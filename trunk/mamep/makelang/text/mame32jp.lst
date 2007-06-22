@@ -837,6 +837,7 @@ popeyeu	ƒ|ƒpƒC (rev D not protected)	‚Û‚Ï‚¢	Nintendo
 popeyef	ƒ|ƒpƒC (rev F)	‚Û‚Ï‚¢	Nintendo
 popeyebl	ƒ|ƒpƒC (ŠC‘¯”Å)	‚Û‚Ï‚¢	bootleg
 punchout	ƒpƒ“ƒ`ƒAƒEƒgII	‚Ï‚ñ‚¿‚ ‚¤‚Æ	Nintendo
+punchita	ƒpƒ“ƒ`ƒAƒEƒgII (ƒCƒ^ƒŠƒA”Å) (ŠC‘¯”Å)	‚Ï‚ñ‚¿‚ ‚¤‚Æ	bootleg
 spnchout	ƒX[ƒp[ƒpƒ“ƒ`ƒAƒEƒgII	‚·[‚Ï[‚Ï‚ñ‚¿‚ ‚¤‚Æ	Nintendo
 spnchotj	ƒX[ƒp[ƒpƒ“ƒ`ƒAƒEƒgII (“ú–{”Å)	‚·[‚Ï[‚Ï‚ñ‚¿‚ ‚¤‚Æ	Nintendo
 armwrest	ƒA[ƒ€ƒŒƒXƒŠƒ“ƒO	‚ [‚Ş‚ê‚·‚è‚ñ‚®	Nintendo
@@ -1022,7 +1023,7 @@ spcewarl	ƒXƒy[ƒXƒEƒH[ (Leijac)	‚·‚Ø[‚·‚¤‚§[	Leijac (Konami)
 polaris	ƒ|ƒ‰ƒŠƒX (set 1)	‚Û‚ç‚è‚·	Taito
 polarisa	ƒ|ƒ‰ƒŠƒX (set 2)	‚Û‚ç‚è‚·	Taito
 ballbomb	ƒoƒ‹[ƒ“ƒ{ƒ“ƒo[	‚Î‚é[‚ñ‚Ú‚ñ‚Î[	Taito
-indianbt	ƒCƒ“ƒfƒBƒAƒ“ƒoƒgƒ‹	‚¢‚ñ‚Å‚¡‚ ‚ñ‚Î‚Æ‚é	Taito
+indianbt	ƒCƒ“ƒfƒAƒ“ƒoƒgƒ‹	‚¢‚ñ‚Å‚ ‚ñ‚Î‚Æ‚é	Taito
 m79amb	M-79 ƒAƒ“ƒuƒbƒVƒ…	‚¦‚Ş79‚ ‚ñ‚Ô‚Á‚µ‚ã	RamTek
 alieninv	ƒXƒy[ƒXƒCƒ“ƒx[ƒ_[ / Alien Invasion Part II	‚·‚Ø[‚·‚¢‚ñ‚×[‚¾[_1_1	bootleg
 tst_invd	ƒXƒy[ƒXƒCƒ“ƒx[ƒ_[ / Test ROM	‚·‚Ø[‚·‚¢‚ñ‚×[‚¾[_1_1	Test ROM
@@ -2346,13 +2347,15 @@ pzloop2j	ƒpƒYƒ‹[ƒv2 (“ú–{”Å 010205)	‚Ï‚¸‚é[‚Õ_2	Mitchell, distributed by Capco
 choko	”vƒpƒYƒ‹ ’·] (“ú–{”Å 010820)	‚¶‚á‚ñ‚Ï‚¢‚Ï‚¸‚é‚¿‚å‚¤‚±‚¤	Mitchell, distributed by Capcom
 hsf2j	ƒnƒCƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -The Anniversary Edition (“ú–{”Å 031222)	‚Í‚¢‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2	Capcom
 hsf2	ƒnƒCƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -The Anniversary Edition (ƒAƒWƒA”Å 040202)	‚Í‚¢‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2	Capcom
-warzard	ƒEƒH[ƒU[ƒh	‚¤‚§[‚´[‚Ç	Capcom
-sfiii	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III -ƒjƒ…[ƒWƒFƒlƒŒ[ƒVƒ‡ƒ“	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_1	Capcom
-jojo	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_1	Capcom
-jojoba	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ -–¢—ˆ‚Ö‚ÌˆâY	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_2‚İ‚ç‚¢‚Ö‚Ì‚¢‚³‚ñ	Capcom
-jojobaa	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ -–¢—ˆ‚Ö‚ÌˆâY (alt)	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_2‚İ‚ç‚¢‚Ö‚Ì‚¢‚³‚ñ	Capcom
-sfiii2	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III 2nd IMPACT -ƒWƒƒƒCƒAƒ“ƒgƒAƒ^ƒbƒN	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_2‚¢‚ñ‚Ï‚­‚Æ	Capcom
-sfiii3	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III 3rd STRIKE -ƒtƒ@ƒCƒgƒtƒH[ƒUƒtƒ…[ƒ`ƒƒ[	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_3‚·‚Æ‚ç‚¢‚­	Capcom
+warzard	ƒEƒH[ƒU[ƒh (“ú–{”Å 96/11/21)	‚¤‚§[‚´[‚Ç	Capcom
+sfiii	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III -ƒjƒ…[ƒWƒFƒlƒŒ[ƒVƒ‡ƒ“ (“ú–{”Å 970204)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_1	Capcom
+sfiii2	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III 2nd IMPACT -ƒWƒƒƒCƒAƒ“ƒgƒAƒ^ƒbƒN (“ú–{”Å 970930)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_2‚¢‚ñ‚Ï‚­‚Æ	Capcom
+sfiii3	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III 3rd STRIKE -ƒtƒ@ƒCƒgƒtƒH[ƒUƒtƒ…[ƒ`ƒƒ[ (USA”Å 990512)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_3‚·‚Æ‚ç‚¢‚­	Capcom
+sfiii3a	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[III 3rd STRIKE -ƒtƒ@ƒCƒgƒtƒH[ƒUƒtƒ…[ƒ`ƒƒ[ (USA”Å 990608)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_3_3‚·‚Æ‚ç‚¢‚­	Capcom
+jojo	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ (“ú–{”Å 981202)	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_1	Capcom
+jojoalt	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ (“ú–{”Å 990108)	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_1	Capcom
+jojoba	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ -–¢—ˆ‚Ö‚ÌˆâY (“ú–{”Å 990913 NCD)	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_2‚İ‚ç‚¢‚Ö‚Ì‚¢‚³‚ñ	Capcom
+jojobaa	ƒWƒ‡ƒWƒ‡‚ÌŠï–­‚È–`Œ¯ -–¢—ˆ‚Ö‚ÌˆâY (“ú–{”Å 990913)	‚¶‚å‚¶‚å‚Ì‚«‚İ‚å‚¤‚È‚Ú‚¤‚¯‚ñ_2‚İ‚ç‚¢‚Ö‚Ì‚¢‚³‚ñ	Capcom
 ts2	ƒoƒgƒ‹ƒAƒŠ[ƒi“¬_“`2 (USA”Å 951124)	‚Î‚Æ‚é‚ ‚è[‚È‚Æ‚¤‚µ‚ñ‚Å‚ñ2	Capcom/Takara
 ts2j	ƒoƒgƒ‹ƒAƒŠ[ƒi“¬_“`2 (“ú–{”Å 951124)	‚Î‚Æ‚é‚ ‚è[‚È‚Æ‚¤‚µ‚ñ‚Å‚ñ2	Capcom/Takara
 starglad	ƒXƒ^[ƒOƒ‰ƒfƒBƒGƒCƒ^[ -ƒGƒsƒ\[ƒh:I ƒtƒ@ƒCƒiƒ‹ƒNƒ‹ƒZƒCƒh (USA”Å 960627)	‚·‚½[‚®‚ç‚Å‚¡‚¦‚¢‚½[_1	Capcom
@@ -4109,8 +4112,8 @@ mtrap3	ƒ}ƒEƒXƒgƒ‰ƒbƒv (ver 3)	‚Ü‚¤‚·‚Æ‚ç‚Á‚Õ	Exidy
 mtrap4	ƒ}ƒEƒXƒgƒ‰ƒbƒv (ver 4)	‚Ü‚¤‚·‚Æ‚ç‚Á‚Õ	Exidy
 pepper2	ƒyƒbƒp[II	‚Ø‚Á‚Ï[2	Exidy
 hardhat	ƒn[ƒhƒnƒbƒg	‚Í[‚Ç‚Í‚Á‚Æ	Exidy
-fax	ƒtƒ@ƒbƒNƒX	‚Ó‚Ÿ‚Á‚­‚·	Exidy
-faxa	ƒtƒ@ƒbƒNƒX (alt questions)	‚Ó‚Ÿ‚Á‚­‚·	Exidy
+fax	ƒtƒ@ƒbƒNƒX	‚Ó‚Ÿ‚Á‚­‚·_1	Exidy
+fax2	ƒtƒ@ƒbƒNƒX2	‚Ó‚Ÿ‚Á‚­‚·_2	Exidy
 circus	ƒT[ƒJƒX	‚³[‚©‚·	Exidy
 circusse	ƒT[ƒJƒX (Sub-Electro) (ŠC‘¯”Å)	‚³[‚©‚·	[Exidy] (Sub-Electro bootleg)
 robotbwl	ƒƒ{ƒbƒgƒ{ƒEƒ‹	‚ë‚Ú‚Á‚Æ‚Ú‚¤‚é	Exidy
@@ -4710,7 +4713,7 @@ marukodq	‚¿‚Ñ‚Ü‚éq‚¿‚á‚ñ ‚Ü‚éqƒfƒ‰ƒbƒNƒXƒNƒCƒY	‚¿‚Ñ‚Ü‚é‚±‚¿‚á‚ñ‚Ü‚é‚±‚Å‚ç‚Á‚­‚
 neomrdo	ƒlƒIEMr.DoI	‚Ë‚¨‚İ‚·‚½[‚Ç‚£	Visco
 sdodgeb	‚­‚É‚¨‚Ì”MŒŒ“¬‹…“`à	‚­‚É‚¨‚Ì‚Ë‚Á‚¯‚Â‚Æ‚¤‚«‚ã‚¤‚Å‚ñ‚¹‚Â	Technos
 goalx3	ƒS[ƒ‹IƒS[ƒ‹IƒS[ƒ‹I	‚²[‚é‚²[‚é‚²[‚é	Visco
-zintrckb	‰Ÿ‚µo‚µƒWƒ“ƒgƒŠƒbƒN (ƒnƒbƒN / ŠC‘¯”Å)	‚¨‚µ‚¾‚µ‚¶‚ñ‚Æ‚è‚Á‚­	hack
+zintrckb	‰Ÿ‚µo‚µƒWƒ“ƒgƒŠƒbƒN (ƒnƒbƒN / ŠC‘¯”Å)	‚¨‚µ‚¾‚µ‚¶‚ñ‚Æ‚è‚Á‚­	hack / bootleg
 overtop	ƒI[ƒo[ƒgƒbƒv	‚¨[‚Î[‚Æ‚Á‚Õ	ADK
 neodrift	ƒlƒIEƒhƒŠƒtƒgƒAƒEƒg -ƒjƒ…[ƒeƒNƒmƒƒW[	‚Ë‚¨‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ	Visco
 kof96	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '96 (set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_03_1996	SNK
@@ -4804,9 +4807,9 @@ svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Play
 svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Playmore
 svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	Playmore
 svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (ŠC‘¯”Å)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	bootleg
-svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set 1)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
-svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å / ƒnƒbƒN set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
-svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
+svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å set 1)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
+svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (ŠC‘¯”Å set 2)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
+svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (ŠC‘¯”Å)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	bootleg
 samsho5	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 1)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5h	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (set 2)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsho5b	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (ŠC‘¯”Å)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	bootleg
@@ -4814,8 +4817,8 @@ kf2k3pcb	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ
 kof2003	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠCŠO / USA”Å MVS)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
 kf2k3bl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 1)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
 kf2k3bla	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (ŠC‘¯”Å set 2)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	bootleg
-kf2k3pl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Plus / Hero (ŠC‘¯”Å / ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
-kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å / ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
+kf2k3pl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Plus / Hero (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
+kf2k3upl	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 / The King of Fighters 2004 Ultra Plus (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_2_2003	bootleg
 samsh5sp	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 1 uncensored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sh	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 2 censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 samsh5sn	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (set 3 less censored)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
@@ -5471,7 +5474,7 @@ gunbird2	ƒKƒ“ƒo[ƒh2	‚ª‚ñ‚Î[‚Ç_2	Psikyo
 s1945iii	ƒXƒgƒ‰ƒCƒJ[ƒY1999 (“ú–{”Å)	‚·‚Æ‚ç‚¢‚©[‚¸_21999	Psikyo
 dragnblz	ƒhƒ‰ƒSƒ“ƒuƒŒƒCƒY	‚Ç‚ç‚²‚ñ‚Ô‚ê‚¢‚¸	Psikyo
 gnbarich	ƒKƒ“ƒoƒŠƒbƒ`	‚ª‚ñ‚Î‚è‚Á‚¿	Psikyo
-mjgtaste	G-taste–ƒ	‚¶‚¡‚Ä‚¢‚·‚Æ‚Ü[‚¶‚á‚ñ	Psikyo
+mjgtaste	G-taste–ƒ	‚¶‚¡‚Ä‚¢‚·‚Æ‚Ü‚ ‚¶‚á‚ñ	Psikyo
 hotgmck	‘ÎíƒzƒbƒgƒMƒ~ƒbƒN (“ú–{”Å)	‚½‚¢‚¹‚ñ‚Ù‚Á‚Æ‚¬‚İ‚Á‚­_1	Psikyo
 hgkairak	‘ÎíƒzƒbƒgƒMƒ~ƒbƒN ‰õŠy“V (“ú–{”Å)	‚½‚¢‚¹‚ñ‚Ù‚Á‚Æ‚¬‚İ‚Á‚­_2‚©‚¢‚ç‚­‚Ä‚ñ	Psikyo
 hotgmck3	‘ÎíƒzƒbƒgƒMƒ~ƒbƒN3 ƒfƒWƒ^ƒ‹ƒT[ƒtƒBƒ“ (“ú–{”Å)	‚½‚¢‚¹‚ñ‚Ù‚Á‚Æ‚¬‚İ‚Á‚­_3‚Å‚¶‚½‚é‚³[‚Ó‚¡‚ñ	Psikyo
@@ -5878,7 +5881,7 @@ tgtballa	ƒ^[ƒQƒbƒgƒ{[ƒ‹	‚½[‚°‚Á‚Æ‚Ú[‚é	Yun Sung
 torus	ƒg[ƒ‰ƒX	‚Æ[‚ç‚·	Yun Sung
 madball	ƒ}ƒbƒhƒ{[ƒ‹ V2.0	‚Ü‚Á‚Ç‚Ú[‚é‚Î[‚¶‚å‚ñ2.0	Yun Sung
 madballn	ƒ}ƒbƒhƒ{[ƒ‹ V2.0 (with nudity)	‚Ü‚Á‚Ç‚Ú[‚é‚Î[‚¶‚å‚ñ2.0	Yun Sung
-cannball	ƒLƒƒƒmƒ“ƒ{[ƒ‹	‚«‚á‚Ì‚ñ‚Ú[‚é	Yun Sung / Soft Vision
+cannball	ƒLƒƒƒmƒ“ƒ{[ƒ‹ (Yun Sung)	‚«‚á‚Ì‚ñ‚Ú[‚é	Yun Sung / Soft Vision
 magix	ƒ}ƒWƒbƒNƒX	‚Ü‚¶‚Á‚­‚·_1	Yun Sung
 rocktris	ƒƒbƒNƒgƒŠƒX	‚ë‚Á‚­‚Æ‚è‚·	Yun Sung
 magicbub	ƒ}ƒWƒbƒNƒoƒuƒ‹	‚Ü‚¶‚Á‚­‚Î‚Ô‚é	Yun Sung
@@ -6641,6 +6644,7 @@ good	ƒOƒbƒh (ŠØ‘”Å)	‚®‚Á‚Ç	unknown
 filetto	ƒtƒBƒŒƒbƒg (ver 1.05 901009)	‚Ó‚¡‚ê‚Á‚Æ	Novarmatic
 quizo	ƒNƒCƒYƒIƒŠƒ“ƒsƒbƒN	‚­‚¢‚¸‚¨‚è‚ñ‚Ò‚Á‚­	Seoul Coin Corp.
 gstream	GƒXƒgƒŠ[ƒ€ -G2020	‚¶[‚·‚Æ‚è[‚Ş	Oriental Soft Japan
+miniboy7	ƒ~ƒjƒ{[ƒC7	‚İ‚É‚Ú[‚¢‚¹‚Ô‚ñ	Bonanza Enterprises, Ltd
 knightsh	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ƒnƒbƒN)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	hack / bootleg
 knightsb	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ŠC‘¯”Å)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	bootleg
 sf2m8	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (M8)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	hack / bootleg
@@ -6732,7 +6736,7 @@ mslug5d	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (fully decrypted)	‚ß‚½‚é‚·‚ç‚Á‚®_5_1	SNK / Playmore
 samsho5d	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ë (decrypted C)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_1‚º‚ë	Yuki Enterprise / SNK Playmore
 samsh5sd	ƒTƒ€ƒ‰ƒCƒXƒsƒŠƒbƒc—ëƒXƒyƒVƒƒƒ‹ (decrypted C)	‚³‚Ş‚ç‚¢‚·‚Ò‚è‚Á‚Â_6_2‚º‚ë‚·‚Ø‚µ‚á‚é	Yuki Enterprise / SNK Playmore
 lans2k4d	ƒVƒ‡ƒbƒNƒgƒ‹[ƒp[ƒY ƒZƒJƒ“ƒhƒXƒJƒbƒh / Lansquenet 2004 (fully decrypted) (ŠC‘¯”Å)	‚µ‚å‚Á‚­‚Æ‚é[‚Ï[‚¸_2‚¹‚©‚ñ‚Ç‚·‚©‚Á‚Ç	bootleg
-svcd	SNK VS. CAPCOM -SVC CHAOS (MVS decrypted C)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	bootleg
+svcd	SNK VS. CAPCOM -SVC CHAOS (MVS / decrypted C)	‚¦‚·‚¦‚Ê‚¯‚¢‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	bootleg
 jckeygpd	ƒWƒ‡ƒbƒL[ƒOƒ‰ƒ“ƒvƒŠ (decrypted C)	‚¶‚å‚Á‚«[‚®‚ç‚ñ‚Õ‚è	Sun Amusement / BrezzaSoft
 kf2k3pcd	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY 2003 (“ú–{”Å JAMMA PCB decrypted C&Bios)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_10_1_2003	SNK Playmore
 kogd	ƒUEƒLƒ“ƒOEƒIƒuEƒtƒ@ƒCƒ^[ƒY '97 / King of Gladiator (fully decrypted) (ŠC‘¯”Å)	‚´‚«‚ñ‚®‚¨‚Ô‚Ó‚Ÿ‚¢‚½[‚¸_04_2_1997	bootleg
