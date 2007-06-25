@@ -44,6 +44,7 @@ CPUS += SH2
 # only for MESS and so aren't included
 #-------------------------------------------------
 
+SOUNDS += CUSTOM
 SOUNDS += YM2151
 SOUNDS += OKIM6295
 SOUNDS += QSOUND
@@ -81,6 +82,7 @@ DRVLIBS += \
 
 $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/pd4990a.o \
+ 	$(MACHINE)/intelfsh.o \
 	$(VIDEO)/res_net.o \
 
 
@@ -91,7 +93,7 @@ $(MAMEOBJ)/shared.a: \
 $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/cps3.o \
+	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 

@@ -552,7 +552,7 @@ endif
 
 # output a map file (emulator only)
 ifneq ($(MAP),)
-    MAPFLAGS = -Wl,-Map,$(NAME).map
+    MAPFLAGS = -Wl,-Map,$(FULLNAME).map
     MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
     MAPCLIFLAGS = -Wl,-Map,$(NAME).map
     MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
