@@ -83,7 +83,6 @@ DRVLIBS += \
 $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/pd4990a.o \
  	$(MACHINE)/intelfsh.o \
-	$(VIDEO)/res_net.o \
 
 
 #-------------------------------------------------
@@ -103,3 +102,10 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
 
+
+
+#-------------------------------------------------
+# misc dependencies
+#-------------------------------------------------
+
+$(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
