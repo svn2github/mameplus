@@ -269,7 +269,7 @@ static int drawdd_window_init(win_window_info *window)
 
 error:
 	drawdd_window_destroy(window);
-	faprintf(stderr, _WINDOWS("Unable to initialize DirectDraw.\n"));
+	mame_printf_error(_WINDOWS("Unable to initialize DirectDraw.\n"));
 	return 1;
 }
 
@@ -467,7 +467,7 @@ static int ddraw_create(win_window_info *window)
 	verify = ddraw_verify_caps(dd);
 	if (verify == 2)
 	{
-		faprintf(stderr, _WINDOWS("DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n"));
+		mame_printf_error(_WINDOWS("DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n"));
 		goto error;
 	}
 	if (verify == 1)
@@ -598,7 +598,7 @@ static int ddraw_create_surfaces(win_window_info *window)
 			result = IDirectDrawSurface_QueryInterface(dd->primary, &IID_IDirectDrawGammaControl, (void **)&dd->gamma);
 			if (result != DD_OK)
 			{
-				faprintf(stderr, _WINDOWS("DirectDraw: Warning - device does not support full screen gamma correction.\n"));
+				mame_printf_warning(_WINDOWS("DirectDraw: Warning - device does not support full screen gamma correction.\n"));
 				dd->gamma = NULL;
 			}
 
@@ -1122,7 +1122,7 @@ static int config_adapter_mode(win_window_info *window)
 	result = IDirectDraw7_GetDeviceIdentifier(dd->ddraw, &identifier, 0);
 	if (result != DD_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error getting identifier for device\n"));
+		mame_printf_error(_WINDOWS("Error getting identifier for device\n"));
 		return 1;
 	}
 	mame_printf_verbose(_WINDOWS("DirectDraw: Configuring device %s\n"), identifier.szDescription);

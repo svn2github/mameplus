@@ -64,7 +64,7 @@ extern int win_physical_height;
 //  PARAMETERS
 //============================================================
 
-#define MAX_KEYBOARDS		8
+#define MAX_KEYBOARDS		1
 #define MAX_MICE			8
 #define MAX_JOYSTICKS		8
 #define MAX_LIGHTGUNS		8
@@ -152,17 +152,6 @@ struct _raw_mouse
 	USHORT			flags;
 };
 
-typedef struct _raw_keyboard raw_keyboard;
-struct _raw_keyboard
-{
-	// Identifier for the keyboard.
-	// WM_INPUT passes the device HANDLE as lparam
-	HANDLE			device_handle;
-
-	//current state
-	BYTE			keyboard_state[MAX_KEYS];
-};
-
 
 
 //============================================================
@@ -189,7 +178,6 @@ static int					dinput_version;
 // global states
 static int					input_paused;
 static osd_ticks_t			last_poll;
-static osd_lock *			raw_input_lock;
 
 // Controller override options
 static float				joy_deadzone;
@@ -213,12 +201,10 @@ static LPDIRECTINPUTDEVICE2	keyboard_device2[MAX_KEYBOARDS];
 static DIDEVCAPS			keyboard_caps[MAX_KEYBOARDS];
 static BYTE					keyboard_state[MAX_KEYBOARDS][MAX_KEYS];
 static UINT8				keyboard_detected_non_di_input;
-static raw_keyboard			raw_keyboard_device[MAX_KEYBOARDS];
 
 // additional key data
-static INT8					oldkey[MAX_KEYBOARDS][MAX_KEYS];
-static INT8					currkey[MAX_KEYBOARDS][MAX_KEYS];
-static BYTE					virtual_key_to_di_key[MAX_KEYS];
+static INT8					oldkey[MAX_KEYS];
+static INT8					currkey[MAX_KEYS];
 
 // mouse states
 static int					mouse_active;
@@ -227,6 +213,7 @@ static int					mouse_num_of_buttons;
 static LPDIRECTINPUTDEVICE	mouse_device[MAX_MICE+1];
 static LPDIRECTINPUTDEVICE2	mouse_device2[MAX_MICE+1];
 static raw_mouse			raw_mouse_device[MAX_MICE];
+static osd_lock *			raw_mouse_lock;
 static DIDEVCAPS			mouse_caps[MAX_MICE+1];
 static DIMOUSESTATE2		mouse_state[MAX_MICE];
 static DWORD				mouse_state_size;
@@ -284,11 +271,11 @@ static void update_joystick_axes(void);
 static void init_keycodes(void);
 static void init_joycodes(void);
 static void poll_lightguns(void);
-static BOOL is_rdp_device_name(const TCHAR *device_string);
+static BOOL is_rm_rdp_mouse(const TCHAR *device_string);
 static void process_raw_input(PRAWINPUT raw);
-static BOOL register_raw_input(void);
-static BOOL init_raw_input(void);
-static void win_read_raw_input(void);
+static BOOL register_raw_mouse(void);
+static BOOL init_raw_mouse(void);
+static void win_read_raw_mouse(void);
 
 
 
@@ -313,11 +300,10 @@ static pRegisterRawInputDevices _RegisterRawInputDevices;
 //============================================================
 
 // macros for building/mapping keyboard codes
-#define KEYCODE(keyb, dik, vk, ascii)	((dik) | ((vk) << 8) | ((ascii) << 16) | ((keyb) << 24))
+#define KEYCODE(dik, vk, ascii)		((dik) | ((vk) << 8) | ((ascii) << 16))
 #define DICODE(keycode)				((keycode) & 0xff)
 #define VKCODE(keycode)				(((keycode) >> 8) & 0xff)
 #define ASCIICODE(keycode)			(((keycode) >> 16) & 0xff)
-#define KEYBNUM(keycode)				(((keycode) >> 24) & 0xf)
 
 // macros for building/mapping joystick codes
 #define JOYCODE(joy, type, index)	((index) | ((type) << 8) | ((joy) << 12) | 0x80000000)
@@ -494,133 +480,6 @@ const int win_key_trans_table[][4] =
 	{ -1 }
 };
 
-// RAWINPUT does not expose key name retrieve api, so we need this array
-const char* dik_names[] =
-{
-	"ESCAPE",
-	"1",
-	"2",
-	"3",
-	"4",
-	"5",
-	"6",
-	"7",
-	"8",
-	"9",
-	"0",
-	"MINUS",
-	"EQUALS",
-	"BACK",
-	"TAB",
-	"Q",
-	"W",
-	"E",
-	"R",
-	"T",
-	"Y",
-	"U",
-	"I",
-	"O",
-	"P",
-	"LBRACKET",
-	"RBRACKET",
-	"RETURN",
-	"LCONTROL",
-	"A",
-	"S",
-	"D",
-	"F",
-	"G",
-	"H",
-	"J",
-	"K",
-	"L",
-	"SEMICOLON",
-	"APOSTROPHE",
-	"GRAVE",
-	"LSHIFT",
-	"BACKSLASH",
-	"Z",
-	"X",
-	"C",
-	"V",
-	"B",
-	"N",
-	"M",
-	"COMMA",
-	"PERIOD",
-	"SLASH",
-	"RSHIFT",
-	"MULTIPLY",
-	"LMENU",
-	"SPACE",
-	"CAPITAL",
-	"F1",
-	"F2",
-	"F3",
-	"F4",
-	"F5",
-	"F6",
-	"F7",
-	"F8",
-	"F9",
-	"F10",
-	"NUMLOCK",
-	"SCROLL",
-	"NUMPAD7",
-	"NUMPAD8",
-	"NUMPAD9",
-	"SUBTRACT",
-	"NUMPAD4",
-	"NUMPAD5",
-	"NUMPAD6",
-	"ADD",
-	"NUMPAD1",
-	"NUMPAD2",
-	"NUMPAD3",
-	"NUMPAD0",
-	"DECIMAL",
-	"F11",
-	"F12",
-	"F13",
-	"F14",
-	"F15",
-	"NUMPADENTER",
-	"RCONTROL",
-	"DIVIDE",
-	"SYSRQ",
-	"RMENU",
-	"HOME",
-	"UP",
-	"PRIOR",
-	"LEFT",
-	"RIGHT",
-	"END",
-	"DOWN",
-	"NEXT",
-	"INSERT",
-	"DELETE",
-	"LWIN",
-	"RWIN",
-	"APPS",
-	"PAUSE",
-	"CANCEL",
-	"KANA",		// KEYCODE_KANA
-	"CONVERT",	// KEYCODE_CONVERT
-	"NONCONVERT",	// KEYCODE_NONCONVERT
-	"MUTE",
-	"VOLUMEDOWN",
-	"VOLUMEUP",
-	"WEBHOME",
-	"WEBSEARCH",
-	"WEBFAVORITES",
-	"WEBREFRESH",
-	"WEBSTOP",
-	"WEBFORWARD",
-	"WEBBACK",
-	"MAIL",
-	"MEDIASELECT"
-};
 
 // master joystick translation table
 static int joy_trans_table[][2] =
@@ -1479,7 +1338,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_AXISMODE, 0, DIPH_DEVICE, DIPROPAXISMODE_ABS);
 	if (result != DI_OK)
  	{
- 		faprintf(stderr, _WINDOWS("Can't set axis mode for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+ 		mame_printf_error(_WINDOWS("Can't set axis mode for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
 		goto cant_set_axis_mode;
 	}
 
@@ -1494,7 +1353,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 	result = IDirectInputDevice_SetProperty(joystick_device[joystick_count], DIPROP_RANGE, &range.diph);
  	if (result != DI_OK)
  	{
- 		faprintf(stderr, _WINDOWS("Can't set range for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+ 		mame_printf_error(_WINDOWS("Can't set range for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
 		goto cant_set_range;
 	}
 
@@ -1504,7 +1363,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_DEADZONE, 0, DIPH_DEVICE, 10000 * joy_deadzone);
 	 	if (result != DI_OK)
 	 	{
-	 		faprintf(stderr, _WINDOWS("Can't set deadzone for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+	 		mame_printf_error(_WINDOWS("Can't set deadzone for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
 			goto cant_set_deadzone;
 		}
 	}
@@ -1515,7 +1374,7 @@ static BOOL CALLBACK enum_joystick_callback(LPCDIDEVICEINSTANCE instance, LPVOID
 		result = set_DI_Dword_Property(joystick_device[joystick_count], DIPROP_SATURATION, 0, DIPH_DEVICE, 10000 * joy_saturation);
 	 	if (result != DI_OK)
 	 	{
-	 		faprintf(stderr, _WINDOWS("Can't set saturation for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
+	 		mame_printf_error(_WINDOWS("Can't set saturation for Joystick %d - %s\n"), joystick_count, joystick_name[joystick_count]);
 			goto cant_set_saturation;
 		}
 	}
@@ -1575,7 +1434,7 @@ int wininput_init(running_machine *machine)
 	add_exit_callback(machine, wininput_exit);
 
 	// allocate a lock
-	raw_input_lock = osd_lock_alloc();
+	raw_mouse_lock = osd_lock_alloc();
 
 	// decode the options
 	extract_input_config();
@@ -1615,42 +1474,36 @@ int wininput_init(running_machine *machine)
 		end_resource_tracking();
 	}
 
+	// initialize keyboard devices
 	keyboard_count = 0;
+	result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_KEYBOARD, enum_keyboard_callback, 0, DIEDFL_ATTACHEDONLY);
+	if (result != DI_OK)
+		goto cant_init_keyboard;
+
+	// initialize mouse devices
 	lightgun_count = 0;
 	mouse_count = 0;
 	mouse_num_of_buttons = 8;
-	lightgun_dual_player_state[0] = lightgun_dual_player_state[1] = 0;
-	lightgun_dual_player_state[2] = lightgun_dual_player_state[3] = 0;
-	memset(virtual_key_to_di_key, 0xFF, sizeof(virtual_key_to_di_key));
-
-
-	win_use_raw_input = init_raw_input();
-
-	// fallback to legacy input
-	if (!win_use_raw_input)
+	mouse_state_size = sizeof(DIMOUSESTATE2);
+	if (win_use_mouse || use_lightgun)
 	{
-		// initialize keyboard devices
-		result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_KEYBOARD, enum_keyboard_callback, 0, DIEDFL_ATTACHEDONLY);
-		if (result != DI_OK)
-			goto cant_init_keyboard;
-
-		// initialize mouse devices
-		mouse_state_size = sizeof(DIMOUSESTATE2);
-		if (win_use_mouse || use_lightgun)
+		lightgun_dual_player_state[0] = lightgun_dual_player_state[1] = 0;
+		lightgun_dual_player_state[2] = lightgun_dual_player_state[3] = 0;
+		win_use_raw_mouse = init_raw_mouse();
+		if (!win_use_raw_mouse)
 		{
 			result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_MOUSE, enum_mouse_callback, 0, DIEDFL_ATTACHEDONLY);
 			if (result != DI_OK)
 				goto cant_init_mouse;
 			// remove system mouse on multi-mouse systems
 			remove_dx_system_mouse();
-
-			// if we have at least one mouse, and the "Dual" option is selected,
-			//  then the lightgun_count is 2 (The two guns are read as a single
-			//  4-button mouse).
-			if (mouse_count && use_lightgun_dual && lightgun_count < 2)
-				lightgun_count = 2;
-
 		}
+
+		// if we have at least one mouse, and the "Dual" option is selected,
+		//  then the lightgun_count is 2 (The two guns are read as a single
+		//  4-button mouse).
+		if (mouse_count && use_lightgun_dual && lightgun_count < 2)
+			lightgun_count = 2;
 	}
 
 	// initialize joystick devices
@@ -1698,6 +1551,15 @@ static void wininput_exit(running_machine *machine)
 {
 	int i;
 
+	// release all our keyboards
+	for (i = 0; i < keyboard_count; i++)
+	{
+		IDirectInputDevice_Release(keyboard_device[i]);
+		if (keyboard_device2[i])
+			IDirectInputDevice_Release(keyboard_device2[i]);
+		keyboard_device2[i]=0;
+	}
+
 	// release all our joysticks
 	for (i = 0; i < joystick_count; i++)
 	{
@@ -1708,18 +1570,8 @@ static void wininput_exit(running_machine *machine)
 	}
 
 	// release all our mice
-	if (!win_use_raw_input)
+	if (!win_use_raw_mouse)
 	{
-
-		// release all our keyboards
-		for (i = 0; i < keyboard_count; i++)
-		{
-			IDirectInputDevice_Release(keyboard_device[i]);
-			if (keyboard_device2[i])
-				IDirectInputDevice_Release(keyboard_device2[i]);
-			keyboard_device2[i]=0;
-		}
-
 		if (mouse_count > 1)
 		{
 			IDirectInputDevice_Release(mouse_device[MAX_MICE]);
@@ -1748,13 +1600,8 @@ static void wininput_exit(running_machine *machine)
 	dinput = NULL;
 
 	// release lock
-	if (raw_input_lock != NULL)
-	{
-		osd_lock_acquire(raw_input_lock);
-		win_use_raw_input = FALSE;
-		osd_lock_release(raw_input_lock);
-		osd_lock_free(raw_input_lock);
-	}
+	if (raw_mouse_lock != NULL)
+		osd_lock_free(raw_mouse_lock);
 }
 
 
@@ -1767,31 +1614,35 @@ void win_pause_input(running_machine *machine, int paused)
 {
 	int i;
 
-	if (!win_use_raw_input)
+	// if paused, unacquire all devices
+	if (paused)
 	{
-		// if paused, unacquire all devices
-		if (paused)
-		{
-			// unacquire all keyboards
-			for (i = 0; i < keyboard_count; i++)
-				IDirectInputDevice_Unacquire(keyboard_device[i]);
+		// unacquire all keyboards
+		for (i = 0; i < keyboard_count; i++)
+			IDirectInputDevice_Unacquire(keyboard_device[i]);
 
-			// unacquire all our mice
+		// unacquire all our mice
+		if (!win_use_raw_mouse)
+		{
 			if (mouse_count > 1)
 				IDirectInputDevice_Unacquire(mouse_device[MAX_MICE]);
 			for (i = 0; i < mouse_count; i++)
 				IDirectInputDevice_Unacquire(mouse_device[i]);
 		}
-		// otherwise, reacquire all devices
-		else
-		{
-			// acquire all keyboards
-			for (i = 0; i < keyboard_count; i++)
-				IDirectInputDevice_Acquire(keyboard_device[i]);
+	}
 
-			// acquire all our mice if active
+	// otherwise, reacquire all devices
+	else
+	{
+		// acquire all keyboards
+		for (i = 0; i < keyboard_count; i++)
+			IDirectInputDevice_Acquire(keyboard_device[i]);
+
+		// acquire all our mice if active
+		if (!win_use_raw_mouse)
+		{
 			if (mouse_count > 1)
-				IDirectInputDevice_Acquire(mouse_device[MAX_MICE]);
+			IDirectInputDevice_Acquire(mouse_device[MAX_MICE]);
 			if (mouse_active && !win_has_menu(win_window_list))
 #ifdef USE_JOY_MOUSE_MOVE
 				for (i = 0; i < mouse_count && (win_use_mouse || use_lightgun || use_stickpoint); i++)
@@ -1806,6 +1657,8 @@ void win_pause_input(running_machine *machine, int paused)
 	input_paused = paused;
 	winwindow_update_cursor_state();
 }
+
+
 
 //============================================================
 //  wininput_poll
@@ -1826,69 +1679,87 @@ void wininput_poll(void)
 	// if we don't have focus, turn off all keys
 	if (!focus)
 	{
-		for (i = 0; i < keyboard_count; i++)
-		{
-			memset(&keyboard_state[0][0], 0, sizeof(keyboard_state[i]));
-			updatekeyboard();
-		}
+		memset(&keyboard_state[0][0], 0, sizeof(keyboard_state[i]));
+		updatekeyboard();
 		return;
 	}
 
-
-	if (win_use_raw_input)
-		win_read_raw_input();
+	// poll all keyboards
+	if (keyboard_detected_non_di_input)
+		result = DIERR_NOTACQUIRED;
 	else
-	{
-		// poll all keyboards
-		if (keyboard_detected_non_di_input)
-			result = DIERR_NOTACQUIRED;
-		else
-			for (i = 0; i < keyboard_count; i++)
+		for (i = 0; i < keyboard_count; i++)
+		{
+			// first poll the device
+			if (keyboard_device2[i])
+				IDirectInputDevice2_Poll(keyboard_device2[i]);
+
+			// get the state
+			result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
+
+			// handle lost inputs here
+			if ((result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED) && !input_paused)
 			{
-				// first poll the device
-				if (keyboard_device2[i])
-					IDirectInputDevice2_Poll(keyboard_device2[i]);
-
-				// get the state
-				result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
-
-				// handle lost inputs here
-				if ((result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED) && !input_paused)
-				{
-					result = IDirectInputDevice_Acquire(keyboard_device[i]);
-					if (result == DI_OK)
-						result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
-				}
-
-				// convert to 0 or 1
+				result = IDirectInputDevice_Acquire(keyboard_device[i]);
 				if (result == DI_OK)
-					for (j = 0; j < sizeof(keyboard_state[i]); j++)
-						keyboard_state[i][j] >>= 7;
+					result = IDirectInputDevice_GetDeviceState(keyboard_device[i], sizeof(keyboard_state[i]), &keyboard_state[i][0]);
 			}
 
-		keyboard_detected_non_di_input = FALSE;
+			// convert to 0 or 1
+			if (result == DI_OK)
+				for (j = 0; j < sizeof(keyboard_state[i]); j++)
+					keyboard_state[i][j] >>= 7;
+		}
 
-		// if we couldn't poll the keyboard that way, poll it via GetAsyncKeyState
-		if (result != DI_OK)
-			for (i = 0; codelist[i].oscode; i++)
-				if (IS_KEYBOARD_CODE(codelist[i].oscode))
+	keyboard_detected_non_di_input = FALSE;
+
+	// if we couldn't poll the keyboard that way, poll it via GetAsyncKeyState
+	if (result != DI_OK)
+		for (i = 0; codelist[i].oscode; i++)
+			if (IS_KEYBOARD_CODE(codelist[i].oscode))
+			{
+				int dik = DICODE(codelist[i].oscode);
+				int vk = VKCODE(codelist[i].oscode);
+
+				// if we have a non-zero VK, query it
+				if (vk)
 				{
-					int dik = DICODE(codelist[i].oscode);
-					int vk = VKCODE(codelist[i].oscode);
-
-					// if we have a non-zero VK, query it
-					if (vk)
-					{
-						keyboard_state[0][dik] = (GetAsyncKeyState(vk) >> 15) & 1;
-						if (keyboard_state[0][dik])
-							keyboard_detected_non_di_input = TRUE;
-					}
+					keyboard_state[0][dik] = (GetAsyncKeyState(vk) >> 15) & 1;
+					if (keyboard_state[0][dik])
+						keyboard_detected_non_di_input = TRUE;
 				}
+			}
 
-		// update the lagged keyboard
-		updatekeyboard();
+	// update the lagged keyboard
+	updatekeyboard();
 
-		// poll all our mice if active
+	// poll all joysticks
+	for (i = 0; i < joystick_count; i++)
+	{
+		// first poll the device
+		if (joystick_device2[i])
+			IDirectInputDevice2_Poll(joystick_device2[i]);
+
+		// get the state
+		result = IDirectInputDevice_GetDeviceState(joystick_device[i], sizeof(joystick_state[i]), &joystick_state[i]);
+
+		// handle lost inputs here
+		if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
+		{
+			result = IDirectInputDevice_Acquire(joystick_device[i]);
+			if (result == DI_OK)
+				result = IDirectInputDevice_GetDeviceState(joystick_device[i], sizeof(joystick_state[i]), &joystick_state[i]);
+		}
+	}
+
+	// update joystick axis history
+	update_joystick_axes();
+
+	// poll all our mice if active
+	if (win_use_raw_mouse)
+		win_read_raw_mouse();
+	else
+	{
 		if (mouse_active && !win_has_menu(win_window_list))
 #ifdef USE_JOY_MOUSE_MOVE
 			for (i = 0; i < mouse_count && (win_use_mouse||use_lightgun||use_stickpoint); i++)
@@ -1915,29 +1786,6 @@ void wininput_poll(void)
 		// poll the lightguns
 		poll_lightguns();
 	}
-
-
-	// poll all joysticks
-	for (i = 0; i < joystick_count; i++)
-	{
-		// first poll the device
-		if (joystick_device2[i])
-			IDirectInputDevice2_Poll(joystick_device2[i]);
-
-		// get the state
-		result = IDirectInputDevice_GetDeviceState(joystick_device[i], sizeof(joystick_state[i]), &joystick_state[i]);
-
-		// handle lost inputs here
-		if (result == DIERR_INPUTLOST || result == DIERR_NOTACQUIRED)
-		{
-			result = IDirectInputDevice_Acquire(joystick_device[i]);
-			if (result == DI_OK)
-				result = IDirectInputDevice_GetDeviceState(joystick_device[i], sizeof(joystick_state[i]), &joystick_state[i]);
-		}
-	}
-
-	// update joystick axis history
-	update_joystick_axes();
 }
 
 
@@ -1975,7 +1823,7 @@ static void parse_analog_select(int type, const char *option)
 		analog_type[type] = SELECT_TYPE_LIGHTGUN;
 	else
 	{
-		faprintf(stderr, _WINDOWS("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
+		mame_printf_error(_WINDOWS("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
 		analog_type[type] = SELECT_TYPE_KEYBOARD;
 	}
 }
@@ -2054,15 +1902,15 @@ static void parse_digital(const char *option)
 	return;
 
 usage:
-	faprintf(stderr, _WINDOWS("Invalid %s value %s; reverting to all -- valid values are:\n"), option, soriginal);
-	faprintf(stderr, _WINDOWS("         none -- no axes on any joysticks are digital\n"));
-	faprintf(stderr, _WINDOWS("         all -- all axes on all joysticks are digital\n"));
-	faprintf(stderr, _WINDOWS("         j<N> -- all axes on joystick <N> are digital\n"));
-	faprintf(stderr, _WINDOWS("         j<N>a<M> -- axis <M> on joystick <N> is digital\n"));
-	faprintf(stderr, _WINDOWS("    Multiple axes can be specified for one joystick:\n"));
-	faprintf(stderr, _WINDOWS("         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n"));
-	faprintf(stderr, _WINDOWS("    Multiple joysticks can be specified separated by commas:\n"));
-	faprintf(stderr, _WINDOWS("         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n"));
+	mame_printf_error(_WINDOWS("Invalid %s value %s; reverting to all -- valid values are:\n"), option, soriginal);
+	mame_printf_error(_WINDOWS("         none -- no axes on any joysticks are digital\n"));
+	mame_printf_error(_WINDOWS("         all -- all axes on all joysticks are digital\n"));
+	mame_printf_error(_WINDOWS("         j<N> -- all axes on joystick <N> are digital\n"));
+	mame_printf_error(_WINDOWS("         j<N>a<M> -- axis <M> on joystick <N> is digital\n"));
+	mame_printf_error(_WINDOWS("    Multiple axes can be specified for one joystick:\n"));
+	mame_printf_error(_WINDOWS("         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n"));
+	mame_printf_error(_WINDOWS("    Multiple joysticks can be specified separated by commas:\n"));
+	mame_printf_error(_WINDOWS("         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n"));
 }
 
 //============================================================
@@ -2126,30 +1974,25 @@ static void extract_input_config(void)
 
 static void updatekeyboard(void)
 {
-	int k;
 	int i, changed = 0;
 
-	for (k = 0; k < keyboard_count; k++)
-	{
-		changed = 0;
-		// see if any keys have changed state
-		for (i = 0; i < MAX_KEYS; i++)
-			if (keyboard_state[k][i] != oldkey[k][i])
-			{
-				changed = 1;
+	// see if any keys have changed state
+	for (i = 0; i < MAX_KEYS; i++)
+		if (keyboard_state[0][i] != oldkey[i])
+		{
+			changed = 1;
 
-				// keypress was missed, turn it on for one frame
-				if (keyboard_state[k][i] == 0 && currkey[k][i] == 0)
-					currkey[k][i] = -1;
-			}
+			// keypress was missed, turn it on for one frame
+			if (keyboard_state[0][i] == 0 && currkey[i] == 0)
+				currkey[i] = -1;
+		}
 
-		// if keyboard state is stable, copy it over
-		if (!changed)
-			memcpy(currkey[k], &keyboard_state[k][0], sizeof(currkey[0]));
+	// if keyboard state is stable, copy it over
+	if (!changed)
+		memcpy(currkey, &keyboard_state[0][0], sizeof(currkey));
 
-		// remember the previous state
-		memcpy(oldkey[k], &keyboard_state[k][0], sizeof(oldkey[0]));
-	}
+	// remember the previous state
+	memcpy(oldkey, &keyboard_state[0][0], sizeof(oldkey));
 }
 
 
@@ -2160,7 +2003,6 @@ static void updatekeyboard(void)
 
 static int is_key_pressed(os_code keycode)
 {
-	int keyb_num = KEYBNUM(keycode);
 	int dik = DICODE(keycode);
 
 	// make sure we've polled recently
@@ -2188,9 +2030,9 @@ static int is_key_pressed(os_code keycode)
 
 	// otherwise, just return the current keystate
 	if (steadykey)
-		return currkey[keyb_num][dik];
+		return currkey[dik];
 	else
-		return keyboard_state[keyb_num][dik];
+		return keyboard_state[0][dik];
 }
 
 
@@ -2203,108 +2045,57 @@ static void init_keycodes(void)
 {
 	const int iswin9x = (GetVersion() >> 31) & 1;
 
-	int key, k;
+	int key;
 
-	if (win_use_raw_input)
+	// iterate over all possible keys
+	for (key = 0; key < MAX_KEYS; key++)
 	{
-		int entry;
-		for (key = 0; key < MAX_KEYS; key++)
-		{
-			virtual_key_to_di_key[key] = 0xFF;
-			for (entry = 0; win_key_trans_table[entry][0] >= 0; entry++)
-				if (win_key_trans_table[entry][VIRTUAL_KEY] == key)
-				{
-					virtual_key_to_di_key[key] = (BYTE)win_key_trans_table[entry][DI_KEY];
-					break;
-				}
-		}
+		DIDEVICEOBJECTINSTANCE instance = { 0 };
+		HRESULT result;
 
-		for (k = 0; k < keyboard_count; k++)
+		// attempt to get the object info
+		instance.dwSize = STRUCTSIZE(DIDEVICEOBJECTINSTANCE);
+		result = IDirectInputDevice_GetObjectInfo(keyboard_device[0], &instance, key, DIPH_BYOFFSET);
+		if (result == DI_OK)
 		{
-			// iterate over all possible keys
-			for (key = 0; key < MAX_KEYS; key++)
+			// if it worked, assume we have a valid key
+
+			// copy the name
+			char *namecopy = utf8_from_tstring(instance.tszName);
+			if (namecopy != NULL)
 			{
+				input_code standardcode;
+				os_code code;
+				int entry;
 
 				// find the table entry, if there is one
 				for (entry = 0; win_key_trans_table[entry][0] >= 0; entry++)
 					if (win_key_trans_table[entry][DI_KEY] == key)
-					{
-						TCHAR special_name[MAX_PATH];
-						char *namecopy;
-						input_code standardcode;
-						os_code code;
+						break;
 
-						_stprintf(special_name, "Keyb %i %s", k, dik_names[entry]);
-
-						namecopy = utf8_from_tstring(special_name);
-						code = KEYCODE(k, key, win_key_trans_table[entry][VIRTUAL_KEY], win_key_trans_table[entry][ASCII_KEY]);
-						if (k == 0)
-							standardcode = win_key_trans_table[entry][MAME_KEY];
-						else
-							standardcode = CODE_OTHER_DIGITAL;
-
-						codelist[total_codes].name = namecopy;
-						codelist[total_codes].oscode = code;
-						codelist[total_codes].inputcode = standardcode;
-						total_codes++;
-					}
-			}
-		}
-
-	}
-	else
-	for (k = 0; k < keyboard_count; k++)
-	{
-		// iterate over all possible keys
-		for (key = 0; key < MAX_KEYS; key++)
-		{
-			DIDEVICEOBJECTINSTANCE instance = { 0 };
-			HRESULT result;
-
-			// attempt to get the object info
-			instance.dwSize = STRUCTSIZE(DIDEVICEOBJECTINSTANCE);
-			result = IDirectInputDevice_GetObjectInfo(keyboard_device[0], &instance, key, DIPH_BYOFFSET);
-			if (result == DI_OK)
-			{
-				// if it worked, assume we have a valid key
-
-				// copy the name
-				char *namecopy = utf8_from_tstring(instance.tszName);
-				if (namecopy != NULL)
+				// compute the code, which encodes DirectInput, virtual, and ASCII codes
+				code = KEYCODE(key, 0, 0);
+				standardcode = CODE_OTHER_DIGITAL;
+				if (win_key_trans_table[entry][0] >= 0)
 				{
-					input_code standardcode;
-					os_code code;
-					int entry;
+					int vkey = win_key_trans_table[entry][VIRTUAL_KEY];
+					if (iswin9x)
+						switch (vkey)
+						{
+							case VK_LSHIFT:   case VK_RSHIFT:   vkey = VK_SHIFT;   break;
+							case VK_LCONTROL: case VK_RCONTROL: vkey = VK_CONTROL; break;
+							case VK_LMENU:    case VK_RMENU:    vkey = VK_MENU;    break;
+						}
 
-					// find the table entry, if there is one
-					for (entry = 0; win_key_trans_table[entry][0] >= 0; entry++)
-						if (win_key_trans_table[entry][DI_KEY] == key)
-							break;
-
-					// compute the code, which encodes DirectInput, virtual, and ASCII codes
-					code = KEYCODE(k, key, 0, 0);
-					standardcode = CODE_OTHER_DIGITAL;
-					if (win_key_trans_table[entry][0] >= 0)
-					{
-						int vkey = win_key_trans_table[entry][VIRTUAL_KEY];
-						if (iswin9x)
-							switch (vkey)
-							{
-								case VK_LSHIFT:   case VK_RSHIFT:   vkey = VK_SHIFT;   break;
-								case VK_LCONTROL: case VK_RCONTROL: vkey = VK_CONTROL; break;
-								case VK_LMENU:    case VK_RMENU:    vkey = VK_MENU;    break;
-							}
-
-						code = KEYCODE(k, key, vkey, win_key_trans_table[entry][ASCII_KEY]);
-						standardcode = win_key_trans_table[entry][MAME_KEY];
-					}
-
-					// fill in the key description
-					codelist[total_codes].name = namecopy;
-					codelist[total_codes].oscode = code;
-					codelist[total_codes].inputcode = standardcode;
-					total_codes++;
+					code = KEYCODE(key, vkey, win_key_trans_table[entry][ASCII_KEY]);
+					standardcode = win_key_trans_table[entry][MAME_KEY];
 				}
+
+				// fill in the key description
+				codelist[total_codes].name = namecopy;
+				codelist[total_codes].oscode = code;
+				codelist[total_codes].inputcode = standardcode;
+				total_codes++;
 			}
 		}
 	}
@@ -2460,7 +2251,7 @@ static void init_joycodes(void)
 		add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSE_POS, 2), CODE_OTHER_DIGITAL);
 
 #ifdef USE_JOY_MOUSE_MOVE
-		if (win_use_raw_input)
+		if (win_use_raw_mouse)
 		{
 			sprintf(tempname, _WINDOWS("Stick%sX-"), mousename);
 			add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEAXIS_NEG, 0), CODE_OTHER_DIGITAL);
@@ -2517,9 +2308,9 @@ static void init_joycodes(void)
 		// add mouse buttons
 		for (button = 0; button < mouse_num_of_buttons; button++)
 		{
-			if (win_use_raw_input)
+			if (win_use_raw_mouse)
 			{
-				sprintf(tempname, _WINDOWS("%s Button %d"), mousename, button);
+				sprintf(tempname, _WINDOWS("%sButton %d"), mousename, button);
 				add_joylist_entry(tempname, JOYCODE(mouse, CODETYPE_MOUSEBUTTON, button), CODE_OTHER_DIGITAL);
 			}
 			else
@@ -2560,7 +2351,7 @@ static void init_joycodes(void)
 	// map lightguns second
 	for (gun = 0; gun < lightgun_count; gun++)
 	{
-		if (win_use_raw_input)
+		if (win_use_raw_mouse)
 			sprintf(mousename, _WINDOWS("Lightgun on Mouse %d "), gun + 1);
 		else
 			sprintf(mousename, _WINDOWS("Lightgun %d "), gun + 1);
@@ -2734,7 +2525,7 @@ static INT32 get_joycode_value(os_code joycode)
 	switch (codetype)
 	{
 		case CODETYPE_MOUSEBUTTON:
-			if (!win_use_raw_input) {
+			if (!win_use_raw_mouse) {
 				/* ActLabs lightgun - remap button 2 (shot off-screen) as button 1 */
 				if (use_lightgun_dual && joyindex<4) {
 					if (use_lightgun_reload && joynum==0) {
@@ -2817,7 +2608,7 @@ static INT32 get_joycode_value(os_code joycode)
 			if ((joyindex==0 && mouse_state[joynum].lX != 0) || (joyindex==1 && mouse_state[joynum].lY != 0))
 				mame_printf_verbose("(%d)X=%3ld:Y=%3ld\n", joyindex, mouse_state[joynum].lX, mouse_state[joynum].lY);
 
-			if (win_use_raw_input)
+			if (win_use_raw_mouse)
 			{
 				if (raw_mouse_device[joynum].flags != MOUSE_MOVE_RELATIVE)
 					return 0;
@@ -2940,7 +2731,7 @@ static INT32 get_joycode_value(os_code joycode)
 				win_pause_input(Machine, 0);
 			}
 
-			if (win_use_raw_input && (raw_mouse_device[joynum].flags != MOUSE_MOVE_RELATIVE))
+			if (win_use_raw_mouse && (raw_mouse_device[joynum].flags != MOUSE_MOVE_RELATIVE))
 				return 0;
 
 			// return the latest mouse info
@@ -2972,7 +2763,7 @@ static INT32 get_joycode_value(os_code joycode)
 			if (joyindex >= MAX_LIGHTGUN_AXIS)
 				return 0;
 
-			if (win_use_raw_input) {
+			if (win_use_raw_mouse) {
 				if (raw_mouse_device[joynum].flags == MOUSE_MOVE_RELATIVE)
 					return 0;
 				// convert absolute mouse data to the range we need
@@ -3219,9 +3010,9 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 
 
 //============================================================
-//  set_raw_device_name
+//  set_rawmouse_device_name
 //============================================================
-static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
+static void set_rawmouse_device_name(const TCHAR *raw_string, unsigned int mouse_num)
 {
 	// This routine is used to get the mouse name.  This will give
 	// us the same name that DX will report on non-XP systems.
@@ -3239,7 +3030,6 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 	TCHAR reg_string[MAX_PATH] = TEXT("SYSTEM\\CurrentControlSet\\Enum\\");
 	TCHAR parent_id_prefix[MAX_PATH];		// the id we are looking for
 	TCHAR test_parent_id_prefix[MAX_PATH];	// the id we are testing
-	TCHAR test_name[MAX_PATH];				// test device name
 	TCHAR *test_pos;						// general purpose test pointer for positioning
 	DWORD name_length = MAX_PATH;
 	DWORD instance, hardware;
@@ -3247,17 +3037,12 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 	int key_pos, hardware_key_pos;		// used to keep track of where the keys are added.
 	LONG hardware_result, instance_result;
 
-	device_name[0] = 0;
-
-	if (_tcslen(raw_string) < 5) return;
-
-	//TODO: make better string pos result handling
+	// too many mice?
+	if (mouse_num > MAX_MICE) return;
+	mouse_name[mouse_num][0] = 0;
 
 	// is string formated in RAW format?
-	if (_tcsncmp(raw_string, TEXT("\\??\\"), 4))
-		if (_tcsncmp(raw_string, TEXT("\\\\?\\"), 4))
-			return;
-
+	if (_tcsncmp(raw_string, TEXT("\\??\\"), 4)) return;
 	key_pos = _tcslen(reg_string);
 
 	// remove \??\ from start and add this onto the end of the key string
@@ -3282,12 +3067,12 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 		instance_result = RegQueryValueEx(reg_key,
 								TEXT("LocationInformation"),
 								NULL, NULL,
-								device_name,
+								(LPBYTE)mouse_name[mouse_num],
 								&name_length)
 				&& RegQueryValueEx(reg_key,
 								TEXT("DeviceDesc"),
 								NULL, NULL,
-								device_name,
+								(LPBYTE)mouse_name[mouse_num],
 								&name_length);
 		RegCloseKey(reg_key);
 	}
@@ -3312,7 +3097,6 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 						0, KEY_READ, &hardware_key);
 	if (hardware_result != ERROR_SUCCESS) return;
 
-	test_name[0] = 0;
 	// Start checking each peice of USB hardware
 	for (hardware = 0; hardware_result == ERROR_SUCCESS; hardware++)
 	{
@@ -3349,13 +3133,6 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 												0, KEY_READ, &sub_key);
 						if (instance_result == ERROR_SUCCESS)
 						{
-							name_length = MAX_PATH;
-							if (RegQueryValueEx(sub_key, TEXT("LocationInformation"),
-								NULL, NULL, test_name, &name_length) != ERROR_SUCCESS)
-							{
-								test_name[0] = 0;
-							}
-
 							// get the ParentIdPrefix of this instance of the hardware
 							name_length = sizeof(test_parent_id_prefix);
 							if (RegQueryValueEx(sub_key,
@@ -3381,11 +3158,17 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 	RegCloseKey(hardware_key);
 
 	if (instance_result == ERROR_SUCCESS)
-		if (test_name[0] != 0)
-		{
-			// We should now be at the USB parent device.  Get the real mouse name.
-			_tcscpy(device_name, test_name);
-		}
+	{
+		// We should now be at the USB parent device.  Get the real mouse name.
+		name_length = MAX_PATH;
+		instance_result = RegQueryValueEx(sub_key,
+								TEXT("LocationInformation"),
+								NULL, NULL,
+								(LPBYTE)mouse_name[mouse_num],
+								&name_length);
+		RegCloseKey(sub_key);
+		RegCloseKey(reg_key);
+	}
 
 	return;
 }
@@ -3393,7 +3176,7 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 
 
 //============================================================
-//  is_rdp_device_name
+//  is_rm_rdp_mouse
 //============================================================
 // returns TRUE if it is a remote desktop mouse
 
@@ -3405,166 +3188,126 @@ static void set_raw_device_name(const TCHAR *raw_string, char *device_name)
 //    is formatted. To determine root devices, you can check device status bits."
 //  So tell me, what are these (how you say) "status bits" and where can I get some?
 
-static BOOL is_rdp_device_name(const TCHAR *device_string)
+static BOOL is_rm_rdp_mouse(const TCHAR *device_string)
 {
-	return !(_tcsncmp(device_string, TEXT("\\??\\Root#RDP_"), 13)) ||
-		!(_tcsncmp(device_string, TEXT("\\\\?\\Root#RDP_"), 13));
+	return !(_tcsncmp(device_string, TEXT("\\??\\Root#RDP_MOU#0000#"), 22));
 }
 
 
 
 //============================================================
-//  register_raw_input
+//  register_raw_mouse
 //============================================================
 // returns TRUE if registration succeeds
 
-static BOOL register_raw_input(void)
+static BOOL register_raw_mouse(void)
 {
 	// This function registers to receive the WM_INPUT messages
-	RAWINPUTDEVICE rid[2]; // Register only for mouse messages from wm_input.
-	int rid_count = 1;
+	RAWINPUTDEVICE rid[1]; // Register only for mouse messages from wm_input.
 
 	//register to get wm_input messages
 	rid[0].usUsagePage = 0x01;
-	rid[0].usUsage = 0x06;//keyboard
-	rid[0].dwFlags = 0; // RIDEV_NOLEGACY;   // adds HID mouse and also ignores legacy
+	rid[0].usUsage = 0x02;
+	rid[0].dwFlags = 0;// RIDEV_NOLEGACY;   // adds HID mouse and also ignores legacy mouse messages
 	rid[0].hwndTarget = NULL;
-
-	rid[1].usUsagePage = 0x01;
-	rid[1].usUsage = 0x02;//mouse
-	rid[1].dwFlags = 0;// RIDEV_NOLEGACY;   // adds HID mouse and also ignores legacy mouse messages
-	rid[1].hwndTarget = NULL;
-
-	if (win_use_mouse || use_lightgun)
-		rid_count = 2;
 
 	// Register to receive the WM_INPUT message for any change in mouse
 	// (buttons, wheel, and movement will all generate the same message)
-	return ((*_RegisterRawInputDevices)(rid, rid_count, sizeof (rid[0])));
+	return ((*_RegisterRawInputDevices)(rid, 1, sizeof (rid[0])));
 }
 
 
 
 //============================================================
-//  init_raw_input
+//  init_raw_mouse
 //============================================================
 // returns TRUE if initialization succeeds
 
-static BOOL init_raw_input(void)
+static BOOL init_raw_mouse(void)
 {
 	PRAWINPUTDEVICELIST raw_input_device_list;
 	TCHAR *ps_name = NULL;
 	HMODULE user32;
 	int input_devices, size, i;
-	BOOL is_enum_ok;
 
 	/* Check to see if OS is raw input capable */
 	user32 = LoadLibrary(TEXT("user32.dll"));
-	if (!user32)
-		return FALSE;
+	if (!user32) goto cant_use_raw_input;
 	_RegisterRawInputDevices = (pRegisterRawInputDevices)GetProcAddress(user32,"RegisterRawInputDevices");
-	if (!_RegisterRawInputDevices)
-		return FALSE;
+	if (!_RegisterRawInputDevices) goto cant_use_raw_input;
 	_GetRawInputDeviceList = (pGetRawInputDeviceList)GetProcAddress(user32,"GetRawInputDeviceList");
-	if (!_GetRawInputDeviceList)
-		return FALSE;
+	if (!_GetRawInputDeviceList) goto cant_use_raw_input;
 #ifdef UNICODE
 	_GetRawInputDeviceInfo = (pGetRawInputDeviceInfo)GetProcAddress(user32,"GetRawInputDeviceInfoW");
 #else
 	_GetRawInputDeviceInfo = (pGetRawInputDeviceInfo)GetProcAddress(user32,"GetRawInputDeviceInfoA");
 #endif
-	if (!_GetRawInputDeviceInfo)
-		return 0;
-
+	if (!_GetRawInputDeviceInfo) goto cant_use_raw_input;
 	_GetRawInputData = (pGetRawInputData)GetProcAddress(user32,"GetRawInputData");
-	if (!_GetRawInputData)
-		return FALSE;
+	if (!_GetRawInputData) goto cant_use_raw_input;
 
 	// 1st call to GetRawInputDeviceList: Pass NULL to get the number of devices.
 	if ((*_GetRawInputDeviceList)(NULL, &input_devices, sizeof(RAWINPUTDEVICELIST)) != 0)
-		return FALSE;
+		goto cant_use_raw_input;
 
 	// Allocate the array to hold the DeviceList
 	if ((raw_input_device_list = malloc(sizeof(RAWINPUTDEVICELIST) * input_devices)) == NULL)
-		return FALSE;
+		goto cant_use_raw_input;
 
 	// 2nd call to GetRawInputDeviceList: Pass the pointer to our DeviceList and GetRawInputDeviceList() will fill the array
 	if ((*_GetRawInputDeviceList)(raw_input_device_list, &input_devices, sizeof(RAWINPUTDEVICELIST)) == -1)
-		return FALSE;
+		goto cant_create_raw_input;
 
-
-	// Loop through all devices and setup them.
-	// RAW input reports the list last inpute device to first,
+	// Loop through all devices and setup the mice.
+	// RAWMOUSE reports the list last mouse to first,
 	//  so we will read from the end of the list first.
-	// Otherwise every new input device plugged in becomes mouse 1.
-	is_enum_ok = TRUE;
-	for (i = input_devices - 1; (i >= 0); i--)
+	// Otherwise every new mouse plugged in becomes mouse 1.
+	for (i = input_devices - 1; (i >= 0) && (mouse_count < MAX_MICE); i--)
 	{
-		/* Get the device name and use it to determine if it's the RDP Terminal Services virtual device. */
-
-		// 1st call to GetRawInputDeviceInfo: Pass NULL to get the size of the device name
-		if ((*_GetRawInputDeviceInfo)(raw_input_device_list[i].hDevice, RIDI_DEVICENAME, NULL, &size) != 0)
+		if (raw_input_device_list[i].dwType == RIM_TYPEMOUSE)
 		{
-			is_enum_ok = FALSE;
-			break;
-		}
+			/* Get the device name and use it to determine if it's the RDP Terminal Services virtual device. */
 
+			// 1st call to GetRawInputDeviceInfo: Pass NULL to get the size of the device name
+			if ((*_GetRawInputDeviceInfo)(raw_input_device_list[i].hDevice, RIDI_DEVICENAME, NULL, &size) != 0)
+				goto cant_create_raw_input;
 
-		// Allocate the array to hold the name
-		if ((ps_name = (TCHAR *)malloc(sizeof(TCHAR) * size)) == NULL)
-		{
-			is_enum_ok = FALSE;
-			break;
-		}
+			// Allocate the array to hold the name
+			if ((ps_name = (TCHAR *)malloc(sizeof(TCHAR) * size)) == NULL)
+				goto cant_create_raw_input;
 
-		// 2nd call to GetRawInputDeviceInfo: Pass our pointer to get the device name
-		if ((int)(*_GetRawInputDeviceInfo)(raw_input_device_list[i].hDevice, RIDI_DEVICENAME, ps_name, &size) < 0)
-		{
-			is_enum_ok = FALSE;
-			break;
-		}
+			// 2nd call to GetRawInputDeviceInfo: Pass our pointer to get the device name
+			if ((int)(*_GetRawInputDeviceInfo)(raw_input_device_list[i].hDevice, RIDI_DEVICENAME, ps_name, &size) < 0)
+				goto cant_create_raw_input;
 
-		if (!is_rdp_device_name(ps_name))
-		{
-			switch (raw_input_device_list[i].dwType)
+			// Use this mouse if it's not an RDP mouse
+			if (!is_rm_rdp_mouse(ps_name))
 			{
-			case RIM_TYPEKEYBOARD:
-				if (keyboard_count < MAX_KEYBOARDS)
-				{
-					raw_keyboard_device[keyboard_count].device_handle = raw_input_device_list[i].hDevice;
-					//set_raw_device_name(ps_name, keyboard_name[keyboard_count]);
-					memset(raw_keyboard_device[keyboard_count].keyboard_state, 0, sizeof(raw_keyboard_device[0]));
-					keyboard_count++;
-				}
-				break;
-			case RIM_TYPEMOUSE:
-				if (win_use_mouse || use_lightgun)
-				if (mouse_count < MAX_MICE)
-				{
-					raw_mouse_device[mouse_count].device_handle = raw_input_device_list[i].hDevice;
-					set_raw_device_name(ps_name, mouse_name[mouse_count]);
-					mouse_count++;
-				}
-				break;
+				raw_mouse_device[mouse_count].device_handle = raw_input_device_list[i].hDevice;
+				set_rawmouse_device_name(ps_name, mouse_count);
+				mouse_count++;
 			}
+
+			free(ps_name);
 		}
-
-
-		free(ps_name);
 	}
 
 	free(raw_input_device_list);
 
-	if (!is_enum_ok)
-		return FALSE;
+	// only use raw mouse support for multiple mice
+	if (mouse_count < 2)
+	{
+		mouse_count = 0;
+		goto dont_use_raw_input;
+	}
 
 	// finally, register to recieve raw input WM_INPUT messages
-	if (!register_raw_input())
-		return FALSE;
+	if (!register_raw_mouse())
+		goto cant_init_raw_input;
 
+	mame_printf_verbose(_WINDOWS("Input: Using RAWMOUSE for Mouse input\n"));
 	mouse_num_of_buttons = 5;
 
-	mame_printf_verbose(_WINDOWS("Input: Using RAWINPUT for Keyboard and Mouse input\n"));
 	// override lightgun settings.  Not needed with RAWinput.
 	use_lightgun = 0;
 	use_lightgun_dual = 0;
@@ -3576,7 +3319,15 @@ static BOOL init_raw_input(void)
 	// The only way I can think of to tell if a mouse is a lightgun is to
 	//  use the device id.  And keep a list of known lightguns.
 	lightgun_count = mouse_count;
-	return TRUE;
+	return 1;
+
+cant_create_raw_input:
+	free(raw_input_device_list);
+	free(ps_name);
+dont_use_raw_input:
+cant_use_raw_input:
+cant_init_raw_input:
+	return 0;
 }
 
 
@@ -3590,84 +3341,9 @@ static void process_raw_input(PRAWINPUT raw)
 	int i;
 	USHORT button_flags;
 	BYTE *buttons;
-	BYTE dik;
-	BYTE state;
 
-	osd_lock_acquire(raw_input_lock);
-	for (i = 0; i < keyboard_count; i++)
-	{
-		if (raw_keyboard_device[i].device_handle != raw->header.hDevice)
-			continue;
-		switch (raw->data.keyboard.Message)
-		{
-		case WM_KEYDOWN:
-		case WM_SYSKEYDOWN:
-			state = 1;
-			break;
-		case WM_KEYUP:
-		case WM_SYSKEYUP:
-			state = 0;
-			break;
-		default:
-			state = 2; //unhandled WM
-		}
-		if (state > 1)
-			break;
-
-		switch(raw->data.keyboard.VKey)
-		{
-		case VK_MENU:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_RMENU : DIK_LMENU;
-			break;
-		case VK_CONTROL:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_RCONTROL : DIK_LCONTROL;
-			break;
-		case VK_SHIFT:
-			dik = (raw->data.keyboard.MakeCode == 0x36) ? DIK_RSHIFT : DIK_LSHIFT;
-			break;
-		case VK_RETURN:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_NUMPADENTER : DIK_RETURN;
-			break;
-		case VK_INSERT:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_INSERT : DIK_NUMPAD0;
-			break;
-		case VK_END:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_END : DIK_NUMPAD1;
-			break;
-		case VK_DOWN:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_DOWN : DIK_NUMPAD2;
-			break;
-		case VK_NEXT:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_NEXT : DIK_NUMPAD3;
-			break;
-		case VK_LEFT:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_LEFT : DIK_NUMPAD4;
-			break;
-		case VK_CLEAR:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? 0xFF : DIK_NUMPAD5;
-			break;
-		case VK_RIGHT:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_RIGHT : DIK_NUMPAD6;
-			break;
-		case VK_HOME:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_HOME : DIK_NUMPAD7;
-			break;
-		case VK_UP:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_UP : DIK_NUMPAD8;
-			break;
-		case VK_PRIOR:
-			dik = (raw->data.keyboard.Flags & RI_KEY_E0) ? DIK_PRIOR : DIK_NUMPAD9;
-			break;
-		default:
-			dik = virtual_key_to_di_key[(BYTE)raw->data.keyboard.VKey];
-			break;
-		}
-
-		if (dik != 0xFF)
-			raw_keyboard_device[i].keyboard_state[dik] = state;
-	}
-
-	for (i = 0; i < mouse_count; i++)
+	osd_lock_acquire(raw_mouse_lock);
+	for ( i=0; i < mouse_count; i++)
 	{
 		if (raw_mouse_device[i].device_handle == raw->header.hDevice)
 		{
@@ -3706,60 +3382,58 @@ static void process_raw_input(PRAWINPUT raw)
 			raw_mouse_device[i].flags = raw->data.mouse.usFlags;
 		}
 	}
-	osd_lock_release(raw_input_lock);
+	osd_lock_release(raw_mouse_lock);
 }
 
 
 
 //============================================================
-//  win_raw_input_update
+//  win_raw_mouse_update
 //============================================================
-// returns TRUE if raw input info successfully updated
+// returns TRUE if raw mouse info successfully updated
 
-BOOL win_raw_input_update(HANDLE in_device_handle)
+BOOL win_raw_mouse_update(HANDLE in_device_handle)
 {
 	//  When the WM_INPUT message is received, the lparam must be passed to this
 	//  function to keep a running tally of all mouse moves.
 
 	LPBYTE data;
 	int size;
-	BOOL res = FALSE;
 
 	if ((*_GetRawInputData)((HRAWINPUT)in_device_handle, RID_INPUT, NULL, &size, sizeof(RAWINPUTHEADER)) == -1)
-		return FALSE;
+		goto cant_find_raw_data;
 
 	data = (LPBYTE)malloc(sizeof(LPBYTE) * size);
 	if (data == NULL)
-		return FALSE;
+		goto cant_find_raw_data;
 
-	if ((*_GetRawInputData)((HRAWINPUT)in_device_handle, RID_INPUT, data, &size, sizeof(RAWINPUTHEADER)) == size )
-	{
-		process_raw_input((RAWINPUT*)data);
-		res = TRUE;
-	}
+	if ((*_GetRawInputData)((HRAWINPUT)in_device_handle, RID_INPUT, data, &size, sizeof(RAWINPUTHEADER)) != size )
+		goto cant_read_raw_data;
+
+	process_raw_input((RAWINPUT*)data);
 
 	free(data);
-	return res;
+	return 1;
 
+cant_read_raw_data:
+	free(data);
+cant_find_raw_data:
+	return 0;
 }
 
-//============================================================
-//  win_read_raw_input
-//============================================================
-// use this to poll and reset the current raw devices
 
-static void win_read_raw_input(void)
+
+//============================================================
+//  win_read_raw_mouse
+//============================================================
+// use this to poll and reset the current mouse info
+
+static void win_read_raw_mouse(void)
 {
 	int i;
 
-	osd_lock_acquire(raw_input_lock);
-
-	for (i = 0; i < keyboard_count; i++)
-	{
-		memcpy(keyboard_state[i], raw_keyboard_device[i].keyboard_state, sizeof(keyboard_state[0]));
-	}
-
-	for (i = 0; i < mouse_count; i++)
+	osd_lock_acquire(raw_mouse_lock);
+	for ( i = 0; i < mouse_count; i++)
 	{
 		mouse_state[i] = raw_mouse_device[i].mouse_state;
 
@@ -3779,5 +3453,5 @@ static void win_read_raw_input(void)
 			raw_mouse_device[i].mouse_state.lZ = 0;
 		}
 	}
-	osd_lock_release(raw_input_lock);
+	osd_lock_release(raw_mouse_lock);
 }

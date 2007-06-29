@@ -258,7 +258,7 @@ static HRESULT dsound_init(void)
 	result = DirectSoundCreate(NULL, &dsound, NULL);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error creating DirectSound: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error creating DirectSound: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -267,7 +267,7 @@ static HRESULT dsound_init(void)
 	result = IDirectSound_GetCaps(dsound, &dsound_caps);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error getting DirectSound capabilities: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error getting DirectSound capabilities: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -275,7 +275,7 @@ static HRESULT dsound_init(void)
 	result = IDirectSound_SetCooperativeLevel(dsound, win_window_list->hwnd, DSSCL_PRIORITY);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error setting DirectSound cooperative level: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error setting DirectSound cooperative level: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -305,7 +305,7 @@ static HRESULT dsound_init(void)
 	result = IDirectSoundBuffer_Play(stream_buffer, 0, 0, DSBPLAY_LOOPING);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error playing: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error playing: %08x\n"), (UINT32)result);
 		goto error;
 	}
 	return DS_OK;
@@ -351,7 +351,7 @@ static HRESULT dsound_create_buffers(void)
 	result = IDirectSound_CreateSoundBuffer(dsound, &primary_desc, &primary_buffer, NULL);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error creating primary DirectSound buffer: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error creating primary DirectSound buffer: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -359,7 +359,7 @@ static HRESULT dsound_create_buffers(void)
 	result = IDirectSoundBuffer_SetFormat(primary_buffer, &stream_format);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error setting primary DirectSound buffer format: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error setting primary DirectSound buffer format: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -367,7 +367,7 @@ static HRESULT dsound_create_buffers(void)
 	result = IDirectSoundBuffer_GetFormat(primary_buffer, &primary_format, sizeof(primary_format), NULL);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error getting primary DirectSound buffer format: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error getting primary DirectSound buffer format: %08x\n"), (UINT32)result);
 		goto error;
 	}
 	mame_printf_verbose(_WINDOWS("DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n"),
@@ -384,7 +384,7 @@ static HRESULT dsound_create_buffers(void)
 	result = IDirectSound_CreateSoundBuffer(dsound, &stream_desc, &stream_buffer, NULL);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error creating DirectSound stream buffer: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error creating DirectSound stream buffer: %08x\n"), (UINT32)result);
 		goto error;
 	}
 
@@ -392,7 +392,7 @@ static HRESULT dsound_create_buffers(void)
 	result = IDirectSoundBuffer_Lock(stream_buffer, 0, stream_buffer_size, &buffer, &locked, NULL, NULL, 0);
 	if (result != DS_OK)
 	{
-		faprintf(stderr, _WINDOWS("Error locking DirectSound stream buffer: %08x\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Error locking DirectSound stream buffer: %08x\n"), (UINT32)result);
 		goto error;
 	}
 

@@ -91,7 +91,4 @@ extern const options_entry mame_win_options[];
 // use if you want to print something with the verbose flag
 void CLIB_DECL mame_printf_verbose(const char *text, ...) ATTR_PRINTF(1,2);
 #endif
-
-int CLIB_DECL faprintf(FILE *f, const char *fmt, ...) ATTR_PRINTF(2,3);
-
 #endif

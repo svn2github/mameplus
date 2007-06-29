@@ -405,30 +405,6 @@ static void osd_exit(running_machine *machine)
 
 
 //============================================================
-//  faprintf
-//============================================================
-
-int CLIB_DECL faprintf(FILE *f, const char *fmt, ...)
-{
-	char buf[5000];
-	CHAR *s;
-	va_list arg;
-	int result;
-
-	/* dump to the buffer */
-	va_start(arg, fmt);
-	result = vsnprintf(buf, ARRAY_LENGTH(buf), fmt, arg);
-	s = astring_from_utf8(buf);
-	fputs(s, f);
-	free(s);
-	va_end(arg);
-
-	return result;
-}
-
-
-
-//============================================================
 //  win_mame_file_output_callback
 //============================================================
 
