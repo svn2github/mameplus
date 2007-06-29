@@ -36,7 +36,6 @@ galmidw	小蜜蜂 (Midway)	小蜜蜂 (Midway)	[Namco] (Midway license)
 galmidwo	小蜜蜂 (Midway, old rev)	小蜜蜂 (Midway, old rev)	[Namco] (Midway license)
 superg	超级小蜜蜂	超级小蜜蜂	hack
 galapx	小蜜蜂 Part X	小蜜蜂 Part X	hack
-moonaln	Moon Alien	Moon Alien	[Nichibutsu] (Karateco license)
 galap1	小蜜蜂 / 宇宙入侵者 Galactica	小蜜蜂 / 宇宙入侵者 Galactica	hack
 galap4	小蜜蜂 Part 4	小蜜蜂 Part 4	hack
 galturbo	小蜜蜂 Turbo	小蜜蜂 Turbo	hack
@@ -1009,9 +1008,9 @@ varthr1	威虎战机 - 雷暴行动 (世界版 920612)	威虎战机 - 雷暴行动 (世界版 920612)	
 varthu	威虎战机 - 雷暴行动 (美版 920612)	威虎战机 - 雷暴行动 (美版 920612)	Capcom (Romstar license)
 varthj	威虎战机 - 雷暴行动 (日版 920714)	威虎战机 - 雷暴行动 (日版 920714)	Capcom
 cworld2j	冒险问答 - Capcom 世界 2 (日版 920611)	冒险问答 - Capcom 世界 2 (日版 920611)	Capcom
-wof	吞食天地 II 赤壁之战 / Warriors of Fate (世界版 921002)	吞食天地 II 赤壁之战 / Warriors of Fate (世界版 921002)	Capcom
+wof	吞食天地 II 赤壁之战 / 三国志 II (世界版 921002)	吞食天地 II 赤壁之战 / 三国志 II (世界版 921002)	Capcom
 wofa	吞食天地 II 赤壁之战 / 三国志 II (亚洲版 921005)	吞食天地 II 赤壁之战 / 三国志 II (亚洲版 921005)	Capcom
-wofu	吞食天地 II 赤壁之战 / Warriors of Fate (美版 921031)	吞食天地 II 赤壁之战 / Warriors of Fate (美版 921031)	Capcom
+wofu	吞食天地 II 赤壁之战 / 三国志 II (美版 921031)	吞食天地 II 赤壁之战 / 三国志 II (美版 921031)	Capcom
 wofj	吞食天地 II 赤壁之战 (日版 921031)	吞食天地 II 赤壁之战 (日版 921031)	Capcom
 sf2hf	街头霸王 II - Hyper Fighting (世界版 921209)	街头霸王 II - Hyper Fighting (世界版 921209)	Capcom
 sf2t	街头霸王 II' Turbo - Hyper Fighting (美版 921209)	街头霸王 II' Turbo - Hyper Fighting (美版 921209)	Capcom
@@ -1126,6 +1125,7 @@ mshb	超级漫画英雄 (巴西版 951117)	超级漫画英雄 (巴西版 951117)	Capcom
 19xxj	19XX: 命运否决战 (日版 951225)	19XX: 命运否决战 (日版 951225)	Capcom
 19xxjr1	19XX: 命运否决战 (日版 951207)	19XX: 命运否决战 (日版 951207)	Capcom
 19xxa	19XX: 命运否决战 (亚洲版 951207)	19XX: 命运否决战 (亚洲版 951207)	Capcom
+19xxb	19XX: 命运否决战 (巴西版 951218)	19XX: 命运否决战 (巴西版 951218)	Capcom
 19xxh	19XX: 命运否决战 (西班牙版 951218)	19XX: 命运否决战 (西班牙版 951218)	Capcom
 ddsom	龙与地下城 2: 暗黑秘影 (欧洲版 960619)	龙与地下城 2: 暗黑秘影 (欧洲版 960619)	Capcom
 ddsomr1	龙与地下城 2: 暗黑秘影 (欧洲版 960223)	龙与地下城 2: 暗黑秘影 (欧洲版 960223)	Capcom
@@ -1230,9 +1230,9 @@ progeara	疾风之岚 (亚洲版 010117)	疾风之岚 (亚洲版 010117)	Capcom, supported by 
 pzloop2	环绕球 2 (欧版 010302)	环绕球 2 (欧版 010302)	Mitchell, distributed by Capcom
 pzloop2j	环绕球 2 (日版 010205)	环绕球 2 (日版 010205)	Mitchell, distributed by Capcom
 choko	长江 (日版 010820)	长江 (日版 010820)	Mitchell, distributed by Capcom
-hsf2j	超级街霸 2：周年纪念版 (日版 031222)	超级街霸 2：周年纪念版 (日版 031222)	Capcom
-hsf2	超级街霸 2：周年纪念版 (亚洲版 040202)	超级街霸 2：周年纪念版 (亚洲版 040202)	Capcom
-warzard	Warzard / 红色地球 (日版 96/11/21)	Warzard / 红色地球 (日版 96/11/21)	Capcom
+hsf2j	超级街霸 2：15周年纪念版 (日版 031222)	超级街霸 2：15周年纪念版 (日版 031222)	Capcom
+hsf2	超级街霸 2：15周年纪念版 (亚洲版 040202)	超级街霸 2：15周年纪念版 (亚洲版 040202)	Capcom
+warzard	Warzard / 红色地球 (日版 961121)	Warzard / 红色地球 (日版 961121)	Capcom
 sfiii	街头霸王 3 - 新的时代 (日版 970204)	街头霸王 3 - 新的时代 (日版 970204)	Capcom
 jojo	JoJo 的奇妙冒险 (日版 981202)	JoJo 的奇妙冒险 (日版 981202)	Capcom
 jojoalt	JoJo 的奇妙冒险 (日版 990108)	JoJo 的奇妙冒险 (日版 990108)	Capcom
@@ -2690,7 +2690,7 @@ mvscud	漫画英雄 对 Capcom: 超级英雄的冲突 (美版 980123 凤凰版)	漫画英雄 对 Capco
 sfa3d	少年街霸 阿尔法 3 (美版 980904 凤凰版)	少年街霸 阿尔法 3 (美版 980904 凤凰版)	hack
 gwingjd	千兆翼 (日版 990223 凤凰版)	千兆翼 (日版 990223 凤凰版)	hack
 1944d	1944: 环岛之战 (美版 000620 凤凰版)	1944: 环岛之战 (美版 000620 凤凰版)	hack
-hsf2d	超级街霸 2：周年纪念版 (亚洲版 040202 凤凰版)	超级街霸 2：周年纪念版 (亚洲版 040202 凤凰版)	hack
+hsf2d	超级街霸 2：15周年纪念版 (亚洲版 040202 凤凰版)	超级街霸 2：15周年纪念版 (亚洲版 040202 凤凰版)	hack
 dstlku1d	恶魔战士: 午夜斗士 (美版 940705 凤凰版)	恶魔战士: 午夜斗士 (美版 940705 凤凰版)	hack
 kof96ep	拳皇 '96 (盗版)	拳皇 '96 (盗版)	bootleg
 kof97pla	拳皇 '97 重出江湖 加强版 2003 (盗版)	拳皇 '97 重出江湖 加强版 2003 (盗版)	bootleg
