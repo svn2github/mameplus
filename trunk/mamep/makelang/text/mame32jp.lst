@@ -483,6 +483,7 @@ naughtyc	ノーティ・ボーイ (Cinematronics)	のーてぃぼーい	Jaleco (Cinematronics l
 popflame	ポップフレーマー (protected)	ぽっぷふれーまー	Jaleco
 popflama	ポップフレーマー (not protected)	ぽっぷふれーまー	Jaleco
 popflamb	ポップフレーマー (ハック?)	ぽっぷふれーまー	Jaleco
+popflamn	ポップフレーマー (Naughty Boy PCB) (海賊版)	ぽっぷふれーまー	Jaleco
 trvmstr	トリビアマスター (set 1)	とりびあ_2_ますたー	Enerdyne Technologies Inc.
 trvmstra	トリビアマスター (set 2)	とりびあ_2_ますたー	Enerdyne Technologies Inc.
 trvgns	トリビアジーニアス	とりびあ_2_じーにあす	Enerdyne Technologies Inc.
@@ -802,6 +803,7 @@ bandido	シェリフ / Bandido	しぇりふ	Exidy
 helifire	ヘリファイア (set 1)	へりふぁいあ	Nintendo
 helifira	ヘリファイア (set 2)	へりふぁいあ	Nintendo
 radarscp	レーダースコープ	れーだーすこーぷ	Nintendo
+radarsc1	レーダースコープ (TRS01)	れーだーすこーぷ	Nintendo
 dkong	ドンキーコング (USA版 set 1)	どんきーこんぐ_1	Nintendo of America
 dkongo	ドンキーコング (USA版 set 2)	どんきーこんぐ_1	Nintendo
 dkongjp	ドンキーコング (日本版 set 1)	どんきーこんぐ_1	Nintendo
@@ -1338,7 +1340,8 @@ wwester1	ワイルドウエスタン (set 2)	わいるどうえすたん	Taito Corporation
 frontlin	フロントライン	ふろんとらいん	Taito Corporation
 elevator	エレベーターアクション	えれべーたーあくしょん_1	Taito Corporation
 elevatob	エレベーターアクション (海賊版)	えれべーたーあくしょん_1	bootleg
-tinstar	ザ・ティンスター	ざてぃんすたー	Taito Corporation
+tinstar	ザ・ティンスター (set 1)	ざてぃんすたー	Taito Corporation
+tinstar2	ザ・ティンスター (set 2)	ざてぃんすたー	Taito Corporation
 waterski	ウォータースキー	うぉーたーすきー	Taito Corporation
 bioatack	バイオアタック	ばいおあたっく	Taito Corporation (Fox Video Games license)
 hwrace	ハイウェイレース	はいうぇいれーす	Taito Corporation
@@ -2347,7 +2350,7 @@ pzloop2j	パズループ2 (日本版 010205)	ぱずるーぷ_2	Mitchell, distributed by Capco
 choko	雀牌パズル 長江 (日本版 010820)	じゃんぱいぱずるちょうこう	Mitchell, distributed by Capcom
 hsf2j	ハイパーストリートファイターII -The Anniversary Edition (日本版 031222)	はいぱーすとりーとふぁいたー_2	Capcom
 hsf2	ハイパーストリートファイターII -The Anniversary Edition (アジア版 040202)	はいぱーすとりーとふぁいたー_2	Capcom
-warzard	ウォーザード (日本版 96/11/21)	うぉーざーど	Capcom
+warzard	ウォーザード (日本版 961121)	うぉーざーど	Capcom
 sfiii	ストリートファイターIII -ニュージェネレーション (日本版 970204)	すとりーとふぁいたー_3_1	Capcom
 sfiii2	ストリートファイターIII 2nd IMPACT -ジャイアントアタック (日本版 970930)	すとりーとふぁいたー_3_2いんぱくと	Capcom
 sfiii3	ストリートファイターIII 3rd STRIKE -ファイトフォーザフューチャー (USA版 990512)	すとりーとふぁいたー_3_3すとらいく	Capcom
@@ -2743,6 +2746,7 @@ headonb	ヘッドオン (1 player)	へっどおん_1	Gremlin
 headons	ヘッドオン (Sidam) (海賊版)	へっどおん_1	[Gremlin] (Sidam bootleg)
 supcrash	ヘッドオン / Super Crash (海賊版)	へっどおん_1	[Gremlim] (Video G Electronic Games bootleg)
 headon2	ヘッドオン2	へっどおん_2	Sega
+car2	ヘッドオン2 / Car 2 (海賊版)	へっどおん_2	[Sega] (RZ Bologna bootleg)
 invho2	スペースインビンコ／ヘッドオン2	すぺーすいんびんこへっどおん2	Sega
 nsub	N-サブ (upright)	えぬさぶ	Sega
 samurai	サムライ	さむらい	Sega
@@ -3346,6 +3350,7 @@ mp_soni2	ソニック・ザ・ヘッジホッグ2 (Mega Play)	そにっくざへっじほっぐ_2	Sega
 mp_mazin	マジンサーガ / Mazin Wars (Mega Play)	まじんさーが	Sega
 mp_col3	コラムスIII -対決！コラムスワールド / Columns III -Revenge of Columns (Mega Play)	こらむす_3	Sega
 ssf2ghw	スーパーストリートファイターII -ザ・ニューチャレンジャーズ (日本版 MegaDrive ver) (海賊版)	すーぱーすとりーとふぁいたー2_1ざにゅーちゃれんじゃーず	bootleg / Capcom
+aladbl	アラジン (日本版 Megadrive ver) (海賊版)	あらじん	bootleg / Sega
 csmash	コズミックスマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版)	こずみっくすまっしゅ	Sega
 vs2_2k	バーチャストライカー2 バージョン2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
 vs2_2ka	バーチャストライカー2 バージョン2000 (set 2) (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
@@ -4195,6 +4200,8 @@ missile	ミサイルコマンド (set 1)	みさいるこまんど	Atari
 missile2	ミサイルコマンド (set 2)	みさいるこまんど	Atari
 suprmatk	ミサイルコマンド / Super Missile Attack (set 2)	みさいるこまんど	Atari + Gencomp
 sprmatkd	ミサイルコマンド / Super Missile Attack (not encrypted)	みさいるこまんど	Atari + Gencomp
+mcombat	ミサイルコマンド / Missile Combat (Videotron) (海賊版 set 1)	みさいるこまんど	[Atari] (Videotron bootleg)
+mcombata	ミサイルコマンド / Missile Combat (Videotron) (海賊版 set 2)	みさいるこまんど	[Atari] (Videotron bootleg)
 llander	ルナーランダー (rev 2)	るなーらんだー	Atari
 llander1	ルナーランダー (rev 1)	るなーらんだー	Atari
 asteroid	アステロイド (rev 2)	あすてろいど_1	Atari
@@ -4786,8 +4793,9 @@ kof2001	ザ・キング・オブ・ファイターズ 2001 (set 1)	ざきんぐおぶふぁいたーず_08_
 kof2001h	ザ・キング・オブ・ファイターズ 2001 (set 2)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 cthd2003	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版 set 1)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
 ct2k3sp	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
+ct2k3sa	Tザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus alternate (海賊版)	ざきんぐおぶふぁいたーず_08_4_2001	bootleg
 mslug4	メタルスラッグ4	めたるすらっぐ_4_1	Mega
-ms4plus	メタルスラッグ4 / Metal Slug 4 Plus (海賊版 / ハック)	めたるすらっぐ_4_2	bootleg
+ms4plus	メタルスラッグ4 / Metal Slug 4 Plus (海賊版)	めたるすらっぐ_4_2	bootleg
 rotd	レイジ・オブ・ザ・ドラゴンズ	れいじおぶざどらごんず	Evoga / Playmore
 kof2002	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle	ざきんぐおぶふぁいたーず_09_1_2002	Eolith / Playmore
 kf2k2pls	ザ・キング・オブ・ファイターズ 2002 / The King of Fighters 2002 Plus (海賊版 / ハック set 1)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
@@ -5545,7 +5553,7 @@ bangj	GUNガバチョ (日本版)	がんがばちょ	Gaelco
 speedup	スピードアップ	すぴーどあっぷ	Gaelco
 surfplnt	サーフプラネット	さーふぷらねっと	Gaelco
 radikalb	ラジカルバイカーズ	らじかるばいかーず	Gaelco
-djboy	DJボーイ	でぃーじぇいぼーい	Sammy / Williams [Kaneko]
+djboy	DJボーイ	でぃーじぇいぼーい	Kaneko
 djboyj	DJボーイ (日本版)	でぃーじぇいぼーい	Sega [Kaneko]
 airbustr	エア・バスター -Trouble Specialty Raid Unit (海外版)	えあばすたー	Kaneko (Namco license)
 airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kaneko (Namco license)
@@ -5988,6 +5996,7 @@ hkagerou	華陽炎 [BET] (日本版)	はなかげろう	Nakanihon + Dynax
 realbrk	ビリヤードアカデミー リアルブレイク (欧州版)	びりやーどあかでみーりあるぶれいく	Nakanihon
 realbrkk	ビリヤードアカデミー リアルブレイク (韓国版)	びりやーどあかでみーりあるぶれいく	Nakanihon
 realbrkj	ビリヤードアカデミー リアルブレイク (日本版)	びりやーどあかでみーりあるぶれいく	Nakanihon
+dai2kaku	大大革命 (日本版)	だいだいかくめい	SystemBit
 mjchuuka	麻雀中華兒女 (中国版)	まーじゃんちゅうかねじょ	Dynax
 mjreach1	麻雀 立直一発 (日本版)	まーじゃんりーちいっぱつ	Nihon System
 pkgnsh	パチンコ銀玉勝負 (日本版)	ぱちんこぎんだましょうぶ_1	Nakanihon / Dynax

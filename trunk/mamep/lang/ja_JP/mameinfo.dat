@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.116u1      #
+#     Mameinfo.dat日本語版 v0.116u2      #
 #                                        #
-#             June 16, 2007              #
+#             June 21, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,48 +12,124 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：837 翻訳済：809
-# 追加項目：341 合計：1178
+# Tester報告：849 翻訳済：821
+# 追加項目：341 合計：1190
 #
 
 
-$info=svcpcb
+$info=sbdk
 $mame
 [バグ]
 
-- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
+- プレイヤー1のボタンが割り当てられてない。
+プレイヤー2のボタン1はあるが動作しない。
+実際にはボタンが2つ必要なようだ。 sbdk0116u1gra, Tafoid / twisty
 
 $end
 
-$info=ms5pcb
+$info=shootgal
 $mame
 [バグ]
 
-- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
+- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
 
 $end
 
-$info=kf2k3pcb
+$info=lemmings
 $mame
 [バグ]
 
-- NeoGeo系の単体基板タイトルがクラッシュする。 neodriv0116u1red, r0ast3r
+- 4面その他で、レミングスが出口の後ろ側に描画される。 lemmings0116u1gre, refraction
 
 $end
 
-$info=strhoop
+$info=mappy
 $mame
 [バグ]
 
-- 起動時にリセットを繰り返す。 strhoop0116u1red, Osso
+- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 左キーを押し続け全部グリッド表示にする
+
+3) サービスキー(9キー)を3回押す
+
+4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
+
+
+- 隠しメッセージ2：
+
+1) 3回目のボーナス面まで進む
+
+2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
+
+ボーナス合計画面にコピーライトが追加される
 
 $end
 
-$info=wb3
+$info=term2
 $mame
 [バグ]
 
-- 画面右端の黒い部分が左にすこしずれていて、背景が見えている。 wb3_0116u1gre, Kold666
+- 各面最後のボーナス得点計算で、点数が加算されず0点のまま。 term2_0116u1yel, RansAckeR
+
+
+- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
+
+
+- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
+
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
+
+$end
+
+$info=finallap
+$mame
+[バグ]
+
+- 最適なアナログ入力設定：
+
+Paddle Digital Speed: 10
+
+Paddle Autocenter Speed: 15
+
+Paddle Sensitivity: 20% finallap0116u1ora, fostar
+
+
+- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
+
+$end
+
+$info=battleg
+$mame
+[バグ]
+
+- ソースコード内で、どのNMKチップがサウンドバンキングに使われているかを調べる必要があると書かれているが、
+実際の基板上ではGAL20v8がサウンドROMとZ80間に配置されていて、NMKチップは使われていない。 battleg0116u1ora, Kold666
+
+
+- アトラクトモードを走らせて、4ループ目のデモプレイのところでクラッシュする。 battleg0116u1red, Cananas et alia.
+
+
+- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty / AWJ
+
+
+[TIPS]
+
+- 魔法大作戦キャラの出し方：
+
+コイン投入後、上上下下左右左右ABCスタートと入力
 
 $end
 
@@ -2107,24 +2183,6 @@ $mame
 
 $end
 
-$info=term2
-$mame
-[バグ]
-
-- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
-
-
-- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
-
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
-
-$end
-
 $info=mgakuen
 $mame
 [バグ]
@@ -2138,14 +2196,6 @@ $mame
 [バグ]
 
 - 面クリア画面のタイムボーナスのカウントが正しく更新されていない。 mnight0102gre, Kekule / Twisty
-
-$end
-
-$info=mole
-$mame
-[バグ]
-
-- 右下の面表示モグラが化けていく。 mole0104u7gre, cpukett
 
 $end
 
@@ -2386,22 +2436,6 @@ $mame
 
 $end
 
-$info=aof2
-$mame
-[バグ]
-
-- 難易度を8にしてゲームに戻り、ゲームを始めると“IRQ2 enabled, need raster driver”と表示され画面が真っ黒になる。他の難易度は問題ない。 aof2099red, Twisty / cpukett / Kitsune Sniper
-
-$end
-
-$info=bstars
-$mame
-[バグ]
-
-- HOMERUNの文字は選手のクローズアップのときに消えなければいけない。 bstars078u3gre, Haze / SpooNMan
-
-$end
-
 $info=fightfev
 $mame
 [バグ]
@@ -2417,24 +2451,6 @@ $mame
 - テリーの3面の背景にある橋げたは、2 partial updatesでラスタがかかっているときには正常に表示されるが、
 パワーダンクなどの技を出すと、partial updatesが1に短く切り替わり、橋のグラフィックがちらつく。
 garouoでも起きる。 garoup058gre, devlin_wagner
-
-$end
-
-$info=ncommand
-$mame
-[バグ]
-
-- 画面の上の部分が点滅する。 ncommand0109u3gre, KillerBee
-
-$end
-
-$info=neocup98
-$mame
-[バグ]
-
-- "Chance"の文字が表示されているときにシュートボタンを押すと、時々空中シーンに切り替わる。
-このときフィールドが表示されずに観客席にゴールが重なって表示される。
-通常の3Dビューのときは問題ない。 neocup98096u3gre, Iaspis
 
 $end
 
@@ -2454,17 +2470,6 @@ $mame
 - MVS実機との比較。
 お互いに離れてズームアウトして、
 ジャンプをしたときのワープのようなエフェクトがかかるが、MAMEでは見られない。接近戦のときの表示は正確。Galfordsの面でよくわかる。 samsho337b16gre, Mr_Plough
-
-
-- 背景がアニメーションしない。shamsho3のタイトル画面でよくわかる。 samsho3_0114yel, HyperYagami / twisty
-
-$end
-
-$info=samsho4
-$mame
-[バグ]
-
-- 背景がアニメーションしない。shamsho3のタイトル画面でよくわかる。 samsho3_0114yel, HyperYagami / twisty
 
 $end
 
@@ -4132,7 +4137,7 @@ $mame
 [バグ]
 
 - 2P側で一人プレイをすると、敵を撃った得点が1Pに加算される。
-カプセルを取ったり、ボムで敵を倒した場合は2Pに加算される。 thunderx079u1gre, Mr. Do
+カプセルを取ったり、ボムで敵を倒した場合は2Pに加算される。 thunderx079u1gre, Mr. Do / ShimaPong
 
 $end
 
@@ -4294,21 +4299,6 @@ $mame
 4面：ボス戦で現れる戦車を色が変化するまで待ってボムで一気に破壊する
 
 5面：移動する床に乗っている敵を、床が止まるまで破壊しない
-
-$end
-
-$info=battleg
-$mame
-[バグ]
-
-- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty / AWJ
-
-
-[TIPS]
-
-- 魔法大作戦キャラの出し方：
-
-コイン投入後、上上下下左右左右ABCスタートと入力
 
 $end
 
@@ -5412,14 +5402,6 @@ $mame
 [バグ]
 
 - サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett
-
-$end
-
-$info=finallap
-$mame
-[バグ]
-
-- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
 $end
 
@@ -8859,31 +8841,6 @@ $mame
 - メンテナンスコード
 
 50820：メンテナンスモード
-
-$end
-
-$info=mappy
-$mame
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 左キーを押し続け全部グリッド表示にする
-
-3) サービスキー(9キー)を3回押す
-
-4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
-
-
-- 隠しメッセージ2：
-
-1) 3回目のボーナス面まで進む
-
-2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
-
-ボーナス合計画面にコピーライトが追加される
 
 $end
 
