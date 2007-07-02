@@ -62,4 +62,6 @@ void *__cdecl _alloca(size_t);
 #pragma warning(disable:4550)		// "expression evaluates .. missing an argument list"
 #pragma warning(disable:4552)		// "operator has no effect"
 #pragma warning(disable:4761)		// "integral size mismatch in argument"
+#pragma warning(disable:4799)
+#pragma warning(disable:4819)
 #endif /* _MSC_VER */

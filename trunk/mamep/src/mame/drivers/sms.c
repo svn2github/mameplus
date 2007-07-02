@@ -4695,7 +4695,7 @@ static WRITE8_HANDLER (segae_ridleofp_port_fa_w)
 
 static DRIVER_INIT( ridleofp )
 {
-	init_segasyse(machine);
+	driver_init_segasyse(machine);
 
 	memory_install_read8_handler(0, ADDRESS_SPACE_IO, 0xf8, 0xf8, 0, 0, segae_ridleofp_port_f8_r);
 	memory_install_write8_handler(0, ADDRESS_SPACE_IO, 0xfa, 0xfa, 0, 0, segae_ridleofp_port_fa_w);
@@ -4704,7 +4704,7 @@ static DRIVER_INIT( ridleofp )
 
 static DRIVER_INIT( hangonjr )
 {
-	init_segasyse(machine);
+	driver_init_segasyse(machine);
 
 	memory_install_read8_handler(0, ADDRESS_SPACE_IO, 0xf8, 0xf8, 0, 0, segae_hangonjr_port_f8_r);
 	memory_install_write8_handler(0, ADDRESS_SPACE_IO, 0xfa, 0xfa, 0, 0, segae_hangonjr_port_fa_w);

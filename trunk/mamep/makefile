@@ -520,7 +520,8 @@ CFLAGS += -O$(OPTIMIZE)
 # if we are optimizing, include optimization options
 # and make all errors into warnings
 ifneq ($(OPTIMIZE),0)
-CFLAGS += -Werror $(ARCH) -fno-strict-aliasing
+#CFLAGS += -Werror $(ARCH) -fno-strict-aliasing
+CFLAGS += $(ARCH) -fno-strict-aliasing
 endif
 
 
