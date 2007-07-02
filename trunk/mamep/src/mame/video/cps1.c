@@ -369,7 +369,7 @@ static struct CPS1config cps1_config_table[]=
 	{"dinohb",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"dinob",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
 	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-	{"knightsb",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
+	{"knightsb",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 13 },
 	{"sf2m8",   HACK_B_3, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
 	{"sf2m13",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
@@ -1372,7 +1372,7 @@ static void cps1_render_sprites(running_machine *machine, mame_bitmap *bitmap, c
 	UINT16 *base=cps1_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (cps1_game_config->kludge == 10)
+	if (cps1_game_config->kludge == 10 || cps1_game_config->kludge == 13)
 	{
 		base += cps1_last_sprite_offset;
 		baseadd = -4;
