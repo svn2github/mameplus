@@ -4136,7 +4136,7 @@ static void scanline_timer_callback(int num)
 //      mame_printf_debug("scanline %d\n",genesis_scanline_counter);
 		timer_adjust(scanline_timer,  SUBSECONDS_TO_DOUBLE(MAX_SUBSECONDS/megadriv_framerate/megadrive_total_scanlines), 0, 0);
 
-		timer_adjust(render_timer,  TIME_IN_USEC(1), 0, 0);
+		timer_adjust_ptr(render_timer,  TIME_IN_USEC(1), 0);
 
 
 
