@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.116u2      #
+#     Mameinfo.dat日本語版 v0.116u3      #
 #                                        #
-#             June 21, 2007              #
+#              July 5, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,18 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：849 翻訳済：821
-# 追加項目：341 合計：1190
+# Tester報告：860 翻訳済：840
+# 追加項目：341 合計：1201
 #
 
+
+$info=primrage
+$mame
+[バグ]
+
+- BGMや効果音がおかしい。0.113サイクルから発生。 primrage0116u3yel, Slick Mandela
+
+$end
 
 $info=sbdk
 $mame
@@ -35,11 +43,118 @@ $mame
 
 $end
 
+$info=victnine
+$mame
+[バグ]
+
+- チームを選ぶとゲームがリセットしてタイトル画面に戻る。 victnine0116u2red, etabeta
+
+$end
+
+$info=pacmanbl
+$mame
+[バグ]
+
+- 背景の表示が右にずれている。スプライトは正常な模様。 pacmanbl0116u3yel, Robbbert
+
+$end
+
+$info=leprechn
+$mame
+[情報]
+
+- F2キーを押しながらリセットするとテストモードになる。
+F1キーで移動、F2キーで選択。
+
+
+[バグ]
+
+- デバッグビルドでアサートが出る。 leprechn0116u3ora, judge_ / robiza
+
+
+- 1面をすぎると、AY-8910のChannel Cから変なノイズが出る。0.60では起きていない。 leprechn061gre, M.A.S.H.
+
+$end
+
+$info=vbowl
+$mame
+[バグ]
+
+- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule
+
+$end
+
+$info=ironhors
+$mame
+[バグ]
+
+- 効果音が出なくなっている。 ironhors0116u3yel, Kold666
+
+$end
+
+$info=kinst
+$mame
+[バグ]
+
+- 入力を一切受け付けない。 kinst0116u3gra, KermitTheFrog / John IV
+
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+$end
+
+$info=kinst2
+$mame
+[バグ]
+
+- 入力を一切受け付けない。 kinst0116u3gra, KermitTheFrog / John IV
+
+
+- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
+kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
+
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
+
+$end
+
 $info=lemmings
 $mame
 [バグ]
 
 - 4面その他で、レミングスが出口の後ろ側に描画される。 lemmings0116u1gre, refraction
+
+$end
+
+$info=spelunk2
+$mame
+[バグ]
+
+- 通り抜けられる壁の色は実機では普通の壁よりも暗い色になる。
+MAMEでは全て暗い色になっている。 spelunk2_0116u3gre, Stefan Lindberg / Phil Bennett
+
+
+- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
+
+$end
+
+$info=spelunkr
+$mame
+[バグ]
+
+- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
 
 $end
 
@@ -70,6 +185,32 @@ $mame
 2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
 
 ボーナス合計画面にコピーライトが追加される
+
+$end
+
+$info=mk3
+$mame
+[バグ]
+
+- セーブステートを読み込むとサウンドがぐちゃぐちゃになる。 mk3_0116u2gre, Belegdol
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
+
+
+- 教会の面で、影が2番目の背景レイヤーに隠れてしまう。
+ジャンプするとよくわかる。 umk3060gre_2, Jonemaan
+
+$end
+
+$info=smashtv
+$mame
+[バグ]
+
+- ときどきプレイフィールドに見えない壁が現われて、画面の端の方に行けなくなる。 smashtv0116u2gre, The_Pro
 
 $end
 
@@ -108,6 +249,83 @@ Paddle Sensitivity: 20% finallap0116u1ora, fostar
 
 
 - アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
+
+$end
+
+$info=daraku
+$mame
+[バグ]
+
+- 実機との比較：
+
+1)  起動時の警告画面の背景は、青色のグラデーションになる。下に行くほど濃い。サービスモードの背景も同様。
+
+2) 必殺技を出すときは画面が少しフェードアウトする。MAMEでは変化しない。 daraku0116u3ora, Karasu
+
+
+- テストモードに入って、サウンドテストで0x24や0xffffなどの番号をかけるとゲームが固まる。リセットするしかない。実機のバグ？ daraku063red, Kale
+
+$end
+
+$info=tnzs
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
+
+
+- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=chukatai
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
+
+$end
+
+$info=drtoppel
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
+
+$end
+
+$info=insectx
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
+
+$end
+
+$info=kabukiz
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
+
+$end
+
+$info=kageki
+$mame
+[バグ]
+
+- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
 
 $end
 
@@ -519,6 +737,9 @@ $mame
 - 効果音が間違ってループすることがある。
 頭上に列車が来るところで「ヒュー」っという音や、エンディングや2面で画面に飛び込むところのノイズも止まらない。 edrandy065gre, Nomax / Nerox91 / ocp_001 / Kale / big_lenny_c / Smitdogg
 
+
+- 一番上のUnkownのDIPスイッチは、コイン2つでスタートするかの設定。親セットのみ。 edrandy0113gra, Machone
+
 $end
 
 $info=a51mxr3k
@@ -646,6 +867,14 @@ SF2 turboの筐体と並べてみたが、
 フレームレートは100%
 
 【注】CPUの速度が8MHzではなくて12になっているせいで起きているようだ。 sf2t37b8yel, Sixtoe / Antos / Smitdogg
+
+$end
+
+$info=csclubj
+$mame
+[バグ]
+
+- バスケットボールのときのボイスが出てない。 csclubj0111gre, twisty
 
 $end
 
@@ -797,7 +1026,18 @@ $info=cfghtice
 $mame
 [バグ]
 
+- 氷の部分の色が青くなっている。 cfghtice0116gre, ShimaPong
+
+
 - ゴールキーパーに近づくとフィールドが逆さまに表示される。 cfghtice097u3gre, qapo
+
+$end
+
+$info=czeroize
+$mame
+[バグ]
+
+- 0.114u4以降、カセットからのロードが完了後、画面がぐちゃぐちゃで正しく動作しない。 czeroize0116red, ShimaPong
 
 $end
 
@@ -1361,38 +1601,6 @@ $mame
 
 $end
 
-$info=kinst2
-$mame
-[バグ]
-
-- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
-kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-$end
-
-$info=kinst
-$mame
-[バグ]
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-$end
-
 $info=kncljoe
 $mame
 [バグ]
@@ -1447,11 +1655,6 @@ $mame
 また、ボスの登場時にカラーパレットが変わってしまう。 sonofphx36b6gre, Fujur
 
 
-- このゲームがparentになっているが、
-実はこのゲームはbootleg。
-リパルス(repulse)もしくは99(99lstwar)がオリジナル。 sonofphx37b6ora, Fujix (nastyj)
-
-
 - 1面でやられると、赤いゴミが画面の左下に表示される。 sonofphx0101u5gre, RansAckeR / Haze
 
 $end
@@ -1492,20 +1695,6 @@ $mame
 [バグ]
 
 - イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
-
-$end
-
-$info=leprechn
-$mame
-[情報]
-
-- F2キーを押しながらリセットするとテストモードになる。
-F1キーで移動、F2キーで選択。
-
-
-[バグ]
-
-- 1面をすぎると、AY-8910のChannel Cから変なノイズが出る。0.60では起きていない。 leprechn061gre, M.A.S.H.
 
 $end
 
@@ -2049,6 +2238,14 @@ $mame
 
 $end
 
+$info=lastfort
+$mame
+[バグ]
+
+- 面をクリアでのタイムボーナス計算時にグラフィック化けが表示される。 lastfort0116gre, Scuore
+
+$end
+
 $info=jdreddp
 $mame
 [バグ]
@@ -2460,16 +2657,6 @@ $mame
 
 - ゲームを始めてコインを入れると、音楽がなり始めるが、タイマーが22になると止まる。
 ループするはずだがそうならない。実機確認済み。 nitd058gre, Smitdogg / Razoola
-
-$end
-
-$info=samsho3
-$mame
-[バグ]
-
-- MVS実機との比較。
-お互いに離れてズームアウトして、
-ジャンプをしたときのワープのようなエフェクトがかかるが、MAMEでは見られない。接近戦のときの表示は正確。Galfordsの面でよくわかる。 samsho337b16gre, Mr_Plough
 
 $end
 
@@ -4132,15 +4319,6 @@ $mame
 
 $end
 
-$info=thunderx
-$mame
-[バグ]
-
-- 2P側で一人プレイをすると、敵を撃った得点が1Pに加算される。
-カプセルを取ったり、ボムで敵を倒した場合は2Pに加算される。 thunderx079u1gre, Mr. Do / ShimaPong
-
-$end
-
 $info=f1dream
 $mame
 [バグ]
@@ -4211,25 +4389,6 @@ $mame
 [バグ]
 
 - tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
-
-$end
-
-$info=tnzs
-$mame
-[バグ]
-
-- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
@@ -4938,21 +5097,6 @@ $mame
 
 $end
 
-$info=mk3
-$mame
-[バグ]
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-
-- 教会の面で、影が2番目の背景レイヤーに隠れてしまう。
-ジャンプするとよくわかる。 umk3060gre_2, Jonemaan
-
-$end
-
 $info=mk2
 $mame
 [バグ]
@@ -5011,6 +5155,16 @@ $mame
 [バグ]
 
 - プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
+
+$end
+
+$info=progolf
+$mame
+[バグ]
+
+- メモリ配置エラー：
+
+Attempted to malloc zero bytes (src/emu/drawgfx.c:262) progolf0116ora, Firewave
 
 $end
 
@@ -6368,14 +6522,6 @@ $mame
 
 $end
 
-$info=daraku
-$mame
-[バグ]
-
-- テストモードに入って、サウンドテストで0x24や0xffffなどの番号をかけるとゲームが固まる。リセットするしかない。実機のバグ？ daraku063red, Kale
-
-$end
-
 $info=psychic5
 $mame
 [バグ]
@@ -6497,14 +6643,6 @@ $mame
 
 $end
 
-$info=slapshot
-$mame
-[バグ]
-
-- スペシャルテクニックを使うと、どのキャラクタでもビリーのアップが表示される。実機での確認必要。 slapshot099u1gre, king_krm
-
-$end
-
 $info=sshanghb
 $mame
 [バグ]
@@ -6562,16 +6700,6 @@ $mame
 [バグ]
 
 - デモ画面で、タイトーのロゴや、横に並んだ兵士が左に寄りすぎてるのではないだろうか？ rambo3062gre, JonasPersson
-
-$end
-
-$info=growl
-$mame
-[バグ]
-
-- 4面の戦車が表示はされるようになったが、色がおかしい。
-
-RGB(0～255)の色で、0,16,0を33,66,33に置き換えると正しく見える。 growl057gre, Bugfinder
 
 $end
 
