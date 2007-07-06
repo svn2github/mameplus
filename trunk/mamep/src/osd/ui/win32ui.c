@@ -82,6 +82,8 @@
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
 
+#undef rand
+
 #include "DirectDraw.h"
 #include "DirectInput.h"
 #include "DIJoystick.h"     /* For DIJoystick avalibility. */

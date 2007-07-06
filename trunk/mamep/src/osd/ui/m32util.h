@@ -40,10 +40,11 @@ extern const WCHAR * GetFilename(const WCHAR *filename);
 BOOL DriverIsClone(int driver_index);
 BOOL DriverIsBroken(int driver_index);
 BOOL DriverIsHarddisk(int driver_index);
-BOOL DriverHasOptionalBIOS(int driver_index);
 BOOL DriverIsStereo(int driver_index);
 BOOL DriverIsVector(int driver_index);
 BOOL DriverIsBios(int driver_index);
+BOOL DriverHasOptionalBios(int driver_index);
+int DriverBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
 BOOL DriverUsesYM3812(int driver_index);
@@ -52,6 +53,7 @@ BOOL DriverUsesLightGun(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
+
 
 #ifdef USE_IPS
 int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name);

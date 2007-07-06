@@ -447,7 +447,7 @@ static void HandleEvents( void )
 	if( state.time <=0 )
 	{
 		if(	state.rescue_xpos<= -64 &&
-			(rand()&3) == 0 &&
+			(mame_rand(Machine)&3) == 0 &&
 			(event == 0 || event == 75 || event == 125 || event == 250 || event == 500) )
 		{
 			state.rescue_xpos = SCREEN_WIDTH;

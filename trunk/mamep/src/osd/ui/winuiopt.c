@@ -2728,12 +2728,12 @@ static void build_default_bios(void)
 
 	for (i = 0; i < num_drivers; i++)
 	{
-		if (drivers[i]->bios)
+		if (DriverHasOptionalBios(i))
 		{
 			int driver_index = i;
 			int n;
 
-			while (!(drivers[driver_index]->flags & NOT_A_DRIVER))
+			while (!DriverIsBios(driver_index))
 			{
 				int parent_index = GetParentIndex(drivers[driver_index]);
 
@@ -2746,24 +2746,29 @@ static void build_default_bios(void)
 			if (last_skip == drivers[driver_index])
 				continue;
 
-			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
+			for (n = 0; n < MAX_SYSTEM_BIOS * 2; n++)
 			{
 				if (default_bios[n].drv == NULL)
 				{
 					int alt_index = bsearch_alt_option(GetFilename(driversw[driver_index]->source_file));
-					const bios_entry *biosinfo;
-					int count;
+					const rom_entry *rom;
+					int count = 1;
 
 					assert(0 <= alt_index && alt_index < num_alt_options);
 
-					biosinfo = drivers[driver_index]->bios;
-
-					for (count = 0; !BIOSENTRY_ISEND(&biosinfo[count]); count++)
-						;
+					for (rom = drivers[driver_index]->rom; !ROMENTRY_ISEND(rom); rom++)
+						if (count < ROM_GETBIOSFLAGS(rom))
+							count = ROM_GETBIOSFLAGS(rom);
 
 					if (count == 1)
 					{
 						dprintf("BIOS skip: %s [%s]", drivers[driver_index]->description, drivers[driver_index]->name);
+						last_skip = drivers[driver_index];
+						break;
+					}
+					if (n >= MAX_SYSTEM_BIOS)
+					{
+						dprintf("BIOS skip: %d in %s [%s]", count, drivers[driver_index]->description, drivers[driver_index]->name);
 						last_skip = drivers[driver_index];
 						break;
 					}

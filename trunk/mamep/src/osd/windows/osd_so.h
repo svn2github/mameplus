@@ -45,7 +45,7 @@
 
 		#include "palette.h"
 		#include "romload.h"
-		extern SHAREDOBJ_FUNC(int)               determine_bios_rom(const bios_entry *bios);
+		extern SHAREDOBJ_FUNC(int)               determine_bios_rom(const rom_entry *romp);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_region(const game_driver *drv);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_region(const rom_entry *romp);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_file(const rom_entry *romp);

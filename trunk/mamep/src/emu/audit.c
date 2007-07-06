@@ -95,7 +95,14 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 	int records;
 
 #ifdef CHECK_SELECTED_BIOS_ONLY
-	int system_bios = determine_bios_rom(drivers[game]->bios);
+	int system_bios;
+#endif /* CHECK_SELECTED_BIOS_ONLY */
+
+	if (!drivers[game]->rom)
+		return 0;
+
+#ifdef CHECK_SELECTED_BIOS_ONLY
+	system_bios = determine_bios_rom(drivers[game]->rom);
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 
 	/* determine the number of records we will generate */
@@ -126,7 +133,7 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 				if (ROMREGION_ISROMDATA(region))
 				{
 #ifdef CHECK_SELECTED_BIOS_ONLY
-					if (!ROM_GETBIOS(rom) || (ROM_GETBIOS(rom) == (system_bios+1))) /* alternate bios sets */
+					if (!ROM_GETBIOSFLAGS(rom) || (ROM_GETBIOSFLAGS(rom) == (system_bios+1))) /* alternate bios sets */
 					{
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 					if (audit_one_rom(rom, gamedrv, validation, record++) && (!shared || allshared))

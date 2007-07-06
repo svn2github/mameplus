@@ -127,7 +127,7 @@ endif
 CC += /Og /Ob2 /Oi /Ot /Oy /GA /Gy /GF
 
 ifdef PTR64
-CC += /wd4267
+CC += /wd4267 /Wp64
 endif
 
 # filter X86_ASM define

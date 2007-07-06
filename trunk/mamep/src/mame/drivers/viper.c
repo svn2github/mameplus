@@ -735,16 +735,13 @@ static DRIVER_INIT(ppp2nd)
 
 /*****************************************************************************/
 
-//#define ROM_LOAD_BIOS(bios,name,offset,length,hash)
-//		ROMX_LOAD(name, offset, length, hash, ROM_BIOS(bios+1)) /* Note '+1' */
+#define ROM_LOAD_BIOS(bios,name,offset,length,hash) \
+		ROMX_LOAD(name, offset, length, hash, ROM_BIOS(bios+1)) /* Note '+1' */
 
 #define VIPER_BIOS \
 	ROM_REGION64_BE(0x40000, REGION_USER1, 0)	/* Boot ROM */ \
+	ROM_SYSTEM_BIOS(0, "Viper BIOS", "GM941B01") \
 		ROM_LOAD_BIOS(0, "941b01.u25", 0x00000, 0x40000, CRC(233e5159) SHA1(66ff268d5bf78fbfa48cdc3e1b08f8956cfd6cfb))
-
-SYSTEM_BIOS_START(kviper)
-	SYSTEM_BIOS_ADD(0, "Viper BIOS", "GM941B01")
-SYSTEM_BIOS_END
 
 
 ROM_START(kviper)

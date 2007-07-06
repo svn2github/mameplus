@@ -355,29 +355,21 @@ enum {cjoy, cdoublejoy, cAD_stick, cdial, ctrackball, cpaddle, clightgun, cpedal
 
 static void print_game_bios(FILE* out, const game_driver* game)
 {
-	const bios_entry *thisbios;
+	const rom_entry *rom;
 
-	if(!game->bios)
-		return;
+	for (rom = game->rom; !ROMENTRY_ISEND(rom); rom++)
+		if (ROMENTRY_ISSYSTEM_BIOS(rom))
+		{
+			const char *name = ROM_GETHASHDATA(rom);
+			const char *description = name + strlen(name) + 1;
 
-	thisbios = game->bios;
-
-	/* Match against bios short names */
-	while(!BIOSENTRY_ISEND(thisbios))
-	{
-		fprintf(out, "\t\t<biosset");
-
-		if (thisbios->_name)
-			fprintf(out, " name=\"%s\"", xml_normalize_string(thisbios->_name));
-		if (thisbios->_description)
-			fprintf(out, " description=\"%s\"", xml_normalize_string(thisbios->_description));
-		if (thisbios->value == 0)
-			fprintf(out, " default=\"yes\"");
-
-		fprintf(out, "/>\n");
-
-		thisbios++;
-	}
+			fprintf(out, "\t\t<biosset");
+			fprintf(out, " name=\"%s\"", xml_normalize_string(name));
+			fprintf(out, " description=\"%s\"", xml_normalize_string(description));
+			if (ROM_GETBIOSFLAGS(rom) == 1)
+				fprintf(out, " default=\"yes\"");
+			fprintf(out, "/>\n");
+		}
 }
 
 static void print_game_rom(FILE* out, const game_driver* game)
@@ -403,7 +395,7 @@ static void print_game_rom(FILE* out, const game_driver* game)
 				strcpy(name,ROM_GETNAME(rom));
 				offset = ROM_GETOFFSET(rom);
 				is_disk = ROMREGION_ISDISKDATA(region);
-				is_bios = ROM_GETBIOS(rom);
+				is_bios = ROM_GETBIOSFLAGS(rom);
 
 				switch (rom_type)
 				{
@@ -440,21 +432,16 @@ static void print_game_rom(FILE* out, const game_driver* game)
 				}
 
 				found_bios = 0;
-				if(!is_disk && is_bios && game->bios)
+				if(!is_disk && is_bios)
 				{
-					const bios_entry *thisbios = game->bios;
-
-					/* Match against bios short names */
-					while(!found_bios && !BIOSENTRY_ISEND(thisbios) )
-					{
-						if((is_bios-1) == thisbios->value) /* Note '-1' */
+					/* Scan backwards for name */
+					for (prom = rom-1; prom != game->rom; prom--)
+						if (ROMENTRY_ISSYSTEM_BIOS(prom))
 						{
-							strcpy(bios_name,thisbios->_name);
+							strcpy(bios_name, ROM_GETHASHDATA(prom));
 							found_bios = 1;
+							break;
 						}
-
-						thisbios++;
-					}
 				}
 
 
@@ -545,13 +532,12 @@ static void print_game_rom(FILE* out, const game_driver* game)
 					fprintf(out, " dispose=\"yes\"");
 
 				fprintf(out, " offset=\"%x\"", offset);
-				fprintf(out, "/>\n");
 			}
 			else
 			{
 				fprintf(out, " index=\"%x\"", DISK_GETINDEX(rom));
-				fprintf(out, "/>\n");
 			}
+			fprintf(out, "/>\n");
 		}
 	}
 }

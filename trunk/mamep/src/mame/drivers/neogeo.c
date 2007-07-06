@@ -163,7 +163,7 @@ static void adjust_display_position_interrupt_timer(void)
 {
 	if ((display_counter + 1) != 0)
 	{
-		mame_time period = double_to_mame_time(TIME_IN_HZ(NEOGEO_PIXEL_CLOCK) * (display_counter + 1));
+		mame_time period = scale_up_mame_time(MAME_TIME_IN_HZ(NEOGEO_PIXEL_CLOCK), display_counter + 1);
 		if (LOG_VIDEO_SYSTEM) logerror("adjust_display_position_interrupt_timer  current y: %02x  current x: %02x   target y: %x  target x: %x\n", video_screen_get_vpos(0), video_screen_get_hpos(0), (display_counter + 1) / NEOGEO_HTOTAL, (display_counter + 1) % NEOGEO_HTOTAL);
 
 		mame_timer_adjust(display_position_interrupt_timer, period, 0, time_zero);
@@ -997,17 +997,41 @@ static MACHINE_START( neogeo )
 
 static MACHINE_RESET( neogeo )
 {
+	offs_t offs;
+
 #ifdef USE_NEOGEO_HACKS
 	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
 	int memcard_manager = 0; // FIXME
 	UINT16 src, res;
-#endif /* USE_NEOGEO_HACKS */
-	offs_t offs;
 
-#ifdef USE_NEOGEO_HACKS
-	if (machine->gamedrv->bios)
+	if (!strcmp(machine->gamedrv->name,"irrmaze"))
 	{
-		if (system_bios == NEOGEO_BIOS_EURO)
+		logerror("BIOS Hack enabled for Trackball\n");
+
+		/* Set up machine country */
+		src = readinputportbytag("HACK_IN5");
+		res = src & 0x3;
+
+		/* Console/arcade mode */
+		if (src & 0x04) 
+			res |= 0x8000;
+
+		/* write the ID in the system BIOS ROM */
+		mem16[0x0200] = res;
+
+		if (memcard_manager==1)
+		{
+			memcard_manager=0;
+			mem16[0x10c44/2] = 0x4366;
+		}
+		else
+		{
+			mem16[0x10c44/2] = 0x0c94;
+		}
+	}
+	else
+	{
+		if (system_bios - 1 == NEOGEO_BIOS_EURO)
 		{
 			logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
 
@@ -1033,7 +1057,7 @@ static MACHINE_RESET( neogeo )
 			}
 		}
 
-		if (system_bios == NEOGEO_BIOS_DEBUG)
+		if (system_bios - 1 == NEOGEO_BIOS_DEBUG)
 		{
 			logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
 
@@ -1053,32 +1077,6 @@ static MACHINE_RESET( neogeo )
 			{
 				mem16[0x1194c/2] = 0x1b6a;
 			}
-		}
-	}
-
-	if (!strcmp(machine->gamedrv->name,"irrmaze"))
-	{
-		logerror("BIOS Hack enabled for Trackball\n");
-
-		/* Set up machine country */
-		src = readinputportbytag("HACK_IN5");
-		res = src & 0x3;
-
-		/* Console/arcade mode */
-		if (src & 0x04) 
-			res |= 0x8000;
-
-		/* write the ID in the system BIOS ROM */
-		mem16[0x0200] = res;
-
-		if (memcard_manager==1)
-		{
-			memcard_manager=0;
-			mem16[0x10c44/2] = 0x4366;
-		}
-		else
-		{
-			mem16[0x10c44/2] = 0x0c94;
 		}
 	}
 #endif /* USE_NEOGEO_HACKS */
@@ -1395,7 +1393,7 @@ static DRIVER_INIT( neogeo )
 {
 #ifdef USE_NEOGEO_HACKS
 	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
-	system_bios = determine_bios_rom(machine->gamedrv->bios);
+	system_bios = determine_bios_rom(machine->gamedrv->rom);
 
 	/* irritating maze uses a trackball */
 	if (!strcmp(machine->gamedrv->name,"irrmaze"))
@@ -1423,29 +1421,26 @@ static DRIVER_INIT( neogeo )
 	}
 	else
 	{
-		if (machine->gamedrv->bios)
+		if (system_bios - 1 == NEOGEO_BIOS_EURO)
 		{
-			if (system_bios == NEOGEO_BIOS_EURO)
-			{
-				logerror("BIOS Patch is applied for NEOGEO_BIOS_EURO\n");
+			logerror("BIOS Patch is applied for NEOGEO_BIOS_EURO\n");
 
-				/* Remove memory check for now */
-				mem16[0x11b00/2] = 0x4e71;
-				mem16[0x11b02/2] = 0x4e71;
-				mem16[0x11b16/2] = 0x4ef9;
-				mem16[0x11b18/2] = 0x00c1;
-				mem16[0x11b1a/2] = 0x1b6a;
+			/* Remove memory check for now */
+			mem16[0x11b00/2] = 0x4e71;
+			mem16[0x11b02/2] = 0x4e71;
+			mem16[0x11b16/2] = 0x4ef9;
+			mem16[0x11b18/2] = 0x00c1;
+			mem16[0x11b1a/2] = 0x1b6a;
 
-				/* Patch bios rom, for Calendar errors */
-				mem16[0x11c14/2] = 0x4e71;
-				mem16[0x11c16/2] = 0x4e71;
-				mem16[0x11c1c/2] = 0x4e71;
-				mem16[0x11c1e/2] = 0x4e71;
+			/* Patch bios rom, for Calendar errors */
+			mem16[0x11c14/2] = 0x4e71;
+			mem16[0x11c16/2] = 0x4e71;
+			mem16[0x11c1c/2] = 0x4e71;
+			mem16[0x11c1e/2] = 0x4e71;
 
-				/* Rom internal checksum fails for now.. */
-				mem16[0x11c62/2] = 0x4e71;
-				mem16[0x11c64/2] = 0x4e71;
-			}
+			/* Rom internal checksum fails for now.. */
+			mem16[0x11c62/2] = 0x4e71;
+			mem16[0x11c64/2] = 0x4e71;
 		}
 	}
 #endif /* USE_NEOGEO_HACKS */

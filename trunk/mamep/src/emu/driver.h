@@ -219,7 +219,6 @@ struct _game_driver
 	const char *		source_file;				/* set this to __FILE__ */
 	const char *		parent;						/* if this is a clone, the name of the parent */
 	const char *		name;						/* short (8-character) name of the game */
-	const bios_entry *	bios;						/* list of names and ROM_BIOSFLAGS */
 	const char *		description;				/* full name of the game */
 	const char *		year;						/* year the game was released */
 	const char *		manufacturer;				/* manufacturer of the game */
@@ -514,7 +513,6 @@ game_driver driver_##NAME =					\
 	__FILE__,								\
 	#PARENT,								\
 	#NAME,									\
-	system_bios_0,							\
 	FULLNAME,								\
 	#YEAR,									\
 	COMPANY,								\
@@ -532,7 +530,6 @@ game_driver driver_##NAME =					\
 	__FILE__,								\
 	#PARENT,								\
 	#NAME,									\
-	system_bios_##BIOS,						\
 	FULLNAME,								\
 	#YEAR,									\
 	COMPANY,								\
@@ -550,7 +547,6 @@ game_driver driver_##NAME =					\
 	__FILE__,								\
 	#PARENT,								\
 	#NAME,									\
-	system_bios_0,							\
 	FULLNAME,								\
 	#YEAR,									\
 	COMPANY,								\
@@ -564,10 +560,6 @@ game_driver driver_##NAME =					\
 
 /* this allows to leave the INIT field empty in the GAME() macro call */
 #define driver_init_0 0
-
-/* this allows to leave the BIOS field empty in the GAMEB() macro call */
-#define system_bios_0 0
-
 
 
 /***************************************************************************

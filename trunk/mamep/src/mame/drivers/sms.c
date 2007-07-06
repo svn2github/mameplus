@@ -394,7 +394,7 @@ static void *start_vdp(int type)
 	chip->writemode = 0;
 	chip->r_bitmap = auto_bitmap_alloc(Machine->screen[0].width,Machine->screen[0].height,Machine->screen[0].format);
 
-	chip->sms_scanline_timer = timer_alloc_ptr(sms_scanline_timer_callback, chip);
+	chip->sms_scanline_timer = mame_timer_alloc_ptr(sms_scanline_timer_callback, chip);
 
 	return chip;
 }
@@ -929,12 +929,12 @@ WRITE8_HANDLER( megatech_bios_6000_w )
 
 READ8_HANDLER( megatech_bios_6800_r )
 {
-	return rand();
+	return mame_rand(Machine);
 }
 
 READ8_HANDLER( megatech_bios_6801_r )
 {
-	return rand();
+	return mame_rand(Machine);
 }
 
 void init_megatech_map(void)
@@ -1276,8 +1276,7 @@ static void sms_scanline_timer_callback(void* param)
 	if (chip->sms_scanline_counter<(chip->sms_total_scanlines-1))
 	{
 		chip->sms_scanline_counter++;
-		timer_adjust_ptr(chip->sms_scanline_timer,  SUBSECONDS_TO_DOUBLE(1000000000000000000LL/chip->sms_framerate/chip->sms_total_scanlines), 0);
-
+		mame_timer_adjust_ptr(chip->sms_scanline_timer, scale_up_mame_time(MAME_TIME_IN_HZ(chip->sms_framerate), chip->sms_total_scanlines), time_zero);
 
 		if (chip->sms_scanline_counter>sms_mode_table[chip->screen_mode].sms2_height)
 		{
@@ -1442,7 +1441,7 @@ static void end_of_frame(struct sms_vdp *chip)
 
 	chip->sms_scanline_counter = -1;
 	chip->yscroll = chip->regs[0x9]; // this can't change mid-frame
-	timer_adjust_ptr(chip->sms_scanline_timer,  TIME_NOW, 0);
+	mame_timer_adjust_ptr(chip->sms_scanline_timer, time_zero, time_zero);
 }
 
 //mamep: resolve conflict with drivers/segae.c
@@ -1485,7 +1484,7 @@ VIDEO_UPDATE(sms)
 //mamep: resolve conflict with drivers/segae.c
 static MACHINE_RESET(sms)
 {
-	timer_adjust_ptr(vdp1->sms_scanline_timer,  TIME_NOW, 0);
+	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
 }
 
 static NVRAM_HANDLER( smsgg )
@@ -4375,8 +4374,8 @@ UINT8 f7_bank_value;
 
 MACHINE_RESET(systeme)
 {
-	timer_adjust_ptr(vdp1->sms_scanline_timer,  TIME_NOW, 0);
-	timer_adjust_ptr(vdp2->sms_scanline_timer,  TIME_NOW, 0);
+	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
+	mame_timer_adjust_ptr(vdp2->sms_scanline_timer, time_zero, time_zero);
 }
 
 VIDEO_EOF(systeme)

@@ -32,7 +32,8 @@
 #define ROMENTRYTYPE_COPY			6					/* this entry copies data from another region/offset */
 #define ROMENTRYTYPE_CARTRIDGE		7					/* this entry specifies a cartridge (MESS) */
 #define ROMENTRYTYPE_IGNORE			8					/* this entry continues loading the previous ROM but throws the data away */
-#define ROMENTRYTYPE_COUNT			9
+#define ROMENTRYTYPE_SYSTEM_BIOS		9					/* this entry specifies a bios */
+#define ROMENTRYTYPE_COUNT			10
 
 
 /* ----- per-region constants ----- */
@@ -109,7 +110,10 @@
 #define ROM_INHERITFLAGSMASK		0x08000000			/* inherit all flags from previous definition */
 #define		ROM_INHERITFLAGS		0x08000000
 
-#define ROM_INHERITEDFLAGS			(ROM_GROUPMASK | ROM_SKIPMASK | ROM_REVERSEMASK | ROM_BITWIDTHMASK | ROM_BITSHIFTMASK)
+#define ROM_BIOSFLAGSMASK			0xf0000000			/* only loaded if value matches global bios value */
+#define 	ROM_BIOS(n)				(((n) & 15) << 28)
+
+#define ROM_INHERITEDFLAGS			(ROM_GROUPMASK | ROM_SKIPMASK | ROM_REVERSEMASK | ROM_BITWIDTHMASK | ROM_BITSHIFTMASK | ROM_BIOSFLAGSMASK)
 
 
 
@@ -124,17 +128,7 @@ struct _rom_entry
 	UINT32			_offset;			/* offset to load it to */
 	UINT32			_length;			/* length of the file */
 	UINT32			_flags;				/* flags */
-	UINT8			_bios;				/* BIOS */
 	const char *	_hashdata;			/* hashing informations (checksums) */
-};
-
-
-typedef struct _bios_entry bios_entry;
-struct _bios_entry
-{
-	int				value;				/* value of mask to apply to ROM_BIOSFLAGS is chosen */
-	const char *	_name;				/* name of the bios, e.g "default","japan" */
-	const char *	_description;		/* long name of the bios, e.g "Europe MVS (Ver. 2)" */
 };
 
 
@@ -174,6 +168,7 @@ struct _rom_load_data
 #define ROMENTRY_COPY				((const char *)ROMENTRYTYPE_COPY)
 #define ROMENTRY_CARTRIDGE			((const char *)ROMENTRYTYPE_CARTRIDGE)
 #define ROMENTRY_IGNORE				((const char *)ROMENTRYTYPE_IGNORE)
+#define ROMENTRY_SYSTEM_BIOS			((const char *)ROMENTRYTYPE_SYSTEM_BIOS)
 
 #define ROMENTRY_GETTYPE(r)			((FPTR)(r)->_name)
 #define ROMENTRY_ISSPECIAL(r)		(ROMENTRY_GETTYPE(r) < ROMENTRYTYPE_COUNT)
@@ -185,10 +180,8 @@ struct _rom_load_data
 #define ROMENTRY_ISFILL(r)			((r)->_name == ROMENTRY_FILL)
 #define ROMENTRY_ISCOPY(r)			((r)->_name == ROMENTRY_COPY)
 #define ROMENTRY_ISIGNORE(r)		((r)->_name == ROMENTRY_IGNORE)
+#define ROMENTRY_ISSYSTEM_BIOS(r)		((r)->_name == ROMENTRY_SYSTEM_BIOS)
 #define ROMENTRY_ISREGIONEND(r)		(ROMENTRY_ISREGION(r) || ROMENTRY_ISEND(r))
-
-#define BIOSENTRY_ISEND(b)			((b)->_name == NULL)
-
 
 /* ----- per-region macros ----- */
 #define ROMREGION_GETTYPE(r)		((UINT32)(r)->_hashdata)
@@ -221,7 +214,7 @@ struct _rom_load_data
 #define ROM_GETBITWIDTH(r)			(((ROM_GETFLAGS(r) & ROM_BITWIDTHMASK) >> 21) + 8 * ((ROM_GETFLAGS(r) & ROM_BITWIDTHMASK) == 0))
 #define ROM_GETBITSHIFT(r)			((ROM_GETFLAGS(r) & ROM_BITSHIFTMASK) >> 24)
 #define ROM_INHERITSFLAGS(r)		((ROM_GETFLAGS(r) & ROM_INHERITFLAGSMASK) == ROM_INHERITFLAGS)
-#define ROM_GETBIOS(r)				((r)->_bios)
+#define ROM_GETBIOSFLAGS(r)			((ROM_GETFLAGS(r) & ROM_BIOSFLAGSMASK) >> 28)
 #define ROM_NOGOODDUMP(r)			(hash_data_has_info((r)->_hashdata, HASH_INFO_NO_DUMP))
 
 
@@ -232,13 +225,11 @@ struct _rom_load_data
 
 /* ----- start/stop macros ----- */
 #define ROM_START(name)								static const rom_entry rom_##name[] = {
-#define ROM_END										{ ROMENTRY_END, 0, 0, 0, 0, NULL } };
-#define SYSTEM_BIOS_START(name)						static const bios_entry system_bios_##name[] = {
-#define SYSTEM_BIOS_END								{ 0, NULL } };
+#define ROM_END										{ ROMENTRY_END, 0, 0, 0, NULL } };
 
 
 /* ----- ROM region macros ----- */
-#define ROM_REGION(length,type,flags)				{ ROMENTRY_REGION, 0, length, flags, 0, (const char*)type },
+#define ROM_REGION(length,type,flags)				{ ROMENTRY_REGION, 0, length, flags, (const char*)type },
 #define ROM_REGION16_LE(length,type,flags)			ROM_REGION(length, type, (flags) | ROMREGION_16BIT | ROMREGION_LE)
 #define ROM_REGION16_BE(length,type,flags)			ROM_REGION(length, type, (flags) | ROMREGION_16BIT | ROMREGION_BE)
 #define ROM_REGION32_LE(length,type,flags)			ROM_REGION(length, type, (flags) | ROMREGION_32BIT | ROMREGION_LE)
@@ -248,8 +239,8 @@ struct _rom_load_data
 
 
 /* ----- core ROM loading macros ----- */
-#define ROMMD5_LOAD(name,offset,length,hash,flags)	{ name, offset, length, flags, 0, hash },
-#define ROMX_LOAD(name,offset,length,hash,flags)	{ name, offset, length, flags, 0, hash },
+#define ROMMD5_LOAD(name,offset,length,hash,flags)	{ name, offset, length, flags, hash },
+#define ROMX_LOAD(name,offset,length,hash,flags)	{ name, offset, length, flags, hash },
 #define ROM_LOAD(name,offset,length,hash)			ROMX_LOAD(name, offset, length, hash, 0)
 #define ROM_LOAD_OPTIONAL(name,offset,length,hash)	ROMX_LOAD(name, offset, length, hash, ROM_OPTIONAL)
 #define ROM_CONTINUE(offset,length)					ROMX_LOAD(ROMENTRY_CONTINUE, offset, length, 0, ROM_INHERITFLAGS)
@@ -272,21 +263,7 @@ struct _rom_load_data
 
 
 /* ----- system BIOS macros ----- */
-#define SYSTEM_BIOS_ADD(value,name,description)		{ (int)value, (const char*)name, (const char*)description },
-#define BIOS_DEFAULT								"default"
-
-
-/* ----- BIOS ROM loading macros ----- */
-#define ROMBX_LOAD(name,offset,length,hash,flags,bios)      { name, offset, length, flags, bios, hash },
-#define ROM_LOAD_BIOS(bios,name,offset,length,hash) \
-		ROMBX_LOAD(name, offset, length, hash, 0, bios+1) /* Note '+1' */
-#define ROM_LOAD16_BYTE_BIOS(bios,name,offset,length,hash) \
-		ROMBX_LOAD(name, offset, length, hash, ROM_SKIP(1), bios+1)
-#define ROM_LOAD16_WORD_BIOS(bios,name,offset,length,hash) \
-		ROMBX_LOAD(name, offset, length, hash, 0, bios+1) /* Note '+1' */
-#define ROM_LOAD16_WORD_SWAP_BIOS(bios,name,offset,length,hash) \
-		ROMBX_LOAD(name, offset, length, hash, ROM_GROUPWORD | ROM_REVERSE, bios+1) /* Note '+1' */
-
+#define ROM_SYSTEM_BIOS(value,name,description) ROMX_LOAD(ROMENTRY_SYSTEM_BIOS, 0, 0, name "\0" description, ROM_BIOS(value+1))
 
 /* ----- disk loading macros ----- */
 #define DISK_REGION(type)							ROM_REGION(1, type, ROMREGION_DATATYPEDISK)
@@ -312,7 +289,7 @@ chd_error open_disk_image(const game_driver *gamedrv, const rom_entry *romp, chd
 chd_file *get_disk_handle(int diskindex);
 
 /* get bios number */
-int determine_bios_rom(const bios_entry *bios);
+int determine_bios_rom(const rom_entry *romp);
 
 /* ROM processing */
 void rom_init(running_machine *machine, const rom_entry *romp);

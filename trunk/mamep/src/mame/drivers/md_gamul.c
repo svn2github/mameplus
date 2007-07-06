@@ -322,11 +322,11 @@ READ16_HANDLER( g_chifi3_prot_r )
 	}
 	else if (activecpu_get_pc()==0x10c4a) // unknown
 	{
-		return rand();
+		return mame_rand(Machine);
 	}
 	else if (activecpu_get_pc()==0x10c50) // unknown
 	{
-		return rand();
+		return mame_rand(Machine);
 	}
 	else if (activecpu_get_pc()==0x10c52) // relates to the game speed..
 	{

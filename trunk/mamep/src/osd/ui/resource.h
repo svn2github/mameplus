@@ -379,23 +379,6 @@
 #define IDC_JOYID7TEXT                  1325 // JOYSTICK_ID
 #define IDC_JOYID8TEXT                  1326 // JOYSTICK_ID
 
-#define IDC_BIOS1                       1327
-#define IDC_BIOS2                       1328
-#define IDC_BIOS3                       1329
-#define IDC_BIOS4                       1330
-#define IDC_BIOS5                       1331
-#define IDC_BIOS6                       1332
-#define IDC_BIOS7                       1333
-#define IDC_BIOS8                       1334
-#define IDC_BIOSTEXT                    1335
-#define IDC_BIOSTEXT1                   1336
-#define IDC_BIOSTEXT2                   1337
-#define IDC_BIOSTEXT3                   1338
-#define IDC_BIOSTEXT4                   1339
-#define IDC_BIOSTEXT5                   1340
-#define IDC_BIOSTEXT6                   1341
-#define IDC_BIOSTEXT7                   1342
-#define IDC_BIOSTEXT8                   1343
 #define IDC_ZOOMTEXT                    1344
 #define IDC_SCREENTEXT                  1346
 #define IDC_USE_LIST                    1349
@@ -416,6 +399,40 @@
 #define IDC_TRANSPARENCY                1362 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1363 // TRANS_UI
 #define IDC_PROP_INPUT                  1364
+
+#define IDC_BIOS1                       1365
+#define IDC_BIOS2                       1366
+#define IDC_BIOS3                       1367
+#define IDC_BIOS4                       1368
+#define IDC_BIOS5                       1369
+#define IDC_BIOS6                       1370
+#define IDC_BIOS7                       1371
+#define IDC_BIOS8                       1372
+#define IDC_BIOS9                       1373
+#define IDC_BIOS10                      1374
+#define IDC_BIOS11                      1375
+#define IDC_BIOS12                      1376
+#define IDC_BIOS13                      1377
+#define IDC_BIOS14                      1378
+#define IDC_BIOS15                      1379
+#define IDC_BIOS16                      1380
+#define IDC_BIOSTEXT                    1381
+#define IDC_BIOSTEXT1                   1382
+#define IDC_BIOSTEXT2                   1383
+#define IDC_BIOSTEXT3                   1384
+#define IDC_BIOSTEXT4                   1385
+#define IDC_BIOSTEXT5                   1386
+#define IDC_BIOSTEXT6                   1387
+#define IDC_BIOSTEXT7                   1388
+#define IDC_BIOSTEXT8                   1389
+#define IDC_BIOSTEXT9                   1390
+#define IDC_BIOSTEXT10                  1391
+#define IDC_BIOSTEXT11                  1392
+#define IDC_BIOSTEXT12                  1393
+#define IDC_BIOSTEXT13                  1394
+#define IDC_BIOSTEXT14                  1395
+#define IDC_BIOSTEXT15                  1396
+#define IDC_BIOSTEXT16                  1397
 
 #define IDC_DRV_TEXT                    1400 // DRIVER_SWITCH
 #define IDC_DRV_MAME                    1401 // DRIVER_SWITCH
@@ -559,7 +576,7 @@
 #define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        250
 #define _APS_NEXT_COMMAND_VALUE         40300
-#define _APS_NEXT_CONTROL_VALUE         1370
+#define _APS_NEXT_CONTROL_VALUE         1410
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

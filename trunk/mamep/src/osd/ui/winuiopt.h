@@ -16,9 +16,10 @@
 #include "osd_cpu.h"
 #include "input.h" /* for input_seq definition */
 
-#define MAX_SYSTEM_BIOS		8
+#define MAX_SYSTEM_BIOS		16
+#define MAX_SYSTEM_BIOS_ENTRY	16
+#define BIOS_DEFAULT		"default"
 #define MAX_GAMEDESC 256
-
 
 #define GUIOPTION_LIST_MODE	"list_mode"
 #define GUIOPTION_LIST_FONT	"list_font"

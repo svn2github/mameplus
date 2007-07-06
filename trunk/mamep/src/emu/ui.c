@@ -1563,9 +1563,9 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
-	double time_now = timer_get_time();
-	double time_display = TIME_IN_SEC(1.0f);
-	double time_fadeout = TIME_IN_SEC(1.0f);
+	double time_now = mame_time_to_double(mame_timer_get_time());
+	double time_display = mame_time_to_double(MAME_TIME_IN_MSEC(1000));
+	double time_fadeout = mame_time_to_double(MAME_TIME_IN_MSEC(1000));
 	float curx;
 	int i;
 

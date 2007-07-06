@@ -193,7 +193,7 @@ BOOL bThemeActive;
 static options_type  origGameOpts;
 static BOOL orig_uses_defaults;
 static options_type* pGameOpts = NULL;
-static const bios_entry *g_biosinfo = NULL;
+static const game_driver *g_biosinfo = NULL;
 static int  default_bios_index[MAX_SYSTEM_BIOS];
 static char *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
@@ -1922,6 +1922,14 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_BIOS6 :
 	case IDC_BIOS7 :
 	case IDC_BIOS8 :
+	case IDC_BIOS9 :
+	case IDC_BIOS10 :
+	case IDC_BIOS11 :
+	case IDC_BIOS12 :
+	case IDC_BIOS13 :
+	case IDC_BIOS14 :
+	case IDC_BIOS15 :
+	case IDC_BIOS16 :
 		if (wNotifyCode == CBN_SELCHANGE)
 		{
 			changed = TRUE;
@@ -3329,11 +3337,11 @@ static void SetPropEnabledControls(HWND hWnd)
 	{
 		for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 		{
-			const game_driver *drv = GetSystemBiosInfo(i);
+			const game_driver *bios = GetSystemBiosInfo(i);
 
-			if (drv)
+			if (bios)
 			{
-				Static_SetText(GetDlgItem(hWnd, IDC_BIOSTEXT1 + i), driversw[GetDriverIndex(drv)]->description);
+				Static_SetTextA(GetDlgItem(hWnd, IDC_BIOSTEXT1 + i), bios->description);
 
 				ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT1 + i), SW_SHOW);
 				ShowWindow(GetDlgItem(hWnd,IDC_BIOS1 + i), SW_SHOW);
@@ -3602,12 +3610,25 @@ static void AssignAnalogAxes(HWND hWnd)
 	}
 }
 
+static const char *GetBIOSName(const game_driver *bios, int nIndex)
+{
+	const rom_entry *rom;
+
+	for (rom = bios->rom; !ROMENTRY_ISEND(rom); rom++)
+	{
+		if (ROMENTRY_ISSYSTEM_BIOS(rom) && (ROM_GETBIOSFLAGS(rom) - 1 == nIndex))
+			return ROM_GETHASHDATA(rom);
+	}
+
+	return NULL;
+}
+
 static void AssignBios(HWND hWnd)
 {
 	FreeIfAllocated(&pGameOpts->bios);
 
 	if (g_biosinfo && g_nBiosIndex)
-		pGameOpts->bios = strdup(g_biosinfo[g_nBiosIndex]._name);
+		pGameOpts->bios = strdup(GetBIOSName(g_biosinfo, g_nBiosIndex));
 	else
 		pGameOpts->bios = mame_strdup(BIOS_DEFAULT);
 }
@@ -3672,12 +3693,12 @@ static void AssignPositional(HWND hWnd)
 #define AssignDefaultBios(i) \
 static void AssignDefaultBios##i(HWND hWnd) \
 { \
-	const game_driver *drv = GetSystemBiosInfo(i); \
+	const game_driver *bios = GetSystemBiosInfo(i); \
  \
-	if (drv) \
+	if (bios) \
 	{ \
 		if (default_bios_index[i]) \
-			SetDefaultBios(i, drv->bios[default_bios_index[i]]._name); \
+			SetDefaultBios(i, GetBIOSName(bios, default_bios_index[i])); \
 		else \
 			SetDefaultBios(i, BIOS_DEFAULT); \
 	} \
@@ -3691,6 +3712,14 @@ AssignDefaultBios(4)
 AssignDefaultBios(5)
 AssignDefaultBios(6)
 AssignDefaultBios(7)
+AssignDefaultBios(8)
+AssignDefaultBios(9)
+AssignDefaultBios(10)
+AssignDefaultBios(11)
+AssignDefaultBios(12)
+AssignDefaultBios(13)
+AssignDefaultBios(14)
+AssignDefaultBios(15)
 
 static void AssignEffect(HWND hWnd)
 {
@@ -3826,14 +3855,15 @@ static void ResetDataMap(void)
 	}
 
 	g_biosinfo = NULL;
-	if (IS_GAME)
-		g_biosinfo = drivers[g_nGame]->bios;
+	if (IS_GAME && DriverHasOptionalBios(g_nGame))
+		g_biosinfo = GetSystemBiosInfo(DriverBiosIndex(g_nGame));
 	else if (IS_FOLDER)
 	{
 		for (i = 0; drivers[i]; i++)
-			if (!wcscmp(GetDriverFilename(i), g_pFolder) && drivers[i]->bios)
+			if (!wcscmp(GetDriverFilename(i), g_pFolder))
 			{
-				g_biosinfo = drivers[i]->bios;
+				if (DriverHasOptionalBios(i))
+					g_biosinfo = GetSystemBiosInfo(DriverBiosIndex(i));
 				break;
 			}
 	}
@@ -3842,7 +3872,7 @@ static void ResetDataMap(void)
 	if (g_biosinfo)
 	{
 		set_core_bios(pGameOpts->bios);
-		g_nBiosIndex = determine_bios_rom(g_biosinfo);
+		g_nBiosIndex = determine_bios_rom(g_biosinfo->rom) - 1;
 		set_core_bios(NULL);
 	}
 
@@ -3850,16 +3880,16 @@ static void ResetDataMap(void)
 	{
 		for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 		{
-			const game_driver *drv = GetSystemBiosInfo(i);
+			const game_driver *bios = GetSystemBiosInfo(i);
 
-			if (drv)
+			if (bios)
 			{
-				char *bios = strdup(GetDefaultBios(i));
+				char *name = strdup(GetDefaultBios(i));
 
-				set_core_bios(bios);
-				default_bios_index[i] = determine_bios_rom(drv->bios);
+				set_core_bios(name);
+				default_bios_index[i] = determine_bios_rom(bios->rom) - 1;
 				set_core_bios(NULL);
-				free(bios);
+				free(name);
 			}
 		}
 	}
@@ -4090,25 +4120,33 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_M68K_CORE,     DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,     DM_INT,  &pGameOpts->m68k_core,     0, 0, 0);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
+#define DATAMAPADD_BIOS(n) \
+	if (GetSystemBiosInfo(n)) \
+	{ \
+		DataMapAdd(IDC_BIOS1+n, DM_INT, CT_COMBOBOX, \
+			&default_bios_index[n], DM_NONE, NULL, 0, 0, \
+			AssignDefaultBios##n); \
+	}
+
 	/* BIOS */
 	if (IS_GLOBAL)
 	{
-		if (GetSystemBiosInfo(0))
-			DataMapAdd(IDC_BIOS1,         DM_INT,  CT_COMBOBOX, &default_bios_index[0],    DM_NONE, NULL,                      0, 0, AssignDefaultBios0);
-		if (GetSystemBiosInfo(1))
-			DataMapAdd(IDC_BIOS2,         DM_INT,  CT_COMBOBOX, &default_bios_index[1],    DM_NONE, NULL,                      0, 0, AssignDefaultBios1);
-		if (GetSystemBiosInfo(2))
-			DataMapAdd(IDC_BIOS3,         DM_INT,  CT_COMBOBOX, &default_bios_index[2],    DM_NONE, NULL,                      0, 0, AssignDefaultBios2);
-		if (GetSystemBiosInfo(3))
-			DataMapAdd(IDC_BIOS4,         DM_INT,  CT_COMBOBOX, &default_bios_index[3],    DM_NONE, NULL,                      0, 0, AssignDefaultBios3);
-		if (GetSystemBiosInfo(4))
-			DataMapAdd(IDC_BIOS5,         DM_INT,  CT_COMBOBOX, &default_bios_index[4],    DM_NONE, NULL,                      0, 0, AssignDefaultBios4);
-		if (GetSystemBiosInfo(5))
-			DataMapAdd(IDC_BIOS6,         DM_INT,  CT_COMBOBOX, &default_bios_index[5],    DM_NONE, NULL,                      0, 0, AssignDefaultBios5);
-		if (GetSystemBiosInfo(6))
-			DataMapAdd(IDC_BIOS7,         DM_INT,  CT_COMBOBOX, &default_bios_index[6],    DM_NONE, NULL,                      0, 0, AssignDefaultBios6);
-		if (GetSystemBiosInfo(7))
-			DataMapAdd(IDC_BIOS8,         DM_INT,  CT_COMBOBOX, &default_bios_index[7],    DM_NONE, NULL,                      0, 0, AssignDefaultBios7);
+		DATAMAPADD_BIOS(0)
+		DATAMAPADD_BIOS(1)
+		DATAMAPADD_BIOS(2)
+		DATAMAPADD_BIOS(3)
+		DATAMAPADD_BIOS(4)
+		DATAMAPADD_BIOS(5)
+		DATAMAPADD_BIOS(6)
+		DATAMAPADD_BIOS(7)
+		DATAMAPADD_BIOS(8)
+		DATAMAPADD_BIOS(9)
+		DATAMAPADD_BIOS(10)
+		DATAMAPADD_BIOS(11)
+		DATAMAPADD_BIOS(12)
+		DATAMAPADD_BIOS(13)
+		DATAMAPADD_BIOS(14)
+		DATAMAPADD_BIOS(15)
 	}
 
 #ifdef MESS
@@ -5212,21 +5250,38 @@ static void InitializeControllerMappingUI(HWND hwnd)
 }
 
 
-static void InitializeBIOSUI(HWND hwnd)
+static void InitializeBIOSCtrl(HWND hCtrl, const game_driver *bios)
 {
-	HWND hCtrl = GetDlgItem(hwnd,IDC_BIOS);
-
-	if (hCtrl && g_biosinfo)
+	if (hCtrl && bios)
 	{
 		int i;
 
-		for (i = 0; !BIOSENTRY_ISEND(&g_biosinfo[i]); i++)
+		for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 		{
-			ComboBox_AddStringA(hCtrl,g_biosinfo[i]._description);
+			const rom_entry *rom;
+
+			for (rom = bios->rom; !ROMENTRY_ISEND(rom); rom++)
+			{
+				if (ROMENTRY_ISSYSTEM_BIOS(rom) && (ROM_GETBIOSFLAGS(rom) - 1 == i))
+				{
+					const char *name = ROM_GETHASHDATA(rom);
+					const char *description = name + strlen(name) + 1;
+
+					ComboBox_AddStringA(hCtrl, description);
+					break;
+				}
+			}
 		}
 	}
 }
 
+static void InitializeBIOSUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd, IDC_BIOS);
+
+	if (hCtrl)
+		InitializeBIOSCtrl(hCtrl, g_biosinfo);
+}
 
 static void InitializeDefaultBIOSUI(HWND hwnd)
 {
@@ -5234,18 +5289,10 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 
 	for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 	{
-		const game_driver *drv = GetSystemBiosInfo(n);
-		HWND hCtrl = GetDlgItem(hwnd,IDC_BIOS1 + n);
+		HWND hCtrl = GetDlgItem(hwnd, IDC_BIOS1 + n);
 
-		if (hCtrl && drv)
-		{
-			int i;
-
-			for (i = 0; !BIOSENTRY_ISEND(&drv->bios[i]); i++)
-			{
-				ComboBox_AddStringA(hCtrl,drv->bios[i]._description);
-			}
-		}
+		if (hCtrl)
+			InitializeBIOSCtrl(hCtrl, GetSystemBiosInfo(n));
 	}
 }
 

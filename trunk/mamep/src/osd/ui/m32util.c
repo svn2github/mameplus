@@ -55,7 +55,7 @@ static struct DriversInfo
 	BOOL isClone;
 	BOOL isBroken;
 	BOOL isHarddisk;
-	BOOL hasOptionalBIOS;
+	BOOL hasOptionalBios;
 	BOOL isStereo;
 	BOOL isVector;
 	BOOL usesRoms;
@@ -369,7 +369,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					gameinfo->isHarddisk = TRUE;
 					break;
 				}
-			gameinfo->hasOptionalBIOS = (gamedrv->bios != NULL);
 			expand_machine_driver(gamedrv->drv, &drv);
 
 			num_speakers = 0;
@@ -380,12 +379,15 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->isStereo = (num_speakers > 1);
 			gameinfo->isVector = ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
+			gameinfo->hasOptionalBios = FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
-					gameinfo->usesRoms = TRUE; 
-					break; 
+					gameinfo->usesRoms = TRUE;
+					gameinfo->hasOptionalBios = (determine_bios_rom(gamedrv->rom) != 0);
+					break;
 				}
+
 			gameinfo->usesSamples = FALSE;
 			gameinfo->usesYM3812 = FALSE;
 			for (i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++)
@@ -499,10 +501,26 @@ BOOL DriverIsBios(int driver_index)
 	return bBios;
 }
 
-
-BOOL DriverHasOptionalBIOS(int driver_index)
+BOOL DriverHasOptionalBios(int driver_index)
 {
-	return GetDriversInfo(driver_index)->hasOptionalBIOS;
+	return GetDriversInfo(driver_index)->hasOptionalBios;
+}
+
+int DriverBiosIndex(int driver_index)
+{
+	int i;
+
+	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
+	{
+		const game_driver *bios = GetSystemBiosInfo(i);
+		const game_driver *drv;
+
+		for (drv = drivers[driver_index]; drv; drv = driver_get_clone(drv))
+			if (bios == drv)
+				return i;
+	}
+
+	return -1;
 }
 
 BOOL DriverIsStereo(int driver_index)

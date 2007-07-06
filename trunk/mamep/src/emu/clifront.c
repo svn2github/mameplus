@@ -55,14 +55,6 @@ void assign_drivers(void);
 static void display_help(void);
 static void setup_language(void); 
 /* informational functions */
-static int info_listxml(const char *gamename);
-static int info_listgames(const char *gamename);
-static int info_listfull(const char *gamename);
-static int info_listsource(const char *gamename);
-static int info_listclones(const char *gamename);
-static int info_listcrc(const char *gamename);
-static int info_listroms(const char *gamename);
-static int info_listsamples(const char *gamename);
 static int info_verifyroms(const char *gamename);
 static int info_verifysamples(const char *gamename);
 static int info_romident(const char *gamename);
@@ -395,17 +387,17 @@ static int execute_commands(const char *exename)
 		int (*function)(const char *gamename);
 	} info_commands[] =
 	{
-		{ CLIOPTION_LISTXML,		info_listxml },
-		{ CLIOPTION_LISTGAMES,		info_listgames },
-		{ CLIOPTION_LISTFULL,		info_listfull },
-		{ CLIOPTION_LISTSOURCE,		info_listsource },
-		{ CLIOPTION_LISTCLONES,		info_listclones },
-		{ CLIOPTION_LISTCRC,		info_listcrc },
+		{ CLIOPTION_LISTXML,		cli_info_listxml },
+		{ CLIOPTION_LISTFULL,		cli_info_listfull },
+		{ CLIOPTION_LISTSOURCE,		cli_info_listsource },
+		{ CLIOPTION_LISTCLONES,		cli_info_listclones },
+		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
+		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 #ifdef MESS
 		{ CLIOPTION_LISTDEVICES,	info_listdevices },
 #endif
-		{ CLIOPTION_LISTROMS,		info_listroms },
-		{ CLIOPTION_LISTSAMPLES,	info_listsamples },
+		{ CLIOPTION_LISTROMS,		cli_info_listroms },
+		{ CLIOPTION_LISTSAMPLES,	cli_info_listsamples },
 		{ CLIOPTION_VERIFYROMS,		info_verifyroms },
 		{ CLIOPTION_VERIFYSAMPLES,	info_verifysamples },
 		{ CLIOPTION_ROMIDENT,		info_romident }
@@ -612,11 +604,11 @@ static void setup_language(void)
 ***************************************************************************/
 
 /*-------------------------------------------------
-    info_listxml - output the XML data for one
+    cli_info_listxml - output the XML data for one
     or more games
 -------------------------------------------------*/
 
-static int info_listxml(const char *gamename)
+int cli_info_listxml(const char *gamename)
 {
 	/* since print_mame_xml expands the machine driver, we need to set things up */
 	init_resource_tracking();
@@ -632,11 +624,11 @@ static int info_listxml(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listfull - output the name and description
+    cli_info_listfull - output the name and description
     of one or more games
 -------------------------------------------------*/
 
-static int info_listfull(const char *gamename)
+int cli_info_listfull(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -682,10 +674,10 @@ static int info_listfull(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listgames
+    cli_info_listgames
 -------------------------------------------------*/
 
-int info_listgames(const char *gamename)
+int cli_info_listgames(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -729,11 +721,11 @@ int info_listgames(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listsource - output the name and source
+    cli_info_listsource - output the name and source
     filename of one or more games
 -------------------------------------------------*/
 
-static int info_listsource(const char *gamename)
+int cli_info_listsource(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -752,11 +744,11 @@ static int info_listsource(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listclones - output the name and source
+    cli_info_listclones - output the name and source
     filename of one or more games
 -------------------------------------------------*/
 
-static int info_listclones(const char *gamename)
+int cli_info_listclones(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -785,11 +777,11 @@ static int info_listclones(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listcrc - output the CRC and name of
+    cli_info_listcrc - output the CRC and name of
     all ROMs referenced by MAME
 -------------------------------------------------*/
 
-static int info_listcrc(const char *gamename)
+int cli_info_listcrc(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -819,11 +811,11 @@ static int info_listcrc(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listroms - output the list of ROMs
+    cli_info_listroms - output the list of ROMs
     referenced by a given game or set of games
 -------------------------------------------------*/
 
-static int info_listroms(const char *gamename)
+int cli_info_listroms(const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -889,11 +881,11 @@ static int info_listroms(const char *gamename)
 
 
 /*-------------------------------------------------
-    info_listsamples - output the list of samples
+    cli_info_listsamples - output the list of samples
     referenced by a given game or set of games
 -------------------------------------------------*/
 
-static int info_listsamples(const char *gamename)
+int cli_info_listsamples(const char *gamename)
 {
 	int count = 0;
 

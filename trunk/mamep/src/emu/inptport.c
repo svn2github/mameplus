@@ -2559,26 +2559,23 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 	     (!mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
 	      || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c")))
 	{
+		int system_bios = determine_bios_rom(Machine->gamedrv->rom);
+
 		/* first mark all items to disable */
 		remove_neogeo_territory = 1;
 		remove_neogeo_arcade = 1;
 
-		if (Machine->gamedrv->bios)
+		switch (system_bios - 1)
 		{
-			int system_bios = determine_bios_rom(Machine->gamedrv->bios);
+		// enable arcade/console and territory
+		case NEOGEO_BIOS_EURO:
+			remove_neogeo_arcade = 0;
+			remove_neogeo_territory = 0;
+			break;
 
-			switch (system_bios)
-			{
-			// enable arcade/console and territory
-			case NEOGEO_BIOS_EURO:
-				remove_neogeo_arcade = 0;
-				remove_neogeo_territory = 0;
-				break;
-
-			// enable territory
-			case NEOGEO_BIOS_DEBUG:
-				remove_neogeo_territory = 0;
-			}
+		// enable territory
+		case NEOGEO_BIOS_DEBUG:
+			remove_neogeo_territory = 0;
 		}
 
 		// enable arcade/console and territory
@@ -3487,7 +3484,7 @@ static void update_digital_joysticks(void)
 					if ((info->current4way & (JOYDIR_UP_BIT | JOYDIR_DOWN_BIT)) &&
 						(info->current4way & (JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT)))
 					{
-						if (rand() & 1)
+						if (mame_rand(Machine) & 1)
 							info->current4way &= ~(JOYDIR_LEFT_BIT | JOYDIR_RIGHT_BIT);
 						else
 							info->current4way &= ~(JOYDIR_UP_BIT | JOYDIR_DOWN_BIT);
@@ -4038,7 +4035,7 @@ INLINE void copy_command_buffer(char log)
 		return;
 
 	command_buffer[len].code = uchar;
-	command_buffer[len].time = timer_get_time();
+	command_buffer[len].time = mame_time_to_double(mame_timer_get_time());
 	command_buffer[++len].code = '\0';
 }
 

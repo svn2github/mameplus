@@ -361,7 +361,7 @@ NVRAM_HANDLER( generic_randfill )
 	{
 		UINT8 *nvram = nvram_select();
 		for (i = 0; i < generic_nvram_size; i++)
-			nvram[i] = rand();
+			nvram[i] = mame_rand(machine);
 	}
 }
 

@@ -160,40 +160,31 @@ void CLIB_DECL debugload(const char *string, ...)
     from SystemBios structure and OPTION_BIOS
 -------------------------------------------------*/
 
-int determine_bios_rom(const bios_entry *bios)
+int determine_bios_rom(const rom_entry *romp)
 {
+	const rom_entry *rom;
 	const char *specbios = options_get_string(mame_options(), OPTION_BIOS);
-	const bios_entry *firstbios = bios;
+	int bios_count = 0;
 
 	/* set to default */
-	int bios_no = 0;
+	int bios_no = 1;
 
-	/* Not system_bios_0 and bios is set  */
-	if (bios && (specbios != NULL))
-	{
-		/* Allow '-bios n' to still be used */
-		while (!BIOSENTRY_ISEND(bios))
+	for (rom = romp;!ROMENTRY_ISEND(rom);rom++)
+		if (ROMENTRY_ISSYSTEM_BIOS(rom))
 		{
+			const char *biosname = ROM_GETHASHDATA(rom);
+			int bios_flags = ROM_GETBIOSFLAGS(rom);
 			char bios_number[3];
-			sprintf(bios_number, "%d", bios->value);
 
-			if (!strcmp(bios_number, specbios))
-				bios_no = bios->value;
-
-			bios++;
+			/* Allow '-bios n' to still be used */
+			sprintf(bios_number, "%d", bios_flags-1);
+			if (specbios && (!strcmp(bios_number, specbios) || !strcmp(biosname, specbios)))
+				bios_no = bios_flags;
+			bios_count++;
 		}
 
-		bios = firstbios;
-
-		/* Test for bios short names */
-		while (!BIOSENTRY_ISEND(bios))
-		{
-			if (!strcmp(bios->_name, specbios))
-				bios_no = bios->value;
-
-			bios++;
-		}
-	}
+	if (bios_count == 0)
+		bios_no = 0;
 
 	debugload("Using System BIOS: %d\n", bios_no);
 
@@ -211,14 +202,14 @@ static int count_roms(const rom_entry *romp)
 	const rom_entry *region, *rom;
 	int count = 0;
 
-	/* determine the correct biosset to load based on OPTION_BIOS string */
-	int this_bios = determine_bios_rom(Machine->gamedrv->bios);
-
 	/* loop over regions, then over files */
 	for (region = romp; region; region = rom_next_region(region))
 		for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-			if (!ROM_GETBIOS(romp) || (ROM_GETBIOS(romp) == (this_bios+1))) /* alternate bios sets */
+		{
+			int bios_flags = ROM_GETBIOSFLAGS(rom);
+			if (!bios_flags || (bios_flags == system_bios)) /* alternate bios sets */
 				count++;
+		}
 
 	/* return the total count */
 	return count;
@@ -233,7 +224,7 @@ static int count_roms(const rom_entry *romp)
 static void fill_random(UINT8 *base, UINT32 length)
 {
 	while (length--)
-		*base++ = rand();
+		*base++ = mame_rand(Machine);
 }
 
 
@@ -595,7 +586,7 @@ static int read_rom_data(rom_load_data *romdata, const rom_entry *romp)
 			return 0;
 		numbytes -= bytesleft;
 
-		debugload("  Copying to %08X\n", (int)base);
+		debugload("  Copying to %p\n", base);
 
 		/* unmasked cases */
 		if (datamask == 0xff)
@@ -720,7 +711,6 @@ static void copy_rom_data(rom_load_data *romdata, const rom_entry *romp)
 static void process_rom_entries(rom_load_data *romdata, const rom_entry *romp)
 {
 	UINT32 lastflags = 0;
-	UINT8 lastbios = 0;
 
 	/* loop until we hit the end of this region */
 	while (!ROMENTRY_ISREGIONEND(romp))
@@ -748,7 +738,8 @@ static void process_rom_entries(rom_load_data *romdata, const rom_entry *romp)
 		/* handle files */
 		else if (ROMENTRY_ISFILE(romp))
 		{
-			if (!ROM_GETBIOS(romp) || (ROM_GETBIOS(romp) == (system_bios+1))) /* alternate bios sets */
+			int bios_flags = ROM_GETBIOSFLAGS(romp);
+			if (!bios_flags || (bios_flags == system_bios)) /* alternate bios sets */
 			{
 				const rom_entry *baserom = romp;
 				int explength = 0;
@@ -769,15 +760,9 @@ static void process_rom_entries(rom_load_data *romdata, const rom_entry *romp)
 
 						/* handle flag inheritance */
 						if (!ROM_INHERITSFLAGS(&modified_romp))
-						{
 							lastflags = modified_romp._flags;
-							lastbios = modified_romp._bios;
-						}
 						else
-						{
 							modified_romp._flags = (modified_romp._flags & ~ROM_INHERITEDFLAGS) | lastflags;
-							modified_romp._bios = lastbios;
-						}
 
 						explength += ROM_GETLENGTH(&modified_romp);
 
@@ -1012,7 +997,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	memset(disk_handle, 0, sizeof(disk_handle));
 
 	/* determine the correct biosset to load based on OPTION_BIOS string */
-	system_bios = determine_bios_rom(Machine->gamedrv->bios);
+	system_bios = determine_bios_rom(romp);
 
 #ifdef USE_IPS
 	if (patchname && *patchname)
@@ -1035,7 +1020,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 		/* remember the base and length */
 		romdata.regionbase = new_memory_region(machine, regiontype, ROMREGION_GETLENGTH(region), ROMREGION_GETFLAGS(region));
 		romdata.regionlength = ROMREGION_GETLENGTH(region);
-		debugload("Allocated %X bytes @ %08X\n", romdata.regionlength, (int)romdata.regionbase);
+		debugload("Allocated %X bytes @ %p\n", romdata.regionlength, romdata.regionbase);
 
 		/* clear the region if it's requested */
 		if (ROMREGION_ISERASE(region))

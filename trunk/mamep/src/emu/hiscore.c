@@ -272,7 +272,7 @@ static void hiscore_periodic (int param)
 			if (safe_to_load())
 			{
 				hiscore_load();
-				timer_enable(timer, FALSE);
+				mame_timer_enable(timer, FALSE);
 			}
 		}
 	}
@@ -380,8 +380,8 @@ void hiscore_init (running_machine *machine, const char *name)
 		mame_fclose (f);
 	}
 
-	timer = timer_alloc(hiscore_periodic);
-	timer_adjust(timer, TIME_IN_HZ(60), 0, TIME_IN_HZ(60));
+	timer = mame_timer_alloc(hiscore_periodic);
+	mame_timer_adjust(timer, MAME_TIME_IN_HZ(60), 0, MAME_TIME_IN_HZ(60));
 
 	add_exit_callback(machine, hiscore_close);
 }
