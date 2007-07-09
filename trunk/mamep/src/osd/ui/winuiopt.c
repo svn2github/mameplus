@@ -2757,8 +2757,9 @@ static void build_default_bios(void)
 					assert(0 <= alt_index && alt_index < num_alt_options);
 
 					for (rom = drivers[driver_index]->rom; !ROMENTRY_ISEND(rom); rom++)
-						if (count < ROM_GETBIOSFLAGS(rom))
-							count = ROM_GETBIOSFLAGS(rom);
+						if (ROMENTRY_ISSYSTEM_BIOS(rom))
+							if (count < ROM_GETBIOSFLAGS(rom))
+								count = ROM_GETBIOSFLAGS(rom);
 
 					if (count == 1)
 					{

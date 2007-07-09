@@ -133,7 +133,7 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 				if (ROMREGION_ISROMDATA(region))
 				{
 #ifdef CHECK_SELECTED_BIOS_ONLY
-					if (!ROM_GETBIOSFLAGS(rom) || (ROM_GETBIOSFLAGS(rom) == (system_bios+1))) /* alternate bios sets */
+					if (!ROMENTRY_ISSYSTEM_BIOS(rom) || (ROM_GETBIOSFLAGS(rom) == system_bios)) /* alternate bios sets */
 					{
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 					if (audit_one_rom(rom, gamedrv, validation, record++) && (!shared || allshared))
