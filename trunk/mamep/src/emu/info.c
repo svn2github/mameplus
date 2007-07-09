@@ -357,6 +357,9 @@ static void print_game_bios(FILE* out, const game_driver* game)
 {
 	const rom_entry *rom;
 
+	if (game->rom == NULL)
+		return;
+
 	for (rom = game->rom; !ROMENTRY_ISEND(rom); rom++)
 		if (ROMENTRY_ISSYSTEM_BIOS(rom))
 		{
