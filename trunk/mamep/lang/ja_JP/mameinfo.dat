@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.116u3      #
+#     Mameinfo.dat日本語版 v0.116u4      #
 #                                        #
-#              July 5, 2007              #
+#              July 9, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：860 翻訳済：840
-# 追加項目：341 合計：1201
+# Tester報告：868 翻訳済：849
+# 追加項目：341 合計：1209
 #
 
 
@@ -22,6 +22,22 @@ $mame
 [バグ]
 
 - BGMや効果音がおかしい。0.113サイクルから発生。 primrage0116u3yel, Slick Mandela
+
+$end
+
+$info=changela
+$mame
+[バグ]
+
+- DIP設定でジョイスティック操作に設定しても、ジョイスティック入力用の割り当てが無い。 changela0116u4gra, twisty
+
+$end
+
+$info=djboy
+$mame
+[バグ]
+
+- 2面のボスが表示されず、それ以上進めなくなることがある。 djboy0116u4yel, hammad
 
 $end
 
@@ -59,74 +75,11 @@ $mame
 
 $end
 
-$info=leprechn
-$mame
-[情報]
-
-- F2キーを押しながらリセットするとテストモードになる。
-F1キーで移動、F2キーで選択。
-
-
-[バグ]
-
-- デバッグビルドでアサートが出る。 leprechn0116u3ora, judge_ / robiza
-
-
-- 1面をすぎると、AY-8910のChannel Cから変なノイズが出る。0.60では起きていない。 leprechn061gre, M.A.S.H.
-
-$end
-
 $info=vbowl
 $mame
 [バグ]
 
 - 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule
-
-$end
-
-$info=ironhors
-$mame
-[バグ]
-
-- 効果音が出なくなっている。 ironhors0116u3yel, Kold666
-
-$end
-
-$info=kinst
-$mame
-[バグ]
-
-- 入力を一切受け付けない。 kinst0116u3gra, KermitTheFrog / John IV
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-$end
-
-$info=kinst2
-$mame
-[バグ]
-
-- 入力を一切受け付けない。 kinst0116u3gra, KermitTheFrog / John IV
-
-
-- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
-kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
 
 $end
 
@@ -138,19 +91,15 @@ $mame
 
 $end
 
-$info=spelunk2
+$info=spelunkr
 $mame
 [バグ]
-
-- 通り抜けられる壁の色は実機では普通の壁よりも暗い色になる。
-MAMEでは全て暗い色になっている。 spelunk2_0116u3gre, Stefan Lindberg / Phil Bennett
-
 
 - 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
 
 $end
 
-$info=spelunkr
+$info=spelunk2
 $mame
 [バグ]
 
@@ -267,6 +216,30 @@ $mame
 
 $end
 
+$info=exctleag
+$mame
+[バグ]
+
+- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
+
+$end
+
+$info=suprleag
+$mame
+[バグ]
+
+- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
+
+$end
+
+$info=tetrisp2
+$mame
+[バグ]
+
+- 0.116u1より、起動しても画面が真っ黒のまま進まない。 tetrisp2_0116u4red, Tafoid
+
+$end
+
 $info=tnzs
 $mame
 [バグ]
@@ -348,6 +321,31 @@ $mame
 - 魔法大作戦キャラの出し方：
 
 コイン投入後、上上下下左右左右ABCスタートと入力
+
+$end
+
+$info=gauntleg
+$mame
+[バグ]
+
+- グレー画面の直後にクラッシュする。 gauntleg0116u4red, Sabotendar Kun /  SailorSat
+
+$end
+
+$info=gauntdl
+$mame
+[バグ]
+
+- グレー画面の直後にクラッシュする。 gauntleg0116u4red, Sabotendar Kun /  SailorSat
+
+
+- テストモードのファイルシステムチェックをするとクラッシュする。
+Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
+
+
+- VGAモードでゲームを起動するとクラッシュする。
+またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
+実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
 
 $end
 
@@ -1321,11 +1319,6 @@ $info=kingball
 $mame
 [バグ]
 
-- キングが「Help」から「Bye Bye」と言うまでの間、
-音楽にノイズが入る。
-0.57から。 kingball058gre, Jonemaan / Tafoid
-
-
 - ショットと壁の一部が左右にぶれている。 kingball071u2gre, AdamA / TriggerFin
 
 $end
@@ -1598,6 +1591,38 @@ $mame
 - 選手紹介や休憩の画面で、太い茶色の線が現れる。
 また、ラウンド終了直後、0.5秒くらい各インジケータが画面に残ってしまう。
 実機で起こるかどうかは分からないが、このようにはならないと思われる。 kingofb37b16gre, Zip
+
+$end
+
+$info=kinst2
+$mame
+[バグ]
+
+- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
+kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
+
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
+
+$end
+
+$info=kinst
+$mame
+[バグ]
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
 
 $end
 
@@ -4635,20 +4660,6 @@ $mame
 
 $end
 
-$info=gauntdl
-$mame
-[バグ]
-
-- テストモードのファイルシステムチェックをするとクラッシュする。
-Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
-
-
-- VGAモードでゲームを起動するとクラッシュする。
-またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
-実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
-
-$end
-
 $info=victory
 $mame
 [バグ]
@@ -7564,6 +7575,15 @@ $mame
 またストップモードでは同じく2キーでストップ、1キーで解除する。
 
 レベル選択モードでは、1キーで選択、2キーで再スタート。
+
+$end
+
+$info=leprechn
+$mame
+[情報]
+
+- F2キーを押しながらリセットするとテストモードになる。
+F1キーで移動、F2キーで選択。
 
 $end
 

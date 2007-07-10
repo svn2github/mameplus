@@ -2350,15 +2350,26 @@ pzloop2j	パズループ2 (日本版 010205)	ぱずるーぷ_2	Mitchell, distributed by Capco
 choko	雀牌パズル 長江 (日本版 010820)	じゃんぱいぱずるちょうこう	Mitchell, distributed by Capcom
 hsf2j	ハイパーストリートファイターII -The Anniversary Edition (日本版 031222)	はいぱーすとりーとふぁいたー_2	Capcom
 hsf2	ハイパーストリートファイターII -The Anniversary Edition (アジア版 040202)	はいぱーすとりーとふぁいたー_2	Capcom
-warzard	ウォーザード (日本版 961121)	うぉーざーど	Capcom
 sfiii	ストリートファイターIII -ニュージェネレーション (日本版 970204)	すとりーとふぁいたー_3_1	Capcom
+sfiiiu	ストリートファイターIII -ニュージェネレーション (USA版 970204)	すとりーとふぁいたー_3_1	Capcom
 sfiii2	ストリートファイターIII 2nd IMPACT -ジャイアントアタック (日本版 970930)	すとりーとふぁいたー_3_2いんぱくと	Capcom
+sfiii2u	ストリートファイターIII 2nd IMPACT -ジャイアントアタック (USA版 970930)	すとりーとふぁいたー_3_2いんぱくと	Capcom
 sfiii3	ストリートファイターIII 3rd STRIKE -ファイトフォーザフューチャー (USA版 990512)	すとりーとふぁいたー_3_3すとらいく	Capcom
 sfiii3a	ストリートファイターIII 3rd STRIKE -ファイトフォーザフューチャー (USA版 990608)	すとりーとふぁいたー_3_3すとらいく	Capcom
 jojo	ジョジョの奇妙な冒険 (日本版 981202)	じょじょのきみょうなぼうけん_1	Capcom
 jojoalt	ジョジョの奇妙な冒険 (日本版 990108)	じょじょのきみょうなぼうけん_1	Capcom
-jojoba	ジョジョの奇妙な冒険 -未来への遺産 (日本版 990913 NCD)	じょじょのきみょうなぼうけん_2みらいへのいさん	Capcom
-jojobaa	ジョジョの奇妙な冒険 -未来への遺産 (日本版 990913)	じょじょのきみょうなぼうけん_2みらいへのいさん	Capcom
+jojoba	ジョジョの奇妙な冒険 -未来への遺産 (日本版 990913)	じょじょのきみょうなぼうけん_2みらいへのいさん	Capcom
+redearth	ウォーザード / Red Earth (欧州版 961121)	うぉーざーど	Capcom
+warzard	ウォーザード (日本版 961121)	うぉーざーど	Capcom
+sfiiin	ストリートファイターIII -ニュージェネレーション (アジア版 970204 NO CD)	すとりーとふぁいたー_3_1	Capcom
+sfiii2n	ストリートファイターIII 2nd IMPACT -ジャイアントアタック (アジア版 970930 NO CD)	すとりーとふぁいたー_3_2いんぱくと	Capcom
+sfiii3n	ストリートファイターIII 3rd STRIKE -ファイトフォーザフューチャー (日本版 990512 NO CD)	すとりーとふぁいたー_3_3すとらいく	Capcom
+sfiii3an	ストリートファイターIII 3rd STRIKE -ファイトフォーザフューチャー (日本版 990608 NO CD)	すとりーとふぁいたー_3_3すとらいく	Capcom
+jojon	ジョジョの奇妙な冒険 (アジア版 981202 NO CD)	じょじょのきみょうなぼうけん_1	Capcom
+jojoaltn	ジョジョの奇妙な冒険 (アジア版 990108 NO CD)	じょじょのきみょうなぼうけん_1	Capcom
+jojoban	ジョジョの奇妙な冒険 -未来への遺産 (日本版 990913 NO CD)	じょじょのきみょうなぼうけん_2みらいへのいさん	Capcom
+jojobane	ジョジョの奇妙な冒険 -未来への遺産 (欧州版 990913 NO CD)	じょじょのきみょうなぼうけん_2みらいへのいさん	Capcom
+redeartn	ウォーザード / Red Earth (961121 NO CD)	うぉーざーど	Capcom
 ts2	バトルアリーナ闘神伝2 (USA版 951124)	ばとるありーなとうしんでん2	Capcom/Takara
 ts2j	バトルアリーナ闘神伝2 (日本版 951124)	ばとるありーなとうしんでん2	Capcom/Takara
 starglad	スターグラディエイター -エピソード:I ファイナルクルセイド (USA版 960627)	すたーぐらでぃえいたー_1	Capcom
@@ -3366,8 +3377,8 @@ suchie3	アイドル雀士スーチーパイIII (日本版)	あいどるじゃんしすーちーぱい_3	Jale
 pjustic	燃えろ！ジャスティス学園 (日本 / USA / 海外/ 韓国 / オーストラリア版)	もえろじゃすてぃすがくえん	Capcom
 pstone	パワーストーン (日本 / USA / 欧州 / アジア / オーストラリア版)	ぱわーすとーん_1	Capcom
 pstone2	パワーストーン2 (日本 / USA / 欧州 / アジア / オーストラリア版)	ぱわーすとーん_2	Capcom
-otrigger	アウトトリガー (日本 / USA / 海外/ 韓国 / オーストラリア版)	あうととりがー	Sega
-samba	サンバdeアミーゴ (日本版)	さんばであみーご	Sega
+otrigger	アウトトリガー (日本 / USA / 海外 / 韓国 / オーストラリア版)	あうととりがー	Sega
+samba	サンバDEアミーゴ (日本版)	さんばであみーご	Sega
 slasho	スラッシュアウト (日本 / USA / 海外 / 韓国 / オーストラリア版)	すらっしゅあうと	Sega
 spawn	スポーン -In The Demon's Hand (日本 / USA / 欧州 / アジア / オーストラリア版)	すぽーん	Capcom
 virnba	バーチャNBA (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃえぬびーえー	Sega
@@ -4793,7 +4804,7 @@ kof2001	ザ・キング・オブ・ファイターズ 2001 (set 1)	ざきんぐおぶふぁいたーず_08_
 kof2001h	ザ・キング・オブ・ファイターズ 2001 (set 2)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 cthd2003	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版 set 1)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
 ct2k3sp	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus (海賊版)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
-ct2k3sa	Tザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus alternate (海賊版)	ざきんぐおぶふぁいたーず_08_4_2001	bootleg
+ct2k3sa	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 Super Plus alternate (海賊版)	ざきんぐおぶふぁいたーず_08_4_2001	bootleg
 mslug4	メタルスラッグ4	めたるすらっぐ_4_1	Mega
 ms4plus	メタルスラッグ4 / Metal Slug 4 Plus (海賊版)	めたるすらっぐ_4_2	bootleg
 rotd	レイジ・オブ・ザ・ドラゴンズ	れいじおぶざどらごんず	Evoga / Playmore
@@ -5553,14 +5564,13 @@ bangj	GUNガバチョ (日本版)	がんがばちょ	Gaelco
 speedup	スピードアップ	すぴーどあっぷ	Gaelco
 surfplnt	サーフプラネット	さーふぷらねっと	Gaelco
 radikalb	ラジカルバイカーズ	らじかるばいかーず	Gaelco
-djboy	DJボーイ	でぃーじぇいぼーい	Kaneko
+djboy	DJボーイ	でぃーじぇいぼーい	Sammy / Williams [Kaneko]
 djboyj	DJボーイ (日本版)	でぃーじぇいぼーい	Sega [Kaneko]
 airbustr	エア・バスター -Trouble Specialty Raid Unit (海外版)	えあばすたー	Kaneko (Namco license)
 airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kaneko (Namco license)
 airbusb	エア・バスター -Trouble Specialty Raid Unit (海賊版)	えあばすたー	bootleg
-galpanic	ギャルズパニック (set 1)	ぎゃるずぱにっく_1	Kaneko
-galpanib	ギャルズパニック (set 2)	ぎゃるずぱにっく_1	Kaneko
-galpania	ギャルズパニック (set 3)	ぎゃるずぱにっく_1	Kaneko
+galpanic	ギャルズパニック (Unprotected)	ぎゃるずぱにっく_1	Kaneko
+galpania	ギャルズパニック (MCU Protected)	ぎゃるずぱにっく_1	Kaneko
 galpani2	ギャルズパニックII (アジア版)	ぎゃるずぱにっく_2_1	Kaneko
 galpan2g	ギャルズパニックII (ドイツ版)	ぎゃるずぱにっく_2_1	Kaneko
 galpan2t	ギャルズパニックII (台湾版)	ぎゃるずぱにっく_2_1	Kaneko
@@ -5582,7 +5592,8 @@ explbrkr	爆烈ブレイカー / Explosive Breaker	ばくれつぶれいかー	Kaneko
 bakubrkr	爆烈ブレイカー	ばくれつぶれいかー	Kaneko
 shogwarr	富士山バスター / Shogun Warriors	ふじやまばすたー	Kaneko
 fjbuster	富士山バスター (日本版)	ふじやまばすたー	Kaneko
-brapboys	B.ラップ ボーイズ (日本版)	びぃらっぷぼーいず	Kaneko
+brapboys	B.ラップ ボーイズ (海外版)	びぃらっぷぼーいず	Kaneko
+brapboyj	B.ラップ ボーイズ (日本版)	びぃらっぷぼーいず	Kaneko
 bloodwar	大江戸ファイト / Blood Warrior	おおえどふぁいと	Kaneko
 bonkadv	究極！！PC原人 -スペシャルアーケードバージョン	きゅうきょくぴーしーげんじん	Kaneko
 gtmr	グレート1000マイルズラリー (94/07/18)	ぐれーと1000まいるずらりー_1	Kaneko
@@ -6445,7 +6456,7 @@ enigma2a	エニグマII (Space Invaders hardware)	えにぐま2	Zilec Electronics
 ltcasino	リトルカジノ	りとるかじの_1	Digital Controls Inc.
 mv4in1	リトルカジノ / Mini Vegas 4in1	りとるかじの_1	Entertainment Enterprises
 ltcasin2	リトルカジノ2	りとるかじの_2	Digital Controls Inc.
-coolmini	クールミニゲームコレクション	くーるみにげーむこれくしょん	Semicom
+coolmini	クールミニゲームコレクション	くーるみにげーむこれくしょん	SemiCom
 luplup	ラップラップパズル (ver 3.0 / 990128)	らっぷらっぷぱずる	Omega System
 luplup29	ラップラップパズル (ver 2.9 / 990108)	らっぷらっぷぱずる	Omega System
 puzlbang	ラップラップパズル (ver 2.8 / 990106)	らっぷらっぷぱずる	Omega System
@@ -6605,7 +6616,8 @@ wheelfir	ホイールズ&ファイア	ほいーるずあんどふぁいあ	TCH
 littlerb	リトルロビン	りとるろびん	TCH
 tattack	タイムアタッカー	たいむあたっかー	Shonan
 mosaicf2	モザイク (F2 System)	もざいく	F2 System
-wyvernwg	ワイヴァーンウイングス	わいばーんういんぐす	Semicom (Game Vision License)
+finalgdr	ファイナルゴドリ	ふぁいなるごどり	SemiCom
+wyvernwg	ワイヴァーンウイングス	わいばーんういんぐす	SemiCom (Game Vision License)
 rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
 mirax	ミラックス	みらっくす	Current Technologies
