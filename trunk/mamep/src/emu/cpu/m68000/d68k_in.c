@@ -8,10 +8,10 @@ must fix:
 /* ======================================================================== */
 /*
  *                                  MUSASHI
- *                                Version 3.3
+ *                                Version 3.31
  *
  * A portable Motorola M680x0 processor emulation engine.
- * Copyright 1998-2001 Karl Stenerud.  All rights reserved.
+ * Copyright 1998-2007 Karl Stenerud.  All rights reserved.
  *
  * This code may be freely used for non-commercial purposes as long as this
  * copyright notice remains unaltered in the source code and any binary files
@@ -12763,6 +12763,18 @@ M68KMAKE_OP(rol, 32, r, .)
 	else
 		_sub_r32_r32(REG_EBP, REG_ECX);
 
+	if (update_flag)
+	{
+		_mov_r32_r32(REG_EBX, REG_ECX);
+		_and_r32_imm(REG_ECX, 0x1f);
+
+		_mov_r32_r32(REG_EDX, REG_EAX);
+		_rol_r32_cl(REG_EDX);
+		DRC_CFLAG_COND_C();
+
+		_mov_r32_r32(REG_ECX, REG_EBX);
+	}
+
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
@@ -12776,13 +12788,8 @@ _resolve_link(&link2);
 	_rol_r32_cl(REG_EAX);
 
 	_mov_m32abs_r32(&DY, REG_EAX);
-
 	if (update_flag)
-	{
-		DRC_CFLAG_COND_C();
-
 		_jmp_near_link(&link2);
-	}
 
 _resolve_link(&link1);
 	if (update_flag)
