@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.116u4      #
+#      Mameinfo.dat日本語版 v0.117       #
 #                                        #
-#              July 9, 2007              #
+#             July 11, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,18 +12,10 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：868 翻訳済：849
+# Tester報告：868 翻訳済：850
 # 追加項目：341 合計：1209
 #
 
-
-$info=primrage
-$mame
-[バグ]
-
-- BGMや効果音がおかしい。0.113サイクルから発生。 primrage0116u3yel, Slick Mandela
-
-$end
 
 $info=changela
 $mame
@@ -79,7 +71,7 @@ $info=vbowl
 $mame
 [バグ]
 
-- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule
+- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty
 
 $end
 
@@ -163,27 +155,6 @@ $mame
 
 $end
 
-$info=term2
-$mame
-[バグ]
-
-- 各面最後のボーナス得点計算で、点数が加算されず0点のまま。 term2_0116u1yel, RansAckeR
-
-
-- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
-
-
-- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
-
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
-
-$end
-
 $info=finallap
 $mame
 [バグ]
@@ -232,76 +203,6 @@ $mame
 
 $end
 
-$info=tetrisp2
-$mame
-[バグ]
-
-- 0.116u1より、起動しても画面が真っ黒のまま進まない。 tetrisp2_0116u4red, Tafoid
-
-$end
-
-$info=tnzs
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-
-- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
-$info=chukatai
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-$end
-
-$info=drtoppel
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-$end
-
-$info=insectx
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-$end
-
-$info=kabukiz
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-$end
-
-$info=kageki
-$mame
-[バグ]
-
-- tnzs.cのゲームで、フレームスキップを0以外にしてコインを入れようとすると、“Coin Error”か“Bad Hardware”と表示されて固まる。 tnzs0116u2red, Tafoid
-
-$end
-
 $info=battleg
 $mame
 [バグ]
@@ -324,28 +225,11 @@ $mame
 
 $end
 
-$info=gauntleg
+$info=lottofun
 $mame
 [バグ]
 
-- グレー画面の直後にクラッシュする。 gauntleg0116u4red, Sabotendar Kun /  SailorSat
-
-$end
-
-$info=gauntdl
-$mame
-[バグ]
-
-- グレー画面の直後にクラッシュする。 gauntleg0116u4red, Sabotendar Kun /  SailorSat
-
-
-- テストモードのファイルシステムチェックをするとクラッシュする。
-Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
-
-
-- VGAモードでゲームを起動するとクラッシュする。
-またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
-実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
+- 数ゲーム後にチケットが切れて、CALL OPERATORと表示されることがある。 lottofun0117ora, Luigi30
 
 $end
 
@@ -810,7 +694,7 @@ $info=9ballsh3
 $mame
 [バグ]
 
-- このセットのみNVRAMエラーで起動しない。 9ballsh3097red, El Condor
+- このセットのみNVRAMエラーで起動しない。 9ballsh3097red, El Condor /  Luigi30
 
 $end
 
@@ -2402,6 +2286,24 @@ $mame
 
 
 - ファイナル版でプレイしたが、常にノイズが入っている。 DACサウンドの問題だと思われる。 narc36finalgre, Lord Caos / Suppi-Chan
+
+$end
+
+$info=term2
+$mame
+[バグ]
+
+- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
+
+
+- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
+
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -4417,6 +4319,25 @@ $mame
 
 $end
 
+$info=tnzs
+$mame
+[バグ]
+
+- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
 $info=outzone
 $mame
 [バグ]
@@ -4580,7 +4501,7 @@ $mame
 [バグ]
 
 - ハイスコアの部分がゲーム中「0000000」のまま。
-更新しても変わらない。他のTokiのセットでは起きない。 tokiu056gre, zaxxon1
+更新しても変わらない。他のTokiのセットでは起きない。 tokiu056gre, zaxxon1 / Luigi30 / Lord Nightmare
 
 $end
 
@@ -4657,6 +4578,20 @@ $mame
 
 - 動作がとても遅い。プレイヤーなどの動作もノロノロ。
 ただしクロック数は実機どおりの設定。 vball071u1gre, pomata / Haze / Karasu
+
+$end
+
+$info=gauntdl
+$mame
+[バグ]
+
+- テストモードのファイルシステムチェックをするとクラッシュする。
+Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
+
+
+- VGAモードでゲームを起動するとクラッシュする。
+またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
+実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
 
 $end
 
