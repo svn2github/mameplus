@@ -66,6 +66,7 @@ static struct DriversInfo
 	BOOL supportsSaveState;
 	BOOL hasM68K;
 	int parentIndex;
+	int biosIndex;
 } *drivers_info = NULL;
 
 
@@ -473,6 +474,34 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					}
 				}
 			}
+			gameinfo->biosIndex = -1;
+			if (DriverIsBios(ndriver))
+				gameinfo->biosIndex = ndriver;
+			else if (gameinfo->hasOptionalBios)
+			{
+				int parentIndex;
+
+				if (gameinfo->isClone)
+					parentIndex = gameinfo->parentIndex;
+				else
+					parentIndex = ndriver;
+
+				while (1)
+				{
+					parentIndex = GetGameNameIndex(drivers[parentIndex]->parent);
+					if (parentIndex == -1)
+					{
+						dprintf("bios for %s is not found", drivers[ndriver]->name);
+						break;
+					}
+
+					if (DriverIsBios(parentIndex))
+					{
+						gameinfo->biosIndex = parentIndex;
+						break;
+					}
+				}
+			}
 		}
 	}
 	return &drivers_info[driver_index];
@@ -508,16 +537,18 @@ BOOL DriverHasOptionalBios(int driver_index)
 
 int DriverBiosIndex(int driver_index)
 {
+	return GetDriversInfo(driver_index)->biosIndex;
+}
+
+int DriverSystemBiosIndex(int driver_index)
+{
 	int i;
 
 	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 	{
-		const game_driver *bios = GetSystemBiosInfo(i);
-		const game_driver *drv;
-
-		for (drv = drivers[driver_index]; drv; drv = driver_get_clone(drv))
-			if (bios == drv)
-				return i;
+		int bios_driver = GetSystemBiosDriver(i);
+		if (bios_driver != -1 && bios_driver == DriverBiosIndex(driver_index))
+			return i;
 	}
 
 	return -1;

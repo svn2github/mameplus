@@ -540,6 +540,7 @@
 #define ID_OPTIONS_MMO2LST              40099
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
+#define ID_BIOS_PROPERTIES		40102
 
 #define ID_STYLE_NONE                   40190 // IMAGE_MENU
 #define ID_STYLE_BASIC                  40191 // IMAGE_MENU

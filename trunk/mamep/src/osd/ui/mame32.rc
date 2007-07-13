@@ -64,6 +64,7 @@ BEGIN
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
         MENUITEM "Propert&ies for Driver",      ID_FOLDER_SOURCEPROPERTIES
+        MENUITEM "Properties for BIOS",         ID_BIOS_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
         MENUITEM SEPARATOR
         MENUITEM "&Audit all games",            ID_FILE_AUDIT
@@ -200,6 +201,7 @@ BEGIN
         MENUITEM "A&udit",                      ID_GAME_AUDIT
         MENUITEM SEPARATOR
           MENUITEM "Propert&ies for Driver",      ID_FOLDER_SOURCEPROPERTIES
+          MENUITEM "Properties for BIOS",       ID_BIOS_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
     END
 END
@@ -1503,6 +1505,7 @@ BEGIN
     ID_OPTIONS_BG           "Select a background image file"
     ID_OPTIONS_MMO2LST      "Save game list in specified lst file"
     ID_FOLDER_SOURCEPROPERTIES "Display the driver properties of the selected game"
+    ID_BIOS_PROPERTIES      "Display the bios properties of the selected game"
 END
 
 STRINGTABLE DISCARDABLE 

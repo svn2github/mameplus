@@ -295,12 +295,6 @@ typedef struct
 	int driver_index; // index for driver if driver is unified
 } alt_options_type;
 
-struct _default_bios
-{
-	const game_driver *drv;
-	alt_options_type *alt_option;
-};
-
 struct _joycodes
 {
 	const char *name;
@@ -411,7 +405,7 @@ static int alt_options_len = 700;
 alt_options_type *alt_options;  // Array of Folder specific options
 
 // default bios setting
-static struct _default_bios default_bios[MAX_SYSTEM_BIOS];
+static int default_bios[MAX_SYSTEM_BIOS];
 
 /* Global UI options */
 static int  num_drivers = 0;
@@ -801,7 +795,10 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 
 		// if bios has been loaded, save it
 		if (alt_option->option->bios)
-			bios = strdup(alt_option->option->bios);
+		{
+			bios = alt_option->option->bios;
+			alt_option->option->bios = NULL;
+		}
 
 		// try vector.ini
 		if (alt_option->need_vector_config)
@@ -814,10 +811,7 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 
 		// DO NOT OVERRIDE bios by default setting
 		if (bios)
-		{
-			FreeIfAllocated(&alt_option->option->bios);
 			alt_option->option->bios = bios;
-		}
 
 #ifdef USE_IPS
 		alt_option->option->ips = ips;
@@ -872,6 +866,9 @@ options_type* GetParentOptions(int driver_index)
 	if (DriverIsClone(driver_index))
 		return GetGameOptions(DriverParentIndex(driver_index));
 
+	if (!DriverIsBios(driver_index) && DriverHasOptionalBios(driver_index))
+		return GetGameOptions(DriverBiosIndex(driver_index));
+
 	return GetSourceOptions(driver_index);
 }
 
@@ -882,12 +879,21 @@ options_type * GetGameOptions(int driver_index)
 	if (driver_variables[driver_index].use_default)
 	{
 		options_type *opt = GetParentOptions(driver_index);
+		char *bios = NULL;
+
 #ifdef USE_IPS
 		// HACK: DO NOT INHERIT IPS CONFIGURATION
 		WCHAR *ips = driver_options[driver_index].ips;
 
 		driver_options[driver_index].ips = NULL;
 #endif /* USE_IPS */
+
+		// save default bios setting if driver is bios
+		if (DriverIsBios(driver_index) && driver_options[driver_index].bios)
+		{
+			bios = driver_options[driver_index].bios;
+			driver_options[driver_index].bios = NULL;
+		}
 
 		// DO NOT OVERRIDE if driver name is same as parent
 		if (opt != &driver_options[driver_index])
@@ -897,6 +903,10 @@ options_type * GetGameOptions(int driver_index)
 
 			CopyGameOptions(opt,&driver_options[driver_index]);
 		}
+
+		// DO NOT OVERRIDE bios by default setting
+		if (bios)
+			driver_options[driver_index].bios = bios;
 
 #ifdef USE_IPS
 		driver_options[driver_index].ips = ips;
@@ -909,20 +919,20 @@ options_type * GetGameOptions(int driver_index)
 	return &driver_options[driver_index];
 }
 
-const game_driver *GetSystemBiosInfo(int bios_index)
+int GetSystemBiosDriver(int bios_index)
 {
 	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
 
-	return default_bios[bios_index].drv;
+	return default_bios[bios_index];
 }
 
 const char *GetDefaultBios(int bios_index)
 {
 	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
 
-	if (default_bios[bios_index].drv)
+	if (default_bios[bios_index] != -1)
 	{
-		options_type *opt = GetAltOptions(default_bios[bios_index].alt_option);
+		options_type *opt = GetGameOptions(default_bios[bios_index]);
 
 		return opt->bios;
 	}
@@ -934,9 +944,9 @@ void SetDefaultBios(int bios_index, const char *value)
 {
 	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
 
-	if (default_bios[bios_index].drv)
+	if (default_bios[bios_index] != -1)
 	{
-		options_type *opt = GetAltOptions(default_bios[bios_index].alt_option);
+		options_type *opt = GetGameOptions(default_bios[bios_index]);
 
 		FreeIfAllocated(&opt->bios);
 		opt->bios = strdup(value);
@@ -2616,17 +2626,16 @@ void SaveDefaultOptions(void)
 	}
 
 	/* default option has bios tab. so save default bios */
-	for (i = 0; i < num_alt_options; i++)
-		if (alt_options[i].option->bios)
+	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
+		if (default_bios[i] != -1)
 		{
-			char *bios = strdup(alt_options[i].option->bios);
+			char *bios = strdup(driver_options[default_bios[i]].bios);
+			GetGameOptions(default_bios[i]);
 
-			GetAltOptions(&alt_options[i]);
+			FreeIfAllocated(&driver_options[default_bios[i]].bios);
+			driver_options[default_bios[i]].bios = bios;
 
-			FreeIfAllocated(&alt_options[i].option->bios);
-			alt_options[i].option->bios = bios;
-
-			options_save_alt_config(&alt_options[i]);
+			SaveGameOptions(default_bios[i]);
 		}
 }
 
@@ -2726,6 +2735,9 @@ static void build_default_bios(void)
 	const game_driver *last_skip = NULL;
 	int i;
 
+	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
+		default_bios[i] = -1;
+
 	for (i = 0; i < num_drivers; i++)
 	{
 		if (DriverHasOptionalBios(i))
@@ -2746,15 +2758,12 @@ static void build_default_bios(void)
 			if (last_skip == drivers[driver_index])
 				continue;
 
-			for (n = 0; n < MAX_SYSTEM_BIOS * 2; n++)
+			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 			{
-				if (default_bios[n].drv == NULL)
+				if (default_bios[n] == -1)
 				{
-					int alt_index = bsearch_alt_option(GetFilename(driversw[driver_index]->source_file));
 					const rom_entry *rom;
 					int count = 1;
-
-					assert(0 <= alt_index && alt_index < num_alt_options);
 
 					for (rom = drivers[driver_index]->rom; !ROMENTRY_ISEND(rom); rom++)
 						if (ROMENTRY_ISSYSTEM_BIOS(rom))
@@ -2776,13 +2785,10 @@ static void build_default_bios(void)
 					else
 						dprintf("BIOS %d: %d in %s [%s]", n, count, drivers[driver_index]->description, drivers[driver_index]->name);
 
-					default_bios[n].drv = drivers[driver_index];
-					default_bios[n].alt_option = &alt_options[alt_index];
-					default_bios[n].alt_option->has_bios = TRUE;
-
+					default_bios[n] = driver_index;
 					break;
 				}
-				else if (default_bios[n].drv == drivers[driver_index])
+				else if (default_bios[n] == driver_index)
 					break;
 			}
 		}
@@ -2856,6 +2862,7 @@ static void unify_alt_options(void)
 		alt_options[n].option = &driver_options[i];
 		alt_options[n].variable = &driver_variables[i];
 		alt_options[n].driver_index = i;
+		alt_options[n].has_bios = DriverIsBios(i);
 	}
 }
 

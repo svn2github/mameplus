@@ -310,7 +310,7 @@ void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults);
 const WCHAR *GetUnifiedFolder(int driver_index);
 int GetUnifiedDriver(const WCHAR *name);
 
-const game_driver *GetSystemBiosInfo(int bios_index);
+int GetSystemBiosDriver(int bios_index);
 const char *GetDefaultBios(int bios_index);
 void SetDefaultBios(int bios_index, const char *value);
 

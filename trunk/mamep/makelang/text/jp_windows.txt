@@ -1,42 +1,42 @@
-# osd/windows/input.c: 1909
+# osd/windows/input.c: 1907
          all -- all axes on all joysticks are digital\n
          all -- 全てのジョイスティックの全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1915
+# osd/windows/input.c: 1913
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
          j1,j2a2 -- 全てのジョイスティック1の軸とジョイスティック2の軸2をデジタルにします\n
 
-# osd/windows/input.c: 1913
+# osd/windows/input.c: 1911
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
          j1a5a6 -- ジョイスティック1の軸5と6をデジタルにします\n
 
-# osd/windows/input.c: 1910
+# osd/windows/input.c: 1908
          j<N> -- all axes on joystick <N> are digital\n
          j<N> -- ジョイスティック<N>の全ての軸をデジタルにします\n
 
-# osd/windows/input.c: 1911
+# osd/windows/input.c: 1909
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
          j<N>a<M> -- ジョイスティック<N>の軸<M>をデジタルにします\n
 
-# osd/windows/input.c: 1908
+# osd/windows/input.c: 1906
          none -- no axes on any joysticks are digital\n
          none -- 全てのジョイスティックの軸をデジタルにしません\n
 
-# osd/windows/input.c: 1912
+# osd/windows/input.c: 1910
     Multiple axes can be specified for one joystick:\n
     一つのジョイスティックの複数の軸を指定する事が出来ます:\n
 
-# osd/windows/input.c: 1914
+# osd/windows/input.c: 1912
     Multiple joysticks can be specified separated by commas:\n
     コンマで区切る事で複数のジョイスティック指定する事が出来ます:\n
 
-# osd/windows/input.c: 2390
+# osd/windows/input.c: 2388
  - digital
  - デジタル
 
-# osd/windows/input.c: 2315
-%s Button %d
-%s ボタン %d
+# osd/windows/input.c: 2313
+%sButton %d
+%sボタン %d
 
 # osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
 (disabled by compiling option)
@@ -510,7 +510,7 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/input.c: 2974
+# osd/windows/input.c: 2972
 Fast Forward
 早送り
 
@@ -526,11 +526,11 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# osd/windows/input.c: 2390
+# osd/windows/input.c: 2388
 Input:  Axis %d (%s)%s\n
 入力:  軸%d (%s)%s\n
 
-# osd/windows/input.c: 2228
+# osd/windows/input.c: 2226
 Input: %s: %s\n
 入力: %s: %s\n
 
@@ -546,31 +546,31 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 入力: %sが存在するためマウスを自動的に有効にします\n
 
-# osd/windows/input.c: 2173
+# osd/windows/input.c: 2171
 Input: Joystick %d axis %d is now %s\n
 入力: ジョイスティック%d 軸%d は%sです\n
 
-# osd/windows/input.c: 2371
+# osd/windows/input.c: 2369
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 入力: ジョイスティック%d: %s (%d個の軸、%d個のボタン、%d個の視点)\n
 
-# osd/windows/input.c: 1532
+# osd/windows/input.c: 1530
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 入力: キーボード=%d  マウス=%d  ジョイスティック=%d  光線銃=%d\n
 
-# osd/windows/input.c: 3310
+# osd/windows/input.c: 3308
 Input: Using RAWMOUSE for Mouse input\n
 入力: マウスの入力にRAWMOUSEを使用します\n
 
-# osd/windows/input.c: 1534
+# osd/windows/input.c: 1532
 Input: \"%s\" controller support enabled\n
 入力: コントローラ「%s」のサポートが有効です\n
 
-# osd/windows/input.c: 1907
+# osd/windows/input.c: 1905
 Invalid %s value %s; reverting to all -- valid values are:\n
 %sの値%sは不正です。全の値を復元します。有効な値:\n
 
-# osd/windows/input.c: 1828
+# osd/windows/input.c: 1826
 Invalid %s value %s; reverting to keyboard\n
 %sの値%sは不正です。キーボードに復元します\n
 
@@ -578,47 +578,47 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# osd/windows/input.c: 2491
+# osd/windows/input.c: 2489
 J%d %s D
 J%d %s 下
 
-# osd/windows/input.c: 2495
+# osd/windows/input.c: 2493
 J%d %s L
 J%d %s 左
 
-# osd/windows/input.c: 2499
+# osd/windows/input.c: 2497
 J%d %s R
 J%d %s 右
 
-# osd/windows/input.c: 2487
+# osd/windows/input.c: 2485
 J%d %s U
 J%d %s 上
 
-# osd/windows/input.c: 2359
+# osd/windows/input.c: 2357
 Lightgun %d 
 光線銃 %d 
 
-# osd/windows/input.c: 2862
+# osd/windows/input.c: 2860
 Lightgun not supported in windowed mode
 ウインドウモードでは光線銃はサポートされません
 
-# osd/windows/input.c: 2357
+# osd/windows/input.c: 2355
 Lightgun on Mouse %d 
 マウス %d の光線銃
 
-# osd/windows/winmain.c: 493
+# osd/windows/winmain.c: 469
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
-# osd/windows/window.c: 621
+# osd/windows/window.c: 614
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
-# osd/windows/input.c: 2225
+# osd/windows/input.c: 2223
 Mouse 
 マウス
 
-# osd/windows/input.c: 2223
+# osd/windows/input.c: 2221
 Mouse %d 
 マウス%d
 
@@ -638,43 +638,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# osd/windows/input.c: 2294
+# osd/windows/input.c: 2292
 Stick %d %s +
 スティック %d %s +
 
-# osd/windows/input.c: 2287
+# osd/windows/input.c: 2285
 Stick %d %s -
 スティック %d %s -
 
-# osd/windows/input.c: 2296
+# osd/windows/input.c: 2294
 Stick %s +
 スティック %s +
 
-# osd/windows/input.c: 2289
+# osd/windows/input.c: 2287
 Stick %s -
 スティック %s -
 
-# osd/windows/input.c: 2260
+# osd/windows/input.c: 2258
 Stick%sX+
 スティック%sX+
 
-# osd/windows/input.c: 2258
+# osd/windows/input.c: 2256
 Stick%sX-
 スティック%sX-
 
-# osd/windows/input.c: 2264
+# osd/windows/input.c: 2262
 Stick%sY+
 スティック%sY+
 
-# osd/windows/input.c: 2262
+# osd/windows/input.c: 2260
 Stick%sY-
 スティック%sY-
 
-# osd/windows/input.c: 2268
+# osd/windows/input.c: 2266
 Stick%sZ+
 スティック%sZ+
 
-# osd/windows/input.c: 2266
+# osd/windows/input.c: 2264
 Stick%sZ-
 スティック%sZ-
 
@@ -682,7 +682,7 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
-# osd/windows/input.c: 2956
+# osd/windows/input.c: 2954
 Toggle Fullscreen
 フルスクリーン切り替え
 
@@ -742,7 +742,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
-# osd/windows/input.c: 2171
+# osd/windows/input.c: 2169
 analog
 アナログ
 
@@ -794,7 +794,7 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 ダイアル
 
-# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
+# osd/windows/input.c: 1958, 2169 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
 digital
 デジタル
 
@@ -914,11 +914,11 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# osd/windows/input.c: 2171
+# osd/windows/input.c: 2169
 invalid
 不正
 
-# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 53
+# osd/windows/input.c: 1466, 1822 osd/windows/winmain.h: 53
 lightgun
 光線銃
 

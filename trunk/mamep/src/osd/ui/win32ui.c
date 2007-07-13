@@ -2476,6 +2476,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		EnableMenuItem(GetMenu(hMain), ID_CUSTOMIZE_FIELDS,  MF_GRAYED);
 		EnableMenuItem(GetMenu(hMain), ID_GAME_PROPERTIES,   MF_GRAYED);
 		EnableMenuItem(GetMenu(hMain), ID_FOLDER_SOURCEPROPERTIES, MF_GRAYED);
+		EnableMenuItem(GetMenu(hMain), ID_BIOS_PROPERTIES, MF_GRAYED);
 		EnableMenuItem(GetMenu(hMain), ID_OPTIONS_DEFAULTS,  MF_GRAYED);
 	}
 
@@ -2684,11 +2685,6 @@ static void Win32UI_exit(void)
 		free(icon_index);
 		icon_index = NULL;
 	}
-	if (sorted_drivers != NULL)
-	{
-		free(sorted_drivers);
-		sorted_drivers = NULL;
-	}
 
 	DirectInputClose();
 	DirectDraw_Close();
@@ -2706,6 +2702,12 @@ static void Win32UI_exit(void)
 	OptionsExit();
 
 	HelpExit();
+
+	if (sorted_drivers != NULL)
+	{
+		free(sorted_drivers);
+		sorted_drivers = NULL;
+	}
 
 	free(sort_index);
 
@@ -3917,10 +3919,18 @@ static void DisableSelection(void)
 	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
+	mmi.cbSize         = sizeof(mmi);
+	mmi.fMask          = MIIM_TYPE;
+	mmi.fType          = MFT_STRING;
+	mmi.dwTypeData     = _UIW(TEXT("Properties for BIOS"));
+	mmi.cch            = wcslen(mmi.dwTypeData);
+	SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mmi);
+
 	EnableMenuItem(hMenu, ID_FILE_PLAY, 		   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,	   MF_GRAYED);
 	EnableMenuItem(hMenu, ID_GAME_PROPERTIES,	   MF_GRAYED);
-	EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,	   MF_GRAYED);
+	EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,  MF_GRAYED);
+	EnableMenuItem(hMenu, ID_BIOS_PROPERTIES,	   MF_GRAYED);
 #ifdef USE_VIEW_PCBINFO
 	EnableMenuItem(hMenu, ID_VIEW_PCBINFO,		   MF_GRAYED);
 #endif /* USE_VIEW_PCBINFO */
@@ -3941,7 +3951,7 @@ static void EnableSelection(int nGame)
 	const WCHAR *	pText;
 	MENUITEMINFO	mmi;
 	HMENU		hMenu = GetMenu(hMain);
-
+	int             bios_driver;
 	
 	snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")),
 	         ConvertAmpersandString(UseLangList() ?
@@ -3963,6 +3973,25 @@ static void EnableSelection(int nGame)
 	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mmi);
 
+	bios_driver = DriverBiosIndex(nGame);
+	if (bios_driver != -1 && bios_driver != nGame)
+	{
+		snwprintf(buf, ARRAY_LENGTH(buf),
+			_UIW(TEXT("Properties for %s BIOS")), driversw[bios_driver]->name);
+		mmi.dwTypeData = buf;
+	}
+	else
+	{
+		EnableMenuItem(hMenu, ID_BIOS_PROPERTIES, MF_GRAYED);
+		mmi.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+	}
+
+	mmi.cbSize         = sizeof(mmi);
+	mmi.fMask          = MIIM_TYPE;
+	mmi.fType          = MFT_STRING;
+	mmi.cch            = wcslen(mmi.dwTypeData);
+	SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mmi);
+
 	pText = UseLangList() ?
 		_LSTW(driversw[nGame]->description) :
 		driversw[nGame]->modify_the;
@@ -3982,7 +4011,8 @@ static void EnableSelection(int nGame)
 	if (!oldControl)
 	{
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,          MF_ENABLED);
-		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,	   MF_ENABLED);
+		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,  MF_ENABLED);
+		EnableMenuItem(hMenu, ID_BIOS_PROPERTIES, bios_driver != -1 ? MF_ENABLED : MF_GRAYED);
 	}
 
 	if (bProgressShown && bListReady == TRUE)
@@ -5245,6 +5275,21 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		UpdateStatusBar();
 		break;
 
+	case ID_BIOS_PROPERTIES:
+		if (!oldControl)
+		{
+			int bios_driver = DriverBiosIndex(Picker_GetSelectedItem(hwndList));
+			if (bios_driver != -1)
+			{
+				HICON hIcon = ImageList_GetIcon(NULL, IDI_BIOS, ILD_TRANSPARENT);
+				InitPropertyPage(hInst, hwnd, bios_driver, hIcon, NULL);
+				SaveGameOptions(bios_driver);
+			}
+		}
+		/* Just in case the toggle MMX on/off */
+		UpdateStatusBar();
+		break;
+
 	case ID_FOLDER_SOURCEPROPERTIES:
 		if (!oldControl)
 		{
@@ -5268,13 +5313,22 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		if (!oldControl)
 		{
 			LPTREEFOLDER lpFolder = GetSelectedFolder();
-			const WCHAR *name = lpFolder->m_lpTitle;
+			int bios_driver = GetBiosDriverByFolder(lpFolder);
+			if (bios_driver != -1)
+			{
+				InitPropertyPage(hInst, hwnd, bios_driver, GetSelectedFolderIcon(), NULL);
+				SaveGameOptions(bios_driver);
+			}
+			else
+			{
+				const WCHAR *name = lpFolder->m_lpTitle;
 
-			if (lpFolder->m_lpOriginalTitle)
-				name = lpFolder->m_lpOriginalTitle;
+				if (lpFolder->m_lpOriginalTitle)
+					name = lpFolder->m_lpOriginalTitle;
 
-			InitPropertyPage(hInst, hwnd, -2, GetSelectedFolderIcon(), name);
-			SaveFolderOptions(name);
+				InitPropertyPage(hInst, hwnd, -2, GetSelectedFolderIcon(), name);
+				SaveFolderOptions(name);
+			}
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
@@ -7153,6 +7207,7 @@ static void UpdateMenu(HMENU hMenu)
 	MENUITEMINFO	mItem;
 	int 			nGame = Picker_GetSelectedItem(hwndList);
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
+	int bios_driver;
 	int i;
 
 	if (have_selection)
@@ -7181,6 +7236,25 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
+		bios_driver = DriverBiosIndex(nGame);
+		if (bios_driver != -1 && bios_driver != nGame)
+		{
+			snwprintf(buf, ARRAY_LENGTH(buf),
+				_UIW(TEXT("Properties for %s BIOS")), driversw[bios_driver]->name);
+			mItem.dwTypeData = buf;
+		}
+		else
+		{
+			EnableMenuItem(hMenu, ID_BIOS_PROPERTIES, MF_GRAYED);
+			mItem.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+		}
+
+		mItem.cbSize     = sizeof(mItem);
+		mItem.fMask      = MIIM_TYPE;
+		mItem.fType      = MFT_STRING;
+		mItem.cch        = wcslen(mItem.dwTypeData);
+		SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mItem);
+
 		EnableMenuItem(hMenu, ID_CONTEXT_SELECT_RANDOM, MF_ENABLED);
 	}
 	else
@@ -7205,10 +7279,18 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FOLDER_SOURCEPROPERTIES, FALSE, &mItem);
 
+		mItem.cbSize     = sizeof(mItem);
+		mItem.fMask      = MIIM_TYPE;
+		mItem.fType      = MFT_STRING;
+		mItem.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+		mItem.cch        = wcslen(mItem.dwTypeData);
+		SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mItem);
+
 		EnableMenuItem(hMenu, ID_FILE_PLAY,             MF_GRAYED);
 		EnableMenuItem(hMenu, ID_FILE_PLAY_RECORD,      MF_GRAYED);
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,       MF_GRAYED);
-		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES,     MF_GRAYED);
+		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_BIOS_PROPERTIES,       MF_GRAYED);
 		EnableMenuItem(hMenu, ID_CONTEXT_SELECT_RANDOM, MF_GRAYED);
 	}
 
@@ -7217,6 +7299,7 @@ static void UpdateMenu(HMENU hMenu)
 		EnableMenuItem(hMenu, ID_CUSTOMIZE_FIELDS,  MF_GRAYED);
 		EnableMenuItem(hMenu, ID_GAME_PROPERTIES,   MF_GRAYED);
 		EnableMenuItem(hMenu, ID_FOLDER_SOURCEPROPERTIES, MF_GRAYED);
+		EnableMenuItem(hMenu, ID_BIOS_PROPERTIES,   MF_GRAYED);
 		EnableMenuItem(hMenu, ID_OPTIONS_DEFAULTS,  MF_GRAYED);
 	}
 
@@ -7231,7 +7314,7 @@ static void UpdateMenu(HMENU hMenu)
 		EnableMenuItem(hMenu,ID_CONTEXT_RENAME_CUSTOM,MF_GRAYED);
 	}
 
-	if (lpFolder && (IsSourceFolder(lpFolder) || IsVectorFolder(lpFolder)))
+	if (lpFolder && (IsSourceFolder(lpFolder) || IsVectorFolder(lpFolder) || IsBiosFolder(lpFolder)))
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES,MF_ENABLED);
 	else
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES,MF_GRAYED);

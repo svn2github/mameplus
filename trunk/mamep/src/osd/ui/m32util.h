@@ -45,6 +45,7 @@ BOOL DriverIsVector(int driver_index);
 BOOL DriverIsBios(int driver_index);
 BOOL DriverHasOptionalBios(int driver_index);
 int DriverBiosIndex(int driver_index);
+int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
 BOOL DriverUsesYM3812(int driver_index);

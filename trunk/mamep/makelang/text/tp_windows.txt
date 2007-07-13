@@ -1,41 +1,41 @@
-# osd/windows/input.c: 1909
+# osd/windows/input.c: 1907
          all -- all axes on all joysticks are digital\n
 
 
-# osd/windows/input.c: 1915
+# osd/windows/input.c: 1913
          j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
 
 
-# osd/windows/input.c: 1913
+# osd/windows/input.c: 1911
          j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
 
 
-# osd/windows/input.c: 1910
+# osd/windows/input.c: 1908
          j<N> -- all axes on joystick <N> are digital\n
 
 
-# osd/windows/input.c: 1911
+# osd/windows/input.c: 1909
          j<N>a<M> -- axis <M> on joystick <N> is digital\n
 
 
-# osd/windows/input.c: 1908
+# osd/windows/input.c: 1906
          none -- no axes on any joysticks are digital\n
 
 
-# osd/windows/input.c: 1912
+# osd/windows/input.c: 1910
     Multiple axes can be specified for one joystick:\n
 
 
-# osd/windows/input.c: 1914
+# osd/windows/input.c: 1912
     Multiple joysticks can be specified separated by commas:\n
 
 
-# osd/windows/input.c: 2390
+# osd/windows/input.c: 2388
  - digital
 
 
-# osd/windows/input.c: 2315
-%s Button %d
+# osd/windows/input.c: 2313
+%sButton %d
 
 
 # osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
@@ -510,7 +510,7 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 
 
-# osd/windows/input.c: 2974
+# osd/windows/input.c: 2972
 Fast Forward
 
 
@@ -526,11 +526,11 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# osd/windows/input.c: 2390
+# osd/windows/input.c: 2388
 Input:  Axis %d (%s)%s\n
 
 
-# osd/windows/input.c: 2228
+# osd/windows/input.c: 2226
 Input: %s: %s\n
 
 
@@ -546,31 +546,31 @@ Input: Autoenabling lightguns due to presence of a %s\n
 Input: Autoenabling mice due to presence of a %s\n
 
 
-# osd/windows/input.c: 2173
+# osd/windows/input.c: 2171
 Input: Joystick %d axis %d is now %s\n
 
 
-# osd/windows/input.c: 2371
+# osd/windows/input.c: 2369
 Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
 
 
-# osd/windows/input.c: 1532
+# osd/windows/input.c: 1530
 Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
 
 
-# osd/windows/input.c: 3310
+# osd/windows/input.c: 3308
 Input: Using RAWMOUSE for Mouse input\n
 
 
-# osd/windows/input.c: 1534
+# osd/windows/input.c: 1532
 Input: \"%s\" controller support enabled\n
 
 
-# osd/windows/input.c: 1907
+# osd/windows/input.c: 1905
 Invalid %s value %s; reverting to all -- valid values are:\n
 
 
-# osd/windows/input.c: 1828
+# osd/windows/input.c: 1826
 Invalid %s value %s; reverting to keyboard\n
 
 
@@ -578,47 +578,47 @@ Invalid %s value %s; reverting to keyboard\n
 Invalid video value %s; reverting to gdi\n
 
 
-# osd/windows/input.c: 2491
+# osd/windows/input.c: 2489
 J%d %s D
 
 
-# osd/windows/input.c: 2495
+# osd/windows/input.c: 2493
 J%d %s L
 
 
-# osd/windows/input.c: 2499
+# osd/windows/input.c: 2497
 J%d %s R
 
 
-# osd/windows/input.c: 2487
+# osd/windows/input.c: 2485
 J%d %s U
 
 
-# osd/windows/input.c: 2359
+# osd/windows/input.c: 2357
 Lightgun %d 
 
 
-# osd/windows/input.c: 2862
+# osd/windows/input.c: 2860
 Lightgun not supported in windowed mode
 
 
-# osd/windows/input.c: 2357
+# osd/windows/input.c: 2355
 Lightgun on Mouse %d 
 
 
-# osd/windows/winmain.c: 493
+# osd/windows/winmain.c: 469
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
 
 
-# osd/windows/window.c: 621
+# osd/windows/window.c: 614
 MAME: %s [%s] - Screen %d
 
 
-# osd/windows/input.c: 2225
+# osd/windows/input.c: 2223
 Mouse 
 
 
-# osd/windows/input.c: 2223
+# osd/windows/input.c: 2221
 Mouse %d 
 
 
@@ -638,43 +638,43 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# osd/windows/input.c: 2294
+# osd/windows/input.c: 2292
 Stick %d %s +
 
 
-# osd/windows/input.c: 2287
+# osd/windows/input.c: 2285
 Stick %d %s -
 
 
-# osd/windows/input.c: 2296
+# osd/windows/input.c: 2294
 Stick %s +
 
 
-# osd/windows/input.c: 2289
+# osd/windows/input.c: 2287
 Stick %s -
 
 
-# osd/windows/input.c: 2260
+# osd/windows/input.c: 2258
 Stick%sX+
 
 
-# osd/windows/input.c: 2258
+# osd/windows/input.c: 2256
 Stick%sX-
 
 
-# osd/windows/input.c: 2264
+# osd/windows/input.c: 2262
 Stick%sY+
 
 
-# osd/windows/input.c: 2262
+# osd/windows/input.c: 2260
 Stick%sY-
 
 
-# osd/windows/input.c: 2268
+# osd/windows/input.c: 2266
 Stick%sZ+
 
 
-# osd/windows/input.c: 2266
+# osd/windows/input.c: 2264
 Stick%sZ-
 
 
@@ -682,7 +682,7 @@ Stick%sZ-
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/input.c: 2956
+# osd/windows/input.c: 2954
 Toggle Fullscreen
 
 
@@ -742,7 +742,7 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 
 
-# osd/windows/input.c: 2171
+# osd/windows/input.c: 2169
 analog
 
 
@@ -794,7 +794,7 @@ default to maximized windows; otherwise, windows will be minimized
 dial
 
 
-# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
+# osd/windows/input.c: 1958, 2169 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
 digital
 
 
@@ -914,11 +914,11 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 gamma value in full screen mode
 
 
-# osd/windows/input.c: 2171
+# osd/windows/input.c: 2169
 invalid
 
 
-# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 53
+# osd/windows/input.c: 1466, 1822 osd/windows/winmain.h: 53
 lightgun
 
 

@@ -116,6 +116,7 @@ static LPFOLDERDATA  g_lpFolderData;
 static LPFILTER_ITEM g_lpFilterList;	
 
 static UINT          g_source_folder = 0;
+static UINT          g_bios_folder = 0;
 
 /***************************************************************************
     private function prototypes
@@ -253,9 +254,28 @@ LPTREEFOLDER GetFolder(UINT nFolder)
 	return (nFolder < numFolders) ? treeFolders[nFolder] : NULL;
 }
 
+int GetBiosDriverByFolder(LPTREEFOLDER lpFolder)
+{
+	int n;
+
+	if (lpFolder->m_nParent != g_bios_folder)
+		return -1;
+
+	n = FindBit(lpFolder->m_lpGameBits, 0, TRUE);
+	if (n == -1)
+		return -1;
+
+	return DriverBiosIndex(n);
+}
+
 BOOL IsSourceFolder(LPTREEFOLDER lpFolder)
 {
 	return lpFolder->m_nParent == g_source_folder;
+}
+
+BOOL IsBiosFolder(LPTREEFOLDER lpFolder)
+{
+	return GetBiosDriverByFolder(lpFolder) != -1;
 }
 
 BOOL IsVectorFolder(LPTREEFOLDER lpFolder)
@@ -1194,6 +1214,8 @@ void CreateBIOSFolders(int parent_index)
 	const game_driver *drv;
 	int nParentIndex = -1;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	g_bios_folder = parent_index;
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);

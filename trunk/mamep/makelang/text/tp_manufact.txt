@@ -422,6 +422,10 @@ Craul Denshi
 Cream
 
 
+# Gyrodine
+Crux
+
+
 # Mirax
 Current Technologies
 
@@ -1234,7 +1238,7 @@ Merit
 Metro
 
 
-# Wild Arrow
+# Wild Arrow (Standard V4.8)
 Meyco Games
 
 
@@ -1348,6 +1352,10 @@ Nasco Japan
 
 # Neo Turf Masters / Big Tournament Golf
 Nazca
+
+
+# Super Pool (Italy)
+Nazionale Elettronica Giochi S.A.S.
 
 
 # Neo Pong (v1.1)
@@ -1470,6 +1478,10 @@ Orca
 Oriental
 
 
+# G-Stream G2020
+Oriental Soft Japan
+
+
 # Defence Command
 Outer Limits
 
@@ -1526,7 +1538,7 @@ PlayMan
 Playmark
 
 
-# SvC Chaos - SNK vs Capcom (JAMMA PCB)
+# SNK vs. CAPCOM SVC CHAOS (JAMMA PCB)
 Playmore
 
 
@@ -1738,10 +1750,6 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Minigame Collection
-Semicom
-
-
 # Hex Pool (Senko)
 Senko
 
@@ -1934,6 +1942,10 @@ System Service
 System Ten
 
 
+# DaiDaiKakumei (Japan)
+SystemBit
+
+
 # Pebble Beach - The Great Shot (JUE 950913 V0.990)
 T&E Soft
 
@@ -1962,7 +1974,7 @@ TDS
 TDS & Mints
 
 
-# Cannonball (set 2)
+# Cannon Ball (set 2)
 TV Game Gruenberg
 
 

@@ -196,7 +196,9 @@ void SetCurrentFolder(LPTREEFOLDER lpFolder);
 LPTREEFOLDER GetCurrentFolder(void);
 LPTREEFOLDER GetFolder(UINT nFolder);
 
+int  GetBiosDriverByFolder(LPTREEFOLDER lpFolder);
 BOOL IsSourceFolder(LPTREEFOLDER lpFolder);
+BOOL IsBiosFolder(LPTREEFOLDER lpFolder);
 BOOL IsVectorFolder(LPTREEFOLDER lpFolder);
 LPTREEFOLDER GetSourceFolder(int driver_index);
 

@@ -1,144 +1,144 @@
-# emu/datafile.c: 2445
+# emu/datafile.c: 2448
           DIAL:  %4d\n
 
 
-# emu/datafile.c: 2451
+# emu/datafile.c: 2454
          OTHER:  %4d\n
 
 
-# emu/datafile.c: 2449
+# emu/datafile.c: 2452
          PEDAL:  %4d\n
 
 
-# emu/datafile.c: 2444
+# emu/datafile.c: 2447
         PADDLE:  %4d\n
 
 
-# emu/romload.c: 295
+# emu/romload.c: 286
        FOUND: %s\n
 
 
-# emu/datafile.c: 2436
+# emu/datafile.c: 2439
        JOY2WAY:  %4d\n
 
 
-# emu/datafile.c: 2437
+# emu/datafile.c: 2440
        JOY4WAY:  %4d\n
 
 
-# emu/datafile.c: 2438
+# emu/datafile.c: 2441
        JOY8WAY:  %4d\n
 
 
-# emu/datafile.c: 2447
+# emu/datafile.c: 2450
       AD STICK:  %4d\n
 
 
-# emu/datafile.c: 2439
+# emu/datafile.c: 2442
       JOY16WAY:  %4d\n
 
 
-# emu/datafile.c: 2448
+# emu/datafile.c: 2451
       LIGHTGUN:  %4d\n
 
 
-# emu/datafile.c: 2430
+# emu/datafile.c: 2433
      PLAYERS %d:  %4d\n
 
 
-# emu/datafile.c: 2446
+# emu/datafile.c: 2449
      TRACKBALL:  %4d\n
 
 
-# emu/datafile.c: 2460
+# emu/datafile.c: 2463
     BUTTONS%3d:  %4d\n
 
 
-# emu/romload.c: 289
+# emu/romload.c: 280
     EXPECTED: %s\n
 
 
-# emu/datafile.c: 2466
+# emu/datafile.c: 2469
     NO BUTTONS:  %4d\n
 
 
-# emu/audit.c: 310
+# emu/audit.c: 317
    FOUND: %s\n
 
 
-# emu/datafile.c: 2268
+# emu/datafile.c: 2270
  %4d HARDDISK\n
 
 
-# emu/datafile.c: 2264
+# emu/datafile.c: 2266
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
 
 
-# emu/datafile.c: 2260
+# emu/datafile.c: 2262
  %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
 
 
-# emu/datafile.c: 2262
+# emu/datafile.c: 2264
  %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
 
 
-# emu/datafile.c: 2266
+# emu/datafile.c: 2268
  %4d STEREO     + %4d\n
 
 
-# emu/audit.c: 284
+# emu/audit.c: 291
  (%d bytes)
 
 
-# emu/clifront.c: 872
+# emu/clifront.c: 864
  BAD
 
 
-# emu/datafile.c: 2440
+# emu/datafile.c: 2443
  DOUBLEJOY2WAY:  %4d\n
 
 
-# emu/datafile.c: 2441
+# emu/datafile.c: 2444
  DOUBLEJOY4WAY:  %4d\n
 
 
-# emu/datafile.c: 2442
+# emu/datafile.c: 2445
  DOUBLEJOY8WAY:  %4d\n
 
 
-# emu/datafile.c: 2369
+# emu/datafile.c: 2372
  GAMES WITH  %d CPUs: %4d\n
 
 
-# emu/datafile.c: 2400
+# emu/datafile.c: 2403
  GAMES WITH  %d SNDINTRF: %4d\n
 
 
-# emu/clifront.c: 878
+# emu/clifront.c: 870
  NO GOOD DUMP KNOWN
 
 
-# emu/cheat.c: 9085
+# emu/cheat.c: 9081
 %.8X-%.8X MEMORY
 
 
-# emu/cheat.c: 2628, 2787
+# emu/cheat.c: 2624, 2783
 %d cheats saved
 
 
-# emu/cheat.c: 5256, 5785, 6243
+# emu/cheat.c: 5252, 5781, 6239
 %d results found
 
 
-# emu/clifront.c: 1022
+# emu/clifront.c: 1014
 %d romsets found, %d were OK.\n
 
 
-# emu/clifront.c: 1099
+# emu/clifront.c: 1091
 %d samplesets found, %d were OK.\n
 
 
-# emu/cheat.c: 11629
+# emu/cheat.c: 11625
 %s : %s selected
 
 
@@ -146,7 +146,7 @@
 %s Analog
 
 
-# emu/romload.c: 928
+# emu/romload.c: 913
 %s CHD NEEDS REDUMP\n
 
 
@@ -158,75 +158,75 @@
 %s Inc
 
 
-# emu/romload.c: 350
+# emu/romload.c: 341
 %s NO GOOD DUMP KNOWN\n
 
 
-# emu/romload.c: 257
+# emu/romload.c: 248
 %s NOT FOUND (NO GOOD DUMP KNOWN)\n
 
 
-# emu/romload.c: 264, 902
+# emu/romload.c: 255, 887
 %s NOT FOUND\n
 
 
-# emu/romload.c: 366
+# emu/romload.c: 357
 %s ROM NEEDS REDUMP\n
 
 
-# emu/romload.c: 900, 949, 963
+# emu/romload.c: 885, 934, 948
 %s UNSUPPORTED CHD VERSION\n
 
 
-# emu/romload.c: 357, 922
+# emu/romload.c: 348, 907
 %s WRONG CHECKSUMS:\n
 
 
-# emu/romload.c: 343
+# emu/romload.c: 334
 %s WRONG LENGTH (expected: %08x found: %08x)\n
 
 
-# emu/cheat.c: 2611
+# emu/cheat.c: 2607
 %s activated
 
 
-# emu/cheat.c: 11627, 11685
+# emu/cheat.c: 11623, 11681
 %s disabled
 
 
-# emu/cheat.c: 11693
+# emu/cheat.c: 11689
 %s enabled
 
 
-# emu/state.c: 687
+# emu/state.c: 678
 %s'%s' is not a valid savestate file for game '%s'.
 
 
-# emu/romload.c: 951
+# emu/romload.c: 936
 %s: CAN'T CREATE DIFF FILE\n
 
 
-# emu/romload.c: 965
+# emu/romload.c: 950
 %s: CAN'T OPEN DIFF FILE\n
 
 
-# emu/state.c: 699
+# emu/state.c: 690
 %sIncompatible save file (signature %08x, expected %08x)
 
 
-# emu/state.c: 671
+# emu/state.c: 662
 %sThis is not a MAME save file
 
 
-# emu/state.c: 679
+# emu/state.c: 670
 %sWrong version in save file (%d, 1 expected)
 
 
-# emu/clifront.c: 1383
+# emu/clifront.c: 1375
 (BAD) 
 
 
-# emu/uitext.c: 161
+# emu/uitext.c: 159
 (Card may already exist)
 
 
@@ -238,15 +238,15 @@
 (disabled by compiling option)
 
 
-# emu/uitext.c: 149
+# emu/uitext.c: 147
 (locked)
 
 
-# emu/uitext.c: 75, 76
+# emu/uitext.c: 73, 74
 (more)
 
 
-# emu/cheat.c: 2216, 2726, 3145, 3160, 3172, 3184, 3196, 6004, 7164 emu/uitext.c: 42 tools/chdman.c: 742, 1488
+# emu/cheat.c: 2212, 2722, 3141, 3156, 3168, 3180, 3192, 6000, 7160 emu/uitext.c: 40 tools/chdman.c: 742, 1488
 (none)
 
 
@@ -290,11 +290,11 @@
 1 Player Start
 
 
-# emu/cheat.c: 5266, 5795, 6253
+# emu/cheat.c: 5262, 5791, 6249
 1 result found, added to list
 
 
-# emu/cheat.c: 2958, 7108
+# emu/cheat.c: 2954, 7104
 16 Bit
 
 
@@ -338,11 +338,11 @@
 2 Players Start
 
 
-# emu/cheat.c: 2959, 7109
+# emu/cheat.c: 2955, 7105
 24 Bit
 
 
-# emu/datafile.c: 2472
+# emu/datafile.c: 2475
 24-BIT DISPLAY : %3d  + %3d\n
 
 
@@ -370,7 +370,7 @@
 3 Players Start
 
 
-# emu/cheat.c: 2960, 7110
+# emu/cheat.c: 2956, 7106
 32 Bit
 
 
@@ -430,7 +430,7 @@
 7 Players Start
 
 
-# emu/cheat.c: 2957, 7107
+# emu/cheat.c: 2953, 7103
 8 Bit
 
 
@@ -450,19 +450,19 @@
 9 Coins/1 Credit
 
 
-# emu/cheat.c: 9929
+# emu/cheat.c: 9925
 :1st Activation Key (%s)\n
 
 
-# emu/cheat.c: 9927
+# emu/cheat.c: 9923
 :1st Activation Key for %s (%s)\n
 
 
-# emu/cheat.c: 9937
+# emu/cheat.c: 9933
 :2nd Activation Key (%s)\n
 
 
-# emu/cheat.c: 9935
+# emu/cheat.c: 9931
 :2nd Activation Key for %s (%s)\n
 
 
@@ -562,11 +562,11 @@ AD Stick Z 7
 AD Stick Z 8
 
 
-# emu/uitext.c: 54
+# emu/uitext.c: 52
 ALL CHANNELS
 
 
-# emu/uitext.c: 60
+# emu/uitext.c: 58
 ALL CPUS
 
 
@@ -574,19 +574,19 @@ ALL CPUS
 AWP Simulated Video (No Artwork)
 
 
-# emu/uitext.c: 182
+# emu/uitext.c: 180
 Activation Key
 
 
-# emu/cheat.c: 3179
+# emu/cheat.c: 3175
 Activation Key (1st)
 
 
-# emu/cheat.c: 3191
+# emu/cheat.c: 3187
 Activation Key (2nd)
 
 
-# emu/cheat.c: 2897
+# emu/cheat.c: 2893
 Add
 
 
@@ -594,15 +594,15 @@ Add
 Add Cheat
 
 
-# emu/cheat.c: 7194
+# emu/cheat.c: 7190
 Add Value
 
 
-# emu/uitext.c: 165
+# emu/uitext.c: 163
 Add/Edit a Cheat
 
 
-# emu/cheat.c: 2886, 3406
+# emu/cheat.c: 2882, 3402
 Add/Subtract
 
 
@@ -618,31 +618,31 @@ Adder,VFD and Lamp Matrix
 Adder,VFD and Lamps
 
 
-# emu/cheat.c: 736, 3698, 7140 emu/uitext.c: 44
+# emu/cheat.c: 732, 3694, 7136 emu/uitext.c: 42
 Address
 
 
-# emu/cheat.c: 3659
+# emu/cheat.c: 3655
 Address Index
 
 
-# emu/cheat.c: 7199
+# emu/cheat.c: 7195
 Address Shift
 
 
-# emu/cheat.c: 3638
+# emu/cheat.c: 3634
 Address Size
 
 
-# emu/cheat.c: 7646 mame/drivers/mcr68.c: 795 
+# emu/cheat.c: 7642 mame/drivers/mcr68.c: 795 
 Advanced
 
 
-# emu/cheat.c: 6334 emu/uitext.c: 213
+# emu/cheat.c: 6330 emu/uitext.c: 211
 All Memory
 
 
-# emu/uitext.c: 221
+# emu/uitext.c: 219
 All values saved
 
 
@@ -654,11 +654,11 @@ Allow Continue
 Alternate
 
 
-# emu/uitext.c: 97
+# emu/uitext.c: 95
 Analog Controls
 
 
-# mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 1005, 1049, 1105, 1182, 1231
+# mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 1282
 Arcade
 
 
@@ -674,27 +674,27 @@ Asia
 Attempted to malloc zero bytes (%s:%d)
 
 
-# mame/drivers/bottom9.c: 272, 369 mame/drivers/btime.c: 731 mame/drivers/csk.c: 285, 445 mame/drivers/galaga.c: 1016, 1092 mame/drivers/pacman.c: 2785 mame/drivers/pmpoker.c: 560, 622, 691, 760 mame/drivers/seta.c: 4660 
+# mame/drivers/bottom9.c: 272, 369 mame/drivers/btime.c: 731 mame/drivers/csk.c: 285, 445 mame/drivers/galaga.c: 1016, 1092 mame/drivers/pacman.c: 2785 mame/drivers/pmpoker.c: 560, 622, 692, 761, 830 mame/drivers/seta.c: 4654 
 Auto
 
 
-# emu/cheat.c: 7653
+# emu/cheat.c: 7649
 Auto Save Cheats
 
 
-# emu/uitext.c: 128
+# emu/uitext.c: 126
 Autocenter Speed
 
 
-# mame/drivers/neogeo.c: 943
+# mame/drivers/neogeo.c: 1195
 Autofire (in some games)
 
 
-# emu/uitext.c: 245
+# emu/uitext.c: 243
 Autofire Delay
 
 
-# emu/uitext.c: 107
+# emu/uitext.c: 105
 Autofire Setting
 
 
@@ -706,11 +706,11 @@ Automatic
 Average speed: %.2f%% (%d seconds)\n
 
 
-# emu/cheat.c: 9060
+# emu/cheat.c: 9056
 BANK%.2d
 
 
-# emu/cheat.c: 3553
+# emu/cheat.c: 3549
 BCD
 
 
@@ -718,15 +718,15 @@ BCD
 BIOS
 
 
-# emu/ui.c: 2662
+# emu/ui.c: 2675
 Beam Width
 
 
-# mame/drivers/metro.c: 2359 mame/drivers/nbmj8891.c: 2360 mame/drivers/pacman.c: 2769
+# mame/drivers/metro.c: 2358 mame/drivers/nbmj8891.c: 2360 mame/drivers/pacman.c: 2769
 Beginner
 
 
-# mame/drivers/bmcbowl.c: 374 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 176 mame/drivers/gdrawpkr.c: 321 mame/drivers/limenko.c: 426 mame/drivers/lvcards.c: 218, 302 mame/drivers/magic10.c: 216 mame/drivers/magicfly.c: 585 mame/drivers/nmg5.c: 685 mame/drivers/pmpoker.c: 569, 664, 733 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 552
+# mame/drivers/bmcbowl.c: 373 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 168 mame/drivers/gdrawpkr.c: 313 mame/drivers/limenko.c: 418 mame/drivers/lvcards.c: 217, 301 mame/drivers/magic10.c: 216 mame/drivers/magicfly.c: 572 mame/drivers/nmg5.c: 681 mame/drivers/pmpoker.c: 569, 631, 734, 803 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 540 mame/drivers/wldarrow.c: 239
 Bet
 
 
@@ -734,11 +734,11 @@ Bet
 Bill 1
 
 
-# emu/cheat.c: 744 emu/uitext.c: 200
+# emu/cheat.c: 740 emu/uitext.c: 198
 Binary
 
 
-# emu/cheat.c: 5865
+# emu/cheat.c: 5861
 Bit
 
 
@@ -750,7 +750,7 @@ Bonus Life
 Bookkeeping
 
 
-# emu/uitext.c: 102 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 195
+# emu/uitext.c: 100 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 195
 Bookkeeping Info
 
 
@@ -758,11 +758,11 @@ Bookkeeping Info
 Break in Debugger
 
 
-# emu/uitext.c: 55 mame/drivers/namcos1.c: 642
+# emu/uitext.c: 53 mame/drivers/namcos1.c: 642
 Brightness
 
 
-# mame/drivers/m107.c: 296 mame/drivers/m92.c: 976 mame/drivers/usgames.c: 139 
+# mame/drivers/m107.c: 296 mame/drivers/m92.c: 975 mame/drivers/usgames.c: 139 
 Button 1
 
 
@@ -770,19 +770,19 @@ Button 1
 Button Lamps
 
 
-# emu/cheat.c: 3580
+# emu/cheat.c: 3576
 Byte Length
 
 
-# mame/drivers/neogeo.c: 943, 1082
+# mame/drivers/neodrvr.c: 69 mame/drivers/neogeo.c: 1195
 COMM Setting
 
 
-# emu/clifront.c: 92
+# emu/clifront.c: 84
 CONFIGURATION COMMANDS
 
 
-# emu/clifront.c: 115
+# emu/clifront.c: 107
 CONFIGURATION OPTIONS
 
 
@@ -790,7 +790,7 @@ CONFIGURATION OPTIONS
 CORE ARTWORK OPTIONS
 
 
-# emu/clifront.c: 87
+# emu/clifront.c: 79
 CORE COMMANDS
 
 
@@ -854,15 +854,15 @@ CORE STATE/PLAYBACK OPTIONS
 CORE VECTOR OPTIONS
 
 
-# emu/cheat.c: 3611, 3630, 5997, 7145 emu/uitext.c: 43 
+# emu/cheat.c: 3607, 3626, 5993, 7141 emu/uitext.c: 41 
 CPU
 
 
-# emu/cheat.c: 9073
+# emu/cheat.c: 9069
 CPU%.2d 
 
 
-# emu/clifront.c: 104
+# emu/clifront.c: 96
 CRC-32s
 
 
@@ -870,39 +870,39 @@ CRC-32s
 Cabinet
 
 
-# mame/drivers/gstriker.c: 409 mame/drivers/segaxbd.c: 704, 745, 778, 820 mame/drivers/taito_f2.c: 2416, 2806
+# mame/drivers/gstriker.c: 409 mame/drivers/segaxbd.c: 725, 766, 799, 841 mame/drivers/taito_f2.c: 2416, 2806
 Cabinet Type
 
 
-# emu/uitext.c: 98
+# emu/uitext.c: 96
 Calibrate Joysticks
 
 
-# mame/drivers/acefruit.c: 388 mame/drivers/getrivia.c: 287 mame/drivers/magicfly.c: 519 mame/drivers/pmpoker.c: 573, 635, 704 mame/drivers/segac2.c: 1199 
+# mame/drivers/acefruit.c: 386 mame/drivers/getrivia.c: 287 mame/drivers/magicfly.c: 506 mame/drivers/pmpoker.c: 573, 635, 705, 774 mame/drivers/segac2.c: 1198 
 Cancel
 
 
-# emu/uitext.c: 152
+# emu/uitext.c: 150
 Card Number:
 
 
-# emu/uitext.c: 248 mame/drivers/cischeat.c: 1591 mame/drivers/namcos22.c: 3897, 3971
+# emu/uitext.c: 246 mame/drivers/cischeat.c: 1591 mame/drivers/namcos22.c: 3897, 3971
 Center
 
 
-# emu/uitext.c: 111
+# emu/uitext.c: 109
 Cheat
 
 
-# emu/cheat.c: 9777
+# emu/cheat.c: 9773
 Cheat Database reloaded
 
 
-# emu/uitext.c: 186
+# emu/uitext.c: 184
 Cheat conflict found: disabling
 
 
-# emu/uitext.c: 176
+# emu/uitext.c: 174
 Cheats
 
 
@@ -910,15 +910,19 @@ Cheats
 Chi
 
 
-# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2697 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2655, 2708, 2836
+# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2697 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2662, 2715, 2843
 China
 
 
-# emu/cheat.c: 7642 mame/drivers/st0016.c: 436
+# emu/cheat.c: 7638 mame/drivers/st0016.c: 436
 Classic
 
 
-# emu/cheat.c: 2904 mame/drivers/gladiatr.c: 531
+# mame/layout/connect4.lay: 90
+Classic graphics and VFD
+
+
+# emu/cheat.c: 2900 mame/drivers/gladiatr.c: 531
 Clear
 
 
@@ -926,15 +930,15 @@ Clear
 Cocktail
 
 
-# emu/uitext.c: 183
+# emu/uitext.c: 181
 Code
 
 
-# emu/uitext.c: 148 mame/drivers/igs_blit.c: 1812
+# emu/uitext.c: 146 mame/drivers/igs_blit.c: 1810
 Coin
 
 
-# emu/inptport.c: 901 mame/drivers/mexico86.c: 282 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 631, 700
+# emu/inptport.c: 901 mame/drivers/mexico86.c: 282 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 701, 770
 Coin 1
 
 
@@ -974,15 +978,15 @@ Coin A
 Coin B
 
 
-# mame/drivers/arabian.c: 313 mame/drivers/bking2.c: 325, 439 mame/drivers/marinedt.c: 364 mame/drivers/markham.c: 109 mame/drivers/mcr68.c: 737 mame/drivers/powerins.c: 216 mame/drivers/segas18.c: 791, 823 mame/drivers/system18.c: 1261
+# mame/drivers/arabian.c: 313 mame/drivers/bking2.c: 325, 439 mame/drivers/marinedt.c: 361 mame/drivers/markham.c: 109 mame/drivers/mcr68.c: 737 mame/drivers/powerins.c: 216 mame/drivers/segas18.c: 791, 823 mame/drivers/system18.c: 1261
 Coin Chutes
 
 
-# mame/drivers/neogeo.c: 943, 1076
+# mame/drivers/neodrvr.c: 63 mame/drivers/neogeo.c: 1195
 Coin Chutes?
 
 
-# mame/drivers/airbustr.c: 461 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 838 mame/drivers/bloodbro.c: 163, 253, 344 mame/drivers/cabal.c: 348 mame/drivers/exidy.c: 400 mame/drivers/galpanic.c: 593, 704, 773 mame/drivers/holeland.c: 121, 188 mame/drivers/m62.c: 635, 688, 738, 790, 842, 894, 946, 996, 1046, 1099, 1150, 1200 mame/drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 mame/drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/mcatadv.c: 341 mame/drivers/midzeus.c: 1223 mame/drivers/mpatrol.c: 175 mame/drivers/playch10.c: 650 mame/drivers/playmark.c: 450, 598, 695, 791 mame/drivers/powerbal.c: 263 mame/drivers/raiden.c: 158 mame/drivers/rallyx.c: 644 mame/drivers/shisen.c: 158 mame/drivers/sshangha.c: 245 mame/drivers/system18.c: 1326 mame/drivers/tagteam.c: 228 mame/drivers/taito_l.c: 1954 mame/drivers/travrusa.c: 157, 187 mame/drivers/troangel.c: 141 mame/drivers/vigilant.c: 268, 358 mame/drivers/welltris.c: 566 mame/drivers/wilytowr.c: 400 mame/drivers/yard.c: 133
+# mame/drivers/airbustr.c: 462 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 838 mame/drivers/bloodbro.c: 163, 253, 344 mame/drivers/cabal.c: 348 mame/drivers/exidy.c: 400 mame/drivers/galpanic.c: 543, 654, 723 mame/drivers/holeland.c: 121, 188 mame/drivers/m62.c: 636, 689, 739, 791, 843, 895, 947, 997, 1047, 1100, 1151, 1201 mame/drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 mame/drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/mcatadv.c: 341 mame/drivers/midzeus.c: 1222 mame/drivers/mpatrol.c: 175 mame/drivers/playch10.c: 650 mame/drivers/playmark.c: 450, 598, 695, 791 mame/drivers/powerbal.c: 263 mame/drivers/raiden.c: 158 mame/drivers/rallyx.c: 644 mame/drivers/shisen.c: 158 mame/drivers/sshangha.c: 245 mame/drivers/system18.c: 1326 mame/drivers/tagteam.c: 228 mame/drivers/taito_l.c: 1954 mame/drivers/travrusa.c: 157, 187 mame/drivers/troangel.c: 141 mame/drivers/vigilant.c: 268, 358 mame/drivers/welltris.c: 566 mame/drivers/wilytowr.c: 389 mame/drivers/yard.c: 133
 Coin Mode
 
 
@@ -990,7 +994,7 @@ Coin Mode
 Coin Slot
 
 
-# mame/drivers/alpha68k.c: 1635 mame/drivers/armedf.c: 551 mame/drivers/bbusters.c: 455, 520 mame/drivers/boogwing.c: 178 mame/drivers/buggychl.c: 330 mame/drivers/cps1.c: 1663, 2381, 2484, 2738, 2847, 3523 mame/drivers/cshooter.c: 430 mame/drivers/deco32.c: 1339 mame/drivers/flstory.c: 425 mame/drivers/freekick.c: 527 mame/drivers/galaxian.c: 2825 mame/drivers/itech8.c: 1614 mame/drivers/lkage.c: 247 mame/drivers/lordgun.c: 345 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/nycaptor.c: 742 mame/drivers/sslam.c: 578 mame/drivers/suprslam.c: 231
+# mame/drivers/alpha68k.c: 1635 mame/drivers/armedf.c: 551 mame/drivers/bbusters.c: 455, 520 mame/drivers/boogwing.c: 178 mame/drivers/buggychl.c: 330 mame/drivers/cps1.c: 1663, 2381, 2484, 2738, 2847, 3523 mame/drivers/cshooter.c: 429 mame/drivers/deco32.c: 1339 mame/drivers/flstory.c: 425 mame/drivers/freekick.c: 527 mame/drivers/galaxian.c: 2847 mame/drivers/itech8.c: 1611 mame/drivers/lkage.c: 247 mame/drivers/lordgun.c: 345 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/nycaptor.c: 742 mame/drivers/sslam.c: 578 mame/drivers/suprslam.c: 231
 Coin Slots
 
 
@@ -1002,23 +1006,23 @@ Coinage
 Color Overlay
 
 
-# emu/uitext.c: 69
+# emu/uitext.c: 67
 Command List not available
 
 
-# emu/cheat.c: 2871, 2944, 3167
+# emu/cheat.c: 2867, 2940, 3163
 Comment
 
 
-# mame/drivers/alpha68k.c: 1636 mame/drivers/armedf.c: 552 mame/drivers/bbusters.c: 456, 521 mame/drivers/boogwing.c: 179 mame/drivers/deco32.c: 1340 mame/drivers/gaelco2.c: 714, 1176 mame/drivers/gijoe.c: 311 mame/drivers/itech8.c: 1615 mame/drivers/konamigq.c: 493 mame/drivers/konamigx.c: 1744 mame/drivers/lethal.c: 542, 590 mame/drivers/lordgun.c: 347 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/marinedt.c: 365 mame/drivers/markham.c: 111 mame/drivers/mcr68.c: 739 mame/drivers/moo.c: 491, 560 mame/drivers/mystwarr.c: 1098, 1166, 1239 mame/drivers/segac2.c: 1065 mame/drivers/segas18.c: 902, 958, 1014, 1068, 1134, 1151, 1195 mame/drivers/snk.c: 2931, 2987, 3063, 3120 mame/drivers/sslam.c: 579 mame/drivers/suprslam.c: 232 mame/drivers/system18.c: 1327 mame/drivers/system24.c: 1322, 1398, 1469, 1539, 1599
+# mame/drivers/alpha68k.c: 1636 mame/drivers/armedf.c: 552 mame/drivers/bbusters.c: 456, 521 mame/drivers/boogwing.c: 179 mame/drivers/deco32.c: 1340 mame/drivers/gaelco2.c: 714, 1176 mame/drivers/gijoe.c: 310 mame/drivers/itech8.c: 1612 mame/drivers/konamigq.c: 492 mame/drivers/konamigx.c: 1744 mame/drivers/lethal.c: 542, 590 mame/drivers/lordgun.c: 347 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/marinedt.c: 362 mame/drivers/markham.c: 111 mame/drivers/mcr68.c: 739 mame/drivers/moo.c: 491, 560 mame/drivers/mystwarr.c: 1096, 1164, 1237 mame/drivers/segac2.c: 1064 mame/drivers/segas18.c: 902, 958, 1014, 1068, 1134, 1151, 1195 mame/drivers/snk.c: 2931, 2987, 3063, 3120 mame/drivers/sslam.c: 579 mame/drivers/suprslam.c: 232 mame/drivers/system18.c: 1327 mame/drivers/system24.c: 1322, 1398, 1469, 1539, 1599
 Common
 
 
-# emu/cheat.c: 4855, 4860, 4865, 4870, 5974
+# emu/cheat.c: 4851, 4856, 4861, 4866, 5970
 Comparison
 
 
-# emu/cheat.c: 5465
+# emu/cheat.c: 5461
 Comparison Option
 
 
@@ -1026,15 +1030,15 @@ Comparison Option
 Config Menu
 
 
-# emu/uitext.c: 170
+# emu/uitext.c: 168
 Configure Watchpoints
 
 
-# mame/drivers/drgnmst.c: 254 mame/drivers/fastlane.c: 197 mame/drivers/ksayakyu.c: 171 mame/drivers/merit.c: 530 mame/drivers/metro.c: 2572 mame/drivers/nemesis.c: 1581 mame/drivers/seta.c: 3295 mame/drivers/tmnt.c: 1876, 1962
+# mame/drivers/drgnmst.c: 254 mame/drivers/fastlane.c: 197 mame/drivers/ksayakyu.c: 171 mame/drivers/merit.c: 530 mame/drivers/metro.c: 2571 mame/drivers/nemesis.c: 1581 mame/drivers/seta.c: 3289 mame/drivers/tmnt.c: 1876, 1962
 Continue
 
 
-# mame/drivers/toaplan2.c: 2170, 2503, 2577
+# mame/drivers/toaplan2.c: 2177, 2510, 2584
 Continue Mode
 
 
@@ -1042,7 +1046,7 @@ Continue Mode
 Continue Price
 
 
-# emu/uitext.c: 167
+# emu/uitext.c: 165
 Continue Search
 
 
@@ -1050,15 +1054,15 @@ Continue Search
 Continues
 
 
-# emu/uitext.c: 56
+# emu/uitext.c: 54
 Contrast
 
 
-# mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2376 mame/drivers/st0016.c: 491 mame/drivers/tail2nos.c: 204 
+# mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2375 mame/drivers/st0016.c: 491 mame/drivers/tail2nos.c: 204 
 Control Panel
 
 
-# mame/drivers/changela.c: 964 mame/drivers/nbmj8891.c: 1021, 1117 mame/drivers/taitosj.c: 1769 mame/drivers/tumbleb.c: 1536 
+# mame/drivers/nbmj8891.c: 1021, 1117 mame/drivers/taitosj.c: 1769 mame/drivers/tumbleb.c: 1536 
 Control Type
 
 
@@ -1070,7 +1074,7 @@ Controller
 Controls
 
 
-# emu/cheat.c: 3571
+# emu/cheat.c: 3567
 Copy Previous Value
 
 
@@ -1078,15 +1082,15 @@ Copy Previous Value
 Could not load controller file %s.cfg
 
 
-# emu/state.c: 726
+# emu/state.c: 717
 Could not read MAME save file header
 
 
-# mame/drivers/aerofgt.c: 1056, 1143 mame/drivers/bbusters.c: 568 mame/drivers/bwing.c: 292 mame/drivers/cischeat.c: 1193 mame/drivers/crshrace.c: 381, 537 mame/drivers/ddenlovr.c: 4596 mame/drivers/f1gp.c: 307, 412 mame/drivers/kaneko16.c: 1198, 1294 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 249, 712 mame/drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 mame/drivers/seta.c: 3475, 3800, 4122, 4291 mame/drivers/ssv.c: 2954 mame/drivers/st0016.c: 494 mame/drivers/stv.c: 2233 mame/drivers/suprslam.c: 274 mame/drivers/tail2nos.c: 207 mame/drivers/taotaido.c: 282
+# mame/drivers/aerofgt.c: 1056, 1143 mame/drivers/bbusters.c: 568 mame/drivers/bwing.c: 292 mame/drivers/cischeat.c: 1193 mame/drivers/crshrace.c: 381, 537 mame/drivers/ddenlovr.c: 4592 mame/drivers/f1gp.c: 307, 412 mame/drivers/kaneko16.c: 1201, 1297 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 249, 712 mame/drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 mame/drivers/seta.c: 3469, 3794, 4116, 4285 mame/drivers/ssv.c: 2954 mame/drivers/st0016.c: 494 mame/drivers/stv.c: 2233 mame/drivers/suprslam.c: 274 mame/drivers/tail2nos.c: 207 mame/drivers/taotaido.c: 282
 Country
 
 
-# emu/uitext.c: 155
+# emu/uitext.c: 153
 Create New Card
 
 
@@ -1094,47 +1098,47 @@ Create New Card
 Crop to Screen
 
 
-# emu/cheat.c: 5841
+# emu/cheat.c: 5837
 Current Data
 
 
-# emu/cheat.c: 2935 emu/sound/custom.c: 83 mame/drivers/tickee.c: 204 
+# emu/cheat.c: 2931 emu/sound/custom.c: 83 mame/drivers/tickee.c: 204 
 Custom
 
 
-# emu/uitext.c: 100
+# emu/uitext.c: 98
 Custom Buttons
 
 
-# mame/drivers/cinemat.c: 259, 822 mame/drivers/exidy.c: 148, 605 mame/drivers/mcr.c: 390, 966
+# mame/drivers/cinemat.c: 258, 821 mame/drivers/exidy.c: 148, 605 mame/drivers/mcr.c: 390, 966
 DIAL
 
 
-# emu/datafile.c: 2443
+# emu/datafile.c: 2446
 DOUBLEJOY16WAY:  %4d\n
 
 
-# emu/cheat.c: 3516
+# emu/cheat.c: 3512
 Data
 
 
-# emu/cheat.c: 7204
+# emu/cheat.c: 7200
 Data Shift
 
 
-# emu/cheat.c: 7662 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 653 
+# emu/cheat.c: 7658 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
 Debug
 
 
-# emu/cheat.c: 743 emu/uitext.c: 199
+# emu/cheat.c: 739 emu/uitext.c: 197
 Decimal
 
 
-# emu/video.c: 630
+# emu/video.c: 651
 Decoding (%d%%)
 
 
-# emu/uitext.c: 226
+# emu/uitext.c: 224
 Decoding Graphics
 
 
@@ -1142,15 +1146,15 @@ Decoding Graphics
 Decrypting %d%%
 
 
-# mame/drivers/asuka.c: 707, 749, 791 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 308 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
+# mame/drivers/asuka.c: 707, 749, 791 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 301 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
 Default
 
 
-# emu/uitext.c: 208
+# emu/uitext.c: 206
 Default Search Speed
 
 
-# emu/cheat.c: 3278
+# emu/cheat.c: 3274
 Delay
 
 
@@ -1162,7 +1166,7 @@ Delete Cheat
 Demo Sounds
 
 
-# emu/uitext.c: 181 
+# emu/uitext.c: 179 
 Description
 
 
@@ -1242,11 +1246,11 @@ Difficulty 1
 Difficulty 2
 
 
-# emu/uitext.c: 127
+# emu/uitext.c: 125
 Digital Speed
 
 
-# emu/uitext.c: 96
+# emu/uitext.c: 94
 Dip Switches
 
 
@@ -1254,19 +1258,19 @@ Dip Switches
 Disable All Coins
 
 
-# emu/uitext.c: 175 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 337, 415 mame/drivers/metro.c: 2385 mame/drivers/midvunit.c: 831 mame/drivers/mpu4.c: 2030, 2033, 2036, 2039, 2153, 2156, 2159, 2162, 2277, 2280, 2283, 2286, 2399, 2402, 2405, 2408 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1642, 1739, 1827 mame/drivers/pacman.c: 1233, 1295 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2428 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
+# emu/uitext.c: 173 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 336, 414 mame/drivers/metro.c: 2384 mame/drivers/midvunit.c: 831 mame/drivers/mpu4.c: 1938, 1941, 1944, 1947, 2061, 2064, 2067, 2070, 2185, 2188, 2191, 2194, 2307, 2310, 2313, 2316 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1642, 1739, 1827 mame/drivers/pacman.c: 1233, 1295 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2413 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
 Disabled
 
 
-# emu/cheat.c: 7166 emu/uitext.c: 191
+# emu/cheat.c: 7162 emu/uitext.c: 189
 Display Type
 
 
-# emu/cheat.c: 6009
+# emu/cheat.c: 6005
 Do Search
 
 
-# mame/drivers/seta.c: 5690 mame/drivers/tail2nos.c: 208
+# mame/drivers/seta.c: 5684 mame/drivers/tail2nos.c: 208
 Domestic
 
 
@@ -1274,15 +1278,15 @@ Domestic
 Door Interlock
 
 
-# mame/drivers/cherrym.c: 174 mame/drivers/dunhuang.c: 540 mame/drivers/gdrawpkr.c: 281 mame/drivers/nbmj8891.c: 1375 mame/drivers/pmpoker.c: 571 mame/drivers/witch.c: 550
+# mame/drivers/cherrym.c: 166 mame/drivers/dunhuang.c: 538 mame/drivers/gdrawpkr.c: 273 mame/drivers/nbmj8891.c: 1375 mame/drivers/pmpoker.c: 571 mame/drivers/witch.c: 538
 Double Up
 
 
-# emu/uitext.c: 235
+# emu/uitext.c: 233
 Driver Configuration
 
 
-# emu/uitext.c: 66
+# emu/uitext.c: 64
 Driverinfo not available
 
 
@@ -1314,15 +1318,15 @@ Dual Under-Over
 Dual Under-Over (Gapless)
 
 
-# emu/cheat.c: 2945
+# emu/cheat.c: 2941
 EEPROM
 
 
-# emu/romload.c: 410 
+# emu/romload.c: 401
 ERROR: required files are missing, the game cannot be run.
 
 
-# emu/audit.c: 308
+# emu/audit.c: 315
 EXPECTED: %s\n
 
 
@@ -1342,51 +1346,51 @@ Easy
 Edit Cheat
 
 
-# emu/uitext.c: 154
+# emu/uitext.c: 152
 Eject Current Card
 
 
-# emu/cheat.c: 7154
+# emu/cheat.c: 7150
 Element Size
 
 
-# emu/cheat.c: 7185
+# emu/cheat.c: 7181
 Elements Per Line
 
 
-# emu/uitext.c: 164
+# emu/uitext.c: 162
 Enable/Disable a Cheat
 
 
-# emu/inptport.c: 3143
+# emu/inptport.c: 3142
 End of playback
 
 
-# emu/inptport.c: 3146
+# emu/inptport.c: 3145
 End of playback - %i frames - Average speed %f%%
 
 
-# emu/cheat.c: 3589
+# emu/cheat.c: 3585
 Endianness
 
 
-# emu/cheat.c: 5459
+# emu/cheat.c: 5455
 Energy (Less or Greater)
 
 
-# emu/uitext.c: 205
+# emu/uitext.c: 203
 Energy (greater or less)
 
 
-# mame/drivers/kaneko16.c: 1199, 1295 mame/drivers/nmk16.c: 2695
+# mame/drivers/kaneko16.c: 1202, 1298 mame/drivers/nmk16.c: 2695
 England
 
 
-# emu/inptport.c: 442 mame/drivers/snowbros.c: 913
+# emu/inptport.c: 442 mame/drivers/snowbros.c: 956
 English
 
 
-# emu/cheat.c: 4856, 5312, 5851
+# emu/cheat.c: 4852, 5308, 5847
 Equal
 
 
@@ -1394,15 +1398,15 @@ Equal
 Error
 
 
-# emu/uitext.c: 160
+# emu/uitext.c: 158
 Error creating memory card
 
 
-# emu/uitext.c: 156
+# emu/uitext.c: 154
 Error loading memory card
 
 
-# emu/state.c: 856
+# emu/state.c: 845
 Error: 
 
 
@@ -1418,7 +1422,7 @@ Error: Failed to save state
 Error: Unable to save state due to illegal registrations. See error.log for details.
 
 
-# emu/ui.c: 1661
+# emu/ui.c: 1674
 Error: illegal caption file
 
 
@@ -1434,7 +1438,7 @@ Error: unknown option: %s\n
 Europe
 
 
-# mame/drivers/metro.c: 2365 mame/drivers/nbmj8891.c: 2361
+# mame/drivers/metro.c: 2364 mame/drivers/nbmj8891.c: 2361
 Expert
 
 
@@ -1442,7 +1446,7 @@ Expert
 Extended INP file info:\n
 
 
-# emu/clifront.c: 98
+# emu/clifront.c: 90
 FRONTEND COMMANDS
 
 
@@ -1458,23 +1462,23 @@ Failed to open file for playback
 Failed to open file for recording
 
 
-# emu/cheat.c: 6330 emu/uitext.c: 209 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1570, 1624 mame/drivers/amidar.c: 286 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 276 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 727 mame/drivers/cps1.c: 1278, 1581 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/gameplan.c: 609, 1060 mame/drivers/jcross.c: 189 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 619, 670, 721, 771, 823, 875, 929, 1029, 1082 mame/drivers/mcr.c: 1133 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2632, 2938, 3236, 3535 mame/drivers/ninjaw.c: 532 mame/drivers/nmg5.c: 438, 498, 591, 598, 633, 638 mame/drivers/nmk16.c: 2769 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 183 mame/drivers/segas16a.c: 1316 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 713 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2577 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1772 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2384, 2453 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 252, 307, 348 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 185 mame/drivers/warriorb.c: 345 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
+# emu/cheat.c: 6326 emu/uitext.c: 207 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1570, 1624 mame/drivers/amidar.c: 286 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 727 mame/drivers/cps1.c: 1278, 1581 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/gameplan.c: 585, 1036 mame/drivers/jcross.c: 189 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 620, 671, 722, 772, 824, 876, 930, 1030, 1083 mame/drivers/mcr.c: 1133 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2631, 2937, 3235, 3534 mame/drivers/ninjaw.c: 532 mame/drivers/nmg5.c: 434, 494, 587, 594, 629, 634 mame/drivers/nmk16.c: 2769 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 244 mame/drivers/segas16a.c: 1452 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 756 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2577 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1772 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2383, 2452 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 252, 307, 348 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 180 mame/drivers/warriorb.c: 345 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
 Fast
 
 
-# emu/mamecore.h: 170
+# emu/mamecore.h: 175
 Fatal error: %s (%s:%d)
 
 
-# emu/mamecore.h: 167
+# emu/mamecore.h: 172
 Fatal error: %s\nCaused by assert: %s:%d: %s
 
 
-# mame/drivers/ninjakid.c: 293 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 204
+# mame/drivers/ninjakid.c: 292 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 203
 First Bonus
 
 
-# emu/cheat.c: 5319, 5843
+# emu/cheat.c: 5315, 5839
 First Data
 
 
@@ -1482,19 +1486,19 @@ First Data
 Flip Screen
 
 
-# emu/uitext.c: 232
+# emu/uitext.c: 230
 Flip X
 
 
-# emu/uitext.c: 233 mame/drivers/midzeus.c: 1099
+# emu/uitext.c: 231 mame/drivers/midzeus.c: 1098
 Flip Y
 
 
-# emu/cheat.c: 2887
+# emu/cheat.c: 2883
 Force Range
 
 
-# mame/drivers/seta.c: 5691
+# mame/drivers/seta.c: 5685
 Foreign
 
 
@@ -1506,7 +1510,7 @@ Frameskip Dec
 Frameskip Inc
 
 
-# mame/drivers/lockon.c: 257 mame/drivers/lvcards.c: 326 mame/drivers/pgm.c: 892, 989, 1079, 1171, 1267, 1358 mame/drivers/segas16a.c: 1268 mame/drivers/segas16b.c: 2613 mame/drivers/taito_z.c: 1981, 2052
+# mame/drivers/lockon.c: 247 mame/drivers/lvcards.c: 325 mame/drivers/pgm.c: 892, 989, 1079, 1171, 1267, 1358 mame/drivers/segas16a.c: 1404 mame/drivers/segas16b.c: 2613 mame/drivers/taito_z.c: 1980, 2051
 Free
 
 
@@ -1514,7 +1518,7 @@ Free
 Free Play
 
 
-# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1082 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 490 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 227, 253 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1245, 1676 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 288 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 525 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 418 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 322, 476 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 981, 1114, 1245, 1306, 1374 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 414 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 209 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 785, 799, 872, 882, 904, 914 mame/drivers/namcos12.c: 1411 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neogeo.c: 943, 1091 mame/drivers/nycaptor.c: 722 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 420 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 432 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 606, 744 mame/drivers/suprnova.c: 555, 630 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 410, 519 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
+# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1082 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 491 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 227, 253 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1245, 1676 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 286 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 525 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 408 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 322, 476 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 1002, 1135, 1266, 1327, 1395 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 413 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 201 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 785, 799, 872, 882, 904, 914 mame/drivers/namcos12.c: 1410 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neodrvr.c: 78 mame/drivers/neogeo.c: 1195 mame/drivers/nycaptor.c: 722 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 419 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 431 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 606, 744 mame/drivers/suprnova.c: 553, 628 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 409, 518 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
 Freeze
 
 
@@ -1526,35 +1530,35 @@ French
 GAME: 
 
 
-# mame/drivers/bublbobl.c: 604 mame/drivers/cps1.c: 730, 812, 1020, 1104, 1139, 1225, 1439, 1529, 1610, 1806, 1901, 1991, 2073, 2156, 2250, 2346, 2437, 2540, 2648, 2767, 2876, 2968, 3061, 3579, 3679, 3783, 3882, 4042, 4155 mame/drivers/fcrash.c: 301 mame/drivers/ksys573.c: 2802 mame/drivers/macs.c: 244 mame/drivers/missile.c: 820 mame/drivers/pacman.c: 1403 mame/drivers/turbo.c: 898 mame/drivers/vegas.c: 2037
+# mame/drivers/bublbobl.c: 604 mame/drivers/cps1.c: 730, 812, 1020, 1104, 1139, 1225, 1439, 1529, 1610, 1806, 1901, 1991, 2073, 2156, 2250, 2346, 2437, 2540, 2648, 2767, 2876, 2968, 3061, 3579, 3679, 3783, 3882, 4042, 4155 mame/drivers/fcrash.c: 299 mame/drivers/ksys573.c: 2802 mame/drivers/macs.c: 244 mame/drivers/missile.c: 818 mame/drivers/pacman.c: 1403 mame/drivers/turbo.c: 898 mame/drivers/vegas.c: 2024
 Game
 
 
-# emu/uitext.c: 106
+# emu/uitext.c: 104
 Game Documents
 
 
-# emu/uitext.c: 120
+# emu/uitext.c: 118
 Game Driverinfo
 
 
-# emu/uitext.c: 115
+# emu/uitext.c: 113
 Game History
 
 
-# emu/uitext.c: 105
+# emu/uitext.c: 103
 Game Information
 
 
-# emu/uitext.c: 119
+# emu/uitext.c: 117
 Game Mameinfo
 
 
-# emu/inptport.c: 2628 mame/drivers/neogeo.c: 1006, 1050, 1106, 1232
+# emu/inptport.c: 2627 mame/drivers/neogeo.c: 1282
 Game Slots
 
 
-# emu/uitext.c: 117
+# emu/uitext.c: 115
 Game Story
 
 
@@ -1562,15 +1566,15 @@ Game Story
 Game Time
 
 
-# emu/uitext.c: 57
+# emu/uitext.c: 55
 Gamma
 
 
-# mame/drivers/midzeus.c: 1222 
+# mame/drivers/midzeus.c: 1221 
 General
 
 
-# emu/uitext.c: 171
+# emu/uitext.c: 169
 General Help
 
 
@@ -1578,7 +1582,7 @@ General Help
 German
 
 
-# mame/drivers/kaneko16.c: 1201, 1297 mame/drivers/midzeus.c: 1204 mame/drivers/nmk16.c: 2690
+# mame/drivers/kaneko16.c: 1204, 1300 mame/drivers/midzeus.c: 1203 mame/drivers/nmk16.c: 2690
 Germany
 
 
@@ -1586,23 +1590,23 @@ Germany
 Gray
 
 
-# emu/cheat.c: 4871, 5305, 5850
+# emu/cheat.c: 4867, 5301, 5846
 Greater
 
 
-# emu/cheat.c: 5853
+# emu/cheat.c: 5849
 Greater Or Equal
 
 
-# emu/cheat.c: 5307
+# emu/cheat.c: 5303
 Greater or Equal
 
 
-# emu/datafile.c: 2474
+# emu/datafile.c: 2477
 HI/TRUE BITMAP : %3d  + %3d\n
 
 
-# emu/datafile.c: 2478
+# emu/datafile.c: 2481
 HIGHLIGHTS     : %3d  + %3d\n
 
 
@@ -1618,15 +1622,15 @@ Harder
 Hardest
 
 
-# mame/drivers/ddenlovr.c: 3250 mame/drivers/shanghai.c: 914 
+# mame/drivers/ddenlovr.c: 3246 mame/drivers/shanghai.c: 913 
 Help
 
 
-# emu/uitext.c: 187
+# emu/uitext.c: 185
 Help not available yet
 
 
-# emu/cheat.c: 742 emu/uitext.c: 198
+# emu/cheat.c: 738 emu/uitext.c: 196
 Hex
 
 
@@ -1646,7 +1650,7 @@ Hide Overlays
 High
 
 
-# mame/drivers/balsente.c: 358, 412, 595, 649, 754, 809, 891, 1070 mame/drivers/zaccaria.c: 428, 538 
+# mame/drivers/balsente.c: 358, 412, 595, 649, 754, 809, 891, 1070 mame/drivers/zaccaria.c: 427, 537 
 High Scores
 
 
@@ -1662,27 +1666,27 @@ Highest
 Hispanic
 
 
-# emu/uitext.c: 61
+# emu/uitext.c: 59
 History not available
 
 
-# mame/drivers/neogeo.c: 1004, 1048, 1104, 1181, 1230
+# mame/drivers/neogeo.c: 1282
 Home
 
 
-# mame/drivers/aerofgt.c: 1147 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4768 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2696 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2040, 2205, 2219, 2267, 2419, 2481, 2543, 2613, 2657, 2710, 2861
+# mame/drivers/aerofgt.c: 1147 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4764 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2696 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2047, 2212, 2226, 2274, 2426, 2488, 2550, 2620, 2664, 2717, 2868
 Hong Kong
 
 
-# emu/ui.c: 2613
+# emu/ui.c: 2626
 Horiz position
 
 
-# emu/ui.c: 2579
+# emu/ui.c: 2592
 Horiz stretch
 
 
-# mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 775, 920 mame/drivers/jack.c: 684 mame/drivers/thepit.c: 527 
+# mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 751, 896 mame/drivers/jack.c: 684 mame/drivers/thepit.c: 527 
 Horizontal
 
 
@@ -1690,39 +1694,39 @@ Horizontal
 Horizontally
 
 
-# emu/uitext.c: 29
+# emu/uitext.c: 27
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
 
 
-# emu/datafile.c: 2281
+# emu/datafile.c: 2283
 IMPERFECT COLORS   : %3d  %3d\n
 
 
-# emu/datafile.c: 2277
+# emu/datafile.c: 2279
 IMPERFECT GRAPHICS : %3d  %3d\n
 
 
-# emu/datafile.c: 2285
+# emu/datafile.c: 2287
 IMPERFECT SOUND    : %3d  %3d\n
 
 
-# emu/audit.c: 306
+# emu/audit.c: 313
 INCORRECT CHECKSUM:\n
 
 
-# emu/audit.c: 315
+# emu/audit.c: 322
 INCORRECT LENGTH: %d bytes\n
 
 
-# emu/uitext.c: 41 mame/drivers/travrusa.c: 90, 90
+# emu/uitext.c: 39 mame/drivers/travrusa.c: 90, 90
 INVALID
 
 
-# emu/cheat.c: 2869
+# emu/cheat.c: 2865
 Ignore Decrement
 
 
-# emu/cheat.c: 3288
+# emu/cheat.c: 3284
 Ignore Decrement By
 
 
@@ -1746,15 +1750,15 @@ Illegal integer value for %s; keeping value of %s\n
 Illegal integer value for %s; reverting to %d\n
 
 
-# emu/clifront.c: 534 emu/mame.c: 1289 emu/ui.c: 345 
+# emu/clifront.c: 526 emu/mame.c: 1292 emu/ui.c: 352 
 Illegal value for %s = %s\n
 
 
-# emu/uitext.c: 238 
+# emu/uitext.c: 236 
 Image Enhancement
 
 
-# emu/cheat.c: 5855
+# emu/cheat.c: 5851
 Increased By Value
 
 
@@ -1762,27 +1766,27 @@ Increased By Value
 Infinite
 
 
-# emu/cheat.c: 576 mame/drivers/calorie.c: 309 mame/drivers/cinemat.c: 924 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3162 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 417 mame/drivers/jack.c: 652 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 285 mame/drivers/vicdual.c: 1641, 2046
+# emu/cheat.c: 572 mame/drivers/calorie.c: 307 mame/drivers/cinemat.c: 923 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3184 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 407 mame/drivers/jack.c: 652 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 282 mame/drivers/vicdual.c: 1673, 2078
 Infinite Lives
 
 
-# emu/cheat.c: 575 mame/drivers/vsnes.c: 857
+# emu/cheat.c: 571 mame/drivers/vsnes.c: 857
 Infinite Time
 
 
-# emu/cheat.c: 4879, 5419
+# emu/cheat.c: 4875, 5415
 Initialize Memory
 
 
-# emu/mame.c: 1529
+# emu/mame.c: 1532
 Initializing...
 
 
-# emu/uitext.c: 95
+# emu/uitext.c: 93
 Input (general)
 
 
-# emu/uitext.c: 104
+# emu/uitext.c: 102
 Input (this game)
 
 
@@ -1806,15 +1810,15 @@ Invalid %s value (must be between %f and %f); keeping value of %s\n
 Invalid %s value (must be between %i and %i); keeping value of %s\n
 
 
-# mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2922, 2939, 2990, 3007
+# mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2921, 2938, 2989, 3006
 Inverted
 
 
-# emu/cheat.c: 578 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 236
+# emu/cheat.c: 574 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 236
 Invincibility
 
 
-# mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 571, 645 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2067, 2132, 2189, 2253, 2292, 2400, 2460, 2522, 2596, 2642, 2695, 2965, 3081 mame/drivers/yard.c: 145
+# mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 614, 688 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2074, 2139, 2196, 2260, 2299, 2407, 2467, 2529, 2603, 2649, 2702, 2972, 3088 mame/drivers/yard.c: 145
 Invulnerability
 
 
@@ -1822,7 +1826,7 @@ Invulnerability
 Italian
 
 
-# mame/drivers/kaneko16.c: 1200, 1296 mame/drivers/midyunit.c: 784 mame/drivers/midzeus.c: 1208 
+# mame/drivers/kaneko16.c: 1203, 1299 mame/drivers/midyunit.c: 784 mame/drivers/midzeus.c: 1207 
 Italy
 
 
@@ -1842,15 +1846,15 @@ Joystick
 Kan
 
 
-# emu/cheat.c: 3276
+# emu/cheat.c: 3272
 Keep
 
 
-# emu/inptport.c: 1084 mame/drivers/ddenlovr.c: 3774, 4001, 4989 mame/drivers/ltcasino.c: 563 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
+# emu/inptport.c: 1084 mame/drivers/ddenlovr.c: 3770, 3997, 4985 mame/drivers/ltcasino.c: 561 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
 Keyboard
 
 
-# mame/drivers/aerofgt.c: 1146 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2694 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2039, 2086, 2204, 2217, 2266, 2417, 2479, 2541, 2612
+# mame/drivers/aerofgt.c: 1146 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2694 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2046, 2093, 2211, 2224, 2273, 2424, 2486, 2548, 2619
 Korea
 
 
@@ -1862,15 +1866,15 @@ LCD%d Pixel Aspect (%d:%d)
 LCD%d Standard (%d:%d)
 
 
-# emu/cheat.c: 5971
+# emu/cheat.c: 5967
 LHS
 
 
-# emu/uitext.c: 193
+# emu/uitext.c: 191
 Label
 
 
-# emu/cheat.c: 7157 emu/uitext.c: 192
+# emu/cheat.c: 7153 emu/uitext.c: 190
 Label Type
 
 
@@ -1882,7 +1886,7 @@ Lamps
 Lamps and Timer
 
 
-# emu/inptport.c: 441 emu/uitext.c: 337 mame/drivers/snowbros.c: 989
+# emu/inptport.c: 441 emu/uitext.c: 335 mame/drivers/snowbros.c: 1032
 Language
 
 
@@ -1890,19 +1894,19 @@ Language
 Left Half
 
 
-# emu/cheat.c: 7150
+# emu/cheat.c: 7146
 Length
 
 
-# emu/cheat.c: 4866, 5304, 5849 mame/drivers/cninja.c: 737 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 606 mame/drivers/drtomy.c: 210, 213 mame/drivers/nmg5.c: 467, 531, 534 mame/drivers/warriorb.c: 386
+# emu/cheat.c: 4862, 5300, 5845 mame/drivers/cninja.c: 737 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 606 mame/drivers/drtomy.c: 208, 211 mame/drivers/nmg5.c: 463, 527, 530 mame/drivers/warriorb.c: 386
 Less
 
 
-# emu/cheat.c: 5852
+# emu/cheat.c: 5848
 Less Or Equal
 
 
-# emu/cheat.c: 5306
+# emu/cheat.c: 5302
 Less or Equal
 
 
@@ -1982,7 +1986,7 @@ Lightgun Y 7
 Lightgun Y 8
 
 
-# emu/cheat.c: 3210
+# emu/cheat.c: 3206
 Link Extension
 
 
@@ -1990,15 +1994,15 @@ Link Extension
 Lives
 
 
-# emu/uitext.c: 203
+# emu/uitext.c: 201
 Lives (or another value)
 
 
-# emu/cheat.c: 7659
+# emu/cheat.c: 7655
 Load Old Format Code
 
 
-# emu/uitext.c: 153
+# emu/uitext.c: 151
 Load Selected Card
 
 
@@ -2006,23 +2010,23 @@ Load Selected Card
 Load State
 
 
-# emu/ui.c: 2217
+# emu/ui.c: 2230
 Load cancelled
 
 
-# emu/ui.c: 2248
+# emu/ui.c: 2261
 Load from position %c
 
 
-# emu/romload.c: 382
+# emu/romload.c: 373
 Loading (%d%%)
 
 
-# emu/romload.c: 384
+# emu/romload.c: 375
 Loading Complete
 
 
-# emu/cheat.c: 3597
+# emu/cheat.c: 3593
 Location
 
 
@@ -2030,11 +2034,11 @@ Location
 Low
 
 
-# emu/clifront.c: 467
+# emu/clifront.c: 459
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
 
-# emu/uitext.c: 121
+# emu/uitext.c: 119
 MAME Statistics
 
 
@@ -2046,7 +2050,7 @@ MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\ns
 MAMEInfo:\n
 
 
-# emu/inptport.c: 2627 mame/drivers/neogeo.c: 1003, 1047, 1103, 1180, 1229
+# emu/inptport.c: 2626 mame/drivers/neogeo.c: 1282
 Machine Mode
 
 
@@ -2058,7 +2062,7 @@ Main Screen Pixel Aspect (%d:%d)
 Main Screen Standard (%d:%d)
 
 
-# emu/uitext.c: 65
+# emu/uitext.c: 63
 Mameinfo not available
 
 
@@ -2066,23 +2070,23 @@ Mameinfo not available
 Manufacturer
 
 
-# emu/cheat.c: 2934
+# emu/cheat.c: 2930
 Mapped Memory
 
 
-# emu/cheat.c: 3396
+# emu/cheat.c: 3392
 Mask
 
 
-# emu/cheat.c: 3479
+# emu/cheat.c: 3475
 Match to Write
 
 
-# emu/uitext.c: 215
+# emu/uitext.c: 213
 Matches found
 
 
-# emu/uitext.c: 184 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 225 mame/drivers/travrusa.c: 90
+# emu/uitext.c: 182 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 225 mame/drivers/travrusa.c: 90
 Max
 
 
@@ -2090,47 +2094,47 @@ Max
 Max Players
 
 
-# emu/cheat.c: 3429
+# emu/cheat.c: 3425
 Maximum Boundary
 
 
-# emu/cheat.c: 6331 emu/inptport.c: 453 emu/uitext.c: 210
+# emu/cheat.c: 6327 emu/inptport.c: 453 emu/uitext.c: 208
 Medium
 
 
-# emu/uitext.c: 112 
+# emu/uitext.c: 110 
 Memory Card
 
 
-# emu/uitext.c: 159
+# emu/uitext.c: 157
 Memory card created
 
 
-# emu/uitext.c: 158
+# emu/uitext.c: 156
 Memory card ejected
 
 
-# emu/uitext.c: 157
+# emu/uitext.c: 155
 Memory card loaded
 
 
-# emu/cheat.c: 7638 mame/drivers/tempest.c: 509
+# emu/cheat.c: 7634 mame/drivers/tempest.c: 509
 Minimum
 
 
-# emu/cheat.c: 3419
+# emu/cheat.c: 3415
 Minimum Boundary
 
 
-# emu/cheat.c: 3535
+# emu/cheat.c: 3531
 Minimum Displayed Value
 
 
-# emu/cheat.c: 3543
+# emu/cheat.c: 3539
 Minimum Value
 
 
-# mame/drivers/astrocde.c: 769, 790 mame/drivers/jack.c: 683 mame/drivers/thepit.c: 525
+# mame/drivers/astrocde.c: 768, 789 mame/drivers/jack.c: 683 mame/drivers/thepit.c: 525 mame/drivers/wldarrow.c: 189
 Monitor
 
 
@@ -2138,11 +2142,11 @@ Monitor
 Mono
 
 
-# emu/uitext.c: 178
+# emu/uitext.c: 176
 More Info
 
 
-# emu/uitext.c: 179
+# emu/uitext.c: 177
 More Info for
 
 
@@ -2214,79 +2218,79 @@ Mouse Y 8
 Move User Interface
 
 
-# emu/uitext.c: 39
+# emu/uitext.c: 37
 NA
 
 
-# emu/audit.c: 292
+# emu/audit.c: 299
 NEEDS REDUMP\n
 
 
-# emu/datafile.c: 2287
+# emu/datafile.c: 2289
 NO COCKTAIL        : %3d  %3d\n
 
 
-# emu/datafile.c: 2289
+# emu/datafile.c: 2291
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
-# emu/audit.c: 297
+# emu/audit.c: 304
 NO GOOD DUMP KNOWN\n
 
 
-# emu/clifront.c: 1322 tools/romcmp.c: 464
+# emu/clifront.c: 1314 tools/romcmp.c: 449
 NO MATCH\n
 
 
-# emu/datafile.c: 2283
+# emu/datafile.c: 2285
 NO SOUND           : %3d  %3d\n
 
 
-# emu/datafile.c: 2273
+# emu/datafile.c: 2275
 NON-WORKING        : %3d  %3d\n
 
 
-# emu/clifront.c: 1316
+# emu/clifront.c: 1308
 NOT A ROM\n
 
 
-# emu/audit.c: 337
+# emu/audit.c: 344
 NOT FOUND (BIOS)\n
 
 
-# emu/audit.c: 333
+# emu/audit.c: 340
 NOT FOUND (shared with parent)\n
 
 
-# emu/audit.c: 323
+# emu/audit.c: 330
 NOT FOUND - NO GOOD DUMP KNOWN\n
 
 
-# emu/audit.c: 328
+# emu/audit.c: 335
 NOT FOUND BUT OPTIONAL\n
 
 
-# emu/audit.c: 319
+# emu/audit.c: 326
 NOT FOUND\n
 
 
-# emu/cheat.c: 3140, 3155, 6000 emu/uitext.c: 180 
+# emu/cheat.c: 3136, 3151, 5996 emu/uitext.c: 178 
 Name
 
 
-# emu/clifront.c: 651
+# emu/clifront.c: 643
 Name:     Description:\n
 
 
-# emu/clifront.c: 774
+# emu/clifront.c: 766
 Name:    Clone of:\n
 
 
-# emu/cheat.c: 5856
+# emu/cheat.c: 5852
 Near To
 
 
-# mame/drivers/neogeo.c: 933, 1293
+# mame/drivers/neodrvr.c: 295 mame/drivers/neogeo.c: 1245
 Next Game
 
 
@@ -2298,47 +2302,47 @@ Nihongo
 No
 
 
-# emu/uitext.c: 217
+# emu/uitext.c: 215
 No previous values saved
 
 
-# emu/cheat.c: 735, 2909 emu/inptport.c: 485 emu/input.c: 1066, 1401 emu/sound/custom.c: 84 emu/uimenu.c: 2141 
+# emu/cheat.c: 731, 2905 emu/inptport.c: 485 emu/input.c: 1065, 1398 emu/sound/custom.c: 84 emu/uimenu.c: 2142 
 None
 
 
-# emu/cheat.c: 2917, 2932 emu/inptport.c: 452 mame/drivers/metro.c: 2775 mame/drivers/yunsun16.c: 430
+# emu/cheat.c: 2913, 2928 emu/inptport.c: 452 mame/drivers/metro.c: 2774 mame/drivers/yunsun16.c: 430
 Normal
 
 
-# emu/cheat.c: 2867
+# emu/cheat.c: 2863
 Normal/Delay
 
 
-# emu/cheat.c: 4861, 5313, 5854
+# emu/cheat.c: 4857, 5309, 5850
 Not Equal
 
 
-# emu/cheat.c: 2892
+# emu/cheat.c: 2888
 Null
 
 
-# emu/uitext.c: 190
+# emu/uitext.c: 188
 Number of bytes
 
 
-# emu/uitext.c: 40 
+# emu/uitext.c: 38 
 OK
 
 
-# emu/romload.c: 250
+# emu/romload.c: 241
 OPTIONAL %s NOT FOUND\n
 
 
-# emu/inptport.c: 378 emu/uitext.c: 38, 242
+# emu/inptport.c: 378 emu/uitext.c: 36, 240
 Off
 
 
-# emu/inptport.c: 379 emu/uitext.c: 37, 243
+# emu/inptport.c: 379 emu/uitext.c: 35, 241
 On
 
 
@@ -2346,23 +2350,23 @@ On
 On Screen Display
 
 
-# emu/cheat.c: 3255 emu/sound/discrete.h: 3611
+# emu/cheat.c: 3251 emu/sound/discrete.h: 3796
 One Shot
 
 
-# emu/uitext.c: 222
+# emu/uitext.c: 220
 One match found - added to list
 
 
-# emu/uitext.c: 91
+# emu/uitext.c: 89
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
 
 
-# emu/cheat.c: 3362
+# emu/cheat.c: 3358
 Operation
 
 
-# emu/uitext.c: 172 mame/drivers/fgoal.c: 304 
+# emu/uitext.c: 170 mame/drivers/fgoal.c: 297 
 Options
 
 
@@ -2370,15 +2374,15 @@ Options
 Orientation
 
 
-# emu/uitext.c: 142
+# emu/uitext.c: 140
 Other Controls
 
 
-# emu/uitext.c: 30
+# emu/uitext.c: 28
 Otherwise, type OK or move the joystick left then right to continue
 
 
-# emu/uitext.c: 59
+# emu/uitext.c: 57
 Overclock
 
 
@@ -2386,7 +2390,7 @@ Overclock
 Overseas
 
 
-# mame/drivers/cherrym.c: 173 mame/drivers/neogeo.c: 1254
+# mame/drivers/cherrym.c: 165
 P1 Big
 
 
@@ -2646,7 +2650,7 @@ P1 Right/Up
 P1 Select
 
 
-# mame/drivers/cherrym.c: 177 mame/drivers/neogeo.c: 1255
+# mame/drivers/cherrym.c: 169
 P1 Small
 
 
@@ -3918,7 +3922,7 @@ Pedal
 Pixel Aspect (%d:%d)
 
 
-# mame/drivers/astrocde.c: 756 mame/drivers/bottom9.c: 235 mame/drivers/deniam.c: 272 mame/drivers/destroyr.c: 210 mame/drivers/firetrk.c: 592, 660, 743 mame/drivers/galpanic.c: 845 mame/drivers/skyraid.c: 143 mame/drivers/snk.c: 4053, 4194 mame/drivers/sprint2.c: 334, 406 mame/drivers/sprint4.c: 311 mame/drivers/sprint8.c: 320, 455 mame/drivers/sspeedr.c: 171 mame/drivers/starshp1.c: 251 mame/drivers/suprslam.c: 262 mame/drivers/tank8.c: 273 mame/drivers/triplhnt.c: 171 mame/drivers/wolfpack.c: 224 
+# mame/drivers/astrocde.c: 755 mame/drivers/bottom9.c: 235 mame/drivers/deniam.c: 272 mame/drivers/destroyr.c: 210 mame/drivers/firetrk.c: 592, 660, 743 mame/drivers/galpanic.c: 795 mame/drivers/skyraid.c: 143 mame/drivers/snk.c: 4053, 4194 mame/drivers/sprint2.c: 334, 406 mame/drivers/sprint4.c: 311 mame/drivers/sprint8.c: 320, 455 mame/drivers/sspeedr.c: 171 mame/drivers/starshp1.c: 251 mame/drivers/suprslam.c: 262 mame/drivers/tank8.c: 273 mame/drivers/triplhnt.c: 171 mame/drivers/wolfpack.c: 224 
 Play Time
 
 
@@ -3926,35 +3930,35 @@ Play Time
 Player %d
 
 
-# emu/uitext.c: 134
+# emu/uitext.c: 132
 Player 1 Controls
 
 
-# emu/uitext.c: 135
+# emu/uitext.c: 133
 Player 2 Controls
 
 
-# emu/uitext.c: 136
+# emu/uitext.c: 134
 Player 3 Controls
 
 
-# emu/uitext.c: 137
+# emu/uitext.c: 135
 Player 4 Controls
 
 
-# emu/uitext.c: 138
+# emu/uitext.c: 136
 Player 5 Controls
 
 
-# emu/uitext.c: 139
+# emu/uitext.c: 137
 Player 6 Controls
 
 
-# emu/uitext.c: 140
+# emu/uitext.c: 138
 Player 7 Controls
 
 
-# emu/uitext.c: 141
+# emu/uitext.c: 139
 Player 8 Controls
 
 
@@ -4034,63 +4038,63 @@ Positional V 7
 Positional V 8
 
 
-# emu/cheat.c: 3562
+# emu/cheat.c: 3558
 Prefill
 
 
-# emu/uitext.c: 35
+# emu/uitext.c: 33
 Press Any Key
 
 
-# emu/uitext.c: 36
+# emu/uitext.c: 34
 Press Select Key/Button
 
 
-# emu/cheat.c: 5318, 5842
+# emu/cheat.c: 5314, 5838
 Previous Data
 
 
-# mame/drivers/neogeo.c: 933, 1295
+# mame/drivers/neodrvr.c: 297 mame/drivers/neogeo.c: 1245
 Previous Game
 
 
-# emu/uitext.c: 218
+# emu/uitext.c: 216
 Previous values already restored
 
 
-# emu/cheat.c: 2937
+# emu/cheat.c: 2933
 Program Space
 
 
-# emu/ui.c: 2262
+# emu/ui.c: 2275
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 
 
-# emu/ui.c: 2060
+# emu/ui.c: 2073
 REC START
 
 
-# emu/ui.c: 2065
+# emu/ui.c: 2078
 REC STOP
 
 
-# emu/cheat.c: 5977
+# emu/cheat.c: 5973
 RHS
 
 
-# emu/datafile.c: 2291
+# emu/datafile.c: 2293
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 
 
-# emu/cheat.c: 3462
+# emu/cheat.c: 3458
 Range Maximum
 
 
-# emu/cheat.c: 3445
+# emu/cheat.c: 3441
 Range Minimum
 
 
-# emu/cheat.c: 592 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2234
+# emu/cheat.c: 588 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2241
 Rapid Fire
 
 
@@ -4102,67 +4106,67 @@ Reach
 Record Movie
 
 
-# emu/uitext.c: 225
+# emu/uitext.c: 223
 Refresh rate
 
 
-# emu/cheat.c: 2933, 3620 emu/inptport.c: 433 mame/drivers/pgm.c: 908, 919
+# emu/cheat.c: 2929, 3616 emu/inptport.c: 433 mame/drivers/pgm.c: 908, 919
 Region
 
 
-# emu/uitext.c: 53
+# emu/uitext.c: 51
 Relative
 
 
-# emu/cheat.c: 2936
+# emu/cheat.c: 2932
 Relative Address
 
 
-# emu/inptport.c: 1139 emu/uitext.c: 173
+# emu/inptport.c: 1139 emu/uitext.c: 171
 Reload Database
 
 
-# mame/drivers/arcadia.c: 228 mame/drivers/astrocde.c: 1026, 1147 mame/drivers/deco32.c: 1430, 1524 mame/drivers/djmain.c: 499 mame/drivers/hanaroku.c: 158 mame/drivers/laserbat.c: 265, 344, 418 mame/drivers/murogem.c: 126 mame/drivers/playch10.c: 472 mame/drivers/sengokmj.c: 237 mame/drivers/trvquest.c: 141 
+# mame/drivers/arcadia.c: 228 mame/drivers/astrocde.c: 1025, 1146 mame/drivers/deco32.c: 1430, 1524 mame/drivers/djmain.c: 499 mame/drivers/hanaroku.c: 157 mame/drivers/laserbat.c: 265, 344, 418 mame/drivers/murogem.c: 126 mame/drivers/playch10.c: 472 mame/drivers/sengokmj.c: 237 mame/drivers/trvquest.c: 141 
 Reset
 
 
-# emu/inptport.c: 1090 emu/uitext.c: 108
+# emu/inptport.c: 1090 emu/uitext.c: 106
 Reset Game
 
 
-# mame/drivers/seattle.c: 1925, 2318, 2416 mame/drivers/vegas.c: 1861, 1893, 1907, 1937, 1981, 2077 
+# mame/drivers/seattle.c: 1910, 2303, 2401 mame/drivers/vegas.c: 1848, 1880, 1894, 1924, 1968, 2064 
 Resolution
 
 
-# emu/uitext.c: 219
+# emu/uitext.c: 217
 Restoration successful
 
 
-# emu/uitext.c: 169
+# emu/uitext.c: 167
 Restore Previous Results
 
 
-# emu/cheat.c: 3263
+# emu/cheat.c: 3259
 Restore Previous Value
 
 
-# emu/uitext.c: 109
+# emu/uitext.c: 107
 Return to Game
 
 
-# emu/uitext.c: 143
+# emu/uitext.c: 141
 Return to Groups
 
 
-# emu/uitext.c: 33
+# emu/uitext.c: 31
 Return to Main Menu
 
 
-# emu/uitext.c: 34
+# emu/uitext.c: 32
 Return to Prior Menu
 
 
-# emu/inptport.c: 483 emu/uitext.c: 129
+# emu/inptport.c: 483 emu/uitext.c: 127
 Reverse
 
 
@@ -4178,11 +4182,11 @@ Rockn Megasession Custom
 Ron
 
 
-# emu/uitext.c: 230
+# emu/uitext.c: 228
 Rotate Clockwise
 
 
-# emu/uitext.c: 231
+# emu/uitext.c: 229
 Rotate Counter-clockwise
 
 
@@ -4194,7 +4198,7 @@ Rotate View
 Rotation
 
 
-# emu/datafile.c: 2476
+# emu/datafile.c: 2479
 SHADOWS        : %3d  + %3d\n
 
 
@@ -4202,7 +4206,7 @@ SHADOWS        : %3d  + %3d\n
 Samples
 
 
-# emu/clifront.c: 937
+# emu/clifront.c: 929
 Samples not supported in this build\n
 
 
@@ -4210,7 +4214,7 @@ Samples not supported in this build\n
 Save Cheat
 
 
-# emu/cheat.c: 4881, 5417, 6012
+# emu/cheat.c: 4877, 5413, 6008
 Save Memory
 
 
@@ -4222,11 +4226,11 @@ Save Snapshot
 Save State
 
 
-# emu/ui.c: 2215
+# emu/ui.c: 2228
 Save cancelled
 
 
-# emu/ui.c: 2243
+# emu/ui.c: 2256
 Save to position %c
 
 
@@ -4234,11 +4238,11 @@ Save to position %c
 Screen
 
 
-# emu/uitext.c: 229
+# emu/uitext.c: 227
 Screen #
 
 
-# emu/ui.c: 2511, 2529, 2546, 2562, 2579, 2596, 2613, 2630
+# emu/ui.c: 2524, 2542, 2559, 2575, 2592, 2609, 2626, 2643
 Screen %d %s %.3f
 
 
@@ -4250,11 +4254,11 @@ Screen %d Pixel Aspect (%d:%d)
 Screen %d Standard (%d:%d)
 
 
-# emu/uitext.c: 50
+# emu/uitext.c: 48
 Screen Resolution
 
 
-# emu/uitext.c: 87
+# emu/uitext.c: 85
 Screen flipping in cocktail mode is not supported.
 
 
@@ -4262,63 +4266,63 @@ Screen flipping in cocktail mode is not supported.
 Screen flipping in cocktail mode is not supported.\n
 
 
-# emu/cheat.c: 7634
+# emu/cheat.c: 7630
 Search Dialog Style
 
 
-# emu/cheat.c: 6363
+# emu/cheat.c: 6359
 Search Speed
 
 
-# emu/cheat.c: 1724
+# emu/cheat.c: 1720
 Search a Cheat (Advanced Mode)
 
 
-# emu/cheat.c: 1720
+# emu/cheat.c: 1716
 Search a Cheat (Classic Mode)
 
 
-# emu/cheat.c: 1716
+# emu/cheat.c: 1712
 Search a Cheat (Minimum Mode)
 
 
-# emu/uitext.c: 216
+# emu/uitext.c: 214
 Search not initialized
 
 
-# mame/drivers/ninjakid.c: 296
+# mame/drivers/ninjakid.c: 295
 Second Bonus
 
 
-# emu/cheat.c: 2872, 2946 mame/drivers/bwidow.c: 640 mame/drivers/maxaflex.c: 271 mame/drivers/megaplay.c: 73 mame/drivers/megatech.c: 111 mame/drivers/mpu4.c: 2079 mame/drivers/nbmj8688.c: 2693 mame/drivers/pingpong.c: 339 mame/drivers/trackfld.c: 665
+# emu/cheat.c: 2868, 2942 mame/drivers/bwidow.c: 640 mame/drivers/maxaflex.c: 274 mame/drivers/megaplay.c: 73 mame/drivers/megatech.c: 111 mame/drivers/mpu4.c: 1987 mame/drivers/nbmj8688.c: 2693 mame/drivers/pingpong.c: 339 mame/drivers/trackfld.c: 665
 Select
 
 
-# emu/uitext.c: 214
+# emu/uitext.c: 212
 Select Memory Areas
 
 
-# emu/cheat.c: 7631
+# emu/cheat.c: 7627
 Select Search
 
 
-# emu/uitext.c: 220
+# emu/uitext.c: 218
 Select a value
 
 
-# emu/ui.c: 2208
+# emu/ui.c: 2221
 Select position to load from
 
 
-# emu/ui.c: 2206
+# emu/ui.c: 2219
 Select position to save to
 
 
-# emu/uitext.c: 130
+# emu/uitext.c: 128
 Sensitivity
 
 
-# emu/inptport.c: 916 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1753, 1786, 1875 mame/drivers/gdrawpkr.c: 294 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 187
+# emu/inptport.c: 916 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1752, 1785, 1874 mame/drivers/gdrawpkr.c: 286 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 182
 Service
 
 
@@ -4346,19 +4350,19 @@ Service Mode
 Service Mode/Free Play
 
 
-# emu/cheat.c: 2903 emu/uitext.c: 185 mame/drivers/arcadia.c: 229 mame/drivers/pingpong.c: 344 mame/drivers/trackfld.c: 655
+# emu/cheat.c: 2899 emu/uitext.c: 183 mame/drivers/arcadia.c: 229 mame/drivers/pingpong.c: 344 mame/drivers/trackfld.c: 655
 Set
 
 
-# emu/cheat.c: 3470
+# emu/cheat.c: 3466
 Set/Clear
 
 
-# emu/cheat.c: 2888
+# emu/cheat.c: 2884
 Set/Clear Bits
 
 
-# emu/cheat.c: 7656
+# emu/cheat.c: 7652
 Show Activation Key Message
 
 
@@ -4382,7 +4386,7 @@ Show Cheat List
 Show Command
 
 
-# emu/uitext.c: 123
+# emu/uitext.c: 121
 Show Command List
 
 
@@ -4410,11 +4414,11 @@ Show Overlays
 Show Profiler
 
 
-# emu/cheat.c: 7650
+# emu/cheat.c: 7646
 Show Search Labels
 
 
-# emu/cheat.c: 5993
+# emu/cheat.c: 5989
 Signed
 
 
@@ -4426,19 +4430,19 @@ Simple LEDs
 Single
 
 
-# emu/cheat.c: 5987
+# emu/cheat.c: 5983
 Size
 
 
-# emu/cheat.c: 7180
+# emu/cheat.c: 7176
 Skip Bytes
 
 
-# emu/cheat.c: 6332 emu/uitext.c: 211 mame/drivers/4enraya.c: 118 mame/drivers/aleck64.c: 362 mame/drivers/amidar.c: 285 mame/drivers/angelkds.c: 478 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 158 mame/drivers/brkthru.c: 232, 235, 277, 280 mame/drivers/btime.c: 797 mame/drivers/cninja.c: 725 mame/drivers/cps1.c: 1276, 1580 mame/drivers/deniam.c: 273 mame/drivers/epos.c: 150, 153, 159 mame/drivers/fuukifg3.c: 421 mame/drivers/gameplan.c: 608, 1059 mame/drivers/jcross.c: 187 mame/drivers/m62.c: 618, 668, 719, 770, 822, 874, 928, 1027, 1080 mame/drivers/mcr.c: 1134 mame/drivers/megaplay.c: 222 mame/drivers/metro.c: 3234 mame/drivers/nmg5.c: 437, 497, 590, 597, 632, 637 mame/drivers/nmk16.c: 2767 mame/drivers/phoenix.c: 321 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 443, 511 mame/drivers/safarir.c: 182 mame/drivers/segas16a.c: 1315 mame/drivers/segas16b.c: 2660 mame/drivers/sf.c: 332, 510, 648 mame/drivers/shisen.c: 140 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 153 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 249 mame/drivers/system1.c: 1962 mame/drivers/system16.c: 1771 mame/drivers/taito_z.c: 2382, 2451 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 251, 306, 347 mame/drivers/trackfld.c: 598 mame/drivers/vigilant.c: 239 mame/drivers/vsnes.c: 1070, 1781 mame/drivers/wallc.c: 183 mame/drivers/wilytowr.c: 455 mame/drivers/xain.c: 398 mame/drivers/yamato.c: 380 mame/drivers/zac2650.c: 72, 122
+# emu/cheat.c: 6328 emu/uitext.c: 209 mame/drivers/4enraya.c: 118 mame/drivers/aleck64.c: 362 mame/drivers/amidar.c: 285 mame/drivers/angelkds.c: 478 mame/drivers/bestleag.c: 272 mame/drivers/bigstrkb.c: 158 mame/drivers/brkthru.c: 232, 235, 277, 280 mame/drivers/btime.c: 797 mame/drivers/cninja.c: 725 mame/drivers/cps1.c: 1276, 1580 mame/drivers/deniam.c: 273 mame/drivers/epos.c: 150, 153, 159 mame/drivers/fuukifg3.c: 421 mame/drivers/gameplan.c: 584, 1035 mame/drivers/jcross.c: 187 mame/drivers/m62.c: 619, 669, 720, 771, 823, 875, 929, 1028, 1081 mame/drivers/mcr.c: 1134 mame/drivers/megaplay.c: 222 mame/drivers/metro.c: 3233 mame/drivers/nmg5.c: 433, 493, 586, 593, 628, 633 mame/drivers/nmk16.c: 2767 mame/drivers/phoenix.c: 321 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 443, 511 mame/drivers/safarir.c: 243 mame/drivers/segas16a.c: 1451 mame/drivers/segas16b.c: 2660 mame/drivers/sf.c: 332, 510, 648 mame/drivers/shisen.c: 140 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 153 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 249 mame/drivers/system1.c: 1962 mame/drivers/system16.c: 1771 mame/drivers/taito_z.c: 2381, 2450 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 251, 306, 347 mame/drivers/trackfld.c: 598 mame/drivers/vigilant.c: 239 mame/drivers/vsnes.c: 1070, 1781 mame/drivers/wallc.c: 178 mame/drivers/wilytowr.c: 444 mame/drivers/xain.c: 398 mame/drivers/yamato.c: 380 mame/drivers/zac2650.c: 72, 122
 Slow
 
 
-# emu/uitext.c: 207
+# emu/uitext.c: 205
 Slow But Sure (changed or not)
 
 
@@ -4446,7 +4450,7 @@ Slow But Sure (changed or not)
 Soft Reset
 
 
-# emu/uitext.c: 46 mame/drivers/balsente.c: 748, 803 mame/drivers/contra.c: 221 mame/drivers/couple.c: 209 mame/drivers/gijoe.c: 300 mame/drivers/mosaic.c: 207 mame/drivers/tmnt.c: 2105, 2187, 2433 
+# emu/uitext.c: 44 mame/drivers/balsente.c: 748, 803 mame/drivers/contra.c: 221 mame/drivers/couple.c: 207 mame/drivers/gijoe.c: 299 mame/drivers/mosaic.c: 207 mame/drivers/tmnt.c: 2105, 2187, 2433 
 Sound
 
 
@@ -4462,7 +4466,7 @@ Standard
 Standard (%d:%d)
 
 
-# emu/uitext.c: 166
+# emu/uitext.c: 164
 Start a New Cheat Search
 
 
@@ -4486,15 +4490,15 @@ State successfully saved.
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 
 
-# emu/uitext.c: 67
+# emu/uitext.c: 65
 Statistics not available
 
 
-# emu/cheat.c: 5462
+# emu/cheat.c: 5458
 Status (Same or Different)
 
 
-# emu/uitext.c: 206
+# emu/uitext.c: 204
 Status (bits or flags)
 
 
@@ -4502,27 +4506,27 @@ Status (bits or flags)
 Stereo
 
 
-# mame/drivers/bmcbowl.c: 370 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 427 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2026 mame/drivers/turbo.c: 893
+# mame/drivers/bmcbowl.c: 369 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 419 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2033 mame/drivers/turbo.c: 893
 Stop
 
 
-# emu/uitext.c: 63
+# emu/uitext.c: 61
 Story not available
 
 
-# emu/cheat.c: 737
+# emu/cheat.c: 733
 String
 
 
-# emu/cheat.c: 2898
+# emu/cheat.c: 2894
 Subtract
 
 
-# emu/cheat.c: 2918, 5990
+# emu/cheat.c: 2914, 5986
 Swap
 
 
-# emu/uitext.c: 88
+# emu/uitext.c: 86
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
 
 
@@ -4530,15 +4534,15 @@ THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't both
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 
 
-# mame/drivers/aerofgt.c: 1058, 1148 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1213 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2042, 2088, 2154, 2220, 2268, 2311, 2421, 2483, 2545, 2614, 2658, 2711
+# mame/drivers/aerofgt.c: 1058, 1148 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1212 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2049, 2095, 2161, 2227, 2275, 2318, 2428, 2490, 2552, 2621, 2665, 2718
 Taiwan
 
 
-# mame/drivers/bmcbowl.c: 380 mame/drivers/dwarfd.c: 452 mame/drivers/gdrawpkr.c: 322 mame/drivers/magicfly.c: 563 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 549
+# mame/drivers/bmcbowl.c: 379 mame/drivers/dwarfd.c: 452 mame/drivers/gdrawpkr.c: 314 mame/drivers/magicfly.c: 550 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 537
 Take
 
 
-# emu/inptport.c: 2626 mame/drivers/neogeo.c: 999, 1043, 1099, 1176, 1225 mame/drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329 mame/drivers/toaplan2.c: 2033, 2076, 2140, 2197, 2213, 2261, 2303, 2337, 2408, 2468, 2530, 2607, 2650, 2703, 2831, 2844, 2856
+# emu/inptport.c: 2625 mame/drivers/neogeo.c: 1282 mame/drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329 mame/drivers/toaplan2.c: 2040, 2083, 2147, 2204, 2220, 2268, 2310, 2344, 2415, 2475, 2537, 2614, 2657, 2710, 2838, 2851, 2863
 Territory
 
 
@@ -4546,23 +4550,23 @@ Territory
 Test
 
 
-# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 777 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3290 mame/drivers/ertictac.c: 230 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 146 mame/drivers/gdrawpkr.c: 298 mame/drivers/halleys.c: 1702 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 767, 815 mame/drivers/jchan.c: 730 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 115 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 379, 771, 1238, 2188 mame/drivers/nwk-tr.c: 851 mame/drivers/nycaptor.c: 613 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 261 mame/drivers/quasar.c: 315 mame/drivers/quizo.c: 188 mame/drivers/raiden2.c: 980, 1059, 1108 mame/drivers/segas16a.c: 1494 mame/drivers/segas16b.c: 2915 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 621 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2069
+# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 777 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3286 mame/drivers/ertictac.c: 230 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 144 mame/drivers/gdrawpkr.c: 290 mame/drivers/halleys.c: 1700 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 760, 808 mame/drivers/jchan.c: 729 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 114 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 379, 771, 1230, 2179 mame/drivers/nwk-tr.c: 849 mame/drivers/nycaptor.c: 613 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 260 mame/drivers/quasar.c: 315 mame/drivers/quizo.c: 186 mame/drivers/raiden2.c: 978, 1057, 1106 mame/drivers/segas16a.c: 1630 mame/drivers/segas16b.c: 2915 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 619 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2056
 Test Mode
 
 
-# mame/drivers/dbz.c: 271, 364 mame/drivers/kinst.c: 518, 622 mame/drivers/konamigq.c: 471 mame/drivers/konamigv.c: 392 mame/drivers/ksys573.c: 2791 mame/drivers/mcr68.c: 734 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 933 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 232, 443, 509, 604, 694 mame/drivers/midzeus.c: 1021, 1102, 1228 mame/drivers/mpu4.c: 2074 mame/drivers/namcos10.c: 407 mame/drivers/namcos11.c: 934 mame/drivers/namcos12.c: 1449 mame/drivers/namcos21.c: 1943, 2020, 2097 mame/drivers/neogeo.c: 943, 979, 1073, 1193 mame/drivers/seattle.c: 2209, 2334, 2432 mame/drivers/vegas.c: 2059 mame/drivers/zn.c: 3063
+# mame/drivers/dbz.c: 271, 364 mame/drivers/kinst.c: 518, 622 mame/drivers/konamigq.c: 470 mame/drivers/konamigv.c: 392 mame/drivers/ksys573.c: 2791 mame/drivers/mcr68.c: 734 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 933 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 232, 443, 509, 604, 694 mame/drivers/midzeus.c: 1020, 1101, 1227 mame/drivers/mpu4.c: 1859, 1982, 2106, 2229 mame/drivers/namcos10.c: 407 mame/drivers/namcos11.c: 934 mame/drivers/namcos12.c: 1448 mame/drivers/namcos21.c: 1941, 2018, 2095 mame/drivers/neodrvr.c: 60 mame/drivers/neogeo.c: 1195 mame/drivers/seattle.c: 2194, 2319, 2417 mame/drivers/vegas.c: 2046 mame/drivers/zn.c: 3063
 Test Switch
 
 
-# emu/uitext.c: 51 mame/drivers/megasys1.c: 2210
+# emu/uitext.c: 49 mame/drivers/megasys1.c: 2210
 Text
 
 
-# emu/cheat.c: 7160
+# emu/cheat.c: 7156
 Text Label
 
 
-# emu/uitext.c: 83
+# emu/uitext.c: 81
 The colors are completely wrong.
 
 
@@ -4570,7 +4574,7 @@ The colors are completely wrong.
 The colors are completely wrong.\n
 
 
-# emu/uitext.c: 82
+# emu/uitext.c: 80
 The colors aren't 100% accurate.
 
 
@@ -4578,7 +4582,7 @@ The colors aren't 100% accurate.
 The colors aren't 100% accurate.\n
 
 
-# emu/uitext.c: 89
+# emu/uitext.c: 87
 The game has protection which isn't fully emulated.
 
 
@@ -4586,7 +4590,7 @@ The game has protection which isn't fully emulated.
 The game has protection which isn't fully emulated.\n
 
 
-# emu/uitext.c: 86
+# emu/uitext.c: 84
 The game lacks sound.
 
 
@@ -4594,7 +4598,7 @@ The game lacks sound.
 The game lacks sound.\n
 
 
-# emu/uitext.c: 85
+# emu/uitext.c: 83
 The sound emulation isn't 100% accurate.
 
 
@@ -4602,7 +4606,7 @@ The sound emulation isn't 100% accurate.
 The sound emulation isn't 100% accurate.\n
 
 
-# emu/uitext.c: 84
+# emu/uitext.c: 82
 The video emulation isn't 100% accurate.
 
 
@@ -4610,11 +4614,11 @@ The video emulation isn't 100% accurate.
 The video emulation isn't 100% accurate.\n
 
 
-# emu/uitext.c: 81
+# emu/uitext.c: 79
 There are known problems with this game:
 
 
-# emu/uitext.c: 90
+# emu/uitext.c: 88
 There are working clones of this game. They are:
 
 
@@ -4622,7 +4626,7 @@ There are working clones of this game. They are:
 This INP file is not an extended INP file, extra info not available\n
 
 
-# emu/clifront.c: 839
+# emu/clifront.c: 831
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 
 
@@ -4630,7 +4634,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 Throttle
 
 
-# emu/uitext.c: 147
+# emu/uitext.c: 145
 Tickets dispensed
 
 
@@ -4638,27 +4642,27 @@ Tickets dispensed
 Tilt
 
 
-# mame/drivers/amspdwy.c: 181 mame/drivers/cinemat.c: 361, 520 mame/drivers/cps1.c: 4001, 4114 mame/drivers/dkong.c: 1006 mame/drivers/drtomy.c: 209 mame/drivers/fitfight.c: 315, 453, 595 mame/drivers/gomoku.c: 116 mame/drivers/homedata.c: 873, 954 mame/drivers/lazercmd.c: 518 mame/drivers/m107.c: 275 mame/drivers/m92.c: 955 mame/drivers/megaplay.c: 244 mame/drivers/megasys1.c: 1412, 2215 mame/drivers/metlclsh.c: 225 mame/drivers/metro.c: 2680, 2774 mame/drivers/mw8080bw.c: 2189 mame/drivers/nbmj8688.c: 2101, 2175 mame/drivers/pacman.c: 2170, 2271 mame/drivers/paradise.c: 148, 216 mame/drivers/pcktgal.c: 159 mame/drivers/pktgaldx.c: 251 mame/drivers/pokechmp.c: 203 mame/drivers/punchout.c: 518, 589 mame/drivers/realbrk.c: 279 mame/drivers/segas16b.c: 2197 mame/drivers/segaxbd.c: 784, 826, 918, 999 mame/drivers/snowbros.c: 1255, 1334 mame/drivers/starfire.c: 206, 255 mame/drivers/supbtime.c: 295 mame/drivers/system1.c: 970, 1132, 1184 mame/drivers/system16.c: 1027 mame/drivers/taito_f2.c: 3302 mame/drivers/taito_l.c: 1295, 1822, 1978, 1978 mame/drivers/taitosj.c: 918, 1003, 1445 mame/drivers/tattack.c: 100 mame/drivers/troangel.c: 106 mame/drivers/tubep.c: 631 mame/drivers/tumbleb.c: 1115, 1346, 1692 mame/drivers/vicdual.c: 495 mame/drivers/vsnes.c: 860, 1380 mame/drivers/wwfsstar.c: 288 mame/drivers/zac2650.c: 171
+# mame/drivers/amspdwy.c: 181 mame/drivers/cinemat.c: 360, 519 mame/drivers/cps1.c: 4001, 4114 mame/drivers/dkong.c: 1006 mame/drivers/drtomy.c: 207 mame/drivers/fitfight.c: 315, 453, 595 mame/drivers/gomoku.c: 116 mame/drivers/homedata.c: 873, 954 mame/drivers/lazercmd.c: 518 mame/drivers/m107.c: 275 mame/drivers/m92.c: 954 mame/drivers/megaplay.c: 244 mame/drivers/megasys1.c: 1412, 2215 mame/drivers/metlclsh.c: 225 mame/drivers/metro.c: 2679, 2773 mame/drivers/mw8080bw.c: 2180 mame/drivers/nbmj8688.c: 2101, 2175 mame/drivers/pacman.c: 2170, 2271 mame/drivers/paradise.c: 148, 216 mame/drivers/pcktgal.c: 159 mame/drivers/pktgaldx.c: 251 mame/drivers/pokechmp.c: 203 mame/drivers/punchout.c: 518, 589 mame/drivers/realbrk.c: 292 mame/drivers/segas16b.c: 2197 mame/drivers/segaxbd.c: 805, 847, 939, 1020 mame/drivers/snowbros.c: 1298, 1377 mame/drivers/starfire.c: 206, 255 mame/drivers/supbtime.c: 295 mame/drivers/system1.c: 970, 1132, 1184 mame/drivers/system16.c: 1027 mame/drivers/taito_f2.c: 3302 mame/drivers/taito_l.c: 1295, 1822, 1978, 1978 mame/drivers/taitosj.c: 918, 1003, 1445 mame/drivers/tattack.c: 99 mame/drivers/troangel.c: 106 mame/drivers/tubep.c: 627 mame/drivers/tumbleb.c: 1115, 1346, 1692 mame/drivers/vicdual.c: 495 mame/drivers/vsnes.c: 860, 1380 mame/drivers/wwfsstar.c: 288 mame/drivers/zac2650.c: 171
 Time
 
 
-# mame/drivers/chinagat.c: 397 mame/drivers/ddragon.c: 790 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 718, 769, 821, 873 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2774 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1300 mame/drivers/segas16a.c: 999, 1024 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2928, 3044 mame/drivers/vsnes.c: 1472, 1780
+# mame/drivers/chinagat.c: 397 mame/drivers/ddragon.c: 790 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 719, 770, 822, 874 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2773 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1278 mame/drivers/segas16a.c: 1135, 1160 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2935, 3051 mame/drivers/vsnes.c: 1472, 1780
 Timer
 
 
-# emu/cheat.c: 4831, 5456
+# emu/cheat.c: 4827, 5452
 Timer (+ or -)
 
 
-# emu/uitext.c: 204
+# emu/uitext.c: 202
 Timers (+/- some value)
 
 
-# mame/drivers/bigevglf.c: 272 mame/drivers/chqflag.c: 307 mame/drivers/dynax.c: 2697 mame/drivers/gaiden.c: 623 mame/drivers/megaplay.c: 353 mame/drivers/seta.c: 3322, 3555, 5333 mame/drivers/seta2.c: 660 mame/drivers/travrusa.c: 167 mame/drivers/yunsung8.c: 257 
+# mame/drivers/bigevglf.c: 272 mame/drivers/chqflag.c: 307 mame/drivers/dynax.c: 2697 mame/drivers/gaiden.c: 623 mame/drivers/megaplay.c: 353 mame/drivers/seta.c: 3316, 3549, 5327 mame/drivers/seta2.c: 660 mame/drivers/travrusa.c: 167 mame/drivers/yunsung8.c: 257 
 Title
 
 
-# emu/uitext.c: 244
+# emu/uitext.c: 242
 Toggle
 
 
@@ -4754,11 +4758,11 @@ Triple Side-by-Side
 Triple Side-by-Side (Gapless)
 
 
-# emu/cheat.c: 3218 mame/drivers/lastduel.c: 422 
+# emu/cheat.c: 3214 mame/drivers/lastduel.c: 422 
 Type
 
 
-# emu/uitext.c: 92
+# emu/uitext.c: 90
 Type OK or move the joystick left then right to continue
 
 
@@ -4830,11 +4834,11 @@ UI Zoom In
 UI Zoom Out
 
 
-# emu/datafile.c: 2275
+# emu/datafile.c: 2277
 UNEMULATED PROTEC. : %3d  %3d\n
 
 
-# emu/cheat.c: 9089 emu/romload.c: 286 lib/util/cdrom.c: 446 mame/drivers/ms32.c: 434 mame/drivers/segahang.c: 547, 563 mame/drivers/segaorun.c: 583, 734 mame/video/v9938.c: 68
+# emu/cheat.c: 9085 emu/romload.c: 277 lib/util/cdrom.c: 473 mame/drivers/ms32.c: 434 mame/drivers/segahang.c: 547, 563 mame/drivers/segaorun.c: 583, 734 mame/video/v9938.c: 68
 UNKNOWN
 
 
@@ -4846,7 +4850,7 @@ US
 USA
 
 
-# emu/clifront.c: 430
+# emu/clifront.c: 422
 Unable to create file %s.ini\n
 
 
@@ -4856,18 +4860,6 @@ Unable to load due to pending anonymous timers. See error.log for details.
 
 # emu/mame.c: 1671
 Unable to save due to pending anonymous timers. See error.log for details.
-
-
-# emu/mame.c: 1539
-Unable to start machine emulation
-
-
-# emu/mame.c: 1541
-Unable to start sound emulation
-
-
-# emu/mame.c: 1543
-Unable to start video emulation
 
 
 # lib/util/options.c: 877
@@ -4886,131 +4878,131 @@ Unexpected integer option %s queried\n
 Unknown
 
 
-# mame/drivers/aerofgt.c: 885 mame/drivers/csk.c: 261 mame/drivers/goldstar.c: 164, 172, 196 mame/drivers/segas16a.c: 965 mame/drivers/segas16b.c: 2011, 2876, 2877 mame/drivers/spy.c: 492 mame/drivers/system16.c: 2022, 2023
+# mame/drivers/aerofgt.c: 885 mame/drivers/csk.c: 261 mame/drivers/goldstar.c: 164, 172, 196 mame/drivers/segas16a.c: 1101 mame/drivers/segas16b.c: 2011, 2876, 2877 mame/drivers/spy.c: 492 mame/drivers/system16.c: 2022, 2023
 Unlimited
 
 
-# emu/inptport.c: 480 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1615 mame/drivers/seta.c: 3682, 3685 mame/drivers/seta2.c: 552, 555 mame/drivers/ssv.c: 1186
+# emu/inptport.c: 480 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1615 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 552, 555 mame/drivers/ssv.c: 1186
 Unused
 
 
-# emu/cheat.c: 2948
+# emu/cheat.c: 2944
 Unused (10)
 
 
-# emu/cheat.c: 2948
+# emu/cheat.c: 2944
 Unused (11)
 
 
-# emu/cheat.c: 2948
+# emu/cheat.c: 2944
 Unused (12)
 
 
-# emu/cheat.c: 2949
+# emu/cheat.c: 2945
 Unused (13)
 
 
-# emu/cheat.c: 2949
+# emu/cheat.c: 2945
 Unused (14)
 
 
-# emu/cheat.c: 2949
+# emu/cheat.c: 2945
 Unused (15)
 
 
-# emu/cheat.c: 2949
+# emu/cheat.c: 2945
 Unused (16)
 
 
-# emu/cheat.c: 2949
+# emu/cheat.c: 2945
 Unused (17)
 
 
-# emu/cheat.c: 2950
+# emu/cheat.c: 2946
 Unused (18)
 
 
-# emu/cheat.c: 2950
+# emu/cheat.c: 2946
 Unused (19)
 
 
-# emu/cheat.c: 2950
+# emu/cheat.c: 2946
 Unused (20)
 
 
-# emu/cheat.c: 2950
+# emu/cheat.c: 2946
 Unused (21)
 
 
-# emu/cheat.c: 2950
+# emu/cheat.c: 2946
 Unused (22)
 
 
-# emu/cheat.c: 2951
+# emu/cheat.c: 2947
 Unused (23)
 
 
-# emu/cheat.c: 2951
+# emu/cheat.c: 2947
 Unused (24)
 
 
-# emu/cheat.c: 2951
+# emu/cheat.c: 2947
 Unused (25)
 
 
-# emu/cheat.c: 2951
+# emu/cheat.c: 2947
 Unused (26)
 
 
-# emu/cheat.c: 2951
+# emu/cheat.c: 2947
 Unused (27)
 
 
-# emu/cheat.c: 2952
+# emu/cheat.c: 2948
 Unused (28)
 
 
-# emu/cheat.c: 2952
+# emu/cheat.c: 2948
 Unused (29)
 
 
-# emu/cheat.c: 2947
+# emu/cheat.c: 2943
 Unused (3)
 
 
-# emu/cheat.c: 2952
+# emu/cheat.c: 2948
 Unused (30)
 
 
-# emu/cheat.c: 2952
+# emu/cheat.c: 2948
 Unused (31)
 
 
-# emu/cheat.c: 2947
+# emu/cheat.c: 2943
 Unused (4)
 
 
-# emu/cheat.c: 2890, 2947
+# emu/cheat.c: 2886, 2943
 Unused (5)
 
 
-# emu/cheat.c: 2891, 2938, 2947
+# emu/cheat.c: 2887, 2934, 2943
 Unused (6)
 
 
-# emu/cheat.c: 2939, 2947
+# emu/cheat.c: 2935, 2943
 Unused (7)
 
 
-# emu/cheat.c: 2948
+# emu/cheat.c: 2944
 Unused (8)
 
 
-# emu/cheat.c: 2948
+# emu/cheat.c: 2944
 Unused (9)
 
 
-# emu/ui.c: 629
+# emu/ui.c: 636
 Updating Artwork...
 
 
@@ -5018,31 +5010,31 @@ Updating Artwork...
 Upright
 
 
-# mame/drivers/segaxbd.c: 748
+# mame/drivers/segaxbd.c: 769
 Upright 1
 
 
-# emu/uitext.c: 146
+# emu/uitext.c: 144
 Uptime
 
 
-# emu/uitext.c: 28
+# emu/uitext.c: 26
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 
 
-# emu/clifront.c: 470
+# emu/clifront.c: 462
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 
 
-# emu/clifront.c: 369
+# emu/clifront.c: 361
 Usage: %s [%s] [options]\n\nOptions:\n
 
 
-# emu/uitext.c: 133
+# emu/uitext.c: 131
 User Interface
 
 
-# emu/cheat.c: 3525
+# emu/cheat.c: 3521
 User Select
 
 
@@ -5054,27 +5046,27 @@ VFD Display Output Only
 VFD Only (%d:%d)
 
 
-# emu/cheat.c: 4826, 5844, 5980 emu/uitext.c: 45
+# emu/cheat.c: 4822, 5840, 5976 emu/uitext.c: 43
 Value
 
 
-# emu/cheat.c: 5442
+# emu/cheat.c: 5438
 Value (Equal)
 
 
-# emu/cheat.c: 5449
+# emu/cheat.c: 5445
 Value (NearTo)
 
 
-# emu/uitext.c: 58
+# emu/uitext.c: 56
 Vector Flicker
 
 
-# emu/uitext.c: 49
+# emu/uitext.c: 47
 Vector Game
 
 
-# emu/inptport.c: 432 emu/uitext.c: 332
+# emu/inptport.c: 432 emu/uitext.c: 330
 Version
 
 
@@ -5082,15 +5074,15 @@ Version
 Version string: %s\n
 
 
-# emu/ui.c: 2630
+# emu/ui.c: 2643
 Vert position
 
 
-# emu/ui.c: 2596
+# emu/ui.c: 2609
 Vert stretch
 
 
-# mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 776, 921 mame/drivers/jack.c: 685 mame/drivers/thepit.c: 526 
+# mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 752, 897 mame/drivers/jack.c: 685 mame/drivers/thepit.c: 526 
 Vertical
 
 
@@ -5114,15 +5106,15 @@ Very High
 Very Low
 
 
-# emu/cheat.c: 6333 emu/uitext.c: 212 mame/drivers/cps1.c: 1579 mame/drivers/m62.c: 927 mame/drivers/rohga.c: 510
+# emu/cheat.c: 6329 emu/uitext.c: 210 mame/drivers/cps1.c: 1579 mame/drivers/m62.c: 928 mame/drivers/rohga.c: 510
 Very Slow
 
 
-# emu/uitext.c: 228
+# emu/uitext.c: 226
 Video Options
 
 
-# emu/uitext.c: 168
+# emu/uitext.c: 166
 View Last Results
 
 
@@ -5130,7 +5122,7 @@ View Last Results
 Voice
 
 
-# emu/uitext.c: 52
+# emu/uitext.c: 50
 Volume
 
 
@@ -5142,15 +5134,15 @@ Volume Down
 Volume Up
 
 
-# emu/romload.c: 417 
+# emu/romload.c: 408
 WARNING: the game might not run correctly.
 
 
-# emu/datafile.c: 2279
+# emu/datafile.c: 2281
 WRONG COLORS       : %3d  %3d\n
 
 
-# emu/cheat.c: 2868
+# emu/cheat.c: 2864
 Wait
 
 
@@ -5162,35 +5154,35 @@ Warning: invalid line in INI: %s
 Warning: unknown option in INI: %s\n
 
 
-# emu/cheat.c: 2870 emu/uitext.c: 196
+# emu/cheat.c: 2866 emu/uitext.c: 194
 Watch
 
 
-# emu/cheat.c: 8653
+# emu/cheat.c: 8649
 Watch %.8X (%d)
 
 
-# emu/cheat.c: 3337
+# emu/cheat.c: 3333
 Watch Add Value
 
 
-# emu/cheat.c: 3345
+# emu/cheat.c: 3341
 Watch Format
 
 
-# emu/cheat.c: 3353
+# emu/cheat.c: 3349
 Watch Label
 
 
-# emu/cheat.c: 3320
+# emu/cheat.c: 3316
 Watch Per Line
 
 
-# emu/cheat.c: 3300
+# emu/cheat.c: 3296
 Watch Size
 
 
-# emu/cheat.c: 3310
+# emu/cheat.c: 3306
 Watch Skip
 
 
@@ -5198,11 +5190,11 @@ Watch Skip
 Watch Value
 
 
-# emu/uitext.c: 174
+# emu/uitext.c: 172
 Watchpoint
 
 
-# emu/uitext.c: 177
+# emu/uitext.c: 175
 Watchpoints
 
 
@@ -5210,23 +5202,23 @@ Watchpoints
 World
 
 
-# emu/cheat.c: 2885
+# emu/cheat.c: 2881
 Write
 
 
-# emu/cheat.c: 2889
+# emu/cheat.c: 2885
 Write If Match
 
 
-# emu/uitext.c: 194
+# emu/uitext.c: 192
 X Position
 
 
-# emu/cheat.c: 7209 mame/machine/scudsp.c: 885
+# emu/cheat.c: 7205 mame/machine/scudsp.c: 885
 XOR
 
 
-# emu/uitext.c: 195
+# emu/uitext.c: 193
 Y Position
 
 
@@ -5242,19 +5234,19 @@ Zoom = %d
 Zoom Auto
 
 
-# emu/datafile.c: 2407
+# emu/datafile.c: 2410
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 
 
-# emu/datafile.c: 2419
+# emu/datafile.c: 2422
 \n    TOTAL: %4d\n
 
 
-# emu/datafile.c: 2390
+# emu/datafile.c: 2393
 \n   TOTAL: %4d\n
 
 
-# emu/video.c: 1180
+# emu/video.c: 1201
 \n%d partial updates
 
 
@@ -5266,7 +5258,7 @@ Zoom Auto
 \nROM REGION:\n
 
 
-# emu/datafile.c: 2334
+# emu/datafile.c: 2337
 \nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
 
 
@@ -5278,19 +5270,19 @@ Zoom Auto
 \nStory:\n
 
 
-# emu/datafile.c: 2507
+# emu/datafile.c: 2510
 \nWARNING: FPS number too high!\n
 
 
-# emu/clifront.c: 282
+# emu/clifront.c: 274
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 
 
-# emu/datafile.c: 2258
+# emu/datafile.c: 2260
 \n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
 
 
-# emu/datafile.c: 2424
+# emu/datafile.c: 2427
 \n\nCABINET INPUT CONTROL: (ALL)\n\n
 
 
@@ -5298,63 +5290,63 @@ Zoom Auto
 \n\nCLONES:\n
 
 
-# emu/datafile.c: 2364
+# emu/datafile.c: 2367
 \n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
 
 
-# emu/datafile.c: 2483
+# emu/datafile.c: 2486
 \n\nFRAMES PER SECOND (%d): (ALL)\n\n
 
 
-# emu/datafile.c: 2272
+# emu/datafile.c: 2274
 \n\nGAME INFO FLAGS   : ORIG CLNS\n\n
 
 
-# emu/datafile.c: 2607
+# emu/datafile.c: 2610
 \n\nMAME VERSIONS (%3d)\n\n
 
 
-# emu/datafile.c: 2567
+# emu/datafile.c: 2570
 \n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
 
 
-# emu/datafile.c: 2336
+# emu/datafile.c: 2339
 \n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
 
 
-# emu/datafile.c: 2395
+# emu/datafile.c: 2398
 \n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
 
 
-# emu/datafile.c: 2342
+# emu/datafile.c: 2345
 \n\nTYPICAL ROMSET SIZE (ALL)\n
 
 
-# emu/datafile.c: 2597
+# emu/datafile.c: 2600
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 
 
-# emu/datafile.c: 2471
+# emu/datafile.c: 2474
 \n\nVIDEO NEEDS... : ORIG   CLNS\n\n
 
 
-# emu/datafile.c: 2354
+# emu/datafile.c: 2357
 \n\nYEAR    NEW GAMES\n\n
 
 
-# emu/datafile.c: 2298
+# emu/datafile.c: 2300
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 
 
-# emu/romload.c: 313
+# emu/romload.c: 304
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
 
 
-# emu/cheat.c: 2647, 2797, 4667
+# emu/cheat.c: 2643, 2793, 4663
 activation key saved
 
 
-# emu/clifront.c: 99
+# emu/clifront.c: 91
 all available info on driver in XML format
 
 
@@ -5362,11 +5354,11 @@ all available info on driver in XML format
 amount to scale the screen brightness when paused
 
 
-# emu/mamecore.h: 166 
+# emu/mamecore.h: 171 
 assert: %s:%d: %s
 
 
-# emu/video.c: 1168
+# emu/video.c: 1189
 auto%2d/%d
 
 
@@ -5426,7 +5418,7 @@ button color (yellow)
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
-# emu/cheat.c: 2347
+# emu/cheat.c: 2343
 cheat database not found
 
 
@@ -5438,11 +5430,11 @@ cheat filename
 command list database name
 
 
-# emu/clifront.c: 109
+# emu/clifront.c: 101
 compare files with known MAME roms
 
 
-# emu/clifront.c: 93
+# emu/clifront.c: 85
 create the default configuration file
 
 
@@ -5518,7 +5510,7 @@ directory to save screenshots
 directory to save states
 
 
-# emu/debug/debugcmd.c: 1074, 1258
+# emu/debug/debugcmd.c: 1075, 1259
 disabled
 
 
@@ -5526,11 +5518,11 @@ disabled
 display additional diagnostic information
 
 
-# emu/clifront.c: 94
+# emu/clifront.c: 86
 display running parameters
 
 
-# emu/clifront.c: 102
+# emu/clifront.c: 94
 driver sourcefile
 
 
@@ -5554,7 +5546,7 @@ enable bezels if artwork is enabled and available
 enable cheat subsystem
 
 
-# emu/clifront.c: 116
+# emu/clifront.c: 108
 enable loading of configuration files
 
 
@@ -5590,19 +5582,19 @@ enable/disable local language game list
 enable/disable volume auto adjust
 
 
-# emu/debug/debugcmd.c: 1074, 1258
+# emu/debug/debugcmd.c: 1075, 1259
 enabled
 
 
-# emu/clifront.c: 597
+# emu/clifront.c: 589
 error: invalid value for language: %s\nUse %s\n
 
 
-# emu/ui.c: 369
+# emu/ui.c: 376
 error: invalid value for palette: %s\n
 
 
-# emu/video.c: 1164
+# emu/video.c: 1185
 fast 
 
 
@@ -5626,11 +5618,11 @@ font normal color
 font special color
 
 
-# emu/video.c: 1156
+# emu/video.c: 1177
 frame:%d 
 
 
-# emu/clifront.c: 369 emu/info.c: 25 mame/drivers/ksys573.c: 3098, 3113 
+# emu/clifront.c: 361 emu/info.c: 25 mame/drivers/ksys573.c: 3098, 3113 
 game
 
 
@@ -5658,15 +5650,15 @@ invalid
 ips datfile name
 
 
-# emu/clifront.c: 989, 1069
+# emu/clifront.c: 981, 1061
 is bad\n
 
 
-# emu/clifront.c: 999, 1079
+# emu/clifront.c: 991, 1071
 is best available\n
 
 
-# emu/clifront.c: 994, 1074
+# emu/clifront.c: 986, 1066
 is good\n
 
 
@@ -5674,15 +5666,15 @@ is good\n
 lightgun
 
 
-# emu/clifront.c: 111
+# emu/clifront.c: 103
 list available devices
 
 
-# emu/clifront.c: 106
+# emu/clifront.c: 98
 list optional samples for a driver
 
 
-# emu/clifront.c: 105
+# emu/clifront.c: 97
 list required roms for a driver
 
 
@@ -5690,27 +5682,27 @@ list required roms for a driver
 mameinfo database name
 
 
-# emu/input.c: 1072, 1372
+# emu/input.c: 1071, 1369
 n/a
 
 
-# emu/cheat.c: 2650, 2800, 4670
+# emu/cheat.c: 2646, 2796, 4666
 no activation key
 
 
-# emu/cheat.c: 6638
+# emu/cheat.c: 6634
 no results for this region
 
 
-# emu/cheat.c: 6640
+# emu/cheat.c: 6636
 no results found
 
 
-# emu/input.c: 1067
+# emu/input.c: 1066
 not
 
 
-# emu/cheat.c: 2295
+# emu/cheat.c: 2291
 null name
 
 
@@ -5726,19 +5718,19 @@ optional filename to write a MNG movie of the current session
 optional filename to write a WAV file of the current session
 
 
-# emu/input.c: 1068
+# emu/input.c: 1067
 or
 
 
-# emu/cheat.c: 8700, 8735
+# emu/cheat.c: 8696, 8731
 out of memory while adding search
 
 
-# emu/cheat.c: 8472, 8505
+# emu/cheat.c: 8468, 8501
 out of memory while adding watch
 
 
-# emu/cheat.c: 8190, 8224, 8346, 8374
+# emu/cheat.c: 8186, 8220, 8342, 8370
 out of memory while loading cheat database
 
 
@@ -5774,7 +5766,7 @@ path to ini files
 path to samplesets
 
 
-# emu/video.c: 1160
+# emu/video.c: 1181
 paused
 
 
@@ -5782,7 +5774,7 @@ paused
 pedal
 
 
-# emu/clifront.c: 89
+# emu/clifront.c: 81
 perform driver validation on all game drivers
 
 
@@ -5802,27 +5794,27 @@ quit game with confirmation
 record an input file
 
 
-# emu/cheat.c: 6469, 6847
+# emu/cheat.c: 6465, 6843
 region invalidated - %d results remain
 
 
-# emu/clifront.c: 107
+# emu/clifront.c: 99
 report romsets that have problems
 
 
-# emu/clifront.c: 108
+# emu/clifront.c: 100
 report samplesets that have problems
 
 
-# emu/clifront.c: 980
+# emu/clifront.c: 972
 romset %s 
 
 
-# emu/clifront.c: 1013
+# emu/clifront.c: 1005
 romset \"%s\" not found!\n
 
 
-# emu/clifront.c: 1015
+# emu/clifront.c: 1007
 romset \"%s\" not supported!\n
 
 
@@ -5842,19 +5834,19 @@ rotate the game screen according to the game's orientation needs it
 s%d
 
 
-# emu/clifront.c: 1063
+# emu/clifront.c: 1055
 sampleset %s 
 
 
-# emu/clifront.c: 1090
+# emu/clifront.c: 1082
 sampleset \"%s\" not found!\n
 
 
-# emu/clifront.c: 1092
+# emu/clifront.c: 1084
 sampleset \"%s\" not supported!\n
 
 
-# emu/cheat.c: 5258, 5787, 6245, 6262
+# emu/cheat.c: 5254, 5783, 6241, 6258
 saved all memory regions
 
 
@@ -5862,7 +5854,7 @@ saved all memory regions
 saved state to load
 
 
-# emu/video.c: 1829
+# emu/video.c: 1850
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 
 
@@ -5878,7 +5870,7 @@ select the system BIOS to use
 select translation language
 
 
-# emu/cheat.c: 11675
+# emu/cheat.c: 11671
 set %s
 
 
@@ -5898,23 +5890,23 @@ set vector beam width
 set vector flicker effect
 
 
-# emu/clifront.c: 101
+# emu/clifront.c: 93
 short name, full name
 
 
-# emu/clifront.c: 103
+# emu/clifront.c: 95
 show clones
 
 
-# emu/clifront.c: 88
+# emu/clifront.c: 80
 show help message
 
 
-# emu/clifront.c: 95
+# emu/clifront.c: 87
 show this help
 
 
-# emu/video.c: 1172
+# emu/video.c: 1193
 skip %d/%d
 
 
@@ -5922,7 +5914,7 @@ skip %d/%d
 skip displaying the information screen at startup
 
 
-# emu/emuopts.c: 142 emu/emuopts.h: 121 emu/uitext.c: 47 mame/drivers/harddriv.c: 3335 mame/drivers/segas16b.c: 962, 1034 
+# emu/emuopts.c: 142 emu/emuopts.h: 121 emu/uitext.c: 45 mame/drivers/harddriv.c: 3335 mame/drivers/segas16b.c: 962, 1034 
 sound
 
 
@@ -5930,7 +5922,7 @@ sound
 sound volume in decibels (-32 min, 0 max)
 
 
-# emu/uitext.c: 48 
+# emu/uitext.c: 46 
 stereo
 
 
@@ -5942,11 +5934,11 @@ story database name
 switch drivers
 
 
-# emu/cheat.c: 2341
+# emu/cheat.c: 2337
 there are no cheats for this game
 
 
-# emu/cheat.c: 8931
+# emu/cheat.c: 8927
 there are no old values
 
 
@@ -5962,7 +5954,7 @@ transparency of UI background [0 - 255]
 unable to open log file
 
 
-# emu/cheat.c: 2351
+# emu/cheat.c: 2347
 unzip it and place it in the MAME directory
 
 
@@ -5974,7 +5966,7 @@ use antialiasing when drawing vectors
 use transparent background for UI text
 
 
-# emu/cheat.c: 8928
+# emu/cheat.c: 8924
 values restored
 
 
@@ -5982,7 +5974,7 @@ values restored
 window background color
 
 
-# emu/clifront.c: 100
+# emu/clifront.c: 92
 year, manufacturer and full name
 
 
