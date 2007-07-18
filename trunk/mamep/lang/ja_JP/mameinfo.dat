@@ -2,7 +2,7 @@
 #                                        #
 #      Mameinfo.dat日本語版 v0.117       #
 #                                        #
-#             July 11, 2007              #
+#             July 16, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,16 +12,32 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：868 翻訳済：850
-# 追加項目：341 合計：1209
+# Tester報告：876 翻訳済：854
+# 追加項目：341 合計：1217
 #
 
+
+$info=primrage
+$mame
+[バグ]
+
+- 効果音が画面より1、2秒遅れて再生される。 primrage0117gre, Slick Mandela
+
+$end
 
 $info=changela
 $mame
 [バグ]
 
 - DIP設定でジョイスティック操作に設定しても、ジョイスティック入力用の割り当てが無い。 changela0116u4gra, twisty
+
+$end
+
+$info=cbtime
+$mame
+[バグ]
+
+- キャラクタが画面右上にはまってゲームができない。 cbtime0117red, Bruno /  Tafoid
 
 $end
 
@@ -172,6 +188,14 @@ Paddle Sensitivity: 20% finallap0116u1ora, fostar
 
 $end
 
+$info=mslug2
+$mame
+[バグ]
+
+- 4面ボスの巨大キャノン砲のグラフィックが乱れる。実機での確認が必要。 mslug2_0117gre, Pr3tty F1y
+
+$end
+
 $info=daraku
 $mame
 [バグ]
@@ -203,6 +227,109 @@ $mame
 
 $end
 
+$info=eswatu
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=fantzone
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=shinobi
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=shdancer
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=astorm3
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=sspeedr
+$mame
+[バグ]
+
+- ペダル操作がゲーム内、テストのどちらでも動作しない。 sspeedr0117gra, Luigi30
+
+$end
+
 $info=battleg
 $mame
 [バグ]
@@ -230,6 +357,35 @@ $mame
 [バグ]
 
 - 数ゲーム後にチケットが切れて、CALL OPERATORと表示されることがある。 lottofun0117ora, Luigi30
+
+$end
+
+$info=xsleena
+$mame
+[バグ]
+
+- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
+
+
+- キャラクタの一部分の線が欠けている。
+緑の惑星（Lagto Soa）のドラゴンの後ろ部分と、
+後半の面のボスの頭部分。 xsleena059gre, Smitdogg / Stefan Lindberg
+
+$end
+
+$info=solarwar
+$mame
+[バグ]
+
+- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
+
+$end
+
+$info=xtheball
+$mame
+[バグ]
+
+- ボールが現われるとき、上半分しか表示されない。 xtheball0117gre, Luigi30
 
 $end
 
@@ -4852,16 +5008,6 @@ $mame
 
 $end
 
-$info=xsleena
-$mame
-[バグ]
-
-- キャラクタの一部分の線が欠けている。
-緑の惑星（Lagto Soa）のドラゴンの後ろ部分と、
-後半の面のボスの頭部分。 xsleena059gre, Smitdogg / Stefan Lindberg
-
-$end
-
 $info=xexex
 $mame
 [バグ]
@@ -5101,16 +5247,6 @@ $mame
 [バグ]
 
 - プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
-
-$end
-
-$info=progolf
-$mame
-[バグ]
-
-- メモリ配置エラー：
-
-Attempted to malloc zero bytes (src/emu/drawgfx.c:262) progolf0116ora, Firewave
 
 $end
 

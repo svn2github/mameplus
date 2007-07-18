@@ -572,7 +572,7 @@ endif
 ifneq ($(MAP),)
     MAPFLAGS = -Wl,-Map,$(FULLNAME).map
     MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
-    MAPCLIFLAGS = -Wl,-Map,$(NAME).map
+    MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
     MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
 else
     MAPFLAGS =
