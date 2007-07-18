@@ -2131,48 +2131,48 @@ Show these fields in this order:
 Mezõk mutatása ilyen sorban:
 
 # osd/ui/properties.c: 4796
-Skip 1 of 12 frames
-1 kihagyása 12-bõl
+Skip 1 of 10 frames
+1 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4805
-Skip 10 of 12 frames
-10 kihagyása 12-bõl
+Skip 10 of 10 frames
+10 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4806
-Skip 11 of 12 frames
-11 kihagyása 12-bõl
+Skip 11 of 10 frames
+11 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4797
-Skip 2 of 12 frames
-2 kihagyása 12-bõl
+Skip 2 of 10 frames
+2 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4798
-Skip 3 of 12 frames
-3 kihagyása 12-bõl
+Skip 3 of 10 frames
+3 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4799
-Skip 4 of 12 frames
-4 kihagyása 12-bõl
+Skip 4 of 10 frames
+4 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4800
-Skip 5 of 12 frames
-5 kihagyása 12-bõl
+Skip 5 of 10 frames
+5 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4801
-Skip 6 of 12 frames
-6 kihagyása 12-bõl
+Skip 6 of 10 frames
+6 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4802
-Skip 7 of 12 frames
-7 kihagyása 12-bõl
+Skip 7 of 10 frames
+7 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4803
-Skip 8 of 12 frames
-8 kihagyása 12-bõl
+Skip 8 of 10 frames
+8 kihagyása 10-bõl
 
 # osd/ui/properties.c: 4804
-Skip 9 of 12 frames
-9 kihagyása 12-bõl
+Skip 9 of 10 frames
+9 kihagyása 10-bõl
 
 # osd/ui/mame32.rc: 773
 Skip game info

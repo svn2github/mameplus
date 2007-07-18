@@ -1543,48 +1543,48 @@ Show these fields in this order:
 Afficher ces champs dans cet ordre :
 
 # osd/ui/properties.c: 4796
-Skip 1 of 12 frames
-Sauter 1 image sur 12
+Skip 1 of 10 frames
+Sauter 1 image sur 10
 
 # osd/ui/properties.c: 4805
-Skip 10 of 12 frames
-Sauter 10 images sur 12
+Skip 10 of 10 frames
+Sauter 10 images sur 10
 
 # osd/ui/properties.c: 4806
-Skip 11 of 12 frames
-Sauter 11 images sur 12
+Skip 11 of 10 frames
+Sauter 11 images sur 10
 
 # osd/ui/properties.c: 4797
-Skip 2 of 12 frames
-Sauter 2 images sur 12
+Skip 2 of 10 frames
+Sauter 2 images sur 10
 
 # osd/ui/properties.c: 4798
-Skip 3 of 12 frames
-Sauter 3 images sur 12
+Skip 3 of 10 frames
+Sauter 3 images sur 10
 
 # osd/ui/properties.c: 4799
-Skip 4 of 12 frames
-Sauter 4 images sur 12
+Skip 4 of 10 frames
+Sauter 4 images sur 10
 
 # osd/ui/properties.c: 4800
-Skip 5 of 12 frames
-Sauter 5 images sur 12
+Skip 5 of 10 frames
+Sauter 5 images sur 10
 
 # osd/ui/properties.c: 4801
-Skip 6 of 12 frames
-Sauter 6 images sur 12
+Skip 6 of 10 frames
+Sauter 6 images sur 10
 
 # osd/ui/properties.c: 4802
-Skip 7 of 12 frames
-Sauter 7 images sur 12
+Skip 7 of 10 frames
+Sauter 7 images sur 10
 
 # osd/ui/properties.c: 4803
-Skip 8 of 12 frames
-Sauter 8 images sur 12
+Skip 8 of 10 frames
+Sauter 8 images sur 10
 
 # osd/ui/properties.c: 4804
-Skip 9 of 12 frames
-Sauter 9 images sur 12
+Skip 9 of 10 frames
+Sauter 9 images sur 10
 
 # osd/ui/mame32.rc: 773
 Skip game info

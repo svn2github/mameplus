@@ -2131,48 +2131,48 @@ Show these fields in this order:
 다음 순서로 필드표시:
 
 #
-Skip 1 of 12 frames
-12 프레임중 1 프레임 스킵
+Skip 1 of 10 frames
+10 프레임중 1 프레임 스킵
 
 #
-Skip 10 of 12 frames
-12 프레임중 10 프레임 스킵
+Skip 10 of 10 frames
+10 프레임중 10 프레임 스킵
 
 #
-Skip 11 of 12 frames
-12 프레임중 11 프레임 스킵
+Skip 11 of 10 frames
+10 프레임중 11 프레임 스킵
 
 #
-Skip 2 of 12 frames
-12 프레임중 2 프레임 스킵
+Skip 2 of 10 frames
+10 프레임중 2 프레임 스킵
 
 #
-Skip 3 of 12 frames
-12 프레임중 3 프레임 스킵
+Skip 3 of 10 frames
+10 프레임중 3 프레임 스킵
 
 #
-Skip 4 of 12 frames
-12 프레임중 4 프레임 스킵
+Skip 4 of 10 frames
+10 프레임중 4 프레임 스킵
 
 #
-Skip 5 of 12 frames
-12 프레임중 5 프레임 스킵
+Skip 5 of 10 frames
+10 프레임중 5 프레임 스킵
 
 #
-Skip 6 of 12 frames
-12 프레임중 6 프레임 스킵
+Skip 6 of 10 frames
+10 프레임중 6 프레임 스킵
 
 #
-Skip 7 of 12 frames
-12 프레임중 7 프레임 스킵
+Skip 7 of 10 frames
+10 프레임중 7 프레임 스킵
 
 #
-Skip 8 of 12 frames
-12 프레임중 8 프레임 스킵
+Skip 8 of 10 frames
+10 프레임중 8 프레임 스킵
 
 #
-Skip 9 of 12 frames
-12 프레임중 9 프레임 스킵
+Skip 9 of 10 frames
+10 프레임중 9 프레임 스킵
 
 #
 Skip game info

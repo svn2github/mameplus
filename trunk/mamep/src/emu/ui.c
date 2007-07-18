@@ -387,7 +387,11 @@ static void setup_palette(void)
 		if (col == UI_FILLCOLOR)
 			rate = ui_transparency;
 		else if (col == CURSOR_COLOR)
+		{
 			rate = ui_transparency / 2;
+			if (rate < 128)
+				rate = 128; //cursor should be visible
+		}
 #endif /* TRANS_UI */
 
 		uifont_colortable[col] = MAKE_ARGB(rate, r, g, b);

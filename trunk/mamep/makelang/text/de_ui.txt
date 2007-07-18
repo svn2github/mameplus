@@ -1647,48 +1647,48 @@ Show these fields in this order:
 Zeige die Felder in dieser Reihenfolge:
 
 # osd/ui/properties.c: 4808
-Skip 1 of 12 frames
-Übergehe 1 von 12 Bildern
+Skip 1 of 10 frames
+Übergehe 1 von 10 Bildern
 
 # osd/ui/properties.c: 4817
-Skip 10 of 12 frames
-Übergehe 10 von 12 Bildern
+Skip 10 of 10 frames
+Übergehe 10 von 10 Bildern
 
 # osd/ui/properties.c: 4818
-Skip 11 of 12 frames
-Übergehe 11 von 12 Bildern
+Skip 11 of 10 frames
+Übergehe 11 von 10 Bildern
 
 # osd/ui/properties.c: 4809
-Skip 2 of 12 frames
-Übergehe 2 von 12 Bildern
+Skip 2 of 10 frames
+Übergehe 2 von 10 Bildern
 
 # osd/ui/properties.c: 4810
-Skip 3 of 12 frames
-Übergehe 3 von 12 Bildern
+Skip 3 of 10 frames
+Übergehe 3 von 10 Bildern
 
 # osd/ui/properties.c: 4811
-Skip 4 of 12 frames
-Übergehe 4 von 12 Bildern
+Skip 4 of 10 frames
+Übergehe 4 von 10 Bildern
 
 # osd/ui/properties.c: 4812
-Skip 5 of 12 frames
-Übergehe 5 von 12 Bildern
+Skip 5 of 10 frames
+Übergehe 5 von 10 Bildern
 
 # osd/ui/properties.c: 4813
-Skip 6 of 12 frames
-Übergehe 6 von 12 Bildern
+Skip 6 of 10 frames
+Übergehe 6 von 10 Bildern
 
 # osd/ui/properties.c: 4814
-Skip 7 of 12 frames
-Übergehe 7 von 12 Bildern
+Skip 7 of 10 frames
+Übergehe 7 von 10 Bildern
 
 # osd/ui/properties.c: 4815
-Skip 8 of 12 frames
-Übergehe 8 von 12 Bildern
+Skip 8 of 10 frames
+Übergehe 8 von 10 Bildern
 
 # osd/ui/properties.c: 4816
-Skip 9 of 12 frames
-Übergehe 9 von 12 Bildern
+Skip 9 of 10 frames
+Übergehe 9 von 10 Bildern
 
 # osd/ui/mame32.rc: 773
 Skip game info

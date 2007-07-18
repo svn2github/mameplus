@@ -4838,17 +4838,16 @@ static void InitializeSkippingUI(HWND hwnd)
 	if (hCtrl)
 	{
 		ComboBox_AddString(hCtrl, _UIW(TEXT("Draw every frame")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 1 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 2 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 3 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 4 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 5 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 6 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 7 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 8 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 9 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 10 of 12 frames")));
-		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 11 of 12 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 1 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 2 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 3 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 4 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 5 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 6 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 7 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 8 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 9 of 10 frames")));
+		ComboBox_AddString(hCtrl, _UIW(TEXT("Skip 10 of 10 frames")));
 	}
 }
 

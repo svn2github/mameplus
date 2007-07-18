@@ -1639,48 +1639,48 @@ Size:
 Rozmiar:
 
 # ui/properties.c: 4067
-Skip 1 of 12 frames
-Pomiñ 1 z 12 klatek
+Skip 1 of 10 frames
+Pomiñ 1 z 10 klatek
 
 # ui/properties.c: 4076
-Skip 10 of 12 frames
-Pomiñ 10 z 12 klatek
+Skip 10 of 10 frames
+Pomiñ 10 z 10 klatek
 
 # ui/properties.c: 4077
-Skip 11 of 12 frames
-Pomiñ 11 z 12 klatek
+Skip 11 of 10 frames
+Pomiñ 11 z 10 klatek
 
 # ui/properties.c: 4068
-Skip 2 of 12 frames
-Pomiñ 2 z 12 klatek
+Skip 2 of 10 frames
+Pomiñ 2 z 10 klatek
 
 # ui/properties.c: 4069
-Skip 3 of 12 frames
-Pomiñ 3 z 12 klatek
+Skip 3 of 10 frames
+Pomiñ 3 z 10 klatek
 
 # ui/properties.c: 4070
-Skip 4 of 12 frames
-Pomiñ 4 z 12 klatek
+Skip 4 of 10 frames
+Pomiñ 4 z 10 klatek
 
 # ui/properties.c: 4071
-Skip 5 of 12 frames
-Pomiñ 5 z 12 klatek
+Skip 5 of 10 frames
+Pomiñ 5 z 10 klatek
 
 # ui/properties.c: 4072
-Skip 6 of 12 frames
-Pomiñ 6 z 12 klatek
+Skip 6 of 10 frames
+Pomiñ 6 z 10 klatek
 
 # ui/properties.c: 4073
-Skip 7 of 12 frames
-Pomiñ 7 z 12 klatek
+Skip 7 of 10 frames
+Pomiñ 7 z 10 klatek
 
 # ui/properties.c: 4074
-Skip 8 of 12 frames
-Pomiñ 8 z 12 klatek
+Skip 8 of 10 frames
+Pomiñ 8 z 10 klatek
 
 # ui/properties.c: 4075
-Skip 9 of 12 frames
-Pomiñ 9 z 12 klatek
+Skip 9 of 10 frames
+Pomiñ 9 z 10 klatek
 
 # ui/mame32.rc: 821
 Skip game info

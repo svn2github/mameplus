@@ -2031,48 +2031,48 @@ Show these fields in this order:
 °´ÒÔÏÂË³ĞòÏÔÊ¾À¸Ä¿:
 
 # osd/ui/properties.c: 4787
-Skip 1 of 12 frames
-ÌøÖ¡ 1/12
+Skip 1 of 10 frames
+ÌøÖ¡ 1/10
 
 # osd/ui/properties.c: 4796
-Skip 10 of 12 frames
-ÌøÖ¡ 10/12
+Skip 10 of 10 frames
+ÌøÖ¡ 10/10
 
 # osd/ui/properties.c: 4797
-Skip 11 of 12 frames
-ÌøÖ¡ 11/12
+Skip 11 of 10 frames
+ÌøÖ¡ 11/10
 
 # osd/ui/properties.c: 4788
-Skip 2 of 12 frames
-ÌøÖ¡ 2/12
+Skip 2 of 10 frames
+ÌøÖ¡ 2/10
 
 # osd/ui/properties.c: 4789
-Skip 3 of 12 frames
-ÌøÖ¡ 3/12
+Skip 3 of 10 frames
+ÌøÖ¡ 3/10
 
 # osd/ui/properties.c: 4790
-Skip 4 of 12 frames
-ÌøÖ¡ 4/12
+Skip 4 of 10 frames
+ÌøÖ¡ 4/10
 
 # osd/ui/properties.c: 4791
-Skip 5 of 12 frames
-ÌøÖ¡ 5/12
+Skip 5 of 10 frames
+ÌøÖ¡ 5/10
 
 # osd/ui/properties.c: 4792
-Skip 6 of 12 frames
-ÌøÖ¡ 6/12
+Skip 6 of 10 frames
+ÌøÖ¡ 6/10
 
 # osd/ui/properties.c: 4793
-Skip 7 of 12 frames
-ÌøÖ¡ 7/12
+Skip 7 of 10 frames
+ÌøÖ¡ 7/10
 
 # osd/ui/properties.c: 4794
-Skip 8 of 12 frames
-ÌøÖ¡ 8/12
+Skip 8 of 10 frames
+ÌøÖ¡ 8/10
 
 # osd/ui/properties.c: 4795
-Skip 9 of 12 frames
-ÌøÖ¡ 9/12
+Skip 9 of 10 frames
+ÌøÖ¡ 9/10
 
 # osd/ui/mame32.rc: 771
 Skip game info
@@ -2300,7 +2300,7 @@ Translation Files
 
 # osd/ui/mame32.rc: 786
 Transparent in-game UI
-Í¸Ã÷µÄÓÎÏ·ÖĞ²Ëµ¥
+ÓÎÏ·²Ëµ¥Í¸Ã÷¶È
 
 # osd/ui/mame32.rc: 684
 Triple buffering

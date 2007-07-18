@@ -2135,48 +2135,48 @@ Show these fields in this order:
 Mostrar esses campos nesta ordem:
 
 # osd/ui/properties.c: 4796
-Skip 1 of 12 frames
-Pular 1 de 12 quadros
+Skip 1 of 10 frames
+Pular 1 de 10 quadros
 
 # osd/ui/properties.c: 4805
-Skip 10 of 12 frames
-Pular 10 de 12 quadros
+Skip 10 of 10 frames
+Pular 10 de 10 quadros
 
 # osd/ui/properties.c: 4806
-Skip 11 of 12 frames
-Pular 11 de 12 quadros
+Skip 11 of 10 frames
+Pular 11 de 10 quadros
 
 # osd/ui/properties.c: 4797
-Skip 2 of 12 frames
-Pular 2 de 12 quadros
+Skip 2 of 10 frames
+Pular 2 de 10 quadros
 
 # osd/ui/properties.c: 4798
-Skip 3 of 12 frames
-Pular 3 de 12 quadros
+Skip 3 of 10 frames
+Pular 3 de 10 quadros
 
 # osd/ui/properties.c: 4799
-Skip 4 of 12 frames
-Pular 4 de 12 quadros
+Skip 4 of 10 frames
+Pular 4 de 10 quadros
 
 # osd/ui/properties.c: 4800
-Skip 5 of 12 frames
-Pular 5 de 12 quadros
+Skip 5 of 10 frames
+Pular 5 de 10 quadros
 
 # osd/ui/properties.c: 4801
-Skip 6 of 12 frames
-Pular 6 de 12 quadros
+Skip 6 of 10 frames
+Pular 6 de 10 quadros
 
 # osd/ui/properties.c: 4802
-Skip 7 of 12 frames
-Pular 7 de 12 quadros
+Skip 7 of 10 frames
+Pular 7 de 10 quadros
 
 # osd/ui/properties.c: 4803
-Skip 8 of 12 frames
-Pular 8 de 12 quadros
+Skip 8 of 10 frames
+Pular 8 de 10 quadros
 
 # osd/ui/properties.c: 4804
-Skip 9 of 12 frames
-Pular 9 de 12 quadros
+Skip 9 of 10 frames
+Pular 9 de 10 quadros
 
 # osd/ui/mame32.rc: 773
 Skip game info

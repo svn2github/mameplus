@@ -2131,48 +2131,48 @@ Show these fields in this order:
 按照這個順序顯示欄位:
 
 # osd/ui/properties.c: 4804
-Skip 1 of 12 frames
-每 12 畫格省略 1 個
+Skip 1 of 10 frames
+每 10 畫格省略 1 個
 
 # osd/ui/properties.c: 4813
-Skip 10 of 12 frames
-每 12 畫格省略 10 個
+Skip 10 of 10 frames
+每 10 畫格省略 10 個
 
 # osd/ui/properties.c: 4814
-Skip 11 of 12 frames
-每 12 畫格省略 11 個
+Skip 11 of 10 frames
+每 10 畫格省略 11 個
 
 # osd/ui/properties.c: 4805
-Skip 2 of 12 frames
-每 12 畫格省略 2 個
+Skip 2 of 10 frames
+每 10 畫格省略 2 個
 
 # osd/ui/properties.c: 4806
-Skip 3 of 12 frames
-每 12 畫格省略 3 個
+Skip 3 of 10 frames
+每 10 畫格省略 3 個
 
 # osd/ui/properties.c: 4807
-Skip 4 of 12 frames
-每 12 畫格省略 4 個
+Skip 4 of 10 frames
+每 10 畫格省略 4 個
 
 # osd/ui/properties.c: 4808
-Skip 5 of 12 frames
-每 12 畫格省略 5 個
+Skip 5 of 10 frames
+每 10 畫格省略 5 個
 
 # osd/ui/properties.c: 4809
-Skip 6 of 12 frames
-每 12 畫格省略 6 個
+Skip 6 of 10 frames
+每 10 畫格省略 6 個
 
 # osd/ui/properties.c: 4810
-Skip 7 of 12 frames
-每 12 畫格省略 7 個
+Skip 7 of 10 frames
+每 10 畫格省略 7 個
 
 # osd/ui/properties.c: 4811
-Skip 8 of 12 frames
-每 12 畫格省略 8 個
+Skip 8 of 10 frames
+每 10 畫格省略 8 個
 
 # osd/ui/properties.c: 4812
-Skip 9 of 12 frames
-每 12 畫格省略 9 個
+Skip 9 of 10 frames
+每 10 畫格省略 9 個
 
 # osd/ui/mame32.rc: 774
 Skip game info

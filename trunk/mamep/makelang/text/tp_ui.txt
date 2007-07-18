@@ -2139,47 +2139,43 @@ Show these fields in this order:
 
 
 # osd/ui/properties.c: 4841
-Skip 1 of 12 frames
+Skip 1 of 10 frames
 
 
 # osd/ui/properties.c: 4850
-Skip 10 of 12 frames
-
-
-# osd/ui/properties.c: 4851
-Skip 11 of 12 frames
+Skip 10 of 10 frames
 
 
 # osd/ui/properties.c: 4842
-Skip 2 of 12 frames
+Skip 2 of 10 frames
 
 
 # osd/ui/properties.c: 4843
-Skip 3 of 12 frames
+Skip 3 of 10 frames
 
 
 # osd/ui/properties.c: 4844
-Skip 4 of 12 frames
+Skip 4 of 10 frames
 
 
 # osd/ui/properties.c: 4845
-Skip 5 of 12 frames
+Skip 5 of 10 frames
 
 
 # osd/ui/properties.c: 4846
-Skip 6 of 12 frames
+Skip 6 of 10 frames
 
 
 # osd/ui/properties.c: 4847
-Skip 7 of 12 frames
+Skip 7 of 10 frames
 
 
 # osd/ui/properties.c: 4848
-Skip 8 of 12 frames
+Skip 8 of 10 frames
 
 
 # osd/ui/properties.c: 4849
-Skip 9 of 12 frames
+Skip 9 of 10 frames
 
 
 # osd/ui/mame32.rc: 776

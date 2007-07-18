@@ -2139,48 +2139,48 @@ Show these fields in this order:
 表\示設定済みフィールド:
 
 # osd/ui/properties.c: 4841
-Skip 1 of 12 frames
-12フレームに1回スキップ
+Skip 1 of 10 frames
+10フレームに1回スキップ
 
 # osd/ui/properties.c: 4850
-Skip 10 of 12 frames
-12フレームに10回スキップ
+Skip 10 of 10 frames
+10フレームに10回スキップ
 
 # osd/ui/properties.c: 4851
-Skip 11 of 12 frames
-12フレームに11回スキップ
+Skip 11 of 10 frames
+10フレームに11回スキップ
 
 # osd/ui/properties.c: 4842
-Skip 2 of 12 frames
-12フレームに2回スキップ
+Skip 2 of 10 frames
+10フレームに2回スキップ
 
 # osd/ui/properties.c: 4843
-Skip 3 of 12 frames
-12フレームに3回スキップ
+Skip 3 of 10 frames
+10フレームに3回スキップ
 
 # osd/ui/properties.c: 4844
-Skip 4 of 12 frames
-12フレームに4回スキップ
+Skip 4 of 10 frames
+10フレームに4回スキップ
 
 # osd/ui/properties.c: 4845
-Skip 5 of 12 frames
-12フレームに5回スキップ
+Skip 5 of 10 frames
+10フレームに5回スキップ
 
 # osd/ui/properties.c: 4846
-Skip 6 of 12 frames
-12フレームに6回スキップ
+Skip 6 of 10 frames
+10フレームに6回スキップ
 
 # osd/ui/properties.c: 4847
-Skip 7 of 12 frames
-12フレームに7回スキップ
+Skip 7 of 10 frames
+10フレームに7回スキップ
 
 # osd/ui/properties.c: 4848
-Skip 8 of 12 frames
-12フレームに8回スキップ
+Skip 8 of 10 frames
+10フレームに8回スキップ
 
 # osd/ui/properties.c: 4849
-Skip 9 of 12 frames
-12フレームに9回スキップ
+Skip 9 of 10 frames
+10フレームに9回スキップ
 
 # osd/ui/mame32.rc: 776
 Skip game info
