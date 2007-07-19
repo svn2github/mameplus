@@ -510,92 +510,6 @@ INLINE void _options_get_analog_select(core_options *opts, char **p, const char 
 
 //============================================================
 
-#define MAX_JOYSTICKS		8
-#define MAX_AXES		8
-
-INLINE void _options_get_digital(core_options *opts, char **p, const char *name)
-{
-	const char *stemp = options_get_string(opts, name);
-
-	if (stemp && *stemp)
-	{
-		if (strcmp(stemp, "none") == 0
-		 || strcmp(stemp, "all") == 0)
-		{
-			FreeIfAllocated(p);
-			*p = strdup(stemp);
-			return;
-		}
-
-		/* scan the string */
-		while (1)
-		{
-			int joynum = 0;
-			int axisnum = 0;
-
-			/* stop if we hit the end */
-			if (stemp[0] == 0)
-				break;
-
-			/* we require the next bits to be j<N> */
-			if (tolower(stemp[0]) != 'j' || sscanf(&stemp[1], "%d", &joynum) != 1)
-				return;
-			stemp++;
-			while (stemp[0] != 0 && isdigit(stemp[0]))
-				stemp++;
-
-			/* if we are followed by a comma or an end, mark all the axes digital */
-			if (stemp[0] == 0 || stemp[0] == ',')
-			{
-				if (joynum == 0 || joynum > MAX_JOYSTICKS)
-					return;
-				if (stemp[0] == 0)
-					break;
-				stemp++;
-				continue;
-			}
-
-			/* loop over axes */
-			while (1)
-			{
-				/* stop if we hit the end */
-				if (stemp[0] == 0)
-					break;
-
-				/* if we hit a comma, skip it and break out */
-				if (stemp[0] == ',')
-				{
-					stemp++;
-					break;
-				}
-
-				/* we require the next bits to be a<N> */
-				if (tolower(stemp[0]) != 'a' || sscanf(&stemp[1], "%d", &axisnum) != 1)
-					return;
-				stemp++;
-				while (stemp[0] != 0 && isdigit(stemp[0]))
-					stemp++;
-
-				/* set that axis to digital */
-				if (joynum == 0 || joynum > MAX_JOYSTICKS || axisnum >= MAX_AXES)
-					return;
-			}
-		}
-
-		FreeIfAllocated(p);
-		*p = strdup(stemp);
-	}
-}
-
-#define options_set_digital		options_set_string
-#define options_copy_digital		options_copy_string
-#define options_free_digital		options_free_string
-#define _options_compare_digital	_options_compare_string
-#define options_compare_digital		options_compare_string
-
-
-//============================================================
-
 INLINE void _options_get_led_mode(core_options *opts, char **p, const char *name)
 {
 	const char *stemp = options_get_string(opts, name);
@@ -1102,7 +1016,7 @@ INLINE void _options_get_ui_key(core_options *opts, KeySeq *ks, const char *name
 
 	ks->seq_string = strdup(stemp);
 
-	string_to_seq(ks->seq_string, &ks->is);
+	input_seq_from_tokens(ks->seq_string, &ks->is);
 	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
 }
 
@@ -1120,7 +1034,7 @@ INLINE void options_copy_ui_key(const KeySeq *src, KeySeq *dest)
 
 	dest->seq_string = strdup(src->seq_string);
 
-	string_to_seq(dest->seq_string, &dest->is);
+	input_seq_from_tokens(dest->seq_string, &dest->is);
 	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
 }
 

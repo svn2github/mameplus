@@ -574,7 +574,8 @@ static BOOL bListReady     = FALSE;
 static struct OSDJoystick* g_pJoyGUI = NULL;
 
 /* store current keyboard state (in internal codes) here */
-static input_code keyboard_state[ __code_max ]; /* __code_max #defines the number of internal key_codes */
+static input_code *keyboard_state;
+static int keyboard_state_count;
 
 /* search */
 static WCHAR g_SearchText[256];
@@ -1846,7 +1847,7 @@ int GetParentRomSetIndex(const game_driver *driver)
 
 	if( nParentIndex >= 0)
 	{
-		if ((drivers[nParentIndex]->flags & NOT_A_DRIVER) == 0)
+		if ((drivers[nParentIndex]->flags & GAME_IS_BIOS_ROOT) == 0)
 			return nParentIndex;
 	}
 
@@ -2524,16 +2525,28 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	hAccel = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDA_TAB_KEYS));
 
-	/* clear keyboard state */
-	KeyboardStateClear();
+	/* initialize keyboard_state */
+	{
+		keyboard_state_count = 0;
+ 		for (i = 0; i < wininput_count_key_trans_table(); i++)
+			if (keyboard_state_count < win_key_trans_table[i][MAME_KEY] + 1)
+				keyboard_state_count = win_key_trans_table[i][MAME_KEY] + 1;
+		keyboard_state = malloc(sizeof (*keyboard_state) * keyboard_state_count);
+
+		/* clear keyboard state */
+		KeyboardStateClear();
+	}
 
 	for (i = 0; i < NUM_GUI_SEQUENCES; i++)
 	{
 		input_seq *is1;
 		input_seq *is2;
+	 	char seqbuffer[256];
+
 		is1 = &(GUISequenceControl[i].is);
 		is2 = GUISequenceControl[i].getiniptr();
-		seq_copy(is1, is2);
+		input_seq_to_tokens(is1, seqbuffer, sizeof(seqbuffer));
+		input_seq_from_tokens(seqbuffer, is2);
 		//dprintf("seq =%s is: %4i %4i %4i %4i\n",GUISequenceControl[i].name, (*is1)[0], (*is1)[1], (*is1)[2], (*is1)[3]);
 	}
 
@@ -2685,6 +2698,9 @@ static void Win32UI_exit(void)
 		free(icon_index);
 		icon_index = NULL;
 	}
+
+	free(keyboard_state);
+	keyboard_state = NULL;
 
 	DirectInputClose();
 	DirectDraw_Close();
@@ -4233,37 +4249,37 @@ LPWSTR ConvertAmpersandString(LPCWSTR s)
 	return buf;
 }
 
-static int GUI_seq_pressed(input_code *code)
+static int GUI_seq_pressed(input_code *code, int seq_max)
 {
 	int j;
 	int res = 1;
 	int invert = 0;
 	int count = 0;
 
-	for(j=0;j<SEQ_MAX;++j)
+	for (j = 0; j < seq_max; j++)
 	{
 		switch (code[j])
 		{
-			case CODE_NONE :
-				return res && count;
-			case CODE_OR :
-				if (res && count)
-					return 1;
-				res = 1;
-				count = 0;
-				break;
-			case CODE_NOT :
-				invert = !invert;
-				break;
-			default:
-				if (res)
-				{
-					int pressed = keyboard_state[code[j]];
-					if ((pressed != 0) == invert)
-						res = 0;
-				}
-				invert = 0;
-				++count;
+		case SEQCODE_END :
+			return res && count;
+		case SEQCODE_OR :
+			if (res && count)
+				return 1;
+			res = 1;
+			count = 0;
+			break;
+		case SEQCODE_NOT :
+			invert = !invert;
+			break;
+		default:
+			if (res)
+			{
+				int pressed = keyboard_state[code[j]];
+				if ((pressed != 0) == invert)
+					res = 0;
+			}
+			invert = 0;
+			++count;
 		}
 	}
 	return res && count;
@@ -4277,7 +4293,7 @@ static void check_for_GUI_action(void)
 	{
 		input_seq *is = &(GUISequenceControl[i].is);
 
-		if (GUI_seq_pressed(is->code))
+		if (GUI_seq_pressed(is->code, ARRAY_LENGTH(is->code)))
 		{
 			dprintf("seq =%s pressed\n", GUISequenceControl[i].name);
 			switch (GUISequenceControl[i].func_id)
@@ -4300,7 +4316,7 @@ static void KeyboardStateClear(void)
 {
 	int i;
 
-	for (i = 0; i < __code_max; i++)
+	for (i = 0; i < keyboard_state_count; i++)
 		keyboard_state[i] = 0;
 
 	dprintf("keyboard gui state cleared.\n");
@@ -4356,7 +4372,7 @@ static void KeyboardKeyDown(int syskey, int vk_code, int special)
 	}
 	else
 	{
-		for (i = 0; i < __code_max; i++)
+		for (i = 0; i < wininput_count_key_trans_table(); i++)
 		{
 			if ( vk_code == win_key_trans_table[i][VIRTUAL_KEY])
 			{
@@ -4426,7 +4442,7 @@ static void KeyboardKeyUp(int syskey, int vk_code, int special)
 	}
 	else
 	{
-		for (i = 0; i < __code_max; i++)
+		for (i = 0; i < wininput_count_key_trans_table(); i++)
 		{
 			if (vk_code == win_key_trans_table[i][VIRTUAL_KEY])
 			{

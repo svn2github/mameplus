@@ -39,9 +39,9 @@
 		extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
 		#include "audit.h"
-		extern SHAREDOBJ_FUNC(int) audit_images(int game, UINT32 validation, audit_record **audit);
-		extern SHAREDOBJ_FUNC(int) audit_samples(int game, audit_record **audit);
-		extern SHAREDOBJ_FUNC(int) audit_summary(int game, int count, const audit_record *records, int output);
+		extern SHAREDOBJ_FUNC(int) audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **audit);
+		extern SHAREDOBJ_FUNC(int) audit_samples(const game_driver *gamedrv, audit_record **audit);
+		extern SHAREDOBJ_FUNC(int) audit_summary(const game_driver *gamedrv, int count, const audit_record *records, int output);
 
 		#include "palette.h"
 		#include "romload.h"
@@ -147,13 +147,12 @@
 		extern SHAREDOBJ_FUNC(png_error) png_filter(png_info *p);
 		extern SHAREDOBJ_FUNC(png_error) png_write_bitmap(core_file *fp, png_info *info, bitmap_t *bitmap, int palette_length, const UINT32 *palette);
 
-		#include "emu/input.h"
-		SHAREDOBJ_FUNC(void) code_init(running_machine *machine);
-		SHAREDOBJ_FUNC(void) seq_copy(input_seq *seqdst, const input_seq *seqsrc);
-		SHAREDOBJ_FUNC(int)  string_to_seq(const char *string, input_seq *seq);
-
 		#include "inptport.h"
 		SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(const input_port_token *ipt, input_port_entry *memory);
+
+		#include "inputseq.h"
+		extern SHAREDOBJ_FUNC(int) input_seq_to_tokens(const input_seq *seq, char *buffer, size_t buflen);
+		extern SHAREDOBJ_FUNC(int) input_seq_from_tokens(const char *string, input_seq *seq);
 
 		#include "sndintrf.h"
 		extern SHAREDOBJ_FUNC(void)         sndintrf_init(running_machine *machine);
@@ -238,9 +237,9 @@
 		#endif
 		#endif /* NEOGEO_BIOS_SELECT */
 
-
 		// in windows/input.c
 		extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
+		extern SHAREDOBJ_FUNC(int) wininput_count_key_trans_table(void);
 
 		// in windows/window.c
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
@@ -306,7 +305,8 @@
 		#endif /* USE_SCALE_EFFECTS */
 
 		// in windows/input.c
-		extern const int win_key_trans_table[][4];
+		extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
+		extern SHAREDOBJ_FUNC(int) wininput_count_key_trans_table(void);
 
 		// in windows/window.c
 		extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);
@@ -364,7 +364,8 @@
 	#endif /* USE_SCALE_EFFECTS */
 
 	// in windows/input.c
-	extern const int win_key_trans_table[][4];
+	extern SHAREDOBJ_DATA const int win_key_trans_table[][4];
+	extern SHAREDOBJ_FUNC(int) wininput_count_key_trans_table(void);
 
 	// in windows/window.c
 	extern SHAREDOBJ_FUNC(void) winwindow_exit(running_machine *machine);

@@ -521,7 +521,6 @@ void OptionsInit()
 	memset(&backup, 0, sizeof (backup));
 
 	num_drivers = GetNumGames();
-	code_init(NULL);
 
 	options_create_entry_cli();
 	options_get_core(&settings);

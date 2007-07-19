@@ -83,11 +83,10 @@ INLINE void set_status(audit_record *record, UINT8 status, UINT8 substatus)
     images for a game
 -------------------------------------------------*/
 
-int audit_images(int game, UINT32 validation, audit_record **audit)
+int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **audit)
 {
 #define CHECK_SELECTED_BIOS_ONLY
 
-	const game_driver *gamedrv = drivers[game];
 	const rom_entry *region, *rom;
 	audit_record *record;
 	int foundany = FALSE;
@@ -98,11 +97,11 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 	int system_bios;
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 
-	if (!drivers[game]->rom)
+	if (!gamedrv->rom)
 		return 0;
 
 #ifdef CHECK_SELECTED_BIOS_ONLY
-	system_bios = determine_bios_rom(drivers[game]->rom);
+	system_bios = determine_bios_rom(gamedrv->rom);
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 
 	/* determine the number of records we will generate */
@@ -124,7 +123,7 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
 		record = *audit;
 
 		/* iterate over regions and ROMs */
-		for (region = rom_first_region(drivers[game]); region; region = rom_next_region(region))
+		for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 			{
 				int shared = rom_used_by_parent(gamedrv, rom, NULL);
@@ -168,9 +167,8 @@ int audit_images(int game, UINT32 validation, audit_record **audit)
     game
 -------------------------------------------------*/
 
-int audit_samples(int game, audit_record **audit)
+int audit_samples(const game_driver *gamedrv, audit_record **audit)
 {
-	const game_driver *gamedrv = drivers[game];
 	machine_config config;
 	audit_record *record;
 	int sndnum, sampnum;
@@ -258,9 +256,8 @@ int audit_samples(int game, audit_record **audit)
     list of audit records
 -------------------------------------------------*/
 
-int audit_summary(int game, int count, const audit_record *records, int output)
+int audit_summary(const game_driver *gamedrv, int count, const audit_record *records, int output)
 {
-	const game_driver *gamedrv = drivers[game];
 	int overall_status = CORRECT;
 	int notfound = 0;
 	int recnum;
@@ -424,7 +421,7 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
 
 		/* not found and used by parent */
 		else if (rom_used_by_parent(gamedrv, rom, &parent))
-			set_status(record, AUDIT_STATUS_NOT_FOUND, (parent->flags & NOT_A_DRIVER) ? SUBSTATUS_NOT_FOUND_BIOS : SUBSTATUS_NOT_FOUND_PARENT);
+			set_status(record, AUDIT_STATUS_NOT_FOUND, (parent->flags & GAME_IS_BIOS_ROOT) ? SUBSTATUS_NOT_FOUND_BIOS : SUBSTATUS_NOT_FOUND_PARENT);
 
 		/* just plain old not found */
 		else

@@ -419,11 +419,11 @@ static void DebugMeshEnd( void )
 
 static void DebugCheckKeys( void )
 {
-	if( code_pressed_memory( KEYCODE_M ) )
+	if( input_code_pressed_once( KEYCODE_M ) )
 	{
 		m_b_debugmesh = !m_b_debugmesh;
 	}
-	if( code_pressed_memory( KEYCODE_V ) )
+	if( input_code_pressed_once( KEYCODE_V ) )
 	{
 		m_b_debugtexture = !m_b_debugtexture;
 	}
@@ -436,7 +436,7 @@ static void DebugCheckKeys( void )
 		video_screen_set_visarea(0,  0, m_n_screenwidth - 1, 0, m_n_screenheight - 1 );
 	}
 
-	if( code_pressed_memory( KEYCODE_I ) )
+	if( input_code_pressed_once( KEYCODE_I ) )
 	{
 		if( m_b_debugtexture )
 		{
@@ -470,7 +470,7 @@ static void DebugCheckKeys( void )
 	}
 
 #if 0
-	if( code_pressed_memory( KEYCODE_D ) )
+	if( input_code_pressed_once( KEYCODE_D ) )
 	{
 		FILE *f;
 		int n_x;
@@ -484,7 +484,7 @@ static void DebugCheckKeys( void )
 		}
 		fclose( f );
 	}
-	if( code_pressed_memory( KEYCODE_S ) )
+	if( input_code_pressed_once( KEYCODE_S ) )
 	{
 		FILE *f;
 		popmessage( "saving..." );
@@ -495,7 +495,7 @@ static void DebugCheckKeys( void )
 		}
 		fclose( f );
 	}
-	if( code_pressed_memory( KEYCODE_L ) )
+	if( input_code_pressed_once( KEYCODE_L ) )
 	{
 		FILE *f;
 		popmessage( "loading..." );

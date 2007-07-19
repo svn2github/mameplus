@@ -499,7 +499,7 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 	int state;
 
 	/* disable everything if we are using -str */
-	if (!first_time || (str > 0 && str < 60*5))
+	if (!first_time || (str > 0 && str < 60*5) || Machine->gamedrv == &driver_empty)
 		show_gameinfo = show_warnings = show_disclaimer = FALSE;
 
 	/* initialize the on-screen display system */
@@ -532,7 +532,7 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 				{
 					ui_set_handler(handler_messagebox_ok, 0);
 					if (Machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
-						messagebox_backcolor = MAKE_ARGB(0xe0,0x60,0x10,0x10);
+						messagebox_backcolor = UI_REDCOLOR;
 				}
 				break;
 
@@ -554,7 +554,8 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 		}
 
 		/* clear the input memory */
-		while (code_read_async() != CODE_NONE) ;
+		input_code_poll_switches(TRUE);
+		while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID) ;
 
 		/* loop while we have a handler */
 		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine))
@@ -567,8 +568,13 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 		scroll_reset = TRUE;
 	}
 
+ 	/* if we're the empty driver, force the menus on */
+ 	if (Machine->gamedrv == &driver_empty)
+ 		ui_set_handler(ui_menu_ui_handler, 0);
+
 	/* clear the input memory */
-	while (code_read_async() != CODE_NONE) ;
+	while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
+		;
 
 	return 0;
 }
@@ -1375,6 +1381,16 @@ int ui_get_show_profiler(void)
 
 
 /*-------------------------------------------------
+    ui_show_menu - show the menus
+-------------------------------------------------*/
+
+void ui_show_menu(void)
+{
+	ui_set_handler(ui_menu_ui_handler, 0);
+}
+
+
+/*-------------------------------------------------
     ui_is_menu_active - return TRUE if the menu
     UI handler is active
 -------------------------------------------------*/
@@ -1484,7 +1500,7 @@ static int sprintf_warnings(char *buffer)
 
 			/* find the parent of this driver */
 			clone_of = driver_get_clone(Machine->gamedrv);
-			if (clone_of != NULL && !(clone_of->flags & NOT_A_DRIVER))
+			if (clone_of != NULL && !(clone_of->flags & GAME_IS_BIOS_ROOT))
  				maindrv = clone_of;
 			else
 				maindrv = Machine->gamedrv;
@@ -1864,11 +1880,11 @@ static UINT32 handler_messagebox_ok(UINT32 state)
 	if (res == 0)
 	{
 		/* an 'O' or left joystick kicks us to the next state */
-		if (state == 0 && (code_pressed_memory(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT)))
+		if (state == 0 && (input_code_pressed_once(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT)))
 			state++;
 
 		/* a 'K' or right joystick exits the state */
-		else if (state == 1 && (code_pressed_memory(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
+		else if (state == 1 && (input_code_pressed_once(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
 			state = UI_HANDLER_CANCEL;
 	}
 
@@ -1907,7 +1923,7 @@ static UINT32 handler_messagebox_selectkey(UINT32 state)
 	/* if select key is pressed, just exit */
 	if (res == 1)
 	{
-		if (code_read_async() != CODE_NONE)
+		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
 			state = UI_HANDLER_CANCEL;
 	}
 
@@ -2022,7 +2038,7 @@ static UINT32 handler_ingame(UINT32 state)
 	if (input_ui_pressed(IPT_UI_PAUSE))
 	{
 		/* with a shift key, it is single step */
-		if (is_paused && (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT)))
+		if (is_paused && (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT)))
 		{
 			single_step = TRUE;
 			mame_pause(Machine, FALSE);
@@ -2126,7 +2142,7 @@ static UINT32 handler_ingame(UINT32 state)
 		video_set_throttle(!video_get_throttle());
 
 	/* check for fast forward */
-	if (input_port_type_pressed(IPT_OSD_3, 0))
+	if (input_port_type_pressed(IPT_UI_FAST_FORWARD, 0))
 	{
 		video_set_fastforward(TRUE);
 		ui_show_fps_temp(0.5);
@@ -2158,11 +2174,11 @@ static UINT32 handler_slider(UINT32 state)
 	/* alt goes to 1, shift goes 10x smaller, control goes 10x larger */
 	if (increment != 0)
 	{
-		if (code_pressed(KEYCODE_LALT) || code_pressed(KEYCODE_RALT))
+		if (input_code_pressed(KEYCODE_LALT) || input_code_pressed(KEYCODE_RALT))
 			increment = (increment < 0) ? -1 : 1;
-		if (code_pressed(KEYCODE_LSHIFT) || code_pressed(KEYCODE_RSHIFT))
+		if (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT))
 			increment = (increment < -10 || increment > 10) ? (increment / 10) : ((increment < 0) ? -1 : 1);
-		if (code_pressed(KEYCODE_LCONTROL) || code_pressed(KEYCODE_RCONTROL))
+		if (input_code_pressed(KEYCODE_LCONTROL) || input_code_pressed(KEYCODE_RCONTROL))
 			increment *= 10;
 	}
 
@@ -2238,19 +2254,19 @@ static UINT32 handler_load_save(UINT32 state)
 		return UI_HANDLER_CANCEL;
 	}
 
-	/* fetch a code; if it's none, we're done */
-	code = code_read_async();
-	if (code == CODE_NONE)
-		return state;
-
 	/* check for A-Z or 0-9 */
-	if (code >= KEYCODE_A && code <= KEYCODE_Z)
-		file = code - KEYCODE_A + 'a';
-	if (code >= KEYCODE_0 && code <= KEYCODE_9)
-		file = code - KEYCODE_0 + '0';
-	if (code >= KEYCODE_0_PAD && code <= KEYCODE_9_PAD)
-		file = code - KEYCODE_0_PAD + '0';
-	if (!file)
+	for (code = KEYCODE_A; code <= (input_code)KEYCODE_Z; code++)
+		if (input_code_pressed_once(code))
+			file = code - KEYCODE_A + 'a';
+	if (file == 0)
+		for (code = KEYCODE_0; code <= (input_code)KEYCODE_9; code++)
+			if (input_code_pressed_once(code))
+				file = code - KEYCODE_0 + '0';
+	if (file == 0)
+		for (code = KEYCODE_0_PAD; code <= (input_code)KEYCODE_9_PAD; code++)
+			if (input_code_pressed_once(code))
+				file = code - KEYCODE_0_PAD + '0';
+	if (file == 0)
 		return state;
 
 	/* display a popup indicating that the save will proceed */

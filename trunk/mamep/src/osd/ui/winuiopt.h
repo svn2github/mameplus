@@ -203,16 +203,12 @@ typedef struct
 // INPUT DEVICE OPTIONS
 	BOOL	mouse;
 	BOOL	joystick;
-#ifdef USE_JOY_MOUSE_MOVE
-	BOOL	stickpoint;
-#endif /* USE_JOY_MOUSE_MOVE */
 	BOOL	lightgun;
 	BOOL	dual_lightgun;
 	BOOL	offscreen_reload;
 	BOOL	steadykey;
 	float	joy_deadzone;
 	float	joy_saturation;
-	char*	digital;
 #ifdef JOYSTICK_ID
 	int	joyid1;
 	int	joyid2;

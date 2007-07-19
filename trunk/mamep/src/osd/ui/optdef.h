@@ -211,16 +211,12 @@ START_OPT_FUNC_DRIVER
 // INPUT DEVICE OPTIONS
 	DEFINE_OPT(bool,                 mouse)
 	DEFINE_OPT(bool,                 joystick)
-#ifdef USE_JOY_MOUSE_MOVE
-	DEFINE_OPT(bool,                 stickpoint)
-#endif /* USE_JOY_MOUSE_MOVE */
 	DEFINE_OPT(bool,                 lightgun)
 	DEFINE_OPT(bool,                 dual_lightgun)
 	DEFINE_OPT(bool,                 offscreen_reload)
 	DEFINE_OPT(bool,                 steadykey)
 	DEFINE_OPT(float,                joy_deadzone)
 	DEFINE_OPT(float,                joy_saturation)
-	DEFINE_OPT(digital,              digital)
 #ifdef JOYSTICK_ID
 	DEFINE_OPT(int_positive,         joyid1)
 	DEFINE_OPT(int_positive,         joyid2)

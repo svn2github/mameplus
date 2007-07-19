@@ -3207,16 +3207,10 @@ static void SetPropEnabledControls(HWND hWnd)
 	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
 	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),TRUE);
-#ifdef USE_JOY_MOUSE_MOVE
-		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),TRUE);
-#endif /* USE_JOY_MOUSE_MOVE */
 	}
 	else
 	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),FALSE);
-#ifdef USE_JOY_MOUSE_MOVE
-		Button_Enable(GetDlgItem(hWnd,IDC_USE_STICKPOINT),FALSE);
-#endif /* USE_JOY_MOUSE_MOVE */
 	}
 
 	if (nIndex <= -1 || DriverUsesLightGun(nIndex))
@@ -4023,9 +4017,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
 	DataMapAdd(IDC_RELOAD,        DM_BOOL, CT_BUTTON,   &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload,0, 0, 0);
-#ifdef USE_JOY_MOUSE_MOVE
-	DataMapAdd(IDC_USE_STICKPOINT,DM_BOOL, CT_BUTTON,   &pGameOpts->stickpoint,DM_BOOL,   &pGameOpts->stickpoint,          0, 0, 0);
-#endif /* USE_JOY_MOUSE_MOVE */
 #ifdef JOYSTICK_ID
 	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid1,        DM_INT, &pGameOpts->joyid1,             0, 0, 0);
 	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid2,        DM_INT, &pGameOpts->joyid2,             0, 0, 0);

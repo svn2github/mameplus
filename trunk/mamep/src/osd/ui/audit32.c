@@ -170,7 +170,7 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
 	int res;
 
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
-	res = audit_summary(game, audit_records, audit, TRUE);
+	res = audit_summary(drivers[game], audit_records, audit, TRUE);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb ? prevcb : mame_null_output_callback, prevparam, NULL, NULL);
 
 	return res;
@@ -227,7 +227,7 @@ int Mame32VerifyRomSet(int game)
 	}
 
 	// audit romset
-	audit_records = audit_images(game, AUDIT_VALIDATE_FAST, &audit);
+	audit_records = audit_images(drivers[game], AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
 		free(audit);
@@ -243,7 +243,7 @@ int Mame32VerifySampleSet(int game)
 	int audit_records;
 	int res;
 
-	audit_records = audit_samples(game, &audit);
+	audit_records = audit_samples(drivers[game], &audit);
 	res = ProcessAuditResults(game, audit, audit_records);
 	if (audit_records > 0)
 		free(audit);

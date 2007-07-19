@@ -253,12 +253,11 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	if (result != -1)
 		goto error;
 
-	/* if no driver specified, display help */
+	/* if no driver specified, load the empty driver */
 	if (gamename == NULL)
 	{
-		result = MAMERR_INVALID_CONFIG;
-		display_help();
-		goto error;
+		extern game_driver driver_empty;
+		driver = &driver_empty;
 	}
 
 	/* if we don't have a valid driver selected, offer some suggestions */
@@ -268,7 +267,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		int drvnum;
 
 		/* get the top 10 approximate matches */
-		driver_get_approx_matches(gamename, ARRAY_LENGTH(matches), matches);
+		driver_list_get_approx_matches(drivers, gamename, ARRAY_LENGTH(matches), matches);
 
 		/* print them out */
 		mame_printf_error(_("\n\"%s\" approximately matches the following\n"
@@ -634,7 +633,7 @@ int cli_info_listfull(const char *gamename)
 
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		if ((drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			char name[200];
 
@@ -686,7 +685,7 @@ int cli_info_listgames(const char *gamename)
 		gamename = "*";
 
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
-		if ((drivers[drvindex]->flags & NOT_A_DRIVER) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		if ((drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			char name[200];
 
@@ -716,7 +715,7 @@ int cli_info_listgames(const char *gamename)
 		}
 
 	/* return an error if none found */
-	return (count > 0) ? 0 : 1;
+	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
 }
 
 
@@ -758,7 +757,7 @@ int cli_info_listclones(const char *gamename)
 		const game_driver *clone_of = driver_get_clone(drivers[drvindex]);
 
 		/* if we are a clone, and either our name matches the gamename, or the clone's name matches, display us */
-		if (clone_of != NULL && (clone_of->flags & NOT_A_DRIVER) == 0)
+		if (clone_of != NULL && (clone_of->flags & GAME_IS_BIOS_ROOT) == 0)
 			if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0 || mame_strwildcmp(gamename, clone_of->name) == 0)
 			{
 				/* print the header on the first one */
@@ -954,8 +953,8 @@ static int info_verifyroms(const char *gamename)
 			int res;
 
 			/* audit the ROMs in this set */
-			audit_records = audit_images(drvindex, AUDIT_VALIDATE_FAST, &audit);
-			res = audit_summary(drvindex, audit_records, audit, TRUE);
+			audit_records = audit_images(drivers[drvindex], AUDIT_VALIDATE_FAST, &audit);
+			res = audit_summary(drivers[drvindex], audit_records, audit, TRUE);
 			if (audit_records > 0)
 				free(audit);
 
@@ -1038,8 +1037,8 @@ static int info_verifysamples(const char *gamename)
 			int res;
 
 			/* audit the samples in this set */
-			audit_records = audit_samples(drvindex, &audit);
-			res = audit_summary(drvindex, audit_records, audit, TRUE);
+			audit_records = audit_samples(drivers[drvindex], &audit);
+			res = audit_summary(drivers[drvindex], audit_records, audit, TRUE);
 			if (audit_records > 0)
 				free(audit);
 			else

@@ -1618,7 +1618,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		}
 
 	clone_of = driver_get_clone(drv);
-	if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
+	if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 	{
 		strcat(buffer, _("\nORIGINAL:\n"));
 		strcat(buffer, _LST(clone_of->description));
@@ -1739,7 +1739,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 		all++;
 
 		clone_of = driver_get_clone(drivers[i]);
-		if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
+		if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 		{
 			clone = 1;
 			cl++;
@@ -2310,13 +2310,13 @@ int load_driver_statistics (char *buffer, int bufsize)
 			{ 
 				all++;
 
-				if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
+				if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 					cl++;
 				if (!mame_stricmp (drivers[i]->source_file+17, "neogeo.c")
 				 || !mame_stricmp (drivers[i]->source_file+17, "neodrvr.c"))
 				{
 					neo++;
-					if (clone_of && !(clone_of->flags & NOT_A_DRIVER))
+					if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 						neoc++;
 				}
 			}

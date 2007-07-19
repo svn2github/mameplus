@@ -263,7 +263,7 @@ static void hiscore_save (void)
 
 
 /* call hiscore_update periodically (i.e. once per frame) */
-static void hiscore_periodic (int param)
+static TIMER_CALLBACK( hiscore_periodic )
 {
 	if (state.mem_range)
 	{

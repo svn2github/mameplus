@@ -727,10 +727,6 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,126,10,0,HIDC_USE_MOUSE
     CONTROL         "Enable steadykey support",IDC_STEADYKEY,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,73,126,10,0,HIDC_STEADYKEY
-#ifdef USE_JOY_MOUSE_MOVE
-    CONTROL         "Enable pointing stick input",IDC_USE_STICKPOINT, "Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,126,10
-#endif /* USE_JOY_MOUSE_MOVE */
     GROUPBOX        "",IDC_STATIC,4,101,138,44,WS_DISABLED
     CONTROL         "Enable lightgun input",IDC_LIGHTGUN,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,101,100,10,0,HIDC_LIGHTGUN

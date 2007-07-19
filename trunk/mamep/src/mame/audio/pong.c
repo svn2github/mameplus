@@ -27,7 +27,7 @@ int pong_score_sound = 0;
 /************************************/
 /* Sound handler start				*/
 /************************************/
-static void pong_sh_update(int param)
+static TIMER_CALLBACK( pong_sh_update )
 {
 	sample_set_volume(CHANNEL_HIT, pong_hit_sound ? 100.0 : 0.0);
 	sample_set_volume(CHANNEL_VBLANK, pong_vblank_sound ? 100.0 : 0.0);

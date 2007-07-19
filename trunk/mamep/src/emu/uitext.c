@@ -104,7 +104,9 @@ static const char *mame_default_text[] =
 	CAPSTARTGAMENOUN " Documents",
 	"Autofire Setting",
 	"Reset " CAPSTARTGAMENOUN,
+	"Select New " CAPSTARTGAMENOUN,
 	"Return to " CAPSTARTGAMENOUN,
+	"Exit",
 
 	"Cheat",
 	"Memory Card",

@@ -42,6 +42,7 @@
 #else /* UI_COLOR_DISPLAY */
 #define UI_FILLCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
 #endif /* UI_COLOR_DISPLAY */
+#define UI_REDCOLOR				MAKE_ARGB(0xf0,0x60,0x10,0x10)
 
 /* cancel return value for a UI handler */
 #define UI_HANDLER_CANCEL		((UINT32)~0)
@@ -141,6 +142,9 @@ int ui_get_show_fps(void);
 /* get/set whether or not the profiler is displayed */
 void ui_set_show_profiler(int show);
 int ui_get_show_profiler(void);
+
+/* force the menus to display */
+void ui_show_menu(void);
 
 /* return true if a menu or the slider is displayed */
 int ui_is_menu_active(void);

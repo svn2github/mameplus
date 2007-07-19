@@ -1020,28 +1020,28 @@ static void toaplan1_render (running_machine *machine, mame_bitmap *bitmap)
 
 #ifdef BGDBG
 
-if (code_pressed(KEYCODE_Q)) { toaplan_dbg_priority = 0; }
-if (code_pressed(KEYCODE_W)) { toaplan_dbg_priority = 1; }
-if (code_pressed_memory(KEYCODE_E)) { toaplan_dbg_priority = 2; }
-if (code_pressed_memory(KEYCODE_R)) { toaplan_dbg_priority = 3; }
-if (code_pressed_memory(KEYCODE_T)) { toaplan_dbg_priority = 4; }
-if (code_pressed_memory(KEYCODE_Y)) { toaplan_dbg_priority = 5; }
-if (code_pressed_memory(KEYCODE_U)) { toaplan_dbg_priority = 6; }
-if (code_pressed_memory(KEYCODE_I)) { toaplan_dbg_priority = 7; }
-if (code_pressed_memory(KEYCODE_A)) { toaplan_dbg_priority = 8; }
-if (code_pressed_memory(KEYCODE_S)) { toaplan_dbg_priority = 9; }
-if (code_pressed_memory(KEYCODE_D)) { toaplan_dbg_priority = 10; }
-if (code_pressed_memory(KEYCODE_F)) { toaplan_dbg_priority = 11; }
-if (code_pressed_memory(KEYCODE_G)) { toaplan_dbg_priority = 12; }
-if (code_pressed_memory(KEYCODE_H)) { toaplan_dbg_priority = 13; }
-if (code_pressed_memory(KEYCODE_J)) { toaplan_dbg_priority = 14; }
-if (code_pressed_memory(KEYCODE_K)) { toaplan_dbg_priority = 15; }
+if (input_code_pressed(KEYCODE_Q)) { toaplan_dbg_priority = 0; }
+if (input_code_pressed(KEYCODE_W)) { toaplan_dbg_priority = 1; }
+if (input_code_pressed_once(KEYCODE_E)) { toaplan_dbg_priority = 2; }
+if (input_code_pressed_once(KEYCODE_R)) { toaplan_dbg_priority = 3; }
+if (input_code_pressed_once(KEYCODE_T)) { toaplan_dbg_priority = 4; }
+if (input_code_pressed_once(KEYCODE_Y)) { toaplan_dbg_priority = 5; }
+if (input_code_pressed_once(KEYCODE_U)) { toaplan_dbg_priority = 6; }
+if (input_code_pressed_once(KEYCODE_I)) { toaplan_dbg_priority = 7; }
+if (input_code_pressed_once(KEYCODE_A)) { toaplan_dbg_priority = 8; }
+if (input_code_pressed_once(KEYCODE_S)) { toaplan_dbg_priority = 9; }
+if (input_code_pressed_once(KEYCODE_D)) { toaplan_dbg_priority = 10; }
+if (input_code_pressed_once(KEYCODE_F)) { toaplan_dbg_priority = 11; }
+if (input_code_pressed_once(KEYCODE_G)) { toaplan_dbg_priority = 12; }
+if (input_code_pressed_once(KEYCODE_H)) { toaplan_dbg_priority = 13; }
+if (input_code_pressed_once(KEYCODE_J)) { toaplan_dbg_priority = 14; }
+if (input_code_pressed_once(KEYCODE_K)) { toaplan_dbg_priority = 15; }
 
-if (code_pressed_memory(KEYCODE_Z)) { toaplan_dbg_sprite_only ^= 1; }
-if (code_pressed_memory(KEYCODE_X)) { toaplan_dbg_layer[0] ^= 1; }
-if (code_pressed_memory(KEYCODE_C)) { toaplan_dbg_layer[1] ^= 1; }
-if (code_pressed_memory(KEYCODE_V)) { toaplan_dbg_layer[2] ^= 1; }
-if (code_pressed_memory(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
+if (input_code_pressed_once(KEYCODE_Z)) { toaplan_dbg_sprite_only ^= 1; }
+if (input_code_pressed_once(KEYCODE_X)) { toaplan_dbg_layer[0] ^= 1; }
+if (input_code_pressed_once(KEYCODE_C)) { toaplan_dbg_layer[1] ^= 1; }
+if (input_code_pressed_once(KEYCODE_V)) { toaplan_dbg_layer[2] ^= 1; }
+if (input_code_pressed_once(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
 
 if( toaplan_dbg_priority != 0 ){
 
@@ -1186,28 +1186,28 @@ static void demonwld_render (running_machine *machine, mame_bitmap *bitmap)
 
 #ifdef BGDBG
 
-if (code_pressed_memory(KEYCODE_Q)) { toaplan_dbg_priority = 0; }
-if (code_pressed_memory(KEYCODE_W)) { toaplan_dbg_priority = 1; }
-if (code_pressed_memory(KEYCODE_E)) { toaplan_dbg_priority = 2; }
-if (code_pressed_memory(KEYCODE_R)) { toaplan_dbg_priority = 3; }
-if (code_pressed_memory(KEYCODE_T)) { toaplan_dbg_priority = 4; }
-if (code_pressed_memory(KEYCODE_Y)) { toaplan_dbg_priority = 5; }
-if (code_pressed_memory(KEYCODE_U)) { toaplan_dbg_priority = 6; }
-if (code_pressed_memory(KEYCODE_I)) { toaplan_dbg_priority = 7; }
-if (code_pressed_memory(KEYCODE_O)) { toaplan_dbg_priority = 8; }
-if (code_pressed_memory(KEYCODE_A)) { toaplan_dbg_priority = 9; }
-if (code_pressed_memory(KEYCODE_S)) { toaplan_dbg_priority = 10; }
-if (code_pressed_memory(KEYCODE_D)) { toaplan_dbg_priority = 11; }
-if (code_pressed_memory(KEYCODE_F)) { toaplan_dbg_priority = 12; }
-if (code_pressed_memory(KEYCODE_G)) { toaplan_dbg_priority = 13; }
-if (code_pressed_memory(KEYCODE_H)) { toaplan_dbg_priority = 14; }
-if (code_pressed_memory(KEYCODE_J)) { toaplan_dbg_priority = 15; }
+if (input_code_pressed_once(KEYCODE_Q)) { toaplan_dbg_priority = 0; }
+if (input_code_pressed_once(KEYCODE_W)) { toaplan_dbg_priority = 1; }
+if (input_code_pressed_once(KEYCODE_E)) { toaplan_dbg_priority = 2; }
+if (input_code_pressed_once(KEYCODE_R)) { toaplan_dbg_priority = 3; }
+if (input_code_pressed_once(KEYCODE_T)) { toaplan_dbg_priority = 4; }
+if (input_code_pressed_once(KEYCODE_Y)) { toaplan_dbg_priority = 5; }
+if (input_code_pressed_once(KEYCODE_U)) { toaplan_dbg_priority = 6; }
+if (input_code_pressed_once(KEYCODE_I)) { toaplan_dbg_priority = 7; }
+if (input_code_pressed_once(KEYCODE_O)) { toaplan_dbg_priority = 8; }
+if (input_code_pressed_once(KEYCODE_A)) { toaplan_dbg_priority = 9; }
+if (input_code_pressed_once(KEYCODE_S)) { toaplan_dbg_priority = 10; }
+if (input_code_pressed_once(KEYCODE_D)) { toaplan_dbg_priority = 11; }
+if (input_code_pressed_once(KEYCODE_F)) { toaplan_dbg_priority = 12; }
+if (input_code_pressed_once(KEYCODE_G)) { toaplan_dbg_priority = 13; }
+if (input_code_pressed_once(KEYCODE_H)) { toaplan_dbg_priority = 14; }
+if (input_code_pressed_once(KEYCODE_J)) { toaplan_dbg_priority = 15; }
 
-if (code_pressed_memory(KEYCODE_Z)) { toaplan_dbg_sprite_only ^= 1; }
-if (code_pressed_memory(KEYCODE_X)) { toaplan_dbg_layer[0] ^= 1; }
-if (code_pressed_memory(KEYCODE_C)) { toaplan_dbg_layer[1] ^= 1; }
-if (code_pressed_memory(KEYCODE_V)) { toaplan_dbg_layer[2] ^= 1; }
-if (code_pressed_memory(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
+if (input_code_pressed_once(KEYCODE_Z)) { toaplan_dbg_sprite_only ^= 1; }
+if (input_code_pressed_once(KEYCODE_X)) { toaplan_dbg_layer[0] ^= 1; }
+if (input_code_pressed_once(KEYCODE_C)) { toaplan_dbg_layer[1] ^= 1; }
+if (input_code_pressed_once(KEYCODE_V)) { toaplan_dbg_layer[2] ^= 1; }
+if (input_code_pressed_once(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
 
 if( toaplan_dbg_priority != 0 ){
 

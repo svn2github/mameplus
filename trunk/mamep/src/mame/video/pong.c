@@ -83,14 +83,14 @@ INLINE void pong_vertical_velocity(void);
 INLINE void pong_7seg(int H0, int n);
 
 /* SU 058 */
-static void score_timer_cb(int param)
+static TIMER_CALLBACK( score_timer_cb )
 {
 	score_sound_timer = 0;              /* SU 059 */
 	/* disable score sound */
 	pong_score_sound = 0;
 }
 
-static void serve_timer_cb(int param)
+static TIMER_CALLBACK( serve_timer_cb )
 {
 	serve_timer = 0;		            /* SU 059 */
 	/* falling edge of serve timer (output of NE555/F4) */

@@ -31,7 +31,7 @@ ROM_START( 32x_knuk )
 ROM_END
 
 
-GAME( 1900, 32x_bios,    0,        _32x,        megadriv,    _32x,    ROT0,   "Unsorted", "32X Bios", GAME_NOT_WORKING|NOT_A_DRIVER )
+GAME( 1900, 32x_bios,    0,        _32x,        megadriv,    _32x,    ROT0,   "Unsorted", "32X Bios", GAME_NOT_WORKING|GAME_IS_BIOS_ROOT )
 GAME( 1900, 32x_knuk,    32x_bios, _32x,        megadriv,    _32x, ROT0,   "Unsorted", "Knuckles Chaotix", GAME_NOT_WORKING )
 
 

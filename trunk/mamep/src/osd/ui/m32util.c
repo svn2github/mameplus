@@ -525,7 +525,7 @@ BOOL DriverIsHarddisk(int driver_index)
 BOOL DriverIsBios(int driver_index)
 {
 	BOOL bBios = FALSE;
-	if( !( (drivers[driver_index]->flags & NOT_A_DRIVER ) == 0)   )
+	if( !( (drivers[driver_index]->flags & GAME_IS_BIOS_ROOT ) == 0)   )
 		bBios = TRUE;
 	return bBios;
 }
