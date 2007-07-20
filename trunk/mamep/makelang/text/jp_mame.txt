@@ -62,7 +62,7 @@
     NO BUTTONS:  %4d\n
             ボタン未使用:  %4d\n
 
-# emu/audit.c: 317
+# emu/audit.c: 314
    FOUND: %s\n
 見つかった物: %s\n
 
@@ -86,11 +86,11 @@
  %4d STEREO     + %4d\n
  %4d ステレオ   + %4d\n
 
-# emu/audit.c: 291
+# emu/audit.c: 288
  (%d bytes)
  (%d バイト)
 
-# emu/clifront.c: 864
+# emu/clifront.c: 863
  BAD
  不良
 
@@ -114,11 +114,11 @@
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
-# emu/clifront.c: 870
+# emu/clifront.c: 869
  NO GOOD DUMP KNOWN
  正常なダンプは存在しません
 
-# emu/cheat.c: 9081
+# emu/cheat.c: 9089
 %.8X-%.8X MEMORY
 %.8X-%.8X メモリ
 
@@ -126,23 +126,23 @@
 %d cheats saved
 %d個のチートを保存しました
 
-# emu/cheat.c: 5252, 5781, 6239
+# emu/cheat.c: 5260, 5789, 6247
 %d results found
 %d個の結果が見つかりました
 
-# emu/clifront.c: 1014
+# emu/clifront.c: 1013
 %d romsets found, %d were OK.\n
 %d個のロムセットが見つかり、%d個が正常です。\n
 
-# emu/clifront.c: 1091
+# emu/clifront.c: 1090
 %d samplesets found, %d were OK.\n
 %d個のサンプルセットが見つかり、%d個が正常です。\n
 
-# emu/cheat.c: 11625
+# emu/cheat.c: 11636
 %s : %s selected
 %s : %sが選択されました
 
-# emu/uimenu.c: 130
+# emu/uimenu.c: 137
 %s Analog
 %s アナログ
 
@@ -150,11 +150,11 @@
 %s CHD NEEDS REDUMP\n
 %s CHDは再ダンプが必要です\n
 
-# emu/uimenu.c: 131
+# emu/uimenu.c: 138
 %s Dec
 %s 増加
 
-# emu/uimenu.c: 132
+# emu/uimenu.c: 139
 %s Inc
 %s 減少
 
@@ -190,11 +190,11 @@
 %s activated
 %sを有効にしました
 
-# emu/cheat.c: 11623, 11681
+# emu/cheat.c: 11634, 11692
 %s disabled
 %sは無効です
 
-# emu/cheat.c: 11689
+# emu/cheat.c: 11700
 %s enabled
 %sは有効です
 
@@ -222,23 +222,23 @@
 %sWrong version in save file (%d, 1 expected)
 %s保存したファイルのバージョンが違います (%d、正常値 1)
 
-# emu/clifront.c: 1375
+# emu/clifront.c: 1374
 (BAD) 
 (異常) 
 
-# emu/uitext.c: 159
+# emu/uitext.c: 161
 (Card may already exist)
 (カードを既に作成済みかも知れません)
 
-# emu/emuopts.c: 164, 165
+# emu/emuopts.c: 185, 186
 (debugger-only command)
 (デバッガ用コマンド)
 
-# emu/emuopts.c: 52, 76, 82, 87, 149, 176, 182, 188, 194, 195, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231 
+# emu/emuopts.c: 52, 76, 82, 87, 149, 197, 203, 209, 215, 216, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252 
 (disabled by compiling option)
 (コンパイルオプションにより無効)
 
-# emu/uitext.c: 147
+# emu/uitext.c: 149
 (locked)
 (固定)
 
@@ -246,55 +246,55 @@
 (more)
 (続く)
 
-# emu/cheat.c: 2212, 2722, 3141, 3156, 3168, 3180, 3192, 6000, 7160 emu/uitext.c: 40 tools/chdman.c: 742, 1488
+# emu/cheat.c: 2212, 2722, 3141, 3156, 3168, 3184, 3200, 6008, 7168 emu/uitext.c: 40 tools/chdman.c: 742, 1488
 (none)
 (なし)
 
-# emu/inptport.c: 405
+# emu/inptport.c: 406
 1 Coin/1 Credit
 1 コイン/1 クレジット
 
-# emu/inptport.c: 411
+# emu/inptport.c: 412
 1 Coin/2 Credits
 1 コイン/2 クレジット
 
-# emu/inptport.c: 414
+# emu/inptport.c: 415
 1 Coin/3 Credits
 1 コイン/3 クレジット
 
-# emu/inptport.c: 417
+# emu/inptport.c: 418
 1 Coin/4 Credits
 1 コイン/4 クレジット
 
-# emu/inptport.c: 418
+# emu/inptport.c: 419
 1 Coin/5 Credits
 1 コイン/5 クレジット
 
-# emu/inptport.c: 419
+# emu/inptport.c: 420
 1 Coin/6 Credits
 1 コイン/6 クレジット
 
-# emu/inptport.c: 420
+# emu/inptport.c: 421
 1 Coin/7 Credits
 1 コイン/7 クレジット
 
-# emu/inptport.c: 421
+# emu/inptport.c: 422
 1 Coin/8 Credits
 1 コイン/8 クレジット
 
-# emu/inptport.c: 422
+# emu/inptport.c: 423
 1 Coin/9 Credits
 1 コイン/9 クレジット
 
-# emu/inptport.c: 892
+# emu/inptport.c: 867
 1 Player Start
 1プレイヤー スタート
 
-# emu/cheat.c: 5262, 5791, 6249
+# emu/cheat.c: 5270, 5799, 6257
 1 result found, added to list
 1個の結果が見つかりました、リストに追加します
 
-# emu/cheat.c: 2954, 7104
+# emu/cheat.c: 2954, 7112
 16 Bit
 16ビット
 
@@ -302,43 +302,43 @@
 1st Bonus Life
 初回ボーナスライフ
 
-# emu/inptport.c: 398
+# emu/inptport.c: 399
 2 Coins/1 Credit
 2 コイン/1 クレジット
 
-# emu/inptport.c: 404
+# emu/inptport.c: 405
 2 Coins/2 Credits
 2 コイン/2 クレジット
 
-# emu/inptport.c: 408
+# emu/inptport.c: 409
 2 Coins/3 Credits
 2 コイン/3 クレジット
 
-# emu/inptport.c: 410
+# emu/inptport.c: 411
 2 Coins/4 Credits
 2 コイン/4 クレジット
 
-# emu/inptport.c: 412
+# emu/inptport.c: 413
 2 Coins/5 Credits
 2 コイン/5 クレジット
 
-# emu/inptport.c: 413
+# emu/inptport.c: 414
 2 Coins/6 Credits
 2 コイン/6 クレジット
 
-# emu/inptport.c: 415
+# emu/inptport.c: 416
 2 Coins/7 Credits
 2 コイン/7 クレジット
 
-# emu/inptport.c: 416
+# emu/inptport.c: 417
 2 Coins/8 Credits
 2 コイン/8 クレジット
 
-# emu/inptport.c: 893
+# emu/inptport.c: 868
 2 Players Start
 2プレイヤー スタート
 
-# emu/cheat.c: 2955, 7105
+# emu/cheat.c: 2955, 7113
 24 Bit
 24ビット
 
@@ -350,215 +350,215 @@
 2nd Bonus Life
 2回目ボーナスライフ
 
-# emu/inptport.c: 395
+# emu/inptport.c: 396
 3 Coins/1 Credit
 3 コイン/1 クレジット
 
-# emu/inptport.c: 400
+# emu/inptport.c: 401
 3 Coins/2 Credits
 3 コイン/2 クレジット
 
-# emu/inptport.c: 403
+# emu/inptport.c: 404
 3 Coins/3 Credits
 3 コイン/3 クレジット
 
-# emu/inptport.c: 407
+# emu/inptport.c: 408
 3 Coins/4 Credits
 3 コイン/4 クレジット
 
-# emu/inptport.c: 894
+# emu/inptport.c: 869
 3 Players Start
 3プレイヤー スタート
 
-# emu/cheat.c: 2956, 7106
+# emu/cheat.c: 2956, 7114
 32 Bit
 32ビット
 
-# emu/inptport.c: 394
+# emu/inptport.c: 395
 4 Coins/1 Credit
 4 コイン/1 クレジット
 
-# emu/inptport.c: 397
+# emu/inptport.c: 398
 4 Coins/2 Credits
 4 コイン/2 クレジット
 
-# emu/inptport.c: 401
+# emu/inptport.c: 402
 4 Coins/3 Credits
 4 コイン/3 クレジット
 
-# emu/inptport.c: 402
+# emu/inptport.c: 403
 4 Coins/4 Credits
 4 コイン/4 クレジット
 
-# emu/inptport.c: 406
+# emu/inptport.c: 407
 4 Coins/5 Credits
 4 コイン/5 クレジット
 
-# emu/inptport.c: 409
+# emu/inptport.c: 410
 4 Coins/7 Credits
 4 コイン/7 クレジット
 
-# emu/inptport.c: 895
+# emu/inptport.c: 870
 4 Players Start
 4プレイヤー スタート
 
-# emu/inptport.c: 393
+# emu/inptport.c: 394
 5 Coins/1 Credit
 5 コイン/1 クレジット
 
-# emu/inptport.c: 399
+# emu/inptport.c: 400
 5 Coins/3 Credits
 5 コイン/3 クレジット
 
-# emu/inptport.c: 896
+# emu/inptport.c: 871
 5 Players Start
 5プレイヤー スタート
 
-# emu/inptport.c: 392
+# emu/inptport.c: 393
 6 Coins/1 Credit
 6 コイン/1 クレジット
 
-# emu/inptport.c: 897
+# emu/inptport.c: 872
 6 Players Start
 6プレイヤー スタート
 
-# emu/inptport.c: 391
+# emu/inptport.c: 392
 7 Coins/1 Credit
 7 コイン/1 クレジット
 
-# emu/inptport.c: 898
+# emu/inptport.c: 873
 7 Players Start
 7プレイヤー スタート
 
-# emu/cheat.c: 2953, 7103
+# emu/cheat.c: 2953, 7111
 8 Bit
 8ビット
 
-# emu/inptport.c: 390
+# emu/inptport.c: 391
 8 Coins/1 Credit
 8 コイン/1 クレジット
 
-# emu/inptport.c: 396
+# emu/inptport.c: 397
 8 Coins/3 Credits
 8 コイン/3 クレジット
 
-# emu/inptport.c: 899
+# emu/inptport.c: 874
 8 Players Start
 8プレイヤー スタート
 
-# emu/inptport.c: 389
+# emu/inptport.c: 390
 9 Coins/1 Credit
 9 コイン/1 クレジット
 
-# emu/cheat.c: 9925
+# emu/cheat.c: 9935
 :1st Activation Key (%s)\n
 :最初のアクティベーションキー (%s)\n
 
-# emu/cheat.c: 9923
+# emu/cheat.c: 9933
 :1st Activation Key for %s (%s)\n
 :%sの最初のアクティベーションキー (%s)\n
 
-# emu/cheat.c: 9933
+# emu/cheat.c: 9944
 :2nd Activation Key (%s)\n
 :2番目ののアクティベーションキー (%s)\n
 
-# emu/cheat.c: 9931
+# emu/cheat.c: 9942
 :2nd Activation Key for %s (%s)\n
 :%sの2番目ののアクティベーションキー (%s)\n
 
-# emu/inptport.c: 1021
+# emu/inptport.c: 996
 AD Stick X
 AD スティック X
 
-# emu/inptport.c: 1022
+# emu/inptport.c: 997
 AD Stick X 2
 AD スティック X 2
 
-# emu/inptport.c: 1023
+# emu/inptport.c: 998
 AD Stick X 3
 AD スティック X 3
 
-# emu/inptport.c: 1024
+# emu/inptport.c: 999
 AD Stick X 4
 AD スティック X 4
 
-# emu/inptport.c: 1025
+# emu/inptport.c: 1000
 AD Stick X 5
 AD スティック X 5
 
-# emu/inptport.c: 1026
+# emu/inptport.c: 1001
 AD Stick X 6
 AD スティック X 6
 
-# emu/inptport.c: 1027
+# emu/inptport.c: 1002
 AD Stick X 7
 AD スティック X 7
 
-# emu/inptport.c: 1028
+# emu/inptport.c: 1003
 AD Stick X 8
 AD スティック X 8
 
-# emu/inptport.c: 1030
+# emu/inptport.c: 1005
 AD Stick Y
 AD スティック Y
 
-# emu/inptport.c: 1031
+# emu/inptport.c: 1006
 AD Stick Y 2
 AD スティック Y 2
 
-# emu/inptport.c: 1032
+# emu/inptport.c: 1007
 AD Stick Y 3
 AD スティック Y 3
 
-# emu/inptport.c: 1033
+# emu/inptport.c: 1008
 AD Stick Y 4
 AD スティック Y 4
 
-# emu/inptport.c: 1034
+# emu/inptport.c: 1009
 AD Stick Y 5
 AD スティック Y 5
 
-# emu/inptport.c: 1035
+# emu/inptport.c: 1010
 AD Stick Y 6
 AD スティック Y 6
 
-# emu/inptport.c: 1036
+# emu/inptport.c: 1011
 AD Stick Y 7
 AD スティック Y 7
 
-# emu/inptport.c: 1037
+# emu/inptport.c: 1012
 AD Stick Y 8
 AD スティック Y 8
 
-# emu/inptport.c: 1039
+# emu/inptport.c: 1014
 AD Stick Z
 AD スティック Z
 
-# emu/inptport.c: 1040
+# emu/inptport.c: 1015
 AD Stick Z 2
 AD スティック Z 2
 
-# emu/inptport.c: 1041
+# emu/inptport.c: 1016
 AD Stick Z 3
 AD スティック Z 3
 
-# emu/inptport.c: 1042
+# emu/inptport.c: 1017
 AD Stick Z 4
 AD スティック Z 4
 
-# emu/inptport.c: 1043
+# emu/inptport.c: 1018
 AD Stick Z 5
 AD スティック Z 5
 
-# emu/inptport.c: 1044
+# emu/inptport.c: 1019
 AD Stick Z 6
 AD スティック Z 6
 
-# emu/inptport.c: 1045
+# emu/inptport.c: 1020
 AD Stick Z 7
 AD スティック Z 7
 
-# emu/inptport.c: 1046
+# emu/inptport.c: 1021
 AD Stick Z 8
 AD スティック Z 8
 
@@ -574,7 +574,7 @@ ALL CPUS
 AWP Simulated Video (No Artwork)
 AWPビデオシミュレーション (アートワークではありません）
 
-# emu/uitext.c: 180
+# emu/uitext.c: 182
 Activation Key
 有効化キー
 
@@ -582,7 +582,7 @@ Activation Key
 Activation Key (1st)
 有効化キー (1)
 
-# emu/cheat.c: 3187
+# emu/cheat.c: 3191
 Activation Key (2nd)
 有効化キー (2)
 
@@ -590,19 +590,19 @@ Activation Key (2nd)
 Add
 加算
 
-# emu/inptport.c: 1134
+# emu/inptport.c: 1109
 Add Cheat
 チートを追加
 
-# emu/cheat.c: 7190
+# emu/cheat.c: 7198
 Add Value
 値を追加
 
-# emu/uitext.c: 163
+# emu/uitext.c: 165
 Add/Edit a Cheat
 チートを追加/編集する
 
-# emu/cheat.c: 2882, 3402
+# emu/cheat.c: 2882, 3410
 Add/Subtract
 加算/減算
 
@@ -618,39 +618,39 @@ VFDとランプマトリックス追加
 Adder,VFD and Lamps
 VFDとランプ追加
 
-# emu/cheat.c: 732, 3694, 7136 emu/uitext.c: 42
+# emu/cheat.c: 732, 3702, 7144 emu/uitext.c: 42
 Address
 アドレス
 
-# emu/cheat.c: 3655
+# emu/cheat.c: 3663
 Address Index
 アドレスのインデックス
 
-# emu/cheat.c: 7195
+# emu/cheat.c: 7203
 Address Shift
 アドレスシフト
 
-# emu/cheat.c: 3634
+# emu/cheat.c: 3642
 Address Size
 アドレスのサイズ
 
-# emu/cheat.c: 7642 mame/drivers/mcr68.c: 795 
+# emu/cheat.c: 7650 mame/drivers/mcr68.c: 795 
 Advanced
 拡張形式
 
-# emu/cheat.c: 6330 emu/uitext.c: 211
+# emu/cheat.c: 6338 emu/uitext.c: 213
 All Memory
 全てのメモリ
 
-# emu/uitext.c: 219
+# emu/uitext.c: 221
 All values saved
 すべての値を保存しました
 
-# emu/inptport.c: 475
+# emu/inptport.c: 476
 Allow Continue
 コンティニューあり
 
-# emu/inptport.c: 484
+# emu/inptport.c: 485
 Alternate
 別版
 
@@ -658,7 +658,7 @@ Alternate
 Analog Controls
 アナログコントロール
 
-# mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 1282
+# mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 1305
 Arcade
 アーケード
 
@@ -666,7 +666,7 @@ Arcade
 Artwork
 アートワーク
 
-# emu/inptport.c: 438
+# emu/inptport.c: 439
 Asia
 アジア
 
@@ -678,19 +678,19 @@ Attempted to malloc zero bytes (%s:%d)
 Auto
 自動
 
-# emu/cheat.c: 7649
+# emu/cheat.c: 7657
 Auto Save Cheats
 チートの自動保存
 
-# emu/uitext.c: 126
+# emu/uitext.c: 128
 Autocenter Speed
 自動センタリング速度
 
-# mame/drivers/neogeo.c: 1195
+# mame/drivers/neogeo.c: 1218
 Autofire (in some games)
 連射 (対応ゲームのみ)
 
-# emu/uitext.c: 243
+# emu/uitext.c: 245
 Autofire Delay
 連射間隔
 
@@ -706,11 +706,11 @@ Automatic
 Average speed: %.2f%% (%d seconds)\n
 平均速度: %.2f%% (%d秒)\n
 
-# emu/cheat.c: 9056
+# emu/cheat.c: 9064
 BANK%.2d
 バンク%.2d
 
-# emu/cheat.c: 3549
+# emu/cheat.c: 3557
 BCD
 BCD
 
@@ -718,7 +718,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2675
+# emu/ui.c: 2695
 Beam Width
 ビーム幅
 
@@ -730,19 +730,19 @@ Beginner
 Bet
 賭ける
 
-# emu/inptport.c: 909
+# emu/inptport.c: 884
 Bill 1
 紙幣の確認 1
 
-# emu/cheat.c: 740 emu/uitext.c: 198
+# emu/cheat.c: 740 emu/uitext.c: 200
 Binary
 2進
 
-# emu/cheat.c: 5861
+# emu/cheat.c: 5869
 Bit
 ビット
 
-# emu/inptport.c: 383
+# emu/inptport.c: 384
 Bonus Life
 ボーナスライフ
 
@@ -754,7 +754,7 @@ Bookkeeping
 Bookkeeping Info
 インカム情報
 
-# emu/inptport.c: 1087
+# emu/inptport.c: 1062
 Break in Debugger
 デバッガで停止
 
@@ -770,11 +770,11 @@ Button 1
 Button Lamps
 ボタンランプ
 
-# emu/cheat.c: 3576
+# emu/cheat.c: 3584
 Byte Length
 バイト長
 
-# mame/drivers/neodrvr.c: 69 mame/drivers/neogeo.c: 1195
+# mame/drivers/neodrvr.c: 69 mame/drivers/neogeo.c: 1218
 COMM Setting
 COMMセッティング
 
@@ -798,7 +798,7 @@ CORE COMMANDS
 CORE CONFIGURATION OPTIONS
 コアの設定オプション
 
-# emu/emuopts.c: 157
+# emu/emuopts.c: 178
 CORE DEBUGGING OPTIONS
 コアのデバッグオプション
 
@@ -810,11 +810,11 @@ CORE FILENAME OPTIONS
 CORE INPUT OPTIONS
 コアの入力オプション
 
-# emu/emuopts.c: 235
+# emu/emuopts.c: 256
 CORE LANGUAGE OPTIONS
 コアの言語オプション
 
-# emu/emuopts.c: 169
+# emu/emuopts.c: 190
 CORE MISC OPTIONS
 コアのその他オプション
 
@@ -822,7 +822,7 @@ CORE MISC OPTIONS
 CORE OUTPUT DIRECTORY OPTIONS
 コアの出力ディレクトリオプション
 
-# emu/emuopts.c: 199
+# emu/emuopts.c: 220
 CORE PALETTE OPTIONS
 コアのパレットオプション
 
@@ -854,11 +854,11 @@ CORE STATE/PLAYBACK OPTIONS
 CORE VECTOR OPTIONS
 コアのベクタオプション
 
-# emu/cheat.c: 3607, 3626, 5993, 7141 emu/uitext.c: 41 
+# emu/cheat.c: 3615, 3634, 6001, 7149 emu/uitext.c: 41 
 CPU
 CPU
 
-# emu/cheat.c: 9069
+# emu/cheat.c: 9077
 CPU%.2d 
 CPU%.2d 
 
@@ -866,11 +866,11 @@ CPU%.2d
 CRC-32s
 CRC-32の値を表\示
 
-# emu/inptport.c: 424 
+# emu/inptport.c: 425 
 Cabinet
 筐体
 
-# mame/drivers/gstriker.c: 409 mame/drivers/segaxbd.c: 725, 766, 799, 841 mame/drivers/taito_f2.c: 2416, 2806
+# mame/drivers/gstriker.c: 409 mame/drivers/segaxbd.c: 726, 767, 800, 842 mame/drivers/taito_f2.c: 2416, 2806
 Cabinet Type
 筐体タイプ
 
@@ -882,27 +882,27 @@ Calibrate Joysticks
 Cancel
 キャンセル
 
-# emu/uitext.c: 150
+# emu/uitext.c: 152
 Card Number:
 カード番号:
 
-# emu/uitext.c: 246 mame/drivers/cischeat.c: 1591 mame/drivers/namcos22.c: 3897, 3971
+# emu/uitext.c: 248 mame/drivers/cischeat.c: 1591 mame/drivers/namcos22.c: 3897, 3971
 Center
 センタリング
 
-# emu/uitext.c: 109
+# emu/uitext.c: 111
 Cheat
 チート (ゲームの改造)
 
-# emu/cheat.c: 9773
+# emu/cheat.c: 9781
 Cheat Database reloaded
 チートデータを読み込みました
 
-# emu/uitext.c: 184
+# emu/uitext.c: 186
 Cheat conflict found: disabling
 重複するチートが見つかりました: 無効にします
 
-# emu/uitext.c: 174
+# emu/uitext.c: 176
 Cheats
 チート
 
@@ -910,11 +910,11 @@ Cheats
 Chi
 チー
 
-# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2697 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2662, 2715, 2843
+# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2697 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2687, 2740, 2893
 China
 中国
 
-# emu/cheat.c: 7638 mame/drivers/st0016.c: 436
+# emu/cheat.c: 7646 mame/drivers/st0016.c: 436
 Classic
 従来形式
 
@@ -926,67 +926,67 @@ Classic graphics and VFD
 Clear
 クリア
 
-# emu/inptport.c: 426 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
+# emu/inptport.c: 427 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
 Cocktail
 カクテル
 
-# emu/uitext.c: 181
+# emu/uitext.c: 183
 Code
 コード
 
-# emu/uitext.c: 146 mame/drivers/igs_blit.c: 1810
+# emu/uitext.c: 148 mame/drivers/igs_blit.c: 1810
 Coin
 コイン
 
-# emu/inptport.c: 901 mame/drivers/mexico86.c: 282 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 701, 770
+# emu/inptport.c: 876 mame/drivers/mexico86.c: 282 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 701, 770
 Coin 1
 コイン 1
 
-# emu/inptport.c: 902 mame/drivers/mexico86.c: 287 mame/drivers/midyunit.c: 417
+# emu/inptport.c: 877 mame/drivers/mexico86.c: 287 mame/drivers/midyunit.c: 417
 Coin 2
 コイン 2
 
-# emu/inptport.c: 903
+# emu/inptport.c: 878
 Coin 3
 コイン 3
 
-# emu/inptport.c: 904
+# emu/inptport.c: 879
 Coin 4
 コイン 4
 
-# emu/inptport.c: 905
+# emu/inptport.c: 880
 Coin 5
 コイン 5
 
-# emu/inptport.c: 906
+# emu/inptport.c: 881
 Coin 6
 コイン 6
 
-# emu/inptport.c: 907
+# emu/inptport.c: 882
 Coin 7
 コイン 7
 
-# emu/inptport.c: 908
+# emu/inptport.c: 883
 Coin 8
 コイン 8
 
-# emu/inptport.c: 387
+# emu/inptport.c: 388
 Coin A
 コイン A
 
-# emu/inptport.c: 388
+# emu/inptport.c: 389
 Coin B
 コイン B
 
-# mame/drivers/arabian.c: 313 mame/drivers/bking2.c: 325, 439 mame/drivers/marinedt.c: 361 mame/drivers/markham.c: 109 mame/drivers/mcr68.c: 737 mame/drivers/powerins.c: 216 mame/drivers/segas18.c: 791, 823 mame/drivers/system18.c: 1261
+# mame/drivers/arabian.c: 313 mame/drivers/bking2.c: 325, 439 mame/drivers/marinedt.c: 361 mame/drivers/markham.c: 109 mame/drivers/mcr68.c: 737 mame/drivers/powerins.c: 216 mame/drivers/segas18.c: 792, 824 mame/drivers/system18.c: 1261
 Coin Chutes
 コイン投入数
 
-# mame/drivers/neodrvr.c: 63 mame/drivers/neogeo.c: 1195
+# mame/drivers/neodrvr.c: 63 mame/drivers/neogeo.c: 1218
 Coin Chutes?
 コイン投入数?
 
-# mame/drivers/airbustr.c: 462 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 838 mame/drivers/bloodbro.c: 163, 253, 344 mame/drivers/cabal.c: 348 mame/drivers/exidy.c: 400 mame/drivers/galpanic.c: 543, 654, 723 mame/drivers/holeland.c: 121, 188 mame/drivers/m62.c: 636, 689, 739, 791, 843, 895, 947, 997, 1047, 1100, 1151, 1201 mame/drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 mame/drivers/m90.c: 220, 265, 323, 368, 443, 513, 585, 630 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/mcatadv.c: 341 mame/drivers/midzeus.c: 1222 mame/drivers/mpatrol.c: 175 mame/drivers/playch10.c: 650 mame/drivers/playmark.c: 450, 598, 695, 791 mame/drivers/powerbal.c: 263 mame/drivers/raiden.c: 158 mame/drivers/rallyx.c: 644 mame/drivers/shisen.c: 158 mame/drivers/sshangha.c: 245 mame/drivers/system18.c: 1326 mame/drivers/tagteam.c: 228 mame/drivers/taito_l.c: 1954 mame/drivers/travrusa.c: 157, 187 mame/drivers/troangel.c: 141 mame/drivers/vigilant.c: 268, 358 mame/drivers/welltris.c: 566 mame/drivers/wilytowr.c: 389 mame/drivers/yard.c: 133
+# mame/drivers/airbustr.c: 463 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 836 mame/drivers/bloodbro.c: 163, 253, 344 mame/drivers/cabal.c: 348 mame/drivers/exidy.c: 400 mame/drivers/galpanic.c: 547, 658, 727 mame/drivers/holeland.c: 121, 188 mame/drivers/m62.c: 636, 689, 739, 791, 843, 895, 947, 997, 1047, 1100, 1151, 1201 mame/drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 mame/drivers/m90.c: 227, 272, 330, 375, 450, 520, 592, 637 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/mcatadv.c: 341 mame/drivers/midzeus.c: 1222 mame/drivers/mpatrol.c: 175 mame/drivers/playch10.c: 650 mame/drivers/playmark.c: 450, 598, 695, 791 mame/drivers/powerbal.c: 263 mame/drivers/raiden.c: 158 mame/drivers/rallyx.c: 644 mame/drivers/shisen.c: 158 mame/drivers/sshangha.c: 245 mame/drivers/system18.c: 1326 mame/drivers/tagteam.c: 228 mame/drivers/taito_l.c: 1954 mame/drivers/travrusa.c: 157, 187 mame/drivers/troangel.c: 141 mame/drivers/vigilant.c: 268, 358 mame/drivers/welltris.c: 566 mame/drivers/wilytowr.c: 389 mame/drivers/yard.c: 133
 Coin Mode
 コインモード
 
@@ -998,7 +998,7 @@ Coin Slot
 Coin Slots
 コインスロット
 
-# emu/inptport.c: 386
+# emu/inptport.c: 387
 Coinage
 コイン投入数
 
@@ -1014,23 +1014,23 @@ Command List not available
 Comment
 コメント
 
-# mame/drivers/alpha68k.c: 1636 mame/drivers/armedf.c: 552 mame/drivers/bbusters.c: 456, 521 mame/drivers/boogwing.c: 179 mame/drivers/deco32.c: 1340 mame/drivers/gaelco2.c: 714, 1176 mame/drivers/gijoe.c: 310 mame/drivers/itech8.c: 1612 mame/drivers/konamigq.c: 492 mame/drivers/konamigx.c: 1744 mame/drivers/lethal.c: 542, 590 mame/drivers/lordgun.c: 347 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/marinedt.c: 362 mame/drivers/markham.c: 111 mame/drivers/mcr68.c: 739 mame/drivers/moo.c: 491, 560 mame/drivers/mystwarr.c: 1096, 1164, 1237 mame/drivers/segac2.c: 1064 mame/drivers/segas18.c: 902, 958, 1014, 1068, 1134, 1151, 1195 mame/drivers/snk.c: 2931, 2987, 3063, 3120 mame/drivers/sslam.c: 579 mame/drivers/suprslam.c: 232 mame/drivers/system18.c: 1327 mame/drivers/system24.c: 1322, 1398, 1469, 1539, 1599
+# mame/drivers/alpha68k.c: 1636 mame/drivers/armedf.c: 552 mame/drivers/bbusters.c: 456, 521 mame/drivers/boogwing.c: 179 mame/drivers/deco32.c: 1340 mame/drivers/gaelco2.c: 714, 1176 mame/drivers/gijoe.c: 310 mame/drivers/itech8.c: 1612 mame/drivers/konamigq.c: 492 mame/drivers/konamigx.c: 1744 mame/drivers/lethal.c: 542, 590 mame/drivers/lordgun.c: 347 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/marinedt.c: 362 mame/drivers/markham.c: 111 mame/drivers/mcr68.c: 739 mame/drivers/moo.c: 491, 560 mame/drivers/mystwarr.c: 1096, 1164, 1237 mame/drivers/segac2.c: 1064 mame/drivers/segas18.c: 903, 959, 1015, 1069, 1135, 1152, 1196 mame/drivers/snk.c: 2931, 2987, 3063, 3120 mame/drivers/sslam.c: 579 mame/drivers/suprslam.c: 232 mame/drivers/system18.c: 1327 mame/drivers/system24.c: 1322, 1398, 1469, 1539, 1599
 Common
 共通
 
-# emu/cheat.c: 4851, 4856, 4861, 4866, 5970
+# emu/cheat.c: 4859, 4864, 4869, 4874, 5978
 Comparison
 比較
 
-# emu/cheat.c: 5461
+# emu/cheat.c: 5469
 Comparison Option
 比較オプション
 
-# emu/inptport.c: 1088
+# emu/inptport.c: 1063
 Config Menu
 設定メニュー
 
-# emu/uitext.c: 168
+# emu/uitext.c: 170
 Configure Watchpoints
 ウォッチポイントの設定
 
@@ -1038,19 +1038,19 @@ Configure Watchpoints
 Continue
 継続
 
-# mame/drivers/toaplan2.c: 2177, 2510, 2584
+# mame/drivers/toaplan2.c: 2202, 2535, 2609
 Continue Mode
 コンティニューモード
 
-# emu/inptport.c: 469
+# emu/inptport.c: 470
 Continue Price
 コンティニュー額
 
-# emu/uitext.c: 165
+# emu/uitext.c: 167
 Continue Search
 検索を継続する
 
-# emu/inptport.c: 474
+# emu/inptport.c: 475
 Continues
 コンティニュー
 
@@ -1066,17 +1066,21 @@ Control Panel
 Control Type
 コントロールの種類
 
-# emu/inptport.c: 470
+# emu/inptport.c: 471
 Controller
 コントローラー
 
-# emu/inptport.c: 465 mame/drivers/fantland.c: 583
+# emu/inptport.c: 466 mame/drivers/fantland.c: 583
 Controls
 コントロール
 
-# emu/cheat.c: 3567
+# emu/cheat.c: 3575
 Copy Previous Value
 前回の値をコピー
+
+# emu/uimenu.c: 3153
+Copyright 2007, Nicola Salmoria
+Copyright 2007, Nicola Salmoria
 
 # emu/config.c: 136, 140
 Could not load controller file %s.cfg
@@ -1086,19 +1090,19 @@ Could not load controller file %s.cfg
 Could not read MAME save file header
 MAME保存ファイルのヘッダが読み込めません
 
-# mame/drivers/aerofgt.c: 1056, 1143 mame/drivers/bbusters.c: 568 mame/drivers/bwing.c: 292 mame/drivers/cischeat.c: 1193 mame/drivers/crshrace.c: 381, 537 mame/drivers/ddenlovr.c: 4592 mame/drivers/f1gp.c: 307, 412 mame/drivers/kaneko16.c: 1201, 1297 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 249, 712 mame/drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 mame/drivers/seta.c: 3469, 3794, 4116, 4285 mame/drivers/ssv.c: 2954 mame/drivers/st0016.c: 494 mame/drivers/stv.c: 2233 mame/drivers/suprslam.c: 274 mame/drivers/tail2nos.c: 207 mame/drivers/taotaido.c: 282
+# mame/drivers/aerofgt.c: 1056, 1143 mame/drivers/bbusters.c: 568 mame/drivers/bwing.c: 292 mame/drivers/cischeat.c: 1193 mame/drivers/crshrace.c: 381, 537 mame/drivers/ddenlovr.c: 4592 mame/drivers/f1gp.c: 307, 412 mame/drivers/kaneko16.c: 1017, 1113 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 249, 712 mame/drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 mame/drivers/seta.c: 3469, 3794, 4116, 4285 mame/drivers/ssv.c: 2954 mame/drivers/st0016.c: 494 mame/drivers/stv.c: 2233 mame/drivers/suprslam.c: 274 mame/drivers/tail2nos.c: 207 mame/drivers/taotaido.c: 282
 Country
 地域
 
-# emu/uitext.c: 153
+# emu/uitext.c: 155
 Create New Card
 新しいカードを作成
 
-# emu/uimenu.c: 1476
+# emu/uimenu.c: 1546
 Crop to Screen
 画面外をカット
 
-# emu/cheat.c: 5837
+# emu/cheat.c: 5845
 Current Data
 現在のデータ
 
@@ -1118,19 +1122,19 @@ DIAL
 DOUBLEJOY16WAY:  %4d\n
 16方向デュアルスティック:  %4d\n
 
-# emu/cheat.c: 3512
+# emu/cheat.c: 3520
 Data
 データ
 
-# emu/cheat.c: 7200
+# emu/cheat.c: 7208
 Data Shift
 データシフト
 
-# emu/cheat.c: 7658 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
+# emu/cheat.c: 7666 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
 Debug
 デバッグ
 
-# emu/cheat.c: 739 emu/uitext.c: 197
+# emu/cheat.c: 739 emu/uitext.c: 199
 Decimal
 10進
 
@@ -1138,7 +1142,7 @@ Decimal
 Decoding (%d%%)
 デコード中 (%d%%)
 
-# emu/uitext.c: 224
+# emu/uitext.c: 226
 Decoding Graphics
 グラフィックのデコード中
 
@@ -1146,95 +1150,95 @@ Decoding Graphics
 Decrypting %d%%
 暗号解除中 %d%%
 
-# mame/drivers/asuka.c: 707, 749, 791 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 301 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
+# mame/drivers/asuka.c: 705, 747, 789 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 301 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
 Default
 デフォルト
 
-# emu/uitext.c: 206
+# emu/uitext.c: 208
 Default Search Speed
 標準の検索速度
 
-# emu/cheat.c: 3274
+# emu/cheat.c: 3282
 Delay
 ディレイ
 
-# emu/inptport.c: 1135
+# emu/inptport.c: 1110
 Delete Cheat
 チート削除
 
-# emu/inptport.c: 385
+# emu/inptport.c: 386
 Demo Sounds
 デモサウンド
 
-# emu/uitext.c: 179 
+# emu/uitext.c: 181 
 Description
 説明
 
-# emu/inptport.c: 985 mame/drivers/ssv.c: 2776 
+# emu/inptport.c: 960 mame/drivers/ssv.c: 2776 
 Dial
 ダイアル
 
-# emu/inptport.c: 986
+# emu/inptport.c: 961
 Dial 2
 ダイアル 2
 
-# emu/inptport.c: 987
+# emu/inptport.c: 962
 Dial 3
 ダイアル 3
 
-# emu/inptport.c: 988
+# emu/inptport.c: 963
 Dial 4
 ダイアル 4
 
-# emu/inptport.c: 989
+# emu/inptport.c: 964
 Dial 5
 ダイアル 5
 
-# emu/inptport.c: 990
+# emu/inptport.c: 965
 Dial 6
 ダイアル 6
 
-# emu/inptport.c: 991
+# emu/inptport.c: 966
 Dial 7
 ダイアル 7
 
-# emu/inptport.c: 992
+# emu/inptport.c: 967
 Dial 8
 ダイアル 8
 
-# emu/inptport.c: 994
+# emu/inptport.c: 969
 Dial V
 ダイアル V
 
-# emu/inptport.c: 995
+# emu/inptport.c: 970
 Dial V 2
 ダイアル V 2
 
-# emu/inptport.c: 996
+# emu/inptport.c: 971
 Dial V 3
 ダイアル V 3
 
-# emu/inptport.c: 997
+# emu/inptport.c: 972
 Dial V 4
 ダイアル V 4
 
-# emu/inptport.c: 998
+# emu/inptport.c: 973
 Dial V 5
 ダイアル V 5
 
-# emu/inptport.c: 999
+# emu/inptport.c: 974
 Dial V 6
 ダイアル V 6
 
-# emu/inptport.c: 1000
+# emu/inptport.c: 975
 Dial V 7
 ダイアル V 7
 
-# emu/inptport.c: 1001
+# emu/inptport.c: 976
 Dial V 8
 ダイアル V 8
 
-# emu/inptport.c: 384 mame/drivers/pktgaldx.c: 251
+# emu/inptport.c: 385 mame/drivers/pktgaldx.c: 251
 Difficulty
 難易度
 
@@ -1246,7 +1250,7 @@ Difficulty 1
 Difficulty 2
 難易度 2
 
-# emu/uitext.c: 125
+# emu/uitext.c: 127
 Digital Speed
 デジタル速度
 
@@ -1258,15 +1262,15 @@ Dip Switches
 Disable All Coins
 すべてのコインを無効
 
-# emu/uitext.c: 173 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 336, 414 mame/drivers/metro.c: 2384 mame/drivers/midvunit.c: 831 mame/drivers/mpu4.c: 1938, 1941, 1944, 1947, 2061, 2064, 2067, 2070, 2185, 2188, 2191, 2194, 2307, 2310, 2313, 2316 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1642, 1739, 1827 mame/drivers/pacman.c: 1233, 1295 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2413 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
+# emu/uitext.c: 175 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 336, 414 mame/drivers/metro.c: 2384 mame/drivers/midvunit.c: 831 mame/drivers/mpu4.c: 1938, 1941, 1944, 1947, 2061, 2064, 2067, 2070, 2185, 2188, 2191, 2194, 2307, 2310, 2313, 2316 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1642, 1739, 1827 mame/drivers/pacman.c: 1233, 1295 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2414 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
 Disabled
 無効
 
-# emu/cheat.c: 7162 emu/uitext.c: 189
+# emu/cheat.c: 7170 emu/uitext.c: 191
 Display Type
 表\示形式
 
-# emu/cheat.c: 6005
+# emu/cheat.c: 6013
 Do Search
 検索実行
 
@@ -1274,7 +1278,7 @@ Do Search
 Domestic
 国内
 
-# emu/inptport.c: 918
+# emu/inptport.c: 893
 Door Interlock
 ドア連動
 
@@ -1282,7 +1286,7 @@ Door Interlock
 Double Up
 ダブルアップ
 
-# emu/uitext.c: 233
+# emu/uitext.c: 235
 Driver Configuration
 ドライバ設定
 
@@ -1290,7 +1294,7 @@ Driver Configuration
 Driverinfo not available
 ドライバ情報が見つかりません
 
-# emu/inptport.c: 466
+# emu/inptport.c: 467
 Dual
 デュアル
 
@@ -1326,83 +1330,83 @@ EEPROM
 ERROR: required files are missing, the game cannot be run.
 エラー: 必要なファイルがありません。ゲームは実行できません。
 
-# emu/audit.c: 315
+# emu/audit.c: 312
 EXPECTED: %s\n
 正常な物: %s\n
 
-# emu/inptport.c: 450
+# emu/inptport.c: 451
 Easier
 より簡単
 
-# emu/inptport.c: 449
+# emu/inptport.c: 450
 Easiest
 最も簡単
 
-# emu/inptport.c: 451 mame/drivers/yunsun16.c: 430
+# emu/inptport.c: 452 mame/drivers/yunsun16.c: 430
 Easy
 簡単
 
-# emu/inptport.c: 1138
+# emu/inptport.c: 1113
 Edit Cheat
 チート編集
 
-# emu/uitext.c: 152
+# emu/uitext.c: 154
 Eject Current Card
 現在のカードを取り出し
 
-# emu/cheat.c: 7150
+# emu/cheat.c: 7158
 Element Size
 要素サイズ
 
-# emu/cheat.c: 7181
+# emu/cheat.c: 7189
 Elements Per Line
 1行あたりの要素数
 
-# emu/uitext.c: 162
+# emu/uitext.c: 164
 Enable/Disable a Cheat
 チートを有効/無効にする
 
-# emu/inptport.c: 3142
+# emu/inptport.c: 3139
 End of playback
 再生終了
 
-# emu/inptport.c: 3145
+# emu/inptport.c: 3142
 End of playback - %i frames - Average speed %f%%
 再生終了 - %i フレーム - 平均速度 %f%%
 
-# emu/cheat.c: 3585
+# emu/cheat.c: 3593
 Endianness
 バイトの並び順
 
-# emu/cheat.c: 5455
+# emu/cheat.c: 5463
 Energy (Less or Greater)
 エネルギー (増減)
 
-# emu/uitext.c: 203
+# emu/uitext.c: 205
 Energy (greater or less)
 エネルギー (値の大小)
 
-# mame/drivers/kaneko16.c: 1202, 1298 mame/drivers/nmk16.c: 2695
+# mame/drivers/kaneko16.c: 1018, 1114 mame/drivers/nmk16.c: 2695
 England
 イギリス
 
-# emu/inptport.c: 442 mame/drivers/snowbros.c: 956
+# emu/inptport.c: 443 mame/drivers/snowbros.c: 961
 English
 英語
 
-# emu/cheat.c: 4852, 5308, 5847
+# emu/cheat.c: 4860, 5316, 5855
 Equal
 等しい
 
-# mame/drivers/segaybd.c: 862 
+# mame/drivers/segaybd.c: 864 
 Error
 エラー
 
-# emu/uitext.c: 158
+# emu/uitext.c: 160
 Error creating memory card
 メモリーカード作成エラー
 
-# emu/uitext.c: 154
+# emu/uitext.c: 156
 Error loading memory card
 メモリーカード読み込みエラー
 
@@ -1410,19 +1414,19 @@ Error loading memory card
 Error: 
 エラー: 
 
-# emu/mame.c: 1801, 1805
+# emu/mame.c: 1860, 1864
 Error: Failed to load state
 エラー: ステートの読み込みが失敗しました
 
-# emu/mame.c: 1723
+# emu/mame.c: 1782
 Error: Failed to save state
 エラー: ステートの保存が失敗しました
 
-# emu/mame.c: 1686
+# emu/mame.c: 1745
 Error: Unable to save state due to illegal registrations. See error.log for details.
 エラー: 不正な登録のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
-# emu/ui.c: 1674
+# emu/ui.c: 1694
 Error: illegal caption file
 エラー: 不正なキャプションファイルです
 
@@ -1434,7 +1438,7 @@ Error: オプション「%s」には引数が必要です\n
 Error: unknown option: %s\n
 Error: オプション「%s」はありません\n
 
-# emu/inptport.c: 437
+# emu/inptport.c: 438
 Europe
 ヨーロッパ
 
@@ -1442,7 +1446,7 @@ Europe
 Expert
 エキスパート
 
-# emu/inptport.c: 1333
+# emu/inptport.c: 1329
 Extended INP file info:\n
 拡張再生ファイル情報:\n
 
@@ -1454,23 +1458,27 @@ FRONTEND COMMANDS
 Failed to allocate %d bytes (%s:%d)
 %dバイトのmallocが失敗しました(%s:%d)
 
-# emu/inptport.c: 1303
+# emu/inptport.c: 1299
 Failed to open file for playback
 再生ファイルが読み込めません
 
-# emu/inptport.c: 1383
+# emu/inptport.c: 1379
 Failed to open file for recording
 入力を保存するファイルが作成できません
 
-# emu/cheat.c: 6326 emu/uitext.c: 207 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1570, 1624 mame/drivers/amidar.c: 286 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 727 mame/drivers/cps1.c: 1278, 1581 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/gameplan.c: 585, 1036 mame/drivers/jcross.c: 189 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 620, 671, 722, 772, 824, 876, 930, 1030, 1083 mame/drivers/mcr.c: 1133 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2631, 2937, 3235, 3534 mame/drivers/ninjaw.c: 532 mame/drivers/nmg5.c: 434, 494, 587, 594, 629, 634 mame/drivers/nmk16.c: 2769 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 244 mame/drivers/segas16a.c: 1452 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 756 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2577 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1772 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2383, 2452 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 252, 307, 348 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 180 mame/drivers/warriorb.c: 345 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
+# emu/cheat.c: 6334 emu/uitext.c: 209 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1570, 1624 mame/drivers/amidar.c: 286 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 729 mame/drivers/cps1.c: 1278, 1581 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/gameplan.c: 585, 1036 mame/drivers/jcross.c: 189 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 620, 671, 722, 772, 824, 876, 930, 1030, 1083 mame/drivers/mcr.c: 1133 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2631, 2937, 3235, 3534 mame/drivers/ninjaw.c: 532 mame/drivers/nmg5.c: 434, 494, 587, 594, 629, 634 mame/drivers/nmk16.c: 2769 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 244 mame/drivers/segas16a.c: 1452 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 761 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2577 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1772 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2383, 2452 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 252, 307, 348 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 180 mame/drivers/warriorb.c: 345 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
 Fast
 速い
 
-# emu/mamecore.h: 175
+# emu/inptport.c: 1071
+Fast Forward
+早送り
+
+# emu/mamecore.h: 172
 Fatal error: %s (%s:%d)
 致命的なエラー: %s (%s:%d)
 
-# emu/mamecore.h: 172
+# emu/mamecore.h: 169
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
@@ -1478,19 +1486,19 @@ Fatal error: %s\nCaused by assert: %s:%d: %s
 First Bonus
 ボーナス初回
 
-# emu/cheat.c: 5315, 5839
+# emu/cheat.c: 5323, 5847
 First Data
 最初のデータ
 
-# emu/inptport.c: 427
+# emu/inptport.c: 428
 Flip Screen
 画面反転
 
-# emu/uitext.c: 230
+# emu/uitext.c: 232
 Flip X
 X軸反転
 
-# emu/uitext.c: 231 mame/drivers/midzeus.c: 1098
+# emu/uitext.c: 233 mame/drivers/midzeus.c: 1098
 Flip Y
 Y軸反転
 
@@ -1502,11 +1510,11 @@ Force Range
 Foreign
 海外
 
-# emu/inptport.c: 1093
+# emu/inptport.c: 1068
 Frameskip Dec
 フレームスキップ数減少
 
-# emu/inptport.c: 1094
+# emu/inptport.c: 1069
 Frameskip Inc
 フレームスキップ数増加
 
@@ -1514,15 +1522,15 @@ Frameskip Inc
 Free
 フリー
 
-# emu/inptport.c: 423
+# emu/inptport.c: 424
 Free Play
 フリープレイ
 
-# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1082 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 491 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 227, 253 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1245, 1676 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 286 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 525 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 408 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 322, 476 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 1002, 1135, 1266, 1327, 1395 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 413 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 201 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 785, 799, 872, 882, 904, 914 mame/drivers/namcos12.c: 1410 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neodrvr.c: 78 mame/drivers/neogeo.c: 1195 mame/drivers/nycaptor.c: 722 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 419 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 431 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 606, 744 mame/drivers/suprnova.c: 553, 628 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 409, 518 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
+# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1082 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 492 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 229, 255 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1245, 1676 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 286 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 525 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 408 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 322, 476 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 1002, 1135, 1266, 1327, 1395 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 413 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 617 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 201 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 785, 799, 872, 882, 904, 914 mame/drivers/namcos12.c: 1410 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neodrvr.c: 78 mame/drivers/neogeo.c: 1218 mame/drivers/nycaptor.c: 722 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 419 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 431 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 606, 744 mame/drivers/suprnova.c: 553, 628 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 409, 518 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
 Freeze
 動きを止める
 
-# emu/inptport.c: 445 emu/uilang.c: 21 
+# emu/inptport.c: 446 emu/uilang.c: 21 
 French
 フランス語
 
@@ -1530,7 +1538,7 @@ French
 GAME: 
 ゲーム: 
 
-# mame/drivers/bublbobl.c: 604 mame/drivers/cps1.c: 730, 812, 1020, 1104, 1139, 1225, 1439, 1529, 1610, 1806, 1901, 1991, 2073, 2156, 2250, 2346, 2437, 2540, 2648, 2767, 2876, 2968, 3061, 3579, 3679, 3783, 3882, 4042, 4155 mame/drivers/fcrash.c: 299 mame/drivers/ksys573.c: 2802 mame/drivers/macs.c: 244 mame/drivers/missile.c: 818 mame/drivers/pacman.c: 1403 mame/drivers/turbo.c: 898 mame/drivers/vegas.c: 2024
+# mame/drivers/bublbobl.c: 604 mame/drivers/cps1.c: 730, 812, 1020, 1104, 1139, 1225, 1439, 1529, 1610, 1806, 1901, 1991, 2073, 2156, 2250, 2346, 2437, 2540, 2648, 2767, 2876, 2968, 3061, 3579, 3679, 3783, 3882, 4042, 4155 mame/drivers/fcrash.c: 299 mame/drivers/ksys573.c: 2804 mame/drivers/macs.c: 244 mame/drivers/missile.c: 822 mame/drivers/pacman.c: 1403 mame/drivers/turbo.c: 898 mame/drivers/vegas.c: 2025
 Game
 ゲーム名
 
@@ -1538,11 +1546,11 @@ Game
 Game Documents
 ゲームのドキュメント
 
-# emu/uitext.c: 118
+# emu/uitext.c: 120
 Game Driverinfo
 ゲームのドライバ情報
 
-# emu/uitext.c: 113
+# emu/uitext.c: 115
 Game History
 ゲームの歴史
 
@@ -1550,19 +1558,19 @@ Game History
 Game Information
 ゲーム情報
 
-# emu/uitext.c: 117
+# emu/uitext.c: 119
 Game Mameinfo
 ゲームのMAME情報
 
-# emu/inptport.c: 2627 mame/drivers/neogeo.c: 1282
+# emu/inptport.c: 2624 mame/drivers/neogeo.c: 1305
 Game Slots
 ゲームスロット
 
-# emu/uitext.c: 115
+# emu/uitext.c: 117
 Game Story
 ゲームのストーリー
 
-# emu/inptport.c: 468
+# emu/inptport.c: 469
 Game Time
 ゲーム時間
 
@@ -1574,31 +1582,39 @@ Gamma
 General
 一般
 
-# emu/uitext.c: 169
+# emu/uitext.c: 171
 General Help
 全般のヘルプ
 
-# emu/inptport.c: 444 emu/uilang.c: 22 
+# emu/rendfont.c: 866
+Generating cached BDF font...\n
+BDFフォントのキャッシュを生成中...\n
+
+# emu/inptport.c: 445 emu/uilang.c: 22 
 German
 ドイツ語
 
-# mame/drivers/kaneko16.c: 1204, 1300 mame/drivers/midzeus.c: 1203 mame/drivers/nmk16.c: 2690
+# mame/drivers/kaneko16.c: 1020, 1116 mame/drivers/midzeus.c: 1203 mame/drivers/nmk16.c: 2690
 Germany
 ドイツ
+
+# emu/uimenu.c: 3145
+Gfx: %s, Sound: %s
+グラフィック: %s サウンド: %s
 
 # mame/drivers/royalmah.c: 1551 
 Gray
 グレー
 
-# emu/cheat.c: 4867, 5301, 5846
+# emu/cheat.c: 4875, 5309, 5854
 Greater
 大きい
 
-# emu/cheat.c: 5849
+# emu/cheat.c: 5857
 Greater Or Equal
 以上
 
-# emu/cheat.c: 5303
+# emu/cheat.c: 5311
 Greater or Equal
 以上
 
@@ -1610,15 +1626,15 @@ RGBダイレクト  : %3d  + %3d\n
 HIGHLIGHTS     : %3d  + %3d\n
 ハイライト使用 : %3d  + %3d\n
 
-# emu/inptport.c: 454
+# emu/inptport.c: 455
 Hard
 困難
 
-# emu/inptport.c: 455
+# emu/inptport.c: 456
 Harder
 より困難
 
-# emu/inptport.c: 456
+# emu/inptport.c: 457
 Hardest
 最も困難
 
@@ -1626,27 +1642,27 @@ Hardest
 Help
 ヘルプ
 
-# emu/uitext.c: 185
+# emu/uitext.c: 187
 Help not available yet
 ヘルプはまだありません
 
-# emu/cheat.c: 738 emu/uitext.c: 196
+# emu/cheat.c: 738 emu/uitext.c: 198
 Hex
 16進
 
-# emu/uimenu.c: 1456
+# emu/uimenu.c: 1526
 Hide Backdrops
 バックドロップを隠す
 
-# emu/uimenu.c: 1468
+# emu/uimenu.c: 1538
 Hide Bezels
 ベゼルを隠す
 
-# emu/uimenu.c: 1462
+# emu/uimenu.c: 1532
 Hide Overlays
 オーバレイを隠す
 
-# emu/inptport.c: 460
+# emu/inptport.c: 461
 High
 高い
 
@@ -1654,15 +1670,15 @@ High
 High Scores
 ハイスコア
 
-# emu/inptport.c: 461
+# emu/inptport.c: 462
 Higher
 より高い
 
-# emu/inptport.c: 462
+# emu/inptport.c: 463
 Highest
 最も高い
 
-# emu/inptport.c: 440
+# emu/inptport.c: 441
 Hispanic
 ラテン
 
@@ -1670,23 +1686,23 @@ Hispanic
 History not available
 ヒストリーが見つかりません
 
-# mame/drivers/neogeo.c: 1282
+# mame/drivers/neogeo.c: 1305
 Home
 家庭用
 
-# mame/drivers/aerofgt.c: 1147 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4764 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2696 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2047, 2212, 2226, 2274, 2426, 2488, 2550, 2620, 2664, 2717, 2868
+# mame/drivers/aerofgt.c: 1147 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4764 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2696 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2072, 2237, 2251, 2299, 2451, 2513, 2575, 2645, 2689, 2742
 Hong Kong
 香港
 
-# emu/ui.c: 2626
+# emu/ui.c: 2646
 Horiz position
 水平位置
 
-# emu/ui.c: 2592
+# emu/ui.c: 2612
 Horiz stretch
 水平拡大
 
-# mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 751, 896 mame/drivers/jack.c: 684 mame/drivers/thepit.c: 527 
+# mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 751, 896 mame/drivers/jack.c: 689 mame/drivers/thepit.c: 527 
 Horizontal
 水平
 
@@ -1710,11 +1726,11 @@ IMPERFECT GRAPHICS : %3d  %3d\n
 IMPERFECT SOUND    : %3d  %3d\n
 音の再現が不完全   : %3d  %3d\n
 
-# emu/audit.c: 313
+# emu/audit.c: 310
 INCORRECT CHECKSUM:\n
 チェックサムの異常:\n
 
-# emu/audit.c: 322
+# emu/audit.c: 319
 INCORRECT LENGTH: %d bytes\n
 ファイルサイズの異常: %d バイト\n
 
@@ -1726,7 +1742,7 @@ INVALID
 Ignore Decrement
 減少無視
 
-# emu/cheat.c: 3284
+# emu/cheat.c: 3292
 Ignore Decrement By
 この値まで減少を無視
 
@@ -1750,23 +1766,27 @@ Illegal integer value for %s; keeping value of %s\n
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
-# emu/clifront.c: 526 emu/mame.c: 1292 emu/ui.c: 352 
+# emu/clifront.c: 525 emu/mame.c: 1353 emu/ui.c: 352 
 Illegal value for %s = %s\n
 不正な値 %s = %s\n
 
-# emu/uitext.c: 236 
+# emu/uitext.c: 238 
 Image Enhancement
 画像イメージの向上
 
-# emu/cheat.c: 5851
+# emu/uimenu.c: 3134, 3141 
+Imperfect
+不完全
+
+# emu/cheat.c: 5859
 Increased By Value
 値によって増加
 
-# emu/inptport.c: 477
+# emu/inptport.c: 478
 Infinite
 無制限
 
-# emu/cheat.c: 572 mame/drivers/calorie.c: 307 mame/drivers/cinemat.c: 923 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3184 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 407 mame/drivers/jack.c: 652 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 282 mame/drivers/vicdual.c: 1673, 2078
+# emu/cheat.c: 572 mame/drivers/calorie.c: 307 mame/drivers/cinemat.c: 923 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3184 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 407 mame/drivers/jack.c: 657 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 282 mame/drivers/vicdual.c: 1681, 2089
 Infinite Lives
 ライフ無制限
 
@@ -1774,11 +1794,11 @@ Infinite Lives
 Infinite Time
 時間無制限
 
-# emu/cheat.c: 4875, 5415
+# emu/cheat.c: 4883, 5423
 Initialize Memory
 メモリを保存
 
-# emu/mame.c: 1532
+# emu/mame.c: 1592
 Initializing...
 初期化中...
 
@@ -1790,17 +1810,37 @@ Input (general)
 Input (this game)
 入力設定 (このゲーム)
 
-# emu/inptport.c: 1324, 1344
+# emu/inptport.c: 1320, 1340
 Input file is for game '%s', not for current game '%s'\n
 ゲーム「%s」の入力ファイルは選択されたゲーム「%s」の物ではありません\n
+
+# emu/input.c: 717
+Input: Adding %s #%d: %s\n
+Input: %s #%dを追加: %s\n
+
+# emu/inptport.c: 4052
+Input: Autoenabling %s due to presence of a %s\n
+Input: 自動的に%sを有効にしています。%sが存在します。\n
+
+# emu/input.c: 614
+Input: Changing default joystick map
+Input: デフォルトのジョイスティックマップを変更しています
+
+# emu/input.c: 565
+Input: Default joystick map
+Input: デフォルトのジョイスティックマップです
 
 # mame/drivers/funworld.c: 874, 1184 
 Insert
 挿入
 
-# emu/inptport.c: 434
+# emu/inptport.c: 435
 International
 インターナショナル
+
+# emu/inptport.c: 4041
+Invalid %s value %s; reverting to keyboard\n
+%sに不正な値%s; キーボードを元の状態に戻します\n
 
 # lib/util/options.c: 1099
 Invalid %s value (must be between %f and %f); keeping value of %s\n
@@ -1810,35 +1850,43 @@ Invalid %s value (must be between %f and %f); keeping value of %s\n
 Invalid %s value (must be between %i and %i); keeping value of %s\n
 「%s」は不正な値です(%iから%iまでの間でなければなりません)。値%sを保持します。\n
 
+# emu/uigfx.c: 1049 emu/video.c: 720
+Invalid bitmap format!
+ビットマップの形式が不正!
+
+# emu/input.c: 563
+Invalid joystick map: %s\n
+不正なジョイスティックマップ: %s\n
+
 # mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2921, 2938, 2989, 3006
 Inverted
 反転
 
-# emu/cheat.c: 574 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 236
+# emu/cheat.c: 574 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 237
 Invincibility
 無敵
 
-# mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 614, 688 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2074, 2139, 2196, 2260, 2299, 2407, 2467, 2529, 2603, 2649, 2702, 2972, 3088 mame/drivers/yard.c: 145
+# mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 619, 693 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2099, 2164, 2221, 2285, 2324, 2432, 2492, 2554, 2628, 2674, 2727, 2997, 3113 mame/drivers/yard.c: 145
 Invulnerability
 耐久力
 
-# emu/inptport.c: 446 emu/uilang.c: 23 
+# emu/inptport.c: 447 emu/uilang.c: 23 
 Italian
 イタリア語
 
-# mame/drivers/kaneko16.c: 1203, 1299 mame/drivers/midyunit.c: 784 mame/drivers/midzeus.c: 1207 
+# mame/drivers/kaneko16.c: 1019, 1115 mame/drivers/midyunit.c: 784 mame/drivers/midzeus.c: 1207 
 Italy
 イタリア
 
-# emu/inptport.c: 435 
+# emu/inptport.c: 436 
 Japan
 日本
 
-# emu/inptport.c: 443 emu/uilang.c: 24 
+# emu/inptport.c: 444 emu/uilang.c: 24 
 Japanese
 日本語
 
-# emu/inptport.c: 472 
+# emu/inptport.c: 473 
 Joystick
 ジョイスティック
 
@@ -1846,15 +1894,15 @@ Joystick
 Kan
 カン
 
-# emu/cheat.c: 3272
+# emu/cheat.c: 3280
 Keep
 保持
 
-# emu/inptport.c: 1084 mame/drivers/ddenlovr.c: 3770, 3997, 4985 mame/drivers/ltcasino.c: 561 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
+# emu/inptport.c: 1059 mame/drivers/ddenlovr.c: 3770, 3997, 4985 mame/drivers/ltcasino.c: 561 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
 Keyboard
 キーボード
 
-# mame/drivers/aerofgt.c: 1146 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2694 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2046, 2093, 2211, 2224, 2273, 2424, 2486, 2548, 2619
+# mame/drivers/aerofgt.c: 1146 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2694 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2071, 2118, 2236, 2249, 2298, 2449, 2511, 2573, 2644
 Korea
 韓国
 
@@ -1866,15 +1914,15 @@ LCD%d Pixel Aspect (%d:%d)
 LCD%d Standard (%d:%d)
 液晶%d 標準 (%d:%d)
 
-# emu/cheat.c: 5967
+# emu/cheat.c: 5975
 LHS
 LHS
 
-# emu/uitext.c: 191
+# emu/uitext.c: 193
 Label
 ラベル
 
-# emu/cheat.c: 7153 emu/uitext.c: 190
+# emu/cheat.c: 7161 emu/uitext.c: 192
 Label Type
 ラベルタイプ
 
@@ -1886,7 +1934,7 @@ Lamps
 Lamps and Timer
 ランプとタイマ
 
-# emu/inptport.c: 441 emu/uitext.c: 335 mame/drivers/snowbros.c: 1032
+# emu/inptport.c: 442 emu/uitext.c: 337 mame/drivers/snowbros.c: 1037
 Language
 言語
 
@@ -1894,27 +1942,27 @@ Language
 Left Half
 左半分
 
-# emu/cheat.c: 7146
+# emu/cheat.c: 7154
 Length
 長さ
 
-# emu/cheat.c: 4862, 5300, 5845 mame/drivers/cninja.c: 737 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 606 mame/drivers/drtomy.c: 208, 211 mame/drivers/nmg5.c: 463, 527, 530 mame/drivers/warriorb.c: 386
+# emu/cheat.c: 4870, 5308, 5853 mame/drivers/cninja.c: 739 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 606 mame/drivers/drtomy.c: 208, 211 mame/drivers/nmg5.c: 463, 527, 530 mame/drivers/warriorb.c: 386
 Less
 小さい
 
-# emu/cheat.c: 5848
+# emu/cheat.c: 5856
 Less Or Equal
 以下
 
-# emu/cheat.c: 5302
+# emu/cheat.c: 5310
 Less or Equal
 以下
 
-# emu/inptport.c: 476
+# emu/inptport.c: 477
 Level Select
 難易度選択
 
-# emu/inptport.c: 471
+# emu/inptport.c: 472
 Light Gun
 光線銃
 
@@ -1922,99 +1970,99 @@ Light Gun
 Lightgun
 光線銃
 
-# emu/inptport.c: 1048
+# emu/inptport.c: 1023
 Lightgun X
 光線銃 X
 
-# emu/inptport.c: 1049
+# emu/inptport.c: 1024
 Lightgun X 2
 光線銃 X 2
 
-# emu/inptport.c: 1050
+# emu/inptport.c: 1025
 Lightgun X 3
 光線銃 X 3
 
-# emu/inptport.c: 1051
+# emu/inptport.c: 1026
 Lightgun X 4
 光線銃 X 4
 
-# emu/inptport.c: 1052
+# emu/inptport.c: 1027
 Lightgun X 5
 光線銃 X 5
 
-# emu/inptport.c: 1053
+# emu/inptport.c: 1028
 Lightgun X 6
 光線銃 X 6
 
-# emu/inptport.c: 1054
+# emu/inptport.c: 1029
 Lightgun X 7
 光線銃 X 7
 
-# emu/inptport.c: 1055
+# emu/inptport.c: 1030
 Lightgun X 8
 光線銃 X 8
 
-# emu/inptport.c: 1057
+# emu/inptport.c: 1032
 Lightgun Y
 光線銃 Y
 
-# emu/inptport.c: 1058
+# emu/inptport.c: 1033
 Lightgun Y 2
 光線銃 Y 2
 
-# emu/inptport.c: 1059
+# emu/inptport.c: 1034
 Lightgun Y 3
 光線銃 Y 3
 
-# emu/inptport.c: 1060
+# emu/inptport.c: 1035
 Lightgun Y 4
 光線銃 Y 4
 
-# emu/inptport.c: 1061
+# emu/inptport.c: 1036
 Lightgun Y 5
 光線銃 Y 5
 
-# emu/inptport.c: 1062
+# emu/inptport.c: 1037
 Lightgun Y 6
 光線銃 Y 6
 
-# emu/inptport.c: 1063
+# emu/inptport.c: 1038
 Lightgun Y 7
 光線銃 Y 7
 
-# emu/inptport.c: 1064
+# emu/inptport.c: 1039
 Lightgun Y 8
 光線銃 Y 8
 
-# emu/cheat.c: 3206
+# emu/cheat.c: 3214
 Link Extension
 リンク拡張
 
-# emu/inptport.c: 382
+# emu/inptport.c: 383
 Lives
 ライフ
 
-# emu/uitext.c: 201
+# emu/uitext.c: 203
 Lives (or another value)
 ライフ (決まった値)
 
-# emu/cheat.c: 7655
+# emu/cheat.c: 7663
 Load Old Format Code
 旧形式コードの読込み
 
-# emu/uitext.c: 151
+# emu/uitext.c: 153
 Load Selected Card
 選択したカードの読み込み
 
-# emu/inptport.c: 1133
+# emu/inptport.c: 1108
 Load State
 プレイ状態の復帰
 
-# emu/ui.c: 2230
+# emu/ui.c: 2250
 Load cancelled
 読み込みを中止しました
 
-# emu/ui.c: 2261
+# emu/ui.c: 2281
 Load from position %c
 %c から読み込みました
 
@@ -2022,27 +2070,35 @@ Load from position %c
 Loading (%d%%)
 読み込み中 (%d%%)
 
+# emu/rendfont.c: 759
+Loading BDF font... (%d characters loaded)\n
+BDFフォントを読み込み中... (%d文字を読み込み)\n
+
 # emu/romload.c: 375
 Loading Complete
 読み込み完了
 
-# emu/cheat.c: 3593
+# emu/cheat.c: 3601
 Location
 位置
 
-# emu/inptport.c: 459
+# emu/inptport.c: 460
 Low
 低い
 
-# emu/clifront.c: 459
+# emu/uimenu.c: 3150
+M.A.M.E. %s
+M.A.M.E. %s
+
+# emu/clifront.c: 458
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
-# emu/uitext.c: 119
+# emu/uitext.c: 121
 MAME Statistics
 MAMEの統計データ
 
-# emu/mame.c: 189
+# emu/mame.c: 192
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
 MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\nし、ハードウェアが要求するROMイメージと呼ばれるソ\フトウェアがなければ動作しま\nせん。ROMは他の商用ソ\フトウェアと同様に著作物であるため、あなたが所持していな\nいアーケードマシンのROMを使用することは違法になります。言うまでもなくMAMEと一\n緒に配布してはいけません。ROMと一緒にMAMEを配布することは著作権の侵害であり、\n直ちにゲームメーカーに報告され、然るべき法的措置がとられるでしょう。\n
 
@@ -2050,7 +2106,7 @@ MAMEはエミュレータです: いくつかのアーケードマシンをほぼ忠実に再現します。しか\n
 MAMEInfo:\n
 MAME情報:\n
 
-# emu/inptport.c: 2626 mame/drivers/neogeo.c: 1282
+# emu/inptport.c: 2623 mame/drivers/neogeo.c: 1305
 Machine Mode
 マシンモード
 
@@ -2074,19 +2130,19 @@ Manufacturer
 Mapped Memory
 割り当て済みメモリ
 
-# emu/cheat.c: 3392
+# emu/cheat.c: 3400
 Mask
 マスク
 
-# emu/cheat.c: 3475
+# emu/cheat.c: 3483
 Match to Write
 一致したら書き込む
 
-# emu/uitext.c: 213
+# emu/uitext.c: 215
 Matches found
 一致する値が見つかりました
 
-# emu/uitext.c: 182 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 225 mame/drivers/travrusa.c: 90
+# emu/uitext.c: 184 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 225 mame/drivers/travrusa.c: 90
 Max
 最大
 
@@ -2094,127 +2150,131 @@ Max
 Max Players
 最大プレイヤー数
 
-# emu/cheat.c: 3425
+# emu/cheat.c: 3433
 Maximum Boundary
 最大境界
 
-# emu/cheat.c: 6327 emu/inptport.c: 453 emu/uitext.c: 208
+# emu/cheat.c: 6335 emu/inptport.c: 454 emu/uitext.c: 210
 Medium
 普通
 
-# emu/uitext.c: 110 
+# emu/uitext.c: 112 
 Memory Card
 メモリカード
 
-# emu/uitext.c: 157
+# emu/uitext.c: 159
 Memory card created
 メモリーカードを作成しました
 
-# emu/uitext.c: 156
+# emu/uitext.c: 158
 Memory card ejected
 メモリーカードを取り出しました
 
-# emu/uitext.c: 155
+# emu/uitext.c: 157
 Memory card loaded
 メモリーカードを読み込みました
 
-# emu/cheat.c: 7634 mame/drivers/tempest.c: 509
+# emu/cheat.c: 7642 mame/drivers/tempest.c: 509
 Minimum
 最小形式
 
-# emu/cheat.c: 3415
+# emu/cheat.c: 3423
 Minimum Boundary
 最小境界
 
-# emu/cheat.c: 3531
+# emu/cheat.c: 3539
 Minimum Displayed Value
 最小表\示値
 
-# emu/cheat.c: 3539
+# emu/cheat.c: 3547
 Minimum Value
 最小値
 
-# mame/drivers/astrocde.c: 768, 789 mame/drivers/jack.c: 683 mame/drivers/thepit.c: 525 mame/drivers/wldarrow.c: 189
+# mame/drivers/astrocde.c: 768, 789 mame/drivers/jack.c: 688 mame/drivers/thepit.c: 525 mame/drivers/wldarrow.c: 189
 Monitor
 モニタ
 
-# emu/inptport.c: 479 mame/drivers/tx1.c: 955, 959
+# emu/inptport.c: 480 mame/drivers/tx1.c: 955, 959
 Mono
 モノラル
 
-# emu/uitext.c: 176
+# emu/uitext.c: 178
 More Info
 補足説明
 
-# emu/uitext.c: 177
+# emu/uitext.c: 179
 More Info for
 補足説明:
 
-# emu/inptport.c: 1066
+# emu/input.c: 139 
+Mouse
+マウス
+
+# emu/inptport.c: 1041
 Mouse X
 マウス X
 
-# emu/inptport.c: 1067
+# emu/inptport.c: 1042
 Mouse X 2
 マウス X 2
 
-# emu/inptport.c: 1068
+# emu/inptport.c: 1043
 Mouse X 3
 マウス X 3
 
-# emu/inptport.c: 1069
+# emu/inptport.c: 1044
 Mouse X 4
 マウス X 4
 
-# emu/inptport.c: 1070
+# emu/inptport.c: 1045
 Mouse X 5
 マウス X 5
 
-# emu/inptport.c: 1071
+# emu/inptport.c: 1046
 Mouse X 6
 マウス X 6
 
-# emu/inptport.c: 1072
+# emu/inptport.c: 1047
 Mouse X 7
 マウス X 7
 
-# emu/inptport.c: 1073
+# emu/inptport.c: 1048
 Mouse X 8
 マウス X 8
 
-# emu/inptport.c: 1075
+# emu/inptport.c: 1050
 Mouse Y
 マウス Y
 
-# emu/inptport.c: 1076
+# emu/inptport.c: 1051
 Mouse Y 2
 マウス Y 2
 
-# emu/inptport.c: 1077
+# emu/inptport.c: 1052
 Mouse Y 3
 マウス Y 3
 
-# emu/inptport.c: 1078
+# emu/inptport.c: 1053
 Mouse Y 4
 マウス Y 4
 
-# emu/inptport.c: 1079
+# emu/inptport.c: 1054
 Mouse Y 5
 マウス Y 5
 
-# emu/inptport.c: 1080
+# emu/inptport.c: 1055
 Mouse Y 6
 マウス Y 6
 
-# emu/inptport.c: 1081
+# emu/inptport.c: 1056
 Mouse Y 7
 マウス Y 7
 
-# emu/inptport.c: 1082
+# emu/inptport.c: 1057
 Mouse Y 8
 マウス Y 8
 
-# emu/uimenu.c: 1401
+# emu/uimenu.c: 1471
 Move User Interface
 ユーザインターフェイスを移動
 
@@ -2222,7 +2282,7 @@ Move User Interface
 NA
 なし
 
-# emu/audit.c: 299
+# emu/audit.c: 296
 NEEDS REDUMP\n
 再ダンプが必要です\n
 
@@ -2234,11 +2294,11 @@ NO COCKTAIL        : %3d  %3d\n
 NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 正常なダンプが不明 : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
-# emu/audit.c: 304
+# emu/audit.c: 301
 NO GOOD DUMP KNOWN\n
 正常なダンプは不明です\n
 
-# emu/clifront.c: 1314 tools/romcmp.c: 449
+# emu/clifront.c: 1313 tools/romcmp.c: 449
 NO MATCH\n
 マッチしません\n
 
@@ -2250,47 +2310,47 @@ NO SOUND           : %3d  %3d\n
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
-# emu/clifront.c: 1308
+# emu/clifront.c: 1307
 NOT A ROM\n
 ROMではありません\n
 
-# emu/audit.c: 344
+# emu/audit.c: 341
 NOT FOUND (BIOS)\n
 見つかりません (BIOS)\n
 
-# emu/audit.c: 340
+# emu/audit.c: 337
 NOT FOUND (shared with parent)\n
 見つかりません (親と共有)\n
 
-# emu/audit.c: 330
+# emu/audit.c: 327
 NOT FOUND - NO GOOD DUMP KNOWN\n
 見つかりません (正常なダンプは不明です)\n
 
-# emu/audit.c: 335
+# emu/audit.c: 332
 NOT FOUND BUT OPTIONAL\n
 見つかりませんがオプションです\n
 
-# emu/audit.c: 326
+# emu/audit.c: 323
 NOT FOUND\n
 見つかりません\n
 
-# emu/cheat.c: 3136, 3151, 5996 emu/uitext.c: 178 
+# emu/cheat.c: 3136, 3151, 6004 emu/uitext.c: 180 
 Name
 名前
 
-# emu/clifront.c: 643
+# emu/clifront.c: 642
 Name:     Description:\n
 名前:     詳細:\n
 
-# emu/clifront.c: 766
+# emu/clifront.c: 765
 Name:    Clone of:\n
 名前:    クローン:\n
 
-# emu/cheat.c: 5852
+# emu/cheat.c: 5860
 Near To
 近い
 
-# mame/drivers/neodrvr.c: 295 mame/drivers/neogeo.c: 1245
+# mame/drivers/neodrvr.c: 295 mame/drivers/neogeo.c: 1268
 Next Game
 次のゲーム
 
@@ -2298,19 +2358,19 @@ Next Game
 Nihongo
 日本語
 
-# emu/inptport.c: 380 
+# emu/inptport.c: 381 
 No
 いいえ
 
-# emu/uitext.c: 215
+# emu/uitext.c: 217
 No previous values saved
 前回の値が保存されていません
 
-# emu/cheat.c: 731, 2905 emu/inptport.c: 485 emu/input.c: 1065, 1398 emu/sound/custom.c: 84 emu/uimenu.c: 2142 
+# emu/cheat.c: 731, 2905 emu/inptport.c: 486 emu/inputseq.c: 433 emu/sound/custom.c: 84 emu/uimenu.c: 2376 
 None
 なし
 
-# emu/cheat.c: 2913, 2928 emu/inptport.c: 452 mame/drivers/metro.c: 2774 mame/drivers/yunsun16.c: 430
+# emu/cheat.c: 2913, 2928 emu/inptport.c: 453 mame/drivers/metro.c: 2774 mame/drivers/yunsun16.c: 430
 Normal
 標準
 
@@ -2318,7 +2378,7 @@ Normal
 Normal/Delay
 標準/ディレイ
 
-# emu/cheat.c: 4857, 5309, 5850
+# emu/cheat.c: 4865, 5317, 5858
 Not Equal
 異なる
 
@@ -2326,11 +2386,11 @@ Not Equal
 Null
 なし
 
-# emu/uitext.c: 188
+# emu/uitext.c: 190
 Number of bytes
 バイト数
 
-# emu/uitext.c: 38 
+# emu/uimenu.c: 3136, 3143 emu/uitext.c: 38 
 OK
 OK
 
@@ -2338,23 +2398,23 @@ OK
 OPTIONAL %s NOT FOUND\n
 オプションの%s 見つかりません\n
 
-# emu/inptport.c: 378 emu/uitext.c: 36, 240
+# emu/inptport.c: 379 emu/uitext.c: 36, 242
 Off
 OFF
 
-# emu/inptport.c: 379 emu/uitext.c: 35, 241
+# emu/inptport.c: 380 emu/uitext.c: 35, 243
 On
 ON
 
-# emu/inptport.c: 1086
+# emu/inptport.c: 1061
 On Screen Display
 オンスクリーンディスプレイ
 
-# emu/cheat.c: 3251 emu/sound/discrete.h: 3796
+# emu/cheat.c: 3259 emu/sound/discrete.h: 3835
 One Shot
 一回のみ
 
-# emu/uitext.c: 220
+# emu/uitext.c: 222
 One match found - added to list
 一致する値が見つかりました - リストに追加します
 
@@ -2362,11 +2422,11 @@ One match found - added to list
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
 このゲーム用のROMまたはCHDが正しくありません。このゲームは正しく実行できないかも知れません。
 
-# emu/cheat.c: 3358
+# emu/cheat.c: 3366
 Operation
 操作
 
-# emu/uitext.c: 170 mame/drivers/fgoal.c: 297 
+# emu/uitext.c: 172 mame/drivers/fgoal.c: 297 
 Options
 オプション
 
@@ -2374,13 +2434,29 @@ Options
 Orientation
 画面の向き
 
-# emu/uitext.c: 140
+# emu/uitext.c: 142
 Other Controls
 その他のコントロール
 
 # emu/uitext.c: 28
 Otherwise, type OK or move the joystick left then right to continue
 そうでなければ、続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
+
+# mame/video/tceptor.c: 281, 339, 395 
+Out of memory
+メモリ不足
+
+# emu/uimenu.c: 3126
+Overall: NOT WORKING
+総合評価: 動作不可
+
+# emu/uimenu.c: 3128
+Overall: Unemulated Protection
+総合評価: プロテクト未対応
+
+# emu/uimenu.c: 3130
+Overall: Working
+総合評価: 動作可
 
 # emu/uitext.c: 57
 Overclock
@@ -2394,259 +2470,259 @@ Overseas
 P1 Big
 P1 ビッグ
 
-# emu/inptport.c: 522, 527
+# emu/inptport.c: 517
 P1 Button 1
 P1 ボタン 1
 
-# emu/inptport.c: 537
+# emu/inptport.c: 526
 P1 Button 10
 P1 ボタン 10
 
-# emu/inptport.c: 538
+# emu/inptport.c: 527
 P1 Button 11
 P1 ボタン 11
 
-# emu/inptport.c: 539
+# emu/inptport.c: 528
 P1 Button 12
 P1 ボタン 12
 
-# emu/inptport.c: 540
+# emu/inptport.c: 529
 P1 Button 13
 P1 ボタン 13
 
-# emu/inptport.c: 541
+# emu/inptport.c: 530
 P1 Button 14
 P1 ボタン 14
 
-# emu/inptport.c: 542
+# emu/inptport.c: 531
 P1 Button 15
 P1 ボタン 15
 
-# emu/inptport.c: 543
+# emu/inptport.c: 532
 P1 Button 16
 P1 ボタン 16
 
-# emu/inptport.c: 523, 528
+# emu/inptport.c: 518
 P1 Button 2
 P1 ボタン 2
 
-# emu/inptport.c: 524, 529
+# emu/inptport.c: 519
 P1 Button 3
 P1 ボタン 3
 
-# emu/inptport.c: 525, 530
+# emu/inptport.c: 520
 P1 Button 4
 P1 ボタン 4
 
-# emu/inptport.c: 532
+# emu/inptport.c: 521
 P1 Button 5
 P1 ボタン 5
 
-# emu/inptport.c: 533
+# emu/inptport.c: 522
 P1 Button 6
 P1 ボタン 6
 
-# emu/inptport.c: 534
+# emu/inptport.c: 523
 P1 Button 7
 P1 ボタン 7
 
-# emu/inptport.c: 535
+# emu/inptport.c: 524
 P1 Button 8
 P1 ボタン 8
 
-# emu/inptport.c: 536
+# emu/inptport.c: 525
 P1 Button 9
 P1 ボタン 9
 
-# emu/inptport.c: 545
+# emu/inptport.c: 534
 P1 Custom 1
 P1 カスタム 1
 
-# emu/inptport.c: 546
+# emu/inptport.c: 535
 P1 Custom 2
 P1 カスタム 2
 
-# emu/inptport.c: 547
+# emu/inptport.c: 536
 P1 Custom 3
 P1 カスタム 3
 
-# emu/inptport.c: 548
+# emu/inptport.c: 537
 P1 Custom 4
 P1 カスタム 4
 
-# emu/inptport.c: 504, 509 mame/drivers/4enraya.c: 134
+# emu/inptport.c: 506 mame/drivers/4enraya.c: 134
 P1 Down
 P1 下
 
-# emu/inptport.c: 505, 510
+# emu/inptport.c: 507
 P1 Left
 P1 左
 
-# emu/inptport.c: 518
+# emu/inptport.c: 514
 P1 Left/Down
 P1 左/下
 
-# emu/inptport.c: 519
+# emu/inptport.c: 515
 P1 Left/Left
 P1 左/左
 
-# emu/inptport.c: 520
+# emu/inptport.c: 516
 P1 Left/Right
 P1 左/右
 
-# emu/inptport.c: 517
+# emu/inptport.c: 513
 P1 Left/Up
 P1 左/上
 
-# emu/inptport.c: 552
+# emu/inptport.c: 541
 P1 Mahjong A
 P1 麻雀 A
 
-# emu/inptport.c: 553
+# emu/inptport.c: 542
 P1 Mahjong B
 P1 麻雀 B
 
-# emu/inptport.c: 574
+# emu/inptport.c: 563
 P1 Mahjong Bet
 P1 麻雀 ベット
 
-# emu/inptport.c: 579 mame/includes/nb1413m3.h: 164
+# emu/inptport.c: 568 mame/includes/nb1413m3.h: 164
 P1 Mahjong Big
 P1 麻雀 ビッグ
 
-# emu/inptport.c: 554
+# emu/inptport.c: 543
 P1 Mahjong C
 P1 麻雀 C
 
-# emu/inptport.c: 571
+# emu/inptport.c: 560
 P1 Mahjong Chi
 P1 麻雀 チー
 
-# emu/inptport.c: 555
+# emu/inptport.c: 544
 P1 Mahjong D
 P1 麻雀 D
 
-# emu/inptport.c: 577
+# emu/inptport.c: 566
 P1 Mahjong Double Up
 P1 麻雀 ダブルアップ
 
-# emu/inptport.c: 556
+# emu/inptport.c: 545
 P1 Mahjong E
 P1 麻雀 E
 
-# emu/inptport.c: 557
+# emu/inptport.c: 546
 P1 Mahjong F
 P1 麻雀 F
 
-# emu/inptport.c: 578
+# emu/inptport.c: 567
 P1 Mahjong Flip Flop
 P1 麻雀 フリップフロップ
 
-# emu/inptport.c: 558
+# emu/inptport.c: 547
 P1 Mahjong G
 P1 麻雀 G
 
-# emu/inptport.c: 559
+# emu/inptport.c: 548
 P1 Mahjong H
 P1 麻雀 H
 
-# emu/inptport.c: 560
+# emu/inptport.c: 549
 P1 Mahjong I
 P1 麻雀 I
 
-# emu/inptport.c: 561
+# emu/inptport.c: 550
 P1 Mahjong J
 P1 麻雀 J
 
-# emu/inptport.c: 562
+# emu/inptport.c: 551
 P1 Mahjong K
 P1 麻雀 K
 
-# emu/inptport.c: 569
+# emu/inptport.c: 558
 P1 Mahjong Kan
 P1 麻雀 カン
 
-# emu/inptport.c: 563
+# emu/inptport.c: 552
 P1 Mahjong L
 P1 麻雀 L
 
-# emu/inptport.c: 575
+# emu/inptport.c: 564
 P1 Mahjong Last Chance
 P1 麻雀 ラストチャンス
 
-# emu/inptport.c: 564
+# emu/inptport.c: 553
 P1 Mahjong M
 P1 麻雀 M
 
-# emu/inptport.c: 565
+# emu/inptport.c: 554
 P1 Mahjong N
 P1 麻雀 N
 
-# emu/inptport.c: 566
+# emu/inptport.c: 555
 P1 Mahjong O
 P1 麻雀 O
 
-# emu/inptport.c: 567
+# emu/inptport.c: 556
 P1 Mahjong P
 P1 麻雀 P
 
-# emu/inptport.c: 570
+# emu/inptport.c: 559
 P1 Mahjong Pon
 P1 麻雀 ポン
 
-# emu/inptport.c: 568
+# emu/inptport.c: 557
 P1 Mahjong Q
 P1 麻雀 Q
 
-# emu/inptport.c: 572
+# emu/inptport.c: 561
 P1 Mahjong Reach
 P1 麻雀 リーチ
 
-# emu/inptport.c: 573
+# emu/inptport.c: 562
 P1 Mahjong Ron
 P1 麻雀 ロン
 
-# emu/inptport.c: 576
+# emu/inptport.c: 565
 P1 Mahjong Score
 P1 麻雀 スコア
 
-# emu/inptport.c: 580 mame/includes/nb1413m3.h: 164
+# emu/inptport.c: 569 mame/includes/nb1413m3.h: 164
 P1 Mahjong Small
 P1 麻雀 スモール
 
-# emu/inptport.c: 922
+# emu/inptport.c: 897
 P1 Pedal 1
 P1 ペダル 1
 
-# emu/inptport.c: 931
+# emu/inptport.c: 906
 P1 Pedal 2
 P1 ペダル 2
 
-# emu/inptport.c: 940
+# emu/inptport.c: 915
 P1 Pedal 3
 P1 ペダル 3
 
-# emu/inptport.c: 506, 511
+# emu/inptport.c: 508
 P1 Right
 P1 右
 
-# emu/inptport.c: 514
+# emu/inptport.c: 510
 P1 Right/Down
 P1 右/下
 
-# emu/inptport.c: 515
+# emu/inptport.c: 511
 P1 Right/Left
 P1 右/左
 
-# emu/inptport.c: 516
+# emu/inptport.c: 512
 P1 Right/Right
 P1 右/右
 
-# emu/inptport.c: 513
+# emu/inptport.c: 509
 P1 Right/Up
 P1 右/上
 
-# emu/inptport.c: 551 mame/drivers/kinstb.c: 112 mame/drivers/lemmings.c: 139 mame/drivers/nss.c: 338
+# emu/inptport.c: 540 mame/drivers/kinstb.c: 112 mame/drivers/lemmings.c: 139 mame/drivers/nss.c: 338
 P1 Select
 P1 選択
 
@@ -2654,1263 +2730,1263 @@ P1 選択
 P1 Small
 P1 スモール
 
-# emu/inptport.c: 550 mame/drivers/kinstb.c: 113 mame/drivers/nss.c: 339
+# emu/inptport.c: 539 mame/drivers/kinstb.c: 113 mame/drivers/nss.c: 339
 P1 Start
 P1 スタート
 
-# emu/inptport.c: 581
+# emu/inptport.c: 570
 P1 Toggle Autofire
 P1 連射切り替え
 
-# emu/inptport.c: 503, 508
+# emu/inptport.c: 505
 P1 Up
 P1 上
 
-# emu/inptport.c: 603, 608
+# emu/inptport.c: 584
 P2 Button 1
 P2 ボタン 1
 
-# emu/inptport.c: 618
+# emu/inptport.c: 593
 P2 Button 10
 P2 ボタン 10
 
-# emu/inptport.c: 619
+# emu/inptport.c: 594
 P2 Button 11
 P2 ボタン 11
 
-# emu/inptport.c: 620
+# emu/inptport.c: 595
 P2 Button 12
 P2 ボタン 12
 
-# emu/inptport.c: 621
+# emu/inptport.c: 596
 P2 Button 13
 P2 ボタン 13
 
-# emu/inptport.c: 622
+# emu/inptport.c: 597
 P2 Button 14
 P2 ボタン 14
 
-# emu/inptport.c: 623
+# emu/inptport.c: 598
 P2 Button 15
 P2 ボタン 15
 
-# emu/inptport.c: 624
+# emu/inptport.c: 599
 P2 Button 16
 P2 ボタン 16
 
-# emu/inptport.c: 604, 609
+# emu/inptport.c: 585
 P2 Button 2
 P2 ボタン 2
 
-# emu/inptport.c: 605, 610
+# emu/inptport.c: 586
 P2 Button 3
 P2 ボタン 3
 
-# emu/inptport.c: 606, 611
+# emu/inptport.c: 587
 P2 Button 4
 P2 ボタン 4
 
-# emu/inptport.c: 613
+# emu/inptport.c: 588
 P2 Button 5
 P2 ボタン 5
 
-# emu/inptport.c: 614
+# emu/inptport.c: 589
 P2 Button 6
 P2 ボタン 6
 
-# emu/inptport.c: 615
+# emu/inptport.c: 590
 P2 Button 7
 P2 ボタン 7
 
-# emu/inptport.c: 616
+# emu/inptport.c: 591
 P2 Button 8
 P2 ボタン 8
 
-# emu/inptport.c: 617
+# emu/inptport.c: 592
 P2 Button 9
 P2 ボタン 9
 
-# emu/inptport.c: 626
+# emu/inptport.c: 601
 P2 Custom 1
 P2 カスタム 1
 
-# emu/inptport.c: 627
+# emu/inptport.c: 602
 P2 Custom 2
 P2 カスタム 2
 
-# emu/inptport.c: 628
+# emu/inptport.c: 603
 P2 Custom 3
 P2 カスタム 3
 
-# emu/inptport.c: 629
+# emu/inptport.c: 604
 P2 Custom 4
 P2 カスタム 4
 
-# emu/inptport.c: 585, 590 mame/drivers/4enraya.c: 136
+# emu/inptport.c: 573 mame/drivers/4enraya.c: 136
 P2 Down
 P2 下
 
-# emu/inptport.c: 586, 591
+# emu/inptport.c: 574
 P2 Left
 P2 左
 
-# emu/inptport.c: 599
+# emu/inptport.c: 581
 P2 Left/Down
 P2 左/下
 
-# emu/inptport.c: 600
+# emu/inptport.c: 582
 P2 Left/Left
 P2 左/左
 
-# emu/inptport.c: 601
+# emu/inptport.c: 583
 P2 Left/Right
 P2 左/右
 
-# emu/inptport.c: 598
+# emu/inptport.c: 580
 P2 Left/Up
 P2 左/上
 
-# emu/inptport.c: 633
+# emu/inptport.c: 608
 P2 Mahjong A
 P2 麻雀 A
 
-# emu/inptport.c: 634
+# emu/inptport.c: 609
 P2 Mahjong B
 P2 麻雀 B
 
-# emu/inptport.c: 655
+# emu/inptport.c: 630
 P2 Mahjong Bet
 P2 麻雀 ベット
 
-# emu/inptport.c: 660 mame/includes/nb1413m3.h: 219
+# emu/inptport.c: 635 mame/includes/nb1413m3.h: 219
 P2 Mahjong Big
 P2 麻雀 ビッグ
 
-# emu/inptport.c: 635
+# emu/inptport.c: 610
 P2 Mahjong C
 P2 麻雀 C
 
-# emu/inptport.c: 652
+# emu/inptport.c: 627
 P2 Mahjong Chi
 P2 麻雀 チー
 
-# emu/inptport.c: 636
+# emu/inptport.c: 611
 P2 Mahjong D
 P2 麻雀 D
 
-# emu/inptport.c: 658
+# emu/inptport.c: 633
 P2 Mahjong Double Up
 P2 麻雀 ダブルアップ
 
-# emu/inptport.c: 637
+# emu/inptport.c: 612
 P2 Mahjong E
 P2 麻雀 E
 
-# emu/inptport.c: 638
+# emu/inptport.c: 613
 P2 Mahjong F
 P2 麻雀 F
 
-# emu/inptport.c: 659
+# emu/inptport.c: 634
 P2 Mahjong Flip Flop
 P2 麻雀 フリップフロップ
 
-# emu/inptport.c: 639
+# emu/inptport.c: 614
 P2 Mahjong G
 P2 麻雀 G
 
-# emu/inptport.c: 640
+# emu/inptport.c: 615
 P2 Mahjong H
 P2 麻雀 H
 
-# emu/inptport.c: 641
+# emu/inptport.c: 616
 P2 Mahjong I
 P2 麻雀 I
 
-# emu/inptport.c: 642
+# emu/inptport.c: 617
 P2 Mahjong J
 P2 麻雀 J
 
-# emu/inptport.c: 643
+# emu/inptport.c: 618
 P2 Mahjong K
 P2 麻雀 K
 
-# emu/inptport.c: 650
+# emu/inptport.c: 625
 P2 Mahjong Kan
 P2 麻雀 カン
 
-# emu/inptport.c: 644
+# emu/inptport.c: 619
 P2 Mahjong L
 P2 麻雀 L
 
-# emu/inptport.c: 656
+# emu/inptport.c: 631
 P2 Mahjong Last Chance
 P2 麻雀 ラストチャンス
 
-# emu/inptport.c: 645
+# emu/inptport.c: 620
 P2 Mahjong M
 P2 麻雀 M
 
-# emu/inptport.c: 646
+# emu/inptport.c: 621
 P2 Mahjong N
 P2 麻雀 N
 
-# emu/inptport.c: 647
+# emu/inptport.c: 622
 P2 Mahjong O
 P2 麻雀 O
 
-# emu/inptport.c: 648
+# emu/inptport.c: 623
 P2 Mahjong P
 P2 麻雀 P
 
-# emu/inptport.c: 651
+# emu/inptport.c: 626
 P2 Mahjong Pon
 P2 麻雀 ポン
 
-# emu/inptport.c: 649
+# emu/inptport.c: 624
 P2 Mahjong Q
 P2 麻雀 Q
 
-# emu/inptport.c: 653
+# emu/inptport.c: 628
 P2 Mahjong Reach
 P2 麻雀 リーチ
 
-# emu/inptport.c: 654
+# emu/inptport.c: 629
 P2 Mahjong Ron
 P2 麻雀 ロン
 
-# emu/inptport.c: 657
+# emu/inptport.c: 632
 P2 Mahjong Score
 P2 麻雀 スコア
 
-# emu/inptport.c: 661 mame/includes/nb1413m3.h: 219
+# emu/inptport.c: 636 mame/includes/nb1413m3.h: 219
 P2 Mahjong Small
 P2 麻雀 スモール
 
-# emu/inptport.c: 923
+# emu/inptport.c: 898
 P2 Pedal 1
 P2 ペダル 1
 
-# emu/inptport.c: 932
+# emu/inptport.c: 907
 P2 Pedal 2
 P2 ペダル 2
 
-# emu/inptport.c: 941
+# emu/inptport.c: 916
 P2 Pedal 3
 P2 ペダル 3
 
-# emu/inptport.c: 587, 592
+# emu/inptport.c: 575
 P2 Right
 P2 右
 
-# emu/inptport.c: 595
+# emu/inptport.c: 577
 P2 Right/Down
 P2 右/下
 
-# emu/inptport.c: 596
+# emu/inptport.c: 578
 P2 Right/Left
 P2 右/左
 
-# emu/inptport.c: 597
+# emu/inptport.c: 579
 P2 Right/Right
 P2 右/右
 
-# emu/inptport.c: 594
+# emu/inptport.c: 576
 P2 Right/Up
 P2 右/上
 
-# emu/inptport.c: 632 mame/drivers/kinstb.c: 127 mame/drivers/lemmings.c: 142 mame/drivers/nss.c: 353
+# emu/inptport.c: 607 mame/drivers/kinstb.c: 127 mame/drivers/lemmings.c: 142 mame/drivers/nss.c: 353
 P2 Select
 P2 選択
 
-# emu/inptport.c: 631 mame/drivers/kinstb.c: 128 mame/drivers/nss.c: 354
+# emu/inptport.c: 606 mame/drivers/kinstb.c: 128 mame/drivers/nss.c: 354
 P2 Start
 P2 スタート
 
-# emu/inptport.c: 662
+# emu/inptport.c: 637
 P2 Toggle Autofire
 P2 連射切り替え
 
-# emu/inptport.c: 584, 589
+# emu/inptport.c: 572
 P2 Up
 P2 上
 
-# emu/inptport.c: 676
+# emu/inptport.c: 651
 P3 Button 1
 P3 ボタン 1
 
-# emu/inptport.c: 685
+# emu/inptport.c: 660
 P3 Button 10
 P3 ボタン 10
 
-# emu/inptport.c: 686
+# emu/inptport.c: 661
 P3 Button 11
 P3 ボタン 11
 
-# emu/inptport.c: 687
+# emu/inptport.c: 662
 P3 Button 12
 P3 ボタン 12
 
-# emu/inptport.c: 688
+# emu/inptport.c: 663
 P3 Button 13
 P3 ボタン 13
 
-# emu/inptport.c: 689
+# emu/inptport.c: 664
 P3 Button 14
 P3 ボタン 14
 
-# emu/inptport.c: 690
+# emu/inptport.c: 665
 P3 Button 15
 P3 ボタン 15
 
-# emu/inptport.c: 691
+# emu/inptport.c: 666
 P3 Button 16
 P3 ボタン 16
 
-# emu/inptport.c: 677
+# emu/inptport.c: 652
 P3 Button 2
 P3 ボタン 2
 
-# emu/inptport.c: 678
+# emu/inptport.c: 653
 P3 Button 3
 P3 ボタン 3
 
-# emu/inptport.c: 679
+# emu/inptport.c: 654
 P3 Button 4
 P3 ボタン 4
 
-# emu/inptport.c: 680
+# emu/inptport.c: 655
 P3 Button 5
 P3 ボタン 5
 
-# emu/inptport.c: 681
+# emu/inptport.c: 656
 P3 Button 6
 P3 ボタン 6
 
-# emu/inptport.c: 682
+# emu/inptport.c: 657
 P3 Button 7
 P3 ボタン 7
 
-# emu/inptport.c: 683
+# emu/inptport.c: 658
 P3 Button 8
 P3 ボタン 8
 
-# emu/inptport.c: 684
+# emu/inptport.c: 659
 P3 Button 9
 P3 ボタン 9
 
-# emu/inptport.c: 693
+# emu/inptport.c: 668
 P3 Custom 1
 P3 カスタム 1
 
-# emu/inptport.c: 694
+# emu/inptport.c: 669
 P3 Custom 2
 P3 カスタム 2
 
-# emu/inptport.c: 695
+# emu/inptport.c: 670
 P3 Custom 3
 P3 カスタム 3
 
-# emu/inptport.c: 696
+# emu/inptport.c: 671
 P3 Custom 4
 P3 カスタム 4
 
-# emu/inptport.c: 665
+# emu/inptport.c: 640
 P3 Down
 P3 下
 
-# emu/inptport.c: 666
+# emu/inptport.c: 641
 P3 Left
 P3 左
 
-# emu/inptport.c: 673
+# emu/inptport.c: 648
 P3 Left/Down
 P3 左/下
 
-# emu/inptport.c: 674
+# emu/inptport.c: 649
 P3 Left/Left
 P3 左/左
 
-# emu/inptport.c: 675
+# emu/inptport.c: 650
 P3 Left/Right
 P3 左/右
 
-# emu/inptport.c: 672
+# emu/inptport.c: 647
 P3 Left/Up
 P3 左/上
 
-# emu/inptport.c: 924
+# emu/inptport.c: 899
 P3 Pedal 1
 P3 ペダル 1
 
-# emu/inptport.c: 933
+# emu/inptport.c: 908
 P3 Pedal 2
 P3 ペダル 2
 
-# emu/inptport.c: 942
+# emu/inptport.c: 917
 P3 Pedal 3
 P3 ペダル 3
 
-# emu/inptport.c: 667
+# emu/inptport.c: 642
 P3 Right
 P3 右
 
-# emu/inptport.c: 669
+# emu/inptport.c: 644
 P3 Right/Down
 P3 右/下
 
-# emu/inptport.c: 670
+# emu/inptport.c: 645
 P3 Right/Left
 P3 右/左
 
-# emu/inptport.c: 671
+# emu/inptport.c: 646
 P3 Right/Right
 P3 右/右
 
-# emu/inptport.c: 668
+# emu/inptport.c: 643
 P3 Right/Up
 P3 右/上
 
-# emu/inptport.c: 699 mame/drivers/kinstb.c: 142 mame/drivers/nss.c: 368
+# emu/inptport.c: 674 mame/drivers/kinstb.c: 142 mame/drivers/nss.c: 368
 P3 Select
 P3 選択
 
-# emu/inptport.c: 698 mame/drivers/kinstb.c: 143 mame/drivers/nss.c: 369
+# emu/inptport.c: 673 mame/drivers/kinstb.c: 143 mame/drivers/nss.c: 369
 P3 Start
 P3 スタート
 
-# emu/inptport.c: 700
+# emu/inptport.c: 675
 P3 Toggle Autofire
 P3 連射切り替え
 
-# emu/inptport.c: 664
+# emu/inptport.c: 639
 P3 Up
 P3 上
 
-# emu/inptport.c: 714
+# emu/inptport.c: 689
 P4 Button 1
 P4 ボタン 1
 
-# emu/inptport.c: 723
+# emu/inptport.c: 698
 P4 Button 10
 P4 ボタン 10
 
-# emu/inptport.c: 724
+# emu/inptport.c: 699
 P4 Button 11
 P4 ボタン 11
 
-# emu/inptport.c: 725
+# emu/inptport.c: 700
 P4 Button 12
 P4 ボタン 12
 
-# emu/inptport.c: 726
+# emu/inptport.c: 701
 P4 Button 13
 P4 ボタン 13
 
-# emu/inptport.c: 727
+# emu/inptport.c: 702
 P4 Button 14
 P4 ボタン 14
 
-# emu/inptport.c: 728
+# emu/inptport.c: 703
 P4 Button 15
 P4 ボタン 15
 
-# emu/inptport.c: 729
+# emu/inptport.c: 704
 P4 Button 16
 P4 ボタン 16
 
-# emu/inptport.c: 715
+# emu/inptport.c: 690
 P4 Button 2
 P4 ボタン 2
 
-# emu/inptport.c: 716
+# emu/inptport.c: 691
 P4 Button 3
 P4 ボタン 3
 
-# emu/inptport.c: 717
+# emu/inptport.c: 692
 P4 Button 4
 P4 ボタン 4
 
-# emu/inptport.c: 718
+# emu/inptport.c: 693
 P4 Button 5
 P4 ボタン 5
 
-# emu/inptport.c: 719
+# emu/inptport.c: 694
 P4 Button 6
 P4 ボタン 6
 
-# emu/inptport.c: 720
+# emu/inptport.c: 695
 P4 Button 7
 P4 ボタン 7
 
-# emu/inptport.c: 721
+# emu/inptport.c: 696
 P4 Button 8
 P4 ボタン 8
 
-# emu/inptport.c: 722
+# emu/inptport.c: 697
 P4 Button 9
 P4 ボタン 9
 
-# emu/inptport.c: 731
+# emu/inptport.c: 706
 P4 Custom 1
 P4 カスタム 1
 
-# emu/inptport.c: 732
+# emu/inptport.c: 707
 P4 Custom 2
 P4 カスタム 2
 
-# emu/inptport.c: 733
+# emu/inptport.c: 708
 P4 Custom 3
 P4 カスタム 3
 
-# emu/inptport.c: 734
+# emu/inptport.c: 709
 P4 Custom 4
 P4 カスタム 4
 
-# emu/inptport.c: 703
+# emu/inptport.c: 678
 P4 Down
 P4 下
 
-# emu/inptport.c: 704
+# emu/inptport.c: 679
 P4 Left
 P4 左
 
-# emu/inptport.c: 711
+# emu/inptport.c: 686
 P4 Left/Down
 P4 左/下
 
-# emu/inptport.c: 712
+# emu/inptport.c: 687
 P4 Left/Left
 P4 左/左
 
-# emu/inptport.c: 713
+# emu/inptport.c: 688
 P4 Left/Right
 P4 左/右
 
-# emu/inptport.c: 710
+# emu/inptport.c: 685
 P4 Left/Up
 P4 左/上
 
-# emu/inptport.c: 925
+# emu/inptport.c: 900
 P4 Pedal 1
 P4 ペダル 1
 
-# emu/inptport.c: 934
+# emu/inptport.c: 909
 P4 Pedal 2
 P4 ペダル 2
 
-# emu/inptport.c: 943
+# emu/inptport.c: 918
 P4 Pedal 3
 P4 ペダル 3
 
-# emu/inptport.c: 705
+# emu/inptport.c: 680
 P4 Right
 P4 右
 
-# emu/inptport.c: 707
+# emu/inptport.c: 682
 P4 Right/Down
 P4 右/下
 
-# emu/inptport.c: 708
+# emu/inptport.c: 683
 P4 Right/Left
 P4 右/左
 
-# emu/inptport.c: 709
+# emu/inptport.c: 684
 P4 Right/Right
 P4 右/右
 
-# emu/inptport.c: 706
+# emu/inptport.c: 681
 P4 Right/Up
 P4 右/上
 
-# emu/inptport.c: 737 mame/drivers/kinstb.c: 157 mame/drivers/nss.c: 383
+# emu/inptport.c: 712 mame/drivers/kinstb.c: 157 mame/drivers/nss.c: 383
 P4 Select
 P4 選択
 
-# emu/inptport.c: 736 mame/drivers/kinstb.c: 158 mame/drivers/nss.c: 384
+# emu/inptport.c: 711 mame/drivers/kinstb.c: 158 mame/drivers/nss.c: 384
 P4 Start
 P4 スタート
 
-# emu/inptport.c: 738
+# emu/inptport.c: 713
 P4 Toggle Autofire
 P4 連射切り替え
 
-# emu/inptport.c: 702
+# emu/inptport.c: 677
 P4 Up
 P4 上
 
-# emu/inptport.c: 752
+# emu/inptport.c: 727
 P5 Button 1
 P5 ボタン 1
 
-# emu/inptport.c: 761
+# emu/inptport.c: 736
 P5 Button 10
 P5 ボタン 10
 
-# emu/inptport.c: 762
+# emu/inptport.c: 737
 P5 Button 11
 P5 ボタン 11
 
-# emu/inptport.c: 763
+# emu/inptport.c: 738
 P5 Button 12
 P5 ボタン 12
 
-# emu/inptport.c: 764
+# emu/inptport.c: 739
 P5 Button 13
 P5 ボタン 13
 
-# emu/inptport.c: 765
+# emu/inptport.c: 740
 P5 Button 14
 P5 ボタン 14
 
-# emu/inptport.c: 766
+# emu/inptport.c: 741
 P5 Button 15
 P5 ボタン 15
 
-# emu/inptport.c: 767
+# emu/inptport.c: 742
 P5 Button 16
 P5 ボタン 16
 
-# emu/inptport.c: 753
+# emu/inptport.c: 728
 P5 Button 2
 P5 ボタン 2
 
-# emu/inptport.c: 754
+# emu/inptport.c: 729
 P5 Button 3
 P5 ボタン 3
 
-# emu/inptport.c: 755
+# emu/inptport.c: 730
 P5 Button 4
 P5 ボタン 4
 
-# emu/inptport.c: 756
+# emu/inptport.c: 731
 P5 Button 5
 P5 ボタン 5
 
-# emu/inptport.c: 757
+# emu/inptport.c: 732
 P5 Button 6
 P5 ボタン 6
 
-# emu/inptport.c: 758
+# emu/inptport.c: 733
 P5 Button 7
 P5 ボタン 7
 
-# emu/inptport.c: 759
+# emu/inptport.c: 734
 P5 Button 8
 P5 ボタン 8
 
-# emu/inptport.c: 760
+# emu/inptport.c: 735
 P5 Button 9
 P5 ボタン 9
 
-# emu/inptport.c: 769
+# emu/inptport.c: 744
 P5 Custom 1
 P5 カスタム 1
 
-# emu/inptport.c: 770
+# emu/inptport.c: 745
 P5 Custom 2
 P5 カスタム 2
 
-# emu/inptport.c: 771
+# emu/inptport.c: 746
 P5 Custom 3
 P5 カスタム 3
 
-# emu/inptport.c: 772
+# emu/inptport.c: 747
 P5 Custom 4
 P5 カスタム 4
 
-# emu/inptport.c: 741
+# emu/inptport.c: 716
 P5 Down
 P5 下
 
-# emu/inptport.c: 742
+# emu/inptport.c: 717
 P5 Left
 P5 左
 
-# emu/inptport.c: 749
+# emu/inptport.c: 724
 P5 Left/Down
 P5 左/下
 
-# emu/inptport.c: 750
+# emu/inptport.c: 725
 P5 Left/Left
 P5 左/左
 
-# emu/inptport.c: 751
+# emu/inptport.c: 726
 P5 Left/Right
 P5 左/右
 
-# emu/inptport.c: 748
+# emu/inptport.c: 723
 P5 Left/Up
 P5 左/上
 
-# emu/inptport.c: 926
+# emu/inptport.c: 901
 P5 Pedal 1
 P5 ペダル 1
 
-# emu/inptport.c: 935
+# emu/inptport.c: 910
 P5 Pedal 2
 P5 ペダル 2
 
-# emu/inptport.c: 944
+# emu/inptport.c: 919
 P5 Pedal 3
 P5 ペダル 3
 
-# emu/inptport.c: 743
+# emu/inptport.c: 718
 P5 Right
 P5 右
 
-# emu/inptport.c: 745
+# emu/inptport.c: 720
 P5 Right/Down
 P5 右/下
 
-# emu/inptport.c: 746
+# emu/inptport.c: 721
 P5 Right/Left
 P5 右/左
 
-# emu/inptport.c: 747
+# emu/inptport.c: 722
 P5 Right/Right
 P5 右/右
 
-# emu/inptport.c: 744
+# emu/inptport.c: 719
 P5 Right/Up
 P5 右/上
 
-# emu/inptport.c: 775
+# emu/inptport.c: 750
 P5 Select
 P5 選択
 
-# emu/inptport.c: 774
+# emu/inptport.c: 749
 P5 Start
 P5 スタート
 
-# emu/inptport.c: 776
+# emu/inptport.c: 751
 P5 Toggle Autofire
 P5 連射切り替え
 
-# emu/inptport.c: 740
+# emu/inptport.c: 715
 P5 Up
 P5 上
 
-# emu/inptport.c: 790
+# emu/inptport.c: 765
 P6 Button 1
 P6 ボタン 1
 
-# emu/inptport.c: 799
+# emu/inptport.c: 774
 P6 Button 10
 P6 ボタン 10
 
-# emu/inptport.c: 800
+# emu/inptport.c: 775
 P6 Button 11
 P6 ボタン 11
 
-# emu/inptport.c: 801
+# emu/inptport.c: 776
 P6 Button 12
 P6 ボタン 12
 
-# emu/inptport.c: 802
+# emu/inptport.c: 777
 P6 Button 13
 P6 ボタン 13
 
-# emu/inptport.c: 803
+# emu/inptport.c: 778
 P6 Button 14
 P6 ボタン 14
 
-# emu/inptport.c: 804
+# emu/inptport.c: 779
 P6 Button 15
 P6 ボタン 15
 
-# emu/inptport.c: 805
+# emu/inptport.c: 780
 P6 Button 16
 P6 ボタン 16
 
-# emu/inptport.c: 791
+# emu/inptport.c: 766
 P6 Button 2
 P6 ボタン 2
 
-# emu/inptport.c: 792
+# emu/inptport.c: 767
 P6 Button 3
 P6 ボタン 3
 
-# emu/inptport.c: 793
+# emu/inptport.c: 768
 P6 Button 4
 P6 ボタン 4
 
-# emu/inptport.c: 794
+# emu/inptport.c: 769
 P6 Button 5
 P6 ボタン 5
 
-# emu/inptport.c: 795
+# emu/inptport.c: 770
 P6 Button 6
 P6 ボタン 6
 
-# emu/inptport.c: 796
+# emu/inptport.c: 771
 P6 Button 7
 P6 ボタン 7
 
-# emu/inptport.c: 797
+# emu/inptport.c: 772
 P6 Button 8
 P6 ボタン 8
 
-# emu/inptport.c: 798
+# emu/inptport.c: 773
 P6 Button 9
 P6 ボタン 9
 
-# emu/inptport.c: 807
+# emu/inptport.c: 782
 P6 Custom 1
 P6 カスタム 1
 
-# emu/inptport.c: 808
+# emu/inptport.c: 783
 P6 Custom 2
 P6 カスタム 2
 
-# emu/inptport.c: 809
+# emu/inptport.c: 784
 P6 Custom 3
 P6 カスタム 3
 
-# emu/inptport.c: 810
+# emu/inptport.c: 785
 P6 Custom 4
 P6 カスタム 4
 
-# emu/inptport.c: 779
+# emu/inptport.c: 754
 P6 Down
 P6 下
 
-# emu/inptport.c: 780
+# emu/inptport.c: 755
 P6 Left
 P6 左
 
-# emu/inptport.c: 787
+# emu/inptport.c: 762
 P6 Left/Down
 P6 左/下
 
-# emu/inptport.c: 788
+# emu/inptport.c: 763
 P6 Left/Left
 P6 左/左
 
-# emu/inptport.c: 789
+# emu/inptport.c: 764
 P6 Left/Right
 P6 左/右
 
-# emu/inptport.c: 786
+# emu/inptport.c: 761
 P6 Left/Up
 P6 左/上
 
-# emu/inptport.c: 927
+# emu/inptport.c: 902
 P6 Pedal 1
 P6 ペダル 1
 
-# emu/inptport.c: 936
+# emu/inptport.c: 911
 P6 Pedal 2
 P6 ペダル 2
 
-# emu/inptport.c: 945
+# emu/inptport.c: 920
 P6 Pedal 3
 P6 ペダル 3
 
-# emu/inptport.c: 781
+# emu/inptport.c: 756
 P6 Right
 P6 右
 
-# emu/inptport.c: 783
+# emu/inptport.c: 758
 P6 Right/Down
 P6 右/下
 
-# emu/inptport.c: 784
+# emu/inptport.c: 759
 P6 Right/Left
 P6 右/左
 
-# emu/inptport.c: 785
+# emu/inptport.c: 760
 P6 Right/Right
 P6 右/右
 
-# emu/inptport.c: 782
+# emu/inptport.c: 757
 P6 Right/Up
 P6 右/上
 
-# emu/inptport.c: 813
+# emu/inptport.c: 788
 P6 Select
 P6 選択
 
-# emu/inptport.c: 812
+# emu/inptport.c: 787
 P6 Start
 P6 スタート
 
-# emu/inptport.c: 814
+# emu/inptport.c: 789
 P6 Toggle Autofire
 P6 連射切り替え
 
-# emu/inptport.c: 778
+# emu/inptport.c: 753
 P6 Up
 P6 上
 
-# emu/inptport.c: 828
+# emu/inptport.c: 803
 P7 Button 1
 P7 ボタン 1
 
-# emu/inptport.c: 837
+# emu/inptport.c: 812
 P7 Button 10
 P7 ボタン 10
 
-# emu/inptport.c: 838
+# emu/inptport.c: 813
 P7 Button 11
 P7 ボタン 11
 
-# emu/inptport.c: 839
+# emu/inptport.c: 814
 P7 Button 12
 P7 ボタン 12
 
-# emu/inptport.c: 840
+# emu/inptport.c: 815
 P7 Button 13
 P7 ボタン 13
 
-# emu/inptport.c: 841
+# emu/inptport.c: 816
 P7 Button 14
 P7 ボタン 14
 
-# emu/inptport.c: 842
+# emu/inptport.c: 817
 P7 Button 15
 P7 ボタン 15
 
-# emu/inptport.c: 843
+# emu/inptport.c: 818
 P7 Button 16
 P7 ボタン 16
 
-# emu/inptport.c: 829
+# emu/inptport.c: 804
 P7 Button 2
 P7 ボタン 2
 
-# emu/inptport.c: 830
+# emu/inptport.c: 805
 P7 Button 3
 P7 ボタン 3
 
-# emu/inptport.c: 831
+# emu/inptport.c: 806
 P7 Button 4
 P7 ボタン 4
 
-# emu/inptport.c: 832
+# emu/inptport.c: 807
 P7 Button 5
 P7 ボタン 5
 
-# emu/inptport.c: 833
+# emu/inptport.c: 808
 P7 Button 6
 P7 ボタン 6
 
-# emu/inptport.c: 834
+# emu/inptport.c: 809
 P7 Button 7
 P7 ボタン 7
 
-# emu/inptport.c: 835
+# emu/inptport.c: 810
 P7 Button 8
 P7 ボタン 8
 
-# emu/inptport.c: 836
+# emu/inptport.c: 811
 P7 Button 9
 P7 ボタン 9
 
-# emu/inptport.c: 845
+# emu/inptport.c: 820
 P7 Custom 1
 P7 カスタム 1
 
-# emu/inptport.c: 846
+# emu/inptport.c: 821
 P7 Custom 2
 P7 カスタム 2
 
-# emu/inptport.c: 847
+# emu/inptport.c: 822
 P7 Custom 3
 P7 カスタム 3
 
-# emu/inptport.c: 848
+# emu/inptport.c: 823
 P7 Custom 4
 P7 カスタム 4
 
-# emu/inptport.c: 817
+# emu/inptport.c: 792
 P7 Down
 P7 下
 
-# emu/inptport.c: 818
+# emu/inptport.c: 793
 P7 Left
 P7 左
 
-# emu/inptport.c: 825
+# emu/inptport.c: 800
 P7 Left/Down
 P7 左/下
 
-# emu/inptport.c: 826
+# emu/inptport.c: 801
 P7 Left/Left
 P7 左/左
 
-# emu/inptport.c: 827
+# emu/inptport.c: 802
 P7 Left/Right
 P7 左/右
 
-# emu/inptport.c: 824
+# emu/inptport.c: 799
 P7 Left/Up
 P7 左/上
 
-# emu/inptport.c: 928
+# emu/inptport.c: 903
 P7 Pedal 1
 P7 ペダル 2
 
-# emu/inptport.c: 937
+# emu/inptport.c: 912
 P7 Pedal 2
 P7 ペダル 2
 
-# emu/inptport.c: 946
+# emu/inptport.c: 921
 P7 Pedal 3
 P7 ペダル 3
 
-# emu/inptport.c: 819
+# emu/inptport.c: 794
 P7 Right
 P7 右
 
-# emu/inptport.c: 821
+# emu/inptport.c: 796
 P7 Right/Down
 P7 右/下
 
-# emu/inptport.c: 822
+# emu/inptport.c: 797
 P7 Right/Left
 P7 右/左
 
-# emu/inptport.c: 823
+# emu/inptport.c: 798
 P7 Right/Right
 P7 右/右
 
-# emu/inptport.c: 820
+# emu/inptport.c: 795
 P7 Right/Up
 P7 右/上
 
-# emu/inptport.c: 851
+# emu/inptport.c: 826
 P7 Select
 P7 選択
 
-# emu/inptport.c: 850
+# emu/inptport.c: 825
 P7 Start
 P7 スタート
 
-# emu/inptport.c: 852
+# emu/inptport.c: 827
 P7 Toggle Autofire
 P7 連射切り替え
 
-# emu/inptport.c: 816
+# emu/inptport.c: 791
 P7 Up
 P7 上
 
-# emu/inptport.c: 866
+# emu/inptport.c: 841
 P8 Button 1
 P8 ボタン 1
 
-# emu/inptport.c: 875
+# emu/inptport.c: 850
 P8 Button 10
 P8 ボタン 10
 
-# emu/inptport.c: 876
+# emu/inptport.c: 851
 P8 Button 11
 P8 ボタン 11
 
-# emu/inptport.c: 877
+# emu/inptport.c: 852
 P8 Button 12
 P8 ボタン 12
 
-# emu/inptport.c: 878
+# emu/inptport.c: 853
 P8 Button 13
 P8 ボタン 13
 
-# emu/inptport.c: 879
+# emu/inptport.c: 854
 P8 Button 14
 P8 ボタン 14
 
-# emu/inptport.c: 880
+# emu/inptport.c: 855
 P8 Button 15
 P8 ボタン 15
 
-# emu/inptport.c: 881
+# emu/inptport.c: 856
 P8 Button 16
 P8 ボタン 16
 
-# emu/inptport.c: 867
+# emu/inptport.c: 842
 P8 Button 2
 P8 ボタン 2
 
-# emu/inptport.c: 868
+# emu/inptport.c: 843
 P8 Button 3
 P8 ボタン 3
 
-# emu/inptport.c: 869
+# emu/inptport.c: 844
 P8 Button 4
 P8 ボタン 4
 
-# emu/inptport.c: 870
+# emu/inptport.c: 845
 P8 Button 5
 P8 ボタン 5
 
-# emu/inptport.c: 871
+# emu/inptport.c: 846
 P8 Button 6
 P8 ボタン 6
 
-# emu/inptport.c: 872
+# emu/inptport.c: 847
 P8 Button 7
 P8 ボタン 7
 
-# emu/inptport.c: 873
+# emu/inptport.c: 848
 P8 Button 8
 P8 ボタン 8
 
-# emu/inptport.c: 874
+# emu/inptport.c: 849
 P8 Button 9
 P8 ボタン 9
 
-# emu/inptport.c: 883
+# emu/inptport.c: 858
 P8 Custom 1
 P8 カスタム 1
 
-# emu/inptport.c: 884
+# emu/inptport.c: 859
 P8 Custom 2
 P8 カスタム 2
 
-# emu/inptport.c: 885
+# emu/inptport.c: 860
 P8 Custom 3
 P8 カスタム 3
 
-# emu/inptport.c: 886
+# emu/inptport.c: 861
 P8 Custom 4
 P8 カスタム 4
 
-# emu/inptport.c: 855
+# emu/inptport.c: 830
 P8 Down
 P8 下
 
-# emu/inptport.c: 856
+# emu/inptport.c: 831
 P8 Left
 P8 左
 
-# emu/inptport.c: 863
+# emu/inptport.c: 838
 P8 Left/Down
 P8 左/下
 
-# emu/inptport.c: 864
+# emu/inptport.c: 839
 P8 Left/Left
 P8 左/左
 
-# emu/inptport.c: 865
+# emu/inptport.c: 840
 P8 Left/Right
 P8 左/右
 
-# emu/inptport.c: 862
+# emu/inptport.c: 837
 P8 Left/Up
 P8 左/上
 
-# emu/inptport.c: 929
+# emu/inptport.c: 904
 P8 Pedal 1
 P8 ペダル 1
 
-# emu/inptport.c: 938
+# emu/inptport.c: 913
 P8 Pedal 2
 P8 ペダル 2
 
-# emu/inptport.c: 947
+# emu/inptport.c: 922
 P8 Pedal 3
 P8 ペダル 3
 
-# emu/inptport.c: 857
+# emu/inptport.c: 832
 P8 Right
 P8 右
 
-# emu/inptport.c: 859
+# emu/inptport.c: 834
 P8 Right/Down
 P8 右/下
 
-# emu/inptport.c: 860
+# emu/inptport.c: 835
 P8 Right/Left
 P8 右/左
 
-# emu/inptport.c: 861
+# emu/inptport.c: 836
 P8 Right/Right
 P8 右/右
 
-# emu/inptport.c: 858
+# emu/inptport.c: 833
 P8 Right/Up
 P8 右/上
 
-# emu/inptport.c: 889
+# emu/inptport.c: 864
 P8 Select
 P8 選択
 
-# emu/inptport.c: 888
+# emu/inptport.c: 863
 P8 Start
 P8 スタート
 
-# emu/inptport.c: 890
+# emu/inptport.c: 865
 P8 Toggle Autofire
 P8 連射切り替え
 
-# emu/inptport.c: 854
+# emu/inptport.c: 829
 P8 Up
 P8 上
 
-# emu/inptport.c: 949 mame/drivers/taito_f2.c: 2867 
+# emu/inptport.c: 924 mame/drivers/taito_f2.c: 2867 
 Paddle
 パドル
 
-# emu/inptport.c: 950
+# emu/inptport.c: 925
 Paddle 2
 パドル 2
 
-# emu/inptport.c: 951
+# emu/inptport.c: 926
 Paddle 3
 パドル 3
 
-# emu/inptport.c: 952
+# emu/inptport.c: 927
 Paddle 4
 パドル 4
 
-# emu/inptport.c: 953
+# emu/inptport.c: 928
 Paddle 5
 パドル 5
 
-# emu/inptport.c: 954
+# emu/inptport.c: 929
 Paddle 6
 パドル 6
 
-# emu/inptport.c: 955
+# emu/inptport.c: 930
 Paddle 7
 パドル 7
 
-# emu/inptport.c: 956
+# emu/inptport.c: 931
 Paddle 8
 パドル 8
 
-# emu/inptport.c: 958
+# emu/inptport.c: 933
 Paddle V
 パドル V
 
-# emu/inptport.c: 959
+# emu/inptport.c: 934
 Paddle V 2
 パドル V 2
 
-# emu/inptport.c: 960
+# emu/inptport.c: 935
 Paddle V 3
 パドル V 3
 
-# emu/inptport.c: 961
+# emu/inptport.c: 936
 Paddle V 4
 パドル V 4
 
-# emu/inptport.c: 962
+# emu/inptport.c: 937
 Paddle V 5
 パドル V 5
 
-# emu/inptport.c: 963
+# emu/inptport.c: 938
 Paddle V 6
 パドル V 6
 
-# emu/inptport.c: 964
+# emu/inptport.c: 939
 Paddle V 7
 パドル V 7
 
-# emu/inptport.c: 965
+# emu/inptport.c: 940
 Paddle V 8
 パドル V 8
 
-# emu/inptport.c: 429, 1089
+# emu/inptport.c: 430, 1064
 Pause
 一時停止
 
@@ -3922,7 +3998,7 @@ Pedal
 Pixel Aspect (%d:%d)
 アスペクト比 (%d:%d)
 
-# mame/drivers/astrocde.c: 755 mame/drivers/bottom9.c: 235 mame/drivers/deniam.c: 272 mame/drivers/destroyr.c: 210 mame/drivers/firetrk.c: 592, 660, 743 mame/drivers/galpanic.c: 795 mame/drivers/skyraid.c: 143 mame/drivers/snk.c: 4053, 4194 mame/drivers/sprint2.c: 334, 406 mame/drivers/sprint4.c: 311 mame/drivers/sprint8.c: 320, 455 mame/drivers/sspeedr.c: 171 mame/drivers/starshp1.c: 251 mame/drivers/suprslam.c: 262 mame/drivers/tank8.c: 273 mame/drivers/triplhnt.c: 171 mame/drivers/wolfpack.c: 224 
+# mame/drivers/astrocde.c: 755 mame/drivers/bottom9.c: 235 mame/drivers/deniam.c: 272 mame/drivers/destroyr.c: 212 mame/drivers/firetrk.c: 594, 662, 745 mame/drivers/galpanic.c: 799 mame/drivers/skyraid.c: 143 mame/drivers/snk.c: 4053, 4194 mame/drivers/sprint2.c: 334, 406 mame/drivers/sprint4.c: 312 mame/drivers/sprint8.c: 320, 455 mame/drivers/sspeedr.c: 171 mame/drivers/starshp1.c: 251 mame/drivers/suprslam.c: 262 mame/drivers/tank8.c: 273 mame/drivers/triplhnt.c: 171 mame/drivers/wolfpack.c: 226 
 Play Time
 プレイ時間
 
@@ -3930,43 +4006,43 @@ Play Time
 Player %d
 プレイヤー %d
 
-# emu/uitext.c: 132
+# emu/uitext.c: 134
 Player 1 Controls
 プレイヤー1 コントロール
 
-# emu/uitext.c: 133
+# emu/uitext.c: 135
 Player 2 Controls
 プレイヤー2 コントロール
 
-# emu/uitext.c: 134
+# emu/uitext.c: 136
 Player 3 Controls
 プレイヤー3 コントロール
 
-# emu/uitext.c: 135
+# emu/uitext.c: 137
 Player 4 Controls
 プレイヤー4 コントロール
 
-# emu/uitext.c: 136
+# emu/uitext.c: 138
 Player 5 Controls
 プレイヤー5 コントロール
 
-# emu/uitext.c: 137
+# emu/uitext.c: 139
 Player 6 Controls
 プレイヤー6 コントロール
 
-# emu/uitext.c: 138
+# emu/uitext.c: 140
 Player 7 Controls
 プレイヤー7 コントロール
 
-# emu/uitext.c: 139
+# emu/uitext.c: 141
 Player 8 Controls
 プレイヤー8 コントロール
 
-# emu/inptport.c: 464
+# emu/inptport.c: 465
 Players
 プレイヤー
 
-# emu/inptport.c: 1328, 1346
+# emu/inptport.c: 1324, 1342
 Playing back previously recorded game %s\n
 以前に記録されたゲーム「%s」を再生します\n
 
@@ -3974,71 +4050,71 @@ Playing back previously recorded game %s\n
 Pon
 ポン
 
-# emu/inptport.c: 967
+# emu/inptport.c: 942
 Positional
 座標
 
-# emu/inptport.c: 968
+# emu/inptport.c: 943
 Positional 2
 座標 2
 
-# emu/inptport.c: 969
+# emu/inptport.c: 944
 Positional 3
 座標 3
 
-# emu/inptport.c: 970
+# emu/inptport.c: 945
 Positional 4
 座標 4
 
-# emu/inptport.c: 971
+# emu/inptport.c: 946
 Positional 5
 座標 5
 
-# emu/inptport.c: 972
+# emu/inptport.c: 947
 Positional 6
 座標 6
 
-# emu/inptport.c: 973
+# emu/inptport.c: 948
 Positional 7
 座標 7
 
-# emu/inptport.c: 974
+# emu/inptport.c: 949
 Positional 8
 座標 8
 
-# emu/inptport.c: 976
+# emu/inptport.c: 951
 Positional V
 座標 垂直
 
-# emu/inptport.c: 977
+# emu/inptport.c: 952
 Positional V 2
 座標 垂直 2
 
-# emu/inptport.c: 978
+# emu/inptport.c: 953
 Positional V 3
 座標 垂直 3
 
-# emu/inptport.c: 979
+# emu/inptport.c: 954
 Positional V 4
 座標 垂直 4
 
-# emu/inptport.c: 980
+# emu/inptport.c: 955
 Positional V 5
 座標 垂直 5
 
-# emu/inptport.c: 981
+# emu/inptport.c: 956
 Positional V 6
 座標 垂直 6
 
-# emu/inptport.c: 982
+# emu/inptport.c: 957
 Positional V 7
 座標 垂直 7
 
-# emu/inptport.c: 983
+# emu/inptport.c: 958
 Positional V 8
 座標 垂直 8
 
-# emu/cheat.c: 3558
+# emu/cheat.c: 3566
 Prefill
 事前に埋める
 
@@ -4050,15 +4126,15 @@ Press Any Key
 Press Select Key/Button
 決定キー/ボタンを押してください
 
-# emu/cheat.c: 5314, 5838
+# emu/cheat.c: 5322, 5846
 Previous Data
 前回のデータ
 
-# mame/drivers/neodrvr.c: 297 mame/drivers/neogeo.c: 1245
+# mame/drivers/neodrvr.c: 297 mame/drivers/neogeo.c: 1268
 Previous Game
 前のゲーム
 
-# emu/uitext.c: 216
+# emu/uitext.c: 218
 Previous values already restored
 前回の値は既に復帰済みです
 
@@ -4066,19 +4142,19 @@ Previous values already restored
 Program Space
 プログラム領域
 
-# emu/ui.c: 2275
+# emu/ui.c: 2295
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# emu/ui.c: 2073
+# emu/ui.c: 2093
 REC START
 録画開始
 
-# emu/ui.c: 2078
+# emu/ui.c: 2098
 REC STOP
 録画停止
 
-# emu/cheat.c: 5973
+# emu/cheat.c: 5981
 RHS
 RHS
 
@@ -4086,15 +4162,15 @@ RHS
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 再ダンプが必要     : %3d  %3d\n(%3d ROM、全%dゲーム)\n
 
-# emu/cheat.c: 3458
+# emu/cheat.c: 3466
 Range Maximum
 範囲最大
 
-# emu/cheat.c: 3441
+# emu/cheat.c: 3449
 Range Minimum
 範囲最小
 
-# emu/cheat.c: 588 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2241
+# emu/cheat.c: 588 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2266
 Rapid Fire
 連射
 
@@ -4102,15 +4178,15 @@ Rapid Fire
 Reach
 リーチ
 
-# emu/inptport.c: 1098
+# emu/inptport.c: 1074
 Record Movie
 録画
 
-# emu/uitext.c: 223
+# emu/uitext.c: 225
 Refresh rate
 リフレッシュレート
 
-# emu/cheat.c: 2929, 3616 emu/inptport.c: 433 mame/drivers/pgm.c: 908, 919
+# emu/cheat.c: 2929, 3624 emu/inptport.c: 434 mame/drivers/pgm.c: 908, 919
 Region
 領域
 
@@ -4122,7 +4198,7 @@ Relative
 Relative Address
 相対アドレス
 
-# emu/inptport.c: 1139 emu/uitext.c: 171
+# emu/inptport.c: 1114 emu/uitext.c: 173
 Reload Database
 データベース再読み込み
 
@@ -4130,31 +4206,31 @@ Reload Database
 Reset
 リセット
 
-# emu/inptport.c: 1090 emu/uitext.c: 106
+# emu/inptport.c: 1065 emu/uitext.c: 106
 Reset Game
 ゲームをリセットする
 
-# mame/drivers/seattle.c: 1910, 2303, 2401 mame/drivers/vegas.c: 1848, 1880, 1894, 1924, 1968, 2064 
+# mame/drivers/seattle.c: 1911, 2304, 2402 mame/drivers/vegas.c: 1849, 1881, 1895, 1925, 1969, 2065 
 Resolution
 解像度
 
-# emu/uitext.c: 217
+# emu/uitext.c: 219
 Restoration successful
 値の復帰に成功しました
 
-# emu/uitext.c: 167
+# emu/uitext.c: 169
 Restore Previous Results
 前回の結果に戻す
 
-# emu/cheat.c: 3259
+# emu/cheat.c: 3267
 Restore Previous Value
 前回の値に戻す
 
-# emu/uitext.c: 107
+# emu/uitext.c: 108
 Return to Game
 ゲームに戻る
 
-# emu/uitext.c: 141
+# emu/uitext.c: 143
 Return to Groups
 グループに戻る
 
@@ -4166,7 +4242,7 @@ Return to Main Menu
 Return to Prior Menu
 一つ前のメニューに戻る
 
-# emu/inptport.c: 483 emu/uitext.c: 127
+# emu/inptport.c: 484 emu/uitext.c: 129
 Reverse
 反転
 
@@ -4182,15 +4258,15 @@ Rockn Megasession Custom
 Ron
 ロン
 
-# emu/uitext.c: 228
+# emu/uitext.c: 230
 Rotate Clockwise
 時計回りに回転
 
-# emu/uitext.c: 229
+# emu/uitext.c: 231
 Rotate Counter-clockwise
 反時計回りに回転
 
-# emu/uimenu.c: 1451
+# emu/uimenu.c: 1521
 Rotate View
 画面を回転
 
@@ -4206,31 +4282,31 @@ SHADOWS        : %3d  + %3d\n
 Samples
 サンプル
 
-# emu/clifront.c: 929
+# emu/clifront.c: 928
 Samples not supported in this build\n
 このビルドではサンプルはサポートされていません\n
 
-# emu/inptport.c: 1136
+# emu/inptport.c: 1111
 Save Cheat
 チート保存
 
-# emu/cheat.c: 4877, 5413, 6008
+# emu/cheat.c: 4885, 5421, 6016
 Save Memory
 メモリに保存
 
-# emu/inptport.c: 1097
+# emu/inptport.c: 1073
 Save Snapshot
 スナップショットの保存
 
-# emu/inptport.c: 1132 
+# emu/inptport.c: 1107 
 Save State
 プレイ状態の保存
 
-# emu/ui.c: 2228
+# emu/ui.c: 2248
 Save cancelled
 保存を中止しました
 
-# emu/ui.c: 2256
+# emu/ui.c: 2276
 Save to position %c
 %c に保存しました
 
@@ -4238,11 +4314,11 @@ Save to position %c
 Screen
 画面
 
-# emu/uitext.c: 227
+# emu/uitext.c: 229
 Screen #
 画面 #
 
-# emu/ui.c: 2524, 2542, 2559, 2575, 2592, 2609, 2626, 2643
+# emu/ui.c: 2544, 2562, 2579, 2595, 2612, 2629, 2646, 2663
 Screen %d %s %.3f
 画面%d %s %.3f
 
@@ -4266,11 +4342,11 @@ Screen flipping in cocktail mode is not supported.
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
-# emu/cheat.c: 7630
+# emu/cheat.c: 7638
 Search Dialog Style
 検索ダイアログ形式
 
-# emu/cheat.c: 6359
+# emu/cheat.c: 6367
 Search Speed
 検索速度
 
@@ -4286,7 +4362,7 @@ Search a Cheat (Classic Mode)
 Search a Cheat (Minimum Mode)
 チートを検索（最小モード）
 
-# emu/uitext.c: 214
+# emu/uitext.c: 216
 Search not initialized
 検索処理が初期化されていません
 
@@ -4298,51 +4374,51 @@ Second Bonus
 Select
 選択
 
-# emu/uitext.c: 212
+# emu/uitext.c: 214
 Select Memory Areas
 メモリ領域を選択
 
-# emu/cheat.c: 7627
+# emu/cheat.c: 7635
 Select Search
 検索領域を選択
 
-# emu/uitext.c: 218
+# emu/uitext.c: 220
 Select a value
 値の選択
 
-# emu/ui.c: 2221
+# emu/ui.c: 2241
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# emu/ui.c: 2219
+# emu/ui.c: 2239
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
-# emu/uitext.c: 128
+# emu/uitext.c: 130
 Sensitivity
 感度
 
-# emu/inptport.c: 916 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1752, 1785, 1874 mame/drivers/gdrawpkr.c: 286 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 182
+# emu/inptport.c: 891 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1752, 1785, 1874 mame/drivers/gdrawpkr.c: 286 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 182
 Service
 サービス
 
-# emu/inptport.c: 911
+# emu/inptport.c: 886
 Service 1
 サービス1
 
-# emu/inptport.c: 912
+# emu/inptport.c: 887
 Service 2
 サービス2
 
-# emu/inptport.c: 913
+# emu/inptport.c: 888
 Service 3
 サービス3
 
-# emu/inptport.c: 914
+# emu/inptport.c: 889
 Service 4
 サービス4
 
-# emu/inptport.c: 428
+# emu/inptport.c: 429
 Service Mode
 サービスモード
 
@@ -4350,11 +4426,11 @@ Service Mode
 Service Mode/Free Play
 サービスモード/フリープレイ
 
-# emu/cheat.c: 2899 emu/uitext.c: 183 mame/drivers/arcadia.c: 229 mame/drivers/pingpong.c: 344 mame/drivers/trackfld.c: 655
+# emu/cheat.c: 2899 emu/uitext.c: 185 mame/drivers/arcadia.c: 229 mame/drivers/pingpong.c: 344 mame/drivers/trackfld.c: 655
 Set
 セット
 
-# emu/cheat.c: 3466
+# emu/cheat.c: 3474
 Set/Clear
 セット/クリア
 
@@ -4362,63 +4438,63 @@ Set/Clear
 Set/Clear Bits
 ビットのセット/クリア
 
-# emu/cheat.c: 7652
+# emu/cheat.c: 7660
 Show Activation Key Message
 アクティベーションキーメッセージを表\示
 
-# emu/uimenu.c: 1458
+# emu/uimenu.c: 1528
 Show Backdrops
 バックドロップを表\示
 
-# emu/uimenu.c: 1470
+# emu/uimenu.c: 1540
 Show Bezels
 ベゼルを表\示
 
-# emu/inptport.c: 1108
+# emu/inptport.c: 1084
 Show Button Input
 入力履歴を表\示
 
-# emu/inptport.c: 1100
+# emu/inptport.c: 1076
 Show Cheat List
 チートリストを表\示
 
-# emu/inptport.c: 1102
+# emu/inptport.c: 1078
 Show Command
 コマンドの表\示
 
-# emu/uitext.c: 121
+# emu/uitext.c: 123
 Show Command List
 コマンドリストを表\示
 
-# emu/inptport.c: 1105
+# emu/inptport.c: 1081
 Show Current Time
 現在の時刻を表\示
 
-# emu/inptport.c: 1096
+# emu/inptport.c: 1072
 Show FPS
 FPSの表\示
 
-# emu/uimenu.c: 1474
+# emu/uimenu.c: 1544
 Show Full Artwork
 全てのアートワークを表\示
 
-# emu/inptport.c: 1092
+# emu/inptport.c: 1067
 Show Gfx
 グラフィックデータ表\示
 
-# emu/uimenu.c: 1464
+# emu/uimenu.c: 1534
 Show Overlays
 オーバレイを表\示
 
-# emu/inptport.c: 1127
+# emu/inptport.c: 1102
 Show Profiler
 プロファイラ表\示
 
-# emu/cheat.c: 7646
+# emu/cheat.c: 7654
 Show Search Labels
 検索ラベルの表\示
 
-# emu/cheat.c: 5989
+# emu/cheat.c: 5997
 Signed
 符号あり
 
@@ -4426,27 +4502,27 @@ Signed
 Simple LEDs
 シンプルなLED
 
-# emu/inptport.c: 467
+# emu/inptport.c: 468
 Single
 シングル
 
-# emu/cheat.c: 5983
+# emu/cheat.c: 5991
 Size
 サイズ
 
-# emu/cheat.c: 7176
+# emu/cheat.c: 7184
 Skip Bytes
 読み飛ばすバイト数
 
-# emu/cheat.c: 6328 emu/uitext.c: 209 mame/drivers/4enraya.c: 118 mame/drivers/aleck64.c: 362 mame/drivers/amidar.c: 285 mame/drivers/angelkds.c: 478 mame/drivers/bestleag.c: 272 mame/drivers/bigstrkb.c: 158 mame/drivers/brkthru.c: 232, 235, 277, 280 mame/drivers/btime.c: 797 mame/drivers/cninja.c: 725 mame/drivers/cps1.c: 1276, 1580 mame/drivers/deniam.c: 273 mame/drivers/epos.c: 150, 153, 159 mame/drivers/fuukifg3.c: 421 mame/drivers/gameplan.c: 584, 1035 mame/drivers/jcross.c: 187 mame/drivers/m62.c: 619, 669, 720, 771, 823, 875, 929, 1028, 1081 mame/drivers/mcr.c: 1134 mame/drivers/megaplay.c: 222 mame/drivers/metro.c: 3233 mame/drivers/nmg5.c: 433, 493, 586, 593, 628, 633 mame/drivers/nmk16.c: 2767 mame/drivers/phoenix.c: 321 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 443, 511 mame/drivers/safarir.c: 243 mame/drivers/segas16a.c: 1451 mame/drivers/segas16b.c: 2660 mame/drivers/sf.c: 332, 510, 648 mame/drivers/shisen.c: 140 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 153 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 249 mame/drivers/system1.c: 1962 mame/drivers/system16.c: 1771 mame/drivers/taito_z.c: 2381, 2450 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 251, 306, 347 mame/drivers/trackfld.c: 598 mame/drivers/vigilant.c: 239 mame/drivers/vsnes.c: 1070, 1781 mame/drivers/wallc.c: 178 mame/drivers/wilytowr.c: 444 mame/drivers/xain.c: 398 mame/drivers/yamato.c: 380 mame/drivers/zac2650.c: 72, 122
+# emu/cheat.c: 6336 emu/uitext.c: 211 mame/drivers/4enraya.c: 118 mame/drivers/aleck64.c: 362 mame/drivers/amidar.c: 285 mame/drivers/angelkds.c: 478 mame/drivers/bestleag.c: 272 mame/drivers/bigstrkb.c: 158 mame/drivers/brkthru.c: 232, 235, 277, 280 mame/drivers/btime.c: 797 mame/drivers/cninja.c: 727 mame/drivers/cps1.c: 1276, 1580 mame/drivers/deniam.c: 273 mame/drivers/epos.c: 150, 153, 159 mame/drivers/fuukifg3.c: 421 mame/drivers/gameplan.c: 584, 1035 mame/drivers/jcross.c: 187 mame/drivers/m62.c: 619, 669, 720, 771, 823, 875, 929, 1028, 1081 mame/drivers/mcr.c: 1134 mame/drivers/megaplay.c: 222 mame/drivers/metro.c: 3233 mame/drivers/nmg5.c: 433, 493, 586, 593, 628, 633 mame/drivers/nmk16.c: 2767 mame/drivers/phoenix.c: 321 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 443, 511 mame/drivers/safarir.c: 243 mame/drivers/segas16a.c: 1451 mame/drivers/segas16b.c: 2660 mame/drivers/sf.c: 332, 510, 648 mame/drivers/shisen.c: 140 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 153 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 249 mame/drivers/system1.c: 1962 mame/drivers/system16.c: 1771 mame/drivers/taito_z.c: 2381, 2450 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 251, 306, 347 mame/drivers/trackfld.c: 598 mame/drivers/vigilant.c: 239 mame/drivers/vsnes.c: 1070, 1781 mame/drivers/wallc.c: 178 mame/drivers/wilytowr.c: 444 mame/drivers/xain.c: 398 mame/drivers/yamato.c: 380 mame/drivers/zac2650.c: 72, 122
 Slow
 遅い
 
-# emu/uitext.c: 205
+# emu/uitext.c: 207
 Slow But Sure (changed or not)
 遅いけど確実 (変化したかしないか)
 
-# emu/inptport.c: 1091
+# emu/inptport.c: 1066
 Soft Reset
 ソ\フトリセット
 
@@ -4454,11 +4530,11 @@ Soft Reset
 Sound
 音源
 
-# emu/inptport.c: 447 emu/uilang.c: 26 
+# emu/inptport.c: 448 emu/uilang.c: 26 
 Spanish
 スペイン語
 
-# emu/emuopts.c: 154 emu/inptport.c: 482 
+# emu/emuopts.c: 154 emu/inptport.c: 483 
 Standard
 標準
 
@@ -4466,11 +4542,11 @@ Standard
 Standard (%d:%d)
 標準 (%d:%d)
 
-# emu/uitext.c: 164
+# emu/uitext.c: 166
 Start a New Cheat Search
 新規チートのサーチ開始
 
-# emu/inptport.c: 1340
+# emu/inptport.c: 1336
 Start time: %s\n
 開始時刻: %s\n
 
@@ -4478,15 +4554,15 @@ Start time: %s\n
 State
 ステート
 
-# emu/mame.c: 1798
+# emu/mame.c: 1857
 State successfully loaded.
 ステートを正常に読み込みました。
 
-# emu/mame.c: 1720
+# emu/mame.c: 1779
 State successfully saved.
 ステートを正常に保存しました。
 
-# emu/mame.c: 1718
+# emu/mame.c: 1777
 State successfully saved.\nWarning: Save states are not officially supported for this game.
 ステートを正常に保存しました。\n警告: このゲームはステートセーブを公式にサポートしていません。
 
@@ -4494,19 +4570,19 @@ State successfully saved.\nWarning: Save states are not officially supported for
 Statistics not available
 統計データはありません
 
-# emu/cheat.c: 5458
+# emu/cheat.c: 5466
 Status (Same or Different)
 状態 (一致・不一致)
 
-# emu/uitext.c: 204
+# emu/uitext.c: 206
 Status (bits or flags)
 状態 (ビットかフラグ)
 
-# emu/inptport.c: 478 
+# emu/inptport.c: 479 
 Stereo
 ステレオ
 
-# mame/drivers/bmcbowl.c: 369 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 419 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2033 mame/drivers/turbo.c: 893
+# mame/drivers/bmcbowl.c: 369 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 419 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2058 mame/drivers/turbo.c: 893
 Stop
 停止
 
@@ -4522,7 +4598,7 @@ String
 Subtract
 減算
 
-# emu/cheat.c: 2914, 5986
+# emu/cheat.c: 2914, 5994
 Swap
 交換
 
@@ -4534,7 +4610,7 @@ THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't both
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。\n
 
-# mame/drivers/aerofgt.c: 1058, 1148 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1212 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2049, 2095, 2161, 2227, 2275, 2318, 2428, 2490, 2552, 2621, 2665, 2718
+# mame/drivers/aerofgt.c: 1058, 1148 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1212 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2074, 2120, 2186, 2252, 2300, 2343, 2453, 2515, 2577, 2646, 2690, 2743
 Taiwan
 台湾
 
@@ -4542,19 +4618,19 @@ Taiwan
 Take
 取得
 
-# emu/inptport.c: 2625 mame/drivers/neogeo.c: 1282 mame/drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329 mame/drivers/toaplan2.c: 2040, 2083, 2147, 2204, 2220, 2268, 2310, 2344, 2415, 2475, 2537, 2614, 2657, 2710, 2838, 2851, 2863
+# emu/inptport.c: 2622 mame/drivers/neogeo.c: 1305 mame/drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329 mame/drivers/toaplan2.c: 2065, 2108, 2172, 2229, 2245, 2293, 2335, 2369, 2440, 2500, 2562, 2639, 2682, 2735, 2863, 2875, 2888
 Territory
 地域
 
-# emu/inptport.c: 430 mame/drivers/dbz.c: 271, 364
+# emu/inptport.c: 431 mame/drivers/dbz.c: 271, 364
 Test
 テスト
 
-# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 777 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3286 mame/drivers/ertictac.c: 230 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 144 mame/drivers/gdrawpkr.c: 290 mame/drivers/halleys.c: 1700 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 760, 808 mame/drivers/jchan.c: 729 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 114 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 379, 771, 1230, 2179 mame/drivers/nwk-tr.c: 849 mame/drivers/nycaptor.c: 613 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 260 mame/drivers/quasar.c: 315 mame/drivers/quizo.c: 186 mame/drivers/raiden2.c: 978, 1057, 1106 mame/drivers/segas16a.c: 1630 mame/drivers/segas16b.c: 2915 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 619 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2056
+# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 777 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3286 mame/drivers/ertictac.c: 230 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 144 mame/drivers/gdrawpkr.c: 290 mame/drivers/halleys.c: 1700 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 760, 808 mame/drivers/jchan.c: 729 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 114 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 386, 778, 1237, 2186 mame/drivers/nwk-tr.c: 849 mame/drivers/nycaptor.c: 613 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 260 mame/drivers/quasar.c: 315 mame/drivers/quizo.c: 186 mame/drivers/raiden2.c: 978, 1057, 1106 mame/drivers/segas16a.c: 1630 mame/drivers/segas16b.c: 2915 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 619 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2057
 Test Mode
 テストモード
 
-# mame/drivers/dbz.c: 271, 364 mame/drivers/kinst.c: 518, 622 mame/drivers/konamigq.c: 470 mame/drivers/konamigv.c: 392 mame/drivers/ksys573.c: 2791 mame/drivers/mcr68.c: 734 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 933 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 232, 443, 509, 604, 694 mame/drivers/midzeus.c: 1020, 1101, 1227 mame/drivers/mpu4.c: 1859, 1982, 2106, 2229 mame/drivers/namcos10.c: 407 mame/drivers/namcos11.c: 934 mame/drivers/namcos12.c: 1448 mame/drivers/namcos21.c: 1941, 2018, 2095 mame/drivers/neodrvr.c: 60 mame/drivers/neogeo.c: 1195 mame/drivers/seattle.c: 2194, 2319, 2417 mame/drivers/vegas.c: 2046 mame/drivers/zn.c: 3063
+# mame/drivers/dbz.c: 271, 364 mame/drivers/kinst.c: 518, 622 mame/drivers/konamigq.c: 470 mame/drivers/konamigv.c: 392 mame/drivers/ksys573.c: 2793 mame/drivers/mcr68.c: 734 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 933 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 232, 443, 509, 604, 694 mame/drivers/midzeus.c: 1020, 1101, 1227 mame/drivers/mpu4.c: 1859, 1982, 2106, 2229 mame/drivers/namcos10.c: 407 mame/drivers/namcos11.c: 934 mame/drivers/namcos12.c: 1448 mame/drivers/namcos21.c: 1941, 2018, 2095 mame/drivers/neodrvr.c: 60 mame/drivers/neogeo.c: 1218 mame/drivers/seattle.c: 2195, 2320, 2418 mame/drivers/vegas.c: 2047 mame/drivers/zn.c: 3063
 Test Switch
 テストスイッチ
 
@@ -4562,7 +4638,7 @@ Test Switch
 Text
 テキスト
 
-# emu/cheat.c: 7156
+# emu/cheat.c: 7164
 Text Label
 テキストラベル
 
@@ -4622,39 +4698,39 @@ There are known problems with this game:
 There are working clones of this game. They are:
 このゲームには以下の動作可能\なクローンが存在します:
 
-# emu/inptport.c: 1313
+# emu/inptport.c: 1309
 This INP file is not an extended INP file, extra info not available\n
 この再生ファイルは拡張再生ファイルではありません。追加情報はありません\n
 
-# emu/clifront.c: 831
+# emu/clifront.c: 830
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
-# emu/inptport.c: 1095 
+# emu/inptport.c: 1070 
 Throttle
 スピード制限 有効/無効
 
-# emu/uitext.c: 145
+# emu/uitext.c: 147
 Tickets dispensed
 チケット発券数
 
-# emu/inptport.c: 431, 917
+# emu/inptport.c: 432, 892
 Tilt
 ティルト
 
-# mame/drivers/amspdwy.c: 181 mame/drivers/cinemat.c: 360, 519 mame/drivers/cps1.c: 4001, 4114 mame/drivers/dkong.c: 1006 mame/drivers/drtomy.c: 207 mame/drivers/fitfight.c: 315, 453, 595 mame/drivers/gomoku.c: 116 mame/drivers/homedata.c: 873, 954 mame/drivers/lazercmd.c: 518 mame/drivers/m107.c: 275 mame/drivers/m92.c: 954 mame/drivers/megaplay.c: 244 mame/drivers/megasys1.c: 1412, 2215 mame/drivers/metlclsh.c: 225 mame/drivers/metro.c: 2679, 2773 mame/drivers/mw8080bw.c: 2180 mame/drivers/nbmj8688.c: 2101, 2175 mame/drivers/pacman.c: 2170, 2271 mame/drivers/paradise.c: 148, 216 mame/drivers/pcktgal.c: 159 mame/drivers/pktgaldx.c: 251 mame/drivers/pokechmp.c: 203 mame/drivers/punchout.c: 518, 589 mame/drivers/realbrk.c: 292 mame/drivers/segas16b.c: 2197 mame/drivers/segaxbd.c: 805, 847, 939, 1020 mame/drivers/snowbros.c: 1298, 1377 mame/drivers/starfire.c: 206, 255 mame/drivers/supbtime.c: 295 mame/drivers/system1.c: 970, 1132, 1184 mame/drivers/system16.c: 1027 mame/drivers/taito_f2.c: 3302 mame/drivers/taito_l.c: 1295, 1822, 1978, 1978 mame/drivers/taitosj.c: 918, 1003, 1445 mame/drivers/tattack.c: 99 mame/drivers/troangel.c: 106 mame/drivers/tubep.c: 627 mame/drivers/tumbleb.c: 1115, 1346, 1692 mame/drivers/vicdual.c: 495 mame/drivers/vsnes.c: 860, 1380 mame/drivers/wwfsstar.c: 288 mame/drivers/zac2650.c: 171
+# mame/drivers/amspdwy.c: 181 mame/drivers/cinemat.c: 360, 519 mame/drivers/cps1.c: 4001, 4114 mame/drivers/dkong.c: 1006 mame/drivers/drtomy.c: 207 mame/drivers/fitfight.c: 315, 453, 595 mame/drivers/gomoku.c: 116 mame/drivers/homedata.c: 873, 954 mame/drivers/lazercmd.c: 518 mame/drivers/m107.c: 275 mame/drivers/m92.c: 954 mame/drivers/megaplay.c: 244 mame/drivers/megasys1.c: 1412, 2215 mame/drivers/metlclsh.c: 225 mame/drivers/metro.c: 2679, 2773 mame/drivers/mw8080bw.c: 2187 mame/drivers/nbmj8688.c: 2101, 2175 mame/drivers/pacman.c: 2170, 2271 mame/drivers/paradise.c: 148, 216 mame/drivers/pcktgal.c: 159 mame/drivers/pktgaldx.c: 251 mame/drivers/pokechmp.c: 203 mame/drivers/punchout.c: 518, 589 mame/drivers/realbrk.c: 292 mame/drivers/segas16b.c: 2197 mame/drivers/segaxbd.c: 806, 848, 940, 1021 mame/drivers/snowbros.c: 1303, 1382 mame/drivers/starfire.c: 208, 257 mame/drivers/supbtime.c: 295 mame/drivers/system1.c: 970, 1132, 1184 mame/drivers/system16.c: 1027 mame/drivers/taito_f2.c: 3302 mame/drivers/taito_l.c: 1295, 1822, 1978, 1978 mame/drivers/taitosj.c: 918, 1003, 1445 mame/drivers/tattack.c: 99 mame/drivers/troangel.c: 106 mame/drivers/tubep.c: 629 mame/drivers/tumbleb.c: 1115, 1346, 1692 mame/drivers/vicdual.c: 495 mame/drivers/vsnes.c: 860, 1380 mame/drivers/wwfsstar.c: 288 mame/drivers/zac2650.c: 171
 Time
 時間
 
-# mame/drivers/chinagat.c: 397 mame/drivers/ddragon.c: 790 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 719, 770, 822, 874 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2773 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1278 mame/drivers/segas16a.c: 1135, 1160 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2935, 3051 mame/drivers/vsnes.c: 1472, 1780
+# mame/drivers/chinagat.c: 397 mame/drivers/ddragon.c: 790 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 719, 770, 822, 874 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2773 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1278 mame/drivers/segas16a.c: 1135, 1160 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2960, 3076 mame/drivers/vsnes.c: 1472, 1780
 Timer
 時間
 
-# emu/cheat.c: 4827, 5452
+# emu/cheat.c: 4835, 5460
 Timer (+ or -)
 時間
 
-# emu/uitext.c: 202
+# emu/uitext.c: 204
 Timers (+/- some value)
 タイマー (+/- の値)
 
@@ -4662,87 +4738,87 @@ Timers (+/- some value)
 Title
 タイトル画面
 
-# emu/uitext.c: 242
+# emu/uitext.c: 244
 Toggle
 切り替え
 
-# emu/inptport.c: 1099
+# emu/inptport.c: 1075
 Toggle Cheat
 チート 有効/無効
 
-# emu/inptport.c: 1140
+# emu/inptport.c: 1115
 Toggle Crosshair
 十\字線のトグル
 
-# emu/inptport.c: 1131
+# emu/inptport.c: 1106
 Toggle Debugger
 デバッガ表\示切り替え
 
-# emu/inptport.c: 1003
+# emu/inptport.c: 978
 Track X
 トラック X
 
-# emu/inptport.c: 1004
+# emu/inptport.c: 979
 Track X 2
 トラック X 2
 
-# emu/inptport.c: 1005
+# emu/inptport.c: 980
 Track X 3
 トラック X 3
 
-# emu/inptport.c: 1006
+# emu/inptport.c: 981
 Track X 4
 トラック X 4
 
-# emu/inptport.c: 1007
+# emu/inptport.c: 982
 Track X 5
 トラック X 5
 
-# emu/inptport.c: 1008
+# emu/inptport.c: 983
 Track X 6
 トラック X 6
 
-# emu/inptport.c: 1009
+# emu/inptport.c: 984
 Track X 7
 トラック X 7
 
-# emu/inptport.c: 1010
+# emu/inptport.c: 985
 Track X 8
 トラック X 8
 
-# emu/inptport.c: 1012
+# emu/inptport.c: 987
 Track Y
 トラック Y
 
-# emu/inptport.c: 1013
+# emu/inptport.c: 988
 Track Y 2
 トラック Y 2
 
-# emu/inptport.c: 1014
+# emu/inptport.c: 989
 Track Y 3
 トラック Y 3
 
-# emu/inptport.c: 1015
+# emu/inptport.c: 990
 Track Y 4
 トラック Y 4
 
-# emu/inptport.c: 1016
+# emu/inptport.c: 991
 Track Y 5
 トラック Y 5
 
-# emu/inptport.c: 1017
+# emu/inptport.c: 992
 Track Y 6
 トラック Y 6
 
-# emu/inptport.c: 1018
+# emu/inptport.c: 993
 Track Y 7
 トラック Y 7
 
-# emu/inptport.c: 1019
+# emu/inptport.c: 994
 Track Y 8
 トラック Y 8
 
-# emu/inptport.c: 473 
+# emu/inptport.c: 474 
 Trackball
 トラックボール
 
@@ -4758,7 +4834,7 @@ Triple Side-by-Side
 Triple Side-by-Side (Gapless)
 3画面 横並び (繋ぎ目なし)
 
-# emu/cheat.c: 3214 mame/drivers/lastduel.c: 422 
+# emu/cheat.c: 3222 mame/drivers/lastduel.c: 422 
 Type
 種別
 
@@ -4766,71 +4842,79 @@ Type
 Type OK or move the joystick left then right to continue
 続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
-# emu/inptport.c: 1120
+# emu/uimenu.c: 3071
+Type name or select: %s_
+名前を入力または選択: %s_
+
+# emu/uimenu.c: 3073
+Type name or select: (random)
+名前を入力または選択: (ランダム)
+
+# emu/inptport.c: 1095
 UI Cancel
 UI キャンセル
 
-# emu/inptport.c: 1121
+# emu/inptport.c: 1096
 UI Clear
 UI クリア
 
-# emu/inptport.c: 1112
+# emu/inptport.c: 1087
 UI Down
 UI 下
 
-# emu/inptport.c: 1116
+# emu/inptport.c: 1091
 UI End
 UI エンド
 
-# emu/inptport.c: 1115
+# emu/inptport.c: 1090
 UI Home
 UI ホーム
 
-# emu/inptport.c: 1113
+# emu/inptport.c: 1088
 UI Left
 UI 左
 
-# emu/inptport.c: 1125
+# emu/inptport.c: 1100
 UI Next Group
 UI 次のグループ
 
-# emu/inptport.c: 1118
+# emu/inptport.c: 1093
 UI Page Down
 UI ページダウン
 
-# emu/inptport.c: 1117
+# emu/inptport.c: 1092
 UI Page Up
 UI ページアップ
 
-# emu/inptport.c: 1124
+# emu/inptport.c: 1099
 UI Previous Group
 UI 前のグループ
 
-# emu/inptport.c: 1114
+# emu/inptport.c: 1089
 UI Right
 UI 右
 
-# emu/inptport.c: 1126
+# emu/inptport.c: 1101
 UI Rotate
 UI 回転
 
-# emu/inptport.c: 1119
+# emu/inptport.c: 1094
 UI Select
 UI 決定
 
-# emu/inptport.c: 1129
+# emu/inptport.c: 1104
 UI Toggle
 UI 表\示切り替え
 
-# emu/inptport.c: 1111
+# emu/inptport.c: 1086
 UI Up
 UI 上
 
-# emu/inptport.c: 1122
+# emu/inptport.c: 1097
 UI Zoom In
 UI ズームイン
 
-# emu/inptport.c: 1123
+# emu/inptport.c: 1098
 UI Zoom Out
 UI ズームアウト
 
@@ -4838,7 +4922,7 @@ UI ズームアウト
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
 
-# emu/cheat.c: 9085 emu/romload.c: 277 lib/util/cdrom.c: 473 mame/drivers/ms32.c: 434 mame/drivers/segahang.c: 547, 563 mame/drivers/segaorun.c: 583, 734 mame/video/v9938.c: 68
+# emu/cheat.c: 9093 emu/romload.c: 277 lib/util/cdrom.c: 473 mame/drivers/ms32.c: 434 mame/drivers/segahang.c: 547, 563 mame/drivers/segaorun.c: 584, 735 mame/video/v9938.c: 68
 UNKNOWN
 不明
 
@@ -4846,19 +4930,23 @@ UNKNOWN
 US
 米国
 
-# emu/inptport.c: 436 
+# emu/inptport.c: 437 
 USA
 アメリカ
 
-# emu/clifront.c: 422
+# emu/video.c: 373
+Unable to allocate snapshot render target\n
+スナップショット用の描画対象が用意出来ません\n
+
+# emu/clifront.c: 421
 Unable to create file %s.ini\n
 ファイル%s.iniが作成出来ません\n
 
-# emu/mame.c: 1757
+# emu/mame.c: 1816
 Unable to load due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを読み込むことが出来ません。詳細はerror.logをご覧下さい。
 
-# emu/mame.c: 1671
+# emu/mame.c: 1730
 Unable to save due to pending anonymous timers. See error.log for details.
 何かのタイマーが保留中のためステートを保存する事が出来ません。詳細はerror.logをご覧下さい。
 
@@ -4874,7 +4962,11 @@ Unexpected float option %s queried\n
 Unexpected integer option %s queried\n
 整数値オプション%sが不正です\n
 
-# emu/inptport.c: 481 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 tools/regrep.c: 93
+# emu/uimenu.c: 3139
+Unimplemented
+未対応
+
+# emu/inptport.c: 482 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 tools/regrep.c: 93
 Unknown
 不明
 
@@ -4882,7 +4974,7 @@ Unknown
 Unlimited
 無制限
 
-# emu/inptport.c: 480 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1615 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 552, 555 mame/drivers/ssv.c: 1186
+# emu/inptport.c: 481 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1615 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 552, 555 mame/drivers/ssv.c: 1186
 Unused
 未使用
 
@@ -5002,19 +5094,19 @@ Unused (8)
 Unused (9)
 未使用 (9)
 
-# emu/ui.c: 636
+# emu/ui.c: 646
 Updating Artwork...
 アートワークを更新中...
 
-# emu/inptport.c: 425
+# emu/inptport.c: 426
 Upright
 アップライト
 
-# mame/drivers/segaxbd.c: 769
+# mame/drivers/segaxbd.c: 770
 Upright 1
 アップライト1
 
-# emu/uitext.c: 144
+# emu/uitext.c: 146
 Uptime
 起動時間
 
@@ -5022,19 +5114,19 @@ Uptime
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。
 
-# emu/clifront.c: 462
+# emu/clifront.c: 461
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 使用法:  MAME ゲーム名 [オプション]\n\n         MAME -showusage    オプションを簡単に一覧表\示\n         MAME -showconfig   オプションの設定値を一覧表\示\n         MAME -createconfig mame.iniを生成\n\n詳しい使用法については、windows.txtを参照下さい\n
 
-# emu/clifront.c: 361
+# emu/clifront.c: 360
 Usage: %s [%s] [options]\n\nOptions:\n
 使用法: %s [%s] [オプション]\n\nオプション:\n
 
-# emu/uitext.c: 131
+# emu/uitext.c: 133
 User Interface
 ユーザインターフェイス
 
-# emu/cheat.c: 3521
+# emu/cheat.c: 3529
 User Select
 ユーザの選択
 
@@ -5046,15 +5138,15 @@ VFDの出力のみ表\示
 VFD Only (%d:%d)
 VFDのみ (%d:%d)
 
-# emu/cheat.c: 4822, 5840, 5976 emu/uitext.c: 43
+# emu/cheat.c: 4830, 5848, 5984 emu/uitext.c: 43
 Value
 値
 
-# emu/cheat.c: 5438
+# emu/cheat.c: 5446
 Value (Equal)
 値 (一致)
 
-# emu/cheat.c: 5445
+# emu/cheat.c: 5453
 Value (NearTo)
 値 (近似値)
 
@@ -5066,23 +5158,23 @@ Vector Flicker
 Vector Game
 ベクタゲーム
 
-# emu/inptport.c: 432 emu/uitext.c: 330
+# emu/inptport.c: 433 emu/uitext.c: 332
 Version
 バージョン
 
-# emu/inptport.c: 1339
+# emu/inptport.c: 1335
 Version string: %s\n
 バージョン文字列: %s\n
 
-# emu/ui.c: 2643
+# emu/ui.c: 2663
 Vert position
 垂直位置
 
-# emu/ui.c: 2609
+# emu/ui.c: 2629
 Vert stretch
 垂直拡大
 
-# mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 752, 897 mame/drivers/jack.c: 685 mame/drivers/thepit.c: 526 
+# mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 752, 897 mame/drivers/jack.c: 690 mame/drivers/thepit.c: 526 
 Vertical
 垂直
 
@@ -5090,31 +5182,31 @@ Vertical
 Vertically
 垂直
 
-# emu/inptport.c: 448
+# emu/inptport.c: 449
 Very Easy
 ベリーイージー
 
-# emu/inptport.c: 457
+# emu/inptport.c: 458
 Very Hard
 ベリーハード
 
-# emu/inptport.c: 463
+# emu/inptport.c: 464
 Very High
 とても高い
 
-# emu/inptport.c: 458
+# emu/inptport.c: 459
 Very Low
 ベリーロー
 
-# emu/cheat.c: 6329 emu/uitext.c: 210 mame/drivers/cps1.c: 1579 mame/drivers/m62.c: 928 mame/drivers/rohga.c: 510
+# emu/cheat.c: 6337 emu/uitext.c: 212 mame/drivers/cps1.c: 1579 mame/drivers/m62.c: 928 mame/drivers/rohga.c: 510
 Very Slow
 とても遅い
 
-# emu/uitext.c: 226
+# emu/uitext.c: 228
 Video Options
 ビデオオプション
 
-# emu/uitext.c: 166
+# emu/uitext.c: 168
 View Last Results
 最後の結果を表\示する
 
@@ -5126,11 +5218,11 @@ Voice
 Volume
 音量
 
-# emu/inptport.c: 919
+# emu/inptport.c: 894
 Volume Down
 音量を下げる
 
-# emu/inptport.c: 920
+# emu/inptport.c: 895
 Volume Up
 音量を上げる
 
@@ -5154,51 +5246,51 @@ Warning: invalid line in INI: %s
 Warning: unknown option in INI: %s\n
 警告: INIファイルに不明なオプションがあります: %s
 
-# emu/cheat.c: 2866 emu/uitext.c: 194
+# emu/cheat.c: 2866 emu/uitext.c: 196
 Watch
 ウォッチ
 
-# emu/cheat.c: 8649
+# emu/cheat.c: 8657
 Watch %.8X (%d)
 ウォッチ %.8X (%d)
 
-# emu/cheat.c: 3333
+# emu/cheat.c: 3341
 Watch Add Value
 ウォッチに値を追加
 
-# emu/cheat.c: 3341
+# emu/cheat.c: 3349
 Watch Format
 ウォッチの形式
 
-# emu/cheat.c: 3349
+# emu/cheat.c: 3357
 Watch Label
 ウォッチのラベル
 
-# emu/cheat.c: 3316
+# emu/cheat.c: 3324
 Watch Per Line
 1行あたりのウォッチ
 
-# emu/cheat.c: 3296
+# emu/cheat.c: 3304
 Watch Size
 ウォッチサイズ
 
-# emu/cheat.c: 3306
+# emu/cheat.c: 3314
 Watch Skip
 ウォッチスキップ
 
-# emu/inptport.c: 1137
+# emu/inptport.c: 1112
 Watch Value
 ウォッチの値表\示
 
-# emu/uitext.c: 172
+# emu/uitext.c: 174
 Watchpoint
 ウォッチポイント
 
-# emu/uitext.c: 175
+# emu/uitext.c: 177
 Watchpoints
 ウォッチポイント
 
-# emu/inptport.c: 439
+# emu/inptport.c: 440
 World
 世界共通
 
@@ -5210,19 +5302,19 @@ Write
 Write If Match
 一致したら書き込み
 
-# emu/uitext.c: 192
+# emu/uitext.c: 194
 X Position
 X座標
 
-# emu/cheat.c: 7205 mame/machine/scudsp.c: 885
+# emu/cheat.c: 7213 mame/machine/scudsp.c: 885
 XOR
 XOR値
 
-# emu/uitext.c: 193
+# emu/uitext.c: 195
 Y Position
 Y座標
 
-# emu/inptport.c: 381 
+# emu/inptport.c: 382 
 Yes
 はい
 
@@ -5246,7 +5338,7 @@ Zoom Auto
 \n   TOTAL: %4d\n
 \n    合計: %4d\n
 
-# emu/video.c: 1201
+# emu/video.c: 1206
 \n%d partial updates
 \n%d部分更新
 
@@ -5274,7 +5366,7 @@ Zoom Auto
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# emu/clifront.c: 274
+# emu/clifront.c: 273
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -5342,7 +5434,7 @@ Zoom Auto
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
 \t不正なチェックサム値%sを0として処理します (先頭のゼロを確認して下さい)\n
 
-# emu/cheat.c: 2643, 2793, 4663
+# emu/cheat.c: 2643, 2793, 4671
 activation key saved
 アクティベーションキーが保存されました
 
@@ -5354,15 +5446,23 @@ all available info on driver in XML format
 amount to scale the screen brightness when paused
 ポーズ時の画面の明るさ
 
-# emu/mamecore.h: 171 
+# emu/inptport.c: 1222
+analog joystick
+アナログスティック
+
+# emu/uimenu.c: 3154
+and the MAME team
+and the MAME team
+
+# emu/mamecore.h: 168 
 assert: %s:%d: %s
 アサート: %s:%d: %s
 
-# emu/video.c: 1189
+# emu/video.c: 1194
 auto%2d/%d
 自動%2d/%d
 
-# emu/emuopts.c: 180
+# emu/emuopts.c: 201
 automatic pause when playback is finished
 再生終了時に自動停止
 
@@ -5374,47 +5474,51 @@ automatically rotate screen clockwise 90 degrees if vertical
 automatically rotate screen counterclockwise 90 degrees if vertical
 垂直型画面の場合は自動で反時計回りに90度回転します
 
-# emu/emuopts.c: 211
+# emu/emuopts.c: 232
 button color (aqua)
 ボタン (S 0r 7)
 
-# emu/emuopts.c: 208
+# emu/emuopts.c: 229
 button color (blue)
 ボタン (D or 4)
 
-# emu/emuopts.c: 207
+# emu/emuopts.c: 228
 button color (green)
 ボタン (C or 3)
 
-# emu/emuopts.c: 214
+# emu/emuopts.c: 235
 button color (lime)
 ボタン (10)
 
-# emu/emuopts.c: 213
+# emu/emuopts.c: 234
 button color (navy)
 ボタン (9)
 
-# emu/emuopts.c: 210
+# emu/emuopts.c: 231
 button color (pink)
 ボタン (P or 6)
 
-# emu/emuopts.c: 209
+# emu/emuopts.c: 230
 button color (purple)
 ボタン (K or 5)
 
-# emu/emuopts.c: 205
+# emu/emuopts.c: 226
 button color (red)
 ボタン (A or 1)
 
-# emu/emuopts.c: 212
+# emu/emuopts.c: 233
 button color (silver)
 ボタン (8)
 
-# emu/emuopts.c: 206
+# emu/emuopts.c: 227
 button color (yellow)
 ボタン (B or 2)
 
-# emu/emuopts.c: 186
+# emu/emuopts.c: 163
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+ジョイスティックの入力を無視する領域の内側しきい値 (0.0 中央、1.0 外)
+
+# emu/emuopts.c: 207
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 M68Kコアを変更 (0:C、1:DRC、2:ASM+DRC)
 
@@ -5442,7 +5546,7 @@ create the default configuration file
 crop artwork to game screen size
 アートワークをゲーム画面サイズでカットします
 
-# emu/emuopts.c: 215
+# emu/emuopts.c: 236
 cursor color
 カーソ\ル
 
@@ -5458,7 +5562,7 @@ default game screen contrast correction
 default game screen gamma correction
 デフォルトのゲーム画面のガンマ補正値
 
-# emu/info.c: 90 
+# emu/info.c: 90 emu/inptport.c: 1225
 dial
 ダイアル
 
@@ -5514,7 +5618,7 @@ directory to save states
 disabled
 無効
 
-# emu/emuopts.c: 159
+# emu/emuopts.c: 180
 display additional diagnostic information
 起動時に診断用の情報を表\示
 
@@ -5525,6 +5629,38 @@ display running parameters
 # emu/clifront.c: 94
 driver sourcefile
 ドライバのソ\ースファイル名を表\示
+
+# emu/emuopts.c: 171
+enable (keyboard|mouse|joystick) if a dial control is present
+ダイヤルを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 173
+enable (keyboard|mouse|joystick) if a lightgun control is present
+光線中を使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 175
+enable (keyboard|mouse|joystick) if a mouse control is present
+マウスを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 168
+enable (keyboard|mouse|joystick) if a paddle control is present
+パドルを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 170
+enable (keyboard|mouse|joystick) if a pedal control is present
+ペダルを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 174
+enable (keyboard|mouse|joystick) if a positional control is present
+座標コントロールを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 172
+enable (keyboard|mouse|joystick) if a trackball control is present
+トラックボールを使用する時に(keyboard|mouse|joystick)を有効
+
+# emu/emuopts.c: 169
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+アナログスティックを使用する時に(keyboard|mouse|joystick)を有効
 
 # emu/emuopts.c: 101
 enable automatic frameskip selection
@@ -5542,13 +5678,25 @@ enable backdrops if artwork is enabled and available
 enable bezels if artwork is enabled and available
 アートワークが使用可能\な場合にベゼルを有効
 
-# emu/emuopts.c: 171
+# emu/emuopts.c: 192
 enable cheat subsystem
 チートシステムを有効
+
+# emu/emuopts.c: 156
+enable joystick input
+ジョイスティックを使用
+
+# emu/emuopts.c: 157
+enable lightgun input
+光線銃を使用
 
 # emu/clifront.c: 108
 enable loading of configuration files
 設定ファイルの読み込みを有効
+
+# emu/emuopts.c: 155
+enable mouse input
+マウスまたはトラックボールを使用
 
 # emu/emuopts.c: 121
 enable overlays if artwork is enabled and available
@@ -5562,6 +5710,10 @@ enable sleeping, which gives time back to other applications when idle
 enable sound output
 サウンドを有効
 
+# emu/emuopts.c: 160
+enable steadykey support
+ボタンの同時押し認識を容易にする
+
 # emu/emuopts.c: 144
 enable the use of external samples if available
 存在する場合、外部サンプルファイルを有効にする
@@ -5570,11 +5722,11 @@ enable the use of external samples if available
 enable throttling to keep game running in sync with real time
 実際の時間と実行速度を同期するために速度制限を有効にする
 
-# emu/emuopts.c: 161
+# emu/emuopts.c: 182
 enable/disable debugger
 デバッガの有効・無効
 
-# emu/emuopts.c: 237
+# emu/emuopts.c: 258
 enable/disable local language game list
 ローカライズされたゲームリストを有効
 
@@ -5586,7 +5738,11 @@ enable/disable volume auto adjust
 enabled
 有効
 
-# emu/clifront.c: 589
+# emu/emuopts.c: 164
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
+
+# emu/clifront.c: 588
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
@@ -5594,7 +5750,7 @@ error: invalid value for language: %s\nUse %s\n
 error: invalid value for palette: %s\n
 エラー: 不正なパレット指定: %s\n
 
-# emu/video.c: 1185
+# emu/video.c: 1190
 fast 
 高速
 
@@ -5606,27 +5762,27 @@ flip screen left-right
 flip screen upside-down
 上下反転
 
-# emu/emuopts.c: 201
+# emu/emuopts.c: 222
 font blank color
 フォント (空白)
 
-# emu/emuopts.c: 202
+# emu/emuopts.c: 223
 font normal color
 フォント (通常)
 
-# emu/emuopts.c: 203
+# emu/emuopts.c: 224
 font special color
 フォント (特殊)
 
-# emu/video.c: 1177
+# emu/video.c: 1182
 frame:%d 
 フレーム:%d
 
-# emu/clifront.c: 361 emu/info.c: 25 mame/drivers/ksys573.c: 3098, 3113 
+# emu/clifront.c: 360 emu/info.c: 25 mame/drivers/ksys573.c: 3100, 3115 
 game
 ゲーム名
 
-# emu/emuopts.c: 158
+# emu/emuopts.c: 179
 generate an error.log file
 error.logファイルを生成
 
@@ -5638,31 +5794,35 @@ high score database name
 history database name
 ヒストリーデータベースのファイル名
 
+# emu/uimenu.c: 3157
+http://mamedev.org
+http://mamedev.org
+
 # emu/emuopts.c: 131
 image enhancement effect
 イメージを向上させるエフェクト
 
-# emu/memory.c: 3128 
+# emu/memory.c: 3128
 invalid
 不正
 
-# emu/emuopts.c: 174
+# emu/emuopts.c: 195
 ips datfile name
 IPSデータファイル名
 
-# emu/clifront.c: 981, 1061
+# emu/clifront.c: 980, 1060
 is bad\n
 は異常です\n
 
-# emu/clifront.c: 991, 1071
+# emu/clifront.c: 990, 1070
 is best available\n
 は現状では最良な状態です\n
 
-# emu/clifront.c: 986, 1066
+# emu/clifront.c: 985, 1065
 is good\n
 は正常です\n
 
-# emu/info.c: 90 
+# emu/emuopts.h: 130 emu/info.c: 90 emu/inptport.c: 1223, 4035, 4038 
 lightgun
 光線銃
 
@@ -5682,23 +5842,23 @@ list required roms for a driver
 mameinfo database name
 MAMEINFOデータベースのファイル名
 
-# emu/input.c: 1071, 1369
+# emu/inputseq.c: 433
 n/a
 なし
 
-# emu/cheat.c: 2646, 2796, 4666
+# emu/cheat.c: 2646, 2796, 4674
 no activation key
 アクティベーションキーはありません
 
-# emu/cheat.c: 6634
+# emu/cheat.c: 6642
 no results for this region
 この領域には検索結果がありません
 
-# emu/cheat.c: 6636
+# emu/cheat.c: 6644
 no results found
 検索結果がありません
 
-# emu/input.c: 1066
+# emu/inputseq.c: 448
 not
 not
 
@@ -5718,23 +5878,23 @@ optional filename to write a MNG movie of the current session
 optional filename to write a WAV file of the current session
 指定したファイル名で現在のセッションをWAVサウンドに記録
 
-# emu/input.c: 1067
+# emu/inputseq.c: 446
 or
 or
 
-# emu/cheat.c: 8696, 8731
+# emu/cheat.c: 8704, 8739
 out of memory while adding search
 サーチの追加でメモリ不足です
 
-# emu/cheat.c: 8468, 8501
+# emu/cheat.c: 8476, 8509
 out of memory while adding watch
 ウォッチの追加でメモリ不足です
 
-# emu/cheat.c: 8186, 8220, 8342, 8370
+# emu/cheat.c: 8194, 8228, 8350, 8378
 out of memory while loading cheat database
 チートデータの読み込みでメモリ不足です
 
-# emu/info.c: 90 
+# emu/info.c: 90 emu/inptport.c: 1221
 paddle
 パドル
 
@@ -5766,11 +5926,11 @@ iniファイルへのパスを指定
 path to samplesets
 サンプルファイルへのパスを指定
 
-# emu/video.c: 1181
+# emu/video.c: 1186
 paused
 中断
 
-# emu/info.c: 90 
+# emu/info.c: 90 emu/inptport.c: 1224
 pedal
 ペダル
 
@@ -5782,11 +5942,15 @@ perform driver validation on all game drivers
 playback an input file
 入力の再現するファイル名
 
+# emu/inptport.c: 1227
+positional
+座標
+
 # emu/emuopts.c: 154
 preconfigure for specified controller
 コントローラの指定
 
-# emu/emuopts.c: 178
+# emu/emuopts.c: 199
 quit game with confirmation
 ゲーム終了時に確認する
 
@@ -5794,7 +5958,7 @@ quit game with confirmation
 record an input file
 入力を保存するファイル名
 
-# emu/cheat.c: 6465, 6843
+# emu/cheat.c: 6473, 6851
 region invalidated - %d results remain
 不正な領域 - %d個の結果が残っています
 
@@ -5806,15 +5970,15 @@ report romsets that have problems
 report samplesets that have problems
 問題のあるサンプルセットを報告
 
-# emu/clifront.c: 972
+# emu/clifront.c: 971
 romset %s 
 ROMセット%s
 
-# emu/clifront.c: 1005
+# emu/clifront.c: 1004
 romset \"%s\" not found!\n
 ロムセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 1007
+# emu/clifront.c: 1006
 romset \"%s\" not supported!\n
 ロムセット「%s」は対応していません!\n
 
@@ -5834,19 +5998,19 @@ rotate the game screen according to the game's orientation needs it
 s%d
 画面%d
 
-# emu/clifront.c: 1055
+# emu/clifront.c: 1054
 sampleset %s 
 サンプルセット%s
 
-# emu/clifront.c: 1082
+# emu/clifront.c: 1081
 sampleset \"%s\" not found!\n
 サンプルセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 1084
+# emu/clifront.c: 1083
 sampleset \"%s\" not supported!\n
 サンプルセット「%s」は対応していません!\n
 
-# emu/cheat.c: 5254, 5783, 6241, 6258
+# emu/cheat.c: 5262, 5791, 6249, 6266
 saved all memory regions
 全てのメモリ領域を保存しました
 
@@ -5854,23 +6018,23 @@ saved all memory regions
 saved state to load
 保存したステートを読み込む
 
-# emu/video.c: 1850
+# emu/video.c: 1855
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 スケールエフェクト「%s」は15ビットカラー、32ビットカラー共にサポートされていません。スケールエフェクトを無効にします。
 
-# emu/emuopts.c: 162
+# emu/emuopts.c: 183
 script for debugger
 デバッガ用のスクリプト
 
-# emu/emuopts.c: 170
+# emu/emuopts.c: 191
 select the system BIOS to use
 使用するシステムBIOSを選択する
 
-# emu/emuopts.c: 236
+# emu/emuopts.c: 257
 select translation language
 使用する言語を選択
 
-# emu/cheat.c: 11671
+# emu/cheat.c: 11682
 set %s
 %sをセット
 
@@ -5906,11 +6070,11 @@ show help message
 show this help
 このヘルプを表\示
 
-# emu/video.c: 1193
+# emu/video.c: 1198
 skip %d/%d
 スキップ %d/%d
 
-# emu/emuopts.c: 172
+# emu/emuopts.c: 193
 skip displaying the information screen at startup
 起動時の情報表\示画面をスキップする
 
@@ -5938,19 +6102,19 @@ switch drivers
 there are no cheats for this game
 このゲームのチートはありません
 
-# emu/cheat.c: 8927
+# emu/cheat.c: 8935
 there are no old values
 前回の結果はありません
 
-# emu/info.c: 90 
+# emu/info.c: 90 emu/inptport.c: 1226 
 trackball
 トラックボール
 
-# emu/emuopts.c: 192
+# emu/emuopts.c: 213
 transparency of UI background [0 - 255]
 UIの背景の透明度 [0 - 255]
 
-# emu/mame.c: 321
+# emu/mame.c: 322
 unable to open log file
 ログファイルが開けません
 
@@ -5962,15 +6126,19 @@ MAMEと同じフォルダにチートデータを置いてください
 use antialiasing when drawing vectors
 ベクタの描画にアンチエイリアスを使用
 
-# emu/emuopts.c: 191
+# emu/emuopts.c: 212
 use transparent background for UI text
 UIテキストの背景を半透明にする
 
-# emu/cheat.c: 8924
+# emu/cheat.c: 8932
 values restored
 前回の結果に戻しました
 
-# emu/emuopts.c: 204
+# emu/video.c: 685
+video_screen_configure(): visible area must be contained within the width/height!
+video_screen_configure(): 可視領域は幅・高さの範囲を含める必要があります!
+
+# emu/emuopts.c: 225
 window background color
 ウィンドウ 背景色
 

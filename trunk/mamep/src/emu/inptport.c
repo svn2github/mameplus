@@ -4038,7 +4038,7 @@ static void autoselect_device(const input_port_entry *ipt, int type1, int type2,
 		autostring = "lightgun";
 	}
 	else if (strcmp(stemp, "keyboard") != 0)
-		mame_printf_error("Invalid %s value %s; reverting to keyboard\n", option, stemp);
+		mame_printf_error(_("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
 
 	/* only scan the list if we haven't already enabled this class of control */
 	if (!input_device_class_enabled(autoenable))
@@ -4049,7 +4049,7 @@ static void autoselect_device(const input_port_entry *ipt, int type1, int type2,
 				(type2 != 0 && ipt->type == type2) ||
 				(type3 != 0 && ipt->type == type3))
 			{
-				mame_printf_verbose("Input: Autoenabling %s due to presence of a %s\n", autostring, ananame);
+				mame_printf_verbose(_("Input: Autoenabling %s due to presence of a %s\n"), autostring, ananame);
 				input_device_class_enable(autoenable, TRUE);
 				break;
 			}

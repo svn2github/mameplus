@@ -714,7 +714,7 @@ input_device *input_device_add(input_device_class devclass, const char *name, vo
 		device->lastmap = JOYSTICK_MAP_NEUTRAL;
 	}
 
-	mame_printf_verbose("Input: Adding %s #%d: %s\n", code_to_string(devclass_string_table, devclass), devlist->count, device->name);
+	mame_printf_verbose(_("Input: Adding %s #%d: %s\n"), code_to_string(devclass_string_table, devclass), devlist->count, device->name);
 	return device;
 }
 

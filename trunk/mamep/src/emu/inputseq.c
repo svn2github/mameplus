@@ -430,7 +430,7 @@ int input_seq_name(const input_seq *seq, char *buffer, size_t buflen)
 
 	/* special case: empty */
 	if (copycodenum == 0)
-		return safe_append_buffer(buffer, (seq->code[0] == SEQCODE_END) ? "None" : "n/a", buflen);
+		return safe_append_buffer(buffer, (seq->code[0] == SEQCODE_END) ? _("None") : _("n/a"), buflen);
 
 	/* loop until we hit the end */
 	for (codenum = 0; codenum < ARRAY_LENGTH(seqcopy.code) && seqcopy.code[codenum] != SEQCODE_END; codenum++)
@@ -443,9 +443,9 @@ int input_seq_name(const input_seq *seq, char *buffer, size_t buflen)
 
 		/* handle OR/NOT codes here */
 		if (code == SEQCODE_OR)
-			totallen += safe_append_buffer(buffer, "or", buflen);
+			totallen += safe_append_buffer(buffer, _("or"), buflen);
 		else if (code == SEQCODE_NOT)
-			totallen += safe_append_buffer(buffer, "not", buflen);
+			totallen += safe_append_buffer(buffer, _("not"), buflen);
 
 		/* otherwise, assume it is an input code and ask the input system to generate it */
 		else

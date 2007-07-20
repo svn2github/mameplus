@@ -224,7 +224,7 @@ void winwindow_init(running_machine *machine)
 	// create an event to signal UI pausing
 	ui_pause_event = CreateEvent(NULL, TRUE, FALSE, NULL);
 	if (!ui_pause_event)
-		fatalerror("Failed to create pause event");
+		fatalerror(_WINDOWS("Failed to create pause event"));
 
 	// if multithreading, create a thread to run the windows
 	if (multithreading_enabled)
@@ -232,13 +232,13 @@ void winwindow_init(running_machine *machine)
 		// create an event to signal when the window thread is ready
 		window_thread_ready_event = CreateEvent(NULL, TRUE, FALSE, NULL);
 		if (!window_thread_ready_event)
-			fatalerror("Failed to create window thread ready event");
+			fatalerror(_WINDOWS("Failed to create window thread ready event"));
 
 		// create a thread to run the windows from
 		temp = _beginthreadex(NULL, 0, thread_entry, NULL, 0, (unsigned *)&window_threadid);
 		window_thread = (HANDLE)temp;
 		if (window_thread == NULL)
-			fatalerror("Failed to create window thread");
+			fatalerror(_WINDOWS("Failed to create window thread"));
 
 		// set the thread priority equal to the main MAME thread
 		SetThreadPriority(window_thread, GetThreadPriority(GetCurrentThread()));
@@ -575,7 +575,7 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 	// load the layout
 	window->target = render_target_alloc(NULL, 0);
 	if (window->target == NULL)
-		fatalerror("Error creating render target for window %d", index);
+		fatalerror(_WINDOWS("Error creating render target for window %d"), index);
 
 	// set the specific view
 	sprintf(option, "view%d", index);
@@ -611,7 +611,7 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 
 	// handle error conditions
 	if (window->init_state == -1)
-		fatalerror("Unable to complete window creation");
+		fatalerror(_WINDOWS("Unable to complete window creation"));
 }
 
 
@@ -795,7 +795,7 @@ static void create_window_class(void)
 
 		// register the class; fail if we can't
 		if (!RegisterClass(&wc))
-			fatalerror("Failed to create window class");
+			fatalerror(_WINDOWS("Failed to create window class"));
 		classes_created = TRUE;
 	}
 }

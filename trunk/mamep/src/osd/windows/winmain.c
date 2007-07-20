@@ -710,11 +710,11 @@ static int CLIB_DECL compare_hits(const void *item1, const void *item2)
 static void add_symbol_map_entry(UINT32 start, const char *name)
 {
 	if (map_entries == MAX_SYMBOLS)
-		fatalerror("Symbol table full");
+		fatalerror(_WINDOWS("Symbol table full"));
 	symbol_map[map_entries].start = start;
 	symbol_map[map_entries].name = core_strdup(name);
 	if (symbol_map[map_entries].name == NULL)
-		fatalerror("Out of memory");
+		fatalerror(_WINDOWS("Out of memory"));
 	map_entries++;
 }
 

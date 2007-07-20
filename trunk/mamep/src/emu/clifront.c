@@ -522,7 +522,7 @@ void assign_drivers(void)
 						}
 
 					if (!drivers_table[i].name)
-						mame_printf_error("Illegal value for %s = %s\n", OPTION_DRIVER_CONFIG, s);
+						mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_DRIVER_CONFIG, s);
 				}
 				free(s);
  				p = strtok(NULL, ",");
@@ -925,7 +925,7 @@ int cli_info_listsamples(const char *gamename)
 	/* clean up our tracked resources */
 	exit_resource_tracking();
 #else
-	mame_printf_error("Samples not supported in this build\n");
+	mame_printf_error(_("Samples not supported in this build\n"));
 #endif
 
 	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;

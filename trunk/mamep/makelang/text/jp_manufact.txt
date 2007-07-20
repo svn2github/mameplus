@@ -54,7 +54,7 @@ Atari Games
 Athena
 アテナ
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 アトラス
 
@@ -402,7 +402,7 @@ Rare LTD.
 SNK of America
 SNKアメリカ
 
-# Viewpoint
+# Atomiswave Bios
 Sammy
 サミー
 
@@ -710,7 +710,7 @@ ATW USA, Inc.
 Absolute Entertainment Inc.
 
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 
 
@@ -754,7 +754,7 @@ Amenip Nova Games Ltd.
 Ameri
 
 
-# Mad Dog McCree v1C board rev.A
+# American Laser Games BIOS
 American Laser Games
 
 
@@ -782,7 +782,7 @@ Andamiro
 Apple
 
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 
 
@@ -838,7 +838,7 @@ Bally Midway
 Bandai
 
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 
 
@@ -878,7 +878,7 @@ Bootleg in Coinmaster hardware
 Bordun International
 
 
-# The Crystal of Kings
+# Crystal System BIOS
 Brezzasoft
 
 
@@ -960,6 +960,10 @@ Comad
 
 # Funny Bubble (Comad version)
 Comad Industry Co Ltd
+
+
+# Amiga CD32 Bios
+Commodore
 
 
 # Puyo Puyo Sun (J 961115 V0.001)
@@ -1156,6 +1160,10 @@ Eastern Micro Electronics, Inc.
 
 # The Alphax Z (Japan)
 Ed
+
+
+# PS Arcade 95
+Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -1370,7 +1378,7 @@ Hot B
 Human Inc.
 
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 
 
@@ -1522,8 +1530,8 @@ LAX
 Leante Games
 
 
-# Space War (Leijac)
-Leijac
+# Space War (Leijac Corporation)
+Leijac Corporation
 
 
 # Astro Laser
@@ -1544,6 +1552,10 @@ Limenko
 
 # Quizmaster (German)
 Loewen Spielautomaten
+
+
+# Space Invaders (Logitec)
+Logitec
 
 
 # Star Wars Trilogy (ver A)

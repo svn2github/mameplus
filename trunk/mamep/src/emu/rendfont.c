@@ -756,7 +756,7 @@ static int render_font_load_bdf(render_font *font)
 
 			/* some progress for big fonts */
 			if (++charcount % 256 == 0)
-				mame_printf_warning("Loading BDF font... (%d characters loaded)\n", charcount);
+				mame_printf_warning(_("Loading BDF font... (%d characters loaded)\n"), charcount);
 		}
 	}
 	return 0;
@@ -863,7 +863,7 @@ static int render_font_save_cached(render_font *font, const char *filename, UINT
 	int tableindex;
 	int chnum;
 
-	mame_printf_warning("Generating cached BDF font...\n");
+	mame_printf_warning(_("Generating cached BDF font...\n"));
 
 	/* attempt to open the file */
 	filerr = mame_fopen(SEARCHPATH_FONT, filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);

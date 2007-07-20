@@ -1104,7 +1104,7 @@ static void dinput_init(running_machine *machine)
 		// enumerate the ones we have
 		result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_KEYBOARD, dinput_keyboard_enum, 0, DIEDFL_ATTACHEDONLY);
 		if (result != DI_OK)
-			fatalerror("DirectInput: Unable to enumerate keyboards (result=%08X)\n", (UINT32)result);
+			fatalerror(_WINDOWS("DirectInput: Unable to enumerate keyboards (result=%08X)\n"), (UINT32)result);
 	}
 
 	// initialize mouse & lightgun devices, but only if we don't have any yet
@@ -1113,13 +1113,13 @@ static void dinput_init(running_machine *machine)
 		// enumerate the ones we have
 		result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_MOUSE, dinput_mouse_enum, 0, DIEDFL_ATTACHEDONLY);
 		if (result != DI_OK)
-			fatalerror("DirectInput: Unable to enumerate mice (result=%08X)\n", (UINT32)result);
+			fatalerror(_WINDOWS("DirectInput: Unable to enumerate mice (result=%08X)\n"), (UINT32)result);
 	}
 
 	// initialize joystick devices
 	result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_JOYSTICK, dinput_joystick_enum, 0, DIEDFL_ATTACHEDONLY);
 	if (result != DI_OK)
-		fatalerror("DirectInput: Unable to enumerate joysticks (result=%08X)\n", (UINT32)result);
+		fatalerror(_WINDOWS("DirectInput: Unable to enumerate joysticks (result=%08X)\n"), (UINT32)result);
 }
 
 

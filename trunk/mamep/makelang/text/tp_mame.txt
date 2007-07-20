@@ -1586,6 +1586,10 @@ General
 General Help
 
 
+# emu/rendfont.c: 866
+Generating cached BDF font...\n
+
+
 # emu/inptport.c: 445 emu/uilang.c: 22 
 German
 
@@ -1810,6 +1814,14 @@ Input (this game)
 Input file is for game '%s', not for current game '%s'\n
 
 
+# emu/input.c: 717
+Input: Adding %s #%d: %s\n
+
+
+# emu/inptport.c: 4052
+Input: Autoenabling %s due to presence of a %s\n
+
+
 # emu/input.c: 614
 Input: Changing default joystick map
 
@@ -1836,6 +1848,10 @@ Invalid %s value (must be between %f and %f); keeping value of %s\n
 
 # lib/util/options.c: 1081
 Invalid %s value (must be between %i and %i); keeping value of %s\n
+
+
+# emu/uigfx.c: 1049 emu/video.c: 720
+Invalid bitmap format!
 
 
 # emu/input.c: 563
@@ -2052,6 +2068,10 @@ Load from position %c
 
 # emu/romload.c: 373
 Loading (%d%%)
+
+
+# emu/rendfont.c: 759
+Loading BDF font... (%d characters loaded)\n
 
 
 # emu/romload.c: 375
@@ -2420,6 +2440,10 @@ Other Controls
 
 # emu/uitext.c: 28
 Otherwise, type OK or move the joystick left then right to continue
+
+
+# mame/video/tceptor.c: 281, 339, 395 
+Out of memory
 
 
 # emu/uimenu.c: 3126
@@ -4910,6 +4934,10 @@ US
 USA
 
 
+# emu/video.c: 373
+Unable to allocate snapshot render target\n
+
+
 # emu/clifront.c: 421
 Unable to create file %s.ini\n
 
@@ -6104,6 +6132,10 @@ use transparent background for UI text
 
 # emu/cheat.c: 8932
 values restored
+
+
+# emu/video.c: 685
+video_screen_configure(): visible area must be contained within the width/height!
 
 
 # emu/emuopts.c: 225

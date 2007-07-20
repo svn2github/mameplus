@@ -370,7 +370,7 @@ void video_init(running_machine *machine)
 		viddata->snap_target = render_target_alloc(layout_snap, RENDER_CREATE_SINGLE_FILE | RENDER_CREATE_HIDDEN);
 		assert(viddata->snap_target != NULL);
 		if (viddata->snap_target == NULL)
-			fatalerror("Unable to allocate snapshot render target\n");
+			fatalerror(_("Unable to allocate snapshot render target\n"));
 		render_target_set_layer_config(viddata->snap_target, 0);
 	}
 
@@ -682,7 +682,7 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 
 		/* reality checks */
 		if (visarea->min_x < 0 || visarea->min_y < 0 || visarea->max_x >= width || visarea->max_y >= height)
-			fatalerror("video_screen_configure(): visible area must be contained within the width/height!");
+			fatalerror(_("video_screen_configure(): visible area must be contained within the width/height!"));
 
 		/* extract the current width/height from the bitmap */
 		if (info->bitmap[0] != NULL)
@@ -717,7 +717,7 @@ void video_screen_configure(int scrnum, int width, int height, const rectangle *
 				case BITMAP_FORMAT_INDEXED16:	info->format = TEXFORMAT_PALETTE16;		break;
 				case BITMAP_FORMAT_RGB15:		info->format = TEXFORMAT_RGB15;			break;
 				case BITMAP_FORMAT_RGB32:		info->format = TEXFORMAT_RGB32;			break;
-				default:						fatalerror("Invalid bitmap format!");	break;
+				default:						fatalerror(_("Invalid bitmap format!"));	break;
 			}
 
 			/* allocate new stuff */

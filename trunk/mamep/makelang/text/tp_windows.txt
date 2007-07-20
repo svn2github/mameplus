@@ -366,6 +366,18 @@ DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
+# osd/windows/input.c: 1122
+DirectInput: Unable to enumerate joysticks (result=%08X)\n
+
+
+# osd/windows/input.c: 1107
+DirectInput: Unable to enumerate keyboards (result=%08X)\n
+
+
+# osd/windows/input.c: 1116
+DirectInput: Unable to enumerate mice (result=%08X)\n
+
+
 # osd/windows/input.c: 1096
 DirectInput: Using DirectInput %d\n
 
@@ -384,6 +396,10 @@ Error creating DirectSound: %08x\n
 
 # osd/windows/sound.c: 350
 Error creating primary DirectSound buffer: %08x\n
+
+
+# osd/windows/window.c: 578
+Error creating render target for window %d
 
 
 # osd/windows/drawd3d.c: 768
@@ -446,6 +462,22 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 
 
+# osd/windows/window.c: 227
+Failed to create pause event
+
+
+# osd/windows/window.c: 798
+Failed to create window class
+
+
+# osd/windows/window.c: 241
+Failed to create window thread
+
+
+# osd/windows/window.c: 235
+Failed to create window thread ready event
+
+
 # osd/windows/winmain.c: 193
 INPUT DEVICE OPTIONS
 
@@ -466,6 +498,10 @@ Invalid video value %s; reverting to gdi\n
 MAME: %s [%s] - Screen %d
 
 
+# osd/windows/winmain.c: 717
+Out of memory
+
+
 # osd/windows/winmain.c: 154
 PER-WINDOW VIDEO OPTIONS
 
@@ -482,6 +518,10 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
+# osd/windows/winmain.c: 713
+Symbol table full
+
+
 # osd/windows/drawd3d.c: 1781
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
@@ -492,6 +532,10 @@ Toggle Fullscreen
 
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
+
+
+# osd/windows/window.c: 614
+Unable to complete window creation
 
 
 # osd/windows/drawd3d.c: 715
