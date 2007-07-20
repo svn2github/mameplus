@@ -4230,6 +4230,10 @@ Restore Previous Value
 Return to Game
 
 
+# emu/uitext.c: 0
+Select New Game
+
+
 # emu/uitext.c: 143
 Return to Groups
 
