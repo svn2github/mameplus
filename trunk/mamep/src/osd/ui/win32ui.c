@@ -1764,8 +1764,9 @@ static char *ModifyThe(const char *str)
 
 		while (!modify_separator_len(str))
 		{
-			if ((*p++ = *str++) == '\0')
+			if ((*p++ = *str) == '\0')
 				break;
+			str++;
 		}
 
 		*p = '\0';

@@ -328,8 +328,6 @@
 #define IDC_DIAL                        1237
 #define IDC_TRACKBALL                   1238
 #define IDC_LIGHTGUNDEVICE              1239
-#define IDC_ANALOG_AXES_TEXT            1241
-#define IDC_ANALOG_AXES                 1242
 #define IDC_HIGH_PRIORITY_TEXT          1243
 #define IDC_HIGH_PRIORITYTXT            1244
 #define IDC_SELECT_EFFECT               0	 // N/A

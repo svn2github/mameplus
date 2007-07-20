@@ -151,7 +151,6 @@ static void InitializeViewUI(HWND hwnd);
 static void InitializeRefreshUI(HWND hwnd);
 static void UpdateRefreshUI(HWND hwnd);
 static void InitializeDefaultInputUI(HWND hWnd);
-static void InitializeAnalogAxesUI(HWND hWnd);
 static void InitializeEffectUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
@@ -236,7 +235,6 @@ static int  g_nPositionalIndex = 0;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
 static BOOL  g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
-static BOOL g_bAnalogCheckState[65]; // 8 Joysticks  * 8 Axes each
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
@@ -387,7 +385,6 @@ static DWORD dwHelpIDs[] =
 	IDC_BIOS,               HIDC_BIOS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_SCREEN,             HIDC_SCREEN,
-	IDC_ANALOG_AXES,		HIDC_ANALOG_AXES,
 	IDC_PADDLE,				HIDC_PADDLE,
 	IDC_ADSTICK,			HIDC_ADSTICK,
 	IDC_PEDAL,				HIDC_PEDAL,
@@ -2126,26 +2123,6 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 	//We'll need to use a CheckState Table 
 	//Because this one gets called for all kinds of other things too, and not only if a check is set
 	case LVN_ITEMCHANGED: 
-		{
-			if ( ((NMLISTVIEW *) lParam)->hdr.idFrom == IDC_ANALOG_AXES )
-			{
-				HWND hList = ((NMLISTVIEW *) lParam)->hdr.hwndFrom;
-				int iItem = ((NMLISTVIEW *) lParam)->iItem;
-				BOOL bCheckState = ListView_GetCheckState(hList, iItem );
-
-				if( bCheckState != g_bAnalogCheckState[iItem] )
-				{
-					// enable the apply button
-					if (g_nGame > -1)
-						SetGameUsesDefaults(g_nGame,FALSE);
-					g_bUseDefaults = FALSE;
-					PropSheet_Changed(GetParent(hDlg), hDlg);
-					g_bReset = TRUE;
-					EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-					g_bAnalogCheckState[iItem] = ! g_bAnalogCheckState[iItem];
-				}
-			}
-		}
 		break;
 	case PSN_SETACTIVE:
 		/* Initialize the controls. */
@@ -2504,57 +2481,6 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			o->aspects[g_nSelectScreenIndex] = mame_strdup(buffer);
 		}
 	}
-	/*analog axes*/
-	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
-	if (hCtrl)
-	{
-		int nCount;
-		char buffer[200];
-		char digital[200];
-		int oldJoyId = -1;
-		int joyId = 0;
-		int axisId = 0;
-		BOOL bFirst = TRUE;
-		memset(digital,0,sizeof(digital));
-		// Get the number of items in the control
-		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
-		{
-			if( ListView_GetCheckState(hCtrl,nCount) )
-			{
-				//Get The JoyId
-				ListView_GetItemTextA(hCtrl, nCount, 2, buffer, ARRAY_LENGTH(buffer));
-				joyId = atoi(buffer);
-				if( oldJoyId != joyId) 
-				{
-					oldJoyId = joyId;
-					//add new JoyId
-					if( bFirst )
-					{
-						strcat(digital, "j");
-						bFirst = FALSE;
-					}
-					else
-					{
-						strcat(digital, ",j");
-					}
-					strcat(digital, buffer);
-				}
-				//Get The AxisId
-				ListView_GetItemTextA(hCtrl, nCount, 3, buffer, ARRAY_LENGTH(buffer));
-				axisId = atoi(buffer);
-				strcat(digital,"a");
-				strcat(digital, buffer);
-			}
-		}
-		if (!strlen(digital))
-			strcpy(digital,"none");
-		if (mame_stricmp (digital,o->digital) != 0)
-		{
-			// save the new setting
-			FreeIfAllocated(&o->digital);
-			o->digital = mame_strdup(digital);
-		}
-	}
 #ifdef MESS
 	MessPropToOptions(g_nGame, hWnd, o);
 #endif
@@ -2883,86 +2809,6 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 		Static_SetTextA(hCtrl, buf);
 	}
 
-	hCtrl = GetDlgItem(hWnd, IDC_ANALOG_AXES);	
-	if (hCtrl)
-	{
-		int nCount;
-
-		/* Get the number of items in the control */
-		char buffer[200];
-		char digital[200];
-		char *pDest = NULL;
-		char *pDest2 = NULL;
-		char *pDest3 = NULL;
-		int result = 0;
-		int result2 = 0;
-		int result3 = 0;
-		int joyId = 0;
-		int axisId = 0;
-		memset(digital,0,200);
-		// Get the number of items in the control
-		for (nCount = 0; nCount < ListView_GetItemCount(hCtrl); nCount++)
-		{
-			//Get The JoyId
-			ListView_GetItemTextA(hCtrl, nCount,2, buffer, ARRAY_LENGTH(buffer));
-			joyId = atoi(buffer);
-			sprintf(digital,"j%s",buffer);
-			//First find the JoyId in the saved String
-			pDest = strstr (o->digital,digital);
-			result = pDest - o->digital + 1;
-			if ( pDest != NULL)
-			{
-				//TrimRight pDest to the first Comma, as there starts a new Joystick
-				pDest2 = strchr(pDest,',');
-				if( pDest2 != NULL )
-				{
-					result2 = pDest2 - pDest + 1;
-				}
-				//Get The AxisId
-				ListView_GetItemTextA(hCtrl, nCount,3, buffer, ARRAY_LENGTH(buffer));
-				axisId = atoi(buffer);
-				sprintf(digital,"a%s",buffer);
-				//Now find the AxisId in the saved String
-				pDest3 = strstr (pDest,digital);
-				result3 = pDest3 - pDest + 1;
-				if ( pDest3 != NULL)
-				{
-					//if this is after the comma result3 is bigger than result2
-					// show the setting in the Control
-					if( result2 == 0 )
-					{
-						//The Table variable needs to be set before we send the message to the Listview,
-						//this is true for all below cases, otherwise we get false positives
-						g_bAnalogCheckState[nCount] = TRUE;
-						ListView_SetCheckState(hCtrl, nCount, TRUE );
-					}
-					else
-					{
-						if( result3 < result2)
-						{
-							g_bAnalogCheckState[nCount] = TRUE;
-							ListView_SetCheckState(hCtrl, nCount, TRUE );
-						}
-						else
-						{
-							g_bAnalogCheckState[nCount] = FALSE;
-							ListView_SetCheckState(hCtrl, nCount, FALSE );
-						}
-					}
-				}
-				else
-				{
-					g_bAnalogCheckState[nCount] = FALSE;
-					ListView_SetCheckState(hCtrl, nCount, FALSE );
-				}
-			}
-			else
-			{
-				g_bAnalogCheckState[nCount] = FALSE;
-				ListView_SetCheckState(hCtrl, nCount, FALSE );
-			}
-		}
-	}
 	/* vector */
 	hCtrl = GetDlgItem(hWnd, IDC_BEAMDISP);
 	if (hCtrl)
@@ -3061,9 +2907,6 @@ static void SetPropEnabledControls(HWND hWnd)
 //	BOOL multimon = (DirectDraw_GetNumDisplays() >= 2);
 	int joystick_attached = 0;
 	int in_window = 0;
-#ifdef JOYSTICK_ID
-	int  i;
-#endif /* JOYSTICK_ID */
 
 #ifdef MESS
 	MessSetPropEnabledControls(hWnd, pGameOpts);
@@ -3160,11 +3003,11 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATTEXT),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSATDISP),               joystick_attached);
 	EnableWindow(GetDlgItem(hWnd, IDC_JSAT),                   joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES),	           joystick_attached);
-	EnableWindow(GetDlgItem(hWnd, IDC_ANALOG_AXES_TEXT),       joystick_attached);
 #ifdef JOYSTICK_ID
 	if (joystick_attached && DIJoystick.Available())
 	{
+		int  i;
+
 		EnableWindow(GetDlgItem(hWnd, IDC_JOYIDTEXT),  TRUE);
 
 		for (i = 0; i < 8; i++)
@@ -3327,6 +3170,8 @@ static void SetPropEnabledControls(HWND hWnd)
 	// BIOS
 	if (nIndex == GLOBAL_OPTIONS)
 	{
+		int i;
+
 		for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 		{
 			int bios_driver = GetSystemBiosDriver(i);
@@ -3526,80 +3371,6 @@ static void AssignD3DVersion(HWND hWnd)
 	pGameOpts->d3dversion = ptr;
 }
 
-
-static void AssignAnalogAxes(HWND hWnd)
-{
-	int nCheckCounter = 0;
-	int nStickCount = 1;
-	int nAxisCount = 1;
-	int i = 0;
-	BOOL bJSet = FALSE;
-	BOOL bFirstTime = TRUE;
-	char joyname[256];
-	char old_joyname[256];
-	char mapping[256];
-	char j_entry[16];
-	char a_entry[16];
-	memset(&joyname,0,sizeof(joyname));
-	memset(&old_joyname,0,sizeof(old_joyname));
-	memset(&mapping,0,sizeof(mapping));
-	memset(&a_entry,0,sizeof(a_entry));
-	memset(&j_entry,0,sizeof(j_entry));
-
-	FreeIfAllocated(&pGameOpts->digital);
-	
-	for( i=0;i<ListView_GetItemCount(hWnd);i++)
-	{
-		//determine Id of selected entry
-		ListView_GetItemTextA(hWnd, i, 0, joyname, 256);
-		if( strlen(old_joyname) == 0 )
-		{
-			//New Stick
-			strcpy(old_joyname, joyname);
-			sprintf(j_entry,"j%d",nStickCount );
-			bJSet = FALSE;
-		}
-		//Check if Stick has changed
-		if( strcmp(joyname, old_joyname ) != 0 )
-		{
-			strcpy(old_joyname, joyname);
-			nStickCount++;
-			nAxisCount = 0;
-			sprintf(j_entry,"j%d",nStickCount );
-			bJSet = FALSE;
-		}
-		if( ListView_GetCheckState(hWnd, i ) )
-		{
-			if( bJSet == FALSE )
-			{
-				if( bFirstTime )
-					strcat(mapping,j_entry);
-				else
-				{
-					strcat(mapping,", ");
-					strcat(mapping,j_entry);
-				}
-				bJSet = TRUE;
-			}
-			nCheckCounter++;
-			sprintf(a_entry,"a%d",nAxisCount );
-			strcat(mapping,a_entry);
-		}
-		nAxisCount++;
-	}
-	if( nCheckCounter == ListView_GetItemCount(hWnd) )
-	{
-		//all axes on all joysticks are digital
-		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = mame_strdup("all");
-	}
-	if( nCheckCounter == 0 )
-	{
-		// no axes are treated as digital, which is the default...
-		FreeIfAllocated(&pGameOpts->digital);
-		pGameOpts->digital = mame_strdup("none");
-	}
-}
 
 static const char *GetBIOSName(int bios_driver, int nIndex)
 {
@@ -4027,7 +3798,6 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid7,        DM_INT, &pGameOpts->joyid7,             0, 0, 0);
 	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid8,        DM_INT, &pGameOpts->joyid8,             0, 0, 0);
 #endif /* JOYSTICK_ID */
-	DataMapAdd(IDC_ANALOG_AXES,   DM_NONE, CT_NONE,     &pGameOpts->digital,       DM_STRING,&pGameOpts->digital,          0, 0, AssignAnalogAxes);
 	/*Controller mapping*/
 	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,           DM_STRING,&pGameOpts->paddle_device,    0, 0, AssignPaddle);
 	DataMapAdd(IDC_ADSTICK,       DM_INT, CT_COMBOBOX,  &g_nADStickIndex,          DM_STRING,&pGameOpts->adstick_device,   0, 0, AssignADStick);
@@ -4266,7 +4036,6 @@ static void InitializeOptions(HWND hDlg)
 	InitializeScreenUI(hDlg);
 	InitializeSelectScreenUI(hDlg);
 	InitializeDefaultInputUI(hDlg);
-	InitializeAnalogAxesUI(hDlg);
 	InitializeEffectUI(hDlg);
 	InitializeBIOSUI(hDlg);
 	InitializeDefaultBIOSUI(hDlg);
@@ -5017,63 +4786,6 @@ static void UpdateRefreshUI(HWND hwnd)
 static void InitializeRefreshUI(HWND hwnd)
 {
 	UpdateRefreshUI(hwnd);
-}
-/*Populate the Analog axes Listview*/
-static void InitializeAnalogAxesUI(HWND hwnd)
-{
-	int i=0, j=0, res = 0;
-	int iEntryCounter = 0;
-	WCHAR buf[256];
-	LVITEM item;
-	LVCOLUMN column;
-	HWND hCtrl = GetDlgItem(hwnd, IDC_ANALOG_AXES);
-	if( hCtrl )
-	{
-		//Enumerate the Joystick axes, and add them to the Listview...
-		ListView_SetExtendedListViewStyle(hCtrl,LVS_EX_CHECKBOXES );
-		//add two Columns...
-		column.mask = LVCF_TEXT | LVCF_WIDTH |LVCF_SUBITEM;
-		column.pszText = _UIW(TEXT("Joystick"));
-		column.cchTextMax = wcslen(column.pszText);
-		column.iSubItem = 0;
-		column.cx = 100;
-		res = ListView_InsertColumn(hCtrl,0, &column );
-		column.pszText = _UIW(TEXT("Axis"));
-		column.cchTextMax = wcslen(column.pszText);
-		column.iSubItem = 1;
-		column.cx = 100;
-		res = ListView_InsertColumn(hCtrl,1, &column );
-		column.pszText = _UIW(TEXT("JoystickId"));
-		column.cchTextMax = wcslen(column.pszText);
-		column.iSubItem = 2;
-		column.cx = 70;
-		res = ListView_InsertColumn(hCtrl,2, &column );
-		column.pszText = _UIW(TEXT("AxisId"));
-		column.cchTextMax = wcslen(column.pszText);
-		column.iSubItem = 3;
-		column.cx = 50;
-		res = ListView_InsertColumn(hCtrl,3, &column );
-		DIJoystick.init();
-		memset(&item,0,sizeof(item) );
-		item.mask = LVIF_TEXT;
-		for (i = 0; i < DIJoystick_GetNumPhysicalJoysticks(); i++)
-		{
-			item.iItem = iEntryCounter;
-			item.pszText = _Unicode(DIJoystick_GetPhysicalJoystickName(i));
-			item.cchTextMax = wcslen(item.pszText);
-
-			for (j = 0; j < DIJoystick_GetNumPhysicalJoystickAxes(i); j++)
-			{
-				ListView_InsertItem(hCtrl,&item );
-				ListView_SetItemText(hCtrl,iEntryCounter,1, _Unicode(DIJoystick_GetPhysicalJoystickAxisName(i,j)));
-				swprintf(buf, TEXT("%d"), i);
-				ListView_SetItemText(hCtrl,iEntryCounter,2, buf);
-				swprintf(buf, TEXT("%d"), j);
-				ListView_SetItemText(hCtrl,iEntryCounter++,3, buf);
-				item.iItem = iEntryCounter;
-			}
-		}
-	}
 }
 /* Populate the Default Input drop down */
 static void InitializeDefaultInputUI(HWND hwnd)
