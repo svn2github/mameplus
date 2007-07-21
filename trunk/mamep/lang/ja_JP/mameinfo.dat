@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.117       #
+#     Mameinfo.dat日本語版 vv0.117u1     #
 #                                        #
-#             July 16, 2007              #
+#             July 20, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,380 +12,28 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：876 翻訳済：854
-# 追加項目：341 合計：1217
+# Tester報告：846 翻訳済：826
+# 追加項目：341 合計：1187
 #
 
 
-$info=primrage
+$info=bosco
 $mame
 [バグ]
 
-- 効果音が画面より1、2秒遅れて再生される。 primrage0117gre, Slick Mandela
+- 基地や機雷を破壊して爆発音が鳴っている間、ショット音が少し変になる。実機では起こらない。 bosco0117u1gre, Gyrovision / nostos
 
-$end
 
-$info=changela
-$mame
-[バグ]
-
-- DIP設定でジョイスティック操作に設定しても、ジョイスティック入力用の割り当てが無い。 changela0116u4gra, twisty
-
-$end
-
-$info=cbtime
-$mame
-[バグ]
-
-- キャラクタが画面右上にはまってゲームができない。 cbtime0117red, Bruno /  Tafoid
-
-$end
-
-$info=djboy
-$mame
-[バグ]
-
-- 2面のボスが表示されず、それ以上進めなくなることがある。 djboy0116u4yel, hammad
-
-$end
-
-$info=sbdk
-$mame
-[バグ]
-
-- プレイヤー1のボタンが割り当てられてない。
-プレイヤー2のボタン1はあるが動作しない。
-実際にはボタンが2つ必要なようだ。 sbdk0116u1gra, Tafoid / twisty
-
-$end
-
-$info=shootgal
-$mame
-[バグ]
-
-- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
-
-$end
-
-$info=victnine
-$mame
-[バグ]
-
-- チームを選ぶとゲームがリセットしてタイトル画面に戻る。 victnine0116u2red, etabeta
-
-$end
-
-$info=pacmanbl
-$mame
-[バグ]
-
-- 背景の表示が右にずれている。スプライトは正常な模様。 pacmanbl0116u3yel, Robbbert
-
-$end
-
-$info=vbowl
-$mame
-[バグ]
-
-- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty
-
-$end
-
-$info=lemmings
-$mame
-[バグ]
-
-- 4面その他で、レミングスが出口の後ろ側に描画される。 lemmings0116u1gre, refraction
-
-$end
-
-$info=spelunkr
-$mame
-[バグ]
-
-- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
-
-$end
-
-$info=spelunk2
-$mame
-[バグ]
-
-- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
-
-$end
-
-$info=mappy
-$mame
-[バグ]
-
-- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
+- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet / Tafoid
 
 
 [TIPS]
 
 - 隠しメッセージ：
 
-1) サービスモードに入る(F2)
+1) サービスモードに入る(F2キー)
 
-2) 左キーを押し続け全部グリッド表示にする
-
-3) サービスキー(9キー)を3回押す
-
-4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
-
-
-- 隠しメッセージ2：
-
-1) 3回目のボーナス面まで進む
-
-2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
-
-ボーナス合計画面にコピーライトが追加される
-
-$end
-
-$info=mk3
-$mame
-[バグ]
-
-- セーブステートを読み込むとサウンドがぐちゃぐちゃになる。 mk3_0116u2gre, Belegdol
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-
-- 教会の面で、影が2番目の背景レイヤーに隠れてしまう。
-ジャンプするとよくわかる。 umk3060gre_2, Jonemaan
-
-$end
-
-$info=smashtv
-$mame
-[バグ]
-
-- ときどきプレイフィールドに見えない壁が現われて、画面の端の方に行けなくなる。 smashtv0116u2gre, The_Pro
-
-$end
-
-$info=finallap
-$mame
-[バグ]
-
-- 最適なアナログ入力設定：
-
-Paddle Digital Speed: 10
-
-Paddle Autocenter Speed: 15
-
-Paddle Sensitivity: 20% finallap0116u1ora, fostar
-
-
-- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
-
-$end
-
-$info=mslug2
-$mame
-[バグ]
-
-- 4面ボスの巨大キャノン砲のグラフィックが乱れる。実機での確認が必要。 mslug2_0117gre, Pr3tty F1y
-
-$end
-
-$info=daraku
-$mame
-[バグ]
-
-- 実機との比較：
-
-1)  起動時の警告画面の背景は、青色のグラデーションになる。下に行くほど濃い。サービスモードの背景も同様。
-
-2) 必殺技を出すときは画面が少しフェードアウトする。MAMEでは変化しない。 daraku0116u3ora, Karasu
-
-
-- テストモードに入って、サウンドテストで0x24や0xffffなどの番号をかけるとゲームが固まる。リセットするしかない。実機のバグ？ daraku063red, Kale
-
-$end
-
-$info=exctleag
-$mame
-[バグ]
-
-- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
-
-$end
-
-$info=suprleag
-$mame
-[バグ]
-
-- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
-
-$end
-
-$info=eswatu
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=fantzone
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=shinobi
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=shdancer
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=astorm3
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=sspeedr
-$mame
-[バグ]
-
-- ペダル操作がゲーム内、テストのどちらでも動作しない。 sspeedr0117gra, Luigi30
-
-$end
-
-$info=battleg
-$mame
-[バグ]
-
-- ソースコード内で、どのNMKチップがサウンドバンキングに使われているかを調べる必要があると書かれているが、
-実際の基板上ではGAL20v8がサウンドROMとZ80間に配置されていて、NMKチップは使われていない。 battleg0116u1ora, Kold666
-
-
-- アトラクトモードを走らせて、4ループ目のデモプレイのところでクラッシュする。 battleg0116u1red, Cananas et alia.
-
-
-- ランダムにクラッシュする。また、プレイ後にMAMEを終了させると、Access Violationのエラーが出る。 battleg0113u4red, Iaspis / twisty / AWJ
-
-
-[TIPS]
-
-- 魔法大作戦キャラの出し方：
-
-コイン投入後、上上下下左右左右ABCスタートと入力
-
-$end
-
-$info=lottofun
-$mame
-[バグ]
-
-- 数ゲーム後にチケットが切れて、CALL OPERATORと表示されることがある。 lottofun0117ora, Luigi30
-
-$end
-
-$info=xsleena
-$mame
-[バグ]
-
-- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
-
-
-- キャラクタの一部分の線が欠けている。
-緑の惑星（Lagto Soa）のドラゴンの後ろ部分と、
-後半の面のボスの頭部分。 xsleena059gre, Smitdogg / Stefan Lindberg
-
-$end
-
-$info=solarwar
-$mame
-[バグ]
-
-- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
-
-$end
-
-$info=xtheball
-$mame
-[バグ]
-
-- ボールが現われるとき、上半分しか表示されない。 xtheball0117gre, Luigi30
+2) ボタン1を押しながら、上x5 右x6、下x1、左x4を押す
 
 $end
 
@@ -554,6 +202,14 @@ $mame
 
 
 - 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
+
+$end
+
+$info=primrage
+$mame
+[バグ]
+
+- 効果音が画面より1、2秒遅れて再生される。 primrage0117gre, Slick Mandela
 
 $end
 
@@ -1127,6 +783,14 @@ $mame
 
 $end
 
+$info=djboy
+$mame
+[バグ]
+
+- 2面のボスが表示されず、それ以上進めなくなることがある。 djboy0116u4yel, hammad
+
+$end
+
 $info=dkongjr
 $mame
 [バグ]
@@ -1138,6 +802,14 @@ BGMが鳴らない。
 
 
 - 2面(カギを上に持っていく面)で、ジュニアが時々カギをすり抜けてしまう。 dkongjr37b9gre, Chad H
+
+$end
+
+$info=shootgal
+$mame
+[バグ]
+
+- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
 
 $end
 
@@ -1265,6 +937,14 @@ $mame
 
 $end
 
+$info=victnine
+$mame
+[バグ]
+
+- チームを選ぶとゲームがリセットしてタイトル画面に戻る。 victnine0116u2red, etabeta
+
+$end
+
 $info=gigasb
 $mame
 [バグ]
@@ -1306,23 +986,6 @@ $mame
 
 - レベル30以上で、危険のBGMになってブロックを減らしても通常のBGMに戻らない。
 また、プレイ中にいきなり“逆転パズル番長！”の声が聞こえることがある。 pbancho058gre, Ashuime
-
-$end
-
-$info=bosco
-$mame
-[バグ]
-
-- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet / Tafoid
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2キー)
-
-2) ボタン1を押しながら、上x5 右x6、下x1、左x4を押す
 
 $end
 
@@ -1384,6 +1047,14 @@ b16以降のデモでは、(1+2)+3号機のドッキング時に、(1+2)号機�
 - 「サンプル情報の間違い」
 
 サンプルが必要なゲームなのに、不要とレポートされる。 samplesinfo098u3ora, Wojciech Zakrzewski
+
+$end
+
+$info=pacmanbl
+$mame
+[バグ]
+
+- 背景の表示が右にずれている。スプライトは正常な模様。 pacmanbl0116u3yel, Robbbert
 
 $end
 
@@ -1593,6 +1264,14 @@ $mame
 [バグ]
 
 - コンティニュー時にコインをいれてすぐスタートボタンを押すと、画面にエラーが表示されて固まる。 drgwrld3_0109red, hammad / ponzicar
+
+$end
+
+$info=vbowl
+$mame
+[バグ]
+
+- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty
 
 $end
 
@@ -1836,6 +1515,22 @@ $mame
 
 $end
 
+$info=spelunkr
+$mame
+[バグ]
+
+- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
+
+$end
+
+$info=spelunk2
+$mame
+[バグ]
+
+- 実機ではスペランカー1と2のどちらでも、快傑ヤンチャ丸と同じようなドラムサウンドが鳴っている。 spelunkr0116u3gre, Stefan Lindberg
+
+$end
+
 $info=airduel
 $mame
 [バグ]
@@ -1925,6 +1620,36 @@ $mame
 [バグ]
 
 - スプライト拡大に不具合あり。2面の飛行機などで現れる。 devstors37b6gre, YMI / Pi
+
+$end
+
+$info=mappy
+$mame
+[バグ]
+
+- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 左キーを押し続け全部グリッド表示にする
+
+3) サービスキー(9キー)を3回押す
+
+4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
+
+
+- 隠しメッセージ2：
+
+1) 3回目のボーナス面まで進む
+
+2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
+
+ボーナス合計画面にコピーライトが追加される
 
 $end
 
@@ -2371,6 +2096,24 @@ $mame
 
 カーセレクトで最初の車をハイライトさせ、視点1キーを押しながらハンドルを右一杯→左一杯→右一杯→左一杯→右一杯→左一杯に回し、アクセルを踏む。
 成功するとフェラーリが赤から青緑色に変わる。通常より格段に高性能。
+
+$end
+
+$info=mk3
+$mame
+[バグ]
+
+- セーブステートを読み込むとサウンドがぐちゃぐちゃになる。 mk3_0116u2gre, Belegdol
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
+
+
+- 教会の面で、影が2番目の背景レイヤーに隠れてしまう。
+ジャンプするとよくわかる。 umk3060gre_2, Jonemaan
 
 $end
 
@@ -3372,6 +3115,22 @@ $mame
 
 $end
 
+$info=exctleag
+$mame
+[バグ]
+
+- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
+
+$end
+
+$info=suprleag
+$mame
+[バグ]
+
+- 守備側のとき、フィールド表示に不具合が出る。 exctleag0116u4gre, fostar
+
+$end
+
 $info=tturf
 $mame
 [バグ]
@@ -3379,6 +3138,101 @@ $mame
 - 2面最後のエレベータ、
 3面と最後の面の鉄のゴロゴロでスプライト表示順位が違う。
 おそらくスプライトマネージャの問題。 tturf36b16gre, Lord Caos
+
+$end
+
+$info=eswatu
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=fantzone
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=shinobi
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=shdancer
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
+
+$end
+
+$info=astorm3
+$mame
+[バグ]
+
+- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
+再現方法は以下の通り：
+
+1) ゲームを始める
+
+2) F4キーを押してビューア表示
+
+3) Enterキーを2回押す
+
+4) ]キーを最終ページまで押す（8ページか16ページ）
+
+5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
 
 $end
 
@@ -4511,21 +4365,6 @@ MAMEでは青いままになっている。 truxton0106u7gre, Kold666
 
 $end
 
-$info=batrider
-$mame
-[バグ]
-
-- アトラクトモードをそのままにしておくと、デモプレイの手前でクラッシュする。起きないマシンもある。 batrider0114red, JonteP
-
-
-[TIPS]
-
-- 魔法大作戦とバトルガレッガキャラの出し方：
-
-コイン投入後、上上下下左右左右ABスタートと入力。“エクセレント”と言われれば成功
-
-$end
-
 $info=batsugun
 $mame
 [バグ]
@@ -5008,11 +4847,32 @@ $mame
 
 $end
 
+$info=xsleena
+$mame
+[バグ]
+
+- キャラクタの一部分の線が欠けている。
+緑の惑星（Lagto Soa）のドラゴンの後ろ部分と、
+後半の面のボスの頭部分。 xsleena059gre, Smitdogg / Stefan Lindberg
+
+
+- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
+
+$end
+
 $info=xexex
 $mame
 [バグ]
 
 - カクテルモード時のプレイヤー2の画面が正しく表示されない。 xexex071u2gre, Kale
+
+$end
+
+$info=xtheball
+$mame
+[バグ]
+
+- ボールが現われるとき、上半分しか表示されない。 xtheball0117gre, Luigi30
 
 $end
 
@@ -5138,6 +4998,21 @@ $mame
 
 - ゲームのイントロ部分の実機ムービーとの比較。
 背景グラフィックがMAMEではおかしい。またマップに黒いブロックも表示されている。 gaiapols096u3ora, Kold666
+
+$end
+
+$info=daraku
+$mame
+[バグ]
+
+- 実機との比較：
+
+1)  起動時の警告画面の背景は、青色のグラデーションになる。下に行くほど濃い。サービスモードの背景も同様。
+
+2) 必殺技を出すときは画面が少しフェードアウトする。MAMEでは変化しない。 daraku0116u3ora, Karasu
+
+
+- テストモードに入って、サウンドテストで0x24や0xffffなどの番号をかけるとゲームが固まる。リセットするしかない。実機のバグ？ daraku063red, Kale
 
 $end
 
@@ -5290,6 +5165,14 @@ $mame
 
 $end
 
+$info=lottofun
+$mame
+[バグ]
+
+- 数ゲーム後にチケットが切れて、CALL OPERATORと表示されることがある。 lottofun0117ora, Luigi30
+
+$end
+
 $info=brubber
 $mame
 [バグ]
@@ -5430,6 +5313,23 @@ $mame
 
 $end
 
+$info=finallap
+$mame
+[バグ]
+
+- 最適なアナログ入力設定：
+
+Paddle Digital Speed: 10
+
+Paddle Autocenter Speed: 15
+
+Paddle Sensitivity: 20% finallap0116u1ora, fostar
+
+
+- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
+
+$end
+
 $info=othldrby
 $mame
 [バグ]
@@ -5504,21 +5404,6 @@ $mame
 
 $end
 
-$info=brkthru
-$mame
-[情報]
-
-- 1キーと2キーを押しながらF3を押すとテストモードに入れる。
-テストメニューを進めるには3キー。
-
-
-[バグ]
-
-- デフォルトの筐体設定はアップライトだが、2人プレイ時にはカクテルモードのように動作する。
-DIP設定も変更できない。 brkthru091u1gra, Thenasty / stephh
-
-$end
-
 $info=zoar
 $mame
 [バグ]
@@ -5548,6 +5433,16 @@ $mame
 [バグ]
 
 - プレイヤー3用のキーがマッピングされている。 ghostb0105u4gra, cpukett
+
+$end
+
+$info=sbdk
+$mame
+[バグ]
+
+- プレイヤー1のボタンが割り当てられてない。
+プレイヤー2のボタン1はあるが動作しない。
+実際にはボタンが2つ必要なようだ。 sbdk0116u1gra, Tafoid / twisty
 
 $end
 
@@ -5853,6 +5748,14 @@ $mame
 
 $end
 
+$info=sspeedr
+$mame
+[バグ]
+
+- ペダル操作がゲーム内、テストのどちらでも動作しない。 sspeedr0117gra, Luigi30
+
+$end
+
 $info=jjparads
 $mame
 [バグ]
@@ -5900,6 +5803,14 @@ $mame
 人の影が赤く表示されている。
 ただし、別ドライバのmiajでも起きているので、
 もしかしたらバグではないかもしれない。 mia055gre, Gmitra
+
+$end
+
+$info=solarwar
+$mame
+[バグ]
+
+- プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
 
 $end
 
@@ -6024,6 +5935,14 @@ $mame
 [バグ]
 
 - プレイヤー1のスタートボタンを押すと、画面左下が化ける。 saturn0104u3gre, etabeta /  Twisty
+
+$end
+
+$info=changela
+$mame
+[バグ]
+
+- DIP設定でジョイスティック操作に設定しても、ジョイスティック入力用の割り当てが無い。 changela0116u4gra, twisty
 
 $end
 
@@ -6334,6 +6253,14 @@ $mame
 
 $end
 
+$info=lemmings
+$mame
+[バグ]
+
+- 4面その他で、レミングスが出口の後ろ側に描画される。 lemmings0116u1gre, refraction
+
+$end
+
 $info=avengers
 $mame
 [情報]
@@ -6405,6 +6332,14 @@ $mame
 ● mk, mk2, mk3：game adjustments / standard pricing
 
 ● umk3：メインメニュー mk237b5gre, IF
+
+$end
+
+$info=smashtv
+$mame
+[バグ]
+
+- ときどきプレイフィールドに見えない壁が現われて、画面の端の方に行けなくなる。 smashtv0116u2gre, The_Pro
 
 $end
 
@@ -6481,6 +6416,14 @@ $mame
 最初の敵2体にはヒットするが、
 そのあと2体には当らず、それにすぐやられてしまう。
 どうやら、デモのゲームスピードが合ってないようだ。 blkpnthr37b11gre, YMI
+
+$end
+
+$info=mslug2
+$mame
+[バグ]
+
+- 4面ボスの巨大キャノン砲のグラフィックが乱れる。実機での確認が必要。 mslug2_0117gre, Pr3tty F1y
 
 $end
 
@@ -7123,6 +7066,15 @@ $mame
 
 
 - 発射ボタンを押すと起動時のROM/RAMテストをスキップできる。
+
+$end
+
+$info=brkthru
+$mame
+[情報]
+
+- 1キーと2キーを押しながらF3を押すとテストモードに入れる。
+テストメニューを進めるには3キー。
 
 $end
 
@@ -8671,6 +8623,26 @@ $mame
 
 
 - ネーム入れで "KISSY"、"TAKKY"、"JUNKO"、"MAKO."、"YURI."、"FIGER"、"NKGT."、"WATAB"のいずれかを入力すると名前が虹色に光る。
+
+$end
+
+$info=batrider
+$mame
+[TIPS]
+
+- 魔法大作戦とバトルガレッガキャラの出し方：
+
+コイン投入後、上上下下左右左右ABスタートと入力。“エクセレント”と言われれば成功
+
+$end
+
+$info=battleg
+$mame
+[TIPS]
+
+- 魔法大作戦キャラの出し方：
+
+コイン投入後、上上下下左右左右ABCスタートと入力
 
 $end
 

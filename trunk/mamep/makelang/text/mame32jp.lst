@@ -134,6 +134,8 @@ mooncrsg	ムーンクレスタ (Gremlin)	むーんくれすた	Gremlin
 smooncrs	ムーンクレスタ / Super Moon Cresta	むーんくれすた	Gremlin
 mooncrsb	ムーンクレスタ (海賊版 set 1)	むーんくれすた	bootleg
 mooncrs2	ムーンクレスタ (海賊版 set 2)	むーんくれすた	Nichibutsu
+spcdrag	ムーンクレスタ / Space Dragon (海賊版 set 1)	むーんくれすた	bootleg
+spcdraga	ムーンクレスタ / Space Dragon (海賊版 set 2)	むーんくれすた	bootleg
 mooncrs3	ムーンクレスタ (海賊版 set 3)	むーんくれすた	bootleg
 fantazia	ムーンクレスタ / Fantazia	むーんくれすた	bootleg
 moonqsr	ムーンクエーサー	むーんくえーさー	Nichibutsu
@@ -962,7 +964,7 @@ nss_sten	スーパーテニス ワールドサーキット / Super Tennis (Nintendo Super System
 kinstb	キラー・インスティンクト (SNES) (海賊版)	きらーいんすてぃんくと_1	bootleg
 seawolf	シーウルフ	しーうるふ_1	Midway
 gunfight	ガンファイト	がんふぁいと	Midway
-tornbase	トルネードベースボール	とるねーどべーすぼーる	Midway
+tornbase	ボールパーク / Tornado Baseball	ぼーるぱーく	Midway / Taito
 280zzzap	フェアレディ280ZZZAP	ふぇあれでぃ280ZZZAP	Midway
 maze	アメージングメイズ	あめーじんぐめいず	Midway
 boothill	ブーツヒル	ぶーつひる	Midway
@@ -970,7 +972,7 @@ checkmat	チェックメイト	ちぇっくめいと	Midway
 desertgu	デザートガン	でざーとがん	Midway
 dplay	ボールパーク / Double Play	ぼーるぱーく_1	Midway
 lagunar	ラグナレーサー	らぐなれーさー	Midway
-gmissile	ガイディッドミサイル	がいでぃっどみさいる	Midway
+gmissile	ミサイルX / Guided Missile	みさいるえっくす	Taito / Midway
 m4	M-4	えむ4	Midway
 clowns	クラウンズ (rev 2)	くらうんず	Midway
 clowns1	クラウンズ (rev 1)	くらうんず	Midway
@@ -980,7 +982,7 @@ dogpatch	ドッグパッチ	どっぐぱっち	Midway
 spcenctr	スペースエンカウンター	すぺーすえんかうんたー	Midway
 phantom2	ファントムII	ふぁんとむ2	Midway
 bowler	ボウリングアレー	ぼうりんぐあれー	Midway
-invaders	スペースインベーダー	すぺーすいんべーだー_1_1	Midway
+invaders	スペースインベーダー / Space Invaders M	すぺーすいんべーだー_1_1	Midway / Taito
 blueshrk	ブルーシャーク	ぶるーしゃーく	Midway
 invad2ct	スペースインベーダーII (Midway cocktail)	すぺーすいんべーだー_2	Midway
 invadpt2	スペースインベーダー パートII (Taito)	すぺーすいんべーだー_1_2	Taito
@@ -1021,7 +1023,7 @@ schasrcv	スペースチェイサー (CV ver)	すぺーすちぇいさー	Taito
 lupin3	ルパン三世	るぱんさんせい	Taito
 spclaser	スペースウォー / Space Laser	すぺーすうぉー	GamePlan (Taito)
 laser	スペースウォー / Astro Laser	すぺーすうぉー	Leisure Time Electronics Inc.
-spcewarl	スペースウォー (Leijac)	すぺーすうぉー	Leijac (Konami)
+spcewarl	スペースウォー (Leijac Corporation)	すぺーすうぉー	Leijac Corporation (Konami)
 polaris	ポラリス (set 1)	ぽらりす	Taito
 polarisa	ポラリス (set 2)	ぽらりす	Taito
 ballbomb	バルーンボンバー	ばるーんぼんばー	Taito
@@ -1034,11 +1036,11 @@ sicv	スペースインベーダー (CV ver)	すぺーすいんべーだー_1_1	Taito
 sisv	スペースインベーダー (SV ver)	すぺーすいんべーだー_1_1	Taito
 sisv2	スペースインベーダー (SV ver 2)	すぺーすいんべーだー_1_1	Taito
 spacewr3	スペースインベーダー / Space War Part 3	すぺーすいんべーだー_1_1	bootleg
-invaderl	スペースインベーダー (Logitec)	すぺーすいんべーだー_1_1	bootleg
+invaderl	スペースインベーダー (Logitec)	すぺーすいんべーだー_1_1	Logitec
 invader4	スペースインベーダー / Space Invaders Part Four	すぺーすいんべーだー_1_1	bootleg
 yosakdon	与作とドン平 (set 1)	よさくとどんべえ	Wing
 yosakdoa	与作とドン平 (set 2)	よさくとどんべえ	Wing
-spceking	スペースキング	すぺーすきんぐ	Leijac (Konami)
+spceking	スペースキング	すぺーすきんぐ	Leijac Corporation (Konami)
 spcewars	スペースインベーダー / Space War (Sanritsu)	すぺーすいんべーだー_1_1	Sanritsu
 cosmo	コズモ	こずも	TDS &amp; Mints
 darthvdr	スペースインベーダー / Darth Vader	すぺーすいんべーだー_1_1	bootleg
@@ -1803,7 +1805,7 @@ twincobu	究極タイガー / Twin Cobra (USA版)	きゅうきょくたいがー_1	[Toaplan] Tait
 ktiger	究極タイガー (日本版)	きゅうきょくたいがー_1	[Toaplan] Taito Corporation
 gulfwar2	ガルフウォーII	がるふうぉー2	Comad
 rallybik	ダッシュ野郎	だっしゅやろう	[Toaplan] Taito Corporation
-truxton	達人	たつじん	[Toaplan] Taito Corporation
+truxton	達人 / Truxton	たつじん_1	[Toaplan] Taito Corporation
 hellfire	ヘルファイアー (2p ver)	へるふぁいあー	Toaplan (Taito license)
 hellfir1	ヘルファイアー (1p ver)	へるふぁいあー	Toaplan (Taito license)
 hellfir2	ヘルファイアー (2p ver first edition)	へるふぁいあー	Toaplan (Taito license)
@@ -1847,7 +1849,7 @@ ghox	ゴークス	ごーくす	Toaplan
 dogyuun	ドギューン！！	どぎゅーん	Toaplan
 kbash	ナックルバッシュ	なっくるばっしゅ	Toaplan
 kbash2	ナックルバッシュ / Knuckle Bash 2 (海賊版)	なっくるばっしゅ	bootleg
-truxton2	達人王 (日本版)	たつじんおう	Toaplan
+truxton2	達人王 / Truxton II	たつじん_2おう	Toaplan
 pipibibs	フーピー	ふーぴー	Toaplan
 whoopee	フーピー	ふーぴー	Toaplan
 pipibibi	フーピー (海賊版?)	ふーぴー	[Toaplan] Ryouta Kikaku
@@ -1865,13 +1867,14 @@ sstrikra	魔法大作戦 / Sorcer Striker (海外版 alt)	まほうだいさくせん	Raizing
 mahoudai	魔法大作戦 (日本版)	まほうだいさくせん	Raizing (Able license)
 shippumd	疾風魔法大作戦 -Kingdom-Grandprix (日本版)	しっぷうまほうだいさくせん	Raizing / Eighting
 kingdmgp	疾風魔法大作戦 -Kingdom-Grandprix / Kingdom Grandprix (海外版)	しっぷうまほうだいさくせん	Raizing / Eighting
-battleg	バトルガレッガ Type2 (デンマーク / 中国版 Tue Apr 2 1996)	ばとるがれっが_2たいぷ2	Raizing / Eighting
-battlega	バトルガレッガ (欧州 / USA / 日本 / アジア版 Sat Feb 3 1996)	ばとるがれっが_1	Raizing / Eighting
-battlegb	バトルガレッガ (オーストリア / 香港版 Sat Mar 2 1996)	ばとるがれっが_1	Raizing / Eighting
-battlegc	バトルガレッガ (オーストリア / 香港版 Sat Feb 3 1996)	ばとるがれっが_1	Raizing / Eighting
-batrider	アームドポリス バトライダー (日本版 ver B)	あーむどぽりす ばとらいだー	Raizing / Eighting
-batridra	アームドポリス バトライダー (日本版 ver A)	あーむどぽりす ばとらいだー	Raizing / Eighting
-batridrk	アームドポリス バトライダー (韓国版 ver B)	あーむどぽりす ばとらいだー	Raizing / Eighting
+bgaregga	バトルガレッガ (欧州 / USA / 日本 / アジア版 Sat Feb 3 1996)	ばとるがれっが	Raizing / Eighting
+bgareghk	バトルガレッガ (オーストリア / 香港版 Sat Feb 3 1996)	ばとるがれっが	Raizing / Eighting
+bgaregnv	バトルガレッガ (new ver) (オーストリア / 香港版 Sat Mar 2 1996)	ばとるがれっが	Raizing / Eighting
+bgaregt2	バトルガレッガ (type 2) (欧州 / USA / 日本 / アジア版 Sat Mar 2 1996)	ばとるがれっが	Raizing / Eighting
+bgaregcn	バトルガレッガ (type 2) (デンマーク / 中国版 Tue Apr 2 1996)	ばとるがれっが	Raizing / Eighting
+batrider	アームドポリス バトライダー (日本版 B ver Fri Feb 13 1998)	あーむどぽりすばとらいだー	Raizing / Eighting
+batridra	アームドポリス バトライダー (日本版 Mon Dec 22 1997)	あーむどぽりすばとらいだー	Raizing / Eighting
+batridrk	アームドポリス バトライダー (韓国版 Fri Feb 13 1998)	あーむどぽりすばとらいだー	Raizing / Eighting
 bbakraid	バトルバクレイド (日本版 Wed Apr 7 1999)	ばとるばくれいど	Eighting
 bbakradu	バトルバクレイド (日本版 Unlimited ver Tue Jun 8 1999)	ばとるばくれいど	Eighting
 pwrinst2	豪血寺一族2 / Power Instinct 2 (USA版)	ごうけつじ_2いちぞく_2	Atlus/Cave
@@ -4132,7 +4135,7 @@ pepper2	ペッパーII	ぺっぱー2	Exidy
 hardhat	ハードハット	はーどはっと	Exidy
 fax	ファックス	ふぁっくす_1	Exidy
 fax2	ファックス2	ふぁっくす_2	Exidy
-circus	サーカス	さーかす	Exidy
+circus	サーカス / Acrobat TV	さーかす	Exidy / Taito
 circusse	サーカス (Sub-Electro) (海賊版)	さーかす	[Exidy] (Sub-Electro bootleg)
 robotbwl	ロボットボウル	ろぼっとぼうる	Exidy
 crash	クラッシュ	くらっしゅ	Exidy
@@ -5168,7 +5171,7 @@ striv	スーパートリブ	すーぱーとりぶ_1	Hara Industries
 jack	ジャックと豆の木 / Jack the Giantkiller (set 1)	じゃっくとまめのき	Cinematronics
 jack2	ジャックと豆の木 / Jack the Giantkiller (set 2)	じゃっくとまめのき	Cinematronics
 jack3	ジャックと豆の木 / Jack the Giantkiller (set 3)	じゃっくとまめのき	Cinematronics
-treahunt	ジャックと豆の木 / Treasure Hunt (日本版?)	じゃっくとまめのき	Hara Industries
+treahunt	ジャックと豆の木 / Treasure Hunt (海賊版?)	じゃっくとまめのき	Hara Industries
 zzyzzyxx	ズィズィックス (set 1)	ずぃずぃっくす	Cinematronics + Advanced Microcomputer Systems
 zzyzzyx2	ズィズィックス (set 2)	ずぃずぃっくす	Cinematronics + Advanced Microcomputer Systems
 brix	ズィズィックス / Brix	ずぃずぃっくす	Cinematronics + Advanced Microcomputer Systems
@@ -5574,6 +5577,8 @@ airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kanek
 airbusb	エア・バスター -Trouble Specialty Raid Unit (海賊版)	えあばすたー	bootleg
 galpanic	ギャルズパニック (Unprotected)	ぎゃるずぱにっく_1	Kaneko
 galpania	ギャルズパニック (MCU Protected)	ぎゃるずぱにっく_1	Kaneko
+galsnew	ギャルズパニック (USA版 EXPRO-02 PCB)	ぎゃるずぱにっく_1	Kaneko
+galsnewa	ギャルズパニック (海外版 EXPRO-02 PCB)	ぎゃるずぱにっく_1	Kaneko
 galpani2	ギャルズパニックII (アジア版)	ぎゃるずぱにっく_2_1	Kaneko
 galpan2g	ギャルズパニックII (ドイツ版)	ぎゃるずぱにっく_2_1	Kaneko
 galpan2t	ギャルズパニックII (台湾版)	ぎゃるずぱにっく_2_1	Kaneko
@@ -5768,7 +5773,7 @@ heberpop	へべれけのぽぷーん (日本版)	へべれけのぽぷーん	Sunsoft / Atlus
 blocken	ぶろっけん (日本版)	ぶろっけん	KID / Visco
 goindol	ゴインドル (海外版)	ごいんどる	Sun a Electronics
 goindolu	ゴインドル (USA版)	ごいんどる	Sun a Electronics
-goindolj	ゴインドル (日本版)	ごいんどる	Sun a Electronics
+goindolk	ゴインドル (韓国版)	ごいんどる	Sun a Electronics
 rranger	ラフレンジャー (ver 2.0)	らふれんじゃー	SunA (Sharp Image license)
 sranger	スーパーレンジャー (ver 2.0)	すーぱーれんじゃー	SunA
 srangerb	スーパーレンジャー (海賊版)	すーぱーれんじゃー	bootleg
@@ -6273,7 +6278,7 @@ scrabble	スクラブル (rev F)	すくらぶる	JPM
 hngmnjpm	ハングマン (JPM)	はんぐまん	JPM
 astinvad	カミカゼ / Astro Invader	かみかぜ	Stern
 kosmokil	カミカゼ / Kosmo Killer	かみかぜ	bootleg
-kamikaze	カミカゼ	かみかぜ	Leijac
+kamikaze	カミカゼ	かみかぜ	Leijac Corporation
 spcking2	スペースインベーダー / Space King 2	すぺーすいんべーだー_1_1	Konami
 spaceint	スペースイントルーダー	すぺーすいんとるーだー	Shoei
 spaceinj	スペースイントルーダー (日本版)	すぺーすいんとるーだー	Shoei
@@ -6478,6 +6483,7 @@ fort2ba	フォートレス2 ブルーアーケード (ver 1.00 / PCB ver 3.05)	ふぉーとれす2	E
 klondkp	クロンダイクプラス	くろんだいくぷらす	Eolith
 hidctch3	ヒドゥンキャッチ3 (ver 1.00 / PCB ver 3.05)	ひどぅんきゃっち_3	Eolith
 crazywar	クレージーウォー	くれーじーうぉー	Eolith
+bballoon	バルーン&バルーン	ばるーんあんどばるーん	Eolith
 xfiles	X-ファイル	えっくすふぁいる	dgPIX Entertainment Inc.
 kdynastg	キング・オブ・ダイナストギア (ver 1.8)	きんぐおぶだいなすとぎあ	EZ Graphics
 fmaniac3	フィッシングマニアック3	ふぃっしんぐまにあっく_3	Saero Entertainment
