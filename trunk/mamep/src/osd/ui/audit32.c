@@ -200,6 +200,20 @@ static BOOL RomsetNotExist(int game)
 			mame_fclose(file);
 			return FALSE;
 		}
+
+#if 0 // open it will decrease audit speed
+		mame_path *path;
+
+		// open the folder if we can
+		fname = assemble_3_strings(SEARCHPATH_ROM, PATH_SEPARATOR, drv->name);
+		path = mame_openpath(mame_options(), fname);
+		free(fname);
+		if (path != NULL)
+		{
+			mame_closepath(path);
+			return FALSE;
+		}
+#endif
 	}
 
 	return TRUE;
@@ -217,8 +231,7 @@ int Mame32VerifyRomSet(int game)
 	game_options = GetGameOptions(game);
 	set_core_bios(game_options->bios);
 
-	// if zipped rom file dosen't exist, do not verify it
-	// but the non zipped romset in a directory will not be verified
+	// if rom file dosen't exist, do not verify it
 	if (RomsetNotExist(game))
 	{
 		res = NOTFOUND;
