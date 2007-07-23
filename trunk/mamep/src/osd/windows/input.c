@@ -219,6 +219,9 @@ static device_info *		lightgun_list;
 
 // joystick states
 static device_info *		joystick_list;
+#ifdef JOYSTICK_ID
+static int			joyid[8];
+#endif /* JOYSTICK_ID */
 
 // default axis names
 static const TCHAR *default_axis_name[] =
@@ -287,6 +290,9 @@ static INT32 rawinput_mouse_axis_get_state(void *device_internal, void *item_int
 static TCHAR *reg_query_string(HKEY key, const TCHAR *path);
 static const TCHAR *default_button_name(int which);
 static const TCHAR *default_pov_name(int which);
+#ifdef JOYSTICK_ID
+static void assgin_joystick_to_player(device_info *devinfo);
+#endif /* JOYSTICK_ID */
 
 
 
@@ -501,6 +507,51 @@ void wininput_init(running_machine *machine)
 
 	// decode the options
 	lightgun_shared_axis_mode = options_get_bool(mame_options(), WINOPTION_DUAL_LIGHTGUN);
+
+#ifdef JOYSTICK_ID
+	{
+		int used_id[8];
+		int i;
+
+		for (i = 0; i < 8; i++)
+			used_id[i] = -1;
+
+		for (i = 0; i < 8; i++)
+		{
+			char name[8];
+			int id;
+
+			sprintf(name, "joyid%d", i + 1);
+			id = options_get_int(mame_options(), name);
+
+			if (used_id[id] == -1)
+			{
+				joyid[i] =  id;
+				used_id[id] = i;
+			}
+			else
+			{
+				mame_printf_error(_WINDOWS("invalid %s value: joystick #%d is used by player %d\n"), name, id, used_id[id]);
+				joyid[i] =  -1;
+			}
+		}
+
+		for (i = 0; i < 8; i++)
+		{
+			if (joyid[i] == -1)
+			{
+				int id;
+
+				for (id = 0; id < 8; id++)
+					if (used_id[id] == -1)
+						break;
+				joyid[i] = id;
+
+				mame_printf_info(_WINDOWS("Use joystick #%d for player %d\n"), joyid[i], i);
+			}
+		}
+	}
+#endif /* JOYSTICK_ID */
 
 	// initialize RawInput and DirectInput (RawInput first so we can fall back)
 	rawinput_init(machine);
@@ -1120,6 +1171,32 @@ static void dinput_init(running_machine *machine)
 	result = IDirectInput_EnumDevices(dinput, DIDEVTYPE_JOYSTICK, dinput_joystick_enum, 0, DIEDFL_ATTACHEDONLY);
 	if (result != DI_OK)
 		fatalerror(_WINDOWS("DirectInput: Unable to enumerate joysticks (result=%08X)\n"), (UINT32)result);
+
+#ifdef JOYSTICK_ID
+	if (joystick_list != NULL)
+	{
+		int i;
+
+		for (i = 0; i < 8; i++)
+		{
+			device_info *devinfo = joystick_list;
+			int index = 0;
+
+			while (devinfo != NULL)
+			{
+				if (index == joyid[i])
+				{
+					mame_printf_info(_WINDOWS("Assign joystick %s to player %d\n"), devinfo->name, i);
+					assgin_joystick_to_player(devinfo);
+					break;
+				}
+
+				index++;
+				devinfo = devinfo->next;
+			}
+		}
+	}
+#endif /* JOYSTICK_ID */
 }
 
 
@@ -1467,7 +1544,6 @@ static void dinput_mouse_poll(device_info *devinfo)
 static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
 	DWORD cooperative_level = (HAS_WINDOW_MENU ? DISCL_BACKGROUND : DISCL_FOREGROUND) | DISCL_EXCLUSIVE;
-	int axisnum, axiscount, povnum, butnum;
 	device_info *devinfo;
 	HRESULT result;
 
@@ -1499,6 +1575,23 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 	devinfo->dinput.caps.dwPOVs = MIN(devinfo->dinput.caps.dwPOVs, 4);
 	devinfo->dinput.caps.dwButtons = MIN(devinfo->dinput.caps.dwButtons, 128);
 
+#ifndef JOYSTICK_ID
+	assgin_joystick_to_player(devinfo);
+#endif /* JOYSTICK_ID */
+
+exit:
+	return DIENUM_CONTINUE;
+
+error:
+	if (devinfo != NULL)
+		dinput_device_release(devinfo);
+	goto exit;
+}
+
+static void assgin_joystick_to_player(device_info *devinfo)
+{
+	int axisnum, axiscount, povnum, butnum;
+
 	// add the device
 	devinfo->device = input_device_add(DEVICE_CLASS_JOYSTICK, devinfo->name, devinfo);
 	devinfo->poll = dinput_joystick_poll;
@@ -1508,6 +1601,7 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 	{
 		DIPROPRANGE dipr;
 		const char *name;
+		HRESULT result;
 
 		// fetch the range of this axis
 		dipr.diph.dwSize = sizeof(dipr);
@@ -1561,15 +1655,8 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 		input_device_item_add(devinfo->device, name, &devinfo->joystick.state.rgbButtons[butnum], (butnum < 16) ? (ITEM_ID_BUTTON1 + butnum) : ITEM_ID_OTHER_SWITCH, generic_button_get_state);
 		free((void *)name);
 	}
-
-exit:
-	return DIENUM_CONTINUE;
-
-error:
-	if (devinfo != NULL)
-		dinput_device_release(devinfo);
-	goto exit;
 }
+
 
 
 //============================================================
