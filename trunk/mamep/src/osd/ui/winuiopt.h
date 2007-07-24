@@ -206,6 +206,8 @@ typedef struct
 	BOOL	lightgun;
 	BOOL	dual_lightgun;
 	BOOL	offscreen_reload;
+	BOOL	multikeyboard;
+	BOOL	multimouse;
 	BOOL	steadykey;
 	float	joy_deadzone;
 	float	joy_saturation;
@@ -228,6 +230,7 @@ typedef struct
 	char*	trackball_device;
 	char*	lightgun_device;
 	char*	positional_device;
+	char*	mouse_device;
 } options_type;
 
 

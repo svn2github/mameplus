@@ -3939,7 +3939,7 @@ static void DisableSelection(void)
 	mmi.cbSize         = sizeof(mmi);
 	mmi.fMask          = MIIM_TYPE;
 	mmi.fType          = MFT_STRING;
-	mmi.dwTypeData     = _UIW(TEXT("Properties for BIOS"));
+	mmi.dwTypeData     = _UIW(TEXT("Properties &for BIOS"));
 	mmi.cch            = wcslen(mmi.dwTypeData);
 	SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mmi);
 
@@ -3994,13 +3994,13 @@ static void EnableSelection(int nGame)
 	if (bios_driver != -1 && bios_driver != nGame)
 	{
 		snwprintf(buf, ARRAY_LENGTH(buf),
-			_UIW(TEXT("Properties for %s BIOS")), driversw[bios_driver]->name);
+			_UIW(TEXT("Properties &for %s BIOS")), driversw[bios_driver]->name);
 		mmi.dwTypeData = buf;
 	}
 	else
 	{
 		EnableMenuItem(hMenu, ID_BIOS_PROPERTIES, MF_GRAYED);
-		mmi.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+		mmi.dwTypeData = _UIW(TEXT("Properties &for BIOS"));
 	}
 
 	mmi.cbSize         = sizeof(mmi);
@@ -7257,13 +7257,13 @@ static void UpdateMenu(HMENU hMenu)
 		if (bios_driver != -1 && bios_driver != nGame)
 		{
 			snwprintf(buf, ARRAY_LENGTH(buf),
-				_UIW(TEXT("Properties for %s BIOS")), driversw[bios_driver]->name);
+				_UIW(TEXT("Properties &for %s BIOS")), driversw[bios_driver]->name);
 			mItem.dwTypeData = buf;
 		}
 		else
 		{
 			EnableMenuItem(hMenu, ID_BIOS_PROPERTIES, MF_GRAYED);
-			mItem.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+			mItem.dwTypeData = _UIW(TEXT("Properties &for BIOS"));
 		}
 
 		mItem.cbSize     = sizeof(mItem);
@@ -7299,7 +7299,7 @@ static void UpdateMenu(HMENU hMenu)
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
 		mItem.fType      = MFT_STRING;
-		mItem.dwTypeData = _UIW(TEXT("Properties for BIOS"));
+		mItem.dwTypeData = _UIW(TEXT("Properties &for BIOS"));
 		mItem.cch        = wcslen(mItem.dwTypeData);
 		SetMenuItemInfo(hMenu, ID_BIOS_PROPERTIES, FALSE, &mItem);
 

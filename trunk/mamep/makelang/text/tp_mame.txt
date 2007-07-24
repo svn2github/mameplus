@@ -806,6 +806,10 @@ CORE DEBUGGING OPTIONS
 CORE FILENAME OPTIONS
 
 
+# emu/emuopts.c: 167
+CORE INPUT AUTOMATIC ENABLE OPTIONS
+
+
 # emu/emuopts.c: 153
 CORE INPUT OPTIONS
 
@@ -1326,6 +1330,10 @@ Dual Under-Over (Gapless)
 EEPROM
 
 
+# emu/patch.c: 322
+ERROR: %s/%s: IPS data is empty\n
+
+
 # emu/romload.c: 401
 ERROR: required files are missing, the game cannot be run.
 
@@ -1394,6 +1402,10 @@ England
 English
 
 
+# mame/drivers/neodrvr.c: 172 mame/drivers/neogeo.c: 1291
+Enter BIOS
+
+
 # emu/cheat.c: 4860, 5316, 5855
 Equal
 
@@ -1440,6 +1452,10 @@ Error: unknown option: %s\n
 
 # emu/inptport.c: 438
 Europe
+
+
+# emu/uitext.c: 109 
+Exit
 
 
 # mame/drivers/metro.c: 2364 mame/drivers/nbmj8891.c: 2361
@@ -2360,6 +2376,10 @@ Nihongo
 
 # emu/inptport.c: 381 
 No
+
+
+# emu/drivers/empty.c: 81
+No Driver Loaded
 
 
 # emu/uitext.c: 217
@@ -4230,10 +4250,6 @@ Restore Previous Value
 Return to Game
 
 
-# emu/uitext.c: 0
-Select New Game
-
-
 # emu/uitext.c: 143
 Return to Groups
 
@@ -4380,6 +4396,10 @@ Select
 
 # emu/uitext.c: 214
 Select Memory Areas
+
+
+# emu/uitext.c: 107
+Select New Game
 
 
 # emu/cheat.c: 7635
@@ -5542,6 +5562,10 @@ command list database name
 compare files with known MAME roms
 
 
+# emu/emuopts.c: 161
+convert lightgun button 2 into offscreen reload
+
+
 # emu/clifront.c: 85
 create the default configuration file
 
@@ -5706,6 +5730,14 @@ enable mouse input
 enable overlays if artwork is enabled and available
 
 
+# emu/emuopts.c: 158
+enable separate input from each keyboard device (if present)
+
+
+# emu/emuopts.c: 159
+enable separate input from each mouse device (if present)
+
+
 # emu/emuopts.c: 105
 enable sleeping, which gives time back to other applications when idle
 
@@ -5752,6 +5784,10 @@ error: invalid value for language: %s\nUse %s\n
 
 # emu/ui.c: 376
 error: invalid value for palette: %s\n
+
+
+# emu/emuopts.c: 162
+explicit joystick map, or auto to auto-select
 
 
 # emu/video.c: 1190
@@ -6043,7 +6079,7 @@ set %s
 
 
 # emu/emuopts.c: 102
-set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
+set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
 
 
 # emu/emuopts.c: 143

@@ -98,7 +98,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 
 
@@ -166,7 +166,7 @@ Amenip Nova Games Ltd.
 Ameri
 
 
-# Mad Dog McCree v1C board rev.A
+# American Laser Games BIOS
 American Laser Games
 
 
@@ -194,7 +194,7 @@ Andamiro
 Apple
 
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 
 
@@ -238,7 +238,7 @@ Atari Games
 Athena
 
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 
 
@@ -270,7 +270,7 @@ Bandai
 Banpresto
 
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 
 
@@ -306,7 +306,7 @@ Bootleg in Coinmaster hardware
 Bordun International
 
 
-# The Crystal of Kings
+# Crystal System BIOS
 Brezzasoft
 
 
@@ -414,6 +414,10 @@ Comad & New Japan System
 Comad Industry Co Ltd
 
 
+# Amiga CD32 Bios
+Commodore
+
+
 # Puyo Puyo Sun (J 961115 V0.001)
 Compile
 
@@ -444,6 +448,10 @@ Craul Denshi
 
 # Run Deep
 Cream
+
+
+# Gyrodine
+Crux
 
 
 # Mirax
@@ -656,6 +664,10 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
+
+
+# PS Arcade 95
+Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -962,7 +974,7 @@ Human Amusement
 Human Inc.
 
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 
 
@@ -1170,8 +1182,8 @@ LAX
 Leante Games
 
 
-# Space War (Leijac)
-Leijac
+# Space War (Leijac Corporation)
+Leijac Corporation
 
 
 # Astro Laser
@@ -1192,6 +1204,10 @@ Limenko
 
 # Quizmaster (German)
 Loewen Spielautomaten
+
+
+# Space Invaders (Logitec)
+Logitec
 
 
 # Star Wars Trilogy (ver A)
@@ -1258,7 +1274,7 @@ Merit
 Metro
 
 
-# Wild Arrow
+# Wild Arrow (Standard V4.8)
 Meyco Games
 
 
@@ -1372,6 +1388,10 @@ Nasco Japan
 
 # Neo Turf Masters / Big Tournament Golf
 Nazca
+
+
+# Super Pool (Italy)
+Nazionale Elettronica Giochi S.A.S.
 
 
 # Neo Pong (v1.1)
@@ -1494,6 +1514,10 @@ Orca
 Oriental
 
 
+# G-Stream G2020
+Oriental Soft Japan
+
+
 # Defence Command
 Outer Limits
 
@@ -1550,7 +1574,7 @@ PlayMan
 Playmark
 
 
-# SvC Chaos - SNK vs Capcom (JAMMA PCB)
+# SNK vs. CAPCOM SVC CHAOS (JAMMA PCB)
 Playmore
 
 
@@ -1698,7 +1722,7 @@ Sage's Creation
 Sai-Mate
 
 
-# Viewpoint
+# Atomiswave Bios
 Sammy
 
 
@@ -1760,10 +1784,6 @@ Seibu Kaihatsu Inc.
 
 # Hyper Pacman
 SemiCom
-
-
-# Cool Minigame Collection
-Semicom
 
 
 # Hex Pool (Senko)
@@ -1958,6 +1978,10 @@ System Service
 System Ten
 
 
+# DaiDaiKakumei (Japan)
+SystemBit
+
+
 # Pebble Beach - The Great Shot (JUE 950913 V0.990)
 T&E Soft
 
@@ -1986,7 +2010,7 @@ TDS
 TDS & Mints
 
 
-# Cannonball (set 2)
+# Cannon Ball (set 2)
 TV Game Gruenberg
 
 

@@ -1,80 +1,20 @@
-# osd/windows/input.c: 1909
-         all -- all axes on all joysticks are digital\n
-         all -- 所有搖桿上的軸均是數位裝置\n
-
-# osd/windows/input.c: 1915
-         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
-         j1,j2a2 -- 搖桿 1 上的所有軸和搖桿 2 上的軸 2 是數位裝置\n
-
-# osd/windows/input.c: 1913
-         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
-         j1a5a6 -- 搖桿 1 上的軸 5 和軸 6 是數位裝置\n
-
-# osd/windows/input.c: 1910
-         j<N> -- all axes on joystick <N> are digital\n
-         j<N> -- 搖桿 <N> 上的所有軸是數位裝置\n
-
-# osd/windows/input.c: 1911
-         j<N>a<M> -- axis <M> on joystick <N> is digital\n
-         j<N>a<M> -- 搖桿 <N> 上的軸 <M> 是數位裝置\n
-
-# osd/windows/input.c: 1908
-         none -- no axes on any joysticks are digital\n
-         none -- 沒有任何搖桿上的軸是數位裝置\n
-
-# osd/windows/input.c: 1912
-    Multiple axes can be specified for one joystick:\n
-    一個搖桿能夠指定多個軸:\n
-
-# osd/windows/input.c: 1914
-    Multiple joysticks can be specified separated by commas:\n
-    多個搖桿能夠以逗號分開指定:\n
-
-# osd/windows/input.c: 2390
- - digital
- - 數位
-
-# osd/windows/input.c: 2315
-%s Button %d
-%s 按鈕 %d
-
-# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
+# osd/windows/winmain.c: 206, 207, 208, 209, 210, 211, 212, 213
 (disabled by compiling option)
 (由編譯選項停用)
 
-# osd/windows/video.c: 274
+# osd/windows/video.c: 266
 (primary)
 (主顯示器)
 
-# osd/windows/winmain.c: 236
-AUTOMATIC DEVICE SELECTION OPTIONS
-自動選取裝置選項
+# osd/windows/input.c: 1189
+Assign joystick %s to player %d\n
+分配搖桿 %s 到玩家 %d\n
 
-# osd/windows/input.c: 1341
-Can't set axis mode for Joystick %d - %s\n
-無法設定搖桿 %d - %s 的軸模式\n
-
-# osd/windows/input.c: 1366
-Can't set deadzone for Joystick %d - %s\n
-無法設定搖桿 %d - %s 的無反應區\n
-
-# osd/windows/input.c: 1356
-Can't set range for Joystick %d - %s\n
-無法設定搖桿 %d - %s 的範圍\n
-
-# osd/windows/input.c: 1377
-Can't set saturation for Joystick %d - %s\n
-無法設定搖桿 %d - %s 的飽和值\n
-
-# osd/windows/winmain.c: 131
-DEBUGGING OPTIONS
-除錯選項
-
-# osd/windows/winmain.c: 156
+# osd/windows/winmain.c: 149
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D 特定選項
 
-# osd/windows/winmain.c: 152
+# osd/windows/winmain.c: 145
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定選項
 
@@ -430,31 +370,47 @@ DirectDraw: 警告 - 裝置可能無法正常配合 DirectDraw 描繪\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
-# osd/windows/input.c: 1457
+# osd/windows/input.c: 1173
+DirectInput: Unable to enumerate joysticks (result=%08X)\n
+DirectInput: 無法列舉搖桿 (result=%08X)\n
+
+# osd/windows/input.c: 1158
+DirectInput: Unable to enumerate keyboards (result=%08X)\n
+DirectInput: 無法列舉鍵盤 (result=%08X)\n
+
+# osd/windows/input.c: 1167
+DirectInput: Unable to enumerate mice (result=%08X)\n
+DirectInput: 無法列舉滑鼠 (result=%08X)\n
+
+# osd/windows/input.c: 1147
 DirectInput: Using DirectInput %d\n
 DirectInput: 正在使用 DirectInput %d\n
 
-# osd/windows/sound.c: 373
+# osd/windows/sound.c: 369
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 
-# osd/windows/sound.c: 387
+# osd/windows/sound.c: 383
 Error creating DirectSound stream buffer: %08x\n
 建立 DirectSound 串流緩衝時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 261
+# osd/windows/sound.c: 257
 Error creating DirectSound: %08x\n
 建立 DirectSound 時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 354
+# osd/windows/sound.c: 350
 Error creating primary DirectSound buffer: %08x\n
 建立主要 DirectSound 緩衝時發生錯誤: %08x\n
+
+# osd/windows/window.c: 578
+Error creating render target for window %d
+建立描繪目標於視窗 %d 時發生錯誤
 
 # osd/windows/drawd3d.c: 768
 Error creating vertex buffer (%08X)
 建立頂點緩衝時發生錯誤 (%08X)
 
-# osd/windows/sound.c: 270
+# osd/windows/sound.c: 266
 Error getting DirectSound capabilities: %08x\n
 取得 DirectSound 功\能時發生錯誤: %08x\n
 
@@ -470,23 +426,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 為介面卡取得模式時發生錯誤 #%d\n
 
-# osd/windows/sound.c: 370
+# osd/windows/sound.c: 366
 Error getting primary DirectSound buffer format: %08x\n
 取得主要 DirectSound 緩衝格式時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 395
+# osd/windows/sound.c: 391
 Error locking DirectSound stream buffer: %08x\n
 鎖定 DirectSound 串流緩衝時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 308
+# osd/windows/sound.c: 304
 Error playing: %08x\n
 執行時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 278
+# osd/windows/sound.c: 274
 Error setting DirectSound cooperative level: %08x\n
 設定 DirectSound cooperative level 時發生錯誤: %08x\n
 
-# osd/windows/sound.c: 362
+# osd/windows/sound.c: 358
 Error setting primary DirectSound buffer format: %08x\n
 設定主要 DirectSound 緩衝格式時發生錯誤: %08x\n
 
@@ -506,123 +462,51 @@ Error: Device does not meet minimum requirements for Direct3D rendering\n
 Error: unable to configure a screen texture format\n
 錯誤: 無法設定畫面材質格式\n
 
-# osd/windows/winmain.c: 188
+# osd/windows/winmain.c: 181
 FULL SCREEN OPTIONS
 全螢幕選項
 
-# osd/windows/input.c: 2974
-Fast Forward
-快轉
+# osd/windows/window.c: 227
+Failed to create pause event
+無法建立暫停事件
 
-# osd/windows/winmain.c: 200
+# osd/windows/window.c: 798
+Failed to create window class
+無法建立視窗類別
+
+# osd/windows/window.c: 241
+Failed to create window thread
+無法建立視窗執行緒
+
+# osd/windows/window.c: 235
+Failed to create window thread ready event
+無法建立視窗執行緒預備事件
+
+# osd/windows/winmain.c: 193
 INPUT DEVICE OPTIONS
 輸入裝置選項
 
-# osd/windows/video.c: 542
+# osd/windows/video.c: 534
 Illegal aspect ratio value for %s = %s\n
 非法的長寬比例值於 %s = %s\n
 
-# osd/windows/video.c: 565
+# osd/windows/video.c: 557
 Illegal resolution value for %s = %s\n
 非法的解析度值於 %s = %s\n
 
-# osd/windows/input.c: 2390
-Input:  Axis %d (%s)%s\n
-輸入:  軸 %d (%s)%s\n
-
-# osd/windows/input.c: 2228
-Input: %s: %s\n
-輸入: %s: %s\n
-
-# osd/windows/input.c: 1076
-Input: Autoenabling joysticks due to presence of a %s\n
-輸入: 自動啟用搖桿，因為存在%s\n
-
-# osd/windows/input.c: 1083
-Input: Autoenabling lightguns due to presence of a %s\n
-輸入: 自動啟用光線槍，因為存在%s\n
-
-# osd/windows/input.c: 1069
-Input: Autoenabling mice due to presence of a %s\n
-輸入: 自動啟用滑鼠，因為存在%s\n
-
-# osd/windows/input.c: 2173
-Input: Joystick %d axis %d is now %s\n
-輸入: 搖桿 %d 軸 %d 目前是%s\n
-
-# osd/windows/input.c: 2371
-Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-輸入: 搖桿 %d: %s (%d 軸, %d 按鈕, %d POV)\n
-
-# osd/windows/input.c: 1532
-Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-輸入: 鍵盤=%d  滑鼠=%d  搖桿=%d 光線槍=%d\n
-
-# osd/windows/input.c: 3310
-Input: Using RAWMOUSE for Mouse input\n
-輸入: 正在使用 RAWMOUSE 於滑鼠輸入\n
-
-# osd/windows/input.c: 1534
-Input: \"%s\" controller support enabled\n
-輸入: 已啟用 \"%s\" 控制器支援\n
-
-# osd/windows/input.c: 1907
-Invalid %s value %s; reverting to all -- valid values are:\n
-無效的 %s 值: %s; 還原成 all -- 有效的值為:\n
-
-# osd/windows/input.c: 1828
-Invalid %s value %s; reverting to keyboard\n
-無效的 %s 值 %s; 還原成 keyboard\n
-
-# osd/windows/video.c: 459
+# osd/windows/video.c: 451
 Invalid video value %s; reverting to gdi\n
 無效的視訊值 %s; 還原成 gdi\n
 
-# osd/windows/input.c: 2491
-J%d %s D
-J%d %s 下
-
-# osd/windows/input.c: 2495
-J%d %s L
-J%d %s 左
-
-# osd/windows/input.c: 2499
-J%d %s R
-J%d %s 右
-
-# osd/windows/input.c: 2487
-J%d %s U
-J%d %s 上
-
-# osd/windows/input.c: 2359
-Lightgun %d 
-光線槍 %d 
-
-# osd/windows/input.c: 2862
-Lightgun not supported in windowed mode
-在視窗模式中不支援光線槍
-
-# osd/windows/input.c: 2357
-Lightgun on Mouse %d 
-光線槍在滑鼠 %d 
-
-# osd/windows/winmain.c: 493
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作權 (C) 1997-2007 隸屬於 Nicola Salmoria 與 MAME 團隊\n\nM.A.M.E. 是一個主控台應用程式，您必須從命令提示字元啟動它。\n\n用法:\tMAME 遊戲名稱 [選項]\n\n\tMAME -showusage\t\t列出選項的簡短描述\n\tMAME -showconfig\t\t列出設定選項的清單\n\tMAME -createconfig\t建立 mame.ini 檔案\n\n請查閱\文件以取得更多資訊。\n\n您現在要開啟文件嗎?
-
-# osd/windows/window.c: 621
+# osd/windows/window.c: 593
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - 畫面 %d
 
-# osd/windows/input.c: 2225
-Mouse 
-滑鼠 
+# osd/windows/winmain.c: 717
+Out of memory
+記憶體不足
 
-# osd/windows/input.c: 2223
-Mouse %d 
-滑鼠 %d 
-
-# osd/windows/winmain.c: 161
+# osd/windows/winmain.c: 154
 PER-WINDOW VIDEO OPTIONS
 各個畫面的視訊選項
 
@@ -630,65 +514,37 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 建議的視訊模式無法支援裝置 %s\n
 
-# osd/windows/sound.c: 125
+# osd/windows/input.c: 1740
+RawInput: APIs detected\n
+RawInput: 偵測出 API\n
+
+# osd/windows/sound.c: 121
 Sound buffer: overflows=%d underflows=%d\n
 聲音緩衝: overflows=%d underflows=%d\n
 
-# osd/windows/sound.c: 121
+# osd/windows/sound.c: 117
 Sound: buffer overflows=%d underflows=%d\n
 聲音: 緩衝 overflows=%d underflows=%d\n
 
-# osd/windows/input.c: 2294
-Stick %d %s +
-控制桿 %d %s +
-
-# osd/windows/input.c: 2287
-Stick %d %s -
-控制桿 %d %s -
-
-# osd/windows/input.c: 2296
-Stick %s +
-控制桿 %s +
-
-# osd/windows/input.c: 2289
-Stick %s -
-控制桿 %s -
-
-# osd/windows/input.c: 2260
-Stick%sX+
-控制桿%sX+
-
-# osd/windows/input.c: 2258
-Stick%sX-
-控制桿%sX-
-
-# osd/windows/input.c: 2264
-Stick%sY+
-控制桿%sY+
-
-# osd/windows/input.c: 2262
-Stick%sY-
-控制桿%sY-
-
-# osd/windows/input.c: 2268
-Stick%sZ+
-控制桿%sZ+
-
-# osd/windows/input.c: 2266
-Stick%sZ-
-控制桿%sZ-
+# osd/windows/winmain.c: 713
+Symbol table full
+所有符號表
 
 # osd/windows/drawd3d.c: 1781
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材質太大! (要求: %dx%d, 最大 %dx%d)\n
 
-# osd/windows/input.c: 2956
+# osd/windows/input.c: 795
 Toggle Fullscreen
 切換全螢幕
 
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
+
+# osd/windows/window.c: 614
+Unable to complete window creation
+無法完成視窗創建
 
 # osd/windows/drawd3d.c: 715
 Unable to create the Direct3D device (%08X)\n
@@ -702,7 +558,7 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 無法初始化 DirectDraw\n
 
-# osd/windows/video.c: 510
+# osd/windows/video.c: 502
 Unable to load PNG file '%s'\n
 無法載入 PNG 檔案 '%s'\n
 
@@ -714,27 +570,31 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 未知的材質混和模式=%d 格式=%d\n
 
-# osd/windows/video.c: 419
+# osd/windows/video.c: 411
 Using %s scale effect\n
 正在使用 %s 縮放效果\n
 
-# osd/windows/video.c: 274
+# osd/windows/video.c: 266
 Video: Monitor %p = \"%s\" %s\n
 視訊: 顯示器 %p = \"%s\" %s\n
 
-# osd/windows/winmain.c: 135
+# osd/windows/winmain.c: 124
+WINDOWS DEBUGGING OPTIONS
+WINDOWS 除錯選項
+
+# osd/windows/winmain.c: 128
 WINDOWS PERFORMANCE OPTIONS
 WUNDOWS 效能選項
 
-# osd/windows/winmain.c: 196
+# osd/windows/winmain.c: 189
 WINDOWS SOUND OPTIONS
 WINDOWS 聲音選項
 
-# osd/windows/winmain.c: 140
+# osd/windows/winmain.c: 133
 WINDOWS VIDEO OPTIONS
 WINDOWS 視訊選項
 
-# osd/windows/video.c: 455
+# osd/windows/video.c: 447
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 
@@ -742,311 +602,203 @@ Warning: -video none doesn't make much sense without -seconds_to_run\n
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 裝置可能無法正常配合 Direct3D 描繪\n
 
-# osd/windows/input.c: 2171
-analog
-類比
-
-# osd/windows/input.c: 1465
-analog joystick
-類比搖桿
-
-# osd/windows/winmain.c: 163
+# osd/windows/winmain.c: 156
 aspect ratio for all screens; 'auto' here will try to make a best guess
 全部畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 168
+# osd/windows/winmain.c: 161
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 第一個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 183
+# osd/windows/winmain.c: 176
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 173
+# osd/windows/winmain.c: 166
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 第二個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 178
+# osd/windows/winmain.c: 171
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 第三個畫面的長寬比例; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 191
+# osd/windows/winmain.c: 184
 brightness value in full screen mode
 全螢幕模式亮度值
 
-# osd/windows/winmain.c: 212
-center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-搖桿的中心無反應區範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
-
-# osd/windows/winmain.c: 145
+# osd/windows/winmain.c: 138
 constrain to the proper aspect ratio
 強制使用合適的長寬比例
 
-# osd/windows/winmain.c: 192
+# osd/windows/winmain.c: 185
 contrast value in full screen mode
 全螢幕模式對比值
 
-# osd/windows/winmain.c: 144
+# osd/windows/winmain.c: 137
 default to maximized windows; otherwise, windows will be minimized
 預設成視窗最大化; 否則將採用視窗最小化模式
 
-# osd/windows/input.c: 1468
-dial
-方向盤
-
-# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 53
-digital
-數位
-
-# osd/windows/winmain.c: 240
-enable (keyboard|mouse|joystick) if a dial control is present
-啟用 (keyboard|mouse|joystick) 對應存在方向盤裝置的場合
-
-# osd/windows/winmain.c: 242
-enable (keyboard|mouse|joystick) if a lightgun control is present
-啟用 (keyboard|mouse|joystick) 對應存在光線槍裝置的場合
-
-# osd/windows/winmain.c: 245
-enable (keyboard|mouse|joystick) if a mouse control is present
-啟用 (keyboard|mouse|joystick) 對應存在滑鼠裝置的場合
-
-# osd/windows/winmain.c: 237
-enable (keyboard|mouse|joystick) if a paddle control is present
-啟用 (keyboard|mouse|joystick) 對應存在操縱桿裝置的場合
-
-# osd/windows/winmain.c: 239
-enable (keyboard|mouse|joystick) if a pedal control is present
-啟用 (keyboard|mouse|joystick) 對應存在踏板裝置的場合
-
-# osd/windows/winmain.c: 243
-enable (keyboard|mouse|joystick) if a positional control is present
-啟用 (keyboard|mouse|joystick) 對應存在定位器裝置的場合
-
-# osd/windows/winmain.c: 241
-enable (keyboard|mouse|joystick) if a trackball control is present
-啟用 (keyboard|mouse|joystick) 對應存在軌跡球裝置的場合
-
-# osd/windows/winmain.c: 238
-enable (keyboard|mouse|joystick) if an analog joystick control is present
-啟用 (keyboard|mouse|joystick) 對應存在類比搖桿裝置的場合
-
-# osd/windows/winmain.c: 158
+# osd/windows/winmain.c: 151
 enable bilinear filtering on screen output
 啟用雙線過濾的畫面輸出
 
-# osd/windows/winmain.c: 209
+# osd/windows/winmain.c: 194
 enable dual lightgun input
 啟用雙光線槍輸入
 
-# osd/windows/winmain.c: 153
+# osd/windows/winmain.c: 146
 enable hardware stretching
 啟用硬體延展
 
-# osd/windows/winmain.c: 202
-enable joystick input
-啟用搖桿輸入
-
-# osd/windows/winmain.c: 208
-enable lightgun input
-啟用光線槍輸入
-
-# osd/windows/winmain.c: 201
-enable mouse input
-啟用滑鼠輸入
-
-# osd/windows/winmain.c: 137
+# osd/windows/winmain.c: 130
 enable multithreading; this enables rendering and blitting on a separate thread
 啟用多執行緒; 可以將描繪和 blit 分開處理
 
-# osd/windows/winmain.c: 204
-enable pointing stick input
-啟用指點桿輸入
-
-# osd/windows/winmain.c: 190
+# osd/windows/winmain.c: 183
 enable resolution switching
 啟用解析度切換
 
-# osd/windows/winmain.c: 211
-enable steadykey support
-啟用多鍵同時輸入支援
-
-# osd/windows/winmain.c: 189
+# osd/windows/winmain.c: 182
 enable triple buffering
 啟用三重緩衝
 
-# osd/windows/winmain.c: 149
+# osd/windows/winmain.c: 142
 enable using the start of VBLANK for throttling instead of the game time
 啟用 VBLANK 開始限制速度取代遊戲時間
 
-# osd/windows/winmain.c: 148
+# osd/windows/winmain.c: 141
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 啟用畫面翻轉之前等待 VBLANK 開始; 降低破損效果
 
-# osd/windows/winmain.c: 143
+# osd/windows/winmain.c: 136
 enable window mode; otherwise, full screen mode is assumed
 啟用視窗模式; 否則將採用全螢幕模式
 
-# osd/windows/winmain.c: 213
-end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
-搖桿的末端軸飽和值範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
-
-# osd/windows/winmain.c: 162
+# osd/windows/winmain.c: 155
 explicit name of all screens; 'auto' here will try to make a best guess
 全部畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 167
+# osd/windows/winmain.c: 160
 explicit name of the first screen; 'auto' here will try to make a best guess
 第一個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 182
+# osd/windows/winmain.c: 175
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 第四個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 172
+# osd/windows/winmain.c: 165
 explicit name of the second screen; 'auto' here will try to make a best guess
 第二個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 177
+# osd/windows/winmain.c: 170
 explicit name of the third screen; 'auto' here will try to make a best guess
 第三個畫面的詳細名稱; 設為 auto 將試著找出最佳設定
 
-# osd/windows/winmain.c: 193
+# osd/windows/winmain.c: 186
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# osd/windows/input.c: 2171
-invalid
-無效的
-
-# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 53
-lightgun
-光線槍
-
-# osd/windows/winmain.c: 214
-mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-標示某些搖桿或軸為數位裝置 (none|all|j<N>*|j<N>a<M>[,...])
-
-# osd/windows/winmain.c: 147
+# osd/windows/winmain.c: 140
 name of a PNG file to use for visual effects, or 'none'
 設定要使用的視覺效果 PNG 檔名，或設為 none
 
-# osd/windows/winmain.c: 142
+# osd/windows/winmain.c: 135
 number of screens to create; usually, you want just one
 建立的畫面總數; 通常設為一個
 
-# osd/windows/winmain.c: 210
-offscreen shots reload
-射擊畫面外區域即重新填補
-
-# osd/windows/winmain.c: 132
+# osd/windows/winmain.c: 125
 output error.log data to the system debugger
 輸出 error.log 資料到系統除錯程式
 
-# osd/windows/input.c: 1464
-paddle
-操縱桿
-
-# osd/windows/input.c: 1467
-pedal
-踏板
-
-# osd/windows/input.c: 1470
-positional
-定位器
-
-# osd/windows/winmain.c: 164
+# osd/windows/winmain.c: 157
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 全部畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 169
+# osd/windows/winmain.c: 162
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第一個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 184
+# osd/windows/winmain.c: 177
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第四個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 174
+# osd/windows/winmain.c: 167
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第二個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 179
+# osd/windows/winmain.c: 172
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 第三個畫面的解析度; 格式是 <寬>x<高>[@<更新頻率>] 或 auto
 
-# osd/windows/winmain.c: 165
+# osd/windows/winmain.c: 158
 preferred view for all screens
 全部畫面的檢視方式
 
-# osd/windows/winmain.c: 170
+# osd/windows/winmain.c: 163
 preferred view for the first screen
 第一個畫面的檢視方式
 
-# osd/windows/winmain.c: 185
+# osd/windows/winmain.c: 178
 preferred view for the fourth screen
 第四個畫面的檢視方式
 
-# osd/windows/winmain.c: 175
+# osd/windows/winmain.c: 168
 preferred view for the second screen
 第二個畫面的檢視方式
 
-# osd/windows/winmain.c: 180
+# osd/windows/winmain.c: 173
 preferred view for the third screen
 第三個畫面的檢視方式
 
-# osd/windows/winmain.c: 146
+# osd/windows/winmain.c: 139
 scale screen rendering by this amount in software
 以此倍數執行軟體縮放畫面描繪
 
-# osd/windows/winmain.c: 197
+# osd/windows/winmain.c: 190
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
-# osd/windows/winmain.c: 217
+# osd/windows/winmain.c: 197
 set joystick ID (Player1)
 設定搖桿 ID (玩家 1)
 
-# osd/windows/winmain.c: 218
+# osd/windows/winmain.c: 198
 set joystick ID (Player2)
 設定搖桿 ID (玩家 2)
 
-# osd/windows/winmain.c: 219
+# osd/windows/winmain.c: 199
 set joystick ID (Player3)
 設定搖桿 ID (玩家 3)
 
-# osd/windows/winmain.c: 220
+# osd/windows/winmain.c: 200
 set joystick ID (Player4)
 設定搖桿 ID (玩家 4)
 
-# osd/windows/winmain.c: 221
+# osd/windows/winmain.c: 201
 set joystick ID (Player5)
 設定搖桿 ID (玩家 5)
 
-# osd/windows/winmain.c: 222
+# osd/windows/winmain.c: 202
 set joystick ID (Player6)
 設定搖桿 ID (玩家 6)
 
-# osd/windows/winmain.c: 223
+# osd/windows/winmain.c: 203
 set joystick ID (Player7)
 設定搖桿 ID (玩家 7)
 
-# osd/windows/winmain.c: 224
+# osd/windows/winmain.c: 204
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 
-# osd/windows/winmain.c: 157
+# osd/windows/winmain.c: 150
 specify the preferred Direct3D version (8 or 9)
 指定喜好的 Direct3D 版本 (8 或 9)
 
-# osd/windows/winmain.c: 136
+# osd/windows/winmain.c: 129
 thread priority for the main game thread; range from -15 to 1
 主要遊戲的執行緒優先權; 範圍是 -15 至 1
 
-# osd/windows/input.c: 1469
-trackball
-軌跡球
-
-# osd/windows/winmain.c: 141
+# osd/windows/winmain.c: 134
 video output method: none, gdi, ddraw, or d3d
 視訊輸出方式: none, gdi, ddraw 或 d3d
 

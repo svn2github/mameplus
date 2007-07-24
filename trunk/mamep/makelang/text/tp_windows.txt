@@ -6,6 +6,10 @@
 (primary)
 
 
+# osd/windows/input.c: 1189
+Assign joystick %s to player %d\n
+
+
 # osd/windows/winmain.c: 149
 DIRECT3D-SPECIFIC OPTIONS
 
@@ -366,19 +370,19 @@ DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
-# osd/windows/input.c: 1122
+# osd/windows/input.c: 1173
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 
 
-# osd/windows/input.c: 1107
+# osd/windows/input.c: 1158
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 
 
-# osd/windows/input.c: 1116
+# osd/windows/input.c: 1167
 DirectInput: Unable to enumerate mice (result=%08X)\n
 
 
-# osd/windows/input.c: 1096
+# osd/windows/input.c: 1147
 DirectInput: Using DirectInput %d\n
 
 
@@ -510,6 +514,10 @@ PER-WINDOW VIDEO OPTIONS
 Proposed video mode not supported on device %s\n
 
 
+# osd/windows/input.c: 1740
+RawInput: APIs detected\n
+
+
 # osd/windows/sound.c: 121
 Sound buffer: overflows=%d underflows=%d\n
 
@@ -526,7 +534,7 @@ Symbol table full
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/input.c: 744
+# osd/windows/input.c: 795
 Toggle Fullscreen
 
 
@@ -568,6 +576,10 @@ Using %s scale effect\n
 
 # osd/windows/video.c: 266
 Video: Monitor %p = \"%s\" %s\n
+
+
+# osd/windows/winmain.c: 124
+WINDOWS DEBUGGING OPTIONS
 
 
 # osd/windows/winmain.c: 128

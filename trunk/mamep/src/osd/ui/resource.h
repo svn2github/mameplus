@@ -279,12 +279,14 @@
 #define IDC_ASPECTRATIOTEXT             1156
 #define IDC_JOY_GUI                     1157
 #define IDC_BROADCAST                   1158
-#define IDC_JDZ                         1160
-#define IDC_JDZDISP                     1161
-#define IDC_JDZTEXT                     1162
-#define IDC_AUDIO_LATENCY_DISP          1192
-#define IDC_PLAY_GAME                   1164
-#define IDC_LIGHTGUN                    1165
+#define IDC_JDZ                         1159
+#define IDC_JDZDISP                     1160
+#define IDC_JDZTEXT                     1161
+#define IDC_MULTIKEYBOARD               1162
+#define IDC_MULTIMOUSE                  1163
+#define IDC_AUDIO_LATENCY_DISP          1164
+#define IDC_PLAY_GAME                   1165
+#define IDC_LIGHTGUN                    1166
 #define IDC_SSTAB                       1167
 #define IDC_GAME_ICON                   1168
 #define IDC_RANDOM_BG                   1169
@@ -328,6 +330,8 @@
 #define IDC_DIAL                        1237
 #define IDC_TRACKBALL                   1238
 #define IDC_LIGHTGUNDEVICE              1239
+#define IDC_POSITIONALDEVICE            1240
+#define IDC_MOUSEDEVICE                 1241
 #define IDC_HIGH_PRIORITY_TEXT          1243
 #define IDC_HIGH_PRIORITYTXT            1244
 #define IDC_SELECT_EFFECT               0	 // N/A
@@ -341,7 +345,6 @@
 #define IDC_D3D_TEXT                    1188
 #define IDC_DDRAW_TEXT                  1189
 #define IDC_PRESCALETEXT                1190
-#define IDC_POSITIONALEVICE             1240
 #define IDC_DISPLAY_SPLASH_SCREEN       1245
 #define IDC_SHOW_TREE_SHEET             1248 // USE_TREE_SHEET
 #define IDC_JSAT                        1250

@@ -214,6 +214,8 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(bool,                 lightgun)
 	DEFINE_OPT(bool,                 dual_lightgun)
 	DEFINE_OPT(bool,                 offscreen_reload)
+	DEFINE_OPT(bool,                 multikeyboard)
+	DEFINE_OPT(bool,                 multimouse)
 	DEFINE_OPT(bool,                 steadykey)
 	DEFINE_OPT(float,                joy_deadzone)
 	DEFINE_OPT(float,                joy_saturation)
@@ -236,6 +238,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(analog_select,        trackball_device)
 	DEFINE_OPT(analog_select,        lightgun_device)
 	DEFINE_OPT(analog_select,        positional_device)
+	DEFINE_OPT(analog_select,        mouse_device)
 END_OPT_FUNC_DRIVER
 #endif /* START_OPT_FUNC_DRIVER */
 

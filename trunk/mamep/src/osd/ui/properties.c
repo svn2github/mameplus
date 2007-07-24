@@ -232,6 +232,7 @@ static int  g_nDialIndex = 0;
 static int  g_nTrackballIndex = 0;
 static int  g_nLightgunIndex = 0;
 static int  g_nPositionalIndex = 0;
+static int  g_nMouseIndex = 0;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
 static BOOL  g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
@@ -1963,7 +1964,8 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 	case IDC_DIAL:
 	case IDC_TRACKBALL:
 	case IDC_LIGHTGUNDEVICE:
-	case IDC_POSITIONALEVICE:
+	case IDC_POSITIONALDEVICE:
+	case IDC_MOUSEDEVICE:
 		if (wNotifyCode == CBN_SELCHANGE)
 		{
 			changed = TRUE;
@@ -3452,6 +3454,14 @@ static void AssignPositional(HWND hWnd)
 		pGameOpts->positional_device = mame_strdup(ptr);
 }
 
+static void AssignMouse(HWND hWnd)
+{
+	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nMouseIndex);
+	FreeIfAllocated(&pGameOpts->mouse_device);
+	if (ptr != NULL)
+		pGameOpts->mouse_device = mame_strdup(ptr);
+}
+
 #define AssignDefaultBios(i) \
 static void AssignDefaultBios##i(HWND hWnd) \
 { \
@@ -3729,6 +3739,12 @@ static void ResetDataMap(void)
 		if (!mame_stricmp(pGameOpts->positional_device, g_ComboBoxDevice[i].m_pData))
 			g_nPositionalIndex = i;
 	}
+	g_nMouseIndex = 0;
+	for (i = 0; i < NUMDEVICES; i++)
+	{
+		if (!mame_stricmp(pGameOpts->mouse_device, g_ComboBoxDevice[i].m_pData))
+			g_nMouseIndex = i;
+	}
 
 }
 
@@ -3784,6 +3800,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_JDZDISP,       DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->joy_deadzone,    0, 0, 0);
 	DataMapAdd(IDC_JSAT,          DM_INT,  CT_SLIDER,   &g_nJSATIndex,             DM_FLOAT,  &pGameOpts->joy_saturation,  0, 0, AssignJSAT);
 	DataMapAdd(IDC_JSATDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT,  &pGameOpts->joy_saturation,  0, 0, 0);
+	DataMapAdd(IDC_MULTIKEYBOARD, DM_BOOL, CT_BUTTON,   &pGameOpts->multikeyboard, DM_BOOL,   &pGameOpts->multikeyboard,   0, 0, 0);
+	DataMapAdd(IDC_MULTIMOUSE,    DM_BOOL, CT_BUTTON,   &pGameOpts->multimouse,    DM_BOOL,   &pGameOpts->multimouse,      0, 0, 0);
 	DataMapAdd(IDC_STEADYKEY,     DM_BOOL, CT_BUTTON,   &pGameOpts->steadykey,     DM_BOOL,   &pGameOpts->steadykey,       0, 0, 0);
 	DataMapAdd(IDC_LIGHTGUN,      DM_BOOL, CT_BUTTON,   &pGameOpts->lightgun,      DM_BOOL,   &pGameOpts->lightgun,        0, 0, 0);
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
@@ -3805,7 +3823,8 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DIAL,          DM_INT, CT_COMBOBOX,  &g_nDialIndex,             DM_STRING,&pGameOpts->dial_device,      0, 0, AssignDial);
 	DataMapAdd(IDC_TRACKBALL,     DM_INT, CT_COMBOBOX,  &g_nTrackballIndex,        DM_STRING,&pGameOpts->trackball_device, 0, 0, AssignTrackball);
 	DataMapAdd(IDC_LIGHTGUNDEVICE,DM_INT, CT_COMBOBOX,  &g_nLightgunIndex,         DM_STRING,&pGameOpts->lightgun_device,  0, 0, AssignLightgun);
-	DataMapAdd(IDC_POSITIONALEVICE,DM_INT, CT_COMBOBOX, &g_nPositionalIndex,       DM_STRING,&pGameOpts->positional_device,0, 0, AssignPositional);
+	DataMapAdd(IDC_POSITIONALDEVICE,DM_INT, CT_COMBOBOX,&g_nPositionalIndex,       DM_STRING,&pGameOpts->positional_device,0, 0, AssignPositional);
+	DataMapAdd(IDC_MOUSEDEVICE,   DM_INT, CT_COMBOBOX,  &g_nMouseIndex,            DM_STRING,&pGameOpts->mouse_device,     0, 0, AssignMouse);
 
 
 	/* core video */
@@ -4890,7 +4909,8 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	HWND hCtrl3 = GetDlgItem(hwnd,IDC_DIAL);
 	HWND hCtrl4 = GetDlgItem(hwnd,IDC_TRACKBALL);
 	HWND hCtrl5 = GetDlgItem(hwnd,IDC_LIGHTGUNDEVICE);
-	HWND hCtrl6 = GetDlgItem(hwnd,IDC_POSITIONALEVICE);
+	HWND hCtrl6 = GetDlgItem(hwnd,IDC_POSITIONALDEVICE);
+	HWND hCtrl7 = GetDlgItem(hwnd,IDC_MOUSEDEVICE);
 
 	if (hCtrl)
 	{
@@ -4946,6 +4966,14 @@ static void InitializeControllerMappingUI(HWND hwnd)
 		{
 			ComboBox_InsertString(hCtrl6, i, _UIW(g_ComboBoxDevice[i].m_pText));
 			ComboBox_SetItemData( hCtrl6, i, g_ComboBoxDevice[i].m_pData);
+		}
+	}
+	if (hCtrl7)
+	{
+		for (i = 0; i < NUMDEVICES; i++)
+		{
+			ComboBox_InsertString(hCtrl7, i, _UIW(g_ComboBoxDevice[i].m_pText));
+			ComboBox_SetItemData( hCtrl7, i, g_ComboBoxDevice[i].m_pData);
 		}
 	}
 }
