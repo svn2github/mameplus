@@ -3133,7 +3133,13 @@ static void LoadAltOptions(alt_options_type *alt_option)
 
 static void LoadDefaultOptions(void)
 {
+	int i;
+
 	options_load_default_config();
+
+	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
+		if (default_bios[i] != -1)
+			GetGameOptions(default_bios[i]);
 }
 
 static void LoadOptions(void)
