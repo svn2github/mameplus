@@ -428,10 +428,10 @@ static struct ComboBoxSelectScreen
 	const int	m_pData;
 } g_ComboBoxSelectScreen[] = 
 {
-	{ TEXT("Screen 0"),             0    },
-	{ TEXT("Screen 1"),             1    },
-	{ TEXT("Screen 2"),             2    },
-	{ TEXT("Screen 3"),             3    },
+	{ TEXT("First screen"),         0    },
+	{ TEXT("Second screen"),        1    },
+	{ TEXT("Third screen"),         2    },
+	{ TEXT("Fourth screen"),        3    },
 };
 #define NUMSELECTSCREEN ARRAY_LENGTH(g_ComboBoxSelectScreen)
 
@@ -441,10 +441,10 @@ static struct ComboBoxView
 	const char*	m_pData;
 } g_ComboBoxView[] = 
 {
-	{ TEXT("Auto"),		      "auto"    },
+	{ TEXT("Auto"),		          "auto"        },
 	{ TEXT("Standard"),         "standard"    }, 
-	{ TEXT("Pixel Aspect"),     "pixel"   }, 
-	{ TEXT("Cocktail"),         "cocktail"     },
+	{ TEXT("Pixel Aspect"),     "pixel"       }, 
+	{ TEXT("Cocktail"),         "cocktail"    },
 };
 #define NUMVIEW ARRAY_LENGTH(g_ComboBoxView)
 
@@ -469,13 +469,13 @@ static const struct
 	const UINT ctrl;
 } drivers_table[] =
 {
-	{"mame",		IDC_DRV_MAME},
-	{"plus",		IDC_DRV_PLUS},
-	{"homebrew",		IDC_DRV_HOMEBREW},
-	{"neod",		IDC_DRV_NEOD},
+	{"mame",        IDC_DRV_MAME},
+	{"plus",        IDC_DRV_PLUS},
+	{"homebrew",    IDC_DRV_HOMEBREW},
+	{"neod",        IDC_DRV_NEOD},
 #ifndef NEOCPSMAME
-	{"noncpu",		IDC_DRV_NONCPU},
-	{"hazemd",		IDC_DRV_HAZEMD},
+	{"noncpu",      IDC_DRV_NONCPU},
+	{"hazemd",      IDC_DRV_HAZEMD},
 #endif /* NEOCPSMAME */
 	{0}
 };

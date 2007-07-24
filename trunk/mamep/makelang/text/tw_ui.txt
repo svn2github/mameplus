@@ -276,7 +276,7 @@ MAME 版本資訊(&M)
 
 # osd/ui/mame32.rc: 916
 &User Interface (Fonts, Colors, Sizes)
-使用介面(字型、色彩、大小)(&U)
+使用介面 (字型、色彩、大小)(&U)
 
 # osd/ui/mame32.rc: 879
 &Vector Graphics
@@ -364,7 +364,7 @@ All files (*.*)
 
 # osd/ui/mame32.rc: 944
 Allow game selection by a &joystick (requires restart)
-允許\使用搖桿選擇遊戲(需重新啟動)(&J)
+允許\使用搖桿選擇遊戲 (需重新啟動)(&J)
 
 # osd/ui/mame32.rc: 947
 Allow game selection by custom &key sequences
@@ -1000,7 +1000,7 @@ Enable sound and sound CPUs
 
 # osd/ui/mame32.rc: 732
 Enable steadykey support
-啟用多鍵同時輸入支援
+啟用多個按鍵同時輸入支援
 
 # osd/ui/mame32.rc: 583
 Enforce aspect ratio
@@ -1016,7 +1016,7 @@ Error finding custom file name to save
 
 # osd/ui/mame32.rc: 768
 Error log (for developers)
-錯誤記錄(程式開發用)
+錯誤記錄 (程式開發用)
 
 # osd/ui/win32ui.c: 7680
 Error searching for custom folder
@@ -1058,6 +1058,10 @@ File Audit
 Filters for %s Folder
 篩選 %s 資料夾
 
+# osd/ui/properties.c: 431
+First screen
+第一個畫面
+
 # osd/ui/mame32.rc: 834
 Flicker
 閃爍度
@@ -1093,6 +1097,10 @@ Font (normal)
 # osd/ui/paletteedit.c: 106
 Font (special)
 字型 (特殊)
+
+# osd/ui/properties.c: 434
+Fourth screen
+第四個畫面
 
 # osd/ui/mame32.rc: 598
 Frame skipping
@@ -1200,7 +1208,7 @@ Help
 
 # osd/ui/mame32.rc: 953
 Hide &mouse cursor (requires restart)
-隱藏滑鼠指標(需重新啟動)(&M)
+隱藏滑鼠指標 (需重新啟動)(&M)
 
 # osd/ui/layout.c: 117
 High Scores
@@ -1882,22 +1890,6 @@ Scale screen
 Screen
 畫面
 
-# osd/ui/properties.c: 431
-Screen 0
-畫面 0
-
-# osd/ui/properties.c: 432
-Screen 1
-畫面 1
-
-# osd/ui/properties.c: 433
-Screen 2
-畫面 2
-
-# osd/ui/properties.c: 434
-Screen 3
-畫面 3
-
 # osd/ui/win32ui.c: 3487
 Screen flip support is missing
 尚未支援畫面翻轉
@@ -1929,6 +1921,10 @@ Screenshot Cycletime in Seconds
 # osd/ui/mame32.rc: 80
 Screenshot Ta&b\tAlt+B
 預覽圖索引標籤(&B)\tAlt+B
+
+# osd/ui/properties.c: 432
+Second screen
+第二個畫面
 
 # osd/ui/mame32.rc: 949
 Select &random background image on start
@@ -2309,6 +2305,10 @@ There is no application associated with the given filename extension.
 # osd/ui/m32util.c: 260
 There was not enough memory to complete the operation.
 記憶體不足無法完成這項作業。
+
+# osd/ui/properties.c: 433
+Third screen
+第三個畫面
 
 # osd/ui/mame32.rc: 793
 Thread priority

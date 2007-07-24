@@ -1887,19 +1887,19 @@ Screen
 
 
 # osd/ui/properties.c: 431
-Screen 0
+First screen
 
 
 # osd/ui/properties.c: 432
-Screen 1
+Second screen
 
 
 # osd/ui/properties.c: 433
-Screen 2
+Third screen
 
 
 # osd/ui/properties.c: 434
-Screen 3
+Fourth screen
 
 
 # osd/ui/win32ui.c: 3487

@@ -676,7 +676,7 @@ Autocenter Speed
 
 # mame/drivers/neogeo.c: 1218
 Autofire (in some games)
-連射功\能(用於部分遊戲)
+連射功\能 (用於部分遊戲)
 
 # emu/uitext.c: 245
 Autofire Delay
@@ -1060,7 +1060,7 @@ Copy Previous Value
 
 # emu/uimenu.c: 3153
 Copyright 2007, Nicola Salmoria
-著作權 (C) 2007 Nicola Salmoria
+著作權 (C) 2007, Nicola Salmoria
 
 # emu/config.c: 136, 140
 Could not load controller file %s.cfg
@@ -1828,7 +1828,7 @@ International
 
 # emu/inptport.c: 4041
 Invalid %s value %s; reverting to keyboard\n
-無效的 %s 值; 還原成鍵盤\n
+無效的 %s 值  %s; 還原成鍵盤\n
 
 # lib/util/options.c: 1099
 Invalid %s value (must be between %f and %f); keeping value of %s\n
@@ -5704,11 +5704,11 @@ enable overlays if artwork is enabled and available
 
 # emu/emuopts.c: 158
 enable separate input from each keyboard device (if present)
-啟用單獨輸入於各個鍵盤裝置 (如果存在的話)
+啟用每個鍵盤裝置各自分開輸入 (如果存在)
 
 # emu/emuopts.c: 159
 enable separate input from each mouse device (if present)
-啟用單獨輸入於各個滑鼠裝置 (如果存在的話)
+啟用每個滑鼠裝置各自分開輸入 (如果存在)
 
 # emu/emuopts.c: 105
 enable sleeping, which gives time back to other applications when idle
@@ -5720,7 +5720,7 @@ enable sound output
 
 # emu/emuopts.c: 160
 enable steadykey support
-啟用多鍵同時輸入支援
+啟用多個按鍵同時輸入支援
 
 # emu/emuopts.c: 144
 enable the use of external samples if available
