@@ -291,7 +291,7 @@ static TCHAR *reg_query_string(HKEY key, const TCHAR *path);
 static const TCHAR *default_button_name(int which);
 static const TCHAR *default_pov_name(int which);
 #ifdef JOYSTICK_ID
-static void assgin_joystick_to_player(device_info *devinfo);
+static void assign_joystick_to_player(device_info *devinfo);
 #endif /* JOYSTICK_ID */
 
 
@@ -1187,7 +1187,7 @@ static void dinput_init(running_machine *machine)
 				if (index == joyid[i])
 				{
 					mame_printf_info(_WINDOWS("Assign joystick %s to player %d\n"), devinfo->name, i);
-					assgin_joystick_to_player(devinfo);
+					assign_joystick_to_player(devinfo);
 					break;
 				}
 
@@ -1576,7 +1576,7 @@ static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 	devinfo->dinput.caps.dwButtons = MIN(devinfo->dinput.caps.dwButtons, 128);
 
 #ifndef JOYSTICK_ID
-	assgin_joystick_to_player(devinfo);
+	assign_joystick_to_player(devinfo);
 #endif /* JOYSTICK_ID */
 
 exit:
@@ -1588,7 +1588,7 @@ error:
 	goto exit;
 }
 
-static void assgin_joystick_to_player(device_info *devinfo)
+static void assign_joystick_to_player(device_info *devinfo)
 {
 	int axisnum, axiscount, povnum, butnum;
 
