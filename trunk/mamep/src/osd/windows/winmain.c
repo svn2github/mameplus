@@ -253,10 +253,8 @@ int utf8_main(int argc, char **argv)
 	// set up exception handling
 	pass_thru_filter = SetUnhandledExceptionFilter(exception_filter);
 
-	if (0)
-	//fixme: get error message from GUI
 	// if we're a GUI app, out errors to message boxes
-	//if (win_is_gui_application() || is_double_click_start(argc))
+	if (win_is_gui_application() || is_double_click_start(argc))
 	{
 		// if we are a GUI app, output errors to message boxes
 		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, winui_output_error, NULL, NULL, NULL);
@@ -264,6 +262,16 @@ int utf8_main(int argc, char **argv)
 		// make sure any console window that opened on our behalf is nuked
 		FreeConsole();
 	}
+	else
+		mame_set_output_channel(OUTPUT_CHANNEL_ERROR, win_mame_file_output_callback, stderr, NULL, NULL);
+
+	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, win_mame_file_output_callback, stderr, NULL, NULL);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, win_mame_file_output_callback, stdout, NULL, NULL);
+#ifdef MAME_DEBUG
+	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
+#endif
+	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, win_mame_file_output_callback, stdout, NULL, NULL);
+	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 
 	// soft-link optional functions
 	soft_link_functions();
@@ -277,15 +285,6 @@ int utf8_main(int argc, char **argv)
 
 	// set up language for windows
 	assign_msg_catategory(UI_MSG_OSD0, "windows");
-
-	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, win_mame_file_output_callback, stderr, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_WARNING, win_mame_file_output_callback, stderr, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, win_mame_file_output_callback, stdout, NULL, NULL);
-#ifdef MAME_DEBUG
-	mame_set_output_channel(OUTPUT_CHANNEL_DEBUG, win_mame_file_output_callback, stdout, NULL, NULL);
-#endif
-	mame_set_output_channel(OUTPUT_CHANNEL_VERBOSE, win_mame_file_output_callback, stdout, NULL, NULL);
-	mame_set_output_channel(OUTPUT_CHANNEL_LOG, win_mame_file_output_callback, stderr, NULL, NULL);
 
 	// parse config and cmdline options
 	res = cli_execute(argc, argv, mame_win_options);
