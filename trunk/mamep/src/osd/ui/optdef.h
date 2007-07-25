@@ -127,6 +127,26 @@ START_OPT_FUNC_DRIVER
 
 // CORE INPUT OPTIONS
 	DEFINE_OPT(string_allow_null,    ctrlr)
+	DEFINE_OPT(bool,                 mouse)
+	DEFINE_OPT(bool,                 joystick)
+	DEFINE_OPT(bool,                 lightgun)
+	DEFINE_OPT(bool,                 multikeyboard)
+	DEFINE_OPT(bool,                 multimouse)
+	DEFINE_OPT(bool,                 steadykey)
+	DEFINE_OPT(bool,                 offscreen_reload)
+	DEFINE_OPT(string,               joystick_map)
+	DEFINE_OPT(float,                joy_deadzone)
+	DEFINE_OPT(float,                joy_saturation)
+
+// CORE INPUT AUTOMATIC ENABLE OPTIONS
+	DEFINE_OPT(analog_select,        paddle_device)
+	DEFINE_OPT(analog_select,        adstick_device)
+	DEFINE_OPT(analog_select,        pedal_device)
+	DEFINE_OPT(analog_select,        dial_device)
+	DEFINE_OPT(analog_select,        trackball_device)
+	DEFINE_OPT(analog_select,        lightgun_device)
+	DEFINE_OPT(analog_select,        positional_device)
+	DEFINE_OPT(analog_select,        mouse_device)
 
 // CORE DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
@@ -151,7 +171,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(ui_transparency,      ui_transparency)
 #endif /* TRANS_UI */
 
-// DEBUGGING OPTIONS
+// WINDOWS DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 oslog)
 
 // WINDOWS PERFORMANCE OPTIONS
@@ -209,16 +229,7 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(int,                  audio_latency)
 
 // INPUT DEVICE OPTIONS
-	DEFINE_OPT(bool,                 mouse)
-	DEFINE_OPT(bool,                 joystick)
-	DEFINE_OPT(bool,                 lightgun)
 	DEFINE_OPT(bool,                 dual_lightgun)
-	DEFINE_OPT(bool,                 offscreen_reload)
-	DEFINE_OPT(bool,                 multikeyboard)
-	DEFINE_OPT(bool,                 multimouse)
-	DEFINE_OPT(bool,                 steadykey)
-	DEFINE_OPT(float,                joy_deadzone)
-	DEFINE_OPT(float,                joy_saturation)
 #ifdef JOYSTICK_ID
 	DEFINE_OPT(int_positive,         joyid1)
 	DEFINE_OPT(int_positive,         joyid2)
@@ -229,16 +240,6 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(int_positive,         joyid7)
 	DEFINE_OPT(int_positive,         joyid8)
 #endif /* JOYSTICK_ID */
-
-// AUTOMATIC DEVICE SELECTION OPTIONS
-	DEFINE_OPT(analog_select,        paddle_device)
-	DEFINE_OPT(analog_select,        adstick_device)
-	DEFINE_OPT(analog_select,        pedal_device)
-	DEFINE_OPT(analog_select,        dial_device)
-	DEFINE_OPT(analog_select,        trackball_device)
-	DEFINE_OPT(analog_select,        lightgun_device)
-	DEFINE_OPT(analog_select,        positional_device)
-	DEFINE_OPT(analog_select,        mouse_device)
 END_OPT_FUNC_DRIVER
 #endif /* START_OPT_FUNC_DRIVER */
 

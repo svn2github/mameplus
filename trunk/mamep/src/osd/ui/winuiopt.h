@@ -131,6 +131,26 @@ typedef struct
 
 // CORE INPUT OPTIONS
 	char*	ctrlr;
+	BOOL	mouse;
+	BOOL	joystick;
+	BOOL	lightgun;
+	BOOL	multikeyboard;
+	BOOL	multimouse;
+	BOOL	steadykey;
+	BOOL	offscreen_reload;
+	char*	joystick_map;
+	float	joy_deadzone;
+	float	joy_saturation;
+
+// CORE INPUT AUTOMATIC ENABLE OPTIONS
+	char*	paddle_device;
+	char*	adstick_device;
+	char*	pedal_device;
+	char*	dial_device;
+	char*	trackball_device;
+	char*	lightgun_device;
+	char*	positional_device;
+	char*	mouse_device;
 
 // CORE DEBUGGING OPTIONS
 	BOOL	log;
@@ -155,7 +175,7 @@ typedef struct
 	int	ui_transparency;
 #endif /* TRANS_UI */
 
-// DEBUGGING OPTIONS
+// WINDOWS DEBUGGING OPTIONS
 	BOOL	oslog;
 
 // WINDOWS PERFORMANCE OPTIONS
@@ -201,16 +221,7 @@ typedef struct
 	int	audio_latency;
 
 // INPUT DEVICE OPTIONS
-	BOOL	mouse;
-	BOOL	joystick;
-	BOOL	lightgun;
 	BOOL	dual_lightgun;
-	BOOL	offscreen_reload;
-	BOOL	multikeyboard;
-	BOOL	multimouse;
-	BOOL	steadykey;
-	float	joy_deadzone;
-	float	joy_saturation;
 #ifdef JOYSTICK_ID
 	int	joyid1;
 	int	joyid2;
@@ -221,16 +232,6 @@ typedef struct
 	int	joyid7;
 	int	joyid8;
 #endif /* JOYSTICK_ID */
-
-// AUTOMATIC DEVICE SELECTION OPTIONS
-	char*	paddle_device;
-	char*	adstick_device;
-	char*	pedal_device;
-	char*	dial_device;
-	char*	trackball_device;
-	char*	lightgun_device;
-	char*	positional_device;
-	char*	mouse_device;
 } options_type;
 
 
