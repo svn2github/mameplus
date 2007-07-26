@@ -20,7 +20,6 @@
 ***************************************************************************/
 
 #define CLIOPTION_CREATECONFIG			"createconfig"
-#define CLIOPTION_READCONFIG			"readconfig"
 #define CLIOPTION_SHOWCONFIG			"showconfig"
 #define CLIOPTION_SHOWUSAGE				"showusage"
 #define CLIOPTION_VALIDATE				"validate"
@@ -56,4 +55,5 @@ int cli_info_listcrc(const char *gamename);
 int cli_info_listroms(const char *gamename);
 int cli_info_listsamples(const char *gamename);
 
+void setup_language(void); 
 #endif	/* __CLIFRONT_H__ */

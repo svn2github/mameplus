@@ -514,7 +514,7 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
-	for (state = 0; state < maxstate && !mame_is_scheduled_event_pending(Machine); state++)
+	for (state = 0; state < maxstate && !mame_is_scheduled_event_pending(Machine) && !ui_menu_is_force_game_select(); state++)
 	{
 		/* default to standard colors */
 		messagebox_backcolor = UI_FILLCOLOR;
@@ -558,7 +558,7 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 		while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID) ;
 
 		/* loop while we have a handler */
-		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine))
+		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine) && !ui_menu_is_force_game_select())
 			video_frame_update();
 
 		/* clear the handler and force an update */
@@ -568,9 +568,9 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 		scroll_reset = TRUE;
 	}
 
- 	/* if we're the empty driver, force the menus on */
- 	if (Machine->gamedrv == &driver_empty)
- 		ui_set_handler(ui_menu_ui_handler, 0);
+	/* if we're the empty driver, force the menus on */
+	if (ui_menu_is_force_game_select())
+		ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* clear the input memory */
 	while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
@@ -2793,7 +2793,8 @@ static void build_bgtexture(running_machine *machine)
 		*BITMAP_ADDR32(bgbitmap, i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
 	}
 
-	bgtexture = render_texture_alloc(bgbitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+	bgtexture = render_texture_alloc(render_texture_hq_scale, NULL);
+	render_texture_set_bitmap(bgtexture, bgbitmap, NULL, 0, TEXFORMAT_ARGB32);
 	add_exit_callback(machine, free_bgtexture);
 }
 

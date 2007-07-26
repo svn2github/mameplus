@@ -264,8 +264,6 @@ struct _lang_struct
 };
 typedef struct _lang_struct lang_struct;
 
-extern lang_struct lang;
-
 #if 0
 int uistring_init (mame_file *language_file);
 #else

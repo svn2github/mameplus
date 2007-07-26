@@ -33,6 +33,10 @@ const options_entry mame_core_options[] =
 	{ "driver_config",               "mame,plus", 0,                 "switch drivers"},
 #endif /* DRIVER_SWITCH */
 
+	/* config options */
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
+	{ "readconfig;rc",               "1",         OPTION_BOOLEAN,    "enable loading of configuration files" },
+
 	/* seach path options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SEARCH PATH OPTIONS" },
 	{ "rompath;rp;biospath;bp",      "roms",      0,                 "path to ROMsets and hard disk images" },

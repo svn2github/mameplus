@@ -178,7 +178,8 @@ INLINE render_font_char *get_char(render_font *font, unicode_char chnum)
 			ch->bitmap = bitmap_alloc(ch->bmwidth, ch->bmheight, BITMAP_FORMAT_ARGB32);
 			render_texture_hq_scale(ch->bitmap, glyph_ch->bitmap, NULL, NULL);
 
-			ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+			ch->texture = render_texture_alloc(render_texture_hq_scale, NULL);
+			render_texture_set_bitmap(ch->texture, ch->bitmap, NULL, 0, TEXFORMAT_ARGB32);
 		}
 		else
 			render_font_char_expand(font, ch);
@@ -426,7 +427,8 @@ static void render_font_char_expand(render_font *font, render_font_char *ch)
 	}
 
 	/* wrap a texture around the bitmap */
-	ch->texture = render_texture_alloc(ch->bitmap, NULL, 0, TEXFORMAT_ARGB32, render_texture_hq_scale, NULL);
+	ch->texture = render_texture_alloc(render_texture_hq_scale, NULL);
+	render_texture_set_bitmap(ch->texture, ch->bitmap, NULL, 0, TEXFORMAT_ARGB32);
 }
 
 

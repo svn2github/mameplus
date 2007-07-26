@@ -68,6 +68,7 @@
 #define GAMENOUN				"game"
 #define GAMESNOUN				"games"
 #define HISTORYNAME				"History"
+#define COPYRIGHT				"Copyright 2007, Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
 #else
 #define APPNAME					"MESS"
 #define APPNAME_LOWER			"mess"
@@ -78,6 +79,7 @@
 #define GAMENOUN				"system"
 #define GAMESNOUN				"systems"
 #define HISTORYNAME				"System Info"
+#define COPYRIGHT				"Copyright 2007, the MESS team\nhttp://mess.org"
 #endif
 
 
@@ -252,7 +254,7 @@ extern char build_version[];
 /* ----- core system management ----- */
 
 /* execute as configured by the OPTION_GAMENAME option */
-int run_game(const game_driver *driver);
+int mame_execute(void);
 
 /* return the current phase */
 int mame_get_phase(running_machine *machine);

@@ -170,13 +170,14 @@
 		extern SHAREDOBJ_FUNC(int)            options_add_entries(core_options *opts, const options_entry *entrylist);
 		extern SHAREDOBJ_FUNC(int)            options_set_option_default_value(core_options *opts, const char *name, const char *defvalue);
 		extern SHAREDOBJ_FUNC(int)            options_set_option_callback(core_options *opts, const char *name, void (*callback)(core_options *opts, const char *arg));
-		extern SHAREDOBJ_FUNC(int)            options_parse_command_line(core_options *opts, int argc, char **argv);
-		extern SHAREDOBJ_FUNC(int)            options_parse_ini_file(core_options *opts, core_file *inifile);
+		extern SHAREDOBJ_FUNC(int)            options_parse_command_line(core_options *opts, int argc, char **argv, int priority);
+		extern SHAREDOBJ_FUNC(int)            options_parse_ini_file(core_options *opts, core_file *inifile, int priority);
 		extern SHAREDOBJ_FUNC(int)            options_output_command_line_marked(core_options *opts, char *buf);
 		extern SHAREDOBJ_FUNC(void)           options_output_ini_file(core_options *opts, core_file *inifile);
 		extern SHAREDOBJ_FUNC(void)           options_output_ini_file_marked(core_options *opts, core_file *inifile);
 		extern SHAREDOBJ_FUNC(void)           options_output_ini_stdfile(core_options *opts, FILE *inifile);
 		extern SHAREDOBJ_FUNC(void)           options_output_help(core_options *opts, void (*output)(const char *s));
+		extern SHAREDOBJ_FUNC(void)           options_clear_output_mark(core_options *opts);
 		extern SHAREDOBJ_FUNC(int)            options_copy(core_options *dest_opts, core_options *src_opts);
 		extern SHAREDOBJ_FUNC(int)            options_equal(core_options *opts1, core_options *opts2);
 		extern SHAREDOBJ_FUNC(const char *)   options_get_string(core_options *opts, const char *name);
@@ -186,11 +187,10 @@
 		extern SHAREDOBJ_FUNC(int)            options_get_int_range(core_options *opts, const char *name, int minval, int maxval);
 		extern SHAREDOBJ_FUNC(float)          options_get_float_range(core_options *opts, const char *name, float minval, float maxval);
 		extern SHAREDOBJ_FUNC(UINT32)         options_get_seqid(core_options *opts, const char *name);
-		extern SHAREDOBJ_FUNC(void)           options_set_string(core_options *opts, const char *name, const char *value);
-		extern SHAREDOBJ_FUNC(void)           options_set_bool(core_options *opts, const char *name, int value);
-		extern SHAREDOBJ_FUNC(void)           options_set_int(core_options *opts, const char *name, int value);
-		extern SHAREDOBJ_FUNC(void)           options_set_float(core_options *opts, const char *name, float value);
-		extern SHAREDOBJ_FUNC(void)           options_clear_output_mark(core_options *opts);
+		extern SHAREDOBJ_FUNC(void)           options_set_string(core_options *opts, const char *name, const char *value, int priority);
+		extern SHAREDOBJ_FUNC(void)           options_set_bool(core_options *opts, const char *name, int value, int priority);
+		extern SHAREDOBJ_FUNC(void)           options_set_int(core_options *opts, const char *name, int value, int priority);
+		extern SHAREDOBJ_FUNC(void)           options_set_float(core_options *opts, const char *name, float value, int priority);
 
 		#include "emuopts.h"
 		extern SHAREDOBJ_FUNC(void)           mame_options_init(const options_entry *entries);

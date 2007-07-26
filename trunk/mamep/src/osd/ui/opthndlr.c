@@ -95,7 +95,7 @@ static void _options_get_csv_int(core_options *opts, int *dest, int numitems, co
 		dest[i] = array[i];
 }
 
-static void options_set_csv_int(core_options *opts, const char *name, const int *src, int numitems)
+static void options_set_csv_int(core_options *opts, const char *name, const int *src, int numitems, int priority)
 {
 	char buf[1024];
 	char *p;
@@ -110,7 +110,7 @@ static void options_set_csv_int(core_options *opts, const char *name, const int 
 		p += strlen(p);
 	}
 
-	options_set_string(opts, name, buf);
+	options_set_string(opts, name, buf, priority);
 }
 
 INLINE void options_copy_csv_int(const int *src, int *dest, int numitems)
@@ -165,14 +165,14 @@ INLINE const WCHAR *options_get_wstring(core_options *opts, const char *name)
 	return wstring_from_utf8(stemp);
 }
 
-INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value)
+INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority)
 {
 	char *utf8_value = NULL;
 
 	if (value)
 		utf8_value = utf8_from_wstring(value);
 
-	options_set_string(opts, name, utf8_value);
+	options_set_string(opts, name, utf8_value, priority);
 }
 
 INLINE void _options_get_wstring(core_options *opts, WCHAR **p, const char *name)
@@ -214,7 +214,7 @@ INLINE void _options_get_string_allow_null(core_options *opts, char **p, const c
 		*p = strdup(stemp);
 }
 
-#define options_set_string_allow_null(opts,name,value)	options_set_string(opts, name, value)
+#define options_set_string_allow_null(opts,name,value,priority)	options_set_string(opts, name, value, priority)
 
 INLINE void options_copy_string_allow_null(const char *src, char **dest)
 {
@@ -245,7 +245,7 @@ INLINE void _options_get_wstring_allow_null(core_options *opts, WCHAR **p, const
 		*p = wstring_from_utf8(stemp);
 }
 
-#define options_set_wstring_allow_null(opts,name,value)	options_set_wstring(opts, name, value)
+#define options_set_wstring_allow_null(opts,name,value,priority)	options_set_wstring(opts, name, value, priority)
 
 INLINE void options_copy_wstring_allow_null(const WCHAR *src, WCHAR **dest)
 {
@@ -426,19 +426,19 @@ INLINE void _options_get_m68k_core(core_options *opts, int *p, const char *name)
 	}
 }
 
-INLINE void options_set_m68k_core(core_options *opts, const char *name, int value)
+INLINE void options_set_m68k_core(core_options *opts, const char *name, int value, int priority)
 {
 	switch (value)
 	{
 	case 0:
 	default:
-		options_set_string(opts, name, "c");
+		options_set_string(opts, name, "c", priority);
 		break;
 	case 1:
-		options_set_string(opts, name, "drc");
+		options_set_string(opts, name, "drc", priority);
 		break;
 	case 2:
-		options_set_string(opts, name, "asm");
+		options_set_string(opts, name, "asm", priority);
 		break;
 	}
 }
@@ -645,9 +645,9 @@ INLINE void _options_get_langcode(core_options *opts, int *p, const char *name)
 	*p = langcode;
 }
 
-INLINE void options_set_langcode(core_options *opts, const char *name, int langcode)
+INLINE void options_set_langcode(core_options *opts, const char *name, int langcode, int priority)
 {
-	options_set_string(opts, OPTION_LANGUAGE, langcode < 0 ? "auto" : ui_lang_info[langcode].name);
+	options_set_string(opts, OPTION_LANGUAGE, langcode < 0 ? "auto" : ui_lang_info[langcode].name, priority);
 }
 
 #define options_copy_langcode		options_copy_int
@@ -678,7 +678,7 @@ INLINE void _options_get_palette(core_options *opts, char **p, const char *name)
 	*p = strdup(stemp);
 }
 
-#define options_set_palette(opts,name,value)	options_set_string(opts, name,value)
+#define options_set_palette(opts,name,value,priority)	options_set_string(opts, name,value,priority)
 #define options_copy_palette		options_copy_string
 #define options_free_palette		FreeIfAllocated
 #define options_compare_palette		options_compare_string
@@ -718,7 +718,7 @@ INLINE void _options_get_list_mode(core_options *opts, int *view, const char *na
 		}
 }
 
-#define options_set_list_mode(opts,name,view)	options_set_string(opts, GUIOPTION_LIST_MODE, view_modes[view])
+#define options_set_list_mode(opts,name,view,priority)	options_set_string(opts, GUIOPTION_LIST_MODE, view_modes[view],priority)
 #define options_copy_list_mode			options_copy_int
 #define options_free_list_mode(p)
 
@@ -811,7 +811,7 @@ INLINE void _options_get_list_fontface(core_options *opts, LOGFONTW *f, const ch
 	free((void *)stemp);
 }
 
-INLINE void options_set_list_font(core_options *opts, const char *name, const LOGFONTW *f)
+INLINE void options_set_list_font(core_options *opts, const char *name, const LOGFONTW *f, int priority)
 {
 	char buf[512];
 
@@ -830,10 +830,10 @@ INLINE void options_set_list_font(core_options *opts, const char *name, const LO
 	             f->lfQuality,
 	             f->lfPitchAndFamily);
 
-	options_set_string(opts, GUIOPTION_LIST_FONT, buf);
+	options_set_string(opts, GUIOPTION_LIST_FONT, buf, priority);
 }
 
-#define options_set_list_fontface(opts,name,f)	options_set_wstring(opts, GUIOPTION_LIST_FONTFACE, (f)->lfFaceName)
+#define options_set_list_fontface(opts,name,f,priority)	options_set_wstring(opts, GUIOPTION_LIST_FONTFACE, (f)->lfFaceName, priority)
 
 INLINE void options_copy_list_font(const LOGFONTW *src, LOGFONTW *dest)
 {
@@ -864,7 +864,7 @@ INLINE void options_copy_list_fontface(const LOGFONTW *src, LOGFONTW *dest)
 //============================================================
 
 #define _options_get_csv_color(opts,dest,numitems,name)	_options_get_csv_int(opts, (int *)dest, numitems, name)
-#define options_set_csv_color(opts,name,src,numitems)	options_set_csv_int(opts, name, (const int *)src, numitems)
+#define options_set_csv_color(opts,name,src,numitems,priority)	options_set_csv_int(opts, name, (const int *)src, numitems, priority)
 #define options_copy_csv_color(src,dest,numitems)	options_copy_csv_int((const int *)src, (int *)dest, numitems)
 #define options_free_csv_color(p,num)
 
@@ -967,12 +967,12 @@ INLINE void _options_get_ui_joy(core_options *opts, int *array, const char *name
 		return;
 }
 
-INLINE void options_set_ui_joy(core_options *opts, const char *name, const int *array)
+INLINE void options_set_ui_joy(core_options *opts, const char *name, const int *array, int priority)
 {
 	char buf[80];
 	int axis, dir;
 
-	options_set_string(opts, name, NULL);
+	options_set_string(opts, name, NULL, priority);
 
 	if (array[0] == 0)
 		return;
@@ -996,7 +996,7 @@ INLINE void options_set_ui_joy(core_options *opts, const char *name, const int *
 	}
 
 	sprintf(buf, "%d,%s,%d,%s", array[0], joycode_axis[axis].name, array[2], joycode_dir[dir].name);
-	options_set_string(opts, name, buf);
+	options_set_string(opts, name, buf, priority);
 }
 
 #define options_copy_ui_joy(src,dest)	options_copy_csv_int(src,dest,4)
@@ -1020,9 +1020,9 @@ INLINE void _options_get_ui_key(core_options *opts, KeySeq *ks, const char *name
 	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
 }
 
-INLINE void options_set_ui_key(core_options *opts, const char *name, const KeySeq *ks)
+INLINE void options_set_ui_key(core_options *opts, const char *name, const KeySeq *ks, int priority)
 {
-	options_set_string(opts, name, ks->seq_string);
+	options_set_string(opts, name, ks->seq_string, priority);
 }
 
 INLINE void options_copy_ui_key(const KeySeq *src, KeySeq *dest)
@@ -1095,7 +1095,7 @@ INLINE void _options_get_folder_hide(core_options *opts, LPBITS *flags, const ch
 	}
 }
 
-INLINE void options_set_folder_hide(core_options *opts, const char *name, LPBITS flags)
+INLINE void options_set_folder_hide(core_options *opts, const char *name, LPBITS flags, int priority)
 {
 	char buf[1024];
 	char *p;
@@ -1122,7 +1122,7 @@ INLINE void options_set_folder_hide(core_options *opts, const char *name, LPBITS
 		}
 	*p = '\0';
 
-	options_set_string(opts, name, buf);
+	options_set_string(opts, name, buf, priority);
 }
 
 INLINE void options_copy_folder_hide(const LPBITS src, LPBITS *dest)
@@ -1195,7 +1195,7 @@ INLINE void _options_get_folder_flag(core_options *opts, f_flag *flags, const ch
 	}
 }
 
-INLINE void options_set_folder_flag(core_options *opts, const char *name, const f_flag *flags)
+INLINE void options_set_folder_flag(core_options *opts, const char *name, const f_flag *flags, int priority)
 {
 	char *buf;
 	int size;
@@ -1226,7 +1226,7 @@ INLINE void options_set_folder_flag(core_options *opts, const char *name, const 
 			len += sprintf(buf + len, "%s,%ld", flags->entry[i].name, dwFlags);
 		}
 
-	options_set_string(opts, GUIOPTION_FOLDER_FLAG, buf);
+	options_set_string(opts, GUIOPTION_FOLDER_FLAG, buf, priority);
 	free(buf);
 }
 
