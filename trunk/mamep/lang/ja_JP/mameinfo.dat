@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 vv0.117u1     #
+#     Mameinfo.dat日本語版 v0.117u2      #
 #                                        #
-#             July 20, 2007              #
+#             July 27, 2007              #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,26 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：846 翻訳済：826
-# 追加項目：341 合計：1187
+# Tester報告：852 翻訳済：832
+# 追加項目：341 合計：1193
 #
 
+
+$info=mtrap
+$mame
+[情報]
+
+- 4キーを押しながらリセットするとサービスモード。
+
+
+[バグ]
+
+- 実機とのサウンドの比較。MAMEではサンプルの再生速度が速すぎる。また、ゲームオーバーのBGMのループも速すぎ。 mtrap0117u2ora, Tafoid
+
+
+- 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
+
+$end
 
 $info=bosco
 $mame
@@ -34,6 +50,47 @@ $mame
 1) サービスモードに入る(F2キー)
 
 2) ボタン1を押しながら、上x5 右x6、下x1、左x4を押す
+
+$end
+
+$info=lethalj
+$mame
+[バグ]
+
+- 照準の位置と実際に撃つ場所がずれている。 lethalj0117u1gra, twisty
+
+$end
+
+$info=mpatrol
+$mame
+[情報]
+
+- F2キーを押しながらリセットでテストモードになる。
+RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
+
+
+[バグ]
+
+- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield
+
+$end
+
+$info=powerins
+$mame
+[バグ]
+
+- YM2203の音量が低すぎてほとんど聞こえない。 powerins0117u2ora, vidpro1 / AWJ
+
+
+[TIPS]
+
+- 拡張サービスモードの入り方：
+
+1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
+
+2) 2Pボタン3+2PスタートかF2キーを押す
+
+(from オン氏)
 
 $end
 
@@ -883,19 +940,6 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 $end
 
-$info=mtrap
-$mame
-[情報]
-
-- 4キーを押しながらリセットするとサービスモード。
-
-
-[バグ]
-
-- 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
-
-$end
-
 $info=fastlane
 $mame
 [バグ]
@@ -1047,14 +1091,6 @@ b16以降のデモでは、(1+2)+3号機のドッキング時に、(1+2)号機�
 - 「サンプル情報の間違い」
 
 サンプルが必要なゲームなのに、不要とレポートされる。 samplesinfo098u3ora, Wojciech Zakrzewski
-
-$end
-
-$info=pacmanbl
-$mame
-[バグ]
-
-- 背景の表示が右にずれている。スプライトは正常な模様。 pacmanbl0116u3yel, Robbbert
 
 $end
 
@@ -1763,14 +1799,6 @@ $mame
 
 $end
 
-$info=dotrone
-$mame
-[バグ]
-
-- コインを2つ入れたあとに1Pスタートボタンを押しても動作しない。ところがコインを4つ入れると動作する。 dotrone0101u5yel, Twisty
-
-$end
-
 $info=journey
 $mame
 [情報]
@@ -1784,30 +1812,12 @@ $mame
 
 $end
 
-$info=tapper
-$mame
-[バグ]
-
-- 画面最上部に余分なグラフィックが表示される。 tapper0102gre1, Haze / Old Wolf
-
-
-- ボーナス面で、缶をシャッフルする前にテーブルをたたく音がしない。また、ゲーム全体の音がずれていたり、おかしくなっている。
-0.98u1より発生。 tapper0102gre2, Old Wolf / BSR
-
-$end
-
 $info=timber
 $mame
 [バグ]
 
-- 面をクリアしてオヤジと握手しているときの音が出なくなった。0.97では問題ない。 timber0100u3gre, dropdeadhippie
-
-
 - 熊が蜂の巣を投げたあとにそのままにしておくと、熊のグラフィックが画面の左右に分かれて表示される。
 また、ゲームオーバーやレベルのテキストがグラフィックの背面に表示される。 timber067gre, schmegs
-
-
-- 画面上部にスプライトの一部が表示される。0.98u3から。 timber099gre, M.A.S.H.
 
 $end
 
@@ -1816,46 +1826,6 @@ $mame
 [バグ]
 
 - 戦艦の砲撃に当り判定がない。 twotiger37b15gre, Desmatic
-
-$end
-
-$info=shollow
-$mame
-[バグ]
-
-- mcr.c, mcr3.cのゲーム：サウンドが遅れる。 mcr0103u3yel, JigenD /  Gyrovision
-
-$end
-
-$info=wacko
-$mame
-[バグ]
-
-- mcr.c, mcr3.cのゲーム：サウンドが遅れる。 mcr0103u3yel, JigenD /  Gyrovision
-
-$end
-
-$info=tron
-$mame
-[バグ]
-
-- mcr.c, mcr3.cのゲーム：サウンドが遅れる。 mcr0103u3yel, JigenD /  Gyrovision
-
-$end
-
-$info=dotron
-$mame
-[バグ]
-
-- mcr.c, mcr3.cのゲーム：サウンドが遅れる。 mcr0103u3yel, JigenD /  Gyrovision
-
-$end
-
-$info=crater
-$mame
-[バグ]
-
-- mcr.c, mcr3.cのゲーム：サウンドが遅れる。 mcr0103u3yel, JigenD /  Gyrovision
 
 $end
 
@@ -7654,15 +7624,6 @@ $mame
 
 $end
 
-$info=mpatrol
-$mame
-[情報]
-
-- F2キーを押しながらリセットでテストモードになる。
-RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
-
-$end
-
 $info=mrdo
 $mame
 [情報]
@@ -9270,20 +9231,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
-
-$end
-
-$info=powerins
-$mame
-[TIPS]
-
-- 拡張サービスモードの入り方：
-
-1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
-
-2) 2Pボタン3+2PスタートかF2キーを押す
-
-(from オン氏)
 
 $end
 
