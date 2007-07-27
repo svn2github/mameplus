@@ -208,7 +208,7 @@ static void dip_switch_build_model(input_port_entry *entry, int item_is_selected
 static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_menu_x2, float dip_menu_y2, int model_index);
 static void dip_switch_render(const menu_extra *extra, float x1, float y1, float x2, float y2);
 
-static CLIB_DECL int select_game_driver_compare(const void *elem1, const void *elem2);
+static int CLIB_DECL select_game_driver_compare(const void *elem1, const void *elem2);
 static void select_game_build_driver_list(void);
 static void select_game_render(const menu_extra *extra, float x1, float y1, float x2, float y2);
 static int select_game_handle_key(input_code keycode, char value);
@@ -3143,7 +3143,7 @@ static void dip_switch_render(const menu_extra *extra, float x1, float y1, float
     names of two drivers
 -------------------------------------------------*/
 
-static CLIB_DECL int select_game_driver_compare(const void *elem1, const void *elem2)
+static int CLIB_DECL select_game_driver_compare(const void *elem1, const void *elem2)
 {
 	const game_driver **driver1_ptr = (const game_driver **)elem1;
 	const game_driver **driver2_ptr = (const game_driver **)elem2;
