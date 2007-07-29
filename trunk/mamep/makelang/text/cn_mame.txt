@@ -98,6 +98,10 @@
  GAMES WITH  %d SNDINTRF: %4d\n
 使用 %d 种音效界面的游戏: %4d\n
 
+# emu/clifront.c: 869
+ NO GOOD DUMP KNOWN
+尚无正确的转储文件
+
 # emu/cheat.c: 9089
 %.8X-%.8X MEMORY
 %.8X-%.8X 内存
@@ -110,6 +114,18 @@
 %d results found
 找到 %d 结果
 
+# emu/clifront.c: 1013
+%d romsets found, %d were OK.\n
+找到 %d  个ROM组合，正确 %d。\n
+
+# emu/clifront.c: 1090
+%d samplesets found, %d were OK.\n
+找到 %d  个采样组合，正确 %d。\n
+
+# emu/cheat.c: 11636
+%s : %s selected
+%s : %s 选定
+
 # emu/uimenu.c: 137
 %s Analog
 %s 模拟控制
@@ -121,6 +137,10 @@
 # emu/uimenu.c: 139
 %s Inc
 %s 增加
+
+# emu/romload.c: 341
+%s NO GOOD DUMP KNOWN\n
+%s 尚无正确的转储文件\n
 
 # emu/cheat.c: 2607
 %s activated
@@ -798,6 +818,10 @@ Continue Search
 Continues
 续关数
 
+# emu/uitext.c: 54
+Contrast
+对比度
+
 # mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2375 mame/drivers/st0016.c: 491 mame/drivers/tail2nos.c: 204 
 Control Panel
 控制面板
@@ -817,6 +841,10 @@ Controls
 # emu/cheat.c: 3575
 Copy Previous Value
 复制上一次的值
+
+# emu/uimenu.c: 3153
+Copyright 2007, Nicola Salmoria
+版权所有 2007, Nicola Salmoria
 
 # emu/config.c: 136, 140
 Could not load controller file %s.cfg
@@ -873,6 +901,10 @@ Decoding (%d%%)
 # emu/uitext.c: 226
 Decoding Graphics
 图形解码
+
+# mame/machine/cps2crpt.c: 686
+Decrypting %d%%
+正在解密 %d%%
 
 # mame/drivers/asuka.c: 705, 747, 789 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 301 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
 Default
@@ -1118,6 +1150,10 @@ Expert
 Fast
 快速
 
+# emu/inptport.c: 1071
+Fast Forward
+快进
+
 # emu/mamecore.h: 172
 Fatal error: %s (%s:%d)
 严重错误: %s (%s:%d)
@@ -1238,6 +1274,14 @@ German
 Germany
 德国
 
+# emu/uimenu.c: 3145
+Gfx: %s, Sound: %s
+图像: %s, 声音: %s
+
+# mame/drivers/royalmah.c: 1551 
+Gray
+灰
+
 # emu/cheat.c: 4875, 5309, 5854
 Greater
 大于
@@ -1326,6 +1370,14 @@ Home
 Hong Kong
 香港
 
+# emu/ui.c: 2646
+Horiz position
+水平位置
+
+# emu/ui.c: 2612
+Horiz stretch
+水平拉伸
+
 # mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 751, 896 mame/drivers/jack.c: 689 mame/drivers/thepit.c: 527 
 Horizontal
 水平
@@ -1365,6 +1417,10 @@ Ignore Decrement By
 # emu/uitext.c: 238 
 Image Enhancement
 图像增强
+
+# emu/uimenu.c: 3134, 3141 
+Imperfect
+不精确
 
 # emu/cheat.c: 5859
 Increased By Value
@@ -1866,6 +1922,18 @@ Other Controls
 Otherwise, type OK or move the joystick left then right to continue
 否则，请键入 OK 或先向左再向右移动游戏杆以便继续
 
+# emu/uimenu.c: 3126
+Overall: NOT WORKING
+总体: 不可运行
+
+# emu/uimenu.c: 3128
+Overall: Unemulated Protection
+总体: 未模拟的保护
+
+# emu/uimenu.c: 3130
+Overall: Working
+总体: 可以运行
+
 # emu/uitext.c: 57
 Overclock
 超频
@@ -1885,6 +1953,30 @@ P1 按钮 1
 # emu/inptport.c: 526
 P1 Button 10
 P1 按钮 10
+
+# emu/inptport.c: 527
+P1 Button 11
+P1 按钮 11
+
+# emu/inptport.c: 528
+P1 Button 12
+P1 按钮 12
+
+# emu/inptport.c: 529
+P1 Button 13
+P1 按钮 13
+
+# emu/inptport.c: 530
+P1 Button 14
+P1 按钮 14
+
+# emu/inptport.c: 531
+P1 Button 15
+P1 按钮 15
+
+# emu/inptport.c: 532
+P1 Button 16
+P1 按钮 16
 
 # emu/inptport.c: 518
 P1 Button 2
@@ -2134,6 +2226,30 @@ P2 按钮 1
 P2 Button 10
 P2 按钮 10
 
+# emu/inptport.c: 594
+P2 Button 11
+P2 按钮 11
+
+# emu/inptport.c: 595
+P2 Button 12
+P2 按钮 12
+
+# emu/inptport.c: 596
+P2 Button 13
+P2 按钮 13
+
+# emu/inptport.c: 597
+P2 Button 14
+P2 按钮 14
+
+# emu/inptport.c: 598
+P2 Button 15
+P2 按钮 15
+
+# emu/inptport.c: 599
+P2 Button 16
+P2 按钮 16
+
 # emu/inptport.c: 585
 P2 Button 2
 P2 按钮 2
@@ -2378,6 +2494,30 @@ P3 按钮 1
 P3 Button 10
 P3 按钮 10
 
+# emu/inptport.c: 661
+P3 Button 11
+P3 按钮 11
+
+# emu/inptport.c: 662
+P3 Button 12
+P3 按钮 12
+
+# emu/inptport.c: 663
+P3 Button 13
+P3 按钮 13
+
+# emu/inptport.c: 664
+P3 Button 14
+P3 按钮 14
+
+# emu/inptport.c: 665
+P3 Button 15
+P3 按钮 15
+
+# emu/inptport.c: 666
+P3 Button 16
+P3 按钮 16
+
 # emu/inptport.c: 652
 P3 Button 2
 P3 按钮 2
@@ -2505,6 +2645,30 @@ P4 按钮 1
 # emu/inptport.c: 698
 P4 Button 10
 P4 按钮 10
+
+# emu/inptport.c: 699
+P4 Button 11
+P4 按钮 11
+
+# emu/inptport.c: 700
+P4 Button 12
+P4 按钮 12
+
+# emu/inptport.c: 701
+P4 Button 13
+P4 按钮 13
+
+# emu/inptport.c: 702
+P4 Button 14
+P4 按钮 14
+
+# emu/inptport.c: 703
+P4 Button 15
+P4 按钮 15
+
+# emu/inptport.c: 704
+P4 Button 16
+P4 按钮 16
 
 # emu/inptport.c: 690
 P4 Button 2
@@ -2634,6 +2798,30 @@ P5 按钮 1
 P5 Button 10
 P5 按钮 10
 
+# emu/inptport.c: 737
+P5 Button 11
+P5 按钮 11
+
+# emu/inptport.c: 738
+P5 Button 12
+P5 按钮 12
+
+# emu/inptport.c: 739
+P5 Button 13
+P5 按钮 13
+
+# emu/inptport.c: 740
+P5 Button 14
+P5 按钮 14
+
+# emu/inptport.c: 741
+P5 Button 15
+P5 按钮 15
+
+# emu/inptport.c: 742
+P5 Button 16
+P5 按钮 16
+
 # emu/inptport.c: 728
 P5 Button 2
 P5 按钮 2
@@ -2761,6 +2949,30 @@ P6 按钮 1
 # emu/inptport.c: 774
 P6 Button 10
 P6 按钮 10
+
+# emu/inptport.c: 775
+P6 Button 11
+P6 按钮 11
+
+# emu/inptport.c: 776
+P6 Button 12
+P6 按钮 12
+
+# emu/inptport.c: 777
+P6 Button 13
+P6 按钮 13
+
+# emu/inptport.c: 778
+P6 Button 14
+P6 按钮 14
+
+# emu/inptport.c: 779
+P6 Button 15
+P6 按钮 15
+
+# emu/inptport.c: 780
+P6 Button 16
+P6 按钮 16
 
 # emu/inptport.c: 766
 P6 Button 2
@@ -2890,6 +3102,30 @@ P7 按钮 1
 P7 Button 10
 P7 按钮 10
 
+# emu/inptport.c: 813
+P7 Button 11
+P7 按钮 11
+
+# emu/inptport.c: 814
+P7 Button 12
+P7 按钮 12
+
+# emu/inptport.c: 815
+P7 Button 13
+P7 按钮 13
+
+# emu/inptport.c: 816
+P7 Button 14
+P7 按钮 14
+
+# emu/inptport.c: 817
+P7 Button 15
+P7 按钮 15
+
+# emu/inptport.c: 818
+P7 Button 16
+P7 按钮 16
+
 # emu/inptport.c: 804
 P7 Button 2
 P7 按钮 2
@@ -3017,6 +3253,30 @@ P8 按钮 1
 # emu/inptport.c: 850
 P8 Button 10
 P8 按钮 10
+
+# emu/inptport.c: 851
+P8 Button 11
+P8 按钮 11
+
+# emu/inptport.c: 852
+P8 Button 12
+P8 按钮 12
+
+# emu/inptport.c: 853
+P8 Button 13
+P8 按钮 13
+
+# emu/inptport.c: 854
+P8 Button 14
+P8 按钮 14
+
+# emu/inptport.c: 855
+P8 Button 15
+P8 按钮 15
+
+# emu/inptport.c: 856
+P8 Button 16
+P8 按钮 16
 
 # emu/inptport.c: 842
 P8 Button 2
@@ -3462,6 +3722,18 @@ Search Dialog Style
 Search Speed
 搜索速度
 
+# emu/cheat.c: 1720
+Search a Cheat (Advanced Mode)
+搜索作弊码 (高级模式)
+
+# emu/cheat.c: 1716
+Search a Cheat (Classic Mode)
+搜索作弊码 (经典模式)
+
+# emu/cheat.c: 1712
+Search a Cheat (Minimum Mode)
+搜索作弊码 (简化模式)
+
 # emu/uitext.c: 216
 Search not initialized
 搜索未初始化
@@ -3477,6 +3749,10 @@ Select
 # emu/uitext.c: 214
 Select Memory Areas
 选定内存区域
+
+# emu/uitext.c: 107
+Select New Game
+选择新游戏
 
 # emu/cheat.c: 7635
 Select Search
@@ -3653,6 +3929,10 @@ State successfully saved.\nWarning: Save states are not officially supported for
 # emu/uitext.c: 65
 Statistics not available
 没有可供查看的统计数据
+
+# emu/cheat.c: 5466
+Status (Same or Different)
+状态 (相同或不同)
 
 # emu/uitext.c: 206
 Status (bits or flags)
@@ -3894,6 +4174,14 @@ Type
 Type OK or move the joystick left then right to continue
 请键入 OK 或先向左再向右移动游戏杆以便继续。
 
+# emu/uimenu.c: 3071
+Type name or select: %s_
+请键入游戏名或选择: %s_
+
+# emu/uimenu.c: 3073
+Type name or select: (random)
+请键入游戏名或选择: (随机)
+
 # emu/inptport.c: 1095
 UI Cancel
 菜单 取消键
@@ -3985,6 +4273,10 @@ Unable to load due to pending anonymous timers. See error.log for details.
 # emu/mame.c: 1730
 Unable to save due to pending anonymous timers. See error.log for details.
 由于匿名计时器尚未停止，无法保存游戏进度。详见 error.log。
+
+# emu/uimenu.c: 3139
+Unimplemented
+未实现
 
 # emu/inptport.c: 482 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 tools/regrep.c: 93
 Unknown
@@ -4078,6 +4370,10 @@ Unused (28)
 Unused (29)
 未使用 (29)
 
+# emu/cheat.c: 2943
+Unused (3)
+未使用 (3)
+
 # emu/cheat.c: 2948
 Unused (30)
 未使用 (30)
@@ -4110,6 +4406,10 @@ Unused (8)
 Unused (9)
 未使用 (9)
 
+# emu/ui.c: 646
+Updating Artwork...
+更新装饰图...
+
 # emu/inptport.c: 426
 Upright
 直立型
@@ -4138,6 +4438,10 @@ User Select
 Value
 值
 
+# emu/cheat.c: 5453
+Value (NearTo)
+值(近似)
+
 # emu/uitext.c: 56
 Vector Flicker
 矢量闪烁
@@ -4149,6 +4453,18 @@ Vector Game
 # emu/inptport.c: 433 emu/uitext.c: 332
 Version
 版本
+
+# emu/inptport.c: 1335
+Version string: %s\n
+版本号: %s\n
+
+# emu/ui.c: 2663
+Vert position
+垂直位置
+
+# emu/ui.c: 2629
+Vert stretch
+垂直拉伸
 
 # mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 752, 897 mame/drivers/jack.c: 690 mame/drivers/thepit.c: 526 
 Vertical
@@ -4265,6 +4581,10 @@ World
 # emu/cheat.c: 2881
 Write
 写入
+
+# emu/cheat.c: 2885
+Write If Match
+如果匹配则写入
 
 # emu/uitext.c: 194
 X Position
@@ -4386,9 +4706,61 @@ Zoom Auto
 \n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
 \n\n年份: 原作  克隆  机皇   总计\n\n
 
+# emu/uimenu.c: 3154
+and the MAME team
+以及 MAME 开发组
+
+# emu/emuopts.c: 232
+button color (aqua)
+按钮色 (青)
+
+# emu/emuopts.c: 229
+button color (blue)
+按钮色 (蓝)
+
+# emu/emuopts.c: 228
+button color (green)
+按钮色 (绿)
+
+# emu/emuopts.c: 235
+button color (lime)
+按钮色 (橙)
+
+# emu/emuopts.c: 234
+button color (navy)
+按钮色 (深蓝)
+
+# emu/emuopts.c: 231
+button color (pink)
+按钮色 (粉红)
+
+# emu/emuopts.c: 230
+button color (purple)
+按钮色 (紫)
+
+# emu/emuopts.c: 226
+button color (red)
+按钮色 (红)
+
+# emu/emuopts.c: 233
+button color (silver)
+按钮色 (银)
+
+# emu/emuopts.c: 227
+button color (yellow)
+按钮色 (黄)
+
+# emu/emuopts.c: 207
+change m68k core (0:C, 1:DRC, 2:ASM+DRC)
+更改 m68k 核心 (0:C，1:动态重编译，2:汇编+动态重编译)
+
 # emu/cheat.c: 2343
 cheat database not found
 未找到作弊码数据库
+
+# emu/emuopts.c: 236
+cursor color
+光标色
 
 # emu/info.c: 90 emu/inptport.c: 1225
 dial
@@ -4466,9 +4838,17 @@ there are no old values
 trackball
 轨迹球
 
+# emu/emuopts.c: 213
+transparency of UI background [0 - 255]
+菜单背景透明度 [0 - 255]
+
 # emu/cheat.c: 2347
 unzip it and place it in the MAME directory
 请解压缩到 MAME 目录
+
+# emu/emuopts.c: 212
+use transparent background for UI text
+菜单文字使用透明背景
 
 # emu/cheat.c: 8932
 values restored
@@ -4490,28 +4870,8 @@ values restored
  BAD
 
 
-# emu/clifront.c: 869
- NO GOOD DUMP KNOWN
-
-
-# emu/clifront.c: 1013
-%d romsets found, %d were OK.\n
-
-
-# emu/clifront.c: 1090
-%d samplesets found, %d were OK.\n
-
-
-# emu/cheat.c: 11636
-%s : %s selected
-
-
 # emu/romload.c: 913
 %s CHD NEEDS REDUMP\n
-
-
-# emu/romload.c: 341
-%s NO GOOD DUMP KNOWN\n
 
 
 # emu/romload.c: 248
@@ -4662,6 +5022,10 @@ CORE DEBUGGING OPTIONS
 CORE FILENAME OPTIONS
 
 
+# emu/emuopts.c: 167
+CORE INPUT AUTOMATIC ENABLE OPTIONS
+
+
 # emu/emuopts.c: 153
 CORE INPUT OPTIONS
 
@@ -4730,24 +5094,12 @@ Color Overlay
 Comparison Option
 
 
-# emu/uitext.c: 54
-Contrast
-
-
-# emu/uimenu.c: 3153
-Copyright 2007, Nicola Salmoria
-
-
 # emu/datafile.c: 2446
 DOUBLEJOY16WAY:  %4d\n
 
 
 # emu/cheat.c: 7666 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
 Debug
-
-
-# mame/machine/cps2crpt.c: 686
-Decrypting %d%%
 
 
 # emu/uitext.c: 235
@@ -4782,6 +5134,10 @@ Dual Under-Over (Gapless)
 EEPROM
 
 
+# emu/patch.c: 322
+ERROR: %s/%s: IPS data is empty\n
+
+
 # emu/romload.c: 401
 ERROR: required files are missing, the game cannot be run.
 
@@ -4798,12 +5154,20 @@ End of playback - %i frames - Average speed %f%%
 Energy (Less or Greater)
 
 
+# mame/drivers/neodrvr.c: 172 mame/drivers/neogeo.c: 1291
+Enter BIOS
+
+
 # lib/util/options.c: 496
 Error: option %s expected a parameter\n
 
 
 # lib/util/options.c: 477
 Error: unknown option: %s\n
+
+
+# emu/uitext.c: 109 
+Exit
 
 
 # emu/inptport.c: 1329
@@ -4826,28 +5190,8 @@ Failed to open file for playback
 Failed to open file for recording
 
 
-# emu/inptport.c: 1071
-Fast Forward
-
-
 # emu/rendfont.c: 866
 Generating cached BDF font...\n
-
-
-# emu/uimenu.c: 3145
-Gfx: %s, Sound: %s
-
-
-# mame/drivers/royalmah.c: 1551 
-Gray
-
-
-# emu/ui.c: 2646
-Horiz position
-
-
-# emu/ui.c: 2612
-Horiz stretch
 
 
 # emu/audit.c: 310
@@ -4880,10 +5224,6 @@ Illegal integer value for %s; reverting to %d\n
 
 # emu/clifront.c: 525 emu/mame.c: 1353 emu/ui.c: 352 
 Illegal value for %s = %s\n
-
-
-# emu/uimenu.c: 3134, 3141 
-Imperfect
 
 
 # emu/cheat.c: 4883, 5423
@@ -5046,216 +5386,16 @@ Name:     Description:\n
 Name:    Clone of:\n
 
 
+# emu/drivers/empty.c: 81
+No Driver Loaded
+
+
 # emu/romload.c: 241
 OPTIONAL %s NOT FOUND\n
 
 
 # mame/video/tceptor.c: 281, 339, 395 
 Out of memory
-
-
-# emu/uimenu.c: 3126
-Overall: NOT WORKING
-
-
-# emu/uimenu.c: 3128
-Overall: Unemulated Protection
-
-
-# emu/uimenu.c: 3130
-Overall: Working
-
-
-# emu/inptport.c: 527
-P1 Button 11
-
-
-# emu/inptport.c: 528
-P1 Button 12
-
-
-# emu/inptport.c: 529
-P1 Button 13
-
-
-# emu/inptport.c: 530
-P1 Button 14
-
-
-# emu/inptport.c: 531
-P1 Button 15
-
-
-# emu/inptport.c: 532
-P1 Button 16
-
-
-# emu/inptport.c: 594
-P2 Button 11
-
-
-# emu/inptport.c: 595
-P2 Button 12
-
-
-# emu/inptport.c: 596
-P2 Button 13
-
-
-# emu/inptport.c: 597
-P2 Button 14
-
-
-# emu/inptport.c: 598
-P2 Button 15
-
-
-# emu/inptport.c: 599
-P2 Button 16
-
-
-# emu/inptport.c: 661
-P3 Button 11
-
-
-# emu/inptport.c: 662
-P3 Button 12
-
-
-# emu/inptport.c: 663
-P3 Button 13
-
-
-# emu/inptport.c: 664
-P3 Button 14
-
-
-# emu/inptport.c: 665
-P3 Button 15
-
-
-# emu/inptport.c: 666
-P3 Button 16
-
-
-# emu/inptport.c: 699
-P4 Button 11
-
-
-# emu/inptport.c: 700
-P4 Button 12
-
-
-# emu/inptport.c: 701
-P4 Button 13
-
-
-# emu/inptport.c: 702
-P4 Button 14
-
-
-# emu/inptport.c: 703
-P4 Button 15
-
-
-# emu/inptport.c: 704
-P4 Button 16
-
-
-# emu/inptport.c: 737
-P5 Button 11
-
-
-# emu/inptport.c: 738
-P5 Button 12
-
-
-# emu/inptport.c: 739
-P5 Button 13
-
-
-# emu/inptport.c: 740
-P5 Button 14
-
-
-# emu/inptport.c: 741
-P5 Button 15
-
-
-# emu/inptport.c: 742
-P5 Button 16
-
-
-# emu/inptport.c: 775
-P6 Button 11
-
-
-# emu/inptport.c: 776
-P6 Button 12
-
-
-# emu/inptport.c: 777
-P6 Button 13
-
-
-# emu/inptport.c: 778
-P6 Button 14
-
-
-# emu/inptport.c: 779
-P6 Button 15
-
-
-# emu/inptport.c: 780
-P6 Button 16
-
-
-# emu/inptport.c: 813
-P7 Button 11
-
-
-# emu/inptport.c: 814
-P7 Button 12
-
-
-# emu/inptport.c: 815
-P7 Button 13
-
-
-# emu/inptport.c: 816
-P7 Button 14
-
-
-# emu/inptport.c: 817
-P7 Button 15
-
-
-# emu/inptport.c: 818
-P7 Button 16
-
-
-# emu/inptport.c: 851
-P8 Button 11
-
-
-# emu/inptport.c: 852
-P8 Button 12
-
-
-# emu/inptport.c: 853
-P8 Button 13
-
-
-# emu/inptport.c: 854
-P8 Button 14
-
-
-# emu/inptport.c: 855
-P8 Button 15
-
-
-# emu/inptport.c: 856
-P8 Button 16
 
 
 # mame/layout/nbmj8688.lay: 52, 62
@@ -5362,22 +5502,6 @@ Samples not supported in this build\n
 Screen %d %s %.3f
 
 
-# emu/cheat.c: 1720
-Search a Cheat (Advanced Mode)
-
-
-# emu/cheat.c: 1716
-Search a Cheat (Classic Mode)
-
-
-# emu/cheat.c: 1712
-Search a Cheat (Minimum Mode)
-
-
-# emu/uitext.c: 0
-Select New Game
-
-
 # emu/cheat.c: 7660
 Show Activation Key Message
 
@@ -5392,10 +5516,6 @@ Start time: %s\n
 
 # mame/drivers/funworld.c: 862, 924, 986, 1110, 1172 
 State
-
-
-# emu/cheat.c: 5466
-Status (Same or Different)
 
 
 # mame/drivers/bmcbowl.c: 379 mame/drivers/dwarfd.c: 452 mame/drivers/gdrawpkr.c: 314 mame/drivers/magicfly.c: 550 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 537
@@ -5426,14 +5546,6 @@ Triple Side-by-Side
 Triple Side-by-Side (Gapless)
 
 
-# emu/uimenu.c: 3071
-Type name or select: %s_
-
-
-# emu/uimenu.c: 3073
-Type name or select: (random)
-
-
 # emu/video.c: 373
 Unable to allocate snapshot render target\n
 
@@ -5452,18 +5564,6 @@ Unexpected float option %s queried\n
 
 # lib/util/options.c: 906
 Unexpected integer option %s queried\n
-
-
-# emu/uimenu.c: 3139
-Unimplemented
-
-
-# emu/cheat.c: 2943
-Unused (3)
-
-
-# emu/ui.c: 646
-Updating Artwork...
 
 
 # emu/clifront.c: 461
@@ -5486,32 +5586,12 @@ VFD Only (%d:%d)
 Value (Equal)
 
 
-# emu/cheat.c: 5453
-Value (NearTo)
-
-
-# emu/inptport.c: 1335
-Version string: %s\n
-
-
-# emu/ui.c: 2663
-Vert position
-
-
-# emu/ui.c: 2629
-Vert stretch
-
-
 # lib/util/options.c: 544
 Warning: invalid line in INI: %s
 
 
 # lib/util/options.c: 566
 Warning: unknown option in INI: %s\n
-
-
-# emu/cheat.c: 2885
-Write If Match
 
 
 # emu/video.c: 1206
@@ -5542,10 +5622,6 @@ amount to scale the screen brightness when paused
 analog joystick
 
 
-# emu/uimenu.c: 3154
-and the MAME team
-
-
 # emu/mamecore.h: 168 
 assert: %s:%d: %s
 
@@ -5566,52 +5642,8 @@ automatically rotate screen clockwise 90 degrees if vertical
 automatically rotate screen counterclockwise 90 degrees if vertical
 
 
-# emu/emuopts.c: 232
-button color (aqua)
-
-
-# emu/emuopts.c: 229
-button color (blue)
-
-
-# emu/emuopts.c: 228
-button color (green)
-
-
-# emu/emuopts.c: 235
-button color (lime)
-
-
-# emu/emuopts.c: 234
-button color (navy)
-
-
-# emu/emuopts.c: 231
-button color (pink)
-
-
-# emu/emuopts.c: 230
-button color (purple)
-
-
-# emu/emuopts.c: 226
-button color (red)
-
-
-# emu/emuopts.c: 233
-button color (silver)
-
-
-# emu/emuopts.c: 227
-button color (yellow)
-
-
 # emu/emuopts.c: 163
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-
-
-# emu/emuopts.c: 207
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 
 
 # emu/emuopts.c: 71
@@ -5626,16 +5658,16 @@ command list database name
 compare files with known MAME roms
 
 
+# emu/emuopts.c: 161
+convert lightgun button 2 into offscreen reload
+
+
 # emu/clifront.c: 85
 create the default configuration file
 
 
 # emu/emuopts.c: 119
 crop artwork to game screen size
-
-
-# emu/emuopts.c: 236
-cursor color
 
 
 # emu/emuopts.c: 126
@@ -5782,6 +5814,14 @@ enable mouse input
 enable overlays if artwork is enabled and available
 
 
+# emu/emuopts.c: 158
+enable separate input from each keyboard device (if present)
+
+
+# emu/emuopts.c: 159
+enable separate input from each mouse device (if present)
+
+
 # emu/emuopts.c: 105
 enable sleeping, which gives time back to other applications when idle
 
@@ -5824,6 +5864,10 @@ error: invalid value for language: %s\nUse %s\n
 
 # emu/ui.c: 376
 error: invalid value for palette: %s\n
+
+
+# emu/emuopts.c: 162
+explicit joystick map, or auto to auto-select
 
 
 # emu/video.c: 1190
@@ -6071,7 +6115,7 @@ set %s
 
 
 # emu/emuopts.c: 102
-set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
+set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
 
 
 # emu/emuopts.c: 143
@@ -6122,20 +6166,12 @@ story database name
 switch drivers
 
 
-# emu/emuopts.c: 213
-transparency of UI background [0 - 255]
-
-
 # emu/mame.c: 322
 unable to open log file
 
 
 # emu/emuopts.c: 136
 use antialiasing when drawing vectors
-
-
-# emu/emuopts.c: 212
-use transparent background for UI text
 
 
 # emu/video.c: 685
