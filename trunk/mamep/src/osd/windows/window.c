@@ -38,6 +38,7 @@
 #include "debugwin.h"
 #include "strconv.h"
 #include "config.h"
+#include "winutf8.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
@@ -571,7 +572,6 @@ void winwindow_update_cursor_state(void)
 void winwindow_video_window_create(int index, win_monitor_info *monitor, const win_window_config *config)
 {
 	win_window_info *window, *win;
-	char buf[256];
 	char option[20];
 
 	assert(GetCurrentThreadId() == main_threadid);
@@ -614,10 +614,9 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 
 	// make the window title
 	if (video_config.numscreens == 1)
-		sprintf(buf, APPNAME ": %s [%s]", _LST(Machine->gamedrv->description), Machine->gamedrv->name);
+		sprintf(window->title, APPNAME ": %s [%s]", _LST(Machine->gamedrv->description), Machine->gamedrv->name);
 	else
-		sprintf(buf, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), _LST(Machine->gamedrv->description), Machine->gamedrv->name, index);
-	MultiByteToWideChar(CP_UTF8, 0, buf, -1, window->title, sizeof window->title);
+		sprintf(window->title, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), _LST(Machine->gamedrv->description), Machine->gamedrv->name, index);
 
 	// set the initial maximized state
 	window->startmaximized = options_get_bool(mame_options(), WINOPTION_MAXIMIZE);
@@ -1164,8 +1163,6 @@ static unsigned __stdcall thread_entry(void *param)
 
 static int complete_create(win_window_info *window)
 {
-	// mamep: not necessary
-//	TCHAR *t_title;
 	RECT monitorbounds, client;
 	int tempwidth, tempheight;
 	HMENU menu = NULL;
@@ -1183,13 +1180,9 @@ static int complete_create(win_window_info *window)
 #endif
 
 	// create the window, but don't show it yet
-//	t_title = tstring_from_utf8(window->title);
-	//if (t_title == NULL)
-		//return 1;
-	window->hwnd = CreateWindowEx(
+	window->hwnd = win_create_window_ex_utf8(
 						window->fullscreen ? FULLSCREEN_STYLE_EX : WINDOW_STYLE_EX,
-						TEXT("MAME"),
-//						t_title,
+						"MAME",
 						window->title,
 						window->fullscreen ? FULLSCREEN_STYLE : WINDOW_STYLE,
 						monitorbounds.left + 20, monitorbounds.top + 20,
@@ -1198,7 +1191,6 @@ static int complete_create(win_window_info *window)
 						menu,
 						GetModuleHandle(NULL),
 						NULL);
-//	free(t_title);
 	if (window->hwnd == NULL)
 		return 1;
 

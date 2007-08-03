@@ -38,6 +38,38 @@
 		#endif /* DRIVER_SWITCH */
 		extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
+		#include "astring.h"
+		extern SHAREDOBJ_FUNC(astring *)    astring_alloc(void);
+		extern SHAREDOBJ_FUNC(void)         astring_free(astring * str);
+		extern SHAREDOBJ_FUNC(astring *)    astring_cpy(astring * dst, const astring *src);
+		extern SHAREDOBJ_FUNC(astring *)    astring_cpyc(astring * dst, const char *src);
+		extern SHAREDOBJ_FUNC(astring *)    astring_cpych(astring * dst, const char *src, int count);
+		extern SHAREDOBJ_FUNC(astring *)    astring_cpysubstr(astring * dst, const astring *src, int start, int count);
+		extern SHAREDOBJ_FUNC(astring *)    astring_ins(astring * dst, int insbefore, const astring *src);
+		extern SHAREDOBJ_FUNC(astring *)    astring_insc(astring * dst, int insbefore, const char *src);
+		extern SHAREDOBJ_FUNC(astring *)    astring_insch(astring * dst, int insbefore, const char *src, int count);
+		extern SHAREDOBJ_FUNC(astring *)    astring_inssubstr(astring * dst, int insbefore, const astring *src, int start, int count);
+		extern SHAREDOBJ_FUNC(astring *)    astring_substr(astring * str, int start, int count);
+		extern SHAREDOBJ_FUNC(const char *) astring_c(const astring *str);
+		extern SHAREDOBJ_FUNC(int)          astring_len(const astring *str);
+		extern SHAREDOBJ_FUNC(int)          astring_cmp(const astring *str1, const astring *str2);
+		extern SHAREDOBJ_FUNC(int)          astring_cmpc(const astring *str1, const char *str2);
+		extern SHAREDOBJ_FUNC(int)          astring_cmpch(const astring *str1, const char *str2, int count);
+		extern SHAREDOBJ_FUNC(int)          astring_cmpsubstr(const astring *str1, const astring *str2, int start, int count);
+		extern SHAREDOBJ_FUNC(int)          astring_icmp(const astring *str1, const astring *str2);
+		extern SHAREDOBJ_FUNC(int)          astring_icmpc(const astring *str1, const char *str2);
+		extern SHAREDOBJ_FUNC(int)          astring_icmpch(const astring *str1, const char *str2, int count);
+		extern SHAREDOBJ_FUNC(int)          astring_icmpsubstr(const astring *str1, const astring *str2, int start, int count);
+		extern SHAREDOBJ_FUNC(int)          astring_chr(const astring *str, int start, int ch);
+		extern SHAREDOBJ_FUNC(int)          astring_rchr(const astring *str, int start, int ch);
+		extern SHAREDOBJ_FUNC(int)          astring_find(const astring *str, int start, const astring *search);
+		extern SHAREDOBJ_FUNC(int)          astring_findc(const astring *str, int start, const char *search);
+		extern SHAREDOBJ_FUNC(astring *)    astring_delchr(astring * str, int ch);
+		extern SHAREDOBJ_FUNC(astring *)    astring_replacechr(astring * str, int ch, int newch);
+		extern SHAREDOBJ_FUNC(astring *)    astring_toupper(astring * str);
+		extern SHAREDOBJ_FUNC(astring *)    astring_tolower(astring * str);
+		extern SHAREDOBJ_FUNC(astring *)    astring_trimspace(astring * str);
+
 		#include "audit.h"
 		extern SHAREDOBJ_FUNC(int) audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **audit);
 		extern SHAREDOBJ_FUNC(int) audit_samples(const game_driver *gamedrv, audit_record **audit);
@@ -151,7 +183,7 @@
 		SHAREDOBJ_FUNC(input_port_entry *) input_port_allocate(const input_port_token *ipt, input_port_entry *memory);
 
 		#include "inputseq.h"
-		extern SHAREDOBJ_FUNC(int) input_seq_to_tokens(const input_seq *seq, char *buffer, size_t buflen);
+		extern SHAREDOBJ_FUNC(astring *) input_seq_to_tokens(astring *string, const input_seq *seq);
 		extern SHAREDOBJ_FUNC(int) input_seq_from_tokens(const char *string, input_seq *seq);
 
 		#include "sndintrf.h"

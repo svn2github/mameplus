@@ -97,11 +97,14 @@ else
 endif
 
 ifneq ($(MSVC_BUILD),)
+
+VCONV = $(WINOBJ)/vconv$(EXE)
+
 # replace the various compilers with vconv.exe prefixes
-CC = @$(OBJ)/vconv.exe gcc -I.
-LD = @$(OBJ)/vconv.exe ld /profile
-AR = @$(OBJ)/vconv.exe ar
-RC = @$(OBJ)/vconv.exe windres
+CC = @$(VCONV) gcc -I.
+LD = @$(VCONV) ld /profile
+AR = @$(VCONV) ar
+RC = @$(VCONV) windres
 
 # make sure we use the multithreaded runtime
 CC += /MT
@@ -137,9 +140,12 @@ DEFS := $(filter-out -DX86_ASM,$(DEFS))
 DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
 
 # make msvcprep into a pre-build step
-OSPREBUILD = $(OBJ)/vconv.exe
+# OSPREBUILD = $(VCONV)
 
-$(OBJ)/vconv.exe: $(WINOBJ)/vconv.o
+# add VCONV to the build tools
+BUILD += $(VCONV)
+
+$(VCONV): $(WINOBJ)/vconv.o
 	@echo Linking $@...
 ifdef PTR64
 	@link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@

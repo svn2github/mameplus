@@ -3085,6 +3085,9 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 	UINT8				dirty = 0;
 	static INT32      currentNameTemplate = 0;
 
+	astring *			temp_string_1 = astring_alloc();
+	astring *			temp_string_2 = astring_alloc();
+
 	if(!entry)
 		return 0;
 
@@ -3175,11 +3178,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 				menuItem[total] = _("Activation Key (1st)");
 
 				if((entry->flags & kCheatFlag_HasActivationKey1))
-				{
-					static char name[100];
-					input_code_name(entry->activationKey1, name, ARRAY_LENGTH(name));
-					menuSubItem[total++] = name;
-				}
+					menuSubItem[total++] = astring_c(input_code_name(temp_string_1, entry->activationKey1));
 				else
 					menuSubItem[total++] = _("(none)");
 			}
@@ -3191,11 +3190,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 				menuItem[total] = _("Activation Key (2nd)");
 
 				if((entry->flags & kCheatFlag_HasActivationKey2))
-				{
-					static char name[100];
-					input_code_name(entry->activationKey2, name, ARRAY_LENGTH(name));
-					menuSubItem[total++] = name;
-				}
+					menuSubItem[total++] = astring_c(input_code_name(temp_string_2, entry->activationKey2));
 				else
 					menuSubItem[total++] = _("(none)");
 			}
@@ -4714,6 +4709,9 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 
 		entry->flags |= kCheatFlag_Dirty;
 	}
+
+	astring_free(temp_string_1);
+	astring_free(temp_string_2);
 
 	return sel + 1;
 }
@@ -9060,7 +9058,7 @@ static void SetSearchRegionDefaultName(SearchRegion * region)
 				genf *				handler = region->writeHandler->write.handler;
 				FPTR				handlerAddress = (FPTR)handler;
 				if(	(handlerAddress >= ((FPTR)MWA8_BANK1)) && (handlerAddress <= ((FPTR)MWA8_BANK24)))
-					sprintf(desc, _("BANK%.2d"), (handlerAddress - ((FPTR)MWA8_BANK1)) + 1);
+					sprintf(desc, _("BANK%.2d"), (int)(handlerAddress - (FPTR)MWA8_BANK1) + 1);
 				else
 				{
 					switch(handlerAddress)
@@ -9895,7 +9893,6 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 		case activationKey:
 			for(i = 0; i < 2; i++)
 			{
-				char		name[100];
 				char		* bufTraverse = buf;
 				int			addressLength;
 
@@ -9927,20 +9924,22 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 				if(!i)
 				{
 					/* ----- 1st key ----- */
-					input_code_name(entry->activationKey1, name, ARRAY_LENGTH(name));
-  					if(entry->name)
-						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key for %s (%s)\n"), entry->name, name);
-  					else
-						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key (%s)\n"), name);
+					astring *name = input_code_name(astring_alloc(), entry->activationKey1);
+					if (entry->name)
+						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key for %s (%s)\n"), entry->name, astring_c(name));
+					else
+						bufTraverse += sprintf(bufTraverse, _(":1st Activation Key (%s)\n"), astring_c(name));
+					astring_free(name);
 				}
 				else
 				{
 					/* ----- 2nd key ----- */
-					input_code_name(entry->activationKey2, name, ARRAY_LENGTH(name));
-					if(entry->name)
-						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key for %s (%s)\n"), entry->name, name);
+					astring *name = input_code_name(astring_alloc(), entry->activationKey2);
+					if (entry->name)
+						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key for %s (%s)\n"), entry->name, astring_c(name));
 					else
-						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key (%s)\n"), name);
+						bufTraverse += sprintf(bufTraverse, _(":2nd Activation Key (%s)\n"), astring_c(name));
+					astring_free(name);
 				}
 
 				/* ----- write the activation key code ----- */

@@ -225,7 +225,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	BOOL success;
 	const WCHAR *zip_name = NULL;
 	const WCHAR *basedir = NULL;
-	char *fname;
+	astring *fname;
 	char *utf8filename;
 
 	switch (pic_type)
@@ -274,25 +274,25 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	utf8filename = utf8_from_wstring(filename);
 
 	// look for the raw file
-	fname = assemble_2_strings(utf8filename, ".png");
-	filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
-	free(fname);
+	fname = astring_assemble_2(astring_alloc(), utf8filename, ".png");
+	filerr = mame_fopen(SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
+	astring_free(fname);
 
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
-		fname = assemble_4_strings(utf8filename, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
-		free(fname);
+		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
+		astring_free(fname);
 	}
 
 	if (filerr != FILERR_NONE)
 	{
 		// and look for the zip
 		char *utf8zip_name = utf8_from_wstring(zip_name);
-		fname = assemble_4_strings(utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, fname, OPEN_FLAG_READ, &mfile);
-		free(fname);
+		fname = astring_assemble_4(astring_alloc(), utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = mame_fopen(SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
+		astring_free(fname);
 		free(utf8zip_name);
 	}
 

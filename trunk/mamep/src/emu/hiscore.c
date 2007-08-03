@@ -196,10 +196,10 @@ static void hiscore_load (void)
 	{
 		file_error filerr;
 		mame_file *f;
-		char *fname;
-		fname = assemble_2_strings(Machine->basename, ".hi");
-		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_READ, &f);
-		free(fname);
+		astring *fname;
+		fname = astring_assemble_2(astring_alloc(), Machine->basename, ".hi");
+		filerr = mame_fopen (SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_READ, &f);
+		astring_free(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
 		if (filerr == FILERR_NONE)
@@ -232,10 +232,10 @@ static void hiscore_save (void)
 	{
 		file_error filerr;
 		mame_file *f;
-		char *fname;
-		fname = assemble_2_strings(Machine->basename, ".hi");
-		filerr = mame_fopen (SEARCHPATH_HISCORE, fname, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
-		free(fname);
+		astring *fname;
+		fname = astring_assemble_2(astring_alloc(), Machine->basename, ".hi");
+		filerr = mame_fopen (SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
+		astring_free(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
 		{

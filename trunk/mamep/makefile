@@ -657,9 +657,10 @@ include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+include $(SRC)/lib/lib.mak
+include $(SRC)/build/build.mak
 include $(SRC)/tools/tools.mak
 include $(SRC)/emu/emu.mak
-include $(SRC)/lib/lib.mak
 
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
@@ -690,7 +691,7 @@ endif
 # primary targets
 #-------------------------------------------------
 
-emulator: maketree $(EMULATOR)
+emulator: maketree $(BUILD) $(EMULATOR)
 
 tools: maketree $(TOOLS)
 

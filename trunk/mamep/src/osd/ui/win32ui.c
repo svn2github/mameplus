@@ -2540,15 +2540,17 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	for (i = 0; i < NUM_GUI_SEQUENCES; i++)
 	{
-		input_seq *is1;
+		const input_seq *is1;
 		input_seq *is2;
-	 	char seqbuffer[256];
+	 	astring *seqstring = astring_alloc();
 
 		is1 = &(GUISequenceControl[i].is);
 		is2 = GUISequenceControl[i].getiniptr();
-		input_seq_to_tokens(is1, seqbuffer, sizeof(seqbuffer));
-		input_seq_from_tokens(seqbuffer, is2);
+		input_seq_to_tokens(seqstring, is1);
+		input_seq_from_tokens(astring_c(seqstring), is2);
 		//dprintf("seq =%s is: %4i %4i %4i %4i\n",GUISequenceControl[i].name, (*is1)[0], (*is1)[1], (*is1)[2], (*is1)[3]);
+		//dprintf("seq =%s: %s", GUISequenceControl[i].name, astring_c(seqstring));
+		astring_free(seqstring);
 	}
 
 	if (GetJoyGUI() == TRUE)

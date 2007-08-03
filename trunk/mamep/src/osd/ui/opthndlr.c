@@ -209,16 +209,28 @@ INLINE void _options_get_string_allow_null(core_options *opts, char **p, const c
 {
 	const char *stemp = options_get_string(opts, name);
 
+	if (*stemp == '\0')
+		stemp = NULL;
+
 	FreeIfAllocated(p);
 	if (stemp)
 		*p = strdup(stemp);
 }
 
-#define options_set_string_allow_null(opts,name,value,priority)	options_set_string(opts, name, value, priority)
+INLINE void options_set_string_allow_null(core_options *opts, const char *name, const char *value, int priority)
+{
+	if (value == NULL)
+		value = "";
+
+	options_set_string(opts, name, value, priority);
+}
 
 INLINE void options_copy_string_allow_null(const char *src, char **dest)
 {
 	FreeIfAllocated(dest);
+
+	if (*src == '\0')
+		src = NULL;
 
 	if (src)
 		*dest = strdup(src);
@@ -240,12 +252,21 @@ INLINE void _options_get_wstring_allow_null(core_options *opts, WCHAR **p, const
 {
 	const char *stemp = options_get_string(opts, name);
 
+	if (*stemp == '\0')
+		stemp = NULL;
+
 	FreeIfAllocatedW(p);
 	if (stemp)
 		*p = wstring_from_utf8(stemp);
 }
 
-#define options_set_wstring_allow_null(opts,name,value,priority)	options_set_wstring(opts, name, value, priority)
+INLINE void options_set_wstring_allow_null(core_options *opts, const char *name, const WCHAR *value, int priority)
+{
+	if (value == NULL)
+		value = TEXT("");
+
+	options_set_wstring(opts, name, value, priority);
+}
 
 INLINE void options_copy_wstring_allow_null(const WCHAR *src, WCHAR **dest)
 {

@@ -128,7 +128,7 @@ static void load_mmo(int msgcat)
 	struct mmo *p = &mmo_table[current_lang][msgcat];
 	file_error filerr;
 	mame_file *file;
-	char *fname;
+	astring *fname;
 	int str_size;
 	int size;
 	int i;
@@ -139,9 +139,9 @@ static void load_mmo(int msgcat)
 	if (!mmo_config[msgcat].filename)
 		return;
 
-	fname = assemble_4_strings(ui_lang_info[current_lang].name, "/", mmo_config[msgcat].filename, ".mmo");
-	filerr = mame_fopen(SEARCHPATH_TRANSLATION, fname, OPEN_FLAG_READ, &file);
-	free(fname);
+	fname = astring_assemble_4(astring_alloc(), ui_lang_info[current_lang].name, "/", mmo_config[msgcat].filename, ".mmo");
+	filerr = mame_fopen(SEARCHPATH_TRANSLATION, astring_c(fname), OPEN_FLAG_READ, &file);
+	astring_free(fname);
 
 	if (filerr != FILERR_NONE)
 		goto mmo_readerr;

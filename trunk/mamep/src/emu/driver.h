@@ -230,7 +230,7 @@ struct _game_driver
 
 #ifdef MESS
 	void (*sysconfig_ctor)(struct SystemConfigurationParamBlock *cfg);
-	const game_driver *	compatible_with;
+	const char *		compatible_with;
 #endif
 
 	UINT32				flags;						/* orientation and other flags; see defines below */

@@ -202,12 +202,12 @@ static BOOL RomsetNotExist(int game)
 	{
 		file_error filerr;
 		mame_file *file;
-		char *fname;
+		astring *fname;
 
 		// open the file if we can
-		fname = assemble_2_strings(drv->name, ".zip");
-		filerr = mame_fopen(SEARCHPATH_ROM, fname, OPEN_FLAG_READ, &file);
-		free(fname);
+		fname = astring_assemble_2(astring_alloc(), drv->name, ".zip");
+		filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
+		astring_free(fname);
 		if (filerr == FILERR_NONE)
 		{
 			mame_fclose(file);
@@ -218,9 +218,9 @@ static BOOL RomsetNotExist(int game)
 		mame_path *path;
 
 		// open the folder if we can
-		fname = assemble_3_strings(SEARCHPATH_ROM, PATH_SEPARATOR, drv->name);
-		path = mame_openpath(mame_options(), fname);
-		free(fname);
+		fname = astring_assemble_3(astring_alloc(), SEARCHPATH_ROM, PATH_SEPARATOR, drv->name);
+		path = mame_openpath(mame_options(), astring_c(fname));
+		astring_free(fname);
 		if (path != NULL)
 		{
 			mame_closepath(path);
