@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.117u2      #
+#     Mameinfo.dat日本語版 v0.117u3      #
 #                                        #
-#             July 27, 2007              #
+#             August 4, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,24 +12,16 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：852 翻訳済：832
-# 追加項目：341 合計：1193
+# Tester報告：861 翻訳済：840
+# 追加項目：342 合計：1203
 #
 
 
-$info=mtrap
+$info=stonebal
 $mame
-[情報]
-
-- 4キーを押しながらリセットするとサービスモード。
-
-
 [バグ]
 
-- 実機とのサウンドの比較。MAMEではサンプルの再生速度が速すぎる。また、ゲームオーバーのBGMのループも速すぎ。 mtrap0117u2ora, Tafoid
-
-
-- 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
+- グラフィックが右に25ピクセルずれて表示される。 stonebal0117u2gre, Jan Tleskac / Tafoid
 
 $end
 
@@ -71,7 +63,31 @@ RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
 
 [バグ]
 
-- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield
+- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
+
+$end
+
+$info=ms5pcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
+
+$end
+
+$info=svcpcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
+
+$end
+
+$info=kf2k3pcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
 
 $end
 
@@ -91,6 +107,17 @@ $mame
 2) 2Pボタン3+2PスタートかF2キーを押す
 
 (from オン氏)
+
+$end
+
+$info=shadfrcj
+$mame
+[バグ]
+
+- 画面の上部に点滅する矢印のようなものが現われる。 shadfrcj0117u3gre, sjyune / Tafoid
+
+
+- ゲームを開始するとすぐにエンディングが始まる。 shadfrcj0117u3yel, sjyune
 
 $end
 
@@ -937,6 +964,19 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 
 - 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
+
+$end
+
+$info=mtrap
+$mame
+[情報]
+
+- 4キーを押しながらリセットするとサービスモード。
+
+
+[バグ]
+
+- 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
 
 $end
 
@@ -4946,22 +4986,6 @@ $mame
 
 $end
 
-$info=hayaosi1
-$mame
-[バグ]
-
-- ゲーム名が「Hayaoshi Quiz Ohzaketteisen」なのは間違い。 hayaosi1_0107u3ora, J.J.Boy
-
-$end
-
-$info=fantasy
-$mame
-[バグ]
-
-- World版のコンティニュー画面がドイツ語で表示される。 fantasy0105u3ora, cpukett / Twisty / Luigi30 / RansAckeR
-
-$end
-
 $info=gaiapols
 $mame
 [バグ]
@@ -5087,6 +5111,14 @@ $mame
 
 $end
 
+$info=hayaosi1
+$mame
+[バグ]
+
+- ゲーム名が「Hayaoshi Quiz Ohzaketteisen」なのは間違い。 hayaosi1_0107u3ora, J.J.Boy
+
+$end
+
 $info=nss_smw
 $mame
 [バグ]
@@ -5156,6 +5188,25 @@ $mame
 
 $end
 
+$info=rodland
+$mame
+[バグ]
+
+- 実機を持ってる人からのレポート：
+週末に基板の修理に出したのですが、ROMが2ついかれていたので、MAMEのROMを焼いたものと交換しましたところ、背景とスプライトの内容が完全に入れ替わったのでございます。
+
+そこで、rl_23.romとr1_14.romを差し替えたら直りました。ということは、MAMEのROMが入れ替わっておるわけで、それにあわせてドライバも書かれておるのでしょう。
+
+（さらに詳しくは本家参照） rodland061ora, bloodflowers
+
+
+[TIPS]
+
+- コイン投入後、プレイヤー1の下下下スタートと入力すると、エキストラモードになる。
+面構成やグラフィックス、音楽が別なものになる。
+
+$end
+
 $info=jumping
 $mame
 [バグ]
@@ -5164,6 +5215,14 @@ $mame
 MAMEではjumpingの方が速すぎる。
 
 基板上のOSCは2つで、24MHzと18.432MHz。 jumping0104u5ora, kold666
+
+$end
+
+$info=fantasy
+$mame
+[バグ]
+
+- World版のコンティニュー画面がドイツ語で表示される。 fantasy0105u3ora, cpukett / Twisty / Luigi30 / RansAckeR
 
 $end
 
@@ -5253,25 +5312,6 @@ $mame
 [バグ]
 
 - ラスタエフェクトはV33 CPUを23.4MHz以上にすると動作する。ただし、速度はひどく遅くなる。 nbbatman060ora, Kale
-
-$end
-
-$info=rodland
-$mame
-[バグ]
-
-- 実機を持ってる人からのレポート：
-週末に基板の修理に出したのですが、ROMが2ついかれていたので、MAMEのROMを焼いたものと交換しましたところ、背景とスプライトの内容が完全に入れ替わったのでございます。
-
-そこで、rl_23.romとr1_14.romを差し替えたら直りました。ということは、MAMEのROMが入れ替わっておるわけで、それにあわせてドライバも書かれておるのでしょう。
-
-（さらに詳しくは本家参照） rodland061ora, bloodflowers
-
-
-[TIPS]
-
-- コイン投入後、プレイヤー1の下下下スタートと入力すると、エキストラモードになる。
-面構成やグラフィックス、音楽が別なものになる。
 
 $end
 
@@ -8261,6 +8301,14 @@ $mame
 [情報]
 
 - スタートボタンはショットボタンと兼用。
+
+$end
+
+$info=zookeep
+$mame
+[情報]
+
+- 画面のリフレッシュレートがデフォルトでは76Hzだが、ゲーム中に動的に変更して正しい値（60.02Hz)で動作する。
 
 $end
 
