@@ -194,6 +194,9 @@ static BOOL orig_uses_defaults;
 static options_type* pGameOpts = NULL;
 static int g_biosinfo = -1;
 static int  default_bios_index[MAX_SYSTEM_BIOS];
+#ifdef JOYSTICK_ID
+static int g_nJoyid[8];
+#endif /* JOYSTICK_ID */
 static char *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
@@ -3397,6 +3400,29 @@ static void AssignBios(HWND hWnd)
 		pGameOpts->bios = mame_strdup(BIOS_DEFAULT);
 }
 
+#ifdef JOYSTICK_ID
+#define AssignJoyid(n)	\
+static void AssignJoyid##n(HWND hWnd) \
+{ \
+	int nIndex = CB_ERR; \
+ \
+	if (ComboBox_GetCount(hWnd) > 0) \
+		nIndex = ComboBox_GetCurSel(hWnd); \
+ \
+	if (nIndex != CB_ERR) \
+		pGameOpts->joyid##n = nIndex; \
+}
+
+AssignJoyid(1)
+AssignJoyid(2)
+AssignJoyid(3)
+AssignJoyid(4)
+AssignJoyid(5)
+AssignJoyid(6)
+AssignJoyid(7)
+AssignJoyid(8)
+#endif /* JOYSTICK_ID */
+
 static void AssignPaddle(HWND hWnd)
 {
 	const char* ptr = (const char*)ComboBox_GetItemData(hWnd, g_nPaddleIndex);
@@ -3668,6 +3694,17 @@ static void ResetDataMap(void)
 		}
 	}
 
+#ifdef JOYSTICK_ID
+	g_nJoyid[0] = pGameOpts->joyid1;
+	g_nJoyid[1] = pGameOpts->joyid2;
+	g_nJoyid[2] = pGameOpts->joyid3;
+	g_nJoyid[3] = pGameOpts->joyid4;
+	g_nJoyid[4] = pGameOpts->joyid5;
+	g_nJoyid[5] = pGameOpts->joyid6;
+	g_nJoyid[6] = pGameOpts->joyid7;
+	g_nJoyid[7] = pGameOpts->joyid8;
+#endif /* JOYSTICK_ID */
+
 	g_nVideoIndex = 0;
 	for (i = 0; i < NUMVIDEO; i++)
 	{
@@ -3807,14 +3844,14 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_DUAL_LIGHTGUN, DM_BOOL, CT_BUTTON,   &pGameOpts->dual_lightgun, DM_BOOL,   &pGameOpts->dual_lightgun,   0, 0, 0);
 	DataMapAdd(IDC_RELOAD,        DM_BOOL, CT_BUTTON,   &pGameOpts->offscreen_reload,DM_BOOL, &pGameOpts->offscreen_reload,0, 0, 0);
 #ifdef JOYSTICK_ID
-	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid1,        DM_INT, &pGameOpts->joyid1,             0, 0, 0);
-	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid2,        DM_INT, &pGameOpts->joyid2,             0, 0, 0);
-	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid3,        DM_INT, &pGameOpts->joyid3,             0, 0, 0);
-	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid4,        DM_INT, &pGameOpts->joyid4,             0, 0, 0);
-	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid5,        DM_INT, &pGameOpts->joyid5,             0, 0, 0);
-	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid6,        DM_INT, &pGameOpts->joyid6,             0, 0, 0);
-	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid7,        DM_INT, &pGameOpts->joyid7,             0, 0, 0);
-	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &pGameOpts->joyid8,        DM_INT, &pGameOpts->joyid8,             0, 0, 0);
+	DataMapAdd(IDC_JOYID1,        DM_INT,  CT_COMBOBOX, &g_nJoyid[0],              DM_INT, &pGameOpts->joyid1,             0, 0, AssignJoyid1);
+	DataMapAdd(IDC_JOYID2,        DM_INT,  CT_COMBOBOX, &g_nJoyid[1],              DM_INT, &pGameOpts->joyid2,             0, 0, AssignJoyid2);
+	DataMapAdd(IDC_JOYID3,        DM_INT,  CT_COMBOBOX, &g_nJoyid[2],              DM_INT, &pGameOpts->joyid3,             0, 0, AssignJoyid3);
+	DataMapAdd(IDC_JOYID4,        DM_INT,  CT_COMBOBOX, &g_nJoyid[3],              DM_INT, &pGameOpts->joyid4,             0, 0, AssignJoyid4);
+	DataMapAdd(IDC_JOYID5,        DM_INT,  CT_COMBOBOX, &g_nJoyid[4],              DM_INT, &pGameOpts->joyid5,             0, 0, AssignJoyid5);
+	DataMapAdd(IDC_JOYID6,        DM_INT,  CT_COMBOBOX, &g_nJoyid[5],              DM_INT, &pGameOpts->joyid6,             0, 0, AssignJoyid6);
+	DataMapAdd(IDC_JOYID7,        DM_INT,  CT_COMBOBOX, &g_nJoyid[6],              DM_INT, &pGameOpts->joyid7,             0, 0, AssignJoyid7);
+	DataMapAdd(IDC_JOYID8,        DM_INT,  CT_COMBOBOX, &g_nJoyid[7],              DM_INT, &pGameOpts->joyid8,             0, 0, AssignJoyid8);
 #endif /* JOYSTICK_ID */
 	/*Controller mapping*/
 	DataMapAdd(IDC_PADDLE,        DM_INT, CT_COMBOBOX,  &g_nPaddleIndex,           DM_STRING,&pGameOpts->paddle_device,    0, 0, AssignPaddle);
