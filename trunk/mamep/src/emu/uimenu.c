@@ -3004,7 +3004,7 @@ static void dip_switch_build_model(input_port_entry *entry, int item_is_selected
 		/* indicate the toggle exists in the switch */
 		dip_switch_model[model_index].total_dip_mask |= toggle_switch_mask;
 
-		/* if issolated bit is on, set the toggle on */
+		/* if isolated bit is on, set the toggle on */
 		if ((1 << value_mask_bit) & entry->default_value)
 			dip_switch_model[model_index].total_dip_settings |= toggle_switch_mask;
 

@@ -24,6 +24,10 @@ extern int utf8_main(int argc, char **argv);
 //  main
 //============================================================
 
+#ifndef IN_WINMAIN
+#undef main
+#endif
+
 #ifdef __GNUC__
 int main(int argc, char **a_argv)
 #else // !__GNUC__

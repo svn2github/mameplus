@@ -6,6 +6,8 @@
 #include "osd_so.h"
 
 #ifndef DONT_USE_DLL
+#undef main
+
 int main(int argc, char *argv[])
 {
 	return main_(argc, argv);

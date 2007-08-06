@@ -59,24 +59,18 @@ $(GUIOBJ)/ui.a: $(TMPOBJS)
 ifeq ($(MSVC_BUILD),)
     GUIOBJS += $(GUIOBJ)/m32main.o $(GUIOBJ)/ui.a
 
-    # add resource file
-    GUIOBJS += $(GUIOBJ)/mame32.res
 else
     OSDOBJS += $(GUIOBJ)/ui.a
 
     ifeq ($(NO_DLL),)
         GUIOBJS += $(GUIOBJ)/m32main.o
         OSDOBJS += $(GUIOBJ)/win32ui.o
-
-        # add resource file
-        GUIOBJS += $(GUIOBJ)/mame32.res
     else
         GUIOBJS += $(GUIOBJ)/m32main.o
-
-        # add resource file
-        GUIOBJS += $(GUIOBJ)/mame32.res
     endif
 endif
+
+GUIOBJS += $(GUIOBJ)/mame32.res
 
 
 

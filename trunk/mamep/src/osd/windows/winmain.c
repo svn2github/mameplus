@@ -238,6 +238,8 @@ static void winui_output_error(void *param, const char *format, va_list argptr)
 //============================================================
 //  utf8_main
 //============================================================
+#define IN_WINMAIN
+#undef main
 #define main main_
 #include "windows/main.c"
 #undef main
