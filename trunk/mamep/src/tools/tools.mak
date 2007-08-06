@@ -67,7 +67,7 @@ chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN)
 JEDUTILOBJS = \
 	$(TOOLSOBJ)/jedutil.o \
 
-jedutil$(EXE): $(JEDUTILOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+jedutil$(EXE): $(JEDUTILOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -80,7 +80,7 @@ jedutil$(EXE): $(JEDUTILOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 MAKEMETAOBJS = \
 	$(TOOLSOBJ)/makemeta.o \
 
-makemeta$(EXE): $(MAKEMETAOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+makemeta$(EXE): $(MAKEMETAOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -93,7 +93,7 @@ makemeta$(EXE): $(MAKEMETAOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 REGREPOBJS = \
 	$(TOOLSOBJ)/regrep.o \
 
-regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -106,7 +106,7 @@ regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 SRCCLEANOBJS = \
 	$(TOOLSOBJ)/srcclean.o \
 
-srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -119,6 +119,6 @@ srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 SRC2HTMLOBJS = \
 	$(TOOLSOBJ)/src2html.o \
 
-src2html$(EXE): $(SRC2HTMLOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
+src2html$(EXE): $(SRC2HTMLOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
