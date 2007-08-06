@@ -429,6 +429,8 @@ int mame_execute(void)
 
 		/* destroy the machine */
 		destroy_machine(machine);
+
+		Machine = NULL;
 	}
 
 	/* return an error */
