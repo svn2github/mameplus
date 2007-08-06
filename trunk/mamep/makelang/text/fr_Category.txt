@@ -4,7 +4,7 @@ Balle & Manette
 
 # 19
 Breakout
-Casse brique
+Casse Brique
 
 # 99
 Breakout *Mature*

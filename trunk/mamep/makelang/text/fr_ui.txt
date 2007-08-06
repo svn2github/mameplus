@@ -344,7 +344,7 @@ Sens Horaire Auto
 
 # osd/ui/mame32.rc: 775
 Auto restore and save (only if available)
-Restorer/Sauvegarder Auto (si disponible)
+Restorer/Sauvegarder Auto (si dispo)
 
 # osd/ui/mame32.rc: 596, 1138
 Automatic
@@ -1664,7 +1664,7 @@ Hist&oire
 
 # osd/ui/mame32.rc: 578
 Start out maximized
-Démarré en plein écran
+Démarrer en plein écran
 
 # osd/ui/layout.c: 121
 State
@@ -1916,7 +1916,7 @@ Par &Année
 
 # osd/ui/properties.c: 857
 %d x %d (H) %f Hz (%d colors)
-
+%d x %d (H) %f Hz (%d couleur)
 
 # osd/ui/properties.c: 850
 %d x %d (V) %f Hz (%d colors)
@@ -1932,26 +1932,26 @@ Par &Année
 
 # osd/ui/properties.c: 1084
 %s (%d player)
-
+%s (%d joueur)
 
 # osd/ui/properties.c: 1095
 %s (%d player, %d button)
-
+%s (%d joueur, %d bouton)
 
 # osd/ui/properties.c: 1093
 %s (%d player, %d buttons)
-
+%s (%d joueur, %d boutons)
 
 # osd/ui/properties.c: 1081
 %s (%d players)
-
+%s (%d joueurs)
 
 # osd/ui/properties.c: 1090
 %s (%d players, %d button)
-
+%s (%d players, %d button)
 
 # osd/ui/properties.c: 1087
-%s (%d players, %d buttons)
+%s (%d joueurs, %d boutons)
 
 
 # osd/ui/properties.c: 1222
@@ -1960,7 +1960,7 @@ Par &Année
 
 # osd/ui/mame32.rc: 146
 &Export Game List...
-
+&Exporter la liste de jeu...
 
 # osd/ui/mame32.rc: 88, 247, 260
 &Marquee
@@ -1968,7 +1968,7 @@ Par &Année
 
 # osd/ui/mame32.rc: 116
 &Menu Style
-
+Style du &Menu
 
 # osd/ui/mame32.rc: 404, 906, 931, 948, 1012, 1040
 &OK
@@ -1992,7 +1992,7 @@ Artwork
 
 # osd/ui/mame32.rc: 798
 Artwork options
-
+Options Artwork
 
 # osd/ui/mame32.rc: 1137
 Aspect ratio:
@@ -2052,7 +2052,7 @@ Cocktail
 
 # osd/ui/layout.c: 134
 Comment Files
-
+Commentaires des Fichiers
 
 # osd/ui/mame32.rc: 1131
 Configure for:
@@ -2152,7 +2152,7 @@ Emulation
 
 # osd/ui/mame32.rc: 668
 Enable Bilinear Filtering
-Activer Filtrage Bilinéaire
+Activer le Filtrage Bilinéaire
 
 # osd/ui/mame32.rc: 777
 Enable multithreading
@@ -2204,15 +2204,15 @@ Correction Gamma
 
 # osd/ui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
-
+Options Global du Driver\nOptions perso utilisés par tous les jeux %s
 
 # osd/ui/properties.c: 1207
 Global vector options\nCustom options used by all games in the Vector
-
+Options Global du Driver\nOptions perso utilisés par tous les jeux dans le Vecteur
 
 # osd/ui/mame32.rc: 121
 Gray
-
+Gris
 
 # osd/ui/mame32.rc: 1175
 Homebrew
@@ -2324,7 +2324,7 @@ Neogeo Decrypted
 
 # osd/ui/dialogs.c: 914
 No PCB Info available for this game.
-
+Aucune info PCB disponible pour ce jeu.
 
 # osd/ui/mame32.rc: 1182
 Non-CPU
@@ -2504,7 +2504,7 @@ Show game PCB information
 
 # osd/ui/mame32.rc: 1574
 Sort by number of plays
-
+Trier par le nombre de parties
 
 # osd/ui/properties.c: 442, 3492, 3497, 3500, 3751, 3754, 5056, 5078
 Standard
@@ -2556,19 +2556,19 @@ Use various icon for Not Working game
 
 # osd/ui/treeview.c: 1248
 Vector (H)
-
+Vecteur (H)
 
 # osd/ui/properties.c: 842
 Vector (H) %f Hz (%d colors)
-
+Vecteur (H) %f Hz (%d couleurs)
 
 # osd/ui/treeview.c: 1246
 Vector (V)
-
+Vecteur (V)
 
 # osd/ui/properties.c: 837
 Vector (V) %f Hz (%d colors)
-
+Vecteur (V) %f Hz (%d couleurs)
 
 # osd/ui/treeview.c: 1014
 Vertical

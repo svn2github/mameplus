@@ -1360,7 +1360,7 @@ HazeMD
 
 # 9452
 Neogeo decrypted
-
+Neogeo décrypté
 
 # 9448
 Non-CPU
@@ -1376,5 +1376,5 @@ Version
 
 # 9432
 home-brew
-
+Création Maison
 

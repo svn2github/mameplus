@@ -4072,7 +4072,7 @@ MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\ns
 
 # emu/datafile.c: 1509
 MAMEInfo:\n
-
+MAMEInfo :\n
 
 # mame/layout/nbmj8688.lay: 21
 Main Screen Pixel Aspect (%d:%d)
@@ -5756,9 +5756,9 @@ use transparent background for UI text
 
 # emu/emuopts.c: 203
 window background color
-
+Couleur Arrière Plan de la fenêtre
 
 # emu/clifront.c: 96
 year, manufacturer and full name
-
+année, développeur et nom complet
 
