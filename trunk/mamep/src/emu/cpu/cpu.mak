@@ -1017,7 +1017,7 @@ $(CPUOBJ)/m68000/%.o: $(CPUOBJ)/m68000/%.c
 	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUSRC)/m68000 -I$(CPUSRC) -c $< -o $@
 
 # rule to link the generator
-$(CPUOBJ)/m68000/%$(EXE): $(CPUOBJ)/m68000/%.o $(OSDMAIN)
+$(CPUOBJ)/m68000/%$(EXE): $(CPUOBJ)/m68000/%.o $(OSDMAIN) $(LIBOCORE)
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
 
 # rule to generate the C files
@@ -1030,8 +1030,8 @@ $(CPUOBJ)/m68000/d68kops.c: $(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUSRC)/m68000/d68
 	$(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/d68k_in.c
 
 # rule to build the generator
-$(CPUOBJ)/m68000/m68kmake$(EXE): $(CPUOBJ)/m68000/m68kmake.o $(OSDMAIN) $(LIBOCORE)
-$(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o $(OSDMAIN) $(LIBOCORE)
+$(CPUOBJ)/m68000/m68kmake$(EXE): $(CPUOBJ)/m68000/m68kmake.o
+$(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o
 
 # rule to ensure we build the header before building the core CPU file
 $(CPUOBJ)/m68000/m68kcpu.o: $(CPUOBJ)/m68000/m68kops.c $(CPUSRC)/m68000/m68kfpu.c
@@ -1081,9 +1081,9 @@ endif
 # generate asm source files for the 68000/68020 emulators
 M68000ASM_GENERATED_STAMP = $(CPUOBJ)/m68000/asm68k_stamp
 
-$(M68000ASM_GENERATED_STAMP): $(CPUSRC)/m68000/make68k.c $(OSDMAIN) $(LIBOCORE)
-	@echo Compiling $<...
-	$(XCC) $(CDEFS) $(CFLAGS) $(CONSOLE_PROGRAM) -O0 -DDOS -o $(CPUOBJ)/m68000/make68k$(EXE) $< $(OSDMAIN) $(LIBOCORE)
+$(CPUOBJ)/m68000/make68k$(EXE): $(CPUOBJ)/m68000/make68k.o
+
+$(M68000ASM_GENERATED_STAMP): $(CPUOBJ)/m68000/make68k$(EXE)
 	@echo -n > $(M68000ASM_GENERATED_STAMP)
 
 $(CPUOBJ)/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
