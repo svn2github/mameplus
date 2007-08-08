@@ -1079,22 +1079,21 @@ endif
 endif
 
 # generate asm source files for the 68000/68020 emulators
-M68000ASM_GENERATED_STAMP = $(CPUOBJ)/m68000/asm68k_stamp
-
 $(CPUOBJ)/m68000/make68k$(EXE): $(CPUOBJ)/m68000/make68k.o
 
-$(M68000ASM_GENERATED_STAMP): $(CPUOBJ)/m68000/make68k$(EXE)
-	@echo -n > $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/make68k.o: $(CPUSRC)/m68000/make68k.c
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -O0 -DDOS -c $< -o $@
 
-$(CPUOBJ)/m68000/68000.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68000.asm: $(CPUOBJ)/m68000/make68k$(EXE)
 	@echo Generating $@...
 	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68000tab.asm 00 $(P6OPT)
 
-$(CPUOBJ)/m68000/68010.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68010.asm: $(CPUOBJ)/m68000/make68k$(EXE)
 	@echo Generating $@...
 	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68010tab.asm 10 $(P6OPT)
 
-$(CPUOBJ)/m68000/68020.asm: $(M68000ASM_GENERATED_STAMP)
+$(CPUOBJ)/m68000/68020.asm: $(CPUOBJ)/m68000/make68k$(EXE)
 	@echo Generating $@...
 	@$(CPUOBJ)/m68000/make68k$(EXE) $@ $(CPUOBJ)/m68000/68020tab.asm 20 $(P6OPT)
 
