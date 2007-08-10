@@ -1801,7 +1801,7 @@ static UINT32 menu_select_game(UINT32 state)
 	/* otherwise, add a general input configuration and exit menus */
 	else
 	{
-		item_list[menu_items++].text = "Configure General Inputs";
+		item_list[menu_items++].text = _("Configure General Inputs");
 		item_list[menu_items++].text = ui_getstring(UI_exit);
 	}
 

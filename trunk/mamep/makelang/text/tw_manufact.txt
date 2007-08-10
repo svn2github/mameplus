@@ -130,6 +130,10 @@ Aiky
 Alba
 
 
+# Imola Grand Prix
+Alberici
+
+
 # Delta Race
 Allied Leisure
 
@@ -164,6 +168,10 @@ Amenip Nova Games Ltd.
 
 # AmeriDarts (set 1)
 Ameri
+
+
+# King Pin
+American Communication Laboratories Inc.
 
 
 # American Laser Games BIOS
@@ -1178,10 +1186,6 @@ LAI Games
 LAX
 
 
-# Monza GP
-Leante Games
-
-
 # Space War (Leijac Corporation)
 Leijac Corporation
 
@@ -1684,6 +1688,10 @@ Ryoto Electric Co.
 
 # Go 2000
 SA
+
+
+# Astron Belt
+SEGA
 
 
 # Trivia (sms)

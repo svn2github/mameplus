@@ -975,11 +975,11 @@ Enable mouse input
 启用鼠标输入
 
 # osd/ui/mame32.rc: 730
-Enable multi-keyboard
+Enable multiple keyboards
 启用多键盘支持
 
 # osd/ui/mame32.rc: 728
-Enable multi-mouse
+multiple mice
 启用多鼠标支持
 
 # osd/ui/mame32.rc: 776

@@ -725,9 +725,9 @@ BEGIN
                     HIDC_JOYSTICK
     CONTROL         "Enable mouse input",IDC_USE_MOUSE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,126,10,0,HIDC_USE_MOUSE
-    CONTROL         "Enable multi-mouse",IDC_MULTIMOUSE ,"Button",
+    CONTROL         "Enable multiple mice",IDC_MULTIMOUSE ,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,73,126,10
-    CONTROL         "Enable multi-keyboard",IDC_MULTIKEYBOARD,"Button",
+    CONTROL         "Enable multiple keyboards",IDC_MULTIKEYBOARD,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,87,126,10
     CONTROL         "Enable steadykey support",IDC_STEADYKEY,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,101,126,10,0,HIDC_STEADYKEY

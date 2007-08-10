@@ -461,6 +461,7 @@ static struct ComboBoxDevices
 	{ TEXT("Mouse"),                 "mouse"     },
 	{ TEXT("Joystick"),              "joystick"  },
 	{ TEXT("Lightgun"),              "lightgun"  },
+	{ TEXT("None"),                  "none"  },
 };
 
 #define NUMDEVICES ARRAY_LENGTH(g_ComboBoxDevice)
@@ -2981,10 +2982,10 @@ static void SetPropEnabledControls(HWND hWnd)
 /*
 	//Switchres and D3D or ddraw enable the per screen parameters
 
-	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),                 (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),             (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),               (ddraw || d3d) && multimon);
-	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),           (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),            (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),        (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),          (ddraw || d3d) && multimon);
+	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),      (ddraw || d3d) && multimon);
 */
 #ifdef TRANS_UI
 	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
@@ -3051,6 +3052,10 @@ static void SetPropEnabledControls(HWND hWnd)
 	}
 #endif /* JOYSTICK_ID */
 
+	/* Mouse options */
+	useart = Button_GetCheck(GetDlgItem(hWnd, IDC_USE_MOUSE));
+	EnableWindow(GetDlgItem(hWnd, IDC_MULTIMOUSE),             useart);
+
 	/* Trackball / Mouse options */
 	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
 	{
@@ -3088,7 +3093,7 @@ static void SetPropEnabledControls(HWND hWnd)
 			use_lightgun = Button_GetCheck(GetDlgItem(hWnd,IDC_LIGHTGUN));
 			mouse = Button_GetCheck(GetDlgItem(hWnd,IDC_USE_MOUSE));
 			Button_Enable(GetDlgItem(hWnd,IDC_LIGHTGUN), !mouse);
-			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun && !mouse);
+			Button_Enable(GetDlgItem(hWnd,IDC_DUAL_LIGHTGUN),use_lightgun || mouse);
 			Button_Enable(GetDlgItem(hWnd,IDC_RELOAD),use_lightgun || mouse);
 		}
 		else
