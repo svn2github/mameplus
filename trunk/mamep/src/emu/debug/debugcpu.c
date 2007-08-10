@@ -1592,7 +1592,7 @@ static void check_hotspots(int cpunum, int spacenum, offs_t address)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-UINT8 debug_read_byte(int spacenum, offs_t address)
+UINT8 debug_read_byte(int spacenum, offs_t address, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 	UINT64 custom;
@@ -1605,7 +1605,7 @@ UINT8 debug_read_byte(int spacenum, offs_t address)
 	memory_set_debugger_access(1);
 
 	/* translate if necessary; if not mapped, return 0xff */
-	if (info->translate && !(*info->translate)(spacenum, &address))
+	if (apply_translation && info->translate != NULL && !(*info->translate)(spacenum, &address))
 		result = 0xff;
 
 	/* if there is a custom read handler, and it returns TRUE, use that value */
@@ -1627,7 +1627,7 @@ UINT8 debug_read_byte(int spacenum, offs_t address)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-UINT16 debug_read_word(int spacenum, offs_t address)
+UINT16 debug_read_word(int spacenum, offs_t address, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 	UINT64 custom;
@@ -1639,8 +1639,8 @@ UINT16 debug_read_word(int spacenum, offs_t address)
 	/* if this is misaligned read, or if there are no word readers, just read two bytes */
 	if ((address & 1) || !active_address_space[spacenum].accessors->read_word)
 	{
-		UINT8 byte0 = debug_read_byte(spacenum, address + 0);
-		UINT8 byte1 = debug_read_byte(spacenum, address + 1);
+		UINT8 byte0 = debug_read_byte(spacenum, address + 0, apply_translation);
+		UINT8 byte1 = debug_read_byte(spacenum, address + 1, apply_translation);
 
 		/* based on the endianness, the result is assembled differently */
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
@@ -1656,7 +1656,7 @@ UINT16 debug_read_word(int spacenum, offs_t address)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, return 0xffff */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate != NULL && !(*info->translate)(spacenum, &address))
 			result = 0xffff;
 
 		/* if there is a custom read handler, and it returns TRUE, use that value */
@@ -1680,7 +1680,7 @@ UINT16 debug_read_word(int spacenum, offs_t address)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-UINT32 debug_read_dword(int spacenum, offs_t address)
+UINT32 debug_read_dword(int spacenum, offs_t address, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 	UINT64 custom;
@@ -1692,8 +1692,8 @@ UINT32 debug_read_dword(int spacenum, offs_t address)
 	/* if this is misaligned read, or if there are no dword readers, just read two words */
 	if ((address & 3) || !active_address_space[spacenum].accessors->read_dword)
 	{
-		UINT16 word0 = debug_read_word(spacenum, address + 0);
-		UINT16 word1 = debug_read_word(spacenum, address + 2);
+		UINT16 word0 = debug_read_word(spacenum, address + 0, apply_translation);
+		UINT16 word1 = debug_read_word(spacenum, address + 2, apply_translation);
 
 		/* based on the endianness, the result is assembled differently */
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
@@ -1709,7 +1709,7 @@ UINT32 debug_read_dword(int spacenum, offs_t address)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, return 0xffffffff */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate != NULL && !(*info->translate)(spacenum, &address))
 			result = 0xffffffff;
 
 		/* if there is a custom read handler, and it returns TRUE, use that value */
@@ -1733,7 +1733,7 @@ UINT32 debug_read_dword(int spacenum, offs_t address)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-UINT64 debug_read_qword(int spacenum, offs_t address)
+UINT64 debug_read_qword(int spacenum, offs_t address, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 	UINT64 custom;
@@ -1745,8 +1745,8 @@ UINT64 debug_read_qword(int spacenum, offs_t address)
 	/* if this is misaligned read, or if there are no qword readers, just read two dwords */
 	if ((address & 7) || !active_address_space[spacenum].accessors->read_qword)
 	{
-		UINT32 dword0 = debug_read_dword(spacenum, address + 0);
-		UINT32 dword1 = debug_read_dword(spacenum, address + 4);
+		UINT32 dword0 = debug_read_dword(spacenum, address + 0, apply_translation);
+		UINT32 dword1 = debug_read_dword(spacenum, address + 4, apply_translation);
 
 		/* based on the endianness, the result is assembled differently */
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
@@ -1762,7 +1762,7 @@ UINT64 debug_read_qword(int spacenum, offs_t address)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, return 0xffffffffffffffff */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate != NULL && !(*info->translate)(spacenum, &address))
 			result = ~(UINT64)0;
 
 		/* if there is a custom read handler, and it returns TRUE, use that value */
@@ -1786,7 +1786,7 @@ UINT64 debug_read_qword(int spacenum, offs_t address)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-void debug_write_byte(int spacenum, offs_t address, UINT8 data)
+void debug_write_byte(int spacenum, offs_t address, UINT8 data, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 
@@ -1797,7 +1797,7 @@ void debug_write_byte(int spacenum, offs_t address, UINT8 data)
 	memory_set_debugger_access(1);
 
 	/* translate if necessary; if not mapped, we're done */
-	if (info->translate && !(*info->translate)(spacenum, &address))
+	if (apply_translation && info->translate != NULL && !(*info->translate)(spacenum, &address))
 		;
 
 	/* if there is a custom write handler, and it returns TRUE, use that */
@@ -1819,7 +1819,7 @@ void debug_write_byte(int spacenum, offs_t address, UINT8 data)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-void debug_write_word(int spacenum, offs_t address, UINT16 data)
+void debug_write_word(int spacenum, offs_t address, UINT16 data, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 
@@ -1831,13 +1831,13 @@ void debug_write_word(int spacenum, offs_t address, UINT16 data)
 	{
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
 		{
-			debug_write_byte(spacenum, address + 0, data >> 0);
-			debug_write_byte(spacenum, address + 1, data >> 8);
+			debug_write_byte(spacenum, address + 0, data >> 0, apply_translation);
+			debug_write_byte(spacenum, address + 1, data >> 8, apply_translation);
 		}
 		else
 		{
-			debug_write_byte(spacenum, address + 0, data >> 8);
-			debug_write_byte(spacenum, address + 1, data >> 0);
+			debug_write_byte(spacenum, address + 0, data >> 8, apply_translation);
+			debug_write_byte(spacenum, address + 1, data >> 0, apply_translation);
 		}
 	}
 
@@ -1848,7 +1848,7 @@ void debug_write_word(int spacenum, offs_t address, UINT16 data)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, we're done */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate && !(*info->translate)(spacenum, &address))
 			;
 
 		/* if there is a custom write handler, and it returns TRUE, use that */
@@ -1871,7 +1871,7 @@ void debug_write_word(int spacenum, offs_t address, UINT16 data)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-void debug_write_dword(int spacenum, offs_t address, UINT32 data)
+void debug_write_dword(int spacenum, offs_t address, UINT32 data, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 
@@ -1883,13 +1883,13 @@ void debug_write_dword(int spacenum, offs_t address, UINT32 data)
 	{
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
 		{
-			debug_write_word(spacenum, address + 0, data >> 0);
-			debug_write_word(spacenum, address + 2, data >> 16);
+			debug_write_word(spacenum, address + 0, data >> 0, apply_translation);
+			debug_write_word(spacenum, address + 2, data >> 16, apply_translation);
 		}
 		else
 		{
-			debug_write_word(spacenum, address + 0, data >> 16);
-			debug_write_word(spacenum, address + 2, data >> 0);
+			debug_write_word(spacenum, address + 0, data >> 16, apply_translation);
+			debug_write_word(spacenum, address + 2, data >> 0, apply_translation);
 		}
 	}
 
@@ -1900,7 +1900,7 @@ void debug_write_dword(int spacenum, offs_t address, UINT32 data)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, we're done */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate && !(*info->translate)(spacenum, &address))
 			;
 
 		/* if there is a custom write handler, and it returns TRUE, use that */
@@ -1923,7 +1923,7 @@ void debug_write_dword(int spacenum, offs_t address, UINT32 data)
     current cpu in the specified memory space
 -------------------------------------------------*/
 
-void debug_write_qword(int spacenum, offs_t address, UINT64 data)
+void debug_write_qword(int spacenum, offs_t address, UINT64 data, int apply_translation)
 {
 	const debug_cpu_info *info = &debug_cpuinfo[cpu_getactivecpu()];
 
@@ -1935,13 +1935,13 @@ void debug_write_qword(int spacenum, offs_t address, UINT64 data)
 	{
 		if (debug_cpuinfo[cpu_getactivecpu()].endianness == CPU_IS_LE)
 		{
-			debug_write_dword(spacenum, address + 0, data >> 0);
-			debug_write_dword(spacenum, address + 4, data >> 32);
+			debug_write_dword(spacenum, address + 0, data >> 0, apply_translation);
+			debug_write_dword(spacenum, address + 4, data >> 32, apply_translation);
 		}
 		else
 		{
-			debug_write_dword(spacenum, address + 0, data >> 32);
-			debug_write_dword(spacenum, address + 4, data >> 0);
+			debug_write_dword(spacenum, address + 0, data >> 32, apply_translation);
+			debug_write_dword(spacenum, address + 4, data >> 0, apply_translation);
 		}
 	}
 	/* otherwise, this proceeds like the byte case */
@@ -1951,7 +1951,7 @@ void debug_write_qword(int spacenum, offs_t address, UINT64 data)
 		memory_set_debugger_access(1);
 
 		/* translate if necessary; if not mapped, we're done */
-		if (info->translate && !(*info->translate)(spacenum, &address))
+		if (apply_translation && info->translate && !(*info->translate)(spacenum, &address))
 			;
 
 		/* if there is a custom write handler, and it returns TRUE, use that */
@@ -2107,10 +2107,10 @@ UINT64 external_read_memory(int space, UINT32 offset, int size)
 	offset = ADDR2BYTE(offset, info, space);
 	switch (size)
 	{
-		case 1:		return debug_read_byte(space, offset);
-		case 2:		return debug_read_word(space, offset);
-		case 4:		return debug_read_dword(space, offset);
-		case 8:		return debug_read_qword(space, offset);
+		case 1:		return debug_read_byte(space, offset, TRUE);
+		case 2:		return debug_read_word(space, offset, TRUE);
+		case 4:		return debug_read_dword(space, offset, TRUE);
+		case 8:		return debug_read_qword(space, offset, TRUE);
 	}
 	return ~0;
 }
@@ -2131,10 +2131,10 @@ void external_write_memory(int space, UINT32 offset, int size, UINT64 value)
 	offset = ADDR2BYTE(offset, info, space);
 	switch (size)
 	{
-		case 1:		debug_write_byte(space, offset, value); break;
-		case 2:		debug_write_word(space, offset, value); break;
-		case 4:		debug_write_dword(space, offset, value); break;
-		case 8:		debug_write_qword(space, offset, value); break;
+		case 1:		debug_write_byte(space, offset, value, TRUE); break;
+		case 2:		debug_write_word(space, offset, value, TRUE); break;
+		case 4:		debug_write_dword(space, offset, value, TRUE); break;
+		case 8:		debug_write_qword(space, offset, value, TRUE); break;
 	}
 }
 
