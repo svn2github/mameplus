@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.117u3      #
+#     Mameinfo.dat日本語版 v0.118u1      #
 #                                        #
-#             August 4, 2007             #
+#            August 11, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,112 +12,222 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：861 翻訳済：840
-# 追加項目：342 合計：1203
+# Tester報告：844 翻訳済：818
+# 追加項目：342 合計：1186
 #
 
 
-$info=stonebal
+$info=mappy
 $mame
 [バグ]
 
-- グラフィックが右に25ピクセルずれて表示される。 stonebal0117u2gre, Jan Tleskac / Tafoid
-
-$end
-
-$info=bosco
-$mame
-[バグ]
-
-- 基地や機雷を破壊して爆発音が鳴っている間、ショット音が少し変になる。実機では起こらない。 bosco0117u1gre, Gyrovision / nostos
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
 
 
-- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet / Tafoid
+- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
 
 
 [TIPS]
 
 - 隠しメッセージ：
 
-1) サービスモードに入る(F2キー)
+1) サービスモードに入る(F2)
 
-2) ボタン1を押しながら、上x5 右x6、下x1、左x4を押す
+2) 左キーを押し続け全部グリッド表示にする
 
-$end
+3) サービスキー(9キー)を3回押す
 
-$info=lethalj
-$mame
-[バグ]
-
-- 照準の位置と実際に撃つ場所がずれている。 lethalj0117u1gra, twisty
-
-$end
-
-$info=mpatrol
-$mame
-[情報]
-
-- F2キーを押しながらリセットでテストモードになる。
-RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
+4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
 
 
-[バグ]
+- 隠しメッセージ2：
 
-- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
+1) 3回目のボーナス面まで進む
+
+2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
+
+ボーナス合計画面にコピーライトが追加される
 
 $end
 
-$info=ms5pcb
+$info=grobda
 $mame
 [バグ]
 
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
-$info=svcpcb
-$mame
-[バグ]
-
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
-$info=kf2k3pcb
-$mame
-[バグ]
-
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
-$info=powerins
-$mame
-[バグ]
-
-- YM2203の音量が低すぎてほとんど聞こえない。 powerins0117u2ora, vidpro1 / AWJ
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
 
 
 [TIPS]
 
-- 拡張サービスモードの入り方：
+- 隠しメッセージ：
 
-1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
+1) サービスモードに入る(F2)
 
-2) 2Pボタン3+2PスタートかF2キーを押す
+2) DIPスイッチで以下のように設定する
 
-(from オン氏)
+   Coin A: 1 Coin / 1 Credit
+
+   Coin B: 1 Coin / 4 Credits
+
+   Freese: On
+
+   Lives: 1
+
+   Difficulty: Rank C
+
+   Demo Sounds: Off
+
+   Level Select: Off
+
+   Bonus Life: 10k
+
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 右＋ボタン1＋2Pスタートを同時に押す
+
+抜けるには1Pスタートと9キー
 
 $end
 
-$info=shadfrcj
+$info=superpac
 $mame
 [バグ]
 
-- 画面の上部に点滅する矢印のようなものが現われる。 shadfrcj0117u3gre, sjyune / Tafoid
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
 
 
-- ゲームを開始するとすぐにエンディングが始まる。 shadfrcj0117u3yel, sjyune
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) ボタン1を押しながら→↓↓←←←←↑と入力する
+
+$end
+
+$info=digdug2
+$mame
+[バグ]
+
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+
+
+[TIPS]
+
+- 隠し画面(NewVerのみ)：
+
+1) サービスモードに入る(F2)
+
+2) Sound 1Bを選ぶ
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 下x2 右x1 左x2 下x2 左x3 上x2 を押す
+
+5) サービスキー(9キー)をもう一度押す
+
+$end
+
+$info=todruaga
+$mame
+[バグ]
+
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+
+
+- 最初のクレジット音が鳴らない。2つ目以降は大丈夫。 todruaga078u4gre, Fujix (Visitor)
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) Sound 19を鳴らす
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 上x4　下x1　左x6　2Pスタート を押す
+
+$end
+
+$info=pacnpal
+$mame
+[バグ]
+
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 左x1 右x9 下x5 上x6 を入力
+
+$end
+
+$info=phozon
+$mame
+[情報]
+
+- 34面（2周目のワールド9）をクリアするとゲームがクラッシュするが、正しい動作の模様。
+これ以降のデータが存在せず、DIP設定のレベルセレクトで35面を設定しても同様になる。
+
+
+- PROMが一つ不明。用途も同じく不明。
+
+
+[バグ]
+
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 上x4 右x1 下x1 左x2 を入力
+
+$end
+
+$info=motos
+$mame
+[バグ]
+
+- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) DIPスイッチを以下の設定にする
+
+   Coinage: 3 Coins / 1 Credit
+
+   Lives: 3
+
+   Difficulty: Rank A
+
+   Bonus Life: 10k 30k 50k
+
+   Demo Sounds: Off
+
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 右＋ボタン1＋2Pスタートを同時に押す
+
+抜けるには1Pスタートと9キー
 
 $end
 
@@ -231,6 +341,14 @@ $mame
 【更新】実機での確認結果。
 DIPスイッチ6でテストモードに入る。サウンド番号0Aを計ったところ、3.3秒くらいだった。
 MAMEでは3.8～3.9秒ほどなので、2倍までは速くないが、十分わかるくらいの違いがある。 arkanoidc059gre, ZeroKnightRaiden / dwidel / Kale
+
+$end
+
+$info=stonebal
+$mame
+[バグ]
+
+- グラフィックが右に25ピクセルずれて表示される。 stonebal0117u2gre, Jan Tleskac / Tafoid
 
 $end
 
@@ -1073,6 +1191,26 @@ $mame
 
 $end
 
+$info=bosco
+$mame
+[バグ]
+
+- 基地や機雷を破壊して爆発音が鳴っている間、ショット音が少し変になる。実機では起こらない。 bosco0117u1gre, Gyrovision / nostos
+
+
+- タイトル画面の左端に灰色部分が残る。 bosco080u1gre, Prophet / Tafoid
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2キー)
+
+2) ボタン1を押しながら、上x5 右x6、下x1、左x4を押す
+
+$end
+
 $info=xevious
 $mame
 [バグ]
@@ -1699,57 +1837,6 @@ $mame
 
 $end
 
-$info=mappy
-$mame
-[バグ]
-
-- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 左キーを押し続け全部グリッド表示にする
-
-3) サービスキー(9キー)を3回押す
-
-4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
-
-
-- 隠しメッセージ2：
-
-1) 3回目のボーナス面まで進む
-
-2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
-
-ボーナス合計画面にコピーライトが追加される
-
-$end
-
-$info=todruaga
-$mame
-[バグ]
-
-- 最初のクレジット音が鳴らない。2つ目以降は大丈夫。 todruaga078u4gre, Fujix (Visitor)
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) Sound 19を鳴らす
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 上x4　下x1　左x6　2Pスタート を押す
-
-$end
-
 $info=mario
 $mame
 [情報]
@@ -2250,6 +2337,20 @@ $mame
 
 $end
 
+$info=mpatrol
+$mame
+[情報]
+
+- F2キーを押しながらリセットでテストモードになる。
+RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
+
+
+[バグ]
+
+- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
+
+$end
+
 $info=metamrph
 $mame
 [バグ]
@@ -2457,6 +2558,30 @@ $mame
 [バグ]
 
 - ボイスがおかしくなっている。 twinbee0115u3gre, Kold666
+
+$end
+
+$info=ms5pcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
+
+$end
+
+$info=svcpcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
+
+$end
+
+$info=kf2k3pcb
+$mame
+[バグ]
+
+- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
 
 $end
 
@@ -2864,7 +2989,7 @@ $mame
 
 - 音楽のチャンネルの中に、しばらくするとずれ出すものがある。
 例えば、1面の真ん中あたりなど。
-親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg
+親版のraidenでは起きない。 raidena058gre, Jonemaan / RansAckeR / Stefan Lindberg / Kold666
 
 $end
 
@@ -3418,6 +3543,17 @@ $mame
 [バグ]
 
 - 実機と比較して、多くのスプライトが表示されていない。どの面でも赤いライバルが常に横で競っているがMAMEでは見あたらない。 sgladiat0102u5yel, Kold666
+
+$end
+
+$info=shadfrcj
+$mame
+[バグ]
+
+- 画面の上部に点滅する矢印のようなものが現われる。 shadfrcj0117u3gre, sjyune / Tafoid
+
+
+- ゲームを開始するとすぐにエンディングが始まる。 shadfrcj0117u3yel, sjyune
 
 $end
 
@@ -5127,6 +5263,25 @@ $mame
 
 $end
 
+$info=powerins
+$mame
+[バグ]
+
+- YM2203の音量が低すぎてほとんど聞こえない。 powerins0117u2ora, vidpro1 / AWJ
+
+
+[TIPS]
+
+- 拡張サービスモードの入り方：
+
+1) 1Pと2Pの全キーと1Pと2Pのスタートを押して起動(リセット)
+
+2) 2Pボタン3+2PスタートかF2キーを押す
+
+(from オン氏)
+
+$end
+
 $info=shangon3
 $mame
 [バグ]
@@ -5495,6 +5650,14 @@ $mame
 
 - 銃のリロードができない。最近、MAMEがバージョンアップするたびに、画面外の部分がどんどん小さくなっていて、ついにどこを撃ってもリロードできなくなった。
 チートを使うしかない。 le2085u2gra, Karasu
+
+$end
+
+$info=lethalj
+$mame
+[バグ]
+
+- 照準の位置と実際に撃つ場所がずれている。 lethalj0117u1gra, twisty
 
 $end
 
@@ -7785,27 +7948,6 @@ $mame
 
 $end
 
-$info=phozon
-$mame
-[情報]
-
-- 34面（2周目のワールド9）をクリアするとゲームがクラッシュするが、正しい動作の模様。
-これ以降のデータが存在せず、DIP設定のレベルセレクトで35面を設定しても同様になる。
-
-
-- PROMが一つ不明。用途も同じく不明。
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 上x4 右x1 下x1 左x2 を入力
-
-$end
-
 $info=pbballex
 $mame
 [情報]
@@ -8740,24 +8882,6 @@ $mame
 
 $end
 
-$info=digdug2
-$mame
-[TIPS]
-
-- 隠し画面(NewVerのみ)：
-
-1) サービスモードに入る(F2)
-
-2) Sound 1Bを選ぶ
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 下x2 右x1 左x2 下x2 左x3 上x2 を押す
-
-5) サービスキー(9キー)をもう一度押す
-
-$end
-
 $info=dkong
 $mame
 [TIPS]
@@ -8906,41 +9030,6 @@ $mame
 
 $end
 
-$info=grobda
-$mame
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) DIPスイッチで以下のように設定する
-
-   Coin A: 1 Coin / 1 Credit
-
-   Coin B: 1 Coin / 4 Credits
-
-   Freese: On
-
-   Lives: 1
-
-   Difficulty: Rank C
-
-   Demo Sounds: Off
-
-   Level Select: Off
-
-   Bonus Life: 10k
-
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 右＋ボタン1＋2Pスタートを同時に押す
-
-抜けるには1Pスタートと9キー
-
-$end
-
 $info=gunfront
 $mame
 [TIPS]
@@ -9086,35 +9175,6 @@ $mame
 
 $end
 
-$info=motos
-$mame
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) DIPスイッチを以下の設定にする
-
-   Coinage: 3 Coins / 1 Credit
-
-   Lives: 3
-
-   Difficulty: Rank A
-
-   Bonus Life: 10k 30k 50k
-
-   Demo Sounds: Off
-
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 右＋ボタン1＋2Pスタートを同時に押す
-
-抜けるには1Pスタートと9キー
-
-$end
-
 $info=mouja
 $mame
 [TIPS]
@@ -9168,18 +9228,6 @@ $mame
 [TIPS]
 
 - テストモードに入るには、コイン1(5キー)を押しながらリセット。
-
-$end
-
-$info=pacnpal
-$mame
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 左x1 右x9 下x5 上x6 を入力
 
 $end
 
@@ -9449,18 +9497,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
-
-$end
-
-$info=superpac
-$mame
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) ボタン1を押しながら→↓↓←←←←↑と入力する
 
 $end
 
