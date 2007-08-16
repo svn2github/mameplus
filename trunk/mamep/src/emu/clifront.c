@@ -47,11 +47,12 @@ struct _romident_status
 ***************************************************************************/
 
 static int execute_simple_commands(const char *exename);
-static int execute_commands(const char *exename);
+static int execute_commands(const char *exename, const game_driver *driver);
 #ifdef DRIVER_SWITCH
 void assign_drivers(void);
 #endif /* DRIVER_SWITCH */
 static void display_help(void);
+
 /* informational functions */
 static int info_verifyroms(const char *gamename);
 static int info_verifysamples(const char *gamename);
@@ -150,11 +151,8 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	core_filename_extract_base(gamename, options_get_string(mame_options(), OPTION_GAMENAME), TRUE);
 	driver = driver_get_name(astring_c(gamename));
 
-	/* parse any relevant INI files */
-	mame_parse_ini_files(mame_options(), driver);
-
 	/* execute any commands specified */
-	result = execute_commands(astring_c(exename));
+	result = execute_commands(astring_c(exename), driver);
 	if (result != -1)
 		goto error;
 
@@ -245,7 +243,7 @@ static int execute_simple_commands(const char *exename)
     commands
 -------------------------------------------------*/
 
-static int execute_commands(const char *exename)
+static int execute_commands(const char *exename, const game_driver *driver)
 {
 	static const struct
 	{
@@ -276,6 +274,9 @@ static int execute_commands(const char *exename)
 		file_error filerr;
 		mame_file *file;
 
+		/* parse any relevant INI files before proceeding */
+		mame_parse_ini_files(mame_options(), driver);
+
 		/* make the output filename */
 		filerr = mame_fopen(NULL, CONFIGNAME ".ini", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
 
@@ -295,6 +296,8 @@ static int execute_commands(const char *exename)
 	/* showconfig? */
 	if (options_get_bool(mame_options(), CLIOPTION_SHOWCONFIG))
 	{
+		/* parse any relevant INI files before proceeding */
+		mame_parse_ini_files(mame_options(), driver);
 		options_output_ini_stdfile(mame_options(), stdout);
 		return MAMERR_NONE;
 	}
@@ -304,6 +307,9 @@ static int execute_commands(const char *exename)
 		if (options_get_bool(mame_options(), info_commands[i].option))
 		{
 			const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
+
+			/* parse any relevant INI files before proceeding */
+			mame_parse_ini_files(mame_options(), driver);
 			return (*info_commands[i].function)((gamename[0] == 0) ? "*" : gamename);
 		}
 

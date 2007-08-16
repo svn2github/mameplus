@@ -1230,7 +1230,8 @@ const game_driver * const mamedrivers[] =
 	/* MCR1 */
 	DRIVER( solarfox )	/* (c) 1981 */
 	DRIVER( kick )		/* (c) 1981 */
-	DRIVER( kicka )		/* bootleg? */
+	DRIVER( kickman )	/* (c) 1981 */
+	DRIVER( kickc )		/* (c) 1981 */
 	/* MCR2 */
 	DRIVER( shollow )	/* (c) 1981 */
 	DRIVER( shollow2 )	/* (c) 1981 */
@@ -7542,16 +7543,18 @@ Other Sun games
 	DRIVER( bmcbowl )	/* (c) 1994 BMC */
 	DRIVER( pitboss )	/* (c) 1983 Merit */
 	DRIVER( casino5 )	/* (c) 1983 Merit */
-	DRIVER( trvwhzho )	/* (c) 1985 Merit */
-	DRIVER( trvwhzha )	/* (c) 1985 Merit */
-	DRIVER( trvwhzve )	/* (c) 1985 Merit */
-	DRIVER( trvwhzva )	/* (c) 1985 Merit */
-	DRIVER( trvwhzii )	/* (c) 1985 Merit */
-	DRIVER( trvwziii )	/* (c) 1985 Merit */
-	DRIVER( trvwhziv )	/* (c) 1985 Merit */
+	DRIVER( trvwzh )	/* (c) 1985 Merit */
+	DRIVER( trvwzha )	/* (c) 1985 Merit */
+	DRIVER( trvwzv )	/* (c) 1985 Merit */
+	DRIVER( trvwzva )	/* (c) 1985 Merit */
+	DRIVER( trvwz2 )	/* (c) 1985 Merit */
+	DRIVER( trvwz3h )	/* (c) 1985 Merit */
+	DRIVER( trvwz3v )	/* (c) 1985 Merit */
+	DRIVER( trvwz4 )	/* (c) 1985 Merit */
 	DRIVER( tictac )	/* (c) 1985 Merit */
 	DRIVER( phrcraze )	/* (c) 1986 Merit */
 	DRIVER( phrcrazs )	/* (c) 1986 Merit */
+	DRIVER( bigappg )	/* (c) 1986 Merit */
 	DRIVER( couple )	/* (c) 1988 Merit */
 	DRIVER( couplep )	/* (c) 1988 Merit */
 	DRIVER( couplei )	/* (c) 1988 Merit */
@@ -7672,6 +7675,7 @@ Other Sun games
 	DRIVER( pottnpkr )	/* Bootleg */
 	DRIVER( pottnpkb )	/* Bootleg */
 	DRIVER( gdrawpkr )	/* (c) 1981 Cal Omega / Casino Electronics Inc. */
+	DRIVER( elgrande )	/* (c) 1982 Tuni Electro Service / E.T. Marketing */
 	DRIVER( altair )	/* (c) 1981 Cidelsa */
 	DRIVER( destryer )	/* (c) 1981 Cidelsa */
 	DRIVER( destryea )	/* (c) 1981 Cidelsa */
@@ -7694,8 +7698,9 @@ Other Sun games
 	DRIVER( gstream )	/* (c) 2002, Oriental Soft Japan */
 	DRIVER( miniboy7 )	/* (c) 1983, Bonanza Enterprises */
 	DRIVER( 39in1 )		/* MAME based bootleg */
-	DRIVER( kingpin )	/* (c) 1983, American Communications Laboratories Inc. */
-	DRIVER( kingpinm )	/* (c) 1983, American Communications Laboratories Inc. */
+	DRIVER( kingpin )	/* (c) 1983 American Communications Laboratories Inc. */
+	DRIVER( kingpinm )	/* (c) 1983 American Communications Laboratories Inc. */
+	DRIVER( thayers )	/* (c) 1983 RDI Video Systems */
 
 #endif /* NEOCPSMAME */
 #endif	/* DRIVER_RECURSIVE */
