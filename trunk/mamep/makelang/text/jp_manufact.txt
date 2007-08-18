@@ -730,6 +730,10 @@ Acom
 Aiky
 
 
+# Imola Grand Prix
+Alberici
+
+
 # Delta Race
 Allied Leisure
 
@@ -752,6 +756,10 @@ Amenip Nova Games Ltd.
 
 # AmeriDarts (set 1)
 Ameri
+
+
+# King Pin
+American Communication Laboratories Inc.
 
 
 # American Laser Games BIOS
@@ -1526,10 +1534,6 @@ LAI Games
 LAX
 
 
-# Monza GP
-Leante Games
-
-
 # Space War (Leijac Corporation)
 Leijac Corporation
 
@@ -1870,6 +1874,10 @@ Psygnosis
 RACDYM
 
 
+# Thayer's Quest
+RDI Video Systems
+
+
 # Kyukyoku no Hito [BET] (Japan 880824)
 ROLLER TRON
 
@@ -1920,6 +1928,10 @@ Ryoto Electric Co.
 
 # Go 2000
 SA
+
+
+# Astron Belt
+SEGA
 
 
 # Trivia (sms)
@@ -2248,6 +2260,10 @@ Trimark
 
 # MTV Rock-N-Roll Trivia (Part 2)
 Triumph Software Inc.
+
+
+# El Grande - 5 Card Draw (New)
+Tuni Electro Service
 
 
 # Bubble 2000
