@@ -137,10 +137,10 @@ mooncrs2	ムーンクレスタ (海賊版 set 2)	むーんくれすた	Nichibutsu
 spcdrag	ムーンクレスタ / Space Dragon (海賊版 set 1)	むーんくれすた	bootleg
 spcdraga	ムーンクレスタ / Space Dragon (海賊版 set 2)	むーんくれすた	bootleg
 mooncrs3	ムーンクレスタ (海賊版 set 3)	むーんくれすた	bootleg
-fantazia	ムーンクレスタ / Fantazia	むーんくれすた	bootleg
+fantazia	ムーンクレスタ / Fantazia (海賊版?)	むーんくれすた	Subelectro
 moonqsr	ムーンクエーサー	むーんくえーさー	Nichibutsu
 mshuttle	ムーンシャトル / Moon Shuttle (USA版?)	むーんしゃとる	Nichibutsu
-mshuttlj	ムーンシャトル (日本版)	むーんしゃとる	Nichibutsu
+mshuttlj	ムーンシャトル (日本版 set 1)	むーんしゃとる	Nichibutsu
 mshutlj2	ムーンシャトル (日本版 set 2)	むーんしゃとる	Nichibutsu
 moonal2	ムーンエイリアン Part2	むーんえいりあん_2ぱーと2	Nichibutsu
 moonal2b	ムーンエイリアン Part2 (older ver)	むーんえいりあん_2ぱーと2	Nichibutsu
@@ -174,7 +174,7 @@ tazzmang	タズマニア (Galaxian Hardware)	たずまにあ	bootleg
 racknrol	ラック＋ロール	らっくぷらすろーる	Status (Shinkai License)
 hexpool	ヘックスプール (Shinkai)	へっくすぷーる	Shinkai
 hexpoola	ヘックスプール (Senko)	へっくすぷーる	Senko
-trvchlng	トリビアチャレンジ	とりびあ_2_ちゃれんじ	Joyland (Senko License)
+trvchlng	トリビアチャレンジ	とりびあちゃれんじ	Joyland (Senko License)
 luctoday	ラッキートゥデイ	らっきーとぅでい	Sigma
 chewing	チューイングガム	ちゅーいんぐがむ	unknown
 catacomb	カタコンベ	かたこんべ	MTM Games
@@ -486,9 +486,9 @@ popflame	ポップフレーマー (protected)	ぽっぷふれーまー	Jaleco
 popflama	ポップフレーマー (not protected)	ぽっぷふれーまー	Jaleco
 popflamb	ポップフレーマー (ハック?)	ぽっぷふれーまー	Jaleco
 popflamn	ポップフレーマー (Naughty Boy PCB) (海賊版)	ぽっぷふれーまー	Jaleco
-trvmstr	トリビアマスター (set 1)	とりびあ_2_ますたー	Enerdyne Technologies Inc.
-trvmstra	トリビアマスター (set 2)	とりびあ_2_ますたー	Enerdyne Technologies Inc.
-trvgns	トリビアジーニアス	とりびあ_2_じーにあす	Enerdyne Technologies Inc.
+trvmstr	トリビアマスター (set 1)	とりびあますたー	Enerdyne Technologies Inc.
+trvmstra	トリビアマスター (set 2)	とりびあますたー	Enerdyne Technologies Inc.
+trvgns	トリビアジーニアス	とりびあじーにあす	bootleg?
 geebee	ジービー	じーびー	Namco
 geebeeg	ジービー (Gremlin)	じーびー	[Namco] (Gremlin license)
 bombbee	ボムビー	ぼむびー	Namco
@@ -1087,8 +1087,9 @@ demndrgn	デーモンズ&ドラゴンズ (prototype)	でーもんずあんどどらごんず	Bally Midw
 profpac	プロフェッサーパックマン	ぷろふぇっさーぱっくまん	Bally Midway
 tenpindx	テンピンデラックス	てんぴんでらっくす	Bally Midway
 solarfox	ソーラーフォックス (upright)	そーらーふぉっくす	Bally Midway
-kick	キックマン (upright)	きっくまん	Midway
-kicka	キックマン (cocktail)	きっくまん	Midway
+kick	キック (upright)	きっく	Midway
+kickman	キック / Kickman (upright)	きっく	Midway
+kickc	キック (cocktail)	きっく	Midway
 shollow	サタンズホロウ (set 1)	さたんずほろう	Bally Midway
 shollow2	サタンズホロウ (set 2)	さたんずほろう	Bally Midway
 tron	トロン (set 1)	とろん	Bally Midway
@@ -1500,7 +1501,7 @@ cadashu	カダッシュ (USA版)	かだっしゅ	Taito America Corporation
 cadashi	カダッシュ (イタリア版)	かだっしゅ	Taito Corporation Japan
 cadashf	カダッシュ (フランス版)	かだっしゅ	Taito Corporation Japan
 galmedes	ガルメデス (日本版)	がるめです	Visco
-earthjkr	アースジョーカー (日本版)	あーすじょーかー	Visco
+earthjkr	アースジョーカー / U.N. Defense Force	あーすじょーかー	Visco
 eto	古今東西干支物語 -猫だって干支の仲間になりたかった (日本版)	ここんとうざいえとものがたり	Visco
 wgp	WGP -リアルレースフィーリング (USA版)	わーるどぐらんぷり_1	Taito America Corporation
 wgpj	WGP -リアルレースフィーリング (日本版)	わーるどぐらんぷり_1	Taito Corporation
@@ -3036,7 +3037,7 @@ shdance1	シャドーダンサー -影の舞 (set 1)	しゃどーだんさー	Sega
 ddcrew	D.D.クルー (海外版 set 4 3 players FD1094 317-0190)	でぃーでぃーくるー	Sega
 ddcrewu	D.D.クルー (USA版 set 3 4 players FD1094 317-0186)	でぃーでぃーくるー	Sega
 ddcrew2	D.D.クルー (海外版 set 2 2 players FD1094 317-0184)	でぃーでぃーくるー	Sega
-ddcrew1	D.D.クルー (海外版 set 1 4 players FD1094 317-?)	でぃーでぃーくるー	Sega
+ddcrew1	D.D.クルー (海外版 set 1 4 players FD1094 317-0187)	でぃーでぃーくるー	Sega
 ddcrewj	D.D.クルー (日本版 set 5 2 players FD1094 317-0182)	でぃーでぃーくるー	Sega
 cltchitr	クラッチヒッター (USA版 set 2 FD1094 317-0176)	くらっちひったー	Sega
 cltchtrj	クラッチヒッター (日本版 set 1 FD1094 317-0175)	くらっちひったー	Sega
@@ -3148,7 +3149,7 @@ f1lap	F1スーパーラップ	えふわん_2すーぱーらっぷ	Sega
 dbzvrvs	ドラゴンボールZ V.R.V.S.	どらごんぼーるぜっとぶいあーるばーさす	Sega / Banpresto
 darkedge	ダークエッジ (海外版)	だーくえっじ	Sega
 darkedgj	ダークエッジ (日本版)	だーくえっじ	Sega
-slipstrm	スリップストリーム	すりっぷすとりーむ	Capcom
+slipstrm	スリップストリーム (ブラジル版 950515)	すりっぷすとりーむ	Capcom
 orunners	アウトランナーズ (海外版)	あうとらん_2なーず	Sega
 orunneru	アウトランナーズ (USA版)	あうとらん_2なーず	Sega
 harddunk	ハードダンク (海外版)	はーどだんく	Sega
@@ -5976,6 +5977,7 @@ untoucha	アンタッチャブル (日本版)	あんたっちゃぶる	Dynax
 tontonb	東東 [BET] (日本版)	とんとん	Dynax
 hanamai	華の舞 (日本版)	はなのまい	Dynax
 majs101b	麻雀スタジオ101 [BET] (日本版)	まーじゃんすたじお101	Dynax
+mjapinky	麻雀アマンドピンキー [BET] (日本版)	まーじゃんあまんどぴんきー	Dynax
 hnkochou	華胡蝶 [BET] (日本版)	はなこちょう	Dynax
 mjderngr	マージャンデリンジャー (日本版)	まーじゃんでりんじゃー	Dynax
 hnoridur	華折鶴 (日本版)	はなおりづる	Dynax
@@ -6538,16 +6540,18 @@ cardline	カードライン	かーどらいん	Veltmeijer
 bmcbowl	滾球の星	こんきゅうのほし	BMC
 pitboss	ピットボス	ぴっとぼす_1	Merit
 casino5	カジノ5	かじのふぁいぶ	Merit
-trvwhzho	トリビア? ウィズ (horizontal question set 1)	とりびあ_2_うぃず_hq1	Merit
-trvwhzha	トリビア? ウィズ (horizontal question set 2)	とりびあ_2_うぃず_hq2	Merit
-trvwhzve	トリビア? ウィズ (vertical question set 1)	とりびあ_2_うぃず_vq1	Merit
-trvwhzva	トリビア? ウィズ (vertical question set 2)	とりびあ_2_うぃず_vq2	Merit
-trvwhzii	トリビア? ウィズ (edition 2)	とりびあ_2_うぃず_ed2	Merit
-trvwziii	トリビア? ウィズ (edition 3)	とりびあ_2_うぃず_ed3	Merit
-trvwhziv	トリビア? ウィズ (edition 4)	とりびあ_2_うぃず_ed4	Merit
+trvwzh	トリビア? ウィズ (horizontal - question set 1)	とりびあうぃず	Merit
+trvwzha	トリビア? ウィズ (horizontal - question set 2)	とりびあうぃず	Merit
+trvwzv	トリビア? ウィズ (vertical - question set 1)	とりびあうぃず	Merit
+trvwzva	トリビア? ウィズ (vertical - question set 2)	とりびあうぃず	Merit
+trvwz2	トリビア? ウィズ (edition 2)	とりびあうぃず	Merit
+trvwz3h	トリビア? ウィズ (edition 3 - horizontal)	とりびあうぃず	Merit
+trvwz3v	トリビア? ウィズ (edition 3 - vertical)	とりびあうぃず	Merit
+trvwz4	トリビア? ウィズ (edition 4)	とりびあうぃず	Merit
 tictac	チクタクトリビア	ちくたくとりびあ	Merit
 phrcraze	フレーズクレーズ	ふれーずくれーず	Merit
 phrcrazs	フレーズクレーズ (sex kit)	ふれーずくれーず	Merit
+bigappg	ビッグアップルゲームス?	びっぐあっぷるげーむす	Merit
 couple	ザ・カップルズ (set 1)	ざかっぷるず	Merit
 couplep	ザ・カップルズ (set 2)	ざかっぷるず	Merit
 couplei	ザ・カップルズ (set 3)	ざかっぷるず	Merit
@@ -6632,12 +6636,12 @@ magic10	マジックス10 (ver 16.55)	まじっくす_2_1てん	A.W.P. Games
 magic10a	マジックス10 (ver 16.45)	まじっくす_2_1てん	A.W.P. Games
 magic102	マジックス10 2 (ver 1.1)	まじっくす_2_2てんつー	ABM Games
 dwarfd	ドワーフスデン	どわーふすでん	Electro-Sport
-trvquest	トリビアクエスト	とりびあ_2_くえすと	Sunn / Techstar
+trvquest	トリビアクエスト	とりびあくえすと	Sunn / Techstar
 wheelfir	ホイールズ&ファイア	ほいーるずあんどふぁいあ	TCH
 littlerb	リトルロビン	りとるろびん	TCH
 tattack	タイムアタッカー	たいむあたっかー	Shonan
 mosaicf2	モザイク (F2 System)	もざいく	F2 System
-finalgdr	ファイナルゴドリ	ふぁいなるごどり	SemiCom
+finalgdr	ファイナルゴドリ (韓国版)	ふぁいなるごどり	SemiCom
 wyvernwg	ワイヴァーンウイングス	わいばーんういんぐす	SemiCom (Game Vision License)
 rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
@@ -6665,8 +6669,10 @@ goldnpkr	ゴールデンポーカーダブルアップ (big boy)	ごーるでんぽーかーだぶるあっぷ
 goldnpkb	ゴールデンポーカーダブルアップ (mini boy)	ごーるでんぽーかーだぶるあっぷ	Bonanza Enterprises, Ltd
 goldnpkc	ゴールデンポーカー (no double up)	ごーるでんぽーかー	Bootleg
 jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Bootleg in Coinmaster hardware
-pottnpkr	ジャックポッテンズポーカー	じゃっくぽってんずぽーかー	Unknown
+pottnpkr	ジャックポッテンズポーカー (海賊版 set 1)	じゃっくぽってんずぽーかー	Bootleg
+pottnpkb	ジャックポッテンズポーカー (海賊版 set 2)	じゃっくぽってんずぽーかー	Bootleg
 gdrawpkr	ゲーミングドローポーカー	げーみんぐどろーぽーかー	Cal Omega / Casino Electronics Inc.
+elgrande	エルグランド -5 Card Draw (new)	えるぐらんど	Tuni Electro Service / E.T. Marketing
 altair	アルタイル	あるたいる	Cidelsa
 destryer	デストロイヤー (Cidelsa set 1)	ですとろいやー	Cidelsa
 destryea	デストロイヤー (Cidelsa set 2)	ですとろいやー	Cidelsa
@@ -6691,6 +6697,7 @@ miniboy7	ミニボーイ7	みにぼーいせぶん	Bonanza Enterprises, Ltd
 39in1	39 in 1 MAME海賊版	さーてぃーないんいんわんめいむかいぞくばん	????
 kingpin	キングピン	きんぐぴん_1	American Communication Laboratories Inc.
 kingpinm	キングピンマルチゲーム	きんぐぴん_2_まるちげーむ	American Communication Laboratories Inc.
+thayers	セイヤーズクエスト	せいやーずくえすと	RDI Video Systems
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg

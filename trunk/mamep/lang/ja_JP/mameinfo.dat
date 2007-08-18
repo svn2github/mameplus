@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.118u1      #
 #                                        #
-#            August 11, 2007             #
+#            August 15, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：844 翻訳済：818
-# 追加項目：342 合計：1186
+# Tester報告：848 翻訳済：822
+# 追加項目：342 合計：1190
 #
 
 
@@ -228,6 +228,26 @@ $mame
 4) 右＋ボタン1＋2Pスタートを同時に押す
 
 抜けるには1Pスタートと9キー
+
+$end
+
+$info=psychic5
+$mame
+[バグ]
+
+- BGMの音程が低い。ソフトリセットすると直る。 psychic5_0118u1yel, klaxer / Tafoid / twisty
+
+
+- リセット直後のデモでは炎がアニメーションしていないが、
+その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
+
+$end
+
+$info=sspaceat
+$mame
+[バグ]
+
+- エラーが出て起動できない。 sspaceat0118u1red, Firewave
 
 $end
 
@@ -6717,15 +6737,6 @@ $mame
 [バグ]
 
 - 敵の音が低すぎる。 Mame0.35のときは正常だったが、0.36b6では異常に低い。 pleiads36b6yel, Dutch
-
-$end
-
-$info=psychic5
-$mame
-[バグ]
-
-- リセット直後のデモでは炎がアニメーションしていないが、
-その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
 
 $end
 
