@@ -142,6 +142,7 @@ static const translation_info windres_translate[] =
 {
 	{ 0,		"-D*",				"/D*" },
 	{ 0,		"-U*",				"/U*" },
+	{ 0,		"-I*",				"/I*" },
 	{ 0,		"--include-dir*",	"/I*" },
 	{ 0,		"-o*",				"/fo*" },
 	{ 0,		"-O*",				"" },

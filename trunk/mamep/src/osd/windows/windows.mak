@@ -58,13 +58,11 @@ OBJDIRS += $(WINOBJ)
 # configure the resource compiler
 #-------------------------------------------------
 
-ifeq ($(USE_XGCC),)
-    RC = @windres --use-temp-file
-else
-    RC = @i686-pc-mingw32-windres
-endif
-RCDEFS += -DNDEBUG -D_WIN32_IE=0x0400
-RCFLAGS += -O coff --include-dir src/osd
+RC = @windres --use-temp-file
+
+RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
+
+RCFLAGS = -O coff -I $(WINSRC) -I $(WINOBJ)
 
 
 
@@ -288,7 +286,7 @@ endif
 
 
 #-------------------------------------------------
-# Windows-specific objects
+# OSD Windows library
 #-------------------------------------------------
 
 OSDOBJS = \
@@ -406,9 +404,35 @@ endif
 
 
 #-------------------------------------------------
+# rule for making the verinfo tool
+#-------------------------------------------------
+
+VERINFO = $(WINOBJ)/verinfo$(EXE)
+
+$(VERINFO): $(WINOBJ)/verinfo.o $(VERSIONOBJ) $(OSDMAIN) $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+
+BUILD += $(VERINFO)
+
+
+
+#-------------------------------------------------
 # generic rule for the resource compiler
 #-------------------------------------------------
 
 $(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
+
+
+
+#-------------------------------------------------
+# rules for resource file
+#-------------------------------------------------
+
+$(WINOBJ)/mame.res: $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+
+$(WINOBJ)/mamevers.rc: $(VERINFO)
+	@echo Emitting $@...
+	@$(VERINFO) > $@

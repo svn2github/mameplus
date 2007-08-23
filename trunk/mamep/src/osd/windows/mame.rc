@@ -5,6 +5,11 @@
 //  Visit http://mamedev.org for licensing and usage restrictions.
 //
 
+#define NOWINRES
+#include "windows.h"
+#include "commctrl.h"
+#include "mamevers.rc"
+
 //1                       24      MOVEABLE PURE   "mame.man"
 
 //Microsoft Developer Studio generated resource script.
