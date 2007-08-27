@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.118u1      #
+#     Mameinfo.dat日本語版 v0.118u2      #
 #                                        #
-#            August 15, 2007             #
+#            August 21, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,44 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：848 翻訳済：822
-# 追加項目：342 合計：1190
+# Tester報告：852 翻訳済：828
+# 追加項目：342 合計：1194
 #
 
+
+$info=gijoe
+$mame
+[バグ]
+
+- 2面ボスを倒した直後にクラッシュする。 gijoe0118u2red, ponzicar / twisty
+
+
+- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+
+$end
+
+$info=qbert
+$mame
+[情報]
+
+- ハイスコアで名前を入力するには1または2キーを使う。
+
+
+- 「Auto Round Advance」のDIP設定をONにすると、
+1または2キーで面を飛ばすことができる。
+また、残機も無限になる。
+
+
+[バグ]
+
+- 方向キーの再配列が、斜めの入力しか受け付けない。 qbert0118u2gra, denzilla / Tafoid
+
+
+- coinop.orgの説明によると、
+鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
+Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
+
+$end
 
 $info=mappy
 $mame
@@ -231,15 +265,14 @@ $mame
 
 $end
 
-$info=psychic5
+$info=galaga88
 $mame
 [バグ]
 
-- BGMの音程が低い。ソフトリセットすると直る。 psychic5_0118u1yel, klaxer / Tafoid / twisty
+- 新UIからnamcos1.cのゲームを起動、一旦ESCキーで抜けてから、再度同じゲームを起動するとスプライトなどが表示されない。 namcos1_0118u2yel, Rogerr / Tafoid /twisty
 
 
-- リセット直後のデモでは炎がアニメーションしていないが、
-その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
+- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
 
 $end
 
@@ -248,6 +281,39 @@ $mame
 [バグ]
 
 - エラーが出て起動できない。 sspaceat0118u1red, Firewave
+
+$end
+
+$info=psychic5
+$mame
+[バグ]
+
+- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
+
+
+- リセット直後のデモでは炎がアニメーションしていないが、
+その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
+
+$end
+
+$info=oscar
+$mame
+[バグ]
+
+- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
+
+$end
+
+$info=valtric
+$mame
+[情報]
+
+- テストモードにするには、コイン2キー(6キー)を起動時に押す。
+
+
+[バグ]
+
+- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
 
 $end
 
@@ -1403,26 +1469,6 @@ $mame
 
 $end
 
-$info=qbert
-$mame
-[情報]
-
-- ハイスコアで名前を入力するには1または2キーを使う。
-
-
-- 「Auto Round Advance」のDIP設定をONにすると、
-1または2キーで面を飛ばすことができる。
-また、残機も無限になる。
-
-
-[バグ]
-
-- coinop.orgの説明によると、
-鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
-Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
-
-$end
-
 $info=qbertqub
 $mame
 [バグ]
@@ -2323,14 +2369,6 @@ $mame
 
 $end
 
-$info=mgakuen
-$mame
-[バグ]
-
-- 起動中に緑画面が表示されてMAMEがフリーズする。 mgakuen0106u1red, ra
-
-$end
-
 $info=mnight
 $mame
 [バグ]
@@ -2434,14 +2472,6 @@ $mame
 [バグ]
 
 - ペナルティーショット画面が逆さまになる。 faceoff0105u3yel, cpukett
-
-$end
-
-$info=galaga88
-$mame
-[バグ]
-
-- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
 
 $end
 
@@ -2549,14 +2579,6 @@ $mame
 [バグ]
 
 - 先日オリジナル筐体（オーストラリア版が無いとすれば海外版）を確認したところ、タイトル画面でもBGMが流れていた。 suzuka8h074u2gre, jonwil
-
-$end
-
-$info=starblad
-$mame
-[バグ]
-
-- 0.113から、F3でリセットするとMAMEがクラッシュする。 starblad0113u3red, Heihachi_73 / twisty
 
 $end
 
@@ -5097,7 +5119,9 @@ $info=beastrzb
 $mame
 [バグ]
 
-- ゲーム情報画面の後にクラッシュする。 beastrzb097u2red, Firewave / RansAckeR
+- ゲーム情報画面の後にクラッシュする。<br>
+<br>
+Haze氏情報：まだ68kコードがあるので、クラッシュする可能性がある。 beastrzb097u2red, Firewave / RansAckeR
 
 $end
 
@@ -5299,20 +5323,6 @@ $mame
 2) 2Pボタン3+2PスタートかF2キーを押す
 
 (from オン氏)
-
-$end
-
-$info=shangon3
-$mame
-[バグ]
-
-- shangon3セットのCPU2 ROMが違う模様。
-本来はshangonセットと同じ、epr10790、epr10791、epr10792、epr10793を使う。
-system16.com(http://www.system16.com/hardware.php?id=697)のマニュアル15
-ページに載っている。
-
-違うROMを使っているため、左カーブ手前で右矢印がでたり、ロードサインが間違っている。
-原因はCPU1のROMにはコースに配置されているオブジェクトデータがあり、CPU2のROMに実際のコースデータがあるため。 shangon3_0105u2ora, AWJ
 
 $end
 
@@ -5645,14 +5655,6 @@ $mame
 
 - キーボードでパドル操作する場合、右キーを押すとボールと同じX軸の位置にジャンプする。
 右キーを押しっぱなしにすれば、ボールが落ちることはない。 oigas0115gra, Tafoid
-
-$end
-
-$info=gijoe
-$mame
-[バグ]
-
-- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
 
 $end
 
@@ -8347,14 +8349,6 @@ $mame
 [情報]
 
 - このゲームはレーザーディスクゲーム。プレイは可能だが、もちろんレーザーディスクで再生される背景は表示されない。
-
-$end
-
-$info=valtric
-$mame
-[情報]
-
-- テストモードにするには、コイン2キー(6キー)を起動時に押す。
 
 $end
 

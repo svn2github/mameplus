@@ -1505,8 +1505,8 @@ earthjkr	アースジョーカー / U.N. Defense Force	あーすじょーかー	Visco
 eto	古今東西干支物語 -猫だって干支の仲間になりたかった (日本版)	ここんとうざいえとものがたり	Visco
 wgp	WGP -リアルレースフィーリング (USA版)	わーるどぐらんぷり_1	Taito America Corporation
 wgpj	WGP -リアルレースフィーリング (日本版)	わーるどぐらんぷり_1	Taito Corporation
-wgpjoy	WGP -リアルレースフィーリング (日本版 joystick ver set 1)	わーるどぐらんぷり_1	Taito Corporation
-wgpjoya	WGP -リアルレースフィーリング (日本版 joystick ver set 2)	わーるどぐらんぷり_1	Taito Corporation
+wgpjoy	WGP -リアルレースフィーリング (joystick ver 日本版 set 1)	わーるどぐらんぷり_1	Taito Corporation
+wgpjoya	WGP -リアルレースフィーリング (joystick ver 日本版 set 2)	わーるどぐらんぷり_1	Taito Corporation
 wgp2	WGP2 -リアルレースフィーリング (日本版)	わーるどぐらんぷり_2	Taito Corporation
 slapshot	スラップショット (日本版)	すらっぷしょっと	Taito Corporation
 opwolf3	オペレーションウルフ3 (海外版)	おぺれーしょんうるふ_3	Taito Corporation Japan
@@ -5308,6 +5308,7 @@ rdftu	ライデンファイターズ (USA版)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu (Fabt
 rdftau	ライデンファイターズ (オーストラリア版)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu
 rdftj	ライデンファイターズ (日本版 set 2)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu
 rdftdi	ライデンファイターズ (Dream Island Co. license)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu (Dream Island license)
+rdftit	ライデンファイターズ (イタリア版)	らいでん_4ふぁいたーず_1	Seibu Kaihatsu
 rdft2	ライデンファイターズ2 -オペレーション・ヘルダイヴ	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Tuning license)
 rdft2a	ライデンファイターズ2 -オペレーション・ヘルダイヴ (アジア版 Metrotainment license SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Metrotainment license)
 rdft2a2	ライデンファイターズ2 -オペレーション・ヘルダイヴ (アジア版 Dream Island license SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Dream Island license)
@@ -6070,6 +6071,7 @@ hfh	黄飛鴻	ふぁんふぇいほん	IGS
 tarzan	ターザン	たーざん	IGS
 dunhuang	敦煌	どんふぁん	Spirit
 iqblocka	IQブロック (set 2)	あいきゅーぶろっく	IGS
+iqblockf	IQブロック (set 3 フランス版?)	あいきゅーぶろっく	IGS
 tjsb	麻将 天将神兵	まーじゃんちゃんじゃんしぇんびん	IGS
 lhzb2	麻将 龍虎争霸2 (set 1)	まーじゃんろんふーぜんば_2	IGS
 lhzb2a	麻将 龍虎争霸2 (set 2)	まーじゃんろんふーぜんば_2	IGS
@@ -6698,6 +6700,7 @@ miniboy7	ミニボーイ7	みにぼーいせぶん	Bonanza Enterprises, Ltd
 kingpin	キングピン	きんぐぴん_1	American Communication Laboratories Inc.
 kingpinm	キングピンマルチゲーム	きんぐぴん_2_まるちげーむ	American Communication Laboratories Inc.
 thayers	セイヤーズクエスト	せいやーずくえすと	RDI Video Systems
+thayersa	セイヤーズクエスト (alt set)	せいやーずくえすと	RDI Video Systems
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
