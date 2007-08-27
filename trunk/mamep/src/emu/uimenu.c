@@ -436,12 +436,12 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 
 		/* if we're on the top line, display the up arrow */
 		if (linenum == 0 && top_line != 0)
-			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width, 0,
+			ui_draw_text_full(up_arrow, effective_left, line_y, effective_width,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* if we're on the bottom line, display the down arrow */
 		else if (linenum == visible_lines - 1 && itemnum != numitems - 1)
-			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width, 0,
+			ui_draw_text_full(down_arrow, effective_left, line_y, effective_width,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
  		/* if we're just a divider, draw a line */
@@ -450,7 +450,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 
 		/* if we don't have a subitem, just draw the string centered */
 		else if (item->subtext == NULL)
-			ui_draw_text_full(itemtext, effective_left, line_y, effective_width, 0,
+			ui_draw_text_full(itemtext, effective_left, line_y, effective_width,
 						JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 
 		/* otherwise, draw the item on the left and the subitem text on the right */
@@ -474,7 +474,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 			}
 
 			/* draw the left-side text */
-			ui_draw_text_full(itemtext, effective_left, line_y, effective_width, 0,
+			ui_draw_text_full(itemtext, effective_left, line_y, effective_width,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, &item_width, NULL);
 
 			/* give 2 spaces worth of padding */
@@ -489,7 +489,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 			}
 
 			/* draw the subitem right-justified */
-			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width, 0,
+			ui_draw_text_full(subitem_text, effective_left + item_width, line_y, effective_width - item_width,
 #ifdef UI_COLOR_DISPLAY
 						JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, fgcolor, bgcolor, &subitem_width, NULL);
 #else /* UI_COLOR_DISPLAY */
@@ -498,10 +498,10 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 
 			/* apply arrows */
 			if (itemnum == selected && (item->flags & MENU_FLAG_LEFT_ARROW))
-				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width, 0,
+				ui_draw_text_full(left_arrow, effective_left + effective_width - subitem_width - left_arrow_width, line_y, left_arrow_width,
 							JUSTIFY_LEFT, WRAP_NEVER, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (itemnum == selected && (item->flags & MENU_FLAG_RIGHT_ARROW))
-				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width, 0,
+				ui_draw_text_full(right_arrow, visible_left, line_y, visible_width,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 
@@ -509,10 +509,10 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 		/* draw the arrows for selected items */
 		if (itemnum == selected)
 		{
-			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width, 0,
+			ui_draw_text_full(left_hilight, visible_left, line_y, visible_width,
 						JUSTIFY_LEFT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 			if (!(item->flags & (MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW)))
-				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width, 0,
+				ui_draw_text_full(right_hilight, visible_left, line_y, visible_width,
 							JUSTIFY_RIGHT, WRAP_TRUNCATE, DRAW_NORMAL, itemfg, ARGB_BLACK, NULL, NULL);
 		}
 #endif /* !UI_COLOR_DISPLAY */
@@ -528,7 +528,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 		float target_x, target_y;
 
 		/* compute the multi-line target width/height */
-		ui_draw_text_full(item->subtext, 0, 0, visible_width * 0.75f, 0,
+		ui_draw_text_full(item->subtext, 0, 0, visible_width * 0.75f,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 
 		/* determine the target location */
@@ -542,7 +542,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 						target_y - UI_BOX_TB_BORDER,
 						target_x + target_width  + UI_BOX_LR_BORDER,
 						target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
-		ui_draw_text_full(item->subtext, target_x, target_y, target_width, 0,
+		ui_draw_text_full(item->subtext, target_x, target_y, target_width,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 
@@ -553,6 +553,18 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 	/* return the number of visible lines, minus 1 for top arrow and 1 for bottom arrow */
 	return visible_lines - (top_line != 0) - (top_line + visible_lines != numitems);
 }
+
+int ui_menu_draw_fixed_width(const ui_menu_item *items, int numitems, int selected, const menu_extra *extra)
+{
+	int mode_save = ui_draw_text_set_fixed_width_mode(TRUE);
+	int retval;
+
+	retval = ui_menu_draw(items, numitems, selected, extra);
+	ui_draw_text_set_fixed_width_mode(mode_save);
+
+	return retval;
+}
+
 
 
 /*-------------------------------------------------
@@ -571,7 +583,7 @@ void ui_menu_draw_text_box(const char *text)
 	float target_x, target_y;
 
 	/* compute the multi-line target width/height */
-	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER - 2.0f * gutter_width, 0,
+	ui_draw_text_full(text, 0, 0, 1.0f - 2.0f * UI_BOX_LR_BORDER - 2.0f * gutter_width,
 				JUSTIFY_LEFT, WRAP_WORD, DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &target_width, &target_height);
 	target_height += 2.0f * line_height;
 	if (target_height > 1.0f - 2.0f * UI_BOX_TB_BORDER)
@@ -600,7 +612,7 @@ void ui_menu_draw_text_box(const char *text)
 					 target_y - UI_BOX_TB_BORDER,
 					 target_x + target_width + gutter_width + UI_BOX_LR_BORDER,
 					 target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
-	ui_draw_text_full(text, target_x, target_y, target_width, 0,
+	ui_draw_text_full(text, target_x, target_y, target_width,
 				JUSTIFY_LEFT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 
 	/* draw the "return to prior menu" text with a hilight behind it */
@@ -611,7 +623,7 @@ void ui_menu_draw_text_box(const char *text)
 						sel_bgcolor,
 						hilight_texture,
 						PRIMFLAG_BLENDMODE(BLENDMODE_ALPHA) | PRIMFLAG_TEXWRAP(TRUE));
-	ui_draw_text_full(priortext, target_x, target_y + target_height - line_height, target_width, 0,
+	ui_draw_text_full(priortext, target_x, target_y + target_height - line_height, target_width,
 				JUSTIFY_CENTER, WRAP_TRUNCATE, DRAW_NORMAL, sel_fgcolor, sel_bgcolor, NULL, NULL);
 }
 
@@ -2170,6 +2182,7 @@ static UINT32 menu_documents(UINT32 state)
 			return ui_menu_stack_push(menu_command, 0);
 #endif /* CMD_LIST */
 
+		ui_draw_text_box_reset_scroll();
 		return ui_menu_stack_push(menu_document_contents, state << 24);
 	}
 
@@ -2334,7 +2347,7 @@ static UINT32 menu_command(UINT32 state)
 		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : ui_getstring(UI_returntoprior));
 
 		/* draw the menu */
-		visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
+		visible_items = ui_menu_draw_fixed_width(item_list, menu_items, selected, NULL);
 
 		/* handle generic menu keys */
 		if (ui_menu_generic_keys(&selected, menu_items, visible_items))
@@ -2353,7 +2366,10 @@ static UINT32 menu_command(UINT32 state)
 		if (input_ui_pressed(IPT_UI_SELECT))
 		{
 			if (selected < total)
+			{
+				ui_draw_text_box_reset_scroll();
 				return ui_menu_stack_push(menu_command_contents, (shortcut << 24) | selected);
+			}
 		}
 	}
 	else
@@ -3099,7 +3115,6 @@ static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_
 						segment_start_x - name_width,
 						dip_field_y + (DIP_SWITCH_HEIGHT - ui_font_height)/2,
 						name_width,
-						0,
 						JUSTIFY_LEFT,
 						WRAP_NEVER,
 						DRAW_NORMAL,
@@ -3243,7 +3258,7 @@ static void select_game_render(const menu_extra *extra, float origx1, float orig
 		sprintf(&tempbuf[0][0], _("Type name or select: (random)"));
 
 	/* get the size of the text */
-	ui_draw_text_full(&tempbuf[0][0], 0.0f, 0.0f, 1.0f, 0, JUSTIFY_CENTER, WRAP_TRUNCATE,
+	ui_draw_text_full(&tempbuf[0][0], 0.0f, 0.0f, 1.0f, JUSTIFY_CENTER, WRAP_TRUNCATE,
 					  DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &width, NULL);
 	width += 2 * UI_BOX_LR_BORDER;
 	maxwidth = MAX(width, origx2 - origx1);
@@ -3264,7 +3279,7 @@ static void select_game_render(const menu_extra *extra, float origx1, float orig
 	y2 -= UI_BOX_TB_BORDER;
 
 	/* draw the text within it */
-	ui_draw_text_full(&tempbuf[0][0], x1, y1, x2 - x1, 0, JUSTIFY_CENTER, WRAP_TRUNCATE,
+	ui_draw_text_full(&tempbuf[0][0], x1, y1, x2 - x1, JUSTIFY_CENTER, WRAP_TRUNCATE,
 					  DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	/* determine the text to render below */
 	driver = extra->param;
@@ -3332,7 +3347,7 @@ static void select_game_render(const menu_extra *extra, float origx1, float orig
 	maxwidth = origx2 - origx1;
 	for (line = 0; line < 4; line++)
 	{
-		ui_draw_text_full(&tempbuf[line][0], 0.0f, 0.0f, 1.0f, 0, JUSTIFY_CENTER, WRAP_TRUNCATE,
+		ui_draw_text_full(&tempbuf[line][0], 0.0f, 0.0f, 1.0f, JUSTIFY_CENTER, WRAP_TRUNCATE,
 						  DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &width, NULL);
 		width += 2 * UI_BOX_LR_BORDER;
 		maxwidth = MAX(maxwidth, width);
@@ -3359,7 +3374,7 @@ static void select_game_render(const menu_extra *extra, float origx1, float orig
 	/* draw all lines */
 	for (line = 0; line < 4; line++)
 	{
-		ui_draw_text_full(&tempbuf[line][0], x1, y1, x2 - x1, 0, JUSTIFY_CENTER, WRAP_TRUNCATE,
+		ui_draw_text_full(&tempbuf[line][0], x1, y1, x2 - x1, JUSTIFY_CENTER, WRAP_TRUNCATE,
 						  DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 		y1 += ui_get_line_height();
 	}

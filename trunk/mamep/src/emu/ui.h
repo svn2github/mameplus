@@ -126,11 +126,13 @@ void ui_draw_outlined_box(float x0, float y0, float x1, float y1, rgb_t backcolo
 void ui_draw_text(const char *buf, float x, float y);
 
 /* full-on text draw with all the options */
-void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int offset, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
+void ui_draw_text_full(const char *origs, float x, float y, float wrapwidth, int justify, int wrap, int draw, rgb_t fgcolor, rgb_t bgcolor, float *totalwidth, float *totalheight);
+int ui_draw_text_set_fixed_width_mode(int mode);
 
 /* draw a multi-line message with a box around it */
 void ui_draw_text_box(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
 void ui_draw_text_box_fixed_width(const char *text, int justify, float xpos, float ypos, rgb_t backcolor);
+void ui_draw_text_box_reset_scroll(void);
 
 /* display a temporary message at the bottom of the screen */
 void CLIB_DECL ui_popup_time(int seconds, const char *text, ...) ATTR_PRINTF(2,3);

@@ -511,7 +511,7 @@ float render_font_get_char_width(render_font *font, float height, float aspect, 
 	return (float)get_char(font, ch)->width * font->scale * height * aspect;
 }
 
-//mamep: to render as fixed with font
+//mamep: to render as fixed-width font
 float render_font_get_char_width_no_margin(render_font *font, float height, float aspect, unicode_char ch)
 {
 	return (float)(get_char(font, ch)->width - 1) * font->scale * height * aspect;

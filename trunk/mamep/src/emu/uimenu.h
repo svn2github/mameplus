@@ -64,6 +64,7 @@ void ui_menu_init(running_machine *machine);
 
 /* draw a menu, returning the number of visible items */
 int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const menu_extra *extra);
+int ui_menu_draw_fixed_width(const ui_menu_item *items, int numitems, int selected, const menu_extra *extra);
 
 /* master handler */
 UINT32 ui_menu_ui_handler(UINT32 state);
