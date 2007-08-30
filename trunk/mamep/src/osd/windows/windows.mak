@@ -191,6 +191,9 @@ CURPATH = ./
 # Windows-specific debug objects and flags
 #-------------------------------------------------
 
+# define the x64 ABI to be Windows
+DEFS += -DX64_WINDOWS_ABI
+
 # map all instances of "main" to "utf8_main"
 DEFS += -Dmain=utf8_main
 
@@ -393,11 +396,11 @@ $(LIBOSD): $(OSDOBJS)
 
 ledutil$(EXE): $(WINOBJ)/ledutil.o $(OSDMAIN) $(LIBOCORE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 TOOLS += ledutil$(EXE)
 
-# if we are not using x86drc.o, we should be
+# if we are not using x86drc.o, we should
 ifeq ($(X86_MIPS3_DRC),)
 COREOBJS += $(OBJ)/x86drc.o
 endif
@@ -409,9 +412,9 @@ endif
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
 
-$(VERINFO): $(WINOBJ)/verinfo.o $(VERSIONOBJ) $(OSDMAIN) $(LIBOCORE)
+$(VERINFO): $(WINOBJ)/verinfo.o $(OSDMAIN) $(LIBOCORE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
 BUILD += $(VERINFO)
 
@@ -431,8 +434,8 @@ $(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
 # rules for resource file
 #-------------------------------------------------
 
-$(WINOBJ)/mame.res: $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+$(RESFILE): $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
 
-$(WINOBJ)/mamevers.rc: $(VERINFO)
+$(WINOBJ)/mamevers.rc: $(VERINFO) $(SRC)\version.c
 	@echo Emitting $@...
-	@$(VERINFO) > $@
+	@$(VERINFO) $(SRC)\version.c > $@

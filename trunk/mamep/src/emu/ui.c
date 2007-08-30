@@ -302,7 +302,7 @@ INLINE int is_fullwidth_char(unicode_char uchar)
 	switch (uchar)
 	{
 	// Chars in Latin-1 Supplement
-	// font width is depend on your font
+	// font width depends on your font
 	case 0x00a7:
 	case 0x00a8:
 	case 0x00b0:
@@ -315,12 +315,12 @@ INLINE int is_fullwidth_char(unicode_char uchar)
 	}
 
 	// Greek and Coptic
-	// font width is depend on your font
+	// font width depends on your font
 	if (uchar >= 0x0370 && uchar <= 0x03ff)
 		return CHAR_WIDTH_UNKNOWN;
 
 	// Cyrillic
-	// font width is depend on your font
+	// font width depends on your font
 	if (uchar >= 0x0400 && uchar <= 0x04ff)
 		return CHAR_WIDTH_UNKNOWN;
 
