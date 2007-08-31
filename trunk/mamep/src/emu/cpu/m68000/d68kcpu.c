@@ -1392,6 +1392,8 @@ void m68kdrc_pulse_reset(void)
 		drconfig.cb_entrygen      = m68kdrc_entrygen;
 
 		m68kdrc_cpu.drc = drc_init(cpu_getactivecpu(), &drconfig);
+
+		drc_cache_reset(m68kdrc_cpu.drc);
 	}
 
 	m68k_pulse_reset();
