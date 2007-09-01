@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.118u2      #
+#     Mameinfo.dat日本語版 v0.118u3      #
 #                                        #
-#            August 21, 2007             #
+#            August 29, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,18 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：852 翻訳済：828
-# 追加項目：342 合計：1194
+# Tester報告：854 翻訳済：834
+# 追加項目：342 合計：1196
 #
 
+
+$info=kod
+$mame
+[バグ]
+
+- 実機では、エンディングの背景には戦闘シーンが少し化けて表示される。MAMEでは真っ黒のまま。 kod0118u2yel, cacis / Kold666
+
+$end
 
 $info=gijoe
 $mame
@@ -25,29 +33,6 @@ $mame
 
 
 - プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
-
-$end
-
-$info=qbert
-$mame
-[情報]
-
-- ハイスコアで名前を入力するには1または2キーを使う。
-
-
-- 「Auto Round Advance」のDIP設定をONにすると、
-1または2キーで面を飛ばすことができる。
-また、残機も無限になる。
-
-
-[バグ]
-
-- 方向キーの再配列が、斜めの入力しか受け付けない。 qbert0118u2gra, denzilla / Tafoid
-
-
-- coinop.orgの説明によると、
-鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
-Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
 
 $end
 
@@ -262,6 +247,14 @@ $mame
 4) 右＋ボタン1＋2Pスタートを同時に押す
 
 抜けるには1Pスタートと9キー
+
+$end
+
+$info=buckrog
+$mame
+[バグ]
+
+- 背景の星表示がズームせずに、完全にランダムな表示になる。 buckrog0118u2yel, AWJ / twisty
 
 $end
 
@@ -570,9 +563,6 @@ $end
 $info=topsecrt
 $mame
 [バグ]
-
-- 実機ではタイトルロゴの周り部分が少し明るく表示される。 topsecrt0109gre1, Kold666
-
 
 - 2面の終わり部分で、MAMEでは画面が真っ黒になるまで暗くなるが、実機では濃い青色で止まる。 topsecrt0109gre2, Kold666
 
@@ -1029,9 +1019,6 @@ $mame
 
 - テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
 
-
-- 起動時にテストキーを押してオプションリセットするとクラッシュする。 hoops96_0115u1red, Fujix
-
 $end
 
 $info=logicpro
@@ -1264,7 +1251,7 @@ $info=gogomile
 $mame
 [バグ]
 
-- コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk
+- コンティニュー画面でコインを入れることが出来ない。 gogomile0114u2gre, Justin Kerk / twisty
 
 $end
 
@@ -1466,6 +1453,26 @@ $mame
 [バグ]
 
 - 説明の女性の声が途切れる。以前は正しく動いていた。 gotcha067gre, The Lamb
+
+$end
+
+$info=qbert
+$mame
+[情報]
+
+- ハイスコアで名前を入力するには1または2キーを使う。
+
+
+- 「Auto Round Advance」のDIP設定をONにすると、
+1または2キーで面を飛ばすことができる。
+また、残機も無限になる。
+
+
+[バグ]
+
+- coinop.orgの説明によると、
+鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
+Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
 
 $end
 
@@ -4509,33 +4516,6 @@ $mame
 
 $end
 
-$info=arknoid2
-$mame
-[バグ]
-
-- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
-
-$end
-
-$info=tnzs
-$mame
-[バグ]
-
-- tnzsでは、青い背景が黒になっている。arknoid2は画面の上下部分やテキストが欠けている。 tnzc0107yel, solarsight / Twisty
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
 $info=outzone
 $mame
 [バグ]
@@ -6527,14 +6507,6 @@ $mame
 ● mk, mk2, mk3：game adjustments / standard pricing
 
 ● umk3：メインメニュー mk237b5gre, IF
-
-$end
-
-$info=smashtv
-$mame
-[バグ]
-
-- ときどきプレイフィールドに見えない壁が現われて、画面の端の方に行けなくなる。 smashtv0116u2gre, The_Pro
 
 $end
 
@@ -9526,6 +9498,20 @@ $mame
 $end
 
 $info=thundfox
+$mame
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=tnzs
 $mame
 [TIPS]
 

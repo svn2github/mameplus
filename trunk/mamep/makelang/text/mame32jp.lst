@@ -1265,6 +1265,7 @@ crossbld	クロスブレイズ (日本版)	くろすぶれいず	Irem
 lethalth	サンダーブラスター / Lethal Thunder (海外版)	さんだーぶらすたー	Irem
 thndblst	サンダーブラスター (日本版)	さんだーぶらすたー	Irem
 uccops	アンダーカバーコップス (海外版)	あんだーかばーこっぷす	Irem
+uccopsar	アンダーカバーコップス (Alpha Renewal ver)	あんだーかばーこっぷす	Irem
 uccopsj	アンダーカバーコップス (日本版)	あんだーかばーこっぷす	Irem
 mysticri	魔法警備隊ガンホーキ / Mystic Riders (海外版)	まほうけいびたいがんほーき	Irem
 gunhohki	魔法警備隊ガンホーキ (日本版)	まほうけいびたいがんほーき	Irem
@@ -2061,8 +2062,9 @@ willowje	ウィロー (日本版 英語)	うぃろー	Capcom
 unsquad	エリア88 / U.N. Squadron (USA版)	えりあえいてぃーえいと	Capcom
 area88	エリア88 (日本版)	えりあえいてぃーえいと	Capcom
 ffight	ファイナルファイト (海外版)	ふぁいなるふぁいと_1	Capcom
-ffightu	ファイナルファイト (USA版 900112)	ふぁいなるふぁいと_1	Capcom
-ffightua	ファイナルファイト (USA版 900613)	ふぁいなるふぁいと_1	Capcom
+ffightu	ファイナルファイト (USA版)	ふぁいなるふぁいと_1	Capcom
+ffightua	ファイナルファイト (USA版 900112)	ふぁいなるふぁいと_1	Capcom
+ffightub	ファイナルファイト (USA版 900613)	ふぁいなるふぁいと_1	Capcom
 ffightj	ファイナルファイト (日本版)	ふぁいなるふぁいと_1	Capcom
 ffightj1	ファイナルファイト (日本版 900305)	ふぁいなるふぁいと_1	Capcom
 1941	1941 -カウンターアタック (海外版)	いちきゅうよん_3いち	Capcom
@@ -6701,6 +6703,7 @@ kingpin	キングピン	きんぐぴん_1	American Communication Laboratories Inc.
 kingpinm	キングピンマルチゲーム	きんぐぴん_2_まるちげーむ	American Communication Laboratories Inc.
 thayers	セイヤーズクエスト	せいやーずくえすと	RDI Video Systems
 thayersa	セイヤーズクエスト (alt set)	せいやーずくえすと	RDI Video Systems
+istellar	インターステラー	いんたーすてらー	Funai/Gakken
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
