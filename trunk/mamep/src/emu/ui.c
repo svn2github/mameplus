@@ -1811,7 +1811,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * Machine->screen[0].refresh;	// 5sec.
+				next_caption_timer = 5 * SUBSECONDS_TO_HZ(Machine->screen[0].refresh);	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);
