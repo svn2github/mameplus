@@ -153,7 +153,7 @@ endif
 
 $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	@echo Compiling $<...
-	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE -c $< /Fo$@
+	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
 
 else
 # overwrite optimze option for Pentium M
