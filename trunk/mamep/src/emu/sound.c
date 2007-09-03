@@ -780,18 +780,23 @@ static TIMER_CALLBACK( sound_update )
 	}
 
 	/* now downmix the final result */
-#if 0 /*fixme: USE_VOLUME_AUTO_ADJUST*/
+	finalmix_step = video_get_speed_factor();
+	finalmix_offset = 0;
+
+#ifdef USE_VOLUME_AUTO_ADJUST
 	if (options_get_bool(mame_options(), OPTION_VOLUME_ADJUST))
 	{
 		have_sample = 0;
 
-		for (sample = 0; sample < samples_this_update; sample++)
+		for (sample = finalmix_leftover; sample < samples_this_update * 100; sample += finalmix_step)
 		{
+			int sampindex = sample / 100;
+
 			/* clamp the left side */
-			finalmix[sample*2+0] = calc_volume_final(leftmix[sample]);
+			finalmix[finalmix_offset++] = calc_volume_final(leftmix[sampindex]);
 	
 			/* clamp the right side */
-			finalmix[sample*2+1] = calc_volume_final(rightmix[sample]);
+			finalmix[finalmix_offset++] = calc_volume_final(rightmix[sampindex]);
 		}
 
 		if (have_sample)
@@ -802,8 +807,6 @@ static TIMER_CALLBACK( sound_update )
 	}
 	else
 #endif /* USE_VOLUME_AUTO_ADJUST */
-	finalmix_step = video_get_speed_factor();
-	finalmix_offset = 0;
 	for (sample = finalmix_leftover; sample < samples_this_update * 100; sample += finalmix_step)
 	{
 		int sampindex = sample / 100;
