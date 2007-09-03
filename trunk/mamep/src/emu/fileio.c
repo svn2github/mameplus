@@ -268,26 +268,27 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 		/* if we're opening for read-only we have other options */
 		if ((openflags & (OPEN_FLAG_READ | OPEN_FLAG_WRITE)) == OPEN_FLAG_READ)
 		{
-			filerr = fopen_attempt_zipped(fullname, crc, openflags, *file);
+			astring *zipped_fullname;
+
+			zipped_fullname = astring_alloc();
+			astring_cpyc(zipped_fullname, astring_c(fullname));
+			filerr = fopen_attempt_zipped(zipped_fullname, crc, openflags, *file);
+			astring_free(zipped_fullname);
+			zipped_fullname = NULL;
+
 			if (filerr == FILERR_NONE)
 				break;
 
-#if 0
+#if 1	// mamep: load zipped inp file
 			{
-				astring *zipped_fullname;
-				int offset, n;
+				int offset = 0;
+				int n = astring_rchr(fullname, offset, '.');
 
-				offset = 0;
-				n = astring_rchr(fullname, offset, '.');
-				if (n > 0)
-					offset = n;
-
-				n = astring_rchr(fullname, offset, PATH_SEPARATOR[0]);
 				if (n > 0)
 					offset = n;
 
 				zipped_fullname = astring_alloc();
-				astring_cpych(zipped_fullname, astring_c(fullname), astring_len(fullname) - offset);
+				astring_cpych(zipped_fullname, astring_c(fullname), offset);
 				astring_catc(zipped_fullname, PATH_SEPARATOR);
 				astring_catc(zipped_fullname, filename);
 

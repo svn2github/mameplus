@@ -184,6 +184,7 @@ BEGIN
         MENUITEM "&Play",                       ID_FILE_PLAY
         MENUITEM SEPARATOR
         MENUITEM "Play and &Record Input...",   ID_FILE_PLAY_RECORD
+        MENUITEM "P&layback Input...",          ID_FILE_PLAY_BACK
         MENUITEM SEPARATOR
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
