@@ -283,7 +283,8 @@ endif
 ifneq ($(WINUI),)
 ifneq ($(NO_DLL),)
 OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
-OSDMAIN = $(WINOBJ)/main.o
+OSDMAIN_NORES = $(WINOBJ)/main.o
+OSDMAIN = $(OSDMAIN_NORES)
 endif
 endif
 
@@ -357,7 +358,6 @@ OSDOBJS += \
 	$(WINOBJ)/debugwin.o
 endif
 
-# add resource file for dll
 # add a stub resource file
 ifdef PTR64
 RESFILE = $(WINOBJ)/mamex64.res
@@ -365,7 +365,10 @@ else
 RESFILE = $(WINOBJ)/mame.res
 endif
 
+# add a resource file
 CLIOBJS += $(RESFILE)
+VERSIONRES = $(WINOBJ)/version.res
+OSDMAIN += $(VERSIONRES)
 
 
 
@@ -412,7 +415,11 @@ endif
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
 
-$(VERINFO): $(WINOBJ)/verinfo.o $(OSDMAIN) $(LIBOCORE)
+$(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -UWINUI -c $< -o $@
+
+$(VERINFO): $(WINOBJ)/verinfo.o $(OSDMAIN_NORES) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -435,6 +442,7 @@ $(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
 #-------------------------------------------------
 
 $(RESFILE): $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+$(VERSIONRES): $(WINSRC)/version.rc $(WINOBJ)/mamevers.rc
 
 $(WINOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 	@echo Emitting $@...

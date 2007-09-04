@@ -72,6 +72,30 @@ endif
 
 GUIOBJS += $(GUIOBJ)/mame32.res
 
+$(GUIOBJ)/mame32.res: $(GUISRC)/mame32.rc $(GUIOBJ)/mamevers32.rc
+
+
+
+#####################################################################
+# rule for making the verinfo tool
+
+VERINFO32 = $(GUIOBJ)/verinfo32$(EXE)
+
+$(GUIOBJ)/verinfo32.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+
+$(VERINFO32): $(GUIOBJ)/verinfo32.o $(OSDMAIN_NORES) $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+BUILD += $(VERINFO32)
+
+$(GUIOBJ)/mamevers32.rc: $(VERINFO32) $(SRC)/version.c
+	@echo Emitting $@...
+	@$(VERINFO32) $(SRC)/version.c > $@
+
+
 
 
 #####################################################################
@@ -92,7 +116,7 @@ DEFS += \
 #####################################################################
 # Resources
 
-RCFLAGS += --include-dir $(GUISRC)
+RCFLAGS += --include-dir $(GUISRC) --include-dir $(GUIOBJ)
 
 
 
