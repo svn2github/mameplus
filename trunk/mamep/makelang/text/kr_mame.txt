@@ -764,7 +764,7 @@ Alternate
 
 #
 Analog Controls
-아날로그 조종
+아날로그 콘트롤
 
 #
 Arcade
@@ -1025,6 +1025,10 @@ China
 #
 Classic
 고전
+
+#
+Classic graphics and VFD
+고전 그래픽 및 VFD
 
 #
 Clear
@@ -1352,7 +1356,7 @@ Difficulty 2
 
 #
 Digital Speed
-디지탈 속도
+디지털 속도
 
 #
 Dip Switches
@@ -1471,6 +1475,10 @@ End of playback
 재생 종료
 
 #
+End of playback - %i frames - Average speed %f%%
+재생 종료 - %i 프레임 - 평균 속도 %f%%
+
+#
 Endianness
 엔디아니스
 
@@ -1543,6 +1551,10 @@ Expert
 전문가
 
 #
+Extended INP file info:\n
+확장 INP 파일 정보:\n
+
+#
 FRONTEND COMMANDS
 프론트엔드 명령
 
@@ -1561,6 +1573,10 @@ Failed to open file for recording
 #
 Fast
 빠름
+
+#
+Fast Forward
+빨리 감기
 
 #
 Fatal error: %s\nCaused by assert: %s:%d: %s
@@ -1675,12 +1691,20 @@ General Help
 일반적 도움말
 
 #
+Generating cached BDF font...\n
+BDF폰트 캐시 생성 중...\n
+
+#
 German
 독일어
 
 #
 Germany
 독일
+
+#
+Gfx: %s, Sound: %s
+Gfx: %s, 사운드: %s
 
 #
 Gray
@@ -1855,6 +1879,10 @@ Image Enhancement
 이미지 개선
 
 #
+Imperfect
+불완전함
+
+#
 Increased By Value
 값 증가
 
@@ -1891,6 +1919,22 @@ Input file is for game '%s', not for current game '%s'\n
  '%s' 게임의 입력 파일 입니다(현재 '%s')\n
 
 #
+Input: Adding %s #%d: %s\n
+입력: 추가 %s #%d: %s\n
+
+#
+Input: Autoenabling %s due to presence of a %s\n
+입력: %s 자동 활성화 - %s 발견\n
+
+#
+Input: Changing default joystick map
+입력: 기본 조이스틱 배치 변경
+
+#
+Input: Default joystick map
+입력: 기본 조이스틱 배치
+
+#
 Insert
 삽입
 
@@ -1899,12 +1943,24 @@ International
 인터네셔널
 
 #
+Invalid %s value %s; reverting to keyboard\n
+잘못된 %s 값 %s; 키보드로 전환\n
+
+#
 Invalid %s value (must be between %f and %f); keeping value of %s\n
 잘못된 %s 값 (%f에서 %f사이가 유효); %s값 유지\n
 
 #
 Invalid %s value (must be between %i and %i); keeping value of %s\n
 잘못된 %s 값 (%i에서 %i사이가 유효); %s값 유지\n
+
+#
+Invalid bitmap format!
+잘못된 비트맵 폰트!
+
+#
+Invalid joystick map: %s\n
+잘못된 조이스틱 배치: %s\n
 
 #
 Inverted
@@ -2119,6 +2175,10 @@ Loading (%d%%)
 불러오는중 (%d%%)
 
 #
+Loading BDF font... (%d characters loaded)\n
+BDF 폰트 불러오는 중... (%d 문자 불러옴)\n
+
+#
 Loading Complete
 불러오기 완료
 
@@ -2245,6 +2305,10 @@ More Info
 #
 More Info for
 추가 정보
+
+#
+Mouse
+마우스
 
 #
 Mouse X
@@ -2477,6 +2541,22 @@ Other Controls
 #
 Otherwise, type OK or move the joystick left then right to continue
 아니라면, OK를 입력하거 조이스틱을 좌우로 움직여 진행하십시오.
+
+#
+Out of memory
+메모리 부족
+
+#
+Overall: NOT WORKING
+종합: 실행 불가
+
+#
+Overall: Unemulated Protection
+종합: 암호화 에뮬 못함
+
+#
+Overall: Working
+종합: 실행 가능
 
 #
 Overclock
@@ -4399,6 +4479,10 @@ Select Memory Areas
 메모리 범위 선택
 
 #
+Select New Game
+새 게임 선택
+
+#
 Select Search
 검색 선택
 
@@ -4567,6 +4651,10 @@ Start a New Cheat Search
 새 치트 검색 시작
 
 #
+Start time: %s\n
+시작 시간: %s\n
+
+#
 State
 상태
 
@@ -4715,6 +4803,10 @@ There are working clones of this game. They are:
 이 게임의 실행 가능한 클론롬은:
 
 #
+This INP file is not an extended INP file, extra info not available\n
+현재 INP 파일은 확장 INP 파일이 아닙니니다. 추가 정보를 이용할 수 없습니다\n
+
+#
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
 
@@ -4855,6 +4947,14 @@ Type OK or move the joystick left then right to continue
 OK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
 
 #
+Type name or select: %s_
+이름을 입력하거나 선택 : %s_
+
+#
+Type name or select: (random)
+이름을 입력하거나 선택 : (무작위)
+
+#
 UI Cancel
 UI 취소
 
@@ -4939,6 +5039,10 @@ USA
 미국
 
 #
+Unable to allocate snapshot render target\n
+스크린샷 생성 타겟을 위치할 수 없습니다\n
+
+#
 Unable to create file %s.ini\n
 %s.ini 파일을 생성할 수 없습니다\n
 
@@ -4951,18 +5055,6 @@ Unable to save due to pending anonymous timers. See error.log for details.
 알수없는 타이머로 인해 저장할 수 없음. 자세한 내용은 error.log에
 
 #
-Unable to start machine emulation
-기기 에뮬레이션을 시작할 수 없음
-
-#
-Unable to start sound emulation
-사운드 에뮬레이션을 시작할 수 없음
-
-#
-Unable to start video emulation
-비디오 에뮬레이션을 시작할 수 없음
-
-#
 Unexpected boolean option %s queried\n
 예상치 못한 boolean 옵션 %s 요청\n
 
@@ -4973,6 +5065,10 @@ Unexpected float option %s queried\n
 #
 Unexpected integer option %s queried\n
 예상치 못한 integer 옵션 %s 요청\n
+
+#
+Unimplemented
+적용안됨
 
 #
 Unknown
@@ -5171,6 +5267,10 @@ Version
 버전
 
 #
+Version string: %s\n
+버전 스트링: %s\n
+
+#
 Vert position
 수직 위치
 
@@ -5343,6 +5443,14 @@ amount to scale the screen brightness when paused
 일시 정지 시의 화면 밝기
 
 #
+analog joystick
+아날로그 조이스틱
+
+#
+and the MAME team
+그리고 MAME 팀
+
+#
 assert: %s:%d: %s
 알림: %s:%d: %s
 
@@ -5401,6 +5509,10 @@ button color (silver)
 #
 button color (yellow)
 버튼 색상 (노란색)
+
+#
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+움직임을 무시할 조이스틱 데드존 영역 중심 (0.0 가운데, 1.0 끝)
 
 #
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
@@ -5515,6 +5627,38 @@ driver sourcefile
 드라이버 소스파일
 
 #
+enable (keyboard|mouse|joystick) if a dial control is present
+게임에서 다이얼 콘트을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a lightgun control is present
+게임에서 라이트건을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a mouse control is present
+게임에서 마우스를 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a paddle control is present
+게임에서 핸들을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a pedal control is present
+게임에서 페달을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a positional control is present
+게임에서 위치표시장치를 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if a trackball control is present
+게임에서 트랙볼을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+게임에서 아날로그 조이스틱을 사용할 경우 (keyboard|mouse|joystick) 사용
+
+#
 enable automatic frameskip selection
 자동 프레임스킵 사용
 
@@ -5535,8 +5679,20 @@ enable cheat subsystem
 치트 서브시스템 사용
 
 #
+enable joystick input
+조이스틱 입력 사용
+
+#
+enable lightgun input
+라이트건 입력 사용
+
+#
 enable loading of configuration files
 설정 파일 불러오기 사용
+
+#
+enable mouse input
+마우스 입력 사용
 
 #
 enable overlays if artwork is enabled and available
@@ -5549,6 +5705,10 @@ enable sleeping, which gives time back to other applications when idle
 #
 enable sound output
 사운드 출력 사용
+
+#
+enable steadykey support
+고정키 지원 사용
 
 #
 enable the use of external samples if available
@@ -5573,6 +5733,10 @@ enable/disable volume auto adjust
 #
 enabled
 활성화
+
+#
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+움직임을 무시할 조이스틱 축 초과 범위 (0.0 가운데, 1.0 끝)
 
 #
 error: invalid value for language: %s\nUse %s\n
@@ -5771,6 +5935,10 @@ playback an input file
 리플레이 파일 재생
 
 #
+positional
+위치표시
+
+#
 preconfigure for specified controller
 특정 입력기를 위한 기본 설정
 
@@ -5957,6 +6125,10 @@ UI 텍스트에 투명 배경 사용
 #
 values restored
 값 복구됨
+
+#
+video_screen_configure(): visible area must be contained within the width/height!
+video_screen_configure(): 가시영역은 폭/높이 영역 안에 있어야 합니다!
 
 #
 window background color

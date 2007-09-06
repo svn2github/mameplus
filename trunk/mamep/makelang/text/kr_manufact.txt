@@ -3,16 +3,184 @@
 <알수없음>
 
 #
+Acom
+에이콤
+
+#
+American Sammy
+아메리칸 새미
+
+#
+Amstar
+암스타
+
+#
+Apple
+애플
+
+#
+Atari
+아타리
+
+#
+Atari Games
+아타리
+
+#
+Atlus
+아트러스
+
+#
+Bandai
+반다이
+
+#
+Banpresto
+반프레스토
+
+#
+Bonanza Enterprises, Ltd
+보난자 엔터프라이즈
+
+#
 Bootleg
 해적판
+
+#
+Buena Vista Interactive
+브에나비스타 인터엑티브
+
+#
+Capcom
+캡콤
+
+#
+Codemasters
+코드마스터
+
+#
+Commodore
+코모도어
+
+#
+Compile
+컴파일
 
 #
 Italian bootleg
 이탈리아 해적판
 
 #
+Playmore
+플레이모어
+
+#
+SNK of America
+SNK 아메리카
+
+#
+SPHINX
+스핑크스
+
+#
+Sunsoft
+선소프트
+
+#
+Taito
+타이토
+
+#
+Taito America Corp.
+타이토 아메리카
+
+#
+Taito America Corporation
+타이토 아메리카
+
+#
+Taito Corp.
+타이토
+
+#
+Taito Corporation
+타이토
+
+#
+Taito?
+타이토?
+
+#
+Takara
+타카라
+
+#
+Technos
+테크노스
+
+#
+Technos Japan
+테크노스 저팬
+
+#
+Technosoft
+테크노소프트
+
+#
+Tecmo
+테크모
+
+#
+Tecno Soft
+테크노소프트
+
+#
+Tecnosoft
+테크노소프트
+
+#
+Universal
+유니버셜
+
+#
+Universal Video Games
+유니버셜 비디오 게임즈
+
+#
+Uniwang
+우니왕
+
+#
 Unknown
 알수없음
+
+#
+Unsorted
+미분류
+
+#
+Video System
+비디오 시스템
+
+#
+Video System Co.
+비디오 시스템
+
+#
+Virgin
+버진
+
+#
+Visco
+비스코
+
+#
+Yun Sung
+윤성
+
+#
+Zelco
+잘레코
 
 #
 bootleg

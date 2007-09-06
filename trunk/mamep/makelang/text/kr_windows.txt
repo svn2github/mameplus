@@ -1,74 +1,10 @@
 #
-         all -- all axes on all joysticks are digital\n
-         all -- 모든 조이스틱의 모든 축이 디지탈 입력\n
-
-#
-         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
-         j1,j2a2 -- 조이스틱1의 모든 축과 조이스틱2의 축2가 디지탈 입력\n
-
-#
-         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
-         j1a5a6 -- 조이스틱1의 축 5, 6이 디지탈 입력\n
-
-#
-         j<N> -- all axes on joystick <N> are digital\n
-         j<N> -- 조이스틱<N>의 모든 축이 디지탈 입력\n
-
-#
-         j<N>a<M> -- axis <M> on joystick <N> is digital\n
-         j<N>a<M> -- 조이스틱<N>의 축 <M>이 디지탈 입력\n
-
-#
-         none -- no axes on any joysticks are digital\n
-         none -- 조이스틱상의 어떤 축도 디지탈 입력이 아님\n
-
-#
-    Multiple axes can be specified for one joystick:\n
-    하나의 조이스틱에 여러개의 축 지정이 가능:\n
-
-#
-    Multiple joysticks can be specified separated by commas:\n
-    여러개의 조이스틱을 콤마로 구분해 지정 가능:\n
-
-#
- - digital
- - 디지탈
-
-#
-%s Button %d
-%s 버튼 %d
-
-#
 (disabled by compiling option)
 (컴파일 옵션에서 제외됨)
 
 #
 (primary)
 (주요)
-
-#
-AUTOMATIC DEVICE SELECTION OPTIONS
-장치 자동 선택 옵션
-
-#
-Can't set axis mode for Joystick %d - %s\n
-조이스틱 %d 의 축 모드를 설정할 수 없음 - %s\n
-
-#
-Can't set deadzone for Joystick %d - %s\n
-조이스틱 %d 의 데드존을 설정할 수 없음 - %s\n
-
-#
-Can't set range for Joystick %d - %s\n
-조이스틱 %d 의 범위를 설정할 수 없음 - %s\n
-
-#
-Can't set saturation for Joystick %d - %s\n
-조이스틱 %d 의 감도를 설정할 수 없음 - %s\n
-
-#
-DEBUGGING OPTIONS
-디버그 옵션
 
 #
 DIRECT3D-SPECIFIC OPTIONS
@@ -431,6 +367,18 @@ DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 경고 - 장치가 전체화면 감마 수정을 지원하지 않습니다\n
 
 #
+DirectInput: Unable to enumerate joysticks (result=%08X)\n
+DirectInput: 조이스틱 확인 불가 (result=%08X)\n
+
+#
+DirectInput: Unable to enumerate keyboards (result=%08X)\n
+DirectInput: 키보드 확인 불가 (result=%08X)\n
+
+#
+DirectInput: Unable to enumerate mice (result=%08X)\n
+DirectInput: 마우스 확인 불가 (result=%08X)\n
+
+#
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
@@ -449,6 +397,10 @@ DirectSound 생성 오류: %08x\n
 #
 Error creating primary DirectSound buffer: %08x\n
 주 DirectSound 버퍼 생성 오류: %08x\n
+
+#
+Error creating render target for window %d
+%d 윈도우에 렌더 타겟 생성 오류
 
 #
 Error creating vertex buffer (%08X)
@@ -511,8 +463,20 @@ FULL SCREEN OPTIONS
 전체 화면 옵션
 
 #
-Fast Forward
-고속 모드
+Failed to create pause event
+pause event 생성 실패
+
+#
+Failed to create window class
+window class 생성 실패
+
+#
+Failed to create window thread
+window thread 생성 실패
+
+#
+Failed to create window thread ready event
+window thread ready event 생성 실패
 
 #
 INPUT DEVICE OPTIONS
@@ -527,100 +491,16 @@ Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
 #
-Input:  Axis %d (%s)%s\n
-입력: 축 %d (%s)%s\n
-
-#
-Input: \"%s\" controller support enabled\n
-입력: \"%s\" 콘트롤러 지원 사용\n
-
-#
-Input: %s: %s\n
-입력: %s: %s\n
-
-#
-Input: Autoenabling joysticks due to presence of a %s\n
-입력: %s 유무에 따라 조이스틱 자동 사용\n
-
-#
-Input: Autoenabling lightguns due to presence of a %s\n
-입력: %s 유무에 따라 라이트건 자동 사용\n
-
-#
-Input: Autoenabling mice due to presence of a %s\n
-입력: %s 유무에 따라 마우스 자동 사용\n
-
-#
-Input: Joystick %d axis %d is now %s\n
-입력: 조이스틱 %d 축 %d 이 %s 로 설정됨\n
-
-#
-Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
-입력: 조이스틱 %d: %s (%d 축, %d 버튼, %d POV)\n
-
-#
-Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
-입력: 키보드=%d  마우스=%d  조이스틱=%d  라이트건=%d\n
-
-#
-Input: Using RAWMOUSE for Mouse input\n
-입력: 마우스 입력에 RAWMOUSE 사용\n
-
-#
-Invalid %s value %s; reverting to all -- valid values are:\n
-잘못된 %s 값 %s;전체 복구 - 정상 값:\n
-
-#
-Invalid %s value %s; reverting to keyboard\n
-잘못된 %s 값 %s;키보드로 복구\n
-
-#
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
 #
-J%d %s D
-J%d %s 하
-
-#
-J%d %s L
-J%d %s 좌
-
-#
-J%d %s R
-J%d %s 우
-
-#
-J%d %s U
-J%d %s 상
-
-#
-Lightgun %d 
-라이트건 %d
-
-#
-Lightgun not supported in windowed mode
-라이트건은 창모드에서 지원되지 않습니다.
-
-#
-Lightgun on Mouse %d 
-라이트건 모드 마우스 %d
-
-#
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. 는 콘솔 프로그램입니다. 명령 프롬프트에서 실행해 주십시오.\n\n사용법:\tMAME 게임명 [옵션]\n\n\tMAME -showusage\t\t기본적인 옵션 사용법 확인\n\tMAME -showconfig\t\t설정옵션 목록\n\tMAME -createconfig\tmame.ini 생성 \n\n더 자세한 정보는 문서파일을 참고하십시오.\n\n문서를 지금 보시겠습니까?
-
-#
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Screen %d
 
 #
-Mouse 
-마우스
-
-#
-Mouse %d 
-마우스 %d
+Out of memory
+메모리 부족
 
 #
 PER-WINDOW VIDEO OPTIONS
@@ -639,44 +519,8 @@ Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
 #
-Stick %d %s +
-스틱 %d %s +
-
-#
-Stick %d %s -
-스틱 %d %s -
-
-#
-Stick %s +
-스틱 %s +
-
-#
-Stick %s -
-스틱 %s -
-
-#
-Stick%sX+
-스틱%sX+
-
-#
-Stick%sX-
-스틱%sX-
-
-#
-Stick%sY+
-스틱%sY+
-
-#
-Stick%sY-
-스틱%sY-
-
-#
-Stick%sZ+
-스틱%sZ+
-
-#
-Stick%sZ-
-스틱%sZ-
+Symbol table full
+심볼 테이블 가득참
 
 #
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
@@ -689,6 +533,10 @@ Toggle Fullscreen
 #
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
+
+#
+Unable to complete window creation
+창 생성 완료 불가
 
 #
 Unable to create the Direct3D device (%08X)\n
@@ -743,14 +591,6 @@ Warning: Device may not perform well for Direct3D rendering\n
 경고: 장치가 Direct3D 렌더링을 잘 지원하지 못합니다\n
 
 #
-analog
-아날로그
-
-#
-analog joystick
-아날로그 조이스틱
-
-#
 aspect ratio for all screens; 'auto' here will try to make a best guess
 전체 스크린 화면 비율; '자동'설정하면 최적값을 찾습니다
 
@@ -775,10 +615,6 @@ brightness value in full screen mode
 전체화면 밝기
 
 #
-center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-조이스틱 데드존 (0.0 가운데, 1.0 끝)
-
-#
 constrain to the proper aspect ratio
 화면 비 유지
 
@@ -789,46 +625,6 @@ contrast value in full screen mode
 #
 default to maximized windows; otherwise, windows will be minimized
 창크기 최대화를 기본으로; 반대는 창크기 최소화
-
-#
-dial
-다이얼
-
-#
-digital
-디지탈
-
-#
-enable (keyboard|mouse|joystick) if a dial control is present
-다이얼 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if a lightgun control is present
-라이트건 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if a mouse control is present
-마우스 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if a paddle control is present
-핸들 기능이 있을시 (키보드|마우스|조이스틱)활성화
-
-#
-enable (keyboard|mouse|joystick) if a pedal control is present
-패달 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if a positional control is present
-포지셔널 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if a trackball control is present
-트랙볼 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
-
-#
-enable (keyboard|mouse|joystick) if an analog joystick control is present
-아날로그 조종장치가 설정되었을때 (키보드|마우스|조이스틱) 사용
 
 #
 enable bilinear filtering on screen output
@@ -843,56 +639,52 @@ enable hardware stretching
 하드웨어 늘리기 사용
 
 #
-enable joystick input
-조이스틱 입력 활성화
-
-#
-enable lightgun input
-라이트건 입력 활성화
-
-#
-enable mouse input
-마우스 입력 활성화
-
-#
 enable multithreading; this enables rendering and blitting on a separate thread
 렘더링과 블리팅을 분리된 스레드에서 실행하도록 멀티 스레딩 사용
-
-#
-enable pointing stick input
-포인트 스틱 입력 활성화
 
 #
 enable resolution switching
 해상도 변경 사용
 
 #
-enable steadykey support
-스태디키 지원 활성화
-
-#
 enable triple buffering
 트리플 버퍼링 사용
+
+#
+enable using the start of VBLANK for throttling instead of the game time
+감속기능에 게임 시간 대신에 VBLANK 시작 점을 사용
+
+#
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+화면 전환전 VBLANK 시작을 기다림; 화면이 갈라지는 현상을 감소시킴
 
 #
 enable window mode; otherwise, full screen mode is assumed
 윈도우 모드 사용; 설정하지 않으면 전체화면으로 설정됨
 
 #
+explicit name of all screens; 'auto' here will try to make a best guess
+모든 스크린의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
+
+#
+explicit name of the first screen; 'auto' here will try to make a best guess
+1번 스크린의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
+
+#
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+4번 스크린의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
+
+#
+explicit name of the second screen; 'auto' here will try to make a best guess
+2번 스크린의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
+
+#
+explicit name of the third screen; 'auto' here will try to make a best guess
+3번 스크린의 정확한 명칭; '자동' 설정 시 최적값을 찾게됩니다
+
+#
 gamma value in full screen mode
 전체 화면 감마 값
-
-#
-invalid
-잘못됨
-
-#
-lightgun
-라이트건
-
-#
-mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
-조이스틱 혹은 축을 디지탈로 표시 (없음|모두|j<N>*|j<N>a<M>[,...])
 
 #
 name of a PNG file to use for visual effects, or 'none'
@@ -903,24 +695,8 @@ number of screens to create; usually, you want just one
 생성할 화면 수;보통 1로 설정
 
 #
-offscreen shots reload
-화면 밖에서 재장전
-
-#
 output error.log data to the system debugger
 error.log 데이터를 시스템 디버거에 출력
-
-#
-paddle
-핸들
-
-#
-pedal
-페달
-
-#
-positional
-위치표시
 
 #
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
@@ -1009,10 +785,6 @@ specify the preferred Direct3D version (8 or 9)
 #
 thread priority for the main game thread; range from -15 to 1
 기본 게임 스레드의 우선 순위; -15 에서 1 범위
-
-#
-trackball
-트랙볼
 
 #
 video output method: none, gdi, ddraw, or d3d

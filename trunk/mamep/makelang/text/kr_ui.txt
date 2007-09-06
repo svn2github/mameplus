@@ -867,6 +867,10 @@ Display splash screen on start
 시작시 스플래시 화면 보임
 
 #
+Display the bios properties of the selected game
+선택된 게임의 바이오스 속성 표시
+
+#
 Display the driver properties of the selected game
 선택된 게임의 드라이버 속성을 보임
 
@@ -967,10 +971,6 @@ E&xit
 종료(&X)
 
 #
-ERROR: required files are missing, the game cannot be run.
-오류: 파일이 부족합니다. 게임을 실행할수 없습니다.
-
-#
 Emulation
 에뮬레이션
 
@@ -995,12 +995,20 @@ Enable mouse input
 마우스 사용
 
 #
-Enable multithreading
-멀티스레딩 사용
+Enable multi-threading
+멀티스래딩 사용
 
 #
-Enable pointing stick input
-포인팅 스틱 입력 사용
+Enable multiple keyboards
+다중 키보드 사용
+
+#
+Enable multiple mice
+다중 마우스 사용
+
+#
+Enable multithreading
+멀티스레딩 사용
 
 #
 Enable sound and sound CPUs
@@ -1067,6 +1075,10 @@ Filters for %s Folder
 %s 폴더의 필터
 
 #
+First screen
+첫번째 스크린
+
+#
 Flicker
 깜빡임
 
@@ -1101,6 +1113,10 @@ Font (normal)
 #
 Font (special)
 글꼴 (전용)
+
+#
+Fourth screen
+네번째 스크린
 
 #
 Frame skipping
@@ -1383,10 +1399,6 @@ Loa&d Savestate...
 상태저장 파일 불러오기(&D)...
 
 #
-Loading %s
-읽는중 %s
-
-#
 Localize GUI and MAME core.
 GUI 와 MAME 코어를 지역화함.
 
@@ -1461,6 +1473,10 @@ Missing Sound
 #
 Mouse
 마우스
+
+#
+Mouse device
+마우스 장치
 
 #
 Move Down
@@ -1719,6 +1735,14 @@ Propert&ies for Driver
 드라이버 등록정보
 
 #
+Properties for %s BIOS
+%s 바이오스 속성
+
+#
+Properties for BIOS
+바이오스 속성
+
+#
 Propery Sheet Error %d %X
 등록정보 시트 오류 %d %X
 
@@ -1935,6 +1959,10 @@ Screenshot Ta&b\tAlt+B
 스크린샷 탭(&B)\tAlt+B
 
 #
+Second screen
+두번째 스크린
+
+#
 Select &random background image on start
 시작시 무작위로 배경 이미지 선택(&R)
 
@@ -2132,47 +2160,43 @@ Show these fields in this order:
 
 #
 Skip 1 of 10 frames
-10 프레임중 1 프레임 스킵
+프레임 스킵 1/10
 
 #
 Skip 10 of 10 frames
-10 프레임중 10 프레임 스킵
-
-#
-Skip 11 of 10 frames
-10 프레임중 11 프레임 스킵
+프레임 스킵 10/10
 
 #
 Skip 2 of 10 frames
-10 프레임중 2 프레임 스킵
+프레임 스킵 2/10
 
 #
 Skip 3 of 10 frames
-10 프레임중 3 프레임 스킵
+프레임 스킵 3/10
 
 #
 Skip 4 of 10 frames
-10 프레임중 4 프레임 스킵
+프레임 스킵 4/10
 
 #
 Skip 5 of 10 frames
-10 프레임중 5 프레임 스킵
+프레임 스킵 5/10
 
 #
 Skip 6 of 10 frames
-10 프레임중 6 프레임 스킵
+프레임 스킵 6/10
 
 #
 Skip 7 of 10 frames
-10 프레임중 7 프레임 스킵
+프레임 스킵 7/10
 
 #
 Skip 8 of 10 frames
-10 프레임중 8 프레임 스킵
+프레임 스킵 8/10
 
 #
 Skip 9 of 10 frames
-10 프레임중 9 프레임 스킵
+프레임 스킵 9/10
 
 #
 Skip game info
@@ -2317,6 +2341,10 @@ There is no application associated with the given filename extension.
 #
 There was not enough memory to complete the operation.
 명령을 완료하기위한 메모리가 부족합니다.
+
+#
+Third screen
+세번째 스크린
 
 #
 Thread priority
@@ -2537,10 +2565,6 @@ Visual Effects
 #
 Volume attenuation
 볼륨 감소
-
-#
-WARNING: the game might not run correctly.
-주의: 이 게임은 올바르게 동작하지 않을수 있습니다.
 
 #
 WINDOW POSITION OPTIONS
