@@ -164,6 +164,7 @@ CPUS += V810
 CPUS += M37702
 CPUS += M37710
 CPUS += PPC403
+CPUS += PPC601
 CPUS += PPC602
 CPUS += PPC603
 CPUS += MPC8240
@@ -375,6 +376,7 @@ DRVLIBS += \
 	$(MAMEOBJ)/sigma.a \
 	$(MAMEOBJ)/snk.a \
 	$(MAMEOBJ)/stern.a \
+	$(MAMEOBJ)/subsino.a \
 	$(MAMEOBJ)/sun.a \
 	$(MAMEOBJ)/suna.a \
 	$(MAMEOBJ)/tad.a \
@@ -487,7 +489,7 @@ $(MAMEOBJ)/amiga.a: \
 	$(DRIVERS)/alg.o \
 	$(MACHINE)/amiga.o $(AUDIO)/amiga.o $(VIDEO)/amiga.o \
 	$(DRIVERS)/arcadia.o \
-	$(DRIVERS)/cubocd32.o \
+	$(DRIVERS)/cubocd32.o $(MACHINE)/cubocd32.o \
 	$(DRIVERS)/mquake.o \
 	$(DRIVERS)/upscope.o \
 
@@ -1262,6 +1264,7 @@ $(MAMEOBJ)/seta.a: \
 	$(DRIVERS)/macs.o \
 	$(DRIVERS)/seta.o $(VIDEO)/seta.o \
 	$(DRIVERS)/seta2.o $(VIDEO)/seta2.o \
+	$(DRIVERS)/speglsht.o \
 	$(DRIVERS)/speedatk.o $(VIDEO)/speedatk.o \
 	$(DRIVERS)/srmp2.o $(VIDEO)/srmp2.o \
 	$(DRIVERS)/srmp6.o \
@@ -1295,6 +1298,10 @@ $(MAMEOBJ)/stern.a: \
 	$(DRIVERS)/cliffhgr.o $(AUDIO)/cliffhgr.o \
 	$(DRIVERS)/mazerbla.o \
 	$(DRIVERS)/supdrapo.o \
+
+$(MAMEOBJ)/subsino.a: \
+	$(DRIVERS)/bishjan.o \
+	$(DRIVERS)/lastfght.o \
 
 $(MAMEOBJ)/sun.a: \
 	$(DRIVERS)/arabian.o $(VIDEO)/arabian.o \
@@ -1596,7 +1603,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/kyugo.o $(VIDEO)/kyugo.o \
 	$(DRIVERS)/ladyfrog.o $(VIDEO)/ladyfrog.o \
 	$(DRIVERS)/laserbas.o \
-	$(DRIVERS)/lastfght.o \
 	$(DRIVERS)/lethalj.o $(VIDEO)/lethalj.o \
 	$(DRIVERS)/limenko.o \
 	$(DRIVERS)/ltcasino.o \

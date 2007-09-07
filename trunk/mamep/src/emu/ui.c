@@ -1863,7 +1863,7 @@ int sprintf_game_info(char *buffer)
 		ui_getstring(UI_cpu));
 
 	/* loop over all CPUs */
-	for (cpunum = 0; cpunum < MAX_CPU && Machine->drv->cpu[cpunum].cpu_type; cpunum += count)
+	for (cpunum = 0; cpunum < MAX_CPU && Machine->drv->cpu[cpunum].cpu_type != CPU_DUMMY; cpunum += count)
 	{
 		int type = Machine->drv->cpu[cpunum].cpu_type;
 		int clock = Machine->drv->cpu[cpunum].cpu_clock;
@@ -1890,7 +1890,7 @@ int sprintf_game_info(char *buffer)
 	bufptr += sprintf(bufptr, "\n%s:\n", ui_getstring(UI_sound));
 
 	/* loop over all sound chips */
-	for (sndnum = 0; sndnum < MAX_SOUND && Machine->drv->sound[sndnum].sound_type; sndnum += count)
+	for (sndnum = 0; sndnum < MAX_SOUND && Machine->drv->sound[sndnum].sound_type != SOUND_DUMMY; sndnum += count)
 	{
 		int type = Machine->drv->sound[sndnum].sound_type;
 		int clock = sndnum_clock(sndnum);

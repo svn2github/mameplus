@@ -484,7 +484,6 @@ endif
 # add a basic set of warnings
 CFLAGS += \
 	-Wall \
-	-Wno-unused-functions \
 	-Wpointer-arith \
 	-Wbad-function-cast \
 	-Wcast-align \
