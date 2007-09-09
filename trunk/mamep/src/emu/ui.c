@@ -2625,7 +2625,7 @@ static INT32 slider_refresh(INT32 newval, char *buffer, int arg)
 	{
 		screen_state *state = &Machine->screen[arg];
 		video_screen_configure(arg, state->width, state->height, &state->visarea, HZ_TO_SUBSECONDS(defrefresh + (float)newval * 0.001f));
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_refresh_rate), Machine->screen[arg].refresh);
+		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_refresh_rate), SUBSECONDS_TO_HZ(Machine->screen[arg].refresh));
 	}
 	refresh = SUBSECONDS_TO_HZ(Machine->screen[arg].refresh);
 	return floor((refresh - defrefresh) * 1000.0f + 0.5f);
