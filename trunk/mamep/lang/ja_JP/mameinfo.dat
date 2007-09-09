@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.118u3      #
+#     Mameinfo.dat日本語版 v0.118u5      #
 #                                        #
-#            August 29, 2007             #
+#           September 8, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,16 +12,54 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：854 翻訳済：834
-# 追加項目：342 合計：1196
+# Tester報告：867 翻訳済：844
+# 追加項目：342 合計：1209
 #
 
+
+$info=guwange
+$mame
+[バグ]
+
+- ゲーム開始直後にクラッシュする。 cave0118u5red, AWJ / twisty
+
+$end
+
+$info=donpachi
+$mame
+[情報]
+
+- 全ての設定はサービスモード(F2キーをしばらく押して入る)で行う。
+DIPスイッチは使わない。
+
+
+[バグ]
+
+- ゲーム開始直後にクラッシュする。 cave0118u5red, AWJ / twisty
+
+$end
 
 $info=kod
 $mame
 [バグ]
 
 - 実機では、エンディングの背景には戦闘シーンが少し化けて表示される。MAMEでは真っ黒のまま。 kod0118u2yel, cacis / Kold666
+
+$end
+
+$info=espial
+$mame
+[バグ]
+
+- US版では鳴っているBGMがマスタセットでは鳴らない。 espial0118u5yel, gtmoa
+
+$end
+
+$info=radikalb
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 radikalb0118u5red, Machone
 
 $end
 
@@ -36,217 +74,101 @@ $mame
 
 $end
 
-$info=mappy
+$info=kinst
 $mame
 [バグ]
 
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
 
 
-- 屋根裏部分のプライオリティがおかしく、全てのキャラクタが表示されない。 mappy0116u2gre, Tafoid
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
 
 
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 左キーを押し続け全部グリッド表示にする
-
-3) サービスキー(9キー)を3回押す
-
-4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
-
-
-- 隠しメッセージ2：
-
-1) 3回目のボーナス面まで進む
-
-2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
-
-ボーナス合計画面にコピーライトが追加される
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
 
 $end
 
-$info=grobda
+$info=kinst2
 $mame
 [バグ]
 
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
 
 
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) DIPスイッチで以下のように設定する
-
-   Coin A: 1 Coin / 1 Credit
-
-   Coin B: 1 Coin / 4 Credits
-
-   Freese: On
-
-   Lives: 1
-
-   Difficulty: Rank C
-
-   Demo Sounds: Off
-
-   Level Select: Off
-
-   Bonus Life: 10k
+- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
+kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
 
 
-3) サービスキー(9キー)を押してグリッドを表示
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
 
-4) 右＋ボタン1＋2Pスタートを同時に押す
 
-抜けるには1Pスタートと9キー
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
 
 $end
 
-$info=superpac
-$mame
-[バグ]
-
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) ボタン1を押しながら→↓↓←←←←↑と入力する
-
-$end
-
-$info=digdug2
-$mame
-[バグ]
-
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
-
-
-[TIPS]
-
-- 隠し画面(NewVerのみ)：
-
-1) サービスモードに入る(F2)
-
-2) Sound 1Bを選ぶ
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 下x2 右x1 左x2 下x2 左x3 上x2 を押す
-
-5) サービスキー(9キー)をもう一度押す
-
-$end
-
-$info=todruaga
-$mame
-[バグ]
-
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
-
-
-- 最初のクレジット音が鳴らない。2つ目以降は大丈夫。 todruaga078u4gre, Fujix (Visitor)
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) Sound 19を鳴らす
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 上x4　下x1　左x6　2Pスタート を押す
-
-$end
-
-$info=pacnpal
-$mame
-[バグ]
-
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 左x1 右x9 下x5 上x6 を入力
-
-$end
-
-$info=phozon
+$info=mikie
 $mame
 [情報]
 
-- 34面（2周目のワールド9）をクリアするとゲームがクラッシュするが、正しい動作の模様。
-これ以降のデータが存在せず、DIP設定のレベルセレクトで35面を設定しても同様になる。
-
-
-- PROMが一つ不明。用途も同じく不明。
+- テストモードに入るには、1Pスタートと2Pスタートを押しながらリセット。
 
 
 [バグ]
 
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
-
-
-[TIPS]
-
-- 隠しメッセージ：
-
-1) サービスモードに入る(F2)
-
-2) 上x4 右x1 下x1 左x2 を入力
+- ロッカールームのBGMの音程が外れている。0.114u3のSN76496エミュレータ改良からか？ mikie0118u5gre, Machone
 
 $end
 
-$info=motos
+$info=ordyne
 $mame
 [バグ]
 
-- mappy.cの全ゲームが起動できない。 mappyc0118u1red, Tafoid
+- 左右のサウンドチャンネルが反対。 ordyne0118u4gre, Pelota
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 3面の水部分が黒く表示化けしている。また2面の森シーンの表示プライオリティがおかしい。 pacland0118u5yel, Machone
+
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
+
+
+- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
+
+$end
+
+$info=polepos2
+$mame
+[バグ]
+
+- Namco版はスタートの時にアクセルを踏んでいるとタイヤがスピンする音が聞こえるが、Atari版は聞こえない。 polepos2_0118u4gre, Kold666
 
 
 [TIPS]
 
-- 隠しメッセージ：
+- 隠し画面：
 
 1) サービスモードに入る(F2)
 
-2) DIPスイッチを以下の設定にする
+2) ハンドルを04に合わせる。シフトをHIに入れる
 
-   Coinage: 3 Coins / 1 Credit
+3) ハンドルを45に合わせる。シフトをHIに入れる
 
-   Lives: 3
+4) ハンドルを55に合わせる。シフトをHIに入れる
 
-   Difficulty: Rank A
+5) ハンドルを56に合わせる。シフトをHIに入れる
 
-   Bonus Life: 10k 30k 50k
-
-   Demo Sounds: Off
-
-
-3) サービスキー(9キー)を押してグリッドを表示
-
-4) 右＋ボタン1＋2Pスタートを同時に押す
-
-抜けるには1Pスタートと9キー
+6) ハンドルを91に合わせる。シフトをHIに入れる
 
 $end
 
@@ -274,6 +196,38 @@ $mame
 [バグ]
 
 - エラーが出て起動できない。 sspaceat0118u1red, Firewave
+
+$end
+
+$info=excitebk
+$mame
+[バグ]
+
+- 実機に比べて色がおかしい。 excitebk0118u5gre, Mr. Do
+
+
+- 「vsnes.c」バグ
+
+vsslalom: 「GAME OVER」の文字の下側がずれている。
+
+tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
+
+duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
+
+excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
+
+excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
+3面の色がexcitebkと違う。5面の色が反転。
+
+vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
+
+$end
+
+$info=yamato
+$mame
+[バグ]
+
+- 起動しない、またはクラッシュする。 yamato0118u5red, Firewave / twisty
 
 $end
 
@@ -1558,7 +1512,7 @@ $info=vbowl
 $mame
 [バグ]
 
-- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty
+- 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty / BarnacleEd
 
 $end
 
@@ -1597,38 +1551,6 @@ $mame
 - 選手紹介や休憩の画面で、太い茶色の線が現れる。
 また、ラウンド終了直後、0.5秒くらい各インジケータが画面に残ってしまう。
 実機で起こるかどうかは分からないが、このようにはならないと思われる。 kingofb37b16gre, Zip
-
-$end
-
-$info=kinst2
-$mame
-[バグ]
-
-- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
-kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-$end
-
-$info=kinst
-$mame
-[バグ]
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
 
 $end
 
@@ -1907,6 +1829,27 @@ $mame
 [バグ]
 
 - スプライト拡大に不具合あり。2面の飛行機などで現れる。 devstors37b6gre, YMI / Pi
+
+$end
+
+$info=todruaga
+$mame
+[バグ]
+
+- 最初のクレジット音が鳴らない。2つ目以降は大丈夫。 todruaga078u4gre, Fujix (Visitor)
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) Sound 19を鳴らす
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 上x4　下x1　左x6　2Pスタート を押す
 
 $end
 
@@ -2450,14 +2393,6 @@ $mame
 
 $end
 
-$info=cgangpzl
-$mame
-[バグ]
-
-- namcona1.c：cgangpzlは初回起動時にRAM/ROMテストで固まる。再起動すると動作する。 namcona1c057red, Sixtoe / Karasu / Pika163 / Russ H. / Smitdogg / Luigi30
-
-$end
-
 $info=outfxies
 $mame
 [バグ]
@@ -2830,17 +2765,6 @@ $mame
 [バグ]
 
 - ゲーム終了時、マップが表示された後に“volume error”が出てリセットがかかる。 overdriv37b13gre, Sports Dude
-
-$end
-
-$info=pacland
-$mame
-[バグ]
-
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-
-- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
 
 $end
 
@@ -4837,27 +4761,6 @@ $mame
 $end
 
 $info=tkoboxng
-$mame
-[バグ]
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-$end
-
-$info=excitebk
 $mame
 [バグ]
 
@@ -7459,15 +7362,6 @@ $mame
 
 $end
 
-$info=donpachi
-$mame
-[情報]
-
-- 全ての設定はサービスモード(F2キーをしばらく押して入る)で行う。
-DIPスイッチは使わない。
-
-$end
-
 $info=dowild
 $mame
 [情報]
@@ -7796,14 +7690,6 @@ $mame
 
 $end
 
-$info=mikie
-$mame
-[情報]
-
-- テストモードに入るには、1Pスタートと2Pスタートを押しながらリセット。
-
-$end
-
 $info=minefld
 $mame
 [情報]
@@ -7930,6 +7816,27 @@ $mame
 [情報]
 
 - テストモードに入るには3+F3キー。
+
+$end
+
+$info=phozon
+$mame
+[情報]
+
+- 34面（2周目のワールド9）をクリアするとゲームがクラッシュするが、正しい動作の模様。
+これ以降のデータが存在せず、DIP設定のレベルセレクトで35面を設定しても同様になる。
+
+
+- PROMが一つ不明。用途も同じく不明。
+
+
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 上x4 右x1 下x1 左x2 を入力
 
 $end
 
@@ -8859,6 +8766,24 @@ $mame
 
 $end
 
+$info=digdug2
+$mame
+[TIPS]
+
+- 隠し画面(NewVerのみ)：
+
+1) サービスモードに入る(F2)
+
+2) Sound 1Bを選ぶ
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 下x2 右x1 左x2 下x2 左x3 上x2 を押す
+
+5) サービスキー(9キー)をもう一度押す
+
+$end
+
 $info=dkong
 $mame
 [TIPS]
@@ -9007,6 +8932,41 @@ $mame
 
 $end
 
+$info=grobda
+$mame
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) DIPスイッチで以下のように設定する
+
+   Coin A: 1 Coin / 1 Credit
+
+   Coin B: 1 Coin / 4 Credits
+
+   Freese: On
+
+   Lives: 1
+
+   Difficulty: Rank C
+
+   Demo Sounds: Off
+
+   Level Select: Off
+
+   Bonus Life: 10k
+
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 右＋ボタン1＋2Pスタートを同時に押す
+
+抜けるには1Pスタートと9キー
+
+$end
+
 $info=gunfront
 $mame
 [TIPS]
@@ -9110,6 +9070,31 @@ $mame
 
 $end
 
+$info=mappy
+$mame
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 左キーを押し続け全部グリッド表示にする
+
+3) サービスキー(9キー)を3回押す
+
+4) ボタン1を押しながら 左x4　1Pスタートx6　左x3　2Pスタート を押す
+
+
+- 隠しメッセージ2：
+
+1) 3回目のボーナス面まで進む
+
+2) ボタン1x3　1Pスタートx3　2Pスタートx3 を入力
+
+ボーナス合計画面にコピーライトが追加される
+
+$end
+
 $info=masterw
 $mame
 [TIPS]
@@ -9149,6 +9134,35 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
+
+$end
+
+$info=motos
+$mame
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) DIPスイッチを以下の設定にする
+
+   Coinage: 3 Coins / 1 Credit
+
+   Lives: 3
+
+   Difficulty: Rank A
+
+   Bonus Life: 10k 30k 50k
+
+   Demo Sounds: Off
+
+
+3) サービスキー(9キー)を押してグリッドを表示
+
+4) 右＋ボタン1＋2Pスタートを同時に押す
+
+抜けるには1Pスタートと9キー
 
 $end
 
@@ -9208,6 +9222,18 @@ $mame
 
 $end
 
+$info=pacnpal
+$mame
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) 左x1 右x9 下x5 上x6 を入力
+
+$end
+
 $info=plotting
 $mame
 [TIPS]
@@ -9244,26 +9270,6 @@ $mame
 - ハイスコアリセット方法：
 
 サービスモードに入りアクセルを踏んだままシフトをLOからHIにする
-
-$end
-
-$info=polepos2
-$mame
-[TIPS]
-
-- 隠し画面：
-
-1) サービスモードに入る(F2)
-
-2) ハンドルを04に合わせる。シフトをHIに入れる
-
-3) ハンドルを45に合わせる。シフトをHIに入れる
-
-4) ハンドルを55に合わせる。シフトをHIに入れる
-
-5) ハンドルを56に合わせる。シフトをHIに入れる
-
-6) ハンドルを91に合わせる。シフトをHIに入れる
 
 $end
 
@@ -9474,6 +9480,18 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
+
+$end
+
+$info=superpac
+$mame
+[TIPS]
+
+- 隠しメッセージ：
+
+1) サービスモードに入る(F2)
+
+2) ボタン1を押しながら→↓↓←←←←↑と入力する
 
 $end
 

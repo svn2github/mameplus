@@ -578,8 +578,8 @@ drgnbstr	ƒhƒ‰ƒSƒ“ƒoƒXƒ^[	‚Ç‚ç‚²‚ñ‚Î‚·‚½[	Namco
 skykid	ƒXƒJƒCƒLƒbƒh (new ver)	‚·‚©‚¢‚«‚Á‚Ç_1	Namco
 skykido	ƒXƒJƒCƒLƒbƒh (old ver)	‚·‚©‚¢‚«‚Á‚Ç_1	Namco
 skykidd	ƒXƒJƒCƒLƒbƒh (CUS60 ver)	‚·‚©‚¢‚«‚Á‚Ç_1	Namco
-baraduke	ƒoƒ‰ƒfƒ…[ƒN (set 1)	‚Î‚ç‚Å‚ã[‚­	Namco
-baraduka	ƒoƒ‰ƒfƒ…[ƒN (set 2)	‚Î‚ç‚Å‚ã[‚­	Namco
+aliensec	ƒoƒ‰ƒfƒ…[ƒN / Alien Sector	‚Î‚ç‚Å‚ã[‚­	Namco
+baraduke	ƒoƒ‰ƒfƒ…[ƒN	‚Î‚ç‚Å‚ã[‚­	Namco
 metrocrs	ƒƒgƒƒNƒƒX (set 1)	‚ß‚Æ‚ë‚­‚ë‚·	Namco
 metrocra	ƒƒgƒƒNƒƒX (set 2)	‚ß‚Æ‚ë‚­‚ë‚·	Namco
 hopmappy	ƒzƒbƒsƒ“ƒOƒ}ƒbƒs[	‚Ù‚Á‚Ò‚ñ‚®‚Ü‚Á‚Ò[	Namco
@@ -2212,8 +2212,9 @@ armwara	ƒpƒ[ƒhƒMƒA -Strategic Variant Armor Equipment / Armored Warriors (ƒAƒW
 xmcota	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (‰¢B”Å 950105)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotau	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (USA”Å 950105)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotah	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (ƒ‰ƒeƒ“”Å 950331)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
-xmcotaj	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941219)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
-xmcotaj1	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941217)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
+xmcotaj	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941222)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
+xmcotaj1	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941219)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
+xmcotaj2	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941217)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotaa	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (ƒAƒWƒA”Å 941217)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotajr	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941208 rent ver)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 nwarr	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (‰¢B”Å 950316)	‚Î‚ñ‚Ï‚¢‚ _2‚Í‚ñ‚½[	Capcom
@@ -2524,7 +2525,8 @@ konam80k	ƒRƒiƒ~ 80'sƒA[ƒP[ƒhƒMƒƒƒ‰ƒŠ[ / Konami 80's AC Special (GC826 ver KAA
 dstage	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ / Dancing Stage (GN845 ver EAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
 ddru	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GN845 ver UAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
 ddrj	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ ƒCƒ“ƒ^[ƒlƒbƒgƒ‰ƒ“ƒLƒ“ƒOƒo[ƒWƒ‡ƒ“ (GC845 ver JBA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_2_‚¢‚ñ‚½[‚Ë‚Á‚Æ‚ç‚ñ‚«‚ñ‚®‚Î[‚¶‚å‚ñ	Konami
-ddrja	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GC845 ver JAB)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
+ddrja	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GC845 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
+ddrjb	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GC845 ver JAB)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
 ddra	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (GN845 ver AAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_1_1	Konami
 fbait2bc	ƒoƒXƒAƒ“ƒOƒ‰[2 / Fisherman's Bait 2 - A Bass Challenge (GE865 ver UAB)	‚Î‚·‚ ‚ñ‚®‚ç[_2	Konami
 drmn	ƒhƒ‰ƒ€ƒ}ƒjƒA (GQ881 ver JAD)	‚Ç‚ç‚Ş‚Ü‚É‚ _1	Konami
@@ -2542,14 +2544,16 @@ ddr2ml	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 2nd Mix ƒŠƒ“ƒNƒo[ƒWƒ‡ƒ“ (GE885 ver JAA)	‚¾‚
 ddr2mc	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 2nd Mix with ƒr[ƒgƒ}ƒjƒAII DX CLUB VERSiON (GE896 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_2_1_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·_3_‚¤‚¡‚¸‚Ñ[‚Æ‚Ü‚É‚ ‚Â[‚Å‚¡[‚¦‚Á‚­‚·_1_‚­‚ç‚Ô‚Î[‚¶‚å‚ñ	Konami
 ddr2mc2	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 2nd Mix with ƒr[ƒgƒ}ƒjƒAII DX substream CLUB VERSiON 2 (GE984 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_2_1_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·_3_‚¤‚¡‚¸‚Ñ[‚Æ‚Ü‚É‚ ‚Â[‚Å‚¡[‚¦‚Á‚­‚·_2_‚³‚Ô‚·‚Æ‚è[‚Ş‚Î[‚¶‚å‚ñ	Konami
 gtrfrk2m	ƒMƒ^[ƒtƒŠ[ƒNƒX 2nd Mix Ver 1.01 (GQ883 ver JAD)	‚¬‚½[‚Ó‚è[‚­‚·_02_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·_101	Konami
-dsftkd	ƒ_ƒ“ƒVƒ“ƒOƒXƒe[ƒW featuring TRUE KiSS DESTiNATiON (G*884 ver JAA)	‚¾‚ñ‚µ‚ñ‚®‚·‚Ä[‚¶_1_‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚Æ‚£‚é[‚«‚·‚Å‚¡‚·‚Ä‚¡‚Ë[‚µ‚å‚ñ	Konami
-ddrsbm	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo Bass Mix (GQ894 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_2_‚Î‚·‚İ‚Á‚­‚·	Konami
-ddrs2k	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo 2000 (GC905 ver AAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_1_2000	Konami
-ddrs2kj	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo 2000 (GC905 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_1_2000	Konami
+dsftkd	ƒ_ƒ“ƒVƒ“ƒOƒXƒe[ƒW featuring TRUE KiSS DESTiNATiON (G*884 ver JAA)	‚¾‚ñ‚µ‚ñ‚®‚·‚Ä[‚¶_1_2_‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚Æ‚£‚é[‚«‚·‚Å‚¡‚·‚Ä‚¡‚Ë[‚µ‚å‚ñ	Konami
 ddr3mk	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 3rd Mix Ver.Korea2 (GN887 ver KBA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_3_‚³[‚Ç‚İ‚Á‚­‚·_2_‚Î[‚¶‚å‚ñ‚±‚è‚ _2	Konami
 ddr3mka	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 3rd Mix Ver.Korea (GN887 ver KAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_3_‚³[‚Ç‚İ‚Á‚­‚·_2_‚Î[‚¶‚å‚ñ‚±‚è‚ _1	Konami
 ddr3ma	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 3rd Mix (GN887 ver AAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_3_‚³[‚Ç‚İ‚Á‚­‚·_1	Konami
 ddr3mj	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 3rd Mix (GN887 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_3_‚³[‚Ç‚İ‚Á‚­‚·_1	Konami
+ddrsbm	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo Bass Mix (GQ894 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_2_‚Î‚·‚İ‚Á‚­‚·	Konami
+ddrs2k	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo 2000 (GC905 ver AAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_1_2000	Konami
+ddrs2kj	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ Solo 2000 (GC905 ver JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_4_‚»‚ë_1_2000	Konami
+dsfdct	ƒ_ƒ“ƒVƒ“ƒOƒXƒe[ƒW featuring Dreams Come True (GC910 ver JCA)	‚¾‚ñ‚µ‚ñ‚®‚·‚Ä[‚¶_1_1_‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚Ç‚è[‚Ş‚¸‚©‚Ş‚Æ‚£‚é[	Konami
+dsfdcta	ƒ_ƒ“ƒVƒ“ƒOƒXƒe[ƒW featuring Dreams Come True (GC910 ver JAA)	‚¾‚ñ‚µ‚ñ‚®‚·‚Ä[‚¶_1_1_‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚Ç‚è[‚Ş‚¸‚©‚Ş‚Æ‚£‚é[	Konami
 drmn2m	ƒhƒ‰ƒ€ƒ}ƒjƒA 2nd Mix (GE912 ver JAA)	‚Ç‚ç‚Ş‚Ü‚É‚ _2_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·	Konami
 dncfrks	ƒ_ƒ“ƒXƒ}ƒjƒAƒbƒNƒX / Dance Freaks (G*874 ver KAA)	‚¾‚ñ‚·‚Ü‚É‚ ‚Á‚­‚·_1	Konami
 dmx	ƒ_ƒ“ƒXƒ}ƒjƒAƒbƒNƒX (G*874 ver JAA)	‚¾‚ñ‚·‚Ü‚É‚ ‚Á‚­‚·_1	Konami
@@ -2574,6 +2578,7 @@ gtrfrk6m	ƒMƒ^[ƒtƒŠ[ƒNƒX 6th Mix (G*B06 VER. JAA)	‚¬‚½[‚Ó‚è[‚­‚·_06_‚µ‚Á‚­‚·‚
 ddrmax	DDR Max ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 6th Mix (G*B19 ver JAA)	‚Å‚¡[‚Å‚¡[‚ [‚é‚Ü‚Á‚­‚·_1_‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ‚µ‚Á‚­‚·‚·‚İ‚Á‚­‚·	Konami
 ddrmax2	DDR Max 2 ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ 7th Mix (G*B20 ver JAA)	‚Å‚¡[‚Å‚¡[‚ [‚é‚Ü‚Á‚­‚·_2_‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ‚¹‚Ô‚ñ‚·‚İ‚Á‚­‚·	Konami
 dsem2	ƒ_ƒ“ƒVƒ“ƒOƒXƒe[ƒW Euro Mix 2 (G*C23 VER EAA)	‚¾‚ñ‚µ‚ñ‚®‚·‚Ä[‚¶_2_‚ä[‚ë‚İ‚Á‚­‚·_2	Konami
+ddrextrm	ƒ_ƒ“ƒXƒ_ƒ“ƒXƒŒƒ{ƒŠƒ…[ƒVƒ‡ƒ“ ƒGƒNƒXƒXƒgƒŠ[ƒ€ (G*C36 VER. JAA)	‚¾‚ñ‚·‚¾‚ñ‚·‚ê‚Ú‚è‚ã[‚µ‚å‚ñ_8_‚¦‚­‚·‚Æ‚è[‚Ş	Konami
 gtfrk11m	ƒMƒ^[ƒtƒŠ[ƒNƒX 11th Mix (G*D39 VER. JAA)	‚¬‚½[‚Ó‚è[‚­‚·_11_‚¢‚ê‚Ô‚ñ‚·‚İ‚Á‚­‚·	Konami
 ppp2nd	ƒpƒ‰ƒpƒ‰ƒpƒ‰ƒ_ƒCƒX 2nd Mix	‚Ï‚ç‚Ï‚ç‚Ï‚ç‚¾‚¢‚·_2_‚¹‚©‚ñ‚Ç‚İ‚Á‚­‚·	Konami
 boxingm	ƒ{ƒNƒVƒ“ƒOƒ}ƒjƒA ‚ ‚µ‚½‚ÌƒWƒ‡[	‚Ú‚­‚µ‚ñ‚®‚Ü‚É‚ ‚ ‚µ‚½‚Ì‚¶‚å[	Konami
@@ -3645,7 +3650,7 @@ metlsavr	ƒƒ^ƒ‹ƒZ[ƒo[	‚ß‚½‚é‚¹[‚Î[	First Amusement
 bcstry	B.C.ƒXƒg[ƒŠ[ (set 1)	‚Ñ[‚µ[‚·‚Æ[‚è[	SemiCom
 bcstrya	B.C.ƒXƒg[ƒŠ[ (set 2)	‚Ñ[‚µ[‚·‚Æ[‚è[	SemiCom
 semibase	–³ŒÀŸ•‰ (SemiCom Baseball) (ŠØ‘”Å)	‚Ş‚Í‚ñ‚·‚ñ‚Ô	SemiCom
-dquizgo	ƒf[ƒgƒNƒCƒYƒS[ƒS[ (ŠØ‘”Å)	‚Å[‚Æ‚­‚¢‚¸‚²[‚²[	SemiCom
+dquizgo	ƒf[ƒgƒNƒCƒYƒS[ƒS[ (ŠØ‘”Å)	‚Å[‚Æ‚­‚¢‚¸‚²[‚²[_1	SemiCom
 suprtrio	ƒX[ƒp[ƒgƒŠƒI	‚·[‚Ï[‚Æ‚è‚¨	Gameace
 lemmings	ƒŒƒ~ƒ“ƒOƒX (USA”Å prototype)	‚ê‚İ‚ñ‚®‚·	Data East USA
 dragngun	ƒhƒ‰ƒSƒ“ƒKƒ“ (USA”Å)	‚Ç‚ç‚²‚ñ‚ª‚ñ	Data East Corporation
@@ -5648,8 +5653,9 @@ ryouran	VS–ƒ ‰³—ã‡—	‚Ô‚¢‚¦‚·‚Ü[‚¶‚á‚ñ‚¨‚Æ‚ß‚è‚å‚¤‚ç‚ñ	Electro Design
 teljan	TEL	‚Ä‚é‚¶‚á‚ñ	Electro Design
 hanaawas	‰Ô‡‚í‚¹	‚Í‚È‚ ‚í‚¹	Seta
 speedatk	ƒXƒs[ƒhƒAƒ^ƒbƒNI	‚·‚Ò[‚Ç‚ ‚½‚Á‚­	Seta Kikaku Corp.
-srmp2	ƒX[ƒp[ƒŠƒAƒ‹–ƒPII (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_2‚Ò[‚Â[	Seta
-srmp3	ƒX[ƒp[ƒŠƒAƒ‹–ƒP3 (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_3‚Ò[‚·‚è[	Seta
+srmp1	ƒX[ƒp[ƒŠƒAƒ‹–ƒPI (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_1_‚Ò[‚í‚ñ	Seta
+srmp2	ƒX[ƒp[ƒŠƒAƒ‹–ƒPII (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_2_‚Ò[‚Â[	Seta
+srmp3	ƒX[ƒp[ƒŠƒAƒ‹–ƒP3 (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_3_‚Ò[‚·‚è[	Seta
 mjyuugi	–ƒ—V‹Z (“ú–{”Å set 1)	‚Ü[‚¶‚á‚ñ‚ä‚¤‚¬	Visco
 mjyuugia	–ƒ—V‹Y (“ú–{”Å set 2)	‚Ü[‚¶‚á‚ñ‚ä‚¤‚¬	Visco
 ponchin	–ƒƒ|ƒ“’¿‚©‚ñ (“ú–{”Å set 1)	‚Ü[‚¶‚á‚ñ‚Û‚ñ‚¿‚ñ‚©‚ñ	Visco
@@ -5706,10 +5712,10 @@ myangel	qˆç‚ÄƒNƒCƒY ƒ}ƒCƒGƒ“ƒWƒFƒ‹ (“ú–{”Å)	‚±‚»‚¾‚Ä‚­‚¢‚¸‚Ü‚¢‚¦‚ñ‚¶‚¥‚é_1	Namc
 myangel2	qˆç‚ÄƒNƒCƒY ƒ}ƒCƒGƒ“ƒWƒFƒ‹2 (“ú–{”Å)	‚±‚»‚¾‚Ä‚­‚¢‚¸‚Ü‚¢‚¦‚ñ‚¶‚¥‚é_2	Namco
 pzlbowl	ƒpƒYƒ‹DEƒ{[ƒŠƒ“ƒO (“ú–{”Å)	‚Ï‚¸‚é‚Å‚Ú[‚è‚ñ‚®	Nihon System / Moss
 penbros	ƒyƒ“ƒMƒ“ƒuƒ‰ƒU[ƒY (“ú–{”Å)	‚Ø‚ñ‚¬‚ñ‚Ô‚ç‚´[‚¸	Subsino
-srmp4	ƒX[ƒp[ƒŠƒAƒ‹–ƒPIV (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_4‚Ò[‚Ó‚§[	Seta
-srmp4o	ƒX[ƒp[ƒŠƒAƒ‹–ƒPIV (“ú–{”Å older set)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_4‚Ò[‚Ó‚§[	Seta
+srmp4	ƒX[ƒp[ƒŠƒAƒ‹–ƒPIV (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_4_‚Ò[‚Ó‚§[	Seta
+srmp4o	ƒX[ƒp[ƒŠƒAƒ‹–ƒPIV (“ú–{”Å older set)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_4_‚Ò[‚Ó‚§[	Seta
 twineag2	ƒcƒCƒ“ƒC[ƒOƒ‹II -The Rescue Mission	‚Â‚¢‚ñ‚¢[‚®‚é_2	Seta
-srmp7	ƒX[ƒp[ƒŠƒAƒ‹–ƒP7 (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_7‚Ò[‚¹‚Ô‚ñ	Seta
+srmp7	ƒX[ƒp[ƒŠƒAƒ‹–ƒP7 (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_7_‚Ò[‚¹‚Ô‚ñ	Seta
 dynagear	ƒ_ƒCƒiƒMƒA	‚¾‚¢‚È‚¬‚ 	Sammy
 survarts	ƒTƒoƒCƒoƒ‹ƒA[ƒc (ŠCŠO”Å)	‚³‚Î‚¢‚Î‚é‚ [‚Â	Sammy
 survartu	ƒTƒoƒCƒoƒ‹ƒA[ƒc (USA”Å)	‚³‚Î‚¢‚Î‚é‚ [‚Â	Sammy (American)
@@ -5737,18 +5743,18 @@ gdfs	‹@“®ímƒKƒ“ƒ_ƒ€ ƒtƒ@ƒCƒiƒ‹ƒVƒ…[ƒeƒBƒ“ƒO -ƒXƒy[ƒXƒEƒH[ in 0079 (“ú–{”Å)	
 darkhors	ƒ_[ƒNƒz[ƒX	‚¾[‚­‚Ù[‚·	bootleg
 renju	KIRAKIRAŒÜ–Ú‚È‚ç‚× ˜Aì‹M‘°	‚«‚ç‚«‚ç‚²‚à‚­‚È‚ç‚×‚ê‚ñ‚¶‚ã‚«‚¼‚­	Visco
 nratechu	‚Ë‚ç‚Á‚Äƒ`ƒ…[I	‚Ë‚ç‚Á‚Ä‚¿‚ã[	Seta
-srmp5	ƒX[ƒp[ƒŠƒAƒ‹–ƒPV	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_5‚Ò[‚Ó‚Ÿ‚¢‚Ô	Seta
-speglsht	ƒX[ƒp[ƒC[ƒOƒ‹ƒVƒ‡ƒbƒg (set 1)	‚·[‚Ï[‚¢[‚®‚é‚µ‚å‚Á‚Æ	Seta
+srmp5	ƒX[ƒp[ƒŠƒAƒ‹–ƒPV	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_5_‚Ò[‚Ó‚Ÿ‚¢‚Ô	Seta
+speglsht	ƒX[ƒp[ƒC[ƒOƒ‹ƒVƒ‡ƒbƒg	‚·[‚Ï[‚¢[‚®‚é‚µ‚å‚Á‚Æ	Seta
 speglsha	ƒX[ƒp[ƒC[ƒOƒ‹ƒVƒ‡ƒbƒg (set 2)	‚·[‚Ï[‚¢[‚®‚é‚µ‚å‚Á‚Æ	Seta
 mayjinsn	‘w‚µ«Šû ŒÜŒwí	‚Í‚â‚´‚µ‚µ‚å‚¤‚¬‚ß‚¢‚¶‚ñ‚¹‚ñ_1	Seta
 mayjisn2	‘w‚µ«Šû ŒÜŒwí2	‚Í‚â‚´‚µ‚µ‚å‚¤‚¬‚ß‚¢‚¶‚ñ‚¹‚ñ_2	Seta
 koikois	ƒX[ƒp[ƒŠƒAƒ‹‰ÔD —ö‚±‚¢‚µ‚Ü‚µ‚å	‚·[‚Ï[‚è‚ ‚é‚Í‚È‚Ó‚¾‚±‚¢‚±‚¢‚µ‚Ü‚µ‚å_1	Visco
-srmp6	ƒX[ƒp[ƒŠƒAƒ‹–ƒPVI (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_6‚Ò[‚µ‚Á‚­‚·	Seta
+srmp6	ƒX[ƒp[ƒŠƒAƒ‹–ƒPVI (“ú–{”Å)	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_6_‚Ò[‚µ‚Á‚­‚·	Seta
 11beat	ƒCƒŒƒuƒ“ƒr[ƒgEƒ[ƒ‹ƒhƒg[ƒiƒƒ“ƒg	‚¢‚ê‚Ô‚ñ‚Ñ[‚Æ‚í[‚é‚Ç‚Æ[‚È‚ß‚ñ‚Æ	Hudson
 mtetrisc	ƒ}ƒWƒJƒ‹ƒeƒgƒŠƒXƒ`ƒƒƒŒƒ“ƒW featuring ƒ~ƒbƒL[ (“ú–{”Å 981009)	‚Ü‚¶‚©‚é‚Ä‚Æ‚è‚·‚¿‚á‚ê‚ñ‚¶‚Ó‚¡[‚¿‚á‚è‚ñ‚®‚İ‚Á‚«[	Capcom
 starsldr	ƒXƒ^[ƒ\ƒ‹ƒWƒƒ[EƒoƒjƒVƒ“ƒOƒA[ƒX	‚·‚½[‚»‚é‚¶‚á[‚Î‚É‚µ‚ñ‚®‚ [‚·	Hudson/Seta
 vivdolls	ƒrƒrƒbƒhƒh[ƒ‹ƒY	‚Ñ‚Ñ‚Á‚Ç‚Ç[‚é‚·	Visco
-srmvs	ƒX[ƒp[ƒŠƒAƒ‹–ƒVS	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_8‚Ô‚¢‚¦‚·	Seta
+srmvs	ƒX[ƒp[ƒŠƒAƒ‹–ƒVS	‚·[‚Ï[‚è‚ ‚é‚Ü[‚¶‚á‚ñ_8_‚Ô‚¢‚¦‚·	Seta
 twrshaft	ƒ^ƒ[&ƒVƒƒƒtƒg	‚½‚í[‚ ‚ñ‚Ç‚µ‚á‚Ó‚Æ	Aruze
 powerins	‹ŒŒ›ˆê‘° (“ú–{”Å)	‚²‚¤‚¯‚Â‚¶_1‚¢‚¿‚¼‚­_1	Atlus
 powerina	‹ŒŒ›ˆê‘° / Power Instinct (USA”Å) (ŠC‘¯”Å set 1)	‚²‚¤‚¯‚Â‚¶_1‚¢‚¿‚¼‚­_1	Atlus
@@ -5988,6 +5994,7 @@ drgpunch	ƒhƒ‰ƒSƒ“ƒpƒ“ƒ` (“ú–{”Å)	‚Ç‚ç‚²‚ñ‚Ï‚ñ‚¿	Dynax
 mjfriday	–ƒƒtƒ‰ƒCƒf[ (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Ó‚ç‚¢‚Å[	Dynax
 jantouki	ƒLƒƒƒ“ƒpƒXƒnƒ“ƒeƒBƒ“ƒO“¬‹L (“ú–{”Å)	‚«‚á‚ñ‚Ï‚·‚Í‚ñ‚Ä‚¡‚ñ‚®‚¶‚á‚ñ‚Æ‚¤‚«	Dynax
 mjifb	–ƒIf...? [BET]	‚Ü[‚¶‚á‚ñ‚¢‚Ó	Dynax
+cafetime	–ƒ ƒJƒtƒFƒ^ƒCƒ€	‚Ü[‚¶‚á‚ñ‚©‚Ó‚¥‚½‚¢‚Ş	Dynax
 janptr96	ƒWƒƒƒ“ƒsƒ…[ƒ^['96 (“ú–{”Å)	‚¶‚á‚ñ‚Ò‚ã[‚½[‚È‚¢‚ñ‚Ä‚¡[‚ñ‚µ‚Á‚­‚·	Dynax
 sprtmtch	ƒhƒ‰ƒSƒ“ƒpƒ“ƒ` / Sports Match	‚Ç‚ç‚²‚ñ‚Ï‚ñ‚¿	Dynax (Fabtek license)
 maya	ƒ}ƒ„	‚Ü‚â	Promat
@@ -5995,6 +6002,7 @@ inca	ƒCƒ“ƒJ	‚¢‚ñ‚©	<unknown>
 mcnpshnt	–ƒƒLƒƒƒ“ƒpƒXƒnƒ“ƒeƒBƒ“ƒO (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚«‚á‚ñ‚Ï‚·‚Í‚ñ‚Ä‚¡‚ñ‚®	Dynax
 7jigen	7ŸŒ³‚Ì—d¸’B -Mahjong 7 Dimensions (“ú–{”Å)	‚È‚È‚¶‚°‚ñ‚Ì‚æ‚¤‚¹‚¢‚½‚¿	Dynax
 neruton	‚Ü[‚¶‚á‚ñ‚Ë‚é‚Æ‚ñ”vŒ~’c (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Ë‚é‚Æ‚ñ‚Í‚¢‚­‚¶‚ç‚¾‚ñ	Dynax / Yukiyoshi Tokoro
+mjcomv1	Šâ’Jƒeƒ“ƒz[‚Ì–ƒƒRƒ~ƒbƒNŒ€ê Vol.1 (Japan)	‚¢‚í‚½‚É‚Ä‚ñ‚Ù[‚Ì‚Ü[‚¶‚á‚ñ‚±‚İ‚Á‚­‚°‚«‚¶‚å‚¤_1	Dynax
 shpeng	ƒV[ƒnƒ“ƒ^[ƒyƒ“ƒMƒ“	‚µ[‚Í‚ñ‚½[‚Ø‚ñ‚¬‚ñ	WSAC Systems?
 tenkai	–ƒ“VŠJŠá	‚Ü[‚¶‚á‚ñ‚Ä‚ñ‚©‚¢‚°‚ñ_1	Dynax
 tenkai2b	–ƒ“VŠJŠá Part 2 (ŠC‘¯”Å)	‚Ü[‚¶‚á‚ñ‚Ä‚ñ‚©‚¢‚°‚ñ_2	Dynax
@@ -6264,7 +6272,8 @@ evosocc	ƒGƒ{ƒŠƒ…[ƒVƒ‡ƒ“ƒTƒbƒJ[	‚¦‚Ú‚è‚ã[‚µ‚å‚ñ‚³‚Á‚©[	Evoga
 qos	ƒAEƒNƒGƒXƒ`ƒ‡ƒ“EƒIƒuEƒXƒ|[ƒc (39-960-099)	‚ ‚­‚¦‚·‚¿‚å‚ñ‚¨‚Ô‚·‚Û[‚Â	BFM
 qosa	ƒAEƒNƒGƒXƒ`ƒ‡ƒ“EƒIƒuEƒXƒ|[ƒc (39-960-089)	‚ ‚­‚¦‚·‚¿‚å‚ñ‚¨‚Ô‚·‚Û[‚Â	BFM
 qntoondo	ƒNƒCƒ“ƒgƒD[ƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-136)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM/ELAM
-quintoon	ƒNƒCƒ“ƒgƒD[ƒ“ (UK”Å Game Card 95-750-203)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM
+quintoon	ƒNƒCƒ“ƒgƒD[ƒ“ (UK”Å Game Card 95-750-206)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM
+quintono	ƒNƒCƒ“ƒgƒD[ƒ“ (UK”Å Game Card 95-750-203)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM
 qntoond	ƒNƒCƒ“ƒgƒD[ƒ“ (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-243)	‚­‚¢‚ñ‚Æ‚£[‚ñ	BFM/ELAM
 pokio	ƒ|ƒLƒI (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-278)	‚Û‚«‚¨	BFM/ELAM
 slotsnl	ƒXƒƒbƒc (ƒIƒ‰ƒ“ƒ_”Å Game Card 95-750-368)	‚·‚ë‚Á‚Â	BFM/ELAM
@@ -6487,6 +6496,7 @@ luplup29	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 2.9 / 990108)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 puzlbang	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 2.8 / 990106)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 suplup	ƒX[ƒp[ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 4.0 / 990518)	‚·[‚Ï[‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 vamphalf	ƒ”ƒ@ƒ“ƒv~1^2 (ŠØ‘”Å)	‚Î‚ñ‚Õ‚Í[‚Ó	Danbi &amp; F2 System
+dquizgo2	ƒf[ƒgƒNƒCƒYƒS[ƒS[ƒGƒsƒ\[ƒh2	‚Å[‚Æ‚­‚¢‚¸‚²[‚²[_2_‚¦‚Ò‚»[‚Ç2	SemiCom
 misncrft	ƒ~ƒbƒVƒ‡ƒ“ƒNƒ‰ƒtƒg (ver 2.4)	‚İ‚Á‚µ‚å‚ñ‚­‚ç‚Ó‚Æ	Sun
 hidnctch	ƒqƒhƒDƒ“ƒLƒƒƒbƒ` (ŠCŠO”Å PCB ver 3.03)	‚Ğ‚Ç‚£‚ñ‚«‚á‚Á‚¿_1	Eolith
 puzzlekg	ƒpƒYƒ‹ƒLƒ“ƒO -Dance & Puzzle	‚Ï‚¸‚é‚«‚ñ‚®	Eolith
@@ -6651,6 +6661,7 @@ rbmk	Àí–ƒ«‰¤	‚¶‚Á‚¹‚ñ‚Ü[‚¶‚á‚ñ‚¨‚¤	GMS
 go2000	ƒS[2000	‚²[‚Â[‚³‚¤‚´‚ñ	SA
 mirax	ƒ~ƒ‰ƒbƒNƒX	‚İ‚ç‚Á‚­‚·	Current Technologies
 lastfght	ƒ‰ƒXƒgƒtƒ@ƒCƒeƒBƒ“ƒO	‚ç‚·‚Æ‚Ó‚Ÿ‚¢‚Ä‚¡‚ñ‚®	Subsino
+bishjan	”üÎ	‚Ñ‚µ‚å‚¤‚¶‚á‚ñ	Subsino
 sliver	ƒXƒŠƒo[	‚·‚è‚Î[	Hollow Corp
 intrscti	ƒCƒ“ƒ^[ƒZƒNƒeƒB	‚¢‚ñ‚½[‚¹‚­‚Ä‚¡	Unknown
 pasha2	ƒpƒVƒƒƒpƒVƒƒ2	‚Ï‚µ‚á‚Ï‚µ‚á_2	Dong Sung
