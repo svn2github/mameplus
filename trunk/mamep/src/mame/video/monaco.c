@@ -35,7 +35,6 @@ static void build_led_font(void)
 		{ 0, 1, 2, 3, 4, 5 },
 		8*8
 	};
-	static pen_t colortable[2];
 
 	led_font = allocgfx(&layout);
 	if (!led_font)
@@ -43,7 +42,7 @@ static void build_led_font(void)
 
 	decodegfx(led_font, fontdata, 0, led_font->total_elements);
 
-	led_font->colortable = colortable;
+	led_font->color_base = 0;
 	led_font->total_colors = 1;
 }
 
@@ -566,9 +565,6 @@ static void draw_leds( mame_bitmap *bitmap )
 {
 	int i, data;
 
-	led_font->colortable[0] = get_black_pen(Machine);
-	led_font->colortable[1] = get_white_pen(Machine);
-
 	data = monaco_gfx.led_score;
 	for( i=3; i>=0; i-- )
 	{
@@ -623,6 +619,8 @@ VIDEO_START( monaco )
 {
 	int i;
 
+	palette_set_color_rgb( machine, 0, 0x00,0x00,0x00 ); /* black (tire) */
+	palette_set_color_rgb( machine, 1, 0xff,0xff,0xff ); /* white (trim) */
 	/* computer car */
 	for( i=0; i<NUM_COMPUTER_CAR_TYPES; i++ )
 	{

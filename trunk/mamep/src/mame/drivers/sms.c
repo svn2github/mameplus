@@ -796,6 +796,7 @@ void init_ports_standard(void)
 
 	memory_install_read8_handler (0, ADDRESS_SPACE_IO, 0xdc, 0xdc, 0, 0, sms_ioport_dc_r);
 	memory_install_read8_handler (0, ADDRESS_SPACE_IO, 0xdd, 0xdd, 0, 0, sms_ioport_dd_r);
+	memory_install_read8_handler (0, ADDRESS_SPACE_IO, 0xde, 0xde, 0, 0, sms_ioport_dd_r);
 	memory_install_read8_handler (0, ADDRESS_SPACE_IO, 0xdf, 0xdf, 0, 0, sms_ioport_dd_r); // adams family
 }
 
@@ -4039,7 +4040,7 @@ GAME( 1900, s_zilli,         0,        sms,    sms,    standpal, ROT0,   "Sega",
 
 
 #ifdef HAZEMD
-GAME( 199?, megatech,        0,        sms,    sms,    mtc, ROT0,   "Sega", "(Megatech) (Bios Test)", NOT_A_DRIVER )
+GAME( 199?, megatech,        0,        sms,    sms,    mtc, ROT0,   "Sega", "(Megatech) (Bios Test)", GAME_IS_BIOS_ROOT )
 GAME( 199?, mt_astro,        megatech,        sms,    sms,    mtc, ROT0,   "Sega", "Astro Warrior (Megatech) (Bios Test)", 0 )
 
 
