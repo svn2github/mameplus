@@ -19,8 +19,8 @@ void AuditDialog(HWND hParent);
 void InitGameAudit(int gameIndex);
 INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-int Mame32VerifyRomSet(int game);
-int Mame32VerifySampleSet(int game);
+int Mame32VerifyRomSet(int game, BOOL isComplete);
+int Mame32VerifySampleSet(int game, BOOL isComplete);
 
 const WCHAR *GetAuditString(int audit_result);
 BOOL IsAuditResultKnown(int audit_result);

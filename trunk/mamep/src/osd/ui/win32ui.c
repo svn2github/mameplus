@@ -3216,13 +3216,13 @@ static BOOL FolderCheck(void)
 		nGameIndex  = lvi.lParam;
 		if (GetRomAuditResults(nGameIndex) == UNKNOWN)
 		{
-			Mame32VerifyRomSet(nGameIndex);
+			Mame32VerifyRomSet(nGameIndex, FALSE);
 			changed = TRUE;
 		}
 
 		if (GetSampleAuditResults(nGameIndex) == UNKNOWN)
 		{
-			Mame32VerifySampleSet(nGameIndex);
+			Mame32VerifySampleSet(nGameIndex, FALSE);
 			changed = TRUE;
 		}
 
@@ -3268,13 +3268,13 @@ static BOOL GameCheck(void)
 
 	if (GetRomAuditResults(game_index) == UNKNOWN)
 	{
-		Mame32VerifyRomSet(game_index);
+		Mame32VerifyRomSet(game_index, FALSE);
 		changed = TRUE;
 	}
 
 	if (GetSampleAuditResults(game_index) == UNKNOWN)
 	{
-		Mame32VerifySampleSet(game_index);
+		Mame32VerifySampleSet(game_index, FALSE);
 		changed = TRUE;
 	}
 

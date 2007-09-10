@@ -1,3 +1,4 @@
+//mamep: mame32 v118u5
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
@@ -38,10 +39,10 @@
 
 #include "bitmask.h"
 #include "winuiopt.h"
-#include "winmain.h"
 #include "m32util.h"
 #include "audit32.h"
-#include "Properties.h"
+#include "properties.h"
+#include "winmain.h"
 #include "translate.h"
 
 /***************************************************************************
@@ -60,7 +61,7 @@ static const WCHAR *StatusString(int iStatus);
  ***************************************************************************/
 
 #define SAMPLES_NOT_USED    3
-#define MAX_TEXT		   2147483647
+#define MAX_AUDITBOX_TEXT	0x7FFFFFFE
 
 HWND hAudit;
 static int rom_index;
@@ -107,7 +108,7 @@ void AuditDialog(HWND hParent)
 
 void InitGameAudit(int gameIndex)
 {
-	//mamep: DO NOT CALL cli_frontend_init(), or crash
+	//mamep: DO NOT CALL cli_frontend_init(), otherwise crash
 	rom_index = gameIndex;
 }
 
@@ -119,8 +120,8 @@ const WCHAR *GetAuditString(int audit_result)
 		case BEST_AVAILABLE:
 			return _UIW(TEXT("Yes"));
 
-		case INCORRECT:
 		case NOTFOUND:
+		case INCORRECT:
 			return _UIW(TEXT("No"));
 			break;
 
@@ -129,7 +130,6 @@ const WCHAR *GetAuditString(int audit_result)
 
 		default:
 			dprintf("unknown audit value %i",audit_result);
-			break;
 	}
 
 	return TEXT("?");
@@ -163,26 +163,13 @@ static void Mame32Output(void *param, const char *format, va_list argptr)
 	DetailsPrintf(TEXT("%s"), _UTF8Unicode(ConvertToWindowsNewlines(buffer)));
 }
 
-static int ProcessAuditResults(int game, audit_record *audit, int audit_records)
+static int ProcessAuditResults(int game, audit_record *audit, int audit_records, BOOL isComplete)
 {
 	output_callback prevcb;
 	void *prevparam;
 	int res;
 
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, Mame32Output, NULL, &prevcb, &prevparam);
-	res = audit_summary(drivers[game], audit_records, audit, TRUE);
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb ? prevcb : mame_null_output_callback, prevparam, NULL, NULL);
-
-	return res;
-}
-
-static int ProcessAuditResults_NoGUI(int game, audit_record *audit, int audit_records)
-{
-	output_callback prevcb;
-	void *prevparam;
-	int res;
-
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, mame_null_output_callback, NULL, &prevcb, &prevparam);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, (isComplete) ? Mame32Output : mame_null_output_callback, NULL, &prevcb, &prevparam);
 	res = audit_summary(drivers[game], audit_records, audit, TRUE);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb ? prevcb : mame_null_output_callback, prevparam, NULL, NULL);
 
@@ -214,7 +201,7 @@ static BOOL RomsetNotExist(int game)
 			return FALSE;
 		}
 
-#if 0 // open it will decrease audit speed
+#if 0 // enable it will decrease audit speed
 		mame_path *path;
 
 		// open the folder if we can
@@ -233,28 +220,28 @@ static BOOL RomsetNotExist(int game)
 }
 
 // Verifies the ROM set while calling SetRomAuditResults
-int Mame32VerifyRomSet(int game)
+int Mame32VerifyRomSet(int game, BOOL isComplete)
 {
 	audit_record *audit;
 	int audit_records;
 	options_type *game_options;
 	int res;
 
-	// apply selecting BIOS
+	// mamep: apply selecting BIOS
 	game_options = GetGameOptions(game);
 	set_core_bios(game_options->bios);
 
-	// if rom file dosen't exist, do not verify it
-	if (RomsetNotExist(game))
+	// mamep: if rom file doesn't exist, don't verify it
+	if (!isComplete && RomsetNotExist(game))
 	{
 		res = NOTFOUND;
 		SetRomAuditResults(game, res);
 		return res;
 	}
 
-	// audit romset
+	// perform the audit
 	audit_records = audit_images(drivers[game], AUDIT_VALIDATE_FAST, &audit);
-	res = ProcessAuditResults_NoGUI(game, audit, audit_records);
+	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);
 
@@ -263,52 +250,15 @@ int Mame32VerifyRomSet(int game)
 }
 
 // Verifies the Sample set while calling SetSampleAuditResults
-int Mame32VerifySampleSet(int game)
+int Mame32VerifySampleSet(int game, BOOL isComplete)
 {
 	audit_record *audit;
 	int audit_records;
 	int res;
 
+	// perform the audit
 	audit_records = audit_samples(drivers[game], &audit);
-	res = ProcessAuditResults_NoGUI(game, audit, audit_records);
-	if (audit_records > 0)
-		free(audit);
-
-	SetSampleAuditResults(game, res);
-	return res;
-}
-
-// Verifies the ROM set while calling SetRomAuditResults
-int Mame32VerifyRomSet_Complete(int game)
-{
-	audit_record *audit;
-	int audit_records;
-	options_type *game_options;
-	int res;
-
-	// apply selecting BIOS
-	game_options = GetGameOptions(game);
-	set_core_bios(game_options->bios);
-
-	// audit romset
-	audit_records = audit_images(drivers[game], AUDIT_VALIDATE_FAST, &audit);
-	res = ProcessAuditResults(game, audit, audit_records);
-	if (audit_records > 0)
-		free(audit);
-
-	SetRomAuditResults(game, res);
-	return res;
-}
-
-// Verifies the Sample set while calling SetSampleAuditResults
-static int Mame32VerifySampleSet_Complete(int game)
-{
-	audit_record *audit;
-	int audit_records;
-	int res;
-
-	audit_records = audit_samples(drivers[game], &audit);
-	res = ProcessAuditResults(game, audit, audit_records);
+	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);
 
@@ -372,8 +322,9 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		if (hEdit != NULL)
 		{
 			SendMessage( hEdit, EM_SETBKGNDCOLOR, FALSE, GetSysColor(COLOR_BTNFACE) );
-			//RS Standard is MAX_UINT, which seems not to be enough, so we use a higher Number...
-			SendMessage( hEdit, EM_EXLIMITTEXT, 0, MAX_TEXT );
+			// MSH - Set to max
+			SendMessage( hEdit, EM_SETLIMITTEXT, MAX_AUDITBOX_TEXT, 0 );
+
 		}
 		SendDlgItemMessage(hDlg, IDC_ROMS_PROGRESS,    PBM_SETRANGE, 0, MAKELPARAM(0, GetNumGames()));
 		SendDlgItemMessage(hDlg, IDC_SAMPLES_PROGRESS, PBM_SETRANGE, 0, MAKELPARAM(0, GetNumGames()));
@@ -447,11 +398,11 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 			int iStatus;
 			const WCHAR *lpStatus;
 
-			iStatus = Mame32VerifyRomSet_Complete(rom_index);
+			iStatus = Mame32VerifyRomSet(rom_index, TRUE);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), lpStatus);
 
-			iStatus = Mame32VerifySampleSet_Complete(rom_index);
+			iStatus = Mame32VerifySampleSet(rom_index, TRUE);
 			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), lpStatus);
 		}
@@ -466,7 +417,7 @@ static void ProcessNextRom()
 	int retval;
 	WCHAR buffer[200];
 
-	retval = Mame32VerifyRomSet_Complete(rom_index);
+	retval = Mame32VerifyRomSet(rom_index, TRUE);
 	switch (retval)
 	{
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
@@ -505,7 +456,7 @@ static void ProcessNextSample()
 	int  retval;
 	WCHAR buffer[200];
 	
-	retval = Mame32VerifySampleSet_Complete(sample_index);
+	retval = Mame32VerifySampleSet(sample_index, TRUE);
 	
 	switch (retval)
 	{

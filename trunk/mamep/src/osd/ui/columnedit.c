@@ -1,3 +1,4 @@
+//mamep: mame32 v118u5
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32

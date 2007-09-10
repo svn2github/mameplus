@@ -1,3 +1,4 @@
+//mamep: mame32 v118u5
 /* Bitmask.c - Bitmask support routines - MSH 11/19/1998 */
 
 #define WIN32_LEAN_AND_MEAN

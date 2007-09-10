@@ -22,18 +22,15 @@
 #include <stdio.h>
 #include <math.h>
 
-// undef WINNT for dinput.h to prevent duplicate definition
-#undef WINNT
 // have problem with DX7??
 #undef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION	0x0500
-#include <dinput.h>
 
-#include "MAME32.h"	// include this first
+#include "mame32.h"	// include this first
 #include "screenshot.h"
-#include "DirectInput.h"
-#include "DIJoystick.h"
-#include "M32Util.h"
+#include "directinput.h"
+#include "dijoystick.h"
+#include "m32util.h"
 #include "dxdecode.h"
 
 /***************************************************************************
