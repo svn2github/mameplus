@@ -55,6 +55,19 @@
 
 #define MAX_EXTRA_FOLDERS 256
 
+#if defined(__GNUC__)
+/* fix warning: value computed is not used for GCC4 */
+#undef TreeView_SetImageList
+//#define TreeView_SetImageList(w,h,i) (HIMAGELIST)SNDMSG((w),TVM_SETIMAGELIST,i,(LPARAM)(HIMAGELIST)(h))
+static HIMAGELIST TreeView_SetImageList(HWND w, HIMAGELIST h, int i)
+{
+	LRESULT result;
+
+	result = SNDMSG(w, TVM_SETIMAGELIST, (WPARAM)i, (LPARAM)h);
+	return (HIMAGELIST)result;
+}
+#endif /* defined(__GNUC__) */
+
 /***************************************************************************
     public structures
  ***************************************************************************/
@@ -1965,7 +1978,8 @@ BOOL InitFolders(void)
 	dwprintf(TEXT("I %shave %s"), doCreateFavorite ? TEXT("don't ") : TEXT(""), extFavorite.title);
 	if (doCreateFavorite)
 	{
-		int rooticon, subicon;
+		int rooticon = 0;
+		int subicon = 0;
 		const WCHAR *title = extFavorite.title;
 		WCHAR *filename;
 		char *rootname = strdup(extFavorite.root_icon);

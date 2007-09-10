@@ -43,6 +43,28 @@ static HWND ListView_GetEditControl(HWND w)
 	hwnd = SendMessage((w),LVM_GETEDITCONTROL,0,0);
 	return (HWND)hwnd;
 }
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_InsertString
+//#define ComboBox_InsertString(hwndCtl,index,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_INSERTSTRING,(WPARAM)(int)(index),(LPARAM)(LPCTSTR)(lpsz)))
+static int ComboBox_InsertString(HWND hwndCtl, int index, LPCTSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_INSERTSTRING, (WPARAM)index, (LPARAM)lpsz);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetCurSel
+//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
+static int ComboBox_SetCurSel(HWND hwndCtl, int index)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
+	return (int)result;
+}
 #endif /* defined(__GNUC__) */
 
 #define MAX_DIRS 64
@@ -241,8 +263,12 @@ static void UpdateDirectoryList(HWND hDlg)
 	nType = ComboBox_GetCurSel(hCombo);
 	if (IsMultiDir(nType))
 	{
-		Item.pszText = TEXT(DIRLIST_NEWENTRYTEXT);
+		LPWSTR wstr = wcsdup(TEXT(DIRLIST_NEWENTRYTEXT));
+
+		Item.pszText = wstr;
 		ListView_InsertItem(hList, &Item);
+		free(wstr);
+
 		for (i = DirInfo_NumDir(g_pDirInfo, nType) - 1; 0 <= i; i--)
 		{
 			Item.pszText = DirInfo_Path(g_pDirInfo, nType, i);

@@ -489,9 +489,10 @@ CFLAGS += \
 	-Wcast-align \
 	-Wstrict-prototypes \
 	-Wundef \
-#	-Wformat-security \
+	-Wno-format-security \
 	-Wwrite-strings \
 	-Wno-unused-function \
+	-Wno-pointer-sign \
 
 # add profiling information for the compiler
 ifdef PROFILE

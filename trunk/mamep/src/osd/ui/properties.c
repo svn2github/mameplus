@@ -102,6 +102,62 @@ typedef HANDLE HTHEME;
 /* fix warning: cast does not match function type */
 #undef  PropSheet_GetTabControl
 #define PropSheet_GetTabControl(d) (HWND)(LRESULT)(int)SendMessage((d),PSM_GETTABCONTROL,0,0)
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_AddString
+//#define ComboBox_AddString(hwndCtl,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_ADDSTRING,0,(LPARAM)(LPCTSTR)(lpsz)))
+static int ComboBox_AddString(HWND hwndCtl, LPCTSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_ADDSTRING, 0, (LPARAM)lpsz);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_InsertString
+//#define ComboBox_InsertString(hwndCtl,index,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_INSERTSTRING,(WPARAM)(int)(index),(LPARAM)(LPCTSTR)(lpsz)))
+static int ComboBox_InsertString(HWND hwndCtl, int index, LPCTSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_INSERTSTRING, (WPARAM)index, (LPARAM)lpsz);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_ResetContent
+//#define ComboBox_ResetContent(hwndCtl) ((int)(DWORD)SendMessage((hwndCtl),CB_RESETCONTENT,0,0))
+static int ComboBox_ResetContent(HWND hwndCtl)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_RESETCONTENT, 0, 0);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetCurSel
+//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
+static int ComboBox_SetCurSel(HWND hwndCtl, int index)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetItemData
+//#define ComboBox_SetItemData(hwndCtl,index,data) ((int)(DWORD)SendMessage((hwndCtl),CB_SETITEMDATA,(WPARAM)(int)(index),(LPARAM)(data)))
+#define ComboBox_SetItemData(hwndCtl,index,data) _ComboBox_SetItemData(hwndCtl, index, (LPARAM)(data))
+static int _ComboBox_SetItemData(HWND hwndCtl, int index, DWORD data)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETITEMDATA, (WPARAM)index, (LPARAM)data);
+	return (int)result;
+}
 #endif /* defined(__GNUC__) */
 
 /***************************************************************
@@ -1614,7 +1670,6 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	HTREEITEM hItem;
 	LONG_PTR  prevProc;
 
-	TCITEM item;
 	HWND hTempTab;
 
 	if (g_nFirstInitPropertySheet == 0)
@@ -1670,11 +1725,19 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 						rectTree.right - rectTree.left, rectTree.bottom - rectTree.top,
 						hWnd, (HMENU)0x1234, hSheetInstance, NULL);
 
-	item.mask    = TCIF_TEXT;
-	item.iImage  = 0;
-	item.lParam  = 0;
-	item.pszText = TEXT("");
-	SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
+	{
+		LPWSTR wstr = wcsdup(TEXT(""));
+		TCITEM item;
+
+		item.mask    = TCIF_TEXT;
+		item.iImage  = 0;
+		item.lParam  = 0;
+		item.pszText = wstr;
+
+		SendMessage(hTempTab, TCM_INSERTITEM, 0, (LPARAM)&item);
+
+		free(wstr);
+	}
 
 	SendMessage(hTempTab, TCM_GETITEMRECT, 0, (LPARAM)&rcTabCaption);
 	nCaptionHeight = (rcTabCaption.bottom - rcTabCaption.top);
@@ -4700,7 +4763,7 @@ static void InitializeVideoUI(HWND hwnd)
 		for (i = 0; i < NUMVIDEO; i++)
 		{
 			ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxVideo[i].m_pText));
-			ComboBox_SetItemData( hCtrl, i, g_ComboBoxVideo[i].m_pData);
+			ComboBox_SetItemData(hCtrl, i, g_ComboBoxVideo[i].m_pData);
 		}
 	}
 }

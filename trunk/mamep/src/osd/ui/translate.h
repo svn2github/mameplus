@@ -23,11 +23,11 @@ int ComboBox_GetLBTextLenA(HWND hwndCtl, int nIndex);
 int ComboBox_GetTextA(HWND hwndCtl, LPSTR lpch, int cchMax);
 BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz);
 
-#define ComboBox_AddStringW(hwndCtl,lpsz)                       ((int)(DWORD)        SendMessageW(        (hwndCtl), CB_ADDSTRING,     0,                         (LPARAM)(LPWSTR)(lpsz)))
-#define ComboBox_InsertStringW(hwndCtl,index,lpsz)              ((int)(DWORD)        SendMessageW(        (hwndCtl), CB_INSERTSTRING,  (WPARAM)(int)(index),      (LPARAM)(LPCTSTR)(lpsz)))
-#define ComboBox_FindStringW(hwndCtl,indexStart,lpszFind)       ((int)(DWORD)        SendMessageW(        (hwndCtl), CB_FINDSTRING,    (WPARAM)(int)(indexStart), (LPARAM)(LPWSTR)(lpszFind)))
-#define ComboBox_GetLBTextW(hwndCtl,index,lpszBuffer)           ((int)(DWORD)        SendMessageW(        (hwndCtl), CB_GETLBTEXT,     (WPARAM)(int)(index),      (LPARAM)(LPWSTR)(lpszBuffer)))
-#define ComboBox_GetLBTextLenW(hwndCtl,index)                   ((int)(DWORD)        SendMessageW(        (hwndCtl), CB_GETLBTEXTLEN,  (WPARAM)(int)(index),      0))
+int ComboBox_AddStringW(HWND hwndCtl, LPWSTR lpsz);
+int ComboBox_InsertStringW(HWND hwndCtl, int index, LPWSTR lpsz);
+int ComboBox_FindStringW(HWND hwndCtl, int indexStart, LPWSTR lpszFind);
+int ComboBox_GetLBTextW(HWND hwndCtl, int index, LPWSTR lpszBuffer);
+int ComboBox_GetLBTextLenW(HWND hwndCtl, int index);
 
 /* No internal conversion */
 #define Edit_GetTextA(hwndCtl,lpch,cchMax)     GetWindowTextA((hwndCtl),(lpch),(cchMax))

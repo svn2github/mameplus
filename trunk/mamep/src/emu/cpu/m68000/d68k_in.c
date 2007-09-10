@@ -12953,11 +12953,9 @@ M68KMAKE_OP(roxr, 8, r, .)
 	{
 		DRC_CXFLAG_COND_C();
 
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -12974,10 +12972,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
-
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13033,12 +13027,9 @@ M68KMAKE_OP(roxr, 16, r, .)
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13055,9 +13046,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13114,11 +13102,9 @@ M68KMAKE_OP(roxr, 32, r, .)
 	{
 		DRC_CXFLAG_COND_C();
 
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13135,9 +13121,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13304,11 +13287,9 @@ M68KMAKE_OP(roxl, 8, r, .)
 	{
 		DRC_CXFLAG_COND_C();
 
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13325,9 +13306,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13384,11 +13362,9 @@ M68KMAKE_OP(roxl, 16, r, .)
 	{
 		DRC_CXFLAG_COND_C();
 
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13405,9 +13381,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)
@@ -13464,11 +13437,9 @@ M68KMAKE_OP(roxl, 32, r, .)
 	{
 		DRC_CXFLAG_COND_C();
 
+		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
 		_jmp_near_link(&link3);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link3, 0, 1);
 
 _resolve_link(&link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
@@ -13485,9 +13456,6 @@ _resolve_link(&link2);
 
 		_jmp_near_link(&link4);
 	}
-	//else
-	//	just remove warnings
-	//	memset(&link4, 0, 1);
 
 _resolve_link(&link1);
 	if (update_flag)

@@ -564,17 +564,17 @@ void ListView_GetItemTextA(HWND hwndCtl, int nIndex, int isitem, LPSTR lpch, int
 
 int ComboBox_AddStringA(HWND hwndCtl, LPCSTR lpsz)
 {
-	return ComboBox_AddStringW(hwndCtl, (LPCWSTR)_Unicode(lpsz));
+	return ComboBox_AddStringW(hwndCtl, _Unicode(lpsz));
 }
 
 int ComboBox_InsertStringA(HWND hwndCtl, int nIndex, LPCSTR lpsz)
 {
-	return ComboBox_InsertStringW(hwndCtl, nIndex, (LPCWSTR)_Unicode(lpsz));
+	return ComboBox_InsertStringW(hwndCtl, nIndex, _Unicode(lpsz));
 }
 
 int ComboBox_FindStringA(HWND hwndCtl, int indexStart, LPCSTR lpszFind)
 {
-	return ComboBox_FindStringW(hwndCtl, indexStart, (LPCWSTR)_Unicode(lpszFind));
+	return ComboBox_FindStringW(hwndCtl, indexStart, _Unicode(lpszFind));
 }
 
 int ComboBox_GetLBTextA(HWND hwndCtl, int nIndex, LPSTR lpszBuffer)
@@ -633,6 +633,49 @@ BOOL ComboBox_SetTextA(HWND hwndCtl, LPCSTR lpsz)
 	return SetWindowTextW(hwndCtl, _Unicode(lpsz));
 
 }
+
+int ComboBox_AddStringW(HWND hwndCtl, LPWSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessageW(hwndCtl, CB_ADDSTRING, 0, (LPARAM)lpsz);
+	return (int)result;
+}
+
+int ComboBox_InsertStringW(HWND hwndCtl, int index, LPWSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessageW(hwndCtl, CB_INSERTSTRING, index, (LPARAM)lpsz);
+	return (int)result;
+}
+
+int ComboBox_FindStringW(HWND hwndCtl, int indexStart, LPWSTR lpszFind)
+{
+	DWORD result;
+
+	result = SendMessageW(hwndCtl, CB_FINDSTRING, indexStart, (LPARAM)lpszFind);
+	return (int)result;
+}
+
+int ComboBox_GetLBTextW(HWND hwndCtl, int index, LPWSTR lpszBuffer)
+{
+	DWORD result;
+
+	result = SendMessageW(hwndCtl, CB_GETLBTEXT, index, (LPARAM)lpszBuffer);
+	return (int)result;
+}
+
+	DWORD result;
+
+int ComboBox_GetLBTextLenW(HWND hwndCtl, int index)
+{
+	DWORD result;
+
+	result = SendMessageW(hwndCtl, CB_GETLBTEXTLEN, index, 0);
+	return (int)result;
+}
+
 
 
 #undef _wfopen

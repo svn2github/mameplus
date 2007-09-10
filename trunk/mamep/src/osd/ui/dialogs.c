@@ -73,6 +73,54 @@ static WNDPROC g_lpPcbInfoWndProc = NULL;
 static LRESULT CALLBACK PcbInfoWndProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 #endif /* USE_VIEW_PCBINFO */
 
+#if defined(__GNUC__)
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_AddString
+//#define ComboBox_AddString(hwndCtl,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_ADDSTRING,0,(LPARAM)(LPCTSTR)(lpsz)))
+static int ComboBox_AddString(HWND hwndCtl, LPCTSTR lpsz)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_ADDSTRING, 0, (LPARAM)lpsz);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetCurSel
+//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
+static int ComboBox_SetCurSel(HWND hwndCtl, int index)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetItemData
+//#define ComboBox_SetItemData(hwndCtl,index,data) ((int)(DWORD)SendMessage((hwndCtl),CB_SETITEMDATA,(WPARAM)(int)(index),(LPARAM)(data)))
+#define ComboBox_SetItemData(hwndCtl,index,data) _ComboBox_SetItemData(hwndCtl, index, (LPARAM)(data))
+static int _ComboBox_SetItemData(HWND hwndCtl, int index, DWORD data)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETITEMDATA, (WPARAM)index, (LPARAM)data);
+	return (int)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef TreeView_SetImageList
+//#define TreeView_SetImageList(w,h,i) (HIMAGELIST)SNDMSG((w),TVM_SETIMAGELIST,i,(LPARAM)(HIMAGELIST)(h))
+static HIMAGELIST TreeView_SetImageList(HWND w, HIMAGELIST h, int i)
+{
+	LRESULT result;
+
+	result = SNDMSG(w, TVM_SETIMAGELIST, (WPARAM)i, (LPARAM)h);
+	return (HIMAGELIST)result;
+}
+#endif /* defined(__GNUC__) */
+
+
 /***************************************************************************/
 
 LPCWSTR GetFilterText(void)
@@ -617,7 +665,6 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		int num_folders;
 		int i;
 		TVINSERTSTRUCT tvis;
-		TVITEM tvi;
 		BOOL first_entry = TRUE;
 		HIMAGELIST treeview_icons = GetTreeViewIconList();
 		static HFONT hFont;
@@ -652,8 +699,12 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 
 				if (folders[i]->m_nParent == -1)
 				{
-				    tvis.hParent = TVI_ROOT;
+					TVITEM tvi;
+
+					tvis.hParent = TVI_ROOT;
 					tvis.hInsertAfter = TVI_SORT;
+
+					memset(&tvi, 0, sizeof tvi);
 					tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 					tvi.pszText = folders[i]->m_lpTitle;
 					tvi.lParam = (LPARAM)folders[i];
@@ -714,22 +765,22 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		{
 		case IDOK:
 		{
-		   TVITEM tvi;
-		   tvi.hItem = TreeView_GetSelection(GetDlgItem(hDlg,IDC_CUSTOM_TREE));
-		   tvi.mask = TVIF_PARAM;
-		   if (TreeView_GetItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvi) == TRUE)
-		   {
-			  /* should look for New... */
-		   
-			  default_selection = (LPTREEFOLDER)tvi.lParam; /* start here next time */
+			TVITEM tvi;
+			tvi.hItem = TreeView_GetSelection(GetDlgItem(hDlg,IDC_CUSTOM_TREE));
+			tvi.mask = TVIF_PARAM;
+			if (TreeView_GetItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvi) == TRUE)
+			{
+				/* should look for New... */
 
-			  AddToCustomFolder((LPTREEFOLDER)tvi.lParam,driver_index);
-		   }
+				default_selection = (LPTREEFOLDER)tvi.lParam; /* start here next time */
 
-		   EndDialog(hDlg, 0);
-		   return TRUE;
+				AddToCustomFolder((LPTREEFOLDER)tvi.lParam,driver_index);
+			}
 
-		   break;
+			EndDialog(hDlg, 0);
+			return TRUE;
+
+			break;
 		}
 		case IDCANCEL:
 			EndDialog(hDlg, 0);

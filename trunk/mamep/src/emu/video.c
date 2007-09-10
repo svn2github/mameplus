@@ -214,7 +214,7 @@ static void rgb888_draw_primitives(const render_primitive *primlist, void *dstda
 #ifdef USE_SCALE_EFFECTS
 static void allocate_scalebitmap(running_machine *machine);
 static void free_scalebitmap(running_machine *machine);
-static void texture_set_scalebitmap(internal_screen_info *screen, const rectangle *visarea, const rgb_t *palette);
+static void texture_set_scalebitmap(internal_screen_info *screen, const rectangle *visarea, UINT32 palettebase);
 #endif /* USE_SCALE_EFFECTS */
 
 
@@ -1149,7 +1149,7 @@ static void finish_screen_updates(running_machine *machine)
 					fixedvis.max_y++;
 #ifdef USE_SCALE_EFFECTS
 					if (scale_effect.effect)
-						texture_set_scalebitmap(screen, &fixedvis, palette_get_adjusted_colors(machine) + machine->drv->screen[scrnum].palette_base);
+						texture_set_scalebitmap(screen, &fixedvis, machine->drv->screen[scrnum].palette_base);
 					else
 #endif /* USE_SCALE_EFFECTS */
 						render_texture_set_bitmap(screen->texture[screen->curbitmap], bitmap, &fixedvis, machine->drv->screen[scrnum].palette_base, screen->format);
@@ -2014,8 +2014,9 @@ static void free_scalebitmap(running_machine *machine)
 	scale_ysize = 0;
 }
 
-static void convert_palette_to_32(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, const rgb_t *palette)
+static void convert_palette_to_32(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, UINT32 palettebase)
 {
+	const rgb_t *palette = palette_entry_list_adjusted(Machine->palette) + palettebase;
 	int x, y;
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
@@ -2028,8 +2029,9 @@ static void convert_palette_to_32(const mame_bitmap *src, mame_bitmap *dst, cons
 	}
 }
 
-static void convert_palette_to_15(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, const rgb_t *palette)
+static void convert_palette_to_15(const mame_bitmap *src, mame_bitmap *dst, const rectangle *visarea, UINT32 palettebase)
 {
+	const rgb_t *palette = palette_entry_list_adjusted(Machine->palette) + palettebase;
 	int x, y;
 
 	for (y = visarea->min_y; y < visarea->max_y; y++)
@@ -2080,7 +2082,7 @@ static void convert_32_to_15(mame_bitmap *src, mame_bitmap *dst, const rectangle
 	}
 }
 
-static void texture_set_scalebitmap(internal_screen_info *screen, const rectangle *visarea, const rgb_t *palette)
+static void texture_set_scalebitmap(internal_screen_info *screen, const rectangle *visarea, UINT32 palettebase)
 {
 	int curbank = screen->curbitmap;
 	int scalebank = screen->scale_bank_offset + curbank;
@@ -2103,9 +2105,9 @@ static void texture_set_scalebitmap(internal_screen_info *screen, const rectangl
 		target = screen->work_bitmap[curbank];
 
 		if (scale_depth == 32)
-			convert_palette_to_32(screen->bitmap[curbank], target, visarea, palette);
+			convert_palette_to_32(screen->bitmap[curbank], target, visarea, palettebase);
 		else
-			convert_palette_to_15(screen->bitmap[curbank], target, visarea, palette);
+			convert_palette_to_15(screen->bitmap[curbank], target, visarea, palettebase);
 
 		break;
 

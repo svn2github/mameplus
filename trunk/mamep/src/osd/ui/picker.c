@@ -38,14 +38,27 @@
 #include "translate.h"
 
 
+#if defined(__GNUC__)
+/* fix warning: the address will always evaluate as 'true' for GCC4 */
+#undef ListView_GetItemRect
+//#define ListView_GetItemRect(w,i,p,c) (BOOL)SNDMSG((w),LVM_GETITEMRECT,i,((p)?(((LPRECT)(p))->left=(c),(LPARAM)(LPRECT)(p)):0))
+static BOOL ListView_GetItemRect(HWND w, int i, LPRECT p, int c)
+{
+	LRESULT result;
+
+	if (p)
+		p->left = c;
+
+	result = SNDMSG(w, LVM_GETITEMRECT, (WPARAM)i, (LPARAM)p);
+	return (BOOL)result;
+}
+
 // fix warning: cast does not match function type
-#if defined(__GNUC__) && defined(ListView_GetHeader)
 #undef ListView_GetHeader
-#endif
-#if defined(__GNUC__) && defined(ListView_GetImageList)
+
 #undef ListView_GetImageList
 #define ListView_GetImageList(w,i) (HIMAGELIST)(LRESULT)(int)SendMessage((w),LVM_GETIMAGELIST,(i),0)
-#endif
+#endif /* defined(__GNUC__) */
 
 #ifndef ListView_GetImageList
 #define ListView_GetImageList(w,i) (HIMAGELIST)(LRESULT)(int)SendMessage((w),LVM_GETIMAGELIST,(i),0)

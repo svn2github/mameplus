@@ -16,6 +16,20 @@
 #include "winuiopt.h"
 #include "DataMap.h"
 
+#if defined(__GNUC__)
+/* fix warning: value computed is not used for GCC4 */
+#undef ComboBox_SetCurSel
+//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
+static int ComboBox_SetCurSel(HWND hwndCtl, int index)
+{
+	DWORD result;
+
+	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
+	return (int)result;
+}
+#endif /* defined(__GNUC__) */
+
+
 #define MAX_CTRLS	128
 
 static DATA_MAP dataMap[MAX_CTRLS];

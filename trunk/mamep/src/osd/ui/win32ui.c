@@ -92,10 +92,34 @@
 #define LVS_EX_LABELTIP         0x00004000 // listview unfolds partly hidden labels if it does not have infotip text
 #endif // LVS_EX_LABELTIP
 
+#if defined(__GNUC__)
+/* fix warning: value computed is not used for GCC4 */
+#undef ListView_SetImageList
+//#define ListView_SetImageList(w,h,i) (HIMAGELIST)(UINT)SNDMSG((w),LVM_SETIMAGELIST,(i),(LPARAM)(h))
+static HIMAGELIST ListView_SetImageList(HWND w, HIMAGELIST h, int i)
+{
+	UINT result;
+
+	result = SNDMSG(w, LVM_SETIMAGELIST, i, (LPARAM)h);
+	return (HIMAGELIST)result;
+}
+
+/* fix warning: value computed is not used for GCC4 */
+#undef TreeView_HitTest
+//#define TreeView_HitTest(w,p) (HTREEITEM)SNDMSG((w),TVM_HITTEST,0,(LPARAM)(LPTV_HITTESTINFO)(p))
+static HTREEITEM TreeView_HitTest(HWND w, LPTV_HITTESTINFO p)
+{
+	LRESULT result;
+
+	result = SNDMSG(w, TVM_HITTEST, 0, (LPARAM)p);
+	return (HTREEITEM)result;
+}
+
 // fix warning: cast does not match function type
-#if defined(__GNUC__) && defined(ListView_CreateDragImage)
+#if defined(ListView_CreateDragImage)
 #undef ListView_CreateDragImage
 #endif
+#endif /* defined(__GNUC__) */
 
 #ifndef ListView_CreateDragImage
 #define ListView_CreateDragImage(hwnd, i, lpptUpLeft) \
@@ -1194,11 +1218,8 @@ int WinMain_(HINSTANCE    hInstance,
 	assign_msg_catategory(UI_MSG_OSD1, "ui");
 
 	if (__argc != 1)
-	{
-		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
-		extern int DECL_SPEC main_(int, char**);
 		exit(main_(__argc, __argv));
-	}
+
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
 		return 1;
 
@@ -4106,6 +4127,7 @@ static void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y)
 
 static WCHAR *GetCloneParentName(int nItem)
 {
+	static WCHAR wstr[] = TEXT("");
 	int nParentIndex = -1;
 
 	if (DriverIsClone(nItem) == TRUE)
@@ -4115,7 +4137,7 @@ static WCHAR *GetCloneParentName(int nItem)
 			return  UseLangList() ? 
 				_LSTW(driversw[nParentIndex]->description) : driversw[nParentIndex]->modify_the;
 	}
-	return TEXT("");
+	return wstr;
 }
 
 static BOOL PickerHitTest(HWND hWnd)
@@ -5605,7 +5627,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 static void LoadBackgroundBitmap(void)
 {
 	HGLOBAL hDIBbg;
-	WCHAR*	pFileName = 0;
+	LPCWSTR	pFileName = 0;
 
 	if (hBackground)
 	{

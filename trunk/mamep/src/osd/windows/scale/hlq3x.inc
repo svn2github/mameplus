@@ -28,6 +28,11 @@ void PIXEL_PROC(
 	unsigned i;
 	unsigned last = count - 1;
 
+	memset(c, 0, sizeof c);
+#ifdef PIXEL_INDEX
+	memset(s, 0, sizeof s);
+#endif
+
 	for(i = 0; i < count; i++) {
 		if (i > 0) {
 			PIXEL_COPY(0, 1);
