@@ -1,3 +1,4 @@
+//mamep: mame32 v118u5
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
@@ -25,9 +26,9 @@
 #include <sys/stat.h>
 #include <wingdi.h>
 #include <time.h>
-#include <malloc.h>
 #include <assert.h>
 #include <tchar.h>
+#include <stdlib.h>
 
 #include "mame32.h"
 #include "translate.h"
@@ -132,7 +133,8 @@ static int TabView_GetTabFromTabIndex(HWND hwndTabView, int tab_index)
 int TabView_GetCurrentTab(HWND hwndTabView)
 {
 	struct TabViewInfo *pTabViewInfo;
-	const char *pszTab = NULL;
+	LPCSTR pszTab = NULL;
+	LPCSTR pszThatTab;
 	int i, nTab = -1;
 
 	pTabViewInfo = GetTabViewInfo(hwndTabView);
@@ -146,7 +148,8 @@ int TabView_GetCurrentTab(HWND hwndTabView)
 		{
 			for (i = 0; i < pTabViewInfo->nTabCount; i++)
 			{
-				if (!stricmp(pszTab, pTabViewInfo->pCallbacks->pfnGetTabShortName(i)))
+				pszThatTab = pTabViewInfo->pCallbacks->pfnGetTabShortName(i);
+				if (pszThatTab && !mame_stricmp(pszTab, pszThatTab))
 				{
 					nTab = i;
 					break;
@@ -171,7 +174,7 @@ int TabView_GetCurrentTab(HWND hwndTabView)
 void TabView_SetCurrentTab(HWND hwndTabView, int nTab)
 {
 	struct TabViewInfo *pTabViewInfo;
-	const char *pszName;
+	LPCSTR pszName;
 	char szBuffer[16];
 
 	pTabViewInfo = GetTabViewInfo(hwndTabView);
@@ -334,5 +337,4 @@ BOOL SetupTabView(HWND hwndTabView, const struct TabViewOptions *pOptions)
 		pTabViewInfo->pCallbacks->pfnOnSelectionChanged();
 	return TRUE;
 }
-
 

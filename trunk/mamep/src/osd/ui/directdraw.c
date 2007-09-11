@@ -27,11 +27,11 @@
 #endif
 #include <ddraw.h>
 
-#include "M32Util.h"
+#include "m32util.h"
 #include "screenshot.h"
 #include "mame32.h"
 #include "dxdecode.h"
-#include "DirectDraw.h"
+#include "directdraw.h"
 
 /***************************************************************************
 	function prototypes

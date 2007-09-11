@@ -13,6 +13,9 @@
 #ifndef DIRECTINPUT_H
 #define DIRECTINPUT_H
 
+// have problem with DX7??
+#undef DIRECTINPUT_VERSION
+#define DIRECTINPUT_VERSION	0x0500
 #include <dinput.h>
 
 extern BOOL DirectInputInitialize(void);

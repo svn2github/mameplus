@@ -4813,7 +4813,7 @@ static void UpdateSelectScreenUI(HWND hwnd)
 			ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxSelectScreen[i].m_pText));
 			ComboBox_SetItemData( hCtrl, i, g_ComboBoxSelectScreen[i].m_pData);
 		}
-		// Smaller AMount of screens was selected, so use 0
+		// Smaller Amount of screens was selected, so use 0
 		if( i< curSel )
 			ComboBox_SetCurSel(hCtrl, 0 );
 		else

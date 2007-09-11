@@ -1,3 +1,4 @@
+//mamep: mame32 v118u5
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
@@ -19,16 +20,11 @@
  ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
 #include <windows.h>
 
-// undef WINNT for dinput.h to prevent duplicate definition
-#undef WINNT
-// have problem with DX7??
-#undef DIRECTINPUT_VERSION
-#define DIRECTINPUT_VERSION	0x0500
-#include <dinput.h>
-#include "DirectInput.h"
-#include "M32Util.h"
+#include "directinput.h"
+#include "m32util.h"
 
 /***************************************************************************
 	function prototypes
@@ -65,14 +61,14 @@ static HANDLE hDLL = NULL;
  *
  ****************************************************************************/
 
-typedef HRESULT (WINAPI *dica_proc)(HINSTANCE hinst, DWORD dwVersion, LPDIRECTINPUTA *ppDI,
+typedef HRESULT (WINAPI *dic_proc)(HINSTANCE hinst, DWORD dwVersion, LPDIRECTINPUT *ppDI,
 									LPUNKNOWN punkOuter);
 
 BOOL DirectInputInitialize()
 {
 	HRESULT   hr;
 	UINT	  error_mode;
-	dica_proc dica;
+	dic_proc  dic;
 
 	if (hDLL != NULL)
 		return TRUE;
@@ -81,21 +77,25 @@ BOOL DirectInputInitialize()
 
 	/* Turn off error dialog for this call */
 	error_mode = SetErrorMode(0);
-	hDLL = LoadLibrary("dinput.dll");
+	hDLL = LoadLibrary(TEXT("dinput.dll"));
 	SetErrorMode(error_mode);
 
 	if (hDLL == NULL)
 		return FALSE;
 
-	dica = (dica_proc)GetProcAddress(hDLL, "DirectInputCreateA");
-	if (dica == NULL)
+#ifdef UNICODE
+	dic = (dic_proc)GetProcAddress(hDLL, "DirectInputCreateW");
+#else
+	dic = (dic_proc)GetProcAddress(hDLL, "DirectInputCreateA");
+#endif
+	if (dic == NULL)
 		return FALSE;
 
-	hr = dica(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &di, NULL);
+	hr = dic(GetModuleHandle(NULL), DIRECTINPUT_VERSION, &di, NULL);
 
 	if (FAILED(hr)) 
 	{
-		hr = dica(GetModuleHandle(NULL), 0x0300, &di, NULL);
+		hr = dic(GetModuleHandle(NULL), 0x0300, &di, NULL);
 
 		if (FAILED(hr))
 		{

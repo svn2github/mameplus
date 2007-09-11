@@ -21,10 +21,10 @@ typedef struct _mybitmapinfo
 } MYBITMAPINFO, *LPMYBITMAPINFO;
 
 #ifdef MESS
-extern BOOL LoadScreenShotEx(int nGame, const WCHAR *lpSoftwareName, int nType);
+extern BOOL LoadScreenShotEx(int nGame, LPCWSTR lpSoftwareName, int nType);
 #else /* !MESS */
 #ifdef USE_IPS
-extern BOOL LoadScreenShot(int nGame, const WCHAR *lpIPSName, int nType);
+extern BOOL LoadScreenShot(int nGame, LPCWSTR lpIPSName, int nType);
 #else /* USE_IPS */
 extern BOOL LoadScreenShot(int nGame, int nType);
 #endif /* USE_IPS */

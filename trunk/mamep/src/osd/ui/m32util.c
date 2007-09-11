@@ -23,17 +23,16 @@
 #include <shlwapi.h>
 #include <assert.h>
 #include <stdio.h>
-#include <io.h>
 
-#include "MAME32.h"	// include this first
+#include "mame32.h"	// include this first
 #include "unzip.h"
+#include "bitmask.h"
 #include "screenshot.h"
 #include "sound/samples.h"
-#include "M32Util.h"
+#include "m32util.h"
 #include "translate.h"
 
 #ifdef USE_IPS
-#include "bitmask.h"
 #include "winuiopt.h"
 #include "patch.h"
 #endif /* USE_IPS */

@@ -30,8 +30,8 @@
 
 #include "mame32.h"
 #include "bitmask.h"
-#include "TreeView.h"
-#include "M32Util.h"
+#include "treeview.h"
+#include "m32util.h"
 #include "resource.h"
 #include "directories.h"
 #include "winuiopt.h"

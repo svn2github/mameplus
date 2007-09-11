@@ -90,8 +90,7 @@ void AuditDialog(HWND hParent)
 
 	//RS use Riched32.dll
 	// Riched32.dll doesn't work on Win9X
-	// hModule = LoadLibraryA("Riched32.dll");
-	hModule = LoadLibraryA("RICHED20.DLL");
+	hModule = LoadLibrary(TEXT("Riched20.dll"));
 	if( hModule )
 	{
 		DialogBox(GetModuleHandle(NULL),MAKEINTRESOURCE(IDD_AUDIT),hParent,AuditWindowProc);
@@ -108,7 +107,6 @@ void AuditDialog(HWND hParent)
 
 void InitGameAudit(int gameIndex)
 {
-	//mamep: DO NOT CALL cli_frontend_init(), otherwise crash
 	rom_index = gameIndex;
 }
 
@@ -396,7 +394,7 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 		KillTimer(hDlg, 0);
 		{
 			int iStatus;
-			const WCHAR *lpStatus;
+			LPCWSTR lpStatus;
 
 			iStatus = Mame32VerifyRomSet(rom_index, TRUE);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
@@ -500,7 +498,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	HWND	hEdit;
 	va_list marker;
 	WCHAR	buffer[2000];
-	long l;
+	int textLength;
 
 	//RS 20030613 Different Ids for Property Page and Dialog
 	// so see which one's currently instantiated
@@ -520,9 +518,9 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	
 	va_end(marker);
 
-	l = Edit_GetTextLength(hEdit);
-	Edit_SetSel(hEdit, l, l);
-	SendMessageW( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
+	textLength = Edit_GetTextLength(hEdit);
+	Edit_SetSel(hEdit, textLength, textLength);
+	SendMessage( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
 }
 
 static const WCHAR *StatusString(int iStatus)

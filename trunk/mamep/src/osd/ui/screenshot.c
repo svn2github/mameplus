@@ -26,7 +26,7 @@
 #include <stdlib.h>
 #include <io.h>
 #include <fcntl.h>
-#include "MAME32.h"
+#include "mame32.h"
 #include "driver.h"
 #include "png.h"
 #include "osdepend.h"
@@ -44,7 +44,7 @@
 
 static BOOL     AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE* pPal);
 
-static int png_read_png_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL);
+static int png_read_bitmap_gui(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL);
 /***************************************************************************
     Static global variables
 ***************************************************************************/
@@ -75,7 +75,7 @@ BOOL ScreenShotLoaded(void)
 }
 
 #ifdef MESS
-static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, const WCHAR *lpSoftwareName, int nType)
+static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, LPCWSTR lpSoftwareName, int nType)
 {
 	WCHAR *s = alloca((wcslen(drv_name) + 1 + wcslen(lpSoftwareName) + 5) * sizeof (*s));
 	swprintf(s, TEXT("%s/%s.png"), drv_name, lpSoftwareName);
@@ -85,10 +85,10 @@ static BOOL LoadSoftwareScreenShot(const WCHAR *drv_name, const WCHAR *lpSoftwar
 
 /* Allow us to pre-load the DIB once for future draws */
 #ifdef MESS
-BOOL LoadScreenShotEx(int nGame, const WCHAR *lpSoftwareName, int nType)
+BOOL LoadScreenShotEx(int nGame, LPCWSTR lpSoftwareName, int nType)
 #else /* !MESS */
 #ifdef USE_IPS
-BOOL LoadScreenShot(int nGame, const WCHAR *lpIPSName, int nType)
+BOOL LoadScreenShot(int nGame, LPCWSTR lpIPSName, int nType)
 #else /* USE_IPS */
 BOOL LoadScreenShot(int nGame, int nType)
 #endif /* USE_IPS */
@@ -301,7 +301,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	if (filerr != FILERR_NONE)
 		return FALSE;
 
-	success = png_read_png_bitmap(mame_core_file(mfile), phDIB, pPal);
+	success = png_read_bitmap_gui(mame_core_file(mfile), phDIB, pPal);
 
 	mame_fclose(mfile);
 
@@ -466,7 +466,7 @@ BOOL AllocatePNG(png_info *p, HGLOBAL *phDIB, HPALETTE *pPal)
 }
 
 /* Copied and modified from png.c */
-static int png_read_png_bitmap(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
+static int png_read_bitmap_gui(LPVOID mfile, HGLOBAL *phDIB, HPALETTE *pPAL)
 {
 	png_info p;
 	UINT32 i;
