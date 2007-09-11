@@ -50,6 +50,7 @@ SOUNDS += OKIM6295
 SOUNDS += QSOUND
 SOUNDS += YM2610
 SOUNDS += YM2610B
+SOUNDS += CDDA
 
 
 
@@ -83,6 +84,8 @@ DRVLIBS += \
 $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/pd4990a.o \
  	$(MACHINE)/intelfsh.o \
+	$(MACHINE)/scsicd.o \
+	$(MACHINE)/wd33c93.o \
 
 
 #-------------------------------------------------
