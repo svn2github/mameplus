@@ -155,6 +155,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( swarm )		/* hack */
 	DRIVER( zerotime )	/* hack */
 	DRIVER( starfght )	/* hack */
+	DRIVER( galaxbsf )	/* hack */
 	DRIVER( tst_galx )	/* Galaxian Test ROM */
 	DRIVER( gmgalax )	/* bootleg */
 	DRIVER( pisces )	/* Subelectro */
@@ -235,6 +236,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( chewing )	/* ?? unknown */
 	DRIVER( catacomb )	/* 1982 MTM Games */
 	DRIVER( ckongg )    /* 1981 bootleg */
+	DRIVER( kkgalax )   /* 1981 bootleg */
 	DRIVER( porter )    /* 19?? bootleg */
 
 	/* Has some similarities with Moon Cresta but Board is very different */
@@ -328,6 +330,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( scrpiona )	/* (c) 1982 Zaccaria */
 	DRIVER( scrpionb )	/* (c) 1982 Zaccaria */
 	DRIVER( ad2083 )	/* (c) 1983 Midcoin */
+	DRIVER( turpins )	/* (c) 1981 bootleg */
 
 	/* "Crazy Climber hardware" games */
 	DRIVER( cclimber )	/* (c) 1980 Nichibutsu */
@@ -1625,6 +1628,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( topspedu )	/* B14 (c) 1987 Taito America Corporation (US) */
 	DRIVER( fullthrl )	/* B14 (c) 1987 Taito Corporation (Japan) */
 	DRIVER( opwolf )	/* B20 (c) 1987 Taito Corporation Japan (World) */
+	DRIVER( opwolfa )	/* B20 (c) 1987 Taito Corporation Japan (World) */
 	DRIVER( opwolfu )	/* B20 (c) 1987 Taito America Corporation (US) */
 	DRIVER( opwolfb )	/* bootleg */
 	DRIVER( othunder )	/* B67 (c) 1988 Taito Corporation Japan (World) */
@@ -4291,6 +4295,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( senjyo )	/* (c) 1983 Tehkan */
 	DRIVER( starforc )	/* (c) 1984 Tehkan */
 	DRIVER( starfore )	/* (c) 1984 Tehkan */
+	DRIVER( starforb )	/* (c) 1984 Tehkan */
 	DRIVER( megaforc )	/* (c) 1985 Tehkan + Video Ware license */
 	DRIVER( baluba )	/* (c) 1986 Able Corp. */
 	DRIVER( bombjack )	/* (c) 1984 Tehkan */
@@ -5808,6 +5813,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( vandyke )	/* UPL-90064 (c) UPL */
 	DRIVER( vandyjal )	/* UPL-90064 (c) Jaleco */
 	DRIVER( vandyja2 )	/* UPL-90064 (c) Jaleco */
+	DRIVER( vandykeb )	/* bootleg */
 	DRIVER( blkheart )	/* UPL-91069 */
 	DRIVER( blkhearj )	/* UPL-91069 */
 	DRIVER( acrobatm )	/* UPL-91073 (c) 1991 UPL + Taito license */
@@ -7272,6 +7278,7 @@ Other Sun games
 	/* Scorpion 2+Video Board Games */
 	DRIVER( qntoondo )	/* 1993 */
 	DRIVER( quintoon )	/* 1993 */
+	DRIVER( quintond )	/* 1993 */
 	DRIVER( quintono )	/* 1993 */
 	DRIVER( qntoond )	/* 1993 */
 	DRIVER( pokio )		/* 1994 */
