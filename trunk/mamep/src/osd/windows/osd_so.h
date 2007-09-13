@@ -381,7 +381,7 @@
 	#endif /* DRIVER_SWITCH */
 
 	// in datafile.c
-	extern void datafile_init(void);
+	extern void datafile_init(core_options *options);
 	extern void datafile_exit(void);
 	extern const char *localized_directory;
 	extern const char *history_filename;
