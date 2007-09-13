@@ -232,10 +232,10 @@ VIDEO_UPDATE(ssfindo)
 			for(y=0;y<256;y++)
 				for(x=0;x<320;x+=4)
 				{
-					*BITMAP_ADDR16(bitmap, y, x+1) = vram[s]&0xff;
-					*BITMAP_ADDR16(bitmap, y, x+2) = (vram[s]>>8)&0xff;
-					*BITMAP_ADDR16(bitmap, y, x+3) = (vram[s]>>16)&0xff;
-					*BITMAP_ADDR16(bitmap, y, x+4) = (vram[s]>>24)&0xff;
+					*BITMAP_ADDR16(bitmap, y, x+0) = vram[s]&0xff;
+					*BITMAP_ADDR16(bitmap, y, x+1) = (vram[s]>>8)&0xff;
+					*BITMAP_ADDR16(bitmap, y, x+2) = (vram[s]>>16)&0xff;
+					*BITMAP_ADDR16(bitmap, y, x+3) = (vram[s]>>24)&0xff;
 					s++;
 				}
 		}
@@ -718,5 +718,6 @@ static DRIVER_INIT(ppcar)
 
 GAME( 1999, ssfindo, 0,        ssfindo,  ssfindo,  ssfindo, ROT0, "Icarus", "See See Find Out", GAME_NO_SOUND )
 GAME( 1999, ppcar,   0,        ppcar,    ppcar,    ppcar, ROT0, "Icarus", "Pang Pang Car", GAME_NO_SOUND )
+
 
 

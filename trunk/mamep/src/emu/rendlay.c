@@ -692,15 +692,17 @@ static void draw_segment_diagonal_1(mame_bitmap *dest, int minx, int maxx, int m
 
 	/* draw line */
 	for (x = minx; x < maxx; x++)
-	{
-		UINT32 *d = BITMAP_ADDR32(dest, 0, x);
-		int step = (x - minx) * ratio;
-
-		for (y = maxy - width - step; y < maxy - step; y++)
+		if (x >= 0 && x < dest->width)
 		{
-			d[y * dest->rowpixels] = color;
+			UINT32 *d = BITMAP_ADDR32(dest, 0, x);
+			int step = (x - minx) * ratio;
+
+			for (y = maxy - width - step; y < maxy - step; y++)
+				if (y >= 0 && y < dest->height)
+				{
+					d[y * dest->rowpixels] = color;
+				}
 		}
-	}
 }
 
 
@@ -720,15 +722,17 @@ static void draw_segment_diagonal_2(mame_bitmap *dest, int minx, int maxx, int m
 
 	/* draw line */
 	for (x = minx; x < maxx; x++)
-	{
-		UINT32 *d = BITMAP_ADDR32(dest, 0, x);
-		int step = (x - minx) * ratio;
-
-		for (y = miny + step; y < miny + step + width; y++)
+		if (x >= 0 && x < dest->width)
 		{
-			d[y * dest->rowpixels] = color;
+			UINT32 *d = BITMAP_ADDR32(dest, 0, x);
+			int step = (x - minx) * ratio;
+
+			for (y = miny + step; y < miny + step + width; y++)
+				if (y >= 0 && y < dest->height)
+				{
+					d[y * dest->rowpixels] = color;
+				}
 		}
-	}
 }
 
 
@@ -972,6 +976,7 @@ static void layout_element_draw_led14seg(mame_bitmap *dest, const rectangle *bou
 	bitmap_free(tempbitmap);
 }
 
+
 /*-------------------------------------------------
     layout_element_draw_led14segsc - draw a
     14-segment LCD with semicolon (2 extra segments)
@@ -1202,10 +1207,12 @@ static void layout_element_draw_led16seg(mame_bitmap *dest, const rectangle *bou
 	bitmap_free(tempbitmap);
 }
 
+
 /*-------------------------------------------------
     layout_element_draw_led16segsc - draw a
     16-segment LCD with semicolon (2 extra segments)
 -------------------------------------------------*/
+
 static void layout_element_draw_led16segsc(mame_bitmap *dest, const rectangle *bounds, const render_color *color, int pattern)
 {
 	const rgb_t onpen = MAKE_ARGB(0xff, 0xff, 0xff, 0xff);
@@ -1324,6 +1331,8 @@ static void layout_element_draw_led16segsc(mame_bitmap *dest, const rectangle *b
 
 	bitmap_free(tempbitmap);
 }
+
+
 
 /***************************************************************************
     LAYOUT FILE PARSING

@@ -73,7 +73,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( batcird )	/* 19/03/1997 (c) 1997 (Euro) Phoenix Edition */
 	DRIVER( vsavd )		/* 19/05/1997 (c) 1997 (Euro) Phoenix Edition */
 	DRIVER( mvscud )	/* 23/01/1998 (c) 1998 (US) Phoenix Edition */
-	DRIVER( sfa3d )		/* 04/09/1998 (c) 1998 (US) Phoenix Edition */
+	DRIVER( sfa3ud )	/* 04/09/1998 (c) 1998 (US) Phoenix Edition */
 	DRIVER( gwingjd )	/* 23/02/1999 (c) 1999 Takumi (Japan) Phoenix Edition */
 	DRIVER( 1944d )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) Phoenix Edition */
 	DRIVER( hsf2d )	/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
