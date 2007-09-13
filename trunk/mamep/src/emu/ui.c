@@ -469,7 +469,7 @@ int ui_init(running_machine *machine)
 	ui_menu_init(machine);
 	ui_gfx_init(machine);
 
-	datafile_init();
+	datafile_init(mame_options());
 
 	/* reset globals */
 	single_step = FALSE;

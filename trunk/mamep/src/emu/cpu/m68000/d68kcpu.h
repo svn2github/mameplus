@@ -56,7 +56,7 @@ extern int m68kdrc_cycles;
 extern int m68kdrc_recompile_flag;
 extern int m68kdrc_check_code_modify;
 extern unsigned int m68kdrc_instr_size;
-extern link_info m68kdrc_link_make_cc;
+extern emit_link m68kdrc_link_make_cc;
 
 #define m68kdrc_cpu		m68ki_cpu
 #define m68kdrc_cpu_core	m68ki_cpu_core
@@ -423,21 +423,21 @@ extern link_info m68kdrc_link_make_cc;
 /* Enable or disable callback functions */
 #if M68K_EMULATE_INT_ACK
 	extern int m68kdrc_call_int_ack(int int_line);
-	#define m68kdrc_int_ack(reg)	do { _push_r32(reg); _call(m68kdrc_call_int_ack); _add_r32_imm(REG_ESP, 4); } while (0)
+	#define m68kdrc_int_ack(reg)	do { emit_push_r32(DRCTOP, reg); emit_call(DRCTOP, (x86code *)m68kdrc_call_int_ack); emit_add_r32_imm(DRCTOP, REG_ESP, 4); } while (0)
 #else
 	#define m68kdrc_int_ack(reg)
 #endif /* M68K_EMULATE_INT_ACK */
 
 #if M68K_EMULATE_BKPT_ACK
 	extern void m68kdrc_call_bkpt_ack_callback(unsigned int data);
-	#define m68kdrc_bkpt_ack(reg)	do { _push_r32(reg); _call(m68kdrc_call_bkpt_ack_callback); _add_r32_imm(REG_ESP, 4); } while (0)
+	#define m68kdrc_bkpt_ack(reg)	do { emit_push_r32(DRCTOP, reg); emit_call(DRCTOP, (x86code *)m68kdrc_call_bkpt_ack_callback); emit_add_r32_imm(DRCTOP, REG_ESP, 4); } while (0)
 #else
 	#define m68kdrc_bkpt_ack(reg)
 #endif /* M68K_EMULATE_BKPT_ACK */
 
 #if M68K_EMULATE_RESET
 	extern void m68kdrc_call_reset_instr_callback(void);
-	#define m68kdrc_output_reset()	_call(m68kdrc_call_reset_instr_callback)
+	#define m68kdrc_output_reset()	emit_call(DRCTOP, (x86code *)m68kdrc_call_reset_instr_callback)
 #else
 	#define m68kdrc_output_reset()
 #endif /* M68K_EMULATE_RESET */
@@ -446,7 +446,7 @@ extern link_info m68kdrc_link_make_cc;
 	extern void m68kdrc_call_cmpild_instr_callback(unsigned int val, int reg);
 	#define m68kdrc_cmpild_callback(val,reg) \
 		do { \
-			_push_imm(reg); _push_imm(val); _call(m68kdrc_call_cmpild_instr_callback); _add_r32_imm(REG_ESP, 8); \
+			emit_push_imm(DRCTOP, reg); emit_push_imm(DRCTOP, val); emit_call(DRCTOP, (x86code *)m68kdrc_call_cmpild_instr_callback); emit_add_r32_imm(DRCTOP, REG_ESP, 8); \
 			m68kdrc_recompile_flag |= RECOMPILE_ADD_DISPATCH | RECOMPILE_END_OF_STRING; \
 		} while (0)
 #else
@@ -455,14 +455,14 @@ extern link_info m68kdrc_link_make_cc;
 
 #if M68K_RTE_HAS_CALLBACK
 	extern void m68kdrc_call_rte_callback(void);
-	#define m68kdrc_rte_callback()	_call(m68kdrc_call_rte_callback)
+	#define m68kdrc_rte_callback()	emit_call(DRCTOP, (x86code *)m68kdrc_call_rte_callback)
 #else
 	#define m68kdrc_rte_callback()
 #endif /* M68K_RTE_HAS_CALLBACK */
 
 #if M68K_TAS_HAS_CALLBACK
 	extern int m68kdrc_call_tas_callback(void);
-	#define m68kdrc_tas_callback()	_call(m68kdrc_call_tas_callback)
+	#define m68kdrc_tas_callback()	emit_call(DRCTOP, (x86code *)m68kdrc_call_tas_callback)
 #else
 	#define m68kdrc_tas_callback()
 #endif /* M68K_TAS_HAS_CALLBACK */
@@ -479,7 +479,7 @@ extern link_info m68kdrc_link_make_cc;
 
 #if M68K_MONITOR_PC
 	extern void m68kdrc_call_pc_changed_callback(unsigned int new_pc);
-	#define m68kdrc_pc_changed(reg)	do { _push_r32(reg); _call(m68kdrc_call_pc_changed_callback); _add_r32_imm(REG_ESP, 4); } while (0)
+	#define m68kdrc_pc_changed(reg)	do { emit_push_r32(DRCTOP, reg); emit_call(DRCTOP, (x86code *)m68kdrc_call_pc_changed_callback); emit_add_r32_imm(DRCTOP, REG_ESP, 4); } while (0)
 #else
 	#define m68kdrc_pc_changed(reg)
 #endif /* M68K_MONITOR_PC */
@@ -600,22 +600,22 @@ extern link_info m68kdrc_link_make_cc;
 
 
 /* address register indirect */
-#define DRC_EA_AY_AI_8()   _mov_r32_m32abs(REG_EAX, &AY)
+#define DRC_EA_AY_AI_8()   emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY))
 #define DRC_EA_AY_AI_16()  DRC_EA_AY_AI_8()
 #define DRC_EA_AY_AI_32()  DRC_EA_AY_AI_8()
 
 /* postincrement */
-#define DRC_EA_AY_PI_8()   do { DRC_EA_AY_AI_8(); _add_m32abs_imm(&AY, 1); } while (0)		/* (size = byte) */
-#define DRC_EA_AY_PI_16()  do { DRC_EA_AY_AI_16(); _add_m32abs_imm(&AY, 2); } while (0)		/* (size = word) */
-#define DRC_EA_AY_PI_32()  do { DRC_EA_AY_AI_32(); _add_m32abs_imm(&AY, 4); } while (0)		/* (size = long) */
+#define DRC_EA_AY_PI_8()   do { DRC_EA_AY_AI_8(); emit_add_m32_imm(DRCTOP, MABS(&AY), 1); } while (0)		/* (size = byte) */
+#define DRC_EA_AY_PI_16()  do { DRC_EA_AY_AI_16(); emit_add_m32_imm(DRCTOP, MABS(&AY), 2); } while (0)		/* (size = word) */
+#define DRC_EA_AY_PI_32()  do { DRC_EA_AY_AI_32(); emit_add_m32_imm(DRCTOP, MABS(&AY), 4); } while (0)		/* (size = long) */
 
 /* predecrement */
-#define DRC_EA_AY_PD_8()   do { _sub_m32abs_imm(&AY, 1); DRC_EA_AY_AI_8(); } while (0)		/* (size = byte) */
-#define DRC_EA_AY_PD_16()  do { _sub_m32abs_imm(&AY, 2); DRC_EA_AY_AI_16(); } while (0)		/* (size = word) */
-#define DRC_EA_AY_PD_32()  do { _sub_m32abs_imm(&AY, 4); DRC_EA_AY_AI_32(); } while (0)		/* (size = long) */
+#define DRC_EA_AY_PD_8()   do { emit_sub_m32_imm(DRCTOP, MABS(&AY), 1); DRC_EA_AY_AI_8(); } while (0)		/* (size = byte) */
+#define DRC_EA_AY_PD_16()  do { emit_sub_m32_imm(DRCTOP, MABS(&AY), 2); DRC_EA_AY_AI_16(); } while (0)		/* (size = word) */
+#define DRC_EA_AY_PD_32()  do { emit_sub_m32_imm(DRCTOP, MABS(&AY), 4); DRC_EA_AY_AI_32(); } while (0)		/* (size = long) */
 
 /* displacement */
-#define DRC_EA_AY_DI_8()   do { uint32 ea = MAKE_INT_16(OPER_I_16()); _mov_r32_m32abs(REG_EAX, &AY); _add_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_EA_AY_DI_8()   do { uint32 ea = MAKE_INT_16(OPER_I_16()); emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY)); emit_add_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
 #define DRC_EA_AY_DI_16()  DRC_EA_AY_DI_8()
 #define DRC_EA_AY_DI_32()  DRC_EA_AY_DI_8()
 
@@ -625,22 +625,22 @@ extern link_info m68kdrc_link_make_cc;
 #define DRC_EA_AY_IX_32()  DRC_EA_AY_IX_8()
 
 /* address register indirect */
-#define DRC_EA_AX_AI_8()   _mov_r32_m32abs(REG_EAX, &AX)
+#define DRC_EA_AX_AI_8()   emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX))
 #define DRC_EA_AX_AI_16()  DRC_EA_AX_AI_8()
 #define DRC_EA_AX_AI_32()  DRC_EA_AX_AI_8()
 
 /* postincrement */
-#define DRC_EA_AX_PI_8()   do { DRC_EA_AX_AI_8(); _add_m32abs_imm(&AX, 1); } while (0)		/* (size = byte) */
-#define DRC_EA_AX_PI_16()  do { DRC_EA_AX_AI_16(); _add_m32abs_imm(&AX, 2); } while (0)		/* (size = word) */
-#define DRC_EA_AX_PI_32()  do { DRC_EA_AX_AI_32(); _add_m32abs_imm(&AX, 4); } while (0)		/* (size = long) */
+#define DRC_EA_AX_PI_8()   do { DRC_EA_AX_AI_8(); emit_add_m32_imm(DRCTOP, MABS(&AX), 1); } while (0)		/* (size = byte) */
+#define DRC_EA_AX_PI_16()  do { DRC_EA_AX_AI_16(); emit_add_m32_imm(DRCTOP, MABS(&AX), 2); } while (0)		/* (size = word) */
+#define DRC_EA_AX_PI_32()  do { DRC_EA_AX_AI_32(); emit_add_m32_imm(DRCTOP, MABS(&AX), 4); } while (0)		/* (size = long) */
 
 /* predecrement */
-#define DRC_EA_AX_PD_8()   do { _sub_m32abs_imm(&AX, 1); DRC_EA_AX_AI_8(); } while (0)		/* (size = byte) */
-#define DRC_EA_AX_PD_16()  do { _sub_m32abs_imm(&AX, 2); DRC_EA_AX_AI_16(); } while (0)		/* (size = word) */
-#define DRC_EA_AX_PD_32()  do { _sub_m32abs_imm(&AX, 4); DRC_EA_AX_AI_32(); } while (0)		/* (size = long) */
+#define DRC_EA_AX_PD_8()   do { emit_sub_m32_imm(DRCTOP, MABS(&AX), 1); DRC_EA_AX_AI_8(); } while (0)		/* (size = byte) */
+#define DRC_EA_AX_PD_16()  do { emit_sub_m32_imm(DRCTOP, MABS(&AX), 2); DRC_EA_AX_AI_16(); } while (0)		/* (size = word) */
+#define DRC_EA_AX_PD_32()  do { emit_sub_m32_imm(DRCTOP, MABS(&AX), 4); DRC_EA_AX_AI_32(); } while (0)		/* (size = long) */
 
 /* displacement */
-#define DRC_EA_AX_DI_8()   do { uint32 ea = MAKE_INT_16(OPER_I_16()); _mov_r32_m32abs(REG_EAX, &AX); _add_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_EA_AX_DI_8()   do { uint32 ea = MAKE_INT_16(OPER_I_16()); emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX)); emit_add_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
 #define DRC_EA_AX_DI_16()  DRC_EA_AX_DI_8()
 #define DRC_EA_AX_DI_32()  DRC_EA_AX_DI_8()
 
@@ -649,17 +649,17 @@ extern link_info m68kdrc_link_make_cc;
 #define DRC_EA_AX_IX_16()  DRC_EA_AX_IX_8()
 #define DRC_EA_AX_IX_32()  DRC_EA_AX_IX_8()
 
-#define DRC_EA_A7_AI_8()   do { _mov_r32_m32abs(REG_EAX, &REG68K_A[7]); } while (0)
-#define DRC_EA_A7_PI_8()   do { DRC_EA_A7_AI_8(); _add_m32abs_imm(&REG68K_A[7], 2); } while (0)	
-#define DRC_EA_A7_PD_8()   do { _sub_m32abs_imm(&REG68K_A[7], 2); DRC_EA_A7_AI_8(); } while (0)
+#define DRC_EA_A7_AI_8()   do { emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7])); } while (0)
+#define DRC_EA_A7_PI_8()   do { DRC_EA_A7_AI_8(); emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), 2); } while (0)	
+#define DRC_EA_A7_PD_8()   do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_A[7]), 2); DRC_EA_A7_AI_8(); } while (0)
 
 /* absolute word */
-#define DRC_EA_AW_8()      do { uint32 ea = MAKE_INT_16(OPER_I_16()); _mov_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_EA_AW_8()      do { uint32 ea = MAKE_INT_16(OPER_I_16()); emit_mov_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
 #define DRC_EA_AW_16()     DRC_EA_AW_8()
 #define DRC_EA_AW_32()     DRC_EA_AW_8()
 
 /* absolute long */
-#define DRC_EA_AL_8()      do { uint32 ea = OPER_I_32(); _mov_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_EA_AL_8()      do { uint32 ea = OPER_I_32(); emit_mov_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
 #define DRC_EA_AL_16()     DRC_EA_AL_8()
 #define DRC_EA_AL_32()     DRC_EA_AL_8()
 
@@ -674,9 +674,9 @@ extern link_info m68kdrc_link_make_cc;
 #define DRC_EA_PCIX_32()   DRC_EA_PCIX_8()
 
 
-#define DRC_OPER_I_8()     { uint32 ea = OPER_I_8(); _mov_r32_imm(REG_EAX, ea); } while (0)
-#define DRC_OPER_I_16()    { uint32 ea = OPER_I_16(); _mov_r32_imm(REG_EAX, ea); } while (0)
-#define DRC_OPER_I_32()    { uint32 ea = OPER_I_32(); _mov_r32_imm(REG_EAX, ea); } while (0)
+#define DRC_OPER_I_8()     { uint32 ea = OPER_I_8(); emit_mov_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
+#define DRC_OPER_I_16()    { uint32 ea = OPER_I_16(); emit_mov_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
+#define DRC_OPER_I_32()    { uint32 ea = OPER_I_32(); emit_mov_r32_imm(DRCTOP, REG_EAX, ea); } while (0)
 
 
 /* --------------------------- Status Register ---------------------------- */
@@ -709,218 +709,218 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 */
 
 
-#define DRC_NFLAG_8()	_mov_m8abs_r8(&FLAG_N, REG_AL)
-#define DRC_NFLAG_16()	_mov_m8abs_r8(&FLAG_N, REG_AH)
+#define DRC_NFLAG_8()	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_AL)
+#define DRC_NFLAG_16()	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_AH)
 #define DRC_NFLAG_32() \
 	do \
 	{						/* break ECX */ \
-		_mov_r32_r32(REG_ECX, REG_EAX); \
-		_shr_r32_imm(REG_ECX, 16); \
-		_mov_m8abs_r8(&FLAG_N, REG_CH); \
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX); \
+		emit_shr_r32_imm(DRCTOP, REG_ECX, 16); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_CH); \
 	} while (0)
 #define DRC_NFLAG_64() \
 	do \
 	{						/* break ECX */ \
-		_mov_r32_r32(REG_ECX, REG_EDX); \
-		_shr_r32_imm(REG_ECX, 16); \
-		_mov_m8abs_r8(&FLAG_N, REG_CH); \
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX); \
+		emit_shr_r32_imm(DRCTOP, REG_ECX, 16); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_CH); \
 	} while (0)
 
 #define DRC_VFLAG_ADD_8() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EAX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_mov_m8abs_r8(&FLAG_V, REG_CL); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EAX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL); \
 	} while (0)
 #define DRC_VFLAG_ADD_16() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EAX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_mov_m8abs_r8(&FLAG_V, REG_CH); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EAX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CH); \
 	} while (0)
 #define DRC_VFLAG_ADD_32() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EAX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_shr_r32_imm(REG_ECX, 16); \
-		_mov_m8abs_r8(&FLAG_V, REG_CH); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EAX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_shr_r32_imm(DRCTOP, REG_ECX, 16); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CH); \
 	} while (0)
 
 #define DRC_VFLAG_SUB_8() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EBX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_mov_m8abs_r8(&FLAG_V, REG_CL); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL); \
 	} while (0)
 #define DRC_VFLAG_SUB_16() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EBX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_mov_m8abs_r8(&FLAG_V, REG_CH); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CH); \
 	} while (0)
 #define DRC_VFLAG_SUB_32() \
 	do \
 	{						/* break EBX, ECX */ \
-		_xor_r32_r32(REG_ECX, REG_EBX); \
-		_xor_r32_r32(REG_EBX, REG_EAX); \
-		_and_r32_r32(REG_ECX, REG_EBX); \
-		_shr_r32_imm(REG_ECX, 16); \
-		_mov_m8abs_r8(&FLAG_V, REG_CH); \
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX); \
+		emit_shr_r32_imm(DRCTOP, REG_ECX, 16); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CH); \
 	} while (0)
 
 #define DRC_VFLAG_NEG_8() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_ECX); \
-		_and_r32_r32(REG_EBX, REG_EAX); \
-		_mov_m8abs_r8(&FLAG_V, REG_BL); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_BL); \
 	} while (0)
 
 #define DRC_VFLAG_NEG_16() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_ECX); \
-		_and_r32_r32(REG_EBX, REG_EAX); \
-		_mov_m8abs_r8(&FLAG_V, REG_BH); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_BH); \
 	} while (0)
 
 #define DRC_VFLAG_NEG_32() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_ECX); \
-		_and_r32_r32(REG_EBX, REG_EAX); \
-		_shr_r32_imm(REG_EBX, 16); \
-		_mov_m8abs_r8(&FLAG_V, REG_BH); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 16); \
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_BH); \
 	} while (0)
 
 #define DRC_CFLAG_COND_C() \
 	do \
 	{ \
-		_setcc_m8abs(COND_C, ((uint8 *)&FLAG_C) + 1); \
+		emit_setcc_m8(DRCTOP, COND_C, MABS(((uint32)&FLAG_C) + 1)); \
 	} while (0)
 
 #define DRC_CFLAG_8() \
 	do \
 	{ \
-		_mov_m16abs_r16(&FLAG_C, REG_AX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_AX); \
 	} while (0)
 #define DRC_CFLAG_16() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_EAX); \
-		_shr_r32_imm(REG_EBX, 8); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 8); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 #define DRC_CFLAG_ADD_32() \
 	do \
 	{						/* break EBX, ECX, EDX */ \
-		_mov_r32_r32(REG_EDX, REG_ECX); \
-		_and_r32_r32(REG_EDX, REG_EBX);	/* EDX = (S & D) */ \
-		_or_r32_r32(REG_ECX, REG_EBX);	/* ECX = (S | D) */ \
-		_mov_r32_r32(REG_EBX, REG_EAX); \
-		_not_r32(REG_EBX); \
-		_and_r32_r32(REG_EBX, REG_ECX);	/* EBX = (~R & (S | D)) */ \
-		_or_r32_r32(REG_EBX, REG_EDX);	/* EBX = ((S & D) | (~R & (S | D))) */ \
-		_shr_r32_imm(REG_EBX, 23); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_ECX); \
+		emit_and_r32_r32(DRCTOP, REG_EDX, REG_EBX);	/* EDX = (S & D) */ \
+		emit_or_r32_r32(DRCTOP, REG_ECX, REG_EBX);	/* ECX = (S | D) */ \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_not_r32(DRCTOP, REG_EBX); \
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_ECX);	/* EBX = (~R & (S | D)) */ \
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);	/* EBX = ((S & D) | (~R & (S | D))) */ \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 23); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 #define DRC_CFLAG_SUB_32() \
 	do \
 	{						/* break EBX, ECX, EDX */ \
-		_mov_r32_r32(REG_EDX, REG_ECX); \
-		_and_r32_r32(REG_EDX, REG_EAX);	/* EDX = (S & R) */ \
-		_or_r32_r32(REG_ECX, REG_EAX);	/* ECX = (S | R) */ \
-		_not_r32(REG_EBX); \
-		_and_r32_r32(REG_EBX, REG_ECX);	/* EBX = (~D & (S | R)) */ \
-		_or_r32_r32(REG_EBX, REG_EDX);	/* EBX = ((S & R) | (~D & (S | R))) */ \
-		_shr_r32_imm(REG_EBX, 23); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_ECX); \
+		emit_and_r32_r32(DRCTOP, REG_EDX, REG_EAX);	/* EDX = (S & R) */ \
+		emit_or_r32_r32(DRCTOP, REG_ECX, REG_EAX);	/* ECX = (S | R) */ \
+		emit_not_r32(DRCTOP, REG_EBX); \
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_ECX);	/* EBX = (~D & (S | R)) */ \
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);	/* EBX = ((S & R) | (~D & (S | R))) */ \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 23); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 
 #define DRC_CFLAG_NEG_8() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_EAX); \
-		_or_r32_r32(REG_EBX, REG_ECX); \
-		_shl_r32_imm(REG_EBX, 1); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 1); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 #define DRC_CFLAG_NEG_16() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_EAX); \
-		_or_r32_r32(REG_EBX, REG_ECX); \
-		_shr_r32_imm(REG_EBX, 7); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 7); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 #define DRC_CFLAG_NEG_32() \
 	do \
 	{						/* break EBX */ \
-		_mov_r32_r32(REG_EBX, REG_EAX); \
-		_or_r32_r32(REG_EBX, REG_ECX); \
-		_shr_r32_imm(REG_EBX, 23); \
-		_mov_m16abs_r16(&FLAG_C, REG_BX); \
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX); \
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_ECX); \
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 23); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX); \
 	} while (0)
 
 #define DRC_CXFLAG_COND_C() \
 	do \
 	{ \
 		DRC_CFLAG_COND_C(); \
-		_setcc_m8abs(COND_C, ((uint8 *)&FLAG_X) + 1); \
+		emit_setcc_m8(DRCTOP, COND_C, MABS(((uint32)&FLAG_X) + 1)); \
 	} while (0)
 
 #define DRC_CXFLAG_8() \
 	do \
 	{ \
  		DRC_CFLAG_8(); \
-		_mov_m16abs_r16(&FLAG_X, REG_AX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_AX); \
 	} while (0)
 #define DRC_CXFLAG_16() \
 	do \
 	{ \
 		DRC_CFLAG_16();				/* break EBX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 #define DRC_CXFLAG_ADD_32() \
 	do \
 	{ \
 		DRC_CFLAG_ADD_32();			/* break EBX, ECX, EDX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 #define DRC_CXFLAG_SUB_32() \
 	do \
 	{ \
 		DRC_CFLAG_SUB_32();			/* break EBX, ECX, EDX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 
 #define DRC_CXFLAG_NEG_8() \
 	do \
 	{ \
  		DRC_CFLAG_NEG_8();			/* break EBX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 #define DRC_CXFLAG_NEG_16() \
 	do \
 	{ \
 		DRC_CFLAG_NEG_16();			/* break EBX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 #define DRC_CXFLAG_NEG_32() \
 	do \
 	{ \
 		DRC_CFLAG_NEG_32();			/* break EBX */ \
-		_mov_m16abs_r16(&FLAG_X, REG_BX); \
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX); \
 	} while (0)
 
 
@@ -946,41 +946,41 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 #define DRC_XFLAG_AS_COND_C() \
 	do \
 	{						/* fixme: break EDX */ \
-		_mov_r8_m8abs(REG_DL, ((uint8 *)&FLAG_X) + 1); \
-		_shr_r32_imm(REG_EDX, 1); \
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(((uint32)&FLAG_X) + 1)); \
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 1); \
 	} while (0)
 
 
 #define m68kdrc_cond(flag,value,cond) \
-	_and_m32abs_imm(&flag, value); \
-	_jcc_near_link(cond, &m68kdrc_link_make_cc)
+	emit_and_m32_imm(DRCTOP, MABS(&flag), value); \
+	emit_jcc_near_link(DRCTOP, cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_nv(fail_cond) \
-	_mov_r8_m8abs(REG_AL, &FLAG_N); \
-	_mov_r8_m8abs(REG_BL, &FLAG_V); \
-	_xor_r32_r32(REG_EAX, REG_EBX); \
-	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68K_COND_LT() if EAX != 0 */ \
-	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&FLAG_N)); \
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_V)); \
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX); \
+	emit_and_r32_imm(DRCTOP, REG_EAX, NFLAG_SET); 	/* M68K_COND_LT() if EAX != 0 */ \
+	emit_jcc_near_link(DRCTOP, fail_cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_hi(fail_cond) \
-	_mov_r16_m16abs(REG_AX, &FLAG_C); \
-	_and_r32_imm(REG_EAX, CFLAG_SET);	/* M68K_COND_CC() if EAX == 0 */ \
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&FLAG_C)); \
+	emit_and_r32_imm(DRCTOP, REG_EAX, CFLAG_SET);	/* M68K_COND_CC() if EAX == 0 */ \
  \
-	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
-	_setcc_r8(COND_Z, REG_AL);		/* M68K_COND_NE() if AL == 0 */ \
-	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_HI() if EAX == 0 */ \
-	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
+	emit_test_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_CLEAR); \
+	emit_setcc_r8(DRCTOP, COND_Z, REG_AL);		/* M68K_COND_NE() if AL == 0 */ \
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);		/* M68K_COND_HI() if EAX == 0 */ \
+	emit_jcc_near_link(DRCTOP, fail_cond, &m68kdrc_link_make_cc)
 
 #define m68kdrc_cond_gt(fail_cond) \
-	_mov_r8_m8abs(REG_AL, &FLAG_N); \
-	_mov_r8_m8abs(REG_BL, &FLAG_V); \
-	_xor_r32_r32(REG_EAX, REG_EBX); \
-	_and_r32_imm(REG_EAX, NFLAG_SET); 	/* M68K_COND_GE() if EAX == 0 */  \
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&FLAG_N)); \
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_V)); \
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX); \
+	emit_and_r32_imm(DRCTOP, REG_EAX, NFLAG_SET); 	/* M68K_COND_GE() if EAX == 0 */  \
  \
-	_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR); \
-	_setcc_r8(COND_Z, REG_AH);		/* M68K_COND_NE() if AH == 0 */ \
-	_or_r32_r32(REG_EAX, REG_EAX);		/* M68K_COND_GT() if EAX == 0 */ \
-	_jcc_near_link(fail_cond, &m68kdrc_link_make_cc)
+	emit_test_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_CLEAR); \
+	emit_setcc_r8(DRCTOP, COND_Z, REG_AH);		/* M68K_COND_NE() if AH == 0 */ \
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);		/* M68K_COND_GT() if EAX == 0 */ \
+	emit_jcc_near_link(DRCTOP, fail_cond, &m68kdrc_link_make_cc)
 
 
 /* Conditions */
@@ -1022,40 +1022,40 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 	/* ___XNZVC */ \
 	do \
 	{ \
-		link_info get_ccr_link1; \
+		emit_link get_ccr_link1; \
  \
-		_xor_r32_r32(REG_EAX, REG_EAX); \
+		emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX); \
  \
 		/* (M68K_COND_XS() >> 4) : bit 4 */ \
-		_mov_r16_m16abs(REG_DX, &FLAG_X); \
-		_and_r32_imm(REG_EDX, XFLAG_SET); \
-		_shr_r32_imm(REG_EDX, 4); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, XFLAG_SET); \
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 4); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
  \
 		/* (M68K_COND_MI() >> 4) : bit 3 */ \
-		_mov_r8_m8abs(REG_DL, &FLAG_N); \
-		_and_r32_imm(REG_EDX, NFLAG_SET); \
-		_shr_r32_imm(REG_EDX, 4); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_N)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, NFLAG_SET); \
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 4); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
  \
 		/* (M68K_COND_EQ() << 2) : bit 2 */ \
-		_mov_r32_m32abs(REG_EDX, &FLAG_Z); \
-		_or_r32_r32(REG_EDX, REG_EDX); \
-		_jcc_near_link(COND_NZ, &get_ccr_link1); \
-		_or_r32_imm(REG_EAX, 1 << 2); \
-		_resolve_link(&get_ccr_link1); \
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MABS(&FLAG_Z)); \
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_EDX); \
+		emit_jcc_near_link(DRCTOP, COND_NZ, &get_ccr_link1); \
+		emit_or_r32_imm(DRCTOP, REG_EAX, 1 << 2); \
+		resolve_link(DRCTOP, &get_ccr_link1); \
  \
 		/* (M68K_COND_VS() >> 6) : bit 1 */ \
-		_mov_r8_m8abs(REG_DL, &FLAG_V); \
-		_and_r32_imm(REG_EDX, VFLAG_SET); \
-		_shr_r32_imm(REG_EDX, 6); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_V)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, VFLAG_SET); \
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 6); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
  \
 		/* (M68K_COND_CS() >> 8) : bit 0 */ \
-		_mov_r16_m16abs(REG_DX, &FLAG_C); \
-		_and_r32_imm(REG_EDX, CFLAG_SET); \
-		_shr_r32_imm(REG_EDX, 8); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_C)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, CFLAG_SET); \
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 8); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
 	} while (0)
 
 /* Get the status register */
@@ -1066,36 +1066,36 @@ DRC_CFLAG_NEG_32(EAX, ECX)
 		m68kdrc_get_ccr(); \
  \
 		/* T1 : bit 15 */ \
-		_or_r32_m32abs(REG_EAX, &FLAG_T1); \
+		emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&FLAG_T1)); \
  \
 		/* T1 : bit 14 */ \
-		_or_r32_m32abs(REG_EAX, &FLAG_T0); \
+		emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&FLAG_T0)); \
  \
 		/* (FLAG_S << 11) : bit 13 */ \
-		_mov_r8_m8abs(REG_DL, &FLAG_S); \
-		_and_r32_imm(REG_EDX, SFLAG_SET); \
-		_shl_r32_imm(REG_EDX, 11); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_S)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, SFLAG_SET); \
+		emit_shl_r32_imm(DRCTOP, REG_EDX, 11); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
  \
 		/* (FLAG_M << 11) : bit 12  */ \
-		_mov_r8_m8abs(REG_DL, &FLAG_M); \
-		_and_r32_imm(REG_EDX, MFLAG_SET); \
-		_shl_r32_imm(REG_EDX, 11); \
-		_or_r32_r32(REG_EAX, REG_EDX); \
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_M)); \
+		emit_and_r32_imm(DRCTOP, REG_EDX, MFLAG_SET); \
+		emit_shl_r32_imm(DRCTOP, REG_EDX, 11); \
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX); \
  \
 		/* FLAG_INT_MASK : bit 8-10 */ \
-		_or_r32_m32abs(REG_EAX, &FLAG_INT_MASK); \
+		emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&FLAG_INT_MASK)); \
 	} while (0)
 
 
 
 /* ---------------------------- Cycle Counting ---------------------------- */
 
-#define DRC_ADD_CYCLES(cycles)	do { uint32 val = cycles; if (val) _add_r32_imm(REG_EBP, val); } while (0)
-#define DRC_USE_CYCLES(cycles)	do { uint32 val = cycles; if (val) _sub_r32_imm(REG_EBP, val); } while (0)
-#define DRC_SET_CYCLES(cycles)	_mov_r32_imm(REG_EBP, cycles)
-#define DRC_GET_CYCLES()	_mov_r32_r32(REG_EAX, REG_EBP)
-#define DRC_USE_ALL_CYCLES()	_mov_r32_imm(REG_EBP, 0)
+#define DRC_ADD_CYCLES(cycles)	do { uint32 val = cycles; if (val) emit_add_r32_imm(DRCTOP, REG_EBP, val); } while (0)
+#define DRC_USE_CYCLES(cycles)	do { uint32 val = cycles; if (val) emit_sub_r32_imm(DRCTOP, REG_EBP, val); } while (0)
+#define DRC_SET_CYCLES(cycles)	emit_mov_r32_imm(DRCTOP, REG_EBP, cycles)
+#define DRC_GET_CYCLES()	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBP)
+#define DRC_USE_ALL_CYCLES()	emit_mov_r32_imm(DRCTOP, REG_EBP, 0)
 
 
 /* ----------------------------- Read / Write ----------------------------- */
@@ -1404,19 +1404,19 @@ INLINE void m68ki_write_32_pd_fc(uint address, uint fc, uint value)
 INLINE void m68kdrc_append_save_call_restore(drc_core *drc, void *target, UINT32 stackadj)
 {
 	// save volatiles
-	_mov_m32abs_r32(drc->icountptr, REG_EBP);
-	_mov_m32abs_imm(drc->pcptr, REG68K_PC);
+	emit_mov_m32_r32(DRCTOP, MABS(drc->icountptr), REG_EBP);
+	emit_mov_m32_imm(DRCTOP, MABS(drc->pcptr), REG68K_PC);
 
 	// call	target
-	_call(target);
+	emit_call(DRCTOP, (x86code *)target);
 
 	// restore volatiles
-	_mov_r32_m32abs(REG_EBP, drc->icountptr);
+	emit_mov_r32_m32(DRCTOP, REG_EBP, MABS(drc->icountptr));
 	/* (don't change PC) */
 
 	// adjust stack
 	if (stackadj)
-		_add_r32_imm(REG_ESP, stackadj);
+		emit_add_r32_imm(DRCTOP, REG_ESP, stackadj);
 }
 
 extern uint8	m68kdrc_real_read_8(uint32 address);
@@ -1448,9 +1448,9 @@ extern uint8	m68kdrc_real_read_8_fc(uint fc, uint32 address);
 extern uint16	m68kdrc_real_read_16_fc(uint fc, uint32 address);
 extern uint32	m68kdrc_real_read_32_fc(uint fc, uint32 address);
 
-#define m68kdrc_read_8_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_8_fc,  8) } while (0)
-#define m68kdrc_read_16_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_16_fc, 8) } while (0)
-#define m68kdrc_read_32_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_32_fc, 8) } while (0)
+#define m68kdrc_read_8_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_8_fc,  8) } while (0)
+#define m68kdrc_read_16_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_16_fc, 8) } while (0)
+#define m68kdrc_read_32_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_read_32_fc, 8) } while (0)
 #else
 #define m68kdrc_read_8_fc(fc_ptr)	m68kdrc_read_8()
 #define m68kdrc_read_16_fc(fc_ptr)	m68kdrc_read_16()
@@ -1471,9 +1471,9 @@ extern uint8	m68kdrc_real_write_8_fc(uint fc, uint32 address, uint8 value);
 extern uint16	m68kdrc_real_write_16_fc(uint fc, uint32 address, uint16 value);
 extern uint32	m68kdrc_real_write_32_fc(uint fc, uint32 address, uint32 value);
 
-#define m68kdrc_write_8_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_8_fc,  12) } while (0)
-#define m68kdrc_write_16_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_16_fc, 12) } while (0)
-#define m68kdrc_write_32_fc(fc_ptr)	do { _push_m32abs(fc_ptr); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_32_fc, 12) } while (0)
+#define m68kdrc_write_8_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_8_fc,  12) } while (0)
+#define m68kdrc_write_16_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_16_fc, 12) } while (0)
+#define m68kdrc_write_32_fc(fc_ptr)	do { emit_push_m32(DRCTOP, MABS(fc_ptr)); m68kdrc_append_save_call_restore(drc, (void *)(uint32)m68kdrc_real_write_32_fc, 12) } while (0)
 #else
 #define m68kdrc_write_8_fc(fc_ptr)	m68kdrc_write_8()
 #define m68kdrc_write_16_fc(fc_ptr)	m68kdrc_write_16()
@@ -1495,13 +1495,13 @@ INLINE void m68kdrc_get_ea_pcdi(drc_core *drc)
 	uint old_pc = REG68K_PC;
 	uint32 ea = MAKE_INT_16(OPER_I_16());
 	m68ki_use_program_space(); /* auto-disable */
-	_mov_r32_imm(REG_EAX, old_pc + ea);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, old_pc + ea);
 }
 
 INLINE void m68kdrc_get_ea_pcix(drc_core *drc)
 {
 	m68ki_use_program_space(); /* auto-disable */
-	_mov_m32abs_imm(&REG68K_PC, REG68K_PC);
+	emit_mov_m32_imm(DRCTOP, MABS(&REG68K_PC), REG68K_PC);
 	m68kdrc_get_ea_ix(drc, &REG68K_PC);
 }
 
@@ -1559,13 +1559,13 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	{
 		/* Calculate index */
 		if(!BIT_B(extension))           /* W/L */
-			_movsx_r32_m16abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 		else
-			_mov_r32_m32abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 
 		/* Add base register and displacement and return */
-		_add_r32_imm(REG_EAX, MAKE_INT_8(extension));
-		_add_r32_m32abs(REG_EAX, pAn);
+		emit_add_r32_imm(DRCTOP, REG_EAX, MAKE_INT_8(extension));
+		emit_add_r32_m32(DRCTOP, REG_EAX, MABS(pAn));
 
 		return;
 	}
@@ -1575,20 +1575,20 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	{
 		/* Calculate index */
 		if(!BIT_B(extension))           /* W/L */
-			_movsx_r32_m16abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 		else
-			_mov_r32_m32abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 
 		/* Add scale if proper CPU type */
 		if(CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 		{
 			if ((extension>>9) & 3)
-				_shl_r32_imm(REG_EAX, (extension>>9) & 3);  /* SCALE */
+				emit_shl_r32_imm(DRCTOP, REG_EAX, (extension>>9) & 3);  /* SCALE */
 		}
 
 		/* Add base register and displacement and return */
-		_add_r32_imm(REG_EAX, MAKE_INT_8(extension));
-		_add_r32_m32abs(REG_EAX, pAn);
+		emit_add_r32_imm(DRCTOP, REG_EAX, MAKE_INT_8(extension));
+		emit_add_r32_m32(DRCTOP, REG_EAX, MABS(pAn));
 
 		return;
 	}
@@ -1602,19 +1602,19 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	{
 		/* Calculate index */
 		if(!BIT_B(extension))           /* W/L */
-			_movsx_r32_m16abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 		else
-			_mov_r32_m32abs(REG_EAX, &REG68K_DA[extension>>12]);     /* Xn */
+			emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[extension>>12]));     /* Xn */
 
 		/* Add scale if proper CPU type */
 		if(CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 		{
 			if ((extension>>9) & 3)
-				_shl_r32_imm(REG_EAX, (extension>>9) & 3);  /* SCALE */
+				emit_shl_r32_imm(DRCTOP, REG_EAX, (extension>>9) & 3);  /* SCALE */
 		}
 	}
 	else
-		_xor_r32_r32(REG_EAX, REG_EAX);
+		emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
 
 	/* Check if base register is present */
 	if(BIT_7(extension))                /* BS */
@@ -1639,10 +1639,10 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	if(!(extension&7))                  /* No Memory Indirect */
 	{
 		if (pAn)
-			_add_r32_m32abs(REG_EAX, pAn);
+			emit_add_r32_m32(DRCTOP, REG_EAX, MABS(pAn));
 
 		if (bd)
-			_add_r32_imm(REG_EAX, bd);
+			emit_add_r32_imm(DRCTOP, REG_EAX, bd);
 
 		return;
 	}
@@ -1665,105 +1665,105 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
 	/* Postindex */
 	if(BIT_2(extension))                /* I/IS:  0 = preindex, 1 = postindex */
 	{
-		_push_r32(REG_EAX);	/* save Xn */
-		_mov_r32_imm(REG_EAX, bd);
+		emit_push_r32(DRCTOP, REG_EAX);	/* save Xn */
+		emit_mov_r32_imm(DRCTOP, REG_EAX, bd);
 
 		if (pAn)
-			_add_r32_m32abs(REG_EAX, pAn);
+			emit_add_r32_m32(DRCTOP, REG_EAX, MABS(pAn));
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_pop_r32(REG_EBX);
-		_add_r32_r32(REG_EAX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		if (od)
-			_add_r32_imm(REG_EAX, od);
+			emit_add_r32_imm(DRCTOP, REG_EAX, od);
 	}
 	/* Preindex */
 	else
 	{
 		if (bd)
-			_add_r32_imm(REG_EAX, bd);
+			emit_add_r32_imm(DRCTOP, REG_EAX, bd);
 
 		if (pAn)
-			_add_r32_m32abs(REG_EAX, pAn);
+			emit_add_r32_m32(DRCTOP, REG_EAX, MABS(pAn));
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
 		if (od)
-			_add_r32_imm(REG_EAX, od);
+			emit_add_r32_imm(DRCTOP, REG_EAX, od);
 	}
 }
 
 
 /* Fetch operands */
-#define DRC_OPER_AY_AI_8()  do { DRC_EA_AY_AI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AY_AI_16() do { DRC_EA_AY_AI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AY_AI_32() do { DRC_EA_AY_AI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AY_PI_8()  do { DRC_EA_AY_PI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AY_PI_16() do { DRC_EA_AY_PI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AY_PI_32() do { DRC_EA_AY_PI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AY_PD_8()  do { DRC_EA_AY_PD_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AY_PD_16() do { DRC_EA_AY_PD_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AY_PD_32() do { DRC_EA_AY_PD_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AY_DI_8()  do { DRC_EA_AY_DI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AY_DI_16() do { DRC_EA_AY_DI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AY_DI_32() do { DRC_EA_AY_DI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AY_IX_8()  do { DRC_EA_AY_IX_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AY_IX_16() do { DRC_EA_AY_IX_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AY_IX_32() do { DRC_EA_AY_IX_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AY_AI_8()  do { DRC_EA_AY_AI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AY_AI_16() do { DRC_EA_AY_AI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AY_AI_32() do { DRC_EA_AY_AI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AY_PI_8()  do { DRC_EA_AY_PI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AY_PI_16() do { DRC_EA_AY_PI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AY_PI_32() do { DRC_EA_AY_PI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AY_PD_8()  do { DRC_EA_AY_PD_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AY_PD_16() do { DRC_EA_AY_PD_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AY_PD_32() do { DRC_EA_AY_PD_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AY_DI_8()  do { DRC_EA_AY_DI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AY_DI_16() do { DRC_EA_AY_DI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AY_DI_32() do { DRC_EA_AY_DI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AY_IX_8()  do { DRC_EA_AY_IX_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AY_IX_16() do { DRC_EA_AY_IX_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AY_IX_32() do { DRC_EA_AY_IX_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
 
-#define DRC_OPER_AX_AI_8()  do { DRC_EA_AX_AI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AX_AI_16() do { DRC_EA_AX_AI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AX_AI_32() do { DRC_EA_AX_AI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AX_PI_8()  do { DRC_EA_AX_PI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AX_PI_16() do { DRC_EA_AX_PI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AX_PI_32() do { DRC_EA_AX_PI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AX_PD_8()  do { DRC_EA_AX_PD_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AX_PD_16() do { DRC_EA_AX_PD_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AX_PD_32() do { DRC_EA_AX_PD_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AX_DI_8()  do { DRC_EA_AX_DI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AX_DI_16() do { DRC_EA_AX_DI_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AX_DI_32() do { DRC_EA_AX_DI_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AX_IX_8()  do { DRC_EA_AX_IX_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AX_IX_16() do { DRC_EA_AX_IX_16(); _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AX_IX_32() do { DRC_EA_AX_IX_32(); _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AX_AI_8()  do { DRC_EA_AX_AI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AX_AI_16() do { DRC_EA_AX_AI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AX_AI_32() do { DRC_EA_AX_AI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AX_PI_8()  do { DRC_EA_AX_PI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AX_PI_16() do { DRC_EA_AX_PI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AX_PI_32() do { DRC_EA_AX_PI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AX_PD_8()  do { DRC_EA_AX_PD_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AX_PD_16() do { DRC_EA_AX_PD_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AX_PD_32() do { DRC_EA_AX_PD_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AX_DI_8()  do { DRC_EA_AX_DI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AX_DI_16() do { DRC_EA_AX_DI_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AX_DI_32() do { DRC_EA_AX_DI_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AX_IX_8()  do { DRC_EA_AX_IX_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AX_IX_16() do { DRC_EA_AX_IX_16(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AX_IX_32() do { DRC_EA_AX_IX_32(); emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
 
-#define DRC_OPER_A7_PI_8()  do { DRC_EA_A7_PI_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_A7_PD_8()  do { DRC_EA_A7_PD_8();  _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_A7_PI_8()  do { DRC_EA_A7_PI_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_A7_PD_8()  do { DRC_EA_A7_PD_8();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
 
-#define DRC_OPER_AW_8()     do { DRC_EA_AW_8();     _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AW_16()    do { DRC_EA_AW_16();    _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AW_32()    do { DRC_EA_AW_32();    _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_AL_8()     do { DRC_EA_AL_8();     _push_r32(REG_EAX); m68kdrc_read_8();  } while (0)
-#define DRC_OPER_AL_16()    do { DRC_EA_AL_16();    _push_r32(REG_EAX); m68kdrc_read_16(); } while (0)
-#define DRC_OPER_AL_32()    do { DRC_EA_AL_32();    _push_r32(REG_EAX); m68kdrc_read_32(); } while (0)
-#define DRC_OPER_PCDI_8()   do { DRC_EA_PCDI_8();   _push_r32(REG_EAX); m68kdrc_read_pcrel_8();  } while (0)
-#define DRC_OPER_PCDI_16()  do { DRC_EA_PCDI_16();  _push_r32(REG_EAX); m68kdrc_read_pcrel_16(); } while (0)
-#define DRC_OPER_PCDI_32()  do { DRC_EA_PCDI_32();  _push_r32(REG_EAX); m68kdrc_read_pcrel_32(); } while (0)
-#define DRC_OPER_PCIX_8()   do { DRC_EA_PCIX_8();   _push_r32(REG_EAX); m68kdrc_read_pcrel_8();  } while (0)
-#define DRC_OPER_PCIX_16()  do { DRC_EA_PCIX_16();  _push_r32(REG_EAX); m68kdrc_read_pcrel_16(); } while (0)
-#define DRC_OPER_PCIX_32()  do { DRC_EA_PCIX_32();  _push_r32(REG_EAX); m68kdrc_read_pcrel_32(); } while (0)
+#define DRC_OPER_AW_8()     do { DRC_EA_AW_8();     emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AW_16()    do { DRC_EA_AW_16();    emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AW_32()    do { DRC_EA_AW_32();    emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_AL_8()     do { DRC_EA_AL_8();     emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_8();  } while (0)
+#define DRC_OPER_AL_16()    do { DRC_EA_AL_16();    emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_16(); } while (0)
+#define DRC_OPER_AL_32()    do { DRC_EA_AL_32();    emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_32(); } while (0)
+#define DRC_OPER_PCDI_8()   do { DRC_EA_PCDI_8();   emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_8();  } while (0)
+#define DRC_OPER_PCDI_16()  do { DRC_EA_PCDI_16();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_16(); } while (0)
+#define DRC_OPER_PCDI_32()  do { DRC_EA_PCDI_32();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_32(); } while (0)
+#define DRC_OPER_PCIX_8()   do { DRC_EA_PCIX_8();   emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_8();  } while (0)
+#define DRC_OPER_PCIX_16()  do { DRC_EA_PCIX_16();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_16(); } while (0)
+#define DRC_OPER_PCIX_32()  do { DRC_EA_PCIX_32();  emit_push_r32(DRCTOP, REG_EAX); m68kdrc_read_pcrel_32(); } while (0)
 
 
 
 /* ---------------------------- Stack Functions --------------------------- */
 
-#define m68kdrc_push_16_imm(x)		do { _sub_m32abs_imm(&REG68K_SP, 2); _push_imm(x); _push_m32abs(&REG68K_SP); m68kdrc_write_16(); } while (0)
-#define m68kdrc_push_32_imm(x)		do { _sub_m32abs_imm(&REG68K_SP, 4); _push_imm(x); _push_m32abs(&REG68K_SP); m68kdrc_write_32(); } while (0)
-#define m68kdrc_push_16_m32abs(p)	do { _sub_m32abs_imm(&REG68K_SP, 2); _push_m32abs(p); _push_m32abs(&REG68K_SP); m68kdrc_write_16(); } while (0)
-#define m68kdrc_push_32_m32abs(p)	do { _sub_m32abs_imm(&REG68K_SP, 4); _push_m32abs(p); _push_m32abs(&REG68K_SP); m68kdrc_write_32(); } while (0)
-#define m68kdrc_push_16_r32(reg)	do { _sub_m32abs_imm(&REG68K_SP, 2); _push_r32(reg); _push_m32abs(&REG68K_SP); m68kdrc_write_16(); } while (0)
-#define m68kdrc_push_32_r32(reg)	do { _sub_m32abs_imm(&REG68K_SP, 4); _push_r32(reg); _push_m32abs(&REG68K_SP); m68kdrc_write_32(); } while (0)
+#define m68kdrc_push_16_imm(x)		do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); emit_push_imm(DRCTOP, x); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_16(); } while (0)
+#define m68kdrc_push_32_imm(x)		do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); emit_push_imm(DRCTOP, x); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_32(); } while (0)
+#define m68kdrc_push_16_m32abs(p)	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); emit_push_m32(DRCTOP, MABS(p)); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_16(); } while (0)
+#define m68kdrc_push_32_m32abs(p)	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); emit_push_m32(DRCTOP, MABS(p)); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_32(); } while (0)
+#define m68kdrc_push_16_r32(reg)	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); emit_push_r32(DRCTOP, reg); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_16(); } while (0)
+#define m68kdrc_push_32_r32(reg)	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); emit_push_r32(DRCTOP, reg); emit_push_m32(DRCTOP, MABS(&REG68K_SP)); m68kdrc_write_32(); } while (0)
 
-#define m68kdrc_pull_16()	do { _push_m32abs(&REG68K_SP); _add_m32abs_imm(&REG68K_SP, 2); m68kdrc_read_16(); } while (0)
-#define m68kdrc_pull_32()	do { _push_m32abs(&REG68K_SP); _add_m32abs_imm(&REG68K_SP, 4); m68kdrc_read_32(); } while (0)
-#define m68kdrc_fake_push_16()	do { _sub_m32abs_imm(&REG68K_SP, 2); } while (0)
-#define m68kdrc_fake_push_32()	do { _sub_m32abs_imm(&REG68K_SP, 4); } while (0)
-#define m68kdrc_fake_pull_16()	do { _add_m32abs_imm(&REG68K_SP, 2); } while (0)
-#define m68kdrc_fake_pull_32()	do { _add_m32abs_imm(&REG68K_SP, 4); } while (0)
+#define m68kdrc_pull_16()	do { emit_push_m32(DRCTOP, MABS(&REG68K_SP)); emit_add_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); m68kdrc_read_16(); } while (0)
+#define m68kdrc_pull_32()	do { emit_push_m32(DRCTOP, MABS(&REG68K_SP)); emit_add_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); m68kdrc_read_32(); } while (0)
+#define m68kdrc_fake_push_16()	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); } while (0)
+#define m68kdrc_fake_push_32()	do { emit_sub_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); } while (0)
+#define m68kdrc_fake_pull_16()	do { emit_add_m32_imm(DRCTOP, MABS(&REG68K_SP), 2); } while (0)
+#define m68kdrc_fake_pull_32()	do { emit_add_m32_imm(DRCTOP, MABS(&REG68K_SP), 4); } while (0)
 
 
 /* ----------------------------- Program Flow ----------------------------- */
@@ -1774,25 +1774,25 @@ INLINE void m68kdrc_get_ea_ix(drc_core *drc, uint *pAn)
  */
 INLINE void m68kdrc_jump(drc_core *drc)
 {
-	link_info link1;
+	emit_link link1;
 
-	_and_r32_imm(REG_EAX, CPU_ADDRESS_MASK);
-	_mov_r32_r32(REG_EDI, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EAX, CPU_ADDRESS_MASK);
+	emit_mov_r32_r32(DRCTOP, REG_EDI, REG_EAX);
 
-	_cmp_r32_imm(REG_EDI, REG68K_PPC);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EDI, REG68K_PPC);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 #if 0
-	_push_imm(REG68K_PPC);
-	_push_r32(REG_EAX);
-	_push_imm("Eat all cycles (PC = %06x, PPC = %06x)\n");
-	_call(printf);
-	_add_r32_imm(REG_ESP, 12);
+	emit_push_imm(DRCTOP, REG68K_PPC);
+	emit_push_r32(DRCTOP, REG_EAX);
+	emit_push_imm(DRCTOP, "Eat all cycles (PC = %06x, PPC = %06x)\n");
+	emit_call(DRCTOP, (x86code *)printf);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 12);
 #endif
 
 	DRC_USE_ALL_CYCLES();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68kdrc_pc_changed(REG_EDI);
 	m68kdrc_recompile_flag |= RECOMPILE_ADD_DISPATCH | RECOMPILE_DONT_ADD_PCDELTA | RECOMPILE_END_OF_STRING;
 }
@@ -1800,11 +1800,11 @@ _resolve_link(&link1);
 /* REG_ESI: vector */
 INLINE void m68kdrc_jump_vector(drc_core *drc)
 {
-	_mov_r32_m32abs(REG_EDX, &REG68K_VBR);
-	_mov_r32_r32(REG_EAX, REG_ESI);
-	_shl_r32_imm(REG_EAX, 2);
-	_add_r32_r32(REG_EDX, REG_EAX);
-	_push_r32(REG_EDX);
+	emit_mov_r32_m32(DRCTOP, REG_EDX, MABS(&REG68K_VBR));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_add_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+	emit_push_r32(DRCTOP, REG_EDX);
 
 	m68kdrc_read_data_32();
 
@@ -1824,7 +1824,7 @@ INLINE void m68kdrc_branch_or_dispatch(drc_core *drc, uint32 newpc, int cycles, 
 {
 	void *code = drc_get_code_at_pc(drc, newpc);
 
-	_mov_r32_imm(REG_EDI, newpc);
+	emit_mov_r32_imm(DRCTOP, REG_EDI, newpc);
 	m68kdrc_pc_changed(REG_EDI);
 
 	if (eat_all_cycles && newpc == REG68K_PPC)
@@ -1834,14 +1834,14 @@ INLINE void m68kdrc_branch_or_dispatch(drc_core *drc, uint32 newpc, int cycles, 
 #endif
 		//DRC_USE_ALL_CYCLES();
 		DRC_SET_CYCLES(-cycles);
-		_jmp(drc->out_of_cycles);
+		emit_jmp(DRCTOP, drc->out_of_cycles);
 		return;
 	}
 
 	drc_append_standard_epilogue(drc, cycles, 0, 1);
 
 	if (code)
-		_jmp(code);
+		emit_jmp(DRCTOP, code);
 	else
 		drc_append_tentative_fixed_dispatcher(drc, newpc);
 }
@@ -1858,34 +1858,34 @@ INLINE void m68kdrc_set_s_flag(drc_core *drc, uint8 value)
 {
 	uint8 new_s_flag = value & SFLAG_SET;
 
-	_movzx_r32_m8abs(REG_EBX, &FLAG_S);
-	_movzx_r32_m8abs(REG_ECX, &FLAG_M);
+	emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&FLAG_S));
+	emit_movzx_r32_m8(DRCTOP, REG_ECX, MABS(&FLAG_M));
 
-	_mov_r32_r32(REG_EDX, REG_EBX);
-	_shr_r32_imm(REG_EDX, 1);
-	_and_r32_r32(REG_EDX, REG_ECX);
-	_or_r32_r32(REG_EBX, REG_EDX);
-	_shl_r32_imm(REG_EBX, 2);
+	emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+	emit_shr_r32_imm(DRCTOP, REG_EDX, 1);
+	emit_and_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
 
-	_mov_r32_m32abs(REG_ECX, &REG68K_SP);
-	_mov_m32bd_r32(REG_EBX, &REG68K_SP_BASE, REG_ECX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_SP));
+	emit_mov_m32_r32(DRCTOP, MBD(REG_EBX, &REG68K_SP_BASE), REG_ECX);
 
-	_mov_m8abs_imm(&FLAG_S, new_s_flag);
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_S), new_s_flag);
 
 	if (new_s_flag)
 	{
-		_movzx_r32_m8abs(REG_ECX, &FLAG_M);
-		_and_r32_imm(REG_ECX, new_s_flag >> 1);
-		_or_r32_imm(REG_ECX, new_s_flag);
-		_shl_r32_imm(REG_ECX, 2);
-		_mov_r32_m32bd(REG_EBX, REG_ECX, &REG68K_SP_BASE);
+		emit_movzx_r32_m8(DRCTOP, REG_ECX, MABS(&FLAG_M));
+		emit_and_r32_imm(DRCTOP, REG_ECX, new_s_flag >> 1);
+		emit_or_r32_imm(DRCTOP, REG_ECX, new_s_flag);
+		emit_shl_r32_imm(DRCTOP, REG_ECX, 2);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ECX, &REG68K_SP_BASE));
 	}
 	else
 	{
-		_mov_r32_m32abs(REG_EBX, &REG68K_SP_BASE);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_SP_BASE));
 	}
 
-	_mov_m32abs_r32(&REG68K_SP, REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_SP), REG_EBX);
 }
 
 /* Set the S and M flags and change the active stack pointer.
@@ -1895,34 +1895,34 @@ INLINE void m68kdrc_set_sm_flag(drc_core *drc)
 // in:		EAX
 // break:	EBX, ECX, EDX
 {
-	_movzx_r32_m8abs(REG_EBX, &FLAG_S);
-	_movzx_r32_m8abs(REG_ECX, &FLAG_M);
+	emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&FLAG_S));
+	emit_movzx_r32_m8(DRCTOP, REG_ECX, MABS(&FLAG_M));
 
-	_mov_r32_r32(REG_EDX, REG_EBX);
-	_shr_r32_imm(REG_EDX, 1);
-	_and_r32_r32(REG_EDX, REG_ECX);
-	_or_r32_r32(REG_EBX, REG_EDX);
-	_shl_r32_imm(REG_EBX, 2);
+	emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+	emit_shr_r32_imm(DRCTOP, REG_EDX, 1);
+	emit_and_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
 
-	_mov_r32_m32abs(REG_ECX, &REG68K_SP);
-	_mov_m32bd_r32(REG_EBX, &REG68K_SP_BASE, REG_ECX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_SP));
+	emit_mov_m32_r32(DRCTOP, MBD(REG_EBX, &REG68K_SP_BASE), REG_ECX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, SFLAG_SET);
-	_mov_m8abs_r8(&FLAG_S, REG_BL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, SFLAG_SET);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_S), REG_BL);
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_and_r32_imm(REG_ECX, MFLAG_SET);
-	_mov_m8abs_r8(&FLAG_M, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_ECX, MFLAG_SET);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_M), REG_CL);
 
-	_mov_r32_r32(REG_EDX, REG_EBX);
-	_shr_r32_imm(REG_EDX, 1);
-	_and_r32_r32(REG_EDX, REG_ECX);
-	_or_r32_r32(REG_EBX, REG_EDX);
-	_shl_r32_imm(REG_EBX, 2);
+	emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+	emit_shr_r32_imm(DRCTOP, REG_EDX, 1);
+	emit_and_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
 
-	_mov_r32_m32bd(REG_ECX, REG_EBX, &REG68K_SP_BASE);
-	_mov_m32abs_r32(&REG68K_SP, REG_ECX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_EBX, &REG68K_SP_BASE));
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_SP), REG_ECX);
 }
 
 /* Set the S and M flags.  Don't touch the stack pointer. */
@@ -1930,13 +1930,13 @@ INLINE void m68kdrc_set_sm_flag_nosp(drc_core *drc)
 // in:		EAX
 // break:	EBX
 {
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, SFLAG_SET);
-	_mov_m8abs_r8(&FLAG_S, REG_BL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, SFLAG_SET);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_S), REG_BL);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, MFLAG_SET);
-	_mov_m8abs_r8(&FLAG_M, REG_BL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, MFLAG_SET);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_M), REG_BL);
 }
 
 /* Set the condition code register */
@@ -1944,30 +1944,30 @@ INLINE void m68kdrc_set_ccr(drc_core *drc)
 // in:		EAX
 // break:	EBX
 {
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 4);
-	_shl_r32_imm(REG_EBX, 4);
-	_mov_m16abs_r16(&FLAG_X, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 4);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 3);
-	_shl_r32_imm(REG_EBX, 4);
-	_mov_m8abs_r8(&FLAG_N, REG_BL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 3);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 2);
-	_xor_r32_imm(REG_EBX, 1 << 2);
-	_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 2);
+	emit_xor_r32_imm(DRCTOP, REG_EBX, 1 << 2);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EBX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 1);
-	_shl_r32_imm(REG_EBX, 6);
-	_mov_m8abs_r8(&FLAG_V, REG_BL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 6);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_BL);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 0);
-	_shl_r32_imm(REG_EBX, 8);
-	_mov_m16abs_r16(&FLAG_C, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 0);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 8);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
 }
 
 /* Set the status register but don't check for interrupts */
@@ -1975,20 +1975,20 @@ INLINE void m68kdrc_set_sr_noint(drc_core *drc)
 // in:		EAX
 // break:	EAX, EBX
 {
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 15);
-	_mov_m16abs_r16(&FLAG_T1, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 15);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_T1), REG_BX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 14);
-	_mov_m16abs_r16(&FLAG_T0, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 14);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_T0), REG_BX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 0x0700);
-	_mov_m16abs_r16(&FLAG_INT_MASK, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 0x0700);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_INT_MASK), REG_BX);
 
 	m68kdrc_set_ccr(drc);
-	_shr_r32_imm(REG_EAX, 11);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 11);
 	m68kdrc_set_sm_flag(drc);
 }
 
@@ -1999,20 +1999,20 @@ INLINE void m68kdrc_set_sr_noint_nosp(drc_core *drc)
 // in:		EAX
 // break:	EAX, EBX
 {
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 15);
-	_mov_m16abs_r16(&FLAG_T1, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 15);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_T1), REG_BX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 1 << 14);
-	_mov_m16abs_r16(&FLAG_T0, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 1 << 14);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_T0), REG_BX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, 0x0700);
-	_mov_m16abs_r16(&FLAG_INT_MASK, REG_BX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 0x0700);
+	emit_mov_m16_r16(DRCTOP, MABS(&FLAG_INT_MASK), REG_BX);
 
 	m68kdrc_set_ccr(drc);
-	_shr_r32_imm(REG_EAX, 11);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 11);
 	m68kdrc_set_sm_flag_nosp(drc);
 }
 
@@ -2072,11 +2072,11 @@ INLINE void m68kdrc_vncz_flag_move_8(drc_core *drc)
 {
 	if (m68kdrc_update_vncz_check())
 	{
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 		DRC_NFLAG_8();
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -2084,11 +2084,11 @@ INLINE void m68kdrc_vncz_flag_move_16(drc_core *drc)
 {
 	if (m68kdrc_update_vncz_check())
 	{
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 		DRC_NFLAG_16();
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -2096,10 +2096,10 @@ INLINE void m68kdrc_vncz_flag_move_32(drc_core *drc)
 {
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 		DRC_NFLAG_32();				/* break ECX */
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -2111,8 +2111,8 @@ INLINE void m68kdrc_vncxz_flag_add_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CXFLAG_8();
 
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2124,8 +2124,8 @@ INLINE void m68kdrc_vncxz_flag_add_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CXFLAG_16();			/* break EBX */
 
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2137,7 +2137,7 @@ INLINE void m68kdrc_vncxz_flag_add_32(drc_core *drc)
 		DRC_VFLAG_ADD_32();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2149,9 +2149,9 @@ INLINE void m68kdrc_vncxz_flag_addx_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CXFLAG_8();
 
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
 	}
 }
 
@@ -2163,9 +2163,9 @@ INLINE void m68kdrc_vncxz_flag_addx_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CXFLAG_16();			/* break EBX */
 
-		_mov_r16_m16abs(REG_BX, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_Z), REG_BX);
 	}
 }
 
@@ -2177,9 +2177,9 @@ INLINE void m68kdrc_vncxz_flag_addx_32(drc_core *drc)
 		DRC_VFLAG_ADD_32();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_r32_m32abs(REG_EBX, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EBX);
 	}
 }
 
@@ -2191,8 +2191,8 @@ INLINE void m68kdrc_vncxz_flag_sub_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CXFLAG_8();
 
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2204,8 +2204,8 @@ INLINE void m68kdrc_vncxz_flag_sub_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CXFLAG_16();			/* break EBX */
 
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2217,7 +2217,7 @@ INLINE void m68kdrc_vncxz_flag_sub_32(drc_core *drc)
 		DRC_VFLAG_SUB_32();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2229,8 +2229,8 @@ INLINE void m68kdrc_vncz_flag_sub_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CFLAG_8();
 
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
 	}
 }
@@ -2243,8 +2243,8 @@ INLINE void m68kdrc_vncz_flag_sub_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CFLAG_16();				/* break EBX */
 
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2256,7 +2256,7 @@ INLINE void m68kdrc_vncz_flag_sub_32(drc_core *drc)
 		DRC_VFLAG_SUB_16();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2268,9 +2268,9 @@ INLINE void m68kdrc_vncxz_flag_subx_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CXFLAG_8();
 
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));		/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
 	}
 }
 
@@ -2282,9 +2282,9 @@ INLINE void m68kdrc_vncxz_flag_subx_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CXFLAG_16();			/* break EBX */
 
-		_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&FLAG_Z));	/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_Z), REG_BX);
 	}
 }
 
@@ -2296,9 +2296,9 @@ INLINE void m68kdrc_vncxz_flag_subx_32(drc_core *drc)
 		DRC_VFLAG_SUB_32();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&FLAG_Z));	/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2310,8 +2310,8 @@ INLINE void m68kdrc_vncz_flag_cmp_8(drc_core *drc)
 		DRC_NFLAG_8();
 		DRC_CFLAG_8();
 
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2323,8 +2323,8 @@ INLINE void m68kdrc_vncz_flag_cmp_16(drc_core *drc)
 		DRC_NFLAG_16();
 		DRC_CFLAG_16();				/* break EBX */
 
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2336,7 +2336,7 @@ INLINE void m68kdrc_vncz_flag_cmp_32(drc_core *drc)
 		DRC_VFLAG_SUB_32();			/* break EBX, ECX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2348,8 +2348,8 @@ INLINE void m68kdrc_vncxz_flag_neg_8(drc_core *drc)
 		DRC_CXFLAG_NEG_8();			/* break EBX */
 		DRC_NFLAG_8();
 
-		_movzx_r32_r8(REG_EAX, REG_AL);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2361,8 +2361,8 @@ INLINE void m68kdrc_vncxz_flag_neg_16(drc_core *drc)
 		DRC_CXFLAG_NEG_16();			/* break EBX */
 		DRC_NFLAG_16();
 
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2374,7 +2374,7 @@ INLINE void m68kdrc_vncxz_flag_neg_32(drc_core *drc)
 		DRC_CXFLAG_NEG_32();			/* break EBX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2386,9 +2386,9 @@ INLINE void m68kdrc_vncxz_flag_negx_8(drc_core *drc)
 		DRC_CXFLAG_NEG_8();			/* break EBX */
 		DRC_NFLAG_8();
 
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);		/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));		/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
 	}
 }
 
@@ -2400,9 +2400,9 @@ INLINE void m68kdrc_vncxz_flag_negx_16(drc_core *drc)
 		DRC_CXFLAG_NEG_16();			/* break EBX */
 		DRC_NFLAG_16();
 
-		_mov_r16_m16abs(REG_BX, &FLAG_Z);	/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m16abs_r16(&FLAG_Z, REG_BX);
+		emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&FLAG_Z));	/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_Z), REG_BX);
 	}
 }
 
@@ -2414,16 +2414,16 @@ INLINE void m68kdrc_vncxz_flag_negx_32(drc_core *drc)
 		DRC_CXFLAG_NEG_32();			/* break EBX */
 		DRC_NFLAG_32();				/* break ECX */
 
-		_mov_r32_m32abs(REG_EBX, &FLAG_Z);	/* break EBX */
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&FLAG_Z));	/* break EBX */
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EBX);
 	}
 }
 
 
 /* ------------------------- Exception Processing ------------------------- */
 
-#define m68kdrc_exception_pc_as_nextpc()	_mov_r32_imm(REG_EDI, REG68K_PC)
+#define m68kdrc_exception_pc_as_nextpc()	emit_mov_r32_imm(DRCTOP, REG_EDI, REG68K_PC)
 #define m68kdrc_exception_pc_as_previouspc()
 
 #define m68kdrc_exception_cycles_add()		DRC_USE_CYCLES(m68kdrc_cycles)
@@ -2434,18 +2434,18 @@ INLINE void m68kdrc_vncxz_flag_negx_32(drc_core *drc)
 	{ \
 		m68kdrc_exception_pc_as_##pc(); \
 		m68kdrc_exception_cycles_##cycles(); \
-		_jmp(m68kdrc_cpu.generate_exception_##reason); \
+		emit_jmp(DRCTOP, m68kdrc_cpu.generate_exception_##reason); \
 	} while (0)
 
-#define	m68kdrc_exception_trap(type)		do { _mov_r32_imm(REG_ESI, type); m68kdrc_exception(trap, nextpc, add); } while (0)
-#define	m68kdrc_exception_trapN(n)		do { _mov_r32_imm(REG_ESI, EXCEPTION_TRAP_BASE + (n)); m68kdrc_exception(trapN, nextpc, add); } while (0)
+#define	m68kdrc_exception_trap(type)		do { emit_mov_r32_imm(DRCTOP, REG_ESI, type); m68kdrc_exception(trap, nextpc, add); } while (0)
+#define	m68kdrc_exception_trapN(n)		do { emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_TRAP_BASE + (n)); m68kdrc_exception(trapN, nextpc, add); } while (0)
 #define	m68kdrc_exception_trace()		m68kdrc_exception(trace, nextpc, add)
 #define	m68kdrc_exception_privilege_violation()	m68kdrc_exception(privilege_violation, previouspc, remove)
 #define	m68kdrc_exception_1010()		m68kdrc_exception(1010, previouspc, remove)
 #define	m68kdrc_exception_1111()		m68kdrc_exception(1111, previouspc, remove)
 #define	m68kdrc_exception_illegal()		m68kdrc_exception(illegal, previouspc, remove)
 #define	m68kdrc_exception_format_error()	m68kdrc_exception(format_error, nextpc, remove)
-#define	m68kdrc_exception_address_error()	do { _mov_m16abs_imm(&REG68K_IR, REG68K_IR); m68kdrc_exception(address_error, nextpc, remove); } while (0)
+#define	m68kdrc_exception_address_error()	do { emit_mov_m16_imm(DRCTOP, MABS(&REG68K_IR), REG68K_IR); m68kdrc_exception(address_error, nextpc, remove); } while (0)
 
 
 

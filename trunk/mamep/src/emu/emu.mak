@@ -88,12 +88,12 @@ EMUOBJS += \
 	$(EMUOBJ)/patch.o
 endif
 
-ifdef USE_HISCORE
+ifneq ($(USE_HISCORE),)
 EMUOBJS += \
 	$(EMUOBJ)/hiscore.o
 endif
 
-ifdef DEBUG
+ifneq ($(DEBUG),)
 EMUOBJS += \
 	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/debug/debugcmd.o \
@@ -118,7 +118,7 @@ include $(EMUSRC)/cpu/cpu.mak
 
 $(LIBCPU): $(CPUOBJS)
 
-ifdef DEBUG
+ifneq ($(DEBUG),)
 $(LIBCPU): $(DBGOBJS)
 endif
 

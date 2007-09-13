@@ -127,7 +127,7 @@ int m68kdrc_cycles;
 int m68kdrc_recompile_flag;
 int m68kdrc_check_code_modify;
 unsigned int m68kdrc_instr_size;
-link_info m68kdrc_link_make_cc;
+emit_link m68kdrc_link_make_cc;
 
 
 /* ======================================================================== */
@@ -198,8 +198,8 @@ static void m68kdrc_init_exception(drc_core *drc)
 	m68kdrc_get_sr();
 
 	/* Turn off trace flag, clear pending traces */
-	_mov_m16abs_imm(&FLAG_T0, 0);
-	_mov_m16abs_imm(&FLAG_T1, 0);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_T0), 0);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_T1), 0);
 	m68ki_clear_trace();
 
 	/* Enter supervisor mode */
@@ -210,9 +210,9 @@ static void m68kdrc_init_exception(drc_core *drc)
 /* SR: REG_EAX */
 static void m68kdrc_stack_frame_3word(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_32_r32(REG_EDI);
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);
 }
 
@@ -230,13 +230,13 @@ static void m68kdrc_stack_frame_0000(drc_core *drc)
 	else
 	{
 
-		_push_r32(REG_EAX);
-		_mov_r32_r32(REG_EBX, REG_ESI);
-		_shl_r32_imm(REG_EBX, 2);
+		emit_push_r32(DRCTOP, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
 		m68kdrc_push_16_r32(REG_EBX);
 
 		m68kdrc_push_32_r32(REG_EDI);
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 		m68kdrc_push_16_r32(REG_EAX);
 	}
 }
@@ -247,15 +247,15 @@ static void m68kdrc_stack_frame_0000(drc_core *drc)
 /* SR: REG_EAX, vector: REG_ESI */
 static void m68kdrc_stack_frame_0001(drc_core *drc)
 {
-	_push_r32(REG_EAX);
-	_mov_r32_r32(REG_EBX, REG_ESI);
-	_shl_r32_imm(REG_EBX, 2);
-	_or_r32_imm(REG_EBX, 0x1000);
+	emit_push_r32(DRCTOP, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_or_r32_imm(DRCTOP, REG_EBX, 0x1000);
 
 	m68kdrc_push_16_r32(REG_EBX);
 
 	m68kdrc_push_32_r32(REG_EDI);
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);
 }
 
@@ -265,15 +265,15 @@ static void m68kdrc_stack_frame_0001(drc_core *drc)
 /* SR: REG_EAX, vector: REG_ESI */
 static void m68kdrc_stack_frame_0010(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_32_m32abs(&REG68K_PPC);
-	_mov_r32_r32(REG_EBX, REG_ESI);
-	_shl_r32_imm(REG_EBX, 2);
-	_or_r32_imm(REG_EBX, 0x2000);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_or_r32_imm(DRCTOP, REG_EBX, 0x2000);
 	m68kdrc_push_16_r32(REG_EBX);
 
 	m68kdrc_push_32_r32(REG_EDI);
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);
 }
 
@@ -282,10 +282,10 @@ static void m68kdrc_stack_frame_0010(drc_core *drc)
 /* SR: REG_EAX */
 static void m68kdrc_stack_frame_buserr(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_push_32_r32(REG_EDI);
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);
 	m68kdrc_push_16_m32abs(&REG68K_IR);
 	m68kdrc_push_32_m32abs(&m68ki_aerr_address);	/* access address */
@@ -294,9 +294,9 @@ static void m68kdrc_stack_frame_buserr(drc_core *drc)
 	 * I/N  0 = instruction, 1 = not
 	 * FC   3-bit function code
 	 */
-	_mov_r16_m16abs(REG_BX, &m68ki_aerr_write_mode);
-	_or_r32_m32abs(REG_EBX, &CPU_INSTR_MODE);
-	_or_r32_m32abs(REG_EBX, &m68ki_aerr_fc);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&m68ki_aerr_write_mode));
+	emit_or_r32_m32(DRCTOP, REG_EBX, MABS(&CPU_INSTR_MODE));
+	emit_or_r32_m32(DRCTOP, REG_EBX, MABS(&m68ki_aerr_fc));
 	m68kdrc_push_16_r32(REG_EBX);
 }
 
@@ -307,7 +307,7 @@ static void m68kdrc_stack_frame_buserr(drc_core *drc)
 /* SR: REG_EAX, vector: REG_ESI */
 static void m68kdrc_stack_frame_1000(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	/* VERSION
 	 * NUMBER
@@ -331,16 +331,16 @@ static void m68kdrc_stack_frame_1000(drc_core *drc)
 	m68kdrc_push_32_imm(0);		/* FAULT ADDRESS */
 	m68kdrc_push_16_imm(0);		/* SPECIAL STATUS WORD */
 
-	_mov_r32_r32(REG_EBX, REG_ESI);
-	_shl_r32_imm(REG_EBX, 2);
-	_or_r32_imm(REG_EBX, 0x8000);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_or_r32_imm(DRCTOP, REG_EBX, 0x8000);
 	m68kdrc_push_16_r32(REG_EBX);	/* 1000, VECTOR OFFSET */
 
 	/* PROGRAM COUNTER */
 	m68kdrc_push_32_r32(REG_EDI);
 
 	/* STATUS REGISTER */
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);
 }
 
@@ -352,7 +352,7 @@ static void m68kdrc_stack_frame_1000(drc_core *drc)
 /* SR: REG_EAX, vector: REG_ESI */
 static void m68kdrc_stack_frame_1010(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_push_16_imm(0);		/* INTERNAL REGISTER */
 	m68kdrc_push_16_imm(0);		/* INTERNAL REGISTER */
@@ -365,14 +365,14 @@ static void m68kdrc_stack_frame_1010(drc_core *drc)
 	m68kdrc_push_16_imm(0);		/* SPECIAL STATUS REGISTER */
 	m68kdrc_push_16_imm(0);		/* INTERNAL REGISTER */
 
-	_mov_r32_r32(REG_EBX, REG_ESI);
-	_shl_r32_imm(REG_EBX, 2);
-	_or_r32_imm(REG_EBX, 0xa000);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_or_r32_imm(DRCTOP, REG_EBX, 0xa000);
 	m68kdrc_push_16_r32(REG_EBX);	/* 1010, VECTOR OFFSET */
 
 	m68kdrc_push_32_r32(REG_EDI);	/* PROGRAM COUNTER */
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);	/* STATUS REGISTER */
 }
 
@@ -384,7 +384,7 @@ static void m68kdrc_stack_frame_1010(drc_core *drc)
 /* SR: REG_EAX, vector: REG_ESI */
 static void m68kdrc_stack_frame_1011(drc_core *drc)
 {
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_push_32_imm(0);		/* INTERNAL REGISTERS (18 words) */
 	m68kdrc_push_32_imm(0);
@@ -412,14 +412,14 @@ static void m68kdrc_stack_frame_1011(drc_core *drc)
 	m68kdrc_push_16_imm(0);		/* SPECIAL STATUS REGISTER */
 	m68kdrc_push_16_imm(0);		/* INTERNAL REGISTER */
 
-	_mov_r32_r32(REG_EBX, REG_ESI);
-	_shl_r32_imm(REG_EBX, 2);
-	_or_r32_imm(REG_EBX, 0xb000);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_or_r32_imm(DRCTOP, REG_EBX, 0xb000);
 	m68kdrc_push_16_r32(REG_EBX);	/* 1011, VECTOR OFFSET */
 
 	m68kdrc_push_32_r32(REG_EDI);	/* PROGRAM COUNTER */
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_push_16_r32(REG_EAX);	/* STATUS REGISTER */
 }
 #endif
@@ -440,9 +440,9 @@ static void append_exception_trap(drc_core *drc)
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -456,9 +456,9 @@ static void append_exception_trapN(drc_core *drc)
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -468,14 +468,14 @@ static void append_exception_trace(drc_core *drc)
 {
 	m68kdrc_init_exception(drc);
 
-	_mov_r32_imm(REG_ESI, EXCEPTION_TRACE);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_TRACE);
 
 	if(CPU_TYPE_IS_010_LESS(CPU_TYPE))
 	{
 		#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
 		if(CPU_TYPE_IS_000(CPU_TYPE))
 		{
-			_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_NO);
+			emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_NO);
 		}
 		#endif /* M68K_EMULATE_ADDRESS_ERROR */
 		m68kdrc_stack_frame_0000(drc);
@@ -486,12 +486,12 @@ static void append_exception_trace(drc_core *drc)
 	m68kdrc_jump_vector(drc);
 
 	/* Trace nullifies a STOP instruction */
-	_and_m32abs_imm(&CPU_STOPPED, ~STOP_LEVEL_STOP);
+	emit_and_m32_imm(DRCTOP, MABS(&CPU_STOPPED), ~STOP_LEVEL_STOP);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -504,18 +504,18 @@ static void append_exception_privilege_violation(drc_core *drc)
 	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
 	if(CPU_TYPE_IS_000(CPU_TYPE))
 	{
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_NO);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_NO);
 	}
 	#endif /* M68K_EMULATE_ADDRESS_ERROR */
 
-	_mov_r32_imm(REG_ESI, EXCEPTION_PRIVILEGE_VIOLATION);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_PRIVILEGE_VIOLATION);
 	m68kdrc_stack_frame_0000(drc);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -530,14 +530,14 @@ static void append_exception_1010(drc_core *drc)
 #endif
 
 	m68kdrc_init_exception(drc);
-	_mov_r32_imm(REG_ESI, EXCEPTION_1010);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_1010);
 	m68kdrc_stack_frame_0000(drc);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -552,14 +552,14 @@ static void append_exception_1111(drc_core *drc)
 #endif
 
 	m68kdrc_init_exception(drc);
-	_mov_r32_imm(REG_ESI, EXCEPTION_1111);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_1111);
 	m68kdrc_stack_frame_0000(drc);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -576,18 +576,18 @@ static void append_exception_illegal(drc_core *drc)
 	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
 	if(CPU_TYPE_IS_000(CPU_TYPE))
 	{
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_NO);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_NO);
 	}
 	#endif /* M68K_EMULATE_ADDRESS_ERROR */
 
-	_mov_r32_imm(REG_ESI, EXCEPTION_ILLEGAL_INSTRUCTION);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_ILLEGAL_INSTRUCTION);
 	m68kdrc_stack_frame_0000(drc);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -596,14 +596,14 @@ static void append_exception_illegal(drc_core *drc)
 static void append_exception_format_error(drc_core *drc)
 {
 	m68kdrc_init_exception(drc);
-	_mov_r32_imm(REG_ESI, EXCEPTION_FORMAT_ERROR);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_FORMAT_ERROR);
 	m68kdrc_stack_frame_0000(drc);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
 	drc_append_dispatcher(drc);
 }
@@ -611,8 +611,8 @@ static void append_exception_format_error(drc_core *drc)
 /* Exception for address error */
 static void append_exception_address_error(drc_core *drc)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 
 	m68kdrc_init_exception(drc);
 
@@ -620,150 +620,150 @@ static void append_exception_address_error(drc_core *drc)
 	 * this is a catastrophic failure.
 	 * Halt the CPU
 	 */
-	_cmp_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_BERR_AERR_RESET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_cmp_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_BERR_AERR_RESET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-_push_imm(0x00ffff01);
-_call(m68k_memory_intf.read8);	// m68k_read_memory_8
-_add_r32_imm(REG_ESP, 4);
-	_mov_m32abs_imm(&CPU_STOPPED, STOP_LEVEL_HALT);
-	_jmp_near_link(&link2);
+emit_push_imm(DRCTOP, 0x00ffff01);
+emit_call(DRCTOP, (x86code *)m68k_memory_intf.read8);	// m68k_read_memory_8
+emit_add_r32_imm(DRCTOP, REG_ESP, 4);
+	emit_mov_m32_imm(DRCTOP, MABS(&CPU_STOPPED), STOP_LEVEL_HALT);
+	emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-	_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_BERR_AERR_RESET);
+resolve_link(DRCTOP, &link1);
+	emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_BERR_AERR_RESET);
 
 	/* Note: This is implemented for 68000 only! */
 	m68kdrc_stack_frame_buserr(drc);
 
-	_mov_r32_imm(REG_ESI, EXCEPTION_ADDRESS_ERROR);
+	emit_mov_r32_imm(DRCTOP, REG_ESI, EXCEPTION_ADDRESS_ERROR);
 	m68kdrc_jump_vector(drc);
 
 	/* Use up some clock cycles */
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_sub_r32_r32(REG_EBP, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EAX);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	drc_append_dispatcher(drc);
 }
 
 
 static void append_exception_interrupt(drc_core *drc)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
-	link_info link5;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
+	emit_link link5;
 
-	_sub_r32_imm(REG_ESP, 6);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 6);
 
 	#if M68K_EMULATE_ADDRESS_ERROR == OPT_ON
 	if(CPU_TYPE_IS_000(CPU_TYPE))
 	{
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_NO);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_NO);
 	}
 	#endif /* M68K_EMULATE_ADDRESS_ERROR */
 
 	/* Acknowledge the interrupt */
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_int_ack(REG_EAX);
-	_pop_r32(REG_EBX);
+	emit_pop_r32(DRCTOP, REG_EBX);
 
 	/* Get the interrupt vector */
-	_cmp_r32_imm(REG_EAX, M68K_INT_ACK_AUTOVECTOR);
-	_jcc_near_link(COND_Z, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, M68K_INT_ACK_AUTOVECTOR);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-	_cmp_r32_imm(REG_EAX, M68K_INT_ACK_SPURIOUS);
-	_jcc_near_link(COND_Z, &link2);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, M68K_INT_ACK_SPURIOUS);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_cmp_r32_imm(REG_EAX, 256);
-	_jcc_near_link(COND_LE, &link3);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 256);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link3);
 
 	//M68K_DO_LOG_EMU((M68K_LOG_FILEHANDLE "%s at %08x: Interrupt acknowledge returned invalid vector $%x\n",
 	//		 m68ki_cpu_names[CPU_TYPE], ADDRESS_68K(REG68K_PC), vector));
 	drc_append_dispatcher(drc);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	/* Use the autovectors.  This is the most commonly used implementation */
-	_mov_r32_imm(REG_EAX, EXCEPTION_INTERRUPT_AUTOVECTOR);
-	_add_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, EXCEPTION_INTERRUPT_AUTOVECTOR);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_jmp_near_link(&link4);
+	emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	/* Called if no devices respond to the interrupt acknowledge */
-	_mov_r32_imm(REG_EAX, EXCEPTION_SPURIOUS_INTERRUPT);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, EXCEPTION_SPURIOUS_INTERRUPT);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
-	_mov_r32_r32(REG_ESI, REG_EAX);	// vector
-	_push_r32(REG_EBX);		// int_level
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
+	emit_mov_r32_r32(DRCTOP, REG_ESI, REG_EAX);	// vector
+	emit_push_r32(DRCTOP, REG_EBX);		// int_level
 	m68kdrc_init_exception(drc);
-	_pop_r32(REG_EBX);
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_pop_r32(DRCTOP, REG_EBX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 
 	/* Set the interrupt mask to the level of the one being serviced */
-	_shl_r32_imm(REG_EBX, 8);
-	_mov_m32abs_r32(&FLAG_INT_MASK, REG_EBX);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 8);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_INT_MASK), REG_EBX);
 
 	/* Get the new PC */
-	_mov_r32_r32(REG_EAX, REG_ESI);
-	_shl_r32_imm(REG_EAX, 2);
-	_add_r32_m32abs(REG_EAX, &REG68K_VBR);
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_ESI);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_add_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_VBR));
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_data_32();
 
-	_or_r32_r32(REG_EAX, REG_EAX);
-	_jcc_near_link(COND_NZ, &link5);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link5);
 
 	/* If vector is uninitialized, call the uninitialized interrupt vector */
-	_mov_r32_m32abs(REG_EAX, &REG68K_VBR);
-	_add_r32_imm(REG_EAX, EXCEPTION_UNINITIALIZED_INTERRUPT << 2);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_VBR));
+	emit_add_r32_imm(DRCTOP, REG_EAX, EXCEPTION_UNINITIALIZED_INTERRUPT << 2);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_data_32();
 
-_resolve_link(&link5);
-	_mov_m32bd_r32(REG_ESP, 0, REG_EAX);
+resolve_link(DRCTOP, &link5);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 0), REG_EAX);
 
 	/* Generate a stack frame */
-	_mov_r16_m16bd(REG_AX, REG_ESP, 4);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MBD(REG_ESP, 4));
 	m68kdrc_stack_frame_0000(drc);
 
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link6;
+		emit_link link6;
 
-		_and_m8abs_imm(&FLAG_M, MFLAG_SET);
-		_jcc_near_link(COND_Z, &link6);
-		_mov_r32_m32abs(REG_EAX, &REG68K_SP);
+		emit_and_m8_imm(DRCTOP, MABS(&FLAG_M), MFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link6);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_SP));
 
 		/* Create throwaway frame */
-		_mov_r16_m16bd(REG_AX, REG_ESP, 4);
-		_mov_r8_m8abs(REG_AL, &FLAG_S);
+		emit_mov_r16_m16(DRCTOP, REG_AX, MBD(REG_ESP, 4));
+		emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&FLAG_S));
 		m68kdrc_set_sm_flag(drc);	/* clear M */
 
-		_or_r32_imm(REG_EAX, 0x2000);	/* Same as SR in master stack frame except S is forced high */
+		emit_or_r32_imm(DRCTOP, REG_EAX, 0x2000);	/* Same as SR in master stack frame except S is forced high */
 
 		m68kdrc_stack_frame_0001(drc);
 
-_resolve_link(&link6);
+resolve_link(DRCTOP, &link6);
 	}
 
-	_mov_r32_m32bd(REG_EDI, REG_ESP, 0);
-	_add_r32_imm(REG_ESP, 6);
+	emit_mov_r32_m32(DRCTOP, REG_EDI, MBD(REG_ESP, 0));
+	emit_add_r32_imm(DRCTOP, REG_ESP, 6);
 
 	/* Defer cycle counting until later */
-	_xor_r32_r32(REG_EAX, REG_EAX); \
-	_mov_r8_m8bd(REG_AL, REG_ESI, CYC_EXCEPTION);
-	_add_r32_m32abs(REG_EAX, &CPU_INT_CYCLES);
-	_mov_m32abs_r32(&CPU_INT_CYCLES, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX); \
+	emit_mov_r8_m8(DRCTOP, REG_AL, MBD(REG_ESI, CYC_EXCEPTION));
+	emit_add_r32_m32(DRCTOP, REG_EAX, MABS(&CPU_INT_CYCLES));
+	emit_mov_m32_r32(DRCTOP, MABS(&CPU_INT_CYCLES), REG_EAX);
 
 #if !M68K_EMULATE_INT_ACK
 	/* Automatically clear IRQ if we are not using an acknowledge scheme */
-	_mov_m32abs_imm(&CPU_INT_LEVEL, 0);
+	emit_mov_m32_imm(DRCTOP, MABS(&CPU_INT_LEVEL), 0);
 #endif /* M68K_EMULATE_INT_ACK */
 
 	drc_append_dispatcher(drc);
@@ -774,16 +774,16 @@ _resolve_link(&link6);
 
 static void append_check_interrupts(drc_core *drc)
 {
-	link_info link1;
+	emit_link link1;
 
-	_mov_r32_m32abs(REG_EAX, &CPU_INT_LEVEL);
-	_cmp_r32_m32abs(REG_EAX, &FLAG_INT_MASK);
-	_jcc_near_link(COND_LE, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&CPU_INT_LEVEL));
+	emit_cmp_r32_m32(DRCTOP, REG_EAX, MABS(&FLAG_INT_MASK));
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_shr_r32_imm(REG_EAX, 8);
-	_jmp_m32abs(&m68ki_cpu.generate_exception_interrupt);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+	emit_jmp_m32(DRCTOP, MABS(&m68ki_cpu.generate_exception_interrupt));
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 }
 
 
@@ -818,11 +818,11 @@ static void m68kdrc_entrygen(drc_core *drc)
 	//printf("DRC entrygen: %p\n", drc->cache_top);
 
 #if 0
-_call(cpu_getcurrentframe);
-_push_r32(REG_EAX);
-_push_imm("entry : %d\n");
-_call(printf);
-_add_r32_imm(REG_ESP, 8);
+emit_call(DRCTOP, (x86code *)cpu_getcurrentframe);
+emit_push_r32(DRCTOP, REG_EAX);
+emit_push_imm(DRCTOP, "entry : %d\n");
+emit_call(DRCTOP, (x86code *)printf);
+emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 #endif
 }
 
@@ -895,7 +895,7 @@ static int drc_register_code(drc_core *drc, UINT32 pc)
 #ifdef LOG_COMPILE
 		printf("%06x: already compiled\n", pc);
 #endif
-		_jmp(drc->lookup_l1[l1index][l2index]);
+		emit_jmp(DRCTOP, drc->lookup_l1[l1index][l2index]);
 
 		return 0;
 	}
@@ -926,7 +926,7 @@ void m68kdrc_append_code_verify(drc_core *drc)
 	UINT8 *do_recompile = drc->recompile;
 #ifdef LOG_CODE_MODIFY
 	extern int activecpu;
-	link_info link_verify_ok;
+	emit_link link_verify_ok;
 	int i;
 #endif
 
@@ -963,81 +963,81 @@ void m68kdrc_append_code_verify(drc_core *drc)
 
 	m68kdrc_code_verify_size = size;
 
-	_push_imm(addr);
-	_call(m68kdrc_call_cpu_opptr);
-	_add_r32_imm(REG_ESP, 4);
+	emit_push_imm(DRCTOP, addr);
+	emit_call(DRCTOP, (x86code *)m68kdrc_call_cpu_opptr);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_cmp_r32_imm(REG_EAX, (uint32)codeptr);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, (uint32)codeptr);
 #ifdef LOG_CODE_MODIFY
-	_jcc_near_link(COND_E, &link_verify_ok);
+	emit_jcc_near_link(DRCTOP, COND_E, &link_verify_ok);
 
 do_recompile = drc->cache_top;
-	_push_imm(addr + size - 1);
-	_push_imm(addr);
-	_push_imm(activecpu);
-	_push_imm("cpu #%d: PC=%06x - %06x: code modified\n");
-	_call(printf);
-	_add_r32_imm(REG_ESP, 16);
+	emit_push_imm(DRCTOP, addr + size - 1);
+	emit_push_imm(DRCTOP, addr);
+	emit_push_imm(DRCTOP, activecpu);
+	emit_push_imm(DRCTOP, "cpu #%d: PC=%06x - %06x: code modified\n");
+	emit_call(DRCTOP, (x86code *)printf);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
 	if (bus32)
 	{
 		for (i = 0; i < size; i += 4)
 		{
-			_push_imm(m68k_read_immediate_32(addr + i));
-			_push_imm("%08x ");
-			_call(printf);
-			_add_r32_imm(REG_ESP, 8);
+			emit_push_imm(DRCTOP, m68k_read_immediate_32(addr + i));
+			emit_push_imm(DRCTOP, "%08x ");
+			emit_call(DRCTOP, (x86code *)printf);
+			emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 		}
 	}
 	else
 	{
 		for (i = 0; i < size; i += 2)
 		{
-			_push_imm(m68k_read_immediate_16(addr + i));
-			_push_imm("%04x ");
-			_call(printf);
-			_add_r32_imm(REG_ESP, 8);
+			emit_push_imm(DRCTOP, m68k_read_immediate_16(addr + i));
+			emit_push_imm(DRCTOP, "%04x ");
+			emit_call(DRCTOP, (x86code *)printf);
+			emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 		}
 	}
 
-	_push_imm("\n");
-	_call(printf);
-	_add_r32_imm(REG_ESP, 4);
+	emit_push_imm(DRCTOP, "\n");
+	emit_call(DRCTOP, (x86code *)printf);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 
 	if (bus32)
 	{
 		for (i = 0; i < size; i += 4)
 		{
-			_push_imm(addr + i);
+			emit_push_imm(DRCTOP, addr + i);
 			m68kdrc_read_pcrel_32();
-			_push_r32(REG_EAX);
-			_push_imm("%08x ");
-			_call(printf);
-			_add_r32_imm(REG_ESP, 8);
+			emit_push_r32(DRCTOP, REG_EAX);
+			emit_push_imm(DRCTOP, "%08x ");
+			emit_call(DRCTOP, (x86code *)printf);
+			emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 		}
 	}
 	else
 	{
 		for (i = 0; i < size; i += 2)
 		{
-			_push_imm(addr + i);
+			emit_push_imm(DRCTOP, addr + i);
 			m68kdrc_read_pcrel_16();
-			_push_r32(REG_EAX);
-			_push_imm("%04x ");
-			_call(printf);
-			_add_r32_imm(REG_ESP, 8);
+			emit_push_r32(DRCTOP, REG_EAX);
+			emit_push_imm(DRCTOP, "%04x ");
+			emit_call(DRCTOP, (x86code *)printf);
+			emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 		}
 	}
 
-	_push_imm("\n");
-	_call(printf);
-	_add_r32_imm(REG_ESP, 4);
+	emit_push_imm(DRCTOP, "\n");
+	emit_call(DRCTOP, (x86code *)printf);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_jmp(drc->recompile);
+	emit_jmp(DRCTOP, drc->recompile);
 
-_resolve_link(&link_verify_ok);
+resolve_link(DRCTOP, &link_verify_ok);
 #else
-	_jcc(COND_NE, do_recompile);
+	emit_jcc(DRCTOP, COND_NE, do_recompile);
 #endif
 
 	if (bus32)
@@ -1049,9 +1049,9 @@ _resolve_link(&link_verify_ok);
 			if (!pass)
 				imm = *(uint32 *)codeptr;
 
-			_cmp_m32bd_imm(REG_EAX, 0, imm);
-			_jcc(COND_NE, do_recompile);
-			_add_r32_imm(REG_EAX, 4);
+			emit_cmp_m32_imm(DRCTOP, MBD(REG_EAX, 0), imm);
+			emit_jcc(DRCTOP, COND_NE, do_recompile);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			addr += 4;
 			codeptr += 4;
@@ -1060,7 +1060,7 @@ _resolve_link(&link_verify_ok);
 	}
 	else
 	{
-		_xor_r32_r32(REG_EBX, REG_EBX);
+		emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
 
 		while (size > 0)
 		{
@@ -1069,10 +1069,10 @@ _resolve_link(&link_verify_ok);
 			if (!pass)
 				imm = *(uint16 *)codeptr;
 
-			_mov_r16_m16bd(REG_BX, REG_EAX, 0);
-			_cmp_r32_imm(REG_EBX, imm);
-			_jcc(COND_NE, do_recompile);
-			_add_r32_imm(REG_EAX, 2);
+			emit_mov_r16_m16(DRCTOP, REG_BX, MBD(REG_EAX, 0));
+			emit_cmp_r32_imm(DRCTOP, REG_EBX, imm);
+			emit_jcc(DRCTOP, COND_NE, do_recompile);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			addr += 2;
 			codeptr += 2;
@@ -1092,18 +1092,18 @@ _resolve_link(&link_verify_ok);
 		{
 			if (m68kdrc_code_verify_end - drc->cache_top < 128)
 			{
-				link_info link1;
+				emit_link link1;
 
-				_jmp_short_link(&link1);
+				emit_jmp_short_link(DRCTOP, &link1);
 
 				if (drc->cache_top > m68kdrc_code_verify_end)
 					fatalerror("%p: over flow", drc->cache_top);
 
 				drc->cache_top = m68kdrc_code_verify_end;
-				_resolve_link(&link1);
+				resolve_link(DRCTOP, &link1);
 			}
 			else
-				_jmp(m68kdrc_code_verify_end);
+				emit_jmp(DRCTOP, m68kdrc_code_verify_end);
 		}
 
 		if (drc->cache_top > m68kdrc_code_verify_end)
@@ -1127,13 +1127,13 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 
 #ifdef MAME_DEBUG
 	/* check stack pointer */
-	_push_r32(REG_ESP);
-	_call(check_stack);
-	_add_r32_imm(REG_ESP, 4);
+	emit_push_r32(DRCTOP, REG_ESP);
+	emit_call(DRCTOP, (x86code *)check_stack);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 #endif
 
 	/* update previous PC */
-	_mov_m32abs_r32(&REG68K_PPC, REG_EDI);
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_PPC), REG_EDI);
 
 	/* do compile */
 	m68kdrc_instruction_compile_table[REG68K_IR](drc);
@@ -1159,12 +1159,12 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
 	{
 		if (m68kdrc_recompile_flag & RECOMPILE_VNCXZ_FLAGS_DIRTY)
-			_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x001f);
+			emit_mov_m32_imm(DRCTOP, MABS(&m68kdrc_cpu.flags_dirty_mark), 0x001f);
 		if (m68kdrc_recompile_flag & RECOMPILE_VNCZ_FLAGS_DIRTY)
-			_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x000f);
+			emit_mov_m32_imm(DRCTOP, MABS(&m68kdrc_cpu.flags_dirty_mark), 0x000f);
 	}
 	else
-		_mov_m32abs_imm(&m68kdrc_cpu.flags_dirty_mark, 0x0000);
+		emit_mov_m32_imm(DRCTOP, MABS(&m68kdrc_cpu.flags_dirty_mark), 0x0000);
 #endif
 
 	if (m68kdrc_recompile_flag & RECOMPILE_UNIMPLEMENTED)

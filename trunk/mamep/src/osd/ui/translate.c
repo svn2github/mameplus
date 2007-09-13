@@ -110,7 +110,7 @@ int InitTranslator(int langcode)
 
 	ansi_codepage = ui_lang_info[langcode].codepage;
 
-	lang_set_langcode(langcode);
+	lang_set_langcode(get_core_options(), langcode);
 
 	if (hTranslateFont != NULL)
 		DeleteObject(hTranslateFont);

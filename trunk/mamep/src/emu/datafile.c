@@ -68,6 +68,8 @@ const char *DATAFILE_TAG_END = "$end";
 #define FILE_ROOT	2
 #define FILE_TYPEMAX	((FILE_MERGED | FILE_ROOT) + 1)
 
+static core_options *datafile_options;
+
 struct tDatafileIndex
 {
 	UINT64 offset;
@@ -128,8 +130,10 @@ static void flush_index(void);
  *      startup and shutdown functions
  ****************************************************************************/
 
-void datafile_init(void)
+void datafile_init(core_options *options)
 {
+	datafile_options = options;
+
 	while (drivers[num_games] != NULL)
 		num_games++;
 }
@@ -704,7 +708,7 @@ static UINT8 ParseOpen(const char *pszFilename)
 	file_error filerr;
 
 	/* Open file up in binary mode */
-	filerr = mame_fopen(SEARCHPATH_DATAFILE, pszFilename, OPEN_FLAG_READ, &fp);
+	filerr = mame_fopen_options(datafile_options, SEARCHPATH_DATAFILE, pszFilename, OPEN_FLAG_READ, &fp);
 	if (filerr != FILERR_NONE)
 		return(FALSE);
 
@@ -1332,7 +1336,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 	if (where != FILE_ROOT)
 	{
 		sprintf(filename, "%s\\%s\\",
-	        	options_get_string(mame_options(), OPTION_LOCALIZED_DIRECTORY),
+	        	options_get_string(datafile_options, OPTION_LOCALIZED_DIRECTORY),
 			ui_lang_info[lang_get_langcode()].name);
 	}
 
@@ -1458,7 +1462,7 @@ int load_driver_history (const game_driver *drv, char *buffer, int bufsize)
 	                         "history/", "history.dat");
 	result &= load_datafile (drv, buffer, bufsize,
 	                         DATAFILE_TAG_BIO, FILE_ROOT, hist_idx,
-	                         "history/", options_get_string(mame_options(), OPTION_HISTORY_FILE));
+	                         "history/", options_get_string(datafile_options, OPTION_HISTORY_FILE));
 
 	return result;
 }
@@ -1486,7 +1490,7 @@ int load_driver_story (const game_driver *drv, char *buffer, int bufsize)
 		                         "story/", "story.dat");
 		result &= load_datafile (drv, buffer, bufsize,
 		                         DATAFILE_TAG_STORY, FILE_ROOT, story_idx,
-		                         "story/", options_get_string(mame_options(), OPTION_STORY_FILE));
+		                         "story/", options_get_string(datafile_options, OPTION_STORY_FILE));
 
 		if (buffer[check_pos] == '\0')
 			buffer[skip_pos] = '\0';
@@ -1556,7 +1560,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	                         "mameinfo/", "mameinfo.dat");
 	result &= load_datafile (drv, buffer, bufsize,
 	                         DATAFILE_TAG_MAME, FILE_ROOT, mame_idx,
-	                         "mameinfo/", options_get_string(mame_options(), OPTION_MAMEINFO_FILE));
+	                         "mameinfo/", options_get_string(datafile_options, OPTION_MAMEINFO_FILE));
 
 	strcat(buffer, _("\nROM REGION:\n"));
 	for (region = rom_first_region(drv); region; region = rom_next_region(region))
@@ -1661,7 +1665,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	sprintf (buffer, _("\nSOURCE: %s\n"), drv->source_file+17);
 
 	/* Try to open mameinfo datafile - driver section */
-	if (ParseOpen (options_get_string(mame_options(), OPTION_MAMEINFO_FILE)))
+	if (ParseOpen (options_get_string(datafile_options, OPTION_MAMEINFO_FILE)))
 	{
 		int err;
 
@@ -2662,7 +2666,7 @@ static int find_command (const game_driver *drv)
 		if (where != FILE_ROOT)
 		{
 			sprintf(filename, "%s\\%s\\",
-		        	options_get_string(mame_options(), OPTION_LOCALIZED_DIRECTORY),
+		        	options_get_string(datafile_options, OPTION_LOCALIZED_DIRECTORY),
 				ui_lang_info[lang_get_langcode()].name);
 		}
 
@@ -2675,7 +2679,7 @@ static int find_command (const game_driver *drv)
 			if (i & FILE_MERGED)
 			{
 				if (where & FILE_ROOT)
-					strcpy(base, options_get_string(mame_options(), OPTION_COMMAND_FILE));
+					strcpy(base, options_get_string(datafile_options, OPTION_COMMAND_FILE));
 				else
 					strcpy(base, "command.dat");
 

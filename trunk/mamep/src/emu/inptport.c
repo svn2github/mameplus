@@ -2561,7 +2561,7 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 	     (!mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
 	      || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c")))
 	{
-		int system_bios = determine_bios_rom(Machine->gamedrv->rom);
+		int system_bios = determine_bios_rom(mame_options(), Machine->gamedrv->rom);
 
 		/* first mark all items to disable */
 		remove_neogeo_territory = 1;

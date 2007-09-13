@@ -44,6 +44,7 @@
 #include "properties.h"
 #include "winmain.h"
 #include "translate.h"
+#include "winuiopt.h"
 
 /***************************************************************************
     function prototypes
@@ -191,7 +192,7 @@ static BOOL RomsetNotExist(int game)
 
 		// open the file if we can
 		fname = astring_assemble_2(astring_alloc(), drv->name, ".zip");
-		filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
+		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
 		astring_free(fname);
 		if (filerr == FILERR_NONE)
 		{
@@ -238,7 +239,7 @@ int Mame32VerifyRomSet(int game, BOOL isComplete)
 	}
 
 	// perform the audit
-	audit_records = audit_images(drivers[game], AUDIT_VALIDATE_FAST, &audit);
+	audit_records = audit_images(get_core_options(), drivers[game], AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);
@@ -255,7 +256,7 @@ int Mame32VerifySampleSet(int game, BOOL isComplete)
 	int res;
 
 	// perform the audit
-	audit_records = audit_samples(drivers[game], &audit);
+	audit_records = audit_samples(get_core_options(), drivers[game], &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);

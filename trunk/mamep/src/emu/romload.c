@@ -67,7 +67,7 @@ chd_file *get_disk_handle(int diskindex)
 	open_chd *curdisk;
 	for (curdisk = chd_list; curdisk != NULL && diskindex-- != 0; curdisk = curdisk->next) ;
 	if (curdisk != NULL)
-	return (curdisk->diffchd != NULL) ? curdisk->diffchd : curdisk->origchd;
+		return (curdisk->diffchd != NULL) ? curdisk->diffchd : curdisk->origchd;
 	return NULL;
 }
 
@@ -181,9 +181,9 @@ void CLIB_DECL debugload(const char *string, ...)
     from SystemBios structure and OPTION_BIOS
 -------------------------------------------------*/
 
-int determine_bios_rom(const rom_entry *romp)
+int determine_bios_rom(core_options *options, const rom_entry *romp)
 {
-	const char *specbios = options_get_string(mame_options(), OPTION_BIOS);
+	const char *specbios = options_get_string(options, OPTION_BIOS);
 	const rom_entry *rom;
 	int bios_count = 0;
 
@@ -862,7 +862,7 @@ chd_error open_disk_image_options(core_options *options, const game_driver *game
 	{
 		astring *fname = astring_assemble_4(astring_alloc(), searchdrv->name, PATH_SEPARATOR, ROM_GETNAME(romp), ".chd");
 		filerr = mame_fopen_options(options, SEARCHPATH_IMAGE, astring_c(fname), OPEN_FLAG_READ, image_file);
-	astring_free(fname);
+		astring_free(fname);
 	}
 
 	/* did the file open succeed? */
@@ -897,7 +897,7 @@ chd_error open_disk_image_options(core_options *options, const game_driver *game
 						{
 							astring *fname = astring_assemble_4(astring_alloc(), searchdrv->name, PATH_SEPARATOR, ROM_GETNAME(rom), ".chd");
 							filerr = mame_fopen_options(options, SEARCHPATH_IMAGE, astring_c(fname), OPEN_FLAG_READ, image_file);
-						astring_free(fname);
+							astring_free(fname);
 						}
 
 						/* did the file open succeed? */
@@ -1089,7 +1089,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	chd_list_tailptr = &chd_list;
 
 	/* determine the correct biosset to load based on OPTION_BIOS string */
-	system_bios = determine_bios_rom(romp);
+	system_bios = determine_bios_rom(mame_options(), romp);
 
 #ifdef USE_IPS
 	if (patchname && *patchname)

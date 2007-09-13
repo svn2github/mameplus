@@ -46,14 +46,14 @@
 int cli_execute(int argc, char **argv, const options_entry *osd_options);
 
 /* informational functions */
-int cli_info_listxml(const char *gamename);
-int cli_info_listgames(const char *gamename);
-int cli_info_listfull(const char *gamename);
-int cli_info_listsource(const char *gamename);
-int cli_info_listclones(const char *gamename);
-int cli_info_listcrc(const char *gamename);
-int cli_info_listroms(const char *gamename);
-int cli_info_listsamples(const char *gamename);
+int cli_info_listxml(core_options *options, const char *gamename);
+int cli_info_listgames(core_options *options, const char *gamename);
+int cli_info_listfull(core_options *options, const char *gamename);
+int cli_info_listsource(core_options *options, const char *gamename);
+int cli_info_listclones(core_options *options, const char *gamename);
+int cli_info_listcrc(core_options *options, const char *gamename);
+int cli_info_listroms(core_options *options, const char *gamename);
+int cli_info_listsamples(core_options *options, const char *gamename);
 
-void setup_language(void); 
+void setup_language(core_options *options); 
 #endif	/* __CLIFRONT_H__ */

@@ -34,7 +34,7 @@
 		extern SHAREDOBJ_DATA const game_driver * const noncpudrivers[];
 		extern SHAREDOBJ_DATA const game_driver * const hazemddrivers[];
 		#endif /* NEOCPSMAME */
-		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
+		extern SHAREDOBJ_FUNC(void) assign_drivers(core_options *options);
 		#endif /* DRIVER_SWITCH */
 		extern SHAREDOBJ_FUNC(const game_driver *) driver_get_clone(const game_driver *driver);
 
@@ -71,13 +71,13 @@
 		extern SHAREDOBJ_FUNC(astring *)    astring_trimspace(astring * str);
 
 		#include "audit.h"
-		extern SHAREDOBJ_FUNC(int) audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **audit);
-		extern SHAREDOBJ_FUNC(int) audit_samples(const game_driver *gamedrv, audit_record **audit);
+		extern SHAREDOBJ_FUNC(int) audit_images(core_options *options, const game_driver *gamedrv, UINT32 validation, audit_record **audit);
+		extern SHAREDOBJ_FUNC(int) audit_samples(core_options *options, const game_driver *gamedrv, audit_record **audit);
 		extern SHAREDOBJ_FUNC(int) audit_summary(const game_driver *gamedrv, int count, const audit_record *records, int output);
 
 		#include "palette.h"
 		#include "romload.h"
-		extern SHAREDOBJ_FUNC(int)               determine_bios_rom(const rom_entry *romp);
+		extern SHAREDOBJ_FUNC(int)               determine_bios_rom(core_options *options, const rom_entry *romp);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_region(const game_driver *drv);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_next_region(const rom_entry *romp);
 		extern SHAREDOBJ_FUNC(const rom_entry *) rom_first_file(const rom_entry *romp);
@@ -95,7 +95,7 @@
 		extern SHAREDOBJ_FUNC(const char *)cputype_shortname(int cputype);
 
 		#include "datafile.h"
-		extern SHAREDOBJ_FUNC(void) datafile_init(void);
+		extern SHAREDOBJ_FUNC(void) datafile_init(core_options *options);
 		extern SHAREDOBJ_FUNC(void) datafile_exit(void);
 		extern SHAREDOBJ_FUNC(int)  load_driver_history (const game_driver *drv, char *buffer, int bufsize);
 		#ifdef STORY_DATAFILE
@@ -140,7 +140,7 @@
 
 		#include "fileio.h"
 		extern SHAREDOBJ_FUNC(int)             mame_faccess(const char *filename, int filetype);
-		extern SHAREDOBJ_FUNC(file_error)      mame_fopen(const char *searchpath, const char *filename, UINT32 openflags, mame_file **file);
+		extern SHAREDOBJ_FUNC(file_error)      mame_fopen_options(core_options *opts, const char *searchpath, const char *filename, UINT32 openflags, mame_file **file);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fread(mame_file *file, void *buffer, UINT32 length);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fwrite(mame_file *file, const void *buffer, UINT32 length);
 		extern SHAREDOBJ_FUNC(UINT32)          mame_fread_swap(mame_file *file, void *buffer, UINT32 length);
@@ -225,9 +225,8 @@
 		extern SHAREDOBJ_FUNC(void)           options_set_float(core_options *opts, const char *name, float value, int priority);
 
 		#include "emuopts.h"
-		extern SHAREDOBJ_FUNC(void)           mame_options_init(const options_entry *entries);
+		extern SHAREDOBJ_FUNC(core_options *) mame_options_init(const options_entry *entries);
 		extern SHAREDOBJ_FUNC(void)           mame_options_exit(void);
-		extern SHAREDOBJ_FUNC(core_options *) mame_options(void);
 
 		#include "restrack.h"
 		extern SHAREDOBJ_FUNC(void)   add_free_resources_callback(void (*callback)(void));
@@ -252,7 +251,7 @@
 		extern SHAREDOBJ_DATA         struct ui_lang_info_t ui_lang_info[UI_LANG_MAX];
 		extern SHAREDOBJ_FUNC(int)    lang_find_langname(const char *name);
 		extern SHAREDOBJ_FUNC(int)    lang_find_codepage(int cp);
-		extern SHAREDOBJ_FUNC(void)   lang_set_langcode(int langcode);
+		extern SHAREDOBJ_FUNC(void)   lang_set_langcode(core_options *options, int langcode);
 		extern SHAREDOBJ_FUNC(void)   assign_msg_catategory(int msgcat, const char *name);
 		extern SHAREDOBJ_FUNC(void)   lang_message_enable(int msgcat, int enable);
 		extern SHAREDOBJ_FUNC(int)    lang_message_is_enabled(int msgcat);
@@ -319,7 +318,7 @@
 		extern const game_driver * const noncpudrivers[];
 		extern const game_driver * const hazemddrivers[];
 		#endif /* NEOCPSMAME */
-		extern SHAREDOBJ_FUNC(void) assign_drivers(void);
+		extern SHAREDOBJ_FUNC(void) assign_drivers(core_options *options);
 		#endif /* DRIVER_SWITCH */
 
 		// in datafile.c
@@ -378,7 +377,7 @@
 	extern const game_driver * const noncpudrivers[];
 	extern const game_driver * const hazemddrivers[];
 	#endif /* NEOCPSMAME */
-	extern SHAREDOBJ_FUNC(void) assign_drivers(void);
+	extern SHAREDOBJ_FUNC(void) assign_drivers(core_options *options);
 	#endif /* DRIVER_SWITCH */
 
 	// in datafile.c

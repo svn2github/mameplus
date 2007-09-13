@@ -90,6 +90,8 @@ typedef struct
 	int	seconds_to_run;
 	BOOL	throttle;
 	BOOL	sleep;
+	float	speed;
+	BOOL	refreshspeed;
 
 // CORE ROTATION OPTIONS
 	BOOL	rotate;
@@ -270,6 +272,7 @@ enum
 void OptionsInit(void);
 void OptionsExit(void);
 
+core_options *get_core_options(void);
 void set_core_input_directory(const WCHAR *dir);
 void set_core_state_directory(const WCHAR *dir);
 void set_core_input_directory(const WCHAR *dir);

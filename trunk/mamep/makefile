@@ -176,8 +176,8 @@ X86_M68K_DRC =
 endif
 
 # specify a default optimization level if none explicitly stated
-ifndef OPTIMIZE
-ifndef SYMBOLS
+ifeq ($(OPTIMIZE),)
+ifeq ($(SYMBOLS),)
 OPTIMIZE = 3
 else
 OPTIMIZE = 0
@@ -270,19 +270,19 @@ ifneq ($(PM),)
     ARCH = -march=pentiumm
 endif
 
-ifdef G4
+ifneq ($(G4),)
     ARCHSUFFIX = g4
     ARCH = -mcpu=G4
     ENDIAN = big
 endif
 
-ifdef G5
+ifneq ($(G5),)
     ARCHSUFFIX = g5
     ARCH = -mcpu=G5
     ENDIAN = big
 endif
 
-ifdef CELL
+ifneq ($(CELL),)
     ARCHSUFFIX = cbe
     ARCH = 
     ENDIAN = big
@@ -477,7 +477,7 @@ else
 endif
 
 # add -g if we need symbols
-ifdef SYMBOLS
+ifneq ($(SYMBOLS),)
 CFLAGS += -g
 endif
 
@@ -495,7 +495,7 @@ CFLAGS += \
 	-Wno-pointer-sign \
 
 # add profiling information for the compiler
-ifdef PROFILE
+ifneq ($(PROFILE),)
 CFLAGS += -pg
 endif
 
@@ -520,7 +520,7 @@ CFLAGS += $(ARCH) -fno-strict-aliasing
 endif
 
 # if symbols are on, make sure we have frame pointers
-ifdef SYMBOLS
+ifneq ($(SYMBOLS),)
 CFLAGS += -fno-omit-frame-pointer
 endif
 
@@ -709,7 +709,7 @@ clean:
 	$(RM) $(EMULATOR)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
-ifdef MAP
+ifneq ($(MAP),)
 	@echo Deleting $(FULLNAME).map...
 	$(RM) $(FULLNAME).map
 endif

@@ -2264,21 +2264,22 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 #ifdef DRIVER_SWITCH
 	{
+		core_options *options;
 		mame_file *file;
 		file_error filerr;
 
-		mame_options_init(mame_win_options);
+		options = mame_options_init(mame_win_options);
 
-		filerr = mame_fopen(SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
+		filerr = mame_fopen_options(options, SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
 		{
-			options_parse_ini_file(mame_options(), mame_core_file(file), OPTION_PRIORITY_INI);
+			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_INI);
 			mame_fclose(file);
 		}
 
-		assign_drivers();
+		assign_drivers(options);
 
-		mame_options_exit();
+		options_free(options);
 	}
 #endif /* DRIVER_SWITCH */
 
@@ -2312,8 +2313,6 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	/* initialize sound information */
 	sndintrf_init(NULL);
-
-	datafile_init();
 
 	wndclass.style         = CS_HREDRAW | CS_VREDRAW;
 	wndclass.lpfnWndProc   = MameWindowProc;
@@ -2352,6 +2351,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	dprintf("about to init options");
 	OptionsInit();
 	dprintf("options loaded");
+
+	datafile_init(get_core_options());
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 	// Display splash screen window
@@ -6585,7 +6586,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 
 		set_core_input_directory(path);
 		stemp = utf8_from_wstring(fname);
-		filerr = mame_fopen(SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
+		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_INPUTLOG, stemp, OPEN_FLAG_READ, &pPlayBack);
 		free(stemp);
 		set_core_input_directory(GetInpDir());
 
@@ -6725,7 +6726,7 @@ static void MameLoadState(const WCHAR *fname_state)
 #endif // MESS
 
 		stemp = utf8_from_wstring(state_fname);
-		filerr = mame_fopen(SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
+		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_STATE, stemp, OPEN_FLAG_READ, &pSaveState);
 		free(stemp);
 		set_core_state_directory(GetStateDir());
 		if (filerr != FILERR_NONE)

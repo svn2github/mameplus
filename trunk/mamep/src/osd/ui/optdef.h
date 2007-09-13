@@ -86,6 +86,8 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(int_positive,         seconds_to_run)
 	DEFINE_OPT(bool,                 throttle)
 	DEFINE_OPT(bool,                 sleep)
+	DEFINE_OPT(float,                speed)
+	DEFINE_OPT(bool,                 refreshspeed)
 
 // CORE ROTATION OPTIONS
 	DEFINE_OPT(bool,                 rotate)

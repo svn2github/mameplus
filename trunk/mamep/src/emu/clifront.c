@@ -46,17 +46,17 @@ struct _romident_status
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static int execute_simple_commands(const char *exename);
-static int execute_commands(const char *exename, const game_driver *driver);
+static int execute_simple_commands(core_options *options, const char *exename);
+static int execute_commands(core_options *options, const char *exename, const game_driver *driver);
 #ifdef DRIVER_SWITCH
-void assign_drivers(void);
+void assign_drivers(core_options *options);
 #endif /* DRIVER_SWITCH */
 static void display_help(void);
 
 /* informational functions */
-static int info_verifyroms(const char *gamename);
-static int info_verifysamples(const char *gamename);
-static int info_romident(const char *gamename);
+static int info_verifyroms(core_options *options, const char *gamename);
+static int info_verifysamples(core_options *options, const char *gamename);
+static int info_romident(core_options *options, const char *gamename);
 
 /* utilities */
 static void romident(const char *filename, romident_status *status);
@@ -117,42 +117,43 @@ const options_entry cli_options[] =
 
 int cli_execute(int argc, char **argv, const options_entry *osd_options)
 {
+	core_options *options;
 	astring *gamename = astring_alloc();
 	astring *exename = astring_alloc();
 	const game_driver *driver;
 	int result;
 
 	/* initialize the options manager and add the CLI-specific options */
-	mame_options_init(osd_options);
-	options_add_entries(mame_options(), cli_options);
+	options = mame_options_init(osd_options);
+	options_add_entries(options, cli_options);
 
-	setup_language(); 
+	setup_language(options); 
 
 	/* parse the command line first; if we fail here, we're screwed */
-	if (options_parse_command_line(mame_options(), argc, argv, OPTION_PRIORITY_CMDLINE))
+	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
 	{
 		result = MAMERR_INVALID_CONFIG;
 		goto error;
 	}
 
-	setup_language(); 
+	setup_language(options); 
 
 #ifdef DRIVER_SWITCH
-	assign_drivers();
+	assign_drivers(options);
 #endif /* DRIVER_SWITCH */ 
 
 	/* parse the simple commmands before we go any further */
 	core_filename_extract_base(exename, argv[0], TRUE);
-	result = execute_simple_commands(astring_c(exename));
+	result = execute_simple_commands(options, astring_c(exename));
 	if (result != -1)
 		goto error;
 
 	/* find out what game we might be referring to */
-	core_filename_extract_base(gamename, options_get_string(mame_options(), OPTION_GAMENAME), TRUE);
+	core_filename_extract_base(gamename, options_get_string(options, OPTION_GAMENAME), TRUE);
 	driver = driver_get_name(astring_c(gamename));
 
 	/* execute any commands specified */
-	result = execute_commands(astring_c(exename), driver);
+	result = execute_commands(options, astring_c(exename), driver);
 	if (result != -1)
 		goto error;
 
@@ -178,7 +179,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	}
 
 	/* run the game */
-	result = mame_execute();
+	result = mame_execute(options);
 
 error:
 #ifdef DRIVER_SWITCH
@@ -186,7 +187,7 @@ error:
 #endif /* DRIVER_SWITCH */ 
 
 	/* free our options and exit */
-	mame_options_exit();
+	options_free(options);
 	astring_free(gamename);
 	astring_free(exename);
 	return result;
@@ -209,26 +210,26 @@ static void help_output(const char *s)
     commands that don't require any context
 -------------------------------------------------*/
 
-static int execute_simple_commands(const char *exename)
+static int execute_simple_commands(core_options *options, const char *exename)
 {
 	/* help? */
-	if (options_get_bool(mame_options(), CLIOPTION_HELP))
+	if (options_get_bool(options, CLIOPTION_HELP))
 	{
 		display_help();
 		return MAMERR_NONE;
 	}
 
 	/* showusage? */
-	if (options_get_bool(mame_options(), CLIOPTION_SHOWUSAGE))
+	if (options_get_bool(options, CLIOPTION_SHOWUSAGE))
 	{
-		setup_language();
+		setup_language(options);
 		mame_printf_info(_("Usage: %s [%s] [options]\n\nOptions:\n"), exename, _(GAMENOUN));
-		options_output_help(mame_options(), help_output);
+		options_output_help(options, help_output);
 		return MAMERR_NONE;
 	}
 
 	/* validate? */
-	if (options_get_bool(mame_options(), CLIOPTION_VALIDATE))
+	if (options_get_bool(options, CLIOPTION_VALIDATE))
 	{
 		extern int mame_validitychecks(const game_driver *driver);
 		return mame_validitychecks(NULL);
@@ -243,12 +244,12 @@ static int execute_simple_commands(const char *exename)
     commands
 -------------------------------------------------*/
 
-static int execute_commands(const char *exename, const game_driver *driver)
+static int execute_commands(core_options *options, const char *exename, const game_driver *driver)
 {
 	static const struct
 	{
 		const char *option;
-		int (*function)(const char *gamename);
+		int (*function)(core_options *options, const char *gamename);
 	} info_commands[] =
 	{
 		{ CLIOPTION_LISTXML,		cli_info_listxml },
@@ -269,13 +270,13 @@ static int execute_commands(const char *exename, const game_driver *driver)
 	int i;
 
 	/* createconfig? */
-	if (options_get_bool(mame_options(), CLIOPTION_CREATECONFIG))
+	if (options_get_bool(options, CLIOPTION_CREATECONFIG))
 	{
 		file_error filerr;
 		mame_file *file;
 
 		/* parse any relevant INI files before proceeding */
-		mame_parse_ini_files(mame_options(), driver);
+		mame_parse_ini_files(options, driver);
 
 		/* make the output filename */
 		filerr = mame_fopen(NULL, CONFIGNAME ".ini", OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
@@ -288,29 +289,29 @@ static int execute_commands(const char *exename, const game_driver *driver)
 		}
 
 		/* output the configuration and exit cleanly */
-		options_output_ini_file(mame_options(), mame_core_file(file));
+		options_output_ini_file(options, mame_core_file(file));
 		mame_fclose(file);
 		return MAMERR_NONE;
 	}
 
 	/* showconfig? */
-	if (options_get_bool(mame_options(), CLIOPTION_SHOWCONFIG))
+	if (options_get_bool(options, CLIOPTION_SHOWCONFIG))
 	{
 		/* parse any relevant INI files before proceeding */
-		mame_parse_ini_files(mame_options(), driver);
-		options_output_ini_stdfile(mame_options(), stdout);
+		mame_parse_ini_files(options, driver);
+		options_output_ini_stdfile(options, stdout);
 		return MAMERR_NONE;
 	}
 
 	/* informational commands? */
 	for (i = 0; i < ARRAY_LENGTH(info_commands); i++)
-		if (options_get_bool(mame_options(), info_commands[i].option))
+		if (options_get_bool(options, info_commands[i].option))
 		{
-			const char *gamename = options_get_string(mame_options(), OPTION_GAMENAME);
+			const char *gamename = options_get_string(options, OPTION_GAMENAME);
 
 			/* parse any relevant INI files before proceeding */
-			mame_parse_ini_files(mame_options(), driver);
-			return (*info_commands[i].function)((gamename[0] == 0) ? "*" : gamename);
+			mame_parse_ini_files(options, driver);
+			return (*info_commands[i].function)(options, (gamename[0] == 0) ? "*" : gamename);
 		}
 
 	return -1;
@@ -341,7 +342,7 @@ static void display_help(void)
 
 
 #ifdef DRIVER_SWITCH
-void assign_drivers(void)
+void assign_drivers(core_options *options)
 {
 	static const struct
 	{
@@ -366,7 +367,7 @@ void assign_drivers(void)
 	int i, n;
 
 #ifndef TINY_NAME
-	const char *drv_option = options_get_string(mame_options(), OPTION_DRIVER_CONFIG);
+	const char *drv_option = options_get_string(options, OPTION_DRIVER_CONFIG);
 	if (drv_option)
 	{
 		char *temp = mame_strdup(drv_option);
@@ -439,10 +440,10 @@ void assign_drivers(void)
 //  setup_language
 //============================================================
 
-void setup_language(void)
+void setup_language(core_options *options)
 {
-	const char *langname = options_get_string(mame_options(), OPTION_LANGUAGE);
-	int use_lang_list =options_get_bool(mame_options(), OPTION_USE_LANG_LIST);
+	const char *langname = options_get_string(options, OPTION_LANGUAGE);
+	int use_lang_list =options_get_bool(options, OPTION_USE_LANG_LIST);
 
 	int langcode = mame_stricmp(langname, "auto") ?
 		lang_find_langname(langname) :
@@ -451,7 +452,7 @@ void setup_language(void)
 	if (langcode < 0)
 	{
 		langcode = UI_LANG_EN_US;
-		lang_set_langcode(langcode);
+		lang_set_langcode(options, langcode);
 		set_osdcore_acp(ui_lang_info[langcode].codepage);
 
 		if (mame_stricmp(langname, "auto"))
@@ -459,7 +460,7 @@ void setup_language(void)
 		                langname, ui_lang_info[langcode].description);
 	}
 
-	lang_set_langcode(langcode);
+	lang_set_langcode(options, langcode);
 	set_osdcore_acp(ui_lang_info[langcode].codepage);
 
 	lang_message_enable(UI_MSG_LIST, use_lang_list);
@@ -477,7 +478,7 @@ void setup_language(void)
     or more games
 -------------------------------------------------*/
 
-int cli_info_listxml(const char *gamename)
+int cli_info_listxml(core_options *options, const char *gamename)
 {
 	/* since print_mame_xml expands the machine driver, we need to set things up */
 	init_resource_tracking();
@@ -497,7 +498,7 @@ int cli_info_listxml(const char *gamename)
     of one or more games
 -------------------------------------------------*/
 
-int cli_info_listfull(const char *gamename)
+int cli_info_listfull(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -546,7 +547,7 @@ int cli_info_listfull(const char *gamename)
     cli_info_listgames
 -------------------------------------------------*/
 
-int cli_info_listgames(const char *gamename)
+int cli_info_listgames(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -594,7 +595,7 @@ int cli_info_listgames(const char *gamename)
     filename of one or more games
 -------------------------------------------------*/
 
-int cli_info_listsource(const char *gamename)
+int cli_info_listsource(core_options *options, const char *gamename)
 {
 	astring *filename = astring_alloc();
 	int drvindex, count = 0;
@@ -619,7 +620,7 @@ int cli_info_listsource(const char *gamename)
     filename of one or more games
 -------------------------------------------------*/
 
-int cli_info_listclones(const char *gamename)
+int cli_info_listclones(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -652,7 +653,7 @@ int cli_info_listclones(const char *gamename)
     all ROMs referenced by MAME
 -------------------------------------------------*/
 
-int cli_info_listcrc(const char *gamename)
+int cli_info_listcrc(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -686,7 +687,7 @@ int cli_info_listcrc(const char *gamename)
     referenced by a given game or set of games
 -------------------------------------------------*/
 
-int cli_info_listroms(const char *gamename)
+int cli_info_listroms(core_options *options, const char *gamename)
 {
 	int drvindex, count = 0;
 
@@ -756,7 +757,7 @@ int cli_info_listroms(const char *gamename)
     referenced by a given game or set of games
 -------------------------------------------------*/
 
-int cli_info_listsamples(const char *gamename)
+int cli_info_listsamples(core_options *options, const char *gamename)
 {
 	int count = 0;
 
@@ -809,7 +810,7 @@ int cli_info_listsamples(const char *gamename)
     one or more games
 -------------------------------------------------*/
 
-static int info_verifyroms(const char *gamename)
+static int info_verifyroms(core_options *options, const char *gamename)
 {
 	int correct = 0;
 	int incorrect = 0;
@@ -825,7 +826,7 @@ static int info_verifyroms(const char *gamename)
 			int res;
 
 			/* audit the ROMs in this set */
-			audit_records = audit_images(drivers[drvindex], AUDIT_VALIDATE_FAST, &audit);
+			audit_records = audit_images(options, drivers[drvindex], AUDIT_VALIDATE_FAST, &audit);
 			res = audit_summary(drivers[drvindex], audit_records, audit, TRUE);
 			if (audit_records > 0)
 				free(audit);
@@ -893,7 +894,7 @@ static int info_verifyroms(const char *gamename)
     one or more games
 -------------------------------------------------*/
 
-static int info_verifysamples(const char *gamename)
+static int info_verifysamples(core_options *options, const char *gamename)
 {
 	int correct = 0;
 	int incorrect = 0;
@@ -909,7 +910,7 @@ static int info_verifysamples(const char *gamename)
 			int res;
 
 			/* audit the samples in this set */
-			audit_records = audit_samples(drivers[drvindex], &audit);
+			audit_records = audit_samples(options, drivers[drvindex], &audit);
 			res = audit_summary(drivers[drvindex], audit_records, audit, TRUE);
 			if (audit_records > 0)
 				free(audit);
@@ -970,7 +971,7 @@ static int info_verifysamples(const char *gamename)
     matches in our internal database
 -------------------------------------------------*/
 
-static int info_romident(const char *gamename)
+static int info_romident(core_options *options, const char *gamename)
 {
 	romident_status status;
 

@@ -22,8 +22,8 @@
     FUNCTION PROTOTYPES
 ***************************************************************************/
 
-static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record);
-static int audit_one_disk(const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record);
+static int audit_one_rom(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record);
+static int audit_one_disk(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record);
 static int rom_used_by_parent(const game_driver *gamedrv, const rom_entry *romentry, const game_driver **parent);
 
 
@@ -54,7 +54,7 @@ INLINE void set_status(audit_record *record, UINT8 status, UINT8 substatus)
     images for a game
 -------------------------------------------------*/
 
-int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **audit)
+int audit_images(core_options *options, const game_driver *gamedrv, UINT32 validation, audit_record **audit)
 {
 #define CHECK_SELECTED_BIOS_ONLY
 
@@ -72,7 +72,7 @@ int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **a
 		return 0;
 
 #ifdef CHECK_SELECTED_BIOS_ONLY
-	system_bios = determine_bios_rom(gamedrv->rom);
+	system_bios = determine_bios_rom(options, gamedrv->rom);
 #endif /* CHECK_SELECTED_BIOS_ONLY */
 
 	/* determine the number of records we will generate */
@@ -106,7 +106,7 @@ int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **a
 					if (!ROMENTRY_ISSYSTEM_BIOS(rom) && !(ROM_GETBIOSFLAGS(rom) && (ROM_GETBIOSFLAGS(rom) != system_bios))) /* alternate bios sets */
 					{
 #endif /* CHECK_SELECTED_BIOS_ONLY */
-					if (audit_one_rom(rom, gamedrv, validation, record++) && (!shared || allshared))
+					if (audit_one_rom(options, rom, gamedrv, validation, record++) && (!shared || allshared))
 						foundany = TRUE;
 #ifdef CHECK_SELECTED_BIOS_ONLY
 					}
@@ -116,7 +116,7 @@ int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **a
 				/* audit a disk */
 				else if (ROMREGION_ISDISKDATA(region))
 				{
-					if (audit_one_disk(rom, gamedrv, validation, record++) && (!shared || allshared))
+					if (audit_one_disk(options, rom, gamedrv, validation, record++) && (!shared || allshared))
 						foundany = TRUE;
 				}
 			}
@@ -138,7 +138,7 @@ int audit_images(const game_driver *gamedrv, UINT32 validation, audit_record **a
     game
 -------------------------------------------------*/
 
-int audit_samples(const game_driver *gamedrv, audit_record **audit)
+int audit_samples(core_options *options, const game_driver *gamedrv, audit_record **audit)
 {
 	machine_config config;
 	audit_record *record;
@@ -193,13 +193,13 @@ int audit_samples(const game_driver *gamedrv, audit_record **audit)
 
 						/* attempt to access the file from the game driver name */
 						fname = astring_assemble_3(astring_alloc(), gamedrv->name, PATH_SEPARATOR, intf->samplenames[sampnum]);
-						filerr = mame_fopen(SEARCHPATH_SAMPLE, astring_c(fname), OPEN_FLAG_READ, &file);
+						filerr = mame_fopen_options(options, SEARCHPATH_SAMPLE, astring_c(fname), OPEN_FLAG_READ, &file);
 
 						/* attempt to access the file from the shared driver name */
 						if (filerr != FILERR_NONE && sharedname != NULL)
 						{
 							astring_assemble_3(fname, sharedname, PATH_SEPARATOR, intf->samplenames[sampnum]);
-							filerr = mame_fopen(SEARCHPATH_SAMPLE, astring_c(fname), OPEN_FLAG_READ, &file);
+							filerr = mame_fopen_options(options, SEARCHPATH_SAMPLE, astring_c(fname), OPEN_FLAG_READ, &file);
 						}
 						astring_free(fname);
 
@@ -329,7 +329,7 @@ int audit_summary(const game_driver *gamedrv, int count, const audit_record *rec
     audit_one_rom - validate a single ROM entry
 -------------------------------------------------*/
 
-static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
+static int audit_one_rom(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
 {
 	const game_driver *drv;
 	const rom_entry *chunk;
@@ -361,9 +361,9 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
 		/* open the file if we can */
 		fname = astring_assemble_3(astring_alloc(), drv->name, PATH_SEPARATOR, ROM_GETNAME(rom));
 	    if (has_crc)
-			filerr = mame_fopen_crc(SEARCHPATH_ROM, astring_c(fname), crc, OPEN_FLAG_READ, &file);
+			filerr = mame_fopen_crc_options(options, SEARCHPATH_ROM, astring_c(fname), crc, OPEN_FLAG_READ, &file);
 		else
-			filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
+			filerr = mame_fopen_options(options, SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
 		astring_free(fname);
 
 		/* if we got it, extract the hash and length */
@@ -431,7 +431,7 @@ static int audit_one_rom(const rom_entry *rom, const game_driver *gamedrv, UINT3
     audit_one_disk - validate a single disk entry
 -------------------------------------------------*/
 
-static int audit_one_disk(const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
+static int audit_one_disk(core_options *options, const rom_entry *rom, const game_driver *gamedrv, UINT32 validation, audit_record *record)
 {
 	mame_file *source_file;
 	chd_file *source;
@@ -443,7 +443,7 @@ static int audit_one_disk(const rom_entry *rom, const game_driver *gamedrv, UINT
 	record->exphash = ROM_GETHASHDATA(rom);
 
 	/* open the disk */
-	err = open_disk_image(gamedrv, rom, &source_file, &source);
+	err = open_disk_image_options(options, gamedrv, rom, &source_file, &source);
 
 	/* if we failed, report the error */
 	if (err != CHDERR_NONE)

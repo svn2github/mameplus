@@ -390,6 +390,7 @@ static void  free_folder_flag(f_flag *flag);
     Internal variables
  ***************************************************************************/
 
+static core_options *options_cli;	// base core options and driver options
 static core_options *options_winui;	// only GUI related
 
 static settings_type settings;
@@ -523,6 +524,8 @@ void OptionsInit()
 	num_drivers = GetNumGames();
 
 	options_create_entry_cli();
+	lang_set_langcode(options_cli, UI_LANG_EN_US);
+
 	options_get_core(&settings);
 	options_get_driver(&global);
 
@@ -599,93 +602,98 @@ void OptionsExit(void)
 
 
 /* -- */
+core_options *get_core_options(void)
+{
+	return options_cli;
+}
+
 void set_core_input_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), OPTION_INPUT_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_INPUT_DIRECTORY, dir, OPTION_PRIORITY_INI);
 }
 
 void set_core_state_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), OPTION_STATE_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STATE_DIRECTORY, dir, OPTION_PRIORITY_INI);
 }
 
 void set_core_snapshot_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_INI);
 }
 
 void set_core_localized_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), OPTION_LOCALIZED_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_LOCALIZED_DIRECTORY, dir, OPTION_PRIORITY_INI);
 }
 
 void set_core_state(const WCHAR *name)
 {
-	options_set_wstring(mame_options(), OPTION_STATE, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STATE, name, OPTION_PRIORITY_INI);
 }
 
 void set_core_playback(const WCHAR *name)
 {
-	options_set_wstring(mame_options(), OPTION_PLAYBACK, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_PLAYBACK, name, OPTION_PRIORITY_INI);
 }
 
 void set_core_record(const WCHAR *name)
 {
-	options_set_wstring(mame_options(), OPTION_RECORD, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_RECORD, name, OPTION_PRIORITY_INI);
 }
 
 void set_core_mngwrite(const WCHAR *filename)
 {
-	options_set_wstring(mame_options(), OPTION_MNGWRITE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_MNGWRITE, filename, OPTION_PRIORITY_INI);
 }
 
 void set_core_wavwrite(const WCHAR *filename)
 {
-	options_set_wstring(mame_options(), OPTION_WAVWRITE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_WAVWRITE, filename, OPTION_PRIORITY_INI);
 }
 
 void set_core_history_filename(const WCHAR *filename)
 {
-	options_set_wstring(mame_options(), OPTION_HISTORY_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_HISTORY_FILE, filename, OPTION_PRIORITY_INI);
 }
 
 #ifdef STORY_DATAFILE
 void set_core_story_filename(const WCHAR *filename)
 {
-	options_set_wstring(mame_options(), OPTION_STORY_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STORY_FILE, filename, OPTION_PRIORITY_INI);
 }
 #endif /* STORY_DATAFILE */
 
 void set_core_mameinfo_filename(const WCHAR *filename)
 {
-	options_set_wstring(mame_options(), OPTION_MAMEINFO_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_MAMEINFO_FILE, filename, OPTION_PRIORITY_INI);
 }
 
 void set_core_bios(const char *bios)
 {
-	options_set_string(mame_options(), OPTION_BIOS, bios, OPTION_PRIORITY_INI);
+	options_set_string(options_cli, OPTION_BIOS, bios, OPTION_PRIORITY_INI);
 }
 
 
 /* -- */
 static void set_core_rom_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), SEARCHPATH_ROM, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_ROM, dir, OPTION_PRIORITY_INI);
 }
 
 static void set_core_image_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), SEARCHPATH_IMAGE, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_IMAGE, dir, OPTION_PRIORITY_INI);
 }
 
 static void set_core_sample_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_INI);
 }
 
 static void set_core_translation_directory(const WCHAR *dir)
 {
-	options_set_wstring(mame_options(), SEARCHPATH_TRANSLATION, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_TRANSLATION, dir, OPTION_PRIORITY_INI);
 }
 
 
@@ -970,7 +978,7 @@ void SetLangcode(int langcode)
 	settings.langcode = langcode;
 
 	/* apply to emulator core for datafile.c */
-	lang_set_langcode(langcode);
+	lang_set_langcode(get_core_options(), langcode);
 
 	/* apply for osd core functions */
 	set_osdcore_acp(ui_lang_info[langcode].codepage);
@@ -2942,7 +2950,7 @@ static void generate_default_ctrlr(void)
 	wcscat(fname, TEXT(".cfg"));
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 		mame_fclose(file);
 
@@ -2954,7 +2962,7 @@ static void generate_default_ctrlr(void)
 	{
 		create_path_recursive(ctrlrpath);
 
-		filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 		if (filerr == FILERR_NONE)
 		{
 			mame_fputs(file, default_ctrlr);
@@ -3425,11 +3433,12 @@ static void memory_error(const char *message)
 
 static void options_create_entry_cli(void)
 {
-	mame_options_init(mame_win_options);
+	/* create cli options */
+	options_cli = mame_options_init(mame_win_options);
 
-	options_set_output_callback(mame_options(), OPTMSG_INFO, debug_printf);
-	options_set_output_callback(mame_options(), OPTMSG_WARNING, debug_printf);
-	options_set_output_callback(mame_options(), OPTMSG_ERROR, debug_printf);
+	options_set_output_callback(options_cli, OPTMSG_INFO, debug_printf);
+	options_set_output_callback(options_cli, OPTMSG_WARNING, debug_printf);
+	options_set_output_callback(options_cli, OPTMSG_ERROR, debug_printf);
 }
 
 static void options_create_entry_winui(void)
@@ -3448,7 +3457,8 @@ static void options_create_entry_winui(void)
 
 static void options_free_entry_cli(void)
 {
-	mame_options_exit();
+	options_free(options_cli);
+	options_cli = NULL;
 }
 
 static void options_free_entry_winui(void)
@@ -3470,7 +3480,7 @@ static int options_load_default_config(void)
 	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
@@ -3478,7 +3488,7 @@ static int options_load_default_config(void)
 
 	options_set_core(&backup.settings);
 	options_set_driver(&backup.global);
-	retval = options_parse_ini_file(mame_options(), mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
 	options_get_core(&settings);
 	options_get_driver(&global);
 
@@ -3508,14 +3518,14 @@ static int options_load_driver_config(int driver_index)
 	wcscat(fname, TEXT(".ini"));
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_driver(&driver_options[driver_index]);
-	retval = options_parse_ini_file(mame_options(), mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
 	options_get_driver(&driver_options[driver_index]);
 
 	update_driver_use_default(driver_index);
@@ -3546,14 +3556,14 @@ static int options_load_alt_config(alt_options_type *alt_option)
 		wcscpy(fname + len - 6, TEXT(".ini"));
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return 0;
 
 	options_set_driver(alt_option->option);
-	retval = options_parse_ini_file(mame_options(), mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
 	options_get_driver(alt_option->option);
 
 	update_alt_use_default(alt_option);
@@ -3575,7 +3585,7 @@ static int options_load_winui_config(void)
 	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_WINUI_INI);
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
@@ -3605,7 +3615,7 @@ static int options_save_default_config(void)
 	wcscat(fname, TEXT(PATH_SEPARATOR) TEXT_MAME_INI);
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
@@ -3613,7 +3623,7 @@ static int options_save_default_config(void)
 
 	options_set_core(&settings);
 	options_set_driver(&global);
-	options_output_ini_file(mame_options(), mame_core_file(file));
+	options_output_ini_file(options_cli, mame_core_file(file));
 
 	mame_fclose(file);
 
@@ -3658,16 +3668,16 @@ static int options_save_driver_config(int driver_index)
 	create_path_recursive(settings.inipath);
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_driver(&driver_options[driver_index]);
-	options_clear_output_mark(mame_options());
+	options_clear_output_mark(options_cli);
 	options_set_mark_driver(&driver_options[driver_index], parent);
-	options_output_ini_file_marked(mame_options(), mame_core_file(file));
+	options_output_ini_file_marked(options_cli, mame_core_file(file));
 
 	mame_fclose(file);
 
@@ -3711,16 +3721,16 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	create_path_recursive(settings.inipath);
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
 		return -1;
 
 	options_set_driver(alt_option->option);
-	options_clear_output_mark(mame_options());
+	options_clear_output_mark(options_cli);
 	options_set_mark_driver(alt_option->option, parent);
-	options_output_ini_file_marked(mame_options(), mame_core_file(file));
+	options_output_ini_file_marked(options_cli, mame_core_file(file));
 
 	mame_fclose(file);
 
@@ -3740,7 +3750,7 @@ static int options_save_winui_config(void)
 	wcscat(fname, strlower(TEXT(PATH_SEPARATOR) TEXT_WINUI_INI));
 
 	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen(SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
 	free(stemp);
 
 	if (filerr != FILERR_NONE)
@@ -3782,16 +3792,16 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	options_set_core(&backup.settings);
 	options_set_driver(&backup.global);
 
-	options_clear_output_mark(mame_options());
+	options_clear_output_mark(options_cli);
 	options_set_mark_core(&settings, &backup.settings);
 	options_set_mark_driver(opt, &backup.global);
 
 	if (override_callback)
 		override_callback();
 
-	len = options_output_command_line_marked(mame_options(), NULL);
+	len = options_output_command_line_marked(options_cli, NULL);
 	p = malloc(len + 1);
-	options_output_command_line_marked(mame_options(), p);
+	options_output_command_line_marked(options_cli, p);
 	wopts = wstring_from_utf8(p);
 	free(p);
 	len = wcslen(wopts);
@@ -3842,10 +3852,10 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_get_core(settings_type *p) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_CORE	}
 #define START_OPT_FUNC_DRIVER	static void options_get_driver(options_type *p) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_DRIVER	}
 #define START_OPT_FUNC_WINUI	static void options_get_winui(settings_type *p) { \
 					core_options *opts = options_winui;
@@ -3871,10 +3881,10 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_set_core(const settings_type *p) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_CORE	}
 #define START_OPT_FUNC_DRIVER	static void options_set_driver(const options_type *p) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_DRIVER	}
 #define START_OPT_FUNC_WINUI	static void options_set_winui(const settings_type *p) { \
 					core_options *opts = options_winui;
@@ -3972,10 +3982,10 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #undef DEFINE_OPT_N
 
 #define START_OPT_FUNC_CORE	static void options_set_mark_core(const settings_type *p, const settings_type *ref) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_CORE	}
 #define START_OPT_FUNC_DRIVER	static void options_set_mark_driver(const options_type *p, const options_type *ref) { \
-					core_options *opts = mame_options();
+					core_options *opts = options_cli;
 #define END_OPT_FUNC_DRIVER	}
 #define DEFINE_OPT(type,name)		do { if (options_compare_##type((p->name), (ref->name))) options_set_##type(opts, #name, (p->name), OPTION_PRIORITY_INI); } while (0);
 #define DEFINE_OPT_N(type,name,n)	do { if (options_compare_##type((p->name##s[n]), (ref->name##s[n]))) options_set_##type(opts, #name#n, (p->name##s[n]), OPTION_PRIORITY_INI); } while (0);	

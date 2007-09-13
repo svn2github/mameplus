@@ -384,7 +384,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
 					gameinfo->usesRoms = TRUE;
-					gameinfo->hasOptionalBios = (determine_bios_rom(gamedrv->rom) != 0);
+					gameinfo->hasOptionalBios = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
 					break;
 				}
 

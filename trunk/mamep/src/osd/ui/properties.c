@@ -3741,7 +3741,7 @@ static void ResetDataMap(void)
 	if (g_biosinfo != -1)
 	{
 		set_core_bios(pGameOpts->bios);
-		g_nBiosIndex = determine_bios_rom(drivers[g_biosinfo]->rom) - 1;
+		g_nBiosIndex = determine_bios_rom(get_core_options(), drivers[g_biosinfo]->rom) - 1;
 		set_core_bios(NULL);
 	}
 
@@ -3755,7 +3755,7 @@ static void ResetDataMap(void)
 				char *name = strdup(GetDefaultBios(i));
 
 				set_core_bios(name);
-				default_bios_index[i] = determine_bios_rom(drivers[bios_driver]->rom) - 1;
+				default_bios_index[i] = determine_bios_rom(get_core_options(), drivers[bios_driver]->rom) - 1;
 				set_core_bios(NULL);
 				free(name);
 			}

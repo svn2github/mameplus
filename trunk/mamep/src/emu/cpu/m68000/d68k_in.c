@@ -963,340 +963,340 @@ M68KMAKE_OP(040fpu1, 32, ., .)
 
 M68KMAKE_OP(abcd, 8, rr, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_mov_r8_r8(REG_CH, REG_CL);
-	_and_r32_imm(REG_ECX, 0xf00f);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0xf00f);
 
-	_mov_r8_m8abs(REG_AL, &DY);
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_ECX, REG_EAX);
+	emit_adc_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_r8(REG_EAX, REG_CL);
-	_mov_r32_r32(REG_EBX, REG_ECX);
-	_shr_r32_imm(REG_EBX, 8);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+	emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_LE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_add_r32_imm(REG_EAX, 6);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		_setcc_r8(COND_G, REG_BH);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
+		emit_setcc_r8(DRCTOP, COND_G, REG_BH);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
-	_jcc_near_link(COND_LE, &link2);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link2);
 
-	_sub_r32_imm(REG_EAX, 0xa0);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0xa0);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_not_r32(REG_ECX);			/* Undefined V behavior */
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
 		DRC_NFLAG_8();				/* Undefined N behavior */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
 M68KMAKE_OP(abcd, 8, mm, ax7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_ECX, REG_EAX);
+	emit_adc_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_r8(REG_EAX, REG_CL);
-	_mov_r32_r32(REG_EBX, REG_ECX);
-	_shr_r32_imm(REG_EBX, 8);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+	emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_LE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_add_r32_imm(REG_EAX, 6);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		_setcc_r8(COND_G, REG_BH);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
+		emit_setcc_r8(DRCTOP, COND_G, REG_BH);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_jcc_near_link(COND_LE, &link2);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link2);
 
-	_sub_r32_imm(REG_EAX, 0xa0);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0xa0);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_not_r32(REG_ECX);			/* Undefined V behavior */
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
 		DRC_NFLAG_8();				/* Undefined N behavior */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(abcd, 8, mm, ay7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_ECX, REG_EAX);
+	emit_adc_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_r8(REG_EAX, REG_CL);
-	_mov_r32_r32(REG_EBX, REG_ECX);
-	_shr_r32_imm(REG_EBX, 8);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+	emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_LE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_add_r32_imm(REG_EAX, 6);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		_setcc_r8(COND_G, REG_BH);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
+		emit_setcc_r8(DRCTOP, COND_G, REG_BH);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_jcc_near_link(COND_LE, &link2);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link2);
 
-	_sub_r32_imm(REG_EAX, 0xa0);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0xa0);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_not_r32(REG_ECX);			/* Undefined V behavior */
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
 		DRC_NFLAG_8();			/* Undefined N behavior */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(abcd, 8, mm, axy7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_ECX, REG_EAX);
+	emit_adc_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_r8(REG_EAX, REG_CL);
-	_mov_r32_r32(REG_EBX, REG_ECX);
-	_shr_r32_imm(REG_EBX, 8);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+	emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_LE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_add_r32_imm(REG_EAX, 6);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		_setcc_r8(COND_G, REG_BH);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
+		emit_setcc_r8(DRCTOP, COND_G, REG_BH);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_jcc_near_link(COND_LE, &link2);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link2);
 
-	_sub_r32_imm(REG_EAX, 0xa0);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0xa0);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_not_r32(REG_ECX);			/* Undefined V behavior */
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
 		DRC_NFLAG_8();				/* Undefined N behavior */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(abcd, 8, mm, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_ECX, REG_EAX);
+	emit_adc_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_r8(REG_EAX, REG_CL);
-	_mov_r32_r32(REG_EBX, REG_ECX);
-	_shr_r32_imm(REG_EBX, 8);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_CL);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+	emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_LE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-	_add_r32_imm(REG_EAX, 6);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		_setcc_r8(COND_G, REG_BH);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
+		emit_setcc_r8(DRCTOP, COND_G, REG_BH);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_jcc_near_link(COND_LE, &link2);
+	emit_jcc_near_link(DRCTOP, COND_LE, &link2);
 
-	_sub_r32_imm(REG_EAX, 0xa0);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0xa0);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_not_r32(REG_ECX);			/* Undefined V behavior */
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
 		DRC_NFLAG_8();				/* Undefined N behavior */
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1305,18 +1305,18 @@ M68KMAKE_OP(add, 8, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -1325,17 +1325,17 @@ M68KMAKE_OP(add, 8, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_8;
-	_mov_r16_r16(REG_CX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_CX, REG_AX);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -1343,16 +1343,16 @@ M68KMAKE_OP(add, 16, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -1360,16 +1360,16 @@ M68KMAKE_OP(add, 16, er, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &AY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -1378,16 +1378,16 @@ M68KMAKE_OP(add, 16, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -1395,16 +1395,16 @@ M68KMAKE_OP(add, 32, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -1412,16 +1412,16 @@ M68KMAKE_OP(add, 32, er, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AY));
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -1430,16 +1430,16 @@ M68KMAKE_OP(add, 32, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -1447,24 +1447,24 @@ M68KMAKE_OP(add, 8, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DX);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1473,23 +1473,23 @@ M68KMAKE_OP(add, 16, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_movzx_r32_m16abs(REG_ECX, &DX);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DX));
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -1498,23 +1498,23 @@ M68KMAKE_OP(add, 32, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_m32abs(REG_ECX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DX));
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -1523,10 +1523,10 @@ M68KMAKE_OP(adda, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_movsx_r32_m16abs(REG_ECX, &DY);
-	_add_r32_r32(REG_EAX, REG_ECX);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -1534,10 +1534,10 @@ M68KMAKE_OP(adda, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_movsx_r32_m16abs(REG_ECX, &AY);
-	_add_r32_r32(REG_EAX, REG_ECX);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -1546,10 +1546,10 @@ M68KMAKE_OP(adda, 16, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EAX, REG_AX);
-	_mov_r32_m32abs(REG_ECX, &AX);
-	_add_r32_r32(REG_ECX, REG_EAX);
-	_mov_m32abs_r32(&AX, REG_ECX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AX));
+	emit_add_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_ECX);
 }
 
 
@@ -1557,9 +1557,9 @@ M68KMAKE_OP(adda, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_add_r32_m32abs(REG_EAX, &DY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_add_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -1567,9 +1567,9 @@ M68KMAKE_OP(adda, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_add_r32_m32abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_add_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -1578,9 +1578,9 @@ M68KMAKE_OP(adda, 32, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_m32abs(REG_ECX, &AX);
-	_add_r32_r32(REG_ECX, REG_EAX);
-	_mov_m32abs_r32(&AX, REG_ECX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AX));
+	emit_add_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_ECX);
 }
 
 
@@ -1590,17 +1590,17 @@ M68KMAKE_OP(addi, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DY);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_mov_r16_imm(REG_CX, src);
+	emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -1610,23 +1610,23 @@ M68KMAKE_OP(addi, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_mov_r16_imm(REG_CX, src);
+	emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1637,16 +1637,16 @@ M68KMAKE_OP(addi, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -1656,22 +1656,22 @@ M68KMAKE_OP(addi, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -1682,16 +1682,16 @@ M68KMAKE_OP(addi, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -1701,23 +1701,23 @@ M68KMAKE_OP(addi, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -1726,17 +1726,17 @@ M68KMAKE_OP(addq, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DY);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_mov_r16_imm(REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r16_imm(DRCTOP, REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -1744,23 +1744,23 @@ M68KMAKE_OP(addq, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_mov_r16_imm(REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r16_imm(DRCTOP, REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1769,16 +1769,16 @@ M68KMAKE_OP(addq, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -1786,9 +1786,9 @@ M68KMAKE_OP(addq, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_add_r32_imm(REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_add_r32_imm(DRCTOP, REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -1796,23 +1796,23 @@ M68KMAKE_OP(addq, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -1821,16 +1821,16 @@ M68KMAKE_OP(addq, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -1838,9 +1838,9 @@ M68KMAKE_OP(addq, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_add_r32_imm(REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_add_r32_imm(DRCTOP, REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -1848,22 +1848,22 @@ M68KMAKE_OP(addq, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_add_r32_r32(REG_EAX, REG_ECX);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_add_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -1872,18 +1872,18 @@ M68KMAKE_OP(addx, 8, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
 
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8abs(REG_AL, &DX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -1891,16 +1891,16 @@ M68KMAKE_OP(addx, 16, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_movzx_r32_m16abs(REG_EAX, &DX);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_16(drc);	/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -1908,16 +1908,16 @@ M68KMAKE_OP(addx, 32, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_mov_r32_m32abs(REG_EAX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_32(drc);	/* break EBX, ECX, EDX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -1926,22 +1926,22 @@ M68KMAKE_OP(addx, 8, mm, ax7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1951,22 +1951,22 @@ M68KMAKE_OP(addx, 8, mm, ay7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -1976,22 +1976,22 @@ M68KMAKE_OP(addx, 8, mm, axy7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -2001,22 +2001,22 @@ M68KMAKE_OP(addx, 8, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -2026,22 +2026,22 @@ M68KMAKE_OP(addx, 16, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_16(drc);	/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -2051,22 +2051,22 @@ M68KMAKE_OP(addx, 32, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_adc_r32_r32(REG_EAX, REG_ECX);
+	emit_adc_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_addx_32(drc);	/* break EBX, ECX, EDX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -2075,14 +2075,14 @@ M68KMAKE_OP(and, 8, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -2092,12 +2092,12 @@ M68KMAKE_OP(and, 8, er, .)
 
 	M68KMAKE_GET_OPER_AY_8;
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -2105,14 +2105,14 @@ M68KMAKE_OP(and, 16, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -2122,12 +2122,12 @@ M68KMAKE_OP(and, 16, er, .)
 
 	M68KMAKE_GET_OPER_AY_16;
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -2135,13 +2135,13 @@ M68KMAKE_OP(and, 32, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_and_r32_m32abs(REG_EAX, &DX);
+	emit_and_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -2151,11 +2151,11 @@ M68KMAKE_OP(and, 32, er, .)
 
 	M68KMAKE_GET_OPER_AY_32;
 
-	_and_r32_m32abs(REG_EAX, &DX);
+	emit_and_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -2163,20 +2163,20 @@ M68KMAKE_OP(and, 8, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -2185,20 +2185,20 @@ M68KMAKE_OP(and, 16, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -2207,19 +2207,19 @@ M68KMAKE_OP(and, 32, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_and_r32_m32abs(REG_EAX, &DX);
+	emit_and_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -2230,13 +2230,13 @@ M68KMAKE_OP(andi, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -2246,19 +2246,19 @@ M68KMAKE_OP(andi, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -2269,13 +2269,13 @@ M68KMAKE_OP(andi, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -2285,19 +2285,19 @@ M68KMAKE_OP(andi, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -2308,13 +2308,13 @@ M68KMAKE_OP(andi, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -2324,19 +2324,19 @@ M68KMAKE_OP(andi, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -2349,7 +2349,7 @@ M68KMAKE_OP(andi, 16, toc, .)
 
 	m68kdrc_get_ccr();
 
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_set_ccr(drc);
 }
@@ -2357,22 +2357,22 @@ M68KMAKE_OP(andi, 16, toc, .)
 
 M68KMAKE_OP(andi, 16, tos, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	uint16 src = OPER_I_16();
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	m68kdrc_get_sr();
-	_and_r32_imm(REG_EAX, src);
+	emit_and_r32_imm(DRCTOP, REG_EAX, src);
 	m68kdrc_set_sr(drc);
 }
 
@@ -2386,18 +2386,18 @@ M68KMAKE_OP(asr, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movsx_r32_m8abs(REG_EAX, &DY);
-	_sar_r32_imm(REG_EAX, shift);
+	emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_sar_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -2410,18 +2410,18 @@ M68KMAKE_OP(asr, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
-	_sar_r32_imm(REG_EAX, shift);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_sar_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -2434,200 +2434,200 @@ M68KMAKE_OP(asr, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_sar_r32_imm(REG_EAX, shift);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_sar_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(asr, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movsx_r32_m8abs(REG_EAX, &DY);
+	emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_sar_r32_imm(REG_EAX, 16);
-	_sar_r32_imm(REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_sar_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_sar_r32_cl(DRCTOP, REG_EAX);
 
 	if (update_flag)
 		DRC_CXFLAG_COND_C();
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
 	}
 
 	if (update_flag)
 	{
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
 
 M68KMAKE_OP(asr, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_sar_r32_imm(REG_EAX, 16);
-	_sar_r32_imm(REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_sar_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_sar_r32_cl(DRCTOP, REG_EAX);
 
 	if (update_flag)
 		DRC_CXFLAG_COND_C();
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
 	}
 
 	if (update_flag)
 	{
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
 
 M68KMAKE_OP(asr, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag ;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_sar_r32_imm(REG_EAX, 16);
-	_sar_r32_imm(REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_sar_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_sar_r32_cl(DRCTOP, REG_EAX);
 
 	if (update_flag)
 		DRC_CXFLAG_COND_C();
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
 	}
 
 	if (update_flag)
 	{
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 }
 
@@ -2636,26 +2636,26 @@ M68KMAKE_OP(asr, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_movsx_r32_r16(REG_EAX, REG_AX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
 
-	_sar_r32_imm(REG_EAX, 1);
+	emit_sar_r32_imm(DRCTOP, REG_EAX, 1);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -2671,41 +2671,41 @@ M68KMAKE_OP(asl, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 	if (update_flag)
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r8_r8(REG_BL, REG_AL);
-		_and_r32_imm(REG_EBX, m68ki_shift_8_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link1);
+		emit_mov_r8_r8(DRCTOP, REG_BL, REG_AL);
+		emit_and_r32_imm(DRCTOP, REG_EBX, m68ki_shift_8_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_cmp_r32_imm(REG_EBX, m68ki_shift_8_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link2);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, m68ki_shift_8_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 
-	_mov_r8_imm(REG_CL, shift);
-	_shl_r8_cl(REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -2720,42 +2720,42 @@ M68KMAKE_OP(asl, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (update_flag)
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r16_r16(REG_BX, REG_AX);
-		_and_r32_imm(REG_EBX, m68ki_shift_16_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link1);
+		emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, m68ki_shift_16_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_cmp_r32_imm(REG_EBX, m68ki_shift_16_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link2);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, m68ki_shift_16_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 
-	_mov_r8_imm(REG_CL, shift);
-	_shl_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -2770,130 +2770,130 @@ M68KMAKE_OP(asl, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (update_flag)
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, m68ki_shift_32_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link1);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, m68ki_shift_32_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_cmp_r32_imm(REG_EBX, m68ki_shift_32_table[shift + 1]);
-		_jcc_near_link(COND_Z, &link2);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, m68ki_shift_32_table[shift + 1]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 
-	_shl_r32_imm(REG_EAX, shift);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(asl, 8, r, .)
 {
-	link_info link1;
-	link_info link5;
+	emit_link link1;
+	emit_link link5;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	if (update_flag)
 	{
-		link_info link2;
-		link_info link3;
-		link_info link4;
+		emit_link link2;
+		emit_link link3;
+		emit_link link4;
 
-		_mov_r32_r32(REG_EDX, REG_ECX);
-		_add_r32_imm(REG_EDX, 1);
-		_mov_r8_m8bd(REG_DL, REG_EDX, m68ki_shift_8_table);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_add_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MBD(REG_EDX, m68ki_shift_8_table));
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link2);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_sub_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link3);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link3);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link4);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
-_resolve_link(&link3);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+resolve_link(DRCTOP, &link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 	}
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link5);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link5);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shl_r8_cl(REG_AL);
-	_shl_r8_cl(REG_AL);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link5);
-	_shl_r8_cl(REG_AL);
+resolve_link(DRCTOP, &link5);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
-		_jmp_near_link(&link5);
+		emit_jmp_near_link(DRCTOP, &link5);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link5);
+resolve_link(DRCTOP, &link5);
 		DRC_NFLAG_8();
 	}
 }
@@ -2901,91 +2901,91 @@ _resolve_link(&link5);
 
 M68KMAKE_OP(asl, 16, r, .)
 {
-	link_info link1;
-	link_info link5;
+	emit_link link1;
+	emit_link link5;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	if (update_flag)
 	{
-		link_info link2;
-		link_info link3;
-		link_info link4;
+		emit_link link2;
+		emit_link link3;
+		emit_link link4;
 
-		_mov_r32_r32(REG_EDX, REG_ECX);
-		_add_r32_imm(REG_EDX, 1);
-		_shl_r32_imm(REG_EDX, 1);
-		_mov_r16_m16bd(REG_DX, REG_EDX, m68ki_shift_16_table);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_add_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_shl_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MBD(REG_EDX, m68ki_shift_16_table));
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link2);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_sub_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link3);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link3);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link4);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
-_resolve_link(&link3);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+resolve_link(DRCTOP, &link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 	}
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link5);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link5);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shl_r16_cl(REG_AX);
-	_shl_r16_cl(REG_AX);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link5);
-	_shl_r16_cl(REG_AX);
+resolve_link(DRCTOP, &link5);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
-		_jmp_near_link(&link5);
+		emit_jmp_near_link(DRCTOP, &link5);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link5);
+resolve_link(DRCTOP, &link5);
 		DRC_NFLAG_16();
 	}
 }
@@ -2993,88 +2993,88 @@ _resolve_link(&link5);
 
 M68KMAKE_OP(asl, 32, r, .)
 {
-	link_info link1;
-	link_info link5;
+	emit_link link1;
+	emit_link link5;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	if (update_flag)
 	{
-		link_info link2;
-		link_info link3;
-		link_info link4;
+		emit_link link2;
+		emit_link link3;
+		emit_link link4;
 
-		_mov_r32_r32(REG_EDX, REG_ECX);
-		_add_r32_imm(REG_EDX, 1);
-		_shl_r32_imm(REG_EDX, 2);
-		_mov_r32_m32bd(REG_EDX, REG_EDX, m68ki_shift_32_table);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_add_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_shl_r32_imm(DRCTOP, REG_EDX, 2);
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MBD(REG_EDX, m68ki_shift_32_table));
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link2);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_sub_r32_r32(REG_EBX, REG_EDX);
-		_jcc_near_link(COND_Z, &link3);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link3);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link4);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
-_resolve_link(&link3);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+resolve_link(DRCTOP, &link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 	}
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link5);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link5);
 
-	_shl_r32_imm(REG_EAX, 16);
-	_shl_r32_imm(REG_EAX, 16);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link5);
-	_shl_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link5);
+	emit_shl_r32_cl(DRCTOP, REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
-		_jmp_near_link(&link5);
+		emit_jmp_near_link(DRCTOP, &link5);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link5);
+resolve_link(DRCTOP, &link5);
 		DRC_NFLAG_32();
 	}
 }
@@ -3086,49 +3086,49 @@ M68KMAKE_OP(asl, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, m68ki_shift_16_table[2]);
-		_jcc_near_link(COND_Z, &link1);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, m68ki_shift_16_table[2]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_cmp_r32_imm(REG_EBX, m68ki_shift_16_table[2]);
-		_jcc_near_link(COND_Z, &link2);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, m68ki_shift_16_table[2]);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 
-	_mov_r8_imm(REG_CL, 1);
-	_shl_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 1);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -3142,7 +3142,7 @@ M68KMAKE_OP(bcc, 8, ., .)
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 	m68kdrc_branch_8(MASK_OUT_ABOVE_8(REG68K_IR), 1);
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 	DRC_USE_CYCLES(CYC_BCC_NOTAKE_B);
 }
 
@@ -3158,7 +3158,7 @@ M68KMAKE_OP(bcc, 16, ., .)
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 	m68kdrc_branch_16(oper, 1);
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 	DRC_USE_CYCLES(CYC_BCC_NOTAKE_W);
 }
 
@@ -3175,7 +3175,7 @@ M68KMAKE_OP(bcc, 32, ., .)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		m68kdrc_branch_32(ea, 1);
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 	}
 	else
 	{
@@ -3186,7 +3186,7 @@ _resolve_link(&m68kdrc_link_make_cc);
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 		m68kdrc_branch_8(MASK_OUT_ABOVE_8(REG68K_IR), 1);
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 		DRC_USE_CYCLES(CYC_BCC_NOTAKE_B);
 	}
 }
@@ -3196,22 +3196,22 @@ M68KMAKE_OP(bchg, 32, r, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x1f);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x1f);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_xor_r32_r32(REG_EAX, REG_EBX);
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -3219,29 +3219,29 @@ M68KMAKE_OP(bchg, 8, r, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 7);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 7);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -3252,17 +3252,17 @@ M68KMAKE_OP(bchg, 32, s, d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_xor_r32_imm(REG_EAX, mask);
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, mask);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -3272,24 +3272,24 @@ M68KMAKE_OP(bchg, 8, s, .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_xor_r32_imm(REG_EAX, mask);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, mask);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -3298,23 +3298,23 @@ M68KMAKE_OP(bclr, 32, r, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x1f);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x1f);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_not_r32(REG_EBX);
-	_and_r32_r32(REG_EAX, REG_EBX);
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_not_r32(DRCTOP, REG_EBX);
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -3322,30 +3322,30 @@ M68KMAKE_OP(bclr, 8, r, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 7);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 7);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_not_r32(REG_EBX);
-	_and_r32_r32(REG_EAX, REG_EBX);
+	emit_not_r32(DRCTOP, REG_EBX);
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -3356,17 +3356,17 @@ M68KMAKE_OP(bclr, 32, s, d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_and_r32_imm(REG_EAX, ~mask);
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EAX, ~mask);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -3376,24 +3376,24 @@ M68KMAKE_OP(bclr, 8, s, .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_and_r32_imm(REG_EAX, ~mask);
+	emit_and_r32_imm(DRCTOP, REG_EAX, ~mask);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -3410,67 +3410,67 @@ M68KMAKE_OP(bfchg, 32, ., d)
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
 		}
 
-		_mov_r32_m32abs(REG_EAX, &DY);
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 
 			if (update_flag)
-				_mov_r8_r8(REG_CH, REG_CL);
+				emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
 
-			_ror_r32_cl(REG_EDX);
+			emit_ror_r32_cl(DRCTOP, REG_EDX);
 
 			if (update_flag)
 			{
-				_mov_r8_r8(REG_CL, REG_CH);
-				_shl_r32_cl(REG_EBX);
+				emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
+				emit_shl_r32_cl(DRCTOP, REG_EBX);
 			}
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_ror_r32_imm(REG_EDX, offset);
+			emit_ror_r32_imm(DRCTOP, REG_EDX, offset);
 
 			if (update_flag)
-				_shl_r32_imm(REG_EBX, offset);
+				emit_shl_r32_imm(DRCTOP, REG_EBX, offset);
 		}
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_xor_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32abs_r32(&DY, REG_EAX);
+		emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	}
 	else
 	{
@@ -3484,8 +3484,8 @@ M68KMAKE_OP(bfchg, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 		int update_flag;
@@ -3503,134 +3503,134 @@ M68KMAKE_OP(bfchg, 32, ., .)
 	ea
 	mask_long
 */
-		_sub_r32_imm(REG_ESP, 16);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 16);
 
 		M68KMAKE_GET_EA_AY_8;
 		update_flag = m68kdrc_update_vncz_check();
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);			// width
+			emit_push_r32(DRCTOP, REG_EDX);			// width
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);	// mask_base
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);	// mask_base
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_sar_r32_imm(REG_EBX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EBX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_sar_r32_imm(DRCTOP, REG_EBX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r8_r8(REG_CL, REG_BL);
-			_shr_r32_cl(REG_EDX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+			emit_shr_r32_cl(DRCTOP, REG_EDX);
 
-			_push_r32(REG_EBX);			// offset
+			emit_push_r32(DRCTOP, REG_EBX);			// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
 			if (offset)
-				_shr_r32_imm(REG_EDX, offset);
-			_push_imm(offset);
+				emit_shr_r32_imm(DRCTOP, REG_EDX, offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_mov_m32bd_r32(REG_ESP, 8, REG_EBX);		// ea+4
-		_mov_m32bd_r32(REG_ESP, 16, REG_EBX);		// ea+4
-		_sub_r32_imm(REG_ESP, 4);			// data
-		_push_r32(REG_EAX);				// ea
-		_push_r32(REG_EDX);				// mask_long
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);		// ea+4
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EBX);		// ea+4
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);			// data
+		emit_push_r32(DRCTOP, REG_EAX);				// ea
+		emit_push_r32(DRCTOP, REG_EDX);				// mask_long
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 12);		// offset
-		_shl_r32_cl(REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 12));		// offset
+		emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 		}
 
-		_pop_r32(REG_EDX);				// mask_long
+		emit_pop_r32(DRCTOP, REG_EDX);				// mask_long
 
 		if (update_flag)
 		{
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_xor_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);		// data
+		emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);		// data
 		m68kdrc_write_32();
 
-		_pop_r32(REG_ECX);				// offset
-		_pop_r32(REG_EAX);				// width
+		emit_pop_r32(DRCTOP, REG_ECX);				// offset
+		emit_pop_r32(DRCTOP, REG_EAX);				// width
 
-		_add_r32_r32(REG_EAX, REG_ECX);
-		_cmp_r32_imm(REG_EAX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);				// mask_base
-		_mov_r32_r32(REG_ECX, REG_EBX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_r8_m8abs(REG_DL, &FLAG_Z);
-		_or_r32_r32(REG_EDX, REG_ECX);
-		_mov_m8abs_r8(&FLAG_Z, REG_DL);
+		emit_pop_r32(DRCTOP, REG_EBX);				// mask_base
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_DL);
 
-		_xor_r32_r32(REG_EAX, REG_EBX);
+		emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+		emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 		m68kdrc_write_8();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 16);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -3652,68 +3652,68 @@ M68KMAKE_OP(bfclr, 32, ., d)
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
 		}
 
-		_mov_r32_m32abs(REG_EAX, &DY);
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 
 			if (update_flag)
-				_mov_r8_r8(REG_CH, REG_CL);
+				emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
 
-			_ror_r32_cl(REG_EDX);
+			emit_ror_r32_cl(DRCTOP, REG_EDX);
 
 			if (update_flag)
 			{
-				_mov_r8_r8(REG_CL, REG_CH);
-				_shl_r32_cl(REG_EBX);
+				emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
+				emit_shl_r32_cl(DRCTOP, REG_EBX);
 			}
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_ror_r32_imm(REG_EDX, offset);
+			emit_ror_r32_imm(DRCTOP, REG_EDX, offset);
 
 			if (update_flag)
-				_shl_r32_imm(REG_EBX, offset);
+				emit_shl_r32_imm(DRCTOP, REG_EBX, offset);
 		}
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_not_r32(REG_EDX);
-		_and_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32abs_r32(&DY, REG_EAX);
+		emit_not_r32(DRCTOP, REG_EDX);
+		emit_and_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	}
 	else
 	{
@@ -3727,8 +3727,8 @@ M68KMAKE_OP(bfclr, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 		int update_flag;
@@ -3745,136 +3745,136 @@ M68KMAKE_OP(bfclr, 32, ., .)
 	ea
 	mask_long
 */
-		_sub_r32_imm(REG_ESP, 16);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 16);
 
 		M68KMAKE_GET_EA_AY_8;
 		update_flag = m68kdrc_update_vncz_check();
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);			// width
+			emit_push_r32(DRCTOP, REG_EDX);			// width
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);	// mask_base
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);	// mask_base
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_sar_r32_imm(REG_EBX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EBX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_sar_r32_imm(DRCTOP, REG_EBX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r8_r8(REG_CL, REG_BL);
-			_shr_r32_cl(REG_EDX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+			emit_shr_r32_cl(DRCTOP, REG_EDX);
 
-			_push_r32(REG_EBX);			// offset
+			emit_push_r32(DRCTOP, REG_EBX);			// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
 			if (offset)
-				_shr_r32_imm(REG_EDX, offset);
-			_push_imm(offset);
+				emit_shr_r32_imm(DRCTOP, REG_EDX, offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_mov_m32bd_r32(REG_ESP, 8, REG_EBX);		// ea+4
-		_mov_m32bd_r32(REG_ESP, 16, REG_EBX);		// ea+4
-		_sub_r32_imm(REG_ESP, 4);			// data
-		_push_r32(REG_EAX);				// ea
-		_push_r32(REG_EDX);				// mask_long
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);		// ea+4
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EBX);		// ea+4
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);			// data
+		emit_push_r32(DRCTOP, REG_EAX);				// ea
+		emit_push_r32(DRCTOP, REG_EDX);				// mask_long
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 12);		// offset
-		_shl_r32_cl(REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 12));		// offset
+		emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 		}
 
-		_pop_r32(REG_EDX);				// mask_long
+		emit_pop_r32(DRCTOP, REG_EDX);				// mask_long
 
 		if (update_flag)
 		{
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_not_r32(REG_EDX);
-		_and_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);		// data
+		emit_not_r32(DRCTOP, REG_EDX);
+		emit_and_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);		// data
 		m68kdrc_write_32();
 
-		_pop_r32(REG_ECX);				// offset
-		_pop_r32(REG_EAX);				// width
+		emit_pop_r32(DRCTOP, REG_ECX);				// offset
+		emit_pop_r32(DRCTOP, REG_EAX);				// width
 
-		_add_r32_r32(REG_EAX, REG_ECX);
-		_cmp_r32_imm(REG_EAX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);				// mask_base
-		_mov_r32_r32(REG_ECX, REG_EBX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_r8_m8abs(REG_DL, &FLAG_Z);
-		_or_r32_r32(REG_EDX, REG_ECX);
-		_mov_m8abs_r8(&FLAG_Z, REG_DL);
+		emit_pop_r32(DRCTOP, REG_EBX);				// mask_base
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_DL);
 
-		_not_r32(REG_EBX);
-		_and_r32_r32(REG_EAX, REG_EBX);
+		emit_not_r32(DRCTOP, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+		emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 		m68kdrc_write_8();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 16);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -3894,52 +3894,52 @@ M68KMAKE_OP(bfexts, 32, ., d)
 		M68KMAKE_CODE_VERIFY(2+2);
 		update_flag = m68kdrc_update_vncz_check();
 
-		_mov_r32_m32abs(REG_EAX, &DY);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_mov_r8_imm(REG_CL, offset);
+			emit_mov_r8_imm(DRCTOP, REG_CL, offset);
 		}
 
-		_rol_r32_cl(REG_EAX);
+		emit_rol_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_sar_r32_cl(REG_EAX);
+			emit_sar_r32_cl(DRCTOP, REG_EAX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_sar_r32_imm(REG_EAX, 32 - width);
+			emit_sar_r32_imm(DRCTOP, REG_EAX, 32 - width);
 		}
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 	}
 	else
 	{
@@ -3953,114 +3953,114 @@ M68KMAKE_OP(bfexts, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 		int update_flag;
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_8;
 		update_flag = m68kdrc_update_vncz_check();
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);		// width
+			emit_push_r32(DRCTOP, REG_EDX);		// width
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_mov_r32_r32(REG_EDX, REG_EBX);
-			_sar_r32_imm(REG_EDX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EDX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+			emit_sar_r32_imm(DRCTOP, REG_EDX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_push_r32(REG_EBX);		// offset
+			emit_push_r32(DRCTOP, REG_EBX);		// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
-			_push_imm(offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_push_r32(REG_EBX);			// ea+4
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_push_r32(DRCTOP, REG_EBX);			// ea+4
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 4);	// offset
-		_mov_r8_r8(REG_CL, REG_BL);
-		_shl_r32_cl(REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 4));	// offset
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
 
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 8);	// width
-		_add_r32_r32(REG_EBX, REG_ECX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 8));	// width
+		emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-		_cmp_r32_imm(REG_EBX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-		_mov_m32bd_r32(REG_ESP, 12, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 12), REG_EAX);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_ECX);	// offset
+		emit_pop_r32(DRCTOP, REG_ECX);	// offset
 
-		_shl_r32_cl(REG_EAX);
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 8);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 8));
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
-		_pop_r32(REG_EBX);	// width
-		_mov_r32_imm(REG_ECX, 32);
-		_sub_r32_r32(REG_ECX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);	// width
+		emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+		emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EBX);
 
-		_sar_r32_cl(REG_EAX);
+		emit_sar_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 
-		_add_r32_imm(REG_ESP, 4);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 	}
 	else
 	{
@@ -4080,52 +4080,52 @@ M68KMAKE_OP(bfextu, 32, ., d)
 		M68KMAKE_CODE_VERIFY(2+2);
 		update_flag = m68kdrc_update_vncz_check();
 
-		_mov_r32_m32abs(REG_EAX, &DY);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_mov_r8_imm(REG_CL, offset);
+			emit_mov_r8_imm(DRCTOP, REG_CL, offset);
 		}
 
-		_rol_r32_cl(REG_EAX);
+		emit_rol_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_shr_r32_cl(REG_EAX);
+			emit_shr_r32_cl(DRCTOP, REG_EAX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_shr_r32_imm(REG_EAX, 32 - width);
+			emit_shr_r32_imm(DRCTOP, REG_EAX, 32 - width);
 		}
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 	}
 	else
 	{
@@ -4139,114 +4139,114 @@ M68KMAKE_OP(bfextu, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 		int update_flag;
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_8;
 		update_flag = m68kdrc_update_vncz_check();
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);		// width
+			emit_push_r32(DRCTOP, REG_EDX);		// width
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_mov_r32_r32(REG_EDX, REG_EBX);
-			_sar_r32_imm(REG_EDX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EDX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+			emit_sar_r32_imm(DRCTOP, REG_EDX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_push_r32(REG_EBX);		// offset
+			emit_push_r32(DRCTOP, REG_EBX);		// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
-			_push_imm(offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_push_r32(REG_EBX);			// ea+4
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_push_r32(DRCTOP, REG_EBX);			// ea+4
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 4);	// offset
-		_mov_r8_r8(REG_CL, REG_BL);
-		_shl_r32_cl(REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 4));	// offset
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
 
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 8);	// width
-		_add_r32_r32(REG_EBX, REG_ECX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 8));	// width
+		emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-		_cmp_r32_imm(REG_EBX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
-		_mov_m32bd_r32(REG_ESP, 12, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 12), REG_EAX);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_ECX);	// offset
+		emit_pop_r32(DRCTOP, REG_ECX);	// offset
 
-		_shl_r32_cl(REG_EAX);
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 8);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 8));
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
-		_pop_r32(REG_EBX);	// width
-		_mov_r32_imm(REG_ECX, 32);
-		_sub_r32_r32(REG_ECX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);	// width
+		emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+		emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EBX);
 
-		_shr_r32_cl(REG_EAX);
+		emit_shr_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 
-		_add_r32_imm(REG_ESP, 4);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 	}
 	else
 	{
@@ -4260,8 +4260,8 @@ M68KMAKE_OP(bfffo, 32, ., d)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 		void *loop;
 
 		uint16 word2 = OPER_I_16();
@@ -4270,74 +4270,74 @@ M68KMAKE_OP(bfffo, 32, ., d)
 		M68KMAKE_CODE_VERIFY(2+2);
 		update_flag = m68kdrc_update_vncz_check();
 
-		_mov_r32_m32abs(REG_EAX, &DY);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
-			_mov_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
+			emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_mov_r32_imm(REG_ECX, offset);
-			_mov_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, offset);
+			emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 		}
 
-		_rol_r32_cl(REG_EAX);
+		emit_rol_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_shr_r32_cl(REG_EAX);
+			emit_shr_r32_cl(DRCTOP, REG_EAX);
 
-			_mov_r32_r32(REG_ECX, REG_EDX);
-			_sub_r32_imm(REG_ECX, 1);
-			_mov_r32_imm(REG_EDX, 1);
-			_shl_r32_cl(REG_EDX);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_sub_r32_imm(DRCTOP, REG_ECX, 1);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_shr_r32_imm(REG_EAX, 32 - width);
-			_mov_r32_imm(REG_EDX, 1 << (width - 1));
+			emit_shr_r32_imm(DRCTOP, REG_EAX, 32 - width);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 1 << (width - 1));
 		}
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_or_r32_r32(REG_EDX, REG_EDX);
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_EDX);
 loop = drc->cache_top;
-		_jcc_near_link(COND_Z, &link1);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EDX);
-		_jcc_near_link(COND_NZ, &link2);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
-		_add_r32_imm(REG_EBX, 1);
-		_shr_r32_imm(REG_EDX, 1);
-		_jmp(loop);
+		emit_add_r32_imm(DRCTOP, REG_EBX, 1);
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_jmp(DRCTOP, loop);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EBX);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EBX);
 	}
 	else
 	{
@@ -4351,8 +4351,8 @@ M68KMAKE_OP(bfffo, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 		void *loop;
 
 		uint16 word2 = OPER_I_16();
@@ -4360,22 +4360,22 @@ M68KMAKE_OP(bfffo, 32, ., .)
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);		// width
+			emit_push_r32(DRCTOP, REG_EDX);		// width
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 		}
 
 		M68KMAKE_GET_EA_AY_8;
@@ -4383,105 +4383,105 @@ M68KMAKE_OP(bfffo, 32, ., .)
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_push_r32(REG_EBX);		// offset
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_push_r32(DRCTOP, REG_EBX);		// offset
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_mov_r32_r32(REG_EDX, REG_EBX);
-			_sar_r32_imm(REG_EDX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EDX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+			emit_sar_r32_imm(DRCTOP, REG_EDX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_push_r32(REG_EBX);		// local_offset
+			emit_push_r32(DRCTOP, REG_EBX);		// local_offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_push_imm(offset);
+			emit_push_imm(DRCTOP, offset);
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
-			_push_imm(offset % 8);
+			emit_push_imm(DRCTOP, offset % 8);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_push_r32(REG_EBX);			// ea+4
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_push_r32(DRCTOP, REG_EBX);			// ea+4
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 4);	// local_offset
-		_mov_r8_r8(REG_CL, REG_BL);
-		_shl_r32_cl(REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 4));	// local_offset
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
 
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 12);	// width
-		_add_r32_r32(REG_EBX, REG_ECX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 12));	// width
+		emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-		_cmp_r32_imm(REG_EBX, 32);
-		_jcc_near_link(COND_LE, &link1);
-		_mov_m32bd_r32(REG_ESP, 16, REG_EAX);	// data
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EAX);	// data
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_ECX);	// local_offset
+		emit_pop_r32(DRCTOP, REG_ECX);	// local_offset
 
-		_shl_r32_cl(REG_EAX);
-		_shr_r32_imm(REG_EAX, 8);
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 8);	// data
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_shl_r32_cl(DRCTOP, REG_EAX);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 8));	// data
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		if (update_flag)
 			DRC_NFLAG_32();		/* break ECX */
 
-		_pop_r32(REG_EBX);	// offset
-		_pop_r32(REG_EDX);	// width
+		emit_pop_r32(DRCTOP, REG_EBX);	// offset
+		emit_pop_r32(DRCTOP, REG_EDX);	// width
 
-		_mov_r32_imm(REG_ECX, 32);
-		_sub_r32_r32(REG_ECX, REG_EDX);
-		_shr_r32_cl(REG_EAX);
+		emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+		emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_shr_r32_cl(DRCTOP, REG_EAX);
 
 		if (update_flag)
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_mov_r32_r32(REG_ECX, REG_EDX);
-		_sub_r32_imm(REG_ECX, 1);
-		_mov_r32_imm(REG_EDX, 1);
-		_shl_r32_cl(REG_EDX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_sub_r32_imm(DRCTOP, REG_ECX, 1);
+		emit_mov_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_shl_r32_cl(DRCTOP, REG_EDX);
 
-		_or_r32_r32(REG_EDX, REG_EDX);
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_EDX);
 loop = drc->cache_top;
-		_jcc_near_link(COND_Z, &link1);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EDX);
-		_jcc_near_link(COND_NZ, &link2);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
-		_add_r32_imm(REG_EBX, 1);
-		_shr_r32_imm(REG_EDX, 1);
-		_jmp(loop);
+		emit_add_r32_imm(DRCTOP, REG_EBX, 1);
+		emit_shr_r32_imm(DRCTOP, REG_EDX, 1);
+		emit_jmp(DRCTOP, loop);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EBX);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EBX);
 
-		_add_r32_imm(REG_ESP, 4);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 4);
 	}
 	else
 	{
@@ -4499,63 +4499,63 @@ M68KMAKE_OP(bfins, 32, ., d)
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_r32(REG_EBX, REG_ECX);
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
-			_mov_r32_r32(REG_ECX, REG_EBX);
-			_shl_r32_cl(REG_EAX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+			emit_shl_r32_cl(DRCTOP, REG_EAX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
-			_shl_r32_imm(REG_EAX, 32 - width);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
+			emit_shl_r32_imm(DRCTOP, REG_EAX, 32 - width);
 		}
 
 		if (m68kdrc_update_vncz_check())
 		{
 			DRC_NFLAG_32();		/* break ECX */
 
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_mov_r8_imm(REG_CL, offset);
+			emit_mov_r8_imm(DRCTOP, REG_CL, offset);
 		}
 
-		_mov_r8_r8(REG_CH, REG_CL);
-		_ror_r32_cl(REG_EDX);
+		emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+		emit_ror_r32_cl(DRCTOP, REG_EDX);
 
-		_mov_r8_r8(REG_CL, REG_CH);
-		_ror_r32_cl(REG_EAX);
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
+		emit_ror_r32_cl(DRCTOP, REG_EAX);
 
-		_mov_r32_m32abs(REG_EBX, &DY);
-		_not_r32(REG_EDX);
-		_and_r32_r32(REG_EBX, REG_EDX);
-		_or_r32_r32(REG_EAX, REG_EBX);
-		_mov_m32abs_r32(&DY, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+		emit_not_r32(DRCTOP, REG_EDX);
+		emit_and_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	}
 	else
 	{
@@ -4569,8 +4569,8 @@ M68KMAKE_OP(bfins, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 
@@ -4588,149 +4588,149 @@ M68KMAKE_OP(bfins, 32, ., .)
 	mask_long
 	ea
 */
-		_sub_r32_imm(REG_ESP, 8);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 8);
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);
-			_shl_r32_cl(REG_EAX);
-			_push_r32(REG_EAX);			// insert_base
+			emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));
+			emit_shl_r32_cl(DRCTOP, REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);			// insert_base
 
-			_mov_r32_r32(REG_ECX, REG_EBX);
-			_mov_r32_imm(REG_EAX, 0xffffffff);
-			_shl_r32_cl(REG_EAX);
-			_push_r32(REG_EAX);			// mask_base
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+			emit_mov_r32_imm(DRCTOP, REG_EAX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);			// mask_base
 
-			_sub_r32_imm(REG_ESP, 4);		// ea+4 for read
-			_push_r32(REG_EDX);			// width
+			emit_sub_r32_imm(DRCTOP, REG_ESP, 4);		// ea+4 for read
+			emit_push_r32(DRCTOP, REG_EDX);			// width
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2>>12)&7]);
-			_shl_r32_imm(REG_EBX, (32 - width));
-			_push_r32(REG_EBX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2>>12)&7]));
+			emit_shl_r32_imm(DRCTOP, REG_EBX, (32 - width));
+			emit_push_r32(DRCTOP, REG_EBX);
 
-			_push_imm(0xffffffff << (32 - width));
+			emit_push_imm(DRCTOP, 0xffffffff << (32 - width));
 
-			_sub_r32_imm(REG_ESP, 4);
-			_push_imm(width);
+			emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
+			emit_push_imm(DRCTOP, width);
 		}
 
 		M68KMAKE_GET_EA_AY_8;
 
-		_mov_r32_m32bd(REG_EDX, REG_ESP, 8);
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MBD(REG_ESP, 8));
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_sar_r32_imm(REG_EBX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EBX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_sar_r32_imm(DRCTOP, REG_EBX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r8_r8(REG_CL, REG_BL);
-			_shr_r32_cl(REG_EDX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+			emit_shr_r32_cl(DRCTOP, REG_EDX);
 
-			_push_r32(REG_EBX);			// offset
+			emit_push_r32(DRCTOP, REG_EBX);			// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
 			if (offset)
-				_shr_r32_imm(REG_EDX, offset);	// mask_long
-			_push_imm(offset);
+				emit_shr_r32_imm(DRCTOP, REG_EDX, offset);	// mask_long
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_mov_m32bd_r32(REG_ESP, 20, REG_EBX);		// ea+4 for write
-		_mov_m32bd_r32(REG_ESP, 8, REG_EBX);		// ea+4 for write
-		_sub_r32_imm(REG_ESP, 4);			// data
-		_push_r32(REG_EAX);				// ea for write
-		_push_r32(REG_EDX);				// mask_long
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 20), REG_EBX);		// ea+4 for write
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);		// ea+4 for write
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);			// data
+		emit_push_r32(DRCTOP, REG_EAX);				// ea for write
+		emit_push_r32(DRCTOP, REG_EDX);				// mask_long
 
-		_push_r32(REG_EAX);				// ea for read
+		emit_push_r32(DRCTOP, REG_EAX);				// ea for read
 
 		if (m68kdrc_update_vncz_check())
 		{
-			_mov_r32_m32bd(REG_EAX, REG_ESP, 32);		// insert_base
+			emit_mov_r32_m32(DRCTOP, REG_EAX, MBD(REG_ESP, 32));		// insert_base
 			DRC_NFLAG_32();		/* break ECX */
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
 		m68kdrc_read_32();
 
-		_pop_r32(REG_EDX);				// mask_long
-		_not_r32(REG_EDX);
-		_and_r32_r32(REG_EAX, REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);				// mask_long
+		emit_not_r32(DRCTOP, REG_EDX);
+		emit_and_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-		_mov_r32_m32bd(REG_EDX, REG_ESP, 24);		// insert_base
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 8);		// offset
-		_shr_r32_cl(REG_EDX);				// insert_long
-		_or_r32_r32(REG_EAX, REG_EDX);
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MBD(REG_ESP, 24));		// insert_base
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 8));		// offset
+		emit_shr_r32_cl(DRCTOP, REG_EDX);				// insert_long
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_write_32();
 
-		_pop_r32(REG_ECX);				// offset
-		_pop_r32(REG_EAX);				// width
+		emit_pop_r32(DRCTOP, REG_ECX);				// offset
+		emit_pop_r32(DRCTOP, REG_EAX);				// width
 
-		_add_r32_r32(REG_EAX, REG_ECX);
-		_cmp_r32_imm(REG_EAX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);				// mask_base
+		emit_pop_r32(DRCTOP, REG_EBX);				// mask_base
 
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
 
-		_mov_r8_m8abs(REG_DL, &FLAG_Z);
-		_or_r32_r32(REG_EDX, REG_ECX);
-		_mov_m8abs_r8(&FLAG_Z, REG_DL);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_DL);
 
-		_pop_r32(REG_ECX);				// insert_base
+		emit_pop_r32(DRCTOP, REG_ECX);				// insert_base
 
-		_not_r32(REG_EBX);
-		_and_r32_r32(REG_EAX, REG_EBX);
-		_or_r32_r32(REG_EAX, REG_ECX);
+		emit_not_r32(DRCTOP, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-		_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+		emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 		m68kdrc_write_8();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 20);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 20);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -4752,67 +4752,67 @@ M68KMAKE_OP(bfset, 32, ., d)
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
 		}
 
-		_mov_r32_m32abs(REG_EAX, &DY);
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
 
 			if (update_flag)
-				_mov_r8_r8(REG_CH, REG_CL);
+				emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
 
-			_ror_r32_cl(REG_EDX);
+			emit_ror_r32_cl(DRCTOP, REG_EDX);
 
 			if (update_flag)
 			{
-				_mov_r8_r8(REG_CL, REG_CH);
-				_shl_r32_cl(REG_EBX);
+				emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
+				emit_shl_r32_cl(DRCTOP, REG_EBX);
 			}
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_ror_r32_imm(REG_EDX, offset);
+			emit_ror_r32_imm(DRCTOP, REG_EDX, offset);
 
 			if (update_flag)
-				_shl_r32_imm(REG_EBX, offset);
+				emit_shl_r32_imm(DRCTOP, REG_EBX, offset);
 		}
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_or_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32abs_r32(&DY, REG_EAX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	}
 	else
 	{
@@ -4826,8 +4826,8 @@ M68KMAKE_OP(bfset, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 		int update_flag;
@@ -4844,134 +4844,134 @@ M68KMAKE_OP(bfset, 32, ., .)
 	ea
 	mask_long
 */
-		_sub_r32_imm(REG_ESP, 16);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 16);
 
 		M68KMAKE_GET_EA_AY_8;
 		update_flag = m68kdrc_update_vncz_check();
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);			// width
+			emit_push_r32(DRCTOP, REG_EDX);			// width
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);	// mask_base
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);	// mask_base
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_sar_r32_imm(REG_EBX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EBX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_sar_r32_imm(DRCTOP, REG_EBX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r8_r8(REG_CL, REG_BL);
-			_shr_r32_cl(REG_EDX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+			emit_shr_r32_cl(DRCTOP, REG_EDX);
 
-			_push_r32(REG_EBX);			// offset
+			emit_push_r32(DRCTOP, REG_EBX);			// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
 			if (offset)
-				_shr_r32_imm(REG_EDX, offset);
-			_push_imm(offset);
+				emit_shr_r32_imm(DRCTOP, REG_EDX, offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_mov_m32bd_r32(REG_ESP, 8, REG_EBX);		// ea+4
-		_mov_m32bd_r32(REG_ESP, 16, REG_EBX);		// ea+4
-		_sub_r32_imm(REG_ESP, 4);			// data
-		_push_r32(REG_EAX);				// ea
-		_push_r32(REG_EDX);				// mask_long
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);		// ea+4
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EBX);		// ea+4
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);			// data
+		emit_push_r32(DRCTOP, REG_EAX);				// ea
+		emit_push_r32(DRCTOP, REG_EDX);				// mask_long
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 12);		// offset
-		_shl_r32_cl(REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 12));		// offset
+		emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 		if (update_flag)
 		{
 			//NFLAG_32();
-			_shr_r32_imm(REG_EBX, 16);
-			_mov_m8abs_r8(&FLAG_N, REG_BH);
+			emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-			_mov_r32_r32(REG_ECX, REG_EAX);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 		}
 
-		_pop_r32(REG_EDX);				// mask_long
+		emit_pop_r32(DRCTOP, REG_EDX);				// mask_long
 
 		if (update_flag)
 		{
-			_and_r32_r32(REG_ECX, REG_EDX);
-			_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 
-		_or_r32_r32(REG_EAX, REG_EDX);
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);		// data
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);		// data
 		m68kdrc_write_32();
 
-		_pop_r32(REG_ECX);				// offset
-		_pop_r32(REG_EAX);				// width
+		emit_pop_r32(DRCTOP, REG_ECX);				// offset
+		emit_pop_r32(DRCTOP, REG_EAX);				// width
 
-		_add_r32_r32(REG_EAX, REG_ECX);
-		_cmp_r32_imm(REG_EAX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);				// mask_base
-		_mov_r32_r32(REG_ECX, REG_EBX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_r8_m8abs(REG_DL, &FLAG_Z);
-		_or_r32_r32(REG_EDX, REG_ECX);
-		_mov_m8abs_r8(&FLAG_Z, REG_DL);
+		emit_pop_r32(DRCTOP, REG_EBX);				// mask_base
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_DL);
 
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+		emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 		m68kdrc_write_8();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 16);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -4991,53 +4991,53 @@ M68KMAKE_OP(bftst, 32, ., d)
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
 		}
 
-		_mov_r32_m32abs(REG_EAX, &DY);
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
 		if (BIT_B(word2))
 		{
-			_mov_r8_m8abs(REG_CL, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_ECX, 31);
-			_mov_r8_r8(REG_CH, REG_CL);
-			_ror_r32_cl(REG_EDX);
+			emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_ECX, 31);
+			emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+			emit_ror_r32_cl(DRCTOP, REG_EDX);
 
-			_mov_r8_r8(REG_CL, REG_CH);
-			_shl_r32_cl(REG_EBX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
+			emit_shl_r32_cl(DRCTOP, REG_EBX);
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
-			_ror_r32_imm(REG_EDX, offset);
-			_shl_r32_imm(REG_EBX, offset);
+			emit_ror_r32_imm(DRCTOP, REG_EDX, offset);
+			emit_shl_r32_imm(DRCTOP, REG_EBX, offset);
 		}
 
 		//NFLAG_32();
-		_shr_r32_imm(REG_EBX, 16);
-		_mov_m8abs_r8(&FLAG_N, REG_BH);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EDX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -5051,120 +5051,120 @@ M68KMAKE_OP(bftst, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 8);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 8);
 
 		M68KMAKE_GET_EA_AY_8;
 
 		if (BIT_5(word2))
 		{
-			_mov_r8_m8abs(REG_DL, &REG68K_D[word2 & 7]);
-			_sub_r32_imm(REG_EDX, 1);
-			_and_r32_imm(REG_EDX, 31);
-			_add_r32_imm(REG_EDX, 1);
+			emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[word2 & 7]));
+			emit_sub_r32_imm(DRCTOP, REG_EDX, 1);
+			emit_and_r32_imm(DRCTOP, REG_EDX, 31);
+			emit_add_r32_imm(DRCTOP, REG_EDX, 1);
 
-			_push_r32(REG_EDX);
+			emit_push_r32(DRCTOP, REG_EDX);
 
-			_mov_r32_imm(REG_ECX, 32);
-			_sub_r32_r32(REG_ECX, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_ECX, 32);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff);
-			_shl_r32_cl(REG_EDX);
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff);
+			emit_shl_r32_cl(DRCTOP, REG_EDX);
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);
 		}
 		else
 		{
 			uint8 width = ((word2 - 1) & 31) + 1;
 
-			_push_imm(width);
+			emit_push_imm(DRCTOP, width);
 
-			_mov_r32_imm(REG_EDX, 0xffffffff << (32 - width));
-			_mov_m32bd_r32(REG_ESP, 8, REG_EDX);
+			emit_mov_r32_imm(DRCTOP, REG_EDX, 0xffffffff << (32 - width));
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EDX);
 		}
 
 		if (BIT_B(word2))
 		{
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-			_xor_r32_r32(REG_ECX, REG_ECX);
-			_sar_r32_imm(REG_EBX, 3);
-			_setcc_r8(COND_S, REG_CL);
-			_add_r32_r32(REG_EAX, REG_EBX);
-			_sub_r32_r32(REG_EAX, REG_ECX);
+			emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+			emit_sar_r32_imm(DRCTOP, REG_EBX, 3);
+			emit_setcc_r8(DRCTOP, COND_S, REG_CL);
+			emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 6) & 7]);
-			_and_r32_imm(REG_EBX, 7);
-			_shl_r32_imm(REG_ECX, 3);
-			_add_r32_r32(REG_EBX, REG_ECX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+			emit_and_r32_imm(DRCTOP, REG_EBX, 7);
+			emit_shl_r32_imm(DRCTOP, REG_ECX, 3);
+			emit_add_r32_r32(DRCTOP, REG_EBX, REG_ECX);
 
-			_mov_r8_r8(REG_CL, REG_BL);
-			_shr_r32_cl(REG_EDX);
+			emit_mov_r8_r8(DRCTOP, REG_CL, REG_BL);
+			emit_shr_r32_cl(DRCTOP, REG_EDX);
 
-			_push_r32(REG_EBX);			// offset
+			emit_push_r32(DRCTOP, REG_EBX);			// offset
 		}
 		else
 		{
 			uint8 offset = (word2 >> 6) & 31;
 
 			if (offset / 8)
-				_add_r32_imm(REG_EAX, offset / 8);
+				emit_add_r32_imm(DRCTOP, REG_EAX, offset / 8);
 
 			offset %= 8;
 			if (offset)
-				_shr_r32_imm(REG_EDX, offset);
-			_push_imm(offset);
+				emit_shr_r32_imm(DRCTOP, REG_EDX, offset);
+			emit_push_imm(DRCTOP, offset);
 		}
 
-		_lea_r32_m32bd(REG_EBX, REG_EAX, 4);
-		_mov_m32bd_r32(REG_ESP, 8, REG_EBX);
-		_push_r32(REG_EDX);
+		emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 4));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);
+		emit_push_r32(DRCTOP, REG_EDX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
-		_shl_r32_cl(REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
+		emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 		//NFLAG_32();
-		_shr_r32_imm(REG_EBX, 16);
-		_mov_m8abs_r8(&FLAG_N, REG_BH);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 16);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_pop_r32(REG_EDX);
-		_and_r32_r32(REG_ECX, REG_EDX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EDX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-		_pop_r32(REG_ECX);
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_ECX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 
-		_add_r32_r32(REG_EAX, REG_ECX);
-		_cmp_r32_imm(REG_EAX, 32);
-		_jcc_near_link(COND_LE, &link1);
+		emit_add_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 32);
+		emit_jcc_near_link(DRCTOP, COND_LE, &link1);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);
-		_mov_r32_r32(REG_ECX, REG_EBX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_r8_m8abs(REG_DL, &FLAG_Z);
-		_or_r32_r32(REG_EDX, REG_ECX);
-		_mov_m8abs_r8(&FLAG_Z, REG_DL);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EDX, REG_ECX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_DL);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-		_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5181,9 +5181,9 @@ M68KMAKE_OP(bkpt, 0, ., .)
 		M68KMAKE_CODE_VERIFY(0);
 
 		if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
-			_mov_r32_imm(REG_EAX, REG68K_IR & 7);
+			emit_mov_r32_imm(DRCTOP, REG_EAX, REG68K_IR & 7);
 		else
-			_xor_r32_r32(REG_EAX, REG_EAX);
+			emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
 
 		m68kdrc_bkpt_ack(REG_EAX);		   /* auto-disable (see m68kcpu.h) */
 	}
@@ -5252,23 +5252,23 @@ M68KMAKE_OP(bset, 32, r, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x1f);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x1f);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -5276,29 +5276,29 @@ M68KMAKE_OP(bset, 8, r, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 7);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 7);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_r32(REG_ECX, REG_EBX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -5309,18 +5309,18 @@ M68KMAKE_OP(bset, 32, s, d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_or_r32_imm(REG_EAX, mask);
+	emit_or_r32_imm(DRCTOP, REG_EAX, mask);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -5330,24 +5330,24 @@ M68KMAKE_OP(bset, 8, s, .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_r32_r32(REG_ECX, REG_EAX);
-		_and_r32_imm(REG_ECX, mask);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, mask);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 	}
 
-	_or_r32_imm(REG_EAX, mask);
+	emit_or_r32_imm(DRCTOP, REG_EAX, mask);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -5409,12 +5409,12 @@ M68KMAKE_OP(btst, 32, r, d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x1f);
-	_mov_r32_imm(REG_EAX, 1);
-	_shl_r32_cl(REG_EAX);
-	_and_r32_m32abs(REG_EAX, &DY);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x1f);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EAX);
+	emit_and_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 }
 
 
@@ -5424,12 +5424,12 @@ M68KMAKE_OP(btst, 8, r, .)
 
 	M68KMAKE_GET_OPER_AY_8;
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x7);
-	_mov_r32_imm(REG_EBX, 1);
-	_shl_r32_cl(REG_EBX);
-	_and_r32_r32(REG_EAX, REG_EBX);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x7);
+	emit_mov_r32_imm(DRCTOP, REG_EBX, 1);
+	emit_shl_r32_cl(DRCTOP, REG_EBX);
+	emit_and_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 }
 
 
@@ -5439,9 +5439,9 @@ M68KMAKE_OP(btst, 32, s, d)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_and_r32_imm(REG_EAX, mask);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_and_r32_imm(DRCTOP, REG_EAX, mask);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 }
 
 
@@ -5453,8 +5453,8 @@ M68KMAKE_OP(btst, 8, s, .)
 
 	M68KMAKE_GET_OPER_AY_8;
 
-	_and_r32_imm(REG_EAX, mask);
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EAX, mask);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 }
 
 
@@ -5491,48 +5491,48 @@ M68KMAKE_OP(cas, 8, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_8;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
-		_mov_r32_r32(REG_ECX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_movzx_r32_m8abs(REG_EBX, &REG68K_D[word2 & 7]);
-		_mov_r8_r8(REG_DL, REG_BL);
-		_mov_r16_r16(REG_AX, REG_BX);
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_D[word2 & 7]));
+		emit_mov_r8_r8(DRCTOP, REG_DL, REG_BL);
+		emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_8(drc);		/* break EBX, ECX */
 
-		_or_r32_r32(REG_EAX, REG_EAX);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-		_mov_m8abs_r8(&REG68K_D[word2 & 7], REG_DL);
-		_add_r32_imm(REG_ESP, 8);
+		emit_mov_m8_r8(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_DL);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		DRC_USE_CYCLES(3);
 
-		_mov_r8_m8abs(REG_DL, &REG68K_D[(word2 >> 6) & 7]);
+		emit_mov_r8_m8(DRCTOP, REG_DL, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-		_mov_m8bd_r8(REG_ESP, 4, REG_DL);
+		emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_DL);
 		m68kdrc_write_8();
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5546,48 +5546,48 @@ M68KMAKE_OP(cas, 16, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_16;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_16();
-		_mov_r32_r32(REG_ECX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_movzx_r32_m16abs(REG_EBX, &REG68K_D[word2 & 7]);
-		_mov_r16_r16(REG_DX, REG_BX);
-		_mov_r32_r32(REG_EAX, REG_EBX);
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_D[word2 & 7]));
+		emit_mov_r16_r16(DRCTOP, REG_DX, REG_BX);
+		emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_16(drc);		/* break EBX, ECX */
 
-		_or_r32_r32(REG_EAX, REG_EAX);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-		_mov_m16abs_r16(&REG68K_D[word2 & 7], REG_DX);
-		_add_r32_imm(REG_ESP, 8);
+		emit_mov_m16_r16(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_DX);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		DRC_USE_CYCLES(3);
 
-		_mov_r16_m16abs(REG_DX, &REG68K_D[(word2 >> 6) & 7]);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-		_mov_m16bd_r16(REG_ESP, 4, REG_DX);
+		emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_DX);
 		m68kdrc_write_16();
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5601,48 +5601,48 @@ M68KMAKE_OP(cas, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(2+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_32;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
-		_mov_r32_r32(REG_ECX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_D[word2 & 7]);
-		_mov_r32_r32(REG_EDX, REG_EBX);
-		_mov_r32_r32(REG_EAX, REG_EBX);
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[word2 & 7]));
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_32(drc);		/* break EBX, ECX */
 
-		_or_r32_r32(REG_EAX, REG_EAX);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);
-		_add_r32_imm(REG_ESP, 8);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		DRC_USE_CYCLES(3);
 
-		_mov_r32_m32abs(REG_EDX, &REG68K_D[(word2 >> 6) & 7]);
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MABS(&REG68K_D[(word2 >> 6) & 7]));
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EDX);
 		m68kdrc_write_32();
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5656,84 +5656,84 @@ M68KMAKE_OP(cas2, 16, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
 		uint32 word2 = OPER_I_32();
 
 		M68KMAKE_CODE_VERIFY(2+4);
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
-		_sub_r32_imm(REG_ESP, 4);
-		_push_r32(REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
+		emit_push_r32(DRCTOP, REG_EBX);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_DA[(word2 >> 28) & 15]);
-		_sub_r32_imm(REG_ESP, 4);
-		_push_r32(REG_EAX);
-		_push_r32(REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[(word2 >> 28) & 15]));
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
+		emit_push_r32(DRCTOP, REG_EAX);
+		emit_push_r32(DRCTOP, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_16();
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_mov_m32bd_r32(REG_ESP, 16, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EAX);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32abs(REG_ECX, &REG68K_D[(word2 >> 16) & 7]);
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_D[(word2 >> 16) & 7]));
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_16(drc);		/* break EBX, ECX */
 
 		m68kdrc_read_16();
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_r32(REG_EDX, REG_EAX);
-		_mov_r32_m32abs(REG_ECX, &REG68K_D[word2 & 7]);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_D[word2 & 7]));
 
-		_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_CLEAR);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_16(drc);		/* break EBX, ECX */
 
-		_or_r32_r32(REG_EAX, REG_EAX);
-		_jcc_near_link(COND_NZ, &link2);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 		DRC_USE_CYCLES(3);
 
-		_mov_r16_m16abs(REG_AX, &REG68K_D[(word2 >> 22) & 7]);
-		_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+		emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&REG68K_D[(word2 >> 22) & 7]));
+		emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 		m68kdrc_write_16();
 
-		_mov_r16_m16abs(REG_AX, &REG68K_D[(word2 >> 6) & 7]);
-		_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+		emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+		emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 		m68kdrc_write_16();
 
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
 		if (BIT_1F(word2))
 		{
-			_mov_r16_m16bd(REG_BX, REG_ESP, 12);
-			_movsx_r32_r16(REG_EBX, REG_BX);
-			_mov_m32abs_r32(&REG68K_D[(word2 >> 16) & 7], REG_EBX);
+			emit_mov_r16_m16(DRCTOP, REG_BX, MBD(REG_ESP, 12));
+			emit_movsx_r32_r16(DRCTOP, REG_EBX, REG_BX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 16) & 7]), REG_EBX);
 
-			_movsx_r32_r16(REG_EDX, REG_DX);
-			_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);
+			emit_movsx_r32_r16(DRCTOP, REG_EDX, REG_DX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);
 		}
 		else
 		{
-			_mov_r16_m16bd(REG_BX, REG_ESP, 12);
-			_mov_m16abs_r16(&REG68K_D[(word2 >> 16) & 7], REG_BX);
-			_mov_m16abs_r16(&REG68K_D[word2 & 7], REG_DX);
+			emit_mov_r16_m16(DRCTOP, REG_BX, MBD(REG_ESP, 12));
+			emit_mov_m16_r16(DRCTOP, MABS(&REG68K_D[(word2 >> 16) & 7]), REG_BX);
+			emit_mov_m16_r16(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_DX);
 		}
 
-		_add_r32_imm(REG_ESP, 16);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 	else
 	{
@@ -5747,72 +5747,72 @@ M68KMAKE_OP(cas2, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
-		link_info link3;
+		emit_link link1;
+		emit_link link2;
+		emit_link link3;
 
 		uint32 word2 = OPER_I_32();
 
 		M68KMAKE_CODE_VERIFY(2+4);
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
-		_sub_r32_imm(REG_ESP, 4);
-		_push_r32(REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
+		emit_push_r32(DRCTOP, REG_EBX);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_DA[(word2 >> 28) & 15]);
-		_sub_r32_imm(REG_ESP, 4);
-		_push_r32(REG_EAX);
-		_push_r32(REG_EBX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[(word2 >> 28) & 15]));
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
+		emit_push_r32(DRCTOP, REG_EAX);
+		emit_push_r32(DRCTOP, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_mov_m32bd_r32(REG_ESP, 16, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EAX);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_m32abs(REG_ECX, &REG68K_D[(word2 >> 16) & 7]);
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_D[(word2 >> 16) & 7]));
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_32(drc);		/* break EBX, ECX */
 
 		m68kdrc_read_32();
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_mov_r32_r32(REG_EDX, REG_EAX);
-		_mov_r32_m32abs(REG_ECX, &REG68K_D[word2 & 7]);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&REG68K_D[word2 & 7]));
 
-		_test_m32abs_imm(&FLAG_Z, ZFLAG_CLEAR);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_CLEAR);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_sub_32(drc);		/* break EBX, ECX */
 
-		_or_r32_r32(REG_EAX, REG_EAX);
-		_jcc_near_link(COND_NZ, &link2);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 		DRC_USE_CYCLES(3);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 22) & 7]);
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 22) & 7]));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 		m68kdrc_write_32();
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 6) & 7]);
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 6) & 7]));
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 		m68kdrc_write_32();
 
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-_resolve_link(&link2);
-		_mov_r32_m32bd(REG_EBX, REG_ESP, 12);
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 16) & 7], REG_EBX);
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);
+resolve_link(DRCTOP, &link1);
+resolve_link(DRCTOP, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MBD(REG_ESP, 12));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 16) & 7]), REG_EBX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);
 
-		_add_r32_imm(REG_ESP, 16);
+		emit_add_r32_imm(DRCTOP, REG_ESP, 16);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 	else
 	{
@@ -5824,62 +5824,62 @@ _resolve_link(&link3);
 
 M68KMAKE_OP(chk, 16, ., d)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_movsx_r32_m16abs(REG_EAX, &DX);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DX));
 
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);	/* Undocumented */
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undocumented */
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);	/* Undocumented */
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);	/* Undocumented */
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undocumented */
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);	/* Undocumented */
 
-	_cmp_r32_imm(REG_EAX, 0);
-	_jcc_near_link(COND_L, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0);
+	emit_jcc_near_link(DRCTOP, COND_L, &link1);
 
-	_movsx_r32_m16abs(REG_EBX, &DY);
-	_sub_r32_r32(REG_EBX, REG_EAX);
-	_jcc_near_link(COND_NC, &link2);
+	emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_jcc_near_link(DRCTOP, COND_NC, &link2);
 
-_resolve_link(&link1);
-	_shl_r32_imm(REG_EAX, 7);
+resolve_link(DRCTOP, &link1);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 7);
 	DRC_NFLAG_16();
 
 	m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 }
 
 
 M68KMAKE_OP(chk, 16, ., .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EAX, REG_AX);
-	_movsx_r32_m16abs(REG_EBX, &DX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
 
-	_mov_m32abs_r32(&FLAG_Z, REG_EBX);	/* Undocumented */
-	_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undocumented */
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);	/* Undocumented */
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EBX);	/* Undocumented */
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undocumented */
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);	/* Undocumented */
 
-	_cmp_r32_imm(REG_EBX, 0);
-	_jcc_near_link(COND_L, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EBX, 0);
+	emit_jcc_near_link(DRCTOP, COND_L, &link1);
 
-	_sub_r32_r32(REG_EAX, REG_EBX);
-	_jcc_near_link(COND_NC, &link2);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NC, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	// NFLAG_16();
-	_mov_m8abs_r8(&FLAG_N, REG_BH);
+	emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
 	m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 }
 
 
@@ -5887,32 +5887,32 @@ M68KMAKE_OP(chk, 32, ., d)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		M68KMAKE_CODE_VERIFY(0);
 
-		_mov_r32_m32abs(REG_EAX, &DX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);	/* Undocumented */
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undocumented */
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);	/* Undocumented */
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);	/* Undocumented */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undocumented */
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);	/* Undocumented */
 
-		_cmp_r32_imm(REG_EAX, 0);
-		_jcc_near_link(COND_L, &link1);
+		emit_cmp_r32_imm(DRCTOP, REG_EAX, 0);
+		emit_jcc_near_link(DRCTOP, COND_L, &link1);
 
-		_mov_r32_m32abs(REG_EBX, &DY);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_jcc_near_link(COND_NC, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_jcc_near_link(DRCTOP, COND_NC, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		// NFLAG_32();
-		_shl_r32_imm(REG_EBX, 16);
-		_mov_m8abs_r8(&FLAG_N, REG_BH);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 16);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
 		m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5926,32 +5926,32 @@ M68KMAKE_OP(chk, 32, ., .)
 {
 	if (CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 	{
-		link_info link1;
-		link_info link2;
+		emit_link link1;
+		emit_link link2;
 
 		M68KMAKE_CODE_VERIFY(0);
 
 		M68KMAKE_GET_OPER_AY_16;
-		_mov_r32_m32abs(REG_EBX, &DX);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
 
-		_mov_m32abs_r32(&FLAG_Z, REG_EBX);	/* Undocumented */
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undocumented */
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);	/* Undocumented */
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EBX);	/* Undocumented */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undocumented */
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);	/* Undocumented */
 
-		_cmp_r32_imm(REG_EBX, 0);
-		_jcc_near_link(COND_L, &link1);
+		emit_cmp_r32_imm(DRCTOP, REG_EBX, 0);
+		emit_jcc_near_link(DRCTOP, COND_L, &link1);
 
-		_sub_r32_r32(REG_EAX, REG_EBX);
-		_jcc_near_link(COND_NC, &link2);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+		emit_jcc_near_link(DRCTOP, COND_NC, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		// NFLAG_32();
-		_shl_r32_imm(REG_EBX, 16);
-		_mov_m8abs_r8(&FLAG_N, REG_BH);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 16);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BH);
 
 		m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	}
 	else
 	{
@@ -5969,50 +5969,50 @@ M68KMAKE_OP(chk2cmp2, 8, ., pcdi)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCDI_8();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 1);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 1);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_8();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_8();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r8(REG_EAX, REG_AL);
-			_movsx_r32_r8(REG_EDX, REG_DL);
-			_movsx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+			emit_movsx_r32_r8(DRCTOP, REG_EDX, REG_DL);
+			emit_movsx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
 		else
-			_movzx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6031,50 +6031,50 @@ M68KMAKE_OP(chk2cmp2, 8, ., pcix)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCIX_8();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 1);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 1);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_8();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_8();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r8(REG_EAX, REG_AL);
-			_movsx_r32_r8(REG_EDX, REG_DL);
-			_movsx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+			emit_movsx_r32_r8(DRCTOP, REG_EDX, REG_DL);
+			emit_movsx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
 		else
-			_movzx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6093,50 +6093,50 @@ M68KMAKE_OP(chk2cmp2, 8, ., .)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_8;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 1);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 1);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r8(REG_EAX, REG_AL);
-			_movsx_r32_r8(REG_EDX, REG_DL);
-			_movsx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+			emit_movsx_r32_r8(DRCTOP, REG_EDX, REG_DL);
+			emit_movsx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
 		else
-			_movzx_r32_m8abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m8(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6155,50 +6155,50 @@ M68KMAKE_OP(chk2cmp2, 16, ., pcdi)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCDI_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 2);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_16();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_16();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_movsx_r32_r16(REG_EDX, REG_DX);
-			_movsx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_movsx_r32_r16(DRCTOP, REG_EDX, REG_DX);
+			emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
-			_movzx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_shr_r32_imm(REG_EBX, 8);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6217,51 +6217,51 @@ M68KMAKE_OP(chk2cmp2, 16, ., pcix)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCIX_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 2);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_16();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_16();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_movsx_r32_r16(REG_EDX, REG_DX);
-			_movsx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_movsx_r32_r16(DRCTOP, REG_EDX, REG_DX);
+			emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
 		else
-			_movzx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_shr_r32_imm(REG_EBX, 8);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6280,51 +6280,51 @@ M68KMAKE_OP(chk2cmp2, 16, ., .)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_16;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 2);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_16();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_16();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
 		if (!BIT_F(word2))
 		{
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_movsx_r32_r16(REG_EDX, REG_DX);
-			_movsx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_movsx_r32_r16(DRCTOP, REG_EDX, REG_DX);
+			emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 		}
 		else
-			_movzx_r32_m16abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+			emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_shr_r32_imm(REG_EBX, 8);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 8);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6343,45 +6343,45 @@ M68KMAKE_OP(chk2cmp2, 32, ., pcdi)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCDI_32();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 4);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 4);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_32();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_32();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_setcc_r8(COND_C, REG_DH);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_setcc_r8(COND_C, REG_BH);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_DH);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_BH);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6400,45 +6400,45 @@ M68KMAKE_OP(chk2cmp2, 32, ., pcix)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		DRC_EA_PCIX_32();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 4);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 4);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_pcrel_32();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_pcrel_32();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_setcc_r8(COND_C, REG_DH);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_setcc_r8(COND_C, REG_BH);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_DH);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_BH);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6457,45 +6457,45 @@ M68KMAKE_OP(chk2cmp2, 32, ., .)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_sub_r32_imm(REG_ESP, 4);
+		emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 		M68KMAKE_GET_EA_AY_32;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_add_r32_imm(REG_EAX, 4);
-		_push_r32(REG_EAX);
+		emit_add_r32_imm(DRCTOP, REG_EAX, 4);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_32();
 
-		_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
 		m68kdrc_read_32();
 
-		_pop_r32(REG_EDX);
+		emit_pop_r32(DRCTOP, REG_EDX);
 
-		_mov_r32_m32abs(REG_EBX, &REG68K_DA[(word2 >> 12) & 15]);
+		emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_sub_r32_r32(REG_EDX, REG_EBX);
-		_setcc_r8(COND_NZ, REG_CL);
-		_setcc_r8(COND_C, REG_DH);
-		_sub_r32_r32(REG_EBX, REG_EAX);
-		_setcc_r8(COND_NZ, REG_AL);
-		_setcc_r8(COND_C, REG_BH);
-		_or_r32_r32(REG_EBX, REG_EDX);
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_and_r32_r32(REG_ECX, REG_EAX);
-		_mov_m32abs_r32(&FLAG_Z, REG_ECX);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EDX, REG_EBX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_CL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_DH);
+		emit_sub_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_setcc_r8(DRCTOP, COND_NZ, REG_AL);
+		emit_setcc_r8(DRCTOP, COND_C, REG_BH);
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EDX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_ECX);
 
 		if (BIT_B(word2))
 		{
-			link_info link1;
+			emit_link link1;
 
-			_test_r32_imm(REG_EBX, CFLAG_SET);
-			_jcc_near_link(COND_Z, &link1);
+			emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 			m68kdrc_exception_trap(EXCEPTION_CHK);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		}
 	}
 	else
@@ -6510,14 +6510,14 @@ M68KMAKE_OP(clr, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_m8abs_imm(&DY, 0);
+	emit_mov_m8_imm(DRCTOP, MABS(&DY), 0);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 }
 
@@ -6530,14 +6530,14 @@ M68KMAKE_OP(clr, 8, ., .)
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 
-	_push_imm(0);
-	_push_r32(REG_EAX);
+	emit_push_imm(DRCTOP, 0);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -6546,14 +6546,14 @@ M68KMAKE_OP(clr, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_m16abs_imm(&DY, 0);
+	emit_mov_m16_imm(DRCTOP, MABS(&DY), 0);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 }
 
@@ -6566,14 +6566,14 @@ M68KMAKE_OP(clr, 16, ., .)
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 
-	_push_imm(0);
-	_push_r32(REG_EAX);
+	emit_push_imm(DRCTOP, 0);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -6582,14 +6582,14 @@ M68KMAKE_OP(clr, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_m32abs_imm(&DY, 0);
+	emit_mov_m32_imm(DRCTOP, MABS(&DY), 0);
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 }
 
@@ -6602,14 +6602,14 @@ M68KMAKE_OP(clr, 32, ., .)
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_imm(&FLAG_Z, ZFLAG_SET);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_Z), ZFLAG_SET);
 	}
 
-	_push_imm(0);
-	_push_r32(REG_EAX);
+	emit_push_imm(DRCTOP, 0);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -6618,14 +6618,14 @@ M68KMAKE_OP(cmp, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -6636,13 +6636,13 @@ M68KMAKE_OP(cmp, 8, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_8;
-	_mov_r16_r16(REG_CX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_CX, REG_AX);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -6652,12 +6652,12 @@ M68KMAKE_OP(cmp, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_movzx_r32_m16abs(REG_ECX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -6667,12 +6667,12 @@ M68KMAKE_OP(cmp, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_movzx_r32_m16abs(REG_ECX, &AY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -6683,12 +6683,12 @@ M68KMAKE_OP(cmp, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -6698,12 +6698,12 @@ M68KMAKE_OP(cmp, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6713,12 +6713,12 @@ M68KMAKE_OP(cmp, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_m32abs(REG_ECX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6729,12 +6729,12 @@ M68KMAKE_OP(cmp, 32, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6744,12 +6744,12 @@ M68KMAKE_OP(cmpa, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_movsx_r32_m16abs(REG_ECX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6759,12 +6759,12 @@ M68KMAKE_OP(cmpa, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_movsx_r32_m16abs(REG_ECX, &AY);
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6775,12 +6775,12 @@ M68KMAKE_OP(cmpa, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_ECX, REG_AX);
+	emit_movsx_r32_r16(DRCTOP, REG_ECX, REG_AX);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6790,12 +6790,12 @@ M68KMAKE_OP(cmpa, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6805,12 +6805,12 @@ M68KMAKE_OP(cmpa, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_m32abs(REG_ECX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AY));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6821,12 +6821,12 @@ M68KMAKE_OP(cmpa, 32, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_mov_r32_m32abs(REG_EBX, &AX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -6838,14 +6838,14 @@ M68KMAKE_OP(cmpi, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_imm(REG_CL, src);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -6857,14 +6857,14 @@ M68KMAKE_OP(cmpi, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
 	M68KMAKE_GET_OPER_AY_8;
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_imm(REG_CL, src);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -6879,12 +6879,12 @@ M68KMAKE_OP(cmpi, 8, ., pcdi)
 		M68KMAKE_CODE_VERIFY(2+2);
 
 		DRC_OPER_PCDI_8();
-		_mov_r16_r16(REG_BX, REG_AX);
+		emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_mov_r8_imm(REG_CL, src);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_mov_r8_imm(DRCTOP, REG_CL, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 	}
@@ -6905,12 +6905,12 @@ M68KMAKE_OP(cmpi, 8, ., pcix)
 		M68KMAKE_CODE_VERIFY(2+2);
 
 		DRC_OPER_PCIX_8();
-		_mov_r16_r16(REG_BX, REG_AX);
+		emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_mov_r8_imm(REG_CL, src);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_mov_r8_imm(DRCTOP, REG_CL, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 	}
@@ -6928,12 +6928,12 @@ M68KMAKE_OP(cmpi, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -6946,12 +6946,12 @@ M68KMAKE_OP(cmpi, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2+2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r16_imm(REG_CX, src);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -6966,12 +6966,12 @@ M68KMAKE_OP(cmpi, 16, ., pcdi)
 		M68KMAKE_CODE_VERIFY(2+2);
 
 		DRC_OPER_PCDI_16();
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_mov_r16_imm(REG_CX, src);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 	}
@@ -6992,12 +6992,12 @@ M68KMAKE_OP(cmpi, 16, ., pcix)
 		M68KMAKE_CODE_VERIFY(2+2);
 
 		DRC_OPER_PCIX_16();
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-		_xor_r32_r32(REG_ECX, REG_ECX);
-		_mov_r16_imm(REG_CX, src);
+		emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+		emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 	}
@@ -7017,12 +7017,12 @@ M68KMAKE_OP(cmpi, 32, ., d)
 
 	m68kdrc_cmpild_callback(src, REG68K_IR & 7);		   /* auto-disable (see m68kcpu.h) */
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -7035,11 +7035,11 @@ M68KMAKE_OP(cmpi, 32, ., .)
 	M68KMAKE_CODE_VERIFY(2+4);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -7054,11 +7054,11 @@ M68KMAKE_OP(cmpi, 32, ., pcdi)
 		M68KMAKE_CODE_VERIFY(2+4);
 
 		DRC_OPER_PCDI_32();
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-		_mov_r32_imm(REG_ECX, src);
+		emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 	}
@@ -7079,11 +7079,11 @@ M68KMAKE_OP(cmpi, 32, ., pcix)
 		M68KMAKE_CODE_VERIFY(2+4);
 
 		DRC_OPER_PCIX_32();
-		_mov_r32_r32(REG_EBX, REG_EAX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-		_mov_r32_imm(REG_ECX, src);
+		emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-		_sub_r32_r32(REG_EAX, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 		m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 	}
@@ -7100,14 +7100,14 @@ M68KMAKE_OP(cmpm, 8, ., ax7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_A7_PI_8();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -7118,14 +7118,14 @@ M68KMAKE_OP(cmpm, 8, ., ay7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_AX_PI_8();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -7136,14 +7136,14 @@ M68KMAKE_OP(cmpm, 8, ., axy7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_A7_PI_8();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -7154,14 +7154,14 @@ M68KMAKE_OP(cmpm, 8, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_AX_PI_8();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_8(drc);		/* break EBX, ECX */
 }
@@ -7172,14 +7172,14 @@ M68KMAKE_OP(cmpm, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_AX_PI_16();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_16(drc);		/* break EBX, ECX */
 }
@@ -7190,14 +7190,14 @@ M68KMAKE_OP(cmpm, 32, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_OPER_AX_PI_32();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_pop_r32(REG_ECX);
+	emit_pop_r32(DRCTOP, REG_ECX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncz_flag_cmp_32(drc);		/* break EBX, ECX */
 }
@@ -7324,22 +7324,22 @@ M68KMAKE_OP(dbt, 16, ., .)
 M68KMAKE_OP(dbf, 16, ., .)
 {
 	uint32 ea = OPER_I_16();
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_sub_r32_imm(REG_EAX, 1);
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 1);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
-	_jcc_near_link(COND_S, &link1);
+	emit_jcc_near_link(DRCTOP, COND_S, &link1);
 
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	DRC_USE_CYCLES(CYC_DBCC_F_NOEXP);
 	m68kdrc_branch_16(ea, 0);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	DRC_USE_CYCLES(CYC_DBCC_F_EXP);
 }
 
@@ -7347,203 +7347,203 @@ _resolve_link(&link1);
 M68KMAKE_OP(dbcc, 16, ., .)
 {
 	uint32 ea = OPER_I_16();
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
 	M68KMAKE_NOT_CC;
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_sub_r32_imm(REG_EAX, 1);
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 1);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
-	_jcc_near_link(COND_S, &link1);
+	emit_jcc_near_link(DRCTOP, COND_S, &link1);
 
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	DRC_USE_CYCLES(CYC_DBCC_F_NOEXP);
 	m68kdrc_branch_16(ea, 0);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	DRC_USE_CYCLES(CYC_DBCC_F_EXP);
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 }
 
 
 M68KMAKE_OP(divs, 16, ., d)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m16abs(REG_EBX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
 
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
-	_mov_r32_m32abs(REG_EAX, &DX);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_cdq();
-	_idiv_r32(REG_EBX);
+	emit_cdq(DRCTOP);
+	emit_idiv_r32(DRCTOP, REG_EBX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link2);
-	_cmp_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link3);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+	emit_cmp_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link3);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-	_jmp_near_link(&link4);
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+	emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link2);
+resolve_link(DRCTOP, &link3);
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_shl_r32_imm(REG_EDX, 16);
-	_or_r32_r32(REG_EAX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EDX, 16);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 }
 
 
 M68KMAKE_OP(divs, 16, ., .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EBX, REG_AX);
+	emit_movsx_r32_r16(DRCTOP, REG_EBX, REG_AX);
 
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
-	_mov_r32_m32abs(REG_EAX, &DX);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_cdq();
-	_idiv_r32(REG_EBX);
+	emit_cdq(DRCTOP);
+	emit_idiv_r32(DRCTOP, REG_EBX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link2);
-	_cmp_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link3);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+	emit_cmp_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link3);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-	_jmp_near_link(&link4);
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+	emit_jmp_near_link(DRCTOP, &link4);
 
-_resolve_link(&link2);
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link2);
+resolve_link(DRCTOP, &link3);
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_shl_r32_imm(REG_EDX, 16);
-	_or_r32_r32(REG_EAX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EDX, 16);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 }
 
 
 M68KMAKE_OP(divu, 16, ., d)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
 
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
-	_mov_r32_m32abs(REG_EAX, &DX);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_xor_r32_r32(REG_EDX, REG_EDX);
-	_div_r32(REG_EBX);
+	emit_xor_r32_r32(DRCTOP, REG_EDX, REG_EDX);
+	emit_div_r32(DRCTOP, REG_EBX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link2);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-	_jmp_near_link(&link3);
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+	emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_shl_r32_imm(REG_EDX, 16);
-	_or_r32_r32(REG_EAX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EDX, 16);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 }
 
 
 M68KMAKE_OP(divu, 16, ., .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movzx_r32_r16(REG_EBX, REG_AX);
+	emit_movzx_r32_r16(DRCTOP, REG_EBX, REG_AX);
 
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
-	_mov_r32_m32abs(REG_EAX, &DX);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_xor_r32_r32(REG_EDX, REG_EDX);
-	_div_r32(REG_EBX);
+	emit_xor_r32_r32(DRCTOP, REG_EDX, REG_EDX);
+	emit_div_r32(DRCTOP, REG_EBX);
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_and_r32_imm(REG_EBX, ~0xffff);
-	_jcc_near_link(COND_Z, &link2);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_and_r32_imm(DRCTOP, REG_EBX, ~0xffff);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-	_jmp_near_link(&link3);
+	emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+	emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_shl_r32_imm(REG_EDX, 16);
-	_or_r32_r32(REG_EAX, REG_EDX);
+	emit_shl_r32_imm(DRCTOP, REG_EDX, 16);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EDX);
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 }
 
 
 M68KMAKE_OP(divl, 32, ., d)
 {
-	link_info link1;
+	emit_link link1;
 
 	uint16 word2 = OPER_I_16();
 
@@ -7555,86 +7555,86 @@ M68KMAKE_OP(divl, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (BIT_A(word2))	/* 64 bit */
 	{
-		link_info link2;
-		link_info link3;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r32_m32abs(REG_EDX, &REG68K_D[word2 & 7]);	/* dividend (high) */
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MABS(&REG68K_D[word2 & 7]));	/* dividend (high) */
 
 		if (BIT_B(word2))	/* signed */
 		{
-			link_info link4;
-			link_info link5;
+			emit_link link4;
+			emit_link link5;
 
-			_mov_r32_r32(REG_ECX, REG_EDX);
-			_test_r32_imm(REG_ECX, 0x8000);
-			_jcc_near_link(COND_Z, &link4);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_test_r32_imm(DRCTOP, REG_ECX, 0x8000);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link4);
 
-			_neg_r32(REG_ECX);
+			emit_neg_r32(DRCTOP, REG_ECX);
 
-_resolve_link(&link4);
-			_mov_r32_r32(REG_EAX, REG_EBX);
-			_test_r32_imm(REG_EAX, 0x8000);
+resolve_link(DRCTOP, &link4);
+			emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_test_r32_imm(DRCTOP, REG_EAX, 0x8000);
 
-			_jcc_near_link(COND_Z, &link5);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link5);
 
-			_neg_r32(REG_EAX);
+			emit_neg_r32(DRCTOP, REG_EAX);
 
-_resolve_link(&link5);
-			_sub_r32_r32(REG_ECX, REG_EAX);
-			_jcc_near_link(COND_C, &link2);
+resolve_link(DRCTOP, &link5);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+			emit_jcc_near_link(DRCTOP, COND_C, &link2);
 		}
 		else	   		/* unsigned */
 		{
-			_mov_r32_r32(REG_EAX, REG_EDX);
-			_sub_r32_r32(REG_EAX, REG_EBX);
-			_jcc_near_link(COND_C, &link2);
+			emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_jcc_near_link(DRCTOP, COND_C, &link2);
 		}
 
 		/* overflow */
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);		/* dividend (low) */
+resolve_link(DRCTOP, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));		/* dividend (low) */
 
 		if(BIT_B(word2))	/* signed */
-			_idiv_r32(REG_EBX);
+			emit_idiv_r32(DRCTOP, REG_EBX);
 		else			/* unsigned */
-			_div_r32(REG_EBX);
+			emit_div_r32(DRCTOP, REG_EBX);
 
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);		/* remainder */
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);	/* quotient */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);		/* remainder */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);	/* quotient */
 
 		m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 	else	/* 32 bit */
 	{
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));
 
 		if(BIT_B(word2))	/* signed */
 		{
-			_cdq();
-			_idiv_r32(REG_EBX);
+			emit_cdq(DRCTOP);
+			emit_idiv_r32(DRCTOP, REG_EBX);
 		}
 		else			/* unsigned */
 		{
-			_xor_r32_r32(REG_EDX, REG_EDX);
-			_div_r32(REG_EBX);
+			emit_xor_r32_r32(DRCTOP, REG_EDX, REG_EDX);
+			emit_div_r32(DRCTOP, REG_EBX);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);		/* remainder */
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);	/* quotient */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);		/* remainder */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);	/* quotient */
 
 		m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 	}
@@ -7643,7 +7643,7 @@ _resolve_link(&link3);
 
 M68KMAKE_OP(divl, 32, ., .)
 {
-	link_info link1;
+	emit_link link1;
 
 	uint16 word2 = OPER_I_16();
 
@@ -7656,86 +7656,86 @@ M68KMAKE_OP(divl, 32, ., .)
 	M68KMAKE_CODE_VERIFY(2+2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_EBX, REG_EAX);
-	_or_r32_r32(REG_EBX, REG_EBX);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_or_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_trap(EXCEPTION_ZERO_DIVIDE);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (BIT_A(word2))	/* 64 bit */
 	{
-		link_info link2;
-		link_info link3;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r32_m32abs(REG_EDX, &REG68K_D[word2 & 7]);	/* dividend (high) */
+		emit_mov_r32_m32(DRCTOP, REG_EDX, MABS(&REG68K_D[word2 & 7]));	/* dividend (high) */
 
 		if (BIT_B(word2))	/* signed */
 		{
-			link_info link4;
-			link_info link5;
+			emit_link link4;
+			emit_link link5;
 
-			_mov_r32_r32(REG_ECX, REG_EDX);
-			_test_r32_imm(REG_ECX, 0x8000);
-			_jcc_near_link(COND_Z, &link4);
+			emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+			emit_test_r32_imm(DRCTOP, REG_ECX, 0x8000);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link4);
 
-			_neg_r32(REG_ECX);
+			emit_neg_r32(DRCTOP, REG_ECX);
 
-_resolve_link(&link4);
-			_mov_r32_r32(REG_EAX, REG_EBX);
-			_test_r32_imm(REG_EAX, 0x8000);
+resolve_link(DRCTOP, &link4);
+			emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_test_r32_imm(DRCTOP, REG_EAX, 0x8000);
 
-			_jcc_near_link(COND_Z, &link5);
+			emit_jcc_near_link(DRCTOP, COND_Z, &link5);
 
-			_neg_r32(REG_EAX);
+			emit_neg_r32(DRCTOP, REG_EAX);
 
-_resolve_link(&link5);
-			_sub_r32_r32(REG_ECX, REG_EAX);
-			_jcc_near_link(COND_C, &link2);
+resolve_link(DRCTOP, &link5);
+			emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+			emit_jcc_near_link(DRCTOP, COND_C, &link2);
 		}
 		else	   		/* unsigned */
 		{
-			_mov_r32_r32(REG_EAX, REG_EDX);
-			_sub_r32_r32(REG_EAX, REG_EBX);
-			_jcc_near_link(COND_C, &link2);
+			emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EDX);
+			emit_sub_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+			emit_jcc_near_link(DRCTOP, COND_C, &link2);
 		}
 
 		/* overflow */
-		_mov_m8abs_imm(&FLAG_V, VFLAG_SET);
-		_jmp_near_link(&link3);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_SET);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);		/* dividend (low) */
+resolve_link(DRCTOP, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));		/* dividend (low) */
 
 		if(BIT_B(word2))	/* signed */
-			_idiv_r32(REG_EBX);
+			emit_idiv_r32(DRCTOP, REG_EBX);
 		else			/* unsigned */
-			_div_r32(REG_EBX);
+			emit_div_r32(DRCTOP, REG_EBX);
 
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);		/* remainder */
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);	/* quotient */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);		/* remainder */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);	/* quotient */
 
 		m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 	else	/* 32 bit */
 	{
-		_mov_r32_m32abs(REG_EAX, &REG68K_D[(word2 >> 12) & 7]);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_D[(word2 >> 12) & 7]));
 
 		if(BIT_B(word2))	/* signed */
 		{
-			_cdq();
-			_idiv_r32(REG_EBX);
+			emit_cdq(DRCTOP);
+			emit_idiv_r32(DRCTOP, REG_EBX);
 		}
 		else			/* unsigned */
 		{
-			_xor_r32_r32(REG_EDX, REG_EDX);
-			_div_r32(REG_EBX);
+			emit_xor_r32_r32(DRCTOP, REG_EDX, REG_EDX);
+			emit_div_r32(DRCTOP, REG_EBX);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);		/* remainder */
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);	/* quotient */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);		/* remainder */
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);	/* quotient */
 
 		m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 	}
@@ -7746,14 +7746,14 @@ M68KMAKE_OP(eor, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -7761,20 +7761,20 @@ M68KMAKE_OP(eor, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -7783,14 +7783,14 @@ M68KMAKE_OP(eor, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -7798,20 +7798,20 @@ M68KMAKE_OP(eor, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -7820,13 +7820,13 @@ M68KMAKE_OP(eor, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_xor_r32_m32abs(REG_EAX, &DX);
+	emit_xor_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -7834,19 +7834,19 @@ M68KMAKE_OP(eor, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_xor_r32_m32abs(REG_EAX, &DX);
+	emit_xor_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -7857,14 +7857,14 @@ M68KMAKE_OP(eori, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_mov_r8_imm(REG_BL, src);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_imm(DRCTOP, REG_BL, src);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -7874,20 +7874,20 @@ M68KMAKE_OP(eori, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_imm(REG_BL, src);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_imm(DRCTOP, REG_BL, src);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -7898,14 +7898,14 @@ M68KMAKE_OP(eori, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_mov_r16_imm(REG_BX, src);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_imm(DRCTOP, REG_BX, src);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -7915,20 +7915,20 @@ M68KMAKE_OP(eori, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r16_imm(REG_BX, src);
-	_xor_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_imm(DRCTOP, REG_BX, src);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -7939,13 +7939,13 @@ M68KMAKE_OP(eori, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_xor_r32_imm(REG_EAX, src);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -7955,19 +7955,19 @@ M68KMAKE_OP(eori, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_xor_r32_imm(REG_EAX, src);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -7980,7 +7980,7 @@ M68KMAKE_OP(eori, 16, toc, .)
 
 	m68kdrc_get_ccr();
 
-	_xor_r32_imm(REG_EAX, src);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_set_ccr(drc);
 }
@@ -7988,22 +7988,22 @@ M68KMAKE_OP(eori, 16, toc, .)
 
 M68KMAKE_OP(eori, 16, tos, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	uint16 src = OPER_I_16();
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	m68kdrc_get_sr();
-	_xor_r32_imm(REG_EAX, src);
+	emit_xor_r32_imm(DRCTOP, REG_EAX, src);
 	m68kdrc_set_sr(drc);
 }
 
@@ -8012,10 +8012,10 @@ M68KMAKE_OP(exg, 32, dd, .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &DX);
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_m32abs_r32(&DX, REG_EBX);
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -8023,10 +8023,10 @@ M68KMAKE_OP(exg, 32, aa, .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_mov_r32_m32abs(REG_EBX, &AY);
-	_mov_m32abs_r32(&AX, REG_EBX);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -8034,10 +8034,10 @@ M68KMAKE_OP(exg, 32, da, .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &DX);
-	_mov_r32_m32abs(REG_EBX, &AY);
-	_mov_m32abs_r32(&DX, REG_EBX);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EBX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -8045,11 +8045,11 @@ M68KMAKE_OP(ext, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m8abs(REG_EAX, &DY);
+	emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -8057,11 +8057,11 @@ M68KMAKE_OP(ext, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -8071,11 +8071,11 @@ M68KMAKE_OP(extb, 32, ., .)
 	{
 		M68KMAKE_CODE_VERIFY(2);
 
-		_movsx_r32_m8abs(REG_EAX, &DY);
+		emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
 		m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-		_mov_m32abs_r32(&DY, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	}
 	else
 	{
@@ -8109,13 +8109,13 @@ M68KMAKE_OP(jsr, 32, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68ki_trace_t0();				   /* auto-disable (see m68kcpu.h) */
 
 	m68kdrc_push_32_imm(REG68K_PC);
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_jump(drc);
 }
 
@@ -8125,7 +8125,7 @@ M68KMAKE_OP(lea, 32, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_EA_AY_32;
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -8135,14 +8135,14 @@ M68KMAKE_OP(link, 16, ., a7)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-	_sub_r32_imm(REG_EAX, 4);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 4);
 
-	_push_r32(REG_EAX);
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 
-	_add_m32abs_imm(&REG68K_A[7], dis);
+	emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), dis);
 }
 
 
@@ -8154,10 +8154,10 @@ M68KMAKE_OP(link, 16, ., .)
 
 	m68kdrc_push_32_m32abs(&AY);
 
-	_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 
-	_add_m32abs_imm(&REG68K_A[7], dis);
+	emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), dis);
 }
 
 
@@ -8169,14 +8169,14 @@ M68KMAKE_OP(link, 32, ., a7)
 
 		M68KMAKE_CODE_VERIFY(0+4);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-		_sub_r32_imm(REG_EAX, 4);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+		emit_sub_r32_imm(DRCTOP, REG_EAX, 4);
 
-		_push_r32(REG_EAX);
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_32();
 
-		_add_m32abs_imm(&REG68K_A[7], dis);
+		emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), dis);
 	}
 	else
 	{
@@ -8196,9 +8196,9 @@ M68KMAKE_OP(link, 32, ., .)
 
 		m68kdrc_push_32_m32abs(&AY);
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-		_mov_m32abs_r32(&AY, REG_EAX);
-		_add_m32abs_imm(&REG68K_A[7], dis);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+		emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
+		emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), dis);
 	}
 	else
 	{
@@ -8217,20 +8217,20 @@ M68KMAKE_OP(lsr, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_shr_r32_imm(REG_EAX, shift);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -8243,20 +8243,20 @@ M68KMAKE_OP(lsr, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_shr_r32_imm(REG_EAX, shift);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -8269,208 +8269,208 @@ M68KMAKE_OP(lsr, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_shr_r32_imm(REG_EAX, shift);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(lsr, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shr_r8_cl(REG_AL);
-	_shr_r8_cl(REG_AL);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shr_r8_cl(DRCTOP, REG_AL);
+	emit_shr_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_shr_r8_cl(REG_AL);
-	_mov_m8abs_r8(&DY, REG_AL);
+resolve_link(DRCTOP, &link2);
+	emit_shr_r8_cl(DRCTOP, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(lsr, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shr_r16_cl(REG_AX);
-	_shr_r16_cl(REG_AX);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shr_r16_cl(DRCTOP, REG_AX);
+	emit_shr_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_shr_r16_cl(REG_AX);
-	_mov_m16abs_r16(&DY, REG_AX);
+resolve_link(DRCTOP, &link2);
+	emit_shr_r16_cl(DRCTOP, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(lsr, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_shr_r32_imm(REG_EAX, 16);
-	_shr_r32_imm(REG_EAX, 16);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_shr_r32_cl(REG_EAX);
-	_mov_m32abs_r32(&DY, REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_shr_r32_cl(DRCTOP, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -8479,26 +8479,26 @@ M68KMAKE_OP(lsr, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_shr_r32_imm(REG_EAX, 1);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 1);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 
-		_mov_m8abs_imm(&FLAG_N, NFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_N), NFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -8512,20 +8512,20 @@ M68KMAKE_OP(lsl, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_shl_r8_cl(REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -8538,20 +8538,20 @@ M68KMAKE_OP(lsl, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_shl_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -8564,195 +8564,195 @@ M68KMAKE_OP(lsl, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_shl_r32_imm(REG_EAX, shift);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(lsl, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shl_r8_cl(REG_AL);
-	_shl_r8_cl(REG_AL);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_shl_r8_cl(REG_AL);
-	_mov_m8abs_r8(&DY, REG_AL);
+resolve_link(DRCTOP, &link2);
+	emit_shl_r8_cl(DRCTOP, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(lsl, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_shl_r16_cl(REG_AX);
-	_shl_r16_cl(REG_AX);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_shl_r16_cl(REG_AX);
-	_mov_m16abs_r16(&DY, REG_AX);
+resolve_link(DRCTOP, &link2);
+	emit_shl_r16_cl(DRCTOP, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(lsl, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_shl_r32_imm(REG_EAX, 16);
-	_shl_r32_imm(REG_EAX, 16);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_shl_r32_cl(REG_EAX);
-	_mov_m32abs_r32(&DY, REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_shl_r32_cl(DRCTOP, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -8762,26 +8762,26 @@ M68KMAKE_OP(lsl, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_shl_r32_imm(REG_EAX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 1);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_16();			/* break EBX */
 		DRC_NFLAG_16();
-		_movzx_r32_r16(REG_EAX, REG_AX);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -8790,11 +8790,11 @@ M68KMAKE_OP(move, 8, d, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -8806,7 +8806,7 @@ M68KMAKE_OP(move, 8, d, .)
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -8814,12 +8814,12 @@ M68KMAKE_OP(move, 8, ai, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8831,9 +8831,9 @@ M68KMAKE_OP(move, 8, ai, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8842,12 +8842,12 @@ M68KMAKE_OP(move, 8, pi7, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_A7_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8856,12 +8856,12 @@ M68KMAKE_OP(move, 8, pi, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8873,9 +8873,9 @@ M68KMAKE_OP(move, 8, pi7, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_A7_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8887,9 +8887,9 @@ M68KMAKE_OP(move, 8, pi, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8898,12 +8898,12 @@ M68KMAKE_OP(move, 8, pd7, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8912,12 +8912,12 @@ M68KMAKE_OP(move, 8, pd, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8929,9 +8929,9 @@ M68KMAKE_OP(move, 8, pd7, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8943,9 +8943,9 @@ M68KMAKE_OP(move, 8, pd, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8954,12 +8954,12 @@ M68KMAKE_OP(move, 8, di, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8971,9 +8971,9 @@ M68KMAKE_OP(move, 8, di, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -8982,15 +8982,15 @@ M68KMAKE_OP(move, 8, ix, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
-	_push_r32(REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_8(drc);
 }
 
@@ -9000,14 +9000,14 @@ M68KMAKE_OP(move, 8, ix, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_8(drc);
 }
 
@@ -9016,12 +9016,12 @@ M68KMAKE_OP(move, 8, aw, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -9033,9 +9033,9 @@ M68KMAKE_OP(move, 8, aw, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -9044,12 +9044,12 @@ M68KMAKE_OP(move, 8, al, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -9061,9 +9061,9 @@ M68KMAKE_OP(move, 8, al, .)
 	M68KMAKE_GET_OPER_AY_8;
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_8();
 }
 
@@ -9072,11 +9072,11 @@ M68KMAKE_OP(move, 16, d, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -9084,11 +9084,11 @@ M68KMAKE_OP(move, 16, d, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -9100,7 +9100,7 @@ M68KMAKE_OP(move, 16, d, .)
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -9108,12 +9108,12 @@ M68KMAKE_OP(move, 16, ai, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9122,12 +9122,12 @@ M68KMAKE_OP(move, 16, ai, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9139,9 +9139,9 @@ M68KMAKE_OP(move, 16, ai, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9150,12 +9150,12 @@ M68KMAKE_OP(move, 16, pi, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9164,12 +9164,12 @@ M68KMAKE_OP(move, 16, pi, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9181,9 +9181,9 @@ M68KMAKE_OP(move, 16, pi, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9192,12 +9192,12 @@ M68KMAKE_OP(move, 16, pd, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9206,12 +9206,12 @@ M68KMAKE_OP(move, 16, pd, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9223,9 +9223,9 @@ M68KMAKE_OP(move, 16, pd, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9234,12 +9234,12 @@ M68KMAKE_OP(move, 16, di, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9248,12 +9248,12 @@ M68KMAKE_OP(move, 16, di, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9265,9 +9265,9 @@ M68KMAKE_OP(move, 16, di, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9276,15 +9276,15 @@ M68KMAKE_OP(move, 16, ix, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
-	_push_r32(REG_EAX);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_16(drc);
 }
 
@@ -9293,15 +9293,15 @@ M68KMAKE_OP(move, 16, ix, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
-	_push_r32(REG_EAX);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_16(drc);
 }
 
@@ -9311,14 +9311,14 @@ M68KMAKE_OP(move, 16, ix, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_16(drc);
 }
 
@@ -9327,12 +9327,12 @@ M68KMAKE_OP(move, 16, aw, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9341,12 +9341,12 @@ M68KMAKE_OP(move, 16, aw, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9358,9 +9358,9 @@ M68KMAKE_OP(move, 16, aw, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9369,12 +9369,12 @@ M68KMAKE_OP(move, 16, al, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_16();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9383,12 +9383,12 @@ M68KMAKE_OP(move, 16, al, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &AY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&AY));
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_16();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9400,9 +9400,9 @@ M68KMAKE_OP(move, 16, al, .)
 	M68KMAKE_GET_OPER_AY_16;
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_16();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
@@ -9411,11 +9411,11 @@ M68KMAKE_OP(move, 32, d, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -9423,11 +9423,11 @@ M68KMAKE_OP(move, 32, d, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -9439,7 +9439,7 @@ M68KMAKE_OP(move, 32, d, .)
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -9447,12 +9447,12 @@ M68KMAKE_OP(move, 32, ai, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9461,12 +9461,12 @@ M68KMAKE_OP(move, 32, ai, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9478,9 +9478,9 @@ M68KMAKE_OP(move, 32, ai, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_AI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9489,12 +9489,12 @@ M68KMAKE_OP(move, 32, pi, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9503,12 +9503,12 @@ M68KMAKE_OP(move, 32, pi, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9520,9 +9520,9 @@ M68KMAKE_OP(move, 32, pi, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_PI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9531,21 +9531,21 @@ M68KMAKE_OP(move, 32, pd, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_sub_r32_imm(REG_ESP, 8);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 8);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_ror_r32_imm(REG_EAX, 16);
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_push_r32(REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_16();
 	m68kdrc_write_16();
@@ -9556,21 +9556,21 @@ M68KMAKE_OP(move, 32, pd, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_sub_r32_imm(REG_ESP, 8);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 8);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_ror_r32_imm(REG_EAX, 16);
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_push_r32(REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_16();
 	m68kdrc_write_16();
@@ -9584,18 +9584,18 @@ M68KMAKE_OP(move, 32, pd, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_sub_r32_imm(REG_ESP, 8);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 8);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_ror_r32_imm(REG_EAX, 16);
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_push_r32(REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_16();
 	m68kdrc_write_16();
@@ -9606,12 +9606,12 @@ M68KMAKE_OP(move, 32, di, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9620,12 +9620,12 @@ M68KMAKE_OP(move, 32, di, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9637,9 +9637,9 @@ M68KMAKE_OP(move, 32, di, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_DI_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9648,15 +9648,15 @@ M68KMAKE_OP(move, 32, ix, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_push_r32(REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 }
 
@@ -9665,15 +9665,15 @@ M68KMAKE_OP(move, 32, ix, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_push_r32(REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 }
 
@@ -9683,14 +9683,14 @@ M68KMAKE_OP(move, 32, ix, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AX_IX_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 
-	_pop_r32(REG_EAX);
+	emit_pop_r32(DRCTOP, REG_EAX);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 }
 
@@ -9699,12 +9699,12 @@ M68KMAKE_OP(move, 32, aw, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9713,12 +9713,12 @@ M68KMAKE_OP(move, 32, aw, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9730,9 +9730,9 @@ M68KMAKE_OP(move, 32, aw, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AW_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9741,12 +9741,12 @@ M68KMAKE_OP(move, 32, al, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_32();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9755,12 +9755,12 @@ M68KMAKE_OP(move, 32, al, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_32();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9772,9 +9772,9 @@ M68KMAKE_OP(move, 32, al, .)
 	M68KMAKE_GET_OPER_AY_32;
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	DRC_EA_AL_32();	
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -9783,8 +9783,8 @@ M68KMAKE_OP(movea, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9792,8 +9792,8 @@ M68KMAKE_OP(movea, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_movsx_r32_m16abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9802,8 +9802,8 @@ M68KMAKE_OP(movea, 16, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EAX, REG_AX);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9811,8 +9811,8 @@ M68KMAKE_OP(movea, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9820,8 +9820,8 @@ M68KMAKE_OP(movea, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9830,7 +9830,7 @@ M68KMAKE_OP(movea, 32, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -9841,7 +9841,7 @@ M68KMAKE_OP(move, 16, frc, d)
 		M68KMAKE_CODE_VERIFY(0);
 
 		m68kdrc_get_ccr();
-		_mov_m16abs_r16(&DY, REG_AX);
+		emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 	}
 	else
 	{
@@ -9859,9 +9859,9 @@ M68KMAKE_OP(move, 16, frc, .)
 
 		m68kdrc_get_ccr();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		M68KMAKE_GET_EA_AY_16;
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_16();
 	}
 	else
@@ -9876,7 +9876,7 @@ M68KMAKE_OP(move, 16, toc, d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
 	m68kdrc_set_ccr(drc);
 }
@@ -9898,19 +9898,19 @@ M68KMAKE_OP(move, 16, frs, d)
 
 	if (CPU_TYPE_IS_010_PLUS(CPU_TYPE))	/* NS990408 */
 	{
-		link_info link1;
+		emit_link link1;
 
-		_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 		m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	}
 
 	m68kdrc_get_sr();
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -9920,54 +9920,54 @@ M68KMAKE_OP(move, 16, frs, .)
 
 	if (CPU_TYPE_IS_010_PLUS(CPU_TYPE))	/* NS990408 */
 	{
-		link_info link1;
+		emit_link link1;
 
-		_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 		m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	}
 
 	m68kdrc_get_sr();
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_write_16();
 }
 
 
 M68KMAKE_OP(move, 16, tos, d)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
-	_mov_r16_m16abs(REG_AX, &DY);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 	m68kdrc_set_sr(drc);
 }
 
 
 M68KMAKE_OP(move, 16, tos, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	M68KMAKE_GET_OPER_AY_16;
@@ -9977,45 +9977,45 @@ _resolve_link(&link1);
 
 M68KMAKE_OP(move, 32, fru, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
-	_mov_r32_m32abs(REG_EAX, &REG68K_USP);
-	_mov_m32abs_r32(&AY, REG_EAX);
+resolve_link(DRCTOP, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_USP));
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
 M68KMAKE_OP(move, 32, tou, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&REG68K_USP, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_USP), REG_EAX);
 }
 
 
 M68KMAKE_OP(movec, 32, cr, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
 	uint16 word2;
 
 	if(!CPU_TYPE_IS_010_PLUS(CPU_TYPE))
@@ -10027,12 +10027,12 @@ M68KMAKE_OP(movec, 32, cr, .)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	word2 = OPER_I_16();
 
 	m68ki_trace_t0();		   /* auto-disable (see m68kcpu.h) */
@@ -10052,52 +10052,52 @@ _resolve_link(&link1);
 	switch (word2 & 0xfff)
 	{
 	case 0x000:			   /* SFC */
-		_mov_r32_m32abs(REG_EAX, &REG68K_SFC);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_SFC));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x001:			   /* DFC */
-		_mov_r32_m32abs(REG_EAX, &REG68K_DFC);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DFC));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x002:			   /* CACR */
-		_mov_r32_m32abs(REG_EAX, &REG68K_CACR);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_CACR));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x800:			   /* USP */
-		_mov_r32_m32abs(REG_EAX, &REG68K_USP);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_USP));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x801:			   /* VBR */
-		_mov_r32_m32abs(REG_EAX, &REG68K_VBR);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_VBR));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x802:			   /* CAAR */
-		_mov_r32_m32abs(REG_EAX, &REG68K_CAAR);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_CAAR));
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x803:			   /* MSP */
-		_test_m8abs_imm(&FLAG_M, MFLAG_SET);
-		_jcc_near_link(COND_Z, &link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_SP);
-		_jmp_near_link(&link3);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_M), MFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_SP));
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_MSP);
+resolve_link(DRCTOP, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_MSP));
 
-_resolve_link(&link3);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+resolve_link(DRCTOP, &link3);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x804:			   /* ISP */
-		_test_m8abs_imm(&FLAG_M, MFLAG_SET);
-		_jcc_near_link(COND_Z, &link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_ISP);
-		_jmp_near_link(&link3);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_M), MFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_ISP));
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_r32_m32abs(REG_EAX, &REG68K_SP);
+resolve_link(DRCTOP, &link2);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_SP));
 
-_resolve_link(&link3);
-		_mov_m32abs_r32(&REG68K_DA[(word2 >> 12) & 15], REG_EAX);
+resolve_link(DRCTOP, &link3);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]), REG_EAX);
 		break;
 	case 0x003:				/* TC */
 		if(CPU_TYPE_IS_040_PLUS(CPU_TYPE))
@@ -10171,9 +10171,9 @@ _resolve_link(&link3);
 
 M68KMAKE_OP(movec, 32, rc, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
 	uint16 word2;
 
 	if(!CPU_TYPE_IS_010_PLUS(CPU_TYPE))
@@ -10185,12 +10185,12 @@ M68KMAKE_OP(movec, 32, rc, .)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	word2 = OPER_I_16();
 
 	m68ki_trace_t0();		   /* auto-disable (see m68kcpu.h) */
@@ -10207,54 +10207,54 @@ _resolve_link(&link1);
 		}
 	}
 
-	_mov_r32_m32abs(REG_EAX, &REG68K_DA[(word2 >> 12) & 15]);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_DA[(word2 >> 12) & 15]));
 
 	switch (word2 & 0xfff)
 	{
 	case 0x000:			   /* SFC */
-		_mov_m32abs_r32(&REG68K_SFC, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_SFC), REG_EAX);
 		break;
 	case 0x001:			   /* DFC */
-		_mov_m32abs_r32(&REG68K_DFC, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DFC), REG_EAX);
 		break;
 	case 0x002:			   /* CACR */
 		if(!CPU_TYPE_IS_EC020_PLUS(CPU_TYPE))
 		{
 			/* non 68040 can only set the lower 4 bits (C,CE,F,E) */
-			_and_r32_imm(REG_EAX, 0x0f);
+			emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
 		}
-		_mov_m32abs_r32(&REG68K_CACR, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_CACR), REG_EAX);
 		break;
 	case 0x800:			   /* USP */
-		_mov_m32abs_r32(&REG68K_USP, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_USP), REG_EAX);
 		break;
 	case 0x801:			   /* VBR */
-		_mov_m32abs_r32(&REG68K_VBR, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_VBR), REG_EAX);
 		break;
 	case 0x802:			   /* CAAR */
-		_mov_m32abs_r32(&REG68K_CAAR, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_CAAR), REG_EAX);
 		break;
 	case 0x803:			   /* MSP */
-		_test_m8abs_imm(&FLAG_M, MFLAG_SET);
-		_jcc_near_link(COND_Z, &link2);
-		_mov_m32abs_r32(&REG68K_SP, REG_EAX);
-		_jmp_near_link(&link3);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_M), MFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_SP), REG_EAX);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_m32abs_r32(&REG68K_MSP, REG_EAX);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_MSP), REG_EAX);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 		break;
 	case 0x804:			   /* ISP */
-		_test_m8abs_imm(&FLAG_M, MFLAG_SET);
-		_jcc_near_link(COND_Z, &link2);
-		_mov_m32abs_r32(&REG68K_ISP, REG_EAX);
-		_jmp_near_link(&link3);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_M), MFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_ISP), REG_EAX);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
-		_mov_m32abs_r32(&REG68K_SP, REG_EAX);
+resolve_link(DRCTOP, &link2);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_SP), REG_EAX);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 		break;
 	case 0x003:			/* TC */
 		if (CPU_TYPE_IS_040_PLUS(CPU_TYPE))
@@ -10334,23 +10334,23 @@ M68KMAKE_OP(movem, 16, re, pd)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_sub_r32_imm(REG_EAX, 2);
-			_push_r32(REG_EAX);
+			emit_sub_r32_imm(DRCTOP, REG_EAX, 2);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_m32abs(&REG68K_DA[15-i]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[15-i]));
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_write_16();
 
-			_pop_r32(REG_EAX);
+			emit_pop_r32(DRCTOP, REG_EAX);
 			count++;
 		}
 
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 
 	DRC_USE_CYCLES(count<<CYC_MOVEM_W);
 }
@@ -10369,14 +10369,14 @@ M68KMAKE_OP(movem, 16, re, .)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_m32abs(&REG68K_DA[i]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[i]));
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_write_16();
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 2);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			count++;
 		}
@@ -10393,35 +10393,35 @@ M68KMAKE_OP(movem, 32, re, pd)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_sub_r32_imm(REG_EAX, 4);
-			_push_r32(REG_EAX);
+			emit_sub_r32_imm(DRCTOP, REG_EAX, 4);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_sub_r32_imm(REG_ESP, 4);
+			emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_mov_r32_m32abs(REG_EBX, &REG68K_DA[15-i]);
-			_push_r32(REG_EBX);
+			emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_DA[15-i]));
+			emit_push_r32(DRCTOP, REG_EBX);
 
-			_ror_r32_imm(REG_EBX, 16);
-			_mov_m32bd_r32(REG_ESP, 8, REG_EBX);
+			emit_ror_r32_imm(DRCTOP, REG_EBX, 16);
+			emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EBX);
 
-			_add_r32_imm(REG_EAX, 2);
-			_push_r32(REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+			emit_push_r32(DRCTOP, REG_EAX);
 
 			m68kdrc_write_16();
 			m68kdrc_write_16();
 
-			_pop_r32(REG_EAX);
+			emit_pop_r32(DRCTOP, REG_EAX);
 			count++;
 		}
 
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 
 	DRC_USE_CYCLES(count<<CYC_MOVEM_L);
 }
@@ -10440,14 +10440,14 @@ M68KMAKE_OP(movem, 32, re, .)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_m32abs(&REG68K_DA[i]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[i]));
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_write_32();
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 4);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			count++;
 		}
@@ -10464,26 +10464,26 @@ M68KMAKE_OP(movem, 16, er, pi)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_16();
 
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 2);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			count++;
 		}
 
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 
 	DRC_USE_CYCLES(count<<CYC_MOVEM_W);
 }
@@ -10502,16 +10502,16 @@ M68KMAKE_OP(movem, 16, er, pcdi)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_pcrel_16();
 
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 2);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			count++;
 		}
@@ -10533,16 +10533,16 @@ M68KMAKE_OP(movem, 16, er, pcix)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_pcrel_16();
 
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 2);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			count++;
 		}
@@ -10564,16 +10564,16 @@ M68KMAKE_OP(movem, 16, er, .)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_16();
 
-			_movsx_r32_r16(REG_EAX, REG_AX);
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 2);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 2);
 
 			count++;
 		}
@@ -10589,25 +10589,25 @@ M68KMAKE_OP(movem, 32, er, pi)
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_32();
 
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 4);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			count++;
 		}
 
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 
 	DRC_USE_CYCLES(count<<CYC_MOVEM_L);
 }
@@ -10626,15 +10626,15 @@ M68KMAKE_OP(movem, 32, er, pcdi)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_pcrel_32();
 
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 4);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			count++;
 		}
@@ -10656,15 +10656,15 @@ M68KMAKE_OP(movem, 32, er, pcix)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_pcrel_32();
 
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 4);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			count++;
 		}
@@ -10686,15 +10686,15 @@ M68KMAKE_OP(movem, 32, er, .)
 	for (i = 0; i < 16; i++)
 		if(register_list & (1 << i))
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_32();
 
-			_mov_m32abs_r32(&REG68K_DA[i], REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_DA[i]), REG_EAX);
 
-			_pop_r32(REG_EAX);
-			_add_r32_imm(REG_EAX, 4);
+			emit_pop_r32(DRCTOP, REG_EAX);
+			emit_add_r32_imm(DRCTOP, REG_EAX, 4);
 
 			count++;
 		}
@@ -10707,19 +10707,19 @@ M68KMAKE_OP(movep, 16, re, .)
 {
 	DRC_CODE_VERIFY(4);
 
-	_mov_r32_m32abs(REG_EAX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_push_r32(REG_EAX);		/* (ea + 2) */
-	_sub_r32_imm(REG_ESP, 4);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea + 2) */
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_shr_r32_imm(REG_EAX, 8);
-	_push_r32(REG_EAX);		/* (ea) */
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea) */
 
 	DRC_EA_AY_DI_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EAX);
 
 	m68kdrc_write_8();
 	m68kdrc_write_8();
@@ -10730,34 +10730,34 @@ M68KMAKE_OP(movep, 32, re, .)
 {
 	DRC_CODE_VERIFY(4);
 
-	_mov_r32_m32abs(REG_EAX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
-	_push_r32(REG_EAX);		/* (ea + 6) */
-	_sub_r32_imm(REG_ESP, 4);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea + 6) */
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_shr_r32_imm(REG_EAX, 8);
-	_push_r32(REG_EAX);		/* (ea + 4) */
-	_sub_r32_imm(REG_ESP, 4);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea + 4) */
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_shr_r32_imm(REG_EAX, 8);
-	_push_r32(REG_EAX);		/* (ea + 2) */
-	_sub_r32_imm(REG_ESP, 4);
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea + 2) */
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
-	_shr_r32_imm(REG_EAX, 8);
-	_push_r32(REG_EAX);		/* (ea) */
+	emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+	emit_push_r32(DRCTOP, REG_EAX);		/* (ea) */
 
 	DRC_EA_AY_DI_32();
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_mov_m32bd_r32(REG_ESP, 8, REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 8), REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_mov_m32bd_r32(REG_ESP, 16, REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 16), REG_EAX);
 
-	_add_r32_imm(REG_EAX, 2);
-	_mov_m32bd_r32(REG_ESP, 24, REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 24), REG_EAX);
 
 	m68kdrc_write_8();
 	m68kdrc_write_8();
@@ -10770,25 +10770,25 @@ M68KMAKE_OP(movep, 16, er, .)
 {
 	DRC_CODE_VERIFY(4);
 
-	_push_imm(0);
+	emit_push_imm(DRCTOP, 0);
 
 	DRC_EA_AY_DI_16();
 
-	_push_r32(REG_EAX);
-	_add_r32_imm(REG_EAX, 2);
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 2);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_read_8();		/* ea + 2 */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 
 	m68kdrc_read_8();		/* ea */
-	_shl_r32_imm(REG_EAX, 8);
+	emit_shl_r32_imm(DRCTOP, REG_EAX, 8);
 
-	_pop_r32(REG_EBX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_pop_r32(DRCTOP, REG_EBX);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -10796,35 +10796,35 @@ M68KMAKE_OP(movep, 32, er, .)
 {
 	DRC_CODE_VERIFY(4);
 
-	_push_imm(0);
+	emit_push_imm(DRCTOP, 0);
 
 	DRC_EA_AY_DI_32();
 
-	_lea_r32_m32bd(REG_EBX, REG_EAX, 6);
-	_push_r32(REG_EBX);		/* ea + 6 */
+	emit_lea_r32_m32(DRCTOP, REG_EBX, MBD(REG_EAX, 6));
+	emit_push_r32(DRCTOP, REG_EBX);		/* ea + 6 */
 
-	_sub_r32_imm(REG_EBX, 2);
-	_push_r32(REG_EBX);		/* ea + 4 */
+	emit_sub_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_push_r32(DRCTOP, REG_EBX);		/* ea + 4 */
 
-	_sub_r32_imm(REG_EBX, 2);
-	_push_r32(REG_EBX);		/* ea + 2 */
+	emit_sub_r32_imm(DRCTOP, REG_EBX, 2);
+	emit_push_r32(DRCTOP, REG_EBX);		/* ea + 2 */
 
-	_push_r32(REG_EAX);		/* ea */
-
-	m68kdrc_read_8();
-	_mov_m8bd_r8(REG_ESP, 12 + 3, REG_AL);	/* (ea) */
+	emit_push_r32(DRCTOP, REG_EAX);		/* ea */
 
 	m68kdrc_read_8();
-	_mov_m8bd_r8(REG_ESP, 8 + 2, REG_AL);	/* (ea + 2) */
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 12 + 3), REG_AL);	/* (ea) */
 
 	m68kdrc_read_8();
-	_mov_m8bd_r8(REG_ESP, 4 + 1, REG_AL);	/* (ea + 4) */
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 8 + 2), REG_AL);	/* (ea + 2) */
+
+	m68kdrc_read_8();
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4 + 1), REG_AL);	/* (ea + 4) */
 
 	m68kdrc_read_8();
 
-	_pop_r32(REG_ECX);
-	_or_r32_r32(REG_EAX, REG_ECX);
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_pop_r32(DRCTOP, REG_ECX);
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -10832,40 +10832,40 @@ M68KMAKE_OP(moves, 8, ., .)
 {
 	if (CPU_TYPE_IS_010_PLUS(CPU_TYPE))
 	{
-		link_info link1;
+		emit_link link1;
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 		m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		M68KMAKE_GET_EA_AY_8;
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 		if (BIT_B(word2))		   /* Register to memory */
 		{
-			_push_m32abs(&REG68K_DA[(word2 >> 12) & 15]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]));
+			emit_push_r32(DRCTOP, REG_EAX);
 
 			m68kdrc_write_8_fc(&REG68K_DFC);
 		}
 		else				   /* Memory to address register */
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_8_fc(&REG68K_SFC);
 
 			if (BIT_F(word2))
 			{
-				_movsx_r32_r8(REG_EAX, REG_AL);
-				_mov_m32abs_r32(&REG68K_A[(word2 >> 12) & 7], REG_EAX);
+				emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
+				emit_mov_m32_r32(DRCTOP, MABS(&REG68K_A[(word2 >> 12) & 7]), REG_EAX);
 			}
 			else
-				_mov_m8abs_r8(&REG68K_A[(word2 >> 12) & 7], REG_AL);
+				emit_mov_m8_r8(DRCTOP, MABS(&REG68K_A[(word2 >> 12) & 7]), REG_AL);
 
 			if(CPU_TYPE_IS_020_VARIANT(CPU_TYPE))
 				DRC_USE_CYCLES(2);
@@ -10883,40 +10883,40 @@ M68KMAKE_OP(moves, 16, ., .)
 {
 	if (CPU_TYPE_IS_010_PLUS(CPU_TYPE))
 	{
-		link_info link1;
+		emit_link link1;
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 		m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		M68KMAKE_GET_EA_AY_16;
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 		if (BIT_B(word2))		   /* Register to memory */
 		{
-			_push_m32abs(&REG68K_DA[(word2 >> 12) & 15]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]));
+			emit_push_r32(DRCTOP, REG_EAX);
 
 			m68kdrc_write_16_fc(&REG68K_DFC);
 		}
 		else				   /* Memory to address register */
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_16_fc(&REG68K_SFC);
 
 			if (BIT_F(word2))
 			{
-				_movsx_r32_r16(REG_EAX, REG_AX);
-				_mov_m32abs_r32(&REG68K_A[(word2 >> 12) & 7], REG_EAX);
+				emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+				emit_mov_m32_r32(DRCTOP, MABS(&REG68K_A[(word2 >> 12) & 7]), REG_EAX);
 			}
 			else
-				_mov_m16abs_r16(&REG68K_A[(word2 >> 12) & 7], REG_AX);
+				emit_mov_m16_r16(DRCTOP, MABS(&REG68K_A[(word2 >> 12) & 7]), REG_AX);
 
 			if(CPU_TYPE_IS_020_VARIANT(CPU_TYPE))
 				DRC_USE_CYCLES(2);
@@ -10934,34 +10934,34 @@ M68KMAKE_OP(moves, 32, ., .)
 {
 	if (CPU_TYPE_IS_010_PLUS(CPU_TYPE))
 	{
-		link_info link1;
+		emit_link link1;
 		uint16 word2 = OPER_I_16();
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-		_jcc_near_link(COND_NZ, &link1);
+		emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+		emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 		m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 		M68KMAKE_GET_EA_AY_32;
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 		if (BIT_B(word2))		   /* Register to memory */
 		{
-			_push_m32abs(&REG68K_DA[(word2 >> 12) & 15]);
-			_push_r32(REG_EAX);
+			emit_push_m32(DRCTOP, MABS(&REG68K_DA[(word2 >> 12) & 15]));
+			emit_push_r32(DRCTOP, REG_EAX);
 
 			m68kdrc_write_32_fc(&REG68K_DFC);
 		}
 		else				   /* Memory to address register */
 		{
-			_push_r32(REG_EAX);
+			emit_push_r32(DRCTOP, REG_EAX);
 			m68kdrc_read_32_fc(&REG68K_SFC);
 
-			_mov_m32abs_r32(&REG68K_A[(word2 >> 12) & 7], REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&REG68K_A[(word2 >> 12) & 7]), REG_EAX);
 		}
 
 		if(CPU_TYPE_IS_020_VARIANT(CPU_TYPE))
@@ -10981,11 +10981,11 @@ M68KMAKE_OP(moveq, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_imm(REG_EAX, res);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, res);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11000,15 +11000,15 @@ M68KMAKE_OP(move16, 32, ., .)
 
 	for (i = 0; i < 4; i++)
 	{
-		_push_m32abs(&REG68K_A[ax]);
+		emit_push_m32(DRCTOP, MABS(&REG68K_A[ax]));
 		m68kdrc_read_32();
 
-		_push_r32(REG_EAX);
-		_push_m32abs(&REG68K_A[ay]);
+		emit_push_r32(DRCTOP, REG_EAX);
+		emit_push_m32(DRCTOP, MABS(&REG68K_A[ay]));
 		m68kdrc_write_32();
 
-		_add_m32abs_imm(&REG68K_A[ax], 4);
-		_add_m32abs_imm(&REG68K_A[ay], 4);
+		emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[ax]), 4);
+		emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[ay]), 4);
 	}
 }
 
@@ -11017,13 +11017,13 @@ M68KMAKE_OP(muls, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
-	_movsx_r32_m16abs(REG_EBX, &DX);
-	_imul_r32(REG_EBX);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_imul_r32(DRCTOP, REG_EBX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11032,13 +11032,13 @@ M68KMAKE_OP(muls, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EAX, REG_AX);
-	_movsx_r32_m16abs(REG_EBX, &DX);
-	_imul_r32(REG_EBX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_movsx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_imul_r32(DRCTOP, REG_EBX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11046,13 +11046,13 @@ M68KMAKE_OP(mulu, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mul_r32(REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mul_r32(DRCTOP, REG_EBX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11061,13 +11061,13 @@ M68KMAKE_OP(mulu, 16, ., .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movzx_r32_r16(REG_EAX, REG_AX);
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mul_r32(REG_EBX);
+	emit_movzx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mul_r32(DRCTOP, REG_EBX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11086,51 +11086,51 @@ M68KMAKE_OP(mull, 32, ., d)
 
 	word2 = OPER_I_16();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 12) & 7]);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 12) & 7]));
 
 	if (BIT_B(word2))			   /* signed */
-		_imul_r32(REG_EBX);
+		emit_imul_r32(DRCTOP, REG_EBX);
 	else
-		_mul_r32(REG_EBX);
+		emit_mul_r32(DRCTOP, REG_EBX);
 
 	if (BIT_A(word2))	/* 64 bit */
 	{
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 
 		if (m68kdrc_update_vncz_check())
 		{
 			DRC_NFLAG_64();		/* break ECX */
-			_or_r32_r32(REG_EDX, REG_EAX);
-			_mov_m32abs_r32(&FLAG_Z, REG_EDX);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_or_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EDX);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 		}
 	}
 	else			/* 32 bit */
 	{
 		if (m68kdrc_update_vncz_check())
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 			DRC_NFLAG_32();		/* break ECX */
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
 			if (BIT_B(word2))		/* signed */
 			{
-				_mov_r32_r32(REG_ECX, REG_EDX);
-				_cdq();
-				_sub_r32_r32(REG_ECX, REG_EDX);
+				emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+				emit_cdq(DRCTOP);
+				emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 			}
 			else				/* unsigned */
-				_or_r32_r32(REG_EDX, REG_EDX);
+				emit_or_r32_r32(DRCTOP, REG_EDX, REG_EDX);
 
-			_setcc_r8(COND_NZ, REG_DL);
-			_shl_r32_imm(REG_EDX, 7);
-			_mov_m8abs_r8(&FLAG_V, REG_DL);
+			emit_setcc_r8(DRCTOP, COND_NZ, REG_DL);
+			emit_shl_r32_imm(DRCTOP, REG_EDX, 7);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_DL);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 	}
 }
 
@@ -11151,114 +11151,114 @@ M68KMAKE_OP(mull, 32, ., .)
 
 	M68KMAKE_GET_OPER_AY_32;
 
-	_mov_r32_m32abs(REG_EBX, &REG68K_D[(word2 >> 12) & 7]);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&REG68K_D[(word2 >> 12) & 7]));
 
 	if (BIT_B(word2))			   /* signed */
-		_imul_r32(REG_EBX);
+		emit_imul_r32(DRCTOP, REG_EBX);
 	else
-		_mul_r32(REG_EBX);
+		emit_mul_r32(DRCTOP, REG_EBX);
 
 	if (BIT_A(word2))	/* 64 bit */
 	{
-		_mov_m32abs_r32(&REG68K_D[word2 & 7], REG_EDX);
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[word2 & 7]), REG_EDX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 
 		if (m68kdrc_update_vncz_check())
 		{
 			DRC_NFLAG_64();		/* break ECX */
-			_or_r32_r32(REG_EDX, REG_EAX);
-			_mov_m32abs_r32(&FLAG_Z, REG_EDX);
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-			_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+			emit_or_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EDX);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+			emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 		}
 	}
 	else			/* 32 bit */
 	{
 		if (m68kdrc_update_vncz_check())
 		{
-			_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+			emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 			DRC_NFLAG_32();		/* break ECX */
-			_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+			emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
 			if (BIT_B(word2))		/* signed */
 			{
-				_mov_r32_r32(REG_ECX, REG_EDX);
-				_cdq();
-				_sub_r32_r32(REG_ECX, REG_EDX);
+				emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EDX);
+				emit_cdq(DRCTOP);
+				emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EDX);
 			}
 			else				/* unsigned */
-				_or_r32_r32(REG_EDX, REG_EDX);
+				emit_or_r32_r32(DRCTOP, REG_EDX, REG_EDX);
 
-			_setcc_r8(COND_NZ, REG_DL);
-			_shl_r32_imm(REG_EDX, 7);
-			_mov_m8abs_r8(&FLAG_V, REG_DL);
+			emit_setcc_r8(DRCTOP, COND_NZ, REG_DL);
+			emit_shl_r32_imm(DRCTOP, REG_EDX, 7);
+			emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_DL);
 		}
 
-		_mov_m32abs_r32(&REG68K_D[(word2 >> 12) & 7], REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&REG68K_D[(word2 >> 12) & 7]), REG_EAX);
 	}
 }
 
 
 M68KMAKE_OP(nbcd, 8, ., d)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r8_m8abs(REG_BL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
 
-	_mov_r8_imm(REG_AL, 0x9a);
+	emit_mov_r8_imm(DRCTOP, REG_AL, 0x9a);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 0x9a);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x9a);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	if (update_flag)
 	{
-		_mov_r8_r8(REG_CL, REG_AL);
-		_not_r32(REG_ECX);			/* Undefined V behavior */
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_AL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
 	}
 
-	_mov_r8_r8(REG_BL, REG_AL);
-	_and_r32_imm(REG_EBX, 0x0f);
+	emit_mov_r8_r8(DRCTOP, REG_BL, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f);
 
-	_cmp_r32_imm(REG_EBX, 0x0a);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_cmp_r32_imm(DRCTOP, REG_EBX, 0x0a);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
-	_and_r32_imm(REG_EAX, 0xf0);
-	_add_r32_imm(REG_EAX, 0x10);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf0);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 0x10);
 
-_resolve_link(&link2);
-	_mov_m8abs_r8(&DY, REG_AL);
+resolve_link(DRCTOP, &link2);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
 
-		_mov_m16abs_imm(&FLAG_C, CFLAG_SET);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_SET);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_SET);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_SET);
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_8();				/* Undefined N behavior */
 	}
 }
@@ -11266,75 +11266,75 @@ _resolve_link(&link2);
 
 M68KMAKE_OP(nbcd, 8, ., .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_imm(REG_BL, 0x9a);
+	emit_mov_r8_imm(DRCTOP, REG_BL, 0x9a);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EBX, REG_EAX);
-	_movzx_r32_r8(REG_EAX, REG_BL);
+	emit_sbb_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_BL);
 
-	_cmp_r32_imm(REG_EAX, 0x9a);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x9a);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	if (update_flag)
 	{
-		_mov_r8_r8(REG_CL, REG_AL);
-		_not_r32(REG_ECX);			/* Undefined V behavior */
+		emit_mov_r8_r8(DRCTOP, REG_CL, REG_AL);
+		emit_not_r32(DRCTOP, REG_ECX);			/* Undefined V behavior */
 	}
 
-	_mov_r8_r8(REG_BL, REG_AL);
-	_and_r32_imm(REG_EBX, 0x0f);
+	emit_mov_r8_r8(DRCTOP, REG_BL, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f);
 
-	_cmp_r32_imm(REG_EBX, 0x0a);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_cmp_r32_imm(DRCTOP, REG_EBX, 0x0a);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
-	_and_r32_imm(REG_EAX, 0xf0);
-	_add_r32_imm(REG_EAX, 0x10);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf0);
+	emit_add_r32_imm(DRCTOP, REG_EAX, 0x10);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	if (update_flag)
 	{
-		_and_r32_r32(REG_ECX, REG_EAX);		/* Undefined V behavior part II */
-		_mov_m8abs_r8(&FLAG_V, REG_CL);
+		emit_and_r32_r32(DRCTOP, REG_ECX, REG_EAX);		/* Undefined V behavior part II */
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_V), REG_CL);
 
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
 
-		_mov_m16abs_imm(&FLAG_C, CFLAG_SET);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_SET);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_SET);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_SET);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 
-	_jmp_near_link(&link3);
+	emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link1);
-	_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
 	if (update_flag)
 	{
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_X, XFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_X), XFLAG_CLEAR);
 	}
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	if (update_flag)
 		DRC_NFLAG_8();				/* Undefined N behavior */
 }
@@ -11344,14 +11344,14 @@ M68KMAKE_OP(neg, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m8abs(REG_EAX, &DY);
+	emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_8(drc);		/* break EBX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -11359,21 +11359,21 @@ M68KMAKE_OP(neg, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
-	_movsx_r32_r8(REG_EAX, REG_AL);
+	emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_8(drc);		/* break EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -11382,14 +11382,14 @@ M68KMAKE_OP(neg, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_16(drc);		/* break EBX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -11397,21 +11397,21 @@ M68KMAKE_OP(neg, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_movsx_r32_r16(REG_EAX, REG_AX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_16(drc);		/* break EBX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -11420,14 +11420,14 @@ M68KMAKE_OP(neg, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -11435,20 +11435,20 @@ M68KMAKE_OP(neg, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncxz_flag_neg_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -11457,16 +11457,16 @@ M68KMAKE_OP(negx, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m8abs(REG_EAX, &DY);
+	emit_movsx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_8(drc);		/* break EBX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -11474,23 +11474,23 @@ M68KMAKE_OP(negx, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
-	_movsx_r32_r8(REG_EAX, REG_AL);
+	emit_movsx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_8(drc);		/* break EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -11499,16 +11499,16 @@ M68KMAKE_OP(negx, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movsx_r32_m16abs(REG_EAX, &DY);
+	emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_16(drc);	/* break EBX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -11516,23 +11516,23 @@ M68KMAKE_OP(negx, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_movsx_r32_r16(REG_EAX, REG_AX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_16(drc);	/* break EBX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -11541,16 +11541,16 @@ M68KMAKE_OP(negx, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_32(drc);	/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -11558,22 +11558,22 @@ M68KMAKE_OP(negx, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_r32(REG_ECX, REG_EAX);
-	_neg_r32(REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_neg_r32(DRCTOP, REG_EAX);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_EBX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncxz_flag_negx_32(drc);	/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -11590,13 +11590,13 @@ M68KMAKE_OP(not, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -11604,19 +11604,19 @@ M68KMAKE_OP(not, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -11625,13 +11625,13 @@ M68KMAKE_OP(not, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -11639,19 +11639,19 @@ M68KMAKE_OP(not, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -11660,13 +11660,13 @@ M68KMAKE_OP(not, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -11674,19 +11674,19 @@ M68KMAKE_OP(not, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_not_r32(REG_EAX);
+	emit_not_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -11695,14 +11695,14 @@ M68KMAKE_OP(or, 8, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -11712,12 +11712,12 @@ M68KMAKE_OP(or, 8, er, .)
 
 	M68KMAKE_GET_OPER_AY_8;
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -11725,14 +11725,14 @@ M68KMAKE_OP(or, 16, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -11742,12 +11742,12 @@ M68KMAKE_OP(or, 16, er, .)
 
 	M68KMAKE_GET_OPER_AY_16;
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -11755,13 +11755,13 @@ M68KMAKE_OP(or, 32, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_or_r32_m32abs(REG_EAX, &DX);
+	emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11771,11 +11771,11 @@ M68KMAKE_OP(or, 32, er, .)
 
 	M68KMAKE_GET_OPER_AY_32;
 
-	_or_r32_m32abs(REG_EAX, &DX);
+	emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -11783,20 +11783,20 @@ M68KMAKE_OP(or, 8, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_m8abs(REG_BL, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -11805,20 +11805,20 @@ M68KMAKE_OP(or, 16, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r16_m16abs(REG_BX, &DX);
-	_or_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r16_m16(DRCTOP, REG_BX, MABS(&DX));
+	emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -11827,19 +11827,19 @@ M68KMAKE_OP(or, 32, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_or_r32_m32abs(REG_EAX, &DX);
+	emit_or_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -11850,13 +11850,13 @@ M68KMAKE_OP(ori, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -11866,19 +11866,19 @@ M68KMAKE_OP(ori, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_8(drc);
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -11889,12 +11889,12 @@ M68KMAKE_OP(ori, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_mov_r16_m16abs(REG_AX, &DY);
-	_or_r32_imm(REG_EAX, src);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -11904,19 +11904,19 @@ M68KMAKE_OP(ori, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_16(drc);
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -11927,12 +11927,12 @@ M68KMAKE_OP(ori, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_or_r32_imm(REG_EAX, src);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -11942,19 +11942,19 @@ M68KMAKE_OP(ori, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -11967,7 +11967,7 @@ M68KMAKE_OP(ori, 16, toc, .)
 
 	m68kdrc_get_ccr();
 
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 
 	m68kdrc_set_ccr(drc);
 }
@@ -11975,22 +11975,22 @@ M68KMAKE_OP(ori, 16, toc, .)
 
 M68KMAKE_OP(ori, 16, tos, .)
 {
-	link_info link1;
+	emit_link link1;
 
 	uint16 src = OPER_I_16();
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
 	m68kdrc_get_sr();
-	_or_r32_imm(REG_EAX, src);
+	emit_or_r32_imm(DRCTOP, REG_EAX, src);
 	m68kdrc_set_sr(drc);
 }
 
@@ -12005,16 +12005,16 @@ M68KMAKE_OP(pack, 16, rr, .)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_mov_r8_m8abs(REG_AL, &DY);
-		_add_r32_imm(REG_EAX, offset);
+		emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EAX, 0x0f);
-		_shr_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0xf0);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0xf0);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_mov_m8abs_r8(&DX, REG_AL);
+		emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 	}
 	else
 	{
@@ -12035,34 +12035,34 @@ M68KMAKE_OP(pack, 16, mm, ax7)
 
 		DRC_EA_AY_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_shl_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shl_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AY_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EAX, 0x0f);
-		_shr_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0xf0);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0xf0);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_8();
 	}
 	else
@@ -12084,34 +12084,34 @@ M68KMAKE_OP(pack, 16, mm, ay7)
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_shl_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shl_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EAX, 0x0f);
-		_shr_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0xf0);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0xf0);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AX_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_8();
 	}
 	else
@@ -12132,34 +12132,34 @@ M68KMAKE_OP(pack, 16, mm, axy7)
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_shl_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shl_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EAX, 0x0f);
-		_shr_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0xf0);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0xf0);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_8();
 	}
 	else
@@ -12181,34 +12181,34 @@ M68KMAKE_OP(pack, 16, mm, .)
 
 		DRC_EA_AY_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_shl_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shl_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AY_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_8();
 
-		_pop_r32(REG_EBX);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_pop_r32(DRCTOP, REG_EBX);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EAX, 0x0f);
-		_shr_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0xf0);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EAX, 0x0f);
+		emit_shr_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0xf0);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AX_PD_8();
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_write_8();
 	}
 	else
@@ -12246,16 +12246,16 @@ M68KMAKE_OP(pflush, 32, ., .)
 
 M68KMAKE_OP(reset, 0, ., .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	m68kdrc_output_reset();		   /* auto-disable (see m68kcpu.h) */
 	DRC_USE_CYCLES(CYC_RESET);
 }
@@ -12270,20 +12270,20 @@ M68KMAKE_OP(ror, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_ror_r8_cl(REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_ror_r8_cl(DRCTOP, REG_AL);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -12296,20 +12296,20 @@ M68KMAKE_OP(ror, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_ror_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_ror_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -12322,137 +12322,137 @@ M68KMAKE_OP(ror, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_ror_r32_imm(REG_EAX, shift);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(ror, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_ror_r8_cl(REG_AL);
-	_ror_r8_cl(REG_AL);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_ror_r8_cl(DRCTOP, REG_AL);
+	emit_ror_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_ror_r8_cl(REG_AL);
+resolve_link(DRCTOP, &link2);
+	emit_ror_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(ror, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_ror_r16_cl(REG_AX);
-	_ror_r16_cl(REG_AX);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_ror_r16_cl(DRCTOP, REG_AX);
+	emit_ror_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_ror_r16_cl(REG_AX);
-	_mov_m16abs_r16(&DY, REG_AX);
+resolve_link(DRCTOP, &link2);
+	emit_ror_r16_cl(DRCTOP, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 
 	}
 }
@@ -12460,57 +12460,57 @@ _resolve_link(&link2);
 
 M68KMAKE_OP(ror, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_ror_r32_imm(REG_EAX, 16);
-	_ror_r32_imm(REG_EAX, 16);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_ror_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_ror_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -12519,26 +12519,26 @@ M68KMAKE_OP(ror, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r8_imm(REG_CL, 1);
-	_ror_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 1);
+	emit_ror_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -12552,20 +12552,20 @@ M68KMAKE_OP(rol, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_rol_r8_cl(REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_rol_r8_cl(DRCTOP, REG_AL);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -12578,20 +12578,20 @@ M68KMAKE_OP(rol, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
-	_rol_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
+	emit_rol_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -12604,202 +12604,202 @@ M68KMAKE_OP(rol, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_rol_r32_imm(REG_EAX, shift);
+	emit_rol_r32_imm(DRCTOP, REG_EAX, shift);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(rol, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_rol_r8_cl(REG_AL);
-	_rol_r8_cl(REG_AL);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rol_r8_cl(DRCTOP, REG_AL);
+	emit_rol_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_rol_r8_cl(REG_AL);
+resolve_link(DRCTOP, &link2);
+	emit_rol_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(rol, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_mov_r8_r8(REG_CH, REG_CL);
-	_mov_r8_imm(REG_CL, 16);
-	_rol_r16_cl(REG_AX);
-	_rol_r16_cl(REG_AX);
-	_mov_r8_r8(REG_CL, REG_CH);
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rol_r16_cl(DRCTOP, REG_AX);
+	emit_rol_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_r8(DRCTOP, REG_CL, REG_CH);
 
-_resolve_link(&link2);
-	_rol_r16_cl(REG_AX);
+resolve_link(DRCTOP, &link2);
+	emit_rol_r16_cl(DRCTOP, REG_AX);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CFLAG_COND_C();
 
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(rol, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	if (update_flag)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_and_r32_imm(REG_ECX, 0x1f);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_and_r32_imm(DRCTOP, REG_ECX, 0x1f);
 
-		_mov_r32_r32(REG_EDX, REG_EAX);
-		_rol_r32_cl(REG_EDX);
+		emit_mov_r32_r32(DRCTOP, REG_EDX, REG_EAX);
+		emit_rol_r32_cl(DRCTOP, REG_EDX);
 		DRC_CFLAG_COND_C();
 
-		_mov_r32_r32(REG_ECX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EBX);
 	}
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_Z, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-	_rol_r32_imm(REG_EAX, 16);
-	_rol_r32_imm(REG_EAX, 16);
+	emit_rol_r32_imm(DRCTOP, REG_EAX, 16);
+	emit_rol_r32_imm(DRCTOP, REG_EAX, 16);
 
-_resolve_link(&link2);
-	_rol_r32_cl(REG_EAX);
+resolve_link(DRCTOP, &link2);
+	emit_rol_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 	if (update_flag)
-		_jmp_near_link(&link2);
+		emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -12808,26 +12808,26 @@ M68KMAKE_OP(rol, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r8_imm(REG_CL, 1);
-	_rol_r16_cl(REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 1);
+	emit_rol_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncz_check())
 	{
 		DRC_CFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -12841,21 +12841,21 @@ M68KMAKE_OP(roxr, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r8_cl(REG_AL);
+	emit_rcr_r8_cl(DRCTOP, REG_AL);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -12868,21 +12868,21 @@ M68KMAKE_OP(roxr, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r16_cl(REG_AX);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -12895,244 +12895,247 @@ M68KMAKE_OP(roxr, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r32_cl(REG_EAX);
+	emit_rcr_r32_cl(DRCTOP, REG_EAX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(roxr, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r8_cl(REG_AL);
+	emit_rcr_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r8_cl(REG_AL);
-	_mov_r8_imm(REG_CL, 16);
-	_rcr_r8_cl(REG_AL);
-	_rcr_r8_cl(REG_AL);
+	emit_rcr_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcr_r8_cl(DRCTOP, REG_AL);
+	emit_rcr_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(roxr, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r16_cl(REG_AX);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r16_cl(REG_AX);
-	_mov_r8_imm(REG_CL, 16);
-	_rcr_r16_cl(REG_AX);
-	_rcr_r16_cl(REG_AX);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(roxr, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r32_cl(REG_EAX);
+	emit_rcr_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r32_cl(REG_EAX);
-	_mov_r8_imm(REG_CL, 16);
-	_rcr_r32_cl(REG_EAX);
-	_rcr_r32_cl(REG_EAX);
+	emit_rcr_r32_cl(DRCTOP, REG_EAX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcr_r32_cl(DRCTOP, REG_EAX);
+	emit_rcr_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -13141,27 +13144,27 @@ M68KMAKE_OP(roxr, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r8_imm(REG_CL, 1);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 1);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcr_r16_cl(REG_AX);
+	emit_rcr_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -13175,21 +13178,21 @@ M68KMAKE_OP(roxl, 8, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r8_cl(REG_AL);
+	emit_rcl_r8_cl(DRCTOP, REG_AL);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_8();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -13202,21 +13205,21 @@ M68KMAKE_OP(roxl, 16, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r16_cl(REG_AX);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -13229,245 +13232,248 @@ M68KMAKE_OP(roxl, 32, s, .)
 	if(shift != 0)
 		DRC_USE_CYCLES(shift<<CYC_SHIFT);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_mov_r8_imm(REG_CL, shift);
+	emit_mov_r8_imm(DRCTOP, REG_CL, shift);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r32_cl(REG_EAX);
+	emit_rcl_r32_cl(DRCTOP, REG_EAX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_32();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
 M68KMAKE_OP(roxl, 8, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r8_cl(REG_AL);
+	emit_rcl_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r8_cl(REG_AL);
-	_mov_r8_imm(REG_CL, 16);
-	_rcl_r8_cl(REG_AL);
-	_rcl_r8_cl(REG_AL);
+	emit_rcl_r8_cl(DRCTOP, REG_AL);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcl_r8_cl(DRCTOP, REG_AL);
+	emit_rcl_r8_cl(DRCTOP, REG_AL);
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(roxl, 16, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_movzx_r32_m16abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r16_cl(REG_AX);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r16_cl(REG_AX);
-	_mov_r8_imm(REG_CL, 16);
-	_rcl_r16_cl(REG_AX);
-	_rcl_r16_cl(REG_AX);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
 
 M68KMAKE_OP(roxl, 32, r, .)
 {
-	link_info link1;
-	link_info link2;
-	link_info link3;
-	link_info link4;
+	emit_link link1;
+	emit_link link2;
+	emit_link link3;
+	emit_link link4;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r32_m32abs(REG_EAX, &DY);
-	_mov_r8_m8abs(REG_CL, &DX);
-	_and_r32_imm(REG_ECX, 0x3f);
-	_jcc_near_link(COND_Z, &link1);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0x3f);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link1);
 
 	if (CYC_SHIFT)
 	{
-		_mov_r32_r32(REG_EBX, REG_ECX);
-		_shl_r32_imm(REG_EBX, CYC_SHIFT);
-		_sub_r32_r32(REG_EBP, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_ECX);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, CYC_SHIFT);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_EBX);
 	}
 	else
-		_sub_r32_r32(REG_EBP, REG_ECX);
+		emit_sub_r32_r32(DRCTOP, REG_EBP, REG_ECX);
 
 	/* ASG: on the 68k, the shift count is mod 64; on the x86, the */
 	/* shift count is mod 32; we need to check for shifts of 32-63 */
 	/* and produce zero */
-	_test_r32_imm(REG_ECX, 0x20);
-	_jcc_near_link(COND_NZ, &link2);
+	emit_test_r32_imm(DRCTOP, REG_ECX, 0x20);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link2);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r32_cl(REG_EAX);
+	emit_rcl_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
 		memset(&link3, 0, sizeof link3);	// just remove warnings for GCC4
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 	}
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r32_cl(REG_EAX);
-	_mov_r8_imm(REG_CL, 16);
-	_rcl_r32_cl(REG_EAX);
-	_rcl_r32_cl(REG_EAX);
+	emit_rcl_r32_cl(DRCTOP, REG_EAX);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 16);
+	emit_rcl_r32_cl(DRCTOP, REG_EAX);
+	emit_rcl_r32_cl(DRCTOP, REG_EAX);
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 
 	if (update_flag)
 	{
 		DRC_CXFLAG_COND_C();
 
-		_jmp_near_link(&link4);
+		memset(&link4, 0, sizeof link4);	// just remove warnings for GCC4
+		emit_jmp_near_link(DRCTOP, &link4);
 	}
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (update_flag)
 	{
-		_mov_r16_m16abs(REG_DX, &FLAG_X);
-		_mov_m16abs_r16(&FLAG_C, REG_DX);
+		emit_mov_r16_m16(DRCTOP, REG_DX, MABS(&FLAG_X));
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_DX);
 
-_resolve_link(&link3);
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link3);
+resolve_link(DRCTOP, &link4);
 		DRC_NFLAG_32();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 }
 
@@ -13476,27 +13482,27 @@ M68KMAKE_OP(roxl, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r8_imm(REG_CL, 1);
+	emit_mov_r8_imm(DRCTOP, REG_CL, 1);
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_rcl_r16_cl(REG_AX);
+	emit_rcl_r16_cl(DRCTOP, REG_AX);
 
 	if (m68kdrc_update_vncxz_check())
 	{
 		DRC_CXFLAG_COND_C();
 		DRC_NFLAG_16();
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 	}
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -13513,7 +13519,7 @@ M68KMAKE_OP(rtd, 32, ., .)
 
 		m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-		_add_m32abs_imm(&REG68K_A[7], offset);
+		emit_add_m32_imm(DRCTOP, MABS(&REG68K_A[7]), offset);
 
 		m68kdrc_jump(drc);
 	}
@@ -13527,120 +13533,120 @@ M68KMAKE_OP(rtd, 32, ., .)
 
 M68KMAKE_OP(rte, 32, ., .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
 	m68kdrc_rte_callback();		   /* auto-disable (see m68kcpu.h) */
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	if (CPU_TYPE_IS_000(CPU_TYPE))
 	{
 		m68kdrc_pull_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		m68kdrc_pull_32();
 		m68kdrc_jump(drc);
 
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 		m68kdrc_set_sr(drc);
 
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 	}
 
 	else if (CPU_TYPE_IS_010(CPU_TYPE))
 	{
-		link_info link2;
-		link_info link3;
+		emit_link link2;
+		emit_link link3;
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-		_add_r32_imm(REG_EAX, 6);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+		emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_16();
 
-		_shr_r32_imm(REG_EAX, 12);
-		_jcc_near_link(COND_Z, &link2);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 12);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);
 
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 		/* Not handling bus fault (9) */
 		m68kdrc_exception_format_error();
 
-		_jmp_near_link(&link3);
+		emit_jmp_near_link(DRCTOP, &link3);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		m68kdrc_pull_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		m68kdrc_pull_32();
 		m68kdrc_fake_pull_16();	/* format word */
 
 		m68kdrc_jump(drc);
 
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 		m68kdrc_set_sr(drc);
 
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 	}
 	else	/* Otherwise it's 020 */
 	{
 		void *entry = drc->cache_top;
 
-		link_info link2;
-		link_info link3;
-		link_info link4;
-		link_info link5;
+		emit_link link2;
+		emit_link link3;
+		emit_link link4;
+		emit_link link5;
 
-		_mov_r32_m32abs(REG_EAX, &REG68K_A[7]);
-		_add_r32_imm(REG_EAX, 6);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&REG68K_A[7]));
+		emit_add_r32_imm(DRCTOP, REG_EAX, 6);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 		m68kdrc_read_16();
 
-		_shr_r32_imm(REG_EAX, 12);
-		_jcc_near_link(COND_Z, &link2);	/* 0: Normal */
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 12);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link2);	/* 0: Normal */
 
-		_sub_r32_imm(REG_EAX, 1);
-		_jcc_near_link(COND_Z, &link3);	/* 1: Throwaway */
+		emit_sub_r32_imm(DRCTOP, REG_EAX, 1);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link3);	/* 1: Throwaway */
 
-		_sub_r32_imm(REG_EAX, 1);
-		_jcc_near_link(COND_Z, &link4);	/* 2: Trap */
+		emit_sub_r32_imm(DRCTOP, REG_EAX, 1);
+		emit_jcc_near_link(DRCTOP, COND_Z, &link4);	/* 2: Trap */
 
 		/* Not handling long or short bus fault */
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 		m68kdrc_exception_format_error();
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 		/* Normal */
 		m68kdrc_pull_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		m68kdrc_pull_32();
 		m68kdrc_fake_pull_16();	/* format word */
 
 		m68kdrc_jump(drc);
 
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 		m68kdrc_set_sr(drc);
 
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 
-		_jmp_near_link(&link5);
+		emit_jmp_near_link(DRCTOP, &link5);
 
-_resolve_link(&link3);
+resolve_link(DRCTOP, &link3);
 		/* Throwaway */
 		m68kdrc_pull_16();
 		m68kdrc_fake_pull_32();	/* program counter */
@@ -13648,12 +13654,12 @@ _resolve_link(&link3);
 
 		m68kdrc_set_sr_noint(drc);
 
-		_jmp(entry);
+		emit_jmp(DRCTOP, entry);
 
-_resolve_link(&link4);
+resolve_link(DRCTOP, &link4);
 		/* Trap */
 		m68kdrc_pull_16();
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		m68kdrc_pull_32();
 		m68kdrc_fake_pull_16();	/* format word */
@@ -13661,13 +13667,13 @@ _resolve_link(&link4);
 
 		m68kdrc_jump(drc);
 
-		_pop_r32(REG_EAX);
+		emit_pop_r32(DRCTOP, REG_EAX);
 		m68kdrc_set_sr(drc);
 
-		_mov_m32abs_imm(&CPU_INSTR_MODE, INSTRUCTION_YES);
-		_mov_m32abs_imm(&CPU_RUN_MODE, RUN_MODE_NORMAL);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_INSTR_MODE), INSTRUCTION_YES);
+		emit_mov_m32_imm(DRCTOP, MABS(&CPU_RUN_MODE), RUN_MODE_NORMAL);
 
-_resolve_link(&link5);
+resolve_link(DRCTOP, &link5);
 	}
 }
 
@@ -13726,371 +13732,371 @@ M68KMAKE_OP(rts, 32, ., .)
 
 M68KMAKE_OP(sbcd, 8, rr, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 	update_flag = m68kdrc_update_vncxz_check();
 
-	_mov_r8_m8abs(REG_CL, &DY);
-	_mov_r8_r8(REG_CH, REG_CL);
-	_and_r32_imm(REG_ECX, 0xf00f);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
+	emit_mov_r8_r8(DRCTOP, REG_CH, REG_CL);
+	emit_and_r32_imm(DRCTOP, REG_ECX, 0xf00f);
 
-	_mov_r8_m8abs(REG_AL, &DX);
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DX));
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	if (update_flag)
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
-	_movzx_r32_r8(REG_EBX, REG_AH);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_movzx_r32_r8(DRCTOP, REG_EBX, REG_AH);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_BE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_BE, &link1);
 
-	_sub_r32_imm(REG_EAX, 0x105);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x105);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
-	_setcc_r8(COND_A, REG_BL);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
+	emit_setcc_r8(DRCTOP, COND_A, REG_BL);
 
-	_shl_r32_imm(REG_EBX, 7);
-
-	if (update_flag)
-		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
-
-	_shl_r32_imm(REG_EBX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 7);
 
 	if (update_flag)
-	{
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
-	}
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
-	_test_r32_imm(REG_EBX, CFLAG_SET);
-	_jcc_near_link(COND_Z, &link2);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 1);
 
-	_sub_r32_imm(REG_EAX, 0x60);
-
-_resolve_link(&link2);
 	if (update_flag)
 	{
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x60);
+
+resolve_link(DRCTOP, &link2);
+	if (update_flag)
+	{
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
+	}
+
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
 M68KMAKE_OP(sbcd, 8, mm, ax7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
-	_movzx_r32_r8(REG_EBX, REG_AH);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_movzx_r32_r8(DRCTOP, REG_EBX, REG_AH);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_BE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_BE, &link1);
 
-	_sub_r32_imm(REG_EAX, 0x105);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x105);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
-	_setcc_r8(COND_A, REG_BL);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
+	emit_setcc_r8(DRCTOP, COND_A, REG_BL);
 
-	_shl_r32_imm(REG_EBX, 7);
-
-	if (update_flag)
-		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
-
-	_shl_r32_imm(REG_EBX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 7);
 
 	if (update_flag)
-	{
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
-	}
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
-	_test_r32_imm(REG_EBX, CFLAG_SET);
-	_jcc_near_link(COND_Z, &link2);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 1);
 
-	_sub_r32_imm(REG_EAX, 0x60);
-
-_resolve_link(&link2);
 	if (update_flag)
 	{
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x60);
+
+resolve_link(DRCTOP, &link2);
+	if (update_flag)
+	{
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
+	}
+
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(sbcd, 8, mm, ay7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
-	_movzx_r32_r8(REG_EBX, REG_AH);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_movzx_r32_r8(DRCTOP, REG_EBX, REG_AH);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_BE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_BE, &link1);
 
-	_sub_r32_imm(REG_EAX, 0x105);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x105);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
-	_setcc_r8(COND_A, REG_BL);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
+	emit_setcc_r8(DRCTOP, COND_A, REG_BL);
 
-	_shl_r32_imm(REG_EBX, 7);
-
-	if (update_flag)
-		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
-
-	_shl_r32_imm(REG_EBX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 7);
 
 	if (update_flag)
-	{
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
-	}
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
-	_test_r32_imm(REG_EBX, CFLAG_SET);
-	_jcc_near_link(COND_Z, &link2);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 1);
 
-	_sub_r32_imm(REG_EAX, 0x60);
-
-_resolve_link(&link2);
 	if (update_flag)
 	{
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x60);
+
+resolve_link(DRCTOP, &link2);
+	if (update_flag)
+	{
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
+	}
+
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(sbcd, 8, mm, axy7)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
-	_movzx_r32_r8(REG_EBX, REG_AH);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_movzx_r32_r8(DRCTOP, REG_EBX, REG_AH);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_BE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_BE, &link1);
 
-	_sub_r32_imm(REG_EAX, 0x105);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x105);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
-	_setcc_r8(COND_A, REG_BL);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
+	emit_setcc_r8(DRCTOP, COND_A, REG_BL);
 
-	_shl_r32_imm(REG_EBX, 7);
-
-	if (update_flag)
-		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
-
-	_shl_r32_imm(REG_EBX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 7);
 
 	if (update_flag)
-	{
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
-	}
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
-	_test_r32_imm(REG_EBX, CFLAG_SET);
-	_jcc_near_link(COND_Z, &link2);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 1);
 
-	_sub_r32_imm(REG_EAX, 0x60);
-
-_resolve_link(&link2);
 	if (update_flag)
 	{
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x60);
+
+resolve_link(DRCTOP, &link2);
+	if (update_flag)
+	{
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
+	}
+
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
 
 M68KMAKE_OP(sbcd, 8, mm, .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 	int update_flag;
 
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
-	_push_r32(REG_EAX);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r8_r8(REG_AH, REG_AL);
-	_and_r32_imm(REG_EAX, 0xf00f);
+	emit_mov_r8_r8(DRCTOP, REG_AH, REG_AL);
+	emit_and_r32_imm(DRCTOP, REG_EAX, 0xf00f);
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	update_flag = m68kdrc_update_vncxz_check();
 	if (update_flag)
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);	/* Undefined in Motorola's M68000PM/AD rev.1 and safer to assume cleared. */
 
-	_movzx_r32_r8(REG_EBX, REG_AH);
-	_movzx_r32_r8(REG_EAX, REG_AL);
+	emit_movzx_r32_r8(DRCTOP, REG_EBX, REG_AH);
+	emit_movzx_r32_r8(DRCTOP, REG_EAX, REG_AL);
 
-	_cmp_r32_imm(REG_EAX, 9);
-	_jcc_near_link(COND_BE, &link1);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 9);
+	emit_jcc_near_link(DRCTOP, COND_BE, &link1);
 
-	_sub_r32_imm(REG_EAX, 0x105);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x105);
 
-_resolve_link(&link1);
-	_add_r32_r32(REG_EAX, REG_EBX);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_cmp_r32_imm(REG_EAX, 0x99);
-	_setcc_r8(COND_A, REG_BL);
+	emit_cmp_r32_imm(DRCTOP, REG_EAX, 0x99);
+	emit_setcc_r8(DRCTOP, COND_A, REG_BL);
 
-	_shl_r32_imm(REG_EBX, 7);
-
-	if (update_flag)
-		_mov_m8abs_r8(&FLAG_N, REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
-
-	_shl_r32_imm(REG_EBX, 1);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 7);
 
 	if (update_flag)
-	{
-		_mov_m16abs_r16(&FLAG_C, REG_BX);
-		_mov_m16abs_r16(&FLAG_X, REG_BX);
-	}
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_N), REG_BL);		/* Undefined in Motorola's M68000PM/AD rev.1 and safer to follow carry. */
 
-	_test_r32_imm(REG_EBX, CFLAG_SET);
-	_jcc_near_link(COND_Z, &link2);
+	emit_shl_r32_imm(DRCTOP, REG_EBX, 1);
 
-	_sub_r32_imm(REG_EAX, 0x60);
-
-_resolve_link(&link2);
 	if (update_flag)
 	{
-		_mov_r8_m8abs(REG_BL, &FLAG_Z);
-		_or_r32_r32(REG_EBX, REG_EAX);
-		_mov_m8abs_r8(&FLAG_Z, REG_BL);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_C), REG_BX);
+		emit_mov_m16_r16(DRCTOP, MABS(&FLAG_X), REG_BX);
 	}
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_test_r32_imm(DRCTOP, REG_EBX, CFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_Z, &link2);
+
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 0x60);
+
+resolve_link(DRCTOP, &link2);
+	if (update_flag)
+	{
+		emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&FLAG_Z));
+		emit_or_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_mov_m8_r8(DRCTOP, MABS(&FLAG_Z), REG_BL);
+	}
+
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14099,7 +14105,7 @@ M68KMAKE_OP(st, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_m8abs_imm(&DY, 0xff);
+	emit_mov_m8_imm(DRCTOP, MABS(&DY), 0xff);
 }
 
 
@@ -14107,10 +14113,10 @@ M68KMAKE_OP(st, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_push_imm(0xff);
+	emit_push_imm(DRCTOP, 0xff);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_8();
 }
@@ -14120,7 +14126,7 @@ M68KMAKE_OP(sf, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_m8abs_imm(&DY, 0);
+	emit_mov_m8_imm(DRCTOP, MABS(&DY), 0);
 }
 
 
@@ -14128,10 +14134,10 @@ M68KMAKE_OP(sf, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_push_imm(0);
+	emit_push_imm(DRCTOP, 0);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_8();
 }
@@ -14139,42 +14145,42 @@ M68KMAKE_OP(sf, 8, ., .)
 
 M68KMAKE_OP(scc, 8, ., d)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_CC;
 
-	_mov_m8abs_imm(&DY, 0xff);
+	emit_mov_m8_imm(DRCTOP, MABS(&DY), 0xff);
 	DRC_USE_CYCLES(CYC_SCC_R_TRUE);
 
-	_jmp_near_link(&link1);
+	emit_jmp_near_link(DRCTOP, &link1);
 
-_resolve_link(&m68kdrc_link_make_cc);
-	_mov_m8abs_imm(&DY, 0);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
+	emit_mov_m8_imm(DRCTOP, MABS(&DY), 0);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 }
 
 
 M68KMAKE_OP(scc, 8, ., .)
 {
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_CC;
 
-	_push_imm(0xff);
+	emit_push_imm(DRCTOP, 0xff);
 
-	_jmp_near_link(&link1);
+	emit_jmp_near_link(DRCTOP, &link1);
 
-_resolve_link(&m68kdrc_link_make_cc);
-	_push_imm(0x00);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
+	emit_push_imm(DRCTOP, 0x00);
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	m68kdrc_write_8();
 }
@@ -14183,22 +14189,22 @@ _resolve_link(&link1);
 M68KMAKE_OP(stop, 0, ., .)
 {
 	uint16 new_sr = OPER_I_16();
-	link_info link1;
+	emit_link link1;
 
 	M68KMAKE_CODE_VERIFY(0+2);
 
-	_test_m8abs_imm(&FLAG_S, SFLAG_SET);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_test_m8_imm(DRCTOP, MABS(&FLAG_S), SFLAG_SET);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_exception_privilege_violation();
 
-_resolve_link(&link1);
+resolve_link(DRCTOP, &link1);
 
 	m68ki_trace_t0();			   /* auto-disable (see m68kcpu.h) */
 
-	_or_m32abs_imm(&CPU_STOPPED, STOP_LEVEL_STOP);
+	emit_or_m32_imm(DRCTOP, MABS(&CPU_STOPPED), STOP_LEVEL_STOP);
 
-	_mov_r32_imm(REG_EAX, new_sr);
+	emit_mov_r32_imm(DRCTOP, REG_EAX, new_sr);
 	m68kdrc_set_sr(drc);
 
 	DRC_USE_ALL_CYCLES();
@@ -14209,18 +14215,18 @@ M68KMAKE_OP(sub, 8, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -14229,17 +14235,17 @@ M68KMAKE_OP(sub, 8, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_8;
-	_mov_r16_r16(REG_CX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_CX, REG_AX);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DX);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DX));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -14247,16 +14253,16 @@ M68KMAKE_OP(sub, 16, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -14264,16 +14270,16 @@ M68KMAKE_OP(sub, 16, er, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &AY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -14282,16 +14288,16 @@ M68KMAKE_OP(sub, 16, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_movzx_r32_m16abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -14299,16 +14305,16 @@ M68KMAKE_OP(sub, 32, er, d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -14316,16 +14322,16 @@ M68KMAKE_OP(sub, 32, er, a)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &AY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AY));
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -14334,16 +14340,16 @@ M68KMAKE_OP(sub, 32, er, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_r32(REG_ECX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_ECX, REG_EAX);
 
-	_mov_r32_m32abs(REG_EBX, &DX);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DX));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -14351,24 +14357,24 @@ M68KMAKE_OP(sub, 8, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DX);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DX));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14377,22 +14383,22 @@ M68KMAKE_OP(sub, 16, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_movzx_r32_m16abs(REG_ECX, &DX);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DX));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -14401,23 +14407,23 @@ M68KMAKE_OP(sub, 32, re, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_m32abs(REG_ECX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DX));
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -14426,10 +14432,10 @@ M68KMAKE_OP(suba, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_movsx_r32_m16abs(REG_ECX, &DY);
-	_sub_r32_r32(REG_EAX, REG_ECX);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -14437,10 +14443,10 @@ M68KMAKE_OP(suba, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_movsx_r32_m16abs(REG_ECX, &AY);
-	_sub_r32_r32(REG_EAX, REG_ECX);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_movsx_r32_m16(DRCTOP, REG_ECX, MABS(&AY));
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -14449,10 +14455,10 @@ M68KMAKE_OP(suba, 16, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_16;
-	_movsx_r32_r16(REG_EAX, REG_AX);
-	_mov_r32_m32abs(REG_ECX, &AX);
-	_sub_r32_r32(REG_ECX, REG_EAX);
-	_mov_m32abs_r32(&AX, REG_ECX);
+	emit_movsx_r32_r16(DRCTOP, REG_EAX, REG_AX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AX));
+	emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_ECX);
 }
 
 
@@ -14460,9 +14466,9 @@ M68KMAKE_OP(suba, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_sub_r32_m32abs(REG_EAX, &DY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_sub_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -14470,9 +14476,9 @@ M68KMAKE_OP(suba, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AX);
-	_sub_r32_m32abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&AX, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AX));
+	emit_sub_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_EAX);
 }
 
 
@@ -14481,9 +14487,9 @@ M68KMAKE_OP(suba, 32, ., .)
 	M68KMAKE_CODE_VERIFY(0);
 
 	M68KMAKE_GET_OPER_AY_32;
-	_mov_r32_m32abs(REG_ECX, &AX);
-	_sub_r32_r32(REG_ECX, REG_EAX);
-	_mov_m32abs_r32(&AX, REG_ECX);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&AX));
+	emit_sub_r32_r32(DRCTOP, REG_ECX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AX), REG_ECX);
 }
 
 
@@ -14493,17 +14499,17 @@ M68KMAKE_OP(subi, 8, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DY);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_mov_r16_imm(REG_CX, src);
+	emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -14513,22 +14519,22 @@ M68KMAKE_OP(subi, 8, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_mov_r16_imm(REG_CX, src);
+	emit_mov_r16_imm(DRCTOP, REG_CX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14539,16 +14545,16 @@ M68KMAKE_OP(subi, 16, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -14558,22 +14564,22 @@ M68KMAKE_OP(subi, 16, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -14584,16 +14590,16 @@ M68KMAKE_OP(subi, 32, ., d)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -14603,22 +14609,22 @@ M68KMAKE_OP(subi, 32, ., .)
 
 	M68KMAKE_CODE_VERIFY(2+4);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, src);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, src);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -14627,17 +14633,17 @@ M68KMAKE_OP(subq, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_EBX, REG_EBX);
-	_mov_r8_m8abs(REG_BL, &DY);
-	_mov_r16_r16(REG_AX, REG_BX);
+	emit_xor_r32_r32(DRCTOP, REG_EBX, REG_EBX);
+	emit_mov_r8_m8(DRCTOP, REG_BL, MABS(&DY));
+	emit_mov_r16_r16(DRCTOP, REG_AX, REG_BX);
 
-	_mov_r16_imm(REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r16_imm(DRCTOP, REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
@@ -14645,22 +14651,22 @@ M68KMAKE_OP(subq, 8, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
-	_mov_r16_r16(REG_BX, REG_AX);
+	emit_mov_r16_r16(DRCTOP, REG_BX, REG_AX);
 
-	_mov_r16_imm(REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r16_imm(DRCTOP, REG_CX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_8(drc);		/* break EBX, ECX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14669,16 +14675,16 @@ M68KMAKE_OP(subq, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_movzx_r32_m16(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16abs_r16(&DY, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DY), REG_AX);
 }
 
 
@@ -14686,9 +14692,9 @@ M68KMAKE_OP(subq, 16, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_sub_r32_imm(REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_sub_r32_imm(DRCTOP, REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -14696,22 +14702,22 @@ M68KMAKE_OP(subq, 16, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_16;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_16(drc);		/* break EBX, ECX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -14720,16 +14726,16 @@ M68KMAKE_OP(subq, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EBX, &DY);
-	_mov_r32_r32(REG_EAX, REG_EBX);
+	emit_mov_r32_m32(DRCTOP, REG_EBX, MABS(&DY));
+	emit_mov_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -14737,9 +14743,9 @@ M68KMAKE_OP(subq, 32, ., a)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_sub_r32_imm(REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_sub_r32_imm(DRCTOP, REG_EAX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -14747,22 +14753,22 @@ M68KMAKE_OP(subq, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_32;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
-	_mov_r32_r32(REG_EBX, REG_EAX);
+	emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
 
-	_mov_r32_imm(REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
+	emit_mov_r32_imm(DRCTOP, REG_ECX, (((REG68K_IR >> 9) - 1) & 7) + 1);
 
-	_sub_r32_r32(REG_EAX, REG_ECX);
+	emit_sub_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_sub_32(drc);		/* break EBX, ECX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -14771,18 +14777,18 @@ M68KMAKE_OP(subx, 8, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_xor_r32_r32(REG_ECX, REG_ECX);
-	_mov_r8_m8abs(REG_CL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_ECX, REG_ECX);
+	emit_mov_r8_m8(DRCTOP, REG_CL, MABS(&DY));
 
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8abs(REG_AL, &DX);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_8(drc);		/* break ECX and EBX */
 
-	_mov_m8abs_r8(&DX, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MABS(&DX), REG_AL);
 }
 
 
@@ -14790,16 +14796,16 @@ M68KMAKE_OP(subx, 16, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m16abs(REG_ECX, &DY);
+	emit_movzx_r32_m16(DRCTOP, REG_ECX, MABS(&DY));
 
-	_movzx_r32_m16abs(REG_EAX, &DX);
+	emit_movzx_r32_m16(DRCTOP, REG_EAX, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_16(drc);	/* break ECX and EBX */
 
-	_mov_m16abs_r16(&DX, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 }
 
 
@@ -14807,16 +14813,16 @@ M68KMAKE_OP(subx, 32, rr, .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_ECX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MABS(&DY));
 
-	_mov_r32_m32abs(REG_EAX, &DX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DX));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_32(drc);	/* break ECX and EBX */
 
-	_mov_m32abs_r32(&DX, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DX), REG_EAX);
 }
 
 
@@ -14825,22 +14831,22 @@ M68KMAKE_OP(subx, 8, mm, ax7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_8(drc);		/* break ECX and EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14850,22 +14856,22 @@ M68KMAKE_OP(subx, 8, mm, ay7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_8(drc);		/* break ECX and EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14875,22 +14881,22 @@ M68KMAKE_OP(subx, 8, mm, axy7)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_A7_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_8(drc);		/* break ECX and EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14900,22 +14906,22 @@ M68KMAKE_OP(subx, 8, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_8();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_8(drc);		/* break ECX and EBX */
 
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 	m68kdrc_write_8();
 }
 
@@ -14925,22 +14931,22 @@ M68KMAKE_OP(subx, 16, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_16();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_16();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_16(drc);	/* break ECX and EBX */
 
-	_mov_m16bd_r16(REG_ESP, 4, REG_AX);
+	emit_mov_m16_r16(DRCTOP, MBD(REG_ESP, 4), REG_AX);
 	m68kdrc_write_16();
 }
 
@@ -14950,22 +14956,22 @@ M68KMAKE_OP(subx, 32, mm, .)
 	M68KMAKE_CODE_VERIFY(2);
 
 	DRC_OPER_AY_PD_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
 	DRC_EA_AX_PD_32();
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_32();
 
-	_mov_r32_m32bd(REG_ECX, REG_ESP, 4);
+	emit_mov_r32_m32(DRCTOP, REG_ECX, MBD(REG_ESP, 4));
 
 	DRC_XFLAG_AS_COND_C();			/* break EDX */
-	_sbb_r32_r32(REG_EAX, REG_ECX);
+	emit_sbb_r32_r32(DRCTOP, REG_EAX, REG_ECX);
 
 	m68kdrc_vncxz_flag_subx_32(drc);	/* break ECX and EBX */
 
-	_mov_m32bd_r32(REG_ESP, 4, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MBD(REG_ESP, 4), REG_EAX);
 	m68kdrc_write_32();
 }
 
@@ -14974,12 +14980,12 @@ M68KMAKE_OP(swap, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
-	_ror_r32_imm(REG_EAX, 16);
+	emit_ror_r32_imm(DRCTOP, REG_EAX, 16);
 	m68kdrc_vncz_flag_move_32(drc);		/* break ECX */
 
-	_mov_m32abs_r32(&DY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&DY), REG_EAX);
 }
 
 
@@ -14987,46 +14993,46 @@ M68KMAKE_OP(tas, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(2);
 
-	_movzx_r32_m8abs(REG_EAX, &DY);
+	emit_movzx_r32_m8(DRCTOP, REG_EAX, MABS(&DY));
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 		DRC_NFLAG_8();
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_or_r32_imm(REG_EAX, 0x80);
-	_mov_m8abs_r8(&DY, REG_AL);
+	emit_or_r32_imm(DRCTOP, REG_EAX, 0x80);
+	emit_mov_m8_r8(DRCTOP, MABS(&DY), REG_AL);
 }
 
 
 M68KMAKE_OP(tas, 8, ., .)
 {
-	link_info link1;
-	link_info link2;
+	emit_link link1;
+	emit_link link2;
 
 	M68KMAKE_CODE_VERIFY(2);
 
-	_sub_r32_imm(REG_ESP, 4);
+	emit_sub_r32_imm(DRCTOP, REG_ESP, 4);
 
 	M68KMAKE_GET_EA_AY_8;
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 
-	_push_r32(REG_EAX);
+	emit_push_r32(DRCTOP, REG_EAX);
 	m68kdrc_read_8();
 
 	if (m68kdrc_update_vncz_check())
 	{
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
 		DRC_NFLAG_8();
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
-		_mov_m8abs_imm(&FLAG_V, VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
+		emit_mov_m8_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
 	}
 
-	_or_r32_imm(REG_EAX, 0x80);
-	_mov_m8bd_r8(REG_ESP, 4, REG_AL);
+	emit_or_r32_imm(DRCTOP, REG_EAX, 0x80);
+	emit_mov_m8_r8(DRCTOP, MBD(REG_ESP, 4), REG_AL);
 
 	/* The Genesis/Megadrive games Gargoyles and Ex-Mutants need the TAS writeback
        disabled in order to function properly.  Some Amiga software may also rely
@@ -15034,16 +15040,16 @@ M68KMAKE_OP(tas, 8, ., .)
        will be needed. */
 
 	m68kdrc_tas_callback();
-	_sub_r32_imm(REG_EAX, 1);
-	_jcc_near_link(COND_NZ, &link1);
+	emit_sub_r32_imm(DRCTOP, REG_EAX, 1);
+	emit_jcc_near_link(DRCTOP, COND_NZ, &link1);
 
 	m68kdrc_write_8();
-	_jmp_near_link(&link2);
+	emit_jmp_near_link(DRCTOP, &link2);
 
-_resolve_link(&link1);
-	_add_r32_imm(REG_ESP, 8);
+resolve_link(DRCTOP, &link1);
+	emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 
-_resolve_link(&link2);
+resolve_link(DRCTOP, &link2);
 }
 
 
@@ -15155,7 +15161,7 @@ M68KMAKE_OP(trapcc, 0, ., .)
 
 		m68kdrc_exception_trap(EXCEPTION_TRAPV);	/* HJB 990403 */
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 	}
 	else
 	{
@@ -15175,7 +15181,7 @@ M68KMAKE_OP(trapcc, 16, ., .)
 
 		m68kdrc_exception_trap(EXCEPTION_TRAPV);	/* HJB 990403 */
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 		REG68K_PC += 2;
 	}
 	else
@@ -15196,7 +15202,7 @@ M68KMAKE_OP(trapcc, 32, ., .)
 
 		m68kdrc_exception_trap(EXCEPTION_TRAPV);	/* HJB 990403 */
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 		REG68K_PC += 4;
 	}
 	else
@@ -15215,7 +15221,7 @@ M68KMAKE_OP(trapv, 0, ., .)
 
 	m68kdrc_exception_trap(EXCEPTION_TRAPV);	/* HJB 990403 */
 
-_resolve_link(&m68kdrc_link_make_cc);
+resolve_link(DRCTOP, &m68kdrc_link_make_cc);
 }
 
 
@@ -15223,13 +15229,13 @@ M68KMAKE_OP(tst, 8, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r8_m8abs(REG_AL, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r8_m8(DRCTOP, REG_AL, MABS(&DY));
 
 	DRC_NFLAG_8();
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15240,9 +15246,9 @@ M68KMAKE_OP(tst, 8, ., .)
 	M68KMAKE_GET_OPER_AY_8;
 
 	DRC_NFLAG_8();
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15253,9 +15259,9 @@ M68KMAKE_OP(tst, 8, ., pcdi)
 	DRC_OPER_PCDI_8();
 
 	DRC_NFLAG_8();
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15268,9 +15274,9 @@ M68KMAKE_OP(tst, 8, ., pcix)
 		DRC_OPER_PCIX_8();
 
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
 	}
 	else
@@ -15290,9 +15296,9 @@ M68KMAKE_OP(tst, 8, ., i)
 		DRC_OPER_I_8();
 
 		DRC_NFLAG_8();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 
 	}
 	else
@@ -15307,13 +15313,13 @@ M68KMAKE_OP(tst, 16, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_xor_r32_r32(REG_EAX, REG_EAX);
-	_mov_r16_m16abs(REG_AX, &DY);
+	emit_xor_r32_r32(DRCTOP, REG_EAX, REG_EAX);
+	emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
 
 	DRC_NFLAG_16();
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15323,12 +15329,12 @@ M68KMAKE_OP(tst, 16, ., a)
 	{
 		M68KMAKE_CODE_VERIFY(0);
 
-		_movsx_r32_m16abs(REG_EAX, &AY);
+		emit_movsx_r32_m16(DRCTOP, REG_EAX, MABS(&AY));
 
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15345,9 +15351,9 @@ M68KMAKE_OP(tst, 16, ., .)
 	M68KMAKE_GET_OPER_AY_16;
 
 	DRC_NFLAG_16();
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15360,9 +15366,9 @@ M68KMAKE_OP(tst, 16, ., pcdi)
 		DRC_OPER_PCDI_16();
 
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15381,9 +15387,9 @@ M68KMAKE_OP(tst, 16, ., pcix)
 		DRC_OPER_PCIX_16();
 
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15402,9 +15408,9 @@ M68KMAKE_OP(tst, 16, ., i)
 		DRC_OPER_I_16();
 
 		DRC_NFLAG_16();
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15418,12 +15424,12 @@ M68KMAKE_OP(tst, 32, ., d)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &DY);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&DY));
 
 	DRC_NFLAG_32();		/* break ECX */
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15433,12 +15439,12 @@ M68KMAKE_OP(tst, 32, ., a)
 	{
 		M68KMAKE_CODE_VERIFY(0);
 
-		_mov_r32_m32abs(REG_EAX, &AY);
+		emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
 
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15455,9 +15461,9 @@ M68KMAKE_OP(tst, 32, ., .)
 	M68KMAKE_GET_OPER_AY_32;
 
 	DRC_NFLAG_32();		/* break ECX */
-	_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-	_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-	_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+	emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+	emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+	emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 }
 
 
@@ -15470,9 +15476,9 @@ M68KMAKE_OP(tst, 32, ., pcdi)
 		DRC_OPER_PCDI_32();
 
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15491,9 +15497,9 @@ M68KMAKE_OP(tst, 32, ., pcix)
 		DRC_OPER_PCIX_32();
 
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15512,9 +15518,9 @@ M68KMAKE_OP(tst, 32, ., i)
 		DRC_OPER_I_32();
 
 		DRC_NFLAG_32();		/* break ECX */
-		_mov_m32abs_r32(&FLAG_Z, REG_EAX);
-		_mov_m32abs_imm(&FLAG_V, VFLAG_CLEAR);
-		_mov_m16abs_imm(&FLAG_C, CFLAG_CLEAR);
+		emit_mov_m32_r32(DRCTOP, MABS(&FLAG_Z), REG_EAX);
+		emit_mov_m32_imm(DRCTOP, MABS(&FLAG_V), VFLAG_CLEAR);
+		emit_mov_m16_imm(DRCTOP, MABS(&FLAG_C), CFLAG_CLEAR);
 	}
 	else
 	{
@@ -15528,10 +15534,10 @@ M68KMAKE_OP(unlk, 32, ., a7)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_push_m32abs(&REG68K_A[7]);
+	emit_push_m32(DRCTOP, MABS(&REG68K_A[7]));
 	m68kdrc_read_32();
 
-	_mov_m32abs_r32(&REG68K_A[7], REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_A[7]), REG_EAX);
 }
 
 
@@ -15539,12 +15545,12 @@ M68KMAKE_OP(unlk, 32, ., .)
 {
 	M68KMAKE_CODE_VERIFY(0);
 
-	_mov_r32_m32abs(REG_EAX, &AY);
-	_mov_m32abs_r32(&REG68K_A[7], REG_EAX);
+	emit_mov_r32_m32(DRCTOP, REG_EAX, MABS(&AY));
+	emit_mov_m32_r32(DRCTOP, MABS(&REG68K_A[7]), REG_EAX);
 
 	m68kdrc_pull_32();
 
-	_mov_m32abs_r32(&AY, REG_EAX);
+	emit_mov_m32_r32(DRCTOP, MABS(&AY), REG_EAX);
 }
 
 
@@ -15557,16 +15563,16 @@ M68KMAKE_OP(unpk, 16, rr, .)
 
 		M68KMAKE_CODE_VERIFY(0+2);
 
-		_mov_r16_m16abs(REG_AX, &DY);
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, 0x000f);
-		_shl_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0x0f00);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r16_m16(DRCTOP, REG_AX, MABS(&DY));
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x000f);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f00);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_mov_m16abs_r16(&DX, REG_AX);
+		emit_mov_m16_r16(DRCTOP, MABS(&DX), REG_AX);
 	}
 	else
 	{
@@ -15587,19 +15593,19 @@ M68KMAKE_OP(unpk, 16, mm, ax7)
 
 		DRC_OPER_AY_PD_8();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, 0x000f);
-		_shl_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0x0f00);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x000f);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f00);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_shr_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 		m68kdrc_write_8();
@@ -15626,19 +15632,19 @@ M68KMAKE_OP(unpk, 16, mm, ay7)
 
 		DRC_OPER_A7_PD_8();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, 0x000f);
-		_shl_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0x0f00);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x000f);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f00);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_shr_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AX_PD_8();
 		m68kdrc_write_8();
@@ -15664,19 +15670,19 @@ M68KMAKE_OP(unpk, 16, mm, axy7)
 
 		DRC_OPER_A7_PD_8();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, 0x000f);
-		_shl_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0x0f00);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x000f);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f00);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_shr_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_A7_PD_8();
 		m68kdrc_write_8();
@@ -15703,19 +15709,19 @@ M68KMAKE_OP(unpk, 16, mm, .)
 
 		DRC_OPER_AY_PD_8();
 
-		_mov_r32_r32(REG_EBX, REG_EAX);
-		_and_r32_imm(REG_EBX, 0x000f);
-		_shl_r32_imm(REG_EBX, 4);
-		_and_r32_imm(REG_EBX, 0x0f00);
-		_or_r32_r32(REG_EAX, REG_EBX);
+		emit_mov_r32_r32(DRCTOP, REG_EBX, REG_EAX);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x000f);
+		emit_shl_r32_imm(DRCTOP, REG_EBX, 4);
+		emit_and_r32_imm(DRCTOP, REG_EBX, 0x0f00);
+		emit_or_r32_r32(DRCTOP, REG_EAX, REG_EBX);
 
 		offset = OPER_I_16();
-		_add_r32_imm(REG_EAX, offset);
+		emit_add_r32_imm(DRCTOP, REG_EAX, offset);
 
-		_push_r32(REG_EAX);
+		emit_push_r32(DRCTOP, REG_EAX);
 
-		_shr_r32_imm(REG_EAX, 8);
-		_push_r32(REG_EAX);
+		emit_shr_r32_imm(DRCTOP, REG_EAX, 8);
+		emit_push_r32(DRCTOP, REG_EAX);
 
 		DRC_EA_AX_PD_8();
 		m68kdrc_write_8();

@@ -290,7 +290,7 @@ chd_error open_disk_image_options(core_options *options, const game_driver *game
 chd_file *get_disk_handle(int diskindex);
 
 /* get bios number */
-int determine_bios_rom(const rom_entry *romp);
+int determine_bios_rom(core_options *options, const rom_entry *romp);
 
 /* ROM processing */
 void rom_init(running_machine *machine, const rom_entry *romp);
