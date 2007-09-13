@@ -1416,7 +1416,7 @@ static DRIVER_INIT( neogeo )
 {
 #ifdef USE_NEOGEO_HACKS
 	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
-	system_bios = determine_bios_rom(machine->gamedrv->rom);
+	system_bios = determine_bios_rom(mame_options(), machine->gamedrv->rom);
 
 	/* irritating maze uses a trackball */
 	if (!strcmp(machine->gamedrv->name,"irrmaze"))
