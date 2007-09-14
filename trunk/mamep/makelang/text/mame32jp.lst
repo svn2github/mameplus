@@ -99,9 +99,10 @@ moonaln	ムーンエイリアン	むーんえいりあん_1	[Nichibutsu] (Karateco license)
 galap1	ギャラクシアン / Space Invaders Galactica	ぎゃらくしあん	hack
 galap4	ギャラクシアン / Galaxian Part 4	ぎゃらくしあん	hack
 galturbo	ギャラクシアン / Galaxian Turbo	ぎゃらくしあん	hack
-swarm	ギャラクシアン / Swarm	ぎゃらくしあん	hack
+swarm	ギャラクシアン / Swarm (ハック)	ぎゃらくしあん	[Namco] (Sub-Electro bootleg)
 zerotime	ギャラクシアン / Zero Time	ぎゃらくしあん	Petaco S.A.
-starfght	ギャラクシアン / Star Fighter	ぎゃらくしあん	Jeutel
+starfght	ギャラクシアン / Star Fighter (海賊版)	ぎゃらくしあん	Jeutel
+galaxbsf	ギャラクシアン (海賊版)	ぎゃらくしあん	bootleg
 tst_galx	ギャラクシアン / Test ROM	ぎゃらくしあん	Test ROM
 gmgalax	パックマン / Ghostmuncher Galaxian (海賊版)	ぱっくまん	bootleg
 pisces	パイシーズ	ぱいしーず	Subelectro
@@ -181,7 +182,8 @@ trvchlng	トリビアチャレンジ	とりびあちゃれんじ	Joyland (Senko License)
 luctoday	ラッキートゥデイ	らっきーとぅでい	Sigma
 chewing	チューイングガム	ちゅーいんぐがむ	unknown
 catacomb	カタコンベ	かたこんべ	MTM Games
-ckongg	ドンキーコング / Crazy Kong (galaxian)	どんきーこんぐ_1	bootleg
+ckongg	ドンキーコング / Crazy Kong (Galaxian hardware) (海賊版 set 1)	どんきーこんぐ_1	bootleg
+kkgalax	ドンキーコング / Crazy Kong (Galaxian hardware) (海賊版 set 2)	どんきーこんぐ_1	bootleg
 porter	ポートマン (Moon Cresta hardware) (海賊版)	ぽーとまん	[Nova Games Ltd.] (bootleg)
 rockclim	ロッククライマー	ろっくくらいまー	Taito
 scramble	スクランブル	すくらんぶる	Konami
@@ -271,6 +273,7 @@ scorpion	スコーピオン (set 1)	すこーぴおん	Zaccaria
 scrpiona	スコーピオン (set 2)	すこーぴおん	Zaccaria
 scrpionb	スコーピオン (set 3)	すこーぴおん	Zaccaria
 ad2083	A.D.2083	えーでぃー2083	Midcoin
+turpins	ターピン (Scramble hardware) (海賊版)	たーぴん	[Sega] (bootleg)
 cclimber	クレイジークライマー (USA版)	くれいじーくらいまー_1	Nichibutsu
 cclimbrj	クレイジークライマー (日本版)	くれいじーくらいまー_1	Nichibutsu
 ccboot	クレイジークライマー (海賊版 set 1)	くれいじーくらいまー_1	bootleg
@@ -1456,9 +1459,10 @@ rastsag1	ラスタンサーガ (日本版 rev 1)	らすたんさーが_1	Taito Corporation
 topspeed	フルスロットル / Top Speed (海外版)	ふるすろっとる	Taito Corporation Japan
 topspedu	フルスロットル / Top Speed (USA版)	ふるすろっとる	Taito America Corporation (Romstar license)
 fullthrl	フルスロットル (日本版)	ふるすろっとる	Taito Corporation
-opwolf	オペレーションウルフ (海外版)	おぺれーしょんうるふ_1	Taito Corporation Japan
+opwolf	オペレーションウルフ (海外版 set 1)	おぺれーしょんうるふ_1	Taito Corporation Japan
+opwolfa	オペレーションウルフ (海外版 set 2)	おぺれーしょんうるふ_1	Taito Corporation Japan
 opwolfu	オペレーションウルフ (USA版)	おぺれーしょんうるふ_1	Taito America Corporation
-opwolfb	オペレーションウルフ / Operation Bear	おぺれーしょんうるふ_1	bootleg
+opwolfb	オペレーションウルフ / Operation Bear (海賊版)	おぺれーしょんうるふ_1	[Taito] (Bear Corporation Korea bootleg)
 othunder	オペレーションサンダーボルト (海外版)	おぺれーしょんさんだーぼると	Taito Corporation Japan
 othundu	オペレーションサンダーボルト (USA版)	おぺれーしょんさんだーぼると	Taito America Corporation
 othunduo	オペレーションサンダーボルト (USA版 older)	おぺれーしょんさんだーぼると	Taito America Corporation
@@ -3719,6 +3723,7 @@ stadh96a	スタジアムヒーロー'96 (ver EAJ)	すたじあむひーろー_296	Data East Corpor
 senjyo	センジョウ	せんじょう	Tehkan
 starforc	スターフォース	すたーふぉーす	Tehkan
 starfore	スターフォース (encrypted)	すたーふぉーす	Tehkan
+starforb	スターフォース (encrypted) (海賊版)	すたーふぉーす	[Tehkan] (bootleg)
 megaforc	スターフォース / Mega Force	すたーふぉーす	Tehkan (Video Ware license)
 baluba	バルバルークの伝説	ばるばるーくのでんせつ	Able Corp, Ltd.
 bombjack	ボンジャック (set 1)	ぼんじゃっく	Tehkan
@@ -5053,6 +5058,7 @@ sbsgomo	宇宙戦艦ゴモラ	うちゅうせんかんごもら	UPL
 vandyke	バンダイク (日本版)	ばんだいく	UPL
 vandyjal	バンダイク (Jaleco set 1)	ばんだいく	UPL (Jaleco license)
 vandyja2	バンダイク (Jaleco set 2)	ばんだいく	UPL (Jaleco license)
+vandykeb	バンダイク (with PIC16c57) (海賊版)	ばんだいく	[UPL] (bootleg)
 blkheart	ブラックハート	ぶらっくはーと	UPL
 blkhearj	ブラックハート (日本版)	ぶらっくはーと	UPL
 acrobatm	アクロバットミッション	あくろばっとみっしょん	UPL (Taito license)
@@ -6285,6 +6291,7 @@ qos	ア・クエスチョン・オブ・スポーツ (39-960-099)	あくえすちょんおぶすぽーつ	BFM
 qosa	ア・クエスチョン・オブ・スポーツ (39-960-089)	あくえすちょんおぶすぽーつ	BFM
 qntoondo	クイントゥーン (オランダ版 Game Card 95-750-136)	くいんとぅーん	BFM/ELAM
 quintoon	クイントゥーン (UK版 Game Card 95-750-206)	くいんとぅーん	BFM
+quintond	クイントゥーン (UK版 Game Card 95-751-206 datapak)	くいんとぅーん	BFM
 quintono	クイントゥーン (UK版 Game Card 95-750-203)	くいんとぅーん	BFM
 qntoond	クイントゥーン (オランダ版 Game Card 95-750-243)	くいんとぅーん	BFM/ELAM
 pokio	ポキオ (オランダ版 Game Card 95-750-278)	ぽきお	BFM/ELAM

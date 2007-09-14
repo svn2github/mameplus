@@ -60,7 +60,6 @@
 #define OPTION_STATE_DIRECTORY		"state_directory"
 #define OPTION_SNAPSHOT_DIRECTORY	"snapshot_directory"
 #define OPTION_DIFF_DIRECTORY		"diff_directory"
-#define OPTION_TRANSLATION_DIRECTORY		"translation_directory"
 #define OPTION_COMMENT_DIRECTORY	"comment_directory"
 #ifdef USE_HISCORE
 #define OPTION_HISCORE_DIRECTORY	"hiscore_directory"
