@@ -1046,6 +1046,8 @@ static options_data *find_entry_data(core_options *opts, const char *string, int
 	int hash_entry = hash_value(opts, string);
 	options_hash_entry *link;
 
+	if (!opts) return NULL;
+
 	/* scan all entries */
 	for (link = opts->hashtable[hash_entry]; link != NULL; link = link->next)
 		if (!(link->data->flags & OPTION_HEADER) && link->name != NULL && astring_cmpc(link->name, string) == 0)
@@ -1075,6 +1077,8 @@ static void update_data(core_options *opts, options_data *data, const char *newd
 	const unsigned char *datastart = newdata;
 	float f;
 	int i;
+
+	if (!opts) return;
 
 	/* strip off leading/trailing spaces */
 	while (isspace(*datastart) && datastart <= dataend)
@@ -1191,6 +1195,8 @@ static void message(core_options *opts, options_message msgtype, const char *for
 {
 	char buf[1024];
 	va_list argptr;
+
+	if (!opts) return;
 
 	/* output a message if there is a non-NULL handler for it */
 	if (opts->output[msgtype] != NULL)
