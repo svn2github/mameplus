@@ -2249,6 +2249,11 @@ static void TabSelectionChanged(void)
 	UpdateScreenShot();
 }
 
+static void debug_printf(const char *s)
+{
+	dwprintf(TEXT("%s"), _UTF8Unicode(s));
+}
+
 static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	WNDCLASS wndclass;
@@ -2256,19 +2261,28 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	int      i;
 	int      nSplitterCount;
 	LONG     common_control_version = GetCommonControlVersion();
+	core_options *options;
 
 	srand((unsigned)time(NULL));
 
 	init_resource_tracking();
 	begin_resource_tracking();
 
+	/* set up initial option system */
+	options = mame_options_init(mame_win_options);
+
+	/* set up output callbacks */
+	options_set_output_callback(options, OPTMSG_INFO, debug_printf);
+	options_set_output_callback(options, OPTMSG_WARNING, debug_printf);
+	options_set_output_callback(options, OPTMSG_ERROR, debug_printf);
+
+	/* initialzied ui lang system */
+	lang_set_langcode(options, UI_LANG_EN_US);
+
 #ifdef DRIVER_SWITCH
 	{
-		core_options *options;
 		mame_file *file;
 		file_error filerr;
-
-		options = mame_options_init(mame_win_options);
 
 		filerr = mame_fopen_options(options, SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
@@ -2278,8 +2292,6 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		}
 
 		assign_drivers(options);
-
-		options_free(options);
 	}
 #endif /* DRIVER_SWITCH */
 
@@ -2347,6 +2359,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		if (IDNO == MessageBoxA(0, buf, MAME32NAME " Outdated comctl32.dll Warning", MB_YESNO | MB_ICONWARNING))
 			return FALSE;
 	}
+
+	/* finished initial option system */
+	options_free(options);
+	options = NULL;
 
 	dprintf("about to init options");
 	OptionsInit();
