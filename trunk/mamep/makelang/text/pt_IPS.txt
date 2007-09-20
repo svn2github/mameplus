@@ -1,3 +1,15 @@
+# 20
+CPS1
+Capcom Power System 1
+
+# 30
+CPS2
+Capcom Power System 1
+
+# Title
+IPS
+IPS
+
 # 14
 Misc
 Misto
@@ -6,23 +18,11 @@ Misto
 Neo-Geo
 Neo-Geo
 
+# 93
+PGM
+PolyGame Master
+
 # 7
 Translation
 Tradução
-
-# 20
-CPS1
-
-
-# 30
-CPS2
-
-
-# Title
-IPS
-
-
-# 93
-PGM
-
 
