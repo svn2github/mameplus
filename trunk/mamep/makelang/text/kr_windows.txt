@@ -7,6 +7,10 @@
 (주요)
 
 #
+Assign joystick %s to player %d\n
+%s 조이스틱을 플레이어 %d에 할당\n
+
+#
 DIRECT3D-SPECIFIC OPTIONS
 DIRECT3D-전용 옵션
 
@@ -511,6 +515,10 @@ Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
 #
+RawInput: APIs detected\n
+로우입력:APIs 탐지됨\n
+
+#
 Sound buffer: overflows=%d underflows=%d\n
 사운드 버퍼: 오버플로=%d 언더플로=%d\n
 
@@ -569,6 +577,10 @@ Using %s scale effect\n
 #
 Video: Monitor %p = \"%s\" %s\n
 비디오: 모니터 %p = \"%s\" %s\n
+
+#
+WINDOWS DEBUGGING OPTIONS
+윈도우즈 디버깅 옵션
 
 #
 WINDOWS PERFORMANCE OPTIONS

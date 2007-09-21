@@ -719,6 +719,10 @@ Adder %d Output Only (%d:%d)
 %d 출력 한정 (%d:%d)
 
 #
+Adder and Lamps
+애더 및 램프
+
+#
 Adder,VFD and Lamp Matrix
 Adder, VFD 그리고 램프 매트릭스
 
@@ -891,10 +895,6 @@ CONFIGURATION COMMANDS
 설정 명령
 
 #
-CONFIGURATION OPTIONS
-설정 옵션
-
-#
 CORE ARTWORK OPTIONS
 코어 아트워크 옵션
 
@@ -913,6 +913,10 @@ CORE DEBUGGING OPTIONS
 #
 CORE FILENAME OPTIONS
 코어 파일명 옵션
+
+#
+CORE INPUT AUTOMATIC ENABLE OPTIONS
+코어 입력 자동화 사용 옵션
 
 #
 CORE INPUT OPTIONS
@@ -1139,6 +1143,10 @@ Config Menu
 설정 메뉴
 
 #
+Configure General Inputs
+일반 입력 설정
+
+#
 Configure Watchpoints
 조사점 설정
 
@@ -1363,6 +1371,10 @@ Dip Switches
 딥스위치
 
 #
+Directories
+디렉토리
+
+#
 Disable All Coins
 모든 코인 비활성화
 
@@ -1429,6 +1441,10 @@ Dual Under-Over (Gapless)
 #
 EEPROM
 EEPROM
+
+#
+ERROR: %s/%s: IPS data is empty\n
+오류: %s/%s: IPS 데이터가 없습니다\n
 
 #
 ERROR: required files are missing, the game cannot be run.
@@ -1499,6 +1515,10 @@ English
 영어
 
 #
+Enter BIOS
+바이오스 입력
+
+#
 Equal
 같음
 
@@ -1545,6 +1565,10 @@ Error: unknown option: %s\n
 #
 Europe
 유럽
+
+#
+Exit
+끝내기
 
 #
 Expert
@@ -2461,6 +2485,10 @@ Nihongo
 #
 No
 번호
+
+#
+No Driver Loaded
+드라이버 없음
 
 #
 No previous values saved
@@ -5043,10 +5071,6 @@ Unable to allocate snapshot render target\n
 스크린샷 생성 타겟을 위치할 수 없습니다\n
 
 #
-Unable to create file %s.ini\n
-%s.ini 파일을 생성할 수 없습니다\n
-
-#
 Unable to load due to pending anonymous timers. See error.log for details.
 알수없는 타이머로 인해 불러올 수 없음. 자세한 내용은 error.log에
 
@@ -5217,10 +5241,6 @@ Uptime
 #
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.
-
-#
-Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
-사용법:  MAME 게임명 [옵션]\n\n        MAME -showusage    간단한 옵션 목록\n        MAME -showconfig   설정 옵션 목록\n        MAME -createconfig  mame.ini생성\n\n사용법 설명은, windows.txt 파일을 참고하십시오\n
 
 #
 Usage: %s [%s] [options]\n\nOptions:\n
@@ -5447,10 +5467,6 @@ analog joystick
 아날로그 조이스틱
 
 #
-and the MAME team
-그리고 MAME 팀
-
-#
 assert: %s:%d: %s
 알림: %s:%d: %s
 
@@ -5533,6 +5549,10 @@ command list database name
 #
 compare files with known MAME roms
 알려진 MAME 롬과 비교
+
+#
+convert lightgun button 2 into offscreen reload
+라이트건 버튼 2를 화면 밖 재장전으로 변환
 
 #
 create the default configuration file
@@ -5699,6 +5719,14 @@ enable overlays if artwork is enabled and available
 아트워크이 존재하고 사용 설정되었을때 오버레이 사용
 
 #
+enable separate input from each keyboard device (if present)
+각각의 키보드 장치에서 입력을 분리 (존재할 경우)
+
+#
+enable separate input from each mouse device (if present)
+각각의 마우스 장치에서 입력을 분리 (존재할 경우)
+
+#
 enable sleeping, which gives time back to other applications when idle
 사용하지 않을 때 다른 프로그램에게 우선권을 주기위해 슬립 기능사용
 
@@ -5745,6 +5773,10 @@ error: invalid value for language: %s\nUse %s\n
 #
 error: invalid value for palette: %s\n
 오류: 잘못된 팔레트 값: %s\n
+
+#
+explicit joystick map, or auto to auto-select
+정확한 조이스틱 맵, 또는 자동을 자동 선택으로
 
 #
 fast 
@@ -6031,8 +6063,8 @@ set %s
 %s 설정
 
 #
-set frameskip to fixed value, 0-12 (autoframeskip must be disabled)
-프레임스킵 값 설정, 0-12 (자동 프레임스킵이 꺼져있어야 됨)
+set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
+프레임스킵을 고정값으로 설정, 0-10 (자동 프레임스킵이 꺼져 있어야 함)
 
 #
 set sound output sample rate
