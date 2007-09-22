@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.118u5      #
+#      Mameinfo.dat日本語版 v0.119       #
 #                                        #
-#           September 8, 2007            #
+#           September 22, 2007           #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,30 +12,27 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：867 翻訳済：844
-# 追加項目：342 合計：1209
+# Tester報告：873 翻訳済：847
+# 追加項目：342 合計：1215
 #
 
 
-$info=guwange
+$info=720
 $mame
 [バグ]
 
-- ゲーム開始直後にクラッシュする。 cave0118u5red, AWJ / twisty
+- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
 
 $end
 
-$info=donpachi
+$info=combasc
 $mame
-[情報]
-
-- 全ての設定はサービスモード(F2キーをしばらく押して入る)で行う。
-DIPスイッチは使わない。
-
-
 [バグ]
 
-- ゲーム開始直後にクラッシュする。 cave0118u5red, AWJ / twisty
+- 2回目のFiring Range面で、画面の上下にゴミグラフィックが出る。0.118では正常。 combasc0119gre, izius
+
+
+- 面クリア場面で、キャラクタ名の一部が表示されない。 combasc0102u1gre, RansAckeR
 
 $end
 
@@ -55,14 +52,6 @@ $mame
 
 $end
 
-$info=radikalb
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 radikalb0118u5red, Machone
-
-$end
-
 $info=gijoe
 $mame
 [バグ]
@@ -71,6 +60,29 @@ $mame
 
 
 - プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+
+$end
+
+$info=jrpacman
+$mame
+[情報]
+
+- 2面で、
+画面をずっと右にスクロールさせると、敵が1、2匹左上にはまることがある。
+これはオリジナルの動作。
+
+
+[バグ]
+
+- スプライトが正しくクリッピングされていない。 jrpacman0119gre, CyborgSuperman / Tafoid / twisty
+
+$end
+
+$info=pengo
+$mame
+[バグ]
+
+- スプライトが正しくクリッピングされていない。 jrpacman0119gre, CyborgSuperman / Tafoid / twisty
 
 $end
 
@@ -125,28 +137,6 @@ $mame
 
 $end
 
-$info=ordyne
-$mame
-[バグ]
-
-- 左右のサウンドチャンネルが反対。 ordyne0118u4gre, Pelota
-
-$end
-
-$info=pacland
-$mame
-[バグ]
-
-- 3面の水部分が黒く表示化けしている。また2面の森シーンの表示プライオリティがおかしい。 pacland0118u5yel, Machone
-
-
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-
-- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
-
-$end
-
 $info=polepos2
 $mame
 [バグ]
@@ -172,6 +162,55 @@ $mame
 
 $end
 
+$info=sharrier
+$mame
+[バグ]
+
+- デバッグビルドで、特定のボイスが再生されようとするとクラッシュする。ボスを倒した後の「You're doing great!」など。 sharrier0119red, Lord Nightmare
+
+
+- 残機数が正しく動作しない。
+やられても減らなかったり、逆に増えたりする。
+原因は調査中だが、どうやらコンティニューを何回か繰り返して、クレジットを2か3追加すると起きるようだ。 sharrier236rc2gre, Charvel
+
+
+- イニシャル入力画面が表示されるとき、
+ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
+
+$end
+
+$info=ikari
+$mame
+[情報]
+
+- テストモードに入るには起動中に1Pスタートを押し続ける。
+
+
+[バグ]
+
+- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
+基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
+
+
+- 怒の実機ではタイトル画面の背景は灰色になる。MAMEでは真っ黒。
+他に怒の基板を持ってる人に聞いても同じだそうだ。 ikari099u10gre, Wabajape / Kold666
+
+$end
+
+$info=victroad
+$mame
+[情報]
+
+- テストモードに入るには起動中に1Pスタートを押し続ける。
+
+
+[バグ]
+
+- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
+基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
+
+$end
+
 $info=buckrog
 $mame
 [バグ]
@@ -188,14 +227,6 @@ $mame
 
 
 - ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
-
-$end
-
-$info=sspaceat
-$mame
-[バグ]
-
-- エラーが出て起動できない。 sspaceat0118u1red, Firewave
 
 $end
 
@@ -220,47 +251,6 @@ excitbkj: 日本版の方は色がおかしい。またネームエントリー�
 3面の色がexcitebkと違う。5面の色が反転。
 
 vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-$end
-
-$info=yamato
-$mame
-[バグ]
-
-- 起動しない、またはクラッシュする。 yamato0118u5red, Firewave / twisty
-
-$end
-
-$info=psychic5
-$mame
-[バグ]
-
-- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
-
-
-- リセット直後のデモでは炎がアニメーションしていないが、
-その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
-
-$end
-
-$info=oscar
-$mame
-[バグ]
-
-- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
-
-$end
-
-$info=valtric
-$mame
-[情報]
-
-- テストモードにするには、コイン2キー(6キー)を起動時に押す。
-
-
-[バグ]
-
-- YM2203を使うゲームの一部で、音程が2オクターブほど低く再生される。F3キーでリセットすると正常に戻る。 ym2203_0118u1yel, klaxer / Tafoid / twisty / Kold666
 
 $end
 
@@ -685,14 +675,6 @@ $mame
 [バグ]
 
 - Access Violationエラーでランダムにクラッシュする。 area51mx0115u4red, The Monk
-
-$end
-
-$info=combasc
-$mame
-[バグ]
-
-- 面クリア場面で、キャラクタ名の一部が表示されない。 combasc0102u1gre, RansAckeR
 
 $end
 
@@ -2596,15 +2578,6 @@ garouoでも起きる。 garoup058gre, devlin_wagner
 
 $end
 
-$info=nitd
-$mame
-[バグ]
-
-- ゲームを始めてコインを入れると、音楽がなり始めるが、タイマーが22になると止まる。
-ループするはずだがそうならない。実機確認済み。 nitd058gre, Smitdogg / Razoola
-
-$end
-
 $info=sdodgeb
 $mame
 [バグ]
@@ -2765,6 +2738,17 @@ $mame
 [バグ]
 
 - ゲーム終了時、マップが表示された後に“volume error”が出てリセットがかかる。 overdriv37b13gre, Sports Dude
+
+$end
+
+$info=pacland
+$mame
+[バグ]
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
+
+
+- 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
 
 $end
 
@@ -3209,20 +3193,6 @@ $mame
 
 $end
 
-$info=sharrier
-$mame
-[バグ]
-
-- 残機数が正しく動作しない。
-やられても減らなかったり、逆に増えたりする。
-原因は調査中だが、どうやらコンティニューを何回か繰り返して、クレジットを2か3追加すると起きるようだ。 sharrier236rc2gre, Charvel
-
-
-- イニシャル入力画面が表示されるとき、
-ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
-
-$end
-
 $info=exctleag
 $mame
 [バグ]
@@ -3525,9 +3495,6 @@ $mame
 
 - 画面の上部に点滅する矢印のようなものが現われる。 shadfrcj0117u3gre, sjyune / Tafoid
 
-
-- ゲームを開始するとすぐにエンディングが始まる。 shadfrcj0117u3yel, sjyune
-
 $end
 
 $info=shanghai
@@ -3726,20 +3693,6 @@ $mame
 
 
 - BGMのテンポが遅い。たとえばタイトルシーンでは、音楽がちょうど終わったところでシュートの音が出る。 ftsoccer0105u4gre2, Fujix
-
-$end
-
-$info=ikari
-$mame
-[情報]
-
-- テストモードに入るには起動中に1Pスタートを押し続ける。
-
-
-[バグ]
-
-- 怒の実機ではタイトル画面の背景は灰色になる。MAMEでは真っ黒。
-他に怒の基板を持ってる人に聞いても同じだそうだ。 ikari099u10gre, Wabajape / Kold666
 
 $end
 
@@ -6617,6 +6570,15 @@ $mame
 
 $end
 
+$info=psychic5
+$mame
+[バグ]
+
+- リセット直後のデモでは炎がアニメーションしていないが、
+その後2回目以降のデモのときにはきちんと揺らめいている。 psychic537b8gre, Bugfinder
+
+$end
+
 $info=sdungeon
 $mame
 [情報]
@@ -7362,6 +7324,15 @@ $mame
 
 $end
 
+$info=donpachi
+$mame
+[情報]
+
+- 全ての設定はサービスモード(F2キーをしばらく押して入る)で行う。
+DIPスイッチは使わない。
+
+$end
+
 $info=dowild
 $mame
 [情報]
@@ -7558,16 +7529,6 @@ $mame
 [情報]
 
 - 筐体の緊急停止スイッチを無視するようにパッチしてあるため、メモリテストでIC8 ROMがBADになる。
-
-$end
-
-$info=jrpacman
-$mame
-[情報]
-
-- 2面で、
-画面をずっと右にスクロールさせると、敵が1、2匹左上にはまることがある。
-これはオリジナルの動作。
 
 $end
 
@@ -8231,19 +8192,19 @@ $mame
 
 $end
 
+$info=valtric
+$mame
+[情報]
+
+- テストモードにするには、コイン2キー(6キー)を起動時に押す。
+
+$end
+
 $info=venture
 $mame
 [情報]
 
 - テストモードに入るには、P1コイン(5キー)を押しながらリセット。
-
-$end
-
-$info=victroad
-$mame
-[情報]
-
-- テストモードに入るには起動中に1Pスタートを押し続ける。
 
 $end
 
