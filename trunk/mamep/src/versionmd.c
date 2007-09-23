@@ -11,4 +11,4 @@
 
 ***************************************************************************/
 
-char build_version[] = "HazeMD 0.12a (from MAME 0.111) ("__DATE__")";
+char build_version[] = "HazeMD 0.12a (from MAME 0.119) ("__DATE__")";

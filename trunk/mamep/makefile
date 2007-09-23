@@ -491,7 +491,6 @@ CFLAGS += \
 	-Wundef \
 	-Wno-format-security \
 	-Wwrite-strings \
-	-Wno-unused-function \
 	-Wno-pointer-sign \
 
 # add profiling information for the compiler

@@ -13,6 +13,7 @@
 
 #include "driver.h"
 #include "sound/sn76496.h"
+#include "segae.h"
 
 UINT8* sms_rom;
 UINT8* sms_mainram;
@@ -741,6 +742,7 @@ READ8_HANDLER( sms_ioport_gg00_r )
 
 
 
+#ifdef HAZEMD
 //mamep: resolve conflict with drivers/segae.c
 static READ8_HANDLER( sms_vcounter_r )
 {
@@ -770,6 +772,7 @@ static WRITE8_HANDLER( sms_vdp_ctrl_w )
 {
 	vdp_ctrl_w(data, vdp1);
 }
+#endif
 
 //mamep: resolve conflict with drivers/segae.c
 static WRITE8_HANDLER( sms_sn76496_w )
