@@ -4860,11 +4860,11 @@ values restored
 
 # emu/audit.c: 314
    FOUND: %s\n
-
+   找到: %s\n
 
 # emu/audit.c: 288
  (%d bytes)
-
+ (%d 字节)
 
 # emu/clifront.c: 863
  BAD
@@ -4872,47 +4872,47 @@ values restored
 
 # emu/romload.c: 913
 %s CHD NEEDS REDUMP\n
-
+%s CHD 需要 重新转储\n
 
 # emu/romload.c: 248
 %s NOT FOUND (NO GOOD DUMP KNOWN)\n
-
+%-12s 未找到 (尚无正确的转储文件)\n
 
 # emu/romload.c: 255, 887
 %s NOT FOUND\n
-
+%s 未找到\n
 
 # emu/romload.c: 357
 %s ROM NEEDS REDUMP\n
-
+%s ROM 需要重新转储\n
 
 # emu/romload.c: 885, 934, 948
 %s UNSUPPORTED CHD VERSION\n
-
+%s 未支持的 CHD 版本\n
 
 # emu/romload.c: 348, 907
 %s WRONG CHECKSUMS:\n
-
+%s 错误的校验码:\n
 
 # emu/romload.c: 334
 %s WRONG LENGTH (expected: %08x found: %08x)\n
-
+%s 错误的文件长度 (应为: %08x 找到: %08x)\n
 
 # emu/cheat.c: 11634, 11692
 %s disabled
-
+%s 禁用
 
 # emu/cheat.c: 11700
 %s enabled
-
+%s 启用
 
 # emu/romload.c: 936
 %s: CAN'T CREATE DIFF FILE\n
-
+%s: 不能创建差分文件\n
 
 # emu/romload.c: 950
 %s: CAN'T OPEN DIFF FILE\n
-
+%s: 不能打开差分文件\n
 
 # emu/clifront.c: 1374
 (BAD) 
@@ -4928,19 +4928,19 @@ values restored
 
 # emu/cheat.c: 9935
 :1st Activation Key (%s)\n
-
+:第一个激活的按键 (%s)\n
 
 # emu/cheat.c: 9933
 :1st Activation Key for %s (%s)\n
-
+:第一个激活的按键为 %s (%s)\n
 
 # emu/cheat.c: 9944
 :2nd Activation Key (%s)\n
-
+:第二个激活的按键 (%s)\n
 
 # emu/cheat.c: 9942
 :2nd Activation Key for %s (%s)\n
-
+:第二个激活的按键为 %s (%s)\n
 
 # mame/layout/mpu4.lay: 409
 AWP Simulated Video (No Artwork)

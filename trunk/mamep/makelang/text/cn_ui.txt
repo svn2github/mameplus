@@ -2536,23 +2536,23 @@ Christopher Kirmse and Michael Soderstrom
 
 # osd/ui/winuiopt.c: 3240
 FOLDER LIST HIDE OPTIONS
-
+专用隐藏文件夹选项
 
 # osd/ui/winuiopt.c: 3186
 GENERAL OPTIONS
-
+专用通用选项
 
 # osd/ui/winuiopt.c: 3244
 GUI JOYSTICK OPTIONS
-
+界面游戏杆选项
 
 # osd/ui/winuiopt.c: 3259
 GUI KEYBOARD OPTIONS
-
+界面键盘选项
 
 # osd/ui/winuiopt.c: 3232
 LIST FONT OPTIONS
-
+列表字体选项
 
 # osd/ui/winuiopt.c: 3218
 LISTVIEW OPTIONS
@@ -2560,11 +2560,11 @@ LISTVIEW OPTIONS
 
 # osd/ui/mame32.rc: 404, 428, 439, 471, 491, 514, 553, 572, 623, 660, 716, 759, 820, 848, 875, 912, 937, 1001, 1029, 1044, 1103, 1147, 1203 osd/ui/translate.c: 103
 MS Sans Serif
-
+宋体
 
 # osd/ui/mame32.rc: 1072
 Mouse device
-
+鼠标设备
 
 # osd/ui/mame32.rc: 124
 Office 2003
@@ -2580,21 +2580,21 @@ Office XP
 
 # osd/ui/mame32.rc: 1609
 Translate into Catalan
-
+翻译成加泰罗尼亚语
 
 # osd/ui/mame32.rc: 1609
 Translate into Portuguese (PT)
-
+翻译成葡萄牙语
 
 # osd/ui/mame32.rc: 1609
 Translate into Valencian
-
+翻译成瓦伦西亚语
 
 # osd/ui/winuiopt.c: 3211
 WINDOW POSITION OPTIONS
-
+窗口位置选项
 
 # osd/ui/mame32.rc: 421
 and John Hardy IV
-
+和 John Hardy IV
 
