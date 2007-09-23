@@ -4944,15 +4944,15 @@ values restored
 
 # mame/layout/mpu4.lay: 409
 AWP Simulated Video (No Artwork)
-
+AWP 模拟视频 (无装饰图)
 
 # emu/cheat.c: 3175
 Activation Key (1st)
-
+激活按键 (第一个)
 
 # emu/cheat.c: 3191
 Activation Key (2nd)
-
+激活按键 (第二个)
 
 # mame/layout/bfm_sc2.lay: 807
 Adder %d Output Only (%d:%d)
@@ -4972,11 +4972,11 @@ Attempted to malloc zero bytes (%s:%d)
 
 # emu/video.c: 441
 Average speed: %.2f%% (%d seconds)\n
-
+平均速度: %.2f%% (%d 秒)\n
 
 # emu/cheat.c: 3557
 BCD
-
+十进制
 
 # mame/drivers/playch10.c: 469 
 BIOS
@@ -4988,19 +4988,19 @@ Beam Width
 
 # mame/drivers/coinmstr.c: 185 
 Bookkeeping
-
+收入
 
 # mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73 mame/layout/goldnpkr.lay: 83 mame/layout/pmpoker.lay: 63 mame/layout/pottnpkr.lay: 43
 Button Lamps
-
+按钮灯
 
 # emu/clifront.c: 84
 CONFIGURATION COMMANDS
-
+设置指令
 
 # emu/clifront.c: 107
 CONFIGURATION OPTIONS
-
+设置选项
 
 # emu/emuopts.c: 118
 CORE ARTWORK OPTIONS
@@ -5080,7 +5080,7 @@ CRC-32s
 
 # emu/cheat.c: 9781
 Cheat Database reloaded
-
+已重新载入作弊码数据库
 
 # mame/layout/connect4.lay: 90
 Classic graphics and VFD
@@ -5088,11 +5088,11 @@ Classic graphics and VFD
 
 # emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 76 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
 Color Overlay
-
+颜色覆盖
 
 # emu/cheat.c: 5469
 Comparison Option
-
+比较选项
 
 # emu/datafile.c: 2446
 DOUBLEJOY16WAY:  %4d\n
@@ -5100,11 +5100,11 @@ DOUBLEJOY16WAY:  %4d\n
 
 # emu/cheat.c: 7666 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
 Debug
-
+除错
 
 # emu/uitext.c: 235
 Driver Configuration
-
+驱动设置
 
 # emu/layout/dualhovu.lay: 27 emu/layout/dualhsxs.lay: 45
 Dual Over-Under
@@ -5132,7 +5132,7 @@ Dual Under-Over (Gapless)
 
 # emu/cheat.c: 2941
 EEPROM
-
+只读存储器
 
 # emu/patch.c: 322
 ERROR: %s/%s: IPS data is empty\n
@@ -5140,11 +5140,11 @@ ERROR: %s/%s: IPS data is empty\n
 
 # emu/romload.c: 401
 ERROR: required files are missing, the game cannot be run.
-
+错误: 缺少必需的文件，游戏不能运行。
 
 # emu/audit.c: 312
 EXPECTED: %s\n
-
+应为: %s\n
 
 # emu/inptport.c: 3142
 End of playback - %i frames - Average speed %f%%
@@ -5152,7 +5152,7 @@ End of playback - %i frames - Average speed %f%%
 
 # emu/cheat.c: 5463
 Energy (Less or Greater)
-
+能量 (小于 或 大于)
 
 # mame/drivers/neodrvr.c: 172 mame/drivers/neogeo.c: 1291
 Enter BIOS
@@ -5164,11 +5164,11 @@ Error: option %s expected a parameter\n
 
 # lib/util/options.c: 477
 Error: unknown option: %s\n
-
+错误: 未知选项: %s\n
 
 # emu/uitext.c: 109 
 Exit
-
+退出
 
 # emu/inptport.c: 1329
 Extended INP file info:\n
@@ -5196,11 +5196,11 @@ Generating cached BDF font...\n
 
 # emu/audit.c: 310
 INCORRECT CHECKSUM:\n
-
+不正确的校验码:\n
 
 # emu/audit.c: 319
 INCORRECT LENGTH: %d bytes\n
-
+不正确的长度: %d 字节\n
 
 # lib/util/options.c: 887
 Illegal boolean value for %s; reverting to %d\n
@@ -5228,7 +5228,7 @@ Illegal value for %s = %s\n
 
 # emu/cheat.c: 4883, 5423
 Initialize Memory
-
+初始化记忆卡
 
 # emu/inptport.c: 1320, 1340
 Input file is for game '%s', not for current game '%s'\n
@@ -5236,7 +5236,7 @@ Input file is for game '%s', not for current game '%s'\n
 
 # emu/input.c: 717
 Input: Adding %s #%d: %s\n
-
+输入: 加 %s #%d: %s\n
 
 # emu/inptport.c: 4052
 Input: Autoenabling %s due to presence of a %s\n
@@ -5252,7 +5252,7 @@ Input: Default joystick map
 
 # mame/drivers/funworld.c: 874, 1184 
 Insert
-
+插入
 
 # emu/inptport.c: 4041
 Invalid %s value %s; reverting to keyboard\n
@@ -5276,11 +5276,11 @@ Invalid joystick map: %s\n
 
 # emu/cheat.c: 3280
 Keep
-
+保持
 
 # mame/layout/nbmj8688.lay: 9, 15
 LCD%d Standard (%d:%d)
-
+LCD%d 标准 (%d:%d)
 
 # emu/cheat.c: 5975
 LHS
@@ -5300,7 +5300,7 @@ Left Half
 
 # emu/inptport.c: 477
 Level Select
-
+水平 选择
 
 # emu/cheat.c: 3214
 Link Extension
@@ -5308,7 +5308,7 @@ Link Extension
 
 # emu/cheat.c: 7663
 Load Old Format Code
-
+载入旧格式代码
 
 # emu/rendfont.c: 759
 Loading BDF font... (%d characters loaded)\n
@@ -5336,11 +5336,11 @@ Match to Write
 
 # emu/cheat.c: 7642 mame/drivers/tempest.c: 509
 Minimum
-
+最小
 
 # emu/input.c: 139 
 Mouse
-
+鼠标
 
 # emu/uimenu.c: 1471
 Move User Interface
@@ -5348,43 +5348,43 @@ Move User Interface
 
 # emu/audit.c: 296
 NEEDS REDUMP\n
-
+需要重新转储\n
 
 # emu/audit.c: 301
 NO GOOD DUMP KNOWN\n
-
+尚无正确的转储文件\n
 
 # emu/clifront.c: 1307
 NOT A ROM\n
-
+无 ROM\n
 
 # emu/audit.c: 341
 NOT FOUND (BIOS)\n
-
+未找到 (BIOS)\n
 
 # emu/audit.c: 337
 NOT FOUND (shared with parent)\n
-
+未找到 (与原作共用)\n
 
 # emu/audit.c: 327
 NOT FOUND - NO GOOD DUMP KNOWN\n
-
+未找到 - 尚无正确的转储文件\n
 
 # emu/audit.c: 332
 NOT FOUND BUT OPTIONAL\n
-
+未找到但不是必需的\n
 
 # emu/audit.c: 323
 NOT FOUND\n
-
+未找到\n
 
 # emu/clifront.c: 642
 Name:     Description:\n
-
+名称:     描述:\n
 
 # emu/clifront.c: 765
 Name:    Clone of:\n
-
+名称:     的克隆:\n
 
 # emu/drivers/empty.c: 81
 No Driver Loaded
@@ -5392,15 +5392,15 @@ No Driver Loaded
 
 # emu/romload.c: 241
 OPTIONAL %s NOT FOUND\n
-
+可选的 %s 未找到\n
 
 # mame/video/tceptor.c: 281, 339, 395 
 Out of memory
-
+内存不足
 
 # mame/layout/nbmj8688.lay: 52, 62
 Player %d
-
+玩家 %d
 
 # emu/inptport.c: 1324, 1342
 Playing back previously recorded game %s\n
@@ -5408,75 +5408,75 @@ Playing back previously recorded game %s\n
 
 # emu/inptport.c: 942
 Positional
-
+定位
 
 # emu/inptport.c: 943
 Positional 2
-
+定位 2
 
 # emu/inptport.c: 944
 Positional 3
-
+定位 3
 
 # emu/inptport.c: 945
 Positional 4
-
+定位 4
 
 # emu/inptport.c: 946
 Positional 5
-
+定位 5
 
 # emu/inptport.c: 947
 Positional 6
-
+定位 6
 
 # emu/inptport.c: 948
 Positional 7
-
+定位 7
 
 # emu/inptport.c: 949
 Positional 8
-
+定位 8
 
 # emu/inptport.c: 951
 Positional V
-
+定位 V
 
 # emu/inptport.c: 952
 Positional V 2
-
+定位 V 2
 
 # emu/inptport.c: 953
 Positional V 3
-
+定位 V 3
 
 # emu/inptport.c: 954
 Positional V 4
-
+定位 V 4
 
 # emu/inptport.c: 955
 Positional V 5
-
+定位 V 5
 
 # emu/inptport.c: 956
 Positional V 6
-
+定位 V 6
 
 # emu/inptport.c: 957
 Positional V 7
-
+定位 V 7
 
 # emu/inptport.c: 958
 Positional V 8
-
+定位 V 8
 
 # emu/cheat.c: 2933
 Program Space
-
+程序空间
 
 # emu/ui.c: 2098
 REC STOP
-
+录制停止
 
 # emu/cheat.c: 5981
 RHS
@@ -5484,7 +5484,7 @@ RHS
 
 # emu/cheat.c: 588 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2266
 Rapid Fire
-
+速射
 
 # mame/layout/darius.lay: 61
 Right Half
@@ -5500,11 +5500,11 @@ Samples not supported in this build\n
 
 # emu/ui.c: 2544, 2562, 2579, 2595, 2612, 2629, 2646, 2663
 Screen %d %s %.3f
-
+屏幕 %d %s %.3f
 
 # emu/cheat.c: 7660
 Show Activation Key Message
-
+显示激活的键消息
 
 # mame/layout/buckrog.lay: 9 mame/layout/dlair.lay: 9 mame/layout/sspeedr.lay: 70 mame/layout/subroc3d.lay: 9 mame/layout/turbo.lay: 60
 Simple LEDs
@@ -5512,11 +5512,11 @@ Simple LEDs
 
 # emu/inptport.c: 1336
 Start time: %s\n
-
+开始时间: %s\n
 
 # mame/drivers/funworld.c: 862, 924, 986, 1110, 1172 
 State
-
+已载入
 
 # mame/drivers/bmcbowl.c: 379 mame/drivers/dwarfd.c: 452 mame/drivers/gdrawpkr.c: 314 mame/drivers/magicfly.c: 550 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 537
 Take
@@ -5532,7 +5532,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 
 # emu/cheat.c: 4835, 5460
 Timer (+ or -)
-
+计时器 (+ 或 -)
 
 # mame/layout/nbmj8688.lay: 39
 Triple
@@ -5584,7 +5584,7 @@ VFD Only (%d:%d)
 
 # emu/cheat.c: 5446
 Value (Equal)
-
+数值 (等于)
 
 # lib/util/options.c: 544
 Warning: invalid line in INI: %s
@@ -5596,7 +5596,7 @@ Warning: unknown option in INI: %s\n
 
 # emu/video.c: 1206
 \n%d partial updates
-
+\n%d 部分更新
 
 # emu/clifront.c: 273
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
@@ -5624,7 +5624,7 @@ analog joystick
 
 # emu/mamecore.h: 168 
 assert: %s:%d: %s
-
+判定原因: %s:%d: %s
 
 # emu/video.c: 1194
 auto%2d/%d
