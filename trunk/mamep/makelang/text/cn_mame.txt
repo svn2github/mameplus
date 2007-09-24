@@ -5628,7 +5628,7 @@ assert: %s:%d: %s
 
 # emu/video.c: 1194
 auto%2d/%d
-
+自动%2d/%d
 
 # emu/emuopts.c: 201
 automatic pause when playback is finished
@@ -5648,7 +5648,7 @@ center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 
 # emu/emuopts.c: 71
 cheat filename
-
+作弊文件名
 
 # emu/emuopts.c: 80
 command list database name
@@ -5872,47 +5872,47 @@ explicit joystick map, or auto to auto-select
 
 # emu/video.c: 1190
 fast 
-
+快速
 
 # emu/emuopts.c: 114
 flip screen left-right
-
+画面翻转左-右
 
 # emu/emuopts.c: 115
 flip screen upside-down
-
+画面翻转上-下
 
 # emu/emuopts.c: 222
 font blank color
-
+字体空白颜色
 
 # emu/emuopts.c: 223
 font normal color
-
+字体正常颜色
 
 # emu/emuopts.c: 224
 font special color
-
+字体特殊颜色
 
 # emu/video.c: 1182
 frame:%d 
-
+跳帧:%d 
 
 # emu/clifront.c: 360 emu/info.c: 25 mame/drivers/ksys573.c: 3100, 3115 
 game
-
+游戏
 
 # emu/emuopts.c: 179
 generate an error.log file
-
+生成 error.log 文件
 
 # emu/emuopts.c: 85
 high score database name
-
+游戏高分数据名
 
 # emu/emuopts.c: 72
 history database name
-
+游戏历史数据名
 
 # emu/uimenu.c: 3157
 http://mamedev.org
@@ -5920,11 +5920,11 @@ http://mamedev.org
 
 # emu/emuopts.c: 131
 image enhancement effect
-
+图像增强结果
 
 # emu/emuopts.c: 195
 ips datfile name
-
+IPS 文件名
 
 # emu/clifront.c: 980, 1060
 is bad\n
@@ -5952,11 +5952,11 @@ list required roms for a driver
 
 # emu/emuopts.c: 78
 mameinfo database name
-
+mameinfo 数据名
 
 # emu/cheat.c: 2646, 2796, 4674
 no activation key
-
+未激活的按键
 
 # emu/emuopts.c: 103
 number of emulated seconds to run before automatically exiting
@@ -5984,39 +5984,39 @@ out of memory while loading cheat database
 
 # emu/emuopts.c: 38
 path to ROMsets and hard disk images
-
+路径到 ROMsets 和硬盘图像
 
 # emu/emuopts.c: 43
 path to artwork files
-
+路径到装饰图文件
 
 # emu/emuopts.c: 44
 path to controller definitions
-
+路径到控制器定义
 
 # emu/emuopts.c: 46
 path to font files
-
+路径到字体文件
 
 # emu/emuopts.c: 40
 path to hash files
-
+路径到无用信息文件
 
 # emu/emuopts.c: 45
 path to ini files
-
+路径到 ini 文件
 
 # emu/emuopts.c: 42
 path to samplesets
-
+路径到 samplesets
 
 # emu/video.c: 1186
 paused
-
+中止
 
 # emu/info.c: 90 emu/inptport.c: 1224
 pedal
-
+踏板
 
 # emu/clifront.c: 81
 perform driver validation on all game drivers
@@ -6024,11 +6024,11 @@ perform driver validation on all game drivers
 
 # emu/emuopts.c: 94
 playback an input file
-
+播放输入文件
 
 # emu/inptport.c: 1227
 positional
-
+定位
 
 # emu/emuopts.c: 154
 preconfigure for specified controller
@@ -6040,7 +6040,7 @@ quit game with confirmation
 
 # emu/emuopts.c: 95
 record an input file
-
+记录输入文件
 
 # emu/clifront.c: 99
 report romsets that have problems
@@ -6056,11 +6056,11 @@ romset %s
 
 # emu/clifront.c: 1004
 romset \"%s\" not found!\n
-
+romset \"%s\" 未找到!\n
 
 # emu/clifront.c: 1006
 romset \"%s\" not supported!\n
-
+romset \"%s\" 不支持!\n
 
 # emu/emuopts.c: 110
 rotate screen clockwise 90 degrees
@@ -6084,11 +6084,11 @@ sampleset %s
 
 # emu/clifront.c: 1081
 sampleset \"%s\" not found!\n
-
+sampleset \"%s\" 未找到!\n
 
 # emu/clifront.c: 1083
 sampleset \"%s\" not supported!\n
-
+sampleset \"%s\" 不支持!\n
 
 # emu/emuopts.c: 92
 saved state to load
@@ -6108,11 +6108,11 @@ select the system BIOS to use
 
 # emu/emuopts.c: 257
 select translation language
-
+选择翻译语言
 
 # emu/cheat.c: 11682
 set %s
-
+设置 %s
 
 # emu/emuopts.c: 102
 set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
@@ -6136,19 +6136,19 @@ short name, full name
 
 # emu/clifront.c: 95
 show clones
-
+显示克隆
 
 # emu/clifront.c: 80
 show help message
-
+显示帮助信息
 
 # emu/clifront.c: 87
 show this help
-
+显示这帮助
 
 # emu/video.c: 1198
 skip %d/%d
-
+帧数 %d/%d
 
 # emu/emuopts.c: 193
 skip displaying the information screen at startup
@@ -6160,7 +6160,7 @@ sound volume in decibels (-32 min, 0 max)
 
 # emu/emuopts.c: 74
 story database name
-
+游戏故事数据名
 
 # emu/emuopts.c: 33
 switch drivers
@@ -6168,7 +6168,7 @@ switch drivers
 
 # emu/mame.c: 322
 unable to open log file
-
+不能打开日志文件
 
 # emu/emuopts.c: 136
 use antialiasing when drawing vectors
@@ -6180,9 +6180,9 @@ video_screen_configure(): visible area must be contained within the width/height
 
 # emu/emuopts.c: 225
 window background color
-
+窗口背景颜色
 
 # emu/clifront.c: 92
 year, manufacturer and full name
-
+年份, 制造商和全部名
 
