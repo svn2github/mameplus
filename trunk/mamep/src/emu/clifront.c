@@ -127,7 +127,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	options = mame_options_init(osd_options);
 	options_add_entries(options, cli_options);
 
-	setup_language(options); 
+	setup_language(options);
 
 	/* parse the command line first; if we fail here, we're screwed */
 	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
@@ -136,17 +136,21 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		goto error;
 	}
 
-	setup_language(options); 
-
-#ifdef DRIVER_SWITCH
-	assign_drivers(options);
-#endif /* DRIVER_SWITCH */ 
+	setup_language(options);
 
 	/* parse the simple commmands before we go any further */
 	core_filename_extract_base(exename, argv[0], TRUE);
 	result = execute_simple_commands(options, astring_c(exename));
 	if (result != -1)
 		goto error;
+
+	/* parse the INI file defined by the platform (e.g., "mame.ini") */
+	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
+	parse_ini_file(options, CONFIGNAME);
+
+#ifdef DRIVER_SWITCH
+	assign_drivers(options);
+#endif /* DRIVER_SWITCH */
 
 	/* find out what game we might be referring to */
 	core_filename_extract_base(gamename, options_get_string(options, OPTION_GAMENAME), TRUE);

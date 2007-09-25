@@ -358,7 +358,9 @@ static void  validate_driver_option(options_type *opt);
 static void  CopySettings(const settings_type *source, settings_type *dest);
 static void  FreeSettings(settings_type *p);
 
+#if 0
 static void  SaveGlobalOptions(void);
+#endif
 static void  SaveAltOptions(alt_options_type *alt_option);
 static void  LoadOptions(void);
 static void  LoadGameOptions(int driver_index);

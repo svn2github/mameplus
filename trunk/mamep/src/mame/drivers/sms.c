@@ -431,11 +431,13 @@ static WRITE8_HANDLER( z80_unmapped_w )
 	printf("unmapped z80 write %04x\n",offset);
 }
 
+#if 0
 //mamep: resolve conflict with drivers/segae.c
 static void sn76496_write(UINT8 data)
 {
 	SN76496_0_w(0, data & 0xff);
 }
+#endif
 
 /***** The Inputs should be more complex than this.. closer to megadriv.c! *****/
 
@@ -532,6 +534,7 @@ UINT8 ioport_gg00_r(void)
 }
 
 
+#if 0
 static UINT8 vcounter_r(struct sms_vdp *chip)
 {
 //	return vc_pal_224[sms_scanline_counter%(sizeof vc_pal_224)];
@@ -718,6 +721,7 @@ static void vdp_ctrl_w(UINT8 data, struct sms_vdp *chip)
 		vdp_update_code_addr_regs(chip);
 	}
 }
+#endif
 
 
 
@@ -1339,6 +1343,7 @@ static TIMER_CALLBACK_PTR( sms_scanline_timer_callback )
 	}
 }
 
+#if 0
 static void show_tiles(struct sms_vdp* chip)
 {
 	int x,y,xx,yy;
@@ -1374,6 +1379,7 @@ static void show_tiles(struct sms_vdp* chip)
 		}
 	}
 }
+#endif
 
 /*
  Register $00 - Mode Control No. 1
@@ -3470,6 +3476,7 @@ static DRIVER_INIT( standpal )
 	vdp1->sms_framerate = 50;
 }
 
+#if 0
 static DRIVER_INIT( mtc )
 {
 	init_megatech_map();
@@ -3480,6 +3487,7 @@ static DRIVER_INIT( mtc )
 	vdp1->sms_total_scanlines = 262;
 	vdp1->sms_framerate = 60;
 }
+#endif
 
 
 static DRIVER_INIT( codemagg )

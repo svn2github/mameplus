@@ -262,6 +262,9 @@ int mame_execute(core_options *options);
 /* accesses the core_options for the currently running emulation */
 core_options *mame_options(void);
 
+/* read ini file */
+int parse_ini_file(core_options *options, const char *name);
+
 /* return the current phase */
 int mame_get_phase(running_machine *machine);
 

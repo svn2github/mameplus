@@ -1432,12 +1432,14 @@ static void end_of_frame(struct sms_vdp *chip)
 	mame_timer_adjust_ptr(chip->sms_scanline_timer, time_zero, time_zero);
 }
 
+#if 0
 //mamep: resolve conflict with drivers/sms.c
 static VIDEO_EOF(sms)
 {
 	end_of_frame(vdp1);
 	//if (SMS_PAUSE_BUTTON) cpunum_set_input_line(0,INPUT_LINE_NMI,PULSE_LINE); // not on systeme!!!
 }
+#endif
 
 //mamep: resolve conflict with drivers/sms.c
 static VIDEO_START(sms)
@@ -1449,11 +1451,13 @@ static VIDEO_START(sms)
 }
 
 
+#if 0
 //mamep: resolve conflict with drivers/sms.c
 static MACHINE_RESET(sms)
 {
 	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
 }
+#endif
 
 /* Sega System E */
 

@@ -9105,7 +9105,7 @@ GAMEB( 1994, fightfva, fightfev, neogeo, neogeo_s, neogeo,  neogeo,   ROT0, "Vic
 GAMEB( 1994, pspikes2, neogeo,   neogeo, neogeo,   neogeo,  neogeo,   ROT0, "Video System Co.", "Power Spikes II", 0 )
 GAMEB( 1994, sonicwi2, neogeo,   neogeo, neogeo_s, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 2 / Sonic Wings 2", 0 )
 GAMEB( 1995, sonicwi3, neogeo,   neogeo, neogeo_s, neogeo,  neogeo,   ROT0, "Video System Co.", "Aero Fighters 3 / Sonic Wings 3", 0 )
-GAMEB( 1997, popbounc, neogeo,   neogeo, neogeo_s, popbounc,neogeo,   ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", 0 )
+GAMEB( 1997, popbounc, neogeo,   neogeo, neogeo_s, popbounc,popbounc, ROT0, "Video System Co.", "Pop 'n Bounce / Gapporin", 0 )
 
 /* Visco */
 GAMEB( 1992, androdun, neogeo,   neogeo, neogeo_s, neogeo,  neogeo,   ROT0, "Visco", "Andro Dunos", 0 )

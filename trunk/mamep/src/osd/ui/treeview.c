@@ -160,6 +160,7 @@ static BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder);
     public functions
  ***************************************************************************/
 
+#if 0
 /**************************************************************************
  *      ci_strncmp - case insensitive character array compare
  *
@@ -184,7 +185,7 @@ static int ci_strncmp (const char *s1, const char *s2, int n)
 	}
 	return 0;
 }
-
+#endif
 
 
 /* De-allocate all folder memory */

@@ -312,7 +312,9 @@ static void             KeyboardKeyUp(int syskey, int vk_code, int special);
 static void             KeyboardStateClear(void);
 
 static void             UpdateStatusBar(void);
+#if 0
 static BOOL             PickerHitTest(HWND hWnd);
+#endif
 static BOOL             TreeViewNotify(NMHDR *nm);
 
 static void             ResetBackground(const WCHAR *szFile);
@@ -2029,6 +2031,7 @@ static void build_driversw(void)
 	}
 }
 
+#if 0
 static void free_driversw(void)
 {
 	int i;
@@ -2050,6 +2053,7 @@ static void free_driversw(void)
 	free(driversw);
 	driversw = NULL;
 }
+#endif
 
 static void ChangeLanguage(int id)
 {
@@ -4157,6 +4161,7 @@ static WCHAR *GetCloneParentName(int nItem)
 	return wstr;
 }
 
+#if 0
 static BOOL PickerHitTest(HWND hWnd)
 {
 	RECT			rect;
@@ -4173,6 +4178,7 @@ static BOOL PickerHitTest(HWND hWnd)
 
 	return (! (htInfo.flags & LVHT_NOWHERE));
 }
+#endif
 
 static BOOL TreeViewNotify(LPNMHDR nm)
 {
