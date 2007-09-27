@@ -63,9 +63,13 @@ exit;
 
 sub output_ini
 {
+	my $fname = "$folderdir/$filename.ini";
+
 	if ($filename eq "VerAdded")
 	{
-		open (OUT, ">$folderdir/Version.ini") || die "$!";
+		$fname = "$folderdir/Version.ini";
+		chmod 0666, $fname;
+		open (OUT, ">$fname") || die "$!";
 		print OUT <<__HEAD__;
 [FOLDER_SETTINGS]
 RootFolderIcon = cust1.ico
@@ -74,7 +78,9 @@ __HEAD__
 	}
 	elsif ($filename eq "Category")
 	{
-		open (OUT, ">$folderdir/Category.ini") || die "$!";
+		$fname = "$folderdir/Category.ini";
+		chmod 0666, $fname;
+		open (OUT, ">$fname") || die "$!";
 		print OUT <<__HEAD__;
 [FOLDER_SETTINGS]
 RootFolderIcon = cust1.ico
@@ -83,7 +89,8 @@ __HEAD__
 	}
 	else
 	{
-		open (OUT, ">$folderdir/$filename.ini") || die "$!";
+		chmod 0666, $fname;
+		open (OUT, ">$fname") || die "$!";
 	}
 
 	print OUT "\n[ROOT_FOLDER]\n\n";
@@ -111,7 +118,9 @@ __HEAD__
 			print OUT "\n";
 		}
 	}
+
 	close (OUT);
+	chmod 0444, $fname;
 
 	undef %LIST;
 }
