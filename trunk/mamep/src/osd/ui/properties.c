@@ -3732,7 +3732,7 @@ static void ResetDataMap(void)
 			name[len] = '\0';
 
 			n = GetGameNameIndex(name);
-			if (DriverIsBios(n))
+			if (n != -1 && DriverIsBios(n))
 				g_biosinfo = n;
 		}
 	}
