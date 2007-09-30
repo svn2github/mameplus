@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.119       #
+#     Mameinfo.dat日本語版 v0.119u1      #
 #                                        #
-#           September 22, 2007           #
+#           September 27, 2007           #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,245 +12,82 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：873 翻訳済：847
-# 追加項目：342 合計：1215
+# Tester報告：851 翻訳済：826
+# 追加項目：342 合計：1193
 #
 
 
-$info=720
+$info=phelios
 $mame
 [バグ]
 
-- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
+- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
+恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
 
 $end
 
-$info=combasc
+$info=ordyne
 $mame
 [バグ]
 
-- 2回目のFiring Range面で、画面の上下にゴミグラフィックが出る。0.118では正常。 combasc0119gre, izius
-
-
-- 面クリア場面で、キャラクタ名の一部が表示されない。 combasc0102u1gre, RansAckeR
+- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
+恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
 
 $end
 
-$info=kod
+$info=garou
 $mame
 [バグ]
 
-- 実機では、エンディングの背景には戦闘シーンが少し化けて表示される。MAMEでは真っ黒のまま。 kod0118u2yel, cacis / Kold666
+- NeoGeoの音がおかしくなっている。0.118u3から。
+
+餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
 
 $end
 
-$info=espial
+$info=fatfury2
 $mame
 [バグ]
 
-- US版では鳴っているBGMがマスタセットでは鳴らない。 espial0118u5yel, gtmoa
+- NeoGeoの音がおかしくなっている。0.118u3から。
+
+餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
 
 $end
 
-$info=gijoe
+$info=fatfursp
 $mame
 [バグ]
 
-- 2面ボスを倒した直後にクラッシュする。 gijoe0118u2red, ponzicar / twisty
+- NeoGeoの音がおかしくなっている。0.118u3から。
 
-
-- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
 
 $end
 
-$info=jrpacman
-$mame
-[情報]
-
-- 2面で、
-画面をずっと右にスクロールさせると、敵が1、2匹左上にはまることがある。
-これはオリジナルの動作。
-
-
-[バグ]
-
-- スプライトが正しくクリッピングされていない。 jrpacman0119gre, CyborgSuperman / Tafoid / twisty
-
-$end
-
-$info=pengo
+$info=ssi
 $mame
 [バグ]
 
-- スプライトが正しくクリッピングされていない。 jrpacman0119gre, CyborgSuperman / Tafoid / twisty
-
-$end
-
-$info=kinst
-$mame
-[バグ]
-
-- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
+- 0.119のあたりから、サウンドがおかしい。コインを入れる前の初期画面の音や、スーパーウエポンを使ったときの音など。 ssi0119u1gre, Iaspis
 
 
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+- ごく希に、Tアイテムを取って蝶が現れている間、画面の一番下に化けグラフィックが出る。
+めったに起きない。 ssi0104u3gre, Iaspis / Twisty / robiza
 
 
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-$end
-
-$info=kinst2
-$mame
-[バグ]
-
-- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
-
-
-- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
-kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-$end
-
-$info=mikie
-$mame
-[情報]
-
-- テストモードに入るには、1Pスタートと2Pスタートを押しながらリセット。
-
-
-[バグ]
-
-- ロッカールームのBGMの音程が外れている。0.114u3のSN76496エミュレータ改良からか？ mikie0118u5gre, Machone
-
-$end
-
-$info=polepos2
-$mame
-[バグ]
-
-- Namco版はスタートの時にアクセルを踏んでいるとタイヤがスピンする音が聞こえるが、Atari版は聞こえない。 polepos2_0118u4gre, Kold666
+- ボーナスステージで、UFOの爆発の色がおかしいようだ。 ssi237b2gre, YMI
 
 
 [TIPS]
 
-- 隠し画面：
+- 面セレクトコマンド：
 
-1) サービスモードに入る(F2)
+1) サービススイッチ(9キー)を押しながらリセット
 
-2) ハンドルを04に合わせる。シフトをHIに入れる
+2) 1Pスタートx3　サービス　1Pスタート
 
-3) ハンドルを45に合わせる。シフトをHIに入れる
-
-4) ハンドルを55に合わせる。シフトをHIに入れる
-
-5) ハンドルを56に合わせる。シフトをHIに入れる
-
-6) ハンドルを91に合わせる。シフトをHIに入れる
-
-$end
-
-$info=sharrier
-$mame
-[バグ]
-
-- デバッグビルドで、特定のボイスが再生されようとするとクラッシュする。ボスを倒した後の「You're doing great!」など。 sharrier0119red, Lord Nightmare
-
-
-- 残機数が正しく動作しない。
-やられても減らなかったり、逆に増えたりする。
-原因は調査中だが、どうやらコンティニューを何回か繰り返して、クレジットを2か3追加すると起きるようだ。 sharrier236rc2gre, Charvel
-
-
-- イニシャル入力画面が表示されるとき、
-ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
-
-$end
-
-$info=ikari
-$mame
-[情報]
-
-- テストモードに入るには起動中に1Pスタートを押し続ける。
-
-
-[バグ]
-
-- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
-基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
-
-
-- 怒の実機ではタイトル画面の背景は灰色になる。MAMEでは真っ黒。
-他に怒の基板を持ってる人に聞いても同じだそうだ。 ikari099u10gre, Wabajape / Kold666
-
-$end
-
-$info=victroad
-$mame
-[情報]
-
-- テストモードに入るには起動中に1Pスタートを押し続ける。
-
-
-[バグ]
-
-- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
-基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
-
-$end
-
-$info=buckrog
-$mame
-[バグ]
-
-- 背景の星表示がズームせずに、完全にランダムな表示になる。 buckrog0118u2yel, AWJ / twisty
-
-$end
-
-$info=galaga88
-$mame
-[バグ]
-
-- 新UIからnamcos1.cのゲームを起動、一旦ESCキーで抜けてから、再度同じゲームを起動するとスプライトなどが表示されない。 namcos1_0118u2yel, Rogerr / Tafoid /twisty
-
-
-- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
-
-$end
-
-$info=excitebk
-$mame
-[バグ]
-
-- 実機に比べて色がおかしい。 excitebk0118u5gre, Mr. Do
-
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
+(by Mhk)
 
 $end
 
@@ -435,6 +272,14 @@ $mame
 [バグ]
 
 - 効果音が画面より1、2秒遅れて再生される。 primrage0117gre, Slick Mandela
+
+$end
+
+$info=720
+$mame
+[バグ]
+
+- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
 
 $end
 
@@ -678,6 +523,17 @@ $mame
 
 $end
 
+$info=combasc
+$mame
+[バグ]
+
+- 面クリア場面で、キャラクタ名の一部が表示されない。 combasc0102u1gre, RansAckeR
+
+
+- 2回目のFiring Range面で、画面の上下にゴミグラフィックが出る。0.118では正常。 combasc0119gre, izius
+
+$end
+
 $info=combascb
 $mame
 [バグ]
@@ -744,6 +600,14 @@ $mame
 [バグ]
 
 - 海外版のデモ画面で、テキストが化けている。 cawing0105u1gre,
+
+$end
+
+$info=kod
+$mame
+[バグ]
+
+- 実機では、エンディングの背景には戦闘シーンが少し化けて表示される。MAMEでは真っ黒のまま。 kod0118u2yel, cacis / Kold666
 
 $end
 
@@ -1094,6 +958,14 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 $end
 
+$info=espial
+$mame
+[バグ]
+
+- US版では鳴っているBGMがマスタセットでは鳴らない。 espial0118u5yel, gtmoa
+
+$end
+
 $info=mtrap
 $mame
 [情報]
@@ -1384,6 +1256,17 @@ $mame
 
 $end
 
+$info=gijoe
+$mame
+[バグ]
+
+- 2面ボスを倒した直後にクラッシュする。 gijoe0118u2red, ponzicar / twisty
+
+
+- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
+
+$end
+
 $info=gotcha
 $mame
 [バグ]
@@ -1533,6 +1416,44 @@ $mame
 - 選手紹介や休憩の画面で、太い茶色の線が現れる。
 また、ラウンド終了直後、0.5秒くらい各インジケータが画面に残ってしまう。
 実機で起こるかどうかは分からないが、このようにはならないと思われる。 kingofb37b16gre, Zip
+
+$end
+
+$info=kinst
+$mame
+[バグ]
+
+- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
+
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+$end
+
+$info=kinst2
+$mame
+[バグ]
+
+- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
+
+
+- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
+kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
+
+
+- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
+
+
+- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
+
+
+- 「DCSサウンドシステムについて」
+
+サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
+ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
 
 $end
 
@@ -2301,6 +2222,19 @@ $mame
 
 $end
 
+$info=mikie
+$mame
+[情報]
+
+- テストモードに入るには、1Pスタートと2Pスタートを押しながらリセット。
+
+
+[バグ]
+
+- ロッカールームのBGMの音程が外れている。0.114u3のSN76496エミュレータ改良からか？ mikie0118u5gre, Machone
+
+$end
+
 $info=mnight
 $mame
 [バグ]
@@ -2396,6 +2330,17 @@ $mame
 [バグ]
 
 - ペナルティーショット画面が逆さまになる。 faceoff0105u3yel, cpukett
+
+$end
+
+$info=galaga88
+$mame
+[バグ]
+
+- ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
+
+
+- 新UIからnamcos1.cのゲームを起動、一旦ESCキーで抜けてから、再度同じゲームを起動するとスプライトなどが表示されない。 namcos1_0118u2yel, Rogerr / Tafoid /twisty
 
 $end
 
@@ -3193,6 +3138,23 @@ $mame
 
 $end
 
+$info=sharrier
+$mame
+[バグ]
+
+- デバッグビルドで、特定のボイスが再生されようとするとクラッシュする。ボスを倒した後の「You're doing great!」など。 sharrier0119red, Lord Nightmare
+
+
+- 残機数が正しく動作しない。
+やられても減らなかったり、逆に増えたりする。
+原因は調査中だが、どうやらコンティニューを何回か繰り返して、クレジットを2か3追加すると起きるようだ。 sharrier236rc2gre, Charvel
+
+
+- イニシャル入力画面が表示されるとき、
+ハイスコア一覧が下からスクロールしてくるが、ゲーム中のスプライトの後ろに表示されてしまう。 sharrier336rc2gre, Charvel
+
+$end
+
 $info=exctleag
 $mame
 [バグ]
@@ -3696,6 +3658,24 @@ $mame
 
 $end
 
+$info=ikari
+$mame
+[情報]
+
+- テストモードに入るには起動中に1Pスタートを押し続ける。
+
+
+[バグ]
+
+- 怒の実機ではタイトル画面の背景は灰色になる。MAMEでは真っ黒。
+他に怒の基板を持ってる人に聞いても同じだそうだ。 ikari099u10gre, Wabajape / Kold666
+
+
+- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
+基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
+
+$end
+
 $info=tdfever2
 $mame
 [バグ]
@@ -3952,29 +3932,6 @@ $mame
 [バグ]
 
 - BGMにブツブツとノイズが混じる。またテンポも変。 tetrist059gre, Kale
-
-$end
-
-$info=ssi
-$mame
-[バグ]
-
-- ごく希に、Tアイテムを取って蝶が現れている間、画面の一番下に化けグラフィックが出る。
-めったに起きない。 ssi0104u3gre, Iaspis / Twisty / robiza
-
-
-- ボーナスステージで、UFOの爆発の色がおかしいようだ。 ssi237b2gre, YMI
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
@@ -4590,6 +4547,14 @@ $mame
 
 $end
 
+$info=buckrog
+$mame
+[バグ]
+
+- 背景の星表示がズームせずに、完全にランダムな表示になる。 buckrog0118u2yel, AWJ / twisty
+
+$end
+
 $info=zeropnt
 $mame
 [バグ]
@@ -4649,6 +4614,30 @@ $mame
 
 - たしか37b12からだったと思うが、毎回起動時にテストモードで引っかかってしまう。
 一旦起動してしまえば普通に動作する。但し、リセットを除く。 victory37b16gre, Karasu
+
+$end
+
+$info=excitebk
+$mame
+[バグ]
+
+- 実機に比べて色がおかしい。 excitebk0118u5gre, Mr. Do
+
+
+- 「vsnes.c」バグ
+
+vsslalom: 「GAME OVER」の文字の下側がずれている。
+
+tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
+
+duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
+
+excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
+
+excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
+3面の色がexcitebkと違う。5面の色が反転。
+
+vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
 
 $end
 
@@ -5031,6 +5020,20 @@ $mame
 [バグ]
 
 - 背景の星空は奥行きがあるようにそれぞれ速度をずらして描画される。MAMEでは一枚の面がスクロールするだけになっている。 exerizrb0102u1ora, Kold666
+
+$end
+
+$info=victroad
+$mame
+[情報]
+
+- テストモードに入るには起動中に1Pスタートを押し続ける。
+
+
+[バグ]
+
+- 実機と比較すると、影の表示が間違っている。また、MAMEでは処理が重なっても遅くならない。
+基板上には、8MHzの発信器が付いたCPUとサウンドボードがあるが、ビデオボードは13.4MHz。MAMEはCPUが3つとも4MHｚだが、少なくともひとつは3.35MHｚのはず。 ikari0118u6ora, Kold666
 
 $end
 
@@ -6570,6 +6573,31 @@ $mame
 
 $end
 
+$info=polepos2
+$mame
+[バグ]
+
+- Namco版はスタートの時にアクセルを踏んでいるとタイヤがスピンする音が聞こえるが、Atari版は聞こえない。 polepos2_0118u4gre, Kold666
+
+
+[TIPS]
+
+- 隠し画面：
+
+1) サービスモードに入る(F2)
+
+2) ハンドルを04に合わせる。シフトをHIに入れる
+
+3) ハンドルを45に合わせる。シフトをHIに入れる
+
+4) ハンドルを55に合わせる。シフトをHIに入れる
+
+5) ハンドルを56に合わせる。シフトをHIに入れる
+
+6) ハンドルを91に合わせる。シフトをHIに入れる
+
+$end
+
 $info=psychic5
 $mame
 [バグ]
@@ -7529,6 +7557,16 @@ $mame
 [情報]
 
 - 筐体の緊急停止スイッチを無視するようにパッチしてあるため、メモリテストでIC8 ROMがBADになる。
+
+$end
+
+$info=jrpacman
+$mame
+[情報]
+
+- 2面で、
+画面をずっと右にスクロールさせると、敵が1、2匹左上にはまることがある。
+これはオリジナルの動作。
 
 $end
 
