@@ -647,6 +647,10 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 		if ((data->flags & OPTION_HEADER) != 0)
 			last_header = translate_description(data);
 
+		/* skip UNADORNED options */
+		else if (data->description == NULL)
+			;
+
 		/* otherwise, output entries for all non-deprecated and non-command items (if not in baseopts) */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
 		{
