@@ -538,7 +538,7 @@ digdugb	ƒfƒBƒOƒ_ƒO (rev 1)	‚Å‚¡‚®‚¾‚®_1	Namco
 digdugat	ƒfƒBƒOƒ_ƒO (Atari rev 2)	‚Å‚¡‚®‚¾‚®_1	[Namco] (Atari license)
 digduga1	ƒfƒBƒOƒ_ƒO (Atari rev 1)	‚Å‚¡‚®‚¾‚®_1	[Namco] (Atari license)
 dzigzag	ƒfƒBƒOƒ_ƒO / Zig Zag (Dig Dug hardware)	‚Å‚¡‚®‚¾‚®_1	bootleg
-digsid	ƒfƒBƒOƒ_ƒO (Sidam license)	‚Å‚¡‚®‚¾‚®_1	bootleg
+digsid	ƒfƒBƒOƒ_ƒO (Sidam)	‚Å‚¡‚®‚¾‚®_1	[Namco] (Sidam license)
 xevious	ƒ[ƒrƒEƒX (Namco)	‚º‚Ñ‚¤‚·	Namco
 xeviousa	ƒ[ƒrƒEƒX (Atari set 1)	‚º‚Ñ‚¤‚·	Namco (Atari license)
 xeviousb	ƒ[ƒrƒEƒX (Atari set 2)	‚º‚Ñ‚¤‚·	Namco (Atari license)
@@ -2974,7 +2974,7 @@ tetris	ƒeƒgƒŠƒX (“ú–{”Å set 4 System16A FD1094 317-0093)	‚Ä‚Æ‚è‚·_1_2sega	Sega
 tetris3	ƒeƒgƒŠƒX (“ú–{”Å set 3 System16A FD1094 317-0093a)	‚Ä‚Æ‚è‚·_1_2sega	Sega
 timesca1	ƒ^ƒCƒ€ƒXƒLƒƒƒi[ (set 1 System16A FD1089B 317-0024)	‚½‚¢‚Ş‚·‚«‚á‚È[	Sega
 wb31	ƒƒ“ƒ_[ƒ{[ƒCIII ƒ‚ƒ“ƒXƒ^[ƒŒƒA (set 1 System16A FD1094 317-0084)	‚í‚ñ‚¾[‚Ú[‚¢_3	Sega / Westone
-pshot16a	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (“ú–{”Å 4 Players System16A FD1094 317-0071)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
+pshot16a	ƒpƒbƒVƒ“ƒOƒVƒ‡ƒbƒg (“ú–{”Å 4 players System16A FD1094 317-0071)	‚Ï‚Á‚µ‚ñ‚®‚µ‚å‚Á‚Æ	Sega
 aceattac	ƒG[ƒXƒAƒ^ƒbƒJ[ (FD1094 317-0059)	‚¦[‚·‚ ‚½‚Á‚©[	Sega
 aliensyn	ƒGƒCƒŠƒAƒ“ƒVƒ“ƒhƒ[ƒ€ (set 4 System16B unprotected)	‚¦‚¢‚è‚ ‚ñ‚µ‚ñ‚Ç‚ë[‚Ş	Sega
 aliensy3	ƒGƒCƒŠƒAƒ“ƒVƒ“ƒhƒ[ƒ€ (set 3 System16B FD1089A 317-0033)	‚¦‚¢‚è‚ ‚ñ‚µ‚ñ‚Ç‚ë[‚Ş	Sega
@@ -3700,6 +3700,7 @@ dblewing	™Ô—ƒ <ƒ_ƒuƒ‹ƒEƒCƒ“ƒOƒX>	‚¾‚Ô‚é‚¤‚¢‚ñ‚®‚·	Mitchell
 fghthist	ƒtƒ@ƒCƒ^[ƒYƒqƒXƒgƒŠ[ (ŠCŠO”Å ver 43-07)	‚Ó‚Ÿ‚¢‚½[‚¸‚Ğ‚·‚Æ‚è[_1	Data East Corporation
 fghthstu	ƒtƒ@ƒCƒ^[ƒYƒqƒXƒgƒŠ[ (USA”Å ver 42-03)	‚Ó‚Ÿ‚¢‚½[‚¸‚Ğ‚·‚Æ‚è[_1	Data East Corporation
 fghthsta	ƒtƒ@ƒCƒ^[ƒYƒqƒXƒgƒŠ[ (USA”Å ver 42-05 alt hardware)	‚Ó‚Ÿ‚¢‚½[‚¸‚Ğ‚·‚Æ‚è[_1	Data East Corporation
+fghthstj	ƒtƒ@ƒCƒ^[ƒYƒqƒXƒgƒŠ[ (“ú–{”Å ver 42-03)	‚Ó‚Ÿ‚¢‚½[‚¸‚Ğ‚·‚Æ‚è[_1	Data East Corporation
 hvysmsh	ƒnƒCƒp[ƒnƒ“ƒhƒ{[ƒ‹ ƒwƒr[ƒXƒ}ƒbƒVƒ… -The Future Sports (“ú–{”Å ver -2)	‚Í‚¢‚Ï[‚Í‚ñ‚Ç‚Ú[‚é‚Ö‚Ñ[‚·‚Ü‚Á‚µ‚ã	Data East Corporation
 hvysmsha	ƒnƒCƒp[ƒnƒ“ƒhƒ{[ƒ‹ ƒwƒr[ƒXƒ}ƒbƒVƒ… -The Future Sports (ƒAƒWƒA”Å ver -4)	‚Í‚¢‚Ï[‚Í‚ñ‚Ç‚Ú[‚é‚Ö‚Ñ[‚·‚Ü‚Á‚µ‚ã	Data East Corporation
 nslasher	ƒiƒCƒgƒXƒ‰ƒbƒVƒƒ[ƒY (ŠØ‘”Å rev 1.3)	‚È‚¢‚Æ‚·‚ç‚Á‚µ‚á[‚¸	Data East Corporation
@@ -5110,6 +5111,7 @@ quizmoon	ƒNƒCƒYII ”ü­—ímƒZ[ƒ‰[ƒ€[ƒ“ -’m—ÍE‘Ì—ÍE‚Ì‰^	‚­‚¢‚¸‚Ñ‚µ‚å‚¤‚
 gakupara	ƒNƒCƒY‚ª‚­‚¦‚ñƒpƒ‰ƒ_ƒCƒX (“ú–{”Å)	‚­‚¢‚¸‚ª‚­‚¦‚ñ‚Ï‚ç‚¾‚¢‚·	NMK
 quizdna	ƒNƒCƒYDNA‚Ì”½— (“ú–{”Å)	‚­‚¢‚¸‚Å‚¡[‚¦‚Ê‚¦[‚Ì‚Í‚ñ‚ç‚ñ	Face
 gekiretu	ƒNƒCƒYŒƒ—ó‚·‚­‚ç‚ñ‚Ô‚é -Šw‰€ƒpƒ‰ƒ_ƒCƒX2 (“ú–{”Å)	‚­‚¢‚¸‚°‚«‚ê‚Â‚·‚­‚ç‚ñ‚Ô‚é	Face
+cultures	©•ª‚ğ–‚­ƒJƒ‹ƒ`ƒƒ[ƒXƒN[ƒ‹–ƒ•Ò	‚¶‚Ô‚ñ‚ğ‚İ‚ª‚­‚©‚é‚¿‚á[‚·‚­[‚é‚Ü[‚¶‚á‚ñ‚Ö‚ñ	Face
 narc	ƒi[ƒN (rev 7.00)	‚È[‚­	Williams
 narc3	ƒi[ƒN (rev 3.20)	‚È[‚­	Williams
 trog	ƒgƒ[ƒO (rev LA4 03/11/91)	‚Æ‚ë[‚®	Midway
@@ -5218,6 +5220,7 @@ embargo	ƒGƒ“ƒo[ƒS	‚¦‚ñ‚Î[‚²	Cinematronics
 tripool	ƒgƒ‰ƒCEƒv[ƒ‹ (Casino Tech)	‚Æ‚ç‚¢‚Õ[‚é	Noma (Casino Tech license)
 tripoola	ƒgƒ‰ƒCEƒv[ƒ‹ (Costal Games)	‚Æ‚ç‚¢‚Õ[‚é	Noma (Costal Games license)
 joinem	ƒWƒ‡ƒCƒlƒ€	‚¶‚å‚¢‚Ë‚Ş	Global Corporation
+loverboy	ƒ‰ƒo[ƒ{[ƒC	‚ç‚Î[‚Ú[‚¢	Global Corporation
 striv	ƒX[ƒp[ƒgƒŠƒu	‚·[‚Ï[‚Æ‚è‚Ô_1	Hara Industries
 jack	ƒWƒƒƒbƒN‚Æ“¤‚Ì–Ø / Jack the Giantkiller (set 1)	‚¶‚á‚Á‚­‚Æ‚Ü‚ß‚Ì‚«	Cinematronics
 jack2	ƒWƒƒƒbƒN‚Æ“¤‚Ì–Ø / Jack the Giantkiller (set 2)	‚¶‚á‚Á‚­‚Æ‚Ü‚ß‚Ì‚«	Cinematronics
@@ -5517,6 +5520,7 @@ welltris	ƒEƒFƒ‹ƒgƒŠƒX (ŠCŠO”Å? 2 players)	‚¤‚¥‚é‚Æ‚è‚·	Video System Co.
 welltrij	ƒEƒFƒ‹ƒgƒŠƒX (“ú–{”Å 2 players)	‚¤‚¥‚é‚Æ‚è‚·	Video System Co.
 quiz18k	‚İ‚â‚·‚Ì‚ñ‚«‚ÌƒNƒCƒY18‹Ö -Dr.ƒGƒb‚¿‚á‚ñ‚Ìf@º	‚İ‚â‚·‚Ì‚ñ‚«‚Ì‚­‚¢‚¸18‚«‚ñ	EIM
 f1gp	F-1ƒOƒ‰ƒ“ƒvƒŠ	‚¦‚Ó‚í‚ñ‚®‚ç‚ñ‚Õ‚è_1	Video System Co.
+sf1gp	F-1ƒOƒ‰ƒ“ƒvƒŠ / Super Formula II (ŠC‘¯”Å)	‚¦‚Ó‚í‚ñ‚®‚ç‚ñ‚Õ‚è_1	[Video System Co.] (Playmark bootleg)
 f1gp2	F-1ƒOƒ‰ƒ“ƒvƒŠ Part II	‚¦‚Ó‚í‚ñ‚®‚ç‚ñ‚Õ‚è_1_2‚Ï[‚Æ2	Video System Co.
 crshrace	”š—óƒNƒ‰ƒbƒVƒ…ƒŒ[ƒX (set 1)	‚Î‚­‚ê‚Â‚­‚ç‚Á‚µ‚ã‚ê[‚·	Video System Co.
 crshrac2	”š—óƒNƒ‰ƒbƒVƒ…ƒŒ[ƒX (set 2)	‚Î‚­‚ê‚Â‚­‚ç‚Á‚µ‚ã‚ê[‚·	Video System Co.
@@ -5617,7 +5621,7 @@ wrally2	ƒ[ƒ‹ƒhƒ‰ƒŠ[2 -ƒcƒCƒ“ƒŒ[ƒVƒ“ƒO	‚í[‚é‚Ç‚ç‚è[_2	Gaelco
 maniacsp	ƒ}ƒjƒAƒbƒNƒXƒNƒEƒFƒA (prototype)	‚Ü‚É‚ ‚Á‚­‚·‚­‚¤‚¥‚ 	Gaelco
 maniacsq	ƒ}ƒjƒAƒbƒNƒXƒNƒEƒFƒA (unprotected)	‚Ü‚É‚ ‚Á‚­‚·‚­‚¤‚¥‚ 	Gaelco
 snowboar	ƒXƒm[ƒ{[ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (set 1)	‚·‚Ì[‚Ú[‚Ç‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Gaelco
-snowbalt	ƒXƒm[ƒ{[ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (ver 2)	‚·‚Ì[‚Ú[‚Ç‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Gaelco
+snowbalt	ƒXƒm[ƒ{[ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (ver 2.1)	‚·‚Ì[‚Ú[‚Ç‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Gaelco
 bang	GUNƒKƒoƒ`ƒ‡ / Bang	‚ª‚ñ‚ª‚Î‚¿‚å	Gaelco
 bangj	GUNƒKƒoƒ`ƒ‡ (“ú–{”Å)	‚ª‚ñ‚ª‚Î‚¿‚å	Gaelco
 speedup	ƒXƒs[ƒhƒAƒbƒv	‚·‚Ò[‚Ç‚ ‚Á‚Õ	Gaelco
@@ -5632,6 +5636,7 @@ galpanic	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN (Unprotected)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_1	Kaneko
 galpania	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN (MCU Protected)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_1	Kaneko
 galsnew	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN (USA”Å EXPRO-02 PCB)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_1	Kaneko
 galsnewa	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN (ŠCŠO”Å EXPRO-02 PCB)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_1	Kaneko
+galsnewj	ƒMƒƒƒ‹ƒYƒpƒjƒbƒN (“ú–{”Å EXPRO-02 PCB)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_1	Kaneko (Taito license)
 galpani2	ƒMƒƒƒ‹ƒYƒpƒjƒbƒNII (ƒAƒWƒA”Å)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_2_1	Kaneko
 galpan2g	ƒMƒƒƒ‹ƒYƒpƒjƒbƒNII (ƒhƒCƒc”Å)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_2_1	Kaneko
 galpan2t	ƒMƒƒƒ‹ƒYƒpƒjƒbƒNII (‘ä˜p”Å)	‚¬‚á‚é‚¸‚Ï‚É‚Á‚­_2_1	Kaneko
@@ -6018,6 +6023,8 @@ tangtang	ƒ^ƒ“ƒ^ƒ“ (ver 0526 26/05/2000)	‚½‚ñ‚½‚ñ	ESD
 royalmj	ƒƒCƒ„ƒ‹ƒ}[ƒWƒƒƒ“ (“ú–{”Å ver 1.13)	‚ë‚¢‚â‚é‚Ü[‚¶‚á‚ñ	Nichibutsu
 openmj	ƒI[ƒvƒ“ƒ}[ƒWƒƒƒ“ [BET] (“ú–{”Å)	‚¨[‚Õ‚ñ‚Ü[‚¶‚á‚ñ	Sapporo Mechanic
 royalmah	ƒƒCƒ„ƒ‹ƒ}[ƒWƒƒƒ“ (Falcon) (ŠC‘¯”Å ver 1.01)	‚ë‚¢‚â‚é‚Ü[‚¶‚á‚ñ	bootleg
+janyoup2	—Fƒp[ƒgII (ver 7.03 July 1 1983)	‚¶‚á‚ñ‚ä‚¤‚Ï[‚Æ2	Cosmo Denshi
+janoh	‰¤	‚¶‚á‚ñ‚¨‚¤	Toaplan
 suzume	‚í‚½‚µ‚Í‚·‚¸‚ß‚¿‚á‚ñ (“ú–{”Å)	‚í‚½‚µ‚Í‚·‚¸‚ß‚¿‚á‚ñ	Dyna Electronics
 hnayayoi	‰Ø–í¶ (“ú–{”Å)	‚Í‚È‚â‚æ‚¢	Dyna Electronics
 dondenmj	ƒhƒ“ƒfƒ“–ƒ [BET] (“ú–{”Å)	‚Ç‚ñ‚Å‚ñ‚Ü[‚¶‚á‚ñ	Dyna Electronics
@@ -6029,6 +6036,7 @@ tontonb	“Œ“Œ [BET] (“ú–{”Å)	‚Æ‚ñ‚Æ‚ñ	Dynax
 hanamai	‰Ø‚Ì•‘ (“ú–{”Å)	‚Í‚È‚Ì‚Ü‚¢	Dynax
 majs101b	–ƒƒXƒ^ƒWƒI101 [BET] (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚·‚½‚¶‚¨101	Dynax
 mjapinky	–ƒƒAƒ}ƒ“ƒhƒsƒ“ƒL[ [BET] (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚ ‚Ü‚ñ‚Ç‚Ò‚ñ‚«[	Dynax
+mjdejavu	–ƒå‡‹C˜O (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚µ‚ñ‚«‚ë‚¤	Dynax
 hnkochou	‰ØŒÓ’± [BET] (“ú–{”Å)	‚Í‚È‚±‚¿‚å‚¤	Dynax
 mjderngr	ƒ}[ƒWƒƒƒ“ƒfƒŠƒ“ƒWƒƒ[ (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Å‚è‚ñ‚¶‚á[	Dynax
 hnoridur	‰ØÜ’ß (“ú–{”Å)	‚Í‚È‚¨‚è‚Ã‚é	Dynax
@@ -6036,6 +6044,7 @@ drgpunch	ƒhƒ‰ƒSƒ“ƒpƒ“ƒ` (“ú–{”Å)	‚Ç‚ç‚²‚ñ‚Ï‚ñ‚¿	Dynax
 mjfriday	–ƒƒtƒ‰ƒCƒf[ (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Ó‚ç‚¢‚Å[	Dynax
 jantouki	ƒLƒƒƒ“ƒpƒXƒnƒ“ƒeƒBƒ“ƒO“¬‹L (“ú–{”Å)	‚«‚á‚ñ‚Ï‚·‚Í‚ñ‚Ä‚¡‚ñ‚®‚¶‚á‚ñ‚Æ‚¤‚«	Dynax
 mjifb	–ƒIf...? [BET]	‚Ü[‚¶‚á‚ñ‚¢‚Ó	Dynax
+mjvegas	–ƒƒxƒKƒX (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚×‚ª‚·	Dynax
 cafetime	–ƒ ƒJƒtƒFƒ^ƒCƒ€	‚Ü[‚¶‚á‚ñ‚©‚Ó‚¥‚½‚¢‚Ş	Dynax
 cafedoll	–ƒƒJƒtƒFƒh[ƒ‹ (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚©‚Ó‚¥‚Ç[‚é	Dynax
 janptr96	ƒWƒƒƒ“ƒsƒ…[ƒ^['96 (“ú–{”Å)	‚¶‚á‚ñ‚Ò‚ã[‚½[‚È‚¢‚ñ‚Ä‚¡[‚ñ‚µ‚Á‚­‚·	Dynax
@@ -6081,6 +6090,7 @@ ddenlovr	ƒhƒ“ƒfƒ“ƒ‰ƒo[ Vol.1 ”’•‚Â‚¯‚æ‚Á (`”Å)	‚Ç‚ñ‚Å‚ñ‚ç‚Î[‚Ú‚è‚ã[‚Ş1	Dy
 ddenlovb	ƒhƒ“ƒfƒ“ƒ‰ƒo[ Vol.1 ”’•‚Â‚¯‚æ‚Á (ŠØ‘”Å) (ŠC‘¯”Å)	‚Ç‚ñ‚Å‚ñ‚ç‚Î[‚Ú‚è‚ã[‚Ş1	[Dynax] (bootleg)
 hanakanz	‰Ô‚©‚ñ‚´‚µ (“ú–{”Å)	‚Í‚È‚©‚ñ‚´‚µ	Dynax
 akamaru	Ôƒ}ƒ‹Qã¸ƒhƒ“ƒgƒA[ƒ‹	‚ ‚©‚Ü‚é‚«‚ã[‚¶‚å‚¤‚µ‚å‚¤‚Ç‚ñ‚Æ‚ [‚é	Dynax (Nakanihon licence)
+mjflove	–ƒƒtƒ@ƒ“ƒ^ƒWƒbƒNƒ‰ƒu (“ú–{”Å)	‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚ñ‚½‚¶‚Á‚­‚ç‚Ô	Nakanihon
 hkagerou	‰Ø—z‰Š [BET] (“ú–{”Å)	‚Í‚È‚©‚°‚ë‚¤	Nakanihon + Dynax
 realbrk	ƒrƒŠƒ„[ƒhƒAƒJƒfƒ~[ ƒŠƒAƒ‹ƒuƒŒƒCƒN (‰¢B”Å)	‚Ñ‚è‚â[‚Ç‚ ‚©‚Å‚İ[‚è‚ ‚é‚Ô‚ê‚¢‚­	Nakanihon
 realbrkk	ƒrƒŠƒ„[ƒhƒAƒJƒfƒ~[ ƒŠƒAƒ‹ƒuƒŒƒCƒN (ŠØ‘”Å)	‚Ñ‚è‚â[‚Ç‚ ‚©‚Å‚İ[‚è‚ ‚é‚Ô‚ê‚¢‚­	Nakanihon
@@ -6704,7 +6714,7 @@ wheelfir	ƒzƒC[ƒ‹ƒY&ƒtƒ@ƒCƒA	‚Ù‚¢[‚é‚¸‚ ‚ñ‚Ç‚Ó‚Ÿ‚¢‚ 	TCH
 littlerb	ƒŠƒgƒ‹ƒƒrƒ“	‚è‚Æ‚é‚ë‚Ñ‚ñ	TCH
 tattack	ƒ^ƒCƒ€ƒAƒ^ƒbƒJ[	‚½‚¢‚Ş‚ ‚½‚Á‚©[	Shonan
 mosaicf2	ƒ‚ƒUƒCƒN (F2 System)	‚à‚´‚¢‚­	F2 System
-finalgdr	ƒtƒ@ƒCƒiƒ‹ƒSƒhƒŠ (ŠØ‘”Å)	‚Ó‚Ÿ‚¢‚È‚é‚²‚Ç‚è	SemiCom
+finalgdr	ƒtƒ@ƒCƒiƒ‹ƒSƒhƒŠ (ŠØ‘”Å ver 2.20.5915)	‚Ó‚Ÿ‚¢‚È‚é‚²‚Ç‚è	SemiCom
 wyvernwg	ƒƒCƒ”ƒ@[ƒ“EƒEƒBƒ“ƒOƒY	‚í‚¢‚Î[‚ñ‚¤‚¡‚ñ‚®‚¸	SemiCom (Game Vision License)
 rbmk	Àí–ƒ«‰¤	‚¶‚Á‚¹‚ñ‚Ü[‚¶‚á‚ñ‚¨‚¤	GMS
 go2000	ƒS[2000	‚²[‚Â[‚³‚¤‚´‚ñ	SA
@@ -6764,7 +6774,12 @@ kingpinm	ƒLƒ“ƒOƒsƒ“ƒ}ƒ‹ƒ`ƒQ[ƒ€	‚«‚ñ‚®‚Ò‚ñ_2_‚Ü‚é‚¿‚°[‚Ş	American Communication
 thayers	ƒZƒCƒ„[ƒYƒNƒGƒXƒg	‚¹‚¢‚â[‚¸‚­‚¦‚·‚Æ	RDI Video Systems
 thayersa	ƒZƒCƒ„[ƒYƒNƒGƒXƒg (alt set)	‚¹‚¢‚â[‚¸‚­‚¦‚·‚Æ	RDI Video Systems
 istellar	ƒCƒ“ƒ^[ƒXƒeƒ‰[	‚¢‚ñ‚½[‚·‚Ä‚ç[	Funai/Gakken
+esh	ƒGƒVƒ…[ƒYƒIƒ‹ƒ“ƒ~ƒ‰	‚¦‚µ‚ã[‚¸‚¨‚é‚ñ‚İ‚ç	Funai/Gakken
+esha	ƒGƒVƒ…[ƒYƒIƒ‹ƒ“ƒ~ƒ‰ (set 2)	‚¦‚µ‚ã[‚¸‚¨‚é‚ñ‚İ‚ç	Funai/Gakken
+eshb	ƒGƒVƒ…[ƒYƒIƒ‹ƒ“ƒ~ƒ‰ (set 3)	‚¦‚µ‚ã[‚¸‚¨‚é‚ñ‚İ‚ç	Funai/Gakken
 comebaby	ƒJƒ‚ƒ“ƒxƒCƒr[	‚©‚à‚ñ‚×‚¢‚Ñ[	ExPotato
+mirage	ƒ~ƒ‰[ƒWƒ…—db–ƒ“` (“ú–{”Å)	‚İ‚ç[‚¶‚ã‚æ‚¤‚¶‚ã‚¤‚Ü[‚¶‚á‚ñ‚Å‚ñ	Mitchell
+dominob	ƒhƒ~ƒmƒuƒƒbƒN	‚Ç‚İ‚Ì‚Ô‚ë‚Á‚­	Wonwoo Systems
 knightsh	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ƒnƒbƒN)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	hack / bootleg
 knightsb	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ŠC‘¯”Å)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	bootleg
 sf2m8	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (M8)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	hack / bootleg
@@ -6819,6 +6834,7 @@ matrimbl	V‹ŒŒ›ˆê‘° “¬¥ -Matrimelee (ŠC‘¯”Å)	‚µ‚ñ‚²‚¤‚¯‚Â‚¶‚¢‚¿‚¼‚­‚Æ‚¤‚±‚ñ	b
 mslug5b	ƒƒ^ƒ‹ƒXƒ‰ƒbƒO5 (ŠC‘¯”Å)	‚ß‚½‚é‚·‚ç‚Á‚®_5_1	bootleg
 zintrkcd	‰Ÿ‚µo‚µƒWƒ“ƒgƒŠƒbƒN (CD to MVS Conversion)	‚¨‚µ‚¾‚µ‚¶‚ñ‚Æ‚è‚Á‚­	hack
 fr2ch	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX2 (CD to MVS Conversion)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·_2	hack
+spclone	¹—…™ÖÖ (ver YY clone)	‚³‚ç‚Ü‚ñ‚¾_1	Konami
 vantris	ƒ”ƒ@ƒ“ƒgƒŠƒX (Vanguard hardware)	‚Î‚ñ‚Æ‚è‚·	N.Kehrer
 frogfest	ƒtƒƒbƒOƒtƒB[ƒXƒg	‚Ó‚ë‚Á‚®‚Ó‚¡[‚·‚Æ	Rastersoft
 columnsn	ƒRƒ‰ƒ€ƒX (Neo-Geo)	‚±‚ç‚Ş‚·	Sega / hack
