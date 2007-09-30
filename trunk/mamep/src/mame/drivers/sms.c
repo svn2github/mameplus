@@ -778,8 +778,7 @@ static WRITE8_HANDLER( sms_vdp_ctrl_w )
 }
 #endif
 
-//mamep: resolve conflict with drivers/segae.c
-static WRITE8_HANDLER( sms_sn76496_w )
+WRITE8_HANDLER( sms_sn76496_w )
 {
 	SN76496_0_w(0, data & 0xff);
 }

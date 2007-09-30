@@ -94,6 +94,9 @@ endif
 # uncomment next line to include the debugger
 # DEBUG = 1
 
+# uncomment next line to include the internal profiler
+# PROFILER = 1
+
 # uncomment next line to use DRC MIPS3 engine
 X86_MIPS3_DRC = 1
 
@@ -144,7 +147,7 @@ BUILD_ZLIB = 1
 # uncomment next line to include the symbols
 # SYMBOLS = 1
 
-# uncomment next line to include profiling information
+# uncomment next line to include profiling information from the compiler
 # PROFILE = 1
 
 # uncomment next line to generate a link map for exception handling in windows
@@ -181,6 +184,13 @@ ifeq ($(SYMBOLS),)
 OPTIMIZE = 3
 else
 OPTIMIZE = 0
+endif
+endif
+
+# profiler defaults to on for DEBUG builds
+ifneq ($(DEBUG),)
+ifneq ($(PROFILER),)
+PROFILER = 1
 endif
 endif
 
@@ -379,6 +389,11 @@ else
     DEFS += -DNDEBUG 
 endif
 
+# define MAME_PROFILER if we are a profiling build
+ifneq ($(PROFILER),)
+DEFS += -DMAME_PROFILER
+endif
+
 # define VOODOO_DRC if we are building the DRC Voodoo engine
 ifneq ($(X86_VOODOO_DRC),)
 DEFS += -DVOODOO_DRC
@@ -557,7 +572,6 @@ LDFLAGSEMULATOR =
 ifneq ($(PROFILE),)
     LDFLAGS += -pg
 endif
-
 
 # strip symbols and other metadata in non-symbols and non profiling builds
 

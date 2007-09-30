@@ -151,6 +151,9 @@ void options_output_ini_file(core_options *opts, core_file *inifile);
 
 void options_output_ini_file_marked(core_options *opts, core_file *inifile);
 
+/* output differing option data to an INI file */
+void options_output_diff_ini_file(core_options *opts, core_options *baseopts, core_file *inifile);
+
 /* output option data to a standard file handle */
 void options_output_ini_stdfile(core_options *opts, FILE *inifile);
 

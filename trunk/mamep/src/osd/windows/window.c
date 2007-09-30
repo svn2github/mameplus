@@ -53,12 +53,11 @@
 #include "menu.h"
 #endif /* MESS */
 
-extern void win_timer_enable(int enabled);
-
 extern int drawnone_init(win_draw_callbacks *callbacks);
 extern int drawgdi_init(win_draw_callbacks *callbacks);
 extern int drawdd_init(win_draw_callbacks *callbacks);
 extern int drawd3d_init(win_draw_callbacks *callbacks);
+static LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam);
 
 
 //============================================================
@@ -101,8 +100,8 @@ static win_window_info **last_window_ptr;
 static DWORD main_threadid;
 
 // actual physical resolution
-int win_physical_width;
-int win_physical_height;
+static int win_physical_width;
+static int win_physical_height;
 
 #ifdef USE_SCALE_EFFECTS
 int win_scale_res_changed;
@@ -1277,7 +1276,7 @@ static int complete_create(win_window_info *window)
 //  (window thread)
 //============================================================
 
-LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam)
+static LRESULT CALLBACK winwindow_video_window_proc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam)
 {
 	LONG_PTR ptr = GetWindowLongPtr(wnd, GWLP_USERDATA);
 	win_window_info *window = (win_window_info *)ptr;

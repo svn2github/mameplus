@@ -1099,30 +1099,29 @@ static gfx_layout belt_layout = {
 	0x80
 };
 
-static gfx_decode gfxdecodeinfo[] = {
-	{ REGION_GFX1, 0x0100, &unknown_layout,	0x00, 1 },			/* PR125: unused; police car? */
-	{ REGION_GFX1, 0x0200, &explode_layout,	RED_CLUT, 2 },		/* PR126: explosion */
-	{ REGION_GFX1, 0x0400, &player_layout,	PLAYER_CLUT, 1 },	/* PR127: player's car */
-	{ REGION_GFX1, 0x0600, &player_layout,	PLAYER_CLUT, 1 },	/* PR128: swerving (rough road) */
-	{ REGION_GFX1, 0x0800, &player_layout,	PLAYER_CLUT, 1 },	/* PR129: spinout1 */
-	{ REGION_GFX1, 0x0a00, &player_layout,	PLAYER_CLUT, 1 },	/* PR130: spinout2 */
-	{ REGION_GFX1, 0x0c00, &explode_layout,	CYAN_CLUT, 1 },		/* PR131: spray */
-	{ REGION_GFX1, 0x0e00, &computer_layout,	0x00, 5 },		/* PR132: computer car A,B */
-	{ REGION_GFX1, 0x1000, &text_layout,	CYAN_CLUT, 2 },		/* PR133: text */
-	{ REGION_GFX1, 0x1200, &tree_layout,	TREE_CLUT, 1 },		/* PR134: tree */
-	{ REGION_GFX1, 0x1300, &tree_layout,	TREE_CLUT, 1 },		/* PR134: grass */
-	{ REGION_GFX1, 0x1400, &tree_layout,	SHRUB_CLUT, 1 },	/* PR135: shrub */
-	{ REGION_GFX1, 0x1600, &house_layout,	HOUSE_CLUT, 1 },	/* PR136: house */
-	{ REGION_GFX1, 0x1800, &tunnel_layout,	RED_CLUT, 1 },		/* PR137: tunnel */
-	{ REGION_GFX1, 0x1900, &pool_layout,	CYAN_CLUT, 1 },		/* PR137: pool (oil slick) */
-	{ REGION_GFX1, 0x1900, &belt_layout,	GRASS_CLUT, 2 },	/* PR137: red/green belt */
-	{ REGION_GFX1, 0x1a00, &rescue_layout,	RESCUE_CLUT, 1 },	/* PR138: rescue car */
-	{ REGION_GFX1, 0x1c00, &signal_layout,	YELLOW_CLUT, 1 },	/* PR139: bridge signal (yellow on black)*/
-	{ REGION_GFX1, 0x1c00, &dummy_layout,	PLAYER_CLUT, 1 },	/* PR139: dummy car */
-	{ REGION_GFX1, 0x1e00, &bridge_layout,	WATER_CLUT, 1 },	/* PR140: bridge-water */
-	{ REGION_GFX1, 0x2000, &bridge_layout,	WATER_CLUT, 1 },	/* PR141: bridge-pillar */
-	{ -1 }
-};
+static GFXDECODE_START( monaco )
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0100, unknown_layout,	0x00, 1)	/* PR125: unused; police car? */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0200, explode_layout,	RED_CLUT, 2)	/* PR126: explosion */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0400, player_layout,	PLAYER_CLUT, 1)	/* PR127: player's car */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0600, player_layout,	PLAYER_CLUT, 1)	/* PR128: swerving (rough road) */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0800, player_layout,	PLAYER_CLUT, 1)	/* PR129: spinout1 */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0a00, player_layout,	PLAYER_CLUT, 1)	/* PR130: spinout2 */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0c00, explode_layout,	CYAN_CLUT, 1)	/* PR131: spray */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x0e00, computer_layout,	0x00, 5)	/* PR132: computer car A,B */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1000, text_layout,	CYAN_CLUT, 2)	/* PR133: text */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1200, tree_layout,	TREE_CLUT, 1)	/* PR134: tree */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1300, tree_layout,	TREE_CLUT, 1)	/* PR134: grass */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1400, tree_layout,	SHRUB_CLUT, 1)	/* PR135: shrub */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1600, house_layout,	HOUSE_CLUT, 1)	/* PR136: house */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1800, tunnel_layout,	RED_CLUT, 1)	/* PR137: tunnel */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1900, pool_layout,	CYAN_CLUT, 1)	/* PR137: pool (oil slick) */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1900, belt_layout,	GRASS_CLUT, 2)	/* PR137: red/green belt */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1a00, rescue_layout,	RESCUE_CLUT, 1)	/* PR138: rescue car */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1c00, signal_layout,	YELLOW_CLUT, 1)	/* PR139: bridge signal (yellow on black)*/
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1c00, dummy_layout,	PLAYER_CLUT, 1)	/* PR139: dummy car */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x1e00, bridge_layout,	WATER_CLUT, 1)	/* PR140: bridge-water */
+	GFXDECODE_ENTRY( REGION_GFX1, 0x2000, bridge_layout,	WATER_CLUT, 1)	/* PR141: bridge-pillar */
+GFXDECODE_END
 
 static const char *monaco_sample_names[] =
 {
@@ -1155,7 +1154,7 @@ static MACHINE_DRIVER_START( monaco )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(SCREEN_WIDTH, SCREEN_HEIGHT)
 	MDRV_SCREEN_VISIBLE_AREA(0, SCREEN_WIDTH-1, 0, SCREEN_HEIGHT-1)
-	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_GFXDECODE(monaco)
 	MDRV_PALETTE_LENGTH(1024)
 	MDRV_COLORTABLE_LENGTH(1024)
 

@@ -257,7 +257,7 @@ struct ext_header
 #define IS_AUTOKEY(port)		((port->autofire_setting & AUTOFIRE_ON) || ((port->autofire_setting & AUTOFIRE_TOGGLE) && (autofire_toggle_port->defvalue & (1 << port->player))))
 
 /* original input_ports without modifications */
-input_port_entry *input_ports_default;
+static input_port_entry *input_ports_default;
 
 
 /***************************************************************************
@@ -312,14 +312,14 @@ static void make_input_log(void);
 #endif /* USE_SHOW_INPUT_LOG */
 
 /* recorded speed read from an INP file */
-double rec_speed;
+static double rec_speed;
 
 /* set to 1 if INP file being played is a standard MAME INP file */
-int no_extended_inp;
+static int no_extended_inp;
 
 /* for average speed calculations */
-int framecount;
-double totalspeed;
+static int framecount;
+static double totalspeed;
 
 
 /***************************************************************************

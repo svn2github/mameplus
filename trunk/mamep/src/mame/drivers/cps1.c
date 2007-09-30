@@ -386,6 +386,7 @@ static WRITE8_HANDLER( qsound_banksw_w )
 *
 ********************************************************************/
 
+#ifndef MESS
 static struct EEPROM_interface qsound_eeprom_interface =
 {
 	7,		/* address bits */
@@ -429,6 +430,7 @@ static NVRAM_HANDLER( pang3 )
 			EEPROM_load(file);
 	}
 }
+#endif
 
 READ16_HANDLER( cps1_eeprom_port_r )
 {
@@ -4274,14 +4276,12 @@ static const gfx_layout cps1_layout32x32 =
 	512*8		/* char modulo */
 };
 
-gfx_decode cps1_gfxdecodeinfo[] =
-{
-	{ REGION_GFX1, 0, &cps1_layout8x8,   0, 0x100 },
-	{ REGION_GFX1, 0, &cps1_layout8x8_2, 0, 0x100 },
-	{ REGION_GFX1, 0, &cps1_layout16x16, 0, 0x100 },
-	{ REGION_GFX1, 0, &cps1_layout32x32, 0, 0x100 },
-	{ -1 }
-};
+GFXDECODE_START( cps1 )
+	GFXDECODE_ENTRY( REGION_GFX1, 0, cps1_layout8x8,   0, 0x100 )
+	GFXDECODE_ENTRY( REGION_GFX1, 0, cps1_layout8x8_2, 0, 0x100 )
+	GFXDECODE_ENTRY( REGION_GFX1, 0, cps1_layout16x16, 0, 0x100 )
+	GFXDECODE_ENTRY( REGION_GFX1, 0, cps1_layout32x32, 0, 0x100 )
+GFXDECODE_END
 
 
 
@@ -4325,7 +4325,7 @@ static MACHINE_DRIVER_START( cps1 )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA(8*8, (64-8)*8-1, 2*8, 30*8-1 )
-	MDRV_GFXDECODE(cps1_gfxdecodeinfo)
+	MDRV_GFXDECODE(cps1)
 	MDRV_PALETTE_LENGTH(4096)
 
 	MDRV_VIDEO_START(cps1)
@@ -4345,7 +4345,7 @@ static MACHINE_DRIVER_START( cps1 )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
-
+#ifndef MESS
 static MACHINE_DRIVER_START( sf2 )
 
 	/* basic machine hardware */
@@ -4367,7 +4367,6 @@ static MACHINE_DRIVER_START( pang3 )
 	MDRV_IMPORT_FROM(cps1)
 	MDRV_NVRAM_HANDLER(pang3)
 MACHINE_DRIVER_END
-
 
 static MACHINE_DRIVER_START( qsound )
 
@@ -4393,7 +4392,7 @@ static MACHINE_DRIVER_START( qsound )
 
 	MDRV_SOUND_REMOVE("okim")
 MACHINE_DRIVER_END
-
+#endif
 
 
 /***************************************************************************
@@ -8801,7 +8800,7 @@ ROM_START( sfach )
 ROM_END
 
 
-
+#ifndef MESS
 static DRIVER_INIT( wof )
 {
 	wof_decode();
@@ -9497,7 +9496,7 @@ static DRIVER_INIT( pang3 )
 
 	driver_init_cps1(machine);
 }
-
+#endif
 
 
 GAME( 1988, forgottn, 0,        cps1,     forgottn, cps1,     ROT0,   "Capcom", "Forgotten Worlds (US)", 0 )

@@ -2743,11 +2743,9 @@ static const gfx_layout zoomlayout =
 			8*64, 9*64, 10*64, 11*64, 12*64, 13*64, 14*64, 15*64 },
 	16*64
 };
-static const gfx_decode glfgreat_gfxdecodeinfo[] =
-{
-	{ REGION_GFX3, 0, &zoomlayout, 0x400, 16 },
-	{ -1 }
-};
+static GFXDECODE_START( glfgreat )
+	GFXDECODE_ENTRY( REGION_GFX3, 0, zoomlayout, 0x400, 16 )
+GFXDECODE_END
 
 static MACHINE_DRIVER_START( glfgreat )
 
@@ -2768,7 +2766,7 @@ static MACHINE_DRIVER_START( glfgreat )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MDRV_GFXDECODE(glfgreat_gfxdecodeinfo)
+	MDRV_GFXDECODE(glfgreat)
 	MDRV_PALETTE_LENGTH(2048)
 
 	MDRV_VIDEO_START(glfgreat)
@@ -2817,7 +2815,7 @@ static MACHINE_DRIVER_START( prmrsocr )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(64*8, 32*8)
 	MDRV_SCREEN_VISIBLE_AREA(14*8, (64-14)*8-1, 2*8, 30*8-1 )
-	MDRV_GFXDECODE(glfgreat_gfxdecodeinfo)
+	MDRV_GFXDECODE(glfgreat)
 	MDRV_PALETTE_LENGTH(2048)
 
 	MDRV_VIDEO_START(prmrsocr)

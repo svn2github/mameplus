@@ -294,7 +294,6 @@ int determine_bios_rom(core_options *options, const rom_entry *romp);
 
 /* ROM processing */
 void rom_init(running_machine *machine, const rom_entry *romp);
-void rom_exit(running_machine *machine);
 int rom_load_warnings(void);
 const rom_entry *rom_first_region(const game_driver *drv);
 const rom_entry *rom_next_region(const rom_entry *romp);

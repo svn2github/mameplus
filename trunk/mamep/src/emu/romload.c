@@ -59,6 +59,14 @@ static int total_rom_load_warnings;
 
 
 /***************************************************************************
+    FUNCTION PROTOTYPES
+***************************************************************************/
+
+static void rom_exit(running_machine *machine);
+
+
+
+/***************************************************************************
     HARD DISK HANDLING
 ***************************************************************************/
 
@@ -157,7 +165,7 @@ const rom_entry *rom_next_chunk(const rom_entry *romp)
     debugload - log data to a file
 -------------------------------------------------*/
 
-void CLIB_DECL debugload(const char *string, ...)
+static void CLIB_DECL debugload(const char *string, ...)
 {
 #ifdef LOG_LOAD
 	static int opened;
@@ -1168,7 +1176,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
     rom_exit - clean up after ourselves
 -------------------------------------------------*/
 
-void rom_exit(running_machine *machine)
+static void rom_exit(running_machine *machine)
 {
 	open_chd *curchd;
 	int i;

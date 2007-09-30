@@ -93,9 +93,13 @@ EMUOBJS += \
 	$(EMUOBJ)/hiscore.o
 endif
 
+ifneq ($(PROFILER),)
+EMUOBJS += \
+	$(EMUOBJ)/profiler.o
+endif
+
 ifneq ($(DEBUG),)
 EMUOBJS += \
-	$(EMUOBJ)/profiler.o \
 	$(EMUOBJ)/debug/debugcmd.o \
 	$(EMUOBJ)/debug/debugcmt.o \
 	$(EMUOBJ)/debug/debugcon.o \
