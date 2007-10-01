@@ -1,3 +1,7 @@
+# osd/ui/mame32.rc: 422
+                                
+Traduzido para Ciro Alfredo Consentino <emuloader@mameworld.net> 28-09-2007
+
 # osd/ui/properties.c: 1115
 %d colors 
 %d cores 
@@ -2545,10 +2549,6 @@ por Vezes &Jogadas
 # osd/ui/win32ui.h: 20
 type a keyword
 digite uma palavra-chave
-
-# osd/ui/mame32.rc: 422
-                                
-
 
 # osd/ui/mame32.rc: 1504
 Display the bios properties of the selected game

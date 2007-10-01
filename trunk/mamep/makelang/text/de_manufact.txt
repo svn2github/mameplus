@@ -70,7 +70,7 @@ Absolute Entertainment Inc.
 Academysoft-Elory
 
 
-# NBA Jam Extreme
+# Acclaim PSX
 Acclaim
 
 
@@ -100,6 +100,10 @@ Aiky
 
 # Real Mahjong Haihai (Japan)
 Alba
+
+
+# Imola Grand Prix
+Alberici
 
 
 # Delta Race
@@ -138,7 +142,11 @@ Amenip Nova Games Ltd.
 Ameri
 
 
-# Mad Dog McCree v1C board rev.A
+# King Pin
+American Communication Laboratories Inc.
+
+
+# American Laser Games BIOS
 American Laser Games
 
 
@@ -166,11 +174,11 @@ Andamiro
 Apple
 
 
-# SportTime Table Hockey (Arcadia, V 2.1)
+# Arcadia System BIOS
 Arcadia Systems
 
 
-# Street Fighter EX (USA 961219)
+# Street Fighter EX (EURO 961219)
 Arika
 
 
@@ -210,7 +218,7 @@ Atari Games
 Athena
 
 
-# Power Instinct 3 - Groove On Fight (J 970416 V1.001)
+# Atlus PSX
 Atlus
 
 
@@ -242,7 +250,7 @@ Bandai
 Banpresto
 
 
-# The Crystal Maze: Team Challenge (SWP)
+# MPU4 Video Firmware
 Barcrest
 
 
@@ -274,11 +282,15 @@ Bonanza Enterprises, Ltd
 Bootleg
 
 
+# Joker-Poker
+Bootleg in Coinmaster hardware
+
+
 # Sky Lancer (Bordun International)
 Bordun International
 
 
-# The Crystal of Kings
+# Crystal System BIOS
 Brezzasoft
 
 
@@ -302,6 +314,10 @@ CD Express
 CVS
 
 
+# Gaming Draw Poker
+Cal Omega
+
+
 # 1942 (PlayChoice-10)
 Capcom
 
@@ -312,10 +328,6 @@ Capcom, supported by Cave
 
 # Giga Wing (USA 990222)
 Capcom, supported by Takumi
-
-
-# 906III Video Poker
-Casino Electronics Inc.
 
 
 # Cool Pool
@@ -374,10 +386,6 @@ Codemasters
 Coinmaster
 
 
-# Joker Poker
-Coinmaster-Gaming, Ltd
-
-
 # Gulf War II
 Comad
 
@@ -388,6 +396,10 @@ Comad & New Japan System
 
 # Funny Bubble (Comad version)
 Comad Industry Co Ltd
+
+
+# Amiga CD32 Bios
+Commodore
 
 
 # Puyo Puyo Sun (J 961115 V0.001)
@@ -420,6 +432,10 @@ Craul Denshi
 
 # Run Deep
 Cream
+
+
+# Gyrodine
+Crux
 
 
 # Mirax
@@ -632,6 +648,10 @@ Ed
 
 # Battle Bakraid (Japan) (Wed Apr 7 1999)
 Eighting
+
+
+# PS Arcade 95
+Eighting/Raizing
 
 
 # Space Force (set 2)
@@ -938,7 +958,7 @@ Human Amusement
 Human Inc.
 
 
-# Kisekae Mahjong
+# Multi Amenity Cassette System BIOS
 I'Max
 
 
@@ -1016,6 +1036,10 @@ JMA
 
 # Poker Night
 JMK
+
+
+# Cluedo (prod. 2D)
+JPM
 
 
 # Check Man (Japan)
@@ -1138,12 +1162,8 @@ LAI Games
 LAX
 
 
-# Monza GP
-Leante Games
-
-
-# Space War (Leijac)
-Leijac
+# Space War (Leijac Corporation)
+Leijac Corporation
 
 
 # Astro Laser
@@ -1164,6 +1184,10 @@ Limenko
 
 # Quizmaster (German)
 Loewen Spielautomaten
+
+
+# Space Invaders (Logitec)
+Logitec
 
 
 # Star Wars Trilogy (ver A)
@@ -1230,7 +1254,7 @@ Merit
 Metro
 
 
-# Wild Arrow
+# Wild Arrow (Standard V4.8)
 Meyco Games
 
 
@@ -1262,7 +1286,7 @@ Midway
 Midway Games
 
 
-# Wonder League Star (Korea)
+# Wonder League Star - Sok-Magicball Fighting (Korea)
 Mijin
 
 
@@ -1346,6 +1370,10 @@ Nasco Japan
 Nazca
 
 
+# Super Pool (Italy)
+Nazionale Elettronica Giochi S.A.S.
+
+
 # Neo Pong (v1.1)
 Neodev
 
@@ -1414,6 +1442,10 @@ Nova?
 Novar
 
 
+# Filetto (v1.05 901009)
+Novarmatic
+
+
 # American Poker II (set 1)
 Novomatic
 
@@ -1462,6 +1494,10 @@ Orca
 Oriental
 
 
+# G-Stream G2020
+Oriental Soft Japan
+
+
 # Defence Command
 Outer Limits
 
@@ -1470,7 +1506,7 @@ Outer Limits
 P & P Marketing
 
 
-# Magic Fly (Ver 0.3)
+# Magic Fly
 P&A Games
 
 
@@ -1511,14 +1547,14 @@ Philko
 
 
 # PlayMan Poker (Germany)
-PlayMan?
+PlayMan
 
 
 # Super Slam (set 1)
 Playmark
 
 
-# SvC Chaos - SNK vs Capcom (JAMMA PCB)
+# SNK vs. CAPCOM SVC CHAOS (JAMMA PCB)
 Playmore
 
 
@@ -1560,6 +1596,10 @@ Psygnosis
 
 # Heaven's Gate
 RACDYM
+
+
+# Thayer's Quest
+RDI Video Systems
 
 
 # Kyukyoku no Hito [BET] (Japan 880824)
@@ -1630,6 +1670,10 @@ Ryoto Electric Co.
 SA
 
 
+# Astron Belt
+SEGA
+
+
 # Trivia (sms)
 SMS MFG CORP
 
@@ -1666,7 +1710,7 @@ Sage's Creation
 Sai-Mate
 
 
-# Viewpoint
+# Atomiswave Bios
 Sammy
 
 
@@ -1730,10 +1774,6 @@ Seibu Kaihatsu Inc.
 SemiCom
 
 
-# Cool Minigame Collection
-Semicom
-
-
 # Hex Pool (Senko)
 Senko
 
@@ -1748,6 +1788,10 @@ Sensible Software
 
 # Sente Diagnostic Cartridge
 Sente
+
+
+# Quiz Olympic
+Seoul Coin Corp.
 
 
 # Vastar (set 1)
@@ -1828,6 +1872,10 @@ Space
 
 # Evil Stone
 Spacy Industrial, Ltd.
+
+
+# Mahjong Dunhuang
+Spirit
 
 
 # Pele's World Tournament Soccer (UE) [!]
@@ -1918,6 +1966,10 @@ System Service
 System Ten
 
 
+# DaiDaiKakumei (Japan)
+SystemBit
+
+
 # Pebble Beach - The Great Shot (JUE 950913 V0.990)
 T&E Soft
 
@@ -1946,7 +1998,7 @@ TDS
 TDS & Mints
 
 
-# Cannonball (set 2)
+# Cannon Ball (set 2)
 TV Game Gruenberg
 
 
@@ -2126,6 +2178,10 @@ Triumph Software Inc.
 Tsuburaya Prod.
 
 
+# El Grande - 5 Card Draw (New)
+Tuni Electro Service
+
+
 # Bubble 2000
 Tuning
 
@@ -2158,7 +2214,7 @@ Universal Video Spiel
 Uniwang
 
 
-# Mahjong Dunhuang
+# Intersecti
 Unknown
 
 

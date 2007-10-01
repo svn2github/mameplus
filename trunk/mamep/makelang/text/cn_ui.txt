@@ -1,16 +1,16 @@
-# osd/ui/properties.c: 1111
+# osd/ui/properties.c: 1115
 %d colors 
 %d 色 
 
-# osd/ui/win32ui.c: 258, 3776
+# osd/ui/win32ui.c: 258, 3778
 %d games
 %d 个游戏
 
-# osd/ui/properties.c: 860
+# osd/ui/properties.c: 864
 %d x %d (H) %f Hz (%d colors)
 %d x %d (水平) %f Hz (%d 色)
 
-# osd/ui/properties.c: 853
+# osd/ui/properties.c: 857
 %d x %d (V) %f Hz (%d colors)
 %d x %d (垂直) %f Hz (%d 色)
 
@@ -22,31 +22,31 @@
 %dx%d (V)
 %dx%d (垂直)
 
-# osd/ui/properties.c: 1087
+# osd/ui/properties.c: 1091
 %s (%d player)
 %s (%d 玩家)
 
-# osd/ui/properties.c: 1098
+# osd/ui/properties.c: 1102
 %s (%d player, %d button)
 %s (%d 玩家, %d 按钮)
 
-# osd/ui/properties.c: 1096
+# osd/ui/properties.c: 1100
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按钮)
 
-# osd/ui/properties.c: 1084
+# osd/ui/properties.c: 1088
 %s (%d players)
 %s (%d 玩家)
 
-# osd/ui/properties.c: 1093
+# osd/ui/properties.c: 1097
 %s (%d players, %d button)
 %s (%d 玩家, %d 按钮)
 
-# osd/ui/properties.c: 1090
+# osd/ui/properties.c: 1094
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按钮)
 
-# osd/ui/properties.c: 1225
+# osd/ui/properties.c: 1229
 %s\nThis is also global driver options in the %s
 %s\n这也是 %s 的全局驱动选项
 
@@ -90,7 +90,7 @@
 &Cancel
 取消(&C)
 
-# osd/ui/audit32.c: 491 osd/ui/mame32.rc: 1206
+# osd/ui/audit32.c: 542 osd/ui/mame32.rc: 1206
 &Close
 关闭(&C)
 
@@ -98,7 +98,7 @@
 &Contents\tF1
 內容(&C)\tF1
 
-# osd/ui/audit32.c: 361
+# osd/ui/audit32.c: 412
 &Continue
 继续(&C)
 
@@ -202,7 +202,7 @@ MAME 版本说明(&M)
 &Palette Setting...
 色盘设置(&P)...
 
-# osd/ui/audit32.c: 356 osd/ui/mame32.rc: 442
+# osd/ui/audit32.c: 407 osd/ui/mame32.rc: 442
 &Pause
 暂停(&P)
 
@@ -210,11 +210,11 @@ MAME 版本说明(&M)
 &Picture Area\tAlt+P
 图片区域(&P)\tAlt+P
 
-# osd/ui/mame32.rc: 52, 184 osd/ui/win32ui.c: 3928
+# osd/ui/mame32.rc: 52, 184 osd/ui/win32ui.c: 3930
 &Play
 运行(&P)
 
-# osd/ui/win32ui.c: 257, 3973, 7232, 7279
+# osd/ui/win32ui.c: 257, 3975, 7234, 7281
 &Play %s
 运行(&P) %s
 
@@ -290,7 +290,7 @@ MAME 版本说明(&M)
 &Working
 可以运行(&W)
 
-# osd/ui/win32ui.c: 6695
+# osd/ui/win32ui.c: 6697
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是游戏 '%s' 的有效进度文件。
 
@@ -314,7 +314,7 @@ A sharing violation occurred.
 A&udit
 校验(&U)
 
-# osd/ui/properties.c: 1034 osd/ui/treeview.c: 1441
+# osd/ui/properties.c: 1038 osd/ui/treeview.c: 1441
 AD Stick
 AD 游戏杆
 
@@ -378,7 +378,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允许从文件夹中过滤游戏
 
-# osd/ui/properties.c: 4642
+# osd/ui/properties.c: 4684
 Anti-clockwise
 逆时针
 
@@ -414,19 +414,19 @@ Audit
 Audit ROM and samples sets
 校验 ROM 和采样文件集
 
-# osd/ui/audit32.c: 490
+# osd/ui/audit32.c: 541
 Audit complete.\n
 校验完成。\n
 
-# osd/ui/properties.c: 444, 4554, 4735, 4770
+# osd/ui/properties.c: 447, 4596, 4777, 4812
 Auto
 自动
 
-# osd/ui/properties.c: 4645
+# osd/ui/properties.c: 4687
 Auto anti-clockwise
 自动逆时针
 
-# osd/ui/properties.c: 4644
+# osd/ui/properties.c: 4686
 Auto clockwise
 自动顺时针
 
@@ -450,7 +450,7 @@ Available
 Available fields:
 可用栏目:
 
-# osd/ui/properties.c: 1181
+# osd/ui/properties.c: 1185
 BIOS missing
 缺少 BIOS
 
@@ -474,7 +474,7 @@ Basic
 Beam width
 光束宽度
 
-# osd/ui/audit32.c: 539
+# osd/ui/audit32.c: 590
 Best available
 最佳可用状态
 
@@ -606,7 +606,7 @@ Categories
 Changing this item is not permitted
 不允许更改此项
 
-# osd/ui/audit32.c: 279, 289
+# osd/ui/audit32.c: 330, 340
 Checking Game %s - %s
 正在检查游戏 %s - %s
 
@@ -614,7 +614,7 @@ Checking Game %s - %s
 Checking...
 正在检查...
 
-# osd/ui/properties.c: 4641
+# osd/ui/properties.c: 4683
 Clockwise
 顺时针
 
@@ -630,15 +630,15 @@ Clone of:
 Clones
 克隆游戏
 
-# osd/ui/properties.c: 447
+# osd/ui/properties.c: 450
 Cocktail
 平躺型机台
 
-# osd/ui/properties.c: 1149
+# osd/ui/properties.c: 1153
 Colors are completely wrong
 颜色完全错误
 
-# osd/ui/properties.c: 1154
+# osd/ui/properties.c: 1158
 Colors aren't 100% accurate
 颜色不是100%精确
 
@@ -726,11 +726,11 @@ Copyright (C) 1997-2007 The MAME Team
 Correct:
 正确:
 
-# osd/ui/win32ui.c: 6570
+# osd/ui/win32ui.c: 6572
 Could not open '%s' as a valid input file.
 '%s'不是有效的输入指令文件。
 
-# osd/ui/win32ui.c: 6636, 6709
+# osd/ui/win32ui.c: 6638, 6711
 Could not open '%s' as a valid savestate file.
 '%s'不是有效的游戏进度文件。
 
@@ -742,7 +742,7 @@ Crop artwork
 Cursor
 光标
 
-# osd/ui/win32ui.c: 4778, 4806
+# osd/ui/win32ui.c: 4780, 4808
 Custom
 自定义
 
@@ -766,11 +766,11 @@ Customize interface options.
 Customize which columns are used in the game list
 自定义游戏列表使用的栏目
 
-# osd/ui/properties.c: 4640
+# osd/ui/properties.c: 4682
 Default
 默认
 
-# osd/ui/properties.c: 623
+# osd/ui/properties.c: 627
 Default Game
 默认游戏
 
@@ -794,7 +794,7 @@ Description
 Details
 明细
 
-# osd/ui/properties.c: 1026 osd/ui/treeview.c: 1443
+# osd/ui/properties.c: 1030 osd/ui/treeview.c: 1443
 Dial
 方向盘
 
@@ -802,11 +802,11 @@ Dial
 Dial device
 方向盘设备
 
-# osd/ui/mame32.rc: 670 osd/ui/properties.c: 409
+# osd/ui/mame32.rc: 670 osd/ui/properties.c: 412
 Direct3D
 Direct3D
 
-# osd/ui/mame32.rc: 471
+# osd/ui/mame32.rc: 471 
 Directories
 目录
 
@@ -898,23 +898,23 @@ Double Joy 4-Way
 Double Joy 8-Way
 8方向双游戏杆
 
-# osd/ui/properties.c: 959, 984
+# osd/ui/properties.c: 963, 988
 Double Joystick 16-Way
 16方向双游戏杆
 
-# osd/ui/properties.c: 952, 973, 974
+# osd/ui/properties.c: 956, 977, 978
 Double Joystick 2-Way
 2方向双游戏杆
 
-# osd/ui/properties.c: 948, 949, 977
+# osd/ui/properties.c: 952, 953, 981
 Double Joystick 2-Way Vertical
 垂直2方向双游戏杆
 
-# osd/ui/properties.c: 955, 980
+# osd/ui/properties.c: 959, 984
 Double Joystick 4-Way
 4方向双游戏杆
 
-# osd/ui/properties.c: 961, 986
+# osd/ui/properties.c: 965, 990
 Double Joystick 8-Way
 8方向双游戏杆
 
@@ -922,7 +922,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 抗锯齿描绘矢量
 
-# osd/ui/properties.c: 4619
+# osd/ui/properties.c: 4661
 Draw every frame
 不跳帧
 
@@ -974,17 +974,13 @@ Enable lightgun input
 Enable mouse input
 启用鼠标输入
 
-# osd/ui/mame32.rc: 730
-Enable multiple keyboards
-启用多键盘支持
-
-# osd/ui/mame32.rc: 728
-multiple mice
-启用多鼠标支持
-
 # osd/ui/mame32.rc: 776
 Enable multi-threading
 启用多线程
+
+# osd/ui/mame32.rc: 730
+Enable multiple keyboards
+启用多键盘支持
 
 # osd/ui/mame32.rc: 631
 Enable sound and sound CPUs
@@ -998,7 +994,7 @@ Enable steadykey support
 Enforce aspect ratio
 强制调整外观比例
 
-# osd/ui/audit32.c: 102 osd/ui/properties.c: 643, 734, 1731
+# osd/ui/audit32.c: 102 osd/ui/properties.c: 647, 738, 1735
 Error
 错误
 
@@ -1010,7 +1006,7 @@ Error finding custom file name to save
 Error log (for developers)
 错误记录(开发用)
 
-# osd/ui/win32ui.c: 7680
+# osd/ui/win32ui.c: 7682
 Error searching for custom folder
 搜索自定义文件夹时发生错误
 
@@ -1030,15 +1026,19 @@ Exit the application
 External Folder List
 外部目录列表
 
+# osd/ui/winuiopt.c: 3246
+FOLDER LIST HIDE OPTIONS
+专用隐藏文件夹选项
+
 # osd/ui/layout.c: 74
 FPS
 游戏帧速
 
-# osd/ui/audit32.c: 547
+# osd/ui/audit32.c: 598
 Failed
 失败
 
-# osd/ui/audit32.c: 296 osd/ui/mame32.rc: 439
+# osd/ui/audit32.c: 347 osd/ui/mame32.rc: 439
 File Audit
 文件校验
 
@@ -1046,7 +1046,7 @@ File Audit
 Filters for %s Folder
 %s 文件夹的过滤器
 
-# osd/ui/properties.c: 431
+# osd/ui/properties.c: 434
 First screen
 第一个屏幕
 
@@ -1086,7 +1086,7 @@ Font (normal)
 Font (special)
 字体 (特殊)
 
-# osd/ui/properties.c: 434
+# osd/ui/properties.c: 437
 Fourth screen
 第四个屏幕
 
@@ -1105,6 +1105,18 @@ Full screen contrast
 # osd/ui/mame32.rc: 697
 Full screen gamma
 全屏幕灰度
+
+# osd/ui/winuiopt.c: 3192
+GENERAL OPTIONS
+专用通用选项
+
+# osd/ui/winuiopt.c: 3250
+GUI JOYSTICK OPTIONS
+界面游戏杆选项
+
+# osd/ui/winuiopt.c: 3265
+GUI KEYBOARD OPTIONS
+界面键盘选项
 
 # osd/ui/mame32.rc: 875
 Game Filters
@@ -1130,15 +1142,15 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 游戏过滤器允许在每个文件夹自定义隐藏符合过滤条件的游戏。
 
-# osd/ui/properties.c: 1164
+# osd/ui/properties.c: 1168
 Game lacks sound
 游戏尚未支持声音
 
-# osd/ui/properties.c: 1144
+# osd/ui/properties.c: 1148
 Game protection isn't fully emulated
 游戏的保护尚未完全模拟
 
-# osd/ui/win32ui.c: 3528
+# osd/ui/win32ui.c: 3530
 Game search %d%% complete
 游戏搜索 %d%% 完成
 
@@ -1150,15 +1162,15 @@ Gamma Correction
 General
 普通
 
-# osd/ui/properties.c: 1227
+# osd/ui/properties.c: 1231
 Global driver options\nCustom options used by all games in the %s
 全局驱动选项\n所有 %s 游戏使用的自定义选项
 
-# osd/ui/properties.c: 1207
+# osd/ui/properties.c: 1211
 Global game options\nDefault options used by all games
 全局游戏选项\n所有游戏使用的默认选项
 
-# osd/ui/properties.c: 1210
+# osd/ui/properties.c: 1214
 Global vector options\nCustom options used by all games in the Vector
 全局矢量选项\n所有矢量游戏使用的自定义选项
 
@@ -1170,7 +1182,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 灰
 
-# osd/ui/win32ui.c: 705 osd/ui/winuiopt.c: 454, 3219
+# osd/ui/win32ui.c: 705 osd/ui/winuiopt.c: 454, 3225
 Grouped
 分组
 
@@ -1206,7 +1218,7 @@ Horizontal
 How cheats work
 如何使用作弊码
 
-# osd/ui/winuiopt.c: 3166
+# osd/ui/winuiopt.c: 3172
 INTERFACE OPTIONS
 界面选项
 
@@ -1282,27 +1294,27 @@ Joy 4-Way
 Joy 8-Way
 8方向游戏杆
 
-# osd/ui/properties.c: 459
+# osd/ui/properties.c: 462
 Joystick
 游戏杆
 
-# osd/ui/properties.c: 911, 934
+# osd/ui/properties.c: 915, 938
 Joystick 16-Way
 16方向游戏杆
 
-# osd/ui/properties.c: 900, 901, 927
+# osd/ui/properties.c: 904, 905, 931
 Joystick 2-Way
 2方向游戏杆
 
-# osd/ui/properties.c: 904, 923, 924
+# osd/ui/properties.c: 908, 927, 928
 Joystick 2-Way Vertical
 垂直2方向游戏杆
 
-# osd/ui/properties.c: 907, 930
+# osd/ui/properties.c: 911, 934
 Joystick 4-Way
 4方向游戏杆
 
-# osd/ui/properties.c: 913, 936
+# osd/ui/properties.c: 917, 940
 Joystick 8-Way
 8方向游戏杆
 
@@ -1314,7 +1326,7 @@ Joystick deadzone
 Joystick saturation
 游戏杆饱和度
 
-# osd/ui/properties.c: 457
+# osd/ui/properties.c: 460
 Keyboard
 键盘
 
@@ -1322,11 +1334,15 @@ Keyboard
 L&arge Icons
 大图标(&A)
 
+# osd/ui/winuiopt.c: 3238
+LIST FONT OPTIONS
+列表字体选项
+
 # osd/ui/win32ui.c: 701 osd/ui/winuiopt.c: 450
 Large Icons
 大图标
 
-# osd/ui/layout.c: 79 osd/ui/properties.c: 460, 1038 osd/ui/treeview.c: 1445
+# osd/ui/layout.c: 79 osd/ui/properties.c: 463, 1042 osd/ui/treeview.c: 1445
 Lightgun
 光枪
 
@@ -1386,6 +1402,10 @@ MAME32 版作者
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32 将重置所选的项目\n为安装时的初始设置并退出。\n\n
 
+# osd/ui/mame32.rc: 404, 428, 439, 471, 491, 514, 553, 572, 623, 660, 716, 759, 820, 848, 875, 912, 937, 1001, 1029, 1044, 1103, 1147, 1203 osd/ui/translate.c: 103
+MS Sans Serif
+宋体
+
 # osd/ui/mame32.rc: 521
 Manufactured:
 制造厂商:
@@ -1414,9 +1434,13 @@ Miscellaneous
 Missing Sound
 缺少声音
 
-# osd/ui/properties.c: 458
+# osd/ui/properties.c: 461
 Mouse
 鼠标
+
+# osd/ui/mame32.rc: 1072
+Mouse device
+鼠标设备
 
 # osd/ui/mame32.rc: 507
 Move Down
@@ -1446,7 +1470,7 @@ Neogeo 解密
 New game changes
 新游戏更改
 
-# osd/ui/audit32.c: 124 osd/ui/win32ui.c: 5725
+# osd/ui/audit32.c: 124 osd/ui/win32ui.c: 5727
 No
 否
 
@@ -1462,7 +1486,7 @@ No Dump
 No PCB Info available for this game.
 这个游戏没有可用的 PCB 信息
 
-# osd/ui/win32ui.c: 3955
+# osd/ui/win32ui.c: 3957
 No Selection
 没有选定
 
@@ -1478,11 +1502,11 @@ Non-CPU
 Non-Wor&king
 不可运行(&K)
 
-# osd/ui/dialogs.c: 216 osd/ui/properties.c: 3509, 4643, 4870, 5134 
+# osd/ui/dialogs.c: 216 osd/ui/properties.c: 464, 3540, 4685, 4912, 5176 
 None
 无
 
-# osd/ui/audit32.c: 400, 404
+# osd/ui/audit32.c: 451, 455
 None required
 不需要
 
@@ -1490,11 +1514,11 @@ None required
 Not Working
 不可运行
 
-# osd/ui/audit32.c: 543
+# osd/ui/audit32.c: 594
 Not found
 未找到
 
-# osd/ui/properties.c: 1133
+# osd/ui/properties.c: 1137
 Not working
 不可运行
 
@@ -1530,7 +1554,7 @@ Overlays
 P&layback Input...
 回放输入指令(&L)...
 
-# osd/ui/winuiopt.c: 3153
+# osd/ui/winuiopt.c: 3159
 PATH AND DIRECTORY OPTIONS
 路径和目录选项
 
@@ -1542,7 +1566,7 @@ PCB 信息
 PCB Info Files
 PCB 信息文件
 
-# osd/ui/properties.c: 1023 osd/ui/treeview.c: 1442
+# osd/ui/properties.c: 1027 osd/ui/treeview.c: 1442
 Paddle
 操纵杆
 
@@ -1554,7 +1578,7 @@ Paddle device
 Palette
 色盘
 
-# osd/ui/audit32.c: 535
+# osd/ui/audit32.c: 586
 Passed
 通过
 
@@ -1578,11 +1602,11 @@ Per-screen video options
 Physical monitor:
 物理显示器:
 
-# osd/ui/properties.c: 446
+# osd/ui/properties.c: 449
 Pixel Aspect
 像素比例
 
-# osd/ui/win32ui.c: 867 osd/ui/winuiopt.c: 3315
+# osd/ui/win32ui.c: 867 osd/ui/winuiopt.c: 3321
 Play Time
 游戏时间
 
@@ -1654,23 +1678,23 @@ Positional device
 Pr&operties
 属性(&O)
 
-# osd/ui/win32ui.c: 3985, 7246, 7289
+# osd/ui/win32ui.c: 3987, 7248, 7291
 Propert&ies for %s
 %s 的属性(&I)
 
-# osd/ui/mame32.rc: 66, 203 osd/ui/win32ui.c: 3935
+# osd/ui/mame32.rc: 66, 203 osd/ui/win32ui.c: 3937
 Propert&ies for Driver
 驱动属性(&I)
 
-# osd/ui/win32ui.c: 3997, 7260
+# osd/ui/win32ui.c: 3999, 7262
 Properties &for %s BIOS
 %s BIOS属性(&F)
 
-# osd/ui/mame32.rc: 67, 204 osd/ui/win32ui.c: 3942, 4003, 7266, 7302
+# osd/ui/mame32.rc: 67, 204 osd/ui/win32ui.c: 3944, 4005, 7268, 7304
 Properties &for BIOS
 BIOS属性
 
-# osd/ui/properties.c: 642, 733
+# osd/ui/properties.c: 646, 737
 Propery Sheet Error %d %X
 属性表单错误 %d %X
 
@@ -1694,7 +1718,7 @@ ROM 检查:
 ROMs
 ROMs
 
-# osd/ui/properties.c: 1183
+# osd/ui/properties.c: 1187
 ROMs missing
 缺少 ROM
 
@@ -1702,11 +1726,11 @@ ROMs missing
 Randomly select a game.
 随机选定游戏
 
-# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5717
+# osd/ui/layout.c: 70 osd/ui/win32ui.c: 5719
 Raster
 点阵画面
 
-# osd/ui/win32ui.c: 3709
+# osd/ui/win32ui.c: 3711
 Ready
 就绪
 
@@ -1838,11 +1862,11 @@ Scale screen
 Screen
 屏幕
 
-# osd/ui/win32ui.c: 3487
+# osd/ui/win32ui.c: 3489
 Screen flip support is missing
 不支持画面翻转
 
-# osd/ui/properties.c: 1174
+# osd/ui/properties.c: 1178
 Screen flipping is not supported
 不支持画面翻转
 
@@ -1870,7 +1894,7 @@ Screenshot Cycletime in Seconds
 Screenshot Ta&b\tAlt+B
 屏幕快照选项卡(&B)\tAlt+B
 
-# osd/ui/properties.c: 432
+# osd/ui/properties.c: 435
 Second screen
 第二个屏幕
 
@@ -2070,43 +2094,43 @@ Show palette for:
 Show these fields in this order:
 按以下顺序显示栏目:
 
-# osd/ui/properties.c: 4620
+# osd/ui/properties.c: 4662
 Skip 1 of 10 frames
 跳帧 1/10
 
-# osd/ui/properties.c: 4629
+# osd/ui/properties.c: 4671
 Skip 10 of 10 frames
 跳帧 10/10
 
-# osd/ui/properties.c: 4621
+# osd/ui/properties.c: 4663
 Skip 2 of 10 frames
 跳帧 2/10
 
-# osd/ui/properties.c: 4622
+# osd/ui/properties.c: 4664
 Skip 3 of 10 frames
 跳帧 3/10
 
-# osd/ui/properties.c: 4623
+# osd/ui/properties.c: 4665
 Skip 4 of 10 frames
 跳帧 4/10
 
-# osd/ui/properties.c: 4624
+# osd/ui/properties.c: 4666
 Skip 5 of 10 frames
 跳帧 5/10
 
-# osd/ui/properties.c: 4625
+# osd/ui/properties.c: 4667
 Skip 6 of 10 frames
 跳帧 6/10
 
-# osd/ui/properties.c: 4626
+# osd/ui/properties.c: 4668
 Skip 7 of 10 frames
 跳帧 7/10
 
-# osd/ui/properties.c: 4627
+# osd/ui/properties.c: 4669
 Skip 8 of 10 frames
 跳帧 8/10
 
-# osd/ui/properties.c: 4628
+# osd/ui/properties.c: 4670
 Skip 9 of 10 frames
 跳帧 9/10
 
@@ -2174,7 +2198,7 @@ Sort items by year
 Sound
 声音芯片
 
-# osd/ui/properties.c: 1169
+# osd/ui/properties.c: 1173
 Sound emulation isn't 100% accurate
 声音模拟不是100%精确
 
@@ -2190,7 +2214,7 @@ Sounds (*.wav)
 St&ory
 游戏故事(&O)
 
-# osd/ui/properties.c: 445, 3346, 3351, 3354, 3559, 3562, 4822, 4844
+# osd/ui/properties.c: 448, 3354, 3359, 3362, 3590, 3593, 4864, 4886
 Standard
 标准
 
@@ -2218,7 +2242,7 @@ Story
 Stretch using hardware
 使用硬件拉伸
 
-# osd/ui/properties.c: 1256 osd/ui/treeview.c: 1376
+# osd/ui/properties.c: 1260 osd/ui/treeview.c: 1376
 Supported
 已支持
 
@@ -2254,7 +2278,7 @@ There is no application associated with the given filename extension.
 There was not enough memory to complete the operation.
 没有足够的内存完成操作。
 
-# osd/ui/properties.c: 433
+# osd/ui/properties.c: 436
 Third screen
 第三个屏幕
 
@@ -2286,13 +2310,17 @@ Toggle Screen Shot
 Total:
 合计:
 
-# osd/ui/layout.c: 78 osd/ui/properties.c: 1030 osd/ui/treeview.c: 1444 osd/ui/win32ui.c: 861
+# osd/ui/layout.c: 78 osd/ui/properties.c: 1034 osd/ui/treeview.c: 1444 osd/ui/win32ui.c: 861
 Trackball
 轨迹球
 
 # osd/ui/mame32.rc: 1063
 Trackball device
 轨迹球设备
+
+# osd/ui/mame32.rc: 1609
+Translate into Catalan
+翻译成加泰罗尼亚语
 
 # osd/ui/mame32.rc: 1609
 Translate into English (US)
@@ -2331,6 +2359,10 @@ Translate into Portuguese (BRA)
 (巴西)葡萄牙文翻译
 
 # osd/ui/mame32.rc: 1609
+Translate into Portuguese (PT)
+翻译成葡萄牙语
+
+# osd/ui/mame32.rc: 1609
 Translate into Simplified Chinese
 简体中文翻译
 
@@ -2341,6 +2373,10 @@ Translate into Spanish
 # osd/ui/mame32.rc: 1609
 Translate into Traditional Chinese
 繁体中文翻译
+
+# osd/ui/mame32.rc: 1609
+Translate into Valencian
+翻译成瓦伦西亚语
 
 # osd/ui/layout.c: 110
 Translation Files
@@ -2382,7 +2418,7 @@ Unavailable
 Unemulated Protection
 未模拟的保护
 
-# osd/ui/audit32.c: 530 osd/ui/properties.c: 1081, 1127 
+# osd/ui/audit32.c: 581 osd/ui/properties.c: 1085, 1131 
 Unknown
 未知
 
@@ -2390,7 +2426,7 @@ Unknown
 Unknown error.
 未知错误。
 
-# osd/ui/properties.c: 1258 osd/ui/treeview.c: 1378
+# osd/ui/properties.c: 1262 osd/ui/treeview.c: 1378
 Unsupported
 未支持
 
@@ -2414,7 +2450,7 @@ Use various icon for Not Working game
 Use volume auto adjust
 使用音量自动调整
 
-# osd/ui/layout.c: 71 osd/ui/mame32.rc: 820 osd/ui/properties.c: 687 osd/ui/treeview.c: 291 osd/ui/win32ui.c: 5715 osd/ui/winuiopt.c: 851, 2809
+# osd/ui/layout.c: 71 osd/ui/mame32.rc: 820 osd/ui/properties.c: 691 osd/ui/treeview.c: 291 osd/ui/win32ui.c: 5717 osd/ui/winuiopt.c: 851, 2809
 Vector
 矢量画面
 
@@ -2422,7 +2458,7 @@ Vector
 Vector (H)
 矢量 (水平)
 
-# osd/ui/properties.c: 845
+# osd/ui/properties.c: 849
 Vector (H) %f Hz (%d colors)
 矢量 (水平) %f Hz (%d 色)
 
@@ -2430,7 +2466,7 @@ Vector (H) %f Hz (%d colors)
 Vector (V)
 矢量 (垂直)
 
-# osd/ui/properties.c: 840
+# osd/ui/properties.c: 844
 Vector (V) %f Hz (%d colors)
 矢量 (垂直) %f Hz (%d 色)
 
@@ -2438,7 +2474,7 @@ Vector (V) %f Hz (%d colors)
 Vertical
 垂直
 
-# osd/ui/properties.c: 1159
+# osd/ui/properties.c: 1163
 Video emulation isn't 100% accurate
 视频模拟不是100%精确
 
@@ -2466,6 +2502,10 @@ Visual Effects
 Volume attenuation
 音量衰减
 
+# osd/ui/winuiopt.c: 3217
+WINDOW POSITION OPTIONS
+窗口位置选项
+
 # osd/ui/mame32.rc: 685
 Wait for vertical sync
 等待垂直同步
@@ -2478,7 +2518,7 @@ MAME 更新点
 Window background
 窗口背景
 
-# osd/ui/layout.c: 66 osd/ui/properties.c: 1135
+# osd/ui/layout.c: 66 osd/ui/properties.c: 1139
 Working
 可以运行
 
@@ -2490,9 +2530,13 @@ Wrong Colors
 Year
 发行年代
 
-# osd/ui/audit32.c: 120 osd/ui/win32ui.c: 5723
+# osd/ui/audit32.c: 120 osd/ui/win32ui.c: 5725
 Yes
 是
+
+# osd/ui/mame32.rc: 421
+and John Hardy IV
+和 John Hardy IV
 
 # osd/ui/mame32.rc: 107
 by &Description
@@ -2534,37 +2578,13 @@ BIOS
 Christopher Kirmse and Michael Soderstrom
 
 
-# osd/ui/winuiopt.c: 3240
-FOLDER LIST HIDE OPTIONS
-专用隐藏文件夹选项
+# osd/ui/mame32.rc: 728
+Enable multiple mice
 
-# osd/ui/winuiopt.c: 3186
-GENERAL OPTIONS
-专用通用选项
 
-# osd/ui/winuiopt.c: 3244
-GUI JOYSTICK OPTIONS
-界面游戏杆选项
-
-# osd/ui/winuiopt.c: 3259
-GUI KEYBOARD OPTIONS
-界面键盘选项
-
-# osd/ui/winuiopt.c: 3232
-LIST FONT OPTIONS
-列表字体选项
-
-# osd/ui/winuiopt.c: 3218
+# osd/ui/winuiopt.c: 3224
 LISTVIEW OPTIONS
 
-
-# osd/ui/mame32.rc: 404, 428, 439, 471, 491, 514, 553, 572, 623, 660, 716, 759, 820, 848, 875, 912, 937, 1001, 1029, 1044, 1103, 1147, 1203 osd/ui/translate.c: 103
-MS Sans Serif
-宋体
-
-# osd/ui/mame32.rc: 1072
-Mouse device
-鼠标设备
 
 # osd/ui/mame32.rc: 124
 Office 2003
@@ -2577,24 +2597,4 @@ Office 2007
 # osd/ui/mame32.rc: 123
 Office XP
 
-
-# osd/ui/mame32.rc: 1609
-Translate into Catalan
-翻译成加泰罗尼亚语
-
-# osd/ui/mame32.rc: 1609
-Translate into Portuguese (PT)
-翻译成葡萄牙语
-
-# osd/ui/mame32.rc: 1609
-Translate into Valencian
-翻译成瓦伦西亚语
-
-# osd/ui/winuiopt.c: 3211
-WINDOW POSITION OPTIONS
-窗口位置选项
-
-# osd/ui/mame32.rc: 421
-and John Hardy IV
-和 John Hardy IV
 

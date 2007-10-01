@@ -2488,5 +2488,5 @@ homebrew
 
 # Chewing Gum
 unknown
-desconocido
+desconegut
 

@@ -1,28 +1,28 @@
-#
+# 20
 CPS1
 CPS1
 
-#
+# 30
 CPS2
 CPS2
 
-#
+# Title
 IPS
 IPS
 
-#
+# 14
 Misc
 기타
 
-#
+# 35
 Neo-Geo
 네오지오
 
-#
+# 93
 PGM
 PGM
 
-#
+# 7
 Translation
 번역판
 

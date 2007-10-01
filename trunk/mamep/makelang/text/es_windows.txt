@@ -542,6 +542,10 @@ Alternar Pantalla completa
 Unable to close the keyboard device. (error %d)\n
 Deseleccionado para cerrar dispositivo del teclado. (error %d)\n
 
+# osd/windows/window.c: 639
+Unable to complete window creation
+No disponible para completar creación de ventana
+
 # osd/windows/drawd3d.c: 716
 Unable to create the Direct3D device (%08X)\n
 No es posible crear el dispositivo Direct3D (%08X)\n
@@ -797,8 +801,4 @@ prioridad de hilo para hilo de juego principal; rago desde -15 hasta 1
 # osd/windows/winmain.c: 134
 video output method: none, gdi, ddraw, or d3d
 metodo de salida de video: ninguno, gdi, ddraw, o d3d
-
-# osd/windows/window.c: 639
-Unable to complete window creation
-
 

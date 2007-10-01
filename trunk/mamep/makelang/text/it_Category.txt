@@ -6,15 +6,15 @@ Racchetta e Pallina
 Breakout
 Barriere
 
-# 99
+# 100
 Breakout *Mature*
 Barriere *Adulti*
 
-# 110
+# 111
 Casino
 Carte
 
-# 218
+# 223
 Casino *Mature*
 Carte *Adulti*
 
@@ -22,603 +22,603 @@ Carte *Adulti*
 Category
 Categoria
 
-# 235
+# 240
 Climbing
 Arrampicata
 
-# 252
+# 257
 Driving
 Guida
 
-# 280
+# 285
 Driving / 1st Person
 Guida / Soggettiva
 
-# 340
+# 345
 Driving / Boat
 Guida / Battelli
 
 # 351
-Driving / Race
-Guida / Corse
-
-# 410
-Driving / Race (chase view)
-Guida / Corsa (visuale mezzo)
-
-# 546
-Driving / Race (chase view) Bike
-Guida / Corse (visuale mezzo) DueRuote
-
-# 580
-Driving / Race 1st P Bike
-Guida / Corsa Soggettiva DueRuote
-
-# 587
-Driving / Race 1st Person
-Guida / Corse Soggettiva
-
-# 608
-Driving / Race Bike
-Guida / Corsa DueRuote
-
-# 625
-Driving / Race Track
-Guida / Corse Tracciati
-
-# 663
-Fighter / 2.5D
-Combattimenti / 2.5D
-
-# 927
-Fighter / 2D
-Combattimenti / 2D
-
-# 981
-Fighter / 3D
-Combattimenti / 3D
-
-# 990
-Fighter / Field
-Combattimenti / Campi
-
-# 1005
-Fighter / Misc.
-Combattimenti / Varie
-
-# 1012
-Fighter / Multiplay
-Combattimenti / Multipartita
-
-# 1016
-Fighter / Versus
-Combattimenti / Contro
-
-# 1528
-Fighter / Versus *Mature*
-Combattimenti / Contro *Adulti*
-
-# 1532
-Fighter / Versus Co-op
-Combattimenti / Contro Co-op
-
-# 1552
-Fighter / Vertical
-Combattimenti / Verticali
-
-# 1576
-Maze
-Labirinti
-
-# 1832
-Maze *Mature*
-Labirinti *Adulti*
-
-# 1836
-Maze / Digging
-Labirinti / Scavatore
-
-# 1870
-Maze / Digging *Mature*
-Labirinti / Scavatore *Adulti*
-
-# 1873
-Maze / Driving
-Labirinti / Guida
-
-# 1899
-Maze / Fighter
-Labirinti / Combattimenti
-
-# 1929
-Maze / Outline
-Labirinti / Contorni
-
-# 1947
-Maze / Outline *Mature*
-Labirinti / Contorni *Adulti*
-
-# 1950
-Maze / Shooter Large
-Labirinti / Spari Grandi
-
-# 2027
-Maze / Shooter Small
-Labirinti / Spari Piccoli
-
-# 2088
-Maze / Shooter Small *Mature*
-Labirinti / Spari Piccoli *Adulti*
-
-# 2092
-Maze / Surround
-Labirinti / Soppravvivenza
-
-# 2106
-Mini-Games
-Mini-Giochi
-
-# 2147
-Misc.
-Varie
-
-# 2227
-Misc. *Mature*
-Varie *Adulti*
-
-# 2236
-Multiplay
-Multipartita
-
-# 2282
-Multiplay *Mature*
-Multipartita *Adulti*
-
-# 2365
-Pinball
-Flipper
-
-# 2384
-Pinball *Mature*
-Flipper *Adulti*
-
-# 2390
-Pinball / Pachinko *Mature*
-Flipper / Pachinko *Adulti*
-
-# 2396
-Platform / Fighter
-Piattaforme / Combattimenti
-
-# 2417
-Platform / Fighter Scrolling
-Piattaforme / Combattimenti a Scorrimento
-
-# 2597
-Platform / Run Jump
-Piattaforme / Corri e Salta
-
-# 2848
-Platform / Run Jump *Mature*
-Piattaforme / Corri e Salta *Adulti*
-
-# 2854
-Platform / Run Jump Scrolling
-Piattaforme / Corri e Salta a Scorrimento
-
-# 2929
-Platform / Shooter
-Piattaforme / Spari
-
-# 2947
-Platform / Shooter Scrolling
-Piattaforme / Spari a Scorrimento
-
-# 3158
-Puzzle
-Rompicapo
-
-# 3206
-Puzzle *Mature*
-Rompicapo *Adulti*
-
-# 3212
-Puzzle / Cards
-Rompicapo / Carte
-
-# 3215
-Puzzle / Cards *Mature*
-Rompicapo / Carte *Adulti*
-
-# 3227
-Puzzle / Drop
-Rompicapo / Caduta
-
-# 3356
-Puzzle / Drop *Mature*
-Rompicapo / Caduta *Adulti*
-
-# 3374
-Puzzle / Match
-Rompicapo / Accoppia
-
-# 3405
-Puzzle / Match *Mature*
-Rompicapo / Accoppia *Adulti*
-
-# 3437
-Puzzle / Maze
-Rompicapo / Labirinti
-
-# 3452
-Puzzle / Outline
-Rompicapo / Contorni
-
-# 3467
-Puzzle / Outline *Mature*
-Rompicapo / Contorni *Adulti*
-
-# 3499
-Puzzle / Sliding
-Rompicapo / Scorrimenti
-
-# 3510
-Puzzle / Sliding *Mature*
-Rompicapo / Scorrimenti *Adulti*
-
-# 3516
-Puzzle / Toss
-Rompicapo / Accoppia 
-
-# 3573
-Puzzle / Toss *Mature*
-Rompicapo / Accoppia *Adulti*
-
-# 3583
-Quiz / Chinese
-Quiz / Cinese
-
-# 3587
-Quiz / English
-Quiz / Inglese
-
-# 3645
-Quiz / English *Mature*
-Quiz / Inglese *Adulti*
-
-# 3661
-Quiz / French
-Quiz / Francese
-
-# 3665
-Quiz / German
-Quiz / Tedesco
-
-# 3669
-Quiz / Italian
-Quiz / Italiano
-
-# 3677
-Quiz / Japanese
-Quiz / Giapponese
-
-# 3736
-Quiz / Japanese *Mature*
-Quiz / Giapponese *Adulti*
-
-# 3747
-Quiz / Music English
-Quiz / Musica Inglese
-
-# 3751
-Quiz / Music Japanese
-Quiz / Musica Giapponese
-
-# 3759
-Rhythm
-Ritmo
-
-# 3844
-Shooter / 1st Person
-Spari / Soggettiva
-
-# 3860
-Shooter / 3rd Person
-Spari / 3a Persona
-
-# 3902
-Shooter / Command
-Spari / Commando
-
-# 3930
-Shooter / Driving
-Spari / Guida
-
-# 3939
-Shooter / Driving (chase view)
-Spari / Guida (vista mezzo)
-
-# 3981
-Shooter / Driving 1st Person
-Spari / Guida Soggettiva
-
-# 3989
-Shooter / Driving Diagonal
-Spari / Guida Diagonale
-
-# 3994
-Shooter / Driving Horizontal
-Spari / Guida Orizontale
-
-# 4008
-Shooter / Driving Vertical
-Spari / Guida Verticale
-
-# 4060
-Shooter / Field
-Spari / Campo
-
-# 4198
-Shooter / Field *Mature*
-Spari / Campo *Adulti*
-
-# 4206
-Shooter / Flying
-Spari / Volo
-
-# 4258
-Shooter / Flying (chase view)
-Spari / Volo (vista mezzo)
-
-# 4291
-Shooter / Flying 1st Person
-Spari / Volo Soggettiva
-
-# 4329
-Shooter / Flying Diagonal
-Spari / Volo Diagonale
-
-# 4337
-Shooter / Flying Horizontal
-Spari / Volo Orizontale
-
-# 4560
-Shooter / Flying Horizontal *Mature*
-Spari / Volo Orizontale *Adulti*
-
-# 4563
-Shooter / Flying Vertical
-Spari / Volo Verticale
-
-# 4972
-Shooter / Flying Vertical *Mature*
-Spari / Volo Verticale *Adulti*
-
-# 4975
-Shooter / Gallery
-Spari / Galleria
-
-# 5348
-Shooter / Gallery *Mature*
-Spari / Galleria *Adulti*
-
-# 5352
-Shooter / Gun
-Spari / Pistola
-
-# 5508
-Shooter / Misc.
-Spari / Varie
-
-# 5526
-Shooter / Misc. Horizontal
-Spari / Varie Orizontali
-
-# 5548
-Shooter / Misc. Vertical
-Spari / Varie Verticali
-
-# 5570
-Shooter / Versus
-Spari / Contro
-
-# 5583
-Shooter / Walking
-Spari / Camminando
-
-# 5690
-Sports
-Sports
-
-# 5714
-Sports / Armwrestling
-Sports / Braccio Di Ferro
-
-# 5719
-Sports / Baseball
-Sports / Baseball
-
-# 5799
-Sports / Basketball
-Sports / Pallacanestro
-
-# 5851
-Sports / Bowling
-Sports / Bowling
-
-# 5885
-Sports / Boxing
-Sports / Pugilato
-
-# 5921
-Sports / Bull Fighting
-Sports / Lotta di Tori
-
-# 5925
-Sports / Darts
-Sports / Freccette
-
-# 5932
-Sports / Dodgeball
-Sports / Dodgeball
-
-# 5937
-Sports / Fishing
-Sports / Pesca
-
-# 5953
-Sports / Football Amer.
-Sports / Football Amer.
-
-# 6005
-Sports / Football Rugby
-Sports / Football Rugby
-
-# 6010
-Sports / Golf
-Sports / Golf
-
-# 6107
-Sports / Handball
-Sports / Handball
-
-# 6111
-Sports / Hang Gliding
-Sports / DeltaPlano
-
-# 6117
-Sports / Hockey
-Sports / Hockey
-
-# 6133
-Sports / Horse Racing
-Sports / Corse Cavalli
-
-# 6148
-Sports / Horseshoes
-Sports / Lancio FerriCavallo
-
-# 6153
-Sports / Multiplay
-Sports / Multipartita
-
-# 6161
-Sports / Ping pong
-Sports / Ping pong
-
-# 6166
-Sports / Pool
-Sports / Billiardo
-
-# 6204
-Sports / Pool *Mature*
-Sports / Biliardo *Adulti*
-
-# 6218
-Sports / Shuffleboard
-Sports / DiscoStrisciante
-
-# 6224
-Sports / Skateboarding
-Sports / Skateboarding
-
-# 6233
-Sports / Skiing
-Sports / Sci
-
-# 6257
-Sports / SkyDiving
-Sports / Paracadutismo
-
-# 6261
-Sports / Soccer
-Sports / Calcio
-
-# 6363
-Sports / Sumo
-Sports / Sumo
-
-# 6366
-Sports / Swimming
-Sports / Nuoto
-
-# 6377
-Sports / Tennis
-Sports / Tennis
-
-# 6408
-Sports / Track & Field
-Sports / Misto Atletica
-
-# 6445
-Sports / VolleyBall
-Sports / PallaVolo
-
-# 6522
-Tabletop
-Da Tavolo
-
-# 6528
-Tabletop *Mature*
-Da Tavolo *Adulti*
-
-# 6531
-Tabletop / Hanafuda
-Da Tavolo / Hanafuda
-
-# 6539
-Tabletop / Hanafuda *Mature*
-Da Tavolo / Hanafuda *Adulti*
-
-# 6559
-Tabletop / Mahjong
-Da Tavolo / Mahjong
-
-# 6584
-Tabletop / Mahjong *Mature*
-Da Tavolo / Mahjong *Adulti*
-
-# 6814
-Tabletop / Othello
-Da Tavolo / Othello
-
-# 6820
-Tabletop / Othello *Mature*
-Da Tavolo / Othello *Adulti*
-
-# 6823
-Tabletop / Renju
-Da Tavolo / Renju
-
-# 6827
-Tabletop / Shougi
-Da Tavolo / Shougi 
-
-# 346
 Driving / Plane
 Guida / Volo
 
-# 2294
+# 356
+Driving / Race
+Guida / Corse
+
+# 416
+Driving / Race (chase view)
+Guida / Corsa (visuale mezzo)
+
+# 556
+Driving / Race (chase view) Bike
+Guida / Corse (visuale mezzo) DueRuote
+
+# 590
+Driving / Race 1st P Bike
+Guida / Corsa Soggettiva DueRuote
+
+# 597
+Driving / Race 1st Person
+Guida / Corse Soggettiva
+
+# 620
+Driving / Race Bike
+Guida / Corsa DueRuote
+
+# 637
+Driving / Race Track
+Guida / Corse Tracciati
+
+# 675
+Fighter / 2.5D
+Combattimenti / 2.5D
+
+# 940
+Fighter / 2D
+Combattimenti / 2D
+
+# 994
+Fighter / 3D
+Combattimenti / 3D
+
+# 1010
+Fighter / Field
+Combattimenti / Campi
+
+# 1025
+Fighter / Misc.
+Combattimenti / Varie
+
+# 1032
+Fighter / Multiplay
+Combattimenti / Multipartita
+
+# 1036
+Fighter / Versus
+Combattimenti / Contro
+
+# 1557
+Fighter / Versus *Mature*
+Combattimenti / Contro *Adulti*
+
+# 1561
+Fighter / Versus Co-op
+Combattimenti / Contro Co-op
+
+# 1581
+Fighter / Vertical
+Combattimenti / Verticali
+
+# 1605
+Maze
+Labirinti
+
+# 1862
+Maze *Mature*
+Labirinti *Adulti*
+
+# 1866
+Maze / Digging
+Labirinti / Scavatore
+
+# 1900
+Maze / Digging *Mature*
+Labirinti / Scavatore *Adulti*
+
+# 1903
+Maze / Driving
+Labirinti / Guida
+
+# 1929
+Maze / Fighter
+Labirinti / Combattimenti
+
+# 1959
+Maze / Outline
+Labirinti / Contorni
+
+# 1977
+Maze / Outline *Mature*
+Labirinti / Contorni *Adulti*
+
+# 1980
+Maze / Shooter Large
+Labirinti / Spari Grandi
+
+# 2057
+Maze / Shooter Small
+Labirinti / Spari Piccoli
+
+# 2118
+Maze / Shooter Small *Mature*
+Labirinti / Spari Piccoli *Adulti*
+
+# 2122
+Maze / Surround
+Labirinti / Soppravvivenza
+
+# 2136
+Mini-Games
+Mini-Giochi
+
+# 2177
+Misc.
+Varie
+
+# 2257
+Misc. *Mature*
+Varie *Adulti*
+
+# 2266
+Multiplay
+Multipartita
+
+# 2316
+Multiplay *Mature*
+Multipartita *Adulti*
+
+# 2328
 Not Classified
 Non classificato
 
-# 3743
+# 2407
+Pinball
+Flipper
+
+# 2426
+Pinball *Mature*
+Flipper *Adulti*
+
+# 2432
+Pinball / Pachinko *Mature*
+Flipper / Pachinko *Adulti*
+
+# 2438
+Platform / Fighter
+Piattaforme / Combattimenti
+
+# 2459
+Platform / Fighter Scrolling
+Piattaforme / Combattimenti a Scorrimento
+
+# 2640
+Platform / Run Jump
+Piattaforme / Corri e Salta
+
+# 2894
+Platform / Run Jump *Mature*
+Piattaforme / Corri e Salta *Adulti*
+
+# 2900
+Platform / Run Jump Scrolling
+Piattaforme / Corri e Salta a Scorrimento
+
+# 2975
+Platform / Shooter
+Piattaforme / Spari
+
+# 2993
+Platform / Shooter Scrolling
+Piattaforme / Spari a Scorrimento
+
+# 3204
+Puzzle
+Rompicapo
+
+# 3252
+Puzzle *Mature*
+Rompicapo *Adulti*
+
+# 3258
+Puzzle / Cards
+Rompicapo / Carte
+
+# 3261
+Puzzle / Cards *Mature*
+Rompicapo / Carte *Adulti*
+
+# 3273
+Puzzle / Drop
+Rompicapo / Caduta
+
+# 3403
+Puzzle / Drop *Mature*
+Rompicapo / Caduta *Adulti*
+
+# 3421
+Puzzle / Match
+Rompicapo / Accoppia
+
+# 3452
+Puzzle / Match *Mature*
+Rompicapo / Accoppia *Adulti*
+
+# 3485
+Puzzle / Maze
+Rompicapo / Labirinti
+
+# 3500
+Puzzle / Outline
+Rompicapo / Contorni
+
+# 3515
+Puzzle / Outline *Mature*
+Rompicapo / Contorni *Adulti*
+
+# 3547
+Puzzle / Sliding
+Rompicapo / Scorrimenti
+
+# 3558
+Puzzle / Sliding *Mature*
+Rompicapo / Scorrimenti *Adulti*
+
+# 3564
+Puzzle / Toss
+Rompicapo / Accoppia 
+
+# 3626
+Puzzle / Toss *Mature*
+Rompicapo / Accoppia *Adulti*
+
+# 3637
+Quiz / Chinese
+Quiz / Cinese
+
+# 3641
+Quiz / English
+Quiz / Inglese
+
+# 3704
+Quiz / English *Mature*
+Quiz / Inglese *Adulti*
+
+# 3720
+Quiz / French
+Quiz / Francese
+
+# 3724
+Quiz / German
+Quiz / Tedesco
+
+# 3728
+Quiz / Italian
+Quiz / Italiano
+
+# 3736
+Quiz / Japanese
+Quiz / Giapponese
+
+# 3796
+Quiz / Japanese *Mature*
+Quiz / Giapponese *Adulti*
+
+# 3803
 Quiz / Korean
 Quiz / Coreano
 
-# 3755
+# 3808
+Quiz / Music English
+Quiz / Musica Inglese
+
+# 3812
+Quiz / Music Japanese
+Quiz / Musica Giapponese
+
+# 3816
 Quiz / Spanish
 Quiz / Spagnolo
 
-# 3775
+# 3820
+Rhythm
+Ritmo
+
+# 3833
 Rhythm / Dance
 Ritmo / Danza
 
-# 3814
+# 3873
 Rhythm / Instruments
 Ritmo / Strumenti
 
-# 6472
+# 3906
+Shooter / 1st Person
+Spari / Soggettiva
+
+# 3923
+Shooter / 3rd Person
+Spari / 3a Persona
+
+# 3966
+Shooter / Command
+Spari / Commando
+
+# 3994
+Shooter / Driving
+Spari / Guida
+
+# 4003
+Shooter / Driving (chase view)
+Spari / Guida (vista mezzo)
+
+# 4045
+Shooter / Driving 1st Person
+Spari / Guida Soggettiva
+
+# 4053
+Shooter / Driving Diagonal
+Spari / Guida Diagonale
+
+# 4058
+Shooter / Driving Horizontal
+Spari / Guida Orizontale
+
+# 4072
+Shooter / Driving Vertical
+Spari / Guida Verticale
+
+# 4124
+Shooter / Field
+Spari / Campo
+
+# 4263
+Shooter / Field *Mature*
+Spari / Campo *Adulti*
+
+# 4271
+Shooter / Flying
+Spari / Volo
+
+# 4323
+Shooter / Flying (chase view)
+Spari / Volo (vista mezzo)
+
+# 4356
+Shooter / Flying 1st Person
+Spari / Volo Soggettiva
+
+# 4394
+Shooter / Flying Diagonal
+Spari / Volo Diagonale
+
+# 4402
+Shooter / Flying Horizontal
+Spari / Volo Orizontale
+
+# 4625
+Shooter / Flying Horizontal *Mature*
+Spari / Volo Orizontale *Adulti*
+
+# 4628
+Shooter / Flying Vertical
+Spari / Volo Verticale
+
+# 5046
+Shooter / Flying Vertical *Mature*
+Spari / Volo Verticale *Adulti*
+
+# 5049
+Shooter / Gallery
+Spari / Galleria
+
+# 5423
+Shooter / Gallery *Mature*
+Spari / Galleria *Adulti*
+
+# 5427
+Shooter / Gun
+Spari / Pistola
+
+# 5595
+Shooter / Misc.
+Spari / Varie
+
+# 5613
+Shooter / Misc. Horizontal
+Spari / Varie Orizontali
+
+# 5636
+Shooter / Misc. Vertical
+Spari / Varie Verticali
+
+# 5658
+Shooter / Versus
+Spari / Contro
+
+# 5671
+Shooter / Walking
+Spari / Camminando
+
+# 5778
+Sports
+Sports
+
+# 5802
+Sports / Armwrestling
+Sports / Braccio Di Ferro
+
+# 5807
+Sports / Baseball
+Sports / Baseball
+
+# 5891
+Sports / Basketball
+Sports / Pallacanestro
+
+# 5944
+Sports / Bowling
+Sports / Bowling
+
+# 5979
+Sports / Boxing
+Sports / Pugilato
+
+# 6018
+Sports / Bull Fighting
+Sports / Lotta di Tori
+
+# 6022
+Sports / Darts
+Sports / Freccette
+
+# 6029
+Sports / Dodgeball
+Sports / Dodgeball
+
+# 6034
+Sports / Fishing
+Sports / Pesca
+
+# 6050
+Sports / Football Amer.
+Sports / Football Amer.
+
+# 6103
+Sports / Football Rugby
+Sports / Football Rugby
+
+# 6108
+Sports / Golf
+Sports / Golf
+
+# 6206
+Sports / Handball
+Sports / Handball
+
+# 6210
+Sports / Hang Gliding
+Sports / DeltaPlano
+
+# 6216
+Sports / Hockey
+Sports / Hockey
+
+# 6232
+Sports / Horse Racing
+Sports / Corse Cavalli
+
+# 6247
+Sports / Horseshoes
+Sports / Lancio FerriCavallo
+
+# 6252
+Sports / Multiplay
+Sports / Multipartita
+
+# 6260
+Sports / Ping pong
+Sports / Ping pong
+
+# 6265
+Sports / Pool
+Sports / Billiardo
+
+# 6303
+Sports / Pool *Mature*
+Sports / Biliardo *Adulti*
+
+# 6317
+Sports / Shuffleboard
+Sports / DiscoStrisciante
+
+# 6323
+Sports / Skateboarding
+Sports / Skateboarding
+
+# 6332
+Sports / Skiing
+Sports / Sci
+
+# 6356
+Sports / SkyDiving
+Sports / Paracadutismo
+
+# 6360
+Sports / Soccer
+Sports / Calcio
+
+# 6464
+Sports / Sumo
+Sports / Sumo
+
+# 6467
+Sports / Swimming
+Sports / Nuoto
+
+# 6478
+Sports / Tennis
+Sports / Tennis
+
+# 6510
+Sports / Track & Field
+Sports / Misto Atletica
+
+# 6547
+Sports / VolleyBall
+Sports / PallaVolo
+
+# 6575
 Sports / Wrestling
 Sports / Wrestling
+
+# 6627
+Tabletop
+Da Tavolo
+
+# 6634
+Tabletop *Mature*
+Da Tavolo *Adulti*
+
+# 6637
+Tabletop / Hanafuda
+Da Tavolo / Hanafuda
+
+# 6647
+Tabletop / Hanafuda *Mature*
+Da Tavolo / Hanafuda *Adulti*
+
+# 6667
+Tabletop / Mahjong
+Da Tavolo / Mahjong
+
+# 6705
+Tabletop / Mahjong *Mature*
+Da Tavolo / Mahjong *Adulti*
+
+# 6936
+Tabletop / Othello
+Da Tavolo / Othello
+
+# 6942
+Tabletop / Othello *Mature*
+Da Tavolo / Othello *Adulti*
+
+# 6945
+Tabletop / Renju
+Da Tavolo / Renju
+
+# 6950
+Tabletop / Shougi
+Da Tavolo / Shougi 
 

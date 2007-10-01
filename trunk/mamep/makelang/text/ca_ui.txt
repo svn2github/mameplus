@@ -1,6 +1,6 @@
 # osd/ui/mame32.rc: 422
                                 
-Traduït per Juanen <juanenrak@gmail.com> 17-09-2007
+Traduït per Juanen <juanenrak@gmail.com> 28-09-2007
 
 # osd/ui/properties.c: 1115
 %d colors 
@@ -859,6 +859,10 @@ Display splash screen on start
 Mostrar pantalla d'inici al començar
 
 # osd/ui/mame32.rc: 1504
+Display the bios properties of the selected game
+Mostrar les propietats de la BIOS del joc seleccionat
+
+# osd/ui/mame32.rc: 1504
 Display the driver properties of the selected game
 Pantalla de propietats de drivers del joc seleccionat
 
@@ -982,6 +986,18 @@ Habilitar entrada de pistola
 Enable mouse input
 Habilitar entrada del ratolí
 
+# osd/ui/mame32.rc: 776
+Enable multi-threading
+Activar multi-fil
+
+# osd/ui/mame32.rc: 730
+Enable multiple keyboards
+Activar multiples teclats 
+
+# osd/ui/mame32.rc: 728
+Enable multiple mice
+Activar multiples ratolins
+
 # osd/ui/mame32.rc: 631
 Enable sound and sound CPUs
 Habilitar sons i CPUs de so:
@@ -1046,6 +1062,10 @@ Verificació d'Arxius
 Filters for %s Folder
 Filtres per a la Carpeta %s
 
+# osd/ui/properties.c: 434
+First screen
+Primera captura
+
 # osd/ui/mame32.rc: 834
 Flicker
 Parpalleig
@@ -1081,6 +1101,10 @@ Font (normal)
 # osd/ui/paletteedit.c: 106
 Font (special)
 Font (especial)
+
+# osd/ui/properties.c: 437
+Fourth screen
+Quarta captura
 
 # osd/ui/mame32.rc: 598
 Frame skipping
@@ -1434,6 +1458,10 @@ So Perdut
 Mouse
 Ratolí
 
+# osd/ui/mame32.rc: 1072
+Mouse device
+Dispositiu - Ratolí
+
 # osd/ui/mame32.rc: 507
 Move Down
 Moure Baix
@@ -1690,6 +1718,14 @@ Propiet&ats per a %s
 Propert&ies for Driver
 Propiet&ats per a Driver
 
+# osd/ui/win32ui.c: 3999, 7262
+Properties &for %s BIOS
+Propietats &per a %s BIOS
+
+# osd/ui/mame32.rc: 67, 204 osd/ui/win32ui.c: 3944, 4005, 7268, 7304
+Properties &for BIOS
+Propietats &per a BIOS
+
 # osd/ui/properties.c: 646, 737
 Propery Sheet Error %d %X
 Error de les Propietats %d %X
@@ -1889,6 +1925,10 @@ Temps de Cicle de les Captures en Segons
 # osd/ui/mame32.rc: 80
 Screenshot Ta&b\tAlt+B
 Pes&tanya de Captures\tAlt+B
+
+# osd/ui/properties.c: 435
+Second screen
+Segona captura
 
 # osd/ui/mame32.rc: 949
 Select &random background image on start
@@ -2270,6 +2310,10 @@ No hi ha aplicació associada amb l'extensió d'arxiu donada.
 There was not enough memory to complete the operation.
 No havia suficient memòria per a completar l'operació.
 
+# osd/ui/properties.c: 436
+Third screen
+Tercera captura
+
 # osd/ui/mame32.rc: 793
 Thread priority
 Fil prioritari
@@ -2361,6 +2405,10 @@ Traduir a l'Espanyol (Espanya)
 # osd/ui/mame32.rc: 1609
 Translate into Traditional Chinese
 Traduir al Xinès Tradiccional
+
+# osd/ui/mame32.rc: 1609
+Translate into Valencian
+Traduir al Valencià
 
 # osd/ui/layout.c: 110
 Translation Files
@@ -2549,52 +2597,4 @@ per Vegades &Jugades
 # osd/ui/win32ui.h: 20
 type a keyword
 buscar un joc en el llistat
-
-# osd/ui/mame32.rc: 1504
-Display the bios properties of the selected game
-
-
-# osd/ui/mame32.rc: 776
-Enable multi-threading
-
-
-# osd/ui/mame32.rc: 730
-Enable multiple keyboards
-
-
-# osd/ui/mame32.rc: 728
-Enable multiple mice
-
-
-# osd/ui/properties.c: 434
-First screen
-
-
-# osd/ui/properties.c: 437
-Fourth screen
-
-
-# osd/ui/mame32.rc: 1072
-Mouse device
-
-
-# osd/ui/win32ui.c: 3999, 7262
-Properties &for %s BIOS
-
-
-# osd/ui/mame32.rc: 67, 204 osd/ui/win32ui.c: 3944, 4005, 7268, 7304
-Properties &for BIOS
-
-
-# osd/ui/properties.c: 435
-Second screen
-
-
-# osd/ui/properties.c: 436
-Third screen
-
-
-# osd/ui/mame32.rc: 1609
-Translate into Valencian
-
 

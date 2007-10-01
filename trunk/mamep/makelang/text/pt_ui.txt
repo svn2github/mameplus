@@ -1,6 +1,6 @@
 # osd/ui/mame32.rc: 422
                                 
-Traduzido para Juanen <juanenrak@gmail.com> 17-09-2007
+Traduzido para Juanen <juanenrak@gmail.com> 28-09-2007
 
 # osd/ui/properties.c: 1115
 %d colors 

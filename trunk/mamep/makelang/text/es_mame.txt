@@ -610,6 +610,10 @@ Añadir/Quitar
 Adder %d Output Only (%d:%d)
 Sumador %d Salida Solo (%d:%d)
 
+# mame/layout/gldncrwn.lay: 81 mame/layout/paradice.lay: 72 mame/layout/pokio.lay: 72 mame/layout/pyramid.lay: 63 mame/layout/quintoon.lay: 72 mame/layout/slots.lay: 81 mame/layout/sltblgpo.lay: 63 mame/layout/sltblgtk.lay: 81
+Adder and Lamps
+Serpiente y lámparas
+
 # mame/layout/bfm_sc2.lay: 31
 Adder,VFD and Lamp Matrix
 Sumador,VFD y Lampara Matrix
@@ -801,6 +805,10 @@ OPCIONES DE DEPURACION (NUCLEO)
 # emu/emuopts.c: 74
 CORE FILENAME OPTIONS
 OPCIONES NOMBRE DE ARCHIVO (NUCLEO)
+
+# emu/emuopts.c: 172
+CORE INPUT AUTOMATIC ENABLE OPTIONS
+OPCIONES DE ACTIVACION DE ENTRADA AUTOMATICA DE NUCLEO
 
 # emu/emuopts.c: 158
 CORE INPUT OPTIONS
@@ -1378,6 +1386,10 @@ Activar/Desactivar los Trucos
 End of playback
 Fin de reproducción
 
+# emu/inptport.c: 3147
+End of playback - %i frames - Average speed %f%%
+Fin de reproducción - %i fotogramas - Velocidad media %f%%
+
 # emu/cheat.c: 3588
 Endianness
 Finalizado
@@ -1830,6 +1842,10 @@ Archivo de entrada para el juego '%s', no para el juego actual '%s'\n
 Input: Adding %s #%d: %s\n
 Entrada: Añadiendo %s #%d: %s\n
 
+# emu/inptport.c: 4062
+Input: Autoenabling %s due to presence of a %s\n
+Entrada: Autoactivación %s debido a la presencia de un %s\n
+
 # emu/input.c: 598
 Input: Changing default joystick map
 Entrada: Cambiar mapa por defecto del joystick
@@ -1845,6 +1861,10 @@ Insertar
 # emu/inptport.c: 435
 International
 Internacional
+
+# emu/inptport.c: 4051
+Invalid %s value %s; reverting to keyboard\n
+Invalido %s valor %s; volviendo a teclado\n
 
 # lib/util/options.c: 1125
 Invalid %s value (must be between %f and %f); keeping value of %s\n
@@ -4554,6 +4574,10 @@ Estandard (%d:%d)
 Start a New Cheat Search
 Empezar Nueva Búsqueda de Trucos
 
+# emu/inptport.c: 1336
+Start time: %s\n
+Hora de salida: %s\n
+
 # mame/drivers/funworld.c: 862, 924, 986, 1110, 1172 
 State
 Estado
@@ -4701,6 +4725,10 @@ Hay problemas conocidos con este juego:
 # emu/uitext.c: 88
 There are working clones of this game. They are:
 Hay clones funcionando en este juego. Son:
+
+# emu/inptport.c: 1309
+This INP file is not an extended INP file, extra info not available\n
+Este archivo INP no es un archivo extendido INP, Info adicional no disponible\n
 
 # emu/clifront.c: 702
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
@@ -4934,6 +4962,10 @@ US
 USA
 USA
 
+# emu/video.c: 375
+Unable to allocate snapshot render target\n
+Incapaz de asignar blanco de render de foto\n
+
 # emu/mame.c: 1942
 Unable to load due to pending anonymous timers. See error.log for details.
 Desactivado para cargar  debido a temporizadores anonimos pendientes. Ver error.log para detalles.
@@ -5149,6 +5181,10 @@ Vector de Juego
 # emu/inptport.c: 433 emu/uitext.c: 332
 Version
 Versión
+
+# emu/inptport.c: 1335
+Version string: %s\n
+Versión de secuencia: %s\n
 
 # emu/ui.c: 2665
 Vert position
@@ -5494,6 +5530,10 @@ color de botón (plata)
 button color (yellow)
 color de botón (amarillo)
 
+# emu/emuopts.c: 168
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+centro del rango de punto muerto para joystick donde el cambio es ignorado (0.0 centro, 1.0 fin)
+
 # emu/emuopts.c: 212
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 cambiar nucleo m68k (0:C, 1:DRC, 2:ASM+DRC)
@@ -5513,6 +5553,10 @@ nombre de base de datos de lista de comandos
 # emu/clifront.c: 99
 compare files with known MAME roms
 comparar archivos con MAME roms conocidas
+
+# emu/emuopts.c: 166
+convert lightgun button 2 into offscreen reload
+convertir boton 2 de pistola dentro de pantalla recargada
 
 # emu/clifront.c: 83
 create the default configuration file
@@ -5606,6 +5650,38 @@ mostrar parametros ejecutados
 driver sourcefile
 archivo fuente del driver
 
+# emu/emuopts.c: 176
+enable (keyboard|mouse|joystick) if a dial control is present
+activar (teclado|raton|joystick) si el control del volante esta presente
+
+# emu/emuopts.c: 178
+enable (keyboard|mouse|joystick) if a lightgun control is present
+activar (teclado|raton|joystick) si el control de la pistola esta presente
+
+# emu/emuopts.c: 180
+enable (keyboard|mouse|joystick) if a mouse control is present
+activar (teclado|raton|joystick) si el control del raton esta presente
+
+# emu/emuopts.c: 173
+enable (keyboard|mouse|joystick) if a paddle control is present
+activar (teclado|raton|joystick) si el control del mando esta presente
+
+# emu/emuopts.c: 175
+enable (keyboard|mouse|joystick) if a pedal control is present
+activar (teclado|raton|joystick) si el control del pedal esta presente
+
+# emu/emuopts.c: 179
+enable (keyboard|mouse|joystick) if a positional control is present
+activar (teclado|raton|joystick) si el control posicional esta presente
+
+# emu/emuopts.c: 177
+enable (keyboard|mouse|joystick) if a trackball control is present
+activar (teclado|raton|joystick) si el control el trackball esta presente
+
+# emu/emuopts.c: 174
+enable (keyboard|mouse|joystick) if an analog joystick control is present
+activar (teclado|raton|joystick) si el control del joystick analogico esta presente
+
 # emu/emuopts.c: 105
 enable automatic frameskip selection
 activar selección automática de salto de imagenes
@@ -5646,6 +5722,14 @@ activar entrada de ratón
 enable overlays if artwork is enabled and available
 activar capa si decorado esta activado y disponible
 
+# emu/emuopts.c: 163
+enable separate input from each keyboard device (if present)
+activar entrada separada desde cada teclado (Si esta presente)
+
+# emu/emuopts.c: 164
+enable separate input from each mouse device (if present)
+activar entrada separada desde cada raton (Si esta presente)
+
 # emu/emuopts.c: 109
 enable sleeping, which gives time back to other applications when idle
 activar suspension, que da tiempo de nuevo a otras aplicaciones cuando marcha lento 
@@ -5653,6 +5737,10 @@ activar suspension, que da tiempo de nuevo a otras aplicaciones cuando marcha le
 # emu/emuopts.c: 147
 enable sound output
 activar salida de sonido
+
+# emu/emuopts.c: 165
+enable steadykey support
+activar soporte de steadykey
 
 # emu/emuopts.c: 149
 enable the use of external samples if available
@@ -5678,6 +5766,10 @@ activar/desactivar volumen auto ajustable
 enabled
 activado
 
+# emu/emuopts.c: 169
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+fin del rango de saturacion del eje para joystick donde el cambio es ignorado (0.0 centro, 1.0 fin)
+
 # emu/clifront.c: 458
 error: invalid value for language: %s\nUse %s\n
 error: valor inválido para idioma: %s\nUsar %s\n
@@ -5685,6 +5777,10 @@ error: valor inválido para idioma: %s\nUsar %s\n
 # emu/ui.c: 376
 error: invalid value for palette: %s\n
 error: valor inválido para paleta: %s\n
+
+# emu/emuopts.c: 167
+explicit joystick map, or auto to auto-select
+mapa explicito de joystick, o auto a auto-seleccionar
 
 # emu/video.c: 1205
 fast 
@@ -5970,6 +6066,10 @@ seleccionar idioma de traducción
 set %s
 configurar %s
 
+# emu/emuopts.c: 106
+set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
+seleccional salto de fotograma a un valor correcto, 0-10 (auto salto de fotograma debe ser desactivado)
+
 # emu/emuopts.c: 148
 set sound output sample rate
 seleccionar ratio de muestra de sonido de salida
@@ -6062,6 +6162,10 @@ usar transparencia de fondo de pantalla para interfaz de texto
 values restored
 valores restaurados
 
+# emu/video.c: 687
+video_screen_configure(): visible area must be contained within the width/height!
+video_screen_configure(): area visible debera ser contenida con la altura/anchura!
+
 # emu/emuopts.c: 230
 window background color
 color de fondo de pantalla de ventana
@@ -6069,108 +6173,4 @@ color de fondo de pantalla de ventana
 # emu/clifront.c: 90
 year, manufacturer and full name
 Año, creador y nombre completo
-
-# mame/layout/gldncrwn.lay: 81 mame/layout/paradice.lay: 72 mame/layout/pokio.lay: 72 mame/layout/pyramid.lay: 63 mame/layout/quintoon.lay: 72 mame/layout/slots.lay: 81 mame/layout/sltblgpo.lay: 63 mame/layout/sltblgtk.lay: 81
-Adder and Lamps
-
-
-# emu/emuopts.c: 172
-CORE INPUT AUTOMATIC ENABLE OPTIONS
-
-
-# emu/inptport.c: 3147
-End of playback - %i frames - Average speed %f%%
-
-
-# emu/inptport.c: 4062
-Input: Autoenabling %s due to presence of a %s\n
-
-
-# emu/inptport.c: 4051
-Invalid %s value %s; reverting to keyboard\n
-
-
-# emu/inptport.c: 1336
-Start time: %s\n
-
-
-# emu/inptport.c: 1309
-This INP file is not an extended INP file, extra info not available\n
-
-
-# emu/video.c: 375
-Unable to allocate snapshot render target\n
-
-
-# emu/inptport.c: 1335
-Version string: %s\n
-
-
-# emu/emuopts.c: 168
-center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-
-
-# emu/emuopts.c: 166
-convert lightgun button 2 into offscreen reload
-
-
-# emu/emuopts.c: 176
-enable (keyboard|mouse|joystick) if a dial control is present
-
-
-# emu/emuopts.c: 178
-enable (keyboard|mouse|joystick) if a lightgun control is present
-
-
-# emu/emuopts.c: 180
-enable (keyboard|mouse|joystick) if a mouse control is present
-
-
-# emu/emuopts.c: 173
-enable (keyboard|mouse|joystick) if a paddle control is present
-
-
-# emu/emuopts.c: 175
-enable (keyboard|mouse|joystick) if a pedal control is present
-
-
-# emu/emuopts.c: 179
-enable (keyboard|mouse|joystick) if a positional control is present
-
-
-# emu/emuopts.c: 177
-enable (keyboard|mouse|joystick) if a trackball control is present
-
-
-# emu/emuopts.c: 174
-enable (keyboard|mouse|joystick) if an analog joystick control is present
-
-
-# emu/emuopts.c: 163
-enable separate input from each keyboard device (if present)
-
-
-# emu/emuopts.c: 164
-enable separate input from each mouse device (if present)
-
-
-# emu/emuopts.c: 165
-enable steadykey support
-
-
-# emu/emuopts.c: 169
-end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
-
-
-# emu/emuopts.c: 167
-explicit joystick map, or auto to auto-select
-
-
-# emu/emuopts.c: 106
-set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
-
-
-# emu/video.c: 687
-video_screen_configure(): visible area must be contained within the width/height!
-
 
