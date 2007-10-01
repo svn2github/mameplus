@@ -15,8 +15,6 @@
 #include "sound/dac.h"
 #include "sound/2151intf.h"
 #include "sound/namco.h"
-#include "rendlay.h"
-#include "tceptor2.lh"
 
 extern PALETTE_INIT( tceptor );
 extern VIDEO_START( tceptor );
@@ -541,6 +539,8 @@ static MACHINE_DRIVER_START( tceptor )
 	MDRV_CPU_IO_MAP(mcu_readport,mcu_writeport)
 	MDRV_CPU_VBLANK_INT(mcu_vb_interrupt,1)
 
+	MDRV_SCREEN_REFRESH_RATE(60.606060)
+	MDRV_SCREEN_VBLANK_TIME(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(100)
 
 	MDRV_NVRAM_HANDLER(generic_1fill)
@@ -550,34 +550,14 @@ static MACHINE_DRIVER_START( tceptor )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_SIZE(38*8, 32*8)
+	MDRV_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
 	MDRV_GFXDECODE(tceptor)
 	MDRV_PALETTE_LENGTH(1024)
 	MDRV_COLORTABLE_LENGTH(4096)
-	MDRV_DEFAULT_LAYOUT(layout_horizont)
-
-	MDRV_SCREEN_ADD("2D", 0x000)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_REFRESH_RATE(60.606060)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_SCREEN_SIZE(38*8, 32*8)
-	MDRV_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
-
-	MDRV_SCREEN_ADD("3D left", 0x000)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_REFRESH_RATE(60.606060)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_SCREEN_SIZE(38*8, 32*8)
-	MDRV_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
-
-	MDRV_SCREEN_ADD("3D right", 0x000)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_REFRESH_RATE(60.606060)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_60HZ_VBLANK_DURATION)
-	MDRV_SCREEN_SIZE(38*8, 32*8)
-	MDRV_SCREEN_VISIBLE_AREA(2*8, 34*8-1 + 2*8, 0*8, 28*8-1 + 0)
 
 	MDRV_PALETTE_INIT(tceptor)
-
 	MDRV_VIDEO_START(tceptor)
 	MDRV_VIDEO_UPDATE(tceptor)
 
@@ -714,5 +694,5 @@ ROM_END
 
 
 /*  ( YEAR  NAME      PARENT    MACHINE   INPUT     INIT      MONITOR   COMPANY FULLNAME ) */
-GAME ( 1986, tceptor,  0,        tceptor,  tceptor,  0,        ROT0,     "Namco",  "Thunder Ceptor", 0)
-GAMEL( 1986, tceptor2, tceptor,  tceptor,  tceptor2, 0,        ROT0,     "Namco",  "Thunder Ceptor II", 0, layout_tceptor2)
+GAME( 1986, tceptor,  0,        tceptor,  tceptor,  0,        ROT0,     "Namco",  "Thunder Ceptor", 0)
+GAME( 1986, tceptor2, tceptor,  tceptor,  tceptor2, 0,        ROT0,     "Namco",  "Thunder Ceptor II", 0)

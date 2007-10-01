@@ -574,12 +574,6 @@ VIDEO_UPDATE( tceptor )
 	rectangle rect;
 	int pri;
 	int bg_center = 144 - ((((bg1_scroll_x + bg2_scroll_x ) & 0x1ff) - 288) / 2);
-	int frame = cpu_getcurrentframe();
-
-	if ((frame & 1) == 1 && screen == 1)
-		return UPDATE_HAS_NOT_CHANGED;
-	if ((frame & 1) == 0 && screen == 2)
-		return UPDATE_HAS_NOT_CHANGED;
 
 	// left background
 	rect = *cliprect;

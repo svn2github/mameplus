@@ -1748,8 +1748,6 @@ $(DRIVERS)/sbrkout.o:	$(LAYOUT)/sbrkout.lh
 
 $(DRIVERS)/sspeedr.o:	$(LAYOUT)/sspeedr.lh
 
-$(DRIVERS)/tceptor.o:	$(LAYOUT)/tceptor2.lh
-
 $(DRIVERS)/tetrisp2.o:	$(LAYOUT)/rocknms.lh
 
 $(DRIVERS)/turbo.o:		$(LAYOUT)/turbo.lh \
