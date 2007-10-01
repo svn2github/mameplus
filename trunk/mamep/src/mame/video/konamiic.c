@@ -1686,7 +1686,7 @@ void K007420_vh_start(running_machine *machine, int gfxnum, void (*callback)(int
 
 	K007420_banklimit = -1;
 
-	state_save_register_global_pointer(K007420_ram, 0x020);
+	state_save_register_global_pointer(K007420_ram, 0x0200);
 	state_save_register_global(K007420_banklimit);
 }
 
