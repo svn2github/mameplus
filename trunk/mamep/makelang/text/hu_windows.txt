@@ -1,24 +1,100 @@
-# osd/windows/sound.c: 257
+# osd/windows/input.c: 1909
+         all -- all axes on all joysticks are digital\n
+         mind -- joystick-ek iránygombjai mind digitálisak\n
+
+# osd/windows/input.c: 1915
+         j1,j2a2 -- all joystick 1 axes and axis 2 on joystick 2 are digital\n
+         j1,j2a2 -- minden joystick 1 irány és a 2 irány a joystick 2-nél digitális\n
+
+# osd/windows/input.c: 1913
+         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
+         j1a5a6 -- axes 5 and 6 on joystick 1 are digital\n
+
+# osd/windows/input.c: 1910
+         j<N> -- all axes on joystick <N> are digital\n
+         j<N> -- minden irány az <N> joystick-en digitális\n
+
+# osd/windows/input.c: 1911
+         j<N>a<M> -- axis <M> on joystick <N> is digital\n
+         j<N>a<M> -- az <M> irány az <N> joystick-en digitális\n
+
+# osd/windows/input.c: 1908
+         none -- no axes on any joysticks are digital\n
+         nincs -- egyik irány sem digitális a joystick-eken\n
+
+# osd/windows/input.c: 1912
+    Multiple axes can be specified for one joystick:\n
+    Többféle irány az joystick függõ:\n
+
+# osd/windows/input.c: 1914
+    Multiple joysticks can be specified separated by commas:\n
+    Többfunkciós joystick-ek vesszõk által különülnek el:\n
+
+# osd/windows/input.c: 2390
+ - digital
+ - digitális
+
+# osd/windows/sound.c: 261
 Error creating DirectSound: %08x\n
 Hiba a DirectSound létrehozásánál: %08x\n
 
-# osd/windows/sound.c: 266
+# osd/windows/sound.c: 270
 Error getting DirectSound capabilities: %08x\n
 Hiba DirectSound képességek elérésénél: %08x\n
 
-# osd/windows/sound.c: 304
+# osd/windows/sound.c: 308
 Error playing: %08x\n
 Hiba a játékban: %08x\n
 
-# osd/windows/sound.c: 274
+# osd/windows/sound.c: 278
 Error setting DirectSound cooperative level: %08x\n
 Hiba a DirectSound összehangolási szintjén: %08x\n
 
-# osd/windows/sound.c: 121
+# osd/windows/input.c: 2974
+Fast Forward
+Gyors elõre
+
+# osd/windows/input.c: 2491
+J%d %s D
+J%d %s D
+
+# osd/windows/input.c: 2495
+J%d %s L
+J%d %s L
+
+# osd/windows/input.c: 2499
+J%d %s R
+J%d %s R
+
+# osd/windows/input.c: 2487
+J%d %s U
+J%d %s U
+
+# osd/windows/input.c: 2862
+Lightgun not supported in windowed mode
+Fénypisztoly ablak módban nem használható
+
+# osd/windows/sound.c: 125
 Sound buffer: overflows=%d underflows=%d\n
 Hang-puffer: overflows=%d underflows=%d\n
 
-# osd/windows/input.c: 789
+# osd/windows/input.c: 2294
+Stick %d %s +
+Kar %d %s +
+
+# osd/windows/input.c: 2287
+Stick %d %s -
+Kar %d %s -
+
+# osd/windows/input.c: 2296
+Stick %s +
+Kar %s +
+
+# osd/windows/input.c: 2289
+Stick %s -
+Kar %s -
+
+# osd/windows/input.c: 2956
 Toggle Fullscreen
 Teljes képernyõre váltás
 
@@ -30,175 +106,271 @@ Billentyûzet kikapcsolása sikertelen. (hiba %d)\n
 Unable to open the keyboard device. (error %d)\n
 Billentyûzet alkalmazása sikertelen. (hiba %d)\n
 
-# osd/windows/video.c: 411
+# osd/windows/video.c: 419
 Using %s scale effect\n
 Felosztási  %s effekt használata\n
 
-# osd/windows/winmain.c: 194
+# osd/windows/input.c: 2171
+analog
+analóg
+
+# osd/windows/input.c: 1465
+analog joystick
+analóg joystick
+
+# osd/windows/input.c: 1468
+dial
+dial
+
+# osd/windows/input.c: 1960, 2171 osd/windows/winmain.c: 214 osd/windows/winmain.h: 51
+digital
+digitális
+
+# osd/windows/winmain.c: 132
+display additional diagnostic information
+kisegítõ diagnosztikai információk megjelenítése
+
+# osd/windows/winmain.c: 237
+enable (keyboard|mouse|joystick) if a paddle control is present
+mûködik a (billentyûzet|egér|joystick) ha van paddle irányító
+
+# osd/windows/winmain.c: 209
 enable dual lightgun input
 kettõs fénypisztoly használat
 
-# osd/windows/winmain.c: 190
+# osd/windows/winmain.c: 202
+enable joystick input
+joystick használat
+
+# osd/windows/winmain.c: 208
+enable lightgun input
+fénypisztoly használat
+
+# osd/windows/winmain.c: 201
+enable mouse input
+egér használat
+
+# osd/windows/winmain.c: 204
+enable pointing stick input
+pointing stick irányító bekapcsolva
+
+# osd/windows/winmain.c: 211
+enable steadykey support
+állandó billentyûk használata
+
+# osd/windows/input.c: 2171
+invalid
+érvénytelen
+
+# osd/windows/input.c: 1466, 1824 osd/windows/winmain.h: 51
+lightgun
+fénypisztoly
+
+# osd/windows/winmain.c: 214
+mark certain joysticks or axes as digital (none|all|j<N>*|j<N>a<M>[,...])
+a meglévõ joystick-ek vagy irányok bejegyzése digitálisként (nincs|mind|j<N>*|j<N>a<M>[,...])
+
+# osd/windows/winmain.c: 210
+offscreen shots reload
+képernyõn kívüli lövések újratöltése
+
+# osd/windows/input.c: 1464
+paddle
+paddle
+
+# osd/windows/input.c: 1467
+pedal
+gázpedál
+
+# osd/windows/winmain.c: 197
 set audio latency (increase to reduce glitches)
 hang lecsengés állítása (növelés a hibák csökkentéséhez)
 
-# osd/windows/winmain.c: 197
+# osd/windows/winmain.c: 217
 set joystick ID (Player1)
 beállítás joystick ID (1 játékos)
 
-# osd/windows/winmain.c: 198
+# osd/windows/winmain.c: 218
 set joystick ID (Player2)
 beállítás joystick ID (2 játékos)
 
-# osd/windows/winmain.c: 199
+# osd/windows/winmain.c: 219
 set joystick ID (Player3)
 beállítás joystick ID (3 játékos)
 
-# osd/windows/winmain.c: 200
+# osd/windows/winmain.c: 220
 set joystick ID (Player4)
 beállítás joystick ID (4 játékos)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 221
 set joystick ID (Player5)
 beállítás joystick ID (5 játékos)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 222
 set joystick ID (Player6)
 beállítás joystick ID (6 játékos)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 223
 set joystick ID (Player7)
 beállítás joystick ID (7 játékos)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 224
 set joystick ID (Player8)
 beállítás joystick ID (8 játékos)
 
-# osd/windows/winmain.c: 206, 207, 208, 209, 210, 211, 212, 213
+# osd/windows/input.c: 1469
+trackball
+hanyattegér
+
+# osd/windows/input.c: 2315
+%s Button %d
+
+
+# osd/windows/winmain.c: 206, 226, 227, 228, 229, 230, 231, 232, 233
 (disabled by compiling option)
 
 
-# osd/windows/video.c: 266
+# osd/windows/video.c: 274
 (primary)
 
 
-# osd/windows/input.c: 1181
-Assign joystick %s to player %d\n
+# osd/windows/winmain.c: 236
+AUTOMATIC DEVICE SELECTION OPTIONS
 
 
-# osd/windows/winmain.c: 149
+# osd/windows/input.c: 1341
+Can't set axis mode for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1366
+Can't set deadzone for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1356
+Can't set range for Joystick %d - %s\n
+
+
+# osd/windows/input.c: 1377
+Can't set saturation for Joystick %d - %s\n
+
+
+# osd/windows/winmain.c: 130
+DEBUGGING OPTIONS
+
+
+# osd/windows/winmain.c: 156
 DIRECT3D-SPECIFIC OPTIONS
 
 
-# osd/windows/winmain.c: 145
+# osd/windows/winmain.c: 152
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
-# osd/windows/drawd3d.c: 1124
+# osd/windows/drawd3d.c: 1120
 Device %s currently in an unsupported mode\n
 
 
-# osd/windows/drawd3d.c: 1094
+# osd/windows/drawd3d.c: 1093
 Direct3D: Configuring adapter #%d = %s\n
 
 
-# osd/windows/drawd3d.c: 719
+# osd/windows/drawd3d.c: 718
 Direct3D: Device created at %dx%d\n
 
 
-# osd/windows/drawd3d.c: 589, 2306
+# osd/windows/drawd3d.c: 588, 2295
 Direct3D: Error %08X during device begin_scene call\n
 
 
-# osd/windows/drawd3d.c: 1584, 2355
+# osd/windows/drawd3d.c: 1573, 2344
 Direct3D: Error %08X during device draw_primitive call\n
 
 
-# osd/windows/drawd3d.c: 618, 2359
+# osd/windows/drawd3d.c: 617, 2348
 Direct3D: Error %08X during device end_scene call\n
 
 
-# osd/windows/drawd3d.c: 2299
+# osd/windows/drawd3d.c: 2288
 Direct3D: Error %08X during device get_render_target call\n
 
 
-# osd/windows/drawd3d.c: 624
+# osd/windows/drawd3d.c: 623
 Direct3D: Error %08X during device present call\n
 
 
-# osd/windows/drawd3d.c: 333, 340, 347, 354
+# osd/windows/drawd3d.c: 332, 339, 346, 353
 Direct3D: Error %08X during device set_render_state call\n
 
 
-# osd/windows/drawd3d.c: 2301, 2363
+# osd/windows/drawd3d.c: 2290, 2352
 Direct3D: Error %08X during device set_render_target call\n
 
 
-# osd/windows/drawd3d.c: 1556, 2353
+# osd/windows/drawd3d.c: 1545, 2342
 Direct3D: Error %08X during device set_stream_source call\n
 
 
-# osd/windows/drawd3d.c: 265, 2312
+# osd/windows/drawd3d.c: 264, 2301
 Direct3D: Error %08X during device set_texture call\n
 
 
-# osd/windows/drawd3d.c: 277, 279, 291, 293, 305
+# osd/windows/drawd3d.c: 276, 278, 290, 292, 304
 Direct3D: Error %08X during device set_texture_stage_state call\n
 
 
-# osd/windows/drawd3d.c: 2287
+# osd/windows/drawd3d.c: 2276
 Direct3D: Error %08X during device stretct_rect call\n
 
 
-# osd/windows/drawd3d.c: 890, 892, 894, 896, 900, 914, 928, 942, 968, 992, 1006, 1019, 1026
+# osd/windows/drawd3d.c: 889, 891, 893, 895, 899, 913, 927, 941, 967, 991, 1005, 1018, 1025
 Direct3D: Error %08X during get_caps_dword call\n
 
 
-# osd/windows/drawd3d.c: 2266
+# osd/windows/drawd3d.c: 2255
 Direct3D: Error %08X during texture get_surface_level call\n
 
 
-# osd/windows/drawd3d.c: 2242
+# osd/windows/drawd3d.c: 2231
 Direct3D: Error %08X during texture unlock_rect call\n
 
 
-# osd/windows/drawd3d.c: 2316
+# osd/windows/drawd3d.c: 2305
 Direct3D: Error %08X during vertex buffer lock call\n
 
 
-# osd/windows/drawd3d.c: 1551, 2348
+# osd/windows/drawd3d.c: 1540, 2337
 Direct3D: Error %08X during vertex buffer unlock call\n
 
 
-# osd/windows/drawd3d.c: 955
+# osd/windows/drawd3d.c: 954
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 
 
-# osd/windows/drawd3d.c: 950
+# osd/windows/drawd3d.c: 949
 Direct3D: Error - Device does not support dest alpha blending with one\n
 
 
-# osd/windows/drawd3d.c: 945
+# osd/windows/drawd3d.c: 944
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 
 
-# osd/windows/drawd3d.c: 903
+# osd/windows/drawd3d.c: 902
 Direct3D: Error - Device does not support immediate presentations\n
 
 
-# osd/windows/drawd3d.c: 908
+# osd/windows/drawd3d.c: 907
 Direct3D: Error - Device does not support per-refresh presentations\n
 
 
-# osd/windows/drawd3d.c: 936
+# osd/windows/drawd3d.c: 935
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 
 
-# osd/windows/drawd3d.c: 931
+# osd/windows/drawd3d.c: 930
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 
 
-# osd/windows/drawd3d.c: 962
+# osd/windows/drawd3d.c: 961
 Direct3D: Error - Device does not support texture alpha\n
 
 
@@ -210,11 +382,11 @@ Direct3D: Error attempting to initialize Direct3D8\n
 Direct3D: Error attempting to initialize Direct3D9\n
 
 
-# osd/windows/drawd3d.c: 1274
+# osd/windows/drawd3d.c: 1263
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 
 
-# osd/windows/drawd3d.c: 1218
+# osd/windows/drawd3d.c: 1207
 Direct3D: Selecting video mode...\n
 
 
@@ -242,67 +414,67 @@ Direct3D: Using Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 
 
-# osd/windows/drawd3d.c: 1028
+# osd/windows/drawd3d.c: 1027
 Direct3D: Using StretchRect for prescaling\n
 
 
-# osd/windows/drawd3d.c: 1022
+# osd/windows/drawd3d.c: 1021
 Direct3D: Using dynamic textures\n
 
 
-# osd/windows/drawd3d.c: 976
+# osd/windows/drawd3d.c: 975
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 986
+# osd/windows/drawd3d.c: 985
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 922
+# osd/windows/drawd3d.c: 921
 Direct3D: Warning - Device does not support hardware rasterization\n
 
 
-# osd/windows/drawd3d.c: 971
+# osd/windows/drawd3d.c: 970
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 981
+# osd/windows/drawd3d.c: 980
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 917
+# osd/windows/drawd3d.c: 916
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 
 
-# osd/windows/drawd3d.c: 995
+# osd/windows/drawd3d.c: 994
 Direct3D: Warning - Device does not support texture clamping\n
 
 
-# osd/windows/drawd3d.c: 1009
+# osd/windows/drawd3d.c: 1008
 Direct3D: Warning - Device does not support texture modulation\n
 
 
-# osd/windows/drawd3d.c: 1000
+# osd/windows/drawd3d.c: 999
 Direct3D: Warning - Device does not support texture wrapping\n
 
 
-# osd/windows/drawd3d.c: 735
+# osd/windows/drawd3d.c: 734
 Direct3D: Warning - device does not support full screen gamma correction.\n
 
 
-# osd/windows/drawd3d.c: 672
+# osd/windows/drawd3d.c: 671
 Direct3D: YUV format = %s\n
 
 
-# osd/windows/drawd3d.c: 1655
+# osd/windows/drawd3d.c: 1644
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
 
-# osd/windows/drawd3d.c: 1064
+# osd/windows/drawd3d.c: 1063
 Direct3D: failed to recreate resources for device; failing permanently\n
 
 
-# osd/windows/drawd3d.c: 1051
+# osd/windows/drawd3d.c: 1050
 Direct3D: resetting device\n
 
 
@@ -446,43 +618,27 @@ DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 
 
-# osd/windows/input.c: 1165
-DirectInput: Unable to enumerate joysticks (result=%08X)\n
-
-
-# osd/windows/input.c: 1150
-DirectInput: Unable to enumerate keyboards (result=%08X)\n
-
-
-# osd/windows/input.c: 1159
-DirectInput: Unable to enumerate mice (result=%08X)\n
-
-
-# osd/windows/input.c: 1139
+# osd/windows/input.c: 1457
 DirectInput: Using DirectInput %d\n
 
 
-# osd/windows/sound.c: 369
+# osd/windows/sound.c: 373
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# osd/windows/sound.c: 383
+# osd/windows/sound.c: 387
 Error creating DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 350
+# osd/windows/sound.c: 354
 Error creating primary DirectSound buffer: %08x\n
 
 
-# osd/windows/window.c: 604
-Error creating render target for window %d
-
-
-# osd/windows/drawd3d.c: 769
+# osd/windows/drawd3d.c: 768
 Error creating vertex buffer (%08X)
 
 
-# osd/windows/drawd3d.c: 1091
+# osd/windows/drawd3d.c: 1090
 Error getting identifier for adapter #%d\n
 
 
@@ -490,115 +646,175 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 
 
-# osd/windows/drawd3d.c: 1100
+# osd/windows/drawd3d.c: 1099
 Error getting mode for adapter #%d\n
 
 
-# osd/windows/sound.c: 366
+# osd/windows/sound.c: 370
 Error getting primary DirectSound buffer format: %08x\n
 
 
-# osd/windows/sound.c: 391
+# osd/windows/sound.c: 395
 Error locking DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 358
+# osd/windows/sound.c: 362
 Error setting primary DirectSound buffer format: %08x\n
 
 
-# osd/windows/drawd3d.c: 777
+# osd/windows/drawd3d.c: 776
 Error setting vertex shader (%08X)
 
 
-# osd/windows/drawd3d.c: 658
+# osd/windows/drawd3d.c: 657
 Error: A8R8G8B8 format textures not supported\n
 
 
-# osd/windows/drawd3d.c: 648
+# osd/windows/drawd3d.c: 647
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 
 
-# osd/windows/drawd3d.c: 690
+# osd/windows/drawd3d.c: 689
 Error: unable to configure a screen texture format\n
 
 
-# osd/windows/winmain.c: 181
+# osd/windows/winmain.c: 188
 FULL SCREEN OPTIONS
 
 
-# osd/windows/window.c: 228
-Failed to create pause event
-
-
-# osd/windows/window.c: 823
-Failed to create window class
-
-
-# osd/windows/window.c: 242
-Failed to create window thread
-
-
-# osd/windows/window.c: 236
-Failed to create window thread ready event
-
-
-# osd/windows/winmain.c: 193
+# osd/windows/winmain.c: 200
 INPUT DEVICE OPTIONS
 
 
-# osd/windows/video.c: 534
+# osd/windows/video.c: 542
 Illegal aspect ratio value for %s = %s\n
 
 
-# osd/windows/video.c: 557
+# osd/windows/video.c: 565
 Illegal resolution value for %s = %s\n
 
 
-# osd/windows/video.c: 451
+# osd/windows/input.c: 2390
+Input:  Axis %d (%s)%s\n
+
+
+# osd/windows/input.c: 2228
+Input: %s: %s\n
+
+
+# osd/windows/input.c: 1076
+Input: Autoenabling joysticks due to presence of a %s\n
+
+
+# osd/windows/input.c: 1083
+Input: Autoenabling lightguns due to presence of a %s\n
+
+
+# osd/windows/input.c: 1069
+Input: Autoenabling mice due to presence of a %s\n
+
+
+# osd/windows/input.c: 2173
+Input: Joystick %d axis %d is now %s\n
+
+
+# osd/windows/input.c: 2371
+Input: Joystick %d: %s (%d axes, %d buttons, %d POVs)\n
+
+
+# osd/windows/input.c: 1532
+Input: Keyboards=%d  Mice=%d  Joysticks=%d  Lightguns=%d\n
+
+
+# osd/windows/input.c: 3310
+Input: Using RAWMOUSE for Mouse input\n
+
+
+# osd/windows/input.c: 1534
+Input: \"%s\" controller support enabled\n
+
+
+# osd/windows/input.c: 1907
+Invalid %s value %s; reverting to all -- valid values are:\n
+
+
+# osd/windows/input.c: 1828
+Invalid %s value %s; reverting to keyboard\n
+
+
+# osd/windows/video.c: 459
 Invalid video value %s; reverting to gdi\n
 
 
-# osd/windows/window.c: 619
+# osd/windows/input.c: 2359
+Lightgun %d 
+
+
+# osd/windows/input.c: 2357
+Lightgun on Mouse %d 
+
+
+# osd/windows/winmain.c: 521
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\nM.A.M.E. is a console application, you should launch it from a command prompt.\n\nUsage:\tMAME gamename [options]\n\n\tMAME -showusage\t\tfor a brief list of options\n\tMAME -showconfig\t\tfor a list of configuration options\n\tMAME -createconfig\tto create a mame.ini\n\nPlease consult the documentation for more information.\n\nWould you like to open the documentation now?
+
+
+# osd/windows/window.c: 618
 MAME: %s [%s] - Screen %d
 
 
-# osd/windows/winmain.c: 718
-Out of memory
+# osd/windows/input.c: 2225
+Mouse 
 
 
-# osd/windows/winmain.c: 154
+# osd/windows/input.c: 2223
+Mouse %d 
+
+
+# osd/windows/winmain.c: 161
 PER-WINDOW VIDEO OPTIONS
 
 
-# osd/windows/drawd3d.c: 1152
+# osd/windows/drawd3d.c: 1143
 Proposed video mode not supported on device %s\n
 
 
-# osd/windows/input.c: 1732
-RawInput: APIs detected\n
-
-
-# osd/windows/sound.c: 117
+# osd/windows/sound.c: 121
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# osd/windows/winmain.c: 714
-Symbol table full
+# osd/windows/input.c: 2260
+Stick%sX+
 
 
-# osd/windows/drawd3d.c: 1792
+# osd/windows/input.c: 2258
+Stick%sX-
+
+
+# osd/windows/input.c: 2264
+Stick%sY+
+
+
+# osd/windows/input.c: 2262
+Stick%sY-
+
+
+# osd/windows/input.c: 2268
+Stick%sZ+
+
+
+# osd/windows/input.c: 2266
+Stick%sZ-
+
+
+# osd/windows/drawd3d.c: 1781
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
-# osd/windows/window.c: 639
-Unable to complete window creation
-
-
-# osd/windows/drawd3d.c: 716
+# osd/windows/drawd3d.c: 715
 Unable to create the Direct3D device (%08X)\n
 
 
-# osd/windows/drawd3d.c: 436, 497
+# osd/windows/drawd3d.c: 435, 496
 Unable to initialize Direct3D.\n
 
 
@@ -606,199 +822,235 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 
 
-# osd/windows/video.c: 502
+# osd/windows/video.c: 510
 Unable to load PNG file '%s'\n
 
 
-# osd/windows/drawd3d.c: 2229
+# osd/windows/drawd3d.c: 2218
 Unknown texture blendmode=%d format=%d\n
 
 
-# osd/windows/video.c: 266
+# osd/windows/video.c: 274
 Video: Monitor %p = \"%s\" %s\n
 
 
-# osd/windows/winmain.c: 124
-WINDOWS DEBUGGING OPTIONS
-
-
-# osd/windows/winmain.c: 128
+# osd/windows/winmain.c: 135
 WINDOWS PERFORMANCE OPTIONS
 
 
-# osd/windows/winmain.c: 189
+# osd/windows/winmain.c: 196
 WINDOWS SOUND OPTIONS
 
 
-# osd/windows/winmain.c: 133
+# osd/windows/winmain.c: 140
 WINDOWS VIDEO OPTIONS
 
 
-# osd/windows/video.c: 447
+# osd/windows/video.c: 455
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
 
-# osd/windows/drawd3d.c: 652
+# osd/windows/drawd3d.c: 651
 Warning: Device may not perform well for Direct3D rendering\n
 
 
-# osd/windows/winmain.c: 156
+# osd/windows/winmain.c: 163
 aspect ratio for all screens; 'auto' here will try to make a best guess
 
 
-# osd/windows/winmain.c: 161
+# osd/windows/winmain.c: 168
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/winmain.c: 176
+# osd/windows/winmain.c: 183
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/winmain.c: 166
+# osd/windows/winmain.c: 173
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/winmain.c: 171
+# osd/windows/winmain.c: 178
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 
 
-# osd/windows/winmain.c: 184
+# osd/windows/winmain.c: 191
 brightness value in full screen mode
 
 
-# osd/windows/winmain.c: 138
+# osd/windows/winmain.c: 212
+center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
+
+
+# osd/windows/winmain.c: 145
 constrain to the proper aspect ratio
 
 
-# osd/windows/winmain.c: 185
+# osd/windows/winmain.c: 192
 contrast value in full screen mode
 
 
-# osd/windows/winmain.c: 137
+# osd/windows/winmain.c: 144
 default to maximized windows; otherwise, windows will be minimized
 
 
-# osd/windows/winmain.c: 151
-enable bilinear filtering on screen output
+# osd/windows/winmain.c: 240
+enable (keyboard|mouse|joystick) if a dial control is present
 
 
-# osd/windows/winmain.c: 146
-enable hardware stretching
+# osd/windows/winmain.c: 242
+enable (keyboard|mouse|joystick) if a lightgun control is present
 
 
-# osd/windows/winmain.c: 130
-enable multithreading; this enables rendering and blitting on a separate thread
+# osd/windows/winmain.c: 245
+enable (keyboard|mouse|joystick) if a mouse control is present
 
 
-# osd/windows/winmain.c: 183
-enable resolution switching
+# osd/windows/winmain.c: 239
+enable (keyboard|mouse|joystick) if a pedal control is present
 
 
-# osd/windows/winmain.c: 182
-enable triple buffering
+# osd/windows/winmain.c: 243
+enable (keyboard|mouse|joystick) if a positional control is present
 
 
-# osd/windows/winmain.c: 142
-enable using the start of VBLANK for throttling instead of the game time
+# osd/windows/winmain.c: 241
+enable (keyboard|mouse|joystick) if a trackball control is present
 
 
-# osd/windows/winmain.c: 141
-enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
-
-
-# osd/windows/winmain.c: 136
-enable window mode; otherwise, full screen mode is assumed
-
-
-# osd/windows/winmain.c: 155
-explicit name of all screens; 'auto' here will try to make a best guess
-
-
-# osd/windows/winmain.c: 160
-explicit name of the first screen; 'auto' here will try to make a best guess
-
-
-# osd/windows/winmain.c: 175
-explicit name of the fourth screen; 'auto' here will try to make a best guess
-
-
-# osd/windows/winmain.c: 165
-explicit name of the second screen; 'auto' here will try to make a best guess
-
-
-# osd/windows/winmain.c: 170
-explicit name of the third screen; 'auto' here will try to make a best guess
-
-
-# osd/windows/winmain.c: 186
-gamma value in full screen mode
-
-
-# osd/windows/winmain.c: 140
-name of a PNG file to use for visual effects, or 'none'
-
-
-# osd/windows/winmain.c: 135
-number of screens to create; usually, you want just one
-
-
-# osd/windows/winmain.c: 125
-output error.log data to the system debugger
-
-
-# osd/windows/winmain.c: 157
-preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-
-
-# osd/windows/winmain.c: 162
-preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-
-
-# osd/windows/winmain.c: 177
-preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-
-
-# osd/windows/winmain.c: 167
-preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-
-
-# osd/windows/winmain.c: 172
-preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+# osd/windows/winmain.c: 238
+enable (keyboard|mouse|joystick) if an analog joystick control is present
 
 
 # osd/windows/winmain.c: 158
+enable bilinear filtering on screen output
+
+
+# osd/windows/winmain.c: 153
+enable hardware stretching
+
+
+# osd/windows/winmain.c: 137
+enable multithreading; this enables rendering and blitting on a separate thread
+
+
+# osd/windows/winmain.c: 190
+enable resolution switching
+
+
+# osd/windows/winmain.c: 189
+enable triple buffering
+
+
+# osd/windows/winmain.c: 149
+enable using the start of VBLANK for throttling instead of the game time
+
+
+# osd/windows/winmain.c: 148
+enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
+
+
+# osd/windows/winmain.c: 143
+enable window mode; otherwise, full screen mode is assumed
+
+
+# osd/windows/winmain.c: 213
+end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
+
+
+# osd/windows/winmain.c: 162
+explicit name of all screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 167
+explicit name of the first screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 182
+explicit name of the fourth screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 172
+explicit name of the second screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 177
+explicit name of the third screen; 'auto' here will try to make a best guess
+
+
+# osd/windows/winmain.c: 193
+gamma value in full screen mode
+
+
+# osd/windows/winmain.c: 147
+name of a PNG file to use for visual effects, or 'none'
+
+
+# osd/windows/winmain.c: 142
+number of screens to create; usually, you want just one
+
+
+# osd/windows/winmain.c: 131
+output error.log data to the system debugger
+
+
+# osd/windows/input.c: 1470
+positional
+
+
+# osd/windows/winmain.c: 164
+preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 169
+preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 184
+preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 174
+preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 179
+preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
+
+
+# osd/windows/winmain.c: 165
 preferred view for all screens
 
 
-# osd/windows/winmain.c: 163
+# osd/windows/winmain.c: 170
 preferred view for the first screen
 
 
-# osd/windows/winmain.c: 178
+# osd/windows/winmain.c: 185
 preferred view for the fourth screen
 
 
-# osd/windows/winmain.c: 168
+# osd/windows/winmain.c: 175
 preferred view for the second screen
 
 
-# osd/windows/winmain.c: 173
+# osd/windows/winmain.c: 180
 preferred view for the third screen
 
 
-# osd/windows/winmain.c: 139
+# osd/windows/winmain.c: 146
 scale screen rendering by this amount in software
 
 
-# osd/windows/winmain.c: 150
+# osd/windows/winmain.c: 157
 specify the preferred Direct3D version (8 or 9)
 
 
-# osd/windows/winmain.c: 129
+# osd/windows/winmain.c: 136
 thread priority for the main game thread; range from -15 to 1
 
 
-# osd/windows/winmain.c: 134
+# osd/windows/winmain.c: 141
 video output method: none, gdi, ddraw, or d3d
 
 

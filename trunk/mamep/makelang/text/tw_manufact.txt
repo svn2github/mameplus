@@ -1622,10 +1622,6 @@ Psygnosis
 RACDYM
 
 
-# Thayer's Quest
-RDI Video Systems
-
-
 # Kyukyoku no Hito [BET] (Japan 880824)
 ROLLER TRON
 
@@ -2200,10 +2196,6 @@ Triumph Software Inc.
 
 # Ultraman Club - Tatakae! Ultraman Kyoudai!!
 Tsuburaya Prod.
-
-
-# El Grande - 5 Card Draw (New)
-Tuni Electro Service
 
 
 # Bubble 2000

@@ -1,25 +1,25 @@
-# 20
-CPS1
+# 283
+Bootleg And Clone
 
 
-# 30
-CPS2
+# 102
+CPS All System
+
+
+# 298
+Haze Megadrive
 
 
 # Title
 IPS
 
 
-# 14
+# 61
 Misc
 
 
-# 35
+# 136
 Neo-Geo
-
-
-# 93
-PGM
 
 
 # 7

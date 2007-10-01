@@ -1,6176 +1,6172 @@
-# emu/datafile.c: 2448
-          DIAL:  %4d\n
-        다이얼:  %4d\n
-
-# emu/datafile.c: 2454
-         OTHER:  %4d\n
-          기타:  %4d\n
-
-# emu/datafile.c: 2452
-         PEDAL:  %4d\n
-          페달:  %4d\n
-
-# emu/datafile.c: 2447
-        PADDLE:  %4d\n
-          핸들:  %4d\n
-
-# emu/romload.c: 286
-       FOUND: %s\n
-        발견: %s\n
-
-# emu/datafile.c: 2439
-       JOY2WAY:  %4d\n
-     2방향스틱:  %4d\n
-
-# emu/datafile.c: 2440
-       JOY4WAY:  %4d\n
-     4방향스틱:  %4d\n
-
-# emu/datafile.c: 2441
-       JOY8WAY:  %4d\n
-     8방향스틱:  %4d\n
-
-# emu/datafile.c: 2450
-      AD STICK:  %4d\n
-       AD 스틱:  %4d\n
-
-# emu/datafile.c: 2442
-      JOY16WAY:  %4d\n
-    16방향스틱:  %4d\n
-
-# emu/datafile.c: 2451
-      LIGHTGUN:  %4d\n
-      라이트건:  %4d\n
-
-# emu/datafile.c: 2433
-     PLAYERS %d:  %4d\n
-    플레이어 %d:  %4d\n
-
-# emu/datafile.c: 2449
-     TRACKBALL:  %4d\n
-        트랙볼:  %4d\n
-
-# emu/datafile.c: 2463
-    BUTTONS%3d:  %4d\n
-       버튼%3d:  %4d\n
-
-# emu/romload.c: 280
-    EXPECTED: %s\n
-    기대값: %s\n
-
-# emu/datafile.c: 2469
-    NO BUTTONS:  %4d\n
-     버튼 없음:  %4d\n
-
-# emu/audit.c: 313
-   FOUND: %s\n
-    찾음: %s\n
-
-# emu/datafile.c: 2270
- %4d HARDDISK\n
- %4d 하드디스크\n
-
-# emu/datafile.c: 2266
- %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
- %4d 수평       + %4d\n %4d 수직       + %4d\n
-
-# emu/datafile.c: 2262
- %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
- %4d 플레초이스 + %4d\n %4d 데코 카스  + %4d\n %4d CVS        + %4d\n
-
-# emu/datafile.c: 2264
- %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
- %4d 래스터     + %4d\n %4d 벡터       + %4d\n
-
-# emu/datafile.c: 2268
- %4d STEREO     + %4d\n
- %4d 스테레오   + %4d\n
-
-# emu/audit.c: 287
- (%d bytes)
- (%d bytes)
-
-# emu/clifront.c: 735
- BAD
- 잘못된 롬
-
-# emu/datafile.c: 2443
- DOUBLEJOY2WAY:  %4d\n
- 2방향듀얼스틱:  %4d\n
-
-# emu/datafile.c: 2444
- DOUBLEJOY4WAY:  %4d\n
- 4방향듀얼스틱:  %4d\n
-
-# emu/datafile.c: 2445
- DOUBLEJOY8WAY:  %4d\n
- 8방향듀얼스틱:  %4d\n
-
-# emu/datafile.c: 2372
- GAMES WITH  %d CPUs: %4d\n
- %d CPU 사용 게임   : %4d\n
-
-# emu/datafile.c: 2403
- GAMES WITH  %d SNDINTRF: %4d\n
- %d 사운드 사용 게임    : %4d\n
-
-# emu/clifront.c: 741
- NO GOOD DUMP KNOWN
- 정확하게 덤프된 롬 없음
-
-# emu/cheat.c: 9086
-%.8X-%.8X MEMORY
-%.8X-%.8X 메모리
-
-# emu/cheat.c: 2624, 2783
-%d cheats saved
-%d 개의 치트저장
-
-# emu/cheat.c: 5258, 5787, 6245
-%d results found
-%d 결과를 찾음
-
-# emu/clifront.c: 885
-%d romsets found, %d were OK.\n
-%d 롬세트 발견, %d 정상\n
-
-# emu/clifront.c: 962
-%d samplesets found, %d were OK.\n
-%d 샘플세트 발견, %d 정상\n
-
-# emu/cheat.c: 11634
-%s : %s selected
-%s : %s 선택됨
-
-# emu/uimenu.c: 141
-%s Analog
-%s 아날로그
-
-# emu/romload.c: 913
-%s CHD NEEDS REDUMP\n
-%s CHD 재덤프 필요\n
-
-# emu/uimenu.c: 142
-%s Dec
-%s 감소
-
-# emu/uimenu.c: 143
-%s Inc
-%s 증가
-
-# emu/romload.c: 341
-%s NO GOOD DUMP KNOWN\n
-%s 정확하게 덤프된 롬이 없음\n
-
-# emu/romload.c: 248
-%s NOT FOUND (NO GOOD DUMP KNOWN)\n
-%s 찾지 못함 (정확하게 덤프된 롬 없음)\n
-
-# emu/romload.c: 255, 887
-%s NOT FOUND\n
-%s 찾지 못함\n
-
-# emu/romload.c: 357
-%s ROM NEEDS REDUMP\n
-%s 롬의 재덤프 필요\n
-
-# emu/romload.c: 885, 934, 948
-%s UNSUPPORTED CHD VERSION\n
-%s 지원되지 않는 CHD 버전\n
-
-# emu/romload.c: 348, 907
-%s WRONG CHECKSUMS:\n
-%s 잘못된 체크섬:\n
-
-# emu/romload.c: 334
-%s WRONG LENGTH (expected: %08x found: %08x)\n
-%s 잘못된 길이 (기대값: %08x 확인결과: %08x)\n
-
-# emu/cheat.c: 2607
-%s activated
-%s 활성화
-
-# emu/cheat.c: 11632, 11690
-%s disabled
-%s 사용안함
-
-# emu/cheat.c: 11698
-%s enabled
-%s 사용
-
-# emu/state.c: 685
-%s'%s' is not a valid savestate file for game '%s'.
-%s'%s' 파일은 게임 '%s'의 올바른 상태저장 파일이 아닙니다.
-
-# emu/romload.c: 936
-%s: CAN'T CREATE DIFF FILE\n
-%s: DIFF 파일 생성 불가\n
-
-# emu/romload.c: 950
-%s: CAN'T OPEN DIFF FILE\n
-%s: DIFF 파일 호출 불가\n
-
-# emu/state.c: 697
-%sIncompatible save file (signature %08x, expected %08x)
-%s비 호환 저장 파일 (서명 %08x, 기대값 %08x)
-
-# emu/state.c: 669
-%sThis is not a MAME save file
-%sMAME 저장 파일이 아닙니다
-
-# emu/state.c: 677
-%sWrong version in save file (%d, 1 expected)
-%s저장 파일 버전이 올바르지 않습니다(%d, 1 필요)
-
-# emu/clifront.c: 1214
-(BAD) 
-(불량)
-
-# emu/uitext.c: 161
-(Card may already exist)
-(카드가 이미 존재합니다)
-
-# emu/emuopts.c: 190, 191
-(debugger-only command)
-(디버거-전용 명령)
-
-# emu/emuopts.c: 56, 80, 86, 91, 154, 202, 208, 214, 220, 221, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 
-(disabled by compiling option)
-(컴파일 옵션에서 제외됨)
-
-# emu/uitext.c: 149
-(locked)
-(잠김)
-
-# emu/uitext.c: 73, 74
-(more)
-(더보기)
-
-# emu/cheat.c: 2212, 2722, 3144, 3159, 3171, 3183, 3195, 6006, 7166 emu/uitext.c: 40 tools/chdman.c: 742, 1488
-(none)
-(없음)
-
-# emu/inptport.c: 406
-1 Coin/1 Credit
-1 동전/1 크레딧
-
-# emu/inptport.c: 412
-1 Coin/2 Credits
-1 동전/2 크레딧
-
-# emu/inptport.c: 415
-1 Coin/3 Credits
-1 동전/3 크레딧
-
-# emu/inptport.c: 418
-1 Coin/4 Credits
-1 동전/4 크레딧
-
-# emu/inptport.c: 419
-1 Coin/5 Credits
-1 동전/5 크레딧
-
-# emu/inptport.c: 420
-1 Coin/6 Credits
-1 동전/6 크레딧
-
-# emu/inptport.c: 421
-1 Coin/7 Credits
-1 동전/7 크레딧
-
-# emu/inptport.c: 422
-1 Coin/8 Credits
-1 동전/8 크레딧
-
-# emu/inptport.c: 423
-1 Coin/9 Credits
-1 동전/9 크레딧
-
-# emu/inptport.c: 867
-1 Player Start
-플레이어 1 시작
-
-# emu/cheat.c: 5268, 5797, 6255
-1 result found, added to list
-1 개의 결과 찾음, 목록에 추가함
-
-# emu/cheat.c: 2954, 7110
-16 Bit
-16 비트
-
-# mame/drivers/cop01.c: 263 mame/drivers/gottlieb.c: 744 mame/drivers/marineb.c: 164, 360 mame/drivers/marvins.c: 274 mame/drivers/nova2001.c: 108 mame/drivers/omegrace.c: 392
-1st Bonus Life
-첫번째 보너스
-
-# emu/inptport.c: 399
-2 Coins/1 Credit
-2 동전/1 크레딧
-
-# emu/inptport.c: 405
-2 Coins/2 Credits
-2 동전/2 크레딧
-
-# emu/inptport.c: 409
-2 Coins/3 Credits
-2 동전/3 크레딧
-
-# emu/inptport.c: 411
-2 Coins/4 Credits
-2 동전/4 크레딧
-
-# emu/inptport.c: 413
-2 Coins/5 Credits
-2 동전/5 크레딧
-
-# emu/inptport.c: 414
-2 Coins/6 Credits
-2 동전/6 크레딧
-
-# emu/inptport.c: 416
-2 Coins/7 Credits
-2 동전/7 크레딧
-
-# emu/inptport.c: 417
-2 Coins/8 Credits
-2 동전/8 크레딧
-
-# emu/inptport.c: 868
-2 Players Start
-플레이어 2 시작
-
-# emu/cheat.c: 2955, 7111
-24 Bit
-24 비트
-
-# emu/datafile.c: 2475
-24-BIT DISPLAY : %3d  + %3d\n
-24-비트 화면   : %3d  + %3d\n
-
-# mame/drivers/cop01.c: 266 mame/drivers/marineb.c: 167, 355 mame/drivers/marvins.c: 283
-2nd Bonus Life
-두번째 보너스
-
-# emu/inptport.c: 396
-3 Coins/1 Credit
-3 동전/1 크레딧
-
-# emu/inptport.c: 401
-3 Coins/2 Credits
-3 동전/2 크레딧
-
-# emu/inptport.c: 404
-3 Coins/3 Credits
-3 동전/3 크레딧
-
-# emu/inptport.c: 408
-3 Coins/4 Credits
-3 동전/4 크레딧
-
-# emu/inptport.c: 869
-3 Players Start
-플레이어 3 시작
-
-# emu/cheat.c: 2956, 7112
-32 Bit
-32 비트
-
-# emu/inptport.c: 395
-4 Coins/1 Credit
-4 동전/1 크레딧
-
-# emu/inptport.c: 398
-4 Coins/2 Credits
-4 동전/2 크레딧
-
-# emu/inptport.c: 402
-4 Coins/3 Credits
-4 동전/3 크레딧
-
-# emu/inptport.c: 403
-4 Coins/4 Credits
-4 동전/4 크레딧
-
-# emu/inptport.c: 407
-4 Coins/5 Credits
-4 동전/5 크레딧
-
-# emu/inptport.c: 410
-4 Coins/7 Credits
-4 동전/7 크레딧
-
-# emu/inptport.c: 870
-4 Players Start
-플레이어 4 시작
-
-# emu/inptport.c: 394
-5 Coins/1 Credit
-5 동전/1 크레딧
-
-# emu/inptport.c: 400
-5 Coins/3 Credits
-5 동전/3 크레딧
-
-# emu/inptport.c: 871
-5 Players Start
-플레이어 5 시작
-
-# emu/inptport.c: 393
-6 Coins/1 Credit
-5 동전/1 크레딧
-
-# emu/inptport.c: 872
-6 Players Start
-플레이어 6 시작
-
-# emu/inptport.c: 392
-7 Coins/1 Credit
-7 동전/1 크레딧
-
-# emu/inptport.c: 873
-7 Players Start
-플레이어 7 시작
-
-# emu/cheat.c: 2953, 7109
-8 Bit
-8 비트
-
-# emu/inptport.c: 391
-8 Coins/1 Credit
-8 동전/1 크레딧
-
-# emu/inptport.c: 397
-8 Coins/3 Credits
-8 동전/3 크레딧
-
-# emu/inptport.c: 874
-8 Players Start
-플레이어 8 시작
-
-# emu/inptport.c: 390
-9 Coins/1 Credit
-9 코인/1 크레딧
-
-# emu/cheat.c: 9931
-:1st Activation Key (%s)\n
-:1차 활성키 (%s)\n
-
-# emu/cheat.c: 9929
-:1st Activation Key for %s (%s)\n
-:%s 1차 활성키 (%s)\n
-
-# emu/cheat.c: 9941
-:2nd Activation Key (%s)\n
-:2차 활성키 (%s)\n
-
-# emu/cheat.c: 9939
-:2nd Activation Key for %s (%s)\n
-:%s 2차 활성키 (%s)\n
-
-# emu/inptport.c: 996
-AD Stick X
-AD 스틱 X
-
-# emu/inptport.c: 997
-AD Stick X 2
-AD 스틱 X 2
-
-# emu/inptport.c: 998
-AD Stick X 3
-AD 스틱 X 3
-
-# emu/inptport.c: 999
-AD Stick X 4
-AD 스틱 X 4
-
-# emu/inptport.c: 1000
-AD Stick X 5
-AD 스틱 X 5
-
-# emu/inptport.c: 1001
-AD Stick X 6
-AD 스틱 X 6
-
-# emu/inptport.c: 1002
-AD Stick X 7
-AD 스틱 X 7
-
-# emu/inptport.c: 1003
-AD Stick X 8
-AD 스틱 X 8
-
-# emu/inptport.c: 1005
-AD Stick Y
-AD 스틱 Y
-
-# emu/inptport.c: 1006
-AD Stick Y 2
-AD 스틱 Y 2
-
-# emu/inptport.c: 1007
-AD Stick Y 3
-AD 스틱 Y 3
-
-# emu/inptport.c: 1008
-AD Stick Y 4
-AD 스틱 Y 4
-
-# emu/inptport.c: 1009
-AD Stick Y 5
-AD 스틱 Y 5
-
-# emu/inptport.c: 1010
-AD Stick Y 6
-AD 스틱 Y 6
-
-# emu/inptport.c: 1011
-AD Stick Y 7
-AD 스틱 Y 7
-
-# emu/inptport.c: 1012
-AD Stick Y 8
-AD 스틱 Y 8
-
-# emu/inptport.c: 1014
-AD Stick Z
-AD 스틱 Z
-
-# emu/inptport.c: 1015
-AD Stick Z 2
-AD 스틱 Z 2
-
-# emu/inptport.c: 1016
-AD Stick Z 3
-AD 스틱 Z 3
-
-# emu/inptport.c: 1017
-AD Stick Z 4
-AD 스틱 Z 4
-
-# emu/inptport.c: 1018
-AD Stick Z 5
-AD 스틱 Z 5
-
-# emu/inptport.c: 1019
-AD Stick Z 6
-AD 스틱 Z 6
-
-# emu/inptport.c: 1020
-AD Stick Z 7
-AD 스틱 Z 7
-
-# emu/inptport.c: 1021
-AD Stick Z 8
-AD 스틱 Z 8
-
-# emu/uitext.c: 52
-ALL CHANNELS
-모든 채널
-
-# emu/uitext.c: 58
-ALL CPUS
-모든 CPU
-
-# mame/layout/mpu4.lay: 414
-AWP Simulated Video (No Artwork)
-AWP 시뮬레이트 비디오 (아트워크 없음)
-
-# emu/uitext.c: 182
-Activation Key
-활성키
-
-# emu/cheat.c: 3178
-Activation Key (1st)
-활성 키 (1차)
-
-# emu/cheat.c: 3190
-Activation Key (2nd)
-활성 키 (2차)
-
-# emu/cheat.c: 2893
-Add
-추가
-
-# emu/inptport.c: 1109
-Add Cheat
-치트 추가
-
-# emu/cheat.c: 7196
-Add Value
-값 추가
-
-# emu/uitext.c: 165
-Add/Edit a Cheat
-치트 추가/수정
-
-# emu/cheat.c: 2882, 3405
-Add/Subtract
-더하기/빼기
-
-# mame/layout/bfm_sc2.lay: 856
-Adder %d Output Only (%d:%d)
-%d 출력 한정 (%d:%d)
-
-# mame/layout/gldncrwn.lay: 81 mame/layout/paradice.lay: 72 mame/layout/pokio.lay: 72 mame/layout/pyramid.lay: 63 mame/layout/quintoon.lay: 72 mame/layout/slots.lay: 81 mame/layout/sltblgpo.lay: 63 mame/layout/sltblgtk.lay: 81
-Adder and Lamps
-애더 및 램프
-
-# mame/layout/bfm_sc2.lay: 31
-Adder,VFD and Lamp Matrix
-Adder, VFD 그리고 램프 매트릭스
-
-# mame/layout/gldncrwn.lay: 110 mame/layout/paradice.lay: 98 mame/layout/pokio.lay: 107 mame/layout/pyramid.lay: 86 mame/layout/quintoon.lay: 98 mame/layout/slots.lay: 110 mame/layout/sltblgpo.lay: 86 mame/layout/sltblgtk.lay: 110
-Adder,VFD and Lamps
-Adder,VFD 그리고 램프
-
-# emu/cheat.c: 732, 3697, 7142 emu/uitext.c: 42
-Address
-주소
-
-# emu/cheat.c: 3658
-Address Index
-주소 인덱스
-
-# emu/cheat.c: 7201
-Address Shift
-주소 Shift
-
-# emu/cheat.c: 3637
-Address Size
-주소 크기
-
-# emu/cheat.c: 7648 mame/drivers/mcr68.c: 795 
-Advanced
-고급
-
-# emu/cheat.c: 6336 emu/uitext.c: 213
-All Memory
-모든 메모리
-
-# emu/uitext.c: 221
-All values saved
-모든 값이 저장됨
-
-# emu/inptport.c: 476
-Allow Continue
-이어하기 허용
-
-# emu/inptport.c: 485
-Alternate
-교체
-
-# emu/uitext.c: 95
-Analog Controls
-아날로그 콘트롤
-
-# mame/drivers/epos.c: 167 mame/drivers/lethal.c: 540, 588 mame/drivers/lordgun.c: 337 mame/drivers/neogeo.c: 1305
-Arcade
-아케이드
-
-# emu/profiler.c: 135 
-Artwork
-아트워크
-
-# emu/inptport.c: 439
-Asia
-아시아
-
-# emu/restrack.c: 72
-Attempted to malloc zero bytes (%s:%d)
-메모리에 0바이트 할당시도 (%s:%d)
-
-# mame/drivers/bottom9.c: 272, 369 mame/drivers/btime.c: 731 mame/drivers/csk.c: 285, 445 mame/drivers/galaga.c: 1016, 1092 mame/drivers/pacman.c: 2785 mame/drivers/pmpoker.c: 561, 623, 693, 762, 831 mame/drivers/seta.c: 4654 
-Auto
-자동
-
-# emu/cheat.c: 7655
-Auto Save Cheats
-치트 자동 저장
-
-# emu/uitext.c: 128
-Autocenter Speed
-자동 중간속도
-
-# mame/drivers/neogeo.c: 1218
-Autofire (in some games)
-연사 (일부 게임)
-
-# emu/uitext.c: 245
-Autofire Delay
-연사 지연
-
-# emu/uitext.c: 105
-Autofire Setting
-연사 설정
-
-# mame/drivers/dynax.c: 2426, 2559, 2692 mame/drivers/speedspn.c: 249 
-Automatic
-자동
-
-# emu/video.c: 443
-Average speed: %.2f%% (%d seconds)\n
-평균 속도: %.2f%% (%d 초)\n
-
-# emu/cheat.c: 9061
-BANK%.2d
-뱅크%.2d
-
-# emu/cheat.c: 3552
-BCD
-BCD
-
-# mame/drivers/playch10.c: 469 
-BIOS
-바이오스
-
-# emu/ui.c: 2697
-Beam Width
-빔 너비
-
-# mame/drivers/metro.c: 2358 mame/drivers/nbmj8891.c: 2360 mame/drivers/pacman.c: 2769
-Beginner
-초심자
-
-# mame/drivers/bmcbowl.c: 373 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 168 mame/drivers/gdrawpkr.c: 379, 446 mame/drivers/limenko.c: 418 mame/drivers/lvcards.c: 217, 301 mame/drivers/magic10.c: 216 mame/drivers/magicfly.c: 572 mame/drivers/nmg5.c: 681 mame/drivers/pmpoker.c: 570, 632, 735, 804 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 540 mame/drivers/wldarrow.c: 239
-Bet
-베팅
-
-# emu/inptport.c: 884
-Bill 1
-청구 1
-
-# emu/cheat.c: 740 emu/uitext.c: 200
-Binary
-바이너리
-
-# emu/cheat.c: 5867
-Bit
-비트
-
-# emu/inptport.c: 384
-Bonus Life
-생명 보너스
-
-# mame/drivers/coinmstr.c: 185 
-Bookkeeping
-책갈피
-
-# emu/uitext.c: 100 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 195
-Bookkeeping Info
-동전 부기 정보
-
-# emu/inptport.c: 1062
-Break in Debugger
-디버거에서 중지
-
-# emu/uitext.c: 53 mame/drivers/namcos1.c: 642
-Brightness
-밝기
-
-# mame/drivers/m107.c: 296 mame/drivers/m92.c: 976 mame/drivers/usgames.c: 139 
-Button 1
-버튼 1
-
-# mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73 mame/layout/goldnpkr.lay: 83 mame/layout/pmpoker.lay: 63 mame/layout/pottnpkr.lay: 43
-Button Lamps
-버튼 램프
-
-# emu/cheat.c: 3579
-Byte Length
-바이트 길이
-
-# mame/drivers/neodrvr.c: 69 mame/drivers/neogeo.c: 1218
-COMM Setting
-COMM 설정
-
-# emu/clifront.c: 82
-CONFIGURATION COMMANDS
-설정 명령
-
-# emu/emuopts.c: 123
-CORE ARTWORK OPTIONS
-코어 아트워크 옵션
-
-# emu/clifront.c: 77
-CORE COMMANDS
-코어 명령
-
-# emu/emuopts.c: 32, 37
-CORE CONFIGURATION OPTIONS
-코어 설정 옵션
-
-# emu/emuopts.c: 183
-CORE DEBUGGING OPTIONS
-코어 디버깅 옵션
-
-# emu/emuopts.c: 74
-CORE FILENAME OPTIONS
-코어 파일명 옵션
-
-# emu/emuopts.c: 172
-CORE INPUT AUTOMATIC ENABLE OPTIONS
-코어 입력 자동화 사용 옵션
-
-# emu/emuopts.c: 158
-CORE INPUT OPTIONS
-코어 입력 옵션
-
-# emu/emuopts.c: 261
-CORE LANGUAGE OPTIONS
-코어 언어 옵션
-
-# emu/emuopts.c: 195
-CORE MISC OPTIONS
-코어 기타 옵션
-
-# emu/emuopts.c: 60
-CORE OUTPUT DIRECTORY OPTIONS
-코어 출력 디렉토리 옵션
-
-# emu/emuopts.c: 225
-CORE PALETTE OPTIONS
-코어 팔레트 옵션
-
-# emu/emuopts.c: 104
-CORE PERFORMANCE OPTIONS
-코어 성능 옵션
-
-# emu/emuopts.c: 113
-CORE ROTATION OPTIONS
-코어 회전 옵션
-
-# emu/emuopts.c: 130
-CORE SCREEN OPTIONS
-코어 화면 옵션
-
-# emu/emuopts.c: 41
-CORE SEARCH PATH OPTIONS
-코어 검색 경로 옵션
-
-# emu/emuopts.c: 146
-CORE SOUND OPTIONS
-코어 사운드 옵션
-
-# emu/emuopts.c: 95
-CORE STATE/PLAYBACK OPTIONS
-코어 상태저장/재생 옵션
-
-# emu/emuopts.c: 140
-CORE VECTOR OPTIONS
-코어 벡터 옵션
-
-# emu/cheat.c: 3610, 3629, 5999, 7147 emu/uitext.c: 41 
-CPU
-CPU
-
-# emu/cheat.c: 9074
-CPU%.2d 
-CPU%.2d
-
-# emu/clifront.c: 94
-CRC-32s
-CRC-32
-
-# emu/inptport.c: 425 
-Cabinet
-캐비넷
-
-# mame/drivers/gstriker.c: 409 mame/drivers/segaxbd.c: 726, 767, 800, 842 mame/drivers/taito_f2.c: 2416, 2806
-Cabinet Type
-캐비넷 유형
-
-# emu/uitext.c: 96
-Calibrate Joysticks
-조이스틱 조정
-
-# mame/drivers/acefruit.c: 386 mame/drivers/getrivia.c: 287 mame/drivers/magicfly.c: 506 mame/drivers/pmpoker.c: 574, 636, 706, 775 mame/drivers/segac2.c: 1198 
-Cancel
-취소
-
-# emu/uitext.c: 152
-Card Number:
-카드 번호:
-
-# emu/uitext.c: 248 mame/drivers/cischeat.c: 1591 mame/drivers/namcos22.c: 3897, 3971
-Center
-원점 복귀
-
-# emu/uitext.c: 111
-Cheat
-치트
-
-# emu/cheat.c: 9778
-Cheat Database reloaded
-치트 데이터베이스 불러옴
-
-# emu/uitext.c: 186
-Cheat conflict found: disabling
-치트 충돌 발생: 비활성화
-
-# emu/uitext.c: 176
-Cheats
-치트
-
-# mame/drivers/system24.c: 1876
-Chi
-치
-
-# mame/drivers/afega.c: 801 mame/drivers/nmk16.c: 2697 mame/drivers/pgm.c: 913, 1007, 1099, 1190, 1286, 1477 mame/drivers/ssv.c: 2955 mame/drivers/toaplan2.c: 2687, 2740, 2893
-China
-중국
-
-# emu/cheat.c: 7644 mame/drivers/st0016.c: 436
-Classic
-고전
-
-# mame/layout/connect4.lay: 95
-Classic graphics and VFD
-고전 그래픽 및 VFD
-
-# emu/cheat.c: 2900 mame/drivers/gladiatr.c: 531
-Clear
-초기화
-
-# emu/inptport.c: 427 emu/layout/dualhovu.lay: 63 emu/layout/dualhsxs.lay: 63 emu/layout/dualhuov.lay: 63 emu/layout/horizont.lay: 15 emu/layout/vertical.lay: 15 
-Cocktail
-칵테일
-
-# emu/uitext.c: 183
-Code
-코드
-
-# emu/uitext.c: 148 mame/drivers/igs_blit.c: 1810
-Coin
-동전
-
-# emu/inptport.c: 876 mame/drivers/mexico86.c: 282 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 702, 771
-Coin 1
-동전 1
-
-# emu/inptport.c: 877 mame/drivers/mexico86.c: 287 mame/drivers/midyunit.c: 417
-Coin 2
-동전 2
-
-# emu/inptport.c: 878
-Coin 3
-동전 3
-
-# emu/inptport.c: 879
-Coin 4
-동전 4
-
-# emu/inptport.c: 880
-Coin 5
-동전 5
-
-# emu/inptport.c: 881
-Coin 6
-동전 6
-
-# emu/inptport.c: 882
-Coin 7
-동전 7
-
-# emu/inptport.c: 883
-Coin 8
-동전 8
-
-# emu/inptport.c: 388
-Coin A
-동전 A
-
-# emu/inptport.c: 389
-Coin B
-동전 B
-
-# mame/drivers/arabian.c: 313 mame/drivers/bking2.c: 325, 439 mame/drivers/marinedt.c: 361 mame/drivers/markham.c: 109 mame/drivers/mcr68.c: 737 mame/drivers/powerins.c: 216 mame/drivers/segas18.c: 792, 824 mame/drivers/system18.c: 1261
-Coin Chutes
-동전 투입구
-
-# mame/drivers/neodrvr.c: 63 mame/drivers/neogeo.c: 1218
-Coin Chutes?
-동전 투입구
-
-# mame/drivers/airbustr.c: 463 mame/drivers/asteroid.c: 421 mame/drivers/asuka.c: 614 mame/drivers/bloodbro.c: 163, 253, 344 mame/drivers/cabal.c: 348 mame/drivers/exidy.c: 400 mame/drivers/galpanic.c: 547, 658, 727 mame/drivers/holeland.c: 121, 188 mame/drivers/m62.c: 636, 689, 739, 791, 843, 895, 947, 997, 1047, 1100, 1151, 1201 mame/drivers/m72.c: 988, 1060, 1131, 1201, 1271, 1338, 1409, 1476, 1544, 1617, 1699, 1787, 1869, 1954 mame/drivers/m90.c: 227, 272, 330, 375, 450, 520, 592, 637 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/mcatadv.c: 341 mame/drivers/midzeus.c: 1222 mame/drivers/mpatrol.c: 175 mame/drivers/playch10.c: 650 mame/drivers/playmark.c: 450, 598, 695, 791 mame/drivers/powerbal.c: 263 mame/drivers/raiden.c: 130 mame/drivers/rallyx.c: 644 mame/drivers/shisen.c: 158 mame/drivers/sshangha.c: 245 mame/drivers/system18.c: 1326 mame/drivers/tagteam.c: 228 mame/drivers/taito_l.c: 1954 mame/drivers/travrusa.c: 157, 187 mame/drivers/troangel.c: 141 mame/drivers/vigilant.c: 268, 358 mame/drivers/welltris.c: 566 mame/drivers/wilytowr.c: 389 mame/drivers/yard.c: 133
-Coin Mode
-동전 유형
-
-# mame/drivers/aerofgt.c: 761, 862, 940, 1010, 1095 mame/drivers/crshrace.c: 281, 459 mame/drivers/gaelco2.c: 712 mame/drivers/taotaido.c: 231
-Coin Slot
-동전 슬롯
-
-# mame/drivers/alpha68k.c: 1635 mame/drivers/armedf.c: 551 mame/drivers/bbusters.c: 455, 520 mame/drivers/boogwing.c: 178 mame/drivers/buggychl.c: 330 mame/drivers/cps1.c: 1663, 2381, 2484, 2738, 2847, 3523 mame/drivers/cshooter.c: 429 mame/drivers/deco32.c: 1339 mame/drivers/flstory.c: 425 mame/drivers/freekick.c: 527 mame/drivers/galaxian.c: 3129 mame/drivers/itech8.c: 1611 mame/drivers/lkage.c: 247 mame/drivers/lordgun.c: 345 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/nycaptor.c: 742 mame/drivers/sslam.c: 578 mame/drivers/suprslam.c: 231
-Coin Slots
-동전 슬롯
-
-# emu/inptport.c: 387
-Coinage
-동전
-
-# emu/layout/ho20ffff.lay: 10 emu/layout/ho2eff2e.lay: 10 emu/layout/ho4f893d.lay: 11 emu/layout/ho88ffff.lay: 10 emu/layout/hoa0a0ff.lay: 10 emu/layout/hoffe457.lay: 10 emu/layout/hoffff20.lay: 10 emu/layout/voffff20.lay: 10 mame/layout/avalnche.lay: 26 mame/layout/bzone.lay: 14 mame/layout/circus.lay: 26 mame/layout/clowns.lay: 26 mame/layout/copsnrob.lay: 18 mame/layout/crash.lay: 26 mame/layout/deadeye.lay: 34 mame/layout/geebee.lay: 76 mame/layout/gypsyjug.lay: 38 mame/layout/invad2ct.lay: 46 mame/layout/invaders.lay: 22 mame/layout/invrvnge.lay: 18 mame/layout/lazercmd.lay: 30 mame/layout/sbrkout.lay: 34 mame/layout/solarq.lay: 18 mame/layout/sos.lay: 18 mame/layout/starcas.lay: 22 mame/layout/tinv2650.lay: 22
-Color Overlay
-컬러 오버레이
-
-# emu/uitext.c: 67
-Command List not available
-표시할 공략 목록이 없습니다
-
-# emu/cheat.c: 2867, 2940, 3166
-Comment
-설명
-
-# mame/drivers/alpha68k.c: 1636 mame/drivers/armedf.c: 552 mame/drivers/bbusters.c: 456, 521 mame/drivers/boogwing.c: 179 mame/drivers/deco32.c: 1340 mame/drivers/gaelco2.c: 714, 1176 mame/drivers/gijoe.c: 310 mame/drivers/itech8.c: 1612 mame/drivers/konamigq.c: 492 mame/drivers/konamigx.c: 1744 mame/drivers/lethal.c: 542, 590 mame/drivers/lordgun.c: 347 mame/drivers/m92.h: 77, 93, 109, 125 mame/drivers/marinedt.c: 362 mame/drivers/markham.c: 111 mame/drivers/mcr68.c: 739 mame/drivers/moo.c: 491, 560 mame/drivers/mystwarr.c: 1096, 1164, 1237 mame/drivers/segac2.c: 1064 mame/drivers/segas18.c: 903, 959, 1015, 1069, 1135, 1152, 1196 mame/drivers/snk.c: 2931, 2987, 3063, 3120 mame/drivers/sslam.c: 579 mame/drivers/suprslam.c: 232 mame/drivers/system18.c: 1327 mame/drivers/system24.c: 1322, 1398, 1469, 1539, 1599
-Common
-공통
-
-# emu/cheat.c: 4857, 4862, 4867, 4872, 5976
-Comparison
-비교
-
-# emu/cheat.c: 5467
-Comparison Option
-비교 옵션
-
-# emu/inptport.c: 1063
-Config Menu
-설정 메뉴
-
-# emu/uimenu.c: 1804
-Configure General Inputs
-일반 입력 설정
-
-# emu/uitext.c: 170
-Configure Watchpoints
-조사점 설정
-
-# mame/drivers/drgnmst.c: 254 mame/drivers/fastlane.c: 197 mame/drivers/ksayakyu.c: 171 mame/drivers/merit.c: 541 mame/drivers/metro.c: 2571 mame/drivers/nemesis.c: 1581 mame/drivers/seta.c: 3289 mame/drivers/tmnt.c: 1876, 1962
-Continue
-이어하기
-
-# mame/drivers/toaplan2.c: 2202, 2535, 2609
-Continue Mode
-이어하기 모드
-
-# emu/inptport.c: 470
-Continue Price
-이어하기 금액
-
-# emu/uitext.c: 167
-Continue Search
-찾기 계속
-
-# emu/inptport.c: 475
-Continues
-이어하기
-
-# emu/uitext.c: 54
-Contrast
-대비
-
-# mame/drivers/brkthru.c: 237, 282 mame/drivers/metro.c: 2375 mame/drivers/st0016.c: 491 mame/drivers/tail2nos.c: 204 
-Control Panel
-조종 패널
-
-# mame/drivers/nbmj8891.c: 1021, 1117 mame/drivers/taitosj.c: 1769 mame/drivers/tumbleb.c: 1536 
-Control Type
-조종장치 종류
-
-# emu/inptport.c: 471
-Controller
-조종장치
-
-# emu/inptport.c: 466 mame/drivers/fantland.c: 583
-Controls
-조작
-
-# emu/cheat.c: 3570
-Copy Previous Value
-이전값 복사
-
-# emu/config.c: 136, 140
-Could not load controller file %s.cfg
-조종장치 파일 %s.cfg를 불러올 수 없습니다
-
-# emu/state.c: 724
-Could not read MAME save file header
-MAME 저장 파일 헤더를 읽을 수 업습니다
-
-# mame/drivers/aerofgt.c: 1056, 1143 mame/drivers/bbusters.c: 568 mame/drivers/bwing.c: 292 mame/drivers/cischeat.c: 1193 mame/drivers/crshrace.c: 381, 537 mame/drivers/ddenlovr.c: 4592 mame/drivers/f1gp.c: 307, 412 mame/drivers/kaneko16.c: 1017, 1113 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 249, 712 mame/drivers/psikyo.c: 644, 764, 1002, 1206, 1304, 1493 mame/drivers/seta.c: 3469, 3794, 4116, 4285 mame/drivers/ssv.c: 2954 mame/drivers/st0016.c: 494 mame/drivers/stv.c: 2233 mame/drivers/suprslam.c: 274 mame/drivers/tail2nos.c: 207 mame/drivers/taotaido.c: 282
-Country
-국가
-
-# emu/uitext.c: 155
-Create New Card
-새로운 카드 생성
-
-# emu/uimenu.c: 1645
-Crop to Screen
-화면에 맞게 잘라냄
-
-# emu/cheat.c: 5843
-Current Data
-현재 데이터
-
-# emu/cheat.c: 2931 emu/sound/custom.c: 83 mame/drivers/tickee.c: 204 
-Custom
-사용자 정의
-
-# emu/uitext.c: 98
-Custom Buttons
-사용자 정의 버튼
-
-# mame/drivers/cinemat.c: 258, 821 mame/drivers/exidy.c: 148, 605 mame/drivers/mcr.c: 390, 966
-DIAL
-다이얼
-
-# emu/datafile.c: 2446
-DOUBLEJOY16WAY:  %4d\n
-16방향듀얼스틱:  %4d\n
-
-# emu/cheat.c: 3515
-Data
-데이터
-
-# emu/cheat.c: 7206
-Data Shift
-데이터 시프트
-
-# emu/cheat.c: 7664 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 918 mame/drivers/psikyo4.c: 577, 621, 696 mame/drivers/psikyosh.c: 661 
-Debug
-디버그
-
-# emu/cheat.c: 739 emu/uitext.c: 199
-Decimal
-10진수
-
-# emu/video.c: 653
-Decoding (%d%%)
-디코딩 (%d%%)
-
-# emu/uitext.c: 226
-Decoding Graphics
-그래픽 디코딩
-
-# mame/machine/cps2crpt.c: 686
-Decrypting %d%%
-암호화 해독 %d%%
-
-# mame/drivers/asuka.c: 536 mame/drivers/bwing.c: 337 mame/drivers/cps1.c: 996, 1080 mame/drivers/fgoal.c: 301 mame/drivers/mcr68.c: 669 mame/drivers/ms32.c: 1103, 1108 mame/drivers/wwfsstar.c: 290 
-Default
-기본값
-
-# emu/uitext.c: 208
-Default Search Speed
-기본 탐색 속도
-
-# emu/cheat.c: 3277
-Delay
-딜레이
-
-# emu/inptport.c: 1110
-Delete Cheat
-치트 제거
-
-# emu/inptport.c: 386
-Demo Sounds
-데모화면 음악
-
-# emu/uitext.c: 181 
-Description
-설명
-
-# emu/inptport.c: 960 mame/drivers/ssv.c: 2776 
-Dial
-다이얼
-
-# emu/inptport.c: 961
-Dial 2
-다이얼 2
-
-# emu/inptport.c: 962
-Dial 3
-다이얼 3
-
-# emu/inptport.c: 963
-Dial 4
-다이얼 4
-
-# emu/inptport.c: 964
-Dial 5
-다이얼 5
-
-# emu/inptport.c: 965
-Dial 6
-다이얼 6
-
-# emu/inptport.c: 966
-Dial 7
-다이얼 7
-
-# emu/inptport.c: 967
-Dial 8
-다이얼 8
-
-# emu/inptport.c: 969
-Dial V
-다이얼 V
-
-# emu/inptport.c: 970
-Dial V 2
-다이얼 V 2
-
-# emu/inptport.c: 971
-Dial V 3
-다이얼 V 3
-
-# emu/inptport.c: 972
-Dial V 4
-다이얼 V 4
-
-# emu/inptport.c: 973
-Dial V 5
-다이얼 V 5
-
-# emu/inptport.c: 974
-Dial V 6
-다이얼 V 6
-
-# emu/inptport.c: 975
-Dial V 7
-다이얼 V 7
-
-# emu/inptport.c: 976
-Dial V 8
-다이얼 V 8
-
-# emu/inptport.c: 385 mame/drivers/pktgaldx.c: 251
-Difficulty
-난이도
-
-# mame/drivers/cps1.c: 2603 mame/drivers/pipedrm.c: 445 mame/drivers/speedbal.c: 125
-Difficulty 1
-난이도 1
-
-# mame/drivers/cps1.c: 2612 mame/drivers/hcastle.c: 165 mame/drivers/pipedrm.c: 450 mame/drivers/speedbal.c: 130
-Difficulty 2
-난이도 2
-
-# emu/uitext.c: 127
-Digital Speed
-디지털 속도
-
-# emu/uitext.c: 94
-Dip Switches
-딥스위치
-
-# tools/src2html.c: 303
-Directories
-디렉토리
-
-# mame/drivers/amidar.c: 166
-Disable All Coins
-모든 코인 비활성화
-
-# emu/uitext.c: 175 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 336, 414 mame/drivers/metro.c: 2384 mame/drivers/midvunit.c: 831 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1642, 1739, 1827 mame/drivers/pacman.c: 1233, 1295 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2414 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
-Disabled
-비활성화
-
-# emu/cheat.c: 7168 emu/uitext.c: 191
-Display Type
-화면 유형
-
-# emu/cheat.c: 6011
-Do Search
-찾기
-
-# mame/drivers/seta.c: 5684 mame/drivers/tail2nos.c: 208
-Domestic
-국내판
-
-# emu/inptport.c: 893
-Door Interlock
-기계 내부잠금
-
-# mame/drivers/cherrym.c: 166 mame/drivers/dunhuang.c: 538 mame/drivers/gdrawpkr.c: 347, 417 mame/drivers/nbmj8891.c: 1375 mame/drivers/pmpoker.c: 572 mame/drivers/witch.c: 538
-Double Up
-두배로
-
-# emu/uitext.c: 235
-Driver Configuration
-드라이버 설정
-
-# emu/uitext.c: 64
-Driverinfo not available
-표시할 드라이버 정보가 없습니다
-
-# emu/inptport.c: 467
-Dual
-듀얼
-
-# emu/layout/dualhovu.lay: 27 emu/layout/dualhsxs.lay: 45
-Dual Over-Under
-듀얼 상-하
-
-# emu/layout/dualhovu.lay: 36 emu/layout/dualhsxs.lay: 54
-Dual Over-Under (Gapless)
-듀얼 상-하 (빈틈없음)
-
-# emu/layout/dualhovu.lay: 45 emu/layout/dualhsxs.lay: 27 emu/layout/dualhuov.lay: 45 mame/layout/firebeat.lay: 3
-Dual Side-by-Side
-듀얼 좌-우
-
-# emu/layout/dualhovu.lay: 54 emu/layout/dualhsxs.lay: 36 emu/layout/dualhuov.lay: 54
-Dual Side-by-Side (Gapless)
-듀얼 좌-우 (빈틈없음)
-
-# emu/layout/dualhuov.lay: 27
-Dual Under-Over
-듀얼 위-아래
-
-# emu/layout/dualhuov.lay: 36
-Dual Under-Over (Gapless)
-듀얼 하-상 (빈틈없음)
-
-# emu/cheat.c: 2941
-EEPROM
-EEPROM
-
-# emu/patch.c: 322
-ERROR: %s/%s: IPS data is empty\n
-오류: %s/%s: IPS 데이터가 없습니다\n
-
-# emu/romload.c: 401
-ERROR: required files are missing, the game cannot be run.
-오류: 필요한 파일이 없습니다, 게임 실행이 불가능합니다.
-
-# emu/audit.c: 311
-EXPECTED: %s\n
-  기대값: %s\n
-
-# emu/inptport.c: 451
-Easier
-좀더 쉬움
-
-# emu/inptport.c: 450
-Easiest
-매우 쉬움
-
-# emu/inptport.c: 452 mame/drivers/yunsun16.c: 430
-Easy
-쉬움
-
-# emu/inptport.c: 1113
-Edit Cheat
-치트 수정
-
-# emu/uitext.c: 154
-Eject Current Card
-현재 카드 꺼내기
-
-# emu/cheat.c: 7156
-Element Size
-요소 크기
-
-# emu/cheat.c: 7187
-Elements Per Line
-행간 요소 수
-
-# emu/uitext.c: 164
-Enable/Disable a Cheat
-치트 활성/비활성
-
-# emu/inptport.c: 3144
-End of playback
-재생 종료
-
-# emu/inptport.c: 3147
-End of playback - %i frames - Average speed %f%%
-재생 종료 - %i 프레임 - 평균 속도 %f%%
-
-# emu/cheat.c: 3588
-Endianness
-엔디아니스
-
-# emu/cheat.c: 5461
-Energy (Less or Greater)
-에너지 (작게 / 크게)
-
-# emu/uitext.c: 205
-Energy (greater or less)
-에너지 (크거나 작거나)
-
-# mame/drivers/kaneko16.c: 1018, 1114 mame/drivers/nmk16.c: 2695
-England
-영국
-
-# emu/inptport.c: 443 mame/drivers/snowbros.c: 961
-English
-영어
-
-# mame/drivers/neodrvr.c: 172 mame/drivers/neogeo.c: 1291
-Enter BIOS
-바이오스 입력
-
-# emu/cheat.c: 4858, 5314, 5853
-Equal
-같음
-
-# mame/drivers/segaybd.c: 864 
-Error
-오류
-
-# emu/uitext.c: 160
-Error creating memory card
-메모리카드 생성 오류
-
-# emu/uitext.c: 156
-Error loading memory card
-메모리카드 읽기 오류
-
-# emu/state.c: 852
-Error: 
-오류: 
-
-# emu/mame.c: 1986, 1990
-Error: Failed to load state
-오류: 상태 읽기 실패
-
-# emu/mame.c: 1908
-Error: Failed to save state
-오류: 상태 저장 실패
-
-# emu/mame.c: 1871
-Error: Unable to save state due to illegal registrations. See error.log for details.
-오류: 잘못된 등록으로 인해 상태저장 불가. 자세한 정보는 error.log에
-
-# emu/ui.c: 1696
-Error: illegal caption file
-오류: 잘못된 캡션 파일
-
-# lib/util/options.c: 453
-Error: option %s expected a parameter\n
-오류: %s 옵션 매개변수가 필요\n
-
-# lib/util/options.c: 436
-Error: unknown option: %s\n
-오류: 알수 없는 옵션: %s\n
-
-# emu/inptport.c: 438
-Europe
-유럽
-
-# emu/uitext.c: 109 
-Exit
-끝내기
-
-# mame/drivers/metro.c: 2364 mame/drivers/nbmj8891.c: 2361
-Expert
-전문가
-
-# emu/inptport.c: 1329
-Extended INP file info:\n
-확장 INP 파일 정보:\n
-
-# emu/clifront.c: 88
-FRONTEND COMMANDS
-프론트엔드 명령
-
-# emu/restrack.c: 89
-Failed to allocate %d bytes (%s:%d)
-%d 바이트 할당 실패 (%s:%d)
-
-# emu/inptport.c: 1299
-Failed to open file for playback
-재생 파일 열기 실패
-
-# emu/inptport.c: 1379
-Failed to open file for recording
-기록 파일 열기 실패
-
-# emu/cheat.c: 6332 emu/uitext.c: 209 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1570, 1624 mame/drivers/amidar.c: 286 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 729 mame/drivers/cps1.c: 1278, 1581 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/galaxian.c: 2487, 2523 mame/drivers/gameplan.c: 587, 1038 mame/drivers/jcross.c: 189 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 620, 671, 722, 772, 824, 876, 930, 1030, 1083 mame/drivers/mcr.c: 1133 mame/drivers/megaplay.c: 224 mame/drivers/metro.c: 2631, 2937, 3235, 3534 mame/drivers/ninjaw.c: 525 mame/drivers/nmg5.c: 434, 494, 587, 594, 629, 634 mame/drivers/nmk16.c: 2769 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 244 mame/drivers/segas16a.c: 1452 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 761 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2577 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1772 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2383, 2452 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 252, 307, 348 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 180 mame/drivers/warriorb.c: 345 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
-Fast
-빠름
-
-# emu/inptport.c: 1071
-Fast Forward
-빨리 감기
-
-# emu/mamecore.h: 172
-Fatal error: %s (%s:%d)
-심각한 오류: %s (%s:%d)
-
-# emu/mamecore.h: 169
-Fatal error: %s\nCaused by assert: %s:%d: %s
-심각한 오류: %s\n발생 원인: %s:%d: %s
-
-# mame/drivers/ninjakid.c: 292 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 203
-First Bonus
-첫번째 보너스
-
-# emu/cheat.c: 5321, 5845
-First Data
-첫번째 데이터
-
-# emu/inptport.c: 428
-Flip Screen
-화면 반전
-
-# emu/uitext.c: 232
-Flip X
-좌우 뒤집기
-
-# emu/uitext.c: 233 mame/drivers/midzeus.c: 1098
-Flip Y
-상하 뒤집기
-
-# emu/cheat.c: 2883
-Force Range
-포스 레인지
-
-# mame/drivers/seta.c: 5685
-Foreign
-외국
-
-# emu/inptport.c: 1068
-Frameskip Dec
-프레임스킵 비율 감소
-
-# emu/inptport.c: 1069
-Frameskip Inc
-프레임스킵 비율 증가
-
-# mame/drivers/lockon.c: 247 mame/drivers/lvcards.c: 325 mame/drivers/pgm.c: 892, 989, 1079, 1171, 1267, 1358 mame/drivers/segas16a.c: 1404 mame/drivers/segas16b.c: 2613 mame/drivers/taito_z.c: 1980, 2051
-Free
-프리
-
-# emu/inptport.c: 424
-Free Play
-프리 플레이
-
-# mame/drivers/1942.c: 213 mame/drivers/1943.c: 147 mame/drivers/40love.c: 1082 mame/drivers/aerofgt.c: 775 mame/drivers/airbustr.c: 492 mame/drivers/alpha68k.c: 1164, 1490, 1543, 1595, 1650, 1676, 1776 mame/drivers/atetris.c: 229, 255 mame/drivers/baraduke.c: 254, 327 mame/drivers/battlex.c: 115 mame/drivers/bbusters.c: 469, 550 mame/drivers/bionicc.c: 245 mame/drivers/blktiger.c: 208 mame/drivers/bwing.c: 289 mame/drivers/compgolf.c: 134 mame/drivers/cps1.c: 668, 836, 954, 1004, 1088, 1159, 1257, 1426, 1516, 1597, 1689, 1793, 1888, 1978, 2060, 2143, 2237, 2299, 2424, 2527, 2635, 2754, 2863, 2955, 3048, 3105, 3165, 3218, 3263, 3316, 3368, 3422, 3465, 3566, 3666, 3770, 3869, 3929 mame/drivers/dec8.c: 1245, 1676 mame/drivers/docastle.c: 341 mame/drivers/exedexes.c: 137 mame/drivers/fcrash.c: 286 mame/drivers/findout.c: 420 mame/drivers/flstory.c: 525 mame/drivers/funkybee.c: 146, 207 mame/drivers/funkyjet.c: 221, 299 mame/drivers/galaga.c: 1023, 1099, 1170, 1244, 1374, 1613, 1672 mame/drivers/gunsmoke.c: 191 mame/drivers/hal21.c: 408 mame/drivers/higemaru.c: 80 mame/drivers/ikki.c: 119 mame/drivers/jcross.c: 195 mame/drivers/karnov.c: 593 mame/drivers/kingobox.c: 289, 375 mame/drivers/kyugo.c: 227, 258, 295, 326, 356, 386, 416 mame/drivers/ladybug.c: 164, 437 mame/drivers/laserbat.c: 376 mame/drivers/legionna.c: 2841, 2929 mame/drivers/lsasquad.c: 322, 476 mame/drivers/mainsnk.c: 195 mame/drivers/mappy.c: 1002, 1135, 1266, 1327, 1395 mame/drivers/markham.c: 143 mame/drivers/marvins.c: 269, 358, 449 mame/drivers/midas.c: 413 mame/drivers/midtunit.c: 343 mame/drivers/midvunit.c: 582 mame/drivers/mitchell.c: 604 mame/drivers/ms32.c: 751, 821, 888 mame/drivers/mugsmash.c: 297, 379 mame/drivers/munchmo.c: 200 mame/drivers/mwarr.c: 201 mame/drivers/namcond1.c: 110 mame/drivers/namcos1.c: 599, 639, 661, 698, 760, 785, 799, 872, 882, 904, 914 mame/drivers/namcos12.c: 1410 mame/drivers/namcos86.c: 569, 659, 729, 807, 886, 965 mame/drivers/neodrvr.c: 78 mame/drivers/neogeo.c: 1218 mame/drivers/ninjaw.c: 487 mame/drivers/nycaptor.c: 722 mame/drivers/ohmygod.c: 292 mame/drivers/onetwo.c: 192 mame/drivers/pacland.c: 331 mame/drivers/pandoras.c: 287 mame/drivers/prehisle.c: 156 mame/drivers/pturn.c: 419 mame/drivers/rollrace.c: 150 mame/drivers/rungun.c: 385 mame/drivers/sauro.c: 247 mame/drivers/scobra.c: 745 mame/drivers/seta2.c: 552 mame/drivers/sf.c: 337, 515, 653 mame/drivers/sgladiat.c: 285 mame/drivers/shootout.c: 167 mame/drivers/sidearms.c: 248 mame/drivers/skykid.c: 167, 246 mame/drivers/snk.c: 2949, 3005, 3081, 3138, 3195, 3266, 3353, 3407, 3465, 3493, 3553, 3624, 3680, 3757, 3822, 3927, 4051, 4192 mame/drivers/snk68.c: 259, 406, 443, 594 mame/drivers/sonson.c: 195 mame/drivers/ssrj.c: 134 mame/drivers/starwars.c: 260, 337 mame/drivers/statriv2.c: 431 mame/drivers/strnskil.c: 197 mame/drivers/superqix.c: 606, 744 mame/drivers/suprnova.c: 553, 628 mame/drivers/tceptor.c: 367, 423 mame/drivers/tmnt.c: 1930, 2016, 2216 mame/drivers/toypop.c: 408, 493 mame/drivers/tsamurai.c: 472, 665 mame/drivers/tumbleb.c: 1465 mame/drivers/vastar.c: 233 mame/drivers/zaccaria.c: 409, 518 mame/drivers/zn.c: 3091 mame/drivers/zodiack.c: 203
-Freeze
-일시정지
-
-# emu/inptport.c: 446 emu/uilang.c: 21 
-French
-프랑스
-
-# emu/datafile.c: 1517
-GAME: 
-게임:
-
-# mame/drivers/bublbobl.c: 604 mame/drivers/cps1.c: 730, 812, 1020, 1104, 1139, 1225, 1439, 1529, 1610, 1806, 1901, 1991, 2073, 2156, 2250, 2346, 2437, 2540, 2648, 2767, 2876, 2968, 3061, 3579, 3679, 3783, 3882, 4042, 4155 mame/drivers/fcrash.c: 299 mame/drivers/ksys573.c: 2833 mame/drivers/macs.c: 244 mame/drivers/missile.c: 822 mame/drivers/pacman.c: 1403 mame/drivers/turbo.c: 898 mame/drivers/vegas.c: 2025
-Game
-게임
-
-# emu/uitext.c: 104
-Game Documents
-게임 문서
-
-# emu/uitext.c: 120
-Game Driverinfo
-게임 드라이버 정보
-
-# emu/uitext.c: 115
-Game History
-게임 역사
-
-# emu/uitext.c: 103
-Game Information
-게임 정보
-
-# emu/uitext.c: 119
-Game Mameinfo
-게임 마메정보
-
-# emu/inptport.c: 2629 mame/drivers/neogeo.c: 1305
-Game Slots
-게임 슬롯
-
-# emu/uitext.c: 117
-Game Story
-게임 줄거리
-
-# emu/inptport.c: 469
-Game Time
-게임 시간
-
-# emu/uitext.c: 55
-Gamma
-감마
-
-# mame/drivers/midzeus.c: 1221 
-General
-일반
-
-# emu/uitext.c: 171
-General Help
-일반적 도움말
-
-# emu/rendfont.c: 867
-Generating cached BDF font...\n
-BDF폰트 캐시 생성 중...\n
-
-# emu/inptport.c: 445 emu/uilang.c: 22 
-German
-독일어
-
-# mame/drivers/kaneko16.c: 1020, 1116 mame/drivers/midzeus.c: 1203 mame/drivers/nmk16.c: 2690
-Germany
-독일
-
-# emu/uimenu.c: 3302
-Gfx: %s, Sound: %s
-Gfx: %s, 사운드: %s
-
-# mame/drivers/royalmah.c: 1581 
-Gray
-회색
-
-# emu/cheat.c: 4873, 5307, 5852
-Greater
-큼
-
-# emu/cheat.c: 5855
-Greater Or Equal
-이상
-
-# emu/cheat.c: 5309
-Greater or Equal
-이상
-
-# emu/datafile.c: 2477
-HI/TRUE BITMAP : %3d  + %3d\n
-HI/TRUE 비트맵 : %3d  + %3d\n
-
-# emu/datafile.c: 2481
-HIGHLIGHTS     : %3d  + %3d\n
-하이라이트     : %3d  + %3d\n
-
-# emu/inptport.c: 455
-Hard
-어려움
-
-# emu/inptport.c: 456
-Harder
-좀더 어려움
-
-# emu/inptport.c: 457
-Hardest
-매우 어려움
-
-# mame/drivers/ddenlovr.c: 3246 mame/drivers/shanghai.c: 913 
-Help
-도움말
-
-# emu/uitext.c: 187
-Help not available yet
-도움말은 준비중입니다
-
-# emu/cheat.c: 738 emu/uitext.c: 198
-Hex
-2진값
-
-# emu/uimenu.c: 1625
-Hide Backdrops
-배경 숨기기
-
-# emu/uimenu.c: 1637
-Hide Bezels
-베젤 숨기기
-
-# emu/uimenu.c: 1631
-Hide Overlays
-오버레이 숨기기
-
-# emu/inptport.c: 461
-High
-높음
-
-# mame/drivers/balsente.c: 358, 412, 595, 649, 754, 809, 891, 1070 mame/drivers/zaccaria.c: 427, 537 
-High Scores
-최고점수
-
-# emu/inptport.c: 462
-Higher
-더 높음
-
-# emu/inptport.c: 463
-Highest
-가장 높음
-
-# emu/inptport.c: 441
-Hispanic
-히스패닉
-
-# emu/uitext.c: 59
-History not available
-표시할 역사 내용이 없습니다
-
-# mame/drivers/neogeo.c: 1305
-Home
-가정용
-
-# mame/drivers/aerofgt.c: 1147 mame/drivers/cave.c: 1744 mame/drivers/ddenlovr.c: 4764 mame/drivers/f1gp.c: 312 mame/drivers/nmk16.c: 2696 mame/drivers/pgm.c: 1011, 1102, 1191, 1290, 1481 mame/drivers/psikyo.c: 648, 768, 1006, 1210 mame/drivers/toaplan1.c: 1188, 1263, 1333, 1408, 1497 mame/drivers/toaplan2.c: 2072, 2237, 2251, 2299, 2451, 2513, 2575, 2645, 2689, 2742
-Hong Kong
-홍콩
-
-# emu/ui.c: 2648
-Horiz position
-수평 위치
-
-# emu/ui.c: 2614
-Horiz stretch
-수평 늘리기
-
-# mame/drivers/findout.c: 280, 310, 340 mame/drivers/gameplan.c: 753, 898 mame/drivers/jack.c: 689 mame/drivers/thepit.c: 527 
-Horizontal
-가로화면
-
-# mame/drivers/afega.c: 310, 387, 467
-Horizontally
-수평
-
-# emu/uitext.c: 27
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 플레이한다면, ESC 를 누르십시오.
-
-# emu/datafile.c: 2283
-IMPERFECT COLORS   : %3d  %3d\n
-불완전한 색상      : %3d  %3d\n
-
-# emu/datafile.c: 2279
-IMPERFECT GRAPHICS : %3d  %3d\n
-불완전한 그래픽    : %3d  %3d\n
-
-# emu/datafile.c: 2287
-IMPERFECT SOUND    : %3d  %3d\n
-불완전한 사운드    : %3d  %3d\n
-
-# emu/audit.c: 309
-INCORRECT CHECKSUM:\n
-잘못된 체크섬:\n
-
-# emu/audit.c: 318
-INCORRECT LENGTH: %d bytes\n
-잘못된 길이:: %d bytes\n
-
-# emu/uitext.c: 39 mame/drivers/travrusa.c: 90, 90
-INVALID
-무효
-
-# emu/cheat.c: 2865
-Ignore Decrement
-감소 무시
-
-# emu/cheat.c: 3287
-Ignore Decrement By
-감소 무시
-
-# lib/util/options.c: 805
-Illegal boolean value for %s; reverting to %d\n
-잘못된 boolean 값 %s; 값 복원 %d\n
-
-# lib/util/options.c: 1119
-Illegal float value for %s; keeping value of %s\n
-%s의 잘못된 float 값; %s 값 유지\n
-
-# lib/util/options.c: 863
-Illegal float value for %s; reverting to %f\n
-잘못된 float 값 %s; 값 복원 %f\n
-
-# lib/util/options.c: 1101
-Illegal integer value for %s; keeping value of %s\n
-%s의 잘못된 integer 값; %s 값 유지\n
-
-# lib/util/options.c: 834
-Illegal integer value for %s; reverting to %d\n
-잘못된 integer 값 %s; 값 복원 %d\n
-
-# emu/clifront.c: 395 emu/mame.c: 1479 emu/ui.c: 352 
-Illegal value for %s = %s\n
-잘못된 값 %s = %s\n
-
-# emu/uitext.c: 238 
-Image Enhancement
-이미지 개선
-
-# emu/uimenu.c: 3291, 3298 
-Imperfect
-불완전함
-
-# emu/cheat.c: 5857
-Increased By Value
-값 증가
-
-# emu/inptport.c: 478
-Infinite
-무한
-
-# emu/cheat.c: 572 mame/drivers/calorie.c: 307 mame/drivers/cinemat.c: 923 mame/drivers/clshroad.c: 218 mame/drivers/galaxian.c: 3466 mame/drivers/ginganin.c: 231 mame/drivers/hal21.c: 407 mame/drivers/jack.c: 657 mame/drivers/prehisle.c: 157 mame/drivers/superdq.c: 281 mame/drivers/vicdual.c: 1681, 2089
-Infinite Lives
-생명 무한
-
-# emu/cheat.c: 571 mame/drivers/vsnes.c: 857
-Infinite Time
-시간 무제한
-
-# emu/cheat.c: 4881, 5421
-Initialize Memory
-메모리 초기화
-
-# emu/mame.c: 1718
-Initializing...
-초기화중...
-
-# emu/uitext.c: 93
-Input (general)
-입력 (일반)
-
-# emu/uitext.c: 102
-Input (this game)
-입력 (이 게임)
-
-# emu/inptport.c: 1320, 1340
-Input file is for game '%s', not for current game '%s'\n
- '%s' 게임의 입력 파일 입니다(현재 '%s')\n
-
-# emu/input.c: 701
-Input: Adding %s #%d: %s\n
-입력: 추가 %s #%d: %s\n
-
-# emu/inptport.c: 4062
-Input: Autoenabling %s due to presence of a %s\n
-입력: %s 자동 활성화 - %s 발견\n
-
-# emu/input.c: 598
-Input: Changing default joystick map
-입력: 기본 조이스틱 배치 변경
-
-# emu/input.c: 549
-Input: Default joystick map
-입력: 기본 조이스틱 배치
-
-# mame/drivers/funworld.c: 874, 1184 
-Insert
-삽입
-
-# emu/inptport.c: 435
-International
-인터네셔널
-
-# emu/inptport.c: 4051
-Invalid %s value %s; reverting to keyboard\n
-잘못된 %s 값 %s; 키보드로 전환\n
-
-# lib/util/options.c: 1125
-Invalid %s value (must be between %f and %f); keeping value of %s\n
-잘못된 %s 값 (%f에서 %f사이가 유효); %s값 유지\n
-
-# lib/util/options.c: 1107
-Invalid %s value (must be between %i and %i); keeping value of %s\n
-잘못된 %s 값 (%i에서 %i사이가 유효); %s값 유지\n
-
-# emu/uigfx.c: 1050 emu/video.c: 722
-Invalid bitmap format!
-잘못된 비트맵 폰트!
-
-# emu/input.c: 547
-Invalid joystick map: %s\n
-잘못된 조이스틱 배치: %s\n
-
-# mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2921, 2938, 2989, 3006
-Inverted
-반전됨
-
-# emu/cheat.c: 574 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 313 mame/drivers/runaway.c: 237
-Invincibility
-무적
-
-# mame/drivers/cps1.c: 909, 1251 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 380, 454, 569 mame/drivers/m72.c: 1001, 1073, 1144, 1214, 1350 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 619, 693 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2099, 2164, 2221, 2285, 2324, 2432, 2492, 2554, 2628, 2674, 2727, 2997, 3113 mame/drivers/yard.c: 145
-Invulnerability
-무적
-
-# emu/inptport.c: 447 emu/uilang.c: 23 
-Italian
-이탈리아어
-
-# mame/drivers/kaneko16.c: 1019, 1115 mame/drivers/midyunit.c: 784 mame/drivers/midzeus.c: 1207 
-Italy
-이탈리아
-
-# emu/inptport.c: 436 
-Japan
-일본
-
-# emu/inptport.c: 444 emu/uilang.c: 24 
-Japanese
-일본어
-
-# emu/inptport.c: 473 
-Joystick
-조이스틱
-
-# mame/drivers/system24.c: 1885
-Kan
-간
-
-# emu/cheat.c: 3275
-Keep
-보관
-
-# emu/inptport.c: 1059 mame/drivers/ddenlovr.c: 3770, 3997, 4985 mame/drivers/ltcasino.c: 561 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1474, 1590, 1872 
-Keyboard
-키보드
-
-# mame/drivers/aerofgt.c: 1146 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 311 mame/drivers/nmk16.c: 2694 mame/drivers/pgm.c: 912, 1010, 1101, 1199, 1289, 1480 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2238 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2071, 2118, 2236, 2249, 2298, 2449, 2511, 2573, 2644
-Korea
-한국
-
-# mame/layout/nbmj8688.lay: 27, 33
-LCD%d Pixel Aspect (%d:%d)
-LCD%d 픽셀비율 (%d:%d)
-
-# mame/layout/nbmj8688.lay: 9, 15
-LCD%d Standard (%d:%d)
-LCD%d 일반비율 (%d:%d)
-
-# emu/cheat.c: 5973
-LHS
-LHS
-
-# emu/uitext.c: 193
-Label
-라벨
-
-# emu/cheat.c: 7159 emu/uitext.c: 192
-Label Type
-라벨 유형
-
-# mame/layout/abaseb.lay: 43 mame/layout/atarifb.lay: 43 mame/layout/atarifb4.lay: 53 mame/layout/sidewndr.lay: 30 mame/layout/tenpindx.lay: 109
-Lamps
-램프
-
-# mame/layout/maxaflex.lay: 49
-Lamps and Timer
-램프와 타이머
-
-# emu/inptport.c: 442 emu/uitext.c: 337 mame/drivers/snowbros.c: 1037
-Language
-언어
-
-# mame/layout/darius.lay: 51
-Left Half
-왼쪽 절반
-
-# emu/cheat.c: 7152
-Length
-길이
-
-# emu/cheat.c: 4868, 5306, 5851 mame/drivers/cninja.c: 739 mame/drivers/compgolf.c: 124 mame/drivers/dec0.c: 606 mame/drivers/drtomy.c: 208, 211 mame/drivers/nmg5.c: 463, 527, 530 mame/drivers/warriorb.c: 386
-Less
-미만
-
-# emu/cheat.c: 5854
-Less Or Equal
-이하
-
-# emu/cheat.c: 5308
-Less or Equal
-이하
-
-# emu/inptport.c: 477
-Level Select
-레벨 선택
-
-# emu/inptport.c: 472
-Light Gun
-라이트건
-
-# mame/drivers/fantland.c: 586 
-Lightgun
-라이트건
-
-# emu/inptport.c: 1023
-Lightgun X
-라이트건 X
-
-# emu/inptport.c: 1024
-Lightgun X 2
-라이트건 X 2
-
-# emu/inptport.c: 1025
-Lightgun X 3
-라이트건 X 3
-
-# emu/inptport.c: 1026
-Lightgun X 4
-라이트건 X 4
-
-# emu/inptport.c: 1027
-Lightgun X 5
-라이트건 X 5
-
-# emu/inptport.c: 1028
-Lightgun X 6
-라이트건 X 6
-
-# emu/inptport.c: 1029
-Lightgun X 7
-라이트건 X 7
-
-# emu/inptport.c: 1030
-Lightgun X 8
-라이트건 X 8
-
-# emu/inptport.c: 1032
-Lightgun Y
-라이트건 Y
-
-# emu/inptport.c: 1033
-Lightgun Y 2
-라이트건 Y 2
-
-# emu/inptport.c: 1034
-Lightgun Y 3
-라이트건 Y 3
-
-# emu/inptport.c: 1035
-Lightgun Y 4
-라이트건 Y 4
-
-# emu/inptport.c: 1036
-Lightgun Y 5
-라이트건 Y 5
-
-# emu/inptport.c: 1037
-Lightgun Y 6
-라이트건 Y 6
-
-# emu/inptport.c: 1038
-Lightgun Y 7
-라이트건 Y 7
-
-# emu/inptport.c: 1039
-Lightgun Y 8
-라이트건 Y 8
-
-# emu/cheat.c: 3209
-Link Extension
-연결 확장
-
-# emu/inptport.c: 383
-Lives
-생명
-
-# emu/uitext.c: 203
-Lives (or another value)
-생명 (또는 다른값)
-
-# emu/cheat.c: 7661
-Load Old Format Code
-이전 포맷 코드 불러오기
-
-# emu/uitext.c: 153
-Load Selected Card
-선택된 카드 읽기
-
-# emu/inptport.c: 1108
-Load State
-상태 읽기
-
-# emu/ui.c: 2252
-Load cancelled
-읽기 취소
-
-# emu/ui.c: 2283
-Load from position %c
-위치 %c 에서 읽음
-
-# emu/romload.c: 373
-Loading (%d%%)
-불러오는중 (%d%%)
-
-# emu/rendfont.c: 760
-Loading BDF font... (%d characters loaded)\n
-BDF 폰트 불러오는 중... (%d 문자 불러옴)\n
-
-# emu/romload.c: 375
-Loading Complete
-불러오기 완료
-
-# emu/cheat.c: 3596
-Location
-위치
-
-# emu/inptport.c: 460
-Low
-낮음
-
-# emu/clifront.c: 328
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - 멀티플 아케이드 머신 에뮬레이터\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-
-# emu/uitext.c: 121
-MAME Statistics
-MAME 통계
-
-# emu/mame.c: 197
-MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-MAME 는 에뮬레이터입니다: MAME는 다양한 아케이드 머신의 특성을 재현해 냅니다.\n하지만 하드웨어는 소프트웨어 없이는 무용지물입니다. 그렇기 때문에 해당\n하드웨어에서 실행되는 롬 이미지가 필요한 것입니다. 그러한 롬들은 다른 상용\n프로그램과 마찬가지로 저작권이 보호되는 상품이고 따라서 원본 아케이드 머신을\n소유하지 않는한 불법이 될수 있습니다. 당연히 롬은 MAME와 함께 배포되지 않습니다.\nMAME와 함께 롬을 배포하는 일은 저작권법 위반이며 발견시 제작자에게 알려서\n법적인 조치가 취해지도록 해야합니다.\n
-
-# emu/datafile.c: 1509
-MAMEInfo:\n
-MAME정보:\n
-
-# emu/inptport.c: 2628 mame/drivers/neogeo.c: 1305
-Machine Mode
-기기 모드
-
-# mame/layout/nbmj8688.lay: 21
-Main Screen Pixel Aspect (%d:%d)
-메인 화면 픽셀비율 (%d:%d)
-
-# mame/layout/nbmj8688.lay: 3
-Main Screen Standard (%d:%d)
-메인화면 일반비율 (%d:%d)
-
-# emu/uitext.c: 63
-Mameinfo not available
-표시할 마메정보 내용이 없습니다
-
-# mame/drivers/alpha68k.c: 1361 mame/drivers/freekick.c: 506 mame/drivers/liberate.c: 254, 354 
-Manufacturer
-제작사
-
-# emu/cheat.c: 2930
-Mapped Memory
-할당된 메모리
-
-# emu/cheat.c: 3395
-Mask
-마스크
-
-# emu/cheat.c: 3478
-Match to Write
-기록 일치
-
-# emu/uitext.c: 215
-Matches found
-일치된 결과를 찾음
-
-# emu/uitext.c: 184 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 225 mame/drivers/travrusa.c: 90
-Max
-최대
-
-# mame/drivers/dassault.c: 354, 419
-Max Players
-최대 플레이어
-
-# emu/cheat.c: 3428
-Maximum Boundary
-최대 경계
-
-# emu/cheat.c: 6333 emu/inptport.c: 454 emu/uitext.c: 210
-Medium
-중간
-
-# emu/uitext.c: 112 
-Memory Card
-메모리카드
-
-# emu/uitext.c: 159
-Memory card created
-메모리카드 생성됨
-
-# emu/uitext.c: 158
-Memory card ejected
-메모리카드 꺼냄
-
-# emu/uitext.c: 157
-Memory card loaded
-메모리카드 불러옴
-
-# emu/cheat.c: 7640 mame/drivers/tempest.c: 509
-Minimum
-최소
-
-# emu/cheat.c: 3418
-Minimum Boundary
-최소 경계
-
-# emu/cheat.c: 3534
-Minimum Displayed Value
-최소 표시값
-
-# emu/cheat.c: 3542
-Minimum Value
-최소 값
-
-# mame/drivers/astrocde.c: 768, 789 mame/drivers/jack.c: 688 mame/drivers/thepit.c: 525 mame/drivers/wldarrow.c: 189
-Monitor
-모니터
-
-# emu/inptport.c: 480 mame/drivers/tx1.c: 955, 959
-Mono
-모노
-
-# emu/uitext.c: 178
-More Info
-추가 정보
-
-# emu/uitext.c: 179
-More Info for
-추가 정보
-
-# emu/input.c: 138 
-Mouse
-마우스
-
-# emu/inptport.c: 1041
-Mouse X
-마우스 X
-
-# emu/inptport.c: 1042
-Mouse X 2
-마우스 X 2
-
-# emu/inptport.c: 1043
-Mouse X 3
-마우스 X 3
-
-# emu/inptport.c: 1044
-Mouse X 4
-마우스 X 4
-
-# emu/inptport.c: 1045
-Mouse X 5
-마우스 X 5
-
-# emu/inptport.c: 1046
-Mouse X 6
-마우스 X 6
-
-# emu/inptport.c: 1047
-Mouse X 7
-마우스 X 7
-
-# emu/inptport.c: 1048
-Mouse X 8
-마우스 X 8
-
-# emu/inptport.c: 1050
-Mouse Y
-마우스 Y
-
-# emu/inptport.c: 1051
-Mouse Y 2
-마우스 Y 2
-
-# emu/inptport.c: 1052
-Mouse Y 3
-마우스 Y 3
-
-# emu/inptport.c: 1053
-Mouse Y 4
-마우스 Y 4
-
-# emu/inptport.c: 1054
-Mouse Y 5
-마우스 Y 5
-
-# emu/inptport.c: 1055
-Mouse Y 6
-마우스 Y 6
-
-# emu/inptport.c: 1056
-Mouse Y 7
-마우스 Y 7
-
-# emu/inptport.c: 1057
-Mouse Y 8
-마우스 Y 8
-
-# emu/uimenu.c: 1570
-Move User Interface
-사용자 인터페이스 이동
-
-# emu/uitext.c: 37
-NA
-이용불가
-
-# emu/audit.c: 295
-NEEDS REDUMP\n
-재덤프 필요\n
-
-# emu/datafile.c: 2289
-NO COCKTAIL        : %3d  %3d\n
-칵테일 없음        : %3d  %3d\n
-
-# emu/datafile.c: 2291
-NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
-정확한 롬이 없음   : %3d  %3d\n(%3d 롬 / %d 게임)\n
-
-# emu/audit.c: 300
-NO GOOD DUMP KNOWN\n
-정확하게 덤프된 롬이 없음\n
-
-# emu/clifront.c: 1153 tools/romcmp.c: 449
-NO MATCH\n
-일치 안함\n
-
-# emu/datafile.c: 2285
-NO SOUND           : %3d  %3d\n
-사운드 없음        : %3d  %3d\n
-
-# emu/datafile.c: 2275
-NON-WORKING        : %3d  %3d\n
-실행 불가능        : %3d  %3d\n
-
-# emu/clifront.c: 1147
-NOT A ROM\n
-롬 파일이 아님\n
-
-# emu/audit.c: 340
-NOT FOUND (BIOS)\n
-찾지 못함 (BIOS)\n
-
-# emu/audit.c: 336
-NOT FOUND (shared with parent)\n
-찾지 못함 (부모롬에서 공유)\n
-
-# emu/audit.c: 326
-NOT FOUND - NO GOOD DUMP KNOWN\n
-찾지 못함 - 정확하게 덤프된 롬이 없음\n
-
-# emu/audit.c: 331
-NOT FOUND BUT OPTIONAL\n
-찾지 못했지만 필수파일은 아님\n
-
-# emu/audit.c: 322
-NOT FOUND\n
-찾지 못함\n
-
-# emu/cheat.c: 3139, 3154, 6002 emu/uitext.c: 180 
-Name
-이름
-
-# emu/clifront.c: 512
-Name:     Description:\n
-이름:     설명:\n
-
-# emu/clifront.c: 637
-Name:    Clone of:\n
-이름:    부모롬 이름:\n
-
-# emu/cheat.c: 5858
-Near To
-비슷함
-
-# mame/drivers/neodrvr.c: 295 mame/drivers/neogeo.c: 1268
-Next Game
-다음 게임
-
-# mame/drivers/holeland.c: 108
-Nihongo
-일본어
-
-# emu/inptport.c: 381 
-No
-번호
-
-# emu/drivers/empty.c: 81
-No Driver Loaded
-드라이버 없음
-
-# emu/uitext.c: 217
-No previous values saved
-이전값이 저장되지 않음
-
-# emu/cheat.c: 731, 2905 emu/inptport.c: 486 emu/inputseq.c: 416 emu/sound/custom.c: 84 emu/uimenu.c: 2499 
-None
-없음
-
-# emu/cheat.c: 2913, 2928 emu/inptport.c: 453 mame/drivers/metro.c: 2774 mame/drivers/yunsun16.c: 430
-Normal
-보통
-
-# emu/cheat.c: 2863
-Normal/Delay
-보통/딜레이
-
-# emu/cheat.c: 4863, 5315, 5856
-Not Equal
-같지 않음
-
-# emu/cheat.c: 2888
-Null
-널
-
-# emu/uitext.c: 190
-Number of bytes
-바이트 수
-
-# emu/uimenu.c: 3293, 3300 emu/uitext.c: 38 
-OK
-확인
-
-# emu/romload.c: 241
-OPTIONAL %s NOT FOUND\n
-부가파일 %s 찾지 못함\n
-
-# emu/inptport.c: 379 emu/uitext.c: 36, 242
-Off
-끄기
-
-# emu/inptport.c: 380 emu/uitext.c: 35, 243
-On
-켜기
-
-# emu/inptport.c: 1061
-On Screen Display
-OSD 표시화면
-
-# emu/cheat.c: 3254 emu/sound/discrete.h: 3835
-One Shot
-한 발
-
-# emu/uitext.c: 222
-One match found - added to list
-한개 발견 - 리스트에 추가됨
-
-# emu/uitext.c: 89
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.
-
-# emu/cheat.c: 3361
-Operation
-작동
-
-# emu/uitext.c: 172 mame/drivers/fgoal.c: 297 
-Options
-옵션
-
-# mame/drivers/findout.c: 309 
-Orientation
-화면방향
-
-# emu/uitext.c: 142
-Other Controls
-기타 추가 조작
-
-# emu/uitext.c: 28
-Otherwise, type OK or move the joystick left then right to continue
-아니라면, OK를 입력하거 조이스틱을 좌우로 움직여 진행하십시오.
-
-# mame/video/tceptor.c: 281, 339, 395 
-Out of memory
-메모리 부족
-
-# emu/uimenu.c: 3283
-Overall: NOT WORKING
-종합: 실행 불가
-
-# emu/uimenu.c: 3285
-Overall: Unemulated Protection
-종합: 암호화 에뮬 못함
-
-# emu/uimenu.c: 3287
-Overall: Working
-종합: 실행 가능
-
-# emu/uitext.c: 57
-Overclock
-오버클럭
-
-# mame/drivers/deadang.c: 178, 248 mame/drivers/tail2nos.c: 209
-Overseas
-해외
-
-# mame/drivers/cherrym.c: 165
-P1 Big
-P1 큼
-
-# emu/inptport.c: 517
-P1 Button 1
-P1 버튼 1
-
-# emu/inptport.c: 526
-P1 Button 10
-P1 버튼 10
-
-# emu/inptport.c: 527
-P1 Button 11
-P1 버튼 11
-
-# emu/inptport.c: 528
-P1 Button 12
-P1 버튼 12
-
-# emu/inptport.c: 529
-P1 Button 13
-P1 버튼 13
-
-# emu/inptport.c: 530
-P1 Button 14
-P1 버튼 14
-
-# emu/inptport.c: 531
-P1 Button 15
-P1 버튼 15
-
-# emu/inptport.c: 532
-P1 Button 16
-P1 버튼 16
-
-# emu/inptport.c: 518
-P1 Button 2
-P1 버튼 2
-
-# emu/inptport.c: 519
-P1 Button 3
-P1 버튼 3
-
-# emu/inptport.c: 520
-P1 Button 4
-P1 버튼 4
-
-# emu/inptport.c: 521
-P1 Button 5
-P1 버튼 5
-
-# emu/inptport.c: 522
-P1 Button 6
-P1 버튼 6
-
-# emu/inptport.c: 523
-P1 Button 7
-P1 버튼 7
-
-# emu/inptport.c: 524
-P1 Button 8
-P1 버튼 8
-
-# emu/inptport.c: 525
-P1 Button 9
-P1 버튼 9
-
-# emu/inptport.c: 534
-P1 Custom 1
-P1 사용자 정의 1
-
-# emu/inptport.c: 535
-P1 Custom 2
-P1 사용자 정의 2
-
-# emu/inptport.c: 536
-P1 Custom 3
-P1 사용자 정의 3
-
-# emu/inptport.c: 537
-P1 Custom 4
-P1 사용자 정의 4
-
-# emu/inptport.c: 506 mame/drivers/4enraya.c: 134
-P1 Down
-P1 아래
-
-# emu/inptport.c: 507
-P1 Left
-P1 왼쪽
-
-# emu/inptport.c: 514
-P1 Left/Down
-P1 왼쪽/아래
-
-# emu/inptport.c: 515
-P1 Left/Left
-P1 왼쪽/왼쪽
-
-# emu/inptport.c: 516
-P1 Left/Right
-P1 왼쪽/오른쪽
-
-# emu/inptport.c: 513
-P1 Left/Up
-P1 왼쪽/위
-
-# emu/inptport.c: 541
-P1 Mahjong A
-P1 마작 A
-
-# emu/inptport.c: 542
-P1 Mahjong B
-P1 마작 B
-
-# emu/inptport.c: 563
-P1 Mahjong Bet
-P1 마작 배팅
-
-# emu/inptport.c: 568 mame/includes/nb1413m3.h: 164
-P1 Mahjong Big
-P1 마작 크게
-
-# emu/inptport.c: 543
-P1 Mahjong C
-P1 마작 C
-
-# emu/inptport.c: 560
-P1 Mahjong Chi
-P1 마작 치
-
-# emu/inptport.c: 544
-P1 Mahjong D
-P1 마작 D
-
-# emu/inptport.c: 566
-P1 Mahjong Double Up
-P1 마작 두배
-
-# emu/inptport.c: 545
-P1 Mahjong E
-P1 마작 E
-
-# emu/inptport.c: 546
-P1 Mahjong F
-P1 마작 F
-
-# emu/inptport.c: 567
-P1 Mahjong Flip Flop
-P1 마작 뒤집기
-
-# emu/inptport.c: 547
-P1 Mahjong G
-P1 마작 G
-
-# emu/inptport.c: 548
-P1 Mahjong H
-P1 마작 H
-
-# emu/inptport.c: 549
-P1 Mahjong I
-P1 마작 I
-
-# emu/inptport.c: 550
-P1 Mahjong J
-P1 마작 J
-
-# emu/inptport.c: 551
-P1 Mahjong K
-P1 마작 K
-
-# emu/inptport.c: 558
-P1 Mahjong Kan
-P1 마작 칸
-
-# emu/inptport.c: 552
-P1 Mahjong L
-P1 마작 L
-
-# emu/inptport.c: 564
-P1 Mahjong Last Chance
-P1 마작 마지막 찬스
-
-# emu/inptport.c: 553
-P1 Mahjong M
-P1 마작 M
-
-# emu/inptport.c: 554
-P1 Mahjong N
-P1 마작 N
-
-# emu/inptport.c: 555
-P1 Mahjong O
-P1 마작 O
-
-# emu/inptport.c: 556
-P1 Mahjong P
-P1 마작 P
-
-# emu/inptport.c: 559
-P1 Mahjong Pon
-P1 마작 폰
-
-# emu/inptport.c: 557
-P1 Mahjong Q
-P1 마작 Q
-
-# emu/inptport.c: 561
-P1 Mahjong Reach
-P1 마작 리치
-
-# emu/inptport.c: 562
-P1 Mahjong Ron
-P1 마작 론
-
-# emu/inptport.c: 565
-P1 Mahjong Score
-P1 마작 점수
-
-# emu/inptport.c: 569 mame/includes/nb1413m3.h: 164
-P1 Mahjong Small
-P1 마작 작게
-
-# emu/inptport.c: 897
-P1 Pedal 1
-P1 페달 1
-
-# emu/inptport.c: 906
-P1 Pedal 2
-P1 페달 2
-
-# emu/inptport.c: 915
-P1 Pedal 3
-P1 페달 3
-
-# emu/inptport.c: 508
-P1 Right
-P1 오른쪽
-
-# emu/inptport.c: 510
-P1 Right/Down
-P1 오른쪽/아래
-
-# emu/inptport.c: 511
-P1 Right/Left
-P1 오른쪽/왼쪽
-
-# emu/inptport.c: 512
-P1 Right/Right
-P1 오른쪽/오른쪽
-
-# emu/inptport.c: 509
-P1 Right/Up
-P1 오른쪽/위
-
-# emu/inptport.c: 540 mame/drivers/kinstb.c: 112 mame/drivers/lemmings.c: 139 mame/drivers/nss.c: 338
-P1 Select
-P1 선택
-
-# mame/drivers/cherrym.c: 169
-P1 Small
-P1 작음
-
-# emu/inptport.c: 539 mame/drivers/kinstb.c: 113 mame/drivers/nss.c: 339
-P1 Start
-P1 시작
-
-# emu/inptport.c: 570
-P1 Toggle Autofire
-P1 연사 사용/해제
-
-# emu/inptport.c: 505
-P1 Up
-P1 위
-
-# emu/inptport.c: 584
-P2 Button 1
-P2 버튼 1
-
-# emu/inptport.c: 593
-P2 Button 10
-P2 버튼 10
-
-# emu/inptport.c: 594
-P2 Button 11
-P2 버튼 11
-
-# emu/inptport.c: 595
-P2 Button 12
-P2 버튼 12
-
-# emu/inptport.c: 596
-P2 Button 13
-P2 버튼 13
-
-# emu/inptport.c: 597
-P2 Button 14
-P2 버튼 14
-
-# emu/inptport.c: 598
-P2 Button 15
-P2 버튼 15
-
-# emu/inptport.c: 599
-P2 Button 16
-P2 버튼 16
-
-# emu/inptport.c: 585
-P2 Button 2
-P2 버튼 2
-
-# emu/inptport.c: 586
-P2 Button 3
-P2 버튼 3
-
-# emu/inptport.c: 587
-P2 Button 4
-P2 버튼 4
-
-# emu/inptport.c: 588
-P2 Button 5
-P2 버튼 5
-
-# emu/inptport.c: 589
-P2 Button 6
-P2 버튼 6
-
-# emu/inptport.c: 590
-P2 Button 7
-P2 버튼 7
-
-# emu/inptport.c: 591
-P2 Button 8
-P2 버튼 8
-
-# emu/inptport.c: 592
-P2 Button 9
-P2 버튼 9
-
-# emu/inptport.c: 601
-P2 Custom 1
-P2 사용자 정의 1
-
-# emu/inptport.c: 602
-P2 Custom 2
-P2 사용자 정의 2
-
-# emu/inptport.c: 603
-P2 Custom 3
-P2 사용자 정의 3
-
-# emu/inptport.c: 604
-P2 Custom 4
-P2 사용자 정의 4
-
-# emu/inptport.c: 573 mame/drivers/4enraya.c: 136
-P2 Down
-P2 아래
-
-# emu/inptport.c: 574
-P2 Left
-P2 왼쪽
-
-# emu/inptport.c: 581
-P2 Left/Down
-P2 왼쪽/아래
-
-# emu/inptport.c: 582
-P2 Left/Left
-P2 왼쪽/왼쪽
-
-# emu/inptport.c: 583
-P2 Left/Right
-P2 왼쪽/오른쪽
-
-# emu/inptport.c: 580
-P2 Left/Up
-P2 왼쪽/위
-
-# emu/inptport.c: 608
-P2 Mahjong A
-P2 마작 A
-
-# emu/inptport.c: 609
-P2 Mahjong B
-P2 마작 B
-
-# emu/inptport.c: 630
-P2 Mahjong Bet
-P2 마작 배팅
-
-# emu/inptport.c: 635 mame/includes/nb1413m3.h: 219
-P2 Mahjong Big
-P2 마작 크게
-
-# emu/inptport.c: 610
-P2 Mahjong C
-P2 마작 C
-
-# emu/inptport.c: 627
-P2 Mahjong Chi
-P2 마작 치
-
-# emu/inptport.c: 611
-P2 Mahjong D
-P2 마작 D
-
-# emu/inptport.c: 633
-P2 Mahjong Double Up
-P2 마작 두배
-
-# emu/inptport.c: 612
-P2 Mahjong E
-P2 마작 E
-
-# emu/inptport.c: 613
-P2 Mahjong F
-P2 마작 F
-
-# emu/inptport.c: 634
-P2 Mahjong Flip Flop
-P2 마작 뒤집기
-
-# emu/inptport.c: 614
-P2 Mahjong G
-P2 마작 G
-
-# emu/inptport.c: 615
-P2 Mahjong H
-P2 마작 H
-
-# emu/inptport.c: 616
-P2 Mahjong I
-P2 마작 I
-
-# emu/inptport.c: 617
-P2 Mahjong J
-P2 마작 J
-
-# emu/inptport.c: 618
-P2 Mahjong K
-P2 마작 K
-
-# emu/inptport.c: 625
-P2 Mahjong Kan
-P2 마작 칸
-
-# emu/inptport.c: 619
-P2 Mahjong L
-P2 마작 L
-
-# emu/inptport.c: 631
-P2 Mahjong Last Chance
-P2 마작 마지막 기회
-
-# emu/inptport.c: 620
-P2 Mahjong M
-P2 마작 M
-
-# emu/inptport.c: 621
-P2 Mahjong N
-P2 마작 N
-
-# emu/inptport.c: 622
-P2 Mahjong O
-P2 마작 O
-
-# emu/inptport.c: 623
-P2 Mahjong P
-P2 마작 P
-
-# emu/inptport.c: 626
-P2 Mahjong Pon
-P2 마작 폰
-
-# emu/inptport.c: 624
-P2 Mahjong Q
-P2 마작 Q
-
-# emu/inptport.c: 628
-P2 Mahjong Reach
-P2 마작 리치
-
-# emu/inptport.c: 629
-P2 Mahjong Ron
-P2 마작 론
-
-# emu/inptport.c: 632
-P2 Mahjong Score
-P2 마작 점수
-
-# emu/inptport.c: 636 mame/includes/nb1413m3.h: 219
-P2 Mahjong Small
-P2 마작 작게
-
-# emu/inptport.c: 898
-P2 Pedal 1
-P2 페달 1
-
-# emu/inptport.c: 907
-P2 Pedal 2
-P2 페달 2
-
-# emu/inptport.c: 916
-P2 Pedal 3
-P2 페달 3
-
-# emu/inptport.c: 575
-P2 Right
-P2 오른쪽
-
-# emu/inptport.c: 577
-P2 Right/Down
-P2 오른쪽/아래
-
-# emu/inptport.c: 578
-P2 Right/Left
-P2 오른쪽/왼쪽
-
-# emu/inptport.c: 579
-P2 Right/Right
-P2 오른쪽/오른쪽
-
-# emu/inptport.c: 576
-P2 Right/Up
-P2 오른쪽/위
-
-# emu/inptport.c: 607 mame/drivers/kinstb.c: 127 mame/drivers/lemmings.c: 142 mame/drivers/nss.c: 353
-P2 Select
-P2 선택
-
-# emu/inptport.c: 606 mame/drivers/kinstb.c: 128 mame/drivers/nss.c: 354
-P2 Start
-P2 시작
-
-# emu/inptport.c: 637
-P2 Toggle Autofire
-P2 연사 사용/해제
-
-# emu/inptport.c: 572
-P2 Up
-P2 위
-
-# emu/inptport.c: 651
-P3 Button 1
-P3 버튼 1
-
-# emu/inptport.c: 660
-P3 Button 10
-P3 버튼 10
-
-# emu/inptport.c: 661
-P3 Button 11
-P3 버튼 11
-
-# emu/inptport.c: 662
-P3 Button 12
-P3 버튼 12
-
-# emu/inptport.c: 663
-P3 Button 13
-P3 버튼 13
-
-# emu/inptport.c: 664
-P3 Button 14
-P3 버튼 14
-
-# emu/inptport.c: 665
-P3 Button 15
-P3 버튼 15
-
-# emu/inptport.c: 666
-P3 Button 16
-P3 버튼 16
-
-# emu/inptport.c: 652
-P3 Button 2
-P3 버튼 2
-
-# emu/inptport.c: 653
-P3 Button 3
-P3 버튼 3
-
-# emu/inptport.c: 654
-P3 Button 4
-P3 버튼 4
-
-# emu/inptport.c: 655
-P3 Button 5
-P3 버튼 5
-
-# emu/inptport.c: 656
-P3 Button 6
-P3 버튼 6
-
-# emu/inptport.c: 657
-P3 Button 7
-P3 버튼 7
-
-# emu/inptport.c: 658
-P3 Button 8
-P3 버튼 8
-
-# emu/inptport.c: 659
-P3 Button 9
-P3 버튼 9
-
-# emu/inptport.c: 668
-P3 Custom 1
-P3 사용자 정의 1
-
-# emu/inptport.c: 669
-P3 Custom 2
-P3 사용자 정의 2
-
-# emu/inptport.c: 670
-P3 Custom 3
-P3 사용자 정의 3
-
-# emu/inptport.c: 671
-P3 Custom 4
-P3 사용자 정의 4
-
-# emu/inptport.c: 640
-P3 Down
-P3 아래
-
-# emu/inptport.c: 641
-P3 Left
-P3 왼쪽
-
-# emu/inptport.c: 648
-P3 Left/Down
-P3 왼쪽/아래
-
-# emu/inptport.c: 649
-P3 Left/Left
-P3 왼쪽/왼쪽
-
-# emu/inptport.c: 650
-P3 Left/Right
-P3 왼쪽/오른쪽
-
-# emu/inptport.c: 647
-P3 Left/Up
-P3 왼쪽/위
-
-# emu/inptport.c: 899
-P3 Pedal 1
-P3 페달 1
-
-# emu/inptport.c: 908
-P3 Pedal 2
-P3 페달 2
-
-# emu/inptport.c: 917
-P3 Pedal 3
-P3 페달 3
-
-# emu/inptport.c: 642
-P3 Right
-P3 오른쪽
-
-# emu/inptport.c: 644
-P3 Right/Down
-P3 오른쪽/아래
-
-# emu/inptport.c: 645
-P3 Right/Left
-P3 오른쪽/왼쪽
-
-# emu/inptport.c: 646
-P3 Right/Right
-P3 오른쪽/오른쪽
-
-# emu/inptport.c: 643
-P3 Right/Up
-P3 오른쪽/위
-
-# emu/inptport.c: 674 mame/drivers/kinstb.c: 142 mame/drivers/nss.c: 368
-P3 Select
-P3 선택
-
-# emu/inptport.c: 673 mame/drivers/kinstb.c: 143 mame/drivers/nss.c: 369
-P3 Start
-P3 시작
-
-# emu/inptport.c: 675
-P3 Toggle Autofire
-P3 연사 사용/해제
-
-# emu/inptport.c: 639
-P3 Up
-P3 위
-
-# emu/inptport.c: 689
-P4 Button 1
-P4 버튼 1
-
-# emu/inptport.c: 698
-P4 Button 10
-P4 버튼 10
-
-# emu/inptport.c: 699
-P4 Button 11
-P4 버튼 11
-
-# emu/inptport.c: 700
-P4 Button 12
-P4 버튼 12
-
-# emu/inptport.c: 701
-P4 Button 13
-P4 버튼 13
-
-# emu/inptport.c: 702
-P4 Button 14
-P4 버튼 14
-
-# emu/inptport.c: 703
-P4 Button 15
-P4 버튼 15
-
-# emu/inptport.c: 704
-P4 Button 16
-P4 버튼 16
-
-# emu/inptport.c: 690
-P4 Button 2
-P4 버튼 2
-
-# emu/inptport.c: 691
-P4 Button 3
-P4 버튼 3
-
-# emu/inptport.c: 692
-P4 Button 4
-P4 버튼 4
-
-# emu/inptport.c: 693
-P4 Button 5
-P4 버튼 5
-
-# emu/inptport.c: 694
-P4 Button 6
-P4 버튼 6
-
-# emu/inptport.c: 695
-P4 Button 7
-P4 버튼 7
-
-# emu/inptport.c: 696
-P4 Button 8
-P4 버튼 8
-
-# emu/inptport.c: 697
-P4 Button 9
-P4 버튼 9
-
-# emu/inptport.c: 706
-P4 Custom 1
-P4 사용자 정의 1
-
-# emu/inptport.c: 707
-P4 Custom 2
-P4 사용자 정의 2
-
-# emu/inptport.c: 708
-P4 Custom 3
-P4 사용자 정의 3
-
-# emu/inptport.c: 709
-P4 Custom 4
-P4 사용자 정의 4
-
-# emu/inptport.c: 678
-P4 Down
-P4 아래
-
-# emu/inptport.c: 679
-P4 Left
-P4 왼쪽
-
-# emu/inptport.c: 686
-P4 Left/Down
-P4 왼쪽/아래
-
-# emu/inptport.c: 687
-P4 Left/Left
-P4 왼쪽/왼쪽
-
-# emu/inptport.c: 688
-P4 Left/Right
-P4 왼쪽/오른쪽
-
-# emu/inptport.c: 685
-P4 Left/Up
-P4 왼쪽/위
-
-# emu/inptport.c: 900
-P4 Pedal 1
-P4 페달 1
-
-# emu/inptport.c: 909
-P4 Pedal 2
-P4 페달 2
-
-# emu/inptport.c: 918
-P4 Pedal 3
-P4 페달 3
-
-# emu/inptport.c: 680
-P4 Right
-P4 오른쪽
-
-# emu/inptport.c: 682
-P4 Right/Down
-P4 오른쪽/아래
-
-# emu/inptport.c: 683
-P4 Right/Left
-P4 오른쪽/왼쪽
-
-# emu/inptport.c: 684
-P4 Right/Right
-P4 오른쪽/오른쪽
-
-# emu/inptport.c: 681
-P4 Right/Up
-P4 오른쪽/위
-
-# emu/inptport.c: 712 mame/drivers/kinstb.c: 157 mame/drivers/nss.c: 383
-P4 Select
-P4 선택
-
-# emu/inptport.c: 711 mame/drivers/kinstb.c: 158 mame/drivers/nss.c: 384
-P4 Start
-P4 시작
-
-# emu/inptport.c: 713
-P4 Toggle Autofire
-P4 연사 사용/해제
-
-# emu/inptport.c: 677
-P4 Up
-P4 위
-
-# emu/inptport.c: 727
-P5 Button 1
-P5 버튼 1
-
-# emu/inptport.c: 736
-P5 Button 10
-P5 버튼 10
-
-# emu/inptport.c: 737
-P5 Button 11
-P5 버튼 11
-
-# emu/inptport.c: 738
-P5 Button 12
-P5 버튼 12
-
-# emu/inptport.c: 739
-P5 Button 13
-P5 버튼 13
-
-# emu/inptport.c: 740
-P5 Button 14
-P5 버튼 14
-
-# emu/inptport.c: 741
-P5 Button 15
-P5 버튼 15
-
-# emu/inptport.c: 742
-P5 Button 16
-P5 버튼 16
-
-# emu/inptport.c: 728
-P5 Button 2
-P5 버튼 2
-
-# emu/inptport.c: 729
-P5 Button 3
-P5 버튼 3
-
-# emu/inptport.c: 730
-P5 Button 4
-P5 버튼 4
-
-# emu/inptport.c: 731
-P5 Button 5
-P5 버튼 5
-
-# emu/inptport.c: 732
-P5 Button 6
-P5 버튼 6
-
-# emu/inptport.c: 733
-P5 Button 7
-P5 버튼 7
-
-# emu/inptport.c: 734
-P5 Button 8
-P5 버튼 8
-
-# emu/inptport.c: 735
-P5 Button 9
-P5 버튼 9
-
-# emu/inptport.c: 744
-P5 Custom 1
-P5 사용자 정의 1
-
-# emu/inptport.c: 745
-P5 Custom 2
-P5 사용자 정의 2
-
-# emu/inptport.c: 746
-P5 Custom 3
-P5 사용자 정의 3
-
-# emu/inptport.c: 747
-P5 Custom 4
-P5 사용자 정의 4
-
-# emu/inptport.c: 716
-P5 Down
-P5 아래
-
-# emu/inptport.c: 717
-P5 Left
-P5 왼쪽
-
-# emu/inptport.c: 724
-P5 Left/Down
-P5 왼쪽/아래
-
-# emu/inptport.c: 725
-P5 Left/Left
-P5 왼쪽/왼쪽
-
-# emu/inptport.c: 726
-P5 Left/Right
-P5 왼쪽/오른쪽
-
-# emu/inptport.c: 723
-P5 Left/Up
-P5 왼쪽/위
-
-# emu/inptport.c: 901
-P5 Pedal 1
-P5 페달 1
-
-# emu/inptport.c: 910
-P5 Pedal 2
-P5 페달 3
-
-# emu/inptport.c: 919
-P5 Pedal 3
-P5 페달 3
-
-# emu/inptport.c: 718
-P5 Right
-P5 오른쪽
-
-# emu/inptport.c: 720
-P5 Right/Down
-P5 오른쪽/아래
-
-# emu/inptport.c: 721
-P5 Right/Left
-P5 오른쪽/왼쪽
-
-# emu/inptport.c: 722
-P5 Right/Right
-P5 오른쪽/오른쪽
-
-# emu/inptport.c: 719
-P5 Right/Up
-P5 오른쪽/위
-
-# emu/inptport.c: 750
-P5 Select
-P5 선택
-
-# emu/inptport.c: 749
-P5 Start
-P5 시작
-
-# emu/inptport.c: 751
-P5 Toggle Autofire
-P5 연사 사용/해제
-
-# emu/inptport.c: 715
-P5 Up
-P5 위
-
-# emu/inptport.c: 765
-P6 Button 1
-P6 버튼 1
-
-# emu/inptport.c: 774
-P6 Button 10
-P6 버튼 10
-
-# emu/inptport.c: 775
-P6 Button 11
-P6 버튼 11
-
-# emu/inptport.c: 776
-P6 Button 12
-P6 버튼 12
-
-# emu/inptport.c: 777
-P6 Button 13
-P6 버튼 13
-
-# emu/inptport.c: 778
-P6 Button 14
-P6 버튼 14
-
-# emu/inptport.c: 779
-P6 Button 15
-P6 버튼 15
-
-# emu/inptport.c: 780
-P6 Button 16
-P6 버튼 16
-
-# emu/inptport.c: 766
-P6 Button 2
-P6 버튼 2
-
-# emu/inptport.c: 767
-P6 Button 3
-P6 버튼 3
-
-# emu/inptport.c: 768
-P6 Button 4
-P6 버튼 4
-
-# emu/inptport.c: 769
-P6 Button 5
-P6 버튼 5
-
-# emu/inptport.c: 770
-P6 Button 6
-P6 버튼 6
-
-# emu/inptport.c: 771
-P6 Button 7
-P6 버튼 7
-
-# emu/inptport.c: 772
-P6 Button 8
-P6 버튼 8
-
-# emu/inptport.c: 773
-P6 Button 9
-P6 버튼 9
-
-# emu/inptport.c: 782
-P6 Custom 1
-P6 사용자 설정 1
-
-# emu/inptport.c: 783
-P6 Custom 2
-P6 사용자 설정 2
-
-# emu/inptport.c: 784
-P6 Custom 3
-P6 사용자 설정 3
-
-# emu/inptport.c: 785
-P6 Custom 4
-P6 사용자 설정 4
-
-# emu/inptport.c: 754
-P6 Down
-P6 아래
-
-# emu/inptport.c: 755
-P6 Left
-P6 왼쪽
-
-# emu/inptport.c: 762
-P6 Left/Down
-P6 왼쪽/아래
-
-# emu/inptport.c: 763
-P6 Left/Left
-P6 왼쪽/왼쪽
-
-# emu/inptport.c: 764
-P6 Left/Right
-P6 왼쪽/오른쪽
-
-# emu/inptport.c: 761
-P6 Left/Up
-P6 왼쪽/위
-
-# emu/inptport.c: 902
-P6 Pedal 1
-P6 페달 1
-
-# emu/inptport.c: 911
-P6 Pedal 2
-P6 페달 2
-
-# emu/inptport.c: 920
-P6 Pedal 3
-P6 페달 3
-
-# emu/inptport.c: 756
-P6 Right
-P6 오른쪽
-
-# emu/inptport.c: 758
-P6 Right/Down
-P6 오른쪽/아래
-
-# emu/inptport.c: 759
-P6 Right/Left
-P6 오른쪽/왼쪽
-
-# emu/inptport.c: 760
-P6 Right/Right
-P6 오른쪽/오른쪽
-
-# emu/inptport.c: 757
-P6 Right/Up
-P6 오른쪽/위
-
-# emu/inptport.c: 788
-P6 Select
-P6 선택
-
-# emu/inptport.c: 787
-P6 Start
-P6 시작
-
-# emu/inptport.c: 789
-P6 Toggle Autofire
-P6 연사 사용/해제
-
-# emu/inptport.c: 753
-P6 Up
-P6 위
-
-# emu/inptport.c: 803
-P7 Button 1
-P7 버튼 1
-
-# emu/inptport.c: 812
-P7 Button 10
-P7 버튼 10
-
-# emu/inptport.c: 813
-P7 Button 11
-P7 버튼 11
-
-# emu/inptport.c: 814
-P7 Button 12
-P7 버튼 12
-
-# emu/inptport.c: 815
-P7 Button 13
-P7 버튼 13
-
-# emu/inptport.c: 816
-P7 Button 14
-P7 버튼 14
-
-# emu/inptport.c: 817
-P7 Button 15
-P7 버튼 15
-
-# emu/inptport.c: 818
-P7 Button 16
-P7 버튼 16
-
-# emu/inptport.c: 804
-P7 Button 2
-P7 버튼 2
-
-# emu/inptport.c: 805
-P7 Button 3
-P7 버튼 3
-
-# emu/inptport.c: 806
-P7 Button 4
-P7 버튼 4
-
-# emu/inptport.c: 807
-P7 Button 5
-P7 버튼 5
-
-# emu/inptport.c: 808
-P7 Button 6
-P7 버튼 6
-
-# emu/inptport.c: 809
-P7 Button 7
-P7 버튼 7
-
-# emu/inptport.c: 810
-P7 Button 8
-P7 버튼 8
-
-# emu/inptport.c: 811
-P7 Button 9
-P7 버튼 9
-
-# emu/inptport.c: 820
-P7 Custom 1
-P7 사용자 설정 1
-
-# emu/inptport.c: 821
-P7 Custom 2
-P7 사용자 설정 2
-
-# emu/inptport.c: 822
-P7 Custom 3
-P7 사용자 설정 3
-
-# emu/inptport.c: 823
-P7 Custom 4
-P7 사용자 설정 4
-
-# emu/inptport.c: 792
-P7 Down
-P7 아래
-
-# emu/inptport.c: 793
-P7 Left
-P7 왼쪽
-
-# emu/inptport.c: 800
-P7 Left/Down
-P7 왼쪽/아래
-
-# emu/inptport.c: 801
-P7 Left/Left
-P7 왼쪽/왼쪽
-
-# emu/inptport.c: 802
-P7 Left/Right
-P7 왼쪽/오른쪽
-
-# emu/inptport.c: 799
-P7 Left/Up
-P7 왼쪽/위
-
-# emu/inptport.c: 903
-P7 Pedal 1
-P7 페달 1
-
-# emu/inptport.c: 912
-P7 Pedal 2
-P7 페달 2
-
-# emu/inptport.c: 921
-P7 Pedal 3
-P7 페달 3
-
-# emu/inptport.c: 794
-P7 Right
-P7 오른쪽
-
-# emu/inptport.c: 796
-P7 Right/Down
-P7 오른쪽/아래
-
-# emu/inptport.c: 797
-P7 Right/Left
-P7 오른쪽/왼쪽
-
-# emu/inptport.c: 798
-P7 Right/Right
-P7 오른쪽/오른쪽
-
-# emu/inptport.c: 795
-P7 Right/Up
-P7 오른쪽/위
-
-# emu/inptport.c: 826
-P7 Select
-P7 선택
-
-# emu/inptport.c: 825
-P7 Start
-P7 시작
-
-# emu/inptport.c: 827
-P7 Toggle Autofire
-P7 연사 사용/해제
-
-# emu/inptport.c: 791
-P7 Up
-P7 위
-
-# emu/inptport.c: 841
-P8 Button 1
-P8 버튼 1
-
-# emu/inptport.c: 850
-P8 Button 10
-P8 버튼 10
-
-# emu/inptport.c: 851
-P8 Button 11
-P8 버튼 11
-
-# emu/inptport.c: 852
-P8 Button 12
-P8 버튼 12
-
-# emu/inptport.c: 853
-P8 Button 13
-P8 버튼 13
-
-# emu/inptport.c: 854
-P8 Button 14
-P8 버튼 14
-
-# emu/inptport.c: 855
-P8 Button 15
-P8 버튼 15
-
-# emu/inptport.c: 856
-P8 Button 16
-P8 버튼 16
-
-# emu/inptport.c: 842
-P8 Button 2
-P8 버튼 2
-
-# emu/inptport.c: 843
-P8 Button 3
-P8 버튼 3
-
-# emu/inptport.c: 844
-P8 Button 4
-P8 버튼 4
-
-# emu/inptport.c: 845
-P8 Button 5
-P8 버튼 5
-
-# emu/inptport.c: 846
-P8 Button 6
-P8 버튼 6
-
-# emu/inptport.c: 847
-P8 Button 7
-P8 버튼 7
-
-# emu/inptport.c: 848
-P8 Button 8
-P8 버튼 8
-
-# emu/inptport.c: 849
-P8 Button 9
-P8 버튼 9
-
-# emu/inptport.c: 858
-P8 Custom 1
-P8 사용자 설정 1
-
-# emu/inptport.c: 859
-P8 Custom 2
-P8 사용자 설정 2
-
-# emu/inptport.c: 860
-P8 Custom 3
-P8 사용자 설정 3
-
-# emu/inptport.c: 861
-P8 Custom 4
-P8 사용자 설정 4
-
-# emu/inptport.c: 830
-P8 Down
-P8 아래
-
-# emu/inptport.c: 831
-P8 Left
-P8 왼쪽
-
-# emu/inptport.c: 838
-P8 Left/Down
-P8 왼쪽/아래
-
-# emu/inptport.c: 839
-P8 Left/Left
-P8 왼쪽/왼쪽
-
-# emu/inptport.c: 840
-P8 Left/Right
-P8 왼쪽/오른쪽
-
-# emu/inptport.c: 837
-P8 Left/Up
-P8 왼쪽/위
-
-# emu/inptport.c: 904
-P8 Pedal 1
-P8 페달 1
-
-# emu/inptport.c: 913
-P8 Pedal 2
-P8 페달 2
-
-# emu/inptport.c: 922
-P8 Pedal 3
-P8 페달 3
-
-# emu/inptport.c: 832
-P8 Right
-P8 오른쪽
-
-# emu/inptport.c: 834
-P8 Right/Down
-P8 오른쪽/아래
-
-# emu/inptport.c: 835
-P8 Right/Left
-P8 오른쪽/왼쪽
-
-# emu/inptport.c: 836
-P8 Right/Right
-P8 오른쪽/오른쪽
-
-# emu/inptport.c: 833
-P8 Right/Up
-P8 오른쪽/위
-
-# emu/inptport.c: 864
-P8 Select
-P8 선택
-
-# emu/inptport.c: 863
-P8 Start
-P8 시작
-
-# emu/inptport.c: 865
-P8 Toggle Autofire
-P8 연사 사용/해제
-
-# emu/inptport.c: 829
-P8 Up
-P8 위
-
-# emu/inptport.c: 924 mame/drivers/taito_f2.c: 2867 
-Paddle
-핸들
-
-# emu/inptport.c: 925
-Paddle 2
-핸들 2
-
-# emu/inptport.c: 926
-Paddle 3
-핸들 3
-
-# emu/inptport.c: 927
-Paddle 4
-핸들 4
-
-# emu/inptport.c: 928
-Paddle 5
-핸들 5
-
-# emu/inptport.c: 929
-Paddle 6
-핸들 6
-
-# emu/inptport.c: 930
-Paddle 7
-핸들 7
-
-# emu/inptport.c: 931
-Paddle 8
-핸들 8
-
-# emu/inptport.c: 933
-Paddle V
-핸들 V
-
-# emu/inptport.c: 934
-Paddle V 2
-핸들 V 2
-
-# emu/inptport.c: 935
-Paddle V 3
-핸들 V 3
-
-# emu/inptport.c: 936
-Paddle V 4
-핸들 V 4
-
-# emu/inptport.c: 937
-Paddle V 5
-핸들 V 5
-
-# emu/inptport.c: 938
-Paddle V 6
-핸들 V 6
-
-# emu/inptport.c: 939
-Paddle V 7
-핸들 V 7
-
-# emu/inptport.c: 940
-Paddle V 8
-핸들 V 8
-
-# emu/inptport.c: 430, 1064
-Pause
-일시정지
-
-# mame/drivers/imolagp.c: 472 mame/drivers/turbo.c: 956 
-Pedal
-페달
-
-# emu/layout/horizont.lay: 9 emu/layout/vertical.lay: 9
-Pixel Aspect (%d:%d)
-픽셀비율 (%d:%d)
-
-# mame/drivers/astrocde.c: 755 mame/drivers/bottom9.c: 235 mame/drivers/deniam.c: 272 mame/drivers/destroyr.c: 212 mame/drivers/firetrk.c: 594, 662, 745 mame/drivers/galpanic.c: 799 mame/drivers/skyraid.c: 143 mame/drivers/snk.c: 4053, 4194 mame/drivers/sprint2.c: 334, 406 mame/drivers/sprint4.c: 312 mame/drivers/sprint8.c: 320, 455 mame/drivers/sspeedr.c: 171 mame/drivers/starshp1.c: 251 mame/drivers/suprslam.c: 262 mame/drivers/tank8.c: 273 mame/drivers/triplhnt.c: 171 mame/drivers/wolfpack.c: 247 
-Play Time
-플레이 시간
-
-# mame/layout/nbmj8688.lay: 52, 62
-Player %d
-플레이어 %d
-
-# emu/uitext.c: 134
-Player 1 Controls
-플레이어 1 조작
-
-# emu/uitext.c: 135
-Player 2 Controls
-플레이어 2 조작
-
-# emu/uitext.c: 136
-Player 3 Controls
-플레이어 3 조작
-
-# emu/uitext.c: 137
-Player 4 Controls
-플레이어 4 조작
-
-# emu/uitext.c: 138
-Player 5 Controls
-플레이어 5 조작
-
-# emu/uitext.c: 139
-Player 6 Controls
-플레이어 6 조작
-
-# emu/uitext.c: 140
-Player 7 Controls
-플레이어 7 조작
-
-# emu/uitext.c: 141
-Player 8 Controls
-플레이어 8 조작
-
-# emu/inptport.c: 465
-Players
-플레이어
-
-# emu/inptport.c: 1324, 1342
-Playing back previously recorded game %s\n
-이전에 기록된 게임 재생 %s\n
-
-# mame/drivers/system24.c: 1877
-Pon
-폰
-
-# emu/inptport.c: 942
-Positional
-위치표시
-
-# emu/inptport.c: 943
-Positional 2
-위치표시 2
-
-# emu/inptport.c: 944
-Positional 3
-위치표시 3
-
-# emu/inptport.c: 945
-Positional 4
-위치표시 4
-
-# emu/inptport.c: 946
-Positional 5
-위치표시 5
-
-# emu/inptport.c: 947
-Positional 6
-위치표시 6
-
-# emu/inptport.c: 948
-Positional 7
-위치표시 7
-
-# emu/inptport.c: 949
-Positional 8
-위치표시 8
-
-# emu/inptport.c: 951
-Positional V
-위치표시 V
-
-# emu/inptport.c: 952
-Positional V 2
-위치표시 V 2
-
-# emu/inptport.c: 953
-Positional V 3
-위치표시 V 3
-
-# emu/inptport.c: 954
-Positional V 4
-위치표시 V 4
-
-# emu/inptport.c: 955
-Positional V 5
-위치표시 V 5
-
-# emu/inptport.c: 956
-Positional V 6
-위치표시 V 6
-
-# emu/inptport.c: 957
-Positional V 7
-위치표시 V 7
-
-# emu/inptport.c: 958
-Positional V 8
-위치표시 V 8
-
-# emu/cheat.c: 3561
-Prefill
-미리기록
-
-# emu/uitext.c: 33
-Press Any Key
-아무키나 누르세요
-
-# emu/uitext.c: 34
-Press Select Key/Button
-선택 키/버튼을 누르세요
-
-# emu/cheat.c: 5320, 5844
-Previous Data
-이전 데이터
-
-# mame/drivers/neodrvr.c: 297 mame/drivers/neogeo.c: 1268
-Previous Game
-이전 게임
-
-# emu/uitext.c: 218
-Previous values already restored
-이전값이 이미 저장됨
-
-# emu/cheat.c: 2933
-Program Space
-프로그램 공간
-
-# emu/ui.c: 2297
-Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
-게임을 그만두시겠습니까?\n\n그만두시려면 엔터키를 누르시고,\n계속하시려면 ESC 키를 누르세요.
-
-# emu/ui.c: 2095
-REC START
-기록 시작
-
-# emu/ui.c: 2100
-REC STOP
-기록 중지
-
-# emu/cheat.c: 5979
-RHS
-RHS
-
-# emu/datafile.c: 2293
-ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
-롬 재덤프 필요함   : %3d  %3d\n(%3d 롬 / %d 게임)\n
-
-# emu/cheat.c: 3461
-Range Maximum
-최대 범위
-
-# emu/cheat.c: 3444
-Range Minimum
-최소 범위
-
-# emu/cheat.c: 588 mame/drivers/ssv.c: 2464 mame/drivers/toaplan2.c: 2266
-Rapid Fire
-속사
-
-# mame/drivers/system24.c: 1886
-Reach
-리치
-
-# emu/inptport.c: 1074
-Record Movie
-동영상 기록
-
-# emu/uitext.c: 225
-Refresh rate
-주사율
-
-# emu/cheat.c: 2929, 3619 emu/inptport.c: 434 mame/drivers/pgm.c: 908, 919
-Region
-지역
-
-# emu/uitext.c: 51
-Relative
-상대적인
-
-# emu/cheat.c: 2932
-Relative Address
-상대 주소
-
-# emu/inptport.c: 1114 emu/uitext.c: 173
-Reload Database
-데이터베이스 다시읽기
-
-# mame/drivers/arcadia.c: 228 mame/drivers/astrocde.c: 1025, 1146 mame/drivers/deco32.c: 1430, 1524 mame/drivers/djmain.c: 499 mame/drivers/hanaroku.c: 157 mame/drivers/laserbat.c: 265, 344, 418 mame/drivers/murogem.c: 126 mame/drivers/playch10.c: 472 mame/drivers/sengokmj.c: 237 mame/drivers/trvquest.c: 141 
-Reset
-리셋
-
-# emu/inptport.c: 1065 emu/uitext.c: 106
-Reset Game
-게임 리셋
-
-# mame/drivers/seattle.c: 1911, 2304, 2402 mame/drivers/vegas.c: 1849, 1881, 1895, 1925, 1969, 2065 
-Resolution
-해상도
-
-# emu/uitext.c: 219
-Restoration successful
-복구 완료
-
-# emu/uitext.c: 169
-Restore Previous Results
-이전 결과 복구
-
-# emu/cheat.c: 3262
-Restore Previous Value
-이전 값 복구
-
-# emu/uitext.c: 108
-Return to Game
-게임으로 돌아감
-
-# emu/uitext.c: 143
-Return to Groups
-그룹으로 돌아감
-
-# emu/uitext.c: 31
-Return to Main Menu
-메인메뉴로 돌아감
-
-# emu/uitext.c: 32
-Return to Prior Menu
-이전 메뉴로 돌아감
-
-# emu/inptport.c: 484 emu/uitext.c: 129
-Reverse
-반전
-
-# mame/layout/darius.lay: 61
-Right Half
-오른쪽 절반
-
-# mame/layout/rocknms.lay: 29
-Rockn Megasession Custom
-로큰 메가세션 설정
-
-# mame/drivers/system24.c: 1887
-Ron
-론
-
-# emu/uitext.c: 230
-Rotate Clockwise
-시계방향 회전
-
-# emu/uitext.c: 231
-Rotate Counter-clockwise
-반시계방향 회전
-
-# emu/uimenu.c: 1620
-Rotate View
-화면 회전
-
-# mame/drivers/epos.c: 152 
-Rotation
-회전
-
-# emu/datafile.c: 2479
-SHADOWS        : %3d  + %3d\n
-그림자         : %3d  + %3d\n
-
-# emu/sound/samples.c: 605 
-Samples
-샘플
-
-# emu/clifront.c: 800
-Samples not supported in this build\n
-현재 빌드에서 지원하지 않는 샘플\n
-
-# emu/inptport.c: 1111
-Save Cheat
-치트 저장
-
-# emu/cheat.c: 4883, 5419, 6014
-Save Memory
-메모리 저장
-
-# emu/inptport.c: 1073
-Save Snapshot
-스냅샷 저장
-
-# emu/inptport.c: 1107 
-Save State
-상태 저장
-
-# emu/ui.c: 2250
-Save cancelled
-저장 취소
-
-# emu/ui.c: 2278
-Save to position %c
-위치 %c 에 저장됨
-
-# mame/drivers/findout.c: 279, 339 mame/drivers/turbo.c: 895 
-Screen
-화면
-
-# emu/uitext.c: 229
-Screen #
-화면 #
-
-# emu/ui.c: 2546, 2564, 2581, 2597, 2614, 2631, 2648, 2665
-Screen %d %s %.3f
-화면 %d %s %.3f
-
-# emu/layout/dualhovu.lay: 15, 21 emu/layout/dualhsxs.lay: 15, 21 emu/layout/dualhuov.lay: 15, 21 emu/layout/triphsxs.lay: 21, 27, 33 mame/layout/darius.lay: 21, 27, 33 mame/layout/rocknms.lay: 16, 22
-Screen %d Pixel Aspect (%d:%d)
-%d 화면 픽셀비율 (%d:%d)
-
-# emu/layout/dualhovu.lay: 3, 9 emu/layout/dualhsxs.lay: 3, 9 emu/layout/dualhuov.lay: 3, 9 emu/layout/triphsxs.lay: 3, 9, 15 mame/layout/darius.lay: 3, 9, 15 mame/layout/rocknms.lay: 3, 9
-Screen %d Standard (%d:%d)
-화면 %d 일반비율 (%d:%d)
-
-# emu/uitext.c: 48
-Screen Resolution
-화면 해상도
-
-# emu/uitext.c: 85
-Screen flipping in cocktail mode is not supported.
-칵테일모드에서의 화면 뒤집힘이 지원되지 않습니다.
-
-# emu/datafile.c: 1543
-Screen flipping in cocktail mode is not supported.\n
-칵테일모드에서의 화면 뒤집힘이 지원되지 않습니다.\n
-
-# emu/cheat.c: 7636
-Search Dialog Style
-검색 방법
-
-# emu/cheat.c: 6365
-Search Speed
-검색 속도
-
-# emu/cheat.c: 1720
-Search a Cheat (Advanced Mode)
-치트 검색 (고급 모드)
-
-# emu/cheat.c: 1716
-Search a Cheat (Classic Mode)
-치트 검색 (이전 모드)
-
-# emu/cheat.c: 1712
-Search a Cheat (Minimum Mode)
-치트 검색 (간단 모드)
-
-# emu/uitext.c: 216
-Search not initialized
-검색이 초기화되지 않음
-
-# mame/drivers/ninjakid.c: 295
-Second Bonus
-두번째 보너스
-
-# emu/cheat.c: 2868, 2942 mame/drivers/bwidow.c: 640 mame/drivers/maxaflex.c: 274 mame/drivers/megaplay.c: 73 mame/drivers/megatech.c: 111 mame/drivers/mpu4.c: 1949 mame/drivers/nbmj8688.c: 2693 mame/drivers/pingpong.c: 339 mame/drivers/trackfld.c: 665
-Select
-선택
-
-# emu/uitext.c: 214
-Select Memory Areas
-메모리 범위 선택
-
-# emu/uitext.c: 107
-Select New Game
-새 게임 선택
-
-# emu/cheat.c: 7633
-Select Search
-검색 선택
-
-# emu/uitext.c: 220
-Select a value
-값 선택
-
-# emu/ui.c: 2243
-Select position to load from
-불러올 위치(0-9,A-Z) 선택
-
-# emu/ui.c: 2241
-Select position to save to
-저장할 위치(0-9,A-Z) 선택
-
-# emu/uitext.c: 130
-Sensitivity
-감도
-
-# emu/inptport.c: 891 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1752, 1785, 1874 mame/drivers/gdrawpkr.c: 357, 427 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 182
-Service
-서비스
-
-# emu/inptport.c: 886
-Service 1
-서비스 1
-
-# emu/inptport.c: 887
-Service 2
-서비스 2
-
-# emu/inptport.c: 888
-Service 3
-서비스 3
-
-# emu/inptport.c: 889
-Service 4
-서비스 4
-
-# emu/inptport.c: 429
-Service Mode
-서비스 모드
-
-# mame/drivers/ambush.c: 129
-Service Mode/Free Play
-서비스 모드/프리 플레이
-
-# emu/cheat.c: 2899 emu/uitext.c: 185 mame/drivers/arcadia.c: 229 mame/drivers/pingpong.c: 344 mame/drivers/trackfld.c: 655
-Set
-세트
-
-# emu/cheat.c: 3469
-Set/Clear
-세트/초기화
-
-# emu/cheat.c: 2884
-Set/Clear Bits
-비트 세트/초기화
-
-# emu/cheat.c: 7658
-Show Activation Key Message
-활성 키 메시지 보이기
-
-# emu/uimenu.c: 1627
-Show Backdrops
-배경 보이기
-
-# emu/uimenu.c: 1639
-Show Bezels
-베젤 보이기
-
-# emu/inptport.c: 1084
-Show Button Input
-버튼 입력 표시
-
-# emu/inptport.c: 1076
-Show Cheat List
-치트 목록 표시
-
-# emu/inptport.c: 1078
-Show Command
-공략 표시
-
-# emu/uitext.c: 123
-Show Command List
-공략 목록 표시
-
-# emu/inptport.c: 1081
-Show Current Time
-현재 시간 표시
-
-# emu/inptport.c: 1072
-Show FPS
-FPS 표시
-
-# emu/uimenu.c: 1643
-Show Full Artwork
-전체 아트워크 보이기
-
-# emu/inptport.c: 1067
-Show Gfx
-Gfx 표시
-
-# emu/uimenu.c: 1633
-Show Overlays
-오버레이 보이기
-
-# emu/inptport.c: 1102
-Show Profiler
-프로파일러 표시
-
-# emu/cheat.c: 7652
-Show Search Labels
-검색 라벨 표시
-
-# emu/cheat.c: 5995
-Signed
-표시됨
-
-# mame/layout/buckrog.lay: 9 mame/layout/dlair.lay: 9 mame/layout/sspeedr.lay: 70 mame/layout/subroc3d.lay: 9 mame/layout/turbo.lay: 60
-Simple LEDs
-간단한 LED
-
-# emu/inptport.c: 468
-Single
-싱글
-
-# emu/cheat.c: 5989
-Size
-크기
-
-# emu/cheat.c: 7182
-Skip Bytes
-건더뛴 바이트
-
-# emu/cheat.c: 6334 emu/uitext.c: 211 mame/drivers/4enraya.c: 118 mame/drivers/aleck64.c: 362 mame/drivers/amidar.c: 285 mame/drivers/angelkds.c: 478 mame/drivers/bestleag.c: 272 mame/drivers/bigstrkb.c: 158 mame/drivers/brkthru.c: 232, 235, 277, 280 mame/drivers/btime.c: 797 mame/drivers/cninja.c: 727 mame/drivers/cps1.c: 1276, 1580 mame/drivers/deniam.c: 273 mame/drivers/epos.c: 150, 153, 159 mame/drivers/fuukifg3.c: 421 mame/drivers/galaxian.c: 2486, 2522 mame/drivers/gameplan.c: 586, 1037 mame/drivers/jcross.c: 187 mame/drivers/m62.c: 619, 669, 720, 771, 823, 875, 929, 1028, 1081 mame/drivers/mcr.c: 1134 mame/drivers/megaplay.c: 222 mame/drivers/metro.c: 3233 mame/drivers/nmg5.c: 433, 493, 586, 593, 628, 633 mame/drivers/nmk16.c: 2767 mame/drivers/phoenix.c: 321 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 443, 511 mame/drivers/safarir.c: 243 mame/drivers/segas16a.c: 1451 mame/drivers/segas16b.c: 2660 mame/drivers/sf.c: 332, 510, 648 mame/drivers/shisen.c: 140 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 153 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 249 mame/drivers/system1.c: 1962 mame/drivers/system16.c: 1771 mame/drivers/taito_z.c: 2381, 2450 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 251, 306, 347 mame/drivers/trackfld.c: 598 mame/drivers/vigilant.c: 239 mame/drivers/vsnes.c: 1070, 1781 mame/drivers/wallc.c: 178 mame/drivers/wilytowr.c: 444 mame/drivers/xain.c: 398 mame/drivers/yamato.c: 380 mame/drivers/zac2650.c: 72, 122
-Slow
-느림
-
-# emu/uitext.c: 207
-Slow But Sure (changed or not)
-느리지만 확실함 (변경여부 판별)
-
-# emu/inptport.c: 1066
-Soft Reset
-소프트 리셋
-
-# emu/uitext.c: 44 mame/drivers/balsente.c: 748, 803 mame/drivers/contra.c: 221 mame/drivers/couple.c: 207 mame/drivers/gijoe.c: 299 mame/drivers/mosaic.c: 207 mame/drivers/tmnt.c: 2105, 2187, 2433 
-Sound
-사운드
-
-# emu/inptport.c: 448 emu/uilang.c: 26 
-Spanish
-스페인어
-
-# emu/emuopts.c: 159 emu/inptport.c: 483 
-Standard
-표준
-
-# emu/layout/horizont.lay: 3 emu/layout/vertical.lay: 3
-Standard (%d:%d)
-일반비율 (%d:%d)
-
-# emu/uitext.c: 166
-Start a New Cheat Search
-새 치트 검색 시작
-
-# emu/inptport.c: 1336
-Start time: %s\n
-시작 시간: %s\n
-
-# mame/drivers/funworld.c: 862, 924, 986, 1110, 1172 
-State
-상태
-
-# emu/mame.c: 1983
-State successfully loaded.
-상태를 성공적으로 불러왔습니다.
-
-# emu/mame.c: 1905
-State successfully saved.
-상태가 성공적으로 기록되었습니다.
-
-# emu/mame.c: 1903
-State successfully saved.\nWarning: Save states are not officially supported for this game.
-상태가 성공적으로 기록되었습니다.\n주의: 상태 저장은 이 게임에서 공식적으로 지원되는 기능이 아닙니다.
-
-# emu/uitext.c: 65
-Statistics not available
-표시할 통계내용이 없습니다
-
-# emu/cheat.c: 5464
-Status (Same or Different)
-상태 (동일 / 변화)
-
-# emu/uitext.c: 206
-Status (bits or flags)
-상태 (비트 혹은 플래그)
-
-# emu/inptport.c: 479 
-Stereo
-스테레오
-
-# mame/drivers/bmcbowl.c: 369 mame/drivers/holeland.c: 145, 213 mame/drivers/limenko.c: 419 mame/drivers/pgm.c: 895, 992, 1082, 1174, 1270, 1361 mame/drivers/popper.c: 277 mame/drivers/toaplan2.c: 2058 mame/drivers/turbo.c: 893
-Stop
-정지
-
-# emu/uitext.c: 61
-Story not available
-표시할 줄거리가 없습니다
-
-# emu/cheat.c: 733 emu/restrack.c: 145
-String
-문자열
-
-# emu/cheat.c: 2894
-Subtract
-빼기
-
-# emu/cheat.c: 2914, 5992
-Swap
-교환
-
-# emu/uitext.c: 86
-THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
-이 게임은 실행이 불가능합니다. 정상적으로 동작이 불가능하니 참고하시기 바랍니다.
-
-# emu/datafile.c: 1522
-THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
-이 게임은 실행이 불가능합니다. 정상적으로 동작이 불가능하니 참고하시기 바랍니다.\n
-
-# mame/drivers/aerofgt.c: 1058, 1148 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 313 mame/drivers/midzeus.c: 1212 mame/drivers/pgm.c: 1008, 1098, 1189, 1285, 1478 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2074, 2120, 2186, 2252, 2300, 2343, 2453, 2515, 2577, 2646, 2690, 2743
-Taiwan
-대만
-
-# mame/drivers/bmcbowl.c: 379 mame/drivers/dwarfd.c: 452 mame/drivers/gdrawpkr.c: 380, 447 mame/drivers/magicfly.c: 550 mame/drivers/pmpoker.c: 582 mame/drivers/witch.c: 537
-Take
-갖기
-
-# emu/inptport.c: 2627 mame/drivers/neogeo.c: 1305 mame/drivers/toaplan1.c: 595, 664, 733, 1119, 1184, 1259, 1329 mame/drivers/toaplan2.c: 2065, 2108, 2172, 2229, 2245, 2293, 2335, 2369, 2440, 2500, 2562, 2639, 2682, 2735, 2863, 2875, 2888
-Territory
-지역
-
-# emu/inptport.c: 431 mame/drivers/dbz.c: 271, 364
-Test
-테스트
-
-# mame/drivers/aleck64.c: 264 mame/drivers/btime.c: 777 mame/drivers/coinmstr.c: 267 mame/drivers/ddenlovr.c: 3286 mame/drivers/ertictac.c: 230 mame/drivers/funworld.c: 1234 mame/drivers/galpani3.c: 144 mame/drivers/gdrawpkr.c: 361, 445 mame/drivers/halleys.c: 1700 mame/drivers/homedata.c: 957 mame/drivers/hornet.c: 760, 808 mame/drivers/jchan.c: 710 mame/drivers/koikoi.c: 164 mame/drivers/laserbas.c: 114 mame/drivers/macs.c: 256 mame/drivers/megasys1.c: 1142, 1301 mame/drivers/mw8080bw.c: 386, 778, 1237, 2186 mame/drivers/nwk-tr.c: 849 mame/drivers/nycaptor.c: 613 mame/drivers/ohmygod.c: 192 mame/drivers/panicr.c: 260 mame/drivers/quasar.c: 315 mame/drivers/quizo.c: 186 mame/drivers/raiden2.c: 1018, 1097, 1146 mame/drivers/segas16a.c: 1630 mame/drivers/segas16b.c: 2915 mame/drivers/seicross.c: 188 mame/drivers/snk.c: 3767, 3832 mame/drivers/ssfindo.c: 555 mame/drivers/st0016.c: 408, 497 mame/drivers/suprnova.c: 619 mame/drivers/system1.c: 2037, 2226 mame/drivers/vegas.c: 2057
-Test Mode
-테스트 모드
-
-# mame/drivers/dbz.c: 271, 364 mame/drivers/kinst.c: 518, 622 mame/drivers/konamigq.c: 470 mame/drivers/konamigv.c: 392 mame/drivers/ksys573.c: 2822 mame/drivers/mcr68.c: 734 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 933 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 232, 443, 509, 604, 694 mame/drivers/midzeus.c: 1020, 1101, 1227 mame/drivers/mpu4.c: 1829, 1944, 2059, 2174 mame/drivers/namcos10.c: 407 mame/drivers/namcos11.c: 934 mame/drivers/namcos12.c: 1448 mame/drivers/namcos21.c: 1944, 2021, 2098 mame/drivers/neodrvr.c: 60 mame/drivers/neogeo.c: 1218 mame/drivers/seattle.c: 2195, 2320, 2418 mame/drivers/vegas.c: 2047 mame/drivers/zn.c: 3063
-Test Switch
-테스트 스위치
-
-# emu/uitext.c: 49 mame/drivers/megasys1.c: 2210
-Text
-텍스트
-
-# emu/cheat.c: 7162
-Text Label
-텍스트 라벨
-
-# emu/uitext.c: 81
-The colors are completely wrong.
-컬러가 완전히 다릅니다.
-
-# emu/datafile.c: 1531
-The colors are completely wrong.\n
-컬러가 완전히 다릅니다.\n
-
-# emu/uitext.c: 80
-The colors aren't 100% accurate.
-컬러가 100% 정확치 않습니다.
-
-# emu/datafile.c: 1534
-The colors aren't 100% accurate.\n
-컬러가 100% 정확치 않습니다.\n
-
-# emu/uitext.c: 87
-The game has protection which isn't fully emulated.
-게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.
-
-# emu/datafile.c: 1525
-The game has protection which isn't fully emulated.\n
-게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.\n
-
-# emu/uitext.c: 84
-The game lacks sound.
-사운드가 나지 않습니다.
-
-# emu/datafile.c: 1537
-The game lacks sound.\n
-사운드가 나지 않습니다.\n
-
-# emu/uitext.c: 83
-The sound emulation isn't 100% accurate.
-사운드 에뮬레이션이 100% 정확하지 않습니다.
-
-# emu/datafile.c: 1540
-The sound emulation isn't 100% accurate.\n
-사운드 에뮬레이션이 100% 정확하지 않습니다.\n
-
-# emu/uitext.c: 82
-The video emulation isn't 100% accurate.
-화면 에뮬레이션이 100% 정확하지 않습니다.
-
-# emu/datafile.c: 1528
-The video emulation isn't 100% accurate.\n
-화면 에뮬레이션이 100% 정확하지 않습니다.\n
-
-# emu/uitext.c: 79
-There are known problems with this game:
-이 게임은 다음과 같은 문제점이 있습니다:
-
-# emu/uitext.c: 88
-There are working clones of this game. They are:
-이 게임의 실행 가능한 클론롬은:
-
-# emu/inptport.c: 1309
-This INP file is not an extended INP file, extra info not available\n
-현재 INP 파일은 확장 INP 파일이 아닙니니다. 추가 정보를 이용할 수 없습니다\n
-
-# emu/clifront.c: 702
-This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
-
-# emu/inptport.c: 1070 
-Throttle
-감속기능
-
-# emu/uitext.c: 147
-Tickets dispensed
-티켓 분배
-
-# emu/inptport.c: 432, 892
-Tilt
-틸트
-
-# mame/drivers/amspdwy.c: 183, 219 mame/drivers/cinemat.c: 360, 519 mame/drivers/cps1.c: 4001, 4114 mame/drivers/dkong.c: 1006 mame/drivers/drtomy.c: 207 mame/drivers/fitfight.c: 315, 453, 595 mame/drivers/gomoku.c: 116 mame/drivers/homedata.c: 873, 954 mame/drivers/lazercmd.c: 518 mame/drivers/m107.c: 275 mame/drivers/m92.c: 955 mame/drivers/megaplay.c: 244 mame/drivers/megasys1.c: 1412, 2215 mame/drivers/metlclsh.c: 225 mame/drivers/metro.c: 2679, 2773 mame/drivers/mw8080bw.c: 2187 mame/drivers/nbmj8688.c: 2101, 2175 mame/drivers/pacman.c: 2170, 2271 mame/drivers/paradise.c: 148, 216 mame/drivers/pcktgal.c: 159 mame/drivers/pktgaldx.c: 251 mame/drivers/pokechmp.c: 203 mame/drivers/punchout.c: 518, 589 mame/drivers/realbrk.c: 292 mame/drivers/segas16b.c: 2197 mame/drivers/segaxbd.c: 806, 848, 940, 1021 mame/drivers/snowbros.c: 1303, 1382 mame/drivers/starfire.c: 208, 257 mame/drivers/supbtime.c: 295 mame/drivers/system1.c: 970, 1132, 1184 mame/drivers/system16.c: 1027 mame/drivers/taito_f2.c: 3302 mame/drivers/taito_l.c: 1295, 1822, 1978, 1978 mame/drivers/taitosj.c: 918, 1003, 1445 mame/drivers/tattack.c: 99 mame/drivers/troangel.c: 106 mame/drivers/tubep.c: 629 mame/drivers/tumbleb.c: 1115, 1346, 1692 mame/drivers/vicdual.c: 495 mame/drivers/vsnes.c: 860, 1380 mame/drivers/wwfsstar.c: 288 mame/drivers/zac2650.c: 171
-Time
-시간
-
-# emu/restrack.c: 147 mame/drivers/chinagat.c: 397 mame/drivers/ddragon.c: 790 mame/drivers/fuukifg3.c: 420 mame/drivers/jollyjgr.c: 176 mame/drivers/m62.c: 719, 770, 822, 874 mame/drivers/megaplay.c: 192 mame/drivers/metro.c: 2773 mame/drivers/quizdna.c: 150, 238, 340 mame/drivers/segae.c: 1278 mame/drivers/segas16a.c: 1135, 1160 mame/drivers/segas16b.c: 1926 mame/drivers/shisen.c: 139 mame/drivers/st0016.c: 425 mame/drivers/system16.c: 646 mame/drivers/taito_f2.c: 2021, 3213 mame/drivers/toaplan2.c: 2960, 3076 mame/drivers/vsnes.c: 1472, 1780
-Timer
-타이머
-
-# emu/cheat.c: 4833, 5458
-Timer (+ or -)
-타이머 (+ / -)
-
-# emu/uitext.c: 204
-Timers (+/- some value)
-타이머 (+/- 일부 값)
-
-# mame/drivers/bigevglf.c: 272 mame/drivers/chqflag.c: 307 mame/drivers/dynax.c: 2697 mame/drivers/gaiden.c: 623 mame/drivers/megaplay.c: 353 mame/drivers/seta.c: 3316, 3549, 5327 mame/drivers/seta2.c: 660 mame/drivers/travrusa.c: 167 mame/drivers/yunsung8.c: 257 
-Title
-타이틀
-
-# emu/uitext.c: 244
-Toggle
-켜기/끄기
-
-# emu/inptport.c: 1075
-Toggle Cheat
-치트 사용/해제
-
-# emu/inptport.c: 1115
-Toggle Crosshair
-표적 보임/숨김
-
-# emu/inptport.c: 1106
-Toggle Debugger
-디버거 켜기/끄기
-
-# emu/inptport.c: 978
-Track X
-트랙볼 X
-
-# emu/inptport.c: 979
-Track X 2
-트랙볼 X 2
-
-# emu/inptport.c: 980
-Track X 3
-트랙볼 X 3
-
-# emu/inptport.c: 981
-Track X 4
-트랙볼 X 4
-
-# emu/inptport.c: 982
-Track X 5
-트랙볼 X 5
-
-# emu/inptport.c: 983
-Track X 6
-트랙볼 X 6
-
-# emu/inptport.c: 984
-Track X 7
-트랙볼 X 7
-
-# emu/inptport.c: 985
-Track X 8
-트랙볼 X 8
-
-# emu/inptport.c: 987
-Track Y
-트랙볼 Y
-
-# emu/inptport.c: 988
-Track Y 2
-트랙볼 Y 2
-
-# emu/inptport.c: 989
-Track Y 3
-트랙볼 Y 3
-
-# emu/inptport.c: 990
-Track Y 4
-트랙볼 Y 4
-
-# emu/inptport.c: 991
-Track Y 5
-트랙볼 Y 5
-
-# emu/inptport.c: 992
-Track Y 6
-트랙볼 Y 6
-
-# emu/inptport.c: 993
-Track Y 7
-트랙볼 Y 7
-
-# emu/inptport.c: 994
-Track Y 8
-트랙볼 Y 8
-
-# emu/inptport.c: 474 
-Trackball
-트랙볼
-
-# mame/layout/nbmj8688.lay: 39
-Triple
-트리플
-
-# emu/layout/triphsxs.lay: 39 mame/layout/darius.lay: 39
-Triple Side-by-Side
-트리플 좌-우
-
-# emu/layout/triphsxs.lay: 51
-Triple Side-by-Side (Gapless)
-트리플 좌-우 (빈틈없음)
-
-# emu/cheat.c: 3217 mame/drivers/lastduel.c: 422 
-Type
-유형
-
-# emu/uitext.c: 90
-Type OK or move the joystick left then right to continue
-OK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
-
-# emu/uimenu.c: 3241
-Type name or select: %s_
-이름을 입력하거나 선택 : %s_
-
-# emu/uimenu.c: 3243
-Type name or select: (random)
-이름을 입력하거나 선택 : (무작위)
-
-# emu/inptport.c: 1095
-UI Cancel
-UI 취소
-
-# emu/inptport.c: 1096
-UI Clear
-UI 삭제
-
-# emu/inptport.c: 1087
-UI Down
-UI 아래
-
-# emu/inptport.c: 1091
-UI End
-UI 최하단
-
-# emu/inptport.c: 1090
-UI Home
-UI 최상단
-
-# emu/inptport.c: 1088
-UI Left
-UI 왼쪽
-
-# emu/inptport.c: 1100
-UI Next Group
-UI 다음 그룹
-
-# emu/inptport.c: 1093
-UI Page Down
-UI 아래 페이지
-
-# emu/inptport.c: 1092
-UI Page Up
-UI 위 페이지
-
-# emu/inptport.c: 1099
-UI Previous Group
-UI 이전 그룹
-
-# emu/inptport.c: 1089
-UI Right
-UI 오른쪽
-
-# emu/inptport.c: 1101
-UI Rotate
-UI 회전
-
-# emu/inptport.c: 1094
-UI Select
-UI 선택
-
-# emu/inptport.c: 1104
-UI Toggle
-UI 전환
-
-# emu/inptport.c: 1086
-UI Up
-UI 위
-
-# emu/inptport.c: 1097
-UI Zoom In
-UI 확대
-
-# emu/inptport.c: 1098
-UI Zoom Out
-UI 축소
-
-# emu/datafile.c: 2277
-UNEMULATED PROTEC. : %3d  %3d\n
-에뮬안된 암호화    : %3d  %3d\n
-
-# emu/cheat.c: 9090 emu/romload.c: 277 lib/util/cdrom.c: 473 mame/drivers/ms32.c: 434 mame/drivers/segahang.c: 547, 563 mame/drivers/segaorun.c: 584, 735 mame/video/v9938.c: 68
-UNKNOWN
-알수없음
-
-# emu/uilang.c: 18 mame/drivers/bbusters.c: 571 mame/drivers/taotaido.c: 283 mame/drivers/toaplan1.c: 598, 667, 736, 1186, 1261, 1331, 1406, 1495
-US
-미국
-
-# emu/inptport.c: 437 
-USA
-미국
-
-# emu/video.c: 375
-Unable to allocate snapshot render target\n
-스크린샷 생성 타겟을 위치할 수 없습니다\n
-
-# emu/mame.c: 1942
-Unable to load due to pending anonymous timers. See error.log for details.
-알수없는 타이머로 인해 불러올 수 없음. 자세한 내용은 error.log에
-
-# emu/mame.c: 1856
-Unable to save due to pending anonymous timers. See error.log for details.
-알수없는 타이머로 인해 저장할 수 없음. 자세한 내용은 error.log에
-
-# lib/util/options.c: 796
-Unexpected boolean option %s queried\n
-예상치 못한 boolean 옵션 %s 요청\n
-
-# lib/util/options.c: 854
-Unexpected float option %s queried\n
-예상치 못한 float 옵션 %s 요청\n
-
-# lib/util/options.c: 825
-Unexpected integer option %s queried\n
-예상치 못한 integer 옵션 %s 요청\n
-
-# emu/uimenu.c: 3296
-Unimplemented
-적용안됨
-
-# emu/inptport.c: 482 lib/util/chd.c: 1556 mame/machine/laserdsc.c: 955 tools/regrep.c: 93
-Unknown
-알수없음
-
-# mame/drivers/aerofgt.c: 885 mame/drivers/csk.c: 261 mame/drivers/goldstar.c: 164, 172, 196 mame/drivers/segas16a.c: 1101 mame/drivers/segas16b.c: 2011, 2876, 2877 mame/drivers/spy.c: 492 mame/drivers/system16.c: 2022, 2023
-Unlimited
-무한
-
-# emu/inptport.c: 481 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1615 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 552, 555 mame/drivers/ssv.c: 1186
-Unused
-사용되지않음
-
-# emu/cheat.c: 2944
-Unused (10)
-사용되지않음 (10)
-
-# emu/cheat.c: 2944
-Unused (11)
-사용되지않음 (11)
-
-# emu/cheat.c: 2944
-Unused (12)
-사용되지않음 (12)
-
-# emu/cheat.c: 2945
-Unused (13)
-사용되지않음 (13)
-
-# emu/cheat.c: 2945
-Unused (14)
-사용되지않음 (14)
-
-# emu/cheat.c: 2945
-Unused (15)
-사용되지않음 (15)
-
-# emu/cheat.c: 2945
-Unused (16)
-사용되지않음 (16)
-
-# emu/cheat.c: 2945
-Unused (17)
-사용되지않음 (17)
-
-# emu/cheat.c: 2946
-Unused (18)
-사용되지않음 (18)
-
-# emu/cheat.c: 2946
-Unused (19)
-사용되지않음 (19)
-
-# emu/cheat.c: 2946
-Unused (20)
-사용되지않음 (20)
-
-# emu/cheat.c: 2946
-Unused (21)
-사용되지않음 (21)
-
-# emu/cheat.c: 2946
-Unused (22)
-사용되지않음 (22)
-
-# emu/cheat.c: 2947
-Unused (23)
-사용되지않음 (23)
-
-# emu/cheat.c: 2947
-Unused (24)
-사용되지않음 (24)
-
-# emu/cheat.c: 2947
-Unused (25)
-사용되지않음 (25)
-
-# emu/cheat.c: 2947
-Unused (26)
-사용되지않음 (26)
-
-# emu/cheat.c: 2947
-Unused (27)
-사용되지않음 (27)
-
-# emu/cheat.c: 2948
-Unused (28)
-사용되지않음 (28)
-
-# emu/cheat.c: 2948
-Unused (29)
-사용되지않음 (29)
-
-# emu/cheat.c: 2943
-Unused (3)
-사용안함 (3)
-
-# emu/cheat.c: 2948
-Unused (30)
-사용되지않음 (30)
-
-# emu/cheat.c: 2948
-Unused (31)
-사용되지않음 (31)
-
-# emu/cheat.c: 2943
-Unused (4)
-사용되지않음 (4)
-
-# emu/cheat.c: 2886, 2943
-Unused (5)
-사용되지않음 (5)
-
-# emu/cheat.c: 2887, 2934, 2943
-Unused (6)
-사용되지않음 (6)
-
-# emu/cheat.c: 2935, 2943
-Unused (7)
-사용되지않음 (7)
-
-# emu/cheat.c: 2944
-Unused (8)
-사용되지않음 (8)
-
-# emu/cheat.c: 2944
-Unused (9)
-사용되지않음 (9)
-
-# emu/ui.c: 648
-Updating Artwork...
-아트워크 업데이트...
-
-# emu/inptport.c: 426
-Upright
-오른쪽위
-
-# mame/drivers/segaxbd.c: 770
-Upright 1
-오른쪽위 1
-
-# emu/uitext.c: 146
-Uptime
-시간종료
-
-# emu/uitext.c: 26
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.
-
-# emu/clifront.c: 225
-Usage: %s [%s] [options]\n\nOptions:\n
-사용법: %s [%s] [옵션]\n\n옵션:\n
-
-# emu/uitext.c: 133
-User Interface
-사용자 인터페이스
-
-# emu/cheat.c: 3524
-User Select
-사용자 선택
-
-# mame/layout/mpu4.lay: 890
-VFD Display Output Only
-VFD 화면 출력 만
-
-# mame/layout/bfm_sc2.lay: 861
-VFD Only (%d:%d)
-VFD 만 (%d:%d)
-
-# emu/cheat.c: 4828, 5846, 5982 emu/uitext.c: 43
-Value
-값
-
-# emu/cheat.c: 5444
-Value (Equal)
-값 (동일)
-
-# emu/cheat.c: 5451
-Value (NearTo)
-값 (근사)
-
-# emu/uitext.c: 56
-Vector Flicker
-벡터 깜빡임
-
-# emu/uitext.c: 47
-Vector Game
-벡터 게임
-
-# emu/inptport.c: 433 emu/uitext.c: 332
-Version
-버전
-
-# emu/inptport.c: 1335
-Version string: %s\n
-버전 스트링: %s\n
-
-# emu/ui.c: 2665
-Vert position
-수직 위치
-
-# emu/ui.c: 2631
-Vert stretch
-수직 늘리기
-
-# mame/drivers/findout.c: 281, 311, 341 mame/drivers/gameplan.c: 754, 899 mame/drivers/jack.c: 690 mame/drivers/thepit.c: 526 
-Vertical
-세로화면
-
-# mame/drivers/afega.c: 311, 388, 468
-Vertically
-수직
-
-# emu/inptport.c: 449
-Very Easy
-매우 쉬움
-
-# emu/inptport.c: 458
-Very Hard
-매우 어려움
-
-# emu/inptport.c: 464
-Very High
-매우 높음
-
-# emu/inptport.c: 459
-Very Low
-매우 낮음
-
-# emu/cheat.c: 6335 emu/uitext.c: 212 mame/drivers/cps1.c: 1579 mame/drivers/m62.c: 928 mame/drivers/rohga.c: 510
-Very Slow
-매우 느림
-
-# emu/uitext.c: 228
-Video Options
-비디오 옵션
-
-# emu/uitext.c: 168
-View Last Results
-마지막 결과 보기
-
-# mame/drivers/cps1.c: 4012 mame/drivers/ms32.c: 736, 809, 874 mame/drivers/pgm.c: 889, 986, 1076, 1168, 1264, 1355 mame/drivers/ssv.c: 1682, 1867 mame/drivers/tetrisp2.c: 674, 736
-Voice
-음성
-
-# emu/uitext.c: 50
-Volume
-볼륨
-
-# emu/inptport.c: 894
-Volume Down
-볼륨 감소
-
-# emu/inptport.c: 895
-Volume Up
-볼륨 증가
-
-# emu/romload.c: 408
-WARNING: the game might not run correctly.
-경고: 게임이 올바르게 실행되지 않을 수 있습니다.
-
-# emu/datafile.c: 2281
-WRONG COLORS       : %3d  %3d\n
-잘못된 색상        : %3d  %3d\n
-
-# emu/cheat.c: 2864
-Wait
-대기
-
-# lib/util/options.c: 505
-Warning: invalid line in INI: %s
-경고: INI에 잘못된 줄이 있습니다: %s
-
-# lib/util/options.c: 527
-Warning: unknown option in INI: %s\n
-경고: INI에 알 수 없는 옵션이 있습니다: %s\n
-
-# emu/cheat.c: 2866 emu/uitext.c: 196
-Watch
-보기
-
-# emu/cheat.c: 8655
-Watch %.8X (%d)
-보기 %.8X (%d)
-
-# emu/cheat.c: 3336
-Watch Add Value
-보기값 추가
-
-# emu/cheat.c: 3344
-Watch Format
-보기 초기화
-
-# emu/cheat.c: 3352
-Watch Label
-보기 라벨
-
-# emu/cheat.c: 3319
-Watch Per Line
-행간 보기
-
-# emu/cheat.c: 3299
-Watch Size
-보기 크기
-
-# emu/cheat.c: 3309
-Watch Skip
-보기 넘기기
-
-# emu/inptport.c: 1112
-Watch Value
-보기값
-
-# emu/uitext.c: 174
-Watchpoint
-보기위치
-
-# emu/uitext.c: 177
-Watchpoints
-보기위치
-
-# emu/inptport.c: 440
-World
-세계판
-
-# emu/cheat.c: 2881
-Write
-작성
-
-# emu/cheat.c: 2885
-Write If Match
-일치시 기록
-
-# emu/uitext.c: 194
-X Position
-X 위치
-
-# emu/cheat.c: 7211 mame/machine/scudsp.c: 885
-XOR
-XOR
-
-# emu/uitext.c: 195
-Y Position
-Y 위치
-
-# emu/inptport.c: 382 
-Yes
-예
-
-# emu/uigfx.c: 991
-Zoom = %d
-확대 = %d
-
-# emu/uigfx.c: 993
-Zoom Auto
-자동 확대
-
-# emu/datafile.c: 2410
-\n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
-\n    사운드장치:  (1)  (2)  (3)  (4)\n\n
-
-# emu/datafile.c: 2422
-\n    TOTAL: %4d\n
-\n    전체: %4d\n
-
-# emu/datafile.c: 2393
-\n   TOTAL: %4d\n
-\n    전체: %4d\n
-
-# emu/video.c: 1221
-\n%d partial updates
-\n%d 부분 업데이트
-
-# emu/datafile.c: 1623, 1637
-\nORIGINAL:\n
-\n원본:\n
-
-# emu/datafile.c: 1561
-\nROM REGION:\n
-\n롬 내부파일:\n
-
-# emu/datafile.c: 2337
-\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
-\n롬파일  : %d\n%d + %d 병합된 롬\n\n파일크기: %d MB (비압축)\n%d MB + %d MB 병합됨\n
-
-# emu/datafile.c: 1661
-\nSOURCE: %s\n
-\n소스: %s\n
-
-# emu/datafile.c: 1481
-\nStory:\n
-\n줄거리:\n
-
-# emu/datafile.c: 2510
-\nWARNING: FPS number too high!\n
-\n경고: FPS 수가 너무 큽니다\n
-
-# emu/clifront.c: 169
-\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
-\n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
-
-# emu/datafile.c: 2260
-\n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
-\n\n %4d 게임 (전체)\n %4d 원본       + %4d 클론\n %4d 네오지오   + %4d\n
-
-# emu/datafile.c: 2427
-\n\nCABINET INPUT CONTROL: (ALL)\n\n
-\n\n캐비넷 입력 제어: (전체)\n\n
-
-# emu/datafile.c: 1625, 1639
-\n\nCLONES:\n
-\n\n클론:\n
-
-# emu/datafile.c: 2367
-\n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
-\n\nCPU 하드웨어 (원본 게임)\n\n
-
-# emu/datafile.c: 2486
-\n\nFRAMES PER SECOND (%d): (ALL)\n\n
-\n\n초당 화면 표시 (%d)   : (전체)\n\n
-
-# emu/datafile.c: 2274
-\n\nGAME INFO FLAGS   : ORIG CLNS\n\n
-\n\n게임 정보 플래그   : 원본 클론\n\n
-
-# emu/datafile.c: 2610
-\n\nMAME VERSIONS (%3d)\n\n
-\n\nMAME 버전 (%3d)\n\n
-
-# emu/datafile.c: 2570
-\n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
-\n\n     해상도 & 팔레트크기: (전체)\n    (%d)          (%d)\n\n
-
-# emu/datafile.c: 2339
-\n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
-\n\n롬파일: %d\n%d + %d 병합 롬\n\n파일크기: %d KB (비압축)\n%d KB + %d KB 병합됨\n
-
-# emu/datafile.c: 2398
-\n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
-\n\n사운드 시스템 (원본 게임)\n\n
-
-# emu/datafile.c: 2345
-\n\nTYPICAL ROMSET SIZE (ALL)\n
-\n\n  대표    롬셋 크기 (전체)\n
-
-# emu/datafile.c: 2600
-\n\nVERSION - DRIVERS - SUPPORT:\n\n
-\n\n  버전  -드라이버 - 지원:\n\n
-
-# emu/datafile.c: 2474
-\n\nVIDEO NEEDS... : ORIG   CLNS\n\n
-\n\n비디오 사양... : 원본   클론\n\n
-
-# emu/datafile.c: 2357
-\n\nYEAR    NEW GAMES\n\n
-\n\n년도    신규 게임\n\n
-
-# emu/datafile.c: 2300
-\n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
-\n\n년도: 원본  클론 네오지오 모두\n\n
-
-# emu/romload.c: 304
+#
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
 \t0으로 처리되는 잘못된 %s 체크섬 \n
 
-# emu/cheat.c: 2643, 2793, 4666
+#
+\n\n %4d GAMES (ALL)\n %4d ORIGINALS  + %4d CLNS\n %4d NEOGEO     + %4d\n
+\n\n %4d 게임 (전체)\n %4d 원본       + %4d 클론\n %4d 네오지오   + %4d\n
+
+#
+\n\nCABINET INPUT CONTROL: (ALL)\n\n
+\n\n캐비넷 입력 제어: (전체)\n\n
+
+#
+\n\nCLONES:\n
+\n\n클론:\n
+
+#
+\n\nCPU HARDWARE (ORIGINAL GAMES)\n\n
+\n\nCPU 하드웨어 (원본 게임)\n\n
+
+#
+\n\nFRAMES PER SECOND (%d): (ALL)\n\n
+\n\n초당 화면 표시 (%d)   : (전체)\n\n
+
+#
+\n\nGAME INFO FLAGS   : ORIG CLNS\n\n
+\n\n게임 정보 플래그   : 원본 클론\n\n
+
+#
+\n\nMAME VERSIONS (%3d)\n\n
+\n\nMAME 버전 (%3d)\n\n
+
+#
+\n\nRESOLUTION & PALETTESIZE: (ALL)\n    (%d)          (%d)\n\n
+\n\n     해상도 & 팔레트크기: (전체)\n    (%d)          (%d)\n\n
+
+#
+\n\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d KB (UNCOMPRESSED)\n%d KB + %d KB MERGED\n
+\n\n롬파일: %d\n%d + %d 병합 롬\n\n파일크기: %d KB (비압축)\n%d KB + %d KB 병합됨\n
+
+#
+\n\nSOUND SYSTEM (ORIGINAL GAMES)\n\n
+\n\n사운드 시스템 (원본 게임)\n\n
+
+#
+\n\nTYPICAL ROMSET SIZE (ALL)\n
+\n\n  대표    롬셋 크기 (전체)\n
+
+#
+\n\nVERSION - DRIVERS - SUPPORT:\n\n
+\n\n  버전  -드라이버 - 지원:\n\n
+
+#
+\n\nVIDEO NEEDS... : ORIG   CLNS\n\n
+\n\n비디오 사양... : 원본   클론\n\n
+
+#
+\n\nYEAR    NEW GAMES\n\n
+\n\n년도    신규 게임\n\n
+
+#
+\n\nYEAR: ORIG  CLNS NEOGEO  ALL\n\n
+\n\n년도: 원본  클론 네오지오 모두\n\n
+
+#
+\n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
+\n    사운드장치:  (1)  (2)  (3)  (4)\n\n
+
+#
+\n    TOTAL: %4d\n
+\n    전체: %4d\n
+
+#
+\n   TOTAL: %4d\n
+\n    전체: %4d\n
+
+#
+\n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
+\n\"%s\" 는 대체로 다음과 같은 지원 게임과\n일치합니다. (최적맞춤 우선):\n\n
+
+#
+\n%d partial updates
+\n%d 부분 업데이트
+
+#
+\nORIGINAL:\n
+\n원본:\n
+
+#
+\nROM REGION:\n
+\n롬 내부파일:\n
+
+#
+\nROMFILES: %d\n%d + %d MERGED ROMS\n\nFILESIZE: %d MB (UNCOMPRESSED)\n%d MB + %d MB MERGED\n
+\n롬파일  : %d\n%d + %d 병합된 롬\n\n파일크기: %d MB (비압축)\n%d MB + %d MB 병합됨\n
+
+#
+\nSOURCE: %s\n
+\n소스: %s\n
+
+#
+\nStory:\n
+\n줄거리:\n
+
+#
+\nWARNING: FPS number too high!\n
+\n경고: FPS 수가 너무 큽니다\n
+
+#
+          DIAL:  %4d\n
+        다이얼:  %4d\n
+
+#
+         OTHER:  %4d\n
+          기타:  %4d\n
+
+#
+         PEDAL:  %4d\n
+          페달:  %4d\n
+
+#
+        PADDLE:  %4d\n
+          핸들:  %4d\n
+
+#
+       FOUND: %s\n
+        발견: %s\n
+
+#
+       JOY2WAY:  %4d\n
+     2방향스틱:  %4d\n
+
+#
+       JOY4WAY:  %4d\n
+     4방향스틱:  %4d\n
+
+#
+       JOY8WAY:  %4d\n
+     8방향스틱:  %4d\n
+
+#
+      AD STICK:  %4d\n
+       AD 스틱:  %4d\n
+
+#
+      JOY16WAY:  %4d\n
+    16방향스틱:  %4d\n
+
+#
+      LIGHTGUN:  %4d\n
+      라이트건:  %4d\n
+
+#
+     PLAYERS %d:  %4d\n
+    플레이어 %d:  %4d\n
+
+#
+     TRACKBALL:  %4d\n
+        트랙볼:  %4d\n
+
+#
+    BUTTONS%3d:  %4d\n
+       버튼%3d:  %4d\n
+
+#
+    EXPECTED: %s\n
+    기대값: %s\n
+
+#
+    NO BUTTONS:  %4d\n
+     버튼 없음:  %4d\n
+
+#
+   FOUND: %s\n
+    찾음: %s\n
+
+#
+ %4d HARDDISK\n
+ %4d 하드디스크\n
+
+#
+ %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
+ %4d 수평       + %4d\n %4d 수직       + %4d\n
+
+#
+ %4d PLAYCHOICE + %4d\n %4d DECO CASS  + %4d\n %4d CVS        + %4d\n
+ %4d 플레초이스 + %4d\n %4d 데코 카스  + %4d\n %4d CVS        + %4d\n
+
+#
+ %4d RASTER     + %4d\n %4d VECTOR     + %4d\n
+ %4d 래스터     + %4d\n %4d 벡터       + %4d\n
+
+#
+ %4d STEREO     + %4d\n
+ %4d 스테레오   + %4d\n
+
+#
+ (%d bytes)
+ (%d bytes)
+
+#
+ BAD
+ 잘못된 롬
+
+#
+ DOUBLEJOY2WAY:  %4d\n
+ 2방향듀얼스틱:  %4d\n
+
+#
+ DOUBLEJOY4WAY:  %4d\n
+ 4방향듀얼스틱:  %4d\n
+
+#
+ DOUBLEJOY8WAY:  %4d\n
+ 8방향듀얼스틱:  %4d\n
+
+#
+ GAMES WITH  %d CPUs: %4d\n
+ %d CPU 사용 게임   : %4d\n
+
+#
+ GAMES WITH  %d SNDINTRF: %4d\n
+ %d 사운드 사용 게임    : %4d\n
+
+#
+ NO GOOD DUMP KNOWN
+ 정확하게 덤프된 롬 없음
+
+#
+%.8X-%.8X MEMORY
+%.8X-%.8X 메모리
+
+#
+%d cheats saved
+%d 개의 치트저장
+
+#
+%d results found
+%d 결과를 찾음
+
+#
+%d romsets found, %d were OK.\n
+%d 롬세트 발견, %d 정상\n
+
+#
+%d samplesets found, %d were OK.\n
+%d 샘플세트 발견, %d 정상\n
+
+#
+%s : %s selected
+%s : %s 선택됨
+
+#
+%s Analog
+%s 아날로그
+
+#
+%s CHD NEEDS REDUMP\n
+%s CHD 재덤프 필요\n
+
+#
+%s Dec
+%s 감소
+
+#
+%s Inc
+%s 증가
+
+#
+%s NO GOOD DUMP KNOWN\n
+%s 정확하게 덤프된 롬이 없음\n
+
+#
+%s NOT FOUND\n
+%s 찾지 못함\n
+
+#
+%s NOT FOUND (NO GOOD DUMP KNOWN)\n
+%s 찾지 못함 (정확하게 덤프된 롬 없음)\n
+
+#
+%s ROM NEEDS REDUMP\n
+%s 롬의 재덤프 필요\n
+
+#
+%s UNSUPPORTED CHD VERSION\n
+%s 지원되지 않는 CHD 버전\n
+
+#
+%s WRONG CHECKSUMS:\n
+%s 잘못된 체크섬:\n
+
+#
+%s WRONG LENGTH (expected: %08x found: %08x)\n
+%s 잘못된 길이 (기대값: %08x 확인결과: %08x)\n
+
+#
+%s activated
+%s 활성화
+
+#
+%s disabled
+%s 사용안함
+
+#
+%s enabled
+%s 사용
+
+#
+%s'%s' is not a valid savestate file for game '%s'.
+%s'%s' 파일은 게임 '%s'의 올바른 상태저장 파일이 아닙니다.
+
+#
+%s: CAN'T CREATE DIFF FILE\n
+%s: DIFF 파일 생성 불가\n
+
+#
+%s: CAN'T OPEN DIFF FILE\n
+%s: DIFF 파일 호출 불가\n
+
+#
+%sIncompatible save file (signature %08x, expected %08x)
+%s비 호환 저장 파일 (서명 %08x, 기대값 %08x)
+
+#
+%sThis is not a MAME save file
+%sMAME 저장 파일이 아닙니다
+
+#
+%sWrong version in save file (%d, 1 expected)
+%s저장 파일 버전이 올바르지 않습니다(%d, 1 필요)
+
+#
+(BAD) 
+(불량)
+
+#
+(Card may already exist)
+(카드가 이미 존재합니다)
+
+#
+(debugger-only command)
+(디버거-전용 명령)
+
+#
+(disabled by compiling option)
+(컴파일 옵션에서 제외됨)
+
+#
+(locked)
+(잠김)
+
+#
+(more)
+(더보기)
+
+#
+(none)
+(없음)
+
+#
+1 Coin/1 Credit
+1 동전/1 크레딧
+
+#
+1 Coin/2 Credits
+1 동전/2 크레딧
+
+#
+1 Coin/3 Credits
+1 동전/3 크레딧
+
+#
+1 Coin/4 Credits
+1 동전/4 크레딧
+
+#
+1 Coin/5 Credits
+1 동전/5 크레딧
+
+#
+1 Coin/6 Credits
+1 동전/6 크레딧
+
+#
+1 Coin/7 Credits
+1 동전/7 크레딧
+
+#
+1 Coin/8 Credits
+1 동전/8 크레딧
+
+#
+1 Coin/9 Credits
+1 동전/9 크레딧
+
+#
+1 Player Start
+플레이어 1 시작
+
+#
+1 result found, added to list
+1 개의 결과 찾음, 목록에 추가함
+
+#
+16 Bit
+16 비트
+
+#
+1st Bonus Life
+첫번째 보너스
+
+#
+2 Coins/1 Credit
+2 동전/1 크레딧
+
+#
+2 Coins/2 Credits
+2 동전/2 크레딧
+
+#
+2 Coins/3 Credits
+2 동전/3 크레딧
+
+#
+2 Coins/4 Credits
+2 동전/4 크레딧
+
+#
+2 Coins/5 Credits
+2 동전/5 크레딧
+
+#
+2 Coins/6 Credits
+2 동전/6 크레딧
+
+#
+2 Coins/7 Credits
+2 동전/7 크레딧
+
+#
+2 Coins/8 Credits
+2 동전/8 크레딧
+
+#
+2 Players Start
+플레이어 2 시작
+
+#
+24 Bit
+24 비트
+
+#
+24-BIT DISPLAY : %3d  + %3d\n
+24-비트 화면   : %3d  + %3d\n
+
+#
+2nd Bonus Life
+두번째 보너스
+
+#
+3 Coins/1 Credit
+3 동전/1 크레딧
+
+#
+3 Coins/2 Credits
+3 동전/2 크레딧
+
+#
+3 Coins/3 Credits
+3 동전/3 크레딧
+
+#
+3 Coins/4 Credits
+3 동전/4 크레딧
+
+#
+3 Players Start
+플레이어 3 시작
+
+#
+32 Bit
+32 비트
+
+#
+4 Coins/1 Credit
+4 동전/1 크레딧
+
+#
+4 Coins/2 Credits
+4 동전/2 크레딧
+
+#
+4 Coins/3 Credits
+4 동전/3 크레딧
+
+#
+4 Coins/4 Credits
+4 동전/4 크레딧
+
+#
+4 Coins/5 Credits
+4 동전/5 크레딧
+
+#
+4 Coins/7 Credits
+4 동전/7 크레딧
+
+#
+4 Players Start
+플레이어 4 시작
+
+#
+5 Coins/1 Credit
+5 동전/1 크레딧
+
+#
+5 Coins/3 Credits
+5 동전/3 크레딧
+
+#
+5 Players Start
+플레이어 5 시작
+
+#
+6 Coins/1 Credit
+5 동전/1 크레딧
+
+#
+6 Players Start
+플레이어 6 시작
+
+#
+7 Coins/1 Credit
+7 동전/1 크레딧
+
+#
+7 Players Start
+플레이어 7 시작
+
+#
+8 Bit
+8 비트
+
+#
+8 Coins/1 Credit
+8 동전/1 크레딧
+
+#
+8 Coins/3 Credits
+8 동전/3 크레딧
+
+#
+8 Players Start
+플레이어 8 시작
+
+#
+9 Coins/1 Credit
+9 코인/1 크레딧
+
+#
+:1st Activation Key (%s)\n
+:1차 활성키 (%s)\n
+
+#
+:1st Activation Key for %s (%s)\n
+:%s 1차 활성키 (%s)\n
+
+#
+:2nd Activation Key (%s)\n
+:2차 활성키 (%s)\n
+
+#
+:2nd Activation Key for %s (%s)\n
+:%s 2차 활성키 (%s)\n
+
+#
+AD Stick X
+AD 스틱 X
+
+#
+AD Stick X 2
+AD 스틱 X 2
+
+#
+AD Stick X 3
+AD 스틱 X 3
+
+#
+AD Stick X 4
+AD 스틱 X 4
+
+#
+AD Stick X 5
+AD 스틱 X 5
+
+#
+AD Stick X 6
+AD 스틱 X 6
+
+#
+AD Stick X 7
+AD 스틱 X 7
+
+#
+AD Stick X 8
+AD 스틱 X 8
+
+#
+AD Stick Y
+AD 스틱 Y
+
+#
+AD Stick Y 2
+AD 스틱 Y 2
+
+#
+AD Stick Y 3
+AD 스틱 Y 3
+
+#
+AD Stick Y 4
+AD 스틱 Y 4
+
+#
+AD Stick Y 5
+AD 스틱 Y 5
+
+#
+AD Stick Y 6
+AD 스틱 Y 6
+
+#
+AD Stick Y 7
+AD 스틱 Y 7
+
+#
+AD Stick Y 8
+AD 스틱 Y 8
+
+#
+AD Stick Z
+AD 스틱 Z
+
+#
+AD Stick Z 2
+AD 스틱 Z 2
+
+#
+AD Stick Z 3
+AD 스틱 Z 3
+
+#
+AD Stick Z 4
+AD 스틱 Z 4
+
+#
+AD Stick Z 5
+AD 스틱 Z 5
+
+#
+AD Stick Z 6
+AD 스틱 Z 6
+
+#
+AD Stick Z 7
+AD 스틱 Z 7
+
+#
+AD Stick Z 8
+AD 스틱 Z 8
+
+#
+ALL CHANNELS
+모든 채널
+
+#
+ALL CPUS
+모든 CPU
+
+#
+AWP Simulated Video (No Artwork)
+AWP 시뮬레이트 비디오 (아트워크 없음)
+
+#
+Activation Key
+활성키
+
+#
+Activation Key (1st)
+활성 키 (1차)
+
+#
+Activation Key (2nd)
+활성 키 (2차)
+
+#
+Add
+추가
+
+#
+Add Cheat
+치트 추가
+
+#
+Add Value
+값 추가
+
+#
+Add/Edit a Cheat
+치트 추가/수정
+
+#
+Add/Subtract
+더하기/빼기
+
+#
+Adder %d Output Only (%d:%d)
+%d 출력 한정 (%d:%d)
+
+#
+Adder and Lamps
+애더 및 램프
+
+#
+Adder,VFD and Lamp Matrix
+Adder, VFD 그리고 램프 매트릭스
+
+#
+Adder,VFD and Lamps
+Adder,VFD 그리고 램프
+
+#
+Address
+주소
+
+#
+Address Index
+주소 인덱스
+
+#
+Address Shift
+주소 Shift
+
+#
+Address Size
+주소 크기
+
+#
+Advanced
+고급
+
+#
+All Memory
+모든 메모리
+
+#
+All values saved
+모든 값이 저장됨
+
+#
+Allow Continue
+이어하기 허용
+
+#
+Alternate
+교체
+
+#
+Analog Controls
+아날로그 콘트롤
+
+#
+Arcade
+아케이드
+
+#
+Artwork
+아트워크
+
+#
+Asia
+아시아
+
+#
+Attempted to malloc zero bytes (%s:%d)
+메모리에 0바이트 할당시도 (%s:%d)
+
+#
+Auto
+자동
+
+#
+Auto Save Cheats
+치트 자동 저장
+
+#
+Autocenter Speed
+자동 중간속도
+
+#
+Autofire (in some games)
+연사 (일부 게임)
+
+#
+Autofire Delay
+연사 지연
+
+#
+Autofire Setting
+연사 설정
+
+#
+Automatic
+자동
+
+#
+Average speed: %.2f%% (%d seconds)\n
+평균 속도: %.2f%% (%d 초)\n
+
+#
+BANK%.2d
+뱅크%.2d
+
+#
+BCD
+BCD
+
+#
+BIOS
+바이오스
+
+#
+Beam Width
+빔 너비
+
+#
+Beginner
+초심자
+
+#
+Bet
+베팅
+
+#
+Bill 1
+청구 1
+
+#
+Binary
+바이너리
+
+#
+Bit
+비트
+
+#
+Bonus Life
+생명 보너스
+
+#
+Bookkeeping
+책갈피
+
+#
+Bookkeeping Info
+동전 부기 정보
+
+#
+Break in Debugger
+디버거에서 중지
+
+#
+Brightness
+밝기
+
+#
+Button 1
+버튼 1
+
+#
+Button Lamps
+버튼 램프
+
+#
+Byte Length
+바이트 길이
+
+#
+COMM Setting
+COMM 설정
+
+#
+CONFIGURATION COMMANDS
+설정 명령
+
+#
+CORE ARTWORK OPTIONS
+코어 아트워크 옵션
+
+#
+CORE COMMANDS
+코어 명령
+
+#
+CORE CONFIGURATION OPTIONS
+코어 설정 옵션
+
+#
+CORE DEBUGGING OPTIONS
+코어 디버깅 옵션
+
+#
+CORE FILENAME OPTIONS
+코어 파일명 옵션
+
+#
+CORE INPUT AUTOMATIC ENABLE OPTIONS
+코어 입력 자동화 사용 옵션
+
+#
+CORE INPUT OPTIONS
+코어 입력 옵션
+
+#
+CORE LANGUAGE OPTIONS
+코어 언어 옵션
+
+#
+CORE MISC OPTIONS
+코어 기타 옵션
+
+#
+CORE OUTPUT DIRECTORY OPTIONS
+코어 출력 디렉토리 옵션
+
+#
+CORE PALETTE OPTIONS
+코어 팔레트 옵션
+
+#
+CORE PERFORMANCE OPTIONS
+코어 성능 옵션
+
+#
+CORE ROTATION OPTIONS
+코어 회전 옵션
+
+#
+CORE SCREEN OPTIONS
+코어 화면 옵션
+
+#
+CORE SEARCH PATH OPTIONS
+코어 검색 경로 옵션
+
+#
+CORE SOUND OPTIONS
+코어 사운드 옵션
+
+#
+CORE STATE/PLAYBACK OPTIONS
+코어 상태저장/재생 옵션
+
+#
+CORE VECTOR OPTIONS
+코어 벡터 옵션
+
+#
+CPU
+CPU
+
+#
+CPU%.2d 
+CPU%.2d
+
+#
+CRC-32s
+CRC-32
+
+#
+Cabinet
+캐비넷
+
+#
+Cabinet Type
+캐비넷 유형
+
+#
+Calibrate Joysticks
+조이스틱 조정
+
+#
+Cancel
+취소
+
+#
+Card Number:
+카드 번호:
+
+#
+Center
+원점 복귀
+
+#
+Cheat
+치트
+
+#
+Cheat Database reloaded
+치트 데이터베이스 불러옴
+
+#
+Cheat conflict found: disabling
+치트 충돌 발생: 비활성화
+
+#
+Cheats
+치트
+
+#
+Chi
+치
+
+#
+China
+중국
+
+#
+Classic
+고전
+
+#
+Classic graphics and VFD
+고전 그래픽 및 VFD
+
+#
+Clear
+초기화
+
+#
+Cocktail
+칵테일
+
+#
+Code
+코드
+
+#
+Coin
+동전
+
+#
+Coin 1
+동전 1
+
+#
+Coin 2
+동전 2
+
+#
+Coin 3
+동전 3
+
+#
+Coin 4
+동전 4
+
+#
+Coin 5
+동전 5
+
+#
+Coin 6
+동전 6
+
+#
+Coin 7
+동전 7
+
+#
+Coin 8
+동전 8
+
+#
+Coin A
+동전 A
+
+#
+Coin B
+동전 B
+
+#
+Coin Chutes
+동전 투입구
+
+#
+Coin Chutes?
+동전 투입구
+
+#
+Coin Mode
+동전 유형
+
+#
+Coin Slot
+동전 슬롯
+
+#
+Coin Slots
+동전 슬롯
+
+#
+Coinage
+동전
+
+#
+Color Overlay
+컬러 오버레이
+
+#
+Command List not available
+표시할 공략 목록이 없습니다
+
+#
+Comment
+설명
+
+#
+Common
+공통
+
+#
+Comparison
+비교
+
+#
+Comparison Option
+비교 옵션
+
+#
+Config Menu
+설정 메뉴
+
+#
+Configure General Inputs
+일반 입력 설정
+
+#
+Configure Watchpoints
+조사점 설정
+
+#
+Continue
+이어하기
+
+#
+Continue Mode
+이어하기 모드
+
+#
+Continue Price
+이어하기 금액
+
+#
+Continue Search
+찾기 계속
+
+#
+Continues
+이어하기
+
+#
+Contrast
+대비
+
+#
+Control Panel
+조종 패널
+
+#
+Control Type
+조종장치 종류
+
+#
+Controller
+조종장치
+
+#
+Controls
+조작
+
+#
+Copy Previous Value
+이전값 복사
+
+#
+Could not load controller file %s.cfg
+조종장치 파일 %s.cfg를 불러올 수 없습니다
+
+#
+Could not read MAME save file header
+MAME 저장 파일 헤더를 읽을 수 업습니다
+
+#
+Country
+국가
+
+#
+Create New Card
+새로운 카드 생성
+
+#
+Crop to Screen
+화면에 맞게 잘라냄
+
+#
+Current Data
+현재 데이터
+
+#
+Custom
+사용자 정의
+
+#
+Custom Buttons
+사용자 정의 버튼
+
+#
+DIAL
+다이얼
+
+#
+DOUBLEJOY16WAY:  %4d\n
+16방향듀얼스틱:  %4d\n
+
+#
+Data
+데이터
+
+#
+Data Shift
+데이터 시프트
+
+#
+Debug
+디버그
+
+#
+Decimal
+10진수
+
+#
+Decoding (%d%%)
+디코딩 (%d%%)
+
+#
+Decoding Graphics
+그래픽 디코딩
+
+#
+Decrypting %d%%
+암호화 해독 %d%%
+
+#
+Default
+기본값
+
+#
+Default Search Speed
+기본 탐색 속도
+
+#
+Delay
+딜레이
+
+#
+Delete Cheat
+치트 제거
+
+#
+Demo Sounds
+데모화면 음악
+
+#
+Description
+설명
+
+#
+Dial
+다이얼
+
+#
+Dial 2
+다이얼 2
+
+#
+Dial 3
+다이얼 3
+
+#
+Dial 4
+다이얼 4
+
+#
+Dial 5
+다이얼 5
+
+#
+Dial 6
+다이얼 6
+
+#
+Dial 7
+다이얼 7
+
+#
+Dial 8
+다이얼 8
+
+#
+Dial V
+다이얼 V
+
+#
+Dial V 2
+다이얼 V 2
+
+#
+Dial V 3
+다이얼 V 3
+
+#
+Dial V 4
+다이얼 V 4
+
+#
+Dial V 5
+다이얼 V 5
+
+#
+Dial V 6
+다이얼 V 6
+
+#
+Dial V 7
+다이얼 V 7
+
+#
+Dial V 8
+다이얼 V 8
+
+#
+Difficulty
+난이도
+
+#
+Difficulty 1
+난이도 1
+
+#
+Difficulty 2
+난이도 2
+
+#
+Digital Speed
+디지털 속도
+
+#
+Dip Switches
+딥스위치
+
+#
+Directories
+디렉토리
+
+#
+Disable All Coins
+모든 코인 비활성화
+
+#
+Disabled
+비활성화
+
+#
+Display Type
+화면 유형
+
+#
+Do Search
+찾기
+
+#
+Domestic
+국내판
+
+#
+Door Interlock
+기계 내부잠금
+
+#
+Double Up
+두배로
+
+#
+Driver Configuration
+드라이버 설정
+
+#
+Driverinfo not available
+표시할 드라이버 정보가 없습니다
+
+#
+Dual
+듀얼
+
+#
+Dual Over-Under
+듀얼 상-하
+
+#
+Dual Over-Under (Gapless)
+듀얼 상-하 (빈틈없음)
+
+#
+Dual Side-by-Side
+듀얼 좌-우
+
+#
+Dual Side-by-Side (Gapless)
+듀얼 좌-우 (빈틈없음)
+
+#
+Dual Under-Over
+듀얼 위-아래
+
+#
+Dual Under-Over (Gapless)
+듀얼 하-상 (빈틈없음)
+
+#
+EEPROM
+EEPROM
+
+#
+ERROR: %s/%s: IPS data is empty\n
+오류: %s/%s: IPS 데이터가 없습니다\n
+
+#
+ERROR: required files are missing, the game cannot be run.
+오류: 필요한 파일이 없습니다, 게임 실행이 불가능합니다.
+
+#
+EXPECTED: %s\n
+  기대값: %s\n
+
+#
+Easier
+좀더 쉬움
+
+#
+Easiest
+매우 쉬움
+
+#
+Easy
+쉬움
+
+#
+Edit Cheat
+치트 수정
+
+#
+Eject Current Card
+현재 카드 꺼내기
+
+#
+Element Size
+요소 크기
+
+#
+Elements Per Line
+행간 요소 수
+
+#
+Enable/Disable a Cheat
+치트 활성/비활성
+
+#
+End of playback
+재생 종료
+
+#
+End of playback - %i frames - Average speed %f%%
+재생 종료 - %i 프레임 - 평균 속도 %f%%
+
+#
+Endianness
+엔디아니스
+
+#
+Energy (Less or Greater)
+에너지 (작게 / 크게)
+
+#
+Energy (greater or less)
+에너지 (크거나 작거나)
+
+#
+England
+영국
+
+#
+English
+영어
+
+#
+Enter BIOS
+바이오스 입력
+
+#
+Equal
+같음
+
+#
+Error
+오류
+
+#
+Error creating memory card
+메모리카드 생성 오류
+
+#
+Error loading memory card
+메모리카드 읽기 오류
+
+#
+Error: 
+오류: 
+
+#
+Error: Failed to load state
+오류: 상태 읽기 실패
+
+#
+Error: Failed to save state
+오류: 상태 저장 실패
+
+#
+Error: Unable to save state due to illegal registrations. See error.log for details.
+오류: 잘못된 등록으로 인해 상태저장 불가. 자세한 정보는 error.log에
+
+#
+Error: illegal caption file
+오류: 잘못된 캡션 파일
+
+#
+Error: option %s expected a parameter\n
+오류: %s 옵션 매개변수가 필요\n
+
+#
+Error: unknown option: %s\n
+오류: 알수 없는 옵션: %s\n
+
+#
+Europe
+유럽
+
+#
+Exit
+끝내기
+
+#
+Expert
+전문가
+
+#
+Extended INP file info:\n
+확장 INP 파일 정보:\n
+
+#
+FRONTEND COMMANDS
+프론트엔드 명령
+
+#
+Failed to allocate %d bytes (%s:%d)
+%d 바이트 할당 실패 (%s:%d)
+
+#
+Failed to open file for playback
+재생 파일 열기 실패
+
+#
+Failed to open file for recording
+기록 파일 열기 실패
+
+#
+Fast
+빠름
+
+#
+Fast Forward
+빨리 감기
+
+#
+Fatal error: %s\nCaused by assert: %s:%d: %s
+심각한 오류: %s\n발생 원인: %s:%d: %s
+
+#
+Fatal error: %s (%s:%d)
+심각한 오류: %s (%s:%d)
+
+#
+First Bonus
+첫번째 보너스
+
+#
+First Data
+첫번째 데이터
+
+#
+Flip Screen
+화면 반전
+
+#
+Flip X
+좌우 뒤집기
+
+#
+Flip Y
+상하 뒤집기
+
+#
+Force Range
+포스 레인지
+
+#
+Foreign
+외국
+
+#
+Frameskip Dec
+프레임스킵 비율 감소
+
+#
+Frameskip Inc
+프레임스킵 비율 증가
+
+#
+Free
+프리
+
+#
+Free Play
+프리 플레이
+
+#
+Freeze
+일시정지
+
+#
+French
+프랑스
+
+#
+GAME: 
+게임:
+
+#
+Game
+게임
+
+#
+Game Documents
+게임 문서
+
+#
+Game Driverinfo
+게임 드라이버 정보
+
+#
+Game History
+게임 역사
+
+#
+Game Information
+게임 정보
+
+#
+Game Mameinfo
+게임 마메정보
+
+#
+Game Slots
+게임 슬롯
+
+#
+Game Story
+게임 줄거리
+
+#
+Game Time
+게임 시간
+
+#
+Gamma
+감마
+
+#
+General
+일반
+
+#
+General Help
+일반적 도움말
+
+#
+Generating cached BDF font...\n
+BDF폰트 캐시 생성 중...\n
+
+#
+German
+독일어
+
+#
+Germany
+독일
+
+#
+Gfx: %s, Sound: %s
+Gfx: %s, 사운드: %s
+
+#
+Gray
+회색
+
+#
+Greater
+큼
+
+#
+Greater Or Equal
+이상
+
+#
+Greater or Equal
+이상
+
+#
+HI/TRUE BITMAP : %3d  + %3d\n
+HI/TRUE 비트맵 : %3d  + %3d\n
+
+#
+HIGHLIGHTS     : %3d  + %3d\n
+하이라이트     : %3d  + %3d\n
+
+#
+Hard
+어려움
+
+#
+Harder
+좀더 어려움
+
+#
+Hardest
+매우 어려움
+
+#
+Help
+도움말
+
+#
+Help not available yet
+도움말은 준비중입니다
+
+#
+Hex
+2진값
+
+#
+Hide Backdrops
+배경 숨기기
+
+#
+Hide Bezels
+베젤 숨기기
+
+#
+Hide Overlays
+오버레이 숨기기
+
+#
+High
+높음
+
+#
+High Scores
+최고점수
+
+#
+Higher
+더 높음
+
+#
+Highest
+가장 높음
+
+#
+Hispanic
+히스패닉
+
+#
+History not available
+표시할 역사 내용이 없습니다
+
+#
+Home
+가정용
+
+#
+Hong Kong
+홍콩
+
+#
+Horiz position
+수평 위치
+
+#
+Horiz stretch
+수평 늘리기
+
+#
+Horizontal
+가로화면
+
+#
+Horizontally
+수평
+
+#
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
+만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 플레이한다면, ESC 를 누르십시오.
+
+#
+IMPERFECT COLORS   : %3d  %3d\n
+불완전한 색상      : %3d  %3d\n
+
+#
+IMPERFECT GRAPHICS : %3d  %3d\n
+불완전한 그래픽    : %3d  %3d\n
+
+#
+IMPERFECT SOUND    : %3d  %3d\n
+불완전한 사운드    : %3d  %3d\n
+
+#
+INCORRECT CHECKSUM:\n
+잘못된 체크섬:\n
+
+#
+INCORRECT LENGTH: %d bytes\n
+잘못된 길이:: %d bytes\n
+
+#
+INVALID
+무효
+
+#
+Ignore Decrement
+감소 무시
+
+#
+Ignore Decrement By
+감소 무시
+
+#
+Illegal boolean value for %s; reverting to %d\n
+잘못된 boolean 값 %s; 값 복원 %d\n
+
+#
+Illegal float value for %s; keeping value of %s\n
+%s의 잘못된 float 값; %s 값 유지\n
+
+#
+Illegal float value for %s; reverting to %f\n
+잘못된 float 값 %s; 값 복원 %f\n
+
+#
+Illegal integer value for %s; keeping value of %s\n
+%s의 잘못된 integer 값; %s 값 유지\n
+
+#
+Illegal integer value for %s; reverting to %d\n
+잘못된 integer 값 %s; 값 복원 %d\n
+
+#
+Illegal value for %s = %s\n
+잘못된 값 %s = %s\n
+
+#
+Image Enhancement
+이미지 개선
+
+#
+Imperfect
+불완전함
+
+#
+Increased By Value
+값 증가
+
+#
+Infinite
+무한
+
+#
+Infinite Lives
+생명 무한
+
+#
+Infinite Time
+시간 무제한
+
+#
+Initialize Memory
+메모리 초기화
+
+#
+Initializing...
+초기화중...
+
+#
+Input (general)
+입력 (일반)
+
+#
+Input (this game)
+입력 (이 게임)
+
+#
+Input file is for game '%s', not for current game '%s'\n
+ '%s' 게임의 입력 파일 입니다(현재 '%s')\n
+
+#
+Input: Adding %s #%d: %s\n
+입력: 추가 %s #%d: %s\n
+
+#
+Input: Autoenabling %s due to presence of a %s\n
+입력: %s 자동 활성화 - %s 발견\n
+
+#
+Input: Changing default joystick map
+입력: 기본 조이스틱 배치 변경
+
+#
+Input: Default joystick map
+입력: 기본 조이스틱 배치
+
+#
+Insert
+삽입
+
+#
+International
+인터네셔널
+
+#
+Invalid %s value %s; reverting to keyboard\n
+잘못된 %s 값 %s; 키보드로 전환\n
+
+#
+Invalid %s value (must be between %f and %f); keeping value of %s\n
+잘못된 %s 값 (%f에서 %f사이가 유효); %s값 유지\n
+
+#
+Invalid %s value (must be between %i and %i); keeping value of %s\n
+잘못된 %s 값 (%i에서 %i사이가 유효); %s값 유지\n
+
+#
+Invalid bitmap format!
+잘못된 비트맵 폰트!
+
+#
+Invalid joystick map: %s\n
+잘못된 조이스틱 배치: %s\n
+
+#
+Inverted
+반전됨
+
+#
+Invincibility
+무적
+
+#
+Invulnerability
+무적
+
+#
+Italian
+이탈리아어
+
+#
+Italy
+이탈리아
+
+#
+Japan
+일본
+
+#
+Japanese
+일본어
+
+#
+Joystick
+조이스틱
+
+#
+Kan
+간
+
+#
+Keep
+보관
+
+#
+Keyboard
+키보드
+
+#
+Korea
+한국
+
+#
+LCD%d Pixel Aspect (%d:%d)
+LCD%d 픽셀비율 (%d:%d)
+
+#
+LCD%d Standard (%d:%d)
+LCD%d 일반비율 (%d:%d)
+
+#
+LHS
+LHS
+
+#
+Label
+라벨
+
+#
+Label Type
+라벨 유형
+
+#
+Lamps
+램프
+
+#
+Lamps and Timer
+램프와 타이머
+
+#
+Language
+언어
+
+#
+Left Half
+왼쪽 절반
+
+#
+Length
+길이
+
+#
+Less
+미만
+
+#
+Less Or Equal
+이하
+
+#
+Less or Equal
+이하
+
+#
+Level Select
+레벨 선택
+
+#
+Light Gun
+라이트건
+
+#
+Lightgun
+라이트건
+
+#
+Lightgun X
+라이트건 X
+
+#
+Lightgun X 2
+라이트건 X 2
+
+#
+Lightgun X 3
+라이트건 X 3
+
+#
+Lightgun X 4
+라이트건 X 4
+
+#
+Lightgun X 5
+라이트건 X 5
+
+#
+Lightgun X 6
+라이트건 X 6
+
+#
+Lightgun X 7
+라이트건 X 7
+
+#
+Lightgun X 8
+라이트건 X 8
+
+#
+Lightgun Y
+라이트건 Y
+
+#
+Lightgun Y 2
+라이트건 Y 2
+
+#
+Lightgun Y 3
+라이트건 Y 3
+
+#
+Lightgun Y 4
+라이트건 Y 4
+
+#
+Lightgun Y 5
+라이트건 Y 5
+
+#
+Lightgun Y 6
+라이트건 Y 6
+
+#
+Lightgun Y 7
+라이트건 Y 7
+
+#
+Lightgun Y 8
+라이트건 Y 8
+
+#
+Link Extension
+연결 확장
+
+#
+Lives
+생명
+
+#
+Lives (or another value)
+생명 (또는 다른값)
+
+#
+Load Old Format Code
+이전 포맷 코드 불러오기
+
+#
+Load Selected Card
+선택된 카드 읽기
+
+#
+Load State
+상태 읽기
+
+#
+Load cancelled
+읽기 취소
+
+#
+Load from position %c
+위치 %c 에서 읽음
+
+#
+Loading (%d%%)
+불러오는중 (%d%%)
+
+#
+Loading BDF font... (%d characters loaded)\n
+BDF 폰트 불러오는 중... (%d 문자 불러옴)\n
+
+#
+Loading Complete
+불러오기 완료
+
+#
+Location
+위치
+
+#
+Low
+낮음
+
+#
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
+M.A.M.E. v%s - 멀티플 아케이드 머신 에뮬레이터\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
+
+#
+MAME Statistics
+MAME 통계
+
+#
+MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
+MAME 는 에뮬레이터입니다: MAME는 다양한 아케이드 머신의 특성을 재현해 냅니다.\n하지만 하드웨어는 소프트웨어 없이는 무용지물입니다. 그렇기 때문에 해당\n하드웨어에서 실행되는 롬 이미지가 필요한 것입니다. 그러한 롬들은 다른 상용\n프로그램과 마찬가지로 저작권이 보호되는 상품이고 따라서 원본 아케이드 머신을\n소유하지 않는한 불법이 될수 있습니다. 당연히 롬은 MAME와 함께 배포되지 않습니다.\nMAME와 함께 롬을 배포하는 일은 저작권법 위반이며 발견시 제작자에게 알려서\n법적인 조치가 취해지도록 해야합니다.\n
+
+#
+MAMEInfo:\n
+MAME정보:\n
+
+#
+Machine Mode
+기기 모드
+
+#
+Main Screen Pixel Aspect (%d:%d)
+메인 화면 픽셀비율 (%d:%d)
+
+#
+Main Screen Standard (%d:%d)
+메인화면 일반비율 (%d:%d)
+
+#
+Mameinfo not available
+표시할 마메정보 내용이 없습니다
+
+#
+Manufacturer
+제작사
+
+#
+Mapped Memory
+할당된 메모리
+
+#
+Mask
+마스크
+
+#
+Match to Write
+기록 일치
+
+#
+Matches found
+일치된 결과를 찾음
+
+#
+Max
+최대
+
+#
+Max Players
+최대 플레이어
+
+#
+Maximum Boundary
+최대 경계
+
+#
+Medium
+중간
+
+#
+Memory Card
+메모리카드
+
+#
+Memory card created
+메모리카드 생성됨
+
+#
+Memory card ejected
+메모리카드 꺼냄
+
+#
+Memory card loaded
+메모리카드 불러옴
+
+#
+Minimum
+최소
+
+#
+Minimum Boundary
+최소 경계
+
+#
+Minimum Displayed Value
+최소 표시값
+
+#
+Minimum Value
+최소 값
+
+#
+Monitor
+모니터
+
+#
+Mono
+모노
+
+#
+More Info
+추가 정보
+
+#
+More Info for
+추가 정보
+
+#
+Mouse
+마우스
+
+#
+Mouse X
+마우스 X
+
+#
+Mouse X 2
+마우스 X 2
+
+#
+Mouse X 3
+마우스 X 3
+
+#
+Mouse X 4
+마우스 X 4
+
+#
+Mouse X 5
+마우스 X 5
+
+#
+Mouse X 6
+마우스 X 6
+
+#
+Mouse X 7
+마우스 X 7
+
+#
+Mouse X 8
+마우스 X 8
+
+#
+Mouse Y
+마우스 Y
+
+#
+Mouse Y 2
+마우스 Y 2
+
+#
+Mouse Y 3
+마우스 Y 3
+
+#
+Mouse Y 4
+마우스 Y 4
+
+#
+Mouse Y 5
+마우스 Y 5
+
+#
+Mouse Y 6
+마우스 Y 6
+
+#
+Mouse Y 7
+마우스 Y 7
+
+#
+Mouse Y 8
+마우스 Y 8
+
+#
+Move User Interface
+사용자 인터페이스 이동
+
+#
+NA
+이용불가
+
+#
+NEEDS REDUMP\n
+재덤프 필요\n
+
+#
+NO COCKTAIL        : %3d  %3d\n
+칵테일 없음        : %3d  %3d\n
+
+#
+NO GOOD DUMP KNOWN\n
+정확하게 덤프된 롬이 없음\n
+
+#
+NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
+정확한 롬이 없음   : %3d  %3d\n(%3d 롬 / %d 게임)\n
+
+#
+NO MATCH\n
+일치 안함\n
+
+#
+NO SOUND           : %3d  %3d\n
+사운드 없음        : %3d  %3d\n
+
+#
+NON-WORKING        : %3d  %3d\n
+실행 불가능        : %3d  %3d\n
+
+#
+NOT A ROM\n
+롬 파일이 아님\n
+
+#
+NOT FOUND\n
+찾지 못함\n
+
+#
+NOT FOUND (BIOS)\n
+찾지 못함 (BIOS)\n
+
+#
+NOT FOUND (shared with parent)\n
+찾지 못함 (부모롬에서 공유)\n
+
+#
+NOT FOUND - NO GOOD DUMP KNOWN\n
+찾지 못함 - 정확하게 덤프된 롬이 없음\n
+
+#
+NOT FOUND BUT OPTIONAL\n
+찾지 못했지만 필수파일은 아님\n
+
+#
+Name
+이름
+
+#
+Name:     Description:\n
+이름:     설명:\n
+
+#
+Name:    Clone of:\n
+이름:    부모롬 이름:\n
+
+#
+Near To
+비슷함
+
+#
+Next Game
+다음 게임
+
+#
+Nihongo
+일본어
+
+#
+No
+번호
+
+#
+No Driver Loaded
+드라이버 없음
+
+#
+No previous values saved
+이전값이 저장되지 않음
+
+#
+None
+없음
+
+#
+Normal
+보통
+
+#
+Normal/Delay
+보통/딜레이
+
+#
+Not Equal
+같지 않음
+
+#
+Null
+널
+
+#
+Number of bytes
+바이트 수
+
+#
+OK
+확인
+
+#
+OPTIONAL %s NOT FOUND\n
+부가파일 %s 찾지 못함\n
+
+#
+Off
+끄기
+
+#
+On
+켜기
+
+#
+On Screen Display
+OSD 표시화면
+
+#
+One Shot
+한 발
+
+#
+One match found - added to list
+한개 발견 - 리스트에 추가됨
+
+#
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
+하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.
+
+#
+Operation
+작동
+
+#
+Options
+옵션
+
+#
+Orientation
+화면방향
+
+#
+Other Controls
+기타 추가 조작
+
+#
+Otherwise, type OK or move the joystick left then right to continue
+아니라면, OK를 입력하거 조이스틱을 좌우로 움직여 진행하십시오.
+
+#
+Out of memory
+메모리 부족
+
+#
+Overall: NOT WORKING
+종합: 실행 불가
+
+#
+Overall: Unemulated Protection
+종합: 암호화 에뮬 못함
+
+#
+Overall: Working
+종합: 실행 가능
+
+#
+Overclock
+오버클럭
+
+#
+Overseas
+해외
+
+#
+P1 Big
+P1 큼
+
+#
+P1 Button 1
+P1 버튼 1
+
+#
+P1 Button 10
+P1 버튼 10
+
+#
+P1 Button 11
+P1 버튼 11
+
+#
+P1 Button 12
+P1 버튼 12
+
+#
+P1 Button 13
+P1 버튼 13
+
+#
+P1 Button 14
+P1 버튼 14
+
+#
+P1 Button 15
+P1 버튼 15
+
+#
+P1 Button 16
+P1 버튼 16
+
+#
+P1 Button 2
+P1 버튼 2
+
+#
+P1 Button 3
+P1 버튼 3
+
+#
+P1 Button 4
+P1 버튼 4
+
+#
+P1 Button 5
+P1 버튼 5
+
+#
+P1 Button 6
+P1 버튼 6
+
+#
+P1 Button 7
+P1 버튼 7
+
+#
+P1 Button 8
+P1 버튼 8
+
+#
+P1 Button 9
+P1 버튼 9
+
+#
+P1 Custom 1
+P1 사용자 정의 1
+
+#
+P1 Custom 2
+P1 사용자 정의 2
+
+#
+P1 Custom 3
+P1 사용자 정의 3
+
+#
+P1 Custom 4
+P1 사용자 정의 4
+
+#
+P1 Down
+P1 아래
+
+#
+P1 Left
+P1 왼쪽
+
+#
+P1 Left/Down
+P1 왼쪽/아래
+
+#
+P1 Left/Left
+P1 왼쪽/왼쪽
+
+#
+P1 Left/Right
+P1 왼쪽/오른쪽
+
+#
+P1 Left/Up
+P1 왼쪽/위
+
+#
+P1 Mahjong A
+P1 마작 A
+
+#
+P1 Mahjong B
+P1 마작 B
+
+#
+P1 Mahjong Bet
+P1 마작 배팅
+
+#
+P1 Mahjong Big
+P1 마작 크게
+
+#
+P1 Mahjong C
+P1 마작 C
+
+#
+P1 Mahjong Chi
+P1 마작 치
+
+#
+P1 Mahjong D
+P1 마작 D
+
+#
+P1 Mahjong Double Up
+P1 마작 두배
+
+#
+P1 Mahjong E
+P1 마작 E
+
+#
+P1 Mahjong F
+P1 마작 F
+
+#
+P1 Mahjong Flip Flop
+P1 마작 뒤집기
+
+#
+P1 Mahjong G
+P1 마작 G
+
+#
+P1 Mahjong H
+P1 마작 H
+
+#
+P1 Mahjong I
+P1 마작 I
+
+#
+P1 Mahjong J
+P1 마작 J
+
+#
+P1 Mahjong K
+P1 마작 K
+
+#
+P1 Mahjong Kan
+P1 마작 칸
+
+#
+P1 Mahjong L
+P1 마작 L
+
+#
+P1 Mahjong Last Chance
+P1 마작 마지막 찬스
+
+#
+P1 Mahjong M
+P1 마작 M
+
+#
+P1 Mahjong N
+P1 마작 N
+
+#
+P1 Mahjong O
+P1 마작 O
+
+#
+P1 Mahjong P
+P1 마작 P
+
+#
+P1 Mahjong Pon
+P1 마작 폰
+
+#
+P1 Mahjong Q
+P1 마작 Q
+
+#
+P1 Mahjong Reach
+P1 마작 리치
+
+#
+P1 Mahjong Ron
+P1 마작 론
+
+#
+P1 Mahjong Score
+P1 마작 점수
+
+#
+P1 Mahjong Small
+P1 마작 작게
+
+#
+P1 Pedal 1
+P1 페달 1
+
+#
+P1 Pedal 2
+P1 페달 2
+
+#
+P1 Pedal 3
+P1 페달 3
+
+#
+P1 Right
+P1 오른쪽
+
+#
+P1 Right/Down
+P1 오른쪽/아래
+
+#
+P1 Right/Left
+P1 오른쪽/왼쪽
+
+#
+P1 Right/Right
+P1 오른쪽/오른쪽
+
+#
+P1 Right/Up
+P1 오른쪽/위
+
+#
+P1 Select
+P1 선택
+
+#
+P1 Small
+P1 작음
+
+#
+P1 Start
+P1 시작
+
+#
+P1 Toggle Autofire
+P1 연사 사용/해제
+
+#
+P1 Up
+P1 위
+
+#
+P2 Button 1
+P2 버튼 1
+
+#
+P2 Button 10
+P2 버튼 10
+
+#
+P2 Button 11
+P2 버튼 11
+
+#
+P2 Button 12
+P2 버튼 12
+
+#
+P2 Button 13
+P2 버튼 13
+
+#
+P2 Button 14
+P2 버튼 14
+
+#
+P2 Button 15
+P2 버튼 15
+
+#
+P2 Button 16
+P2 버튼 16
+
+#
+P2 Button 2
+P2 버튼 2
+
+#
+P2 Button 3
+P2 버튼 3
+
+#
+P2 Button 4
+P2 버튼 4
+
+#
+P2 Button 5
+P2 버튼 5
+
+#
+P2 Button 6
+P2 버튼 6
+
+#
+P2 Button 7
+P2 버튼 7
+
+#
+P2 Button 8
+P2 버튼 8
+
+#
+P2 Button 9
+P2 버튼 9
+
+#
+P2 Custom 1
+P2 사용자 정의 1
+
+#
+P2 Custom 2
+P2 사용자 정의 2
+
+#
+P2 Custom 3
+P2 사용자 정의 3
+
+#
+P2 Custom 4
+P2 사용자 정의 4
+
+#
+P2 Down
+P2 아래
+
+#
+P2 Left
+P2 왼쪽
+
+#
+P2 Left/Down
+P2 왼쪽/아래
+
+#
+P2 Left/Left
+P2 왼쪽/왼쪽
+
+#
+P2 Left/Right
+P2 왼쪽/오른쪽
+
+#
+P2 Left/Up
+P2 왼쪽/위
+
+#
+P2 Mahjong A
+P2 마작 A
+
+#
+P2 Mahjong B
+P2 마작 B
+
+#
+P2 Mahjong Bet
+P2 마작 배팅
+
+#
+P2 Mahjong Big
+P2 마작 크게
+
+#
+P2 Mahjong C
+P2 마작 C
+
+#
+P2 Mahjong Chi
+P2 마작 치
+
+#
+P2 Mahjong D
+P2 마작 D
+
+#
+P2 Mahjong Double Up
+P2 마작 두배
+
+#
+P2 Mahjong E
+P2 마작 E
+
+#
+P2 Mahjong F
+P2 마작 F
+
+#
+P2 Mahjong Flip Flop
+P2 마작 뒤집기
+
+#
+P2 Mahjong G
+P2 마작 G
+
+#
+P2 Mahjong H
+P2 마작 H
+
+#
+P2 Mahjong I
+P2 마작 I
+
+#
+P2 Mahjong J
+P2 마작 J
+
+#
+P2 Mahjong K
+P2 마작 K
+
+#
+P2 Mahjong Kan
+P2 마작 칸
+
+#
+P2 Mahjong L
+P2 마작 L
+
+#
+P2 Mahjong Last Chance
+P2 마작 마지막 기회
+
+#
+P2 Mahjong M
+P2 마작 M
+
+#
+P2 Mahjong N
+P2 마작 N
+
+#
+P2 Mahjong O
+P2 마작 O
+
+#
+P2 Mahjong P
+P2 마작 P
+
+#
+P2 Mahjong Pon
+P2 마작 폰
+
+#
+P2 Mahjong Q
+P2 마작 Q
+
+#
+P2 Mahjong Reach
+P2 마작 리치
+
+#
+P2 Mahjong Ron
+P2 마작 론
+
+#
+P2 Mahjong Score
+P2 마작 점수
+
+#
+P2 Mahjong Small
+P2 마작 작게
+
+#
+P2 Pedal 1
+P2 페달 1
+
+#
+P2 Pedal 2
+P2 페달 2
+
+#
+P2 Pedal 3
+P2 페달 3
+
+#
+P2 Right
+P2 오른쪽
+
+#
+P2 Right/Down
+P2 오른쪽/아래
+
+#
+P2 Right/Left
+P2 오른쪽/왼쪽
+
+#
+P2 Right/Right
+P2 오른쪽/오른쪽
+
+#
+P2 Right/Up
+P2 오른쪽/위
+
+#
+P2 Select
+P2 선택
+
+#
+P2 Start
+P2 시작
+
+#
+P2 Toggle Autofire
+P2 연사 사용/해제
+
+#
+P2 Up
+P2 위
+
+#
+P3 Button 1
+P3 버튼 1
+
+#
+P3 Button 10
+P3 버튼 10
+
+#
+P3 Button 11
+P3 버튼 11
+
+#
+P3 Button 12
+P3 버튼 12
+
+#
+P3 Button 13
+P3 버튼 13
+
+#
+P3 Button 14
+P3 버튼 14
+
+#
+P3 Button 15
+P3 버튼 15
+
+#
+P3 Button 16
+P3 버튼 16
+
+#
+P3 Button 2
+P3 버튼 2
+
+#
+P3 Button 3
+P3 버튼 3
+
+#
+P3 Button 4
+P3 버튼 4
+
+#
+P3 Button 5
+P3 버튼 5
+
+#
+P3 Button 6
+P3 버튼 6
+
+#
+P3 Button 7
+P3 버튼 7
+
+#
+P3 Button 8
+P3 버튼 8
+
+#
+P3 Button 9
+P3 버튼 9
+
+#
+P3 Custom 1
+P3 사용자 정의 1
+
+#
+P3 Custom 2
+P3 사용자 정의 2
+
+#
+P3 Custom 3
+P3 사용자 정의 3
+
+#
+P3 Custom 4
+P3 사용자 정의 4
+
+#
+P3 Down
+P3 아래
+
+#
+P3 Left
+P3 왼쪽
+
+#
+P3 Left/Down
+P3 왼쪽/아래
+
+#
+P3 Left/Left
+P3 왼쪽/왼쪽
+
+#
+P3 Left/Right
+P3 왼쪽/오른쪽
+
+#
+P3 Left/Up
+P3 왼쪽/위
+
+#
+P3 Pedal 1
+P3 페달 1
+
+#
+P3 Pedal 2
+P3 페달 2
+
+#
+P3 Pedal 3
+P3 페달 3
+
+#
+P3 Right
+P3 오른쪽
+
+#
+P3 Right/Down
+P3 오른쪽/아래
+
+#
+P3 Right/Left
+P3 오른쪽/왼쪽
+
+#
+P3 Right/Right
+P3 오른쪽/오른쪽
+
+#
+P3 Right/Up
+P3 오른쪽/위
+
+#
+P3 Select
+P3 선택
+
+#
+P3 Start
+P3 시작
+
+#
+P3 Toggle Autofire
+P3 연사 사용/해제
+
+#
+P3 Up
+P3 위
+
+#
+P4 Button 1
+P4 버튼 1
+
+#
+P4 Button 10
+P4 버튼 10
+
+#
+P4 Button 11
+P4 버튼 11
+
+#
+P4 Button 12
+P4 버튼 12
+
+#
+P4 Button 13
+P4 버튼 13
+
+#
+P4 Button 14
+P4 버튼 14
+
+#
+P4 Button 15
+P4 버튼 15
+
+#
+P4 Button 16
+P4 버튼 16
+
+#
+P4 Button 2
+P4 버튼 2
+
+#
+P4 Button 3
+P4 버튼 3
+
+#
+P4 Button 4
+P4 버튼 4
+
+#
+P4 Button 5
+P4 버튼 5
+
+#
+P4 Button 6
+P4 버튼 6
+
+#
+P4 Button 7
+P4 버튼 7
+
+#
+P4 Button 8
+P4 버튼 8
+
+#
+P4 Button 9
+P4 버튼 9
+
+#
+P4 Custom 1
+P4 사용자 정의 1
+
+#
+P4 Custom 2
+P4 사용자 정의 2
+
+#
+P4 Custom 3
+P4 사용자 정의 3
+
+#
+P4 Custom 4
+P4 사용자 정의 4
+
+#
+P4 Down
+P4 아래
+
+#
+P4 Left
+P4 왼쪽
+
+#
+P4 Left/Down
+P4 왼쪽/아래
+
+#
+P4 Left/Left
+P4 왼쪽/왼쪽
+
+#
+P4 Left/Right
+P4 왼쪽/오른쪽
+
+#
+P4 Left/Up
+P4 왼쪽/위
+
+#
+P4 Pedal 1
+P4 페달 1
+
+#
+P4 Pedal 2
+P4 페달 2
+
+#
+P4 Pedal 3
+P4 페달 3
+
+#
+P4 Right
+P4 오른쪽
+
+#
+P4 Right/Down
+P4 오른쪽/아래
+
+#
+P4 Right/Left
+P4 오른쪽/왼쪽
+
+#
+P4 Right/Right
+P4 오른쪽/오른쪽
+
+#
+P4 Right/Up
+P4 오른쪽/위
+
+#
+P4 Select
+P4 선택
+
+#
+P4 Start
+P4 시작
+
+#
+P4 Toggle Autofire
+P4 연사 사용/해제
+
+#
+P4 Up
+P4 위
+
+#
+P5 Button 1
+P5 버튼 1
+
+#
+P5 Button 10
+P5 버튼 10
+
+#
+P5 Button 11
+P5 버튼 11
+
+#
+P5 Button 12
+P5 버튼 12
+
+#
+P5 Button 13
+P5 버튼 13
+
+#
+P5 Button 14
+P5 버튼 14
+
+#
+P5 Button 15
+P5 버튼 15
+
+#
+P5 Button 16
+P5 버튼 16
+
+#
+P5 Button 2
+P5 버튼 2
+
+#
+P5 Button 3
+P5 버튼 3
+
+#
+P5 Button 4
+P5 버튼 4
+
+#
+P5 Button 5
+P5 버튼 5
+
+#
+P5 Button 6
+P5 버튼 6
+
+#
+P5 Button 7
+P5 버튼 7
+
+#
+P5 Button 8
+P5 버튼 8
+
+#
+P5 Button 9
+P5 버튼 9
+
+#
+P5 Custom 1
+P5 사용자 정의 1
+
+#
+P5 Custom 2
+P5 사용자 정의 2
+
+#
+P5 Custom 3
+P5 사용자 정의 3
+
+#
+P5 Custom 4
+P5 사용자 정의 4
+
+#
+P5 Down
+P5 아래
+
+#
+P5 Left
+P5 왼쪽
+
+#
+P5 Left/Down
+P5 왼쪽/아래
+
+#
+P5 Left/Left
+P5 왼쪽/왼쪽
+
+#
+P5 Left/Right
+P5 왼쪽/오른쪽
+
+#
+P5 Left/Up
+P5 왼쪽/위
+
+#
+P5 Pedal 1
+P5 페달 1
+
+#
+P5 Pedal 2
+P5 페달 3
+
+#
+P5 Pedal 3
+P5 페달 3
+
+#
+P5 Right
+P5 오른쪽
+
+#
+P5 Right/Down
+P5 오른쪽/아래
+
+#
+P5 Right/Left
+P5 오른쪽/왼쪽
+
+#
+P5 Right/Right
+P5 오른쪽/오른쪽
+
+#
+P5 Right/Up
+P5 오른쪽/위
+
+#
+P5 Select
+P5 선택
+
+#
+P5 Start
+P5 시작
+
+#
+P5 Toggle Autofire
+P5 연사 사용/해제
+
+#
+P5 Up
+P5 위
+
+#
+P6 Button 1
+P6 버튼 1
+
+#
+P6 Button 10
+P6 버튼 10
+
+#
+P6 Button 11
+P6 버튼 11
+
+#
+P6 Button 12
+P6 버튼 12
+
+#
+P6 Button 13
+P6 버튼 13
+
+#
+P6 Button 14
+P6 버튼 14
+
+#
+P6 Button 15
+P6 버튼 15
+
+#
+P6 Button 16
+P6 버튼 16
+
+#
+P6 Button 2
+P6 버튼 2
+
+#
+P6 Button 3
+P6 버튼 3
+
+#
+P6 Button 4
+P6 버튼 4
+
+#
+P6 Button 5
+P6 버튼 5
+
+#
+P6 Button 6
+P6 버튼 6
+
+#
+P6 Button 7
+P6 버튼 7
+
+#
+P6 Button 8
+P6 버튼 8
+
+#
+P6 Button 9
+P6 버튼 9
+
+#
+P6 Custom 1
+P6 사용자 설정 1
+
+#
+P6 Custom 2
+P6 사용자 설정 2
+
+#
+P6 Custom 3
+P6 사용자 설정 3
+
+#
+P6 Custom 4
+P6 사용자 설정 4
+
+#
+P6 Down
+P6 아래
+
+#
+P6 Left
+P6 왼쪽
+
+#
+P6 Left/Down
+P6 왼쪽/아래
+
+#
+P6 Left/Left
+P6 왼쪽/왼쪽
+
+#
+P6 Left/Right
+P6 왼쪽/오른쪽
+
+#
+P6 Left/Up
+P6 왼쪽/위
+
+#
+P6 Pedal 1
+P6 페달 1
+
+#
+P6 Pedal 2
+P6 페달 2
+
+#
+P6 Pedal 3
+P6 페달 3
+
+#
+P6 Right
+P6 오른쪽
+
+#
+P6 Right/Down
+P6 오른쪽/아래
+
+#
+P6 Right/Left
+P6 오른쪽/왼쪽
+
+#
+P6 Right/Right
+P6 오른쪽/오른쪽
+
+#
+P6 Right/Up
+P6 오른쪽/위
+
+#
+P6 Select
+P6 선택
+
+#
+P6 Start
+P6 시작
+
+#
+P6 Toggle Autofire
+P6 연사 사용/해제
+
+#
+P6 Up
+P6 위
+
+#
+P7 Button 1
+P7 버튼 1
+
+#
+P7 Button 10
+P7 버튼 10
+
+#
+P7 Button 11
+P7 버튼 11
+
+#
+P7 Button 12
+P7 버튼 12
+
+#
+P7 Button 13
+P7 버튼 13
+
+#
+P7 Button 14
+P7 버튼 14
+
+#
+P7 Button 15
+P7 버튼 15
+
+#
+P7 Button 16
+P7 버튼 16
+
+#
+P7 Button 2
+P7 버튼 2
+
+#
+P7 Button 3
+P7 버튼 3
+
+#
+P7 Button 4
+P7 버튼 4
+
+#
+P7 Button 5
+P7 버튼 5
+
+#
+P7 Button 6
+P7 버튼 6
+
+#
+P7 Button 7
+P7 버튼 7
+
+#
+P7 Button 8
+P7 버튼 8
+
+#
+P7 Button 9
+P7 버튼 9
+
+#
+P7 Custom 1
+P7 사용자 설정 1
+
+#
+P7 Custom 2
+P7 사용자 설정 2
+
+#
+P7 Custom 3
+P7 사용자 설정 3
+
+#
+P7 Custom 4
+P7 사용자 설정 4
+
+#
+P7 Down
+P7 아래
+
+#
+P7 Left
+P7 왼쪽
+
+#
+P7 Left/Down
+P7 왼쪽/아래
+
+#
+P7 Left/Left
+P7 왼쪽/왼쪽
+
+#
+P7 Left/Right
+P7 왼쪽/오른쪽
+
+#
+P7 Left/Up
+P7 왼쪽/위
+
+#
+P7 Pedal 1
+P7 페달 1
+
+#
+P7 Pedal 2
+P7 페달 2
+
+#
+P7 Pedal 3
+P7 페달 3
+
+#
+P7 Right
+P7 오른쪽
+
+#
+P7 Right/Down
+P7 오른쪽/아래
+
+#
+P7 Right/Left
+P7 오른쪽/왼쪽
+
+#
+P7 Right/Right
+P7 오른쪽/오른쪽
+
+#
+P7 Right/Up
+P7 오른쪽/위
+
+#
+P7 Select
+P7 선택
+
+#
+P7 Start
+P7 시작
+
+#
+P7 Toggle Autofire
+P7 연사 사용/해제
+
+#
+P7 Up
+P7 위
+
+#
+P8 Button 1
+P8 버튼 1
+
+#
+P8 Button 10
+P8 버튼 10
+
+#
+P8 Button 11
+P8 버튼 11
+
+#
+P8 Button 12
+P8 버튼 12
+
+#
+P8 Button 13
+P8 버튼 13
+
+#
+P8 Button 14
+P8 버튼 14
+
+#
+P8 Button 15
+P8 버튼 15
+
+#
+P8 Button 16
+P8 버튼 16
+
+#
+P8 Button 2
+P8 버튼 2
+
+#
+P8 Button 3
+P8 버튼 3
+
+#
+P8 Button 4
+P8 버튼 4
+
+#
+P8 Button 5
+P8 버튼 5
+
+#
+P8 Button 6
+P8 버튼 6
+
+#
+P8 Button 7
+P8 버튼 7
+
+#
+P8 Button 8
+P8 버튼 8
+
+#
+P8 Button 9
+P8 버튼 9
+
+#
+P8 Custom 1
+P8 사용자 설정 1
+
+#
+P8 Custom 2
+P8 사용자 설정 2
+
+#
+P8 Custom 3
+P8 사용자 설정 3
+
+#
+P8 Custom 4
+P8 사용자 설정 4
+
+#
+P8 Down
+P8 아래
+
+#
+P8 Left
+P8 왼쪽
+
+#
+P8 Left/Down
+P8 왼쪽/아래
+
+#
+P8 Left/Left
+P8 왼쪽/왼쪽
+
+#
+P8 Left/Right
+P8 왼쪽/오른쪽
+
+#
+P8 Left/Up
+P8 왼쪽/위
+
+#
+P8 Pedal 1
+P8 페달 1
+
+#
+P8 Pedal 2
+P8 페달 2
+
+#
+P8 Pedal 3
+P8 페달 3
+
+#
+P8 Right
+P8 오른쪽
+
+#
+P8 Right/Down
+P8 오른쪽/아래
+
+#
+P8 Right/Left
+P8 오른쪽/왼쪽
+
+#
+P8 Right/Right
+P8 오른쪽/오른쪽
+
+#
+P8 Right/Up
+P8 오른쪽/위
+
+#
+P8 Select
+P8 선택
+
+#
+P8 Start
+P8 시작
+
+#
+P8 Toggle Autofire
+P8 연사 사용/해제
+
+#
+P8 Up
+P8 위
+
+#
+Paddle
+핸들
+
+#
+Paddle 2
+핸들 2
+
+#
+Paddle 3
+핸들 3
+
+#
+Paddle 4
+핸들 4
+
+#
+Paddle 5
+핸들 5
+
+#
+Paddle 6
+핸들 6
+
+#
+Paddle 7
+핸들 7
+
+#
+Paddle 8
+핸들 8
+
+#
+Paddle V
+핸들 V
+
+#
+Paddle V 2
+핸들 V 2
+
+#
+Paddle V 3
+핸들 V 3
+
+#
+Paddle V 4
+핸들 V 4
+
+#
+Paddle V 5
+핸들 V 5
+
+#
+Paddle V 6
+핸들 V 6
+
+#
+Paddle V 7
+핸들 V 7
+
+#
+Paddle V 8
+핸들 V 8
+
+#
+Pause
+일시정지
+
+#
+Pedal
+페달
+
+#
+Pixel Aspect (%d:%d)
+픽셀비율 (%d:%d)
+
+#
+Play Time
+플레이 시간
+
+#
+Player %d
+플레이어 %d
+
+#
+Player 1 Controls
+플레이어 1 조작
+
+#
+Player 2 Controls
+플레이어 2 조작
+
+#
+Player 3 Controls
+플레이어 3 조작
+
+#
+Player 4 Controls
+플레이어 4 조작
+
+#
+Player 5 Controls
+플레이어 5 조작
+
+#
+Player 6 Controls
+플레이어 6 조작
+
+#
+Player 7 Controls
+플레이어 7 조작
+
+#
+Player 8 Controls
+플레이어 8 조작
+
+#
+Players
+플레이어
+
+#
+Playing back previously recorded game %s\n
+이전에 기록된 게임 재생 %s\n
+
+#
+Pon
+폰
+
+#
+Positional
+위치표시
+
+#
+Positional 2
+위치표시 2
+
+#
+Positional 3
+위치표시 3
+
+#
+Positional 4
+위치표시 4
+
+#
+Positional 5
+위치표시 5
+
+#
+Positional 6
+위치표시 6
+
+#
+Positional 7
+위치표시 7
+
+#
+Positional 8
+위치표시 8
+
+#
+Positional V
+위치표시 V
+
+#
+Positional V 2
+위치표시 V 2
+
+#
+Positional V 3
+위치표시 V 3
+
+#
+Positional V 4
+위치표시 V 4
+
+#
+Positional V 5
+위치표시 V 5
+
+#
+Positional V 6
+위치표시 V 6
+
+#
+Positional V 7
+위치표시 V 7
+
+#
+Positional V 8
+위치표시 V 8
+
+#
+Prefill
+미리기록
+
+#
+Press Any Key
+아무키나 누르세요
+
+#
+Press Select Key/Button
+선택 키/버튼을 누르세요
+
+#
+Previous Data
+이전 데이터
+
+#
+Previous Game
+이전 게임
+
+#
+Previous values already restored
+이전값이 이미 저장됨
+
+#
+Program Space
+프로그램 공간
+
+#
+Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
+게임을 그만두시겠습니까?\n\n그만두시려면 엔터키를 누르시고,\n계속하시려면 ESC 키를 누르세요.
+
+#
+REC START
+기록 시작
+
+#
+REC STOP
+기록 중지
+
+#
+RHS
+RHS
+
+#
+ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
+롬 재덤프 필요함   : %3d  %3d\n(%3d 롬 / %d 게임)\n
+
+#
+Range Maximum
+최대 범위
+
+#
+Range Minimum
+최소 범위
+
+#
+Rapid Fire
+속사
+
+#
+Reach
+리치
+
+#
+Record Movie
+동영상 기록
+
+#
+Refresh rate
+주사율
+
+#
+Region
+지역
+
+#
+Relative
+상대적인
+
+#
+Relative Address
+상대 주소
+
+#
+Reload Database
+데이터베이스 다시읽기
+
+#
+Reset
+리셋
+
+#
+Reset Game
+게임 리셋
+
+#
+Resolution
+해상도
+
+#
+Restoration successful
+복구 완료
+
+#
+Restore Previous Results
+이전 결과 복구
+
+#
+Restore Previous Value
+이전 값 복구
+
+#
+Return to Game
+게임으로 돌아감
+
+#
+Return to Groups
+그룹으로 돌아감
+
+#
+Return to Main Menu
+메인메뉴로 돌아감
+
+#
+Return to Prior Menu
+이전 메뉴로 돌아감
+
+#
+Reverse
+반전
+
+#
+Right Half
+오른쪽 절반
+
+#
+Rockn Megasession Custom
+로큰 메가세션 설정
+
+#
+Ron
+론
+
+#
+Rotate Clockwise
+시계방향 회전
+
+#
+Rotate Counter-clockwise
+반시계방향 회전
+
+#
+Rotate View
+화면 회전
+
+#
+Rotation
+회전
+
+#
+SHADOWS        : %3d  + %3d\n
+그림자         : %3d  + %3d\n
+
+#
+Samples
+샘플
+
+#
+Samples not supported in this build\n
+현재 빌드에서 지원하지 않는 샘플\n
+
+#
+Save Cheat
+치트 저장
+
+#
+Save Memory
+메모리 저장
+
+#
+Save Snapshot
+스냅샷 저장
+
+#
+Save State
+상태 저장
+
+#
+Save cancelled
+저장 취소
+
+#
+Save to position %c
+위치 %c 에 저장됨
+
+#
+Screen
+화면
+
+#
+Screen #
+화면 #
+
+#
+Screen %d %s %.3f
+화면 %d %s %.3f
+
+#
+Screen %d Pixel Aspect (%d:%d)
+%d 화면 픽셀비율 (%d:%d)
+
+#
+Screen %d Standard (%d:%d)
+화면 %d 일반비율 (%d:%d)
+
+#
+Screen Resolution
+화면 해상도
+
+#
+Screen flipping in cocktail mode is not supported.
+칵테일모드에서의 화면 뒤집힘이 지원되지 않습니다.
+
+#
+Screen flipping in cocktail mode is not supported.\n
+칵테일모드에서의 화면 뒤집힘이 지원되지 않습니다.\n
+
+#
+Search Dialog Style
+검색 방법
+
+#
+Search Speed
+검색 속도
+
+#
+Search a Cheat (Advanced Mode)
+치트 검색 (고급 모드)
+
+#
+Search a Cheat (Classic Mode)
+치트 검색 (이전 모드)
+
+#
+Search a Cheat (Minimum Mode)
+치트 검색 (간단 모드)
+
+#
+Search not initialized
+검색이 초기화되지 않음
+
+#
+Second Bonus
+두번째 보너스
+
+#
+Select
+선택
+
+#
+Select Memory Areas
+메모리 범위 선택
+
+#
+Select New Game
+새 게임 선택
+
+#
+Select Search
+검색 선택
+
+#
+Select a value
+값 선택
+
+#
+Select position to load from
+불러올 위치(0-9,A-Z) 선택
+
+#
+Select position to save to
+저장할 위치(0-9,A-Z) 선택
+
+#
+Sensitivity
+감도
+
+#
+Service
+서비스
+
+#
+Service 1
+서비스 1
+
+#
+Service 2
+서비스 2
+
+#
+Service 3
+서비스 3
+
+#
+Service 4
+서비스 4
+
+#
+Service Mode
+서비스 모드
+
+#
+Service Mode/Free Play
+서비스 모드/프리 플레이
+
+#
+Set
+세트
+
+#
+Set/Clear
+세트/초기화
+
+#
+Set/Clear Bits
+비트 세트/초기화
+
+#
+Show Activation Key Message
+활성 키 메시지 보이기
+
+#
+Show Backdrops
+배경 보이기
+
+#
+Show Bezels
+베젤 보이기
+
+#
+Show Button Input
+버튼 입력 표시
+
+#
+Show Cheat List
+치트 목록 표시
+
+#
+Show Command
+공략 표시
+
+#
+Show Command List
+공략 목록 표시
+
+#
+Show Current Time
+현재 시간 표시
+
+#
+Show FPS
+FPS 표시
+
+#
+Show Full Artwork
+전체 아트워크 보이기
+
+#
+Show Gfx
+Gfx 표시
+
+#
+Show Overlays
+오버레이 보이기
+
+#
+Show Profiler
+프로파일러 표시
+
+#
+Show Search Labels
+검색 라벨 표시
+
+#
+Signed
+표시됨
+
+#
+Simple LEDs
+간단한 LED
+
+#
+Single
+싱글
+
+#
+Size
+크기
+
+#
+Skip Bytes
+건더뛴 바이트
+
+#
+Slow
+느림
+
+#
+Slow But Sure (changed or not)
+느리지만 확실함 (변경여부 판별)
+
+#
+Soft Reset
+소프트 리셋
+
+#
+Sound
+사운드
+
+#
+Spanish
+스페인어
+
+#
+Standard
+표준
+
+#
+Standard (%d:%d)
+일반비율 (%d:%d)
+
+#
+Start a New Cheat Search
+새 치트 검색 시작
+
+#
+Start time: %s\n
+시작 시간: %s\n
+
+#
+State
+상태
+
+#
+State successfully loaded.
+상태를 성공적으로 불러왔습니다.
+
+#
+State successfully saved.
+상태가 성공적으로 기록되었습니다.
+
+#
+State successfully saved.\nWarning: Save states are not officially supported for this game.
+상태가 성공적으로 기록되었습니다.\n주의: 상태 저장은 이 게임에서 공식적으로 지원되는 기능이 아닙니다.
+
+#
+Statistics not available
+표시할 통계내용이 없습니다
+
+#
+Status (Same or Different)
+상태 (동일 / 변화)
+
+#
+Status (bits or flags)
+상태 (비트 혹은 플래그)
+
+#
+Stereo
+스테레오
+
+#
+Stop
+정지
+
+#
+Story not available
+표시할 줄거리가 없습니다
+
+#
+String
+문자열
+
+#
+Subtract
+빼기
+
+#
+Swap
+교환
+
+#
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
+이 게임은 실행이 불가능합니다. 정상적으로 동작이 불가능하니 참고하시기 바랍니다.
+
+#
+THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
+이 게임은 실행이 불가능합니다. 정상적으로 동작이 불가능하니 참고하시기 바랍니다.\n
+
+#
+Taiwan
+대만
+
+#
+Take
+갖기
+
+#
+Territory
+지역
+
+#
+Test
+테스트
+
+#
+Test Mode
+테스트 모드
+
+#
+Test Switch
+테스트 스위치
+
+#
+Text
+텍스트
+
+#
+Text Label
+텍스트 라벨
+
+#
+The colors are completely wrong.
+컬러가 완전히 다릅니다.
+
+#
+The colors are completely wrong.\n
+컬러가 완전히 다릅니다.\n
+
+#
+The colors aren't 100% accurate.
+컬러가 100% 정확치 않습니다.
+
+#
+The colors aren't 100% accurate.\n
+컬러가 100% 정확치 않습니다.\n
+
+#
+The game has protection which isn't fully emulated.
+게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.
+
+#
+The game has protection which isn't fully emulated.\n
+게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.\n
+
+#
+The game lacks sound.
+사운드가 나지 않습니다.
+
+#
+The game lacks sound.\n
+사운드가 나지 않습니다.\n
+
+#
+The sound emulation isn't 100% accurate.
+사운드 에뮬레이션이 100% 정확하지 않습니다.
+
+#
+The sound emulation isn't 100% accurate.\n
+사운드 에뮬레이션이 100% 정확하지 않습니다.\n
+
+#
+The video emulation isn't 100% accurate.
+화면 에뮬레이션이 100% 정확하지 않습니다.
+
+#
+The video emulation isn't 100% accurate.\n
+화면 에뮬레이션이 100% 정확하지 않습니다.\n
+
+#
+There are known problems with this game:
+이 게임은 다음과 같은 문제점이 있습니다:
+
+#
+There are working clones of this game. They are:
+이 게임의 실행 가능한 클론롬은:
+
+#
+This INP file is not an extended INP file, extra info not available\n
+현재 INP 파일은 확장 INP 파일이 아닙니니다. 추가 정보를 이용할 수 없습니다\n
+
+#
+This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
+드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
+
+#
+Throttle
+감속기능
+
+#
+Tickets dispensed
+티켓 분배
+
+#
+Tilt
+틸트
+
+#
+Time
+시간
+
+#
+Timer
+타이머
+
+#
+Timer (+ or -)
+타이머 (+ / -)
+
+#
+Timers (+/- some value)
+타이머 (+/- 일부 값)
+
+#
+Title
+타이틀
+
+#
+Toggle
+켜기/끄기
+
+#
+Toggle Cheat
+치트 사용/해제
+
+#
+Toggle Crosshair
+표적 보임/숨김
+
+#
+Toggle Debugger
+디버거 켜기/끄기
+
+#
+Track X
+트랙볼 X
+
+#
+Track X 2
+트랙볼 X 2
+
+#
+Track X 3
+트랙볼 X 3
+
+#
+Track X 4
+트랙볼 X 4
+
+#
+Track X 5
+트랙볼 X 5
+
+#
+Track X 6
+트랙볼 X 6
+
+#
+Track X 7
+트랙볼 X 7
+
+#
+Track X 8
+트랙볼 X 8
+
+#
+Track Y
+트랙볼 Y
+
+#
+Track Y 2
+트랙볼 Y 2
+
+#
+Track Y 3
+트랙볼 Y 3
+
+#
+Track Y 4
+트랙볼 Y 4
+
+#
+Track Y 5
+트랙볼 Y 5
+
+#
+Track Y 6
+트랙볼 Y 6
+
+#
+Track Y 7
+트랙볼 Y 7
+
+#
+Track Y 8
+트랙볼 Y 8
+
+#
+Trackball
+트랙볼
+
+#
+Triple
+트리플
+
+#
+Triple Side-by-Side
+트리플 좌-우
+
+#
+Triple Side-by-Side (Gapless)
+트리플 좌-우 (빈틈없음)
+
+#
+Type
+유형
+
+#
+Type OK or move the joystick left then right to continue
+OK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
+
+#
+Type name or select: %s_
+이름을 입력하거나 선택 : %s_
+
+#
+Type name or select: (random)
+이름을 입력하거나 선택 : (무작위)
+
+#
+UI Cancel
+UI 취소
+
+#
+UI Clear
+UI 삭제
+
+#
+UI Down
+UI 아래
+
+#
+UI End
+UI 최하단
+
+#
+UI Home
+UI 최상단
+
+#
+UI Left
+UI 왼쪽
+
+#
+UI Next Group
+UI 다음 그룹
+
+#
+UI Page Down
+UI 아래 페이지
+
+#
+UI Page Up
+UI 위 페이지
+
+#
+UI Previous Group
+UI 이전 그룹
+
+#
+UI Right
+UI 오른쪽
+
+#
+UI Rotate
+UI 회전
+
+#
+UI Select
+UI 선택
+
+#
+UI Toggle
+UI 전환
+
+#
+UI Up
+UI 위
+
+#
+UI Zoom In
+UI 확대
+
+#
+UI Zoom Out
+UI 축소
+
+#
+UNEMULATED PROTEC. : %3d  %3d\n
+에뮬안된 암호화    : %3d  %3d\n
+
+#
+UNKNOWN
+알수없음
+
+#
+US
+미국
+
+#
+USA
+미국
+
+#
+Unable to allocate snapshot render target\n
+스크린샷 생성 타겟을 위치할 수 없습니다\n
+
+#
+Unable to load due to pending anonymous timers. See error.log for details.
+알수없는 타이머로 인해 불러올 수 없음. 자세한 내용은 error.log에
+
+#
+Unable to save due to pending anonymous timers. See error.log for details.
+알수없는 타이머로 인해 저장할 수 없음. 자세한 내용은 error.log에
+
+#
+Unexpected boolean option %s queried\n
+예상치 못한 boolean 옵션 %s 요청\n
+
+#
+Unexpected float option %s queried\n
+예상치 못한 float 옵션 %s 요청\n
+
+#
+Unexpected integer option %s queried\n
+예상치 못한 integer 옵션 %s 요청\n
+
+#
+Unimplemented
+적용안됨
+
+#
+Unknown
+알수없음
+
+#
+Unlimited
+무한
+
+#
+Unused
+사용되지않음
+
+#
+Unused (10)
+사용되지않음 (10)
+
+#
+Unused (11)
+사용되지않음 (11)
+
+#
+Unused (12)
+사용되지않음 (12)
+
+#
+Unused (13)
+사용되지않음 (13)
+
+#
+Unused (14)
+사용되지않음 (14)
+
+#
+Unused (15)
+사용되지않음 (15)
+
+#
+Unused (16)
+사용되지않음 (16)
+
+#
+Unused (17)
+사용되지않음 (17)
+
+#
+Unused (18)
+사용되지않음 (18)
+
+#
+Unused (19)
+사용되지않음 (19)
+
+#
+Unused (20)
+사용되지않음 (20)
+
+#
+Unused (21)
+사용되지않음 (21)
+
+#
+Unused (22)
+사용되지않음 (22)
+
+#
+Unused (23)
+사용되지않음 (23)
+
+#
+Unused (24)
+사용되지않음 (24)
+
+#
+Unused (25)
+사용되지않음 (25)
+
+#
+Unused (26)
+사용되지않음 (26)
+
+#
+Unused (27)
+사용되지않음 (27)
+
+#
+Unused (28)
+사용되지않음 (28)
+
+#
+Unused (29)
+사용되지않음 (29)
+
+#
+Unused (3)
+사용안함 (3)
+
+#
+Unused (30)
+사용되지않음 (30)
+
+#
+Unused (31)
+사용되지않음 (31)
+
+#
+Unused (4)
+사용되지않음 (4)
+
+#
+Unused (5)
+사용되지않음 (5)
+
+#
+Unused (6)
+사용되지않음 (6)
+
+#
+Unused (7)
+사용되지않음 (7)
+
+#
+Unused (8)
+사용되지않음 (8)
+
+#
+Unused (9)
+사용되지않음 (9)
+
+#
+Updating Artwork...
+아트워크 업데이트...
+
+#
+Upright
+오른쪽위
+
+#
+Upright 1
+오른쪽위 1
+
+#
+Uptime
+시간종료
+
+#
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
+에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.
+
+#
+Usage: %s [%s] [options]\n\nOptions:\n
+사용법: %s [%s] [옵션]\n\n옵션:\n
+
+#
+User Interface
+사용자 인터페이스
+
+#
+User Select
+사용자 선택
+
+#
+VFD Display Output Only
+VFD 화면 출력 만
+
+#
+VFD Only (%d:%d)
+VFD 만 (%d:%d)
+
+#
+Value
+값
+
+#
+Value (Equal)
+값 (동일)
+
+#
+Value (NearTo)
+값 (근사)
+
+#
+Vector Flicker
+벡터 깜빡임
+
+#
+Vector Game
+벡터 게임
+
+#
+Version
+버전
+
+#
+Version string: %s\n
+버전 스트링: %s\n
+
+#
+Vert position
+수직 위치
+
+#
+Vert stretch
+수직 늘리기
+
+#
+Vertical
+세로화면
+
+#
+Vertically
+수직
+
+#
+Very Easy
+매우 쉬움
+
+#
+Very Hard
+매우 어려움
+
+#
+Very High
+매우 높음
+
+#
+Very Low
+매우 낮음
+
+#
+Very Slow
+매우 느림
+
+#
+Video Options
+비디오 옵션
+
+#
+View Last Results
+마지막 결과 보기
+
+#
+Voice
+음성
+
+#
+Volume
+볼륨
+
+#
+Volume Down
+볼륨 감소
+
+#
+Volume Up
+볼륨 증가
+
+#
+WARNING: the game might not run correctly.
+경고: 게임이 올바르게 실행되지 않을 수 있습니다.
+
+#
+WRONG COLORS       : %3d  %3d\n
+잘못된 색상        : %3d  %3d\n
+
+#
+Wait
+대기
+
+#
+Warning: invalid line in INI: %s
+경고: INI에 잘못된 줄이 있습니다: %s
+
+#
+Warning: unknown option in INI: %s\n
+경고: INI에 알 수 없는 옵션이 있습니다: %s\n
+
+#
+Watch
+보기
+
+#
+Watch %.8X (%d)
+보기 %.8X (%d)
+
+#
+Watch Add Value
+보기값 추가
+
+#
+Watch Format
+보기 초기화
+
+#
+Watch Label
+보기 라벨
+
+#
+Watch Per Line
+행간 보기
+
+#
+Watch Size
+보기 크기
+
+#
+Watch Skip
+보기 넘기기
+
+#
+Watch Value
+보기값
+
+#
+Watchpoint
+보기위치
+
+#
+Watchpoints
+보기위치
+
+#
+World
+세계판
+
+#
+Write
+작성
+
+#
+Write If Match
+일치시 기록
+
+#
+X Position
+X 위치
+
+#
+XOR
+XOR
+
+#
+Y Position
+Y 위치
+
+#
+Yes
+예
+
+#
+Zoom = %d
+확대 = %d
+
+#
+Zoom Auto
+자동 확대
+
+#
 activation key saved
 활성키 저장됨
 
-# emu/clifront.c: 89
+#
 all available info on driver in XML format
 이용가능한 모든 드라이버 정보(XML)
 
-# emu/emuopts.c: 134
+#
 amount to scale the screen brightness when paused
 일시 정지 시의 화면 밝기
 
-# emu/inptport.c: 1222
+#
 analog joystick
 아날로그 조이스틱
 
-# emu/mamecore.h: 168 
+#
 assert: %s:%d: %s
 알림: %s:%d: %s
 
-# emu/video.c: 1209
+#
 auto%2d/%d
 자동%2d/%d
 
-# emu/emuopts.c: 206
+#
 automatic pause when playback is finished
 리플레이 재생이 끝나면 자동으로 일시정지
 
-# emu/emuopts.c: 117
+#
 automatically rotate screen clockwise 90 degrees if vertical
 수직 게임일 경우 자동으로 시계방향 90도 화면 회전
 
-# emu/emuopts.c: 118
+#
 automatically rotate screen counterclockwise 90 degrees if vertical
 수직 게임일 경우 자동으로 반 시계방향 90도 화면 회전
 
-# emu/emuopts.c: 237
+#
 button color (aqua)
 버튼 색상 (아쿠아)
 
-# emu/emuopts.c: 234
+#
 button color (blue)
 버튼 색상 (파란색)
 
-# emu/emuopts.c: 233
+#
 button color (green)
 버튼 색상 (녹색)
 
-# emu/emuopts.c: 240
+#
 button color (lime)
 버튼 색상 (라임)
 
-# emu/emuopts.c: 239
+#
 button color (navy)
 버튼 색상 (남색)
 
-# emu/emuopts.c: 236
+#
 button color (pink)
 버튼 색상 (분홍색)
 
-# emu/emuopts.c: 235
+#
 button color (purple)
 버튼 색상 (자주색)
 
-# emu/emuopts.c: 231
+#
 button color (red)
 버튼 색상 (빨간색)
 
-# emu/emuopts.c: 238
+#
 button color (silver)
 버튼 색상 (실버)
 
-# emu/emuopts.c: 232
+#
 button color (yellow)
 버튼 색상 (노란색)
 
-# emu/emuopts.c: 168
+#
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 움직임을 무시할 조이스틱 데드존 영역 중심 (0.0 가운데, 1.0 끝)
 
-# emu/emuopts.c: 212
+#
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
 m68k 코어 변경 (0:C, 1:DRC, 2:ASM+DRC)
 
-# emu/cheat.c: 2343
+#
 cheat database not found
 치트 데이터베이스가 없음
 
-# emu/emuopts.c: 75
+#
 cheat filename
 치트 파일명
 
-# emu/emuopts.c: 84
+#
 command list database name
 기술표 데이터베이스 이름
 
-# emu/clifront.c: 99
+#
 compare files with known MAME roms
 알려진 MAME 롬과 비교
 
-# emu/emuopts.c: 166
+#
 convert lightgun button 2 into offscreen reload
 라이트건 버튼 2를 화면 밖 재장전으로 변환
 
-# emu/clifront.c: 83
+#
 create the default configuration file
 기본 설정 파일을 생성
 
-# emu/emuopts.c: 124
+#
 crop artwork to game screen size
 아트워크를 게임 화면 크기로 잘라내기
 
-# emu/emuopts.c: 241
+#
 cursor color
 커서 색상
 
-# emu/emuopts.c: 131
+#
 default game screen brightness correction
 기본 게임화면 밝기 수정
 
-# emu/emuopts.c: 132
+#
 default game screen contrast correction
 기본 게임화면 대비 수정
 
-# emu/emuopts.c: 133
+#
 default game screen gamma correction
 기본 게임화면 감마값 수정
 
-# emu/info.c: 90 emu/inptport.c: 1225
+#
 dial
 다이얼
 
-# emu/emuopts.c: 54
+#
 directory for ips files
 uips 파일 디렉토리
 
-# emu/emuopts.c: 52
+#
 directory for localized data files
 지역화 데이터 파일 디렉토리
 
-# emu/emuopts.c: 51
+#
 directory for translation table data
 번역 테이블 데이터 디렉토리
 
-# emu/emuopts.c: 61
+#
 directory to save configurations
 설정 저장 디렉토리
 
-# emu/emuopts.c: 68
+#
 directory to save debugger comments
 디버거 메모 저장 디렉토리
 
-# emu/emuopts.c: 67
+#
 directory to save hard drive image difference files
 하드 이미지 변경 사항 저장 디렉토리
 
-# emu/emuopts.c: 70
+#
 directory to save hiscores
 점수 저장 디렉토리
 
-# emu/emuopts.c: 64
+#
 directory to save input device logs
 입력 장치 기록 저장 디렉토리
 
-# emu/emuopts.c: 63
+#
 directory to save memory card contents
 메모리 카드 저장 디렉토리
 
-# emu/emuopts.c: 62
+#
 directory to save nvram contents
 nvram 저장 디렉토리
 
-# emu/emuopts.c: 66
+#
 directory to save screenshots
 스크린샷 저장 디렉토리
 
-# emu/emuopts.c: 65
+#
 directory to save states
 상태 저장 디렉토리
 
-# emu/debug/debugcmd.c: 1080, 1264
+#
 disabled
 비활성화
 
-# emu/emuopts.c: 185
+#
 display additional diagnostic information
 부가 분석 정보 표시
 
-# emu/clifront.c: 84
+#
 display running parameters
 실행중 파라메터 표시
 
-# emu/clifront.c: 92
+#
 driver sourcefile
 드라이버 소스파일
 
-# emu/emuopts.c: 176
+#
 enable (keyboard|mouse|joystick) if a dial control is present
 게임에서 다이얼 콘트을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 178
+#
 enable (keyboard|mouse|joystick) if a lightgun control is present
 게임에서 라이트건을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 180
+#
 enable (keyboard|mouse|joystick) if a mouse control is present
 게임에서 마우스를 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 173
+#
 enable (keyboard|mouse|joystick) if a paddle control is present
 게임에서 핸들을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 175
+#
 enable (keyboard|mouse|joystick) if a pedal control is present
 게임에서 페달을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 179
+#
 enable (keyboard|mouse|joystick) if a positional control is present
 게임에서 위치표시장치를 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 177
+#
 enable (keyboard|mouse|joystick) if a trackball control is present
 게임에서 트랙볼을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 174
+#
 enable (keyboard|mouse|joystick) if an analog joystick control is present
 게임에서 아날로그 조이스틱을 사용할 경우 (keyboard|mouse|joystick) 사용
 
-# emu/emuopts.c: 105
+#
 enable automatic frameskip selection
 자동 프레임스킵 사용
 
-# emu/emuopts.c: 97
+#
 enable automatic restore at startup, and automatic save at exit time
 시작시 자동 복구 및 종료시 자동 저장 사용
 
-# emu/emuopts.c: 125
+#
 enable backdrops if artwork is enabled and available
 아트워크가 존재하고 사용 설정 되었을때 배경 사용
 
-# emu/emuopts.c: 127
+#
 enable bezels if artwork is enabled and available
 아트워크가 존재하고 사용 설정되었을때 베젤 사용
 
-# emu/emuopts.c: 197
+#
 enable cheat subsystem
 치트 서브시스템 사용
 
-# emu/emuopts.c: 161
+#
 enable joystick input
 조이스틱 입력 사용
 
-# emu/emuopts.c: 162
+#
 enable lightgun input
 라이트건 입력 사용
 
-# emu/emuopts.c: 38
+#
 enable loading of configuration files
 설정 파일 불러오기 사용
 
-# emu/emuopts.c: 160
+#
 enable mouse input
 마우스 입력 사용
 
-# emu/emuopts.c: 126
+#
 enable overlays if artwork is enabled and available
 아트워크이 존재하고 사용 설정되었을때 오버레이 사용
 
-# emu/emuopts.c: 163
+#
 enable separate input from each keyboard device (if present)
 각각의 키보드 장치에서 입력을 분리 (존재할 경우)
 
-# emu/emuopts.c: 164
+#
 enable separate input from each mouse device (if present)
 각각의 마우스 장치에서 입력을 분리 (존재할 경우)
 
-# emu/emuopts.c: 109
+#
 enable sleeping, which gives time back to other applications when idle
 사용하지 않을 때 다른 프로그램에게 우선권을 주기위해 슬립 기능사용
 
-# emu/emuopts.c: 147
+#
 enable sound output
 사운드 출력 사용
 
-# emu/emuopts.c: 165
+#
 enable steadykey support
 고정키 지원 사용
 
-# emu/emuopts.c: 149
+#
 enable the use of external samples if available
 이용 가능할 시 외부 샘플 파일 사용
 
-# emu/emuopts.c: 108
+#
 enable throttling to keep game running in sync with real time
 게임이 실시간으로 실행되도록 감속 기능 사용
 
-# emu/emuopts.c: 187
+#
 enable/disable debugger
 디버거 사용/사용안함
 
-# emu/emuopts.c: 263
+#
 enable/disable local language game list
 지역 언어 게임 목록 사용/사용안함
 
-# emu/emuopts.c: 152
+#
 enable/disable volume auto adjust
 볼륨 자동조절 사용/사용안함
 
-# emu/debug/debugcmd.c: 1080, 1264
+#
 enabled
 활성화
 
-# emu/emuopts.c: 169
+#
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 움직임을 무시할 조이스틱 축 초과 범위 (0.0 가운데, 1.0 끝)
 
-# emu/clifront.c: 458
+#
 error: invalid value for language: %s\nUse %s\n
 오류: 잘못된 언어 값: %s\nUse %s\n
 
-# emu/ui.c: 376
+#
 error: invalid value for palette: %s\n
 오류: 잘못된 팔레트 값: %s\n
 
-# emu/emuopts.c: 167
+#
 explicit joystick map, or auto to auto-select
 정확한 조이스틱 맵, 또는 자동을 자동 선택으로
 
-# emu/video.c: 1205
+#
 fast 
 고속모드
 
-# emu/emuopts.c: 119
+#
 flip screen left-right
 좌우 화면반전
 
-# emu/emuopts.c: 120
+#
 flip screen upside-down
 상하 화면반전
 
-# emu/emuopts.c: 227
+#
 font blank color
 폰트 빈칸 색상
 
-# emu/emuopts.c: 228
+#
 font normal color
 일반 폰트 색상
 
-# emu/emuopts.c: 229
+#
 font special color
 특수문자 색상
 
-# emu/video.c: 1197
+#
 frame:%d 
 프레임:%d 
 
-# emu/clifront.c: 225 emu/info.c: 25 
+#
 game
 게임
 
-# emu/emuopts.c: 184
+#
 generate an error.log file
 error.log 파일 생성
 
-# emu/emuopts.c: 89
+#
 high score database name
 점수 데이터베이스 이름
 
-# emu/emuopts.c: 76
+#
 history database name
 역사 데이터베이스 이름
 
-# emu/emuopts.c: 136
+#
 image enhancement effect
 화면 개선 효과
 
-# emu/memory.c: 3128
+#
 invalid
 잘못된
 
-# emu/emuopts.c: 200
+#
 ips datfile name
 ips 데이터 파일명
 
-# emu/clifront.c: 852, 932
+#
 is bad\n
  불량\n
 
-# emu/clifront.c: 862, 942
+#
 is best available\n
  이용 가능한 최적\n
 
-# emu/clifront.c: 857, 937
+#
 is good\n
  양호\n
 
-# emu/emuopts.h: 138 emu/info.c: 90 emu/inptport.c: 1223, 4040, 4043 
+#
 lightgun
 라이트건
 
-# emu/clifront.c: 101
+#
 list available devices
 이용 가능한 장치 목록
 
-# emu/clifront.c: 96
+#
 list optional samples for a driver
 부가 샘플 목록
 
-# emu/clifront.c: 95
+#
 list required roms for a driver
 드라이버의 필요 롬 목록
 
-# emu/emuopts.c: 82
+#
 mameinfo database name
 마메정보 데이터베이스 이름
 
-# emu/inputseq.c: 416
+#
 n/a
 이용불가
 
-# emu/cheat.c: 2646, 2796, 4669
+#
 no activation key
 활성키 없음
 
-# emu/cheat.c: 6640
+#
 no results for this region
 이 위치에선 결과값이 없음
 
-# emu/cheat.c: 6642
+#
 no results found
 결과 없음
 
-# emu/inputseq.c: 435
+#
 not
 아님
 
-# emu/cheat.c: 2291
+#
 null name
 이름 없음
 
-# emu/emuopts.c: 107
+#
 number of emulated seconds to run before automatically exiting
 자동 종료 전에 실행할 시간(초)
 
-# emu/emuopts.c: 100
+#
 optional filename to write a MNG movie of the current session
 현재 세션에 사용할 MNG 파일명
 
-# emu/emuopts.c: 101
+#
 optional filename to write a WAV file of the current session
 현재 세션에 사용할 WAV 파일명
 
-# emu/inputseq.c: 433
+#
 or
 또는
 
-# emu/cheat.c: 8702, 8737
+#
 out of memory while adding search
 검색을 추가하는데 메모리가 부족합니다
 
-# emu/cheat.c: 8474, 8507
+#
 out of memory while adding watch
 검사를 추가하는데 메모리가 부족합니다
 
-# emu/cheat.c: 8192, 8226, 8348, 8376
+#
 out of memory while loading cheat database
 치트데이터 베이스를 불러오는데 메모리가 부족합니다
 
-# emu/info.c: 90 emu/inptport.c: 1221
+#
 paddle
 핸들
 
-# emu/emuopts.c: 42
+#
 path to ROMsets and hard disk images
 롬세트 및 하드 이미지 경로
 
-# emu/emuopts.c: 47
+#
 path to artwork files
 아트워크 파일 경로
 
-# emu/emuopts.c: 48
+#
 path to controller definitions
 콘트롤러 설정 파일 경로
 
-# emu/emuopts.c: 50
+#
 path to font files
 폰트 파일 경로
 
-# emu/emuopts.c: 44
+#
 path to hash files
 해시 파일 경로
 
-# emu/emuopts.c: 49
+#
 path to ini files
 ini 파일 경로
 
-# emu/emuopts.c: 46
+#
 path to samplesets
 샘플세트 경로
 
-# emu/video.c: 1201
+#
 paused
 일시정지
 
-# emu/info.c: 90 emu/inptport.c: 1224
+#
 pedal
 페달
 
-# emu/clifront.c: 79
+#
 perform driver validation on all game drivers
 모든 게임 드라이버에 대해 확인작업 수행
 
-# emu/emuopts.c: 98
+#
 playback an input file
 리플레이 파일 재생
 
-# emu/inptport.c: 1227
+#
 positional
 위치표시
 
-# emu/emuopts.c: 159
+#
 preconfigure for specified controller
 특정 입력기를 위한 기본 설정
 
-# emu/emuopts.c: 204
+#
 quit game with confirmation
 게임 종료시 확인
 
-# emu/emuopts.c: 99
+#
 record an input file
 리플레이 파일 기록
 
-# emu/cheat.c: 6471, 6849
+#
 region invalidated - %d results remain
 지역 무효화 - %d 결과가 남음
 
-# emu/clifront.c: 97
+#
 report romsets that have problems
 문제가 있는 롬세트 보고
 
-# emu/clifront.c: 98
+#
 report samplesets that have problems
 문제가 있는 샘플세트 보고
 
-# emu/clifront.c: 843
-romset %s 
-롬 세트 %s 
-
-# emu/clifront.c: 876
+#
 romset \"%s\" not found!\n
 롬세트 \"%s\" 찾지 못함!\n
 
-# emu/clifront.c: 878
+#
 romset \"%s\" not supported!\n
 롬세트 \"%s\" 지원 안됨!\n
 
-# emu/emuopts.c: 115
+#
+romset %s 
+롬 세트 %s 
+
+#
 rotate screen clockwise 90 degrees
 시계방향 90도 화면 회전
 
-# emu/emuopts.c: 116
+#
 rotate screen counterclockwise 90 degrees
 반 시계방향 90도 화면 회전
 
-# emu/emuopts.c: 114
+#
 rotate the game screen according to the game's orientation needs it
 게임상 필요에 따라 게임 화면 회전
 
-# emu/layout/snap.lay: 3, 9, 15, 21, 27, 33, 39, 45
+#
 s%d
 s%d
 
-# emu/clifront.c: 926
-sampleset %s 
-샘플세트 %s 
-
-# emu/clifront.c: 953
+#
 sampleset \"%s\" not found!\n
 샘플세트 \"%s\" 찾지 못함!\n
 
-# emu/clifront.c: 955
+#
 sampleset \"%s\" not supported!\n
 샘플세트 \"%s\\ 지원 안됨!\n
 
-# emu/cheat.c: 5260, 5789, 6247, 6264
+#
+sampleset %s 
+샘플세트 %s 
+
+#
 saved all memory regions
 모든 메모리 지역 저장됨
 
-# emu/emuopts.c: 96
+#
 saved state to load
 불러올 상태 저장
 
-# emu/video.c: 1882
+#
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
 \"%s\" 화면효과는 15 및 32 에서 지원되지 않습니다. 화면효과를 사용하지 않습니다.
 
-# emu/emuopts.c: 188
+#
 script for debugger
 디버거용 스크립트
 
-# emu/emuopts.c: 196
+#
 select the system BIOS to use
 사용할 시스템 바이오스 선택
 
-# emu/emuopts.c: 262
+#
 select translation language
 번역 언어 선택
 
-# emu/cheat.c: 11680
+#
 set %s
 %s 설정
 
-# emu/emuopts.c: 106
+#
 set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
 프레임스킵을 고정값으로 설정, 0-10 (자동 프레임스킵이 꺼져 있어야 함)
 
-# emu/emuopts.c: 148
+#
 set sound output sample rate
 사운드 출력 샘플 레이트 설정
 
-# emu/emuopts.c: 142
+#
 set vector beam width
 벡터 빔 너비 설정
 
-# emu/emuopts.c: 143
+#
 set vector flicker effect
 백터 깜빡임 효과 설정
 
-# emu/clifront.c: 91
+#
 short name, full name
 짧은 이름, 전체 이름
 
-# emu/clifront.c: 93
+#
 show clones
 클론 표시
 
-# emu/clifront.c: 78
+#
 show help message
 도움말 표시
 
-# emu/clifront.c: 85
+#
 show this help
 현재 도움말 표시
 
-# emu/video.c: 1213
+#
 skip %d/%d
 스킵 %d/%d
 
-# emu/emuopts.c: 198
+#
 skip displaying the information screen at startup
 시작시 정보 화면 표시 건너뛰기
 
-# emu/emuopts.c: 147 emu/emuopts.h: 129 emu/uitext.c: 45 mame/drivers/harddriv.c: 3335 mame/drivers/segas16b.c: 962, 1034 
+#
 sound
 사운드
 
-# emu/emuopts.c: 150
+#
 sound volume in decibels (-32 min, 0 max)
 사운드 볼륨 (최소 -32, 최대 0)
 
-# emu/uitext.c: 46 
+#
 stereo
 스테레오
 
-# emu/emuopts.c: 78
+#
 story database name
 줄거리 데이터베이스 이름
 
-# emu/emuopts.c: 33
+#
 switch drivers
 드라이버 변경
 
-# emu/cheat.c: 2337
+#
 there are no cheats for this game
 이 게임의 치트가 없습니다
 
-# emu/cheat.c: 8933
+#
 there are no old values
 이전 값이 없습니다
 
-# emu/info.c: 90 emu/inptport.c: 1226 
+#
 trackball
 트랙볼
 
-# emu/emuopts.c: 218
+#
 transparency of UI background [0 - 255]
 UI 배경 투명도 [0 - 255]
 
-# emu/mame.c: 348
+#
 unable to open log file
 로그 파일을 불러올 수 없습니다
 
-# emu/cheat.c: 2347
+#
 unzip it and place it in the MAME directory
 MAME 디렉토리에 압축을 해제해 주십시요
 
-# emu/emuopts.c: 141
+#
 use antialiasing when drawing vectors
 벡터 표시에 안티얼라이징 사용
 
-# emu/emuopts.c: 217
+#
 use transparent background for UI text
 UI 텍스트에 투명 배경 사용
 
-# emu/cheat.c: 8930
+#
 values restored
 값 복구됨
 
-# emu/video.c: 687
+#
 video_screen_configure(): visible area must be contained within the width/height!
 video_screen_configure(): 가시영역은 폭/높이 영역 안에 있어야 합니다!
 
-# emu/emuopts.c: 230
+#
 window background color
 창 배경 색상
 
-# emu/clifront.c: 90
+#
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
-
-# emu/mame.h: 62
-Copyright 2007, Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
-
 

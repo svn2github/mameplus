@@ -326,7 +326,7 @@ Namco
 Namco LTD.
 ナムコ
 
-# Crowns Golf (set 1)
+# Crowns Golf (834-5419-04)
 Nasco Japan
 大平技研 (ユーボ・ナスコ)
 
@@ -386,7 +386,7 @@ Psikyo
 Raizing
 ライジング
 
-# Dimahoo (USA 000121)
+# Dimahoo (Euro 000121)
 Raizing, distributed by Capcom
 ライジング
 
@@ -582,7 +582,7 @@ Unico
 Universal
 ユニバーサル
 
-# Intersecti
+# Saloon (France, encrypted)
 Unknown
 不明
 
@@ -638,7 +638,7 @@ Yuga
 Yumekobo
 夢工房
 
-# Magic Brush
+# Crush Roller (bootleg)
 bootleg
 海賊版
 
@@ -994,6 +994,10 @@ Coreland
 Corsica
 
 
+# Janyou Part II (ver 7.03, July 1 1983)
+Cosmo Denshi
+
+
 # PK Scramble
 Cosmo Electronics Corporation
 
@@ -1250,6 +1254,10 @@ Eterna
 Evona Electronic
 
 
+# Come On Baby
+ExPotato
+
+
 # Cross Pang
 F2 System
 
@@ -1300,6 +1308,10 @@ GREEN SOFT
 
 # Master Boy (Spanish, PCB Rev A)
 Gaelco
+
+
+# Interstellar Laser Fantasy
+Gakken
 
 
 # Table Tennis Champions (set 1)
@@ -1470,7 +1482,7 @@ Jeil Computer System
 Jetsoft
 
 
-# Star Fighter
+# Star Fighter (bootleg of Galaxian)
 Jeutel
 
 
@@ -1722,7 +1734,7 @@ Nihon
 Noma
 
 
-# Port Man
+# Port Man (bootleg on Moon Cresta hardware)
 Nova Games Ltd.
 
 
@@ -1870,6 +1882,10 @@ Promat
 Psygnosis
 
 
+# Ippatsu Gyakuten [BET] (Japan)
+Public Software
+
+
 # Heaven's Gate
 RACDYM
 
@@ -1966,12 +1982,20 @@ Sage's Creation
 Sai-Mate
 
 
+# Deer Hunting USA V4.3
+Sammy USA Corporation
+
+
 # Snooker 10 (Ver 1.11)
 Sandiy
 
 
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
+
+
+# Open Mahjong [BET] (Japan)
+Sapporo Mechanic
 
 
 # NCAA Basketball (Nintendo Super System)
@@ -2036,6 +2060,10 @@ Shonan
 
 # Condor
 Sidam
+
+
+# Astropal
+Sidam?
 
 
 # Lucky Today
@@ -2408,6 +2436,10 @@ Wisdom Tree
 
 # Zan - Yasha Enbukyoku / Zan Yasha Enbuden (J) [!]
 Wolfteam
+
+
+# Domino Block
+Wonwoo Systems
 
 
 # King of Boxer (English)

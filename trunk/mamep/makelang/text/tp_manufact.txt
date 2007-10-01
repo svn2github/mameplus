@@ -422,6 +422,10 @@ Coreland
 Corsica
 
 
+# Janyou Part II (ver 7.03, July 1 1983)
+Cosmo Denshi
+
+
 # PK Scramble
 Cosmo Electronics Corporation
 
@@ -754,6 +758,10 @@ Evoga
 Evona Electronic
 
 
+# Come On Baby
+ExPotato
+
+
 # Grand Cross
 Excellent System
 
@@ -832,6 +840,10 @@ GREEN SOFT
 
 # Master Boy (Spanish, PCB Rev A)
 Gaelco
+
+
+# Interstellar Laser Fantasy
+Gakken
 
 
 # Table Tennis Champions (set 1)
@@ -1058,7 +1070,7 @@ Jeil Computer System
 Jetsoft
 
 
-# Star Fighter
+# Star Fighter (bootleg of Galaxian)
 Jeutel
 
 
@@ -1362,7 +1374,7 @@ Namco
 Namco LTD.
 
 
-# Crowns Golf (set 1)
+# Crowns Golf (834-5419-04)
 Nasco Japan
 
 
@@ -1426,7 +1438,7 @@ Noise Factory
 Noma
 
 
-# Port Man
+# Port Man (bootleg on Moon Cresta hardware)
 Nova Games Ltd.
 
 
@@ -1594,6 +1606,10 @@ Psikyo
 Psygnosis
 
 
+# Ippatsu Gyakuten [BET] (Japan)
+Public Software
+
+
 # Heaven's Gate
 RACDYM
 
@@ -1618,7 +1634,7 @@ Rait Electronics Ltd
 Raizing
 
 
-# Dimahoo (USA 000121)
+# Dimahoo (Euro 000121)
 Raizing, distributed by Capcom
 
 
@@ -1722,6 +1738,10 @@ Sammy Industries
 Sammy Industries Japan
 
 
+# Deer Hunting USA V4.3
+Sammy USA Corporation
+
+
 # Snooker 10 (Ver 1.11)
 Sandiy
 
@@ -1732,6 +1752,10 @@ Sang Ho Soft
 
 # Dream Shopper
 Sanritsu
+
+
+# Open Mahjong [BET] (Japan)
+Sapporo Mechanic
 
 
 # Quiz King of Fighters
@@ -1824,6 +1848,10 @@ Shonan
 
 # Condor
 Sidam
+
+
+# Astropal
+Sidam?
 
 
 # Lucky Today
@@ -2214,7 +2242,7 @@ Universal Video Spiel
 Uniwang
 
 
-# Intersecti
+# Saloon (France, encrypted)
 Unknown
 
 
@@ -2362,6 +2390,10 @@ Wisdom Tree
 Wolfteam
 
 
+# Domino Block
+Wonwoo Systems
+
+
 # King of Boxer (English)
 Woodplace
 
@@ -2466,7 +2498,7 @@ Zilec-Zenitone
 Zyrinx
 
 
-# Magic Brush
+# Crush Roller (bootleg)
 bootleg
 
 
