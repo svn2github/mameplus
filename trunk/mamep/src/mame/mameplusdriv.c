@@ -95,9 +95,11 @@ const game_driver * const plusdrivers[] =
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 	DRIVER( fr2ch )
 
+#ifndef NEOCPSMAME
 #if 1 /* SPCLONE */
 	/* Konami "Nemesis hardware" games */
 	DRIVER( spclone )	/* GX587 (c) 1986 based */
 #endif /* SPCLONE */
+#endif /* NEOCPSMAME */
 
 #endif	/* DRIVER_RECURSIVE */
