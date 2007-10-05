@@ -828,6 +828,7 @@ $(MAMEOBJ)/jaleco.a: \
 	$(DRIVERS)/bestleag.o \
 	$(DRIVERS)/bigstrkb.o $(VIDEO)/bigstrkb.o \
 	$(DRIVERS)/blueprnt.o $(VIDEO)/blueprnt.o \
+	$(DRIVERS)/bnstars.o \
 	$(DRIVERS)/cischeat.o $(VIDEO)/cischeat.o \
 	$(DRIVERS)/citycon.o $(VIDEO)/citycon.o \
 	$(DRIVERS)/ddayjlc.o \
@@ -1603,6 +1604,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/intrscti.o \
 	$(DRIVERS)/istellar.o \
 	$(DRIVERS)/jackpool.o \
+	$(DRIVERS)/jongkyo.o \
 	$(DRIVERS)/jpmimpct.o $(VIDEO)/jpmimpct.o \
 	$(DRIVERS)/kingpin.o \
 	$(DRIVERS)/koikoi.o \
