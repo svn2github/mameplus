@@ -236,6 +236,11 @@ static int execute_simple_commands(core_options *options, const char *exename)
 	if (options_get_bool(options, CLIOPTION_VALIDATE))
 	{
 		extern int mame_validitychecks(const game_driver *driver);
+
+#ifdef DRIVER_SWITCH
+		options_set_string(options, OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI);
+		assign_drivers(options);
+#endif /* DRIVER_SWITCH */
 		return mame_validitychecks(NULL);
 	}
 
