@@ -299,14 +299,15 @@ covert megatech / megaplay drivers to use new code etc. etc.
 #include "sound/sn76496.h"
 #include "machine/mc8123.h"
 #include "machine/segacrpt.h"
+#include "segae.h"
 
 
 //static UINT8* sms_rom;
-static UINT8* sms_mainram;
+UINT8* sms_mainram;
 //static UINT8* smsgg_backupram;
 static TIMER_CALLBACK_PTR( sms_scanline_timer_callback );
-static struct sms_vdp *vdp2;
-static struct sms_vdp *vdp1;
+struct sms_vdp *vdp2;
+struct sms_vdp *vdp1;
 
 static struct sms_vdp *md_sms_vdp;
 
@@ -516,16 +517,7 @@ static UINT8 vc_pal_240[] =
     0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff,
 };
 
-static struct
-{
-	UINT8 sms2_name[40];
-	int sms2_valid;
-	int sms2_height;
-	int sms2_tilemap_height;
-	UINT8* sms_vcounter_table;
-	UINT8* sms_hcounter_table;
-
-} sms_mode_table[] =
+struct sms_mode sms_mode_table[] =
 {
 	/* NTSC Modes */
 	{ "Graphic 1 (NTSC)",         0, 192, 224, vc_ntsc_192, hc_256 },
@@ -564,22 +556,12 @@ static struct
 	{ "Mode 4 (PAL)",            1, 192, 244, vc_pal_192, hc_256 }
 };
 
-enum
-{
-	SMS_VDP = 0,  // SMS1 VDP
-	SMS2_VDP = 1, // SMS2 VDP, or Game Gear VDP running in SMS2 Mode
-	GG_VDP = 2,   // Game Gear VDP running in Game Gear Mode
-	GEN_VDP = 3   // Genesis VDP running in SMS2 Mode
-};
-
-//mamep: resolve conflict with drivers/sms.c
-static int sms_vdp_null_irq_callback(int status)
+int sms_vdp_null_irq_callback(int status)
 {
 	return -1;
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static int sms_vdp_cpu0_irq_callback(int status)
+int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -625,52 +607,9 @@ int sms_vdp_cpu2_irq_callback(int status)
 
 
 
-struct sms_vdp
-{
-	UINT8 chip_id;
-
-	UINT8  cmd_pend;
-	UINT8  cmd_part1;
-	UINT8  cmd_part2;
-	UINT16 addr_reg;
-	UINT8  cmd_reg;
-	UINT8  regs[0x10];
-	UINT8  readbuf;
-	UINT8* vram;
-	UINT8* cram;
-	UINT8  writemode;
-	mame_bitmap* r_bitmap;
-	UINT8* tile_renderline;
-	UINT8* sprite_renderline;
-
-	UINT8 sprite_collision;
-	UINT8 sprite_overflow;
-
-	UINT8  yscroll;
-	UINT8  hint_counter;
-
-	UINT8 frame_irq_pending;
-	UINT8 line_irq_pending;
-
-	UINT8 vdp_type;
-
-	UINT8 gg_cram_latch; // gamegear specific.
-
-	/* below are MAME specific, to make things easier */
-	UINT8 screen_mode;
-	UINT8 is_pal;
-	int sms_scanline_counter;
-	int sms_total_scanlines;
-	int sms_framerate;
-	mame_timer* sms_scanline_timer;
-	UINT16* cram_mamecolours; // for use on RGB_DIRECT screen
-	int	 (*set_irq)(int state);
-
-};
 
 
-
-static void *start_vdp(running_machine *machine, int type)
+void *sms_start_vdp(running_machine *machine, int type)
 {
 	struct sms_vdp *chip;
 
@@ -998,8 +937,7 @@ WRITE8_HANDLER( sms_vdp_ctrl_w )
 	vdp_ctrl_w(data, vdp1);
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static WRITE8_HANDLER( sms_sn76496_w )
+WRITE8_HANDLER( sms_sn76496_w )
 {
 	SN76496_0_w(0, data & 0xff);
 }
@@ -1058,8 +996,7 @@ static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* l
 	}
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
+void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 {
 	int spritenum;
 	int height = 8;
@@ -1180,8 +1117,7 @@ static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 	}
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static void sms_render_tileline(int scanline, struct sms_vdp* chip)
+void sms_render_tileline(int scanline, struct sms_vdp* chip)
 {
 	int column = 0;
 	int count = 32;
@@ -1234,8 +1170,7 @@ static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
+void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
 	UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, scanline, 0);
@@ -1276,8 +1211,7 @@ static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 
 }
 
-//mamep: resolve conflict with drivers/sms.c
-static void sms_draw_scanline(int scanline, struct sms_vdp* chip)
+void sms_draw_scanline(int scanline, struct sms_vdp* chip)
 {
 
 	if (scanline>=0 && scanline<sms_mode_table[chip->screen_mode].sms2_height)
@@ -1478,17 +1412,13 @@ static void end_of_frame(struct sms_vdp *chip)
 	mame_timer_adjust_ptr(chip->sms_scanline_timer, time_zero, time_zero);
 }
 
-#if 0
-//mamep: resolve conflict with drivers/sms.c
-static VIDEO_EOF(sms)
+VIDEO_EOF(sms)
 {
 	end_of_frame(vdp1);
 	//if (SMS_PAUSE_BUTTON) cpunum_set_input_line(0,INPUT_LINE_NMI,PULSE_LINE); // not on systeme!!!
 }
-#endif
 
-//mamep: resolve conflict with drivers/sms.c
-static VIDEO_START(sms)
+VIDEO_START(sms)
 {
 
 //  vdp->is_pal = 1;
@@ -1497,13 +1427,10 @@ static VIDEO_START(sms)
 }
 
 
-#if 0
-//mamep: resolve conflict with drivers/sms.c
-static MACHINE_RESET(sms)
+MACHINE_RESET(sms)
 {
 	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
 }
-#endif
 
 /* Sega System E */
 
@@ -2249,7 +2176,7 @@ static void init_systeme_map(void)
 
 void init_for_megadrive(void)
 {
-	md_sms_vdp = start_vdp(Machine, GEN_VDP);
+	md_sms_vdp = sms_start_vdp(Machine, GEN_VDP);
 	md_sms_vdp->set_irq = sms_vdp_cpu1_irq_callback;
 	md_sms_vdp->is_pal = 0;
 	md_sms_vdp->sms_total_scanlines = 262;
@@ -2263,7 +2190,7 @@ DRIVER_INIT( megatech_bios )
 {
 //  init_systeme_map();
 
-	vdp1 = start_vdp(machine, SMS2_VDP);
+	vdp1 = sms_start_vdp(machine, SMS2_VDP);
 	vdp1->set_irq = sms_vdp_cpu2_irq_callback;
 	vdp1->is_pal = 0;
 	vdp1->sms_total_scanlines = 262;
@@ -2278,7 +2205,7 @@ static DRIVER_INIT( segasyse )
 {
 	init_systeme_map();
 
-	vdp1 = start_vdp(machine, SMS2_VDP);
+	vdp1 = sms_start_vdp(machine, SMS2_VDP);
 //  vdp1->set_irq = sms_vdp_cpu0_irq_callback;
 	vdp1->is_pal = 0;
 	vdp1->sms_total_scanlines = 262;
@@ -2289,7 +2216,7 @@ static DRIVER_INIT( segasyse )
 	vdp1_vram_bank1 = auto_malloc(0x4000);
 
 
-	vdp2 = start_vdp(machine, SMS2_VDP);
+	vdp2 = sms_start_vdp(machine, SMS2_VDP);
 	vdp2->set_irq = sms_vdp_cpu0_irq_callback;
 	vdp2->is_pal = 0;
 	vdp2->sms_total_scanlines = 262;
