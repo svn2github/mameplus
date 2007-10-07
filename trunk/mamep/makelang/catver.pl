@@ -6,6 +6,7 @@ $mameexe = 'mamep';
 
 $textdir = "text";
 $folderdir = "$dir/dirs/folders";
+$CRLF = "\r\n";
 
 %EXTRA = (
 	'plus' => 'Plus!',
@@ -41,7 +42,7 @@ while (<IN>)
 		next if $category eq '';
 		$category =~ s/Volleyball/VolleyBall/;
 
-		$LIST{$category} .= "$name\n";
+		$LIST{$category} .= "$name$CRLF";
 		next;
 	}
 
@@ -70,22 +71,18 @@ sub output_ini
 		$fname = "$folderdir/Version.ini";
 		chmod 0666, $fname;
 		open (OUT, ">$fname") || die "$!";
-		print OUT <<__HEAD__;
-[FOLDER_SETTINGS]
-RootFolderIcon = cust1.ico
-SubFolderIcon = cust2.ico
-__HEAD__
+		print OUT "[FOLDER_SETTINGS]$CRLF";
+		print OUT "RootFolderIcon = cust1.ico$CRLF";
+		print OUT "SubFolderIcon = cust2.ico$CRLF";
 	}
 	elsif ($filename eq "Category")
 	{
 		$fname = "$folderdir/Category.ini";
 		chmod 0666, $fname;
 		open (OUT, ">$fname") || die "$!";
-		print OUT <<__HEAD__;
-[FOLDER_SETTINGS]
-RootFolderIcon = cust1.ico
-SubFolderIcon = cust2.ico
-__HEAD__
+		print OUT "[FOLDER_SETTINGS]$CRLF";
+		print OUT "RootFolderIcon = cust1.ico$CRLF";
+		print OUT "SubFolderIcon = cust2.ico$CRLF";
 	}
 	else
 	{
@@ -93,29 +90,30 @@ __HEAD__
 		open (OUT, ">$fname") || die "$!";
 	}
 
-	print OUT "\n[ROOT_FOLDER]\n\n";
+	binmode(OUT);
+	print OUT "$CRLF[ROOT_FOLDER]$CRLF$CRLF";
 
 	foreach (sort keys %LIST)
 	{
-		print OUT "[$_]\n";
-		print OUT "$LIST{$_}\n";
+		print OUT "[$_]$CRLF";
+		print OUT "$LIST{$_}$CRLF";
 	}
 
 	if ($filename eq "VerAdded")
 	{
 		foreach my $tag (keys %EXTRA)
 		{
-			print OUT "[$EXTRA{$tag}]\n";
+			print OUT "[$EXTRA{$tag}]$CRLF";
 
 			open (EXTRA, "$dir/$mameexe -driver_config $tag -ll|") || die "$!";
 			while (<EXTRA>)
 			{
 				next unless /(.*[^\s])\s+"(.*)"/;
-				print OUT "$1\n";
+				print OUT "$1$CRLF";
 			}
 			close (EXTRA);
 
-			print OUT "\n";
+			print OUT "$CRLF";
 		}
 	}
 
