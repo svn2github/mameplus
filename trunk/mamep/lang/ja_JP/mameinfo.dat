@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.119u1      #
+#     Mameinfo.dat日本語版 v0.119u3      #
 #                                        #
-#           September 27, 2007           #
+#            October 7, 2007             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,40 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：851 翻訳済：826
-# 追加項目：342 合計：1193
+# Tester報告：857 翻訳済：831
+# 追加項目：342 合計：1199
 #
 
+
+$info=deadang
+$mame
+[バグ]
+
+- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty
+
+$end
+
+$info=loverboy
+$mame
+[バグ]
+
+- ボタンが実装されていないため、「Love Stage」がプレイできない。 loverboy0119u2gra, Scuore
+
+$end
+
+$info=alleymas
+$mame
+[バグ]
+
+- 0.105からジョイスティックで操作ができない。入力にキーボード、ジョイスティック、マウスなどを割り当てても反応しない。 alleymas0119u3gra, Tafoid
+
+
+- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid
+
+
+- イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
+
+$end
 
 $info=phelios
 $mame
@@ -35,33 +65,19 @@ $mame
 
 $end
 
-$info=garou
+$info=rfjetus
 $mame
 [バグ]
 
-- NeoGeoの音がおかしくなっている。0.118u3から。
-
-餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
+- 黒画面だけで起動しない。古いバージョンでnv ramを作成してあると起動する。 rfjetus0119u2red, Canim / Tafoid / couriersud
 
 $end
 
-$info=fatfury2
+$info=diehard
 $mame
 [バグ]
 
-- NeoGeoの音がおかしくなっている。0.118u3から。
-
-餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
-
-$end
-
-$info=fatfursp
-$mame
-[バグ]
-
-- NeoGeoの音がおかしくなっている。0.118u3から。
-
-餓狼のKim Dong Hwanの面のBGMで、20秒後からギターが入るが、音色が違っている。また、餓狼伝説2や餓狼伝説SPのAndy Bogardの面のBGMも同様。 neodrv0119u1gre, Arieta / SpinalBlood
+- コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
 
 $end
 
@@ -1546,14 +1562,6 @@ $mame
 
 $end
 
-$info=alleymas
-$mame
-[バグ]
-
-- イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
-
-$end
-
 $info=lethalen
 $mame
 [バグ]
@@ -1688,10 +1696,7 @@ $info=loht
 $mame
 [バグ]
 
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
-
-
-- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
 
 $end
 
@@ -1699,7 +1704,7 @@ $info=hharry
 $mame
 [バグ]
 
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
 
 $end
 
@@ -1707,23 +1712,7 @@ $info=bchopper
 $mame
 [バグ]
 
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix
-
-$end
-
-$info=gunforc2
-$mame
-[バグ]
-
-- 画面にスコアや残り時間などが表示されない。0.114u1から。 gunforc2_0115u1gre, robiza
-
-$end
-
-$info=rtypeleo
-$mame
-[バグ]
-
-- 2面の背景の上部分がラインスクロールしていないため、切り替え部分が見えてしまう。0.114u1から発生。 rtypeleo0115u1gre, robiza
+- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
 
 $end
 
@@ -2472,30 +2461,6 @@ $mame
 
 $end
 
-$info=ms5pcb
-$mame
-[バグ]
-
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
-$info=svcpcb
-$mame
-[バグ]
-
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
-$info=kf2k3pcb
-$mame
-[バグ]
-
-- neodriv.cの単体基板ゲームが起動しない。 neodriv0117u3red, Firewave / hanamichi
-
-$end
-
 $info=2020bb
 $mame
 [バグ]
@@ -2949,9 +2914,6 @@ $mame
 [バグ]
 
 - 画面反転を有効にするとグラフィックがおかしくなる。 nitrobal0111u5gre, Speedfreak
-
-
-- グラフィックが大幅に乱れている。 nitrobal0115u3yel, Tafoid
 
 
 - プライオリティ問題あり。最初の扉を開けて次のエリアに進んだところなど。またテキストレイヤーも化けて表示される。 nitrobal068gre, Firewave / robiza
@@ -3692,21 +3654,6 @@ $mame
 
 $end
 
-$info=wintbob
-$mame
-[情報]
-
-- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
-Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
-実際の基板を探して調べる必要があるとのこと。
-
-
-[バグ]
-
-- 31面以降で、灰色の敵がファイアを吐くとゲームがリセットする。 wiintbob0108u4red, Layne / robiza
-
-$end
-
 $info=sonson
 $mame
 [バグ]
@@ -3777,14 +3724,6 @@ $mame
 [バグ]
 
 - 画面が一瞬他のグラフィックに変わることがある。後の面に進むほどひどくなる。 superchs0101u5gre, Twisty
-
-$end
-
-$info=hotsmash
-$mame
-[バグ]
-
-- 速度制限をONにしてコインを入れ、ゲームを始めようとすると固まる。 hotsmash0110u4red, Jason / Tafoid
 
 $end
 
@@ -8292,6 +8231,16 @@ $mame
 [情報]
 
 - サウンドを追加するにはZ180サウンドCPUの内部ROMを吸い出す必要あり。
+
+$end
+
+$info=wintbob
+$mame
+[情報]
+
+- 68000CPUのクロックを16MHｚにすると表示ずれは修正されるが、
+Haze氏によれば、16MHｚでは当時にしては高すぎるかもしれないので、
+実際の基板を探して調べる必要があるとのこと。
 
 $end
 
