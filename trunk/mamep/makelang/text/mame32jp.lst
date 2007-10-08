@@ -68,6 +68,7 @@ beastf	グロッブ / Beastie Feastie	ぐろっぶ	Epos Corporation
 rocktrv2	MTV ロックンロールトリビア (part 2)	えむてぃーぶいろっくんろーるとりびあ	Triumph Software Inc.
 bigbucks	ビッグバックス -Trivia Quest	びっぐばっくす	Dynasoft Inc.
 mschamp	ミズ・パックマン / Ms. Pac-Man Champion Edition / Super Zola Pac Gal	みずぱっくまん	hack
+cannonbp	キャノンボール (Pacman Hardware)	きゃのんぼーる	Novomatic
 drivfrcp	ドライビングフォース (Pac-Man conversion)	どらいびんぐふぉーす	Shinkai Inc. (Magic Eletronics Inc. licence)
 8bpm	エイトボールアクション (Pac-Man conversion)	えいとぼーるあくしょん	Seatongrove Ltd (Magic Eletronics USA licence)
 porky	ポーキー	ぽーきー	Shinkai Inc. (Magic Eletronics Inc. licence)
@@ -538,7 +539,7 @@ digdugb	ディグダグ (rev 1)	でぃぐだぐ_1	Namco
 digdugat	ディグダグ (Atari rev 2)	でぃぐだぐ_1	[Namco] (Atari license)
 digduga1	ディグダグ (Atari rev 1)	でぃぐだぐ_1	[Namco] (Atari license)
 dzigzag	ディグダグ / Zig Zag (Dig Dug hardware)	でぃぐだぐ_1	bootleg
-digsid	ディグダグ (Sidam)	でぃぐだぐ_1	[Namco] (Sidam license)
+digsid	ディグダグ (manufactured by Sidam)	でぃぐだぐ_1	Namco [Sidam license]
 xevious	ゼビウス (Namco)	ぜびうす	Namco
 xeviousa	ゼビウス (Atari set 1)	ぜびうす	Namco (Atari license)
 xeviousb	ゼビウス (Atari set 2)	ぜびうす	Namco (Atari license)
@@ -1081,7 +1082,8 @@ radarznt	レーダーゾーン (Tuni)	れーだーぞーん	Century Electronics (Tuni Electro 
 outline	レーダーゾーン / Outline	れーだーぞーん	Century Electronics
 goldbug	ゴールドバグ	ごーるどばぐ	Century Electronics
 heartatk	ハートアタック	はーとあたっく	Century Electronics
-hunchbak	ハンチバック	はんちばっく	Century Electronics
+hunchbak	ハンチバック (set 1)	はんちばっく	Century Electronics
+hunchbka	ハンチバック (set 2)	はんちばっく	Century Electronics
 superbik	スーパーバイク	すーぱーばいく	Century Electronics
 raiders	レイダース	れいだーす	Century Electronics
 hero	ヒーロー	ひーろー	Seatongrove Ltd
@@ -1235,6 +1237,9 @@ nspirit	最後の忍道 / Ninja Spirit	さいごのにんどう	Irem
 nspiritj	最後の忍道 (日本版)	さいごのにんどう	Irem
 imgfight	イメージファイト (日本版)	いめーじふぁいと	Irem
 loht	レジェンドオブヒーロー トンマ	れじぇんどおぶひーろーとんま	Irem
+lohtj	レジェンドオブヒーロー トンマ (日本版)	れじぇんどおぶひーろーとんま	Irem
+lohtb	レジェンドオブヒーロー トンマ (海賊版)	れじぇんどおぶひーろーとんま	Irem
+lohtb2	レジェンドオブヒーロー トンマ (海賊版 set 2)	れじぇんどおぶひーろーとんま	Irem
 xmultipl	Xマルチプライ (日本版)	えっくすまるちぷらい	Irem
 dbreed	ドラゴンブリード (M81 PCB ver)	どらごんぶりーど	Irem
 dbreed72	ドラゴンブリード (M72 PCB ver)	どらごんぶりーど	Irem
@@ -1495,6 +1500,7 @@ arkatour	アルカノイド / Tournament Arkanoid (USA版)	あるかのいど_1	Taito America
 tetrsark	テトリス (D.R. Korea)	てとりす_1_3drkorea	D.R. Korea
 sqix	スーパークイックス (set 1)	すーぱーくいっくす	Taito
 sqixa	スーパークイックス (set 2)	すーぱーくいっくす	Taito
+sqixu	スーパークイックス (USA版)	すーぱーくいっくす	Taito (Romstar License)
 sqixbl	スーパークイックス (海賊版)	すーぱーくいっくす	bootleg
 perestro	ペレストロイカ・ガールズ	ぺれすとろいかがーるず	Promat
 perestrf	ペレストロイカ・ガールズ (Fuuki license)	ぺれすとろいかがーるず	Promat (Fuuki license)
@@ -1850,7 +1856,7 @@ snowbroa	スノーブラザーズ -Nick & Tom (set 2)	すのーぶらざーず_1	Toaplan
 snowbrob	スノーブラザーズ -Nick & Tom (set 3)	すのーぶらざーず_1	Toaplan
 snowbroc	スノーブラザーズ -Nick & Tom (set 4)	すのーぶらざーず_1	Toaplan
 snowbroj	スノーブラザーズ -Nick & Tom (日本版)	すのーぶらざーず_1	Toaplan
-wintbob	スノーブラザーズ -Nick & Tom / The Winter Bobble	すのーぶらざーず_1	bootleg
+wintbob	スノーブラザーズ -Nick & Tom / The Winter Bobble (海賊版)	すのーぶらざーず_1	[Toaplan] (Sakowa Project Korea bootleg)
 honeydol	ハニードールス	はにーどーるす	Barko Corp.
 twinadv	ツインアドベンチャー (海外版)	ついんあどべんちゃー	Barko Corp.
 twinadvk	ツインアドベンチャー (韓国版)	ついんあどべんちゃー	Barko Corp.
@@ -2636,7 +2642,8 @@ pkladiel	ポーカーレディース (Leprechaun ver 510)	ぽーかーれでぃーす	Leprechaun
 pkladila	ポーカーレディース (Leprechaun ver 401)	ぽーかーれでぃーす	Leprechaun
 dokaben	ドカベン (日本版)	どかべん	Capcom
 pang	ポンピングワールド / Pang (海外版)	ぽんぴんぐわーるど	Mitchell
-pangb	ポンピングワールド / Pang (海賊版)	ぽんぴんぐわーるど	bootleg
+pangb	ポンピングワールド / Pang (海賊版 set 1)	ぽんぴんぐわーるど	[Mitchell] (bootleg)
+pangbold	ポンピングワールド / Pang (海賊版 set 2)	ぽんぴんぐわーるど	[Mitchell] (bootleg)
 bbros	ポンピングワールド / Buster Bros. (USA版)	ぽんぴんぐわーるど	Capcom
 pompingw	ポンピングワールド (日本版)	ぽんぴんぐわーるど	Mitchell
 cbasebal	カプコンベースボール (日本版)	かぷこんべーすぼーる	Capcom
@@ -2644,6 +2651,7 @@ cworld	アドベンチャークイズ カプコンワールド (日本版)	あどべんちゃーくいず_1かぷ
 hatena	アドベンチャークイズ2 ハテナ？の大冒険 (日本版 900228)	あどべんちゃーくいず_2はてなはてなのだいぼうけん	Capcom
 spang	スーパーパン (海外版 900914)	すーぱーぱん	Mitchell
 spangj	スーパーパン (日本版 901023)	すーぱーぱん	Mitchell
+spangbl	スーパーパン (海外版 900914) (海賊版)	すーぱーぱん	[Mitchell] (bootleg)
 sbbros	スーパーパン / Super Buster Bros. (USA版 901001)	すーぱーぱん	Mitchell + Capcom
 marukin	スーパーMAHJONG(禁)版 (日本版 901017)	すーぱーまーじゃんまるきんばん	Yuga
 qtono1	クイズ殿様の野望 (日本版)	くいずとのさまのやぼう_1	Capcom
@@ -2969,6 +2977,7 @@ fantzon1	ファンタジーゾーン (set 1 unprotected)	ふぁんたじーぞーん_1	Sega
 sdi	SDI <Strategic Defense Initiative> (欧州版 System16A FD1089B 317-0027)	えすでぃーあい	Sega
 shinobi	忍 (set 5 System16A unprotected)	しのび	Sega
 shinobi1	忍 (set 1 System16A FD1094 317-0050)	しのび	Sega
+shinobls	忍 (System 16A) (Star) (海賊版)	しのび	[Sega] (Star bootleg)
 sjryuko1	スケバン雀士竜子 (set 1 System16A FD1089B 317-5021)	すけばんじゃんしりゅうこ	White Board
 tetris	テトリス (日本版 set 4 System16A FD1094 317-0093)	てとりす_1_2sega	Sega
 tetris3	テトリス (日本版 set 3 System16A FD1094 317-0093a)	てとりす_1_2sega	Sega
@@ -3052,7 +3061,8 @@ goldnabl	ゴールデンアックス (encrypted) (海賊版)	ごーるでんあっくす_1	bootleg
 goldnab2	ゴールデンアックス (海賊版)	ごーるでんあっくす_1	bootleg
 passht4b	パッシングショット (4 players) (海賊版)	ぱっしんぐしょっと	bootleg
 passshtb	パッシングショット (2 players) (海賊版)	ぱっしんぐしょっと	bootleg
-shinobl	忍 (海賊版)	しのび	bootleg
+shinoblb	忍 (Beta) (海賊版)	しのび	[Sega] (Beta bootleg)
+shinobld	忍 (Datsu) (海賊版)	しのび	[Sega] (Datsu bootleg)
 tetrisbl	テトリス (海賊版)	てとりす_1_2sega	bootleg
 tturfbl	タフターフ (海賊版)	たふたーふ	bootleg
 wb3bbl	ワンダーボーイIII モンスターレア (海賊版)	わんだーぼーい_3	bootleg
@@ -3133,7 +3143,8 @@ sspiritj	スクランブルスピリッツ (日本版 Floppy DS3-5000-02-REV-A)	すくらんぶるす
 sspirtfc	スクランブルスピリッツ (FD1094 317-0058-02c)	すくらんぶるすぴりっつ	Sega
 gground	ゲイングランド (海外版 FD1094 317-0058-03c?)	げいんぐらんど	Sega
 ggroundj	ゲイングランド (日本版 FD1094 317-0058-03b)	げいんぐらんど	Sega
-crkdown	クラックダウン (USA版 FD1094 317-0058-04d)	くらっくだうん	Sega
+crkdown	クラックダウン (海外版 FD1094 317-0058-04c)	くらっくだうん	Sega
+crkdownu	クラックダウン (USA版 FD1094 317-0058-04d)	くらっくだうん	Sega
 crkdownj	クラックダウン (日本版 FD1094 317-0058-04b)	くらっくだうん	Sega
 sgmast	ジャンボ尾崎のスーパーマスターズ / Super Masters Golf (FD1094 317-0058-05d?)	じゃんぼおざきのすーぱーますたーず	Sega
 sgmastc	ジャンボ尾崎のスーパーマスターズ (海外版 FD1094 317-0058-05c)	じゃんぼおざきのすーぱーますたーず	Sega
@@ -3339,6 +3350,7 @@ tantr	タントアール (日本版)	たんとあーる	Sega
 tantrkor	タントアール (韓国版)	たんとあーる	Sega
 tantrbl	タントアール (日本版) (海賊版 set 1)	たんとあーる	bootleg
 tantrbl2	タントアール (日本版) (海賊版 set 2)	たんとあーる	bootleg
+tantrbl3	タントアール (日本版) (海賊版 set 3)	たんとあーる	bootleg
 puyo	ぷよぷよ (海外版)	ぷよぷよ_1	Sega / Compile
 puyobl	ぷよぷよ (海外版) (海賊版)	ぷよぷよ_1	bootleg
 puyoj	ぷよぷよ (日本版)	ぷよぷよ_1	Sega / Compile
@@ -3748,7 +3760,8 @@ pbactio3	ピンボールアクション (set 3 encrypted)	ぴんぼーるあくしょん	Tehkan
 ponttehk	ポントゥーン (Tehkan)	ぽんとぅーん	Tehkan
 lvpoker	ラブリーポーカー [BET]	らぶりーぽーかー	Tehkan
 lvcards	ラブリーカード	らぶりーかーど	Tehkan
-tehkanwc	テーカンワールドカップ	てーかんわーるどかっぷ	Tehkan
+tehkanwc	テーカンワールドカップ (set 1)	てーかんわーるどかっぷ	Tehkan
+tehkanwb	テーカンワールドカップ (set 2) (海賊版?)	てーかんわーるどかっぷ	Tehkan
 gridiron	グリダイアンファイト	ぐりだいあんふぁいと	Tehkan
 teedoff	ティードオフ (日本版)	てぃーどおふ	Tecmo
 solomon	ソロモンの鍵 (USA版)	そろもんのかぎ	Tecmo
@@ -4975,8 +4988,10 @@ ddragonu	双截龍 <ダブルドラゴン> (USA版 set 1)	だぶるどらごん_1	[Technos] (Taito
 ddragoua	双截龍 <ダブルドラゴン> (USA版 set 2)	だぶるどらごん_1	[Technos] (Taito America license)
 ddragonw	双截龍 <ダブルドラゴン> (海外版 set 1)	だぶるどらごん_1	[Technos] (Taito license)
 ddragnw1	双截龍 <ダブルドラゴン> (海外版 set 2)	だぶるどらごん_1	[Technos] (Taito license)
-ddragonb	双截龍 <ダブルドラゴン> (海賊版)	だぶるどらごん_1	bootleg
+ddragonb	双截龍 <ダブルドラゴン> (海賊版 with HD6903)	だぶるどらごん_1	bootleg
+ddragnba	双截龍 <ダブルドラゴン> (海賊版 with M6803)	だぶるどらごん_1	bootleg
 spdodgeb	熱血高校ドッジボール部 / Super Dodge Ball (USA版)	ねっけつこうこうどっじぼーるぶ	Technos
+nkdodge	熱血高校ドッジボール部 (日本版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodgeb	熱血高校ドッジボール部 (日本版) (海賊版)	ねっけつこうこうどっじぼーるぶ	Technos
 chinagat	西遊降魔録 -流棒妖技ノ章 / China Gate (USA版)	さいゆうごうまろく	[Technos] (Taito Romstar license)
 saiyugou	西遊降魔録 -流棒妖技ノ章 (日本版)	さいゆうごうまろく	Technos
@@ -5362,9 +5377,11 @@ rfjetu	ライデンファイターズJET (USA版)	らいでん_6ふぁいたーずじぇっと	Seibu Kaih
 rfjeta	ライデンファイターズJET (アジア版)	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu (Dream Island license)
 rfjetj	ライデンファイターズJET (日本版)	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu
 rfjetus	ライデンファイターズJET (USA版 single board)	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu (Fabtek license)
-cabal	カベール (USA版 set 1)	かべーる	Tad (Fabtek license)
-cabal2	カベール (USA版 set 2)	かべーる	Tad (Fabtek license)
-cabalbl	カベール (海賊版)	かべーる	bootleg
+cabal	カベール (海外版 joystick ver)	かべーる	Tad Corporation
+cabala	カベール (Alpha trading)	かべーる	Tad Corporation (Alpha Trading license)
+cabalbl	カベール (海賊版 joystick ver)	かべーる	[Tad Corporation] (Red Corporation bootleg)
+cabalus	カベール (USA版 set 1 trackball ver)	かべーる	Tad (Fabtek license)
+cabalus2	カベール (USA版 set 2 trackball ver)	かべーる	Tad (Fabtek license)
 toki	JuJu伝説 / Toki (海外版 set 1)	じゅじゅでんせつ	Tad
 tokia	JuJu伝説 / Toki (海外版 set 2)	じゅじゅでんせつ	Tad
 tokiu	JuJu伝説 / Toki (USA版)	じゅじゅでんせつ	Tad (Fabtek license)
@@ -5474,6 +5491,7 @@ gratiaa	セカンドアース グラティア (91022-10 ver)	せかんどあーすぐらてぃあ	Jaleco
 kirarast	流星雀士キララ★スター	りゅうせいじゃんしきららすたー	Jaleco
 tp2m32	テトリスプラス2 (MegaSystem 32 ver)	てとりす_2ぷらす_2	Jaleco
 f1superb	F-1スーパーバトル	えふわんすーぱーばとる	Jaleco
+bnstars1	VS雀士ブランニュースターズ	ばーさすじゃんしぶらんにゅーすたーず	Jaleco
 rabiolep	ラビオ・レプス (日本版)	らびおれぷす	V-System Co.
 rpunch	ラビオ・レプス / Rabbit Punch (USA版)	らびおれぷす	V-System Co. (Bally/Midway/Sente license)
 svolley	スーパーバレーボール (日本版)	すーぱーばれー_1	V-System Co.
@@ -5627,8 +5645,9 @@ bangj	GUNガバチョ (日本版)	がんがばちょ	Gaelco
 speedup	スピードアップ	すぴーどあっぷ	Gaelco
 surfplnt	サーフプラネット	さーふぷらねっと	Gaelco
 radikalb	ラジカルバイカーズ	らじかるばいかーず	Gaelco
-djboy	DJボーイ	でぃーじぇいぼーい	Sammy / Williams [Kaneko]
-djboyj	DJボーイ (日本版)	でぃーじぇいぼーい	Sega [Kaneko]
+djboy	DJボーイ (set 1)	でぃーじぇいぼーい	Kaneko (American Sammy license)
+djboyj	DJボーイ (日本版)	でぃーじぇいぼーい	Kaneko (Sega license)
+djboya	DJボーイ (set 2)	でぃーじぇいぼーい	Kaneko (American Sammy license)
 airbustr	エア・バスター -Trouble Specialty Raid Unit (海外版)	えあばすたー	Kaneko (Namco license)
 airbustj	エア・バスター -Trouble Specialty Raid Unit (日本版)	えあばすたー	Kaneko (Namco license)
 airbusb	エア・バスター -Trouble Specialty Raid Unit (海賊版)	えあばすたー	bootleg
@@ -6023,7 +6042,7 @@ tangtang	タンタン (ver 0526 26/05/2000)	たんたん	ESD
 royalmj	ロイヤルマージャン (日本版 ver 1.13)	ろいやるまーじゃん	Nichibutsu
 openmj	オープンマージャン [BET] (日本版)	おーぷんまーじゃん	Sapporo Mechanic
 royalmah	ロイヤルマージャン (Falcon) (海賊版 ver 1.01)	ろいやるまーじゃん	bootleg
-janyoup2	雀友パートII (ver 7.03 July 1 1983)	じゃんゆうぱーと2	Cosmo Denshi
+janyoup2	雀友パート2 (ver 7.03 July 1 1983)	じゃんゆうぱーと2	Cosmo Denshi
 janoh	雀王	じゃんおう	Toaplan
 suzume	わたしはすずめちゃん (日本版)	わたしはすずめちゃん	Dyna Electronics
 hnayayoi	華弥生 (日本版)	はなやよい	Dyna Electronics
@@ -6079,8 +6098,11 @@ mjmyornt	麻雀 東洋の神秘	まーじゃんとうようのしんぴ	Dynax
 mjmyuniv	麻雀 宇宙の神秘 -The Mysterious Universe	まーじゃんうちゅうのしんぴ	Dynax
 quiz365	毎日替わるクイズ番組 クイズ365 (日本版)	まいにちかわるくいずばんぐみくいずさんろくご	Nakanihon
 quiz365t	毎日替わるクイズ番組 クイズ365 (香港 / 台湾版)	まいにちかわるくいずばんぐみくいずさんろくご	Nakanihon + Taito
-rongrong	龍龍 / Rong Rong (欧州版)	ろんろん	Nakanihon
-rongrngg	龍龍 / Rong Rong (ドイツ版)	ろんろん	Nakanihon
+rongrong	龍龍 / Rong Rong (欧州版)	ろんろん	Nakanihon (Activision licence)
+rongrngj	龍龍 (日本版)	ろんろん	Nakanihon (Activision licence)
+rongrngg	龍龍 / Rong Rong (ドイツ版)	ろんろん	Nakanihon (Activision licence)
+hparadis	スーパー華パラダイス (日本版)	すーぱーはなぱらだいす	Dynax
+hgokou	花札 華五光 (日本版)	はなふだはなごこう	Dynax (Alba licence)
 mjdchuka	麻雀 大中華圈 (中国版 ver D111)	まーじゃんだいちゅうかけん	Dynax
 mjtensin	麻雀天神牌 (日本版)	まーじゃんてんしんはい	Dynax
 nettoqc	熱答クイズチャンピオン (日本版)	ねっとうくいずちゃんぴおん	Nakanihon
@@ -6136,8 +6158,8 @@ lordgun	ロード・オブ・ガン (USA版)	ろーどおぶがん	IGS
 hfh	黄飛鴻	ふぁんふぇいほん	IGS
 tarzan	ターザン	たーざん	IGS
 dunhuang	敦煌	どんふぁん	Spirit
-iqblocka	IQブロック (set 2)	あいきゅーぶろっく	IGS
-iqblockf	IQブロック (set 3 フランス版?)	あいきゅーぶろっく	IGS
+iqblocka	IQブロック (V127M)	あいきゅーぶろっく	IGS
+iqblockf	IQブロック (V113FR)	あいきゅーぶろっく	IGS
 tjsb	麻将 天将神兵	まーじゃんちゃんじゃんしぇんびん	IGS
 lhzb2	麻将 龍虎争霸2 (set 1)	まーじゃんろんふーぜんば_2	IGS
 lhzb2a	麻将 龍虎争霸2 (set 2)	まーじゃんろんふーぜんば_2	IGS
@@ -6774,12 +6796,13 @@ kingpinm	キングピンマルチゲーム	きんぐぴん_2_まるちげーむ	American Communication
 thayers	セイヤーズクエスト	せいやーずくえすと	RDI Video Systems
 thayersa	セイヤーズクエスト (alt set)	せいやーずくえすと	RDI Video Systems
 istellar	インターステラー	いんたーすてらー	Funai/Gakken
-esh	エシューズオルンミラ	えしゅーずおるんみら	Funai/Gakken
-esha	エシューズオルンミラ (set 2)	えしゅーずおるんみら	Funai/Gakken
-eshb	エシューズオルンミラ (set 3)	えしゅーずおるんみら	Funai/Gakken
+esh	エシュズオルンミラ	えしゅずおるんみら	Funai/Gakken
+esha	エシュズオルンミラ (set 2)	えしゅずおるんみら	Funai/Gakken
+eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
 mirage	ミラージュ妖獣麻雀伝 (日本版)	みらーじゅようじゅうまーじゃんでん	Mitchell
 dominob	ドミノブロック	どみのぶろっく	Wonwoo Systems
+jongkyo	雀狂	じゃんきょう	Kiwako
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
@@ -6822,7 +6845,7 @@ gwingjd	ギガウィング (日本版 990223 Phoenix Edition)	ぎがうぃんぐ_1	hack
 hsf2d	ハイパーストリートファイターII -The Anniversary Edition (アジア版 040202 Phoenix Edition)	はいぱーすとりーとふぁいたー_2	hack
 dstlku1d	ヴァンパイア -ザ・ナイトウォリアーズ / Dark Stalkers -The Night Warriors (USA版 940705 Phoenix Edition)	ばんぱいあ_1	hack
 kof96ep	ザ・キング・オブ・ファイターズ '96 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_03_1996	bootleg
-kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus (海賊版 / ハック)	ざきんぐおぶふぁいたーず_04_2_1997	bootleg
+kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus 2003 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_04_2_1997	bootleg
 kf2k1pls	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 / ハック set 1)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
 kf2k1pa	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 / ハック set 2)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
 cthd2k3a	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版 set 2)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
@@ -6834,7 +6857,7 @@ matrimbl	新豪血寺一族 闘婚 -Matrimelee (海賊版)	しんごうけつじいちぞくとうこん	b
 mslug5b	メタルスラッグ5 (海賊版)	めたるすらっぐ_5_1	bootleg
 zintrkcd	押し出しジントリック (CD to MVS Conversion)	おしだしじんとりっく	hack
 fr2ch	アイドル麻雀ファイナルロマンス2 (CD to MVS Conversion)	あいどるまーじゃんふぁいなるろまんす_2	hack
-spclone	沙羅曼蛇 (ver YY clone)	さらまんだ_1	Konami
+spclone	沙羅曼蛇 (賞品クローン版 ver YY)	さらまんだ_1	Konami
 vantris	ヴァントリス (Vanguard hardware)	ばんとりす	N.Kehrer
 frogfest	フロッグフィースト	ふろっぐふぃーすと	Rastersoft
 columnsn	コラムス (Neo-Geo)	こらむす	Sega / hack
