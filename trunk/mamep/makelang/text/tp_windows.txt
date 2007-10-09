@@ -386,23 +386,23 @@ DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: Using DirectInput %d\n
 
 
-# osd/windows/sound.c: 369
+# osd/windows/sound.c: 370
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# osd/windows/sound.c: 383
+# osd/windows/sound.c: 384
 Error creating DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 257
+# osd/windows/sound.c: 258
 Error creating DirectSound: %08x\n
 
 
-# osd/windows/sound.c: 350
+# osd/windows/sound.c: 351
 Error creating primary DirectSound buffer: %08x\n
 
 
-# osd/windows/window.c: 637
+# osd/windows/window.c: 636
 Error creating render target for window %d
 
 
@@ -410,7 +410,7 @@ Error creating render target for window %d
 Error creating vertex buffer (%08X)
 
 
-# osd/windows/sound.c: 266
+# osd/windows/sound.c: 267
 Error getting DirectSound capabilities: %08x\n
 
 
@@ -426,23 +426,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 
 
-# osd/windows/sound.c: 366
+# osd/windows/sound.c: 367
 Error getting primary DirectSound buffer format: %08x\n
 
 
-# osd/windows/sound.c: 391
+# osd/windows/sound.c: 392
 Error locking DirectSound stream buffer: %08x\n
 
 
-# osd/windows/sound.c: 304
+# osd/windows/sound.c: 305
 Error playing: %08x\n
 
 
-# osd/windows/sound.c: 274
+# osd/windows/sound.c: 275
 Error setting DirectSound cooperative level: %08x\n
 
 
-# osd/windows/sound.c: 358
+# osd/windows/sound.c: 359
 Error setting primary DirectSound buffer format: %08x\n
 
 
@@ -466,19 +466,19 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 
 
-# osd/windows/window.c: 227
+# osd/windows/window.c: 226
 Failed to create pause event
 
 
-# osd/windows/window.c: 856
+# osd/windows/window.c: 855
 Failed to create window class
 
 
-# osd/windows/window.c: 241
+# osd/windows/window.c: 240
 Failed to create window thread
 
 
-# osd/windows/window.c: 235
+# osd/windows/window.c: 234
 Failed to create window thread ready event
 
 
@@ -498,7 +498,7 @@ Illegal resolution value for %s = %s\n
 Invalid video value %s; reverting to gdi\n
 
 
-# osd/windows/window.c: 652
+# osd/windows/window.c: 651
 MAME: %s [%s] - Screen %d
 
 
@@ -518,11 +518,11 @@ Proposed video mode not supported on device %s\n
 RawInput: APIs detected\n
 
 
-# osd/windows/sound.c: 121
+# osd/windows/sound.c: 122
 Sound buffer: overflows=%d underflows=%d\n
 
 
-# osd/windows/sound.c: 117
+# osd/windows/sound.c: 118
 Sound: buffer overflows=%d underflows=%d\n
 
 
@@ -542,7 +542,7 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 
 
-# osd/windows/window.c: 672
+# osd/windows/window.c: 671
 Unable to complete window creation
 
 

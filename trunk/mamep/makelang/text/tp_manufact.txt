@@ -1458,7 +1458,7 @@ Novar
 Novarmatic
 
 
-# American Poker II (set 1)
+# Cannon Ball (Pacman Hardware)
 Novomatic
 
 
@@ -1850,6 +1850,10 @@ Shonan
 Sidam
 
 
+# Dig Dug (manufactured by Sidam)
+Sidam license
+
+
 # Astropal
 Sidam?
 
@@ -2034,8 +2038,12 @@ TV Game Gruenberg
 TV-Tuning
 
 
-# Cabal (US set 1)
+# Cabal (US set 1, Trackball version)
 Tad
+
+
+# Cabal (World, Joystick version)
+Tad Corporation
 
 
 # Rock Climber

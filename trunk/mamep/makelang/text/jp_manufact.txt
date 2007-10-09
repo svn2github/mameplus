@@ -494,7 +494,7 @@ System Service
 TDS
 東京電子設計
 
-# Cabal (US set 1)
+# Cabal (US set 1, Trackball version)
 Tad
 タッド
 
@@ -1754,7 +1754,7 @@ Novar
 Novarmatic
 
 
-# American Poker II (set 1)
+# Cannon Ball (Pacman Hardware)
 Novomatic
 
 
@@ -2062,6 +2062,10 @@ Shonan
 Sidam
 
 
+# Dig Dug (manufactured by Sidam)
+Sidam license
+
+
 # Astropal
 Sidam?
 
@@ -2196,6 +2200,10 @@ TV Game Gruenberg
 
 # Ameisenbaer (German)
 TV-Tuning
+
+
+# Cabal (World, Joystick version)
+Tad Corporation
 
 
 # Tiger Heli (US)
