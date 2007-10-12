@@ -105,7 +105,11 @@ AR = @$(VCONV) ar
 RC = @$(VCONV) windres
 
 # make sure we use the multithreaded runtime
+ifdef DEBUG
+CC += /MTd
+else
 CC += /MT
+endif
 
 # turn on link-time codegen if the MAXOPT flag is also set
 ifneq ($(MAXOPT),)

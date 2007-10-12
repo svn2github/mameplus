@@ -1767,7 +1767,6 @@ endif
 
 $(CPUOBJ)/z80gb/z80gb.o:	$(CPUSRC)/z80gb/z80gb.c \
 							$(CPUSRC)/z80gb/z80gb.h \
-							$(CPUSRC)/z80gb/daa_tab.h \
 							$(CPUSRC)/z80gb/opc_cb.h \
 							$(CPUSRC)/z80gb/opc_main.h
 
