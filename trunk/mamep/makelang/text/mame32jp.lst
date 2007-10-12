@@ -1325,7 +1325,7 @@ krull	銀河伝説クルール	ぎんがでんせつくるーる	Gottlieb
 kngtmare	ナイトメア (prototype)	ないとめあ	Gottlieb
 sqbert	Qバート / Faster Harder More Challenging Q*bert (prototype)	きゅーばーと	Mylstar
 mach3	マッハ3	まっは3	Mylstar
-cobram3	コブラコマンド	こぶらこまんど	Data East
+cobram3	サンダーストーム / Cobra Command	さんだーすとーむ	Data East
 usvsthem	アスVS.ゼム	あすばーさすぜむ	Mylstar
 3stooges	ザ・スリーストゥージーズ	ざすりーすとぅーじーず	Mylstar
 qbertqub	Qバート キューブズ	きゅーばーときゅーぶず	Mylstar
@@ -1451,7 +1451,8 @@ bublbob1	バブルボブル (older)	ばぶるぼぶる	Taito Corporation
 bublbobr	バブルボブル (USA版 with mode select)	ばぶるぼぶる	Taito America Corporation (Romstar license)
 bubbobr1	バブルボブル (USA版)	ばぶるぼぶる	Taito America Corporation (Romstar license)
 boblbobl	バブルボブル / Bobble Bobble	ばぶるぼぶる	bootleg
-sboblbob	バブルボブル / Super Bobble Bobble	ばぶるぼぶる	bootleg
+sboblboa	バブルボブル / Super Bobble Bobble (set 1)	ばぶるぼぶる	bootleg
+sboblbob	バブルボブル / Super Bobble Bobble (set 2)	ばぶるぼぶる	bootleg
 bub68705	バブルボブル (海賊版 with 68705)	ばぶるぼぶる	bootleg
 missb2	バブルボブル / Miss Bubble II	ばぶるぼぶる	Alpha Co
 kikikai	奇々怪界	ききかいかい	Taito Corporation
@@ -1946,7 +1947,8 @@ flashgla	フラッシュギャル (set 2)	ふらっしゅぎゃる	Sega
 srdmissn	S.R.D.ミッション	えすあーるでぃーみっしょん	Taito Corporation
 fx	S.R.D.ミッション / F-X	えすあーるでぃーみっしょん	bootleg
 legend	レジェンド	れじぇんど	Sega / Coreland ?
-airwolf	エアーウルフ	えあーうるふ	Kyugo
+airwolf	エアーウルフ (set 1)	えあーうるふ	Kyugo
+airwolfa	エアーウルフ (USA版)	えあーうるふ	Kyugo (UA Theatre license)
 skywolf	エアーウルフ / Sky Wolf (set 1)	えあーうるふ	bootleg
 skywolf2	エアーウルフ / Sky Wolf (set 2)	えあーうるふ	bootleg
 defender	ディフェンダー (Red label)	でぃふぇんだー	Williams
@@ -2355,7 +2357,7 @@ mvsca	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980123)	
 mvscar1	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (アジア版 980112)	まーぶるばーさすかぷこん_1	Capcom
 mvsch	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ラテン版 980123)	まーぶるばーさすかぷこん_1	Capcom
 mvscb	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (ブラジル版 980123)	まーぶるばーさすかぷこん_1	Capcom
-sfa3	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980904)	すとりーとふぁいたー_6ぜろ_3	Capcom
+sfa3	ストリートファイターZERO3 / Street Fighter Alpha 3 (欧州版 980904)	すとりーとふぁいたー_6ぜろ_3	Capcom
 sfa3u	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980904)	すとりーとふぁいたー_6ぜろ_3	Capcom
 sfa3ur1	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980629)	すとりーとふぁいたー_6ぜろ_3	Capcom
 sfa3b	ストリートファイターZERO3 / Street Fighter Alpha 3 (ブラジル版 980629)	すとりーとふぁいたー_6ぜろ_3	Capcom
@@ -2644,6 +2646,7 @@ dokaben	ドカベン (日本版)	どかべん	Capcom
 pang	ポンピングワールド / Pang (海外版)	ぽんぴんぐわーるど	Mitchell
 pangb	ポンピングワールド / Pang (海賊版 set 1)	ぽんぴんぐわーるど	[Mitchell] (bootleg)
 pangbold	ポンピングワールド / Pang (海賊版 set 2)	ぽんぴんぐわーるど	[Mitchell] (bootleg)
+pangba	ポンピングワールド / Pang (海賊版 set 3)	ぽんぴんぐわーるど	[Mitchell] (bootleg)
 bbros	ポンピングワールド / Buster Bros. (USA版)	ぽんぴんぐわーるど	Capcom
 pompingw	ポンピングワールド (日本版)	ぽんぴんぐわーるど	Mitchell
 cbasebal	カプコンベースボール (日本版)	かぷこんべーすぼーる	Capcom
@@ -2736,6 +2739,7 @@ gt97v121	ゴールデンティー'97 (ver 1.21)	ごーるでんてぃー_4_11997	Incredible Tech
 gt97s121	ゴールデンティー'97 (ver 1.21S)	ごーるでんてぃー_4_11997	Incredible Technologies
 gt97v120	ゴールデンティー'97 (ver 1.20)	ごーるでんてぃー_4_11997	Incredible Technologies
 gt97t240	ゴールデンティー'97 トーナメント (ver 2.40)	ごーるでんてぃー_4_21997とーなめんと	Incredible Technologies
+gt97t243	ゴールデンティー'97 トーナメント (ver 2.43)	ごーるでんてぃー_4_21997とーなめんと	Incredible Technologies
 gt98	ゴールデンティー'98 (ver 1.10)	ごーるでんてぃー_5_11998	Incredible Technologies
 gt98v100	ゴールデンティー'98 (ver 1.00)	ごーるでんてぃー_5_11998	Incredible Technologies
 gt98s100	ゴールデンティー'98 (ver 1.00S)	ごーるでんてぃー_5_11998	Incredible Technologies
@@ -2859,6 +2863,7 @@ galaxyr	スターブレイザー / Galaxy Ranger	すたーぶれいざー	SEGA
 galaxyrp	スターブレイザー / Galaxy Ranger (Pioneer LDV1000)	すたーぶれいざー	SEGA
 sblazerp	スターブレイザー (Pioneer LDV1000)	すたーぶれいざー	SEGA
 cobraseg	アストロンベルト / Cobra Command (Sega LaserDisc Hardware)	あすとろんべると	SEGA
+gpworld	GPワールド	じーぴーわーるど	SEGA
 chboxing	チャンピオンボクシング	ちゃんぴおんぼくしんぐ	Sega
 chwrestl	チャンピオンプロレス	ちゃんぴおんぷろれす	Sega
 dokidoki	どきどきペンギンランド	どきどきぺんぎんらんど	Sega
@@ -2961,6 +2966,7 @@ sharrir1	スペースハリアー (8751 315-5163)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
 aliensy1	エイリアンシンドローム (set 1 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
 aliensy2	エイリアンシンドローム (set 2 System16A FD1089A 317-0033)	えいりあんしんどろーむ	Sega
+aliensy5	エイリアンシンドローム (set 5 System16A FD1089B 317-0037)	えいりあんしんどろーむ	Sega
 bodyslam	ダンプ松本 / Body Slam (8751 317-0015)	だんぷまつもと	Sega
 dumpmtmt	ダンプ松本 (日本版 8751 317-unknown)	だんぷまつもと	Sega
 mjleague	メジャーリーグ	めじゃーりーぐ	Sega
@@ -3586,8 +3592,8 @@ srdarwnj	SRD <スーパーリアルダーウィン> (日本版)	えすあーるでぃー	Data East Corp
 gondo	魔境戦士 / Gondomania (USA版)	まきょうせんし	Data East USA
 makyosen	魔境戦士 (日本版)	まきょうせんし	Data East Corporation
 garyoret	臥竜列伝 (日本版)	がりょうれつでん	Data East Corporation
-cobracom	コブラコマンド (海外版 rev 5)	こぶらこまんど	Data East Corporation
-cobracmj	コブラコマンド (日本版)	こぶらこまんど	Data East Corporation
+cobracom	サンダーストーム / Cobra Command (海外版 rev 5)	さんだーすとーむ	Data East Corporation
+cobracmj	サンダーストーム (日本版)	さんだーすとーむ	Data East Corporation
 oscar	サイコニクス・オスカー (USA版)	さいこにくすおすかー	Data East USA
 oscarj	サイコニクス・オスカー (日本版 rev 2)	さいこにくすおすかー	Data East Corporation
 oscarj1	サイコニクス・オスカー (日本版 rev 1)	さいこにくすおすかー	Data East Corporation
@@ -5118,6 +5124,7 @@ mjzoomin	麻雀ちゃんねるズームイン！	まーじゃんちゃんねるずーむいん	Jaleco
 kakumei	麻雀革命	まーじゃんかくめい_1	Jaleco
 kakumei2	麻雀革命II -プリンセスリーグ	まーじゃんかくめい_2	Jaleco
 suchipi	アイドル雀士スーチーパイスペシャル	あいどるじゃんしすーちーぱい_1すぺしゃる	Jaleco
+hayaosi1	早押しクイズ グランドチャンピオン大会	はやおしくいずぐらんどちゃんぴおんたいかい	Jaleco
 ddealer	ダブルディーラー	だぶるでぃーらー	NMK
 quizpani	クイズぱにくるふぁんたじ～	くいずぱにくるふぁんたじー	NMK
 acommand	エイリアンコマンド	えいりあんこまんど	Jaleco
@@ -5217,7 +5224,7 @@ blitz2k	NFLブリッツ2000 -ゴールドエディション	えぬえふえるぶりっつ_32000	Midway 
 hyprdriv	ハイパードライブ	はいぱーどらいぶ	Midway Games
 gauntleg	ガントレット レジェンド (ver 1.6)	がんとれっと_3れじぇんど	Atari Games
 gauntl12	ガントレット レジェンド (ver 1.2)	がんとれっと_3れじぇんど	Atari Games
-tenthdeg	テンスディグリー	てんすでぃぐりー	Atari Games
+tenthdeg	テンスディグリー (prototype)	てんすでぃぐりー	Atari Games
 roadburn	ロードバーナーズ	ろーどばーなーず	Atari Games
 sf2049	サンフランシスコラッシュ 2049	さんふらんしすこらっしゅ_32049_1	Atari Games
 sf2049se	サンフランシスコラッシュ 2049 スペシャルエディション	さんふらんしすこらっしゅ_32049_2すぺしゃるえでぃしょん	Atari Games
@@ -5235,7 +5242,7 @@ embargo	エンバーゴ	えんばーご	Cinematronics
 tripool	トライ・プール (Casino Tech)	とらいぷーる	Noma (Casino Tech license)
 tripoola	トライ・プール (Costal Games)	とらいぷーる	Noma (Costal Games license)
 joinem	ジョイネム	じょいねむ	Global Corporation
-loverboy	ラバーボーイ	らばーぼーい	Global Corporation
+loverboy	ラバーボーイ	らばーぼーい	G.T Enterprise Inc
 striv	スーパートリブ	すーぱーとりぶ_1	Hara Industries
 jack	ジャックと豆の木 / Jack the Giantkiller (set 1)	じゃっくとまめのき	Cinematronics
 jack2	ジャックと豆の木 / Jack the Giantkiller (set 2)	じゃっくとまめのき	Cinematronics
@@ -5378,7 +5385,7 @@ rfjeta	ライデンファイターズJET (アジア版)	らいでん_6ふぁいたーずじぇっと	Seibu K
 rfjetj	ライデンファイターズJET (日本版)	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu
 rfjetus	ライデンファイターズJET (USA版 single board)	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu (Fabtek license)
 cabal	カベール (海外版 joystick ver)	かべーる	Tad Corporation
-cabala	カベール (Alpha trading)	かべーる	Tad Corporation (Alpha Trading license)
+cabala	カベール (Alpha Trading)	かべーる	Tad Corporation (Alpha Trading license)
 cabalbl	カベール (海賊版 joystick ver)	かべーる	[Tad Corporation] (Red Corporation bootleg)
 cabalus	カベール (USA版 set 1 trackball ver)	かべーる	Tad (Fabtek license)
 cabalus2	カベール (USA版 set 2 trackball ver)	かべーる	Tad (Fabtek license)
@@ -5477,7 +5484,8 @@ bestleag	ビッグストライカー / Best League	びっぐすとらいかー	bootleg
 chimerab	キメラビースト (prototype)	きめらびーすと	Jaleco
 cybattlr	サイバトラー	さいばとらー	Jaleco
 peekaboo	ピーカブー！	ぴーかぶー	Jaleco
-hayaosi1	早押しクイズ グランドチャンピオン大会	はやおしくいずぐらんどちゃんぴおんたいかい	Jaleco
+hayaosi2	早押しクイズ グランドチャンピオン大会	はやおしくいずぐらんどちゃんぴおんたいかい	Jaleco
+hayaosi3	早押しクイズ 熱闘生放送	はやおしくいずねっとうなまほうそう	Jaleco
 bbbxing	ベストバウトボクシング	べすとばうとぼくしんぐ	Jaleco
 47pie2	アイドル雀士スーチーパイII (ver 1.1)	あいどるじゃんしすーちーぱい_2	Jaleco
 47pie2o	アイドル雀士スーチーパイII (ver 1.0)	あいどるじゃんしすーちーぱい_2	Jaleco
@@ -5955,11 +5963,12 @@ skyalert	スカイアラート	すかいあらーと	Metro
 poitto	ぽいっと！	ぽいっと	Metro / Able Corp.
 dharma	だるま道場 -目指せ、達麿王	だるまどうじょう	Metro
 dharmak	だるま道場 -目指せ、達麿王 (韓国版)	だるまどうじょう	Metro
-lastfort	牌砦	とりで	Metro
-lastfero	牌砦 (erotic)	とりで	Metro
-lastforg	牌砦 / Last Fortress (ドイツ版)	とりで	Metro
-toride2g	牌砦II -仇討外伝	とりで2	Metro
-torid2gg	牌砦II -仇討外伝 (ドイツ版)	とりで2	Metro
+lastfort	牌砦	とりで_1	Metro
+lastfero	牌砦 (erotic)	とりで_1	Metro
+lastforg	牌砦 / Last Fortress (ドイツ版)	とりで_1	Metro
+toride2g	牌砦II -仇討外伝	とりで_2	Metro
+torid2gg	牌砦II -仇討外伝 (ドイツ版)	とりで_2	Metro
+toride2j	牌砦II -仇討外伝 (日本版)	とりで_2	Metro
 gunmast	ガンマスター	がんますたー	Metro
 daitorid	大牌砦	だいとりで	Metro
 dokyusei	麻雀同級生	まーじゃんどうきゅうせい_1	Make Software / Elf / Media Trading
@@ -6081,6 +6090,7 @@ tenkaibb	麻雀天開眼 (海賊版 b)	まーじゃんてんかいげん_1	Dynax
 tenkaicb	麻雀天開眼 (海賊版 c)	まーじゃんてんかいげん_1	Dynax
 tenkaid	麻雀天開眼 (set 1)	まーじゃんてんかいげん_1	Dynax
 tenkaie	麻雀天開眼 (set 2)	まーじゃんてんかいげん_1	Dynax
+htengoku	華天国 (日本版)	はなてんごく	Dynax
 mjreach	麻雀立直 (海賊版)	まーじゃんりーち	Dynax
 mjdialq2	麻雀ダイヤルQ2 (日本版)	まーじゃんだいやるきゅーつー	Dynax
 yarunara	麻雀やるなら～ (日本版)	まーじゃんやるならー	Dynax
@@ -6122,6 +6132,8 @@ mjchuuka	麻雀中華兒女 (中国版)	まーじゃんちゅうかねじょ	Dynax
 mjreach1	麻雀 立直一発 (日本版)	まーじゃんりーちいっぱつ	Nihon System
 pkgnsh	パチンコ銀玉勝負 (日本版)	ぱちんこぎんだましょうぶ_1	Nakanihon / Dynax
 pkgnshdx	パチンコ銀玉勝負DX (日本版)	ぱちんこぎんだましょうぶ_2でらっくす	Nakanihon / Dynax
+hjingi	華仁義	はなじんぎ	Dynax
+hanayara	華をやらねば！ (日本版)	はなをやらねば	Dynax
 mjelctrn	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3a	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3 alt)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
@@ -6142,6 +6154,7 @@ stellecu	ステッレ・エ・キュービ (イタリア版)	すてっれえきゅーび	Sure
 iqblock	IQブロック	あいきゅーぶろっく	IGS
 grndtour	グランドツアー	ぐらんどつあー	IGS
 cabaret	キャバレー	きゃばれー	IGS
+pokerigs	ポーカー? (IGS)	ぽーかー	IGS
 lhb	龍虎榜	ろんふーばん_1	IGS
 lhba	龍虎榜 (set 2)	ろんふーばん_1	IGS
 dbc	達坂城	だーばんちぇん	IGS
@@ -6337,12 +6350,12 @@ maddog2	マッドドッグII -The Lost Gold (ver 2.04)	まっどどっぐ_2	American Laser G
 maddog22	マッドドッグII -The Lost Gold (ver 2.02)	まっどどっぐ_2	American Laser Games
 maddog21	マッドドッグII -The Lost Gold (ver 1.0)	まっどどっぐ_2	American Laser Games
 spacepir	スペースパイレーツ (ver 2.2)	すぺーすぱいれーつ	American Laser Games
-gallgall	ガラッガーズギャラリー (ver 2.2)	がらっがーずぎゃらりー	American Laser Games
+gallgall	ギャラガーズギャラリー (ver 2.2)	ぎゃらがーずぎゃらりー	American Laser Games
 crimepat	クライムパトロール (ver 1.4)	くらいむぱとろーる_1	American Laser Games
 crime211	クライムパトロール2 -Drug Wars (ver 1.1)	くらいむぱとろーる_2	American Laser Games
 crimep2	クライムパトロール2 -Drug Wars (ver 1.3)	くらいむぱとろーる_2	American Laser Games
 lastbh	ザ ラストバウンティハンター (ver 0.06)	ざらすとばうんてぃはんたー	American Laser Games
-fastdraw	ファストドローシャットダウン (ver 1.3)	ふぁすとどろーしゃっとだうん	American Laser Games
+fastdraw	ファストドローショーダウン (ver 1.3)	ふぁすとどろーしょーだうん	American Laser Games
 aplatoon	プラトーン (USA版 ver ??)	ぷらとーん	Nova?
 zortonbr	ゾートンブラザース (Los Justicieros)	ぞーとんぶらざーす	Web Picmatic
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
@@ -6408,15 +6421,15 @@ ambush	アンブッシュ	あんぶっしゅ	Nippon Amuse Co-Ltd
 ambusht	アンブッシュ (Tecfri)	あんぶっしゅ	Tecfri
 ambushv	アンブッシュ (Volt Elec co-ltd)	あんぶっしゅ	Volt Elec co-ltd
 homo	ゴインドル / Homo	ごいんどる	bootleg
-dlair	ドラゴンズ・レアー (USA版 rev F2)	どらごんずれあー	Cinematronics
-dlairf	ドラゴンズ・レアー (USA版 rev F)	どらごんずれあー	Cinematronics
-dlaire	ドラゴンズ・レアー (USA版 rev E)	どらごんずれあー	Cinematronics
-dlaird	ドラゴンズ・レアー (USA版 rev D Pioneer LD-V1000)	どらごんずれあー	Cinematronics
-dlairc	ドラゴンズ・レアー (USA版 rev C Pioneer PR-7820)	どらごんずれあー	Cinematronics
-dlairb	ドラゴンズ・レアー (USA版 rev B Pioneer PR-7820)	どらごんずれあー	Cinematronics
-dlaira	ドラゴンズ・レアー (USA版 rev A Pioneer PR-7820)	どらごんずれあー	Cinematronics
-dleuro	ドラゴンズ・レアー (欧州版)	どらごんずれあー	Atari
-dlital	ドラゴンズ・レアー (イタリア版)	どらごんずれあー	Sidam
+dlair	ドラゴンズ・レア (USA版 rev F2)	どらごんずれあ	Cinematronics
+dlairf	ドラゴンズ・レア (USA版 rev F)	どらごんずれあ	Cinematronics
+dlaire	ドラゴンズ・レア (USA版 rev E)	どらごんずれあ	Cinematronics
+dlaird	ドラゴンズ・レア (USA版 rev D Pioneer LD-V1000)	どらごんずれあ	Cinematronics
+dlairc	ドラゴンズ・レア (USA版 rev C Pioneer PR-7820)	どらごんずれあ	Cinematronics
+dlairb	ドラゴンズ・レア (USA版 rev B Pioneer PR-7820)	どらごんずれあ	Cinematronics
+dlaira	ドラゴンズ・レア (USA版 rev A Pioneer PR-7820)	どらごんずれあ	Cinematronics
+dleuro	ドラゴンズ・レア (欧州版)	どらごんずれあ	Atari
+dlital	ドラゴンズ・レア (イタリア版)	どらごんずれあ	Sidam
 spaceace	スペースエース (USA版 rev A3)	すぺーすえーす	Cinematronics
 spaceaa2	スペースエース (USA版 rev A2)	すぺーすえーす	Cinematronics
 spaceaa	スペースエース (USA版 rev A)	すぺーすえーす	Cinematronics
@@ -6795,14 +6808,16 @@ kingpin	キングピン	きんぐぴん_1	American Communication Laboratories Inc.
 kingpinm	キングピンマルチゲーム	きんぐぴん_2_まるちげーむ	American Communication Laboratories Inc.
 thayers	セイヤーズクエスト	せいやーずくえすと	RDI Video Systems
 thayersa	セイヤーズクエスト (alt set)	せいやーずくえすと	RDI Video Systems
-istellar	インターステラー	いんたーすてらー	Funai/Gakken
+istellar	インター・ステラ	いんたーすてら	Funai/Gakken
 esh	エシュズオルンミラ	えしゅずおるんみら	Funai/Gakken
 esha	エシュズオルンミラ (set 2)	えしゅずおるんみら	Funai/Gakken
 eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
+peplus	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
 mirage	ミラージュ妖獣麻雀伝 (日本版)	みらーじゅようじゅうまーじゃんでん	Mitchell
 dominob	ドミノブロック	どみのぶろっく	Wonwoo Systems
 jongkyo	雀狂	じゃんきょう	Kiwako
+gtipoker	GTIポーカー	じーてぃーあいぽーかー	GTI Inc
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg
