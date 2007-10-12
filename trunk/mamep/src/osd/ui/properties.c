@@ -931,211 +931,50 @@ static LPCWSTR GameInfoScreen(int nIndex)
 static LPCWSTR GameInfoInput(int nIndex)
 {
 	static WCHAR buf[1024];
-	const input_port_entry* input;
-	int nplayer = 0;
-	const WCHAR *control = 0;
-	int nbutton = 0;
+	static WCHAR control[1024];
+	int nplayer = DriverNumPlayers(nIndex);
+	int nbutton = DriverNumButtons(nIndex);
 #if 0 // no space
 	int ncoin = 0;
 	const WCHAR *service = 0;
 	const WCHAR *tilt = 0;
 #endif // no space
+	int i;
 
-	begin_resource_tracking();
-
-	input = input_port_allocate(drivers[nIndex]->ipt, NULL);
-
-	while (input->type != IPT_END)
+	control[0] = '\0';
+	for (i = 0; i < CONTROLLER_MAX; i++)
 	{
-		if (nplayer < input->player+1)
-			nplayer = input->player+1;
-
-		switch (input->type)
+		if (DriverUsesController(nIndex, i))
 		{
-			case IPT_JOYSTICK_LEFT:
-			case IPT_JOYSTICK_RIGHT:
+			static const WCHAR *name[CONTROLLER_MAX] =
+			{
+				TEXT("Joystick 2-Way"),
+				TEXT("Joystick 4-Way"),
+				TEXT("Joystick 8-Way"),
+				TEXT("Joystick 16-Way"),
+//				TEXT("Joystick 2-Way Vertical"),
+				TEXT("Double Joystick 2-Way"),
+				TEXT("Double Joystick 4-Way"),
+				TEXT("Double Joystick 8-Way"),
+				TEXT("Double Joystick 16-Way"),
+//				TEXT("Double Joystick 2-Way Vertical"),
+				TEXT("AD Stick"),
+				TEXT("Paddle"),
+				TEXT("Dial"),
+				TEXT("Trackball"),
+				TEXT("Lightgun"),
+				TEXT("Pedal")
+			};
 
-				/* if control not defined, start it off as horizontal 2-way */
-				if (!control)
-					control = _UIW(TEXT("Joystick 2-Way"));
-				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way"))) == 0)
-					;
-				/* if already defined as vertical, make it 4 or 8 way */
-				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
-				{
-					if (input->way == 4)
-						control = _UIW(TEXT("Joystick 4-Way"));
-					else
-					{
-						if (input->way == 16)
-							control = _UIW(TEXT("Joystick 16-Way"));
-						else
-							control = _UIW(TEXT("Joystick 8-Way"));
-					}
-				}
-				break;
-
-			case IPT_JOYSTICK_UP:
-			case IPT_JOYSTICK_DOWN:
-
-				/* if control not defined, start it off as vertical 2-way */
-				if (!control)
-					control = _UIW(TEXT("Joystick 2-Way Vertical"));
-				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way Vertical"))) == 0)
-					;
-				/* if already defined as horiz, make it 4 or 8way */
-				else if (wcscmp(control, _UIW(TEXT("Joystick 2-Way")))==0)
-				{
-					if (input->way == 4)
-						control = _UIW(TEXT("Joystick 4-Way"));
-					else
-					{
-						if (input->way == 16)
-							control = _UIW(TEXT("Joystick 16-Way"));
-						else
-							control = _UIW(TEXT("Joystick 8-Way"));
-					}
-				}
-				break;
-
-			case IPT_JOYSTICKRIGHT_UP:
-			case IPT_JOYSTICKRIGHT_DOWN:
-			case IPT_JOYSTICKLEFT_UP:
-			case IPT_JOYSTICKLEFT_DOWN:
-
-				/* if control not defined, start it off as vertical 2way */
-				if (!control)
-					control = _UIW(TEXT("Double Joystick 2-Way Vertical"));
-				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
-					;
-				/* if already defined as horiz, make it 4 or 8 way */
-				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
-				{
-					if (input->way == 4)
-						control = _UIW(TEXT("Double Joystick 4-Way"));
-					else
-					{
-						if (input->way == 16)
-							control = _UIW(TEXT("Double Joystick 16-Way"));
-						else
-							control = _UIW(TEXT("Double Joystick 8-Way"));
-					}
-				}
-				break;
-
-			case IPT_JOYSTICKRIGHT_LEFT:
-			case IPT_JOYSTICKRIGHT_RIGHT:
-			case IPT_JOYSTICKLEFT_LEFT:
-			case IPT_JOYSTICKLEFT_RIGHT:
-
-				/* if control not defined, start it off as horiz 2-way */
-				if (!control)
-					control = _UIW(TEXT("Double Joystick 2-Way"));
-				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way"))) == 0)
-					;
-				/* if already defined as vertical, make it 4 or 8 way */
-				else if (wcscmp(control, _UIW(TEXT("Double Joystick 2-Way Vertical"))) == 0)
-				{
-					if (input->way == 4)
-						control = _UIW(TEXT("Double Joystick 4-Way"));
-					else
-					{
-						if (input->way == 16)
-							control = _UIW(TEXT("Double Joystick 16-Way"));
-						else
-							control = _UIW(TEXT("Double Joystick 8-Way"));
-					}
-				}
-				break;
-
-			case IPT_BUTTON1:
-				if (nbutton<1) nbutton = 1;
-				break;
-			case IPT_BUTTON2:
-				if (nbutton<2) nbutton = 2;
-				break;
-			case IPT_BUTTON3:
-				if (nbutton<3) nbutton = 3;
-				break;
-			case IPT_BUTTON4:
-				if (nbutton<4) nbutton = 4;
-				break;
-			case IPT_BUTTON5:
-				if (nbutton<5) nbutton = 5;
-				break;
-			case IPT_BUTTON6:
-				if (nbutton<6) nbutton = 6;
-				break;
-			case IPT_BUTTON7:
-				if (nbutton<7) nbutton = 7;
-				break;
-			case IPT_BUTTON8:
-				if (nbutton<8) nbutton = 8;
-				break;
-			case IPT_BUTTON9:
-				if (nbutton<9) nbutton = 9;
-				break;
-			case IPT_BUTTON10:
-				if (nbutton<10) nbutton = 10;
-				break;
-
-			case IPT_PADDLE:
-				control = _UIW(TEXT("Paddle"));
-				break;
-			case IPT_DIAL:
-				control = _UIW(TEXT("Dial"));
-				break;
-			case IPT_TRACKBALL_X:
-			case IPT_TRACKBALL_Y:
-				control = _UIW(TEXT("Trackball"));
-				break;
-			case IPT_AD_STICK_X:
-			case IPT_AD_STICK_Y:
-				control = _UIW(TEXT("AD Stick"));
-				break;
-			case IPT_LIGHTGUN_X:
-			case IPT_LIGHTGUN_Y:
-				control = _UIW(TEXT("Lightgun"));
-				break;
-#if 0 // no space
-			case IPT_COIN1:
-				if (ncoin < 1) ncoin = 1;
-				break;
-			case IPT_COIN2:
-				if (ncoin < 2) ncoin = 2;
-				break;
-			case IPT_COIN3:
-				if (ncoin < 3) ncoin = 3;
-				break;
-			case IPT_COIN4:
-				if (ncoin < 4) ncoin = 4;
-				break;
-			case IPT_COIN5:
-				if (ncoin < 5) ncoin = 5;
-				break;
-			case IPT_COIN6:
-				if (ncoin < 6) ncoin = 6;
-				break;
-			case IPT_COIN7:
-				if (ncoin < 7) ncoin = 7;
-				break;
-			case IPT_COIN8:
-				if (ncoin < 8) ncoin = 8;
-				break;
-			case IPT_SERVICE :
-				service = "yes";
-				break;
-			case IPT_TILT :
-				tilt = "yes";
-				break;
-#endif // no space
+#if 0	// no space
+			if (control[0] != '\0')
+				wcscat(control, TEXT(" "));
+			wcscat(control, _UIW(name[i]));
+#else
+			wcscpy(control, _UIW(name[i]));
+#endif
 		}
-		++input;
 	}
-
-	end_resource_tracking();
-
-	if (control == NULL) control = TEXT("");
 
 	if (nplayer<1)
 		wcscpy(buf, _UIW(TEXT("Unknown")));

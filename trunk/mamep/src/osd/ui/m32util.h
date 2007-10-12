@@ -49,12 +49,26 @@ int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
 BOOL DriverUsesYM3812(int driver_index);
-BOOL DriverUsesTrackball(int driver_index);
-BOOL DriverUsesLightGun(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
 
+enum
+{
+		CONTROLLER_JOY2WAY, CONTROLLER_JOY4WAY, CONTROLLER_JOY8WAY, CONTROLLER_JOY16WAY,
+//		CONTROLLER_VJOY2WAY,
+		CONTROLLER_DOUBLEJOY2WAY, CONTROLLER_DOUBLEJOY4WAY, CONTROLLER_DOUBLEJOY8WAY, CONTROLLER_DOUBLEJOY16WAY,
+//		CONTROLLER_VDOUBLEJOY2WAY,
+		CONTROLLER_ADSTICK, CONTROLLER_PADDLE, CONTROLLER_DIAL, CONTROLLER_TRACKBALL, CONTROLLER_LIGHTGUN, CONTROLLER_PEDAL,
+		CONTROLLER_MAX
+};
+
+int DriverNumPlayers(int driver_index);
+int DriverNumButtons(int driver_index);
+BOOL DriverUsesController(int driver_index, int type);
+
+#define DriverUsesTrackball(driver_index)	DriverUsesController(driver_index, CONTROLLER_TRACKBALL)
+#define DriverUsesLightGun(driver_index)	DriverUsesController(driver_index, CONTROLLER_LIGHTGUN)
 
 #ifdef USE_IPS
 int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name);

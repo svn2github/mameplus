@@ -1408,36 +1408,38 @@ void CreateSaveStateFolders(int parent_index)
 	}
 }
 
-struct control_cache_t
-{
-	const input_port_token *ipt;
-	LPBITS mask;
-};
-
-static int cmp_ipt(const void *m1, const void *m2)
-{
-	struct control_cache_t *p1 = (struct control_cache_t *)m1;
-	struct control_cache_t *p2 = (struct control_cache_t *)m2;
-
-	return (int)p1->ipt - (int)p2->ipt;
-}
-
 void CreateControlFolders(int parent_index)
 {
 	enum {
-		FOLDER_PLAYER1, FOLDER_PLAYER2, FOLDER_PLAYER3, FOLDER_PLAYER4,
-		FOLDER_PLAYER5, FOLDER_PLAYER6, FOLDER_PLAYER7, FOLDER_PLAYER8,
-		FOLDER_BUTTON1, FOLDER_BUTTON2, FOLDER_BUTTON3, FOLDER_BUTTON4, FOLDER_BUTTON5,
-		FOLDER_BUTTON6, FOLDER_BUTTON7, FOLDER_BUTTON8, FOLDER_BUTTON9, FOLDER_BUTTON10,
 		FOLDER_JOY2WAY, FOLDER_JOY4WAY, FOLDER_JOY8WAY, FOLDER_JOY16WAY,
 //		FOLDER_VJOY2WAY,
 		FOLDER_DOUBLEJOY2WAY, FOLDER_DOUBLEJOY4WAY, FOLDER_DOUBLEJOY8WAY, FOLDER_DOUBLEJOY16WAY,
 //		FOLDER_VDOUBLEJOY2WAY,
 		FOLDER_ADSTICK, FOLDER_PADDLE, FOLDER_DIAL, FOLDER_TRACKBALL, FOLDER_LIGHTGUN, FOLDER_PEDAL,
+		FOLDER_PLAYER1, FOLDER_PLAYER2, FOLDER_PLAYER3, FOLDER_PLAYER4,
+		FOLDER_PLAYER5, FOLDER_PLAYER6, FOLDER_PLAYER7, FOLDER_PLAYER8,
+		FOLDER_BUTTON1, FOLDER_BUTTON2, FOLDER_BUTTON3, FOLDER_BUTTON4, FOLDER_BUTTON5,
+		FOLDER_BUTTON6, FOLDER_BUTTON7, FOLDER_BUTTON8, FOLDER_BUTTON9, FOLDER_BUTTON10,
 		FOLDER_MAX
 	};
 
 	static const WCHAR *ctrl_names[FOLDER_MAX] = {
+		TEXT("Joy 2-Way"),
+		TEXT("Joy 4-Way"),
+		TEXT("Joy 8-Way"),
+		TEXT("Joy 16-Way"),
+//		TEXT("Joy 2-Way (V)"),
+		TEXT("Double Joy 2-Way"),
+		TEXT("Double Joy 4-Way"),
+		TEXT("Double Joy 8-Way"),
+		TEXT("Double Joy 16-Way"),
+//		TEXT("Double Joy 2-Way (V)"),
+		TEXT("AD Stick"),
+		TEXT("Paddle"),
+		TEXT("Dial"),
+		TEXT("Trackball"),
+		TEXT("Lightgun"),
+		TEXT("Pedal"),
 		TEXT("Player 1"),
 		TEXT("Players 2"),
 		TEXT("Players 3"),
@@ -1455,23 +1457,7 @@ void CreateControlFolders(int parent_index)
 		TEXT("Buttons 7"),
 		TEXT("Buttons 8"),
 		TEXT("Buttons 9"),
-		TEXT("Buttons 10"),
-		TEXT("Joy 2-Way"),
-		TEXT("Joy 4-Way"),
-		TEXT("Joy 8-Way"),
-		TEXT("Joy 16-Way"),
-//		TEXT("Joy 2-Way (V)"),
-		TEXT("Double Joy 2-Way"),
-		TEXT("Double Joy 4-Way"),
-		TEXT("Double Joy 8-Way"),
-		TEXT("Double Joy 16-Way"),
-//		TEXT("Double Joy 2-Way (V)"),
-		TEXT("AD Stick"),
-		TEXT("Paddle"),
-		TEXT("Dial"),
-		TEXT("Trackball"),
-		TEXT("Lightgun"),
-		TEXT("Pedal")
+		TEXT("Buttons 10")
 	};
 
 	int i;
@@ -1479,8 +1465,6 @@ void CreateControlFolders(int parent_index)
 	int nFolder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 	LPTREEFOLDER map[FOLDER_MAX];
-	struct control_cache_t *cache;
-	int cache_len = 0;
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
@@ -1494,152 +1478,21 @@ void CreateControlFolders(int parent_index)
 		map[i] = treeFolders[nFolder++];
 	}
 
-	cache = malloc(sizeof (*cache) * nGames * 2);
-	if (cache == NULL)
-		return;
-
 	for (i = 0; i < nGames; i++)
 	{
-		struct control_cache_t *entry;
-		struct control_cache_t tmp;
+		int p = DriverNumPlayers(i);
+		int b = DriverNumButtons(i);
 		int j;
 
-		if (!drivers[i]->ipt)
-			continue;
+		for (j = 0; j < CONTROLLER_MAX; j++)
+			if (DriverUsesController(i, j))
+				AddGame(map[j], i);
 
-		tmp.ipt = drivers[i]->ipt;
-		entry = bsearch(&tmp, cache, cache_len, sizeof (*cache), cmp_ipt);
-		if (entry == NULL)
-		{
-			const input_port_entry *input;
-			int b = 0;
-			int p = 0;
-			int w = 0;
-
-			entry = &cache[cache_len++];
-			entry->ipt = tmp.ipt;
-			entry->mask = NewBits(FOLDER_MAX);
-
-			begin_resource_tracking();
-			input = input_port_allocate(entry->ipt, NULL);
-
-			while (input->type != IPT_END)
-			{
-				int n;
-
-				if (p < input->player + 1)
-					p = input->player + 1;
-
-				n = input->type - IPT_BUTTON1 + 1;
-				if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
-				{
-					b = n;
-					continue;
-				}
-
-				switch (input->type)
-				{
-				case IPT_JOYSTICK_LEFT:
-				case IPT_JOYSTICK_RIGHT:
-
-					if (!w)
-						w = FOLDER_JOY2WAY;
-					break;
-
-				case IPT_JOYSTICK_UP:
-				case IPT_JOYSTICK_DOWN:
-
-						if (input->way == 4)
-							w = FOLDER_JOY4WAY;
-						else
-						{
-							if (input->way == 16)
-								w = FOLDER_JOY16WAY;
-							else
-								w = FOLDER_JOY8WAY;
-						}
-					break;
-
-				case IPT_JOYSTICKRIGHT_LEFT:
-				case IPT_JOYSTICKRIGHT_RIGHT:	
-				case IPT_JOYSTICKLEFT_LEFT:
-				case IPT_JOYSTICKLEFT_RIGHT:
-
-					if (!w)
-						w = FOLDER_DOUBLEJOY2WAY;
-					break;
-
-				case IPT_JOYSTICKRIGHT_UP:
-				case IPT_JOYSTICKRIGHT_DOWN:
-				case IPT_JOYSTICKLEFT_UP:
-				case IPT_JOYSTICKLEFT_DOWN:
-
-					if (input->way == 4)
-						w = FOLDER_DOUBLEJOY4WAY;
-					else
-					{
-						if (input->way == 16)
-							w = FOLDER_DOUBLEJOY16WAY;
-						else
-							w = FOLDER_DOUBLEJOY8WAY;
-					}
-					break;
-
-				case IPT_PADDLE:
-					SetBit(entry->mask, FOLDER_PADDLE);
-					break;
-
-				case IPT_DIAL:
-					SetBit(entry->mask, FOLDER_DIAL);
-					break;
-
-				case IPT_TRACKBALL_X:
-				case IPT_TRACKBALL_Y:
-					SetBit(entry->mask, FOLDER_TRACKBALL);
-					break;
-
-				case IPT_AD_STICK_X:
-				case IPT_AD_STICK_Y:
-					SetBit(entry->mask, FOLDER_ADSTICK);
-					break;
-
-				case IPT_LIGHTGUN_X:
-				case IPT_LIGHTGUN_Y:
-					SetBit(entry->mask, FOLDER_LIGHTGUN);
-					break;
-				case IPT_PEDAL:
-					SetBit(entry->mask, FOLDER_PEDAL);
-					break;
-				}
-				++input;
-			}
-
-			end_resource_tracking();
-
-			if (p)
-				SetBit(entry->mask, FOLDER_PLAYER1 + p - 1);
-
-			if (b)
-				SetBit(entry->mask, FOLDER_BUTTON1 + b - 1);
-
-			if (w)
-				SetBit(entry->mask, w);
-
-			tmp = *entry;
-			qsort(cache, cache_len, sizeof (*cache), cmp_ipt);
-			entry = &tmp;
-		}
-
-		for (j = 0; j < FOLDER_MAX; j++)
-			if (TestBit(entry->mask, j))
-				AddGame(map[j],i);
+		if (p)
+			AddGame(map[FOLDER_PLAYER1 + p - 1], i);
+		if (b)
+			AddGame(map[FOLDER_BUTTON1 + b - 1], i);
 	}
-
-	dprintf("found %d ipts in %d", cache_len, nGames);
-
-	for (i = 0; i < cache_len; i++)
-		DeleteBits(cache[i].mask);
-	free(cache);
 }
 #endif /* MISC_FOLDER */
 

@@ -60,10 +60,11 @@ static struct DriversInfo
 	BOOL usesRoms;
 	BOOL usesSamples;
 	BOOL usesYM3812;
-	BOOL usesTrackball;
-	BOOL usesLightGun;
 	BOOL supportsSaveState;
 	BOOL hasM68K;
+	int numPlayers;
+	int numButtons;
+	BOOL usesController[CONTROLLER_MAX];
 	int parentIndex;
 	int biosIndex;
 } *drivers_info = NULL;
@@ -344,6 +345,166 @@ const WCHAR * GetDriverFilename(int nIndex)
 	return GetFilename(driversw[nIndex]->source_file);
 }
 
+struct control_cache_t
+{
+	const input_port_token *ipt;
+	int num;
+};
+
+static int cmp_ipt(const void *m1, const void *m2)
+{
+	struct control_cache_t *p1 = (struct control_cache_t *)m1;
+	struct control_cache_t *p2 = (struct control_cache_t *)m2;
+
+	return (int)p1->ipt - (int)p2->ipt;
+}
+
+static void UpdateController(void)
+{
+	struct control_cache_t *cache;
+	const input_port_token *last_ipt = NULL;
+	BOOL flags[CONTROLLER_MAX];
+	int nGames = GetNumGames();
+	int b = 0;
+	int p = 0;
+	int i;
+
+	cache = malloc(sizeof (*cache) * nGames);
+	if (cache == NULL)
+		return;
+
+	for (i = 0; i < nGames; i++)
+	{
+		cache[i].ipt = drivers[i]->ipt;
+		cache[i].num = i;
+	}
+	qsort(cache, nGames, sizeof (*cache), cmp_ipt);
+
+	for (i = 0; i < nGames; i++)
+	{
+		struct DriversInfo *gameinfo = &drivers_info[cache[i].num];
+
+		if (!cache[i].ipt)
+			continue;
+
+		if (cache[i].ipt != last_ipt)
+		{
+			const input_port_entry *input;
+			int w = 0;
+
+			last_ipt = cache[i].ipt;
+			memset(flags, 0, sizeof flags);
+			b = 0;
+			p = 0;
+
+			begin_resource_tracking();
+			input = input_port_allocate(last_ipt, NULL);
+
+			while (input->type != IPT_END)
+			{
+				int n;
+
+				if (p < input->player + 1)
+					p = input->player + 1;
+
+				n = input->type - IPT_BUTTON1 + 1;
+				if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
+				{
+					b = n;
+					continue;
+				}
+
+				switch (input->type)
+				{
+				case IPT_JOYSTICK_LEFT:
+				case IPT_JOYSTICK_RIGHT:
+
+					if (!w)
+						w = CONTROLLER_JOY2WAY;
+					break;
+
+				case IPT_JOYSTICK_UP:
+				case IPT_JOYSTICK_DOWN:
+
+						if (input->way == 4)
+							w = CONTROLLER_JOY4WAY;
+						else
+						{
+							if (input->way == 16)
+								w = CONTROLLER_JOY16WAY;
+							else
+								w = CONTROLLER_JOY8WAY;
+						}
+					break;
+
+				case IPT_JOYSTICKRIGHT_LEFT:
+				case IPT_JOYSTICKRIGHT_RIGHT:	
+				case IPT_JOYSTICKLEFT_LEFT:
+				case IPT_JOYSTICKLEFT_RIGHT:
+
+					if (!w)
+						w = CONTROLLER_DOUBLEJOY2WAY;
+					break;
+
+				case IPT_JOYSTICKRIGHT_UP:
+				case IPT_JOYSTICKRIGHT_DOWN:
+				case IPT_JOYSTICKLEFT_UP:
+				case IPT_JOYSTICKLEFT_DOWN:
+
+					if (input->way == 4)
+						w = CONTROLLER_DOUBLEJOY4WAY;
+					else
+					{
+						if (input->way == 16)
+							w = CONTROLLER_DOUBLEJOY16WAY;
+						else
+							w = CONTROLLER_DOUBLEJOY8WAY;
+					}
+					break;
+
+				case IPT_PADDLE:
+					flags[CONTROLLER_PADDLE] = TRUE;
+					break;
+
+				case IPT_DIAL:
+					flags[CONTROLLER_DIAL] = TRUE;
+					break;
+
+				case IPT_TRACKBALL_X:
+				case IPT_TRACKBALL_Y:
+					flags[CONTROLLER_TRACKBALL] = TRUE;
+					break;
+
+				case IPT_AD_STICK_X:
+				case IPT_AD_STICK_Y:
+					flags[CONTROLLER_ADSTICK] = TRUE;
+					break;
+
+				case IPT_LIGHTGUN_X:
+				case IPT_LIGHTGUN_Y:
+					flags[CONTROLLER_LIGHTGUN] = TRUE;
+					break;
+				case IPT_PEDAL:
+					flags[CONTROLLER_PEDAL] = TRUE;
+					break;
+				}
+				++input;
+			}
+
+			end_resource_tracking();
+
+			flags[w] = TRUE;
+		}
+
+		gameinfo->numPlayers = p;
+		gameinfo->numButtons = b;
+
+		memcpy(gameinfo->usesController, flags, sizeof gameinfo->usesController);
+	}
+
+	free(cache);
+}
+
 static struct DriversInfo* GetDriversInfo(int driver_index)
 {
 	if (drivers_info == NULL)
@@ -357,7 +518,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config drv;
-			const input_port_entry *input_ports;
 			int speakernum, num_speakers;
 			gameinfo->isClone = (nParentIndex != -1);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
@@ -416,26 +576,11 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				)
 					gameinfo->usesYM3812 = TRUE;
 			}
-			gameinfo->usesTrackball = FALSE;
-			gameinfo->usesLightGun = FALSE;
-			if (gamedrv->ipt != NULL)
-			{
-				begin_resource_tracking();
-				input_ports = input_port_allocate(gamedrv->ipt, NULL);
-				while (1)
-				{
-					UINT32 type;
-					type = input_ports->type;
-					if (type == IPT_END)
-						break;
-					if (type == IPT_TRACKBALL_X || type == IPT_TRACKBALL_Y)
-						gameinfo->usesTrackball = TRUE;
-					if (type == IPT_LIGHTGUN_X || type == IPT_LIGHTGUN_Y)
-						gameinfo->usesLightGun = TRUE;
-					input_ports++;
-				}
-				end_resource_tracking();
-			}
+
+			gameinfo->numPlayers = 0;
+			gameinfo->numButtons = 0;
+			memset(gameinfo->usesController, 0, sizeof gameinfo->usesController);
+
 			gameinfo->hasM68K = FALSE;
 			for (i = 0; i < MAX_CPU; i++)
 			{
@@ -502,6 +647,8 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				}
 			}
 		}
+
+		UpdateController();
 	}
 	return &drivers_info[driver_index];
 }
@@ -578,14 +725,19 @@ BOOL DriverUsesYM3812(int driver_index)
 	return GetDriversInfo(driver_index)->usesYM3812;
 }
 
-BOOL DriverUsesTrackball(int driver_index)
+int DriverNumPlayers(int driver_index)
 {
-	return GetDriversInfo(driver_index)->usesTrackball;
+	return GetDriversInfo(driver_index)->numPlayers;
 }
 
-BOOL DriverUsesLightGun(int driver_index)
+int DriverNumButtons(int driver_index)
 {
-	return GetDriversInfo(driver_index)->usesLightGun;
+	return GetDriversInfo(driver_index)->numButtons;
+}
+
+BOOL DriverUsesController(int driver_index, int type)
+{
+	return GetDriversInfo(driver_index)->usesController[type];
 }
 
 BOOL DriverSupportsSaveState(int driver_index)
