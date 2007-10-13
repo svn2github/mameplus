@@ -71,6 +71,7 @@ sub output_ini
 		$fname = "$folderdir/Version.ini";
 		chmod 0666, $fname;
 		open (OUT, ">$fname") || die "$!";
+		binmode(OUT);
 		print OUT "[FOLDER_SETTINGS]$CRLF";
 		print OUT "RootFolderIcon = cust1.ico$CRLF";
 		print OUT "SubFolderIcon = cust2.ico$CRLF";
@@ -80,6 +81,7 @@ sub output_ini
 		$fname = "$folderdir/Category.ini";
 		chmod 0666, $fname;
 		open (OUT, ">$fname") || die "$!";
+		binmode(OUT);
 		print OUT "[FOLDER_SETTINGS]$CRLF";
 		print OUT "RootFolderIcon = cust1.ico$CRLF";
 		print OUT "SubFolderIcon = cust2.ico$CRLF";
@@ -88,9 +90,9 @@ sub output_ini
 	{
 		chmod 0666, $fname;
 		open (OUT, ">$fname") || die "$!";
+		binmode(OUT);
 	}
 
-	binmode(OUT);
 	print OUT "$CRLF[ROOT_FOLDER]$CRLF$CRLF";
 
 	foreach (sort keys %LIST)
