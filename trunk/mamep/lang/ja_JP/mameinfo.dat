@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.119u3      #
+#     Mameinfo.dat日本語版 v0.119u4      #
 #                                        #
-#            October 7, 2007             #
+#            October 12, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：857 翻訳済：831
-# 追加項目：342 合計：1199
+# Tester報告：864 翻訳済：840
+# 追加項目：342 合計：1206
 #
 
 
@@ -25,11 +25,29 @@ $mame
 
 $end
 
-$info=loverboy
+$info=targ
 $mame
 [バグ]
 
-- ボタンが実装されていないため、「Love Stage」がプレイできない。 loverboy0119u2gra, Scuore
+- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
+
+
+<b>Targ</b> - テキストは白ではなくライトブルー。
+
+<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
+
+$end
+
+$info=spectar
+$mame
+[バグ]
+
+- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
+
+
+<b>Targ</b> - テキストは白ではなくライトブルー。
+
+<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
 
 $end
 
@@ -65,6 +83,34 @@ $mame
 
 $end
 
+$info=popbounc
+$mame
+[バグ]
+
+- NeoGeoの書き直しから、パドルとジョイスティックのどちらに設定しても操作ができない。 popbounc0119u3gra, SpinalBlood / Tafoid
+
+
+- サービスモードの設定でパドルコントローラを利用できるようになるはずだが、MAMEではサポートされていない。
+もしかしたら、イライラ棒のように別なバージョンのBIOSが必要なのかもしれない。 popbounc37b3gre, TriggerFin
+
+$end
+
+$info=darkplnt
+$mame
+[バグ]
+
+- 画面が左右に大きくずれている。 darkplnt0119u3yel, Tafoid
+
+$end
+
+$info=superbon
+$mame
+[バグ]
+
+- プレイができなくなっている。0.37b15から。 superbon0119u3yel, Tafoid / Stiletto
+
+$end
+
 $info=rfjetus
 $mame
 [バグ]
@@ -78,6 +124,14 @@ $mame
 [バグ]
 
 - コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
+
+$end
+
+$info=wboy3
+$mame
+[バグ]
+
+- このバージョンではDIPスイッチの残ライフ設定が違う。3、4、5人の設定はそれぞれ、1、2、3人。 wboy3_0119u3gra, izius
 
 $end
 
@@ -1277,9 +1331,6 @@ $mame
 [バグ]
 
 - 2面ボスを倒した直後にクラッシュする。 gijoe0118u2red, ponzicar / twisty
-
-
-- プレイ人数のDIP設定で、4 Playersは2 Players。 gijoe0114gra, Augusto / twisty
 
 $end
 
@@ -5069,14 +5120,6 @@ $mame
 
 $end
 
-$info=hayaosi1
-$mame
-[バグ]
-
-- ゲーム名が「Hayaoshi Quiz Ohzaketteisen」なのは間違い。 hayaosi1_0107u3ora, J.J.Boy
-
-$end
-
 $info=nss_smw
 $mame
 [バグ]
@@ -5401,14 +5444,6 @@ $mame
 
 $end
 
-$info=ghostb
-$mame
-[バグ]
-
-- プレイヤー3用のキーがマッピングされている。 ghostb0105u4gra, cpukett
-
-$end
-
 $info=sbdk
 $mame
 [バグ]
@@ -5416,14 +5451,6 @@ $mame
 - プレイヤー1のボタンが割り当てられてない。
 プレイヤー2のボタン1はあるが動作しない。
 実際にはボタンが2つ必要なようだ。 sbdk0116u1gra, Tafoid / twisty
-
-$end
-
-$info=finalizr
-$mame
-[バグ]
-
-- 1番目と2番目のUnknownのDIPスイッチは難易度、3番目はサービスモード、4番目は未使用。I/Oチェックではコイン3はサービスコインとなっている。 finalizr0102u5gra, ShimaPong
 
 $end
 
@@ -5576,14 +5603,6 @@ $mame
 [バグ]
 
 - 5キーでクレジットを入れた後、6キーを押してもクレジットが入らない。5なら続けて入る。同じく6で始めたときには5は使えない。059～062で確認。 othldrby062gra, Thenasty
-
-$end
-
-$info=parodius
-$mame
-[バグ]
-
-- I/Oテストによるとコイン3はサービスキー。 parodius0111u3gra, Speedfreak
 
 $end
 
@@ -5784,14 +5803,6 @@ $mame
 [バグ]
 
 - プレイヤー1のコンティニューをするのにプレイヤー2のスタートボタンを押さなければいけない。 xsleena0117gra, Ineedashield /  Haze
-
-$end
-
-$info=futspy
-$mame
-[バグ]
-
-- 実機と比較すると、上下の操作逆転している。 futspy0114gra, Kold666
 
 $end
 
@@ -6432,15 +6443,6 @@ $mame
 タイマーの表示が点滅する。
 ゲームが始まっても、キャラクタが表示されず、コンティニュー画面もあっという間に終了する。
 Nebulaでも同じ結果になるので、ゲーム自体のバグの可能性あり。 ncombat079u1gre, arpinkor
-
-$end
-
-$info=popbounc
-$mame
-[バグ]
-
-- サービスモードの設定でパドルコントローラを利用できるようになるはずだが、MAMEではサポートされていない。
-もしかしたら、イライラ棒のように別なバージョンのBIOSが必要なのかもしれない。 popbounc37b3gre, TriggerFin
 
 $end
 
