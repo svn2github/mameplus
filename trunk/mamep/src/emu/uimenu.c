@@ -1756,10 +1756,10 @@ static UINT32 menu_select_game(UINT32 state)
 	/* if nothing there, just display an error message and exit */
 	if (matchcount == 0)
 	{
-		ui_draw_text_box("No games found. Please check the rompath specified in the mame.ini file.\n\n"
+		ui_draw_text_box(_("No games found. Please check the rompath specified in the mame.ini file.\n\n"
 						 "If this is your first time using MAME, please see the config.txt file in "
 						 "the docs directory for information on configuring MAME.\n\n"
-						 "Press any key to exit",
+						 "Press any key to exit"),
 		                 JUSTIFY_CENTER, 0.5f, 0.5f, UI_REDCOLOR);
 		if (input_code_poll_switches(FALSE))
 			return ui_menu_stack_pop();
@@ -1811,8 +1811,8 @@ static UINT32 menu_select_game(UINT32 state)
 	/* if we have an error, overlay with the error message and look for a keypress */
 	if (error)
 	{
-		ui_draw_text_box("The selected game is missing one or more required ROM or CHD images. "
-		                 "Please select a different game.\n\nPress any key to continue.",
+		ui_draw_text_box(_("The selected game is missing one or more required ROM or CHD images. "
+		                 "Please select a different game.\n\nPress any key to continue."),
 		                 JUSTIFY_CENTER, 0.5f, 0.5f, UI_REDCOLOR);
 		if (input_code_poll_switches(FALSE))
 			error = FALSE;

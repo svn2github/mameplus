@@ -390,7 +390,10 @@ static void UpdateController(void)
 		if (cache[i].ipt != last_ipt)
 		{
 			const input_port_entry *input;
-			int w = 0;
+			int w = CONTROLLER_JOY8WAY;
+			BOOL lr = FALSE;
+			BOOL ud = FALSE;
+			BOOL dual = FALSE;
 
 			last_ipt = cache[i].ipt;
 			memset(flags, 0, sizeof flags);
@@ -416,50 +419,36 @@ static void UpdateController(void)
 
 				switch (input->type)
 				{
-				case IPT_JOYSTICK_LEFT:
-				case IPT_JOYSTICK_RIGHT:
-
-					if (!w)
-						w = CONTROLLER_JOY2WAY;
-					break;
-
-				case IPT_JOYSTICK_UP:
-				case IPT_JOYSTICK_DOWN:
-
-						if (input->way == 4)
-							w = CONTROLLER_JOY4WAY;
-						else
-						{
-							if (input->way == 16)
-								w = CONTROLLER_JOY16WAY;
-							else
-								w = CONTROLLER_JOY8WAY;
-						}
-					break;
-
 				case IPT_JOYSTICKRIGHT_LEFT:
 				case IPT_JOYSTICKRIGHT_RIGHT:	
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
+					dual = TRUE;
 
-					if (!w)
-						w = CONTROLLER_DOUBLEJOY2WAY;
+				case IPT_JOYSTICK_LEFT:
+				case IPT_JOYSTICK_RIGHT:
+					lr = TRUE;
+
+					if (input->way == 4)
+						w = CONTROLLER_JOY4WAY;
+					else if (input->way == 16)
+						w = CONTROLLER_JOY16WAY;
 					break;
 
 				case IPT_JOYSTICKRIGHT_UP:
 				case IPT_JOYSTICKRIGHT_DOWN:
 				case IPT_JOYSTICKLEFT_UP:
 				case IPT_JOYSTICKLEFT_DOWN:
+					dual = TRUE;
+
+				case IPT_JOYSTICK_UP:
+				case IPT_JOYSTICK_DOWN:
+					ud = TRUE;
 
 					if (input->way == 4)
-						w = CONTROLLER_DOUBLEJOY4WAY;
-					else
-					{
-						if (input->way == 16)
-							w = CONTROLLER_DOUBLEJOY16WAY;
-						else
-							w = CONTROLLER_DOUBLEJOY8WAY;
-					}
+						w = CONTROLLER_JOY4WAY;
+					else if (input->way == 16)
+						w = CONTROLLER_JOY16WAY;
 					break;
 
 				case IPT_PADDLE:
@@ -493,7 +482,18 @@ static void UpdateController(void)
 
 			end_resource_tracking();
 
-			flags[w] = TRUE;
+			if (lr || ud)
+			{
+				if (lr && !ud)
+					w = CONTROLLER_JOY2WAY;
+				else if (!lr && ud)
+					w = CONTROLLER_VJOY2WAY;
+
+				if (dual)
+					w += CONTROLLER_DOUBLEJOY2WAY - CONTROLLER_JOY2WAY;
+
+				flags[w] = TRUE;
+			}
 		}
 
 		gameinfo->numPlayers = p;

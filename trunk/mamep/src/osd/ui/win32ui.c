@@ -228,6 +228,9 @@ typedef struct tagLVBKIMAGEW
     (BOOL)SNDMSG((hwnd), LVM_GETBKIMAGEA, 0, (LPARAM)(plvbki))
 #endif // ListView_GetBkImageA
 
+
+#define MEASURE_INIT_EXIT_TIME
+
 #define MM_PLAY_GAME (WM_APP + 15000)
 
 #define JOYGUI_MS 100
@@ -1211,6 +1214,14 @@ int WinMain_(HINSTANCE    hInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
+#ifdef MEASURE_INIT_EXIT_TIME
+	SYSTEMTIME st;
+	DWORD start, end, delta;
+
+	GetLocalTime(&st);
+	start = st.wMinute * 60 * 1000 + st.wSecond * 1000 + st.wMilliseconds;
+#endif /* MEASURE_INIT_EXIT_TIME */
+
 	dprintf("MAME32 starting\n");
 
 	use_gui_romloading = TRUE;
@@ -1225,11 +1236,39 @@ int WinMain_(HINSTANCE    hInstance,
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
 		return 1;
 
+#ifdef MEASURE_INIT_EXIT_TIME
+	GetLocalTime(&st);
+	end = st.wMinute * 60 * 1000 + st.wSecond * 1000 + st.wMilliseconds;
+
+	delta = end - start;
+	if (delta >= 60 * 60 * 1000)
+		delta -= 60 * 60 * 1000;
+
+	dprintf("startup time: %d.%03d", delta / 1000, delta % 1000);
+#endif /* MEASURE_INIT_EXIT_TIME */
+
 	// pump message, but quit on WM_QUIT
 	while(PumpMessage())
 		;
 
+#ifdef MEASURE_INIT_EXIT_TIME
+	GetLocalTime(&st);
+	start = st.wMinute * 60 * 1000 + st.wSecond * 1000 + st.wMilliseconds;
+#endif /* MEASURE_INIT_EXIT_TIME */
+
 	Win32UI_exit();
+
+#ifdef MEASURE_INIT_EXIT_TIME
+	GetLocalTime(&st);
+	end = st.wMinute * 60 * 1000 + st.wSecond * 1000 + st.wMilliseconds;
+
+	delta = end - start;
+	if (delta >= 60 * 60 * 1000)
+		delta -= 60 * 60 * 1000;
+
+	dprintf("ending time: %d.%03d", delta / 1000, delta % 1000);
+#endif /* MEASURE_INIT_EXIT_TIME */
+
 	return 0;
 }
 
@@ -3886,10 +3925,19 @@ static void UpdateHistory(void)
 #ifdef USE_IPS
 		if (g_IPSMenuSelectName)
 		{
-			WCHAR *p = NULL;
 			histText = GetPatchDesc(driversw[Picker_GetSelectedItem(hwndList)]->name, g_IPSMenuSelectName);
-			if(histText && (p = wcschr(histText, '/')))	// no category
-				histText = p + 1;
+			if (histText)
+			{
+				WCHAR *text = wcsdup(histText);
+
+				wcstok(text, TEXT("\r\n"));	// check only first line
+				if (wcschr(text, '/'))		// no category
+				{
+					WCHAR *p = wcschr(histText, '/');
+					histText = p + 1;
+				}
+				free(text);
+			}
 		}
 		else
 #endif /* USE_IPS */

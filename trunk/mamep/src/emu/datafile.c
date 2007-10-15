@@ -1865,6 +1865,12 @@ int load_driver_statistics (char *buffer, int bufsize)
 		
 		if (drivers[i]->ipt)
 		{
+			int lr = 0;
+			int ud = 0;
+			int dual = 0;
+
+			y = 3; /* default 8 way */
+
 			begin_resource_tracking();
 		
 			inp = input_port_allocate(drivers[i]->ipt, NULL);
@@ -1875,44 +1881,42 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 				switch (inp->type)
 				{
-				case IPT_JOYSTICK_LEFT:
-				case IPT_JOYSTICK_RIGHT:
-					if (!y)
-						y = 1;
-					break;
-				case IPT_JOYSTICK_UP:
-				case IPT_JOYSTICK_DOWN:
-					if (inp->way == 4)
-						y = 2;
-					else
-					{
-						if (inp->way == 16)
-							y = 4;
-						else
-							y = 3;
-					}
-					break;
 				case IPT_JOYSTICKRIGHT_LEFT:
 				case IPT_JOYSTICKRIGHT_RIGHT:
 				case IPT_JOYSTICKLEFT_LEFT:
 				case IPT_JOYSTICKLEFT_RIGHT:
-					if (!y)
-						y = 5;
+					dual = 1;
+
+				case IPT_JOYSTICK_LEFT:
+				case IPT_JOYSTICK_RIGHT:
+					lr = 1;
+
+					if (inp->way == 4)
+						y = 2;
+					else if (inp->way == 16)
+						y = 4;
 					break;
+
 				case IPT_JOYSTICKRIGHT_UP:
 				case IPT_JOYSTICKRIGHT_DOWN:
 				case IPT_JOYSTICKLEFT_UP:
 				case IPT_JOYSTICKLEFT_DOWN:
+					dual = 1;
+
+				case IPT_JOYSTICK_UP:
+				case IPT_JOYSTICK_DOWN:
+					ud = 1;
+
 					if (inp->way == 4)
-						y = 6;
-					else
-					{
-						if (inp->way == 16)
-							y = 8;
-						else
-							y = 7;
-					}
+						y = 2;
+					else if (inp->way == 16)
+						y = 4;
 					break;
+
+					if (!y)
+						y = 5;
+					break;
+
 				case IPT_BUTTON1:
 					if (x<1) x = 1;
 					break;
@@ -1968,6 +1972,19 @@ int load_driver_statistics (char *buffer, int bufsize)
 				++inp;
 			}
 			end_resource_tracking();
+
+			if (lr || ud)
+			{
+				if (lr && !ud)
+					y = 1; /* 2 way */
+				else if (!lr && ud)
+					y = 1; /* virtical 2 way */
+
+				if (dual)
+					y += 4;
+			}
+			else
+				y = 0;
 		}	
 		if (n) control[n]++;
 		if (x) control[x+10]++;

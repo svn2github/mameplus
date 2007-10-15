@@ -3151,7 +3151,7 @@ static void update_playback_record(int portnum, UINT32 portvalue)
 			else
 			{
 				popmessage(_("End of playback - %i frames - Average speed %f%%"),framecount,(double)totalspeed/framecount);
-				printf("End of playback - %i frames - Average speed %f%%\n",framecount,(double)totalspeed/framecount);
+				printf(_("End of playback - %i frames - Average speed %f%%\n"),framecount,(double)totalspeed/framecount);
 			}
 
 #ifdef AUTO_PAUSE_PLAYBACK

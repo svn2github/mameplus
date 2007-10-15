@@ -323,6 +323,12 @@ sub ParseSrcFiles
 			s/APPNAME/"MAME"/g;
 			s/APPLONGNAME/"M.A.M.E."/g;
 
+			# convert APPNAME_LOWER
+			s/APPNAME_LOWER/"mame"/g;
+
+			# convert CONFIGNAME
+			s/CONFIGNAME/"mame"/g;
+
 			# convert GAMENOUN/GAMESNOUN/CAPGAMENOUN/CAPSTARTGAMENOUN
 			s/CAPSTARTGAMENOUN/"Game"/g;
 			s/CAPGAMENOUN/"GAME"/g;
@@ -375,6 +381,12 @@ sub ParseSrcFiles
 							# convert APPNAME/APPLONGNAME
 							s/APPNAME/"MAME"/g;
 							s/APPLONGNAME/"M.A.M.E."/g;
+
+							# convert APPNAME_LOWER
+							s/APPNAME_LOWER/"mame"/g;
+
+							# convert CONFIGNAME
+							s/CONFIGNAME/"mame"/g;
 
 							# convert GAMENOUN/GAMESNOUN/CAPGAMENOUN/CAPSTARTGAMENOUN
 							s/GAMENOUN/"game"/g;

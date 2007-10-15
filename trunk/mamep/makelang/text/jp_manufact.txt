@@ -1290,6 +1290,10 @@ Free Enterprise Games
 Fun World
 
 
+# Lover Boy
+G.T Enterprise Inc
+
+
 # Flame Gunner
 GAPS Inc.
 
@@ -1304,6 +1308,10 @@ GMS
 
 # Abunai Houkago - Mou Matenai (Japan 890325)
 GREEN SOFT
+
+
+# GTI Poker
+GTI Inc
 
 
 # Master Boy (Spanish, PCB Rev A)
@@ -1416,6 +1424,10 @@ IGS
 
 # Dou Di Zhu
 IGS?
+
+
+# Player's Edge Plus (PP0516) Double Bonus Poker
+IGT - International Gaming Technology
 
 
 # See See Find Out

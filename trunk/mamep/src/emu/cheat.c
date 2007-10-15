@@ -1689,7 +1689,7 @@ UINT32 cheat_menu(UINT32 state)
 					break;
 
 				default:
-					ui_popup_time(1, "undefined menu switching : %x", submenu_choice);
+					ui_popup_time(1, _("undefined menu switching : %x"), submenu_choice);
 			}
 
 			submenu_choice = 1;
@@ -2781,7 +2781,7 @@ static int AddEditCheatMenu(int selection)
 			for(i = 0; i < cheatListLength; i++)		// shift + save = save all codes
 				SaveCheat(&cheatList[i], 0, 0);
 
-			ui_popup_time(1, "%d cheats saved", cheatListLength);
+			ui_popup_time(1, _("%d cheats saved"), cheatListLength);
 		}
 		else
 		{
@@ -5183,7 +5183,7 @@ static int DoSearchMenuMinimum(int selection)
 					}
 					else
 						/* ----- if no search region (eg, sms.c in HazeMD), don't open result viewer to avoid the crash ----- */
-						ui_popup_time(1, "no search regions");
+						ui_popup_time(1, _("no search regions"));
 					break;
 
 				case kMenu_RestoreSearch:
@@ -5732,7 +5732,7 @@ static int DoSearchMenuClassic(int selection)
 				}
 				else
 					/* ----- if no search region (eg, sms.c in HazeMD), don't open result viewer to avoid the crash ----- */
-					ui_popup_time(1, "no search regions");
+					ui_popup_time(1, _("no search regions"));
 				break;
 
 			case kMenu_RestoreSearch:
@@ -6276,7 +6276,7 @@ static int DoSearchMenu(int selection)
 					}
 					else
 						/* ----- if no search region (eg, sms.c in HazeMD), don't open result viewer to avoid the crash ----- */
-						ui_popup_time(1, "no search regions");
+						ui_popup_time(1, _("no search regions"));
 					break;
 
 				case kMenu_RestoreSearch:
@@ -6469,7 +6469,7 @@ static int SelectSearchRegions(int selection, SearchInfo * search)
 			{
 				InvalidateEntireRegion(search, region);
 
-				ui_popup_time(1, "region invalidated - %d results remain", search->numResults);
+				ui_popup_time(1, _("region invalidated - %d results remain"), search->numResults);
 			}
 		}
 	}
@@ -7784,7 +7784,7 @@ static int SelectOptions(int selection)
 	{
 		SaveCheat(NULL, 0, 2);
 
-		ui_popup_time(1, "command code saved");
+		ui_popup_time(1, _("command code saved"));
 	}
 
 	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
