@@ -132,7 +132,7 @@ endif
 CC += /Og /Ob2 /Oi /Ot /Oy /GA /Gy /GF
 
 ifdef PTR64
-CC += /wd4267 /wd4312 /Wp64
+CC += /wd4267 /Wp64
 endif
 
 # filter X86_ASM define
@@ -363,11 +363,7 @@ OSDOBJS += \
 endif
 
 # add a stub resource file
-ifdef PTR64
-RESFILE = $(WINOBJ)/mamex64.res
-else
 RESFILE = $(WINOBJ)/mame.res
-endif
 
 # add a resource file
 CLIOBJS += $(RESFILE)

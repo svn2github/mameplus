@@ -8,7 +8,8 @@
 //============================================================
 
 // standard windows headers
-#define _WIN32_WINNT 0x0400
+#undef _WIN32_WINNT
+#define _WIN32_WINNT 0x0501
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <commctrl.h>
@@ -238,11 +239,6 @@ static void winui_output_error(void *param, const char *format, va_list argptr)
 //============================================================
 //  utf8_main
 //============================================================
-#define IN_WINMAIN
-#undef main
-#define main main_
-#include "windows/main.c"
-#undef main
 
 int utf8_main(int argc, char **argv)
 {
@@ -903,3 +899,11 @@ static void stop_profiler(void)
 static void start_profiler(void) {}
 static void stop_profiler(void) {}
 #endif
+
+
+
+#undef _WIN32_WINNT
+#define IN_WINMAIN
+#undef main
+#define main main_
+#include "windows/main.c"

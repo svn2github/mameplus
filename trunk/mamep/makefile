@@ -126,6 +126,7 @@ X86_M68K_DRC = 1
 #-------------------------------------------------
 
 # uncomment one of the next lines to build a target-optimized build
+# NATIVE = 1
 # ATHLON = 1
 # I686 = 1
 # P4 = 1
@@ -240,12 +241,18 @@ CONSOLE_PROGRAM = -mconsole
 ARCH = 
 ENDIAN = little
 
-COMPILER_SUFFIX =
-XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
-
 # by default, compile for Pentium target and add no suffix
 ARCHSUFFIX =
 ARCH = -march=pentium
+
+COMPILER_SUFFIX =
+XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
+
+# architecture-specific builds get extra options
+ifneq ($(NATIVE),)
+    ARCHSUFFIX = nat
+    ARCH = -march=native
+endif
 
 ifneq ($(ATHLON),)
     ARCHSUFFIX = at
