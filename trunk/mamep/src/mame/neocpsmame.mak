@@ -72,20 +72,7 @@ endif
 DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/neogeo.a \
-	$(MAMEOBJ)/shared.a \
 
-
-
-#-------------------------------------------------
-# the following files are general components and
-# shared across a number of drivers
-#-------------------------------------------------
-
-$(MAMEOBJ)/shared.a: \
-	$(MACHINE)/pd4990a.o \
- 	$(MACHINE)/intelfsh.o \
-	$(MACHINE)/scsicd.o \
-	$(MACHINE)/wd33c93.o \
 
 
 #-------------------------------------------------
