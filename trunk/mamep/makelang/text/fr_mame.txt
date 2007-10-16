@@ -2244,11 +2244,11 @@ Recharger la base de donnée
 
 # mame/drivers/arcadia.c: 228 mame/drivers/astrocde.c: 597 mame/drivers/deco32.c: 1430, 1524 mame/drivers/djmain.c: 499 mame/drivers/hanaroku.c: 158 mame/drivers/laserbat.c: 265, 344, 418 mame/drivers/murogem.c: 126 mame/drivers/playch10.c: 472 mame/drivers/sengokmj.c: 237 mame/drivers/trvquest.c: 141 
 Reset
-Redémarrage
+Redémarrer
 
 # emu/inptport.c: 1023 emu/uitext.c: 108
 Reset Game
-Redémarrer
+Redémarrer le Jeu
 
 # mame/drivers/seattle.c: 1925, 2318, 2416 mame/drivers/vegas.c: 1861, 1893, 1907, 1937, 1981, 2077 
 Resolution
@@ -3108,7 +3108,7 @@ Valeurs restorées
 
 # emu/datafile.c: 2449
          PEDAL:  %4d\n
-
+       PEDALE :  %4d\n
 
 # emu/datafile.c: 2447
       AD STICK:  %4d\n
@@ -3120,7 +3120,7 @@ Valeurs restorées
 
 # emu/audit.c: 310
    FOUND: %s\n
-
+ TROUVE : %s\n
 
 # emu/datafile.c: 2264
  %4d HORIZONTAL + %4d\n %4d VERTICAL   + %4d\n
@@ -3140,22 +3140,22 @@ Valeurs restorées
 
 # emu/clifront.c: 864
  BAD
-
+ MAUVAIS
 
 # emu/clifront.c: 870
  NO GOOD DUMP KNOWN
-
+ AUCUN BON DUMP CONNU
 
 # emu/clifront.c: 1014
 %d romsets found, %d were OK.\n
-
+%d romsets trouvés, %d étaient OK.\n
 
 # emu/clifront.c: 1091
 %d samplesets found, %d were OK.\n
-
+%d samplesets trouvés, %d étaient OK.\n
 
 # emu/cheat.c: 11628
-%s : %s selected
+%s : %s sélectionné
 
 
 # emu/uimenu.c: 130
@@ -3164,227 +3164,227 @@ Valeurs restorées
 
 # emu/romload.c: 928
 %s CHD NEEDS REDUMP\n
-
+%s CHD A REDUMPER\n
 
 # emu/uimenu.c: 131
 %s Dec
-
+%s Dim
 
 # emu/uimenu.c: 132
 %s Inc
-
+%s Aug
 
 # emu/romload.c: 350
 %s NO GOOD DUMP KNOWN\n
-
+%s AUCUN BON DUMP CONNU\n
 
 # emu/romload.c: 257
-%s NOT FOUND (NO GOOD DUMP KNOWN)\n
+%s NON TROUVE (AUCUN BON DUMP CONNU)\n
 
 
 # emu/romload.c: 264, 902
-%s NOT FOUND\n
+%s NON TROUVE\n
 
 
 # emu/romload.c: 366
 %s ROM NEEDS REDUMP\n
-
+%s ROM A REDUMPER\n
 
 # emu/romload.c: 900, 949, 963
 %s UNSUPPORTED CHD VERSION\n
-
+%s VERSION DU CHD NON SUPPORTE\n
 
 # emu/romload.c: 357, 922
 %s WRONG CHECKSUMS:\n
-
+%s HECKSUMS INCORRECTES :\n
 
 # emu/romload.c: 343
 %s WRONG LENGTH (expected: %08x found: %08x)\n
-
+%s MAUVAISE LONGUEUR (espéré : %08x trouvé : %08x)\n
 
 # emu/cheat.c: 11626, 11684
 %s disabled
-
+%s désactivé
 
 # emu/cheat.c: 11692
 %s enabled
-
+%s activé
 
 # emu/romload.c: 951
 %s: CAN'T CREATE DIFF FILE\n
-
+%s: NE PEUT PAS CREER UN FICHIER DIFF\n
 
 # emu/romload.c: 965
 %s: CAN'T OPEN DIFF FILE\n
-
+%s: NE PEUT PAS OUVRIR UN FICHIER DIFF\n
 
 # emu/clifront.c: 1375
 (BAD) 
-
+(MAUVAIS)
 
 # emu/emuopts.c: 163, 164
 (debugger-only command)
-
+(commande débugeur seulement)
 
 # emu/emuopts.c: 52, 76, 82, 87, 149, 175, 181, 187, 193, 194, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230 
 (disabled by compiling option)
-
+(désactivé par l'option de compilation)
 
 # emu/uitext.c: 75, 76
 (more)
-
+(plus)
 
 # emu/inptport.c: 386
 1 Coin/1 Credit
-
+1 Pièce/1 Crédit
 
 # emu/inptport.c: 392
 1 Coin/2 Credits
-
+1 Pièce/2 Crédits
 
 # emu/inptport.c: 395
 1 Coin/3 Credits
-
+1 Pièce/3 Crédits
 
 # emu/inptport.c: 398
 1 Coin/4 Credits
-
+1 Pièce/4 Crédit
 
 # emu/inptport.c: 399
 1 Coin/5 Credits
-
+1 Pièce/5 Crédits
 
 # emu/inptport.c: 400
 1 Coin/6 Credits
-
+1 Pièce/6 Crédits
 
 # emu/inptport.c: 401
 1 Coin/7 Credits
-
+1 Pièce/7 Crédits
 
 # emu/inptport.c: 402
 1 Coin/8 Credits
-
+1 Pièce/8 Crédits
 
 # emu/inptport.c: 403
 1 Coin/9 Credits
-
+1 Pièce/9 Crédits
 
 # emu/inptport.c: 379
 2 Coins/1 Credit
-
+2 Pièces/1 Crédit
 
 # emu/inptport.c: 385
 2 Coins/2 Credits
-
+2 Pièces/2 Crédits
 
 # emu/inptport.c: 389
 2 Coins/3 Credits
-
+2 Pièces/3 Crédits
 
 # emu/inptport.c: 391
 2 Coins/4 Credits
-
+2 Pièces/4 Crédits
 
 # emu/inptport.c: 393
 2 Coins/5 Credits
-
+2 Pièces/5 Crédits
 
 # emu/inptport.c: 394
 2 Coins/6 Credits
-
+2 Pièces/6 Crédits
 
 # emu/inptport.c: 396
 2 Coins/7 Credits
-
+2 Pièces/7 Crédits
 
 # emu/inptport.c: 397
 2 Coins/8 Credits
-
+2 Pièces/8 Crédits
 
 # emu/inptport.c: 376
 3 Coins/1 Credit
-
+3 Pièces/1 Crédit
 
 # emu/inptport.c: 381
 3 Coins/2 Credits
-
+3 Pièces/2 Crédits
 
 # emu/inptport.c: 384
 3 Coins/3 Credits
-
+3 Pièces/3 Crédits
 
 # emu/inptport.c: 388
 3 Coins/4 Credits
-
+3 Pièces/4 Crédits
 
 # emu/inptport.c: 375
 4 Coins/1 Credit
-
+4 Pièces/1 Crédit
 
 # emu/inptport.c: 378
 4 Coins/2 Credits
-
+4 Pièces/2 Crédits
 
 # emu/inptport.c: 382
 4 Coins/3 Credits
-
+4 Pièces/3 Crédits
 
 # emu/inptport.c: 383
 4 Coins/4 Credits
-
+4 Pièces/4 Crédits
 
 # emu/inptport.c: 387
 4 Coins/5 Credits
-
+4 Pièces/5 Crédits
 
 # emu/inptport.c: 390
 4 Coins/7 Credits
-
+4 Pièces/7 Crédits
 
 # emu/inptport.c: 374
 5 Coins/1 Credit
-
+5 Pièces/1 Crédit
 
 # emu/inptport.c: 380
 5 Coins/3 Credits
-
+5 Pièces/3 Crédits
 
 # emu/inptport.c: 373
 6 Coins/1 Credit
-
+6 Pièces/1 Crédit
 
 # emu/inptport.c: 372
 7 Coins/1 Credit
-
+7 Pièces/1 Crédit
 
 # emu/inptport.c: 371
 8 Coins/1 Credit
-
+8 Pièces/1 Crédit
 
 # emu/inptport.c: 377
 8 Coins/3 Credits
-
+8 Pièces/3 Crédits
 
 # emu/inptport.c: 370
 9 Coins/1 Credit
-
+9 Pièces/1 Crédit
 
 # emu/cheat.c: 9928
 :1st Activation Key (%s)\n
-
+:1ère Touche d'Activation (%s)\n
 
 # emu/cheat.c: 9926
 :1st Activation Key for %s (%s)\n
-
+:1ère Touche d'Activation pour %s (%s)\n
 
 # emu/cheat.c: 9936
 :2nd Activation Key (%s)\n
-
+:2ème Touche d'Activation (%s)\n
 
 # emu/cheat.c: 9934
 :2nd Activation Key for %s (%s)\n
-
+:2ème Touche d'Activation pour %s (%s)\n
 
 # emu/inptport.c: 954
 AD Stick X
@@ -3488,11 +3488,11 @@ AWP Simulated Video (No Artwork)
 
 # emu/cheat.c: 3178
 Activation Key (1st)
-
+Touche d'Activation (1)
 
 # emu/cheat.c: 3190
 Activation Key (2nd)
-
+Touche d'Activation (2)
 
 # mame/layout/bfm_sc2.lay: 807
 Adder %d Output Only (%d:%d)
@@ -3520,7 +3520,7 @@ Attempted to malloc zero bytes (%s:%d)
 
 # emu/video.c: 430
 Average speed: %.2f%% (%d seconds)\n
-
+Vitesse moyenne : %.2f%% (%d secondes)\n
 
 # emu/cheat.c: 9059
 BANK%.2d
@@ -3552,7 +3552,7 @@ Bookkeeping
 
 # emu/inptport.c: 1020
 Break in Debugger
-
+Pause dans le Débugeur
 
 # mame/layout/cardline.lay: 83 mame/layout/funworld.lay: 73
 Button Lamps
@@ -3652,7 +3652,7 @@ Cheat
 
 # emu/cheat.c: 9776
 Cheat Database reloaded
-
+Base De Donnée des cheats rechargé
 
 # emu/uitext.c: 176
 Cheats
@@ -3692,7 +3692,7 @@ Contrast
 
 # emu/config.c: 136, 140
 Could not load controller file %s.cfg
-
+Ne peut pas charger le fichier contrôleur %s.cfg
 
 # emu/uimenu.c: 1476
 Crop to Screen
@@ -3708,15 +3708,15 @@ DOUBLEJOY16WAY:  %4d\n
 
 # emu/cheat.c: 7661 mame/drivers/aerofgt.c: 597, 674 mame/drivers/cinemat.c: 919 mame/drivers/psikyo4.c: 578, 622, 697 mame/drivers/psikyosh.c: 653 
 Debug
-
+Débug
 
 # emu/video.c: 619
 Decoding (%d%%)
-
+Décodage (%d%%)
 
 # mame/machine/cps2crpt.c: 686
 Decrypting %d%%
-
+Décryptage %d%%
 
 # emu/uitext.c: 181 
 Description
@@ -3764,7 +3764,7 @@ Double Up
 
 # emu/uitext.c: 235
 Driver Configuration
-
+Config du Driver
 
 # emu/inptport.c: 447
 Dual
@@ -3800,23 +3800,23 @@ EEPROM
 
 # emu/romload.c: 410 
 ERROR: required files are missing, the game cannot be run.
-
+ERREUR : les fichiers requis sotn manquant, le jeu ne peut pas fonctionner.
 
 # emu/audit.c: 308
 EXPECTED: %s\n
-
+ESPERE : %s\n
 
 # emu/cheat.c: 5458
 Energy (Less or Greater)
-
+Energie (Plus ou Moins)
 
 # lib/util/options.c: 468
 Error: option %s expected a parameter\n
-
+Erreur: l'option %s demande un paramètre\n
 
 # lib/util/options.c: 449
 Error: unknown option: %s\n
-
+Erreur : option inconnu : %s\n
 
 # emu/inptport.c: 418
 Europe
@@ -3832,23 +3832,23 @@ FRONTEND COMMANDS
 
 # emu/restrack.c: 97
 Failed to allocate %d bytes (%s:%d)
-
+L'allocation de %d bytes (%s:%d) a &choué
 
 # emu/inptport.c: 1233
 Failed to open file for playback
-
+L'ouverture du fichier playback a échoué
 
 # emu/inptport.c: 1284
 Failed to open file for recording
-
+L'ouverture du fichier d'enregistrement a échoué
 
 # emu/mamecore.h: 170
 Fatal error: %s (%s:%d)
-
+Erreur fatal : %s (%s:%d)
 
 # emu/mamecore.h: 167
 Fatal error: %s\nCaused by assert: %s:%d: %s
-
+Erreur fatal : %s\nCaused by assert: %s:%d: %s
 
 # emu/uitext.c: 232
 Flip X
@@ -3912,11 +3912,11 @@ Horizontal
 
 # emu/audit.c: 306
 INCORRECT CHECKSUM:\n
-
+CHECKSUM INCORRECTE :\n
 
 # emu/audit.c: 315
 INCORRECT LENGTH: %d bytes\n
-
+LONGUEUR INCORRECTE : %d bytes\n
 
 # lib/util/options.c: 859
 Illegal boolean value for %s; reverting to %d\n
@@ -3936,19 +3936,19 @@ Illegal value for %s = %s\n
 
 # emu/uitext.c: 238 
 Image Enhancement
-
+Amélioration de l'Image
 
 # emu/cheat.c: 4878, 5418
 Initialize Memory
-
+Initialiser la Mémoire
 
 # emu/mame.c: 1502
 Initializing...
-
+Initialisation...
 
 # emu/inptport.c: 1244
 Input file is for game '%s', not for current game '%s'\n
-
+Le fichier contrôleur est pour le jeu '%s', pas pour le jeu '%s' en cours\n
 
 # emu/inptport.c: 415
 International
@@ -3956,11 +3956,11 @@ International
 
 # lib/util/options.c: 957
 Invalid %s value (must be between %d and %d); reverting to %d\n
-
+Valeur %s invalide (doit être entre %d et %d); revenu sur %d\n
 
 # lib/util/options.c: 998
 Invalid %s value (must be between %f and %f); reverting to %f\n
-
+Valeur %s invalide (doit être entre %f et %f); revenu sur %f\n
 
 # emu/inptport.c: 453 
 Joystick
@@ -3972,7 +3972,7 @@ Kan
 
 # emu/cheat.c: 3275
 Keep
-
+Garder
 
 # mame/layout/nbmj8688.lay: 27, 33
 LCD%d Pixel Aspect (%d:%d)
@@ -4056,19 +4056,19 @@ Load Old Format Code
 
 # emu/romload.c: 382
 Loading (%d%%)
-
+Chargement (%d%%)
 
 # emu/romload.c: 384
 Loading Complete
-
+Chargement Complet
 
 # emu/clifront.c: 459
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 par Nicola Salmoria et l'équipe MAME\n\n
 
 # emu/mame.c: 189
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-
+MAME est un émulateur : il reproduit, plus ou moins fidélement, le comportement de\n plusieurs machines d'arcade. Le matériel est inutile sans logiciel, donc l'image\nd'une rom fonctionnant sur le matériel est nécessaire. Ces ROMs, comme d'autres\nlogiciels commercieux, sont sous droit d'auteurs et il est illégale de\n les utiliser si vous ne possédez pas la machine original. Les ROMs\nne sont pas distribués avec MAME. La distribution d'images ROM aves MAME\n est une violation des droits d'auteurs et sera rapporté aux\nauteurs qui pourront engager des actions légales.\n
 
 # emu/datafile.c: 1509
 MAMEInfo:\n
@@ -4812,35 +4812,35 @@ Samples
 
 # emu/clifront.c: 929
 Samples not supported in this build\n
-
+Samples non supporté dans ce build\n
 
 # emu/uitext.c: 229
 Screen #
-
+Ecran #
 
 # emu/ui.c: 2506, 2524, 2541, 2557, 2574, 2591, 2608, 2625
 Screen %d %s %.3f
-
+Ecran %d %s %.3f
 
 # emu/layout/dualhovu.lay: 15, 21 emu/layout/dualhsxs.lay: 15, 21 emu/layout/dualhuov.lay: 15, 21 emu/layout/triphsxs.lay: 21, 27, 33 mame/layout/darius.lay: 21, 27, 33 mame/layout/rocknms.lay: 16, 22
 Screen %d Pixel Aspect (%d:%d)
-
+Ecran %d Pixel Aspect (%d:%d)
 
 # emu/layout/dualhovu.lay: 3, 9 emu/layout/dualhsxs.lay: 3, 9 emu/layout/dualhuov.lay: 3, 9 emu/layout/triphsxs.lay: 3, 9, 15 mame/layout/darius.lay: 3, 9, 15 mame/layout/rocknms.lay: 3, 9
 Screen %d Standard (%d:%d)
-
+Ecran %d Standard (%d:%d)
 
 # emu/cheat.c: 1723
 Search a Cheat (Advanced Mode)
-
+Rechercher un Cheat (Mode Avancée)
 
 # emu/cheat.c: 1719
 Search a Cheat (Classic Mode)
-
+Rechercher un Cheat (Mode Classique)
 
 # emu/cheat.c: 1715
 Search a Cheat (Minimum Mode)
-
+Rechercher un Cheat (Mode Réduit)
 
 # emu/inptport.c: 849 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1753, 1786, 1875 mame/drivers/pgm.c: 864 mame/drivers/wallc.c: 187
 Service
@@ -4908,19 +4908,19 @@ Standard (%d:%d)
 
 # emu/mame.c: 1781
 State successfully loaded.
-
+Chargement d'Etat réussi.
 
 # emu/mame.c: 1703
 State successfully saved.
-
+Sauvegarde d'Etat réussi.
 
 # emu/cheat.c: 5461
 Status (Same or Different)
-
+Statut (Pareil ou Différent)
 
 # emu/uitext.c: 88
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
-
+CE JEU NE FONCTIONNE PAS. Vous ne pourrez pas le faire fonctionner correctement. 
 
 # emu/datafile.c: 1522
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
@@ -5048,7 +5048,7 @@ USA
 
 # emu/clifront.c: 422
 Unable to create file %s.ini\n
-
+Ne peut pas créer le fichier %s.ini\n
 
 # emu/mame.c: 1740
 Unable to load due to pending anonymous timers. See error.log for details.
@@ -5056,15 +5056,15 @@ Unable to load due to pending anonymous timers. See error.log for details.
 
 # emu/mame.c: 1512
 Unable to start machine emulation
-
+Ne peut pas démarrer l'émulation de la machine
 
 # emu/mame.c: 1514
 Unable to start sound emulation
-
+Ne peut pas démarrer l'émulation du son
 
 # emu/mame.c: 1516
 Unable to start video emulation
-
+Ne peut pas démarrer l'émulation vidéo
 
 # lib/util/options.c: 849
 Unexpected boolean option %s queried\n
@@ -5080,11 +5080,11 @@ Unexpected integer option %s queried\n
 
 # emu/cheat.c: 2946
 Unused (3)
-
+Inutilisé (3)
 
 # emu/ui.c: 629
 Updating Artwork...
-
+Mise à Jour de l'Artwork...
 
 # emu/uitext.c: 146
 Uptime
@@ -5140,19 +5140,19 @@ Volume
 
 # emu/romload.c: 417 
 WARNING: the game might not run correctly.
-
+ATTENTION : le jeu peut ne pas fonctionner correctement.
 
 # lib/util/options.c: 516
 Warning: invalid line in INI: %s
-
+Attention : ligne invalide dans INI: %s
 
 # lib/util/options.c: 538
 Warning: unknown option in INI: %s\n
-
+Attention : option inconnu dans INI : %s
 
 # emu/cheat.c: 2888
 Write If Match
-
+Ecrire Si Correspond
 
 # emu/cheat.c: 7208 mame/machine/scudsp.c: 885
 XOR
@@ -5180,7 +5180,7 @@ Zoom Auto
 
 # emu/video.c: 1165
 \n%d partial updates
-
+\n%d mise à jour partiel
 
 # emu/datafile.c: 1621, 1635
 \nORIGINAL:\n
@@ -5208,11 +5208,11 @@ Zoom Auto
 
 # emu/cheat.c: 2646, 2796, 4666
 activation key saved
-
+Touche d'Activation sauvegardé
 
 # emu/clifront.c: 95
 all available info on driver in XML format
-
+Toutes les infos dispo sur le driver au format XML
 
 # emu/emuopts.c: 129
 amount to scale the screen brightness when paused
@@ -5676,7 +5676,7 @@ select the system BIOS to use
 
 # emu/emuopts.c: 235
 select translation language
-
+Sélection du langage de traduction
 
 # emu/cheat.c: 11674
 set %s
@@ -5700,23 +5700,23 @@ set vector flicker effect
 
 # emu/clifront.c: 97
 short name, full name
-
+nom court, nom complet
 
 # emu/clifront.c: 99
 show clones
-
+Afficher les Clones
 
 # emu/clifront.c: 84
 show help message
-
+Afficher le message d'aide
 
 # emu/clifront.c: 91
 show this help
-
+Afficher l'aide
 
 # emu/video.c: 1157
 skip %d/%d
-
+passé %d/%d
 
 # emu/emuopts.c: 171
 skip displaying the information screen at startup

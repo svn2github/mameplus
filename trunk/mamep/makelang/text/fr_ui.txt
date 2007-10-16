@@ -508,7 +508,7 @@ Sens Horaires
 
 # osd/ui/win32ui.c: 867
 Clone Of
-Clone de :
+Clone de
 
 # osd/ui/mame32.rc: 544
 Clone of:
@@ -1996,7 +1996,7 @@ Options Artwork
 
 # osd/ui/mame32.rc: 1137
 Aspect ratio:
-
+Aspect ratio :
 
 # osd/ui/properties.c: 441, 4730, 4912, 4947
 Auto
@@ -2320,7 +2320,7 @@ NVRAM
 
 # osd/ui/mame32.rc: 1177
 Neogeo Decrypted
-
+Neogeo Décrypté
 
 # osd/ui/dialogs.c: 914
 No PCB Info available for this game.
@@ -2400,15 +2400,15 @@ Joué
 
 # osd/ui/mame32.rc: 1087
 Positional device
-
+Périphérique de Position
 
 # osd/ui/win32ui.c: 3961, 7167, 7191
 Propert&ies for %s
-
+Propriét&és pour %s
 
 # osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3919
 Propert&ies for Driver
-
+Propriét&és du Driver
 
 # osd/ui/mame32.rc: 780
 Quit game with confirmation

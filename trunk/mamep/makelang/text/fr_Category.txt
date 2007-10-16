@@ -4,11 +4,11 @@ Balle & Manette
 
 # 19
 Breakout
-Casse Brique
+Casse-Brique
 
 # 99
 Breakout *Mature*
-Casse Brique *Adulte*
+Casse-Brique *Adulte*
 
 # 221
 Casino *Mature*
@@ -512,7 +512,7 @@ Jeu de plateau / Majhong
 
 # 6617
 Tabletop / Mahjong *Mature*
-Jeu de plateau * Majhong *Adulte*
+Jeu de plateau / Majhong *Adulte*
 
 # 6847
 Tabletop / Othello
