@@ -4705,7 +4705,7 @@ ridhero	ライディングヒーロー (set 1)	らいでぃんぐひーろー	SNK
 ridheroh	ライディングヒーロー (set 2)	らいでぃんぐひーろー	SNK
 alpham2	ASOII -ラストガーディアン	えーえすおー_2	SNK
 ncombat	ニンジャコンバット (set 1)	にんじゃこんばっと	Alpha Denshi Co.
-ncombata	ニンジャコンバット (set 2)	にんじゃこんばっと	Alpha Denshi Co.
+ncombath	ニンジャコンバット (set 2)	にんじゃこんばっと	Alpha Denshi Co.
 cyberlip	サイバーリップ	さいばーりっぷ	SNK
 superspy	ザ・スーパースパイ	ざすーぱーすぱい	SNK
 mutnat	ミューテイション・ネイション	みゅーていしょんねいしょん	SNK
@@ -4752,6 +4752,7 @@ viewpoin	ビューポイント	びゅーぽいんと	Sammy
 ssideki	得点王 -Super Sidekicks	とくてんおう_1	SNK
 wh1	ワールドヒーローズ (set 1)	わーるどひーろーず_1	Alpha Denshi Co.
 wh1h	ワールドヒーローズ (set 2)	わーるどひーろーず_1	Alpha Denshi Co.
+wh1ha	ワールドヒーローズ (set 3)	わーるどひーろーず_1	Alpha Denshi Co.
 kof94	ザ・キング・オブ・ファイターズ '94	ざきんぐおぶふぁいたーず_01_1994	SNK
 aof2	龍虎の拳2 (set 1)	りゅうこのけん_2	SNK
 aof2a	龍虎の拳2 (set 2)	りゅうこのけん_2	SNK
@@ -4764,7 +4765,8 @@ fightfva	ファイトフィーバー (set 2)	ふぁいとふぃーばー	Viccom
 ssideki2	得点王2 -リアルファイトフットボール	とくてんおう_2	SNK
 spinmast	ミラクルアドベンチャー	みらくるあどべんちゃー	Data East Corporation
 samsho2	真サムライスピリッツ -覇王丸地獄変	しんさむらいすぴりっつ	SNK
-wh2j	ワールドヒーローズ2 JET	わーるどひーろーず_2_2じぇっと	ADK / SNK
+wh2j	ワールドヒーローズ2 JET (set 1)	わーるどひーろーず_2_2じぇっと	ADK / SNK
+wh2jh	ワールドヒーローズ2 JET (set 2)	わーるどひーろーず_2_2じぇっと	ADK / SNK
 wjammers	フライングパワーディスク	ふらいんぐぱわーでぃすく	Data East Corporation
 karnovr	ファイターズヒストリーダイナマイト	ふぁいたーずひすとりー_2だいなまいと	Data East Corporation
 gururin	ぐるりん	ぐるりん	Face
@@ -4874,6 +4876,7 @@ kof2000	ザ・キング・オブ・ファイターズ 2000	ざきんぐおぶふぁいたーず_07_1_2000	S
 kof2000n	ザ・キング・オブ・ファイターズ 2000 (not encrypted)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 bangbead	バンビード	ばんびーど	Visco
 nitd	ナイトメア・イン・ザ・ダーク	ないとめあいんざだーく	Eleven / Gavaking
+nitdbl	ナイトメア・イン・ザ・ダーク (海賊版)	ないとめあいんざだーく	Eleven / Gavaking
 sengoku3	戦国伝承2001	せんごくでんしょう_32001	SNK
 kof2001	ザ・キング・オブ・ファイターズ 2001 (set 1)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 kof2001h	ザ・キング・オブ・ファイターズ 2001 (set 2)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
@@ -4899,8 +4902,8 @@ mslug5	メタルスラッグ5	めたるすらっぐ_5_1	SNK Playmore
 ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版 / ハック)	めたるすらっぐ_5_2	bootleg
 svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん_1	Playmore
 svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん_1	Playmore
-svc	SNK VS. CAPCOM -SVC CHAOS (MVS)	えすえぬけいばーさすかぷこん_1	Playmore
-svcboot	SNK VS. CAPCOM -SVC CHAOS (MVS) (海賊版)	えすえぬけいばーさすかぷこん_1	bootleg
+svc	SNK VS. CAPCOM -SVC CHAOS	えすえぬけいばーさすかぷこん_1	Playmore
+svcboot	SNK VS. CAPCOM -SVC CHAOS (海賊版)	えすえぬけいばーさすかぷこん_1	bootleg
 svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 1)	えすえぬけいばーさすかぷこん_2	bootleg
 svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 2)	えすえぬけいばーさすかぷこん_2	bootleg
 svcsplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Super Plus (海賊版)	えすえぬけいばーさすかぷこん_2	bootleg
@@ -5124,7 +5127,6 @@ mjzoomin	麻雀ちゃんねるズームイン！	まーじゃんちゃんねるずーむいん	Jaleco
 kakumei	麻雀革命	まーじゃんかくめい_1	Jaleco
 kakumei2	麻雀革命II -プリンセスリーグ	まーじゃんかくめい_2	Jaleco
 suchipi	アイドル雀士スーチーパイスペシャル	あいどるじゃんしすーちーぱい_1すぺしゃる	Jaleco
-hayaosi1	早押しクイズ 王座決定戦	はやおしくいずぐおうざけっていせん	Jaleco
 ddealer	ダブルディーラー	だぶるでぃーらー	NMK
 quizpani	クイズぱにくるふぁんたじ～	くいずぱにくるふぁんたじー	NMK
 acommand	エイリアンコマンド	えいりあんこまんど	Jaleco
@@ -5483,6 +5485,7 @@ bigstrkb	ビッグストライカー (海賊版)	びっぐすとらいかー	bootleg
 bestleag	ビッグストライカー / Best League	びっぐすとらいかー	bootleg
 chimerab	キメラビースト (prototype)	きめらびーすと	Jaleco
 cybattlr	サイバトラー	さいばとらー	Jaleco
+hayaosi1	早押しクイズ 王座決定戦	はやおしくいずぐおうざけっていせん	Jaleco
 peekaboo	ピーカブー！	ぴーかぶー	Jaleco
 hayaosi2	早押しクイズ グランドチャンピオン大会	はやおしくいずぐらんどちゃんぴおんたいかい	Jaleco
 hayaosi3	早押しクイズ 熱闘生放送	はやおしくいずねっとうなまほうそう	Jaleco
