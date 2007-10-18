@@ -562,6 +562,16 @@ static struct
 };
 #endif /* IMAGE_MENU */
 
+/* Support for eXtended INP format */
+struct ext_header
+{
+	char header[7];  // must be "XINP" followed by NULLs
+	char shortname[9];  // game shortname
+	char version[32];  // MAME version string
+	long starttime;  // approximate INP start time
+	char dummy[32];  // for possible future expansion
+};
+
 /***************************************************************************
     Internal variables
  ***************************************************************************/
@@ -6672,7 +6682,22 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 			inp_header inp_header;
 
 			// read playback header
-			mame_fread(pPlayBack, &inp_header, sizeof(inp_header));
+			{
+				struct ext_header xheader;
+				// read first four bytes to check INP type
+				mame_fread(pPlayBack, xheader.header, 7);
+				mame_fseek(pPlayBack, 0, SEEK_SET);
+				if(strncmp(xheader.header,"XINP\0\0\0",7) != 0)
+				{
+					// read playback header
+					mame_fread(pPlayBack, &inp_header, sizeof(inp_header));
+				} else {
+					// read header
+					mame_fread(pPlayBack, &xheader, sizeof(struct ext_header));
+
+					memcpy(inp_header.name, xheader.shortname, sizeof(inp_header.name));
+				}
+			}
 
 			if (!isalnum(inp_header.name[0])) // If first byte is not alpha-numeric
 				mame_fseek(pPlayBack, 0, SEEK_SET); // old .inp file - no header

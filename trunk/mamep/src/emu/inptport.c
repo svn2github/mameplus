@@ -3386,6 +3386,17 @@ profiler_mark(PROFILER_INPUT);
 			update_playback_record(portnum, readinputport(portnum));
 	}
 
+	/* store speed read from INP file, if extended INP */
+	if (Machine->playback_file != NULL && !no_extended_inp)
+	{
+		long dummy;
+		mame_fread(Machine->playback_file,&rec_speed,sizeof(double));
+		mame_fread(Machine->playback_file,&dummy,sizeof(long));
+		framecount++;
+		rec_speed *= 100;
+		totalspeed += rec_speed;
+	}
+
 #ifdef USE_SHOW_INPUT_LOG
 	/* show input log */
 	if (show_input_log && (!Machine->playback_file))
