@@ -3793,17 +3793,6 @@ profiler_mark(PROFILER_INPUT);
 		}
 	}
 
-	/* store speed read from INP file, if extended INP */
-	if (Machine->playback_file != NULL && !no_extended_inp)
-	{
-		long dummy;
-		mame_fread(Machine->playback_file,&rec_speed,sizeof(double));
-		mame_fread(Machine->playback_file,&dummy,sizeof(long));
-		framecount++;
-		rec_speed *= 100;
-		totalspeed += rec_speed;
-	}
-
 profiler_mark(PROFILER_END);
 }
 
