@@ -1,624 +1,624 @@
-#
+# 6
 Ball & Paddle
 공 & 라켓
 
-#
+# 19
 Breakout
 벽돌깨기
 
-#
+# 102
 Breakout *Mature*
 벽돌깨기 *성인*
 
-#
+# 113
 Casino
 카지노
 
-#
+# 238
 Casino *Mature*
 카지노 *성인*
 
-#
+# Title
 Category
 분류
 
-#
+# 255
 Climbing
 등산
 
-#
+# 272
 Driving
 운전
 
-#
+# 300
 Driving / 1st Person
 운전 / 1인칭
 
-#
+# 360
 Driving / Boat
 운전 / 보트
 
-#
+# 366
 Driving / Plane
 운전 / 비행기
 
-#
+# 371
 Driving / Race
 운전 / 경주
 
-#
+# 432
 Driving / Race (chase view)
 운전 / 경주 (추적)
 
-#
+# 573
 Driving / Race (chase view) Bike
 운전 / 바이크 경주 (3인칭)
 
-#
+# 607
 Driving / Race 1st P Bike
 운전 / 바이크 경주 1인칭
 
-#
+# 614
 Driving / Race 1st Person
 운전 / 1인칭 경주
 
-#
+# 637
 Driving / Race Bike
 운전 / 바이크 경주
 
-#
+# 654
 Driving / Race Track
 운전 / 경주 트랙
 
-#
+# 693
 Fighter / 2.5D
 격투 / 2.5D
 
-#
+# 967
 Fighter / 2D
 격투 / 2D
 
-#
+# 1027
 Fighter / 3D
 격투 / 3D
 
-#
+# 1043
 Fighter / Field
 격투 / 필드
 
-#
+# 1058
 Fighter / Misc.
 격투 / 기타
 
-#
+# 1065
 Fighter / Multiplay
 격투 / 멀티플레이
 
-#
+# 1069
 Fighter / Versus
 격투 / 대전
 
-#
+# 1604
 Fighter / Versus *Mature*
 격투 / 대전 *성인*
 
-#
+# 1608
 Fighter / Versus Co-op
 격투 / 협동
 
-#
+# 1628
 Fighter / Vertical
 격투 / 수직
 
-#
+# 1653
 Maze
 미로
 
-#
+# 1914
 Maze *Mature*
 미로 *성인*
 
-#
+# 1919
 Maze / Digging
 미로 / 굴착
 
-#
+# 1954
 Maze / Digging *Mature*
 미로 / 굴착 *성인*
 
-#
+# 1957
 Maze / Driving
 미로 / 탐험
 
-#
+# 1984
 Maze / Fighter
 미로 / 격투
 
-#
+# 2014
 Maze / Outline
 미로 / 땅따먹기
 
-#
+# 2032
 Maze / Outline *Mature*
 미로 / 땅따먹기 *성인*
 
-#
+# 2035
 Maze / Shooter Large
 미로 / 사격 (큰)
 
-#
+# 2112
 Maze / Shooter Small
 미로 / 사격 (작은)
 
-#
+# 2174
 Maze / Shooter Small *Mature*
 미로 / 사격 (작은) *성인*
 
-#
+# 2178
 Maze / Surround
 미로 / 포위
 
-#
+# 2192
 Mini-Games
 미니-게임
 
-#
+# 2234
 Misc.
 기타
 
-#
+# 2314
 Misc. *Mature*
 기타 *성인*
 
-#
+# 2323
 Multiplay
 멀티플래이
 
-#
+# 2374
 Multiplay *Mature*
 멀티플래이 *성인*
 
-#
+# 2386
 Not Classified
 지정 안됨
 
-#
+# 2469
 Pinball
 핀볼
 
-#
+# 2488
 Pinball *Mature*
 핀볼 *성인*
 
-#
+# 2494
 Pinball / Pachinko *Mature*
 핀볼 / 파칭고 *성인*
 
-#
+# 2500
 Platform / Fighter
 플랫폼 / 격투
 
-#
+# 2521
 Platform / Fighter Scrolling
 플랫폼 / 스크롤 격투
 
-#
+# 2704
 Platform / Run Jump
 플랫폼 / 뛰며 달리기
 
-#
+# 2966
 Platform / Run Jump *Mature*
 플랫폼 / 뛰며 달리기 *성인*
 
-#
+# 2972
 Platform / Run Jump Scrolling
 플랫폼 / 스크롤 뛰며 달리기
 
-#
+# 3048
 Platform / Shooter
 플랫폼 / 사격
 
-#
+# 3066
 Platform / Shooter Scrolling
 플랫폼 / 스크롤 슈팅
 
-#
+# 3278
 Puzzle
 퍼즐
 
-#
+# 3326
 Puzzle *Mature*
 퍼즐 *성인*
 
-#
+# 3334
 Puzzle / Cards
 퍼즐 / 카드
 
-#
+# 3337
 Puzzle / Cards *Mature*
 퍼즐 / 카드 *성인*
 
-#
+# 3349
 Puzzle / Drop
 퍼즐 / 낙하
 
-#
+# 3480
 Puzzle / Drop *Mature*
 퍼즐 / 낙하 *성인*
 
-#
+# 3498
 Puzzle / Match
 퍼즐 / 맞추기
 
-#
+# 3531
 Puzzle / Match *Mature*
 퍼즐 / 맞추기 *성인*
 
-#
+# 3565
 Puzzle / Maze
 퍼즐 / 미로
 
-#
+# 3580
 Puzzle / Outline
 퍼즐 / 땅따먹기
 
-#
+# 3596
 Puzzle / Outline *Mature*
 퍼즐 / 땅따먹기 *성인*
 
-#
+# 3630
 Puzzle / Sliding
 퍼즐 / 슬라이드
 
-#
+# 3641
 Puzzle / Sliding *Mature*
 퍼즐 / 슬라이드 *성인*
 
-#
+# 3647
 Puzzle / Toss
 퍼즐 / 튕기기
 
-#
+# 3709
 Puzzle / Toss *Mature*
 퍼즐 / 튕기기 *성인*
 
-#
+# 3720
 Quiz / Chinese
 퀴즈 / 중국어
 
-#
+# 3724
 Quiz / English
 퀴즈 / 영어
 
-#
+# 3788
 Quiz / English *Mature*
 퀴즈 / 영어 *성인*
 
-#
+# 3804
 Quiz / French
 퀴즈 / 프랑스어
 
-#
+# 3808
 Quiz / German
 퀴즈 / 독일어
 
-#
+# 3812
 Quiz / Italian
 퀴즈 / 이탈리아어
 
-#
+# 3820
 Quiz / Japanese
 퀴즈 / 일본어
 
-#
+# 3883
 Quiz / Japanese *Mature*
 퀴즈 / 일본어 *성인*
 
-#
+# 3890
 Quiz / Korean
 퀴즈 / 한국어
 
-#
+# 3896
 Quiz / Music English
 퀴즈 / 영어 음악
 
-#
+# 3900
 Quiz / Music Japanese
 퀴즈 / 일본어 음악
 
-#
+# 3904
 Quiz / Spanish
 퀴즈 / 스페인어
 
-#
+# 3908
 Rhythm
 리듬
 
-#
+# 3921
 Rhythm / Dance
 리듬액션 / 댄스
 
-#
+# 3967
 Rhythm / Instruments
 리듬액션 / 악기
 
-#
+# 4003
 Shooter / 1st Person
 슈팅 / 1인칭
 
-#
+# 4020
 Shooter / 3rd Person
 슈팅 / 3인칭
 
-#
+# 4066
 Shooter / Command
 슈팅 / 통솔
 
-#
+# 4096
 Shooter / Driving
 슈팅 / 운전
 
-#
+# 4105
 Shooter / Driving (chase view)
 슈팅 / 운전 (3인칭)
 
-#
+# 4149
 Shooter / Driving 1st Person
 슈팅 / 1인칭 운전
 
-#
+# 4157
 Shooter / Driving Diagonal
 슈팅 / 대각선 운전
 
-#
+# 4162
 Shooter / Driving Horizontal
 슈팅 / 수평 운전
 
-#
+# 4176
 Shooter / Driving Vertical
 슈팅 / 수직 운전
 
-#
+# 4228
 Shooter / Field
 슈팅 / 필드
 
-#
+# 4368
 Shooter / Field *Mature*
 슈팅 / 필드 *성인*
 
-#
+# 4376
 Shooter / Flying
 슈팅 / 비행
 
-#
+# 4428
 Shooter / Flying (chase view)
 슈팅 / 비행 (3인칭)
 
-#
+# 4461
 Shooter / Flying 1st Person
 슈팅 / 1인칭 비행
 
-#
+# 4504
 Shooter / Flying Diagonal
 슈팅 / 대각선 비행
 
-#
+# 4512
 Shooter / Flying Horizontal
 슈팅 / 수평 비행
 
-#
+# 4741
 Shooter / Flying Horizontal *Mature*
 슈팅 / 수평 비행 *성인*
 
-#
+# 4744
 Shooter / Flying Vertical
 슈팅 / 수직 비행
 
-#
+# 5166
 Shooter / Flying Vertical *Mature*
 슈팅 / 수직 비행 *성인*
 
-#
+# 5169
 Shooter / Gallery
 슈팅 / 갤러리
 
-#
+# 5553
 Shooter / Gallery *Mature*
 슈팅 / 갤러리 *성인*
 
-#
+# 5557
 Shooter / Gun
 슈팅 / 총
 
-#
+# 5734
 Shooter / Misc.
 슈팅 / 기타
 
-#
+# 5752
 Shooter / Misc. Horizontal
 슈팅 / 기타 수평
 
-#
+# 5775
 Shooter / Misc. Vertical
 슈팅 / 기타 수직
 
-#
+# 5797
 Shooter / Versus
 슈팅 / 대전
 
-#
+# 5810
 Shooter / Walking
 슈팅 / 걷기
 
-#
+# 5919
 Sports
 스포츠
 
-#
+# 5943
 Sports / Armwrestling
 스포츠 / 팔씨름
 
-#
+# 5948
 Sports / Baseball
 스포츠 / 야구
 
-#
+# 6032
 Sports / Basketball
 스포츠 / 농구
 
-#
+# 6085
 Sports / Bowling
 스포츠 / 볼링
 
-#
+# 6120
 Sports / Boxing
 스포츠 / 권투
 
-#
+# 6161
 Sports / Bull Fighting
 스포츠 / 투우
 
-#
+# 6165
 Sports / Darts
 스포츠 / 다트
 
-#
+# 6172
 Sports / Dodgeball
 스포츠 / 피구
 
-#
+# 6178
 Sports / Fishing
 스포츠 / 낚시
 
-#
+# 6194
 Sports / Football Amer.
 스포츠 / 미식 축구
 
-#
+# 6247
 Sports / Football Rugby
 스포츠 / 럭비
 
-#
+# 6252
 Sports / Golf
 스포츠 / 골프
 
-#
+# 6352
 Sports / Handball
 스포츠 / 핸드볼
 
-#
+# 6356
 Sports / Hang Gliding
 스포츠 / 행글라이딩
 
-#
+# 6362
 Sports / Hockey
 스포츠 / 하키
 
-#
+# 6378
 Sports / Horse Racing
 스포츠 / 경마
 
-#
+# 6394
 Sports / Horseshoes
 스포츠 / 편자 던지기
 
-#
+# 6399
 Sports / Multiplay
 스포츠 / 멀티플래이
 
-#
+# 6407
 Sports / Ping pong
 스포츠 / 탁구
 
-#
+# 6412
 Sports / Pool
 스포츠 / 당구
 
-#
+# 6450
 Sports / Pool *Mature*
 스포츠 / 당구 *성인*
 
-#
+# 6464
 Sports / Shuffleboard
 스포츠 / 원반밀어치기
 
-#
+# 6470
 Sports / Skateboarding
 스포츠 / 스케이트보드
 
-#
+# 6479
 Sports / Skiing
 스포츠 / 스키
 
-#
+# 6503
 Sports / SkyDiving
 스포츠 / 스카이다이빙
 
-#
+# 6507
 Sports / Soccer
 스포츠 / 축구
 
-#
+# 6613
 Sports / Sumo
 스포츠 / 씨름
 
-#
+# 6616
 Sports / Swimming
 스포츠 / 수영
 
-#
+# 6627
 Sports / Tennis
 스포츠 / 테니스
 
-#
+# 6660
 Sports / Track & Field
 스포츠 / 트랙 & 필드
 
-#
+# 6697
 Sports / VolleyBall
 스포츠 / 배구
 
-#
+# 6725
 Sports / Wrestling
 스포츠 / 레슬링
 
-#
+# 6777
 Tabletop
 보드게임
 
-#
+# 6785
 Tabletop *Mature*
 보드게임 *성인*
 
-#
+# 6788
 Tabletop / Hanafuda
 보드게임 / 화투
 
-#
+# 6801
 Tabletop / Hanafuda *Mature*
 보드게임 / 화투 *성인*
 
-#
+# 6823
 Tabletop / Mahjong
 보드게임 / 마작
 
-#
+# 6867
 Tabletop / Mahjong *Mature*
 보드게임 / 마작 *성인*
 
-#
+# 7110
 Tabletop / Othello
 보드게임 / 오델로
 
-#
+# 7116
 Tabletop / Othello *Mature*
 보드게임 / 오델로 *성인*
 
-#
+# 7121
 Tabletop / Renju
 보드게임 / 바둑
 
-#
+# 7126
 Tabletop / Shougi
 보드게임 / 장기
 

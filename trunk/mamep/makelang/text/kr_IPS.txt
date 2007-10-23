@@ -1,28 +1,28 @@
-#
-CPS1
-CPS1
+# 283
+Bootleg And Clone
+해적판 및 클론
 
-#
-CPS2
-CPS2
+# 102
+CPS All System
+모든 CPS시스템
 
-#
+# 298
+Haze Megadrive
+헤이즈 메가드라이브
+
+# Title
 IPS
 IPS
 
-#
+# 61
 Misc
 기타
 
-#
+# 136
 Neo-Geo
 네오지오
 
-#
-PGM
-PGM
-
-#
+# 7
 Translation
 번역판
 
