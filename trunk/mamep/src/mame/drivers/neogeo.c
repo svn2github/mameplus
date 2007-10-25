@@ -99,10 +99,6 @@
  *
  *************************************/
 
-#ifdef USE_NEOGEO_HACKS
-INT32 system_bios;
-#endif /* USE_NEOGEO_HACKS */
-
 static UINT8 display_poisition_interrupt_control;
 static UINT32 display_counter;
 static UINT32 vblank_interrupt_pending;

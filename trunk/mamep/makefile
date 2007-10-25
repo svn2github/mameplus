@@ -572,7 +572,7 @@ CFLAGS += \
 
 # LDFLAGS are used generally; LDFLAGSEMULATOR are additional
 # flags only used when linking the core emulator
-LDFLAGS = -Lextra/lib
+LDFLAGS = -Wl,--warn-common -Lextra/lib
 LDFLAGSEMULATOR =
 
 # add profiling information for the linker
@@ -669,7 +669,7 @@ endif
 # include files which define additional targets
 #-------------------------------------------------
 
-all: maketree emulator tools
+all: maketree buildtools emulator tools
 
 
 
@@ -717,6 +717,8 @@ endif
 #-------------------------------------------------
 
 emulator: maketree $(BUILD) $(EMULATOR)
+
+buildtools: maketree $(BUILD)
 
 tools: maketree $(TOOLS)
 

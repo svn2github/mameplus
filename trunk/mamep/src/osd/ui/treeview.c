@@ -960,11 +960,11 @@ void CreateCPUFolders(int parent_index)
 
 		for (n = 0; n < MAX_CPU; n++)
 		{
-			if (drv.cpu[n].cpu_type == CPU_DUMMY)
+			if (drv.cpu[n].type == CPU_DUMMY)
 				break;
 
 			// cpu type #'s are one-based
-			AddGame(map[drv.cpu[n].cpu_type], i);
+			AddGame(map[drv.cpu[n].type], i);
 		}
 	}
 }
@@ -1021,16 +1021,16 @@ void CreateSoundFolders(int parent_index)
 
 		for (n = 0; n < MAX_SOUND; n++)
 		{
-			if (drv.sound[n].sound_type == SOUND_DUMMY)
+			if (drv.sound[n].type == SOUND_DUMMY)
 				break;
 
-			if (drv.sound[n].sound_type != SOUND_FILTER_VOLUME
-			 && drv.sound[n].sound_type != SOUND_FILTER_RC
-			 && drv.sound[n].sound_type != SOUND_FILTER_LOWPASS)
+			if (drv.sound[n].type != SOUND_FILTER_VOLUME
+			 && drv.sound[n].type != SOUND_FILTER_RC
+			 && drv.sound[n].type != SOUND_FILTER_LOWPASS)
 			{
 				// sound type #'s are one-based, though that doesn't affect us here
-				if (map[drv.sound[n].sound_type])
-				AddGame(map[drv.sound[n].sound_type], i);
+				if (map[drv.sound[n].type])
+				AddGame(map[drv.sound[n].type], i);
 			}
 		}
 	}

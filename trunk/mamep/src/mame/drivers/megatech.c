@@ -268,8 +268,8 @@ static WRITE8_HANDLER( z80_unmapped_w )
 	printf("unmapped z80 write %04x\n",offset);
 }
 
-UINT8* sms_mainram;
-UINT8* sms_rom;
+//UINT8* sms_mainram;
+static UINT8* sms_rom;
 
 
 WRITE8_HANDLER( mt_sms_standard_rom_bank_w )

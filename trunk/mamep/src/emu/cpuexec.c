@@ -213,7 +213,7 @@ void cpuexec_init(running_machine *machine)
 	/* loop over all our CPUs */
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
 	{
-		int cputype = machine->drv->cpu[cpunum].cpu_type;
+		cpu_type cputype = machine->drv->cpu[cpunum].type;
 		int num_regs;
 
 		/* if this is a dummy, stop looking */
@@ -223,7 +223,7 @@ void cpuexec_init(running_machine *machine)
 		/* initialize the cpuinfo struct */
 		memset(&cpu[cpunum], 0, sizeof(cpu[cpunum]));
 		cpu[cpunum].suspend = SUSPEND_REASON_RESET;
-		cpu[cpunum].clock = machine->drv->cpu[cpunum].cpu_clock;
+		cpu[cpunum].clock = machine->drv->cpu[cpunum].clock;
 		cpu[cpunum].clockscale = 1.0;
 		cpu[cpunum].localtime = time_zero;
 
@@ -302,7 +302,7 @@ static void cpuexec_reset(running_machine *machine)
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
 	{
 		/* enable all CPUs (except for disabled CPUs) */
-		if (!(machine->drv->cpu[cpunum].cpu_flags & CPU_DISABLE))
+		if (!(machine->drv->cpu[cpunum].flags & CPU_DISABLE))
 			cpunum_resume(cpunum, SUSPEND_ANY_REASON);
 		else
 			cpunum_suspend(cpunum, SUSPEND_REASON_DISABLE, 1);
@@ -480,7 +480,7 @@ void cpuexec_timeslice(void)
 	LOG(("cpu_timeslice: target = %.9f\n", mame_time_to_double(target)));
 
 	/* process any pending suspends */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].cpu_type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		if (cpu[cpunum].suspend != cpu[cpunum].nextsuspend)
 			LOG(("--> updated CPU%d suspend from %X to %X\n", cpunum, cpu[cpunum].suspend, cpu[cpunum].nextsuspend));
@@ -489,7 +489,7 @@ void cpuexec_timeslice(void)
 	}
 
 	/* loop over CPUs */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].cpu_type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* only process if we're not suspended */
 		if (!cpu[cpunum].suspend)
@@ -535,7 +535,7 @@ void cpuexec_timeslice(void)
 	}
 
 	/* update the local times of all CPUs */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].cpu_type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* if we're suspended and counting, process */
 		if (cpu[cpunum].suspend && cpu[cpunum].eatcycles && compare_mame_times(cpu[cpunum].localtime, target) < 0)
@@ -976,7 +976,7 @@ void cpu_trigger(int trigger)
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
 	{
 		/* if this is a dummy, stop looking */
-		if (Machine->drv->cpu[cpunum].cpu_type == CPU_DUMMY)
+		if (Machine->drv->cpu[cpunum].type == CPU_DUMMY)
 			break;
 
 		/* see if this is a matching trigger */
@@ -1385,7 +1385,7 @@ static void compute_perfect_interleave(void)
 	/* start with a huge time factor and find the 2nd smallest cycle time */
 	perfect_interleave = time_zero;
 	perfect_interleave.subseconds = MAX_SUBSECONDS - 1;
-	for (cpunum = 1; Machine->drv->cpu[cpunum].cpu_type != CPU_DUMMY; cpunum++)
+	for (cpunum = 1; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* find the 2nd smallest cycle interval */
 		if (subseconds_per_cycle[cpunum] < smallest)

@@ -1492,7 +1492,8 @@ static void m68kcore_init(running_machine *machine)
 {
 	static const char *names[] = { "C", "DRC", "ASM" };
 	cpu_config *cpu_ptr = (cpu_config *)machine->drv->cpu;
-	int cpunum, type;
+	int cpunum;
+	cpu_type type;
 	const char *stemp = options_get_string(mame_options(), OPTION_M68K_CORE);
 	int m68k_core = 0;
 
@@ -1518,7 +1519,7 @@ static void m68kcore_init(running_machine *machine)
 
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
 	{
-		type = cpu_ptr[cpunum].cpu_type;
+		type = cpu_ptr[cpunum].type;
 #if (HAS_M68000)
 		if(type == CPU_M68000)
 		{
@@ -1527,21 +1528,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68000ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68000 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68000]);
-			//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68000]);
+			logerror("cpu[%d]: M68000 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68000]);
+			//printf  ("cpu[%d]: M68000 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68000]);
 		}
 #endif
 #if (HAS_M68008)
@@ -1552,21 +1553,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68000ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68008 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68008]);
-			//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68008]);
+			logerror("cpu[%d]: M68008 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68008]);
+			//printf  ("cpu[%d]: M68008 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68008]);
 		}
 #endif
 #if (HAS_M68010)
@@ -1577,21 +1578,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68010ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68010 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68010]);
-			//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68010]);
+			logerror("cpu[%d]: M68010 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68010]);
+			//printf  ("cpu[%d]: M68010 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68010]);
 		}
 #endif
 #if (HAS_M68EC020)
@@ -1602,21 +1603,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68020ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68EC020]);
-			//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68EC020]);
+			logerror("cpu[%d]: M68EC020 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68EC020]);
+			//printf  ("cpu[%d]: M68EC020 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68EC020]);
 		}
 #endif
 #if (HAS_M68020)
@@ -1627,21 +1628,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68020ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68020 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68020]);
-			//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68020]);
+			logerror("cpu[%d]: M68020 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68020]);
+			//printf  ("cpu[%d]: M68020 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68020]);
 		}
 #endif
 #if (HAS_M68040)
@@ -1652,21 +1653,21 @@ static void m68kcore_init(running_machine *machine)
 			case 2:
 #if (HAS_M68040ASM)
 				// enable ASM core
-				cpu_ptr[cpunum].cpu_type += 2;
+				cpu_ptr[cpunum].type += 2;
 				break;
 #endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
-				cpu_ptr[cpunum].cpu_type += 1;
+				cpu_ptr[cpunum].type += 1;
 				break;
 #endif
 			default:
 				break;
 			}
 
-			logerror("cpu[%d]: M68040 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68040]);
-			//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[cpu_ptr[cpunum].cpu_type - CPU_M68040]);
+			logerror("cpu[%d]: M68040 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68040]);
+			//printf  ("cpu[%d]: M68040 %s core\n", cpunum, names[cpu_ptr[cpunum].type - CPU_M68040]);
 		}
 #endif
 	}

@@ -2104,16 +2104,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 				/* Calc all CPU's only in ORIGINAL games */
 				y = 0;
 				n = 0;
-				while (n < MAX_CPU && drv.cpu[n].cpu_type)
+				while (n < MAX_CPU && drv.cpu[n].type)
 				{
-					int type = drv.cpu[n].cpu_type;
+					cpu_type type = drv.cpu[n].type;
 					int count = 0;
 					char cpu_name[256];
 
 					n++;
 
 					while (n < MAX_CPU
-						&& drv.cpu[n].cpu_type == type)
+						&& drv.cpu[n].type == type)
 					{
 						count++;
 						n++;
@@ -2136,16 +2136,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 				/* Calc all Sound hardware only in ORIGINAL games */
 				y = 0;
 				n = 0;
-				while (n < MAX_SOUND && drv.sound[n].sound_type)
+				while (n < MAX_SOUND && drv.sound[n].type)
 				{
-					int type = drv.sound[n].sound_type;
+					sound_type type = drv.sound[n].type;
 					int count = 0;
 					char sound_name[256];
 
 					n++;
 
 					while (n < MAX_CPU
-						&& drv.sound[n].sound_type == type)
+						&& drv.sound[n].type == type)
 					{
 						count++;
 						n++;

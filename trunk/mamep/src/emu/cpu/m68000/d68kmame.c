@@ -5,9 +5,9 @@
 
 /* global access */
 
-struct m68k_memory_interface m68k_memory_intf;
-offs_t m68k_encrypted_opcode_start[MAX_CPU];
-offs_t m68k_encrypted_opcode_end[MAX_CPU];
+extern struct m68k_memory_interface m68k_memory_intf;
+extern offs_t m68k_encrypted_opcode_start[MAX_CPU];
+extern offs_t m68k_encrypted_opcode_end[MAX_CPU];
 
 
 #if 0 //ks hcmame s switch m68k core
@@ -166,9 +166,6 @@ static const struct m68k_memory_interface interface_d32 =
 	writelong_d32
 };
 
-
-/* global access */
-struct m68k_memory_interface m68k_memory_intf;
 
 
 /****************************************************************************

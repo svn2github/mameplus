@@ -550,10 +550,10 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 
 			gameinfo->usesSamples = FALSE;
 			gameinfo->usesYM3812 = FALSE;
-			for (i = 0; drv.sound[i].sound_type && i < MAX_SOUND; i++)
+			for (i = 0; drv.sound[i].type && i < MAX_SOUND; i++)
 			{
 #if HAS_SAMPLES
-				if (drv.sound[i].sound_type == SOUND_SAMPLES)
+				if (drv.sound[i].type == SOUND_SAMPLES)
 				{
 					const char **samplenames;
 
@@ -565,13 +565,13 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 #endif
 				if (0
 #if HAS_YM3812
-					|| drv.sound[i].sound_type == SOUND_YM3812
+					|| drv.sound[i].type == SOUND_YM3812
 #endif
 #if HAS_YM3526
-					|| drv.sound[i].sound_type == SOUND_YM3526
+					|| drv.sound[i].type == SOUND_YM3526
 #endif
 #if HAS_YM2413
-					|| drv.sound[i].sound_type == SOUND_YM2413
+					|| drv.sound[i].type == SOUND_YM2413
 #endif
 				)
 					gameinfo->usesYM3812 = TRUE;
@@ -586,22 +586,22 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			{
 				if (0
 #if (HAS_M68000)
-					|| drv.cpu[i].cpu_type == CPU_M68000
+					|| drv.cpu[i].type == CPU_M68000
 #endif
 #if (HAS_M68008)
-					|| drv.cpu[i].cpu_type == CPU_M68008
+					|| drv.cpu[i].type == CPU_M68008
 #endif
 #if (HAS_M68010)
-					|| drv.cpu[i].cpu_type == CPU_M68010
+					|| drv.cpu[i].type == CPU_M68010
 #endif
 #if (HAS_M68EC020)
-					|| drv.cpu[i].cpu_type == CPU_M68EC020
+					|| drv.cpu[i].type == CPU_M68EC020
 #endif
 #if (HAS_M68020)
-					|| drv.cpu[i].cpu_type == CPU_M68020
+					|| drv.cpu[i].type == CPU_M68020
 #endif
 #if (HAS_M68040)
-					|| drv.cpu[i].cpu_type == CPU_M68040
+					|| drv.cpu[i].type == CPU_M68040
 #endif
 				)
 					gameinfo->hasM68K = TRUE;

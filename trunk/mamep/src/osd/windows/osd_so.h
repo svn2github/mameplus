@@ -91,8 +91,8 @@
 
 		#include "cpuintrf.h"
 		extern SHAREDOBJ_FUNC(void)        cpuintrf_init(running_machine *machine);
-		extern SHAREDOBJ_FUNC(const char *)cputype_get_info_string(int cpunum, UINT32 state);
-		extern SHAREDOBJ_FUNC(const char *)cputype_shortname(int cputype);
+		extern SHAREDOBJ_FUNC(const char *)cputype_get_info_string(cpu_type cputype, UINT32 state);
+		extern SHAREDOBJ_FUNC(const char *)cputype_shortname(cpu_type cputype);
 
 		#include "datafile.h"
 		extern SHAREDOBJ_FUNC(void) datafile_init(core_options *options);
@@ -189,7 +189,7 @@
 		#include "sndintrf.h"
 		extern SHAREDOBJ_FUNC(void)         sndintrf_init(running_machine *machine);
 		extern SHAREDOBJ_FUNC(const char *) sndtype_shortname(int sndnum);
-		extern SHAREDOBJ_FUNC(const char *) sndtype_get_info_string(int sndnum, UINT32 state);
+		extern SHAREDOBJ_FUNC(const char *) sndtype_get_info_string(sound_type sndtype, UINT32 state);
 		extern SHAREDOBJ_FUNC(int)          sndtype_clock(int sndnum);
 
 		#include "state.h"

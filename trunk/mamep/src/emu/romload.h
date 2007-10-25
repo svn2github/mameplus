@@ -303,4 +303,7 @@ const rom_entry *rom_first_chunk(const rom_entry *romp);
 const rom_entry *rom_next_chunk(const rom_entry *romp);
 
 
+extern int system_bios;
+
+
 #endif	/* __ROMLOAD_H__ */

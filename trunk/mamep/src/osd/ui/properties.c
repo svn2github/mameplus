@@ -812,18 +812,18 @@ static LPCWSTR GameInfoCPU(int nIndex)
 	buf[0] = '\0';
 
 	i = 0;
-	while (i < MAX_CPU && drv.cpu[i].cpu_type)
+	while (i < MAX_CPU && drv.cpu[i].type)
 	{
-		if (drv.cpu[i].cpu_clock >= 1000000)
+		if (drv.cpu[i].clock >= 1000000)
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
-					drv.cpu[i].cpu_clock / 1000000,
-					drv.cpu[i].cpu_clock % 1000000);
+					_Unicode(cputype_name(drv.cpu[i].type)),
+					drv.cpu[i].clock / 1000000,
+					drv.cpu[i].clock % 1000000);
 		else
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-					_Unicode(cputype_name(drv.cpu[i].cpu_type)),
-					drv.cpu[i].cpu_clock / 1000,
-					drv.cpu[i].cpu_clock % 1000);
+					_Unicode(cputype_name(drv.cpu[i].type)),
+					drv.cpu[i].clock / 1000,
+					drv.cpu[i].clock % 1000);
 
 		wcscat(buf, TEXT("\n"));
 
@@ -844,18 +844,18 @@ static LPCWSTR GameInfoSound(int nIndex)
 	buf[0] = '\0';
 
 	i = 0;
-	while (i < MAX_SOUND && drv.sound[i].sound_type)
+	while (i < MAX_SOUND && drv.sound[i].type)
 	{
 		int clock,sound_type,count;
 
-		sound_type = drv.sound[i].sound_type;
+		sound_type = drv.sound[i].type;
 		clock = drv.sound[i].clock;
 
 		count = 1;
 		i++;
 
 		while (i < MAX_SOUND
-				&& drv.sound[i].sound_type == sound_type
+				&& drv.sound[i].type == sound_type
 				&& drv.sound[i].clock == clock)
 		{
 			count++;
