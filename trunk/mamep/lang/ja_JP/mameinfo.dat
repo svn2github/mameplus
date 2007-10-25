@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.119u4      #
+#      Mameinfo.dat日本語版 v0.120       #
 #                                        #
-#            October 12, 2007            #
+#            October 22, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：864 翻訳済：840
-# 追加項目：342 合計：1206
+# Tester報告：871 翻訳済：846
+# 追加項目：342 合計：1213
 #
 
 
@@ -21,7 +21,23 @@ $info=deadang
 $mame
 [バグ]
 
-- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty
+- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty /  robiza
+
+$end
+
+$info=tenkaibb
+$mame
+[バグ]
+
+- うまく起動しない。 tenkaibb0120red, dyq
+
+$end
+
+$info=mjreach
+$mame
+[バグ]
+
+- うまく起動しない。 tenkaibb0120red, dyq
 
 $end
 
@@ -51,6 +67,14 @@ $mame
 
 $end
 
+$info=ikki
+$mame
+[バグ]
+
+- スプライトが全てちらつく。0.112u3から発生。 ikki0120yel, ShimaPong /  robiza
+
+$end
+
 $info=alleymas
 $mame
 [バグ]
@@ -62,6 +86,114 @@ $mame
 
 
 - イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
+
+$end
+
+$info=mp_twc
+$mame
+[バグ]
+
+- 黒画面だけで起動しない。 mp_twc0120red, Scagazza
+
+$end
+
+$info=finalapr
+$mame
+[バグ]
+
+- Core 2 Duo@3.4GHzのシステムでも、速度が数%しか出ない。0.118u1から起きている。 finalapr0120yel, Machone
+
+
+- 背景がおかしくなっている。 finalapr0115u2gre, robiza
+
+$end
+
+$info=outfxies
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+
+- ドゥイーブの飛行機の面で後ろ側にゴミグラフィックが表示される。 outfxies0100u1gre, F1ReB4LL
+
+$end
+
+$info=ptblank
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+
+- “Shoot 14 Criminals”の面でドアの部分に縦線が表示される。 ptblank076u1gre, Heihachi_73
+
+$end
+
+$info=gslugrsj
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=gslgr94u
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=vshoot
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+
+- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
+
+$end
+
+$info=sws95
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=sws96
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=sws97
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=nebulray
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
+
+$end
+
+$info=machbrkr
+$mame
+[バグ]
+
+- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
 
 $end
 
@@ -119,6 +251,22 @@ $mame
 
 $end
 
+$info=speedatk
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチを設定すると、グラフィックが片方にずれて表示される。 speedatk0120gre, IceMan01 /  Robbbert
+
+$end
+
+$info=stadhero
+$mame
+[バグ]
+
+- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
+
+$end
+
 $info=diehard
 $mame
 [バグ]
@@ -135,29 +283,11 @@ $mame
 
 $end
 
-$info=ssi
+$info=dcclubfd
 $mame
 [バグ]
 
-- 0.119のあたりから、サウンドがおかしい。コインを入れる前の初期画面の音や、スーパーウエポンを使ったときの音など。 ssi0119u1gre, Iaspis
-
-
-- ごく希に、Tアイテムを取って蝶が現れている間、画面の一番下に化けグラフィックが出る。
-めったに起きない。 ssi0104u3gre, Iaspis / Twisty / robiza
-
-
-- ボーナスステージで、UFOの爆発の色がおかしいようだ。 ssi237b2gre, YMI
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
+- プレイ中にAccess Violationエラーが出てクラッシュする。 dcclubfd0120red, Scagazza
 
 $end
 
@@ -2341,30 +2471,6 @@ $mame
 
 $end
 
-$info=finalapr
-$mame
-[バグ]
-
-- 背景がおかしくなっている。 finalapr0115u2gre, robiza
-
-$end
-
-$info=outfxies
-$mame
-[バグ]
-
-- ドゥイーブの飛行機の面で後ろ側にゴミグラフィックが表示される。 outfxies0100u1gre, F1ReB4LL
-
-$end
-
-$info=vshoot
-$mame
-[バグ]
-
-- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
-
-$end
-
 $info=faceoff
 $mame
 [バグ]
@@ -3925,6 +4031,29 @@ $mame
 
 $end
 
+$info=ssi
+$mame
+[バグ]
+
+- ごく希に、Tアイテムを取って蝶が現れている間、画面の一番下に化けグラフィックが出る。
+めったに起きない。 ssi0104u3gre, Iaspis / Twisty / robiza
+
+
+- ボーナスステージで、UFOの爆発の色がおかしいようだ。 ssi237b2gre, YMI
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
 $info=arabianm
 $mame
 [バグ]
@@ -5424,7 +5553,7 @@ $info=zoar
 $mame
 [バグ]
 
-- アップライト筐体のDIP設定が動作しない。常にカクテルモード。 zoar095u5gra, Thenasty
+- アップライト筐体のDIP設定が動作しない。常にカクテルモード。 zoar095u5gra, Thenasty / Luigi30
 
 $end
 
@@ -5532,7 +5661,7 @@ $info=hiimpact
 $mame
 [バグ]
 
-- サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett
+- サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett / Luigi30
 
 $end
 
@@ -6341,14 +6470,6 @@ $mame
 
 - 得点が正しく計算されない。
 パーフェクト時の3万点が加算されない。 knckhead071u2gre2, QTQuazar
-
-$end
-
-$info=ptblank
-$mame
-[バグ]
-
-- “Shoot 14 Criminals”の面でドアの部分に縦線が表示される。 ptblank076u1gre, Heihachi_73
 
 $end
 
