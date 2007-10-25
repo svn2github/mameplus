@@ -1,6 +1,6 @@
 # Conquer
 <unknown>
-<desconegut>
+<desconocido>
 
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
@@ -422,6 +422,10 @@ Coreland
 Corsica
 Corsica
 
+# Janyou Part II (ver 7.03, July 1 1983)
+Cosmo Denshi
+Cosmo Denshi
+
 # PK Scramble
 Cosmo Electronics Corporation
 Cosmo Electronics Corporation
@@ -754,6 +758,10 @@ Evoga
 Evona Electronic
 Evona Electronic
 
+# Come On Baby
+ExPotato
+ExPotato
+
 # Grand Cross
 Excellent System
 Excellent System
@@ -810,6 +818,10 @@ Fun World
 Fuuki
 Fuuki
 
+# Lover Boy
+G.T Enterprise Inc
+G.T Enterprise Inc
+
 # Flame Gunner
 GAPS Inc.
 GAPS Inc.
@@ -830,9 +842,17 @@ GMS
 GREEN SOFT
 GREEN SOFT
 
+# GTI Poker
+GTI Inc
+GTI Inc
+
 # Master Boy (Spanish, PCB Rev A)
 Gaelco
 Gaelco
+
+# Interstellar Laser Fantasy
+Gakken
+Gakken
 
 # Table Tennis Champions (set 1)
 Gamart?
@@ -978,6 +998,10 @@ IGS
 IGS?
 IGS?
 
+# Player's Edge Plus (PP0516) Double Bonus Poker
+IGT - International Gaming Technology
+IGT - International Gaming Technology
+
 # See See Find Out
 Icarus
 Icarus
@@ -1058,7 +1082,7 @@ Jeil Computer System
 Jetsoft
 Jetsoft
 
-# Star Fighter
+# Star Fighter (bootleg of Galaxian)
 Jeutel
 Jeutel
 
@@ -1362,7 +1386,7 @@ Namco
 Namco LTD.
 Namco LTD.
 
-# Crowns Golf (set 1)
+# Crowns Golf (834-5419-04)
 Nasco Japan
 Nasco Japan
 
@@ -1426,7 +1450,7 @@ Noise Factory
 Noma
 Noma
 
-# Port Man
+# Port Man (bootleg on Moon Cresta hardware)
 Nova Games Ltd.
 Nova Games Ltd.
 
@@ -1446,7 +1470,7 @@ Novar
 Novarmatic
 Novarmatic
 
-# American Poker II (set 1)
+# Cannon Ball (Pacman Hardware)
 Novomatic
 Novomatic
 
@@ -1594,6 +1618,10 @@ Psikyo
 Psygnosis
 Psygnosis
 
+# Ippatsu Gyakuten [BET] (Japan)
+Public Software
+Public Software
+
 # Heaven's Gate
 RACDYM
 RACDYM
@@ -1618,7 +1646,7 @@ Rait Electronics Ltd
 Raizing
 Raizing
 
-# Dimahoo (USA 000121)
+# Dimahoo (Euro 000121)
 Raizing, distributed by Capcom
 Raizing, distributed by Capcom
 
@@ -1722,6 +1750,10 @@ Sammy Industries
 Sammy Industries Japan
 Sammy Industries Japan
 
+# Deer Hunting USA V4.3
+Sammy USA Corporation
+Sammy USA Corporation
+
 # Snooker 10 (Ver 1.11)
 Sandiy
 Sandiy
@@ -1733,6 +1765,10 @@ Sang Ho Soft
 # Dream Shopper
 Sanritsu
 Sanritsu
+
+# Open Mahjong [BET] (Japan)
+Sapporo Mechanic
+Sapporo Mechanic
 
 # Quiz King of Fighters
 Saurus
@@ -1825,6 +1861,14 @@ Shonan
 # Condor
 Sidam
 Sidam
+
+# Dig Dug (manufactured by Sidam)
+Sidam license
+Sidam license
+
+# Astropal
+Sidam?
+Sidam?
 
 # Lucky Today
 Sigma
@@ -2006,9 +2050,13 @@ TV Game Gruenberg
 TV-Tuning
 TV-Tuning
 
-# Cabal (US set 1)
+# Cabal (US set 1, Trackball version)
 Tad
 Tad
+
+# Cabal (World, Joystick version)
+Tad Corporation
+Tad Corporation
 
 # Rock Climber
 Taito
@@ -2214,7 +2262,7 @@ Universal Video Spiel
 Uniwang
 Uniwang
 
-# Intersecti
+# Saloon (France, encrypted)
 Unknown
 Unknown
 
@@ -2362,6 +2410,10 @@ Wisdom Tree
 Wolfteam
 Wolfteam
 
+# Domino Block
+Wonwoo Systems
+Wonwoo Systems
+
 # King of Boxer (English)
 Woodplace
 Woodplace
@@ -2466,7 +2518,7 @@ Zilec-Zenitone
 Zyrinx
 Zyrinx
 
-# Magic Brush
+# Crush Roller (bootleg)
 bootleg
 bootleg
 
@@ -2488,5 +2540,5 @@ homebrew
 
 # Chewing Gum
 unknown
-desconegut
+desconocido
 

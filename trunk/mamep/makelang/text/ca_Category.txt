@@ -1,4 +1,4 @@
-# 7
+# 6
 Ball & Paddle
 Bola i Taujana
 
@@ -6,15 +6,15 @@ Bola i Taujana
 Breakout
 Maons
 
-# 100
+# 102
 Breakout *Mature*
 Maons *Adults*
 
-# 111
+# 113
 Casino
 Casino
 
-# 223
+# 238
 Casino *Mature*
 Casino *Adults*
 
@@ -22,603 +22,603 @@ Casino *Adults*
 Category
 Categoria
 
-# 240
+# 255
 Climbing
 Escalada
 
-# 257
+# 272
 Driving
 Carreres
 
-# 285
+# 300
 Driving / 1st Person
 Carreres / 1ª Persona
 
-# 345
+# 360
 Driving / Boat
 Carreres / Pots
 
-# 351
+# 366
 Driving / Plane
 Carreres / Aeroplano
 
-# 356
+# 371
 Driving / Race
 Carreres / Carreres
 
-# 416
+# 432
 Driving / Race (chase view)
 Carreres / Carreres (vista caça)
 
-# 556
+# 573
 Driving / Race (chase view) Bike
 Carreres / Carrera de Motos (vista caça)
 
-# 590
+# 607
 Driving / Race 1st P Bike
 Carreres / Carrera de Motos en 1ª Persona
 
-# 597
+# 614
 Driving / Race 1st Person
 Carreres / Carrera en 1ª Persona
 
-# 620
+# 637
 Driving / Race Bike
 Carreres / Carrera de Motos
 
-# 637
+# 654
 Driving / Race Track
 Carreres / Carrera en Pista
 
-# 675
+# 693
 Fighter / 2.5D
 Lluita / 2.5D
 
-# 940
+# 967
 Fighter / 2D
 Lluita / 2D
 
-# 994
+# 1027
 Fighter / 3D
 Lluita / 3D
 
-# 1010
+# 1043
 Fighter / Field
 Lluita / Competició
 
-# 1025
+# 1058
 Fighter / Misc.
 Lluita / Varis
 
-# 1032
+# 1065
 Fighter / Multiplay
 Lluita / Multijugador
 
-# 1036
+# 1069
 Fighter / Versus
 Lluita / Un Contra Un
 
-# 1557
+# 1604
 Fighter / Versus *Mature*
 Lluita / Un Contra Un *Adults*
 
-# 1561
+# 1608
 Fighter / Versus Co-op
 Lluita / Un Contra Un Co-Op
 
-# 1581
+# 1628
 Fighter / Vertical
 Lluita / Vertical
 
-# 1605
+# 1653
 Maze
 Laberint
 
-# 1862
+# 1914
 Maze *Mature*
 Laberint *Adults*
 
-# 1866
+# 1919
 Maze / Digging
 Laberint / Excavacions
 
-# 1900
+# 1954
 Maze / Digging *Mature*
 Laberint / Excavacions *Adults*
 
-# 1903
+# 1957
 Maze / Driving
 Laberint / Carreres
 
-# 1929
+# 1984
 Maze / Fighter
 Laberint / Lluita
 
-# 1959
+# 2014
 Maze / Outline
 Laberint / Contorn
 
-# 1977
+# 2032
 Maze / Outline *Mature*
 Laberint / Contorn *Adults*
 
-# 1980
+# 2035
 Maze / Shooter Large
 Laberint / Tirs Llargs
 
-# 2057
+# 2112
 Maze / Shooter Small
 Laberint / Petits Tirs
 
-# 2118
+# 2174
 Maze / Shooter Small *Mature*
 Laberint / Petits Tirs *Adults*
 
-# 2122
+# 2178
 Maze / Surround
 Laberint / Marrada
 
-# 2136
+# 2192
 Mini-Games
 Mini-Jocs
 
-# 2177
+# 2234
 Misc.
 Varis
 
-# 2257
+# 2314
 Misc. *Mature*
 Varis / *Adults*
 
-# 2266
+# 2323
 Multiplay
 Multijugador
 
-# 2316
+# 2374
 Multiplay *Mature*
 Multijugador *Adults*
 
-# 2328
+# 2386
 Not Classified
 No Classificats
 
-# 2407
+# 2469
 Pinball
 Pimball
 
-# 2426
+# 2488
 Pinball *Mature*
 Pimball *Adults*
 
-# 2432
+# 2494
 Pinball / Pachinko *Mature*
 Pimball / Pachinko *Adults*
 
-# 2438
+# 2500
 Platform / Fighter
 Plataformes / Lluita
 
-# 2459
+# 2521
 Platform / Fighter Scrolling
 Plataformes / Lluita en Moviment 
 
-# 2640
+# 2704
 Platform / Run Jump
 Plataformes / Carrera de Salts
 
-# 2894
+# 2966
 Platform / Run Jump *Mature*
 Plataformes / Carrera de Salts *Adults*
 
-# 2900
+# 2972
 Platform / Run Jump Scrolling
 Plataformes / Carrera de Salts en Moviment
 
-# 2975
+# 3048
 Platform / Shooter
 Plataformes / Tirs
 
-# 2993
+# 3066
 Platform / Shooter Scrolling
 Plataformes / Tirs en Moviment
 
-# 3204
+# 3278
 Puzzle
 Trencaclosques
 
-# 3252
+# 3326
 Puzzle *Mature*
 Trencaclosques *Adults*
 
-# 3258
+# 3334
 Puzzle / Cards
 Trencaclosques / Cartes
 
-# 3261
+# 3337
 Puzzle / Cards *Mature*
 Trencaclosques / Cartes *Adults*
 
-# 3273
+# 3349
 Puzzle / Drop
 Trencaclosques / Llançament
 
-# 3403
+# 3480
 Puzzle / Drop *Mature*
 Trencaclosques / Llançament *Adults*
 
-# 3421
+# 3498
 Puzzle / Match
 Trencaclosques / Parelles
 
-# 3452
+# 3531
 Puzzle / Match *Mature*
 Trencaclosques / Parelles *Adults*
 
-# 3485
+# 3565
 Puzzle / Maze
 Trencaclosques / Maze
 
-# 3500
+# 3580
 Puzzle / Outline
 Trencaclosques / Contorn
 
-# 3515
+# 3596
 Puzzle / Outline *Mature*
 Trencaclosques / Contorn *Adults*
 
-# 3547
+# 3630
 Puzzle / Sliding
 Trencaclosques / Lliscar
 
-# 3558
+# 3641
 Puzzle / Sliding *Mature*
 Trencaclosques / Lliscar *Adults*
 
-# 3564
+# 3647
 Puzzle / Toss
 Trencaclosques / Llançament
 
-# 3626
+# 3709
 Puzzle / Toss *Mature*
 Trencaclosques / Llançament *Adults*
 
-# 3637
+# 3720
 Quiz / Chinese
 Concurs / Xino
 
-# 3641
+# 3724
 Quiz / English
 Concurs / Anglès
 
-# 3704
+# 3788
 Quiz / English *Mature*
 Concurs / Anglès *Adults*
 
-# 3720
+# 3804
 Quiz / French
 Concurs / Francès
 
-# 3724
+# 3808
 Quiz / German
 Concurs / Alemany
 
-# 3728
+# 3812
 Quiz / Italian
 Concurs / Italià
 
-# 3736
+# 3820
 Quiz / Japanese
 Concurs / Japonès
 
-# 3796
+# 3883
 Quiz / Japanese *Mature*
 Concurs / Japonès *Adults*
 
-# 3803
+# 3890
 Quiz / Korean
 Concurs / Coreà
 
-# 3808
+# 3896
 Quiz / Music English
 Concurs / Música Anglesa
 
-# 3812
+# 3900
 Quiz / Music Japanese
 Concurs / Música Japonesa
 
-# 3816
+# 3904
 Quiz / Spanish
 Concurs / Espanyol
 
-# 3820
+# 3908
 Rhythm
 Rítmic
 
-# 3833
+# 3921
 Rhythm / Dance
 Rítmic / Balli
 
-# 3873
+# 3967
 Rhythm / Instruments
 Rítmic / Instruments
 
-# 3906
+# 4003
 Shooter / 1st Person
 Tirs / 1ª Persona
 
-# 3923
+# 4020
 Shooter / 3rd Person
 Tirs / 3ª Persona
 
-# 3966
+# 4066
 Shooter / Command
 Tirs / Comandos
 
-# 3994
+# 4096
 Shooter / Driving
 Tirs / Carreres
 
-# 4003
+# 4105
 Shooter / Driving (chase view)
 Tirs / Carreres (vista caça)
 
-# 4045
+# 4149
 Shooter / Driving 1st Person
 Tirs / Carreres en 1ª Persona
 
-# 4053
+# 4157
 Shooter / Driving Diagonal
 Tirs / Carreres Diagonal
 
-# 4058
+# 4162
 Shooter / Driving Horizontal
 Tirs / Carreres Horitzontal 
 
-# 4072
+# 4176
 Shooter / Driving Vertical
 Tirs / Carreres Vertical
 
-# 4124
+# 4228
 Shooter / Field
 Tirs / Camp
 
-# 4263
+# 4368
 Shooter / Field *Mature*
 Tirs / Camp *Adults*
 
-# 4271
+# 4376
 Shooter / Flying
 Tirs / Vol
 
-# 4323
+# 4428
 Shooter / Flying (chase view)
 Tirs / Vol (vista caça)
 
-# 4356
+# 4461
 Shooter / Flying 1st Person
 Tirs / Vol en 1ª Persona
 
-# 4394
+# 4504
 Shooter / Flying Diagonal
 Tirs / Vol Diagonal
 
-# 4402
+# 4512
 Shooter / Flying Horizontal
 Tirs / Vol Horitzontal
 
-# 4625
+# 4741
 Shooter / Flying Horizontal *Mature*
 Tirs / Vol Horitzontal *Adults*
 
-# 4628
+# 4744
 Shooter / Flying Vertical
 Tirs / Vol Vertical
 
-# 5046
+# 5166
 Shooter / Flying Vertical *Mature*
 Tirs / Vol Vertical *Adults*
 
-# 5049
+# 5169
 Shooter / Gallery
 Tirs / Galeria
 
-# 5423
+# 5553
 Shooter / Gallery *Mature*
 Tirs / Galeria *Adults*
 
-# 5427
+# 5557
 Shooter / Gun
 Tirs / Pistola
 
-# 5595
+# 5734
 Shooter / Misc.
 Tirs / Varis
 
-# 5613
+# 5752
 Shooter / Misc. Horizontal
 Tirs / Varis Horitzontal
 
-# 5636
+# 5775
 Shooter / Misc. Vertical
 Tirs / Vertical Varis
 
-# 5658
+# 5797
 Shooter / Versus
 Tirs / Un Contra Un
 
-# 5671
+# 5810
 Shooter / Walking
 Tirs / A Peu
 
-# 5778
+# 5919
 Sports
 Esports
 
-# 5802
+# 5943
 Sports / Armwrestling
 Esports / Lluita amb Punys
 
-# 5807
+# 5948
 Sports / Baseball
 Esports / Veisbol
 
-# 5891
+# 6032
 Sports / Basketball
 Esports / Bàsquet
 
-# 5944
+# 6085
 Sports / Bowling
 Esports / Bitlles
 
-# 5979
+# 6120
 Sports / Boxing
 Esports / Boxa
 
-# 6018
+# 6161
 Sports / Bull Fighting
 Esports / Toreig
 
-# 6022
+# 6165
 Sports / Darts
 Esports / Dards
 
-# 6029
+# 6172
 Sports / Dodgeball
 Esports / Baló Presoner
 
-# 6034
+# 6178
 Sports / Fishing
 Esports / Pesca
 
-# 6050
+# 6194
 Sports / Football Amer.
 Esports / Futbol Americà
 
-# 6103
+# 6247
 Sports / Football Rugby
 Esports / Rugby
 
-# 6108
+# 6252
 Sports / Golf
 Esports / Golf
 
-# 6206
+# 6352
 Sports / Handball
 Esports / Pilota Basca
 
-# 6210
+# 6356
 Sports / Hang Gliding
 Esports / Vol Lliure
 
-# 6216
+# 6362
 Sports / Hockey
 Esports / Hoquei
 
-# 6232
+# 6378
 Sports / Horse Racing
 Esports / Carrera de Cavalls
 
-# 6247
+# 6394
 Sports / Horseshoes
 Esports / Tir amb Ferradures
 
-# 6252
+# 6399
 Sports / Multiplay
 Esports / Multijugador
 
-# 6260
+# 6407
 Sports / Ping pong
 Esports / Ping pong
 
-# 6265
+# 6412
 Sports / Pool
 Esports / Billar
 
-# 6303
+# 6450
 Sports / Pool *Mature*
 Esports / Piscina *Adults*
 
-# 6317
+# 6464
 Sports / Shuffleboard
 Esports / Shuffleboard
 
-# 6323
+# 6470
 Sports / Skateboarding
 Esports / Patinatge
 
-# 6332
+# 6479
 Sports / Skiing
 Esports / Esquí
 
-# 6356
+# 6503
 Sports / SkyDiving
 Esports / Paracaigudisme
 
-# 6360
+# 6507
 Sports / Soccer
 Esports / Futbol
 
-# 6464
+# 6613
 Sports / Sumo
 Esports / Summe
 
-# 6467
+# 6616
 Sports / Swimming
 Esports / Natació
 
-# 6478
+# 6627
 Sports / Tennis
 Esports / Tennis
 
-# 6510
+# 6660
 Sports / Track & Field
 Esports / Competició en Pista
 
-# 6547
+# 6697
 Sports / VolleyBall
 Esports / Voleivol
 
-# 6575
+# 6725
 Sports / Wrestling
 Esports / Lluita
 
-# 6627
+# 6777
 Tabletop
 Joc de Mesa
 
-# 6634
+# 6785
 Tabletop *Mature*
 Joc de Mesa *Adults*
 
-# 6637
+# 6788
 Tabletop / Hanafuda
 Joc de Mesa / Hanafuda
 
-# 6647
+# 6801
 Tabletop / Hanafuda *Mature*
 Joc de Mesa / Hanafuda *Adults*
 
-# 6667
+# 6823
 Tabletop / Mahjong
 Joc de Mesa / Mahjong
 
-# 6705
+# 6867
 Tabletop / Mahjong *Mature*
 Joc de Mesa / Mahjong *Adults*
 
-# 6936
+# 7110
 Tabletop / Othello
 Joc de Mesa / Othello
 
-# 6942
+# 7116
 Tabletop / Othello *Mature*
 Joc de Mesa / Othello *Adults*
 
-# 6945
+# 7121
 Tabletop / Renju
 Joc de Mesa / Dames Chinescas
 
-# 6950
+# 7126
 Tabletop / Shougi
 Joc de Mesa / Shouigi
 

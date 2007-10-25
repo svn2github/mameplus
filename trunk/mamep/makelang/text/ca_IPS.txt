@@ -1,28 +1,28 @@
-# 20
-CPS1
-Capcom Power System 1
-
-# 30
-CPS2
-Capcom Power System 2
+# 298
+Haze Megadrive
+Haze Megadrive
 
 # Title
 IPS
 IPS
 
-# 14
+# 61
 Misc
 Varis
 
-# 35
+# 136
 Neo-Geo
 Neo-Geo
-
-# 93
-PGM
-PolyGame Master
 
 # 7
 Translation
 Traducció
+
+# 283
+Bootleg And Clone
+
+
+# 102
+CPS All System
+
 

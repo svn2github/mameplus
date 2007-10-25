@@ -1,28 +1,28 @@
-# 20
-CPS1
-CPS1
-
-# 30
-CPS2
-CPS2
+# 298
+Haze Megadrive
+Haze Megadrive
 
 # Title
 IPS
 IPS
 
-# 14
+# 61
 Misc
 Misto
 
-# 35
+# 136
 Neo-Geo
 Neo-Geo
-
-# 93
-PGM
-PGM
 
 # 7
 Translation
 Tradução
+
+# 283
+Bootleg And Clone
+
+
+# 102
+CPS All System
+
 
