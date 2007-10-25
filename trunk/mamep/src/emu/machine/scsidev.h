@@ -68,4 +68,3 @@ int scsihd_dispatch(int operation, void *file, INT64 intparm, UINT8 *ptrparm);
 
 #endif
 
-
