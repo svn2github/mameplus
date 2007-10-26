@@ -2223,6 +2223,12 @@ static struct VLM5030interface vlm5030_interface =
     0              /* memory length */
 };
 
+static struct VLM5030interface gx400_vlm5030_interface =
+{
+    REGION_SOUND1, /* memory region  */
+    0x800,         /* memory length */
+};
+
 static void volume_callback(int v)
 {
 	K007232_set_volume(0,0,(v >> 4) * 0x11,0);
@@ -2562,7 +2568,7 @@ static MACHINE_DRIVER_START( gx400 )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.35)	/* verified with OST */
 
 	MDRV_SOUND_ADD(VLM5030, 3579545)
-	MDRV_SOUND_CONFIG(vlm5030_interface)
+	MDRV_SOUND_CONFIG(gx400_vlm5030_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)	/* unused */
 MACHINE_DRIVER_END
 
@@ -2611,7 +2617,7 @@ static MACHINE_DRIVER_START( rf2_gx400 )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.60)
 
 	MDRV_SOUND_ADD(VLM5030, 3579545)
-	MDRV_SOUND_CONFIG(vlm5030_interface)
+	MDRV_SOUND_CONFIG(gx400_vlm5030_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.70)
 MACHINE_DRIVER_END
 
