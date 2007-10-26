@@ -297,8 +297,8 @@ swimmer	スイマー (set 1)	すいまー	Tehkan
 swimmera	スイマー (set 2)	すいまー	Tehkan
 swimmerb	スイマー (set 3)	すいまー	Tehkan
 guzzler	ガズラー	がずらー	Tehkan
-cannonb	キャノンボール (Crazy Climber hardware)	きゃのんぼーる	Soft
-cannonb2	キャノンボール (set 2)	きゃのんぼーる	TV Game Gruenberg
+cannonb	キャノンボール (Crazy Climber hardware) (海賊版 set 1)	きゃのんぼーる	Soft
+cannonb2	キャノンボール (Crazy Climber hardware) (海賊版 set 2)	きゃのんぼーる	TV Game Gruenberg
 ckongb	ドンキーコング / Crazy Kong Part II (Alternative levels)	どんきーこんぐ_1	bootleg
 gomoku	五目並べ -連珠	ごもくならべれんじゅ	Nichibutsu
 wiping	ワイピング	わいぴんぐ	Nichibutsu
@@ -314,6 +314,7 @@ firebatl	ファイヤーバトル	ふぁいやーばとる	Taito
 clshroad	クラッシュ・ロード	くらっしゅろーど	Woodplace Inc.
 clshrdst	クラッシュ・ロード (Status license)	くらっしゅろーど	Woodplace Inc. (Status Game Corp. license)
 tubep	チューブパニック	ちゅーぶぱにっく	Nichibutsu + Fujitek
+tubepb	チューブパニック (海賊版)	ちゅーぶぱにっく	bootleg
 rjammer	ローラージャマー	ろーらーじゃまー	Nichibutsu + Alice
 magmax	マグマックス	まぐまっくす	Nichibutsu
 cop01	コップ01 (set 1)	こっぷぜろわん	Nichibutsu
@@ -3240,7 +3241,7 @@ prikura	プリクラ大作戦 (日本版 960910 ver 1.000)	ぷりくらだいさくせん	Atlus
 puyosun	ぷよぷよSUN (日本版 961115 ver 0.001)	ぷよぷよ_3さん	Compile
 rsgun	レイディアントシルバーガン (日本 / USA / 欧州 / 台湾版 980523 ver 1.000)	れいでぃあんとしるばーがん	Treasure
 sandor	2度あることはサンドアール (日本版 951114 ver 1.000)	にどあることはさんどあーる	Sega
-thunt	2度あることはサンドアール / Treasure Hunt (日本 / USA / 欧州 / 台湾版 970901 ver 2.00E)	にどあることはさんどあーる	Sega (Deniam license?)
+thunt	2度あることはサンドアール / Treasure Hunt (日本 / USA / 欧州 / 台湾版 970901 ver 2.00E)	にどあることはさんどあーる	Sega
 sasissu	対戦タントアール サシっす！！ (日本版 980216 ver 1.000)	たいせんたんとあーるさしっす	Sega
 seabass	シーバス・フィッシング (日本 / USA / 欧州 / 台湾版 971110 ver 0.001)	しーばすふぃっしんぐ	A wave inc. (Able license)
 shanhigw	上海 万里の長城 (日本 / USA / 欧州版 950623 ver 1.005)	しゃんはい_4ばんりのちょうじょう	Sunsoft / Activision
@@ -4167,6 +4168,7 @@ gticlub	GTIクラブ -Rally Cote D'azur (ver AAA)	じーてぃーあいくらぶ_1	Konami
 gticlubj	GTIクラブ -Rally Cote D'azur (ver JAA)	じーてぃーあいくらぶ_1	Konami
 hangplt	ハングパイロット	はんぐぱいろっと	Konami
 nbapbp	NBAプレイバイプレイ	えぬびーえーぷれいばいぷれい	Konami
+terabrst	テラバースト	てらばーすと	Konami
 gradius4	グラディウスIV -復活	ぐらでぃうす_4	Konami
 sscope	サイレントスコープ (ver UAB)	さいれんとすこーぷ_1	Konami
 sscopea	サイレントスコープ (ver UAA)	さいれんとすこーぷ_1	Konami
@@ -4289,9 +4291,10 @@ llander	ルナーランダー (rev 2)	るなーらんだー	Atari
 llander1	ルナーランダー (rev 1)	るなーらんだー	Atari
 asteroid	アステロイド (rev 2)	あすてろいど_1	Atari
 asteroi1	アステロイド (rev 1)	あすてろいど_1	Atari
-asteroib	アステロイド (海賊版 Lunar Lander hardware)	あすてろいど_1	bootleg
+asteroib	アステロイド (Lunar Lander hardware) (海賊版)	あすてろいど_1	bootleg
 asterock	アステロイド / Asterock	あすてろいど_1	Sidam
 meteorts	アステロイド / Meteorites	あすてろいど_1	VGG
+meteorho	アステロイド / Meteor	あすてろいど_1	Hoei
 astdelux	アステロイドデラックス (rev 3)	あすてろいど_2でらっくす	Atari
 astdelu2	アステロイドデラックス (rev 2)	あすてろいど_2でらっくす	Atari
 astdelu1	アステロイドデラックス (rev 1)	あすてろいど_2でらっくす	Atari
@@ -5205,9 +5208,10 @@ crusnw13	クルージンワールド (rev L1.3)	くるーじん_2わーるど	Midway
 offroadc	オフロードチャレンジ	おふろーどちゃれんじ	Midway
 wargods	ウォーゴッド	うぉーごっど	Midway
 mk4	モータルコンバット4 (rev L3)	もーたるこんばっと_4	Midway
+mk4a	モータルコンバット4  (? rev)	もーたるこんばっと_4	Midway
 invasn	インベージョン -The Abductors (Midway)	いんべーじょん	Midway
 crusnexo	クルージンエキゾチカ	くるーじん_3えきぞちか	Midway
-thegrid	ザ・グリッド	ざぐりっど	Midway
+thegrid	ザ・グリッド (ver 1.1)	ざぐりっど	Midway
 wg3dh	ウェイン・グレツキーズ 3Dホッケー	うぇいんぐれつきーずすりーでぃーほっけー	Atari Games
 mace	メイス -ザ・ダークエイジ (boot ROM 1.0ce HDD 1.0b)	めいす	Atari Games
 macea	メイス -ザ・ダークエイジ (HDD 1.0a)	めいす	Atari Games
@@ -5342,6 +5346,9 @@ raident	雷電 (台湾版)	らいでん_1	Seibu Kaihatsu (Liang HWA Electronics license)
 sdgndmps	機動戦士SDガンダム サイコサラマンダーの脅威	きどうせんしえすでぃーがんだむさいこさらまんだーのきょうい	Banpresto / Bandai
 dcon	D-CON	でぃーこん	Success
 sengokmj	戦國麻雀 (日本版)	せんごくまーじゃん	Sigma
+totmejan	とってもE雀 -潜入アイドルプロダクション！	とってもいーじゃん	Seibu (distributed by Tecmo)
+goodejan	グッとE雀 -勝ち抜き麻雀賞金王！！ (set 1)	ぐっといーじゃん	Seibu (distributed by Tecmo)
+goodejaa	グッとE雀 -勝ち抜き麻雀賞金王！！ (set 2)	ぐっといーじゃん	Seibu (distributed by Tecmo)
 raiden2	雷電II (USA版 set 1 Fabtek)	らいでん_2	Seibu Kaihatsu
 raiden2a	雷電II (set 2 Metrotainment)	らいでん_2	Seibu Kaihatsu
 raiden2b	雷電II (日本版 set 3)	らいでん_2	Seibu Kaihatsu
@@ -5549,7 +5556,7 @@ welltris	ウェルトリス (海外版? 2 players)	うぇるとりす	Video System Co.
 welltrij	ウェルトリス (日本版 2 players)	うぇるとりす	Video System Co.
 quiz18k	みやすのんきのクイズ18禁 -Dr.エッちゃんの診察室	みやすのんきのくいず18きん	EIM
 f1gp	F-1グランプリ	えふわんぐらんぷり_1	Video System Co.
-sf1gp	F-1グランプリ / Super Formula II (海賊版)	えふわんぐらんぷり_1	[Video System Co.] (Playmark bootleg)
+f1gpb	F-1グランプリ (Playmark) (海賊版)	えふわんぐらんぷり_1	[Video System Co.] (Playmark bootleg)
 f1gp2	F-1グランプリ Part II	えふわんぐらんぷり_1_2ぱーと2	Video System Co.
 crshrace	爆烈クラッシュレース (set 1)	ばくれつくらっしゅれーす	Video System Co.
 crshrac2	爆烈クラッシュレース (set 2)	ばくれつくらっしゅれーす	Video System Co.
@@ -6817,10 +6824,13 @@ esha	エシュズオルンミラ (set 2)	えしゅずおるんみら	Funai/Gakken
 eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
 peplus	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
+pepp0188	プレイヤーズエッジプラス スタンダードドローポーカー (PP0188)	ぷれいやーずえっじぷらすすたんだーどどろーぽーかー	IGT - International Gaming Technology
+peset038	プレイヤーズエッジプラス セットチップ (Set038)	ぷれいやーずえっじぷらすせっとちっぷ	IGT - International Gaming Technology
 mirage	ミラージュ妖獣麻雀伝 (日本版)	みらーじゅようじゅうまーじゃんでん	Mitchell
 dominob	ドミノブロック	どみのぶろっく	Wonwoo Systems
 jongkyo	雀狂	じゃんきょう	Kiwako
 gtipoker	GTIポーカー	じーてぃーあいぽーかー	GTI Inc
+gamecstl	ゲームクリスタル	げーむくりすたる	Cristaltec
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	hack / bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	hack / bootleg

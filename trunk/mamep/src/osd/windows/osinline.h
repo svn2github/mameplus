@@ -34,10 +34,6 @@ INLINE int _vec_mult(int x, int y)
     return result;
 }
 
-
-
-c:\Program Files (x86)\Microsoft Visual Studio 8\VC\include
-
 #elif defined(__GNUC__) && !defined(PTR64)
 
 // GCC, x86, 32-bit
