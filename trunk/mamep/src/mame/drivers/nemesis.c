@@ -2869,7 +2869,7 @@ ROM_START( spclone )
 	ROM_LOAD16_BYTE( "587-c06.17c",  0x40001, 0x20000, CRC(c2f567ea) SHA1(0c38fea53f3d4a9ae0deada5669deca4be8c9fd3) ) /* Mask rom */
 
 	ROM_REGION( 0x10000, REGION_CPU2, 0 )    /* 64k for sound */
-	ROM_LOAD(      "587nd09.11j",      0x00000, 0x08000, CRC(d9e55288) SHA1(96740a0ab1f9f7e33236083f248ee3920d1819c9) )
+	ROM_LOAD(      "587nd09.11j",      0x00000, 0x08000, CRC(bf83b182) SHA1(e702eddffea3bad8944bfab03d53c6e277bca866) )
 
 	ROM_REGION( 0x04000, REGION_SOUND1, 0 )    /* VLM5030 data? */
 	ROM_LOAD(      "587-d08.8g",       0x00000, 0x04000, CRC(f9ac6b82) SHA1(3370fc3a7f82e922e19d54afb3bca7b07fa4aa9a) )
