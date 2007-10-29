@@ -208,7 +208,7 @@ Impostazioni &Palette...
 
 # osd/ui/mame32.rc: 232
 &Properties
-&Propriet
+&Proprietà
 
 # osd/ui/mame32.rc: 891
 &Raster Graphics
@@ -280,7 +280,7 @@ Grafica &Vettoriale
 
 # osd/ui/win32ui.c: 6624
 '%s' is not a valid savestate file for game '%s'.
-'%s' non ?un archivio salvataggio valido per il gioco '%s'.
+'%s' non è un archivio salvataggio valido per il gioco '%s'.
 
 # osd/ui/mame32.rc: 899
 (*) = inherited from parent folder
@@ -296,7 +296,7 @@ Grafica &Vettoriale
 
 # osd/ui/m32util.c: 267
 A sharing violation occurred.
-?avvenuta una Violazione di condivisione.
+È avvenuta una Violazione di condivisione.
 
 # osd/ui/mame32.rc: 199
 A&udit
@@ -588,7 +588,7 @@ Categorie
 
 # osd/ui/columnedit.c: 257
 Changing this item is not permitted
-Non si pu?modificare questo elemento
+Non si può modificare questo elemento
 
 # osd/ui/audit32.c: 238, 248
 Checking Game %s - %s
@@ -812,15 +812,15 @@ Mostrare schermata introduttiva all'avvio
 
 # osd/ui/mame32.rc: 1518
 Display the driver properties of the selected game
-Mostra le propriet?del driver del gioco selezionato
+Mostra le proprietà del driver del gioco selezionato
 
 # osd/ui/mame32.rc: 1566
 Display the properties of the currently selected folder
-Mostra le propriet?della cartella selezionata
+Mostra le proprietà della cartella selezionata
 
 # osd/ui/mame32.rc: 1548
 Display the properties of the selected items
-Mostra le propriet?degli elementi selezionati
+Mostra le proprietà degli elementi selezionati
 
 # osd/ui/mame32.rc: 1485, 1503
 Displays detailed information about each item in the window.
@@ -896,7 +896,7 @@ E&xit
 
 # osd/ui/win32ui.c: 7637
 ERROR: required files are missing, the game cannot be run.
-ERRORE: i files richiesti mancano, il gioco non pu?avviarsi.
+ERRORE: i files richiesti mancano, il gioco non può avviarsi.
 
 # osd/ui/mame32.rc: 989
 Emulation
@@ -988,7 +988,7 @@ Ribalta schermo sn-dx
 
 # osd/ui/mame32.rc: 587
 Flip screen upside-down
-Ribalta schermo su-gi
+Ribalta schermo su-giù
 
 # osd/ui/dialogs.c: 210 osd/ui/winuiopt.c: 428
 Flyer
@@ -1020,7 +1020,7 @@ Salto quadri
 
 # osd/ui/mame32.rc: 698
 Full screen brightness
-Luminosit?Tutto Schermo
+Luminosità Tutto Schermo
 
 # osd/ui/mame32.rc: 876
 Game Filters
@@ -1048,7 +1048,7 @@ Il gioco manca del suono
 
 # osd/ui/properties.c: 1153
 Game protection isn't fully emulated
-La protezione del gioco non ?pienamente emulata
+La protezione del gioco non è pienamente emulata
 
 # osd/ui/win32ui.c: 3521
 Game search %d%% complete
@@ -1292,7 +1292,7 @@ Mouse
 
 # osd/ui/mame32.rc: 504
 Move Down
-Sposta Gi
+Sposta Giù
 
 # osd/ui/columnedit.c: 50
 Move Item
@@ -1404,7 +1404,7 @@ Passato
 
 # osd/ui/mame32.rc: 591
 Pause Brightness
-Pausa Luminosit
+Pausa Luminosità
 
 # osd/ui/treeview.c: 1434
 Pedal
@@ -1468,11 +1468,11 @@ Giocatore 8
 
 # osd/ui/mame32.rc: 67, 202
 Pr&operties
-Pro&priet
+Pro&prietà
 
 # osd/ui/properties.c: 651, 742
 Propery Sheet Error %d %X
-Errore Tabella Propriet?%d %X
+Errore Tabella Proprietà %d %X
 
 # osd/ui/mame32.rc: 65, 187
 R&emove From This Folder
@@ -1584,7 +1584,7 @@ Icone &Piccole
 
 # osd/ui/mame32.rc: 998
 S&tretch screenshot larger than natural size
-S&tira screenshot pi?largo della dimen. naturale
+S&tira screenshot più largo della dimen. naturale
 
 # osd/ui/mame32.rc: 559
 Sample check:
@@ -1668,7 +1668,7 @@ Seleziona un file sonoro per registrare
 
 # osd/ui/mame32.rc: 1548
 Select fullscreen or window mode in GUI
-Imposta la modalit?Tutto Schermo o Finestra per l'interfaccia
+Imposta la modalità Tutto Schermo o Finestra per l'interfaccia
 
 # osd/ui/mame32.rc: 1602
 Select the cabinet image
@@ -1692,7 +1692,7 @@ Seleziona l'immagine del marchio
 
 # osd/ui/mame32.rc: 929
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
-Seleziona le opzioni da riportare alle configurazioni predefinite. Le opzioni saranno ripristinate quando il MAME32 sar?riavviato.
+Seleziona le opzioni da riportare alle configurazioni predefinite. Le opzioni saranno ripristinate quando il MAME32 sarà riavviato.
 
 # osd/ui/mame32.rc: 1602
 Select the screen shot image
@@ -1924,7 +1924,7 @@ Suono
 
 # osd/ui/properties.c: 1178
 Sound emulation isn't 100% accurate
-L'emulazione sonora non ?accurata al 100%
+L'emulazione sonora non è accurata al 100%
 
 # osd/ui/mame32.rc: 527
 Sound:
@@ -1984,19 +1984,19 @@ Il sistema operativo ha esaurito la memoria o risorse.
 
 # osd/ui/m32util.c: 251
 The specified file was not found.
-Il file specificato non ?stato trovato.
+Il file specificato non è stato trovato.
 
 # osd/ui/m32util.c: 263
 The specified path was not found.
-Il percorso specificato non ?stato trovato.
+Il percorso specificato non è stato trovato.
 
 # osd/ui/m32util.c: 255
 There is no application associated with the given filename extension.
-Non c'?alcuna applicazione associata con l'estensione file assegnata.
+Non c'è alcuna applicazione associata con l'estensione file assegnata.
 
 # osd/ui/m32util.c: 259
 There was not enough memory to complete the operation.
-Non c'?abbastanza memoria per completare l'operazione.
+Non c'è abbastanza memoria per completare l'operazione.
 
 # osd/ui/mame32.rc: 582
 Throttle
@@ -2160,7 +2160,7 @@ Verticale
 
 # osd/ui/properties.c: 1168
 Video emulation isn't 100% accurate
-L'emulazione video non ?accurata al 100%
+L'emulazione video non è accurata al 100%
 
 # osd/ui/mame32.rc: 641
 Volume attenuation
@@ -2176,7 +2176,7 @@ Attendi sincronia vertic.
 
 # osd/ui/mame32.rc: 1530
 What's new in MAME
-Novit?del MAME
+Novità del MAME
 
 # osd/ui/paletteedit.c: 107
 Window background
@@ -2196,7 +2196,7 @@ Anno
 
 # osd/ui/audit32.c: 131 osd/ui/win32ui.c: 5664
 Yes
-S
+Sì
 
 # osd/ui/mame32.rc: 418
 and John Hardy IV
@@ -2252,7 +2252,7 @@ Base
 
 # osd/ui/mame32.rc: 604
 Brightness Correction
-Correzione Luminosit
+Correzione Luminosità
 
 # osd/ui/properties.c: 456
 Cocktail
@@ -2392,7 +2392,7 @@ MAME32 PCB Info: %s [%s]
 
 # osd/ui/dialogs.c: 124
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
-Il MAME32 adesso ripristiner?gli elementi\nselezionati come le impostazioni\nin origine e poi uscir?\n\n
+Il MAME32 adesso ripristinerà gli elementi\nselezionati come le impostazioni\nin origine e poi uscirà.\n\n
 
 # osd/ui/mame32.rc: 401, 425, 436, 468, 488, 511, 550, 569, 620, 657, 713, 760, 821, 849, 876, 913, 938, 955, 1019, 1047, 1062, 1118, 1162, 1218 osd/ui/translate.c: 103
 MS Sans Serif
@@ -2468,11 +2468,11 @@ Periferica posizionale
 
 # osd/ui/win32ui.c: 3970, 7176, 7200
 Propert&ies for %s
-Propriet?per %s
+Proprietà per %s
 
 # osd/ui/mame32.rc: 66, 201 osd/ui/win32ui.c: 3928
 Propert&ies for Driver
-Propriet?per Driver
+Proprietà per Driver
 
 # osd/ui/mame32.rc: 780
 Quit game with confirmation
@@ -2548,7 +2548,7 @@ Le nuove impostazioni verranno attivate\nal prossimo riavvio del MAME32.\n\n
 
 # osd/ui/mame32.rc: 794
 Thread priority
-Priorit?del processo
+Priorità del processo
 
 # osd/ui/mame32.rc: 1622
 Translate into Catalan
@@ -2564,7 +2564,7 @@ Files Traduzione
 
 # osd/ui/mame32.rc: 982
 Use TreeView in property pages
-Usa Esplora Risorse nelle pagine delle propriet
+Usa Esplora Risorse nelle pagine delle proprietà
 
 # osd/ui/properties.c: 854
 Vector (H) %f Hz (%d colors)
