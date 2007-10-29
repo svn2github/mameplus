@@ -3660,6 +3660,7 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 	static WCHAR String[1024];
 	BOOL bConverted = FALSE;
 	//LPWSTR pDest = lpttt->lpszText;
+
 	/* Map command ID to string index */
 	for (i = 0; CommandToString[i] != -1; i++)
 	{
@@ -3696,7 +3697,7 @@ static void CopyToolTipTextW(LPTOOLTIPTEXTW lpttt)
 	else
 		wcscpy(String, _UIW(TEXT("Invalid Button Index")));
 
-	wcscpy(lpttt->lpszText, String);
+	lpttt->lpszText = String;
 }
 
 static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
@@ -3707,6 +3708,7 @@ static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
 	static char String[1024];
 	BOOL bConverted = FALSE;
 	//LPSTR pDest = lpttt->lpszText;
+
 	/* Map command ID to string index */
 	for (i = 0; CommandToString[i] != -1; i++)
 	{
@@ -3744,7 +3746,7 @@ static void CopyToolTipTextA(LPTOOLTIPTEXTA lpttt)
 	else
 		strcpy(String, _String(_UIW(TEXT("Invalid Button Index"))));
 
-	strcpy(lpttt->lpszText, String);
+	lpttt->lpszText = String;
 }
 
 static HWND InitToolbar(HWND hParent)
