@@ -610,6 +610,10 @@ void mame_schedule_exit(running_machine *machine)
 	else
 		mame->exit_pending = TRUE;
 
+	/* if we're executing, abort out immediately */
+	if (cpu_getactivecpu() >= 0)
+		activecpu_adjust_icount(-activecpu_get_icount() - 1);
+
 	/* if we're autosaving on exit, schedule a save as well */
 	if (options_get_bool(mame_options(), OPTION_AUTOSAVE) && (machine->gamedrv->flags & GAME_SUPPORTS_SAVE))
 		mame_schedule_save(machine, "auto");
@@ -625,6 +629,10 @@ void mame_schedule_hard_reset(running_machine *machine)
 {
 	mame_private *mame = machine->mame_data;
 	mame->hard_reset_pending = TRUE;
+
+	/* if we're executing, abort out immediately */
+	if (cpu_getactivecpu() >= 0)
+		activecpu_adjust_icount(-activecpu_get_icount() - 1);
 }
 
 
@@ -641,6 +649,10 @@ void mame_schedule_soft_reset(running_machine *machine)
 
 	/* we can't be paused since the timer needs to fire */
 	mame_pause(machine, FALSE);
+
+	/* if we're executing, abort out immediately */
+	if (cpu_getactivecpu() >= 0)
+		activecpu_adjust_icount(-activecpu_get_icount() - 1);
 }
 
 
@@ -654,6 +666,10 @@ void mame_schedule_new_driver(running_machine *machine, const game_driver *drive
 	mame_private *mame = machine->mame_data;
 	mame->hard_reset_pending = TRUE;
 	mame->new_driver_pending = driver;
+
+	/* if we're executing, abort out immediately */
+	if (cpu_getactivecpu() >= 0)
+		activecpu_adjust_icount(-activecpu_get_icount() - 1);
 }
 
 
