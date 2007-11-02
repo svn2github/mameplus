@@ -2199,7 +2199,8 @@ ssf2tb	スーパーストリートファイターII -ザ・トーナメント・バトル (海外版 931119)	
 ssf2tbr1	スーパーストリートファイターII -ザ・トーナメント・バトル (海外版 930911)	すーぱーすとりーとふぁいたー2_2ざとーなめんとばとる	Capcom
 ssf2tbj	スーパーストリートファイターII -ザ・トーナメント・バトル (日本版 930911)	すーぱーすとりーとふぁいたー2_2ざとーなめんとばとる	Capcom
 ecofghtr	アルティミットエコロジー / Eco Fighters (海外版 931203)	あるてぃみっとえころじー	Capcom
-ecofghtu	アルティミットエコロジー / Eco Fighters (USA版 931203)	あるてぃみっとえころじー	Capcom
+ecofghtu	アルティミットエコロジー / Eco Fighters (USA版 940215)	あるてぃみっとえころじー	Capcom
+ecofgtu1	アルティミットエコロジー / Eco Fighters (USA版 931203)	あるてぃみっとえころじー	Capcom
 ecofghta	アルティミットエコロジー / Eco Fighters (アジア版 931203)	あるてぃみっとえころじー	Capcom
 uecology	アルティミットエコロジー (日本版 931203)	あるてぃみっとえころじー	Capcom
 ddtod	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (欧州版 940412)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
@@ -2574,6 +2575,8 @@ ddr2mc	ダンスダンスレボリューション 2nd Mix with ビートマニアII DX CLUB VERSiON 
 ddr2mc2	ダンスダンスレボリューション 2nd Mix with ビートマニアII DX substream CLUB VERSiON 2 (GE984 ver JAA)	だんすだんすれぼりゅーしょん_2_1_せかんどみっくす_3_うぃずびーとまにあつーでぃーえっくす_2_さぶすとりーむばーじょん	Konami
 gtrfrk2m	ギターフリークス 2nd Mix Ver 1.01 (GQ883 ver JAD)	ぎたーふりーくす_02_せかんどみっくす_101	Konami
 dsftkd	ダンシングステージ featuring TRUE KiSS DESTiNATiON (G*884 ver JAA)	だんしんぐすてーじ_1_2_ふぃーちゃりんぐとぅるーきすでぃすてぃねーしょん	Konami
+cr589fw	コナミ CD-ROM Drive アップデータ 2.0 (700B04)	こなみしーでぃーろむどらいぶあっぷでーた_2	Konami
+cr589fwa	コナミ CD-ROM Drive アップデータ (700A04)	こなみしーでぃーろむどらいぶあっぷでーた_1	Konami
 ddr3mk	ダンスダンスレボリューション 3rd Mix Ver.Korea2 (GN887 ver KBA)	だんすだんすれぼりゅーしょん_3_さーどみっくす_2_ばーじょんこりあ_2	Konami
 ddr3mka	ダンスダンスレボリューション 3rd Mix Ver.Korea (GN887 ver KAA)	だんすだんすれぼりゅーしょん_3_さーどみっくす_2_ばーじょんこりあ_1	Konami
 ddr3ma	ダンスダンスレボリューション 3rd Mix (GN887 ver AAA)	だんすだんすれぼりゅーしょん_3_さーどみっくす_1	Konami
@@ -2604,12 +2607,13 @@ dmx2m	ダンスマニアックス 2nd Mix (G*A39 ver JAA)	だんすまにあっくす_2_せかんどみ
 gtrfrk5m	ギターフリークス 5th Mix (G*A26 ver JAA)	ぎたーふりーくす_05_ふぃふすみっくす	Konami
 ddr5m	ダンスダンスレボリューション 5th Mix (G*A27 ver JAA)	だんすだんすれぼりゅーしょん_7_ふぃふすみっくす	Konami
 dmx2majp	ダンスマニアックス 2nd Mix Append J-Paradise (G*A38 ver JAA)	だんすまにあっくす_2_せかんどみっくす_2_あぺんどじぇいぱらだいす	Konami
-gtrfrk6m	ギターフリークス 6th Mix (G*B06 VER. JAA)	ぎたーふりーくす_06_しっくすすみっくす	Konami
+gtrfrk6m	ギターフリークス 6th Mix (G*B06 ver JAA)	ぎたーふりーくす_06_しっくすすみっくす	Konami
+gtrfrk7m	ギターフリークス 7th Mix (G*B17 ver JAA)	ぎたーふりーくす_07_せぶんすみっくす	Konami
 ddrmax	DDR Max ダンスダンスレボリューション 6th Mix (G*B19 ver JAA)	でぃーでぃーあーるまっくす_1_だんすだんすれぼりゅーしょんしっくすすみっくす	Konami
 ddrmax2	DDR Max 2 ダンスダンスレボリューション 7th Mix (G*B20 ver JAA)	でぃーでぃーあーるまっくす_2_だんすだんすれぼりゅーしょんせぶんすみっくす	Konami
 dsem2	ダンシングステージ Euro Mix 2 (G*C23 VER EAA)	だんしんぐすてーじ_2_ゆーろみっくす_2	Konami
 ddrextrm	ダンスダンスレボリューション エクストリーム (G*C36 VER. JAA)	だんすだんすれぼりゅーしょん_8_えくすとりーむ	Konami
-gtfrk11m	ギターフリークス 11th Mix (G*D39 VER. JAA)	ぎたーふりーくす_11_いれぶんすみっくす	Konami
+gtfrk11m	ギターフリークス 11th Mix (G*D39 ver JAA)	ぎたーふりーくす_11_いれぶんすみっくす	Konami
 ppp2nd	パラパラパラダイス 2nd Mix	ぱらぱらぱらだいす_2_せかんどみっくす	Konami
 boxingm	ボクシングマニア あしたのジョー	ぼくしんぐまにああしたのじょー	Konami
 code1d	緊急車両24時 -Code One Dispatch	きんきゅうしゃりょうにじゅうよじ	Konami
@@ -4178,6 +4182,7 @@ racingj2	レーシングジャム チャプターII	れーしんぐじゃむ_2ちゃぷたー2	Konami
 thrilld	スリルドライブ	すりるどらいぶ_1	Konami
 midnrun	ミッドナイトラン -ロードファイター2	みっどないとらん	Konami
 windheat	ワインディングヒート	わいんでぃんぐひーと	Konami
+jetwave	ジェットウェーブ	じぇっとうぇーぶ	Konami
 polystar	とべ！ポリスターズ (ver JAA)	とべぽりすたーず	Konami
 totlvice	トータルバイス (ver JAD)	とーたるばいす	Konami
 btltryst	バトルトライスト (ver JAC)	ばとるとらいすと	Konami
@@ -5207,8 +5212,8 @@ crusnw20	クルージンワールド (rev L2.0)	くるーじん_2わーるど	Midway
 crusnw13	クルージンワールド (rev L1.3)	くるーじん_2わーるど	Midway
 offroadc	オフロードチャレンジ	おふろーどちゃれんじ	Midway
 wargods	ウォーゴッド	うぉーごっど	Midway
-mk4	モータルコンバット4 (rev L3)	もーたるこんばっと_4	Midway
-mk4a	モータルコンバット4  (? rev)	もーたるこんばっと_4	Midway
+mk4	モータルコンバット4 (3.0)	もーたるこんばっと_4	Midway
+mk4a	モータルコンバット4  (2.1)	もーたるこんばっと_4	Midway
 invasn	インベージョン -The Abductors (Midway)	いんべーじょん	Midway
 crusnexo	クルージンエキゾチカ	くるーじん_3えきぞちか	Midway
 thegrid	ザ・グリッド (ver 1.1)	ざぐりっど	Midway
@@ -6386,7 +6391,8 @@ sltblgpo	スロッツ (ベルギー版 Cash Game Card 95-750-938)	すろっつ	BFM/ELAM
 sltblgp1	スロッツ (ベルギー版 Cash Game Card 95-752-008)	すろっつ	BFM/ELAM
 gldncrwn	ゴールデンクラウン (オランダ版 Game Card 95-752-011)	ごーるでんくらうん	BFM/ELAM
 connect4	コネクト4	こねくとふぉー	Dolbeck Systems
-dealem	ディール・エム (MPU4 Conversion Kit)	でぃーるえむ	Zenitone
+dealem	ディール・エム (MPU4 Conversion Kit ver 7.0)	でぃーるえむ	Zenitone
+timemchn	タイムマシン (ver 2.0)	たいむましん	Barcrest
 crmaze	ザ・クリスタルメイズ チームチャレンジ (SWP)	ざくりすたるめいずちーむちゃれんじ	Barcrest
 crmazea	ザ・クリスタルメイズ (AMLD ver SWP)	ざくりすたるめいず	Barcrest
 crmazeb	ザ・クリスタルメイズ ナウ フィーチャリング オーシャンゾーン (AMLD ver SWP)	ざくりすたるめいずなうふぃーちゃりんぐおーしゃんぞーん	Barcrest
