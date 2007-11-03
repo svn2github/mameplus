@@ -7842,6 +7842,32 @@ ROM_START( dstlku1d )
 	ROM_LOAD16_WORD_SWAP( "vam.12m",   0x200000, 0x200000, CRC(1a3e5c03) SHA1(c5a556e125d6c3d68da745b4d56cd7a851f2a23d) )
 ROM_END
 
+ROM_START( progearj )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "pgajd.03", 0x000000, 0x80000, CRC(4fef676c) SHA1(f50f32403315f77e115141bbee6a1b9a800821eb) )
+	ROM_LOAD16_WORD_SWAP( "pgajd.04", 0x080000, 0x80000, CRC(a069bd3b) SHA1(6b7e20c883221da9b8eccb4f86017bb93e1fc11f) )
+
+	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
+	ROMX_LOAD( "pga-simm.01c",   0x0000000, 0x200000,  CRC(452f98b0) SHA1(a10e615c32098f6d25becd466da8faa967523a7b) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.01d",   0x0000001, 0x200000,  CRC(9e672092) SHA1(fce0b8b43a1c069262f4e3e81c1a04621e232c88) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.01a",   0x0000002, 0x200000,  CRC(ae9ddafe) SHA1(afbb26fed6cd0cb5c0099a10d35aeb453318c14d) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.01b",   0x0000003, 0x200000,  CRC(94d72d94) SHA1(df6a3fe49c008f73b160eb6f2a44dc371ff73cba) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.03c",   0x0000004, 0x200000,  CRC(48a1886d) SHA1(ebf44b42d784924e08a832a7e5f66a887bab244b) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.03d",   0x0000005, 0x200000,  CRC(172d7e37) SHA1(0eaedd24cd3fa87b6f35fbd63078d40c493c92d0) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.03a",   0x0000006, 0x200000,  CRC(9ee33d98) SHA1(85d1bd31940e35ac8c732165020881a2d65cd6b1) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+	ROMX_LOAD( "pga-simm.03b",   0x0000007, 0x200000,  CRC(848dee32) SHA1(c591288e86ad1624d0fe66563808af9fac786e64) , ROM_GROUPBYTE | ROM_SKIP(7) ) // ROM on a simm
+
+	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "pga.01",   0x00000, 0x08000, CRC(bdbfa992) SHA1(7c5496c1daaea6a7ab95c0b25625d325ec3427cc) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "pga-simm.05a",   0x000000, 0x200000, CRC(c0aac80c) SHA1(91784d35d4f7e113529bb5be6081b67094b150ea) ) // ROM on a simm
+	ROM_LOAD16_WORD_SWAP( "pga-simm.05b",   0x200000, 0x200000, CRC(37a65d86) SHA1(374d562a4648734f82aa2ddb6d258e870896dd45) ) // ROM on a simm
+	ROM_LOAD16_WORD_SWAP( "pga-simm.06a",   0x400000, 0x200000, CRC(d3f1e934) SHA1(5dcea28c873d0d472f5b94e07d97cd77ace2b252) ) // ROM on a simm
+	ROM_LOAD16_WORD_SWAP( "pga-simm.06b",   0x600000, 0x200000, CRC(8b39489a) SHA1(fd790efaf37dc2c4c16f657941044e3e2d3c2711) ) // ROM on a simm
+ROM_END
+
 
 
 
@@ -8106,3 +8132,4 @@ GAME( 2004, hsf2d,    hsf2,    phoenix, ssf2,    cps2, ROT0,   "hack", "Hyper St
 GAME( 1999, gwingjd,  gigawing,phoenix, 19xx,    cps2, ROT0,   "hack", "Giga Wing (Japan 990223 Phoenix Edition)", 0 )
 GAME( 2000, 1944d,    1944,    phoenix, 19xx,    cps2, ROT0,   "hack", "1944: The Loop Master (USA 000620 Phoenix Edition)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1994, dstlku1d, dstlk,   phoenix, ssf2,    cps2, ROT0,   "hack", "Darkstalkers: The Night Warriors (USA 940705 Phoenix Edition)", 0 )
+GAME( 2001, progerjd, progear, phoenix, sgemf,   cps2, ROT0,   "hack", "Progear no Arashi (Japan 010117 Phoenix Edition)", 0 )
