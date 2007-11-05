@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#      Mameinfo.dat日本語版 v0.120       #
+#     Mameinfo.dat日本語版 v0.120u2      #
 #                                        #
-#            October 22, 2007            #
+#            November 4, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,58 +12,16 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：871 翻訳済：846
-# 追加項目：342 合計：1213
+# Tester報告：861 翻訳済：835
+# 追加項目：342 合計：1203
 #
 
 
-$info=deadang
+$info=terabrst
 $mame
 [バグ]
 
-- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty /  robiza
-
-$end
-
-$info=tenkaibb
-$mame
-[バグ]
-
-- うまく起動しない。 tenkaibb0120red, dyq
-
-$end
-
-$info=mjreach
-$mame
-[バグ]
-
-- うまく起動しない。 tenkaibb0120red, dyq
-
-$end
-
-$info=targ
-$mame
-[バグ]
-
-- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
-
-
-<b>Targ</b> - テキストは白ではなくライトブルー。
-
-<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
-
-$end
-
-$info=spectar
-$mame
-[バグ]
-
-- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
-
-
-<b>Targ</b> - テキストは白ではなくライトブルー。
-
-<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
+- ガン操作が0.120u2で動作していない。また両画面を表示させるとクラッシュする。 terabrst0120u2gra, iceman2004cny /  F1ReB4LL
 
 $end
 
@@ -71,223 +29,42 @@ $info=ikki
 $mame
 [バグ]
 
-- スプライトが全てちらつく。0.112u3から発生。 ikki0120yel, ShimaPong /  robiza
+- ゲーム内でのスプライトのちらつきは0.120u1で修正されたが、デモシーンなどで別なちらつきが発生している。
+インターリーブの値を0x21に下げると修正される模様。 ikki0120u1yel, ShimaPong / Robiza
 
 $end
 
-$info=alleymas
+$info=mp_bio
 $mame
 [バグ]
 
-- 0.105からジョイスティックで操作ができない。入力にキーボード、ジョイスティック、マウスなどを割り当てても反応しない。 alleymas0119u3gra, Tafoid
-
-
-- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid
-
-
-- イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
+- コンティニュー画面で、コイン入力は受け付けるが、スタートボタンを押してもコンティニューできない。
+時々動作することもある。 mp_bio0120u2gra, LastNinja2
 
 $end
 
-$info=mp_twc
+$info=mpatrol
 $mame
+[情報]
+
+- F2キーを押しながらリセットでテストモードになる。
+RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
+
+
 [バグ]
 
-- 黒画面だけで起動しない。 mp_twc0120red, Scagazza
+- サウンドが鳴らない。6800の書き直しにより発生。 mpatrol0120u2yel, Chook
+
+
+- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
 
 $end
 
-$info=finalapr
+$info=kof10th
 $mame
 [バグ]
 
-- Core 2 Duo@3.4GHzのシステムでも、速度が数%しか出ない。0.118u1から起きている。 finalapr0120yel, Machone
-
-
-- 背景がおかしくなっている。 finalapr0115u2gre, robiza
-
-$end
-
-$info=outfxies
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-
-- ドゥイーブの飛行機の面で後ろ側にゴミグラフィックが表示される。 outfxies0100u1gre, F1ReB4LL
-
-$end
-
-$info=ptblank
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-
-- “Shoot 14 Criminals”の面でドアの部分に縦線が表示される。 ptblank076u1gre, Heihachi_73
-
-$end
-
-$info=gslugrsj
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=gslgr94u
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=vshoot
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-
-- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
-
-$end
-
-$info=sws95
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=sws96
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=sws97
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=nebulray
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=machbrkr
-$mame
-[バグ]
-
-- namconb.cゲーム：スプライトが表示されない。Phil氏によるSystem21の変更により一時的に発生中。 namconb1_0119u2yel, Kold666
-
-$end
-
-$info=phelios
-$mame
-[バグ]
-
-- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
-恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
-
-$end
-
-$info=ordyne
-$mame
-[バグ]
-
-- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
-恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
-
-$end
-
-$info=popbounc
-$mame
-[バグ]
-
-- NeoGeoの書き直しから、パドルとジョイスティックのどちらに設定しても操作ができない。 popbounc0119u3gra, SpinalBlood / Tafoid
-
-
-- サービスモードの設定でパドルコントローラを利用できるようになるはずだが、MAMEではサポートされていない。
-もしかしたら、イライラ棒のように別なバージョンのBIOSが必要なのかもしれない。 popbounc37b3gre, TriggerFin
-
-$end
-
-$info=darkplnt
-$mame
-[バグ]
-
-- 画面が左右に大きくずれている。 darkplnt0119u3yel, Tafoid
-
-$end
-
-$info=superbon
-$mame
-[バグ]
-
-- プレイができなくなっている。0.37b15から。 superbon0119u3yel, Tafoid / Stiletto
-
-$end
-
-$info=rfjetus
-$mame
-[バグ]
-
-- 黒画面だけで起動しない。古いバージョンでnv ramを作成してあると起動する。 rfjetus0119u2red, Canim / Tafoid / couriersud
-
-$end
-
-$info=speedatk
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチを設定すると、グラフィックが片方にずれて表示される。 speedatk0120gre, IceMan01 /  Robbbert
-
-$end
-
-$info=stadhero
-$mame
-[バグ]
-
-- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
-
-$end
-
-$info=diehard
-$mame
-[バグ]
-
-- コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
-
-$end
-
-$info=wboy3
-$mame
-[バグ]
-
-- このバージョンではDIPスイッチの残ライフ設定が違う。3、4、5人の設定はそれぞれ、1、2、3人。 wboy3_0119u3gra, izius
-
-$end
-
-$info=dcclubfd
-$mame
-[バグ]
-
-- プレイ中にAccess Violationエラーが出てクラッシュする。 dcclubfd0120red, Scagazza
+- テキストレイヤーが表示されない。Sレイヤーの描画の高速化ハックにバグがあるため起きているので、これを外せば直る。 kof10th0120u2yel, Robbbert / Mamesick
 
 $end
 
@@ -504,7 +281,7 @@ $mame
 [バグ]
 
 - 葉っぱを食べるとノイズ音が聞こえるが、本当はランダムな音階の音になる。
-何回かリセットした後、初めの1、2回だけ正常に動作することもある。 botanic080u1gre, Pi
+何回かリセットした後、初めの1、2回だけ正常に動作することもある。 botanic080u1gre, Pi / RansAckeR
 
 $end
 
@@ -954,6 +731,14 @@ $mame
 
 $end
 
+$info=deadang
+$mame
+[バグ]
+
+- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty /  robiza
+
+$end
+
 $info=garyoret
 $mame
 [バグ]
@@ -1102,6 +887,22 @@ $mame
 
 - ゲームを立ち上げると"Backup Error"と表示される。リセットすると"Backup OK"と表示されるが、再起動するとまたエラーになる。
 他のdynax.cのゲームではこうはならない。 quiztvqq095gre, Firewave
+
+$end
+
+$info=tenkaibb
+$mame
+[バグ]
+
+- うまく起動しない。 tenkaibb0120red, dyq
+
+$end
+
+$info=mjreach
+$mame
+[バグ]
+
+- うまく起動しない。 tenkaibb0120red, dyq
 
 $end
 
@@ -1743,6 +1544,20 @@ $mame
 
 $end
 
+$info=alleymas
+$mame
+[バグ]
+
+- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid
+
+
+- イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
+
+
+- 0.105からジョイスティックで操作ができない。入力にキーボード、ジョイスティック、マウスなどを割り当てても反応しない。 alleymas0119u3gra, Tafoid
+
+$end
+
 $info=lethalen
 $mame
 [バグ]
@@ -2059,6 +1874,14 @@ $mame
 [バグ]
 
 - Green Hill Zoneの水の色がGenesis版に比べて完全に違っている。 mp_sonic0104u1gre, Luigi30 / Twisty
+
+$end
+
+$info=mp_twc
+$mame
+[バグ]
+
+- 黒画面だけで起動しない。 mp_twc0120red, Scagazza
 
 $end
 
@@ -2431,20 +2254,6 @@ $mame
 
 $end
 
-$info=mpatrol
-$mame
-[情報]
-
-- F2キーを押しながらリセットでテストモードになる。
-RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
-
-
-[バグ]
-
-- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
-
-$end
-
 $info=metamrph
 $mame
 [バグ]
@@ -2468,6 +2277,33 @@ $mame
 [バグ]
 
 - サービスモードに入りゲームオプションを変更してNVファイルに記録してから再起動するとROM/RAMチェックをパスしない。 mtlchamp099yel, marco75
+
+$end
+
+$info=finalapr
+$mame
+[バグ]
+
+- 背景がおかしくなっている。 finalapr0115u2gre, robiza
+
+
+- Core 2 Duo@3.4GHzのシステムでも、速度が数%しか出ない。0.118u1から起きている。 finalapr0120yel, Machone
+
+$end
+
+$info=outfxies
+$mame
+[バグ]
+
+- ドゥイーブの飛行機の面で後ろ側にゴミグラフィックが表示される。 outfxies0100u1gre, F1ReB4LL
+
+$end
+
+$info=vshoot
+$mame
+[バグ]
+
+- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
 
 $end
 
@@ -2572,6 +2408,24 @@ $mame
 [バグ]
 
 - 日本版は自機の操作がきかない。テストモードに入って"motion of cabinet"をオフにすると直る。 metlhwkj094u4yel, Fujix
+
+$end
+
+$info=phelios
+$mame
+[バグ]
+
+- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
+恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
+
+$end
+
+$info=ordyne
+$mame
+[バグ]
+
+- namcos2.cのゲームで、キャラクタが光る処理があると大きく速度が落ちる。オーダインやフェリオスのボスにヒットしたときなど。
+恐らく他のゲームにも影響あり。 namcos2_0119u1yel, izius
 
 $end
 
@@ -3135,6 +2989,14 @@ $mame
 
 $end
 
+$info=darkplnt
+$mame
+[バグ]
+
+- 画面が左右に大きくずれている。 darkplnt0119u3yel, Tafoid
+
+$end
+
 $info=spdcoin
 $mame
 [バグ]
@@ -3143,6 +3005,14 @@ $mame
 
 
 - サウンドが不完全。もっと多くの音が聞こえるはずで、音量も低すぎる。 spdcoin36b16gre, Frotz
+
+$end
+
+$info=superbon
+$mame
+[バグ]
+
+- プレイができなくなっている。0.37b15から。 superbon0119u3yel, Tafoid / Stiletto
 
 $end
 
@@ -3439,6 +3309,14 @@ $mame
 [バグ]
 
 - DIPスイッチをONにしてもデモサウンドが出ない。 gprider1097gre, SportsDude
+
+$end
+
+$info=rfjetus
+$mame
+[バグ]
+
+- 黒画面だけで起動しない。古いバージョンでnv ramを作成してあると起動する。 rfjetus0119u2red, Canim / Tafoid / couriersud
 
 $end
 
@@ -3820,6 +3698,14 @@ $mame
 
 $end
 
+$info=speedatk
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチを設定すると、グラフィックが片方にずれて表示される。 speedatk0120gre, IceMan01 /  Robbbert
+
+$end
+
 $info=speedbal
 $mame
 [情報]
@@ -3855,6 +3741,14 @@ $mame
 [バグ]
 
 - キャラを打ったときに、プレイヤー1のスプライトの上部分が切れる。 nratechu0104u1gre, king_krm
+
+$end
+
+$info=diehard
+$mame
+[バグ]
+
+- コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
 
 $end
 
@@ -3960,6 +3854,14 @@ $mame
 [バグ]
 
 - 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
+
+$end
+
+$info=dcclubfd
+$mame
+[バグ]
+
+- プレイ中にAccess Violationエラーが出てクラッシュする。 dcclubfd0120red, Scagazza
 
 $end
 
@@ -4666,14 +4568,6 @@ $mame
 
 $end
 
-$info=buckrog
-$mame
-[バグ]
-
-- 背景の星表示がズームせずに、完全にランダムな表示になる。 buckrog0118u2yel, AWJ / twisty
-
-$end
-
 $info=zeropnt
 $mame
 [バグ]
@@ -5110,6 +5004,32 @@ $mame
 
 $end
 
+$info=targ
+$mame
+[バグ]
+
+- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
+
+
+<b>Targ</b> - テキストは白ではなくライトブルー。
+
+<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
+
+$end
+
+$info=spectar
+$mame
+[バグ]
+
+- TargとSpectarのカラーアダプタボードを修理していたところ、MAMEの色は違うことがわかった。
+
+
+<b>Targ</b> - テキストは白ではなくライトブルー。
+
+<b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
+
+$end
+
 $info=gaiapols
 $mame
 [バグ]
@@ -5379,6 +5299,14 @@ $mame
 [バグ]
 
 - 参照用の実機からの録音。 stactics0113u4ora, Gyrovision
+
+$end
+
+$info=stadhero
+$mame
+[バグ]
+
+- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
 
 $end
 
@@ -5692,6 +5620,18 @@ $mame
 
 $end
 
+$info=popbounc
+$mame
+[バグ]
+
+- NeoGeoの書き直しから、パドルとジョイスティックのどちらに設定しても操作ができない。 popbounc0119u3gra, SpinalBlood / Tafoid
+
+
+- サービスモードの設定でパドルコントローラを利用できるようになるはずだが、MAMEではサポートされていない。
+もしかしたら、イライラ棒のように別なバージョンのBIOSが必要なのかもしれない。 popbounc37b3gre, TriggerFin
+
+$end
+
 $info=ninjakd2
 $mame
 [バグ]
@@ -5890,6 +5830,14 @@ $mame
 [バグ]
 
 - チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
+
+$end
+
+$info=wboy3
+$mame
+[バグ]
+
+- このバージョンではDIPスイッチの残ライフ設定が違う。3、4、5人の設定はそれぞれ、1、2、3人。 wboy3_0119u3gra, izius
 
 $end
 
@@ -6470,6 +6418,14 @@ $mame
 
 - 得点が正しく計算されない。
 パーフェクト時の3万点が加算されない。 knckhead071u2gre2, QTQuazar
+
+$end
+
+$info=ptblank
+$mame
+[バグ]
+
+- “Shoot 14 Criminals”の面でドアの部分に縦線が表示される。 ptblank076u1gre, Heihachi_73
 
 $end
 
