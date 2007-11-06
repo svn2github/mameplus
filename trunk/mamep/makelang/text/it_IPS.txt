@@ -1,28 +1,28 @@
-# 20
-CPS1
-CPS1
+#
+Bootleg And Clone
+Bootleg e Cloni
 
-# 30
-CPS2
-CPS2
+#
+CPS All System
+Tutti i Sistemi CPS
 
-# Title
+#
+Haze Megadrive
+Haze Megadrive
+
+#
 IPS
 IPS
 
-# 14
+#
 Misc
 Varie
 
-# 35
+#
 Neo-Geo
 Neo-Geo
 
-# 93
-PGM
-PGM
-
-# 7
+#
 Translation
 Traduzioni
 

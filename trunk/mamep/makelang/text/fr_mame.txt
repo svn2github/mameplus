@@ -3548,7 +3548,7 @@ Bit
 
 # mame/drivers/coinmstr.c: 185 
 Bookkeeping
-
+Livre de Compte
 
 # emu/inptport.c: 1020
 Break in Debugger
@@ -3688,7 +3688,7 @@ Continues
 
 # emu/uitext.c: 56
 Contrast
-
+Contraste
 
 # emu/config.c: 136, 140
 Could not load controller file %s.cfg
@@ -3800,7 +3800,7 @@ EEPROM
 
 # emu/romload.c: 410 
 ERROR: required files are missing, the game cannot be run.
-ERREUR : les fichiers requis sotn manquant, le jeu ne peut pas fonctionner.
+ERREUR : les fichiers requis sont manquant, le jeu ne peut pas fonctionner.
 
 # emu/audit.c: 308
 EXPECTED: %s\n
@@ -3832,7 +3832,7 @@ FRONTEND COMMANDS
 
 # emu/restrack.c: 97
 Failed to allocate %d bytes (%s:%d)
-L'allocation de %d bytes (%s:%d) a &choué
+L'allocation de %d bytes (%s:%d) a échoué
 
 # emu/inptport.c: 1233
 Failed to open file for playback
@@ -3920,19 +3920,19 @@ LONGUEUR INCORRECTE : %d bytes\n
 
 # lib/util/options.c: 859
 Illegal boolean value for %s; reverting to %d\n
-
+Valeur boléenne illégale pour %s; revenu sur %d\n
 
 # lib/util/options.c: 917, 988
 Illegal float value for %s; reverting to %f\n
-
+Valeur flotante illégale pour %s; revenu sur %d\n
 
 # lib/util/options.c: 888, 947
 Illegal integer value for %s; reverting to %d\n
-
+Valeur intégré illégale pour %s; revenu sur %d\n
 
 # emu/clifront.c: 526 emu/mame.c: 1262 emu/ui.c: 345 
 Illegal value for %s = %s\n
-
+Valeur illégale pour %s = %s\n
 
 # emu/uitext.c: 238 
 Image Enhancement
@@ -5672,7 +5672,7 @@ script for debugger
 
 # emu/emuopts.c: 169
 select the system BIOS to use
-
+Choix du BIOS sytème à utiliser
 
 # emu/emuopts.c: 235
 select translation language

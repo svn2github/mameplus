@@ -36,7 +36,7 @@
 
 # osd/ui/mame32.rc: 969
 &Broadcast selected game to all windows
-&Diffuser le jeu sur tous les écrans
+&Diffuser le jeu sélectionné sur tous les écrans
 
 # osd/ui/mame32.rc: 87, 246, 259
 &Cabinet
@@ -172,7 +172,7 @@ Zone de la &Photo\tAlt+P
 
 # osd/ui/mame32.rc: 959
 &Search for new games on start
-&Rechercher de nouveaux jeux au démarrage
+&Rechercher des nouveaux jeux au démarrage
 
 # osd/ui/mame32.rc: 62, 190
 &Select Random Game
@@ -292,11 +292,11 @@ Tous les fichiers (*.*)
 
 # osd/ui/mame32.rc: 962
 Allow game selection by a &joystick (requires restart)
-Permettre la sélection d'un jeu avec un &Joystick (nécessite un redémarrage)
+Choix d'un jeu via un &Joystick (redémarrage requis)
 
 # osd/ui/mame32.rc: 965
 Allow game selection by custom &key sequences
-Permettre la sélection d'un jeu en personnalisant des séquences de &touches
+Choix d'un jeu via des séquences de &touches
 
 # osd/ui/mame32.rc: 1530
 Allow restoring options to 'sane' values.
@@ -1160,7 +1160,7 @@ Luminosité en Pause
 
 # osd/ui/treeview.c: 1424
 Pedal
-Pédale\t
+Pédale
 
 # osd/ui/mame32.rc: 1075
 Pedal device
@@ -1284,11 +1284,11 @@ Redémarrer le Tem&ps de Jeu
 
 # osd/ui/mame32.rc: 995
 Reset all Play Times
-Redémarrer tous les temps de jeu
+Redémarrer tous les Temps du Jeu
 
 # osd/ui/mame32.rc: 993
 Reset all Playcounts
-Redémarrer tous les compteurs de jeux
+Redémarrer tous les Compteurs du Jeu
 
 # osd/ui/mame32.rc: 1548
 Reset play time of currently selected game
@@ -1460,7 +1460,7 @@ Choisir la liste de la couleur de la fonte pour les jeux clones
 
 # osd/ui/mame32.rc: 990
 Show Game Ca&ption
-Afficher le sous&titre du jeu
+Afficher le sous-&titre du jeu
 
 # osd/ui/mame32.rc: 1010
 Show History on Tab
@@ -2028,7 +2028,7 @@ Bezels
 
 # osd/ui/mame32.rc: 992
 Bookkeeping
-
+Livre de Compte
 
 # osd/ui/mame32.rc: 604
 Brightness Correction
@@ -2484,23 +2484,23 @@ Screenshot Cycletime in Seconds
 
 # osd/ui/mame32.rc: 967
 Select &random background image on start
-
+Choix d'un arrière plan au &hasard
 
 # osd/ui/win32ui.c: 832
 Select a folder to save game list
-
+Sélectionner un dossier pour sauvegarder la liste de jeu
 
 # osd/ui/win32ui.c: 819
 Select a mng file to record
-
+Sélectionner un fichier mng à enregistrer
 
 # osd/ui/mame32.rc: 988
 Set Game List Not Working Color
-
+Choisir la couleur pour les jeux non jouable
 
 # osd/ui/mame32.rc: 1564
 Show game PCB information
-
+Afficher les infos sur le PCB du jeu
 
 # osd/ui/mame32.rc: 1574
 Sort by number of plays
@@ -2548,11 +2548,11 @@ Type
 
 # osd/ui/mame32.rc: 982
 Use TreeView in property pages
-
+Uiliser l'arborescence dans les pages des propriètés
 
 # osd/ui/mame32.rc: 986
 Use various icon for Not Working game
-
+Utiliser un icône différent pour les jeux non jouable
 
 # osd/ui/treeview.c: 1248
 Vector (H)

@@ -164,11 +164,11 @@ Divers *Adulte*
 
 # 2240
 Multiplay
-Multi jeu
+Multi-jeu
 
 # 2287
 Multiplay *Mature*
-Multi jeu *Adulte*
+Multi-jeu *Adulte*
 
 # 2379
 Pinball
@@ -448,7 +448,7 @@ Sports / Parapente
 
 # 6157
 Sports / Horse Racing
-Sports / course de chevaux
+Sports / Course de chevaux
 
 # 6172
 Sports / Horseshoes
