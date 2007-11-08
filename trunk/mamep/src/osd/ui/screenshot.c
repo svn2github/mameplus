@@ -95,8 +95,7 @@ BOOL LoadScreenShot(int nGame, int nType)
 #endif /* MESS */
 {
 	BOOL loaded = FALSE;
-	int nParentIndex = GetParentIndex(drivers[nGame]);
-	WCHAR buf[MAX_PATH];
+	int nIndex = nGame;
 
 	/* No need to reload the same one again */
 #ifndef MESS
@@ -111,62 +110,43 @@ BOOL LoadScreenShot(int nGame, int nType)
 #ifdef MESS
 	if (lpSoftwareName)
 	{
-		loaded = LoadSoftwareScreenShot(driversw[nGame]->name, lpSoftwareName, nType);
-		if (!loaded && DriverIsClone(nGame) == TRUE)
+		loaded = LoadSoftwareScreenShot(driversw[nIndex]->name, lpSoftwareName, nType);
+		if (!loaded && DriverIsClone(nIndex) == TRUE)
 		{
-			loaded = LoadSoftwareScreenShot(driversw[nParentIndex]->name, lpSoftwareName, nType);
+			nIndex = GetParentIndex(drivers[nIndex]);
+			loaded = LoadSoftwareScreenShot(driversw[nIndex]->name, lpSoftwareName, nType);
 		}
 	}
 	if (!loaded)
 #endif /* MESS */
 	{
-		WCHAR *wdrv = driversw[nGame]->name;
-
 #ifdef USE_IPS
 		if (lpIPSName)
 		{
+			WCHAR *wdrv = driversw[nIndex]->name;
+			WCHAR buf[MAX_PATH];
+
 			wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
 			dwprintf(TEXT("found ipsname: %s"), buf);
+
+			while (!loaded && nIndex >= 0)
+			{
+				wdrv = driversw[nIndex]->name;
+				wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
+				loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
+				nIndex = GetParentIndex(drivers[nIndex]);
+			}
 		}
 		else
 #endif /* USE_IPS */
 		{
-			wcscpy(buf, wdrv);
-			dwprintf(TEXT("not found ipsname: %s"), buf);
-		}
+			dwprintf(TEXT("not found ipsname: %s"), driversw[nIndex]->name);
 
-		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-	}
-
-	/* If not loaded, see if there is a clone and try that */
-	if (!loaded && nParentIndex >= 0)
-	{
-		WCHAR *wdrv = driversw[nParentIndex]->name;
-
-#ifdef USE_IPS
-		if (lpIPSName)
-		{
-			wsprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
-			dwprintf(TEXT("found clone ipsname: %s"), buf);
-		}
-		else
-#endif /* USE_IPS */
-			wcscpy(buf, wdrv);
-
-		loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
-		nParentIndex = GetParentIndex(drivers[nParentIndex]);
-		if (!loaded && nParentIndex >= 0)
-		{
-			wdrv = driversw[nParentIndex]->name;
-
-#ifdef USE_IPS
-			if (lpIPSName)
-				swprintf(buf, TEXT("%s/%s"), wdrv, lpIPSName);
-			else
-#endif /* USE_IPS */
-				wcscpy(buf, wdrv);
-
-			loaded = LoadDIB(buf, &m_hDIB, &m_hPal, nType);
+			while (!loaded && nIndex >= 0)
+			{
+				loaded = LoadDIB(driversw[nIndex]->name, &m_hDIB, &m_hPal, nType);
+				nIndex = GetParentIndex(drivers[nIndex]);
+			}
 		}
 	}
 
@@ -220,13 +200,13 @@ void FreeScreenShot(void)
 
 BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
+	const WCHAR *zip_name = NULL;
+	const WCHAR *basedir = NULL;
+	char *utf8filename;
+	astring *fname;
 	mame_file *mfile;
 	file_error filerr;
 	BOOL success;
-	const WCHAR *zip_name = NULL;
-	const WCHAR *basedir = NULL;
-	astring *fname;
-	char *utf8filename;
 
 	switch (pic_type)
 	{
@@ -280,19 +260,74 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 
 	if (filerr != FILERR_NONE)
 	{
-		// and look for the zip
-		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
-		astring_free(fname);
+		enum
+		{
+			SNAPSHOT_FILE_DRIVERNAME = 0,
+			SNAPSHOT_FILE_NUMBER,
+			SNAPSHOT_FILE_FINAL,
+			SNAPSHOT_FILE_MAX
+		};
+		int i;
+		const WCHAR *filenames[SNAPSHOT_FILE_MAX];
+
+		filenames[SNAPSHOT_FILE_DRIVERNAME] = filename;
+		filenames[SNAPSHOT_FILE_NUMBER] = TEXT("0000");
+		filenames[SNAPSHOT_FILE_FINAL] = TEXT("final");
+
+		// and look into sub directory
+		for (i = 0; i < SNAPSHOT_FILE_MAX; i++)
+		{
+			const WCHAR *curfile = filenames[i];
+			char *utf8curfile = utf8_from_wstring(curfile);
+
+			//dwprintf(TEXT("try %s/%s"), filename, curfile);
+
+			fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8curfile, ".png");
+			filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
+			astring_free(fname);
+
+			free(utf8curfile);
+
+			if (filerr == FILERR_NONE)
+			{
+				// find maximum number
+				if (i == SNAPSHOT_FILE_NUMBER)
+				{
+					for (i = 1; i < 10000; i++)
+					{
+						char buf[MAX_PATH];
+						mame_file *mtmpfile;
+
+						sprintf(buf, "%s" PATH_SEPARATOR "%04d.png", utf8filename, i);
+						filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, buf, OPEN_FLAG_READ, &mtmpfile);
+
+						if (filerr != FILERR_NONE)
+							break;
+
+						mame_fclose(mfile);
+						mfile = mtmpfile;
+					}
+
+					dprintf("max: %04d", i - 1);
+					filerr = FILERR_NONE;
+				}
+
+				break;
+			}
+		}
 	}
 
 	if (filerr != FILERR_NONE)
 	{
-		// and look for the zip
 		char *utf8zip_name = utf8_from_wstring(zip_name);
+
+		//dwprintf(TEXT("try %s/%s"), zip_name, filename);
+
+		// and look for the zip
 		fname = astring_assemble_4(astring_alloc(), utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
 		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
 		astring_free(fname);
+
 		free(utf8zip_name);
 	}
 
