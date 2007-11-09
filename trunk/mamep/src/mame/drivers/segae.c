@@ -1482,7 +1482,7 @@ MACHINE_RESET(sms)
 	PORT_DIPSETTING(    0xa0, DEF_STR( 1C_6C ) )
 
 
-INPUT_PORTS_START( transfrm ) /* Used By Transformer */
+static INPUT_PORTS_START( transfrm ) /* Used By Transformer */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	SEGA_COIN_B
@@ -1531,7 +1531,7 @@ INPUT_PORTS_START( transfrm ) /* Used By Transformer */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( fantzn2 ) /* Used By Fantasy Zone 2 */
+static INPUT_PORTS_START( fantzn2 ) /* Used By Fantasy Zone 2 */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	SEGA_COIN_B
@@ -1578,7 +1578,7 @@ INPUT_PORTS_START( fantzn2 ) /* Used By Fantasy Zone 2 */
 	PORT_BIT( 0x80, IP_ACTIVE_LOW,  IPT_UNUSED )
 INPUT_PORTS_END
 
-INPUT_PORTS_START( opaopa ) /* Used By Opa Opa */
+static INPUT_PORTS_START( opaopa ) /* Used By Opa Opa */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	SEGA_COIN_B
@@ -1638,7 +1638,7 @@ INPUT_PORTS_START( opaopa ) /* Used By Opa Opa */
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( tetrisse ) /* Used By Tetris */
+static INPUT_PORTS_START( tetrisse ) /* Used By Tetris */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	SEGA_COIN_B
@@ -1680,7 +1680,7 @@ INPUT_PORTS_START( tetrisse ) /* Used By Tetris */
 INPUT_PORTS_END
 
 
-INPUT_PORTS_START( hangonjr ) /* Used By Hang On Jr */
+static INPUT_PORTS_START( hangonjr ) /* Used By Hang On Jr */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	SEGA_COIN_B
@@ -1730,7 +1730,7 @@ INPUT_PORTS_START( hangonjr ) /* Used By Hang On Jr */
 	PORT_BIT( 0xff, 0x00, IPT_PEDAL ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(100) PORT_KEYDELTA(20)
 INPUT_PORTS_END
 
-INPUT_PORTS_START( ridleofp ) /* Used By Riddle Of Pythagoras */
+static INPUT_PORTS_START( ridleofp ) /* Used By Riddle Of Pythagoras */
 	PORT_START_TAG("DSW0")	/* Read from Port 0xf2 */
 	SEGA_COIN_A
 	PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )

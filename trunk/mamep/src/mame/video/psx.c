@@ -163,7 +163,7 @@ static union
 	} Dot;
 } m_packet;
 
-struct PSXGPU
+static struct PSXGPU
 {
 	INT32 n_tx;
 	INT32 n_ty;

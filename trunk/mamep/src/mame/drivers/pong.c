@@ -11,7 +11,7 @@
 
 extern struct SamplesSound_interface pong_samples_interface;
 
-INPUT_PORTS_START( pong )
+static INPUT_PORTS_START( pong )
 	PORT_START		/* IN0 buttons */
 	PORT_BIT( 0x01, IP_ACTIVE_HIGH, IPT_START1 )
 	PORT_DIPNAME( 0x02, 0x00, "Ending Score" )
