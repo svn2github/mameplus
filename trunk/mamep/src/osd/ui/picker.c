@@ -198,7 +198,7 @@ static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
 	LV_ITEM lvi;
 	int iItem;
 	int nColumn;
-	WCHAR szBuffer[256];
+	static WCHAR szBuffer[1024];
 
 	dwPos = GetMessagePos();
 	pt.x = LOWORD(dwPos);
@@ -222,8 +222,7 @@ static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
 	wcscpy(szBuffer, lpttt->szText);
 	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
 
-	wcsncpy(lpttt->szText, szBuffer, ARRAY_LENGTH(lpttt->szText) - 1);
-	lpttt->szText[ARRAY_LENGTH(lpttt->szText) - 1] = '\0';
+	lpttt->lpszText = szBuffer;
 
 	return TRUE;
 }
@@ -236,7 +235,8 @@ static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
 	LV_ITEM lvi;
 	int iItem;
 	int nColumn;
-	WCHAR szBuffer[256];
+	static WCHAR szBufferW[1024];
+	static char szBuffer[1024 * 2];
 
 	dwPos = GetMessagePos();
 	pt.x = LOWORD(dwPos);
@@ -257,11 +257,12 @@ static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
 
 	iItem = lvi.lParam;
 	nColumn = Picker_GetRealColumnFromViewColumn(hWnd, lvht.iSubItem);
-	wcscpy(szBuffer, _Unicode(lpttt->szText));
-	Picker_CallGetItemString(hWnd, iItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
+	wcscpy(szBufferW, _Unicode(lpttt->szText));
+	Picker_CallGetItemString(hWnd, iItem, nColumn, szBufferW, ARRAY_LENGTH(szBufferW));
 
-	strncpy(lpttt->szText, _String(szBuffer), ARRAY_LENGTH(lpttt->szText) - 1);
-	lpttt->szText[ARRAY_LENGTH(lpttt->szText) - 1] = '\0';
+	strncpy(szBuffer, _String(szBufferW), sizeof (szBuffer) - 1);
+	szBuffer[sizeof (szBuffer) - 1] = '\0';
+	lpttt->lpszText = szBuffer;
 
 	return TRUE;
 }
