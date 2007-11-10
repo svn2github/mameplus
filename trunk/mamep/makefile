@@ -170,7 +170,6 @@ BUILD_ZLIB = 1
 
 # disable DRC cores for 64-bit builds
 ifneq ($(PTR64),)
-X86_MIPS3_DRC =
 X86_PPC_DRC =
 X86_VOODOO_DRC =
 X86_ASM_68000 =
