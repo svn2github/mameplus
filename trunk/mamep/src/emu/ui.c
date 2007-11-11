@@ -2383,7 +2383,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 	if (!options_get_bool(mame_options(), OPTION_CONFIRM_QUIT))
 	{
 		mame_schedule_exit(Machine);
-		return UI_HANDLER_CANCEL;
+		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
 	ui_draw_message_window(_(quit_message));
@@ -2391,7 +2391,7 @@ static UINT32 handler_confirm_quit(UINT32 state)
 	if (input_ui_pressed(IPT_UI_SELECT))
 	{
 		mame_schedule_exit(Machine);
-		return UI_HANDLER_CANCEL;
+		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
 	if (input_ui_pressed(IPT_UI_CANCEL))
