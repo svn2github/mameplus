@@ -209,7 +209,7 @@ INLINE void _options_get_string_allow_null(core_options *opts, char **p, const c
 {
 	const char *stemp = options_get_string(opts, name);
 
-	if (*stemp == '\0')
+	if (stemp && *stemp == '\0')
 		stemp = NULL;
 
 	FreeIfAllocated(p);
@@ -229,7 +229,7 @@ INLINE void options_copy_string_allow_null(const char *src, char **dest)
 {
 	FreeIfAllocated(dest);
 
-	if (*src == '\0')
+	if (src && *src == '\0')
 		src = NULL;
 
 	if (src)
