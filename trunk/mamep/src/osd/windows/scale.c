@@ -1099,7 +1099,8 @@ static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	buf = scale_buffer[bank];
 
 	// treat 2xSaI differently from the others to better align the blitters with scanlines
-	if (scale_effect.effect == SCALE_EFFECT_2XSAI) {
+	if (scale_effect.effect == SCALE_EFFECT_2XSAI)
+	{
 		for (y = 1; y < height; y++, src += src_pitch, buf += src_pitch, dst += 2 * dst_pitch)
 			scale_2xsai_line(src, buf, src_pitch, width - 1, dst, dst_pitch, 0);
 		scale_2xsai_line(src, buf, 0, width - 1, dst, dst_pitch, 0);

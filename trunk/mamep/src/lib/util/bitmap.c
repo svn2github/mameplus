@@ -24,7 +24,11 @@
 
 bitmap_t *bitmap_alloc(int width, int height, bitmap_format format)
 {
+#ifdef USE_SCALE_EFFECTS
+	return bitmap_alloc_slop(width, height, 0, 1, format);
+#else /* USE_SCALE_EFFECTS */
 	return bitmap_alloc_slop(width, height, 0, 0, format);
+#endif /* USE_SCALE_EFFECTS */
 }
 
 
