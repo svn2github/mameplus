@@ -74,6 +74,8 @@ GUIOBJS += $(GUIOBJ)/mame32.res
 
 $(GUIOBJ)/mame32.res: $(GUISRC)/mame32.rc $(GUIOBJ)/mamevers32.rc
 
+$(GUIOBJ)/winuiopt.o: $(GUISRC)/optdef.h $(GUISRC)/opthndlr.c
+
 
 
 #####################################################################

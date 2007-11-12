@@ -128,7 +128,7 @@ START_OPT_FUNC_DRIVER
 #endif /* USE_VOLUME_AUTO_ADJUST */
 
 // CORE INPUT OPTIONS
-	DEFINE_OPT(string_allow_null,    ctrlr)
+	DEFINE_OPT(string,               ctrlr)
 	DEFINE_OPT(bool,                 mouse)
 	DEFINE_OPT(bool,                 joystick)
 	DEFINE_OPT(bool,                 lightgun)
