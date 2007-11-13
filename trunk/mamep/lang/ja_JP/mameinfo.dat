@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.120u2      #
+#     Mameinfo.dat日本語版 v0.120u3      #
 #                                        #
-#            November 4, 2007            #
+#           November 10, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,41 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：861 翻訳済：835
-# 追加項目：342 合計：1203
+# Tester報告：870 翻訳済：846
+# 追加項目：342 合計：1212
 #
 
+
+$info=mcnpshnt
+$mame
+[バグ]
+
+- 不明なDIP設定。
+
+Flip Screenのすぐ下のunkonwnは時間の設定。
+
+CoinageとDemo Soundsの間のunknownはオートツモ設定。 mcnpshnt0120u3gra, mahjongfan
+
+$end
+
+$info=gradius4
+$mame
+[バグ]
+
+- グラフィックが全ておかしくなっている。64ビット環境では起きない。 gradius4_0120u3yel, incognito / John IV
+
+
+- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
+
+2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
+
+
+- 「24KHｚと15KHｚ表示の問題」
+
+
+グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
+
+$end
 
 $info=terabrst
 $mame
@@ -43,28 +74,99 @@ $mame
 
 $end
 
-$info=mpatrol
+$info=mhhonban
 $mame
-[情報]
-
-- F2キーを押しながらリセットでテストモードになる。
-RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
-
-
 [バグ]
 
-- サウンドが鳴らない。6800の書き直しにより発生。 mpatrol0120u2yel, Chook
-
-
-- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
+- DIPスイッチ1-4は、コイン当たりのクレジット数設定。 mhhonban0120u3gra, mahjongfan
 
 $end
 
-$info=kof10th
+$info=mjdejavu
 $mame
 [バグ]
 
-- テキストレイヤーが表示されない。Sレイヤーの描画の高速化ハックにバグがあるため起きているので、これを外せば直る。 kof10th0120u2yel, Robbbert / Mamesick
+- 配牌後に並び替えされず、リーチなどもできない。 mjdejavu0120u3yel, dyq
+
+$end
+
+$info=blitz2k
+$mame
+[バグ]
+
+- VS画面の直後に32ビット版はクラッシュ、64ビット版はフリーズする。 blitz2k0120u2red, Scagazza / Fujix
+
+$end
+
+$info=calspeed
+$mame
+[バグ]
+
+- マニュアルギアを選択してもオートマになる。 calspeed0120u3gre, Scagazza
+
+$end
+
+$info=calspeda
+$mame
+[バグ]
+
+- 64ビット版で、キャリブレーションの画面の後、黒画面でフリーズする。 calspeda0120u2red, Scagazza
+
+$end
+
+$info=grdforce
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=astrass
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=batmanfr
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=cotton2
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=cottonbm
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=othellos
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=gauntleg
+$mame
+[バグ]
+
+- 64ビット版で、Mountain Journeyを選ぶと2面でクラッシュする。 gauntleg0120u2red, Scagazza
 
 $end
 
@@ -1347,22 +1449,6 @@ $mame
 
 $end
 
-$info=gradius4
-$mame
-[バグ]
-
-- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
-
-2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
-
-
-- 「24KHｚと15KHｚ表示の問題」
-
-
-グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
-
-$end
-
 $info=drgwrld3
 $mame
 [バグ]
@@ -2254,6 +2340,20 @@ $mame
 
 $end
 
+$info=mpatrol
+$mame
+[情報]
+
+- F2キーを押しながらリセットでテストモードになる。
+RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
+
+
+[バグ]
+
+- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
+
+$end
+
 $info=metamrph
 $mame
 [バグ]
@@ -3076,18 +3176,6 @@ $mame
 
 $end
 
-$info=elim2
-$mame
-[バグ]
-
-- ゲーム中に画面中央に青いドットが表示される。
-クローン版elim4では起きない。 elim2055gre, Fever
-
-
-- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
-
-$end
-
 $info=columns2
 $mame
 [バグ]
@@ -3107,6 +3195,18 @@ $mame
 
 - プレイヤー2の操作が分かれていない。
 そのため、プレイヤー1の操作でプレイしなければいけない。 zektor055gra, Karasu
+
+$end
+
+$info=elim2
+$mame
+[バグ]
+
+- ゲーム中に画面中央に青いドットが表示される。
+クローン版elim4では起きない。 elim2055gre, Fever
+
+
+- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
 
 $end
 
@@ -5143,14 +5243,6 @@ $mame
 
 $end
 
-$info=hstennis
-$mame
-[バグ]
-
-- キー設定で、P1 SoftがP2 Softになっている。 hstennis0103u2ora, Fujix
-
-$end
-
 $info=policetr
 $mame
 [バグ]
@@ -5240,6 +5332,14 @@ $mame
 [TIPS]
 
 - 敵の車を一台も破壊せずにクリアすると50,000点のボーナス。
+
+$end
+
+$info=nbbatman
+$mame
+[バグ]
+
+- ラスタエフェクトはV33 CPUを23.4MHz以上にすると動作する。ただし、速度はひどく遅くなる。 nbbatman060ora, Kale
 
 $end
 
@@ -5370,36 +5470,11 @@ $mame
 
 $end
 
-$info=nbbatman
-$mame
-[バグ]
-
-- ラスタエフェクトはV33 CPUを23.4MHz以上にすると動作する。ただし、速度はひどく遅くなる。 nbbatman060ora, Kale
-
-$end
-
 $info=gakusai2
 $mame
 [バグ]
 
 - BGMのドラムパートの音量が異常に大きい。一部SEでも起こっている。他のmetro.cのゲームは正常。 gakusai066ora, MAMEjong
-
-$end
-
-$info=finallap
-$mame
-[バグ]
-
-- 最適なアナログ入力設定：
-
-Paddle Digital Speed: 10
-
-Paddle Autocenter Speed: 15
-
-Paddle Sensitivity: 20% finallap0116u1ora, fostar
-
-
-- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
 $end
 
@@ -5590,6 +5665,14 @@ $mame
 [バグ]
 
 - サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett / Luigi30
+
+$end
+
+$info=finallap
+$mame
+[バグ]
+
+- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
 $end
 
