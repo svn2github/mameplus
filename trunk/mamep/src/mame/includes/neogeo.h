@@ -20,6 +20,7 @@ enum
 	NEOGEO_BIOS_TYPE_TRACKBALL	// Irritating Maze (Trackball)
 };
 
+// in emu/romload.c
 int determine_neogeo_bios(void);
 #endif /* USE_NEOGEO_HACKS */
 

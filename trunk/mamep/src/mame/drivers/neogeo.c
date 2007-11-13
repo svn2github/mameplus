@@ -1410,49 +1410,6 @@ MACHINE_DRIVER_END
  *
  *************************************/
 
-#ifdef USE_NEOGEO_HACKS
-#define BIOS_CRC_EURO 		0x9036d879
-#define BIOS_CRC_DEBUG		0x698ebb7d
-#define BIOS_CRC_TRACKBALL	0x853e6b96
-
-int determine_neogeo_bios(void)
-{
-	extern int system_bios;
-	const rom_entry *romp = Machine->gamedrv->rom;
-	const rom_entry *rom;
-
-	system_bios = determine_bios_rom(mame_options(), romp);
-
-	for (rom = romp; !ROMENTRY_ISEND(rom); rom++)
-	{
-		if (ROMENTRY_ISFILE(rom))
-		{
-			int bios_flags = ROM_GETBIOSFLAGS(rom);
-
-			if (!bios_flags || (bios_flags == system_bios))
-			{
-				const char *hash = ROM_GETHASHDATA(rom);
-				UINT8 crcs[4];
-
-				if (hash_data_extract_binary_checksum(hash, HASH_CRC, crcs))
-				{
-					UINT32 crc = (crcs[0] << 24) | (crcs[1] << 16) | (crcs[2] << 8) | crcs[3];
-
-					if (crc == BIOS_CRC_TRACKBALL)
-						return NEOGEO_BIOS_TYPE_TRACKBALL;
-					if (crc == BIOS_CRC_EURO)
-						return NEOGEO_BIOS_TYPE_EURO;
-					if (crc == BIOS_CRC_DEBUG)
-						return NEOGEO_BIOS_TYPE_DEBUG;
-				}
-			}
-		}
-	}
-
-	return NEOGEO_BIOS_TYPE_NORMAL;
-}
-#endif /* USE_NEOGEO_HACKS */
-
 static DRIVER_INIT( neogeo )
 {
 #ifdef USE_NEOGEO_HACKS
