@@ -1024,8 +1024,57 @@ static MACHINE_RESET( neogeo )
 	int memcard_manager = 0; // FIXME
 	UINT16 src, res;
 
-	if (!strcmp(machine->gamedrv->name,"irrmaze"))
+	switch (determine_neogeo_bios())
 	{
+	case NEOGEO_BIOS_TYPE_EURO:
+		logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
+
+		/* Set up machine country */
+		src = readinputportbytag("HACK_IN5");
+		res = src & 0x3;
+
+		/* Console/arcade mode */
+		if (src & 0x04) 
+			res |= 0x8000;
+
+		/* write the ID in the system BIOS ROM */
+		mem16[0x0200] = res;
+
+		if (memcard_manager==1)
+		{
+			memcard_manager=0;
+			mem16[0x11b1a/2] = 0x500a;
+		}
+		else
+		{
+			mem16[0x11b1a/2] = 0x1b6a;
+		}
+
+		break;
+
+	case NEOGEO_BIOS_TYPE_DEBUG:
+		logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
+
+		/* Set up machine country */
+		src = readinputportbytag("HACK_IN5");
+		res = src & 0x3;
+
+		/* write the ID in the system BIOS ROM */
+		mem16[0x0200] = res;
+
+		if (memcard_manager==1)
+		{
+			memcard_manager=0;
+			mem16[0x11b1a/2] = 0x3cac;
+		}
+		else
+		{
+			mem16[0x1194c/2] = 0x1b6a;
+		}
+
+		break;
+
+	case NEOGEO_BIOS_TYPE_TRACKBALL:
 		logerror("BIOS Hack enabled for Trackball\n");
 
 		/* Set up machine country */
@@ -1048,56 +1097,8 @@ static MACHINE_RESET( neogeo )
 		{
 			mem16[0x10c44/2] = 0x0c94;
 		}
-	}
-	else
-	{
-		if (system_bios - 1 == NEOGEO_BIOS_EURO)
-		{
-			logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
 
-			/* Set up machine country */
-			src = readinputportbytag("HACK_IN5");
-			res = src & 0x3;
-
-			/* Console/arcade mode */
-			if (src & 0x04) 
-				res |= 0x8000;
-
-			/* write the ID in the system BIOS ROM */
-			mem16[0x0200] = res;
-
-			if (memcard_manager==1)
-			{
-				memcard_manager=0;
-				mem16[0x11b1a/2] = 0x500a;
-			}
-			else
-			{
-				mem16[0x11b1a/2] = 0x1b6a;
-			}
-		}
-
-		if (system_bios - 1 == NEOGEO_BIOS_DEBUG)
-		{
-			logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
-
-			/* Set up machine country */
-			src = readinputportbytag("HACK_IN5");
-			res = src & 0x3;
-
-			/* write the ID in the system BIOS ROM */
-			mem16[0x0200] = res;
-
-			if (memcard_manager==1)
-			{
-				memcard_manager=0;
-				mem16[0x11b1a/2] = 0x3cac;
-			}
-			else
-			{
-				mem16[0x1194c/2] = 0x1b6a;
-			}
-		}
+		break;
 	}
 #endif /* USE_NEOGEO_HACKS */
 
@@ -1409,15 +1410,81 @@ MACHINE_DRIVER_END
  *
  *************************************/
 
+#ifdef USE_NEOGEO_HACKS
+#define BIOS_CRC_EURO 		0x9036d879
+#define BIOS_CRC_DEBUG		0x698ebb7d
+#define BIOS_CRC_TRACKBALL	0x853e6b96
+
+int determine_neogeo_bios(void)
+{
+	extern int system_bios;
+	const rom_entry *romp = Machine->gamedrv->rom;
+	const rom_entry *rom;
+
+	system_bios = determine_bios_rom(mame_options(), romp);
+
+	for (rom = romp; !ROMENTRY_ISEND(rom); rom++)
+	{
+		if (ROMENTRY_ISFILE(rom))
+		{
+			int bios_flags = ROM_GETBIOSFLAGS(rom);
+
+			if (!bios_flags || (bios_flags == system_bios))
+			{
+				const char *hash = ROM_GETHASHDATA(rom);
+				UINT8 crcs[4];
+
+				if (hash_data_extract_binary_checksum(hash, HASH_CRC, crcs))
+				{
+					UINT32 crc = (crcs[0] << 24) | (crcs[1] << 16) | (crcs[2] << 8) | crcs[3];
+
+					if (crc == BIOS_CRC_TRACKBALL)
+						return NEOGEO_BIOS_TYPE_TRACKBALL;
+					if (crc == BIOS_CRC_EURO)
+						return NEOGEO_BIOS_TYPE_EURO;
+					if (crc == BIOS_CRC_DEBUG)
+						return NEOGEO_BIOS_TYPE_DEBUG;
+				}
+			}
+		}
+	}
+
+	return NEOGEO_BIOS_TYPE_NORMAL;
+}
+#endif /* USE_NEOGEO_HACKS */
+
 static DRIVER_INIT( neogeo )
 {
 #ifdef USE_NEOGEO_HACKS
 	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
-	system_bios = determine_bios_rom(mame_options(), machine->gamedrv->rom);
 
-	/* irritating maze uses a trackball */
-	if (!strcmp(machine->gamedrv->name,"irrmaze"))
+	switch (determine_neogeo_bios())
 	{
+	case NEOGEO_BIOS_TYPE_EURO:
+		logerror("BIOS Patch is applied for NEOGEO_BIOS_EURO\n");
+
+		/* Remove memory check for now */
+		mem16[0x11b00/2] = 0x4e71;
+		mem16[0x11b02/2] = 0x4e71;
+		mem16[0x11b16/2] = 0x4ef9;
+		mem16[0x11b18/2] = 0x00c1;
+		mem16[0x11b1a/2] = 0x1b6a;
+
+		/* Patch bios rom, for Calendar errors */
+		mem16[0x11c14/2] = 0x4e71;
+		mem16[0x11c16/2] = 0x4e71;
+		mem16[0x11c1c/2] = 0x4e71;
+		mem16[0x11c1e/2] = 0x4e71;
+
+		/* Rom internal checksum fails for now.. */
+		mem16[0x11c62/2] = 0x4e71;
+		mem16[0x11c64/2] = 0x4e71;
+
+		break;
+
+	case NEOGEO_BIOS_TYPE_TRACKBALL:
+		/* irritating maze uses a trackball */
+
 		logerror("BIOS Patch is applied for Trackball\n");
 
 		/* TODO: check the memcard manager patch in neogeo_init_machine(), */
@@ -1438,30 +1505,8 @@ static DRIVER_INIT( neogeo )
 		/* Rom internal checksum fails for now.. */
 		mem16[0x10d8c/2] = 0x4e71;
 		mem16[0x10d8e/2] = 0x4e71;
-	}
-	else
-	{
-		if (system_bios - 1 == NEOGEO_BIOS_EURO)
-		{
-			logerror("BIOS Patch is applied for NEOGEO_BIOS_EURO\n");
 
-			/* Remove memory check for now */
-			mem16[0x11b00/2] = 0x4e71;
-			mem16[0x11b02/2] = 0x4e71;
-			mem16[0x11b16/2] = 0x4ef9;
-			mem16[0x11b18/2] = 0x00c1;
-			mem16[0x11b1a/2] = 0x1b6a;
-
-			/* Patch bios rom, for Calendar errors */
-			mem16[0x11c14/2] = 0x4e71;
-			mem16[0x11c16/2] = 0x4e71;
-			mem16[0x11c1c/2] = 0x4e71;
-			mem16[0x11c1e/2] = 0x4e71;
-
-			/* Rom internal checksum fails for now.. */
-			mem16[0x11c62/2] = 0x4e71;
-			mem16[0x11c64/2] = 0x4e71;
-		}
+		break;
 	}
 #endif /* USE_NEOGEO_HACKS */
 

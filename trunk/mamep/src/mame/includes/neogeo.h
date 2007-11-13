@@ -12,8 +12,15 @@
 
 
 #ifdef USE_NEOGEO_HACKS
-#define NEOGEO_BIOS_EURO	0	// Europe MVS (Ver. 2)
-#define NEOGEO_BIOS_DEBUG	10	// Debug MVS (Hack?)
+enum
+{
+	NEOGEO_BIOS_TYPE_NORMAL,
+	NEOGEO_BIOS_TYPE_EURO,		// Europe MVS (Ver. 2)
+	NEOGEO_BIOS_TYPE_DEBUG,		// Debug MVS (Hack?)
+	NEOGEO_BIOS_TYPE_TRACKBALL	// Irritating Maze (Trackball)
+};
+
+int determine_neogeo_bios(void);
 #endif /* USE_NEOGEO_HACKS */
 
 

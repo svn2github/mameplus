@@ -2561,30 +2561,28 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 	     (!mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
 	      || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c")))
 	{
-		int system_bios = determine_bios_rom(mame_options(), Machine->gamedrv->rom);
-
 		/* first mark all items to disable */
 		remove_neogeo_territory = 1;
 		remove_neogeo_arcade = 1;
 
-		switch (system_bios - 1)
+		switch (determine_neogeo_bios())
 		{
-		// enable arcade/console and territory
-		case NEOGEO_BIOS_EURO:
+		case NEOGEO_BIOS_TYPE_EURO:
+			// enable arcade/console and territory
 			remove_neogeo_arcade = 0;
 			remove_neogeo_territory = 0;
 			break;
 
-		// enable territory
-		case NEOGEO_BIOS_DEBUG:
+		case NEOGEO_BIOS_TYPE_DEBUG:
+			// enable territory
 			remove_neogeo_territory = 0;
-		}
+			break;
 
-		// enable arcade/console and territory
-		if (!strcmp(Machine->gamedrv->name,"irrmaze"))
-		{
+		case NEOGEO_BIOS_TYPE_TRACKBALL:
+			// enable arcade/console and territory
 			remove_neogeo_arcade = 0;
 			remove_neogeo_territory = 0;
+			break;
 		}
 	}
 #endif /* USE_NEOGEO_HACKS */
