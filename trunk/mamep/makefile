@@ -720,9 +720,9 @@ endif
 
 ifeq ($(NO_DLL),)
 # gui target
-$(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/ui/guimain.o $(GUIRESFILE)
+$(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/ui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
 endif
 
 # cli target
