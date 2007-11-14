@@ -45,6 +45,7 @@
 #include "winuiopt.h"
 #include "help.h"
 #include "dialogs.h"
+#include "strconv.h"
 #include "translate.h"
 
 #ifdef _MSC_VER
@@ -1881,8 +1882,8 @@ BOOL InitFolders(void)
 		int subicon = 0;
 		const WCHAR *title = extFavorite.title;
 		WCHAR *filename;
-		char *rootname = strdup(extFavorite.root_icon);
-		char *subname = strdup(extFavorite.sub_icon);
+		char *rootname = mame_strdup(extFavorite.root_icon);
+		char *subname = mame_strdup(extFavorite.sub_icon);
 
 		filename = malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
 		wcscpy(filename, title);
@@ -2253,6 +2254,8 @@ static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int ms
 
 	return FALSE;
 }
+
+extern DWORD create_path_recursive(const TCHAR *path);
 
 static int InitExtraFolders(void)
 {

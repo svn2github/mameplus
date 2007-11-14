@@ -37,6 +37,7 @@
 #include "m32util.h"
 #include "win32ui.h"
 #include "translate.h"
+#include "strconv.h"
 
 /***************************************************************************
     function prototypes

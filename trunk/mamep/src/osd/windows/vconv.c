@@ -64,6 +64,7 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-E",					"/c~/E >" },
 	{ 0,		"-S",					"/c~/Fa" },
 	{ VS7,		"-O0",					"/Od /GS" },
+	{ 0,		"-O0",					"/Od" },
 #ifdef ICC_BUILD
 	{ 0,		"-O3",					"/O3 /Qip /Qvec_report0" },
 #else

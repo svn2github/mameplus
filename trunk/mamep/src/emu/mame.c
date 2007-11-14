@@ -95,7 +95,6 @@
 #include "debug/debugcon.h"
 #endif
 
-#include <stdio.h>
 #include <stdarg.h>
 #include <setjmp.h>
 #include <time.h>

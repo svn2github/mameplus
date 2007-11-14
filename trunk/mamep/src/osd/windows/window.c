@@ -44,7 +44,7 @@
 #endif /* USE_SCALE_EFFECTS */
 
 #ifdef WINUI
-#include "ui/resource.h"
+#include "winui/resource.h"
 #else
 #include "windows/resource.h"
 #endif /* WINUI */
@@ -138,6 +138,7 @@ static HANDLE window_thread_ready_event;
 //  PROTOTYPES
 //============================================================
 
+static void winwindow_exit(running_machine *machine);
 static void winwindow_video_window_destroy(win_window_info *window);
 static void draw_video_contents(win_window_info *window, HDC dc, int update);
 
@@ -277,7 +278,7 @@ void winwindow_init(running_machine *machine)
 //  (main thread)
 //============================================================
 
-void winwindow_exit(running_machine *machine)
+static void winwindow_exit(running_machine *machine)
 {
 	assert(GetCurrentThreadId() == main_threadid);
 

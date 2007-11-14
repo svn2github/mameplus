@@ -55,6 +55,7 @@
 #include "resource.h"
 #include "resource.hm"
 
+#include "datafile.h"
 #include "screenshot.h"
 #include "M32Util.h"
 #include "file.h"
@@ -77,6 +78,7 @@
 #ifdef UI_COLOR_PALETTE
 #include "paletteedit.h"
 #endif /* UI_COLOR_PALETTE */
+#include "strconv.h"
 #include "translate.h"
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
@@ -626,6 +628,9 @@ static WCHAR g_SearchText[256];
 #define VIRTUAL_KEY		2
 #define ASCII_KEY		3
 
+extern const int win_key_trans_table[][4];
+extern int wininput_count_key_trans_table(void);
+
 typedef struct
 {
 	char		name[40];	    // functionality name (optional)
@@ -1071,7 +1076,7 @@ static int RunMAME(int nGameIndex)
 
 	time(&start);
 	SetTimer(hMain, GAMEWND_TIMER, 1000/*1s*/, NULL);
-	exit_code = main_(argc, (char **)argv);
+	exit_code = mame_main(argc, (char **)argv);
 	time(&end);
 	/*This is to make sure this timer is killed, if the Game Window was not found
 	Should not happen, but you never know... */
@@ -1208,19 +1213,8 @@ static int RunMAME(int nGameIndex)
 #endif
 }
 
-#undef WinMainInDLL
-#ifndef DONT_USE_DLL
-#ifdef _MSC_VER
-#define WinMainInDLL
-#endif /* _MSC_VER */
-#endif /* !DONT_USE_DLL */
 
-#ifdef WinMainInDLL
-SHAREDOBJ_FUNC(int) WinMain_(HINSTANCE    hInstance,
-#else
-int WinMain_(HINSTANCE    hInstance,
-#endif
-                   HINSTANCE    hPrevInstance,
+int Mame32Main(HINSTANCE    hInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
@@ -1241,8 +1235,11 @@ int WinMain_(HINSTANCE    hInstance,
 	assign_msg_catategory(UI_MSG_OSD1, "ui");
 
 	if (__argc != 1)
-		exit(main_(__argc, __argv));
-
+	{
+		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
+		extern int DECL_SPEC mame_main(int, char**);
+		exit(mame_main(__argc, __argv));
+	}
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
 		return 1;
 
@@ -6252,7 +6249,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_DIRECTORY:
-		value = stricmp(drivers[index1]->name, drivers[index2]->name);
+		value = mame_stricmp(drivers[index1]->name, drivers[index2]->name);
 		break;
 
 	case COLUMN_SRCDRIVERS:
@@ -6294,17 +6291,17 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_MANUFACTURER:
-		if (stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer) == 0)
+		if (mame_stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer) == 0)
 			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 
-		value = stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer);
+		value = mame_stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer);
 		break;
 
 	case COLUMN_YEAR:
-		if (stricmp(drivers[index1]->year, drivers[index2]->year) == 0)
+		if (mame_stricmp(drivers[index1]->year, drivers[index2]->year) == 0)
 			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 
-		value = stricmp(drivers[index1]->year, drivers[index2]->year);
+		value = mame_stricmp(drivers[index1]->year, drivers[index2]->year);
 		break;
 
 	case COLUMN_CLONE:

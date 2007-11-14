@@ -34,6 +34,7 @@
 
 #include "MAME32.h"	// include this first
 #include "driver.h"
+#include "winmain.h"
 #include "options.h"
 #include "emuopts.h"
 #include "bitmask.h"
@@ -44,12 +45,14 @@
 #include "splitters.h"
 #include "DirectDraw.h"
 #include "winuiopt.h"
+#include "strconv.h"
 #include "translate.h"
 #include "directories.h"
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
 
+extern DWORD create_path_recursive(const TCHAR *path);
 
 /***************************************************************************
     Internal structures
@@ -958,7 +961,7 @@ void SetDefaultBios(int bios_index, const char *value)
 		options_type *opt = GetGameOptions(default_bios[bios_index]);
 
 		FreeIfAllocated(&opt->bios);
-		opt->bios = strdup(value);
+		opt->bios = mame_strdup(value);
 	}
 }
 
@@ -1032,7 +1035,7 @@ void SetUIPaletteString(int n, const char *s)
 		if (ui_palette_tbl[i].code == n)
 		{
 			FreeIfAllocated(ui_palette_tbl[i].data);
-			*ui_palette_tbl[i].data = strdup(s);
+			*ui_palette_tbl[i].data = mame_strdup(s);
 		}
 }
 #endif /* UI_COLOR_PALETTE */
@@ -1176,7 +1179,7 @@ BOOL GetRandomBackground(void)
 void SetSavedFolderPath(const char *path)
 {
 	FreeIfAllocated(&settings.folder_current);
-	settings.folder_current = strdup(path);
+	settings.folder_current = mame_strdup(path);
 }
 
 const char *GetSavedFolderPath(void)
@@ -1265,7 +1268,7 @@ void SetCurrentTab(const char *shortname)
 {
 	FreeIfAllocated(&settings.current_tab);
 	if (shortname != NULL)
-		settings.current_tab = strdup(shortname);
+		settings.current_tab = mame_strdup(shortname);
 }
 
 const char *GetCurrentTab(void)
@@ -1278,7 +1281,7 @@ void SetDefaultGame(const char *name)
 	FreeIfAllocated(&settings.default_game);
 
 	if (name != NULL)
-		settings.default_game = strdup(name);
+		settings.default_game = mame_strdup(name);
 }
 
 const char *GetDefaultGame(void)
@@ -2638,7 +2641,7 @@ void SaveDefaultOptions(void)
 	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 		if (default_bios[i] != -1)
 		{
-			char *bios = strdup(driver_options[default_bios[i]].bios);
+			char *bios = mame_strdup(driver_options[default_bios[i]].bios);
 			GetGameOptions(default_bios[i]);
 
 			FreeIfAllocated(&driver_options[default_bios[i]].bios);
@@ -3043,7 +3046,7 @@ static void validate_resolution(char **p)
 	if (strcmp(*p, "0x0@0") == 0)
 	{
 		FreeIfAllocated(p);
-		*p = strdup("auto");
+		*p = mame_strdup("auto");
 	}
 }
 
@@ -3113,7 +3116,7 @@ static void set_folder_flag(f_flag *flag, const char *path, DWORD dwFlags)
 		flag->num += ALLOC_FOLDERFLAG;
 	}
 
-	flag->entry[i].name = strdup(path);
+	flag->entry[i].name = mame_strdup(path);
 	flag->entry[i].flags = dwFlags;
 }
 

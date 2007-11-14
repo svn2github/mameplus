@@ -800,4 +800,8 @@ void osd_break_into_debugger(const char *message);
 
 
 int osd_get_default_codepage(void);
+
+void set_osdcore_acp(int cp);
+int get_osdcore_acp(void);
+
 #endif	/* __OSDEPEND_H__ */

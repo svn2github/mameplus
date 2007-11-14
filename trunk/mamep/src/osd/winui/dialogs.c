@@ -44,6 +44,7 @@
 #ifdef USE_VIEW_PCBINFO
 #include "file.h"
 #endif /* USE_VIEW_PCBINFO */
+#include "strconv.h"
 #include "translate.h"
 
 #define FILTERTEXT_LEN 256

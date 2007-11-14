@@ -133,7 +133,7 @@ INLINE void _options_get_string(core_options *opts, char **p, const char *name)
 	if (stemp && *stemp)
 	{
 		FreeIfAllocated(p);
-		*p = strdup(stemp);
+		*p = mame_strdup(stemp);
 	}
 }
 
@@ -141,7 +141,7 @@ INLINE void options_copy_string(const char *src, char **dest)
 {
 	FreeIfAllocated(dest);
 
-	*dest = strdup(src);
+	*dest = mame_strdup(src);
 }
 
 #define options_free_string			FreeIfAllocated
@@ -214,7 +214,7 @@ INLINE void _options_get_string_allow_null(core_options *opts, char **p, const c
 
 	FreeIfAllocated(p);
 	if (stemp)
-		*p = strdup(stemp);
+		*p = mame_strdup(stemp);
 }
 
 INLINE void options_set_string_allow_null(core_options *opts, const char *name, const char *value, int priority)
@@ -233,7 +233,7 @@ INLINE void options_copy_string_allow_null(const char *src, char **dest)
 		src = NULL;
 
 	if (src)
-		*dest = strdup(src);
+		*dest = mame_strdup(src);
 }
 
 #define options_free_string_allow_null			FreeIfAllocated
@@ -431,11 +431,11 @@ INLINE void _options_get_m68k_core(core_options *opts, int *p, const char *name)
 
 	if (stemp != NULL)
 	{
-		if (stricmp(stemp, "c") == 0)
+		if (mame_stricmp(stemp, "c") == 0)
 			*p= 0;
-		else if (stricmp(stemp, "drc") == 0)
+		else if (mame_stricmp(stemp, "drc") == 0)
 			*p= 1;
-		else if (stricmp(stemp, "asm") == 0)
+		else if (mame_stricmp(stemp, "asm") == 0)
 			*p= 2;
 		else
 		{
@@ -517,7 +517,7 @@ INLINE void _options_get_analog_select(core_options *opts, char **p, const char 
 		 || strcmp(stemp, "lightgun") == 0)
 		{
 			FreeIfAllocated(p);
-			*p = strdup(stemp);
+			*p = mame_strdup(stemp);
 		}
 	}
 }
@@ -541,7 +541,7 @@ INLINE void _options_get_led_mode(core_options *opts, char **p, const char *name
 		 || strcmp(stemp, "usb") == 0)
 		{
 			FreeIfAllocated(p);
-			*p = strdup(stemp);
+			*p = mame_strdup(stemp);
 		}
 	}
 }
@@ -566,7 +566,7 @@ INLINE void _options_get_video(core_options *opts, char **p, const char *name)
 		 || strcmp(stemp, "d3d") == 0)
 		{
 			FreeIfAllocated(p);
-			*p = strdup(stemp);
+			*p = mame_strdup(stemp);
 		}
 	}
 }
@@ -592,7 +592,7 @@ INLINE void _options_get_aspect(core_options *opts, char **p, const char *name)
 		 || (sscanf(stemp, "%d:%d", &num, &den) == 2 && num > 0 && den > 0))
 		{
 			FreeIfAllocated(p);
-			*p = strdup(stemp);
+			*p = mame_strdup(stemp);
 		}
 	}
 }
@@ -618,7 +618,7 @@ INLINE void _options_get_resolution(core_options *opts, char **p, const char *na
 		 || sscanf(stemp, "%dx%d@%d", &width, &height, &refresh) >= 2)
 		{
 			FreeIfAllocated(p);
-			*p = strdup(stemp);
+			*p = mame_strdup(stemp);
 		}
 	}
 }
@@ -696,7 +696,7 @@ INLINE void _options_get_palette(core_options *opts, char **p, const char *name)
 			return;
 
 	FreeIfAllocated(p);
-	*p = strdup(stemp);
+	*p = mame_strdup(stemp);
 }
 
 #define options_set_palette(opts,name,value,priority)	options_set_string(opts, name,value,priority)
@@ -1035,7 +1035,7 @@ INLINE void _options_get_ui_key(core_options *opts, KeySeq *ks, const char *name
 	if (stemp == NULL)
 		return;
 
-	ks->seq_string = strdup(stemp);
+	ks->seq_string = mame_strdup(stemp);
 
 	input_seq_from_tokens(ks->seq_string, &ks->is);
 	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);
@@ -1053,7 +1053,7 @@ INLINE void options_copy_ui_key(const KeySeq *src, KeySeq *dest)
 	if (src->seq_string == NULL)
 		return;
 
-	dest->seq_string = strdup(src->seq_string);
+	dest->seq_string = mame_strdup(src->seq_string);
 
 	input_seq_from_tokens(dest->seq_string, &dest->is);
 	//dprintf("seq=%s,,,%04i %04i %04i %04i \n",stemp,ks->is.code[0],ks->is.code[1],ks->is.code[2],ks->is.code[3]);

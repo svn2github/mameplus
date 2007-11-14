@@ -362,7 +362,7 @@ BOOL PropSheetFilter_BIOS(void)
 	return IS_GLOBAL;
 #else /* DRIVER_SWITCH */
 	if (IS_GLOBAL)
-		return (GetSystemBiosDriver(0) != NULL);
+		return (GetSystemBiosDriver(0) != 0);
 
 	return 0;
 #endif /* DRIVER_SWITCH */
@@ -575,12 +575,12 @@ void PropertiesInit(void)
 		dd.cb = sizeof(dd);
 
 		g_sMonitorDeviceString[0] = NULL;
-		g_sMonitorDeviceName[0] = strdup("auto");
+		g_sMonitorDeviceName[0] = mame_strdup("auto");
 
 		for (i = 0; i < iMonitors; i++)
 		{
-			g_sMonitorDeviceString[i + 1] = strdup(DirectDraw_GetDisplayName(i));
-			g_sMonitorDeviceName[i + 1] = strdup(DirectDraw_GetDisplayDriver(i));
+			g_sMonitorDeviceString[i + 1] = mame_strdup(DirectDraw_GetDisplayName(i));
+			g_sMonitorDeviceName[i + 1] = mame_strdup(DirectDraw_GetDisplayDriver(i));
 		}
 
 		g_sMonitorDeviceString[i + 1] = NULL;
@@ -2307,9 +2307,9 @@ static void PropToOptions(HWND hWnd, options_type *o)
 			FreeIfAllocated(&o->driver_config);
 
 			if (all_enable)
-				o->driver_config = strdup("all");
+				o->driver_config = mame_strdup("all");
 			else
-				o->driver_config = strdup(buffer);
+				o->driver_config = mame_strdup(buffer);
 		}
 	}
 #endif /* DRIVER_SWITCH */
@@ -3253,7 +3253,7 @@ static void AssignInput(HWND hWnd)
 	if (new_length == CB_ERR)
 	{
 		dprintf("error getting text len");
-		pGameOpts->ctrlr = strdup("Standard");
+		pGameOpts->ctrlr = mame_strdup("Standard");
 		return;
 	}
 	pGameOpts->ctrlr = (char *)malloc(new_length + 1);
@@ -3302,7 +3302,7 @@ static void AssignBios(HWND hWnd)
 	FreeIfAllocated(&pGameOpts->bios);
 
 	if (g_biosinfo != -1 && g_nBiosIndex)
-		pGameOpts->bios = strdup(GetBIOSName(g_biosinfo, g_nBiosIndex));
+		pGameOpts->bios = mame_strdup(GetBIOSName(g_biosinfo, g_nBiosIndex));
 	else
 		pGameOpts->bios = mame_strdup(BIOS_DEFAULT);
 }
@@ -3564,7 +3564,7 @@ static void ResetDataMap(void)
 	{
 		char *name = _String(g_pFolder);
 		int len = strlen(name) - 2;
-		if (!stricmp(name + len, ".c"))
+		if (!mame_stricmp(name + len, ".c"))
 		{
 			int n;
 
@@ -3591,7 +3591,7 @@ static void ResetDataMap(void)
 			int bios_driver = GetSystemBiosDriver(i);
 			if (bios_driver != -1)
 			{
-				char *name = strdup(GetDefaultBios(i));
+				char *name = mame_strdup(GetDefaultBios(i));
 
 				set_core_bios(name);
 				default_bios_index[i] = determine_bios_rom(get_core_options(), drivers[bios_driver]->rom) - 1;

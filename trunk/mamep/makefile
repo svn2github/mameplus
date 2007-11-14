@@ -26,23 +26,24 @@ include config.def
 #-------------------------------------------------
 
 ifneq ($(HAZEMD),)
-TARGET = mame
-SUBTARGET = hazemd
-USE_DRIVER_SWITCH=
+    TARGET = mame
+    SUBTARGET = hazemd
+    USE_DRIVER_SWITCH=
 else
-ifneq ($(NEOCPSMAME),)
-TARGET = mame
-SUBTARGET = neocpsmame
-else
-ifeq ($(TARGET),)
-TARGET = mame
-endif
+    ifneq ($(NEOCPSMAME),)
+        TARGET = mame
+        SUBTARGET = neocpsmame
+    else
+        ifeq ($(TARGET),)
+        TARGET = mame
+    endif
 endif
 endif
 
 ifeq ($(SUBTARGET),)
 SUBTARGET = $(TARGET)
 endif
+
 
 
 #-------------------------------------------------
@@ -211,22 +212,11 @@ EXE = .exe
 endif
 
 # compiler, linker and utilities
-ifneq ($(USE_XGCC),)
-    AR = @i686-pc-mingw32-ar
-    CC = @i686-pc-mingw32-gcc
-    XCC = @i686-pc-mingw32-gcc
-    LD = @i686-pc-mingw32-gcc
-else
     AR = @ar
     CC = @gcc
-    XCC = @gcc
     LD = @gcc
-endif
 MD = -mkdir$(EXE)
 RM = @rm -f
-
-WINDOWS_PROGRAM = -mwindows
-CONSOLE_PROGRAM = -mconsole
 
 
 
@@ -240,66 +230,52 @@ CONSOLE_PROGRAM = -mconsole
 ARCH = 
 ENDIAN = little
 
-# by default, compile for Pentium target and add no suffix
-ARCHSUFFIX =
-ARCH = -march=pentium
-
-COMPILER_SUFFIX =
-XEXTRA_SUFFIX = $(EXTRA_SUFFIX)
-
 # architecture-specific builds get extra options
 ifneq ($(NATIVE),)
-    ARCHSUFFIX = nat
+    SUFFIX = nat
     ARCH = -march=native
 endif
 
+# architecture-specific builds get extra options
 ifneq ($(ATHLON),)
-    ARCHSUFFIX = at
-    ARCH = -march=athlon -m3dnow
-endif
-
-ifneq ($(ATHLONXP),)
-    ARCHSUFFIX = ax
-    ARCH = -march=athlon-xp -m3dnow -msse
+    SUFFIX = at
+    ARCH = -march=athlon
 endif
 
 ifneq ($(I686),)
-    ARCHSUFFIX = pp
-    ARCH = -march=i686 -mmmx
-    P6OPT = ppro
-else
-    P6OPT = notppro
+    SUFFIX = pp
+    ARCH = -march=pentiumpro
 endif
 
 ifneq ($(P4),)
-    ARCHSUFFIX = p4
-    ARCH = -march=pentium4 -msse2
+    SUFFIX = p4
+    ARCH = -march=pentium4
 endif
 
 ifneq ($(AMD64),)
-    ARCHSUFFIX = 64
+    SUFFIX = 64
     ARCH = -march=athlon64
 endif
 
 ifneq ($(PM),)
-    ARCHSUFFIX = pm
-    ARCH = -march=pentiumm
+    SUFFIX = pm
+    ARCH = -march=pentium3 -msse2
 endif
 
 ifneq ($(G4),)
-    ARCHSUFFIX = g4
+    SUFFIX = g4
     ARCH = -mcpu=G4
     ENDIAN = big
 endif
 
 ifneq ($(G5),)
-    ARCHSUFFIX = g5
+    SUFFIX = g5
     ARCH = -mcpu=G5
     ENDIAN = big
 endif
 
 ifneq ($(CELL),)
-    ARCHSUFFIX = cbe
+    SUFFIX = cbe
     ARCH = 
     ENDIAN = big
 endif
@@ -308,6 +284,16 @@ endif
 #-------------------------------------------------
 # form the name of the executable
 #-------------------------------------------------
+
+# x64 builds append the 'x64' suffix
+ifdef PTR64
+SUFFIX:=$(SUFFIX)x64
+endif
+
+# debug builds append the 'd' suffix
+ifdef DEBUG
+SUFFIX:=$(SUFFIX)d
+endif
 
 # the name is just 'target' if no subtarget; otherwise it is
 # the concatenation of the two (e.g., mametiny)
@@ -318,31 +304,12 @@ else
 endif
 
 # fullname is prefix+name+suffix
-FULLNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)$(COMPILER_SUFFIX)
-
-ifeq ($(NO_DLL),)
-    LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)lib$(COMPILER_SUFFIX)
-    GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(ARCHSUFFIX)$(XEXTRA_SUFFIX)gui$(COMPILER_SUFFIX)
-endif
-
-# debug builds just get the 'd' suffix and nothing more
-ifneq ($(DEBUG),)
-    FULLNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)d
-    ifeq ($(NO_DLL),)
-        LIBNAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)libd
-        GUINAME = $(PREFIX)$(SUBTARGET)$(SUFFIX)$(XEXTRA_SUFFIX)guid
-    endif
-endif
+FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)
+FULLGUINAME = $(PREFIX)$(NAME)gui$(SUFFIX)
 
 # add an EXE suffix to get the final emulator name
-ifneq ($(NO_DLL),)
-    EMULATOR = $(FULLNAME)$(EXE)
-else
-    EMULATORDLL = $(LIBNAME).dll
-    EMULATORCLI = $(FULLNAME)$(EXE)
-    EMULATORGUI = $(GUINAME)$(EXE)
-    EMULATOR    = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
-endif
+EMULATORCLI = $(FULLNAME)$(EXE)
+EMULATORGUI = $(FULLGUINAME)$(EXE)
 
 
 
@@ -380,13 +347,13 @@ ifeq ($(ENDIAN),little)
 DEFS += -DLSB_FIRST
 endif
 
+# MAME Plus! specific options
+DEFS += -DXML_STATIC -Drestrict=__restrict
+
 # define PTR64 if we are a 64-bit target
 ifneq ($(PTR64),)
 DEFS += -DPTR64
 endif
-
-# MAME Plus! specific options
-DEFS += -DXML_STATIC -Drestrict=__restrict
 
 # define MAME_DEBUG if we are a debugging build
 ifneq ($(DEBUG),)
@@ -491,12 +458,6 @@ endif
 # we compile to C89 standard with GNU extensions
 CFLAGS = -std=gnu89
 
-ifneq ($(W_ERROR),)
-    CFLAGS += -Werror
-else
-    CFLAGS += -Wno-error
-endif
-
 # add -g if we need symbols
 ifneq ($(SYMBOLS),)
 CFLAGS += -g
@@ -524,18 +485,12 @@ ifneq ($(TARGETOS),os2)
 CFLAGS += -Wdeclaration-after-statement
 endif
 
-ifneq ($(I686),)
-# If you have a trouble in I686 build, try to remove a comment.
-#    CFLAGS += -fno-builtin -fno-omit-frame-pointer 
-endif
-
 # add the optimization flag
 CFLAGS += -O$(OPTIMIZE)
 
 # if we are optimizing, include optimization options
 # and make all errors into warnings
 ifneq ($(OPTIMIZE),0)
-#CFLAGS += -Werror $(ARCH) -fno-strict-aliasing
 CFLAGS += $(ARCH) -fno-strict-aliasing
 endif
 
@@ -544,7 +499,13 @@ ifneq ($(SYMBOLS),)
 CFLAGS += -fno-omit-frame-pointer
 endif
 
-
+ifeq ($(NO_DLL),)
+	DEFS += -DWIN32 -DWINNT
+	EMULATORDLL = $(FULLNAME)lib.dll
+	EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
+else
+	EMULATORALL = $(EMULATORCLI)
+endif
 
 #-------------------------------------------------
 # include paths
@@ -561,7 +522,11 @@ CFLAGS += \
 	-I$(SRC)/lib/util \
 	-I$(SRC)/osd \
 	-I$(SRC)/osd/$(OSD) \
-	-I$(SRC) \
+
+CFLAGS += \
+	-I$(SRC)/mess \
+	-I$(SRC)/mess/includes \
+	-I$(SRC)/mess/osd/$(OSD)
 
 
 
@@ -592,7 +557,7 @@ ifneq ($(MAP),)
     MAPFLAGS = -Wl,-Map,$(FULLNAME).map
     MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
     MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
-    MAPGUIFLAGS = -Wl,-Map,$(GUINAME).map
+    MAPGUIFLAGS = -Wl,-Map,$(FULLGUINAME).map
 else
     MAPFLAGS =
     MAPDLLFLAGS =
@@ -668,7 +633,7 @@ endif
 # include files which define additional targets
 #-------------------------------------------------
 
-all: maketree buildtools emulator tools
+all: maketree buildtools emulator
 
 
 
@@ -681,6 +646,8 @@ include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+#include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
+#include $(SRC)/mess/messcore.mak
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 include $(SRC)/tools/tools.mak
@@ -697,25 +664,12 @@ ifneq ($(BUILD_ZLIB),)
 COREOBJS += $(ZLIB)
 endif
 
-ifneq ($(NO_DLL),)
-# do not use dllimport
-    CDEFS += -DDONT_USE_DLL
-
-    ifneq ($(WINUI),)
-        OSOBJS += $(GUIOBJS)
-        LIBS += $(GUILIBS)
-    else
-        OSOBJS += $(CLIOBJS)
-        LIBS += $(CLILIBS)
-    endif
-endif
-
 
 #-------------------------------------------------
 # primary targets
 #-------------------------------------------------
 
-emulator: maketree $(BUILD) $(EMULATOR)
+emulator: maketree $(BUILD) $(EMULATORALL)
 
 buildtools: maketree $(BUILD)
 
@@ -726,8 +680,8 @@ maketree: $(sort $(OBJDIRS))
 clean:
 	@echo Deleting object tree $(OBJ)...
 	$(RM) -r $(OBJ)
-	@echo Deleting $(EMULATOR)...
-	$(RM) $(EMULATOR)
+	@echo Deleting $(EMULATORALL)...
+	$(RM) $(EMULATORALL)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
 ifneq ($(MAP),)
@@ -750,65 +704,58 @@ $(sort $(OBJDIRS)):
 # executable targets and dependencies
 #-------------------------------------------------
 
-ifneq ($(NO_DLL),)
-  ifneq ($(WINUI),)
-    $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE) $(GUIOBJS)
-  else
-    $(EMULATOR): $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE) $(CLIOBJS)
-  endif
+ifdef MSVC_BUILD
+DLLLINK=lib
 else
-    $(EMULATORDLL): $(VERSIONOBJ) $(DRVLIBS) $(OSDOBJS) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE) $(VERSIONRES)
+DLLLINK=dll
 endif
 
+ifeq ($(NO_DLL),)
+$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 # always recompile the version string
-ifneq ($(HAZEMD),)
-	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/versionmd.c -o $(VERSIONOBJ)
-else
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
-endif
 	@echo Linking $@...
+	$(LD) -shared $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $@ $(MAPDLLFLAGS)
+endif
 
-ifneq ($(NO_DLL),)
-    ifneq ($(WINUI),)
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(WINDOWS_PROGRAM) -o $@ $^ $(LIBS) $(MAPFLAGS)
-    else
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) -o $@ $^ $(LIBS) $(MAPFLAGS)
-    endif
+ifeq ($(NO_DLL),)
+# gui target
+$(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/ui/guimain.o $(GUIRESFILE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/ui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
+endif
 
-    ifneq ($(UPX),)
-	upx -9 $(EMULATOR)
-    endif
-
+# cli target
+ifeq ($(NO_DLL),)
+    $(EMULATORCLI): $(EMULATORDLL) $(OBJ)/osd/windows/climain.o
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/windows/climain.o $(LIBS) -o $@ $(MAPCLIFLAGS)
 else
-    # build DLL
-	$(RM) $@
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) -shared -o $@ $^ $(LIBS) $(MAPDLLFLAGS)
-    ifneq ($(UPX),)
-	upx -9 $@
-    endif
-
-    # gui target
-    $(EMULATORGUI): $(EMULATORDLL) $(GUIOBJS)
+	$(EMULATORCLI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(WINDOWS_PROGRAM) $^ -o $@ $(GUILIBS) $(MAPGUIFLAGS)
-    ifneq ($(UPX),)
-	upx -9 $@
-    endif
-
-    # cli target
-    $(EMULATORCLI): $(EMULATORDLL) $(CLIOBJS)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@ $(CLILIBS) $(MAPCLIFLAGS)
-    ifneq ($(UPX),)
-	upx -9 $@
-    endif
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
 endif
-
-
 
 #-------------------------------------------------
 # generic rules
 #-------------------------------------------------
+
+$(OBJ)/mess/%.o: $(SRC)/mess/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
+
+$(OBJ)/mess/devices/%.o: $(SRC)/mess/devices/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
+
+$(OBJ)/mess/drivers/%.o: $(SRC)/mess/drivers/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
+
+$(OBJ)/mess/osd/windows/%.o: $(SRC)/mess/osd/windows/%.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DMESS $(CFLAGS) -c $< -o $@
 
 $(OBJ)/%.o: $(SRC)/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
@@ -834,10 +781,6 @@ $(OBJ)/%.a:
 	@echo Archiving $@...
 	$(RM) $@
 	$(AR) -cr $@ $^
-
-%$(EXE):
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(CONSOLE_PROGRAM) $^ $(LIBS) -o $@
 
 ifeq ($(TARGETOS),macosx)
 $(OBJ)/%.o: $(SRC)/%.m | $(OSPREBUILD)

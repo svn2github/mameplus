@@ -96,74 +96,63 @@ endif
 
 ifneq ($(MSVC_BUILD),)
 
-VCONV = $(WINOBJ)/vconv$(EXE)
-
-# replace the various compilers with vconv.exe prefixes
-CC = @$(VCONV) gcc -I.
-LD = @$(VCONV) ld /profile
-AR = @$(VCONV) ar
-RC = @$(VCONV) windres
-
-# make sure we use the multithreaded runtime
-ifdef DEBUG
-CC += /MTd
-else
-CC += /MT
-endif
-
-# turn on link-time codegen if the MAXOPT flag is also set
-ifneq ($(MAXOPT),)
-    ifneq ($(ICC_BUILD),)
-        CC += /Qipo /Qipo_obj
+    VCONV = $(WINOBJ)/vconv$(EXE)
+    
+    # replace the various compilers with vconv.exe prefixes
+    CC = @$(VCONV) gcc -I.
+    LD = @$(VCONV) ld /profile
+    AR = @$(VCONV) ar
+    RC = @$(VCONV) windres
+    
+    # make sure we use the multithreaded runtime
+    ifdef DEBUG
+    CC += /MTd
     else
-        CC += /GL
-        LD += /LTCG
+    CC += /MT
     endif
-endif
-
-# /Og enable global optimization
-# /Ob<n> inline expansion (level 2)
-# /Oi enable intrinsic functions
-# /Ot favor code speed
-# /Oy enable frame pointer omission
-# /GA optimize for Windows Application
-# /Gy separate functions for linker
-# /GF enable read-only string pooling
-CC += /Og /Ob2 /Oi /Ot /Oy /GA /Gy /GF
-
-ifdef PTR64
-CC += /wd4267 /Wp64
-endif
-
-# filter X86_ASM define
-DEFS := $(filter-out -DX86_ASM,$(DEFS))
-
-# add some VC++-specific defines
-DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
-
-# make msvcprep into a pre-build step
-# OSPREBUILD = $(VCONV)
-
-# add VCONV to the build tools
-BUILD += $(VCONV)
-
-$(VCONV): $(WINOBJ)/vconv.o
-	@echo Linking $@...
-ifdef PTR64
-	@link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@
-else
-	@link.exe /nologo $^ version.lib /out:$@
-endif
-
-$(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
-	@echo Compiling $<...
-	@cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
-
-else
-# overwrite optimze option for Pentium M
-    ifneq ($(PM),)
-        ARCH = -march=pentium3 -msse2
+    
+    # turn on link-time codegen if the MAXOPT flag is also set
+    ifneq ($(MAXOPT),)
+        ifneq ($(ICC_BUILD),)
+            CC += /Qipo /Qipo_obj
+        else
+            CC += /GL
+            LD += /LTCG
+        endif
     endif
+    
+    # /O2 (Maximize Speed) equals /Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy
+    # /GA optimize for Windows Application
+    CC += /GA
+    
+    ifdef PTR64
+    CC += /wd4267 /Wp64
+    endif
+    
+    # filter X86_ASM define
+    DEFS := $(filter-out -DX86_ASM,$(DEFS))
+    
+    # add some VC++-specific defines
+    DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf -Dvsnprintf=_vsnprintf
+    
+    # make msvcprep into a pre-build step
+    # OSPREBUILD = $(VCONV)
+    
+    # add VCONV to the build tools
+    BUILD += $(VCONV)
+    
+    $(VCONV): $(WINOBJ)/vconv.o
+	    @echo Linking $@...
+    ifdef PTR64
+	    @link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@
+    else
+	    @link.exe /nologo $^ version.lib /out:$@
+    endif
+    
+    $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
+	    @echo Compiling $<...
+	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
+
 endif
 
 
@@ -173,13 +162,8 @@ endif
 # at the end
 #-------------------------------------------------
 
-ASM = @nasm
-ASMFLAGS = -f coff
-
-ifeq ($(COMPILESYSTEM_CYGWIN),)
 ASM = @nasmw
-endif
-
+ASMFLAGS = -f coff
 
 
 #-------------------------------------------------
@@ -234,7 +218,6 @@ endif
 # add the windows libaries
 // mamep: -lunicows MUST be in the first place
 LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
-CLILIBS =
 
 ifdef PTR64
 LIBS += -lbufferoverflowu
@@ -281,15 +264,6 @@ OSDCOREOBJS = \
 ifneq ($(findstring MALLOC_DEBUG,$(DEFS)),)
 OSDCOREOBJS += \
 	$(WINOBJ)/winalloc.o
-endif
-
-# remove main.o from OSDCOREOBJS
-ifneq ($(WINUI),)
-ifneq ($(NO_DLL),)
-OSDCOREOBJS := $(OSDCOREOBJS:$(WINOBJ)/main.o=)
-OSDMAIN_NORES = $(WINOBJ)/main.o
-OSDMAIN = $(OSDMAIN_NORES)
-endif
 endif
 
 
@@ -365,20 +339,14 @@ endif
 # add a stub resource file
 RESFILE = $(WINOBJ)/mame.res
 
-# add a resource file
-CLIOBJS += $(RESFILE)
-VERSIONRES = $(WINOBJ)/version.res
-OSDMAIN += $(VERSIONRES)
-
 
 
 #-------------------------------------------------
-# if building with a UI, set the C flags and
-# include the ui.mak
+# if building with a UI, include the ui.mak
 #-------------------------------------------------
 
 ifneq ($(WINUI),)
-include $(WINSRC)/../ui/ui.mak
+include $(SRC)/osd/winui/ui.mak
 endif
 
 
@@ -392,12 +360,11 @@ $(LIBOCORE): $(OSDCOREOBJS)
 $(LIBOSD): $(OSDOBJS)
 
 
-
 #-------------------------------------------------
 # rule for making the ledutil sample
 #-------------------------------------------------
 
-ledutil$(EXE): $(WINOBJ)/ledutil.o $(OSDMAIN) $(LIBOCORE)
+ledutil$(EXE): $(WINOBJ)/ledutil.o $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -415,11 +382,7 @@ endif
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
 
-$(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -UWINUI -c $< -o $@
-
-$(VERINFO): $(WINOBJ)/verinfo.o $(OSDMAIN_NORES) $(LIBOCORE)
+$(VERINFO): $(WINOBJ)/verinfo.o $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -431,7 +394,7 @@ BUILD += $(VERINFO)
 # generic rule for the resource compiler
 #-------------------------------------------------
 
-$(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
+$(WINOBJ)/%.res: $(WINSRC)/%.rc | $(OSPREBUILD)
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) -o $@ -i $<
 
@@ -442,7 +405,6 @@ $(OBJ)/%.res: $(SRC)/%.rc | $(OSPREBUILD)
 #-------------------------------------------------
 
 $(RESFILE): $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
-$(VERSIONRES): $(WINOBJ)/mamevers.rc
 
 $(WINOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 	@echo Emitting $@...

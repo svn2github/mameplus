@@ -11,7 +11,7 @@
 
 #include "inputseq.h"
 #include "restrack.h"
-#include "osd_so.h"
+#include "driver.h"
 #include <ctype.h>
 
 

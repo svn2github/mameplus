@@ -7,7 +7,9 @@
 
 // MAME headers
 #include "driver.h"
-#include "osd_so.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
 
 // scale2x
 #include "scale/scale2x.h"

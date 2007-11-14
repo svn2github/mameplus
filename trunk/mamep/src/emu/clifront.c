@@ -19,7 +19,7 @@
 #include "unzip.h"
 #include "romload.h"
 #include "sound/samples.h"
-#include "osd_so.h" 
+#include "osdcore.h"
 #include <ctype.h>
 
 #ifdef MESS
@@ -515,7 +515,8 @@ int cli_info_listfull(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 		if ((drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
-			char name[200];
+			char name[200];
+
 
 			/* print the header on the first one */
 			if (count == 0)
@@ -524,27 +525,48 @@ int cli_info_listfull(core_options *options, const char *gamename)
 			count++;
 
 			/* output the remaining information */
-			mame_printf_info("%-10s", drivers[drvindex]->name);
-
-			if (lang_message_is_enabled(UI_MSG_LIST))
-			{
-				strcpy(name, _LST(drivers[drvindex]->description));
-				mame_printf_info("\"%s\"\n", name);
-				continue;
-			}
-
-			namecopy(name,drivers[drvindex]->description);
-			mame_printf_info("\"%s",name);
-
-			/* print the additional description only if we are listing clones */
-			{
-				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
-
-				if (pdest != NULL && pdest > drivers[drvindex]->description)
-					mame_printf_info("%s", pdest);
-			}
-
-			mame_printf_info("\"\n");
+			mame_printf_info("%-10s", drivers[drvindex]->name);
+
+
+
+			if (lang_message_is_enabled(UI_MSG_LIST))
+
+			{
+
+				strcpy(name, _LST(drivers[drvindex]->description));
+
+				mame_printf_info("\"%s\"\n", name);
+
+				continue;
+
+			}
+
+
+
+			namecopy(name,drivers[drvindex]->description);
+
+			mame_printf_info("\"%s",name);
+
+
+
+			/* print the additional description only if we are listing clones */
+
+			{
+
+				char *pdest = pdest = strstr(drivers[drvindex]->description, " (");
+
+
+
+				if (pdest != NULL && pdest > drivers[drvindex]->description)
+
+					mame_printf_info("%s", pdest);
+
+			}
+
+
+
+			mame_printf_info("\"\n");
+
 		}
 
 	/* return an error if none found */
@@ -1173,29 +1195,52 @@ static void identify_data(const char *name, const UINT8 *data, int length, romid
 }
 
 
-static void namecopy(char *name_ref, const char *desc)
-{
-	char name[200];
-
-	if (lang_message_is_enabled(UI_MSG_LIST))
-	{
-		strcpy(name, _LST(desc));
-		if (strstr(name," (")) *strstr(name," (") = 0;
-		sprintf(name_ref,"%s",name);
-		return;
-	}
-
-	strcpy(name,desc);
-
-	/* remove details in parenthesis */
-	if (strstr(name," (")) *strstr(name," (") = 0;
-
-	/* Move leading "The" to the end */
-	if (strncmp(name,"The ",4) == 0)
-		sprintf(name_ref,"%s, The",name+4);
-	else
-		sprintf(name_ref,"%s",name);
-}
+static void namecopy(char *name_ref, const char *desc)
+
+{
+
+	char name[200];
+
+
+
+	if (lang_message_is_enabled(UI_MSG_LIST))
+
+	{
+
+		strcpy(name, _LST(desc));
+
+		if (strstr(name," (")) *strstr(name," (") = 0;
+
+		sprintf(name_ref,"%s",name);
+
+		return;
+
+	}
+
+
+
+	strcpy(name,desc);
+
+
+
+	/* remove details in parenthesis */
+
+	if (strstr(name," (")) *strstr(name," (") = 0;
+
+
+
+	/* Move leading "The" to the end */
+
+	if (strncmp(name,"The ",4) == 0)
+
+		sprintf(name_ref,"%s, The",name+4);
+
+	else
+
+		sprintf(name_ref,"%s",name);
+
+}
+
 
 
 /*-------------------------------------------------

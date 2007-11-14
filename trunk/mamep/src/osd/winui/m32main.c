@@ -10,35 +10,22 @@
 
 ***************************************************************************/
 
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
+#define WINUI
 
-#ifndef DONT_USE_DLL
-#define SHAREDOBJ_IMPORT
-#endif /* DONT_USE_DLL */
+// import the main() from MAME, but rename it so we can call it indirectly
+#undef main
+#define main mame_main
+#include "windows/main.c"
+#undef main
 
-#include "osd_so.h"
+#include "screenshot.h"
+#include "win32ui.h"
 
-#undef WinMainInDLL
-#ifndef DONT_USE_DLL
-#ifdef _MSC_VER
-#define WinMainInDLL
-#endif /* _MSC_VER */
-#endif /* !DONT_USE_DLL */
-
-#ifdef WinMainInDLL
-SHAREDOBJ_FUNC(int) WinMain_(HINSTANCE    hInstance,
-#else
-extern int WinMain_(HINSTANCE    hInstance,
-#endif
-                   HINSTANCE    hPrevInstance,
-                   LPSTR        lpCmdLine,
-                   int          nCmdShow);
 
 int WINAPI WinMain(HINSTANCE    hInstance,
                    HINSTANCE    hPrevInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
-	return WinMain_(hInstance, hPrevInstance, lpCmdLine, nCmdShow);
+	return Mame32Main(hInstance, lpCmdLine, nCmdShow);
 }

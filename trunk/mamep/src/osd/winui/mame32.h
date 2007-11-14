@@ -29,10 +29,6 @@
 #define assert(x)
 #endif
 
-#undef strdup
-#undef stricmp
-#undef strnicmp
-
 #include "screenshot.h"
 #include "win32ui.h"
 
@@ -85,20 +81,21 @@
 
 
 #ifdef _MSC_VER
-#define wcscmpi _wcsicmp
-#define snprintf _snprintf
-#define snwprintf _snwprintf
+	#define wcscmpi _wcsicmp
+	#define snprintf _snprintf
+	#define snwprintf _snwprintf
 
-// for VC2005
-#if _MSC_VER >= 1400
-#define wcsdup _wcsdup
-#define wcsicmp _wcsicmp
-#define strdup _strdup
-#define stricmp _stricmp
-#define strlwr _strlwr
-#define itoa _itoa
-#endif
-
+	// for VC2005
+	#if _MSC_VER >= 1400
+		#undef strdup
+		#undef stricmp
+		#define wcsdup _wcsdup
+		#define wcsicmp _wcsicmp
+		#define strdup _strdup
+		#define stricmp _stricmp
+		#define strlwr _strlwr
+		#define itoa _itoa
+	#endif
 #endif
 
 
