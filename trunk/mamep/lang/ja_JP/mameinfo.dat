@@ -2,7 +2,7 @@
 #                                        #
 #     Mameinfo.dat日本語版 v0.120u3      #
 #                                        #
-#           November 10, 2007            #
+#           November 14, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,31 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：870 翻訳済：846
-# 追加項目：342 合計：1212
+# Tester報告：875 翻訳済：848
+# 追加項目：342 合計：1217
 #
 
+
+$info=crimfght
+$mame
+[バグ]
+
+- BGMの速度が少し遅い。 crimfght0120u3gre, ENAY
+
+
+[TIPS]
+
+- 2周ノーミスでクリアするとクレジットが無限になる。
+
+$end
+
+$info=dunhuang
+$mame
+[バグ]
+
+- MAMEのロンキーがリーチ、チーがロン、Zキーがリーチとして動作する。 dunhuang0120u3gra, Vas Crabb
+
+$end
 
 $info=mcnpshnt
 $mame
@@ -26,6 +47,16 @@ $mame
 Flip Screenのすぐ下のunkonwnは時間の設定。
 
 CoinageとDemo Soundsの間のunknownはオートツモ設定。 mcnpshnt0120u3gra, mahjongfan
+
+$end
+
+$info=mjdialq2
+$mame
+[バグ]
+
+- 最初のUnknown DIPスイッチ2つはコイン当たりのクレジット数を設定する。
+
+OFF-ONが2、OFF-OFFが1、ON-OFFが1/2、ON-ONが1/3。 mjdialq2_0120u3gra, mahjongfan
 
 $end
 
@@ -71,6 +102,18 @@ $mame
 
 - コンティニュー画面で、コイン入力は受け付けるが、スタートボタンを押してもコンティニューできない。
 時々動作することもある。 mp_bio0120u2gra, LastNinja2
+
+$end
+
+$info=patimono
+$mame
+[バグ]
+
+- DIPスイッチ1-3はコイン当たりのクレジット数設定。OFFが1、ONが2。
+
+DIPスイッチ1-4はデモモードでのサウンド設定。ONのときはサウンドがOFF。
+
+DIPスイッチ1-5はBGM設定。ONだとBGMなし。ただし、ONときにはサウンド関係のバグがある模様。 patimono0120u3gra, mahjongfan
 
 $end
 
@@ -159,6 +202,39 @@ $mame
 [バグ]
 
 - サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=gauntdl
+$mame
+[バグ]
+
+- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
+
+
+- テストモードのファイルシステムチェックをするとクラッシュする。
+Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
+
+
+- VGAモードでゲームを起動するとクラッシュする。
+またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
+実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
+
+$end
+
+$info=nbashowt
+$mame
+[バグ]
+
+- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
+
+$end
+
+$info=tenthdeg
+$mame
+[バグ]
+
+- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
 
 $end
 
@@ -480,10 +556,10 @@ $mame
 - 3面ボスの背景にいるクイーンの顔のグラフィックがずれる。波打つようなエフェクトがかかると思われる。 btoads0102u5gre, cpukett / Stefan Lindberg
 
 
-- 2面ボスと背景部分でプライオリティ不具合あり。ボスは右端の柱の裏側に表示される。 btoads0103gre, Stefan Lindberg
+- 2面ボスと背景部分でプライオリティ不具合あり。ボスは右端の柱の裏側に表示される。 btoads0103gre, Stefan Lindberg / ENAY
 
 
-- エンディングの文字色が茶色に緑の組み合わせになってるが、どう見ても正しくない。 btoads0103u1gre, cpukett
+- エンディングの文字色が茶色に緑の組み合わせになってるが、どう見ても正しくない。 btoads0103u1gre, cpukett / ENAY
 
 $end
 
@@ -4012,7 +4088,7 @@ $info=silentd
 $mame
 [バグ]
 
-- タイトルシーンで爆発のグラフィックが画面に残る。 silentd0108u5gre, Twist
+- タイトルシーンで爆発のグラフィックが画面に残る。 silentd0108u5gre, Twist / RansAckeR
 
 
 - 以下のDIPスイッチが動作しない：
@@ -4699,20 +4775,6 @@ $mame
 
 $end
 
-$info=gauntdl
-$mame
-[バグ]
-
-- テストモードのファイルシステムチェックをするとクラッシュする。
-Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
-
-
-- VGAモードでゲームを起動するとクラッシュする。
-またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
-実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
-
-$end
-
 $info=victory
 $mame
 [バグ]
@@ -5240,16 +5302,6 @@ $mame
 - MAMEのドライバ側で時刻を取得しているが、2004年が1904年になっている。
 しかし、ゲーム自体は2000年問題には対応している。
 時刻設定をしようとするとゲームがフリーズしてしまうので、変更した時間をセーブすることができない。 mmpanic078u3ora, Nomax / PsikyoFan
-
-$end
-
-$info=policetr
-$mame
-[バグ]
-
-- Act-Labs製の光線銃を使っているとき、狙っているところ全然違う場所に当たることがしばしば。
-
-調べたところ、外れた弾は画面の端に当たっているもよう。 lightguns062ora, Smitdogg / uRebelScum
 
 $end
 
@@ -8816,14 +8868,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
-
-$end
-
-$info=crimfght
-$mame
-[TIPS]
-
-- 2周ノーミスでクリアするとクレジットが無限になる。
 
 $end
 
