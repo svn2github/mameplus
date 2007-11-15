@@ -232,50 +232,50 @@ ENDIAN = little
 
 # architecture-specific builds get extra options
 ifneq ($(NATIVE),)
-    SUFFIX = nat
+    ARCHSUFFIX = nat
     ARCH = -march=native
 endif
 
 # architecture-specific builds get extra options
 ifneq ($(ATHLON),)
-    SUFFIX = at
+    ARCHSUFFIX = at
     ARCH = -march=athlon
 endif
 
 ifneq ($(I686),)
-    SUFFIX = pp
+    ARCHSUFFIX = pp
     ARCH = -march=pentiumpro
 endif
 
 ifneq ($(P4),)
-    SUFFIX = p4
+    ARCHSUFFIX = p4
     ARCH = -march=pentium4
 endif
 
 ifneq ($(AMD64),)
-    SUFFIX = 64
+    ARCHSUFFIX = 64
     ARCH = -march=athlon64
 endif
 
 ifneq ($(PM),)
-    SUFFIX = pm
+    ARCHSUFFIX = pm
     ARCH = -march=pentium3 -msse2
 endif
 
 ifneq ($(G4),)
-    SUFFIX = g4
+    ARCHSUFFIX = g4
     ARCH = -mcpu=G4
     ENDIAN = big
 endif
 
 ifneq ($(G5),)
-    SUFFIX = g5
+    ARCHSUFFIX = g5
     ARCH = -mcpu=G5
     ENDIAN = big
 endif
 
 ifneq ($(CELL),)
-    SUFFIX = cbe
+    ARCHSUFFIX = cbe
     ARCH = 
     ENDIAN = big
 endif
@@ -298,14 +298,14 @@ endif
 # the name is just 'target' if no subtarget; otherwise it is
 # the concatenation of the two (e.g., mametiny)
 ifeq ($(TARGET),$(SUBTARGET))
-    NAME = $(TARGET)
+    NAME = $(TARGET)p
 else
-    NAME = $(TARGET)$(SUBTARGET)
+    NAME = $(TARGET)$(SUBTARGET)p
 endif
 
 # fullname is prefix+name+suffix
-FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)
-FULLGUINAME = $(PREFIX)$(NAME)gui$(SUFFIX)
+FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)$(ARCHSUFFIX)
+FULLGUINAME = $(PREFIX)$(NAME)gui$(SUFFIX)$(ARCHSUFFIX)
 
 # add an EXE suffix to get the final emulator name
 EMULATORCLI = $(FULLNAME)$(EXE)
