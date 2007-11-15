@@ -337,7 +337,8 @@ OSDOBJS += \
 endif
 
 # add a stub resource file
-RESFILE = $(WINOBJ)/mame.res
+CLIRESFILE = $(WINOBJ)/mame.res
+VERSIONRES = $(WINOBJ)/version.res
 
 
 
@@ -382,6 +383,10 @@ endif
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
 
+$(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) $(CFLAGS) -UWINUI -c $< -o $@
+
 $(VERINFO): $(WINOBJ)/verinfo.o $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
@@ -404,7 +409,8 @@ $(WINOBJ)/%.res: $(WINSRC)/%.rc | $(OSPREBUILD)
 # rules for resource file
 #-------------------------------------------------
 
-$(RESFILE): $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+$(WINOBJ)/mame.res: $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+$(WINOBJ)/version.res: $(WINOBJ)/mamevers.rc
 
 $(WINOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 	@echo Emitting $@...

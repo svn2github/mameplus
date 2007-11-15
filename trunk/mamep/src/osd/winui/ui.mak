@@ -62,7 +62,7 @@ $(LIBOSD): $(WINUIOBJS)
 
 GUIRESFILE = $(WINUIOBJ)/mame32.res
 
-$(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc
+$(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
 
 $(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.c
 
@@ -84,15 +84,32 @@ DEFS += \
 #####################################################################
 # Resources
 
+VERINFO32 = $(WINUIOBJ)/verinfo32$(EXE)
+
+$(WINUIOBJ)/verinfo32.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+
+$(VERINFO32): $(WINUIOBJ)/verinfo32.o $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+BUILD += $(VERINFO32)
+
+
 UI_RC = @windres --use-temp-file
 
 UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 
-UI_RCFLAGS = -O coff --include-dir $(WINUISRC)
+UI_RCFLAGS = -O coff --include-dir $(WINUISRC) --include-dir $(WINUIOBJ)
 
 $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
 	@echo Compiling mame32 resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+
+$(WINUIOBJ)/mamevers32.rc: $(VERINFO32) $(SRC)/version.c
+	@echo Emitting $@...
+	@$(VERINFO32) $(SRC)/version.c > $@
 
 #####################################################################
 # Linker
