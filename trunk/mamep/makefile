@@ -458,6 +458,12 @@ endif
 # we compile to C89 standard with GNU extensions
 CFLAGS = -std=gnu89
 
+ifneq ($(W_ERROR),)
+    CFLAGS += -Werror
+else
+    CFLAGS += -Wno-error
+endif
+
 # add -g if we need symbols
 ifneq ($(SYMBOLS),)
 CFLAGS += -g

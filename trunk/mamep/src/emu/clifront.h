@@ -55,5 +55,9 @@ int cli_info_listcrc(core_options *options, const char *gamename);
 int cli_info_listroms(core_options *options, const char *gamename);
 int cli_info_listsamples(core_options *options, const char *gamename);
 
+#ifdef DRIVER_SWITCH
+void assign_drivers(core_options *options);
+#endif /* DRIVER_SWITCH */
+
 void setup_language(core_options *options); 
 #endif	/* __CLIFRONT_H__ */

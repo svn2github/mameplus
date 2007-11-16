@@ -48,9 +48,6 @@ struct _romident_status
 
 static int execute_simple_commands(core_options *options, const char *exename);
 static int execute_commands(core_options *options, const char *exename, const game_driver *driver);
-#ifdef DRIVER_SWITCH
-void assign_drivers(core_options *options);
-#endif /* DRIVER_SWITCH */
 static void display_help(void);
 
 /* informational functions */

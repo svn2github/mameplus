@@ -51,6 +51,9 @@
 #include "driver.h"
 #include "osdepend.h"
 #include "unzip.h"
+#ifdef DRIVER_SWITCH
+#include "clifront.h"
+#endif /* DRIVER_SWITCH */
 
 #include "resource.h"
 #include "resource.hm"
