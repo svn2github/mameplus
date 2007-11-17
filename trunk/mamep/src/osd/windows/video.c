@@ -45,6 +45,7 @@
 #include "strconv.h"
 #include "config.h"
 
+#define MESS
 #ifdef MESS
 #include "menu.h"
 #endif

@@ -248,9 +248,9 @@ enum
 	UI_last_mame_entry
 };
 
-#ifdef MESS
+//#ifdef MESS
 #include "muitext.h"
-#endif
+//#endif
 
 struct _lang_struct
 {
@@ -273,4 +273,12 @@ int uistring_init (void);
 const char * ui_getstring (int string_num);
 
 #endif /* __uitext_H__ */
+
+
+
+
+
+
+
+
 

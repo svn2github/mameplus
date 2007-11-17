@@ -7,7 +7,7 @@
 ###########################################################################
 
 
-CFLAGS += -DWINUI -DEMULATORDLL=\"$(EMULATORDLL)\"
+CFLAGS += -DEMULATORDLL=\"$(EMULATORDLL)\"
 RCFLAGS += -DMESS
 
 LIBS += -lcomdlg32
@@ -19,12 +19,12 @@ OBJDIRS += \
 MESS_WINSRC = src/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
-OSDOBJS += \
+#fixme: should use LIBOSD +=
+MESSLIBOSD += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
 	$(MESS_WINOBJ)/mess.res	\
-	$(MESS_WINOBJ)/messlib.o	\
 	$(MESS_WINOBJ)/opcntrl.o	\
 	$(MESS_WINOBJ)/tapedlg.o
 

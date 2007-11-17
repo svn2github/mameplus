@@ -13,7 +13,7 @@
 #include "config.h"
 #include "xmlfile.h"
 
-
+#define MESS
 #define DEBUG_CONFIG		0
 
 

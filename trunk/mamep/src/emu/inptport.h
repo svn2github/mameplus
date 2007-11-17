@@ -21,9 +21,9 @@
 #include "unicode.h"
 #endif /* USE_SHOW_INPUT_LOG */
 
-#ifdef MESS
+//#ifdef MESS
 #include "unicode.h"
-#endif
+//#endif
 
 
 
@@ -385,12 +385,12 @@ enum
 	INPUT_TOKEN_ADJUSTER,
 	INPUT_TOKEN_CONFNAME,
 	INPUT_TOKEN_CONFSETTING,
-#ifdef MESS
+//#ifdef MESS
 	INPUT_TOKEN_CHAR,
 	INPUT_TOKEN_CATEGORY,
 	INPUT_TOKEN_CATEGORY_NAME,
 	INPUT_TOKEN_CATEGORY_SETTING,
-#endif /* MESS */
+//#endif /* MESS */
 };
 
 
@@ -621,12 +621,12 @@ struct _input_port_entry
 	} diploc[8];
 
 	/* valid if type is IPT_KEYBOARD */
-#ifdef MESS
+//#ifdef MESS
 	struct
 	{
 		unicode_char chars[3];/* (MESS-specific) unicode key data */
 	} keyboard;
-#endif /* MESS */
+//#endif /* MESS */
 
 	int autofire_setting;
 };
@@ -820,7 +820,7 @@ struct _inp_header
 #define PORT_CONFSETTING(default,name) \
 	INPUT_PORT_UINT32_PAIR(INPUT_TOKEN_CONFSETTING, default), INPUT_PORT_PTR(name),
 
-#ifdef MESS
+//#ifdef MESS
 /* keyboard chars */
 #define PORT_CHAR(ch)	\
 	INPUT_PORT_UINT32_PAIR(INPUT_TOKEN_CHAR, ch),
@@ -834,7 +834,7 @@ struct _inp_header
 
 #define PORT_CATEGORY_ITEM(default,name,category) 					\
 	INPUT_PORT_UINT32_PAIR(INPUT_TOKEN_CATEGORY_SETTING, default), INPUT_PORT_PTR(name), INPUT_PORT_UINT32_PAIR(INPUT_TOKEN_CATEGORY, category),
-#endif /* MESS */
+//#endif /* MESS */
 
 
 

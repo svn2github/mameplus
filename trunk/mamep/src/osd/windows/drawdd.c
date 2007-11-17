@@ -30,7 +30,7 @@
 #include "window.h"
 #include "config.h"
 
-
+#define MESS
 
 //============================================================
 //  DEBUGGING

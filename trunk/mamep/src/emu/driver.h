@@ -73,9 +73,9 @@
 #include "audio/generic.h"
 #include "video/generic.h"
 
-#ifdef MESS
+//#ifdef MESS
 #include "messdrv.h"
-#endif
+//#endif
 
 #include "osd_so.h"
 
@@ -161,10 +161,10 @@
 #define GAME_IS_BIOS_ROOT				0x1000	/* this driver entry is a BIOS root */
 #define GAME_NO_STANDALONE				0x2000	/* this driver cannot stand alone */
 
-#ifdef MESS
+//#ifdef MESS
 #define GAME_COMPUTER               	0x8000  /* Driver is a computer (needs full keyboard) */
 #define GAME_COMPUTER_MODIFIED      	0x0800	/* Official? Hack */
-#endif
+//#endif
 
 
 
@@ -228,10 +228,10 @@ struct _game_driver
 	void				(*driver_init)(running_machine *machine); /* DRIVER_INIT callback */
 	const rom_entry *	rom;						/* pointer to list of ROMs for the game */
 
-#ifdef MESS
+//#ifdef MESS
 	void (*sysconfig_ctor)(struct SystemConfigurationParamBlock *cfg);
 	const char *		compatible_with;
-#endif
+//#endif
 
 	UINT32				flags;						/* orientation and other flags; see defines below */
 	const char *		default_layout;				/* default internally defined layout */
@@ -521,6 +521,8 @@ game_driver driver_##NAME =					\
 	ipt_##INPUT,							\
 	driver_init_##INIT,						\
 	rom_##NAME,								\
+	NULL,									\
+	NULL,									\
 	(MONITOR)|(FLAGS),						\
 	NULL									\
 };
@@ -538,6 +540,8 @@ game_driver driver_##NAME =					\
 	ipt_##INPUT,							\
 	driver_init_##INIT,						\
 	rom_##NAME,								\
+	NULL,									\
+	NULL,									\
 	(MONITOR)|(FLAGS),						\
 	&LAYOUT[0]								\
 };
@@ -561,7 +565,7 @@ extern const game_driver * const homebrewdrivers[];
 extern const game_driver * const neoddrivers[];
 #ifndef NEOCPSMAME
 extern const game_driver * const noncpudrivers[];
-extern const game_driver * const hazemddrivers[];
+extern const game_driver * const consoledrivers[];
 #endif /* NEOCPSMAME */
 #endif /* DRIVER_SWITCH */
 

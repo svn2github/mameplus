@@ -535,7 +535,7 @@ static const struct
 	{"neod",        IDC_DRV_NEOD},
 #ifndef NEOCPSMAME
 	{"noncpu",      IDC_DRV_NONCPU},
-	{"hazemd",      IDC_DRV_HAZEMD},
+	{"console",     IDC_DRV_CONSOLE},
 #endif /* NEOCPSMAME */
 	{0}
 };

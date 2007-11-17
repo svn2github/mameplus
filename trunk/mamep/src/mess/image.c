@@ -480,6 +480,15 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 	if ((err == IMAGE_ERROR_FILENOTFOUND) && (open_flags == OPEN_FLAG_READ))
 		err = load_zip_path(image, path);
 
+	//mamep: feed a dummy image when image_name is \0
+	if (err && path[0] == '\0')
+	{
+		const UINT8 dummy_image[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+		mame_printf_info("feed dummy rom\n");
+		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
+		if (filerr == FILERR_NONE)
+			err = IMAGE_ERROR_SUCCESS;
+	}
 	/* check to make sure that our reported error is reflective of the actual status */
 	if (err)
 		assert(!is_loaded(image));

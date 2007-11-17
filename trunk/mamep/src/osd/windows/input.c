@@ -48,6 +48,7 @@
 #include "config.h"
 #include "osd_so.h"
 
+#define MESS
 #ifdef MESS
 #include "uimess.h"
 #endif
@@ -1164,7 +1165,8 @@ static void dinput_init(running_machine *machine)
 			}
 		}
 	}
-#endif /* JOYSTICK_ID */
+#endif /* JOYSTICK_ID */
+
 }
 
 

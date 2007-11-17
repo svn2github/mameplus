@@ -49,6 +49,7 @@
 #include "windows/resource.h"
 #endif /* WINUI */
 
+#define MESS
 #ifdef MESS
 #include "menu.h"
 #endif /* MESS */

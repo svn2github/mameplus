@@ -166,6 +166,7 @@ void set_refresh_rate(int scrnum, float refresh);
 /* ----- crosshair rendering ----- */
 
 void video_crosshair_toggle(void);
+void video_crosshair_set_screenmask_callback(running_machine *machine, UINT32 (*get_screen_mask)(int player));
 
 
 #ifdef USE_SCALE_EFFECTS

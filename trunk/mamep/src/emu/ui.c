@@ -26,10 +26,12 @@
 #include "uigfx.h"
 #include "uitext.h"
 
+#define MESS
 #ifdef MESS
 #include "mess.h"
 #include "uimess.h"
 #include "inputx.h"
+#include "messopts.h"
 #endif
 
 #include <ctype.h>
@@ -2054,7 +2056,8 @@ static UINT32 handler_ingame(UINT32 state)
 		single_step = FALSE;
 	}
 
-#ifdef MESS
+// mamep: we want to use both window UI and in-game UI
+#if 0 //def MESS
 	if (mess_disable_builtin_ui())
 		return 0;
 #endif

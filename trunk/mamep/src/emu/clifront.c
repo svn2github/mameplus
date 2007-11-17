@@ -22,9 +22,9 @@
 #include "osdcore.h"
 #include <ctype.h>
 
-#ifdef MESS
+//#ifdef MESS
 #include "climess.h"
-#endif /* MESS */
+//#endif /* MESS */
 
 
 
@@ -94,9 +94,9 @@ const options_entry cli_options[] =
 	{ "verifyroms",               "0",        OPTION_COMMAND,    "report romsets that have problems" },
 	{ "verifysamples",            "0",        OPTION_COMMAND,    "report samplesets that have problems" },
 	{ "romident",                 "0",        OPTION_COMMAND,    "compare files with known MAME roms" },
-#ifdef MESS
+//#ifdef MESS
 	{ "listdevices",              "0",        OPTION_COMMAND,    "list available devices" },
-#endif
+//#endif
 
 	{ NULL }
 };
@@ -125,6 +125,13 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	options_add_entries(options, cli_options);
 
 	setup_language(options);
+
+//mamep: have to init drivers, so that we can add options specific to a MESS driver via callbacks
+#ifdef DRIVER_SWITCH
+	mame_printf_info("CLIMAIN\n");
+	options_set_string(options, OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI);
+	assign_drivers(options);
+#endif /* DRIVER_SWITCH */
 
 	/* parse the command line first; if we fail here, we're screwed */
 	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
@@ -264,9 +271,9 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTCLONES,		cli_info_listclones },
 		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
 		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
-#ifdef MESS
+//#ifdef MESS
 		{ CLIOPTION_LISTDEVICES,	info_listdevices },
-#endif
+//#endif
 		{ CLIOPTION_LISTROMS,		cli_info_listroms },
 		{ CLIOPTION_LISTSAMPLES,	cli_info_listsamples },
 		{ CLIOPTION_VERIFYROMS,		info_verifyroms },
@@ -357,22 +364,19 @@ void assign_drivers(core_options *options)
 	} drivers_table[] =
 	{
 		{ "mame",	mamedrivers },
-#ifndef TINY_NAME
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "neod",	neoddrivers },
 	#ifndef NEOCPSMAME
 		{ "noncpu",	noncpudrivers },
-		{ "hazemd",	hazemddrivers },
+		{ "console",	consoledrivers },
 	#endif /* NEOCPSMAME */
-#endif /* !TINY_NAME */
 		{ NULL }
 	};
 
 	UINT32 enabled = 0;
 	int i, n;
 
-#ifndef TINY_NAME
 	const char *drv_option = options_get_string(options, OPTION_DRIVER_CONFIG);
 	if (drv_option)
 	{
@@ -407,7 +411,6 @@ void assign_drivers(core_options *options)
  			free(temp);
 		}
 	}
-#endif /* !TINY_NAME */
 
 	if (enabled == 0)
 		enabled = 1;	// default to mamedrivers

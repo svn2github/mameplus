@@ -1166,7 +1166,7 @@ BEGIN
     CONTROL         "Neogeo Decrypted",IDC_DRV_NEOD,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,56,90,10
 #ifndef NEOCPSMAME
-    CONTROL         "HazeMD",IDC_DRV_HAZEMD,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Console",IDC_DRV_CONSOLE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,82,69,70,10
     CONTROL         "Non-CPU",IDC_DRV_NONCPU,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,69,90,10

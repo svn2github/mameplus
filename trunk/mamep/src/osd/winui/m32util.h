@@ -40,6 +40,7 @@ extern const WCHAR * GetFilename(const WCHAR *filename);
 BOOL DriverIsClone(int driver_index);
 BOOL DriverIsBroken(int driver_index);
 BOOL DriverIsHarddisk(int driver_index);
+BOOL DriverIsConsole(int driver_index);
 BOOL DriverIsStereo(int driver_index);
 BOOL DriverIsVector(int driver_index);
 BOOL DriverIsBios(int driver_index);

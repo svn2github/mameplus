@@ -23,6 +23,7 @@
     - I'm sure there's lots more ...
 
 ***************************************************************************/
+#define MESS 1
 #include "driver.h"
 #include "video/generic.h"
 #include "includes/snes.h"
@@ -60,7 +61,7 @@ ADDRESS_MAP_END
 
 
 
-static INPUT_PORTS_START( snes )
+static INPUT_PORTS_START( snes_m )
 	PORT_START  /* IN 0 : Joypad 1 - L */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON3) PORT_NAME("P1 Button A")  PORT_PLAYER(1) PORT_CODE(KEYCODE_D)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON4) PORT_NAME("P1 Button X")  PORT_PLAYER(1) PORT_CODE(KEYCODE_S)
@@ -550,5 +551,5 @@ ROM_START(snespal)
 ROM_END
 
 /*     YEAR  NAME     PARENT  COMPAT  MACHINE  INPUT  INIT  CONFIG  COMPANY     FULLNAME                                      FLAGS */
-CONS( 1989, snes,    0,      0,      snes,    snes,  0,    snes,   "Nintendo", "Super Nintendo Entertainment System (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 1991, snespal, snes,   0,      snespal, snes,  0,    snes,   "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1989, snes,    0,      0,      snes,    snes_m,  0,    snes,   "Nintendo", "Super Nintendo Entertainment System (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1991, snespal, snes,   0,      snespal, snes_m,  0,    snes,   "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )

@@ -510,7 +510,11 @@ ifeq ($(NO_DLL),)
 	EMULATORDLL = $(FULLNAME)lib.dll
 	EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
 else
-	EMULATORALL = $(EMULATORCLI)
+	ifeq ($(WINUI),)
+		EMULATORALL = $(EMULATORCLI)
+	else
+		EMULATORALL = $(EMULATORGUI)
+	endif
 endif
 
 #-------------------------------------------------
@@ -561,7 +565,7 @@ endif
 # output a map file (emulator only)
 ifneq ($(MAP),)
     MAPFLAGS = -Wl,-Map,$(FULLNAME).map
-    MAPDLLFLAGS = -Wl,-Map,$(LIBNAME).map
+    MAPDLLFLAGS = -Wl,-Map,$(FULLNAME)lib.map
     MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
     MAPGUIFLAGS = -Wl,-Map,$(FULLGUINAME).map
 else
@@ -651,9 +655,9 @@ all: maketree buildtools emulator
 include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
+include $(SRC)/mess/messcore.mak
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
-#include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
-#include $(SRC)/mess/messcore.mak
+include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 include $(SRC)/tools/tools.mak
@@ -717,7 +721,7 @@ DLLLINK=dll
 endif
 
 ifeq ($(NO_DLL),)
-$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 # always recompile the version string
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
@@ -729,6 +733,10 @@ ifeq ($(NO_DLL),)
 $(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
+else
+$(EMULATORGUI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
 endif
 
 # cli target
@@ -737,11 +745,13 @@ $(EMULATORCLI): $(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/windows/climain.o $(CLIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
 else
-$(EMULATORCLI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+$(EMULATORCLI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
 endif
+
+
 
 #-------------------------------------------------
 # generic rules

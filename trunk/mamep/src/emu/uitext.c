@@ -13,6 +13,7 @@
 #include "driver.h"
 #include "uitext.h"
 
+#define MESS
 #ifdef MESS
 extern const char *mess_default_text[];
 #endif /* MESS */

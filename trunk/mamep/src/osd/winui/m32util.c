@@ -668,6 +668,11 @@ BOOL DriverIsHarddisk(int driver_index)
 	return GetDriversInfo(driver_index)->isHarddisk;
 }
 
+BOOL DriverIsConsole(int driver_index)
+{
+	return drivers[driver_index]->sysconfig_ctor != NULL;
+}
+
 BOOL DriverIsBios(int driver_index)
 {
 	BOOL bBios = FALSE;
@@ -975,4 +980,7 @@ void CenterWindow(HWND hWnd)
 /***************************************************************************
 	Internal functions
  ***************************************************************************/
+
+
+
 

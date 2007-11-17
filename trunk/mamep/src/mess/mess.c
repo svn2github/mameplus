@@ -155,7 +155,7 @@ void devices_init(running_machine *machine)
 
 			/* is an image specified for this image */
 			image_name = mess_get_device_option(&dev->devclass, id);
-			if ((image_name != NULL) && (image_name[0] != '\0'))
+			if ((image_name != NULL) /* && (image_name[0] != '\0') */) //mamep: feed a dummy image when image_name is \0
 			{
 				/* try to load this image */
 				result = image_load(image, image_name);

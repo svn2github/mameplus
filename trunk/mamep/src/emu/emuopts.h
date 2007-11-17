@@ -38,9 +38,9 @@
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
-#ifdef MESS
+//#ifdef MESS
 #define OPTION_HASHPATH				"hashpath"
-#endif
+//#endif
 #define OPTION_SAMPLEPATH			"samplepath"
 #define OPTION_ARTPATH				"artpath"
 #define OPTION_CTRLRPATH			"ctrlrpath"

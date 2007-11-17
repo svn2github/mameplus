@@ -65,6 +65,7 @@ typedef UINT32 FPTR;
 typedef struct _running_machine running_machine;
 typedef struct _mame_display mame_display;
 typedef struct _game_driver game_driver;
+typedef struct _msgame_driver msgame_driver;
 typedef struct _machine_config machine_config;
 typedef struct _rom_load_data rom_load_data;
 typedef struct _osd_create_params osd_create_params;

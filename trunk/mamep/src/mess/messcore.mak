@@ -11,7 +11,7 @@
 # MESS core defines
 #-------------------------------------------------
 
-COREDEFS += -DMESS
+#COREDEFS += -DMESS
 
 
 # Root object directories

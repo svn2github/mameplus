@@ -441,7 +441,7 @@
 #define IDC_DRV_HOMEBREW                1403 // DRIVER_SWITCH
 #define IDC_DRV_NEOD                    1404 // DRIVER_SWITCH
 #define IDC_DRV_NONCPU                  1405 // DRIVER_SWITCH
-#define IDC_DRV_HAZEMD                  1406 // DRIVER_SWITCH
+#define IDC_DRV_CONSOLE                 1406 // DRIVER_SWITCH
 
 #define ID_FILE_EXIT                    40001
 #define ID_ABOUT                        40003

@@ -104,6 +104,7 @@
 
 #include "rendfont.h"
 
+#define MESS
 #ifdef MESS
 #include "inputx.h"
 #endif

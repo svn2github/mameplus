@@ -12,6 +12,8 @@
 
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
+MESSSRC = $(SRC)/mess
+MESSOBJ = $(OBJ)/mess
 
 AUDIO = $(MAMEOBJ)/audio
 DRIVERS = $(MAMEOBJ)/drivers
@@ -19,13 +21,27 @@ LAYOUT = $(MAMEOBJ)/layout
 MACHINE = $(MAMEOBJ)/machine
 VIDEO = $(MAMEOBJ)/video
 
+MESS_AUDIO = $(MESSOBJ)/audio
+MESS_DEVICES = $(MESSOBJ)/devices
+MESS_DRIVERS = $(MESSOBJ)/drivers
+MESS_FORMATS = $(MESSOBJ)/formats
+MESS_LAYOUT = $(MESSOBJ)/layout
+MESS_MACHINE = $(MESSOBJ)/machine
+MESS_VIDEO = $(MESSOBJ)/video
+
 OBJDIRS += \
 	$(AUDIO) \
 	$(DRIVERS) \
 	$(LAYOUT) \
 	$(MACHINE) \
 	$(VIDEO) \
-
+	$(MESS_AUDIO) \
+	$(MESS_DEVICES) \
+	$(MESS_DRIVERS) \
+	$(MESS_FORMATS) \
+	$(MESS_LAYOUT) \
+	$(MESS_MACHINE) \
+	$(MESS_VIDEO) \
 
 
 #-------------------------------------------------
@@ -309,7 +325,7 @@ DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
             $(MAMEOBJ)/mamencpudriv.o \
             $(MAMEOBJ)/mamehbdriv.o \
             $(MAMEOBJ)/mameneoddriv.o \
-            $(MAMEOBJ)/mamemddriv.o
+            $(MAMEOBJ)/mameconsoledriv.o
 endif
 
 DRVLIBS += \
@@ -416,6 +432,14 @@ $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/segacrpt.o \
 	$(MACHINE)/ticket.o \
 	$(VIDEO)/avgdvg.o \
+	$(MESS_FORMATS)/ioprocs.o	\
+	$(MESS_FORMATS)/flopimg.o	\
+	$(MESS_FORMATS)/cassimg.o	\
+	$(MESS_DEVICES)/mflopimg.o	\
+	$(MESS_DEVICES)/cassette.o	\
+	$(MESS_DEVICES)/cartslot.o	\
+	$(MESS_DEVICES)/flopdrv.o	\
+	$(MESS_FORMATS)/wavfile.o
 
 
 
@@ -1043,7 +1067,15 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(MACHINE)/drakton.o \
 	$(MACHINE)/strtheat.o \
+	$(MESS_MACHINE)/nes_mmc.o	\
 	$(VIDEO)/ppu2c0x.o \
+	$(MESS_VIDEO)/nes.o		\
+	$(MESS_MACHINE)/nes.o		\
+	$(MESS_DRIVERS)/nes.o		\
+	$(MAME_AUDIO)/snes.o			\
+	$(MAME_MACHINE)/snes.o			\
+	$(MAME_VIDEO)/snes.o			\
+	$(MESS_DRIVERS)/snes.o	 	\
 
 $(MAMEOBJ)/nix.a: \
 	$(DRIVERS)/fitfight.o $(VIDEO)/fitfight.o \
@@ -1172,6 +1204,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/turbo.o $(AUDIO)/turbo.o $(VIDEO)/turbo.o \
 	$(DRIVERS)/vicdual.o $(AUDIO)/vicdual.o $(VIDEO)/vicdual.o \
 	$(DRIVERS)/zaxxon.o $(AUDIO)/zaxxon.o $(VIDEO)/zaxxon.o \
+	$(MESS_DRIVERS)/genesis.o	\
 	$(DRIVERS)/megadriv.o \
 	$(DRIVERS)/md_games.o \
 	$(DRIVERS)/md_arcad.o \

@@ -514,7 +514,8 @@ DEVICE_LOAD(nes_cart)
 
 bad:
 	logerror("BAD section hit during LOAD ROM.\n");
-	return INIT_FAIL;
+	//mamep: ignore rom check to start window UI
+	return INIT_PASS;
 }
 
 
