@@ -1458,7 +1458,8 @@ bub68705	バブルボブル (海賊版 with 68705)	ばぶるぼぶる	bootleg
 missb2	バブルボブル / Miss Bubble II	ばぶるぼぶる	Alpha Co
 kikikai	奇々怪界	ききかいかい	Taito Corporation
 knightb	奇々怪界 / Knight Boy	ききかいかい	bootleg
-kicknrun	キック&ラン	きっくあんどらん	Taito Corporation
+kicknrun	キック&ラン (海外版)	きっくあんどらん	Taito Corporation
+kicknruu	キック&ラン (USA版)	きっくあんどらん	Taito America Corp
 mexico86	キック&ラン / Mexico 86	きっくあんどらん	bootleg
 darius	ダライアス (海外版)	だらいあす_1	Taito Corporation Japan
 dariusj	ダライアス (日本版)	だらいあす_1	Taito Corporation
@@ -3204,6 +3205,7 @@ dbzvrvs	ドラゴンボールZ V.R.V.S.	どらごんぼーるぜっとぶいあーるばーさす	Sega / B
 darkedge	ダークエッジ (海外版)	だーくえっじ	Sega
 darkedgj	ダークエッジ (日本版)	だーくえっじ	Sega
 slipstrm	スリップストリーム (ブラジル版 950515)	すりっぷすとりーむ	Capcom
+slipstrh	スリップストリーム (ラテン版 950515)	すりっぷすとりーむ	Capcom
 orunners	アウトランナーズ (海外版)	あうとらん_2なーず	Sega
 orunneru	アウトランナーズ (USA版)	あうとらん_2なーず	Sega
 harddunk	ハードダンク (海外版)	はーどだんく	Sega
@@ -6397,6 +6399,9 @@ sltblgtk	スロッツ (ベルギー版 Token Game Card 95-750-943)	すろっつ	BFM/ELAM
 sltblgpo	スロッツ (ベルギー版 Cash Game Card 95-750-938)	すろっつ	BFM/ELAM
 sltblgp1	スロッツ (ベルギー版 Cash Game Card 95-752-008)	すろっつ	BFM/ELAM
 gldncrwn	ゴールデンクラウン (オランダ版 Game Card 95-752-011)	ごーるでんくらうん	BFM/ELAM
+mpu4utst	MPU4 ユニットテスト (program 4)	えむぴーゆーふぉーゆにっとてすと	Barcrest
+mpu4tst2	MPU4 ユニットテスト (program 2)	えむぴーゆーふぉーゆにっとてすと	Barcrest
+mpu4met0	MPU4 メーターカラーロム	えむぴーゆーふぉーめーたーからーろむ	Barcrest
 connect4	コネクト4	こねくとふぉー	Dolbeck Systems
 dealem	ディール・エム (MPU4 Conversion Kit ver 7.0)	でぃーるえむ	Zenitone
 timemchn	タイムマシン (ver 2.0)	たいむましん	Barcrest
@@ -6407,6 +6412,7 @@ turnover	ターンオーバー	たーんおーばー	Barcrest
 skiltrek	スキルトレック	すきるとれっく	Barcrest
 mating	ザ・マッチングゲーム (Datapak)	ざまっちんぐげーむ	Barcrest
 matinga	ザ・マッチングゲーム (Standard)	ざまっちんぐげーむ	Barcrest
+vgpoker	ベガスポーカー (prototype)	べがすぽーかー	BwB
 backgamn	バックギャモン	ばっくぎゃもん	ADP
 quickjac	クイックジャック	くいっくじゃっく	ADP
 skattv	スカットTV	すかっとてぃーびー	ADP
@@ -6744,10 +6750,14 @@ rcasino	ロイヤルカジノ	ろいやるかじの	Dyna Electronics
 cmv801	チェリーマスター (ver 8.01)	ちぇりーますたー_1	Corsica
 cm2v841	チェリーマスターII ver 8.41 (set 1)	ちぇりーますたー_2	Dyna Electronics
 cm2841a	チェリーマスターII ver 8.41 (set 2)	ちぇりーますたー_2	Dyna Electronics
-ampoker2	アメリカンポーカーII (set 1)	あめりかんぽーかー2	Novomatic
-ampokr2a	アメリカンポーカーII (set 2)	あめりかんぽーかー2	Novomatic
-ampokr2b	アメリカンポーカーII (set 3)	あめりかんぽーかー2	Novomatic
-ampokr2c	アメリカンポーカーII (set 4)	あめりかんぽーかー2	Novomatic
+ampoker2	アメリカンポーカーII	あめりかんぽーかー_2	Novomatic
+ampkr2b1	アメリカンポーカーII (海賊版 set 1)	あめりかんぽーかー_2	Bootleg
+ampkr2b2	アメリカンポーカーII (海賊版 set 2)	あめりかんぽーかー_2	Bootleg
+ampkr2b3	アメリカンポーカーII (海賊版 set 3)	あめりかんぽーかー_2	Bootleg
+pkrdewin	アメリカンポーカーII / Poker De Win	あめりかんぽーかー_2	Bootleg
+ampkr95	アメリカンポーカーII / American Poker 95	あめりかんぽーかー_2	Bootleg
+sigmapkr	シグマポーカー	しぐまぽーか_1	Sigma Inc.
+sigma2k	シグマポーカー2000	しぐまぽーかー_2_2000	Sigma Inc.
 lucky8	ラッキー8ラインズ	らっきーえいとらいんず	Falcon
 sidewndr	サイドワインダー	さいどわいんだー	ACE
 spellbnd	スペルバウンド	すぺるばうんど	ACE
@@ -6837,8 +6847,15 @@ esha	エシュズオルンミラ (set 2)	えしゅずおるんみら	Funai/Gakken
 eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
 peplus	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
+pepp0158	プレイヤーズエッジプラス 4 オブアカインドボーナスポーカー (PP0158)	ぷれいやーずえっじぷらす4おぶあかいんどぼーなすぽーかー	IGT - International Gaming Technology
 pepp0188	プレイヤーズエッジプラス スタンダードドローポーカー (PP0188)	ぷれいやーずえっじぷらすすたんだーどどろーぽーかー	IGT - International Gaming Technology
 peset038	プレイヤーズエッジプラス セットチップ (Set038)	ぷれいやーずえっじぷらすせっとちっぷ	IGT - International Gaming Technology
+pebe0014	プレイヤーズエッジプラス ブラックジャック (BE0014)	ぷれいやーずえっじぷらすぶらっくじゃっく	IGT - International Gaming Technology
+peke1012	プレイヤーズエッジプラス ケノ (KE1012)	ぷれいやーずえっじぷらすけの	IGT - International Gaming Technology
+peps0615	プレイヤーズエッジプラス カオススロッツ (PS0615)	ぷれいやーずえっじぷらすかおすすろっつ	IGT - International Gaming Technology
+peps0716	プレイヤーズエッジプラス クォーターマニアスロッツ (PS0716)	ぷれいやーずえっじぷらすくぉーたーまにあすろっつ	IGT - International Gaming Technology
+pexp0019	プレイヤーズエッジプラス デュースワイルドポーカー (XP000019)	ぷれいやーずえっじぷらすでゅーすわいるどぽーかー	IGT - International Gaming Technology
+pexs0006	プレイヤーズエッジプラス トリプルトリプルダイアモンドスロッツ (XS000006)	ぷれいやーずえっじぷらすとりぷるとりぷるだいあもんどすろっつ	IGT - International Gaming Technology
 mirage	ミラージュ妖獣麻雀伝 (日本版)	みらーじゅようじゅうまーじゃんでん	Mitchell
 dominob	ドミノブロック	どみのぶろっく	Wonwoo Systems
 jongkyo	雀狂	じゃんきょう	Kiwako
@@ -6885,6 +6902,7 @@ gwingjd	ギガウィング (日本版 990223 Phoenix Edition)	ぎがうぃんぐ_1	hack
 1944d	1944 -ザ・ループマスター (USA版 000620 Phoenix Edition)	いちきゅうよん_4よん	hack
 hsf2d	ハイパーストリートファイターII -The Anniversary Edition (アジア版 040202 Phoenix Edition)	はいぱーすとりーとふぁいたー_2	hack
 dstlku1d	ヴァンパイア -ザ・ナイトウォリアーズ / Dark Stalkers -The Night Warriors (USA版 940705 Phoenix Edition)	ばんぱいあ_1	hack
+progerjd	プロギアの嵐 (日本版 010117 Phoenix Edition)	ぷろぎあのあらし	hack
 kof96ep	ザ・キング・オブ・ファイターズ '96 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_03_1996	bootleg
 kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus 2003 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_04_2_1997	bootleg
 kf2k1pls	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 / ハック set 1)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
