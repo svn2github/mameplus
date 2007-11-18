@@ -27,5 +27,6 @@ int WINAPI WinMain(HINSTANCE    hInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
+	extern int Mame32Main(HINSTANCE, LPTSTR, int);
 	return Mame32Main(hInstance, lpCmdLine, nCmdShow);
 }

@@ -298,9 +298,9 @@ endif
 # the name is just 'target' if no subtarget; otherwise it is
 # the concatenation of the two (e.g., mametiny)
 ifeq ($(TARGET),$(SUBTARGET))
-    NAME = $(TARGET)p
+    NAME = $(TARGET)$(EXTRA_SUFFIX)
 else
-    NAME = $(TARGET)$(SUBTARGET)p
+    NAME = $(TARGET)$(SUBTARGET)$(EXTRA_SUFFIX)
 endif
 
 # fullname is prefix+name+suffix
@@ -601,6 +601,7 @@ LIBCPU = $(OBJ)/libcpu.a
 LIBSOUND = $(OBJ)/libsound.a
 LIBUTIL = $(OBJ)/libutil.a
 LIBOCORE = $(OBJ)/libocore.a
+LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
 ifeq ($(HAZEMD),)
@@ -732,11 +733,11 @@ ifeq ($(NO_DLL),)
 # gui target
 $(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPGUIFLAGS)
 else
-$(EMULATORGUI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+$(EMULATORGUI):	$(OBJ)/osd/winui/m32main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN) $(GUIRESFILE)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPGUIFLAGS)
 endif
 
 # cli target
@@ -748,7 +749,7 @@ else
 $(EMULATORCLI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPCLIFLAGS)
 endif
 
 
