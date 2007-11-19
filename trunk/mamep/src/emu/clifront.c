@@ -24,6 +24,7 @@
 
 //#ifdef MESS
 #include "climess.h"
+#include "messopts.h"
 //#endif /* MESS */
 
 
@@ -125,13 +126,6 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	options_add_entries(options, cli_options);
 
 	setup_language(options);
-
-//mamep: have to init drivers, so that we can add options specific to a MESS driver via callbacks
-#ifdef DRIVER_SWITCH
-	mame_printf_info("CLIMAIN\n");
-	options_set_string(options, OPTION_DRIVER_CONFIG, "all", OPTION_PRIORITY_INI);
-	assign_drivers(options);
-#endif /* DRIVER_SWITCH */
 
 	/* parse the command line first; if we fail here, we're screwed */
 	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
@@ -440,6 +434,8 @@ void assign_drivers(core_options *options)
 		}
 
 	drivers[n] = NULL;
+
+	options_set_bool(options, OPTION_ADDED_DEVICE_OPTIONS, FALSE, OPTION_PRIORITY_DEFAULT);
 }
 #endif /* DRIVER_SWITCH */
 

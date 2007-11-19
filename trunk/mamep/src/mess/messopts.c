@@ -13,7 +13,6 @@
 #include "messopts.h"
 #include "osdmess.h"
 
-#define OPTION_ADDED_DEVICE_OPTIONS	"added_device_options"
 
 
 /***************************************************************************
@@ -26,7 +25,8 @@ const options_entry mess_core_options[] =
     { "ramsize;ram",				NULL,	0,									"size of RAM (if supported by driver)" },
 	{ "writeconfig;wc",				"0",	OPTION_BOOLEAN,						"writes configuration to (driver).ini on exit" },
 	{ OPTION_SKIP_WARNINGS,			"0",    OPTION_BOOLEAN,						"skip displaying the warnings screen" },
-	{ OPTION_ADDED_DEVICE_OPTIONS,	"0",	OPTION_BOOLEAN | OPTION_INTERNAL,	"device-specific options have been added" },
+//mamep: stop adding device options until array drivers[] is ready
+	{ OPTION_ADDED_DEVICE_OPTIONS,	"1",	OPTION_BOOLEAN | OPTION_INTERNAL,	"device-specific options have been added" },
 	{ NULL }
 };
 
