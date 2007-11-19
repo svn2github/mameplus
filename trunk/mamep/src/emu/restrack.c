@@ -14,7 +14,6 @@
 #include "timer.h"
 #include "state.h"
 #include "uilang.h"
-#include "osd_so.h"
 
 
 

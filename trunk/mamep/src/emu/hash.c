@@ -122,7 +122,6 @@
 #include "hash.h"
 #include "md5.h"
 #include "sha1.h"
-#include "osd_so.h"
 #include "mame.h"
 #include "romload.h"
 

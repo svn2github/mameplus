@@ -21,7 +21,6 @@
 // MAMEOS headers
 #include "strconv.h"
 #include "winutil.h"
-#include "osd_so.h"
 
 
 //============================================================

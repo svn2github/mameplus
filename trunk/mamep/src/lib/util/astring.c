@@ -11,7 +11,6 @@
 
 #include "astring.h"
 #include "osdcore.h"
-#include "osd_so.h"
 
 #include <string.h>
 #include <stdarg.h>

@@ -14,7 +14,6 @@
 #include "options.h"
 #include "astring.h"
 #include "uilang.h"
-#include "osd_so.h"
 
 
 

@@ -13,7 +13,6 @@
 #include <math.h>
 #include <zlib.h>
 #include "png.h"
-#include "osd_so.h"
 
 
 /***************************************************************************

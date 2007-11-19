@@ -36,7 +36,6 @@
 #include "strconv.h"
 #include "winutf8.h"
 #include "winutil.h"
-#include "osd_so.h"
 
 #define ENABLE_PROFILER		0
 #define DEBUG_SLOW_LOCKS	0

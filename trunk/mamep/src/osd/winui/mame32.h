@@ -13,14 +13,6 @@
 #ifndef MAME32_H
 #define MAME32_H
 
-#ifndef DONT_USE_DLL
-#ifndef _MSC_VER
-#define SHAREDOBJ_IMPORT
-#endif /* !_MSC_VER */
-#endif /* !DONT_USE_DLL */
-
-#include "osd_so.h"
-
 #undef assert
 #ifdef MAME_DEBUG
 #include "M32Util.h"

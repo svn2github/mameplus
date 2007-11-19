@@ -14,7 +14,6 @@
 
 #include <ctype.h>
 #include <zlib.h>
-#include "osd_so.h"
 
 
 

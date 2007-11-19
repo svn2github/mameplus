@@ -11,7 +11,6 @@
 ****************************************************************************/
 
 #include "mamecore.h"
-#include "osd_so.h"
 #include <ctype.h>
 
 /* a giant string buffer for temporary strings */

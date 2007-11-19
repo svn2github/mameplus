@@ -13,7 +13,6 @@
 #include "mame.h"
 #include "fileio.h"
 #include "emuopts.h"
-#include "osd_so.h"
 
 #include <ctype.h>
 

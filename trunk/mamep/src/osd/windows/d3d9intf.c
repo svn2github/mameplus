@@ -14,7 +14,6 @@
 
 // MAME headers
 #include "mame.h"
-#include "osd_so.h"
 
 // MAMEOS headers
 #include "d3dintf.h"

@@ -18,7 +18,6 @@
 #include "uitext.h"
 #include "unicode.h"
 #include <zlib.h>
-#include "osd_so.h"
 
 
 /*************************************

@@ -10,7 +10,6 @@
 ****************************************************************************/
 
 #include "corestr.h"
-#include "osd_so.h"
 #include <ctype.h>
 #include <stdlib.h>
 

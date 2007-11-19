@@ -46,7 +46,6 @@
 #include "video.h"
 #include "strconv.h"
 #include "config.h"
-#include "osd_so.h"
 
 #define MESS
 #ifdef MESS
