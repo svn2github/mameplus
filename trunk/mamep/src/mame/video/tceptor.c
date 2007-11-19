@@ -278,9 +278,7 @@ static void decode_bg(running_machine *machine, int region)
 	int len = 0x8000;
 	int i;
 
-	buffer = malloc(len);
-
-	assert_always(buffer, "Out of memory");
+	buffer = malloc_or_die(len);
 
 	/* expand rom tc2-19.10d */
 	for (i = 0; i < len / 2; i++)
@@ -337,8 +335,7 @@ static void decode_sprite16(running_machine *machine, int region)
 	UINT8 *dst;
 	int i, y;
 
-	dst = (UINT8 *)malloc(len);
-	assert_always(dst, "Out of memory");
+	dst = malloc_or_die(len);
 
 	for (i = 0; i < len / (4*4*16); i++)
 		for (y = 0; y < 16; y++)
@@ -393,8 +390,7 @@ static void decode_sprite32(running_machine *machine, int region)
 	UINT8 *dst;
 	int i;
 
-	dst = (UINT8 *)malloc(len);
-	assert_always(dst, "Out of memory");
+	dst = malloc_or_die(len);
 
 	memset(dst, 0, len);
 

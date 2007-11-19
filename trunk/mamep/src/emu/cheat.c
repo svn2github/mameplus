@@ -535,7 +535,7 @@ static const char			* cheatfile = NULL;
     GLOBAL VARIABLES
 ***************************************************************************/
 
-static mame_timer			* periodic_timer;
+static emu_timer			* periodic_timer;
 
 static CheatEntry			* cheatList = NULL;
 static INT32				cheatListLength = 0;
@@ -1517,8 +1517,8 @@ void cheat_init(running_machine *machine)
 	/* ----- initialize string table ----- */
 	InitStringTable();
 
-	periodic_timer = mame_timer_alloc(cheat_periodic);
-	mame_timer_adjust(periodic_timer, make_mame_time(0, Machine->screen[0].refresh), 0, make_mame_time(0, Machine->screen[0].refresh));
+	periodic_timer = timer_alloc(cheat_periodic);
+	timer_adjust(periodic_timer, attotime_make(0, Machine->screen[0].refresh), 0, attotime_make(0, Machine->screen[0].refresh));
 
 	add_exit_callback(machine, cheat_exit);
 }
@@ -9473,11 +9473,12 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 				/* ----- refresh rate ----- */
 				case kCustomLocation_RefreshRate:
 				{
+					screen_state	*state = &Machine->screen[0];
 					double			refresh = data;
 
 					refresh /= 65536.0;
 
-					set_refresh_rate(0, refresh);
+					video_screen_configure(0, state->width, state->height, &state->visarea, HZ_TO_ATTOSECONDS(refresh));
 				}
 				break;
 			}
@@ -11453,7 +11454,7 @@ static void cheat_periodicAction(CheatAction * action)
 				/* ----- keep if one shot + restore prevous value + delay !=0 ----- */
 				cheat_periodicOperation(action);
 
-				if(action->frameTimer >= (parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh)))
+				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11465,7 +11466,7 @@ static void cheat_periodicAction(CheatAction * action)
 			else
 			{
 				/* ----- otherwise, delay ----- */
-				if(action->frameTimer >= (parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh)))
+				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11504,7 +11505,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * SUBSECONDS_TO_HZ(Machine->screen[0].refresh);
+					action->frameTimer = parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh);
 
 					action->flags |= kActionFlag_WasModified;
 				}

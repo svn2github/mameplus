@@ -124,6 +124,7 @@ CPUS += TMS32010
 CPUS += TMS32025
 CPUS += TMS32026
 CPUS += TMS32031
+CPUS += TMS32032
 CPUS += TMS32051
 CPUS += CCPU
 CPUS += ADSP2100
@@ -566,7 +567,7 @@ $(MAMEOBJ)/atlus.a: \
 	$(DRIVERS)/powerins.o $(VIDEO)/powerins.o \
 
 $(MAMEOBJ)/barcrest.a: \
-	$(MACHINE)/mmtr.o \
+	$(MACHINE)/meters.o \
 	$(DRIVERS)/mpu4.o \
 	$(MACHINE)/steppers.o \
 

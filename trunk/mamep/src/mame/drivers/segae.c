@@ -556,12 +556,22 @@ struct sms_mode sms_mode_table[] =
 	{ "Mode 4 (PAL)",            1, 192, 244, vc_pal_192, hc_256 }
 };
 
-int sms_vdp_null_irq_callback(int status)
+#ifdef 0
+enum
+{
+	SMS_VDP = 0,  // SMS1 VDP
+	SMS2_VDP = 1, // SMS2 VDP, or Game Gear VDP running in SMS2 Mode
+	GG_VDP = 2,   // Game Gear VDP running in Game Gear Mode
+	GEN_VDP = 3   // Genesis VDP running in SMS2 Mode
+};
+#endif
+
+static int sms_vdp_null_irq_callback(int status)
 {
 	return -1;
 }
 
-int sms_vdp_cpu0_irq_callback(int status)
+static int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -575,7 +585,7 @@ int sms_vdp_cpu0_irq_callback(int status)
 	return 0;
 }
 
-int sms_vdp_cpu1_irq_callback(int status)
+static int sms_vdp_cpu1_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -590,7 +600,7 @@ int sms_vdp_cpu1_irq_callback(int status)
 }
 
 
-int sms_vdp_cpu2_irq_callback(int status)
+static int sms_vdp_cpu2_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -606,7 +616,50 @@ int sms_vdp_cpu2_irq_callback(int status)
 
 
 
+#ifdef 0
+struct sms_vdp
+{
+	UINT8 chip_id;
 
+	UINT8  cmd_pend;
+	UINT8  cmd_part1;
+	UINT8  cmd_part2;
+	UINT16 addr_reg;
+	UINT8  cmd_reg;
+	UINT8  regs[0x10];
+	UINT8  readbuf;
+	UINT8* vram;
+	UINT8* cram;
+	UINT8  writemode;
+	mame_bitmap* r_bitmap;
+	UINT8* tile_renderline;
+	UINT8* sprite_renderline;
+
+	UINT8 sprite_collision;
+	UINT8 sprite_overflow;
+
+	UINT8  yscroll;
+	UINT8  hint_counter;
+
+	UINT8 frame_irq_pending;
+	UINT8 line_irq_pending;
+
+	UINT8 vdp_type;
+
+	UINT8 gg_cram_latch; // gamegear specific.
+
+	/* below are MAME specific, to make things easier */
+	UINT8 screen_mode;
+	UINT8 is_pal;
+	int sms_scanline_counter;
+	int sms_total_scanlines;
+	int sms_framerate;
+	emu_timer* sms_scanline_timer;
+	UINT16* cram_mamecolours; // for use on RGB_DIRECT screen
+	int	 (*set_irq)(int state);
+
+};
+#endif
 
 
 void *sms_start_vdp(running_machine *machine, int type)
@@ -669,7 +722,7 @@ void *sms_start_vdp(running_machine *machine, int type)
 	chip->writemode = 0;
 	chip->r_bitmap = auto_bitmap_alloc(machine->screen[0].width,machine->screen[0].height,machine->screen[0].format);
 
-	chip->sms_scanline_timer = mame_timer_alloc_ptr(sms_scanline_timer_callback, chip);
+	chip->sms_scanline_timer = timer_alloc_ptr(sms_scanline_timer_callback, chip);
 
 	return chip;
 }
@@ -677,7 +730,7 @@ void *sms_start_vdp(running_machine *machine, int type)
 /* stop timer and clear ram.. used on megatech when we switch between genesis and sms mode */
 void segae_md_sms_stop_scanline_timer(void)
 {
-	mame_timer_adjust_ptr(md_sms_vdp->sms_scanline_timer,  time_never, time_never);
+	timer_adjust_ptr(md_sms_vdp->sms_scanline_timer,  attotime_never, attotime_never);
 	memset(md_sms_vdp->vram,0x00,0x4000);
 }
 
@@ -996,7 +1049,7 @@ static void draw_tile_line(int drawxpos, int tileline, UINT16 tiledata, UINT8* l
 	}
 }
 
-void sms_render_spriteline(int scanline, struct sms_vdp* chip)
+static void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 {
 	int spritenum;
 	int height = 8;
@@ -1117,7 +1170,7 @@ void sms_render_spriteline(int scanline, struct sms_vdp* chip)
 	}
 }
 
-void sms_render_tileline(int scanline, struct sms_vdp* chip)
+static void sms_render_tileline(int scanline, struct sms_vdp* chip)
 {
 	int column = 0;
 	int count = 32;
@@ -1170,7 +1223,7 @@ void sms_render_tileline(int scanline, struct sms_vdp* chip)
 
 }
 
-void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
+static void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 {
 	int x;
 	UINT16* lineptr = BITMAP_ADDR16(chip->r_bitmap, scanline, 0);
@@ -1211,7 +1264,7 @@ void sms_copy_to_renderbuffer(int scanline, struct sms_vdp* chip)
 
 }
 
-void sms_draw_scanline(int scanline, struct sms_vdp* chip)
+static void sms_draw_scanline(int scanline, struct sms_vdp* chip)
 {
 
 	if (scanline>=0 && scanline<sms_mode_table[chip->screen_mode].sms2_height)
@@ -1244,7 +1297,7 @@ static TIMER_CALLBACK_PTR( sms_scanline_timer_callback )
 	if (chip->sms_scanline_counter<(chip->sms_total_scanlines-1))
 	{
 		chip->sms_scanline_counter++;
-		mame_timer_adjust_ptr(chip->sms_scanline_timer, MAME_TIME_IN_HZ(chip->sms_framerate * chip->sms_total_scanlines), time_zero);
+		timer_adjust_ptr(chip->sms_scanline_timer, ATTOTIME_IN_HZ(chip->sms_framerate * chip->sms_total_scanlines), attotime_zero);
 
 		if (chip->sms_scanline_counter>sms_mode_table[chip->screen_mode].sms2_height)
 		{
@@ -1391,7 +1444,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = 0;
 		visarea.max_y = sms_mode_table[chip->screen_mode].sms2_height-1;
 
-		if (chip->chip_id==3) video_screen_configure(0, 256, 256, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
+		if (chip->chip_id==3) video_screen_configure(0, 256, 256, &visarea, HZ_TO_ATTOSECONDS(chip->sms_framerate));
 
 	}
 	else /* 160x144 */
@@ -1409,7 +1462,7 @@ static void end_of_frame(struct sms_vdp *chip)
 
 	chip->sms_scanline_counter = -1;
 	chip->yscroll = chip->regs[0x9]; // this can't change mid-frame
-	mame_timer_adjust_ptr(chip->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(chip->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 #ifdef UNUSED_FUNCTION
@@ -1430,7 +1483,7 @@ VIDEO_START(sms)
 
 MACHINE_RESET(sms)
 {
-	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(vdp1->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 /* Sega System E */
@@ -1887,18 +1940,18 @@ static UINT8 f7_bank_value;
 
 static MACHINE_RESET(systeme)
 {
-	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
-	mame_timer_adjust_ptr(vdp2->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(vdp1->sms_scanline_timer, attotime_zero, attotime_zero);
+	timer_adjust_ptr(vdp2->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 MACHINE_RESET(megatech_md_sms)
 {
-	mame_timer_adjust_ptr(md_sms_vdp->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(md_sms_vdp->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 MACHINE_RESET(megatech_bios)
 {
-	mame_timer_adjust_ptr(vdp1->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(vdp1->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 static VIDEO_EOF(systeme)
@@ -1988,7 +2041,7 @@ static VIDEO_UPDATE(systeme)
 }
 
 
-MACHINE_DRIVER_START( systeme )
+static MACHINE_DRIVER_START( systeme )
 	MDRV_CPU_ADD_TAG("z80", Z80, 10738600/2) /* correct for hangonjr, and astroflash/transformer at least  */
 	MDRV_CPU_PROGRAM_MAP(systeme_readmem,systeme_writemem)
 	MDRV_CPU_IO_MAP(sms_readport,sms_writeport)
