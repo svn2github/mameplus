@@ -426,7 +426,7 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 	image_error_t err = IMAGE_ERROR_FILENOTFOUND;
 	astring *full_path = NULL;
 	const char *file_extension;
-
+	
 	/* assemble the path */
 	if (software_path)
 	{
@@ -570,7 +570,7 @@ static int image_load_internal(mess_image *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	if ((compare_mame_times(mame_timer_get_time(), time_zero) > 0) && image->dev->reset_on_load)
+	if ((attotime_compare(timer_get_time(), attotime_zero) > 0) && image->dev->reset_on_load)
 		mame_schedule_hard_reset(Machine);
 
 	/* determine open plan */

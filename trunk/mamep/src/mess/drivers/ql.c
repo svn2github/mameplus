@@ -6,6 +6,7 @@
 #include "video/generic.h"
 #include "video/zx8301.h"
 #include "inputx.h"
+#include <time.h>
 
 /*
 
@@ -16,103 +17,135 @@
 
 	TODO:
 
-	- get COMCTL from i8048 WR output
-	- IPC <-> ZX8302 communication
-	- correct frequency for RTC timer
+	- emulate COMCTL properly
+	- serial data latching?
+	- transmit interrupt timing
+	- interface interrupt
 	- keyboard/joystick connections
 	- speaker sound
 	- accurate screen timings
-	- microdrive
-	- serial I/O
+	- microdrive simulation
 
 */
 
 #define X1 15000000.0
-#define X2 32768.0
-#define X3 4436000.0
+#define X2    32768.0
+#define X3  4436000.0
 #define X4 11000000.0
 
 /* Peripheral Chip (ZX8302) */
 
-#define ZX8302_IPC_START	0
-#define ZX8302_IPC_STOP		5
+#define ZX8302_BAUD_19200	0x00
+#define ZX8302_BAUD_9600	0x01
+#define ZX8302_BAUD_4800	0x02
+#define ZX8302_BAUD_2400	0x03
+#define ZX8302_BAUD_1200	0x04
+#define ZX8302_BAUD_600		0x05
+#define ZX8302_BAUD_300		0x06
+#define ZX8302_BAUD_75		0x07
+#define ZX8302_BAUD_MASK	0x07
+
+#define ZX8302_MODE_SER1	0x00
+#define ZX8302_MODE_SER2	0x08
+#define ZX8302_MODE_MDV		0x10
+#define ZX8302_MODE_NET		0x18
+#define ZX8302_MODE_MASK	0x18
+
+#define ZX8302_INT_GAP			0x01
+#define ZX8302_INT_INTERFACE	0x02
+#define ZX8302_INT_TRANSMIT		0x04
+#define ZX8302_INT_FRAME		0x08
+#define ZX8302_INT_EXTERNAL		0x10
+
+#define ZX8302_STATUS_BUFFER_FULL	0x02
+
+#define ZX8302_TXD_START	0
+#define ZX8302_TXD_STOP		9
+#define ZX8302_TXD_STOP2	10
 
 static struct ZX8302
 {
-	int comdata;
+	int comdata, comdata_l;
 	int comctl;
 	int baudx4;
 	UINT8 tcr;
 	UINT8 tdr;
-	UINT8 intr;
-	UINT16 ctr;
+	UINT8 irq;
+	UINT32 ctr;
 	UINT8 idr;
-	int ipc_bits;
+	UINT8 status;
+	int ipc_bits, tx_bits;
 	int ser1_rxd, ser1_cts;
 	int ser2_txd, ser2_dtr;
+	int netout, netin;
+	int mdrdw, mdselck, mdseld, erase, raw1, raw2;
 } zx8302;
 
-static mame_timer *zx8302_txd_timer, *zx8302_ipc_timer, *zx8302_rtc_timer;
+static emu_timer *zx8302_txd_timer, *zx8302_ipc_timer, *zx8302_rtc_timer;
+
+static void zx8302_interrupt(UINT8 line)
+{
+	zx8302.irq |= line;
+	cpunum_set_input_line(0, MC68000_IRQ_2, HOLD_LINE);
+}
+
+static void zx8302_txd(int level)
+{
+	switch (zx8302.tcr & ZX8302_MODE_MASK)
+	{
+	case ZX8302_MODE_SER1:
+		zx8302.ser1_rxd = level;
+		break;
+
+	case ZX8302_MODE_SER2:
+		zx8302.ser2_txd = level;
+		break;
+
+	case ZX8302_MODE_MDV:
+		// TODO
+		break;
+
+	case ZX8302_MODE_NET:
+		zx8302.netout = level;
+		break;
+	}
+}
 
 static TIMER_CALLBACK( zx8302_txd_tick )
 {
-}
-
-static void hack_comctl(void)
-{
-	/*
-		This function hacks in the COMCTL line state. The real solution would be 
-		to add a WR output line to the i8039 cpu core and monitor that instead.
-	*/
-
-	offs_t pc = cpunum_get_physical_pc_byte(1);
-
-	switch (pc)
+	switch (zx8302.tx_bits)
 	{
-	case 0x0758:
-	case 0x075a:
-	case 0x076b:
-	case 0x0774:
-		zx8302.comctl = 0;
-	
-	default:
-		zx8302.comctl = 1;
-	}
+	case ZX8302_TXD_START:
+		if (!(zx8302.irq & ZX8302_INT_TRANSMIT))
+		{
+			zx8302_txd(0);
+			zx8302.tx_bits++;
+		}
+		break;
 
-	logerror("PC: %x, comctl: %u\n", pc, zx8302.comctl);
+	default:
+		zx8302_txd(BIT(zx8302.tdr, 0));
+		zx8302.tdr >>= 1;
+		zx8302.tx_bits++;
+		break;
+
+	case ZX8302_TXD_STOP:
+		zx8302_txd(1);
+		zx8302.tx_bits++;
+		break;
+
+	case ZX8302_TXD_STOP2:
+		zx8302_txd(1);
+		zx8302.tx_bits = ZX8302_TXD_START;
+		zx8302.status &= ~ZX8302_STATUS_BUFFER_FULL;
+		zx8302_interrupt(ZX8302_INT_TRANSMIT);
+		break;
+	}
 }
 
 static TIMER_CALLBACK( zx8302_ipc_tick )
 {
 	zx8302.baudx4 = zx8302.baudx4 ? 0 : 1;
-
-	hack_comctl(); // HACK
-
-	if (zx8302.baudx4)
-	{
-		if (zx8302.comctl)
-		{
-			// send 4 bits of data to the IPC
-
-			switch (zx8302.ipc_bits)
-			{
-			case ZX8302_IPC_START:
-				zx8302.comdata = 0;
-				zx8302.ipc_bits++;
-				break;
-
-			default:
-				zx8302.comdata = BIT(zx8302.idr, 0);
-				zx8302.idr >>= 1;
-				zx8302.ipc_bits++;
-				break;
-
-			case ZX8302_IPC_STOP:
-				zx8302.comdata = 1;
-				break;
-			}
-		}
-	}
 }
 
 static TIMER_CALLBACK( zx8302_rtc_tick )
@@ -122,63 +155,90 @@ static TIMER_CALLBACK( zx8302_rtc_tick )
 
 static READ8_HANDLER( zx8302_rtc_r )
 {
-	if (offset)
+	switch (offset)
 	{
-		return zx8302.ctr & 0xff;
+	case 0:
+		return (zx8302.ctr >> 24) & 0xff;
+	case 1:
+		return (zx8302.ctr >> 16) & 0xff;
+	case 2:
+		return (zx8302.ctr >> 8) & 0xff;
+	case 3:
+		return zx8302.ctr;
 	}
-	else
-	{
-		return zx8302.ctr >> 8;
-	}
+
+	return 0;
 }
 
 static WRITE8_HANDLER( zx8302_rtc_w )
 {
-	if (offset)
-	{
-		zx8302.ctr = (zx8302.ctr & 0xff00) | data;
-	}
-	else
-	{
-		zx8302.ctr = (data << 8) | (zx8302.ctr & 0xff);
-	}
+	// TODO
 }
 
 static WRITE8_HANDLER( zx8302_control_w )
 {
-	int baud = 19200 >> (data & 0x07);
+	int baud = (19200 >> (data & ZX8302_BAUD_MASK));
 	int baudx4 = baud * 4;
 
 	zx8302.tcr = data;
 
-	mame_timer_adjust(zx8302_txd_timer, time_zero, 0, MAME_TIME_IN_HZ(baud));
-	mame_timer_adjust(zx8302_ipc_timer, time_zero, 0, MAME_TIME_IN_HZ(baudx4));
+	/*
+	switch (data & ZX8302_MODE_MASK)
+	{
+	case ZX8302_MODE_SER1:
+		logerror("ZX8302 Mode : SER1\n");
+		break;
+	case ZX8302_MODE_SER2:
+		logerror("ZX8302 Mode : SER2\n");
+		break;
+	case ZX8302_MODE_MDV:
+		logerror("ZX8302 Mode : MDV\n");
+		break;
+	case ZX8302_MODE_NET:
+		logerror("ZX8302 Mode : NET\n");
+		break;
+	}
+	*/
+
+	timer_adjust(zx8302_txd_timer, attotime_zero, 0, ATTOTIME_IN_HZ(baud));
+	timer_adjust(zx8302_ipc_timer, attotime_zero, 0, ATTOTIME_IN_HZ(baudx4));
+
+	//logerror("ZX8302 Baud Rate : %u\n", baud);
 }
 
-static READ8_HANDLER( zx8302_ipc_r )
+static READ8_HANDLER( zx8302_status_r )
 {
 	/*
 		
 		bit		description
 		
 		0		Network port
-		1		Microdrive buffer full
+		1		Transmit buffer full
 		2		
 		3		
-		4		DTR
-		5		CTS
+		4		SER1 DTR
+		5		SER2 CTS
 		6		COMCTL
 		7		COMDATA
 
 	*/
+	
+	UINT8 data = (zx8302.comdata_l << 7) | (zx8302.comctl << 6) | (zx8302.ser1_cts << 5)| (zx8302.ser2_dtr << 4) | (zx8302.status & 0x0f); 
 
-	return (zx8302.comdata << 7) | (zx8302.comctl << 6);
+	zx8302.comctl = 1;
+
+	return data;
 }
 
-static WRITE8_HANDLER( zx8302_ipc_w )
+static TIMER_CALLBACK( zx8302_delayed_ipc_command )
 {
-	zx8302.idr = data;
-	zx8302.ipc_bits = ZX8302_IPC_START;
+	zx8302.idr = param;
+	zx8302.comdata = BIT(param, 0);
+}
+
+static WRITE8_HANDLER( zx8302_ipc_command_w )
+{
+	timer_set(ATTOTIME_IN_NSEC(480), data, zx8302_delayed_ipc_command);
 }
 
 static WRITE8_HANDLER( zx8302_mdv_control_w )
@@ -210,29 +270,21 @@ static WRITE8_HANDLER( zx8302_mdv_control_w )
 	*/
 }
 
-static READ8_HANDLER( zx8302_irq_r )
+static READ8_HANDLER( zx8302_irq_status_r )
 {
-	/*
-		
-		bit		description
-		
-		0		Gap interrupt
-		1		Interface interrupt
-		2		Transmit interrupt
-		3		Frame interrupt
-		4		External interrupt
-		5		
-		6		
-		7		
-
-	*/
-
-	return 0;
+	return zx8302.irq;
 }
 
-static WRITE8_HANDLER( zx8302_irq_w )
+static WRITE8_HANDLER( zx8302_irq_acknowledge_w )
 {
-	zx8302.intr = data;
+	//logerror("ZX8302 Interrupt Acknowledge : %x\n", data);
+
+	zx8302.irq &= ~data;
+
+	if (!zx8302.irq)
+	{
+		cpunum_set_input_line(0, MC68000_IRQ_2, CLEAR_LINE);
+	}
 }
 
 static READ8_HANDLER( zx8302_mdv_track1_r )
@@ -245,9 +297,17 @@ static READ8_HANDLER( zx8302_mdv_track2_r )
 	return 0;
 }
 
-static WRITE8_HANDLER( zx8302_txdata_w )
+static WRITE8_HANDLER( zx8302_data_w )
 {
+	//logerror("ZX8302 Data Write : %x\n", data);
+
 	zx8302.tdr = data;
+	zx8302.status |= ZX8302_STATUS_BUFFER_FULL;
+}
+
+static INTERRUPT_GEN( zx8302_int )
+{
+	zx8302_interrupt(ZX8302_INT_FRAME);
 }
 
 /* Intelligent Peripheral Controller (IPC) */
@@ -258,6 +318,54 @@ static struct IPC
 	int ser1_txd, ser1_dtr;
 	int ser2_rxd, ser2_cts;
 } ipc;
+
+static WRITE8_HANDLER( ipc_link_hack_w )
+{
+	/*
+
+		IPC <-> ZX8302 serial link protocol
+		***********************************
+
+		Send bit to IPC
+		---------------
+
+		1. ZX initiates transmission (COMDATA = 0)
+		2. IPC acknowledges (COMCTL = 0, COMTL = 1)
+		3. ZX transmits data bit (COMDATA = 0 or 1)
+		4. IPC acknowledges (COMCTL = 0, COMTL = 1)
+		5. ZX ends bit transfer (COMDATA = 1)
+
+		Receive bit from IPC
+		--------------------
+
+		1. ZX initiates transmission (COMDATA = 0)
+		2. IPC acknowledges (COMCTL = 0, COMTL = 1)
+		3. IPC transmits data bit (COMDATA = 0 or 1)
+		4. IPC acknowledges (COMCTL = 0, COMTL = 1)
+		5. IPC ends bit transfer (COMDATA = 1)
+
+	*/
+
+	switch (activecpu_get_pc())
+	{
+	case 0x759:
+		// transmit data bit from ZX8302
+		zx8302.comdata = BIT(zx8302.idr, 1);
+		break;
+
+	case 0x75b:
+		// end bit transfer from ZX8302
+		zx8302.comdata = 1;
+		zx8302.comctl = 0;
+		break;
+
+	case 0x775:
+		// latch data bit from IPC
+		zx8302.comdata_l = zx8302.comdata;
+		zx8302.comctl = 0;
+		break;
+	}
+}
 
 static WRITE8_HANDLER( ipc_port1_w )
 {
@@ -303,15 +411,15 @@ static WRITE8_HANDLER( ipc_port2_w )
 	case 0:
 		cpunum_set_input_line(0, MC68000_IRQ_2, CLEAR_LINE);
 		cpunum_set_input_line(0, MC68000_IRQ_5, CLEAR_LINE);
-		cpunum_set_input_line(0, MC68000_IRQ_7, ASSERT_LINE);
+		cpunum_set_input_line(0, MC68000_IRQ_7, HOLD_LINE);
 		break;
-	case 1:
+	case 1: // CTRL-ALT-7
 		cpunum_set_input_line(0, MC68000_IRQ_2, CLEAR_LINE);
-		cpunum_set_input_line(0, MC68000_IRQ_5, ASSERT_LINE);
+		cpunum_set_input_line(0, MC68000_IRQ_5, HOLD_LINE);
 		cpunum_set_input_line(0, MC68000_IRQ_7, CLEAR_LINE);
 		break;
 	case 2:
-		cpunum_set_input_line(0, MC68000_IRQ_2, ASSERT_LINE);
+		cpunum_set_input_line(0, MC68000_IRQ_2, HOLD_LINE);
 		cpunum_set_input_line(0, MC68000_IRQ_5, CLEAR_LINE);
 		cpunum_set_input_line(0, MC68000_IRQ_7, CLEAR_LINE);
 		break;
@@ -389,13 +497,14 @@ static READ8_HANDLER( ipc_bus_r )
 static ADDRESS_MAP_START( ql_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x000000, 0x00bfff) AM_ROM	// System ROM
 	AM_RANGE(0x00c000, 0x00ffff) AM_ROM // Cartridge ROM
-	AM_RANGE(0x018000, 0x018001) AM_READWRITE(zx8302_rtc_r, zx8302_rtc_w)
+	AM_RANGE(0x018000, 0x018003) AM_READ(zx8302_rtc_r)
+	AM_RANGE(0x018000, 0x018001) AM_WRITE(zx8302_rtc_w)
 	AM_RANGE(0x018002, 0x018002) AM_WRITE(zx8302_control_w)
-	AM_RANGE(0x018003, 0x018003) AM_WRITE(zx8302_ipc_w)
-	AM_RANGE(0x018020, 0x018020) AM_READWRITE(zx8302_ipc_r, zx8302_mdv_control_w)
-	AM_RANGE(0x018020, 0x018020) AM_READWRITE(zx8302_irq_r, zx8302_irq_w)
-	AM_RANGE(0x018022, 0x018022) AM_READWRITE(zx8302_mdv_track1_r, zx8302_txdata_w)
-	AM_RANGE(0x018023, 0x018023) AM_READ(zx8302_mdv_track2_r)
+	AM_RANGE(0x018003, 0x018003) AM_WRITE(zx8302_ipc_command_w)
+	AM_RANGE(0x018020, 0x018020) AM_READWRITE(zx8302_status_r, zx8302_mdv_control_w)
+	AM_RANGE(0x018021, 0x018021) AM_READWRITE(zx8302_irq_status_r, zx8302_irq_acknowledge_w)
+	AM_RANGE(0x018022, 0x018022) AM_READWRITE(zx8302_mdv_track1_r, zx8302_data_w)
+	AM_RANGE(0x018023, 0x018023) AM_READ(zx8302_mdv_track2_r) AM_WRITENOP
 	AM_RANGE(0x018063, 0x018063) AM_WRITE(zx8301_control_w)
 	AM_RANGE(0x020000, 0x02ffff) AM_RAM AM_BASE(&videoram)
 	AM_RANGE(0x030000, 0x03ffff) AM_RAM // onboard RAM
@@ -409,6 +518,7 @@ static ADDRESS_MAP_START( ipc_map, ADDRESS_SPACE_PROGRAM, 8 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( ipc_io_map, ADDRESS_SPACE_IO, 8 )
+	AM_RANGE(0x00, 0x7f) AM_WRITE(ipc_link_hack_w)
 	AM_RANGE(0x27, 0x28) AM_READNOP // IPC reads these to set P0 (bus) to Hi-Z mode
 	AM_RANGE(I8039_p1, I8039_p1) AM_WRITE(ipc_port1_w)
 	AM_RANGE(I8039_p2, I8039_p2) AM_READWRITE(ipc_port2_r, ipc_port2_w)
@@ -527,38 +637,45 @@ INPUT_PORTS_END
 
 /* Machine Drivers */
 
-static INTERRUPT_GEN( zx8302_int )
-{
-	cpunum_set_input_line(0, MC68000_IRQ_2, ASSERT_LINE);
-}
-
 static MACHINE_START( ql )
 {
 	// ZX8302
 
 	state_save_register_global(zx8302.comdata);
+	state_save_register_global(zx8302.comdata_l);
 	state_save_register_global(zx8302.comctl);
 	state_save_register_global(zx8302.baudx4);
 	state_save_register_global(zx8302.tcr);
 	state_save_register_global(zx8302.tdr);
-	state_save_register_global(zx8302.intr);
+	state_save_register_global(zx8302.irq);
 	state_save_register_global(zx8302.ctr);
 	state_save_register_global(zx8302.idr);
 	state_save_register_global(zx8302.ipc_bits);
+	state_save_register_global(zx8302.tx_bits);
 	state_save_register_global(zx8302.ser1_rxd);
 	state_save_register_global(zx8302.ser1_cts);
 	state_save_register_global(zx8302.ser2_txd);
 	state_save_register_global(zx8302.ser2_dtr);
+	state_save_register_global(zx8302.netout);
+	state_save_register_global(zx8302.netin);
+	state_save_register_global(zx8302.mdrdw);
+	state_save_register_global(zx8302.mdselck);
+	state_save_register_global(zx8302.mdseld);
+	state_save_register_global(zx8302.erase);
+	state_save_register_global(zx8302.raw1);
+	state_save_register_global(zx8302.raw2);
 
 	memset(&zx8302, 0, sizeof(zx8302));
 	zx8302.comctl = 1;
 	zx8302.comdata = 1;
 
-	zx8302_txd_timer = mame_timer_alloc(zx8302_txd_tick);
-	zx8302_ipc_timer = mame_timer_alloc(zx8302_ipc_tick);
-	zx8302_rtc_timer = mame_timer_alloc(zx8302_rtc_tick);
+	zx8302_txd_timer = timer_alloc(zx8302_txd_tick);
+	zx8302_ipc_timer = timer_alloc(zx8302_ipc_tick);
+	zx8302_rtc_timer = timer_alloc(zx8302_rtc_tick);
 
-	mame_timer_adjust(zx8302_rtc_timer, time_zero, 0, MAME_TIME_IN_HZ(X2));
+	timer_adjust(zx8302_rtc_timer, attotime_zero, 0, ATTOTIME_IN_HZ(X2/32768));
+
+	zx8302.ctr = time(NULL) + 283996800;
 
 	// IPC
 
@@ -614,35 +731,35 @@ MACHINE_DRIVER_END
 ROM_START( ql )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
 	ROM_SYSTEM_BIOS( 0, "js", "v1.10 (JS)" )
-	ROMX_LOAD( "ql.js 0000.ic33", 0x000000, 0x008000, CRC(1bbad3b8) SHA1(59fd4372771a630967ee102760f4652904d7d5fa), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(1) )
-    ROMX_LOAD( "ql.js 8000.ic34", 0x008000, 0x004000, CRC(c970800e) SHA1(b8c9203026a7de6a44bd0942ec9343e8b222cb41), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(1) )
+	ROMX_LOAD( "ql.js 0000.ic33", 0x000000, 0x008000, CRC(1bbad3b8) SHA1(59fd4372771a630967ee102760f4652904d7d5fa), ROM_BIOS(1) )
+    ROMX_LOAD( "ql.js 8000.ic34", 0x008000, 0x004000, CRC(c970800e) SHA1(b8c9203026a7de6a44bd0942ec9343e8b222cb41), ROM_BIOS(1) )
 
 	ROM_SYSTEM_BIOS( 1, "tb", "v1.0? (TB)" )
-	ROMX_LOAD( "tb.ic33", 0x000000, 0x008000, BAD_DUMP CRC(1c86d688) SHA1(7df8028e6671afc4ebd5f65bf6c2d6019181f239), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(2) )
-    ROMX_LOAD( "tb.ic34", 0x008000, 0x004000, BAD_DUMP CRC(de7f9669) SHA1(9d6bc0b794541a4cec2203256ae92c7e68d1011d), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(2) )
+	ROMX_LOAD( "tb.ic33", 0x000000, 0x008000, BAD_DUMP CRC(1c86d688) SHA1(7df8028e6671afc4ebd5f65bf6c2d6019181f239), ROM_BIOS(2) )
+    ROMX_LOAD( "tb.ic34", 0x008000, 0x004000, BAD_DUMP CRC(de7f9669) SHA1(9d6bc0b794541a4cec2203256ae92c7e68d1011d), ROM_BIOS(2) )
 
 	ROM_SYSTEM_BIOS( 2, "jm", "v1.03 (JM)" )
-	ROMX_LOAD( "ql.jm 0000.ic33", 0x000000, 0x008000, CRC(1f8e840a) SHA1(7929e716dfe88318bbe99e34f47d039957fe3cc0), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(3) )
-    ROMX_LOAD( "ql.jm 8000.ic34", 0x008000, 0x004000, CRC(9168a2e9) SHA1(1e7c47a59fc40bd96dfefc2f4d86827c15f0199e), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(3) )
+	ROMX_LOAD( "ql.jm 0000.ic33", 0x000000, 0x008000, CRC(1f8e840a) SHA1(7929e716dfe88318bbe99e34f47d039957fe3cc0), ROM_BIOS(3) )
+    ROMX_LOAD( "ql.jm 8000.ic34", 0x008000, 0x004000, CRC(9168a2e9) SHA1(1e7c47a59fc40bd96dfefc2f4d86827c15f0199e), ROM_BIOS(3) )
 
 	ROM_SYSTEM_BIOS( 3, "ah", "v1.02 (AH)" )
-	ROMX_LOAD( "ah.ic33.1", 0x000000, 0x004000, BAD_DUMP CRC(a9b4d2df) SHA1(142d6f01a9621aff5e0ad678bd3cbf5cde0db801), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(4) )
-    ROMX_LOAD( "ah.ic33.2", 0x004000, 0x004000, BAD_DUMP CRC(36488e4e) SHA1(ff6f597b30ea03ce480a3d6728fd1d858da34d6a), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(4) )
-	ROMX_LOAD( "ah.ic34",   0x008000, 0x004000, BAD_DUMP CRC(61259d4c) SHA1(bdd10d111e7ba488551a27c8d3b2743917ff1307), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(4) )
+	ROMX_LOAD( "ah.ic33.1", 0x000000, 0x004000, BAD_DUMP CRC(a9b4d2df) SHA1(142d6f01a9621aff5e0ad678bd3cbf5cde0db801), ROM_BIOS(4) )
+    ROMX_LOAD( "ah.ic33.2", 0x004000, 0x004000, BAD_DUMP CRC(36488e4e) SHA1(ff6f597b30ea03ce480a3d6728fd1d858da34d6a), ROM_BIOS(4) )
+	ROMX_LOAD( "ah.ic34",   0x008000, 0x004000, BAD_DUMP CRC(61259d4c) SHA1(bdd10d111e7ba488551a27c8d3b2743917ff1307), ROM_BIOS(4) )
 
 	ROM_SYSTEM_BIOS( 4, "pm", "v1.01 (PM)" )
-	ROMX_LOAD( "pm.ic33", 0x000000, 0x008000, NO_DUMP, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(5) )
-    ROMX_LOAD( "pm.ic34", 0x008000, 0x004000, NO_DUMP, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(5) )
+	ROMX_LOAD( "pm.ic33", 0x000000, 0x008000, NO_DUMP, ROM_BIOS(5) )
+    ROMX_LOAD( "pm.ic34", 0x008000, 0x004000, NO_DUMP, ROM_BIOS(5) )
 
 	ROM_SYSTEM_BIOS( 5, "fb", "v1.00 (FB)" )
-    ROMX_LOAD( "fb.ic33", 0x000000, 0x008000, NO_DUMP, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(6) )
-    ROMX_LOAD( "fb.ic34", 0x008000, 0x004000, NO_DUMP, ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(6) )
+    ROMX_LOAD( "fb.ic33", 0x000000, 0x008000, NO_DUMP, ROM_BIOS(6) )
+    ROMX_LOAD( "fb.ic34", 0x008000, 0x004000, NO_DUMP, ROM_BIOS(6) )
 
 	ROM_SYSTEM_BIOS( 6, "tyche", "v2.05 (Tyche)" )
-    ROMX_LOAD( "tyche.rom", 0x000000, 0x010000, BAD_DUMP CRC(8724b495) SHA1(5f33a1bc3f23fd09c31844b65bc3aca7616f180a), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(7) )
+    ROMX_LOAD( "tyche.rom", 0x000000, 0x010000, BAD_DUMP CRC(8724b495) SHA1(5f33a1bc3f23fd09c31844b65bc3aca7616f180a), ROM_BIOS(7) )
 
 	ROM_SYSTEM_BIOS( 7, "min189", "Minerva v1.89" )
-    ROMX_LOAD( "minerva.rom", 0x000000, 0x00c000, CRC(930befe3) SHA1(84a99c4df13b97f90baf1ec8cb6c2e52e3e1bb4d), ROM_GROUPWORD | ROM_REVERSE | ROM_BIOS(8) )
+    ROMX_LOAD( "minerva.rom", 0x000000, 0x00c000, CRC(930befe3) SHA1(84a99c4df13b97f90baf1ec8cb6c2e52e3e1bb4d), ROM_BIOS(8) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "v07.ic24",	  0x0000, 0x0800, CRC(051111f9) SHA1(83ed562464df89b9fdd9740db51d45884a512696) ) // V0.7
@@ -651,8 +768,8 @@ ROM_END
 
 ROM_START( ql_jsu )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "jsu.ic33", 0x000000, 0x008000, BAD_DUMP CRC(e397f49f) SHA1(c06f92eabaf3e6dd298c51cb7f7535d8ef0ef9c5) )
-    ROM_LOAD16_WORD_SWAP( "jsu.ic34", 0x008000, 0x004000, BAD_DUMP CRC(3debbacc) SHA1(9fbc3e42ec463fa42f9c535d63780ff53a9313ec) )
+    ROM_LOAD( "jsu.ic33", 0x000000, 0x008000, BAD_DUMP CRC(e397f49f) SHA1(c06f92eabaf3e6dd298c51cb7f7535d8ef0ef9c5) )
+    ROM_LOAD( "jsu.ic34", 0x008000, 0x004000, BAD_DUMP CRC(3debbacc) SHA1(9fbc3e42ec463fa42f9c535d63780ff53a9313ec) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -660,8 +777,8 @@ ROM_END
 
 ROM_START( ql_mge )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "mge.ic33", 0x000000, 0x008000, BAD_DUMP CRC(d5293bde) SHA1(bf5af7e53a472d4e9871f182210787d601db0634) )
-    ROM_LOAD16_WORD_SWAP( "mge.ic34", 0x008000, 0x004000, BAD_DUMP CRC(a694f8d7) SHA1(bd2868656008de85d7c191598588017ae8aa3339) )
+    ROM_LOAD( "mge.ic33", 0x000000, 0x008000, BAD_DUMP CRC(d5293bde) SHA1(bf5af7e53a472d4e9871f182210787d601db0634) )
+    ROM_LOAD( "mge.ic34", 0x008000, 0x004000, BAD_DUMP CRC(a694f8d7) SHA1(bd2868656008de85d7c191598588017ae8aa3339) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -669,8 +786,8 @@ ROM_END
 
 ROM_START( ql_mgf )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "mgf.ic33", 0x000000, 0x008000, NO_DUMP )
-    ROM_LOAD16_WORD_SWAP( "mgf.ic34", 0x008000, 0x004000, NO_DUMP )
+    ROM_LOAD( "mgf.ic33", 0x000000, 0x008000, NO_DUMP )
+    ROM_LOAD( "mgf.ic34", 0x008000, 0x004000, NO_DUMP )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -678,8 +795,8 @@ ROM_END
 
 ROM_START( ql_mgg )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "mgg.ic33", 0x000000, 0x008000, BAD_DUMP CRC(b4e468fd) SHA1(cd02a3cd79af90d48b65077d0571efc2f12f146e) )
-    ROM_LOAD16_WORD_SWAP( "mgg.ic34", 0x008000, 0x004000, BAD_DUMP CRC(54959d40) SHA1(ffc0be9649f26019d7be82925c18dc699259877f) )
+    ROM_LOAD( "mgg.ic33", 0x000000, 0x008000, BAD_DUMP CRC(b4e468fd) SHA1(cd02a3cd79af90d48b65077d0571efc2f12f146e) )
+    ROM_LOAD( "mgg.ic34", 0x008000, 0x004000, BAD_DUMP CRC(54959d40) SHA1(ffc0be9649f26019d7be82925c18dc699259877f) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -687,8 +804,8 @@ ROM_END
 
 ROM_START( ql_mgi )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "mgi.ic33", 0x000000, 0x008000, BAD_DUMP CRC(d5293bde) SHA1(bf5af7e53a472d4e9871f182210787d601db0634) )
-    ROM_LOAD16_WORD_SWAP( "mgi.ic34", 0x008000, 0x004000, BAD_DUMP CRC(a2fdfb83) SHA1(162b1052737500f3c13497cdf0f813ba006bdae9) )
+    ROM_LOAD( "mgi.ic33", 0x000000, 0x008000, BAD_DUMP CRC(d5293bde) SHA1(bf5af7e53a472d4e9871f182210787d601db0634) )
+    ROM_LOAD( "mgi.ic34", 0x008000, 0x004000, BAD_DUMP CRC(a2fdfb83) SHA1(162b1052737500f3c13497cdf0f813ba006bdae9) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -696,8 +813,8 @@ ROM_END
 
 ROM_START( ql_mgs )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "mgs.ic33", 0x000000, 0x008000, NO_DUMP )
-    ROM_LOAD16_WORD_SWAP( "mgs.ic34", 0x008000, 0x004000, NO_DUMP )
+    ROM_LOAD( "mgs.ic33", 0x000000, 0x008000, NO_DUMP )
+    ROM_LOAD( "mgs.ic34", 0x008000, 0x004000, NO_DUMP )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )
@@ -705,8 +822,8 @@ ROM_END
 
 ROM_START( ql_efp )
     ROM_REGION( 0x400000, REGION_CPU1, 0 )
-    ROM_LOAD16_WORD_SWAP( "efp.ic33", 0x000000, 0x008000, BAD_DUMP CRC(eb181641) SHA1(43c1e0215cf540cbbda240b1048910ff55681059) )
-    ROM_LOAD16_WORD_SWAP( "efp.ic34", 0x008000, 0x004000, BAD_DUMP CRC(4c3b34b7) SHA1(f9dc571d2d4f68520b306ecc7516acaeea69ec0d) )
+    ROM_LOAD( "efp.ic33", 0x000000, 0x008000, BAD_DUMP CRC(eb181641) SHA1(43c1e0215cf540cbbda240b1048910ff55681059) )
+    ROM_LOAD( "efp.ic34", 0x008000, 0x004000, BAD_DUMP CRC(4c3b34b7) SHA1(f9dc571d2d4f68520b306ecc7516acaeea69ec0d) )
 
 	ROM_REGION( 0x800, REGION_CPU2, 0 )
 	ROM_LOAD( "ipc8049.ic24", 0x0000, 0x0800, CRC(6a0d1f20) SHA1(fcb1c97ee7c66e5b6d8fbb57c06fd2f6509f2e1b) )

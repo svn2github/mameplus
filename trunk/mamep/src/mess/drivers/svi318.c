@@ -10,10 +10,11 @@
 */
 
 #include "driver.h"
-#include "video/generic.h"
-#include "machine/8255ppi.h"
-#include "video/tms9928a.h"
 #include "includes/svi318.h"
+#include "video/generic.h"
+#include "video/tms9928a.h"
+#include "machine/8255ppi.h"
+#include "machine/uart8250.h"
 #include "machine/wd17xx.h"
 #include "devices/basicdsk.h"
 #include "devices/printer.h"
@@ -22,6 +23,7 @@
 #include "formats/svi_cas.h"
 #include "sound/dac.h"
 #include "sound/ay8910.h"
+#include "sv328806.lh"
 
 static ADDRESS_MAP_START( svi318_mem, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0x0000, 0x7fff) AM_READWRITE( MRA8_BANK1, svi318_writemem1 )
@@ -29,13 +31,19 @@ static ADDRESS_MAP_START( svi318_mem, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE( 0xc000, 0xffff) AM_READWRITE( MRA8_BANK3, svi318_writemem3 )
 ADDRESS_MAP_END
 
-
+static ADDRESS_MAP_START( svi328_806_mem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE( 0x0000, 0x7fff) AM_READWRITE( MRA8_BANK1, svi318_writemem1 )
+	AM_RANGE( 0x8000, 0xbfff) AM_READWRITE( MRA8_BANK2, svi318_writemem2 )
+	AM_RANGE( 0xc000, 0xefff) AM_READWRITE( MRA8_BANK3, svi318_writemem3 )
+	AM_RANGE( 0xf000, 0xffff) AM_READWRITE( MRA8_BANK4, svi318_writemem4 )
+ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( svi318_io, ADDRESS_SPACE_IO, 8 )
 	ADDRESS_MAP_FLAGS( AMEF_UNMAP(0xff) )
 	ADDRESS_MAP_FLAGS( AMEF_ABITS(8) )
 	AM_RANGE( 0x10, 0x11) AM_WRITE( svi318_printer_w )
 	AM_RANGE( 0x12, 0x12) AM_READ( svi318_printer_r )
+	AM_RANGE( 0x28, 0x2f) AM_READWRITE( uart8250_0_r, uart8250_0_w )
 	AM_RANGE( 0x30, 0x30) AM_READWRITE( wd17xx_status_r, wd17xx_command_w )
 	AM_RANGE( 0x31, 0x31) AM_READWRITE( wd17xx_track_r, wd17xx_track_w )
 	AM_RANGE( 0x32, 0x32) AM_READWRITE( wd17xx_sector_r, wd17xx_sector_w )
@@ -64,8 +72,8 @@ static ADDRESS_MAP_START( svi318_io2, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE( 0x33, 0x33) AM_READWRITE( wd17xx_data_r, wd17xx_data_w )
 	AM_RANGE( 0x34, 0x34) AM_READWRITE( svi318_fdc_irqdrq_r, svi318_fdc_drive_motor_w )
 	AM_RANGE( 0x38, 0x38) AM_WRITE( svi318_fdc_density_side_w )
-	AM_RANGE( 0x50, 0x51) AM_READWRITE( svi318_crtc_r, svi318_crtc_w )
-	AM_RANGE( 0x58, 0x58) AM_WRITE( svi318_crtcbank_w )
+	AM_RANGE( 0x50, 0x51) AM_READWRITE( svi806_r, svi806_w )
+	AM_RANGE( 0x58, 0x58) AM_WRITE( svi806_ram_enable_w )
 	AM_RANGE( 0x80, 0x80) AM_WRITE( TMS9928A_vram_w )
 	AM_RANGE( 0x81, 0x81) AM_WRITE( TMS9928A_register_w )
 	AM_RANGE( 0x84, 0x84) AM_READ( TMS9928A_vram_r )
@@ -265,8 +273,8 @@ static INPUT_PORTS_START ( svi328 )
   PORT_BIT (0x08, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM -") PORT_CODE(KEYCODE_MINUS_PAD)
   PORT_BIT (0x10, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM *") PORT_CODE(KEYCODE_ASTERISK)
   PORT_BIT (0x20, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM /") PORT_CODE(KEYCODE_SLASH_PAD)
-  PORT_BIT (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM .") PORT_CODE(KEYCODE_LALT)
-  PORT_BIT (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM ,") PORT_CODE(KEYCODE_RALT)
+  PORT_BIT (0x40, IP_ACTIVE_LOW, IPT_UNUSED)
+  PORT_BIT (0x80, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM ,") PORT_CODE(KEYCODE_DEL_PAD)
 
  PORT_START /* 11 */
   PORT_BIT (0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP)
@@ -294,7 +302,7 @@ static INPUT_PORTS_START ( svi328 )
   PORT_BIT (0x08, IP_ACTIVE_LOW, IPT_UNUSED)
   PORT_BIT (0x10, IP_ACTIVE_LOW, IPT_UNUSED)
   PORT_BIT (0x20, IP_ACTIVE_LOW, IPT_UNUSED)
-  PORT_BIT (0x40, IP_ACTIVE_LOW, IPT_UNUSED)
+  PORT_BIT (0x40, IP_ACTIVE_LOW, IPT_KEYBOARD) PORT_NAME("NUM ENTER") PORT_CODE(KEYCODE_ENTER_PAD)
   PORT_BIT (0x80, IP_ACTIVE_LOW, IPT_UNUSED)
 
 INPUT_PORTS_END
@@ -317,7 +325,7 @@ static MACHINE_DRIVER_START( svi318 )
 	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(1)
 
-	MDRV_MACHINE_START( svi318 )
+	MDRV_MACHINE_START( svi318_pal )
 	MDRV_MACHINE_RESET( svi318 )
 
 	/* Video hardware */
@@ -334,17 +342,62 @@ static MACHINE_DRIVER_START( svi318 )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)	
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( svi328b )
+static MACHINE_DRIVER_START( svi318n )
 	MDRV_IMPORT_FROM( svi318 )
+	MDRV_SCREEN_REFRESH_RATE(60)
 
-	MDRV_CPU_MODIFY("main")
+	MDRV_MACHINE_START( svi318_ntsc )
+	MDRV_MACHINE_RESET( svi318 )
+
+	MDRV_IMPORT_FROM( tms9928a )
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( svi328_806 )
+	/* Basic machine hardware */
+	MDRV_CPU_ADD_TAG( "main", Z80, 3579545 )	/* 3.579545 Mhz */
+	MDRV_CPU_PROGRAM_MAP( svi328_806_mem, 0 )
 	MDRV_CPU_IO_MAP( svi318_io2, 0 )
-	MDRV_MACHINE_RESET( svi328b )
+	MDRV_CPU_VBLANK_INT( svi318_interrupt, 1 )
+	MDRV_INTERLEAVE(1)
 
-	/* video hardware */
+	MDRV_MACHINE_START( svi318_pal )
+	MDRV_MACHINE_RESET( svi328_806 )
+
+	/* Video hardware */
+	MDRV_DEFAULT_LAYOUT( layout_sv328806 )
+
+	MDRV_SCREEN_ADD("main", 0)
+	MDRV_SCREEN_REFRESH_RATE(50)
+	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
+	MDRV_IMPORT_FROM(tms9928a)
+	MDRV_PALETTE_LENGTH(TMS9928A_PALETTE_SIZE + 2)	/* 2 additional entries for monochrome svi806 output */
+
+	MDRV_SCREEN_ADD("svi806", 0)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(DEFAULT_60HZ_VBLANK_DURATION)
 	MDRV_SCREEN_SIZE(640, 400)
 	MDRV_SCREEN_VISIBLE_AREA(0,640-1, 0, 400-1)
-	MDRV_VIDEO_UPDATE( svi328b )
+
+	MDRV_VIDEO_UPDATE( svi328_806 )
+
+	/* Sound hardware */
+	MDRV_SPEAKER_STANDARD_MONO("mono")
+	MDRV_SOUND_ADD(DAC, 0)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MDRV_SOUND_ADD(WAVE, 0)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
+	MDRV_SOUND_ADD(AY8910, 1789773)
+	MDRV_SOUND_CONFIG(ay8910_interface)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.75)
+MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( svi328n_806 )
+	MDRV_IMPORT_FROM( svi328_806 )
+	MDRV_SCREEN_REFRESH_RATE(60)
+
+	MDRV_MACHINE_START( svi318_ntsc)
+	MDRV_IMPORT_FROM( tms9928a )
 MACHINE_DRIVER_END
 
 /***************************************************************************
@@ -353,20 +406,57 @@ MACHINE_DRIVER_END
 
 ***************************************************************************/
 
-ROM_START (svi318)
-	ROM_REGION (0x10000, REGION_CPU1,0)
-	ROM_LOAD ("svi100.rom", 0x0000, 0x8000, CRC(98d48655) SHA1(07758272df475e5e06187aa3574241df1b14035b))
-ROM_END
-
-ROM_START (svi328)
-	ROM_REGION (0x10000, REGION_CPU1,0)
+ROM_START( svi318 )
+	ROM_REGION(0x10000, REGION_CPU1, 0)
 	ROM_SYSTEM_BIOS(0, "111", "SV BASIC v1.11")
-	ROMX_LOAD ("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89), ROM_BIOS(1))
+	ROMX_LOAD("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89), ROM_BIOS(1))
 	ROM_SYSTEM_BIOS(1, "110", "SV BASIC v1.1")
-	ROMX_LOAD ("svi110.rom", 0x0000, 0x8000, CRC(709904e9) SHA1(7d8daf52f78371ca2c9443e04827c8e1f98c8f2c), ROM_BIOS(2))
+	ROMX_LOAD("svi110.rom", 0x0000, 0x8000, CRC(709904e9) SHA1(7d8daf52f78371ca2c9443e04827c8e1f98c8f2c), ROM_BIOS(2))
+	ROM_SYSTEM_BIOS(2, "100", "SV BASIC v1.0")
+	ROMX_LOAD("svi100.rom", 0x0000, 0x8000, CRC(98d48655) SHA1(07758272df475e5e06187aa3574241df1b14035b), ROM_BIOS(3))
 ROM_END
 
-ROM_START (svi328b)
+ROM_START( svi318n  )
+	ROM_REGION(0x10000, REGION_CPU1, 0)
+	ROM_SYSTEM_BIOS(0, "111", "SV BASIC v1.11")
+	ROMX_LOAD("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89), ROM_BIOS(1))
+	ROM_SYSTEM_BIOS(1, "110", "SV BASIC v1.1")
+	ROMX_LOAD("svi110.rom", 0x0000, 0x8000, CRC(709904e9) SHA1(7d8daf52f78371ca2c9443e04827c8e1f98c8f2c), ROM_BIOS(2))
+	ROM_SYSTEM_BIOS(2, "100", "SV BASIC v1.0")
+	ROMX_LOAD("svi100.rom", 0x0000, 0x8000, CRC(98d48655) SHA1(07758272df475e5e06187aa3574241df1b14035b), ROM_BIOS(3))
+ROM_END
+
+ROM_START( svi328 )
+	ROM_REGION(0x10000, REGION_CPU1, 0)
+	ROM_SYSTEM_BIOS(0, "111", "SV BASIC v1.11")
+	ROMX_LOAD("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89), ROM_BIOS(1))
+	ROM_SYSTEM_BIOS(1, "110", "SV BASIC v1.1")
+	ROMX_LOAD("svi110.rom", 0x0000, 0x8000, CRC(709904e9) SHA1(7d8daf52f78371ca2c9443e04827c8e1f98c8f2c), ROM_BIOS(2))
+	ROM_SYSTEM_BIOS(2, "100", "SV BASIC v1.0")
+	ROMX_LOAD("svi100.rom", 0x0000, 0x8000, CRC(98d48655) SHA1(07758272df475e5e06187aa3574241df1b14035b), ROM_BIOS(3))
+ROM_END
+
+ROM_START( svi328n )
+	ROM_REGION(0x10000, REGION_CPU1, 0)
+	ROM_SYSTEM_BIOS(0, "111", "SV BASIC v1.11")
+	ROMX_LOAD("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89), ROM_BIOS(1))
+	ROM_SYSTEM_BIOS(1, "110", "SV BASIC v1.1")
+	ROMX_LOAD("svi110.rom", 0x0000, 0x8000, CRC(709904e9) SHA1(7d8daf52f78371ca2c9443e04827c8e1f98c8f2c), ROM_BIOS(2))
+	ROM_SYSTEM_BIOS(2, "100", "SV BASIC v1.0")
+	ROMX_LOAD("svi100.rom", 0x0000, 0x8000, CRC(98d48655) SHA1(07758272df475e5e06187aa3574241df1b14035b), ROM_BIOS(3))
+ROM_END
+
+ROM_START( sv328p80 )
+	ROM_REGION (0x10000, REGION_CPU1,0)
+	ROM_LOAD ("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89))
+	ROM_REGION( 0x1000, REGION_GFX1, 0)
+	ROM_SYSTEM_BIOS(0, "english", "English Character Cartridge")
+	ROMX_LOAD ("svi806.rom",   0x0000, 0x1000, CRC(850bc232) SHA1(ed45cb0e9bd18a9d7bd74f87e620f016a7ae840f), ROM_BIOS(1))
+	ROM_SYSTEM_BIOS(1, "swedish", "Swedish Character Cartridge")
+	ROMX_LOAD ("svi806se.rom", 0x0000, 0x1000, CRC(daea8956) SHA1(3f16d5513ad35692488ae7d864f660e76c6e8ed3), ROM_BIOS(2))
+ROM_END
+
+ROM_START( sv328n80 )
 	ROM_REGION (0x10000, REGION_CPU1,0)
 	ROM_LOAD ("svi111.rom", 0x0000, 0x8000, CRC(bc433df6) SHA1(10349ce675f6d6d47f0976e39cb7188eba858d89))
 	ROM_REGION( 0x1000, REGION_GFX1, 0)
@@ -382,9 +472,13 @@ static void svi318_printer_getinfo(const device_class *devclass, UINT32 state, u
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_COUNT:							info->i = 1; break;
+		case DEVINFO_INT_COUNT:
+			info->i = 1;
+			break;
 
-		default:										printer_device_getinfo(devclass, state, info); break;
+		default:
+			printer_device_getinfo(devclass, state, info);
+			break;
 	}
 }
 
@@ -394,12 +488,18 @@ static void svi318_cassette_getinfo(const device_class *devclass, UINT32 state, 
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_COUNT:							info->i = 1; break;
+		case DEVINFO_INT_COUNT:
+			info->i = 1;
+			break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_PTR_CASSETTE_FORMATS:				info->p = (void *) svi_cassette_formats; break;
+		case DEVINFO_PTR_CASSETTE_FORMATS:
+			info->p = (void *) svi_cassette_formats;
+			break;
 
-		default:										cassette_device_getinfo(devclass, state, info); break;
+		default:
+			cassette_device_getinfo(devclass, state, info);
+			break;
 	}
 }
 
@@ -409,17 +509,29 @@ static void svi318_cartslot_getinfo(const device_class *devclass, UINT32 state, 
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_COUNT:							info->i = 1; break;
+		case DEVINFO_INT_COUNT:
+			info->i = 1;
+			break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_PTR_INIT:							info->init = device_init_svi318_cart; break;
-		case DEVINFO_PTR_LOAD:							info->load = device_load_svi318_cart; break;
-		case DEVINFO_PTR_UNLOAD:						info->unload = device_unload_svi318_cart; break;
+		case DEVINFO_PTR_INIT:
+			info->init = device_init_svi318_cart;
+			break;
+		case DEVINFO_PTR_LOAD:
+			info->load = device_load_svi318_cart;
+			break;
+		case DEVINFO_PTR_UNLOAD:
+			info->unload = device_unload_svi318_cart;
+			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "rom"); break;
+		case DEVINFO_STR_FILE_EXTENSIONS:
+			strcpy(info->s = device_temp_str(), "rom");
+			break;
 
-		default:										cartslot_device_getinfo(devclass, state, info); break;
+		default:
+			cartslot_device_getinfo(devclass, state, info);
+			break;
 	}
 }
 
@@ -429,33 +541,41 @@ static void svi318_floppy_getinfo(const device_class *devclass, UINT32 state, un
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_COUNT:							info->i = 2; break;
+		case DEVINFO_INT_COUNT:
+			info->i = 2;
+			break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_PTR_LOAD:							info->load = device_load_svi318_floppy; break;
+		case DEVINFO_PTR_LOAD:
+			info->load = device_load_svi318_floppy;
+			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "dsk"); break;
+		case DEVINFO_STR_FILE_EXTENSIONS:
+			strcpy(info->s = device_temp_str(), "dsk");
+			break;
 
-		default:										legacybasicdsk_device_getinfo(devclass, state, info); break;
+		default:
+			legacybasicdsk_device_getinfo(devclass, state, info);
+			break;
 	}
 }
 
-SYSTEM_CONFIG_START(svi318_common)
+SYSTEM_CONFIG_START( svi318_common )
 	CONFIG_DEVICE(svi318_printer_getinfo)
 	CONFIG_DEVICE(svi318_cassette_getinfo)
 	CONFIG_DEVICE(svi318_cartslot_getinfo)
 	CONFIG_DEVICE(svi318_floppy_getinfo)
 SYSTEM_CONFIG_END
 
-SYSTEM_CONFIG_START(svi318)
+SYSTEM_CONFIG_START( svi318 )
 	CONFIG_IMPORT_FROM(svi318_common)
 	CONFIG_RAM_DEFAULT(16 * 1024)
 	CONFIG_RAM( 80 * 1024 )
 	CONFIG_RAM( 144 * 1024 )
 SYSTEM_CONFIG_END
 
-SYSTEM_CONFIG_START(svi328)
+SYSTEM_CONFIG_START( svi328 )
 	CONFIG_IMPORT_FROM(svi318_common)
 	CONFIG_RAM_DEFAULT(64 * 1024)
 	CONFIG_RAM( 128 * 1024 )
@@ -463,6 +583,10 @@ SYSTEM_CONFIG_START(svi328)
 SYSTEM_CONFIG_END
 
 /*    YEAR  NAME        PARENT  COMPAT  MACHINE     INPUT   INIT    CONFIG  COMPANY         FULLNAME                    FLAGS */
-COMP( 1983, svi318,     0,      0,      svi318,     svi318, svi318, svi318, "Spectravideo", "SVI-318 (SV BASIC v1.0)",  0 )
-COMP( 1983, svi328,     svi318, 0,      svi318,     svi328, svi318, svi328, "Spectravideo", "SVI-328",                  0 )
-COMP( 1983, svi328b,    svi318, 0,      svi328b,    svi328, svi318, svi328, "Spectravideo", "SVI-328 + 80 column card", GAME_NOT_WORKING )
+COMP( 1983, svi318,     0,      0,      svi318,     svi318, svi318, svi318, "Spectravideo", "SVI-318 (PAL)",            0 )
+COMP( 1983, svi318n,    svi318, 0,      svi318n,    svi318, svi318, svi318, "Spectravideo", "SVI-318 (NTSC)",           0 )
+COMP( 1983, svi328,     svi318, 0,      svi318,     svi328, svi318, svi328, "Spectravideo", "SVI-328 (PAL)",            0 )
+COMP( 1983, svi328n,    svi318, 0,      svi318n,    svi328, svi318, svi328, "Spectravideo", "SVI-328 (NTSC)",           0 )
+COMP( 1983, sv328p80,   svi318, 0,      svi328_806,    svi328, svi318, svi328, "Spectravideo", "SVI-328 (PAL) + SVI-806 80 column card", 0 )
+COMP( 1983, sv328n80,   svi318, 0,      svi328n_806,    svi328, svi318, svi328, "Spectravideo", "SVI-328 (NTSC) + SVI-806 80 column card", 0 )
+
