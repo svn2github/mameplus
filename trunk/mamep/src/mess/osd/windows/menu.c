@@ -3,6 +3,8 @@
 //	menu.c - Win32 MESS menus handling
 //
 //============================================================
+#define UNICODE
+#define _UNICODE
 
 // standard windows headers
 #include <windows.h>
@@ -164,7 +166,7 @@ static void customize_input(HWND wnd, const char *title, int cust_type, int play
 			if (inputclass == INPUT_CLASS_CATEGORIZED)
 				this_player = in->category;
 			else
-                this_player = input_player_number(in);
+				this_player = input_player_number(in);
 
 			if (this_player == player)
 			{
@@ -305,7 +307,7 @@ static void customize_switches(HWND wnd, int title_string_num, UINT32 ipt_name, 
 		{
 			if (input_port_active(in))
 			{
-				switch_name = input_port_name(in);
+				switch_name = _(input_port_name(in));
 				if (win_dialog_add_combobox(dlg, switch_name, in->default_value, storeval_inputport, in))
 					goto done;
 			}
@@ -318,7 +320,7 @@ static void customize_switches(HWND wnd, int title_string_num, UINT32 ipt_name, 
 		{
 			if (switch_name)
 			{
-				if (win_dialog_add_combobox_item(dlg, input_port_name(in), in->default_value))
+				if (win_dialog_add_combobox_item(dlg, _(input_port_name(in)), in->default_value))
 					goto done;
 			}
 		}
@@ -408,7 +410,7 @@ static void customize_analogcontrols(HWND wnd)
 	{
 		if (port_type_is_analog(in->type))
 		{
-			name = input_port_name(in);
+			name = _(input_port_name(in));
 
 			_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
 				"%s %s", name, ui_getstring(UI_keyjoyspeed));
@@ -981,8 +983,7 @@ static HMENU find_sub_menu(HMENU menu, const char *menutext, int create_sub_menu
 
 	while(*menutext)
 	{
-		TCHAR *t_menutext = tstring_from_utf8(menutext);
-
+		TCHAR *t_menutext = tstring_from_utf8(_WINDOWS(menutext));
 		i = -1;
 		do
 		{
@@ -1994,6 +1995,72 @@ HMODULE win_resource_module(void)
 
 
 //============================================================
+//	translate_menu
+//============================================================
+
+#ifndef UNDER_CE
+static void translate_menu(HMENU hMenu)
+{
+	int i;
+
+	for (i = GetMenuItemCount(hMenu) - 1; i >= 0; i--)
+	{
+		HMENU hSubMenu;
+		MENUITEMINFOA miiA;
+		char buffer[1024];
+		int id;
+		char *p;
+
+		hSubMenu = GetSubMenu(hMenu, i);
+		if (hSubMenu != NULL )
+			translate_menu(hSubMenu);
+
+		miiA.cbSize     = sizeof(MENUITEMINFOA);
+		miiA.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
+		miiA.dwTypeData = buffer;
+		miiA.cch        = ARRAY_LENGTH(buffer);
+		*buffer        = '\0';
+
+		if (!GetMenuItemInfoA(hMenu, i, TRUE, &miiA) || !miiA.wID)
+			continue;
+
+		if (miiA.fType & MFT_SEPARATOR)
+			continue;
+
+		id = miiA.wID;
+		p = _WINDOWS(buffer);
+		if (p != buffer)
+		{
+			MENUITEMINFOW miiW;
+
+			miiW.dwTypeData = wstring_from_utf8(p);
+			if (miiW.dwTypeData)
+			{
+				miiW.cbSize     = sizeof(miiW);
+				miiW.fMask      = MIIM_STRING | MIIM_FTYPE;
+				miiW.cch        = wcslen(miiW.dwTypeData);
+
+				SetMenuItemInfoW(hMenu, i, TRUE, &miiW);
+
+				free(miiW.dwTypeData);
+			}
+		}
+
+		miiA.cbSize     = sizeof(MENUITEMINFOA);
+		miiA.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
+		miiA.dwTypeData = buffer;
+		miiA.cch        = ARRAY_LENGTH(buffer);
+		*buffer        = '\0';
+
+		if (!GetMenuItemInfoA(hMenu, i, TRUE, &miiA) || !miiA.wID)
+			exit(1);
+	}
+}
+#endif /* UNDER_CE */
+
+
+
+//============================================================
 //	win_create_menu
 //============================================================
 
@@ -2012,6 +2079,8 @@ int win_create_menu(HMENU *menus)
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));
 		if (!menu_bar)
 			goto error;
+
+		translate_menu(menu_bar);
 
 		if (win_setup_menus(module, menu_bar))
 			goto error;

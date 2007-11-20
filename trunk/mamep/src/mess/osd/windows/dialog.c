@@ -3,6 +3,8 @@
 //	dialog.c - Win32 MESS dialog handling
 //
 //============================================================
+#define UNICODE
+#define _UNICODE
 
 #include <windows.h>
 #include <commctrl.h>

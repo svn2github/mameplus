@@ -7,6 +7,8 @@
 //	started to have dynamic controls
 //
 //============================================================
+#define UNICODE
+#define _UNICODE
 
 #include <windows.h>
 #include <commctrl.h>

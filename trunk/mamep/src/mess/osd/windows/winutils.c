@@ -3,6 +3,8 @@
 //	winutils.c - Generic Win32 utility code
 //
 //============================================================
+#define UNICODE
+#define _UNICODE
 
 // Needed for better file dialog
 #undef _WIN32_WINNT
