@@ -24,9 +24,22 @@ MESSLIBOSD += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
-	$(MESS_WINOBJ)/mess.res	\
 	$(MESS_WINOBJ)/opcntrl.o	\
 	$(MESS_WINOBJ)/tapedlg.o
+
+ifeq ($(NO_DLL),)
+    MESSLIBOSD += $(MESS_WINOBJ)/mess.res
+else
+    ifneq ($(WINUI),)
+        ## fixme: move gui resource code to mess/osd/ui
+        RCFLAGS += --include-dir $(WINUISRC) --include-dir $(WINUIOBJ)
+        $(MESS_WINOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+        GUIRESFILE = $(MESS_WINOBJ)/messgui.res
+    else
+        $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+        CLIRESFILE = $(MESS_WINOBJ)/messcli.res
+    endif
+endif
 
 $(LIBOSD): $(OSDOBJS)
 

@@ -1,0 +1,2 @@
+#include "mame32.rc"
+#include "mess.rc"

@@ -358,6 +358,7 @@ void assign_drivers(core_options *options)
 	} drivers_table[] =
 	{
 		{ "mame",	mamedrivers },
+#ifndef TINY_NAME
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "neod",	neoddrivers },
@@ -365,12 +366,14 @@ void assign_drivers(core_options *options)
 		{ "noncpu",	noncpudrivers },
 		{ "console",	consoledrivers },
 	#endif /* NEOCPSMAME */
+#endif /* !TINY_NAME */
 		{ NULL }
 	};
 
 	UINT32 enabled = 0;
 	int i, n;
 
+#ifndef TINY_NAME
 	const char *drv_option = options_get_string(options, OPTION_DRIVER_CONFIG);
 	if (drv_option)
 	{
@@ -405,6 +408,7 @@ void assign_drivers(core_options *options)
  			free(temp);
 		}
 	}
+#endif /* !TINY_NAME */
 
 	if (enabled == 0)
 		enabled = 1;	// default to mamedrivers

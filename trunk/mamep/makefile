@@ -299,12 +299,19 @@ endif
 
 # fullname is prefix+name+suffix
 FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)$(ARCHSUFFIX)
-FULLGUINAME = $(PREFIX)$(NAME)gui$(SUFFIX)$(ARCHSUFFIX)
 
-# add an EXE suffix to get the final emulator name
-EMULATORCLI = $(FULLNAME)$(EXE)
-EMULATORGUI = $(FULLGUINAME)$(EXE)
+ifeq ($(NO_DLL),)
+    # add an EXE suffix to get the final emulator name
+    EMULATORCLI = $(FULLNAME)$(EXE)
+    EMULATORDLL = $(FULLNAME)lib.dll
+    EMULATORGUI = $(FULLNAME)gui$(EXE)
 
+    DEFS += -DWIN32 -DWINNT
+    EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
+else
+    EMULATOR = $(FULLNAME)$(EXE)
+    EMULATORALL = $(EMULATOR)
+endif
 
 
 #-------------------------------------------------
@@ -499,18 +506,6 @@ ifneq ($(SYMBOLS),)
 CFLAGS += -fno-omit-frame-pointer
 endif
 
-ifeq ($(NO_DLL),)
-	DEFS += -DWIN32 -DWINNT
-	EMULATORDLL = $(FULLNAME)lib.dll
-	EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
-else
-	ifeq ($(WINUI),)
-		EMULATORALL = $(EMULATORCLI)
-	else
-		EMULATORALL = $(EMULATORGUI)
-	endif
-endif
-
 #-------------------------------------------------
 # include paths
 #-------------------------------------------------
@@ -558,14 +553,17 @@ endif
 
 # output a map file (emulator only)
 ifneq ($(MAP),)
-    MAPFLAGS = -Wl,-Map,$(FULLNAME).map
-    MAPDLLFLAGS = -Wl,-Map,$(FULLNAME)lib.map
-    MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
-    MAPGUIFLAGS = -Wl,-Map,$(FULLGUINAME).map
+    ifeq ($(NO_DLL),)
+        MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
+        MAPDLLFLAGS = -Wl,-Map,$(FULLNAME)lib.map
+        MAPGUIFLAGS = -Wl,-Map,$(FULLNAME)gui.map
+    else
+        MAPFLAGS = -Wl,-Map,$(FULLNAME).map
+    endif
 else
     MAPFLAGS =
-    MAPDLLFLAGS =
     MAPCLIFLAGS =
+    MAPDLLFLAGS =
     MAPGUIFLAGS =
 endif
 
@@ -718,29 +716,31 @@ $(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) 
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) -shared $(LDFLAGS) $(LDFLAGSEMULATOR) $^ $(LIBS) -o $@ $(MAPDLLFLAGS)
-endif
 
-ifeq ($(NO_DLL),)
 # gui target
 $(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPGUIFLAGS)
-else
-$(EMULATORGUI):	$(OBJ)/osd/winui/m32main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN) $(GUIRESFILE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPGUIFLAGS)
-endif
 
 # cli target
-ifeq ($(NO_DLL),)
 $(EMULATORCLI): $(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/windows/climain.o $(CLIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
+
 else
-$(EMULATORCLI):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+  ifneq ($(WINUI),)
+    # gui target
+    $(EMULATOR):	$(OBJ)/osd/winui/m32main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
-	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPCLIFLAGS)
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPFLAGS)
+  else
+    # cli target
+    $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPFLAGS)
+  endif
 endif
 
 
