@@ -1355,7 +1355,7 @@ void CreateFPSFolders(int parent_index)
 		machine_config drv;
 
 		expand_machine_driver(drivers[i]->drv,&drv);
-		f = SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
+		f = ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
 
 		for (jj = 0; jj < nFPS; jj++)
 			if (fps[jj] == f)

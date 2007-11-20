@@ -1669,9 +1669,9 @@ static void display_time(void)
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
-	double time_now = mame_time_to_double(mame_timer_get_time());
-	double time_display = mame_time_to_double(MAME_TIME_IN_MSEC(1000));
-	double time_fadeout = mame_time_to_double(MAME_TIME_IN_MSEC(1000));
+	double time_now = attotime_to_double(timer_get_time());
+	double time_display = attotime_to_double(ATTOTIME_IN_MSEC(1000));
+	double time_fadeout = attotime_to_double(ATTOTIME_IN_MSEC(1000));
 	float curx;
 	int i;
 
@@ -1813,7 +1813,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * SUBSECONDS_TO_HZ(Machine->screen[0].refresh);	// 5sec.
+				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh);	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);

@@ -14,6 +14,7 @@
 #include "driver.h"
 #include "sound/sn76496.h"
 #include "segae.h"
+#include "sms.h"
 
 static UINT8* sms_rom;
 static UINT8* smsgg_backupram;
@@ -464,7 +465,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = 0;
 		visarea.max_y = sms_mode_table[chip->screen_mode].sms2_height-1;
 
-		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_ATTOSECONDS(chip->sms_framerate));
 	}
 	else /* 160x144 */
 	{
@@ -474,7 +475,7 @@ static void end_of_frame(struct sms_vdp *chip)
 		visarea.min_y = (192-144)/2;
 		visarea.max_y = (192-144)/2+144-1;
 
-		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_SUBSECONDS(chip->sms_framerate));
+		video_screen_configure(0, 256, sms_mode_table[chip->screen_mode].sms2_height, &visarea, HZ_TO_ATTOSECONDS(chip->sms_framerate));
 
 	}
 
@@ -484,7 +485,7 @@ static void end_of_frame(struct sms_vdp *chip)
 
 	chip->sms_scanline_counter = -1;
 	chip->yscroll = chip->regs[0x9]; // this can't change mid-frame
-	mame_timer_adjust_ptr(chip->sms_scanline_timer, time_zero, time_zero);
+	timer_adjust_ptr(chip->sms_scanline_timer, attotime_zero, attotime_zero);
 }
 
 static VIDEO_EOF(sms)

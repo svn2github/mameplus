@@ -4108,7 +4108,7 @@ INLINE void copy_command_buffer(char log)
 		return;
 
 	command_buffer[len].code = uchar;
-	command_buffer[len].time = mame_time_to_double(mame_timer_get_time());
+	command_buffer[len].time = attotime_to_double(timer_get_time());
 	command_buffer[++len].code = '\0';
 }
 

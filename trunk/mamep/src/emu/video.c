@@ -783,7 +783,7 @@ void set_refresh_rate(int scrnum, float refresh)
 	screen_state *state = &Machine->screen[scrnum];
 	const rectangle visarea = state->visarea;
 
-	video_screen_configure(scrnum, state->width, state->height, &visarea, HZ_TO_SUBSECONDS(refresh));
+	video_screen_configure(scrnum, state->width, state->height, &visarea, HZ_TO_ATTOSECONDS(refresh));
 }
 
 

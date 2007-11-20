@@ -2007,7 +2007,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc all Frames_Per_Second numbers */
-		fps[0] = SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
+		fps[0] = ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
 		for (n = 1; n < ARRAY_LENGTH(fps); n++)
 		{
 			if (fps[n] == fps[0])

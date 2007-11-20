@@ -180,7 +180,7 @@ VIDEO_UPDATE( pong )
 			if(	!serve_timer )                                                 /* SU 059 */
 			{
 				/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 F capacitor */
-				mame_timer_set(MAME_TIME_IN_USEC((int)(1.2*330000.0*4.7)), 0, serve_timer_cb);  /* SU 059 */
+				timer_set(ATTOTIME_IN_USEC((int)(1.2*330000.0*4.7)), 0, serve_timer_cb);  /* SU 059 */
 				serve_timer = 1;	                                           /* SU 059 */
 			}
 		}
@@ -728,7 +728,7 @@ INTERRUPT_GEN( pong_vh_scanline )
 						if( ATRACT && !score_sound_timer )                                  /* SU 059 */
 						{
 							/* monoflop (NE555/G4) with a 220 kOhms resistor and 1.0 F capacitor */
-							mame_timer_set(MAME_TIME_IN_USEC((int)(1.2*220000.0*1.0)), 0, score_timer_cb);   /* SU 059 */
+							timer_set(ATTOTIME_IN_USEC((int)(1.2*220000.0*1.0)), 0, score_timer_cb);   /* SU 059 */
 							score_sound_timer = 1;                                          /* SU 059 */
 							pong_score_sound = 1;
 							/* raising edge of SC (output of NE555/G4) toggles D-type flip-flop 7474/H3.2 */
@@ -753,7 +753,7 @@ INTERRUPT_GEN( pong_vh_scanline )
  						if ( !serve_timer )                                                 /* SU 059 */
 						{
 							/* monoflop (NE555/G4) with a 330 kOhms resistor and 4.7 F capacitor */
-							mame_timer_set(MAME_TIME_IN_USEC((int)(1.2*330000.0*4.7)), 0, serve_timer_cb);   /* SU 059 */
+							timer_set(ATTOTIME_IN_USEC((int)(1.2*330000.0*4.7)), 0, serve_timer_cb);   /* SU 059 */
 							serve_timer = 1;                                                /* SU 059 */
 						}
 					}

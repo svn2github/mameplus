@@ -44,7 +44,7 @@ static void pong_sh_start(void)
 	sample_set_volume(CHANNEL_VBLANK, 0.0);
 	sample_set_volume(CHANNEL_SCORE, 0.0);
 
-	mame_timer_pulse(make_mame_time(0, Machine->screen[0].refresh), 0, pong_sh_update);
+	timer_pulse(attotime_make(0, Machine->screen[0].refresh), 0, pong_sh_update);
 }
 
 struct Samplesinterface pong_samples_interface =

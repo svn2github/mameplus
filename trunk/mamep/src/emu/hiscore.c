@@ -17,7 +17,7 @@
 
 #define VERBOSE 0
 
-static mame_timer *timer;
+static emu_timer *timer;
 
 #if VERBOSE
 #define LOG(x)	logerror x
@@ -272,7 +272,7 @@ static TIMER_CALLBACK( hiscore_periodic )
 			if (safe_to_load())
 			{
 				hiscore_load();
-				mame_timer_enable(timer, FALSE);
+				timer_enable(timer, FALSE);
 			}
 		}
 	}
@@ -380,8 +380,8 @@ void hiscore_init (running_machine *machine, const char *name)
 		mame_fclose (f);
 	}
 
-	timer = mame_timer_alloc(hiscore_periodic);
-	mame_timer_adjust(timer, MAME_TIME_IN_HZ(60), 0, MAME_TIME_IN_HZ(60));
+	timer = timer_alloc(hiscore_periodic);
+	timer_adjust(timer, ATTOTIME_IN_HZ(60), 0, ATTOTIME_IN_HZ(60));
 
 	add_exit_callback(machine, hiscore_close);
 }

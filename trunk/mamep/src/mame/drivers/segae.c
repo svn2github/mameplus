@@ -300,6 +300,7 @@ covert megatech / megaplay drivers to use new code etc. etc.
 #include "machine/mc8123.h"
 #include "machine/segacrpt.h"
 #include "segae.h"
+#include "sms.h"
 
 
 //static UINT8* sms_rom;
@@ -556,7 +557,7 @@ struct sms_mode sms_mode_table[] =
 	{ "Mode 4 (PAL)",            1, 192, 244, vc_pal_192, hc_256 }
 };
 
-#ifdef 0
+#if 0
 enum
 {
 	SMS_VDP = 0,  // SMS1 VDP
@@ -571,7 +572,7 @@ static int sms_vdp_null_irq_callback(int status)
 	return -1;
 }
 
-static int sms_vdp_cpu0_irq_callback(int status)
+int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -616,7 +617,7 @@ static int sms_vdp_cpu2_irq_callback(int status)
 
 
 
-#ifdef 0
+#if 0
 struct sms_vdp
 {
 	UINT8 chip_id;

@@ -913,14 +913,14 @@ static LPCWSTR GameInfoScreen(int nIndex)
 			swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
-				SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
+				ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
 				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
 				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
-				SUBSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
+				ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
 		}
 	}
 	return buf;
