@@ -1073,9 +1073,6 @@ $(MAMEOBJ)/nintendo.a: \
 	$(MESS_VIDEO)/nes.o		\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
-	$(MAME_AUDIO)/snes.o			\
-	$(MAME_MACHINE)/snes.o			\
-	$(MAME_VIDEO)/snes.o			\
 	$(MESS_DRIVERS)/snes.o	 	\
 
 $(MAMEOBJ)/nix.a: \
@@ -1206,13 +1203,6 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/vicdual.o $(AUDIO)/vicdual.o $(VIDEO)/vicdual.o \
 	$(DRIVERS)/zaxxon.o $(AUDIO)/zaxxon.o $(VIDEO)/zaxxon.o \
 	$(MESS_DRIVERS)/genesis.o	\
-	$(DRIVERS)/megadriv.o \
-	$(DRIVERS)/md_games.o \
-	$(DRIVERS)/md_arcad.o \
-	$(DRIVERS)/md_gamul.o \
-	$(DRIVERS)/md_gam32.o \
-	$(DRIVERS)/ssf2md.o \
-	$(DRIVERS)/sms.o \
 	$(MACHINE)/fd1089.o \
 	$(MACHINE)/fd1094.o \
 	$(MACHINE)/fddebug.o \

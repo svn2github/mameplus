@@ -300,15 +300,14 @@ covert megatech / megaplay drivers to use new code etc. etc.
 #include "machine/mc8123.h"
 #include "machine/segacrpt.h"
 #include "segae.h"
-#include "sms.h"
 
 
 //static UINT8* sms_rom;
-UINT8* sms_mainram;
+static UINT8* sms_mainram;
 //static UINT8* smsgg_backupram;
 static TIMER_CALLBACK_PTR( sms_scanline_timer_callback );
-struct sms_vdp *vdp2;
-struct sms_vdp *vdp1;
+static struct sms_vdp *vdp2;
+static struct sms_vdp *vdp1;
 
 static struct sms_vdp *md_sms_vdp;
 
@@ -518,7 +517,16 @@ static UINT8 vc_pal_240[] =
     0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc, 0xfd, 0xfe, 0xff,
 };
 
-struct sms_mode sms_mode_table[] =
+static struct
+{
+	UINT8 sms2_name[40];
+	int sms2_valid;
+	int sms2_height;
+	int sms2_tilemap_height;
+	UINT8* sms_vcounter_table;
+	UINT8* sms_hcounter_table;
+
+} sms_mode_table[] =
 {
 	/* NTSC Modes */
 	{ "Graphic 1 (NTSC)",         0, 192, 224, vc_ntsc_192, hc_256 },
@@ -557,7 +565,6 @@ struct sms_mode sms_mode_table[] =
 	{ "Mode 4 (PAL)",            1, 192, 244, vc_pal_192, hc_256 }
 };
 
-#if 0
 enum
 {
 	SMS_VDP = 0,  // SMS1 VDP
@@ -565,14 +572,13 @@ enum
 	GG_VDP = 2,   // Game Gear VDP running in Game Gear Mode
 	GEN_VDP = 3   // Genesis VDP running in SMS2 Mode
 };
-#endif
 
 static int sms_vdp_null_irq_callback(int status)
 {
 	return -1;
 }
 
-int sms_vdp_cpu0_irq_callback(int status)
+static int sms_vdp_cpu0_irq_callback(int status)
 {
 	if (status==1)
 	{
@@ -617,7 +623,7 @@ static int sms_vdp_cpu2_irq_callback(int status)
 
 
 
-#if 0
+
 struct sms_vdp
 {
 	UINT8 chip_id;
@@ -660,10 +666,10 @@ struct sms_vdp
 	int	 (*set_irq)(int state);
 
 };
-#endif
 
 
-void *sms_start_vdp(running_machine *machine, int type)
+
+static void *start_vdp(running_machine *machine, int type)
 {
 	struct sms_vdp *chip;
 
@@ -1474,7 +1480,7 @@ VIDEO_EOF(sms)
 }
 #endif
 
-VIDEO_START(sms)
+static VIDEO_START(sms)
 {
 
 //  vdp->is_pal = 1;
@@ -1482,10 +1488,12 @@ VIDEO_START(sms)
 //  vdp->sms_framerate = 50;
 }
 
+#ifdef UNUSED_FUNCTION
 MACHINE_RESET(sms)
 {
 	timer_adjust_ptr(vdp1->sms_scanline_timer, attotime_zero, attotime_zero);
 }
+#endif
 
 /* Sega System E */
 
@@ -2231,7 +2239,7 @@ static void init_systeme_map(void)
 
 void init_for_megadrive(void)
 {
-	md_sms_vdp = sms_start_vdp(Machine, GEN_VDP);
+	md_sms_vdp = start_vdp(Machine, GEN_VDP);
 	md_sms_vdp->set_irq = sms_vdp_cpu1_irq_callback;
 	md_sms_vdp->is_pal = 0;
 	md_sms_vdp->sms_total_scanlines = 262;
@@ -2245,7 +2253,7 @@ DRIVER_INIT( megatech_bios )
 {
 //  init_systeme_map();
 
-	vdp1 = sms_start_vdp(machine, SMS2_VDP);
+	vdp1 = start_vdp(machine, SMS2_VDP);
 	vdp1->set_irq = sms_vdp_cpu2_irq_callback;
 	vdp1->is_pal = 0;
 	vdp1->sms_total_scanlines = 262;
@@ -2260,7 +2268,7 @@ static DRIVER_INIT( segasyse )
 {
 	init_systeme_map();
 
-	vdp1 = sms_start_vdp(machine, SMS2_VDP);
+	vdp1 = start_vdp(machine, SMS2_VDP);
 //  vdp1->set_irq = sms_vdp_cpu0_irq_callback;
 	vdp1->is_pal = 0;
 	vdp1->sms_total_scanlines = 262;
@@ -2271,7 +2279,7 @@ static DRIVER_INIT( segasyse )
 	vdp1_vram_bank1 = auto_malloc(0x4000);
 
 
-	vdp2 = sms_start_vdp(machine, SMS2_VDP);
+	vdp2 = start_vdp(machine, SMS2_VDP);
 	vdp2->set_irq = sms_vdp_cpu0_irq_callback;
 	vdp2->is_pal = 0;
 	vdp2->sms_total_scanlines = 262;

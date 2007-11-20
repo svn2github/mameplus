@@ -2283,12 +2283,8 @@ void SetMainTitle(void)
 
 	sscanf(build_version,"%s",version);
 	swprintf(buffer, TEXT("%s Plus! %s"),
-#ifdef HAZEMD
-		TEXT("HazeMD"),
-#else
-		TEXT(MAME32NAME),
-#endif /*HAZEMD */
-		_Unicode(version));
+	TEXT(MAME32NAME),
+	_Unicode(version));
 
 	SetWindowText(hMain, buffer);
 }

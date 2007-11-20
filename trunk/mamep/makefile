@@ -25,19 +25,13 @@ include config.def
 # src/$(TARGET)/$(SUBTARGET).mak
 #-------------------------------------------------
 
-ifneq ($(HAZEMD),)
+ifneq ($(NEOCPSMAME),)
     TARGET = mame
-    SUBTARGET = hazemd
-    USE_DRIVER_SWITCH=
+    SUBTARGET = neocpsmame
 else
-    ifneq ($(NEOCPSMAME),)
-        TARGET = mame
-        SUBTARGET = neocpsmame
-    else
-        ifeq ($(TARGET),)
-        TARGET = mame
-    endif
-endif
+    ifeq ($(TARGET),)
+    TARGET = mame
+	endif
 endif
 
 ifeq ($(SUBTARGET),)

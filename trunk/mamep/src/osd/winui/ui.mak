@@ -182,10 +182,6 @@ ifneq ($(USE_DRIVER_SWITCH),)
 UI_RCDEFS += -DDRIVER_SWITCH
 endif
 
-ifneq ($(HAZEMD),)
-UI_RCDEFS += -DHAZEMD
-endif
-
 ifneq ($(NEOCPSMAME),)
 UI_RCDEFS += -DNEOCPSMAME
 endif
