@@ -42,6 +42,10 @@
 &Devices
 
 
+# mess/osd/windows/mess.rc: 0
+&Input
+
+
 # mess/osd/windows/mess.rc: 40
 &Edit
 

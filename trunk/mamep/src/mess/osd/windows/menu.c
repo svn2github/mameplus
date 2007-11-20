@@ -1110,7 +1110,7 @@ static void setup_joystick_menu(HMENU menu_bar)
 		in++;
 	}
 
-	joystick_menu = find_sub_menu(menu_bar, "&Options\0&Joysticks\0", TRUE);
+	joystick_menu = find_sub_menu(menu_bar, "&Input\0&Joysticks\0", TRUE);
 	if (!joystick_menu)
 		return;
 
@@ -1317,7 +1317,7 @@ static void prepare_menus(HWND wnd)
 	}
 
 	// set up screens in video menu
-	video_menu = find_sub_menu(menu_bar, "&Options\0&Video\0", FALSE);
+	video_menu = find_sub_menu(menu_bar, "&Video\0&Video\0", FALSE);
 	do
 	{
 		get_menu_item_string(video_menu, 0, TRUE, NULL, t_buf, ARRAY_LENGTH(t_buf));
@@ -1337,7 +1337,7 @@ static void prepare_menus(HWND wnd)
 	}
 
 	// set up device menu; first remove all existing menu items
-	device_menu = find_sub_menu(menu_bar, "&Devices\0", FALSE);
+	device_menu = find_sub_menu(menu_bar, "&File\0&Devices\0", FALSE);
 	remove_menu_items(device_menu);
 
 	// then set up the actual devices
@@ -1953,7 +1953,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 #endif
 
 	// set up frameskip menu
-	frameskip_menu = find_sub_menu(menu_bar, "&Options\0&Frameskip\0", FALSE);
+	frameskip_menu = find_sub_menu(menu_bar, "&Video\0&Frameskip\0", FALSE);
 	if (!frameskip_menu)
 		return 1;
 	for(i = 0; i < frameskip_level_count(); i++)

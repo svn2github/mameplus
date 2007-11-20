@@ -483,7 +483,7 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 	//mamep: feed a dummy image when image_name is \0
 	if (err && path[0] == '\0')
 	{
-		const UINT8 dummy_image[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+		const UINT8 dummy_image[] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 		mame_printf_info("feed dummy rom\n");
 		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
 		if (filerr == FILERR_NONE)

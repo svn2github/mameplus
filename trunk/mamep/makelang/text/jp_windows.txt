@@ -42,6 +42,10 @@ DIPスイッチ...(&D)
 &Devices
 デバイス(&D)
 
+# mess/osd/windows/mess.rc: 0
+&Input
+入力(&I)
+
 # mess/osd/windows/mess.rc: 40
 &Edit
 編集(&E)
