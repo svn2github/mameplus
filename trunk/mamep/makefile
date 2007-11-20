@@ -598,11 +598,8 @@ LIBOCORE = $(OBJ)/libocore.a
 LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
-ifeq ($(HAZEMD),)
-    VERSIONOBJ = $(OBJ)/version.o
-else
-    VERSIONOBJ = $(OBJ)/versionmd.o
-endif
+VERSIONOBJ = $(OBJ)/version.o
+
 
 
 #-------------------------------------------------
