@@ -13,7 +13,7 @@ $CRLF = "\r\n";
 	'homebrew' => 'home-brew',
 	'neod' => 'Neogeo decrypted',
 	'noncpu' => 'Non-CPU',
-	'hazemd' => 'HazeMD'
+	'console' => 'Console'
 );
 
 open (IN, "$textdir/catver.ini") || die "$!";
