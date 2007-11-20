@@ -231,7 +231,7 @@ done:
 
 static void customize_joystick(HWND wnd, int joystick_num)
 {
-	customize_input(wnd, "Joysticks/Controllers", ARTWORK_CUSTTYPE_JOYSTICK, joystick_num, INPUT_CLASS_CONTROLLER, NULL);
+	customize_input(wnd, _WINDOWS("Joysticks/Controllers"), ARTWORK_CUSTTYPE_JOYSTICK, joystick_num, INPUT_CLASS_CONTROLLER, NULL);
 }
 
 
@@ -242,7 +242,7 @@ static void customize_joystick(HWND wnd, int joystick_num)
 
 static void customize_keyboard(HWND wnd)
 {
-	customize_input(wnd, "Emulated Keyboard", ARTWORK_CUSTTYPE_KEYBOARD, 0, INPUT_CLASS_KEYBOARD, NULL);
+	customize_input(wnd, _WINDOWS("Emulated Keyboard"), ARTWORK_CUSTTYPE_KEYBOARD, 0, INPUT_CLASS_KEYBOARD, NULL);
 }
 
 
@@ -253,7 +253,7 @@ static void customize_keyboard(HWND wnd)
 
 static void customize_miscinput(HWND wnd)
 {
-	customize_input(wnd, "Miscellaneous Input", ARTWORK_CUSTTYPE_MISC, 0, INPUT_CLASS_MISC, NULL);
+	customize_input(wnd, _WINDOWS("Miscellaneous Input"), ARTWORK_CUSTTYPE_MISC, 0, INPUT_CLASS_MISC, NULL);
 }
 
 
@@ -265,7 +265,7 @@ static void customize_miscinput(HWND wnd)
 static void customize_categorizedinput(HWND wnd, const char *section, int category)
 {
 	assert(category > 0);
-	customize_input(wnd, "Input", ARTWORK_CUSTTYPE_JOYSTICK, category, INPUT_CLASS_CATEGORIZED, section);
+	customize_input(wnd, _WINDOWS("Input"), ARTWORK_CUSTTYPE_JOYSTICK, category, INPUT_CLASS_CATEGORIZED, section);
 }
 
 
@@ -470,7 +470,7 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	else
 	{
 		snprintf(state_filename, sizeof(state_filename) / sizeof(state_filename[0]),
-			"%s State.sta", Machine->gamedrv->description);
+			_WINDOWS("%s State.sta"), Machine->gamedrv->description);
 		dir = NULL;
 
 		src = state_filename;
@@ -487,7 +487,7 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	ofn.type = dlgtype;
 	ofn.owner = wnd;
 	ofn.flags = OFN_EXPLORER | OFN_NOCHANGEDIR | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | fileproc_flags;
-	ofn.filter = "State Files (*.sta)|*.sta|All Files (*.*)|*.*";
+	ofn.filter = _WINDOWS("State Files (*.sta)|*.sta|All Files (*.*)|*.*");
 	ofn.initial_directory = dir;
 
 	snprintf(ofn.filename, ARRAY_LENGTH(ofn.filename), "%s", state_filename);
@@ -795,14 +795,14 @@ static void build_generic_filter(const struct IODevice *dev, int is_save, char *
 
 	// common image types
 	file_extensions = device_get_info_string(&dev->devclass, DEVINFO_STR_FILE_EXTENSIONS);
-	s += add_filter_entry(filter, filter_len, "Common image types", file_extensions);
+	s += add_filter_entry(filter, filter_len, _WINDOWS("Common image types"), file_extensions);
 
 	// all files
-	s += sprintf(s, "All files (*.*)|*.*|");
+	s += sprintf(s, _WINDOWS("All files (*.*)|*.*|"));
 
 	// compressed
 	if (!is_save)
-		s += sprintf(s, "Compressed Images (*.zip)|*.zip|");
+		s += sprintf(s, _WINDOWS("Compressed Images (*.zip)|*.zip|"));
 
 	*(s++) = '\0';
 }
@@ -872,8 +872,8 @@ static void change_device(HWND wnd, mess_image *img, int is_save)
 		if (err)
 		{
 			snprintf(buffer, sizeof(buffer) / sizeof(buffer[0]),
-				"Error when %s the image: %s",
-				is_save ? "creating" : "loading",
+				_WINDOWS("Error when %s the image: %s"),
+				_WINDOWS(is_save ? "creating" : "loading"),
 				image_error(img));
 
 			win_message_box_utf8(wnd, buffer, APPNAME, MB_OK);
@@ -1134,7 +1134,7 @@ static void setup_joystick_menu(HMENU menu_bar)
 
 				// tack on the final items and the menu item
 				AppendMenu(submenu, MF_SEPARATOR, 0, NULL);
-				AppendMenu(submenu, MF_STRING, ID_INPUT_0 + i, TEXT("&Configure..."));
+				append_menu_utf8(submenu, MF_STRING, ID_INPUT_0 + i, _WINDOWS("&Configure..."));
 				append_menu_utf8(joystick_menu, MF_STRING | MF_POPUP, (UINT_PTR) submenu, in->name);
 				child_count++;
 			}
@@ -1150,7 +1150,7 @@ static void setup_joystick_menu(HMENU menu_bar)
 		{
 			for(i = 0; i < joystick_count; i++)
 			{
-				snprintf(buf, sizeof(buf) / sizeof(buf[0]), "Joystick %i", i + 1);
+				snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("Joystick %i"), i + 1);
 				append_menu_utf8(joystick_menu, MF_STRING, ID_JOYSTICK_0 + i, buf);
 				child_count++;
 			}
@@ -1389,7 +1389,7 @@ static void prepare_menus(HWND wnd)
 			else
 			{
 				sub_menu = NULL;
-				s = "Not working";
+				s = _WINDOWS("Not working");
 				flags = MF_DISABLED | MF_GRAYED;
 			}
 
@@ -1962,7 +1962,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 	}
 
 	// set the help menu to refer to this machine
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), "About %s (%s)...", Machine->gamedrv->description, Machine->gamedrv->name);
+	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), Machine->gamedrv->description, Machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
 	return 0;
 }

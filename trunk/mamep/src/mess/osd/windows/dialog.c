@@ -1269,17 +1269,17 @@ int win_dialog_add_portselect(dialog_box *dialog, input_port_entry *port, const 
 	if (port_type_is_analog(port->type))
 	{
 		seq_types[seq_count] = SEQ_TYPE_STANDARD;
-		port_suffix[seq_count] = " Analog";
+		port_suffix[seq_count] = _WINDOWS(" Analog");
 		is_analog[seq_count] = TRUE;
 		seq_count++;
 
 		seq_types[seq_count] = SEQ_TYPE_DECREMENT;
-		port_suffix[seq_count] = " Dec";
+		port_suffix[seq_count] = _WINDOWS(" Dec");
 		is_analog[seq_count] = FALSE;
 		seq_count++;
 
 		seq_types[seq_count] = SEQ_TYPE_INCREMENT;
-		port_suffix[seq_count] = " Inc";
+		port_suffix[seq_count] = _WINDOWS(" Inc");
 		is_analog[seq_count] = FALSE;
 		seq_count++;
 	}

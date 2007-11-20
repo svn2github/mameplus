@@ -714,14 +714,6 @@ Absolute Entertainment Inc.
 Acclaim
 
 
-# Warpspeed (U) [!]
-Accolade
-
-
-# Pele! (UE) [!]
-Accolate
-
-
 # Imago
 Acom
 
@@ -822,7 +814,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# A Question of Sport (39-960-099)
+# Inquizitor
 BFM
 
 
@@ -846,7 +838,7 @@ Bally Midway
 Bandai
 
 
-# MPU4 Video Firmware
+# MPU4 Unit Test (Program 4)
 Barcrest
 
 
@@ -890,12 +882,8 @@ Bordun International
 Brezzasoft
 
 
-# Gargoyles (U) [!]
-Buena Vista Interactive
-
-
-# Wild Snake (U) (Prototype) [!]
-Bullet-Proof Software
+# Vegas Poker (Prototype)
+BwB
 
 
 # Cuore 1 (Italia)
@@ -954,10 +942,6 @@ Cinematronics
 Coastal Amusements
 
 
-# Micro Machines (UE) [c][!]
-Codemasters
-
-
 # Trail Blazer
 Coinmaster
 
@@ -982,10 +966,6 @@ Compile
 Comsoft
 
 
-# Corporation (E) [c][!]
-Core
-
-
 # SWAT (315-5048)
 Coreland
 
@@ -1008,6 +988,10 @@ Craul Denshi
 
 # Run Deep
 Cream
+
+
+# GameCristal
+Cristaltec
 
 
 # Gyrodine
@@ -1050,10 +1034,6 @@ Data Amusement
 Datel SAS
 
 
-# Flashback - The Quest for Identity (U) [!]
-Delphine
-
-
 # Logic Pro (Japan)
 Deniam
 
@@ -1066,20 +1046,8 @@ Digital Controls Inc.
 Digitrex Techstar
 
 
-# Dino Dini's Soccer (E)
-Dino Dini
-
-
-# The Great Circus Mystery - Starring Mickey & Minnie (U) [!]
-Disney
-
-
 # Connect 4
 Dolbeck Systems
-
-
-# Blood Shot (E) (M4) [!]
-Domark
 
 
 # Double Point (Dong Bang Electron, bootleg?)
@@ -1266,10 +1234,6 @@ F2 System
 Face?
 
 
-# Mega Bomberman - 8 Player Demo (Unl)
-Factor 5
-
-
 # Frogger (Falcon bootleg)
 Falcon
 
@@ -1342,10 +1306,6 @@ GameTek
 Gameace
 
 
-# (Game Gear) Tesserae  [!]
-Gametek
-
-
 # Puckman Pockimon
 Genie
 
@@ -1392,6 +1352,10 @@ Hanaho Games
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Meteor
+Hoei
 
 
 # Sliver
@@ -1532,10 +1496,6 @@ Kinky Kit and Game Co.
 
 # Malzak
 Kitronix
-
-
-# Aerobiz Supersonic (U) [!]
-Koei
 
 
 # Flower
@@ -1692,10 +1652,6 @@ Mylstar
 
 # Vantris (Vanguard hardware)
 N.Kehrer
-
-
-# Gynoug (J) [!]
-NCS
 
 
 # Pirates
@@ -1878,10 +1834,6 @@ Primetek Investments
 Prince Co.
 
 
-# The Pagemaster (U) [!]
-Probe
-
-
 # Ozon I
 Proma
 
@@ -1910,10 +1862,6 @@ RDI Video Systems
 ROLLER TRON
 
 
-# Radica: Volume 1 (Sonic the Hedgehog, Altered Beast, Golden Axe, Dr. Robotnik's Mean Bean Machine, Kid Chameleon, Flicky) (US)
-Radica Games
-
-
 # Azurian Attack
 Rait Electronics Ltd
 
@@ -1928,10 +1876,6 @@ Raster Elite
 
 # Frog Feast
 Rastersoft
-
-
-# The Earth Defend (Unl) [!]
-Realtec
 
 
 # Astro Fire
@@ -1986,10 +1930,6 @@ SPHINX
 Saero Entertainment
 
 
-# Devilish - The Next Possession (U) [c][!]
-Sage's Creation
-
-
 # Elan Doree - Legend of Dragon (JUET 980922 V1.006)
 Sai-Mate
 
@@ -2018,11 +1958,7 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
-# NBA Action (U) [!]
-Sega Sports
-
-
-# Seibu Cup Soccer
+# Tottemo E Jong
 Seibu
 
 
@@ -2040,10 +1976,6 @@ Senko
 
 # Special Forces
 Senko Industries
-
-
-# Sensible Soccer - International Edition (E) (M4) [!]
-Sensible Software
 
 
 # Sente Diagnostic Cartridge
@@ -2086,19 +2018,19 @@ Sidam?
 Sigma
 
 
+# Sigma Poker
+Sigma Inc.
+
+
 # Orbitron
 Signatron USA
-
-
-# OutRun 2019 (U) [!]
-Sims
 
 
 # Erotictac/Tactic
 Sisteme
 
 
-# Cannon Ball (Crazy Climber hardware)
+# Cannon Ball (bootleg on Crazy Climber hardware, set 1)
 Soft
 
 
@@ -2108,10 +2040,6 @@ Soft Art Co.
 
 # Jolly Card (Croatia)
 Soft Design
-
-
-# (Game Gear) Gear Works  [!]
-Sony
 
 
 # Dambusters (UK)
@@ -2124,10 +2052,6 @@ Spacy Industrial, Ltd.
 
 # Mahjong Dunhuang
 Spirit
-
-
-# Pele's World Tournament Soccer (UE) [!]
-Sport Accolate
 
 
 # Rack + Roll
@@ -2206,7 +2130,7 @@ TCH
 TDS & Mints
 
 
-# Cannon Ball (set 2)
+# Cannon Ball (bootleg on Crazy Climber hardware, set 2)
 TV Game Gruenberg
 
 
@@ -2216,6 +2140,10 @@ TV-Tuning
 
 # Cabal (World, Joystick version)
 Tad Corporation
+
+
+# Kick and Run (US)
+Taito America Corp
 
 
 # Tiger Heli (US)
@@ -2250,16 +2178,8 @@ Techstar
 Tecno Soft
 
 
-# Thunder Force IV (J) [!]
-Tecnosoft
-
-
 # Mr. TNT
 Telko
-
-
-# Hard Drivin' (W) [!]
-Tengen
 
 
 # Konek-Gorbunok
@@ -2276,10 +2196,6 @@ The Game Room
 
 # Trivia Madness
 Thunderhead Inc.
-
-
-# Journey From Darkness - Strider Returns (U) [c][!]
-Tiertex
 
 
 # Area 51 (Time Warner License)
@@ -2300,10 +2216,6 @@ Topis Corp
 
 # Radiant Silvergun (JUET 980523 V1.000)
 Treasure
-
-
-# Warlock (UE) [!]
-Trimark
 
 
 # MTV Rock-N-Roll Trivia (Part 2)
@@ -2338,10 +2250,6 @@ Universal Video Spiel
 Uniwang
 
 
-# 12-in-1 (Unl)
-Unsorted
-
-
 # Poly-Play
 VEB Polytechnik Karl-Marx-Stadt
 
@@ -2374,10 +2282,6 @@ Venture Line
 Vesely Svet
 
 
-# Socket (U) [!]
-Vic Tokai
-
-
 # Fight Fever (set 1)
 Viccom
 
@@ -2396,10 +2300,6 @@ Video Games GmbH
 
 # Griffon
 Videotron
-
-
-# Spot Goes to Hollywood (U) (REV01) [!]
-Virgin
 
 
 # Devil Fish (Galaxian hardware, bootleg?)
@@ -2450,14 +2350,6 @@ Williams
 Wing
 
 
-# Bible Adventures (Unl) [!]
-Wisdom Tree
-
-
-# Zan - Yasha Enbukyoku / Zan Yasha Enbuden (J) [!]
-Wolfteam
-
-
 # Domino Block
 Wonwoo Systems
 
@@ -2502,7 +2394,7 @@ Zaccaria
 Zelco
 
 
-# Deal 'Em (MPU4 Conversion Kit)
+# Deal 'Em (MPU4 Conversion Kit, v7.0)
 Zenitone
 
 
@@ -2532,10 +2424,6 @@ Zilec Games
 
 # Check Man
 Zilec-Zenitone
-
-
-# Sub-Terrania (U) [!]
-Zyrinx
 
 
 # X-Files

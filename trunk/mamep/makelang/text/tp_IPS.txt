@@ -1,12 +1,12 @@
-# 283
+# 286
 Bootleg And Clone
 
 
-# 102
+# 105
 CPS All System
 
 
-# 298
+# 301
 Haze Megadrive
 
 
@@ -14,11 +14,11 @@ Haze Megadrive
 IPS
 
 
-# 61
+# 64
 Misc
 
 
-# 136
+# 139
 Neo-Geo
 
 

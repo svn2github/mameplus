@@ -190,8 +190,6 @@ sub ParseSrcFiles
 {
 	my $file = $_[0];
 
-	return if $file eq "mamedbg.c";
-
 	if (($file =~ /\.[ch]$/i) || ($file =~ /\.rc$/i))
 	{
 		my $lines;
@@ -429,7 +427,7 @@ sub ParseSrcFiles
 				}
 
 				# translater credit
-				elsif ($file eq 'osd/ui/mame32.rc' && $result =~ /^\s+$/)
+				elsif ($file eq 'osd/winui/mame32.rc' && $result =~ /^\s+$/)
 				{
 					$found{$result} .= ", $lines";
 				}
@@ -540,13 +538,13 @@ sub MakeSrc
 		my $text = $_;
 		my $ref = $SRC{$text};
 
-		while ($ref =~ /osd\/windows\/[^\s]+[\s,\d]+/)
+		while ($ref =~ /(mess\/|)osd\/windows\/[^\s]+[\s,\d]+/)
 		{
 			$windows .= $&;
 			$ref = $` . $';
 		}
 
-		while ($ref =~ /osd\/ui\/[^\s]+[\s,\d]+/)
+		while ($ref =~ /(mess\/|)osd\/winui\/[^\s]+[\s,\d]+/)
 		{
 			$ui .= $&;
 			$ref = $` . $';
@@ -561,7 +559,7 @@ sub MakeSrc
 			}
 
 			# Remove option strings (RC system related)
-			elsif ($windows ne '' && $ui =~ /^osd\/ui\/options.c: [\d]+ $/)
+			elsif ($windows ne '' && $ui =~ /^osd\/winui\/options.c: [\d]+ $/)
 			{
 				undef $ui;
 			}
