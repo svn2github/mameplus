@@ -1078,6 +1078,61 @@ static void append_menu_utf8(HMENU menu, UINT flags, UINT_PTR id, const char *st
 
 
 //============================================================
+//	append_menu_by_pos_utf8
+//============================================================
+
+static void append_menu_by_pos_utf8(HMENU menu, UINT pos, UINT flags, UINT id, HMENU submenu, const char *str)
+{
+	TCHAR *t_str = str ? tstring_from_utf8(str) : NULL;
+	MENUITEMINFO mii;
+
+	mii.cbSize = sizeof(MENUITEMINFO);
+	mii.fMask = MIIM_STATE;
+	mii.fState = MFS_ENABLED;
+
+	if (str)
+	{
+		mii.fMask |= MIIM_TYPE;
+		mii.fType = MFT_STRING;
+		mii.dwTypeData = t_str;
+	}
+
+	if (flags & MF_SEPARATOR)
+	{
+		mii.fMask |= MIIM_TYPE;
+		mii.fType = MFT_SEPARATOR;
+	}
+
+	if (flags & (MF_GRAYED | MF_DISABLED))
+		mii.fState |= MFS_DISABLED;
+	if (flags & MF_CHECKED)
+		mii.fState |= MFS_CHECKED;
+	if (flags & MF_HILITE)
+		mii.fState |= MFS_HILITE;
+	if (flags & MF_DEFAULT)
+		mii.fState |= MFS_DEFAULT;
+
+	if (id)
+	{
+		mii.fMask |= MIIM_ID;
+		mii.wID = id;
+	}
+
+	if (submenu)
+	{
+		mii.fMask |= MIIM_SUBMENU;
+		mii.hSubMenu = submenu;
+	}
+
+	InsertMenuItem(menu, pos, TRUE, &mii);
+
+	if (t_str)
+		free(t_str);
+}
+
+
+
+//============================================================
 //	append_menu_uistring
 //============================================================
 
@@ -1089,13 +1144,24 @@ static void append_menu_uistring(HMENU menu, UINT flags, UINT_PTR id, int uistri
 
 
 //============================================================
-//	remove_menu_items
+//	remove_menu_items_from_pos_until_separator
 //============================================================
 
-static void remove_menu_items(HMENU menu)
+static void remove_menu_items_from_pos_until_separator(HMENU menu, UINT pos)
 {
-	while(RemoveMenu(menu, 0, MF_BYPOSITION))
-		;
+	MENUITEMINFO mii;
+
+	memset(&mii, 0, sizeof(mii));
+	mii.cbSize = sizeof(mii);
+	mii.fMask = MIIM_TYPE;
+
+	while (GetMenuItemInfo(menu, pos, TRUE, &mii))
+	{
+		if (mii.fType == MFT_SEPARATOR)
+			break;
+
+		RemoveMenu(menu, pos, MF_BYPOSITION);
+	}
 }
 
 
@@ -1225,7 +1291,7 @@ static void prepare_menus(HWND wnd)
 	const char *s;
 	HMENU menu_bar;
 	HMENU video_menu;
-	HMENU device_menu;
+	HMENU file_menu;
 	HMENU sub_menu;
 	UINT_PTR new_item;
 	UINT flags;
@@ -1355,12 +1421,14 @@ static void prepare_menus(HWND wnd)
 	}
 
 	// set up device menu; first remove all existing menu items
-	device_menu = find_sub_menu(menu_bar, "&File\0&Devices\0", FALSE);
-	remove_menu_items(device_menu);
+	file_menu = find_sub_menu(menu_bar, "&File\0", FALSE);
+	remove_menu_items_from_pos_until_separator(file_menu, 0);
 
 	// then set up the actual devices
 	for (dev = Machine->devices; dev->type < IO_COUNT; dev++)
 	{
+		int pos = 0;
+
 		for (i = 0; i < dev->count; i++)
 		{
 			img = image_from_device_and_index(dev, i);
@@ -1369,20 +1437,20 @@ static void prepare_menus(HWND wnd)
 			{	
 				new_item = ID_DEVICE_0 + (image_absolute_index(img) * DEVOPTION_MAX);
 				flags_for_exists = MF_STRING;
-	
+
 				if (!image_exists(img))
 					flags_for_exists |= MF_GRAYED;
-	
+
 				flags_for_writing = flags_for_exists;
 				if (!image_is_writable(img))
 					flags_for_writing |= MF_GRAYED;
-	
+
 				sub_menu = CreateMenu();
 				append_menu_uistring(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		UI_mount);
-	
+
 				if (dev->creatable)
 					append_menu_uistring(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	UI_create);
-	
+
 				append_menu_uistring(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	UI_unmount);
 
 #if HAS_WAVE
@@ -1413,7 +1481,7 @@ static void prepare_menus(HWND wnd)
 			}
 
 			snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%s: %s", image_typename_id(img), s);
-			append_menu_utf8(device_menu, flags, (UINT_PTR) sub_menu, buf);
+			append_menu_by_pos_utf8(file_menu, pos++, flags, 0, sub_menu, buf);
 		}
 	}
 }

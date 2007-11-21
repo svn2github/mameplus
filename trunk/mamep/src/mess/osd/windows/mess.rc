@@ -29,10 +29,7 @@ IDR_RUNTIME_MENU MENU
 BEGIN
     POPUP "&File"
     BEGIN
-  	    POPUP "&Devices"
-        BEGIN
-            MENUITEM SEPARATOR
-        END
+        MENUITEM SEPARATOR
         MENUITEM "&Load State...",              ID_FILE_LOADSTATE
         MENUITEM "&Save State",                 ID_FILE_SAVESTATE
         MENUITEM "S&ave State As...",           ID_FILE_SAVESTATE_AS
