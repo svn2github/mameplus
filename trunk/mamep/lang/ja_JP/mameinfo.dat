@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.120u3      #
+#     Mameinfo.dat日本語版 v0.120u4      #
 #                                        #
-#           November 14, 2007            #
+#           November 19, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：875 翻訳済：848
-# 追加項目：342 合計：1217
+# Tester報告：879 翻訳済：854
+# 追加項目：342 合計：1221
 #
 
 
@@ -27,6 +27,17 @@ $mame
 [TIPS]
 
 - 2周ノーミスでクリアするとクレジットが無限になる。
+
+$end
+
+$info=hoops96
+$mame
+[バグ]
+
+- F2キーを押すとゲームがクラッシュする。起きる場合と起きない場合がある。 hoops96_0120u3red, LastNinja2
+
+
+- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
 
 $end
 
@@ -60,25 +71,6 @@ OFF-ONが2、OFF-OFFが1、ON-OFFが1/2、ON-ONが1/3。 mjdialq2_0120u3gra, mah
 
 $end
 
-$info=gradius4
-$mame
-[バグ]
-
-- グラフィックが全ておかしくなっている。64ビット環境では起きない。 gradius4_0120u3yel, incognito / John IV
-
-
-- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
-
-2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
-
-
-- 「24KHｚと15KHｚ表示の問題」
-
-
-グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
-
-$end
-
 $info=terabrst
 $mame
 [バグ]
@@ -102,6 +94,30 @@ $mame
 
 - コンティニュー画面で、コイン入力は受け付けるが、スタートボタンを押してもコンティニューできない。
 時々動作することもある。 mp_bio0120u2gra, LastNinja2
+
+$end
+
+$info=mpu4met0
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
+
+$end
+
+$info=mpu4tst2
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
+
+$end
+
+$info=mpu4utst
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
 
 $end
 
@@ -146,6 +162,14 @@ $mame
 [バグ]
 
 - マニュアルギアを選択してもオートマになる。 calspeed0120u3gre, Scagazza
+
+$end
+
+$info=hyprdriv
+$mame
+[バグ]
+
+- ブレーキボタンが働かない。キャリブレーションしても効果がない。 hyprdriv0120u4gra, Scagazza
 
 $end
 
@@ -205,36 +229,19 @@ $mame
 
 $end
 
-$info=gauntdl
+$info=rjammer
 $mame
 [バグ]
 
-- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
+- 1) 敵がラスタエフェクトがかかったようにちらつく。アトラクトモードの2周目で確認できる。
 
+2) 遠くにいる敵が表示されない。
 
-- テストモードのファイルシステムチェックをするとクラッシュする。
-Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
+3) 道路横の看板が表示されないことがある。
 
+4) タイトル画面のロゴで「R」の一部が欠けている。
 
-- VGAモードでゲームを起動するとクラッシュする。
-またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
-実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
-
-$end
-
-$info=nbashowt
-$mame
-[バグ]
-
-- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
-
-$end
-
-$info=tenthdeg
-$mame
-[バグ]
-
-- 32ビットビルドだとグラフィックが大きく乱れる。64ビットでは起きない。 vegas.c0120u3yel, incognito / John IV /  Scagazza
+5) 1周目の2面以降、敵の色が青で始まり、面の途中で正しい色に突然変わる。 rjammer0120u4gre, The tECHIDNA
 
 $end
 
@@ -553,7 +560,7 @@ $mame
 - 実機のバグが再現されていない。背景の右端2ピクセルが左端に表示される。 btoads0101gre, Stefan Lindberg
 
 
-- 3面ボスの背景にいるクイーンの顔のグラフィックがずれる。波打つようなエフェクトがかかると思われる。 btoads0102u5gre, cpukett / Stefan Lindberg
+- 3面ボスの背景にいるクイーンの顔のグラフィックがずれる。波打つようなエフェクトがかかると思われる。 btoads0102u5gre, cpukett / Stefan Lindberg / ENAY
 
 
 - 2面ボスと背景部分でプライオリティ不具合あり。ボスは右端の柱の裏側に表示される。 btoads0103gre, Stefan Lindberg / ENAY
@@ -973,14 +980,6 @@ $mame
 [バグ]
 
 - 0.114u4以降、カセットからのロードが完了後、画面がぐちゃぐちゃで正しく動作しない。 czeroize0116red, ShimaPong
-
-$end
-
-$info=hoops96
-$mame
-[バグ]
-
-- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
 
 $end
 
@@ -1522,6 +1521,22 @@ $mame
 [バグ]
 
 - “リーチ”、“ロン”などの声が出ない。 hourouki063gre, J.J.Boy
+
+$end
+
+$info=gradius4
+$mame
+[バグ]
+
+- 1) 4面でLEDに73、または71と表示されるところがある。おそらくエラーが起きているはずだが、ゲーム自体は普通に動作する。
+
+2) 3面の背景の右上が時々表示されなくなる。 gradius4_0111gre, AWJ
+
+
+- 「24KHｚと15KHｚ表示の問題」
+
+
+グラディウス4で、モニタタイプのDIPを15KHｚにすると、3Dグラフィックは縮小されるが、2Dタイルマップは24KHｚのときのサイズのまま。 hornet0104u2ora, AWJ / Luigi30
 
 $end
 
@@ -3632,32 +3647,6 @@ $mame
 
 $end
 
-$info=shanghai
-$mame
-[バグ]
-
-- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
-
-
-- カーソルの手を一番右側に持っていって上下に動かすと、
-画面左端でも黒い線が上下に動く。
-恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
-
-
-- コインを2つ入れてリセットすると、
-MAMEのメッセージで「unsupported commnad undef (0000)」などと表示される。
-mamewでのみ起こるようだ。 shanghai37b16gre2, Gmitra
-
-$end
-
-$info=shangha2
-$mame
-[バグ]
-
-- 0.112u2以前と比べると、サウンドがいろいろおかしくなっている。 shanghaic0113u3gre, Tafoid
-
-$end
-
 $info=blocken
 $mame
 [バグ]
@@ -3711,6 +3700,16 @@ $mame
 
 
 となっているが、実機では拡大処理は行われていない。 shangha3337b7gre, Fujix
+
+$end
+
+$info=shanghai
+$mame
+[バグ]
+
+- カーソルの手を一番右側に持っていって上下に動かすと、
+画面左端でも黒い線が上下に動く。
+恐らく、手のスプライトの一部か？ shanghai37b16gre1, Gmitra
 
 $end
 
@@ -4772,6 +4771,20 @@ $mame
 
 - 動作がとても遅い。プレイヤーなどの動作もノロノロ。
 ただしクロック数は実機どおりの設定。 vball071u1gre, pomata / Haze / Karasu
+
+$end
+
+$info=gauntdl
+$mame
+[バグ]
+
+- テストモードのファイルシステムチェックをするとクラッシュする。
+Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
+
+
+- VGAモードでゲームを起動するとクラッシュする。
+またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
+実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
 
 $end
 
@@ -6348,15 +6361,6 @@ $mame
 [バグ]
 
 - [possible] テストモードで5キーを押すとCoin B、6キーを押すとCoin Aが反応する。 lastday0106u7gra, cpukett
-
-$end
-
-$info=superx
-$mame
-[バグ]
-
-- 2面の初めから画面の後ろ側に中ボスが見えている。
-他の面でも同様の現象あり。 superx074u1gre, MAMEjong
 
 $end
 
