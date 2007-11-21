@@ -1,6 +1,6 @@
 # 7726
 Console
-コンソ\ール
+家庭用ゲーム機
 
 # 7740
 Neogeo decrypted

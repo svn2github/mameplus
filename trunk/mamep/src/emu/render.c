@@ -45,6 +45,7 @@
 #include "output.h"
 #include "xmlfile.h"
 #include <math.h>
+#include <ctype.h>
 
 
 
@@ -1111,6 +1112,67 @@ const char *render_target_get_view_name(render_target *target, int viewindex)
 					return view->name;
 
 	return NULL;
+}
+
+
+/*-------------------------------------------------
+    render_target_get_translated_view_name - return the
+    localized name of the indexed view
+-------------------------------------------------*/
+
+const char *render_target_get_translated_view_name(render_target *target, int viewindex)
+{
+	const unsigned char *s = render_target_get_view_name(target, viewindex);
+	const unsigned char *idx[8];
+	const unsigned char **pp;
+	astring *temp, *res;
+
+	if (!s)
+		return NULL;
+
+	temp = astring_alloc();
+	pp = idx;
+	while (*s)
+	{
+		if (isdigit(*s))
+		{
+			*pp++ = s;
+
+			astring_catc(temp, "%");
+			astring_catc(temp, "d");
+
+			for (s++; *s; s++)
+				if (!isdigit(*s))
+					break;
+		}
+		else
+			astring_catch(temp, s++, 1);
+	}
+
+	s = _(astring_c(temp));
+
+	res = astring_alloc();
+	pp = idx;
+	while (*s)
+	{
+		if (s[0] == '%' && s[1] == 'd')
+		{
+			s += 2;
+
+			while (isdigit(**pp))
+				astring_catch(res, (*pp)++, 1);
+			pp++;
+		}
+		else
+			astring_catch(res, s++, 1);
+	}
+
+	s = mame_strdup(astring_c(res));
+
+	astring_free(res);
+	astring_free(temp);
+
+	return s;
 }
 
 

@@ -121,12 +121,12 @@ struct _seqselect_info
 #define DLGITEM_SCROLLBAR		((const WCHAR *) dlgitem_scrollbar)
 #define DLGITEM_COMBOBOX		((const WCHAR *) dlgitem_combobox)
 
-#define DLGTEXT_OK				ui_getstring(UI_OK)
-#define DLGTEXT_APPLY			"Apply"
-#define DLGTEXT_CANCEL			"Cancel"
+#define DLGTEXT_OK			_WINDOWS("OK")
+#define DLGTEXT_APPLY			_WINDOWS("Apply")
+#define DLGTEXT_CANCEL			_WINDOWS("Cancel")
 
 #define FONT_SIZE				8
-#define FONT_FACE				L"Arial"
+#define FONT_FACE				TEXT("Arial")
 
 #define TIMER_ID				0xdeadbeef
 

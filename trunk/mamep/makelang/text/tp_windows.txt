@@ -1,108 +1,104 @@
-# mess/osd/windows/dialog.c: 1272
+# mess/osd/windows/dialog.c: 1274
  Analog
 
 
-# mess/osd/windows/dialog.c: 1277
+# mess/osd/windows/dialog.c: 1279
  Dec
 
 
-# mess/osd/windows/dialog.c: 1282
+# mess/osd/windows/dialog.c: 1284
  Inc
 
 
-# mess/osd/windows/menu.c: 473
+# mess/osd/windows/menu.c: 475
 %s State.sta
 
 
-# mess/osd/windows/mess.rc: 98
+# mess/osd/windows/mess.rc: 106
 &About MESS...
 
 
-# mess/osd/windows/mess.rc: 69
+# mess/osd/windows/mess.rc: 61
 &Analog Controls...
 
 
-# mess/osd/windows/mess.rc: 66
+# mess/osd/windows/mess.rc: 98
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1137
+# mess/osd/windows/menu.c: 1138
 &Configure...
 
 
-# mess/osd/windows/mess.rc: 67
+# mess/osd/windows/mess.rc: 99
 &DIP Switches...
 
 
-# mess/osd/windows/mess.rc: 89
+# mess/osd/windows/mess.rc: 101
 &Debugger...
 
 
-# mess/osd/windows/menu.c: 1339 mess/osd/windows/mess.rc: 91
+# mess/osd/windows/menu.c: 1341 mess/osd/windows/mess.rc: 32
 &Devices
 
 
-# mess/osd/windows/mess.rc: 0
-&Input
-
-
-# mess/osd/windows/mess.rc: 40
-&Edit
-
-
-# mess/osd/windows/mess.rc: 38 
+# mess/osd/windows/mess.rc: 42 
 &Exit
 
 
-# mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1341 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 1955 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 1962 mess/osd/windows/mess.rc: 74
 &Frameskip
 
 
-# mess/osd/windows/mess.rc: 87
+# mess/osd/windows/mess.rc: 90
 &Full Screen\tAlt+Enter
 
 
-# mess/osd/windows/mess.rc: 95 
+# mess/osd/windows/mess.rc: 103 
 &Help
 
 
-# mess/osd/windows/mess.rc: 86
+# mess/osd/windows/mess.rc: 89
 &Hide Menubar\tTab
 
 
-# mess/osd/windows/menu.c: 1112 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 50
+&Input
+
+
+# mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 59
 &Joysticks
 
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 52
 &Keyboard
 
 
-# mess/osd/windows/mess.rc: 32
+# mess/osd/windows/mess.rc: 36
 &Load State...
 
 
-# mess/osd/windows/mess.rc: 68
+# mess/osd/windows/mess.rc: 60
 &Miscellaneous Inputs...
 
 
-# mess/osd/windows/menu.c: 1112, 1319, 1955 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/mess.rc: 92 
 &Options
 
 
-# mess/osd/windows/mess.rc: 46 
+# mess/osd/windows/mess.rc: 94 
 &Pause
 
 
-# mess/osd/windows/mess.rc: 33
+# mess/osd/windows/mess.rc: 37
 &Save State
 
 
-# mess/osd/windows/menu.c: 1319 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1320, 1320, 1962 mess/osd/windows/mess.rc: 63, 65
 &Video
 
 
@@ -114,19 +110,19 @@
 (primary)
 
 
-# mess/osd/windows/menu.c: 1965
+# mess/osd/windows/menu.c: 1972
 About %s (%s)...
 
 
-# mess/osd/windows/mess.rc: 97
+# mess/osd/windows/mess.rc: 105
 About This System...
 
 
-# mess/osd/windows/menu.c: 801
+# mess/osd/windows/menu.c: 803
 All files (*.*)|*.*|
 
 
-# mess/osd/windows/dialog.c: 123
+# mess/osd/windows/dialog.c: 125
 Apply
 
 
@@ -134,23 +130,23 @@ Apply
 Assign joystick %s to player %d\n
 
 
-# mess/osd/windows/mess.rc: 73 
+# mess/osd/windows/mess.rc: 76 
 Auto
 
 
-# mess/osd/windows/dialog.c: 123 
+# mess/osd/windows/dialog.c: 126 
 Cancel
 
 
-# mess/osd/windows/menu.c: 798 
+# mess/osd/windows/menu.c: 800 
 Common image types
 
 
-# mess/osd/windows/menu.c: 805
+# mess/osd/windows/menu.c: 807
 Compressed Images (*.zip)|*.zip|
 
 
-# mess/osd/windows/mess.rc: 55
+# mess/osd/windows/mess.rc: 57
 Customize Emulated Keyboard...
 
 
@@ -534,11 +530,11 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# mess/osd/windows/mess.rc: 52
+# mess/osd/windows/mess.rc: 54
 Emulated
 
 
-# mess/osd/windows/menu.c: 245
+# mess/osd/windows/menu.c: 247
 Emulated Keyboard
 
 
@@ -554,7 +550,7 @@ Error creating DirectSound: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 
 
-# osd/windows/window.c: 638
+# osd/windows/window.c: 641
 Error creating render target for window %d
 
 
@@ -602,7 +598,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 877
 Error when %s the image: %s
 
 
@@ -626,7 +622,7 @@ FULL SCREEN OPTIONS
 Failed to create pause event
 
 
-# osd/windows/window.c: 857
+# osd/windows/window.c: 860
 Failed to create window class
 
 
@@ -638,7 +634,7 @@ Failed to create window thread
 Failed to create window thread ready event
 
 
-# mess/osd/windows/mess.rc: 48
+# mess/osd/windows/mess.rc: 96
 Ha&rd Reset
 
 
@@ -646,47 +642,47 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 
 
-# osd/windows/video.c: 535
+# osd/windows/video.c: 540
 Illegal aspect ratio value for %s = %s\n
 
 
-# osd/windows/video.c: 558
+# osd/windows/video.c: 563
 Illegal resolution value for %s = %s\n
 
 
-# mess/osd/windows/menu.c: 268
+# mess/osd/windows/menu.c: 270
 Input
 
 
-# osd/windows/video.c: 452
+# osd/windows/video.c: 457
 Invalid video value %s; reverting to gdi\n
 
 
-# mess/osd/windows/menu.c: 1153
+# mess/osd/windows/menu.c: 1154
 Joystick %i
 
 
-# mess/osd/windows/menu.c: 234
+# mess/osd/windows/menu.c: 236
 Joysticks/Controllers
 
 
-# osd/windows/window.c: 653
+# osd/windows/window.c: 656
 MAME: %s [%s] - Screen %d
 
 
-# mess/osd/windows/mess.rc: 75
+# mess/osd/windows/mess.rc: 78
 Maximum &Speed
 
 
-# mess/osd/windows/menu.c: 256
+# mess/osd/windows/menu.c: 258
 Miscellaneous Input
 
 
-# mess/osd/windows/mess.rc: 53
+# mess/osd/windows/mess.rc: 55
 Natural
 
 
-# mess/osd/windows/menu.c: 1392 
+# mess/osd/windows/menu.c: 1394 
 Not working
 
 
@@ -698,15 +694,11 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 
 
-# mess/osd/windows/mess.rc: 42
-Paste
-
-
-# mess/osd/windows/mess.rc: 144
+# mess/osd/windows/mess.rc: 152
 Pause
 
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 150
 Play
 
 
@@ -718,39 +710,39 @@ Proposed video mode not supported on device %s\n
 RawInput: APIs detected\n
 
 
-# mess/osd/windows/mess.rc: 61
+# mess/osd/windows/mess.rc: 68
 Rotate 0 degrees
 
 
-# mess/osd/windows/mess.rc: 63
+# mess/osd/windows/mess.rc: 70
 Rotate 180 degrees
 
 
-# mess/osd/windows/mess.rc: 64
+# mess/osd/windows/mess.rc: 71
 Rotate 270 degrees
 
 
-# mess/osd/windows/mess.rc: 62
+# mess/osd/windows/mess.rc: 69
 Rotate 90 degrees
 
 
-# mess/osd/windows/mess.rc: 34
+# mess/osd/windows/mess.rc: 38
 S&ave State As...
 
 
-# mess/osd/windows/mess.rc: 36
+# mess/osd/windows/mess.rc: 40
 Save Sc&reenshot
 
 
-# mess/osd/windows/mess.rc: 84
+# mess/osd/windows/mess.rc: 87
 Show &FPS
 
 
-# mess/osd/windows/mess.rc: 88
+# mess/osd/windows/mess.rc: 100
 Show P&rofiler
 
 
-# mess/osd/windows/mess.rc: 47
+# mess/osd/windows/mess.rc: 95
 Soft &Reset
 
 
@@ -762,11 +754,11 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# mess/osd/windows/menu.c: 490
+# mess/osd/windows/menu.c: 492
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
-# mess/osd/windows/mess.rc: 143
+# mess/osd/windows/mess.rc: 151
 Stop
 
 
@@ -774,7 +766,7 @@ Stop
 Symbol table full
 
 
-# mess/osd/windows/mess.rc: 137
+# mess/osd/windows/mess.rc: 145
 Tape Control
 
 
@@ -790,7 +782,7 @@ Toggle Fullscreen
 Unable to close the keyboard device. (error %d)\n
 
 
-# osd/windows/window.c: 673
+# osd/windows/window.c: 676
 Unable to complete window creation
 
 
@@ -806,7 +798,7 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 
 
-# osd/windows/video.c: 503
+# osd/windows/video.c: 508
 Unable to load PNG file '%s'\n
 
 
@@ -818,11 +810,11 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 
 
-# mess/osd/windows/mess.rc: 82
+# mess/osd/windows/mess.rc: 85
 Unlimited
 
 
-# osd/windows/video.c: 412
+# osd/windows/video.c: 417
 Using %s scale effect\n
 
 
@@ -850,7 +842,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 
 
-# osd/windows/video.c: 448
+# osd/windows/video.c: 453
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
 
@@ -890,7 +882,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 876
+# mess/osd/windows/menu.c: 878
 creating
 
 
@@ -958,7 +950,7 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 876
+# mess/osd/windows/menu.c: 878
 loading
 
 

@@ -90,7 +90,7 @@
  (%d bytes)
  (%d バイト)
 
-# emu/clifront.c: 767
+# emu/clifront.c: 802
  BAD
  不良
 
@@ -114,7 +114,7 @@
  GAMES WITH  %d SNDINTRF: %4d\n
  %d個の音源使用ゲーム: %4d\n
 
-# emu/clifront.c: 773
+# emu/clifront.c: 808
  NO GOOD DUMP KNOWN
  正常なダンプは存在しません
 
@@ -130,11 +130,11 @@
 %d results found
 %d個の結果が見つかりました
 
-# emu/clifront.c: 917
+# emu/clifront.c: 952
 %d romsets found, %d were OK.\n
 %d個のロムセットが見つかり、%d個が正常です。\n
 
-# emu/clifront.c: 994
+# emu/clifront.c: 1029
 %d samplesets found, %d were OK.\n
 %d個のサンプルセットが見つかり、%d個が正常です。\n
 
@@ -230,7 +230,7 @@
 %sWrong version in save file (%d, 1 expected)
 %s保存したファイルのバージョンが違います (%d、正常値 1)
 
-# emu/clifront.c: 1269
+# emu/clifront.c: 1304
 (BAD) 
 (異常) 
 
@@ -257,6 +257,18 @@
 # emu/cheat.c: 2213, 2723, 3145, 3160, 3172, 3184, 3196, 6007, 7167 emu/uitext.c: 41 mess/drivers/mtx.c: 719, 721, 723 tools/chdman.c: 749, 1500
 (none)
 (なし)
+
+# mess/muitext.c: 23
+(playing)
+(再生中)
+
+# mess/muitext.c: 22
+(recording)
+(記録中)
+
+# mess/muitext.c: 13
+**Use ScrLock to toggle**
+**切り替えはScrLockを使用**
 
 # emu/inptport.c: 407
 1 Coin/1 Credit
@@ -794,6 +806,10 @@ Button Lamps
 Byte Length
 バイト長
 
+# mess/muitext.c: 50
+CD-ROM
+CD-ROM
+
 # mame/drivers/neodrvr.c: 69 mame/drivers/neogeo.c: 1216
 COMM Setting
 COMMセッティング
@@ -905,6 +921,14 @@ Cancel
 # emu/uitext.c: 153
 Card Number:
 カード番号:
+
+# mess/muitext.c: 37
+Cartridge
+カートリッジ
+
+# emu/sound/wave.c: 94, 95 mess/muitext.c: 41
+Cassette
+カセット
 
 # emu/uitext.c: 249 mame/drivers/cischeat.c: 1590 mame/drivers/namcos22.c: 3893, 3967
 Center
@@ -1058,7 +1082,7 @@ Composite
 Config Menu
 設定メニュー
 
-# emu/uimenu.c: 1802
+# emu/uimenu.c: 1755
 Configure General Inputs
 一般入力設定
 
@@ -1134,7 +1158,11 @@ Country
 Create New Card
 新しいカードを作成
 
-# emu/uimenu.c: 1659
+# mess/muitext.c: 31 
+Create...
+作成...
+
+# emu/uimenu.c: 1612
 Crop to Screen
 画面外をカット
 
@@ -1149,6 +1177,10 @@ Custom
 # emu/uitext.c: 99
 Custom Buttons
 カスタムボタン
+
+# mess/muitext.c: 40
+Cylinder
+シリンダ
 
 # mame/drivers/cinemat.c: 258, 821 mame/drivers/exidy.c: 148, 605 mame/drivers/mcr.c: 390, 972
 DIAL
@@ -1546,6 +1578,14 @@ Fatal error: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
+# mess/muitext.c: 16
+File Manager
+ファイルマネージャ
+
+# mess/muitext.c: 36, 38
+File Specification
+ファイル仕様
+
 # mame/drivers/ninjakid.c: 290 mame/drivers/rocnrope.c: 164 mame/drivers/xxmissio.c: 203
 First Bonus
 ボーナス初回
@@ -1565,6 +1605,10 @@ X軸反転
 # emu/uitext.c: 234 mame/drivers/midzeus.c: 318
 Flip Y
 Y軸反転
+
+# mess/muitext.c: 38
+Floppy Disk
+フロッピーディスク
 
 # emu/cheat.c: 2884
 Force Range
@@ -1662,7 +1706,7 @@ German
 Germany
 ドイツ
 
-# emu/uimenu.c: 3309
+# emu/uimenu.c: 3262
 Gfx: %s, Sound: %s
 グラフィック: %s サウンド: %s
 
@@ -1698,6 +1742,10 @@ HIGHLIGHTS     : %3d  + %3d\n
 Hard
 困難
 
+# mess/muitext.c: 39
+Hard Disk
+ハードディスク
+
 # emu/inptport.c: 457
 Harder
 より困難
@@ -1718,15 +1766,15 @@ Help not available yet
 Hex
 16進
 
-# emu/uimenu.c: 1639
+# emu/uimenu.c: 1592
 Hide Backdrops
 バックドロップを隠す
 
-# emu/uimenu.c: 1651
+# emu/uimenu.c: 1604
 Hide Bezels
 ベゼルを隠す
 
-# emu/uimenu.c: 1645
+# emu/uimenu.c: 1598
 Hide Overlays
 オーバレイを隠す
 
@@ -1834,7 +1882,7 @@ Illegal integer value for %s; keeping value of %s\n
 Illegal integer value for %s; reverting to %d\n
 「%s」は不正な整数値です。%dに戻します。\n
 
-# emu/clifront.c: 403 emu/mame.c: 1529 emu/ui.c: 391 
+# emu/clifront.c: 421 emu/mame.c: 1529 emu/ui.c: 391 
 Illegal value for %s = %s\n
 不正な値 %s = %s\n
 
@@ -1842,7 +1890,11 @@ Illegal value for %s = %s\n
 Image Enhancement
 画像イメージの向上
 
-# emu/uimenu.c: 3298, 3305 
+# mess/muitext.c: 15
+Image Information
+イメージ情報
+
+# emu/uimenu.c: 3251, 3258 
 Imperfect
 不完全
 
@@ -1877,6 +1929,10 @@ Input (general)
 # emu/uitext.c: 103
 Input (this game)
 入力設定 (このゲーム)
+
+# mess/muitext.c: 34
+Input Devices
+入力デバイス
 
 # emu/inptport.c: 1321, 1341
 Input file is for game '%s', not for current game '%s'\n
@@ -1969,6 +2025,10 @@ Keep
 # emu/inptport.c: 1060 mame/drivers/bishjan.c: 326 mame/drivers/ddenlovr.c: 4291, 4518, 5506 mame/drivers/ltcasino.c: 561 mame/drivers/rbmk.c: 132 mame/drivers/ssv.c: 1597, 1695, 1937 mess/drivers/thomson.c: 1705 
 Keyboard
 キーボード
+
+# mess/muitext.c: 7
+Keyboard Emulation Status
+キーボードエミュレーション状況
 
 # mame/drivers/aerofgt.c: 1180 mame/drivers/cave.c: 1746 mame/drivers/crshrace.c: 385, 541 mame/drivers/f1gp.c: 373 mame/drivers/nmk16.c: 2695 mame/drivers/pgm.c: 914, 1012, 1103, 1201, 1291, 1482 mame/drivers/psikyo.c: 647, 767, 1005, 1209 mame/drivers/stv.c: 2240 mame/drivers/taotaido.c: 287 mame/drivers/toaplan1.c: 1189, 1264, 1334, 1409, 1498 mame/drivers/toaplan2.c: 2071, 2118, 2236, 2249, 2298, 2449, 2511, 2573, 2644
 Korea
@@ -2170,7 +2230,7 @@ Location
 Low
 低い
 
-# emu/clifront.c: 336
+# emu/clifront.c: 354
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
 
@@ -2274,6 +2334,14 @@ Minimum Displayed Value
 Minimum Value
 最小値
 
+# mess/muitext.c: 10
+Mode: FULL Emulation
+モード: 完全エミュレーション
+
+# mess/muitext.c: 9
+Mode: PARTIAL Emulation
+モード: 部分エミュレーション
+
 # mame/drivers/astrocde.c: 768, 789 mame/drivers/jack.c: 777 mame/drivers/thepit.c: 540 mame/drivers/wldarrow.c: 189 mess/drivers/amstrad.c: 2151 mess/drivers/atarist.c: 1195, 1228 mess/drivers/tmc1800.c: 353
 Monitor
 モニタ
@@ -2289,6 +2357,10 @@ More Info
 # emu/uitext.c: 180
 More Info for
 補足説明:
+
+# mess/muitext.c: 30 
+Mount...
+マウント...
 
 # emu/input.c: 138 mess/drivers/amiga.c: 107, 110 mess/drivers/atarist.c: 1193, 1226 mess/drivers/msx.c: 112, 124 mess/drivers/thomson.c: 550, 1703 mess/includes/c64.h: 14, 14 mess/includes/cbmb.h: 11, 11 
 Mouse
@@ -2358,7 +2430,7 @@ Mouse Y 7
 Mouse Y 8
 マウス Y 8
 
-# emu/uimenu.c: 1584
+# emu/uimenu.c: 1532
 Move User Interface
 ユーザインターフェイスを移動
 
@@ -2382,7 +2454,7 @@ NO GOOD DUMP KNOWN : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
 NO GOOD DUMP KNOWN\n
 正常なダンプは不明です\n
 
-# emu/clifront.c: 1185 tools/romcmp.c: 449
+# emu/clifront.c: 1220 tools/romcmp.c: 449
 NO MATCH\n
 マッチしません\n
 
@@ -2394,7 +2466,7 @@ NO SOUND           : %3d  %3d\n
 NON-WORKING        : %3d  %3d\n
 動作不可           : %3d  %3d\n
 
-# emu/clifront.c: 1179
+# emu/clifront.c: 1214
 NOT A ROM\n
 ROMではありません\n
 
@@ -2426,11 +2498,11 @@ NVRAM
 Name
 名前
 
-# emu/clifront.c: 523
+# emu/clifront.c: 558
 Name:     Description:\n
 名前:     詳細:\n
 
-# emu/clifront.c: 669
+# emu/clifront.c: 704
 Name:    Clone of:\n
 名前:    クローン:\n
 
@@ -2458,7 +2530,11 @@ No
 No Driver Loaded
 ドライバが読み込まれていません
 
-# emu/uimenu.c: 1763
+# mess/muitext.c: 19
+No Tape Image loaded
+テープイメージがロードされていません
+
+# emu/uimenu.c: 1716
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
 ゲームが見つかりません。mame.iniで指定したROMのパスを確認してください。\n\n初めてMAMEを使用する場合は、MAMEの設定情報についてdocsディレクトリにあるconfig.txtを見て下さい。\n\n何かキーを押すと終了します
 
@@ -2466,7 +2542,7 @@ No games found. Please check the rompath specified in the mame.ini file.\n\nIf t
 No previous values saved
 前回の値が保存されていません
 
-# emu/cheat.c: 732, 2906 emu/inptport.c: 487 emu/inputseq.c: 416 emu/sound/custom.c: 84 emu/uimenu.c: 2503 mess/includes/cbmb.h: 11, 11 mess/machine/serial.c: 154 
+# emu/cheat.c: 732, 2906 emu/inptport.c: 487 emu/inputseq.c: 416 emu/sound/custom.c: 84 emu/uimenu.c: 2456 mess/includes/cbmb.h: 11, 11 mess/machine/serial.c: 154 
 None
 なし
 
@@ -2490,7 +2566,7 @@ Null
 Number of bytes
 バイト数
 
-# emu/uimenu.c: 3300, 3307 emu/uitext.c: 39 
+# emu/uimenu.c: 3253, 3260 emu/uitext.c: 39 
 OK
 OK
 
@@ -2546,15 +2622,15 @@ Otherwise, type OK or move the joystick left then right to continue
 Out of memory
 メモリ不足
 
-# emu/uimenu.c: 3290
+# emu/uimenu.c: 3243
 Overall: NOT WORKING
 総合評価: 動作不可
 
-# emu/uimenu.c: 3292
+# emu/uimenu.c: 3245
 Overall: Unemulated Protection
 総合評価: プロテクト未対応
 
-# emu/uimenu.c: 3294
+# emu/uimenu.c: 3247
 Overall: Working
 総合評価: 動作可
 
@@ -4086,9 +4162,17 @@ Paddle V 7
 Paddle V 8
 パドル V 8
 
+# mess/muitext.c: 46
+Parallel Port
+パラレルポート
+
 # emu/inptport.c: 431, 1065 
 Pause
 一時停止
+
+# mess/muitext.c: 25
+Pause/Stop
+中断/中止
 
 # mame/drivers/imolagp.c: 472 mame/drivers/turbo.c: 956 
 Pedal
@@ -4242,9 +4326,29 @@ Previous Game
 Previous values already restored
 前回の値は既に復帰済みです
 
+# mess/drivers/exidy.c: 670 mess/muitext.c: 44
+Printer
+プリンタ
+
 # emu/cheat.c: 2934
 Program Space
 プログラム領域
+
+# mess/muitext.c: 42
+Punched Card
+パンチカード
+
+# mess/muitext.c: 43
+Punched Tape
+パンチテープ
+
+# mess/drivers/c128.c: 392 mess/drivers/c16.c: 426 mess/drivers/c64.c: 398, 449, 476, 503, 523 mess/drivers/c65.c: 54 mess/drivers/cbmb.c: 273 mess/drivers/pet.c: 412, 431, 445, 461 mess/drivers/vc20.c: 324, 476, 612 mess/muitext.c: 48
+Quickload
+クイックロード
+
+# mess/muitext.c: 35
+Quit Fileselector
+ファイル選択中止
 
 # emu/ui.c: 2382
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
@@ -4289,6 +4393,10 @@ Reach
 # mess/drivers/lviv.c: 319 
 Ready
 Ready
+
+# mess/muitext.c: 26
+Record
+記録
 
 # emu/inptport.c: 1075
 Record Movie
@@ -4358,6 +4466,10 @@ Return to Prior Menu
 Reverse
 反転
 
+# mess/muitext.c: 28
+Rewind
+巻き戻し
+
 # mame/layout/darius.lay: 61
 Right Half
 右半分
@@ -4378,7 +4490,7 @@ Rotate Clockwise
 Rotate Counter-clockwise
 反時計回りに回転
 
-# emu/uimenu.c: 1634
+# emu/uimenu.c: 1587
 Rotate View
 画面を回転
 
@@ -4394,7 +4506,7 @@ SHADOWS        : %3d  + %3d\n
 Samples
 サンプル
 
-# emu/clifront.c: 832
+# emu/clifront.c: 867
 Samples not supported in this build\n
 このビルドではサンプルはサポートされていません\n
 
@@ -4514,6 +4626,10 @@ Select position to save to
 Sensitivity
 感度
 
+# mess/muitext.c: 45
+Serial Port
+シリアルポート
+
 # emu/inptport.c: 892 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1820, 1853, 1942 mame/drivers/gdrawpkr.c: 300, 370 mame/drivers/pgm.c: 866 mame/drivers/wallc.c: 182
 Service
 サービス
@@ -4558,11 +4674,11 @@ Set/Clear Bits
 Show Activation Key Message
 アクティベーションキーメッセージを表\示
 
-# emu/uimenu.c: 1641
+# emu/uimenu.c: 1594
 Show Backdrops
 バックドロップを表\示
 
-# emu/uimenu.c: 1653
+# emu/uimenu.c: 1606
 Show Bezels
 ベゼルを表\示
 
@@ -4590,7 +4706,7 @@ Show Current Time
 Show FPS
 FPSの表\示
 
-# emu/uimenu.c: 1657
+# emu/uimenu.c: 1610
 Show Full Artwork
 全てのアートワークを表\示
 
@@ -4598,7 +4714,7 @@ Show Full Artwork
 Show Gfx
 グラフィックデータ表\示
 
-# emu/uimenu.c: 1647
+# emu/uimenu.c: 1600
 Show Overlays
 オーバレイを表\示
 
@@ -4798,6 +4914,10 @@ The colors aren't 100% accurate.
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
+# mess/muitext.c: 5
+The emulated system is a computer: 
+エミュレートされているシステムはコンピュータ:
+
 # emu/uitext.c: 88
 The game has protection which isn't fully emulated.
 このゲームはプロテクトのためエミュレーションが不完全です。
@@ -4814,7 +4934,11 @@ The game lacks sound.
 The game lacks sound.\n
 サウンドが再生されません。\n
 
-# emu/uimenu.c: 1818
+# mess/muitext.c: 6
+The keyboard emulation may not be 100% accurate.
+キーボードエミュレーションが不完全です。\n
+
+# emu/uimenu.c: 1771
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 選択されたゲームに必要なROMまたはCHDイメージが不足しています。別のゲームを選択して下さい。\n\n何かキーを押すと続行します。
 
@@ -4846,7 +4970,7 @@ There are working clones of this game. They are:
 This INP file is not an extended INP file, extra info not available\n
 この再生ファイルは拡張再生ファイルではありません。追加情報はありません\n
 
-# emu/clifront.c: 734
+# emu/clifront.c: 769
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 これはドライバ「%s」に必要なROMのリストです。\n名前          サイズ チェックサム\n
 
@@ -4986,11 +5110,11 @@ Type
 Type OK or move the joystick left then right to continue
 続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
-# emu/uimenu.c: 3248
+# emu/uimenu.c: 3201
 Type name or select: %s_
 名前を入力または選択: %s_
 
-# emu/uimenu.c: 3250
+# emu/uimenu.c: 3203
 Type name or select: (random)
 名前を入力または選択: (ランダム)
 
@@ -5062,6 +5186,14 @@ UI ズームイン
 UI Zoom Out
 UI ズームアウト
 
+# mess/muitext.c: 12
+UI:   Disabled
+UI:   無効
+
+# mess/muitext.c: 11
+UI:   Enabled
+UI:   有効
+
 # emu/datafile.c: 2298
 UNEMULATED PROTEC. : %3d  %3d\n
 プロテクト未対応   : %3d  %3d\n
@@ -5082,7 +5214,7 @@ USA
 Unable to allocate snapshot render target\n
 スナップショット用の描画対象が用意出来ません\n
 
-# emu/clifront.c: 294
+# emu/clifront.c: 312
 Unable to create file mame.ini\n
 mame.iniが作成出来ません\n
 
@@ -5106,7 +5238,7 @@ Unexpected float option %s queried\n
 Unexpected integer option %s queried\n
 整数値オプション%sが不正です\n
 
-# emu/uimenu.c: 3303 mess/machine/nes.c: 585, 590
+# emu/uimenu.c: 3256 mess/machine/nes.c: 585, 590
 Unimplemented
 未対応
 
@@ -5117,6 +5249,10 @@ Unknown
 # mame/drivers/aerofgt.c: 909 mame/drivers/csk.c: 261 mame/drivers/goldstar.c: 164, 172, 196 mame/drivers/segas16a.c: 1135 mame/drivers/segas16b.c: 2011, 2876, 2877 mame/drivers/spy.c: 492 mame/drivers/system16.c: 1963, 1964 
 Unlimited
 無制限
+
+# mess/muitext.c: 32 
+Unmount
+マウント解除
 
 # emu/inptport.c: 482 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1702 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 733, 736 mame/drivers/ssv.c: 1280, 1338, 1339, 1392, 1403, 1910, 1911, 2049, 2068, 2081, 2085
 Unused
@@ -5258,11 +5394,11 @@ Uptime
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
 所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。
 
-# emu/clifront.c: 339
+# emu/clifront.c: 357
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
 使用法:  MAME gamename [options]\n\n        MAME -showusage    オプションの概要一覧\n        MAME -showconfig   オプションの設定一覧\n        MAME -createconfig mame.iniを生成\n\n使い方についての説明は、windows.txtの内容をご覧下さい。\n
 
-# emu/clifront.c: 228
+# emu/clifront.c: 246
 Usage: %s [%s] [options]\n\nOptions:\n
 使用法: %s [%s] [オプション]\n\nオプション:\n
 
@@ -5470,6 +5606,10 @@ Zoom = %d
 Zoom Auto
 ズーム 自動
 
+# mess/muitext.c: 33
+[empty slot]
+[空きスロット]
+
 # emu/datafile.c: 2431
 \n    SNDINTRF:  (1)  (2)  (3)  (4)\n\n
 \n        音源:  (1)  (2)  (3)  (4)\n\n
@@ -5510,7 +5650,7 @@ Zoom Auto
 \nWARNING: FPS number too high!\n
 \n警告: FPSの値が大きすぎます！\n
 
-# emu/clifront.c: 172
+# emu/clifront.c: 190
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
 \n「%s」に似たゲームは下記の通りです\nサポートされているゲーム (似ているもの順):\n\n
 
@@ -5902,7 +6042,7 @@ enabled
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 ジョイスティックの入力を無視する領域の外側しきい値 (0.0 中央、1.0 外)
 
-# emu/clifront.c: 468
+# emu/clifront.c: 503
 error: invalid value for language: %s\nUse %s\n
 エラー: 不正な言語指定: %s\n%sを使用します\n
 
@@ -5942,7 +6082,7 @@ font special color
 frame:%d 
 フレーム:%d
 
-# emu/clifront.c: 228 emu/info.c: 25 
+# emu/clifront.c: 246 emu/info.c: 25 
 game
 ゲーム名
 
@@ -5970,15 +6110,15 @@ invalid
 ips datfile name
 IPSデータファイル名
 
-# emu/clifront.c: 884, 964
+# emu/clifront.c: 919, 999
 is bad\n
 は異常です\n
 
-# emu/clifront.c: 894, 974
+# emu/clifront.c: 929, 1009
 is best available\n
 は現状では最良な状態です\n
 
-# emu/clifront.c: 889, 969
+# emu/clifront.c: 924, 1004
 is good\n
 は正常です\n
 
@@ -6106,6 +6246,10 @@ perform driver validation on all game drivers
 playback an input file
 入力の再現するファイル名
 
+# mess/muitext.c: 21
+playing
+再生中
+
 # emu/inptport.c: 1228
 positional
 座標
@@ -6122,6 +6266,10 @@ quit game with confirmation
 record an input file
 入力を保存するファイル名
 
+# mess/muitext.c: 20
+recording
+記録中
+
 # emu/cheat.c: 6472, 6850
 region invalidated - %d results remain
 不正な領域 - %d個の結果が残っています
@@ -6134,15 +6282,15 @@ report romsets that have problems
 report samplesets that have problems
 問題のあるサンプルセットを報告
 
-# emu/clifront.c: 875
+# emu/clifront.c: 910
 romset %s 
 ROMセット%s
 
-# emu/clifront.c: 908
+# emu/clifront.c: 943
 romset \"%s\" not found!\n
 ロムセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 910
+# emu/clifront.c: 945
 romset \"%s\" not supported!\n
 ロムセット「%s」は対応していません!\n
 
@@ -6162,15 +6310,15 @@ rotate the game screen according to the game's orientation needs it
 s%d
 画面%d
 
-# emu/clifront.c: 958
+# emu/clifront.c: 993
 sampleset %s 
 サンプルセット%s
 
-# emu/clifront.c: 985
+# emu/clifront.c: 1020
 sampleset \"%s\" not found!\n
 サンプルセット「%s」は見つかりません!\n
 
-# emu/clifront.c: 987
+# emu/clifront.c: 1022
 sampleset \"%s\" not supported!\n
 サンプルセット「%s」は対応していません!\n
 
@@ -6261,6 +6409,10 @@ sound volume in decibels (-32 min, 0 max)
 # emu/uitext.c: 47 
 stereo
 ステレオ
+
+# mess/muitext.c: 24
+stopped
+停止
 
 # emu/emuopts.c: 77
 story database name

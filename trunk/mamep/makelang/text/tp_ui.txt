@@ -674,6 +674,10 @@ Configure for:
 Console
 
 
+# osd/winui/layout.c: 52
+Consoles
+
+
 # osd/winui/mame32.rc: 1467
 Contains commands for displaying help
 

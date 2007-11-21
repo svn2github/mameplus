@@ -333,6 +333,9 @@ render_target *render_target_get_indexed(int index);
 /* return the name of the indexed view, or NULL if it doesn't exist */
 const char *render_target_get_view_name(render_target *target, int viewindex);
 
+/* return the localized name of the indexed view, or NULL if it doesn't exist */
+const char *render_target_get_translated_view_name(render_target *target, int viewindex);
+
 /* return a bitmask of which screens are visible on a given view */
 UINT32 render_target_get_view_screens(render_target *target, int viewindex);
 

@@ -672,7 +672,11 @@ Configure for:
 
 # mess/osd/winui/layoutms.c: 44 osd/winui/mame32.rc: 1169
 Console
-コンソ\ール
+家庭用ゲーム機
+
+# osd/winui/layout.c: 52
+Consoles
+家庭用ゲーム機
 
 # osd/winui/mame32.rc: 1467
 Contains commands for displaying help

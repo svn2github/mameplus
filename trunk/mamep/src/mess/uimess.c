@@ -107,7 +107,7 @@ int ui_sprintf_image_info(char *buf)
 	const struct IODevice *dev;
 	int id;
 
-	dst += sprintf(dst, "%s\n\n", Machine->gamedrv->description);
+	dst += sprintf(dst, "%s\n\n", _LST(Machine->gamedrv->description));
 
 	if (mess_ram_size > 0)
 	{

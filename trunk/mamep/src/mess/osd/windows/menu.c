@@ -472,7 +472,7 @@ static void state_dialog(HWND wnd, win_file_dialog_type dlgtype,
 	else
 	{
 		snprintf(state_filename, sizeof(state_filename) / sizeof(state_filename[0]),
-			_WINDOWS("%s State.sta"), Machine->gamedrv->description);
+			_WINDOWS("%s State.sta"), _LST(Machine->gamedrv->description));
 		dir = NULL;
 
 		src = state_filename;
@@ -1327,11 +1327,12 @@ static void prepare_menus(HWND wnd)
 	while(_tcscmp(t_buf, TEXT("-")));
 	i = 0;
 	view_index = render_target_get_view(window->target);
-	while((view_name = render_target_get_view_name(window->target, i)) != NULL)
+	while((view_name = render_target_get_translated_view_name(window->target, i)) != NULL)
 	{
 		TCHAR *t_view_name = tstring_from_utf8(view_name);
 		InsertMenu(video_menu, i, MF_BYPOSITION | (i == view_index ? MF_CHECKED : 0),
 			ID_VIDEO_VIEW_0 + i, t_view_name);
+		free((char *)view_name);
 		free(t_view_name);
 		i++;
 	}
@@ -1968,7 +1969,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 	}
 
 	// set the help menu to refer to this machine
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), Machine->gamedrv->description, Machine->gamedrv->name);
+	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), _LST(Machine->gamedrv->description), Machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
 	return 0;
 }
