@@ -2038,6 +2038,7 @@ static void translate_menu(HMENU hMenu)
 			{
 				miiW.cbSize     = sizeof(miiW);
 				miiW.fMask      = MIIM_STRING | MIIM_FTYPE;
+				miiW.fType      = MFT_STRING;
 				miiW.cch        = wcslen(miiW.dwTypeData);
 
 				SetMenuItemInfoW(hMenu, i, TRUE, &miiW);
@@ -2045,15 +2046,6 @@ static void translate_menu(HMENU hMenu)
 				free(miiW.dwTypeData);
 			}
 		}
-
-		miiA.cbSize     = sizeof(MENUITEMINFOA);
-		miiA.fMask      = MIIM_ID | MIIM_STRING | MIIM_FTYPE;
-		miiA.dwTypeData = buffer;
-		miiA.cch        = ARRAY_LENGTH(buffer);
-		*buffer        = '\0';
-
-		if (!GetMenuItemInfoA(hMenu, i, TRUE, &miiA) || !miiA.wID)
-			exit(1);
 	}
 }
 #endif /* UNDER_CE */
