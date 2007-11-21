@@ -1444,14 +1444,19 @@ void win_toggle_menubar(int state)
 		AdjustWindowRectEx(&before_rect, style, menu ? TRUE : FALSE, exstyle);
 
 		// toggle the menu
-		if (menu && state <= 0)
+		if (menu)
 		{
-			SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
-			menu = NULL;
+			//mamep: prevent auto hide in window mode
+			if (state == 0 || (state < 0 && !is_windowed()))
+			{
+				SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
+				menu = NULL;
+			}
 		}
-		if (!menu && state >= 0)
+		else
 		{
-			menu = (HMENU) GetProp(hwnd, TEXT("menu"));
+			if(state >= 0)
+				menu = (HMENU) GetProp(hwnd, TEXT("menu"));
 		}
 		SetMenu(hwnd, menu);
 
