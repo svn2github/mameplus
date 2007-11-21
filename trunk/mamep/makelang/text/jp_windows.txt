@@ -71,8 +71,8 @@ DIPスイッチ...(&D)
 ヘルプ(&H)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-メニューバーを隠す(&H)\tScrLk
+&Hide Menubar\tTab
+メニューバーを隠す(&H)\tTab
 
 # mess/osd/windows/menu.c: 1112 mess/osd/windows/mess.rc: 57
 &Joysticks

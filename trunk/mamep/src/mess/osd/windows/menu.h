@@ -17,7 +17,7 @@
 
 int win_setup_menus(HMODULE module, HMENU menu_bar);
 LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPARAM lparam);
-void win_toggle_menubar(void);
+void win_toggle_menubar(int);
 
 
 

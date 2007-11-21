@@ -67,8 +67,8 @@
 說明(&H)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-隱藏選單列(&H)\tScrLk
+&Hide Menubar\tTab
+隱藏選單列(&H)\tTab
 
 # mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 57
 &Joysticks

@@ -29,7 +29,7 @@ const options_entry mame_core_options[] =
 
 #ifdef DRIVER_SWITCH
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
-	{ "driver_config",               "mame,plus", 0,                 "switch drivers"},
+	{ "driver_config",               "mame,plus,console", 0,                 "switch drivers"},
 #endif /* DRIVER_SWITCH */
 
 	/* config options */

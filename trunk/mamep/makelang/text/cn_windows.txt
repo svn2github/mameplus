@@ -51,8 +51,8 @@
 帮助(&H)
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
-隐藏菜单条(&H)\tScrLk
+&Hide Menubar\tTab
+隐藏菜单条(&H)\tTab
 
 # mess/osd/windows/mess.rc: 0
 &Input

@@ -522,6 +522,9 @@ void winwindow_toggle_full_screen(void)
 	for (window = win_window_list; window != NULL; window = window->next)
 		SendMessage(window->hwnd, WM_USER_SET_FULLSCREEN, !video_config.windowed, 0);
 	SetForegroundWindow(win_window_list->hwnd);
+	
+	if (!video_config.windowed)
+		win_toggle_menubar(-1);
 }
 
 

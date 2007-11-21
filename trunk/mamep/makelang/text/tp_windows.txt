@@ -71,7 +71,7 @@
 
 
 # mess/osd/windows/mess.rc: 86
-&Hide Menubar\tScrLk
+&Hide Menubar\tTab
 
 
 # mess/osd/windows/menu.c: 1112 mess/osd/windows/mess.rc: 57

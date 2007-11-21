@@ -1419,7 +1419,7 @@ static void set_speed(int speed)
 //	win_toggle_menubar
 //============================================================
 
-void win_toggle_menubar(void)
+void win_toggle_menubar(int state)
 {
 	win_window_info *window;
 	LONG width_diff;
@@ -1444,12 +1444,12 @@ void win_toggle_menubar(void)
 		AdjustWindowRectEx(&before_rect, style, menu ? TRUE : FALSE, exstyle);
 
 		// toggle the menu
-		if (menu)
+		if (menu && state <= 0)
 		{
 			SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
 			menu = NULL;
 		}
-		else
+		if (!menu && state >= 0)
 		{
 			menu = (HMENU) GetProp(hwnd, TEXT("menu"));
 		}
@@ -1763,7 +1763,7 @@ static int invoke_command(HWND wnd, UINT command)
 
 #if HAS_TOGGLEMENUBAR
 		case ID_OPTIONS_TOGGLEMENUBAR:
-			win_toggle_menubar();
+			win_toggle_menubar(0);
 			break;
 #endif
 

@@ -86,7 +86,7 @@ BEGIN
         END
         MENUITEM "Show &FPS",                   ID_OPTIONS_TOGGLEFPS
         MENUITEM SEPARATOR
-        MENUITEM "&Hide Menubar\tScrLk",        ID_OPTIONS_TOGGLEMENUBAR
+        MENUITEM "&Hide Menubar\tTab",        ID_OPTIONS_TOGGLEMENUBAR
         MENUITEM "&Full Screen\tAlt+Enter",     ID_OPTIONS_FULLSCREEN
     END
     POPUP "&Options"
