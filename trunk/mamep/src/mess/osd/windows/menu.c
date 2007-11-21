@@ -766,7 +766,7 @@ static int add_filter_entry(char *dest, size_t dest_len, const char *description
 
 	// add the description
 	pos += snprintf(&dest[pos], dest_len - pos, "%s (", description);
-	
+
 	// add the extensions to the description
 	pos += copy_extension_list(&dest[pos], dest_len - pos, extensions);
 
@@ -792,12 +792,29 @@ static void build_generic_filter(const struct IODevice *dev, int is_save, char *
 {
 	char *s;
 	const char *file_extensions;
+	char *temp = NULL;
 
 	s = filter;
 
 	// common image types
 	file_extensions = device_get_info_string(&dev->devclass, DEVINFO_STR_FILE_EXTENSIONS);
+
+	//mamep: add zip extension
+	if (!is_save)
+	{
+		temp = malloc(strlen(file_extensions) + sizeof(",zip"));
+		strcpy(temp, file_extensions);
+		strcat(temp, ",zip");
+		file_extensions = temp;
+	}
+
 	s += add_filter_entry(filter, filter_len, _WINDOWS("Common image types"), file_extensions);
+
+	if (temp)
+	{
+		free(temp);
+		temp = NULL;
+	}
 
 	// all files
 	s += sprintf(s, _WINDOWS("All files (*.*)|*.*|"));
