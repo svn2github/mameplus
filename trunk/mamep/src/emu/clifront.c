@@ -119,6 +119,8 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	astring *gamename = astring_alloc();
 	astring *exename = astring_alloc();
 	const game_driver *driver;
+	output_callback prevcb;
+	void *prevparam;
 	int result;
 
 	/* initialize the options manager and add the CLI-specific options */
@@ -127,12 +129,12 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 
 	setup_language(options);
 
-	/* parse the command line first; if we fail here, we're screwed */
-	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
-	{
-		result = MAMERR_INVALID_CONFIG;
-		goto error;
-	}
+	//mamep: ignore error for options added by callback later
+	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, mame_null_output_callback, NULL, &prevcb, &prevparam);
+
+	//mamep: ignore error
+	/* parse the command line first */
+	options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE);
 
 	setup_language(options);
 
@@ -149,6 +151,22 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 #ifdef DRIVER_SWITCH
 	assign_drivers(options);
 #endif /* DRIVER_SWITCH */
+
+	//mamep: enable error; now we have all options we can use
+	mame_set_output_channel(OUTPUT_CHANNEL_ERROR, prevcb, prevparam, NULL, NULL);
+
+	//mamep: try command line again
+	/* parse the command line again; if we fail here, we're screwed */
+	if (options_parse_command_line(options, argc, argv, OPTION_PRIORITY_CMDLINE))
+	{
+		result = MAMERR_INVALID_CONFIG;
+		goto error;
+	}
+
+	//mamep: try ini file again
+	/* parse the INI file defined by the platform (e.g., "mame.ini") */
+	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
+	parse_ini_file(options, CONFIGNAME);
 
 	/* find out what game we might be referring to */
 	core_filename_extract_base(gamename, options_get_string(options, OPTION_GAMENAME), TRUE);
@@ -439,7 +457,24 @@ void assign_drivers(core_options *options)
 
 	drivers[n] = NULL;
 
+#ifdef OPTION_ADDED_DEVICE_OPTIONS
 	options_set_bool(options, OPTION_ADDED_DEVICE_OPTIONS, FALSE, OPTION_PRIORITY_DEFAULT);
+
+	//add options by callback if we need
+	if (!options_get_bool(options, OPTION_ADDED_DEVICE_OPTIONS))
+	{
+		const char *gamename = options_get_string(options, OPTION_GAMENAME);
+		if (gamename)
+		{
+			const char *argv[2];
+
+			argv[0] = gamename;
+			argv[1] = NULL;
+
+			options_parse_command_line(options, ARRAY_LENGTH(argv) - 1, (char **)argv, OPTION_PRIORITY_CMDLINE);
+		}
+	}
+#endif /* OPTION_ADDED_DEVICE_OPTIONS */
 }
 #endif /* DRIVER_SWITCH */
 
