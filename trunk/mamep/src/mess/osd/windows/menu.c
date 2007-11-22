@@ -1743,6 +1743,9 @@ static int invoke_command(HWND wnd, UINT command)
 	LONG_PTR ptr = GetWindowLongPtr(wnd, GWLP_USERDATA);
 	win_window_info *window = (win_window_info *)ptr;
 
+	//mamep: to avoid crash if multithreading is enabled
+	winwindow_ui_pause_from_window_thread(TRUE);
+
 	switch(command)
 	{
 		case ID_FILE_LOADSTATE:
@@ -1966,6 +1969,9 @@ static int invoke_command(HWND wnd, UINT command)
 			}
 			break;
 	}
+
+	//mamep: to avoid crash if multithreading is enabled
+	winwindow_ui_pause_from_window_thread(FALSE);
 	return handled;
 }
 
