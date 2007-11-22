@@ -4011,4 +4011,3 @@ GAME( 1997, overrev,         0, model2c, model2, 0, ROT0, "Jaleco", "Over Rev", 
 GAME( 1997, topskatr,        0, model2c, model2, 0, ROT0, "Sega", "Top Skater", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1998, bel,             0, model2c, bel,    0, ROT0, "Sega/EPL Productions", "Behind Enemy Lines", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 
-

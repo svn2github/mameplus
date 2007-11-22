@@ -720,4 +720,3 @@ GAME( 1999, ssfindo, 0,        ssfindo,  ssfindo,  ssfindo, ROT0, "Icarus", "See
 GAME( 1999, ppcar,   0,        ppcar,    ppcar,    ppcar, ROT0, "Icarus", "Pang Pang Car", GAME_NO_SOUND )
 
 
-
