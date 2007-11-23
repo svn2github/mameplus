@@ -236,7 +236,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( luctoday )	/* 1980 Sigma */
 	DRIVER( chewing )	/* ?? unknown */
 	DRIVER( catacomb )	/* 1982 MTM Games */
-	DRIVER( ckongg )    /* 1981 bootleg */
+	DRIVER( ckongg )        /* 1981 bootleg */
 	DRIVER( kkgalax )   /* 1981 bootleg */
 	DRIVER( porter )    /* 19?? bootleg */
 
@@ -3642,6 +3642,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( titlef )	/* (c) 1992 (World) */
 	DRIVER( titlefu )	/* (c) 1992 (US) */
 	DRIVER( scross )	/* (c) 1992 (World) */
+	DRIVER( scrossu )	/* (c) 1992 (World) */
 
 	/* Model 1 Games */
 	DRIVER( vf )		/* (c) 1993 */
@@ -5377,7 +5378,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( choppera )	/* A7003 'KK' (c) 1988 */
 	DRIVER( chopperb )	/* A7003 'KK' (c) 1988 */
 	DRIVER( legofair )	/* A7003 'KK' (c) 1988 */
-	DRIVER( ftsoccer )	/*            (c) 1988 */
+	DRIVER( fsoccer )	/* A6006 'FS' (c) 1988 */
+	DRIVER( fsoccerb )	/*            (c) 1988 */
 	DRIVER( tdfever )	/* A6006 'TD' (c) 1987 */
 	DRIVER( tdfeverj )	/* A6006 'TD' (c) 1987 */
 	DRIVER( tdfever2 )	/* A6006 'TD'?(c) 1988 */
@@ -5616,7 +5618,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
-	DRIVER( cthd2003 )	/* bootleg of kof2001 */
+	DRIVER( cthd2003 )	/* bootleg of kof2001*/
 	DRIVER( ct2k3sp )	/* bootleg of kof2001 */
 	DRIVER( ct2k3sa )	/* bootleg of kof2001 */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
@@ -7860,12 +7862,12 @@ Other Sun games
 	DRIVER( pepp0158 )	/* (c) 1987 IGT - International Gaming Technology */
 	DRIVER( pepp0188 )	/* (c) 1987 IGT - International Gaming Technology */
 	DRIVER( peset038 )	/* (c) 1987 IGT - International Gaming Technology */
-    DRIVER( pebe0014 )	/* (c) 1994 IGT - International Gaming Technology */
-    DRIVER( peke1012 )	/* (c) 1994 IGT - International Gaming Technology */
-    DRIVER( peps0615 )	/* (c) 1996 IGT - International Gaming Technology */
+	DRIVER( pebe0014 )	/* (c) 1994 IGT - International Gaming Technology */
+	DRIVER( peke1012 )	/* (c) 1994 IGT - International Gaming Technology */
+	DRIVER( peps0615 )	/* (c) 1996 IGT - International Gaming Technology */
 	DRIVER( peps0716 )	/* (c) 1996 IGT - International Gaming Technology */
-    DRIVER( pexp0019 )	/* (c) 1995 IGT - International Gaming Technology */
-    DRIVER( pexs0006 )	/* (c) 1997 IGT - International Gaming Technology */
+	DRIVER( pexp0019 )	/* (c) 1995 IGT - International Gaming Technology */
+	DRIVER( pexs0006 )	/* (c) 1997 IGT - International Gaming Technology */
 	DRIVER( mirage )	/* (c) 1994 Mitchell */
 	DRIVER( dominob )	/* (c) 1990 Wonwoo Systems */
 	DRIVER( jongkyo )	/* (c) 1985 Kiwako */

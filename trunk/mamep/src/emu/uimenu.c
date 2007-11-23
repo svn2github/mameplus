@@ -549,7 +549,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
 
-	/* If there is somthing special to add, do it by calling the passed routine */
+	/* if there is somthing special to add, do it by calling the passed routine */
 	if (extra != NULL)
 		(*extra->render)(extra, x1, y1, x2, y2);
 
@@ -576,7 +576,7 @@ int ui_menu_draw_fixed_width(const ui_menu_item *items, int numitems, int select
     bottom
 -------------------------------------------------*/
 
-void ui_menu_draw_text_box(const char *text)
+static void ui_menu_draw_text_box(const char *text)
 {
 	const char *priortext = ui_getstring(UI_returntoprior);
 	float line_height = ui_get_line_height();

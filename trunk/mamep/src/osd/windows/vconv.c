@@ -85,17 +85,18 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-W*",					"" },
 	{ VS2005,	"-march=*",				"" },		// deprecated in VS2005
 	{ 0,		"-march=pentium",		"/G5" },
+	{ 0,		"-march=pentiumpro",	"/G6" },
+	{ 0,		"-march=pentium3",		"/G6" },
+	{ 0,		"-march=pentium-m",		"/G6" },
 	{ 0,		"-march=athlon",		"/G7" },
 	{ 0,		"-march=athlon-xp",		"/G7" },
 	{ 0,		"-march=i686",			"/G6" },
-	{ 0,		"-march=pentiumpro",	"/G6" },
 #ifdef ICC_BUILD
 	{ 0,		"-march=pentium4",		"/G7 /QxN" },
 #else
 	{ 0,		"-march=pentium4",		"/G7 /arch:SSE2" },
 #endif
 	{ 0,		"-march=athlon64",		"/G7" },
-	{ 0,		"-march=pentium3",		"/G6" },
 #ifdef ICC_BUILD
 	{ 0,		"-march=pentiumm",		"/G6 /QxB" },
 #else
@@ -105,7 +106,7 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-msee",				"" }, // "/arch:SSE"
 	{ VS71,		"-msse2",				"" }, // "/arch:SSE2"
 	{ 0,		"-msse2",				"" },
-	{ 0,		"-m3dnow",				"" },
+	{ 0,		"-msse3",				"" },
 	{ 0,		"-mwindows",			"" },
 	{ 0,		"-mno-cygwin",			"" },
 #ifdef ICC_BUILD

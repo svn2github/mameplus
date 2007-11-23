@@ -1088,6 +1088,7 @@ void mame_printf_debug(const char *format, ...)
     appropriate callback
 -------------------------------------------------*/
 
+#ifdef UNUSED_FUNCTION
 void mame_printf_log(const char *format, ...)
 {
 	va_list argptr;
@@ -1104,6 +1105,7 @@ void mame_printf_log(const char *format, ...)
 	(*output_cb[OUTPUT_CHANNEL_LOG])(output_cb_param[OUTPUT_CHANNEL_LOG], format, argptr);
 	va_end(argptr);
 }
+#endif
 
 
 

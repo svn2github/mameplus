@@ -283,14 +283,14 @@ struct _game_driver
 
 #define MDRV_CPU_REPLACE(tag, _type, _clock)								\
 	cpu = driver_find_cpu(machine, tag);								\
-	cpu->type = (CPU_##_type);										\
-	cpu->clock = (_clock);											\
+	cpu->type = (CPU_##_type);											\
+	cpu->clock = (_clock);												\
 
 
 /* CPU parameters */
 #define MDRV_CPU_FLAGS(_flags)											\
 	if (cpu)															\
-		cpu->flags = (_flags);										\
+		cpu->flags = (_flags);											\
 
 #define MDRV_CPU_CONFIG(config)											\
 	if (cpu)															\
@@ -421,7 +421,7 @@ struct _game_driver
 	screen->defstate.refresh = HZ_TO_ATTOSECONDS(rate);					\
 
 #define MDRV_SCREEN_VBLANK_TIME(time)									\
-	screen->defstate.vblank = time;										\
+	screen->defstate.vblank = time;				\
 	screen->defstate.oldstyle_vblank_supplied = 1;						\
 
 #define MDRV_SCREEN_SIZE(_width, _height)								\
