@@ -40,6 +40,7 @@ const game_driver * const consoledrivers[] =
 	DRIVER( nes )		/* Nintendo Entertainment System					*/
 	DRIVER( nespal )	/* Nintendo Entertainment System					*/
 	DRIVER( famicom )
+	DRIVER( famitwin )	/* Sharp Famicom Twin System						*/
 	DRIVER( snes )		/* Nintendo Super Nintendo NTSC						*/
 	DRIVER( snespal )	/* Nintendo Super Nintendo PAL						*/
 
