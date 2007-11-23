@@ -28,7 +28,8 @@ MESSLIBOSD += \
 	$(MESS_WINOBJ)/tapedlg.o
 
 ifeq ($(NO_DLL),)
-    MESSLIBOSD += $(MESS_WINOBJ)/mess.res
+    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
+    MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
 else
     ifneq ($(WINUI),)
         ## fixme: move gui resource code to mess/osd/ui
