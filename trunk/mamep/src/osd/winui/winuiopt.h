@@ -234,6 +234,15 @@ typedef struct
 	int	joyid7;
 	int	joyid8;
 #endif /* JOYSTICK_ID */
+
+// MESS SPECIFIC OPTIONS
+	char*	ramsize;
+	BOOL	writeconfig;
+	BOOL	skip_warnings;
+
+// WINDOWS MESS SPECIFIC OPTIONS
+	BOOL	newui;
+	BOOL	natural;
 } options_type;
 
 

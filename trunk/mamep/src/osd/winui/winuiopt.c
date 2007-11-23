@@ -206,6 +206,7 @@ typedef struct
 
 // CORE SEARCH PATH OPTIONS
 	WCHAR*	rompath;
+	WCHAR*	hashpath;
 	WCHAR*	samplepath;
 	WCHAR*	artpath;
 	WCHAR*	ctrlrpath;

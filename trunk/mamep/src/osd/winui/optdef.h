@@ -2,6 +2,7 @@
 START_OPT_FUNC_CORE
 // CORE SEARCH PATH OPTIONS
 	DEFINE_OPT(wstring,              rompath)
+	DEFINE_OPT(wstring,              hashpath)
 	DEFINE_OPT(wstring,              samplepath)
 	DEFINE_OPT(wstring,              artpath)
 	DEFINE_OPT(wstring,              ctrlrpath)
@@ -242,6 +243,15 @@ START_OPT_FUNC_DRIVER
 	DEFINE_OPT(int_positive,         joyid7)
 	DEFINE_OPT(int_positive,         joyid8)
 #endif /* JOYSTICK_ID */
+
+// MESS SPECIFIC OPTIONS
+	DEFINE_OPT(string_allow_null,    ramsize)
+	DEFINE_OPT(bool,                 writeconfig)
+	DEFINE_OPT(bool,                 skip_warnings)
+
+// WINDOWS MESS SPECIFIC OPTIONS
+	DEFINE_OPT(bool,                 newui)
+	DEFINE_OPT(bool,                 natural)
 END_OPT_FUNC_DRIVER
 #endif /* START_OPT_FUNC_DRIVER */
 
