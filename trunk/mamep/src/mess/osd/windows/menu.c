@@ -1517,6 +1517,13 @@ void win_toggle_menubar(int state)
 	HWND hwnd;
 	HMENU menu;
 
+	//mamep: save as default state if menubar is disabled manually
+	static int defstate = -1;
+	if (state == 0)
+		defstate = state;
+	if (state < 0)
+		state = defstate;
+
 	for (window = win_window_list; window != NULL; window = window->next)
 	{
 		RECT before_rect = { 100, 100, 200, 200 };
