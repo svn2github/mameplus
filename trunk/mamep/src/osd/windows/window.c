@@ -523,8 +523,11 @@ void winwindow_toggle_full_screen(void)
 		SendMessage(window->hwnd, WM_USER_SET_FULLSCREEN, !video_config.windowed, 0);
 	SetForegroundWindow(win_window_list->hwnd);
 	
+#if HAS_WINDOW_MENU
+	//mamep: auto disable menubar if fullscreen
 	if (!video_config.windowed)
 		win_toggle_menubar(-1);
+#endif
 }
 
 
@@ -674,6 +677,12 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 	// handle error conditions
 	if (window->init_state == -1)
 		fatalerror(_WINDOWS("Unable to complete window creation"));
+
+#if HAS_WINDOW_MENU
+	//mamep: auto disable menubar if fullscreen
+	if (!video_config.windowed)
+		win_toggle_menubar(-1);
+#endif
 }
 
 
