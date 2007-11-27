@@ -4,13 +4,12 @@ rem --------------------------------------
 rem MinGW Compiler Configure
 rem --------------------------------------
 
-set PATH=\MinGW\bin;\binutils\bin;extra\bin;%PATH%
+set PATH=..\MinGW\bin;%PATH%
 
 rem --------------------------------------
-rem HtmlHelp Path Configure
+rem MAMEPlus Extra Utils Configure
 rem --------------------------------------
 
-set C_INCLUDE_PATH=extra\include
-set LIBRARY_PATH=extra\lib
+set PATH=extra\bin;%PATH%
 
-echo make
+echo mingw32-make
