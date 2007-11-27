@@ -1763,7 +1763,7 @@ Stereo
 Stereo
 
 # ui/mame32.rc: 694
-Stretch using hardware
+Hardware stretching
 Rozci¹gnij sprzêtowo
 
 # ui/mame32.rc: 691

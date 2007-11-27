@@ -975,7 +975,7 @@ Emulation
 Emuláció
 
 # osd/ui/mame32.rc: 668
-Enable Bilinear Filtering
+Bilinear filtering
 Kettõs lineáris szûrés
 
 # osd/ui/mame32.rc: 767
@@ -2279,7 +2279,7 @@ Story
 Történet
 
 # osd/ui/mame32.rc: 673
-Stretch using hardware
+Hardware stretching
 Hardveres képnyújtás
 
 # osd/ui/properties.c: 1253 osd/ui/treeview.c: 1354

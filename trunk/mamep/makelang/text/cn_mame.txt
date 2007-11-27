@@ -156,7 +156,7 @@
 
 # emu/romload.c: 277
 %s NOT FOUND (NO GOOD DUMP KNOWN)\n
-%-12s 未找到 (尚无正确的转储文件)\n
+%s 未找到 (尚无正确的转储文件)\n
 
 # emu/romload.c: 284, 1008
 %s NOT FOUND\n

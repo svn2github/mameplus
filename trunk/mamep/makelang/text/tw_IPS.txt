@@ -1,14 +1,10 @@
 # 286
 Bootleg And Clone
-盜版及相容版
+盜版與仿製版
 
 # 105
 CPS All System
 CPS 所有系統
-
-# Title
-IPS
-IPS
 
 # 64
 Misc
@@ -20,6 +16,10 @@ Translation
 
 # 301
 Haze Megadrive
+
+
+# Title
+IPS
 
 
 # 139

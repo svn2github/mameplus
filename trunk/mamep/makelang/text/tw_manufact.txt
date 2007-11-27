@@ -6,53 +6,9 @@
 Bootleg
 盜版
 
-# Heiankyo Alien
-Denki Onkyo
-電氣音響
-
-# Super Triv
-Hara Industries
-野間貿易
-
-# Mahjong Kaguyahime [BET] (Japan 880521)
-MIKI SYOUJI
-三木商事
-
-# Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
-MIKI SYOUJI/AV JAPAN
-三木商事/AV JAPAN
-
-# Moon Cresta (Nichibutsu)
-Nichibutsu
-日本物產
-
-# Moon Cresta (Nichibutsu, unencrypted)
-Nichibutsu USA
-日本物產 USA
-
-# Space Fever (set 1)
-Nintendo
-任天堂
-
-# Donkey Kong (US set 1)
-Nintendo of America
-美國任天堂
-
-# Masked Riders Club Battle Race
-Toei
-東映
-
 # Saloon (France, encrypted)
 Unknown
 未知的
-
-# Space Stranger
-Yachiyo Electronics, Ltd.
-八千代電器
-
-# Blazing Star
-Yumekobo
-夢工房
 
 # Crush Roller (bootleg)
 bootleg
@@ -554,6 +510,10 @@ Datel SAS
 Deniam
 
 
+# Heiankyo Alien
+Denki Onkyo
+
+
 # Little Casino
 Digital Controls Inc.
 
@@ -962,6 +922,10 @@ HOEI
 Hanaho Games
 
 
+# Super Triv
+Hara Industries
+
+
 # Fantasy '95
 Hi-max Technology Inc.
 
@@ -1238,6 +1202,14 @@ Logitec
 LucasArts
 
 
+# Mahjong Kaguyahime [BET] (Japan 880521)
+MIKI SYOUJI
+
+
+# Medal Mahjong Pachi-Slot Tengoku [BET] (Japan)
+MIKI SYOUJI/AV JAPAN
+
+
 # Catacomb
 MTM Games
 
@@ -1410,6 +1382,14 @@ Nazionale Elettronica Giochi S.A.S.
 Neodev
 
 
+# Moon Cresta (Nichibutsu)
+Nichibutsu
+
+
+# Moon Cresta (Nichibutsu, unencrypted)
+Nichibutsu USA
+
+
 # Mahjong Housoukyoku Honbanchuu (Japan)
 Nichibutsu?
 
@@ -1428,6 +1408,14 @@ Nihon
 
 # Pocket Gal Deluxe (Japan v3.00)
 Nihon System
+
+
+# Space Fever (set 1)
+Nintendo
+
+
+# Donkey Kong (US set 1)
+Nintendo of America
 
 
 # Ambush
@@ -1810,6 +1798,10 @@ Seta
 Seta Kikaku Corp.
 
 
+# Famicom Twin
+Sharp
+
+
 # Hex Pool (Shinkai)
 Shinkai
 
@@ -2150,6 +2142,10 @@ Time Warner Interactive
 Toaplan
 
 
+# Masked Riders Club Battle Race
+Toei
+
+
 # Leprechaun
 Tong Electronic
 
@@ -2350,6 +2346,10 @@ World Game
 World Games Inc
 
 
+# Space Stranger
+Yachiyo Electronics, Ltd.
+
+
 # War of Aero - Project MEIOU
 Yang Cheng
 
@@ -2380,6 +2380,10 @@ Yuga
 
 # Samurai Shodown V / Samurai Spirits Zero (set 1)
 Yuki Enterprise
+
+
+# Blazing Star
+Yumekobo
 
 
 # Paradise

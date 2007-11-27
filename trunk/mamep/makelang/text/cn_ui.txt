@@ -963,7 +963,7 @@ Emulation
 模拟
 
 # osd/winui/mame32.rc: 675
-Enable Bilinear Filtering
+Bilinear filtering
 启用双线性过滤
 
 # osd/winui/mame32.rc: 770
@@ -2247,7 +2247,7 @@ Story
 游戏故事
 
 # osd/winui/mame32.rc: 680
-Stretch using hardware
+Hardware stretching
 使用硬件拉伸
 
 # osd/winui/properties.c: 1155 osd/winui/treeview.c: 1391

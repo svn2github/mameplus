@@ -1,6 +1,6 @@
 # 7726
 Console
-家用主機
+家用機台
 
 # 7740
 Neogeo decrypted

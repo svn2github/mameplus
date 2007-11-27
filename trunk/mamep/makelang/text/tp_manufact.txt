@@ -1774,6 +1774,10 @@ Seta
 Seta Kikaku Corp.
 
 
+# Famicom Twin
+Sharp
+
+
 # Hex Pool (Shinkai)
 Shinkai
 

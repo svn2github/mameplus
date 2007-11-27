@@ -771,7 +771,7 @@ ERROR: required files are missing, the game cannot be run.
 FEHLER: Benötigte Dateien fehlen, das Spiel kann nicht gestartet werden.
 
 # osd/ui/mame32.rc: 668
-Enable Bilinear Filtering
+Bilinear filtering
 Bilinear Filterung einschalten
 
 # osd/ui/mame32.rc: 767
@@ -1795,7 +1795,7 @@ Story
 Geschichte
 
 # osd/ui/mame32.rc: 673
-Stretch using hardware
+Hardware stretching
 Vergößern mittels Hardware
 
 # osd/ui/properties.c: 1265 osd/ui/treeview.c: 1364

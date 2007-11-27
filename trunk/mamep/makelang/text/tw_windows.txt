@@ -1,6 +1,6 @@
 # mess/osd/windows/dialog.c: 1274
  Analog
- 類比
+ 類比控制
 
 # mess/osd/windows/dialog.c: 1279
  Dec
@@ -10,71 +10,63 @@
  Inc
  增加
 
-# mess/osd/windows/menu.c: 475
-%s State.sta
-%s State.sta
-
-# mess/osd/windows/mess.rc: 98
+# mess/osd/windows/mess.rc: 102
 &About MESS...
 關於 MESS(&A)...
 
-# mess/osd/windows/mess.rc: 69
+# mess/osd/windows/mess.rc: 57
 &Analog Controls...
 類比控制器(&A)...
 
-# mess/osd/windows/mess.rc: 66
+# mess/osd/windows/mess.rc: 94
 &Configuration...
 設定(&C)...
 
-# mess/osd/windows/menu.c: 1138
+# mess/osd/windows/menu.c: 1221
 &Configure...
 設定(&C)...
 
-# mess/osd/windows/mess.rc: 67
+# mess/osd/windows/mess.rc: 95
 &DIP Switches...
-指撥開關(&D)...
+機台設定開關(&D)...
 
-# mess/osd/windows/mess.rc: 89
+# mess/osd/windows/mess.rc: 97
 &Debugger...
-除錯器(&D)...
-
-# mess/osd/windows/menu.c: 1340 mess/osd/windows/mess.rc: 91
-&Devices
-裝置(&D)
-
-# mess/osd/windows/mess.rc: 40
-&Edit
-編輯(&E)
+除錯程式(&D)...
 
 # mess/osd/windows/mess.rc: 38 
 &Exit
-離開(&E)
+結束(&E)
 
-# mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1424 mess/osd/windows/mess.rc: 30 
 &File
 檔案(&F)
 
-# mess/osd/windows/menu.c: 1956 mess/osd/windows/mess.rc: 71
+# mess/osd/windows/menu.c: 2063 mess/osd/windows/mess.rc: 70
 &Frameskip
-省略畫格(&F)
+略過畫格(&F)
 
-# mess/osd/windows/mess.rc: 87
+# mess/osd/windows/mess.rc: 86
 &Full Screen\tAlt+Enter
-全畫面顯示(&F)\tAlt+Enter
+全螢幕(&F)\tAlt+Enter
 
-# mess/osd/windows/mess.rc: 95 
+# mess/osd/windows/mess.rc: 99 
 &Help
 說明(&H)
 
-# mess/osd/windows/mess.rc: 86
+# mess/osd/windows/mess.rc: 85
 &Hide Menubar\tTab
-隱藏選單列(&H)\tTab
+隱藏設定選單(&H)\tTab
 
-# mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 57
+# mess/osd/windows/menu.c: 1196 mess/osd/windows/mess.rc: 46
+&Input
+輸入(&I)
+
+# mess/osd/windows/menu.c: 1196 mess/osd/windows/mess.rc: 55
 &Joysticks
 搖桿(&J)
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 48
 &Keyboard
 鍵盤(&K)
 
@@ -82,15 +74,15 @@
 &Load State...
 載入狀態(&L)...
 
-# mess/osd/windows/mess.rc: 68
+# mess/osd/windows/mess.rc: 56
 &Miscellaneous Inputs...
 雜項輸入(&M)...
 
-# mess/osd/windows/menu.c: 1113, 1320, 1956 mess/osd/windows/mess.rc: 44 
+# mess/osd/windows/mess.rc: 88 
 &Options
 選項(&O)
 
-# mess/osd/windows/mess.rc: 46 
+# mess/osd/windows/mess.rc: 90 
 &Pause
 暫停(&P)
 
@@ -98,9 +90,9 @@
 &Save State
 儲存狀態(&S)
 
-# mess/osd/windows/menu.c: 1320 mess/osd/windows/mess.rc: 58
+# mess/osd/windows/menu.c: 1403, 1403, 2063 mess/osd/windows/mess.rc: 59, 61
 &Video
-視迅(&V)
+視訊(&V)
 
 # osd/windows/winmain.c: 216, 218, 220, 222, 224, 226, 228, 230
 (disabled by compiling option)
@@ -110,45 +102,45 @@
 (primary)
 (主顯示器)
 
-# mess/osd/windows/menu.c: 1966
+# mess/osd/windows/menu.c: 2073
 About %s (%s)...
 關於 %s (%s)...
 
-# mess/osd/windows/mess.rc: 97
+# mess/osd/windows/mess.rc: 101
 About This System...
-關於此系統...
+關於本系統...
 
-# mess/osd/windows/menu.c: 803
+# mess/osd/windows/menu.c: 820
 All files (*.*)|*.*|
 所有檔案 (*.*)|*.*|
 
 # mess/osd/windows/dialog.c: 125
 Apply
-加入
+套用
 
 # osd/windows/input.c: 1157
 Assign joystick %s to player %d\n
 分配搖桿 %s 到玩家 %d\n
 
-# mess/osd/windows/mess.rc: 73 
+# mess/osd/windows/mess.rc: 72 
 Auto
 自動
 
-# mess/osd/windows/dialog.c: 125 
+# mess/osd/windows/dialog.c: 126 
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 800 
+# mess/osd/windows/menu.c: 811 
 Common image types
-共用影像類型
+公共映像檔類型
 
-# mess/osd/windows/menu.c: 807
+# mess/osd/windows/menu.c: 824
 Compressed Images (*.zip)|*.zip|
-已壓縮的影像 (*.zip)|*.zip|
+壓縮的映像檔 (*.zip)|*.zip|
 
-# mess/osd/windows/mess.rc: 55
+# mess/osd/windows/mess.rc: 53
 Customize Emulated Keyboard...
-自訂模擬鍵盤
+自訂模擬鍵盤...
 
 # osd/windows/winmain.c: 149
 DIRECT3D-SPECIFIC OPTIONS
@@ -530,7 +522,7 @@ DirectInput: 正在使用 DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 
-# mess/osd/windows/mess.rc: 52
+# mess/osd/windows/mess.rc: 50
 Emulated
 模擬
 
@@ -550,7 +542,7 @@ Error creating DirectSound: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 建立主要 DirectSound 緩衝時發生錯誤: %08x\n
 
-# osd/windows/window.c: 638
+# osd/windows/window.c: 644
 Error creating render target for window %d
 建立描繪目標於視窗 %d 時發生錯誤
 
@@ -598,9 +590,9 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 設定頂點 shader 時發生錯誤 (%08X)
 
-# mess/osd/windows/menu.c: 877
+# mess/osd/windows/menu.c: 894
 Error when %s the image: %s
-當 %s 影像時發生錯誤: %s
+%s 映像檔時發生錯誤: %s
 
 # osd/windows/drawd3d.c: 663
 Error: A8R8G8B8 format textures not supported\n
@@ -622,7 +614,7 @@ FULL SCREEN OPTIONS
 Failed to create pause event
 無法建立暫停事件
 
-# osd/windows/window.c: 857
+# osd/windows/window.c: 869
 Failed to create window class
 無法建立視窗類別
 
@@ -634,19 +626,19 @@ Failed to create window thread
 Failed to create window thread ready event
 無法建立視窗執行緒預備事件
 
-# mess/osd/windows/mess.rc: 48
+# mess/osd/windows/mess.rc: 92
 Ha&rd Reset
-硬體重置(&r)
+重新啟動硬體(&R)
 
 # osd/windows/winmain.c: 193
 INPUT DEVICE OPTIONS
 輸入裝置選項
 
-# osd/windows/video.c: 535
+# osd/windows/video.c: 540
 Illegal aspect ratio value for %s = %s\n
 非法的長寬比例值於 %s = %s\n
 
-# osd/windows/video.c: 558
+# osd/windows/video.c: 563
 Illegal resolution value for %s = %s\n
 非法的解析度值於 %s = %s\n
 
@@ -654,11 +646,11 @@ Illegal resolution value for %s = %s\n
 Input
 輸入
 
-# osd/windows/video.c: 452
+# osd/windows/video.c: 457
 Invalid video value %s; reverting to gdi\n
 無效的視訊值 %s; 還原成 gdi\n
 
-# mess/osd/windows/menu.c: 1154
+# mess/osd/windows/menu.c: 1237
 Joystick %i
 搖桿 %i
 
@@ -666,21 +658,29 @@ Joystick %i
 Joysticks/Controllers
 搖桿/控制器
 
-# osd/windows/window.c: 653
+# osd/windows/window.c: 659
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - 畫面 %d
 
-# mess/osd/windows/mess.rc: 75
+# mess/osd/windows/mess.rc: 74
 Maximum &Speed
-最高速度(&S)
+最快速度
 
 # mess/osd/windows/menu.c: 258
 Miscellaneous Input
 雜項輸入
 
-# mess/osd/windows/menu.c: 1393 
+# mess/osd/windows/mess.rc: 51
+Natural
+自然
+
+# mess/osd/windows/menu.c: 1479 
 Not working
-無法使用
+不可執行
+
+# mess/osd/windows/dialog.c: 124 
+OK
+確定
 
 # osd/windows/winmain.c: 732
 Out of memory
@@ -690,15 +690,11 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 各個畫面的視訊選項
 
-# mess/osd/windows/mess.rc: 42
-Paste
-貼上
-
-# mess/osd/windows/mess.rc: 144
+# mess/osd/windows/mess.rc: 148
 Pause
 暫停
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 146
 Play
 執行
 
@@ -710,41 +706,41 @@ Proposed video mode not supported on device %s\n
 RawInput: APIs detected\n
 RawInput: 偵測出 API\n
 
-# mess/osd/windows/mess.rc: 61
+# mess/osd/windows/mess.rc: 64
 Rotate 0 degrees
 旋轉 0 度
 
-# mess/osd/windows/mess.rc: 63
+# mess/osd/windows/mess.rc: 66
 Rotate 180 degrees
 旋轉 180 度
 
-# mess/osd/windows/mess.rc: 64
+# mess/osd/windows/mess.rc: 67
 Rotate 270 degrees
 旋轉 270 度
 
-# mess/osd/windows/mess.rc: 62
+# mess/osd/windows/mess.rc: 65
 Rotate 90 degrees
 旋轉 90 度
 
 # mess/osd/windows/mess.rc: 34
 S&ave State As...
-儲存狀態為...
+另存狀態(&A)...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
-儲存捉圖(&r)
+儲存畫面擷圖(&R)
 
-# mess/osd/windows/mess.rc: 84
+# mess/osd/windows/mess.rc: 83
 Show &FPS
 顯示 FPS(&F)
 
-# mess/osd/windows/mess.rc: 88
+# mess/osd/windows/mess.rc: 96
 Show P&rofiler
-顯示設定檔(&P)
+顯示數據(&R)
 
-# mess/osd/windows/mess.rc: 47
+# mess/osd/windows/mess.rc: 91
 Soft &Reset
-軟體重置(&R)
+重新啟動軟體(&R)
 
 # osd/windows/sound.c: 122
 Sound buffer: overflows=%d underflows=%d\n
@@ -756,9 +752,9 @@ Sound: buffer overflows=%d underflows=%d\n
 
 # mess/osd/windows/menu.c: 492
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
-狀態檔 (*.sta)|*.sta|All Files (*.*)|*.*
+儲存狀態檔 (*.sta)|*.sta|All Files (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 143
+# mess/osd/windows/mess.rc: 147
 Stop
 停止
 
@@ -766,7 +762,7 @@ Stop
 Symbol table full
 所有符號表
 
-# mess/osd/windows/mess.rc: 137
+# mess/osd/windows/mess.rc: 141
 Tape Control
 磁帶控制
 
@@ -778,11 +774,15 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Toggle Fullscreen
 切換全螢幕
 
+# osd/windows/input.c: 789
+Toggle Menubar
+切換設定選單
+
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
 
-# osd/windows/window.c: 673
+# osd/windows/window.c: 679
 Unable to complete window creation
 無法完成視窗創建
 
@@ -798,7 +798,7 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 無法初始化 DirectDraw\n
 
-# osd/windows/video.c: 503
+# osd/windows/video.c: 508
 Unable to load PNG file '%s'\n
 無法載入 PNG 檔案 '%s'\n
 
@@ -810,11 +810,11 @@ Unable to open the keyboard device. (error %d)\n
 Unknown texture blendmode=%d format=%d\n
 未知的材質混和模式=%d 格式=%d\n
 
-# mess/osd/windows/mess.rc: 82
+# mess/osd/windows/mess.rc: 81
 Unlimited
-無限制的
+無限
 
-# osd/windows/video.c: 412
+# osd/windows/video.c: 417
 Using %s scale effect\n
 正在使用 %s 縮放效果\n
 
@@ -828,7 +828,7 @@ WINDOWS 除錯選項
 
 # mess/osd/windows/configms.c: 30
 WINDOWS MESS SPECIFIC OPTIONS
-視窗 MESS 特定選項
+WINDOWS MESS 特定選項
 
 # osd/windows/winmain.c: 128
 WINDOWS PERFORMANCE OPTIONS
@@ -842,7 +842,7 @@ WINDOWS 聲音選項
 WINDOWS VIDEO OPTIONS
 WINDOWS 視訊選項
 
-# osd/windows/video.c: 448
+# osd/windows/video.c: 453
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 
@@ -882,7 +882,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 全螢幕模式對比值
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 895
 creating
 正在建立
 
@@ -950,7 +950,7 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 895
 loading
 正在載入
 
@@ -1048,7 +1048,7 @@ set joystick ID (Player8)
 
 # mess/osd/windows/configms.c: 32
 specifies whether to use a natural keyboard or not
-指定無論是否使用人體工學鍵盤
+指定是否使用自然鍵盤
 
 # osd/windows/winmain.c: 150
 specify the preferred Direct3D version (8 or 9)
@@ -1060,13 +1060,13 @@ thread priority for the main game thread; range from -15 to 1
 
 # mess/osd/windows/configms.c: 31
 use the new MESS UI
-使用新的 MESS UI
+使用新的 MESS 設定選單
 
 # osd/windows/winmain.c: 134
 video output method: none, gdi, ddraw, or d3d
 視訊輸出方式: none, gdi, ddraw 或 d3d
 
-# mess/osd/windows/mess.rc: 53
-Natural
+# mess/osd/windows/menu.c: 475
+%s State.sta
 
 

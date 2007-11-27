@@ -963,7 +963,7 @@ Emulation
 Emulação
 
 # osd/ui/mame32.rc: 675
-Enable Bilinear Filtering
+Bilinear filtering
 Habilitar Filtro Bilinear
 
 # osd/ui/mame32.rc: 770
@@ -2231,7 +2231,7 @@ Story
 Story
 
 # osd/ui/mame32.rc: 680
-Stretch using hardware
+Hardware stretching
 Estica usando hardware
 
 # osd/ui/properties.c: 1155 osd/ui/treeview.c: 1390

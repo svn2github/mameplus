@@ -975,7 +975,7 @@ Emulation
 에뮬레이션
 
 #
-Enable Bilinear Filtering
+Bilinear filtering
 바이리니어 필터링 사용
 
 #
@@ -2283,7 +2283,7 @@ Story
 줄거리
 
 #
-Stretch using hardware
+Hardware stretching
 하드웨어 화면 늘리기
 
 #

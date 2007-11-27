@@ -1683,7 +1683,7 @@ Story
 Historique
 
 # osd/ui/mame32.rc: 673
-Stretch using hardware
+Hardware stretching
 Etirer en utilisant le matériel
 
 # osd/ui/properties.c: 1253 osd/ui/treeview.c: 1354
@@ -2151,7 +2151,7 @@ Emulation
 
 
 # osd/ui/mame32.rc: 668
-Enable Bilinear Filtering
+Bilinear filtering
 Activer le Filtrage Bilinéaire
 
 # osd/ui/mame32.rc: 777

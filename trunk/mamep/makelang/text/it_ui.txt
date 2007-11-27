@@ -971,7 +971,7 @@ Emulation
 Emulazione
 
 #
-Enable Bilinear Filtering
+Bilinear filtering
 Attiva il Filtro Bilineare
 
 #
@@ -2275,7 +2275,7 @@ Story
 Storia
 
 #
-Stretch using hardware
+Hardware stretching
 Allarga usando l'hardware
 
 #
