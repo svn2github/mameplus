@@ -786,7 +786,7 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 				if (mess_use_new_ui())
 				{
 					idef->token = "TOGGLE_MENUBAR";
-					idef->name = "Toggle Menubar";
+					idef->name = _WINDOWS("Toggle Menubar");
 					input_seq_set_1 (&idef->defaultseq, KEYCODE_TAB);
 				}
 				break;

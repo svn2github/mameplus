@@ -301,53 +301,6 @@ END
 #endif    // APSTUDIO_INVOKED
 
 
-#if 0
-#ifndef _MAC
-/////////////////////////////////////////////////////////////////////////////
-//
-// Version
-//
-
-VS_VERSION_INFO VERSIONINFO
- FILEVERSION 0,119,0,0
- PRODUCTVERSION 0,119,0,0
- FILEFLAGSMASK 0x3fL
-#ifdef _DEBUG
- FILEFLAGS 0x1L
-#else
- FILEFLAGS 0x0L
-#endif
- FILEOS 0x40004L
- FILETYPE 0x1L
- FILESUBTYPE 0x0L
-BEGIN
-    BLOCK "StringFileInfo"
-    BEGIN
-        BLOCK "040904b0"
-        BEGIN
-            VALUE "Author", "Christopher Kirmse and Michael Soderstrom\0"
-            VALUE "Comments", "Multiple Arcade Machine Emulator\0"
-            VALUE "CompanyName", "MAME Team\0"
-            VALUE "FileDescription", "Multiple Arcade Machine Emulator\0"
-            VALUE "FileVersion", "0, 119, 0, 0\0"
-            VALUE "InternalName", "MAME32\0"
-            VALUE "LegalCopyright", "Copyright (C) 1997-2007 Nicola Salmoria and the MAME team\0"
-            VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "MAME32.exe\0"
-            VALUE "ProductName", "MAME32\0"
-            VALUE "ProductVersion", "0, 119, 0, 0\0"
-        END
-    END
-    BLOCK "VarFileInfo"
-    BEGIN
-        VALUE "Translation", 0x409, 1200
-    END
-END
-
-#endif    // !_MAC
-#endif
-
-
 /////////////////////////////////////////////////////////////////////////////
 //
 // Icon
@@ -668,22 +621,26 @@ BEGIN
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
-    GROUPBOX        "Video output method",IDC_STATIC,4,45,124,30
+    GROUPBOX        "Video output method",IDC_STATIC,4,45,124,73
     COMBOBOX        IDC_VIDEO_MODE,10,57,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "Direct3D",IDC_D3D_TEXT,4,77,124,49
-    CONTROL         "Enable Bilinear Filtering",IDC_D3D_FILTER,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,90,113,10,0,HIDC_D3D_FILTER
-    COMBOBOX        IDC_D3D_VERSION,10,106,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    COMBOBOX        IDC_D3D_VERSION,10,75,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
-    GROUPBOX        "DirectDraw",IDC_DDRAW_TEXT,4,128,124,29
-    CONTROL         "Stretch using hardware",IDC_HWSTRETCH,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,141,113,10,0,HIDC_HWSTRETCH
-    GROUPBOX        "Visual Effects",IDC_STATIC,4,159,124,29
-    COMBOBOX        IDC_EFFECT,10,170,112,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Bilinear filtering",IDC_D3D_FILTER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,91,113,10,0,HIDC_D3D_FILTER
+    CONTROL         "Hardware stretching",IDC_HWSTRETCH,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,104,113,10,0,HIDC_HWSTRETCH
+    GROUPBOX        "Gameplay speed",IDC_STATIC,4,120,124,38
+    CONTROL         "Auto refresh speed",IDC_REFRESHSPEED,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,130,113,10,0,HIDC_REFRESHSPEED
+    CONTROL         "Slider1",IDC_SPEED,"msctls_trackbar32",TBS_BOTH | 
+                    TBS_NOTICKS | WS_TABSTOP,10,143,94,10,0,HIDC_SPEED
+    CTEXT           "1.00",IDC_SPEEDDISP,107,143,17,10,SS_CENTERIMAGE | NOT WS_GROUP
+    GROUPBOX        "Visual Effects",IDC_STATIC,4,160,124,29
+    COMBOBOX        IDC_EFFECT,10,171,112,100,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 #ifdef USE_SCALE_EFFECTS
-    GROUPBOX        "Image Enhancement",IDC_SCALEEFFECTTEXT,4,190,124,30
-    COMBOBOX        IDC_SCALEEFFECT,10,201,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
+    GROUPBOX        "Image Enhancement",IDC_SCALEEFFECTTEXT,4,191,124,29
+    COMBOBOX        IDC_SCALEEFFECT,10,202,112,180,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP
 #endif /* USE_SCALE_EFFECTS */
     CONTROL         "Wait for vertical sync",IDC_WAITVSYNC,"Button",
@@ -694,22 +651,22 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,137,71,118,10,0,HIDC_TRIPLE_BUFFER
     CONTROL         "Switch resolutions to fit",IDC_SWITCHRES,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,137,84,118,10,0,HIDC_SWITCHRES
-    GROUPBOX        "Scale screen",IDC_PRESCALETEXT,131,97,124,29
+    GROUPBOX        "Scale screen",IDC_PRESCALETEXT,131,98,124,29
     CONTROL         "Slider1",IDC_PRESCALE,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,137,111,94,10,0,HIDC_PRESCALE
-    CTEXT           "1.00",IDC_PRESCALEDISP,235,111,17,10,SS_CENTERIMAGE | NOT WS_GROUP
-    GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,131,128,124,29,NOT WS_GROUP
+                    TBS_NOTICKS | WS_TABSTOP,137,112,94,10,0,HIDC_PRESCALE
+    CTEXT           "1.00",IDC_PRESCALEDISP,235,112,17,10,SS_CENTERIMAGE | NOT WS_GROUP
+    GROUPBOX        "Full screen gamma",IDC_FSGAMMATEXT,131,129,124,29,NOT WS_GROUP
     CONTROL         "Slider1",IDC_FSGAMMA,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,137,142,94,10,0,HIDC_FSGAMMA
+                    TBS_NOTICKS | WS_TABSTOP,137,143,94,10,0,HIDC_FSGAMMA
     CTEXT           "2.00",IDC_FSGAMMADISP,235,143,17,10,SS_CENTERIMAGE | NOT WS_GROUP
-    GROUPBOX        "Full screen brightness",IDC_FSBRIGHTNESSTEXT,131,159,124,29
+    GROUPBOX        "Full screen brightness",IDC_FSBRIGHTNESSTEXT,131,160,124,29
     CONTROL         "Slider1",IDC_FSBRIGHTNESS,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,137,172,94,10,0,HIDC_FSBRIGHTNESS
-    CTEXT           "2.00",IDC_FSBRIGHTNESSDISP,235,172,17,10,SS_CENTERIMAGE | NOT WS_GROUP
-    GROUPBOX        "Full screen contrast",IDC_FSCONTRASTTEXT,131,190,124,30
+                    TBS_NOTICKS | WS_TABSTOP,137,173,94,10,0,HIDC_FSBRIGHTNESS
+    CTEXT           "2.00",IDC_FSBRIGHTNESSDISP,235,173,17,10,SS_CENTERIMAGE | NOT WS_GROUP
+    GROUPBOX        "Full screen contrast",IDC_FSCONTRASTTEXT,131,191,124,29
     CONTROL         "Slider1",IDC_FSCONTRAST,"msctls_trackbar32",TBS_BOTH | 
-                    TBS_NOTICKS | WS_TABSTOP,137,204,94,10,0,HIDC_FSCONTRAST
-    CTEXT           "2.00",IDC_FSCONTRASTDISP,235,204,17,10,SS_CENTERIMAGE | NOT WS_GROUP
+                    TBS_NOTICKS | WS_TABSTOP,137,205,94,10,0,HIDC_FSCONTRAST
+    CTEXT           "2.00",IDC_FSCONTRASTDISP,235,205,17,10,SS_CENTERIMAGE | NOT WS_GROUP
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
@@ -794,10 +751,10 @@ BEGIN
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,172,105,10
     CTEXT           "200",IDC_TRANSPARENCYDISP,120,172,20,10,NOT WS_GROUP
 #endif /* TRANS_UI */
-    GROUPBOX        "Thread priority",IDC_HIGH_PRIORITY_TEXT,4,190,140,30
+    GROUPBOX        "Thread priority",IDC_STATIC,4,190,140,30
     CONTROL         "Slider1",IDC_HIGH_PRIORITY,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,9,204,105,10,0,HIDC_HIGH_PRIORITY
-    CTEXT           "-15",IDC_HIGH_PRIORITYTXT,120,204,20,10,NOT WS_GROUP
+    CTEXT           "-15",IDC_HIGH_PRIORITYDISP,120,204,20,10,NOT WS_GROUP
     GROUPBOX        "Artwork options",IDC_STATIC,147,45,108,74
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,59,100,10,0,HIDC_BACKDROPS

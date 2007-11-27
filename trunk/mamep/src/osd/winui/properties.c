@@ -211,6 +211,7 @@ static void InitializeEffectUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
+static void SpeedSelectionChange(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
@@ -294,7 +295,8 @@ static int  g_nPositionalIndex = 0;
 static int  g_nMouseIndex = 0;
 static int  g_nVideoIndex = 0;
 static int  g_nD3DVersionIndex = 0;
-static BOOL  g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+static int  g_nSpeedIndex = 0;
+static BOOL g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
 #ifdef USE_SCALE_EFFECTS
 static int  g_nScaleEffectIndex= 0;
 #endif /* USE_SCALE_EFFECTS */
@@ -445,15 +447,17 @@ static DWORD dwHelpIDs[] =
 	IDC_BIOS,               HIDC_BIOS,
 	IDC_STRETCH_SCREENSHOT_LARGER, HIDC_STRETCH_SCREENSHOT_LARGER,
 	IDC_SCREEN,             HIDC_SCREEN,
-	IDC_PADDLE,				HIDC_PADDLE,
-	IDC_ADSTICK,			HIDC_ADSTICK,
-	IDC_PEDAL,				HIDC_PEDAL,
-	IDC_DIAL,				HIDC_DIAL,
-	IDC_TRACKBALL,			HIDC_TRACKBALL,
-	IDC_LIGHTGUNDEVICE,		HIDC_LIGHTGUNDEVICE,
+	IDC_PADDLE,				      HIDC_PADDLE,
+	IDC_ADSTICK,			      HIDC_ADSTICK,
+	IDC_PEDAL,				      HIDC_PEDAL,
+	IDC_DIAL,				        HIDC_DIAL,
+	IDC_TRACKBALL,			    HIDC_TRACKBALL,
+	IDC_LIGHTGUNDEVICE,		  HIDC_LIGHTGUNDEVICE,
 	IDC_ENABLE_AUTOSAVE,    HIDC_ENABLE_AUTOSAVE,
-	IDC_MULTITHREAD_RENDERING,    HIDC_MULTITHREAD_RENDERING,
-	IDC_JSAT,				HIDC_JSAT,
+	IDC_MULTITHREAD_RENDERING,     HIDC_MULTITHREAD_RENDERING,
+	IDC_JSAT,				               HIDC_JSAT,
+	IDC_SPEED,                     HIDC_SPEED,
+	IDC_REFRESHSPEED,              HIDC_REFRESHSPEED,
 	0,                      0
 };
 
@@ -475,8 +479,8 @@ static struct ComboBoxD3DVersion
 	const int	m_pData;
 } g_ComboBoxD3DVersion[] = 
 {
-	{ TEXT("Version 9"),           9   },
-	{ TEXT("Version 8"),           8   },
+	{ TEXT("Version 9"),  9   },
+	{ TEXT("Version 8"),  8   },
 };
 
 #define NUMD3DVERSIONS ARRAY_LENGTH(g_ComboBoxD3DVersion)
@@ -2710,7 +2714,7 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 #endif /* TRANS_UI */
 
 	/* thread priority */
-	hCtrl = GetDlgItem(hWnd, IDC_HIGH_PRIORITYTXT);
+	hCtrl = GetDlgItem(hWnd, IDC_HIGH_PRIORITYDISP);
 	if (hCtrl)
 	{
 		sprintf(buf, "%d", o->priority);
@@ -2729,6 +2733,13 @@ static void OptionsToProp(HWND hWnd, options_type* o)
 	if (hCtrl)
 	{
 		sprintf(buf, "%03.2f", o->flicker);
+		Static_SetTextA(hCtrl, buf);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_SPEEDDISP);
+	if (hCtrl)
+	{
+		sprintf(buf, "%03.2f", o->speed);
 		Static_SetTextA(hCtrl, buf);
 	}
 
@@ -3189,6 +3200,11 @@ static void AssignJSAT(HWND hWnd)
 	pGameOpts->joy_saturation = g_nJSATIndex / 20.0;
 }
 
+static void AssignSpeed(HWND hWnd)
+{
+	pGameOpts->speed = g_nSpeedIndex / 100.0;
+}
+
 static void AssignRotate(HWND hWnd)
 {
 	pGameOpts->ror = 0;
@@ -3473,19 +3489,20 @@ static void ResetDataMap(void)
 	// add the 0.001 to make sure it truncates properly to the integer
 	// (we don't want 35.99999999 to be cut down to 35 because of floating point error)
 	g_nPrescaleIndex = pGameOpts->prescale;
-	g_nGammaIndex           = (int)((pGameOpts->gamma            - 0.1) * 20.0 + 0.001);
-	g_nFullScreenGammaIndex = (int)((pGameOpts->full_screen_gamma -0.1)  * 20.0 + 0.001);
+	g_nGammaIndex               = (int)((pGameOpts->gamma                  - 0.1) * 20.0 + 0.001);
+	g_nFullScreenGammaIndex     = (int)((pGameOpts->full_screen_gamma      - 0.1) * 20.0 + 0.001);
 	g_nFullScreenBrightnessIndex= (int)((pGameOpts->full_screen_brightness - 0.1) * 20.0 + 0.001);
-	g_nFullScreenContrastIndex = (int)((pGameOpts->full_screen_contrast   - 0.1) * 20.0 + 0.001);
-	g_nBrightIndex   = (int)((pGameOpts->brightness       - 0.1) * 20.0 + 0.001);
-	g_nContrastIndex	= (int)((pGameOpts->contrast         - 0.1) * 20.0 + 0.001);
-	g_nPauseBrightIndex     = (int)((pGameOpts->pause_brightness - 0.5) * 20.0 + 0.001);
-	g_nBeamIndex            = (int)((pGameOpts->beam             - 1.0) * 20.0 + 0.001);
-	g_nFlickerIndex         = (int)( pGameOpts->flicker);
-	g_nJDZIndex             = (int)( pGameOpts->joy_deadzone            * 20.0 + 0.001);
-	g_nJSATIndex            = (int)( pGameOpts->joy_saturation          * 20.0 + 0.001);
+	g_nFullScreenContrastIndex  = (int)((pGameOpts->full_screen_contrast   - 0.1) * 20.0 + 0.001);
+	g_nBrightIndex              = (int)((pGameOpts->brightness             - 0.1) * 20.0 + 0.001);
+	g_nContrastIndex            = (int)((pGameOpts->contrast               - 0.1) * 20.0 + 0.001);
+	g_nPauseBrightIndex         = (int)((pGameOpts->pause_brightness       - 0.5) * 20.0 + 0.001);
+	g_nBeamIndex                = (int)((pGameOpts->beam                   - 1.0) * 20.0 + 0.001);
+	g_nFlickerIndex             = (int)( pGameOpts->flicker);
+	g_nJDZIndex                 = (int)( pGameOpts->joy_deadzone           * 20.0 + 0.001);
+	g_nJSATIndex                = (int)( pGameOpts->joy_saturation         * 20.0 + 0.001);
+	g_nSpeedIndex               = (int)( pGameOpts->speed                  * 100.0+ 0.001);
 #ifdef TRANS_UI
-	g_nUITransparencyIndex  = (int)( pGameOpts->ui_transparency);
+	g_nUITransparencyIndex      = (int)( pGameOpts->ui_transparency);
 #endif /* TRANS_UI */
 
 	// if no controller type was specified or it was standard
@@ -3782,17 +3799,17 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_SCREEN,           DM_INT,  CT_COMBOBOX, &g_nScreenIndex,        DM_STRING,&pGameOpts->screens[g_nSelectScreenIndex], 0, 0, AssignScreen);
 	DataMapAdd(IDC_VIEW,             DM_INT,  CT_COMBOBOX, &g_nViewIndex,          DM_STRING,&pGameOpts->views[g_nSelectScreenIndex],   0, 0, AssignView);
 	/* debugres */
-	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->gamma,            0, 0, AssignGamma);
-	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gamma,            0, 0, 0);
-	DataMapAdd(IDC_CONTRAST,      DM_INT,  CT_SLIDER,   &g_nContrastIndex,         DM_FLOAT, &pGameOpts->contrast,         0, 0, AssignContrast);
-	DataMapAdd(IDC_CONTRASTDISP,  DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->contrast,         0, 0, 0);
+	DataMapAdd(IDC_GAMMA,         DM_INT,  CT_SLIDER,   &g_nGammaIndex,            DM_FLOAT, &pGameOpts->gamma,        0, 0, AssignGamma);
+	DataMapAdd(IDC_GAMMADISP,     DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->gamma,        0, 0, 0);
+	DataMapAdd(IDC_CONTRAST,      DM_INT,  CT_SLIDER,   &g_nContrastIndex,         DM_FLOAT, &pGameOpts->contrast,     0, 0, AssignContrast);
+	DataMapAdd(IDC_CONTRASTDISP,  DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->contrast,     0, 0, 0);
 
 	/* vector */
-	DataMapAdd(IDC_ANTIALIAS,     DM_BOOL, CT_BUTTON,   &pGameOpts->antialias,     DM_BOOL,  &pGameOpts->antialias,        0, 0, 0);
-	DataMapAdd(IDC_BEAM,          DM_INT,  CT_SLIDER,   &g_nBeamIndex,             DM_FLOAT, &pGameOpts->beam,             0, 0, AssignBeam);
-	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->beam,             0, 0, 0);
-	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->flicker,          0, 0, AssignFlicker);
-	DataMapAdd(IDC_FLICKERDISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->flicker,          0, 0, 0);
+	DataMapAdd(IDC_ANTIALIAS,     DM_BOOL, CT_BUTTON,   &pGameOpts->antialias,     DM_BOOL,  &pGameOpts->antialias,    0, 0, 0);
+	DataMapAdd(IDC_BEAM,          DM_INT,  CT_SLIDER,   &g_nBeamIndex,             DM_FLOAT, &pGameOpts->beam,         0, 0, AssignBeam);
+	DataMapAdd(IDC_BEAMDISP,      DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->beam,         0, 0, 0);
+	DataMapAdd(IDC_FLICKER,       DM_INT,  CT_SLIDER,   &g_nFlickerIndex,          DM_FLOAT, &pGameOpts->flicker,      0, 0, AssignFlicker);
+	DataMapAdd(IDC_FLICKERDISP,   DM_NONE, CT_NONE,     NULL,                      DM_FLOAT, &pGameOpts->flicker,      0, 0, 0);
 
 	/* sound */
 	DataMapAdd(IDC_SAMPLERATE,    DM_INT,  CT_COMBOBOX, &g_nSampleRateIndex,       DM_INT,  &pGameOpts->samplerate,    0, 0, AssignSampleRate);
@@ -3807,40 +3824,44 @@ static void BuildDataMap(void)
 	DataMapAdd(IDC_AUDIO_LATENCY_DISP, DM_NONE,  CT_NONE,   NULL, DM_INT, &pGameOpts->audio_latency, 0, 0, 0);
 
 	/* misc artwork options */
-	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops, DM_BOOL, &pGameOpts->use_backdrops,     0, 0, 0);
-	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,  DM_BOOL, &pGameOpts->use_overlays,      0, 0, 0);
-	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,    DM_BOOL, &pGameOpts->use_bezels,        0, 0, 0);
-	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,  DM_BOOL, &pGameOpts->artwork_crop,      0, 0, 0);
+	DataMapAdd(IDC_BACKDROPS,     DM_BOOL, CT_BUTTON,   &pGameOpts->use_backdrops, DM_BOOL, &pGameOpts->use_backdrops, 0, 0, 0);
+	DataMapAdd(IDC_OVERLAYS,      DM_BOOL, CT_BUTTON,   &pGameOpts->use_overlays,  DM_BOOL, &pGameOpts->use_overlays,  0, 0, 0);
+	DataMapAdd(IDC_BEZELS,        DM_BOOL, CT_BUTTON,   &pGameOpts->use_bezels,    DM_BOOL, &pGameOpts->use_bezels,    0, 0, 0);
+	DataMapAdd(IDC_ARTWORK_CROP,  DM_BOOL, CT_BUTTON,   &pGameOpts->artwork_crop,  DM_BOOL, &pGameOpts->artwork_crop,  0, 0, 0);
 
 	/* misc */
 	DataMapAdd(IDC_CHEAT,         DM_BOOL, CT_BUTTON,   &pGameOpts->cheat,         DM_BOOL, &pGameOpts->cheat,         0, 0, 0);
 /*	DataMapAdd(IDC_DEBUG,       DM_BOOL, CT_BUTTON,   &pGameOpts->mame_debug,    DM_BOOL, &pGameOpts->mame_debug,    0, 0, 0); */
-	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->log,      DM_BOOL, &pGameOpts->log,      0, 0, 0);
+	DataMapAdd(IDC_LOG,           DM_BOOL, CT_BUTTON,   &pGameOpts->log,           DM_BOOL, &pGameOpts->log,           0, 0, 0);
 	DataMapAdd(IDC_SLEEP,         DM_BOOL, CT_BUTTON,   &pGameOpts->sleep,         DM_BOOL, &pGameOpts->sleep,         0, 0, 0);
 	DataMapAdd(IDC_HIGH_PRIORITY, DM_INT,  CT_SLIDER,   &g_nPriorityIndex,         DM_INT,  &pGameOpts->priority,      0, 0, AssignPriority);
-	DataMapAdd(IDC_HIGH_PRIORITYTXT,DM_NONE,CT_NONE,    NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
-	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL,CT_BUTTON,    &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
+	DataMapAdd(IDC_HIGH_PRIORITYDISP,DM_NONE,CT_NONE,   NULL,                      DM_INT,  &pGameOpts->priority,      0, 0, 0);
+	DataMapAdd(IDC_SKIP_GAME_INFO,DM_BOOL, CT_BUTTON,   &pGameOpts->skip_gameinfo, DM_BOOL, &pGameOpts->skip_gameinfo, 0, 0, 0);
+	DataMapAdd(IDC_REFRESHSPEED,  DM_BOOL, CT_BUTTON,   &pGameOpts->refreshspeed,  DM_BOOL, &pGameOpts->refreshspeed,  0, 0, 0);
+	DataMapAdd(IDC_SPEED,         DM_INT,  CT_SLIDER,   &g_nSpeedIndex,            DM_INT,  &pGameOpts->speed,         0, 0, AssignSpeed);
+	DataMapAdd(IDC_SPEEDDISP,     DM_NONE, CT_NONE,     NULL,                      DM_INT,  &pGameOpts->speed,         0, 0, 0);
+
 #ifdef DRIVER_SWITCH
 	{
 	int i;
 	for (i=0; drivers_table[i].name; i++)
-		DataMapAdd(drivers_table[i].ctrl,      DM_NONE, CT_NONE,     &pGameOpts->driver_config, DM_STRING,&pGameOpts->driver_config, 0, 0, 0);
+		DataMapAdd(drivers_table[i].ctrl,   DM_NONE, CT_NONE,     &pGameOpts->driver_config,       DM_STRING, &pGameOpts->driver_config,  0, 0, 0);
 	}
 #endif /* DRIVER_SWITCH */
-	DataMapAdd(IDC_BIOS,          DM_INT,  CT_COMBOBOX, &g_nBiosIndex,             DM_STRING, &pGameOpts->bios,        0, 0, AssignBios);
-	DataMapAdd(IDC_ENABLE_AUTOSAVE, DM_BOOL, CT_BUTTON, &pGameOpts->autosave,      DM_BOOL, &pGameOpts->autosave,      0, 0, 0);
-	DataMapAdd(IDC_MULTITHREAD_RENDERING, DM_BOOL, CT_BUTTON, &pGameOpts->multithreading, DM_BOOL, &pGameOpts->multithreading, 0, 0, 0);
-	DataMapAdd(IDC_CONFIRM_QUIT,  DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,  DM_BOOL, &pGameOpts->confirm_quit,  0, 0, 0);
+	DataMapAdd(IDC_BIOS,                  DM_INT,  CT_COMBOBOX, &g_nBiosIndex,                   DM_STRING, &pGameOpts->bios,           0, 0, AssignBios);
+	DataMapAdd(IDC_ENABLE_AUTOSAVE,       DM_BOOL, CT_BUTTON,   &pGameOpts->autosave,            DM_BOOL,   &pGameOpts->autosave,       0, 0, 0);
+	DataMapAdd(IDC_MULTITHREAD_RENDERING, DM_BOOL, CT_BUTTON,   &pGameOpts->multithreading,      DM_BOOL,   &pGameOpts->multithreading, 0, 0, 0);
+	DataMapAdd(IDC_CONFIRM_QUIT,          DM_BOOL, CT_BUTTON,   &pGameOpts->confirm_quit,        DM_BOOL,   &pGameOpts->confirm_quit,   0, 0, 0);
 #ifdef AUTO_PAUSE_PLAYBACK
-	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,  DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback,  DM_BOOL, &pGameOpts->auto_pause_playback,  0, 0, 0);
+	DataMapAdd(IDC_AUTO_PAUSE_PLAYBACK,   DM_BOOL, CT_BUTTON,   &pGameOpts->auto_pause_playback, DM_BOOL,   &pGameOpts->auto_pause_playback,  0, 0, 0);
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	DataMapAdd(IDC_TRANSUI,       DM_BOOL, CT_BUTTON,   &pGameOpts->use_trans_ui,   DM_BOOL, &pGameOpts->use_trans_ui,   0, 0, 0);
-	DataMapAdd(IDC_TRANSPARENCY,  DM_INT,  CT_SLIDER,   &g_nUITransparencyIndex,   DM_INT,  &pGameOpts->ui_transparency, 0, 0, AssignUI_TRANSPARENCY);
-	DataMapAdd(IDC_TRANSPARENCYDISP, DM_NONE,  CT_NONE,   NULL, DM_INT,  &pGameOpts->ui_transparency, 0, 0, 0);
+	DataMapAdd(IDC_TRANSUI,               DM_BOOL, CT_BUTTON,   &pGameOpts->use_trans_ui,        DM_BOOL,   &pGameOpts->use_trans_ui,   0, 0, 0);
+	DataMapAdd(IDC_TRANSPARENCY,          DM_INT,  CT_SLIDER,   &g_nUITransparencyIndex,         DM_INT,    &pGameOpts->ui_transparency,0, 0, AssignUI_TRANSPARENCY);
+	DataMapAdd(IDC_TRANSPARENCYDISP,      DM_NONE, CT_NONE,     NULL,                            DM_INT,    &pGameOpts->ui_transparency,0, 0, 0);
 #endif /* TRANS_UI */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	DataMapAdd(IDC_M68K_CORE,     DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,     DM_INT,  &pGameOpts->m68k_core,     0, 0, 0);
+	DataMapAdd(IDC_M68K_CORE,             DM_INT,  CT_COMBOBOX, &pGameOpts->m68k_core,           DM_INT,    &pGameOpts->m68k_core,      0, 0, 0);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
 #define DATAMAPADD_BIOS(n) \
@@ -4087,6 +4108,10 @@ static void InitializeMisc(HWND hDlg)
 	SendDlgItemMessage(hDlg, IDC_HIGH_PRIORITY, TBM_SETRANGE,
 				(WPARAM)FALSE,
 				(LPARAM)MAKELONG(0, 16)); // [-15, 1]
+
+	SendDlgItemMessage(hDlg, IDC_SPEED, TBM_SETRANGE,
+				(WPARAM)FALSE,
+				(LPARAM)MAKELONG(1, 300)); /* [0.01, 3] in 0.01 increments */
 }
 
 static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
@@ -4181,7 +4206,11 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 	{
 		PrescaleSelectionChange(hwnd);
 	}
-
+	else
+	if (hwndCtl == GetDlgItem(hwnd, IDC_SPEED))
+	{
+		SpeedSelectionChange(hwnd);
+	}
 
 }
 
@@ -4459,8 +4488,24 @@ static void ThreadPrioritySelectionChange(HWND hwnd)
 
 	/* Set the static display to the new value */
 	snprintf(buffer, ARRAY_LENGTH(buffer),"%i",value-15);
-	Static_SetTextA(GetDlgItem(hwnd,IDC_HIGH_PRIORITYTXT),buffer);
+	Static_SetTextA(GetDlgItem(hwnd,IDC_HIGH_PRIORITYDISP),buffer);
 
+}
+
+/* Handle changes to the Speed slider */
+static void SpeedSelectionChange(HWND hwnd)
+{
+	char   buf[100];
+	UINT   nValue;
+	double dSpeed;
+	/* Get the current value of the control */
+	nValue = SendDlgItemMessage(hwnd, IDC_SPEED, TBM_GETPOS, 0, 0);
+
+	dSpeed = nValue / 100.0;
+
+	/* Set the static display to the new value */
+	snprintf(buf, ARRAY_LENGTH(buf), "%03.2f", dSpeed);
+	Static_SetTextA(GetDlgItem(hwnd, IDC_SPEEDDISP), buf);
 }
 
 /* Adjust possible choices in the Screen Size drop down */

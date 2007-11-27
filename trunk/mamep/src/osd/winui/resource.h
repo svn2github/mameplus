@@ -332,8 +332,7 @@
 #define IDC_LIGHTGUNDEVICE              1239
 #define IDC_POSITIONALDEVICE            1240
 #define IDC_MOUSEDEVICE                 1241
-#define IDC_HIGH_PRIORITY_TEXT          1243
-#define IDC_HIGH_PRIORITYTXT            1244
+#define IDC_HIGH_PRIORITYDISP           1244
 #define IDC_SELECT_EFFECT               0	 // N/A
 #define IDC_MULTITHREAD_RENDERING       1249
 #define IDC_ASPECT                      1253
@@ -350,6 +349,9 @@
 #define IDC_JSAT                        1250
 #define IDC_JSATDISP                    1251
 #define IDC_JSATTEXT                    1252
+#define IDC_REFRESHSPEED                1255
+#define IDC_SPEED                       1256
+#define IDC_SPEEDDISP                   1257
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
