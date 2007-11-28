@@ -207,6 +207,32 @@ static const line_aa_step line_aa_4step[] =
 //  INLINES
 //============================================================
 
+INLINE BOOL GetClientRectExceptMenu(HWND hWnd, PRECT pRect, BOOL fullscreen)
+{
+	static HMENU last_menu;
+	static RECT last_rect;
+	static RECT cached_rect;
+	HMENU menu = GetMenu(hWnd);
+	BOOL result = GetClientRect(hWnd, pRect);
+
+	if (!fullscreen || !menu)
+		return result;
+
+	// to avoid flicker use cache if we can use
+	if (last_menu != menu || memcmp(&last_rect, pRect, sizeof *pRect) != 0)
+	{
+		last_menu = menu;
+		last_rect = *pRect;
+
+		SetMenu(hWnd, NULL);
+		result = GetClientRect(hWnd, &cached_rect);
+		SetMenu(hWnd, menu);
+	}
+
+	*pRect = cached_rect;
+	return result;
+}
+
 INLINE UINT32 ycc_to_rgb(UINT8 y, UINT8 cb, UINT8 cr)
 {
 	/* original equations:
@@ -535,7 +561,7 @@ static const render_primitive_list *drawd3d_window_get_primitives(win_window_inf
 	d3d_info *d3d = window->drawdata;
 	RECT client;
 
-	GetClientRect(window->hwnd, &client);
+	GetClientRectExceptMenu(window->hwnd, &client, window->fullscreen);
 	if (rect_width(&client) > 0 && rect_height(&client) > 0)
 	{
 		render_target_set_bounds(window->target, rect_width(&client), rect_height(&client), winvideo_monitor_get_aspect(window->monitor));
@@ -1112,7 +1138,7 @@ static int config_adapter_mode(win_window_info *window)
 		RECT client;
 
 		// bounds are from the window client rect
-		GetClientRect(window->hwnd, &client);
+		GetClientRectExceptMenu(window->hwnd, &client, window->fullscreen);
 		d3d->width = client.right - client.left;
 		d3d->height = client.bottom - client.top;
 
@@ -1291,7 +1317,7 @@ static int update_window_size(win_window_info *window)
 	RECT client;
 
 	// get the current window bounds
-	GetClientRect(window->hwnd, &client);
+	GetClientRectExceptMenu(window->hwnd, &client, window->fullscreen);
 
 	// if we have a device and matching width/height, nothing to do
 	if (d3d->device != NULL && rect_width(&client) == d3d->width && rect_height(&client) == d3d->height)
