@@ -154,111 +154,111 @@ DIRECT3D-SPECIFIC OPTIONS
 DIRECTDRAW-SPECIFIC OPTIONS
 
 
-# osd/windows/drawd3d.c: 1129
+# osd/windows/drawd3d.c: 1155
 Device %s currently in an unsupported mode\n
 
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1125
 Direct3D: Configuring adapter #%d = %s\n
 
 
-# osd/windows/drawd3d.c: 724
+# osd/windows/drawd3d.c: 750
 Direct3D: Device created at %dx%d\n
 
 
-# osd/windows/drawd3d.c: 594, 2311
+# osd/windows/drawd3d.c: 620, 2337
 Direct3D: Error %08X during device begin_scene call\n
 
 
-# osd/windows/drawd3d.c: 1589, 2360
+# osd/windows/drawd3d.c: 1615, 2386
 Direct3D: Error %08X during device draw_primitive call\n
 
 
-# osd/windows/drawd3d.c: 623, 2364
+# osd/windows/drawd3d.c: 649, 2390
 Direct3D: Error %08X during device end_scene call\n
 
 
-# osd/windows/drawd3d.c: 2304
+# osd/windows/drawd3d.c: 2330
 Direct3D: Error %08X during device get_render_target call\n
 
 
-# osd/windows/drawd3d.c: 629
+# osd/windows/drawd3d.c: 655
 Direct3D: Error %08X during device present call\n
 
 
-# osd/windows/drawd3d.c: 333, 340, 347, 354
+# osd/windows/drawd3d.c: 359, 366, 373, 380
 Direct3D: Error %08X during device set_render_state call\n
 
 
-# osd/windows/drawd3d.c: 2306, 2368
+# osd/windows/drawd3d.c: 2332, 2394
 Direct3D: Error %08X during device set_render_target call\n
 
 
-# osd/windows/drawd3d.c: 1561, 2358
+# osd/windows/drawd3d.c: 1587, 2384
 Direct3D: Error %08X during device set_stream_source call\n
 
 
-# osd/windows/drawd3d.c: 265, 2317
+# osd/windows/drawd3d.c: 291, 2343
 Direct3D: Error %08X during device set_texture call\n
 
 
-# osd/windows/drawd3d.c: 277, 279, 291, 293, 305
+# osd/windows/drawd3d.c: 303, 305, 317, 319, 331
 Direct3D: Error %08X during device set_texture_stage_state call\n
 
 
-# osd/windows/drawd3d.c: 2292
+# osd/windows/drawd3d.c: 2318
 Direct3D: Error %08X during device stretct_rect call\n
 
 
-# osd/windows/drawd3d.c: 895, 897, 899, 901, 905, 919, 933, 947, 973, 997, 1011, 1024, 1031
+# osd/windows/drawd3d.c: 921, 923, 925, 927, 931, 945, 959, 973, 999, 1023, 1037, 1050, 1057
 Direct3D: Error %08X during get_caps_dword call\n
 
 
-# osd/windows/drawd3d.c: 2271
+# osd/windows/drawd3d.c: 2297
 Direct3D: Error %08X during texture get_surface_level call\n
 
 
-# osd/windows/drawd3d.c: 2247
+# osd/windows/drawd3d.c: 2273
 Direct3D: Error %08X during texture unlock_rect call\n
 
 
-# osd/windows/drawd3d.c: 2321
+# osd/windows/drawd3d.c: 2347
 Direct3D: Error %08X during vertex buffer lock call\n
 
 
-# osd/windows/drawd3d.c: 1556, 2353
+# osd/windows/drawd3d.c: 1582, 2379
 Direct3D: Error %08X during vertex buffer unlock call\n
 
 
-# osd/windows/drawd3d.c: 960
+# osd/windows/drawd3d.c: 986
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 
 
-# osd/windows/drawd3d.c: 955
+# osd/windows/drawd3d.c: 981
 Direct3D: Error - Device does not support dest alpha blending with one\n
 
 
-# osd/windows/drawd3d.c: 950
+# osd/windows/drawd3d.c: 976
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 
 
-# osd/windows/drawd3d.c: 908
+# osd/windows/drawd3d.c: 934
 Direct3D: Error - Device does not support immediate presentations\n
 
 
-# osd/windows/drawd3d.c: 913
+# osd/windows/drawd3d.c: 939
 Direct3D: Error - Device does not support per-refresh presentations\n
 
 
-# osd/windows/drawd3d.c: 941
+# osd/windows/drawd3d.c: 967
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 
 
-# osd/windows/drawd3d.c: 936
+# osd/windows/drawd3d.c: 962
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 
 
-# osd/windows/drawd3d.c: 967
+# osd/windows/drawd3d.c: 993
 Direct3D: Error - Device does not support texture alpha\n
 
 
@@ -270,11 +270,11 @@ Direct3D: Error attempting to initialize Direct3D8\n
 Direct3D: Error attempting to initialize Direct3D9\n
 
 
-# osd/windows/drawd3d.c: 1279
+# osd/windows/drawd3d.c: 1305
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 
 
-# osd/windows/drawd3d.c: 1223
+# osd/windows/drawd3d.c: 1249
 Direct3D: Selecting video mode...\n
 
 
@@ -302,67 +302,67 @@ Direct3D: Using Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 
 
-# osd/windows/drawd3d.c: 1033
+# osd/windows/drawd3d.c: 1059
 Direct3D: Using StretchRect for prescaling\n
 
 
-# osd/windows/drawd3d.c: 1027
+# osd/windows/drawd3d.c: 1053
 Direct3D: Using dynamic textures\n
 
 
-# osd/windows/drawd3d.c: 981
+# osd/windows/drawd3d.c: 1007
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 991
+# osd/windows/drawd3d.c: 1017
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 927
+# osd/windows/drawd3d.c: 953
 Direct3D: Warning - Device does not support hardware rasterization\n
 
 
-# osd/windows/drawd3d.c: 976
+# osd/windows/drawd3d.c: 1002
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 
 
-# osd/windows/drawd3d.c: 986
+# osd/windows/drawd3d.c: 1012
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 
 
-# osd/windows/drawd3d.c: 922
+# osd/windows/drawd3d.c: 948
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 
 
-# osd/windows/drawd3d.c: 1000
+# osd/windows/drawd3d.c: 1026
 Direct3D: Warning - Device does not support texture clamping\n
 
 
-# osd/windows/drawd3d.c: 1014
+# osd/windows/drawd3d.c: 1040
 Direct3D: Warning - Device does not support texture modulation\n
 
 
-# osd/windows/drawd3d.c: 1005
+# osd/windows/drawd3d.c: 1031
 Direct3D: Warning - Device does not support texture wrapping\n
 
 
-# osd/windows/drawd3d.c: 740
+# osd/windows/drawd3d.c: 766
 Direct3D: Warning - device does not support full screen gamma correction.\n
 
 
-# osd/windows/drawd3d.c: 677
+# osd/windows/drawd3d.c: 703
 Direct3D: YUV format = %s\n
 
 
-# osd/windows/drawd3d.c: 1660
+# osd/windows/drawd3d.c: 1686
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
 
-# osd/windows/drawd3d.c: 1069
+# osd/windows/drawd3d.c: 1095
 Direct3D: failed to recreate resources for device; failing permanently\n
 
 
-# osd/windows/drawd3d.c: 1056
+# osd/windows/drawd3d.c: 1082
 Direct3D: resetting device\n
 
 
@@ -550,7 +550,7 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating render target for window %d
 
 
-# osd/windows/drawd3d.c: 774
+# osd/windows/drawd3d.c: 800
 Error creating vertex buffer (%08X)
 
 
@@ -558,7 +558,7 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 
 
-# osd/windows/drawd3d.c: 1096
+# osd/windows/drawd3d.c: 1122
 Error getting identifier for adapter #%d\n
 
 
@@ -566,7 +566,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 
 
-# osd/windows/drawd3d.c: 1105
+# osd/windows/drawd3d.c: 1131
 Error getting mode for adapter #%d\n
 
 
@@ -590,7 +590,7 @@ Error setting DirectSound cooperative level: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 
 
-# osd/windows/drawd3d.c: 782
+# osd/windows/drawd3d.c: 808
 Error setting vertex shader (%08X)
 
 
@@ -598,15 +598,15 @@ Error setting vertex shader (%08X)
 Error when %s the image: %s
 
 
-# osd/windows/drawd3d.c: 663
+# osd/windows/drawd3d.c: 689
 Error: A8R8G8B8 format textures not supported\n
 
 
-# osd/windows/drawd3d.c: 653
+# osd/windows/drawd3d.c: 679
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 
 
-# osd/windows/drawd3d.c: 695
+# osd/windows/drawd3d.c: 721
 Error: unable to configure a screen texture format\n
 
 
@@ -702,7 +702,7 @@ Pause
 Play
 
 
-# osd/windows/drawd3d.c: 1157
+# osd/windows/drawd3d.c: 1183
 Proposed video mode not supported on device %s\n
 
 
@@ -770,7 +770,7 @@ Symbol table full
 Tape Control
 
 
-# osd/windows/drawd3d.c: 1797
+# osd/windows/drawd3d.c: 1823
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
@@ -790,11 +790,11 @@ Unable to close the keyboard device. (error %d)\n
 Unable to complete window creation
 
 
-# osd/windows/drawd3d.c: 721
+# osd/windows/drawd3d.c: 747
 Unable to create the Direct3D device (%08X)\n
 
 
-# osd/windows/drawd3d.c: 436, 497
+# osd/windows/drawd3d.c: 462, 523
 Unable to initialize Direct3D.\n
 
 
@@ -810,7 +810,7 @@ Unable to load PNG file '%s'\n
 Unable to open the keyboard device. (error %d)\n
 
 
-# osd/windows/drawd3d.c: 2234
+# osd/windows/drawd3d.c: 2260
 Unknown texture blendmode=%d format=%d\n
 
 
@@ -850,7 +850,7 @@ WINDOWS VIDEO OPTIONS
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
 
-# osd/windows/drawd3d.c: 657
+# osd/windows/drawd3d.c: 683
 Warning: Device may not perform well for Direct3D rendering\n
 
 
