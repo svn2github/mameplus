@@ -70,11 +70,11 @@ typedef HANDLE HTHEME;
 #define snprintf _snprintf
 #endif
 
-#ifdef MESS
+//#ifdef MESS
 // done like this until I figure out a better idea
-#include "ui/resourcems.h"
-#include "ui/propertiesms.h"
-#endif
+#include "resourcems.h"
+//#include "propertiesms.h"
+//#endif
 
 // missing win32 api defines
 #ifndef TBCD_TICS
@@ -3893,9 +3893,9 @@ static void BuildDataMap(void)
 		DATAMAPADD_BIOS(15)
 	}
 
-#ifdef MESS
-	DataMapAdd(IDC_USE_NEW_UI,    DM_BOOL, CT_BUTTON,   &pGameOpts->mess.use_new_ui,DM_BOOL, &pGameOpts->mess.use_new_ui, 0, 0, 0);
-#endif
+//#ifdef MESS
+	DataMapAdd(IDC_USE_NEW_UI,    DM_BOOL, CT_BUTTON,   &pGameOpts->newui,DM_BOOL, &pGameOpts->newui, 0, 0, 0);
+//#endif
 
 }
 

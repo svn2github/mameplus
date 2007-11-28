@@ -1,6 +1,6 @@
 //Microsoft Developer Studio generated resource script.
 //
-#include "resource.h"
+#include "resourcems.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
@@ -774,6 +774,10 @@ BEGIN
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
+//#ifdef MESS
+    CONTROL         "Use New UI",IDC_USE_NEW_UI,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,153,157,86,10,0
+//#endif
 END
 
 IDD_PROP_VECTOR DIALOGEX 0, 0, 260, 245

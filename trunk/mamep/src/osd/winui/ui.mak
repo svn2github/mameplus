@@ -11,6 +11,11 @@ WINUIOBJ = $(OBJ)/osd/winui
 
 OBJDIRS += $(WINUIOBJ)
 
+MESS_WINUISRC = $(SRC)/mess/osd/winui
+MESS_WINUIOBJ = $(OBJ)/mess/osd/winui
+OBJDIRS += $(MESS_WINUIOBJ)
+CFLAGS += -I$(WINUISRC) -I$(MESS_WINUISRC)
+
 ifneq ($(USE_IMAGE_MENU),)
     $(WINUIOBJ)/%.o: $(WINUISRC)/%.cpp
 	    @echo Compiling $<...
@@ -101,7 +106,7 @@ UI_RC = @windres --use-temp-file
 
 UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 
-UI_RCFLAGS = -O coff --include-dir $(WINUISRC) --include-dir $(WINUIOBJ)
+UI_RCFLAGS = -O coff --include-dir $(WINUISRC) --include-dir $(WINUIOBJ) --include-dir $(MESS_WINUISRC)
 
 $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
 	@echo Compiling mame32 resources $<...
