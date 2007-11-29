@@ -487,7 +487,7 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 		// SP = 000000
 		// 000008: bra.s 000008
 		const UINT8 dummy_image[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x60, 0xfe};
-		mame_printf_verbose("feed dummy rom\n");
+		mame_printf_warning("feed dummy image for device %s\n", device_typename(image_device(image)->type));
 		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
 		if (filerr == FILERR_NONE)
 			err = IMAGE_ERROR_SUCCESS;

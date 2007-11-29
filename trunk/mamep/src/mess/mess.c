@@ -155,7 +155,7 @@ void devices_init(running_machine *machine)
 
 			/* is an image specified for this image */
 			image_name = mess_get_device_option(&dev->devclass, id);
-			if ((image_name != NULL) /* && (image_name[0] != '\0') */) //mamep: feed a dummy image when image_name is \0
+			if ((image_name != NULL) && (image_name[0] != '\0'))
 			{
 				/* try to load this image */
 				result = image_load(image, image_name);
@@ -174,7 +174,11 @@ void devices_init(running_machine *machine)
 				/* no image... must this device be loaded? */
 				if (dev->must_be_loaded)
 				{
-					fatalerror_exitcode(MAMERR_DEVICE, "Driver requires that device %s must have an image to load\n", device_typename(dev->type));
+					//mamep: prevent MESS window from quitting
+					mame_printf_warning("Driver requires that device %s must have an image to load\n", device_typename(dev->type));
+
+					//mamep: feed a dummy image to avoid crash
+					result = image_load(image, "");
 				}
 			}
 		}
