@@ -542,6 +542,7 @@ CFLAGS += \
 CFLAGS += \
 	-I$(SRC)/mess \
 	-I$(SRC)/mess/includes \
+	-I$(OBJ)/mess/layout \
 	-I$(SRC)/mess/osd/$(OSD)
 
 
