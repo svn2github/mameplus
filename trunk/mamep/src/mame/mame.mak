@@ -1068,6 +1068,10 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(MACHINE)/drakton.o \
 	$(MACHINE)/strtheat.o \
+	$(MESS_AUDIO)/gb.o		\
+	$(MESS_VIDEO)/gb.o		\
+	$(MESS_MACHINE)/gb.o		\
+	$(MESS_DRIVERS)/gb.o		\
 	$(MESS_MACHINE)/nes_mmc.o	\
 	$(VIDEO)/ppu2c0x.o \
 	$(MESS_VIDEO)/nes.o		\
@@ -1754,6 +1758,7 @@ $(DRIVERS)/warpwarp.o:	$(LAYOUT)/geebee.lh \
 
 $(DRIVERS)/zac2650.o:	$(LAYOUT)/tinv2650.lh
 
+$(MESS_DRIVERS)/gb.o:	$(MESS_LAYOUT)/gb.lh
 
 
 #-------------------------------------------------

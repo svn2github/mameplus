@@ -41,8 +41,14 @@ const game_driver * const consoledrivers[] =
 	DRIVER( nespal )	/* Nintendo Entertainment System					*/
 	DRIVER( famicom )
 	DRIVER( famitwin )	/* Sharp Famicom Twin System						*/
+	DRIVER( gameboy )	/* Nintendo GameBoy Handheld						*/
+	DRIVER( supergb )	/* Nintendo Super GameBoy SNES Cartridge			*/
+	DRIVER( gbpocket )	/* Nintendo GameBoy Pocket Handheld					*/
+	DRIVER( gbcolor )	/* Nintendo GameBoy Color Handheld					*/
 	DRIVER( snes )		/* Nintendo Super Nintendo NTSC						*/
 	DRIVER( snespal )	/* Nintendo Super Nintendo PAL						*/
+
+	DRIVER( megaduck )	/* Megaduck											*/
 
 	/* SEGA */
 	DRIVER( megadrij )	/* 1988 Sega Mega Drive (Japan)						*/
