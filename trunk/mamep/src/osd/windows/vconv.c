@@ -85,27 +85,24 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-W*",					"" },
 	{ VS2005,	"-march=*",				"" },		// deprecated in VS2005
 	{ 0,		"-march=pentium",		"/G5" },
-	{ 0,		"-march=pentiumpro",	"/G6" },
-	{ 0,		"-march=pentium3",		"/G6" },
-	{ 0,		"-march=pentium-m",		"/G6" },
 	{ 0,		"-march=athlon",		"/G7" },
-	{ 0,		"-march=athlon-xp",		"/G7" },
-	{ 0,		"-march=i686",			"/G6" },
+	{ 0,		"-march=pentiumpro",	"/G6" },
 #ifdef ICC_BUILD
 	{ 0,		"-march=pentium4",		"/G7 /QxN" },
 #else
-	{ 0,		"-march=pentium4",		"/G7 /arch:SSE2" },
+	{ 0,		"-march=pentium4",		"/G7" },
 #endif
 	{ 0,		"-march=athlon64",		"/G7" },
+	{ 0,		"-march=pentium3",		"/G6" },
 #ifdef ICC_BUILD
-	{ 0,		"-march=pentiumm",		"/G6 /QxB" },
+	{ 0,		"-march=pentium-m",		"/G6 /QxB" },
 #else
-	{ 0,		"-march=pentiumm",		"/G6 /arch:SSE2" },
+	{ 0,		"-march=pentium-m",		"/G6" },
 #endif
-	{ 0,		"-mmmx",				"" },
-	{ 0,		"-msee",				"" }, // "/arch:SSE"
-	{ VS71,		"-msse2",				"" }, // "/arch:SSE2"
+	{ 0,		"-msee",				"/arch:SSE" },
+	{ VS71,		"-msse2",				"/arch:SSE2" },
 	{ 0,		"-msse2",				"" },
+	{ VS71,		"-msse3",				"/arch:SSE2" },
 	{ 0,		"-msse3",				"" },
 	{ 0,		"-mwindows",			"" },
 	{ 0,		"-mno-cygwin",			"" },
@@ -127,8 +124,8 @@ static const translation_info ld_translate[] =
 	{ 0,		"-mno-cygwin",		"" },
 	{ 0,		"-s",				"" },
 	{ 0,		"-WO",				"" },
-	{ 0,		"-mconsole",		"-subsystem:console" },
-	{ 0,		"-mwindows",		"-subsystem:windows" },
+	{ 0,		"-mconsole",		"/subsystem:console" },
+	{ 0,		"-mwindows",		"/subsystem:windows" },
 	{ 0,		"-shared",			"/dll" },
 	{ 0,		"-L*",				"" },
 	{ 0,		"*.dll",			"*.lib" },

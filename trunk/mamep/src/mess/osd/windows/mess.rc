@@ -96,11 +96,12 @@ BEGIN
         MENUITEM "Show P&rofiler",              ID_OPTIONS_PROFILER, GRAYED
         MENUITEM "&Debugger...",                ID_OPTIONS_DEBUGGER
     END
+    /*
     POPUP "&Help"
     BEGIN
         MENUITEM "About This System...",        ID_HELP_ABOUTSYSTEM
         MENUITEM "&About MESS...",              ID_HELP_ABOUT
-    END
+    END*/
 END
 
 
