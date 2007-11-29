@@ -16,7 +16,7 @@ OBJDIRS += \
 	$(MESSOBJ)/osd \
 	$(MESSOBJ)/osd/windows
 
-MESS_WINSRC = src/mess/osd/windows
+MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
 #fixme: should use LIBOSD +=
@@ -33,7 +33,7 @@ ifeq ($(NO_DLL),)
 else
     ifneq ($(WINUI),)
         ## fixme: move gui resource code to mess/osd/ui
-        RCFLAGS += --include-dir $(WINUISRC) --include-dir $(WINUIOBJ)
+        RCFLAGS += --include-dir $(WINUISRC) --include-dir $(WINUIOBJ) --include-dir $(SRC)/mess/osd/winui
         $(MESS_WINOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
         GUIRESFILE = $(MESS_WINOBJ)/messgui.res
     else

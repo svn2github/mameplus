@@ -62,7 +62,15 @@ RC = @windres --use-temp-file
 
 RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 
-RCFLAGS = -O coff -I $(WINSRC) -I $(WINOBJ)
+RCFLAGS = -O coff -I $(WINOBJ)
+ifneq ($(NO_DLL),)
+ifneq ($(WINUI),)
+else
+RCFLAGS += -I $(WINSRC)
+endif
+else
+RCFLAGS += -I $(WINSRC)
+endif
 
 
 
