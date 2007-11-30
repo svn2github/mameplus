@@ -39,7 +39,6 @@
 #define VIDEO_UPDATE(name)		UINT32 video_update_##name(running_machine *machine, int screen, mame_bitmap *bitmap, const rectangle *cliprect)
 
 /* NULL versions */
-#define driver_init_NULL		NULL
 #define nvram_handler_NULL 		NULL
 #define memcard_handler_NULL	NULL
 #define machine_start_NULL 		NULL
@@ -162,7 +161,7 @@
 
 //#ifdef MESS
 #define GAME_COMPUTER               	0x8000  /* Driver is a computer (needs full keyboard) */
-#define GAME_COMPUTER_MODIFIED      	0x0800	/* Official? Hack */
+#define GAME_COMPUTER_MODIFIED      	0x4000	/* Official? Hack */
 //#endif
 
 
@@ -508,26 +507,10 @@ struct _game_driver
 ***************************************************************************/
 
 #define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
-game_driver driver_##NAME =					\
-{											\
-	__FILE__,								\
-	#PARENT,								\
-	#NAME,									\
-	FULLNAME,								\
-	#YEAR,									\
-	COMPANY,								\
-	construct_##MACHINE,					\
-	ipt_##INPUT,							\
-	driver_init_##INIT,						\
-	rom_##NAME,								\
-	NULL,									\
-	NULL,									\
-	(MONITOR)|(FLAGS),						\
-	NULL									\
-};
+	GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,((const char *)0))
 
 #define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
-game_driver driver_##NAME =					\
+const game_driver driver_##NAME =					\
 {											\
 	__FILE__,								\
 	#PARENT,								\
@@ -568,8 +551,7 @@ extern const game_driver * const consoledrivers[];
 #endif /* NEOCPSMAME */
 #endif /* DRIVER_SWITCH */
 
-extern game_driver driver_empty;
-
+extern const game_driver driver_empty;
 
 
 /***************************************************************************

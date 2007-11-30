@@ -380,7 +380,7 @@ void hiscore_init (running_machine *machine, const char *name)
 		mame_fclose (f);
 	}
 
-	timer = timer_alloc(hiscore_periodic);
+	timer = timer_alloc(hiscore_periodic, NULL);
 	timer_adjust(timer, ATTOTIME_IN_HZ(60), 0, ATTOTIME_IN_HZ(60));
 
 	add_exit_callback(machine, hiscore_close);

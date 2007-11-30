@@ -376,7 +376,7 @@ static WRITE16_HANDLER( arm7_latch_68k_w )
 
 #ifdef PGMARM7SPEEDHACK
 	cpu_trigger(1000);
-	timer_set(ATTOTIME_IN_USEC(50), 0, arm_irq); // i don't know how long..
+	timer_set(ATTOTIME_IN_USEC(50), NULL, 0, arm_irq); // i don't know how long..
 	cpu_spinuntil_trigger(1002);
 #else
 	cpunum_set_input_line(2, ARM7_FIRQ_LINE, PULSE_LINE);
@@ -671,7 +671,6 @@ static ADDRESS_MAP_START( kov2_mem, ADDRESS_SPACE_PROGRAM, 16)
 	AM_RANGE(0xd10000, 0xd10001) AM_READWRITE(arm7_latch_68k_r, arm7_latch_68k_w) /* ARM7 Latch */
 ADDRESS_MAP_END
 
-#if 0
 static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 	AM_RANGE(0x000000, 0x07ffff) AM_ROM   /* larger BIOS ROM */
 	AM_RANGE(0xfffffe, 0xffffff) AM_ROMBANK(1) /* Game ROM (unmapped for now, might not even have it) */
@@ -701,7 +700,6 @@ static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0xc10000, 0xc1ffff) AM_READWRITE(z80_ram_r, z80_ram_w) /* Z80 Program */
 ADDRESS_MAP_END
-#endif
 
 static ADDRESS_MAP_START( z80_mem, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0xffff) AM_RAM AM_BASE(&z80_mainram)
@@ -1626,7 +1624,6 @@ static MACHINE_DRIVER_START( kovsh )
 	MDRV_CPU_PROGRAM_MAP(kovsh_arm7_map, 0)
 MACHINE_DRIVER_END
 
-#if 0
 static MACHINE_DRIVER_START( cavepgm )
 	MDRV_IMPORT_FROM(pgm)
 
@@ -1637,7 +1634,6 @@ static MACHINE_DRIVER_START( cavepgm )
 //  MDRV_CPU_ADD_TAG("prot", ARM7, 20000000)    // ???
 //  MDRV_CPU_PROGRAM_MAP(arm7_map, 0)
 MACHINE_DRIVER_END
-#endif
 
 
 /*** Init Stuff **************************************************************/
@@ -2031,12 +2027,11 @@ static READ16_HANDLER( killbld_prot_r )
 {
 //  mame_printf_debug("killbld prot w\n");
 	UINT16 res ;
-#if 0
+
 	static const unsigned long kb_region[6]={
 		0x89911417,0x89911416,0x89911419,
 		0x89911420,0x89911418,0x89911421
 		};
-#endif
 
 	offset&=0xf;
 	res=0;
@@ -2433,7 +2428,7 @@ ROM_END
 
 /*
 
-Oriental Legend / Xi You Shi E Zhuan (CHINA 111 Ver.)
+Oriental Legend / Xi Yo Gi Shi Re Zuang (CHINA 111 Ver.)
 (c)1997 IGS
 
 PGM system
@@ -2501,7 +2496,7 @@ ROM_END
 
 /*
 
-Oriental Legend / Xi You Shi E Zhuan (KOREA 105 Ver.)
+Oriental Legend / Xi Yo Gi Shi Re Zuang (KOREA 105 Ver.)
 (c)1997 IGS
 
 PGM system
@@ -4035,11 +4030,11 @@ ROM_END
 
 GAME( 1997, pgm,      0,          pgm, pgm,      pgm,        ROT0,   "IGS", "PGM (Polygame Master) System BIOS", GAME_IS_BIOS_ROOT )
 
-GAME( 1997, orlegend, pgm,        pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orlegnde, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orlegndc, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orld111c, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orld105k, orlegend,   pgm, orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegend, pgm,        pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 126)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegnde, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 112)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegndc, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orld111c, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orld105k, orlegend,   pgm, orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND  )
 GAME( 1997, drgw2c,   drgw2,      drgw2, pgm,      drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
 GAME( 1999, kov,      pgm,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 117)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
 GAME( 1999, kov115,   kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 115)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */

@@ -598,11 +598,11 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 
 		/* loop while we have a handler */
 		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine) && !ui_menu_is_force_game_select())
-			video_frame_update();
+			video_frame_update(FALSE);
 
 		/* clear the handler and force an update */
 		ui_set_handler(handler_ingame, 0);
-		video_frame_update();
+		video_frame_update(FALSE);
 
 		scroll_reset = TRUE;
 	}
@@ -637,7 +637,7 @@ void ui_set_startup_text(const char *text, int force)
 	if (force || (curtime - lastupdatetime) > osd_ticks_per_second() / 4)
 	{
 		lastupdatetime = curtime;
-		video_frame_update();
+		video_frame_update(FALSE);
 	}
 }
 

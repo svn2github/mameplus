@@ -111,6 +111,7 @@ static const translation_info gcc_translate[] =
 #else
 	{ 0,		"-std=gnu89",			"" },
 #endif
+	{ 0,		"-pipe",				"" },
 	{ 0 }
 };
 

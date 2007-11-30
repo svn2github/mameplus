@@ -631,7 +631,7 @@ static MACHINE_START( xexex )
 
 	resume_trigger = 1000;
 
-	dmadelay_timer = timer_alloc(dmaend_callback);
+	dmadelay_timer = timer_alloc(dmaend_callback, NULL);
 }
 
 

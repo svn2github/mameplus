@@ -27,6 +27,7 @@ extern int m68k_ICount;
 struct m68k_memory_interface
 {
 	offs_t		opcode_xor;						// Address Calculation
+	UINT16	(*readimm16)(offs_t);			// Immediate read 16 bit
 	UINT8		(*read8)(offs_t);				// Normal read 8 bit
 	UINT16	(*read16)(offs_t);				// Normal read 16 bit
 	UINT32	(*read32)(offs_t);				// Normal read 32 bit
