@@ -409,6 +409,7 @@ static void writelong_d8(offs_t address, UINT32 data)
 static const struct m68k_memory_interface interface_d8 =
 {
 	0,
+	m68008_read_immediate_16,
 	program_read_byte_8,
 	readword_d8,
 	readlong_d8,
@@ -430,6 +431,11 @@ static const struct m68k_memory_interface interface_d8 =
  * 16-bit data memory interface
  ****************************************************************************/
 
+static UINT16 read_immediate_16(offs_t address)
+{
+	return cpu_readop16((address) ^ m68k_memory_intf.opcode_xor);
+}
+
 static UINT32 readlong_d16(offs_t address)
 {
 	UINT32 result = program_read_word_16be(address) << 16;
@@ -446,6 +452,7 @@ static void writelong_d16(offs_t address, UINT32 data)
 static const struct m68k_memory_interface interface_d16 =
 {
 	0,
+	read_immediate_16,
 	program_read_byte_16be,
 	program_read_word_16be,
 	readlong_d16,
@@ -531,6 +538,7 @@ static void writelong_d32(offs_t address, UINT32 data)
 static const struct m68k_memory_interface interface_d32 =
 {
 	WORD_XOR_BE(0),
+	read_immediate_16,
 	program_read_byte_32be,
 	readword_d32,
 	readlong_d32,
