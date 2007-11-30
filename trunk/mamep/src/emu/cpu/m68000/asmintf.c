@@ -377,6 +377,12 @@ static void change_pc_m68k(offs_t pc)
  * 8-bit data memory interface
  ****************************************************************************/
 
+static UINT16 m68008_read_immediate_16(offs_t address)
+{
+	offs_t addr = (address) ^ m68k_memory_intf.opcode_xor;
+	return (cpu_readop(addr) << 8) | (cpu_readop(addr + 1));
+}
+
 static UINT16 readword_d8(offs_t address)
 {
 	UINT16 result = program_read_byte_8(address) << 8;

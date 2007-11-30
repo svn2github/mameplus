@@ -67,7 +67,7 @@ int floppy_drive_init(mess_image *img, const floppy_interface *iface)
 /* index pulses at rpm/60 Hz, and stays high 1/20th of time */
 static TIMER_CALLBACK(floppy_drive_index_callback)
 {
-	mess_image *img = (mess_image *) param;
+	mess_image *img = ptr;
 	struct floppy_drive *pDrive = get_drive(img);
 
 	double ms = 1000. / (pDrive->rpm / 60.);
@@ -209,7 +209,7 @@ void floppy_drive_set_motor_state(mess_image *img, int state)
 				/* check it's in range */
 
 				/* setup timer to trigger at rpm */
-				floppy_drive_index_callback(Machine, NULL, (void*)img);
+				floppy_drive_index_callback(Machine, img, 0);
 			}
 			else
 			{

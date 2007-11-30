@@ -257,6 +257,19 @@ int	DisOp;
 #define FASTCALL_SECOND_REG	"edx"
 
 
+/* MAME memory interface */
+#define A68K_MEMORY_INTF_READ8		"a68k_memory_intf+8"
+#define A68K_MEMORY_INTF_READ16		"a68k_memory_intf+12"
+#define A68K_MEMORY_INTF_READ32		"a68k_memory_intf+16"
+#define A68K_MEMORY_INTF_WRITE8		"a68k_memory_intf+20"
+#define A68K_MEMORY_INTF_WRITE16	"a68k_memory_intf+24"
+#define A68K_MEMORY_INTF_WRITE32	"a68k_memory_intf+28"
+#define A68K_MEMORY_INTF_CHANGEPC	"a68k_memory_intf+32"
+#define A68K_MEMORY_INTF_READ8PC	"a68k_memory_intf+36"
+#define A68K_MEMORY_INTF_READ16PC	"a68k_memory_intf+40"
+#define A68K_MEMORY_INTF_READ32PC	"a68k_memory_intf+44"
+
+
 
 /*
  * Global Variables
@@ -678,7 +691,7 @@ void MemoryBanking(int BaseCode)
 	fprintf(fp, "\t\t push  esi\n");
 #endif
 
-	fprintf(fp, "\t\t call  [%sa68k_memory_intf+28]\n", PREF);
+	fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_CHANGEPC "]\n", PREF);
 
 #ifndef FASTCALL
 	fprintf(fp, "\t\t lea   esp,[esp+4]\n");
@@ -1180,15 +1193,15 @@ void Memory_Read(char Size,int AReg,const char *Flags,int Mask)
 			switch (Size)
 			{
 				case SizeBYTE :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+4]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ8 "]\n", PREF);
 					break;
 
 				case SizeWORD :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+8]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ16 "]\n", PREF);
 					break;
 
 				case SizeLONG :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+12]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ32 "]\n", PREF);
 					break;
 			}
 			break;
@@ -1198,15 +1211,15 @@ void Memory_Read(char Size,int AReg,const char *Flags,int Mask)
 			switch (Size)
 			{
 				case SizeBYTE :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+32]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ8PC "]\n", PREF);
 					break;
 
 				case SizeWORD :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+36]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ16PC "]\n", PREF);
 					break;
 
 				case SizeLONG :
-					fprintf(fp, "\t\t call  [%sa68k_memory_intf+40]\n", PREF);
+					fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ32PC "]\n", PREF);
 					break;
 			}
 			break;
@@ -1219,15 +1232,15 @@ void Memory_Read(char Size,int AReg,const char *Flags,int Mask)
 	switch (Size)
 	{
 		case SizeBYTE :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+4]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ8 "]\n", PREF);
 			break;
 
 		case SizeWORD :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+8]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ16 "]\n", PREF);
 			break;
 
 		case SizeLONG :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+12]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_READ32 "]\n", PREF);
 			break;
 	}
 #endif
@@ -1375,15 +1388,15 @@ void Memory_Write(char Size,int AReg,int DReg,const char *Flags,int Mask)
 	switch (Size)
 	{
 		case SizeBYTE :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+16]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_WRITE8 "]\n", PREF);
 			break;
 
 		case SizeWORD :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+20]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_WRITE16 "]\n", PREF);
 			break;
 
 		case SizeLONG :
-			fprintf(fp, "\t\t call  [%sa68k_memory_intf+24]\n", PREF);
+			fprintf(fp, "\t\t call  [%s" A68K_MEMORY_INTF_WRITE32 "]\n", PREF);
 			break;
 	}
 
