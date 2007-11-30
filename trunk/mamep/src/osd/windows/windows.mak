@@ -106,6 +106,11 @@ ifneq ($(MSVC_BUILD),)
 
     VCONV = $(WINOBJ)/vconv$(EXE)
 
+    # append a 'v' prefix if nothing specified
+    ifndef PREFIX
+    PREFIX = v
+    endif
+    
     # replace the various compilers with vconv.exe prefixes
     CC = @$(VCONV) gcc -I.
     LD = @$(VCONV) ld /profile

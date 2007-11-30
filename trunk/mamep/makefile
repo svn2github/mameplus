@@ -88,6 +88,33 @@ endif
 
 
 #-------------------------------------------------
+# configure name of final executable
+#-------------------------------------------------
+
+# uncomment and specify prefix to be added to the name
+# PREFIX =
+
+# uncomment and specify suffix to be added to the name
+# SUFFIX =
+
+
+
+#-------------------------------------------------
+# specify architecture-specific optimizations
+#-------------------------------------------------
+
+# uncomment and specify architecture-specific optimizations here
+# some examples:
+#   optimize for I686:   ARCHOPTS = -march=pentiumpro
+#   optimize for Core 2: ARCHOPTS = -march=pentium-m -msse3
+#   optimize for G4:     ARCHOPTS = -mcpu=G4
+# note that we leave this commented by default so that you can
+# configure this in your environment and never have to think about it
+# ARCHOPTS =
+
+
+
+#-------------------------------------------------
 # specify program options; see each option below 
 # for details
 #-------------------------------------------------
@@ -126,20 +153,11 @@ X86_M68K_DRC = 1
 # for details
 #-------------------------------------------------
 
-# uncomment one of the next lines to build a target-optimized build
-# NATIVE = 1
-# ATHLON = 1
-# AMD64 = 1
-# I686 = 1
-# P4 = 1
-# PM = 1
-# CORE2 = 1
-# G4 = 1
-# G5 = 1
-# CELL = 1
-
 # uncomment next line if you are building for a 64-bit target
 # PTR64 = 1
+
+# uncomment next line if you are building for a big-endian target
+# BIGENDIAN = 1
 
 # uncomment next line to build expat as part of MAME build
 BUILD_EXPAT = 1
@@ -222,83 +240,12 @@ RM = @rm -f
 
 
 #-------------------------------------------------
-# based on the architecture, determine suffixes
-# and endianness
-#-------------------------------------------------
-
-# by default, don't compile for a specific target CPU
-# and assume little-endian (x86)
-ARCH = 
-ENDIAN = little
-
-# architecture-specific builds get extra options
-ifneq ($(NATIVE),)
-    ARCHSUFFIX = nat
-    ARCH = -march=native
-endif
-
-# architecture-specific builds get extra options
-ifneq ($(ATHLON),)
-    ARCHSUFFIX = at
-    ARCH = -march=athlon
-endif
-
-ifneq ($(AMD64),)
-    ARCHSUFFIX = 64
-    ARCH = -march=athlon64
-endif
-
-ifneq ($(I686),)
-    ARCHSUFFIX = pp
-    ARCH = -march=pentiumpro
-endif
-
-ifneq ($(P4),)
-    ARCHSUFFIX = p4
-    ARCH = -march=pentium4
-endif
-
-ifneq ($(PM),)
-    ARCHSUFFIX = pm
-    ARCH = -march=pentium-m
-endif
-
-ifneq ($(CORE2),)
-    ARCHSUFFIX = c2
-    ARCH = -march=pentium-m -msse3
-endif
-
-ifneq ($(G4),)
-    ARCHSUFFIX = g4
-    ARCH = -mcpu=G4
-    ENDIAN = big
-endif
-
-ifneq ($(G5),)
-    ARCHSUFFIX = g5
-    ARCH = -mcpu=G5
-    ENDIAN = big
-endif
-
-ifneq ($(CELL),)
-    ARCHSUFFIX = cbe
-    ARCH = 
-    ENDIAN = big
-endif
-
-
-#-------------------------------------------------
 # form the name of the executable
 #-------------------------------------------------
 
-# x64 builds append the 'x64' suffix
-ifdef PTR64
-SUFFIX:=$(SUFFIX)x64
-endif
-
-# debug builds append the 'd' suffix
+# debug builds just get the 'd' suffix
 ifdef DEBUG
-SUFFIX:=$(SUFFIX)d
+DEBUGSUFFIX = $(SUFFIX)d
 endif
 
 # the name is just 'target' if no subtarget; otherwise it is
@@ -309,8 +256,8 @@ else
     NAME = $(TARGET)$(SUBTARGET)$(EXTRA_SUFFIX)
 endif
 
-# fullname is prefix+name+suffix
-FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)$(ARCHSUFFIX)
+# fullname is prefix+name+suffix+debugsuffix
+FULLNAME = $(PREFIX)$(NAME)$(DEBUGSUFFIX)$(ARCHSUFFIX)
 FULLGUINAME = $(PREFIX)$(NAME)gui$(SUFFIX)$(ARCHSUFFIX)
 
 # add an EXE suffix to get the final emulator name
@@ -349,7 +296,7 @@ endif
 DEFS += -DINLINE="static __inline__"
 
 # define LSB_FIRST if we are a little-endian target
-ifeq ($(ENDIAN),little)
+ifndef BIGENDIAN
 DEFS += -DLSB_FIRST
 endif
 
@@ -464,6 +411,9 @@ endif
 # we compile to C89 standard with GNU extensions
 CFLAGS = -std=gnu89
 
+# this speeds it up a bit by piping between the preprocessor/compiler/assembler
+CFLAGS += -pipe
+
 ifneq ($(W_ERROR),)
     CFLAGS += -Werror
 else
@@ -503,7 +453,8 @@ CFLAGS += -O$(OPTIMIZE)
 # if we are optimizing, include optimization options
 # and make all errors into warnings
 ifneq ($(OPTIMIZE),0)
-CFLAGS += $(ARCH) -fno-strict-aliasing
+CFLAGS += $(ARCHOPTS) -fno-strict-aliasing
+#CFLAGS += $(ARCHOPTS) -fno-strict-aliasing
 endif
 
 # if symbols are on, make sure we have frame pointers

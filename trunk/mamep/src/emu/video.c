@@ -1093,11 +1093,11 @@ void video_frame_update(int debug)
 
 	/* perform tasks for this frame */
 	if (!debug)
-	mame_frame_update(Machine);
+		mame_frame_update(Machine);
 
 	/* update frameskipping */
 	if (!debug)
-	update_frameskip();
+		update_frameskip();
 
 	/* update speed computations */
 	if (!debug && !skipped_it)
