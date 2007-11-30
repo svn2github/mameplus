@@ -1,4 +1,4 @@
-# osd/winui/properties.c: 1010
+# osd/winui/properties.c: 1014
 %d colors 
 %d 色 
 
@@ -6,11 +6,11 @@
 %d games
 %d 个游戏
 
-# osd/winui/properties.c: 920
+# osd/winui/properties.c: 924
 %d x %d (H) %f Hz (%d colors)
 %d x %d (水平) %f Hz (%d 色)
 
-# osd/winui/properties.c: 913
+# osd/winui/properties.c: 917
 %d x %d (V) %f Hz (%d colors)
 %d x %d (垂直) %f Hz (%d 色)
 
@@ -22,31 +22,31 @@
 %dx%d (V)
 %dx%d (垂直)
 
-# osd/winui/properties.c: 986
+# osd/winui/properties.c: 990
 %s (%d player)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 997
+# osd/winui/properties.c: 1001
 %s (%d player, %d button)
 %s (%d 玩家, %d 按钮)
 
-# osd/winui/properties.c: 995
+# osd/winui/properties.c: 999
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按钮)
 
-# osd/winui/properties.c: 983
+# osd/winui/properties.c: 987
 %s (%d players)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 992
+# osd/winui/properties.c: 996
 %s (%d players, %d button)
 %s (%d 玩家, %d 按钮)
 
-# osd/winui/properties.c: 989
+# osd/winui/properties.c: 993
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按钮)
 
-# osd/winui/properties.c: 1124
+# osd/winui/properties.c: 1128
 %s\nThis is also global driver options in the %s
 %s\n这也是 %s 的全局驱动选项
 
@@ -62,7 +62,7 @@
 &Add to Custom Folder...
 添加到自定义文件夹(&A)...
 
-# osd/winui/mame32.rc: 926
+# osd/winui/mame32.rc: 887
 &All games to use default options
 所有游戏使用默认选项(&A)
 
@@ -78,7 +78,7 @@
 &Background Image...
 背景图片(&B)...
 
-# osd/winui/mame32.rc: 955
+# osd/winui/mame32.rc: 916
 &Broadcast selected game to all windows
 将所选的游戏广播到所有窗口(&B)
 
@@ -86,11 +86,11 @@
 &Cabinet
 游戏机台(&C)
 
-# osd/winui/mame32.rc: 447, 910, 935, 999, 1027
+# osd/winui/mame32.rc: 400, 871, 896, 960, 988
 &Cancel
 取消(&C)
 
-# osd/winui/audit32.c: 492 osd/winui/mame32.rc: 1210
+# osd/winui/audit32.c: 492 osd/winui/mame32.rc: 1171
 &Close
 关闭(&C)
 
@@ -110,11 +110,11 @@
 &Custom Filters...\tCtrl+F
 自定义过滤器(&C)...\tCtrl+F
 
-# osd/winui/mame32.rc: 923
+# osd/winui/mame32.rc: 884
 &Default game options
 默认游戏选项(&D)
 
-# osd/winui/mame32.rc: 906
+# osd/winui/mame32.rc: 867
 &Description filter
 描述过滤器(&D)
 
@@ -142,7 +142,7 @@
 &Flyer
 广告图(&F)
 
-# osd/winui/mame32.rc: 929
+# osd/winui/mame32.rc: 890
 &Folder 'filters'
 &文件夹'过滤器'(&F)
 
@@ -190,7 +190,7 @@ MAME 版本说明(&M)
 &New Game Changes
 新游戏更改(&N)
 
-# osd/winui/mame32.rc: 411, 909, 934, 998, 1026
+# osd/winui/mame32.rc: 364, 870, 895, 959, 987
 &OK
 确定(&O)
 
@@ -202,7 +202,7 @@ MAME 版本说明(&M)
 &Palette Setting...
 色盘设置(&P)...
 
-# osd/winui/audit32.c: 357 osd/winui/mame32.rc: 446
+# osd/winui/audit32.c: 357 osd/winui/mame32.rc: 399
 &Pause
 暂停(&P)
 
@@ -222,7 +222,7 @@ MAME 版本说明(&M)
 &Properties
 属性(&P)
 
-# osd/winui/mame32.rc: 894
+# osd/winui/mame32.rc: 855
 &Raster Graphics
 点阵画面(&R)
 
@@ -238,7 +238,7 @@ MAME 版本说明(&M)
 &Reset to Default...
 重置为默认(&R)...
 
-# osd/winui/mame32.rc: 945
+# osd/winui/mame32.rc: 906
 &Search for new games on start
 启动时搜索新游戏(&S)
 
@@ -270,15 +270,15 @@ MAME 版本说明(&M)
 &Troubleshooting
 疑难解答(&T)
 
-# osd/winui/mame32.rc: 891
+# osd/winui/mame32.rc: 852
 &Unavailable
 未拥有的游戏(&U)
 
-# osd/winui/mame32.rc: 920
+# osd/winui/mame32.rc: 881
 &User Interface (Fonts, Colors, Sizes)
 用户界面 (字体, 颜色, 大小)(&U)
 
-# osd/winui/mame32.rc: 883
+# osd/winui/mame32.rc: 844
 &Vector Graphics
 矢量画面(&V)
 
@@ -286,7 +286,7 @@ MAME 版本说明(&M)
 &View
 查看(&V)
 
-# osd/winui/mame32.rc: 900
+# osd/winui/mame32.rc: 861
 &Working
 可以运行(&W)
 
@@ -294,11 +294,11 @@ MAME 版本说明(&M)
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是游戏 '%s' 的有效进度文件。
 
-# osd/winui/mame32.rc: 902
+# osd/winui/mame32.rc: 863
 (*) = inherited from parent folder
 (*) = 从上层文件夹继承
 
-# osd/winui/mame32.rc: 504
+# osd/winui/mame32.rc: 457
 <- Remove
 <- 移除
 
@@ -314,11 +314,11 @@ A sharing violation occurred.
 A&udit
 校验(&U)
 
-# osd/winui/properties.c: 961 osd/winui/treeview.c: 1438
+# osd/winui/properties.c: 965 osd/winui/treeview.c: 1438
 AD Stick
 AD 游戏杆
 
-# osd/winui/mame32.rc: 1058
+# osd/winui/mame32.rc: 1019
 ADStick device
 AD 游戏杆设备
 
@@ -326,27 +326,27 @@ AD 游戏杆设备
 About
 关于
 
-# osd/winui/mame32.rc: 408
+# osd/winui/mame32.rc: 361
 About MAME32
 关于 MAME32
 
-# osd/winui/mame32.rc: 503
+# osd/winui/mame32.rc: 456
 Add ->
 添加 ->
 
-# osd/winui/mame32.rc: 1033
+# osd/winui/mame32.rc: 994
 Add Game To Custom Folder
 添加游戏到自定义文件夹
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Add currently selected game to a custom folder
 将当前所选的游戏添加到一个自定义文件夹
 
-# osd/winui/mame32.rc: 420
+# osd/winui/mame32.rc: 373
 Additional MAME32 code by
 附加的 MAME32 代码
 
-# osd/winui/mame32.rc: 664
+# osd/winui/mame32.rc: 617
 Advanced
 高级
 
@@ -362,23 +362,23 @@ All Games
 All files (*.*)
 所有文件 (*.*)
 
-# osd/winui/mame32.rc: 948
+# osd/winui/mame32.rc: 909
 Allow game selection by a &joystick (requires restart)
 允许使用游戏杆选定游戏(&J) (需要重新启动)
 
-# osd/winui/mame32.rc: 951
+# osd/winui/mame32.rc: 912
 Allow game selection by custom &key sequences
 允许使用自定义键序列选定游戏(&K)
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Allow restoring options to 'sane' values.
 允许还原选项为合法值
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Allows filtering out games from a folder
 允许从文件夹中过滤游戏
 
-# osd/winui/properties.c: 4586
+# osd/winui/properties.c: 4631
 Anti-clockwise
 逆时针
 
@@ -386,7 +386,7 @@ Anti-clockwise
 Arrange &Icons
 排序图标(&I)
 
-# osd/winui/mame32.rc: 1475, 1565
+# osd/winui/mame32.rc: 1436, 1526
 Arranges icons in a grid
 均匀排列图标
 
@@ -394,23 +394,23 @@ Arranges icons in a grid
 Artwork
 装饰图
 
-# osd/winui/mame32.rc: 801
+# osd/winui/mame32.rc: 758
 Artwork options
 装饰图选项
 
-# osd/winui/mame32.rc: 1126
+# osd/winui/mame32.rc: 1087
 Aspect ratio:
 外观比例:
 
-# osd/winui/mame32.rc: 652
+# osd/winui/mame32.rc: 605
 Audio latency
 音频等待时间
 
-# osd/winui/mame32.rc: 557
+# osd/winui/mame32.rc: 510
 Audit
 校验
 
-# osd/winui/mame32.rc: 1521, 1557, 1557
+# osd/winui/mame32.rc: 1482, 1518, 1518
 Audit ROM and samples sets
 校验 ROM 和采样文件集
 
@@ -418,27 +418,31 @@ Audit ROM and samples sets
 Audit complete.\n
 校验完成。\n
 
-# osd/winui/properties.c: 503, 4498, 4679, 4714
+# osd/winui/properties.c: 507, 4543, 4724, 4759
 Auto
 自动
 
-# osd/winui/properties.c: 4589
+# osd/winui/properties.c: 4634
 Auto anti-clockwise
 自动逆时针
 
-# osd/winui/properties.c: 4588
+# osd/winui/properties.c: 4633
 Auto clockwise
 自动顺时针
 
-# osd/winui/mame32.rc: 786
+# osd/winui/mame32.rc: 743
 Auto pause when playback is finished
 播放完成时自动暂停
 
-# osd/winui/mame32.rc: 778
+# osd/winui/mame32.rc: 634
+Auto refresh speed
+自动调整刷新频率
+
+# osd/winui/mame32.rc: 735
 Auto restore and save (only if available)
 自动载入和保存游戏进度
 
-# osd/winui/mame32.rc: 603, 1127
+# osd/winui/mame32.rc: 556, 1088
 Automatic
 自动
 
@@ -446,15 +450,15 @@ Automatic
 Available
 拥有游戏
 
-# osd/winui/mame32.rc: 498
+# osd/winui/mame32.rc: 451
 Available fields:
 可用栏目:
 
-# osd/winui/properties.c: 1080
+# osd/winui/properties.c: 1084
 BIOS missing
 缺少 BIOS
 
-# osd/winui/mame32.rc: 802
+# osd/winui/mame32.rc: 759
 Backdrops
 背景图
 
@@ -470,7 +474,7 @@ Bad Dump
 Basic
 基本样式
 
-# osd/winui/mame32.rc: 834
+# osd/winui/mame32.rc: 795
 Beam width
 光束宽度
 
@@ -478,19 +482,23 @@ Beam width
 Best available
 最佳可用状态
 
-# osd/winui/mame32.rc: 804
+# osd/winui/mame32.rc: 761
 Bezels
 外框图
 
-# osd/winui/mame32.rc: 978
+# osd/winui/mame32.rc: 629
+Bilinear filtering
+启用双线性过滤
+
+# osd/winui/mame32.rc: 939
 Bookkeeping
 记录
 
-# osd/winui/mame32.rc: 611
+# osd/winui/mame32.rc: 564
 Brightness Correction
 亮度修正
 
-# mess/osd/winui/mess32.rc: 25 osd/winui/mame32.rc: 488
+# mess/osd/winui/mess32.rc: 25 osd/winui/mame32.rc: 441
 Browse...
 浏览...
 
@@ -574,7 +582,7 @@ Buttons 8
 Buttons 9
 按钮数 9
 
-# osd/winui/mame32.rc: 886
+# osd/winui/mame32.rc: 847
 C&lones
 克隆游戏(&L)
 
@@ -582,7 +590,7 @@ C&lones
 CPU
 CPU 芯片
 
-# osd/winui/dialogs.c: 255 osd/winui/winuiopt.c: 426
+# osd/winui/dialogs.c: 255 osd/winui/winuiopt.c: 427
 Cabinet
 游戏机台
 
@@ -590,7 +598,7 @@ Cabinet
 Cabinets
 游戏机台
 
-# osd/winui/mame32.rc: 487, 513, 1043
+# osd/winui/mame32.rc: 440, 466, 1004
 Cancel
 取消
 
@@ -598,7 +606,7 @@ Cancel
 Cannot Move Selected Item
 不能移动所选项目
 
-# osd/winui/mame32.rc: 919
+# osd/winui/mame32.rc: 880
 Categories
 分类
 
@@ -610,11 +618,11 @@ Changing this item is not permitted
 Checking Game %s - %s
 正在检查游戏 %s - %s
 
-# osd/winui/mame32.rc: 565, 567
+# osd/winui/mame32.rc: 518, 520
 Checking...
 正在检查...
 
-# osd/winui/properties.c: 4585
+# osd/winui/properties.c: 4630
 Clockwise
 顺时针
 
@@ -622,7 +630,7 @@ Clockwise
 Clone Of
 原作游戏
 
-# osd/winui/mame32.rc: 551
+# osd/winui/mame32.rc: 504
 Clone of:
 原作游戏:
 
@@ -630,19 +638,19 @@ Clone of:
 Clones
 克隆游戏
 
-# osd/winui/properties.c: 506
+# osd/winui/properties.c: 510
 Cocktail
 平躺型机台
 
-# osd/winui/properties.c: 1048
+# osd/winui/properties.c: 1052
 Colors are completely wrong
 颜色完全错误
 
-# osd/winui/properties.c: 1053
+# osd/winui/properties.c: 1057
 Colors aren't 100% accurate
 颜色不是100%精确
 
-# osd/winui/mame32.rc: 544
+# osd/winui/mame32.rc: 497
 Colors:
 颜色:
 
@@ -654,11 +662,11 @@ Comment Files
 Config
 配置
 
-# osd/winui/mame32.rc: 1120
+# osd/winui/mame32.rc: 1081
 Configure for:
 设置对象:
 
-# mess/osd/winui/layoutms.c: 44 osd/winui/mame32.rc: 1169
+# mess/osd/winui/layoutms.c: 44 osd/winui/mame32.rc: 1130
 Console
 家用机
 
@@ -666,27 +674,27 @@ Console
 Consoles
 家用机
 
-# osd/winui/mame32.rc: 1467
+# osd/winui/mame32.rc: 1428
 Contains commands for displaying help
 包含显示帮助的命令
 
-# osd/winui/mame32.rc: 1467
+# osd/winui/mame32.rc: 1428
 Contains commands for manupulating the view
 包含管理视图的命令
 
-# osd/winui/mame32.rc: 1475
+# osd/winui/mame32.rc: 1436
 Contains commands for sorting by various columns
 包含按各栏目排序的命令
 
-# osd/winui/mame32.rc: 1467
+# osd/winui/mame32.rc: 1428
 Contains commands for user interface options
 包含用户界面选项的命令
 
-# osd/winui/mame32.rc: 1467
+# osd/winui/mame32.rc: 1428
 Contains commands for working with the selected items
 包含运行所选项目的命令
 
-# osd/winui/mame32.rc: 616
+# osd/winui/mame32.rc: 569
 Contrast Correction
 对比度修正
 
@@ -694,7 +702,7 @@ Contrast Correction
 Control &Panel
 控制面板(&P)
 
-# osd/winui/dialogs.c: 261 osd/winui/winuiopt.c: 429
+# osd/winui/dialogs.c: 261 osd/winui/winuiopt.c: 430
 Control Panel
 控制面板
 
@@ -706,7 +714,7 @@ Control Panels
 Control Type
 控制类型
 
-# osd/winui/mame32.rc: 541
+# osd/winui/mame32.rc: 494
 Control Type:
 控制类型:
 
@@ -714,23 +722,23 @@ Control Type:
 Controller Files
 控制器文件
 
-# osd/winui/mame32.rc: 1080
+# osd/winui/mame32.rc: 1041
 Controller ID layout
 控制器标识码配置
 
-# osd/winui/mame32.rc: 1048
+# osd/winui/mame32.rc: 1009
 Controller Mapping
 控制器映射
 
-# osd/winui/mame32.rc: 720
+# osd/winui/mame32.rc: 677
 Controllers
 控制器
 
-# osd/winui/mame32.rc: 415
+# osd/winui/mame32.rc: 368
 Copyright (C) 1997-2007 The MAME Team
 版权所有 (C) 1997-2007 MAME 开发组
 
-# osd/winui/mame32.rc: 450, 460
+# osd/winui/mame32.rc: 403, 413
 Correct:
 正确:
 
@@ -742,7 +750,7 @@ Could not open '%s' as a valid input file.
 Could not open '%s' as a valid savestate file.
 '%s'不是有效的游戏进度文件。
 
-# osd/winui/mame32.rc: 808
+# osd/winui/mame32.rc: 765
 Crop artwork
 裁切装饰图
 
@@ -754,7 +762,7 @@ Cursor
 Custom
 自定义
 
-# osd/winui/mame32.rc: 944
+# osd/winui/mame32.rc: 905
 Custom Options
 自定义选项
 
@@ -762,23 +770,23 @@ Custom Options
 Customi&ze Fields...
 自定义栏目(&Z)...
 
-# osd/winui/mame32.rc: 495
+# osd/winui/mame32.rc: 448
 Customize Fields
 自定义栏目
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Customize interface options.
 自定义界面选项
 
-# osd/winui/mame32.rc: 1475, 1539
+# osd/winui/mame32.rc: 1436, 1500
 Customize which columns are used in the game list
 自定义游戏列表使用的栏目
 
-# osd/winui/properties.c: 4584
+# osd/winui/properties.c: 4629
 Default
 默认
 
-# osd/winui/properties.c: 683
+# osd/winui/properties.c: 687
 Default Game
 默认游戏
 
@@ -786,11 +794,11 @@ Default Game
 Default Game &Options...
 默认游戏选项(&O)...
 
-# osd/winui/mame32.rc: 753
+# osd/winui/mame32.rc: 710
 Default input layout
 默认输入布局
 
-# mess/osd/winui/mess32.rc: 27 osd/winui/mame32.rc: 490
+# mess/osd/winui/mess32.rc: 27 osd/winui/mame32.rc: 443
 Delete
 删除
 
@@ -798,27 +806,27 @@ Delete
 Description
 游戏标题
 
-# osd/winui/mame32.rc: 466, 568 osd/winui/win32ui.c: 751 osd/winui/winuiopt.c: 459
+# osd/winui/mame32.rc: 419, 521 osd/winui/win32ui.c: 751 osd/winui/winuiopt.c: 460
 Details
 明细
 
-# osd/winui/properties.c: 963 osd/winui/treeview.c: 1440
+# osd/winui/properties.c: 967 osd/winui/treeview.c: 1440
 Dial
 方向盘
 
-# osd/winui/mame32.rc: 1064
+# osd/winui/mame32.rc: 1025
 Dial device
 方向盘设备
 
-# osd/winui/mame32.rc: 674 osd/winui/properties.c: 468
+# osd/winui/properties.c: 472
 Direct3D
 Direct3D
 
-# osd/winui/mame32.rc: 475 
+# osd/winui/mame32.rc: 428 
 Directories
 目录
 
-# osd/winui/mame32.rc: 481
+# osd/winui/mame32.rc: 434
 Directories:
 目录:
 
@@ -834,55 +842,55 @@ Directory name:
 Disabled
 禁用
 
-# osd/winui/mame32.rc: 576
+# osd/winui/mame32.rc: 529
 Display
 显示
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Display help contents
 显示帮助內容
 
-# osd/winui/mame32.rc: 1475, 1493
+# osd/winui/mame32.rc: 1436, 1454
 Display items by using large icons.
 以大图标显示项目
 
-# osd/winui/mame32.rc: 1475, 1493
+# osd/winui/mame32.rc: 1436, 1454
 Display items by using small icons.
 以小图标显示项目
 
-# osd/winui/mame32.rc: 964
+# osd/winui/mame32.rc: 925
 Display splash screen on start
 显示启动画面
 
-# osd/winui/mame32.rc: 1508
+# osd/winui/mame32.rc: 1469
 Display the bios properties of the selected game
 显示所选游戏的BIOS属性
 
-# osd/winui/mame32.rc: 1508
+# osd/winui/mame32.rc: 1469
 Display the driver properties of the selected game
 显示所选游戏的驱动属性
 
-# osd/winui/mame32.rc: 1557
+# osd/winui/mame32.rc: 1518
 Display the properties of the currently selected folder
 显示当前所选文件夹的属性
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Display the properties of the selected items
 显示所选的项目的属性
 
-# osd/winui/mame32.rc: 1475, 1493
+# osd/winui/mame32.rc: 1436, 1454
 Displays detailed information about each item in the window.
 在窗口中显示每一项目的详细信息
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Displays detailed information and group items in the window by parent.
 显示详细信息并在窗口中按原作分组。
 
-# osd/winui/mame32.rc: 1475, 1493
+# osd/winui/mame32.rc: 1436, 1454
 Displays items in a list.
 显示项目列表
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Displays program and copyright information
 显示程序和版权信息
 
@@ -898,6 +906,10 @@ Double Joy 16-Way
 Double Joy 2-Way
 2方向双游戏杆
 
+# osd/winui/treeview.c: 1437
+Double Joy 2-Way (V)
+2方向双游戏杆 (垂直)
+
 # osd/winui/treeview.c: 1434
 Double Joy 4-Way
 4方向双游戏杆
@@ -906,47 +918,47 @@ Double Joy 4-Way
 Double Joy 8-Way
 8方向双游戏杆
 
-# osd/winui/properties.c: 959
+# osd/winui/properties.c: 963
 Double Joystick 16-Way
 16方向双游戏杆
 
-# osd/winui/properties.c: 956
+# osd/winui/properties.c: 960
 Double Joystick 2-Way
 2方向双游戏杆
 
-# osd/winui/properties.c: 960
+# osd/winui/properties.c: 964
 Double Joystick 2-Way Vertical
 垂直2方向双游戏杆
 
-# osd/winui/properties.c: 957
+# osd/winui/properties.c: 961
 Double Joystick 4-Way
 4方向双游戏杆
 
-# osd/winui/properties.c: 958
+# osd/winui/properties.c: 962
 Double Joystick 8-Way
 8方向双游戏杆
 
-# osd/winui/mame32.rc: 831
+# osd/winui/mame32.rc: 792
 Draw antialiased vectors
 抗锯齿描绘矢量
 
-# osd/winui/properties.c: 4563
+# osd/winui/properties.c: 4608
 Draw every frame
 不跳帧
 
-# osd/winui/layout.c: 58 osd/winui/mame32.rc: 1151 osd/winui/win32ui.c: 913
+# osd/winui/layout.c: 58 osd/winui/mame32.rc: 1112 osd/winui/win32ui.c: 913
 Driver
 游戏驱动
 
-# osd/winui/mame32.rc: 1159
+# osd/winui/mame32.rc: 1120
 Driver options
 驱动选项
 
-# osd/winui/mame32.rc: 549
+# osd/winui/mame32.rc: 502
 Driver:
 游戏驱动:
 
-# osd/winui/mame32.rc: 743
+# osd/winui/mame32.rc: 700
 Dual lightgun
 双光枪
 
@@ -958,51 +970,51 @@ Dumping Status
 E&xit
 退出(&X)
 
-# osd/winui/mame32.rc: 975
+# osd/winui/mame32.rc: 936
 Emulation
 模拟
 
-# osd/winui/mame32.rc: 675
-Bilinear filtering
-启用双线性过滤
-
-# osd/winui/mame32.rc: 770
+# osd/winui/mame32.rc: 727
 Enable game cheats
 启用游戏作弊码
 
-# osd/winui/mame32.rc: 727
+# osd/winui/mame32.rc: 684
 Enable joystick input
 启用游戏杆输入
 
-# osd/winui/mame32.rc: 739
+# osd/winui/mame32.rc: 696
 Enable lightgun input
 启用光枪输入
 
-# osd/winui/mame32.rc: 730
+# osd/winui/mame32.rc: 687
 Enable mouse input
 启用鼠标输入
 
-# osd/winui/mame32.rc: 780
+# osd/winui/mame32.rc: 737
 Enable multi-threading
 启用多线程
 
-# osd/winui/mame32.rc: 734
+# osd/winui/mame32.rc: 691
 Enable multiple keyboards
-启用多键盘支持
+启用多个键盘
 
-# osd/winui/mame32.rc: 635
+# osd/winui/mame32.rc: 689
+Enable multiple mice
+启用多个鼠标
+
+# osd/winui/mame32.rc: 588
 Enable sound and sound CPUs
 启用声音和声音处理器
 
-# osd/winui/mame32.rc: 736
+# osd/winui/mame32.rc: 693
 Enable steadykey support
 启用多键同时输入支持
 
-# osd/winui/mame32.rc: 587
+# osd/winui/mame32.rc: 540
 Enforce aspect ratio
 强制调整外观比例
 
-# osd/winui/audit32.c: 103 osd/winui/properties.c: 703, 794, 1637
+# osd/winui/audit32.c: 103 osd/winui/properties.c: 707, 798, 1641
 Error
 错误
 
@@ -1010,7 +1022,7 @@ Error
 Error finding custom file name to save
 搜索要保存的自定义文件名时发生错误
 
-# osd/winui/mame32.rc: 772
+# osd/winui/mame32.rc: 729
 Error log (for developers)
 错误记录(开发用)
 
@@ -1026,7 +1038,7 @@ Error while renaming custom file %s to %s
 Error while saving custom file %s
 保存自定义文件 %s 时发生错误
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Exit the application
 退出应用程序
 
@@ -1034,7 +1046,7 @@ Exit the application
 External Folder List
 外部目录列表
 
-# osd/winui/winuiopt.c: 3259
+# osd/winui/winuiopt.c: 3260
 FOLDER LIST HIDE OPTIONS
 专用隐藏文件夹选项
 
@@ -1046,7 +1058,7 @@ FPS
 Failed
 失败
 
-# osd/winui/audit32.c: 296 osd/winui/mame32.rc: 443
+# osd/winui/audit32.c: 296 osd/winui/mame32.rc: 396
 File Audit
 文件校验
 
@@ -1054,23 +1066,23 @@ File Audit
 Filters for %s Folder
 %s 文件夹的过滤器
 
-# osd/winui/properties.c: 490
+# osd/winui/properties.c: 494
 First screen
 第一个屏幕
 
-# osd/winui/mame32.rc: 838
+# osd/winui/mame32.rc: 799
 Flicker
 闪烁
 
-# osd/winui/mame32.rc: 596
+# osd/winui/mame32.rc: 549
 Flip screen left-right
 左右翻转画面
 
-# osd/winui/mame32.rc: 594
+# osd/winui/mame32.rc: 547
 Flip screen upside-down
 上下翻转画面
 
-# osd/winui/dialogs.c: 253 osd/winui/winuiopt.c: 425
+# osd/winui/dialogs.c: 253 osd/winui/winuiopt.c: 426
 Flyer
 游戏广告
 
@@ -1094,39 +1106,39 @@ Font (normal)
 Font (special)
 字体 (特殊)
 
-# osd/winui/properties.c: 493
+# osd/winui/properties.c: 497
 Fourth screen
 第四个屏幕
 
-# osd/winui/mame32.rc: 602
+# osd/winui/mame32.rc: 555
 Frame skipping
 跳帧
 
-# osd/winui/mame32.rc: 705
+# osd/winui/mame32.rc: 662
 Full screen brightness
 全屏幕亮度
 
-# osd/winui/mame32.rc: 709
+# osd/winui/mame32.rc: 666
 Full screen contrast
 全屏幕对比度
 
-# osd/winui/mame32.rc: 701
+# osd/winui/mame32.rc: 658
 Full screen gamma
 全屏幕灰度
 
-# osd/winui/winuiopt.c: 3205
+# osd/winui/winuiopt.c: 3206
 GENERAL OPTIONS
 专用通用选项
 
-# osd/winui/winuiopt.c: 3263
+# osd/winui/winuiopt.c: 3264
 GUI JOYSTICK OPTIONS
 界面游戏杆选项
 
-# osd/winui/winuiopt.c: 3278
+# osd/winui/winuiopt.c: 3279
 GUI KEYBOARD OPTIONS
 界面键盘选项
 
-# osd/winui/mame32.rc: 879
+# osd/winui/mame32.rc: 840
 Game Filters
 游戏过滤器
 
@@ -1142,19 +1154,19 @@ Game List &Font...
 Game List Files (*.lst)
 游戏列表文件 (*.lst)
 
-# osd/winui/mame32.rc: 882
+# osd/winui/mame32.rc: 843
 Game filters
 游戏过滤器
 
-# osd/winui/mame32.rc: 904
+# osd/winui/mame32.rc: 865
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 游戏过滤器允许在每个文件夹自定义隐藏符合过滤条件的游戏。
 
-# osd/winui/properties.c: 1063
+# osd/winui/properties.c: 1067
 Game lacks sound
 游戏尚未支持声音
 
-# osd/winui/properties.c: 1043
+# osd/winui/properties.c: 1047
 Game protection isn't fully emulated
 游戏的保护尚未完全模拟
 
@@ -1162,27 +1174,31 @@ Game protection isn't fully emulated
 Game search %d%% complete
 游戏搜索 %d%% 完成
 
-# osd/winui/mame32.rc: 607
+# osd/winui/mame32.rc: 633
+Gameplay speed
+游戏速度
+
+# osd/winui/mame32.rc: 560
 Gamma Correction
 灰度修正
 
-# osd/winui/mame32.rc: 518
+# osd/winui/mame32.rc: 471
 General
 普通
 
-# osd/winui/properties.c: 1126
+# osd/winui/properties.c: 1130
 Global driver options\nCustom options used by all games in the %s
 全局驱动选项\n所有 %s 游戏使用的自定义选项
 
-# osd/winui/properties.c: 1106
+# osd/winui/properties.c: 1110
 Global game options\nDefault options used by all games
 全局游戏选项\n所有游戏使用的默认选项
 
-# osd/winui/properties.c: 1109
+# osd/winui/properties.c: 1113
 Global vector options\nCustom options used by all games in the Vector
 全局矢量选项\n所有矢量游戏使用的自定义选项
 
-# osd/winui/mame32.rc: 435
+# osd/winui/mame32.rc: 388
 Go to Microsoft's DirectX Web Page
 访问微软 DirectX 网页
 
@@ -1190,7 +1206,7 @@ Go to Microsoft's DirectX Web Page
 Gray
 灰
 
-# osd/winui/win32ui.c: 752 osd/winui/winuiopt.c: 460, 3238
+# osd/winui/win32ui.c: 752 osd/winui/winuiopt.c: 461, 3239
 Grouped
 分组
 
@@ -1198,11 +1214,15 @@ Grouped
 Hard Drive Difference
 硬盘差分
 
+# osd/winui/mame32.rc: 631
+Hardware stretching
+使用硬件拉伸
+
 # osd/winui/win32ui.c: 754
 Help
 帮助
 
-# osd/winui/mame32.rc: 957
+# osd/winui/mame32.rc: 918
 Hide &mouse cursor (requires restart)
 隐藏鼠标光标(&M) (需要重新启动)
 
@@ -1210,11 +1230,11 @@ Hide &mouse cursor (requires restart)
 High Scores
 高分纪录
 
-# osd/winui/winuiopt.c: 431, 434
+# osd/winui/winuiopt.c: 432, 435
 History
 历史
 
-# osd/winui/mame32.rc: 1164
+# osd/winui/mame32.rc: 1125
 Homebrew
 自制
 
@@ -1222,11 +1242,11 @@ Homebrew
 Horizontal
 水平
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 How cheats work
 如何使用作弊码
 
-# osd/winui/winuiopt.c: 3185
+# osd/winui/winuiopt.c: 3186
 INTERFACE OPTIONS
 界面选项
 
@@ -1238,7 +1258,7 @@ IPS 文件
 Icons
 图标
 
-# osd/winui/mame32.rc: 685
+# osd/winui/mame32.rc: 642
 Image Enhancement
 图像增强
 
@@ -1262,11 +1282,11 @@ Imperfect Graphics
 Imperfect Sound
 不精确的声音
 
-# osd/winui/mame32.rc: 452, 461
+# osd/winui/mame32.rc: 405, 414
 Incorrect:
 错误:
 
-# osd/winui/mame32.rc: 959
+# osd/winui/mame32.rc: 920
 Inheritable Filters
 可继承的过滤器
 
@@ -1278,11 +1298,11 @@ Ini 文件
 Input Files (*.inp)
 输入指令文件 (*.inp)
 
-# mess/osd/winui/mess32.rc: 26 osd/winui/mame32.rc: 489
+# mess/osd/winui/mess32.rc: 26 osd/winui/mame32.rc: 442
 Insert
 插入
 
-# osd/winui/mame32.rc: 941
+# osd/winui/mame32.rc: 902
 Interface Options
 界面选项
 
@@ -1294,6 +1314,10 @@ Joy 16-Way
 Joy 2-Way
 2方向游戏杆
 
+# osd/winui/treeview.c: 1432
+Joy 2-Way (V)
+2方向游戏杆 (垂直)
+
 # osd/winui/treeview.c: 1429
 Joy 4-Way
 4方向游戏杆
@@ -1302,39 +1326,39 @@ Joy 4-Way
 Joy 8-Way
 8方向游戏杆
 
-# osd/winui/properties.c: 518
+# osd/winui/properties.c: 522
 Joystick
 游戏杆
 
-# osd/winui/properties.c: 954
+# osd/winui/properties.c: 958
 Joystick 16-Way
 16方向游戏杆
 
-# osd/winui/properties.c: 951
+# osd/winui/properties.c: 955
 Joystick 2-Way
 2方向游戏杆
 
-# osd/winui/properties.c: 955
+# osd/winui/properties.c: 959
 Joystick 2-Way Vertical
 垂直2方向游戏杆
 
-# osd/winui/properties.c: 952
+# osd/winui/properties.c: 956
 Joystick 4-Way
 4方向游戏杆
 
-# osd/winui/properties.c: 953
+# osd/winui/properties.c: 957
 Joystick 8-Way
 8方向游戏杆
 
-# osd/winui/mame32.rc: 745
+# osd/winui/mame32.rc: 702
 Joystick deadzone
 游戏杆反应死区
 
-# osd/winui/mame32.rc: 749
+# osd/winui/mame32.rc: 706
 Joystick saturation
 游戏杆饱和度
 
-# osd/winui/properties.c: 516
+# osd/winui/properties.c: 520
 Keyboard
 键盘
 
@@ -1342,19 +1366,19 @@ Keyboard
 L&arge Icons
 大图标(&A)
 
-# osd/winui/winuiopt.c: 3251
+# osd/winui/winuiopt.c: 3252
 LIST FONT OPTIONS
 列表字体选项
 
-# osd/winui/win32ui.c: 748 osd/winui/winuiopt.c: 456
+# osd/winui/win32ui.c: 748 osd/winui/winuiopt.c: 457
 Large Icons
 大图标
 
-# osd/winui/layout.c: 80 osd/winui/properties.c: 519, 965 osd/winui/treeview.c: 1442
+# osd/winui/layout.c: 80 osd/winui/properties.c: 523, 969 osd/winui/treeview.c: 1442
 Lightgun
 光枪
 
-# osd/winui/mame32.rc: 1070
+# osd/winui/mame32.rc: 1031
 Lightgun device
 光枪设备
 
@@ -1362,7 +1386,7 @@ Lightgun device
 Line &Up Icons
 贴齐图标(&U)
 
-# osd/winui/win32ui.c: 750 osd/winui/winuiopt.c: 458
+# osd/winui/win32ui.c: 750 osd/winui/winuiopt.c: 459
 List
 列表
 
@@ -1370,7 +1394,7 @@ List
 Loa&d Savestate...
 载入游戏进度(&D)
 
-# osd/winui/mame32.rc: 1607
+# osd/winui/mame32.rc: 1568
 Localize GUI and MAME core.
 本地化图形用户界面和 MAME 核心。
 
@@ -1378,7 +1402,7 @@ Localize GUI and MAME core.
 Localized Files
 本地化文件
 
-# osd/winui/mame32.rc: 811
+# osd/winui/mame32.rc: 772
 M68000 CPU Core
 M68000 CPU 核心
 
@@ -1386,7 +1410,7 @@ M68000 CPU 核心
 MAME input files (*.inp,*.zip)
 MAME 输入指令文件 (*.inp,*.zip)
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 MAME release notes
 MAME 版本说明
 
@@ -1398,11 +1422,11 @@ MAME 游戏进度文件 (*.sta)
 MAME32 PCB Info: %s [%s]
 MAME32 PCB 信息: %s [%s]
 
-# osd/winui/winuiopt.c: 511
+# osd/winui/winuiopt.c: 512
 MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
 MAME32 已更改 *.ini 文件的目录。\n\n您希望将旧的配置移植到新目录吗?
 
-# osd/winui/mame32.rc: 417
+# osd/winui/mame32.rc: 370
 MAME32 version by
 MAME32 版作者
 
@@ -1410,11 +1434,11 @@ MAME32 版作者
 MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
 MAME32 将重置所选的项目\n为安装时的初始设置并退出。\n\n
 
-# mess/osd/winui/devview.c: 378 mess/osd/winui/mess32.rc: 13, 33 osd/winui/mame32.rc: 408, 432, 443, 475, 495, 518, 557, 576, 627, 664, 720, 763, 824, 852, 879, 916, 941, 1005, 1033, 1048, 1107, 1151, 1207 osd/winui/translate.c: 103
+# mess/osd/winui/devview.c: 378 mess/osd/winui/mess32.rc: 13, 33 osd/winui/mame32.rc: 361, 385, 396, 428, 448, 471, 510, 529, 580, 617, 677, 720, 785, 813, 840, 877, 902, 966, 994, 1009, 1068, 1112, 1168 osd/winui/translate.c: 103
 MS Sans Serif
 宋体
 
-# osd/winui/mame32.rc: 525
+# osd/winui/mame32.rc: 478
 Manufactured:
 制造厂商:
 
@@ -1422,7 +1446,7 @@ Manufactured:
 Manufacturer
 制造厂商
 
-# osd/winui/dialogs.c: 257 osd/winui/winuiopt.c: 427
+# osd/winui/dialogs.c: 257 osd/winui/winuiopt.c: 428
 Marquee
 框头贴画
 
@@ -1434,7 +1458,7 @@ Marquees
 Memory Card
 记忆卡
 
-# osd/winui/mame32.rc: 763
+# osd/winui/mame32.rc: 720
 Miscellaneous
 杂项
 
@@ -1442,15 +1466,15 @@ Miscellaneous
 Missing Sound
 缺少声音
 
-# mess/osd/winui/layoutms.c: 60 osd/winui/properties.c: 517
+# mess/osd/winui/layoutms.c: 60 osd/winui/properties.c: 521
 Mouse
 鼠标
 
-# osd/winui/mame32.rc: 1076
+# osd/winui/mame32.rc: 1037
 Mouse device
 鼠标设备
 
-# osd/winui/mame32.rc: 511
+# osd/winui/mame32.rc: 464
 Move Down
 下移
 
@@ -1458,7 +1482,7 @@ Move Down
 Move Item
 移动项目
 
-# osd/winui/mame32.rc: 510
+# osd/winui/mame32.rc: 463
 Move Up
 上移
 
@@ -1470,11 +1494,11 @@ NVRAM
 Name
 名称
 
-# osd/winui/mame32.rc: 1166
+# osd/winui/mame32.rc: 1127
 Neogeo Decrypted
 Neogeo 解密
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 New game changes
 新游戏更改
 
@@ -1498,19 +1522,19 @@ No PCB Info available for this game.
 No Selection
 没有选定
 
-# osd/winui/mame32.rc: 961
+# osd/winui/mame32.rc: 922
 No offset for clones missing parent in view
 缺少原作的克隆版游戏在视图中不使用缩进
 
-# osd/winui/mame32.rc: 1171
+# osd/winui/mame32.rc: 1132
 Non-CPU
 无 CPU
 
-# osd/winui/mame32.rc: 888
+# osd/winui/mame32.rc: 849
 Non-Wor&king
 不可运行(&K)
 
-# osd/winui/dialogs.c: 265 osd/winui/properties.c: 520, 3442, 4587, 4814, 5078
+# osd/winui/dialogs.c: 265 osd/winui/properties.c: 524, 3458, 4632, 4859, 5123
 None
 无
 
@@ -1526,23 +1550,23 @@ Not Working
 Not found
 未找到
 
-# osd/winui/properties.c: 1032
+# osd/winui/properties.c: 1036
 Not working
 不可运行
 
-# osd/winui/mame32.rc: 1115
+# osd/winui/mame32.rc: 1076
 Number of screens to create
 模拟屏幕数
 
-# osd/winui/mame32.rc: 486, 512, 1042
+# osd/winui/mame32.rc: 439, 465, 1003
 OK
 确定
 
-# osd/winui/mame32.rc: 741
+# osd/winui/mame32.rc: 698
 Offscreen shots reload
 画面外装弹
 
-# osd/winui/mame32.rc: 897
+# osd/winui/mame32.rc: 858
 Ori&ginals
 原作游戏(&G)
 
@@ -1554,7 +1578,7 @@ Orientation
 Originals
 原作游戏
 
-# osd/winui/mame32.rc: 806
+# osd/winui/mame32.rc: 763
 Overlays
 前景图
 
@@ -1562,11 +1586,11 @@ Overlays
 P&layback Input...
 回放输入指令(&L)...
 
-# osd/winui/winuiopt.c: 3172
+# osd/winui/winuiopt.c: 3173
 PATH AND DIRECTORY OPTIONS
 路径和目录选项
 
-# osd/winui/mame32.rc: 1207
+# osd/winui/mame32.rc: 1168
 PCB Info
 PCB 信息
 
@@ -1574,15 +1598,15 @@ PCB 信息
 PCB Info Files
 PCB 信息文件
 
-# osd/winui/properties.c: 962 osd/winui/treeview.c: 1439
+# osd/winui/properties.c: 966 osd/winui/treeview.c: 1439
 Paddle
 操纵杆
 
-# osd/winui/mame32.rc: 1055
+# osd/winui/mame32.rc: 1016
 Paddle device
 操纵杆设备
 
-# osd/winui/mame32.rc: 1005
+# osd/winui/mame32.rc: 966
 Palette
 色盘
 
@@ -1590,35 +1614,35 @@ Palette
 Passed
 通过
 
-# osd/winui/mame32.rc: 598
+# osd/winui/mame32.rc: 551
 Pause Brightness
 暂停画面亮度
 
-# osd/winui/properties.c: 966 osd/winui/treeview.c: 1443
+# osd/winui/properties.c: 970 osd/winui/treeview.c: 1443
 Pedal
 踏板
 
-# osd/winui/mame32.rc: 1061
+# osd/winui/mame32.rc: 1022
 Pedal device
 踏板设备
 
-# osd/winui/mame32.rc: 1119
+# osd/winui/mame32.rc: 1080
 Per-screen video options
 单个屏幕视频选项 
 
-# osd/winui/mame32.rc: 1123
+# osd/winui/mame32.rc: 1084
 Physical monitor:
 物理显示器:
 
-# osd/winui/properties.c: 505
+# osd/winui/properties.c: 509
 Pixel Aspect
 像素比例
 
-# osd/winui/win32ui.c: 914 osd/winui/winuiopt.c: 3334
+# osd/winui/win32ui.c: 914 osd/winui/winuiopt.c: 3335
 Play Time
 游戏时间
 
-# osd/winui/mame32.rc: 1516
+# osd/winui/mame32.rc: 1477
 Play a game starting with the given savestate
 从指定的进度开始运行游戏
 
@@ -1634,11 +1658,11 @@ Play and Record &MNG Video...
 Play and Record &WAV Sound...
 运行并录制 Wav 音频(&W)...
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Play currently selected game
 运行当前所选的游戏
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Playback a recorded game
 播放已录制的游戏
 
@@ -1678,7 +1702,7 @@ Players 7
 Players 8
 玩家数 8
 
-# osd/winui/mame32.rc: 1073
+# osd/winui/mame32.rc: 1034
 Positional device
 定位设备
 
@@ -1702,11 +1726,11 @@ Properties &for %s BIOS
 Properties &for BIOS
 BIOS属性
 
-# osd/winui/properties.c: 702, 793
+# osd/winui/properties.c: 706, 797
 Propery Sheet Error %d %X
 属性表单错误 %d %X
 
-# osd/winui/mame32.rc: 783
+# osd/winui/mame32.rc: 740
 Quit game with confirmation
 退出游戏前确认
 
@@ -1714,23 +1738,23 @@ Quit game with confirmation
 R&emove From This Folder
 从这个文件夹移除(&E)
 
-# osd/winui/mame32.rc: 1011
+# osd/winui/mame32.rc: 972
 RGB setting:
 RGB 设置:
 
-# osd/winui/mame32.rc: 564
+# osd/winui/mame32.rc: 517
 ROM check:
 ROM 检查:
 
-# mess/osd/winui/layoutms.c: 85 osd/winui/layout.c: 108 osd/winui/mame32.rc: 451 osd/winui/win32ui.c: 904
+# mess/osd/winui/layoutms.c: 85 osd/winui/layout.c: 108 osd/winui/mame32.rc: 404 osd/winui/win32ui.c: 904
 ROMs
 ROMs
 
-# osd/winui/properties.c: 1082
+# osd/winui/properties.c: 1086
 ROMs missing
 缺少 ROM
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Randomly select a game.
 随机选定游戏
 
@@ -1742,23 +1766,23 @@ Raster
 Ready
 就绪
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Record a game for later playback
 录制游戏供以后播放
 
-# osd/winui/mame32.rc: 1475, 1565
+# osd/winui/mame32.rc: 1436, 1526
 Refresh game list
 刷新游戏列表
 
-# osd/winui/winuiopt.c: 1622
+# osd/winui/winuiopt.c: 1623
 Reload configurations
 重新载入配置
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Remove currently selected game from this folder
 从这个文件夹移除当前所选的游戏
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Rename currently selected folder
 重命名当前所选的文件夹
 
@@ -1766,11 +1790,11 @@ Rename currently selected folder
 Rese&t Playcount
 重设游戏次数(&T)
 
-# osd/winui/mame32.rc: 620, 657, 713, 756, 817, 843, 1100, 1144, 1199
+# osd/winui/mame32.rc: 573, 610, 670, 713, 778, 804, 1061, 1105, 1160
 Reset
 重设
 
-# osd/winui/mame32.rc: 916
+# osd/winui/mame32.rc: 877
 Reset Options
 重设选项
 
@@ -1778,19 +1802,19 @@ Reset Options
 Reset Pla&y Time
 重设游戏时间(&Y)
 
-# osd/winui/mame32.rc: 981
+# osd/winui/mame32.rc: 942
 Reset all Play Times
 重设所有游戏时间
 
-# osd/winui/mame32.rc: 979
+# osd/winui/mame32.rc: 940
 Reset all Playcounts
 重设所有游戏次数
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Reset play time of currently selected game
 重设当前所选游戏时间
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Reset playcount of currently selected game
 重设当前所选游戏的游戏次数
 
@@ -1798,11 +1822,11 @@ Reset playcount of currently selected game
 Resolution
 分辨率
 
-# osd/winui/mame32.rc: 1134
+# osd/winui/mame32.rc: 1095
 Resolution:
 分辨率:
 
-# osd/winui/mame32.rc: 621, 658, 714, 757, 818, 844, 1101, 1145, 1200
+# osd/winui/mame32.rc: 574, 611, 671, 714, 779, 805, 1062, 1106, 1161
 Restore Default Settings
 还原默认设置
 
@@ -1810,11 +1834,11 @@ Restore Default Settings
 Restore Settings
 还原设置
 
-# osd/winui/mame32.rc: 591
+# osd/winui/mame32.rc: 544
 Rotation
 旋转
 
-# osd/winui/mame32.rc: 583
+# osd/winui/mame32.rc: 536
 Run in a window
 在窗口中运行
 
@@ -1826,19 +1850,19 @@ S&how Pictures
 S&mall Icons
 小图标(&M)
 
-# osd/winui/mame32.rc: 984
+# osd/winui/mame32.rc: 945
 S&tretch screenshot larger than natural size
 拉伸显示屏幕快照(&T)
 
-# osd/winui/mame32.rc: 566
+# osd/winui/mame32.rc: 519
 Sample check:
 采样文件检查:
 
-# osd/winui/mame32.rc: 644
+# osd/winui/mame32.rc: 597
 Sample rate
 采样率
 
-# osd/winui/layout.c: 84, 109 osd/winui/mame32.rc: 457 osd/winui/win32ui.c: 905
+# osd/winui/layout.c: 84, 109 osd/winui/mame32.rc: 410 osd/winui/win32ui.c: 905
 Samples
 采样文件
 
@@ -1846,27 +1870,27 @@ Samples
 Save State
 支持存盘
 
-# osd/winui/mame32.rc: 547
+# osd/winui/mame32.rc: 500
 Save State:
 支持存盘:
 
-# osd/winui/mame32.rc: 1508
+# osd/winui/mame32.rc: 1469
 Save game list in specified lst file
 将游戏列表保存到指定的 lst 文件
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Save sound in wav file
 将音频保存到 Wav 文件
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Save video in specified mng file
 将视频保存到指定的 mng 文件
 
-# osd/winui/mame32.rc: 697
+# osd/winui/mame32.rc: 654
 Scale screen
 缩放屏幕
 
-# osd/winui/mame32.rc: 1107
+# osd/winui/mame32.rc: 1068
 Screen
 屏幕
 
@@ -1874,27 +1898,27 @@ Screen
 Screen flip support is missing
 不支持画面翻转
 
-# osd/winui/properties.c: 1073
+# osd/winui/properties.c: 1077
 Screen flipping is not supported
 不支持画面翻转
 
-# osd/winui/mame32.rc: 1114
+# osd/winui/mame32.rc: 1075
 Screen setting
 屏幕设置
 
-# osd/winui/mame32.rc: 538
+# osd/winui/mame32.rc: 491
 Screen:
 屏幕:
 
-# osd/winui/mame32.rc: 983
+# osd/winui/mame32.rc: 944
 Screenshot Area
 屏幕快照区
 
-# osd/winui/mame32.rc: 991
+# osd/winui/mame32.rc: 952
 Screenshot Bordersize
 屏幕快照边框大小
 
-# osd/winui/mame32.rc: 987
+# osd/winui/mame32.rc: 948
 Screenshot Cycletime in Seconds
 屏幕快照循环秒数
 
@@ -1902,11 +1926,11 @@ Screenshot Cycletime in Seconds
 Screenshot Ta&b\tAlt+B
 屏幕快照选项卡(&B)\tAlt+B
 
-# osd/winui/properties.c: 491
+# osd/winui/properties.c: 495
 Second screen
 第二个屏幕
 
-# osd/winui/mame32.rc: 953
+# osd/winui/mame32.rc: 914
 Select &random background image on start
 启动时随机选定背景图片(&R)
 
@@ -1918,7 +1942,7 @@ Select Item
 Select a Background Image
 选定一个背景图片
 
-# osd/winui/mame32.rc: 1508
+# osd/winui/mame32.rc: 1469
 Select a background image file
 选定一个背景图片文件
 
@@ -1946,79 +1970,79 @@ Select a savestate file
 Select a sound file to record
 选定一个要录制的声音文件
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Select fullscreen or window mode in GUI
 选定全屏幕或窗口模式的图形用户界面
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the cabinet image
 选定机台图片
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the control panel image
 选定控制面板图片
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the flyer image
 选定广告图片
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the history information
 选定游戏历史信息
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the marquee image
 选定框头贴画
 
-# osd/winui/mame32.rc: 932
+# osd/winui/mame32.rc: 893
 Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
 请选定要还原为默认设置的选项。\n选项将在 MAME32 下一次运行时生效。
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the screen shot image
 选定屏幕快照图片
 
-# osd/winui/mame32.rc: 1601
+# osd/winui/mame32.rc: 1562
 Select the story information
 选定游戏故事信息
 
-# osd/winui/mame32.rc: 1593
+# osd/winui/mame32.rc: 1554
 Select the title image
 选定标题图片
 
-# osd/winui/mame32.rc: 974
+# osd/winui/mame32.rc: 935
 Set Game List Not Working Color
 设置不可运行游戏列表的颜色
 
-# osd/winui/mame32.rc: 995
+# osd/winui/mame32.rc: 956
 Set Screenshot Border Color
 设置屏幕快照边框颜色
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Set default game options
 设置默认游戏选项
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Set directory configuration
 设置目录配置
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Set game list and folder list font
 设置游戏列表和文件夹列表的字体
 
-# osd/winui/mame32.rc: 1506
+# osd/winui/mame32.rc: 1467
 Set in-game UI color palette
 设置游戏中菜单界面的色盘
 
-# osd/winui/mame32.rc: 1493
+# osd/winui/mame32.rc: 1454
 Set list font color for clone games
 设置克隆版游戏列表的字体颜色
 
-# osd/winui/mame32.rc: 976
+# osd/winui/mame32.rc: 937
 Show Game Ca&ption
 显示游戏窗口标题(&P)
 
-# osd/winui/mame32.rc: 996
+# osd/winui/mame32.rc: 957
 Show History on Tab
 在选项卡上显示游戏历史
 
@@ -2026,135 +2050,135 @@ Show History on Tab
 Show Tab &Control
 显示选项卡控件(&C)
 
-# osd/winui/mame32.rc: 478
+# osd/winui/mame32.rc: 431
 Show directories for:
 显示目录:
 
-# osd/winui/mame32.rc: 1555
+# osd/winui/mame32.rc: 1516
 Show game PCB information
 显示 PCB 信息
 
-# osd/winui/mame32.rc: 1557
+# osd/winui/mame32.rc: 1518
 Show or hide folder
 显示或隐藏文件夹
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the cabinet image
 显示或隐藏机台图片
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the control panel image
 显示或隐藏控制面板图片
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the flyer image
 显示或隐藏广告图片
 
-# osd/winui/mame32.rc: 1475, 1539
+# osd/winui/mame32.rc: 1436, 1500
 Show or hide the folder list
 显示或隐藏文件夹列表
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the history information
 显示或隐藏游戏历史信息
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the marquee image
 显示或隐藏框头贴画
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Show or hide the picture area
 显示或隐藏图片区域
 
-# osd/winui/mame32.rc: 1539, 1607
+# osd/winui/mame32.rc: 1500, 1568
 Show or hide the pictures
 显示或隐藏图片
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the screen shot image
 显示或隐藏屏幕快照图片
 
-# osd/winui/mame32.rc: 1539
+# osd/winui/mame32.rc: 1500
 Show or hide the screen shot tab
 显示或隐藏屏幕快照选项卡
 
-# osd/winui/mame32.rc: 1475, 1539
+# osd/winui/mame32.rc: 1436, 1500
 Show or hide the status bar
 显示或隐藏状态栏
 
-# osd/winui/mame32.rc: 1587
+# osd/winui/mame32.rc: 1548
 Show or hide the story information
 显示或隐藏游戏故事信息
 
-# osd/winui/mame32.rc: 1579
+# osd/winui/mame32.rc: 1540
 Show or hide the title image
 显示或隐藏标题图片
 
-# osd/winui/mame32.rc: 1475, 1539
+# osd/winui/mame32.rc: 1436, 1500
 Show or hide the toolbar
 显示或隐藏工具栏
 
-# osd/winui/mame32.rc: 1008
+# osd/winui/mame32.rc: 969
 Show palette for:
 显示以下色盘:
 
-# osd/winui/mame32.rc: 505
+# osd/winui/mame32.rc: 458
 Show these fields in this order:
 按以下顺序显示栏目:
 
-# osd/winui/properties.c: 4564
+# osd/winui/properties.c: 4609
 Skip 1 of 10 frames
 跳帧 1/10
 
-# osd/winui/properties.c: 4573
+# osd/winui/properties.c: 4618
 Skip 10 of 10 frames
 跳帧 10/10
 
-# osd/winui/properties.c: 4565
+# osd/winui/properties.c: 4610
 Skip 2 of 10 frames
 跳帧 2/10
 
-# osd/winui/properties.c: 4566
+# osd/winui/properties.c: 4611
 Skip 3 of 10 frames
 跳帧 3/10
 
-# osd/winui/properties.c: 4567
+# osd/winui/properties.c: 4612
 Skip 4 of 10 frames
 跳帧 4/10
 
-# osd/winui/properties.c: 4568
+# osd/winui/properties.c: 4613
 Skip 5 of 10 frames
 跳帧 5/10
 
-# osd/winui/properties.c: 4569
+# osd/winui/properties.c: 4614
 Skip 6 of 10 frames
 跳帧 6/10
 
-# osd/winui/properties.c: 4570
+# osd/winui/properties.c: 4615
 Skip 7 of 10 frames
 跳帧 7/10
 
-# osd/winui/properties.c: 4571
+# osd/winui/properties.c: 4616
 Skip 8 of 10 frames
 跳帧 8/10
 
-# osd/winui/properties.c: 4572
+# osd/winui/properties.c: 4617
 Skip 9 of 10 frames
 跳帧 9/10
 
-# osd/winui/mame32.rc: 776
+# osd/winui/mame32.rc: 733
 Skip game info
 跳过游戏信息画面
 
-# osd/winui/mame32.rc: 774
+# osd/winui/mame32.rc: 731
 Sleep when possible
 空闲时休眠
 
-# osd/winui/win32ui.c: 749 osd/winui/winuiopt.c: 457
+# osd/winui/win32ui.c: 749 osd/winui/winuiopt.c: 458
 Small Icons
 小图标
 
-# osd/winui/dialogs.c: 251 osd/winui/winuiopt.c: 424
+# osd/winui/dialogs.c: 251 osd/winui/winuiopt.c: 425
 Snapshot
 屏幕快照
 
@@ -2170,47 +2194,47 @@ Sort &Ascending
 Sort &Descending
 降序排序(&D)
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort by number of plays
 按游戏次数排序项目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort column in ascending (A-Z) order
 按升序(A-Z)排序栏目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort column in descending (Z-A) order
 按降序(Z-A)排序栏目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort items by game description
 按游戏标题排序项目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort items by manufacturer
 按制造商排序项目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort items by name
 按游戏名排序项目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort items by type
 按类型排序项目
 
-# osd/winui/mame32.rc: 1565
+# osd/winui/mame32.rc: 1526
 Sort items by year
 按年代排序项目
 
-# mess/osd/winui/layoutms.c: 51 osd/winui/layout.c: 63 osd/winui/mame32.rc: 627
+# mess/osd/winui/layoutms.c: 51 osd/winui/layout.c: 63 osd/winui/mame32.rc: 580
 Sound
 声音芯片
 
-# osd/winui/properties.c: 1068
+# osd/winui/properties.c: 1072
 Sound emulation isn't 100% accurate
 声音模拟不是100%精确
 
-# osd/winui/mame32.rc: 534
+# osd/winui/mame32.rc: 487
 Sound:
 声音芯片:
 
@@ -2222,11 +2246,11 @@ Sounds (*.wav)
 St&ory
 游戏故事(&O)
 
-# osd/winui/properties.c: 504, 3256, 3261, 3264, 3492, 3495, 4766, 4788
+# osd/winui/properties.c: 508, 3272, 3277, 3280, 3509, 3512, 4811, 4833
 Standard
 标准
 
-# osd/winui/mame32.rc: 585
+# osd/winui/mame32.rc: 538
 Start out maximized
 启动时最大化
 
@@ -2234,7 +2258,7 @@ Start out maximized
 State
 游戏进度
 
-# osd/winui/mame32.rc: 527
+# osd/winui/mame32.rc: 480
 Status:
 状态:
 
@@ -2242,23 +2266,19 @@ Status:
 Stereo
 立体声
 
-# osd/winui/winuiopt.c: 432
+# osd/winui/winuiopt.c: 433
 Story
 游戏故事
 
-# osd/winui/mame32.rc: 680
-Hardware stretching
-使用硬件拉伸
-
-# osd/winui/properties.c: 1155 osd/winui/treeview.c: 1391
+# osd/winui/properties.c: 1159 osd/winui/treeview.c: 1391
 Supported
 已支持
 
-# osd/winui/mame32.rc: 695
+# osd/winui/mame32.rc: 652
 Switch resolutions to fit
 切换到最适的分辨率
 
-# osd/winui/mame32.rc: 691
+# osd/winui/mame32.rc: 648
 Sync to monitor refresh
 同步显示器刷新率
 
@@ -2286,19 +2306,19 @@ There is no application associated with the given filename extension.
 There was not enough memory to complete the operation.
 没有足够的内存完成操作。
 
-# osd/winui/properties.c: 492
+# osd/winui/properties.c: 496
 Third screen
 第三个屏幕
 
-# osd/winui/mame32.rc: 797
+# osd/winui/mame32.rc: 767
 Thread priority
 线程优先级
 
-# osd/winui/mame32.rc: 589
+# osd/winui/mame32.rc: 542
 Throttle
 限制速度
 
-# osd/winui/dialogs.c: 259 osd/winui/winuiopt.c: 428
+# osd/winui/dialogs.c: 259 osd/winui/winuiopt.c: 429
 Title
 游戏标题
 
@@ -2314,75 +2334,75 @@ Toggle Folder List
 Toggle Screen Shot
 切换屏幕快照
 
-# osd/winui/mame32.rc: 453, 462
+# osd/winui/mame32.rc: 406, 415
 Total:
 合计:
 
-# mess/osd/winui/layoutms.c: 61 osd/winui/layout.c: 79 osd/winui/properties.c: 964 osd/winui/treeview.c: 1441 osd/winui/win32ui.c: 908
+# mess/osd/winui/layoutms.c: 61 osd/winui/layout.c: 79 osd/winui/properties.c: 968 osd/winui/treeview.c: 1441 osd/winui/win32ui.c: 908
 Trackball
 轨迹球
 
-# osd/winui/mame32.rc: 1067
+# osd/winui/mame32.rc: 1028
 Trackball device
 轨迹球设备
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Catalan
 翻译成加泰罗尼亚语
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into English (US)
 英文翻译(美国)
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into French
 法文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into German
 德文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Hungarian
 匈牙利文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Italian
 意大利文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Japanese
 日文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Korean
 韩文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Polish
 波兰文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Portuguese (BRA)
 (巴西)葡萄牙文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Portuguese (PT)
 翻译成葡萄牙语
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Simplified Chinese
 简体中文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Spanish
 西班牙文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Traditional Chinese
 繁体中文翻译
 
-# osd/winui/mame32.rc: 1613
+# osd/winui/mame32.rc: 1574
 Translate into Valencian
 翻译成瓦伦西亚语
 
@@ -2390,15 +2410,15 @@ Translate into Valencian
 Translation Files
 翻译文件
 
-# osd/winui/mame32.rc: 791
+# osd/winui/mame32.rc: 752
 Transparent in-game UI
 游戏菜单透明度
 
-# osd/winui/mame32.rc: 693
+# osd/winui/mame32.rc: 650
 Triple buffering
 三重缓冲
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 Troubleshooting Documentation
 疑难解答文档
 
@@ -2426,7 +2446,7 @@ Unavailable
 Unemulated Protection
 未模拟的保护
 
-# osd/winui/audit32.c: 531 osd/winui/properties.c: 980, 1026 
+# osd/winui/audit32.c: 531 osd/winui/properties.c: 984, 1030 
 Unknown
 未知
 
@@ -2434,7 +2454,7 @@ Unknown
 Unknown error.
 未知错误。
 
-# osd/winui/properties.c: 1157 osd/winui/treeview.c: 1393
+# osd/winui/properties.c: 1161 osd/winui/treeview.c: 1393
 Unsupported
 未支持
 
@@ -2442,23 +2462,27 @@ Unsupported
 Use Local Language Game List
 使用中文游戏列表
 
-# osd/winui/mame32.rc: 968
+# osd/winui/mame32.rc: 747
+Use New UI
+使用新菜单条
+
+# osd/winui/mame32.rc: 929
 Use TreeView in property pages
 在属性页面使用树状视图
 
-# osd/winui/mame32.rc: 638
+# osd/winui/mame32.rc: 591
 Use samples
 使用采样文件
 
-# osd/winui/mame32.rc: 972
+# osd/winui/mame32.rc: 933
 Use various icon for Not Working game
 使用不同的图表显示不可运行的游戏
 
-# osd/winui/mame32.rc: 641
+# osd/winui/mame32.rc: 594
 Use volume auto adjust
 使用音量自动调整
 
-# mess/osd/winui/layoutms.c: 59 osd/winui/layout.c: 72 osd/winui/mame32.rc: 824 osd/winui/properties.c: 747 osd/winui/treeview.c: 306 osd/winui/win32ui.c: 5818 osd/winui/winuiopt.c: 864, 2822
+# mess/osd/winui/layoutms.c: 59 osd/winui/layout.c: 72 osd/winui/mame32.rc: 785 osd/winui/properties.c: 751 osd/winui/treeview.c: 306 osd/winui/win32ui.c: 5818 osd/winui/winuiopt.c: 865, 2823
 Vector
 矢量画面
 
@@ -2466,7 +2490,7 @@ Vector
 Vector (H)
 矢量 (水平)
 
-# osd/winui/properties.c: 905
+# osd/winui/properties.c: 909
 Vector (H) %f Hz (%d colors)
 矢量 (水平) %f Hz (%d 色)
 
@@ -2474,7 +2498,7 @@ Vector (H) %f Hz (%d colors)
 Vector (V)
 矢量 (垂直)
 
-# osd/winui/properties.c: 900
+# osd/winui/properties.c: 904
 Vector (V) %f Hz (%d colors)
 矢量 (垂直) %f Hz (%d 色)
 
@@ -2482,11 +2506,11 @@ Vector (V) %f Hz (%d colors)
 Vertical
 垂直
 
-# osd/winui/properties.c: 1058
+# osd/winui/properties.c: 1062
 Video emulation isn't 100% accurate
 视频模拟不是100%精确
 
-# osd/winui/mame32.rc: 671
+# osd/winui/mame32.rc: 624
 Video output method
 视频输出方式
 
@@ -2498,27 +2522,27 @@ Videos (*.mng)
 View PC&B Info
 查看电路板信息(&B)
 
-# osd/winui/mame32.rc: 1141
+# osd/winui/mame32.rc: 1102
 View:
 视图:
 
-# osd/winui/mame32.rc: 682
+# osd/winui/mame32.rc: 639
 Visual Effects
 视觉效果
 
-# osd/winui/mame32.rc: 648
+# osd/winui/mame32.rc: 601
 Volume attenuation
 音量衰减
 
-# osd/winui/winuiopt.c: 3230
+# osd/winui/winuiopt.c: 3231
 WINDOW POSITION OPTIONS
 窗口位置选项
 
-# osd/winui/mame32.rc: 689
+# osd/winui/mame32.rc: 646
 Wait for vertical sync
 等待垂直同步
 
-# osd/winui/mame32.rc: 1521
+# osd/winui/mame32.rc: 1482
 What's new in MAME
 MAME 更新点
 
@@ -2526,7 +2550,7 @@ MAME 更新点
 Window background
 窗口背景
 
-# mess/osd/winui/layoutms.c: 54 osd/winui/layout.c: 67 osd/winui/properties.c: 1034
+# mess/osd/winui/layoutms.c: 54 osd/winui/layout.c: 67 osd/winui/properties.c: 1038
 Working
 可以运行
 
@@ -2542,7 +2566,7 @@ Year
 Yes
 是
 
-# osd/winui/mame32.rc: 425
+# osd/winui/mame32.rc: 378
 and John Hardy IV
 和 John Hardy IV
 
@@ -2574,31 +2598,19 @@ by Times &Played
 type a keyword
 键入关键字
 
-# osd/winui/mame32.rc: 426
+# osd/winui/mame32.rc: 379
                                 
 
 
-# osd/winui/layout.c: 60, 87 osd/winui/mame32.rc: 814
+# osd/winui/layout.c: 60, 87 osd/winui/mame32.rc: 775
 BIOS
 
 
-# osd/winui/mame32.rc: 328, 421
+# osd/winui/mame32.rc: 374
 Christopher Kirmse and Michael Soderstrom
 
 
-# osd/winui/treeview.c: 1437
-Double Joy 2-Way (V)
-
-
-# osd/winui/mame32.rc: 732
-Enable multiple mice
-
-
-# osd/winui/treeview.c: 1432
-Joy 2-Way (V)
-
-
-# osd/winui/winuiopt.c: 3237
+# osd/winui/winuiopt.c: 3238
 LISTVIEW OPTIONS
 
 
