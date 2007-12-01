@@ -14,91 +14,87 @@
 %s State.sta
 %s ステート.sta
 
-# mess/osd/windows/mess.rc: 106
+# mess/osd/windows/mess.rc: 102
 &About MESS...
 MESSについて...(&A)
 
-# mess/osd/windows/mess.rc: 61
+# mess/osd/windows/mess.rc: 57
 &Analog Controls...
 アナログコントローラ...(&A)
 
-# mess/osd/windows/mess.rc: 98
+# mess/osd/windows/mess.rc: 94
 &Configuration...
 設定...(&C)
 
-# mess/osd/windows/menu.c: 1138
+# mess/osd/windows/menu.c: 1221
 &Configure...
 設定...(&C)
 
-# mess/osd/windows/mess.rc: 99
+# mess/osd/windows/mess.rc: 95
 &DIP Switches...
 DIPスイッチ...(&D)
 
-# mess/osd/windows/mess.rc: 101
+# mess/osd/windows/mess.rc: 97
 &Debugger...
 デバッガ...(&D)
 
-# mess/osd/windows/menu.c: 1341 mess/osd/windows/mess.rc: 32
-&Devices
-デバイス(&D)
-
-# mess/osd/windows/mess.rc: 42 
+# mess/osd/windows/mess.rc: 38 
 &Exit
 終了(&E)
 
-# mess/osd/windows/menu.c: 1341 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1424 mess/osd/windows/mess.rc: 30 
 &File
 ファイル(&F)
 
-# mess/osd/windows/menu.c: 1962 mess/osd/windows/mess.rc: 74
+# mess/osd/windows/menu.c: 2063 mess/osd/windows/mess.rc: 70
 &Frameskip
 フレームスキップ(&F)
 
-# mess/osd/windows/mess.rc: 90
+# mess/osd/windows/mess.rc: 86
 &Full Screen\tAlt+Enter
 フルスクリーン(&F)\tAlt+Enter
 
-# mess/osd/windows/mess.rc: 103 
+# mess/osd/windows/mess.rc: 99 
 &Help
 ヘルプ(&H)
 
-# mess/osd/windows/mess.rc: 89
+# mess/osd/windows/mess.rc: 85
 &Hide Menubar\tTab
 メニューバーを隠す(&H)\tTab
 
-# mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 50
+# mess/osd/windows/menu.c: 1196 mess/osd/windows/mess.rc: 46
 &Input
 入力(&I)
 
-# mess/osd/windows/menu.c: 1113 mess/osd/windows/mess.rc: 59
+# mess/osd/windows/menu.c: 1196 mess/osd/windows/mess.rc: 55
 &Joysticks
 ジョイスティック(&J)
 
-# mess/osd/windows/mess.rc: 52
+# mess/osd/windows/mess.rc: 48
 &Keyboard
 キーボード(&K)
 
-# mess/osd/windows/mess.rc: 36
+# mess/osd/windows/mess.rc: 32
 &Load State...
 ステートを読み込む...(&L)
 
-# mess/osd/windows/mess.rc: 60
+# mess/osd/windows/mess.rc: 56
 &Miscellaneous Inputs...
 その他の入力...(&M)
 
-# mess/osd/windows/mess.rc: 92 
+# mess/osd/windows/mess.rc: 88 
 &Options
 オプション(&O)
 
-# mess/osd/windows/mess.rc: 94 
+# mess/osd/windows/mess.rc: 90 
 &Pause
 中断(&P)
 
-# mess/osd/windows/mess.rc: 37
+# mess/osd/windows/mess.rc: 33
 &Save State
 ステートを保存(&S)
 
-# mess/osd/windows/menu.c: 1320, 1320, 1962 mess/osd/windows/mess.rc: 63, 65
+# mess/osd/windows/menu.c: 1403, 1403, 2063 mess/osd/windows/mess.rc: 59, 61
 &Video
 ビデオ(&V)
 
@@ -110,15 +106,15 @@ DIPスイッチ...(&D)
 (primary)
 (プライマリ)
 
-# mess/osd/windows/menu.c: 1972
+# mess/osd/windows/menu.c: 2073
 About %s (%s)...
 %s (%s)について...
 
-# mess/osd/windows/mess.rc: 105
+# mess/osd/windows/mess.rc: 101
 About This System...
 このシステムについて...
 
-# mess/osd/windows/menu.c: 803
+# mess/osd/windows/menu.c: 820
 All files (*.*)|*.*|
 全てのファイル (*.*)|*.*|
 
@@ -130,7 +126,7 @@ Apply
 Assign joystick %s to player %d\n
 ジョイスティック%sをプレイヤー%dに割り当てます\n
 
-# mess/osd/windows/mess.rc: 76 
+# mess/osd/windows/mess.rc: 72 
 Auto
 自動
 
@@ -138,15 +134,15 @@ Auto
 Cancel
 キャンセル
 
-# mess/osd/windows/menu.c: 800 
+# mess/osd/windows/menu.c: 811 
 Common image types
 共通イメージタイプ
 
-# mess/osd/windows/menu.c: 807
+# mess/osd/windows/menu.c: 824
 Compressed Images (*.zip)|*.zip|
 圧縮イメージ (*.zip)|*.zip|
 
-# mess/osd/windows/mess.rc: 57
+# mess/osd/windows/mess.rc: 53
 Customize Emulated Keyboard...
 キーボードエミュレーションを設定...
 
@@ -158,111 +154,111 @@ Direct3D固有オプション
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
-# osd/windows/drawd3d.c: 1129
+# osd/windows/drawd3d.c: 1155
 Device %s currently in an unsupported mode\n
 デバイス「%s」は現在サポートされていないモードです\n
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1125
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: アダプタ#%dを%sに設定しています\n
 
-# osd/windows/drawd3d.c: 724
+# osd/windows/drawd3d.c: 750
 Direct3D: Device created at %dx%d\n
 Direct3D: デバイスを%dx%dで作成しました\n
 
-# osd/windows/drawd3d.c: 594, 2311
+# osd/windows/drawd3d.c: 620, 2337
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1589, 2360
+# osd/windows/drawd3d.c: 1615, 2386
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 623, 2364
+# osd/windows/drawd3d.c: 649, 2390
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2304
+# osd/windows/drawd3d.c: 2330
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 629
+# osd/windows/drawd3d.c: 655
 Direct3D: Error %08X during device present call\n
 Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 333, 340, 347, 354
+# osd/windows/drawd3d.c: 359, 366, 373, 380
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2306, 2368
+# osd/windows/drawd3d.c: 2332, 2394
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1561, 2358
+# osd/windows/drawd3d.c: 1587, 2384
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 265, 2317
+# osd/windows/drawd3d.c: 291, 2343
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 277, 279, 291, 293, 305
+# osd/windows/drawd3d.c: 303, 305, 317, 319, 331
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2292
+# osd/windows/drawd3d.c: 2318
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 895, 897, 899, 901, 905, 919, 933, 947, 973, 997, 1011, 1024, 1031
+# osd/windows/drawd3d.c: 921, 923, 925, 927, 931, 945, 959, 973, 999, 1023, 1037, 1050, 1057
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2271
+# osd/windows/drawd3d.c: 2297
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2247
+# osd/windows/drawd3d.c: 2273
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2321
+# osd/windows/drawd3d.c: 2347
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1556, 2353
+# osd/windows/drawd3d.c: 1582, 2379
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 960
+# osd/windows/drawd3d.c: 986
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: エラー: デバイスは反転したソ\ースアルファとのアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 955
+# osd/windows/drawd3d.c: 981
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: エラー: デバイスはアルファブレンド係数1をサポートしていません\n
 
-# osd/windows/drawd3d.c: 950
+# osd/windows/drawd3d.c: 976
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: エラー: デバイスはアルファブレンド係数0をサポートしていません\n
 
-# osd/windows/drawd3d.c: 908
+# osd/windows/drawd3d.c: 934
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: エラー: デバイスは垂直同期を待たないプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 913
+# osd/windows/drawd3d.c: 939
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: エラー: デバイスは垂直同期を待つプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 941
+# osd/windows/drawd3d.c: 967
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: エラー: デバイスは色指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 936
+# osd/windows/drawd3d.c: 962
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: エラー: デバイスはソ\ースアルファで指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 967
+# osd/windows/drawd3d.c: 993
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: エラー: デバイスはテクスチャのアルファをサポートしていません\n
 
@@ -274,11 +270,11 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1279
+# osd/windows/drawd3d.c: 1305
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1223
+# osd/windows/drawd3d.c: 1249
 Direct3D: Selecting video mode...\n
 Direct3D: 描画モードを選択中です...\n
 
@@ -306,67 +302,67 @@ Direct3D: Direct3D 8を使用しています\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9を使用しています\n
 
-# osd/windows/drawd3d.c: 1033
+# osd/windows/drawd3d.c: 1059
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: プリスケールにStretchRectを使用しています\n
 
-# osd/windows/drawd3d.c: 1027
+# osd/windows/drawd3d.c: 1053
 Direct3D: Using dynamic textures\n
 Direct3D: ダイナミックテクスチャを使用しています\n
 
-# osd/windows/drawd3d.c: 981
+# osd/windows/drawd3d.c: 1007
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 991
+# osd/windows/drawd3d.c: 1017
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 927
+# osd/windows/drawd3d.c: 953
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告: デバイスはハードウェアによるラスタライズをサポートしていません\n
 
-# osd/windows/drawd3d.c: 976
+# osd/windows/drawd3d.c: 1002
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 986
+# osd/windows/drawd3d.c: 1012
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 922
+# osd/windows/drawd3d.c: 948
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告: デバイスはページフリップ後の描画コマンドキューをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1000
+# osd/windows/drawd3d.c: 1026
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告: デバイスはテクスチャのアドレス固定をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1014
+# osd/windows/drawd3d.c: 1040
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告: デバイスはテクスチャの乗算をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1005
+# osd/windows/drawd3d.c: 1031
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告: デバイスはテクスチャのテクスチャの貼\り付けをサポートしていません\n
 
-# osd/windows/drawd3d.c: 740
+# osd/windows/drawd3d.c: 766
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
 
-# osd/windows/drawd3d.c: 677
+# osd/windows/drawd3d.c: 703
 Direct3D: YUV format = %s\n
 Direct3D: YUV 形式 = %s\n
 
-# osd/windows/drawd3d.c: 1660
+# osd/windows/drawd3d.c: 1686
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
 
-# osd/windows/drawd3d.c: 1069
+# osd/windows/drawd3d.c: 1095
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: デバイスのリソ\ース再生成が失敗しました。
 
-# osd/windows/drawd3d.c: 1056
+# osd/windows/drawd3d.c: 1082
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
@@ -530,7 +526,7 @@ DirectInput: DirectInput %dを使用します\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
-# mess/osd/windows/mess.rc: 54
+# mess/osd/windows/mess.rc: 50
 Emulated
 エミュレート
 
@@ -550,11 +546,11 @@ DirectSoundの作成が出来ません: %08x\n
 Error creating primary DirectSound buffer: %08x\n
 DirectSoundのプライマリバッファを生成出来ません: %08x\n
 
-# osd/windows/window.c: 641
+# osd/windows/window.c: 644
 Error creating render target for window %d
 ウインドウ%dの描画対象の生成でエラーが発生しました
 
-# osd/windows/drawd3d.c: 774
+# osd/windows/drawd3d.c: 800
 Error creating vertex buffer (%08X)
 頂点バッファの作成でエラーが発生しました(%08X)
 
@@ -562,7 +558,7 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 1096
+# osd/windows/drawd3d.c: 1122
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
@@ -570,7 +566,7 @@ Error getting identifier for adapter #%d\n
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1105
+# osd/windows/drawd3d.c: 1131
 Error getting mode for adapter #%d\n
 アダプタ#%dのモードの取得でエラーが発生しました\n
 
@@ -594,23 +590,23 @@ DirectSoundの初期化に失敗しました: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 782
+# osd/windows/drawd3d.c: 808
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
-# mess/osd/windows/menu.c: 877
+# mess/osd/windows/menu.c: 894
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
-# osd/windows/drawd3d.c: 663
+# osd/windows/drawd3d.c: 689
 Error: A8R8G8B8 format textures not supported\n
 エラー: A8R8G8B8形式のテクスチャがサポートされていません\n
 
-# osd/windows/drawd3d.c: 653
+# osd/windows/drawd3d.c: 679
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 エラー: デバイスはDirect3D描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawd3d.c: 695
+# osd/windows/drawd3d.c: 721
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
@@ -622,7 +618,7 @@ FULL SCREEN OPTIONS
 Failed to create pause event
 ポーズイベントの生成が失敗しました
 
-# osd/windows/window.c: 860
+# osd/windows/window.c: 869
 Failed to create window class
 ウインドウクラスの生成が失敗しました
 
@@ -634,7 +630,7 @@ Failed to create window thread
 Failed to create window thread ready event
 ウインドウスレッド準備完了イベントの生成が失敗しました
 
-# mess/osd/windows/mess.rc: 96
+# mess/osd/windows/mess.rc: 92
 Ha&rd Reset
 ハードリセット(&R)
 
@@ -658,7 +654,7 @@ Input
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# mess/osd/windows/menu.c: 1154
+# mess/osd/windows/menu.c: 1237
 Joystick %i
 ジョイスティック %i
 
@@ -666,11 +662,11 @@ Joystick %i
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
-# osd/windows/window.c: 656
+# osd/windows/window.c: 659
 MAME: %s [%s] - Screen %d
 MAME: %s「%s」- 画面%d
 
-# mess/osd/windows/mess.rc: 78
+# mess/osd/windows/mess.rc: 74
 Maximum &Speed
 最高速度(&S)
 
@@ -678,13 +674,17 @@ Maximum &Speed
 Miscellaneous Input
 その他の入力
 
-# mess/osd/windows/mess.rc: 55
+# mess/osd/windows/mess.rc: 51
 Natural
 そのまま
 
-# mess/osd/windows/menu.c: 1394 
+# mess/osd/windows/menu.c: 1479 
 Not working
 動作不可
+
+# mess/osd/windows/dialog.c: 124 
+OK
+OK
 
 # osd/windows/winmain.c: 732
 Out of memory
@@ -694,15 +694,15 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
-# mess/osd/windows/mess.rc: 152
+# mess/osd/windows/mess.rc: 148
 Pause
 中断
 
-# mess/osd/windows/mess.rc: 150
+# mess/osd/windows/mess.rc: 146
 Play
 プレイ
 
-# osd/windows/drawd3d.c: 1157
+# osd/windows/drawd3d.c: 1183
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
@@ -710,39 +710,39 @@ Proposed video mode not supported on device %s\n
 RawInput: APIs detected\n
 RawInput: APIが検出されました\n
 
-# mess/osd/windows/mess.rc: 68
+# mess/osd/windows/mess.rc: 64
 Rotate 0 degrees
 0度回転
 
-# mess/osd/windows/mess.rc: 70
+# mess/osd/windows/mess.rc: 66
 Rotate 180 degrees
 180度回転
 
-# mess/osd/windows/mess.rc: 71
+# mess/osd/windows/mess.rc: 67
 Rotate 270 degrees
 270度回転
 
-# mess/osd/windows/mess.rc: 69
+# mess/osd/windows/mess.rc: 65
 Rotate 90 degrees
 90度回転
 
-# mess/osd/windows/mess.rc: 38
+# mess/osd/windows/mess.rc: 34
 S&ave State As...
 ステートを保存...(&S)
 
-# mess/osd/windows/mess.rc: 40
+# mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
 画面を保存(&R)
 
-# mess/osd/windows/mess.rc: 87
+# mess/osd/windows/mess.rc: 83
 Show &FPS
 FPSを表\示(&F)
 
-# mess/osd/windows/mess.rc: 100
+# mess/osd/windows/mess.rc: 96
 Show P&rofiler
 プロファイラを表\示(&R)
 
-# mess/osd/windows/mess.rc: 95
+# mess/osd/windows/mess.rc: 91
 Soft &Reset
 ソ\フトリセット(&R)
 
@@ -758,7 +758,7 @@ Sound: buffer overflows=%d underflows=%d\n
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 151
+# mess/osd/windows/mess.rc: 147
 Stop
 停止
 
@@ -766,11 +766,11 @@ Stop
 Symbol table full
 シンボルテーブルが一杯
 
-# mess/osd/windows/mess.rc: 145
+# mess/osd/windows/mess.rc: 141
 Tape Control
 テープ制御
 
-# osd/windows/drawd3d.c: 1797
+# osd/windows/drawd3d.c: 1823
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
@@ -778,19 +778,23 @@ Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Toggle Fullscreen
 フルスクリーン切り替え
 
+# osd/windows/input.c: 789
+Toggle Menubar
+メニューバーの切り替え
+
 # osd/windows/ledutil.c: 568, 574
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
-# osd/windows/window.c: 676
+# osd/windows/window.c: 679
 Unable to complete window creation
 ウインドウの生成が完了出来ません
 
-# osd/windows/drawd3d.c: 721
+# osd/windows/drawd3d.c: 747
 Unable to create the Direct3D device (%08X)\n
 Direct3Dデバイスを作成出来ません(%08X)\n
 
-# osd/windows/drawd3d.c: 436, 497
+# osd/windows/drawd3d.c: 462, 523
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
@@ -806,11 +810,11 @@ PNGファイル「%s」を読み込めません\n
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# osd/windows/drawd3d.c: 2234
+# osd/windows/drawd3d.c: 2260
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
-# mess/osd/windows/mess.rc: 85
+# mess/osd/windows/mess.rc: 81
 Unlimited
 無制限
 
@@ -846,7 +850,7 @@ Windows版ビデオオプション
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
-# osd/windows/drawd3d.c: 657
+# osd/windows/drawd3d.c: 683
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
@@ -882,7 +886,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 895
 creating
 作成
 
@@ -950,7 +954,7 @@ explicit name of the third screen; 'auto' here will try to make a best guess
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 895
 loading
 読み込み
 
