@@ -478,13 +478,14 @@ phoenixb	フェニックス (Centuri set 2)	ふぇにっくす	Amstar (Centuri license)
 phoenixt	フェニックス (Taito)	ふぇにっくす	Taito
 phoenix3	フェニックス (T.P.N.)	ふぇにっくす	bootleg
 phoenixc	フェニックス (IRECSA G.G.I Corp)	ふぇにっくす	bootleg?
-condor	フェニックス / Condor	ふぇにっくす	Sidam
-fenix	フェニックス / Fenix	ふぇにっくす	bootleg
+condor	フェニックス / Condor (海賊版)	ふぇにっくす	Sidam (bootleg)
+fenix	フェニックス / Fenix (海賊版)	ふぇにっくす	bootleg
 falcon	フェニックス / Falcon (海賊版 set 1)	ふぇにっくす	bootleg
-vautour	フェニックス / Vautour (set 1 Jeutel France)	ふぇにっくす	bootleg
-vautour2	フェニックス / Vautour (set 2)	ふぇにっくす	bootleg
-griffon	フェニックス / Griffon	ふぇにっくす	Videotron
+vautour	フェニックス / Vautour (海賊版 set 1)	ふぇにっくす	Jeutel (bootleg)
+vautour2	フェニックス / Vautour (海賊版　set 2)	ふぇにっくす	bootleg
+griffon	フェニックス / Griffon (海賊版)	ふぇにっくす	Videotron (bootleg)
 falcona	フェニックス / Falcon (海賊版 set 2)	ふぇにっくす	bootleg
+nextfase	フェニックス / Next Fase (海賊版)	ふぇにっくす	Petaco S.A. (bootleg)
 pleiads	プレアデス (Tehkan)	ぷれあです	Tehkan
 pleiadbl	プレアデス (海賊版)	ぷれあです	bootleg
 pleiadce	プレアデス (Centuri)	ぷれあです	Tehkan (Centuri license)
@@ -589,6 +590,7 @@ drgnbstr	ドラゴンバスター	どらごんばすたー	Namco
 skykid	スカイキッド (new ver)	すかいきっど_1	Namco
 skykido	スカイキッド (old ver)	すかいきっど_1	Namco
 skykidd	スカイキッド (CUS60 ver)	すかいきっど_1	Namco
+skykids	スカイキッド (Manufactured by Sipem)	すかいきっど_1	Namco [Sipem license]
 aliensec	バラデューク / Alien Sector	ばらでゅーく	Namco
 baraduke	バラデューク	ばらでゅーく	Namco
 metrocrs	メトロクロス (set 1)	めとろくろす	Namco
@@ -2910,10 +2912,11 @@ hvymetal	ヘビーメタル (315-5135)	へびーめたる	Sega
 myhero	青春スキャンダル / My Hero (USA版 not encrypted)	せいしゅんすきゃんだる	Sega
 sscandal	青春スキャンダル (日本版 315-5132)	せいしゅんすきゃんだる	Coreland / Sega
 myherok	青春スキャンダル / My Hero (韓国版)	せいしゅんすきゃんだる	Coreland / Sega
-shtngmst	シューティングマスター	しゅーてぃんぐますたー	Sega
+shtngmst	シューティングマスター (set 1 8751 315-5159)	しゅーてぃんぐますたー	Sega
 shtngmsa	シューティングマスター (EVG)	しゅーてぃんぐますたー	Sega [EVG]
-chplft	チョップリフター	ちょっぷりふたー	Sega
-chplftb	チョップリフター (alt)	ちょっぷりふたー	Sega
+shtngmsb	シューティングマスター (set 2 8751 315-5159a)	しゅーてぃんぐますたー	Sega
+chplft	チョップリフター (8751 315-5151)	ちょっぷりふたー	Sega
+chplftb	チョップリフター (unprotected)	ちょっぷりふたー	Sega
 chplftbl	チョップリフター (海賊版)	ちょっぷりふたー	bootleg
 4dwarrio	4-D ウォーリアーズ (315-5162)	ふぉーでぃーうぉーりあーず	Coreland / Sega
 brain	ブレイン	ぶれいん	Coreland / Sega
@@ -2967,7 +2970,8 @@ enduror	エンデューロレーサー (YM2151 FD1089B 317-0013A)	えんでゅーろれーさー	Seg
 enduror1	エンデューロレーサー (YM2203 FD1089B 317-0013A)	えんでゅーろれーさー	Sega
 endurob2	エンデューロレーサー (海賊版 set 2)	えんでゅーろれーさー	bootleg
 endurobl	エンデューロレーサー (海賊版 set 1)	えんでゅーろれーさー	bootleg
-hangon	ハングオン	はんぐおん_1	Sega
+hangon	ハングオン (rev A)	はんぐおん_1	Sega
+hangon1	ハングオン	はんぐおん_1	Sega
 sharrier	スペースハリアー (rev A 8751 317-5163A)	すぺーすはりあー_1	Sega
 sharrir1	スペースハリアー (8751 315-5163)	すぺーすはりあー_1	Sega
 shangupb	スーパーハングオン (Hang-On upgrade) (海賊版)	すーぱーはんぐおん	bootleg
@@ -3148,32 +3152,32 @@ pdrifta	パワードリフト (海外版)	ぱわーどりふと	Sega
 pdrifte	パワードリフト (海外版 earlier)	ぱわーどりふと	Sega
 pdriftj	パワードリフト (日本版)	ぱわーどりふと	Sega
 rchase	レールチェイス (日本版)	れーるちぇいす	Sega
-hotrod	ホットロッド (海外版 3 players turbo set 1)	ほっとろっど	Sega
-hotroda	ホットロッド (海外版 3 players turbo set 2)	ほっとろっど	Sega
-hotrodj	ホットロッド (日本版 4 players)	ほっとろっど	Sega
-sspirits	スクランブルスピリッツ	すくらんぶるすぴりっつ	Sega
-sspiritj	スクランブルスピリッツ (日本版 Floppy DS3-5000-02-REV-A)	すくらんぶるすぴりっつ	Sega
-sspirtfc	スクランブルスピリッツ (FD1094 317-0058-02c)	すくらんぶるすぴりっつ	Sega
-gground	ゲイングランド (海外版 FD1094 317-0058-03c?)	げいんぐらんど	Sega
-ggroundj	ゲイングランド (日本版 FD1094 317-0058-03b)	げいんぐらんど	Sega
-crkdown	クラックダウン (海外版 FD1094 317-0058-04c)	くらっくだうん	Sega
-crkdownu	クラックダウン (USA版 FD1094 317-0058-04d)	くらっくだうん	Sega
-crkdownj	クラックダウン (日本版 FD1094 317-0058-04b)	くらっくだうん	Sega
-sgmast	ジャンボ尾崎のスーパーマスターズ / Super Masters Golf (FD1094 317-0058-05d?)	じゃんぼおざきのすーぱーますたーず	Sega
-sgmastc	ジャンボ尾崎のスーパーマスターズ (海外版 FD1094 317-0058-05c)	じゃんぼおざきのすーぱーますたーず	Sega
-sgmastj	ジャンボ尾崎のスーパーマスターズ (日本版 FD1094 317-0058-05b)	じゃんぼおざきのすーぱーますたーず	Sega
-roughrac	ラフレーサー (日本版 FD1094 317-0058-06b)	らふれーさー	Sega
-bnzabros	ボナンザブラザーズ (USA版 Floppy DS3-5000-07d?)	ぼなんざぶらざーず	Sega
-bnzabrsj	ボナンザブラザーズ (日本版 Floppy DS3-5000-07b)	ぼなんざぶらざーず	Sega
-qsww	クイズ宿題をわすれました！ (日本版 FD1094 317-0058-08b)	くいずしゅくだいをわすれました	Sega
-dcclubfd	ダイナミックカントリークラブ (FD1094 317-0058-09d)	だいなみっくかんとりーくらぶ	Sega
-dcclub	ダイナミックカントリークラブ	だいなみっくかんとりーくらぶ	Sega
-dcclubj	ダイナミックカントリークラブ (日本版)	だいなみっくかんとりーくらぶ	Sega
-mahmajn	所さんのまーまーじゃん	ところさんのまーまーじゃん_1	Sega
-qgh	クイズゴーストハンター -ザ・クイズアドベンチャー	くいずごーすとはんたー	Sega
-quizmeku	クイズ めくるめくストーリー	くいずめくるめくすとーりー	Sega
-qrouka	クイズ廊下に立ってなさい！	くいずろうかにたってなさい	Sega
-mahmajn2	所さんのまーまーじゃん2 -ToKoRo's Cup	ところさんのまーまーじゃん_2	Sega
+hotrod	ホットロッド (海外版 3 players turbo set 1 floppy based)	ほっとろっど	Sega
+hotroda	ホットロッド (海外版 3 players turbo set 2 floppy based)	ほっとろっど	Sega
+hotrodj	ホットロッド (日本版 4 players bloppy based)	ほっとろっど	Sega
+sspirits	スクランブルスピリッツ (海外版, floppy based)	すくらんぶるすぴりっつ	Sega
+sspiritj	スクランブルスピリッツ (日本版 floppy DS3-5000-02-REV-A based)	すくらんぶるすぴりっつ	Sega
+sspirtfc	スクランブルスピリッツ (海外版 set 2? floppy based FD1094 317-0058-02c)	すくらんぶるすぴりっつ	Sega
+gground	ゲイングランド (海外版 3 players floppy based FD1094 317-0058-03c?)	げいんぐらんど	Sega
+ggroundj	ゲイングランド (日本版 2 players floppy based FD1094 317-0058-03b)	げいんぐらんど	Sega
+crkdown	クラックダウン (海外版 floppy based FD1094 317-0058-04c)	くらっくだうん	Sega
+crkdownu	クラックダウン (USA版 floppy based FD1094 317-0058-04d)	くらっくだうん	Sega
+crkdownj	クラックダウン (日本版 floppy based FD1094 317-0058-04b)	くらっくだうん	Sega
+sgmast	ジャンボ尾崎のスーパーマスターズ / Super Masters Golf (海外版? floppy based FD1094 317-0058-05d?)	じゃんぼおざきのすーぱーますたーず	Sega
+sgmastc	ジャンボ尾崎のスーパーマスターズ (海外版 floppy based FD1094 317-0058-05c)	じゃんぼおざきのすーぱーますたーず	Sega
+sgmastj	ジャンボ尾崎のスーパーマスターズ (日本版 floppy based FD1094 317-0058-05b)	じゃんぼおざきのすーぱーますたーず	Sega
+roughrac	ラフレーサー (日本版 floppy based FD1094 317-0058-06b)	らふれーさー	Sega
+bnzabros	ボナンザブラザーズ (USA版 floppy DS3-5000-07d? based)	ぼなんざぶらざーず	Sega
+bnzabrsj	ボナンザブラザーズ (日本版 floppy DS3-5000-07b based)	ぼなんざぶらざーず	Sega
+qsww	クイズ宿題をわすれました！ (日本版 floppy based FD1094 317-0058-08b)	くいずしゅくだいをわすれました	Sega
+dcclubfd	ダイナミックカントリークラブ (USA版 floppy based FD1094 317-0058-09d)	だいなみっくかんとりーくらぶ	Sega
+dcclub	ダイナミックカントリークラブ(海外版 rom based)	だいなみっくかんとりーくらぶ	Sega
+dcclubj	ダイナミックカントリークラブ (日本版 rom based)	だいなみっくかんとりーくらぶ	Sega
+mahmajn	所さんのまーまーじゃん (日本版, rom based)	ところさんのまーまーじゃん_1	Sega
+qgh	クイズゴーストハンター -ザ・クイズアドベンチャー (日本版 rom based)	くいずごーすとはんたー	Sega
+quizmeku	クイズ めくるめくストーリー (日本版 rom based)	くいずめくるめくすとーりー	Sega
+qrouka	クイズ廊下に立ってなさい！ (日本版 rom based)	くいずろうかにたってなさい	Sega
+mahmajn2	所さんのまーまーじゃん2 -ToKoRo's Cup (日本版 rom based)	ところさんのまーまーじゃん_2	Sega
 holo	ホロシアム (USA版)	ほろしあむ	Sega
 svf	ザ・Jリーグ 1994 / Super Visual Football -European Sega Cup	ざじぇいりーぐ1994	Sega
 svs	ザ・Jリーグ 1994 / Super Visual Soccer -Sega Cup (USA版)	ざじぇいりーぐ1994	Sega
@@ -3213,6 +3217,7 @@ harddunj	ハードダンク (日本版)	はーどだんく	Sega
 titlef	タイトルファイト (海外版)	たいとるふぁいと	Sega
 titlefu	タイトルファイト (USA版)	たいとるふぁいと	Sega
 scross	スタジアムクロス (海外版)	すたじあむくろす	Sega
+scrossu	スタジアムクロス (USA版)	すたじあむくろす	Sega
 vf	バーチャファイター	ばーちゃふぁいたー_1_1	Sega
 vr	バーチャレーシング	ばーちゃれーしんぐ	Sega
 vformula	バーチャフォーミュラ	ばーちゃふぉーみゅら	Sega
@@ -3503,8 +3508,8 @@ cnightst	ナイトスター (Cassette set 1)	ないとすたー	Data East Corporation
 cnights2	ナイトスター (Cassette set 2)	ないとすたー	Data East Corporation
 cprosocc	プロサッカー (Cassette)	ぷろさっかー	Data East Corporation
 cprobowl	プロボウリング (Cassette)	ぷろぼうりんぐ	Data East Corporation
-cscrtry	スクラムトライ (Cassette set 1)	すくらむとらい	Data East Corporation
-cscrtry2	スクラムトライ (Cassette set 2)	すくらむとらい	Data East Corporation
+cscrtry	スクラムトライ (cassette set 1)	すくらむとらい	Data East Corporation
+cscrtry2	スクラムトライ (cassette set 2)	すくらむとらい	Data East Corporation
 cppicf	ピーターペッパーズ アイスクリームファクトリー (Cassette set 1)	ぴーたーぺっぱーずあいすくりーむふぁくとりー	Data East Corporation
 cppicf2	ピーターペッパーズ アイスクリームファクトリー (Cassette set 2)	ぴーたーぺっぱーずあいすくりーむふぁくとりー	Data East Corporation
 cfghtice	ファイティングアイスホッケー (Cassette)	ふぁいてぃんぐあいすほっけー	Data East Corporation
@@ -3654,7 +3659,8 @@ edrandy	エドワード・ランディ -ザ・クリフハンガー (海外版 rev 2)	えどわーどらんで
 edrandy1	エドワード・ランディ -ザ・クリフハンガー (海外版 rev 1)	えどわーどらんでぃ	Data East Corporation
 edrandy0	エドワード・ランディ -ザ・クリフハンガー (海外版)	えどわーどらんでぃ	Data East Corporation
 edrandyj	エドワード・ランディ -ザ・クリフハンガー (日本版 rev 2)	えどわーどらんでぃ	Data East Corporation
-supbtime	スーパーバーガータイム (海外版)	すーぱーばーがーたいむ	Data East Corporation
+supbtime	スーパーバーガータイム (海外版 set 1)	すーぱーばーがーたいむ	Data East Corporation
+supbtima	スーパーバーガータイム (海外版 set 2)	すーぱーばーがーたいむ	Data East Corporation
 supbtimj	スーパーバーガータイム (日本版)	すーぱーばーがーたいむ	Data East Corporation
 mutantf	デスブレイド / Mutant Fighter (海外版 rev 4 EM-5)	ですぶれいど	Data East Corporation
 mutantfa	デスブレイド / Mutant Fighter (海外版 rev 3 EM-4)	ですぶれいど	Data East Corporation
@@ -4345,6 +4351,7 @@ centipdb	センチピード (海賊版)	せんちぴーど	bootleg
 caterplr	センチピード / Caterpillar	せんちぴーど	bootleg
 millpac	センチピード / Millpac	せんちぴーど	Valadon Automation
 magworm	センチピード / Magic Worm (海賊版)	せんちぴーど	bootleg
+mazeinv	メイズインベーダース (prototype)	めいずいんべーだーす	Atari
 milliped	ミリピード	みりぴーど	Atari
 qwak	クワック (prototype)	くわっく	Atari
 runaway	ランナウェイ (prototype)	らんなうぇい	Atari
@@ -4547,6 +4554,7 @@ atetrisb	テトリス (海賊版 set 1)	てとりす_1_1atari	bootleg
 atetrsb2	テトリス (海賊版 set 2)	てとりす_1_1atari	bootleg
 eprom	エスケープ・フロム・ザ・プラネット・オブ・ザ・ロボットモンスターズ (set 1)	えすけーぷふろむざぷらねっとおぶざろぼっともんすたーず	Atari Games
 eprom2	エスケープ・フロム・ザ・プラネット・オブ・ザ・ロボットモンスターズ (set 2)	えすけーぷふろむざぷらねっとおぶざろぼっともんすたーず	Atari Games
+guts	ガッツングローリー (prototype)	がっつんぐろーり－	Atari Games
 cyberb2p	サイバーボール2072 (2 players rev 4)	さいばーぼーる_22072	Atari Games
 cyberb23	サイバーボール2072 (2 players rev 3)	さいばーぼーる_22072	Atari Games
 cyberb22	サイバーボール2072 (2 players rev 2)	さいばーぼーる_22072	Atari Games
@@ -4669,7 +4677,7 @@ ikarijp	怒 (日本版)	いかり_1	SNK
 ikarijpb	怒 (日本版) (海賊版)	いかり_1	bootleg
 victroad	怒号層圏 / Victory Road	どごうそうけん	SNK
 dogosoke	怒号層圏	どごうそうけん	SNK
-dogosokj	怒号層圏 (joystick) (海賊版)	どごうそうけん	bootleg
+dogosokj	怒号層圏 (joystick hack) (海賊版)	どごうそうけん	bootleg
 gwar	ゲバラ / Guerrilla War (USA版)	げばら	SNK
 gwarj	ゲバラ (日本版)	げばら	SNK
 gwara	ゲバラ / Guerrilla War (ver 1)	げばら	SNK
@@ -4684,7 +4692,8 @@ chopper	航空騎兵物語 -The Legend of Air Cavalry / Chopper I (USA版 set 1)	こうく
 choppera	航空騎兵物語 -The Legend of Air Cavalry / Chopper I (USA版 set 2)	こうくうきへいものがたり	SNK
 chopperb	航空騎兵物語 -The Legend of Air Cavalry / Chopper I (USA版 set 3)	こうくうきへいものがたり	SNK
 legofair	航空騎兵物語 -The Legend of Air Cavalry (日本版)	こうくうきへいものがたり	SNK
-ftsoccer	ファイティングサッカー	ふぁいてぃんぐさっかー	SNK
+fsoccer	ファイティングサッカー (ver 4)	ふぁいてぃんぐさっかー	SNK
+fsoccerb	ファイティングサッカー (joystick hack) (海賊版)	ふぁいてぃんぐさっかー	bootleg
 tdfever	タッチダウンフィーバー	たっちだうんふぃーばー_1	SNK
 tdfeverj	タッチダウンフィーバー (日本版)	たっちだうんふぃーばー_1	SNK
 tdfever2	タッチダウンフィーバーII	たっちだうんふぃーばー_2	SNK
@@ -5809,7 +5818,7 @@ twineag2	ツインイーグルII -The Rescue Mission	ついんいーぐる_2	Seta
 srmp7	スーパーリアル麻雀P7 (日本版)	すーぱーりあるまーじゃん_7_ぴーせぶん	Seta
 dynagear	ダイナギア	だいなぎあ	Sammy
 survarts	サバイバルアーツ (海外版)	さばいばるあーつ	Sammy
-survartu	サバイバルアーツ (USA版)	さばいばるあーつ	Sammy (American)
+survartu	サバイバルアーツ (USA版)	さばいばるあーつ	American Sammy
 eaglshot	イーグルショットゴルフ	いーぐるしょっとごるふ	Sammy
 hypreact	麻雀ハイパーリアクション (日本版)	まーじゃんはいぱーりあくしょん_1	Sammy
 meosism	メオシス・マジック (日本版)	めおしすまじっく	Sammy
@@ -6848,10 +6857,10 @@ esh	エシュズオルンミラ	えしゅずおるんみら	Funai/Gakken
 esha	エシュズオルンミラ (set 2)	えしゅずおるんみら	Funai/Gakken
 eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
-peplus	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
+peset038	プレイヤーズエッジプラス セットチップ (Set038)	ぷれいやーずえっじぷらすせっとちっぷ	IGT - International Gaming Technology
 pepp0158	プレイヤーズエッジプラス 4 オブアカインドボーナスポーカー (PP0158)	ぷれいやーずえっじぷらす4おぶあかいんどぼーなすぽーかー	IGT - International Gaming Technology
 pepp0188	プレイヤーズエッジプラス スタンダードドローポーカー (PP0188)	ぷれいやーずえっじぷらすすたんだーどどろーぽーかー	IGT - International Gaming Technology
-peset038	プレイヤーズエッジプラス セットチップ (Set038)	ぷれいやーずえっじぷらすせっとちっぷ	IGT - International Gaming Technology
+pepp0516	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
 pebe0014	プレイヤーズエッジプラス ブラックジャック (BE0014)	ぷれいやーずえっじぷらすぶらっくじゃっく	IGT - International Gaming Technology
 peke1012	プレイヤーズエッジプラス キノ (KE1012)	ぷれいやーずえっじぷらすきの	IGT - International Gaming Technology
 peps0615	プレイヤーズエッジプラス カオススロッツ (PS0615)	ぷれいやーずえっじぷらすかおすすろっつ	IGT - International Gaming Technology
