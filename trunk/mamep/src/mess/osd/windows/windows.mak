@@ -18,6 +18,8 @@ OBJDIRS += \
 
 MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
+MESS_WINUISRC = $(SRC)/mess/osd/winui
+MESS_WINUIOBJ = $(OBJ)/mess/osd/winui
 
 #fixme: should use LIBOSD +=
 MESSLIBOSD += \
@@ -32,10 +34,9 @@ ifeq ($(NO_DLL),)
     MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
 else
     ifneq ($(WINUI),)
-        ## fixme: move gui resource code to mess/osd/ui
-        RCFLAGS += --include-dir $(WINUISRC) --include-dir $(WINUIOBJ) --include-dir $(SRC)/mess/osd/winui
-        $(MESS_WINOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
-        GUIRESFILE = $(MESS_WINOBJ)/messgui.res
+        UI_RCFLAGS += --include-dir $(MESS_WINSRC)
+        $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+        GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
     else
         $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
         CLIRESFILE = $(MESS_WINOBJ)/messcli.res
@@ -67,6 +68,7 @@ $(OBJ)/ui/%.res: src/ui/%.rc
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir src/ui -o $@ -i $<
 
-$(OBJ)/mess/ui/%.res: mess/ui/%.rc
-	@echo Compiling resources $<...
-	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir mess/ui --include-dir src/ui --include-dir src -o $@ -i $<
+$(MESS_WINUIOBJ)/%.res: $(MESS_WINUISRC)/%.rc
+	@echo Compiling mame32 resources $<...
+	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+
