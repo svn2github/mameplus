@@ -53,8 +53,10 @@ extern const ICONDATA g_iconData[];
 
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
+#ifdef HIMAGELIST
 HIMAGELIST GetLargeImageList(void);
 HIMAGELIST GetSmallImageList(void);
+#endif
 int GetNumGames(void);
 void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);

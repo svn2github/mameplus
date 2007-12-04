@@ -52,6 +52,10 @@
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
 
+#ifdef MESS
+#include "optionsms.c"
+#endif
+
 extern DWORD create_path_recursive(const TCHAR *path);
 
 /***************************************************************************
@@ -267,6 +271,10 @@ typedef struct
 // CORE LANGUAGE OPTIONS
 	int      langcode;
 	BOOL     use_lang_list;
+
+#ifdef MESS
+MESS_OPTION_TYPE_DEFINE
+#endif
 } settings_type; /* global settings for the UI only */
 
 struct _backup
@@ -282,7 +290,9 @@ typedef struct
 	int play_time;
 	int rom_audit_results;
 	int samples_audit_results;
-
+#ifdef MESS
+	char *extra_software;
+#endif
 	BOOL options_loaded; // whether or not we've loaded the game options yet
 	BOOL use_default; // whether or not we should just use default options
 	int alt_index; // index for alt_option if driver is unified
@@ -315,6 +325,9 @@ INLINE void options_set_wstring(core_options *opts, const char *name, const WCHA
 static void set_core_rom_directory(const WCHAR *dir);
 static void set_core_sample_directory(const WCHAR *dir);
 static void set_core_image_directory(const WCHAR *dir);
+#ifdef MESS
+static void set_core_hash_directory(const WCHAR *dir);
+#endif
 static void set_core_translation_directory(const WCHAR *dir);
 
 static int   regist_alt_option(const WCHAR *name);
@@ -514,6 +527,10 @@ static WCHAR reload_config_msg[] =
 	TEXT("Would you like to migrate old configurations to the new directory?");
 
 
+#ifdef MESS
+#include "optionsms.c"
+#endif
+
 /***************************************************************************
     External functions  
  ***************************************************************************/
@@ -539,6 +556,9 @@ void OptionsInit()
 	default_variables.play_time = 0;
 	default_variables.rom_audit_results = UNKNOWN;
 	default_variables.samples_audit_results = UNKNOWN;
+#ifdef MESS
+	default_variables.extra_software = NULL;
+#endif
 	default_variables.options_loaded = FALSE;
 	default_variables.use_default = TRUE;
 	default_variables.alt_index = -1;
@@ -575,7 +595,7 @@ void OptionsInit()
 	set_core_image_directory(settings.rompath);
 	set_core_sample_directory(settings.samplepath);
 #ifdef MESS
-	SetHashPath(settings.mess.hashdir);
+	set_core_hash_directory(settings.hashpath);
 #endif
 
 	generate_default_dirs();
@@ -696,6 +716,13 @@ static void set_core_sample_directory(const WCHAR *dir)
 {
 	options_set_wstring(options_cli, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_INI);
 }
+
+#ifdef MESS
+static void set_core_hash_directory(const WCHAR *dir)
+{
+	options_set_wstring(options_cli, SEARCHPATH_HASH, dir, OPTION_PRIORITY_INI);
+}
+#endif
 
 static void set_core_translation_directory(const WCHAR *dir)
 {
@@ -3323,8 +3350,15 @@ static const char *driver_flag_names[] =
 	"_playcount",
 	"_play_time",
 	"_rom_audit",
-	"_samples_audit"
+	"_samples_audit",
+#ifdef MESS
+	"_extra_software",
+#endif
+	NULL
 };
+
+#define NUM_MESS_DRIVER_FLAGS	1
+#define NUM_MAME_DRIVER_FLAGS	(ARRAY_LENGTH(driver_flag_names) - 1 - NUM_MESS_DRIVER_FLAGS)
 
 static char driver_flag_unknown[3];
 
@@ -3335,6 +3369,9 @@ static options_entry driver_flag_opts[] =
 	{ NULL, "0",                 0,             "Play Time" },
 	{ NULL, driver_flag_unknown, 0,             "Has Roms" },
 	{ NULL, driver_flag_unknown, 0,             "Has Samples" },
+#ifdef MESS
+	{ NULL, "",                  0,             "Extra Software" },
+#endif
 	{ NULL }
 };
 
@@ -3353,12 +3390,15 @@ static void options_add_driver_flag_opts(core_options *opts)
 
 		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
+			if (!driver_flag_names[j])
+				continue;
 
 			driver_flag_opts[j + 1].name = p;
 			strcpy(p, drivers[i]->name);
 			p += strlen(p);
 			strcat(p, driver_flag_names[j]);
 			p += strlen(p) + 1;
+dprintf("%s", driver_flag_opts[j + 1].name);
 		}
 
 		options_add_entries(opts, driver_flag_opts);
@@ -3384,11 +3424,22 @@ static void options_get_driver_flag_opts(core_options *opts)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
+		for (j = 0; j < NUM_MAME_DRIVER_FLAGS; j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			*flags[j] = options_get_int(opts, buf);
 		}
+#ifdef MESS
+		{
+			const char *s;
+
+			FreeIfAllocated(&driver_variables[i].extra_software);
+			strcpy(p, driver_flag_names[j]);
+			s = options_get_string(opts, buf);
+			if (s)
+				driver_variables[i].extra_software = mame_strdup(s);
+		}
+#endif
 	}
 }
 
@@ -3411,11 +3462,15 @@ static void options_set_driver_flag_opts(core_options *opts)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
+		for (j = 0; j < NUM_MAME_DRIVER_FLAGS; j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			options_set_int(opts, buf, flags[j], OPTION_PRIORITY_INI);
 		}
+#ifdef MESS
+		strcpy(p, driver_flag_names[j]);
+		options_set_string(opts, buf, driver_variables[i].extra_software, OPTION_PRIORITY_INI);
+#endif
 	}
 }
 
@@ -3445,6 +3500,10 @@ static void options_create_entry_cli(void)
 	options_set_output_callback(options_cli, OPTMSG_INFO, debug_printf);
 	options_set_output_callback(options_cli, OPTMSG_WARNING, debug_printf);
 	options_set_output_callback(options_cli, OPTMSG_ERROR, debug_printf);
+
+#ifdef MESS
+	MessSetupGameOptions(options_cli, -1);
+#endif
 }
 
 static void options_create_entry_winui(void)
@@ -3458,6 +3517,9 @@ static void options_create_entry_winui(void)
 	options_set_output_callback(options_winui, OPTMSG_ERROR, debug_printf);
 
 	options_add_entries(options_winui, winui_opts);
+#ifdef MESS
+	MessSetupSettings(options_winui);
+#endif
 	options_add_driver_flag_opts(options_winui);
 }
 

@@ -35,11 +35,11 @@ int  GetMessSortColumn(void);
 void SetMessSortReverse(BOOL reverse);
 BOOL GetMessSortReverse(void);
 
-const char* GetSoftwareDirs(void);
-void  SetSoftwareDirs(const char* paths);
+const WCHAR* GetSoftwareDirs(void);
+void  SetSoftwareDirs(const WCHAR* paths);
 
-void SetHashDirs(const char *dir);
-const char *GetHashDirs(void);
+void SetHashDirs(const WCHAR* dir);
+const WCHAR* GetHashDirs(void);
 
 void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const char *software);
 const char *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst);

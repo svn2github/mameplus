@@ -1,3 +1,4 @@
+#if 0
 #define WIN32_LEAN_AND_MEAN
 #include <assert.h>
 #include <string.h>
@@ -10,11 +11,24 @@
 #include <tchar.h>
 
 #include "m32util.h"
-#include "m32opts.h"
+#include "winuiopt.h"
 #include "optionsms.h"
 #include "emuopts.h"
 #include "driver.h"
+#endif
 #include "messopts.h"
+
+#ifndef	MESS_OPTION_TYPE_DEFINE
+#define MESS_OPTION_TYPE_DEFINE \
+	int      mess_column_shown[MESS_COLUMN_MAX]; \
+	int      mess_column_widths[MESS_COLUMN_MAX]; \
+	int      mess_column_order[MESS_COLUMN_MAX]; \
+	int      mess_sort_column; \
+	BOOL     mess_sort_reversed; \
+	char*    current_software_tab; \
+	WCHAR*   softwarepath; \
+
+#else /* MESS_OPTION_TYPE_DEFINE */
 #include "osd/windows/configms.h"
 #include "winmain.h"
 
@@ -30,15 +44,16 @@
 
 static const options_entry mess_wingui_settings[] =
 {
-	{ WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS,	"186, 230, 88, 84, 84, 68, 248, 248",	0,				NULL },
-	{ WINGUIOPTION_SOFTWARE_COLUMN_ORDER,	"0,   1,    2,  3,  4,  5,   6,   7",	0,				NULL },
-	{ WINGUIOPTION_SOFTWARE_COLUMN_SHOWN,	"1,   1,    1,  1,  1,  0,   0,   0",	0,				NULL },
+	{ NULL,                          NULL,                         OPTION_HEADER,     "MESS SPECIFIC OPTIONS"},
+	{ WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS,	"186, 230, 88, 84, 84, 68, 248, 248",	0,		"Software column width" },
+	{ WINGUIOPTION_SOFTWARE_COLUMN_ORDER,	"0,   1,    2,  3,  4,  5,   6,   7",	0,		"Software column order" },
+	{ WINGUIOPTION_SOFTWARE_COLUMN_SHOWN,	"1,   1,    1,  1,  1,  0,   0,   0",	0,		"Software column shown" },
 
-	{ WINGUIOPTION_SOFTWARE_SORT_COLUMN,	"0",									0,				NULL },
-	{ WINGUIOPTION_SOFTWARE_SORT_REVERSED,	"0",									OPTION_BOOLEAN,	NULL },
+	{ WINGUIOPTION_SOFTWARE_SORT_COLUMN,	"0",					0,		"Software sort column" },
+	{ WINGUIOPTION_SOFTWARE_SORT_REVERSED,	"0",					OPTION_BOOLEAN,	"Software reverse sort" },
 
-	{ WINGUIOPTION_SOFTWARE_TAB,			"0",									0,				NULL },
-	{ WINGUIOPTION_SOFTWAREPATH,			"software",								0,				NULL },
+	{ WINGUIOPTION_SOFTWARE_TAB,		"0",					0,		"Software tab" },
+	{ WINGUIOPTION_SOFTWAREPATH,		"software",				0,		"Software path" },
 	{ NULL }
 };
 
@@ -49,9 +64,8 @@ void MessSetupSettings(core_options *settings)
 
 void MessSetupGameOptions(core_options *opts, int driver_index)
 {
-	BOOL is_global = (driver_index == OPTIONS_TYPE_GLOBAL);
-	AddOptions(opts, mess_core_options, is_global);
-	AddOptions(opts, mess_win_options, is_global);
+	options_add_entries(opts, mess_core_options);
+	options_add_entries(opts, mess_win_options);
 
 	if (driver_index >= 0)
 	{
@@ -61,86 +75,99 @@ void MessSetupGameOptions(core_options *opts, int driver_index)
 
 void SetMessColumnOrder(int order[])
 {
-	char column_order_string[10000];
-	ColumnEncodeStringWithCount(order, column_order_string, MESS_COLUMN_MAX);
-	options_set_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_ORDER, column_order_string, OPTION_PRIORITY_CMDLINE);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_order[i] = order[i];
 }
 
 void GetMessColumnOrder(int order[])
 {
-	const char *column_order_string;
-	column_order_string = options_get_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_ORDER);
-	ColumnDecodeStringWithCount(column_order_string, order, MESS_COLUMN_MAX);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		order[i] = settings.mess_column_order[i];
 }
 
 void SetMessColumnShown(int shown[])
 {
-	char column_shown_string[10000];
-	ColumnEncodeStringWithCount(shown, column_shown_string, MESS_COLUMN_MAX);
-	options_set_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_SHOWN, column_shown_string, OPTION_PRIORITY_CMDLINE);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_shown[i] = shown[i];
 }
 
 void GetMessColumnShown(int shown[])
 {
-	const char *column_shown_string;
-	column_shown_string = options_get_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_SHOWN);
-	ColumnDecodeStringWithCount(column_shown_string, shown, MESS_COLUMN_MAX);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		shown[i] = settings.mess_column_shown[i];
 }
 
 void SetMessColumnWidths(int width[])
 {
-	char column_width_string[10000];
-	ColumnEncodeStringWithCount(width, column_width_string, MESS_COLUMN_MAX);
-	options_set_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS, column_width_string, OPTION_PRIORITY_CMDLINE);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_widths[i] = width[i];
 }
 
 void GetMessColumnWidths(int width[])
 {
-	const char *column_width_string;
-	column_width_string = options_get_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS);
-	ColumnDecodeStringWithCount(column_width_string, width, MESS_COLUMN_MAX);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		width[i] = settings.mess_column_widths[i];
 }
 
 void SetMessSortColumn(int column)
 {
-	options_set_int(Mame32Settings(), WINGUIOPTION_SOFTWARE_SORT_COLUMN, column, OPTION_PRIORITY_CMDLINE);
+	settings.mess_sort_column = column;
 }
 
 int GetMessSortColumn(void)
 {
-	return options_get_int(Mame32Settings(), WINGUIOPTION_SOFTWARE_SORT_COLUMN);
+	return settings.mess_sort_column;
 }
 
 void SetMessSortReverse(BOOL reverse)
 {
-	options_set_bool(Mame32Settings(), WINGUIOPTION_SOFTWARE_SORT_REVERSED, reverse, OPTION_PRIORITY_CMDLINE);
+	settings.mess_sort_reversed = reverse;
 }
 
 BOOL GetMessSortReverse(void)
 {
-	return options_get_bool(Mame32Settings(), WINGUIOPTION_SOFTWARE_SORT_REVERSED);
+	return settings.mess_sort_reversed;
 }
 
-const char* GetSoftwareDirs(void)
+const WCHAR* GetSoftwareDirs(void)
 {
-	return options_get_string(Mame32Settings(), WINGUIOPTION_SOFTWAREPATH);
+	return settings.softwarepath;
 }
 
-void SetSoftwareDirs(const char* paths)
+void SetSoftwareDirs(const WCHAR* paths)
 {
-	options_set_string(Mame32Settings(), WINGUIOPTION_SOFTWAREPATH, paths, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocatedW(&settings.softwarepath);
+
+	if (paths != NULL)
+		settings.softwarepath = wcsdup(paths);
 }
 
-const char *GetHashDirs(void)
+const WCHAR* GetHashDirs(void)
 {
-	return options_get_string(Mame32Global(), OPTION_HASHPATH);
+	return settings.hashpath;
 }
 
-void SetHashDirs(const char *paths)
+void SetHashDirs(const WCHAR* dir)
 {
-	options_set_string(Mame32Global(), OPTION_HASHPATH, paths, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocatedW(&settings.hashpath);
+
+	if (dir != NULL)
+		settings.hashpath = wcsdup(dir);
 }
 
+#if 0
 void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const char *software)
 {
 	const char *opt_name = device_instancename(devclass, device_inst);
@@ -170,35 +197,36 @@ const char *GetSelectedSoftware(int driver_index, const device_class *devclass, 
 	software = options_get_string(o, opt_name);
 	return software ? software : "";
 }
+#endif
 
 void SetExtraSoftwarePaths(int driver_index, const char *extra_paths)
 {
-	char opt_name[32];
-
 	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
 
-	snprintf(opt_name, ARRAY_LENGTH(opt_name), "%s_extra_software", drivers[driver_index]->name);
-	options_set_string(Mame32Settings(), opt_name, extra_paths, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocated(&driver_variables[driver_index].extra_software);
+	if (extra_paths)
+		driver_variables[driver_index].extra_software = mame_strdup(extra_paths);
 }
 
 const char *GetExtraSoftwarePaths(int driver_index)
 {
-	char opt_name[32];
 	const char *paths;
 
 	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
 
-	snprintf(opt_name, ARRAY_LENGTH(opt_name), "%s_extra_software", drivers[driver_index]->name);
-	paths = options_get_string(Mame32Settings(), opt_name);
+	paths = driver_variables[driver_index].extra_software;
 	return paths ? paths : "";
 }
 
 void SetCurrentSoftwareTab(const char *shortname)
 {
-	options_set_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_TAB, shortname, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocated(&settings.current_software_tab);
+	if (shortname != NULL)
+		settings.current_software_tab = mame_strdup(shortname);
 }
 
 const char *GetCurrentSoftwareTab(void)
 {
-	return options_get_string(Mame32Settings(), WINGUIOPTION_SOFTWARE_TAB);
+	return settings.current_software_tab;
 }
+#endif /* MESS_OPTION_TYPE_DEFINE */

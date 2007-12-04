@@ -179,7 +179,7 @@ INLINE void _options_get_wstring(core_options *opts, WCHAR **p, const char *name
 {
 	const char *stemp = options_get_string(opts, name);
 
-	if (stemp &&*stemp)
+	if (stemp && *stemp)
 	{
 		FreeIfAllocatedW(p);
 		*p = wstring_from_utf8(stemp);

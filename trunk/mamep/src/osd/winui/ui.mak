@@ -67,14 +67,6 @@ endif
 
 $(LIBOSD): $(WINUIOBJS)
 
-ifeq ($(NO_DLL),)
-    GUIRESFILE = $(WINUIOBJ)/mame32.res
-else
-    UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
-    GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
-endif
-
 $(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
 
 $(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.c
@@ -123,6 +115,14 @@ $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
 $(WINUIOBJ)/mamevers32.rc: $(VERINFO32) $(SRC)/version.c
 	@echo Emitting $@...
 	@$(VERINFO32) $(SRC)/version.c > $@
+
+ifeq ($(NO_DLL),)
+    GUIRESFILE = $(WINUIOBJ)/mame32.res
+else
+    UI_RCFLAGS += --include-dir $(MESS_WINSRC)
+    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+    GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
+endif
 
 #####################################################################
 # Linker

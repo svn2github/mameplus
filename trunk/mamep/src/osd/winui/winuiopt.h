@@ -16,6 +16,10 @@
 #include "osd_cpu.h"
 #include "input.h" /* for input_seq definition */
 
+//#ifdef MESS
+#include "optionsms.h"
+//#endif
+
 #define MAX_SYSTEM_BIOS		16
 #define MAX_SYSTEM_BIOS_ENTRY	16
 #define BIOS_DEFAULT		"default"
