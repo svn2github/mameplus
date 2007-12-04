@@ -1,12 +1,12 @@
-# 283
+# 286
 Bootleg And Clone
 Bootleg y Clones
 
-# 102
+# 105
 CPS All System
 Todos los Sistemas Capcom Power System
 
-# 298
+# 301
 Haze Megadrive
 Haze Megadrive
 
@@ -14,11 +14,11 @@ Haze Megadrive
 IPS
 IPS
 
-# 61
+# 64
 Misc
 Varios
 
-# 136
+# 139
 Neo-Geo
 Neo-Geo
 

@@ -1,4 +1,4 @@
-# 298
+# 301
 Haze Megadrive
 Haze Megadrive
 
@@ -6,11 +6,11 @@ Haze Megadrive
 IPS
 IPS
 
-# 61
+# 64
 Misc
 Varis
 
-# 136
+# 139
 Neo-Geo
 Neo-Geo
 
@@ -18,11 +18,11 @@ Neo-Geo
 Translation
 Traducció
 
-# 283
+# 286
 Bootleg And Clone
 
 
-# 102
+# 105
 CPS All System
 
 
