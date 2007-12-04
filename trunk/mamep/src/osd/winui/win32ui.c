@@ -362,7 +362,6 @@ static void             MameLoadState(const WCHAR *fname_state);
 static BOOL             CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype);
 static BOOL             CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype);
 static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
-static void             MamePlayGame(void);
 static void             MamePlayGameWithOptions(int nGame);
 static BOOL             GameCheck(void);
 static BOOL             FolderCheck(void);
@@ -1291,6 +1290,16 @@ HWND GetMainWindow(void)
 HWND GetTreeView(void)
 {
 	return hTreeView;
+}
+
+HIMAGELIST GetLargeImageList(void)
+{
+	return hLarge;
+}
+
+HIMAGELIST GetSmallImageList(void)
+{
+	return hSmall;
 }
 
 void GetRealColumnOrder(int order[])
@@ -6884,7 +6893,7 @@ static void MamePlayRecordGame(void)
 	}
 }
 
-static void MamePlayGame(void)
+void MamePlayGame(void)
 {
 	int nGame;
 
@@ -7065,12 +7074,23 @@ static void EnablePlayOptions(int nIndex, options_type *o)
 		o->joystick = FALSE;
 }
 
-static int FindIconIndex(int nIconResource)
+int FindIconIndex(int nIconResource)
 {
 	int i;
 	for(i = 0; g_iconData[i].icon_name; i++)
 	{
 		if (g_iconData[i].resource == nIconResource)
+			return i;
+	}
+	return -1;
+}
+
+int FindIconIndexByName(const char *icon_name)
+{
+	int i;
+	for (i = 0; g_iconData[i].icon_name; i++)
+	{
+		if (!strcmp(g_iconData[i].icon_name, icon_name))
 			return i;
 	}
 	return -1;

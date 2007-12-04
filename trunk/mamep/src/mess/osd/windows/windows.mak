@@ -18,8 +18,6 @@ OBJDIRS += \
 
 MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
-MESS_WINUISRC = $(SRC)/mess/osd/winui
-MESS_WINUIOBJ = $(OBJ)/mess/osd/winui
 
 #fixme: should use LIBOSD +=
 MESSLIBOSD += \
@@ -33,11 +31,7 @@ ifeq ($(NO_DLL),)
     $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
     MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
 else
-    ifneq ($(WINUI),)
-        UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-        $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
-        GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
-    else
+    ifeq ($(WINUI),)
         $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
         CLIRESFILE = $(MESS_WINOBJ)/messcli.res
     endif

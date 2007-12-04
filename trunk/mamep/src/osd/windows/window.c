@@ -44,9 +44,9 @@
 #endif /* USE_SCALE_EFFECTS */
 
 #ifdef WINUI
-#include "winui/resource.h"
+#include "resource.h"
 #else
-#include "windows/resource.h"
+#include "mameres.h"
 #endif /* WINUI */
 
 #define MESS

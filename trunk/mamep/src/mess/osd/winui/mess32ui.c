@@ -5,6 +5,8 @@
 //============================================================
 
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
+#define _UNICODE
 #include <assert.h>
 #include <string.h>
 #include <windows.h>
@@ -19,7 +21,7 @@
 #include "bitmask.h"
 #include "mame32.h"
 #include "resourcems.h"
-#include "m32opts.h"
+#include "winuiopt.h"
 #include "picker.h"
 #include "tabview.h"
 #include "m32util.h"
@@ -44,7 +46,7 @@ static int requested_device_type(char *tchar);
 static void SoftwarePicker_OnHeaderContextMenu(POINT pt, int nColumn);
 
 static LPCSTR SoftwareTabView_GetTabShortName(int tab);
-static LPCSTR SoftwareTabView_GetTabLongName(int tab);
+static LPCTSTR SoftwareTabView_GetTabLongName(int tab);
 static void SoftwareTabView_OnSelectionChanged(void);
 static void SoftwareTabView_OnMoveSize(void);
 static void SetupSoftwareTabView(void);
@@ -67,9 +69,11 @@ static void MessOpenOtherSoftware(int iDevice);
 static void MessCreateDevice(int iDevice);
 static void MessRefreshPicker(int nGame);
 
+static int SoftwarePicker_GetMessUseBrokenColor(void);
 static int SoftwarePicker_GetItemImage(HWND hwndPicker, int nItem);
 static void SoftwarePicker_LeavingItem(HWND hwndSoftwarePicker, int nItem);
 static void SoftwarePicker_EnteringItem(HWND hwndSoftwarePicker, int nItem);
+static int SoftwarePicker_CheckItemBroken(HWND hwndPicker, int nItem);
 
 static BOOL DevView_GetOpenFileName(HWND hwndDevView, const struct IODevice *dev, LPTSTR pszFilename, UINT nFilenameLength);
 static BOOL DevView_GetCreateFileName(HWND hwndDevView, const struct IODevice *dev, LPTSTR pszFilename, UINT nFilenameLength);
@@ -108,6 +112,7 @@ static const struct PickerCallbacks s_softwareListCallbacks =
 	GetMessColumnShown,					// pfnGetColumnShown
 	NULL,								// pfnGetOffsetChildren
 
+	SoftwarePicker_GetMessUseBrokenColor,	// pfnGetUseBrokenColor
 	NULL,								// pfnCompare
 	MamePlayGame,						// pfnDoubleClick
 	SoftwarePicker_GetItemString,		// pfnGetItemString
@@ -116,6 +121,7 @@ static const struct PickerCallbacks s_softwareListCallbacks =
 	SoftwarePicker_EnteringItem,		// pfnEnteringItem
 	NULL,								// pfnBeginListViewDrag
 	NULL,								// pfnFindItemParent
+	SoftwarePicker_CheckItemBroken,		// pfnCheckItemBroken
 	SoftwarePicker_Idle,				// pfnIdle
 	SoftwarePicker_OnHeaderContextMenu,	// pfnOnHeaderContextMenu
 	NULL								// pfnOnBodyContextMenu 
@@ -170,6 +176,20 @@ static const struct deviceentry s_devices[] =
 	{ IO_MEMCARD,	NULL,		"Memory cards" },
 	{ IO_CDROM,		NULL,		"CD-ROM images" }
 };
+
+
+
+typedef BOOL (WINAPI *common_file_dialog_procW)(LPOPENFILENAMEW lpofn);
+typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
+
+#ifdef UNICODE
+#define common_file_dialog_proc common_file_dialog_procW
+#else
+#define common_file_dialog_proc common_file_dialog_procA
+#endif
+
+/* last directory for common file dialogs */
+static TCHAR last_directory[MAX_PATH];
 
 
 
@@ -233,7 +253,7 @@ BOOL CreateMessIcons(void)
 	// create the icon index, if we havn't already
     if (!mess_icon_index)
 	{
-		mess_icon_index = pool_malloc(GetMame32MemoryPool(), driver_list_get_count(drivers) * IO_COUNT * sizeof(*mess_icon_index));
+		mess_icon_index = malloc(driver_list_get_count(drivers) * IO_COUNT * sizeof(*mess_icon_index));
     }
 
     for (i = 0; i < (driver_list_get_count(drivers) * IO_COUNT); i++)
@@ -918,6 +938,11 @@ static LPCTSTR DevView_GetSelectedSoftware(HWND hwndDevView, int nDriverIndex,
 // Software List Class
 // ------------------------------------------------------------------------
 
+static int SoftwarePicker_GetMessUseBrokenColor(void)
+{
+	return !GetUseBrokenIcon();
+}
+
 static int SoftwarePicker_GetItemImage(HWND hwndPicker, int nItem)
 {
     int nType;
@@ -1018,6 +1043,14 @@ static void SoftwarePicker_EnteringItem(HWND hwndSoftwarePicker, int nItem)
 
 		UpdateScreenShot();
 	}
+}
+
+
+
+static int SoftwarePicker_CheckItemBroken(HWND hwndPicker, int nItem)
+{
+	//return SoftwareIsBroken(nItem);
+	return 0;
 }
 
 
@@ -1171,6 +1204,12 @@ static LPCSTR s_tabs[] =
 	"devview\0Device View"
 };
 
+static LPCTSTR t_tabs[] =
+{
+	TEXT("picker\0Picker"),
+	TEXT("devview\0Device View")
+};
+
 
 
 static LPCSTR SoftwareTabView_GetTabShortName(int tab)
@@ -1180,9 +1219,9 @@ static LPCSTR SoftwareTabView_GetTabShortName(int tab)
 
 
 
-static LPCSTR SoftwareTabView_GetTabLongName(int tab)
+static LPCTSTR SoftwareTabView_GetTabLongName(int tab)
 {
-	return s_tabs[tab] + strlen(s_tabs[tab]) + 1;
+	return t_tabs[tab] + _tcslen(t_tabs[tab]) + 1;
 }
 
 

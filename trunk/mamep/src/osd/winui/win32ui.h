@@ -53,11 +53,16 @@ extern const ICONDATA g_iconData[];
 
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
+HIMAGELIST GetLargeImageList(void);
+HIMAGELIST GetSmallImageList(void);
 int GetNumGames(void);
 void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);
 void UpdateScreenShot(void);
 void ResizePickerControls(HWND hWnd);
+void MamePlayGame(void);
+int FindIconIndex(int nIconResource);
+int FindIconIndexByName(const char *icon_name);
 LPWSTR GetSearchText(void);
 #ifdef USE_VIEW_PCBINFO
 void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);

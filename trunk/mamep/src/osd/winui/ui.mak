@@ -11,6 +11,8 @@ WINUIOBJ = $(OBJ)/osd/winui
 
 OBJDIRS += $(WINUIOBJ)
 
+MESS_WINSRC = $(SRC)/mess/osd/windows
+MESS_WINOBJ = $(OBJ)/mess/osd/windows
 MESS_WINUISRC = $(SRC)/mess/osd/winui
 MESS_WINUIOBJ = $(OBJ)/mess/osd/winui
 OBJDIRS += $(MESS_WINUIOBJ)
@@ -65,7 +67,13 @@ endif
 
 $(LIBOSD): $(WINUIOBJS)
 
-GUIRESFILE = $(WINUIOBJ)/mame32.res
+ifeq ($(NO_DLL),)
+    GUIRESFILE = $(WINUIOBJ)/mame32.res
+else
+    UI_RCFLAGS += --include-dir $(MESS_WINSRC)
+    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+    GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
+endif
 
 $(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
 
