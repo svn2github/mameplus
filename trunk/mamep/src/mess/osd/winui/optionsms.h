@@ -18,7 +18,8 @@ enum
 };
 
 void MessSetupSettings(core_options *settings);
-void MessSetupGameOptions(core_options *opts, int driver_index);
+void MessSetupGameVariables(core_options *settings, int driver_index);
+void MessSetupGameOptions(core_options *opt, int driver_index);
 
 void SetMessColumnWidths(int widths[]);
 void GetMessColumnWidths(int widths[]);
@@ -38,14 +39,11 @@ BOOL GetMessSortReverse(void);
 const WCHAR* GetSoftwareDirs(void);
 void  SetSoftwareDirs(const WCHAR* paths);
 
-void SetHashDirs(const WCHAR* dir);
-const WCHAR* GetHashDirs(void);
-
 void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const char *software);
 const char *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst);
 
-void SetExtraSoftwarePaths(int driver_index, const char *extra_paths);
-const char *GetExtraSoftwarePaths(int driver_index);
+void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths);
+const WCHAR *GetExtraSoftwarePaths(int driver_index);
 
 void SetCurrentSoftwareTab(const char *shortname);
 const char *GetCurrentSoftwareTab(void);
