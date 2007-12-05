@@ -16,11 +16,9 @@
 #include "osd_cpu.h"
 #include "input.h" /* for input_seq definition */
 
-//#define MESS_MERGE
-
-#ifdef MESS_MERGE // MESS
+//#ifdef MESS
 #include "optionsms.h"
-#endif
+//#endif
 
 #define MAX_SYSTEM_BIOS		16
 #define MAX_SYSTEM_BIOS_ENTRY	16
@@ -77,8 +75,6 @@ typedef struct
 
 typedef struct
 {
-	core_options *dynamic_opt;
-
 // CORE CONFIGURATION OPTIONS
 #ifdef DRIVER_SWITCH
 	char*	driver_config;
@@ -290,7 +286,6 @@ void OptionsInit(void);
 void OptionsExit(void);
 
 core_options *get_core_options(void);
-core_options *get_winui_options(void);
 void set_core_input_directory(const WCHAR *dir);
 void set_core_state_directory(const WCHAR *dir);
 void set_core_input_directory(const WCHAR *dir);

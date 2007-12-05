@@ -1,3 +1,4 @@
+#if 0
 #define WIN32_LEAN_AND_MEAN
 #include <assert.h>
 #include <string.h>
@@ -10,18 +11,26 @@
 #include <tchar.h>
 
 #include "m32util.h"
-#include "driver.h"
 #include "winuiopt.h"
 #include "optionsms.h"
 #include "emuopts.h"
+#include "driver.h"
+#endif
 #include "messopts.h"
 
+#ifndef	MESS_OPTION_TYPE_DEFINE
+#define MESS_OPTION_TYPE_DEFINE \
+	int      mess_column_shown[MESS_COLUMN_MAX]; \
+	int      mess_column_widths[MESS_COLUMN_MAX]; \
+	int      mess_column_order[MESS_COLUMN_MAX]; \
+	int      mess_sort_column; \
+	BOOL     mess_sort_reversed; \
+	char*    current_software_tab; \
+	WCHAR*   softwarepath; \
+
+#else /* MESS_OPTION_TYPE_DEFINE */
 #include "osd/windows/configms.h"
 #include "winmain.h"
-
-#include "strconv.h"
-#include "opthndlr.h"
-
 
 #define WINGUIOPTION_SOFTWARE_COLUMN_SHOWN		"mess_column_shown"
 #define WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS		"mess_column_widths"
@@ -48,106 +57,114 @@ static const options_entry mess_wingui_settings[] =
 	{ NULL }
 };
 
-static options_entry mess_driver_flag_opts[] =
-{
-	{ NULL, "", 0, "Extra Software" },
-	{ NULL }
-};
-
 void MessSetupSettings(core_options *settings)
 {
 	options_add_entries(settings, mess_wingui_settings);
 }
 
-void MessSetupGameOptions(core_options *opt, int driver_index)
+void MessSetupGameOptions(core_options *opts, int driver_index)
 {
-	static const options_entry this_entry[] =
+	options_add_entries(opts, mess_core_options);
+	options_add_entries(opts, mess_win_options);
+
+	if (driver_index >= 0)
 	{
-		{ OPTION_ADDED_DEVICE_OPTIONS,	"0",	OPTION_BOOLEAN | OPTION_INTERNAL,	"device-specific options have been added" },
-		{ NULL }
-	};
-
-	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
-
-	options_add_entries(opt, this_entry);
-	mess_add_device_options(opt, drivers[driver_index]);
-}
-
-void MessWriteGameOptions(void *p, core_file *inifile)
-{
-	options_output_ini_file(p, inifile);
-}
-
-void MessSetupGameVariables(core_options *settings, int driver_index)
-{
-	char buf[64];
-
-	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
-
-	snprintf(buf, ARRAY_LENGTH(buf), "%s_extra_software", drivers[driver_index]->name);
-	mess_driver_flag_opts[0].name = buf;
-
-	options_add_entries(settings, mess_driver_flag_opts);
+		mess_add_device_options(opts, drivers[driver_index]);
+	}
 }
 
 void SetMessColumnOrder(int order[])
 {
-	options_set_csv_int(get_winui_options(), WINGUIOPTION_SOFTWARE_COLUMN_ORDER, order, MESS_COLUMN_MAX, OPTION_PRIORITY_INI);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_order[i] = order[i];
 }
 
 void GetMessColumnOrder(int order[])
 {
-	_options_get_csv_int(get_winui_options(), order, MESS_COLUMN_MAX, WINGUIOPTION_SOFTWARE_COLUMN_ORDER);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		order[i] = settings.mess_column_order[i];
 }
 
 void SetMessColumnShown(int shown[])
 {
-	options_set_csv_int(get_winui_options(), WINGUIOPTION_SOFTWARE_COLUMN_SHOWN, shown, MESS_COLUMN_MAX, OPTION_PRIORITY_INI);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_shown[i] = shown[i];
 }
 
 void GetMessColumnShown(int shown[])
 {
-	_options_get_csv_int(get_winui_options(), shown, MESS_COLUMN_MAX, WINGUIOPTION_SOFTWARE_COLUMN_SHOWN);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		shown[i] = settings.mess_column_shown[i];
 }
 
 void SetMessColumnWidths(int width[])
 {
-	options_set_csv_int(get_winui_options(), WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS, width, MESS_COLUMN_MAX, OPTION_PRIORITY_INI);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		settings.mess_column_widths[i] = width[i];
 }
 
 void GetMessColumnWidths(int width[])
 {
-	_options_get_csv_int(get_winui_options(), width, MESS_COLUMN_MAX, WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS);
+	int i;
+
+	for (i = 0; i < MESS_COLUMN_MAX; i++)
+		width[i] = settings.mess_column_widths[i];
 }
 
 void SetMessSortColumn(int column)
 {
-	options_set_int(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_COLUMN, column, OPTION_PRIORITY_CMDLINE);
+	settings.mess_sort_column = column;
 }
 
 int GetMessSortColumn(void)
 {
-	return options_get_int(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_COLUMN);
+	return settings.mess_sort_column;
 }
 
 void SetMessSortReverse(BOOL reverse)
 {
-	options_set_bool(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_REVERSED, reverse, OPTION_PRIORITY_CMDLINE);
+	settings.mess_sort_reversed = reverse;
 }
 
 BOOL GetMessSortReverse(void)
 {
-	return options_get_bool(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_REVERSED);
+	return settings.mess_sort_reversed;
 }
 
 const WCHAR* GetSoftwareDirs(void)
 {
-	return options_get_wstring(get_winui_options(), WINGUIOPTION_SOFTWAREPATH);
+	return settings.softwarepath;
 }
 
 void SetSoftwareDirs(const WCHAR* paths)
 {
-	options_set_wstring(get_winui_options(), WINGUIOPTION_SOFTWAREPATH, paths, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocatedW(&settings.softwarepath);
+
+	if (paths != NULL)
+		settings.softwarepath = wcsdup(paths);
+}
+
+const WCHAR* GetHashDirs(void)
+{
+	return settings.hashpath;
+}
+
+void SetHashDirs(const WCHAR* dir)
+{
+	FreeIfAllocatedW(&settings.hashpath);
+
+	if (dir != NULL)
+		settings.hashpath = wcsdup(dir);
 }
 
 #if 0
@@ -182,35 +199,34 @@ const char *GetSelectedSoftware(int driver_index, const device_class *devclass, 
 }
 #endif
 
-void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths)
+void SetExtraSoftwarePaths(int driver_index, const char *extra_paths)
 {
-	char buf[64];
-
 	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
 
-	snprintf(buf, ARRAY_LENGTH(buf), "%s_extra_software", drivers[driver_index]->name);
-	options_set_wstring(get_winui_options(), buf, extra_paths, OPTION_PRIORITY_INI);
+	FreeIfAllocated(&driver_variables[driver_index].extra_software);
+	if (extra_paths)
+		driver_variables[driver_index].extra_software = mame_strdup(extra_paths);
 }
 
-const WCHAR *GetExtraSoftwarePaths(int driver_index)
+const char *GetExtraSoftwarePaths(int driver_index)
 {
-	const WCHAR *paths;
-	char buf[64];
+	const char *paths;
 
 	assert(0 <= driver_index && driver_index < driver_list_get_count(drivers));
 
-	snprintf(buf, ARRAY_LENGTH(buf), "%s_extra_software", drivers[driver_index]->name);
-	paths = options_get_wstring(get_winui_options(), buf);
-
-	return paths ? paths : L"";
+	paths = driver_variables[driver_index].extra_software;
+	return paths ? paths : "";
 }
 
 void SetCurrentSoftwareTab(const char *shortname)
 {
-	options_set_string(get_winui_options(), WINGUIOPTION_SOFTWARE_TAB, shortname, OPTION_PRIORITY_CMDLINE);
+	FreeIfAllocated(&settings.current_software_tab);
+	if (shortname != NULL)
+		settings.current_software_tab = mame_strdup(shortname);
 }
 
 const char *GetCurrentSoftwareTab(void)
 {
-	return options_get_string(get_winui_options(), WINGUIOPTION_SOFTWARE_TAB);
+	return settings.current_software_tab;
 }
+#endif /* MESS_OPTION_TYPE_DEFINE */
