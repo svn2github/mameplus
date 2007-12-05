@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.120u4      #
+#     Mameinfo.dat日本語版 v0.121u2      #
 #                                        #
-#           November 19, 2007            #
+#           November 30, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,242 +12,49 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：879 翻訳済：854
-# 追加項目：342 合計：1221
+# Tester報告：871 翻訳済：844
+# 追加項目：342 合計：1213
 #
 
 
-$info=crimfght
+$info=gradius3
 $mame
 [バグ]
 
-- BGMの速度が少し遅い。 crimfght0120u3gre, ENAY
+- 9面の背景でキューブの表示がおかしくなる。 gradius3_0121u1yel, fostar
 
 
-[TIPS]
-
-- 2周ノーミスでクリアするとクレジットが無限になる。
+- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
 
 $end
 
-$info=hoops96
+$info=timecrsa
 $mame
 [バグ]
 
-- F2キーを押すとゲームがクラッシュする。起きる場合と起きない場合がある。 hoops96_0120u3red, LastNinja2
-
-
-- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
+- 3面のヘリコプターを破壊できない。 timecrsa0121u2gre, Withnail
 
 $end
 
-$info=dunhuang
+$info=slither
 $mame
 [バグ]
 
-- MAMEのロンキーがリーチ、チーがロン、Zキーがリーチとして動作する。 dunhuang0120u3gra, Vas Crabb
-
-$end
-
-$info=mcnpshnt
-$mame
-[バグ]
-
-- 不明なDIP設定。
-
-Flip Screenのすぐ下のunkonwnは時間の設定。
-
-CoinageとDemo Soundsの間のunknownはオートツモ設定。 mcnpshnt0120u3gra, mahjongfan
-
-$end
-
-$info=mjdialq2
-$mame
-[バグ]
-
-- 最初のUnknown DIPスイッチ2つはコイン当たりのクレジット数を設定する。
-
-OFF-ONが2、OFF-OFFが1、ON-OFFが1/2、ON-ONが1/3。 mjdialq2_0120u3gra, mahjongfan
-
-$end
-
-$info=terabrst
-$mame
-[バグ]
-
-- ガン操作が0.120u2で動作していない。また両画面を表示させるとクラッシュする。 terabrst0120u2gra, iceman2004cny /  F1ReB4LL
-
-$end
-
-$info=ikki
-$mame
-[バグ]
-
-- ゲーム内でのスプライトのちらつきは0.120u1で修正されたが、デモシーンなどで別なちらつきが発生している。
-インターリーブの値を0x21に下げると修正される模様。 ikki0120u1yel, ShimaPong / Robiza
-
-$end
-
-$info=mp_bio
-$mame
-[バグ]
-
-- コンティニュー画面で、コイン入力は受け付けるが、スタートボタンを押してもコンティニューできない。
-時々動作することもある。 mp_bio0120u2gra, LastNinja2
-
-$end
-
-$info=mpu4met0
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
-
-$end
-
-$info=mpu4tst2
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
-
-$end
-
-$info=mpu4utst
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
-
-$end
-
-$info=patimono
-$mame
-[バグ]
-
-- DIPスイッチ1-3はコイン当たりのクレジット数設定。OFFが1、ONが2。
-
-DIPスイッチ1-4はデモモードでのサウンド設定。ONのときはサウンドがOFF。
-
-DIPスイッチ1-5はBGM設定。ONだとBGMなし。ただし、ONときにはサウンド関係のバグがある模様。 patimono0120u3gra, mahjongfan
-
-$end
-
-$info=mhhonban
-$mame
-[バグ]
-
-- DIPスイッチ1-4は、コイン当たりのクレジット数設定。 mhhonban0120u3gra, mahjongfan
-
-$end
-
-$info=mjdejavu
-$mame
-[バグ]
-
-- 配牌後に並び替えされず、リーチなどもできない。 mjdejavu0120u3yel, dyq
-
-$end
-
-$info=blitz2k
-$mame
-[バグ]
-
-- VS画面の直後に32ビット版はクラッシュ、64ビット版はフリーズする。 blitz2k0120u2red, Scagazza / Fujix
-
-$end
-
-$info=calspeed
-$mame
-[バグ]
-
-- マニュアルギアを選択してもオートマになる。 calspeed0120u3gre, Scagazza
-
-$end
-
-$info=hyprdriv
-$mame
-[バグ]
-
-- ブレーキボタンが働かない。キャリブレーションしても効果がない。 hyprdriv0120u4gra, Scagazza
-
-$end
-
-$info=calspeda
-$mame
-[バグ]
-
-- 64ビット版で、キャリブレーションの画面の後、黒画面でフリーズする。 calspeda0120u2red, Scagazza
-
-$end
-
-$info=grdforce
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=astrass
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=batmanfr
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=cotton2
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=cottonbm
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=othellos
-$mame
-[バグ]
-
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
-
-$end
-
-$info=rjammer
-$mame
-[バグ]
-
-- 1) 敵がラスタエフェクトがかかったようにちらつく。アトラクトモードの2周目で確認できる。
-
-2) 遠くにいる敵が表示されない。
-
-3) 道路横の看板が表示されないことがある。
-
-4) タイトル画面のロゴで「R」の一部が欠けている。
-
-5) 1周目の2面以降、敵の色が青で始まり、面の途中で正しい色に突然変わる。 rjammer0120u4gre, The tECHIDNA
+-  slither0121u2gre, Tafoid
 
 $end
 
 $info=gauntleg
 $mame
 [バグ]
+
+- 64bit環境で、MAME終了時に次のエラーがランダムで起こる:
+
+C:\mame>mame gauntleg<br>
+Unimplemented op C0B2004B (30,0B)<br>
+Average speed: 51.01% (137 seconds)<br>
+Final code size = 18827616 gauntleg0121u2gre, Malice
+
 
 - 64ビット版で、Mountain Journeyを選ぶと2面でクラッシュする。 gauntleg0120u2red, Scagazza
 
@@ -852,6 +659,19 @@ MAME対応のset 1の基板で確認済み。 crbaloon36finalgre, Fujix (chackn)
 
 $end
 
+$info=crimfght
+$mame
+[バグ]
+
+- BGMの速度が少し遅い。 crimfght0120u3gre, ENAY
+
+
+[TIPS]
+
+- 2周ノーミスでクリアするとクレジットが無限になる。
+
+$end
+
 $info=spacefrt
 $mame
 [バグ]
@@ -980,6 +800,17 @@ $mame
 [バグ]
 
 - 0.114u4以降、カセットからのロードが完了後、画面がぐちゃぐちゃで正しく動作しない。 czeroize0116red, ShimaPong
+
+$end
+
+$info=hoops96
+$mame
+[バグ]
+
+- テストモード以外では右スピーカーからしか音が出ない。 hoops960103u4gre, Twisty
+
+
+- F2キーを押すとゲームがクラッシュする。起きる場合と起きない場合がある。 hoops96_0120u3red, LastNinja2
 
 $end
 
@@ -1553,6 +1384,15 @@ $mame
 [バグ]
 
 - 投球するとゲームがリセットされる。 vbowl0116u3red, Kekule / twisty / BarnacleEd
+
+$end
+
+$info=ikki
+$mame
+[バグ]
+
+- ゲーム内でのスプライトのちらつきは0.120u1で修正されたが、デモシーンなどで別なちらつきが発生している。
+インターリーブの値を0x21に下げると修正される模様。 ikki0120u1yel, ShimaPong / Robiza
 
 $end
 
@@ -2445,6 +2285,30 @@ RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
 
 $end
 
+$info=mpu4met0
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
+
+$end
+
+$info=mpu4tst2
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
+
+$end
+
+$info=mpu4utst
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 mpu4_0120u4red, John IV / JWallace
+
+$end
+
 $info=metamrph
 $mame
 [バグ]
@@ -3148,6 +3012,14 @@ $mame
 
 $end
 
+$info=mjdejavu
+$mame
+[バグ]
+
+- 配牌後に並び替えされず、リーチなどもできない。 mjdejavu0120u3yel, dyq
+
+$end
+
 $info=mjifb
 $mame
 [バグ]
@@ -3259,11 +3131,35 @@ $mame
 
 $end
 
+$info=blitz2k
+$mame
+[バグ]
+
+- VS画面の直後に32ビット版はクラッシュ、64ビット版はフリーズする。 blitz2k0120u2red, Scagazza / Fujix
+
+$end
+
+$info=calspeed
+$mame
+[バグ]
+
+- マニュアルギアを選択してもオートマになる。 calspeed0120u3gre, Scagazza
+
+$end
+
 $info=vaportrx
 $mame
 [バグ]
 
 - レース後のリザルト画面でクラッシュする。 vaportrx0115u4red, Radwar
+
+$end
+
+$info=calspeda
+$mame
+[バグ]
+
+- 64ビット版で、キャリブレーションの画面の後、黒画面でフリーズする。 calspeda0120u2red, Scagazza
 
 $end
 
@@ -3825,9 +3721,6 @@ $mame
 
 - 画面の反転設定や筐体の設定をどのようにしても、ゴールしたときのグラフィックが逆さまになる。 ftsoccer0105u4gre1, cpukett
 
-
-- BGMのテンポが遅い。たとえばタイトルシーンでは、音楽がちょうど終わったところでシュートの音が出る。 ftsoccer0105u4gre2, Fujix
-
 $end
 
 $info=ikari
@@ -3924,6 +3817,54 @@ $mame
 [バグ]
 
 - コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
+
+$end
+
+$info=grdforce
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=astrass
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=batmanfr
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=cotton2
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=cottonbm
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+
+$end
+
+$info=othellos
+$mame
+[バグ]
+
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
 
 $end
 
@@ -4171,7 +4112,7 @@ $mame
 [バグ]
 
 - 初回起動時（nvramが無い状態）、アトラクトモードの画面左側に表示不具合が出る。
-次回起動時（nvramが作成された状態）では起きない。 gseeker0101yel, Twisty
+次回起動時（nvramが作成された状態）では起きない。 gseeker0101yel, Twisty / RansAckeR
 
 
 - コンティニュー画面が真っ黒。 gseeker098u3gre, Twisty
@@ -4318,7 +4259,7 @@ $info=evilston
 $mame
 [バグ]
 
-- 敵にやられるとそれっきりBGMが止まってしまう。SEもおかしくなる。何回か試さないと起きないときもあり。 evilston069u3gre, MAMEjong
+- 敵にやられるとそれっきりBGMが止まってしまう。SEもおかしくなる。何回か試さないと起きないときもあり。 evilston069u3gre, MAMEjong / RansAckeR
 
 $end
 
@@ -4450,7 +4391,7 @@ $mame
 - 2面の水中の敵とのブレンド色が一部おかしい。 fstarfrc0102u1gre, Twisty / RansAckeR / Haze
 
 
-- イントロ部で、画面が高速スクロールするところで、キャラ化けがしばらく表示される。 fstarfrc37b5gre, Jonemaan
+- イントロ部で、画面が高速スクロールするところで、キャラ化けがしばらく表示される。 fstarfrc37b5gre, Jonemaan / RansAckeR
 
 $end
 
@@ -4740,6 +4681,22 @@ $mame
 - 新しくゲームを始めて、 
 2番目の敵の軍団（ピンク色の逆三角のやつ）が画面の外へ飛んでいくと、
 左右関係なく画面左側にスプライトが残ってしまう。 m66037b15gre, Gmitra / DCisTHEbest
+
+$end
+
+$info=rjammer
+$mame
+[バグ]
+
+- 1) 敵がラスタエフェクトがかかったようにちらつく。アトラクトモードの2周目で確認できる。
+
+2) 遠くにいる敵が表示されない。
+
+3) 道路横の看板が表示されないことがある。
+
+4) タイトル画面のロゴで「R」の一部が欠けている。
+
+5) 1周目の2面以降、敵の色が青で始まり、面の途中で正しい色に突然変わる。 rjammer0120u4gre, The tECHIDNA
 
 $end
 
@@ -5651,12 +5608,42 @@ $mame
 
 $end
 
+$info=mcnpshnt
+$mame
+[バグ]
+
+- 不明なDIP設定。
+
+Flip Screenのすぐ下のunkonwnは時間の設定。
+
+CoinageとDemo Soundsの間のunknownはオートツモ設定。 mcnpshnt0120u3gra, mahjongfan
+
+$end
+
+$info=mjdialq2
+$mame
+[バグ]
+
+- 最初のUnknown DIPスイッチ2つはコイン当たりのクレジット数を設定する。
+
+OFF-ONが2、OFF-OFFが1、ON-OFFが1/2、ON-ONが1/3。 mjdialq2_0120u3gra, mahjongfan
+
+$end
+
 $info=oigas
 $mame
 [バグ]
 
 - キーボードでパドル操作する場合、右キーを押すとボールと同じX軸の位置にジャンプする。
 右キーを押しっぱなしにすれば、ボールが落ちることはない。 oigas0115gra, Tafoid
+
+$end
+
+$info=terabrst
+$mame
+[バグ]
+
+- ガン操作が0.120u2で動作していない。また両画面を表示させるとクラッシュする。 terabrst0120u2gra, iceman2004cny /  F1ReB4LL
 
 $end
 
@@ -5716,6 +5703,15 @@ $mame
 
 $end
 
+$info=mp_bio
+$mame
+[バグ]
+
+- コンティニュー画面で、コイン入力は受け付けるが、スタートボタンを押してもコンティニューできない。
+時々動作することもある。 mp_bio0120u2gra, LastNinja2
+
+$end
+
 $info=gstrik2
 $mame
 [バグ]
@@ -5768,6 +5764,18 @@ $mame
 
 $end
 
+$info=patimono
+$mame
+[バグ]
+
+- DIPスイッチ1-3はコイン当たりのクレジット数設定。OFFが1、ONが2。
+
+DIPスイッチ1-4はデモモードでのサウンド設定。ONのときはサウンドがOFF。
+
+DIPスイッチ1-5はBGM設定。ONだとBGMなし。ただし、ONときにはサウンド関係のバグがある模様。 patimono0120u3gra, mahjongfan
+
+$end
+
 $info=popbounc
 $mame
 [バグ]
@@ -5785,6 +5793,14 @@ $mame
 [バグ]
 
 - カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
+
+$end
+
+$info=mhhonban
+$mame
+[バグ]
+
+- DIPスイッチ1-4は、コイン当たりのクレジット数設定。 mhhonban0120u3gra, mahjongfan
 
 $end
 
@@ -5893,6 +5909,14 @@ $mame
 [バグ]
 
 - 筐体のDIPスイッチ設定が動作しない。実はUnknownになっているのが筐体設定。 scorpion0111u5gra, Speedfreak
+
+$end
+
+$info=hyprdriv
+$mame
+[バグ]
+
+- ブレーキボタンが働かない。キャリブレーションしても効果がない。 hyprdriv0120u4gra, Scagazza
 
 $end
 
@@ -6400,14 +6424,6 @@ $mame
 [バグ]
 
 - [possible] 効果音が遅れる。 rushatck0109gre, Withnail
-
-$end
-
-$info=gradius3
-$mame
-[バグ]
-
-- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
 
 $end
 
