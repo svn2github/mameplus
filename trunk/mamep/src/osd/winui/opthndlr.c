@@ -1,3 +1,5 @@
+#include "opthndlr.h"
+
 //============================================================
 
 #define _options_get_bool(opts,p,name)	do { *p = options_get_bool(opts, name); } while (0)
@@ -36,7 +38,7 @@ INLINE BOOL options_compare_float(float v1, float v2)
 
 //============================================================
 
-static void _options_get_csv_int(core_options *opts, int *dest, int numitems, const char *name)
+void _options_get_csv_int(core_options *opts, int *dest, int numitems, const char *name)
 {
 	const char *stemp = options_get_string(opts, name);
 	int array[CSV_ARRAY_MAX];
@@ -95,7 +97,7 @@ static void _options_get_csv_int(core_options *opts, int *dest, int numitems, co
 		dest[i] = array[i];
 }
 
-static void options_set_csv_int(core_options *opts, const char *name, const int *src, int numitems, int priority)
+void options_set_csv_int(core_options *opts, const char *name, const int *src, int numitems, int priority)
 {
 	char buf[1024];
 	char *p;
@@ -155,25 +157,6 @@ INLINE BOOL options_compare_string(const char *s1, const char *s2)
 
 
 //============================================================
-
-INLINE const WCHAR *options_get_wstring(core_options *opts, const char *name)
-{
-	const char *stemp = options_get_string(opts, name);
-
-	if (stemp == NULL)
-		return NULL;
-	return wstring_from_utf8(stemp);
-}
-
-INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority)
-{
-	char *utf8_value = NULL;
-
-	if (value)
-		utf8_value = utf8_from_wstring(value);
-
-	options_set_string(opts, name, utf8_value, priority);
-}
 
 INLINE void _options_get_wstring(core_options *opts, WCHAR **p, const char *name)
 {
@@ -263,7 +246,7 @@ INLINE void _options_get_wstring_allow_null(core_options *opts, WCHAR **p, const
 INLINE void options_set_wstring_allow_null(core_options *opts, const char *name, const WCHAR *value, int priority)
 {
 	if (value == NULL)
-		value = TEXT("");
+		value = L"";
 
 	options_set_wstring(opts, name, value, priority);
 }

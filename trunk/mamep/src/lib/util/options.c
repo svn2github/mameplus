@@ -686,6 +686,7 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
     current marked state to an INI file
 -------------------------------------------------*/
 
+#if 0
 void options_output_ini_file_marked(core_options *opts, core_file *inifile)
 {
 	const char *last_header = NULL;
@@ -719,6 +720,7 @@ void options_output_ini_file_marked(core_options *opts, core_file *inifile)
 		}
 	}
 }
+#endif
 
 
 /*-------------------------------------------------

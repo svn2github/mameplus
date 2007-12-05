@@ -55,7 +55,8 @@ WINUIOBJS += \
 	$(WINUIOBJ)/win32ui.o \
 	$(WINUIOBJ)/winuiopt.o \
 	$(WINUIOBJ)/layout.o \
-	$(WINUIOBJ)/translate.o
+	$(WINUIOBJ)/translate.o \
+
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
     WINUIOBJS += $(WINUIOBJ)/paletteedit.o
@@ -69,7 +70,7 @@ $(LIBOSD): $(WINUIOBJS)
 
 $(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
 
-$(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.c
+$(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.h $(WINUISRC)/opthndlr.c
 
 
 #####################################################################

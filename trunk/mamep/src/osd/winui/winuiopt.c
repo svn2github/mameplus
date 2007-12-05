@@ -52,10 +52,6 @@
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
 
-#ifdef MESS
-#include "optionsms.c"
-#endif
-
 extern DWORD create_path_recursive(const TCHAR *path);
 
 /***************************************************************************
@@ -271,10 +267,6 @@ typedef struct
 // CORE LANGUAGE OPTIONS
 	int      langcode;
 	BOOL     use_lang_list;
-
-#ifdef MESS
-MESS_OPTION_TYPE_DEFINE
-#endif
 } settings_type; /* global settings for the UI only */
 
 struct _backup
@@ -290,9 +282,6 @@ typedef struct
 	int play_time;
 	int rom_audit_results;
 	int samples_audit_results;
-#ifdef MESS
-	char *extra_software;
-#endif
 	BOOL options_loaded; // whether or not we've loaded the game options yet
 	BOOL use_default; // whether or not we should just use default options
 	int alt_index; // index for alt_option if driver is unified
@@ -325,9 +314,9 @@ INLINE void options_set_wstring(core_options *opts, const char *name, const WCHA
 static void set_core_rom_directory(const WCHAR *dir);
 static void set_core_sample_directory(const WCHAR *dir);
 static void set_core_image_directory(const WCHAR *dir);
-#ifdef MESS
+//#ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir);
-#endif
+//#endif
 static void set_core_translation_directory(const WCHAR *dir);
 
 static int   regist_alt_option(const WCHAR *name);
@@ -339,18 +328,15 @@ static void  unify_alt_options(void);
 static void  generate_default_ctrlr(void);
 static void  generate_default_dirs(void);
 
-static void  options_create_entry_cli(void);
-static void  options_create_entry_winui(void);
-
-static void  options_free_entry_cli(void);
-static void  options_free_entry_winui(void);
+static core_options *options_create_entry_cli(void);
+static core_options *options_create_entry_winui(void);
 
 static void  options_free_string_core(settings_type *s);
 static void  options_free_string_driver(options_type *p);
 static void  options_free_string_winui(settings_type *p);
 
 static void  options_get_core(settings_type *p);
-static void  options_get_driver(options_type *p);
+static void  options_get_driver(core_options *opt, options_type *p);
 static void  options_get_winui(settings_type *p);
 
 static void  options_duplicate_settings(const settings_type *source, settings_type *dest);
@@ -409,8 +395,9 @@ static void  free_folder_flag(f_flag *flag);
     Internal variables
  ***************************************************************************/
 
-static core_options *options_cli;	// base core options and driver options
+static core_options *options_cli;	// base core and driver options
 static core_options *options_winui;	// only GUI related
+static core_options *options_driver;	// temp for driver options
 
 static settings_type settings;
 
@@ -527,10 +514,6 @@ static WCHAR reload_config_msg[] =
 	TEXT("Would you like to migrate old configurations to the new directory?");
 
 
-#ifdef MESS
-#include "optionsms.c"
-#endif
-
 /***************************************************************************
     External functions  
  ***************************************************************************/
@@ -546,19 +529,17 @@ void OptionsInit()
 
 	num_drivers = GetNumGames();
 
-	options_create_entry_cli();
+	options_cli = options_create_entry_cli();
+	options_get_core(&settings);
+	options_get_driver(options_cli, &global);
 	lang_set_langcode(options_cli, UI_LANG_EN_US);
 
-	options_get_core(&settings);
-	options_get_driver(&global);
+	options_driver = options_create_entry_cli();
 
 	default_variables.play_count  = 0;
 	default_variables.play_time = 0;
 	default_variables.rom_audit_results = UNKNOWN;
 	default_variables.samples_audit_results = UNKNOWN;
-#ifdef MESS
-	default_variables.extra_software = NULL;
-#endif
 	default_variables.options_loaded = FALSE;
 	default_variables.use_default = TRUE;
 	default_variables.alt_index = -1;
@@ -574,7 +555,20 @@ void OptionsInit()
 	build_alt_options();
 	build_default_bios();
 
-	options_create_entry_winui();
+#ifdef MESS_MERGE // MESS
+	for (i = 0; i < num_drivers; i++)
+	{
+		if (!DriverIsConsole(i))
+			continue;
+
+		if (!driver_options[i].dynamic_opt)
+			driver_options[i].dynamic_opt = options_create_entry_cli();
+
+		MessSetupGameOptions(driver_options[i].dynamic_opt, i);
+	}
+#endif
+
+	options_winui = options_create_entry_winui();
 	options_get_winui(&settings);
 
 	// Create Backup
@@ -594,9 +588,9 @@ void OptionsInit()
 	set_core_rom_directory(settings.rompath);
 	set_core_image_directory(settings.rompath);
 	set_core_sample_directory(settings.samplepath);
-#ifdef MESS
+//#ifdef MESS
 	set_core_hash_directory(settings.hashpath);
-#endif
+//#endif
 
 	generate_default_dirs();
 	generate_default_ctrlr();
@@ -612,6 +606,10 @@ void OptionsExit(void)
 	for (i = 0; i < num_alt_options; i++)
 		FreeGameOptions(alt_options[i].option);
 
+	for (i = 0; i < num_drivers; i++)
+		if (driver_options[i].dynamic_opt)
+			options_free(driver_options[i].dynamic_opt);
+
 	free(driver_options);
 	free(driver_variables);
 	free(alt_options);
@@ -622,8 +620,9 @@ void OptionsExit(void)
 	FreeSettings(&settings);
 	FreeSettings(&backup.settings);
 
-	options_free_entry_cli();
-	options_free_entry_winui();
+	options_free(options_cli);
+	options_free(options_driver);
+	options_free(options_winui);
 }
 
 
@@ -631,6 +630,11 @@ void OptionsExit(void)
 core_options *get_core_options(void)
 {
 	return options_cli;
+}
+
+core_options *get_winui_options(void)
+{
+	return options_winui;
 }
 
 void set_core_input_directory(const WCHAR *dir)
@@ -717,12 +721,12 @@ static void set_core_sample_directory(const WCHAR *dir)
 	options_set_wstring(options_cli, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_INI);
 }
 
-#ifdef MESS
+//#ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir)
 {
 	options_set_wstring(options_cli, SEARCHPATH_HASH, dir, OPTION_PRIORITY_INI);
 }
-#endif
+//#endif
 
 static void set_core_translation_directory(const WCHAR *dir)
 {
@@ -1631,6 +1635,21 @@ void SetSampleDirs(const WCHAR* paths)
 		set_core_sample_directory(settings.samplepath);
 	}
 }
+
+//#ifdef MESS
+const WCHAR* GetHashDirs(void)
+{
+	return settings.hashpath;
+}
+
+void SetHashDirs(const WCHAR* dir)
+{
+	FreeIfAllocatedW(&settings.hashpath);
+
+	if (dir != NULL)
+		settings.hashpath = wcsdup(dir);
+}
+//#endif
 
 const WCHAR* GetIniDir(void)
 {
@@ -3350,15 +3369,8 @@ static const char *driver_flag_names[] =
 	"_playcount",
 	"_play_time",
 	"_rom_audit",
-	"_samples_audit",
-#ifdef MESS
-	"_extra_software",
-#endif
-	NULL
+	"_samples_audit"
 };
-
-#define NUM_MESS_DRIVER_FLAGS	1
-#define NUM_MAME_DRIVER_FLAGS	(ARRAY_LENGTH(driver_flag_names) - 1 - NUM_MESS_DRIVER_FLAGS)
 
 static char driver_flag_unknown[3];
 
@@ -3369,9 +3381,6 @@ static options_entry driver_flag_opts[] =
 	{ NULL, "0",                 0,             "Play Time" },
 	{ NULL, driver_flag_unknown, 0,             "Has Roms" },
 	{ NULL, driver_flag_unknown, 0,             "Has Samples" },
-#ifdef MESS
-	{ NULL, "",                  0,             "Extra Software" },
-#endif
 	{ NULL }
 };
 
@@ -3398,10 +3407,14 @@ static void options_add_driver_flag_opts(core_options *opts)
 			p += strlen(p);
 			strcat(p, driver_flag_names[j]);
 			p += strlen(p) + 1;
-dprintf("%s", driver_flag_opts[j + 1].name);
 		}
 
 		options_add_entries(opts, driver_flag_opts);
+
+#ifdef MESS_MERGE // MESS
+		if (DriverIsConsole(i))
+			MessSetupGameVariables(opts, i);
+#endif
 	}
 }
 
@@ -3424,22 +3437,11 @@ static void options_get_driver_flag_opts(core_options *opts)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < NUM_MAME_DRIVER_FLAGS; j++)
+		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			*flags[j] = options_get_int(opts, buf);
 		}
-#ifdef MESS
-		{
-			const char *s;
-
-			FreeIfAllocated(&driver_variables[i].extra_software);
-			strcpy(p, driver_flag_names[j]);
-			s = options_get_string(opts, buf);
-			if (s)
-				driver_variables[i].extra_software = mame_strdup(s);
-		}
-#endif
 	}
 }
 
@@ -3462,15 +3464,11 @@ static void options_set_driver_flag_opts(core_options *opts)
 		strcpy(buf, drivers[i]->name);
 		p = buf + strlen(buf);
 
-		for (j = 0; j < NUM_MAME_DRIVER_FLAGS; j++)
+		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
 			options_set_int(opts, buf, flags[j], OPTION_PRIORITY_INI);
 		}
-#ifdef MESS
-		strcpy(p, driver_flag_names[j]);
-		options_set_string(opts, buf, driver_variables[i].extra_software, OPTION_PRIORITY_INI);
-#endif
 	}
 }
 
@@ -3478,7 +3476,7 @@ static void options_set_driver_flag_opts(core_options *opts)
 //============================================================
 
 static void options_set_core(const settings_type *p);
-static void options_set_driver(const options_type *p);
+static void options_set_driver(core_options *opt, const options_type *p);
 static void options_set_winui(const settings_type *p);
 
 static void debug_printf(const char *s)
@@ -3492,49 +3490,41 @@ static void memory_error(const char *message)
 	exit(1);
 }
 
-static void options_create_entry_cli(void)
+static core_options *options_create_entry_cli(void)
 {
+	core_options *opt;
+
 	/* create cli options */
-	options_cli = mame_options_init(mame_win_options);
+	opt = mame_options_init(mame_win_options);
 
-	options_set_output_callback(options_cli, OPTMSG_INFO, debug_printf);
-	options_set_output_callback(options_cli, OPTMSG_WARNING, debug_printf);
-	options_set_output_callback(options_cli, OPTMSG_ERROR, debug_printf);
+	options_set_output_callback(opt, OPTMSG_INFO, debug_printf);
+	options_set_output_callback(opt, OPTMSG_WARNING, debug_printf);
+	options_set_output_callback(opt, OPTMSG_ERROR, debug_printf);
 
-#ifdef MESS
-	MessSetupGameOptions(options_cli, -1);
-#endif
+	return opt;
 }
 
-static void options_create_entry_winui(void)
+static core_options *options_create_entry_winui(void)
 {
+	core_options *opt;
+
 	/* create winui options */
-	options_winui = options_create(memory_error);
+	opt = options_create(memory_error);
 
 	/* set up output callbacks */
-	options_set_output_callback(options_winui, OPTMSG_INFO, debug_printf);
-	options_set_output_callback(options_winui, OPTMSG_WARNING, debug_printf);
-	options_set_output_callback(options_winui, OPTMSG_ERROR, debug_printf);
+	options_set_output_callback(opt, OPTMSG_INFO, debug_printf);
+	options_set_output_callback(opt, OPTMSG_WARNING, debug_printf);
+	options_set_output_callback(opt, OPTMSG_ERROR, debug_printf);
 
-	options_add_entries(options_winui, winui_opts);
-#ifdef MESS
-	MessSetupSettings(options_winui);
+	options_add_entries(opt, winui_opts);
+#ifdef MESS_MERGE // MESS
+	MessSetupSettings(opt);
 #endif
-	options_add_driver_flag_opts(options_winui);
-}
 
-static void options_free_entry_cli(void)
-{
-	options_free(options_cli);
-	options_cli = NULL;
-}
+	options_add_driver_flag_opts(opt);
 
-static void options_free_entry_winui(void)
-{
-	options_free(options_winui);
-	options_winui = NULL;
+	return opt;
 }
-
 
 static int options_load_default_config(void)
 {
@@ -3555,10 +3545,10 @@ static int options_load_default_config(void)
 		return 0;
 
 	options_set_core(&backup.settings);
-	options_set_driver(&backup.global);
+	options_set_driver(options_cli, &backup.global);
 	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
 	options_get_core(&settings);
-	options_get_driver(&global);
+	options_get_driver(options_cli, &global);
 
 	mame_fclose(file);
 
@@ -3567,6 +3557,7 @@ static int options_load_default_config(void)
 
 static int options_load_driver_config(int driver_index)
 {
+	core_options *opt = driver_options[driver_index].dynamic_opt;
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	file_error filerr;
@@ -3592,9 +3583,12 @@ static int options_load_driver_config(int driver_index)
 	if (filerr != FILERR_NONE)
 		return 0;
 
-	options_set_driver(&driver_options[driver_index]);
-	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
-	options_get_driver(&driver_options[driver_index]);
+	if (!opt)
+		opt = options_cli;
+
+	options_set_driver(opt, &driver_options[driver_index]);
+	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_INI);
+	options_get_driver(opt, &driver_options[driver_index]);
 
 	update_driver_use_default(driver_index);
 
@@ -3605,6 +3599,7 @@ static int options_load_driver_config(int driver_index)
 
 static int options_load_alt_config(alt_options_type *alt_option)
 {
+	core_options *opt = alt_option->option->dynamic_opt;
 	mame_file *file;
 	file_error filerr;
 	WCHAR fname[MAX_PATH];
@@ -3630,9 +3625,12 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	if (filerr != FILERR_NONE)
 		return 0;
 
-	options_set_driver(alt_option->option);
-	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
-	options_get_driver(alt_option->option);
+	if (!opt)
+		opt = options_cli;
+
+	options_set_driver(opt, alt_option->option);
+	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_INI);
+	options_get_driver(opt, alt_option->option);
 
 	update_alt_use_default(alt_option);
 
@@ -3690,7 +3688,7 @@ static int options_save_default_config(void)
 		return -1;
 
 	options_set_core(&settings);
-	options_set_driver(&global);
+	options_set_driver(options_cli, &global);
 	options_output_ini_file(options_cli, mame_core_file(file));
 
 	mame_fclose(file);
@@ -3700,6 +3698,7 @@ static int options_save_default_config(void)
 
 static int options_save_driver_config(int driver_index)
 {
+	core_options *opt = driver_options[driver_index].dynamic_opt;
 	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	file_error filerr;
@@ -3724,14 +3723,13 @@ static int options_save_driver_config(int driver_index)
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (driver_variables[driver_index].use_default && !driver_options[driver_index].ips)
-#else /* USE_IPS */
-	if (driver_variables[driver_index].use_default)
+	if (!driver_options[driver_index].ips)
 #endif /* USE_IPS */
-	{
-		DeleteFileW(fname);
-		return 0;
-	}
+		if (!opt && driver_variables[driver_index].use_default)
+		{
+			DeleteFileW(fname);
+			return 0;
+		}
 
 	create_path_recursive(settings.inipath);
 
@@ -3742,10 +3740,14 @@ static int options_save_driver_config(int driver_index)
 	if (filerr != FILERR_NONE)
 		return -1;
 
-	options_set_driver(&driver_options[driver_index]);
-	options_clear_output_mark(options_cli);
-	options_set_mark_driver(&driver_options[driver_index], parent);
-	options_output_ini_file_marked(options_cli, mame_core_file(file));
+	if (!opt)
+		opt = options_cli;
+
+	options_revert(options_driver, OPTION_PRIORITY_MAXIMUM);
+	options_copy(options_driver, opt);
+	options_set_driver(options_driver, parent);
+	options_set_driver(opt, &driver_options[driver_index]);
+	options_output_diff_ini_file(opt, options_driver, mame_core_file(file));
 
 	mame_fclose(file);
 
@@ -3754,6 +3756,7 @@ static int options_save_driver_config(int driver_index)
 
 static int options_save_alt_config(alt_options_type *alt_option)
 {
+	core_options *opt = alt_option->option->dynamic_opt;
 	mame_file *file;
 	file_error filerr;
 	WCHAR fname[MAX_PATH];
@@ -3777,10 +3780,9 @@ static int options_save_alt_config(alt_options_type *alt_option)
 
 #ifdef USE_IPS
 	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	if (alt_option->variable->use_default && !alt_option->has_bios && !alt_option->option->ips)
-#else /* USE_IPS */
-	if (alt_option->variable->use_default && !alt_option->has_bios)
+	if (!alt_option->option->ips)
 #endif /* USE_IPS */
+	if (!opt && alt_option->variable->use_default && !alt_option->has_bios)
 	{
 		DeleteFileW(fname);
 		return 0;
@@ -3795,10 +3797,14 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (filerr != FILERR_NONE)
 		return -1;
 
-	options_set_driver(alt_option->option);
-	options_clear_output_mark(options_cli);
-	options_set_mark_driver(alt_option->option, parent);
-	options_output_ini_file_marked(options_cli, mame_core_file(file));
+	if (!opt)
+		opt = options_cli;
+
+	options_revert(options_driver, OPTION_PRIORITY_MAXIMUM);
+	options_copy(options_driver, opt);
+	options_set_driver(options_driver, parent);
+	options_set_driver(opt, alt_option->option);
+	options_output_diff_ini_file(opt, options_driver, mame_core_file(file));
 
 	mame_fclose(file);
 
@@ -3858,7 +3864,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 	opt = GetGameOptions(driver_index);
 
 	options_set_core(&backup.settings);
-	options_set_driver(&backup.global);
+	options_set_driver(options_cli, &backup.global);
 
 	options_clear_output_mark(options_cli);
 	options_set_mark_core(&settings, &backup.settings);
@@ -3922,8 +3928,7 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #define START_OPT_FUNC_CORE	static void options_get_core(settings_type *p) { \
 					core_options *opts = options_cli;
 #define END_OPT_FUNC_CORE	}
-#define START_OPT_FUNC_DRIVER	static void options_get_driver(options_type *p) { \
-					core_options *opts = options_cli;
+#define START_OPT_FUNC_DRIVER	static void options_get_driver(core_options *opts, options_type *p) {
 #define END_OPT_FUNC_DRIVER	}
 #define START_OPT_FUNC_WINUI	static void options_get_winui(settings_type *p) { \
 					core_options *opts = options_winui;
@@ -3951,8 +3956,7 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #define START_OPT_FUNC_CORE	static void options_set_core(const settings_type *p) { \
 					core_options *opts = options_cli;
 #define END_OPT_FUNC_CORE	}
-#define START_OPT_FUNC_DRIVER	static void options_set_driver(const options_type *p) { \
-					core_options *opts = options_cli;
+#define START_OPT_FUNC_DRIVER	static void options_set_driver(core_options *opts, const options_type *p) {
 #define END_OPT_FUNC_DRIVER	}
 #define START_OPT_FUNC_WINUI	static void options_set_winui(const settings_type *p) { \
 					core_options *opts = options_winui;
