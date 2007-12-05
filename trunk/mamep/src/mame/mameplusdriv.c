@@ -55,9 +55,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
-	DRIVER( sfzch )		/* 1995  Street Fighter Zero (CPS Changer) */
-	DRIVER( sfach )		/* 1995  Street Fighter Alpha (Publicity CPS Changer) */
-
 	DRIVER( ddtodd )	/* 12/04/1994 (c) 1993 (Euro) Phoenix Edition */
 	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
 	DRIVER( ringdstd )	/* 02/09/1994 (c) 1994 (Euro) Phoenix Edition */

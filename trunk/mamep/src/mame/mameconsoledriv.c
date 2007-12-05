@@ -55,5 +55,8 @@ const game_driver * const consoledrivers[] =
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
 
+	/* CAPCOM */
+	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/
+
 
 #endif	/* DRIVER_RECURSIVE */
