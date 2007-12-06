@@ -47,6 +47,8 @@ BOOL ReadControl(HWND hWnd, DWORD dwCtrlId);
 
 int GetControlID(HWND hDlg,HWND hwnd);
 int GetControlType(HWND hDlg,HWND hwnd);
+#ifdef LEGASY_OPTION_STRUCTURE
 BOOL IsControlDifferent(HWND hDlg,HWND hwnd_ctrl,options_type *o,options_type *base);
+#endif
 
 #endif /* DATAMAP_H */

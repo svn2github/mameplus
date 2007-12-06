@@ -20,6 +20,8 @@
     Created 8/29/98 by Mike Haaland (mhaaland@hypertech.com)
 
 ***************************************************************************/
+#define LEGASY_OPTION_STRUCTURE
+
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 

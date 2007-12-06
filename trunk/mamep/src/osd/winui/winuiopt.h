@@ -75,6 +75,7 @@ typedef struct
 	input_seq is;		/* sequence definition in MAME's internal keycodes */
 } KeySeq;
 
+#ifdef LEGASY_OPTION_STRUCTURE
 typedef struct
 {
 	core_options *dynamic_opt;
@@ -252,6 +253,7 @@ typedef struct
 	BOOL	newui;
 	BOOL	natural;
 } options_type;
+#endif // LEGASY_OPTION_STRUCTURE
 
 
 // List of artwork types to display in the screen shot area
@@ -293,7 +295,6 @@ core_options *get_core_options(void);
 core_options *get_winui_options(void);
 void set_core_input_directory(const WCHAR *dir);
 void set_core_state_directory(const WCHAR *dir);
-void set_core_input_directory(const WCHAR *dir);
 void set_core_snapshot_directory(const WCHAR *dir);
 void set_core_localized_directory(const WCHAR *dir);
 void set_core_state(const WCHAR *name);
@@ -309,19 +310,43 @@ void set_core_mameinfo_filename(const WCHAR *filename);
 void set_core_bios(const char *bios); 
 
 #ifdef UNICODE
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void));
+#include "strconv.h"
+
+INLINE WCHAR *options_get_wstring(core_options *opts, const char *name)
+{
+	const char *stemp = options_get_string(opts, name);
+
+	if (stemp == NULL)
+		return NULL;
+	return wstring_from_utf8(stemp);
+}
+
+INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority)
+{
+	char *utf8_value = NULL;
+
+	if (value)
+		utf8_value = utf8_from_wstring(value);
+
+	options_set_string(opts, name, utf8_value, priority);
+}
+
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void *param), void *param);
 #endif
 
+#ifdef LEGASY_OPTION_STRUCTURE
 void FreeGameOptions(options_type *o);
 void CopyGameOptions(const options_type *source, options_type *dest);
 
-BOOL FolderHasVector(const WCHAR *name);
 options_type* GetFolderOptions(const WCHAR *name);
 options_type* GetDefaultOptions(void);
 options_type* GetVectorOptions(void);
 options_type* GetSourceOptions(int driver_index);
 options_type* GetParentOptions(int driver_index);
 options_type* GetGameOptions(int driver_index);
+#endif // LEGASY_OPTION_STRUCTURE
+
+BOOL FolderHasVector(const WCHAR *name);
 
 BOOL GetGameUsesDefaults(int driver_index);
 void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
@@ -707,4 +732,25 @@ void SetUIJoyHistoryDown(int joycodeIndex, int val);
 int GetUIJoyExec(int joycodeIndex);
 void SetUIJoyExec(int joycodeIndex, int val);
 
+
+
+
+
+#define OPTIONS_TYPE_GLOBAL		-1
+#define OPTIONS_TYPE_FOLDER		-2
+
+core_options * CreateGameOptions(int driver_index);
+
+
+typedef enum {
+	OPTIONS_GLOBAL = 0,
+	OPTIONS_VECTOR,
+	OPTIONS_SOURCE,
+	OPTIONS_PARENT,
+	OPTIONS_GAME,
+	OPTIONS_MAX
+} OPTIONS_TYPE;
+
+core_options * load_options(OPTIONS_TYPE opt_type, int game_num);
+void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num);
 #endif

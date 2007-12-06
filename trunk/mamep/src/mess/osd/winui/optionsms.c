@@ -1,3 +1,7 @@
+#define LEGASY_OPTION_STRUCTURE
+
+#define UNICODE
+#define _UNICODE
 #define WIN32_LEAN_AND_MEAN
 #include <assert.h>
 #include <string.h>
@@ -19,7 +23,6 @@
 #include "osd/windows/configms.h"
 #include "winmain.h"
 
-#include "strconv.h"
 #include "opthndlr.h"
 
 
@@ -179,7 +182,7 @@ const WCHAR *GetSelectedSoftware(int driver_index, const device_class *devclass,
 	opt = o->dynamic_opt;
 	opt_name = device_instancename(devclass, device_inst);
 	software = options_get_wstring(opt, opt_name);
-	return software ? software : L"";
+	return software ? software : wcsdup(L"");
 }
 
 void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths)
@@ -202,7 +205,7 @@ const WCHAR *GetExtraSoftwarePaths(int driver_index)
 	snprintf(buf, ARRAY_LENGTH(buf), "%s_extra_software", drivers[driver_index]->name);
 	paths = options_get_wstring(get_winui_options(), buf);
 
-	return paths ? paths : L"";
+	return paths ? paths : wcsdup(L"");
 }
 
 void SetCurrentSoftwareTab(const char *shortname)

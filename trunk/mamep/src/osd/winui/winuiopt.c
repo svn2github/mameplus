@@ -18,6 +18,8 @@
 
 ***************************************************************************/
 
+#define LEGASY_OPTION_STRUCTURE
+
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>
@@ -306,8 +308,6 @@ struct _joycodes
     Internal function prototypes
  ***************************************************************************/
 
-INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority);
-
 static void set_core_rom_directory(const WCHAR *dir);
 static void set_core_sample_directory(const WCHAR *dir);
 static void set_core_image_directory(const WCHAR *dir);
@@ -331,10 +331,6 @@ static void  options_free_string_core(settings_type *s);
 static void  options_free_string_driver(options_type *p);
 static void  options_free_string_winui(settings_type *p);
 
-static void  options_get_core(settings_type *p);
-static void  options_get_driver(core_options *opt, options_type *p);
-static void  options_get_winui(settings_type *p);
-
 static void  options_duplicate_settings(const settings_type *source, settings_type *dest);
 static void  options_duplicate_driver(const options_type *source, options_type *dest);
 
@@ -351,6 +347,14 @@ static int   options_save_alt_config(alt_options_type *alt_option);
 static int   options_save_winui_config(void);
 
 static void  validate_driver_option(options_type *opt);
+
+static void  options_get_core(core_options *opt, settings_type *p);
+static void  options_get_driver(core_options *opt, options_type *p);
+static void  options_get_winui(settings_type *p);
+
+static void  options_set_core(core_options *opts, const settings_type *p);
+static void  options_set_driver(core_options *opts, const options_type *p);
+static void  options_set_winui(const settings_type *p);
 
 static void  CopySettings(const settings_type *source, settings_type *dest);
 static void  FreeSettings(settings_type *p);
@@ -509,6 +513,103 @@ static WCHAR reload_config_msg[] =
 
 
 /***************************************************************************
+    Wrapper Function
+ ***************************************************************************/
+
+core_options *CreateGameOptions(int driver_index)
+{
+	core_options *opts = options_create_entry_cli();
+
+	if (driver_index >= 0)
+		MessSetupGameOptions(opts, driver_index);
+
+	return opts;
+}
+
+core_options *load_options(OPTIONS_TYPE opt_type, int game_num)
+{
+	core_options *opts;
+	options_type *o;
+
+	switch (opt_type)
+	{
+	case OPTIONS_GLOBAL:
+		opts = CreateGameOptions(OPTIONS_GLOBAL);
+		o = GetDefaultOptions();
+		break;
+
+	case OPTIONS_VECTOR:
+		opts = CreateGameOptions(OPTIONS_TYPE_FOLDER);
+		o = GetVectorOptions();
+		break;
+
+	case OPTIONS_SOURCE:
+		opts = CreateGameOptions(OPTIONS_TYPE_FOLDER);
+		o = GetSourceOptions(game_num);
+		break;
+
+	case OPTIONS_PARENT:
+		if (DriverIsClone(game_num))
+			game_num = DriverParentIndex(game_num);
+
+	case OPTIONS_GAME:
+		opts = CreateGameOptions(game_num);
+		o = GetGameOptions(game_num);
+		break;
+
+	default:
+		dprintf("load_options(): unknown opt_type: %d", opt_type);
+		exit(1);
+	}
+
+	if (o->dynamic_opt)
+		options_copy(opts, o->dynamic_opt);
+
+	options_set_core(opts, &settings);
+	options_set_driver(opts, o);
+
+	return opts;
+}
+
+void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
+{
+	options_type *o;
+
+	switch (opt_type)
+	{
+	case OPTIONS_GLOBAL:
+		o = GetDefaultOptions();
+		options_get_core(opts, &settings);
+		break;
+
+	case OPTIONS_VECTOR:
+		o = GetVectorOptions();
+		break;
+
+	case OPTIONS_SOURCE:
+		o = GetSourceOptions(game_num);
+		break;
+
+	case OPTIONS_PARENT:
+		o = GetParentOptions(game_num);
+		break;
+
+	case OPTIONS_GAME:
+		o = GetGameOptions(game_num);
+		break;
+
+	default:
+		dprintf("save_options(): unknown opt_type: %d", opt_type);
+		exit(1);
+	}
+
+	options_get_driver(opts, o);
+
+	if (o->dynamic_opt)
+		options_copy(o->dynamic_opt, opts);
+}
+
+/***************************************************************************
     External functions  
  ***************************************************************************/
 
@@ -524,7 +625,7 @@ void OptionsInit()
 	num_drivers = GetNumGames();
 
 	options_cli = options_create_entry_cli();
-	options_get_core(&settings);
+	options_get_core(options_cli, &settings);
 	options_get_driver(options_cli, &global);
 	lang_set_langcode(options_cli, UI_LANG_EN_US);
 
@@ -551,13 +652,8 @@ void OptionsInit()
 #ifdef HANDLE_MESS_OPTIONS
 	for (i = 0; i < num_drivers; i++)
 	{
-		if (!DriverIsConsole(i))
-			continue;
-
-		if (!driver_options[i].dynamic_opt)
-			driver_options[i].dynamic_opt = options_create_entry_cli();
-
-		MessSetupGameOptions(driver_options[i].dynamic_opt, i);
+		if (DriverIsConsole(i))
+			driver_options[i].dynamic_opt = CreateGameOptions(i);
 	}
 #endif /* HANDLE_MESS_OPTIONS */
 
@@ -3415,10 +3511,6 @@ static void options_set_driver_flag_opts(core_options *opts)
 
 //============================================================
 
-static void options_set_core(core_options *opts, const settings_type *p);
-static void options_set_driver(core_options *opts, const options_type *p);
-static void options_set_winui(const settings_type *p);
-
 static void debug_printf(const char *s)
 {
 	dwprintf(TEXT("%s"), _UTF8Unicode(s));
@@ -3487,7 +3579,7 @@ static int options_load_default_config(void)
 	options_set_core(options_cli, &backup.settings);
 	options_set_driver(options_cli, &backup.global);
 	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
-	options_get_core(&settings);
+	options_get_core(options_cli, &settings);
 	options_get_driver(options_cli, &global);
 
 	mame_fclose(file);
@@ -3787,7 +3879,7 @@ static int options_save_winui_config(void)
 	return 0;
 }
 
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void *param), void *param)
 {
 	core_options *opt = driver_options[driver_index].dynamic_opt;
 	options_type *o;
@@ -3823,7 +3915,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void))
 		core_options *save = options_cli;
 
 		options_cli = opt;
-		override_callback();
+		override_callback(param);
 		options_cli = save;
 	}
 
@@ -3881,8 +3973,7 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #undef DEFINE_OPT_ARRAY
 #undef DEFINE_OPT_N
 
-#define START_OPT_FUNC_CORE	static void options_get_core(settings_type *p) { \
-					core_options *opts = options_cli;
+#define START_OPT_FUNC_CORE	static void options_get_core(core_options *opts, settings_type *p) {
 #define END_OPT_FUNC_CORE	}
 #define START_OPT_FUNC_DRIVER	static void options_get_driver(core_options *opts, options_type *p) {
 #define END_OPT_FUNC_DRIVER	}

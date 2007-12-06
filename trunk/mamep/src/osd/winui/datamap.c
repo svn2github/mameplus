@@ -1,6 +1,8 @@
 
 /* DataMap.c - Data Exchange routines by Mike Haaland <mhaaland@hypertech.com> */
 
+#define LEGASY_OPTION_STRUCTURE
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 #include <windowsx.h>
