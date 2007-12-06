@@ -131,9 +131,6 @@ X86_MIPS3_DRC = 1
 # uncomment next line to use DRC PowerPC engine
 X86_PPC_DRC = 1
 
-# uncomment next line to use DRC Voodoo rasterizers
-# X86_VOODOO_DRC = 1
-
 # uncomment next line to use Assembler 68000 engine
 X86_ASM_68000 = 1
 
@@ -313,11 +310,6 @@ endif
 # define MAME_PROFILER if we are a profiling build
 ifneq ($(PROFILER),)
 DEFS += -DMAME_PROFILER
-endif
-
-# define VOODOO_DRC if we are building the DRC Voodoo engine
-ifneq ($(X86_VOODOO_DRC),)
-DEFS += -DVOODOO_DRC
 endif
 
 ifneq ($(USE_SCALE_EFFECTS),)

@@ -1707,6 +1707,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( slapshot )	/* D71 (c) 1994 Taito Corporation (Japan) */
 	DRIVER( opwolf3 )	/* D74 (c) 1994 Taito */
 	DRIVER( opwolf3u )	/* D74 (c) 1994 Taito */
+	DRIVER( scessjoe )	/* ??? (c) 1990 Wave / Taito */
 	DRIVER( ashnojoe )	/* ??? (c) 1990 Wave / Taito */
 
 	/* Taito multi-screen games */
@@ -2750,6 +2751,8 @@ V-V                           TP-027
 	DRIVER( glpracr3 )	/* Gallop Racer 3 (JAPAN) */
 	DRIVER( flamegun )	/* Flame Gunner (USA) */
 	DRIVER( flameguj )	/* Flame Gunner (JAPAN) */
+	DRIVER( tblkkuzu )	/* The Block Kuzushi (JAPAN) */
+	DRIVER( 1on1gov )	/* 1 on 1 Government (JAPAN) */
 	DRIVER( tecmowcm )	/* Tecmo World Cup Millenium (JAPAN) */
 	DRIVER( mfjump )	/* Monster Farm Jump (JAPAN) */
 
@@ -3281,8 +3284,8 @@ V-V                           TP-027
 	DRIVER( sscandal )	/* 834-5755 (c) 1985 Coreland / Sega (S1) */
 	DRIVER( myherok )	/* 834-5755 (c) 1985 Coreland / Sega (S1) */
 	DRIVER( shtngmst )	/* 834-5719/5720 (c) 1985 (S2) */
-	DRIVER( shtngmsa )	/* 834-5719/5720 (c) 1985 (S2) */
- 	DRIVER( shtngmsb )	/* 834-5719/5720 (c) 1985 (S2) */
+	DRIVER( shtngms1 )	/* 834-5719/5720 (c) 1985 (S2) */
+ 	DRIVER( shtngmsa )	/* 834-5719/5720 (c) 1985 (S2) */
 	DRIVER( chplft )	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
 	DRIVER( chplftb )	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
 	DRIVER( chplftbl )	/* bootleg (S2) */
@@ -3689,7 +3692,9 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( puyosun )	/* (c) 1996 Compile */
 	DRIVER( rsgun )		/* (c) 1998 Treasure */
 	DRIVER( sandor )	/* (c) 1995 */
+	DRIVER( sanjeon )	/* (c) 1999 Sega / Deniam */
 	DRIVER( thunt )		/* (c) 1995 Sega (Deniam License) */
+	DRIVER( thuntk )	/* (c) 1995 Sega (Deniam License) */
 	DRIVER( sasissu )	/* (c) 1992 */
 	DRIVER( seabass )	/* (c) 1998 A wave Inc (Able License) */
 	DRIVER( shanhigw )	/* (c) 1996 */
@@ -3699,6 +3704,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( sss )		/* (c) 1998 Capcom / Cave / Victor */
 	DRIVER( suikoenb )	/* (c) 1995 Data East */
 	DRIVER( twcup98 )	/* (c) 1998 Techmo */
+	DRIVER( stress )	/* (c) 1997 Sega */
 	DRIVER( vfkids )	/* (c) 1995 */
 	DRIVER( vfremix )	/* (c) 1996 */
 	DRIVER( vmahjong )	/* (c) 1997 Micronet */
@@ -3713,6 +3719,7 @@ Sep.1994 Quiz Ghost Hunter
 
 	DRIVER( sfish2 )	/* (c) 1995 */
 	DRIVER( sfish2j )	/* (c) 1995 */
+	DRIVER( magzun )	/* (c) 1995 */
 
 	/* Sega Model 2 Games */
 
@@ -3926,7 +3933,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 				/* 45 */
 				/* 46 */
 	DRIVER( mt_astrm )	/* 47 */
-				/* 48 */
+	DRIVER( mt_wwar )	/* 48 */
 	DRIVER( mt_bbros )	/* 49 */
 				/* 50 */
 				/* 51 */
@@ -7880,6 +7887,7 @@ Other Sun games
 	DRIVER( jongkyo )	/* (c) 1985 Kiwako */
 	DRIVER( gtipoker )	/* (c) 1983 GTI Inc */
 	DRIVER( gamecstl )	/* MAME based bootleg */
+	DRIVER( drw80pkr )
 
 #endif /* NEOCPSMAME */
 #endif	/* DRIVER_RECURSIVE */

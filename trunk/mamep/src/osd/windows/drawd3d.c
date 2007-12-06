@@ -233,6 +233,33 @@ INLINE BOOL GetClientRectExceptMenu(HWND hWnd, PRECT pRect, BOOL fullscreen)
 	return result;
 }
 
+INLINE BOOL GetClientRectExceptMenu(HWND hWnd, PRECT pRect, BOOL fullscreen)
+{
+	static HMENU last_menu;
+	static RECT last_rect;
+	static RECT cached_rect;
+	HMENU menu = GetMenu(hWnd);
+	BOOL result = GetClientRect(hWnd, pRect);
+
+	if (!fullscreen || !menu)
+		return result;
+
+	// to avoid flicker use cache if we can use
+	if (last_menu != menu || memcmp(&last_rect, pRect, sizeof *pRect) != 0)
+	{
+		last_menu = menu;
+		last_rect = *pRect;
+
+		SetMenu(hWnd, NULL);
+		result = GetClientRect(hWnd, &cached_rect);
+		SetMenu(hWnd, menu);
+	}
+
+	*pRect = cached_rect;
+	return result;
+}
+
+
 INLINE UINT32 ycc_to_rgb(UINT8 y, UINT8 cb, UINT8 cr)
 {
 	/* original equations:
@@ -732,7 +759,7 @@ try_again:
 	d3d->presentation.MultiSampleType				= D3DMULTISAMPLE_NONE;
 	d3d->presentation.SwapEffect					= D3DSWAPEFFECT_DISCARD;
 	d3d->presentation.hDeviceWindow					= window->hwnd;
-	d3d->presentation.Windowed						= !window->fullscreen || win_has_menu(window);
+	d3d->presentation.Windowed						= (!video_config.switchres || !window->fullscreen) || HAS_WINDOW_MENU;
 	d3d->presentation.EnableAutoDepthStencil		= FALSE;
 	d3d->presentation.AutoDepthStencilFormat		= D3DFMT_D16;
 	d3d->presentation.Flags							= 0;
