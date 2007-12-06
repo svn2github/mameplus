@@ -766,7 +766,7 @@ static int add_filter_entry(char *dest, size_t dest_len, const char *description
 
 	// add the description
 	pos += snprintf(&dest[pos], dest_len - pos, "%s (", description);
-
+	
 	// add the extensions to the description
 	pos += copy_extension_list(&dest[pos], dest_len - pos, extensions);
 
@@ -1437,20 +1437,20 @@ static void prepare_menus(HWND wnd)
 			{	
 				new_item = ID_DEVICE_0 + (image_absolute_index(img) * DEVOPTION_MAX);
 				flags_for_exists = MF_STRING;
-
+	
 				if (!image_exists(img))
 					flags_for_exists |= MF_GRAYED;
-
+	
 				flags_for_writing = flags_for_exists;
 				if (!image_is_writable(img))
 					flags_for_writing |= MF_GRAYED;
-
+	
 				sub_menu = CreateMenu();
 				append_menu_uistring(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		UI_mount);
-
+	
 				if (dev->creatable)
 					append_menu_uistring(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	UI_create);
-
+	
 				append_menu_uistring(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	UI_unmount);
 
 #if HAS_WAVE

@@ -1049,7 +1049,7 @@ void gb_video_init( void ) {
 	/* set the scanline update function */
 	update_scanline = gb_update_scanline;
 
-	gb_lcd.lcd_timer = timer_alloc( gb_lcd_timer_proc, NULL );
+	gb_lcd.lcd_timer = timer_alloc( gb_lcd_timer_proc , NULL);
 	timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(456,0), 0, attotime_never );
 }
 
@@ -1223,7 +1223,7 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			gb_lcd.mode = 2;
 			LCDSTAT = ( LCDSTAT & 0xFC ) | 0x02;
 			/* Generate lcd interrupt if requested */
-			if ( LCDSTAT & 0x20 ) {
+			if ( ( LCDSTAT & 0x20 ) && ! gb_lcd.line_irq ) {
 				cpunum_set_input_line( 0, LCD_INT, HOLD_LINE );
 			}
 			/* Mode 2 lasts approximately 80 clock cycles */

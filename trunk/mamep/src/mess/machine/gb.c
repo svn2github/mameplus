@@ -233,7 +233,7 @@ static void gb_init(void) {
 	gb_sound_w( 0x16, 0x00 );       /* Initialize sound hardware */
 
 	/* Allocate the serial timer, and disable it */
-	gb_serial_timer = timer_alloc( gb_serial_timer_proc, NULL );
+	gb_serial_timer = timer_alloc( gb_serial_timer_proc , NULL);
 	timer_enable( gb_serial_timer, 0 );
 
 }
@@ -301,6 +301,18 @@ MACHINE_RESET( gbpocket )
 	gb_sound_w(0x15,0xF3);
 	gb_sound_w(0x14,0x77);
 
+	/* Initialize part of VRAM. This code must be deleted when we have added the bios dump */
+	{
+		int i;
+		for( i = 1; i < 0x0D; i++ ) {
+			gb_vram[ 0x1903 + i ] = i;
+			gb_vram[ 0x1923 + i ] = i + 0x0C;
+		}
+		gb_vram[ 0x1910 ] = 0x19;
+
+		cpunum_set_input_line( 0, VBL_INT, ASSERT_LINE );
+	}
+
 	/* Enable BIOS rom if we have one */
 	memory_set_bankptr(5, ROMMap[ROMBank00] ? ROMMap[ROMBank00] : gb_dummy_rom_bank );
 	memory_set_bankptr(10, ROMMap[ROMBank00] ? ROMMap[ROMBank00] + 0x0100 : gb_dummy_rom_bank + 0x0100);
@@ -352,6 +364,11 @@ MACHINE_RESET( gbc )
 		gbc_mode = GBC_MODE_GBC;
 	else
 		gbc_mode = GBC_MODE_MONO;
+
+	/* Extra initialization to get the state after running the bios */
+	{
+		cpunum_set_input_line( 0, VBL_INT, ASSERT_LINE );
+	}
 }
 
 static void gb_machine_stop(running_machine *machine)
