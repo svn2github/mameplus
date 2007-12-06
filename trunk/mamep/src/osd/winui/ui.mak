@@ -56,6 +56,7 @@ WINUIOBJS += \
 	$(WINUIOBJ)/winuiopt.o \
 	$(WINUIOBJ)/layout.o \
 	$(WINUIOBJ)/translate.o \
+	$(MESS_WINUIOBJ)/optionsms.o \
 
 
 ifneq ($(USE_UI_COLOR_PALETTE),)

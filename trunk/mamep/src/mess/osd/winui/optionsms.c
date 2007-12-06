@@ -122,7 +122,7 @@ void GetMessColumnWidths(int width[])
 
 void SetMessSortColumn(int column)
 {
-	options_set_int(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_COLUMN, column, OPTION_PRIORITY_CMDLINE);
+	options_set_int(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_COLUMN, column, OPTION_PRIORITY_INI);
 }
 
 int GetMessSortColumn(void)
@@ -132,7 +132,7 @@ int GetMessSortColumn(void)
 
 void SetMessSortReverse(BOOL reverse)
 {
-	options_set_bool(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_REVERSED, reverse, OPTION_PRIORITY_CMDLINE);
+	options_set_bool(get_winui_options(), WINGUIOPTION_SOFTWARE_SORT_REVERSED, reverse, OPTION_PRIORITY_INI);
 }
 
 BOOL GetMessSortReverse(void)
@@ -147,14 +147,14 @@ const WCHAR* GetSoftwareDirs(void)
 
 void SetSoftwareDirs(const WCHAR* paths)
 {
-	options_set_wstring(get_winui_options(), WINGUIOPTION_SOFTWAREPATH, paths, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(get_winui_options(), WINGUIOPTION_SOFTWAREPATH, paths, OPTION_PRIORITY_INI);
 }
 
-#if 0
-void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const char *software)
+void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const WCHAR *software)
 {
 	const char *opt_name = device_instancename(devclass, device_inst);
-	core_options *o;
+	options_type *o;
+	core_options *opt;
 
 	if (LOG_SOFTWARE)
 	{
@@ -162,25 +162,25 @@ void SetSelectedSoftware(int driver_index, const device_class *devclass, int dev
 			driver_index, drivers[driver_index]->name, devclass, device_inst, software);
 	}
 
-	o = load_options(OPTIONS_GAME, driver_index);
+	o = GetGameOptions(driver_index);
+	opt = o->dynamic_opt;
 	opt_name = device_instancename(devclass, device_inst);
-	options_set_string(o, opt_name, software, OPTION_PRIORITY_CMDLINE);
-	save_options(OPTIONS_GAME, o, driver_index);
-	options_free(o);
+	options_set_wstring(opt, opt_name, software, OPTION_PRIORITY_INI);
 }
 
-const char *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst)
+const WCHAR *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst)
 {
 	const char *opt_name = device_instancename(devclass, device_inst);
-	const char *software;
-	core_options *o;
+	const WCHAR *software;
+	options_type *o;
+	core_options *opt;
 
-	o = load_options(OPTIONS_GAME, driver_index);
+	o = GetGameOptions(driver_index);
+	opt = o->dynamic_opt;
 	opt_name = device_instancename(devclass, device_inst);
-	software = options_get_string(o, opt_name);
-	return software ? software : "";
+	software = options_get_wstring(opt, opt_name);
+	return software ? software : L"";
 }
-#endif
 
 void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths)
 {
@@ -207,7 +207,7 @@ const WCHAR *GetExtraSoftwarePaths(int driver_index)
 
 void SetCurrentSoftwareTab(const char *shortname)
 {
-	options_set_string(get_winui_options(), WINGUIOPTION_SOFTWARE_TAB, shortname, OPTION_PRIORITY_CMDLINE);
+	options_set_string(get_winui_options(), WINGUIOPTION_SOFTWARE_TAB, shortname, OPTION_PRIORITY_INI);
 }
 
 const char *GetCurrentSoftwareTab(void)

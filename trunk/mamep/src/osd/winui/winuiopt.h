@@ -16,11 +16,11 @@
 #include "osd_cpu.h"
 #include "input.h" /* for input_seq definition */
 
-//#define MESS_MERGE
+#define HANDLE_MESS_OPTIONS
 
-#ifdef MESS_MERGE // MESS
+#ifdef HANDLE_MESS_OPTIONS
 #include "optionsms.h"
-#endif
+#endif /* HANDLE_MESS_OPTIONS */
 
 #define MAX_SYSTEM_BIOS		16
 #define MAX_SYSTEM_BIOS_ENTRY	16

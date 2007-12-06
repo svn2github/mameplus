@@ -144,7 +144,10 @@ int options_parse_ini_file(core_options *opts, core_file *inifile, int priority)
 /* ----- options output ----- */
 
 /* output option data to command line string */
-int options_output_command_line_marked(core_options *opts, char *buf);
+//int options_output_command_line_marked(core_options *opts, char *buf);
+
+/* output option data to command line string */
+int options_output_diff_command_line(core_options *opts, core_options *baseopts, char *buf);
 
 /* output option data to an INI file */
 void options_output_ini_file(core_options *opts, core_file *inifile);
