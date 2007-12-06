@@ -1119,9 +1119,7 @@ LPWSTR GameInfoTitle(int nIndex)
 		                        driversw[nIndex]->modify_the,
 			driversw[nIndex]->name);
 
-		folder = GetUnifiedFolder(nIndex);
-		if (!folder)
-			return desc;
+		return desc;
 	}
 
 	if (nIndex != FOLDER_OPTIONS)

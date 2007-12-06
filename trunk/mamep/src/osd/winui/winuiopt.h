@@ -328,9 +328,6 @@ void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
 BOOL GetFolderUsesDefaults(const WCHAR *name);
 void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults);
 
-const WCHAR *GetUnifiedFolder(int driver_index);
-int GetUnifiedDriver(const WCHAR *name);
-
 int GetSystemBiosDriver(int bios_index);
 const char *GetDefaultBios(int bios_index);
 void SetDefaultBios(int bios_index, const char *value);

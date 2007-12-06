@@ -284,7 +284,6 @@ typedef struct
 	int samples_audit_results;
 	BOOL options_loaded; // whether or not we've loaded the game options yet
 	BOOL use_default; // whether or not we should just use default options
-	int alt_index; // index for alt_option if driver is unified
 
 } driver_variables_type;
 
@@ -293,9 +292,7 @@ typedef struct
 	const WCHAR *name;
 	options_type *option;
 	driver_variables_type *variable;
-	BOOL has_bios;
 	BOOL need_vector_config;
-	int driver_index; // index for driver if driver is unified
 } alt_options_type;
 
 struct _joycodes
@@ -323,7 +320,6 @@ static int   regist_alt_option(const WCHAR *name);
 static int   bsearch_alt_option(const WCHAR *name);
 static void  build_default_bios(void);
 static void  build_alt_options(void);
-static void  unify_alt_options(void);
 
 static void  generate_default_ctrlr(void);
 static void  generate_default_dirs(void);
@@ -540,7 +536,6 @@ void OptionsInit()
 	default_variables.samples_audit_results = UNKNOWN;
 	default_variables.options_loaded = FALSE;
 	default_variables.use_default = TRUE;
-	default_variables.alt_index = -1;
 
 	/* This allocation should be checked */
 	driver_options = (options_type *)malloc(num_drivers * sizeof (*driver_options));
@@ -574,8 +569,6 @@ void OptionsInit()
 	CopyGameOptions(&global, &backup.global);
 
 	LoadOptions();
-
-	unify_alt_options();
 
 	// apply default font if needed
 	if (settings.list_logfont.lfFaceName[0] == '\0')
@@ -802,25 +795,6 @@ void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults)
 	alt_options[alt_index].variable->use_default = use_defaults;
 }
 
-const WCHAR *GetUnifiedFolder(int driver_index)
-{
-	assert (0 <= driver_index && driver_index < num_drivers);
-
-	if (driver_variables[driver_index].alt_index == -1)
-		return NULL;
-
-	return alt_options[driver_variables[driver_index].alt_index].name;
-}
-
-int GetUnifiedDriver(const WCHAR *name)
-{
-	int alt_index = bsearch_alt_option(name);
-
-	assert (0 <= alt_index && alt_index < num_alt_options);
-
-	return alt_options[alt_index].driver_index;
-}
-
 static options_type * GetAltOptions(alt_options_type *alt_option)
 {
 	if (alt_option->variable->use_default)
@@ -849,7 +823,7 @@ static options_type * GetAltOptions(alt_options_type *alt_option)
 		// free strings what will be never used now
 		FreeGameOptions(alt_option->option);
 
-		CopyGameOptions(opt,alt_option->option);
+		CopyGameOptions(opt, alt_option->option);
 
 		// DO NOT OVERRIDE bios by default setting
 		if (bios)
@@ -943,7 +917,7 @@ options_type * GetGameOptions(int driver_index)
 			// free strings what will be never used now
 			FreeGameOptions(&driver_options[driver_index]);
 
-			CopyGameOptions(opt,&driver_options[driver_index]);
+			CopyGameOptions(opt, &driver_options[driver_index]);
 		}
 
 		// DO NOT OVERRIDE bios by default setting
@@ -2623,16 +2597,11 @@ static void InvalidateGameOptionsInDriver(const WCHAR *name)
 	int i;
 
 	for (i = 0; i < num_drivers; i++)
-	{
-		if (driver_variables[i].alt_index != -1)
-			continue;
-
 		if (wcscmp(GetDriverFilename(i), name) == 0)
 		{
 			driver_variables[i].use_default = TRUE;
 			driver_variables[i].options_loaded = FALSE;
 		}
-	}
 }
 
 static void SaveAltOptions(alt_options_type *alt_option)
@@ -2884,43 +2853,15 @@ static void build_alt_options(void)
 		alt_options[i].variable = &pVars[i];
 		alt_options[i].variable->options_loaded = FALSE;
 		alt_options[i].variable->use_default = TRUE;
-		alt_options[i].has_bios = FALSE;
 		alt_options[i].need_vector_config = FALSE;
-		alt_options[i].driver_index = -1;
 	}
 
 	for (i = 0; i < num_drivers; i++)
-	{
-		const WCHAR *src = GetDriverFilename(i);
-		int n = bsearch_alt_option(src);
-
-		if (!alt_options[n].need_vector_config && DriverIsVector(i))
-			alt_options[n].need_vector_config = TRUE;
-	}
-}
-
-static void unify_alt_options(void)
-{
-	int i;
-
-	for (i = 0; i < num_drivers; i++)
-	{
-		WCHAR buf[16];
-		int n;
-
-		swprintf(buf, TEXT("%s.c"), driversw[i]->name);
-		n = bsearch_alt_option(buf);
-		if (n == -1)
-			continue;
-
-		//dprintf("Unify %s", drivers[i]->name);
-
-		driver_variables[i].alt_index = n;
-		alt_options[n].option = &driver_options[i];
-		alt_options[n].variable = &driver_variables[i];
-		alt_options[n].driver_index = i;
-		alt_options[n].has_bios = DriverIsBios(i);
-	}
+		if (DriverIsVector(i))
+		{
+			int n = bsearch_alt_option(GetDriverFilename(i));
+				alt_options[n].need_vector_config = TRUE;
+		}
 }
 
 static const WCHAR *get_base_config_directory(void)
@@ -2966,10 +2907,11 @@ static void generate_default_dirs(void)
 	for (i = 0; GetDirsFunc[i]; i++)
 	{
 		WCHAR *paths = wcsdup(GetDirsFunc[i]());
-		WCHAR *p;
 		{
+			WCHAR *p;
+
 			for (p = wcstok(paths, TEXT(";")); p; p =wcstok(NULL, TEXT(";")))
-			create_path_recursive(p);
+				create_path_recursive(p);
 		}
 		free(paths);
 	};
@@ -3556,15 +3498,11 @@ static int options_load_default_config(void)
 static int options_load_driver_config(int driver_index)
 {
 	core_options *opt = driver_options[driver_index].dynamic_opt;
-	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	file_error filerr;
 	WCHAR fname[MAX_PATH];
 	char *stemp;
 	int retval;
-
-	if (alt_index != -1)
-		return options_load_alt_config(&alt_options[alt_index]);
 
 	driver_variables[driver_index].options_loaded = TRUE;
 	driver_variables[driver_index].use_default = TRUE;
@@ -3609,6 +3547,11 @@ static int options_load_alt_config(alt_options_type *alt_option)
 	alt_option->variable->use_default = TRUE;
 
 	wcscpy(fname, settings.inipath);
+	if (wcscmpi(alt_option->name, TEXT("Vector")) != 0)
+	{
+		wcscat(fname, TEXT(PATH_SEPARATOR));
+		wcscat(fname, TEXT("source"));
+	}
 	wcscat(fname, TEXT(PATH_SEPARATOR));
 	wcscat(fname, alt_option->name);
 	wcscat(fname, TEXT(".ini"));
@@ -3697,7 +3640,6 @@ static int options_save_default_config(void)
 static int options_save_driver_config(int driver_index)
 {
 	core_options *opt = driver_options[driver_index].dynamic_opt;
-	int alt_index = driver_variables[driver_index].alt_index;
 	mame_file *file;
 	file_error filerr;
 	WCHAR fname[MAX_PATH];
@@ -3706,9 +3648,6 @@ static int options_save_driver_config(int driver_index)
 
 	if (driver_variables[driver_index].options_loaded == FALSE)
 		return 0;
-
-	if (alt_index != -1)
-		return options_save_alt_config(&alt_options[alt_index]);
 
 	parent = update_driver_use_default(driver_index);
 	if (parent == NULL)
@@ -3760,6 +3699,7 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	mame_file *file;
 	file_error filerr;
 	WCHAR fname[MAX_PATH];
+	WCHAR inipath[MAX_PATH];
 	char *stemp;
 	options_type *parent;
 	int len;
@@ -3770,6 +3710,12 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	parent = update_alt_use_default(alt_option);
 
 	wcscpy(fname, settings.inipath);
+	if (wcscmpi(alt_option->name, TEXT("Vector")) != 0)
+	{
+		wcscat(fname, TEXT(PATH_SEPARATOR));
+		wcscat(fname, TEXT("source"));
+	}
+	wcscpy(inipath, fname);
 	wcscat(fname, TEXT(PATH_SEPARATOR));
 	wcscat(fname, strlower(alt_option->name));
 	wcscat(fname, TEXT(".ini"));
@@ -3783,14 +3729,14 @@ static int options_save_alt_config(alt_options_type *alt_option)
 	if (!alt_option->option->ips)
 #endif /* USE_IPS */
 	{
-		if (!opt && alt_option->variable->use_default && !alt_option->has_bios)
+		if (!opt && alt_option->variable->use_default)
 		{
 			DeleteFileW(fname);
 			return 0;
 		}
 	}
 
-	create_path_recursive(settings.inipath);
+	create_path_recursive(inipath);
 
 	stemp = utf8_from_wstring(fname);
 	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
