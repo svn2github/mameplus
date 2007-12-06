@@ -36,21 +36,21 @@
 static const options_entry mess_wingui_settings[] =
 {
 	{ NULL,                          NULL,                         OPTION_HEADER,     "MESS SPECIFIC OPTIONS"},
-	{ WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS,	"186, 230, 88, 84, 84, 68, 248, 248",	0,		"Software column width" },
-	{ WINGUIOPTION_SOFTWARE_COLUMN_ORDER,	"0,   1,    2,  3,  4,  5,   6,   7",	0,		"Software column order" },
-	{ WINGUIOPTION_SOFTWARE_COLUMN_SHOWN,	"1,   1,    1,  1,  1,  0,   0,   0",	0,		"Software column shown" },
+	{ WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS,	"186, 230, 88, 84, 84, 68, 248, 248",	0,				NULL },
+	{ WINGUIOPTION_SOFTWARE_COLUMN_ORDER,	"0,   1,    2,  3,  4,  5,   6,   7",	0,				NULL },
+	{ WINGUIOPTION_SOFTWARE_COLUMN_SHOWN,	"1,   1,    1,  1,  1,  0,   0,   0",	0,				NULL },
 
-	{ WINGUIOPTION_SOFTWARE_SORT_COLUMN,	"0",					0,		"Software sort column" },
-	{ WINGUIOPTION_SOFTWARE_SORT_REVERSED,	"0",					OPTION_BOOLEAN,	"Software reverse sort" },
+	{ WINGUIOPTION_SOFTWARE_SORT_COLUMN,	"0",									0,				NULL },
+	{ WINGUIOPTION_SOFTWARE_SORT_REVERSED,	"0",									OPTION_BOOLEAN,	NULL },
 
-	{ WINGUIOPTION_SOFTWARE_TAB,		"0",					0,		"Software tab" },
-	{ WINGUIOPTION_SOFTWAREPATH,		"software",				0,		"Software path" },
+	{ WINGUIOPTION_SOFTWARE_TAB,			"0",									0,				NULL },
+	{ WINGUIOPTION_SOFTWAREPATH,			"software",								0,				NULL },
 	{ NULL }
 };
 
 static options_entry mess_driver_flag_opts[] =
 {
-	{ NULL, "", 0, "Extra Software" },
+	{ NULL, "", 0, NULL },
 	{ NULL }
 };
 

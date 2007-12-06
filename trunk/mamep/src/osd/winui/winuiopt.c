@@ -3374,11 +3374,11 @@ static char driver_flag_unknown[3];
 
 static options_entry driver_flag_opts[] =
 {
-	{ NULL, NULL,                OPTION_HEADER, "DRIVER FLAGS"},
-	{ NULL, "0",                 0,             "Play Counts" },
-	{ NULL, "0",                 0,             "Play Time" },
-	{ NULL, driver_flag_unknown, 0,             "Has Roms" },
-	{ NULL, driver_flag_unknown, 0,             "Has Samples" },
+	{ NULL, NULL,                OPTION_HEADER, NULL },
+	{ NULL, "0",                 0,             NULL },
+	{ NULL, "0",                 0,             NULL },
+	{ NULL, driver_flag_unknown, 0,             NULL },
+	{ NULL, driver_flag_unknown, 0,             NULL },
 	{ NULL }
 };
 

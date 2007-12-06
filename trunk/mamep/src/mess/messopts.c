@@ -134,7 +134,6 @@ static void add_device_options_for_device(core_options *opts, const game_driver 
 	/* add the option */
 	memset(this_entry, 0, sizeof(this_entry));
 	this_entry[0].name = dev_full_name;
-	this_entry[0].description = dev_full_name;
 	options_add_entries(opts, this_entry);
 }
 

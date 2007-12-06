@@ -68,9 +68,7 @@ struct _options_data
 	options_range_parameter	range_minimum;		/* the minimum of the range */
 	options_range_parameter	range_maximum;		/* the maximum of the range */
 	void					(*callback)(core_options *opts, const char *arg);	/* callback to be invoked when parsing */
-	int					mark;
 };
-
 
 
 /* structure holding information about a collection of options */
@@ -542,74 +540,6 @@ int options_parse_ini_file(core_options *opts, core_file *inifile, int priority)
 ***************************************************************************/
 
 /*-------------------------------------------------
-    options_output_command_line_marked - output the
-    current marked state as command line string
--------------------------------------------------*/
-
-int options_output_command_line_marked(core_options *opts, char *buf)
-{
-	options_data *data;
-	int total = 1;
-
-	/* loop over all items */
-	for (data = opts->datalist; data != NULL; data = data->next)
-	{
-		/* output entries for all non-deprecated and non-command items */
-		if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
-		{
-			int len = 2 + astring_len(data->links[0].name);
-
-			if (data->flags & OPTION_BOOLEAN)
-			{
-				int value = FALSE;
-
-				sscanf(astring_c(data->data), "%d", &value);
-
-				if (value)
-				{
-					if (buf)
-						sprintf(buf, "-%s ", astring_c(data->links[0].name));
-				}
-				else
-				{
-					if (buf)
-						sprintf(buf, "-no%s ", astring_c(data->links[0].name));
-					len += 2;
-				}
-			}
-			else
-			{
-				if (astring_chr(data->data, 0, ' ') != -1 || astring_chr(data->data, 0, '#') != -1)
-				{
-					if (buf)
-						sprintf(buf, "-%s \"%s\" ", astring_c(data->links[0].name), astring_c(data->data));
-					len += 3 + astring_len(data->data);
-				}
-				else
-				{
-					if (buf)
-						sprintf(buf, "-%s %s ", astring_c(data->links[0].name), astring_c(data->data));
-					len += 1 + astring_len(data->data);
-				}
-			}
-
-			if (buf)
-				buf += len;
-			total += len;
-		}
-	}
-
-	if (buf)
-	{
-		if (total > 1)
-			buf--;
-		*buf = '\0';
-	}
-
-	return total;
-}
-
-/*-------------------------------------------------
     translate_description - translate description
     by UI_MSG_MAME or UI_MSG_OSD0
 -------------------------------------------------*/
@@ -637,6 +567,7 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 	const char *name;
 	const char *value;
 	options_data *basedata;
+	int unadorned_index = 0;
 	int total = 1;
 
 	/* loop over all items */
@@ -646,10 +577,6 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 		if ((data->flags & OPTION_HEADER) != 0)
 			continue;
 
-		/* skip UNADORNED options */
-		else if (data->description == NULL)
-			;
-
 		/* otherwise, output entries for all non-deprecated and non-command items (if not in baseopts) */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
 		{
@@ -658,6 +585,13 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 			/* get name and data of this value */
 			name = astring_c(data->links[0].name);
 			value = astring_c(data->data);
+
+			/* skip UNADORNED options */
+			if (strcmp(name, OPTION_UNADORNED(unadorned_index)) == 0)
+			{
+				unadorned_index++;
+				continue;
+			}
 
 			/* look up counterpart in baseopts, if baseopts is specified */
 			basedata = (baseopts != NULL) ? find_entry_data(baseopts, name, FALSE) : NULL;
@@ -729,6 +663,7 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 	const char *name;
 	const char *value;
 	options_data *basedata;
+	int unadorned_index = 0;
 
 	/* loop over all items */
 	for (data = opts->datalist; data != NULL; data = data->next)
@@ -737,16 +672,19 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 		if ((data->flags & OPTION_HEADER) != 0)
 			last_header = translate_description(data);
 
-		/* skip UNADORNED options */
-		else if (data->description == NULL)
-			;
-
 		/* otherwise, output entries for all non-deprecated and non-command items (if not in baseopts) */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
 		{
 			/* get name and data of this value */
 			name = astring_c(data->links[0].name);
 			value = astring_c(data->data);
+
+			/* skip UNADORNED options */
+			if (strcmp(name, OPTION_UNADORNED(unadorned_index)) == 0)
+			{
+				unadorned_index++;
+				continue;
+			}
 
 			/* look up counterpart in baseopts, if baseopts is specified */
 			basedata = (baseopts != NULL) ? find_entry_data(baseopts, name, FALSE) : NULL;
@@ -773,48 +711,6 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 
 
 /*-------------------------------------------------
-    options_output_ini_file_marked - output the
-    current marked state to an INI file
--------------------------------------------------*/
-
-#if 0
-void options_output_ini_file_marked(core_options *opts, core_file *inifile)
-{
-	const char *last_header = NULL;
-	options_data *data;
-
-	/* loop over all items */
-	for (data = opts->datalist; data != NULL; data = data->next)
-	{
-		/* header: record description */
-		if ((data->flags & OPTION_HEADER) != 0)
-			last_header = translate_description(data);
-
-		/* skip UNADORNED options */
-		else if (data->description == NULL)
-			;
-
-		/* otherwise, output entries for all non-deprecated and non-command items */
-		else if (data->mark && (data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
-		{
-			/* output header, if we have one */
-			if (last_header != NULL)
-			{
-				core_fprintf(inifile, "\n#\n# %s\n#\n", last_header);
-				last_header = NULL;
-			}
-
-			if (astring_chr(data->data, 0, ' ') != -1)
-				core_fprintf(inifile, "%-25s \"%s\"\n", astring_c(data->links[0].name), astring_c(data->data));
-			else
-				core_fprintf(inifile, "%-25s %s\n", astring_c(data->links[0].name), astring_c(data->data));
-		}
-	}
-}
-#endif
-
-
-/*-------------------------------------------------
     options_output_ini_file - output the current
     state to an INI file
 -------------------------------------------------*/
@@ -833,6 +729,7 @@ void options_output_ini_file(core_options *opts, core_file *inifile)
 void options_output_ini_stdfile(core_options *opts, FILE *inifile)
 {
 	options_data *data;
+	int unadorned_index = 0;
 
 	/* loop over all items */
 	for (data = opts->datalist; data != NULL; data = data->next)
@@ -841,13 +738,16 @@ void options_output_ini_stdfile(core_options *opts, FILE *inifile)
 		if ((data->flags & OPTION_HEADER) != 0)
 			fprintf(inifile, "\n#\n# %s\n#\n", data->description);
 
-		/* skip UNADORNED options */
-		else if (data->description == NULL)
-			;
-
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
 		{
+			/* skip UNADORNED options */
+			if (strcmp(astring_c(data->links[0].name), OPTION_UNADORNED(unadorned_index)) == 0)
+			{
+				unadorned_index++;
+				continue;
+			}
+
 			if (astring_chr(data->data, 0, ' ') != -1)
 				fprintf(inifile, "%-25s \"%s\"\n", astring_c(data->links[0].name), astring_c(data->data));
 			else
@@ -877,15 +777,6 @@ void options_output_help(core_options *opts, void (*output)(const char *))
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL)) == 0 && data->description != NULL)
 			output_printf(output, "-%-20s%s\n", astring_c(data->links[0].name), translate_description(data));
 	}
-}
-
-
-void options_clear_output_mark(core_options *opts)
-{
-	options_data *data;
-
-	for (data = opts->datalist; data != NULL; data = data->next)
-		data->mark = FALSE;
 }
 
 
@@ -1276,7 +1167,6 @@ static void update_data(core_options *opts, options_data *data, const char *newd
 	/* bump the seqid and clear the error reporting */
 	data->seqid++;
 	data->error_reported = FALSE;
-	data->mark = TRUE;
 }
 
 
