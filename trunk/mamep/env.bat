@@ -7,7 +7,7 @@ rem --------------------------------------
 set PATH=..\MinGW\bin;%PATH%
 
 rem --------------------------------------
-rem MAMEPlus Extra Utils Configure
+rem Extra Utils Configure
 rem --------------------------------------
 
 set PATH=extra\bin;%PATH%
