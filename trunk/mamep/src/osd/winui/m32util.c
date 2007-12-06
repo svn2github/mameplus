@@ -555,7 +555,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 #if HAS_SAMPLES
 				if (drv.sound[i].type == SOUND_SAMPLES)
 				{
-					const char **samplenames;
+					const char *const *samplenames;
 
 					samplenames = ((struct Samplesinterface *)drv.sound[i].config)->samplenames;
 
