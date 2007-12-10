@@ -464,7 +464,7 @@ BIOS
 
 # osd/winui/properties.c: 1084
 BIOS missing
-BIOS がありません
+BIOSがありません
 
 # osd/winui/mame32.rc: 759
 Backdrops
@@ -1744,15 +1744,15 @@ Propert&ies for %s
 
 # osd/winui/mame32.rc: 67, 205 osd/winui/win32ui.c: 4035
 Propert&ies for Driver
-ドライバのプロパティ(&i)
+ドライバのプロパティ(&I)
 
 # osd/winui/win32ui.c: 4097, 7378
 Properties &for %s BIOS
-%s BIOSのプロパティ(&f)
+%s BIOSのプロパティ(&F)
 
 # osd/winui/mame32.rc: 68, 206 osd/winui/win32ui.c: 4042, 4103, 7384, 7420
 Properties &for BIOS
-BIOSのプロパティ(&f)
+BIOSのプロパティ(&F)
 
 # osd/winui/properties.c: 706, 797
 Propery Sheet Error %d %X
