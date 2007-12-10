@@ -16,28 +16,19 @@
 /* Get title string to display in the top of the property page,
  * Called also in Audit32.c
  */
-LPWSTR GameInfoTitle(int nIndex);
-
-enum
-{
-	SOURCE_GLOBAL = 0,
-	SOURCE_VECTOR,
-	SOURCE_FOLDER,
-	SOURCE_GAME,
-	SOURCE_MAX
-};
+LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex);
 
 /* Called in win32ui.c to create the property page */
-void    InitPropertyPage(HINSTANCE hInst, HWND hwnd, int game_num, HICON hIcon, const WCHAR *folder);
+void	InitPropertyPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYPE opt_type, int folder_id, int game_num);
 
 #define PROPERTIES_PAGE 0
 #define AUDIT_PAGE      1   
 
-void    InitPropertyPageToPage(HINSTANCE hInst, HWND hwnd, int game_num, HICON hIcon, int start_page, const WCHAR *folder);
+void	InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYPE opt_type, int folder_id, int game_num, int start_page);
 void    InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd);
 
 /* Get Help ID array for WM_HELP and WM_CONTEXTMENU */
-DWORD   GetHelpIDs(void);
+DWORD_PTR   GetHelpIDs(void);
 
 /* Get Game status text string */
 LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus);
@@ -46,7 +37,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus);
 typedef struct
 {
 	BOOL bOnDefaultPage;
-	BOOL (*pfnFilterProc)(void);
+	BOOL (*pfnFilterProc)(OPTIONS_TYPE opt_type, int folder_id, int game_num);
 	DWORD dwDlgID;
 	DLGPROC pfnDlgProc;
 } PROPERTYSHEETINFO;
@@ -55,12 +46,17 @@ typedef struct
 extern const PROPERTYSHEETINFO g_propSheets[];
 
 
-BOOL PropSheetFilter_Vector(void);
-BOOL PropSheetFilter_BIOS(void);
+BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num);
+BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num);
 
 INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 void PropertiesInit(void);
+int PropertiesCurrentGame(HWND hDlg);
+
+#ifdef TREE_SHEET
+void ModifyPropertySheetForTreeSheet(HWND);
+#endif /* TREE_SHEET */
 
 #endif

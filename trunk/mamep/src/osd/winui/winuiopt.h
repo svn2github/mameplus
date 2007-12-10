@@ -735,6 +735,8 @@ void SetUIJoyExec(int joycodeIndex, int val);
 
 
 
+#define FOLDER_OPTIONS	-2
+#define GLOBAL_OPTIONS	-1
 
 #define OPTIONS_TYPE_GLOBAL		-1
 #define OPTIONS_TYPE_FOLDER		-2

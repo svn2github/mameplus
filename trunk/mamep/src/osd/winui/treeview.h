@@ -196,6 +196,8 @@ void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList);
 void SetCurrentFolder(LPTREEFOLDER lpFolder);
 LPTREEFOLDER GetCurrentFolder(void);
 LPTREEFOLDER GetFolder(UINT nFolder);
+LPTREEFOLDER GetFolderByID(UINT nID);
+LPTREEFOLDER GetFolderByName(int nParentId, const WCHAR *pszFolderName);
 
 int  GetBiosDriverByFolder(LPTREEFOLDER lpFolder);
 BOOL IsSourceFolder(LPTREEFOLDER lpFolder);

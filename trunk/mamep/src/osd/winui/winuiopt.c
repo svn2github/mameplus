@@ -356,6 +356,9 @@ static void  options_set_core(core_options *opts, const settings_type *p);
 static void  options_set_driver(core_options *opts, const options_type *p);
 static void  options_set_winui(const settings_type *p);
 
+static options_type *update_driver_use_default(int driver_index);
+static options_type *update_alt_use_default(alt_options_type *alt_option);
+
 static void  CopySettings(const settings_type *source, settings_type *dest);
 static void  FreeSettings(settings_type *p);
 
@@ -513,7 +516,7 @@ static WCHAR reload_config_msg[] =
 
 
 /***************************************************************************
-    Wrapper Function
+    Wrapper functions
  ***************************************************************************/
 
 core_options *CreateGameOptions(int driver_index)
@@ -534,7 +537,7 @@ core_options *load_options(OPTIONS_TYPE opt_type, int game_num)
 	switch (opt_type)
 	{
 	case OPTIONS_GLOBAL:
-		opts = CreateGameOptions(OPTIONS_GLOBAL);
+		opts = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
 		o = GetDefaultOptions();
 		break;
 
@@ -549,8 +552,9 @@ core_options *load_options(OPTIONS_TYPE opt_type, int game_num)
 		break;
 
 	case OPTIONS_PARENT:
-		if (DriverIsClone(game_num))
-			game_num = DriverParentIndex(game_num);
+		opts = CreateGameOptions(game_num);
+		o = GetParentOptions(game_num);
+		break;
 
 	case OPTIONS_GAME:
 		opts = CreateGameOptions(game_num);
@@ -573,21 +577,23 @@ core_options *load_options(OPTIONS_TYPE opt_type, int game_num)
 
 void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 {
+	int alt_index = -1;
 	options_type *o;
 
 	switch (opt_type)
 	{
 	case OPTIONS_GLOBAL:
 		o = GetDefaultOptions();
-		options_get_core(opts, &settings);
 		break;
 
 	case OPTIONS_VECTOR:
-		o = GetVectorOptions();
+		alt_index = bsearch_alt_option(TEXT("Vector"));
+		o = alt_options[alt_index].option;
 		break;
 
 	case OPTIONS_SOURCE:
-		o = GetSourceOptions(game_num);
+		alt_index = bsearch_alt_option(GetDriverFilename(game_num));
+		o = alt_options[alt_index].option;
 		break;
 
 	case OPTIONS_PARENT:
@@ -603,10 +609,18 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		exit(1);
 	}
 
+	if (opt_type != OPTIONS_GLOBAL && opts == NULL)
+		opts = load_options(opt_type - 1, game_num);
+
 	options_get_driver(opts, o);
 
 	if (o->dynamic_opt)
 		options_copy(o->dynamic_opt, opts);
+
+	if (alt_index != -1)
+		update_alt_use_default(&alt_options[alt_index]);
+	else if (opt_type != OPTIONS_GLOBAL)
+		update_driver_use_default(game_num);
 }
 
 /***************************************************************************
@@ -726,98 +740,98 @@ core_options *get_winui_options(void)
 
 void set_core_input_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, OPTION_INPUT_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_INPUT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_state_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, OPTION_STATE_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STATE_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_snapshot_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_localized_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, OPTION_LOCALIZED_DIRECTORY, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_LOCALIZED_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_state(const WCHAR *name)
 {
-	options_set_wstring(options_cli, OPTION_STATE, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STATE, name, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_playback(const WCHAR *name)
 {
-	options_set_wstring(options_cli, OPTION_PLAYBACK, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_PLAYBACK, name, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_record(const WCHAR *name)
 {
-	options_set_wstring(options_cli, OPTION_RECORD, name, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_RECORD, name, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_mngwrite(const WCHAR *filename)
 {
-	options_set_wstring(options_cli, OPTION_MNGWRITE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_MNGWRITE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_wavwrite(const WCHAR *filename)
 {
-	options_set_wstring(options_cli, OPTION_WAVWRITE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_WAVWRITE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_history_filename(const WCHAR *filename)
 {
-	options_set_wstring(options_cli, OPTION_HISTORY_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_HISTORY_FILE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 #ifdef STORY_DATAFILE
 void set_core_story_filename(const WCHAR *filename)
 {
-	options_set_wstring(options_cli, OPTION_STORY_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_STORY_FILE, filename, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* STORY_DATAFILE */
 
 void set_core_mameinfo_filename(const WCHAR *filename)
 {
-	options_set_wstring(options_cli, OPTION_MAMEINFO_FILE, filename, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, OPTION_MAMEINFO_FILE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_bios(const char *bios)
 {
-	options_set_string(options_cli, OPTION_BIOS, bios, OPTION_PRIORITY_INI);
+	options_set_string(options_cli, OPTION_BIOS, bios, OPTION_PRIORITY_CMDLINE);
 }
 
 
 /* -- */
 static void set_core_rom_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, SEARCHPATH_ROM, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_ROM, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 static void set_core_image_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, SEARCHPATH_IMAGE, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_IMAGE, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 static void set_core_sample_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 //#ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, SEARCHPATH_HASH, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_HASH, dir, OPTION_PRIORITY_CMDLINE);
 }
 //#endif
 
 static void set_core_translation_directory(const WCHAR *dir)
 {
-	options_set_wstring(options_cli, SEARCHPATH_TRANSLATION, dir, OPTION_PRIORITY_INI);
+	options_set_wstring(options_cli, SEARCHPATH_TRANSLATION, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 
@@ -3210,7 +3224,8 @@ static void free_folder_flag(f_flag *flag)
 	for (i = 0; i < flag->num; i++)
 		FreeIfAllocated(&flag->entry[i].name);
 
-	free(flag->entry);
+	if (flag->entry)
+		free(flag->entry);
 	flag->entry = NULL;
 	flag->num = 0;
 }
@@ -3503,7 +3518,7 @@ static void options_set_driver_flag_opts(core_options *opts)
 		for (j = 0; j < ARRAY_LENGTH(driver_flag_names); j++)
 		{
 			strcpy(p, driver_flag_names[j]);
-			options_set_int(opts, buf, flags[j], OPTION_PRIORITY_INI);
+			options_set_int(opts, buf, flags[j], OPTION_PRIORITY_CMDLINE);
 		}
 	}
 }
@@ -3578,7 +3593,7 @@ static int options_load_default_config(void)
 
 	options_set_core(options_cli, &backup.settings);
 	options_set_driver(options_cli, &backup.global);
-	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(options_cli, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
 	options_get_core(options_cli, &settings);
 	options_get_driver(options_cli, &global);
 
@@ -3615,7 +3630,7 @@ static int options_load_driver_config(int driver_index)
 		opt = options_cli;
 
 	options_set_driver(opt, &driver_options[driver_index]);
-	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
 	options_get_driver(opt, &driver_options[driver_index]);
 
 	update_driver_use_default(driver_index);
@@ -3662,7 +3677,7 @@ static int options_load_alt_config(alt_options_type *alt_option)
 		opt = options_cli;
 
 	options_set_driver(opt, alt_option->option);
-	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(opt, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
 	options_get_driver(opt, alt_option->option);
 
 	update_alt_use_default(alt_option);
@@ -3691,7 +3706,7 @@ static int options_load_winui_config(void)
 		return 0;
 
 	options_set_winui(&backup.settings);
-	retval = options_parse_ini_file(options_winui, mame_core_file(file), OPTION_PRIORITY_INI);
+	retval = options_parse_ini_file(options_winui, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
 	options_get_winui(&settings);
 	options_get_driver_flag_opts(options_winui);
 
@@ -4007,11 +4022,11 @@ static void options_duplicate_settings(const settings_type *source, settings_typ
 #define START_OPT_FUNC_WINUI	static void options_set_winui(const settings_type *p) { \
 					core_options *opts = options_winui;
 #define END_OPT_FUNC_WINUI	}
-#define DEFINE_OPT(type,name)		options_set_##type(opts, #name, (p->name), OPTION_PRIORITY_INI);
-#define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(opts, #name, (p->name), ARRAY_LENGTH(p->name), OPTION_PRIORITY_INI);
-#define DEFINE_OPT_STRUCT(type,name)	options_set_##type(opts, #name, (&p->name), OPTION_PRIORITY_INI);
-#define DEFINE_OPT_ARRAY(type,name)	options_set_##type(opts, #name, (p->name), OPTION_PRIORITY_INI);
-#define DEFINE_OPT_N(type,name,n)	options_set_##type(opts, #name#n, (p->name##s[n]), OPTION_PRIORITY_INI);
+#define DEFINE_OPT(type,name)		options_set_##type(opts, #name, (p->name), OPTION_PRIORITY_CMDLINE);
+#define DEFINE_OPT_CSV(type,name)	options_set_csv_##type(opts, #name, (p->name), ARRAY_LENGTH(p->name), OPTION_PRIORITY_CMDLINE);
+#define DEFINE_OPT_STRUCT(type,name)	options_set_##type(opts, #name, (&p->name), OPTION_PRIORITY_CMDLINE);
+#define DEFINE_OPT_ARRAY(type,name)	options_set_##type(opts, #name, (p->name), OPTION_PRIORITY_CMDLINE);
+#define DEFINE_OPT_N(type,name,n)	options_set_##type(opts, #name#n, (p->name##s[n]), OPTION_PRIORITY_CMDLINE);
 #include "optdef.h"
 
 

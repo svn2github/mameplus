@@ -12,6 +12,11 @@
 #include "uimess.h"
 #include "input.h"
 
+#if defined(WIN32) && !defined(SDLMAME_WIN32)
+#include "osd/windows/configms.h"
+#endif
+
+
 int mess_pause_for_ui = 0;
 static int ui_active = 0;
 
@@ -193,7 +198,7 @@ UINT32 ui_menu_image_info(UINT32 state)
 int mess_use_new_ui(void)
 {
 #if defined(WIN32) && !defined(SDLMAME_WIN32)
-	if (options_get_bool(mame_options(), "newui"))
+	if (options_get_bool(mame_options(), WINOPTION_NEWUI))
 		return TRUE;
 #endif
 	return FALSE;

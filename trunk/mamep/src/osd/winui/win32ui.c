@@ -64,6 +64,7 @@
 #include "file.h"
 #include "audit32.h"
 #include "Directories.h"
+#include "winuiopt.h"
 #include "Properties.h"
 #include "ColumnEdit.h"
 #include "picker.h"
@@ -73,7 +74,6 @@
 #include "Splitters.h"
 #include "help.h"
 #include "history.h"
-#include "winuiopt.h"
 #include "dialogs.h"
 #include "windows/input.h"
 #include "winmain.h"
@@ -2300,7 +2300,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 		filerr = mame_fopen_options(options, SEARCHPATH_RAW, CONFIGNAME ".ini", OPEN_FLAG_READ, &file);
 		if (filerr == FILERR_NONE)
 		{
-			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_INI);
+			options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_CMDLINE);
 			mame_fclose(file);
 		}
 
@@ -2613,7 +2613,10 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 			SetTimer(hMain, JOYGUI_TIMER, JOYGUI_MS, NULL);
 	}
 	else
+	{
+		DIJoystick.init();
 		g_pJoyGUI = NULL;
+	}
 
 	ChangeLanguage(0);
 #ifdef IMAGE_MENU
@@ -4970,6 +4973,8 @@ static void PickCloneColor(void)
 static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 {
 	int i;
+	LPTREEFOLDER folder;
+
 #ifdef IMAGE_MENU
 	if ((id >= ID_STYLE_NONE) && (id <= ID_STYLE_NONE + MENU_STYLE_MAX))
 	{
@@ -5030,7 +5035,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				wcscat(new_opt, patch_filename);
 			}
 
-			options_set_wstring(o, OPTION_IPS, new_opt, OPTION_PRIORITY_INI);
+			options_set_wstring(o, OPTION_IPS, new_opt, OPTION_PRIORITY_CMDLINE);
 			save_options(OPTIONS_GAME, o, nGame);
 
 			options_free(o);
@@ -5209,7 +5214,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		InitGameAudit(0);
 		if (!oldControl)
 		{
-			InitPropertyPageToPage(hInst, hwnd, Picker_GetSelectedItem(hwndList), GetSelectedPickItemIcon(), AUDIT_PAGE, NULL);
+			InitPropertyPageToPage(hInst, hwnd, GetSelectedPickItemIcon(), OPTIONS_GAME, -1, Picker_GetSelectedItem(hwndList), AUDIT_PAGE);
 			SaveGameOptions(Picker_GetSelectedItem(hwndList));
 		}
 		/* Just in case the toggle MMX on/off */
@@ -5334,7 +5339,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		{
 			/*it was sent after a refresh (F5) was done, we only reset the View if "available" is the selected folder
 			  as it doesn't affect the others*/
-			LPTREEFOLDER folder = GetSelectedFolder();
+			folder = GetSelectedFolder();
 			if( folder )
 			{
 				if (folder->m_nFolderId == FOLDER_AVAILABLE )
@@ -5344,12 +5349,21 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		}
 		break;
 
-	//fixme: inconsistent w/ official
 	case ID_GAME_PROPERTIES:
 		if (!oldControl)
 		{
-			InitPropertyPage(hInst, hwnd, Picker_GetSelectedItem(hwndList), GetSelectedPickItemIcon(), NULL);
-			SaveGameOptions(Picker_GetSelectedItem(hwndList));
+			folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
+			InitPropertyPage(hInst, hwnd, GetSelectedPickItemIcon(), OPTIONS_GAME, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+#ifdef MESS
+			{
+				extern BOOL g_bModifiedSoftwarePaths;
+				if (g_bModifiedSoftwarePaths) {
+					g_bModifiedSoftwarePaths = FALSE;
+					MessUpdateSoftwareList();
+				}
+			}
+#endif
+			//SaveGameOptions(Picker_GetSelectedItem(hwndList));
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
@@ -5362,9 +5376,31 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			if (bios_driver != -1)
 			{
 				HICON hIcon = ImageList_GetIcon(NULL, IDI_BIOS, ILD_TRANSPARENT);
-				InitPropertyPage(hInst, hwnd, bios_driver, hIcon, NULL);
-				SaveGameOptions(bios_driver);
+
+				folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(bios_driver) );
+				InitPropertyPage(hInst, hwnd, hIcon, OPTIONS_GAME, folder->m_nFolderId, bios_driver);
+#ifdef MESS
+				{
+					extern BOOL g_bModifiedSoftwarePaths;
+					if (g_bModifiedSoftwarePaths) {
+						g_bModifiedSoftwarePaths = FALSE;
+						MessUpdateSoftwareList();
+					}
+				}
+#endif
+				//SaveGameOptions(bios_driver);
 			}
+		}
+		/* Just in case the toggle MMX on/off */
+		UpdateStatusBar();
+		break;
+
+	case ID_FOLDER_PROPERTIES:
+		if (!oldControl)
+		{
+			folder = GetSelectedFolder();
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
@@ -5373,46 +5409,14 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_FOLDER_SOURCEPROPERTIES:
 		if (!oldControl)
 		{
-			LPTREEFOLDER lpFolder = GetSourceFolder(Picker_GetSelectedItem(hwndList));
-			int icon_id = GetTreeViewIconIndex(lpFolder->m_nIconId);
-			HICON hIcon = ImageList_GetIcon(NULL, icon_id, ILD_TRANSPARENT);
-			const WCHAR *name = lpFolder->m_lpTitle;
-
-			if (lpFolder->m_lpOriginalTitle)
-				name = lpFolder->m_lpOriginalTitle;
-
-			InitPropertyPage(hInst, hwnd, -2, hIcon, name);
-			SaveFolderOptions(name);
+			folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
 		break;
 
-	//fixme: inconsistent w/ official
-	case ID_FOLDER_PROPERTIES:
-		if (!oldControl)
-		{
-			LPTREEFOLDER lpFolder = GetSelectedFolder();
-			int bios_driver = GetBiosDriverByFolder(lpFolder);
-			if (bios_driver != -1)
-			{
-				InitPropertyPage(hInst, hwnd, bios_driver, GetSelectedFolderIcon(), NULL);
-				SaveGameOptions(bios_driver);
-			}
-			else
-			{
-				const WCHAR *name = lpFolder->m_lpTitle;
-
-				if (lpFolder->m_lpOriginalTitle)
-					name = lpFolder->m_lpOriginalTitle;
-
-				InitPropertyPage(hInst, hwnd, -2, GetSelectedFolderIcon(), name);
-				SaveFolderOptions(name);
-			}
-		}
-		/* Just in case the toggle MMX on/off */
-		UpdateStatusBar();
-		break;
 	case ID_FOLDER_AUDIT:
 		FolderCheck();
 		/* Just in case the toggle MMX on/off */

@@ -2170,7 +2170,7 @@ int win_create_menu(HMENU *menus)
 	HMODULE module;
 
 	// determine whether we are using the natural keyboard or not
-	win_use_natural_keyboard = options_get_bool(mame_options(), "natural");
+	win_use_natural_keyboard = options_get_bool(mame_options(), WINOPTION_NATURAL);
 
 	if (mess_use_new_ui())
 	{

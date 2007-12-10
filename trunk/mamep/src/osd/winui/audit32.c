@@ -381,14 +381,13 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 #ifdef TREE_SHEET
 		if (GetShowTreeSheet())
 		{
-			extern void ModifyPropertySheetForTreeSheet(HWND);
 			ModifyPropertySheetForTreeSheet(hDlg);
 		}
 #endif /* TREE_SHEET */
 
 		FlushFileCaches();
 		hAudit = hDlg;
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(rom_index));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(OPTIONS_GAME, rom_index));
 		SetTimer(hDlg, 0, 1, NULL);
 		return 1;
 

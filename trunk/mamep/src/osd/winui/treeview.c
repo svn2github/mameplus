@@ -39,10 +39,10 @@
 #include "M32Util.h"
 #include "bitmask.h"
 #include "screenshot.h"
+#include "winuiopt.h"
 #include "TreeView.h"
 #include "resource.h"
 #include "properties.h"
-#include "winuiopt.h"
 #include "help.h"
 #include "dialogs.h"
 #include "strconv.h"
@@ -146,6 +146,7 @@ static BOOL         AddFolder(LPTREEFOLDER lpFolder);
 static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
                               UINT nFolderId, int nParent, UINT nIconId);
 static void         DeleteFolder(LPTREEFOLDER lpFolder);
+static const WCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder);
 
 static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -269,6 +270,21 @@ LPTREEFOLDER GetFolder(UINT nFolder)
 	return (nFolder < numFolders) ? treeFolders[nFolder] : NULL;
 }
 
+LPTREEFOLDER GetFolderByID(UINT nID)
+{
+	UINT i;
+
+	for (i = 0; i < numFolders; i++)
+	{
+		if (treeFolders[i]->m_nFolderId == nID)
+		{
+			return treeFolders[i];
+		}
+	}
+
+	return (LPTREEFOLDER)0;
+}
+
 int GetBiosDriverByFolder(LPTREEFOLDER lpFolder)
 {
 	int n;
@@ -295,15 +311,10 @@ BOOL IsBiosFolder(LPTREEFOLDER lpFolder)
 
 BOOL IsVectorFolder(LPTREEFOLDER lpFolder)
 {
-	const WCHAR *name = lpFolder->m_lpTitle;
-
-	if ( lpFolder->m_nParent != -1)
+	if (lpFolder->m_nParent != -1)
 		return FALSE;
 
-	if (lpFolder->m_lpOriginalTitle)
-		name = lpFolder->m_lpOriginalTitle;
-
-	return wcscmp(name, TEXT("Vector")) == 0;
+	return wcscmp(GetFolderOrigName(lpFolder), TEXT("Vector")) == 0;
 }
 
 LPTREEFOLDER GetSourceFolder(int driver_index)
@@ -314,15 +325,11 @@ LPTREEFOLDER GetSourceFolder(int driver_index)
 	for (i = 0; i < numFolders; i++)
 	{
 		LPTREEFOLDER lpFolder = treeFolders[i];
-		const WCHAR *name = lpFolder->m_lpTitle;
 
 		if (lpFolder->m_nParent != g_source_folder)
 			continue;
 
-		if (lpFolder->m_lpOriginalTitle)
-			name = lpFolder->m_lpOriginalTitle;
-
-		if (wcscmp(name, source_name) == 0)
+		if (wcscmp(GetFolderOrigName(lpFolder), source_name) == 0)
 			return lpFolder;
 	}
 
@@ -556,7 +563,7 @@ void CreateManufacturerFolders(int parent_index)
 				for (i = numFolders-1; i >= start_folder; i--)
 				{
 					//RS Made it case insensitive
-					if (_wcsnicmp(treeFolders[i]->m_lpOriginalTitle, t, 20) == 0)
+					if (_wcsnicmp(GetFolderOrigName(treeFolders[i]), t, 20) == 0)
 					{
 						AddGame(treeFolders[i],jj);
 						break;
@@ -2208,6 +2215,32 @@ LPFOLDERDATA FindFilter(DWORD folderID)
  ***************************************************************************/
 
 /**************************************************************************/
+
+static const WCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder)
+{
+	if (lpFolder->m_lpOriginalTitle)
+		return lpFolder->m_lpOriginalTitle;
+
+	return lpFolder->m_lpTitle;
+}
+
+LPTREEFOLDER GetFolderByName(int nParentId, const WCHAR *pszFolderName)
+{
+	int i = 0, nParent;
+
+	//First Get the Parent TreeviewItem
+	//Enumerate Children
+	for(i = 0; i < numFolders/* ||treeFolders[i] != NULL*/; i++)
+	{
+		if (!wcscmp(GetFolderOrigName(treeFolders[i]), pszFolderName))
+		{
+			nParent = treeFolders[i]->m_nParent;
+			if ((nParent >= 0) && treeFolders[nParent]->m_nFolderId == nParentId)
+				return treeFolders[i];
+		}
+	}
+	return NULL;
+}
 
 static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon)
 {

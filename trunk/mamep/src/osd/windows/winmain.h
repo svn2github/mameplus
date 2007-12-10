@@ -46,6 +46,17 @@
 // input options
 #define WINOPTION_DUAL_LIGHTGUN			"dual_lightgun"
 
+#ifdef JOYSTICK_ID
+#define WINOPTION_JOYID1			"joyid1"
+#define WINOPTION_JOYID2			"joyid2"
+#define WINOPTION_JOYID3			"joyid3"
+#define WINOPTION_JOYID4			"joyid4"
+#define WINOPTION_JOYID5			"joyid5"
+#define WINOPTION_JOYID6			"joyid6"
+#define WINOPTION_JOYID7			"joyid7"
+#define WINOPTION_JOYID8			"joyid8"
+#endif /* JOYSTICK_ID */
+
 // misc options
 #define WINOPTION_AUDIO_LATENCY			"audio_latency"
 #define WINOPTION_PRIORITY				"priority"
