@@ -56,6 +56,7 @@ WINUIOBJS += \
 	$(WINUIOBJ)/winuiopt.o \
 	$(WINUIOBJ)/layout.o \
 	$(WINUIOBJ)/translate.o \
+	$(WINUIOBJ)/helpids.o \
 	$(MESS_WINUIOBJ)/optionsms.o \
 
 
