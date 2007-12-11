@@ -821,6 +821,14 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		update_driver_use_default(game_num);
 }
 
+//mamep: fixme
+core_options *options_get_mess_option(int driver_index)
+{
+	options_type *o = GetGameOptions(driver_index);
+	return o->dynamic_opt;
+}
+
+
 /***************************************************************************
     External functions  
  ***************************************************************************/
@@ -2026,12 +2034,12 @@ void SetInpDir(const WCHAR* path)
 		settings.input_directory = wcsdup(path);
 }
 
-const WCHAR* GetImgDirs(void)
+const WCHAR* GetImgDir(void)
 {
 	return settings.snapshot_directory;
 }
 
-void SetImgDirs(const WCHAR* path)
+void SetImgDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.snapshot_directory);
 
@@ -2078,12 +2086,12 @@ void SetMemcardDir(const WCHAR* path)
 		settings.memcard_directory = wcsdup(path);
 }
 
-const WCHAR* GetFlyerDirs(void)
+const WCHAR* GetFlyerDir(void)
 {
 	return settings.flyer_directory;
 }
 
-void SetFlyerDirs(const WCHAR* path)
+void SetFlyerDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.flyer_directory);
 
@@ -2091,12 +2099,12 @@ void SetFlyerDirs(const WCHAR* path)
 		settings.flyer_directory = wcsdup(path);
 }
 
-const WCHAR* GetCabinetDirs(void)
+const WCHAR* GetCabinetDir(void)
 {
 	return settings.cabinet_directory;
 }
 
-void SetCabinetDirs(const WCHAR* path)
+void SetCabinetDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.cabinet_directory);
 
@@ -2104,12 +2112,12 @@ void SetCabinetDirs(const WCHAR* path)
 		settings.cabinet_directory = wcsdup(path);
 }
 
-const WCHAR* GetMarqueeDirs(void)
+const WCHAR* GetMarqueeDir(void)
 {
 	return settings.marquee_directory;
 }
 
-void SetMarqueeDirs(const WCHAR* path)
+void SetMarqueeDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.marquee_directory);
 
@@ -2117,12 +2125,12 @@ void SetMarqueeDirs(const WCHAR* path)
 		settings.marquee_directory = wcsdup(path);
 }
 
-const WCHAR* GetTitlesDirs(void)
+const WCHAR* GetTitlesDir(void)
 {
 	return settings.title_directory;
 }
 
-void SetTitlesDirs(const WCHAR* path)
+void SetTitlesDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.title_directory);
 
@@ -2130,12 +2138,12 @@ void SetTitlesDirs(const WCHAR* path)
 		settings.title_directory = wcsdup(path);
 }
 
-const WCHAR* GetControlPanelDirs(void)
+const WCHAR* GetControlPanelDir(void)
 {
 	return settings.cpanel_directory;
 }
 
-void SetControlPanelDirs(const WCHAR* path)
+void SetControlPanelDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.cpanel_directory);
 	if (path != NULL)
@@ -2209,12 +2217,12 @@ void SetLocalizedDir(const WCHAR* path)
 		settings.localized_directory = wcsdup(path);
 }
 
-const WCHAR* GetIconsDirs(void)
+const WCHAR* GetIconsDir(void)
 {
 	return settings.icon_directory;
 }
 
-void SetIconsDirs(const WCHAR* path)
+void SetIconsDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.icon_directory);
 
@@ -3190,31 +3198,11 @@ static const WCHAR *get_base_config_directory(void)
 
 static void generate_default_dirs(void)
 {
-	static const WCHAR* (*GetDirsFunc[])(void) =
-	{
-		GetRomDirs,
-		GetSampleDirs,
-		GetArtDir,
-		//fixme: fontpath
-		GetTranslationDir,
-		GetLocalizedDir,
-		GetPatchDir,
-		GetImgDirs,
-		GetFlyerDirs,
-		GetCabinetDirs,
-		GetMarqueeDirs,
-		GetTitlesDirs,
-		GetControlPanelDirs,
-		GetIconsDirs,
-		GetBgDir,
-		GetPcbinfoDir,
-		NULL
-	};
-	
 	int i;
-	for (i = 0; GetDirsFunc[i]; i++)
+
+	for (i = 0; g_directoryInfo[i].pfnGetTheseDirs; i++)
 	{
-		WCHAR *paths = wcsdup(GetDirsFunc[i]());
+		WCHAR *paths = wcsdup(g_directoryInfo[i].pfnGetTheseDirs());
 		{
 			WCHAR *p;
 

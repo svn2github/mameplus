@@ -1,5 +1,3 @@
-#define LEGASY_OPTION_STRUCTURE
-
 #define UNICODE
 #define _UNICODE
 #define WIN32_LEAN_AND_MEAN
@@ -156,8 +154,7 @@ void SetSoftwareDirs(const WCHAR* paths)
 void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const WCHAR *software)
 {
 	const char *opt_name = device_instancename(devclass, device_inst);
-	options_type *o;
-	core_options *opt;
+	core_options *opt = options_get_mess_option(driver_index);
 
 	if (LOG_SOFTWARE)
 	{
@@ -165,8 +162,6 @@ void SetSelectedSoftware(int driver_index, const device_class *devclass, int dev
 			driver_index, drivers[driver_index]->name, devclass, device_inst, software);
 	}
 
-	o = GetGameOptions(driver_index);
-	opt = o->dynamic_opt;
 	opt_name = device_instancename(devclass, device_inst);
 	options_set_wstring(opt, opt_name, software, OPTION_PRIORITY_INI);
 }
@@ -175,11 +170,8 @@ const WCHAR *GetSelectedSoftware(int driver_index, const device_class *devclass,
 {
 	const char *opt_name = device_instancename(devclass, device_inst);
 	const WCHAR *software;
-	options_type *o;
-	core_options *opt;
+	core_options *opt = options_get_mess_option(driver_index);
 
-	o = GetGameOptions(driver_index);
-	opt = o->dynamic_opt;
 	opt_name = device_instancename(devclass, device_inst);
 	software = options_get_wstring(opt, opt_name);
 	return software ? software : wcsdup(L"");

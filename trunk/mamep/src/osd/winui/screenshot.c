@@ -212,27 +212,27 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
-		basedir = GetImgDirs();
+		basedir = GetImgDir();
 		zip_name = TEXT("snap");
 		break;
 	case TAB_FLYER :
-		basedir = GetFlyerDirs();
+		basedir = GetFlyerDir();
 		zip_name = TEXT("flyers");
 		break;
 	case TAB_CABINET :
-		basedir = GetCabinetDirs();
+		basedir = GetCabinetDir();
 		zip_name = TEXT("cabinets");
 		break;
 	case TAB_MARQUEE :
-		basedir = GetMarqueeDirs();
+		basedir = GetMarqueeDir();
 		zip_name =TEXT( "marquees");
 		break;
 	case TAB_TITLE :
-		basedir = GetTitlesDirs();
+		basedir = GetTitlesDir();
 		zip_name = TEXT("titles");
 		break;
 	case TAB_CONTROL_PANEL :
-		basedir = GetControlPanelDirs();
+		basedir = GetControlPanelDir();
 		zip_name = TEXT("cpanel");
 		break;
 	case BACKGROUND :

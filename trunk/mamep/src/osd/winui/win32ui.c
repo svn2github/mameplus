@@ -1444,8 +1444,8 @@ HICON LoadIconFromFile(const char *iconname)
 {
 	static const WCHAR* (*GetDirsFunc[])(void) =
 	{
-		GetIconsDirs,
-		GetImgDirs,
+		GetIconsDir,
+		GetImgDir,
 		NULL
 	};
 
