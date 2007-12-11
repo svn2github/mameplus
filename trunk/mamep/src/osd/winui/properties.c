@@ -193,6 +193,44 @@ static FARPROC fnIsThemed;
 #define PropSheet_GetTabControl(d) (HWND)(LRESULT)(int)SendMessage((d),PSM_GETTABCONTROL,0,0)
 #endif /* defined(__GNUC__) */
 
+#ifdef USE_IPS
+//mamep: ignore ips setting
+static core_options * load_options_ex(OPTIONS_TYPE opt_type, int game_num)
+{
+	core_options *opts = load_options(opt_type, game_num);
+
+	options_set_string(opts, OPTION_IPS, "", OPTION_PRIORITY_CMDLINE);
+	return opts;
+}
+
+//mamep: keep ips setting
+static void save_options_ex(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
+{
+	core_options *orig = load_options(opt_type, game_num);
+	const char *ips = options_get_string(orig, OPTION_IPS);
+
+	if (ips && *ips && !opts)
+	{
+		OPTIONS_TYPE type = opt_type;
+
+		if (type > OPTIONS_GLOBAL)
+			type--;
+
+		opts = load_options(type, game_num);
+	}
+
+	if (opts)
+		options_set_string(opts, OPTION_IPS, ips, OPTION_PRIORITY_CMDLINE);
+
+	options_free(orig);
+	save_options(opt_type, opts, game_num);
+}
+
+#define load_options	load_options_ex
+#define save_options	save_options_ex
+#endif /* USE_IPS */
+
+
 /***************************************************************
  * Imported function prototypes
  ***************************************************************/
@@ -2058,6 +2096,7 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 			if (pOptsGlobal) options_free(pOptsGlobal);
 			if (pOptsVector) options_free(pOptsVector);
 			if (pOptsSource) options_free(pOptsSource);
+			pOptsGlobal = pOptsVector = pOptsSource = NULL;
 
 			{
 				int n;

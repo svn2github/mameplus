@@ -773,6 +773,14 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 	int alt_index = -1;
 	options_type *o;
 
+	if (opts == NULL)
+	{
+		if (opt_type == OPTIONS_GLOBAL)
+			return;
+
+		opts = load_options(opt_type - 1, game_num);
+	}
+
 	switch (opt_type)
 	{
 	case OPTIONS_GLOBAL:
@@ -801,9 +809,6 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		dprintf("save_options(): unknown opt_type: %d", opt_type);
 		exit(1);
 	}
-
-	if (opt_type != OPTIONS_GLOBAL && opts == NULL)
-		opts = load_options(opt_type - 1, game_num);
 
 	options_get_driver(opts, o);
 
