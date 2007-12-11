@@ -74,53 +74,6 @@ static WNDPROC g_lpPcbInfoWndProc = NULL;
 static LRESULT CALLBACK PcbInfoWndProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 #endif /* USE_VIEW_PCBINFO */
 
-#if defined(__GNUC__)
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_AddString
-//#define ComboBox_AddString(hwndCtl,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_ADDSTRING,0,(LPARAM)(LPCTSTR)(lpsz)))
-static int ComboBox_AddString(HWND hwndCtl, LPCTSTR lpsz)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_ADDSTRING, 0, (LPARAM)lpsz);
-	return (int)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_SetCurSel
-//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
-static int ComboBox_SetCurSel(HWND hwndCtl, int index)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
-	return (int)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_SetItemData
-//#define ComboBox_SetItemData(hwndCtl,index,data) ((int)(DWORD)SendMessage((hwndCtl),CB_SETITEMDATA,(WPARAM)(int)(index),(LPARAM)(data)))
-#define ComboBox_SetItemData(hwndCtl,index,data) _ComboBox_SetItemData(hwndCtl, index, (LPARAM)(data))
-static int _ComboBox_SetItemData(HWND hwndCtl, int index, DWORD data)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_SETITEMDATA, (WPARAM)index, (LPARAM)data);
-	return (int)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef TreeView_SetImageList
-//#define TreeView_SetImageList(w,h,i) (HIMAGELIST)SNDMSG((w),TVM_SETIMAGELIST,i,(LPARAM)(HIMAGELIST)(h))
-static HIMAGELIST TreeView_SetImageList(HWND w, HIMAGELIST h, int i)
-{
-	LRESULT result;
-
-	result = SNDMSG(w, TVM_SETIMAGELIST, (WPARAM)i, (LPARAM)h);
-	return (HIMAGELIST)result;
-}
-#endif /* defined(__GNUC__) */
-
 
 /***************************************************************************/
 
@@ -248,26 +201,26 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 						GetOffsetClones());
 		Button_SetCheck(GetDlgItem(hDlg,IDC_BROKEN_ICON),
 						!GetUseBrokenIcon());
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Snapshot")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_SCREENSHOT);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Flyer")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_FLYER);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Cabinet")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CABINET);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Marquee")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_MARQUEE);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Title")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_TITLE);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Control Panel")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CONTROL_PANEL);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("All")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_ALL);
-		ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("None")));
-		ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_NONE);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Snapshot")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_SCREENSHOT);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Flyer")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_FLYER);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Cabinet")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CABINET);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Marquee")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_MARQUEE);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Title")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_TITLE);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Control Panel")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_CONTROL_PANEL);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("All")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_ALL);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("None")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_NONE);
 		if( GetHistoryTab() < MAX_TAB_TYPES )
-			ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab());
+			(void)ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab());
 		else
-			ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab()-TAB_SUBTRACT-(MAX_TAB_TYPES-TAB_HISTORY-1));
+			(void)ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_HISTORY_TAB), GetHistoryTab()-TAB_SUBTRACT-(MAX_TAB_TYPES-TAB_HISTORY-1));
 
 		SendDlgItemMessage(hDlg, IDC_SCREENSHOT_BORDERSIZE, TBM_SETRANGE,
 					(WPARAM)FALSE,
@@ -684,7 +637,7 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		// current game passed in using DialogBoxParam()
 		driver_index = lParam;
 
-		TreeView_SetImageList(GetDlgItem(hDlg,IDC_CUSTOM_TREE), treeview_icons, LVSIL_NORMAL);
+		(void)TreeView_SetImageList(GetDlgItem(hDlg,IDC_CUSTOM_TREE), treeview_icons, LVSIL_NORMAL);
 
 		GetFolders(&folders,&num_folders);
 

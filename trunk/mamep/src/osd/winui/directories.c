@@ -43,28 +43,6 @@ static HWND ListView_GetEditControl(HWND w)
 	hwnd = SendMessage((w),LVM_GETEDITCONTROL,0,0);
 	return (HWND)hwnd;
 }
-
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_InsertString
-//#define ComboBox_InsertString(hwndCtl,index,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_INSERTSTRING,(WPARAM)(int)(index),(LPARAM)(LPCTSTR)(lpsz)))
-static int ComboBox_InsertString(HWND hwndCtl, int index, LPCTSTR lpsz)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_INSERTSTRING, (WPARAM)index, (LPARAM)lpsz);
-	return (int)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_SetCurSel
-//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
-static int ComboBox_SetCurSel(HWND hwndCtl, int index)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
-	return (int)result;
-}
 #endif /* defined(__GNUC__) */
 
 #define MAX_DIRS 64
@@ -328,10 +306,10 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 
 	for (i = nDirInfoCount - 1; i >= 0; i--)
 	{
-		ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
+		(void)ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
 	}
 
-	ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO), 0);
+	(void)ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO), 0);
 
 	GetClientRect(GetDlgItem(hDlg, IDC_DIR_LIST), &rectClient);
 

@@ -56,18 +56,6 @@
 
 #define MAX_EXTRA_FOLDERS 256
 
-#if defined(__GNUC__)
-/* fix warning: value computed is not used for GCC4 */
-#undef TreeView_SetImageList
-//#define TreeView_SetImageList(w,h,i) (HIMAGELIST)SNDMSG((w),TVM_SETIMAGELIST,i,(LPARAM)(HIMAGELIST)(h))
-static HIMAGELIST TreeView_SetImageList(HWND w, HIMAGELIST h, int i)
-{
-	LRESULT result;
-
-	result = SNDMSG(w, TVM_SETIMAGELIST, (WPARAM)i, (LPARAM)h);
-	return (HIMAGELIST)result;
-}
-#endif /* defined(__GNUC__) */
 
 /***************************************************************************
     public structures
@@ -2000,7 +1988,7 @@ static BOOL CreateTreeIcons(void)
 	}
 
 	// Associate the image lists with the list view control.
-	TreeView_SetImageList(GetTreeView(), hTreeSmall, TVSIL_NORMAL);
+	(void)TreeView_SetImageList(GetTreeView(), hTreeSmall, TVSIL_NORMAL);
 
 	return TRUE;
 }

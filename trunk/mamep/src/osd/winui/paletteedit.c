@@ -29,29 +29,6 @@
 #include "resource.h"
 #include "translate.h"
 
-#if defined(__GNUC__)
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_AddString
-//#define ComboBox_AddString(hwndCtl,lpsz) ((int)(DWORD)SendMessage((hwndCtl),CB_ADDSTRING,0,(LPARAM)(LPCTSTR)(lpsz)))
-static int ComboBox_AddString(HWND hwndCtl, LPCTSTR lpsz)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_ADDSTRING, 0, (LPARAM)lpsz);
-	return (int)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef ComboBox_SetCurSel
-//#define ComboBox_SetCurSel(hwndCtl,index) ((int)(DWORD)SendMessage((hwndCtl),CB_SETCURSEL,(WPARAM)(int)(index),0))
-static int ComboBox_SetCurSel(HWND hwndCtl, int index)
-{
-	DWORD result;
-
-	result = SendMessage(hwndCtl, CB_SETCURSEL, (WPARAM)index, 0);
-	return (int)result;
-}
-#endif /* defined(__GNUC__) */
 
 /***************************************************************
  * Imported function prototypes
@@ -158,7 +135,7 @@ static void InitializePaletteUI(HWND hwnd)
 			palette_tmp[i][1] = (unsigned char)b;
 			palette_tmp[i][2] = (unsigned char)c;
 
-			ComboBox_AddString(hCtrl, _UIW(palette_names[i]));
+			(void)ComboBox_AddString(hCtrl, _UIW(palette_names[i]));
 		}
 	}
 
@@ -169,7 +146,7 @@ static void InitializePaletteUI(HWND hwnd)
 				(LPARAM)MAKELONG(0, 255));
 	}
 
-	ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_PALETTE_COMBO), 0);
+	(void)ComboBox_SetCurSel(GetDlgItem(hwnd, IDC_PALETTE_COMBO), 0);
 
 	PaletteSet(hwnd);
 }

@@ -98,28 +98,6 @@
 #endif // LVS_EX_LABELTIP
 
 #if defined(__GNUC__)
-/* fix warning: value computed is not used for GCC4 */
-#undef ListView_SetImageList
-//#define ListView_SetImageList(w,h,i) (HIMAGELIST)(UINT)SNDMSG((w),LVM_SETIMAGELIST,(i),(LPARAM)(h))
-static HIMAGELIST ListView_SetImageList(HWND w, HIMAGELIST h, int i)
-{
-	UINT result;
-
-	result = SNDMSG(w, LVM_SETIMAGELIST, i, (LPARAM)h);
-	return (HIMAGELIST)result;
-}
-
-/* fix warning: value computed is not used for GCC4 */
-#undef TreeView_HitTest
-//#define TreeView_HitTest(w,p) (HTREEITEM)SNDMSG((w),TVM_HITTEST,0,(LPARAM)(LPTV_HITTESTINFO)(p))
-static HTREEITEM TreeView_HitTest(HWND w, LPTV_HITTESTINFO p)
-{
-	LRESULT result;
-
-	result = SNDMSG(w, TVM_HITTEST, 0, (LPARAM)p);
-	return (HTREEITEM)result;
-}
-
 // fix warning: cast does not match function type
 #if defined(ListView_CreateDragImage)
 #undef ListView_CreateDragImage
@@ -6086,8 +6064,8 @@ static void CreateIcons(void)
 	ReloadIcons();
 
 	// Associate the image lists with the list view control.
-	ListView_SetImageList(hwndList, hSmall, LVSIL_SMALL);
-	ListView_SetImageList(hwndList, hLarge, LVSIL_NORMAL);
+	(void)ListView_SetImageList(hwndList, hSmall, LVSIL_SMALL);
+	(void)ListView_SetImageList(hwndList, hLarge, LVSIL_NORMAL);
 
 	// restore our view
 	SetWindowLong(hwndList,GWL_STYLE,dwStyle);
@@ -7116,7 +7094,7 @@ static BOOL HandleTreeContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 	/* select the item that was right clicked or shift-F10'ed */
 	hti.pt = pt;
 	ScreenToClient(hTreeView,&hti.pt);
-	TreeView_HitTest(hTreeView,&hti);
+	(void)TreeView_HitTest(hTreeView,&hti);
 	if ((hti.flags & TVHT_ONITEM) != 0)
 		TreeView_SelectItem(hTreeView,hti.hItem);
 
