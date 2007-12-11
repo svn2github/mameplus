@@ -74,6 +74,7 @@ struct _datamap
 {
 	int entry_count;
 	int entry_size;
+	//mamep: dynamic allocation
 	datamap_entry *entries;
 };
 
@@ -91,7 +92,8 @@ static int control_operation(datamap *map, HWND dialog, core_options *opts,
 	datamap_entry *entry, datamap_callback_type callback_type);
 static void read_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
 static void populate_control(datamap *map, HWND control, core_options *opts, datamap_entry *entry, const char *option_name);
-static	char *tztrim(float float_value);
+//mamep: helper for coloring of changed elements in property page
+//static	char *tztrim(float float_value);
 
 
 //============================================================
@@ -570,9 +572,13 @@ static void read_control(datamap *map, HWND control, core_options *opts, datamap
 					break;
 
 				case DM_FLOAT:
+#if 0 //mamep: use options_set_float, options_equal() works fine.
 					// Use tztrim(float_value) or we get trailing zero's that break options_equal().
 					if (float_value != options_get_float(opts, option_name))
 						options_set_string(opts, option_name, tztrim(float_value), OPTION_PRIORITY_CMDLINE);
+#else
+					options_set_float(opts, option_name, float_value, OPTION_PRIORITY_CMDLINE);
+#endif
 					break;
 
 				default:
@@ -761,6 +767,7 @@ static void populate_control(datamap *map, HWND control, core_options *opts, dat
 	}
 }
 
+#if 0 //mamep: use options_set_float, options_equal() works fine.
 // Return a string from a float value with trailing zeros removed.
 static	char *tztrim(float float_value) {
 	static char tz_string[20];
@@ -789,7 +796,9 @@ static	char *tztrim(float float_value) {
 	tz_string[i] = '\0';
 	return tz_string;
 }
+#endif
 
+//mamep: helper for coloring of changed elements in property page
 const char *datamap_get_contorl_option_name(datamap *map, HWND dialog, HWND control)
 {
 	int i;

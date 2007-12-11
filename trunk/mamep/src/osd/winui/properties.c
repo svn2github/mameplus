@@ -2144,7 +2144,12 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	if (GetWindowLong((HWND)lParam, GWL_ID) < 0)
 		return 0;
 
-	if (IsControlOptionValue(hDlg, (HWND)lParam, pCurrentOpts, pOptsGlobal))
+	if (g_nPropertyMode == OPTIONS_GLOBAL)
+	{
+		//Normal Black case
+		SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+	}
+	else if (IsControlOptionValue(hDlg, (HWND)lParam, pCurrentOpts, pOptsGlobal))
 	{
 		//Normal Black case
 		SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
@@ -2179,7 +2184,6 @@ static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 				SetTextColor((HDC)wParam,VECTOR_COLOR);
 				break;
 			default:
-			case OPTIONS_GLOBAL:
 				SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
 				break;
 		}
