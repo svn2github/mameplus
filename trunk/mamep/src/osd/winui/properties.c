@@ -20,45 +20,132 @@
     Created 8/29/98 by Mike Haaland (mhaaland@hypertech.com)
 
 ***************************************************************************/
-#define LEGASY_OPTION_STRUCTURE
+
+/***************************************************************************
+
+MSH - 20070809
+--
+Notes on properties and ini files, reset and reset to default. 
+----------------------------------------------------------------------------
+Each ini contains a complete option set.
+
+Priority order for option sets (Lowest to Highest):
+
+built-in defaults
+program    ini (executable root filename ini)
+debug      ini (if running a debug build)
+vector     ini (really is vector.ini!)
+driver     ini (source code root filename in which this driver is found)
+granparent ini (grandparent, not sure these exist, but it is possible)
+parent     ini (where parent is the name of the parent driver)
+game       ini (where game is the driver name for this game)
+
+To determine which option set to use, start at the top level (lowest
+priority), and overlay all higher priority ini's until the desired level
+is reached.
+
+The 'default' option set is the next priority higher up the list from
+the desired level. For the default (program.ini) level, it is also the
+default.
+
+When MAME is run, the desired level is game ini.
+
+Expected Code behavior:
+----------------------------------------------------------------------------
+This approach requires 3 option sets, 'current', 'original' and 'default'.
+
+'current': used to populate the property pages, and to initialize the
+'original' set.
+
+'original': used to evaluate if the 'Reset' button is enabled.
+If 'current' matches 'original', the 'Reset' button is disabled,
+otherwise it is enabled.
+
+'default': used to evaluate if the 'Restore to Defaults' button is enabled.
+If 'current' matches 'default', the 'Restore to Defaults' button is disabled,
+otherwise it is enabled.
+
+When editing any option set, the desired level is set to the one being
+edited, the default set for that level, is the next lower priority set found.
+
+Upon entering the properties dialog:
+a) 'current' is initialized
+b) 'original' is initialized by 'current'
+c) 'default' is initialized
+d) Populate Property pages with 'current'
+e) 'Reset' and 'Restore to Defaults' buttons are evaluated.
+
+After any change:
+a) 'current' is updated
+b) 'Reset' and 'Restore to Defaults' buttons are re-evaluated.
+
+Reset:
+a) 'current' is reinitialized to 'original'
+b) Re-populate Property pages with 'current'
+c) 'Reset' and 'Restore to Defaults' buttons are re-evaluated.
+
+Restore to Defaults:
+a) 'current' is reinitialized to 'default'
+b) Re-populate Property pages with 'current'
+b) 'Reset' and 'Restore to Defaults' buttons are re-evaluated.
+
+Apply:
+a) 'original' is reinitialized to 'current'
+b) 'Reset' and 'Restore to defaults' are re-evaluated.
+c) If they 'current' matches 'default', remove the ini from disk.
+   Otherwise, write the ini to disk.
+
+Cancel:
+a) Exit the dialog.
+
+OK:
+a) If they 'current' matches 'default', remove the ini from disk.
+   Otherwise, write the ini to disk.
+b) Exit the dialog.
+
+
+***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 
-#define NONAMELESSUNION 1
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
 #include <commdlg.h>
-#undef NONAMELESSUNION
+#include <ddraw.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
 
-#include "MAME32.h"	// include this first
-#include "driver.h"
+#include <driver.h>
+#include <info.h>
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
-#include "info.h"
 #include "audit.h"
 #include "audit32.h"
 #include "bitmask.h"
 #include "winuiopt.h"
 #include "file.h"
 #include "resource.h"
-#include "DIJoystick.h"     /* For DIJoystick avalibility. */
+#include "dijoystick.h"     /* For DIJoystick avalibility. */
 #include "m32util.h"
 #include "directdraw.h"
 #include "properties.h"
 #include "treeview.h"
+#include "win32ui.h"
 #include "translate.h"
 
 #include "screenshot.h"
+#include "mame32.h"
 #include "datamap.h"
 #include "help.h"
-#include "winmain.h"
 #include "resource.hm"
+#include "winmain.h"
+#include "strconv.h"
+#include "winutf8.h"
+#include "m32util.h"
 #include "datafile.h"
 
 //#ifdef MESS
@@ -69,6 +156,9 @@
 
 
 typedef HANDLE HTHEME;
+
+static HMODULE hThemes;
+static FARPROC fnIsThemed;
 
 #ifdef UNICODE
 #define TTM_SETTITLE            TTM_SETTITLEW
@@ -95,10 +185,6 @@ typedef HANDLE HTHEME;
 #endif
 #ifndef TBCD_CHANNEL
 #define TBCD_CHANNEL 3
-#endif
-
-#ifndef DISPLAY_DEVICE_MIRRORING_DRIVER
-#define DISPLAY_DEVICE_MIRRORING_DRIVER    0x00000008
 #endif
 
 #if defined(__GNUC__)
@@ -173,6 +259,8 @@ BOOL bThemeActive;
 static core_options *pOrigOpts, *pDefaultOpts;
 static BOOL orig_uses_defaults;
 static core_options *pCurrentOpts = NULL;
+
+//mamep: for coloring of changed elements
 static core_options *pOptsGlobal;
 static core_options *pOptsVector;
 static core_options *pOptsSource;
@@ -191,6 +279,7 @@ static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
 static BOOL g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+static HICON g_hIcon = NULL;
 
 #ifdef TREE_SHEET
 #define SHEET_TREE_WIDTH 180
@@ -206,8 +295,6 @@ static HINSTANCE hSheetInstance = 0;
 static WNDPROC pfnOldSheetProc = NULL;
 static  BOOL bPageTreeSelChangedActive = FALSE;
 #endif /* TREE_SHEET */
-
-static HICON g_hIcon = NULL;
 
 /* Property sheets */
 
@@ -246,7 +333,7 @@ BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num)
 	return DriverIsVector(game_num);
 }
 
-BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num)
+BOOL PropSheetFilter_Driver(OPTIONS_TYPE opt_type, int folder_id, int game_num)
 {
 #ifdef DRIVER_SWITCH
 	// driver switch config is in bios page
@@ -408,11 +495,11 @@ static struct ComboBoxDevices
 	const char*	m_pData;
 } g_ComboBoxDevice[] = 
 {
+	{ TEXT("None"),                  "none"  },
 	{ TEXT("Keyboard"),              "keyboard"  },
 	{ TEXT("Mouse"),                 "mouse"     },
 	{ TEXT("Joystick"),              "joystick"  },
 	{ TEXT("Lightgun"),              "lightgun"  },
-	{ TEXT("None"),                  "none"  },
 };
 
 #define NUMDEVICES ARRAY_LENGTH(g_ComboBoxDevice)
@@ -439,12 +526,6 @@ static const struct
 /***************************************************************
  * Public functions
  ***************************************************************/
-
-typedef HTHEME (WINAPI *OpenThemeProc)(HWND hwnd, LPCWSTR pszClassList);
-
-HMODULE hThemes;
-OpenThemeProc fnOpenTheme;
-FARPROC fnIsThemed;
 
 void PropertiesInit(void)
 {
@@ -481,6 +562,12 @@ void PropertiesInit(void)
 		g_sMonitorDeviceString[i + 1] = NULL;
 		g_sMonitorDeviceName[i + 1] = NULL;
 	}
+}
+
+// Called by MESS, to avoid MESS specific hacks in properties.c
+int PropertiesCurrentGame(HWND hDlg)
+{
+	return g_nGame;
 }
 
 DWORD_PTR GetHelpIDs(void)
@@ -520,6 +607,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 	pspages = malloc(sizeof(PROPSHEETPAGE) * possiblePropSheets);
 	if (!pspages)
 		return NULL;
+
 	memset(pspages, 0, sizeof(PROPSHEETPAGE) * possiblePropSheets);
 
 	maxPropSheets = 0;
@@ -535,7 +623,7 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 				pspages[maxPropSheets].dwSize                     = sizeof(PROPSHEETPAGE);
 				pspages[maxPropSheets].dwFlags                    = 0;
 				pspages[maxPropSheets].hInstance                  = hInst;
-				pspages[maxPropSheets].DUMMYUNIONNAME.pszTemplate = MAKEINTRESOURCE(g_propSheets[i].dwDlgID);
+				pspages[maxPropSheets].pszTemplate                = MAKEINTRESOURCE(g_propSheets[i].dwDlgID);
 				pspages[maxPropSheets].pfnCallback                = NULL;
 				pspages[maxPropSheets].lParam                     = 0;
 				pspages[maxPropSheets].pfnDlgProc                 = g_propSheets[i].pfnDlgProc;
@@ -598,9 +686,9 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.pfnCallback                = PropSheetCallbackProc;
 	pshead.hInstance                  = hInst;
 	pshead.pszCaption                 = _UIW(TEXT("Default Game"));
-	pshead.DUMMYUNIONNAME2.nStartPage = 0;
-	pshead.DUMMYUNIONNAME.pszIcon     = MAKEINTRESOURCE(IDI_MAME32_ICON);
-	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
+	pshead.nStartPage                 = 0;
+	pshead.pszIcon                    = MAKEINTRESOURCE(IDI_MAME32_ICON);
+	pshead.ppsp                       = pspage;
 
 #ifdef TREE_SHEET
 	if (GetShowTreeSheet())
@@ -632,7 +720,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 {
 	PROPSHEETHEADER pshead;
 	PROPSHEETPAGE   *pspage;
-	WCHAR*          t_description = NULL;
+	WCHAR*          w_description = NULL;
 	OPTIONS_TYPE    default_type = opt_type;
 
 	if (highlight_brush == NULL)
@@ -693,36 +781,37 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	if (!pspage)
 		return;
 
+
 	// Get the description use as the dialog caption.
 	switch( opt_type )
 	{
 	case OPTIONS_GAME:
-		t_description = UseLangList() ? _LSTW(driversw[g_nGame]->description) : driversw[g_nGame]->modify_the;
+		w_description = UseLangList() ? _LSTW(driversw[g_nGame]->description) : driversw[g_nGame]->modify_the;
 		break;
 	case OPTIONS_VECTOR:
 	case OPTIONS_SOURCE:
-		t_description = GetFolderByID(g_nFolder)->m_lpTitle;
+		w_description = GetFolderByID(g_nFolder)->m_lpTitle;
 		break;
 	case OPTIONS_GLOBAL:
-		t_description = _UIW(TEXT("Default Settings"));
+		w_description = _UIW(TEXT("Default Settings"));
 		break;
 	default:
 		return;
 	}
 	// If we have no descrption, return.
-	if( !t_description )
+	if( !w_description )
 		return;
 
 	/* Fill in the property sheet header */
-	pshead.pszCaption = t_description;
+	pshead.pszCaption = w_description;
 	pshead.hwndParent = hWnd;
 	pshead.dwSize     = sizeof(PROPSHEETHEADER);
 	pshead.dwFlags    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
 	pshead.pfnCallback= PropSheetCallbackProc;
 	pshead.hInstance  = hInst;
-	pshead.DUMMYUNIONNAME2.nStartPage = start_page;
-	pshead.DUMMYUNIONNAME.pszIcon    = MAKEINTRESOURCE(IDI_MAME32_ICON);
-	pshead.DUMMYUNIONNAME3.ppsp       = pspage;
+	pshead.nStartPage = start_page;
+	pshead.pszIcon    = MAKEINTRESOURCE(IDI_MAME32_ICON);
+	pshead.ppsp       = pspage;
 
 #ifdef TREE_SHEET
 	if (GetShowTreeSheet())
@@ -741,10 +830,11 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
-	//mamep: it doesn't allocate t_description from heap
-	//free(t_description);
+	//mamep: it doesn't allocate w_description from heap
+	//free(w_description);
 	free(pspage);
 }
+
 
 /*********************************************************************
  * Local Functions
@@ -839,7 +929,6 @@ static LPCWSTR GameInfoScreen(int nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config drv;
-
 	expand_machine_driver(drivers[nIndex]->drv, &drv);
 
 	if (drv.video_attributes & VIDEO_TYPE_VECTOR)
@@ -1606,7 +1695,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		SendMessage(hTabWnd, TCM_GETITEM, nPage, (LPARAM)&ti);
 
 #if (_WIN32_IE >= 0x0400)
-		lpTvItem = &tvis.DUMMYUNIONNAME.item;
+		lpTvItem = &tvis.item;
 #else
 		lpTvItem = &tvis.item;
 #endif
@@ -1839,7 +1928,6 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 			*/
 		}
 		break;
-
 	default:
 #ifdef MESS
 		if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
@@ -2329,7 +2417,6 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 
 	/* Setup refresh list based on depth. */
 	datamap_update_control(properties_datamap, hWnd, pCurrentOpts, IDC_REFRESH);
-
 	/* Setup Select screen*/
 	UpdateSelectScreenUI(hWnd );
 
@@ -2589,12 +2676,13 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_RELOAD), FALSE);
 	}
 
+
 	/* Sound options */
 	hCtrl = GetDlgItem(hWnd, IDC_USE_SOUND);
 	if (hCtrl)
 	{
 		sound = Button_GetCheck(hCtrl);
-		(void)ComboBox_Enable(GetDlgItem(hWnd, IDC_SAMPLERATE), (sound != 0));
+		ComboBox_Enable(GetDlgItem(hWnd, IDC_SAMPLERATE), (sound != 0));
 
 		EnableWindow(GetDlgItem(hWnd,IDC_VOLUME),sound);
 		EnableWindow(GetDlgItem(hWnd,IDC_RATETEXT),sound);
@@ -2715,6 +2803,8 @@ static BOOL RotateReadControl(datamap *map, HWND dialog, HWND control, core_opti
 	return FALSE;
 }
 
+
+
 static BOOL RotatePopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	int selected_index = 0;
@@ -2732,6 +2822,8 @@ static BOOL RotatePopulateControl(datamap *map, HWND dialog, HWND control, core_
 	(void)ComboBox_SetCurSel(control, selected_index);
 	return FALSE;
 }
+
+
 
 static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
@@ -3105,6 +3197,7 @@ static BOOL DriverConfigReadControl(datamap *map, HWND dialog, HWND control, cor
 
 
 
+//============================================================
 
 /************************************************************
  * DataMap initializers
@@ -3124,6 +3217,7 @@ static void ResetDataMap(HWND hWnd)
 		options_set_string(pCurrentOpts, screen_option, "auto", OPTION_PRIORITY_CMDLINE);
 	}
 }
+
 
 /* Build the control mapping by adding all needed information to the DataMap */
 static void BuildDataMap(void)
@@ -3204,8 +3298,8 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_DIAL,					DM_STRING,	OPTION_DIAL_DEVICE);
 	datamap_add(properties_datamap, IDC_TRACKBALL,				DM_STRING,	OPTION_TRACKBALL_DEVICE);
 	datamap_add(properties_datamap, IDC_LIGHTGUNDEVICE,			DM_STRING,	OPTION_LIGHTGUN_DEVICE);
-	datamap_add(properties_datamap, IDC_POSITIONALDEVICE,		DM_STRING,	OPTION_POSITIONAL_DEVICE);
-	datamap_add(properties_datamap, IDC_MOUSEDEVICE,			DM_STRING,	OPTION_MOUSE_DEVICE);
+	datamap_add(properties_datamap, IDC_POSITIONAL,					DM_STRING,	OPTION_POSITIONAL_DEVICE);
+	datamap_add(properties_datamap, IDC_MOUSE,					DM_STRING,	OPTION_MOUSE_DEVICE);
 
 	// core debugging options
 	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OPTION_LOG);
@@ -3235,7 +3329,7 @@ static void BuildDataMap(void)
 
 	// windows performance options
 	datamap_add(properties_datamap, IDC_HIGH_PRIORITY,			DM_INT,		WINOPTION_PRIORITY);
-	datamap_add(properties_datamap, IDC_HIGH_PRIORITYDISP,		DM_INT,		WINOPTION_PRIORITY);
+	datamap_add(properties_datamap, IDC_HIGH_PRIORITYTXT,		DM_INT,		WINOPTION_PRIORITY);
 	datamap_add(properties_datamap, IDC_MULTITHREAD_RENDERING,	DM_BOOL,	WINOPTION_MULTITHREADING);
 
 	// windows video options
@@ -3250,7 +3344,9 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_EFFECT,					DM_STRING,	WINOPTION_EFFECT);
 	datamap_add(properties_datamap, IDC_WAITVSYNC,				DM_BOOL,	WINOPTION_WAITVSYNC);
 	datamap_add(properties_datamap, IDC_SYNCREFRESH,			DM_BOOL,	WINOPTION_SYNCREFRESH);
+#ifdef USE_SCALE_EFFECTS
 	datamap_add(properties_datamap, IDC_SCALEEFFECT,			DM_STRING,	OPTION_SCALE_EFFECT);
+#endif /* USE_SCALE_EFFECTS */
 
 	// DirectDraw specific options
 	datamap_add(properties_datamap, IDC_HWSTRETCH,				DM_BOOL,	WINOPTION_HWSTRETCH);
@@ -3380,58 +3476,6 @@ static void BuildDataMap(void)
 
 static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, core_options *ref)
 {
-#if 0
-	int control_id = GetControlID(hDlg, hwnd_ctrl);
-
-	// certain controls we need to handle specially
-	switch (control_id)
-	{
-	case IDC_ASPECTRATION :
-	{
-		int n1=0, n2=0;
-
-		sscanf(pGameOpts->aspects[g_nSelectScreenIndex],"%i",&n1);
-		sscanf(opts->aspects[g_nSelectScreenIndex],"%i",&n2);
-
-		return n1 == n2;
-	}
-	case IDC_ASPECTRATIOD :
-	{
-		int temp, d1=0, d2=0;
-
-		sscanf(pGameOpts->aspects[g_nSelectScreenIndex],"%i:%i",&temp,&d1);
-		sscanf(opts->aspects[g_nSelectScreenIndex],"%i:%i",&temp,&d2);
-
-		return d1 == d2;
-	}
-	case IDC_SIZES:
-	{
-		int x1=0,y1=0,x2=0,y2=0;
-
-		if (strcmp(pGameOpts->resolutions[g_nSelectScreenIndex],"auto") == 0 &&
-			strcmp(opts->resolutions[g_nSelectScreenIndex],"auto") == 0)
-			return TRUE;
-
-			sscanf(pGameOpts->resolutions[g_nSelectScreenIndex],"%d x %d",&x1,&y1);
-			sscanf(opts->resolutions[g_nSelectScreenIndex],"%d x %d",&x2,&y2);
-
-		return x1 == x2 && y1 == y2;
-	}
-	case IDC_ROTATE :
-	{
-		ReadControl(hDlg,control_id);
-	
-		return pGameOpts->ror == opts->ror &&
-			pGameOpts->rol == opts->rol;
-
-	}
-	}
-	// most options we can compare using data in the data map
-	if (IsControlDifferent(hDlg,hwnd_ctrl,pGameOpts,opts))
-		return FALSE;
-
-	return TRUE;
-#else
 	const char *option_name;
 	const char *opts_value;
 	const char *ref_value;
@@ -3452,7 +3496,6 @@ static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, 
 		return FALSE;
 
 	return strcmp(opts_value, ref_value) == 0;
-#endif
 }
 
 static void SetStereoEnabled(HWND hWnd, int nIndex)
@@ -3551,20 +3594,8 @@ static void OptOnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 /* Handle changes to the Numscreens slider */
 static void NumScreensSelectionChange(HWND hwnd)
 {
-	char   buf[100];
-	UINT   nValue;
-	int iNumScreens;
-	/* Get the current value of the control */
-	nValue = SendDlgItemMessage(hwnd, IDC_NUMSCREENS, TBM_GETPOS, 0, 0);
-
-	iNumScreens = nValue;
-
-	/* Set the static display to the new value */
-	snprintf(buf, ARRAY_LENGTH(buf), "%d", iNumScreens);
-	Static_SetTextA(GetDlgItem(hwnd, IDC_NUMSCREENSDISP), buf);
 	//Also Update the ScreenSelect Combo with the new number of screens
 	UpdateSelectScreenUI(hwnd );
-
 }
 
 /* Handle changes to the Refresh drop down */
@@ -3776,11 +3807,11 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	HWND hCtrl = GetDlgItem(hwnd,IDC_PADDLE);
 	HWND hCtrl1 = GetDlgItem(hwnd,IDC_ADSTICK);
 	HWND hCtrl2 = GetDlgItem(hwnd,IDC_PEDAL);
-	HWND hCtrl3 = GetDlgItem(hwnd,IDC_DIAL);
-	HWND hCtrl4 = GetDlgItem(hwnd,IDC_TRACKBALL);
-	HWND hCtrl5 = GetDlgItem(hwnd,IDC_LIGHTGUNDEVICE);
-	HWND hCtrl6 = GetDlgItem(hwnd,IDC_POSITIONALDEVICE);
-	HWND hCtrl7 = GetDlgItem(hwnd,IDC_MOUSEDEVICE);
+	HWND hCtrl3 = GetDlgItem(hwnd,IDC_MOUSE);
+	HWND hCtrl4 = GetDlgItem(hwnd,IDC_DIAL);
+	HWND hCtrl5 = GetDlgItem(hwnd,IDC_TRACKBALL);
+	HWND hCtrl6 = GetDlgItem(hwnd,IDC_LIGHTGUNDEVICE);
+	HWND hCtrl7 = GetDlgItem(hwnd,IDC_POSITIONAL);
 
 	if (hCtrl)
 	{

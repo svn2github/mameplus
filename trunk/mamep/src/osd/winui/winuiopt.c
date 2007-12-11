@@ -18,8 +18,6 @@
 
 ***************************************************************************/
 
-#define LEGASY_OPTION_STRUCTURE
-
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>
@@ -71,6 +69,185 @@ typedef struct
 	f_flag_entry *entry;
 	int           num;
 } f_flag;
+
+
+typedef struct
+{
+	core_options *dynamic_opt;
+
+// CORE CONFIGURATION OPTIONS
+#ifdef DRIVER_SWITCH
+	char*	driver_config;
+#endif /* DRIVER_SWITCH */
+
+// CORE STATE/PLAYBACK OPTIONS
+	WCHAR*	state;
+	BOOL	autosave;
+	WCHAR*	playback;
+	WCHAR*	record;
+	WCHAR*	mngwrite;
+	WCHAR*	wavwrite;
+
+// CORE PERFORMANCE OPTIONS
+	BOOL	autoframeskip;
+	int	frameskip;
+	int	seconds_to_run;
+	BOOL	throttle;
+	BOOL	sleep;
+	float	speed;
+	BOOL	refreshspeed;
+
+// CORE ROTATION OPTIONS
+	BOOL	rotate;
+	BOOL	ror;
+	BOOL	rol;
+	BOOL	autoror;
+	BOOL	autorol;
+	BOOL	flipx;
+	BOOL	flipy;
+
+// CORE ARTWORK OPTIONS
+	BOOL	artwork_crop;
+	BOOL	use_backdrops;
+	BOOL	use_overlays;
+	BOOL	use_bezels;
+
+// CORE SCREEN OPTIONS
+	float	brightness;
+	float	contrast;      /* "1.0", 0.5, 2.0 */
+	float	gamma;         /* "1.0", 0.5, 3.0 */
+	float	pause_brightness;
+#ifdef USE_SCALE_EFFECTS
+	char*	scale_effect;
+#endif /* USE_SCALE_EFFECTS */
+
+// CORE VECTOR OPTIONS
+	BOOL	antialias;
+	float	beam;
+	float	flicker;
+
+// CORE SOUND OPTIONS
+	BOOL	sound;
+	int	samplerate;
+	BOOL	samples;
+	int	volume;
+#ifdef USE_VOLUME_AUTO_ADJUST
+	BOOL	volume_adjust;
+#endif /* USE_VOLUME_AUTO_ADJUST */
+
+// CORE INPUT OPTIONS
+	char*	ctrlr;
+	BOOL	mouse;
+	BOOL	joystick;
+	BOOL	lightgun;
+	BOOL	multikeyboard;
+	BOOL	multimouse;
+	BOOL	steadykey;
+	BOOL	offscreen_reload;
+	char*	joystick_map;
+	float	joy_deadzone;
+	float	joy_saturation;
+
+// CORE INPUT AUTOMATIC ENABLE OPTIONS
+	char*	paddle_device;
+	char*	adstick_device;
+	char*	pedal_device;
+	char*	dial_device;
+	char*	trackball_device;
+	char*	lightgun_device;
+	char*	positional_device;
+	char*	mouse_device;
+
+// CORE DEBUGGING OPTIONS
+	BOOL	log;
+	BOOL	verbose;
+
+// CORE MISC OPTIONS
+	char*	bios;
+	BOOL	cheat;
+	BOOL	skip_gameinfo;
+#ifdef USE_IPS
+	WCHAR*	ips;
+#endif /* USE_IPS */
+	BOOL	confirm_quit;
+#ifdef AUTO_PAUSE_PLAYBACK
+	BOOL	auto_pause_playback;
+#endif /* AUTO_PAUSE_PLAYBACK */
+#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
+	int	m68k_core;
+#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
+#ifdef TRANS_UI
+	BOOL	use_trans_ui;
+	int	ui_transparency;
+#endif /* TRANS_UI */
+
+// WINDOWS DEBUGGING OPTIONS
+	BOOL	oslog;
+
+// WINDOWS PERFORMANCE OPTIONS
+	int	priority;
+	BOOL	multithreading;
+
+// WINDOWS VIDEO OPTIONS
+	char*	video;
+	int	numscreens;
+	BOOL	window;
+	BOOL	maximize;
+	BOOL	keepaspect;
+	int	prescale;
+	char*	effect;
+	BOOL	waitvsync;
+	BOOL	syncrefresh;
+
+// DIRECTDRAW-SPECIFIC OPTIONS
+	BOOL	hwstretch;
+
+// DIRECT3D-SPECIFIC OPTIONS
+	int	d3dversion;
+	BOOL	filter;
+
+// PER-WINDOW VIDEO OPTIONS
+	char*	screen;
+	char*	aspect;
+	char*	resolution;
+	char*	view;
+	char*	screens[4];
+	char*	aspects[4];
+	char*	resolutions[4];
+	char*	views[4];
+
+// FULL SCREEN OPTIONS
+	BOOL	triplebuffer;
+	BOOL	switchres;
+	float	full_screen_brightness;
+	float	full_screen_contrast;
+	float	full_screen_gamma;
+
+// WINDOWS SOUND OPTIONS
+	int	audio_latency;
+
+// INPUT DEVICE OPTIONS
+	BOOL	dual_lightgun;
+#ifdef JOYSTICK_ID
+	int	joyid1;
+	int	joyid2;
+	int	joyid3;
+	int	joyid4;
+	int	joyid5;
+	int	joyid6;
+	int	joyid7;
+	int	joyid8;
+#endif /* JOYSTICK_ID */
+
+// MESS SPECIFIC OPTIONS
+	char*	ramsize;
+	BOOL	writeconfig;
+	BOOL	skip_warnings;
+
+// WINDOWS MESS SPECIFIC OPTIONS
+	BOOL	newui;
+	BOOL	natural;
+} options_type;
 
 typedef struct
 {
@@ -374,6 +551,22 @@ static BOOL  IsOptionEqual(options_type *o1, options_type *o2);
 
 static void  set_folder_flag(f_flag *flag, const char *folderPath, DWORD dwFlags);
 static void  free_folder_flag(f_flag *flag);
+
+
+void FreeGameOptions(options_type *o);
+void CopyGameOptions(const options_type *source, options_type *dest);
+
+options_type* GetFolderOptions(const WCHAR *name);
+options_type* GetDefaultOptions(void);
+options_type* GetVectorOptions(void);
+options_type* GetSourceOptions(int driver_index);
+options_type* GetParentOptions(int driver_index);
+options_type* GetGameOptions(int driver_index);
+
+BOOL GetGameUsesDefaults(int driver_index);
+void SetGameUsesDefaults(int driver_index, BOOL use_defaults);
+BOOL GetFolderUsesDefaults(const WCHAR *name);
+void SetFolderUsesDefaults(const WCHAR *name, BOOL use_defaults);
 
 
 /***************************************************************************

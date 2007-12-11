@@ -93,7 +93,7 @@
 #define IDD_PROP_SCREEN                 187
 #define IDI_SOUNDTAB                    0	// N/A
 #define IDD_PALETTE                     190 // UI_COLOR_PALETTE
-#define IDD_PROP_BIOS                   191
+#define IDD_PROP_DRIVER                 191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_CN                  194
@@ -330,9 +330,9 @@
 #define IDC_DIAL                        1237
 #define IDC_TRACKBALL                   1238
 #define IDC_LIGHTGUNDEVICE              1239
-#define IDC_POSITIONALDEVICE            1240
-#define IDC_MOUSEDEVICE                 1241
-#define IDC_HIGH_PRIORITYDISP           1244
+#define IDC_POSITIONAL                  1240
+#define IDC_MOUSE                       1241
+#define IDC_HIGH_PRIORITYTXT            1244
 #define IDC_SELECT_EFFECT               0	 // N/A
 #define IDC_MULTITHREAD_RENDERING       1249
 #define IDC_ASPECT                      1253
