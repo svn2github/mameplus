@@ -135,7 +135,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Comment Files"),         GetCommentDir,       SetCommentDir,       FALSE, DIRDLG_COMMENT },
 	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
 #ifdef USE_VIEW_PCBINFO
-	{ TEXT("PCB Info Files"),        GetPcbinfoDir,       SetPcbinfoDir,       FALSE, 0 },
+	{ TEXT("PCB Info Files"),        GetPcbDir,           SetPcbDir,           FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */
 	{ NULL }
 };

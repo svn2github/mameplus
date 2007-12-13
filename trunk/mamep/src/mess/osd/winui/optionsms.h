@@ -39,6 +39,9 @@ BOOL GetMessSortReverse(void);
 const WCHAR* GetSoftwareDirs(void);
 void  SetSoftwareDirs(const WCHAR* paths);
 
+void SetHashDirs(const WCHAR *dir);
+const WCHAR *GetHashDirs(void);
+
 void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const WCHAR *software);
 const WCHAR *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst);
 

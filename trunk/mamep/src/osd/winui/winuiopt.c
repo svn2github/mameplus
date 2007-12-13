@@ -934,6 +934,30 @@ void OptionsExit(void)
 
 
 /* -- */
+WCHAR *options_get_wstring(core_options *opts, const char *name)
+{
+	const char *stemp = options_get_string(opts, name);
+
+	if (stemp == NULL)
+		return NULL;
+
+	return wstring_from_utf8(stemp);
+}
+
+void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority)
+{
+	char *utf8_value = NULL;
+
+	if (value)
+		utf8_value = utf8_from_wstring(value);
+
+	options_set_string(opts, name, utf8_value, priority);
+
+	free(utf8_value);
+}
+
+
+/* -- */
 core_options *get_core_options(void)
 {
 	return options_cli;
@@ -1924,21 +1948,6 @@ void SetSampleDirs(const WCHAR* paths)
 	}
 }
 
-//#ifdef MESS
-const WCHAR* GetHashDirs(void)
-{
-	return settings.hashpath;
-}
-
-void SetHashDirs(const WCHAR* dir)
-{
-	FreeIfAllocatedW(&settings.hashpath);
-
-	if (dir != NULL)
-		settings.hashpath = wcsdup(dir);
-}
-//#endif
-
 const WCHAR* GetIniDir(void)
 {
 	return settings.inipath;
@@ -2298,12 +2307,12 @@ void SetStoryFile(const WCHAR* path)
 #endif /* STORY_DATAFILE */
 
 #ifdef USE_VIEW_PCBINFO
-const WCHAR* GetPcbinfoDir(void)
+const WCHAR* GetPcbDir(void)
 {
 	return settings.pcbinfo_directory;
 }
 
-void SetPcbinfoDir(const WCHAR* path)
+void SetPcbDir(const WCHAR* path)
 {
 	FreeIfAllocatedW(&settings.pcbinfo_directory);
 
@@ -4080,7 +4089,7 @@ static int options_save_winui_config(void)
 	return 0;
 }
 
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void *param), void *param)
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param)
 {
 	core_options *opt = driver_options[driver_index].dynamic_opt;
 	options_type *o;
@@ -4112,13 +4121,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void *p
 	options_set_driver(opt, o);
 
 	if (override_callback)
-	{
-		core_options *save = options_cli;
-
-		options_cli = opt;
-		override_callback(param);
-		options_cli = save;
-	}
+		override_callback(opt, param);
 
 	len = options_output_diff_command_line(opt, options_ref, NULL);
 	p = malloc(len + 1);

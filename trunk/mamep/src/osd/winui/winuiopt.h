@@ -130,28 +130,9 @@ void set_core_mameinfo_filename(const WCHAR *filename);
 void set_core_bios(const char *bios); 
 
 #ifdef UNICODE
-#include "strconv.h"
-
-INLINE WCHAR *options_get_wstring(core_options *opts, const char *name)
-{
-	const char *stemp = options_get_string(opts, name);
-
-	if (stemp == NULL)
-		return NULL;
-	return wstring_from_utf8(stemp);
-}
-
-INLINE void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority)
-{
-	char *utf8_value = NULL;
-
-	if (value)
-		utf8_value = utf8_from_wstring(value);
-
-	options_set_string(opts, name, utf8_value, priority);
-}
-
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(void *param), void *param);
+WCHAR *options_get_wstring(core_options *opts, const char *name);
+void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority);
+WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param);
 #endif
 
 
@@ -451,8 +432,8 @@ const WCHAR* GetFolderDir(void);
 void SetFolderDir(const WCHAR* path);
 
 #ifdef USE_VIEW_PCBINFO
-const WCHAR* GetPcbinfoDir(void);
-void SetPcbinfoDir(const WCHAR* path);
+const WCHAR* GetPcbDir(void);
+void SetPcbDir(const WCHAR* path);
 #endif /* USE_VIEW_PCBINFO */
 
 

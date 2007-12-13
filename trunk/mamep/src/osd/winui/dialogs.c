@@ -794,7 +794,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			WCHAR szGame[MAX_PATH];
 			WCHAR buf[MAX_PATH];
 			char *stemp;
-			const WCHAR *szDir = GetPcbinfoDir();
+			const WCHAR *szDir = GetPcbDir();
 			mame_file *mfile;
 			file_error filerr;
 			long filelen;

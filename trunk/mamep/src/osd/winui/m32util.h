@@ -83,6 +83,8 @@ void SetCorePathList(int file_type,const char *s);
 void FreeIfAllocated(char **s);
 void FreeIfAllocatedW(WCHAR **s);
 
+HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfiledata);
+
 #ifdef TREE_SHEET
 void CenterWindow(HWND hWnd);
 #endif /* TREE_SHEET */

@@ -935,26 +935,26 @@ static BOOL WaitWithMessageLoop(HANDLE hEvent)
 	return FALSE;
 }
 
-static void override_options(void *param)
+static void override_options(core_options *opts, void *param)
 {
 	const play_options *playopts = param;
 
 	if (playopts->playbackdir != NULL)
-		set_core_input_directory(playopts->playbackdir);
+		options_set_wstring(opts, OPTION_INPUT_DIRECTORY, playopts->playbackdir, OPTION_PRIORITY_CMDLINE);
 	if (playopts->record != NULL)
-		set_core_record(playopts->record);
+		options_set_wstring(opts, OPTION_RECORD, playopts->record, OPTION_PRIORITY_CMDLINE);
 	if (playopts->playback != NULL)
-		set_core_playback(playopts->playback);
+		options_set_wstring(opts, OPTION_PLAYBACK, playopts->playbackdir, OPTION_PRIORITY_CMDLINE);
 
 	if (playopts->statedir != NULL)
-		set_core_input_directory(playopts->statedir);
+		options_set_wstring(opts, OPTION_STATE_DIRECTORY, playopts->statedir, OPTION_PRIORITY_CMDLINE);
 	if (playopts->state != NULL)
-		set_core_state(playopts->state);
+		options_set_wstring(opts, OPTION_STATE, playopts->state, OPTION_PRIORITY_CMDLINE);
 
 	if (playopts->wavwrite != NULL)
-		set_core_wavwrite(playopts->wavwrite);
+		options_set_wstring(opts, OPTION_WAVWRITE, playopts->wavwrite, OPTION_PRIORITY_CMDLINE);
 	if (playopts->mngwrite != NULL)
-		set_core_mngwrite(playopts->mngwrite);
+		options_set_wstring(opts, OPTION_MNGWRITE, playopts->mngwrite, OPTION_PRIORITY_CMDLINE);
 }
 
 static DWORD RunMAME(int nGameIndex, const play_options *playopts)

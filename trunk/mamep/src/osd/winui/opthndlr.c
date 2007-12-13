@@ -1230,7 +1230,7 @@ INLINE void options_set_folder_flag(core_options *opts, const char *name, const 
 			len += sprintf(buf + len, "%s,%ld", flags->entry[i].name, dwFlags);
 		}
 
-	options_set_string(opts, GUIOPTION_FOLDER_FLAG, buf, priority);
+	options_set_string(opts, name, buf, priority);
 	free(buf);
 }
 

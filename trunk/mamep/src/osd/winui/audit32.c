@@ -44,7 +44,7 @@
 #include "properties.h"
 #include "winmain.h"
 #include "translate.h"
-#include "winuiopt.h"
+
 
 /***************************************************************************
     function prototypes

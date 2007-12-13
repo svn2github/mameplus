@@ -30,6 +30,7 @@
 #include "screenshot.h"
 #include "sound/samples.h"
 #include "m32util.h"
+#include "strconv.h"
 #include "translate.h"
 
 #ifdef USE_IPS
@@ -934,6 +935,61 @@ void FreeIfAllocatedW(WCHAR **s)
 	if (*s)
 		free(*s);
 	*s = NULL;
+}
+
+//============================================================
+//  win_get_current_directory_utf8
+//============================================================
+
+DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
+{
+	DWORD result = 0;
+	WCHAR* w_buffer = NULL;
+	char* utf8_buffer = NULL;
+	
+	if( bufferlength > 0 ) {
+		w_buffer = malloc((bufferlength * sizeof(WCHAR)) + 1);
+		if( !w_buffer )
+			return result;
+	}
+
+	result = GetCurrentDirectoryW(bufferlength, w_buffer);
+
+	if( bufferlength > 0 ) {
+		utf8_buffer = utf8_from_wstring(w_buffer);
+		if( !utf8_buffer ) {
+			free(w_buffer);
+			return result;
+		}
+	}
+
+	strncpy(buffer, utf8_buffer, bufferlength);
+
+	if( utf8_buffer )
+		free(utf8_buffer);
+
+	if( w_buffer )
+		free(w_buffer);
+
+	return result;
+}
+
+//============================================================
+//  win_find_first_file_utf8
+//============================================================
+
+HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfiledata)
+{
+	HANDLE result = 0;
+	WCHAR* t_filename = wstring_from_utf8(filename);
+	if( !t_filename )
+		return result;
+
+	result = FindFirstFileW(t_filename, findfiledata);
+
+	free(t_filename);
+
+	return result;
 }
 
 #ifdef TREE_SHEET
