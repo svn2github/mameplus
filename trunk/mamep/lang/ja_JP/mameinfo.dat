@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.121u2      #
+#     Mameinfo.dat日本語版 v0.121u3      #
 #                                        #
-#            December 5, 2007            #
+#            December 8, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,27 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：873 翻訳済：845
-# 追加項目：342 合計：1215
+# Tester報告：878 翻訳済：851
+# 追加項目：342 合計：1220
 #
 
+
+$info=jantouki
+$mame
+[バグ]
+
+- DIPスイッチの修正：
+
+"Choose Game Mode"はゲームモードの選択ではなく、スペシャルアイテムを買うときに毎回100ポイント追加されるかの設定。
+
+"Bonus Coin Every"はボーナスポイント追加の設定。mcnpshntでの機能と同じ。
+
+"Hours"は"Time of Day"の間違い。 jantouki0121u3gra, mahjongfan
+
+
+- 得点計算時に牌の一部が残る。 jantouki079gre, YMI
+
+$end
 
 $info=gradius3
 $mame
@@ -25,6 +42,38 @@ $mame
 
 
 - [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
+
+$end
+
+$info=racedriv
+$mame
+[バグ]
+
+- 全セットでハングする。0.114u4でTMS34010が大幅変更されたのが原因？ racedriv0121u3red, Firewave / Tafoid
+
+$end
+
+$info=tekken3b
+$mame
+[バグ]
+
+- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
+
+$end
+
+$info=tekken3c
+$mame
+[バグ]
+
+- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
+
+$end
+
+$info=alpinesa
+$mame
+[バグ]
+
+- 画面が緑色に点滅して、MAMEがフリーズする。 alpinesa0121u3red, Jan Tleskac / Tafoid
 
 $end
 
@@ -897,14 +946,6 @@ $mame
 [バグ]
 
 - 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
-
-$end
-
-$info=jantouki
-$mame
-[バグ]
-
-- 得点計算時に牌の一部が残る。 jantouki079gre, YMI
 
 $end
 
@@ -2433,14 +2474,6 @@ $mame
 tekken3やehrgeitzのアトラクトモードなどがよくわかる。
 
 逆にSystem11のsouledgeのMDECビデオは実機よりも動作が速い。 namcos1112081gre, Reznor007
-
-$end
-
-$info=tekken3a
-$mame
-[バグ]
-
-- アトラクトモード中に青画面になって固まる。 tekken3a0104u3red, Heihachi_73
 
 $end
 
