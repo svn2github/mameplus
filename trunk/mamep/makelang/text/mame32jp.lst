@@ -500,6 +500,7 @@ popflamb	ポップフレーマー (ハック?)	ぽっぷふれーまー	Jaleco
 popflamn	ポップフレーマー (Naughty Boy PCB) (海賊版)	ぽっぷふれーまー	Jaleco
 trvmstr	トリビアマスター (set 1)	とりびあますたー	Enerdyne Technologies Inc.
 trvmstra	トリビアマスター (set 2)	とりびあますたー	Enerdyne Technologies Inc.
+trvmstrb	トリビアマスター (set 3)	とりびあますたー	Enerdyne Technologies Inc.
 trvgns	トリビアジーニアス	とりびあじーにあす	bootleg?
 geebee	ジービー	じーびー	Namco
 geebeeg	ジービー (Gremlin)	じーびー	[Namco] (Gremlin license)
@@ -1260,8 +1261,8 @@ airduel	エア・デュエル (日本版)	えあでゅえる	Irem
 cosmccop	ギャロップ -Armed Police Unit / Cosmic Cop (海外版)	ぎゃろっぷ	Irem
 gallop	ギャロップ -Armed Police Unit (日本版)	ぎゃろっぷ	Irem
 kengo	剣豪	けんごう	Irem
-sichuan2	四川省 女子寮編 / Sichuan II (set 1) (ハック?)	しせんしょう_1じょしりょうへん	Tamtex
-sichuana	四川省 女子寮編 / Sichuan II (set 2) (ハック?)	しせんしょう_1じょしりょうへん	Tamtex
+sichuan2	四川省 女子寮編 / Sichuan II (ハック set 1)	しせんしょう_1じょしりょうへん	hack
+sichuana	四川省 女子寮編 / Sichuan II (ハック set 2)	しせんしょう_1じょしりょうへん	hack
 shisen	四川省 女子寮編 (日本版)	しせんしょう_1じょしりょうへん	Tamtex
 matchit	四川省 女子寮編 / Match It	しせんしょう_1じょしりょうへん	Tamtex
 hasamu	覇沙夢 (日本版)	はさむ	Irem
@@ -2508,6 +2509,7 @@ tekken3a	鉄拳3 (TET2/VER.B)	てっけん_3	Namco
 tekken3b	鉄拳3 (TET3/VER.A)	てっけん_3	Namco
 tekken3c	鉄拳3 (TET2/VER.A)	てっけん_3	Namco
 lbgrande	リベログランデ (LG2/VER.A)	りべろぐらんで	Namco
+toukon3	新日本プロレスリング 闘魂烈伝3 アーケードエディション (TR1/VER.A)	しんにほんぷろれすりんぐとうこんれつでん_3あーけーどえでぃしょん	Tomy/Namco
 soulclbr	ソウルキャリバー (SOC14/VER.C)	そうるきゃりばー_1	Namco
 soulclba	ソウルキャリバー (SOC11/VER.C)	そうるきゃりばー_1	Namco
 soulclbb	ソウルキャリバー (SOC13/VER.B)	そうるきゃりばー_1	Namco
@@ -2515,7 +2517,9 @@ soulclbc	ソウルキャリバー (SOC11/VER.B)	そうるきゃりばー_1	Namco
 soulclbd	ソウルキャリバー (SOC11/VER.A2)	そうるきゃりばー_1	Namco
 ehrgeiz	エアガイツ -God Bless The Ring (EG3/VER.A)	えあがいつ	Square/Namco
 ehrgeiza	エアガイツ -God Bless The Ring (EG2/VER.A)	えあがいつ	Square/Namco
+kaiunqz	開運クイズ 幸福の旅人 (KW1/VER.A)	かいうんくいずこうふくのたびびと	Namco
 mdhorse	ダービークイズ マイドリームホース (MDH1/VER.A2)	だーびーくいずまいどりーむほーす	Namco
+sws98	スーパーワールドスタジアム'98 (SS81/VER.A)	すーぱーわーるどすたじあむ_1998	Namco
 tenkomor	てんこもりシューティング (TKM2/VER.A1)	てんこもりしゅーてぃんぐ	Namco
 tenkomoj	てんこもりシューティング (TKM1/VER.A1)	てんこもりしゅーてぃんぐ	Namco
 fgtlayer	ファイティングレイヤー (FTL0/VER.A)	ふぁいてぃんぐれいやー	Arika/Namco
@@ -2533,6 +2537,8 @@ aquarush	アクアラッシュ (AQ1/VER.A1)	あくあらっしゅ	Namco
 pacappsp	パカパカパッション スペシャル (PSP1/VER.A)	ぱかぱかぱっしょん_2_2すぺしゃる	Produce/Namco
 golgo13	ゴルゴ13 (GLG1/VER.A)	ごるごさーてぃーん_1	Raizing/Namco
 g13knd	ゴルゴ13 奇跡の弾道 (GLS1/VER.A)	ごるごさーてぃーん_2きせきのだんどう	Raizing/Namco
+sws2000	スーパーワールドスタジアム2000 (SS01/VER.A)	すーぱーわーるどすたじあむ_2000	Namco
+sws2001	スーパーワールドスタジアム2001 (SS11/VER.A)	すーぱーわーるどすたじあむ_2001	Namco
 mrdrilr2	ミスタードリラー2 (DR21 ver A)	みすたーどりらー_2	Namco
 gjspace	雀スペース／撃牌砦　2GAMES in ONE (10011 ver A)	じゃんすぺーすげきとりでつーげーむずいんわん	Namco/Metro
 mrdrilrg	ミスタードリラーグレート (DRG1 ver A)	みすたーどりらー_3ぐれーと	Namco
