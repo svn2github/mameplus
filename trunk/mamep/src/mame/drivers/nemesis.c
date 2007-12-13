@@ -2183,12 +2183,12 @@ GFXDECODE_END
 
 /******************************************************************************/
 
-static struct AY8910interface ay8910_interface_1 =
+static const struct AY8910interface ay8910_interface_1 =
 {
 	nemesis_portA_r
 };
 
-static struct AY8910interface ay8910_interface_2 =
+static const struct AY8910interface ay8910_interface_2 =
 {
 	0,
 	0,
@@ -2196,7 +2196,7 @@ static struct AY8910interface ay8910_interface_2 =
 	k005289_control_B_w
 };
 
-static struct k005289_interface k005289_interface =
+static const struct k005289_interface k005289_interface =
 {
 	REGION_SOUND1	/* prom memory region */
 };
@@ -2207,17 +2207,17 @@ static void sound_irq(int state)
 /*cpunum_set_input_line(1,0,HOLD_LINE);*/
 }
 
-static struct YM2151interface ym2151_interface =
+static const struct YM2151interface ym2151_interface =
 {
 	sound_irq
 };
 
-static struct YM3812interface ym3812_interface =
+static const struct YM3812interface ym3812_interface =
 {
 	sound_irq
 };
 
-static struct VLM5030interface vlm5030_interface =
+static const struct VLM5030interface vlm5030_interface =
 {
     REGION_SOUND1, /* memory region  */
     0              /* memory length */
@@ -2235,7 +2235,7 @@ static void volume_callback(int v)
 	K007232_set_volume(0,1,0,(v & 0x0f) * 0x11);
 }
 
-static struct K007232_interface k007232_interface =
+static const struct K007232_interface k007232_interface =
 {
 	REGION_SOUND2,	/* memory regions */
 	volume_callback	/* external port callback */

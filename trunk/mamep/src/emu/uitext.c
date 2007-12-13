@@ -20,7 +20,7 @@ extern const char *mess_default_text[];
 
 
 /* All entries in this table must match the enum ordering in "uitext.h" */
-static const char *mame_default_text[] =
+static const char *const mame_default_text[] =
 {
 	APPNAME,
 	/* copyright stuff */
@@ -253,7 +253,7 @@ static const char *mame_default_text[] =
 
 
 
-static const char **default_text[] =
+static const char *const *const default_text[] =
 {
 	mame_default_text,
 #ifdef MESS

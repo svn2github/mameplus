@@ -161,6 +161,7 @@ typedef struct
 // CORE DEBUGGING OPTIONS
 	BOOL	log;
 	BOOL	verbose;
+	BOOL	update_in_pause;
 
 // CORE MISC OPTIONS
 	char*	bios;

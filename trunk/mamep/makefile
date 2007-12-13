@@ -671,6 +671,8 @@ else
 DLLLINK=dll
 endif
 
+ifndef EXECUTABLE_DEFINED
+
 ifeq ($(NO_DLL),)
 $(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 # always recompile the version string
@@ -701,6 +703,8 @@ $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(MESSLIBOSD) $(LI
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPFLAGS)
   endif
+endif
+
 endif
 
 

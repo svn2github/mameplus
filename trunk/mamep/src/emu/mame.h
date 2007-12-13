@@ -151,7 +151,7 @@ enum
 	REGION_MAX
 };
 
-extern const char *memory_region_names[REGION_MAX];
+extern const char *const memory_region_names[REGION_MAX];
 
 
 
@@ -255,7 +255,7 @@ struct _mame_system_time
 ***************************************************************************/
 
 extern running_machine *Machine;
-extern const char *mame_disclaimer;
+extern const char mame_disclaimer[];
 extern char giant_string_buffer[];
 
 extern char build_version[];

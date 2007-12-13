@@ -156,6 +156,7 @@ START_OPT_FUNC_DRIVER
 // CORE DEBUGGING OPTIONS
 	DEFINE_OPT(bool,                 log)
 	DEFINE_OPT(bool,                 verbose)
+	DEFINE_OPT(bool,                 update_in_pause)
 
 // CORE MISC OPTIONS
 	DEFINE_OPT(string,               bios)

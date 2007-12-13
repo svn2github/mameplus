@@ -1217,7 +1217,7 @@ static int dialog_add_single_seqselect(struct _dialog_box *di, short x, short y,
 	short cx, short cy, input_port_entry *port, int is_analog, int seq)
 {
 	seqselect_info *stuff;
-	input_seq *code;
+	const input_seq *code;
 
 	code = input_port_seq(port, seq);
 
@@ -1228,7 +1228,7 @@ static int dialog_add_single_seqselect(struct _dialog_box *di, short x, short y,
 	if (!stuff)
 		return 1;
 	memset(stuff, 0, sizeof(*stuff));
-	stuff->code = code;
+	memcpy(stuff->code, code, sizeof(*(stuff->code)));
 	stuff->pos = di->item_count;
 	stuff->timer = 0;
 	stuff->is_analog = is_analog;
