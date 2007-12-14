@@ -1,3 +1,6 @@
+#include "m32opts.h"
+#define OPTIONS_H
+
 /***************************************************************************
 
   M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32

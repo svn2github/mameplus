@@ -53,7 +53,7 @@ WINUIOBJS += \
 	$(WINUIOBJ)/history.o \
 	$(WINUIOBJ)/dialogs.o \
 	$(WINUIOBJ)/win32ui.o \
-	$(WINUIOBJ)/winuiopt.o \
+	$(WINUIOBJ)/m32opts.o \
 	$(WINUIOBJ)/layout.o \
 	$(WINUIOBJ)/translate.o \
 	$(WINUIOBJ)/helpids.o \
