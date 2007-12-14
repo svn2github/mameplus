@@ -1128,10 +1128,10 @@ void GetListFont(LOGFONTW *font)
 	const char *font_string = options_get_string(settings, M32OPTION_LIST_FONT);
 	const WCHAR *stemp = options_get_wstring(settings, M32OPTION_LIST_FONTFACE);
 
+	FontDecodeString(font_string, font);
+
 	if (stemp)
 		snwprintf(font->lfFaceName, ARRAY_LENGTH(font->lfFaceName), L"%s", stemp);
-
-	FontDecodeString(font_string, font);
 }
 
 void SetListFontColor(COLORREF uColor)
