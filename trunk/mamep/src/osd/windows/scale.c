@@ -15,14 +15,13 @@
 #include "scale/scale2x.h"
 #include "scale/scale3x.h"
 #include "scale/hlq.h"
+#include "scale/2xpm.h"
 
 // defines
 #define SCALE_EFFECT_NONE			0
 #define SCALE_EFFECT_SCALE2X		1
 #define SCALE_EFFECT_SCALE2X3		2
-#ifdef USE_4X_SCALE
 #define SCALE_EFFECT_SCALE2X4		3
-#endif /* USE_4X_SCALE */
 #define SCALE_EFFECT_SCALE3X		4
 #define SCALE_EFFECT_SUPERSCALE		5
 #define SCALE_EFFECT_SUPERSCALE75	6
@@ -30,17 +29,18 @@
 #define SCALE_EFFECT_SUPER2XSAI		8
 #define SCALE_EFFECT_SUPEREAGLE		9
 #define SCALE_EFFECT_EAGLE			10
-#define SCALE_EFFECT_HQ2X			11
-#define SCALE_EFFECT_HQ2X3			12
-#define SCALE_EFFECT_HQ2X4			13
-#define SCALE_EFFECT_LQ2X			14
-#define SCALE_EFFECT_LQ2X3			15
-#define SCALE_EFFECT_LQ2X4			16
-#define SCALE_EFFECT_HQ3X			17
-#define SCALE_EFFECT_LQ3X			18
+#define SCALE_EFFECT_2XPM			11
+#define SCALE_EFFECT_HQ2X			12
+#define SCALE_EFFECT_HQ2X3			13
+#define SCALE_EFFECT_HQ2X4			14
+#define SCALE_EFFECT_LQ2X			15
+#define SCALE_EFFECT_LQ2X3			16
+#define SCALE_EFFECT_LQ2X4			17
+#define SCALE_EFFECT_HQ3X			18
+#define SCALE_EFFECT_LQ3X			19
 #ifdef USE_4X_SCALE
-#define SCALE_EFFECT_HQ4X			19
-#define SCALE_EFFECT_LQ4X			20
+#define SCALE_EFFECT_HQ4X			20
+#define SCALE_EFFECT_LQ4X			21
 #endif /* USE_4X_SCALE */
 
 #define MAX_SCALE_BANK				(MAX_SCREENS * 2)
@@ -77,9 +77,7 @@ static const char *str_name[] =
 	"none",
 	"scale2x",
 	"scale2x3",
-#ifdef USE_4X_SCALE
 	"scale2x4",
-#endif /* USE_4X_SCALE */
 	"scale3x",
 	"superscale",
 	"superscale75",
@@ -87,6 +85,7 @@ static const char *str_name[] =
 	"super2xsai",
 	"supereagle",
 	"eagle",
+	"2xpm",
 	"hq2x",
 	"hq2x3",
 	"hq2x4",
@@ -105,29 +104,28 @@ static const char *str_name[] =
 static const char *str_desc[] =
 {
 	"None",
-	"Andrea's Scale2x",
-	"Andrea's Scale2x3",
+	"Scale2x v2.2 by AdvMAME",
+	"Scale2x3 v2.2 by AdvMAME",
+	"Scale2x4 v2.2 by AdvMAME",
+	"Scale3x v2.2 by AdvMAME",
+	"SuperScale by ElSemi",
+	"SuperScale 75% SL by ElSemi",
+	"2xSaI v0.59 by Kreed",
+	"Super 2xSaI v0.59 by Kreed",
+	"Super Eagle v0.59 by Kreed",
+	"Eagle 0.41a by Dirk Stevens",
+	"2xPM v0.2",
+	"HQ2x by Maxim Stepin",
+	"HQ2x3 by AdvMAME",
+	"HQ2x4 by AdvMAME",
+	"LQ2x by AdvMAME",
+	"LQ2x3 by AdvMAME",
+	"LQ2x4 by AdvMAME",
+	"HQ3x by Maxim Stepin",
+	"LQ3x by AdvMAME",
 #ifdef USE_4X_SCALE
-	"Andrea's Scale2x4",
-#endif /* USE_4X_SCALE */
-	"Andrea's Scale3x",
-	"ElSemi's SuperScale",
-	"SuperScale 75% SL",
-	"Kreed's 2xSaI",
-	"Kreed's Super 2xSaI",
-	"Kreed's Super Eagle",
-	"Dirk Stevens' Eagle",
-	"Maxim Stepin's HQ2x",
-	"Andrea's HQ2x3",
-	"Andrea's HQ2x4",
-	"Andrea's LQ2x",
-	"Andrea's LQ2x3",
-	"Andrea's LQ2x4",
-	"Maxim Stepin's HQ3x",
-	"Andrea's LQ3x",
-#ifdef USE_4X_SCALE
-	"Maxim Stepin's HQ4x",
-	"Andrea's LQ4x",
+	"HQ4x by Maxim Stepin",
+	"LQ4x by AdvMAME",
 #endif /* USE_4X_SCALE */
 	NULL
 };
@@ -147,11 +145,9 @@ static int scale_perform_scale2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst
 static void (*scale_scale2x3_line_16)(UINT16 *dst0, UINT16 *dst1, UINT16 *dst2, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
 static void (*scale_scale2x3_line_32)(UINT32 *dst0, UINT32 *dst1, UINT32 *dst2, const UINT32 *src0, const UINT32 *src1, const UINT32 *src2, unsigned count);
 
-#ifdef USE_4X_SCALE
 static int scale_perform_scale2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void (*scale_scale2x4_line_16)(UINT16 *dst0, UINT16 *dst1, UINT16 *dst2, UINT16 *dst3, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
 static void (*scale_scale2x4_line_32)(UINT32 *dst0, UINT32 *dst1, UINT32 *dst2, UINT32 *dst3, const UINT32 *src0, const UINT32 *src1, const UINT32 *src2, unsigned count);
-#endif /* USE_4X_SCALE */
 
 static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
@@ -177,6 +173,9 @@ void  Init_2xSaIMMX(UINT32 BitFormat);
 static void (*scale_2xsai_line)(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
 static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void scale_2xsai_flush_buffer(int src_pitch, int height, int bank);
+
+// functions from 2xpm
+static int scale_perform_2xpm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
 // functions from hq2x/hq3x/hq4x/lq2x/lq3x/lq4x
 static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
@@ -334,7 +333,6 @@ int scale_init(void)
 			scale_effect.ysize = 3;
 			break;
 		}
-#ifdef USE_4X_SCALE
 		case SCALE_EFFECT_SCALE2X4:
 		{
 			sprintf(name, "Scale2x4 (%s)", use_mmx ? "mmx optimised" : "non-mmx version");
@@ -342,7 +340,6 @@ int scale_init(void)
 			scale_effect.ysize = 4;
 			break;
 		}
-#endif /* USE_4X_SCALE */
 		case SCALE_EFFECT_SCALE3X:
 		{
 			sprintf(name, "Scale3x (non-mmx version)");
@@ -407,6 +404,14 @@ int scale_init(void)
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
+		
+		case SCALE_EFFECT_2XPM:
+		{
+			sprintf(name, "2xPM");
+			scale_effect.xsize = scale_effect.ysize = 2;
+			break;
+		}
+		
 		case SCALE_EFFECT_HQ2X:
 		{
 #ifdef USE_MMX_INTERP_SCALE
@@ -583,9 +588,7 @@ int scale_check(int depth)
 
 		case SCALE_EFFECT_SCALE2X:
 		case SCALE_EFFECT_SCALE2X3:
-#ifdef USE_4X_SCALE
 		case SCALE_EFFECT_SCALE2X4:
-#endif /* USE_4X_SCALE */
 		case SCALE_EFFECT_SCALE3X:
 			if (depth == 15 || depth == 16 || depth == 32)
 				return 0;
@@ -594,21 +597,17 @@ int scale_check(int depth)
 
 		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
-			if (use_mmx && (depth == 15 || depth == 16))
-				return 0;
-			else
-				return 1;
-
 		case SCALE_EFFECT_EAGLE:
-			if (use_mmx && (depth == 15 || depth == 16))
-				return 0;
-			else
-				return 1;
-
 		case SCALE_EFFECT_2XSAI:
 		case SCALE_EFFECT_SUPER2XSAI:
 		case SCALE_EFFECT_SUPEREAGLE:
 			if (use_mmx && (depth == 15 || depth == 16))
+				return 0;
+			else
+				return 1;
+
+		case SCALE_EFFECT_2XPM:
+			if (depth == 15)
 				return 0;
 			else
 				return 1;
@@ -656,10 +655,8 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			return scale_perform_scale2x(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_SCALE2X3:
 			return scale_perform_scale2x3(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
-#ifdef USE_4X_SCALE
 		case SCALE_EFFECT_SCALE2X4:
 			return scale_perform_scale2x4(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
-#endif /* USE_4X_SCALE */
 		case SCALE_EFFECT_SCALE3X:
 			return scale_perform_scale3x(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_SUPERSCALE:
@@ -673,6 +670,8 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			if (update)
 				scale_2xsai_flush_buffer(src_pitch, height, bank);
 			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
+		case SCALE_EFFECT_2XPM:
+			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ2X:
 		case SCALE_EFFECT_LQ2X:
 			return scale_perform_hlq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
@@ -865,7 +864,6 @@ static int scale_perform_scale2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst
 }
 
 
-#ifdef USE_4X_SCALE
 //============================================================
 //	scale_perform_scale2x4
 //============================================================
@@ -938,7 +936,6 @@ static int scale_perform_scale2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst
 
 	return 0;
 }
-#endif /* USE_4X_SCALE */
 
 
 //============================================================
@@ -1027,7 +1024,7 @@ static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int d
 		dst1 += dst_pitch;
 	}
 	scale_emms();
-
+	
 	return 0;
 }
 
@@ -1053,6 +1050,23 @@ static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 	scale_emms();
 
+	return 0;
+}
+
+
+
+//============================================================
+//	scale_perform_2xpm
+//============================================================
+
+static int scale_perform_2xpm(UINT8 *src, UINT8 *dest, int src_pitch, int dst_pitch, int width, int height, int depth)
+{
+	
+	if (depth != 15 && depth != 16)
+		return 1;
+
+	_2xpm_16(src, dest, (unsigned long)src_pitch, (unsigned long)dst_pitch, (unsigned long)width, (unsigned long)height, depth);
+	
 	return 0;
 }
 

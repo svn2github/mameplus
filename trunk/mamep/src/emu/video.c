@@ -75,10 +75,10 @@ struct _internal_screen_info
 	UINT32 					movie_frame;		/* current movie frame number */
 
 #ifdef USE_SCALE_EFFECTS
-	int			scale_bank_offset;
-	mame_bitmap *		scale_bitmap[2];
-	mame_bitmap *		work_bitmap[2];
-	int			scale_dirty[2];
+	int						scale_bank_offset;
+	mame_bitmap *			scale_bitmap[2];
+	mame_bitmap *			work_bitmap[2];
+	int						scale_dirty[2];
 #endif /* USE_SCALE_EFFECTS */
 };
 
