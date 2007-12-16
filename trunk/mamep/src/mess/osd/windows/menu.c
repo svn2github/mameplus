@@ -63,6 +63,8 @@ extern void win_timer_enable(int enabled);
 
 #define USE_TAPEDLG	0
 
+#define WM_USER_SET_FULLSCREEN			(WM_USER + 3)
+
 enum
 {
 	DEVOPTION_OPEN,
@@ -1571,7 +1573,9 @@ void win_toggle_menubar(int state)
 				SWP_NOMOVE | SWP_NOZORDER);
 		}
 
-		RedrawWindow(hwnd, NULL, NULL, 0);
+		//RedrawWindow(hwnd, NULL, NULL, 0);
+		//mamep: callback draw.window_init() to refresh d3d->presentation.Windowed
+		SendMessage(window->hwnd, WM_USER_SET_FULLSCREEN, -1, 0);
 	}
 }
 

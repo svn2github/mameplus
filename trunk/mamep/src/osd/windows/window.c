@@ -1858,12 +1858,23 @@ static void adjust_window_position_after_major_change(win_window_info *window)
 
 static void set_fullscreen(win_window_info *window, int fullscreen)
 {
+	BOOL force_init = FALSE;
+
 	assert(GetCurrentThreadId() == window_threadid);
 
 	// if we're in the right state, punt
-	if (window->fullscreen == fullscreen)
+	// mamep: window mode doesn't need a force_init
+	if (window->fullscreen == fullscreen || (!window->fullscreen && fullscreen == -1))
 		return;
-	window->fullscreen = fullscreen;
+	
+	//mamep: set force_init for menubar
+	if (fullscreen == -1)
+	{
+		force_init = TRUE;
+		fullscreen = window->fullscreen;
+	}
+	else
+		window->fullscreen = fullscreen;
 
 	// kill off the drawers
 	(*draw.window_destroy)(window);
@@ -1918,7 +1929,7 @@ static void set_fullscreen(win_window_info *window, int fullscreen)
 	adjust_window_position_after_major_change(window);
 
 	// show ourself
-	if (!window->fullscreen || window->fullscreen_safe)
+	if (!window->fullscreen || window->fullscreen_safe || force_init)
 	{
 		if (video_config.mode != VIDEO_MODE_NONE)
 			ShowWindow(window->hwnd, SW_SHOW);
