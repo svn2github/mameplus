@@ -126,7 +126,7 @@ b) Exit the dialog.
 #include "audit.h"
 #include "audit32.h"
 #include "bitmask.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "file.h"
 #include "resource.h"
 #include "dijoystick.h"     /* For DIJoystick avalibility. */

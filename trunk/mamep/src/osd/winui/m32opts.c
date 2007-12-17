@@ -45,7 +45,7 @@
 #include "splitters.h"
 #include "dijoystick.h"
 #include "audit.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "picker.h"
 #include "winmain.h"
 #include "windows/winutf8.h"

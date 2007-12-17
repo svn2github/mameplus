@@ -27,7 +27,7 @@
 #include <driver.h>
 #include "m32util.h"
 #include "bitmask.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "translate.h"
 
 #include "history.h"

@@ -39,7 +39,7 @@
 #include "M32Util.h"
 #include "bitmask.h"
 #include "screenshot.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "TreeView.h"
 #include "resource.h"
 #include "properties.h"

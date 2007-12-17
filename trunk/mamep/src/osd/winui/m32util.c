@@ -34,7 +34,7 @@
 #include "translate.h"
 
 #ifdef USE_IPS
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "patch.h"
 #endif /* USE_IPS */
 

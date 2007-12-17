@@ -38,7 +38,7 @@
 #include "resource.h"
 
 #include "bitmask.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "m32util.h"
 #include "audit32.h"
 #include "properties.h"

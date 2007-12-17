@@ -34,7 +34,7 @@
 #include "m32util.h"
 #include "resource.h"
 #include "directories.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "translate.h"
 #include "splitters.h"
 #include "help.h"

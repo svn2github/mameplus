@@ -64,7 +64,7 @@
 #include "file.h"
 #include "audit32.h"
 #include "Directories.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "Properties.h"
 #include "ColumnEdit.h"
 #include "picker.h"

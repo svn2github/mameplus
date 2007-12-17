@@ -30,7 +30,7 @@
 #include "win32ui.h"
 #include "resource.h"
 #include "bitmask.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "screenshot.h"
 #include "translate.h"
 

@@ -26,7 +26,7 @@
 #include "TreeView.h"
 #include "M32Util.h"
 
-#include "winuiopt.h"
+#include "m32opts.h"
 
 #if 0 //#if defined(__GNUC__)
 /* fix warning: cast does not match function type */

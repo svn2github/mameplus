@@ -25,7 +25,7 @@
 #include "MAME32.h"
 #include "driver.h"
 #include "bitmask.h"
-#include "winuiopt.h"
+#include "m32opts.h"
 #include "resource.h"
 #include "translate.h"
 
