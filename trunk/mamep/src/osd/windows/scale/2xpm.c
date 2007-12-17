@@ -74,7 +74,7 @@ dst = ( \
 
 //---------------------------------------------------------------------------------------------------------------------------
 
-void _2xpm_16(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
+static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
 {
 	unsigned long x, y;
 	unsigned char *src, *dest;			
@@ -89,16 +89,6 @@ void _2xpm_16(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long 
 	unsigned long src_pitch;
 	unsigned char pprev;	
 	unsigned char dont_reblit;
-//fixme 565	
-	pg_red_mask = RED_MASK565;
-	pg_green_mask = GREEN_MASK565;
-	pg_blue_mask = BLUE_MASK565;
-	pg_lbmask = PG_LBMASK565;
-//fixme 555
-//	pg_red_mask = RED_MASK555;
-//	pg_green_mask = GREEN_MASK555;
-//	pg_blue_mask = BLUE_MASK555;
-//	pg_lbmask = PG_LBMASK555;
 	
 	src = (unsigned char *)SrcPtr;	
 	dest = (unsigned char *)DstPtr;
@@ -314,6 +304,28 @@ void _2xpm_16(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long 
 		start_addr3 = start_addr2 + next_line_src;
 		dst_pixel += complete_line_dst;				
 	}
+}
+
+//---------------------------------------------------------------------------------------------------------------------------
+
+void _2xpm_15(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
+{
+	pg_red_mask = RED_MASK555;
+	pg_green_mask = GREEN_MASK555;
+	pg_blue_mask = BLUE_MASK555;
+	pg_lbmask = PG_LBMASK555;
+
+	_2xpm_1516(SrcPtr, DstPtr, SrcPitch, DstPitch, SrcW, SrcH, depth);
+}
+
+void _2xpm_16(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
+{
+	pg_red_mask = RED_MASK565;
+	pg_green_mask = GREEN_MASK565;
+	pg_blue_mask = BLUE_MASK565;
+	pg_lbmask = PG_LBMASK565;
+
+	_2xpm_1516(SrcPtr, DstPtr, SrcPitch, DstPitch, SrcW, SrcH, depth);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

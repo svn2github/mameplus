@@ -607,7 +607,7 @@ int scale_check(int depth)
 				return 1;
 
 		case SCALE_EFFECT_2XPM:
-			if (depth == 15)
+			if (depth == 15 || depth == 16)
 				return 0;
 			else
 				return 1;
@@ -1065,8 +1065,11 @@ static int scale_perform_2xpm(UINT8 *src, UINT8 *dest, int src_pitch, int dst_pi
 	if (depth != 15 && depth != 16)
 		return 1;
 
-	_2xpm_16(src, dest, (unsigned long)src_pitch, (unsigned long)dst_pitch, (unsigned long)width, (unsigned long)height, depth);
-	
+	if (depth == 15)
+		_2xpm_15(src, dest, (unsigned long)src_pitch, (unsigned long)dst_pitch, (unsigned long)width, (unsigned long)height, depth);
+	else
+		_2xpm_16(src, dest, (unsigned long)src_pitch, (unsigned long)dst_pitch, (unsigned long)width, (unsigned long)height, depth);
+
 	return 0;
 }
 
