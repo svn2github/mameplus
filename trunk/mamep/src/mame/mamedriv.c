@@ -956,6 +956,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( 8ballat2 )	/* (c) 1984 Seatongrove Ltd (Magic Eletronics USA licence) */
 	DRIVER( shootgal )	/* (c) 1984 Seatongrove Ltd (Zaccaria licence) */
 	DRIVER( drakton )	/* (c) 1984 Epos Corporation */
+	DRIVER( drktnjr )	/* (c) 1984 Epos Corporation */
 	DRIVER( strtheat )	/* (c) 1985 Epos Corporation */
 	DRIVER( hunchbkd )	/* (c) 1983 Century */
 	DRIVER( sbdk )		/* (c) 1984 Century */
@@ -5469,6 +5470,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( 2020bba )	/* 0030 (c) 1991 SNK / Pallas */
 	DRIVER( 2020bbh )	/* 0030 (c) 1991 SNK / Pallas */
 	DRIVER( socbrawl )	/* 0031 (c) 1991 SNK */
+	DRIVER( socbrala )	/* 0031 (c) 1991 SNK */
 	DRIVER( roboarmy )	/* 0032 (c) 1991 SNK */
 	DRIVER( roboarma )	/* 0032 (c) 1991 SNK */
 	DRIVER( fatfury1 )	/* 0033 (c) 1991 SNK */
@@ -5550,6 +5552,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sonicwi3 )	/* 0097 (c) 1995 Video System Co. */
 				/* 0098 Idol Mahjong - final romance 2 (CD only? not confirmed, MVS might exist) */
 				/* 0099 Neo Pool Masters */
+				/* 0160 Japanese MVS cart; No bootleg (c) 1997/1998 SNK */
 	DRIVER( turfmast )	/* 0200 (c) 1996 Nazca */
 	DRIVER( mslug )		/* 0201 (c) 1996 Nazca */
 	DRIVER( puzzledp )	/* 0202 (c) 1995 Taito (Visco license) */
@@ -6185,6 +6188,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( raiden2a )	/* (c) 1993 Seibu Kaihatsu + Metrotainment license */
 	DRIVER( raiden2b )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raiden2c )	/* (c) 1993 Seibu Kaihatsu */
+	DRIVER( raiden2d )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raiden2e )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndx )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndxa )	/* (c) 1993 Seibu Kaihatsu */
@@ -6665,6 +6669,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( eightfrc )	/* (c) 1994 Tecmo */
 	DRIVER( kiwame )	/* (c) 1994 Athena */
 	DRIVER( krzybowl )	/* (c) 1994 American Sammy */
+	DRIVER( orbs )		/* (c) 1994 American Sammy */
 	DRIVER( extdwnhl )	/* (c) 1995 Sammy Japan */
 	DRIVER( gundhara )	/* (c) 1995 Banpresto */
 	DRIVER( sokonuke )	/* (c) 1995 Sammy Industries */
