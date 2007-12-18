@@ -790,10 +790,11 @@ void osd_customize_inputport_list(input_port_default_entry *defaults)
 					input_seq_set_1 (&idef->defaultseq, KEYCODE_TAB);
 				}
 				break;
-
+/*
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&idef->defaultseq);
 				break;
+*/
 #endif /* MESS */
 		}
 }
