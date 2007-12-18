@@ -28,7 +28,7 @@
 const options_entry mess_win_options[] =
 {
 	{ NULL,							NULL,   OPTION_HEADER,		"WINDOWS MESS SPECIFIC OPTIONS" },
-//mamep: newui is disabled as default
+//mamep: newui is disabled by default
 	{ "newui;nu",                   "0",    OPTION_BOOLEAN,		"use the new MESS UI" },
 	{ "natural;nat",				"0",	OPTION_BOOLEAN,		"specifies whether to use a natural keyboard or not" },
 	{ NULL }

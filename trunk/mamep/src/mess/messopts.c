@@ -22,7 +22,7 @@
 const options_entry mess_core_options[] =
 {
 	{ NULL,							NULL,   OPTION_HEADER,						"MESS SPECIFIC OPTIONS" },
-	{ "ramsize;ram",				NULL,	0,									"size of RAM (if supported by driver)" },
+    { "ramsize;ram",				NULL,	0,									"size of RAM (if supported by driver)" },
 	{ "writeconfig;wc",				"0",	OPTION_BOOLEAN,						"writes configuration to (driver).ini on exit" },
 	{ OPTION_SKIP_WARNINGS,			"0",    OPTION_BOOLEAN,						"skip displaying the warnings screen" },
 //mamep: stop adding device options until array drivers[] is ready

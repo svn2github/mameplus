@@ -122,7 +122,7 @@ static int add_filter_entry(char *dest, size_t dest_len, const char *description
 //	customize_input
 //============================================================
 
-static void customize_input(HWND wnd, const char *title, int cust_type, int player, int inputclass, const char *section)
+static void customize_input(HWND wnd, const char *title, artwork_cust_type cust_type, int player, int inputclass, const char *section)
 {
 	dialog_box *dlg;
 	input_port_entry *in;
@@ -168,7 +168,7 @@ static void customize_input(HWND wnd, const char *title, int cust_type, int play
 			if (inputclass == INPUT_CLASS_CATEGORIZED)
 				this_player = in->category;
 			else
-				this_player = input_player_number(in);
+                this_player = input_player_number(in);
 
 			if (this_player == player)
 			{
@@ -1754,7 +1754,7 @@ static int invoke_command(HWND wnd, UINT command)
 	LONG_PTR ptr = GetWindowLongPtr(wnd, GWLP_USERDATA);
 	win_window_info *window = (win_window_info *)ptr;
 
-	//mamep: to avoid crash if multithreading is enabled
+	// pause while invoking command
 	winwindow_ui_pause_from_window_thread(TRUE);
 
 	switch(command)
@@ -1981,7 +1981,7 @@ static int invoke_command(HWND wnd, UINT command)
 			break;
 	}
 
-	//mamep: to avoid crash if multithreading is enabled
+	// resume emulation
 	winwindow_ui_pause_from_window_thread(FALSE);
 	return handled;
 }
