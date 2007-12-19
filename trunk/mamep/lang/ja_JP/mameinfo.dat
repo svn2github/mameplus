@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.121u3      #
+#     Mameinfo.dat日本語版 v0.121u4      #
 #                                        #
-#            December 8, 2007            #
+#           December 18, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,23 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：878 翻訳済：851
-# 追加項目：342 合計：1220
+# Tester報告：883 翻訳済：855
+# 追加項目：342 合計：1225
 #
 
+
+$info=shootgal
+$mame
+[バグ]
+
+- 次のエラーが出てクラッシュする:
+
+hb_dma_read_byte - unmapped access for 0x6600 - bucket 0xffffffff shootgal0121u4red, Firewave
+
+
+- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
+
+$end
 
 $info=jantouki
 $mame
@@ -53,6 +66,22 @@ $mame
 
 $end
 
+$info=drivedge
+$mame
+[バグ]
+
+- デモシーンで、車が左右に細かく震える。 drivedge0121u4gre, John IV
+
+$end
+
+$info=mk4
+$mame
+[バグ]
+
+- MAME終了時にデバッグ用と思われる"waveram.dmp"という44MBくらいのファイルが残る。 mk4_0121u4ora, Tafoid
+
+$end
+
 $info=tekken3b
 $mame
 [バグ]
@@ -85,6 +114,25 @@ $mame
 
 $end
 
+$info=area51
+$mame
+[バグ]
+
+- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
+
+
+- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
+
+$end
+
+$info=policetr
+$mame
+[バグ]
+
+- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
+
+$end
+
 $info=elecyoyo
 $mame
 [情報]
@@ -109,6 +157,14 @@ $mame
 
 
 - 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
+
+$end
+
+$info=tmnt2
+$mame
+[バグ]
+
+- このゲームにはGAME_UNEMULATED_PROTECTIONフラグが付いているが、以前プロテクト系の問題として挙げられていた不具合は全て解決している。 tmnt2_0121u4ora, izius
 
 $end
 
@@ -938,14 +994,6 @@ BGMが鳴らない。
 
 
 - 2面(カギを上に持っていく面)で、ジュニアが時々カギをすり抜けてしまう。 dkongjr37b9gre, Chad H
-
-$end
-
-$info=shootgal
-$mame
-[バグ]
-
-- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
 
 $end
 
@@ -6252,14 +6300,6 @@ CPU0を135%に設定するとこれらは解決する。実機との比較が必
 
 - 表示化けした自転車乗りがよく出現する。
 ただし、それが画面から出れば元に戻る。 clshroad055gre, Karasu
-
-$end
-
-$info=area51
-$mame
-[バグ]
-
-- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
 
 $end
 
