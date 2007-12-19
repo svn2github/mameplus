@@ -490,9 +490,9 @@ static void m68000_set_info(UINT32 state, cpuinfo *info)
 
 		/* --- the following bits of info are set as pointers to data or functions --- */
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		m68k_set_reset_instr_callback(info->f);		break;
-		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f)); break;
+		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f));		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:			m68k_set_rte_instr_callback(info->f);		break;
-		case CPUINFO_PTR_M68K_TAS_CALLBACK:			m68k_set_tas_instr_callback((int (*)(void))(info->f)); break;
+		case CPUINFO_PTR_M68K_TAS_CALLBACK:			m68k_set_tas_instr_callback((int (*)(void))(info->f));		break;
 	}
 }
 
@@ -579,10 +579,10 @@ void m68000c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68000");				break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68000"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
 		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "3.32");					break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
 		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998-2007 Karl Stenerud. All rights reserved. (2.1 fixes HJB)"); break;
 
 		case CPUINFO_STR_FLAGS:
@@ -674,7 +674,7 @@ static void m68008_set_info(UINT32 state, cpuinfo *info)
 
 		/* --- the following bits of info are set as pointers to data or functions --- */
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		m68k_set_reset_instr_callback(info->f);		break;
-		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f)); break;
+		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f));		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:			m68k_set_rte_instr_callback(info->f);		break;
 	}
 }
@@ -758,10 +758,10 @@ void m68008c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68008");				break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68008"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
 		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "3.32");					break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
 		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998-2007 Karl Stenerud. All rights reserved. (2.1 fixes HJB)"); break;
 
 		case CPUINFO_STR_FLAGS:
@@ -847,7 +847,7 @@ void m68010c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_DISASSEMBLE:					info->disassemble = m68010_dasm;		break;
 #endif /* MAME_DEBUG */
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68010");				break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68010"); break;
 		case CPUINFO_STR_REGISTER + M68K_SFC:			sprintf(info->s, "SFC:%X",   m68k_get_reg(NULL, M68K_REG_SFC)); break;
 		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s, "DFC:%X",   m68k_get_reg(NULL, M68K_REG_DFC)); break;
 		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", m68k_get_reg(NULL, M68K_REG_VBR)); break;
@@ -908,7 +908,7 @@ static void m68020_set_info(UINT32 state, cpuinfo *info)
 
 		/* --- the following bits of info are set as pointers to data or functions --- */
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		m68k_set_reset_instr_callback(info->f);		break;
-		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f)); break;
+		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f));		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:			m68k_set_rte_instr_callback(info->f);		break;
 	}
 }
@@ -998,10 +998,10 @@ void m68020c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68020");				break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68020"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
 		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "3.32");					break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
 		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998-2007 Karl Stenerud. All rights reserved. (2.1 fixes HJB)"); break;
 
 		case CPUINFO_STR_FLAGS:
@@ -1090,9 +1090,9 @@ void m68ec020c_get_info(UINT32 state, cpuinfo *info)
 #endif /* MAME_DEBUG */
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68EC020");				break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68EC020"); break;
 
-		default:										m68020_get_info(state, info);			break;
+		default:										m68020c_get_info(state, info);			break;
 	}
 }
 
@@ -1149,7 +1149,7 @@ static void m68040_set_info(UINT32 state, cpuinfo *info)
 
 		/* --- the following bits of info are set as pointers to data or functions --- */
 		case CPUINFO_PTR_M68K_RESET_CALLBACK:		m68k_set_reset_instr_callback(info->f);		break;
-		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f)); break;
+		case CPUINFO_PTR_M68K_CMPILD_CALLBACK:		m68k_set_cmpild_instr_callback((void (*)(unsigned int,int))(info->f));		break;
 		case CPUINFO_PTR_M68K_RTE_CALLBACK:			m68k_set_rte_instr_callback(info->f);		break;
 	}
 }
@@ -1239,10 +1239,10 @@ void m68040c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &m68k_ICount;			break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case CPUINFO_STR_NAME:							strcpy(info->s, "68040");				break;
-		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K");		break;
+		case CPUINFO_STR_NAME:							strcpy(info->s, "68040"); break;
+		case CPUINFO_STR_CORE_FAMILY:					strcpy(info->s, "Motorola 68K"); break;
 		case CPUINFO_STR_CORE_VERSION:					strcpy(info->s, "3.32");					break;
-		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__);				break;
+		case CPUINFO_STR_CORE_FILE:						strcpy(info->s, __FILE__); break;
 		case CPUINFO_STR_CORE_CREDITS:					strcpy(info->s, "Copyright 1998-2007 Karl Stenerud. All rights reserved. (2.1 fixes HJB)"); break;
 
 		case CPUINFO_STR_FLAGS:

@@ -3032,7 +3032,6 @@ static void LoadOptionsAndSettings(void)
 	SetUseLangList(UseLangList());
 }
 
-#if 0
 // Copy options, if entry doesn't exist in the dest, create it.
 static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 {
@@ -3065,7 +3064,6 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 		options_enumerator_free(enumerator);
 	}
 }
-#endif
 
 //mamep: fixme
 void SaveGameOptions(int driver_index)
@@ -3510,14 +3508,18 @@ void options_set_wstring(core_options *opts, const char *name, const WCHAR *valu
 
 WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param)
 {
-	core_options *opts = load_options(OPTIONS_GAME, driver_index);
 	core_options *options_ref = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
+	core_options *options_base = load_options(OPTIONS_GAME, driver_index);
+	core_options *opts = load_options(OPTIONS_GLOBAL, GLOBAL_OPTIONS);
 	WCHAR pModule[_MAX_PATH];
 	WCHAR *result;
 	WCHAR *wo;
 	char *p;
 	int pModuleLen;
 	int len;
+
+	ResetToDefaults(options_ref, OPTION_PRIORITY_MAXIMUM);
+	copy_options_ex(opts, options_base);
 
 	if (OnNT())
 		GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
@@ -3552,6 +3554,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_op
 	free(wo);
 
 	options_free(opts);
+	options_free(options_base);
 	options_free(options_ref);
 
 	return result;

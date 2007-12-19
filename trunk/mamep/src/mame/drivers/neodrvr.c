@@ -345,8 +345,8 @@ INPUT_PORTS_END
 	ROM_LOAD16_WORD_SWAP_BIOS(10, "neodebug.rom", 0x00000, 0x020000, CRC(698ebb7d) SHA1(081c49aa8cc7dad5939833dc1b18338321ea0a07) ) /* Debug (Development) Bios */ \
 	ROM_SYSTEM_BIOS(11, "asia-aes",   "Asia AES" ) \
 	ROM_LOAD16_WORD_SWAP_BIOS(11, "neo-epo.bin", 0x00000, 0x020000, CRC(d27a71f1) SHA1(1b3b22092f30c4d1b2c15f04d1670eb1e9fbea07) ) /* AES Console (Asia?) Bios */ \
-	ROM_SYSTEM_BIOS(11, "jap-aes",   "Japan AES" ) \
-	ROM_LOAD16_WORD_SWAP_BIOS(11, "neo-po.bin", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
+	ROM_SYSTEM_BIOS(12, "jap-aes",   "Japan AES" ) \
+	ROM_LOAD16_WORD_SWAP_BIOS(12, "neo-po.bin", 0x00000, 0x020000, CRC(16d0c132) SHA1(4e4a440cae46f3889d20234aebd7f8d5f522e22c) ) /* AES Console (Japan) Bios */
 
 /* note you'll have to modify the last for lines of each block to use the extra bios roms,
    they're hacks / homebrew / console bios roms so MAME doesn't list them by default */
