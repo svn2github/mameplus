@@ -99,7 +99,7 @@ static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsig
 	
 	src_width = SrcW;
 	src_height = SrcH;
-	complete_line_src = src_pitch - (SrcW << 1);
+	complete_line_src = next_line_src - SrcW;
 	complete_line_dst = DstPitch - SrcW * 2;
 	
 	start_addr2 = (unsigned short int *)(src - 2);
