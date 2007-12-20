@@ -3343,8 +3343,8 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 		{
 			char buffer[MAX_PATH];
 
-			GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
-			astring_cpyc(filepath, buffer);
+			GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
+			filepath = astring_cpyc(astring_alloc(), buffer);
 		}
 		else
 		{
