@@ -1046,7 +1046,9 @@ static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	_eagle_mmx16((unsigned long *)src, (unsigned long *)src, width, (unsigned long *)dst, (unsigned long *)dst);
 	dst += dst_pitch - 2;
 	for (y = 0; y < height; y++, src += src_pitch, dst += 2 * dst_pitch)
+	{
 		_eagle_mmx16((unsigned long *)src, (unsigned long *)(src + src_pitch), width, (unsigned long *)dst, (unsigned long *)(dst + dst_pitch));
+	}
 
 	scale_emms();
 

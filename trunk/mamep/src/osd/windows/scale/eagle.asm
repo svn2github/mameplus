@@ -39,6 +39,7 @@
 	  BITS 32
 	  GLOBAL _eagle_mmx16
 	  GLOBAL __eagle_mmx16
+	  EXTERN _eagle_buffer
 	  SECTION .text
 
 ;
@@ -383,8 +384,8 @@ __eagle_mmx16:
 	mov edi,[esp+20+32]
 	mov eax,[esp+24+32]
 
-	;shr ecx, 5
-	shr ecx, 4
+	shr ecx, 5
+	;shr ecx, 4
 
 	push ecx
 
@@ -415,9 +416,10 @@ __eagle_mmx16:
 
 	pop ecx
 
+ global _second_loop
+_second_loop:
 	mov edi, eax
 	mov esi, ebx
-
 
 .second_loop:
 	movq mm0, [ esi ]
@@ -455,7 +457,8 @@ __eagle_mmx16:
 
 	SECTION .bss
 _offset32		resb 32
-_eagle_buffer	resb 16384
+;mamep: kludge to avoid nasmw bug about bbs section size
+;_eagle_buffer	resb 16384
 _tripline1		resb 8
 _tripline2		resb 8
 _tripline3		resb 8
