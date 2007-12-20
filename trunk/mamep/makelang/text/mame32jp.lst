@@ -845,7 +845,8 @@ spcfrcii	スペシャルフォーシズII	すぺしゃるふぉーしず_2	Senko Industries (Magic E
 8ballact	エイトボールアクション (DK conversion)	えいとぼーるあくしょん	Seatongrove Ltd (Magic Eletronics USA licence)
 8ballat2	エイトボールアクション (DKJr conversion)	えいとぼーるあくしょん	Seatongrove Ltd (Magic Eletronics USA licence)
 shootgal	シューティングギャラリー	しゅーてぃんぐぎゃらりー	Seatongrove Ltd (Zaccaria licence)
-drakton	ドラットン	どらっとん	Epos Corporation
+drakton	ドラットン (DK conversion)	どらっとん	Epos Corporation
+drktnjr	ドラットン (DKJr conversion)	どらっとん	Epos Corporation
 strtheat	ストリートヒート -Cardinal Amusements	すとりーとひーと	Epos Corporation
 hunchbkd	ハンチバック (DK conversion)	はんちばっく	Century Electronics
 sbdk	スーパーバイク (DK conversion)	すーぱーばいく	Century Electronics
@@ -1913,31 +1914,31 @@ batridra	アームドポリス バトライダー (日本版 Mon Dec 22 1997)	あーむどぽりすばと
 batridrk	アームドポリス バトライダー (韓国版 Fri Feb 13 1998)	あーむどぽりすばとらいだー	Raizing / Eighting
 bbakraid	バトルバクレイド (日本版 Wed Apr 7 1999)	ばとるばくれいど	Eighting
 bbakradu	バトルバクレイド (日本版 Unlimited ver Tue Jun 8 1999)	ばとるばくれいど	Eighting
-pwrinst2	豪血寺一族2 / Power Instinct 2 (USA版)	ごうけつじ_2いちぞく_2	Atlus/Cave
-pwrins2j	豪血寺一族2 (日本版)	ごうけつじ_2いちぞく_2	Atlus/Cave
-plegends	豪血寺外伝 -最強伝説 / Power Instinct Legends (USA版)	ごうけつじ_3がいでん	Atlus/Cave
-plegendj	豪血寺外伝 -最強伝説 (日本版)	ごうけつじ_3がいでん	Atlus/Cave
-mazinger	マジンガーZ	まじんがーぜっと	Banpresto/Dynamic Pl. Toei Animation
+pwrinst2	豪血寺一族2 / Power Instinct 2 (USA版 ver 94/04/08)	ごうけつじ_2いちぞく_2	Atlus/Cave
+pwrins2j	豪血寺一族2 (日本版 ver 94/04/08))	ごうけつじ_2いちぞく_2	Atlus/Cave
+plegends	豪血寺外伝 -最強伝説 / Power Instinct Legends (USA版 ver 95/06/20)	ごうけつじ_3がいでん	Atlus/Cave
+plegendj	豪血寺外伝 -最強伝説 (日本版 ver 95/06/20)	ごうけつじ_3がいでん	Atlus/Cave
+mazinger	マジンガーZ (海外 / 日本版)	まじんがーぜっと	Banpresto/Dynamic Pl. Toei Animation
 donpachi	首領蜂 (USA版)	どんぱち	Atlus/Cave
 donpacjp	首領蜂 (日本版)	どんぱち	Atlus/Cave
 donpackr	首領蜂 (韓国版)	どんぱち	Atlus/Cave
 donpachk	首領蜂 (香港版)	どんぱち	Atlus/Cave
-metmqstr	隠忍 -ザ・ニンジャマスター / Metamoqester	おに	Banpresto/Pandorabox
+metmqstr	隠忍 -ザ・ニンジャマスター / Metamoqester (海外版)	おに	Banpresto/Pandorabox
 nmaster	隠忍 -ザ・ニンジャマスター (日本版)	おに	Banpresto/Pandorabox
-sailormn	美少女戦士セーラームーン (95/03/22B)	びしょうじょせんしせーらーむーん	Banpresto
-sailormo	美少女戦士セーラームーン (95/03/22)	びしょうじょせんしせーらーむーん	Banpresto
-agallet	アクウギャレット	あくうぎゃれっと	Banpresto / Gazelle
-hotdogst	ホットドッグストーム -The First Supersonics	ほっとどっぐすとーむ	Marble
-ddonpach	怒首領蜂 (海外版)	どどんぱち_1	Atlus/Cave
-ddonpchj	怒首領蜂 (日本版)	どどんぱち_1	Atlus/Cave
-dfeveron	弾銃フィーバロン (日本版)	だんがんふぃーばろん	Cave (Nihon System license)
-feversos	弾銃フィーバロン / Fever SOS (海外版)	だんがんふぃーばろん	Cave (Nihon System license)
-esprade	エスプレイド (海外版 ver 1998 4/22)	えすぷれいど	Atlus/Cave
-espradej	エスプレイド (日本版 ver 1998 4/21)	えすぷれいど	Atlus/Cave
-espradeo	エスプレイド (日本版 ver 1998 4/14)	えすぷれいど	Atlus/Cave
+sailormn	美少女戦士セーラームーン (日本 / USA / UK / ラテン / 台湾 / 韓国版 ver 95/03/22B)	びしょうじょせんしせーらーむーん	Banpresto
+sailormo	美少女戦士セーラームーン (日本 / USA / UK / ラテン / 台湾 / 韓国版 ver 95/03/22)	びしょうじょせんしせーらーむーん	Banpresto
+agallet	アクウギャレット (日本 / USA / UK / ラテン / 台湾 / 韓国版)	あくうぎゃれっと	Banpresto / Gazelle
+hotdogst	ホットドッグストーム -The First Supersonics (海外版)	ほっとどっぐすとーむ	Marble
+ddonpach	怒首領蜂 (海外版 master ver 97/02/05)	どどんぱち_1	Atlus/Cave
+ddonpchj	怒首領蜂 (日本版 master ver 97/02/05)	どどんぱち_1	Atlus/Cave
+dfeveron	弾銃フィーバロン (日本版 ver 98/09/17)	だんがんふぃーばろん	Cave (Nihon System license)
+feversos	弾銃フィーバロン / Fever SOS (海外版 ver 98/09/25)	だんがんふぃーばろん	Cave (Nihon System license)
+esprade	エスプレイド (海外版 ver 98/04/22)	えすぷれいど	Atlus/Cave
+espradej	エスプレイド (日本版 ver 98/04/21)	えすぷれいど	Atlus/Cave
+espradeo	エスプレイド (日本版 ver 98/04/14)	えすぷれいど	Atlus/Cave
 uopoko	魚ポコ / Puzzle Uo Poko (海外版)	うおぽこ	Cave (Jaleco license)
 uopokoj	魚ポコ (日本版)	うおぽこ	Cave (Jaleco license)
-guwange	ぐわんげ (日本版)	ぐわんげ	Atlus/Cave
+guwange	ぐわんげ (日本版 master ver 99/06/24)	ぐわんげ	Atlus/Cave
 gaia	ガイアクルセイダーズ	がいあくるせいだーず	Noise Factory
 theroes	サンダーヒーローズ	さんだーひーろーず	Primetek Investments
 korokoro	コロコロクエスト (日本版)	ころころくえすと	Takumi
@@ -4762,7 +4763,8 @@ legendos	あしたのジョー伝説	あしたのじょーでんせつ	SNK
 2020bb	2020年スーパーベースボール (set 1)	にせんにじゅうねんすーぱーべーすぼーる	SNK / Pallas
 2020bba	2020年スーパーベースボール (set 2)	にせんにじゅうねんすーぱーべーすぼーる	SNK / Pallas
 2020bbh	2020年スーパーベースボール (set 3)	にせんにじゅうねんすーぱーべーすぼーる	SNK / Pallas
-socbrawl	サッカーブロール	さっかーぶろーる	SNK
+socbrawl	サッカーブロール (set 1)	さっかーぶろーる	SNK
+socbrala	サッカーブロール (set 2)	さっかーぶろーる	SNK
 roboarmy	ロボアーミー (set 1)	ろぼあーみー	SNK
 roboarma	ロボアーミー (set 2)	ろぼあーみー	SNK
 fatfury1	餓狼伝説 -宿命の闘い	がろうでんせつ_1	SNK
@@ -4911,7 +4913,7 @@ kof2000	ザ・キング・オブ・ファイターズ 2000	ざきんぐおぶふぁいたーず_07_1_2000	S
 kof2000n	ザ・キング・オブ・ファイターズ 2000 (not encrypted)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 bangbead	バンビード	ばんびーど	Visco
 nitd	ナイトメア・イン・ザ・ダーク	ないとめあいんざだーく	Eleven / Gavaking
-nitdbl	ナイトメア・イン・ザ・ダーク (海賊版)	ないとめあいんざだーく	Eleven / Gavaking
+nitdbl	ナイトメア・イン・ザ・ダーク (海賊版)	ないとめあいんざだーく	bootleg
 sengoku3	戦国伝承2001	せんごくでんしょう_32001	SNK
 kof2001	ザ・キング・オブ・ファイターズ 2001 (set 1)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
 kof2001h	ザ・キング・オブ・ファイターズ 2001 (set 2)	ざきんぐおぶふぁいたーず_08_1_2001	Eolith / SNK
@@ -4934,10 +4936,10 @@ matrim	新豪血寺一族 闘婚 -Matrimelee	しんごうけつじいちぞくとうこん	Noise Factor
 pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
 ms5pcb	メタルスラッグ5 (JAMMA PCB)	めたるすらっぐ_5_1	SNK Playmore
 mslug5	メタルスラッグ5	めたるすらっぐ_5_1	SNK Playmore
-ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版 / ハック)	めたるすらっぐ_5_2	bootleg
-svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん_1	Playmore
-svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん_1	Playmore
-svc	SNK VS. CAPCOM -SVC CHAOS	えすえぬけいばーさすかぷこん_1	Playmore
+ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5_2	bootleg
+svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB)	えすえぬけいばーさすかぷこん_1	SNK Playmore
+svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん_1	SNK Playmore
+svc	SNK VS. CAPCOM -SVC CHAOS	えすえぬけいばーさすかぷこん_1	SNK Playmore
 svcboot	SNK VS. CAPCOM -SVC CHAOS (海賊版)	えすえぬけいばーさすかぷこん_1	bootleg
 svcplus	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 1)	えすえぬけいばーさすかぷこん_2	bootleg
 svcplusa	SNK VS. CAPCOM -SVC CHAOS / SvC Chaos - SNK vs Capcom Plus (海賊版 set 2)	えすえぬけいばーさすかぷこん_2	bootleg
@@ -5386,7 +5388,8 @@ raiden2	雷電II (USA版 set 1 Fabtek)	らいでん_2	Seibu Kaihatsu
 raiden2a	雷電II (set 2 Metrotainment)	らいでん_2	Seibu Kaihatsu
 raiden2b	雷電II (日本版 set 3)	らいでん_2	Seibu Kaihatsu
 raiden2c	雷電II (日本版 set 4)	らいでん_2	Seibu Kaihatsu
-raiden2e	雷電II (easier?)	らいでん_2	Seibu Kaihatsu
+raiden2d	雷電II (set 5)	らいでん_2	Seibu Kaihatsu
+raiden2e	雷電II (set 6 easy ver)	らいでん_2	Seibu Kaihatsu
 raidndx	雷電DX (set 1)	らいでん_3でぃーえっくす	Seibu Kaihatsu
 raidndxa	雷電DX (set 2)	らいでん_3でぃーえっくす	Seibu Kaihatsu
 raidndxb	雷電DX (set 3 Newer V33 PCB)	らいでん_3でぃーえっくす	Seibu Kaihatsu
@@ -5807,6 +5810,7 @@ wrofaero	ウォーオブエアロ -Project MEIOU	うぉーおぶえあろ	Yang Cheng
 eightfrc	エイトフォース	えいとふぉーす	Tecmo
 kiwame	プロ麻雀 極	ぷろまーじゃんきわめ_1_1	Athena
 krzybowl	クレイジーボウル	くれいじーぼうる	American Sammy
+orbs	オーブス (10/7/94 prototype?)	おーぶす	American Sammy
 extdwnhl	エクストリームダウンヒル (ver 1.5)	えくすとりーむだうんひる	Sammy Industries Japan
 gundhara	銃弾嵐	がんだーら	Banpresto
 sokonuke	そこぬけ対戦ゲーム (日本版)	そこぬけたいせんげーむ	Sammy Industries
