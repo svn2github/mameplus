@@ -205,10 +205,6 @@ static render_font *render_font_alloc_command_glyph(int height)
 	font = malloc_or_die(sizeof(*font));
 	memset(font, 0, sizeof(*font));
 
-		//mamep: load command glyph font
-	font = malloc_or_die(sizeof(*font));
-	memset(font, 0, sizeof(*font));
-
 	if (height >= 14)
 		filerr = mame_fopen_ram(font_uicmd14, sizeof(font_uicmd14), OPEN_FLAG_READ, &ramfile);
 	else
