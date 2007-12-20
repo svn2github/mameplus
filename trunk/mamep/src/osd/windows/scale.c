@@ -114,7 +114,7 @@ static const char *str_desc[] =
 	"Super 2xSaI v0.59 by Kreed",
 	"Super Eagle v0.59 by Kreed",
 	"Eagle 0.41a by Dirk Stevens",
-	"2xPM v0.2",
+	"2xPM v0.2 by Pablo Medina",
 	"HQ2x by Maxim Stepin",
 	"HQ2x3 by AdvMAME",
 	"HQ2x4 by AdvMAME",

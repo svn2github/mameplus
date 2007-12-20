@@ -1920,32 +1920,30 @@ void video_init_scale_effect(running_machine *machine)
 	{
 		logerror("WARNING: scale effect is disabled\n");
 		scale_effect.effect = 0;
+		return;
 	}
 
-	if (scale_effect.effect)
+	if (scale_check(scale_depth))
 	{
+		int old_depth = scale_depth;
+
+		use_work_bitmap = 1;
+		scale_depth = (scale_depth == 15) ? 32 : 15;
 		if (scale_check(scale_depth))
 		{
-			int old_depth = scale_depth;
+			popmessage(_("scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled."),
+				scale_desc(scale_effect.effect));
 
-			use_work_bitmap = 1;
-			scale_depth = (scale_depth == 15) ? 32 : 15;
-			if (scale_check(scale_depth))
-			{
-				popmessage(_("scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled."),
-					scale_desc(scale_effect.effect));
-
-				scale_exit();
-				scale_effect.effect = 0;
-				scale_init();
-			}
-			else
-				logerror("WARNING: scale_effect \"%s\" does not support depth %d, use depth %d\n", scale_desc(scale_effect.effect), old_depth, scale_depth);
+			scale_exit();
+			scale_effect.effect = 0;
+			scale_init();
+			return;
 		}
-
-		if (scale_effect.effect)
-			logerror("scale effect: %s (depth:%d)\n", scale_effect.name, scale_depth);
+		else
+			logerror("WARNING: scale_effect \"%s\" does not support depth %d, use depth %d\n", scale_desc(scale_effect.effect), old_depth, scale_depth);
 	}
+
+	logerror("scale effect: %s (depth:%d)\n", scale_effect.name, scale_depth);
 }
 
 void video_exit_scale_effect(running_machine *machine)
@@ -2011,6 +2009,7 @@ static void free_scalebitmap(running_machine *machine)
 
 			for (bank = 0; bank < 2; bank++)
 			{
+				// restore mame screen
 				if ((screen->texture[bank]) && (screen->bitmap[bank]))
 					render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
 
@@ -2118,6 +2117,7 @@ static void texture_set_scalebitmap(internal_screen_info *screen, const rectangl
 	fixedvis.max_x = width * scale_xsize;
 	fixedvis.max_y = height * scale_ysize;
 
+	//convert texture to 15 or 32 bit which scaler is capable of rendering
 	switch (screen->format)
 	{
 	case TEXFORMAT_PALETTE16:
