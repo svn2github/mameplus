@@ -1,4 +1,7 @@
 UINT32 interp_RGB2YUV[65536];
+UINT32   LUT16to32[65536];
+UINT32*  RGBtoYUV = interp_RGB2YUV;
+UINT8 *Buffer=0;
 
 static void interp_init(void)
 {
@@ -7,6 +10,9 @@ static void interp_init(void)
 
 	if (interp_inited) return;
 	interp_inited = 1;
+
+	for (i=0; i<65536; i++)
+		LUT16to32[i] = ((i & 0xF800) << 8) + ((i & 0x07E0) << 5) + ((i & 0x001F) << 3);
 
 	for (i=0; i<32; i++) {
 		for (j=0; j<64; j++) {
@@ -21,6 +27,10 @@ static void interp_init(void)
 			}
 		}
 	}
+	
+	if(Buffer)
+		free(Buffer);
+	Buffer=0;
 }
 
 
