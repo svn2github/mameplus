@@ -176,7 +176,7 @@ endif
 #-------------------------------------------------
 
 ASM = @nasmw
-ASMFLAGS = -f coff
+ASMFLAGS = -f coff -Wno-orphan-labels
 
 
 #-------------------------------------------------
@@ -305,7 +305,7 @@ ifneq ($(USE_SCALE_EFFECTS),)
 OSDOBJS += $(WINOBJ)/scale.o
 
 OBJDIRS += $(WINOBJ)/scale
-OSDOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/eagle_buffer.o $(WINOBJ)/scale/2xsaimmx.o
+OSDOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/2xsaimmx.o $(WINOBJ)/scale/hq2x16.o $(WINOBJ)/scale/hq2x32.o
 OSDOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
@@ -326,6 +326,12 @@ $(WINOBJ)/scale/eagle.o: $(WINSRC)/scale/eagle.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 $(WINOBJ)/scale/2xsaimmx.o: $(WINSRC)/scale/2xsaimmx.asm
+	@echo Assembling $<...
+	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
+$(WINOBJ)/scale/hq2x16.o: $(WINSRC)/scale/hq2x16.asm
+	@echo Assembling $<...
+	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
+$(WINOBJ)/scale/hq2x32.o: $(WINSRC)/scale/hq2x32.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
