@@ -415,8 +415,6 @@ __eagle_mmx16:
 
 	pop ecx
 
- global _second_loop
-_second_loop:
 	mov edi, eax
 	mov esi, ebx
 
