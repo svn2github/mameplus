@@ -56,7 +56,7 @@ static __M64_CONST CONST_FFFF = _MM_PI16(15, 15, 15, 15);
 
 static __M64_CONST CONST_YUV_THRESHOLD = _MM_PI16(0, 0, 0x30, 0x0706);
 
-extern UINT32 interp_RGB2YUV[65536];
+extern UINT32 RGBtoYUV[65536];
 
 INLINE UINT16 interp_32_to_15(UINT32 src)
 {
@@ -344,8 +344,8 @@ INLINE int interp_diff(UINT16 c1, UINT16 c2)
 	__m64 yuv1, yuv2, d1, d2;
 
 	if (c1 == c2) return 0;
-	yuv1 = _mm_cvtsi32_si64(interp_RGB2YUV[c1]);
-	yuv2 = _mm_cvtsi32_si64(interp_RGB2YUV[c2]);
+	yuv1 = _mm_cvtsi32_si64(RGBtoYUV[c1]);
+	yuv2 = _mm_cvtsi32_si64(RGBtoYUV[c2]);
 	d1 = _mm_subs_pu8(yuv1, yuv2);
 	d2 = _mm_subs_pu8(yuv2, yuv1);
 	d1 = _mm_or_si64(d1, d2);

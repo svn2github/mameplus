@@ -305,7 +305,12 @@ ifneq ($(USE_SCALE_EFFECTS),)
 OSDOBJS += $(WINOBJ)/scale.o
 
 OBJDIRS += $(WINOBJ)/scale
-OSDOBJS += $(WINOBJ)/scale/superscale.o $(WINOBJ)/scale/eagle.o $(WINOBJ)/scale/2xsaimmx.o $(WINOBJ)/scale/hq2x16.o $(WINOBJ)/scale/hq2x32.o
+OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
+ifneq ($(ASM_HQ),)
+DEFS += -DASM_HQ
+OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq2x32.obj \
+		   $(WINOBJ)/scale/hq3x16.obj $(WINOBJ)/scale/hq3x32.obj
+endif
 OSDOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
@@ -319,19 +324,7 @@ ifneq ($(USE_4X_SCALE),)
 DEFS += -DUSE_4X_SCALE
 endif
 
-$(WINOBJ)/scale/superscale.o: $(WINSRC)/scale/superscale.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/eagle.o: $(WINSRC)/scale/eagle.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/2xsaimmx.o: $(WINSRC)/scale/2xsaimmx.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/hq2x16.o: $(WINSRC)/scale/hq2x16.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-$(WINOBJ)/scale/hq2x32.o: $(WINSRC)/scale/hq2x32.asm
+$(WINOBJ)/scale/%.obj: $(WINSRC)/scale/%.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
