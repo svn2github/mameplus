@@ -895,6 +895,28 @@ float options_get_float(core_options *opts, const char *name)
 
 
 /*-------------------------------------------------
+    options_get_string - return data formatted
+    as a string
+-------------------------------------------------*/
+
+const char *options_get_option_default_value(core_options *opts, const char *name)
+{
+	options_data *data = find_entry_data(opts, name, FALSE);
+	const char *value = NULL;
+
+	/* error if not found */
+	if (data == NULL)
+		message(opts, OPTMSG_ERROR, "Unexpected option %s queried\n", name);
+
+	/* copy if non-NULL */
+	else
+		value = astring_c(data->defdata);
+
+	return value;
+}
+
+
+/*-------------------------------------------------
     options_get_seqid - return the seqid for an
     entry
 -------------------------------------------------*/

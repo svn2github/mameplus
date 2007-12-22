@@ -174,6 +174,9 @@ int options_get_int(core_options *opts, const char *name);
 /* read an option as a floating point value */
 float options_get_float(core_options *opts, const char *name);
 
+/* read an default option value as a string */
+const char *options_get_option_default_value(core_options *opts, const char *name);
+
 /* read an option as a string */
 UINT32 options_get_seqid(core_options *opts, const char *name);
 

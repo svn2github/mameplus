@@ -3054,6 +3054,8 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 				if (NULL == existing || *existing == '\0')
 				{
 					entries[0].name = option_name;
+					entries[0].defvalue = options_get_option_default_value(pSourceOpts, option_name);
+
 					// create entry
 					options_add_entries(pDestOpts, entries);
 				}
