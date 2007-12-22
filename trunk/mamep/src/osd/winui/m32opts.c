@@ -478,19 +478,19 @@ static const char *view_modes[VIEW_MAX] =
 // Screen shot Page tab control text
 // these must match the order of the options flags in options.h
 // (TAB_...)
-const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
+static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 {
-	L"Snapshot ",
-	L"Flyer ",
-	L"Cabinet ",
+	L"Snapshot",
+	L"Flyer",
+	L"Cabinet",
 	L"Marquee",
 	L"Title",
 	L"Control Panel",
 	L"PCB",
-	L"History ",
+	L"History",
 };
 
-const char* image_tabs_short_name[MAX_TAB_TYPES] =
+static const char* image_tabs_short_name[MAX_TAB_TYPES] =
 {
 	"snapshot",
 	"flyer",
