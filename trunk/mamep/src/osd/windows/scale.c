@@ -182,7 +182,7 @@ static int scale_perform_2xpm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 void hq2x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 void hq2x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-#endif /*ASM_HQ*/
+#endif /* ASM_HQ */
 static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 static void (*scale_hlq2x_15_def)(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq2x_32_def)(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
@@ -424,10 +424,12 @@ int scale_init(void)
 				sprintf(name, "HQ2x (non-mmx version)");
 
 			scale_effect.xsize = scale_effect.ysize = 2;
-#ifndef ASM_HQ
+#ifdef ASM_HQ
+			scale_hlq2x_15_def = NULL;
+#else /* ASM_HQ */
 			scale_hlq2x_15_def = hq2x_15_def;
+#endif /* ASM_HQ */
 			scale_hlq2x_32_def = hq2x_32_def;
-#endif /*ASM_HQ*/
 			break;
 		}
 		case SCALE_EFFECT_HQ2X3:
@@ -671,9 +673,10 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 		case SCALE_EFFECT_2XPM:
 			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ2X:
-//#ifdef ASM_HQ
-			return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
-//#endif /*ASM_HQ*/
+#ifdef ASM_HQ
+			if (depth == 15)
+				return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
+#endif /* ASM_HQ */
 		case SCALE_EFFECT_LQ2X:
 			return scale_perform_hlq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ2X3:
@@ -1139,7 +1142,7 @@ static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 
 //============================================================
-//	scale_perform_hlq2x
+//	scale_perform_hq2x
 //============================================================
 #ifdef ASM_HQ
 static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
@@ -1189,7 +1192,7 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 
 	return 0;
 }
-#endif /*ASM_HQ*/
+#endif /* ASM_HQ */
 
 static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
 {
