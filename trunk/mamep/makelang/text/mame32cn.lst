@@ -938,7 +938,8 @@ unsquad	战区 88 / 联合国空战队 (美版)	战区 88 / 联合国空战队 (美版)	Capcom
 area88	战区 88 (日版)	战区 88 (日版)	Capcom
 ffight	快打旋风 (世界版)	快打旋风 (世界版)	Capcom
 ffightu	快打旋风 (美版 900112)	快打旋风 (美版 900112)	Capcom
-ffightua	快打旋风 (美版 900613)	快打旋风 (美版 900613)	Capcom
+ffightua	快打旋风 (美版 900112)	快打旋风 (美版 900112)	Capcom
+ffightub	快打旋风 (美版 900613)	快打旋风 (美版 900613)	Capcom
 ffightj	快打旋风 (日版)	快打旋风 (日版)	Capcom
 ffightj1	快打旋风 (日版 900305)	快打旋风 (日版 900305)	Capcom
 1941	1941 - 反击战 (世界版)	1941 - 反击战 (世界版)	Capcom
@@ -1046,7 +1047,8 @@ ssf2tb	超级街头霸王 II: 争斗之赛 (世界版 931119)	超级街头霸王 II: 争斗之赛 (世界
 ssf2tbr1	超级街头霸王 II: 争斗之赛 (世界版 930911)	超级街头霸王 II: 争斗之赛 (世界版 930911)	Capcom
 ssf2tbj	超级街头霸王 II: 争斗之赛 (日版 930911)	超级街头霸王 II: 争斗之赛 (日版 930911)	Capcom
 ecofghtr	生态战士 (世界版 931203)	生态战士 (世界版 931203)	Capcom
-ecofghtu	生态战士 (美版 931203)	生态战士 (美版 931203)	Capcom
+ecofghtu	生态战士 (美版 940215)	生态战士 (美版 940215)	Capcom
+ecofgtu1	生态战士 (美版 931203)	生态战士 (美版 931203)	Capcom
 ecofghta	生态战士 (亚洲版 931203)	生态战士 (亚洲版 931203)	Capcom
 uecology	最终生态 (日版 931203)	最终生态 (日版 931203)	Capcom
 ddtod	龙与地下城: 毁灭之塔 (欧洲版 940412)	龙与地下城: 毁灭之塔 (欧洲版 940412)	Capcom
@@ -1219,7 +1221,8 @@ gigawing	千兆翼 (美版 990222)	千兆翼 (美版 990222)	Capcom, supported by Takumi
 gwingj	千兆翼 (日版 990223)	千兆翼 (日版 990223)	Capcom, supported by Takumi
 gwinga	千兆翼 (亚洲版 990222)	千兆翼 (亚洲版 990222)	Capcom, supported by Takumi
 jyangoku	雀国志: 霸王之采牌 (日版 990527)	雀国志: 霸王之采牌 (日版 990527)	Capcom
-dimahoo	大魔法 (美版 000121)	大魔法 (美版 000121)	Eighting/Raizing, distributed by Capcom
+dimahoo	大魔法 (欧版 000121)	大魔法 (欧版 000121)	Eighting/Raizing, distributed by Capcom
+dimahoou	大魔法 (美版 000121)	大魔法 (美版 000121)	Eighting/Raizing, distributed by Capcom
 gmahou	伟大的魔法大作战 (日版 000121)	伟大的魔法大作战 (日版 000121)	Eighting/Raizing, distributed by Capcom
 mmatrix	火烈巨阵: 超固体射击 (美版 000412)	火烈巨阵: 超固体射击 (美版 000412)	Capcom, supported by Takumi
 mmatrixj	火烈巨阵: 超固体射击 (日版 000412)	火烈巨阵: 超固体射击 (日版 000412)	Capcom, supported by Takumi
@@ -1893,7 +1896,7 @@ ridhero	风速英雄 (set 1)	风速英雄 (set 1)	SNK
 ridheroh	风速英雄 (set 2)	风速英雄 (set 2)	SNK
 alpham2	阿尔法 任务 / ASO II - 最后的守护神	阿尔法 任务 / ASO II - 最后的守护神	SNK
 ncombat	忍者大战 (set 1)	忍者大战 (set 1)	Alpha Denshi Co.
-ncombata	忍者大战 (set 2)	忍者大战 (set 2)	Alpha Denshi Co.
+ncombath	忍者大战 (set 2)	忍者大战 (set 2)	Alpha Denshi Co.
 cyberlip	战斗边缘	战斗边缘	SNK
 superspy	谍报飞龙	谍报飞龙	SNK
 mutnat	外星游龙 / 变异种族	外星游龙 / 变异种族	SNK
@@ -1915,7 +1918,8 @@ legendos	传说之虎	传说之虎	SNK
 2020bb	2020 年超级棒球 (set 1)	2020 年超级棒球 (set 1)	SNK / Pallas
 2020bba	2020 年超级棒球 (set 2)	2020 年超级棒球 (set 2)	SNK / Pallas
 2020bbh	2020 年超级棒球 (set 3)	2020 年超级棒球 (set 3)	SNK / Pallas
-socbrawl	机器人足球	机器人足球	SNK
+socbrawl	机器人足球 (set 1)	机器人足球 (set 1)	SNK
+socbrala	机器人足球 (set 2)	机器人足球 (set 2)	SNK
 roboarmy	机甲神兵 (set 1)	机甲神兵 (set 1)	SNK
 roboarma	机甲神兵 (set 2)	机甲神兵 (set 2)	SNK
 fatfury1	饿狼传说 - 宿命之战	饿狼传说 - 宿命之战	SNK
@@ -1952,7 +1956,8 @@ fightfva	狂热格斗 (set 2)	狂热格斗 (set 2)	Viccom
 ssideki2	得点王 2 - 实战足球	得点王 2 - 实战足球	SNK
 spinmast	滑轮大师 / 强尼大冒险	滑轮大师 / 强尼大冒险	Data East Corporation
 samsho2	侍魂 II / 真侍魂 - 霸王丸地狱变	侍魂 II / 真侍魂 - 霸王丸地狱变	SNK
-wh2j	世界英雄 2 Jet	世界英雄 2 Jet	ADK / SNK
+wh2j	世界英雄 2 Jet (set 1)	世界英雄 2 Jet (set 1)	ADK / SNK
+wh2jh	世界英雄 2 Jet (set 2)	世界英雄 2 Jet (set 2)	ADK / SNK
 wjammers	野外排球 / 超级飞碟球	野外排球 / 超级飞碟球	Data East Corporation
 karnovr	斗士的历史 - Karnov 的复仇	斗士的历史 - Karnov 的复仇	Data East Corporation
 gururin	旋转方块	旋转方块	Face
@@ -2701,6 +2706,7 @@ sfz2aad	少年街霸 零 2 阿尔法 (亚洲版 960826 凤凰版)	少年街霸 2 阿尔法 (亚洲版 96
 xmvsfu1d	X-战警 对 街霸 (美版 961004 凤凰版)	X-战警 对 街霸 (美版 961004 凤凰版)	hack
 batcird	战斗回路 (欧版 970319 凤凰版)	战斗回路 (欧版 970319 凤凰版)	hack
 vsavd	吸血鬼救世主: 恶魔的上帝 (欧版 970519 凤凰版)	吸血鬼救世主: 恶魔的上帝 (欧版 970519 凤凰版)	hack
+progerjd	疾风之岚 (日版 010117 凤凰版)	疾风之岚 (日版 010117 凤凰版)	Capcom, supported by Cave
 mvscud	漫画英雄 对 Capcom: 超级英雄的冲突 (美版 980123 凤凰版)	漫画英雄 对 Capcom: 超级英雄的冲突 (美版 980123 凤凰版)	hack
 sfa3ud	少年街霸 阿尔法 3 (美版 980904 凤凰版)	少年街霸 阿尔法 3 (美版 980904 凤凰版)	hack
 gwingjd	千兆翼 (日版 990223 凤凰版)	千兆翼 (日版 990223 凤凰版)	hack
@@ -2738,6 +2744,7 @@ s1945pd	打击者 1945 加强版 (解密 C)	打击者 1945 加强版 (解密 C)	Psikyo
 preisl2d	原始岛 2 (解密 C)	原始岛 2 (解密 C)	Yumekobo
 mslug3d	合金弹头 3 (解密 C)	合金弹头 3 (解密 C)	SNK
 kof2000d	拳皇 2000 (解密 C)	拳皇 2000 (解密 C)	SNK
+nitdbl	黑暗守墓者 / 暗黑恶梦 (盗版)	黑暗守墓者 / 暗黑恶梦 (盗版)	Bootleg
 nitdd	黑暗守墓者 / 暗黑恶梦 (解密 C)	黑暗守墓者 / 暗黑恶梦 (解密 C)	Eleven / Gavaking
 sengok3d	战国传承 3 / 战国传承 2001 (解密 C)	战国传承 3 / 战国传承 2001 (解密 C)	SNK
 kof2001d	拳皇 2001 (解密 C)	拳皇 2001 (解密 C)	Eolith / SNK
