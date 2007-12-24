@@ -188,9 +188,6 @@ static void draw_sprites(running_machine *machine, mame_bitmap *bitmap, const re
 
 VIDEO_UPDATE( hcastle )
 {
-	extern int K007121_flipscreen[];
-	static int saved_flipscreen;
-	int flipscreen;
 	static int old_pf1,old_pf2;
 
 
@@ -199,13 +196,6 @@ VIDEO_UPDATE( hcastle )
 
 	if (K007121_ctrlram[0][3] & 0x01) pf1_bankbase += 0x2000;
 	if (K007121_ctrlram[1][3] & 0x01) pf2_bankbase += 0x2000;
-
-	flipscreen = ((K007121_flipscreen[0] & 0x8) && (K007121_flipscreen[1] & 0x8));
-
-	if (flipscreen != saved_flipscreen) {
-		flip_screen_set(flipscreen);
-		saved_flipscreen = flipscreen;
-	}
 
 	if (pf1_bankbase != old_pf1)
 		tilemap_mark_all_tiles_dirty(fg_tilemap);

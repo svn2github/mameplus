@@ -54,7 +54,7 @@ static PALETTE_INIT( bsktball )
 
 	/* motion */
 	for (i = 0; i < 4*4*4; i++)
-{
+	{
 		colortable_entry_set_value(machine->colortable, 2*4 + i*4 + 0, 1);
 		colortable_entry_set_value(machine->colortable, 2*4 + i*4 + 1, (i >> 2) & 3);
 		colortable_entry_set_value(machine->colortable, 2*4 + i*4 + 2, (i >> 0) & 3);

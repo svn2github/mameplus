@@ -1,7 +1,6 @@
 /* 8080bw.c *********************************
  */
 #include "driver.h"
-#include "streams.h"
 #include "8080bw.h"
 #include "mw8080bw.h"
 #include "sound/samples.h"

@@ -115,7 +115,7 @@ extern int hyp_type_16bit;
 #define BCR_REGISTER		20
 #define TPR_REGISTER		21
 #define TCR_REGISTER		22
-#define TR_REGISTER		23
+#define TR_REGISTER			23
 #define ISR_REGISTER		25
 #define FCR_REGISTER		26
 #define MCR_REGISTER		27

@@ -37,9 +37,9 @@ ROMs:
 
 Program:
 32A12-01.34 = 27C2001
-32A14-0.33 = 27C2001
+32A14-0.33  = 27C2001
 32A13-01.26 = 27C2001
-32A15-0.14 = 27C2001
+32A15-0.14  = 27C2001
 
 Char:
 32A11-0.55 = 27C010
@@ -348,7 +348,7 @@ static INPUT_PORTS_START( shadfrce )
 	PORT_BIT( 0xf8, IP_ACTIVE_LOW, IPT_UNUSED )
 
 	PORT_START	/* Fake IN5 (misc) */
-	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_VBLANK )	/* guess */
+	PORT_BIT( 0x04, IP_ACTIVE_LOW, IPT_VBLANK )                  /* guess */
 	PORT_BIT( 0x10, IP_ACTIVE_LOW, IPT_UNKNOWN )                 /* must be ACTIVE_LOW or 'shadfrcj' jumps to the end (code at 0x04902e) */
 	PORT_BIT( 0xec, IP_ACTIVE_LOW, IPT_UNUSED )
 
@@ -479,7 +479,7 @@ static INPUT_PORTS_START( shadfrce )
 	PORT_DIPSETTING(      0x0000, DEF_STR( Off ) )
 	PORT_DIPSETTING(      0x0100, DEF_STR( On ) )
 	PORT_SERVICE( 0x0200, IP_ACTIVE_LOW )
-	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_VBLANK )	/* guess */
+	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_VBLANK )                /* guess */
 	PORT_BIT( 0x0800, IP_ACTIVE_LOW, IPT_UNUSED )
 	PORT_BIT( 0x1000, IP_ACTIVE_LOW, IPT_UNKNOWN )               /* must be ACTIVE_LOW or 'shadfrcj' jumps to the end (code at 0x04902e) */
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_UNUSED )
@@ -649,5 +649,5 @@ ROM_START( shadfrcj )
 ROM_END
 
 
-GAME( 1993, shadfrce, 0, shadfrce, shadfrce, 0, ROT0, "Technos Japan", "Shadow Force (US Version 2)", GAME_NO_COCKTAIL )
+GAME( 1993, shadfrce, 0,        shadfrce, shadfrce, 0, ROT0, "Technos Japan", "Shadow Force (US Version 2)", GAME_NO_COCKTAIL )
 GAME( 1993, shadfrcj, shadfrce, shadfrce, shadfrce, 0, ROT0, "Technos Japan", "Shadow Force (Japan Version 2)", GAME_NO_COCKTAIL )
