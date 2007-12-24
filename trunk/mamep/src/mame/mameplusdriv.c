@@ -51,6 +51,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( wof3sja )	/* 1997  Three Holy Swords / San Sheng Jian */
 	DRIVER( wofh ) 		/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( wofha ) 	/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
+	DRIVER( wofhfh ) 	/* 1999  Fire Phoenix / Huo Fenghuang */
 	DRIVER( dinob )		/* bootleg */
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */

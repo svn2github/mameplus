@@ -379,6 +379,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sfach",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofh",    HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
 	{"wofha",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
+	{"wofhfh",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wof3js",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofsj",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
 	{"wofsja",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
@@ -2003,4 +2004,5 @@ void cps2_objram_latch(void)
 	cps2_set_sprite_priorities();
 	memcpy(cps2_buffered_obj, cps2_objbase(), cps2_obj_size);
 }
+
 
