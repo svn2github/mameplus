@@ -1,15 +1,9 @@
 @echo off
+set PATH=D:\wgcc421\bin;D:\mamep_svn\extra\bin;C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\
 
-rem --------------------------------------
-rem MinGW Compiler Configure
-rem --------------------------------------
+set C_INCLUDE_PATH=D:\mamep_svn\extra\include
+set LIBRARY_PATH=D:\mamep_svn\extra\lib
+set INCLUDE=D:\mamep_svn\extravc\include\;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include\
+set LIB=D:\mamep_svn\extravc\lib\;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\
 
-set PATH=..\MinGW\bin;%PATH%
-
-rem --------------------------------------
-rem Extra Utils Configure
-rem --------------------------------------
-
-set PATH=extra\bin;%PATH%
-
-echo mingw32-make
+gcc -v
