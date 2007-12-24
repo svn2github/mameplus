@@ -10,8 +10,8 @@
 
  ***************************************************************************/
 
-#ifndef AUDIT32_H
-#define AUDIT32_H
+#ifndef mui_audit_H
+#define mui_audit_H
 
 void AuditDialog(HWND hParent);
 

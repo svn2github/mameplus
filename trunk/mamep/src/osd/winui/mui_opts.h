@@ -10,8 +10,8 @@
 
  ***************************************************************************/
 
-#ifndef M32OPTS_H
-#define M32OPTS_H
+#ifndef mui_opts_H
+#define mui_opts_H
 
 #include "osdcomm.h"
 #include "osd_cpu.h"

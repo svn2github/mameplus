@@ -27,9 +27,9 @@
 #endif
 #include <ddraw.h>
 
-#include "m32util.h"
+#include "mui_util.h"
 #include "screenshot.h"
-#include "mame32.h"
+#include "mameui.h"
 #include "dxdecode.h"
 #include "directdraw.h"
 

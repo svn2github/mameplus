@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-#include "mame32.h"
+#include "mameui.h"
 #include "bitmask.h"
 #include <stdlib.h> /* For malloc and free */
 

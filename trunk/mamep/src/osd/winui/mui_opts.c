@@ -12,7 +12,7 @@
 
  /***************************************************************************
 
-  m32opts.c
+  mui_opts.c
 
   Stores global options and per-game options;
 
@@ -37,15 +37,15 @@
 
 #include "screenshot.h"
 #include "bitmask.h"
-#include "mame32.h"
-#include "m32util.h"
+#include "mameui.h"
+#include "mui_util.h"
 #include "resource.h"
 #include "treeview.h"
 #include "file.h"
 #include "splitters.h"
 #include "dijoystick.h"
 #include "audit.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "picker.h"
 #include "winmain.h"
 #include "windows/winutf8.h"

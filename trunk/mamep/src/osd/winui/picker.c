@@ -30,10 +30,10 @@
 #include "picker.h"
 #include "resource.h"
 #include "screenshot.h"
-#include "win32ui.h"
+#include "winui.h"
 #include "bitmask.h"
-#include "m32opts.h"
-#include "m32util.h"
+#include "mui_opts.h"
+#include "mui_util.h"
 #include "treeview.h"
 #include "translate.h"
 

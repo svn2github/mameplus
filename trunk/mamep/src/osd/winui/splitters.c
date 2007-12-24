@@ -32,10 +32,10 @@
 #include <windowsx.h>
 #include <commctrl.h>
 
-#include "win32ui.h"
+#include "winui.h"
 #include "splitters.h"
 #include "bitmask.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "resource.h"
 #include "screenshot.h"
 

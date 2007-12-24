@@ -20,13 +20,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "MAME32.h"
+#include "mameui.h"
 #include "resource.h"
 #include "bitmask.h"
 #include "TreeView.h"
-#include "M32Util.h"
+#include "mui_util.h"
 
-#include "m32opts.h"
+#include "mui_opts.h"
 
 #if 0 //#if defined(__GNUC__)
 /* fix warning: cast does not match function type */

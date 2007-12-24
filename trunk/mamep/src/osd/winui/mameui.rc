@@ -15,7 +15,7 @@
 #define NOWINRES
 #include "windows.h"
 #include "commctrl.h"
-#include "mamevers32.rc"
+#include "mameversui.rc"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
@@ -309,7 +309,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 #ifndef HAZEMD
-IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\mame32.ico"
+IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\mameui.ico"
 #else
 IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\megadrv.ico"
 #endif
@@ -1416,7 +1416,7 @@ IDC_CURSOR_HSPLIT       CURSOR  DISCARDABLE     "res\\Splith.cur"
 // 24
 //
 
-1                       24      MOVEABLE PURE   "res\\mame32.manifest"
+1                       24      MOVEABLE PURE   "res\\mameui.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //

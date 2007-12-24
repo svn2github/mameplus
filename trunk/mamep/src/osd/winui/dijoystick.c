@@ -26,11 +26,11 @@
 // have problem with DX7??
 #undef DIRECTINPUT_VERSION
 #define DIRECTINPUT_VERSION	0x0500
-#include "mame32.h"	// include this first
+#include "mameui.h"	// include this first
 #include "screenshot.h"
 #include "directinput.h"
 #include "dijoystick.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "dxdecode.h"
 
 /***************************************************************************

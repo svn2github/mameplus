@@ -12,7 +12,7 @@
 
  /***************************************************************************
 
-  win32ui.c
+  winui.c
 
   Win32 GUI code.
 
@@ -47,7 +47,7 @@
 #include <wingdi.h>
 #include <time.h>
 
-#include "mame32.h"
+#include "mameui.h"
 #include "driver.h"
 #include "osdepend.h"
 #include "unzip.h"
@@ -60,11 +60,11 @@
 
 #include "datafile.h"
 #include "screenshot.h"
-#include "M32Util.h"
+#include "mui_util.h"
 #include "file.h"
-#include "audit32.h"
+#include "mui_audit.h"
 #include "Directories.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "Properties.h"
 #include "ColumnEdit.h"
 #include "picker.h"

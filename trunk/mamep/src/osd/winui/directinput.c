@@ -24,7 +24,7 @@
 #include <windows.h>
 
 #include "directinput.h"
-#include "m32util.h"
+#include "mui_util.h"
 
 /***************************************************************************
 	function prototypes

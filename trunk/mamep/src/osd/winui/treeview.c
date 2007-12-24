@@ -33,13 +33,13 @@
 #include <sys/types.h>
 #include <direct.h>
 #include <io.h>
-#include "mame32.h"	// include this first
+#include "mameui.h"	// include this first
 #include "driver.h"
 #include "hash.h"
-#include "M32Util.h"
+#include "mui_util.h"
 #include "bitmask.h"
 #include "screenshot.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "TreeView.h"
 #include "resource.h"
 #include "properties.h"

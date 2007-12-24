@@ -33,12 +33,12 @@ endif
 #-------------------------------------------------
 
 WINUIOBJS += \
-	$(WINUIOBJ)/m32util.o \
+	$(WINUIOBJ)/mui_util.o \
 	$(WINUIOBJ)/directinput.o \
 	$(WINUIOBJ)/dijoystick.o \
 	$(WINUIOBJ)/directdraw.o \
 	$(WINUIOBJ)/directories.o \
-	$(WINUIOBJ)/audit32.o \
+	$(WINUIOBJ)/mui_audit.o \
 	$(WINUIOBJ)/columnedit.o \
 	$(WINUIOBJ)/screenshot.o \
 	$(WINUIOBJ)/treeview.o \
@@ -52,8 +52,8 @@ WINUIOBJS += \
 	$(WINUIOBJ)/help.o \
 	$(WINUIOBJ)/history.o \
 	$(WINUIOBJ)/dialogs.o \
-	$(WINUIOBJ)/win32ui.o \
-	$(WINUIOBJ)/m32opts.o \
+	$(WINUIOBJ)/winui.o \
+	$(WINUIOBJ)/mui_opts.o \
 	$(WINUIOBJ)/layout.o \
 	$(WINUIOBJ)/translate.o \
 	$(WINUIOBJ)/helpids.o \
@@ -70,7 +70,7 @@ endif
 
 $(LIBOSD): $(WINUIOBJS)
 
-$(WINUIOBJ)/mame32.res: $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+$(WINUIOBJ)/mameui.res: $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
 
 $(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.h $(WINUISRC)/opthndlr.c
 
@@ -115,15 +115,15 @@ $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
 	@echo Compiling mame32 resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 
-$(WINUIOBJ)/mamevers32.rc: $(VERINFO32) $(SRC)/version.c
+$(WINUIOBJ)/mameversui.rc: $(VERINFO32) $(SRC)/version.c
 	@echo Emitting $@...
 	@$(VERINFO32) $(SRC)/version.c > $@
 
 ifeq ($(NO_DLL),)
-    GUIRESFILE = $(WINUIOBJ)/mame32.res
+    GUIRESFILE = $(WINUIOBJ)/mameui.res
 else
     UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mame32.rc $(WINUIOBJ)/mamevers32.rc
+    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
     GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
 endif
 

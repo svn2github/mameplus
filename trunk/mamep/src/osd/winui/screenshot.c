@@ -26,16 +26,16 @@
 #include <stdlib.h>
 #include <io.h>
 #include <fcntl.h>
-#include "mame32.h"
+#include "mameui.h"
 #include "driver.h"
 #include "png.h"
 #include "osdepend.h"
 #include "screenshot.h"
 #include "file.h"
 #include "bitmask.h"
-#include "m32opts.h"
-#include "m32util.h"
-#include "win32ui.h"
+#include "mui_opts.h"
+#include "mui_util.h"
+#include "winui.h"
 #include "translate.h"
 #include "strconv.h"
 

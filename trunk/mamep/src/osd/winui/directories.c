@@ -25,11 +25,11 @@
 #include <sys/stat.h>
 #include <assert.h>
 
-#include "MAME32.h"	// include this first
+#include "mameui.h"	// include this first
 #include "screenshot.h"
 #include "Directories.h"
 #include "resource.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "translate.h"
 
 #if defined(__GNUC__)

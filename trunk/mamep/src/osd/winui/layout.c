@@ -28,19 +28,19 @@
 #include <stdlib.h> /* For malloc and free */
 #include <string.h>
 
-#include "mame32.h"
+#include "mameui.h"
 #include "bitmask.h"
 #include "treeview.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "resource.h"
 #include "directories.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "translate.h"
 #include "splitters.h"
 #include "help.h"
-#include "audit32.h"
+#include "mui_audit.h"
 #include "screenshot.h"
-#include "win32ui.h"
+#include "winui.h"
 #include "properties.h"
 
 static BOOL FilterAvailable(int driver_index);

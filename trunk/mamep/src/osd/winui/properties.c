@@ -124,27 +124,27 @@ b) Exit the dialog.
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
 #include "audit.h"
-#include "audit32.h"
+#include "mui_audit.h"
 #include "bitmask.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "file.h"
 #include "resource.h"
 #include "dijoystick.h"     /* For DIJoystick avalibility. */
-#include "m32util.h"
+#include "mui_util.h"
 #include "directdraw.h"
 #include "properties.h"
 #include "treeview.h"
-#include "win32ui.h"
+#include "winui.h"
 #include "translate.h"
 
 #include "screenshot.h"
-#include "mame32.h"
+#include "mameui.h"
 #include "datamap.h"
 #include "help.h"
 #include "winmain.h"
 #include "strconv.h"
 #include "winutf8.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "datafile.h"
 
 //#ifdef MESS

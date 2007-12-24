@@ -23,11 +23,11 @@
 #include <windows.h>
 #include <stdio.h>
 
-#include "MAME32.h"
+#include "mameui.h"
 #include <driver.h>
-#include "m32util.h"
+#include "mui_util.h"
 #include "bitmask.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "translate.h"
 
 #include "history.h"

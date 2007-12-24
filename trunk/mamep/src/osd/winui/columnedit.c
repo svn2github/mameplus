@@ -27,10 +27,10 @@
 #include <commctrl.h>
 #include <commdlg.h>
 
-#include "win32ui.h"
+#include "winui.h"
 #include "resource.h"
 #include "bitmask.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "screenshot.h"
 #include "translate.h"
 
@@ -471,7 +471,7 @@ INT_PTR CALLBACK ColumnDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 {
 	static int shown[COLUMN_MAX];
 	static int order[COLUMN_MAX];
-	extern const WCHAR *column_names[COLUMN_MAX]; // from win32ui.c, should improve
+	extern const WCHAR *column_names[COLUMN_MAX]; // from winui.c, should improve
 
 
 	return InternalColumnDialogProc(hDlg, Msg, wParam, lParam, COLUMN_MAX,

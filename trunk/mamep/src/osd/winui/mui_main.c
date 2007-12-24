@@ -19,7 +19,7 @@
 #undef main
 
 #include "screenshot.h"
-#include "win32ui.h"
+#include "winui.h"
 
 
 int WINAPI WinMain(HINSTANCE    hInstance,

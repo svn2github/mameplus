@@ -13,7 +13,7 @@
  
  /***************************************************************************
 
-  audit32.c
+  mui_audit.c
 
   Audit dialog
 
@@ -28,9 +28,9 @@
 #include <stdio.h>
 #include <richedit.h>
 
-#include "mame32.h"
+#include "mameui.h"
 #include "screenshot.h"
-#include "win32ui.h"
+#include "winui.h"
 
 #include <audit.h>
 #include <unzip.h>
@@ -38,9 +38,9 @@
 #include "resource.h"
 
 #include "bitmask.h"
-#include "m32opts.h"
-#include "m32util.h"
-#include "audit32.h"
+#include "mui_opts.h"
+#include "mui_util.h"
+#include "mui_audit.h"
 #include "properties.h"
 #include "winmain.h"
 #include "translate.h"

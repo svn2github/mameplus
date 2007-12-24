@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Developer Studio generated include file.
-// Used by mame32.rc
+// Used by mameui.rc
 //
 #define IDPAUSE                         3
 #define IDAPPLY                         4

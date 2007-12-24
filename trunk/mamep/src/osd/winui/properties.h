@@ -14,11 +14,11 @@
 #define PROPERTIES_H
 
 /* Get title string to display in the top of the property page,
- * Called also in Audit32.c
+ * Called also in mui_audit.c
  */
 LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex);
 
-/* Called in win32ui.c to create the property page */
+/* Called in winui.c to create the property page */
 void	InitPropertyPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYPE opt_type, int folder_id, int game_num);
 
 #define PROPERTIES_PAGE 0

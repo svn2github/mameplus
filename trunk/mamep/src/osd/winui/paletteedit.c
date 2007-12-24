@@ -22,10 +22,10 @@
 #include <windowsx.h>
 #include <commctrl.h>
 
-#include "MAME32.h"
+#include "mameui.h"
 #include "driver.h"
 #include "bitmask.h"
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "resource.h"
 #include "translate.h"
 

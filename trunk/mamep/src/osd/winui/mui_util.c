@@ -12,7 +12,7 @@
 
 /***************************************************************************
 
-  M32Util.c
+  mui_util.c
 
  ***************************************************************************/
 
@@ -24,17 +24,17 @@
 #include <assert.h>
 #include <stdio.h>
 
-#include "mame32.h"	// include this first
+#include "mameui.h"	// include this first
 #include "unzip.h"
 #include "bitmask.h"
 #include "screenshot.h"
 #include "sound/samples.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "strconv.h"
 #include "translate.h"
 
 #ifdef USE_IPS
-#include "m32opts.h"
+#include "mui_opts.h"
 #include "patch.h"
 #endif /* USE_IPS */
 

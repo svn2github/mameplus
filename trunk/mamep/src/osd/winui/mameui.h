@@ -15,14 +15,14 @@
 
 #undef assert
 #ifdef MAME_DEBUG
-#include "M32Util.h"
+#include "mui_util.h"
 #define assert(x)	do { if (!(x)) { printf("assert: %s:%d: %s", __FILE__, __LINE__, #x); dprintf("assert: %s:%d: %s", __FILE__, __LINE__, #x); exit(-1); } } while (0)
 #else
 #define assert(x)
 #endif
 
 #include "screenshot.h"
-#include "win32ui.h"
+#include "winui.h"
 
 #if !defined(MAME32NAME)
 #define MAME32NAME "MAME32"

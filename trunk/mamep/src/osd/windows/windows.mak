@@ -357,7 +357,7 @@ VERSIONRES = $(WINOBJ)/version.res
 #-------------------------------------------------
 
 ifneq ($(WINUI),)
-include $(SRC)/osd/winui/ui.mak
+include $(SRC)/osd/winui/winui.mak
 endif
 
 

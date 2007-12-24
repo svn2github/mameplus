@@ -30,10 +30,10 @@
 #include <tchar.h>
 #include <stdlib.h>
 
-#include "mame32.h"
+#include "mameui.h"
 #include "translate.h"
 #include "tabview.h"
-#include "m32util.h"
+#include "mui_util.h"
 
 
 struct TabViewInfo

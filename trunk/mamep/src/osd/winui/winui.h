@@ -13,7 +13,7 @@
 #ifndef WIN32UI_H
 #define WIN32UI_H
 
-#include "MAME32.h"	// include this first
+#include "mameui.h"	// include this first
 #include <driver.h>
 
 #if !defined(SEARCH_PROMPT)
@@ -44,7 +44,7 @@ struct _driverw
 	WCHAR *source_file;
 };
 
-/* in win32ui.c */
+/* in winui.c */
 extern struct _driverw **driversw;
 
 /* in layout.c */
