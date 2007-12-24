@@ -25,19 +25,13 @@ include config.def
 # src/$(TARGET)/$(SUBTARGET).mak
 #-------------------------------------------------
 
-ifneq ($(HAZEMD),)
+ifneq ($(NEOCPSMAME),)
     TARGET = mame
-    SUBTARGET = hazemd
-    USE_DRIVER_SWITCH=
+    SUBTARGET = neocpsmame
 else
-    ifneq ($(NEOCPSMAME),)
-        TARGET = mame
-        SUBTARGET = neocpsmame
-    else
-        ifeq ($(TARGET),)
+    ifeq ($(TARGET),)
         TARGET = mame
     endif
-endif
 endif
 
 ifeq ($(SUBTARGET),)
@@ -386,10 +380,6 @@ ifneq ($(NEOCPSMAME),)
     DEFS += -DNEOCPSMAME
 endif
 
-ifneq ($(HAZEMD),)
-    DEFS += -DHAZEMD
-endif
-
 
 #-------------------------------------------------
 # compile flags
@@ -554,11 +544,7 @@ LIBOCORE = $(OBJ)/libocore.a
 LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
-ifeq ($(HAZEMD),)
-    VERSIONOBJ = $(OBJ)/version.o
-else
-    VERSIONOBJ = $(OBJ)/versionmd.o
-endif
+VERSIONOBJ = $(OBJ)/version.o
 
 
 #-------------------------------------------------

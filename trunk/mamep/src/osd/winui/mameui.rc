@@ -307,11 +307,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-#ifndef HAZEMD
 IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\mameui.ico"
-#else
-IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\megadrv.ico"
-#endif
 IDI_WIN_ROMS            ICON    DISCARDABLE     "res\\win_roms.ico"
 IDI_WIN_NOROMS          ICON    DISCARDABLE     "res\\win_noro.ico"
 IDI_WIN_UNKNOWN         ICON    DISCARDABLE     "res\\win_unkn.ico"
