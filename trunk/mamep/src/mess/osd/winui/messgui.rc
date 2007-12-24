@@ -1,2 +1,2 @@
-#include "mame32.rc"
+#include "mameui.rc"
 #include "mess.rc"
