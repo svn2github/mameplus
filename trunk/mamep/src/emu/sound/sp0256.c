@@ -1225,7 +1225,7 @@ static void sp0256_stop(void *token)
 	free( sp->scratch );
 }
 
-void sp0256_reset(void *token)
+static void sp0256_reset(void *token)
 {
 	struct sp0256 *sp = token;
 
@@ -1380,4 +1380,5 @@ void sp0256_get_info(void *token, UINT32 state, sndinfo *info)
 		case SNDINFO_STR_CORE_CREDITS:					info->s = "Copyright (c) 2006, Joseph Zbiciak, tim lindner"; break;
 	}
 }
+
 

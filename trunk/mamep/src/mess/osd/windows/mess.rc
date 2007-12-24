@@ -52,7 +52,7 @@ BEGIN
             MENUITEM SEPARATOR
             MENUITEM "Customize Emulated Keyboard...",     ID_KEYBOARD_CUSTOMIZE
         END
-        MENUITEM "&Joysticks",                  ID_OPTIONS_JOYSTICKS, GRAYED
+        //MENUITEM "&Joysticks",                  ID_OPTIONS_JOYSTICKS, GRAYED
         MENUITEM "&Miscellaneous Inputs...",    ID_OPTIONS_MISCINPUT
         MENUITEM "&Analog Controls...",         ID_OPTIONS_ANALOGCONTROLS
     END

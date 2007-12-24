@@ -87,7 +87,7 @@ typedef struct {
 } minx_regs;
 
 static minx_regs regs;
-int minx_icount;
+static int minx_icount;
 
 #define rd(offset)	program_read_byte_8( offset )
 #define wr(offset,data)	program_write_byte_8( offset, data )
@@ -319,6 +319,7 @@ void minx_get_info( UINT32 state, cpuinfo *info ) {
 	case CPUINFO_STR_REGISTER + MINX_YI:			sprintf( info->s = cpuintrf_temp_str(), "YI:%02X", regs.YI ); break;
 	}
 }
+
 
 
 
