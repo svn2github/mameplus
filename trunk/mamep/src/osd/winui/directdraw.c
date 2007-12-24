@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -18,34 +19,39 @@
  
  ***************************************************************************/
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#undef _UNICODE
+#undef UNICODE
 
 #include <windows.h>
 
+// standard C headers
 #if !defined(__GNUC__)
 #include <multimon.h>
 #endif
 #include <ddraw.h>
+#include <tchar.h>
 
-#include "mui_util.h"
-#include "screenshot.h"
-#include "mameui.h"
-#include "dxdecode.h"
+// MAME/MAMEUI headers
+#include "winui.h"
 #include "directdraw.h"
+#include "mui_util.h" // For ErrorMsg
+#include "dxdecode.h" // For DirectXDecodeError
 
 /***************************************************************************
 	function prototypes
  ***************************************************************************/
 
 static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
-							  LPSTR 	lpDriverDescription,
-							  LPSTR 	lpDriverName,		 
+							  LPTSTR 	lpDriverDescription,
+							  LPTSTR 	lpDriverName,		 
 							  LPVOID	lpContext,
 							  HMONITOR	hm);
 
 static BOOL WINAPI DDEnumOldInfo(GUID FAR *lpGUID,
-								 LPSTR	   lpDriverDescription,
-								 LPSTR	   lpDriverName,		
+								 LPTSTR	   lpDriverDescription,
+								 LPTSTR	   lpDriverName,		
 								 LPVOID    lpContext);
 
 static void CalculateDisplayModes(void);
@@ -62,9 +68,9 @@ static HRESULT CALLBACK EnumDisplayModesCallback2(DDSURFACEDESC2* pddsd, LPVOID 
 
 typedef struct
 {
-   char* name;
+   TCHAR* name;
    GUID* lpguid;
-   char* driver;
+   TCHAR* driver;
 } display_type;
 
 typedef HRESULT (WINAPI *ddc_proc)(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD,
@@ -146,7 +152,7 @@ BOOL DirectDraw_Initialize(void)
 
 	/* Turn off error dialog for this call */
 	error_mode = SetErrorMode(0);
-	g_hDLL = LoadLibrary("ddraw.dll");
+	g_hDLL = LoadLibrary(TEXT("ddraw.dll"));
 	SetErrorMode(error_mode);
 
 	if (g_hDLL == NULL)
@@ -248,11 +254,8 @@ void DirectDraw_Close(void)
 	
 	for (i = 0; i < g_nNumDisplays; i++)
 	{
-		if (g_Displays[i].name != NULL)
-		{
-			free(g_Displays[i].name);
-			g_Displays[i].name = NULL;
-		}
+		free(g_Displays[i].name);
+		g_Displays[i].name = NULL;
 
 		if (g_Displays[i].lpguid != NULL)
 		{
@@ -260,11 +263,8 @@ void DirectDraw_Close(void)
 			g_Displays[i].lpguid = NULL;
 		}
 
-		if (g_Displays[i].driver != NULL)
-		{
-			free(g_Displays[i].driver);
-			g_Displays[i].driver = NULL;
-		}
+		free(g_Displays[i].driver);
+		g_Displays[i].driver = NULL;
 	}
 	g_nNumDisplays = 0;
 	
@@ -317,12 +317,12 @@ BOOL DirectDraw_HasRefresh(void)
 	return g_bRefresh;
 }
 
-const char* DirectDraw_GetDisplayName(int num_display)
+LPCTSTR DirectDraw_GetDisplayName(int num_display)
 {
 	return g_Displays[num_display].name;
 }
 
-const char* DirectDraw_GetDisplayDriver(int num_display)
+LPCTSTR DirectDraw_GetDisplayDriver(int num_display)
 {
 	return g_Displays[num_display].driver;
 }
@@ -332,22 +332,22 @@ const char* DirectDraw_GetDisplayDriver(int num_display)
 /****************************************************************************/
 
 static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
-							  LPSTR 	lpDriverDescription,
-							  LPSTR 	lpDriverName,		 
+							  LPTSTR 	lpDriverDescription,
+							  LPTSTR 	lpDriverName,		 
 							  LPVOID	lpContext,
 							  HMONITOR	hm)
 {
 	if (lpGUID == NULL)
 		return DDENUMRET_OK;
 
-	g_Displays[g_nNumDisplays].name = malloc(strlen(lpDriverDescription) + 1);
-	strcpy(g_Displays[g_nNumDisplays].name, lpDriverDescription);
+	g_Displays[g_nNumDisplays].name = malloc((_tcslen(lpDriverDescription) + 1) * sizeof(TCHAR));
+	_tcscpy(g_Displays[g_nNumDisplays].name, lpDriverDescription);
 
 	g_Displays[g_nNumDisplays].lpguid = (LPGUID)malloc(sizeof(GUID));
 	memcpy(g_Displays[g_nNumDisplays].lpguid, lpGUID, sizeof(GUID));
 
-	g_Displays[g_nNumDisplays].driver = malloc(strlen(lpDriverName) + 1);
-	strcpy(g_Displays[g_nNumDisplays].driver, lpDriverName);
+	g_Displays[g_nNumDisplays].driver = malloc((_tcslen(lpDriverName) + 1) * sizeof(TCHAR));
+	_tcscpy(g_Displays[g_nNumDisplays].driver, lpDriverName);
 
 	g_nNumDisplays++;
 	if (g_nNumDisplays == MAX_DISPLAYS)
@@ -357,8 +357,8 @@ static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
 }
 
 static BOOL WINAPI DDEnumOldInfo(GUID FAR *lpGUID,
-								 LPSTR	   lpDriverDescription,
-								 LPSTR	   lpDriverName,		
+								 LPTSTR	   lpDriverDescription,
+								 LPTSTR	   lpDriverName,		
 								 LPVOID    lpContext)
 {
 	return DDEnumInfo(lpGUID, lpDriverDescription, lpDriverName, lpContext, NULL);

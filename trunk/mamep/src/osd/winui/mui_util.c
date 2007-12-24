@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32	-  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -16,21 +17,27 @@
 
  ***************************************************************************/
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 #include <windows.h>
 #include <shellapi.h>
 #include <shlwapi.h>
+
+// standard C headers
 #include <assert.h>
 #include <stdio.h>
+#include <tchar.h>
 
+// MAME/MAMEUI headers
 #include "mameui.h"	// include this first
 #include "unzip.h"
-#include "bitmask.h"
-#include "screenshot.h"
 #include "sound/samples.h"
-#include "mui_util.h"
+#include "winutf8.h"
 #include "strconv.h"
+#include "winui.h"
+#include "mui_util.h"
 #include "translate.h"
 
 #ifdef USE_IPS
@@ -102,9 +109,9 @@ void __cdecl ErrorMsg(const char* fmt, ...)
 
 	vsprintf(buf, fmt, va);
 
-	MessageBox(GetActiveWindow(), _Unicode(buf), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetActiveWindow(), _Unicode(buf), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
 
-	strcpy(buf2, MAME32NAME ": ");
+	strcpy(buf2, MAMEUINAME ": ");
 	strcat(buf2,buf);
 	strcat(buf2, "\n");
 

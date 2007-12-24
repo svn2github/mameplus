@@ -24,12 +24,12 @@
 #include "screenshot.h"
 #include "winui.h"
 
-#if !defined(MAME32NAME)
-#define MAME32NAME "MAME32"
+#if !defined(MAMEUINAME)
+#define MAMEUINAME "MAME32"
 #endif
 	
-#if !defined(TEXT_MAME32NAME)
-#define TEXT_MAME32NAME TEXT("MAME32")
+#if !defined(TEXT_MAMEUINAME)
+#define TEXT_MAMEUINAME TEXT("MAME32")
 #endif
 
 #if !defined(MAMENAME)

@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by mameui.rc
 //
 #define IDPAUSE                         3
@@ -352,6 +352,8 @@
 #define IDC_REFRESHSPEED                1255
 #define IDC_SPEED                       1256
 #define IDC_SPEEDDISP                   1257
+#define IDC_FILTER_HORIZONTAL           1265
+#define IDC_FILTER_VERTICAL             1266
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
@@ -544,7 +546,8 @@
 #define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
 #define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
 #define ID_BIOS_PROPERTIES		40102
-
+#define ID_HELP_WHATS_NEWUI             40104
+	
 #define ID_STYLE_NONE                   40190 // IMAGE_MENU
 #define ID_STYLE_BASIC                  40191 // IMAGE_MENU
 #define ID_STYLE_GRAY                   40192 // IMAGE_MENU

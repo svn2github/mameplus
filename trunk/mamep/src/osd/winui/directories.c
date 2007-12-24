@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -12,22 +13,27 @@
 
 /***************************************************************************
 
-  Directories.c
+  directories.c
 
 ***************************************************************************/
 
+// standard windows headers
 #define COBJMACROS
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shlobj.h>
+
+// standard C headers
 #include <sys/stat.h>
 #include <assert.h>
+#include <tchar.h>
 
+// MAME/MAMEUI headers
 #include "mameui.h"	// include this first
-#include "screenshot.h"
-#include "Directories.h"
+#include "directories.h"
 #include "resource.h"
 #include "mui_util.h"
 #include "translate.h"
@@ -71,9 +77,9 @@ typedef union
 
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
 #ifdef MESS
-BOOL BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
+BOOL            BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
 #else
-static BOOL         BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
+static BOOL     BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
 #endif
 
 static void     DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, const WCHAR* pText);
@@ -606,7 +612,7 @@ static BOOL Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 		}
 		else
 		{
-			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
+			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAMEUINAME, MB_OKCANCEL) == IDOK)
 				bResult = TRUE;
 		}
 	}
@@ -696,7 +702,7 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 		}
 		else
 		{
-			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAME32NAME, MB_OKCANCEL) == IDOK)
+			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAMEUINAME, MB_OKCANCEL) == IDOK)
 				bResult = TRUE;
 		}
 	}

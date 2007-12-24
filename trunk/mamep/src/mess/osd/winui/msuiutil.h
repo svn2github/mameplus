@@ -1,5 +1,5 @@
-#ifndef MS32UTIL_H
-#define MS32UTIL_H
+#ifndef MSUIUTIL_H
+#define MSUIUTIL_H
 
 #include <windows.h>
 
@@ -8,5 +8,5 @@ BOOL DriverIsModified(int driver_index);
 BOOL DriverUsesMouse(int driver_index);
 BOOL DriverHasDevice(const game_driver *gamedrv, iodevice_t type);
 
-#endif /* MS32UTIL_H */
+#endif /* MSUIUTIL_H */
 

@@ -1,15 +1,15 @@
-//mamep: mame32 v113u3
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
 
-***************************************************************************/
+ ***************************************************************************/
  
 /***************************************************************************
 
@@ -171,6 +171,7 @@ static FARPROC fnIsThemed;
 
 //#ifdef MESS
 // done like this until I figure out a better idea
+#include "messopts.h"
 #include "resourcems.h"
 //#include "propertiesms.h"
 //#endif
@@ -568,13 +569,13 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 		{
 			if (!g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(g_nPropertyMode, g_nFolder, g_nGame))
 			{
-				pspages[maxPropSheets].dwSize                     = sizeof(PROPSHEETPAGE);
-				pspages[maxPropSheets].dwFlags                    = 0;
-				pspages[maxPropSheets].hInstance                  = hInst;
-				pspages[maxPropSheets].pszTemplate                = MAKEINTRESOURCE(g_propSheets[i].dwDlgID);
-				pspages[maxPropSheets].pfnCallback                = NULL;
-				pspages[maxPropSheets].lParam                     = 0;
-				pspages[maxPropSheets].pfnDlgProc                 = g_propSheets[i].pfnDlgProc;
+				pspages[maxPropSheets].dwSize      = sizeof(PROPSHEETPAGE);
+				pspages[maxPropSheets].dwFlags     = 0;
+				pspages[maxPropSheets].hInstance   = hInst;
+				pspages[maxPropSheets].pszTemplate = MAKEINTRESOURCE(g_propSheets[i].dwDlgID);
+				pspages[maxPropSheets].pfnCallback = NULL;
+				pspages[maxPropSheets].lParam      = 0;
+				pspages[maxPropSheets].pfnDlgProc  = g_propSheets[i].pfnDlgProc;
 				maxPropSheets++;
 			}
 		}
@@ -628,15 +629,15 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 		return;
 
 	/* Fill in the property sheet header */
-	pshead.hwndParent                 = hWnd;
-	pshead.dwSize                     = sizeof(PROPSHEETHEADER);
-	pshead.dwFlags                    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
-	pshead.pfnCallback                = PropSheetCallbackProc;
-	pshead.hInstance                  = hInst;
-	pshead.pszCaption                 = _UIW(TEXT("Default Game"));
-	pshead.nStartPage                 = 0;
-	pshead.pszIcon                    = MAKEINTRESOURCE(IDI_MAME32_ICON);
-	pshead.ppsp                       = pspage;
+	pshead.hwndParent   = hWnd;
+	pshead.dwSize       = sizeof(PROPSHEETHEADER);
+	pshead.dwFlags      = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
+	pshead.pfnCallback  = PropSheetCallbackProc;
+	pshead.hInstance    = hInst;
+	pshead.pszCaption   = _UIW(TEXT("Default Game"));
+	pshead.nStartPage   = 0;
+	pshead.pszIcon      = MAKEINTRESOURCE(IDI_MAME32_ICON);
+	pshead.ppsp         = pspage;
 
 #ifdef TREE_SHEET
 	if (GetShowTreeSheet())
@@ -2197,11 +2198,11 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU: 
-		HelpFunction((HWND)wParam, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		HelpFunction((HWND)wParam, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
 		break; 
 
 	}

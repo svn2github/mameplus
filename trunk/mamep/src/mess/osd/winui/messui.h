@@ -1,5 +1,5 @@
-#ifndef __MESS32UI_H__
-#define __MESS32UI_H__
+#ifndef __MESSUI_H__
+#define __MESSUI_H__
 
 #include "driver.h"
 #include "resourcems.h"
@@ -19,4 +19,4 @@ BOOL MessApproveImageList(HWND hParent, int nDriver);
 
 void MessCopyDeviceOption(core_options *opts, const game_driver *gamedrv, const device_class *devclass, int device_index, int global_index);
 
-#endif // __MESS32UI_H__
+#endif // __MESSUI_H__

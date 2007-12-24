@@ -33,7 +33,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "Configuration"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
+    ICON            IDI_MAMEUI_ICON,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,161,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,20,38,178,1
@@ -44,4 +44,4 @@ END
 
 /////////////////////////////////////////////////////////////////////////////
 
-#include "mame32.rc"
+#include "mameui.rc"

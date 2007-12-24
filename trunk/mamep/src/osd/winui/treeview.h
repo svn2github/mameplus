@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -47,14 +48,14 @@
 typedef struct
 {
 	const WCHAR *m_lpTitle; // Folder Title
-	const char  *short_name;  // for saving in the .ini
-	UINT         m_nFolderId; // ID
-	UINT         m_nIconId; // if >= 0, resource id of icon (IDI_xxx), otherwise index in image list
-	DWORD        m_dwUnset; // Excluded filters
-	DWORD        m_dwSet;   // Implied filters
-	void         (*m_pfnCreateFolders)(int parent_index); // Constructor for special folders
-	BOOL         (*m_pfnQuery)(int nDriver);              // Query function
-	BOOL         m_bExpectedResult;                       // Expected query result
+	const char *short_name;  // for saving in the .ini
+	UINT        m_nFolderId; // ID
+	UINT        m_nIconId; // if >= 0, resource id of icon (IDI_xxx), otherwise index in image list
+	DWORD       m_dwUnset; // Excluded filters
+	DWORD       m_dwSet;   // Implied filters
+	void        (*m_pfnCreateFolders)(int parent_index); // Constructor for special folders
+	BOOL        (*m_pfnQuery)(int nDriver);              // Query function
+	BOOL        m_bExpectedResult;                       // Expected query result
 } FOLDERDATA, *LPFOLDERDATA;
 
 typedef struct

@@ -1,14 +1,15 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
 
-***************************************************************************/
+ ***************************************************************************/
 
 /***************************************************************************
 
@@ -17,31 +18,32 @@
   MAME specific TreeView definitions (and maybe more in the future)
 
 ***************************************************************************/
-
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
 #include <commctrl.h>
+
+// standard C headers
 #include <stdio.h>  /* for sprintf */
 #include <stdlib.h> /* For malloc and free */
 #include <string.h>
 
-#include "mameui.h"
+// MAME/MAMEUI headers
 #include "bitmask.h"
 #include "treeview.h"
 #include "mui_util.h"
 #include "resource.h"
 #include "directories.h"
 #include "mui_opts.h"
-#include "translate.h"
 #include "splitters.h"
 #include "help.h"
 #include "mui_audit.h"
-#include "screenshot.h"
 #include "winui.h"
 #include "properties.h"
+#include "translate.h"
 
 static BOOL FilterAvailable(int driver_index);
 
@@ -143,17 +145,17 @@ const DIRECTORYINFO g_directoryInfo[] =
 const SPLITTERINFO g_splitterInfo[] =
 {
 	{ 0.25,	IDC_SPLITTER,	IDC_TREE,	IDC_LIST,		AdjustSplitter1Rect },
-	{ 0.5,	IDC_SPLITTER2,	IDC_LIST,	IDC_SSFRAME,		AdjustSplitter2Rect },
+	{ 0.5,	IDC_SPLITTER2,	IDC_LIST,	IDC_SSFRAME,	AdjustSplitter2Rect },
 	{ -1 }
 };
 
 const MAMEHELPINFO g_helpInfo[] =
 {
-	{ ID_HELP_CONTENTS,     TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_overview.htm") },
-	{ ID_HELP_WHATS_NEW32,	TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_changes.htm") },
-	{ ID_HELP_TROUBLE,      TRUE,	TEXT(MAME32HELP) TEXT("::/html/mame32_support.htm") },
-	{ ID_HELP_RELEASE,      FALSE,	TEXT("windows.txt") },
-	{ ID_HELP_WHATS_NEW,	TRUE,	TEXT(MAME32HELP) TEXT("::/docs/whatsnew.txt") },
+	{ ID_HELP_CONTENTS,		TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_overview.htm") },
+	{ ID_HELP_WHATS_NEWUI,	TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_changes.txt") },
+	{ ID_HELP_TROUBLE,		TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_support.htm") },
+	{ ID_HELP_RELEASE,		FALSE,	TEXT("windows.txt") },
+	{ ID_HELP_WHATS_NEW,	TRUE,	TEXT(MAMEUIHELP) TEXT("::/docs/whatsnew.txt") },
 	{ -1 }
 };
 
@@ -168,7 +170,7 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_INPUT,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_CONTROLLER,	GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
-	{ TRUE, 	PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
+	{ TRUE,		PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
 	{ TRUE,		PropSheetFilter_Driver,	IDD_PROP_DRIVER,		GameOptionsProc },
 	{ FALSE }
 };

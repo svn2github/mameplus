@@ -1,4 +1,4 @@
-//Microsoft Developer Studio generated resource script.
+// Microsoft Visual C++ generated resource script.
 //
 #include "resourcems.h"
 
@@ -15,13 +15,12 @@
 #define NOWINRES
 #include "windows.h"
 #include "commctrl.h"
-#include "mameversui.rc"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (USA) resources
+// English (U.S.) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -46,7 +45,7 @@ BEGIN
     END
 END
 
-IDR_UI_MENU MENU PRELOAD DISCARDABLE 
+IDR_UI_MENU MENU
 BEGIN
     POPUP "&File"
     BEGIN
@@ -1598,6 +1597,7 @@ END
 //
 // Generated from the TEXTINCLUDE 3 resource.
 //
+#include "mameversui.rc" // Version block
 
 
 /////////////////////////////////////////////////////////////////////////////

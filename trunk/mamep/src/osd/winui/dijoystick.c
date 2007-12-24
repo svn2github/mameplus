@@ -1,10 +1,10 @@
-//mamep: mame32 v118u5
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -13,25 +13,28 @@
 
 /***************************************************************************
 
-  DIJoystick.c
+  dijoystick.c
 
  ***************************************************************************/
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 #include <windows.h>
+
+// standard C headers
 #include <assert.h>
 #include <stdio.h>
 #include <math.h>
-// have problem with DX7??
-#undef DIRECTINPUT_VERSION
-#define DIRECTINPUT_VERSION	0x0500
-#include "mameui.h"	// include this first
-#include "screenshot.h"
+#include <tchar.h>
+
+// MAMEUI headers
+#include "winui.h"
 #include "directinput.h"
 #include "dijoystick.h"
-#include "mui_util.h"
-#include "dxdecode.h"
+#include "mui_util.h" // For ErrorMsg
+#include "dxdecode.h" // for DirectXDecodeError
 
 /***************************************************************************
     function prototypes
@@ -68,7 +71,7 @@ struct OSDJoystick  DIJoystick =
 typedef struct
 {
 	GUID guid;
-	WCHAR *name;
+	TCHAR *name;
 
 	int offset; /* offset in dijoystate */
 } axis_type;
@@ -78,7 +81,7 @@ typedef struct
 	BOOL use_joystick;
 
 	GUID guidDevice;
-	WCHAR *name;
+	TCHAR *name;
 
 	BOOL is_light_gun;
 
@@ -147,7 +150,7 @@ static int DIJoystick_init(void)
 	hr = IDirectInput_EnumDevices(di, DIDEVTYPE_JOYSTICK,
 				 (LPDIENUMDEVICESCALLBACK)DIJoystick_EnumDeviceProc,
 				 NULL,
-				 DIEDFL_ATTACHEDONLY);
+				 DIEDFL_ATTACHEDONLY  );
 	if (FAILED(hr))
 	{
 		ErrorMsg("DirectInput EnumDevices() failed: %s", DirectXDecodeError(hr));
@@ -387,7 +390,7 @@ int DIJoystick_GetNumPhysicalJoysticks()
 	return This.num_joysticks;
 }
 
-WCHAR* DIJoystick_GetPhysicalJoystickName(int num_joystick)
+TCHAR* DIJoystick_GetPhysicalJoystickName(int num_joystick)
 {
 	return This.joysticks[num_joystick].name;
 }
@@ -397,7 +400,7 @@ int DIJoystick_GetNumPhysicalJoystickAxes(int num_joystick)
 	return This.joysticks[num_joystick].num_axes;
 }
 
-WCHAR* DIJoystick_GetPhysicalJoystickAxisName(int num_joystick, int num_axis)
+TCHAR* DIJoystick_GetPhysicalJoystickAxisName(int num_joystick, int num_axis)
 {
 	return This.joysticks[num_joystick].axes[num_axis].name;
 }
@@ -408,13 +411,13 @@ WCHAR* DIJoystick_GetPhysicalJoystickAxisName(int num_joystick, int num_axis)
 
 BOOL CALLBACK DIJoystick_EnumDeviceProc(LPDIDEVICEINSTANCE pdidi, LPVOID pv)
 {
-	WCHAR buffer[5000];
+	TCHAR buffer[5000];
 
 	This.joysticks[This.num_joysticks].guidDevice = pdidi->guidInstance;
 
-	swprintf(buffer, TEXT("%s (%s)"), pdidi->tszProductName, pdidi->tszInstanceName);
-	This.joysticks[This.num_joysticks].name = (WCHAR *)malloc((wcslen(buffer) + 1) * sizeof(WCHAR));
-	wcscpy(This.joysticks[This.num_joysticks].name, buffer);
+	_stprintf(buffer, TEXT("%s (%s)"), pdidi->tszProductName, pdidi->tszInstanceName);
+	This.joysticks[This.num_joysticks].name = (TCHAR *)malloc((_tcslen(buffer) + 1) * sizeof(TCHAR));
+	_tcscpy(This.joysticks[This.num_joysticks].name, buffer);
 
 	This.num_joysticks++;
 
@@ -430,8 +433,8 @@ static BOOL CALLBACK DIJoystick_EnumAxisObjectsProc(LPCDIDEVICEOBJECTINSTANCE lp
 
 	joystick->axes[joystick->num_axes].guid = lpddoi->guidType;
 
-	joystick->axes[joystick->num_axes].name = (WCHAR *)malloc((wcslen(lpddoi->tszName) + 1) * sizeof(WCHAR));
-	wcscpy(joystick->axes[joystick->num_axes].name, lpddoi->tszName);
+	joystick->axes[joystick->num_axes].name = (TCHAR *)malloc((_tcslen(lpddoi->tszName) + 1) * sizeof(TCHAR));
+	_tcscpy(joystick->axes[joystick->num_axes].name, lpddoi->tszName);
 
 	joystick->axes[joystick->num_axes].offset = lpddoi->dwOfs;
 
@@ -523,7 +526,7 @@ static void InitJoystick(joystick_type *joystick)
 	joystick->did	   = NULL;
 	joystick->num_axes = 0;
 
-	joystick->is_light_gun = (wcscmp(joystick->name, TEXT("ACT LABS GS (ACT LABS GS)")) == 0);
+	joystick->is_light_gun = (_tcscmp(joystick->name, TEXT("ACT LABS GS (ACT LABS GS)")) == 0);
 
 	/* get a did1 interface first... */
 	hr = IDirectInput_CreateDevice(di, &joystick->guidDevice, &didTemp, NULL);

@@ -1,10 +1,10 @@
-//mamep: mame32 v118u5
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -19,30 +19,30 @@
 
 ***************************************************************************/
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 
 #include <windows.h>
 #include <windowsx.h>
 #include <commctrl.h>
-#include <stdio.h>
 #include <richedit.h>
 
-#include "mameui.h"
-#include "screenshot.h"
-#include "winui.h"
+// standard C headers
+#include <stdio.h>
+#include <tchar.h>
 
-#include <audit.h>
-#include <unzip.h>
-
+// MAME/MAMEUI headers
+#include "mameui.h"	// include this first
+#include "winutf8.h"
+#include "strconv.h"
+#include "audit.h"
 #include "resource.h"
 
-#include "bitmask.h"
 #include "mui_opts.h"
 #include "mui_util.h"
-#include "mui_audit.h"
 #include "properties.h"
-#include "winmain.h"
 #include "translate.h"
 
 
@@ -115,20 +115,20 @@ const WCHAR *GetAuditString(int audit_result)
 {
 	switch (audit_result)
 	{
-		case CORRECT:
-		case BEST_AVAILABLE:
-			return _UIW(TEXT("Yes"));
+	case CORRECT :
+	case BEST_AVAILABLE :
+		return _UIW(TEXT("Yes"));
 
-		case NOTFOUND:
-		case INCORRECT:
-			return _UIW(TEXT("No"));
-			break;
+	case NOTFOUND :
+	case INCORRECT :
+		return _UIW(TEXT("No"));
+		break;
 
-		case UNKNOWN:
-			return TEXT("?");
+	case UNKNOWN :
+		return TEXT("?");
 
-		default:
-			dprintf("unknown audit value %i",audit_result);
+	default:
+		dprintf("unknown audit value %i",audit_result);
 	}
 
 	return TEXT("?");
@@ -154,7 +154,7 @@ BOOL IsAuditResultNo(int audit_result)
     Internal functions
  ***************************************************************************/
 
-static void Mame32Output(void *param, const char *format, va_list argptr)
+static void MameUIOutput(void *param, const char *format, va_list argptr)
 {
 	char buffer[512];
 
@@ -168,7 +168,7 @@ static int ProcessAuditResults(int game, audit_record *audit, int audit_records,
 	void *prevparam;
 	int res;
 
-	mame_set_output_channel(OUTPUT_CHANNEL_INFO, (isComplete) ? Mame32Output : mame_null_output_callback, NULL, &prevcb, &prevparam);
+	mame_set_output_channel(OUTPUT_CHANNEL_INFO, (isComplete) ? MameUIOutput : mame_null_output_callback, NULL, &prevcb, &prevparam);
 	res = audit_summary(drivers[game], audit_records, audit, TRUE);
 	mame_set_output_channel(OUTPUT_CHANNEL_INFO, prevcb ? prevcb : mame_null_output_callback, prevparam, NULL, NULL);
 
@@ -219,7 +219,7 @@ static BOOL RomsetNotExist(int game)
 }
 
 // Verifies the ROM set while calling SetRomAuditResults
-int Mame32VerifyRomSet(int game, BOOL isComplete)
+int MameUIVerifyRomSet(int game, BOOL isComplete)
 {
 	audit_record *audit;
 	int audit_records;
@@ -249,8 +249,8 @@ int Mame32VerifyRomSet(int game, BOOL isComplete)
 	return res;
 }
 
-// Verifies the Sample set while calling SetSampleAuditResults
-int Mame32VerifySampleSet(int game, BOOL isComplete)
+// Verifies the Sample set while calling SetSampleAuditResults	
+int MameUIVerifySampleSet(int game, BOOL isComplete)
 {
 	audit_record *audit;
 	int audit_records;
@@ -338,7 +338,7 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		switch (LOWORD(wParam))
 		{
 		case IDCANCEL:
-			bPaused = FALSE;
+            bPaused = FALSE;
 			if (hThread)
 			{
 				bCancel = TRUE;
@@ -397,11 +397,11 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 			int iStatus;
 			LPCWSTR lpStatus;
 
-			iStatus = Mame32VerifyRomSet(rom_index, TRUE);
+			iStatus = MameUIVerifyRomSet(rom_index, TRUE);
 			lpStatus = DriverUsesRoms(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_ROMS), lpStatus);
 
-			iStatus = Mame32VerifySampleSet(rom_index, TRUE);
+			iStatus = MameUIVerifySampleSet(rom_index, TRUE);
 			lpStatus = DriverUsesSamples(rom_index) ? StatusString(iStatus) : _UIW(TEXT("None required"));
 			SetWindowText(GetDlgItem(hDlg, IDC_PROP_SAMPLES), lpStatus);
 		}
@@ -416,7 +416,7 @@ static void ProcessNextRom()
 	int retval;
 	WCHAR buffer[200];
 
-	retval = Mame32VerifyRomSet(rom_index, TRUE);
+	retval = MameUIVerifyRomSet(rom_index, TRUE);
 	switch (retval)
 	{
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
@@ -455,7 +455,7 @@ static void ProcessNextSample()
 	int  retval;
 	WCHAR buffer[200];
 	
-	retval = Mame32VerifySampleSet(sample_index, TRUE);
+	retval = MameUIVerifySampleSet(sample_index, TRUE);
 	
 	switch (retval)
 	{

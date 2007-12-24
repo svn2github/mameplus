@@ -1,21 +1,21 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
 
  ***************************************************************************/
 
-#ifndef mui_opts_H
-#define mui_opts_H
+#ifndef MUI_OPTS_H
+#define MUI_OPTS_H
 
 #include "osdcomm.h"
 #include "osd_cpu.h"
-#include "bitmask.h"
 #include "options.h"
 #include "inputseq.h" /* for input_seq definition */
 #include <video.h> /* for MAX_SCREENS Definition*/
@@ -27,7 +27,6 @@
 #define MAX_SYSTEM_BIOS		16
 #define MAX_SYSTEM_BIOS_ENTRY	16
 #define BIOS_DEFAULT		"default"
-#define MAX_GAMEDESC 256
 
 // Various levels of ini's we can edit.
 typedef enum {
@@ -59,7 +58,7 @@ enum
 };
 
 
-// can't be the same as the audit_verify_roms() results, listed in audit.h
+// can't be the same as the VerifyRomSet() results, listed in audit.h
 enum
 {
 	UNKNOWN	= -1
@@ -72,12 +71,6 @@ typedef struct
 {
 	int x, y, width, height;
 } AREA;
-
-typedef struct
-{
-	char *seq_string;	/* KEYCODE_LALT KEYCODE_A, etc... */
-	input_seq is;		/* sequence definition in MAME's internal keycodes */
-} KeySeq;
 
 
 // List of artwork types to display in the screen shot area
@@ -122,8 +115,8 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num);
 void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_global);
 core_options *CreateGameOptions(int driver_index);
 
-core_options * Mame32Settings(void);
-core_options * Mame32Global(void);
+core_options * MameUISettings(void);
+core_options * MameUIGlobal(void);
 
 void SaveOptions(void);
 

@@ -1,6 +1,6 @@
 #include "driver.h"
 #include "device.h"
-#include "ms32util.h"
+#include "msuiutil.h"
 
 BOOL DriverIsComputer(int driver_index)
 {

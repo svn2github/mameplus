@@ -1,6 +1,6 @@
 //============================================================
 //
-//	mess32ui.c - MESS extensions to src/ui/win32ui.c
+//	messui.c - MESS extensions to src/osd/winui/winui.c
 //
 //============================================================
 
@@ -19,12 +19,12 @@
 
 #include "screenshot.h"
 #include "bitmask.h"
-#include "mame32.h"
+#include "winui.h"
 #include "resourcems.h"
-#include "winuiopt.h"
+#include "mui_opts.h"
 #include "picker.h"
 #include "tabview.h"
-#include "m32util.h"
+#include "mui_util.h"
 #include "columnedit.h"
 #include "mess.h"
 #include "configms.h"
@@ -34,7 +34,7 @@
 #include "utils.h"
 #include "uitext.h"
 #include "strconv.h"
-#include "mess32ui.h"
+#include "messui.h"
 #include "winutf8.h"
 
 #define LOG_SOFTWARE	0
@@ -253,7 +253,7 @@ BOOL CreateMessIcons(void)
 	// create the icon index, if we havn't already
     if (!mess_icon_index)
 	{
-		mess_icon_index = malloc(driver_list_get_count(drivers) * IO_COUNT * sizeof(*mess_icon_index));
+		mess_icon_index = pool_malloc(GetMameUIMemoryPool(), driver_list_get_count(drivers) * IO_COUNT * sizeof(*mess_icon_index));
     }
 
     for (i = 0; i < (driver_list_get_count(drivers) * IO_COUNT); i++)
@@ -435,7 +435,7 @@ BOOL MessApproveImageList(HWND hParent, int nGame)
 done:
 	if (!bResult)
 	{
-		win_message_box_utf8(hParent, szMessage, MAME32NAME, MB_OK);
+		win_message_box_utf8(hParent, szMessage, MAMEUINAME, MB_OK);
 	}
 
 	devices_free(devices);
@@ -1320,7 +1320,7 @@ void MessCopyDeviceOption(core_options *opts, const game_driver *gamedrv, const 
 
 
 // ------------------------------------------------------------------------
-// Mess32 Diagnostics
+// MessUI Diagnostics
 // ------------------------------------------------------------------------
 
 #ifdef MAME_DEBUG
@@ -1376,7 +1376,7 @@ static void CALLBACK MessTestsTimerProc(HWND hwnd, UINT uMsg, UINT_PTR idEvent, 
 		KillTimer(NULL, s_nTestingTimer);
 		s_nTestingTimer = 0;
 
-		win_message_box_utf8(GetMainWindow(), "Tests successfully completed!", MAME32NAME, MB_OK);
+		win_message_box_utf8(GetMainWindow(), "Tests successfully completed!", MAMEUINAME, MB_OK);
 	}
 	else
 	{

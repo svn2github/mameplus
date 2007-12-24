@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -30,27 +31,37 @@
 #define NONAMELESSUNION
 #endif
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
+#include <commctrl.h>
+#include <commdlg.h>
+#include <wingdi.h>
+
+// standard C headers
 #include <stdio.h>
 #include <ctype.h>
 #include <io.h>
 #include <fcntl.h>
-#include <commctrl.h>
-#include <commdlg.h>
 #include <dlgs.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <wingdi.h>
 #include <time.h>
+#include <tchar.h>
 
-#include "mameui.h"
+// MAME/MAMEUI headers
 #include "driver.h"
 #include "osdepend.h"
 #include "unzip.h"
+#include "winutf8.h"
+#include "strconv.h"
+#include "input.h"
+#include "window.h"
+#include "winmain.h"
 #ifdef DRIVER_SWITCH
 #include "clifront.h"
 #endif /* DRIVER_SWITCH */
@@ -58,51 +69,46 @@
 #include "resource.h"
 #include "resource.hm"
 
+#include "mameui.h"
 #include "datafile.h"
-#include "screenshot.h"
 #include "mui_util.h"
-#include "file.h"
 #include "mui_audit.h"
-#include "Directories.h"
+#include "directories.h"
 #include "mui_opts.h"
-#include "Properties.h"
-#include "ColumnEdit.h"
+#include "properties.h"
+#include "columnedit.h"
 #include "picker.h"
 #include "tabview.h"
 #include "bitmask.h"
-#include "TreeView.h"
-#include "Splitters.h"
+#include "treeview.h"
+#include "splitters.h"
 #include "help.h"
 #include "history.h"
 #include "dialogs.h"
-#include "windows/input.h"
-#include "winmain.h"
-#include "windows/window.h"
+#include "directdraw.h"
+#include "directinput.h"
+#include "dijoystick.h"     /* For DIJoystick avalibility. */
 #ifdef UI_COLOR_PALETTE
 #include "paletteedit.h"
 #endif /* UI_COLOR_PALETTE */
-#include "strconv.h"
 #include "translate.h"
 #ifdef IMAGE_MENU
 #include "imagemenu.h"
 #endif /* IMAGE_MENU */
 
-#undef rand
-
-#include "DirectDraw.h"
-#include "DirectInput.h"
-#include "DIJoystick.h"     /* For DIJoystick avalibility. */
+#ifdef MESS
+#include "messui.h"
+#include "messopts.h"
+#endif // MESS
 
 #ifndef LVS_EX_LABELTIP
 #define LVS_EX_LABELTIP         0x00004000 // listview unfolds partly hidden labels if it does not have infotip text
 #endif // LVS_EX_LABELTIP
 
-#if defined(__GNUC__)
 // fix warning: cast does not match function type
-#if defined(ListView_CreateDragImage)
+#if defined(__GNUC__) && defined(ListView_CreateDragImage)
 #undef ListView_CreateDragImage
 #endif
-#endif /* defined(__GNUC__) */
 
 #ifndef ListView_CreateDragImage
 #define ListView_CreateDragImage(hwnd, i, lpptUpLeft) \
@@ -2208,6 +2214,9 @@ static void RandomSelectBackground(void)
 
 	if (count)
 	{
+#ifdef rand
+#undef rand
+#endif
 		srand( (unsigned)time( NULL ) );
 		wcscpy(szFile, szDir);
 		wcscat(szFile, TEXT("\\"));
@@ -2225,7 +2234,7 @@ void SetMainTitle(void)
 
 	sscanf(build_version,"%s",version);
 	swprintf(buffer, TEXT("%s Plus! %s"),
-	TEXT(MAME32NAME),
+	TEXT(MAMEUINAME),
 	_Unicode(version));
 
 	SetWindowText(hMain, buffer);
@@ -2340,14 +2349,14 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	xpControl = (common_control_version >= PACKVERSION(6,0));
 	if (oldControl)
 	{
-		char buf[] = MAME32NAME " has detected an old version of comctl32.dll\n\n"
+		char buf[] = MAMEUINAME " has detected an old version of comctl32.dll\n\n"
 					 "Game Properties, many configuration options and\n"
 					 "features are not available without an updated DLL\n\n"
 					 "Please install the common control update found at:\n\n"
 					 "http://www.microsoft.com/msdownload/ieplatform/ie/comctrlx86.asp\n\n"
 					 "Would you like to continue without using the new features?\n";
 
-		if (IDNO == MessageBoxA(0, buf, MAME32NAME " Outdated comctl32.dll Warning", MB_YESNO | MB_ICONWARNING))
+		if (IDNO == MessageBoxA(0, buf, MAMEUINAME " Outdated comctl32.dll Warning", MB_YESNO | MB_ICONWARNING))
 			return FALSE;
 	}
 
@@ -2370,7 +2379,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	/* USE LANGUAGE LIST */
 	build_sort_readings();
 
-	g_mame32_message = RegisterWindowMessage(TEXT_MAME32NAME);
+	g_mame32_message = RegisterWindowMessage(TEXT_MAMEUINAME);
 	g_bDoBroadcast = GetBroadcast();
 
 	HelpInit();
@@ -3227,13 +3236,13 @@ static BOOL FolderCheck(void)
 		nGameIndex  = lvi.lParam;
 		if (GetRomAuditResults(nGameIndex) == UNKNOWN)
 		{
-			Mame32VerifyRomSet(nGameIndex, FALSE);
+			MameUIVerifyRomSet(nGameIndex, FALSE);
 			changed = TRUE;
 		}
 
 		if (GetSampleAuditResults(nGameIndex) == UNKNOWN)
 		{
-			Mame32VerifySampleSet(nGameIndex, FALSE);
+			MameUIVerifySampleSet(nGameIndex, FALSE);
 			changed = TRUE;
 		}
 
@@ -3279,13 +3288,13 @@ static BOOL GameCheck(void)
 
 	if (GetRomAuditResults(game_index) == UNKNOWN)
 	{
-		Mame32VerifyRomSet(game_index, FALSE);
+		MameUIVerifyRomSet(game_index, FALSE);
 		changed = TRUE;
 	}
 
 	if (GetSampleAuditResults(game_index) == UNKNOWN)
 	{
-		Mame32VerifySampleSet(game_index, FALSE);
+		MameUIVerifySampleSet(game_index, FALSE);
 		changed = TRUE;
 	}
 
@@ -4749,7 +4758,7 @@ static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
 
-	swprintf(filename, TEXT_MAME32NAME TEXT("%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
+	swprintf(filename, TEXT_MAMEUINAME TEXT("%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
 	wcscpy(filename, strlower(filename));
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
@@ -6547,7 +6556,7 @@ static void MameMessageBoxUTF8(const char *fmt, ...)
 
 	va_start(va, fmt);
 	vsprintf(buf, fmt, va);
-	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
 	va_end(va);
 }
 
@@ -6558,7 +6567,7 @@ static void MameMessageBoxW(const WCHAR *fmt, ...)
 
 	va_start(va, fmt);
 	vswprintf(buf, fmt, va);
-	MessageBox(GetMainWindow(), buf, TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
 	va_end(va);
 }
 
@@ -7749,7 +7758,7 @@ void RemoveGameCustomFolder(int driver_index)
 			return;
 		}
 	}
-	MessageBox(GetMainWindow(), _UIW(TEXT("Error searching for custom folder")), TEXT_MAME32NAME, MB_OK | MB_ICONERROR);
+	MessageBox(GetMainWindow(), _UIW(TEXT("Error searching for custom folder")), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
 
 }
 

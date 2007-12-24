@@ -1,14 +1,15 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
 
-***************************************************************************/
+ ***************************************************************************/
 
 /***************************************************************************
 
@@ -20,30 +21,29 @@
 
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
+
+// standard windows headers
 #include <windows.h>
 #include <windowsx.h>
 #include <shellapi.h>
 #include <shlwapi.h>
 #include <commctrl.h>
 #include <commdlg.h>
+
+// standard C headers
 #include <string.h>
 
+// MAMEUI headers
 #include "mameui.h"
 #include "bitmask.h"
-#include "TreeView.h"
+#include "treeview.h"
 #include "mui_util.h"
 #include "resource.h"
-#include "directories.h"
 #include "mui_opts.h"
-#include "splitters.h"
 #include "help.h"
-#include "mui_audit.h"
-#include "screenshot.h"
-#include "properties.h"
-#include "dialogs.h"
-#ifdef USE_VIEW_PCBINFO
-#include "file.h"
-#endif /* USE_VIEW_PCBINFO */
+#include "properties.h"  // For GetHelpIDs
+
+// MAME headers
 #include "strconv.h"
 #include "translate.h"
 
@@ -51,7 +51,7 @@
 
 static WCHAR g_FilterText[FILTERTEXT_LEN];
 
-#define NUM_EXCLUSIONS  9
+#define NUM_EXCLUSIONS  10
 
 /* Pairs of filters that exclude each other */
 DWORD filterExclusion[NUM_EXCLUSIONS] =
@@ -59,7 +59,8 @@ DWORD filterExclusion[NUM_EXCLUSIONS] =
 	IDC_FILTER_CLONES,      IDC_FILTER_ORIGINALS,
 	IDC_FILTER_NONWORKING,  IDC_FILTER_WORKING,
 	IDC_FILTER_UNAVAILABLE, IDC_FILTER_AVAILABLE,
-	IDC_FILTER_RASTER,      IDC_FILTER_VECTOR
+	IDC_FILTER_RASTER,      IDC_FILTER_VECTOR,
+	IDC_FILTER_HORIZONTAL,  IDC_FILTER_VERTICAL
 };
 
 static void DisableFilterControls(HWND hWnd, LPFOLDERDATA lpFilterRecord,
@@ -98,11 +99,11 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU:
-		HelpFunction((HWND)wParam, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		HelpFunction((HWND)wParam, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
 
 		break;
 
@@ -117,11 +118,11 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			if (resetFilters || resetGames || resetUI || resetDefaults)
 			{
 				WCHAR temp[1024];
-				wcscpy(temp, _UIW(TEXT(MAME32NAME) TEXT(" will now reset the selected\n")
+				wcscpy(temp, _UIW(TEXT(MAMEUINAME) TEXT(" will now reset the selected\n")
 					TEXT("items to the original, installation\n")
 					TEXT("settings then exit.\n\n")));
 				wcscat(temp, _UIW(TEXT("The new settings will take effect\n")
-					TEXT("the next time ") TEXT_MAME32NAME TEXT(" is run.\n\n")));
+					TEXT("the next time ") TEXT_MAMEUINAME TEXT(" is run.\n\n")));
 				wcscat(temp, _UIW(TEXT("Do you wish to continue?")));
 
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
@@ -142,9 +143,7 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					return TRUE;
 				}
 			}
-			/* Fall through if no options were selected
-			 * or the user hit cancel in the popup dialog.
-			 */
+		// Nothing was selected but OK, just fall through
 		case IDCANCEL :
 			EndDialog(hDlg, 0);
 			return TRUE;
@@ -234,11 +233,11 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 
 	case WM_HELP:
 		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU:
-		HelpFunction((HWND)wParam, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		HelpFunction((HWND)wParam, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
 		break;
 	case WM_HSCROLL:
 		HANDLE_WM_HSCROLL(hDlg, wParam, lParam, OnHScroll);
@@ -389,7 +388,7 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 	static DWORD			dwFilters;
 	static DWORD			dwpFilters;
 	static LPFOLDERDATA		lpFilterRecord;
-	WCHAR strText[250];
+	WCHAR 					strText[250];
 	int 					i;
 
 	switch (Msg)
@@ -517,12 +516,12 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 	}
 	case WM_HELP:
 		// User clicked the ? from the upper right on a control
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAME32CONTEXTHELP),
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, TEXT(MAMEUICONTEXTHELP),
 					 HH_TP_HELP_WM_HELP, GetHelpIDs());
 		break;
 
 	case WM_CONTEXTMENU:
-		HelpFunction((HWND)wParam, TEXT(MAME32CONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		HelpFunction((HWND)wParam, TEXT(MAMEUICONTEXTHELP), HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
 		break;
 
 	case WM_COMMAND:
@@ -615,10 +614,11 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 	{
 	case WM_INITDIALOG:
 	{
-		TREEFOLDER **folders;
+	    TREEFOLDER **folders;
 		int num_folders;
 		int i;
 		TVINSERTSTRUCT tvis;
+		TVITEM tvi;
 		BOOL first_entry = TRUE;
 		HIMAGELIST treeview_icons = GetTreeViewIconList();
 		static HFONT hFont;
@@ -646,19 +646,16 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		// insert custom folders into our tree view
 		for (i=0;i<num_folders;i++)
 		{
-			if (folders[i]->m_dwFlags & F_CUSTOM)
+		    if (folders[i]->m_dwFlags & F_CUSTOM)
 			{
-				HTREEITEM hti;
+			    HTREEITEM hti;
 				int jj;
 
 				if (folders[i]->m_nParent == -1)
 				{
-					TVITEM tvi;
-
-					tvis.hParent = TVI_ROOT;
+					memset(&tvi, '\0', sizeof(tvi));
+				    tvis.hParent = TVI_ROOT;
 					tvis.hInsertAfter = TVI_SORT;
-
-					memset(&tvi, 0, sizeof tvi);
 					tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 					tvi.pszText = folders[i]->m_lpTitle;
 					tvi.lParam = (LPARAM)folders[i];
@@ -675,10 +672,10 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 					/* look for children of this custom folder */
 					for (jj=0;jj<num_folders;jj++)
 					{
-						if (folders[jj]->m_nParent == i)
+					    if (folders[jj]->m_nParent == i)
 						{
-							HTREEITEM hti_child;
-							tvis.hParent = hti;
+						    HTREEITEM hti_child;
+						    tvis.hParent = hti;
 							tvis.hInsertAfter = TVI_SORT;
 							tvi.mask = TVIF_TEXT | TVIF_PARAM | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 							tvi.pszText = folders[jj]->m_lpTitle;
@@ -686,9 +683,9 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 							tvi.iImage = GetTreeViewIconIndex(folders[jj]->m_nIconId);
 							tvi.iSelectedImage = 0;
 #if !defined(NONAMELESSUNION)
-							tvis.item = tvi;
+					        tvis.item = tvi;
 #else
-							tvis.DUMMYUNIONNAME.item = tvi;
+					        tvis.DUMMYUNIONNAME.item = tvi;
 #endif							
 							hti_child = TreeView_InsertItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvis);
 							if (folders[jj] == default_selection)
@@ -719,22 +716,22 @@ INT_PTR CALLBACK AddCustomFileDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPA
 		{
 		case IDOK:
 		{
-			TVITEM tvi;
-			tvi.hItem = TreeView_GetSelection(GetDlgItem(hDlg,IDC_CUSTOM_TREE));
-			tvi.mask = TVIF_PARAM;
-			if (TreeView_GetItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvi) == TRUE)
-			{
-				/* should look for New... */
+		   TVITEM tvi;
+		   tvi.hItem = TreeView_GetSelection(GetDlgItem(hDlg,IDC_CUSTOM_TREE));
+		   tvi.mask = TVIF_PARAM;
+		   if (TreeView_GetItem(GetDlgItem(hDlg,IDC_CUSTOM_TREE),&tvi) == TRUE)
+		   {
+			  /* should look for New... */
 
-				default_selection = (LPTREEFOLDER)tvi.lParam; /* start here next time */
+			  default_selection = (LPTREEFOLDER)tvi.lParam; /* start here next time */
 
-				AddToCustomFolder((LPTREEFOLDER)tvi.lParam,driver_index);
-			}
+			  AddToCustomFolder((LPTREEFOLDER)tvi.lParam,driver_index);
+		   }
 
-			EndDialog(hDlg, 0);
-			return TRUE;
+		   EndDialog(hDlg, 0);
+		   return TRUE;
 
-			break;
+		   break;
 		}
 		case IDCANCEL:
 			EndDialog(hDlg, 0);
@@ -751,10 +748,10 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 	HWND hEdit;
 
 	const WCHAR *directx_help =
-		TEXT_MAME32NAME TEXT(" requires DirectX version 3 or later, which is a set of operating\r\n")
+		TEXT_MAMEUINAME TEXT(" requires DirectX version 3 or later, which is a set of operating\r\n")
 		TEXT("system extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\n")
 		TEXT("Visit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\n")
-		TEXT("download DirectX, install it, and then run ") TEXT_MAME32NAME TEXT(" again.\r\n");
+		TEXT("download DirectX, install it, and then run ") TEXT_MAMEUINAME TEXT(" again.\r\n");
 
 	switch (Msg)
 	{
@@ -872,7 +869,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 					PcbData[filelen] = '\0';
 
 					swprintf(buf, 
-						_UIW(TEXT_MAME32NAME TEXT(" PCB Info: %s [%s]")), 
+						_UIW(TEXT_MAMEUINAME TEXT(" PCB Info: %s [%s]")), 
 						ConvertAmpersandString(UseLangList() ?
 							_LSTW(driversw[nGame]->description) :
 							driversw[nGame]->modify_the), 
@@ -916,7 +913,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			}
 			else
 			{
-				MessageBox(GetMainWindow(), _UIW(TEXT("No PCB Info available for this game.")), TEXT(MAME32NAME), MB_OK | MB_ICONEXCLAMATION);
+				MessageBox(GetMainWindow(), _UIW(TEXT("No PCB Info available for this game.")), TEXT(MAMEUINAME), MB_OK | MB_ICONEXCLAMATION);
 				EndDialog(hDlg, 0);
 			}
 
