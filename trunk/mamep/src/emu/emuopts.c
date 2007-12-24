@@ -156,7 +156,7 @@ const options_entry mame_core_options[] =
 
 	/* input options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE INPUT OPTIONS" },
-	{ "ctrlr",                       "Standard",  0,                 "preconfigure for specified controller" },
+	{ "ctrlr",                       NULL,        0,                 "preconfigure for specified controller" },
 	{ "mouse",                       "0",         OPTION_BOOLEAN,    "enable mouse input" },
 	{ "joystick;joy",                "0",         OPTION_BOOLEAN,    "enable joystick input" },
 	{ "lightgun;gun",                "0",         OPTION_BOOLEAN,    "enable lightgun input" },
