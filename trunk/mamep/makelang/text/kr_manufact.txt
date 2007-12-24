@@ -19,6 +19,10 @@ Absolute Entertainment Inc.
 앱솔루트 엔터테인먼트
 
 #
+Academysoft-Elory
+아카데미소프트-일로리
+
+#
 Acclaim
 액클레임
 
@@ -27,12 +31,52 @@ Acom
 에이콤
 
 #
+Aicom
+에이콤
+
+#
+Alba
+알바
+
+#
+Alberici
+알베리시
+
+#
+Allied Leisure
+얼라이드 레져
+
+#
+Alpha Co
+알파
+
+#
 Alpha Denshi
 알파전자
 
 #
 Alpha Denshi Co.
 알파전자
+
+#
+Alta
+알타
+
+#
+Amenip
+아메닙
+
+#
+Amenip Nova Games Ltd.
+아메닙 노바 게임즈
+
+#
+Ameri
+아메리
+
+#
+American Communication Laboratories Inc.
+아메리칸 커뮤니케이션 래버러터리
 
 #
 American Laser Games
@@ -47,6 +91,18 @@ Amstar
 암스타
 
 #
+Amtec
+암텍
+
+#
+Amutech
+아뮤텍
+
+#
+Andamiro
+안다미로
+
+#
 Apple
 애플
 
@@ -57,6 +113,22 @@ Arcadia Systems
 #
 Arika
 아리카
+
+#
+Armenia
+아메니아
+
+#
+Art & Magic
+아트 앤 매직
+
+#
+Artic
+아틱
+
+#
+Aruze
+아루즈
 
 #
 Atari
@@ -87,8 +159,12 @@ Bootleg
 해적판
 
 #
-Buena Vista Interactive
-브에나비스타 인터엑티브
+Brezzasoft
+브레자소프트
+
+#
+CD Express
+CD 익스프레스
 
 #
 Capcom
@@ -117,10 +193,6 @@ Centuri
 #
 Century Electronics
 센츄리 일렉트로닉스
-
-#
-Codemasters
-코드마스터
 
 #
 Commodore
@@ -187,20 +259,12 @@ Datel SAS
 다텔 SAS
 
 #
-Delphine
-델파인
-
-#
 Deniam
 데니암
 
 #
 Denki Onkyo
 덴키 온쿄
-
-#
-Disney
-디즈니
 
 #
 Dong Bang Electron
@@ -233,6 +297,18 @@ Dynamic Pl. Toei Animation
 #
 Electronic Arts
 일렉트로닉 아츠
+
+#
+F2 System
+F2 시스템
+
+#
+Genie
+지니
+
+#
+Global Corporation
+글로벌 코퍼래이션
 
 #
 Italian bootleg
@@ -273,10 +349,6 @@ Karateco
 #
 Kawakusu
 카와쿠스
-
-#
-Koei
-코에이
 
 #
 Konami
@@ -355,6 +427,22 @@ Rare LTD.
 레어 LTD.
 
 #
+Rock-Ola
+록-오라
+
+#
+Rock-ola
+록-오라
+
+#
+Romar
+로마
+
+#
+Ryoto Electric Co.
+료토 일렉트로닉
+
+#
 SEGA
 세가
 
@@ -399,10 +487,6 @@ Sega
 세가
 
 #
-Sega Sports
-세가 스포츠
-
-#
 Seibu
 세이부
 
@@ -443,10 +527,6 @@ Sigma Enterprises Inc.
 시그마 엔터프라이즈 (주)
 
 #
-Sony
-소니
-
-#
 Square
 스퀘어
 
@@ -479,8 +559,20 @@ SunA
 선아
 
 #
+Sunn
+슌
+
+#
 Sunsoft
 선소프트
+
+#
+Sunwise
+선와이즈
+
+#
+Sure
+슈어
 
 #
 T&E Soft
@@ -555,10 +647,6 @@ Tecno Soft
 테크노소프트
 
 #
-Tecnosoft
-테크노소프트
-
-#
 Time Warner
 타임 워너
 
@@ -595,10 +683,6 @@ Unknown
 알수없음
 
 #
-Unsorted
-미분류
-
-#
 Viccom
 빅컴
 
@@ -611,12 +695,28 @@ Video System Co.
 비디오 시스템
 
 #
-Virgin
-버진
-
-#
 Visco
 비스코
+
+#
+Warashi
+와라시
+
+#
+White Board
+화이트보드
+
+#
+Whiteboard
+화이트보드
+
+#
+Yubis/AV JAPAN
+유비스/AV 재팬
+
+#
+Yuki Enterprise
+유키 엔터프라이즈
 
 #
 Yumekobo

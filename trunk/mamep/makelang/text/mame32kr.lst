@@ -473,18 +473,19 @@ musobana	무소바나 (일본판)	무소바나 (일본판)	Nichibutsu/Yubis
 niyanpai	니얀페이 (일본판)	니얀페이 (일본판)	Nichibutsu
 safarir	사파리 랠리 (일본판)	사파리 랠리 (일본판)	SNK
 phoenix	피닉스 (Amstar)	피닉스 (Amstar)	Amstar
-phoenixa	피닉스 (Centuri)	피닉스 (Centuri)	Amstar (Centuri license)
+phoenixa	피닉스 (Centuri), 세트 1	피닉스 (Centuri), 세트 1	Amstar (Centuri license)
 phoenixb	피닉스 (Centuri), 세트 2	피닉스 (Centuri), 세트 2	Amstar (Centuri license)
 phoenixt	피닉스 (Taito)	피닉스 (Taito)	Taito
 phoenix3	피닉스 (T.P.N.)	피닉스 (T.P.N.)	bootleg
 phoenixc	피닉스 (IRECSA, G.G.I Corp)	피닉스 (IRECSA, G.G.I Corp)	bootleg?
-condor	콘도르	콘도르	Sidam
-fenix	페닉스	페닉스	bootleg
-falcon	팰콘 (해적판 세트 1)	팰콘 (해적판 세트 1)	bootleg
-vautour	보투어 (세트 1 - Jeutel France)	보투어 (세트 1 - Jeutel France)	bootleg
-vautour2	보투어 (세트 2)	보투어 (세트 2)	bootleg
-griffon	그리폰	그리폰	Videotron
-falcona	팰콘 (해적판 세트 2)	팰콘 (해적판 세트 2)	bootleg
+condor	콘도르 (피닉스 해적판)	콘도르 (피닉스 해적판)	Sidam (bootleg)
+fenix	페닉스 (피닉스 해적판)	페닉스 (피닉스 해적판)	bootleg
+falcon	팰콘 (피닉스 해적판)	팰콘 (피닉스 해적판)	bootleg
+vautour	보투어 (피닉스 해적판) (세트 1)	보투어 (피닉스 해적판) (세트 1)	Jeutel (bootleg)
+vautour2	보투어 (피닉스 해적판) (세트 2)	보투어 (피닉스 해적판) (세트 2)	bootleg
+griffon	그리폰 (피닉스 해적판)	그리폰 (피닉스 해적판)	Videotron (bootleg)
+falcona	팰콘 (피닉스 해적판)	팰콘 (피닉스 해적판)	bootleg
+nextfase	넥스트 페이즈 (피닉스 해적판)	넥스트 페이즈 (피닉스 해적판)	Petaco S.A. (bootleg)
 pleiads	플레이아즈 (Tehkan)	플레이아즈 (Tehkan)	Tehkan
 pleiadbl	플레이아즈 (해적판)	플레이아즈 (해적판)	bootleg
 pleiadce	플레이아즈 (Centuri)	플레이아즈 (Centuri)	Tehkan (Centuri license)
@@ -499,6 +500,7 @@ popflamb	팝 플레이머 (해킹판?)	팝 플레이머 (해킹판?)	Jaleco
 popflamn	팝 플레이머 (너티 보이 PCB 해적판)	팝 플레이머 (너티 보이 PCB 해적판)	Jaleco
 trvmstr	트리비아 마스터 (세트 1)	트리비아 마스터 (세트 1)	Enerdyne Technologies Inc.
 trvmstra	트리비아 마스터 (세트 2)	트리비아 마스터 (세트 2)	Enerdyne Technologies Inc.
+trvmstrb	트리비아 마스터 (세트 3)	트리비아 마스터 (세트 3)	Enerdyne Technologies Inc.
 trvgns	트리비아 제니어스	트리비아 제니어스	bootleg?
 geebee	지비	지비	Namco
 geebeeg	지비 (Gremlin)	지비 (Gremlin)	[Namco] (Gremlin license)
@@ -589,6 +591,7 @@ drgnbstr	드래곤 버스터	드래곤 버스터	Namco
 skykid	스카이 키드 (신버전)	스카이 키드 (신버전)	Namco
 skykido	스카이 키드 (구버전)	스카이 키드 (구버전)	Namco
 skykidd	스카이 키드 (60A1 버전)	스카이 키드 (60A1 버전)	Namco
+skykids	스카이 키드 (시펨 생산품)	스카이 키드 (시펨 생산품)	Namco [Sipem license]
 aliensec	에일리언 셀렉터	에일리언 셀렉터	Namco
 baraduke	바라듀크 (세트 1)	바라듀크 (세트 1)	Namco
 metrocrs	메트로 크로스 (세트 1)	메트로 크로스 (세트 1)	Namco
@@ -842,7 +845,8 @@ spcfrcii	스페이스 포스 II	스페이스 포스 II	Senko Industries (Magic Eletronics In
 8ballact	에이트 볼 액션 (DK 개조)	에이트 볼 액션 (DK 개조)	Seatongrove Ltd (Magic Eletronics USA licence)
 8ballat2	에이트 볼 액션 (DKJr 개조)	에이트 볼 액션 (DKJr 개조)	Seatongrove Ltd (Magic Eletronics USA licence)
 shootgal	슈팅 갤러리	슈팅 갤러리	Seatongrove Ltd (Zaccaria licence)
-drakton	드랙톤	드랙톤	Epos Corporation
+drakton	드랙톤 (DK 컨버전)	드랙톤 (DK 컨버전)	Epos Corporation
+drktnjr	드랙톤 (DKJr 컨버전)	드랙톤 (DKJr 컨버전)	Epos Corporation
 strtheat	스트리트 히트 - 카디셔널 어뮤즈먼트	스트리트 히트 - 카디셔널 어뮤즈먼트	Epos Corporation
 hunchbkd	꼽추 (DK 개조)	꼽추 (DK 개조)	Century Electronics
 sbdk	슈퍼 바이크 (DK 개조)	슈퍼 바이크 (DK 개조)	Century Electronics
@@ -1261,8 +1265,8 @@ airduel	에어 듀얼 (일본판)	에어 듀얼 (일본판)	Irem
 cosmccop	코스믹 캅 (국제판)	코스믹 캅 (국제판)	Irem
 gallop	갤럽 - 암드 폴리스 유니트 (일본판)	갤럽 - 암드 폴리스 유니트 (일본판)	Irem
 kengo	켄고	켄고	Irem
-sichuan2	시츄안 II (해킹판?) (세트 1)	시츄안 II (해킹판?) (세트 1)	Tamtex
-sichuana	시츄안 II (해킹판?) (세트 2)	시츄안 II (해킹판?) (세트 2)	Tamtex
+sichuan2	시츄안 II (해킹판?) (세트 1)	시츄안 II (해킹판?) (세트 1)	hack
+sichuana	시츄안 II (해킹판?) (세트 2)	시츄안 II (해킹판?) (세트 2)	hack
 shisen	사천성 - 여자 기숙사편 (일본판)	사천성 - 여자 기숙사편 (일본판)	Tamtex
 matchit	매치 잇	매치 잇	Tamtex
 hasamu	패사몽 (일본판)	패사몽 (일본판)	Irem
@@ -1540,6 +1544,7 @@ wgp2	월드 그랜드 프릭스 2 (일본판)	월드 그랜드 프릭스 2 (일본판)	Taito Corporati
 slapshot	슬랩 샷 (일본판)	슬랩 샷 (일본판)	Taito Corporation
 opwolf3	오퍼레이션 울프 3 (국제판)	오퍼레이션 울프 3 (국제판)	Taito Corporation Japan
 opwolf3u	오퍼레이션 울프 3 (미국판)	오퍼레이션 울프 3 (미국판)	Taito America Corporation
+scessjoe	석세스 조 (국제판)	석세스 조 (국제판)	WAVE / Taito Corporation
 ashnojoe	내일의 죠 (일본판)	내일의 죠 (일본판)	WAVE / Taito Corporation
 ninjaw	닌자 워리어즈 (국제판)	닌자 워리어즈 (국제판)	Taito Corporation Japan
 ninjawj	닌자 워리어즈 (일본판)	닌자 워리어즈 (일본판)	Taito Corporation
@@ -2457,6 +2462,8 @@ tondemo	돈데모 크라이시스 (일본판)	돈데모 크라이시스 (일본판)	Tecmo
 glpracr3	갤럽 레이서 3 (일본판)	갤럽 레이서 3 (일본판)	Tecmo
 flamegun	프레임 거너	프레임 거너	GAPS Inc.
 flameguj	프레임 거너 (일본판)	프레임 거너 (일본판)	GAPS Inc.
+tblkkuzu	블록 쿠즈시 (일본판)	블록 쿠즈시 (일본판)	Tamsoft/D3 Publisher
+1on1gov	1 온 1 거버먼트 (일본판)	1 온 1 거버먼트 (일본판)	Tecmo
 tecmowcm	테크모 월드컵 밀레니엄 (일본판)	테크모 월드컵 밀레니엄 (일본판)	Tecmo
 mfjump	몬스터 팜 점프 (일본판)	몬스터 팜 점프 (일본판)	Tecmo
 atluspsx	아트러스 PSX	아트러스 PSX	Sony/Atlus
@@ -2514,6 +2521,7 @@ tekken3a	철권 3 (TET2/버전 B)	철권 3 (TET2/버전 B)	Namco
 tekken3b	철권 3 (TET2/버전 A)	철권 3 (TET2/버전 A)	Namco
 tekken3c	철권 3 (TET2/버전 A)	철권 3 (TET2/버전 A)	Namco
 lbgrande	리베로 그랑데 (LG2/버전 A)	리베로 그랑데 (LG2/버전 A)	Namco
+toukon3	신일본 프로레슬링 투혼 열전 3 아케이드 에디션 (TR1/VER.A)	신일본 프로레슬링 투혼 열전 3 아케이드 에디션 (TR1/VER.A)	Tomy/Namco
 soulclbr	소울 칼리버 (SOC14/버전 C)	소울 칼리버 (SOC14/버전 C)	Namco
 soulclba	소울 칼리버 (SOC11/버전 C)	소울 칼리버 (SOC11/버전 C)	Namco
 soulclbb	소울 칼리버 (SOC13/버전 B)	소울 칼리버 (SOC13/버전 B)	Namco
@@ -2521,7 +2529,9 @@ soulclbc	소울 칼리버 (SOC11/버전 B)	소울 칼리버 (SOC11/버전 B)	Namco
 soulclbd	소울 칼리버 (SOC11/버전 A2)	소울 칼리버 (SOC11/버전 A2)	Namco
 ehrgeiz	에어가이츠 (EG3/버전 A)	에어가이츠 (EG3/버전 A)	Square/Namco
 ehrgeiza	에어가이츠 (EG2/버전 A)	에어가이츠 (EG2/버전 A)	Square/Namco
+kaiunqz	개운 퀴즈 행복의 여행자 (KW1/VER.A)	개운 퀴즈 행복의 여행자 (KW1/VER.A)	Namco
 mdhorse	더비 퀴즈 마이 드림 호스 (MDH1/버전 A2)	더비 퀴즈 마이 드림 호스 (MDH1/버전 A2)	Namco
+sws98	슈퍼 월드 스타디움 '98 (SS81/VER.A)	슈퍼 월드 스타디움 '98 (SS81/VER.A)	Namco
 tenkomor	텐코모리 슈팅 (TKM2/버전 A1)	텐코모리 슈팅 (TKM2/버전 A1)	Namco
 tenkomoj	텐코모리 슈팅 (TKM1/버전 A1)	텐코모리 슈팅 (TKM1/버전 A1)	Namco
 fgtlayer	파이팅 레이어 (FTL0/버전 A)	파이팅 레이어 (FTL0/버전 A)	Arika/Namco
@@ -2539,6 +2549,8 @@ aquarush	아쿠아 러쉬 (AQ1/버전 A1)	아쿠아 러쉬 (AQ1/버전 A1)	Namco
 pacappsp	파카 파카 패션 스페셜 (PSP1/버전 A)	파카 파카 패션 스페셜 (PSP1/버전 A)	Produce/Namco
 golgo13	고르고 13 (GLG1/버전 A)	고르고 13 (GLG1/버전 A)	Raizing/Namco
 g13knd	고르고 13 기적의 탄도 (GLS1/버전 A)	고르고 13 기적의 탄도 (GLS1/버전 A)	Raizing/Namco
+sws2000	슈퍼 월드 스타디움 2000 (SS01/VER.A)	슈퍼 월드 스타디움 2000 (SS01/VER.A)	Namco
+sws2001	슈퍼 월드 스타디움 2001 (SS11/VER.A)	슈퍼 월드 스타디움 2001 (SS11/VER.A)	Namco
 mrdrilr2	미스터 드릴러 2 (DR21 버전 A)	미스터 드릴러 2 (DR21 버전 A)	Namco
 gjspace	참새 스페이스 (10011 버전 A)	참새 스페이스 (10011 버전 A)	Namco/Metro
 mrdrilrg	미스터 드릴러 G (DRG1 버전 A)	미스터 드릴러 G (DRG1 버전 A)	Namco
@@ -2924,7 +2936,8 @@ hvymetal	헤비메탈	헤비메탈	Sega
 myhero	마이 히어로 (미국판)	마이 히어로 (미국판)	Sega
 sscandal	청춘 스캔들 (일본판)	청춘 스캔들 (일본판)	Coreland / Sega
 myherok	청춘 1번지 (한국판)	청춘 1번지 (한국판)	Coreland / Sega
-shtngmst	슈팅 마스터	슈팅 마스터	Sega
+shtngmst	슈팅 마스터 (세트 1, 8751 315-5159)	슈팅 마스터 (세트 1, 8751 315-5159)	Sega
+shtngms1	슈팅 마스터 (8751 315-5159)	슈팅 마스터 (8751 315-5159)	Sega
 shtngmsa	슈팅 마스터 (EVG)	슈팅 마스터 (EVG)	Sega [EVG]
 chplft	초플립터	초플립터	Sega
 chplftb	초플립터 (교체판)	초플립터 (교체판)	Sega
@@ -2981,7 +2994,8 @@ enduror	엔드로 레이서 (YM2151, FD1089B 317-0013A)	엔드로 레이서 (YM2151, FD1089B
 enduror1	엔드로 레이서 (YM2203, FD1089B 317-0013A)	엔드로 레이서 (YM2203, FD1089B 317-0013A)	Sega
 endurob2	엔드로 레이서 (해적판 세트 2)	엔드로 레이서 (해적판 세트 2)	bootleg
 endurobl	엔드로 레이서 (해적판 세트 1)	엔드로 레이서 (해적판 세트 1)	bootleg
-hangon	행온	행온	Sega
+hangon	행온 (개정판 A)	행온 (개정판 A)	Sega
+hangon1	행온	행온	Sega
 sharrier	스페이스 헤리어 (개정판 A, 8751 315-5163A)	스페이스 헤리어 (개정판 A, 8751 315-5163A)	Sega
 sharrir1	스페이스 헤리어 (8751 315-5163)	스페이스 헤리어 (8751 315-5163)	Sega
 shangupb	슈퍼 행온 (행온 업그레이드, 해적판)	슈퍼 행온 (행온 업그레이드, 해적판)	bootleg
@@ -3227,6 +3241,7 @@ harddunj	하드 덩크 (일본판)	하드 덩크 (일본판)	Sega
 titlef	타이틀 파이트 (국제판)	타이틀 파이트 (국제판)	Sega
 titlefu	타이틀 파이트 (미국판)	타이틀 파이트 (미국판)	Sega
 scross	스타디움 크로스 (국제판)	스타디움 크로스 (국제판)	Sega
+scrossu	스타디움 크로스 (미국판)	스타디움 크로스 (미국판)	Sega
 vf	버추어 파이터	버추어 파이터	Sega
 vr	버추어 레이싱	버추어 레이싱	Sega
 vformula	버추어 포뮬러	버추어 포뮬러	Sega
@@ -3262,8 +3277,10 @@ pblbeach	페블 비치 - 그레이트 샷 (JUE 950913 V0.990)	페블 비치 - 그레이트 샷 (JU
 prikura	프린세스 클라라 대작전 (J 960910 V1.000)	프린세스 클라라 대작전 (J 960910 V1.000)	Atlus
 puyosun	뿌요뿌요 썬 (J 961115 V0.001)	뿌요뿌요 썬 (J 961115 V0.001)	Compile
 rsgun	레디언트 실버건 (JUET 980523 V1.000)	레디언트 실버건 (JUET 980523 V1.000)	Treasure
-sandor	산도R (J 951114 V1.000)	산도R (J 951114 V1.000)	Sega
-thunt	트레져 헌트 (JUET 970901 V2.00E)	트레져 헌트 (JUET 970901 V2.00E)	Sega
+sandor	퍼즐 & 액션: 산도R (J 951114 V1.000)	퍼즐 & 액션: 산도R (J 951114 V1.000)	Sega
+sanjeon	대전! 산전수전 (한국판)	대전! 산전수전 (한국판)	Sega / Deniam
+thunt	퍼즐 & 액션: 트레져 헌트 (JUET 970901 V2.00E)	퍼즐 & 액션: 트레져 헌트 (JUET 970901 V2.00E)	Sega
+thuntk	퍼즐 & 액션: 보물을 찾아라 (한국판)	퍼즐 & 액션: 보물을 찾아라 (한국판)	Sega / Deniam
 sasissu	대전 탄토-R 사싯수! (J 980216 V1.000)	대전 탄토-R 사싯수! (J 980216 V1.000)	Sega
 seabass	씨 베스 피싱 (JUET 971110 V0.001)	씨 베스 피싱 (JUET 971110 V0.001)	A wave inc. (Able license)
 shanhigw	상하이 - 그레이트 월 / 상하이 트리플 스리트 (JUE 950623 V1.005)	상하이 - 그레이트 월 / 상하이 트리플 스리트 (JUE 950623 V1.005)	Sunsoft / Activision
@@ -3273,6 +3290,7 @@ sokyugrt	창궁홍련대 / 테라 다이버 (JUET 960821 V1.000)	창궁홍련대 / 테라 다이버 
 sss	스티프 슬로프 슬라이더스 (JUET 981110 V1.000)	스티프 슬로프 슬라이더스 (JUET 981110 V1.000)	Capcom / Cave / Victor
 suikoenb	수호연무 (J 950314 V2.001)	수호연무 (J 950314 V2.001)	Data East
 twcup98	테크모 월드컵 '98 (JUET 980410 V1.000)	테크모 월드컵 '98 (JUET 980410 V1.000)	Tecmo
+stress	스트레스 버스터즈	스트레스 버스터즈	Sega
 vfkids	버추어 파이터 키즈 (JUET 960319 V0.000)	버추어 파이터 키즈 (JUET 960319 V0.000)	Sega
 vfremix	버추어 파이터 리믹스 (JUETBKAL 950428 V1.000)	버추어 파이터 리믹스 (JUETBKAL 950428 V1.000)	Sega
 vmahjong	버추얼 마작 (J 961214 V1.000)	버추얼 마작 (J 961214 V1.000)	Micronet
@@ -3284,6 +3302,7 @@ batmanfr	배트맨 포에버 (JUE 960507 V1.000)	배트맨 포에버 (JUE 960507 V1.000)	Acc
 critcrsh	크리터 크러셔 (EA 951204 V1.000)	크리터 크러셔 (EA 951204 V1.000)	Sega
 sfish2	스포트 피싱 2 (UET 951106 V1.10e)	스포트 피싱 2 (UET 951106 V1.10e)	Sega
 sfish2j	스포트 피싱 2 (J 951201 V1.100)	스포트 피싱 2 (J 951201 V1.100)	Sega
+magzun	매지컬 주노 파워	매지컬 주노 파워	Sega
 daytona	데이토나 USA (일본판)	데이토나 USA (일본판)	Sega
 daytonas	데이토나 USA (새턴 광고 삽입)	데이토나 USA (새턴 광고 삽입)	Sega
 daytonat	데이토나 USA (일본판, Turbo hack)	데이토나 USA (일본판, Turbo hack)	Sega
@@ -3431,6 +3450,7 @@ mt_mwalk	문워커 (Mega-Tech)	문워커 (Mega-Tech)	Sega
 mt_crack	크랙 다운 (Mega-Tech)	크랙 다운 (Mega-Tech)	Sega
 mt_arrow	애로우 플래쉬 (Mega-Tech)	애로우 플래쉬 (Mega-Tech)	Sega
 mt_astrm	에일리언 스톰 (Mega-Tech)	에일리언 스톰 (Mega-Tech)	Sega
+mt_wwar	레슬 워 (Mega-Tech)	레슬 워 (Mega-Tech)	Sega
 mt_bbros	보난자 브라더스 (Mega-Tech)	보난자 브라더스 (Mega-Tech)	Sega
 mt_sonic	소닉 더 헤지혹 (Mega-Tech, 세트 1)	소닉 더 헤지혹 (Mega-Tech, 세트 1)	Sega
 mt_sonia	소닉 더 헤지혹 (Mega-Tech, 세트 2)	소닉 더 헤지혹 (Mega-Tech, 세트 2)	Sega
@@ -3675,7 +3695,8 @@ edrandy	클리프행어 - 에드워드 랜디 (세계 개정판 2)	클리프행어 - 에드워드 랜디 (�
 edrandy1	클리프행어 - 에드워드 랜디 (세계 개정판 1)	클리프행어 - 에드워드 랜디 (세계 개정판 1)	Data East Corporation
 edrandy0	클리프행어 - 에드워드 랜디 (국제판)	클리프행어 - 에드워드 랜디 (국제판)	Data East Corporation
 edrandyj	클리프행어 - 에드워드 랜디 (일본판)	클리프행어 - 에드워드 랜디 (일본판)	Data East Corporation
-supbtime	슈퍼 버거 타임 (국제판)	슈퍼 버거 타임 (국제판)	Data East Corporation
+supbtime	슈퍼 버거 타임 (국제판, 세트 1)	슈퍼 버거 타임 (국제판, 세트 1)	Data East Corporation
+supbtima	슈퍼 버거 타임 (국제판, 세트 2)	슈퍼 버거 타임 (국제판, 세트 2)	Data East Corporation
 supbtimj	슈퍼 버거 타임 (일본판)	슈퍼 버거 타임 (일본판)	Data East Corporation
 mutantf	뮤턴트 파이트 (세계 개정판  4, EM-5)	뮤턴트 파이트 (세계 개정판  4, EM-5)	Data East Corporation
 mutantfa	뮤턴트 파이트 (세계 개정판  3, EM-4)	뮤턴트 파이트 (세계 개정판  3, EM-4)	Data East Corporation
@@ -4368,6 +4389,7 @@ centipdb	센티피드 (해적판)	센티피드 (해적판)	bootleg
 caterplr	캐터필라	캐터필라	bootleg
 millpac	밀펙	밀펙	Valadon Automation
 magworm	매직 웜 (해적판)	매직 웜 (해적판)	bootleg
+mazeinv	매이즈 인베이더즈 (시험판)	매이즈 인베이더즈 (시험판)	Atari
 milliped	밀리피드	밀리피드	Atari
 qwak	콰크 (시범판)	콰크 (시범판)	Atari
 runaway	런어웨이 (시범판)	런어웨이 (시범판)	Atari
@@ -4570,6 +4592,7 @@ atetrisb	테트리스 (해적판 세트 1)	테트리스 (해적판 세트 1)	bootleg
 atetrsb2	테트리스 (해적판 세트 2)	테트리스 (해적판 세트 2)	bootleg
 eprom	로봇 괴수들의 별에서의 탈출 (세트 1)	로봇 괴수들의 별에서의 탈출 (세트 1)	Atari Games
 eprom2	로봇 괴수들의 별에서의 탈출 (세트 2)	로봇 괴수들의 별에서의 탈출 (세트 2)	Atari Games
+guts	것츠 엔 글로리 (시험판)	것츠 엔 글로리 (시험판)	Atari Games
 cyberb2p	사이버볼 2072 (2인용, 개정판 4)	사이버볼 2072 (2인용, 개정판 4)	Atari Games
 cyberb23	사이버볼 2072 (2인용, 개정판 3)	사이버볼 2072 (2인용, 개정판 3)	Atari Games
 cyberb22	사이버볼 2072 (2인용, 개정판 2)	사이버볼 2072 (2인용, 개정판 2)	Atari Games
@@ -4707,7 +4730,8 @@ chopper	초퍼 I (미국판 세트 1)	초퍼 I (미국판 세트 1)	SNK
 choppera	초퍼 I (미국판 세트 2)	초퍼 I (미국판 세트 2)	SNK
 chopperb	초퍼 I (미국판 세트 3)	초퍼 I (미국판 세트 3)	SNK
 legofair	항공 기병 이야기 - 리젼드 오브 에어 카발리 (일본판)	항공 기병 이야기 - 리젼드 오브 에어 카발리 (일본판)	SNK
-ftsoccer	파이팅 사커	파이팅 사커	SNK
+fsoccer	파이팅 사커 (버전 4)	파이팅 사커 (버전 4)	SNK
+fsoccerb	파이팅 사커 (조이스틱 해킹판)	파이팅 사커 (조이스틱 해킹판)	bootleg
 tdfever	터치다운 피버	터치다운 피버	SNK
 tdfeverj	터치다운 피버 (일본판)	터치다운 피버 (일본판)	SNK
 tdfever2	터치다운 피버 2	터치다운 피버 2	SNK
@@ -4763,7 +4787,8 @@ legendos	리젼드 오브 석세스 죠 / 내일의 죠 전설	리젼드 오브 석세스 죠 / 내일의 �
 2020bb	2020 슈퍼 베이스볼 (세트 1)	2020 슈퍼 베이스볼 (세트 1)	SNK / Pallas
 2020bba	2020 슈퍼 베이스볼 (세트 2)	2020 슈퍼 베이스볼 (세트 2)	SNK / Pallas
 2020bbh	2020 슈퍼 베이스볼 (세트 3)	2020 슈퍼 베이스볼 (세트 3)	SNK / Pallas
-socbrawl	사커 브롤	사커 브롤	SNK
+socbrawl	사커 브롤 (세트 1)	사커 브롤 (세트 1)	SNK
+socbrala	사커 브롤 (세트 2)	사커 브롤 (세트 2)	SNK
 roboarmy	로보 아미 (세트 1)	로보 아미 (세트 1)	SNK
 roboarma	로보 아미 (세트 2)	로보 아미 (세트 2)	SNK
 fatfury1	페이탈 퓨리 - 킹 오브 파이터즈 / 아랑전설 - 숙명의 싸움	페이탈 퓨리 - 킹 오브 파이터즈 / 아랑전설 - 숙명의 싸움	SNK
@@ -4912,7 +4937,7 @@ kof2000	킹 오브 파이터즈 2000	킹 오브 파이터즈 2000	SNK
 kof2000n	킹 오브 파이터즈 2000 (비암호화)	킹 오브 파이터즈 2000 (비암호화)	SNK
 bangbead	뱅 비드	뱅 비드	Visco
 nitd	나이트메어 인 더 다크	나이트메어 인 더 다크	Eleven / Gavaking
-nitdbl	나이트메어 인 더 다크 (해적판)	나이트메어 인 더 다크 (해적판)	Eleven / Gavaking
+nitdbl	나이트메어 인 더 다크 (해적판)	나이트메어 인 더 다크 (해적판)	bootleg
 sengoku3	센고쿠 3 / 전국전승 2001	센고쿠 3 / 전국전승 2001	SNK
 kof2001	킹 오브 파이터즈 2001 (세트 1)	킹 오브 파이터즈 2001 (세트 1)	Eolith / SNK
 kof2001h	킹 오브 파이터즈 2001 (세트 2)	킹 오브 파이터즈 2001 (세트 2)	Eolith / SNK
@@ -4936,9 +4961,9 @@ pnyaa	포치와 나야	포치와 나야	Aiky / Taito
 ms5pcb	메탈 슬러그 5 (JAMMA PCB)	메탈 슬러그 5 (JAMMA PCB)	SNK Playmore
 mslug5	메탈 슬러그 5	메탈 슬러그 5	SNK Playmore
 ms5plus	메탈 슬러그 5 플러스 (해적판 / 해킹판)	메탈 슬러그 5 플러스 (해적판 / 해킹판)	bootleg
-svcpcb	SvC 카오스 - SNK vs Capcom (JAMMA PCB, 세트 1)	SvC 카오스 - SNK vs Capcom (JAMMA PCB, 세트 1)	Playmore
-svcpcba	SvC 카오스 - SNK vs CAPCOM (JAMMA PCB, 세트 2)	SvC 카오스 - SNK vs CAPCOM (JAMMA PCB, 세트 2)	Playmore
-svc	SvC 카오스 - SNK vs Capcom (MVS)	SvC 카오스 - SNK vs Capcom (MVS)	Playmore
+svcpcb	SvC 카오스 - SNK vs Capcom (JAMMA PCB, 세트 1)	SvC 카오스 - SNK vs Capcom (JAMMA PCB, 세트 1)	SNK Playmore
+svcpcba	SvC 카오스 - SNK vs CAPCOM (JAMMA PCB, 세트 2)	SvC 카오스 - SNK vs CAPCOM (JAMMA PCB, 세트 2)	SNK Playmore
+svc	SvC 카오스 - SNK vs Capcom (MVS)	SvC 카오스 - SNK vs Capcom (MVS)	SNK Playmore
 svcboot	SvC 카오스 - SNK vs Capcom (MVS) (해적판)	SvC 카오스 - SNK vs Capcom (MVS) (해적판)	bootleg
 svcplus	SvC 카오스 - SNK vs Capcom 플러스 (세트 1, 해적판)	SvC 카오스 - SNK vs Capcom 플러스 (세트 1, 해적판)	bootleg
 svcplusa	SvC 카오스 - SNK vs Capcom 플러스 (세트 2, 해적판)	SvC 카오스 - SNK vs Capcom 플러스 (세트 2, 해적판)	bootleg
@@ -5388,7 +5413,8 @@ raiden2	라이덴 2 (세트 1, 미국판 펩텍)	라이덴 2 (세트 1, 미국판 펩텍)	Seibu Kaih
 raiden2a	라이덴 2 (세트 2, 메트로테인먼트)	라이덴 2 (세트 2, 메트로테인먼트)	Seibu Kaihatsu
 raiden2b	라이덴 2 (세트 3, 일본판)	라이덴 2 (세트 3, 일본판)	Seibu Kaihatsu
 raiden2c	라이덴 2 (세트 4, 일본판)	라이덴 2 (세트 4, 일본판)	Seibu Kaihatsu
-raiden2e	라이덴 2 (이지판?)	라이덴 2 (이지판?)	Seibu Kaihatsu
+raiden2d	라이덴 2 (세트 5)	라이덴 2 (세트 5)	Seibu Kaihatsu
+raiden2e	라이덴 2 (세트 6, 이지 버전)	라이덴 2 (세트 6, 이지 버전)	Seibu Kaihatsu
 raidndx	라이덴 DX (세트 1)	라이덴 DX (세트 1)	Seibu Kaihatsu
 raidndxa	라이덴 DX (세트 2)	라이덴 DX (세트 2)	Seibu Kaihatsu
 raidndxb	라이덴 DX (세트 3, 신버전 V33 PCB)	라이덴 DX (세트 3, 신버전 V33 PCB)	Seibu Kaihatsu
@@ -5810,6 +5836,7 @@ wrofaero	워 오브 에어로 - 프로젝트 MEIOU	워 오브 에어로 - 프로젝트 MEIOU	Yang Ch
 eightfrc	에이트 포스	에이트 포스	Tecmo
 kiwame	프로 마작 키와메	프로 마작 키와메	Athena
 krzybowl	크레이지 보울	크레이지 보울	American Sammy
+orbs	오브 (10/7/94 시험판?)	오브 (10/7/94 시험판?)	American Sammy
 extdwnhl	익스트림 다운힐 (v1.5)	익스트림 다운힐 (v1.5)	Sammy Industries Japan
 gundhara	건드하라	건드하라	Banpresto
 sokonuke	소코누케 대전 게임 (일본판)	소코누케 대전 게임 (일본판)	Sammy Industries
@@ -5835,7 +5862,7 @@ twineag2	트윈 이글 II - 레스큐 미션	트윈 이글 II - 레스큐 미션	Seta
 srmp7	슈퍼 리얼 마작 P7 (일본판)	슈퍼 리얼 마작 P7 (일본판)	Seta
 dynagear	다이나 기어스	다이나 기어스	Sammy
 survarts	서바이벌 아츠 (국제판)	서바이벌 아츠 (국제판)	Sammy
-survartu	서바이벌 아츠 (미국판)	서바이벌 아츠 (미국판)	Sammy (American)
+survartu	서바이벌 아츠 (미국판)	서바이벌 아츠 (미국판)	American Sammy
 eaglshot	이글 샷 골프	이글 샷 골프	Sammy
 hypreact	마작 하이퍼 리액션 (일본판)	마작 하이퍼 리액션 (일본판)	Sammy
 meosism	메오시스 매직 (일본판)	메오시스 매직 (일본판)	Sammy
@@ -6883,10 +6910,10 @@ esh	에쉬의 아우런밀라	에쉬의 아우런밀라	Funai/Gakken
 esha	에쉬의 아우런밀라 (세트 2)	에쉬의 아우런밀라 (세트 2)	Funai/Gakken
 eshb	에쉬의 아우런밀라 (세트 3)	에쉬의 아우런밀라 (세트 3)	Funai/Gakken
 comebaby	컴온 베이비	컴온 베이비	ExPotato
-peplus	플레이어스 엣지 플러스 (PP0516) 더블 보너스 포커	플레이어스 엣지 플러스 (PP0516) 더블 보너스 포커	IGT - International Gaming Technology
+peset038	플레이어스 엣지 플러스 (Set038) 셋칩	플레이어스 엣지 플러스 (Set038) 셋칩	IGT - International Gaming Technology
 pepp0158	플레이어스 엣지 플러스 (PP0158) 4카드 보너스 포커	플레이어스 엣지 플러스 (PP0158) 4카드 보너스 포커	IGT - International Gaming Technology
 pepp0188	플레이어스 엣지 플러스 (PP0188) 스탠다드 드로우 포커	플레이어스 엣지 플러스 (PP0188) 스탠다드 드로우 포커	IGT - International Gaming Technology
-peset038	플레이어스 엣지 플러스 (Set038) 셋칩	플레이어스 엣지 플러스 (Set038) 셋칩	IGT - International Gaming Technology
+pepp0516	플레이어스 엣지 플러스 (PP0516) 더블 보너스 포커	플레이어스 엣지 플러스 (PP0516) 더블 보너스 포커	IGT - International Gaming Technology
 pebe0014	플레이어스 엣지 플러스 (BE0014) 블랙잭	플레이어스 엣지 플러스 (BE0014) 블랙잭	IGT - International Gaming Technology
 peke1012	플레이어스 엣지 플러스 (KE1012) 케노	플레이어스 엣지 플러스 (KE1012) 케노	IGT - International Gaming Technology
 peps0615	플레이어스 엣지 플러스 (PS0615) 카오스 슬롯	플레이어스 엣지 플러스 (PS0615) 카오스 슬롯	IGT - International Gaming Technology
@@ -6898,6 +6925,7 @@ dominob	도미노 블록	도미노 블록	Wonwoo Systems
 jongkyo	작광	작광	Kiwako
 gtipoker	GTI 포커	GTI 포커	GTI Inc
 gamecstl	게임크리스탈	게임크리스탈	Cristaltec
+drw80pkr	드로우 80 포커	드로우 80 포커	IGT - International Gaming Technology
 knightsh	원탁의 기사 (해킹판)	원탁의 기사 (해킹판)	hack / bootleg
 knightsb	원탁의 기사 (해적판)	원탁의 기사 (해적판)	bootleg
 sf2m8	스트리트 파이터 II' - 챔피언 에디션 (M8)	스트리트 파이터 II' - 챔피언 에디션 (M8)	hack / bootleg
@@ -6917,8 +6945,6 @@ dinob	캐딜락 & 디노사우르스 (해적판)	캐딜락 & 디노사우르스 (해적판)	bootleg
 dinoh	캐딜락 & 디노사우르스 (해적판, 세트 1)	캐딜락 & 디노사우르스 (해적판, 세트 1)	hack / bootleg
 dinoha	캐딜락 & 디노사우르스 (해적판, 세트 2)	캐딜락 & 디노사우르스 (해적판, 세트 2)	hack / bootleg
 dinohb	캐딜락 & 디노사우르스 (해적판, 세트 3)	캐딜락 & 디노사우르스 (해적판, 세트 3)	hack / bootleg
-sfzch	스트리트 파이터 제로 (CPS Changer 일본판 951020)	스트리트 파이터 제로 (CPS Changer 일본판 951020)	Capcom
-sfach	스트리트 파이터 알파 (Publicity 미국판 950727)	스트리트 파이터 알파 (Publicity 미국판 950727)	Capcom
 ddtodd	던전즈 & 드래곤즈: 운명의 탑 (유럽판 940412 피닉스 버전)	던전즈 & 드래곤즈: 운명의 탑 (유럽판 940412 피닉스 버전)	hack
 avspd	에일리언 VS 프레대터 (유럽판 940520 피닉스 버전)	에일리언 VS 프레대터 (유럽판 940520 피닉스 버전)	hack
 ringdstd	링 오브 디스트럭션: 슬램마스터즈 II (유럽판 940902 피닉스 버전)	링 오브 디스트럭션: 슬램마스터즈 II (유럽판 940902 피닉스 버전)	hack
@@ -6954,20 +6980,20 @@ mslug5b	메탈 슬러그 5 (해적판)	메탈 슬러그 5 (해적판)	bootleg
 zintrkcd	진트릭 / 밀어내기 젠트릭스 (CD - MVS 컨버전)	진트릭 / 밀어내기 젠트릭스 (CD - MVS 컨버전)	hack
 fr2ch	아이돌 마작 - 파이널 로맨스 2 (CD - MVS 컨버전)	아이돌 마작 - 파이널 로맨스 2 (CD - MVS 컨버전)	hack
 spclone	샐러맨더 (버전 YY 클론)	샐러맨더 (버전 YY 클론)	Konami
-vantris	Vantris (Vanguard hardware)	Vantris (Vanguard hardware)	N.Kehrer
-frogfest	Frog Feast	Frog Feast	Rastersoft
-columnsn	Columns (Neo-Geo)	Columns (Neo-Geo)	Sega / hack
-poknight	Poker Night	Poker Night	JMK
-neodemo	Neo-Demo	Neo-Demo	Chaos
-neo2500	Neo 2500 Demo	Neo 2500 Demo	Blastar
-syscheck	Neo System Check (ver 1.0b)	Neo System Check (ver 1.0b)	Blastar
-neonopon	Neo No Panepon (beta)	Neo No Panepon (beta)	Blastar
-neopong	Neo Pong (v1.1)	Neo Pong (v1.1)	Neodev
-npong10	Neo Pong (v1.0)	Neo Pong (v1.0)	Neodev
-ngem2k	NGEM2K (beta 2006-01-18)	NGEM2K (beta 2006-01-18)	homebrew
-cnbe	Codename - Blut Engel (2006-01-19)	Codename - Blut Engel (2006-01-19)	homebrew
-ltorb1	Jonas Indiana and the Lost Temple of RA (20050717)	Jonas Indiana and the Lost Temple of RA (20050717)	Blastar
-beast	Shadow of the Beast (Neo Demo)	Shadow of the Beast (Neo Demo)	Psygnosis
+vantris	반트리스 (뱅가드 하드웨어)	반트리스 (뱅가드 하드웨어)	N.Kehrer
+frogfest	프로그 피스트	프로그 피스트	Rastersoft
+columnsn	컬럼스 (Neo-Geo)	컬럼스 (Neo-Geo)	Sega / hack
+poknight	포커 나이트	포커 나이트	JMK
+neodemo	네오-데모	네오-데모	Chaos
+neo2500	네오 2500 데모	네오 2500 데모	Blastar
+syscheck	네오 시스템 체크 (버전 1.0b)	네오 시스템 체크 (버전 1.0b)	Blastar
+neonopon	네오 노 파네퐁 (베타)	네오 노 파네퐁 (베타)	Blastar
+neopong	네오 퐁 (v1.1)	네오 퐁 (v1.1)	Neodev
+npong10	네오 퐁 (v1.0)	네오 퐁 (v1.0)	Neodev
+ngem2k	NGEM2K (베타 2006-01-18)	NGEM2K (베타 2006-01-18)	homebrew
+cnbe	코드네임 - 브럿 이글 (2006-01-19)	코드네임 - 브럿 이글 (2006-01-19)	homebrew
+ltorb1	조나스 인디아나 그리고 라의 잃어버린 사원 (20050717)	조나스 인디아나 그리고 라의 잃어버린 사원 (20050717)	Blastar
+beast	쉐도우 오브 더 비스트 (네오 데모)	쉐도우 오브 더 비스트 (네오 데모)	Psygnosis
 zupapad	주파파! (해독된 C)	주파파! (해독된 C)	SNK
 kof99d	킹 오브 파이터즈 '99 - 밀레니엄 배틀 (해독된 C)	킹 오브 파이터즈 '99 - 밀레니엄 배틀 (해독된 C)	SNK
 ganryud	간류 / 무사시 간류키 (해독된 C)	간류 / 무사시 간류키 (해독된 C)	Visco
@@ -7002,8 +7028,15 @@ monaco	모나코 GP	모나코 GP	Sega
 nes	닌텐도 엔터테인먼트 시스템 (NTSC)	닌텐도 엔터테인먼트 시스템 (NTSC)	Nintendo
 nespal	닌텐도 엔터테인먼트 시스템 (PAL)	닌텐도 엔터테인먼트 시스템 (PAL)	Nintendo
 famicom	패미콤	패미콤	Nintendo
+famitwin	패미콤 트윈	패미콤 트윈	Sharp
+gameboy	게임보이	게임보이	Nintendo
+supergb	슈퍼 게임보이	슈퍼 게임보이	Nintendo
+gbpocket	게임보이 포켓	게임보이 포켓	Nintendo
+gbcolor	게임보이 컬러	게임보이 컬러	Nintendo
 snes	슈퍼 닌텐도 엔터테인먼트 시스템 (NTSC)	슈퍼 닌텐도 엔터테인먼트 시스템 (NTSC)	Nintendo
 snespal	슈퍼 닌텐도 엔터테인먼트 시스템 (PAL)	슈퍼 닌텐도 엔터테인먼트 시스템 (PAL)	Nintendo
+megaduck	메가덕/코거 보이	메가덕/코거 보이	Creatronic/Videojet/Timlex/Cougar
 megadrij	메가 드라이브 (일본판, NTSC)	메가 드라이브 (일본판, NTSC)	Sega
 genesis	제네시스 (미국판, NTSC)	제네시스 (미국판, NTSC)	Sega
 megadriv	메가 드라이브 (유럽판, PAL)	메가 드라이브 (유럽판, PAL)	Sega
+sfzch	CPS 체인져 (스트리트 파이터 제로)	CPS 체인져 (스트리트 파이터 제로)	Capcom

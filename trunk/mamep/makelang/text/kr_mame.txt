@@ -339,38 +339,6 @@
 %s저장 파일 버전이 올바르지 않습니다(%d, 1 필요)
 
 #
-&Exit
-종료(&E)
-
-#
-&File
-파일
-
-#
-&Help
-도움말(&H)
-
-#
-&Input
-입력(&I)
-
-#
-&Load State...
-상태 불러오기(&L)...
-
-#
-&Option
-옵션(&O)
-
-#
-&Save State
-상태 저장(&S)
-
-#
-&Video
-비디오(&V)
-
-#
 (BAD) 
 (불량)
 
@@ -397,6 +365,18 @@
 #
 (none)
 (없음)
+
+#
+(playing)
+(실행중)
+
+#
+(recording)
+(기록중)
+
+#
+**Use ScrLock to toggle**
+**ScrLock키로 토글**
 
 #
 1 Coin/1 Credit
@@ -887,6 +867,10 @@ Bet
 베팅
 
 #
+Bezel Lamps
+베젤 램프
+
+#
 Bill 1
 청구 1
 
@@ -1045,6 +1029,10 @@ Card Number:
 #
 Cartridge
 카트리지
+
+#
+Cassette
+카세트
 
 #
 Center
@@ -1259,6 +1247,10 @@ Create New Card
 새로운 카드 생성
 
 #
+Create...
+생성...
+
+#
 Crop to Screen
 화면에 맞게 잘라냄
 
@@ -1273,6 +1265,10 @@ Custom
 #
 Custom Buttons
 사용자 정의 버튼
+
+#
+Cylinder
+실린더
 
 #
 DIAL
@@ -1321,6 +1317,10 @@ Default Search Speed
 #
 Delay
 딜레이
+
+#
+Delete
+삭제
 
 #
 Delete Cheat
@@ -1429,6 +1429,10 @@ Disable All Coins
 #
 Disabled
 비활성화
+
+#
+Display
+표시
 
 #
 Display Type
@@ -1663,6 +1667,14 @@ Fatal error: %s (%s:%d)
 심각한 오류: %s (%s:%d)
 
 #
+File Manager
+파일 매니저
+
+#
+File Specification
+파일 지정
+
+#
 First Bonus
 첫번째 보너스
 
@@ -1681,6 +1693,10 @@ Flip X
 #
 Flip Y
 상하 뒤집기
+
+#
+Floppy Disk
+플로피 디스크
 
 #
 Force Range
@@ -1809,6 +1825,10 @@ HIGHLIGHTS     : %3d  + %3d\n
 #
 Hard
 어려움
+
+#
+Hard Disk
+하드 디스크
 
 #
 Harder
@@ -1955,6 +1975,10 @@ Image Enhancement
 이미지 개선
 
 #
+Image Information
+이미지 정보
+
+#
 Imperfect
 불완전함
 
@@ -1989,6 +2013,10 @@ Input (general)
 #
 Input (this game)
 입력 (이 게임)
+
+#
+Input Devices
+입력 장치
 
 #
 Input file is for game '%s', not for current game '%s'\n
@@ -2081,6 +2109,10 @@ Keep
 #
 Keyboard
 키보드
+
+#
+Keyboard Emulation Status
+키보드 에뮬레이션 상태
 
 #
 Korea
@@ -2287,6 +2319,10 @@ MAMEInfo:\n
 MAME정보:\n
 
 #
+MESS SPECIFIC OPTIONS
+MESS 전용 옵션
+
+#
 Machine Mode
 기기 모드
 
@@ -2369,6 +2405,14 @@ Minimum Displayed Value
 #
 Minimum Value
 최소 값
+
+#
+Mode: FULL Emulation
+모드: 전체 에뮬레이션
+
+#
+Mode: PARTIAL Emulation
+모드: 부분 에뮬레이션
 
 #
 Monitor
@@ -2553,6 +2597,10 @@ No
 #
 No Driver Loaded
 드라이버 없음
+
+#
+No Tape Image loaded
+테이프 이미지 불러오지 않았음
 
 #
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
@@ -4183,8 +4231,16 @@ Paddle V 8
 핸들 V 8
 
 #
+Parallel Port
+페러럴 포트
+
+#
 Pause
 일시정지
+
+#
+Pause/Stop
+일시정지/중지
 
 #
 Pedal
@@ -4193,6 +4249,10 @@ Pedal
 #
 Pixel Aspect (%d:%d)
 픽셀비율 (%d:%d)
+
+#
+Play
+실행
 
 #
 Play Time
@@ -4335,8 +4395,28 @@ Previous values already restored
 이전값이 이미 저장됨
 
 #
+Printer
+프린터
+
+#
 Program Space
 프로그램 공간
+
+#
+Punched Card
+펀치 카드
+
+#
+Punched Tape
+펀치 테이프
+
+#
+Quickload
+빠른 불러오기
+
+#
+Quit Fileselector
+빠른 파일 선택
 
 #
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
@@ -4373,6 +4453,10 @@ Rapid Fire
 #
 Reach
 리치
+
+#
+Record
+기록
 
 #
 Record Movie
@@ -4443,6 +4527,10 @@ Reverse
 반전
 
 #
+Rewind
+되감기
+
+#
 Right Half
 오른쪽 절반
 
@@ -4471,10 +4559,6 @@ Rotation
 회전
 
 #
-S&ave State As...
-상태 저장(&A)...
-
-#
 SHADOWS        : %3d  + %3d\n
 그림자         : %3d  + %3d\n
 
@@ -4493,10 +4577,6 @@ Save Cheat
 #
 Save Memory
 메모리 저장
-
-#
-Save Sc&reenshot
-스크린샷 저장(&R)
 
 #
 Save Snapshot
@@ -4605,6 +4685,10 @@ Select position to save to
 #
 Sensitivity
 감도
+
+#
+Serial Port
+시리얼 포트
 
 #
 Service
@@ -4731,6 +4815,10 @@ Slow But Sure (changed or not)
 느리지만 확실함 (변경여부 판별)
 
 #
+Snapshot
+스트린샷
+
+#
 Soft Reset
 소프트 리셋
 
@@ -4827,6 +4915,10 @@ Take
 갖기
 
 #
+Tape Control
+테이프 콘트롤
+
+#
 Territory
 지역
 
@@ -4867,6 +4959,10 @@ The colors aren't 100% accurate.\n
 컬러가 100% 정확치 않습니다.\n
 
 #
+The emulated system is a computer: 
+에뮬레이트한 시스템은 컴퓨터입니다:
+
+#
 The game has protection which isn't fully emulated.
 게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.
 
@@ -4881,6 +4977,10 @@ The game lacks sound.
 #
 The game lacks sound.\n
 사운드가 나지 않습니다.\n
+
+#
+The keyboard emulation may not be 100% accurate.
+키보드 에뮬레이션이 100% 정확하지 않을 수 있습니다.
 
 #
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
@@ -5129,6 +5229,14 @@ UI 확대
 #
 UI Zoom Out
 UI 축소
+
+#
+UI:   Disabled
+UI:   사용안함
+
+#
+UI:   Enabled
+UI:   사용
 
 #
 UNEMULATED PROTEC. : %3d  %3d\n
@@ -5543,6 +5651,10 @@ Zoom Auto
 자동 확대
 
 #
+[empty slot]
+[빈 슬롯]
+
+#
 activation key saved
 활성키 저장됨
 
@@ -5569,6 +5681,10 @@ auto%2d/%d
 #
 automatic pause when playback is finished
 리플레이 재생이 끝나면 자동으로 일시정지
+
+#
+automatically adjusts the speed of gameplay to keep the refresh rate lower than the screen
+화면상의 재생빈도보다 낮은 값을 갖도록 게임 속도를 자동으로 조절
 
 #
 automatically rotate screen clockwise 90 degrees if vertical
@@ -5647,6 +5763,10 @@ compare files with known MAME roms
 알려진 MAME 롬과 비교
 
 #
+controls the speed of gameplay, relative to realtime; smaller numbers are slower
+실제 속도와 비교해 게임속도를 조절;낮은 숫자일 수록 느림
+
+#
 convert lightgun button 2 into offscreen reload
 라이트건 버튼 2를 화면 밖 재장전으로 변환
 
@@ -5673,6 +5793,10 @@ default game screen contrast correction
 #
 default game screen gamma correction
 기본 게임화면 감마값 수정
+
+#
+device-specific options have been added
+장치 전용 옵션이 추가되었습니다
 
 #
 dial
@@ -6067,6 +6191,10 @@ playback an input file
 리플레이 파일 재생
 
 #
+playing
+실행중
+
+#
 positional
 위치표시
 
@@ -6081,6 +6209,10 @@ quit game with confirmation
 #
 record an input file
 리플레이 파일 기록
+
+#
+recording
+기록중
 
 #
 region invalidated - %d results remain
@@ -6195,12 +6327,20 @@ show this help
 현재 도움말 표시
 
 #
+size of RAM (if supported by driver)
+램 크기 (드라이버에서 지원시)
+
+#
 skip %d/%d
 스킵 %d/%d
 
 #
 skip displaying the information screen at startup
 시작시 정보 화면 표시 건너뛰기
+
+#
+skip displaying the warnings screen
+경고 화면을 건너뜀
 
 #
 sound
@@ -6213,6 +6353,10 @@ sound volume in decibels (-32 min, 0 max)
 #
 stereo
 스테레오
+
+#
+stopped
+중지됨
 
 #
 story database name
@@ -6269,6 +6413,10 @@ video_screen_configure(): 가시영역은 폭/높이 영역 안에 있어야 합니다!
 #
 window background color
 창 배경 색상
+
+#
+writes configuration to (driver).ini on exit
+종료시 설정을 (드라이버).ini 에 기록
 
 #
 year, manufacturer and full name

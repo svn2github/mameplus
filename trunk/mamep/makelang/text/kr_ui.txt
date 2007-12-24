@@ -439,6 +439,10 @@ Auto pause when playback is finished
 재생이 끝나면 자동으로 일시정지
 
 #
+Auto refresh speed
+자동 리프레시 속도
+
+#
 Auto restore and save (only if available)
 자동 복구/저장 (가능한 경우에만)
 
@@ -489,6 +493,10 @@ Best available
 #
 Bezels
 베젤
+
+#
+Bilinear filtering
+바이리니어 필터링
 
 #
 Bookkeeping
@@ -975,10 +983,6 @@ Emulation
 에뮬레이션
 
 #
-Bilinear filtering
-바이리니어 필터링 사용
-
-#
 Enable game cheats
 게임 치트 사용
 
@@ -1179,6 +1183,10 @@ Game search %d%% complete
 게임 찾기 %d%% 완료
 
 #
+Gameplay speed
+게임실행 속도
+
+#
 Gamma Correction
 감마 수정
 
@@ -1213,6 +1221,10 @@ Grouped
 #
 Hard Drive Difference
 하드 드라이브 게임실행 임시파일
+
+#
+Hardware stretching
+하드웨어 늘리기
 
 #
 Help
@@ -2283,10 +2295,6 @@ Story
 줄거리
 
 #
-Hardware stretching
-하드웨어 화면 늘리기
-
-#
 Supported
 지원됨
 
@@ -2477,6 +2485,10 @@ Unsupported
 #
 Use Local Language Game List
 게임 목록에 지역 언어를 사용
+
+#
+Use New UI
+새로운 UI 사용
 
 #
 Use TreeView in property pages
