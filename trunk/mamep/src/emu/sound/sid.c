@@ -362,4 +362,3 @@ int sid6581_port_r (SID6581 *This, int offset)
     return data;
 }
 
-

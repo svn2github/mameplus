@@ -50,4 +50,3 @@ extern UINT32 st0016_rom_bank;
 void st0016_save_init(void);
 
 
-

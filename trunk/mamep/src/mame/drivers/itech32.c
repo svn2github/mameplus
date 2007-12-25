@@ -3976,4 +3976,3 @@ GAME( 2001, gtclassc, 0,        sftm,    aama,  aama,     ROT0, "Incredible Tech
 GAME( 2001, gtclassp, gtclassc, sftm,    aama,  gtclassp, ROT0, "Incredible Technologies", "Golden Tee Classic (v1.00) Alt" , 0) /* PIC 16C54 labeled as ITGFCL */
 GAME( 2001, gtcls100, gtclassc, sftm,    s_ver, s_ver,    ROT0, "Incredible Technologies", "Golden Tee Classic (v1.00S)" , 0) /* PIC 16C54 labeled as ITGFCL-M */
 
-

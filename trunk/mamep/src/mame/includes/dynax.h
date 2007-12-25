@@ -95,4 +95,3 @@ VIDEO_START(ddenlovr);
 VIDEO_UPDATE(ddenlovr);
 VIDEO_EOF(ddenlovr);
 
-

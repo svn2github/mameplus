@@ -1451,4 +1451,3 @@ MACHINE_START( buggybjr )
 	/* /CUDISP CRTC interrupt */
 	timer_set(video_screen_get_time_until_pos(0, CURSOR_YPOS, CURSOR_XPOS), NULL, 0, interrupt_callback);
 }
-

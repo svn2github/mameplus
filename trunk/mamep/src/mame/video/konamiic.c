@@ -8370,4 +8370,3 @@ READ32_HANDLER( K055555_long_r )
 
 READ16_HANDLER( K053244_reg_word_r ) { return(K053244_regs[0][offset*2]<<8|K053244_regs[0][offset*2+1]); }
 
-

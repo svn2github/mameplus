@@ -531,4 +531,3 @@ void c140_get_info(void *token, UINT32 state, sndinfo *info)
 	}
 }
 
-

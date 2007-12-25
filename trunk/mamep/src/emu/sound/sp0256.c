@@ -1381,4 +1381,3 @@ void sp0256_get_info(void *token, UINT32 state, sndinfo *info)
 	}
 }
 
-

@@ -23,4 +23,3 @@ VIDEO_UPDATE( midzeus2 );
 READ32_HANDLER( zeus2_r );
 WRITE32_HANDLER( zeus2_w );
 
-
