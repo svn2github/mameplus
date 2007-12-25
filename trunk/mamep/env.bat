@@ -1,9 +1,11 @@
 @echo off
-set PATH=D:\wgcc421\bin;D:\mamep_svn\extra\bin;C:\Program Files\Microsoft SDKs\Windows\v6.0A\bin\
+set PSDK_DIR=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A
+set MINGW_ROOT=D:\wgcc421
+set PATH=%MINGW_ROOT%\bin;extra\bin;%PSDK_DIR%\bin\
 
-set C_INCLUDE_PATH=D:\mamep_svn\extra\include
-set LIBRARY_PATH=D:\mamep_svn\extra\lib
-set INCLUDE=D:\mamep_svn\extravc\include\;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Include\
-set LIB=D:\mamep_svn\extravc\lib\;C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\
+set C_INCLUDE_PATH=extra\include
+set LIBRARY_PATH=extra\lib
+set INCLUDE=extravc\include\;%PSDK_DIR%\Include\
+set LIB=extravc\lib\;%PSDK_DIR%\Lib\
 
 gcc -v
