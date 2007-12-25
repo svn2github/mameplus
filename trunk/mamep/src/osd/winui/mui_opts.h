@@ -330,7 +330,7 @@ int GetPlayTime(int driver_index);
 void GetTextPlayTime(int driver_index, WCHAR *buf);
 void ResetPlayTime(int driver_index);
 
-char *GetVersionString(void);
+const char *GetVersionString(void);
 
 void SaveDefaultOptions(void);
 

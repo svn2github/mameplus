@@ -52,6 +52,7 @@
 #include "winutf8.h"
 #include "strconv.h"
 #include "clifront.h"
+#include "directories.h" //mamep: for g_directoryInfo[] in function generate_default_dirs()
 #include "translate.h"
 
 //#ifdef MESS
@@ -100,6 +101,10 @@ static void set_core_translation_directory(const WCHAR *dir);
 
 static void  build_default_bios(void);
 
+extern DWORD create_path_recursive(const TCHAR *path);
+
+static void  generate_default_ctrlr(void);
+static void  generate_default_dirs(void);
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -695,6 +700,9 @@ BOOL OptionsInit(void)
 //#ifdef MESS
 	set_core_hash_directory(GetHashDirs());
 //#endif
+
+	generate_default_dirs();
+	generate_default_ctrlr();
 
 	return TRUE;
 }
@@ -1363,6 +1371,7 @@ const WCHAR* GetCtrlrDir(void)
 void SetCtrlrDir(const WCHAR* path)
 {
 	options_set_wstring(global, OPTION_CTRLRPATH, path, OPTION_PRIORITY_CMDLINE);
+	generate_default_ctrlr();
 }
 
 const WCHAR* GetCommentDir(void)
@@ -2734,6 +2743,69 @@ void set_core_bios(const char *bios)
     Internal functions
  ***************************************************************************/
 
+static void generate_default_dirs(void)
+{
+	int i;
+
+	for (i = 0; g_directoryInfo[i].pfnGetTheseDirs; i++)
+	{
+		WCHAR *paths = wcsdup(g_directoryInfo[i].pfnGetTheseDirs());
+		{
+			WCHAR *p;
+
+			for (p = wcstok(paths, TEXT(";")); p; p =wcstok(NULL, TEXT(";")))
+				create_path_recursive(p);
+		}
+		free(paths);
+	};
+}
+
+static void generate_default_ctrlr(void)
+{
+	static const char *default_ctrlr = 
+		"<mameconfig version=\"10\">\n"
+		"\t<system name=\"default\">\n"
+		"\t\t<!--\n"
+		"\t\t\tStandard input customization file\n"
+		"\t\t\t(dummy file for GUI)\n"
+		"\t\t-->\n"
+		"\t</system>\n"
+		"</mameconfig>\n";
+	const WCHAR *ctrlrpath = GetCtrlrDir();
+	const char *ctrlr = options_get_string(mamecore, OPTION_CTRLR);
+
+	mame_file *file;
+	file_error filerr;
+	WCHAR fname[MAX_PATH];
+	char *stemp;
+	BOOL DoCreate;
+
+	snwprintf(fname, ARRAY_LENGTH(fname), L"%s%hs%hs.cfg", ctrlrpath, PATH_SEPARATOR, ctrlr);
+
+	stemp = utf8_from_wstring(fname);
+	filerr = mame_fopen_options(mamecore, SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
+	if (filerr == FILERR_NONE)
+		mame_fclose(file);
+
+	DoCreate = (filerr != FILERR_NONE);
+
+	dprintf("I %shave ctrlr %s", DoCreate ? "don't " : "", ctrlr);
+
+	if (DoCreate)
+	{
+		create_path_recursive(ctrlrpath);
+
+		filerr = mame_fopen_options(mamecore, SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
+		if (filerr == FILERR_NONE)
+		{
+			mame_fputs(file, default_ctrlr);
+			mame_fclose(file);
+		}
+	}
+
+	free(stemp);
+}
+
 static void  CusColorEncodeString(const COLORREF *value, char* str)
 {
 	int  i;
@@ -3095,7 +3167,7 @@ void SaveDefaultOptions(void)
 	SaveSettingsFile(global, NULL, buffer);
 }
 
-char * GetVersionString(void)
+const char * GetVersionString(void)
 {
 	return build_version;
 }

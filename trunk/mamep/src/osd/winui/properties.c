@@ -2888,8 +2888,8 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 
 	// reset the controllers dropdown
 	(void)ComboBox_ResetContent(control);
-	(void)ComboBox_InsertString(control, index, _UIW(TEXT("N/A")));
-	(void)ComboBox_SetItemData(control, index, "");
+	(void)ComboBox_InsertString(control, index, _UIW(TEXT("Standard")));
+	(void)ComboBox_SetItemData(control, index, "Standard");
 	index++;
 
 	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
@@ -2912,6 +2912,9 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 				{
 					// and strip off the extension
 					*ext = 0;
+
+					if (!wcscmpi(root, TEXT("Standard")))
+						continue;
 
 					// set the option?
 					if (!wcscmp(root, w_ctrlr_option))
