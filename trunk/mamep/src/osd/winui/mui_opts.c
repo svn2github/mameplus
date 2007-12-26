@@ -551,11 +551,15 @@ void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_glob
 		good_option = TRUE;
 
 		// check blacklist
-		if (entrylist->name != NULL)
+		//mamep: blacklist is disalbed if it is global option
+		if (entrylist->name && !is_global)
 		{
 			for (i = 0; i < ARRAY_LENGTH(blacklist); i++)
 			{
-				if (!strcmp(entrylist->name, blacklist[i]))
+				int len = strlen(blacklist[i]);
+
+				if (strncmp(entrylist->name, blacklist[i], len) == 0
+				 && (entrylist->name[len] == '\0' || entrylist->name[len] == ';'))
 				{
 					good_option = FALSE;
 					break;
@@ -3365,7 +3369,8 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 	const game_driver *driver = NULL;
 	astring *filename = NULL;
 
-	if (OPTIONS_GLOBAL != opt_type && NULL != opts && !options_equal(opts, global))
+	//mamep: to remove ini file, load baseopts even if it is equals global
+	if (OPTIONS_GLOBAL != opt_type && NULL != opts)
 	{
 		baseopts = load_options(opt_type - 1, game_num);
 	}
@@ -3377,7 +3382,7 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 
 	if (opt_type == OPTIONS_GLOBAL)
 	{
-		/* Don't try to save a null global options file,  or it will be erased. */
+		/* Don't try to save a null global options file, or it will be erased. */
 		if (NULL == opts)
 			return;
 		options_copy(global, opts);
