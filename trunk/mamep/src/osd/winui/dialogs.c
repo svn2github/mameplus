@@ -199,7 +199,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_NOOFFSET_CLONES),
 						GetOffsetClones());
 		Button_SetCheck(GetDlgItem(hDlg,IDC_BROKEN_ICON),
-						!GetUseBrokenIcon());
+						GetUseBrokenIcon());
 		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Snapshot")));
 		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nCount++, TAB_SCREENSHOT);
 		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Flyer")));
@@ -351,7 +351,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 				// LineUpIcons does just a ResetListView(), which is what we want here
 				PostMessage(GetMainWindow(),WM_COMMAND, MAKEWPARAM(ID_VIEW_LINEUPICONS, FALSE),(LPARAM)NULL);
  			}
-			checked = !Button_GetCheck(GetDlgItem(hDlg,IDC_BROKEN_ICON));
+			checked = Button_GetCheck(GetDlgItem(hDlg,IDC_BROKEN_ICON));
 			if (checked != GetUseBrokenIcon())
 			{
 				SetUseBrokenIcon(checked);
