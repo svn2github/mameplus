@@ -101,7 +101,7 @@ struct PickerInfo
 	int *pnColumnsShown;
 	int *pnColumnsOrder;
 	UINT_PTR nTimer;
-	const WCHAR **ppszColumnNames;
+	LPCTSTR *ppszColumnNames;
 };
 
 
@@ -384,7 +384,7 @@ static LRESULT CALLBACK ListViewWndProc(HWND hWnd, UINT message, WPARAM wParam, 
 
 	switch(message)
 	{
-		case WM_MOUSEMOVE:
+	    case WM_MOUSEMOVE:
 			if (MouseHasBeenMoved())
 				ShowCursor(TRUE);
 			break;
@@ -499,7 +499,7 @@ static void Picker_InternalResetColumnDisplay(HWND hWnd, BOOL bFirstTime)
 			ListView_InsertColumn(hWnd, nColumn, &lvc);
 			pPickerInfo->pnColumnsOrder[nColumn] = order[i];
 
-			//dprintf("Visible column %d: Logical column %d; Width=%d\n", nColumn, order[i], widths[order[i]]);
+			dprintf("Visible column %d: Logical column %d; Width=%d\n", nColumn, order[i], widths[order[i]]);
 
 			nColumn++;
 		}
@@ -613,6 +613,8 @@ BOOL SetupPicker(HWND hwndPicker, const struct PickerOptions *pOptions)
 	struct PickerInfo *pPickerInfo;
 	int i;
 	LONG_PTR l;
+
+	assert(hwndPicker);
 
 	// Allocate the list view struct
 	pPickerInfo = (struct PickerInfo *) malloc(sizeof(struct PickerInfo));
@@ -761,7 +763,7 @@ static BOOL PickerHitTest(HWND hWnd)
 	DWORD			res = GetMessagePos();
 	LVHITTESTINFO	htInfo;
 
-	memset(&htInfo, 0, sizeof(htInfo));
+    memset(&htInfo, 0, sizeof(htInfo));
 	p = MAKEPOINTS(res);
 	GetWindowRect(hWnd, &rect);
 	htInfo.pt.x = p.x - rect.left;
@@ -1008,7 +1010,7 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 				szBuffer1, ARRAY_LENGTH(szBuffer1));
 			Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
 				szBuffer2, ARRAY_LENGTH(szBuffer2));
-			nResult = wcscmpi(szBuffer1, szBuffer2);
+			nResult = _tcsicmp(szBuffer1, szBuffer2);
 		}
 
 		if (pcpp->bReverse)
@@ -1088,7 +1090,7 @@ int Picker_InsertItemSorted(HWND hwndPicker, int nParam)
 	lvi.iItem	 = nLow;
 	lvi.iSubItem = 0;
 	lvi.lParam	 = nParam;
-	lvi.pszText  = LPSTR_TEXTCALLBACKW;
+	lvi.pszText  = LPSTR_TEXTCALLBACK;
 	lvi.iImage	 = I_IMAGECALLBACK;
 
 	return ListView_InsertItem(hwndPicker, &lvi);
@@ -1317,10 +1319,10 @@ int Picker_GetNumColumns(HWND hWnd)
 
 
 /* Add ... to Items in ListView if needed */
-static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnLen, int nOffset)
+static LPCWSTR MakeShortString(HDC hDC, LPCWSTR lpszLong, int nColumnLen, int nOffset)
 {
+	static const WCHAR szThreeDots[] = TEXT("...");
 	static WCHAR szShort[MAX_PATH];
-	static WCHAR szThreeDots[4];
 	int nStringLen = wcslen(lpszLong);
 	int nAddLen;
 	SIZE size;
@@ -1330,11 +1332,10 @@ static const WCHAR* MakeShortString(HDC hDC, const WCHAR* lpszLong, int nColumnL
 	if (nStringLen == 0 || size.cx + nOffset <= nColumnLen)
 		return lpszLong;
 
-	wcscpy(szThreeDots, TEXT("..."));
+	wcscpy(szShort, lpszLong);
 	GetTextExtentPoint32(hDC, szThreeDots, wcslen(szThreeDots), &size);
 	nAddLen = size.cx;
 
-	wcscpy(szShort, lpszLong);
 	for (i = nStringLen - 1; i > 0; i--)
 	{
 		szShort[i] = 0;
@@ -1363,7 +1364,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	COLORREF    clrImage = GetSysColor(COLOR_WINDOW);
 	static TCHAR szBuff[MAX_PATH];
 	BOOL        bFocus = (GetFocus() == hWnd);
-	LPCWSTR     pszText;
+	LPCTSTR     pszText;
 	UINT        nStateImageMask;
 	BOOL        bSelected;
 	LV_COLUMN   lvc;
@@ -1378,12 +1379,12 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	int         nColumnMax = 0;
 	int         *order;
 	BOOL        bDrawAsChild;
-	int         indent_space;
-	BOOL        bColorChild = FALSE;
-	BOOL        bParentFound = FALSE;
+	int			indent_space;
+	BOOL		bColorChild = FALSE;
+	BOOL		bParentFound = FALSE;
 	BOOL        bItemBroken = FALSE;
-	int         nParent;
-	HBITMAP     hBackground = GetBackgroundBitmap();
+	int			nParent;
+	HBITMAP		hBackground = GetBackgroundBitmap();
 	MYBITMAPINFO *pbmDesc = GetBackgroundInfo();
 
 	pPickerInfo = GetPickerInfo(hWnd);
@@ -1419,8 +1420,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 	/* Labels are offset by a certain amount */
 	/* This offset is related to the width of a space character */
-	wcscpy(szBuff, TEXT(" "));
-	GetTextExtentPoint32(hDC, szBuff, 1 , &size);
+	GetTextExtentPoint32(hDC, TEXT(" "), 1 , &size);
 	offset = size.cx;
 
 	lvi.mask	   = LVIF_TEXT | LVIF_IMAGE | LVIF_STATE | LVIF_PARAM;
@@ -1475,8 +1475,8 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	}
 
 	ListView_GetItemRect(hWnd, nItem, &rcAllLabels, LVIR_BOUNDS);
-
 	ListView_GetItemRect(hWnd, nItem, &rcLabel, LVIR_LABEL);
+
 	rcAllLabels.left = rcLabel.left;
 
 	if (hBackground != NULL)
@@ -1539,7 +1539,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		/* indent width of icon + the space between the icon and text
 		 * so left of clone icon starts at text of parent
-		 */
+         */
 		indent_space = rect.right - rect.left + offset;
 	}
 
@@ -1676,7 +1676,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		rcItem.left   = rcItem.right;
 		rcItem.right += lvc.cx;
 
-		nRetLen = wcslen(szBuff);
+		nRetLen = _tcslen(szBuff);
 		if (nRetLen == 0)
 			continue;
 
@@ -1736,7 +1736,7 @@ int Picker_GetColumnCount(HWND hwndPicker)
 
 
 
-const WCHAR **Picker_GetColumnNames(HWND hwndPicker)
+LPCTSTR *Picker_GetColumnNames(HWND hwndPicker)
 {
 	struct PickerInfo *pPickerInfo;
 	pPickerInfo = GetPickerInfo(hwndPicker);

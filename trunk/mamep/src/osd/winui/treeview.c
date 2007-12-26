@@ -116,10 +116,10 @@ static WNDPROC      g_lpTreeWndProc = 0;    /* for subclassing the TreeView */
 static HIMAGELIST   hTreeSmall = 0;         /* TreeView Image list of icons */
 
 /* this only has an entry for each TOP LEVEL extra folder */
-static LPEXFOLDERDATA ExtraFolderData[MAX_EXTRA_FOLDERS];
-static int            numExtraFolders = 0;
-static int            numExtraIcons = 0;
-static char           *ExtraFolderIcons[MAX_EXTRA_FOLDERS];
+static LPEXFOLDERDATA		ExtraFolderData[MAX_EXTRA_FOLDERS];
+int			        numExtraFolders = 0;
+static int          numExtraIcons = 0;
+static char         *ExtraFolderIcons[MAX_EXTRA_FOLDERS];
 
 // built in folders and filters
 static LPFOLDERDATA  g_lpFolderData;
@@ -132,7 +132,7 @@ static UINT          g_bios_folder = 0;
     private function prototypes
  ***************************************************************************/
 
-extern BOOL         InitFolders(void);
+extern BOOL			InitFolders(void);
 static BOOL         CreateTreeIcons(void);
 static void         TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars );
@@ -168,20 +168,20 @@ static BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder);
  **************************************************************************/
 static int ci_strncmp (const char *s1, const char *s2, int n)
 {
-	int c1, c2;
+        int c1, c2;
 
-	while (n)
-	{
-		if ((c1 = tolower (*s1)) != (c2 = tolower (*s2)))
-			return (c1 - c2);
-		else if (!c1)
-			break;
-		--n;
+        while (n)
+        {
+                if ((c1 = tolower (*s1)) != (c2 = tolower (*s2)))
+                        return (c1 - c2);
+                else if (!c1)
+                        break;
+                --n;
 
-		s1++;
-		s2++;
-	}
-	return 0;
+                s1++;
+                s2++;
+        }
+        return 0;
 }
 #endif
 
@@ -243,11 +243,11 @@ void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList)
 
 void DestroyTree(HWND hWnd)
 {
-	if ( hTreeSmall )
-	{
-		ImageList_Destroy( hTreeSmall );
-		hTreeSmall = NULL;
-	}
+    if ( hTreeSmall )
+    {
+        ImageList_Destroy( hTreeSmall );
+        hTreeSmall = NULL;
+    }
 }
 
 void SetCurrentFolder(LPTREEFOLDER lpFolder)
@@ -334,7 +334,8 @@ LPTREEFOLDER GetSourceFolder(int driver_index)
 
 void AddGame(LPTREEFOLDER lpFolder, UINT nGame)
 {
-	SetBit(lpFolder->m_lpGameBits, nGame);
+	if (lpFolder)
+		SetBit(lpFolder->m_lpGameBits, nGame);
 }
 
 void RemoveGame(LPTREEFOLDER lpFolder, UINT nGame)
@@ -421,7 +422,7 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 			return TRUE;
 	}
 
-	// Filter games--return TRUE if the game should be HIDDEN in this view
+ 	// Filter games--return TRUE if the game should be HIDDEN in this view
 	if( GetFilterInherit() )
 	{
 		if( lpFolder )
@@ -1680,7 +1681,7 @@ void ResetTreeViewFolders(void)
 		tvi.pszText = treeFolders[i]->m_lpTitle;
 		tvi.lParam	= (LPARAM)treeFolders[i];
 
-#if !defined(NONAMELESSUNION)
+#if !defined(NONAMELESSUNION) /* bug in commctrl.h */
 		tvs.item = tvi;
 #else
 		tvs.DUMMYUNIONNAME.item = tvi;
@@ -1819,7 +1820,9 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 	if (lpFolder)
 	{
 		if (lpFolder->m_lpGameBits)
+		{
 			DeleteBits(lpFolder->m_lpGameBits);
+		}
 
 		FreeIfAllocatedW(&lpFolder->m_lpTitle);
 		FreeIfAllocatedW(&lpFolder->m_lpOriginalTitle);
@@ -1832,9 +1835,9 @@ static void DeleteFolder(LPTREEFOLDER lpFolder)
 /* Can be called to re-initialize the array of treeFolders */
 BOOL InitFolders(void)
 {
-	int             i = 0;
-	LPFOLDERDATA    fData = 0;
+	int 			i = 0;
 	BOOL            doCreateFavorite;
+	LPFOLDERDATA	fData = 0;
 
 	if (treeFolders != NULL)
 	{
@@ -1941,7 +1944,7 @@ BOOL InitFolders(void)
 }
 
 // create iconlist and Treeview control
-static BOOL CreateTreeIcons(void)
+static BOOL CreateTreeIcons()
 {
 	HICON	hIcon;
 	INT 	i;
@@ -2024,7 +2027,7 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// Select a compatible bitmap into the memory DC
 	bitmap = CreateCompatibleBitmap(hDC, rcClient.right - rcClient.left,
-	                                rcClient.bottom - rcClient.top);
+									rcClient.bottom - rcClient.top);
 	hOldBitmap = SelectObject(memDC, bitmap);
 
 	// First let the control do its default drawing.
@@ -2050,24 +2053,24 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		
 		// Create monochrome bitmap for the mask
 		maskBitmap = CreateBitmap(rcClient.right - rcClient.left,
-		                          rcClient.bottom - rcClient.top, 
-		                          1, 1, NULL);
+								  rcClient.bottom - rcClient.top, 
+								  1, 1, NULL);
 
 		hOldMaskBitmap = SelectObject(maskDC, maskBitmap);
 		SetBkColor(memDC, GetSysColor(COLOR_WINDOW));
 
 		// Create the mask from the memory DC
 		BitBlt(maskDC, 0, 0, rcClient.right - rcClient.left,
-		       rcClient.bottom - rcClient.top, memDC, 
-		       rcClient.left, rcClient.top, SRCCOPY);
+			   rcClient.bottom - rcClient.top, memDC, 
+			   rcClient.left, rcClient.top, SRCCOPY);
 
 		tempDC = CreateCompatibleDC(hDC);
 		hOldHBitmap = SelectObject(tempDC, hBackground);
 
 		imageDC = CreateCompatibleDC(hDC);
 		bmpImage = CreateCompatibleBitmap(hDC,
-		                                  rcClient.right - rcClient.left, 
-		                                  rcClient.bottom - rcClient.top);
+										  rcClient.right - rcClient.left, 
+										  rcClient.bottom - rcClient.top);
 		hOldBmpImage = SelectObject(imageDC, bmpImage);
 
 		hPAL = GetBackgroundPalette();
@@ -2089,22 +2092,22 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		for (i = rcRoot.left; i < rcClient.right; i += bmDesc->bmWidth)
 			for (j = rcRoot.top; j < rcClient.bottom; j += bmDesc->bmHeight)
 				BitBlt(imageDC,  i, j, bmDesc->bmWidth, bmDesc->bmHeight, 
-				       tempDC, 0, 0, SRCCOPY);
+					   tempDC, 0, 0, SRCCOPY);
 
 		// Set the background in memDC to black. Using SRCPAINT with black and any other
 		// color results in the other color, thus making black the transparent color
 		SetBkColor(memDC, RGB(0,0,0));
 		SetTextColor(memDC, RGB(255,255,255));
 		BitBlt(memDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left,
-		       rcClip.bottom - rcClip.top,
-		       maskDC, rcClip.left, rcClip.top, SRCAND);
+			   rcClip.bottom - rcClip.top,
+			   maskDC, rcClip.left, rcClip.top, SRCAND);
 
 		// Set the foreground to black. See comment above.
 		SetBkColor(imageDC, RGB(255,255,255));
 		SetTextColor(imageDC, RGB(0,0,0));
 		BitBlt(imageDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left, 
-		       rcClip.bottom - rcClip.top,
-		       maskDC, rcClip.left, rcClip.top, SRCAND);
+			   rcClip.bottom - rcClip.top,
+			   maskDC, rcClip.left, rcClip.top, SRCAND);
 
 		// Combine the foreground with the background
 		BitBlt(imageDC, rcClip.left, rcClip.top, rcClip.right - rcClip.left,
@@ -2146,13 +2149,13 @@ static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 	if (GetBackgroundBitmap() != NULL)
 	{
 		switch (uMsg)
+		{	
+	    case WM_MOUSEMOVE:
 		{
-		case WM_MOUSEMOVE:
-			{
-				if (MouseHasBeenMoved())
-					ShowCursor(TRUE);
-				break;
-			}
+			if (MouseHasBeenMoved())
+				ShowCursor(TRUE);
+			break;
+		}
 
 		case WM_KEYDOWN :
 			if (wParam == VK_F2)
@@ -2392,9 +2395,9 @@ void FreeExtraFolders(void)
 	}
 
 	for (i = 0; i < numExtraIcons; i++)
-	{
+    {
 		free(ExtraFolderIcons[i]);
-	}
+    }
 
 	numExtraIcons = 0;
 
@@ -2520,13 +2523,15 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 				lpTemp = lpFolder;
 			}
 			AddGame(lpTemp, GetGameNameIndex(name));
-		}
-	}
+        }
+    }
 
-	if (fp)
-		fclose(fp);
+    if ( fp )
+    {
+        fclose( fp );
+    }
 
-	return TRUE;
+    return TRUE;
 }
 
 
@@ -2546,8 +2551,8 @@ static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const WCHAR *old_name
 	if (lpFolder->m_nParent >= 0)
 	{
 		//it is a custom SubFolder
-		lpParent = GetFolder(lpFolder->m_nParent);
-		if (lpParent)
+		lpParent = GetFolder( lpFolder->m_nParent );
+		if( lpParent )
 		{
 			snwprintf(filename, ARRAY_LENGTH(filename),
 				TEXT("%s\\%s\\%s.ini"), ini_dirw, lpParent->m_lpTitle, old_name);
@@ -2652,7 +2657,7 @@ void AddToCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
 
 void RemoveFromCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
 {
-	if ((lpFolder->m_dwFlags & F_CUSTOM) == 0)
+    if ((lpFolder->m_dwFlags & F_CUSTOM) == 0)
 	{
 	    MessageBox(GetMainWindow(),_UIW(TEXT("Unable to remove game from non-custom folder")),
 				   TEXT_MAMEUINAME,MB_OK | MB_ICONERROR);
@@ -2672,7 +2677,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	WCHAR fname[MAX_PATH];
 	FILE *fp;
 	BOOL error = FALSE;
-	int i,j;
+    int i,j;
 
 	LPTREEFOLDER root_folder = NULL;
 	LPEXFOLDERDATA extra_folder = NULL;
@@ -2680,10 +2685,10 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 
 	for (i=0;i<numExtraFolders;i++)
 	{
-		if (ExtraFolderData[i]->m_nFolderId == lpFolder->m_nFolderId)
+	    if (ExtraFolderData[i]->m_nFolderId == lpFolder->m_nFolderId)
 		{
-			root_folder = lpFolder;
-			extra_folder = ExtraFolderData[i];
+		    root_folder = lpFolder;
+		    extra_folder = ExtraFolderData[i];
 			break;
 		}
 
@@ -2706,8 +2711,8 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	snwprintf(fname, ARRAY_LENGTH(fname),
 		TEXT("%s\\%s.ini"), folder_dirw, extra_folder->m_szTitle);
 
-	fp = wfopen(fname, TEXT("wt"));
-	if (fp == NULL)
+    fp = wfopen(fname, TEXT("wt"));
+    if (fp == NULL)
 	   error = TRUE;
 	else
 	{
@@ -2758,7 +2763,9 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 				   int driver_index = GetIndexFromSortedIndex(i); 
 
 				   if (TestBit(folder_data->m_lpGameBits,driver_index))
+				   {
 					   fprintf(fp,"%s\n",drivers[driver_index]->name);
+				   }
 			   }
 		   }
 	   }
@@ -2778,7 +2785,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 
 HIMAGELIST GetTreeViewIconList(void)
 {
-	return hTreeSmall;
+    return hTreeSmall;
 }
 
 int GetTreeViewIconIndex(int icon_id)

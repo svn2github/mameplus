@@ -373,11 +373,11 @@ HBITMAP DIBToDDB(HDC hDC, HANDLE hDIB, LPMYBITMAPINFO desc)
 	}
 
 	hBM = CreateDIBitmap(hDC,					  /* handle to device context */
-	                    (LPBITMAPINFOHEADER)lpbi, /* pointer to bitmap info header	*/
-	                    (LONG)CBM_INIT, 		  /* initialization flag */
-	                    lpDIBBits,				  /* pointer to initialization data  */
-	                    (LPBITMAPINFO)lpbi, 	  /* pointer to bitmap info */
-	                    DIB_RGB_COLORS);		  /* color-data usage  */
+						(LPBITMAPINFOHEADER)lpbi, /* pointer to bitmap info header	*/
+						(LONG)CBM_INIT, 		  /* initialization flag */
+						lpDIBBits,				  /* pointer to initialization data  */
+						(LPBITMAPINFO)lpbi, 	  /* pointer to bitmap info */
+						DIB_RGB_COLORS);		  /* color-data usage  */
 
 	return hBM;
 }
