@@ -335,6 +335,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_CLONE_COLOR,				"-1",       0,                 NULL },
 	{ MUIOPTION_BROKEN_COLOR,				"202",      0,                 NULL },
 	{ MUIOPTION_CUSTOM_COLOR,				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, NULL },
+	{ MUIOPTION_USE_BROKEN_ICON,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_FOLDER_FLAG,				NULL,       0,                 NULL },
 	/* ListMode needs to be before ColumnWidths settings */
 	{ MUIOPTION_LIST_MODE,					"Grouped",        0,                 NULL },
