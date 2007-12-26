@@ -492,8 +492,12 @@ static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 	L"Marquee",
 	L"Title",
 	L"Control Panel",
-	L"PCB",
+#ifdef STORY_DATAFILE
 	L"History",
+	L"Story"
+#else /* STORY_DATAFILE */
+	L"History"
+#endif /* STORY_DATAFILE */
 };
 
 static const char* image_tabs_short_name[MAX_TAB_TYPES] =
@@ -504,8 +508,12 @@ static const char* image_tabs_short_name[MAX_TAB_TYPES] =
 	"marquee",
 	"title",
 	"cpanel",
-	"pcb",
+#ifdef STORY_DATAFILE
+	"history",
+	"story"
+#else /* STORY_DATAFILE */
 	"history"
+#endif /* STORY_DATAFILE */
 };
 
 
