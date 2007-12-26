@@ -438,6 +438,7 @@ static const struct CPS1config cps1_config_table[]=
 	/* CPS2 Phoenix Edition games */
 	{"xmcotad", NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff, 8 },
 	{"hsf2d",   NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff, 9 },
+	{"ssf2ud",  NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff },
 	{0}		/* End of table */
 };
 

@@ -77,6 +77,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( hsf2d )	/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
 	DRIVER( dstlku1d )	/* 05/07/1994 (c) 1994 (Phoenix Edition, US 940705) */
 	DRIVER( progerjd )	/* 17/01/2001 (c) 2001 Cave (Phoenix Edition, Japan) */
+	DRIVER( ssf2ud )		/* 11/09/1993 (c) 1993 (Phoenix Edition, US) */
 
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
