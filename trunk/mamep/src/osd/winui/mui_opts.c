@@ -2775,6 +2775,7 @@ static void generate_default_dirs(void)
 
 static void generate_default_ctrlr(void)
 {
+#if 0
 	static const char *default_ctrlr = 
 		"<mameconfig version=\"10\">\n"
 		"\t<system name=\"default\">\n"
@@ -2817,6 +2818,7 @@ static void generate_default_ctrlr(void)
 	}
 
 	free(stemp);
+#endif
 }
 
 static void  CusColorEncodeString(const COLORREF *value, char* str)
