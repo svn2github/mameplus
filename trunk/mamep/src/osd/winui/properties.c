@@ -2789,6 +2789,10 @@ static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_opti
 	selected_screen = GetSelectedScreen(dialog);
 	screen_option_index = ComboBox_GetCurSel(control);
 	screen_option_value = (const char *) ComboBox_GetItemData(control, screen_option_index);
+
+	if (screen_option_value == NULL || *screen_option_value == '\0')
+		screen_option_value = "auto";
+
 	snprintf(screen_option_name, ARRAY_LENGTH(screen_option_name), "screen%d", selected_screen);
 	options_set_string(opts, screen_option_name, screen_option_value, OPTION_PRIORITY_CMDLINE);
 	return FALSE;
@@ -3161,12 +3165,12 @@ static BOOL DriverConfigReadControl(datamap *map, HWND dialog, HWND control, cor
 static void ResetDataMap(HWND hWnd)
 {
 	char screen_option[32];
+	const char *screen_option_value;
 
 	snprintf(screen_option, ARRAY_LENGTH(screen_option), "screen%d", GetSelectedScreen(hWnd));
 
-	if (options_get_string(pCurrentOpts, screen_option) == NULL 
-		|| (mame_stricmp(options_get_string(pCurrentOpts, screen_option), "") == 0 )
-		|| (mame_stricmp(options_get_string(pCurrentOpts, screen_option), "auto") == 0 ) )
+	screen_option_value = options_get_string(pCurrentOpts, screen_option);
+	if (screen_option_value == NULL || *screen_option_value == '\0')
 	{
 		options_set_string(pCurrentOpts, screen_option, "auto", OPTION_PRIORITY_CMDLINE);
 	}
