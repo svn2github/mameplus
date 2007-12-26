@@ -950,7 +950,7 @@ static void override_options(core_options *opts, void *param)
 	if (playopts->record != NULL)
 		options_set_wstring(opts, OPTION_RECORD, playopts->record, OPTION_PRIORITY_CMDLINE);
 	if (playopts->playback != NULL)
-		options_set_wstring(opts, OPTION_PLAYBACK, playopts->playbackdir, OPTION_PRIORITY_CMDLINE);
+		options_set_wstring(opts, OPTION_PLAYBACK, playopts->playback, OPTION_PRIORITY_CMDLINE);
 
 	if (playopts->statedir != NULL)
 		options_set_wstring(opts, OPTION_STATE_DIRECTORY, playopts->statedir, OPTION_PRIORITY_CMDLINE);
