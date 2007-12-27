@@ -1521,6 +1521,10 @@ void osd_toggle_menubar(int state)
 
 	//mamep: save as default state if menubar is disabled manually
 	static int defstate = -1;
+	
+	if (!mess_use_new_ui())
+		return;
+	
 	if (state == 0)
 		defstate = state;
 	if (state < 0)
