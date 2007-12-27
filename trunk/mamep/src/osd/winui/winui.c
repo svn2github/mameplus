@@ -5714,7 +5714,7 @@ int GamePicker_GetItemImage(HWND hwndPicker, int nItem)
 
 int GamePicker_GetUseBrokenColor(void)
 {
-	return !GetUseBrokenIcon();
+	return GetUseBrokenIcon();
 }
 
 const WCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nColumn)
