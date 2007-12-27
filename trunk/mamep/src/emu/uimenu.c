@@ -823,7 +823,10 @@ UINT32 ui_menu_ui_handler(UINT32 state)
 #endif /* CMD_LIST */
 
 	if ((input_ui_pressed(IPT_UI_CONFIGURE) && !ui_menu_is_force_game_select()) || menu_stack[menu_stack_index].handler == NULL)
+	{
+		osd_toggle_menubar(-1);
 		return UI_HANDLER_CANCEL;
+	}
 
 	return state;
 }

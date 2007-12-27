@@ -1507,10 +1507,10 @@ static void set_speed(int speed)
 
 
 //============================================================
-//	win_toggle_menubar
+//	osd_toggle_menubar
 //============================================================
 
-void win_toggle_menubar(int state)
+void osd_toggle_menubar(int state)
 {
 	win_window_info *window;
 	LONG width_diff;
@@ -1871,7 +1871,7 @@ static int invoke_command(HWND wnd, UINT command)
 
 #if HAS_TOGGLEMENUBAR
 		case ID_OPTIONS_TOGGLEMENUBAR:
-			win_toggle_menubar(0);
+			osd_toggle_menubar(0);
 			break;
 #endif
 

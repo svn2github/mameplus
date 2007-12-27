@@ -107,7 +107,7 @@ void osd_wait_for_debugger(void);
 ******************************************************************************/
 
 void osd_update(int skip_redraw);
-
+void osd_toggle_menubar(int);
 
 
 

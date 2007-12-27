@@ -526,7 +526,7 @@ void winwindow_toggle_full_screen(void)
 #if HAS_WINDOW_MENU
 	//mamep: auto disable menubar if fullscreen
 	if (!video_config.windowed)
-		win_toggle_menubar(-1);
+		osd_toggle_menubar(-1);
 #endif
 }
 
@@ -681,7 +681,7 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 #if HAS_WINDOW_MENU
 	//mamep: auto disable menubar if fullscreen
 	if (!video_config.windowed)
-		win_toggle_menubar(-1);
+		osd_toggle_menubar(-1);
 #endif
 }
 

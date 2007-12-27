@@ -2071,7 +2071,10 @@ static UINT32 handler_ingame(UINT32 state)
 
 	/* turn on menus if requested */
 	if (input_ui_pressed(IPT_UI_CONFIGURE))
+	{
+		osd_toggle_menubar(1);
 		return ui_set_handler(ui_menu_ui_handler, 0);
+	}
 
 	if (options_get_bool(mame_options(), OPTION_CHEAT) && input_ui_pressed(IPT_UI_CHEAT))
 		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);

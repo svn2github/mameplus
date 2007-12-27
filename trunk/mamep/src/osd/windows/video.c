@@ -386,14 +386,7 @@ static void check_osd_inputs(void)
 		winwindow_toggle_full_screen();
 
 #ifdef MESS
-	// check for toggling menu bar
-	if (input_ui_pressed(IPT_OSD_2))
-	{
-		if(ui_is_menu_active())
-			win_toggle_menubar(-1);
-		else
-			win_toggle_menubar(1);
-	}
+
 #endif
 }
 
