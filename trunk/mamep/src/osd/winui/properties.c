@@ -316,7 +316,7 @@ static BOOL g_bReset           = FALSE;
 static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
-static BOOL g_bAutoAspect[MAX_SCREENS] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
 static HICON g_hIcon = NULL;
 
 #ifdef TREE_SHEET
@@ -418,10 +418,11 @@ static struct ComboBoxSelectScreen
 	const int	m_pData;
 } g_ComboBoxSelectScreen[] = 
 {
-	{ TEXT("First screen"),         0    },
-	{ TEXT("Second screen"),        1    },
-	{ TEXT("Third screen"),         2    },
-	{ TEXT("Fourth screen"),        3    },
+	{ TEXT("Default setting"),      0    },
+	{ TEXT("First screen"),         1    },
+	{ TEXT("Second screen"),        2    },
+	{ TEXT("Third screen"),         3    },
+	{ TEXT("Fourth screen"),        4    },
 };
 #define NUMSELECTSCREEN ARRAY_LENGTH(g_ComboBoxSelectScreen)
 
@@ -531,9 +532,15 @@ static int GetSelectedScreen(HWND hWnd)
 	int nSelectedScreen = 0;
 	HWND hCtrl = GetDlgItem(hWnd, IDC_SCREENSELECT);
 	if (hCtrl)
-		nSelectedScreen = ComboBox_GetCurSel(hCtrl);
-	if ((nSelectedScreen < 0) || (nSelectedScreen >= MAX_SCREENS))
+	{
+		int nCurSel = ComboBox_GetCurSel(hCtrl);
+		if (nCurSel != CB_ERR)
+			nSelectedScreen = ComboBox_GetItemData(hCtrl, nCurSel);
+	}
+
+	if ((nSelectedScreen < 0) || (nSelectedScreen >= MAX_SCREENS + 1))
 		nSelectedScreen = 0;
+
 	return nSelectedScreen;
 
 }
@@ -2211,6 +2218,16 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 	return 0;
 }
 
+static void AspectSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
+{
+	int nSelectedScreen = GetSelectedScreen(dialog);
+
+	if (nSelectedScreen > 0)
+		snprintf(buffer, buffer_size, "aspect%d", nSelectedScreen - 1);
+	else
+		strcpy(buffer, WINOPTION_ASPECT);
+}
+
 /* Read controls that are not handled in the DataMap */
 static void PropToOptions(HWND hWnd, core_options *o)
 {
@@ -2230,7 +2247,7 @@ static void PropToOptions(HWND hWnd, core_options *o)
 	if (hCtrl && hCtrl2 && hCtrl3)
 	{
 		char aspect_option[32];
-		snprintf(aspect_option, ARRAY_LENGTH(aspect_option), "aspect%d", GetSelectedScreen(hWnd));
+		AspectSetOptionName(NULL, hWnd, NULL, aspect_option, ARRAY_LENGTH(aspect_option));
 
 		if (Button_GetCheck(hCtrl3))
 		{
@@ -2378,7 +2395,7 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	if (hCtrl)
 	{
 		char aspect_option[32];
-		snprintf(aspect_option, ARRAY_LENGTH(aspect_option), "aspect%d", GetSelectedScreen(hWnd));
+		AspectSetOptionName(NULL, hWnd, NULL, aspect_option, ARRAY_LENGTH(aspect_option));
 		if( strcmp(options_get_string(o, aspect_option), "auto") == 0)
 		{
 			Button_SetCheck(hCtrl, TRUE);
@@ -2397,7 +2414,7 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	if (hCtrl && hCtrl2)
 	{
 		char aspect_option[32];
-		snprintf(aspect_option, ARRAY_LENGTH(aspect_option), "aspect%d", GetSelectedScreen(hWnd));
+		AspectSetOptionName(NULL, hWnd, NULL, aspect_option, ARRAY_LENGTH(aspect_option));
 
 		n = 0;
 		d = 0;
@@ -2779,21 +2796,29 @@ static BOOL RotatePopulateControl(datamap *map, HWND dialog, HWND control, core_
 
 
 
+static void ScreenSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
+{
+	int nSelectedScreen = GetSelectedScreen(dialog);
+
+	if (nSelectedScreen > 0)
+		snprintf(buffer, buffer_size, "screen%d", nSelectedScreen - 1);
+	else
+		strcpy(buffer, WINOPTION_SCREEN);
+}
+
 static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	char screen_option_name[32];
 	const char *screen_option_value;
-	int selected_screen;
 	int screen_option_index;
 
-	selected_screen = GetSelectedScreen(dialog);
 	screen_option_index = ComboBox_GetCurSel(control);
 	screen_option_value = (const char *) ComboBox_GetItemData(control, screen_option_index);
 
 	if (screen_option_value == NULL || *screen_option_value == '\0')
 		screen_option_value = "auto";
 
-	snprintf(screen_option_name, ARRAY_LENGTH(screen_option_name), "screen%d", selected_screen);
+	ScreenSetOptionName(map, dialog, control, screen_option_name, ARRAY_LENGTH(screen_option_name));
 	options_set_string(opts, screen_option_name, screen_option_value, OPTION_PRIORITY_CMDLINE);
 	return FALSE;
 }
@@ -2810,7 +2835,7 @@ static BOOL ScreenPopulateControl(datamap *map, HWND dialog, HWND control, core_
 	/* Remove all items in the list. */
 	(void)ComboBox_ResetContent(control);
 
-	snprintf(screen_option, ARRAY_LENGTH(screen_option), "screen%d", GetSelectedScreen(dialog));
+	ScreenSetOptionName(map, dialog, control, screen_option, ARRAY_LENGTH(screen_option));
 	option = options_get_string(opts, screen_option);
 
 	for (i = 0; g_sMonitorDeviceString[i]; i++)
@@ -2834,7 +2859,12 @@ static BOOL ScreenPopulateControl(datamap *map, HWND dialog, HWND control, core_
 
 static void ViewSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
 {
-	snprintf(buffer, buffer_size, "view%d", GetSelectedScreen(dialog));
+	int nSelectedScreen = GetSelectedScreen(dialog);
+
+	if (nSelectedScreen > 0)
+		snprintf(buffer, buffer_size, "view%d", nSelectedScreen - 1);
+	else
+		strcpy(buffer, WINOPTION_VIEW);
 }
 
 
@@ -2847,7 +2877,7 @@ static BOOL ViewPopulateControl(datamap *map, HWND dialog, HWND control, core_op
 	const char *view;
 
 	// determine the view option value
-	snprintf(view_option, ARRAY_LENGTH(view_option), "view%d", GetSelectedScreen(dialog));
+	ViewSetOptionName(map, dialog, control, view_option, ARRAY_LENGTH(view_option));
 	view = options_get_string(opts, view_option);
 
 	(void)ComboBox_ResetContent(control);
@@ -2945,7 +2975,12 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 
 static void ResolutionSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
 {
-	snprintf(buffer, buffer_size, "resolution%d", GetSelectedScreen(dialog));
+	int nSelectedScreen = GetSelectedScreen(dialog);
+
+	if (nSelectedScreen > 0)
+		snprintf(buffer, buffer_size, "resolution%d", nSelectedScreen - 1);
+	else
+		strcpy(buffer, WINOPTION_RESOLUTION);
 }
 
 
@@ -3017,7 +3052,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 		refresh_index++;
 
 		// determine which screen we're using
-		snprintf(screen_option, ARRAY_LENGTH(screen_option), "screen%d", GetSelectedScreen(dialog));
+		ScreenSetOptionName(map, dialog, NULL, screen_option, ARRAY_LENGTH(screen_option));
 		screen = options_get_string(opts, screen_option);
 		if (!screen || !*screen || mame_stricmp(screen, "auto") == 0)
 			screen = NULL;
@@ -3164,7 +3199,7 @@ static void ResetDataMap(HWND hWnd)
 	char screen_option[32];
 	const char *screen_option_value;
 
-	snprintf(screen_option, ARRAY_LENGTH(screen_option), "screen%d", GetSelectedScreen(hWnd));
+	ScreenSetOptionName(NULL, hWnd, NULL, screen_option, ARRAY_LENGTH(screen_option));
 
 	screen_option_value = options_get_string(pCurrentOpts, screen_option);
 	if (screen_option_value == NULL || *screen_option_value == '\0')
@@ -3683,10 +3718,10 @@ static void UpdateSelectScreenUI(HWND hwnd)
 	{
 		int i, curSel;
 		curSel = ComboBox_GetCurSel(hCtrl);
-		if ((curSel < 0) || (curSel >= MAX_SCREENS))
+		if ((curSel < 0) || (curSel >= NUMSELECTSCREEN))
 			curSel = 0;
 		(void)ComboBox_ResetContent(hCtrl );
-		for (i = 0; i < NUMSELECTSCREEN && i < options_get_int(pCurrentOpts, WINOPTION_NUMSCREENS) ; i++)
+		for (i = 0; i < NUMSELECTSCREEN && i < options_get_int(pCurrentOpts, WINOPTION_NUMSCREENS) + 1; i++)
 		{
 			(void)ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxSelectScreen[i].m_pText));
 			(void)ComboBox_SetItemData( hCtrl, i, g_ComboBoxSelectScreen[i].m_pData);

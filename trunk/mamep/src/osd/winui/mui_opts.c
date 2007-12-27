@@ -560,8 +560,8 @@ void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_glob
 		good_option = TRUE;
 
 		// check blacklist
-		//mamep: blacklist is disalbed if it is global option
-		if (entrylist->name && !is_global)
+		//mamep: blacklist is disalbed
+		if (0 && entrylist->name)
 		{
 			for (i = 0; i < ARRAY_LENGTH(blacklist); i++)
 			{
