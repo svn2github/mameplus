@@ -402,6 +402,7 @@ outbuffer    equ 12
 Xres         equ 16
 Yres         equ 20
 pitch        equ 24
+xpitch        equ 28
 
 _hq3x_16:
     push ebp
@@ -412,7 +413,7 @@ _hq3x_16:
     mov     edi,[ebp+outbuffer]
     mov     edx,[ebp+Yres]
     mov     [linesleft],edx
-    mov     ebx,[ebp+Xres]
+    mov     ebx,[ebp+xpitch]
     shl     ebx,1
     mov     dword[prevline],0
     mov     dword[nextline],ebx
@@ -2457,7 +2458,12 @@ _hq3x_16:
     add     edi,ebx
     dec     dword[linesleft]
     jz      .fin
-    mov     ebx,[ebp+Xres]
+    mov     ebx,[ebp+xpitch]
+    mov	    ecx,[ebp+Xres]
+    sub     ebx,ecx
+    shl     ebx,1
+    add     esi,ebx
+    mov     ebx,[ebp+xpitch]
     shl     ebx,1
     cmp     dword[linesleft],1
     je      .lastline

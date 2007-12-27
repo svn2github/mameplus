@@ -69,7 +69,7 @@ static int use_mmx;
 static UINT8 *scale_buffer[MAX_SCALE_BANK];
 
 static int previous_depth[MAX_SCALE_BANK];
-static int previous_pitch[MAX_SCALE_BANK];
+static int previous_width[MAX_SCALE_BANK];
 static int previous_height[MAX_SCALE_BANK];
 
 static const char *str_name[] =
@@ -136,6 +136,8 @@ static const char *str_desc[] =
 //	prototypes
 //============================================================
 
+static void scale_allocate_local_buffer(int width, int height, int bank);
+
 // functions from scale2x
 static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void (*scale_scale2x_line_16)(UINT16 *dst0, UINT16 *dst1, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
@@ -172,32 +174,37 @@ void  Init_2xSaIMMX(UINT32 BitFormat);
 
 static void (*scale_2xsai_line)(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
 static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
-static void scale_2xsai_flush_buffer(int src_pitch, int height, int bank);
 
 // functions from 2xpm
 static int scale_perform_2xpm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
 // functions from hq2x/hq3x/hq4x/lq2x/lq3x/lq4x
-#ifdef ASM_HQ
-void hq2x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
-void hq2x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
-static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-#endif /* ASM_HQ */
 static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 static void (*scale_hlq2x_15_def)(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq2x_32_def)(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
+#ifdef ASM_HQ
+static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
+void hq2x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
+void hq2x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
+#endif /* ASM_HQ */
 
 static int scale_perform_hlq2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-static void (*scale_hlq2x3_16_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
+static void (*scale_hlq2x3_15_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq2x3_32_def)(UINT32* dst0, UINT32* dst1, UINT32* dst2, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
 
 static int scale_perform_hlq2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-static void (*scale_hlq2x4_16_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, UINT16* dst3, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
+static void (*scale_hlq2x4_15_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, UINT16* dst3, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq2x4_32_def)(UINT32* dst0, UINT32* dst1, UINT32* dst2, UINT32* dst3, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
 
 static int scale_perform_hlq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 static void (*scale_hlq3x_15_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq3x_32_def)(UINT32* dst0, UINT32* dst1, UINT32* dst2, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
+#ifdef ASM_HQ
+static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
+void hq3x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
+void hq3x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
+#endif /* ASM_HQ */
+
 #ifdef USE_4X_SCALE
 static int scale_perform_hlq4x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 static void (*scale_hlq4x_15_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, UINT16* dst3, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
@@ -250,7 +257,7 @@ int scale_exit(void)
 
 	for (i = 0; i < MAX_SCALE_BANK; i++)
 	{
-		previous_depth[i] = previous_pitch[i] = previous_height[i] = 0;
+		previous_depth[i] = previous_width[i] = previous_height[i] = 0;
 
 		if (scale_buffer[i])
 		{
@@ -443,7 +450,7 @@ int scale_init(void)
 
 			scale_effect.xsize = 2;
 			scale_effect.ysize = 3;
-			scale_hlq2x3_16_def = hq2x3_16_def;
+			scale_hlq2x3_15_def = hq2x3_15_def;
 			scale_hlq2x3_32_def = hq2x3_32_def;
 			break;
 		}
@@ -458,7 +465,7 @@ int scale_init(void)
 
 			scale_effect.xsize = 2;
 			scale_effect.ysize = 4;
-			scale_hlq2x4_16_def = hq2x4_16_def;
+			scale_hlq2x4_15_def = hq2x4_15_def;
 			scale_hlq2x4_32_def = hq2x4_32_def;
 			break;
 		}
@@ -487,7 +494,7 @@ int scale_init(void)
 
 			scale_effect.xsize = 2;
 			scale_effect.ysize = 3;
-			scale_hlq2x3_16_def = lq2x3_16_def;
+			scale_hlq2x3_15_def = lq2x3_15_def;
 			scale_hlq2x3_32_def = lq2x3_32_def;
 			break;
 		}
@@ -502,7 +509,7 @@ int scale_init(void)
 
 			scale_effect.xsize = 2;
 			scale_effect.ysize = 4;
-			scale_hlq2x4_16_def = lq2x4_16_def;
+			scale_hlq2x4_15_def = lq2x4_15_def;
 			scale_hlq2x4_32_def = lq2x4_32_def;
 			break;
 		}
@@ -516,7 +523,11 @@ int scale_init(void)
 				sprintf(name, "HQ3x (non-mmx version)");
 
 			scale_effect.xsize = scale_effect.ysize = 3;
+#ifdef ASM_HQ
+			scale_hlq3x_15_def = NULL;
+#else /* ASM_HQ */
 			scale_hlq3x_15_def = hq3x_15_def;
+#endif /* ASM_HQ */
 			scale_hlq3x_32_def = hq3x_32_def;
 			break;
 		}
@@ -629,7 +640,7 @@ int scale_check(int depth)
 				return 1;
 #endif /* USE_MMX_INTERP_SCALE */
 
-			if (depth == 15 || depth == 16 || depth == 32)
+			if (depth == 15 || depth == 32)
 				return 0;
 			else
 				return 1;
@@ -668,7 +679,7 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 		case SCALE_EFFECT_SUPER2XSAI:
 		case SCALE_EFFECT_SUPEREAGLE:
 			if (update)
-				scale_2xsai_flush_buffer(src_pitch, height, bank);
+				scale_allocate_local_buffer(src_pitch, height, bank);
 			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_2XPM:
 			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
@@ -686,6 +697,10 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 		case SCALE_EFFECT_LQ2X4:
 			return scale_perform_hlq2x4(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ3X:
+#ifdef ASM_HQ
+			if (depth == 15)
+				return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
+#endif /* ASM_HQ */
 		case SCALE_EFFECT_LQ3X:
 			return scale_perform_hlq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
 #ifdef USE_4X_SCALE
@@ -717,6 +732,21 @@ static inline void scale_emms(void)
 		}
 #endif
 	}
+}
+
+//============================================================
+//	scale_allocate_local_buffer
+//============================================================
+
+static void scale_allocate_local_buffer(int width, int height, int bank)
+{
+	if (scale_buffer[bank])
+		free(scale_buffer[bank]);
+
+	scale_buffer[bank] = malloc(width * height);
+
+	previous_width[bank] = width;
+	previous_height[bank] = height;
 }
 
 //============================================================
@@ -1080,19 +1110,6 @@ static int scale_perform_2xpm(UINT8 *src, UINT8 *dest, int src_pitch, int dst_pi
 
 
 //============================================================
-//	scale_2xsai_flush_buffer
-//============================================================
-
-static void scale_2xsai_flush_buffer(int src_pitch, int height, int bank)
-{
-	if (scale_buffer[bank])
-		free(scale_buffer[bank]);
-	scale_buffer[bank] = malloc(src_pitch * (height + 3));
-	if (scale_buffer[bank])
-		memset(scale_buffer[bank], 0xAA, src_pitch * (height + 3));
-}
-
-//============================================================
 //	scale_perform_2xsai
 //============================================================
 
@@ -1105,15 +1122,14 @@ static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 		return 1;
 
 	// see if we need to (re-)initialise
-	if (previous_depth[bank] != depth || previous_pitch[bank] != src_pitch || previous_height[bank] != height)
+	if (previous_depth[bank] != depth || previous_width[bank] != src_pitch || previous_height[bank] != height + 3)
 	{
 		Init_2xSaIMMX(depth == 15 ? 555 : 565);
 
-		scale_2xsai_flush_buffer(src_pitch, height, bank);
+		scale_allocate_local_buffer(src_pitch, height + 3, bank);
+		memset(scale_buffer[bank], 0xAA, src_pitch * (height + 3));
 
 		previous_depth[bank] = depth;
-		previous_pitch[bank] = src_pitch;
-		previous_height[bank] = height;
 	}
 
 	if (scale_buffer[bank] == NULL)
@@ -1149,42 +1165,42 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 {
 	interp_init();
 
-	if(!Buffer)
+	// see if we need to (re-)initialise
+	if (previous_width[0] != dst_pitch || previous_height[0] != height * 2)
 	{
-		if(depth == 32)
-		{
-			Buffer=malloc(width*2*height*2*4);
-		}
-		else
-		{
-			Buffer=malloc(width*2*height*2*2);
-		}
+		scale_allocate_local_buffer(dst_pitch, height * 2, 0);
+
+		previous_depth[0] = 0;
 	}
 
-	if(depth == 32)
+	if (depth == 32)
 	{
-		UINT8 *ptr= dst;
-		UINT8 *s=Buffer;
+		UINT8 *ptr = dst;
+		UINT8 *s = scale_buffer[0];
 		int i;
-		hq2x_32((unsigned short *)src,(unsigned short *) Buffer,width,height,width*4*2,src_pitch>>1);
-		for(i=0;i<height*2;++i)
+
+		hq2x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 2, src_pitch >> 1);
+
+		for (i = 0; i < height * 2; i++)
 		{
-			memcpy(ptr,s,width*2*4);
-			s+=width*2*4;
-			ptr+=dst_pitch;
+			memcpy(ptr, s, width * 4 * 2);
+			s += width * 4 * 2;
+			ptr += dst_pitch;
 		}
 	}
 	else
 	{
-		UINT8 *ptr= dst;
-		UINT8 *s=Buffer;
+		UINT8 *ptr = dst;
+		UINT8 *s = scale_buffer[0];
 		int i;
-		hq2x_16((unsigned short *)src,(unsigned short *) Buffer,width,height,width*2*2,src_pitch>>1);
-		for(i=0;i<height*2;++i)
+
+		hq2x_16((unsigned short *)src, (unsigned short *)s, width, height, width * 2 * 2, src_pitch >> 1);
+
+		for (i = 0; i < height * 2; i++)
 		{
-			memcpy(ptr,s,width*2*2);
-			s+=width*2*2;
-			ptr+=dst_pitch;
+			memcpy(ptr, s, width * 2 * 2);
+			s += width * 2 * 2;
+			ptr += dst_pitch;
 		}
 	}
 
@@ -1193,6 +1209,10 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 	return 0;
 }
 #endif /* ASM_HQ */
+
+//============================================================
+//	scale_perform_hlq2x
+//============================================================
 
 static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
 {
@@ -1204,24 +1224,23 @@ static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	interp_init();
 
 	if (depth == 15)
-		scale_hlq2x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
-	else
-		scale_hlq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-	if (depth == 15)
 	{
+		scale_hlq2x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst	+= 2 * dst_pitch;
 			src_prev = src_curr;
 			src_curr = src_next;
 			src_next += src_pitch;
-mame_printf_verbose("C hq\n");
+
 			scale_hlq2x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 		}
 	}
 	else
 	{
+		scale_hlq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst += 2 * dst_pitch;
@@ -1263,29 +1282,30 @@ static int scale_perform_hlq2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 	interp_init();
 
 	if (depth == 15 || depth == 16)
-		scale_hlq2x3_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
-	else
-		scale_hlq2x3_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-	if (depth == 15 || depth == 16)
 	{
+		scale_hlq2x3_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst	+= 3 * dst_pitch;
 			src_prev = src_curr;
 			src_curr = src_next;
 			src_next += src_pitch;
-			scale_hlq2x3_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
+			scale_hlq2x3_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 		}
 	}
 	else
 	{
+		scale_hlq2x3_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst += 3 * dst_pitch;
 			src_prev = src_curr;
 			src_curr = src_next;
 			src_next += src_pitch;
+
 			scale_hlq2x3_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 		}
 	}
@@ -1293,8 +1313,9 @@ static int scale_perform_hlq2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 	dst += 3 * dst_pitch;
 	src_prev = src_curr;
 	src_curr = src_next;
-	if (depth == 15 || depth == 16)
-		scale_hlq2x3_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
+	if (depth == 15)
+		scale_hlq2x3_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 	else
 		scale_hlq2x3_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
@@ -1318,30 +1339,31 @@ static int scale_perform_hlq2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 
 	interp_init();
 
-	if (depth == 15 || depth == 16)
-		scale_hlq2x4_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
-	else
-		scale_hlq2x4_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-	if (depth == 15 || depth == 16)
+	if (depth == 15)
 	{
+		scale_hlq2x4_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst	+= 4 * dst_pitch;
 			src_prev = src_curr;
 			src_curr = src_next;
 			src_next += src_pitch;
-			scale_hlq2x4_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
+			scale_hlq2x4_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 		}
 	}
 	else
 	{
+		scale_hlq2x4_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
 		for (y = 2; y < height; y++)
 		{
 			dst += 4 * dst_pitch;
 			src_prev = src_curr;
 			src_curr = src_next;
 			src_next += src_pitch;
+
 			scale_hlq2x4_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 		}
 	}
@@ -1349,8 +1371,9 @@ static int scale_perform_hlq2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 	dst += 4 * dst_pitch;
 	src_prev = src_curr;
 	src_curr = src_next;
-	if (depth == 15 || depth == 16)
-		scale_hlq2x4_16_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
+	if (depth == 15)
+		scale_hlq2x4_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 	else
 		scale_hlq2x4_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
@@ -1360,6 +1383,59 @@ static int scale_perform_hlq2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 
 	return 0;
 }
+
+//============================================================
+//	scale_perform_hq3x
+//============================================================
+#ifdef ASM_HQ
+static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
+{
+	interp_init();
+
+	// see if we need to (re-)initialise
+	if (previous_width[0] != dst_pitch || previous_height[0] != height * 3)
+	{
+		scale_allocate_local_buffer(dst_pitch, height * 3, 0);
+
+		previous_depth[0] = 0;
+	}
+
+	if (depth == 32)
+	{
+		UINT8 *ptr = dst;
+		UINT8 *s = scale_buffer[0];
+		int i;
+
+		hq3x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 3, src_pitch >> 1);
+
+		for (i = 0; i < height * 3; i++)
+		{
+			memcpy(ptr, s, width * 4 * 3);
+			s += width * 4 * 3;
+			ptr += dst_pitch;
+		}
+	}
+	else
+	{
+		UINT8 *ptr = dst;
+		UINT8 *s = scale_buffer[0];
+		int i;
+
+		hq3x_16((unsigned short *)src, (unsigned short *)s, width, height, width * 2 * 3, src_pitch >> 1);
+
+		for (i = 0; i < height * 3; i++)
+		{
+			memcpy(ptr, s, width * 2 * 3);
+			s += width * 2 * 3;
+			ptr += dst_pitch;
+		}
+	}
+
+	scale_emms();
+
+	return 0;
+}
+#endif /* ASM_HQ */
 
 //============================================================
 //	scale_perform_hlq3x
@@ -1375,12 +1451,9 @@ static int scale_perform_hlq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	interp_init();
 
 	if (depth == 15)
-		scale_hlq3x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
-	else
-		scale_hlq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-	if (depth == 15)
 	{
+		scale_hlq3x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
 		for (y = 3; y < height; y++)
 		{
 			dst += 3 * dst_pitch;
@@ -1393,6 +1466,8 @@ static int scale_perform_hlq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	}
 	else
 	{
+		scale_hlq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
 		for (y = 3; y < height; y++)
 		{
 			dst += 3 * dst_pitch;
@@ -1434,13 +1509,10 @@ static int scale_perform_hlq4x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 	interp_init();
 
-	if (depth == 15)
-		scale_hlq4x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
-	else
-		scale_hlq4x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-	if (depth == 15)
+	if (depth == 15 || depth == 16)
 	{
+		scale_hlq4x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
+
 		for (y = 4; y < height; y++)
 		{
 			dst += 4 * dst_pitch;
@@ -1453,6 +1525,8 @@ static int scale_perform_hlq4x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	}
 	else
 	{
+		scale_hlq4x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
 		for (y = 4; y < height; y++)
 		{
 			dst += 4 * dst_pitch;
