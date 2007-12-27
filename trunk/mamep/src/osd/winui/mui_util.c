@@ -62,7 +62,7 @@ static struct DriversInfo
 	BOOL isClone;
 	BOOL isBroken;
 	BOOL isHarddisk;
-	BOOL hasOptionalBios;
+	BOOL hasOptionalBIOS;
 	BOOL isStereo;
 	BOOL isVector;
 	BOOL usesRoms;
@@ -131,7 +131,7 @@ void __cdecl ErrorMsg(const char* fmt, ...)
 
 void __cdecl dprintf(const char* fmt, ...)
 {
-	char	buf[5000];
+	char 	buf[5000];
 	va_list va;
 
 	va_start(va, fmt);
@@ -192,7 +192,7 @@ BOOL OnNT(void)
  */
 LONG GetCommonControlVersion()
 {
-	HMODULE hModule = GetModuleHandleA("comctl32");
+	HMODULE hModule = GetModuleHandleW(TEXT("comctl32"));
 
 	if (hModule)
 	{
@@ -244,13 +244,15 @@ LONG GetCommonControlVersion()
 void DisplayTextFile(HWND hWnd, const WCHAR *cName)
 {
 	HINSTANCE hErr;
-	const WCHAR *msg = 0;
+	LPCWSTR	  msg = 0;
 
 	hErr = ShellExecute(hWnd, NULL, cName, NULL, NULL, SW_SHOWNORMAL);
-	if ((int)hErr > 32)
+	if ((FPTR)hErr > 32) 
+	{
 		return;
+	}
 
-	switch((int)hErr)
+	switch((FPTR)hErr)
 	{
 	case 0:
 		msg = _UIW(TEXT("The operating system is out of memory or resources."));
@@ -280,19 +282,19 @@ void DisplayTextFile(HWND hWnd, const WCHAR *cName)
 		msg = _UIW(TEXT("Unknown error."));
 	}
  
-	MessageBoxW(NULL, msg, cName, MB_OK); 
+	MessageBox(NULL, msg, cName, MB_OK);
 }
 
-LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch)
+LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
 {
 	int len = wcslen(pSrch);
 
-	while (*pStr)
+	while (*pFirst)
 	{
-		if (_wcsnicmp(pStr, pSrch, len) == 0)
-			return (LPWSTR)pStr;
+		if (_wcsnicmp(pFirst, pSrch, len) == 0)
+			return (LPWSTR)pFirst;
 
-		pStr++;
+		pFirst++;
 	}
 
 	return NULL;
@@ -319,23 +321,15 @@ char * ConvertToWindowsNewlines(const char *source)
 	return buf;
 }
 
-const WCHAR * strlower(const WCHAR *s)
-{
-	static WCHAR buf[100 * 1024];
-
-	wcscpy(buf, s);
-	_wcslwr(buf);
-
-	return buf;
-}
-
 /* Lop off path and extention from a source file name
  * This assumes their is a pathname passed to the function
  * like src\drivers\blah.c
  */
-const WCHAR * GetFilename(const WCHAR *filename)
+const WCHAR * GetDriverFilename(int nIndex)
 {
 	const WCHAR *ptmp;
+
+	const WCHAR *filename = driversw[nIndex]->source_file;
 
 	for (ptmp = filename; *ptmp; ptmp++)
 	{
@@ -346,11 +340,6 @@ const WCHAR * GetFilename(const WCHAR *filename)
 	}
 
 	return filename;
-}
-
-const WCHAR * GetDriverFilename(int nIndex)
-{
-	return GetFilename(driversw[nIndex]->source_file);
 }
 
 struct control_cache_t
@@ -547,13 +536,13 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->isStereo = (num_speakers > 1);
 			gameinfo->isVector = ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
-			gameinfo->hasOptionalBios = FALSE;
+			gameinfo->hasOptionalBIOS = FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
-					gameinfo->usesRoms = TRUE;
-					gameinfo->hasOptionalBios = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
-					break;
+					gameinfo->usesRoms = TRUE; 
+					gameinfo->hasOptionalBIOS = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
+					break; 
 				}
 
 			gameinfo->usesSamples = FALSE;
@@ -563,7 +552,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 #if HAS_SAMPLES
 				if (drv.sound[i].type == SOUND_SAMPLES)
 				{
-					const char *const *samplenames;
+					const char * const * samplenames = NULL;
 
 					samplenames = ((struct Samplesinterface *)drv.sound[i].config)->samplenames;
 
@@ -629,7 +618,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->biosIndex = -1;
 			if (DriverIsBios(ndriver))
 				gameinfo->biosIndex = ndriver;
-			else if (gameinfo->hasOptionalBios)
+			else if (gameinfo->hasOptionalBIOS)
 			{
 				int parentIndex;
 
@@ -663,7 +652,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 
 BOOL DriverIsClone(int driver_index)
 {
-	return GetDriversInfo(driver_index)->isClone;
+	 return GetDriversInfo(driver_index)->isClone;
 }
 
 BOOL DriverIsBroken(int driver_index)
@@ -689,9 +678,9 @@ BOOL DriverIsBios(int driver_index)
 	return bBios;
 }
 
-BOOL DriverHasOptionalBios(int driver_index)
+BOOL DriverHasOptionalBIOS(int driver_index)
 {
-	return GetDriversInfo(driver_index)->hasOptionalBios;
+	return GetDriversInfo(driver_index)->hasOptionalBIOS;
 }
 
 int DriverBiosIndex(int driver_index)
@@ -766,6 +755,25 @@ BOOL DriverHasM68K(int driver_index)
 int DriverParentIndex(int driver_index)
 {
 	return GetDriversInfo(driver_index)->parentIndex;
+}
+
+void FlushFileCaches(void)
+{
+	zip_file_cache_clear();
+}
+
+void FreeIfAllocated(char **s)
+{
+	if (*s)
+		free(*s);
+	*s = NULL;
+}
+
+void FreeIfAllocatedW(WCHAR **s)
+{
+	if (*s)
+		free(*s);
+	*s = NULL;
 }
 
 #ifdef USE_IPS
@@ -925,24 +933,7 @@ LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name)
 #endif /* USE_IPS */
 
 
-void FlushFileCaches(void)
-{
-	zip_file_cache_clear();
-}
 
-void FreeIfAllocated(char **s)
-{
-	if (*s)
-		free(*s);
-	*s = NULL;
-}
-
-void FreeIfAllocatedW(WCHAR **s)
-{
-	if (*s)
-		free(*s);
-	*s = NULL;
-}
 
 //============================================================
 //  win_get_current_directory_utf8
@@ -951,21 +942,21 @@ void FreeIfAllocatedW(WCHAR **s)
 DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 {
 	DWORD result = 0;
-	WCHAR* w_buffer = NULL;
+	TCHAR* t_buffer = NULL;
 	char* utf8_buffer = NULL;
 	
 	if( bufferlength > 0 ) {
-		w_buffer = malloc((bufferlength * sizeof(WCHAR)) + 1);
-		if( !w_buffer )
+		t_buffer = malloc((bufferlength * sizeof(TCHAR)) + 1);
+		if( !t_buffer )
 			return result;
 	}
-
-	result = GetCurrentDirectoryW(bufferlength, w_buffer);
-
+	
+	result = GetCurrentDirectory(bufferlength, t_buffer);
+	
 	if( bufferlength > 0 ) {
-		utf8_buffer = utf8_from_wstring(w_buffer);
+		utf8_buffer = utf8_from_tstring(t_buffer);
 		if( !utf8_buffer ) {
-			free(w_buffer);
+			free(t_buffer);
 			return result;
 		}
 	}
@@ -974,10 +965,10 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 
 	if( utf8_buffer )
 		free(utf8_buffer);
-
-	if( w_buffer )
-		free(w_buffer);
-
+	
+	if( t_buffer )
+		free(t_buffer);
+	
 	return result;
 }
 
@@ -985,15 +976,15 @@ DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer)
 //  win_find_first_file_utf8
 //============================================================
 
-HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfiledata)
+HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATA findfiledata)
 {
 	HANDLE result = 0;
-	WCHAR* t_filename = wstring_from_utf8(filename);
+	TCHAR* t_filename = tstring_from_utf8(filename);
 	if( !t_filename )
 		return result;
-
-	result = FindFirstFileW(t_filename, findfiledata);
-
+	
+	result = FindFirstFile(t_filename, findfiledata);
+	
 	free(t_filename);
 
 	return result;

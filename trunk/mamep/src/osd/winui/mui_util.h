@@ -1,17 +1,18 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse
- 
-  This file is part of MAME32, and may only be used, modified and
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
+
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
 
  ***************************************************************************/
 
-#ifndef mui_util_H
-#define mui_util_H
+#ifndef MUI_UTIL_H
+#define MUI_UTIL_H
 
 extern void __cdecl ErrorMsg(const char* fmt, ...);
 extern void __cdecl dprintf(const char* fmt, ...);
@@ -29,22 +30,20 @@ extern void DisplayTextFile(HWND hWnd, const WCHAR *cName);
 /* Check for old version of comctl32.dll */
 extern LONG GetCommonControlVersion(void);
 
-extern LPWSTR MyStrStrI(LPCWSTR pStr, LPCWSTR pSrch);
+extern LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch);
 extern char * ConvertToWindowsNewlines(const char *source);
-extern const WCHAR * strlower(const WCHAR *s);
 
 extern const WCHAR * GetDriverFilename(int nIndex);
-extern const WCHAR * GetFilename(const WCHAR *filename);
 
 
 BOOL DriverIsClone(int driver_index);
 BOOL DriverIsBroken(int driver_index);
 BOOL DriverIsHarddisk(int driver_index);
+BOOL DriverHasOptionalBIOS(int driver_index);
 BOOL DriverIsConsole(int driver_index);
 BOOL DriverIsStereo(int driver_index);
 BOOL DriverIsVector(int driver_index);
 BOOL DriverIsBios(int driver_index);
-BOOL DriverHasOptionalBios(int driver_index);
 int DriverBiosIndex(int driver_index);
 int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);

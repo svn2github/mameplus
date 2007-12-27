@@ -350,10 +350,10 @@ static void             ChangeLanguage(int id);
 static void             ChangeMenuStyle(int id);
 #endif /* IMAGE_MENU */
 static void             MamePlayRecordGame(void);
-static void             MamePlayBackGame(const WCHAR *fname_playback);
+static void             MamePlayBackGame(LPCWSTR fname_playback);
 static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
-static void				MameLoadState(const WCHAR *fname_state);
+static void				MameLoadState(LPCWSTR fname_state);
 static BOOL             CommonFileDialogW(BOOL open_for_write, WCHAR *filename, int filetype);
 static BOOL             CommonFileDialogA(BOOL open_for_write, WCHAR *filename, int filetype);
 static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
@@ -4761,7 +4761,7 @@ static int MMO2LST(void)
 	WCHAR filename[MAX_PATH];
 
 	swprintf(filename, TEXT_MAMEUINAME TEXT("%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
-	wcscpy(filename, strlower(filename));
+	_tcslwr(filename); 
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
 		return 1;
@@ -4834,7 +4834,7 @@ UINT_PTR CALLBACK CFHookProc(
 	switch (uiMsg)
 	{
 		case WM_INITDIALOG:
-			SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const WCHAR *)_UIW(TEXT("Custom")));
+			SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(LPCWSTR)_UIW(TEXT("Custom")));
 			iIndex = SendDlgItemMessage(hdlg, cmb4, CB_GETCOUNT, 0, 0);
 			cList = GetListFontColor();
 			SendDlgItemMessage(hdlg, cmb4, CB_SETITEMDATA,(WPARAM)iIndex-1,(LPARAM)cList );
@@ -4862,7 +4862,7 @@ UINT_PTR CALLBACK CFHookProc(
  							cList = GetListFontColor();
  							PickColor(&cList);
 							SendDlgItemMessage(hdlg, cmb4, CB_DELETESTRING, iIndex, 0);
-							SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(const WCHAR *)_UIW(TEXT("Custom")));
+							SendDlgItemMessage(hdlg, cmb4, CB_ADDSTRING, 0, (LPARAM)(LPCWSTR)_UIW(TEXT("Custom")));
 							SendDlgItemMessage(hdlg, cmb4, CB_SETITEMDATA,(WPARAM)iIndex,(LPARAM)cList);
 							SendDlgItemMessage(hdlg, cmb4, CB_SETCURSEL,(WPARAM)iIndex,0 );
 							return TRUE;
@@ -4876,20 +4876,21 @@ UINT_PTR CALLBACK CFHookProc(
 
 static void PickFont(void)
 {
-	LOGFONTW font;
-	CHOOSEFONTW cf;
+	LOGFONT font;
+	CHOOSEFONT cf;
+	TCHAR szClass[128];
 	HWND hWnd;
 
 	GetListFont(&font);
 	font.lfQuality = DEFAULT_QUALITY;
 
-	cf.lStructSize = sizeof(cf);
+	cf.lStructSize = sizeof(CHOOSEFONT);
 	cf.hwndOwner   = hMain;
 	cf.lpLogFont   = &font;
 	cf.lpfnHook = &CFHookProc;
 	cf.rgbColors   = GetListFontColor();
 	cf.Flags	   = CF_SCREENFONTS | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS | CF_ENABLEHOOK;
-	if (!ChooseFontW(&cf))
+	if (!ChooseFont(&cf))
 		return;
 
 	SetListFont(&font);
@@ -4910,14 +4911,13 @@ static void PickFont(void)
 		hWnd = GetWindow(hMain, GW_CHILD);
 		while(hWnd)
 		{
-			char szClass[128];
-			if (GetClassNameA(hWnd, szClass, ARRAY_LENGTH(szClass)))
+			if (GetClassName(hWnd, szClass, ARRAY_LENGTH(szClass)))
 			{
-				if (!strcmp(szClass, "SysListView32"))
+				if (!_tcscmp(szClass, TEXT("SysListView32")))
 				{
 					ListView_SetTextColor(hWnd, textColor);
 				}
-				else if (!strcmp(szClass, "SysTreeView32"))
+				else if (!_tcscmp(szClass, TEXT("SysTreeView32")))
 				{
 					TreeView_SetTextColor(hTreeView, textColor);
 				}
@@ -5450,9 +5450,9 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			BOOL bUpdateSamples;
 
 			nResult = DialogBox(GetModuleHandle(NULL),
-			                    MAKEINTRESOURCE(IDD_DIRECTORIES),
-			                    hMain,
-			                    DirectoriesDialogProc);
+								MAKEINTRESOURCE(IDD_DIRECTORIES),
+								hMain,
+								DirectoriesDialogProc);
 
 			SaveDefaultOptions();
 
@@ -5469,18 +5469,21 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_OPTIONS_RESET_DEFAULTS:
 		if (DialogBox(GetModuleHandle(NULL),
-		              MAKEINTRESOURCE(IDD_RESET), hMain, ResetDialogProc) == TRUE)
-		{
+					  MAKEINTRESOURCE(IDD_RESET), hMain, ResetDialogProc) == TRUE)
+        {
 			// these may have been changed
 			SaveDefaultOptions();
 			DestroyWindow(hwnd);
 			PostQuitMessage(0);
+		} else {
+			ResetListView();
+			SetFocus(hwndList);
 		}
 		return TRUE;
 
 	case ID_OPTIONS_INTERFACE:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_INTERFACE_OPTIONS),
-		          hMain, InterfaceDialogProc);
+				  hMain, InterfaceDialogProc);
 		SaveDefaultOptions();
 
 		KillTimer(hMain, SCREENSHOT_TIMER);
@@ -5560,26 +5563,26 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	case ID_UI_UP:
 		Picker_SetSelectedPick(hwndList, GetSelectedPick() - 1);
-		break;
+ 		break;
 
 	case ID_UI_DOWN:
 		Picker_SetSelectedPick(hwndList, GetSelectedPick() + 1);
-		break;
+ 		break;
 
 	case ID_UI_PGUP:
 		Picker_SetSelectedPick(hwndList, GetSelectedPick() - ListView_GetCountPerPage(hwndList));
-		break;
+ 		break;
 
 	case ID_UI_PGDOWN:
 		if ( (GetSelectedPick() + ListView_GetCountPerPage(hwndList)) < ListView_GetItemCount(hwndList) )
 			Picker_SetSelectedPick(hwndList,  GetSelectedPick() + ListView_GetCountPerPage(hwndList) );
 		else
 			Picker_SetSelectedPick(hwndList,  ListView_GetItemCount(hwndList)-1 );
-		break;
+ 		break;
 
 	case ID_UI_HOME:
 		Picker_SetSelectedPick(hwndList, 0);
-		break;
+ 		break;
 
 	case ID_UI_END:
 		Picker_SetSelectedPick(hwndList,  ListView_GetItemCount(hwndList)-1 );
@@ -5587,19 +5590,19 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_UI_LEFT:
 		/* hmmmmm..... */
 		SendMessage(hwndList,WM_HSCROLL, SB_LINELEFT, 0);
-		break;
+ 		break;
 
 	case ID_UI_RIGHT:
 		/* hmmmmm..... */
 		SendMessage(hwndList,WM_HSCROLL, SB_LINERIGHT, 0);
-		break;
+ 		break;
 	case ID_UI_HISTORY_UP:
 		/* hmmmmm..... */
 		{
 			HWND hHistory = GetDlgItem(hMain, IDC_HISTORY);
 			SendMessage(hHistory, EM_SCROLL, SB_PAGEUP, 0);
 		}
-		break;
+ 		break;
 
 	case ID_UI_HISTORY_DOWN:
 		/* hmmmmm..... */
@@ -5607,7 +5610,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			HWND hHistory = GetDlgItem(hMain, IDC_HISTORY);
 			SendMessage(hHistory, EM_SCROLL, SB_PAGEDOWN, 0);
 		}
-		break;
+ 		break;
 
 	case IDC_SSFRAME:
 		TabView_CalculateNextTab(hTabCtrl);
@@ -5656,10 +5659,10 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	return FALSE;
 }
 
-static void LoadBackgroundBitmap(void)
+static void LoadBackgroundBitmap()
 {
 	HGLOBAL hDIBbg;
-	LPCWSTR	pFileName = 0;
+	LPCTSTR	pFileName = 0;
 
 	if (hBackground)
 	{
@@ -5707,7 +5710,7 @@ static void ResetColumnDisplay(BOOL first_time)
 	Picker_SetSelectedItem(hwndList, driver_index);
 }
 
-int GamePicker_GetItemImage(HWND hwndPicker, int nItem)
+static int GamePicker_GetItemImage(HWND hwndPicker, int nItem)
 {
 	return GetIconForDriver(nItem);
 }
@@ -5847,9 +5850,9 @@ static int GamePicker_CheckItemBroken(HWND hwndPicker, int nItem)
 }
 
 /* Initialize the Picker and List controls */
-static void InitListView(void)
+static void InitListView()
 {
-	LVBKIMAGEW bki;
+	LVBKIMAGE bki;
 	WCHAR path[MAX_PATH];
 
 	static const struct PickerCallbacks s_gameListCallbacks =
@@ -6095,9 +6098,9 @@ static void CreateIcons(void)
 
 static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_subitem)
 {
-	int value;
-	const WCHAR *name1 = NULL;
-	const WCHAR *name2 = NULL;
+	int value = 0;  /* Default to 0, for unknown case */
+	const TCHAR *name1 = NULL;
+	const TCHAR *name2 = NULL;
 	int nTemp1, nTemp2;
 
 #ifdef DEBUG
@@ -6115,8 +6118,6 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 	switch (sort_subitem)
 	{
 	case COLUMN_GAMES:
-		value = 0;
-
 		if (UseLangList())
 			value = sort_index[index1].readings - sort_index[index2].readings;
 
@@ -6124,7 +6125,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			value = sort_index[index1].description - sort_index[index2].description;
 
 		break;
-
+#if 0
 	case COLUMN_ROMS:
 		nTemp1 = GetRomAuditResults(index1);
 		nTemp2 = GetRomAuditResults(index2);
@@ -6157,7 +6158,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		else
 			value = 1;
 		break;
-
+#endif
 	case COLUMN_SAMPLES:
 		nTemp1 = -1;
 		if (DriverUsesSamples(index1))
@@ -6177,7 +6178,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		nTemp2 = -1;
 		if (DriverUsesSamples(index2))
 		{
-			int audit_result = GetSampleAuditResults(index2);
+			int audit_result = GetSampleAuditResults(index1);
 			if (IsAuditResultKnown(audit_result))
 			{
 				if (IsAuditResultYes(audit_result))
@@ -6188,10 +6189,6 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			else
 				nTemp2 = 2;
 		}
-
-		if (nTemp1 == nTemp2)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 		value = nTemp2 - nTemp1;
 		break;
 
@@ -6200,17 +6197,11 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
    	case COLUMN_SRCDRIVERS:
-		value = wcscmpi(GetDriverFilename(index1), GetDriverFilename(index2));
-		if (value == 0)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
+		value = _tcsicmp(GetDriverFilename(index1), GetDriverFilename(index2));
 		break;
 
 	case COLUMN_PLAYTIME:
 	   value = GetPlayTime(index1) - GetPlayTime(index2);
-		if (value == 0)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 	   break;
 
 	case COLUMN_TYPE:
@@ -6219,39 +6210,23 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
         expand_machine_driver(drivers[index1]->drv,&drv1);
         expand_machine_driver(drivers[index2]->drv,&drv2);
 
-		if ((drv1.video_attributes & VIDEO_TYPE_VECTOR) ==
-			(drv2.video_attributes & VIDEO_TYPE_VECTOR))
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 		value = (drv1.video_attributes & VIDEO_TYPE_VECTOR) -
 				(drv2.video_attributes & VIDEO_TYPE_VECTOR);
 		break;
     }
 	case COLUMN_TRACKBALL:
-		if (DriverUsesTrackball(index1) == DriverUsesTrackball(index2))
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 		value = DriverUsesTrackball(index1) - DriverUsesTrackball(index2);
 		break;
 
 	case COLUMN_PLAYED:
 	   value = GetPlayCount(index1) - GetPlayCount(index2);
-		if (value == 0)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 	   break;
 
 	case COLUMN_MANUFACTURER:
-		if (mame_stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer) == 0)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 		value = mame_stricmp(drivers[index1]->manufacturer, drivers[index2]->manufacturer);
 		break;
 
 	case COLUMN_YEAR:
-		if (mame_stricmp(drivers[index1]->year, drivers[index2]->year) == 0)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
 		value = mame_stricmp(drivers[index1]->year, drivers[index2]->year);
 		break;
 
@@ -6264,19 +6239,21 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		if (*name2 == '\0')
 			name2 = NULL;
 
-		if (name1 == name2)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
-		if (name2 == NULL)
+		if (NULL == name1 && NULL == name2)
+			value = 0;
+		else if (name2 == NULL)
 			value = -1;
 		else if (name1 == NULL)
 			value = 1;
 		else
-			value = wcscmpi(name1, name2);
+			value = _tcsicmp(name1, name2);
 		break;
+	}
 
-	default :
-		return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
+	// Handle same comparisons here
+	if (0 == value && COLUMN_GAMES != sort_subitem)
+	{
+		value = GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
 	}
 
 #ifdef DEBUG
@@ -6561,7 +6538,7 @@ static void MameMessageBoxUTF8(const char *fmt, ...)
 	va_end(va);
 }
 
-static void MameMessageBoxW(const WCHAR *fmt, ...)
+static void MameMessageBoxW(LPCWSTR fmt, ...)
 {
 	WCHAR buf[2048];
 	va_list va;
@@ -6572,7 +6549,7 @@ static void MameMessageBoxW(const WCHAR *fmt, ...)
 	va_end(va);
 }
 
-static void MamePlayBackGame(const WCHAR *fname_playback)
+static void MamePlayBackGame(LPCWSTR fname_playback)
 {
 	int nGame = -1;
 	WCHAR filename[MAX_PATH];
@@ -6631,7 +6608,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 		// check for game name embedded in .inp header
 		if (pPlayBack)
 		{
-			inp_header inp_header;
+			inp_header input_header;
 
 			// read playback header
 			{
@@ -6642,23 +6619,23 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 				if(strncmp(xheader.header,"XINP\0\0\0",7) != 0)
 				{
 					// read playback header
-					mame_fread(pPlayBack, &inp_header, sizeof(inp_header));
+					mame_fread(pPlayBack, &input_header, sizeof(inp_header));
 				} else {
 					// read header
 					mame_fread(pPlayBack, &xheader, sizeof(struct ext_header));
 
-					memcpy(inp_header.name, xheader.shortname, sizeof(inp_header.name));
+					memcpy(input_header.name, xheader.shortname, sizeof(input_header.name));
 				}
 			}
 
-			if (!isalnum(inp_header.name[0])) // If first byte is not alpha-numeric
+			if (!isalnum(input_header.name[0])) // If first byte is not alpha-numeric
 				mame_fseek(pPlayBack, 0, SEEK_SET); // old .inp file - no header
 			else
 			{
 				int i;
 				for (i = 0; drivers[i] != 0; i++) // find game and play it
 				{
-					if (strcmp(drivers[i]->name, inp_header.name) == 0)
+					if (strcmp(drivers[i]->name, input_header.name) == 0)
 					{
 						nGame = i;
 						break;
@@ -6675,7 +6652,7 @@ static void MamePlayBackGame(const WCHAR *fname_playback)
 	}
 }
 
-static void MameLoadState(const WCHAR *fname_state)
+static void MameLoadState(LPCWSTR fname_state)
 {
 	int nGame = -1;
 	WCHAR filename[MAX_PATH];
@@ -6802,7 +6779,7 @@ static void MameLoadState(const WCHAR *fname_state)
 	}
 }
 
-static void MamePlayRecordGame(void)
+static void MamePlayRecordGame()
 {
 	int  nGame;
 	WCHAR filename[MAX_PATH];
@@ -6865,10 +6842,10 @@ static void MamePlayRecordWave()
 	}	
 }
 
-static void MamePlayRecordMNG(void)
+static void MamePlayRecordMNG()
 {
 	int  nGame;
-	WCHAR filename[MAX_PATH];
+	WCHAR filename[MAX_PATH] = { 0, };
 	play_options playopts;
 
 	nGame = Picker_GetSelectedItem(hwndList);
@@ -6955,10 +6932,10 @@ static void AdjustMetrics(void)
 	/* WM_SETTINGCHANGE also */
 	xtraX  = GetSystemMetrics(SM_CXFIXEDFRAME); /* Dialog frame width */
 	xtraY  = GetSystemMetrics(SM_CYFIXEDFRAME); /* Dialog frame height */
-	xtraY += GetSystemMetrics(SM_CYMENUSIZE);   /* Menu height */
-	xtraY += GetSystemMetrics(SM_CYCAPTION);    /* Caption Height */
-	maxX   = GetSystemMetrics(SM_CXSCREEN);     /* Screen Width */
-	maxY   = GetSystemMetrics(SM_CYSCREEN);     /* Screen Height */
+	xtraY += GetSystemMetrics(SM_CYMENUSIZE);	/* Menu height */
+	xtraY += GetSystemMetrics(SM_CYCAPTION);	/* Caption Height */
+	maxX   = GetSystemMetrics(SM_CXSCREEN); 	/* Screen Width */
+	maxY   = GetSystemMetrics(SM_CYSCREEN); 	/* Screen Height */
 
 	hDC = GetDC(hMain);
 	GetTextMetrics (hDC, &tm);
@@ -7066,7 +7043,7 @@ static int GetIconForDriver(int nItem)
 
 	/* these are indices into icon_names, which maps into our image list
 	 * also must match IDI_WIN_NOROMS + iconRoms
-	 */
+     */
 
 	// Show Red-X if the ROMs are present and flagged as NOT WORKING
 	if (iconRoms == 1 && DriverIsBroken(nItem))
@@ -7303,7 +7280,7 @@ static BOOL HandleScreenShotContextMenu(HWND hWnd, WPARAM wParam, LPARAM lParam)
 
 static void UpdateMenu(HMENU hMenu)
 {
-	WCHAR		buf[200];
+	WCHAR			buf[200];
 	MENUITEMINFO	mItem;
 	int 			nGame = Picker_GetSelectedItem(hwndList);
 	LPTREEFOLDER lpFolder = GetCurrentFolder();
@@ -7317,9 +7294,9 @@ static void UpdateMenu(HMENU hMenu)
 		                                _LSTW(driversw[nGame]->description) :
 		                                driversw[nGame]->modify_the));
 
-		mItem.cbSize     = sizeof(mItem);
-		mItem.fMask      = MIIM_TYPE;
-		mItem.fType      = MFT_STRING;
+		mItem.cbSize	 = sizeof(mItem);
+		mItem.fMask 	 = MIIM_TYPE;
+		mItem.fType 	 = MFT_STRING;
 		mItem.dwTypeData = buf;
 		mItem.cch        = wcslen(mItem.dwTypeData);
 

@@ -2679,7 +2679,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	// misc
 	if (g_nPropertyMode == OPTIONS_GAME)
 	{
-		BOOL has_bios = DriverHasOptionalBios(nIndex);
+		BOOL has_bios = DriverHasOptionalBIOS(nIndex);
 
 		ShowWindow(GetDlgItem(hWnd, IDC_BIOS), has_bios ? SW_SHOW : SW_HIDE);
 		ShowWindow(GetDlgItem(hWnd, IDC_BIOSTEXT), has_bios ? SW_SHOW : SW_HIDE);
@@ -3916,7 +3916,7 @@ static void InitializeBIOSUI(HWND hwnd)
 		int nIndex = g_nGame;
 
 		if (g_nPropertyMode == OPTIONS_GAME)
-			if (DriverHasOptionalBios(nIndex))
+			if (DriverHasOptionalBIOS(nIndex))
 				InitializeBIOSCtrl(hCtrl, nIndex, pCurrentOpts);
 	}
 }

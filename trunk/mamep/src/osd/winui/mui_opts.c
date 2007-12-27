@@ -301,7 +301,7 @@ static const options_entry regSettings[] =
 	// UI options
 	{ NULL,									NULL,       OPTION_HEADER,     "DISPLAY STATE OPTIONS" },
 	{ MUIOPTION_DEFAULT_GAME,				MUIDEFAULT_SELECTION, 0,       NULL },
-	{ MUIOPTION_DEFAULT_FOLDER_PATH,			"/",        0,                 NULL },
+	{ MUIOPTION_DEFAULT_FOLDER_PATH,		"/",        0,                 NULL },
 	{ MUIOPTION_SHOW_IMAGE_SECTION,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_FULL_SCREEN,				"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_CURRENT_TAB,				"snapshot",        0,                 NULL },
@@ -323,7 +323,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_SORT_COLUMN,				"0",        0,                 NULL },
 	{ MUIOPTION_SORT_REVERSED,				"0",        OPTION_BOOLEAN,    NULL },
 #ifdef IMAGE_MENU
-	{ MUIOPTION_IMAGEMENU_STYLE,				"0",        0,                 NULL },
+	{ MUIOPTION_IMAGEMENU_STYLE,			"0",        0,                 NULL },
 #endif /* IMAGE_MENU */
 	{ MUIOPTION_WINDOW_X,					"0",        0,                 NULL },
 	{ MUIOPTION_WINDOW_Y,					"0",        0,                 NULL },
@@ -335,16 +335,16 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_CLONE_COLOR,				"-1",       0,                 NULL },
 	{ MUIOPTION_BROKEN_COLOR,				"202",      0,                 NULL },
 	{ MUIOPTION_CUSTOM_COLOR,				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, NULL },
-	{ MUIOPTION_USE_BROKEN_ICON,				"1",        OPTION_BOOLEAN,    NULL },
+	{ MUIOPTION_USE_BROKEN_ICON,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_FOLDER_FLAG,				NULL,       0,                 NULL },
 	/* ListMode needs to be before ColumnWidths settings */
 	{ MUIOPTION_LIST_MODE,					"Grouped",        0,                 NULL },
 	{ MUIOPTION_SPLITTERS,					MUIDEFAULT_SPLITTERS, 0,       NULL },
 	{ MUIOPTION_LIST_FONT,					"-8,0,0,0,400,0,0,0,0,0,0,0,0", 0, NULL },
 	{ MUIOPTION_LIST_FONTFACE,				"MS Sans Serif", 0, NULL },
-	{ MUIOPTION_COLUMN_WIDTHS,				"186,68,84,84,64,88,74,108,60,144,84,60", 0, NULL },
-	{ MUIOPTION_COLUMN_ORDER,				"0,2,3,4,5,6,7,8,9,10,11,1", 0, NULL },
-	{ MUIOPTION_COLUMN_SHOWN,				"1,0,1,1,1,1,1,1,1,1,1,1", 0,  NULL },
+	{ MUIOPTION_COLUMN_WIDTHS,				"185,78,84,84,64,88,74,108,60,144,84,60", 0, NULL },
+	{ MUIOPTION_COLUMN_ORDER,				"0,2,3,4,5,6,7,8,9,1,10,11", 0, NULL },
+	{ MUIOPTION_COLUMN_SHOWN,				"1,0,1,1,1,1,1,1,1,1,0,0", 0,  NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "INTERFACE OPTIONS" },
 	{ MUIOPTION_CHECK_GAME,					"1",        OPTION_BOOLEAN,    NULL },
@@ -382,8 +382,8 @@ static const options_entry regSettings[] =
 
 
 //	{ NULL,									NULL,       OPTION_HEADER,     "FILENAME OPTIONS" },
-//	{ MUIOPTION_HISTORY_FILE,				M32HISTORY_FILE, 0,              NULL },
-//	{ MUIOPTION_MAMEINFO_FILE,				M32MAMEINFO_FILE, 0,             NULL },
+//	{ MUIOPTION_HISTORY_FILE,				MUIHISTORY_FILE, 0,              NULL },
+//	{ MUIOPTION_MAMEINFO_FILE,				MUIMAMEINFO_FILE, 0,             NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION KEY CODES" },
 	{ MUIOPTION_UI_KEY_UP,					"KEYCODE_UP", 0,               NULL },
@@ -423,7 +423,7 @@ static const options_entry regSettings[] =
     { MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
     { MUIOPTION_UI_KEY_VIEW_TAB_TITLE,		"KEYCODE_LALT KEYCODE_5",     0, NULL },
 //mamep: TODO
-//    { MUIOPTION_UI_KEY_VIEW_TAB_PCB,		"KEYCODE_LALT KEYCODE_7",     0, NULL },
+//  { MUIOPTION_UI_KEY_VIEW_TAB_PCB,		"KEYCODE_LALT KEYCODE_7",     0, NULL },
     { MUIOPTION_UI_KEY_QUIT,				"KEYCODE_LALT KEYCODE_Q",     0, NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION JOYSTICK CODES" },
@@ -622,7 +622,7 @@ static void debug_printf(const char *s)
 	dwprintf(L"%s", _UTF8Unicode(s));
 }
 
-BOOL OptionsInit(void)
+BOOL OptionsInit()
 {
 	// create a memory pool for our data
 	options_memory_pool = pool_alloc(memory_error);
@@ -3393,7 +3393,7 @@ void save_options(OPTIONS_TYPE opt_type, core_options *opts, int game_num)
 
 	if (opt_type == OPTIONS_GLOBAL)
 	{
-		/* Don't try to save a null global options file, or it will be erased. */
+		/* Don't try to save a null global options file,  or it will be erased. */
 		if (NULL == opts)
 			return;
 		options_copy(global, opts);
@@ -3508,7 +3508,7 @@ static void build_default_bios(void)
 
 	for (i = 0; i < num_drivers; i++)
 	{
-		if (DriverHasOptionalBios(i))
+		if (DriverHasOptionalBIOS(i))
 		{
 			int driver_index = i;
 			int n;
