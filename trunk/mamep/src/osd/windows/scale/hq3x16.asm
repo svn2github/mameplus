@@ -2456,6 +2456,12 @@ _hq3x_16:
 .nexty
     add     edi,ebx
     add     edi,ebx
+    add     edi,[ebp+pitch]
+    mov	    ebx,[ebp+Xres]
+    shl     ebx,1
+    sub     edi,ebx
+    sub     edi,ebx
+    sub     edi,ebx
     dec     dword[linesleft]
     jz      .fin
     mov     ebx,[ebp+xpitch]

@@ -1165,19 +1165,21 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 {
 	interp_init();
 
-	// see if we need to (re-)initialise
-	if (previous_width[0] != dst_pitch || previous_height[0] != height * 2)
-	{
-		scale_allocate_local_buffer(dst_pitch, height * 2, 0);
-
-		previous_depth[0] = 0;
-	}
-
 	if (depth == 32)
 	{
 		UINT8 *ptr = dst;
-		UINT8 *s = scale_buffer[0];
+		UINT8 *s;
 		int i;
+
+		// see if we need to (re-)initialise
+		if (previous_width[0] != dst_pitch || previous_height[0] != height * 2)
+		{
+			scale_allocate_local_buffer(dst_pitch, height * 2, 0);
+
+			previous_depth[0] = 0;
+		}
+
+		s = scale_buffer[0];
 
 		hq2x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 2, src_pitch >> 1);
 
@@ -1189,20 +1191,7 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 		}
 	}
 	else
-	{
-		UINT8 *ptr = dst;
-		UINT8 *s = scale_buffer[0];
-		int i;
-
-		hq2x_16((unsigned short *)src, (unsigned short *)s, width, height, width * 2 * 2, src_pitch >> 1);
-
-		for (i = 0; i < height * 2; i++)
-		{
-			memcpy(ptr, s, width * 2 * 2);
-			s += width * 2 * 2;
-			ptr += dst_pitch;
-		}
-	}
+		hq2x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
 
 	scale_emms();
 
@@ -1392,19 +1381,21 @@ static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 {
 	interp_init();
 
-	// see if we need to (re-)initialise
-	if (previous_width[0] != dst_pitch || previous_height[0] != height * 3)
-	{
-		scale_allocate_local_buffer(dst_pitch, height * 3, 0);
-
-		previous_depth[0] = 0;
-	}
-
 	if (depth == 32)
 	{
 		UINT8 *ptr = dst;
-		UINT8 *s = scale_buffer[0];
+		UINT8 *s;
 		int i;
+
+		// see if we need to (re-)initialise
+		if (previous_width[0] != dst_pitch || previous_height[0] != height * 3)
+		{
+			scale_allocate_local_buffer(dst_pitch, height * 3, 0);
+
+			previous_depth[0] = 0;
+		}
+
+		s = scale_buffer[0];
 
 		hq3x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 3, src_pitch >> 1);
 
@@ -1416,20 +1407,7 @@ static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 		}
 	}
 	else
-	{
-		UINT8 *ptr = dst;
-		UINT8 *s = scale_buffer[0];
-		int i;
-
-		hq3x_16((unsigned short *)src, (unsigned short *)s, width, height, width * 2 * 3, src_pitch >> 1);
-
-		for (i = 0; i < height * 3; i++)
-		{
-			memcpy(ptr, s, width * 2 * 3);
-			s += width * 2 * 3;
-			ptr += dst_pitch;
-		}
-	}
+		hq3x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
 
 	scale_emms();
 

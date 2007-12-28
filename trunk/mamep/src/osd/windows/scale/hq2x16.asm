@@ -1867,6 +1867,10 @@ _hq2x_16:
     jmp     .flags
 .nexty
     add     edi,ebx
+    add     edi,ebx
+    mov     ebx,[ebp+Xres]
+    shl     ebx,2
+    sub     edi,ebx
     dec     dword[linesleft]
     jz      .fin
     mov     ebx,[ebp+xpitch]
