@@ -30,17 +30,19 @@
 #define SCALE_EFFECT_SUPEREAGLE		9
 #define SCALE_EFFECT_EAGLE			10
 #define SCALE_EFFECT_2XPM			11
-#define SCALE_EFFECT_HQ2X			12
-#define SCALE_EFFECT_HQ2X3			13
-#define SCALE_EFFECT_HQ2X4			14
-#define SCALE_EFFECT_LQ2X			15
-#define SCALE_EFFECT_LQ2X3			16
-#define SCALE_EFFECT_LQ2X4			17
-#define SCALE_EFFECT_HQ3X			18
-#define SCALE_EFFECT_LQ3X			19
+#define SCALE_EFFECT_HQ2XASM		12
+#define SCALE_EFFECT_HQ2X			13
+#define SCALE_EFFECT_HQ2X3			14
+#define SCALE_EFFECT_HQ2X4			15
+#define SCALE_EFFECT_LQ2X			16
+#define SCALE_EFFECT_LQ2X3			17
+#define SCALE_EFFECT_LQ2X4			18
+#define SCALE_EFFECT_HQ3XASM		19
+#define SCALE_EFFECT_HQ3X			20
+#define SCALE_EFFECT_LQ3X			21
 #ifdef USE_4X_SCALE
-#define SCALE_EFFECT_HQ4X			20
-#define SCALE_EFFECT_LQ4X			21
+#define SCALE_EFFECT_HQ4X			22
+#define SCALE_EFFECT_LQ4X			23
 #endif /* USE_4X_SCALE */
 
 #define MAX_SCALE_BANK				(MAX_SCREENS * 2)
@@ -86,12 +88,14 @@ static const char *str_name[] =
 	"supereagle",
 	"eagle",
 	"2xpm",
+	"hq2xasm",
 	"hq2x",
 	"hq2x3",
 	"hq2x4",
 	"lq2x",
 	"lq2x3",
 	"lq2x4",
+	"hq3xasm",
 	"hq3x",
 	"lq3x",
 #ifdef USE_4X_SCALE
@@ -115,12 +119,14 @@ static const char *str_desc[] =
 	"Super Eagle v0.59 by Kreed",
 	"Eagle 0.41a by Dirk Stevens",
 	"2xPM v0.2 by Pablo Medina",
+	"HQ2x (force ASM)",
 	"HQ2x by Maxim Stepin",
 	"HQ2x3 by AdvMAME",
 	"HQ2x4 by AdvMAME",
 	"LQ2x by AdvMAME",
 	"LQ2x3 by AdvMAME",
 	"LQ2x4 by AdvMAME",
+	"HQ3x (force ASM)",
 	"HQ3x by Maxim Stepin",
 	"LQ3x by AdvMAME",
 #ifdef USE_4X_SCALE
@@ -420,7 +426,8 @@ int scale_init(void)
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
-		
+
+		case SCALE_EFFECT_HQ2XASM:
 		case SCALE_EFFECT_HQ2X:
 		{
 #ifdef USE_MMX_INTERP_SCALE
@@ -513,6 +520,7 @@ int scale_init(void)
 			scale_hlq2x4_32_def = lq2x4_32_def;
 			break;
 		}
+		case SCALE_EFFECT_HQ3XASM:
 		case SCALE_EFFECT_HQ3X:
 		{
 #ifdef USE_MMX_INTERP_SCALE
@@ -623,6 +631,13 @@ int scale_check(int depth)
 			else
 				return 1;
 
+		case SCALE_EFFECT_HQ2XASM:
+		case SCALE_EFFECT_HQ3XASM:
+			if (depth == 15 || depth == 16)
+				return 0;
+			else
+				return 1;
+
 		case SCALE_EFFECT_HQ2X:
 		case SCALE_EFFECT_HQ2X3:
 		case SCALE_EFFECT_HQ2X4:
@@ -683,6 +698,8 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_2XPM:
 			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
+		case SCALE_EFFECT_HQ2XASM:
+			return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ2X:
 #ifdef ASM_HQ
 			if (depth == 15)
@@ -696,6 +713,8 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 		case SCALE_EFFECT_HQ2X4:
 		case SCALE_EFFECT_LQ2X4:
 			return scale_perform_hlq2x4(src, dst, src_pitch, dst_pitch, width, height, depth);
+		case SCALE_EFFECT_HQ3XASM:
+			return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ3X:
 #ifdef ASM_HQ
 			if (depth == 15)
@@ -1165,34 +1184,7 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 {
 	interp_init();
 
-	if (depth == 32)
-	{
-		UINT8 *ptr = dst;
-		UINT8 *s;
-		int i;
-
-		// see if we need to (re-)initialise
-		if (previous_width[0] != dst_pitch || previous_height[0] != height * 2)
-		{
-			scale_allocate_local_buffer(dst_pitch, height * 2, 0);
-
-			previous_depth[0] = 0;
-		}
-
-		s = scale_buffer[0];
-
-		hq2x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 2, src_pitch >> 1);
-
-		for (i = 0; i < height * 2; i++)
-		{
-			memcpy(ptr, s, width * 4 * 2);
-			s += width * 4 * 2;
-			ptr += dst_pitch;
-		}
-	}
-	else
-		hq2x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
-
+	hq2x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
 	scale_emms();
 
 	return 0;
@@ -1381,34 +1373,7 @@ static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 {
 	interp_init();
 
-	if (depth == 32)
-	{
-		UINT8 *ptr = dst;
-		UINT8 *s;
-		int i;
-
-		// see if we need to (re-)initialise
-		if (previous_width[0] != dst_pitch || previous_height[0] != height * 3)
-		{
-			scale_allocate_local_buffer(dst_pitch, height * 3, 0);
-
-			previous_depth[0] = 0;
-		}
-
-		s = scale_buffer[0];
-
-		hq3x_32((unsigned short *)src, (unsigned short *)s, width, height, width * 4 * 3, src_pitch >> 1);
-
-		for (i = 0; i < height * 3; i++)
-		{
-			memcpy(ptr, s, width * 4 * 3);
-			s += width * 4 * 3;
-			ptr += dst_pitch;
-		}
-	}
-	else
-		hq3x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
-
+	hq3x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
 	scale_emms();
 
 	return 0;

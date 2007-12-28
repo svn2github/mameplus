@@ -309,7 +309,6 @@ OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/sc
 ifneq ($(ASM_HQ),)
 DEFS += -DASM_HQ
 OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
-#OSDOBJS += $(WINOBJ)/scale/hq2x32.obj $(WINOBJ)/scale/hq3x32.obj
 endif
 OSDOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
 
