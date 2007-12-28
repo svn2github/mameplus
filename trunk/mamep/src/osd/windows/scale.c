@@ -1281,7 +1281,7 @@ static int scale_perform_hlq2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 
 	interp_init();
 
-	if (depth == 15 || depth == 16)
+	if (depth == 15)
 	{
 		scale_hlq2x3_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 
@@ -1509,7 +1509,7 @@ static int scale_perform_hlq4x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 	interp_init();
 
-	if (depth == 15 || depth == 16)
+	if (depth == 15)
 	{
 		scale_hlq4x_15_def((UINT16 *)dst, (UINT16 *)(dst + dst_pitch), (UINT16 *)(dst + 2 * dst_pitch), (UINT16 *)(dst + 3 * dst_pitch), (UINT16 *)src_prev, (UINT16 *)src_curr, (UINT16 *)src_next, width);
 
