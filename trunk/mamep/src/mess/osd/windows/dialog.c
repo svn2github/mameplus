@@ -1213,21 +1213,41 @@ static LRESULT seqselect_apply(dialog_box *dialog, HWND editwnd, UINT message, W
 //	input_port_mutable_seq
 //============================================================
 
-static input_seq *input_port_mutable_seq(input_port_entry *in, int seqtype)
+static input_seq *input_port_mutable_seq(input_port_entry *port, int seqtype)
 {
-	const input_seq *const_seq = input_port_seq(in, seqtype);
-	input_seq *seq;
+	input_seq *portseq;
 
-	if (const_seq == &in->seq)
-		seq = &in->seq;
-	else if (const_seq == &in->analog.incseq)
-		seq = &in->analog.incseq;
-	else if (const_seq == &in->analog.decseq)
-		seq = &in->analog.decseq;
-	else
-		seq = NULL;
+	// if port is disabled, return no key
+	if (port->unused)
+		return NULL;
 
-	return seq;
+	// handle the various seq types
+	switch (seqtype)
+	{
+		case SEQ_TYPE_STANDARD:
+			portseq = &port->seq;
+			break;
+
+		case SEQ_TYPE_INCREMENT:
+			portseq = &port->analog.incseq;
+			break;
+
+		case SEQ_TYPE_DECREMENT:
+			portseq = &port->analog.decseq;
+			break;
+
+		default:
+			return NULL;
+	}
+
+	// does this override the default? if not, find the default setting
+	if (input_seq_get_1(portseq) == SEQCODE_DEFAULT)
+	{
+		const input_seq *default_portseq;
+		default_portseq = input_port_default_seq(port->type, port->player, seqtype);
+		*portseq = *default_portseq;
+	}
+	return portseq;
 }
 
 //============================================================
@@ -1238,7 +1258,7 @@ static int dialog_add_single_seqselect(struct _dialog_box *di, short x, short y,
 	short cx, short cy, input_port_entry *port, int is_analog, int seq)
 {
 	seqselect_info *stuff;
-	const input_seq *code;
+	input_seq *code;
 
 	code = input_port_mutable_seq(port, seq);
 
@@ -1249,7 +1269,7 @@ static int dialog_add_single_seqselect(struct _dialog_box *di, short x, short y,
 	if (!stuff)
 		return 1;
 	memset(stuff, 0, sizeof(*stuff));
-	memcpy(stuff->code, code, sizeof(*(stuff->code)));
+	stuff->code = code;
 	stuff->pos = di->item_count;
 	stuff->timer = 0;
 	stuff->is_analog = is_analog;

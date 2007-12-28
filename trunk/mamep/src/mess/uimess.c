@@ -17,7 +17,7 @@
 #endif
 
 
-int mess_pause_for_ui = 0;
+//int mess_pause_for_ui = 0;
 static int ui_active = 0;
 
 int mess_ui_active(void)
@@ -197,7 +197,7 @@ UINT32 ui_menu_image_info(UINT32 state)
 
 int mess_use_new_ui(void)
 {
-#if defined(WIN32) && !defined(SDLMAME_WIN32)
+#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
 	if (options_get_bool(mame_options(), WINOPTION_NEWUI))
 		return TRUE;
 #endif

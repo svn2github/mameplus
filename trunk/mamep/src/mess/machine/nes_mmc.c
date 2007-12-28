@@ -31,12 +31,12 @@
 #define LOG_FDS	1
 
 /* Global variables */
-int prg_mask;
+static int prg_mask;
 
-int IRQ_enable, IRQ_enable_latch;
-UINT16 IRQ_count, IRQ_count_latch, IRQ_reload;
-UINT8 IRQ_status;
-UINT8 IRQ_mode_jaleco;
+static int IRQ_enable, IRQ_enable_latch;
+static UINT16 IRQ_count, IRQ_count_latch, IRQ_reload;
+static UINT8 IRQ_status;
+static UINT8 IRQ_mode_jaleco;
 
 int MMC1_extended;	/* 0 = normal MMC1 cart, 1 = 512k MMC1, 2 = 1024k MMC1 */
 
@@ -4518,7 +4518,7 @@ int mapper_reset (int mapperNum)
 
 
 
-static mmc mmc_list[] =
+static const mmc mmc_list[] =
 {
 /*	INES   DESC						LOW_W, LOW_R, MED_W, HIGH_W, PPU_latch, scanline CB, hblank CB */
 	{ 0, "No Mapper",				NULL, NULL, NULL, NULL, NULL, NULL, NULL },

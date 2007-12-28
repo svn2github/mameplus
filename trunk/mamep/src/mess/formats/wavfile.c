@@ -228,7 +228,7 @@ static casserr_t wavfile_save(cassette_image *cassette, const struct CassetteInf
 
 
 
-struct CassetteFormat wavfile_format =
+const struct CassetteFormat wavfile_format =
 {
 	"wav",
 	wavfile_identify,
@@ -248,6 +248,7 @@ struct CassetteFormat wavfile_format =
 	This code has already identified some rounding errors
 *********************************************************************/
 
+#ifdef UNUSED_FUNCTION
 void wavfile_testload(const char *fname)
 {
 	cassette_image *cassette;
@@ -279,6 +280,7 @@ void wavfile_testload(const char *fname)
 
 	cassette_close(cassette);
 }
+#endif
 
 
 

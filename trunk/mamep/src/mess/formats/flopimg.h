@@ -81,7 +81,7 @@ struct FloppyFormat
 
 
 #define FLOPPY_OPTIONS_START(name)												\
-	struct FloppyFormat floppyoptions_##name[] =								\
+	const struct FloppyFormat floppyoptions_##name[] =								\
 	{																			\
 
 #define FLOPPY_OPTIONS_END														\
@@ -89,7 +89,7 @@ struct FloppyFormat
 	};
 
 #define FLOPPY_OPTIONS_EXTERN(name)												\
-	extern struct FloppyFormat floppyoptions_##name[]							\
+	extern const struct FloppyFormat floppyoptions_##name[]							\
 
 #define FLOPPY_OPTION(name, extensions_, description_, identify_, construct_, ranges_)\
 	{ #name, extensions_, description_, identify_, construct_, ranges_ },				\
@@ -170,10 +170,6 @@ UINT64 floppy_image_size(floppy_image *floppy);
 
 /* misc */
 const char *floppy_error(floperr_t err);
-
-/* debugging calls */
-floperr_t floppy_test_format(const struct FloppyFormat *format, int (*printerror)(const char *format, ...));
-
 
 
 #endif /* FLOPIMG_H */

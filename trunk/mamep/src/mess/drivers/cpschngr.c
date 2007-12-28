@@ -25,10 +25,12 @@ MACHINE_DRIVER_EXTERN(cps1);
 extern void driver_init_cps1(running_machine *machine);
 
 /*
+#ifdef UNUSED_FUNCTION
 void wof_decode(void)      { }
 void dino_decode(void)     { }
 void punisher_decode(void) { }
 void slammast_decode(void) { }
+#endif
 */
 /***************************************************************************
 
