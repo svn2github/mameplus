@@ -51,7 +51,7 @@ FOLDERDATA g_folderData[] =
 {
 	{TEXT("All Arcades"),     "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,				0,             0,            NULL,                       DriverIsConsole,              FALSE },
 	{TEXT("Available Arcades"),"available",         FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                     FilterAvailable,              TRUE },
-	{TEXT("All Consoles"),    "console",           FOLDER_CONSOLE,      IDI_FOLDER,             0,             0,            NULL,                       DriverIsConsole, 			   TRUE },
+	{TEXT("Consoles"),  	  "console",           FOLDER_CONSOLE,      IDI_FOLDER,             0,             0,            NULL,                       DriverIsConsole, 			   TRUE },
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	{TEXT("Unavailable"),     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,	F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
 #endif

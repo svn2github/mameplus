@@ -355,8 +355,8 @@ All
 所有
 
 # osd/winui/layout.c: 50
-All Games
-所有游戏
+All Arcades
+所有街机
 
 # mess/osd/winui/mess32ui.c: 675 osd/winui/win32ui.c: 841, 848, 855, 862
 All files (*.*)
@@ -447,8 +447,8 @@ Automatic
 自动
 
 # mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
-Available
-拥有游戏
+Available Arcades
+拥有街机
 
 # osd/winui/mame32.rc: 451
 Available fields:
@@ -592,11 +592,11 @@ CPU 芯片
 
 # osd/winui/dialogs.c: 255 osd/winui/winuiopt.c: 427
 Cabinet
-游戏机台
+机台
 
 # mess/osd/winui/layoutms.c: 96 osd/winui/layout.c: 126
 Cabinets
-游戏机台
+机台
 
 # osd/winui/mame32.rc: 440, 466, 1004
 Cancel
@@ -704,11 +704,11 @@ Control &Panel
 
 # osd/winui/dialogs.c: 261 osd/winui/winuiopt.c: 430
 Control Panel
-控制面板
+控制
 
 # mess/osd/winui/layoutms.c: 99 osd/winui/layout.c: 129
 Control Panels
-控制面板
+控制
 
 # osd/winui/layout.c: 77
 Control Type
@@ -1084,11 +1084,11 @@ Flip screen upside-down
 
 # osd/winui/dialogs.c: 253 osd/winui/winuiopt.c: 426
 Flyer
-游戏广告
+广告
 
 # mess/osd/winui/layoutms.c: 95 osd/winui/layout.c: 125
 Flyers
-广告图
+广告
 
 # osd/winui/mame32.rc: 79
 Fold&er List\tAlt+D
@@ -1448,11 +1448,11 @@ Manufacturer
 
 # osd/winui/dialogs.c: 257 osd/winui/winuiopt.c: 428
 Marquee
-框头贴画
+贴画
 
 # mess/osd/winui/layoutms.c: 97 osd/winui/layout.c: 127
 Marquees
-框头贴画
+贴画
 
 # mess/osd/winui/layoutms.c: 94 osd/winui/layout.c: 124
 Memory Card
@@ -2180,11 +2180,11 @@ Small Icons
 
 # osd/winui/dialogs.c: 251 osd/winui/winuiopt.c: 425
 Snapshot
-屏幕快照
+快照
 
 # mess/osd/winui/layoutms.c: 90 mess/osd/winui/mess32ui.c: 168 osd/winui/layout.c: 120
 Snapshots
-屏幕快照
+快照
 
 # osd/winui/mame32.rc: 215
 Sort &Ascending
@@ -2268,7 +2268,7 @@ Stereo
 
 # osd/winui/winuiopt.c: 433
 Story
-游戏故事
+故事
 
 # osd/winui/properties.c: 1159 osd/winui/treeview.c: 1391
 Supported
@@ -2320,11 +2320,11 @@ Throttle
 
 # osd/winui/dialogs.c: 259 osd/winui/winuiopt.c: 429
 Title
-游戏标题
+标题
 
 # mess/osd/winui/layoutms.c: 98 osd/winui/layout.c: 128
 Titles
-游戏标题
+标题
 
 # osd/winui/win32ui.c: 746
 Toggle Folder List

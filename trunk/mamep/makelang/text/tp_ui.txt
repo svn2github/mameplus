@@ -359,7 +359,7 @@ All
 
 
 # osd/winui/layout.c: 50
-All Games
+All Arcades
 
 
 # mess/osd/winui/mess32ui.c: 675 osd/winui/win32ui.c: 841, 848, 855, 862
@@ -451,7 +451,7 @@ Automatic
 
 
 # mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
-Available
+Available Arcades
 
 
 # osd/winui/mame32.rc: 451
