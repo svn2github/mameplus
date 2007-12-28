@@ -608,7 +608,7 @@ static BOOL bProgressShown = FALSE;
 static BOOL bListReady     = FALSE;
 
 /* use a joystick subsystem in the gui? */
-static struct OSDJoystick* g_pJoyGUI = NULL;
+static const struct OSDJoystick* g_pJoyGUI = NULL;
 
 /* store current keyboard state (in internal codes) here */
 static input_code *keyboard_state;
@@ -1153,7 +1153,7 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 }
 
 
-int Mame32Main(HINSTANCE    hInstance,
+int MameUIMain(HINSTANCE    hInstance,
                    LPSTR        lpCmdLine,
                    int          nCmdShow)
 {
@@ -1165,7 +1165,7 @@ int Mame32Main(HINSTANCE    hInstance,
 	start = st.wMinute * 60 * 1000 + st.wSecond * 1000 + st.wMilliseconds;
 #endif /* MEASURE_INIT_EXIT_TIME */
 
-	dprintf("MAME32 starting\n");
+	dprintf("MAMEUI starting\n");
 
 	use_gui_romloading = TRUE;
 

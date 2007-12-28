@@ -25,7 +25,7 @@ struct TabViewCallbacks
 
 	// Accessors
 	LPCSTR (*pfnGetTabShortName)(int nTab);
-	LPCWSTR (*pfnGetTabLongName)(int nTab);
+	LPCTSTR (*pfnGetTabLongName)(int nTab);
 
 	// Callbacks
 	void (*pfnOnSelectionChanged)(void);

@@ -38,11 +38,12 @@ typedef struct
 }
 DIRECTORYINFO;
 
-/* in layout.c */
+/* in layout[ms].c */
 extern const DIRECTORYINFO g_directoryInfo[];
 
 INT_PTR CALLBACK DirectoriesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 
 #endif /* DIRECTORIES_H */
+
 
 

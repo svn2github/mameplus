@@ -29,7 +29,7 @@ typedef struct
 {
 	int		nMenuItem;
 	BOOL	bIsHtmlHelp;
-	LPCWSTR	lpFile;
+	LPCTSTR	lpFile;
 } MAMEHELPINFO;
 
 extern const MAMEHELPINFO g_helpInfo[];
@@ -44,6 +44,6 @@ extern const MAMEHELPINFO g_helpInfo[];
 
 extern int HelpInit(void);
 extern void HelpExit(void);
-extern HWND HelpFunction(HWND hwndCaller, LPCWSTR pszFile, UINT uCommand, DWORD_PTR dwData);
+extern HWND HelpFunction(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwData);
 
 #endif

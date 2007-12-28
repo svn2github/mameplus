@@ -21,11 +21,12 @@
 
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
+#define UNICODE
 #include <windows.h>
 // MAME/MAMEUI headers
 #include "help.h"
 
-typedef HWND (WINAPI *HtmlHelpProc)(HWND hwndCaller, LPCWSTR pszFile, UINT uCommand, DWORD_PTR dwData);
+typedef HWND (WINAPI *HtmlHelpProc)(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwData);
 
 /***************************************************************************
  Internal structures
@@ -63,14 +64,14 @@ int HelpInit(void)
 	g_hHelpLib  = NULL;
 
 	g_dwCookie = 0;
-	HelpFunction(NULL, NULL, HH_INITIALIZE, (DWORD)&g_dwCookie);
+	HelpFunction(NULL, NULL, HH_INITIALIZE, (DWORD_PTR)&g_dwCookie);
 	return 0;
 }
 
 void HelpExit(void)
 {
 	HelpFunction(NULL, NULL, HH_CLOSE_ALL, 0);
-	HelpFunction(NULL, NULL, HH_UNINITIALIZE, (DWORD)g_dwCookie);
+	HelpFunction(NULL, NULL, HH_UNINITIALIZE, (DWORD_PTR)&g_dwCookie);
 
 	g_dwCookie  = 0;
 	g_pHtmlHelp = NULL;
@@ -82,7 +83,7 @@ void HelpExit(void)
 	}
 }
 
-HWND HelpFunction(HWND hwndCaller, LPCWSTR pszFile, UINT uCommand, DWORD_PTR dwData)
+HWND HelpFunction(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwData)
 {
 	if (g_pHtmlHelp == NULL)
 		Help_Load();
@@ -100,7 +101,7 @@ HWND HelpFunction(HWND hwndCaller, LPCWSTR pszFile, UINT uCommand, DWORD_PTR dwD
 static void Help_Load(void)
 {
 #if defined(__GNUC__)
-	g_hHelpLib = LoadLibrary("hhctrl.ocx");
+	g_hHelpLib = LoadLibrary(TEXT("hhctrl.ocx"));
 	if (g_hHelpLib)
 	{
 		FARPROC pProc = NULL;

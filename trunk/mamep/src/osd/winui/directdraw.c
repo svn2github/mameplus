@@ -337,6 +337,7 @@ static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
 							  LPVOID	lpContext,
 							  HMONITOR	hm)
 {
+	// mamep: skip shadow drivers
 	if (lpGUID == NULL)
 		return DDENUMRET_OK;
 
@@ -346,6 +347,7 @@ static BOOL WINAPI DDEnumInfo(GUID FAR *lpGUID,
 	g_Displays[g_nNumDisplays].lpguid = (LPGUID)malloc(sizeof(GUID));
 	memcpy(g_Displays[g_nNumDisplays].lpguid, lpGUID, sizeof(GUID));
 
+	// mamep: use more infomational lpDriverName
 	g_Displays[g_nNumDisplays].driver = malloc((_tcslen(lpDriverName) + 1) * sizeof(TCHAR));
 	_tcscpy(g_Displays[g_nNumDisplays].driver, lpDriverName);
 
@@ -422,6 +424,7 @@ static void CalculateDisplayModes(void)
 	if (g_pDirectDraw2)
 		IDirectDraw2_EnumDisplayModes(g_pDirectDraw2, 0, NULL, &g_DisplayModes, EnumDisplayModesCallback);
 }
+
 
 
 

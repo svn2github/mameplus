@@ -21,9 +21,7 @@
 #include "pool.h"
 #include "screenshot.h"
 
-#if !defined(SEARCH_PROMPT)
 #define SEARCH_PROMPT "type a keyword"
-#endif
 
 enum
 {
@@ -99,6 +97,10 @@ int GetIndexFromSortedIndex(int sorted_index);
 // sets text in part of the status bar on the main window
 void SetStatusBarTextW(int part_index, const WCHAR *message);
 void SetStatusBarTextFW(int part_index, const WCHAR *fmt, ...);
+
+int MameUIMain(HINSTANCE	hInstance,
+                   LPSTR    lpCmdLine,
+                   int      nCmdShow);
 
 BOOL MouseHasBeenMoved(void);
 #endif

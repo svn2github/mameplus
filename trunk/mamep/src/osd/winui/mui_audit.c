@@ -34,7 +34,7 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"	// include this first
+#include "mameui.h"
 #include "winutf8.h"
 #include "strconv.h"
 #include "audit.h"
@@ -64,7 +64,7 @@ static const WCHAR *StatusString(int iStatus);
 #define SAMPLES_NOT_USED    3
 #define MAX_AUDITBOX_TEXT	0x7FFFFFFE
 
-HWND hAudit;
+static HWND hAudit;
 static int rom_index;
 static int roms_correct;
 static int roms_incorrect;
@@ -90,7 +90,7 @@ void AuditDialog(HWND hParent)
 	samples_incorrect = 0;
 
 	//RS use Riched32.dll
-	// Riched32.dll doesn't work on Win9X
+	// mamep: Riched32.dll doesn't work on Win9X
 	hModule = LoadLibrary(TEXT("Riched20.dll"));
 	if( hModule )
 	{
@@ -355,12 +355,12 @@ static INT_PTR CALLBACK AuditWindowProc(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		case IDPAUSE:
 			if (bPaused)
 			{
-				SetDlgItemText(hAudit, IDPAUSE, _UIW(TEXT("&Pause")));
+				SendDlgItemMessage(hAudit, IDPAUSE, WM_SETTEXT, 0, (LPARAM)(LPCTSTR)_UIW(TEXT("&Pause")));
 				bPaused = FALSE;
 			}
 			else
 			{
-				SetDlgItemText(hAudit, IDPAUSE, _UIW(TEXT("&Continue")));
+				SendDlgItemMessage(hAudit, IDPAUSE, WM_SETTEXT, 0, (LPARAM)(LPCTSTR)(_UIW(TEXT("&Continue"))));
 				bPaused = TRUE;
 			}
 			break;
@@ -414,7 +414,7 @@ INT_PTR CALLBACK GameAuditDialogProc(HWND hDlg,UINT Msg,WPARAM wParam,LPARAM lPa
 static void ProcessNextRom()
 {
 	int retval;
-	WCHAR buffer[200];
+	TCHAR buffer[200];
 
 	retval = MameUIVerifyRomSet(rom_index, TRUE);
 	switch (retval)
@@ -422,10 +422,10 @@ static void ProcessNextRom()
 	case BEST_AVAILABLE: /* correct, incorrect or separate count? */
 	case CORRECT:
 		roms_correct++;
-		swprintf(buffer, TEXT("%i"), roms_correct);
-		SetDlgItemText(hAudit, IDC_ROMS_CORRECT, buffer);
-		swprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, buffer);
+		_stprintf(buffer, TEXT("%i"), roms_correct);
+		SendDlgItemMessage(hAudit, IDC_ROMS_CORRECT, WM_SETTEXT, 0, (LPARAM)buffer);
+		_stprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
+		SendDlgItemMessage(hAudit, IDC_ROMS_TOTAL, WM_SETTEXT, 0, (LPARAM)buffer);
 		break;
 
 	case NOTFOUND:
@@ -433,10 +433,10 @@ static void ProcessNextRom()
 
 	case INCORRECT:
 		roms_incorrect++;
-		swprintf(buffer, TEXT("%i"), roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_INCORRECT, buffer);
-		swprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
-		SetDlgItemText(hAudit, IDC_ROMS_TOTAL, buffer);
+		_stprintf(buffer, TEXT("%i"), roms_incorrect);
+		SendDlgItemMessage(hAudit, IDC_ROMS_INCORRECT, WM_SETTEXT, 0, (LPARAM)buffer);
+		_stprintf(buffer, TEXT("%i"), roms_correct + roms_incorrect);
+		SendDlgItemMessage(hAudit, IDC_ROMS_TOTAL, WM_SETTEXT, 0, (LPARAM)buffer);
 		break;
 	}
 
@@ -453,7 +453,7 @@ static void ProcessNextRom()
 static void ProcessNextSample()
 {
 	int  retval;
-	WCHAR buffer[200];
+	TCHAR buffer[200];
 	
 	retval = MameUIVerifySampleSet(sample_index, TRUE);
 	
@@ -463,10 +463,10 @@ static void ProcessNextSample()
 		if (DriverUsesSamples(sample_index))
 		{
 			samples_correct++;
-			swprintf(buffer, TEXT("%i"), samples_correct);
-			SetDlgItemText(hAudit, IDC_SAMPLES_CORRECT, buffer);
-			swprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
-			SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, buffer);
+			_stprintf(buffer, TEXT("%i"), samples_correct);
+			SendDlgItemMessage(hAudit, IDC_SAMPLES_CORRECT, WM_SETTEXT, 0, (LPARAM)buffer);
+			_stprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
+			SendDlgItemMessage(hAudit, IDC_SAMPLES_TOTAL, WM_SETTEXT, 0, (LPARAM)buffer);
 			break;
 		}
 
@@ -475,10 +475,10 @@ static void ProcessNextSample()
 			
 	case INCORRECT:
 		samples_incorrect++;
-		swprintf(buffer, TEXT("%i"), samples_incorrect);
-		SetDlgItemText(hAudit, IDC_SAMPLES_INCORRECT, buffer);
-		swprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
-		SetDlgItemText(hAudit, IDC_SAMPLES_TOTAL, buffer);
+		_stprintf(buffer, TEXT("%i"), samples_incorrect);
+		SendDlgItemMessage(hAudit, IDC_SAMPLES_INCORRECT, WM_SETTEXT, 0, (LPARAM)buffer);
+		_stprintf(buffer, TEXT("%i"), samples_correct + samples_incorrect);
+		SendDlgItemMessage(hAudit, IDC_SAMPLES_TOTAL, WM_SETTEXT, 0, (LPARAM)buffer);
 		
 		break;
 	}
@@ -489,7 +489,7 @@ static void ProcessNextSample()
 	if (sample_index == GetNumGames())
 	{
 		DetailsPrintf(_UIW(TEXT("Audit complete.\n")));
-		SetDlgItemText(hAudit, IDCANCEL, _UIW(TEXT("&Close")));
+		SendDlgItemMessage(hAudit, IDCANCEL, WM_SETTEXT, 0, (LPARAM)(LPCTSTR)_UIW(TEXT("&Close")));
 		sample_index = -1;
 	}
 }

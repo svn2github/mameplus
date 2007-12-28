@@ -164,7 +164,8 @@ typedef enum
 	F_CONSOLE       = 0x00000400,
 	F_MODIFIED      = 0x00000800,
 #endif
-	F_MASK          = 0x00000FFF,
+	F_MASK          = 0x0000FFFF,
+	F_INIEDIT       = 0x00010000, // There is an .ini that can be edited. MSH 20070811
 	F_CUSTOM        = 0x01000000  // for current .ini custom folders
 } FOLDERFLAG;
 

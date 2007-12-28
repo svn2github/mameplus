@@ -1319,6 +1319,7 @@ int Picker_GetNumColumns(HWND hWnd)
 
 
 /* Add ... to Items in ListView if needed */
+// mamep: lstr_ is buggy on win9x?
 static LPCWSTR MakeShortString(HDC hDC, LPCWSTR lpszLong, int nColumnLen, int nOffset)
 {
 	static const WCHAR szThreeDots[] = TEXT("...");
@@ -1736,7 +1737,7 @@ int Picker_GetColumnCount(HWND hwndPicker)
 
 
 
-LPCTSTR *Picker_GetColumnNames(HWND hwndPicker)
+const LPCTSTR *Picker_GetColumnNames(HWND hwndPicker)
 {
 	struct PickerInfo *pPickerInfo;
 	pPickerInfo = GetPickerInfo(hwndPicker);

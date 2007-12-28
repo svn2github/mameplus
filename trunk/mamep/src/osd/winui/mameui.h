@@ -21,7 +21,6 @@
 #define assert(x)
 #endif
 
-#include "screenshot.h"
 #include "winui.h"
 
 #if !defined(MAMEUINAME)

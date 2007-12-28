@@ -49,12 +49,13 @@ static BOOL FilterAvailable(int driver_index);
 
 FOLDERDATA g_folderData[] =
 {
-	{TEXT("All Games"),       "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,				0,             0,            NULL,                       DriverIsConsole,              FALSE },
-	{TEXT("Available"),       "available",         FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                     FilterAvailable,              TRUE },
-	{TEXT("Consoles"),        "console",           FOLDER_CONSOLE,      IDI_FOLDER,             0,             0,            NULL,                       DriverIsConsole, 			   TRUE },
+	{TEXT("All Arcades"),     "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,				0,             0,            NULL,                       DriverIsConsole,              FALSE },
+	{TEXT("Available Arcades"),"available",         FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                     FilterAvailable,              TRUE },
+	{TEXT("All Consoles"),    "console",           FOLDER_CONSOLE,      IDI_FOLDER,             0,             0,            NULL,                       DriverIsConsole, 			   TRUE },
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	{TEXT("Unavailable"),     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,	F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
 #endif
+	{TEXT("Orientation"),     "orientation",       FOLDER_ORIENTATION,  IDI_FOLDER,               0,             0,            CreateOrientationFolders },
 	{TEXT("Manufacturer"),    "manufacturer",      FOLDER_MANUFACTURER, IDI_FOLDER_MANUFACTURER,  0,             0,            CreateManufacturerFolders },
 	{TEXT("Year"),            "year",              FOLDER_YEAR,         IDI_FOLDER_YEAR,          0,             0,            CreateYearFolders },
 	{TEXT("Driver"),          "driver",            FOLDER_SOURCE,       IDI_FOLDER_SOURCE,        0,             0,            CreateSourceFolders },
@@ -63,7 +64,6 @@ FOLDERDATA g_folderData[] =
 #endif /* MISC_FOLDER */
 	{TEXT("CPU"),             "cpu",               FOLDER_CPU,          IDI_CPU,                  0,             0,            CreateCPUFolders },
 	{TEXT("Sound"),           "sound",             FOLDER_SND,          IDI_SND,                  0,             0,            CreateSoundFolders },
-	{TEXT("Orientation"),     "orientation",       FOLDER_ORIENTATION,  IDI_FOLDER,               0,             0,            CreateOrientationFolders },
 	{TEXT("Imperfect"),       "imperfect",         FOLDER_DEFICIENCY,   IDI_FOLDER,               0,             0,            CreateDeficiencyFolders },
 	{TEXT("Dumping Status"),  "dumping",           FOLDER_DUMPING,      IDI_FOLDER,               0,             0,            CreateDumpingFolders },
 	{TEXT("Working"),         "working",           FOLDER_WORKING,      IDI_WORKING,              F_WORKING,     F_NONWORKING, NULL,                       DriverIsBroken,    FALSE },
@@ -72,14 +72,14 @@ FOLDERDATA g_folderData[] =
 	{TEXT("Clones"),          "clones",            FOLDER_CLONES,       IDI_FOLDER,               F_CLONES,      F_ORIGINALS,  NULL,                       DriverIsClone,     TRUE },
 	{TEXT("Raster"),          "raster",            FOLDER_RASTER,       IDI_FOLDER,               F_RASTER,      F_VECTOR,     NULL,                       DriverIsVector,    FALSE },
 	{TEXT("Vector"),          "vector",            FOLDER_VECTOR,       IDI_FOLDER,               F_VECTOR,      F_RASTER,     NULL,                       DriverIsVector,    TRUE },
-#ifdef MISC_FOLDER
+#ifndef MISC_FOLDER
+	{TEXT("Trackball"),       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
+	{TEXT("Lightgun"),        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
+#else /* MISC_FOLDER */
 	{TEXT("Resolution"),      "resolution",        FOLDER_RESOLUTION,   IDI_FOLDER,               0,             0,            CreateResolutionFolders },
 	{TEXT("FPS"),             "fps",               FOLDER_FPS,          IDI_FOLDER,               0,             0,            CreateFPSFolders },
 	{TEXT("Save State"),      "savestate",         FOLDER_SAVESTATE,    IDI_FOLDER,               0,             0,            CreateSaveStateFolders },
 	{TEXT("Control Type"),    "control",           FOLDER_CONTROL,      IDI_FOLDER,               0,             0,            CreateControlFolders },
-#else /* MISC_FOLDER */
-	{TEXT("Trackball"),       "trackball",         FOLDER_TRACKBALL,    IDI_FOLDER,               0,             0,            NULL,                       DriverUsesTrackball,	TRUE },
-	{TEXT("Lightgun"),        "lightgun",          FOLDER_LIGHTGUN,     IDI_FOLDER,               0,             0,            NULL,                       DriverUsesLightGun,TRUE },
 #endif /* !MISC_FOLDER */
 	{TEXT("Stereo"),          "stereo",            FOLDER_STEREO,       IDI_SOUND,                0,             0,            NULL,                       DriverIsStereo,    TRUE },
 	{TEXT("CHD"),             "harddisk",          FOLDER_HARDDISK,     IDI_HARDDISK,             0,             0,            NULL,                       DriverIsHarddisk,  TRUE },
@@ -110,15 +110,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("ROMs"),                  GetRomDirs,          SetRomDirs,          TRUE,  DIRDLG_ROMS },
 	{ TEXT("Samples"),               GetSampleDirs,       SetSampleDirs,       TRUE,  DIRDLG_SAMPLES },
 	{ TEXT("Ini Files"),             GetIniDir,           SetIniDir,           FALSE, DIRDLG_INI },
-	{ TEXT("Translation Files"),     GetTranslationDir,   SetTranslationDir,   FALSE, 0 },
-	{ TEXT("Localized Files"),       GetLocalizedDir,     SetLocalizedDir,     FALSE, 0 },
-#ifdef USE_IPS
-	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
-#endif /* USE_IPS */
 	{ TEXT("Config"),                GetCfgDir,           SetCfgDir,           FALSE, DIRDLG_CFG },
-#ifdef USE_HISCORE
-	{ TEXT("High Scores"),           GetHiDir,            SetHiDir,            FALSE, DIRDLG_HI },
-#endif /* USE_HISCORE */
 	{ TEXT("Snapshots"),             GetImgDir,           SetImgDir,           TRUE,  DIRDLG_IMG },
 	{ TEXT("Input Files (*.inp)"),   GetInpDir,           SetInpDir,           FALSE, DIRDLG_INP },
 	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
@@ -129,6 +121,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Marquees"),              GetMarqueeDir,       SetMarqueeDir,       TRUE,  0 },
 	{ TEXT("Titles"),                GetTitlesDir,        SetTitlesDir,        TRUE,  0 },
 	{ TEXT("Control Panels"),        GetControlPanelDir,  SetControlPanelDir,  TRUE,  0 },
+//	{ TEXT("PCBs"),                  GetPcbDir,           SetPcbDir,           FALSE, 0 },
 	{ TEXT("NVRAM"),                 GetNvramDir,         SetNvramDir,         FALSE, 0 },
 	{ TEXT("Controller Files"),      GetCtrlrDir,         SetCtrlrDir,         FALSE, DIRDLG_CTRLR },
 	{ TEXT("Hard Drive Difference"), GetDiffDir,          SetDiffDir,          FALSE, 0 },
@@ -136,9 +129,17 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Background Images"),     GetBgDir,            SetBgDir,            FALSE, 0 },
 	{ TEXT("Comment Files"),         GetCommentDir,       SetCommentDir,       FALSE, DIRDLG_COMMENT },
 	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
+#ifdef USE_HISCORE
+	{ TEXT("High Scores"),           GetHiDir,            SetHiDir,            FALSE, DIRDLG_HI },
+#endif /* USE_HISCORE */
 #ifdef USE_VIEW_PCBINFO
 	{ TEXT("PCB Info Files"),        GetPcbDir,           SetPcbDir,           FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */
+	{ TEXT("Translation Files"),     GetTranslationDir,   SetTranslationDir,   FALSE, 0 },
+	{ TEXT("Localized Files"),       GetLocalizedDir,     SetLocalizedDir,     FALSE, 0 },
+#ifdef USE_IPS
+	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
+#endif /* USE_IPS */
 	{ NULL }
 };
 
@@ -193,7 +194,7 @@ EXTFOLDER_TEMPLATE extFavorite =
 };
 
 /*
-const char g_szPlayGameString[] = "&Play %s";
+const TCHAR g_szPlayGameString[] = TEXT("&Play %s");
 const char g_szGameCountString[] = "%d games";
 const char g_szHistoryFileName[] = "history.dat";
 const char g_szMameInfoFileName[] = "mameinfo.dat";

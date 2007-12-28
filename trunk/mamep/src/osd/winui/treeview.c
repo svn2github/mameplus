@@ -115,9 +115,9 @@ static UINT         nCurrentFolder = 0;     /* Current folder ID */
 static WNDPROC      g_lpTreeWndProc = 0;    /* for subclassing the TreeView */
 static HIMAGELIST   hTreeSmall = 0;         /* TreeView Image list of icons */
 
-/* this only has an entry for each TOP LEVEL extra folder */
+/* this only has an entry for each TOP LEVEL extra folder + SubFolders*/
 static LPEXFOLDERDATA		ExtraFolderData[MAX_EXTRA_FOLDERS];
-int			        numExtraFolders = 0;
+static int			        numExtraFolders = 0;
 static int          numExtraIcons = 0;
 static char         *ExtraFolderIcons[MAX_EXTRA_FOLDERS];
 
@@ -626,8 +626,9 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 		/* skip over opening braces*/
 
 		if (*s != '[')
+        {
 			*ptmp++ = *s;
-
+	    }
 		(*pParsedChars)++;
 
 		/*for "distributed by" and "supported by" handling*/

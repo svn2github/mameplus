@@ -18,21 +18,19 @@
     history functions.
 
 ***************************************************************************/
-
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>
 #include <stdio.h>
 
-#include "mameui.h"
-#include <driver.h>
+// MAME/MAMEUI headers
+#include "driver.h"
 #include "mui_util.h"
-#include "bitmask.h"
+#include "datafile.h"
+#include "history.h"
 #include "mui_opts.h"
 #include "translate.h"
-
-#include "history.h"
-#include "datafile.h"
 
 /* Game history variables */
 #define MAX_HISTORY_LEN     (400 * 1024)
