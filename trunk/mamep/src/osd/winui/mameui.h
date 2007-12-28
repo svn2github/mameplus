@@ -24,11 +24,11 @@
 #include "winui.h"
 
 #if !defined(MAMEUINAME)
-#define MAMEUINAME "MAME32"
+#define MAMEUINAME "MAMEUI"
 #endif
 	
 #if !defined(TEXT_MAMEUINAME)
-#define TEXT_MAMEUINAME TEXT("MAME32")
+#define TEXT_MAMEUINAME TEXT("MAMEUI")
 #endif
 
 #if !defined(MAMENAME)

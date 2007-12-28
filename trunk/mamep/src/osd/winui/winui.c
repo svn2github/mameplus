@@ -2233,7 +2233,7 @@ void SetMainTitle(void)
 
 	sscanf(build_version,"%s",version);
 	swprintf(buffer, TEXT("%s Plus! %s"),
-	TEXT(MAMEUINAME),
+	TEXT(MAMENAME),
 	_Unicode(version));
 
 	SetWindowText(hMain, buffer);

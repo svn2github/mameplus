@@ -114,7 +114,7 @@ static void  generate_default_dirs(void);
     Internal defines
  ***************************************************************************/
 
-#define UI_INI_FILENAME MAMEUINAME "ui.ini"
+#define UI_INI_FILENAME MAMEUINAME ".ini"
 #define DEFAULT_OPTIONS_INI_FILENAME CONFIGNAME ".ini"
 
 #define MUIOPTION_LIST_MODE						"list_mode"
@@ -427,19 +427,19 @@ static const options_entry regSettings[] =
     { MUIOPTION_UI_KEY_QUIT,				"KEYCODE_LALT KEYCODE_Q",     0, NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION JOYSTICK CODES" },
-	{ MUIOPTION_UI_JOY_UP,					"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_DOWN,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_LEFT,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_RIGHT,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_START,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_PGUP,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_PGDWN,				"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_HOME,				"0,0,0,0",  0,                 NULL },
-	{ MUIOPTION_UI_JOY_END,					"0,0,0,0",  0,                 NULL },
-	{ MUIOPTION_UI_JOY_SS_CHANGE,			"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_HISTORY_UP,			"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_HISTORY_DOWN,		"",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_EXEC,				"0,0,0,0",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_UP,					"1,1,1,1",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_DOWN,				"1,1,1,2",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_LEFT,				"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_RIGHT,				"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_START,				"1,0,1,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_PGUP,				"1,1,2,1",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_PGDWN,				"1,1,2,2",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_HOME,				"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_END,					"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_SS_CHANGE,			"1,0,4,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_HISTORY_UP,			"1,0,2,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_HISTORY_DOWN,		"1,0,3,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_EXEC,				"0,0,0,0",         0,                 NULL },
 
 #ifndef MESS
 	{ NULL,									NULL,       OPTION_HEADER,     "GAME STATISTICS" },
@@ -3094,8 +3094,11 @@ static void GetSettingsFileName(char *filename, size_t filename_size)
 {
 	// copy INI directory
 	char *inidir = utf8_from_wstring(GetIniDir());
-	snprintf(filename, filename_size, "%s\\%s", inidir, UI_INI_FILENAME);
+	char *s = _strdup(UI_INI_FILENAME);
+	_strlwr(s);
+	snprintf(filename, filename_size, "%s\\%s", inidir, s);
 	free(inidir);
+	free(s);
 }
 
 /* Register access functions below */
