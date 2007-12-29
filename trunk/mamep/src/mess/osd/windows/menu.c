@@ -116,6 +116,7 @@ static int joystick_menu_setup;
 static char state_filename[MAX_PATH];
 
 static int add_filter_entry(char *dest, size_t dest_len, const char *description, const char *extensions);
+static void translate_menu(HMENU hMenu);
 
 
 //============================================================
@@ -1012,10 +1013,9 @@ static HMENU find_sub_menu(HMENU menu, const char *menutext, int create_sub_menu
 				return NULL;
 			}
 		}
-		while(_tcscmp(t_menutext, buf));
+		while(_tcscmp(t_menutext, wstring_from_utf8(_WINDOWS(utf8_from_wstring(buf)))));
 
 		free(t_menutext);
-
 		if (!sub_menu && create_sub_menu)
 		{
 			MENUITEMINFO mii;
@@ -2080,6 +2080,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 	// set the help menu to refer to this machine
 	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), _LST(Machine->gamedrv->description), Machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
+	translate_menu(menu_bar);
 	return 0;
 }
 
@@ -2187,12 +2188,10 @@ int win_create_menu(HMENU *menus)
 		if (!menu_bar)
 			goto error;
 
-		translate_menu(menu_bar);
-
 		if (win_setup_menus(module, menu_bar))
 			goto error;
 	}
-
+	translate_menu(menu_bar);
 	*menus = menu_bar;
 	return 0;
 
@@ -2213,6 +2212,7 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 {
 	int i;
 	MSG msg;
+	HMENU menu_bar;
 
 	static const WPARAM keytrans[][2] =
 	{
@@ -2282,6 +2282,9 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 	{
 		case WM_INITMENU:
 			prepare_menus(wnd);
+			menu_bar = GetMenu(wnd);
+			if (menu_bar)
+				translate_menu(menu_bar);
 			break;
 
 		case WM_CHAR:

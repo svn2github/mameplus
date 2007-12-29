@@ -576,14 +576,23 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 				break;
 
 			case 2:
-				if (show_gameinfo && sprintf_game_info(messagebox_text))
+				if ((show_gameinfo || ui_menu_is_dummy_image()) && sprintf_game_info(messagebox_text))
 				{
 					char *bufptr = messagebox_text + strlen(messagebox_text);
 
 					/* append MAME version and ask for select key */
-					bufptr += sprintf(bufptr, "\n\t%s %s\n\t%s", ui_getstring(UI_mame), build_version, ui_getstring(UI_selectkey));
-
-					ui_set_handler(handler_messagebox_selectkey, 0);
+					bufptr += sprintf(bufptr, "\n\t%s %s", ui_getstring(UI_mame), build_version);
+					
+					if(ui_menu_is_dummy_image())
+					{
+						bufptr += sprintf(bufptr, "\n\t%s", _("Please load an image"));
+						ui_set_handler(handler_messagebox, 0);
+					}
+					else
+					{
+						bufptr += sprintf(bufptr, "\n\t%s", ui_getstring(UI_selectkey));
+						ui_set_handler(handler_messagebox_selectkey, 0);
+					}
 				}
 				break;
 #ifdef MESS

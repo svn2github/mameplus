@@ -1622,30 +1622,6 @@ const char *cputype_get_info_string(cpu_type cputype, UINT32 state)
 	return info.s;
 }
 
-const char *cputype_shortname(cpu_type cputype)
-{
-	char *s = cpuintrf_temp_str();
-	char *p;
-
-	strcpy(s, cputype_name(cputype));
-
-	if (!strcmp(s, cputype_name(CPU_DUMMY)))
-		strcpy(s, "");
-	else if (!strcmp(s, "TMS9980A/TMS9981"))
-		strcpy(s, "TMS9980A/81");
-	else
-	{
-		for (p = s; *p; p++)
-			if (!strncmp(p, " (", 2))
-			{
-				*p = '\0';
-				break;
-			}
-	}
-
-	return s;
-}
-
 
 
 /*************************************

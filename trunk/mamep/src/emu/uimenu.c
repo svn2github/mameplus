@@ -2753,7 +2753,7 @@ static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *i
 	const input_port_entry *tin;
 
 	/* set the text to the name and the subitem text to invalid */
-	item->text = input_port_name(in);
+	item->text = _(input_port_name(in));
 	item->subtext = NULL;
 
 	/* scan for the current selection in the list */
@@ -2762,7 +2762,7 @@ static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *i
 		{
 			/* if this is a match, set the subtext */
 			if (in->default_value == tin->default_value)
-				item->subtext = input_port_name(tin);
+				item->subtext = _(input_port_name(tin));
 
 			/* else if we haven't seen a match yet, show a left arrow */
 			else if (!item->subtext)

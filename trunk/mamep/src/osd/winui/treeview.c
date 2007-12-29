@@ -135,20 +135,20 @@ static UINT          g_bios_folder = 0;
 extern BOOL			InitFolders(void);
 static BOOL         CreateTreeIcons(void);
 static void         TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars );
-static const WCHAR *TrimManufacturer(const WCHAR *s);
+static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars );
+static const TCHAR *TrimManufacturer(const TCHAR *s);
 static void         CreateAllChildFolders(void);
 static BOOL         AddFolder(LPTREEFOLDER lpFolder);
-static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
-                              UINT nFolderId, int nParent, UINT nIconId);
+static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, 
+                              UINT nCategoryID, BOOL bTranslate, UINT nFolderId, int nParent, UINT nIconId);
 static void         DeleteFolder(LPTREEFOLDER lpFolder);
-static const WCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder);
+static const TCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder);
 
 static LRESULT CALLBACK TreeWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 static int InitExtraFolders(void);
 static void FreeExtraFolders(void);
-static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon);
+static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon);
 static void SetExtraIcons(char *name, int *id);
 static BOOL TryAddExtraFolderAndChildren(int parent_index);
 
@@ -158,7 +158,7 @@ static BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder);
     public functions
  ***************************************************************************/
 
-#if 0
+#ifdef UNUSED_FUNCTION
 /**************************************************************************
  *      ci_strncmp - case insensitive character array compare
  *
@@ -230,6 +230,8 @@ void ResetFilters(void)
 
 void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList)
 {
+	LONG_PTR l;
+
 	g_lpFolderData = lpFolderData;
 	g_lpFilterList = lpFilterList;
 
@@ -237,10 +239,12 @@ void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList)
 
 	/* this will subclass the treeview (where WM_DRAWITEM gets sent for
 	   the header control) */
-	g_lpTreeWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetTreeView(), GWL_WNDPROC);
-	SetWindowLong(GetTreeView(), GWL_WNDPROC, (LONG)TreeWndProc);
+	l = GetWindowLongPtr(GetTreeView(), GWLP_WNDPROC);
+	g_lpTreeWndProc = (WNDPROC)l;
+	SetWindowLongPtr(GetTreeView(), GWLP_WNDPROC, (LONG_PTR)TreeWndProc);
 }
 
+#ifdef UNUSED_FUNCTION
 void DestroyTree(HWND hWnd)
 {
     if ( hTreeSmall )
@@ -249,6 +253,7 @@ void DestroyTree(HWND hWnd)
         hTreeSmall = NULL;
     }
 }
+#endif
 
 void SetCurrentFolder(LPTREEFOLDER lpFolder)
 {
@@ -315,7 +320,7 @@ BOOL IsVectorFolder(LPTREEFOLDER lpFolder)
 
 LPTREEFOLDER GetSourceFolder(int driver_index)
 {
-	const WCHAR *source_name = GetDriverFilename(driver_index);
+	const TCHAR *source_name = GetDriverFilename(driver_index);
 	UINT i;
 
 	for (i = 0; i < numFolders; i++)
@@ -404,21 +409,12 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 			return TRUE;
 	}
 
-	//mamep: filter for search box control
+	//mamep: filter for search box control, place it here for better performance
 	if (wcslen(search_text) && _wcsicmp(search_text, _UIW(TEXT(SEARCH_PROMPT))))
 	{
 		if (MyStrStrI(driversw[nGame]->description, search_text) == NULL &&
 			MyStrStrI(_LSTW(driversw[nGame]->description), search_text) == NULL &&
 		    MyStrStrI(driversw[nGame]->name, search_text) == NULL)
-			return TRUE;
-	}
-
-	if (wcslen(filter_text))
-	{
-		if (MyStrStrI(UseLangList() ? _LSTW(driversw[nGame]->description) : driversw[nGame]->description, filter_text) == NULL &&
-		    MyStrStrI(driversw[nGame]->name, filter_text) == NULL && 
-		    MyStrStrI(driversw[nGame]->source_file, filter_text) == NULL && 
-		    MyStrStrI(UseLangList()? _MANUFACTW(driversw[nGame]->manufacturer) : driversw[nGame]->manufacturer, filter_text) == NULL)
 			return TRUE;
 	}
 
@@ -436,6 +432,15 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 				dwMask |= lpParent->m_dwFlags;
 			}
 		}
+	}
+
+	if (wcslen(filter_text))
+	{
+		if (MyStrStrI(UseLangList() ? _LSTW(driversw[nGame]->description) : driversw[nGame]->description, filter_text) == NULL &&
+		    MyStrStrI(driversw[nGame]->name, filter_text) == NULL && 
+		    MyStrStrI(driversw[nGame]->source_file, filter_text) == NULL && 
+		    MyStrStrI(UseLangList()? _MANUFACTW(driversw[nGame]->manufacturer) : driversw[nGame]->manufacturer, filter_text) == NULL)
+			return TRUE;
 	}
 
 	// Are there filters set on this folder?
@@ -508,7 +513,7 @@ void CreateSourceFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		const WCHAR *s = GetDriverFilename(jj);
+		const TCHAR *s = GetDriverFilename(jj);
 
 		if (s == NULL || s[0] == '\0')
 			continue;
@@ -547,20 +552,20 @@ void CreateManufacturerFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		const WCHAR *manufacturer = driversw[jj]->manufacturer;
+		const TCHAR *manufacturer = driversw[jj]->manufacturer;
 		int iChars = 0;
 		while (manufacturer != NULL && manufacturer[0] != '\0')
 		{
-			const WCHAR *s = ParseManufacturer(manufacturer, &iChars);
+			const TCHAR *s = ParseManufacturer(manufacturer, &iChars);
 			manufacturer += iChars;
 			//shift to next start char
 			if (s != NULL && wcslen(s) > 0)
  			{
-				const WCHAR *t = TrimManufacturer(s);
+				const TCHAR *t = TrimManufacturer(s);
 				for (i = numFolders-1; i >= start_folder; i--)
 				{
 					//RS Made it case insensitive
-					if (_wcsnicmp(GetFolderOrigName(treeFolders[i]), t, 20) == 0)
+					if (_tcsnicmp(GetFolderOrigName(treeFolders[i]), t, 20) == 0)
 					{
 						AddGame(treeFolders[i],jj);
 						break;
@@ -579,11 +584,11 @@ void CreateManufacturerFolders(int parent_index)
 }
 
 /* Make a reasonable name out of the one found in the driver array */
-static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
+static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 {
-	static WCHAR tmp[256];
-	WCHAR *ptmp;
-	WCHAR *t;
+	static TCHAR tmp[256];
+	TCHAR *ptmp;
+	TCHAR *t;
 	*pParsedChars= 0;
 
 	if (*s == '?' || *s == '<' || s[3] == '?')
@@ -654,9 +659,9 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 				//parse the new "supported by" and "distributed by"
 				ptmp++;
 
-				if (_wcsnicmp(ptmp, TEXT(" supported by"), 13) == 0)
+				if (_tcsnicmp(ptmp, TEXT(" supported by"), 13) == 0)
 					ptmp += 13;
-				else if (_wcsnicmp(ptmp, TEXT(" distributed by"), 15) == 0)
+				else if (_tcsnicmp(ptmp, TEXT(" distributed by"), 15) == 0)
 					ptmp += 15;
 				else
 					return NULL;
@@ -668,23 +673,22 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 					return NULL;
 			}
 		}
-
 		if (tmp[0] == '(' || tmp[0] == ',')
 			ptmp++;
 
-		if (_wcsnicmp(ptmp, TEXT("licensed from "), 14) == 0)
+		if (_tcsnicmp(ptmp, TEXT("licensed from "), 14) == 0)
 			ptmp += 14;
 
 		// for the licenced from case
-		if (_wcsnicmp(ptmp, TEXT("licenced from "), 14) == 0)
+		if (_tcsnicmp(ptmp, TEXT("licenced from "), 14) == 0)
 			ptmp += 14;
 
 		while ((*ptmp != ')' ) && (*ptmp != '/' ) && *ptmp != '\0')
 		{
-			if (*ptmp == ' ' && _wcsnicmp(ptmp, TEXT(" license"), 8) == 0)
+			if (*ptmp == ' ' && _tcsnicmp(ptmp, TEXT(" license"), 8) == 0)
 				break;
 
-			if (*ptmp == ' ' && _wcsnicmp(ptmp, TEXT(" licence"), 8) == 0)
+			if (*ptmp == ' ' && _tcsnicmp(ptmp, TEXT(" licence"), 8) == 0)
 				break;
 
 			*t++ = *ptmp++;
@@ -698,18 +702,17 @@ static const WCHAR *ParseManufacturer(const WCHAR *s, int *pParsedChars )
 }
 
 /* Analyze Manufacturer Names for typical patterns, that don't distinguish between companies (e.g. Co., Ltd., Inc., etc. */
-static const WCHAR *TrimManufacturer(const WCHAR *s)
+static const TCHAR *TrimManufacturer(const TCHAR *s)
 {
 	//Also remove Country specific suffixes (e.g. Japan, Italy, America, USA, ...)
-	WCHAR strTemp[256];
-	static WCHAR strTemp2[256];
 	int i = 0;
+	TCHAR strTemp[256];
+	static TCHAR strTemp2[256];
 	int j = 0;
 	int k = 0;
 	int l = 0;
-
-	strTemp[0] = '\0';
-	strTemp2[0] = '\0';
+	memset(strTemp, '\0', 256 );
+	memset(strTemp2, '\0', 256 );
 
 	//start analyzing from the back, as these are usually suffixes
 	for (i = wcslen(s)-1; i >= 0; i--)
@@ -717,7 +720,7 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 		
 		l = wcslen(strTemp);
 
-		for (k = l; k >= 0; k--)
+		for (k=l; k>=0; k--)
 			strTemp[k+1] = strTemp[k];
 
 		strTemp[0] = s[i];
@@ -726,12 +729,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 		switch (l)
 		{
 			case 2:
-				if (_wcsnicmp(strTemp, TEXT("co"), 2) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co"), 2) == 0)
 				{
 					j = l;
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -740,17 +744,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 3:
-				if (_wcsnicmp(strTemp, TEXT("co."), 3) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("ltd"), 3) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("inc"), 3) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("SRL"), 3) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("USA"), 3) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co."), 3) == 0 || _tcsnicmp(strTemp, TEXT("ltd"), 3) == 0 || _tcsnicmp(strTemp, TEXT("inc"), 3) == 0 || _tcsnicmp(strTemp, TEXT("SRL"), 3) == 0 || _tcsnicmp(strTemp, TEXT("USA"), 3) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -759,16 +759,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 4:
-				if (_wcsnicmp(strTemp, TEXT("inc."), 4) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("ltd."), 4) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("corp"), 4) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("game"), 4) == 0)
+				if (_tcsnicmp(strTemp, TEXT("inc."), 4) == 0 || _tcsnicmp(strTemp, TEXT("ltd."), 4) == 0 || _tcsnicmp(strTemp, TEXT("corp"), 4) == 0 || _tcsnicmp(strTemp, TEXT("game"), 4) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -777,16 +774,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 5:
-				if (_wcsnicmp(strTemp, TEXT("corp."), 5) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("Games"), 5) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("Italy"), 5) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("Japan"), 5) == 0)
+				if (_tcsnicmp(strTemp, TEXT("corp."), 5) == 0 || _tcsnicmp(strTemp, TEXT("Games"), 5) == 0 || _tcsnicmp(strTemp, TEXT("Italy"), 5) == 0 || _tcsnicmp(strTemp, TEXT("Japan"), 5) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -795,14 +789,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 6:
-				if (_wcsnicmp(strTemp, TEXT("co-ltd"), 6) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("S.R.L."), 6) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co-ltd"), 6) == 0 || _tcsnicmp(strTemp, TEXT("S.R.L."), 6) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -811,14 +804,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 7:
-				if (_wcsnicmp(strTemp, TEXT("co. ltd"), 7) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("America"), 7) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co. ltd"), 7) == 0 || _tcsnicmp(strTemp, TEXT("America"), 7) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -827,13 +819,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 8:
-				if (_wcsnicmp(strTemp, TEXT("co. ltd."), 8) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co. ltd."), 8) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -842,14 +834,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 9:
-				if (_wcsnicmp(strTemp, TEXT("co., ltd."), 9) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("gmbh & co"), 9) == 0)
+				if (_tcsnicmp(strTemp, TEXT("co., ltd."), 9) == 0 || _tcsnicmp(strTemp, TEXT("gmbh & co"), 9) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -858,15 +849,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 10:
-				if (_wcsnicmp(strTemp, TEXT("corp, ltd."), 10) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("industries"), 10) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("of America"), 10) == 0)
+				if (_tcsnicmp(strTemp, TEXT("corp, ltd."), 10) == 0 || _tcsnicmp(strTemp, TEXT("industries"), 10) == 0 || _tcsnicmp(strTemp, TEXT("of America"), 10) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -875,14 +864,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 11:
-				if (_wcsnicmp(strTemp, TEXT("corporation"), 11) == 0 ||
-				    _wcsnicmp(strTemp, TEXT("enterprises"), 11) == 0)
+				if (_tcsnicmp(strTemp, TEXT("corporation"), 11) == 0 || _tcsnicmp(strTemp, TEXT("enterprises"), 11) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -891,13 +879,13 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 				}
 				break;
 			case 16:
-				if (_wcsnicmp(strTemp, TEXT("industries japan"), 16) == 0)
+				if (_tcsnicmp(strTemp, TEXT("industries japan"), 16) == 0)
 				{
 					j = l;
-
 					while (s[wcslen(s)-j-1] == ' ' || s[wcslen(s)-j-1] == ',')
+					{
 						j++;
-
+					}
 					if (j != l)
 					{
 						memset(strTemp2, '\0', sizeof strTemp2);
@@ -920,30 +908,24 @@ static const WCHAR *TrimManufacturer(const WCHAR *s)
 
 void CreateCPUFolders(int parent_index)
 {
-	int i;
+	int i,jj;
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 	LPTREEFOLDER map[CPU_COUNT];
 
-	memset(map, 0, sizeof map);
+	ZeroMemory(map, sizeof(map));
+	cpuintrf_init(NULL);
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
 
-	for (i = 0; i < CPU_COUNT; i++)
+	for (i=1;i<CPU_COUNT;i++)
 	{
 		LPTREEFOLDER lpTemp;
-		char name[256];
-		int jj;
 
-		strcpy(name, cputype_shortname(i));
-
-		if (name[0] == '\0')
-			continue;
-
-		for (jj = 0; jj < i; jj++)
-			if (!strcmp(name, cputype_shortname(jj)))
+		for (jj = 1; jj < i; jj++)
+			if (!strcmp(cputype_name(i), cputype_name(jj)))
 				break;
 
 		if (i != jj)
@@ -951,128 +933,77 @@ void CreateCPUFolders(int parent_index)
 			map[i] = map[jj];
 			continue;
 		}
-
-		lpTemp = NewFolder(_Unicode(name), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
+		if( strlen( cputype_name(i) ) <=0 )
+			continue;
+		lpTemp = NewFolder(_Unicode(cputype_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
 
-	for (i = 0; i < nGames; i++)
+	for (jj = 0; jj < nGames; jj++)
 	{
-		machine_config drv;
 		int n;
-
-		expand_machine_driver(drivers[i]->drv, &drv);
-
+		machine_config drv;
+		expand_machine_driver(drivers[jj]->drv,&drv);
 		for (n = 0; n < MAX_CPU; n++)
-		{
-			if (drv.cpu[n].type == CPU_DUMMY)
-				break;
-
+			if (drv.cpu[n].type != CPU_DUMMY)
+			{
 			// cpu type #'s are one-based
-			AddGame(map[drv.cpu[n].type], i);
-		}
+				AddGame(map[drv.cpu[n].type],jj);
+			}
 	}
 }
 
 void CreateSoundFolders(int parent_index)
 {
-	int i;
+	int i,jj;
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 	LPTREEFOLDER map[SOUND_COUNT];
 
-	memset(map, 0, sizeof map);
+	sndintrf_init(NULL);
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
 
-	for (i = 0; i < SOUND_COUNT; i++)
+	for (i = 1 ; i < SOUND_COUNT ; i++)
 	{
 		LPTREEFOLDER lpTemp;
-		char name[256];
-		int jj;
-
-		if (i == SOUND_FILTER_VOLUME
-		 || i == SOUND_FILTER_RC
-		 || i == SOUND_FILTER_LOWPASS)
+		// Init to NULL here in case it doesn't get assigned below.		
+		map[i] = NULL;
+		// empty fields get filled in with SOUND_DUMMY, so check for this and
+		// don't add it
+		if (strcmp(sndtype_name(SOUND_DUMMY),sndtype_name(i)) == 0)
 			continue;
 
-		strcpy(name, sndtype_shortname(i));
-		if (name[0] == '\0')
-			continue;
-
-		for (jj = 0; jj < i; jj++)
-			if (!strcmp(name, sndtype_shortname(jj)))
-				break;
-
-		if (i != jj)
-		{
-			map[i] = map[jj];
-			continue;
-		}
-
-		lpTemp = NewFolder(_Unicode(name), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
+		//dprintf("%i %s\n",i,sndtype_name(i));
+		lpTemp = NewFolder(_Unicode(sndtype_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}
-
-	for (i = 0; i < nGames; i++)
-	{
-		machine_config drv;
-		int n;
-
-		expand_machine_driver(drivers[i]->drv, &drv);
-
-		for (n = 0; n < MAX_SOUND; n++)
-		{
-			if (drv.sound[n].type == SOUND_DUMMY)
-				break;
-
-			if (drv.sound[n].type != SOUND_FILTER_VOLUME
-			 && drv.sound[n].type != SOUND_FILTER_RC
-			 && drv.sound[n].type != SOUND_FILTER_LOWPASS)
-			{
-				// sound type #'s are one-based, though that doesn't affect us here
-				if (map[drv.sound[n].type])
-				AddGame(map[drv.sound[n].type], i);
-			}
-		}
-	}
-}
-
-void CreateOrientationFolders(int parent_index)
-{
-	int jj;
-	int nGames = GetNumGames();
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-
-	// create our two subfolders
-	LPTREEFOLDER lpVert, lpHorz;
-
-	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
-	AddFolder(lpVert);
-
-	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
-	AddFolder(lpHorz);
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
 	for (jj = 0; jj < nGames; jj++)
 	{
-		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
-		{
-			AddGame(lpVert,jj);
-		}
-		else
-		{
-			AddGame(lpHorz,jj);
-		}
+		int n;
+		machine_config drv;
+
+		expand_machine_driver(drivers[jj]->drv,&drv);
+		// Additional range and null checking.
+		for (n = 0; n < MAX_SOUND ; n++)
+			if (drv.sound[n].type > SOUND_DUMMY &&
+				drv.sound[n].type != SOUND_FILTER_VOLUME &&
+				drv.sound[n].type != SOUND_FILTER_RC &&
+				drv.sound[n].type != SOUND_FILTER_LOWPASS)
+			{
+				if (map[drv.sound[n].type] != NULL) {
+					// sound type #'s are one-based, though that doesn't affect us here
+					AddGame(map[drv.sound[n].type],jj);
+				}
+			}
 	}
 }
 
+// mamep: updated mameui's horrible version
 void CreateDeficiencyFolders(int parent_index)
 {
 	static UINT32 deficiency_flags[] =
@@ -1088,7 +1019,7 @@ void CreateDeficiencyFolders(int parent_index)
 
 #define NUM_FLAGS	ARRAY_LENGTH(deficiency_flags)
 
-	static const WCHAR *deficiency_names[NUM_FLAGS] =
+	static const TCHAR *deficiency_names[NUM_FLAGS] =
 	{
 		TEXT("Unemulated Protection"),
 		TEXT("Wrong Colors"),
@@ -1194,10 +1125,11 @@ void CreateYearFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		WCHAR s[100];
-		wcscpy(s, driversw[jj]->year);
+		TCHAR s[100];
+		_tcscpy(s,driversw[jj]->year);
 
-		if (s[0] == '\0')
+		// mamep: ???? is ok
+		if (s[0] == '\0'/* || s[0] == '?'*/)
 			continue;
 
 		if (s[4] == '?')
@@ -1205,9 +1137,9 @@ void CreateYearFolders(int parent_index)
 		
 		// look for an extant year treefolder for this game
 		// (likely to be the previous one, so start at the end)
-		for (i = numFolders-1; i >= start_folder; i--)
+		for (i=numFolders-1;i>=start_folder;i--)
 		{
-			if (_wcsnicmp(treeFolders[i]->m_lpTitle, s, 4) == 0)
+			if (_tcsncmp(treeFolders[i]->m_lpTitle,s,4) == 0)
 			{
 				AddGame(treeFolders[i],jj);
 				break;
@@ -1221,6 +1153,37 @@ void CreateYearFolders(int parent_index)
 			lpTemp = NewFolder(s, 0, !wcscmp(s, TEXT("<unknown>")), next_folder_id++, parent_index, IDI_YEAR);
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
+		}
+	}
+}
+
+void CreateOrientationFolders(int parent_index)
+{
+	int jj;
+	int nGames = GetNumGames();
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// create our two subfolders
+	LPTREEFOLDER lpVert, lpHorz;
+
+	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
+	AddFolder(lpVert);
+
+	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
+	AddFolder(lpHorz);
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+
+	for (jj = 0; jj < nGames; jj++)
+	{
+		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+		{
+			AddGame(lpVert,jj);
+		}
+		else
+		{
+			AddGame(lpHorz,jj);
 		}
 	}
 }
@@ -1280,7 +1243,7 @@ void CreateResolutionFolders(int parent_index)
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
 	machine_config drv;
-	WCHAR Resolution[20];
+	TCHAR Resolution[20];
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
 	// create our two subfolders
@@ -1368,7 +1331,7 @@ void CreateFPSFolders(int parent_index)
 
 		if (nFPS == jj)
 		{
-			WCHAR buf[50];
+			TCHAR buf[50];
 
 			assert(nFPS + 1 < ARRAY_LENGTH(fps));
 			assert(nFPS + 1 < ARRAY_LENGTH(map));
@@ -1429,7 +1392,7 @@ void CreateControlFolders(int parent_index)
 		FOLDER_MAX
 	};
 
-	static const WCHAR *ctrl_names[FOLDER_MAX] = {
+	static const TCHAR *ctrl_names[FOLDER_MAX] = {
 		TEXT("Joy 2-Way"),
 		TEXT("Joy 4-Way"),
 		TEXT("Joy 8-Way"),
@@ -1506,8 +1469,8 @@ static int compare_folder(const void *vp1, const void *vp2)
 {
 	const LPTREEFOLDER p1 = *(const LPTREEFOLDER *)vp1;
 	const LPTREEFOLDER p2 = *(const LPTREEFOLDER *)vp2;
-	const WCHAR *s1 = p1->m_lpTitle;
-	const WCHAR *s2 = p2->m_lpTitle;
+	const TCHAR *s1 = p1->m_lpTitle;
+	const TCHAR *s2 = p2->m_lpTitle;
 
 	while (*s1 && *s2)
 	{
@@ -1773,7 +1736,7 @@ static BOOL AddFolder(LPTREEFOLDER lpFolder)
 }
 
 /* Allocate and initialize a NEW TREEFOLDER */
-static LPTREEFOLDER NewFolder(const WCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
+static LPTREEFOLDER NewFolder(const TCHAR *lpTitle, UINT nCategoryID, BOOL bTranslate, 
 					   UINT nFolderId, int nParent, UINT nIconId)
 {
 	LPTREEFOLDER lpFolder = (LPTREEFOLDER)malloc(sizeof(TREEFOLDER));
@@ -1887,13 +1850,13 @@ BOOL InitFolders(void)
 	{
 		int rooticon = 0;
 		int subicon = 0;
-		const WCHAR *title = extFavorite.title;
-		WCHAR *filename;
+		const TCHAR *title = extFavorite.title;
+		TCHAR *filename;
 		char *rootname = mame_strdup(extFavorite.root_icon);
 		char *subname = mame_strdup(extFavorite.sub_icon);
 
 		filename = malloc(wcslen(title) * sizeof (*filename) + sizeof (TEXT(".ini")));
-		wcscpy(filename, title);
+		_tcscpy(filename, title);
 		wcscat(filename, TEXT(".ini"));
 
 		SetExtraIcons(rootname, &rooticon);
@@ -2216,7 +2179,7 @@ LPFOLDERDATA FindFilter(DWORD folderID)
 
 /**************************************************************************/
 
-static const WCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder)
+static const TCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder)
 {
 	if (lpFolder->m_lpOriginalTitle)
 		return lpFolder->m_lpOriginalTitle;
@@ -2224,7 +2187,7 @@ static const WCHAR *GetFolderOrigName(LPTREEFOLDER lpFolder)
 	return lpFolder->m_lpTitle;
 }
 
-LPTREEFOLDER GetFolderByName(int nParentId, const WCHAR *pszFolderName)
+LPTREEFOLDER GetFolderByName(int nParentId, const TCHAR *pszFolderName)
 {
 	int i = 0, nParent;
 
@@ -2242,9 +2205,9 @@ LPTREEFOLDER GetFolderByName(int nParentId, const WCHAR *pszFolderName)
 	return NULL;
 }
 
-static BOOL RegistExtraFolder(const WCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon)
+static BOOL RegistExtraFolder(const TCHAR *name, LPEXFOLDERDATA *fExData, int msgcat, int icon, int subicon)
 {
-	WCHAR *ext = wcsrchr(name, '.');
+	TCHAR *ext = wcsrchr(name, '.');
 
 	if (ext && !wcsicmp(ext, TEXT(".ini")))
 	{
@@ -2295,15 +2258,15 @@ static int InitExtraFolders(void)
 	WIN32_FIND_DATAW    ffd;
 	HANDLE              hFile;
 	int                 count = 0;
-	WCHAR               path[MAX_PATH];
-	const WCHAR        *dir = GetFolderDir();
+	TCHAR               path[MAX_PATH];
+	const TCHAR        *dir = GetFolderDir();
 	int                 done = FALSE;
 
 	memset(ExtraFolderData, 0, MAX_EXTRA_FOLDERS * sizeof(LPEXFOLDERDATA));
 
 	create_path_recursive(dir);
 
-	wcscpy(path, dir);
+	_tcscpy(path, dir);
 	wcscat(path, TEXT("\\*"));
 	hFile = FindFirstFileW(path, &ffd);
 	if (hFile == INVALID_HANDLE_VALUE)
@@ -2321,7 +2284,7 @@ static int InitExtraFolders(void)
 		if ((ffd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0)
 			goto skip_it;
 
-		wcscpy(path, dir);
+		_tcscpy(path, dir);
 		wcscat(path, TEXT("\\"));
 		wcscat(path, ffd.cFileName);
 		if ((fp = wfopen(path, TEXT("r"))) == NULL)
@@ -2426,7 +2389,7 @@ static void SetExtraIcons(char *name, int *id)
 BOOL TryAddExtraFolderAndChildren(int parent_index)
 {
 	FILE*   fp = NULL;
-	WCHAR   fname[MAX_PATH];
+	TCHAR   fname[MAX_PATH];
 	char    readbuf[256];
 	char*   p;
 	char*   name;
@@ -2488,7 +2451,7 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 				else
 				{
 					/* must be [folder name] */
-					WCHAR *foldername = _Unicode(name);
+					TCHAR *foldername = _Unicode(name);
 
 					current_id = next_folder_id++;
 					/* create a new folder with this name,
@@ -2542,12 +2505,12 @@ void GetFolders(TREEFOLDER ***folders,int *num_folders)
 	*num_folders = numFolders;
 }
 
-static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const WCHAR *old_name,const WCHAR *new_name)
+static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const TCHAR *old_name,const TCHAR *new_name)
 {
-	WCHAR filename[MAX_PATH];
-	WCHAR new_filename[MAX_PATH];
+	TCHAR filename[MAX_PATH];
+	TCHAR new_filename[MAX_PATH];
 	LPTREEFOLDER lpParent = NULL;
-	const WCHAR *ini_dirw = GetIniDir();
+	const TCHAR *ini_dirw = GetIniDir();
 
 	if (lpFolder->m_nParent >= 0)
 	{
@@ -2582,19 +2545,19 @@ static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const WCHAR *old_name
 	return TRUE;
 }
 
-BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const WCHAR *new_name)
+BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const TCHAR *new_name)
 {
 	BOOL retval;
-	WCHAR filename[MAX_PATH];
-	WCHAR new_filename[MAX_PATH];
-	const WCHAR *folder_dirw = GetFolderDir();
+	TCHAR filename[MAX_PATH];
+	TCHAR new_filename[MAX_PATH];
+	const TCHAR *folder_dirw = GetFolderDir();
 	
 	if (lpFolder->m_nParent >= 0)
 	{
 		// a child extra folder was renamed, so do the rename and save the parent
 
 		// save old title
-		WCHAR *old_title = lpFolder->m_lpTitle;
+		TCHAR *old_title = lpFolder->m_lpTitle;
 
 		// set new title
 		lpFolder->m_lpTitle = wcsdup(new_name);
@@ -2630,7 +2593,7 @@ BOOL TryRenameCustomFolder(LPTREEFOLDER lpFolder,const WCHAR *new_name)
 	}
 	else
 	{
-		WCHAR buf[500];
+		TCHAR buf[500];
 
 		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while renaming custom file %s to %s")),
 				 filename, new_filename);
@@ -2675,14 +2638,14 @@ void RemoveFromCustomFolder(LPTREEFOLDER lpFolder,int driver_index)
 
 BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 {
-	WCHAR fname[MAX_PATH];
+	TCHAR fname[MAX_PATH];
 	FILE *fp;
 	BOOL error = FALSE;
     int i,j;
 
 	LPTREEFOLDER root_folder = NULL;
 	LPEXFOLDERDATA extra_folder = NULL;
-	const WCHAR *folder_dirw = GetFolderDir();
+	const TCHAR *folder_dirw = GetFolderDir();
 
 	for (i=0;i<numExtraFolders;i++)
 	{
@@ -2776,7 +2739,7 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 
 	if (error)
 	{
-		WCHAR buf[500];
+		TCHAR buf[500];
 
 		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while saving custom file %s")), fname);
 		MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);

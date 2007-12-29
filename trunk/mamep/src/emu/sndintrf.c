@@ -927,26 +927,6 @@ const char *sndtype_get_info_string(sound_type sndtype, UINT32 state)
 	return info.s;
 }
 
-const char *sndtype_shortname(int sndtype)
-{
-	static char s[256];
-
-	strcpy(s, sndtype_name(sndtype));
-
-	if (!strcmp(s, sndtype_name(SOUND_DUMMY)))
-		strcpy(s, "");
-	else if (!strcmp(s, "Discrete Components"))
-		strcpy(s, "Discrete");
-	else if (!strcmp(s, "DMA-driven DAC"))
-		strcpy(s, "DMA DAC");
-	else if (!strcmp(s, "Sega 315-5560"))
-		strcpy(s, "Sega 315");
-	else if (!strcmp(s, "YMF292-F SCSP"))
-		strcpy(s, "YMF292-F");
-
-	return s;
-}
-
 
 
 /***************************************************************************

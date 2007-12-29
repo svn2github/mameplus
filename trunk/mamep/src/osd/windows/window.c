@@ -1224,8 +1224,8 @@ static int complete_create(win_window_info *window)
 
 	// create the window menu if needed
 #if HAS_WINDOW_MENU
-	if (win_create_menu(&menu))
-		return 1;
+	// mamep: menu failure shouldn't block window creation
+	win_create_menu(&menu);
 #endif
 
 	// create the window, but don't show it yet

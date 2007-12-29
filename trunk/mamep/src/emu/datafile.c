@@ -2119,7 +2119,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 						n++;
 					}
 
-					strcpy(cpu_name, cputype_shortname(type));
+					strcpy(cpu_name, cputype_name(type));
 					if (cpu_name[0] == '\0')
 						continue;
 
@@ -2151,7 +2151,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 						n++;
 					}
 
-					strcpy(sound_name, sndtype_shortname(type));
+					strcpy(sound_name, sndtype_name(type));
 					if (sound_name[0] == '\0')
 						continue;
 
@@ -2404,7 +2404,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	{
 		if (numcpu[0][i] || numcpu[1][i] || numcpu[2][i] || numcpu[3][i])
 		{
-			sprintf(name, "%12s: %4d %4d %4d %4d\n", cputype_shortname(i), numcpu[0][i], numcpu[1][i], numcpu[2][i], numcpu[3][i]);
+			sprintf(name, "%12s: %4d %4d %4d %4d\n", cputype_name(i), numcpu[0][i], numcpu[1][i], numcpu[2][i], numcpu[3][i]);
 			strcat(buffer, name);
 			all = all + numcpu[0][i] + numcpu[1][i] + numcpu[2][i] + numcpu[3][i];
 		}
@@ -2434,7 +2434,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	{
 		if (numsnd[0][i] || numsnd[1][i] || numsnd[2][i] || numsnd[3][i])
 		{
-			sprintf(name, "%12s: %4d %4d %4d %4d\n", sndtype_shortname(i), numsnd[0][i], numsnd[1][i], numsnd[2][i], numsnd[3][i]);
+			sprintf(name, "%12s: %4d %4d %4d %4d\n", sndtype_name(i), numsnd[0][i], numsnd[1][i], numsnd[2][i], numsnd[3][i]);
 			strcat(buffer, name);
 			all = all + numsnd[0][i] + numsnd[1][i] + numsnd[2][i] + numsnd[3][i];
 		}
