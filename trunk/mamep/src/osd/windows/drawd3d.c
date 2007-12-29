@@ -514,8 +514,12 @@ static int drawd3d_window_init(win_window_info *window)
 		goto error;
 
 	// create the device immediately for the full screen case (defer for window mode)
-	if (window->fullscreen && device_create(window))
-		goto error;
+	// mamep: create_device may return D3DERR_DEVICELOST (88760868) during Alt+Enter
+	// however this error should be ignored, just wait for the next frame.
+	// mametesters d3dwindow0117u3red: "Unable to create the Direct3D device (88760868)"
+	// http://msdn2.microsoft.com/en-us/library/bb174302.aspx
+//	if (window->fullscreen && device_create(window))
+//		goto error;
 
 	return 0;
 
