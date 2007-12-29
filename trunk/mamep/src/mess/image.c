@@ -483,11 +483,9 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 	//mamep: feed a dummy image when image_name is \0
 	if (err && path[0] == '\0')
 	{
-		// PC = 000008
-		// SP = 000000
-		// 000008: bra.s 000008
-		const UINT8 dummy_image[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x60, 0xfe};
-		mame_printf_warning("feed dummy image for device %s\n", device_typename(image_device(image)->type));
+		static UINT8 dummy_image[8];
+		memset(dummy_image, 0, sizeof(dummy_image));
+		mame_printf_verbose("feed dummy image for device %s\n", device_typename(image_device(image)->type));
 		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
 		if (filerr == FILERR_NONE)
 			err = IMAGE_ERROR_SUCCESS;
@@ -573,7 +571,7 @@ static int image_load_internal(mess_image *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	if ((attotime_compare(timer_get_time(), attotime_zero) > 0) && image->dev->reset_on_load)
+	if ((ui_menu_is_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && image->dev->reset_on_load)
 		mame_schedule_hard_reset(Machine);
 
 	/* determine open plan */
