@@ -197,7 +197,7 @@ UINT32 ui_menu_image_info(UINT32 state)
 
 int mess_use_new_ui(void)
 {
-#if (defined(WIN32) || defined(_MSC_VER)) && !defined(SDLMAME_WIN32)
+#if (defined(WIN32) || defined(_MSVC_VER)) && !defined(SDLMAME_WIN32)
 	if (options_get_bool(mame_options(), WINOPTION_NEWUI))
 		return TRUE;
 #endif
