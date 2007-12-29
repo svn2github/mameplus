@@ -46,9 +46,10 @@ typedef enum
   file.
 ****************************************************************************/
 
+int has_dummy_image(void);
+
 /* not to be called by anything other than core */
 int image_init(void);
-
 
 
 /****************************************************************************

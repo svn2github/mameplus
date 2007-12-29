@@ -51,8 +51,6 @@ extern const char mess_disclaimer[];
 
 UINT32 hash_data_extract_crc32(const char *d);
 
-int ui_menu_is_dummy_image(void);
-
 /***************************************************************************/
 
 #if HAS_WAVE

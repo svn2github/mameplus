@@ -25,8 +25,6 @@ UINT32 mess_ram_size;
 UINT8 *mess_ram;
 UINT8 mess_ram_default_value = 0xCD;
 
-static int has_dummy_image;
-
 const char mess_disclaimer[] =
 		"MESS is an emulator: it reproduces, more or less faithfully, the behaviour of\n"
 		"several computer and console systems. But hardware is useless without software\n"
@@ -124,11 +122,6 @@ static void devices_exit(running_machine *machine)
 	running_machine
 -------------------------------------------------*/
 
-int ui_menu_is_dummy_image()
-{
-	return has_dummy_image;
-}
-
 void devices_init(running_machine *machine)
 {
 	const struct IODevice *dev;
@@ -152,7 +145,6 @@ void devices_init(running_machine *machine)
 	/* init all devices */
 	image_init();
 
-	has_dummy_image = 0;
 	/* make sure that any required devices have been allocated */
 	for (dev = machine->devices; dev->type < IO_COUNT; dev++)
 	{
@@ -187,7 +179,6 @@ void devices_init(running_machine *machine)
 
 					//mamep: feed a dummy image to avoid crash
 					result = image_load(image, "");
-					has_dummy_image = 1;
 				}
 			}
 		}

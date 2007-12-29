@@ -576,17 +576,19 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 				break;
 
 			case 2:
-				if ((show_gameinfo || ui_menu_is_dummy_image()) && sprintf_game_info(messagebox_text))
+				if ((show_gameinfo || has_dummy_image()) && sprintf_game_info(messagebox_text))
 				{
 					char *bufptr = messagebox_text + strlen(messagebox_text);
 
 					/* append MAME version and ask for select key */
 					bufptr += sprintf(bufptr, "\n\t%s %s", ui_getstring(UI_mame), build_version);
 					
-					if(ui_menu_is_dummy_image())
+					// mamep: prepare a screen for console with dummy image
+					if(has_dummy_image())
 					{
 						bufptr += sprintf(bufptr, "\n\t%s", _("Please load an image"));
-						ui_set_handler(handler_messagebox, 0);
+						ui_set_handler(handler_messagebox_selectkey, 0);
+						osd_toggle_menubar(1);
 					}
 					else
 					{
@@ -2019,7 +2021,7 @@ static UINT32 handler_messagebox_selectkey(UINT32 state)
 	}
 
 	/* if select key is pressed, just exit */
-	if (res == 1)
+	if (res == 1 && !has_dummy_image())
 	{
 		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
 			state = UI_HANDLER_CANCEL;

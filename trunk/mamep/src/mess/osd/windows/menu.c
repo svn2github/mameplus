@@ -1595,6 +1595,8 @@ static void device_command(HWND wnd, mess_image *img, int devoption)
 	{
 		case DEVOPTION_OPEN:
 			change_device(wnd, img, FALSE);
+			if(!is_windowed())
+				osd_toggle_menubar(-1);
 			break;
 
 		case DEVOPTION_CREATE:

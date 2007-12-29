@@ -73,7 +73,7 @@ struct _mess_image
 
 static mess_image *images;
 static UINT32 multiple_dev_mask;
-
+static int _has_dummy_image;
 
 
 /***************************************************************************
@@ -100,6 +100,10 @@ static void memory_error(const char *message)
 }
 
 
+int has_dummy_image()
+{
+	return _has_dummy_image;
+}
 
 /*-------------------------------------------------
     image_init - initialize the core image system
@@ -489,7 +493,10 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
 		if (filerr == FILERR_NONE)
 			err = IMAGE_ERROR_SUCCESS;
+		_has_dummy_image = 1;
 	}
+	else
+		_has_dummy_image = 0;
 	/* check to make sure that our reported error is reflective of the actual status */
 	if (err)
 		assert(!is_loaded(image));
@@ -571,7 +578,7 @@ static int image_load_internal(mess_image *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	if ((ui_menu_is_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && image->dev->reset_on_load)
+	if ((has_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && image->dev->reset_on_load)
 		mame_schedule_hard_reset(Machine);
 
 	/* determine open plan */
