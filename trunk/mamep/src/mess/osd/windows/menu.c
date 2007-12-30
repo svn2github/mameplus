@@ -1521,10 +1521,7 @@ void osd_toggle_menubar(int state)
 
 	//mamep: save as default state if menubar is disabled manually
 	static int defstate = -1;
-	
-	if (!mess_use_new_ui())
-		return;
-	
+
 	if (state == 0)
 		defstate = state;
 	if (state < 0)
@@ -1540,6 +1537,10 @@ void osd_toggle_menubar(int state)
 		// get current menu
 		menu = GetMenu(hwnd);
 
+		// mamep: if "-nonewui", we can only turn off the menu enabled by dummy image
+		if (!mess_use_new_ui() && !menu)
+			return;
+
 		// get before rect
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
@@ -1549,7 +1550,7 @@ void osd_toggle_menubar(int state)
 		if (menu)
 		{
 			//mamep: prevent auto hide in window mode
-			if (state == 0 || (state < 0 && !is_windowed()))
+			if (state == 0 || (state < 0 && (!is_windowed() || !mess_use_new_ui())))
 			{
 				SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
 				menu = NULL;
@@ -2183,7 +2184,8 @@ int win_create_menu(HMENU *menus)
 	// determine whether we are using the natural keyboard or not
 	win_use_natural_keyboard = options_get_bool(mame_options(), WINOPTION_NATURAL);
 
-	if (mess_use_new_ui())
+	// mamep:create menu anyway for dummy image
+	//if (mess_use_new_ui())
 	{
 		module = win_resource_module();
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));

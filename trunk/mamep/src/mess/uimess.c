@@ -198,7 +198,8 @@ UINT32 ui_menu_image_info(UINT32 state)
 int mess_use_new_ui(void)
 {
 #if (defined(WIN32) || defined(_MSVC_VER)) && !defined(SDLMAME_WIN32)
-	if (options_get_bool(mame_options(), WINOPTION_NEWUI))
+	//mamep: force new ui if dummy image is used
+	if (options_get_bool(mame_options(), WINOPTION_NEWUI) || has_dummy_image())
 		return TRUE;
 #endif
 	return FALSE;

@@ -52,6 +52,7 @@
 #define MESS
 #ifdef MESS
 #include "menu.h"
+#include "uimess.h"
 #endif /* MESS */
 
 extern int drawnone_init(win_draw_callbacks *callbacks);
@@ -684,7 +685,7 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 	//mamep: auto disable menubar if fullscreen
 	if(has_dummy_image())
 		osd_toggle_menubar(1);
-	else if (!video_config.windowed)
+	else if (!video_config.windowed || !mess_use_new_ui())
 		osd_toggle_menubar(-1);
 #endif
 }

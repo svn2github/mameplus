@@ -102,7 +102,8 @@ static void memory_error(const char *message)
 
 int has_dummy_image()
 {
-	return _has_dummy_image;
+// mamep: Arcade games don't have dummy image
+	return _has_dummy_image && Machine->gamedrv->sysconfig_ctor;
 }
 
 /*-------------------------------------------------
