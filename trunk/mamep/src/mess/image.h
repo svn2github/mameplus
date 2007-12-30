@@ -52,6 +52,7 @@ int has_dummy_image(void);
 int image_init(void);
 
 
+
 /****************************************************************************
   Device loading and unloading functions
 

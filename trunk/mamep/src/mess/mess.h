@@ -51,6 +51,8 @@ extern const char mess_disclaimer[];
 
 UINT32 hash_data_extract_crc32(const char *d);
 
+
+
 /***************************************************************************/
 
 #if HAS_WAVE

@@ -90,6 +90,7 @@ static struct gb_lcd_struct {
 	int line_irq;
 	int mode_irq;
 	int delayed_line_irq;
+	int sprite_cycles;
 	int scrollx_adjust;
 	struct layer_struct	layer[2];
 	emu_timer	*lcd_timer;
@@ -196,7 +197,7 @@ INLINE void gb_plot_pixel(bitmap_t *bitmap, int x, int y, UINT32 color)
   Select which sprites should be drawn for the current scanline and return the
   number of sprites selected.
  */
-static int gb_select_sprites( void ) {
+static void gb_select_sprites( void ) {
 	int	i, yindex, line, height;
 	UINT8	*oam = gb_oam + 39 * 4;
 
@@ -223,9 +224,9 @@ static int gb_select_sprites( void ) {
 					gb_lcd.sprCount++;
 				}
 			}
+			oam -= 4;
 		}
 	}
-	return gb_lcd.sprCount;
 }
 
 INLINE void gb_update_sprites (void)
@@ -1109,6 +1110,22 @@ static const UINT8 abs_oam_fingerprint[0x100] = {
 };
 */
 
+enum {
+	GB_LCD_STATE_LYXX_M3=1,
+	GB_LCD_STATE_LYXX_PRE_M0,
+	GB_LCD_STATE_LYXX_M0,
+	GB_LCD_STATE_LYXX_M0_PRE_INC,
+	GB_LCD_STATE_LYXX_M0_INC,
+	GB_LCD_STATE_LY00_M2,
+	GB_LCD_STATE_LYXX_M2,
+	GB_LCD_STATE_LY9X_M1,
+	GB_LCD_STATE_LY9X_M1_INC,
+	GB_LCD_STATE_LY00_M1,
+	GB_LCD_STATE_LY00_M1_1,
+	GB_LCD_STATE_LY00_M1_2,
+	GB_LCD_STATE_LY00_M0
+};
+
 static TIMER_CALLBACK( gb_video_init_vbl ) {
 	cpunum_set_input_line( 0, VBL_INT, ASSERT_LINE );
 }
@@ -1224,6 +1241,10 @@ void gb_video_init( int mode ) {
 		gbc_video_w( 0x8, 0xFC );    /* SPR0PAL */
 		gbc_video_w( 0x9, 0xFC );    /* SPR1PAL */
 		gbc_video_w( 0x0F, 0x00 );
+		CURLINE = gb_lcd.current_line = 0x90;
+		LCDSTAT = ( LCDSTAT & 0xF8 ) | 0x01;
+		gb_lcd.mode = 1;
+		timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(292,0), GB_LCD_STATE_LY9X_M1_INC, attotime_never );
 		break;
 	}
 }
@@ -1259,25 +1280,11 @@ static void gb_increment_scanline( void ) {
 	}
 }
 
-enum {
-	GB_LCD_STATE_LYXX_M3=1,
-	GB_LCD_STATE_LYXX_PRE_M0,
-	GB_LCD_STATE_LYXX_M0,
-	GB_LCD_STATE_LYXX_M0_PRE_INC,
-	GB_LCD_STATE_LYXX_M0_INC,
-	GB_LCD_STATE_LY00_M2,
-	GB_LCD_STATE_LYXX_M2,
-	GB_LCD_STATE_LY9X_M1,
-	GB_LCD_STATE_LY9X_M1_INC,
-	GB_LCD_STATE_LY00_M1,
-	GB_LCD_STATE_LY00_M1_1,
-	GB_LCD_STATE_LY00_M1_2,
-	GB_LCD_STATE_LY00_M0
-};
-
 static TIMER_CALLBACK(gb_lcd_timer_proc)
 {
+	static const int sprite_cycles[] = { 0, 8, 20, 32, 44, 52, 64, 76, 88, 96, 108 };
 	int mode = param;
+
 	if ( LCDCONT & 0x80 ) {
 		switch( mode ) {
 		case GB_LCD_STATE_LYXX_PRE_M0:	/* Just before switching to mode 0 */
@@ -1313,7 +1320,7 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			/* Check for HBLANK DMA */
 			if( gbc_hdma_enabled )
 				gbc_hdma(0x10);
-			timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(196 - gb_lcd.scrollx_adjust - 10 * gb_lcd.sprCount,0), GB_LCD_STATE_LYXX_M0_PRE_INC, attotime_never );
+			timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(196 - gb_lcd.scrollx_adjust - gb_lcd.sprite_cycles,0), GB_LCD_STATE_LYXX_M0_PRE_INC, attotime_never );
 			break;
 		case GB_LCD_STATE_LYXX_M0_PRE_INC:	/* Just before incrementing the line counter go to mode 2 internally */
 			if ( CURLINE < 143 ) {
@@ -1386,6 +1393,7 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			break;
 		case GB_LCD_STATE_LYXX_M3:		/* Switch to mode 3 */
 			gb_select_sprites();
+			gb_lcd.sprite_cycles = sprite_cycles[ gb_lcd.sprCount ];
 			/* Set Mode 3 lcdstate */
 			gb_lcd.mode = 3;
 			LCDSTAT = (LCDSTAT & 0xFC) | 0x03;
@@ -1395,8 +1403,8 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			} else {
 				gb_lcd.scrollx_adjust = 0;
 			}
-			/* Mode 3 lasts for approximately 172+#sprites*10 clock cycles */
-			timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(168 + gb_lcd.scrollx_adjust + 10 * gb_lcd.sprCount,0), GB_LCD_STATE_LYXX_PRE_M0, attotime_never );
+			/* Mode 3 lasts for approximately 172+cycles needed to handle sprites clock cycles */
+			timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(168 + gb_lcd.scrollx_adjust + gb_lcd.sprite_cycles,0), GB_LCD_STATE_LYXX_PRE_M0, attotime_never );
 			gb_lcd.start_x = 0;
 			break;
 		case GB_LCD_STATE_LY9X_M1:		/* Switch to or stay in mode 1 */

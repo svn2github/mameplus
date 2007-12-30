@@ -160,7 +160,7 @@ INPUT_PORTS_END
 static const struct CustomSound_interface snes_sound_interface =
 { snes_sh_start, 0, 0 };
 
-static GFXDECODE_START( gfxdecodeinfo )
+static GFXDECODE_START( snes )
 GFXDECODE_END
 
 static PALETTE_INIT( snes )
@@ -188,7 +188,7 @@ static void snes_load_sram(void)
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = (UINT8 *)malloc( snes_cart.sram_max );
+	battery_ram = malloc_or_die( snes_cart.sram_max );
 	ptr = battery_ram;
 	image_battery_load( image_from_devtype_and_index(IO_CARTSLOT,0), battery_ram, snes_cart.sram_max );
 
@@ -218,7 +218,7 @@ static void snes_save_sram(void)
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = (UINT8 *)malloc( snes_cart.sram_max );
+	battery_ram = malloc_or_die( snes_cart.sram_max );
 	ptr = battery_ram;
 
 	if( snes_cart.mode == SNES_MODE_20 )
@@ -483,7 +483,7 @@ static MACHINE_DRIVER_START( snes )
 
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_GFXDECODE(gfxdecodeinfo)
+	MDRV_GFXDECODE(snes)
 	MDRV_PALETTE_LENGTH(32768)
 	MDRV_COLORTABLE_LENGTH(257)
 	MDRV_PALETTE_INIT( snes )
