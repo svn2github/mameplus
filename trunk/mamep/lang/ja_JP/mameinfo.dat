@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.121u4      #
+#     Mameinfo.dat日本語版 v0.122u1      #
 #                                        #
-#           December 18, 2007            #
+#           December 27, 2007            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,175 +12,27 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：883 翻訳済：855
-# 追加項目：342 合計：1225
+# Tester報告：881 翻訳済：846
+# 追加項目：342 合計：1223
 #
 
 
-$info=shootgal
+$info=vshoot
 $mame
 [バグ]
 
-- 次のエラーが出てクラッシュする:
-
-hb_dma_read_byte - unmapped access for 0x6600 - bucket 0xffffffff shootgal0121u4red, Firewave
+- クレジットは入るが、スタートボタンを押してもゲームが始まらない。テストモードでは入力を検知している。 vshoot0122u1red, Tafoid
 
 
-- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
+- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
 
 $end
 
-$info=jantouki
+$info=qtheater
 $mame
 [バグ]
 
-- DIPスイッチの修正：
-
-"Choose Game Mode"はゲームモードの選択ではなく、スペシャルアイテムを買うときに毎回100ポイント追加されるかの設定。
-
-"Bonus Coin Every"はボーナスポイント追加の設定。mcnpshntでの機能と同じ。
-
-"Hours"は"Time of Day"の間違い。 jantouki0121u3gra, mahjongfan
-
-
-- 得点計算時に牌の一部が残る。 jantouki079gre, YMI
-
-$end
-
-$info=gradius3
-$mame
-[バグ]
-
-- 9面の背景でキューブの表示がおかしくなる。 gradius3_0121u1yel, fostar
-
-
-- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
-
-$end
-
-$info=racedriv
-$mame
-[バグ]
-
-- 全セットでハングする。0.114u4でTMS34010が大幅変更されたのが原因？ racedriv0121u3red, Firewave / Tafoid
-
-$end
-
-$info=drivedge
-$mame
-[バグ]
-
-- デモシーンで、車が左右に細かく震える。 drivedge0121u4gre, John IV
-
-$end
-
-$info=mk4
-$mame
-[バグ]
-
-- MAME終了時にデバッグ用と思われる"waveram.dmp"という44MBくらいのファイルが残る。 mk4_0121u4ora, Tafoid
-
-$end
-
-$info=tekken3b
-$mame
-[バグ]
-
-- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
-
-$end
-
-$info=tekken3c
-$mame
-[バグ]
-
-- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
-
-$end
-
-$info=alpinesa
-$mame
-[バグ]
-
-- 画面が緑色に点滅して、MAMEがフリーズする。 alpinesa0121u3red, Jan Tleskac / Tafoid
-
-$end
-
-$info=timecrsa
-$mame
-[バグ]
-
-- 3面のヘリコプターを破壊できない。 timecrsa0121u2gre, Withnail
-
-$end
-
-$info=area51
-$mame
-[バグ]
-
-- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
-
-
-- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
-
-$end
-
-$info=policetr
-$mame
-[バグ]
-
-- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
-
-$end
-
-$info=elecyoyo
-$mame
-[情報]
-
-- テストモードにはF2キーで入る。
-F1キーでテスト項目の切り替えをする。DIPスイッチがないので、設定はサービスモード(F1)で行う。
-F1で次画面、F2で項目選択、F5とF6で上下。初回起動時には言語設定をしなければならない。
-F1で全ての項目を飛ばすか、F3でリセットをする。言語の再設定はNVファイルを削除して再起動する。
-
-
-[バグ]
-
-- ゲーム初期化後、コインを入れスタートを押すとテスト画面になったり、投入したクレジットがリセットされる。 elecyoyo0121u2yel, etabeta
-
-$end
-
-$info=dcclub
-$mame
-[バグ]
-
-- どのクラブを選んでも最大で80%の力でしか打てない。 dcclub0121u2gra, sjyune
-
-
-- 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
-
-$end
-
-$info=tmnt2
-$mame
-[バグ]
-
-- このゲームにはGAME_UNEMULATED_PROTECTIONフラグが付いているが、以前プロテクト系の問題として挙げられていた不具合は全て解決している。 tmnt2_0121u4ora, izius
-
-$end
-
-$info=gauntleg
-$mame
-[バグ]
-
-- 64bit環境で、MAME終了時に次のエラーがランダムで起こる:
-
-C:\mame>mame gauntleg<br>
-Unimplemented op C0B2004B (30,0B)<br>
-Average speed: 51.01% (137 seconds)<br>
-Final code size = 18827616 gauntleg0121u2gre, Malice
-
-
-- 64ビット版で、Mountain Journeyを選ぶと2面でクラッシュする。 gauntleg0120u2red, Scagazza
+- サウンドROMが正しいものに入れ替えられたので、GAME_IMPERFECT_SOUNDフラグは削除出来る。 qtheater0122u1ora, Layne
 
 $end
 
@@ -983,17 +835,28 @@ $mame
 
 $end
 
-$info=dkongjr
+$info=shootgal
 $mame
 [バグ]
 
-- 0.36 final版だと、電気ビリビリの面で、
-BGMが鳴らない。
-この現象は、敵をジャンプしたり、リンゴで倒したときに起きる。
-一度BGMが止まると、その面で死んでも元に戻らない。 dkongjr36finalgre, Quicks
+- 色が化けた画面が表示される。 shootgal0116u1yel, Tafoid / twisty / couriersud
+
+$end
+
+$info=jantouki
+$mame
+[バグ]
+
+- 得点計算時に牌の一部が残る。 jantouki079gre, YMI
 
 
-- 2面(カギを上に持っていく面)で、ジュニアが時々カギをすり抜けてしまう。 dkongjr37b9gre, Chad H
+- DIPスイッチの修正：
+
+"Choose Game Mode"はゲームモードの選択ではなく、スペシャルアイテムを買うときに毎回100ポイント追加されるかの設定。
+
+"Bonus Coin Every"はボーナスポイント追加の設定。mcnpshntでの機能と同じ。
+
+"Hours"は"Time of Day"の間違い。 jantouki0121u3gra, mahjongfan
 
 $end
 
@@ -1418,6 +1281,17 @@ $mame
 
 $end
 
+$info=gradius3
+$mame
+[バグ]
+
+- 9面の背景でキューブの表示がおかしくなる。 gradius3_0121u1yel, fostar
+
+
+- [possible] 画面オフセットか表示領域の問題がある。実機でも起こる？ gradius3_0109u1gre, robiza / Mamesick
+
+$end
+
 $info=groundfx
 $mame
 [バグ]
@@ -1435,6 +1309,14 @@ $mame
 わかりやすいのは、場札8枚のうち、下段右端の2枚が毎回牡丹になるところ。
 また、牡丹はプレイしている間、手札としては一度も配られてこなかった。
 さらに、場札の上段左から2枚目は必ず「雨」。2枚目の引き札は、必ず「菊」になる。 hanaawas37b6gre, Fujix (まるち/　きむ)
+
+$end
+
+$info=racedriv
+$mame
+[バグ]
+
+- 全セットでハングする。0.114u4でTMS34010が大幅変更されたのが原因？ racedriv0121u3red, Firewave / Tafoid
 
 $end
 
@@ -1501,6 +1383,14 @@ $mame
 
 - ゲーム内でのスプライトのちらつきは0.120u1で修正されたが、デモシーンなどで別なちらつきが発生している。
 インターリーブの値を0x21に下げると修正される模様。 ikki0120u1yel, ShimaPong / Robiza
+
+$end
+
+$info=drivedge
+$mame
+[バグ]
+
+- デモシーンで、車が左右に細かく震える。 drivedge0121u4gre, John IV
 
 $end
 
@@ -2462,14 +2352,6 @@ $mame
 
 $end
 
-$info=vshoot
-$mame
-[バグ]
-
-- 画面左上にゴミ表示。 vshoot0100u2gre, qapo
-
-$end
-
 $info=faceoff
 $mame
 [バグ]
@@ -2525,6 +2407,22 @@ tekken3やehrgeitzのアトラクトモードなどがよくわかる。
 
 $end
 
+$info=tekken3b
+$mame
+[バグ]
+
+- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
+
+$end
+
+$info=tekken3c
+$mame
+[バグ]
+
+- アトラクトモードでのグラフィック不具合。また、アトラクトモード後にブルースクリーンで固まる。tekken3aは動作する。 tekken3b0121u3red, Jan Tleskac
+
+$end
+
 $info=assaultp
 $mame
 [バグ]
@@ -2547,14 +2445,6 @@ $mame
 [バグ]
 
 - サウンドの一部が変。わかりやすいところは、審判の声がちゃんとでていないところ。BGMも。 kyukaidk37b6gre, Fujix / Phil Bennett (みーしょう)
-
-$end
-
-$info=metlhawk
-$mame
-[バグ]
-
-- デバッグビルドでクラッシュする。-nodebugにすると問題ない。 metlhawk0107red, ShimaPong
 
 $end
 
@@ -2614,6 +2504,22 @@ $mame
 
 $end
 
+$info=alpinesa
+$mame
+[バグ]
+
+- 画面が緑色に点滅して、MAMEがフリーズする。 alpinesa0121u3red, Jan Tleskac / Tafoid
+
+$end
+
+$info=timecrsa
+$mame
+[バグ]
+
+- 3面のヘリコプターを破壊できない。 timecrsa0121u2gre, Withnail
+
+$end
+
 $info=twinbee
 $mame
 [情報]
@@ -2633,14 +2539,6 @@ $mame
 
 - 国設定をヨーロッパにしてゲームをクリアしても、
 ゲームセットの画面が日本語で表示される。 2020bb056gre, Kale
-
-$end
-
-$info=fightfev
-$mame
-[バグ]
-
-- 漢字の技名表示が完全に化けているのは、ff_s1.romの吸出し失敗が原因。 fightfev37b2gre, Fujix (代理)
 
 $end
 
@@ -3013,6 +2911,22 @@ $mame
 
 
 - 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+$end
+
+$info=elecyoyo
+$mame
+[情報]
+
+- テストモードにはF2キーで入る。
+F1キーでテスト項目の切り替えをする。DIPスイッチがないので、設定はサービスモード(F1)で行う。
+F1で次画面、F2で項目選択、F5とF6で上下。初回起動時には言語設定をしなければならない。
+F1で全ての項目を飛ばすか、F3でリセットをする。言語の再設定はNVファイルを削除して再起動する。
+
+
+[バグ]
+
+- ゲーム初期化後、コインを入れスタートを押すとテスト画面になったり、投入したクレジットがリセットされる。 elecyoyo0121u2yel, etabeta
 
 $end
 
@@ -4065,6 +3979,17 @@ $mame
 
 $end
 
+$info=dcclub
+$mame
+[バグ]
+
+- 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
+
+
+- どのクラブを選んでも最大で80%の力でしか打てない。 dcclub0121u2gra, sjyune
+
+$end
+
 $info=dcclubfd
 $mame
 [バグ]
@@ -4834,6 +4759,22 @@ Voodooの書き直し以前は動作していた。 gauntdl0105red, Reznor007
 - VGAモードでゲームを起動するとクラッシュする。
 またゲームがVGAモードに切り替わるときは、MAMEは639x480@60Hzの画面だが、
 実際の基板では640x480@59.9Hzになる。 gauntdl095u3red, Reznor007 / Firewave
+
+$end
+
+$info=gauntleg
+$mame
+[バグ]
+
+- 64ビット版で、Mountain Journeyを選ぶと2面でクラッシュする。 gauntleg0120u2red, Scagazza
+
+
+- 64bit環境で、MAME終了時に次のエラーがランダムで起こる:
+
+C:\mame>mame gauntleg<br>
+Unimplemented op C0B2004B (30,0B)<br>
+Average speed: 51.01% (137 seconds)<br>
+Final code size = 18827616 gauntleg0121u2gre, Malice
 
 $end
 
@@ -6303,6 +6244,17 @@ CPU0を135%に設定するとこれらは解決する。実機との比較が必
 
 $end
 
+$info=area51
+$mame
+[バグ]
+
+- 言語設定オプションが動作していない。 area51083yel, El Condor / Luigi30
+
+
+- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
+
+$end
+
 $info=contrab
 $mame
 [バグ]
@@ -6461,6 +6413,14 @@ $mame
 
 - 2回目のゲーム開始時、
 1回目とは色が変わってしまう。 csuperas37b13gre2, Steveir
+
+$end
+
+$info=dkongjr
+$mame
+[バグ]
+
+- 2面(カギを上に持っていく面)で、ジュニアが時々カギをすり抜けてしまう。 dkongjr37b9gre, Chad H
 
 $end
 
@@ -6855,6 +6815,14 @@ $mame
 
 $end
 
+$info=policetr
+$mame
+[バグ]
+
+- キャリブレーションを行っても、画面の端の方ではゲーム内の照準とずれてしまう。 area51_0121u4gra, John IV / smf
+
+$end
+
 $info=psychic5
 $mame
 [バグ]
@@ -6981,15 +6949,6 @@ $mame
 [バグ]
 
 - 面と面の間のデモシーンの文字が直接上書きで表示される。 sshanghb072u1gre, Luja
-
-$end
-
-$info=hardhedb
-$mame
-[バグ]
-
-- 海賊版で、スコアが900000点くらいになるとリスタートがかかる。
-海賊版を作った人がどじだったのか、それともMAME自体のバグかは不明。 hardhedb058gre, Kale
 
 $end
 
