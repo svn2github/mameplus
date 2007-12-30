@@ -358,10 +358,6 @@ Advanced
 All
 全て
 
-# osd/winui/layout.c: 50
-All Games
-全ゲーム
-
 # mess/osd/winui/mess32ui.c: 675 osd/winui/win32ui.c: 841, 848, 855, 862
 All files (*.*)
 全てのファイル (*.*)
@@ -449,10 +445,6 @@ Auto restore and save (only if available)
 # osd/winui/mame32.rc: 556, 1088
 Automatic
 自動
-
-# mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
-Available
-所有しているゲーム
 
 # osd/winui/mame32.rc: 451
 Available fields:
@@ -2625,4 +2617,12 @@ by Times &Played
 # osd/winui/win32ui.h: 20
 type a keyword
 キーワードを入力
+
+# osd/winui/layout.c: 50
+All Arcades
+全アーケード
+
+# mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
+Available Arcades
+所有しているアーケード
 
