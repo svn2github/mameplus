@@ -2620,9 +2620,9 @@ type a keyword
 
 # osd/winui/layout.c: 50
 All Arcades
-场筿
+场穨叭诀
 
 # mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
 Available Arcades
-局Τ筿
+局Τ穨叭诀
 
