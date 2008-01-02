@@ -4404,13 +4404,13 @@ static void KeyboardKeyDown(int syskey, int vk_code, int special)
 			switch(vk_code)
 			{
 			case VK_MENU:
-				icode = KEYCODE_RALT;
+				icode = ITEM_ID_RALT;
 				break;
 			case VK_CONTROL:
-				icode = KEYCODE_RCONTROL;
+				icode = ITEM_ID_RCONTROL;
 				break;
 			case VK_SHIFT:
-				icode = KEYCODE_RSHIFT;
+				icode = ITEM_ID_RSHIFT;
 				break;
 			}
 		}
@@ -4419,13 +4419,13 @@ static void KeyboardKeyDown(int syskey, int vk_code, int special)
 			switch(vk_code)
 			{
 			case VK_MENU:
-				icode = KEYCODE_LALT;
+				icode = ITEM_ID_LALT;
 				break;
 			case VK_CONTROL:
-				icode = KEYCODE_LCONTROL;
+				icode = ITEM_ID_LCONTROL;
 				break;
 			case VK_SHIFT:
-				icode = KEYCODE_LSHIFT;
+				icode = ITEM_ID_LSHIFT;
 				break;
 			}
 		}
@@ -4474,13 +4474,13 @@ static void KeyboardKeyUp(int syskey, int vk_code, int special)
 			switch(vk_code)
 			{
 			case VK_MENU:
-				icode = KEYCODE_RALT;
+				icode = ITEM_ID_RALT;
 				break;
 			case VK_CONTROL:
-				icode = KEYCODE_RCONTROL;
+				icode = ITEM_ID_RCONTROL;
 				break;
 			case VK_SHIFT:
-				icode = KEYCODE_RSHIFT;
+				icode = ITEM_ID_RSHIFT;
 				break;
 			}
 		}
@@ -4489,13 +4489,13 @@ static void KeyboardKeyUp(int syskey, int vk_code, int special)
 			switch(vk_code)
 			{
 			case VK_MENU:
-				icode = KEYCODE_LALT;
+				icode = ITEM_ID_LALT;
 				break;
 			case VK_CONTROL:
-				icode = KEYCODE_LCONTROL;
+				icode = ITEM_ID_LCONTROL;
 				break;
 			case VK_SHIFT:
-				icode = KEYCODE_LSHIFT;
+				icode = ITEM_ID_LSHIFT;
 				break;
 			}
 		}
