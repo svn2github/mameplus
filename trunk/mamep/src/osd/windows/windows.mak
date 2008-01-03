@@ -44,6 +44,19 @@
 
 
 #-------------------------------------------------
+# overrides
+#-------------------------------------------------
+
+# turn on unicode for all 64-bit builds regardless
+ifndef UNICODE
+ifdef PTR64
+UNICODE = 1
+endif
+endif
+
+
+
+#-------------------------------------------------
 # object and source roots
 #-------------------------------------------------
 
@@ -145,6 +158,11 @@ ifneq ($(MSVC_BUILD),)
     # filter X86_ASM define
     DEFS := $(filter-out -DX86_ASM,$(DEFS))
     
+    # explicitly set the entry point for UNICODE builds
+    ifdef UNICODE
+    LD += /ENTRY:wmainCRTStartup
+    endif
+
     # add some VC++-specific defines
     DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf
     
@@ -156,11 +174,7 @@ ifneq ($(MSVC_BUILD),)
     
     $(VCONV): $(WINOBJ)/vconv.o
 	    @echo Linking $@...
-    ifdef PTR64
-	    @link.exe /nologo $^ version.lib bufferoverflowu.lib /out:$@
-    else
 	    @link.exe /nologo $^ version.lib /out:$@
-    endif
     
     $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	    @echo Compiling $<...
@@ -374,11 +388,15 @@ $(LIBOSD): $(OSDOBJS)
 # rule for making the ledutil sample
 #-------------------------------------------------
 
-ledutil$(EXE): $(WINOBJ)/ledutil.o $(LIBOCORE)
+LEDUTIL = ledutil$(EXE)
+TOOLS += $(LEDUTIL)
+
+LEDUTILOBJS = \
+	$(WINOBJ)/ledutil.o
+
+$(LEDUTIL): $(LEDUTILOBJS) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-TOOLS += ledutil$(EXE)
 
 # if we are not using x86drc.o, we should
 ifeq ($(X86_MIPS3_DRC),)
@@ -391,16 +409,19 @@ endif
 #-------------------------------------------------
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
+BUILD += $(VERINFO)
 
 $(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) $(CFLAGS) -UWINUI -c $< -o $@
 
-$(VERINFO): $(WINOBJ)/verinfo.o $(LIBOCORE)
+VERINFOOBJS = \
+	$(WINOBJ)/verinfo.o
+
+$(VERINFO): $(VERINFOOBJS) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-BUILD += $(VERINFO)
 
 
 

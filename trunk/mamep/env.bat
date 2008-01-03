@@ -1,6 +1,6 @@
 @echo off
 set PSDK_DIR=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A
-set MINGW_ROOT=D:\wgcc421
+set MINGW_ROOT=..\MinGW
 set PATH=%MINGW_ROOT%\bin;extra\bin;%PSDK_DIR%\bin\
 
 set C_INCLUDE_PATH=extra\include

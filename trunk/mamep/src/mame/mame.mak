@@ -527,7 +527,7 @@ $(MAMEOBJ)/atari.a: \
 	$(DRIVERS)/rampart.o $(VIDEO)/rampart.o \
 	$(DRIVERS)/relief.o $(VIDEO)/relief.o \
 	$(DRIVERS)/runaway.o $(VIDEO)/runaway.o \
-	$(DRIVERS)/sbrkout.o $(MACHINE)/sbrkout.o $(VIDEO)/sbrkout.o \
+	$(DRIVERS)/sbrkout.o \
 	$(DRIVERS)/shuuz.o $(VIDEO)/shuuz.o \
 	$(DRIVERS)/skullxbo.o $(VIDEO)/skullxbo.o \
 	$(DRIVERS)/skydiver.o $(AUDIO)/skydiver.o $(VIDEO)/skydiver.o \
@@ -1728,6 +1728,8 @@ $(DRIVERS)/mw8080bw.o:	$(LAYOUT)/clowns.lh \
 
 $(DRIVERS)/meadows.o:	$(LAYOUT)/deadeye.lh \
 						$(LAYOUT)/gypsyjug.lh
+
+$(DRIVERS)/midzeus.o:	$(LAYOUT)/crusnexo.lh
 
 $(DRIVERS)/nbmj8688.o:	$(LAYOUT)/nbmj8688.lh
 
