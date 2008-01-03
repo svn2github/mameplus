@@ -3953,6 +3953,14 @@ static MACHINE_DRIVER_START( wofb )
 
 	MDRV_SOUND_REMOVE("okim")
 MACHINE_DRIVER_END
+
+static MACHINE_DRIVER_START( wofhfh )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1)
+	MDRV_NVRAM_HANDLER(qsound)
+MACHINE_DRIVER_END
+
 #endif
 
 
@@ -7275,16 +7283,10 @@ ROM_START( wofhfh )
 	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* QSound Z80 code + space for decrypted opcodes */
 	ROM_LOAD( "9",              0x00000, 0x08000, CRC(86fe8a97) SHA1(cab82bcd0f49bcb40201b439cfdd10266f46752a) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
-	ROM_LOAD( "tk2_qa.rom",     0x00000, 0x08000, CRC(c9183a0d) SHA1(d8b1d41c572f08581f8ab9eb878de77d6ea8615d) )
-	ROM_CONTINUE(               0x10000, 0x18000 )
 
-	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_REGION( 0x040000, REGION_SOUND1, 0 ) /* QSound samples */
 	ROM_LOAD( "18",             0x000000, 0x20000, CRC(c04be720) SHA1(2e544e0a0358b6afbdf826d35d9c4c59e4787a93) )
 	ROM_LOAD( "19",             0x020000, 0x20000, CRC(fbb8d8c1) SHA1(8a7689bb7ed56243333133cbacf01a0ae825201e) )
-	ROM_LOAD( "tk2_q1.rom",     0x000000, 0x80000, CRC(611268cf) SHA1(83ab059f2110fb25fdcff928d56b790fc1f5c975) )
-	ROM_LOAD( "tk2_q2.rom",     0x080000, 0x80000, CRC(20f55ca9) SHA1(90134e9a9c4749bb65c728b66ea4dac1fd4d88a4) )
-	ROM_LOAD( "tk2_q3.rom",     0x100000, 0x80000, CRC(bfcf6f52) SHA1(2a85ff3fc89b4cbabd20779ec12da2e116333c7c) )
-	ROM_LOAD( "tk2_q4.rom",     0x180000, 0x80000, CRC(36642e88) SHA1(8ab25b19e2b67215a5cb1f3aa81b9d26009cfeb8) )
 ROM_END
 
 ROM_START( wof3sja )
@@ -8521,7 +8523,7 @@ static DRIVER_INIT( wofhfh )
 	UINT8 *mem8 = memory_region(REGION_CPU1);
 	// Stage Order
 	mem8[0xB214] = 0x00;
-	wof_decode();
+
 	driver_init_cps1(machine);
 }
 
@@ -9106,7 +9108,7 @@ GAME( 1992, sf2m5,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg",
 GAME( 1992, sf2m6,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
 GAME( 1992, sf2m7,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)", 0 )
 GAME( 1992, sf2m8,    sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
-GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "bootleg","Street Fighter II' - Champion Edition (M13)", 0 )
+GAME( 1992, sf2m13,   sf2ce,    sf2,      sf2j,     sf2m13,   ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (M13)", 0 )
 GAME( 1992, sf2tlona, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
 GAME( 1992, sf2tlonb, sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
 GAME( 1992, sf2yyc,   sf2ce,    sf2,      sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)", 0 )
@@ -9131,7 +9133,7 @@ GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", 
 GAME( 1992, wofj,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)", 0 )
 GAME( 1999, wofh,     wof,      wofb,     wofh,     wofh,     ROT0,   "bootleg", "Sangokushi II (Legend of Three Kingdoms' Heroes set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1999, wofha,    wof,      wofb,     wofh,     wofh,     ROT0,   "bootleg", "Sangokushi II (Legend of Three Kingdoms' Heroes set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1999, wofhfh,   wof,      qsound,   wof3js,   wofhfh,   ROT0,   "bootleg", "Sangokushi II (Fire Phoenix)", GAME_NO_SOUND )
+GAME( 1999, wofhfh,   wof,      wofhfh,   wof3js,   wofhfh,   ROT0,   "bootleg", "Sangokushi II (Fire Phoenix)", 0 )
 GAME( 1997, wof3js,   wof,      qsound,   wof3js,   wof3js,   ROT0,   "bootleg", "Sangokushi II (Three Sword Masters)", 0 )
 GAME( 1997, wof3sj,   wof,      wofb,     wofh,     wof3sj,   ROT0,   "bootleg", "Sangokushi II (Three Holy Swords set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3sja,  wof,      wofb,     wofh,     wof3sj,   ROT0,   "bootleg", "Sangokushi II (Three Holy Swords set 2)", GAME_IMPERFECT_SOUND )
