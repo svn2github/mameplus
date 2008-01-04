@@ -90,7 +90,10 @@ const game_driver * const plusdrivers[] =
 	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
 	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( mslug5b )
-
+	DRIVER( rbff1a )    /* 095  (c) 1995 */
+	DRIVER( mslug5h )   /* 0268 (c) 2003 */
+	DRIVER( kof2003h )	/* 0271 (c) 2003 */
+	
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 	DRIVER( fr2ch )
