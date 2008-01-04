@@ -3357,6 +3357,9 @@ core_options * load_options(OPTIONS_TYPE opt_type, int game_num)
 			return opts;
 		}
 
+		// mamep: DO NOT INHERIT IPS CONFIGURATION
+		options_set_string(opts, OPTION_IPS, NULL, OPTION_PRIORITY_CMDLINE);
+
 		ui_parse_ini_file(opts, driver->name);
 
 		if (opt_type == OPTIONS_GAME)
