@@ -67,6 +67,9 @@ void tapecontrol_gettime(char *timepos, size_t timepos_size, mess_image *img, in
 #define IMAGE_VERIFY_PASS 0
 #define IMAGE_VERIFY_FAIL 1
 
+int has_dummy_image(void);
+void set_dummy_image(int di);
+
 /* runs checks to see if device code is proper */
 int mess_validitychecks(void);
 

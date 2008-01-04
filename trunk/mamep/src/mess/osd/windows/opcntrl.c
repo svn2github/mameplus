@@ -105,7 +105,7 @@ static BOOL prepare_combobox(HWND control, const struct OptionGuide *guide,
 				option_count++;
 			}
 		}
-		
+
 		// if there is only one option, it is effectively disabled
 		if (option_count <= 1)
 			has_option = FALSE;

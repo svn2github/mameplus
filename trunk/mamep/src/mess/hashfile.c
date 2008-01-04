@@ -45,7 +45,7 @@ struct hash_parse_state
 	XML_Parser parser;
 	hash_file *hashfile;
 	int done;
-	
+
 	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const char *hash);
 	void (*use_proc)(hash_file *hashfile, void *param, struct hash_info *hi);
 	void (*error_proc)(const char *message);
@@ -64,7 +64,7 @@ struct hash_parse_state
 
 ***************************************************************************/
 
-static void parse_error(struct hash_parse_state *state, const char *fmt, ...)
+static void ATTR_PRINTF(2,3) parse_error(struct hash_parse_state *state, const char *fmt, ...)
 {
 	char buf[256];
 	va_list va;
@@ -82,7 +82,7 @@ static void parse_error(struct hash_parse_state *state, const char *fmt, ...)
 
 static void unknown_tag(struct hash_parse_state *state, const char *tagname)
 {
-	parse_error(state, "[%d:%d]: Unknown tag: %s\n",
+	parse_error(state, "[%lu:%lu]: Unknown tag: %s\n",
 		XML_GetCurrentLineNumber(state->parser),
 		XML_GetCurrentColumnNumber(state->parser),
 		tagname);
@@ -92,7 +92,7 @@ static void unknown_tag(struct hash_parse_state *state, const char *tagname)
 
 static void unknown_attribute(struct hash_parse_state *state, const char *attrname)
 {
-	parse_error(state, "[%d:%d]: Unknown attribute: %s\n",
+	parse_error(state, "[%lu:%lu]: Unknown attribute: %s\n",
 		XML_GetCurrentLineNumber(state->parser),
 		XML_GetCurrentColumnNumber(state->parser),
 		attrname);
@@ -103,7 +103,7 @@ static void unknown_attribute(struct hash_parse_state *state, const char *attrna
 static void unknown_attribute_value(struct hash_parse_state *state,
 	const char *attrname, const char *attrvalue)
 {
-	parse_error(state, "[%d:%d]: Unknown attribute value: %s\n",
+	parse_error(state, "[%lu:%lu]: Unknown attribute value: %s\n",
 		XML_GetCurrentLineNumber(state->parser),
 		XML_GetCurrentColumnNumber(state->parser),
 		attrvalue);
@@ -317,10 +317,10 @@ static void hashfile_parse(hash_file *hashfile,
 	while(!state.done)
 	{
 		len = mame_fread(hashfile->file, buf, sizeof(buf));
-		state.done = mame_feof(hashfile->file);	
+		state.done = mame_feof(hashfile->file);
 		if (XML_Parse(state.parser, buf, len, state.done) == XML_STATUS_ERROR)
 		{
-			parse_error(&state, "[%d:%d]: %s\n",
+			parse_error(&state, "[%lu:%lu]: %s\n",
 				XML_GetCurrentLineNumber(state.parser),
 				XML_GetCurrentColumnNumber(state.parser),
 				XML_ErrorString(XML_GetErrorCode(state.parser)));
@@ -365,7 +365,7 @@ hash_file *hashfile_open_options(core_options *opts, const char *sysname, int is
 	if (!pool)
 		goto error;
 
-	/* allocate space for this hash file */	
+	/* allocate space for this hash file */
 	hashfile = (hash_file *) pool_malloc(pool, sizeof(*hashfile));
 	if (!hashfile)
 		goto error;
@@ -471,7 +471,7 @@ unsigned int hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
 int hashfile_verify(const char *sysname, void (*my_error_proc)(const char *message))
 {
 	hash_file *hashfile;
-	
+
 	hashfile = hashfile_open(sysname, FALSE, my_error_proc);
 	if (!hashfile)
 		return -1;

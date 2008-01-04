@@ -36,6 +36,7 @@ const game_driver * const consoledrivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
+#if 1//ndef NEOCPSMAME
 	/* NINTENDO */
 	DRIVER( nes )		/* Nintendo Entertainment System					*/
 	DRIVER( nespal )	/* Nintendo Entertainment System					*/
@@ -55,8 +56,18 @@ const game_driver * const consoledrivers[] =
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
 
+	/* NEC */
+	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/
+	DRIVER( tg16 )		/* Turbo Grafix-16  NEC 1989-1993					*/
+	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
+
 	/* CAPCOM */
 	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/
 
+	/* BANDAI */
+	DRIVER( wswan )		/* Bandai WonderSwan Handheld						*/
+	DRIVER( wscolor )	/* Bandai WonderSwan Color Handheld					*/
+
+#endif /* NEOCPSMAME */
 
 #endif	/* DRIVER_RECURSIVE */

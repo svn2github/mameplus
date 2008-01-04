@@ -15,6 +15,7 @@
 #define ANIMATION_FRAMES	4
 
 #define VERBOSE				0
+#define LOG(x) do { if (VERBOSE) logerror x; } while (0)
 
 
 /* from devices/mflopimg.c */
@@ -136,9 +137,7 @@ double cassette_input(mess_image *cassette)
 	sample = tag->value;
 	double_value = sample / ((double) 0x7FFFFFFF);
 
-#if VERBOSE
-	logerror("cassette_input(): time_index=%g value=%g\n", tag->position, double_value);
-#endif
+	LOG(("cassette_input(): time_index=%g value=%g\n", tag->position, double_value));
 
 	return double_value;
 }
@@ -274,7 +273,7 @@ static int device_load_cassette(mess_image *image)
 		/* opening an image */
 		do
 		{
-			is_writable = image_is_writable(image); 
+			is_writable = image_is_writable(image);
 			cassette_flags = is_writable ? (CASSETTE_FLAG_READWRITE|CASSETTE_FLAG_SAVEONEXIT) : CASSETTE_FLAG_READONLY;
 			extension = image_filetype(image);
 			err = cassette_open_choices(image, &mess_ioprocs, extension, formats, cassette_flags, &tag->cassette);
@@ -307,7 +306,7 @@ error:
 static void device_unload_cassette(mess_image *image)
 {
 	struct mess_cassetteimg *tag;
-	
+
 	tag = get_cassimg(image);
 
 	/* if we are recording, write the value to the image */

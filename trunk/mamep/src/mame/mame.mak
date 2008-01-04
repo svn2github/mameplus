@@ -415,6 +415,8 @@ DRVLIBS += \
 	$(MAMEOBJ)/vsystem.a \
 	$(MAMEOBJ)/yunsung.a \
 	$(MAMEOBJ)/zaccaria.a \
+	$(MESSOBJ)/bandai.a \
+	$(MESSOBJ)/nec.a \
 	$(MAMEOBJ)/misc.a \
 	$(MAMEOBJ)/shared.a \
 
@@ -440,6 +442,7 @@ $(MAMEOBJ)/shared.a: \
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_DEVICES)/cartslot.o	\
 	$(MESS_DEVICES)/flopdrv.o	\
+	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_FORMATS)/wavfile.o
 
 
@@ -1519,6 +1522,17 @@ $(MAMEOBJ)/zaccaria.a: \
 	$(DRIVERS)/laserbat.o $(AUDIO)/laserbat.o \
 	$(DRIVERS)/zac2650.o $(VIDEO)/zac2650.o \
 	$(DRIVERS)/zaccaria.o $(VIDEO)/zaccaria.o \
+
+$(MESSOBJ)/nec.a:	   \
+	$(MESS_VIDEO)/vdc.o	 \
+	$(MESS_MACHINE)/pce.o	 \
+	$(MESS_DRIVERS)/pce.o
+
+$(MESSOBJ)/bandai.a:     \
+	$(MESS_DRIVERS)/wswan.o   \
+	$(MESS_MACHINE)/wswan.o   \
+	$(MESS_VIDEO)/wswan.o   \
+	$(MESS_AUDIO)/wswan.o
 
 
 

@@ -184,16 +184,10 @@ static void nes_machine_reset(running_machine *machine)
 
 MACHINE_START( nes )
 {
-	//mamep: hack to boot disk system bios on famicom if cart slot is empty
-	if (!image_exists(image_from_devtype_and_index(IO_CARTSLOT, 0)) && device_count(IO_FLOPPY))
-		nes.mapper = 20;
-
 	init_nes_core();
 	add_reset_callback(machine, nes_machine_reset);
 	add_exit_callback(machine, nes_machine_stop);
 
-//mamep: remove this hack to boot disk system
-#if 0
 	if ((!image_exists(image_from_devtype_and_index(IO_CARTSLOT, 0))) && (!image_exists(image_from_devtype_and_index(IO_FLOPPY, 0))))
 	{
 		/* NPW 05-Mar-2006 - Hack to keep the Famicom from crashing */
@@ -202,7 +196,6 @@ MACHINE_START( nes )
 		memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0xFFF9, 0xFFFD, 0, 0, MWA8_BANK11);
 		memory_set_bankptr(11, (void *) infinite_loop);
 	}
-#endif
 }
 
 static void nes_machine_stop(running_machine *machine)
@@ -321,7 +314,7 @@ static void nes_read_input_device(int cfg, nes_input *vals, int pad_port,
 	vals->i0 = 0;
 	vals->i1 = 0;
 	vals->i2 = 0;
-	
+
 	switch(cfg & 0x0f)
 	{
 		case 0x01:	/* gamepad */
@@ -554,8 +547,7 @@ DEVICE_LOAD(nes_cart)
 
 bad:
 	logerror("BAD section hit during LOAD ROM.\n");
-	//mamep: ignore rom check to start window UI
-	return INIT_PASS;
+	return INIT_FAIL;
 }
 
 

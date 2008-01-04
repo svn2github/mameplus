@@ -1455,8 +1455,8 @@ DEVICE_LOAD(gb_cart)
 
 	/* Verify that the file contains 16kb blocks */
 	if ( ( filesize == 0 ) || ( ( filesize % 0x4000 ) != 0 ) ) {
-		//image_seterror( image, IMAGE_ERROR_UNSPECIFIED, "Invalid rom file size" );
-		//return INIT_FAIL;
+		image_seterror( image, IMAGE_ERROR_UNSPECIFIED, "Invalid rom file size" );
+		return INIT_FAIL;
 	}
 
 	/* Claim memory */
@@ -1947,8 +1947,8 @@ DEVICE_LOAD(megaduck_cart)
 	ROMBanks = filesize / 0x4000;
 
 	if ( ( filesize == 0 ) || ( ( filesize % 0x4000 ) != 0 ) ) {
-		//image_seterror( image, IMAGE_ERROR_UNSPECIFIED, "Invalid rom file size" );
-		//return INIT_FAIL;
+		image_seterror( image, IMAGE_ERROR_UNSPECIFIED, "Invalid rom file size" );
+		return INIT_FAIL;
 	}
 
 	/* Claim memory */

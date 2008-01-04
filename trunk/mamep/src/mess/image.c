@@ -45,7 +45,7 @@ struct _mess_image
 	char *dir;
 	char *hash;
 	char *basename_noext;
-	
+
 	/* flags */
 	unsigned int writeable : 1;
 	unsigned int created : 1;
@@ -73,7 +73,7 @@ struct _mess_image
 
 static mess_image *images;
 static UINT32 multiple_dev_mask;
-static int _has_dummy_image;
+
 
 
 /***************************************************************************
@@ -100,11 +100,6 @@ static void memory_error(const char *message)
 }
 
 
-int has_dummy_image()
-{
-// mamep: Arcade games don't have dummy image
-	return _has_dummy_image && Machine->gamedrv->sysconfig_ctor;
-}
 
 /*-------------------------------------------------
     image_init - initialize the core image system
@@ -485,19 +480,6 @@ static image_error_t load_image_by_path(mess_image *image, const char *software_
 	if ((err == IMAGE_ERROR_FILENOTFOUND) && (open_flags == OPEN_FLAG_READ))
 		err = load_zip_path(image, path);
 
-	//mamep: feed a dummy image when image_name is \0
-	if (err && path[0] == '\0')
-	{
-		static UINT8 dummy_image[8];
-		memset(dummy_image, 0, sizeof(dummy_image));
-		mame_printf_verbose("feed dummy image for device %s\n", device_typename(image_device(image)->type));
-		filerr = core_fopen_ram(dummy_image, sizeof(dummy_image), OPEN_FLAG_READ, &image->file);
-		if (filerr == FILERR_NONE)
-			err = IMAGE_ERROR_SUCCESS;
-		_has_dummy_image = 1;
-	}
-	else
-		_has_dummy_image = 0;
 	/* check to make sure that our reported error is reflective of the actual status */
 	if (err)
 		assert(!is_loaded(image));
@@ -859,7 +841,7 @@ void image_seterror(mess_image *image, image_error_t err, const char *message)
 
 /****************************************************************************
   Tag management functions.
-  
+
   When devices have private data structures that need to be associated with a
   device, it is recommended that image_alloctag() be called in the device
   init function.  If the allocation succeeds, then a pointer will be returned
@@ -1172,7 +1154,7 @@ UINT32 image_crc(mess_image *img)
 {
 	const char *hash_string;
 	UINT32 crc = 0;
-	
+
 	hash_string = image_hash(img);
 	if (hash_string)
 		crc = hash_data_extract_crc32(hash_string);
@@ -1373,7 +1355,7 @@ static void setup_working_directory(mess_image *image)
 	/* first set up the working directory to be the MESS directory */
 	osd_get_emulator_directory(mess_directory, ARRAY_LENGTH(mess_directory));
 	image->working_directory = mame_strdup(mess_directory);
-	
+
 	/* now try browsing down to "software" */
 	if (try_change_working_directory(image, "software"))
 	{

@@ -381,11 +381,21 @@ int mame_execute(core_options *options)
 			/* to clear out resources allocated between resets */
 			begin_resource_tracking();
 
-			/* perform a soft reset -- this takes us to the running phase */
-			soft_reset(machine, NULL, 0);
+			//mamep: prevent MESS crash #1
+			if (has_dummy_image())
+			{
+				set_dummy_image(0);
+				mame->hard_reset_pending = TRUE;
+			}
+			else
+			{
+				/* perform a soft reset -- this takes us to the running phase */
+				soft_reset(machine, NULL, 0);
 
-			/* run the CPUs until a reset or exit */
-			mame->hard_reset_pending = FALSE;
+				/* run the CPUs until a reset or exit */
+				mame->hard_reset_pending = FALSE;
+			}
+			
 			while ((!mame->hard_reset_pending && !mame->exit_pending) || mame->saveload_pending_file != NULL)
 			{
 				profiler_mark(PROFILER_EXTRA);
@@ -1784,6 +1794,9 @@ static void init_machine(running_machine *machine)
 	video_init(machine);
 	sound_init(machine);
 
+	//mamep: prevent MESS crash #2
+	if(has_dummy_image())
+		return;
 	/* call the driver's _START callbacks */
 	if (machine->drv->machine_start != NULL) (*machine->drv->machine_start)(machine);
 	if (machine->drv->sound_start != NULL) (*machine->drv->sound_start)(machine);

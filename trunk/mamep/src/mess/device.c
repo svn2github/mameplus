@@ -248,7 +248,7 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 		{
 			devices[i].devclass.get_info = handlers[i];
 			devices[i].devclass.gamedrv = gamedrv;
-			
+
 			/* convert file extensions from comma delimited to null delimited */
 			converted_file_extensions = NULL;
 			file_extensions = device_get_info_string(&devices[i].devclass, DEVINFO_STR_FILE_EXTENSIONS);
@@ -263,7 +263,7 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 				converted_file_extensions[j + 0] = '\0';
 				converted_file_extensions[j + 1] = '\0';
 			}
-			
+
 			info_string = device_get_info_string(&devices[i].devclass, DEVINFO_STR_DEV_TAG);
 			devices[i].tag					= info_string ? pool_strdup(pool, info_string) : NULL;
 			devices[i].type					= device_get_info_int(&devices[i].devclass, DEVINFO_INT_TYPE);
@@ -275,7 +275,18 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 			devices[i].writeable			= device_get_info_int(&devices[i].devclass, DEVINFO_INT_WRITEABLE) ? 1 : 0;
 			devices[i].creatable			= device_get_info_int(&devices[i].devclass, DEVINFO_INT_CREATABLE) ? 1 : 0;
 			devices[i].reset_on_load		= device_get_info_int(&devices[i].devclass, DEVINFO_INT_RESET_ON_LOAD) ? 1 : 0;
-			devices[i].must_be_loaded		= device_get_info_int(&devices[i].devclass, DEVINFO_INT_MUST_BE_LOADED) ? 1 : 0;
+			if (device_get_info_int(&devices[i].devclass, DEVINFO_INT_MUST_BE_LOADED))
+			{
+				if (has_dummy_image() == -1)
+					set_dummy_image(1);
+				devices[i].must_be_loaded = 1;
+			}
+			else
+			{
+				if (has_dummy_image() == -1)
+					set_dummy_image(0);
+				devices[i].must_be_loaded = 0;
+			}
 			devices[i].load_at_init			= device_get_info_int(&devices[i].devclass, DEVINFO_INT_LOAD_AT_INIT) ? 1 : 0;
 			devices[i].not_working			= device_get_info_int(&devices[i].devclass, DEVINFO_INT_NOT_WORKING) ? 1 : 0;
 
@@ -292,7 +303,7 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 			devices[i].name					= default_device_name;
 
 			devices[i].createimage_optguide	= (const struct OptionGuide *) device_get_info_ptr(&devices[i].devclass, DEVINFO_PTR_CREATE_OPTGUIDE);
-			
+
 			createimage_optcount = (int) device_get_info_int(&devices[i].devclass, DEVINFO_INT_CREATE_OPTCOUNT);
 			if (createimage_optcount > 0)
 			{

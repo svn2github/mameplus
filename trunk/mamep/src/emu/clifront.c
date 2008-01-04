@@ -380,10 +380,8 @@ void assign_drivers(core_options *options)
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "neod",	neoddrivers },
-	#ifndef NEOCPSMAME
-		{ "noncpu",	noncpudrivers },
 		{ "console",	consoledrivers },
-	#endif /* NEOCPSMAME */
+		{ "noncpu",	noncpudrivers },
 #endif /* !TINY_NAME */
 		{ NULL }
 	};

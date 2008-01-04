@@ -547,10 +547,8 @@ extern const game_driver * const mamedrivers[];
 extern const game_driver * const plusdrivers[];
 extern const game_driver * const homebrewdrivers[];
 extern const game_driver * const neoddrivers[];
-#ifndef NEOCPSMAME
-extern const game_driver * const noncpudrivers[];
 extern const game_driver * const consoledrivers[];
-#endif /* NEOCPSMAME */
+extern const game_driver * const noncpudrivers[];
 #endif /* DRIVER_SWITCH */
 
 extern const game_driver driver_empty;

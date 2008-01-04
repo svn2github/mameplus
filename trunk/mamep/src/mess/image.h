@@ -46,8 +46,6 @@ typedef enum
   file.
 ****************************************************************************/
 
-int has_dummy_image(void);
-
 /* not to be called by anything other than core */
 int image_init(void);
 
@@ -79,7 +77,7 @@ void image_seterror(mess_image *img, image_error_t err, const char *message);
 
 /****************************************************************************
   Tag management functions.
-  
+
   When devices have private data structures that need to be associated with a
   device, it is recommended that image_alloctag() be called in the device
   init function.  If the allocation succeeds, then a pointer will be returned

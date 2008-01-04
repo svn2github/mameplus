@@ -9184,7 +9184,7 @@ GAME( 1992, wofu,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", 
 GAME( 1992, wofj,     wof,      qsound,   wof,      wof,      ROT0,   "Capcom", "Tenchi wo Kurau II - Sekiheki no Tatakai (Japan 921031)", 0 )
 GAME( 1999, wofh,     wof,      wofb,     wofh,     wofh,     ROT0,   "bootleg", "Sangokushi II (Legend of Three Kingdoms' Heroes set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1999, wofha,    wof,      wofb,     wofh,     wofh,     ROT0,   "bootleg", "Sangokushi II (Legend of Three Kingdoms' Heroes set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1999, wofhfh,   wof,      wofhfh,   wof3js,   wofhfh,   ROT0,   "bootleg", "Sangokushi II (Fire Phoenix)", 0 )
+GAME( 1999, wofhfh,   wof,      wofhfh,   wof3js,   wofhfh,   ROT0,   "bootleg", "Sangokushi II (Fire Phoenix)", GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3js,   wof,      qsound,   wof3js,   wof3js,   ROT0,   "bootleg", "Sangokushi II (Three Sword Masters)", 0 )
 GAME( 1997, wof3sj,   wof,      wofb,     wofh,     wof3sj,   ROT0,   "bootleg", "Sangokushi II (Three Holy Swords set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3sja,  wof,      wofb,     wofh,     wof3sj,   ROT0,   "bootleg", "Sangokushi II (Three Holy Swords set 2)", GAME_IMPERFECT_SOUND )

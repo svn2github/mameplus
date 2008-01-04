@@ -24,6 +24,7 @@
 UINT32 mess_ram_size;
 UINT8 *mess_ram;
 UINT8 mess_ram_default_value = 0xCD;
+int _has_dummy_image = -1;
 
 const char mess_disclaimer[] =
 		"MESS is an emulator: it reproduces, more or less faithfully, the behaviour of\n"
@@ -115,6 +116,20 @@ static void devices_exit(running_machine *machine)
 	machine->devices = NULL;
 }
 
+//mamep: prevent MESS window from quitting
+int has_dummy_image()
+{
+// mamep: Arcade games don't have dummy image
+	if (!Machine->gamedrv->sysconfig_ctor)
+ 		return 0;
+	return _has_dummy_image;
+}
+
+void set_dummy_image(int di)
+{
+// mamep: Arcade games don't have dummy image
+	_has_dummy_image = di;
+}
 
 
 /*-------------------------------------------------
@@ -176,9 +191,7 @@ void devices_init(running_machine *machine)
 				{
 					//mamep: prevent MESS window from quitting
 					mame_printf_warning("Driver requires that device %s must have an image to load\n", device_typename(dev->type));
-
-					//mamep: feed a dummy image to avoid crash
-					result = image_load(image, "");
+					_has_dummy_image = 1;
 				}
 			}
 		}
