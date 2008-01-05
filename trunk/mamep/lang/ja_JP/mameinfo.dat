@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u1      #
+#     Mameinfo.dat日本語版 v0.122u3      #
 #                                        #
-#           December 27, 2007            #
+#            January 4, 2008             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,10 +12,31 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：881 翻訳済：846
-# 追加項目：342 合計：1223
+# Tester報告：876 翻訳済：850
+# 追加項目：343 合計：1219
 #
 
+
+$info=sflush
+$mame
+[バグ]
+
+- プレイヤー2の順番のとき、ボールが下に落下し続ける。 sflush0122u1yel, gtmoa
+
+$end
+
+$info=720
+$mame
+[バグ]
+
+- このドライバの他のゲームに比べ、720°だけデッドロックを防ぐためハックっぽくZ80の周波数が上げられた。
+しかし、普通の速度（2.2MHz→1.789772MHz）に戻して再コンパイルして起動後、サービスモードに入ると普通に動作する。
+その後サービスモードから抜ければゲームも動作する。どうやらNVRAMの有無が原因のようだ。 720_0122u2ora, Tafoid
+
+
+- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
+
+$end
 
 $info=vshoot
 $mame
@@ -28,11 +49,11 @@ $mame
 
 $end
 
-$info=qtheater
+$info=suprridr
 $mame
 [バグ]
 
-- サウンドROMが正しいものに入れ替えられたので、GAME_IMPERFECT_SOUNDフラグは削除出来る。 qtheater0122u1ora, Layne
+- カクテルモードのプレイヤー2用操作が割り当てられていない。 suprridr0122u2gra, IceMan01
 
 $end
 
@@ -42,33 +63,6 @@ $mame
 
 - デモ画面で、しばらくするとハイスコア一覧が表示されるが、
 イニシャル入力のときのようにアルファベット一覧も表示されてしまう。 actfancr36rc2gre, Lord Caos / DCisTHEbest / Pi
-
-$end
-
-$info=bubl2000
-$mame
-[バグ]
-
-- 一定数以上の連鎖をすると背景が黒くなる。その現象の直前に3フレームの間、背景が色化けする。 bubl2000_0105u2gre, Twisty
-
-$end
-
-$info=mangchi
-$mame
-[バグ]
-
-- タイトル画面の背景は黒が正しい。 mangchi0105u2gre, Kold666
-
-$end
-
-$info=popspops
-$mame
-[バグ]
-
-- スタートボタンを押した直後に難易度選択画面が一瞬だけ現れる。 popspops0103u1gre1, king_krm
-
-
-- プレイヤー2でプレイすると、文字を選んだときの画面がきちんと描画されない。 popspops0103u1gre2, king_krm
 
 $end
 
@@ -174,19 +168,6 @@ $mame
 
 $end
 
-$info=gorf
-$mame
-[情報]
-
-- カクテルモードの色がおかしい。
-
-
-[バグ]
-
-- ゲームスタート後は正しくリセットされない。 gorf060gre, DCisTHEbest / Thenasty
-
-$end
-
 $info=bonzeadv
 $mame
 [バグ]
@@ -217,14 +198,6 @@ $mame
 [バグ]
 
 - 効果音が画面より1、2秒遅れて再生される。 primrage0117gre, Slick Mandela
-
-$end
-
-$info=720
-$mame
-[バグ]
-
-- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
 
 $end
 
@@ -346,9 +319,6 @@ $mame
 - 3面ボスの背景にいるクイーンの顔のグラフィックがずれる。波打つようなエフェクトがかかると思われる。 btoads0102u5gre, cpukett / Stefan Lindberg / ENAY
 
 
-- 2面ボスと背景部分でプライオリティ不具合あり。ボスは右端の柱の裏側に表示される。 btoads0103gre, Stefan Lindberg / ENAY
-
-
 - エンディングの文字色が茶色に緑の組み合わせになってるが、どう見ても正しくない。 btoads0103u1gre, cpukett / ENAY
 
 $end
@@ -442,9 +412,6 @@ $mame
 
 - 効果音が間違ってループすることがある。
 頭上に列車が来るところで「ヒュー」っという音や、エンディングや2面で画面に飛び込むところのノイズも止まらない。 edrandy065gre, Nomax / Nerox91 / ocp_001 / Kale / big_lenny_c / Smitdogg
-
-
-- 一番上のUnkownのDIPスイッチは、コイン2つでスタートするかの設定。親セットのみ。 edrandy0113gra, Machone
 
 $end
 
@@ -544,7 +511,7 @@ $info=cawing
 $mame
 [バグ]
 
-- 海外版のデモ画面で、テキストが化けている。 cawing0105u1gre,
+- 海外版のデモ画面で、テキストが化けている。 cawing0105u1gre, ?
 
 $end
 
@@ -679,6 +646,9 @@ $end
 $info=lottof2
 $mame
 [バグ]
+
+- 一部の効果音が鳴らない。 lottof2099u1gre, Reznor007
+
 
 - Insert Coinの文字が欠けている。 lottof2099u2gre, Reip /  Reznor007
 
@@ -896,9 +866,6 @@ $mame
 
 - 最初の中ボスでスクロールが止まるところで、後ろ側にある2つの建物は完全に見えてなければいけない。MAMEでは少しスクロールしすぎ。 dynduke067gre, Kale
 
-
-- 後半の面（5面）からとエンディングの背景色が完全に違っている。 dynduke067gre2, Kale
-
 $end
 
 $info=bullfgtr
@@ -1000,14 +967,6 @@ $mame
 
 $end
 
-$info=victnine
-$mame
-[バグ]
-
-- チームを選ぶとゲームがリセットしてタイトル画面に戻る。 victnine0116u2red, etabeta
-
-$end
-
 $info=gigasb
 $mame
 [バグ]
@@ -1021,17 +980,6 @@ $mame
 [バグ]
 
 - デモ画面でビデオシステムのロゴが6回目に表示されるとき、背景の色が水色になる。 fromancr0103u1gre, king_krm
-
-$end
-
-$info=funkyjet
-$mame
-[バグ]
-
-- 最終ボスを倒したあとにフリーズする。
-
-【0.61更新】実際には以前のフリーズ後も面が続く。
-その後ある場所までいくとフリーズするが、サウンドは鳴り続ける。 funkyjet055yel, Karasu
 
 $end
 
@@ -1094,11 +1042,6 @@ $mame
 
 - オリジナル基板に比べると、バックの効果音のテンポが遅い。ちょうど半分の速度。そのほかの効果音などは問題ない。 galaxian0103u3gre, dropdeadhippie / Tafoid
 
-
-- 「サンプル情報の間違い」
-
-サンプルが必要なゲームなのに、不要とレポートされる。 samplesinfo098u3ora, Wojciech Zakrzewski
-
 $end
 
 $info=kingball
@@ -1125,11 +1068,6 @@ b16以降のデモでは、(1+2)+3号機のドッキング時に、(1+2)号機�
 これはオリジナルのデモと異なり、SPARCADEやGalemuのデモと同じで、この２つのエミュレータは256x256の画面モード。
 0.36b14以前は解像度がオリジナルのゲームと同じ256x224であったのに対して、
 0.36b16以降は256x256になっているものと思われる。 mooncrsb055gre, Fujix / Tafoid (kamo'n)
-
-
-- 「サンプル情報の間違い」
-
-サンプルが必要なゲームなのに、不要とレポートされる。 samplesinfo098u3ora, Wojciech Zakrzewski
 
 $end
 
@@ -1309,14 +1247,6 @@ $mame
 わかりやすいのは、場札8枚のうち、下段右端の2枚が毎回牡丹になるところ。
 また、牡丹はプレイしている間、手札としては一度も配られてこなかった。
 さらに、場札の上段左から2枚目は必ず「雨」。2枚目の引き札は、必ず「菊」になる。 hanaawas37b6gre, Fujix (まるち/　きむ)
-
-$end
-
-$info=racedriv
-$mame
-[バグ]
-
-- 全セットでハングする。0.114u4でTMS34010が大幅変更されたのが原因？ racedriv0121u3red, Firewave / Tafoid
 
 $end
 
@@ -1581,15 +1511,6 @@ $mame
 
 $end
 
-$info=liberate
-$mame
-[バグ]
-
-- 青い敵機を破壊したときのグラフィックが時々乱れる。
-また地面でタンクかジープに乗っているときも、表示化け多数。 liberate074u1gre, BarnacleEd
-
-$end
-
 $info=liberatr
 $mame
 [バグ]
@@ -1767,9 +1688,6 @@ $mame
 
 - 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
 
-
-- 実機と比較すると、マリオや敵、パイプ、POWブロックなどがMAMEでは1ドット上に表示されている。 mario0110u1gre, BSR
-
 $end
 
 $info=marvins
@@ -1896,7 +1814,7 @@ $info=mp_twc
 $mame
 [バグ]
 
-- 黒画面だけで起動しない。 mp_twc0120red, Scagazza
+- 黒画面だけで起動しない。 mp_twc0120red, Scagazza / Pugsy
 
 $end
 
@@ -2366,9 +2284,6 @@ $mame
 
 - ゲームオーバーのときに表示されるヒット率の計算がおかしい場合がある。 galaga88_0109u4gre, Tafoid / Haze
 
-
-- 新UIからnamcos1.cのゲームを起動、一旦ESCキーで抜けてから、再度同じゲームを起動するとスプライトなどが表示されない。 namcos1_0118u2yel, Rogerr / Tafoid /twisty
-
 $end
 
 $info=tekken3
@@ -2379,9 +2294,6 @@ $mame
 tekken3やehrgeitzのアトラクトモードなどがよくわかる。
 
 逆にSystem11のsouledgeのMDECビデオは実機よりも動作が速い。 namcos1112081gre, Reznor007
-
-
-- 勝利シーンの直前にMAMEがフリーズする。 tekken30105u5red, Suutaroka
 
 $end
 
@@ -2448,14 +2360,6 @@ $mame
 
 $end
 
-$info=metlhwkj
-$mame
-[バグ]
-
-- 日本版は自機の操作がきかない。テストモードに入って"motion of cabinet"をオフにすると直る。 metlhwkj094u4yel, Fujix
-
-$end
-
 $info=phelios
 $mame
 [バグ]
@@ -2517,28 +2421,6 @@ $mame
 [バグ]
 
 - 3面のヘリコプターを破壊できない。 timecrsa0121u2gre, Withnail
-
-$end
-
-$info=twinbee
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-
-[バグ]
-
-- ボイスがおかしくなっている。 twinbee0115u3gre, Kold666
-
-$end
-
-$info=2020bb
-$mame
-[バグ]
-
-- 国設定をヨーロッパにしてゲームをクリアしても、
-ゲームセットの画面が日本語で表示される。 2020bb056gre, Kale
 
 $end
 
@@ -2631,6 +2513,14 @@ Reipが何年か前に修正しようとしたが複雑すぎて無理だった�
 
 $end
 
+$info=bubl2000
+$mame
+[バグ]
+
+- 一定数以上の連鎖をすると背景が黒くなる。その現象の直前に3フレームの間、背景が色化けする。 bubl2000_0105u2gre, Twisty
+
+$end
+
 $info=gunnail
 $mame
 [バグ]
@@ -2663,12 +2553,31 @@ $mame
 
 $end
 
+$info=mangchi
+$mame
+[バグ]
+
+- タイトル画面の背景は黒が正しい。 mangchi0105u2gre, Kold666
+
+$end
+
 $info=raphero
 $mame
 [バグ]
 
 - nmk16.cゲームでプライオリティ不具合がある。
 Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
+
+$end
+
+$info=popspops
+$mame
+[バグ]
+
+- スタートボタンを押した直後に難易度選択画面が一瞬だけ現れる。 popspops0103u1gre1, king_krm
+
+
+- プレイヤー2でプレイすると、文字を選んだときの画面がきちんと描画されない。 popspops0103u1gre2, king_krm
 
 $end
 
@@ -2723,14 +2632,6 @@ $mame
 
 
 - 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
-
-$end
-
-$info=mspacmab
-$mame
-[バグ]
-
-- 実機は134面エンドだが、MAMEでは常に141面エンドになっている。mspacmabだけで検証したが、spacmanコードベースのゲームならば、未マップリードのせいで134面になるはず。 pacmanc060gre, dwidel
 
 $end
 
@@ -3186,6 +3087,18 @@ $mame
 
 $end
 
+$info=elim2
+$mame
+[バグ]
+
+- ゲーム中に画面中央に青いドットが表示される。
+クローン版elim4では起きない。 elim2055gre, Fever
+
+
+- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
+
+$end
+
 $info=zektor
 $mame
 [バグ]
@@ -3196,18 +3109,6 @@ $mame
 
 - プレイヤー2の操作が分かれていない。
 そのため、プレイヤー1の操作でプレイしなければいけない。 zektor055gra, Karasu
-
-$end
-
-$info=elim2
-$mame
-[バグ]
-
-- ゲーム中に画面中央に青いドットが表示される。
-クローン版elim4では起きない。 elim2055gre, Fever
-
-
-- [Possible] ベクター描画は以前、わざとラフになるように書き直されたが、TAFAなどのフライヤーと比べると、ラフすぎる模様。 elim2 _0112u2gre, Luigi30 / Twisty
 
 $end
 
@@ -3391,6 +3292,41 @@ $mame
 
 $end
 
+$info=dcclub
+$mame
+[バグ]
+
+- 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
+
+
+- どのクラブを選んでも最大で80%の力でしか打てない。 dcclub0121u2gra, sjyune
+
+$end
+
+$info=dcclubfd
+$mame
+[バグ]
+
+- プレイ中にAccess Violationエラーが出てクラッシュする。 dcclubfd0120red, Scagazza
+
+$end
+
+$info=gground
+$mame
+[バグ]
+
+- 画面左下のキャラクタ選択部分の表示が回転中にずれることがある。 gground0103u1gre, Twisty
+
+$end
+
+$info=qgh
+$mame
+[バグ]
+
+- 変身後、画面が真っ黒になって文字・グラフィックなどが表示されない。 qgh083gre, J.J.Boy
+
+$end
+
 $info=brival
 $mame
 [バグ]
@@ -3410,14 +3346,6 @@ $mame
 [バグ]
 
 - DIPスイッチをONにしてもデモサウンドが出ない。 gprider1097gre, SportsDude
-
-$end
-
-$info=rfjetus
-$mame
-[バグ]
-
-- 黒画面だけで起動しない。古いバージョンでnv ramを作成してあると起動する。 rfjetus0119u2red, Canim / Tafoid / couriersud
 
 $end
 
@@ -3673,10 +3601,10 @@ $mame
 - 一部のボイス（“Maggie”、“That's my sister mister”など）が変になっている。MAMEと実機ではかなり隔たりがあり、本当はTVクオリティに近い。 simpsons062gre2, NeoGouki / Kitsune Sniper / ElCondor
 
 
-- Not Bugページで、最初のボーナス面で風船をふくらましていくと横線が入るのは実機でも起こるとあるが、うちの実機では起きない。 simpsons0103ora2, Magic Knight
-
-
 - MAMEでのスキャンレートを56Hzにしたとき、実機にもっとも近い動作をする。BGMとグラフィックの同期や、アニメーションのスムーズさなど。 simpsons0103ora, Mamesick / Magic Knight
+
+
+- Not Bugページで、最初のボーナス面で風船をふくらましていくと横線が入るのは実機でも起こるとあるが、うちの実機では起きない。 simpsons0103ora2, Magic Knight
 
 
 - 背景のスクロールが他の部分と合わない。
@@ -3807,14 +3735,6 @@ $mame
 [バグ]
 
 - 各面のゴールのときに、仲間が非現実的な反応をする(新しい面のスタート時もある)。 srumbler236b3gre, YMI
-
-$end
-
-$info=powerbls
-$mame
-[バグ]
-
-- gdbのデバッグビルドで、-autosave指定のステート読み込み時にクラッシュする。 powerbls0112u4red, Firewave
 
 $end
 
@@ -3979,41 +3899,6 @@ $mame
 
 $end
 
-$info=dcclub
-$mame
-[バグ]
-
-- 1番ホールで手前のラフにボールを打つと、カラーテストモードに入ったり、画面が化けてクラッシュする。 dcclub0105u3red, cpukett / RB
-
-
-- どのクラブを選んでも最大で80%の力でしか打てない。 dcclub0121u2gra, sjyune
-
-$end
-
-$info=dcclubfd
-$mame
-[バグ]
-
-- プレイ中にAccess Violationエラーが出てクラッシュする。 dcclubfd0120red, Scagazza
-
-$end
-
-$info=gground
-$mame
-[バグ]
-
-- 画面左下のキャラクタ選択部分の表示が回転中にずれることがある。 gground0103u1gre, Twisty
-
-$end
-
-$info=qgh
-$mame
-[バグ]
-
-- 変身後、画面が真っ黒になって文字・グラフィックなどが表示されない。 qgh083gre, J.J.Boy
-
-$end
-
 $info=junglek
 $mame
 [バグ]
@@ -4022,14 +3907,6 @@ $mame
 画面が反転して「Game Over」と表示される。
 カクテルモードのような動作になる。
 37b16～0.55までで確認。 junglek055gre, Thenasty
-
-$end
-
-$info=wwestern
-$mame
-[バグ]
-
-- 起動後クレジットを入れずにステート保存する。一旦MAMEを終了させて、再スタート後ステートをロードすると、クレジットを受け付けない。 wwestern0115u1yel, fossil / Waremonger
 
 $end
 
@@ -4726,9 +4603,6 @@ $mame
 
 - BGMが2音高い。例えばミがファ#になっている。実機で比較。 zeropnt055gre, Kurushimi
 
-
-- 弾が、照準よりも少し左に当たる。右側を撃つともっとひどくなる。 zeropnt062gre, Nerox91
-
 $end
 
 $info=zeropnt2
@@ -5153,22 +5027,6 @@ Victor→Bishamon→Lei-Lei…の順番。 nwarr0105u3ora, AWJ
 
 $end
 
-$info=hanakanz
-$mame
-[バグ]
-
-- ゲームのイントロで“0cd80: warrning unknown pixel command 03”のメッセージが出る。 hanakanz0103u4ora, king_krm / Luigi30
-
-$end
-
-$info=hkagerou
-$mame
-[バグ]
-
-- ゲームプレイ中に“5eedf3: warrning unknown pixel command 03”のメッセージが出る。 hkagerou0103u4ora, king_krm / Luigi30
-
-$end
-
 $info=targ
 $mame
 [バグ]
@@ -5295,6 +5153,22 @@ $mame
 このバグはかなり気まぐれで、これといった再現性はない。
 
 また、Melinaを選んで、最初の敵を倒して次の敵に進むと、やられてもコンティニューできない。 mk2137b5gre, Jeff B
+
+$end
+
+$info=hanakanz
+$mame
+[バグ]
+
+- ゲームのイントロで“0cd80: warrning unknown pixel command 03”のメッセージが出る。 hanakanz0103u4ora, king_krm / Luigi30
+
+$end
+
+$info=hkagerou
+$mame
+[バグ]
+
+- ゲームプレイ中に“5eedf3: warrning unknown pixel command 03”のメッセージが出る。 hkagerou0103u4ora, king_krm / Luigi30
 
 $end
 
@@ -5615,11 +5489,11 @@ $mame
 
 $end
 
-$info=robocop2
+$info=cmv801
 $mame
 [バグ]
 
-- 基板上にはDIPスイッチが3つあるがMAMEには2つしか実装されていない。 robocop2_0106u3gra, Roberto Fresca
+-  cmv801_0116gra, MrDriller
 
 $end
 
@@ -5762,9 +5636,25 @@ $mame
 
 $end
 
+$info=pocketrc
+$mame
+[バグ]
+
+- 車が右にしか回らない。 pocketrc0117gra, The Monk
+
+$end
+
 $info=finallap
 $mame
 [バグ]
+
+- ハンドルの入力感度がおかしくてほとんどプレイにならない。
+良い設定例：
+
+Paddle Digital Spped 10<br>
+Paddle Auotoecenter Speed 15<br>
+Paddle Sensitivity 20% finallap0116u1gra, fostar
+
 
 - アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
@@ -6291,19 +6181,6 @@ $mame
 
 $end
 
-$info=csclub
-$mame
-[バグ]
-
-- テニスで3人に負け無しで勝ち続けるとエキストラステージに進むが、その場面で画面が黒くなり数字が表示されてクラッシュする。 csclub072u1yel, unit3uk / Haze
-
-
-[TIPS]
-
-- 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
-
-$end
-
 $info=pzloop2
 $mame
 [バグ]
@@ -6416,14 +6293,6 @@ $mame
 
 $end
 
-$info=dkongjr
-$mame
-[バグ]
-
-- 2面(カギを上に持っていく面)で、ジュニアが時々カギをすり抜けてしまう。 dkongjr37b9gre, Chad H
-
-$end
-
 $info=lastday
 $mame
 [バグ]
@@ -6439,15 +6308,6 @@ $mame
 - すごくマイナーな表示不具合が2カ所にある。
 エミュレーションのバグかどうかはわからないが、
 色がランダムに変わったり、白い点が現れる箇所がある。 eprom060gre, Darkk
-
-$end
-
-$info=frogg
-$mame
-[バグ]
-
-- やられたときにギャラクシアンの星空が背景に現れる。
-一般的にギャラクシアンのハック基板では星空を完全に消している。 frogg059gre, Darkk / dwidel
 
 $end
 
@@ -6541,15 +6401,6 @@ $mame
 
 - 大きめの敵(ボスなど)にトレースレーザーを発射していると、画面に押されることがある。
 めったに起きないのだが、バグのような気がする。 gallop36b15gre, Sixtoe
-
-$end
-
-$info=spyhunt
-$mame
-[バグ]
-
-- テストモード内の「Player Inputs」の「Oil　Slick
-」ボタンを押すと、アートワークの「Missile」ランプが点灯する。逆に「Missile」を押すと「Oil Slick」のランプがつく。 spyhut061gre, Nerox91
 
 $end
 
@@ -7238,6 +7089,14 @@ $mame
 
 $end
 
+$info=ampoker2
+$mame
+[情報]
+
+-
+
+$end
+
 $info=anteater
 $mame
 [情報]
@@ -7704,6 +7563,14 @@ $mame
 
 $end
 
+$info=gorf
+$mame
+[情報]
+
+- カクテルモードの色がおかしい。
+
+$end
+
 $info=gunbird
 $mame
 [情報]
@@ -7956,6 +7823,14 @@ $mame
 $end
 
 $info=nemesis
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+$end
+
+$info=twinbee
 $mame
 [情報]
 
@@ -8832,6 +8707,14 @@ $mame
 [TIPS]
 
 - 日本版と海賊版のネームエントリーで“JORDAN.LTD”と入力するとクレジットが2つ追加される。
+
+$end
+
+$info=csclub
+$mame
+[TIPS]
+
+- 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
 
 $end
 
