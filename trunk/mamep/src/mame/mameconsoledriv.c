@@ -36,7 +36,7 @@ const game_driver * const consoledrivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-#if 1//ndef NEOCPSMAME
+#ifndef NEOCPSMAME
 	/* NINTENDO */
 	DRIVER( nes )		/* Nintendo Entertainment System					*/
 	DRIVER( nespal )	/* Nintendo Entertainment System					*/
