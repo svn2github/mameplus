@@ -4,7 +4,7 @@
 
     Command-line interface frontend for MAME.
 
-    Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
+    Copyright Nicola Salmoria and the MAME Team.
     Visit http://mamedev.org for licensing and usage restrictions.
 
 ***************************************************************************/
@@ -118,6 +118,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	core_options *options;
 	astring *gamename = astring_alloc();
 	astring *exename = astring_alloc();
+	const char *gamename_option;
 	const game_driver *driver;
 	output_callback prevcb;
 	void *prevparam;
@@ -169,7 +170,8 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	parse_ini_file(options, CONFIGNAME);
 
 	/* find out what game we might be referring to */
-	core_filename_extract_base(gamename, options_get_string(options, OPTION_GAMENAME), TRUE);
+	gamename_option = options_get_string(options, OPTION_GAMENAME);
+	core_filename_extract_base(gamename, gamename_option, TRUE);
 	driver = driver_get_name(astring_c(gamename));
 
 	/* execute any commands specified */
@@ -178,17 +180,17 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		goto error;
 
 	/* if we don't have a valid driver selected, offer some suggestions */
-	if (astring_len(gamename) > 0 && driver == NULL)
+	if (strlen(gamename_option) > 0 && driver == NULL)
 	{
 		const game_driver *matches[10];
 		int drvnum;
 
 		/* get the top 10 approximate matches */
-		driver_list_get_approx_matches(drivers, astring_c(gamename), ARRAY_LENGTH(matches), matches);
+		driver_list_get_approx_matches(drivers, gamename_option, ARRAY_LENGTH(matches), matches);
 
 		/* print them out */
 		mame_printf_error(_("\n\"%s\" approximately matches the following\n"
-				"supported " GAMESNOUN " (best match first):\n\n"), astring_c(gamename));
+				"supported " GAMESNOUN " (best match first):\n\n"), gamename_option);
 		for (drvnum = 0; drvnum < ARRAY_LENGTH(matches); drvnum++)
 			if (matches[drvnum] != NULL)
 				mame_printf_error("%-10s%s\n", matches[drvnum]->name, _LST(matches[drvnum]->description));
@@ -352,7 +354,7 @@ static void display_help(void)
 {
 #ifndef MESS
 	mame_printf_info(_("M.A.M.E. v%s - Multiple Arcade Machine Emulator\n"
-		   "Copyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n"), build_version);
+		   "Copyright Nicola Salmoria and the MAME Team\n\n"), build_version);
 	mame_printf_info("%s\n", _(mame_disclaimer));
 	mame_printf_info(_("Usage:  MAME gamename [options]\n\n"
 		   "        MAME -showusage    for a brief list of options\n"

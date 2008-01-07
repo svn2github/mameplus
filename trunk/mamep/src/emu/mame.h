@@ -4,7 +4,7 @@
 
     Controls execution of the core MAME system.
 
-    Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
+    Copyright Nicola Salmoria and the MAME Team.
     Visit http://mamedev.org for licensing and usage restrictions.
 
 ***************************************************************************/
@@ -68,7 +68,7 @@
 #define GAMENOUN				"game"
 #define GAMESNOUN				"games"
 #define HISTORYNAME				"History"
-#define COPYRIGHT				"Copyright 2007, Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
+#define COPYRIGHT				"Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org"
 #else
 #define APPNAME					"MESS"
 #define APPNAME_LOWER			"mess"
@@ -79,7 +79,7 @@
 #define GAMENOUN				"system"
 #define GAMESNOUN				"systems"
 #define HISTORYNAME				"System Info"
-#define COPYRIGHT				"Copyright 2007, the MESS team\nhttp://mess.org"
+#define COPYRIGHT				"Copyright the MESS team\nhttp://mess.org"
 #endif
 
 
