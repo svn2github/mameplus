@@ -302,7 +302,7 @@ static core_options *pCurrentOpts = NULL;
 static core_options *pOptsGlobal;
 static core_options *pOptsVector;
 static core_options *pOptsSource;
-static core_options *pBiosOpts[MAX_SYSTEM_BIOS];
+static char *pBiosName[MAX_SYSTEM_BIOS];
 static datamap *properties_datamap;
 
 static int  g_nGame            = 0;
@@ -614,10 +614,14 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 		{
 			int nIndex = GetSystemBiosDriver(n);
 
-			if (nIndex == -1)
-				pBiosOpts[n] = NULL;
-			else
-				pBiosOpts[n] = load_options(OPTIONS_GAME, nIndex);
+			pBiosName[n] = NULL;
+
+			if (nIndex != -1)
+			{
+				core_options *opts = load_options(OPTIONS_GAME, nIndex);
+				pBiosName[n] = mame_strdup(options_get_string(opts, OPTION_BIOS));
+				options_free(opts);
+			}
 		}
 	}
 	g_bUseDefaults = FALSE;
@@ -1991,11 +1995,14 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 		{
 			int n;
 
-			for (n = 0; pBiosOpts[n]; n++)
+			for (n = 0; pBiosName[n]; n++)
 			{
 				int nIndex = GetSystemBiosDriver(n);
+				core_options *opts = load_options(OPTIONS_GAME, nIndex);
 
-				save_options(OPTIONS_GAME, pBiosOpts[n], nIndex);
+				options_set_string(opts, OPTION_BIOS, pBiosName[n], OPTION_PRIORITY_CMDLINE);
+				save_options(OPTIONS_GAME, opts, nIndex);
+				options_free(opts);
 			}
 		}
 
@@ -2019,10 +2026,10 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 			{
 				int n;
 
-				for (n = 0; pBiosOpts[n]; n++)
+				for (n = 0; pBiosName[n]; n++)
 				{
-					options_free(pBiosOpts[n]);
-					pBiosOpts[n] = NULL;
+					free(pBiosName[n]);
+					pBiosName[n] = NULL;
 				}
 			}
 		}
@@ -2310,28 +2317,22 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 		{
 			HWND hCtrl;
-			const char *option;
+			int i;
 
-			if (!pBiosOpts[n])
+			if (!pBiosName[n] || !*pBiosName[n])
 				continue;
 
 			hCtrl = GetDlgItem(hWnd, IDC_BIOS1 + n);
 			if (!hCtrl)
 				continue;
 
-			option = options_get_string(pBiosOpts[n], OPTION_BIOS);
-			if (option && *option)
+			for (i = 0; i < ComboBox_GetCount(hCtrl); i++)
 			{
-				int i;
-
-				for (i = 0; i < ComboBox_GetCount(hCtrl); i++)
+				const char *value = (char *)ComboBox_GetItemData(hCtrl, i);
+				if (mame_stricmp(value, pBiosName[n]) == 0)
 				{
-					const char *value = (char *)ComboBox_GetItemData(hCtrl, i);
-					if (mame_stricmp(value, option) == 0)
-					{
-						(void)ComboBox_SetCurSel(hCtrl, i);
-						break;
-					}
+					(void)ComboBox_SetCurSel(hCtrl, i);
+					break;
 				}
 			}
 		}
@@ -3109,28 +3110,26 @@ static BOOL DefaultBiosReadControl(datamap *map, HWND dialog, HWND control, core
 	for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 	{
 		HWND hCtrl;
-		const char *option;
 		const char *value;
 		int nCurSelection;
 
-		if (!pBiosOpts[n])
+		if (!pBiosName[n])
 			continue;
 
 		hCtrl = GetDlgItem(dialog, IDC_BIOS1 + n);
 		if (hCtrl != control)
 			continue;
 
-		option = options_get_string(pBiosOpts[n], OPTION_BIOS);
-
 		nCurSelection = ComboBox_GetCurSel(hCtrl);
 		if (nCurSelection == CB_ERR)
 			return FALSE;
 
 		value = (char *)ComboBox_GetItemData(hCtrl, nCurSelection);
-		if (option && *option && !mame_stricmp(option, value))
+		if (!mame_stricmp(pBiosName[n], value))
 			return FALSE;
 
-		options_set_string(pBiosOpts[n], OPTION_BIOS, value, OPTION_PRIORITY_CMDLINE);
+		free(pBiosName[n]);
+		pBiosName[n] = mame_strdup(value);
 		return TRUE;
 	}
 
@@ -3869,7 +3868,7 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	}
 }
 
-static void InitializeBIOSCtrl(HWND hCtrl, int bios_driver, core_options *o)
+static const char *InitializeBIOSCtrl(HWND hCtrl, int bios_driver, const char *option)
 {
 	if (hCtrl && bios_driver != -1)
 	{
@@ -3899,12 +3898,14 @@ static void InitializeBIOSCtrl(HWND hCtrl, int bios_driver, core_options *o)
 			}
 		}
 
-		set_core_bios(options_get_string(o, OPTION_BIOS));
+		set_core_bios(option);
 		idx = determine_bios_rom(get_core_options(), drivers[bios_driver]->rom) - 1;
 		set_core_bios(NULL);
-		name = (char *)ComboBox_GetItemData(hCtrl, idx);
-		options_set_string(o, OPTION_BIOS, name, OPTION_PRIORITY_CMDLINE);
+
+		return (char *)ComboBox_GetItemData(hCtrl, idx);
 	}
+
+	return NULL;
 }
 
 static void InitializeBIOSUI(HWND hwnd)
@@ -3917,7 +3918,11 @@ static void InitializeBIOSUI(HWND hwnd)
 
 		if (g_nPropertyMode == OPTIONS_GAME)
 			if (DriverHasOptionalBIOS(nIndex))
-				InitializeBIOSCtrl(hCtrl, nIndex, pCurrentOpts);
+			{
+				const char *option = InitializeBIOSCtrl(hCtrl, nIndex, options_get_string(pCurrentOpts, OPTION_BIOS));
+				if (option)
+					options_set_string(pCurrentOpts, OPTION_BIOS, option, OPTION_PRIORITY_CMDLINE);
+			}
 	}
 }
 
@@ -3925,12 +3930,19 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 {
 	int n;
 
-	for (n = 0; pBiosOpts[n]; n++)
+	for (n = 0; pBiosName[n]; n++)
 	{
 		HWND hCtrl = GetDlgItem(hwnd, IDC_BIOS1 + n);
 
 		if (hCtrl)
-			InitializeBIOSCtrl(hCtrl, GetSystemBiosDriver(n), pBiosOpts[n]);
+		{
+			const char *option = InitializeBIOSCtrl(hCtrl, GetSystemBiosDriver(n), pBiosName[n]);
+			if (option)
+			{
+				free(pBiosName[n]);
+				pBiosName[n] = mame_strdup(option);
+			}
+		}
 	}
 }
 
