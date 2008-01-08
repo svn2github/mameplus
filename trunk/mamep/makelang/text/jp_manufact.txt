@@ -58,6 +58,10 @@ Athena
 Atlus
 アトラス
 
+# Ultraman (Japan)
+Bandai
+バンダイ
+
 # Pretty Soldier Sailor Moon (95/03/22B)
 Banpresto
 バンプレスト
@@ -85,6 +89,10 @@ Chuo Co. Ltd
 # Hot Pinball
 Comad & New Japan System
 Comad & 新日本システム
+
+# Puyo Puyo Sun (J 961115 V0.001)
+Compile
+コンパイル
 
 # Orange Club - Maruhi Kagai Jugyou (Japan 880213)
 Daiichi Denshi
@@ -441,6 +449,10 @@ Sesame Japan
 # Championship Bowling
 Seta
 セタ
+
+# Famicom Twin
+Sharp
+シャープ
 
 # Streaking
 Shoei
@@ -834,10 +846,6 @@ BS Electronics
 Bally Midway
 
 
-# Ultraman (Japan)
-Bandai
-
-
 # MPU4 Unit Test (Program 4)
 Barcrest
 
@@ -956,10 +964,6 @@ Comad Industry Co Ltd
 
 # Amiga CD32 Bios
 Commodore
-
-
-# Puyo Puyo Sun (J 961115 V0.001)
-Compile
 
 
 # Battle of Atlantis (set 1)
@@ -1988,10 +1992,6 @@ Seoul Coin Corp.
 
 # Speed Attack!
 Seta Kikaku Corp.
-
-
-# Famicom Twin
-Sharp
 
 
 # Hex Pool (Shinkai)
