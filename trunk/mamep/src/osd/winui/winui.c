@@ -6125,40 +6125,39 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			value = sort_index[index1].description - sort_index[index2].description;
 
 		break;
-#if 0
+
 	case COLUMN_ROMS:
-		nTemp1 = GetRomAuditResults(index1);
-		nTemp2 = GetRomAuditResults(index2);
-
-		if (IsAuditResultKnown(nTemp1) == FALSE && IsAuditResultKnown(nTemp2) == FALSE)
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
-		if (IsAuditResultKnown(nTemp1) == FALSE)
+		nTemp1 = -1;
 		{
-			value = 1;
-			break;
+			int audit_result = GetRomAuditResults(index1);
+			if (IsAuditResultKnown(audit_result))
+			{
+				if (IsAuditResultYes(audit_result))
+					nTemp1 = 2;
+				else 
+					nTemp1 = 1;
+			}
+			else
+				nTemp1 = 0;
 		}
 
-		if (IsAuditResultKnown(nTemp2) == FALSE)
+		nTemp2 = -1;
 		{
-			value = -1;
-			break;
+			int audit_result = GetRomAuditResults(index2);
+			if (IsAuditResultKnown(audit_result))
+			{
+				if (IsAuditResultYes(audit_result))
+					nTemp2 = 2;
+				else 
+					nTemp2 = 1;
+			}
+			else
+				nTemp2 = 0;
 		}
 
-		// ok, both are known
-
-		if (IsAuditResultYes(nTemp1) && IsAuditResultYes(nTemp2))
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-		
-		if (IsAuditResultNo(nTemp1) && IsAuditResultNo(nTemp2))
-			return GamePicker_Compare(hwndPicker, index1, index2, COLUMN_GAMES);
-
-		if (IsAuditResultYes(nTemp1) && IsAuditResultNo(nTemp2))
-			value = -1;
-		else
-			value = 1;
+		value = nTemp2 - nTemp1;
 		break;
-#endif
+
 	case COLUMN_SAMPLES:
 		nTemp1 = -1;
 		if (DriverUsesSamples(index1))
@@ -6167,28 +6166,29 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			if (IsAuditResultKnown(audit_result))
 			{
 				if (IsAuditResultYes(audit_result))
-					nTemp1 = 1;
+					nTemp1 = 2;
 				else 
-					nTemp1 = 0;
+					nTemp1 = 1;
 			}
 			else
-				nTemp1 = 2;
+				nTemp1 = 0;
 		}
 
 		nTemp2 = -1;
 		if (DriverUsesSamples(index2))
 		{
-			int audit_result = GetSampleAuditResults(index1);
+			int audit_result = GetSampleAuditResults(index2);
 			if (IsAuditResultKnown(audit_result))
 			{
 				if (IsAuditResultYes(audit_result))
-					nTemp2 = 1;
+					nTemp2 = 2;
 				else 
-					nTemp2 = 0;
+					nTemp2 = 1;
 			}
 			else
-				nTemp2 = 2;
+				nTemp2 = 0;
 		}
+
 		value = nTemp2 - nTemp1;
 		break;
 
