@@ -79,6 +79,8 @@ LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name);
 void FlushFileCaches(void);
 void SetCorePathList(int file_type,const char *s);
 
+TCHAR* win_tstring_strdup(LPCTSTR str);
+
 void FreeIfAllocated(char **s);
 void FreeIfAllocatedW(WCHAR **s);
 
@@ -88,4 +90,4 @@ HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfil
 void CenterWindow(HWND hWnd);
 #endif /* TREE_SHEET */
 
-#endif /* MAME32UTIL_H */
+#endif /* MUI_UTIL_H */

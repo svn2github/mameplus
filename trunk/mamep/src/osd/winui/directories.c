@@ -35,6 +35,7 @@
 #include "mameui.h"	// include this first
 #include "directories.h"
 #include "resource.h"
+#include "strconv.h"
 #include "mui_util.h"
 #include "translate.h"
 
@@ -59,16 +60,15 @@ static HWND ListView_GetEditControl(HWND w)
 
 typedef struct
 {
-	WCHAR   m_Directories[MAX_DIRS][MAX_PATH];
+	TCHAR   m_Directories[MAX_DIRS][MAX_PATH];
 	int     m_NumDirectories;
 	BOOL    m_bModified;
 } tPath;
 
-typedef union
+typedef struct
 {
 	tPath	*m_Path;
-	WCHAR	*m_Directory;
-	void    *m_Ptr;
+	TCHAR	*m_Directory;
 } tDirInfo;
 
 /***************************************************************************
@@ -77,17 +77,17 @@ typedef union
 
 static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData);
 #ifdef MESS
-BOOL            BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
+BOOL            BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult);
 #else
-static BOOL     BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult);
+static BOOL     BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult);
 #endif
 
-static void     DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, const WCHAR* pText);
-static WCHAR*   DirInfo_Dir(tDirInfo *pInfo, int nType);
-static WCHAR*   DirInfo_Path(tDirInfo *pInfo, int nType, int nItem);
+static void     DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, LPCTSTR pText);
+static TCHAR*   DirInfo_Dir(tDirInfo *pInfo, int nType);
+static TCHAR*   DirInfo_Path(tDirInfo *pInfo, int nType, int nItem);
 static void     DirInfo_SetModified(tDirInfo *pInfo, int nType, BOOL bModified);
 static BOOL     DirInfo_Modified(tDirInfo *pInfo, int nType);
-static WCHAR*   FixSlash(WCHAR* s);
+static TCHAR*   FixSlash(TCHAR *s);
 
 static void     UpdateDirectoryList(HWND hDlg);
 
@@ -164,36 +164,36 @@ static BOOL IsMultiDir(int nType)
 	return g_directoryInfo[nType].bMulti;
 }
 
-static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, const WCHAR* pText)
+static void DirInfo_SetDir(tDirInfo *pInfo, int nType, int nItem, LPCTSTR pText)
 {
-	WCHAR *s;
-	WCHAR *pOldText;
+	TCHAR *s;
+	TCHAR *pOldText;
 
 	if (IsMultiDir(nType))
 	{
 		assert(nItem >= 0);
-		wcscpy(DirInfo_Path(pInfo, nType, nItem), pText);
+		_tcscpy(DirInfo_Path(pInfo, nType, nItem), pText);
 		DirInfo_SetModified(pInfo, nType, TRUE);
 	}
 	else
 	{
-		s = wcsdup(pText);
+		s = win_tstring_strdup(pText);
 		if (!s)
 			return;
 		pOldText = pInfo[nType].m_Directory;
 		if (pOldText)
-			free((char *)pOldText);
+			free(pOldText);
 		pInfo[nType].m_Directory = s;
 	}
 }
 
-static WCHAR* DirInfo_Dir(tDirInfo *pInfo, int nType)
+static TCHAR* DirInfo_Dir(tDirInfo *pInfo, int nType)
 {
 	assert(!IsMultiDir(nType));
 	return pInfo[nType].m_Directory;
 }
 
-static WCHAR* DirInfo_Path(tDirInfo *pInfo, int nType, int nItem)
+static TCHAR* DirInfo_Path(tDirInfo *pInfo, int nType, int nItem)
 {
 	return pInfo[nType].m_Path->m_Directories[nItem];
 }
@@ -214,12 +214,12 @@ static BOOL DirInfo_Modified(tDirInfo *pInfo, int nType)
 	((pInfo)[(path)].m_Path->m_NumDirectories)
 
 /* lop off trailing backslash if it exists */
-static WCHAR* FixSlash(WCHAR* s)
+static TCHAR * FixSlash(TCHAR *s)
 {
 	int len = 0;
 	
 	if (s)
-		len = wcslen(s);
+		len = _tcslen(s);
 
 	if (len && s[len - 1] == *PATH_SEPARATOR)
 		s[len - 1] = '\0';
@@ -247,12 +247,8 @@ static void UpdateDirectoryList(HWND hDlg)
 	nType = ComboBox_GetCurSel(hCombo);
 	if (IsMultiDir(nType))
 	{
-		LPWSTR wstr = wcsdup(TEXT(DIRLIST_NEWENTRYTEXT));
-
-		Item.pszText = wstr;
+		Item.pszText = (TCHAR*) TEXT(DIRLIST_NEWENTRYTEXT);
 		ListView_InsertItem(hList, &Item);
-		free(wstr);
-
 		for (i = DirInfo_NumDir(g_pDirInfo, nType) - 1; 0 <= i; i--)
 		{
 			Item.pszText = DirInfo_Path(g_pDirInfo, nType, i);
@@ -296,9 +292,9 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	LVCOLUMN	LVCol;
 	int 		i;
 	int			nDirInfoCount;
-	const WCHAR*	s;
-	WCHAR *token;
-	WCHAR buf[MAX_PATH * MAX_DIRS];
+	LPCTSTR		s;
+	TCHAR       *token;
+	TCHAR       buf[MAX_PATH * MAX_DIRS];
 
 	/* count how many dirinfos there are */
 	nDirInfoCount = 0;
@@ -332,19 +328,19 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		if (g_directoryInfo[i].bMulti)
 		{
 			/* Copy the string to our own buffer so that we can mutilate it */
-			wcscpy(buf, s);
+			_tcscpy(buf, s);
 
 			g_pDirInfo[i].m_Path = malloc(sizeof(tPath));
 			if (!g_pDirInfo[i].m_Path)
 				goto error;
 
 			g_pDirInfo[i].m_Path->m_NumDirectories = 0;
-			token = wcstok(buf, TEXT(";"));
+			token = _tcstok(buf, TEXT(";"));
 			while ((DirInfo_NumDir(g_pDirInfo, i) < MAX_DIRS) && token)
 			{
-				wcscpy(DirInfo_Path(g_pDirInfo, i, DirInfo_NumDir(g_pDirInfo, i)), token);
+				_tcscpy(DirInfo_Path(g_pDirInfo, i, DirInfo_NumDir(g_pDirInfo, i)), token);
 				DirInfo_NumDir(g_pDirInfo, i)++;
-				token = wcstok(NULL, TEXT(";"));
+				token = _tcstok(NULL, TEXT(";"));
 			}
 			DirInfo_SetModified(g_pDirInfo, i, FALSE);
 		}
@@ -376,8 +372,10 @@ static void Directories_OnDestroy(HWND hDlg)
 
 		for (i = 0; i < nDirInfoCount; i++)
 		{
-			if (g_pDirInfo[i].m_Ptr)
-				free(g_pDirInfo[i].m_Ptr);
+			if (g_pDirInfo[i].m_Path)
+				free(g_pDirInfo[i].m_Path);
+			if (g_pDirInfo[i].m_Directory)
+				free(g_pDirInfo[i].m_Directory);			
 		}
 		free(g_pDirInfo);
 		g_pDirInfo = NULL;
@@ -389,12 +387,12 @@ static void Directories_OnClose(HWND hDlg)
 	EndDialog(hDlg, IDCANCEL);
 }
 
-static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const WCHAR *s))
+static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const TCHAR *s))
 {
 	int i;
 	int nResult = 0;
 	int nPaths;
-	WCHAR buf[MAX_PATH * MAX_DIRS];
+	TCHAR buf[MAX_PATH * MAX_DIRS];
 
 	if (DirInfo_Modified(g_pDirInfo, nDir))
 	{
@@ -403,10 +401,10 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 		for (i = 0; i < nPaths; i++)
 		{
 
-			wcscat(buf, FixSlash(DirInfo_Path(g_pDirInfo, nDir, i)));
+			_tcscat(buf, FixSlash(DirInfo_Path(g_pDirInfo, nDir, i)));
 
 			if (i < nPaths - 1)
-				wcscat(buf, TEXT(";"));
+				_tcscat(buf, TEXT(";"));
 		}
 		SetTheseDirs(buf);
 
@@ -419,7 +417,7 @@ static void Directories_OnOk(HWND hDlg)
 {
 	int i;
 	int nResult = 0;
-	WCHAR *s;
+	TCHAR *s;
 
 	for (i = 0; g_directoryInfo[i].lpName; i++)
 	{
@@ -444,7 +442,7 @@ static void Directories_OnCancel(HWND hDlg)
 static void Directories_OnInsert(HWND hDlg)
 {
 	int 	nItem;
-	WCHAR	buf[MAX_PATH];
+	TCHAR	buf[MAX_PATH];
 	HWND	hList;
 
 	hList = GetDlgItem(hDlg, IDC_DIR_LIST);
@@ -466,10 +464,10 @@ static void Directories_OnInsert(HWND hDlg)
 				return;
 
 			for (i = DirInfo_NumDir(g_pDirInfo, nType); nItem < i; i--)
-				wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
+				_tcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 					   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-			wcscpy(DirInfo_Path(g_pDirInfo, nType, nItem), buf);
+			_tcscpy(DirInfo_Path(g_pDirInfo, nType, nItem), buf);
 			DirInfo_NumDir(g_pDirInfo, nType)++;
 			DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 		}
@@ -484,8 +482,8 @@ static void Directories_OnBrowse(HWND hDlg)
 {
 	int 	nType;
 	int 	nItem;
-	WCHAR	inbuf[MAX_PATH];
-	WCHAR	outbuf[MAX_PATH];
+	TCHAR	inbuf[MAX_PATH];
+	TCHAR	outbuf[MAX_PATH];
 	HWND	hList;
 
 	hList = GetDlgItem(hDlg, IDC_DIR_LIST);
@@ -537,10 +535,10 @@ static void Directories_OnDelete(HWND hDlg)
 	if (IsMultiDir(nType))
 	{
 		for (i = nItem; i < DirInfo_NumDir(g_pDirInfo, nType) - 1; i++)
-			wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
+			_tcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 				   DirInfo_Path(g_pDirInfo, nType, i + 1));
 
-		wcscpy(DirInfo_Path(g_pDirInfo, nType, DirInfo_NumDir(g_pDirInfo, nType) - 1), TEXT(""));
+		_tcscpy(DirInfo_Path(g_pDirInfo, nType, DirInfo_NumDir(g_pDirInfo, nType) - 1), TEXT(""));
 		DirInfo_NumDir(g_pDirInfo, nType)--;
 
 		DirInfo_SetModified(g_pDirInfo, nType, TRUE);
@@ -632,10 +630,10 @@ static BOOL Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 					return FALSE;
 
 				for (i = DirInfo_NumDir(g_pDirInfo, nType); pItem->iItem < i; i--)
-					wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
+					_tcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 						   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-				wcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), _Unicode(pItem->pszText));
+				_tcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), _Unicode(pItem->pszText));
 
 				DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 				DirInfo_NumDir(g_pDirInfo, nType)++;
@@ -722,10 +720,10 @@ static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
 					return FALSE;
 
 				for (i = DirInfo_NumDir(g_pDirInfo, nType); pItem->iItem < i; i--)
-					wcscpy(DirInfo_Path(g_pDirInfo, nType, i),
+					_tcscpy(DirInfo_Path(g_pDirInfo, nType, i),
 						   DirInfo_Path(g_pDirInfo, nType, i - 1));
 
-				wcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), pItem->pszText);
+				_tcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), pItem->pszText);
 
 				DirInfo_SetModified(g_pDirInfo, nType, TRUE);
 				DirInfo_NumDir(g_pDirInfo, nType)++;
@@ -836,12 +834,12 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
 	return 0;
 }
 
-static BOOL BrowseForDirectoryA(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult) 
+static BOOL BrowseForDirectoryA(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult) 
 {
 	BOOL		bResult = FALSE;
 	IMalloc*	piMalloc = 0;
 	BROWSEINFOA	Info;
-	ITEMIDLIST* pItemIDList = NULL;
+	LPITEMIDLIST pItemIDList = NULL;
 	char		buf[MAX_PATH];
 	char		startDir[MAX_PATH];
 	
@@ -881,20 +879,20 @@ static BOOL BrowseForDirectoryA(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	return bResult;
 }
 
-static BOOL BrowseForDirectoryW(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult) 
+static BOOL BrowseForDirectoryW(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResult) 
 {
 	BOOL		bResult = FALSE;
 	IMalloc*	piMalloc = 0;
 	BROWSEINFOW	Info;
 	ITEMIDLIST* pItemIDList = NULL;
-	WCHAR		buf[MAX_PATH];
-	WCHAR		startDir[MAX_PATH];
+	TCHAR		buf[MAX_PATH];
+	TCHAR		startDir[MAX_PATH];
 	
 	if (!SUCCEEDED(SHGetMalloc(&piMalloc)))
 		return FALSE;
 
 	if (pStartDir)
-		wcscpy(startDir, pStartDir);
+		_tcscpy(startDir, pStartDir);
 	else
 		*startDir = '\0';
 
@@ -926,7 +924,7 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResul
 	return bResult;
 }
 
-BOOL BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult)
+BOOL BrowseForDirectory(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResult)
 {
 	if (!OnNT())
 		return BrowseForDirectoryA(hwnd, pStartDir, pResult);
@@ -935,5 +933,6 @@ BOOL BrowseForDirectory(HWND hwnd, const WCHAR* pStartDir, WCHAR* pResult)
 }
 
 /**************************************************************************/
+
 
 
