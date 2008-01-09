@@ -84,6 +84,7 @@
 
 // It seems that functions lstr...() don't work properly on win9x.
 // Anyway we'd better to use functions wcs...() instead of them.
+/* NO Win9x anymore
 #undef lstrcpy
 #define lstrcpy		!use_wcscpy_win9x_doesnt_work_properly!
 #undef lstrcpyn
@@ -112,3 +113,4 @@
 #define _wfopen 	!win9x_doesnt_has_it!
 #undef _wgetcwd
 #define _wgetcwd	!win9x_doesnt_has_it!
+*/

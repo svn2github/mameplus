@@ -39,19 +39,6 @@
 #include "mui_util.h"
 #include "translate.h"
 
-#if defined(__GNUC__)
-/* fix warning: cast does not match function type */
-#undef ListView_GetEditControl
-//#define ListView_GetEditControl(w) (HWND)(LRESULT)SendMessage((w),LVM_GETEDITCONTROL,0,0)
-static HWND ListView_GetEditControl(HWND w)
-{
-	LRESULT hwnd;
-
-	hwnd = SendMessage((w),LVM_GETEDITCONTROL,0,0);
-	return (HWND)hwnd;
-}
-#endif /* defined(__GNUC__) */
-
 #define MAX_DIRS 64
 
 /***************************************************************************
@@ -100,10 +87,8 @@ static void     Directories_OnCancel(HWND hDlg);
 static void     Directories_OnInsert(HWND hDlg);
 static void     Directories_OnBrowse(HWND hDlg);
 static void     Directories_OnDelete(HWND hDlg);
-static BOOL     Directories_OnBeginLabelEditA(HWND hDlg, NMHDR* pNMHDR);
-static BOOL     Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR);
-static BOOL     Directories_OnBeginLabelEditW(HWND hDlg, NMHDR* pNMHDR);
-static BOOL     Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR);
+static BOOL     Directories_OnBeginLabelEdit(HWND hDlg, NMHDR* pNMHDR);
+static BOOL     Directories_OnEndLabelEdit(HWND hDlg, NMHDR* pNMHDR);
 static void     Directories_OnCommand(HWND hDlg, int id, HWND hwndCtl, UINT codeNotify);
 static BOOL     Directories_OnNotify(HWND hDlg, int id, NMHDR* pNMHDR);
 
@@ -274,6 +259,7 @@ static void Directories_OnSelChange(HWND hDlg)
 	
 	nType = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO));
 
+	// mamep: not only combobox 0 (roms) and 1 (samples) can have multidirs
 	if (IsMultiDir(nType))
 	{
 		EnableWindow(GetDlgItem(hDlg, IDC_DIR_DELETE), TRUE);
@@ -400,7 +386,6 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 		nPaths = DirInfo_NumDir(g_pDirInfo, nDir);
 		for (i = 0; i < nPaths; i++)
 		{
-
 			_tcscat(buf, FixSlash(DirInfo_Path(g_pDirInfo, nDir, i)));
 
 			if (i < nPaths - 1)
@@ -560,12 +545,12 @@ static void Directories_OnDelete(HWND hDlg)
 	ListView_SetItemState(hList, nSelect, LVIS_FOCUSED | LVIS_SELECTED, LVIS_FOCUSED | LVIS_SELECTED);
 }
 
-static BOOL Directories_OnBeginLabelEditA(HWND hDlg, NMHDR* pNMHDR)
+static BOOL Directories_OnBeginLabelEdit(HWND hDlg, NMHDR* pNMHDR)
 {
 	int 		  nType;
 	BOOL		  bResult = FALSE;
-	NMLVDISPINFOA    *pDispInfo = (NMLVDISPINFOA*)pNMHDR;
-	LVITEMA          *pItem = &pDispInfo->item;
+	NMLVDISPINFO* pDispInfo = (NMLVDISPINFO*)pNMHDR;
+	LVITEM* 	  pItem = &pDispInfo->item;
 
 	nType = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO));
 	if (IsMultiDir(nType))
@@ -578,7 +563,7 @@ static BOOL Directories_OnBeginLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 			if (MAX_DIRS <= DirInfo_NumDir(g_pDirInfo, nType))
 				return TRUE; /* don't edit */
 
-			hEdit = ListView_GetEditControl(GetDlgItem(hDlg, IDC_DIR_LIST));
+			hEdit = (HWND)(LRESULT)(int)SendDlgItemMessage(hDlg, IDC_DIR_LIST, LVM_GETEDITCONTROL, 0, 0);
 			Edit_SetText(hEdit, TEXT(""));
 		}
 	}
@@ -586,115 +571,25 @@ static BOOL Directories_OnBeginLabelEditA(HWND hDlg, NMHDR* pNMHDR)
 	return bResult;
 }
 
-static BOOL Directories_OnEndLabelEditA(HWND hDlg, NMHDR* pNMHDR)
+static BOOL Directories_OnEndLabelEdit(HWND hDlg, NMHDR* pNMHDR)
 {
 	BOOL		  bResult = FALSE;
-	NMLVDISPINFOA    *pDispInfo = (NMLVDISPINFOA*)pNMHDR;
-	LVITEMA          *pItem = &pDispInfo->item;
+	NMLVDISPINFO* pDispInfo = (NMLVDISPINFO*)pNMHDR;
+	LVITEM* 	  pItem = &pDispInfo->item;
 
 	if (pItem->pszText != NULL)
 	{
-		struct stat file_stat;
+		struct _stat file_stat;
 
 		/* Don't allow empty entries. */
-		if (!strcmp(pItem->pszText, ""))
+		if (!_tcscmp(pItem->pszText, TEXT("")))
 		{
 			return FALSE;
 		}
 
 		/* Check validity of edited directory. */
-		if (stat(pItem->pszText, &file_stat) == 0
+		if (_tstat(pItem->pszText, &file_stat) == 0
 		&&	(file_stat.st_mode & S_IFDIR))
-		{
-			bResult = TRUE;
-		}
-		else
-		{
-			if (MessageBox(NULL, _UIW(TEXT("Directory does not exist, continue anyway?")), TEXT_MAMEUINAME, MB_OKCANCEL) == IDOK)
-				bResult = TRUE;
-		}
-	}
-
-	if (bResult == TRUE)
-	{
-		int nType;
-		int i;
-
-		nType = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO));
-		if (IsMultiDir(nType))
-		{
-			/* Last item is placeholder for append */
-			if (pItem->iItem == ListView_GetItemCount(GetDlgItem(hDlg, IDC_DIR_LIST)) - 1)
-			{
-				if (MAX_DIRS <= DirInfo_NumDir(g_pDirInfo, nType))
-					return FALSE;
-
-				for (i = DirInfo_NumDir(g_pDirInfo, nType); pItem->iItem < i; i--)
-					_tcscpy(DirInfo_Path(g_pDirInfo, nType, i),
-						   DirInfo_Path(g_pDirInfo, nType, i - 1));
-
-				_tcscpy(DirInfo_Path(g_pDirInfo, nType, pItem->iItem), _Unicode(pItem->pszText));
-
-				DirInfo_SetModified(g_pDirInfo, nType, TRUE);
-				DirInfo_NumDir(g_pDirInfo, nType)++;
-			}
-			else
-				DirInfo_SetDir(g_pDirInfo, nType, pItem->iItem, _Unicode(pItem->pszText));
-		}
-		else
-		{
-			DirInfo_SetDir(g_pDirInfo, nType, pItem->iItem, _Unicode(pItem->pszText));
-		}
-
-		UpdateDirectoryList(hDlg);
-		ListView_SetItemState(GetDlgItem(hDlg, IDC_DIR_LIST), pItem->iItem,
-							  LVIS_FOCUSED | LVIS_SELECTED, LVIS_FOCUSED | LVIS_SELECTED);
-
-	}
-
-	return bResult;
-}
-
-static BOOL Directories_OnBeginLabelEditW(HWND hDlg, NMHDR* pNMHDR)
-{
-	int 		  nType;
-	BOOL		  bResult = FALSE;
-	NMLVDISPINFOW    *pDispInfo = (NMLVDISPINFOW*)pNMHDR;
-	LVITEMW          *pItem = &pDispInfo->item;
-
-	nType = ComboBox_GetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO));
-	if (IsMultiDir(nType))
-	{
-		/* Last item is placeholder for append */
-		if (pItem->iItem == ListView_GetItemCount(GetDlgItem(hDlg, IDC_DIR_LIST)) - 1)
-		{
-			HWND hEdit;
-
-			if (MAX_DIRS <= DirInfo_NumDir(g_pDirInfo, nType))
-				return TRUE; /* don't edit */
-
-			hEdit = ListView_GetEditControl(GetDlgItem(hDlg, IDC_DIR_LIST));
-			Edit_SetText(hEdit, TEXT(""));
-		}
-	}
-
-	return bResult;
-}
-
-static BOOL Directories_OnEndLabelEditW(HWND hDlg, NMHDR* pNMHDR)
-{
-	BOOL		  bResult = FALSE;
-	NMLVDISPINFOW    *pDispInfo = (NMLVDISPINFOW*)pNMHDR;
-	LVITEMW          *pItem = &pDispInfo->item;
-
-	if (pItem->pszText != NULL)
-	{
-		/* Don't allow empty entries. */
-		if (!wcscmp(pItem->pszText, TEXT("")))
-			return FALSE;
-
-		/* Check validity of edited directory. */
-		if (GetFileAttributes(pItem->pszText) & FILE_ATTRIBUTE_DIRECTORY)
 		{
 			bResult = TRUE;
 		}
@@ -792,17 +687,11 @@ static BOOL Directories_OnNotify(HWND hDlg, int id, NMHDR* pNMHDR)
 	case IDC_DIR_LIST:
 		switch (pNMHDR->code)
 		{
-		case LVN_ENDLABELEDITA:
-			return Directories_OnEndLabelEditA(hDlg, pNMHDR);
+		case LVN_ENDLABELEDIT:
+			return Directories_OnEndLabelEdit(hDlg, pNMHDR);
 
-		case LVN_ENDLABELEDITW:
-			return Directories_OnEndLabelEditW(hDlg, pNMHDR);
-
-		case LVN_BEGINLABELEDITA:
-			return Directories_OnBeginLabelEditA(hDlg, pNMHDR);
-
-		case LVN_BEGINLABELEDITW:
-			return Directories_OnBeginLabelEditW(hDlg, pNMHDR);
+		case LVN_BEGINLABELEDIT:
+			return Directories_OnBeginLabelEdit(hDlg, pNMHDR);
 		}
 	}
 	return FALSE;
@@ -823,78 +712,22 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
 	if (uMsg == BFFM_INITIALIZED)
 	{
 		if ((const char*)lpData != NULL)
-		{
-			if (!OnNT())
-				SendMessageA(hwnd, BFFM_SETSELECTIONA, TRUE, lpData);
-			else
-				SendMessageW(hwnd, BFFM_SETSELECTIONW, TRUE, lpData);
-		}
+			SendMessage(hwnd, BFFM_SETSELECTION, TRUE, lpData);
 	}
 
 	return 0;
 }
 
-static BOOL BrowseForDirectoryA(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult) 
+static BOOL BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult) 
 {
 	BOOL		bResult = FALSE;
 	IMalloc*	piMalloc = 0;
-	BROWSEINFOA	Info;
+	BROWSEINFO	Info;
 	LPITEMIDLIST pItemIDList = NULL;
-	char		buf[MAX_PATH];
-	char		startDir[MAX_PATH];
-	
-	if (!SUCCEEDED(SHGetMalloc(&piMalloc)))
-		return FALSE;
-
-	if (pStartDir)
-		strcpy(startDir, _String(pStartDir));
-	else
-		*startDir = '\0';
-
-	Info.hwndOwner		= hwnd;
-	Info.pidlRoot		= NULL;
-	Info.pszDisplayName = buf;
-	Info.lpszTitle		= _String(_UIW(TEXT("Directory name:")));
-	Info.ulFlags		= BIF_RETURNONLYFSDIRS;
-	Info.lpfn			= BrowseCallbackProc;
-	Info.lParam 		= (LPARAM)pStartDir;
-
-	pItemIDList = SHBrowseForFolderA(&Info);
-
-	if (pItemIDList != NULL)
-	{
-		if (SHGetPathFromIDListA(pItemIDList, buf) == TRUE)
-		{
-			wcsncpy(pResult, _Unicode(buf), MAX_PATH);
-			bResult = TRUE;
-		}
-		IMalloc_Free(piMalloc, pItemIDList);
-	}
-	else
-	{
-		bResult = FALSE;
-	}
-
-	IMalloc_Release(piMalloc);
-	return bResult;
-}
-
-static BOOL BrowseForDirectoryW(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResult) 
-{
-	BOOL		bResult = FALSE;
-	IMalloc*	piMalloc = 0;
-	BROWSEINFOW	Info;
-	ITEMIDLIST* pItemIDList = NULL;
 	TCHAR		buf[MAX_PATH];
-	TCHAR		startDir[MAX_PATH];
 	
 	if (!SUCCEEDED(SHGetMalloc(&piMalloc)))
 		return FALSE;
-
-	if (pStartDir)
-		_tcscpy(startDir, pStartDir);
-	else
-		*startDir = '\0';
 
 	Info.hwndOwner		= hwnd;
 	Info.pidlRoot		= NULL;
@@ -902,15 +735,15 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResul
 	Info.lpszTitle		= _UIW(TEXT("Directory name:"));
 	Info.ulFlags		= BIF_RETURNONLYFSDIRS;
 	Info.lpfn			= BrowseCallbackProc;
-	Info.lParam 		= (LPARAM)startDir;
+	Info.lParam 		= (LPARAM)pStartDir;
 
-	pItemIDList = SHBrowseForFolderW(&Info);
+	pItemIDList = SHBrowseForFolder(&Info);
 
 	if (pItemIDList != NULL)
 	{
-		if (SHGetPathFromIDListW(pItemIDList, buf) == TRUE)
+		if (SHGetPathFromIDList(pItemIDList, buf) == TRUE)
 		{
-			wcsncpy(pResult, buf, MAX_PATH);
+			_sntprintf(pResult, MAX_PATH, TEXT("%s"), buf);
 			bResult = TRUE;
 		}
 		IMalloc_Free(piMalloc, pItemIDList);
@@ -924,15 +757,6 @@ static BOOL BrowseForDirectoryW(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResul
 	return bResult;
 }
 
-BOOL BrowseForDirectory(HWND hwnd, const TCHAR* pStartDir, TCHAR* pResult)
-{
-	if (!OnNT())
-		return BrowseForDirectoryA(hwnd, pStartDir, pResult);
-
-	return BrowseForDirectoryW(hwnd, pStartDir, pResult);
-}
-
 /**************************************************************************/
-
 
 

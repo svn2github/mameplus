@@ -36,34 +36,24 @@
 #include "mameui.h"
 #include "picker.h"
 #include "winui.h"
-#include "bitmask.h"
 #include "mui_util.h" // For dprintf
 #include "mui_opts.h"
-#include "treeview.h"
 #include "translate.h"
 
 
-#if defined(__GNUC__)
-/* fix warning: the address will always evaluate as 'true' for GCC4 */
-#undef ListView_GetItemRect
-//#define ListView_GetItemRect(w,i,p,c) (BOOL)SNDMSG((w),LVM_GETITEMRECT,i,((p)?(((LPRECT)(p))->left=(c),(LPARAM)(LPRECT)(p)):0))
-static BOOL ListView_GetItemRect(HWND w, int i, LPRECT p, int c)
-{
-	LRESULT result;
-
-	if (p)
-		p->left = c;
-
-	result = SNDMSG(w, LVM_GETITEMRECT, (WPARAM)i, (LPARAM)p);
-	return (BOOL)result;
-}
-
 // fix warning: cast does not match function type
+#if defined(__GNUC__) && defined(ListView_GetHeader)
 #undef ListView_GetHeader
-
+#endif
+#if defined(__GNUC__) && defined(ListView_GetImageList)
 #undef ListView_GetImageList
-#define ListView_GetImageList(w,i) (HIMAGELIST)(LRESULT)(int)SendMessage((w),LVM_GETIMAGELIST,(i),0)
-#endif /* defined(__GNUC__) */
+#undef ListView_GetItemRect
+#endif
+
+#ifndef ListView_GetItemRect
+#define ListView_GetItemRect(w,i,p,c) \
+	(BOOL)SNDMSG((w),LVM_GETITEMRECT,i,((p != NULL)?(((LPRECT)(p))->left=(c),(LPARAM)(LPRECT)(p)):0))
+#endif
 
 #ifndef ListView_GetImageList
 #define ListView_GetImageList(w,i) (HIMAGELIST)(LRESULT)(int)SendMessage((w),LVM_GETIMAGELIST,(i),0)
@@ -105,8 +95,8 @@ struct PickerInfo
 };
 
 
-static void Picker_CallGetItemString(HWND hwndPicker,
-	int nItem, int nColumn, WCHAR *pszBuffer, UINT nBufferLength);
+static const TCHAR *Picker_CallGetItemString(HWND hwndPicker,
+	int nItem, int nColumn, TCHAR *pszBuffer, UINT nBufferLength);
 
 
 static struct PickerInfo *GetPickerInfo(HWND hWnd)
@@ -194,8 +184,8 @@ static BOOL ListViewOnErase(HWND hWnd, HDC hDC)
 	return TRUE;
 }
 
-
-static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
+//mamep: fix for Unicode? todo: position is incorrect
+static BOOL ListViewNeedToolTipText(HWND hWnd, LPTOOLTIPTEXT lpttt)
 {
 	DWORD dwPos;
 	POINT pt;
@@ -232,46 +222,6 @@ static BOOL ListViewNeedToolTipTextW(HWND hWnd, LPTOOLTIPTEXTW lpttt)
 	return TRUE;
 }
 
-static BOOL ListViewNeedToolTipTextA(HWND hWnd, LPTOOLTIPTEXTA lpttt)
-{
-	DWORD dwPos;
-	POINT pt;
-	LV_HITTESTINFO lvht;
-	LV_ITEM lvi;
-	int iItem;
-	int nColumn;
-	static WCHAR szBufferW[1024];
-	static char szBuffer[1024 * 2];
-
-	dwPos = GetMessagePos();
-	pt.x = LOWORD(dwPos);
-	pt.y = HIWORD(dwPos);
-
-	ScreenToClient(hWnd, &pt);
-
-	lvht.pt = pt;
-	if (!ListView_SubItemHitTest(hWnd, &lvht) || lvht.iItem == -1)
-	{
-		lpttt->szText[0] = '\0';
-		return TRUE;
-	}
-
-	lvi.iItem = lvht.iItem;
-	lvi.mask = LVIF_PARAM;
-	ListView_GetItem(hWnd, &lvi);
-
-	iItem = lvi.lParam;
-	nColumn = Picker_GetRealColumnFromViewColumn(hWnd, lvht.iSubItem);
-	wcscpy(szBufferW, _Unicode(lpttt->szText));
-	Picker_CallGetItemString(hWnd, iItem, nColumn, szBufferW, ARRAY_LENGTH(szBufferW));
-
-	strncpy(szBuffer, _String(szBufferW), sizeof (szBuffer) - 1);
-	szBuffer[sizeof (szBuffer) - 1] = '\0';
-	lpttt->lpszText = szBuffer;
-
-	return TRUE;
-}
-
 static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 {
 	RECT rcClient;
@@ -295,11 +245,8 @@ static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 
 		break;
 
-	case TTN_NEEDTEXTW:
-		return ListViewNeedToolTipTextW(hWnd, (LPTOOLTIPTEXTW)lpNmHdr);
-
-	case TTN_NEEDTEXTA:
-		return ListViewNeedToolTipTextA(hWnd, (LPTOOLTIPTEXTA)lpNmHdr);
+	case TTN_NEEDTEXT:
+		return ListViewNeedToolTipText(hWnd, (LPTOOLTIPTEXT)lpNmHdr);
 	}
 
 	return FALSE;
@@ -540,7 +487,7 @@ void Picker_ResetColumnDisplay(HWND hWnd)
 
 
 
-static void Picker_ClearIdle(HWND hwndPicker)
+void Picker_ClearIdle(HWND hwndPicker)
 {
 	struct PickerInfo *pPickerInfo;
 
@@ -828,26 +775,30 @@ void Picker_SetSelectedItem(HWND hWnd, int nItem)
 
 
 
-static void Picker_CallGetItemString(HWND hwndPicker,
-	int nItem, int nColumn, WCHAR *pszBuffer, UINT nBufferLength)
+static const TCHAR *Picker_CallGetItemString(HWND hwndPicker,
+	int nItem, int nColumn, TCHAR *pszBuffer, UINT nBufferLength)
 {
 	// this call wraps the pfnGetItemString callback to properly set up the
 	// buffers, and normalize the results
 	struct PickerInfo *pPickerInfo;
-	const WCHAR *s;
+	const TCHAR *s;
 
 	pPickerInfo = GetPickerInfo(hwndPicker);
+	pszBuffer[0] = '\0';
 	s = NULL;
 
 	if (pPickerInfo->pCallbacks->pfnGetItemString)
 	{
-		s = pPickerInfo->pCallbacks->pfnGetItemString(hwndPicker, nItem, nColumn);
+		s = pPickerInfo->pCallbacks->pfnGetItemString(hwndPicker,
+			nItem, nColumn, pszBuffer, nBufferLength);
+		//mamep: for translated tooltips?
 		if (s)
 		{
-			wcsncpy(pszBuffer, s, nBufferLength - 1);
+			_tcsncpy(pszBuffer, s, nBufferLength - 1);
 			pszBuffer[nBufferLength - 1] = '\0';
 		}
 	}
+	return s;
 }
 
 
@@ -930,7 +881,8 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 	struct PickerInfo *pPickerInfo = pcpp->pPickerInfo;
 	BOOL bCallCompare = TRUE;
 	int nResult = 0, nParent1, nParent2;
-	WCHAR szBuffer1[256], szBuffer2[256];
+	TCHAR szBuffer1[256], szBuffer2[256];
+	const TCHAR *s1, *s2;
 
 	if (pcpp->nViewMode == VIEW_GROUPED)
 	{
@@ -1006,11 +958,11 @@ static int CALLBACK Picker_CompareProc(LPARAM index1, LPARAM index2, LPARAM nPar
 		else
 		{
 			// no default sort proc, just get the string and compare them
-			Picker_CallGetItemString(pcpp->hwndPicker, index1, pcpp->nSortColumn,
+			s1 = Picker_CallGetItemString(pcpp->hwndPicker, index1, pcpp->nSortColumn,
 				szBuffer1, ARRAY_LENGTH(szBuffer1));
-			Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
+			s2 = Picker_CallGetItemString(pcpp->hwndPicker, index2, pcpp->nSortColumn,
 				szBuffer2, ARRAY_LENGTH(szBuffer2));
-			nResult = _tcsicmp(szBuffer1, szBuffer2);
+			nResult = _tcsicmp(s1, s2);
 		}
 
 		if (pcpp->bReverse)
@@ -1135,7 +1087,9 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 	HWND hWnd;
 	BOOL bResult = FALSE;
 	NM_LISTVIEW *pnmv;
+	LV_DISPINFO *pDispInfo;
 	int nItem, nColumn;
+	const TCHAR *s;
 	BOOL bReverse;
 
 	hWnd = lpNmHdr->hwndFrom;
@@ -1165,11 +1119,8 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 			}
 			break;
 
-		case LVN_GETDISPINFOW:
-			{
-				LV_DISPINFOW *pDispInfo;
-
-				pDispInfo = (LV_DISPINFOW *) lpNmHdr;
+		case LVN_GETDISPINFO:
+			pDispInfo = (LV_DISPINFO *) lpNmHdr;
 				nItem = (int) pDispInfo->item.lParam;
 
 				if (pDispInfo->item.mask & LVIF_IMAGE)
@@ -1190,59 +1141,15 @@ BOOL Picker_HandleNotify(LPNMHDR lpNmHdr)
 
 				if (pDispInfo->item.mask & LVIF_TEXT)
 				{
-					static WCHAR szBuffer[256];
-
 					// retrieve item text
 					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					wcscpy(szBuffer, pDispInfo->item.pszText);
-					Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
-					pDispInfo->item.pszText = szBuffer;
 
+				s = Picker_CallGetItemString(hWnd, nItem, nColumn,
+					pDispInfo->item.pszText, pDispInfo->item.cchTextMax);
+
+				pDispInfo->item.pszText = (TCHAR *) s;
 					bResult = TRUE;
 				}
-			}
-			break;
-
-		case LVN_GETDISPINFOA:
-			{
-				LV_DISPINFOA *pDispInfo;
-
-				pDispInfo = (LV_DISPINFOA *) lpNmHdr;
-				nItem = (int) pDispInfo->item.lParam;
-
-				if (pDispInfo->item.mask & LVIF_IMAGE)
-				{
-					// retrieve item image
-					if (pPickerInfo->pCallbacks->pfnGetItemImage)
-						pDispInfo->item.iImage = pPickerInfo->pCallbacks->pfnGetItemImage(hWnd, nItem);
-					else
-						pDispInfo->item.iImage = 0;
-					bResult = TRUE;
-				}
-
-				if (pDispInfo->item.mask & LVIF_STATE)
-				{
-					pDispInfo->item.state = 0;
-					bResult = TRUE;
-				}
-
-				if (pDispInfo->item.mask & LVIF_TEXT)
-				{
-					WCHAR szBuffer[256];
-					static char szBufferA[ARRAY_LENGTH(szBuffer) * 2];
-
-					// retrieve item text
-					nColumn = Picker_GetRealColumnFromViewColumn(hWnd, pDispInfo->item.iSubItem);
-					wcscpy(szBuffer, _Unicode(pDispInfo->item.pszText));
-					Picker_CallGetItemString(hWnd, nItem, nColumn, szBuffer, ARRAY_LENGTH(szBuffer));
-
-					strncpy(szBufferA, _String(szBuffer), ARRAY_LENGTH(szBufferA) - 1);
-					szBufferA[ARRAY_LENGTH(szBufferA) - 1] = '\0';
-					pDispInfo->item.pszText = szBufferA;
-
-					bResult = TRUE;
-				}
-			}
 			break;
 
 		case LVN_ITEMCHANGED:
@@ -1319,12 +1226,11 @@ int Picker_GetNumColumns(HWND hWnd)
 
 
 /* Add ... to Items in ListView if needed */
-// mamep: lstr_ is buggy on win9x?
-static LPCWSTR MakeShortString(HDC hDC, LPCWSTR lpszLong, int nColumnLen, int nOffset)
+static LPCTSTR MakeShortString(HDC hDC, LPCTSTR lpszLong, int nColumnLen, int nOffset)
 {
-	static const WCHAR szThreeDots[] = TEXT("...");
-	static WCHAR szShort[MAX_PATH];
-	int nStringLen = wcslen(lpszLong);
+	static const TCHAR szThreeDots[] = TEXT("...");
+	static TCHAR szShort[MAX_PATH];
+	int nStringLen = _tcslen(lpszLong);
 	int nAddLen;
 	SIZE size;
 	int i;
@@ -1333,8 +1239,8 @@ static LPCWSTR MakeShortString(HDC hDC, LPCWSTR lpszLong, int nColumnLen, int nO
 	if (nStringLen == 0 || size.cx + nOffset <= nColumnLen)
 		return lpszLong;
 
-	wcscpy(szShort, lpszLong);
-	GetTextExtentPoint32(hDC, szThreeDots, wcslen(szThreeDots), &size);
+	_tcscpy(szShort, lpszLong);
+	GetTextExtentPoint32(hDC, szThreeDots, _tcslen(szThreeDots), &size);
 	nAddLen = size.cx;
 
 	for (i = nStringLen - 1; i > 0; i--)
@@ -1345,7 +1251,7 @@ static LPCWSTR MakeShortString(HDC hDC, LPCWSTR lpszLong, int nColumnLen, int nO
 			break;
 	}
 
-	wcscat(szShort, szThreeDots);
+	_tcscat(szShort, szThreeDots);
 
 	return szShort;
 }
@@ -1448,15 +1354,17 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	/* only indent if parent is also in this view */
 	if ((nParent >= 0) && bDrawAsChild)
 	{
-		LPTREEFOLDER lpFolder = GetCurrentFolder();
-		if (lpFolder)
+		for (i = 0; i < ListView_GetItemCount(hWnd); i++)
 		{
-			int parent_index = DriverParentIndex(lvi.lParam);
+			lvi.mask = LVIF_PARAM;
+			lvi.iItem = i;
+			ListView_GetItem(hWnd, &lvi);
 
-			if (parent_index != -1 &&
-			    TestBit(lpFolder->m_lpGameBits, parent_index) &&
-			    !GameFiltered(parent_index, lpFolder->m_dwFlags))
+			if (lvi.lParam == nParent)
+			{
 				bParentFound = TRUE;
+				break;
+			}
 		}
 	}
 
@@ -1584,7 +1492,8 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		{
 			clrTextSave = SetTextColor(hDC, GetListBrokenColor());
 		}
-		else if (pPickerInfo->pCallbacks->pfnGetOffsetChildren && pPickerInfo->pCallbacks->pfnGetOffsetChildren())
+		else
+		if (pPickerInfo->pCallbacks->pfnGetOffsetChildren && pPickerInfo->pCallbacks->pfnGetOffsetChildren())
 		{
 			if (bDrawAsChild || bColorChild)
 				clrTextSave = SetTextColor(hDC, GetListCloneColor());

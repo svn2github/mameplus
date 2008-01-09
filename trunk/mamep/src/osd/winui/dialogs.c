@@ -20,6 +20,7 @@
 ***************************************************************************/
 
 #define WIN32_LEAN_AND_MEAN
+#define _UNICODE
 #define UNICODE
 
 // standard windows headers
@@ -32,6 +33,7 @@
 
 // standard C headers
 #include <string.h>
+#include <tchar.h>
 
 // MAMEUI headers
 #include "mameui.h"
@@ -54,7 +56,7 @@ static WCHAR g_FilterText[FILTERTEXT_LEN];
 #define NUM_EXCLUSIONS  10
 
 /* Pairs of filters that exclude each other */
-DWORD filterExclusion[NUM_EXCLUSIONS] =
+static DWORD filterExclusion[NUM_EXCLUSIONS] =
 {
 	IDC_FILTER_CLONES,      IDC_FILTER_ORIGINALS,
 	IDC_FILTER_NONWORKING,  IDC_FILTER_WORKING,
@@ -117,30 +119,51 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			resetUI 	  = Button_GetCheck(GetDlgItem(hDlg, IDC_RESET_UI));
 			if (resetFilters || resetGames || resetUI || resetDefaults)
 			{
-				WCHAR temp[1024];
-				wcscpy(temp, _UIW(TEXT(MAMEUINAME) TEXT(" will now reset the selected\n")
-					TEXT("items to the original, installation\n")
-					TEXT("settings then exit.\n\n")));
-				wcscat(temp, _UIW(TEXT("The new settings will take effect\n")
-					TEXT("the next time ") TEXT_MAMEUINAME TEXT(" is run.\n\n")));
-				wcscat(temp, _UIW(TEXT("Do you wish to continue?")));
 
+				TCHAR temp[1024];
+				_tcscpy(temp, TEXT(MAMEUINAME));
+				_tcscat(temp, _UIW(TEXT(" will now reset the following\n")));
+				_tcscat(temp, _UIW(TEXT("to the default settings:\n\n")));
+
+				if (resetDefaults)
+					_tcscat(temp, _UIW(TEXT("Global game options\n")));
+				if (resetGames)
+					_tcscat(temp, _UIW(TEXT("Individual game options\n")));
+				if (resetFilters)
+					_tcscat(temp, _UIW(TEXT("Custom folder filters\n")));
+				if (resetUI)
+				{
+					_tcscat(temp, _UIW(TEXT("User interface settings\n\n")));
+					_tcscat(temp, _UIW(TEXT("Resetting the User Interface options\n")));
+					_tcscat(temp, _UIW(TEXT("requires exiting ")));
+					_tcscat(temp, TEXT(MAMEUINAME));
+					_tcscat(temp, TEXT(".\n"));
+				}
+				_tcscat(temp, _UIW(TEXT("\nDo you wish to continue?")));
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
 				{
 					if (resetFilters)
 						ResetFilters();
 
-					if (resetUI)
-						ResetGUI();
+					if (resetGames)
+						ResetAllGameOptions();
 
 					if (resetDefaults)
 						ResetGameDefaults();
 
-					if (resetGames)
-						ResetAllGameOptions();
-
-					EndDialog(hDlg, 1);
-					return TRUE;
+					// This is the only case we need to exit and restart for.
+					if (resetUI)
+					{
+						ResetGUI();
+						EndDialog(hDlg, 1);
+						return TRUE;
+					} else {
+						EndDialog(hDlg, 0);
+						return TRUE;
+					}
+				} else {
+					// Give the user a chance to change what they want to reset.
+					break;
 				}
 			}
 		// Nothing was selected but OK, just fall through
@@ -155,7 +178,9 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 
 INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
-	char tmp[4];
+	CHOOSECOLOR cc;
+	COLORREF choice_colors[16];
+	TCHAR tmp[4];
 	int i;
 	BOOL bRedrawList = FALSE;
 	int nCurSelection = 0;
@@ -184,13 +209,13 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE),GetHideMouseOnStartup());
 
 		// Get the current value of the control
-		SendDlgItemMessageA(hDlg, IDC_CYCLETIMESEC, TBM_SETRANGE,
+		SendDlgItemMessage(hDlg, IDC_CYCLETIMESEC, TBM_SETRANGE,
 					(WPARAM)FALSE,
 					(LPARAM)MAKELONG(0, 60)); /* [0, 60] */
 		value = GetCycleScreenshot();
-		SendDlgItemMessageA(hDlg,IDC_CYCLETIMESEC, TBM_SETPOS, TRUE, value);
-		itoa(value,tmp,10);
-		SendDlgItemMessageA(hDlg,IDC_CYCLETIMESECTXT,WM_SETTEXT,0, (WPARAM)tmp);
+		SendDlgItemMessage(hDlg,IDC_CYCLETIMESEC, TBM_SETPOS, TRUE, value);
+		_itot(value,tmp,10);
+		SendDlgItemMessage(hDlg,IDC_CYCLETIMESECTXT,WM_SETTEXT,0, (WPARAM)tmp);
 
 		Button_SetCheck(GetDlgItem(hDlg,IDC_STRETCH_SCREENSHOT_LARGER),
 						GetStretchScreenShotLarger());
@@ -226,8 +251,9 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 					(LPARAM)MAKELONG(0, 100)); /* [0, 100] */
 		value = GetScreenshotBorderSize();
 		SendDlgItemMessage(hDlg,IDC_SCREENSHOT_BORDERSIZE, TBM_SETPOS, TRUE, value);
-		itoa(value,tmp,10);
-		SendDlgItemMessageA(hDlg,IDC_SCREENSHOT_BORDERSIZETXT,WM_SETTEXT,0, (WPARAM)tmp);
+		_itot(value,tmp,10);
+		SendDlgItemMessage(hDlg,IDC_SCREENSHOT_BORDERSIZETXT,WM_SETTEXT,0, (WPARAM)tmp);
+
 		//return TRUE;
 		break;
 
@@ -247,11 +273,8 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 		{
 		case IDC_SCREENSHOT_BORDERCOLOR:
 		{
-			CHOOSECOLOR cc;
-			COLORREF choice_colors[16];
-
 			for (i=0;i<16;i++)
-				choice_colors[i] = GetCustomColor(i);
+		 		choice_colors[i] = GetCustomColor(i);
 
 			cc.lStructSize = sizeof(CHOOSECOLOR);
 			cc.hwndOwner   = hDlg;
@@ -269,9 +292,6 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 
 		case IDC_EDIT_BROKEN_COLOR:
 		{
-			CHOOSECOLOR cc;
-			COLORREF choice_colors[16];
-
 			for (i=0;i<16;i++)
 				choice_colors[i] = GetCustomColor(i);
 
@@ -306,7 +326,7 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 #ifdef TREE_SHEET
 			SetShowTreeSheet(Button_GetCheck(GetDlgItem(hDlg, IDC_SHOW_TREE_SHEET)));
 #endif /* TREE_SHEET */
-
+			
 			SetHideMouseOnStartup(Button_GetCheck(GetDlgItem(hDlg,IDC_HIDE_MOUSE)));
 
 			if( Button_GetCheck(GetDlgItem(hDlg,IDC_RESET_PLAYCOUNT ) ) )
@@ -319,18 +339,18 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 				ResetPlayTime( -1 );
 				bRedrawList = TRUE;
 			}
-			value = SendDlgItemMessageA(hDlg,IDC_CYCLETIMESEC, TBM_GETPOS, 0, 0);
+			value = SendDlgItemMessage(hDlg,IDC_CYCLETIMESEC, TBM_GETPOS, 0, 0);
 			if( GetCycleScreenshot() != value )
 			{
 				SetCycleScreenshot(value);
 			}
-			value = SendDlgItemMessageA(hDlg,IDC_SCREENSHOT_BORDERSIZE, TBM_GETPOS, 0, 0);
+			value = SendDlgItemMessage(hDlg,IDC_SCREENSHOT_BORDERSIZE, TBM_GETPOS, 0, 0);
 			if( GetScreenshotBorderSize() != value )
 			{
 				SetScreenshotBorderSize(value);
 				UpdateScreenShot();
 			}
-			value = SendDlgItemMessageA(hDlg,IDC_HIGH_PRIORITY, TBM_GETPOS, 0, 0);
+			value = SendDlgItemMessage(hDlg,IDC_HIGH_PRIORITY, TBM_GETPOS, 0, 0);
 			checked = Button_GetCheck(GetDlgItem(hDlg,IDC_STRETCH_SCREENSHOT_LARGER));
 			if (checked != GetStretchScreenShotLarger())
 			{
@@ -1139,18 +1159,18 @@ static DWORD ValidateFilters(LPFOLDERDATA lpFilterRecord, DWORD dwFlags)
 static void OnHScroll(HWND hwnd, HWND hwndCtl, UINT code, int pos)
 {
 	int value;
-	char tmp[4];
+	TCHAR tmp[4];
 	if (hwndCtl == GetDlgItem(hwnd, IDC_CYCLETIMESEC))
 	{
-		value = SendDlgItemMessageA(hwnd,IDC_CYCLETIMESEC, TBM_GETPOS, 0, 0);
-		itoa(value,tmp,10);
-		SendDlgItemMessageA(hwnd,IDC_CYCLETIMESECTXT,WM_SETTEXT,0, (WPARAM)tmp);
+		value = SendDlgItemMessage(hwnd,IDC_CYCLETIMESEC, TBM_GETPOS, 0, 0);
+		_itot(value,tmp,10);
+		SendDlgItemMessage(hwnd,IDC_CYCLETIMESECTXT,WM_SETTEXT,0, (WPARAM)tmp);
 	}
 	else
 	if (hwndCtl == GetDlgItem(hwnd, IDC_SCREENSHOT_BORDERSIZE))
 	{
-		value = SendDlgItemMessageA(hwnd,IDC_SCREENSHOT_BORDERSIZE, TBM_GETPOS, 0, 0);
-		itoa(value,tmp,10);
-		SendDlgItemMessageA(hwnd,IDC_SCREENSHOT_BORDERSIZETXT,WM_SETTEXT,0, (WPARAM)tmp);
+		value = SendDlgItemMessage(hwnd,IDC_SCREENSHOT_BORDERSIZE, TBM_GETPOS, 0, 0);
+		_itot(value,tmp,10);
+		SendDlgItemMessage(hwnd,IDC_SCREENSHOT_BORDERSIZETXT,WM_SETTEXT,0, (WPARAM)tmp);
 	}
 }

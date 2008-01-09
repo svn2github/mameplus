@@ -50,9 +50,6 @@ struct _driverw
 /* in winui.c */
 extern struct _driverw **driversw;
 
-/* in layout.c */
-extern const ICONDATA g_iconData[];
-
 
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
@@ -95,8 +92,8 @@ int GetGameNameIndex(const char *name);
 int GetIndexFromSortedIndex(int sorted_index);
 
 // sets text in part of the status bar on the main window
-void SetStatusBarTextW(int part_index, const WCHAR *message);
-void SetStatusBarTextFW(int part_index, const WCHAR *fmt, ...);
+void SetStatusBarText(int part_index, const WCHAR *message);
+void SetStatusBarTextF(int part_index, const WCHAR *fmt, ...);
 
 int MameUIMain(HINSTANCE	hInstance,
                    LPSTR    lpCmdLine,

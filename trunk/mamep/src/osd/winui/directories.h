@@ -30,11 +30,11 @@
 
 typedef struct
 {
-	const WCHAR*	lpName;
-	const WCHAR*	(*pfnGetTheseDirs)(void);
-	void		(*pfnSetTheseDirs)(const WCHAR* lpDirs);
-	BOOL		bMulti;
-	int		nDirDlgFlags;
+	LPCWSTR   lpName;
+	LPCWSTR   (*pfnGetTheseDirs)(void);
+	void     (*pfnSetTheseDirs)(LPCWSTR lpDirs);
+	BOOL     bMulti;
+	int      nDirDlgFlags;
 }
 DIRECTORYINFO;
 

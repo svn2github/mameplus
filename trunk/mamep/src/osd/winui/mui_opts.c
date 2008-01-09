@@ -19,12 +19,10 @@
 
 ***************************************************************************/
 
-#define UNICODE
-#define _UNICODE
-
 // standard windows headers
 #define WIN32_LEAN_AND_MEAN
-
+#define _UNICODE
+#define UNICODE
 #include <windows.h>
 #include <windowsx.h>
 #include <winreg.h>
@@ -2554,35 +2552,6 @@ static void options_set_folder_flag(core_options *opts, const char *name, const 
 
 static f_flag settings_folder_flag;
 
-DWORD LoadFolderFlags(const char *path)
-{
-	int i;
-
-	options_get_folder_flag(settings, &settings_folder_flag, MUIOPTION_FOLDER_FLAG);
-
-	if (settings_folder_flag.entry == NULL)
-		return 0;
-
-	for (i = 0; i < settings_folder_flag.num; i++)
-		if (settings_folder_flag.entry[i].name
-		 && strcmp(settings_folder_flag.entry[i].name, path) == 0)
-			return settings_folder_flag.entry[i].flags;
-
-	return 0;
-}
-
-void SaveFolderFlags(const char *path, DWORD flags)
-{
-	DWORD current = LoadFolderFlags(path);
-
-	if (current == flags)
-		return;
-
-	set_folder_flag(&settings_folder_flag, path, flags);
-
-	options_set_folder_flag(settings, MUIOPTION_FOLDER_FLAG, &settings_folder_flag, OPTION_PRIORITY_CMDLINE);
-}
-
 COLORREF GetListBrokenColor(void)
 {
 	COLORREF broken_color = (COLORREF)options_get_int(settings, MUIOPTION_BROKEN_COLOR);
@@ -3044,30 +3013,29 @@ static void TabFlagsDecodeString(const char *str, int *data)
 	}
 }
 
-static file_error LoadSettingsFile(core_options *opts, const char *utf8_filename)
+static file_error LoadSettingsFile(core_options *opts, const char *filename)
 {
 	core_file *file;
 	file_error filerr;
 
-	filerr = core_fopen(utf8_filename, OPEN_FLAG_READ, &file);
+	filerr = core_fopen(filename, OPEN_FLAG_READ, &file);
 	if (filerr == FILERR_NONE)
 	{
 		options_parse_ini_file(opts, file, OPTION_PRIORITY_CMDLINE);
 		core_fclose(file);
 	}
-
 	return filerr;
 }
 
 
-static file_error SaveSettingsFile(core_options *opts, core_options *baseopts, const char *utf8_filename)
+static file_error SaveSettingsFile(core_options *opts, core_options *baseopts, const char *filename)
 {
 	core_file *file;
 	file_error filerr;
 
 	if ((opts != NULL) && ((baseopts == NULL) || !options_equal(opts, baseopts)))
 	{
-		filerr = core_fopen(utf8_filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
+		filerr = core_fopen(filename, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &file);
 		if (filerr == FILERR_NONE)
 		{
 			options_output_diff_ini_file(opts, baseopts, file);
@@ -3076,7 +3044,7 @@ static file_error SaveSettingsFile(core_options *opts, core_options *baseopts, c
 	}
 	else
 	{
-		filerr = osd_rmfile(utf8_filename);
+		filerr = osd_rmfile(filename);
 	}
 
 	return filerr;
@@ -3122,6 +3090,37 @@ static void LoadOptionsAndSettings(void)
 	SetUseLangList(UseLangList());
 }
 
+DWORD LoadFolderFlags(const char *path)
+{
+	int i;
+
+	options_get_folder_flag(settings, &settings_folder_flag, MUIOPTION_FOLDER_FLAG);
+
+	if (settings_folder_flag.entry == NULL)
+		return 0;
+
+	for (i = 0; i < settings_folder_flag.num; i++)
+		if (settings_folder_flag.entry[i].name
+		 && strcmp(settings_folder_flag.entry[i].name, path) == 0)
+			return settings_folder_flag.entry[i].flags;
+
+	return 0;
+}
+
+void SaveFolderFlags(const char *path, DWORD flags)
+{
+	DWORD current = LoadFolderFlags(path);
+
+	if (current == flags)
+		return;
+
+	set_folder_flag(&settings_folder_flag, path, flags);
+
+	options_set_folder_flag(settings, MUIOPTION_FOLDER_FLAG, &settings_folder_flag, OPTION_PRIORITY_CMDLINE);
+}
+
+
+
 // Copy options, if entry doesn't exist in the dest, create it.
 static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 {
@@ -3157,9 +3156,78 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 	}
 }
 
-//mamep: fixme
-void SaveGameOptions(int driver_index)
+// Adds our folder flags to a temporarty core_options, for saving.
+static core_options * AddFolderFlags(core_options *settings)
 {
+	core_options *opts;
+	int numFolders;
+	int i;
+	LPTREEFOLDER lpFolder;
+	int num_entries = 0;
+	options_entry entries[2];
+
+	opts = options_create(memory_error);
+
+	if (NULL == opts)
+	{
+		return NULL;
+	}
+
+	options_add_entries(opts, regSettings);
+	copy_options_ex(opts, settings);
+
+	memcpy(entries, filterOptions, sizeof(filterOptions));
+	entries[0].name = NULL;
+	entries[0].defvalue = NULL;
+	entries[0].flags = OPTION_HEADER;
+	entries[0].description = "FOLDER FILTERS";
+	options_add_entries(opts, entries);
+
+	memcpy(entries, filterOptions, sizeof(filterOptions));
+/*
+	numFolders = GetNumFolders();
+
+	for (i = 0; i < numFolders; i++)
+	{
+		lpFolder = GetFolder(i);
+		if (lpFolder && (lpFolder->m_dwFlags & F_MASK) != 0)
+		{
+			char folder_name[80];
+			char *ptr;
+			astring *option_name;
+
+			// Convert spaces to underscores
+			strcpy(folder_name, lpFolder->m_lpTitle);
+			ptr = folder_name;
+			while (*ptr && *ptr != '\0')
+			{
+				if (*ptr == ' ')
+				{
+					*ptr = '_';
+				}
+				ptr++;
+			}
+
+			option_name = astring_assemble_2(astring_alloc(), folder_name, "_filters" );
+
+			// create entry
+			entries[0].name = astring_c(option_name);
+			options_add_entries(opts, entries);
+
+			// store entry
+            options_set_string(opts, astring_c(option_name), EncodeFolderFlags(lpFolder->m_dwFlags), OPTION_PRIORITY_CMDLINE);
+			astring_free(option_name);
+
+			// increment counter
+			num_entries++;
+		}
+	}
+*/
+	if (num_entries == 0) {
+		options_free(opts);
+		opts = NULL;
+	}
+	return opts;
 }
 
 // Save the UI ini
@@ -3167,12 +3235,20 @@ void SaveOptions(void)
 {
 	if (save_gui_settings)
 	{
+		// Add the folder flag to settings.
 		char buffer[MAX_PATH];
-
+		core_options *opts = AddFolderFlags(settings);
+		// Save opts if it is non-null, else save settings.
+		// It will be null if there are no filters set.
 		GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
-		SaveSettingsFile(settings, NULL, buffer);
+		SaveSettingsFile((opts == NULL) ? settings : opts, NULL, buffer);
+		// Free up the opts allocated by AddFolderFlags.
+		if (opts)
+		{
+			options_free(opts);
+		}
 	}
-
+	//mamep: save for language
 	SaveDefaultOptions();
 }
 
@@ -3180,7 +3256,6 @@ void SaveOptions(void)
 void SaveDefaultOptions(void)
 {
 	char buffer[MAX_PATH];
-
 	GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
 	SaveSettingsFile(global, NULL, buffer);
 }

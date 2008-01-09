@@ -536,9 +536,6 @@ BOOL GetShowTreeSheet(void);
 #endif /* TREE_SHEET */
 
 //mamep: fixme
-void SaveGameOptions(int driver_index);
-
-//mamep: fixme
 core_options *options_get_mess_option(int driver_index);
 
 #endif

@@ -94,6 +94,11 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
 
+#-------------------------------------------------
+# layout dependencies
+#-------------------------------------------------
+
+$(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
 
 #-------------------------------------------------
