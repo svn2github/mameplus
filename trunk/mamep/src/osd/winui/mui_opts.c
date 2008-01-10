@@ -3159,6 +3159,9 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 // Adds our folder flags to a temporarty core_options, for saving.
 static core_options * AddFolderFlags(core_options *settings)
 {
+#if 1 // mamep: folder flags are already registered into variable settings by function SaveFolderFlags()
+	return NULL;
+#else
 	core_options *opts;
 	int numFolders;
 	int i;
@@ -3228,6 +3231,7 @@ static core_options * AddFolderFlags(core_options *settings)
 		opts = NULL;
 	}
 	return opts;
+#endif
 }
 
 // Save the UI ini

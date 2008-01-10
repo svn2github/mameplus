@@ -2248,9 +2248,9 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 
 	// sorted list of drivers by name
 	sorted_drivers = (driver_data_type *) malloc(sizeof (*sorted_drivers) * game_count);
-	memset(sorted_drivers, '\0', sizeof(driver_data_type) * game_count);
 	if (!sorted_drivers)
 		return FALSE;
+	memset(sorted_drivers, 0, sizeof(driver_data_type) * game_count);
 	for (i=0; i<game_count; i++)
 	{
 		sorted_drivers[i].name = drivers[i]->name;
@@ -2688,7 +2688,8 @@ static void Win32UI_exit()
 
 	if (icon_index != NULL)
 	{
-		free(icon_index);
+		//mamep: icon_index is allocated in pool, don't free it now.
+		//free(icon_index);
 		icon_index = NULL;
 	}
 
@@ -4228,7 +4229,7 @@ static void check_for_GUI_action(void)
 
 	for (i = 0; i < NUM_GUI_SEQUENCES; i++)
 	{
-		input_seq *is = &(GUISequenceControl[i].is);
+		const input_seq *is = &(GUISequenceControl[i].is);
 
 		if (GUI_seq_pressed(is))
 		{
@@ -6369,6 +6370,18 @@ void SetStatusBarTextF(int part_index, const TCHAR *fmt, ...)
 	SetStatusBarText(part_index, buf);
 }
 
+//mamep: callback for mamecore that is use utf8 strings instead of TCHAR
+static void CLIB_DECL MameMessageBoxUTF8(const char *fmt, ...)
+{
+	char buf[2048];
+	va_list va;
+
+	va_start(va, fmt);
+	vsprintf(buf, fmt, va);
+	MessageBox(GetMainWindow(), _UTF8Unicode(buf), TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
+	va_end(va);
+}
+
 static void CLIB_DECL MameMessageBox(LPCTSTR fmt, ...)
 {
 	TCHAR buf[2048];
@@ -6591,7 +6604,8 @@ static void MameLoadState(LPCWSTR fname_state)
 
 		// call the MAME core function to check the save state file
 		stemp = utf8_from_wstring(selected_filename);
-		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBox);
+		//mamep: mamecore use utf8 string instead of TCHAR string
+		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBoxUTF8);
 		free(stemp);
 		mame_fclose(pSaveState);
 		if (rc)
