@@ -768,7 +768,7 @@ static void LoadFolderFilter(int folder_index,int filters)
 // Restore ui settings to factory
 void ResetGUI(void)
 {
-	ResetToDefaults(settings, OPTION_PRIORITY_NORMAL);
+	ResetToDefaults(settings, OPTION_PRIORITY_MAXIMUM);
 	// Save the new MAME32ui.ini
 	SaveOptions();
 	save_gui_settings = FALSE;
@@ -1606,7 +1606,7 @@ void ResetGameOptions(int driver_index)
 void ResetGameDefaults(void)
 {
 	// Walk the global settings and reset everything to defaults;
-	ResetToDefaults(global, OPTION_PRIORITY_CMDLINE);
+	ResetToDefaults(global, OPTION_PRIORITY_MAXIMUM);
 	save_options(OPTIONS_GLOBAL, global, 1);
 	save_default_options = FALSE;
 }
