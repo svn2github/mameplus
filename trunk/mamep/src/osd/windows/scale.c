@@ -189,7 +189,7 @@ static int scale_perform_hlq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 static void (*scale_hlq2x_15_def)(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq2x_32_def)(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
 #ifdef ASM_HQ
-static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
+static int scale_perform_hq2xasm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 void hq2x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 void hq2x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 #endif /* ASM_HQ */
@@ -206,7 +206,7 @@ static int scale_perform_hlq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 static void (*scale_hlq3x_15_def)(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 static void (*scale_hlq3x_32_def)(UINT32* dst0, UINT32* dst1, UINT32* dst2, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
 #ifdef ASM_HQ
-static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
+static int scale_perform_hq3xasm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 void hq3x_16(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 void hq3x_32(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 #endif /* ASM_HQ */
@@ -427,7 +427,15 @@ int scale_init(void)
 			break;
 		}
 
+#ifdef ASM_HQ
 		case SCALE_EFFECT_HQ2XASM:
+		{
+			sprintf(name, "HQ2x (ASM)");
+			scale_effect.xsize = scale_effect.ysize = 2;
+			break;
+		}
+#endif /* ASM_HQ */
+
 		case SCALE_EFFECT_HQ2X:
 		{
 #ifdef USE_MMX_INTERP_SCALE
@@ -438,11 +446,7 @@ int scale_init(void)
 				sprintf(name, "HQ2x (non-mmx version)");
 
 			scale_effect.xsize = scale_effect.ysize = 2;
-#ifdef ASM_HQ
-			scale_hlq2x_15_def = NULL;
-#else /* ASM_HQ */
 			scale_hlq2x_15_def = hq2x_15_def;
-#endif /* ASM_HQ */
 			scale_hlq2x_32_def = hq2x_32_def;
 			break;
 		}
@@ -520,7 +524,15 @@ int scale_init(void)
 			scale_hlq2x4_32_def = lq2x4_32_def;
 			break;
 		}
+#ifdef ASM_HQ
 		case SCALE_EFFECT_HQ3XASM:
+		{
+			sprintf(name, "HQ3x (ASM)");
+			scale_effect.xsize = scale_effect.ysize = 3;
+			break;
+		}
+#endif /* ASM_HQ */
+
 		case SCALE_EFFECT_HQ3X:
 		{
 #ifdef USE_MMX_INTERP_SCALE
@@ -531,11 +543,7 @@ int scale_init(void)
 				sprintf(name, "HQ3x (non-mmx version)");
 
 			scale_effect.xsize = scale_effect.ysize = 3;
-#ifdef ASM_HQ
-			scale_hlq3x_15_def = NULL;
-#else /* ASM_HQ */
 			scale_hlq3x_15_def = hq3x_15_def;
-#endif /* ASM_HQ */
 			scale_hlq3x_32_def = hq3x_32_def;
 			break;
 		}
@@ -633,7 +641,7 @@ int scale_check(int depth)
 
 		case SCALE_EFFECT_HQ2XASM:
 		case SCALE_EFFECT_HQ3XASM:
-			if (depth == 15 || depth == 16)
+			if (depth == 15)
 				return 0;
 			else
 				return 1;
@@ -698,13 +706,11 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_2XPM:
 			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
-		case SCALE_EFFECT_HQ2XASM:
-			return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
-		case SCALE_EFFECT_HQ2X:
 #ifdef ASM_HQ
-			if (depth == 15)
-				return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
+		case SCALE_EFFECT_HQ2XASM:
+			return scale_perform_hq2xasm(src, dst, src_pitch, dst_pitch, width, height, depth);
 #endif /* ASM_HQ */
+		case SCALE_EFFECT_HQ2X:
 		case SCALE_EFFECT_LQ2X:
 			return scale_perform_hlq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
 		case SCALE_EFFECT_HQ2X3:
@@ -713,13 +719,11 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 		case SCALE_EFFECT_HQ2X4:
 		case SCALE_EFFECT_LQ2X4:
 			return scale_perform_hlq2x4(src, dst, src_pitch, dst_pitch, width, height, depth);
-		case SCALE_EFFECT_HQ3XASM:
-			return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
-		case SCALE_EFFECT_HQ3X:
 #ifdef ASM_HQ
-			if (depth == 15)
-				return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
+		case SCALE_EFFECT_HQ3XASM:
+			return scale_perform_hq3xasm(src, dst, src_pitch, dst_pitch, width, height, depth);
 #endif /* ASM_HQ */
+		case SCALE_EFFECT_HQ3X:
 		case SCALE_EFFECT_LQ3X:
 			return scale_perform_hlq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
 #ifdef USE_4X_SCALE
@@ -1177,10 +1181,10 @@ static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 
 //============================================================
-//	scale_perform_hq2x
+//	scale_perform_hq2xasm
 //============================================================
 #ifdef ASM_HQ
-static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
+static int scale_perform_hq2xasm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
 {
 	interp_init();
 
@@ -1366,10 +1370,10 @@ static int scale_perform_hlq2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_p
 }
 
 //============================================================
-//	scale_perform_hq3x
+//	scale_perform_hq3xasm
 //============================================================
 #ifdef ASM_HQ
-static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
+static int scale_perform_hq3xasm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
 {
 	interp_init();
 

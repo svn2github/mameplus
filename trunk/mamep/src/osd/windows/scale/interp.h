@@ -68,10 +68,11 @@ INLINE UINT16 interp_32_to_15(UINT32 src)
 
 INLINE UINT32 interp_15_to_32(UINT16 src)
 {
-	return (UINT32)
+	UINT32 color = (UINT32)
 		( ((src & INTERP_MASK_15_R) << 9)
 		| ((src & INTERP_MASK_15_G) << 6)
 		| ((src & INTERP_MASK_15_B) << 3));
+	return color | ((color >> 5) & 0x070707);
 }
 
 INLINE UINT16 interp_32_to_16(UINT32 src)
@@ -84,10 +85,14 @@ INLINE UINT16 interp_32_to_16(UINT32 src)
 
 INLINE UINT32 interp_16_to_32(UINT16 src)
 {
-	return (UINT32)
-		( ((src & INTERP_MASK_16_R) << 8)
-		| ((src & INTERP_MASK_16_G) << 5)
-		| ((src & INTERP_MASK_16_B) << 3));
+	UINT8 r = (src & INTERP_MASK_16_R) >> 11;
+	UINT8 g = (src & INTERP_MASK_16_G) >> 5;
+	UINT8 b = (src & INTERP_MASK_16_B);
+
+	r = (r << 3) | (r >> 2);
+	g = (g << 2) | (g >> 4);
+	b = (b << 3) | (b >> 2);
+	return (UINT32)((r << 16) | (g << 8) | b);
 }
 
 INLINE __m64 interp_15_unpack(UINT16 src)
@@ -366,6 +371,20 @@ INLINE int interp_diff(UINT16 c1, UINT16 c2)
 #define INTERP_16_HNMASK 	(~0x008410U)
 #define INTERP_32_HNMASK 	(~0x808080U)
 
+#define INTERP_15_GEN2(a,b) \
+INLINE UINT16 interp_15_##a##b(UINT16 p1, UINT16 p2) \
+{ \
+	return INTERP_15_MASK_1((INTERP_15_MASK_1(p1)*a + INTERP_15_MASK_1(p2)*b) / 16) \
+		| INTERP_15_MASK_2((INTERP_15_MASK_2(p1)*a + INTERP_15_MASK_2(p2)*b) / 16); \
+}
+
+#define INTERP_15_GEN3(a,b,c) \
+INLINE UINT16 interp_15_##a##b##c(UINT16 p1, UINT16 p2, UINT16 p3) \
+{ \
+	return INTERP_15_MASK_1((INTERP_15_MASK_1(p1)*a + INTERP_15_MASK_1(p2)*b + INTERP_15_MASK_1(p3)*c) / 16) \
+		| INTERP_15_MASK_2((INTERP_15_MASK_2(p1)*a + INTERP_15_MASK_2(p2)*b + INTERP_15_MASK_2(p3)*c) / 16); \
+}
+
 #define INTERP_16_GEN2(a,b) \
 INLINE UINT16 interp_16_##a##b(UINT16 p1, UINT16 p2) \
 { \
@@ -493,6 +512,7 @@ INLINE UINT16 interp_15_71(UINT16 p1, UINT16 p2)
 #endif
 }
 
+#if 0
 INLINE UINT16 interp_15_772(UINT16 p1, UINT16 p2, UINT16 p3)
 {
 	return INTERP_15_MASK_1(((INTERP_15_MASK_1(p1) + INTERP_15_MASK_1(p2))*7 + INTERP_15_MASK_1(p3)*2) / 16)
@@ -516,6 +536,24 @@ INLINE UINT16 interp_15_97(UINT16 p1, UINT16 p2)
 	return INTERP_15_MASK_1((INTERP_15_MASK_1(p1)*9 + INTERP_15_MASK_1(p2)*7) / 16)
 		| INTERP_15_MASK_2((INTERP_15_MASK_2(p1)*9 + INTERP_15_MASK_2(p2)*7) / 16);
 }
+#endif
+
+INTERP_15_GEN3(6,5,5)
+INTERP_15_GEN3(7,5,4)
+INTERP_15_GEN3(7,6,3)
+INTERP_15_GEN3(7,7,2)
+INTERP_15_GEN3(8,5,3)
+INTERP_15_GEN3(9,4,3)
+INTERP_15_GEN3(9,6,1)
+INTERP_15_GEN3(10,3,3)
+INTERP_15_GEN3(10,5,1)
+INTERP_15_GEN3(11,3,2)
+INTERP_15_GEN2(11,5)
+INTERP_15_GEN3(12,3,1)
+INTERP_15_GEN2(13,3)
+INTERP_15_GEN3(14,1,1)
+INTERP_15_GEN2(15,1)
+INTERP_15_GEN2(9,7)
 
 INLINE UINT16 interp_16_11(UINT16 p1, UINT16 p2)
 {

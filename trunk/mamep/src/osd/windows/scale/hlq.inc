@@ -42,22 +42,7 @@
 
 #ifdef INTERP_MMX
 
-	#if PIXEL_BITS == 16
-		#define PIXEL_COLOR				PIXEL_UINT
-		#define PIXEL_PACK(v)			(v)
-		#define PIXEL_UNPACK(v)			(v)
-		#define PIXEL_COPY(p0, p1)		c[p0] = c[p1]
-		#define PIXEL_SRC(p, v)			c[p] = v
-		
-		#ifdef PIXEL_LQ_FILTER
-			#define PIXEL_DIFF(p0, p1)	(c[p0] != c[p1])
-		#else
-			#define PIXEL_DIFF(p0, p1)	interp_diff(c[p0], c[p1])
-		#endif
-		
-		#define INTERP_0(p)				c[p]
-		#define INTERP_(id)				_TOKEN2(interp_16_, id)	
-	#else
+	#if PIXEL_BITS == 32
 		#define PIXEL_COLOR				__m64
 		#define PIXEL_PACK(v)			_TOKEN3(interp_, PIXEL_BITS, _pack)(v)
 		#define PIXEL_UNPACK(v)			_TOKEN3(interp_, PIXEL_BITS, _unpack)(v)
@@ -76,6 +61,21 @@
 		#endif
 
 		#define INTERP_(id)				_TOKEN2(interp_, id)	
+	#else
+		#define PIXEL_COLOR				PIXEL_UINT
+		#define PIXEL_PACK(v)			(v)
+		#define PIXEL_UNPACK(v)			(v)
+		#define PIXEL_COPY(p0, p1)		c[p0] = c[p1]
+		#define PIXEL_SRC(p, v)			c[p] = v
+		
+		#ifdef PIXEL_LQ_FILTER
+			#define PIXEL_DIFF(p0, p1)	(c[p0] != c[p1])
+		#else
+			#define PIXEL_DIFF(p0, p1)	interp_diff(c[p0], c[p1])
+		#endif
+		
+		#define INTERP_0(p)				c[p]
+		#define INTERP_(id)				_TOKEN4(interp_, PIXEL_BITS, _, id)
 	#endif
 	
 #else
@@ -94,7 +94,6 @@
 	
 	#define INTERP_0(p)					c[p]
 	#define INTERP_(id)					_TOKEN4(interp_, PIXEL_BITS, _, id)
-		
 #endif
 
 #define P(a, b) 						_TOKEN2(dst, b)[a]

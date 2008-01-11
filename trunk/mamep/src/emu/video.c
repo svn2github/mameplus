@@ -2074,10 +2074,7 @@ static void convert_palette_to_15(const mame_bitmap *src, mame_bitmap *dst, cons
 		UINT16 *src16 = BITMAP_ADDR16(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
-		{
-			UINT32 color = palette[*src16++];
-			*dst16++ = ((color >> 9) & 0x7c00) | ((color >> 6) & 0x03e0) | ((color >> 3) & 0x001f);
-		}
+			*dst16++ = rgb_to_rgb15(palette[*src16++]);
 	}
 }
 
@@ -2109,10 +2106,7 @@ static void convert_32_to_15(mame_bitmap *src, mame_bitmap *dst, const rectangle
 		UINT32 *src32 = BITMAP_ADDR32(src, y, visarea->min_x);
 
 		for (x = visarea->min_x; x < visarea->max_x; x++)
-		{
-			UINT32 color = *src32++;
-			*dst16++ = ((color >> 9) & 0x7c00) | ((color >> 6) & 0x03e0) | ((color >> 3) & 0x001f);
-		}
+			*dst16++ = rgb_to_rgb15(*src32++);
 	}
 }
 
