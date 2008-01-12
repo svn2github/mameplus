@@ -1082,7 +1082,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_DRIVERS)/snes.o	 	\
-#	$(MESS_DRIVERS)/gba.o \
+	$(MESS_DRIVERS)/gba.o \
 
 $(MAMEOBJ)/nix.a: \
 	$(DRIVERS)/fitfight.o $(VIDEO)/fitfight.o \

@@ -1,0 +1,83 @@
+#ifndef _GBA_H_
+#define _GBA_H_
+
+#define DISPSTAT_VBL			0x0001
+#define DISPSTAT_HBL			0x0002
+#define DISPSTAT_VCNT			0x0004
+#define DISPSTAT_VBL_IRQ_EN		0x0008
+#define DISPSTAT_HBL_IRQ_EN		0x0010
+#define DISPSTAT_VCNT_IRQ_EN		0x0020
+#define DISPSTAT_VCNT_VALUE		0xff00
+
+#define INT_VBL				0x0001
+#define INT_HBL				0x0002
+#define INT_VCNT			0x0004
+#define INT_TM0_OVERFLOW		0x0008
+#define INT_TM1_OVERFLOW		0x0010
+#define INT_TM2_OVERFLOW		0x0020
+#define INT_TM3_OVERFLOW		0x0040
+#define INT_SIO				0x0080
+#define INT_DMA0			0x0100
+#define INT_DMA1			0x0200
+#define INT_DMA2			0x0400
+#define INT_DMA3			0x0800
+#define INT_KEYPAD			0x1000
+#define INT_GAMEPAK			0x2000
+
+#define DISPCNT_MODE			0x0007
+#define DISPCNT_FRAMESEL		0x0010
+#define DISPCNT_HBL_FREE		0x0020
+
+#define DISPCNT_VRAM_MAP		0x0040
+#define DISPCNT_VRAM_MAP_2D		0x0000
+#define DISPCNT_VRAM_MAP_1D		0x0040
+
+#define DISPCNT_BLANK			0x0080
+#define DISPCNT_BG0_EN			0x0100
+#define DISPCNT_BG1_EN			0x0200
+#define DISPCNT_BG2_EN			0x0400
+#define DISPCNT_BG3_EN			0x0800
+#define DISPCNT_OBJ_EN			0x1000
+#define DISPCNT_WIN0_EN			0x2000
+#define DISPCNT_WIN1_EN			0x4000
+#define DISPCNT_OBJWIN_EN		0x8000
+
+#define OBJ_Y_COORD			0x00ff
+#define OBJ_USEROZ			0x0100
+#define OBJ_DOUBLE			0x0200
+#define OBJ_DISABLE			0x0200
+
+#define OBJ_MODE			0x0c00
+#define OBJ_MODE_NORMAL			0x0000
+#define OBJ_MODE_ALPHA			0x0400
+#define OBJ_MODE_WINDOW			0x0800
+
+#define OBJ_MOSAIC			0x1000
+
+#define OBJ_PALMODE			0x2000
+#define OBJ_PALMODE_16			0x0000
+#define OBJ_PALMODE_256			0x2000
+
+#define OBJ_SHAPE			0xc000
+#define OBJ_SHAPE_SQR			0x0000
+#define OBJ_SHAPE_HORIZ			0x4000
+#define OBJ_SHAPE_VERT			0x8000
+
+#define OBJ_X_COORD			0x01ff
+#define OBJ_SCALE_PARAM			0x3e00
+#define OBJ_SCALE_PARAM_SHIFT		9
+#define OBJ_HFLIP			0x1000
+#define OBJ_VFLIP			0x2000
+#define OBJ_SIZE			0xc000
+#define OBJ_SIZE_8			0x0000
+#define OBJ_SIZE_16			0x4000
+#define OBJ_SIZE_32			0x8000
+#define OBJ_SIZE_64			0xc000
+
+#define OBJ_TILENUM    			0x03ff
+#define OBJ_PRIORITY			0x0c00
+#define OBJ_PRIORITY_SHIFT		10
+#define OBJ_PALNUM			0xf000
+#define OBJ_PALNUM_SHIFT		12
+
+#endif

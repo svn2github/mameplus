@@ -48,7 +48,7 @@ const game_driver * const consoledrivers[] =
 	DRIVER( gbcolor )	/* Nintendo GameBoy Color Handheld					*/
 	DRIVER( snes )		/* Nintendo Super Nintendo NTSC						*/
 	DRIVER( snespal )	/* Nintendo Super Nintendo PAL						*/
-//	DRIVER( gba )
+	DRIVER( gba )
 
 	DRIVER( megaduck )	/* Megaduck											*/
 
