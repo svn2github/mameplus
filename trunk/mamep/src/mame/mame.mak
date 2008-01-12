@@ -308,7 +308,7 @@ SOUNDS += BEEP
 #SOUNDS += WAVE
 #SOUNDS += SID6581
 #SOUNDS += SID8580
-#SOUNDS += SP0256
+SOUNDS += SP0256
 
 
 
@@ -1239,7 +1239,7 @@ $(MAMEOBJ)/seibu.a: \
 	$(DRIVERS)/mustache.o $(VIDEO)/mustache.o \
 	$(DRIVERS)/panicr.o \
 	$(DRIVERS)/raiden.o $(VIDEO)/raiden.o \
-	$(DRIVERS)/raiden2.o \
+	$(DRIVERS)/raiden2.o $(MACHINE)/r2crypt.o \
 	$(DRIVERS)/seibuspi.o $(MACHINE)/seibuspi.o $(VIDEO)/seibuspi.o \
 	$(DRIVERS)/sengokmj.o $(VIDEO)/sengokmj.o \
 	$(DRIVERS)/stfight.o $(MACHINE)/stfight.o $(VIDEO)/stfight.o \
@@ -1679,6 +1679,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/vroulet.o \
 	$(DRIVERS)/wldarrow.o \
 	$(DRIVERS)/xyonix.o $(VIDEO)/xyonix.o \
+	$(DRIVERS)/uapce.o $(DRIVERS)/paranoia.o $(VIDEO)/vdc.o $(MACHINE)/pcecommn.o \
 
 
 #-------------------------------------------------

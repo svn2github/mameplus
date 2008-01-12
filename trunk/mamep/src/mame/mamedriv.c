@@ -578,6 +578,7 @@ const game_driver * const mamedrivers[] =
 
 	/* Namco games (plus some intruders on similar hardware) */
 	DRIVER( geebee )	/* [1978] Namco */
+	DRIVER( geebeeb )	/* [1978] Namco (F.lli Bertolino license) */
 	DRIVER( geebeeg )	/* [1978] Gremlin */
 	DRIVER( bombbee )	/* [1979] Namco */
 	DRIVER( cutieq )	/* (c) 1979 Namco */
@@ -1114,6 +1115,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( boothill )	/* 612 [1977] */
 	DRIVER( checkmat )	/* 615 [1977] */
 	DRIVER( desertgu )	/* 618 [1977] */
+	DRIVER( roadrunm )	/* 618 [1977] */
 	DRIVER( dplay )		/* 619 [1977] */
 	DRIVER( lagunar )	/* 622 [1977] */
 	DRIVER( gmissile )	/* 623 [1977] */
@@ -1207,7 +1209,6 @@ const game_driver * const mamedrivers[] =
 	DRIVER( medlanes )	/* [1977?] */
 
 	/* CVS games */
-	DRIVER( cvs )
 	DRIVER( cosmos )	/* (c) 1981 Century */
 	DRIVER( darkwar )	/* (c) 1981 Century */
 	DRIVER( spacefrt )	/* (c) 1981 Century */
@@ -3731,6 +3732,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( sfish2 )	/* (c) 1995 */
 	DRIVER( sfish2j )	/* (c) 1995 */
 	DRIVER( magzun )	/* (c) 1995 */
+	DRIVER( nclubv3 )
 
 	/* Sega Model 2 Games */
 
@@ -3986,6 +3988,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( csmash )
 	DRIVER( vs2_2k )
 	DRIVER( vs2_2ka )
+	DRIVER( smarinef )
 	DRIVER( cspike )
 	DRIVER( capsnk )
 	DRIVER( derbyoc )
@@ -4622,14 +4625,14 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gradius2 )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( grdius2a )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( grdius2b )	/* GX785 (c) 1988 (Japan) */
-	DRIVER( cuebrick )	/* GX903 (c) 1989 */
+	DRIVER( cuebrckj )	/* GX903 (c) 1989 */
 	DRIVER( fround )	/* GX870 (c) 1988 */
 	DRIVER( froundl )	/* GX870 (c) 1988 */
 	DRIVER( hpuncher )	/* GX870 (c) 1988 (Japan) */
 	DRIVER( miaj )		/* GX808 (c) 1989 (Japan) */
 
 	/* (some) Konami 68000 games */
-	DRIVER( cuebrckj )	/* GX903 (c) 1989 */
+	DRIVER( cuebrick )	/* GX903 (c) 1989 */
 	DRIVER( mia )		/* GX808 (c) 1989 */
 	DRIVER( mia2 )		/* GX808 (c) 1989 */
 	DRIVER( tmnt )		/* GX963 (c) 1989 (World) */
@@ -6033,6 +6036,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( invasnv4 )	/* (c) 1999 Midway */
 	DRIVER( crusnexo )	/* (c) 1999 Midway */
 	DRIVER( thegrid )	/* (c) 2001 Midway */
+	DRIVER( thegrida )	/* (c) 2001 Midway */
 
 	/* Midway / Atari  Voodoo based Hardware (Seattle, Flagstaff) */
 	DRIVER( wg3dh )		/* (c) 1996 Atari Games */
@@ -6174,6 +6178,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( airraid )	/* (c) 1987 Seibu Kaihatsu */
 	DRIVER( panicr )	/* Seibu / Taito */
 	DRIVER( deadang )	/* (c) 1988 Seibu Kaihatsu */
+	DRIVER( leadang )	/* (c) 1988 Seibu Kaihatsu */
 	DRIVER( ghunter )	/* (c) 1988 Seibu Kaihatsu + Segasa/Sonic license */
 	DRIVER( dynduke )	/* (c) 1989 Seibu Kaihatsu + Fabtek license */
 	DRIVER( dyndukf )	/* (c) 1989 Seibu Kaihatsu + Fabtek license */
@@ -6199,7 +6204,6 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( raiden2e )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndx )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndxa )	/* (c) 1993 Seibu Kaihatsu */
-	DRIVER( raidndxb )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndxj )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( raidndxm )	/* (c) 1993 Seibu Kaihatsu + Metrotainment license */
 	DRIVER( zeroteam )	/* (c) 1993 Seibu Kaihatsu */
@@ -6207,6 +6211,10 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( zeroteab )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( zerotsel )	/* (c) 1993 Seibu Kaihatsu */
 	DRIVER( nzerotea )	/* (c) 1993 Seibu Kaihatsu */
+
+	/* Newer V33 PCB with COP3 protection */
+	DRIVER( r2dx_v33 )	/* (c) 1996 Seibu Kaihatsu */
+
 
 	/* Seibu SPI System games */
 
@@ -7415,6 +7423,7 @@ Other Sun games
 	DRIVER( quizvadr )	/* 1991 BFM */
 	DRIVER( qos )		/* 1992 BFM */
 	DRIVER( qosa )		/* 1992 BFM */
+	DRIVER( qosb )		/* 1992 BFM */
 
 	/* Scorpion 2+Video Board Games */
 	DRIVER( qntoondo )	/* 1993 */
@@ -7908,6 +7917,8 @@ Other Sun games
 	DRIVER( gtipoker )	/* (c) 1983 GTI Inc */
 	DRIVER( gamecstl )	/* MAME based bootleg */
 	DRIVER( drw80pkr )
+	DRIVER( blazlaz )
+	DRIVER( paranoia )
 
 #endif /* NEOCPSMAME */
 #endif	/* DRIVER_RECURSIVE */
