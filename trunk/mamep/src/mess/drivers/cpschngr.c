@@ -134,6 +134,6 @@ SYSTEM_CONFIG_END
 
 ***************************************************************************/
 
-/*	  YEAR	NAME	  PARENT	COMPAT	MACHINE   INPUT		INIT	CONFIG	COMPANY		FULLNAME */
+/*    YEAR  NAME      PARENT    COMPAT  MACHINE   INPUT     INIT    CONFIG  COMPANY     FULLNAME */
 CONS( 1995, sfzch,    0,        0,		cps1,	  sfzch,    cps1,	cpschngr,	"Capcom", "CPS Changer (Street Fighter Zero)" , 0)
 

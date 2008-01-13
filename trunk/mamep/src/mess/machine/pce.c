@@ -1,5 +1,6 @@
 
 #include "driver.h"
+#include "machine/pcecommn.h"
 #include "video/vdc.h"
 #include "cpu/h6280/h6280.h"
 #include "includes/pce.h"
@@ -26,7 +27,7 @@ enum {
 };
 
 /* system RAM */
-unsigned char *pce_user_ram;    /* scratch RAM at F8 */
+//unsigned char *pce_user_ram;    /* scratch RAM at F8 */
 
 /* CD Unit RAM */
 UINT8	*pce_cd_ram;			/* 64KB RAM from a CD unit */
@@ -82,12 +83,11 @@ const struct MSM5205interface pce_cd_msm5205_interface = {
 	MSM5205_S48_4B		/* 1/48 prescaler, 4bit data */
 };
 
-struct pce_struct pce;
+//struct pce_struct pce;
 
 static UINT8 *cartridge_ram;
 
 /* joystick related data*/
-
 #define JOY_CLOCK   0x01
 #define JOY_RESET   0x02
 
@@ -227,9 +227,11 @@ DEVICE_LOAD(pce_cart)
 	return 0;
 }
 
+#if 0
 DRIVER_INIT( pce ) {
 	pce.io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
+#endif
 
 DRIVER_INIT( tg16 ) {
 	pce.io_port_options = TG_16_JOY_SIG | CONST_SIG;
@@ -239,10 +241,11 @@ DRIVER_INIT( sgx ) {
 	pce.io_port_options = PCE_JOY_SIG | CONST_SIG;
 }
 
-MACHINE_RESET( pce ) {
+MACHINE_RESET( pce_ms ) {
 	pce_cd_init();
 }
 
+#if 0
 /* todo: how many input ports does the PCE have? */
 WRITE8_HANDLER ( pce_joystick_w )
 {
@@ -262,8 +265,9 @@ WRITE8_HANDLER ( pce_joystick_w )
         joystick_port_select = 0;
     }
 }
+#endif
 
-READ8_HANDLER ( pce_joystick_r )
+READ8_HANDLER ( pce_ms_joystick_r )
 {
 	UINT8 ret;
 	int data = readinputport(0);

@@ -79,7 +79,7 @@ static ADDRESS_MAP_START( pce_mem , ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_READWRITE( vce_r, vce_w )
 	AM_RANGE( 0x1FE800, 0x1FEBFF) AM_READWRITE( C6280_r, C6280_0_w )
 	AM_RANGE( 0x1FEC00, 0x1FEFFF) AM_READWRITE( H6280_timer_r, H6280_timer_w )
-	AM_RANGE( 0x1FF000, 0x1FF3FF) AM_READWRITE( pce_joystick_r, pce_joystick_w )
+	AM_RANGE( 0x1FF000, 0x1FF3FF) AM_READWRITE( pce_ms_joystick_r, pce_joystick_w )
 	AM_RANGE( 0x1FF400, 0x1FF7FF) AM_READWRITE( H6280_irq_status_r, H6280_irq_status_w )
 	AM_RANGE( 0x1FF800, 0x1FFBFF) AM_READWRITE( pce_cd_intf_r, pce_cd_intf_w )
 ADDRESS_MAP_END
@@ -104,7 +104,7 @@ static ADDRESS_MAP_START( sgx_mem , ADDRESS_SPACE_PROGRAM, 8)
 	AM_RANGE( 0x1FE400, 0x1FE7FF) AM_READWRITE( vce_r, vce_w )
 	AM_RANGE( 0x1FE800, 0x1FEBFF) AM_READWRITE( C6280_r, C6280_0_w )
 	AM_RANGE( 0x1FEC00, 0x1FEFFF) AM_READWRITE( H6280_timer_r, H6280_timer_w )
-	AM_RANGE( 0x1FF000, 0x1FF3FF) AM_READWRITE( pce_joystick_r, pce_joystick_w )
+	AM_RANGE( 0x1FF000, 0x1FF3FF) AM_READWRITE( pce_ms_joystick_r, pce_joystick_w )
 	AM_RANGE( 0x1FF400, 0x1FF7FF) AM_READWRITE( H6280_irq_status_r, H6280_irq_status_w )
 	AM_RANGE( 0x1FF800, 0x1FFBFF) AM_READWRITE( pce_cd_intf_r, pce_cd_intf_w )
 ADDRESS_MAP_END
@@ -148,7 +148,7 @@ static MACHINE_DRIVER_START( pce )
 	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(1)
 
-	MDRV_MACHINE_RESET( pce )
+	MDRV_MACHINE_RESET( pce_ms )
 
     /* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -189,7 +189,7 @@ static MACHINE_DRIVER_START( sgx )
 	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
 	MDRV_INTERLEAVE(1)
 
-	MDRV_MACHINE_RESET( pce )
+	MDRV_MACHINE_RESET( pce_ms )
 
 	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
@@ -271,7 +271,7 @@ SYSTEM_CONFIG_END
 #define rom_tg16 NULL
 #define rom_sgx NULL
 
-/*	  YEAR  NAME    PARENT	COMPAT	MACHINE	INPUT	 INIT	CONFIG  COMPANY	 FULLNAME */
+/*    YEAR  NAME    PARENT  COMPAT  MACHINE INPUT    INIT   CONFIG  COMPANY  FULLNAME */
 CONS( 1987, pce,    0,      0,      pce,    pce,     pce,   pce,	"Nippon Electronic Company", "PC Engine", GAME_IMPERFECT_SOUND )
 CONS( 1989, tg16,   pce,    0,      pce,    pce,     tg16,  pce,	"Nippon Electronic Company", "TurboGrafx 16", GAME_IMPERFECT_SOUND )
 CONS( 1989,	sgx,	pce,	0,		sgx,	pce,	sgx,	pce,	"Nippon Electronic Company", "SuperGrafx", GAME_IMPERFECT_SOUND )

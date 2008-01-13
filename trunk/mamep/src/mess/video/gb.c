@@ -12,7 +12,6 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "video/generic.h"
 #include "includes/gb.h"
 #include "cpu/z80gb/z80gb.h"
 #include "profiler.h"
@@ -1196,6 +1195,11 @@ void gb_video_init( int mode ) {
 		gb_video_w( 0x8, 0xFC );    /* SPR0PAL */
 		gb_video_w( 0x9, 0xFC );    /* SPR1PAL */
 
+		CURLINE = gb_lcd.current_line = 0;
+		LCDSTAT = ( LCDSTAT & 0xF8 ) | 0x05;
+		gb_lcd.mode = 1;
+		timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(60,0), GB_LCD_STATE_LY00_M0, attotime_never );
+
 		break;
 	case GB_VIDEO_SGB:
 		/* set the scanline update function */
@@ -1216,6 +1220,11 @@ void gb_video_init( int mode ) {
 		gb_video_w( 0x7, 0xFC );    /* BGRDPAL */
 		gb_video_w( 0x8, 0xFC );    /* SPR0PAL */
 		gb_video_w( 0x9, 0xFC );    /* SPR1PAL */
+
+		CURLINE = gb_lcd.current_line = 0;
+		LCDSTAT = ( LCDSTAT & 0xF8 ) | 0x05;
+		gb_lcd.mode = 1;
+		timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(60,0), GB_LCD_STATE_LY00_M0, attotime_never );
 
 		break;
 	case GB_VIDEO_CGB:
@@ -1423,13 +1432,18 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			if ( CURLINE == CMPLINE ) {
 				LCDSTAT |= 0x04;
 			}
+			if ( gb_lcd.delayed_line_irq && gb_lcd.triggering_line_irq ) {
+				cpunum_set_input_line( 0, LCD_INT, HOLD_LINE );
+			}
 			timer_adjust( gb_lcd.lcd_timer, ATTOTIME_IN_CYCLES(452,0), GB_LCD_STATE_LY9X_M1_INC, attotime_never );
 			break;
 		case GB_LCD_STATE_LY9X_M1_INC:		/* Increment scanline counter */
 			gb_increment_scanline();
 			gb_lcd.delayed_line_irq = gb_lcd.line_irq;
-			gb_lcd.line_irq = ( ( CMPLINE == CURLINE ) && ( LCDSTAT & 0x40 ) ) ? 1 : 0;
-			if ( ! gb_lcd.delayed_line_irq && gb_lcd.line_irq ) {
+			gb_lcd.triggering_line_irq = ( ( CMPLINE == CURLINE ) && ( LCDSTAT & 0x40 ) ) ? 1 : 0;
+			gb_lcd.line_irq = 0;
+			if ( ! gb_lcd.delayed_line_irq && gb_lcd.triggering_line_irq ) {
+				gb_lcd.line_irq = gb_lcd.triggering_line_irq;
 				cpunum_set_input_line( 0, LCD_INT, HOLD_LINE );
 			}
 			/* Reset LY==LYC STAT bit */
@@ -1443,7 +1457,7 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 		case GB_LCD_STATE_LY00_M1:		/* we stay in VBlank but current line counter should already be incremented */
 			/* Check LY=LYC for line #153 */
 			if ( gb_lcd.delayed_line_irq ) {
-				if ( gb_lcd.line_irq ) {
+				if ( gb_lcd.triggering_line_irq ) {
 					cpunum_set_input_line( 0, LCD_INT, HOLD_LINE );
 				}
 			}

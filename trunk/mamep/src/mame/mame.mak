@@ -1525,7 +1525,6 @@ $(MAMEOBJ)/zaccaria.a: \
 	$(DRIVERS)/zaccaria.o $(VIDEO)/zaccaria.o \
 
 $(MESSOBJ)/nec.a:	   \
-	$(MESS_VIDEO)/vdc.o	 \
 	$(MESS_MACHINE)/pce.o	 \
 	$(MESS_DRIVERS)/pce.o
 
