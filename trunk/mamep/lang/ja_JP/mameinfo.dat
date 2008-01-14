@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u3      #
+#     Mameinfo.dat日本語版 v0.122u4      #
 #                                        #
-#            January 4, 2008             #
+#            January 8, 2008             #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：876 翻訳済：850
-# 追加項目：343 合計：1219
+# Tester報告：891 翻訳済：860
+# 追加項目：343 合計：1234
 #
 
 
@@ -38,6 +38,52 @@ $mame
 
 $end
 
+$info=nomnlnd
+$mame
+[バグ]
+
+- 0.68からDACサウンド(BGM)が鳴っていない。 nomnlnd0122u3yel, M.A.S.H
+
+$end
+
+$info=sfiii
+$mame
+[バグ]
+
+- 2回ハードリセットするとクラッシュする。デバッグビルドで。 sfiii0122u3red, Firewave
+
+$end
+
+$info=spacefrt
+$mame
+[バグ]
+
+- 0.78u6から敵が化けている。 spacefrt0122u3gre, M.A.S.H
+
+
+- 0.58からDACサウンドが鳴っていない。 spacefrt0122u3yel, M.A.S.H
+
+
+- 敵の表示が四角に点滅する。以前は正常だった。 spacefrt096u1gre, Thenasty
+
+$end
+
+$info=montecar
+$mame
+[バグ]
+
+- 背景が緑色で表示されている。 montecar0122u3gre, M.A.S.H.
+
+$end
+
+$info=phantom2
+$mame
+[バグ]
+
+- 雲のスクロールが逆で速すぎ。 phantom2_0122u3gre, M.A.S.H.
+
+$end
+
 $info=vshoot
 $mame
 [バグ]
@@ -49,11 +95,59 @@ $mame
 
 $end
 
-$info=suprridr
+$info=sbrkout
 $mame
 [バグ]
 
-- カクテルモードのプレイヤー2用操作が割り当てられていない。 suprridr0122u2gra, IceMan01
+- [possible] ボールがブロックをしばしばすり抜ける。 sbrkout0122u3gre, M.A.S.H. / twisty
+
+
+- もっとブロックが出てくるのではないかという疑問があったが、
+その通りだった。
+とはいっても、その間隔は決まってなくて、
+時には空のフィールドで何分も待たされることもあり。
+これがバグなのかどうかは不明。 sbrkout37b14gre, TriggerFin
+
+$end
+
+$info=renju
+$mame
+[バグ]
+
+- 画面反転のDIPスイッチが動作しない。 renju0122u3gra, IceMan01
+
+$end
+
+$info=stadhero
+$mame
+[バグ]
+
+- 2番目のUnknownのDIPスイッチはデモサウンドの切り替え。 stadhero0122u3gra, IceMan01
+
+
+- 画面反転をONにするとスプライトレイヤーが反転しない。 stadhero0122u3gre, IceMan01
+
+
+- 起動時にRAMテスト10-Jと13-Cがエラーと表示される。 stadhero0122u3ora, IceMan01
+
+
+- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
+
+$end
+
+$info=regulus
+$mame
+[バグ]
+
+- カクテルモードでのP2で、グラフィックの画面端部分が化ける。 regulus0122u3gre, IceMan01
+
+$end
+
+$info=tokisens
+$mame
+[バグ]
+
+- デモサウンドの切り替えDIPスイッチが逆。 tokisens0122u3gra, IceMan01
 
 $end
 
@@ -63,14 +157,6 @@ $mame
 
 - デモ画面で、しばらくするとハイスコア一覧が表示されるが、
 イニシャル入力のときのようにアルファベット一覧も表示されてしまう。 actfancr36rc2gre, Lord Caos / DCisTHEbest / Pi
-
-$end
-
-$info=mtetrisc
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 mtetrisc0115u1red, etabeta
 
 $end
 
@@ -131,23 +217,11 @@ $info=arkanoid
 $mame
 [バグ]
 
-- 「tilt」のボタンを押すと、画面に「TILT」としばらく表示された後、「BAD HARDWARE」と表示される。
-アルカノイドのプロテクトがまだ完全にエミュレートされていないために起きているが、恐らくプロテクトルーチンがリセットと勘違いしているようだ。 arkanoid061gre, JonasPersson / The tECHIDNA
-
-
 - サウンドテストではBGMのテンポが倍になる。
 
 【更新】実機での確認結果。
 DIPスイッチ6でテストモードに入る。サウンド番号0Aを計ったところ、3.3秒くらいだった。
 MAMEでは3.8～3.9秒ほどなので、2倍までは速くないが、十分わかるくらいの違いがある。 arkanoidc059gre, ZeroKnightRaiden / dwidel / Kale
-
-$end
-
-$info=stonebal
-$mame
-[バグ]
-
-- グラフィックが右に25ピクセルずれて表示される。 stonebal0117u2gre, Jan Tleskac / Tafoid
 
 $end
 
@@ -182,9 +256,6 @@ $end
 $info=pitfight
 $mame
 [バグ]
-
-- 起動時にコインが2つか1つ投入される。 pitfight0109u2gre, Roger Coltrane / Tafoid / Augusto
-
 
 - アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
 
@@ -275,14 +346,6 @@ $mame
 
 $end
 
-$info=bking3
-$mame
-[バグ]
-
-- 「In the cup」と「Give up!」以外の結果になるとゲームがリセットする。 bking3076u2red, BarnacleEd / The tECHIDNA
-
-$end
-
 $info=blktiger
 $mame
 [バグ]
@@ -314,12 +377,6 @@ $mame
 [バグ]
 
 - 実機のバグが再現されていない。背景の右端2ピクセルが左端に表示される。 btoads0101gre, Stefan Lindberg
-
-
-- 3面ボスの背景にいるクイーンの顔のグラフィックがずれる。波打つようなエフェクトがかかると思われる。 btoads0102u5gre, cpukett / Stefan Lindberg / ENAY
-
-
-- エンディングの文字色が茶色に緑の組み合わせになってるが、どう見ても正しくない。 btoads0103u1gre, cpukett / ENAY
 
 $end
 
@@ -361,14 +418,6 @@ $mame
 [バグ]
 
 - 右に回転できない。左右どちらも左周りになってしまう。 spaceftr095u6gre, qapo
-
-$end
-
-$info=wotw
-$mame
-[バグ]
-
-- ネームエントリー画面が右にクリップされる。 wotw36b1gre, MC68K / Pi
 
 $end
 
@@ -481,14 +530,6 @@ $mame
 [バグ]
 
 - カクテルモードで、2Pのときにグラフィックが化けている。スコア部分も反転していない。 gryzor065gre, Smitdogg
-
-$end
-
-$info=9ballsh3
-$mame
-[バグ]
-
-- このセットのみNVRAMエラーで起動しない。 9ballsh3097red, El Condor /  Luigi30
 
 $end
 
@@ -615,20 +656,9 @@ $mame
 
 $end
 
-$info=spacefrt
-$mame
-[バグ]
-
-- 敵の表示が四角に点滅する。以前は正常だった。 spacefrt096u1gre, Thenasty
-
-$end
-
 $info=wallst
 $mame
 [バグ]
-
-- 2面で戦車のグラフィックが化ける。消える場合もあり。 wallst071gre, Pika163
-
 
 - コイン投入後、ボイスがおかしく再生される。 wallst37b13gre, MASH / TriggerFin
 
@@ -760,34 +790,6 @@ $mame
 
 $end
 
-$info=logicpro
-$mame
-[バグ]
-
-- サービスモードのバグ
-
-logicpro：F2を押してもサービスモードに入らない
-
-logicpr2：サウンドテストで、以前の様に左右キーでコードを変更できない。
-また、グラフィックテストでも、
-他のテストに移行してもグラフィックが残ったままになる。 deniamc37b15gre2, Chook
-
-$end
-
-$info=logicpr2
-$mame
-[バグ]
-
-- サービスモードのバグ
-
-logicpro：F2を押してもサービスモードに入らない
-
-logicpr2：サウンドテストで、以前の様に左右キーでコードを変更できない。
-また、グラフィックテストでも、
-他のテストに移行してもグラフィックが残ったままになる。 deniamc37b15gre2, Chook
-
-$end
-
 $info=karianx
 $mame
 [バグ]
@@ -913,19 +915,6 @@ $mame
 
 $end
 
-$info=mtrap
-$mame
-[情報]
-
-- 4キーを押しながらリセットするとサービスモード。
-
-
-[バグ]
-
-- 斜めに飛んでる間、タカが点滅か完全に消えてしまう。 mtrap37b14gre, Kurushimi
-
-$end
-
 $info=fastlane
 $mame
 [バグ]
@@ -939,14 +928,6 @@ $mame
 [バグ]
 
 - 大型のスプライトの一部が欠ける。 firetrap0104u7gre, Scuore
-
-$end
-
-$info=flkatck
-$mame
-[バグ]
-
-- カクテルモード時、プレイヤー2のスコアの表示位置がそのまま。 flkatck058gre, iob
 
 $end
 
@@ -1316,14 +1297,6 @@ $mame
 
 $end
 
-$info=drivedge
-$mame
-[バグ]
-
-- デモシーンで、車が左右に細かく震える。 drivedge0121u4gre, John IV
-
-$end
-
 $info=berlwall
 $mame
 [バグ]
@@ -1338,22 +1311,11 @@ $mame
 
 $end
 
-$info=kchamp
-$mame
-[バグ]
-
-- キャラクタ化け多数。 kchamp094u5yel, Wojciech Zakrzewski
-
-$end
-
 $info=kingofb
 $mame
 [バグ]
 
 - ゲームオーバーの画面が正しく表示されない。 kingofb37b1gre, Quicks
-
-
-- スプライトプライオリティがおかしい。 kingofb37b6gre, Bugfinder
 
 
 - 選手紹介や休憩の画面で、太い茶色の線が現れる。
@@ -1455,17 +1417,6 @@ $mame
 
 
 - 1面でやられると、赤いゴミが画面の左下に表示される。 sonofphx0101u5gre, RansAckeR / Haze
-
-$end
-
-$info=ladybug
-$mame
-[バグ]
-
-- 2プレイヤーゲーム時に、筐体にコンパネが一つだけしかない場合は、それを交互に使ってプレイする。これは正確な動作。
-
-しかし、プレイヤー1がゲームオーバーになり、
-プレイヤー2がハイスコアの名前を入れるときだけプレイヤー2のジョイスティックを使わなければならない。 ladybug080u1gre, krick
 
 $end
 
@@ -1726,32 +1677,6 @@ $mame
 
 vangrd2、madcrashの両ゲームで、ハイスコアが表示されるまでアトラクトモードを進めると、
 ハイスコア一覧がハイスコア入力画面になっている。 marvinsc36b16gre, Lord Caos
-
-$end
-
-$info=maniach
-$mame
-[バグ]
-
-- コイン投入後、画面上部が化ける。 maniach37b11gre, Labrat / Sixtoe
-
-$end
-
-$info=matmania
-$mame
-[情報]
-
-- ほとんどの色は正常だが、観客の色は青じゃなくて紫だったような気が?
-
-
-[バグ]
-
-- matmania.cバグ
-
-ゲームプレイ中、リングの左右両端に行くと、
-リングのグラフィックが反対側に反転してしまう。
-リングアウトしていないのに、しているかのように表示される。
-6705MCUエミュレーションが不完全？ matmaniac37b14gre, Trojan / El Condor
 
 $end
 
@@ -2112,11 +2037,7 @@ $mame
 【TriggerFinより追加情報】うちではこれが起こる前に3つの設定を変更できた。 narc055gre, RingoWillyCat / TriggerFin / Kitsune Sniper
 
 
-- ゲーム内での音楽は正常にもかかわらず、
-テストモードのSynthesizerテストをするとROMエラーが表示され、正しく動作しない。 narc37b16yel, Suppi-Chan
-
-
-- 言語設定のDIPが動作していない。 narc060gra, DCisTHEbest
+- 言語設定のDIPが動作していない。 narc060gra, DCisTHEbest / arcadegamenut
 
 
 - 一番奥の背景レイヤーのテクスチャが表示されていないようだ。
@@ -2482,37 +2403,6 @@ vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude 
 
 $end
 
-$info=darius2
-$mame
-[バグ]
-
-- 特定の敵のミサイルが表示されない。0.111u1から。 darius2_0114gre, Jonesey / twisty /etabeta
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
-$info=airattck
-$mame
-[バグ]
-
-- 音が出ない。 airattck0112u1yel, Iaspis / twisty / Mamesick
-
-
-- nmk16.cゲームでプライオリティ不具合がある。
-Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
-
-$end
-
 $info=bubl2000
 $mame
 [バグ]
@@ -2558,6 +2448,15 @@ $mame
 [バグ]
 
 - タイトル画面の背景は黒が正しい。 mangchi0105u2gre, Kold666
+
+$end
+
+$info=airattck
+$mame
+[バグ]
+
+- nmk16.cゲームでプライオリティ不具合がある。
+Reipが何年か前に修正しようとしたが複雑すぎて無理だったらしい。 nmk16_0111u1gre, robiza / Kold666
 
 $end
 
@@ -2628,10 +2527,10 @@ $info=pacland
 $mame
 [バグ]
 
-- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666
-
-
 - 起動時にノイズが出る。0.89から。 pacland0113u4gre, Kold666/etabeta
+
+
+- 実機ではクレジットを99まで投入できる。MAMEでは9まで。 pacland0109u4gre, Kold666 / robiza
 
 $end
 
@@ -2698,27 +2597,6 @@ $mame
 [バグ]
 
 - マップモードとVS画面のBGMがリピートされる。 powerina37b4gre, Takuma Sakazaki
-
-$end
-
-$info=btlkroad
-$mame
-[情報]
-
-- MAMEではYM2610だが、実機はYMF286-K。
-
-
-[バグ]
-
-- マイナーなプライオリティバグあり。本家ショット参照。 btlkroad096u3gre, Iaspis / Reip
-
-
-- fpsが60/60でも、ゲームがとても遅い。 btlkrod060gre, Kale
-
-
-[TIPS]
-
-- 起動時にテストボタン+1Pボタン1を押し続けると、テストメニューの項目が追加される。
 
 $end
 
@@ -2983,14 +2861,6 @@ $mame
 
 
 - サウンドが不完全。もっと多くの音が聞こえるはずで、音量も低すぎる。 spdcoin36b16gre, Frotz
-
-$end
-
-$info=superbon
-$mame
-[バグ]
-
-- プレイができなくなっている。0.37b15から。 superbon0119u3yel, Tafoid / Stiletto
 
 $end
 
@@ -3420,17 +3290,6 @@ $mame
 
 $end
 
-$info=qzkklgy2
-$mame
-[バグ]
-
-- 起動時に“DAT ROM Error”と表示されて動作しない。
-0.102より。
-
-DIPスイッチの1-3を変えるとパスする。 qzkklgy2_0106u6red, Fujix / Haze
-
-$end
-
 $info=thunderl
 $mame
 [バグ]
@@ -3618,18 +3477,6 @@ CPU 0の速度を125%にすればうまく動作する。 simpsonsc057gre, Bugfi
 
 $end
 
-$info=skychut
-$mame
-[バグ]
-
-- 敵の出現位置がいきなり自機の目前に現れるが、
-実機では上方からすこしづつ降りてくる。 skychut37b1yel, Fujix (SOW)
-
-
-- 二面で、敵が低すぎて自機に当たってしまう。 skychut37b6gre, Q.T.Quazar
-
-$end
-
 $info=getstarb
 $mame
 [バグ]
@@ -3743,14 +3590,6 @@ $mame
 [バグ]
 
 - キャラを打ったときに、プレイヤー1のスプライトの上部分が切れる。 nratechu0104u1gre, king_krm
-
-$end
-
-$info=diehard
-$mame
-[バグ]
-
-- コインを入れてスタートボタンを押すとクラッシュする。 diehard0119u3red, Machone
 
 $end
 
@@ -4289,21 +4128,6 @@ $mame
 
 $end
 
-$info=gridiron
-$mame
-[情報]
-
-- 実機では、
-現在選択中のフォーメーション番号をLEDで表示する。
-この機能は画面の隅にキャラクタを配置してエミュレートされている。
-
-
-[バグ]
-
-- プレイヤーが消えずに画面に残ることがある。 gridiron079gre, ThrowingMuse
-
-$end
-
 $info=thunderj
 $mame
 [バグ]
@@ -4499,14 +4323,6 @@ $mame
 
 $end
 
-$info=mahoudai
-$mame
-[バグ]
-
-- サービスモードから抜けると“Common RAM Error”と表示され動作しなくなる。 mahoudai0106u7yel, cpukett
-
-$end
-
 $info=snowbro2
 $mame
 [バグ]
@@ -4521,15 +4337,6 @@ $mame
 
 - 地面から現れる猿を倒したときの音が間違っている。
 また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
-
-$end
-
-$info=tokiu
-$mame
-[バグ]
-
-- ハイスコアの部分がゲーム中「0000000」のまま。
-更新しても変わらない。他のTokiのセットでは起きない。 tokiu056gre, zaxxon1 / Luigi30 / Lord Nightmare
 
 $end
 
@@ -4610,15 +4417,6 @@ $mame
 [バグ]
 
 - 弾丸のリロードをするには、画面外を撃つ必要があるが、現在の表示エリアではカーソルが画面外にならない。 zeropnt2072gre2, El Condor
-
-$end
-
-$info=vball
-$mame
-[バグ]
-
-- 動作がとても遅い。プレイヤーなどの動作もノロノロ。
-ただしクロック数は実機どおりの設定。 vball071u1gre, pomata / Haze / Karasu
 
 $end
 
@@ -4826,26 +4624,6 @@ vssoccerはスペインチームの色が違っている。緑のはずだが灰
 
 $end
 
-$info=warriorb
-$mame
-[バグ]
-
-- 画面上部分の8ピクセルが表示されない。
-また、2画面の中央に1ピクセルの幅のゴミラインが表示される。 warriorb0109u2gre, twisty / KillerBee
-
-
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
 $info=wc90b
 $mame
 [バグ]
@@ -4989,16 +4767,6 @@ $mame
 [バグ]
 
 - サンプルサウンドが正しく再生されていない。0.107u2から。 congo0113gre, Gyrovision
-
-$end
-
-$info=beastrzb
-$mame
-[バグ]
-
-- ゲーム情報画面の後にクラッシュする。<br>
-<br>
-Haze氏情報：まだ68kコードがあるので、クラッシュする可能性がある。 beastrzb097u2red, Firewave / RansAckeR
 
 $end
 
@@ -5331,14 +5099,6 @@ $mame
 
 $end
 
-$info=stadhero
-$mame
-[バグ]
-
-- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
-
-$end
-
 $info=cubybop
 $mame
 [バグ]
@@ -5489,29 +5249,11 @@ $mame
 
 $end
 
-$info=cmv801
-$mame
-[バグ]
-
--  cmv801_0116gra, MrDriller
-
-$end
-
 $info=goldbug
 $mame
 [バグ]
 
 - Coin 2の入力設定がダブっている。 goldbug0105u4gra, cpukett
-
-$end
-
-$info=sbdk
-$mame
-[バグ]
-
-- プレイヤー1のボタンが割り当てられてない。
-プレイヤー2のボタン1はあるが動作しない。
-実際にはボタンが2つ必要なようだ。 sbdk0116u1gra, Tafoid / twisty
 
 $end
 
@@ -5807,15 +5549,6 @@ $mame
 [バグ]
 
 - 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
-
-$end
-
-$info=ad2083
-$mame
-[バグ]
-
-- 最初のUnknown DIPスイッチは筐体の設定。OFFがカクテル、ONがアップライト。
-また、カクテルモード時のプレイヤー2用操作が実装されていない。 ad2083_0111u5gra, Speedfreak
 
 $end
 
@@ -6178,6 +5911,19 @@ $mame
 [バグ]
 
 - 著作権のWarning画面がWorld版と同じになっている。 wofu071u2gre, Rando281
+
+$end
+
+$info=csclub
+$mame
+[バグ]
+
+- テニスで3人に負け無しで勝ち続けるとエキストラステージに進むが、その場面で画面が黒くなり数字が表示されてクラッシュする。 csclub072u1yel, unit3uk / Haze
+
+
+[TIPS]
+
+- 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
 
 $end
 
@@ -6674,6 +6420,24 @@ $mame
 
 $end
 
+$info=btlkroad
+$mame
+[情報]
+
+- MAMEではYM2610だが、実機はYMF286-K。
+
+
+[バグ]
+
+- fpsが60/60でも、ゲームがとても遅い。 btlkrod060gre, Kale
+
+
+[TIPS]
+
+- 起動時にテストボタン+1Pボタン1を押し続けると、テストメニューの項目が追加される。
+
+$end
+
 $info=psychic5
 $mame
 [バグ]
@@ -6707,18 +6471,6 @@ $mame
 [バグ]
 
 - 最初のトーナメントではボールのレシーバに赤い矢印が表示されるが、決勝（対アメリカと、対ロシア）では消えてしまう。 svolleyk37b11gre, Sixtoe
-
-$end
-
-$info=sbrkout
-$mame
-[バグ]
-
-- もっとブロックが出てくるのではないかという疑問があったが、
-その通りだった。
-とはいっても、その間隔は決まってなくて、
-時には空のフィールドで何分も待たされることもあり。
-これがバグなのかどうかは不明。 sbrkout37b14gre, TriggerFin
 
 $end
 
@@ -7571,6 +7323,16 @@ $mame
 
 $end
 
+$info=gridiron
+$mame
+[情報]
+
+- 実機では、
+現在選択中のフォーメーション番号をLEDで表示する。
+この機能は画面の隅にキャラクタを配置してエミュレートされている。
+
+$end
+
 $info=gunbird
 $mame
 [情報]
@@ -7761,6 +7523,14 @@ $mame
 
 $end
 
+$info=matmania
+$mame
+[情報]
+
+- ほとんどの色は正常だが、観客の色は青じゃなくて紫だったような気が?
+
+$end
+
 $info=minefld
 $mame
 [情報]
@@ -7793,6 +7563,14 @@ $mame
 
 
 - Miss Pac Plusで、ボーナスフルーツが壁をすり抜けるが、実機もこのように動作する。
+
+$end
+
+$info=mtrap
+$mame
+[情報]
+
+- 4キーを押しながらリセットするとサービスモード。
 
 $end
 
@@ -8710,14 +8488,6 @@ $mame
 
 $end
 
-$info=csclub
-$mame
-[TIPS]
-
-- 合計で1997クレジット以上投入されるとタイトル画面左側に女の子と犬が表示され、各ゲームにスペシャルチームが一つずつ追加される。
-
-$end
-
 $info=cybots
 $mame
 [TIPS]
@@ -8840,6 +8610,20 @@ $mame
 - スタッフクレジット表示：
 
 ゲーム中ではないときに視点1と視点3のキーを押し続ける。
+
+$end
+
+$info=darius2
+$mame
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
 
 $end
 
@@ -9657,6 +9441,20 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk/バイオレンスファイト)
+
+$end
+
+$info=warriorb
+$mame
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
 
 $end
 
