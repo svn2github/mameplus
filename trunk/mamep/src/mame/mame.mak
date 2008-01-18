@@ -83,6 +83,8 @@ CPUS += I8035
 CPUS += I8039
 CPUS += I8048
 CPUS += N7751
+CPUS += MB8884
+CPUS += M58715
 CPUS += I8X41
 CPUS += I8051
 CPUS += I8052
@@ -141,6 +143,7 @@ CPUS += ARM
 CPUS += ARM7
 CPUS += JAGUAR
 CPUS += R3000
+CPUS += R3041
 CPUS += R4600
 CPUS += R4650
 CPUS += R4700
@@ -258,6 +261,8 @@ SOUNDS += NAMCONA
 SOUNDS += TMS36XX
 SOUNDS += TMS3615
 SOUNDS += TMS5110
+SOUNDS += TMC0285
+SOUNDS += TMS5200
 SOUNDS += TMS5220
 SOUNDS += VLM5030
 SOUNDS += ADPCM
@@ -1284,8 +1289,8 @@ $(MAMEOBJ)/snk.a: \
 	$(DRIVERS)/snk68.o $(VIDEO)/snk68.o \
 
 $(MAMEOBJ)/stern.a: \
-	$(DRIVERS)/astinvad.o $(AUDIO)/astinvad.o $(VIDEO)/astinvad.o \
-	$(DRIVERS)/berzerk.o $(AUDIO)/berzerk.o \
+	$(DRIVERS)/astinvad.o \
+	$(DRIVERS)/berzerk.o \
 	$(DRIVERS)/cliffhgr.o $(AUDIO)/cliffhgr.o \
 	$(DRIVERS)/mazerbla.o \
 	$(DRIVERS)/supdrapo.o \
@@ -1665,7 +1670,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/thayers.o \
 	$(DRIVERS)/thedeep.o $(VIDEO)/thedeep.o \
 	$(DRIVERS)/tiamc1.o $(VIDEO)/tiamc1.o $(AUDIO)/tiamc1.o \
-	$(DRIVERS)/tickee.o $(VIDEO)/tickee.o \
+	$(DRIVERS)/tickee.o \
 	$(DRIVERS)/truco.o $(VIDEO)/truco.o \
 	$(DRIVERS)/trucocl.o $(VIDEO)/trucocl.o \
 	$(DRIVERS)/trvmadns.o \
