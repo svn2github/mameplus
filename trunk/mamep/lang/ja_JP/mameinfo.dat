@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u4      #
+#     Mameinfo.dat日本語版 v0.122u5      #
 #                                        #
-#            January 8, 2008             #
+#            January 17, 2008            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：891 翻訳済：860
-# 追加項目：343 合計：1234
+# Tester報告：909 翻訳済：876
+# 追加項目：343 合計：1252
 #
 
 
@@ -25,16 +25,12 @@ $mame
 
 $end
 
-$info=720
+$info=bigevglf
 $mame
 [バグ]
 
-- このドライバの他のゲームに比べ、720°だけデッドロックを防ぐためハックっぽくZ80の周波数が上げられた。
-しかし、普通の速度（2.2MHz→1.789772MHz）に戻して再コンパイルして起動後、サービスモードに入ると普通に動作する。
-その後サービスモードから抜ければゲームも動作する。どうやらNVRAMの有無が原因のようだ。 720_0122u2ora, Tafoid
-
-
-- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
+- 画面反転のDIP設定が動作しない。
+またカクテルモード用のプレイヤー2の操作が割り当てられていない。 bigevglf0122u5gra, IceMan01
 
 $end
 
@@ -58,13 +54,23 @@ $info=spacefrt
 $mame
 [バグ]
 
-- 0.78u6から敵が化けている。 spacefrt0122u3gre, M.A.S.H
-
-
 - 0.58からDACサウンドが鳴っていない。 spacefrt0122u3yel, M.A.S.H
 
+$end
 
-- 敵の表示が四角に点滅する。以前は正常だった。 spacefrt096u1gre, Thenasty
+$info=deadang
+$mame
+[バグ]
+
+- 最後の手前の面（シカゴ）でグラフィックエラーが多数現われる。 deadang0122u5yel, Karasu
+
+$end
+
+$info=wcvol95
+$mame
+[バグ]
+
+- ゲーム速度がとても遅い。0.111u2でARMコアのサイクルタイミングが変更されているが、それ以前は問題なく動作していた。 wcvol95_0122u4gre, Swossino / Twist / Mamesick
 
 $end
 
@@ -73,6 +79,86 @@ $mame
 [バグ]
 
 - 背景が緑色で表示されている。 montecar0122u3gre, M.A.S.H.
+
+$end
+
+$info=zigzag
+$mame
+[バグ]
+
+- カクテルモードのプレイヤー2画面が右にずれている。 zigzag0122u4gre, IceMan01
+
+$end
+
+$info=tylz
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 tylz0122u5red, Firewave
+
+$end
+
+$info=bonkadv
+$mame
+[バグ]
+
+- 画面上部に黒い隙間が表示される。 bonkadv0122u5gre, Iaspis
+
+$end
+
+$info=kinst
+$mame
+[バグ]
+
+- 起動直後のデモシーンのBGMが鳴っていない。
+サービスモードに一回入って抜けると正しく再生される。 kinst0122u5gre, Sabotendar Kun
+
+
+- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
+
+$end
+
+$info=bchopper
+$mame
+[バグ]
+
+- 2面で画面が見えなくなり上にスクロールするとき、ステータスバーが2重に表示される。
+壁に向かって上がり続け、ショットを撃っていると再現する。 bchopper0122u5gre, robiza / Twist / Mamesick
+
+$end
+
+$info=dbreed72
+$mame
+[バグ]
+
+- 起動時にクラッシュする。 dbreed72_0122u5red, Firewave
+
+
+- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
+
+$end
+
+$info=uccops
+$mame
+[バグ]
+
+- [possible] 手前のオブジェクトとGoやMission Completeなどのメッセージでプライオリティがおかしい。 uccops0122u5gre, gtmoa
+
+$end
+
+$info=mario
+$mame
+[情報]
+
+- テストモードにするにはF2キーを押しつづける必要がある。
+
+
+[バグ]
+
+- プレイ後にdiscrete0_0.wavという名前のファイルが残される。 mario0122u5ora, John IV
+
+
+- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman / Kold666 / couriersud
 
 $end
 
@@ -95,6 +181,41 @@ $mame
 
 $end
 
+$info=ninjaw
+$mame
+[バグ]
+
+- プレイヤーが点滅しながら登場するとき、背景にプレイヤーの影が表示される。 ninjaw0122u5gre, robiza
+
+$end
+
+$info=martmast
+$mame
+[バグ]
+
+- ときどきコイン入力が効かないことがある。 pgm.c0122u5gra, ooga
+
+$end
+
+$info=killbldt
+$mame
+[バグ]
+
+- ときどきコイン入力が効かないことがある。 pgm.c0122u5gra, ooga
+
+$end
+
+$info=quasar
+$mame
+[バグ]
+
+- 起動時にクラッシュ。 quasar0122u5red, Firewave
+
+
+- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
+
+$end
+
 $info=sbrkout
 $mame
 [バグ]
@@ -107,6 +228,14 @@ $mame
 とはいっても、その間隔は決まってなくて、
 時には空のフィールドで何分も待たされることもあり。
 これがバグなのかどうかは不明。 sbrkout37b14gre, TriggerFin
+
+$end
+
+$info=aurail
+$mame
+[バグ]
+
+- segas16b.cのゲームで、カクテルモードのプレイヤー2画面がおかしい。 segas16b.c0122u4gre, IceMan01
 
 $end
 
@@ -148,6 +277,73 @@ $mame
 [バグ]
 
 - デモサウンドの切り替えDIPスイッチが逆。 tokisens0122u3gra, IceMan01
+
+$end
+
+$info=pulirula
+$mame
+[バグ]
+
+- 実機ではスプライトの影部分が波を打っている。 pulirula0122u5gre, Kold666
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=miaj
+$mame
+[バグ]
+
+- 0.76u2から起動時の画面に表示されるテキストが左右反転している。このバージョンでタイルマップへの変更が行われた。 miaj0122u5gre, RansAckeR
+
+$end
+
+$info=warriorb
+$mame
+[バグ]
+
+- 表示レイアウト"Dual Side by side, Gapless"を選択し、ウィンドウサイズを変更すると、両画面の隙間が現われる。 warriorb.c0122u5gre, Iaspis
+
+
+[TIPS]
+
+- 面セレクトコマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=darius2d
+$mame
+[バグ]
+
+- 表示レイアウト"Dual Side by side, Gapless"を選択し、ウィンドウサイズを変更すると、両画面の隙間が現われる。 warriorb.c0122u5gre, Iaspis
+
+$end
+
+$info=monymony
+$mame
+[バグ]
+
+- 基板のクロック周波数を測定していたのだが、TMS5200で問題が発生。MAMEでは640kHzだが、測定値は565kHzだった。
+ここで問題なのはTMS5200のそばにあるレゾネータで、クロックピンがいくつかのレジスタやコンデンサやトランジスタに接続されている。3.58MHｚのOSCまではトレースができるが、そこからは無理。
+このクロックは、多分実機ではディスクリートコンポーネントを分周器として使っているかもしれない。この場合、MAMEにはどんな値を設定すべきだろうか。 monymony0122u3ora, Kold666
+
+
+- 鮫かワニにプレイヤーが食われるときのプライオリティがおかしい。 monymony0113u4gre, Lord Nightmare
 
 $end
 
@@ -272,6 +468,14 @@ $mame
 
 $end
 
+$info=720
+$mame
+[バグ]
+
+- スプライトがちらつく。よくわかるのは、ゲーム開始直後のスピーカー。また、メインキャラクタを動かしてもちらつく。0.114u4から。 720_0118u6gre, Machone / twisty
+
+$end
+
 $info=paperboy
 $mame
 [バグ]
@@ -349,9 +553,6 @@ $end
 $info=blktiger
 $mame
 [バグ]
-
-- 実機では、イントロ画面のドラゴンは山の裏側に表示される。 blktiger060gre, BMF54123 / dwidel
-
 
 - プレイ中にコインを受け付けない。
 コンティニュー画面ではOK。
@@ -656,14 +857,6 @@ $mame
 
 $end
 
-$info=wallst
-$mame
-[バグ]
-
-- コイン投入後、ボイスがおかしく再生される。 wallst37b13gre, MASH / TriggerFin
-
-$end
-
 $info=darkseal
 $mame
 [バグ]
@@ -709,14 +902,6 @@ $mame
 
 - 実機と比べると、タイトルコールのタイミング違う。MAMEのフレームレートを60Hzから57.5Hzにすれば正しくなる。
 ちなみにオリジナルのダブルドラゴンは57.44Hz。 ddragon30104u7gre2, Machone
-
-$end
-
-$info=deadang
-$mame
-[バグ]
-
-- 1面をクリアするとゲームがフリーズする。 deadang0119u2red, cibomatto2002 / twisty /  robiza
 
 $end
 
@@ -904,14 +1089,6 @@ EPROMはそれぞれ違うがPROMは同一。（MAMEでは同一のPROMを読み
 
 
 - 実機の背景表示は少しゆがんでいる。 splndrbt0110u2_2, Kold666
-
-$end
-
-$info=espial
-$mame
-[バグ]
-
-- US版では鳴っているBGMがマスタセットでは鳴らない。 espial0118u5yel, gtmoa
 
 $end
 
@@ -1171,26 +1348,6 @@ $mame
 
 $end
 
-$info=qbert
-$mame
-[情報]
-
-- ハイスコアで名前を入力するには1または2キーを使う。
-
-
-- 「Auto Round Advance」のDIP設定をONにすると、
-1または2キーで面を飛ばすことができる。
-また、残機も無限になる。
-
-
-[バグ]
-
-- coinop.orgの説明によると、
-鼻野郎がパワーアップするときに「Hello, I'm turned on」としゃべるはず。 
-Dithの最新サンプルセットには入っていて、サービスモードでは聞くことができる。 qbert37b14gre1, Kurushimi / The tECHIDNA / Randolph
-
-$end
-
 $info=qbertqub
 $mame
 [バグ]
@@ -1324,35 +1481,11 @@ $mame
 
 $end
 
-$info=kinst
-$mame
-[バグ]
-
-- デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
-
-$end
-
 $info=kinst2
 $mame
 [バグ]
 
 - デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
-
-
-- テストモードの音量設定で最大に設定してリセットしても、元の音量に戻ってしまう。
-kinst1では正常に動作する。 kinst2083gre, Layne / Reznor007
-
-
-- CPUボードテストをすると“SRAM ERROR”になる。 kinstc0102gre, RansAckeR
-
-
-- 起動時に画面が青く表示され、“ポーン”という音が聞こえるはずだが、MAMEでは再現されていない。 kinstc081u7gre, Shadichu / Reznor007
 
 
 - 「DCSサウンドシステムについて」
@@ -1420,17 +1553,6 @@ $mame
 
 $end
 
-$info=lasso
-$mame
-[バグ]
-
-- 面クリア時の音楽が途切れる。 lasso056gre_1, Karasu
-
-
-- 練習面でのタイマーの進み方がとんでもなく速い。 lasso056gre_2, Karasu
-
-$end
-
 $info=aafb
 $mame
 [バグ]
@@ -1444,7 +1566,7 @@ $info=alleymas
 $mame
 [バグ]
 
-- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid
+- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid / RansAckeR
 
 
 - イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
@@ -1567,38 +1689,6 @@ $mame
 
 $end
 
-$info=dbreed72
-$mame
-[バグ]
-
-- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
-
-$end
-
-$info=loht
-$mame
-[バグ]
-
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
-
-$end
-
-$info=hharry
-$mame
-[バグ]
-
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
-
-$end
-
-$info=bchopper
-$mame
-[バグ]
-
-- スコアやその他の情報が表示されない。 m72_0115u3yel, robiza / Fujix / MilliGoodz
-
-$end
-
 $info=devstors
 $mame
 [バグ]
@@ -1625,19 +1715,6 @@ $mame
 3) サービスキー(9キー)を押してグリッドを表示
 
 4) 上x4　下x1　左x6　2Pスタート を押す
-
-$end
-
-$info=mario
-$mame
-[情報]
-
-- テストモードにするにはF2キーを押しつづける必要がある。
-
-
-[バグ]
-
-- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman
 
 $end
 
@@ -1724,14 +1801,6 @@ $mame
 
 - スプライトが2WDと4WDの切り替え表示の右側に秒がされる。
 また、Sled Pullingでもそりが画面右に表示される。 powerdrv0102gre, RansAckeR
-
-$end
-
-$info=mp_sonic
-$mame
-[バグ]
-
-- Green Hill Zoneの水の色がGenesis版に比べて完全に違っている。 mp_sonic0104u1gre, Luigi30 / Twisty
 
 $end
 
@@ -1996,14 +2065,6 @@ $info=umk3
 $mame
 [バグ]
 
-- 隠れキャラ（Mileena、Ermac、Classic Sub-Zero）を有効にした場合、キャラ選択画面の色と背景が完全に化ける。 umk3059gre, Alyas
-
-
-- 対戦相手再設定のときに時々、
-間違った色が難易度設定の方に現れる。恐らくバンクスイッチングの不具合。
-デモ画面をしばらく走らせた後にゲームを始めても、同じような現象が起こる。 umk3137b5gre, MC68K/IF
-
-
 - Scorpionでプレイ中、ヒモ系のアイテムを持ったときに、
 もし左側なら、左・左・左Shiftのコマンドを入力すると、「Get over here!」と言うはずだが、
 MAMEでは「Get ov」しか言わない。 umk3237b5gre, MC68K / beegboss
@@ -2048,24 +2109,6 @@ $mame
 
 
 - ファイナル版でプレイしたが、常にノイズが入っている。 DACサウンドの問題だと思われる。 narc36finalgre, Lord Caos / Suppi-Chan
-
-$end
-
-$info=term2
-$mame
-[バグ]
-
-- テストモードで、カーソルを上下に移動したときの右の説明が部分が正しく描画されない。 term20103u4gre, cpukett
-
-
-- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30
-
-
-- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
-実機では3～4秒かかる。 term2056ora, dwidel
-
-
-- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -2345,6 +2388,19 @@ $mame
 
 $end
 
+$info=twinbee
+$mame
+[情報]
+
+- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
+
+
+[バグ]
+
+- ボイスがおかしくなっている。 twinbee0115u3gre, Kold666 / BUT
+
+$end
+
 $info=garoup
 $mame
 [バグ]
@@ -2503,15 +2559,6 @@ $mame
 [バグ]
 
 - 最初の何面かをクリアして"First Droid Wave Complete"のメッセージが出ててプレイヤーが増えるとBGMがその後変になる。 omegrace0104u9gre, tamacula
-
-$end
-
-$info=othunder
-$mame
-[バグ]
-
-- 背景レイヤーが左にずれている模様。
-画面右端に黒い部分が表示されている。 othunder074u1gre2, Nerox91
 
 $end
 
@@ -3042,101 +3089,6 @@ $mame
 
 $end
 
-$info=eswatu
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=fantzone
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=shinobi
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=shdancer
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
-$info=astorm3
-$mame
-[バグ]
-
-- Sega System16とSystem18の一部のゲームで、タイルマップビューアを使うと、画面化けが起こる。
-再現方法は以下の通り：
-
-1) ゲームを始める
-
-2) F4キーを押してビューア表示
-
-3) Enterキーを2回押す
-
-4) ]キーを最終ページまで押す（8ページか16ページ）
-
-5) F4キーを押してビューアを閉じる segas16_18_0117yel, Jonah1976
-
-$end
-
 $info=ddcew
 $mame
 [バグ]
@@ -3473,7 +3425,7 @@ $mame
 CPU_KONAMI, 3000000, /* ? */
 
 となっているのでコーダーは速度について、はっきりしてなかったようだが、
-CPU 0の速度を125%にすればうまく動作する。 simpsonsc057gre, Bugfinder
+CPU 0の速度を125%にすればうまく動作する。 simpsonsc057gre, Bugfinder / Kold666
 
 $end
 
@@ -3573,7 +3525,7 @@ $mame
 [バグ]
 
 - 動作が速すぎ。オリジナルを思い出してみると、デモ画面の音楽は、ゲームタイトルが表示される前と後の2つのパートからなっていて、
-2つめの方は、文字の点滅の開始と同じに始まるはず。 speedbal36b11gre, Bugfinder
+2つめの方は、文字の点滅の開始と同じに始まるはず。 speedbal36b11gre, Bugfinder / Mamesick
 
 $end
 
@@ -3597,7 +3549,7 @@ $info=grdforce
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3605,7 +3557,7 @@ $info=astrass
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3613,7 +3565,7 @@ $info=batmanfr
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3621,7 +3573,7 @@ $info=cotton2
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3629,7 +3581,7 @@ $info=cottonbm
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3637,7 +3589,7 @@ $info=othellos
 $mame
 [バグ]
 
-- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB
+- サービスモードに入って"Each Game Test"を選んでも動作しない。 grdforce0120u2red, LastNinja2 / Tafoid / Haze / RB / LastNinja2
 
 $end
 
@@ -3664,14 +3616,6 @@ $mame
 [バグ]
 
 - 画面が一瞬他のグラフィックに変わることがある。後の面に進むほどひどくなる。 superchs0101u5gre, Twisty
-
-$end
-
-$info=suratk
-$mame
-[バグ]
-
-- キャラクタROMテストに失敗する。 suratk0113u4gre, Kold666
 
 $end
 
@@ -3735,17 +3679,6 @@ $mame
 
 
 - エンディングで、ヒーロー3人が浮いている泡が半分しか描かれない。 astrombl236b4gre, YMI
-
-$end
-
-$info=junglek
-$mame
-[バグ]
-
-- 2人プレーで、両方がゲームオーバーになると、「Player 2 Game Over」のメッセージの後、
-画面が反転して「Game Over」と表示される。
-カクテルモードのような動作になる。
-37b16～0.55までで確認。 junglek055gre, Thenasty
 
 $end
 
@@ -4179,14 +4112,6 @@ blswhstlのみで起きて、detatwinでは起きない。 blswhstl056gra, Jpika
 
 $end
 
-$info=cuebrckj
-$mame
-[バグ]
-
-- ビデオROMチェックで全てBADと報告される。 cuebrckj0102u5gre, Reip
-
-$end
-
 $info=ssriders
 $mame
 [バグ]
@@ -4194,14 +4119,6 @@ $mame
 - 斜め移動時に、キャラクタがぶれる(多分プライオリティのせい。
 
 【更新】0.72u1で改善。 ssriders336b4gre, Hazard / NeoGouki
-
-$end
-
-$info=tmnt
-$mame
-[バグ]
-
-- ゲーム開始デモの"Fire!"の声が2回目からしか出ない。 tmnt095gre, dropdeadhippie
 
 $end
 
@@ -4754,14 +4671,6 @@ $mame
 
 $end
 
-$info=monymony
-$mame
-[バグ]
-
-- 鮫かワニにプレイヤーが食われるときのプライオリティがおかしい。 monymony0113u4gre, Lord Nightmare
-
-$end
-
 $info=congo
 $mame
 [バグ]
@@ -4818,6 +4727,21 @@ $mame
 <b>Targ</b> - テキストは白ではなくライトブルー。
 
 <b>Spectar</b> - 自機と敵機のショットは黄色ではない。テキストは白。また、ショット音はTargとは異なる。 targ0119u3ora, outerworldarcade
+
+$end
+
+$info=term2
+$mame
+[バグ]
+
+- アイテム箱から出てくる武器冷やし器や、再チャージの動作が速すぎる。
+実機では3～4秒かかる。 term2056ora, dwidel
+
+
+- テストモードで画面反転の設定をしても文字が左右に反転するだけ。 term20104u2gre, Luigi30 / RansAckeR / Aaron Giles
+
+
+- スカイネットを破壊した後の画像が左右反転している。前からあったバグ。 term2054gre, BSR
 
 $end
 
@@ -5000,14 +4924,6 @@ $mame
 
 - ゴールデンアックスの5704ROMボードを使うものはROMテストでBADと報告される。パッシングショットも同様。
 エミュレーションの不具合の模様。 goldnaxe0103u2ora, AWJ /  Haze
-
-$end
-
-$info=cuebrick
-$mame
-[バグ]
-
-- cuebrickが日本版、cuebrikjが海外版になっている。 cuebrick099ora, Thenasty
 
 $end
 
@@ -5370,14 +5286,6 @@ $mame
 
 $end
 
-$info=hiimpact
-$mame
-[バグ]
-
-- サービスモードのスイッチテストで、Video Freezeに割り当てられているキーがない。 hiimpact0106gra, cpukett / Luigi30
-
-$end
-
 $info=pocketrc
 $mame
 [バグ]
@@ -5389,14 +5297,6 @@ $end
 $info=finallap
 $mame
 [バグ]
-
-- ハンドルの入力感度がおかしくてほとんどプレイにならない。
-良い設定例：
-
-Paddle Digital Spped 10<br>
-Paddle Auotoecenter Speed 15<br>
-Paddle Sensitivity 20% finallap0116u1gra, fostar
-
 
 - アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
@@ -5469,14 +5369,6 @@ $mame
 
 $end
 
-$info=tharrier
-$mame
-[バグ]
-
-- 入力シグナルデータの解析。本家参照。 tharrier097gra, darkcoder
-
-$end
-
 $info=vandyke
 $mame
 [バグ]
@@ -5488,27 +5380,11 @@ ROM/RAMテストの直後に例外エラーでゲームが落ちる。
 
 $end
 
-$info=opwolf
-$mame
-[バグ]
-
-- 「Launguage」のDIP設定を「Japanese」にしても効果なし。 opwolf055gra, stephh / cpukett
-
-$end
-
 $info=oneshot
 $mame
 [バグ]
 
 - 5キーでクレジットを入れた後、6キーを押してもクレジットが入らない。5なら続けて入る。同じく6で始めたときには5は使えない。059～062で確認。 othldrby062gra, Thenasty
-
-$end
-
-$info=quasar
-$mame
-[バグ]
-
-- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
 
 $end
 
@@ -5549,22 +5425,6 @@ $mame
 [バグ]
 
 - 画面反転を有効にすると、表示が化ける。 rpunch0111u5gra, Speedfreak
-
-$end
-
-$info=hotshock
-$mame
-[バグ]
-
-- カクテルモード用のプレイヤー2の操作が実装されていない。 hotshock0106u1gra, cpukett
-
-$end
-
-$info=scorpion
-$mame
-[バグ]
-
-- 筐体のDIPスイッチ設定が動作しない。実はUnknownになっているのが筐体設定。 scorpion0111u5gra, Speedfreak
 
 $end
 
@@ -5993,16 +5853,6 @@ $mame
 [バグ]
 
 - 面の最初に紫色のダイアログボックスが表示されるが、MAMEのようにゆっくりではない。また、オープニングのBGMも途中で切れる。 bouldash062gre, Sam Miller
-
-$end
-
-$info=midres
-$mame
-[バグ]
-
-- 戦艦の砲台から出る煙の色が間違っている。
-以前は正しい色だった。
-ただし、実機は見たことが無いので、こういうものかもしれない。 midres056gre_2, Iron Man
 
 $end
 
@@ -7608,14 +7458,6 @@ $mame
 
 $end
 
-$info=twinbee
-$mame
-[情報]
-
-- 画面が明るいのはオリジナル通り。ガンマを0.5程度に下げると正しい表示になる。
-
-$end
-
 $info=rf2
 $mame
 [情報]
@@ -7710,6 +7552,19 @@ $mame
 [情報]
 
 - 実機よりも速度低下が頻繁に起こる。
+
+$end
+
+$info=qbert
+$mame
+[情報]
+
+- ハイスコアで名前を入力するには1または2キーを使う。
+
+
+- 「Auto Round Advance」のDIP設定をONにすると、
+1または2キーで面を飛ばすことができる。
+また、残機も無限になる。
 
 $end
 
@@ -9158,20 +9013,6 @@ $mame
 
 $end
 
-$info=pulirula
-$mame
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
 $info=puzznic
 $mame
 [TIPS]
@@ -9441,20 +9282,6 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk/バイオレンスファイト)
-
-$end
-
-$info=warriorb
-$mame
-[TIPS]
-
-- 面セレクトコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
 
 $end
 
