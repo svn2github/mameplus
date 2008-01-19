@@ -354,6 +354,10 @@ Advanced
 All
 全部
 
+# osd/winui/layout.c: 50
+All Arcades
+全部業務機
+
 # mess/osd/winui/mess32ui.c: 675 osd/winui/win32ui.c: 841, 848, 855, 862
 All files (*.*)
 所有檔案 (*.*)
@@ -441,6 +445,10 @@ Auto restore and save (only if available)
 # osd/winui/mame32.rc: 556, 1088
 Automatic
 自動
+
+# mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
+Available Arcades
+擁有業務機
 
 # osd/winui/mame32.rc: 451
 Available fields:
@@ -2617,12 +2625,4 @@ type a keyword
 # osd/winui/mame32.rc: 379
                                 
 
-
-# osd/winui/layout.c: 50
-All Arcades
-全部業務機
-
-# mess/osd/winui/layoutms.c: 40 osd/winui/layout.c: 51
-Available Arcades
-擁有業務機
 
