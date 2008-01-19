@@ -1076,7 +1076,7 @@ gypsyjug	ƒWƒvƒV[ƒWƒƒƒOƒ‰[	‚¶‚Õ‚µ[‚¶‚á‚®‚ç[	Meadows
 minferno	ƒCƒ“ƒtƒFƒ‹ƒm (S2650)	‚¢‚ñ‚Ó‚¥‚é‚Ì	Meadows
 medlanes	ƒƒhƒEƒYƒŒ[ƒ“	‚ß‚Ç‚¤‚¸‚ê[‚ñ	Meadows Games, Inc.
 cosmos	ƒRƒXƒ‚ƒX	‚±‚·‚à‚·	Century Electronics
-darkwar	ƒ_[ƒNƒEƒH[ƒŠƒA[	‚¾[‚­‚¤‚§[‚è‚ [	Century Electronics
+darkwar	ƒ_[ƒNƒƒŠƒA[	‚¾[‚­‚í‚è‚ [	Century Electronics
 spacefrt	ƒXƒy[ƒXƒtƒH[ƒgƒŒƒX (CVS)	‚·‚Ø[‚·‚Ó‚§[‚Æ‚ê‚·	Century Electronics
 8ball	ƒrƒfƒIƒGƒCƒgƒ{[ƒ‹	‚Ñ‚Å‚¨‚¦‚¢‚Æ‚Ú[‚é	Century Electronics
 8ball1	ƒrƒfƒIƒGƒCƒgƒ{[ƒ‹ (rev 1)	‚Ñ‚Å‚¨‚¦‚¢‚Æ‚Ú[‚é	Century Electronics
@@ -3294,7 +3294,7 @@ critcrsh	ƒ^ƒ^ƒRƒbƒg / Critter Crusher (‰¢B / ƒAƒWƒA”Å 951204 ver 1.000)	‚½‚½‚±‚
 sfish2	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (USA / ‰¢B / ‘ä˜p”Å 951106 ver 1.10e)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 sfish2j	ƒXƒ|[ƒcƒtƒBƒbƒVƒ“ƒO2 (“ú–{”Å 951201 ver 1.100)	‚·‚Û[‚Â‚Ó‚¡‚Á‚µ‚ñ‚®2	Sega
 magzun	ƒ}ƒWƒJƒ‹“ª”]ƒpƒ[	‚Ü‚¶‚©‚é‚¸‚Ì‚¤‚Ï‚í[	Sega
-nclubv3	ƒl[ƒ€ƒNƒ‰ƒu Ver.3 (J 970723 V1.000)	‚Ë[‚Ş‚­‚ç‚Ô_3	Sega
+nclubv3	ƒl[ƒ€ƒNƒ‰ƒu Ver.3 (“ú–{”Å 970723 V1.000)	‚Ë[‚Ş‚­‚ç‚Ô_3	Sega
 daytona	ƒfƒCƒgƒiUSA (“ú–{”Å)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
 daytonas	ƒfƒCƒgƒiUSA (With Saturn Adverts)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
 daytonat	ƒfƒCƒgƒiUSA (“ú–{”Å Turbo hack)	‚Å‚¢‚Æ‚È‚ä[‚¦‚·‚¦[_1	Sega
@@ -3551,6 +3551,8 @@ afire	ƒAƒXƒgƒƒtƒ@ƒCƒ^[ / Astro Fire	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	Rene Pierre
 acombat	ƒAƒXƒgƒƒtƒ@ƒCƒ^[ / Astro Combat (newer cb)	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	bootleg
 acombato	ƒAƒXƒgƒƒtƒ@ƒCƒ^[ / Astro Combat (older pz)	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	bootleg
 sstarbtl	ƒAƒXƒgƒƒtƒ@ƒCƒ^[ / Super Star Battle	‚ ‚·‚Æ‚ë‚Ó‚Ÿ‚¢‚½[	bootleg
+spfghmk2	ƒXƒy[ƒXƒtƒ@ƒCƒ^[Eƒ}[ƒNII (set 1)	‚·‚Ø[‚·‚Ó‚Ÿ‚¢‚½[_2‚Ü[‚­‚Â[	Data East
+spfgmk22	ƒXƒy[ƒXƒtƒ@ƒCƒ^[Eƒ}[ƒNII (set 2)	‚·‚Ø[‚·‚Ó‚Ÿ‚¢‚½[_2‚Ü[‚­‚Â[	Data East
 tomahawk	ƒgƒ}ƒz[ƒN777 (rev 5)	‚Æ‚Ü‚Ù[‚­777	Data East
 tomahaw1	ƒgƒ}ƒz[ƒN777 (rev 1)	‚Æ‚Ü‚Ù[‚­777	Data East
 progolf	ƒvƒƒSƒ‹ƒt (set 1)	‚Õ‚ë‚²‚é‚Ó	Data East Corporation
@@ -5462,6 +5464,7 @@ legionnu	ÅIŠi“¬‹M‘°ƒŒƒWƒIƒlƒA (USA”Å)	‚³‚¢‚µ‚ã‚¤‚©‚­‚Æ‚¤‚«‚¼‚­‚ê‚¶‚¨‚Ë‚ 	Tad (
 heatbrl	ƒq[ƒeƒbƒhƒoƒŒƒ‹ (ŠCŠO”Å)	‚Ğ[‚Ä‚Á‚Ç‚Î‚ê‚é	Tad
 heatbrlo	ƒq[ƒeƒbƒhƒoƒŒƒ‹ (ŠCŠO”Å old ver)	‚Ğ[‚Ä‚Á‚Ç‚Î‚ê‚é	Tad
 heatbrlu	ƒq[ƒeƒbƒhƒoƒŒƒ‹ (USA”Å)	‚Ğ[‚Ä‚Á‚Ç‚Î‚ê‚é	Tad
+hetbrlu2	ƒq[ƒeƒbƒhƒoƒŒƒ‹ (USA”Å set 2)	‚Ğ[‚Ä‚Á‚Ç‚Î‚ê‚é	Tad
 godzilla	ƒSƒWƒ‰	‚²‚¶‚ç	Banpresto
 denjinmk	“d_–‚˜ø	‚Å‚ñ‚¶‚ñ‚Ü‚©‚¢_1	Banpresto
 sdgndmrb	SDƒKƒ“ƒ_ƒ€O‘u ƒŒƒCƒ“ƒ{[‘å—¤í‹L	‚¦‚·‚Å‚¡[‚ª‚ñ‚¾‚Ş‚³‚ñ‚²‚­‚µ‚ê‚¢‚ñ‚Ú[‚½‚¢‚è‚­‚¹‚ñ‚«	Banpresto
@@ -5829,6 +5832,7 @@ gundhara	e’e—’	‚ª‚ñ‚¾[‚ç	Banpresto
 sokonuke	‚»‚±‚Ê‚¯‘ÎíƒQ[ƒ€ (“ú–{”Å)	‚»‚±‚Ê‚¯‚½‚¢‚¹‚ñ‚°[‚Ş	Sammy Industries
 zombraid	ƒ]ƒ“ƒrƒŒƒCƒh (USA”Å)	‚¼‚ñ‚Ñ‚ê‚¢‚Ç	American Sammy
 crazyfgt	ƒNƒŒƒCƒW[ƒtƒ@ƒCƒg	‚­‚ê‚¢‚¶[‚Ó‚Ÿ‚¢‚Æ	Subsino
+inttoote	ƒCƒ“ƒ^[ƒiƒVƒ‡ƒiƒ‹ƒgƒbƒe (ƒhƒCƒc”Å)	‚¢‚ñ‚½[‚È‚µ‚å‚È‚é‚Æ‚Á‚Ä	Coinmaster
 gundamex	‹@“®ímƒKƒ“ƒ_ƒ€ EXƒŒƒrƒ…[	‚«‚Ç‚¤‚¹‚ñ‚µ‚ª‚ñ‚¾‚Ş_2‚¢[‚¦‚Á‚­‚·‚ê‚Ñ‚ã[	Banpresto
 grdians	“d_–‚˜øII / ƒK[ƒfƒBƒAƒ“ƒY	‚Å‚ñ‚¶‚ñ‚Ü‚©‚¢_2	Banpresto
 mj4simai	á‘•¨Œê -–ƒlo–… (“ú–{”Å)	‚í‚©‚­‚³‚à‚Ì‚ª‚½‚è	Maboroshi Ware
@@ -6645,7 +6649,7 @@ eggvent7	ƒGƒbƒOƒxƒ“ƒ`ƒƒ[ (release 7)	‚¦‚Á‚®‚×‚ñ‚¿‚á[	The Game Room
 eggvntdx	ƒGƒbƒOƒxƒ“ƒ`ƒƒ[ƒfƒ‰ƒbƒNƒX	‚¦‚Á‚®‚×‚ñ‚¿‚á[‚Å‚ç‚Á‚­‚·	The Game Room
 ripribit	ƒŠƒbƒp[ƒŠƒrƒbƒg(ver 2.8.4)	‚è‚Á‚Ï[‚è‚Ñ‚Á‚Æ	LAI Games
 cfarm	ƒ`ƒLƒ“ƒtƒ@[ƒ€ (ver 2.0)	‚¿‚«‚ñ‚Ó‚Ÿ[‚Ş	LAI Games
-cclown	ƒNƒŒ[ƒW[ƒNƒ‰ƒEƒ“ƒY (ver 1.0)	‚­‚ê[‚¶[‚­‚ç‚¤‚ñ‚¸	LAI Games
+cclownz	ƒNƒŒ[ƒW[ƒNƒ‰ƒEƒ“ƒY (ver 1.0)	‚­‚ê[‚¶[‚­‚ç‚¤‚ñ‚¸	LAI Games
 rotaryf	ƒ[ƒ^ƒŠ[ƒtƒ@ƒCƒ^[	‚ë[‚½‚è[‚Ó‚Ÿ‚¢‚½[	<unknown>
 sbugger	ƒXƒy[ƒXƒoƒK[ (set 1)	‚·‚Ø[‚·‚Î‚ª[	Game-A-Tron
 sbuggera	ƒXƒy[ƒXƒoƒK[ (set 2)	‚·‚Ø[‚·‚Î‚ª[	Game-A-Tron
@@ -6653,9 +6657,9 @@ portrait	ƒ|[ƒgƒŒ[ƒg (set 1)	‚Û[‚Æ‚ê[‚Æ	Olympia
 portrata	ƒ|[ƒgƒŒ[ƒg (set 2)	‚Û[‚Æ‚ê[‚Æ	Olympia
 enigma2	ƒGƒjƒOƒ}II	‚¦‚É‚®‚Ü2	GamePlan (Zilec Electronics license)
 enigma2a	ƒGƒjƒOƒ}II (Space Invaders hardware)	‚¦‚É‚®‚Ü2	Zilec Electronics
-ltcasino	ƒŠƒgƒ‹ƒJƒWƒm	‚è‚Æ‚é‚©‚¶‚Ì_1	Digital Controls Inc.
-mv4in1	ƒŠƒgƒ‹ƒJƒWƒm / Mini Vegas 4in1	‚è‚Æ‚é‚©‚¶‚Ì_1	Entertainment Enterprises
-ltcasin2	ƒŠƒgƒ‹ƒJƒWƒm2	‚è‚Æ‚é‚©‚¶‚Ì_2	Digital Controls Inc.
+ltcasino	ƒŠƒgƒ‹ƒJƒWƒm (older)	‚è‚Æ‚é‚©‚¶‚Ì	Digital Controls Inc.
+mv4in1	ƒŠƒgƒ‹ƒJƒWƒm / Mini Vegas 4in1	‚è‚Æ‚é‚©‚¶‚Ì	Entertainment Enterprises
+ltcasinn	ƒŠƒgƒ‹ƒJƒWƒm (newer)	‚è‚Æ‚é‚©‚¶‚Ì	Digital Controls Inc.
 coolmini	ƒN[ƒ‹ƒ~ƒjƒQ[ƒ€ƒRƒŒƒNƒVƒ‡ƒ“	‚­[‚é‚İ‚É‚°[‚Ş‚±‚ê‚­‚µ‚å‚ñ	SemiCom
 luplup	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 3.0 / 990128)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
 luplup29	ƒ‰ƒbƒvƒ‰ƒbƒvƒpƒYƒ‹ (ver 2.9 / 990108)	‚ç‚Á‚Õ‚ç‚Á‚Õ‚Ï‚¸‚é	Omega System
@@ -6732,6 +6736,7 @@ tictac	ƒ`ƒNƒ^ƒNƒgƒŠƒrƒA	‚¿‚­‚½‚­‚Æ‚è‚Ñ‚ 	Merit
 phrcraze	ƒtƒŒ[ƒYƒNƒŒ[ƒY	‚Ó‚ê[‚¸‚­‚ê[‚¸	Merit
 phrcrazs	ƒtƒŒ[ƒYƒNƒŒ[ƒY (sex kit)	‚Ó‚ê[‚¸‚­‚ê[‚¸	Merit
 bigappg	ƒrƒbƒOƒAƒbƒvƒ‹ƒQ[ƒ€ƒX?	‚Ñ‚Á‚®‚ ‚Á‚Õ‚é‚°[‚Ş‚·	Merit
+dodge	ƒ_ƒbƒWƒVƒeƒB	‚¾‚Á‚¶‚µ‚Ä‚¡	Merit
 couple	ƒUEƒJƒbƒvƒ‹ƒY (set 1)	‚´‚©‚Á‚Õ‚é‚¸	Merit
 couplep	ƒUEƒJƒbƒvƒ‹ƒY (set 2)	‚´‚©‚Á‚Õ‚é‚¸	Merit
 couplei	ƒUEƒJƒbƒvƒ‹ƒY (set 3)	‚´‚©‚Á‚Õ‚é‚¸	Merit
@@ -6900,6 +6905,7 @@ peps0615	ƒvƒŒƒCƒ„[ƒYƒGƒbƒWƒvƒ‰ƒX ƒJƒIƒXƒXƒƒbƒc (PS0615)	‚Õ‚ê‚¢‚â[‚¸‚¦‚Á‚¶‚Õ‚ç
 peps0716	ƒvƒŒƒCƒ„[ƒYƒGƒbƒWƒvƒ‰ƒX ƒNƒH[ƒ^[ƒ}ƒjƒAƒXƒƒbƒc (PS0716)	‚Õ‚ê‚¢‚â[‚¸‚¦‚Á‚¶‚Õ‚ç‚·‚­‚§[‚½[‚Ü‚É‚ ‚·‚ë‚Á‚Â	IGT - International Gaming Technology
 pexp0019	ƒvƒŒƒCƒ„[ƒYƒGƒbƒWƒvƒ‰ƒX ƒfƒ…[ƒXƒƒCƒ‹ƒhƒ|[ƒJ[ (XP000019)	‚Õ‚ê‚¢‚â[‚¸‚¦‚Á‚¶‚Õ‚ç‚·‚Å‚ã[‚·‚í‚¢‚é‚Ç‚Û[‚©[	IGT - International Gaming Technology
 pexs0006	ƒvƒŒƒCƒ„[ƒYƒGƒbƒWƒvƒ‰ƒX ƒgƒŠƒvƒ‹ƒgƒŠƒvƒ‹ƒ_ƒCƒAƒ‚ƒ“ƒhƒXƒƒbƒc (XS000006)	‚Õ‚ê‚¢‚â[‚¸‚¦‚Á‚¶‚Õ‚ç‚·‚Æ‚è‚Õ‚é‚Æ‚è‚Õ‚é‚¾‚¢‚ ‚à‚ñ‚Ç‚·‚ë‚Á‚Â	IGT - International Gaming Technology
+pexmp006	ƒvƒŒƒCƒ„[ƒYƒGƒbƒWƒvƒ‰ƒX ƒ}ƒ‹ƒ`ƒ|[ƒJ[ (XMP00006)	‚Õ‚ê‚¢‚â[‚¸‚¦‚Á‚¶‚Õ‚ç‚·‚Ü‚é‚¿‚Û[‚©[	IGT - International Gaming Technology
 mirage	ƒ~ƒ‰[ƒWƒ… —db–ƒ“` (“ú–{”Å)	‚İ‚ç[‚¶‚ã‚æ‚¤‚¶‚ã‚¤‚Ü[‚¶‚á‚ñ‚Å‚ñ	Mitchell
 dominob	ƒhƒ~ƒmƒuƒƒbƒN	‚Ç‚İ‚Ì‚Ô‚ë‚Á‚­	Wonwoo Systems
 jongkyo	‹¶	‚¶‚á‚ñ‚«‚å‚¤	Kiwako
