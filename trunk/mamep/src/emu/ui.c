@@ -188,7 +188,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state);
 static UINT32 handler_ingame(running_machine *machine, UINT32 state);
 static UINT32 handler_slider(running_machine *machine, UINT32 state);
 static UINT32 handler_load_save(running_machine *machine, UINT32 state);
-static UINT32 handler_confirm_quit(UINT32 state);
+static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state);
 
 /* slider controls */
 static void slider_init(void);
