@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u5      #
+#     Mameinfo.dat日本語版 v0.122u6      #
 #                                        #
-#            January 17, 2008            #
+#            January 21, 2008            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：909 翻訳済：876
-# 追加項目：343 合計：1252
+# Tester報告：914 翻訳済：879
+# 追加項目：343 合計：1257
 #
 
 
@@ -34,14 +34,6 @@ $mame
 
 $end
 
-$info=nomnlnd
-$mame
-[バグ]
-
-- 0.68からDACサウンド(BGM)が鳴っていない。 nomnlnd0122u3yel, M.A.S.H
-
-$end
-
 $info=sfiii
 $mame
 [バグ]
@@ -50,27 +42,11 @@ $mame
 
 $end
 
-$info=spacefrt
-$mame
-[バグ]
-
-- 0.58からDACサウンドが鳴っていない。 spacefrt0122u3yel, M.A.S.H
-
-$end
-
 $info=deadang
 $mame
 [バグ]
 
 - 最後の手前の面（シカゴ）でグラフィックエラーが多数現われる。 deadang0122u5yel, Karasu
-
-$end
-
-$info=wcvol95
-$mame
-[バグ]
-
-- ゲーム速度がとても遅い。0.111u2でARMコアのサイクルタイミングが変更されているが、それ以前は問題なく動作していた。 wcvol95_0122u4gre, Swossino / Twist / Mamesick
 
 $end
 
@@ -127,38 +103,11 @@ $mame
 
 $end
 
-$info=dbreed72
-$mame
-[バグ]
-
-- 起動時にクラッシュする。 dbreed72_0122u5red, Firewave
-
-
-- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
-
-$end
-
 $info=uccops
 $mame
 [バグ]
 
 - [possible] 手前のオブジェクトとGoやMission Completeなどのメッセージでプライオリティがおかしい。 uccops0122u5gre, gtmoa
-
-$end
-
-$info=mario
-$mame
-[情報]
-
-- テストモードにするにはF2キーを押しつづける必要がある。
-
-
-[バグ]
-
-- プレイ後にdiscrete0_0.wavという名前のファイルが残される。 mario0122u5ora, John IV
-
-
-- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman / Kold666 / couriersud
 
 $end
 
@@ -181,11 +130,60 @@ $mame
 
 $end
 
+$info=luckywld
+$mame
+[バグ]
+
+- トンネル内で表示不具合あり。 luckywld0122u6gre, Edwin1980
+
+$end
+
+$info=kof98
+$mame
+[バグ]
+
+- うちの学生食堂にあるKOF98では、オーダーセレクトでキャラクタをセットするとき、火花が散るようなアニメーションと金属的なサウンドがある。
+エミュレーションの問題か、それとも別バージョンだろうか。 kof98_0122u6gre, aphexdash
+
+$end
+
+$info=fatfury1
+$mame
+[バグ]
+
+- 0.116u1のネオジオ書き直しから、以下のような現象が起きている。
+
+fatfury1: 背景の空の部分に黒い線が現われる。ジャンプしたときなど。
+
+ssideki3: フィールドの左端に線が表示される。 neodrvr.c0122u6gre, goatman64
+
+$end
+
+$info=ssideki3
+$mame
+[バグ]
+
+- 0.116u1のネオジオ書き直しから、以下のような現象が起きている。
+
+fatfury1: 背景の空の部分に黒い線が現われる。ジャンプしたときなど。
+
+ssideki3: フィールドの左端に線が表示される。 neodrvr.c0122u6gre, goatman64
+
+$end
+
 $info=ninjaw
 $mame
 [バグ]
 
 - プレイヤーが点滅しながら登場するとき、背景にプレイヤーの影が表示される。 ninjaw0122u5gre, robiza
+
+$end
+
+$info=strahl
+$mame
+[バグ]
+
+- 0.122u6から全てのスプライトが表示されない。 strahl0122u6yel, Iaspis
 
 $end
 
@@ -205,14 +203,11 @@ $mame
 
 $end
 
-$info=quasar
+$info=zerohour
 $mame
 [バグ]
 
-- 起動時にクラッシュ。 quasar0122u5red, Firewave
-
-
-- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
+- ボーナスライフのDIPスイッチが動作しない。 zerohour0122u6gra, RansAckeR
 
 $end
 
@@ -251,9 +246,6 @@ $info=stadhero
 $mame
 [バグ]
 
-- 2番目のUnknownのDIPスイッチはデモサウンドの切り替え。 stadhero0122u3gra, IceMan01
-
-
 - 画面反転をONにするとスプライトレイヤーが反転しない。 stadhero0122u3gre, IceMan01
 
 
@@ -269,14 +261,6 @@ $mame
 [バグ]
 
 - カクテルモードでのP2で、グラフィックの画面端部分が化ける。 regulus0122u3gre, IceMan01
-
-$end
-
-$info=tokisens
-$mame
-[バグ]
-
-- デモサウンドの切り替えDIPスイッチが逆。 tokisens0122u3gra, IceMan01
 
 $end
 
@@ -429,15 +413,6 @@ $mame
 
 $end
 
-$info=astinvad
-$mame
-[バグ]
-
-- MAMEでは敵が地面に落ちると画面が点滅するが、これは間違い。
-また、自機がやられたときには、背景は黒のままで手前部分だけがオレンジっぽい色になる。 astinvad0106u11gre, Antny / gregf / rohang
-
-$end
-
 $info=bonzeadv
 $mame
 [バグ]
@@ -539,14 +514,6 @@ $mame
 [バグ]
 
 - ゲーム中にサウンドが途切れがち。 mechatt072u1yel, Nerox91
-
-$end
-
-$info=topsecrt
-$mame
-[バグ]
-
-- 2面の終わり部分で、MAMEでは画面が真っ黒になるまで暗くなるが、実機では濃い青色で止まる。 topsecrt0109gre2, Kold666
 
 $end
 
@@ -833,17 +800,6 @@ $mame
 
 $end
 
-$info=crbaloon
-$mame
-[バグ]
-
-- ミスした時のいばらが消えない問題について。
-実機ではミスしたいばらは残機の風船のプレイ時にちゃんと消える。
-バージョン違いではない。
-MAME対応のset 1の基板で確認済み。 crbaloon36finalgre, Fujix (chackn)
-
-$end
-
 $info=crimfght
 $mame
 [バグ]
@@ -862,7 +818,7 @@ $mame
 [バグ]
 
 - 武器を使うとその動作中、BGMのテンポが上がる。
-かなり前から起きていたが、最近はテンポの上がり方が大きい。 darkseal0112u4gre, Tafoid /  ChewChew
+かなり前から起きていたが、最近はテンポの上がり方が大きい。 darkseal0112u4gre, Tafoid / ChewChew
 
 $end
 
@@ -1487,12 +1443,6 @@ $mame
 
 - デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
 
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
 $end
 
 $info=kncljoe
@@ -1566,13 +1516,7 @@ $info=alleymas
 $mame
 [バグ]
 
-- 誕生日とイニシャルで記録を保存できるはずだが、0.104からボウラー選択画面に飛んでしまう。 alleymas0119u3gre, Tafoid / RansAckeR
-
-
 - イニシャルと誕生日を入力するときのカーソルの動く範囲がずれている。 0.53から。 alleymas059gre, Chook / El Condor
-
-
-- 0.105からジョイスティックで操作ができない。入力にキーボード、ジョイスティック、マウスなどを割り当てても反応しない。 alleymas0119u3gra, Tafoid
 
 $end
 
@@ -1589,18 +1533,6 @@ $mame
 [バグ]
 
 - コイン投入後、ショットボタンを押しながらスタートすると面セレクトになるが、16以上（特に19か22）を選ぶと惑星の画面でリセットがかかり、クレジットが0になる。 liberatr061yel, Kirin
-
-$end
-
-$info=legendoh
-$mame
-[バグ]
-
-- MAMEの速度が100%でも、ゲーム速度が異常に遅い。 legendoh0114yel, twisty
-
-
-- タイトル画面以外ではコインをいれることができない。
-さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
 
 $end
 
@@ -1689,6 +1621,14 @@ $mame
 
 $end
 
+$info=dbreed72
+$mame
+[バグ]
+
+- m72.cゲーム：　サンプルサウンドの音程が低い。 m72_0106u11gre, Stefan Lindberg
+
+$end
+
 $info=devstors
 $mame
 [バグ]
@@ -1715,6 +1655,19 @@ $mame
 3) サービスキー(9キー)を押してグリッドを表示
 
 4) 上x4　下x1　左x6　2Pスタート を押す
+
+$end
+
+$info=mario
+$mame
+[情報]
+
+- テストモードにするにはF2キーを押しつづける必要がある。
+
+
+[バグ]
+
+- 実機は電源投入時に音が出る。その直後に面スタートのBGMがかかる。 mario0109u4gre1, patman / Kold666 / couriersud
 
 $end
 
@@ -2042,12 +1995,6 @@ $mame
 - セーブステートを読み込むとサウンドがぐちゃぐちゃになる。 mk3_0116u2gre, Belegdol
 
 
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-
 - 教会の面で、影が2番目の背景レイヤーに隠れてしまう。
 ジャンプするとよくわかる。 umk3060gre_2, Jonemaan
 
@@ -2096,9 +2043,6 @@ $mame
 
 
 【TriggerFinより追加情報】うちではこれが起こる前に3つの設定を変更できた。 narc055gre, RingoWillyCat / TriggerFin / Kitsune Sniper
-
-
-- 言語設定のDIPが動作していない。 narc060gra, DCisTHEbest / arcadegamenut
 
 
 - 一番奥の背景レイヤーのテクスチャが表示されていないようだ。
@@ -2593,18 +2537,6 @@ $mame
 
 $end
 
-$info=phoenix
-$mame
-[バグ]
-
-- カクテルモードに設定するとプレイヤー2の背景が表示されない。 pleiads0111u4gre, Speedfreak
-
-
-- ゲームオーバーになったあとのデモ画面で、
-3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
-
-$end
-
 $info=pc_ngaid
 $mame
 [バグ]
@@ -2696,21 +2628,6 @@ $mame
 
 $end
 
-$info=armwrest
-$mame
-[バグ]
-
-- 最初のボーナス面でグラフィック化けあり。また、5面と9面の後のボーナス面では、お金の袋が表示されずプレイできない。 armwrest35b9yel, Sardius / BSR / Karasu
-
-
-- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN / Kold666
-
-
-- DIPスイッチ情報。
-本家参照。 armwrest37b14gra, stephh
-
-$end
-
 $info=punchout
 $mame
 [バグ]
@@ -2737,6 +2654,18 @@ $mame
 
 
 - 実機ではタイトルロゴやテキストの色が上下で違う。 spnchout0102u2gre, MaximRecoil / Red Raphael
+
+$end
+
+$info=armwrest
+$mame
+[バグ]
+
+- サウンドチャンネルが一つ鳴らなくなっている。 punchout0115gre, MARBIN / Kold666
+
+
+- DIPスイッチ情報。
+本家参照。 armwrest37b14gra, stephh
 
 $end
 
@@ -2889,14 +2818,6 @@ $mame
 [バグ]
 
 - カクテルモードでプレイヤー2のスタート時に、画面の星がおかしく表示される。 trckydoc0111u5gre, Speedfreak
-
-$end
-
-$info=darkplnt
-$mame
-[バグ]
-
-- 画面が左右に大きくずれている。 darkplnt0119u3yel, Tafoid
 
 $end
 
@@ -4371,16 +4292,8 @@ $info=victory
 $mame
 [バグ]
 
-- エミュレーションを開始してゲームをリセットすると、
-サウンドは正常なのに、オーディオエラーが報告される。 victory137b4gre, The tECHIDNA
-
-
 - シールドを使うと、大体6割くらいの確率でボイスやサウンドがぐちゃぐちゃになり、
 敵にやられるまで、音が一切鳴らなくなる。 victory237b4gre, The tECHIDNA
-
-
-- たしか37b12からだったと思うが、毎回起動時にテストモードで引っかかってしまう。
-一旦起動してしまえば普通に動作する。但し、リセットを除く。 victory37b16gre, Karasu
 
 $end
 
@@ -4820,34 +4733,6 @@ $mame
 
 $end
 
-$info=revx
-$mame
-[バグ]
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-$end
-
-$info=mk2
-$mame
-[バグ]
-
-- 「DCSサウンドシステムについて」
-
-サービスモードで音量調節後にゲームを一旦終了して、再起動しても設定した音量にならない。
-ところがサービスモードを開くと、見た目は設定通りになっている。 dcs057ora, Karasu / Smitdogg
-
-
-- デモ画面を見ていると時々、音楽のテンポが異常に速くなる。
-このバグはかなり気まぐれで、これといった再現性はない。
-
-また、Melinaを選んで、最初の敵を倒して次の敵に進むと、やられてもコンティニューできない。 mk2137b5gre, Jeff B
-
-$end
-
 $info=hanakanz
 $mame
 [バグ]
@@ -4871,22 +4756,6 @@ $mame
 - MAMEのドライバ側で時刻を取得しているが、2004年が1904年になっている。
 しかし、ゲーム自体は2000年問題には対応している。
 時刻設定をしようとするとゲームがフリーズしてしまうので、変更した時間をセーブすることができない。 mmpanic078u3ora, Nomax / PsikyoFan
-
-$end
-
-$info=pangpoms
-$mame
-[バグ]
-
-- ゲーム名はPang PomsではなくてPang Pom'sと思われる。タイトル画面の風船はアポストロフィー(略 pangpoms098u3ora, Twisty
-
-$end
-
-$info=nss_smw
-$mame
-[バグ]
-
-- プログラムROM(IC1)のサイズは、正確には今の半分(4Mbit)。 nss_smw0115ora, Heihachi_73 / The Guru
 
 $end
 
@@ -5110,9 +4979,6 @@ $mame
 
 - YM3812が100%の音量でもほとんど聞こえない。 rollerg073ora, Richter_X
 
-
-- コイン3はサービスキー。 rollerg0111u5gra, Speedfreak
-
 $end
 
 $info=shtngmst
@@ -5237,6 +5103,15 @@ $mame
 
 $end
 
+$info=legendoh
+$mame
+[バグ]
+
+- タイトル画面以外ではコインをいれることができない。
+さらに、Push Startと表示されているときは、コインだけでなくスタートボタンも効かない。 legendoh0112u2gra, F1ReB4LL
+
+$end
+
 $info=sb2003
 $mame
 [バグ]
@@ -5277,28 +5152,11 @@ $mame
 
 $end
 
-$info=gstrik2
-$mame
-[バグ]
-
-- 使用しないプレイヤー3と4のスタートボタンがマッピングされている。
-また、サービスモード用の定義がダブっている。 gstrik20105u4gra, cpukett
-
-$end
-
 $info=pocketrc
 $mame
 [バグ]
 
 - 車が右にしか回らない。 pocketrc0117gra, The Monk
-
-$end
-
-$info=finallap
-$mame
-[バグ]
-
-- アクセル、ブレーキ、シフトが動作しない。 finallap097u2gra, fostar
 
 $end
 
@@ -5361,14 +5219,6 @@ $mame
 
 $end
 
-$info=mhhonban
-$mame
-[バグ]
-
-- DIPスイッチ1-4は、コイン当たりのクレジット数設定。 mhhonban0120u3gra, mahjongfan
-
-$end
-
 $info=vandyke
 $mame
 [バグ]
@@ -5385,6 +5235,14 @@ $mame
 [バグ]
 
 - 5キーでクレジットを入れた後、6キーを押してもクレジットが入らない。5なら続けて入る。同じく6で始めたときには5は使えない。059～062で確認。 othldrby062gra, Thenasty
+
+$end
+
+$info=quasar
+$mame
+[バグ]
+
+- 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
 
 $end
 
@@ -5546,20 +5404,6 @@ $mame
 
 - 筐体のDIP設定が反転している。
 アップライトにすると、プレイヤー2の時に画面が反転し、操作もP1とP2で分離する。 spaceskr0111u1gra, Speedfreak / Fujix
-
-$end
-
-$info=mia
-$mame
-[バグ]
-
-- I/Oチェックでプレイヤー1の入力が表示されない。miajでは動作する。 mia0106u5gra, cpukett
-
-
-- エンディングの捕虜がヘリから出てくるシーンで、
-人の影が赤く表示されている。
-ただし、別ドライバのmiajでも起きているので、
-もしかしたらバグではないかもしれない。 mia055gre, Gmitra
 
 $end
 
@@ -6042,6 +5886,17 @@ $mame
 
 $end
 
+$info=mk2
+$mame
+[バグ]
+
+- デモ画面を見ていると時々、音楽のテンポが異常に速くなる。
+このバグはかなり気まぐれで、これといった再現性はない。
+
+また、Melinaを選んで、最初の敵を倒して次の敵に進むと、やられてもコンティニューできない。 mk2137b5gre, Jeff B
+
+$end
+
 $info=strkforc
 $mame
 [バグ]
@@ -6226,6 +6081,15 @@ $mame
 
 - 赤と黄色の化けたグラフィックが画面左下に現れる。
 また黄色と紫の化けもその上辺りで点滅する。 batman237b16gre, Smitdogg
+
+$end
+
+$info=phoenix
+$mame
+[バグ]
+
+- ゲームオーバーになったあとのデモ画面で、
+3行あるうちの一番下の行が消えずに残ってしまう。 phoenix055gre, zaxxon1
 
 $end
 
@@ -6501,6 +6365,17 @@ $mame
 [バグ]
 
 - モナコグランプリで、最後のコーナー近くに見えない壁がある。 f1dreamb061gre, Kale
+
+$end
+
+$info=mia
+$mame
+[バグ]
+
+- エンディングの捕虜がヘリから出てくるシーンで、
+人の影が赤く表示されている。
+ただし、別ドライバのmiajでも起きているので、
+もしかしたらバグではないかもしれない。 mia055gre, Gmitra
 
 $end
 
