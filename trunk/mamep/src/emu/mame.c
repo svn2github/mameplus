@@ -148,7 +148,7 @@ struct _mame_private
 	UINT8			exit_pending;
 	const game_driver *new_driver_pending;
 	astring *		saveload_pending_file;
-	emu_timer *	soft_reset_timer;
+	emu_timer *		soft_reset_timer;
 	mame_file *		logfile;
 
 	/* callbacks */
@@ -369,11 +369,11 @@ int mame_execute(core_options *options)
 			init_machine(machine);
 
 			/* load the configuration settings and NVRAM */
-			settingsloaded = config_load_settings();
+			settingsloaded = config_load_settings(machine);
 			nvram_load();
 
 			/* display the startup screens */
-			ui_display_startup_screens(firstrun, !settingsloaded);
+			ui_display_startup_screens(machine, firstrun, !settingsloaded);
 			firstrun = FALSE;
 
 			/* start resource tracking; note that soft_reset assumes it can */
@@ -402,11 +402,11 @@ int mame_execute(core_options *options)
 
 				/* execute CPUs if not paused */
 				if (!mame->paused)
-					cpuexec_timeslice();
+					cpuexec_timeslice(machine);
 
 				/* otherwise, just pump video updates through */
 				else
-					video_frame_update(FALSE);
+					video_frame_update(machine, FALSE);
 
 				/* handle save/load */
 				if (mame->saveload_schedule_callback)
@@ -424,7 +424,7 @@ int mame_execute(core_options *options)
 			/* save the NVRAM and configuration */
 			nvram_save();
 			if (!machine->playback_file)
-			config_save_settings();
+			config_save_settings(machine);
 		}
 		mame->fatal_error_jmpbuf_valid = FALSE;
 
@@ -1785,7 +1785,7 @@ static void init_machine(running_machine *machine)
 	/* call the game driver's init function */
 	/* this is where decryption is done and memory maps are altered */
 	/* so this location in the init order is important */
-	ui_set_startup_text(_("Initializing..."), TRUE);
+	ui_set_startup_text(machine, _("Initializing..."), TRUE);
 	if (machine->gamedrv->driver_init != NULL)
 		(*machine->gamedrv->driver_init)(machine);
 

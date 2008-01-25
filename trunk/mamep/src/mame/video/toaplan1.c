@@ -1606,5 +1606,5 @@ VIDEO_EOF( samesame )
 {
 	memcpy(buffered_spriteram16, spriteram16, TOAPLAN1_SPRITERAM_SIZE);
 	memcpy(toaplan1_buffered_spritesizeram16, toaplan1_spritesizeram16, TOAPLAN1_SPRITESIZERAM_SIZE);
-	cpunum_set_input_line(0, MC68000_IRQ_2, HOLD_LINE);	/* Frame done */
+	cpunum_set_input_line(machine, 0, MC68000_IRQ_2, HOLD_LINE);	/* Frame done */
 }

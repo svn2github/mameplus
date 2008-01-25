@@ -89,7 +89,7 @@ struct _slider_state
 	INT32			defval;				/* default value */
 	INT32			maxval;				/* maximum value */
 	INT32			incval;				/* increment value */
-	INT32			(*update)(INT32 newval, char *buffer, int arg); /* callback */
+	INT32			(*update)(running_machine *machine, INT32 newval, char *buffer, int arg); /* callback */
 	int				arg;				/* argument */
 };
 
@@ -127,7 +127,7 @@ static int auto_pause;
 static int scroll_reset;
 
 /* current UI handler */
-static UINT32 (*ui_handler_callback)(UINT32);
+static UINT32 (*ui_handler_callback)(running_machine *, UINT32);
 static UINT32 ui_handler_param;
 
 /* flag to track single stepping */
@@ -182,35 +182,36 @@ static int sprintf_disclaimer(char *buffer);
 static int sprintf_warnings(char *buffer);
 
 /* UI handlers */
-static UINT32 handler_messagebox(UINT32 state);
-static UINT32 handler_messagebox_ok(UINT32 state);
-static UINT32 handler_messagebox_selectkey(UINT32 state);
-static UINT32 handler_ingame(UINT32 state);
-static UINT32 handler_slider(UINT32 state);
-static UINT32 handler_load_save(UINT32 state);
+static UINT32 handler_messagebox(running_machine *machine, UINT32 state);
+static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state);
+static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state);
+static UINT32 handler_ingame(running_machine *machine, UINT32 state);
+static UINT32 handler_slider(running_machine *machine, UINT32 state);
+static UINT32 handler_load_save(running_machine *machine, UINT32 state);
 static UINT32 handler_confirm_quit(UINT32 state);
 
 /* slider controls */
 static void slider_init(void);
 static void slider_display(const char *text, int minval, int maxval, int defval, int curval);
 static void slider_draw_bar(float leftx, float topy, float width, float height, float percentage, float default_percentage);
-static INT32 slider_volume(INT32 newval, char *buffer, int arg);
-static INT32 slider_mixervol(INT32 newval, char *buffer, int arg);
-static INT32 slider_adjuster(INT32 newval, char *buffer, int arg);
-static INT32 slider_overclock(INT32 newval, char *buffer, int arg);
-static INT32 slider_refresh(INT32 newval, char *buffer, int arg);
-static INT32 slider_brightness(INT32 newval, char *buffer, int arg);
-static INT32 slider_contrast(INT32 newval, char *buffer, int arg);
-static INT32 slider_gamma(INT32 newval, char *buffer, int arg);
-static INT32 slider_xscale(INT32 newval, char *buffer, int arg);
-static INT32 slider_yscale(INT32 newval, char *buffer, int arg);
-static INT32 slider_xoffset(INT32 newval, char *buffer, int arg);
-static INT32 slider_yoffset(INT32 newval, char *buffer, int arg);
-static INT32 slider_flicker(INT32 newval, char *buffer, int arg);
-static INT32 slider_beam(INT32 newval, char *buffer, int arg);
+static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, int arg);
+static char *slider_get_screen_desc(int arg);
 #ifdef MAME_DEBUG
-static INT32 slider_crossscale(INT32 newval, char *buffer, int arg);
-static INT32 slider_crossoffset(INT32 newval, char *buffer, int arg);
+static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
 #endif
 
 static void build_bgtexture(running_machine *machine);
@@ -225,7 +226,7 @@ static void free_bgtexture(running_machine *machine);
     pair for the current UI handler
 -------------------------------------------------*/
 
-INLINE UINT32 ui_set_handler(UINT32 (*callback)(UINT32), UINT32 param)
+INLINE UINT32 ui_set_handler(UINT32 (*callback)(running_machine *, UINT32), UINT32 param)
 {
 	ui_handler_callback = callback;
 	ui_handler_param = param;
@@ -237,7 +238,8 @@ INLINE UINT32 ui_set_handler(UINT32 (*callback)(UINT32), UINT32 param)
     slider_config - configure a slider entry
 -------------------------------------------------*/
 
-INLINE void slider_config(slider_state *state, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, INT32 (*update)(INT32, char *, int), int arg)
+INLINE void slider_config(slider_state *state, INT32 minval, INT32 defval, INT32 maxval, INT32 incval,
+						  INT32 (*update)(running_machine *, INT32, char *, int), int arg)
 {
 	state->minval = minval;
 	state->defval = defval;
@@ -525,7 +527,7 @@ static int rescale_notifier(running_machine *machine, int width, int height)
     various startup screens
 -------------------------------------------------*/
 
-int ui_display_startup_screens(int first_time, int show_disclaimer)
+int ui_display_startup_screens(running_machine *machine, int first_time, int show_disclaimer)
 {
 #ifdef MESS
 	const int maxstate = 4;
@@ -587,13 +589,13 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 					if(has_dummy_image() > 0)
 					{
 						bufptr += sprintf(bufptr, "\n\t%s", _("Please load an image"));
-						ui_set_handler(handler_messagebox_selectkey, 0);
+						ui_set_handler(handler_messagebox_anykey, 0);
 						osd_toggle_menubar(1);
 					}
 					else
 					{
 						bufptr += sprintf(bufptr, "\n\t%s", ui_getstring(UI_selectkey));
-						ui_set_handler(handler_messagebox_selectkey, 0);
+						ui_set_handler(handler_messagebox_anykey, 0);
 					}
 				}
 				break;
@@ -609,11 +611,11 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
 
 		/* loop while we have a handler */
 		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(Machine) && !ui_menu_is_force_game_select())
-			video_frame_update(FALSE);
+			video_frame_update(machine, FALSE);
 
 		/* clear the handler and force an update */
 		ui_set_handler(handler_ingame, 0);
-		video_frame_update(FALSE);
+		video_frame_update(machine, FALSE);
 
 		scroll_reset = TRUE;
 	}
@@ -635,7 +637,7 @@ int ui_display_startup_screens(int first_time, int show_disclaimer)
     at startup
 -------------------------------------------------*/
 
-void ui_set_startup_text(const char *text, int force)
+void ui_set_startup_text(running_machine *machine, const char *text, int force)
 {
 	static osd_ticks_t lastupdatetime = 0;
 	osd_ticks_t curtime = osd_ticks();
@@ -648,7 +650,7 @@ void ui_set_startup_text(const char *text, int force)
 	if (force || (curtime - lastupdatetime) > osd_ticks_per_second() / 4)
 	{
 		lastupdatetime = curtime;
-		video_frame_update(FALSE);
+		video_frame_update(machine, FALSE);
 	}
 }
 
@@ -658,7 +660,7 @@ void ui_set_startup_text(const char *text, int force)
     render it; called by video.c
 -------------------------------------------------*/
 
-void ui_update_and_render(void)
+void ui_update_and_render(running_machine *machine)
 {
 	/* always start clean */
 	render_container_empty(render_container_get_ui());
@@ -683,7 +685,7 @@ void ui_update_and_render(void)
 
 	/* call the current UI handler */
 	assert(ui_handler_callback != NULL);
-	ui_handler_param = (*ui_handler_callback)(ui_handler_param);
+	ui_handler_param = (*ui_handler_callback)(machine, ui_handler_param);
 
 	/* cancel takes us back to the ingame handler */
 	if (ui_handler_param == UI_HANDLER_CANCEL)
@@ -1545,7 +1547,7 @@ static int sprintf_warnings(char *buffer)
 		/* add one line per warning flag */
 #ifdef MESS
 		if (Machine->gamedrv->flags & GAME_COMPUTER)
-			bufptr += sprintf(bufptr, "%s\n\n%s\n", ui_getstring(UI_comp1), ui_getstring(UI_comp2));
+			bufptr += sprintf(bufptr, "%s\n\n%s\n", "The emulated system is a computer: ", "The keyboard emulation may not be 100% accurate.");
 #endif
 		if (Machine->gamedrv->flags & GAME_IMPERFECT_COLORS)
 			bufptr += sprintf(bufptr, "%s\n", ui_getstring(UI_imperfectcolors));
@@ -1935,7 +1937,7 @@ int sprintf_game_info(char *buffer)
     messagebox_text string but handles no input
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox(UINT32 state)
+static UINT32 handler_messagebox(running_machine *machine, UINT32 state)
 {
 	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 	return 0;
@@ -1947,7 +1949,7 @@ static UINT32 handler_messagebox(UINT32 state)
     messagebox_text string and waits for an OK
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox_ok(UINT32 state)
+static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 {
 	int res;
 
@@ -1983,7 +1985,7 @@ static UINT32 handler_messagebox_ok(UINT32 state)
     selectkey press
 -------------------------------------------------*/
 
-static UINT32 handler_messagebox_selectkey(UINT32 state)
+static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 {
 	int res;
 
@@ -2014,7 +2016,7 @@ static UINT32 handler_messagebox_selectkey(UINT32 state)
     of the standard keypresses
 -------------------------------------------------*/
 
-static UINT32 handler_ingame(UINT32 state)
+static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 {
 	int is_paused = mame_is_paused(Machine);
 
@@ -2241,7 +2243,7 @@ static UINT32 handler_ingame(UINT32 state)
     and calls the slider handler
 -------------------------------------------------*/
 
-static UINT32 handler_slider(UINT32 state)
+static UINT32 handler_slider(running_machine *machine, UINT32 state)
 {
 	slider_state *cur = &slider_list[slider_current];
 	INT32 increment = 0, newval;
@@ -2265,7 +2267,7 @@ static UINT32 handler_slider(UINT32 state)
 	}
 
 	/* determine the new value */
-	newval = (*cur->update)(0, NULL, cur->arg) + increment;
+	newval = (*cur->update)(machine, 0, NULL, cur->arg) + increment;
 
 	/* select resets to the default value */
 	if (input_ui_pressed(IPT_UI_SELECT))
@@ -2278,7 +2280,7 @@ static UINT32 handler_slider(UINT32 state)
 		newval = cur->maxval;
 
 	/* update the new data and get the text */
-	(*cur->update)(newval, textbuf, cur->arg);
+	(*cur->update)(machine, newval, textbuf, cur->arg);
 
 	/* display the UI */
 	slider_display(textbuf, cur->minval, cur->maxval, cur->defval, newval);
@@ -2306,7 +2308,7 @@ static UINT32 handler_slider(UINT32 state)
     specifying a game to save or load
 -------------------------------------------------*/
 
-static UINT32 handler_load_save(UINT32 state)
+static UINT32 handler_load_save(running_machine *machine, UINT32 state)
 {
 	char filename[20];
 	input_code code;
@@ -2371,7 +2373,7 @@ static UINT32 handler_load_save(UINT32 state)
 
 
 
-static UINT32 handler_confirm_quit(UINT32 state)
+static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state)
 {
 	const char *quit_message =
 		"Quit the game?\n\n"
@@ -2550,7 +2552,7 @@ static void slider_draw_bar(float leftx, float topy, float width, float height, 
     slider_volume - global volume slider callback
 -------------------------------------------------*/
 
-static INT32 slider_volume(INT32 newval, char *buffer, int arg)
+static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	if (buffer != NULL)
 	{
@@ -2566,7 +2568,7 @@ static INT32 slider_volume(INT32 newval, char *buffer, int arg)
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_mixervol(INT32 newval, char *buffer, int arg)
+static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	if (buffer != NULL)
 	{
@@ -2582,7 +2584,7 @@ static INT32 slider_mixervol(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_adjuster(INT32 newval, char *buffer, int arg)
+static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	input_port_entry *in = &Machine->input_ports[arg];
 	if (buffer != NULL)
@@ -2599,11 +2601,11 @@ static INT32 slider_adjuster(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_overclock(INT32 newval, char *buffer, int arg)
+static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	if (buffer != NULL)
 	{
-		cpunum_set_clockscale(arg, (float)newval * 0.001f);
+		cpunum_set_clockscale(machine, arg, (float)newval * 0.001f);
 		sprintf(buffer, "%s %s%d %3.0f%%", ui_getstring(UI_overclock), ui_getstring(UI_cpu), arg, floor(cpunum_get_clockscale(arg) * 100.0f + 0.5f));
 	}
 	return floor(cpunum_get_clockscale(arg) * 1000.0f + 0.5f);
@@ -2614,7 +2616,7 @@ static INT32 slider_overclock(INT32 newval, char *buffer, int arg)
     slider_refresh - refresh rate slider callback
 -------------------------------------------------*/
 
-static INT32 slider_refresh(INT32 newval, char *buffer, int arg)
+static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	double defrefresh = ATTOSECONDS_TO_HZ(Machine->drv->screen[arg].defstate.refresh);
 	double refresh;
@@ -2623,7 +2625,7 @@ static INT32 slider_refresh(INT32 newval, char *buffer, int arg)
 	{
 		screen_state *state = &Machine->screen[arg];
 		video_screen_configure(arg, state->width, state->height, &state->visarea, HZ_TO_ATTOSECONDS(defrefresh + (double)newval * 0.001));
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_refresh_rate), ATTOSECONDS_TO_HZ(Machine->screen[arg].refresh));
+		sprintf(buffer, "%s Refresh rate %.3f", slider_get_screen_desc(arg), ATTOSECONDS_TO_HZ(Machine->screen[arg].refresh));
 	}
 	refresh = ATTOSECONDS_TO_HZ(Machine->screen[arg].refresh);
 	return floor((refresh - defrefresh) * 1000.0f + 0.5f);
@@ -2635,13 +2637,13 @@ static INT32 slider_refresh(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_brightness(INT32 newval, char *buffer, int arg)
+static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_brightness(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_brightness), render_container_get_brightness(container));
+		sprintf(buffer, "%s Brightness %.3f", slider_get_screen_desc(arg), render_container_get_brightness(container));
 	}
 	return floor(render_container_get_brightness(container) * 1000.0f + 0.5f);
 }
@@ -2652,13 +2654,13 @@ static INT32 slider_brightness(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_contrast(INT32 newval, char *buffer, int arg)
+static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_contrast(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_contrast), render_container_get_contrast(container));
+		sprintf(buffer, "%s Contrast %.3f", slider_get_screen_desc(arg), render_container_get_contrast(container));
 	}
 	return floor(render_container_get_contrast(container) * 1000.0f + 0.5f);
 }
@@ -2668,13 +2670,13 @@ static INT32 slider_contrast(INT32 newval, char *buffer, int arg)
     slider_gamma - screen gamma slider callback
 -------------------------------------------------*/
 
-static INT32 slider_gamma(INT32 newval, char *buffer, int arg)
+static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_gamma(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, ui_getstring(UI_gamma), render_container_get_gamma(container));
+		sprintf(buffer, "%s Gamma %.3f", slider_get_screen_desc(arg), render_container_get_gamma(container));
 	}
 	return floor(render_container_get_gamma(container) * 1000.0f + 0.5f);
 }
@@ -2685,13 +2687,13 @@ static INT32 slider_gamma(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_xscale(INT32 newval, char *buffer, int arg)
+static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_xscale(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, _("Horiz stretch"), render_container_get_xscale(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(arg), "Horiz Stretch", render_container_get_xscale(container));
 	}
 	return floor(render_container_get_xscale(container) * 1000.0f + 0.5f);
 }
@@ -2702,13 +2704,13 @@ static INT32 slider_xscale(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_yscale(INT32 newval, char *buffer, int arg)
+static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_yscale(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, _("Vert stretch"), render_container_get_yscale(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(arg), "Vert Stretch", render_container_get_yscale(container));
 	}
 	return floor(render_container_get_yscale(container) * 1000.0f + 0.5f);
 }
@@ -2719,13 +2721,13 @@ static INT32 slider_yscale(INT32 newval, char *buffer, int arg)
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_xoffset(INT32 newval, char *buffer, int arg)
+static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_xoffset(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, _("Horiz position"), render_container_get_xoffset(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(arg), "Horiz Position", render_container_get_xoffset(container));
 	}
 	return floor(render_container_get_xoffset(container) * 1000.0f + 0.5f);
 }
@@ -2736,13 +2738,13 @@ static INT32 slider_xoffset(INT32 newval, char *buffer, int arg)
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_yoffset(INT32 newval, char *buffer, int arg)
+static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	render_container *container = render_container_get_screen(arg);
 	if (buffer != NULL)
 	{
 		render_container_set_yoffset(container, (float)newval * 0.001f);
-		sprintf(buffer, _("Screen %d %s %.3f"), arg, _("Vert position"), render_container_get_yoffset(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(arg), "Vert Position", render_container_get_yoffset(container));
 	}
 	return floor(render_container_get_yoffset(container) * 1000.0f + 0.5f);
 }
@@ -2753,7 +2755,7 @@ static INT32 slider_yoffset(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_flicker(INT32 newval, char *buffer, int arg)
+static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	if (buffer != NULL)
 	{
@@ -2769,7 +2771,7 @@ static INT32 slider_flicker(INT32 newval, char *buffer, int arg)
     callback
 -------------------------------------------------*/
 
-static INT32 slider_beam(INT32 newval, char *buffer, int arg)
+static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	if (buffer != NULL)
 	{
@@ -2781,12 +2783,36 @@ static INT32 slider_beam(INT32 newval, char *buffer, int arg)
 
 
 /*-------------------------------------------------
+    slider_get_screen_desc - returns the
+    description for a given screen index
+-------------------------------------------------*/
+
+static char *slider_get_screen_desc(int arg)
+{
+	static char descbuf[256];
+	int item;
+	int screen_count = 0;
+
+	for (item = 0; item < MAX_SCREENS; item++)
+		if (Machine->drv->screen[item].tag != NULL)
+			screen_count++;
+
+	if (screen_count > 1)
+		sprintf(descbuf, "Screen #%d", arg);
+	else
+		strcpy(descbuf, "Screen");
+
+	return descbuf;
+}
+
+
+/*-------------------------------------------------
     slider_crossscale - crosshair scale slider
     callback
 -------------------------------------------------*/
 
 #ifdef MAME_DEBUG
-static INT32 slider_crossscale(INT32 newval, char *buffer, int arg)
+static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	input_port_entry *in;
 
@@ -2814,7 +2840,7 @@ static INT32 slider_crossscale(INT32 newval, char *buffer, int arg)
 -------------------------------------------------*/
 
 #ifdef MAME_DEBUG
-static INT32 slider_crossoffset(INT32 newval, char *buffer, int arg)
+static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
 {
 	input_port_entry *in;
 

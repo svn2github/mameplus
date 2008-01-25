@@ -156,12 +156,12 @@ static emu_timer *watchdog_timer;
 static void cpuexec_exit(running_machine *machine);
 static void cpuexec_reset(running_machine *machine);
 static void cpu_inittimers(running_machine *machine);
-static void cpu_vblankreset(void);
+static void cpu_vblankreset(running_machine *machine);
 static TIMER_CALLBACK( cpu_vblankcallback );
 static TIMER_CALLBACK( cpu_updatecallback );
 static TIMER_CALLBACK( end_interleave_boost );
-static void compute_perfect_interleave(void);
-static void watchdog_setup(int alloc_new);
+static void compute_perfect_interleave(running_machine *machine);
+static void watchdog_setup(running_machine *machine, int alloc_new);
 
 /* CPU clock setting load/save */
 static void cpu_load(int config_type, xml_data_node *parentnode);
@@ -204,7 +204,7 @@ void cpuexec_init(running_machine *machine)
 	/* allocate vblank and refresh timers, and compute the initial timing */
 	vblank_timer = timer_alloc(cpu_vblankcallback, NULL);
 	refresh_timer = timer_alloc(NULL, NULL);
-	cpu_compute_vblank_timing();
+	cpu_compute_vblank_timing(machine);
 
 	/* loop over all our CPUs */
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
@@ -264,7 +264,7 @@ void cpuexec_init(running_machine *machine)
 	add_exit_callback(machine, cpuexec_exit);
 
 	/* compute the perfect interleave factor */
-	compute_perfect_interleave();
+	compute_perfect_interleave(machine);
 
 	/* save some stuff in the default tag */
 	state_save_push_tag(0);
@@ -292,7 +292,7 @@ static void cpuexec_reset(running_machine *machine)
 	/* initialize the various timers (suspends all CPUs at startup) */
 	cpu_inittimers(machine);
 	watchdog_counter = WATCHDOG_IS_INVALID;
-	watchdog_setup(TRUE);
+	watchdog_setup(machine, TRUE);
 
 	/* first pass over CPUs */
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
@@ -311,7 +311,7 @@ static void cpuexec_reset(running_machine *machine)
 	}
 
 	/* reset the globals */
-	cpu_vblankreset();
+	cpu_vblankreset(machine);
 	vblank = 0;
 	current_frame = 0;
 }
@@ -361,21 +361,21 @@ static TIMER_CALLBACK( watchdog_callback )
  *
  *************************************/
 
-static void watchdog_setup(int alloc_new)
+static void watchdog_setup(running_machine *machine, int alloc_new)
 {
 	if (watchdog_counter != WATCHDOG_IS_DISABLED)
 	{
-		if (Machine->drv->watchdog_vblank_count)
+		if (machine->drv->watchdog_vblank_count)
 		{
 			/* Start a vblank based watchdog. */
-			watchdog_counter = Machine->drv->watchdog_vblank_count;
+			watchdog_counter = machine->drv->watchdog_vblank_count;
 		}
-		else if (attotime_compare(Machine->drv->watchdog_time, attotime_zero) != 0)
+		else if (attotime_compare(machine->drv->watchdog_time, attotime_zero) != 0)
 		{
 			/* Start a time based watchdog. */
 			if (alloc_new)
 				watchdog_timer = timer_alloc(watchdog_callback, NULL);
-			timer_adjust(watchdog_timer, Machine->drv->watchdog_time, 0, attotime_zero);
+			timer_adjust(watchdog_timer, machine->drv->watchdog_time, 0, attotime_zero);
 			watchdog_counter = WATCHDOG_IS_TIMER_BASED;
 		}
 		else if (watchdog_counter == WATCHDOG_IS_INVALID)
@@ -396,7 +396,7 @@ static void watchdog_setup(int alloc_new)
              * The 3 seconds delay is targeted at qzshowby, which otherwise
              * would reset at the start of a game.
              */
-			watchdog_counter = 3 * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh);
+			watchdog_counter = 3 * ATTOSECONDS_TO_HZ(machine->screen[0].refresh);
 		}
 	}
 }
@@ -409,11 +409,11 @@ static void watchdog_setup(int alloc_new)
  *
  *************************************/
 
-void watchdog_reset(void)
+void watchdog_reset(running_machine *machine)
 {
 	if (watchdog_counter == WATCHDOG_IS_TIMER_BASED)
 	{
-		timer_reset(watchdog_timer, Machine->drv->watchdog_time);
+		timer_reset(watchdog_timer, machine->drv->watchdog_time);
 	}
 	else
 	{
@@ -423,7 +423,7 @@ void watchdog_reset(void)
 			logerror("(vblank) watchdog armed by reset\n");
 		}
 
-		watchdog_setup(FALSE);
+		watchdog_setup(machine, FALSE);
 	}
 }
 
@@ -435,7 +435,7 @@ void watchdog_reset(void)
  *
  *************************************/
 
-void watchdog_enable(int enable)
+void watchdog_enable(running_machine *machine, int enable)
 {
 	if (!enable)
 	{
@@ -448,7 +448,7 @@ void watchdog_enable(int enable)
 	if (watchdog_counter == WATCHDOG_IS_DISABLED)
 	{
 		watchdog_counter = WATCHDOG_IS_BEING_STARTED;
-		watchdog_setup(FALSE);
+		watchdog_setup(machine, FALSE);
 	}
 }
 
@@ -466,7 +466,7 @@ void watchdog_enable(int enable)
  *
  *************************************/
 
-void cpuexec_timeslice(void)
+void cpuexec_timeslice(running_machine *machine)
 {
 	attotime target = timer_next_fire_time();
 	attotime base = timer_get_time();
@@ -476,7 +476,7 @@ void cpuexec_timeslice(void)
 	LOG(("cpu_timeslice: target = %s\n", attotime_string(target, 9)));
 
 	/* process any pending suspends */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		if (cpu[cpunum].suspend != cpu[cpunum].nextsuspend)
 			LOG(("--> updated CPU%d suspend from %X to %X\n", cpunum, cpu[cpunum].suspend, cpu[cpunum].nextsuspend));
@@ -485,7 +485,7 @@ void cpuexec_timeslice(void)
 	}
 
 	/* loop over CPUs */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* only process if we're not suspended */
 		if (!cpu[cpunum].suspend)
@@ -531,7 +531,7 @@ void cpuexec_timeslice(void)
 	}
 
 	/* update the local times of all CPUs */
-	for (cpunum = 0; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
+	for (cpunum = 0; machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* if we're suspended and counting, process */
 		if (cpu[cpunum].suspend && cpu[cpunum].eatcycles && attotime_compare(cpu[cpunum].localtime, target) < 0)
@@ -683,7 +683,7 @@ int cpunum_get_clock(int cpunum)
  *
  *************************************/
 
-void cpunum_set_clock(int cpunum, int clock)
+void cpunum_set_clock(running_machine *machine, int cpunum, int clock)
 {
 	VERIFY_CPUNUM(cpunum_set_clock);
 
@@ -692,12 +692,12 @@ void cpunum_set_clock(int cpunum, int clock)
 	attoseconds_per_cycle[cpunum] = ATTOSECONDS_PER_SECOND / ((double)clock * cpu[cpunum].clockscale);
 
 	/* re-compute the perfect interleave factor */
-	compute_perfect_interleave();
+	compute_perfect_interleave(machine);
 }
 
 
 
-void cpunum_set_clock_period(int cpunum, attoseconds_t clock_period)
+void cpunum_set_clock_period(running_machine *machine, int cpunum, attoseconds_t clock_period)
 {
 	VERIFY_CPUNUM(cpunum_set_clock);
 
@@ -706,7 +706,7 @@ void cpunum_set_clock_period(int cpunum, attoseconds_t clock_period)
 	attoseconds_per_cycle[cpunum] = clock_period;
 
 	/* re-compute the perfect interleave factor */
-	compute_perfect_interleave();
+	compute_perfect_interleave(machine);
 }
 
 
@@ -733,7 +733,7 @@ double cpunum_get_clockscale(int cpunum)
  *
  *************************************/
 
-void cpunum_set_clockscale(int cpunum, double clockscale)
+void cpunum_set_clockscale(running_machine *machine, int cpunum, double clockscale)
 {
 	VERIFY_CPUNUM(cpunum_set_clockscale);
 
@@ -742,7 +742,7 @@ void cpunum_set_clockscale(int cpunum, double clockscale)
 	attoseconds_per_cycle[cpunum] = ATTOSECONDS_PER_SECOND / ((double)cpu[cpunum].clock * clockscale);
 
 	/* re-compute the perfect interleave factor */
-	compute_perfect_interleave();
+	compute_perfect_interleave(machine);
 }
 
 
@@ -904,12 +904,12 @@ int cpu_scalebyfcount(int value)
  *
  *************************************/
 
-void cpu_compute_vblank_timing(void)
+void cpu_compute_vblank_timing(running_machine *machine)
 {
-	refresh_period = attotime_make(0, Machine->screen[0].refresh);
+	refresh_period = attotime_make(0, machine->screen[0].refresh);
 
 	/* recompute the vblank period */
-	vblank_period = attotime_make(0, Machine->screen[0].refresh / (vblank_multiplier ? vblank_multiplier : 1));
+	vblank_period = attotime_make(0, machine->screen[0].refresh / (vblank_multiplier ? vblank_multiplier : 1));
 	if (vblank_timer != NULL && timer_enable(vblank_timer, FALSE))
 	{
 		attotime remaining = timer_timeleft(vblank_timer);
@@ -960,7 +960,7 @@ int cpu_getcurrentframe(void)
  *
  *************************************/
 
-void cpu_trigger(int trigger)
+void cpu_trigger(running_machine *machine, int trigger)
 {
 	int cpunum;
 
@@ -972,7 +972,7 @@ void cpu_trigger(int trigger)
 	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
 	{
 		/* if this is a dummy, stop looking */
-		if (Machine->drv->cpu[cpunum].type == CPU_DUMMY)
+		if (machine->drv->cpu[cpunum].type == CPU_DUMMY)
 			break;
 
 		/* see if this is a matching trigger */
@@ -994,7 +994,7 @@ void cpu_trigger(int trigger)
 
 static TIMER_CALLBACK( cpu_triggertime_callback )
 {
-	cpu_trigger(param);
+	cpu_trigger(machine, param);
 }
 
 
@@ -1011,9 +1011,9 @@ void cpu_triggertime(attotime duration, int trigger)
  *
  *************************************/
 
-void cpu_triggerint(int cpunum)
+void cpu_triggerint(running_machine *machine, int cpunum)
 {
-	cpu_trigger(TRIGGER_INT + cpunum);
+	cpu_trigger(machine, TRIGGER_INT + cpunum);
 }
 
 
@@ -1149,12 +1149,12 @@ int cpu_getiloops(void)
  *
  *************************************/
 
-static void cpu_vblankreset(void)
+static void cpu_vblankreset(running_machine *machine)
 {
 	int cpunum;
 
 	/* notify the video system of a VBLANK start */
-	video_vblank_start(Machine);
+	video_vblank_start(machine);
 
 	/* read keyboard & update the status of the input ports */
 	input_port_vblank_start();
@@ -1165,7 +1165,7 @@ static void cpu_vblankreset(void)
 		if (--watchdog_counter == 0)
 		{
 			logerror("reset caused by the (vblank) watchdog\n");
-			mame_schedule_soft_reset(Machine);
+			mame_schedule_soft_reset(machine);
 		}
 	}
 
@@ -1173,7 +1173,7 @@ static void cpu_vblankreset(void)
 	for (cpunum = 0; cpunum < cpu_gettotalcpu(); cpunum++)
 	{
 		if (!(cpu[cpunum].suspend & SUSPEND_REASON_DISABLE))
-			cpu[cpunum].iloops = Machine->drv->cpu[cpunum].vblank_interrupts_per_frame - 1;
+			cpu[cpunum].iloops = machine->drv->cpu[cpunum].vblank_interrupts_per_frame - 1;
 		else
 			cpu[cpunum].iloops = -1;
 	}
@@ -1251,13 +1251,13 @@ static TIMER_CALLBACK( cpu_vblankcallback )
 	{
 		/* do we update the screen now? */
 		if (!(machine->drv->video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
-			video_frame_update(FALSE);
+			video_frame_update(machine, FALSE);
 
 		/* Set the timer to update the screen */
 		timer_adjust(update_timer, attotime_make(0, machine->screen[0].vblank), 0, attotime_zero);
 
 		/* reset the globals */
-		cpu_vblankreset();
+		cpu_vblankreset(machine);
 
 		/* reset the counter */
 		vblank_countdown = vblank_multiplier;
@@ -1281,7 +1281,7 @@ static TIMER_CALLBACK( cpu_updatecallback )
 {
 	/* update the screen if we didn't before */
 	if (machine->drv->video_attributes & VIDEO_UPDATE_AFTER_VBLANK)
-		video_frame_update(FALSE);
+		video_frame_update(machine, FALSE);
 	vblank = 0;
 
 	/* update IPT_VBLANK input ports */
@@ -1324,7 +1324,7 @@ static TIMER_CALLBACK( cpu_timedintcallback )
 
 static TIMER_CALLBACK( cpu_timeslicecallback )
 {
-	cpu_trigger(TRIGGER_TIMESLICE);
+	cpu_trigger(machine, TRIGGER_TIMESLICE);
 }
 
 
@@ -1351,7 +1351,7 @@ static TIMER_CALLBACK( end_interleave_boost )
  *
  *************************************/
 
-static void compute_perfect_interleave(void)
+static void compute_perfect_interleave(running_machine *machine)
 {
 	attoseconds_t smallest = attoseconds_per_cycle[0];
 	int cpunum;
@@ -1359,7 +1359,7 @@ static void compute_perfect_interleave(void)
 	/* start with a huge time factor and find the 2nd smallest cycle time */
 	perfect_interleave = attotime_zero;
 	perfect_interleave.attoseconds = ATTOSECONDS_PER_SECOND - 1;
-	for (cpunum = 1; Machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
+	for (cpunum = 1; machine->drv->cpu[cpunum].type != CPU_DUMMY; cpunum++)
 	{
 		/* find the 2nd smallest cycle interval */
 		if (attoseconds_per_cycle[cpunum] < smallest)
@@ -1504,7 +1504,7 @@ static void set_overclock(void)
 	const char *name = Machine->gamedrv->name;
 
 	if (!strcmp(name, "s1945p") || !strcmp(name, "s1945pd"))
-		cpunum_set_clockscale(0, 3.0);
+		cpunum_set_clockscale(Machine, 0, 3.0);
 }
 
 static void cpu_load(int config_type, xml_data_node *parentnode)
@@ -1537,7 +1537,7 @@ static void cpu_load(int config_type, xml_data_node *parentnode)
 		{
 			int clock = xml_get_attribute_int(childnode, "value", 0);
 			if (clock && clock != default_clocks[i])
-				cpunum_set_clockscale(i, (double)clock / 100.0);
+				cpunum_set_clockscale(Machine, i, (double)clock / 100.0);
 		}
 	}
 }

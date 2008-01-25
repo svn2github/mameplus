@@ -787,7 +787,7 @@ static void gba_request_irq(UINT32 int_type)
 		if (gba.IME & 1)
 		{
 //			printf("IRQ %04x\n", int_type);
-			cpunum_set_input_line(0, ARM7_IRQ_LINE, PULSE_LINE);
+			cpunum_set_input_line(Machine, 0, ARM7_IRQ_LINE, PULSE_LINE);
 		}
 	}
 }

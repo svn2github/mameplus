@@ -260,7 +260,13 @@ SOUNDS += NAMCO_63701X
 SOUNDS += NAMCONA
 SOUNDS += TMS36XX
 SOUNDS += TMS3615
+SOUNDS += TMS5100
 SOUNDS += TMS5110
+SOUNDS += TMS5110A
+SOUNDS += CD2801
+SOUNDS += TMC0281
+SOUNDS += CD2802
+SOUNDS += M58817
 SOUNDS += TMC0285
 SOUNDS += TMS5200
 SOUNDS += TMS5220
@@ -386,6 +392,7 @@ DRVLIBS += \
 	$(MAMEOBJ)/orca.a \
 	$(MAMEOBJ)/pacific.a \
 	$(MAMEOBJ)/pacman.a \
+	$(MAMEOBJ)/pce.a \
 	$(MAMEOBJ)/phoenix.a \
 	$(MAMEOBJ)/playmark.a \
 	$(MAMEOBJ)/psikyo.a \
@@ -1134,6 +1141,11 @@ $(MAMEOBJ)/pacman.a: \
 	$(MACHINE)/pacplus.o \
 	$(MACHINE)/theglobp.o \
 
+$(MAMEOBJ)/pce.a: \
+	$(DRIVERS)/uapce.o \
+	$(DRIVERS)/paranoia.o \
+	$(MACHINE)/pcecommn.o $(VIDEO)/vdc.o \
+
 $(MAMEOBJ)/phoenix.a: \
 	$(DRIVERS)/naughtyb.o $(VIDEO)/naughtyb.o \
 	$(DRIVERS)/phoenix.o $(AUDIO)/phoenix.o $(VIDEO)/phoenix.o \
@@ -1478,12 +1490,10 @@ $(MAMEOBJ)/univers.a: \
 	$(DRIVERS)/superdq.o
 
 $(MAMEOBJ)/upl.a: \
-	$(DRIVERS)/mnight.o $(VIDEO)/mnight.o \
 	$(DRIVERS)/mouser.o $(VIDEO)/mouser.o \
-	$(DRIVERS)/ninjakid.o $(VIDEO)/ninjakid.o \
+	$(DRIVERS)/ninjakun.o $(VIDEO)/ninjakun.o \
 	$(DRIVERS)/ninjakd2.o $(VIDEO)/ninjakd2.o \
 	$(DRIVERS)/nova2001.o $(VIDEO)/nova2001.o \
-	$(DRIVERS)/omegaf.o $(VIDEO)/omegaf.o \
 	$(DRIVERS)/pkunwar.o $(VIDEO)/pkunwar.o \
 	$(DRIVERS)/raiders5.o $(VIDEO)/raiders5.o \
 	$(DRIVERS)/xxmissio.o $(VIDEO)/xxmissio.o \
@@ -1683,7 +1693,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/vroulet.o \
 	$(DRIVERS)/wldarrow.o \
 	$(DRIVERS)/xyonix.o $(VIDEO)/xyonix.o \
-	$(DRIVERS)/uapce.o $(DRIVERS)/paranoia.o $(VIDEO)/vdc.o $(MACHINE)/pcecommn.o \
 
 
 #-------------------------------------------------

@@ -296,7 +296,7 @@ INTERRUPT_GEN( cps1_interrupt )
 	/* Strider also has a IRQ4 handler. It is input port related, but the game */
 	/* works without it (maybe it's used to multiplex controls). It is the */
 	/* *only* game to have that. */
-	cpunum_set_input_line(0, 2, HOLD_LINE);
+	cpunum_set_input_line(machine, 0, 2, HOLD_LINE);
 }
 
 /********************************************************************
@@ -315,7 +315,7 @@ static UINT8 *qsound_sharedram1,*qsound_sharedram2;
 
 INTERRUPT_GEN( cps1_qsound_interrupt )
 {
-	cpunum_set_input_line(cpunum, 2, HOLD_LINE);
+	cpunum_set_input_line(machine, cpunum, 2, HOLD_LINE);
 }
 
 
@@ -3822,7 +3822,7 @@ GFXDECODE_END
 
 static void cps1_irq_handler_mus(int irq)
 {
-	cpunum_set_input_line(1,0,irq ? ASSERT_LINE : CLEAR_LINE);
+	cpunum_set_input_line(Machine, 1,0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const struct YM2151interface ym2151_interface =
@@ -8356,13 +8356,13 @@ ROM_END
 static DRIVER_INIT( wof )
 {
 	wof_decode();
-	driver_init_cps1(machine);
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( dino )
 {
 	dino_decode();
-	driver_init_cps1(machine);
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( dinoh )
@@ -9019,13 +9019,13 @@ static DRIVER_INIT( kodb )
 static DRIVER_INIT( punisher )
 {
 	punisher_decode();
-	driver_init_cps1(machine);
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( slammast )
 {
 	slammast_decode();
-	driver_init_cps1(machine);
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( pang3 )
@@ -9049,7 +9049,7 @@ static DRIVER_INIT( pang3 )
 		rom[A/2] = dst;
 	}
 
-	driver_init_cps1(machine);
+	DRIVER_INIT_CALL(cps1);
 }
 #endif
 

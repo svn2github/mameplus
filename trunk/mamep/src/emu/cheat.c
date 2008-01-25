@@ -784,21 +784,21 @@ static char *	CreateStringCopy(char * buf);
 static INT32	UserSelectValueMenu(int selection, CheatEntry * entry);
 
 /********** CHEAT MENU **********/
-static int		EnableDisableCheatMenu(int selection, int firstTime, int shortcut);
-static int		AddEditCheatMenu(int selection);
-static int		EditCheatMenu(CheatEntry * entry, int index, int selection);
+static int		EnableDisableCheatMenu(running_machine *machine, int selection, int firstTime, int shortcut);
+static int		AddEditCheatMenu(running_machine *machine, int selection);
+static int		EditCheatMenu(running_machine *machine, CheatEntry * entry, int index, int selection);
 
-static int		DoSearchMenuMinimum(int selection);			// minimum mode
-static int		DoSearchMenuClassic(int selection);			// classic mode
-static int		DoSearchMenu(int selection);				// advanced mode
-static int		SelectSearchRegions(int selection, SearchInfo * search);
+static int		DoSearchMenuMinimum(running_machine *machine, int selection);	// minimum mode
+static int		DoSearchMenuClassic(running_machine *machine, int selection);	// classic mode
+static int		DoSearchMenu(running_machine *machine, int selection);			// advanced mode
+static int		SelectSearchRegions(running_machine *machine, int selection, SearchInfo * search);
 static int		ViewSearchResults(int selection, int firstTime);
 
-static int		ChooseWatch(int selection);
-static int		EditWatch(WatchInfo * entry, int selection);
+static int		ChooseWatch(running_machine *machine, int selection);
+static int		EditWatch(running_machine *machine, WatchInfo * entry, int selection);
 
-static int		SelectOptions(int selection);
-static int		SelectSearch(int selection);
+static int		SelectOptions(running_machine *machine, int selection);
+static int		SelectSearch(running_machine *machine, int selection);
 
 /********** ENTRY LIST **********/
 static void		ResizeCheatList(UINT32 newLength);
@@ -853,20 +853,20 @@ static void		BackupRegion(SearchRegion * region);
 static void		RestoreRegionBackup(SearchRegion * region);
 static void		SetSearchRegionDefaultName(SearchRegion * region);
 static void		AllocateSearchRegions(SearchInfo * info);
-static void		BuildSearchRegions(SearchInfo * info);
+static void		BuildSearchRegions(running_machine *machine, SearchInfo * info);
 
 /********** CODE LOADER **********/
 static int		ConvertOldCode(int code, int cpu, int * data, int * extendData);
-static void		HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UINT32 extendData, char * name, char * description);
+static void		HandleLocalCommandCheat(running_machine *machine, UINT32 type, UINT32 address, UINT32 data, UINT32 extendData, char * name, char * description);
 
-static void		LoadCheatFile(char * fileName);
-static void		LoadCheatDatabase(void);
+static void		LoadCheatFile(running_machine *machine, char * fileName);
+static void		LoadCheatDatabase(running_machine *machine);
 
 static void		DisposeCheatDatabase(void);
-static void		ReloadCheatDatabase(void);
+static void		ReloadCheatDatabase(running_machine *machine);
 
-static void		SaveCheat(CheatEntry * entry, int selection, int saveCode);
-static void		DoAutoSaveCheats(void);
+static void		SaveCheat(running_machine *machine, CheatEntry * entry, int selection, int saveCode);
+static void		DoAutoSaveCheats(running_machine *machine);
 
 /********** CODE ADDITION **********/
 static void		AddCheatFromResult(SearchInfo * search, SearchRegion * region, UINT32 address);
@@ -924,15 +924,15 @@ static void		DeactivateCheat(CheatEntry * entry);
 static void		TempDeactivateCheat(CheatEntry * entry);
 
 static void		cheat_periodicOperation(CheatAction * action);
-static void		cheat_periodicAction(CheatAction * action);
-static void		cheat_periodicEntry(CheatEntry * entry);
+static void		cheat_periodicAction(running_machine *machine, CheatAction * action);
+static void		cheat_periodicEntry(running_machine *machine, CheatEntry * entry);
 
 static void		UpdateAllCheatInfo(void);
 static void		UpdateCheatInfo(CheatEntry * entry, UINT8 isLoadTime);
 
 static int		IsAddressInRange(CheatAction * action, UINT32 length);
 
-static void		BuildCPUInfoList(void);
+static void		BuildCPUInfoList(running_machine *machine);
 
 /*--------------------------------------------------------------
   special key handler - check pressing shift, ctrl or alt key
@@ -1502,23 +1502,23 @@ void cheat_init(running_machine *machine)
 #endif /* USE_HISCORE */
 
 	/* ----- initialize CPU info for cheat system ----- */
-	BuildCPUInfoList();
+	BuildCPUInfoList(machine);
 
 	/* ----- load cheat database ----- */
-	LoadCheatDatabase();
+	LoadCheatDatabase(machine);
 
 	ResizeSearchList(1);
 	ResizeWatchList(20);
 
 	/* ----- initialize search regions ----- */
-	BuildSearchRegions(GetCurrentSearch());
+	BuildSearchRegions(machine, GetCurrentSearch());
 	AllocateSearchRegions(GetCurrentSearch());
 
 	/* ----- initialize string table ----- */
 	InitStringTable();
 
 	periodic_timer = timer_alloc(cheat_periodic, NULL);
-	timer_adjust(periodic_timer, attotime_make(0, Machine->screen[0].refresh), 0, attotime_make(0, Machine->screen[0].refresh));
+	timer_adjust(periodic_timer, attotime_make(0, machine->screen[0].refresh), 0, attotime_make(0, machine->screen[0].refresh));
 
 	add_exit_callback(machine, cheat_exit);
 }
@@ -1533,7 +1533,7 @@ static void cheat_exit(running_machine *machine)
 
 	/* ----- save all cheats automatically if needed ----- */
 	if(TEST_FIELD(cheatOptions, AutoSaveEnabled))
-		DoAutoSaveCheats();
+		DoAutoSaveCheats(machine);
 
 	/* ----- free database ----- */
 	DisposeCheatDatabase();
@@ -1588,7 +1588,7 @@ static void cheat_exit(running_machine *machine)
   cheat_menu - management for the cheat general menu
 -----------------------------------------------------*/
 
-UINT32 cheat_menu(UINT32 state)
+UINT32 cheat_menu(running_machine *machine, UINT32 state)
 {
 	enum
 	{
@@ -1629,38 +1629,38 @@ UINT32 cheat_menu(UINT32 state)
 		switch(sel)
 		{
 			case kMenu_EnableDisable:
-				submenu_choice = EnableDisableCheatMenu(submenu_choice, firstEntry, shortcut);
+				submenu_choice = EnableDisableCheatMenu(machine, submenu_choice, firstEntry, shortcut);
 				if (shortcut && submenu_choice == 0)
 					sel = -1;
 				break;
 
 			case kMenu_AddEdit:
-				submenu_choice = AddEditCheatMenu(submenu_choice);
+				submenu_choice = AddEditCheatMenu(machine, submenu_choice);
 				break;
 
 			case kMenu_Search:
 				switch(EXTRACT_FIELD(cheatOptions, SearchBox))
 				{
 					case kSearchBox_Minimum:
-						submenu_choice = DoSearchMenuMinimum(submenu_choice);
+						submenu_choice = DoSearchMenuMinimum(machine, submenu_choice);
 						break;
 
 					case kSearchBox_Classic:
-						submenu_choice = DoSearchMenuClassic(submenu_choice);
+						submenu_choice = DoSearchMenuClassic(machine, submenu_choice);
 						break;
 
 					case kSearchBox_Advanced:
-						submenu_choice = DoSearchMenu(submenu_choice);
+						submenu_choice = DoSearchMenu(machine, submenu_choice);
 						break;
 				}
 				break;
 
 			case kMenu_ChooseWatch:
-				submenu_choice = ChooseWatch(submenu_choice);
+				submenu_choice = ChooseWatch(machine, submenu_choice);
 				break;
 
 			case kMenu_Options:
-				submenu_choice = SelectOptions(submenu_choice);
+				submenu_choice = SelectOptions(machine, submenu_choice);
 				break;
 		}
 
@@ -1769,7 +1769,7 @@ UINT32 cheat_menu(UINT32 state)
 				break;
 
 			case kMenu_ReloadDatabase:
-				ReloadCheatDatabase();
+				ReloadCheatDatabase(machine);
 				break;
 
 			default:
@@ -1780,7 +1780,7 @@ UINT32 cheat_menu(UINT32 state)
 	}
 
 	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
-		ReloadCheatDatabase();
+		ReloadCheatDatabase(machine);
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 	{
@@ -2228,7 +2228,7 @@ static INT32 CommentMenu(int selection, CheatEntry * entry)
   EnableDisableCheatMenu - management for Enable/Disable menu
 --------------------------------------------------------------*/
 
-static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
+static int EnableDisableCheatMenu(running_machine *machine, int selection, int firstTime, int shortcut)
 {
 	INT32			sel;
 	static INT32	submenu_choice = 0;
@@ -2263,7 +2263,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 				break;
 
 			case 3:
-				submenu_choice = EditCheatMenu(&cheatList[sel], sel, submenu_choice);
+				submenu_choice = EditCheatMenu(machine, &cheatList[sel], sel, submenu_choice);
 				break;
 
 			default:
@@ -2620,7 +2620,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 		if(input_ui_pressed(IPT_UI_SAVE_CHEAT))			// shift + save = save all codes
 		{
 			for(i = 0; i < cheatListLength; i++)
-				SaveCheat(&cheatList[i], 0, 0);
+				SaveCheat(machine, &cheatList[i], 0, 0);
 
 			ui_popup_time(1, _("%d cheats saved"), cheatListLength);
 		}
@@ -2639,7 +2639,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 			{
 				if((entry->flags & kCheatFlag_HasActivationKey1) || (entry->flags & kCheatFlag_HasActivationKey2))
 				{
-					SaveCheat(entry, sel, 1);
+					SaveCheat(machine, entry, sel, 1);
 
 					ui_popup_time(1, _("activation key saved"));
 				}
@@ -2650,7 +2650,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 		else
 		{
 			if(input_ui_pressed(IPT_UI_SAVE_CHEAT))
-				SaveCheat(entry, 0, 0);						// save current entry
+				SaveCheat(machine, entry, 0, 0);			// save current entry
 		}
 	}
 
@@ -2661,7 +2661,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
 	}
 
 	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
-		ReloadCheatDatabase();
+		ReloadCheatDatabase(machine);
 
 	if(UIPressedRepeatThrottle(IPT_UI_ZOOM_IN, kVerticalKeyRepeatRate))
 		/* ----- quick menu switch : enable/disable -> add/edit ----- */
@@ -2681,7 +2681,7 @@ static int EnableDisableCheatMenu(int selection, int firstTime, int shortcut)
   AddEditCheatMenu - management for Add/Edit cheat menu
 --------------------------------------------------------*/
 
-static int AddEditCheatMenu(int selection)
+static int AddEditCheatMenu(running_machine *machine, int selection)
 {
 	INT32			sel;
 	static INT32	submenuChoice = 0;
@@ -2700,7 +2700,7 @@ static int AddEditCheatMenu(int selection)
 	/********** SUB MENU **********/
 	if(submenuChoice)
 	{
-		submenuChoice = EditCheatMenu(&cheatList[submenuCheat], submenuCheat, submenuChoice);
+		submenuChoice = EditCheatMenu(machine, &cheatList[submenuCheat], submenuCheat, submenuChoice);
 
 		/* ----- meaningless ? because no longer return with sel = -1 (pressed UI_CONFIG in submenu) ----- */
 //      if(submenuChoice == -1)
@@ -2779,7 +2779,7 @@ static int AddEditCheatMenu(int selection)
 		if(ShiftKeyPressed())
 		{
 			for(i = 0; i < cheatListLength; i++)		// shift + save = save all codes
-				SaveCheat(&cheatList[i], 0, 0);
+				SaveCheat(machine, &cheatList[i], 0, 0);
 
 			ui_popup_time(1, _("%d cheats saved"), cheatListLength);
 		}
@@ -2789,7 +2789,7 @@ static int AddEditCheatMenu(int selection)
 			{
 				if((entry->flags & kCheatFlag_HasActivationKey1) || (entry->flags & kCheatFlag_HasActivationKey2))
 				{
-					SaveCheat(entry, sel, 1);		// ctrl + save = save activation key
+					SaveCheat(machine, entry, sel, 1);	// ctrl + save = save activation key
 
 					ui_popup_time(1, _("activation key saved"));
 				}
@@ -2797,7 +2797,7 @@ static int AddEditCheatMenu(int selection)
 					ui_popup_time(1, _("no activation key"));
 			}
 			else
-				SaveCheat(entry, 0, 0);		// save current entry
+				SaveCheat(machine, entry, 0, 0);		// save current entry
 		}
 	}
 
@@ -2837,7 +2837,7 @@ static int AddEditCheatMenu(int selection)
 	}
 
 	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
-		ReloadCheatDatabase();
+		ReloadCheatDatabase(machine);
 
 	if(UIPressedRepeatThrottle(IPT_UI_ZOOM_IN, kVerticalKeyRepeatRate))
 		/* ----- quick menu switch : add/edit -> search ----- */
@@ -2857,7 +2857,7 @@ static int AddEditCheatMenu(int selection)
   EditCheatMenu - management for edit code menu
 ------------------------------------------------*/
 
-static int EditCheatMenu(CheatEntry * entry, int index, int selection)
+static int EditCheatMenu(running_machine *machine, CheatEntry * entry, int index, int selection)
 {
 	static const char *const kTypeNames[] =
 	{
@@ -4502,7 +4502,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 				}
 				else
 				{
-					int	code = input_code_poll_keyboard_switches(FALSE);
+					int	code = input_code_poll_switches(FALSE);
 
 					if(code == KEYCODE_ESC)
 					{
@@ -4662,14 +4662,14 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
 			if(ControlKeyPressed())
 				if((entry->flags & kCheatFlag_HasActivationKey1) || (entry->flags & kCheatFlag_HasActivationKey2))
 				{
-					SaveCheat(entry, index, 1);			// save activation key
+					SaveCheat(machine, entry, index, 1);	// save activation key
 
 					ui_popup_time(1, _("activation key saved"));
 				}
 				else
 					ui_popup_time(1, _("no activation key"));
 			else
-				SaveCheat(entry, 0, 0);					// save current entry
+				SaveCheat(machine, entry, 0, 0);			// save current entry
 		}
 
 		if(input_ui_pressed(IPT_UI_WATCH_VALUE))
@@ -4721,7 +4721,7 @@ static int EditCheatMenu(CheatEntry * entry, int index, int selection)
   DoSearchMenuMinimum - management for minimum search menu
 -----------------------------------------------------------*/
 
-static int DoSearchMenuMinimum(int selection)
+static int DoSearchMenuMinimum(running_machine *machine, int selection)
 {
 	/* main */
 	enum
@@ -4779,7 +4779,7 @@ static int DoSearchMenuMinimum(int selection)
 		switch(sel)
 		{
 			case kMenu_CPU:
-				submenuChoice = SelectSearchRegions(submenuChoice, GetCurrentSearch());
+				submenuChoice = SelectSearchRegions(machine, submenuChoice, GetCurrentSearch());
 				break;
 
 			case kMenu_ViewResult:
@@ -5018,7 +5018,7 @@ static int DoSearchMenuMinimum(int selection)
 					{
 						search->targetIdx--;
 
-						BuildSearchRegions(search);
+						BuildSearchRegions(machine, search);
 						AllocateSearchRegions(search);
 
 						doneSaveMemory = 0;
@@ -5062,7 +5062,7 @@ static int DoSearchMenuMinimum(int selection)
 					{
 						search->targetIdx++;
 
-						BuildSearchRegions(search);
+						BuildSearchRegions(machine, search);
 						AllocateSearchRegions(search);
 
 						doneSaveMemory = 0;
@@ -5300,7 +5300,7 @@ static int DoSearchMenuMinimum(int selection)
   DoSearchMenuClassic - management for classic search menu
 -----------------------------------------------------------*/
 
-static int DoSearchMenuClassic(int selection)
+static int DoSearchMenuClassic(running_machine *machine, int selection)
 {
 	static const char *const energyStrings[] =
 	{
@@ -5398,7 +5398,7 @@ static int DoSearchMenuClassic(int selection)
 		switch(sel)
 		{
 			case kMenu_CPU:
-				submenuChoice = SelectSearchRegions(submenuChoice, GetCurrentSearch());
+				submenuChoice = SelectSearchRegions(machine, submenuChoice, GetCurrentSearch());
 				break;
 
 			case kMenu_ViewResult:
@@ -5566,7 +5566,7 @@ static int DoSearchMenuClassic(int selection)
 				{
 					search->targetIdx--;
 
-					BuildSearchRegions(search);
+					BuildSearchRegions(machine, search);
 					AllocateSearchRegions(search);
 
 					doneSaveMemory = 0;
@@ -5620,7 +5620,7 @@ static int DoSearchMenuClassic(int selection)
 				{
 					search->targetIdx++;
 
-					BuildSearchRegions(search);
+					BuildSearchRegions(machine, search);
 					AllocateSearchRegions(search);
 
 					doneSaveMemory = 0;
@@ -5836,7 +5836,7 @@ static int DoSearchMenuClassic(int selection)
   DoSearchMenu - management for advanced search menu
 -----------------------------------------------------*/
 
-static int DoSearchMenu(int selection)
+static int DoSearchMenu(running_machine *machine, int selection)
 {
 	/* menu stirngs */
 	static const char *const kOperandNameTable[] =
@@ -5925,7 +5925,7 @@ static int DoSearchMenu(int selection)
 		switch(sel)
 		{
 			case kMenu_CPU:
-				submenuChoice = SelectSearchRegions(submenuChoice, GetCurrentSearch());
+				submenuChoice = SelectSearchRegions(machine, submenuChoice, GetCurrentSearch());
 				break;
 
 			case kMenu_ViewResult:
@@ -6142,7 +6142,7 @@ static int DoSearchMenu(int selection)
 				{
 					search->targetIdx--;
 
-					BuildSearchRegions(search);
+					BuildSearchRegions(machine, search);
 					AllocateSearchRegions(search);
 
 					doneMemorySave = 0;
@@ -6202,7 +6202,7 @@ static int DoSearchMenu(int selection)
 				{
 					search->targetIdx++;
 
-					BuildSearchRegions(search);
+					BuildSearchRegions(machine, search);
 					AllocateSearchRegions(search);
 
 					doneMemorySave = 0;
@@ -6326,7 +6326,7 @@ static int DoSearchMenu(int selection)
   SelectSearchRegions - management for search regions selection menu
 ---------------------------------------------------------------------*/
 
-static int SelectSearchRegions(int selection, SearchInfo * search)
+static int SelectSearchRegions(running_machine *machine, int selection, SearchInfo * search)
 {
 	static const char *const kSearchSpeedList[] =
 	{
@@ -6435,7 +6435,7 @@ static int SelectSearchRegions(int selection, SearchInfo * search)
 			else
 				search->searchSpeed = kSearchSpeed_Max;
 
-			BuildSearchRegions(search);
+			BuildSearchRegions(machine, search);
 			AllocateSearchRegions(search);
 		}
 	}
@@ -6456,7 +6456,7 @@ static int SelectSearchRegions(int selection, SearchInfo * search)
 			else
 				search->searchSpeed = kSearchSpeed_Fast;
 
-			BuildSearchRegions(search);
+			BuildSearchRegions(machine, search);
 			AllocateSearchRegions(search);
 		}
 	}
@@ -6862,7 +6862,7 @@ static int ViewSearchResults(int selection, int firstTime)
   ChooseWatch - management for watchpoint list menu
 ----------------------------------------------------*/
 
-static int ChooseWatch(int selection)
+static int ChooseWatch(running_machine *machine, int selection)
 {
 	const char		** menuItem;
 	char			** buf;
@@ -6885,7 +6885,7 @@ static int ChooseWatch(int selection)
 	/********** SUB MENU **********/
 	if(submenuChoice)
 	{
-		submenuChoice = EditWatch(&watchList[submenuWatch], submenuChoice);
+		submenuChoice = EditWatch(machine, &watchList[submenuWatch], submenuChoice);
 
 		/* ----- meaningless ? because no longer return with sel = -1 (pressed UI_CONFIG in submenu) ----- */
 //      if(submenuChoice == -1)
@@ -6978,7 +6978,7 @@ static int ChooseWatch(int selection)
 				memset(&entry, 0, sizeof(CheatEntry));
 
 				SetupCheatFromWatchAsWatch(&entry, watch);
-				SaveCheat(&entry, 0, 0);
+				SaveCheat(machine, &entry, 0, 0);
 				DisposeCheat(&entry);
 			}
 		}
@@ -7082,7 +7082,7 @@ static int ChooseWatch(int selection)
   EditWatch - management for watchpoint edit menu
 --------------------------------------------------*/
 
-static int EditWatch(WatchInfo * entry, int selection)
+static int EditWatch(running_machine *machine, WatchInfo * entry, int selection)
 {
 	enum
 	{
@@ -7299,11 +7299,11 @@ static int EditWatch(WatchInfo * entry, int selection)
 				break;
 
 			case kMenu_XPosition:
-				entry->x -= 0.01;
+				entry->x -= 0.01f;
 				break;
 
 			case kMenu_YPosition:
-				entry->y -= 0.01;
+				entry->y -= 0.01f;
 				break;
 
 			case kMenu_Skip:
@@ -7394,11 +7394,11 @@ static int EditWatch(WatchInfo * entry, int selection)
 				break;
 
 			case kMenu_XPosition:
-				entry->x += 0.01;
+				entry->x += 0.01f;
 				break;
 
 			case kMenu_YPosition:
-				entry->y += 0.01;
+				entry->y += 0.01f;
 				break;
 
 			case kMenu_Skip:
@@ -7570,7 +7570,7 @@ static int EditWatch(WatchInfo * entry, int selection)
 			memset(&tempEntry, 0, sizeof(CheatEntry));
 
 			SetupCheatFromWatchAsWatch(&tempEntry, entry);
-			SaveCheat(&tempEntry, 0, 0);
+			SaveCheat(machine, &tempEntry, 0, 0);
 			DisposeCheat(&tempEntry);
 		}
 	}
@@ -7585,7 +7585,7 @@ static int EditWatch(WatchInfo * entry, int selection)
   SelectOptions - management for options menu
 ----------------------------------------------*/
 
-static int SelectOptions(int selection)
+static int SelectOptions(running_machine *machine, int selection)
 {
 	enum
 	{
@@ -7615,7 +7615,7 @@ static int SelectOptions(int selection)
 		switch(sel)
 		{
 			case kMenu_SelectSearch:
-				submenuChoice = SelectSearch(submenuChoice);
+				submenuChoice = SelectSearch(machine, submenuChoice);
 				break;
 
 			default:
@@ -7782,13 +7782,13 @@ static int SelectOptions(int selection)
 
 	if(input_ui_pressed(IPT_UI_SAVE_CHEAT))
 	{
-		SaveCheat(NULL, 0, 2);
+		SaveCheat(machine, NULL, 0, 2);
 
 		ui_popup_time(1, _("command code saved"));
 	}
 
 	if(input_ui_pressed(IPT_UI_RELOAD_CHEAT))
-		ReloadCheatDatabase();
+		ReloadCheatDatabase(machine);
 
 	if(input_ui_pressed(IPT_UI_CANCEL))
 		sel = -1;
@@ -7800,7 +7800,7 @@ static int SelectOptions(int selection)
   SelectSearch - management for search selection menu
 ------------------------------------------------------*/
 
-static int SelectSearch(int selection)
+static int SelectSearch(running_machine *machine, int selection)
 {
 	INT32			sel;
 	const char		** menuItem;
@@ -7889,7 +7889,7 @@ static int SelectSearch(int selection)
 	{
 		AddSearchBefore(sel);
 
-		BuildSearchRegions(&searchList[sel]);
+		BuildSearchRegions(machine, &searchList[sel]);
 		AllocateSearchRegions(&searchList[sel]);
 	}
 
@@ -7955,7 +7955,7 @@ static TIMER_CALLBACK( cheat_periodic )
 		return;
 
 	for(i = 0; i < cheatListLength; i++)
-		cheat_periodicEntry(&cheatList[i]);
+		cheat_periodicEntry(machine, &cheatList[i]);
 }
 
 /*--------------
@@ -8966,7 +8966,7 @@ static void RestoreRegionBackup(SearchRegion * region)
   DefaultEnableRegion - get default regions you can search
 -----------------------------------------------------------*/
 
-static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
+static UINT8 DefaultEnableRegion(running_machine *machine, SearchRegion * region, SearchInfo * info)
 {
 	write8_handler		handler = region->writeHandler->write.handler8;
 	FPTR				handlerAddress = (FPTR)handler;
@@ -8976,7 +8976,7 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 		case kSearchSpeed_Fast:
 
 #if HAS_SH2
-			if(Machine->drv->cpu[0].type == CPU_SH2)
+			if(machine->drv->cpu[0].type == CPU_SH2)
 			{
 				if(	(info->targetType == kRegionType_CPU) && (info->targetIdx == 0) && (region->address == 0x06000000))
 					return 1;
@@ -8992,7 +8992,7 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 
 			{
 				/* ----- for neogeo, search bank one ----- */
-				if(	(!strcmp(Machine->gamedrv->parent, "neogeo")) && (info->targetType == kRegionType_CPU) &&
+				if(	(!strcmp(machine->gamedrv->parent, "neogeo")) && (info->targetType == kRegionType_CPU) &&
 					(info->targetIdx == 0) && (handler == MWA8_BANK1))
 					return 1;
 			}
@@ -9002,12 +9002,12 @@ static UINT8 DefaultEnableRegion(SearchRegion * region, SearchInfo * info)
 #if HAS_TMS34010
 
 			/* ----- for exterminator, search bank one ----- */
-			if(	(Machine->drv->cpu[1].type == CPU_TMS34010) && (info->targetType == kRegionType_CPU) &&
+			if(	(machine->drv->cpu[1].type == CPU_TMS34010) && (info->targetType == kRegionType_CPU) &&
 				(info->targetIdx == 1) && (handler == MWA8_BANK1))
 				return 1;
 
 			/* ----- for smashtv, search bank two ----- */
-			if(	(Machine->drv->cpu[0].type == CPU_TMS34010) && (info->targetType == kRegionType_CPU) &&
+			if(	(machine->drv->cpu[0].type == CPU_TMS34010) && (info->targetType == kRegionType_CPU) &&
 				(info->targetIdx == 0) && (handler == MWA8_BANK2))
 				return 1;
 
@@ -9158,7 +9158,7 @@ static void AllocateSearchRegions(SearchInfo * info)
   BuildSearchRegions
 ---------------------*/
 
-static void BuildSearchRegions(SearchInfo * info)
+static void BuildSearchRegions(running_machine *machine, SearchInfo * info)
 {
 	info->comparison = kSearchComparison_EqualTo;
 
@@ -9245,7 +9245,7 @@ static void BuildSearchRegions(SearchInfo * info)
 							traverse->backupLast = NULL;
 							traverse->backupStatus = NULL;
 
-							traverse->flags = DefaultEnableRegion(traverse, info) ? kRegionFlag_Enabled : 0;
+							traverse->flags = DefaultEnableRegion(machine, traverse, info) ? kRegionFlag_Enabled : 0;
 
 							SetSearchRegionDefaultName(traverse);
 
@@ -9414,7 +9414,7 @@ static int ConvertOldCode(int code, int cpu, int * data, int * extendData)
   HandleLocalCommandCheat - get special code which is not added into cheat list
 --------------------------------------------------------------------------------*/
 
-static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UINT32 extendData, char * name, char * description)
+static void HandleLocalCommandCheat(running_machine *machine, UINT32 type, UINT32 address, UINT32 data, UINT32 extendData, char * name, char * description)
 {
 	switch(EXTRACT_FIELD(type, LocationType))
 	{
@@ -9465,7 +9465,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 
 						overclock /= 65536.0;
 
-						cpunum_set_clockscale(address, overclock);
+						cpunum_set_clockscale(machine, address, overclock);
 					}
 				}
 				break;
@@ -9473,7 +9473,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
 				/* ----- refresh rate ----- */
 				case kCustomLocation_RefreshRate:
 				{
-					screen_state	*state = &Machine->screen[0];
+					screen_state	*state = &machine->screen[0];
 					double			refresh = data;
 
 					refresh /= 65536.0;
@@ -9490,7 +9490,7 @@ static void HandleLocalCommandCheat(UINT32 type, UINT32 address, UINT32 data, UI
   LoadCheatFile - load cheat code from database
 ------------------------------------------------*/
 
-static void LoadCheatFile(char * fileName)
+static void LoadCheatFile(running_machine *machine, char * fileName)
 {
 	mame_file	* theFile;
 	file_error filerr;
@@ -9509,11 +9509,11 @@ static void LoadCheatFile(char * fileName)
 
 	/* ----- make the format strings ----- */
 #ifdef MESS
-	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
-	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%x:%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
+	sprintf(formatString, ":%s:%s", machine->gamedrv->name, "%x:%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
+	sprintf(oldFormatString, "%s:%s", machine->gamedrv->name, "%x:%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
 #else
-	sprintf(formatString, ":%s:%s", Machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
-	sprintf(oldFormatString, "%s:%s", Machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
+	sprintf(formatString, ":%s:%s", machine->gamedrv->name, "%x:%x:%x:%x:%[^:\n\r]:%[^:\n\r]");
+	sprintf(oldFormatString, "%s:%s", machine->gamedrv->name, "%d:%x:%x:%d:%[^:\n\r]:%[^:\n\r]");
 #endif
 
 	/* ----- get a line from database ----- */
@@ -9602,7 +9602,7 @@ static void LoadCheatFile(char * fileName)
 		{
 			//logerror("cheat: cheat line removed\n", buf);
 
-			HandleLocalCommandCheat(type, address, data, extendData, name, description);
+			HandleLocalCommandCheat(machine, type, address, data, extendData, name, description);
 		}
 		else
 		{
@@ -9684,7 +9684,7 @@ static void LoadCheatFile(char * fileName)
   LoadCheatDatabase - get the database name then load it
 ---------------------------------------------------------*/
 
-static void LoadCheatDatabase(void)
+static void LoadCheatDatabase(running_machine *machine)
 {
 	char		buf[4096];
 	const char	* inTraverse;
@@ -9721,7 +9721,7 @@ static void LoadCheatDatabase(void)
 			if(buf[0])
 			{
 				/* ----- load database based on the name we gotten ----- */
-				LoadCheatFile(buf);
+				LoadCheatFile(machine, buf);
 
 				outTraverse =buf;
 				buf[0] = 0;
@@ -9772,10 +9772,10 @@ static void DisposeCheatDatabase(void)
   ReloadCheatDatabase - reload cheat database directly on the cheat menu
 -------------------------------------------------------------------------*/
 
-static void ReloadCheatDatabase(void)
+static void ReloadCheatDatabase(running_machine *machine)
 {
 	DisposeCheatDatabase();
-	LoadCheatDatabase();
+	LoadCheatDatabase(machine);
 
 	ui_popup_time(1, _("Cheat Database reloaded"));
 }
@@ -9784,7 +9784,7 @@ static void ReloadCheatDatabase(void)
   SaveCheat - save a code (normal code, activation key, option)
 ---------------------------------------------------------------*/
 
-static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
+static void SaveCheat(running_machine *machine, CheatEntry * entry, int selection, int saveCode)
 {
 	enum{
 			normalCode = 0,
@@ -9867,9 +9867,9 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 						break;
 				}
 #ifdef MESS
-				bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.8X:%.*X:%.8X:%.8X", Machine->gamedrv->name, thisGameCRC, type, addressLength, action->address, action->originalDataField, action->extendData);
+				bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.8X:%.*X:%.8X:%.8X", machine->gamedrv->name, thisGameCRC, type, addressLength, action->address, action->originalDataField, action->extendData);
 #else
-				bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.*X:%.8X:%.8X", Machine->gamedrv->name, type, addressLength, action->address, action->originalDataField, action->extendData);
+				bufTraverse += sprintf(bufTraverse, ":%s:%.8X:%.*X:%.8X:%.8X", machine->gamedrv->name, type, addressLength, action->address, action->originalDataField, action->extendData);
 #endif
 				/* ----- set description and comment ----- */
 				if(name)
@@ -9913,14 +9913,14 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
 					addressLength = cpuInfoList[EXTRACT_FIELD(entry->actionList[1].type, LocationParameter)].addressCharsNeeded;
 #ifdef MESS
 				if(!i)
-					bufTraverse += sprintf(bufTraverse, ":%s:%.8X:63004000:%.*X:%.8X:00000000", Machine->gamedrv->name, thisGameCRC, addressLength, selection, entry->activationKey1);
+					bufTraverse += sprintf(bufTraverse, ":%s:%.8X:63004000:%.*X:%.8X:00000000", machine->gamedrv->name, thisGameCRC, addressLength, selection, entry->activationKey1);
 				else
-					bufTraverse += sprintf(bufTraverse, ":%s:%.8X:63004001:%.*X:%.8X:00000000", Machine->gamedrv->name, thisGameCRC, addressLength, selection, entry->activationKey2);
+					bufTraverse += sprintf(bufTraverse, ":%s:%.8X:63004001:%.*X:%.8X:00000000", machine->gamedrv->name, thisGameCRC, addressLength, selection, entry->activationKey2);
 #else
 				if(!i)
-					bufTraverse += sprintf(bufTraverse, ":%s:63004000:%.*X:%.8X:00000000", Machine->gamedrv->name, addressLength, selection, entry->activationKey1);
+					bufTraverse += sprintf(bufTraverse, ":%s:63004000:%.*X:%.8X:00000000", machine->gamedrv->name, addressLength, selection, entry->activationKey1);
 				else
-					bufTraverse += sprintf(bufTraverse, ":%s:63004001:%.*X:%.8X:00000000", Machine->gamedrv->name, addressLength, selection, entry->activationKey2);
+					bufTraverse += sprintf(bufTraverse, ":%s:63004001:%.*X:%.8X:00000000", machine->gamedrv->name, addressLength, selection, entry->activationKey2);
 #endif
 				/* ----- set description and button index ----- */
 				if(!i)
@@ -9972,7 +9972,7 @@ static void SaveCheat(CheatEntry * entry, int selection, int saveCode)
   DoAutoSaveCheat - save normal code automatically when exit cheat system
 --------------------------------------------------------------------------*/
 
-static void DoAutoSaveCheats(void)
+static void DoAutoSaveCheats(running_machine *machine)
 {
 	int	i;
 
@@ -9981,7 +9981,7 @@ static void DoAutoSaveCheats(void)
 		CheatEntry	* entry = &cheatList[i];
 
 		if(entry->flags & kCheatFlag_Dirty)
-			SaveCheat(entry, 0, 0);
+			SaveCheat(machine, entry, 0, 0);
 	}
 }
 
@@ -11413,7 +11413,7 @@ static void cheat_periodicOperation(CheatAction * action)
   cheat_periodicAction - management for cheat actions
 ------------------------------------------------------*/
 
-static void cheat_periodicAction(CheatAction * action)
+static void cheat_periodicAction(running_machine *machine, CheatAction * action)
 {
 	UINT8	parameter = EXTRACT_FIELD(action->type, TypeParameter);
 
@@ -11454,7 +11454,7 @@ static void cheat_periodicAction(CheatAction * action)
 				/* ----- keep if one shot + restore prevous value + delay !=0 ----- */
 				cheat_periodicOperation(action);
 
-				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh)))
+				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11466,7 +11466,7 @@ static void cheat_periodicAction(CheatAction * action)
 			else
 			{
 				/* ----- otherwise, delay ----- */
-				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh)))
+				if(action->frameTimer >= (parameter * ATTOSECONDS_TO_HZ(machine->screen[0].refresh)))
 				{
 					action->frameTimer = 0;
 
@@ -11505,7 +11505,7 @@ static void cheat_periodicAction(CheatAction * action)
 
 				if(currentValue != action->lastValue)
 				{
-					action->frameTimer = parameter * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh);
+					action->frameTimer = parameter * ATTOSECONDS_TO_HZ(machine->screen[0].refresh);
 
 					action->flags |= kActionFlag_WasModified;
 				}
@@ -11541,7 +11541,7 @@ static void cheat_periodicAction(CheatAction * action)
   cheat_periodicEntry - management for cheat entries
 -----------------------------------------------------*/
 
-static void cheat_periodicEntry(CheatEntry * entry)
+static void cheat_periodicEntry(running_machine *machine, CheatEntry * entry)
 {
 	int	i;
 
@@ -11650,7 +11650,7 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 			do{
 				if(!(entry->flags & kCheatFlag_OneShot) || (entry->flags & kCheatFlag_DoOneShot))
-					cheat_periodicAction(&entry->actionList[i]);
+					cheat_periodicAction(machine, &entry->actionList[i]);
 
 				i++;
 
@@ -11713,7 +11713,7 @@ static void cheat_periodicEntry(CheatEntry * entry)
 
 		/* ----- update all actions ----- */
 		for(i = 0; i < entry->actionListLength; i++)
-			cheat_periodicAction(&entry->actionList[i]);
+			cheat_periodicAction(machine, &entry->actionList[i]);
 
 		/* ----- if all actions are done, deactivate the cheat if oneshot entry ----- */
 		{
@@ -11832,13 +11832,13 @@ static int IsAddressInRange(CheatAction * action, UINT32 length)
   BuildCPUInfoList - get CPU info when initialize cheat system
 ---------------------------------------------------------------*/
 
-static void BuildCPUInfoList(void)
+static void BuildCPUInfoList(running_machine *machine)
 {
 	int	i;
 
 	/* ----- do regions ----- */
 	{
-		const rom_entry	 * traverse = rom_first_region(Machine->gamedrv);
+		const rom_entry	 * traverse = rom_first_region(machine->gamedrv);
 
 		memset(regionInfoList, 0, sizeof(CPUInfo) * kRegionListLength);
 
@@ -11900,7 +11900,7 @@ static void BuildCPUInfoList(void)
 			CPUInfo	* info = &cpuInfoList[i];
 			CPUInfo	* regionInfo = &regionInfoList[REGION_CPU1 + i - REGION_INVALID];
 
-			cpu_type type = Machine->drv->cpu[i].type;
+			cpu_type type = machine->drv->cpu[i].type;
 
 			info->type = type;
 			info->dataBits = cputype_databus_width(type, ADDRESS_SPACE_PROGRAM);
