@@ -11,6 +11,7 @@
 #include <QDir>
 #include <QBitArray>
 
+#include "qticohandler.h"
 
 #include "gamelist.h"
 #include "qmc2main.h"
@@ -22,8 +23,12 @@ extern ProcessManager *qmc2ProcessManager;
 extern bool qmc2ReloadActive;
 extern bool qmc2EarlyReloadActive;
 extern bool qmc2StopParser;
+extern bool qmc2IconsPreloaded;
 MameGame *mamegame;
 
+
+#define MAMEPLUS_SIG 0x704c7553
+#define S11N_VER 1
 
 RomInfo::RomInfo(QObject *parent)
 	: QObject(parent)
@@ -82,48 +87,53 @@ Gamelist::~Gamelist()
 
   if ( loadProc )
     loadProc->terminate();
+
+//	if ( verifyProc )
+//		verifyProc->terminate();
 }
 
 void Gamelist::load()
 {
 #ifdef QMC2_DEBUG
-  qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::load()");
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::load()");
 #endif
 
-  qmc2ReloadActive = qmc2EarlyReloadActive = TRUE;
-  qmc2StopParser = FALSE;
+	qmc2ReloadActive = qmc2EarlyReloadActive = TRUE;
+	qmc2StopParser = FALSE;
 
-  QStringList args;
-  QString command;
 
-  gamelistBuffer = "";
+	if (!mamegame->des11n())
+	{
+		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::start tree()");
+		qmc2MainWindow->treeWidgetHierarchy->clear();
+		//start building tree
+		buildTree(true);  //parent
+		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::start tree2()");
+		buildTree(false); //clone
+		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::end tree()");
+		qApp->processEvents();
+	
+		delete mamegame;
+		mamegame = 0;
+		return;
+	}
 
-  listXMLCache.setFileName("listXML.cache");
+	QStringList args;
+	QString command;
 
-  if ( listXMLCache.isOpen() )
-    listXMLCache.close();
+	gamelistBuffer = "";
 
-    loadTimer.start();
-    command = "mamep.exe";
-    args << "-listxml";
+	loadTimer.start();
+	command = "mamep.exe";
+	args << "-listxml";
 
-    listXMLCache.open(QIODevice::WriteOnly | QIODevice::Text);
-    if ( !listXMLCache.isOpen() ) {
-      qmc2MainWindow->log(LOG_QMC2, tr("WARNING: can't open XML gamelist cache for writing, please check permissions"));
-    } else {
-      tsListXMLCache.setDevice(&listXMLCache);
-      tsListXMLCache.reset();
-      tsListXMLCache << "# THIS FILE IS AUTO-GENERATED - PLEASE DO NOT EDIT!\n";
-      tsListXMLCache << "MAME_VERSION\t" + mameVersion + "\n";
-    }
-    loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
-    connect(loadProc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(loadError(QProcess::ProcessError)));
-    connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
-    connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
-    connect(loadProc, SIGNAL(readyReadStandardError()), this, SLOT(loadReadyReadStandardError()));
-    connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
-    connect(loadProc, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(loadStateChanged(QProcess::ProcessState)));
-
+	loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
+	connect(loadProc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(loadError(QProcess::ProcessError)));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(readyReadStandardError()), this, SLOT(loadReadyReadStandardError()));
+	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
+	connect(loadProc, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(loadStateChanged(QProcess::ProcessState)));
 }
 
 void Gamelist::parse()
@@ -153,8 +163,11 @@ void Gamelist::parse()
   qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::start tree2()");
   buildTree(false);	//clone
   qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::end tree()");
-  
+
+  mamegame->s11n();
+
   delete mamegame;
+  mamegame = 0;
   qmc2MainWindow->treeWidgetHierarchy->show();
 }
 
@@ -185,9 +198,6 @@ void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
   qmc2EarlyReloadActive = FALSE;
   loadProc = NULL;
 
-  if ( listXMLCache.isOpen() )
-    listXMLCache.close();
-
   parse();
 }
 
@@ -200,19 +210,16 @@ void Gamelist::loadReadyReadStandardOutput()
 #endif
 
   QString s = proc->readAllStandardOutput();
-  //mamep: remove windows endl3
+  //mamep: remove windows endl
   s.replace(QString("\r"), QString(""));
 
   qmc2MainWindow->progressBarGamelist->setValue(qmc2MainWindow->progressBarGamelist->value() + s.count("<game name="));
   gamelistBuffer += s;
-
-  if ( listXMLCache.isOpen() )
-    tsListXMLCache << s;
 }
 
 void Gamelist::loadReadyReadStandardError()
 {
-  QProcess *proc = (QProcess *)sender();
+// QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
   qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardError(): proc = 0x" + QString::number((ulong)proc, 16));
@@ -236,15 +243,75 @@ void Gamelist::loadStateChanged(QProcess::ProcessState processState)
 
 }
 
+bool Gamelist::loadIcon(QString gameName, QTreeWidgetItem *item, bool checkOnly, QString *fileName)
+{
+  static QIcon icon;
+  static QPixmap pm;
+
+  if (qmc2IconsPreloaded)
+  {
+	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
+	icon = gameinfo->icon;
+	if (icon.isNull() && !gameinfo->cloneof.isEmpty())
+	    icon = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->icon;
+	if (!icon.isNull())	
+		item->setIcon(0, icon);
+    return FALSE;
+  }
+
+    // use icon directory
+    else {
+      QTime preloadTimer, elapsedTime;
+      preloadTimer.start();
+      QString icoDir = "D:/mame/icons/";
+      QDir iconDirectory(icoDir);
+      QStringList nameFilter;
+      nameFilter << "*.ico";
+      QStringList iconFiles = iconDirectory.entryList(nameFilter, QDir::Files | QDir::Readable);
+      int iconCount;
+	//save progress bar for restoration
+      int currentMax = qmc2MainWindow->progressBarGamelist->maximum();
+      qmc2MainWindow->progressBarGamelist->setRange(0, iconFiles.count());
+      qmc2MainWindow->progressBarGamelist->reset();
+//    qApp->processEvents();
+      for (iconCount = 0; iconCount < iconFiles.count(); iconCount++) {
+        qmc2MainWindow->progressBarGamelist->setValue(iconCount);
+//      if ( iconCount % 25 == 0 )
+//        qApp->processEvents();
+#ifdef QMC2_DEBUG
+        qmc2MainWindow->log(LOG_QMC2, QString("DEBUG: loading %1").arg(iconFiles[iconCount]));
+#endif
+          icon = loadWinIco(icoDir + iconFiles[iconCount]);
+
+		QString icofname = iconFiles[iconCount].toLower().remove(".ico");
+		if (mamegame->gamenameGameInfoMap.contains(icofname))
+			mamegame->gamenameGameInfoMap[icofname]->icon = icon;
+/*
+        qmc2IconMap[iconFiles[iconCount].toLower().remove(".ico")] = icon;
+*/
+      }
+      qmc2MainWindow->progressBarGamelist->setRange(0, currentMax);
+      elapsedTime = elapsedTime.addMSecs(preloadTimer.elapsed());
+      qmc2MainWindow->log(LOG_QMC2, tr("done (pre-caching icons from directory, elapsed time = %1)").arg(elapsedTime.toString("mm:ss.zzz")));
+      qmc2MainWindow->log(LOG_QMC2, tr("%1 icons loaded").arg(iconCount));
+      qmc2IconsPreloaded = TRUE;
+	  return loadIcon(gameName, item, checkOnly);
+    }
+
+  return FALSE;
+}
+
 listXMLHandler::listXMLHandler(QTreeWidget *treeWidget)
     : treeWidget(treeWidget)
-
 {
     item = 0;
 	gameinfo = 0;
 	
-	mamegame = new MameGame();
     metMameTag = false;
+
+	if (mamegame)
+		delete mamegame;
+	mamegame = new MameGame();
 }
 
 bool listXMLHandler::startElement(const QString & /* namespaceURI */,
@@ -272,31 +339,10 @@ bool listXMLHandler::startElement(const QString & /* namespaceURI */,
 		RomInfo *rominfo = new RomInfo(gameinfo);
 		rominfo->name = attributes.value("name");
 		rominfo->status = attributes.value("status");
-		rominfo->size = attributes.value("size").toLong();
+		rominfo->size = attributes.value("size").toULongLong();
 
 		bool ok;
 		gameinfo->crcRomInfoMap[attributes.value("crc").toInt(&ok, 16)] = rominfo;
-
-	 /*
-		 long crc = 0, size = 0;
-		 String scrc = attributes.value("crc");
-		 String ssize = attributes.value("size");
-		 if (scrc != null && scrc != null)
-		 {
-			 try
-			 {
-				 crc = Long.parseLong(scrc, 16);
-				 size = Long.parseLong(ssize);
-			 }
-			 catch (NumberFormatException e)
-			 {
-				 System.out.println(gamename + "/" + attributes.value("name") + ": crc: "
-						 + attributes.value("crc") + " len:" + attributes.value("size"));
-			 }
-		 }
-		 
-		 mameGame.setGameRom(gamename, new Long(crc), attributes.value("name"), new Long(size));
-	   */
 	}
 
     currentText.clear();
@@ -328,11 +374,125 @@ bool listXMLHandler::characters(const QString &str)
     return true;
 }
 
-void buildTree(bool isParent)
+void MameGame::s11n()
 {
+	QFile file("gui.cache");
+	file.open(QIODevice::WriteOnly);
+	QDataStream out(&file);
+
+	out << (quint32)MAMEPLUS_SIG; //mameplus signature
+	out << (qint16)S11N_VER; //s11n version
+	out.setVersion(QDataStream::Qt_4_3);
+
+	out << mamegame->gamenameGameInfoMap.count();
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap.value(gamename);
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		out << gamename;
+		out << gameinfo->description;
+		out << gameinfo->year;
+		out << gameinfo->manufacturer;
+		out << gameinfo->sourcefile;
+		out << gameinfo->cloneof;
+
+		out << gameinfo->crcRomInfoMap.count();
+		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
+		{
+			RomInfo *rominfo = gameinfo->crcRomInfoMap.value(crc);
+			out << crc;
+			out << rominfo->name;
+			out << rominfo->status;
+			out << rominfo->size;
+		}
+	}
+	file.close();//fixme check
+}
+
+int MameGame::des11n()
+{
+	QFile file("gui.cache");
+	file.open(QIODevice::ReadOnly);
+	QDataStream in(&file);
+
+	// Read and check the header
+	quint32 mamepSig;
+	in >> mamepSig;
+	if (mamepSig != MAMEPLUS_SIG)
+		return QDataStream::ReadCorruptData;
+
+	// Read the version
+	qint16 version;
+	in >> version;
+	if (version != S11N_VER)
+		return QDataStream::ReadCorruptData;
+	
+	if (version < 1)
+		in.setVersion(QDataStream::Qt_4_2);
+	else
+		in.setVersion(QDataStream::Qt_4_3);
+
+	//finished checking
+	int gamecount;
+	in >> gamecount;
+
+	if (gamecount > 0)
+	{
+		if (mamegame)
+			delete mamegame;
+		mamegame = new MameGame();
+	}
+	
+	for (int i = 0; i < gamecount; i++)
+	{
+		GameInfo *gameinfo = new GameInfo(mamegame);
+		QString gamename;
+		in >> gamename;
+		in >> gameinfo->description;
+		in >> gameinfo->year;
+		in >> gameinfo->manufacturer;
+		in >> gameinfo->sourcefile;
+		in >> gameinfo->cloneof;
+		mamegame->gamenameGameInfoMap[gamename] = gameinfo;
+
+		int romcount;
+		in >> romcount;
+		for (int j = 0; j < romcount; j++)
+		{
+			RomInfo *rominfo = new RomInfo(gameinfo);
+			quint32 crc;
+			in >> crc;
+			in >> rominfo->name;
+			in >> rominfo->status;
+			in >> rominfo->size;
+			gameinfo->crcRomInfoMap[crc] = rominfo;
+		}
+	}
+
+	return in.status();
+}
+
+QIcon loadWinIco(const QString & fileName)
+{
+	QFile *pIcoFile = new QFile(fileName);
+	QIcon icon = QIcon();
+	if (pIcoFile->open(QIODevice::ReadOnly))
+	{
+		QList<QImage> imgList = ICOReader::read(pIcoFile);
+		if (!imgList.isEmpty())
+			icon = QIcon((QPixmap::fromImage(imgList.first())));
+		pIcoFile->close();
+	}
+	delete pIcoFile;
+	return icon;
+}
+
+void Gamelist::buildTree(bool isParent)
+{
+//	qmc2MainWindow->treeWidgetHierarchy->setIconSize(QSize(32,32));
+
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
 		if ((gameinfo->cloneof.isEmpty() || isParent) && !(gameinfo->cloneof.isEmpty() && isParent)) //logical XOR
 		  continue;
 
@@ -343,9 +503,8 @@ void buildTree(bool isParent)
 		else
 		{
 			//find parent and add to it
-			QTreeWidgetItem *parentItem = mamegame->gamenameGameInfoMap.value(gameinfo->cloneof)->pItem;
-			if (parentItem)
-				childItem = new QTreeWidgetItem(parentItem);
+			QTreeWidgetItem *parentItem = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->pItem;
+			gameinfo->pItem = childItem = new QTreeWidgetItem(parentItem);
 		}
 
 		childItem->setData(0, Qt::UserRole, gamename);
@@ -355,6 +514,8 @@ void buildTree(bool isParent)
 		childItem->setText(3, gameinfo->sourcefile);
 		childItem->setText(5, gameinfo->year);
 		childItem->setText(6, gameinfo->cloneof);
+
+		loadIcon(gamename, childItem);
 	}
 }
 

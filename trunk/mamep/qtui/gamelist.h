@@ -10,9 +10,6 @@
 #include <QTextStream>
 #include <QXmlDefaultHandler>
 
-typedef unsigned int						UINT32;
-
-
 class Gamelist : public QObject
 {
   Q_OBJECT
@@ -40,10 +37,8 @@ class Gamelist : public QObject
     QTime miscTimer;
     QFile romCache;
     QFile gamelistCache;
-    QFile listXMLCache;
     QTextStream tsRomCache;
     QTextStream tsGamelistCache;
-    QTextStream tsListXMLCache;
     int numTotalGames;
     int numGames;
     int numCorrectGames;
@@ -74,16 +69,17 @@ class Gamelist : public QObject
 
     // internal methods
     void parse();
+    bool loadIcon(QString, QTreeWidgetItem *, bool checkOnly = FALSE, QString *fileName = NULL);
+	void buildTree(bool isClone);
 };
 
 class RomInfo : public QObject
 {
   public:
     QString name, status;
-	long size;
+	quint64 size;
 
 	RomInfo(QObject *parent = 0);
-
     ~RomInfo();
 };
 
@@ -92,11 +88,11 @@ class GameInfo : public QObject
 {
   public:
     QString description, year, manufacturer, sourcefile, cloneof, lcDescription, reading;
-    QHash<UINT32, RomInfo *> crcRomInfoMap;
+    QHash<quint32, RomInfo *> crcRomInfoMap;
 	QTreeWidgetItem *pItem;
+	QIcon icon;
 	
 	GameInfo(QObject *parent = 0);
-
     ~GameInfo();
 };
 
@@ -108,6 +104,9 @@ class MameGame : public QObject
 
 	MameGame(QObject *parent = 0);
 	~MameGame();
+
+	void s11n();
+	int des11n();
 };
 
 class listXMLHandler : public QXmlDefaultHandler
@@ -129,7 +128,7 @@ private:
     bool metMameTag;
 };
 
-void buildTree(bool isClone);
+QIcon loadWinIco(const QString & fileName);
 
 
 #endif

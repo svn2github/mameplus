@@ -13,6 +13,7 @@ ProcessManager *qmc2ProcessManager = NULL;
 bool qmc2ReloadActive = FALSE;
 bool qmc2EarlyReloadActive = FALSE;
 bool qmc2GuiReady = FALSE;
+bool qmc2IconsPreloaded = FALSE;
 bool qmc2StopParser = FALSE;
 QStringList qmc2BiosROMs;
 
@@ -65,9 +66,10 @@ void MainWindow::on_actionReload_activated()
 
 void MainWindow::init()
 {
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: oninit");
-
-  on_actionReload_activated();
+#ifdef QMC2_DEBUG
+  log(LOG_QMC2, "DEBUG: MainWindow::init()");
+#endif
+    on_actionReload_activated();
 }
 
 int main(int argc, char *argv[])

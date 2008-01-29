@@ -3,8 +3,6 @@
 
 #include <QApplication>
 #include "ui_qmc2main.h"
-//mamep temp
-#include <QListWidgetItem>
 
 #define LOG_QMC2	1
 #define LOG_MAME	2
