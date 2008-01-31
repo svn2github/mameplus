@@ -9,6 +9,16 @@
 #include <QTreeWidget>
 #include <QTextStream>
 #include <QXmlDefaultHandler>
+#include <QThread>
+
+class RenderThread : public QThread
+{
+public:
+    void render();
+
+protected:
+	void run();
+};
 
 class Gamelist : public QObject
 {
@@ -53,6 +63,8 @@ class Gamelist : public QObject
     QTreeWidgetItem *checkedItem;
     bool autoROMCheck;
 
+	RenderThread rthread;
+
     Gamelist(QObject *parent = 0);
     ~Gamelist();
 
@@ -69,7 +81,6 @@ class Gamelist : public QObject
 
     // internal methods
     void parse();
-    bool loadIcon(QString, QTreeWidgetItem *, bool checkOnly = FALSE, QString *fileName = NULL);
 	void buildTree(bool isClone);
 };
 
@@ -109,10 +120,10 @@ class MameGame : public QObject
 	int des11n();
 };
 
-class listXMLHandler : public QXmlDefaultHandler
+class ListXMLHandler : public QXmlDefaultHandler
 {
 public:
-    listXMLHandler(QTreeWidget *treeWidget);
+    ListXMLHandler(QTreeWidget *treeWidget);
 
     bool startElement(const QString &namespaceURI, const QString &localName,
                       const QString &qName, const QXmlAttributes &attributes);
@@ -129,6 +140,6 @@ private:
 };
 
 QIcon loadWinIco(const QString & fileName);
-
+bool loadIcon(QString, QTreeWidgetItem *, bool checkOnly = FALSE, QString *fileName = NULL);
 
 #endif

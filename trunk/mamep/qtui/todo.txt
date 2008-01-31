@@ -1,0 +1,38 @@
+﻿mameui basic
+1 proper model/view with QQ2007 style highlighting
+1 generic multiple zip/folder reading, with parent/clone
+
+generic non-rom
+  chop off file ext, add .zip
+inp/captcomm.inp
+inp/captcomm.zip/captcomm.inp
+
+/cheat.dat
+/cheat.zip/cheat.dat
+
+GUI
+  add .zip to nearest folder name
+snap/captcomm.png
+snap/snap.zip/captcomm.png
+
+rom
+  add .zip to nearest folder name
+
+roms/captcomm/rom1.bin (directly)
+roms/captcomm.zip/rom1.bin
+
+* crc checking
+1 gruadual list loading (1 scan file, 2 load icon, 3 check crc)
+* options dialog, bold changed items, with reset button
+* snapshot (timer delayed instead of cache)
+* history/mameinfo/story
+* mess list
+* switch tree/combobox
+* heap check
+
+extension
+* loading gif
+* command.dat parsing with rich text
+* dockable controls
+* controller setting
+* ui customization
