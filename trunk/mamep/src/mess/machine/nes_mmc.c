@@ -2,14 +2,20 @@
 	TODO:
 	. 5 has some issues, RAM banking needs hardware flags to determine size
 	. 13 needs banked VRAM. -see Videomation
+	. 45 mapper is not fully working
+	. 51 only half of the games work
 	. 64 has some IRQ problems - see Skull & Crossbones
 	. 67 display issues, but vrom fixed
 	. 70 (ark2j) starts on round 0 - is this right? Yep!
 	. 82 has chr-rom banking problems. Also mapper is in the middle of sram, which is unemulated.
 	. 96 is preliminary.
 	. 118 mirroring is a guess, chr-rom banking is likely different
+	. 193 Missing PPU feature?
 	. 228 seems wrong
 	. 229 is preliminary
+	. 230 not working yet
+	. 232 not working yet
+	. 241 preliminary
 
 	AD&D Hillsfar (mapper 1) seems to be broken. Not sure what's up there
 
@@ -38,7 +44,7 @@ static int prg_mask;
 static int IRQ_enable, IRQ_enable_latch;
 static UINT16 IRQ_count, IRQ_count_latch, IRQ_reload;
 static UINT8 IRQ_status;
-static UINT8 IRQ_mode_jaleco;
+static UINT8 IRQ_mode;
 
 int MMC1_extended;	/* 0 = normal MMC1 cart, 1 = 512k MMC1, 2 = 1024k MMC1 */
 
@@ -68,6 +74,8 @@ static int MMC2_bank0, MMC2_bank0_hi, MMC2_bank0_latch, MMC2_bank1, MMC2_bank1_h
 static int MMC3_cmd;
 static int MMC3_prg0, MMC3_prg1;
 static int MMC3_chr[6];
+static int MMC3_prg_base, MMC3_prg_mask;
+static int MMC3_chr_base, MMC3_chr_mask;
 
 static int MMC5_rom_bank_mode;
 static int MMC5_vrom_bank_mode;
@@ -78,13 +86,20 @@ int MMC5_vram_control;
 
 static int mapper41_chr, mapper41_reg2;
 
+static int mapper45_data[4], mapper45_cmd;
+
+static int mapper64_data[0x10], mapper64_cmd;
+
+static int mapper83_data[10];
+static int mapper83_low_data[4];
+
 static int mapper_warning;
 
 static emu_timer	*nes_irq_timer;
 
 static TIMER_CALLBACK(nes_irq_callback)
 {
-	cpunum_set_input_line (machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+	cpunum_set_input_line(machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 	timer_adjust(nes_irq_timer, attotime_never, 0, attotime_never);
 }
 
@@ -572,31 +587,33 @@ static WRITE8_HANDLER( mapper3_w )
 
 static void mapper4_set_prg (void)
 {
-	MMC3_prg0 &= prg_mask;
-	MMC3_prg1 &= prg_mask;
+	int prg0_bank = MMC3_prg_base | ( MMC3_prg0 & MMC3_prg_mask );
+	int prg1_bank = MMC3_prg_base | ( MMC3_prg1 & MMC3_prg_mask );
+	int last_bank = MMC3_prg_base | MMC3_prg_mask;
 
 	if (MMC3_cmd & 0x40)
 	{
-		memory_set_bankptr (1, &nes.rom[(nes.prg_chunks-1) * 0x4000 + 0x10000]);
-		memory_set_bankptr (3, &nes.rom[0x2000 * (MMC3_prg0) + 0x10000]);
+		memory_set_bankptr (1, &nes.rom[(last_bank-1) * 0x2000 + 0x10000]);
+		memory_set_bankptr (3, &nes.rom[0x2000 * (prg0_bank) + 0x10000]);
 	}
 	else
 	{
-		memory_set_bankptr (1, &nes.rom[0x2000 * (MMC3_prg0) + 0x10000]);
-		memory_set_bankptr (3, &nes.rom[(nes.prg_chunks-1) * 0x4000 + 0x10000]);
+		memory_set_bankptr (1, &nes.rom[0x2000 * (prg0_bank) + 0x10000]);
+		memory_set_bankptr (3, &nes.rom[(last_bank-1) * 0x2000 + 0x10000]);
 	}
-	memory_set_bankptr (2, &nes.rom[0x2000 * (MMC3_prg1) + 0x10000]);
+	memory_set_bankptr (2, &nes.rom[0x2000 * (prg1_bank) + 0x10000]);
+	memory_set_bankptr (4, &nes.rom[(last_bank) * 0x2000 + 0x10000]);
 }
 
 static void mapper4_set_chr (void)
 {
 	UINT8 chr_page = (MMC3_cmd & 0x80) >> 5;
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 0, 2, MMC3_chr[0], 1);
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 2, 2, MMC3_chr[1], 1);
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 4, 1, MMC3_chr[2], 1);
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 5, 1, MMC3_chr[3], 1);
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 6, 1, MMC3_chr[4], 1);
-	ppu2c0x_set_videorom_bank(0, chr_page ^ 7, 1, MMC3_chr[5], 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 0, 2, MMC3_chr_base * 64 | ( MMC3_chr[0] & ( MMC3_chr_mask * 64 ) ), 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 2, 2, MMC3_chr_base * 64 | ( MMC3_chr[1] & ( MMC3_chr_mask * 64 ) ), 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 4, 1, MMC3_chr_base * 64 | ( MMC3_chr[2] & ( MMC3_chr_mask * 64 ) ), 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 5, 1, MMC3_chr_base * 64 | ( MMC3_chr[3] & ( MMC3_chr_mask * 64 ) ), 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 6, 1, MMC3_chr_base * 64 | ( MMC3_chr[4] & ( MMC3_chr_mask * 64 ) ), 1);
+	ppu2c0x_set_videorom_bank(0, chr_page ^ 7, 1, MMC3_chr_base * 64 | ( MMC3_chr[5] & ( MMC3_chr_mask * 64 ) ), 1);
 }
 
 static void mapper4_irq ( int num, int scanline, int vblank, int blanked )
@@ -615,7 +632,7 @@ static void mapper4_irq ( int num, int scanline, int vblank, int blanked )
 		if (IRQ_enable && !blanked && (IRQ_count == 0) && priorCount)
 		{
 			logerror("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline, video_screen_get_vpos(0), video_screen_get_hpos(0));
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 //			timer_adjust(nes_irq_timer, ATTOTIME_IN_CYCLES(4, 0), 0, attotime_never);
 		}
 	}
@@ -820,7 +837,7 @@ static void mapper5_irq ( int num, int scanline, int vblank, int blanked )
 	if (scanline == IRQ_count)
 	{
 		if (IRQ_enable)
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 
 		IRQ_status = 0xff;
 	}
@@ -1569,7 +1586,7 @@ static void bandai_irq ( int num, int scanline, int vblank, int blanked )
 	{
 		if (IRQ_count <= 114)
 		{
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 		}
 		IRQ_count -= 114;
 	}
@@ -1705,27 +1722,27 @@ static void jaleco_irq ( int num, int scanline, int vblank, int blanked )
 			IRQ_count -= 0x100;
 
 			logerror ("scanline: %d, irq count: %04x\n", scanline, IRQ_count);
-			if (IRQ_mode_jaleco & 0x08)
+			if (IRQ_mode & 0x08)
 			{
 				if ((IRQ_count & 0x0f) == 0x00)
 					/* rollover every 0x10 */
-					cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+					cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 			}
-			else if (IRQ_mode_jaleco & 0x04)
+			else if (IRQ_mode & 0x04)
 			{
 				if ((IRQ_count & 0x0ff) == 0x00)
 					/* rollover every 0x100 */
-					cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+					cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 			}
-			else if (IRQ_mode_jaleco & 0x02)
+			else if (IRQ_mode & 0x02)
 			{
 				if ((IRQ_count & 0x0fff) == 0x000)
 					/* rollover every 0x1000 */
-					cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+					cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 			}
 			else if (IRQ_count == 0)
 				/* rollover at 0x10000 */
-				cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+				cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 		}
 	}
 	else
@@ -1912,7 +1929,7 @@ static WRITE8_HANDLER( mapper18_w )
 			break;
 		case 0x7001: /* IRQ Control 1 */
 			IRQ_enable = data & 0x01;
-			IRQ_mode_jaleco = data & 0x0e;
+			IRQ_mode = data & 0x0e;
 			logerror("     Mapper 18 IRQ Control 1: %02x\n", data);
 			break;
 
@@ -1943,7 +1960,7 @@ static void namcot_irq ( int num, int scanline, int vblank, int blanked )
 	/* Increment & check the IRQ scanline counter */
 	if (IRQ_enable && (IRQ_count == 0x7fff))
 	{
-		cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+		cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -2000,14 +2017,14 @@ static WRITE8_HANDLER( mapper19_w )
 static void fds_irq ( int num, int scanline, int vblank, int blanked )
 {
 	if (IRQ_enable_latch)
-		cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+		cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 
 	/* Increment & check the IRQ scanline counter */
 	if (IRQ_enable)
 	{
 		if (IRQ_count <= 114)
 		{
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 			IRQ_enable = 0;
 			nes_fds.status0 |= 0x01;
 		}
@@ -2118,7 +2135,7 @@ static void konami_irq ( int num, int scanline, int vblank, int blanked )
 	{
 		IRQ_count = IRQ_count_latch;
 		IRQ_enable = IRQ_enable_latch;
-		cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+		cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -2785,7 +2802,7 @@ static void mapper40_irq ( int num, int scanline, int vblank, int blanked )
 	{
 		if (--IRQ_count == 0)
 		{
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 		}
 	}
 }
@@ -2837,6 +2854,319 @@ static WRITE8_HANDLER( mapper41_w )
 	}
 }
 
+static WRITE8_HANDLER( mapper42_w )
+{
+	LOG_MMC(("mapper42_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( offset >= 0x7000 )
+	{
+		switch( offset & 0x03 )
+		{
+		case 0x00:
+			memory_set_bankptr (5, &nes.rom[( data & ( ( nes.prg_chunks << 1 ) -1 ) ) * 0x2000 + 0x10000]);
+			break;
+		case 0x01:
+			ppu2c0x_set_mirroring( 0, ( data & 0x08 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+			break;
+		case 0x02:
+			/* Check if IRQ is being enabled */
+			if ( ! IRQ_enable && ( data & 0x02 ) ) {
+				IRQ_enable = 1;
+				timer_adjust(nes_irq_timer, ATTOTIME_IN_CYCLES(24576, 0), 0, attotime_never);
+			}
+			if ( ! ( data & 0x02 ) ) {
+				IRQ_enable = 0;
+				timer_adjust(nes_irq_timer, attotime_never, 0, attotime_never);
+			}
+			break;
+		}
+	}
+}
+
+static WRITE8_HANDLER( mapper43_w )
+{
+	int		bank = ( ( ( offset >> 8 ) & 0x03 ) * 0x20 ) + ( offset & 0x1F );
+
+	LOG_MMC(("mapper43_w, offset: %04x, data: %02x\n", offset, data));
+
+	ppu2c0x_set_mirroring( 0, ( offset & 0x2000 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+
+	if ( offset & 0x0800 )
+	{
+		if ( offset & 0x1000 )
+		{
+			if ( bank * 2 >= nes.prg_chunks )
+			{
+				memory_set_bankptr( 3, nes.wram );
+				memory_set_bankptr( 4, nes.wram );
+			}
+			else
+			{
+				LOG_MMC(("mapper43_w, selecting upper 16KB bank of #%02x\n", bank));
+				prg16_cdef( 2 * bank + 1 );
+			}
+		}
+		else
+		{
+			if ( bank * 2 >= nes.prg_chunks )
+			{
+				memory_set_bankptr( 1, nes.wram );
+				memory_set_bankptr( 2, nes.wram );
+			}
+			else
+			{
+				LOG_MMC(("mapper43_w, selecting lower 16KB bank of #%02x\n", bank));
+				prg16_89ab( 2 * bank );
+			}
+		}
+	}
+	else
+	{
+		if ( bank * 2 >= nes.prg_chunks ) {
+			memory_set_bankptr (1, nes.wram );
+			memory_set_bankptr (2, nes.wram );
+			memory_set_bankptr (3, nes.wram );
+			memory_set_bankptr (4, nes.wram );
+		}
+		else 
+		{
+			LOG_MMC(("mapper43_w, selecting 32KB bank #%02x\n", bank));
+			prg32( bank );
+		}
+	}
+}
+
+static WRITE8_HANDLER( mapper44_w )
+{
+//	logerror("mapper44_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
+
+	//only bits 14,13, and 0 matter for offset!
+	switch (offset & 0x6001)
+	{
+	case 0x2001: /* $a001 - Select 128K ROM/VROM base (0..5) or last 256K ROM/VRAM base (6) */
+		{
+			UINT8 page = ( data & 0x07 );
+			if ( page > 6 )
+				page = 6;
+			MMC3_prg_base = page * 16;
+			MMC3_prg_mask = ( page > 5 ) ? 0x1F : 0x0F;
+			MMC3_chr_base = page * 128;
+			MMC3_chr_mask = ( page > 5 ) ? 0xFF : 0x7F;
+		}
+		mapper4_set_prg();
+		mapper4_set_chr();
+		break;
+
+	default:
+		mapper4_w( offset, data );
+		break;
+	}
+}
+
+static WRITE8_HANDLER( mapper45_m_w )
+{
+	LOG_MMC(("mapper45_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( offset == 0 ) {
+		mapper45_data[ mapper45_cmd ] = data;
+		mapper45_cmd = ( mapper45_cmd + 1 ) & 0x03;
+
+		if ( ! mapper45_cmd ) {
+			LOG_MMC(("mapper45_m_w, command completed %02x %02x %02x %02x\n", mapper45_data[3],
+				mapper45_data[2], mapper45_data[1], mapper45_data[0] ));
+
+			MMC3_prg_base = mapper45_data[1];
+			MMC3_prg_mask = 0x3F ^ ( mapper45_data[3] & 0x3F );
+			MMC3_chr_base = ( ( mapper45_data[2] & 0xF0 ) << 4 ) + mapper45_data[0];
+			if ( mapper45_data[2] & 0x08 ) {
+				MMC3_chr_mask = ( 1 << ( ( mapper45_data[2] & 0x07 ) + 1 ) ) - 1;
+			} else {
+				MMC3_chr_mask = 0;
+			}
+			mapper4_set_prg();
+			mapper4_set_chr();
+		}
+	}
+	if ( mapper45_data[3] & 0x40 ) {
+		nes.wram[ offset ] = data;
+	}
+}
+
+static WRITE8_HANDLER( mapper46_m_w )
+{
+	LOG_MMC(("mapper46_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	MMC1_bank1 = ( MMC1_bank1 & 0x01 ) | ( ( data & 0x0F ) << 1 );
+	MMC1_bank2 = ( MMC1_bank2 & 0x07 ) | ( ( data & 0xF0 ) >> 1 );
+	prg32(MMC1_bank1);
+	chr8(MMC1_bank2);
+}
+
+static WRITE8_HANDLER( mapper46_w )
+{
+	LOG_MMC(("mapper46_w, offset: %04x, data: %02x\n", offset, data ));
+
+	MMC1_bank1 = ( MMC1_bank1 & ~0x01 ) | ( ( data & 0x02 ) >> 1 );
+	MMC1_bank2 = ( MMC1_bank2 & ~0x07 ) | ( ( data & 0x70 ) >> 4 );
+	prg32(MMC1_bank1);
+	chr8(MMC1_bank2);
+}
+
+static WRITE8_HANDLER( mapper47_m_w )
+{
+	LOG_MMC(("mapper47_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( offset == 0 ) {
+		MMC3_prg_base = ( data & 0x01 ) << 4;
+		MMC3_prg_mask = 0x0F;
+		MMC3_chr_base = ( data & 0x01 ) << 7;
+		MMC3_chr_mask = 0x7F;
+		mapper4_set_prg();
+		mapper4_set_chr();
+	}
+}
+
+static WRITE8_HANDLER( mapper49_m_w )
+{
+	LOG_MMC(("mapper49_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( ( offset & 0x1800 ) == 0x0800 && ( offset & 0xFF ) == data ) {
+		MMC3_prg_base = ( data & 0xC0 ) >> 2;
+		MMC3_prg_mask = 0x0F;
+		MMC3_chr_base = ( data & 0xC0 ) << 1;
+		MMC3_chr_mask = 0x7F;
+		mapper4_set_prg();
+		mapper4_set_chr();
+	}
+}
+
+static void mapper51_set_banks( void ) {
+	ppu2c0x_set_mirroring( 0, ( MMC1_bank1 == 3 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+
+	if ( MMC1_bank1 & 0x01 ) {
+		prg32( MMC1_bank2 );
+	} else {
+		prg16_cdef( ( MMC1_bank2 * 2 ) + 1 );
+		prg16_89ab( MMC1_bank3 * 2 );
+	}
+}
+
+static WRITE8_HANDLER( mapper51_m_w )
+{
+	LOG_MMC(("mapper51_m_w, offset: %04x, data: %02x\n", offset, data));
+
+	MMC1_bank1 = ( ( data >> 1 ) & 0x01 ) | ( ( data >> 3 ) & 0x02 );
+	mapper51_set_banks();
+}
+
+static WRITE8_HANDLER( mapper51_w )
+{
+	LOG_MMC(("mapper51_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( offset & 0x4000 ) {
+		MMC1_bank3 = data;
+	} else {
+		MMC1_bank2 = data;
+	}
+	mapper51_set_banks();
+}
+
+static WRITE8_HANDLER( mapper57_w )
+{
+	LOG_MMC(("mapper57_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( offset & 0x0800 ) {
+		MMC1_bank2 = data;
+	} else {
+		MMC1_bank1 = data;
+	}
+
+	if ( MMC1_bank2 & 0x80 ) {
+		prg32( 2 | ( MMC1_bank2 >> 6 ) );
+	} else {
+		prg16_89ab( ( MMC1_bank2 >> 5 ) & 0x03 );
+		prg16_cdef( ( MMC1_bank2 >> 5 ) & 0x03 );
+	}
+
+	ppu2c0x_set_mirroring( 0, ( MMC1_bank2 & 0x08 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+
+	chr8( ( MMC1_bank1 & 0x03 ) | ( MMC1_bank2 & 0x07 ) | ( ( MMC1_bank2 & 0x10 ) >> 1 ) );
+}
+
+static WRITE8_HANDLER( mapper58_w )
+{
+	LOG_MMC(("mapper58_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( offset & 0x4000 ) {
+		if ( offset & 0x40 ) {
+			prg16_89ab( offset & 0x07 );
+			prg16_cdef( offset & 0x07 );
+		} else {
+			prg32( ( offset & 0x06 ) >> 1 );
+		}
+
+		chr8( ( offset & 0x38 ) >> 3 );
+
+		ppu2c0x_set_mirroring( 0, ( data & 0x02 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+	}
+}
+
+static WRITE8_HANDLER( mapper61_w )
+{
+	LOG_MMC(("mapper61_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch ( offset & 0x30 ) {
+	case 0x00:
+	case 0x30:
+		prg32( offset & 0x0F );
+		break;
+	case 0x10:
+	case 0x20:
+		prg16_89ab( ( ( offset & 0x0F ) << 1 ) | ( ( offset & 0x20 ) >> 4 ) );
+		prg16_cdef( ( ( offset & 0x0F ) << 1 ) | ( ( offset & 0x20 ) >> 4 ) );
+		break;
+	}
+	ppu2c0x_set_mirroring( 0, ( offset & 0x80 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+}
+
+static WRITE8_HANDLER( mapper62_w )
+{
+	LOG_MMC(("mapper62_w, offset :%04x, data: %02x\n", offset, data));
+
+	chr8( ( ( offset & 0x1F ) << 2 ) | ( data & 0x03 ) );
+
+	if ( offset & 0x20 ) {
+		prg16_89ab( ( offset & 0x40 ) | ( ( offset >> 8 ) & 0x3F ) );
+		prg16_cdef( ( offset & 0x40 ) | ( ( offset >> 8 ) & 0x3F ) );
+	} else {
+		prg32( ( ( offset & 0x40 ) | ( ( offset >> 8 ) & 0x3F ) ) >> 1 );
+	}
+
+	ppu2c0x_set_mirroring( 0, ( offset & 0x80 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+}
+
+static void mapper64_set_banks( void ) {
+	if ( mapper64_cmd & 0x20 ) {
+		chr1_0( mapper64_data[0] );
+		chr1_2( mapper64_data[1] );
+		chr1_1( mapper64_data[8] );
+		chr1_3( mapper64_data[9] );
+	} else {
+		chr1_0( mapper64_data[0] & 0xFE );
+		chr1_1( ( mapper64_data[0] & 0xFE ) | 1 );
+		chr1_2( mapper64_data[1] & 0xFE );
+		chr1_3( ( mapper64_data[1] & 0xFE ) | 1 );
+	}
+	chr1_4( mapper64_data[2] );
+	chr1_5( mapper64_data[3] );
+	chr1_6( mapper64_data[4] );
+	chr1_7( mapper64_data[5] );
+
+	prg8_89( mapper64_data[6] );
+	prg8_ab( mapper64_data[7] );
+	prg8_cd( mapper64_data[10] );
+}
+
 static WRITE8_HANDLER( mapper64_m_w )
 {
 	logerror("mapper64_m_w, offset: %04x, data: %02x\n", offset, data);
@@ -2844,11 +3174,6 @@ static WRITE8_HANDLER( mapper64_m_w )
 
 static WRITE8_HANDLER( mapper64_w )
 {
-	static int cmd = 0;
-	static int chr = 0;
-	static int select_high;
-	static int page;
-
 /* TODO: something in the IRQ handling hoses Skull & Crossbones */
 
 //	logerror("mapper64_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
@@ -2856,114 +3181,16 @@ static WRITE8_HANDLER( mapper64_w )
 	switch (offset & 0x7001)
 	{
 		case 0x0000:
-//			logerror("Mapper 64 0x8000 write value: %02x\n",data);
-			cmd = data & 0x0f;
-			if (data & 0x80)
-				chr = 0x1000;
-			else
-				chr = 0x0000;
-
-			if (data & 0x10)
-			{
-				ppu2c0x_set_videorom_bank(0, 1, 1, 0, 64);
-				ppu2c0x_set_videorom_bank(0, 3, 1, 0, 64);
-			}
-
-			page = chr >> 10;
-			/* Toggle switching between $8000/$A000/$C000 and $A000/$C000/$8000 */
-			if (select_high != (data & 0x40))
-			{
-				if (data & 0x40)
-				{
-					memory_set_bankptr (1, &nes.rom[(nes.prg_chunks-1) * 0x4000 + 0x10000]);
-				}
-				else
-				{
-					memory_set_bankptr (3, &nes.rom[(nes.prg_chunks-1) * 0x4000 + 0x10000]);
-				}
-			}
-
-			select_high = data & 0x40;
-//			logerror("   Mapper 64 select_high: %02x\n", select_high);
+			mapper64_cmd = data;
 			break;
-
 		case 0x0001:
-			switch (cmd)
-			{
-				case 0:
-					ppu2c0x_set_videorom_bank(0, page, 2, data, 64);
-					break;
-
-				case 1:
-					ppu2c0x_set_videorom_bank(0, page ^ 2, 2, data, 64);
-					break;
-
-				case 2:
-					ppu2c0x_set_videorom_bank(0, page ^ 4, 2, data, 64);
-					break;
-
-				case 3:
-					ppu2c0x_set_videorom_bank(0, page ^ 5, 2, data, 64);
-					break;
-
-				case 4:
-					ppu2c0x_set_videorom_bank(0, page ^ 6, 2, data, 64);
-					break;
-
-				case 5:
-					ppu2c0x_set_videorom_bank(0, page ^ 7, 2, data, 64);
-					break;
-
-				case 6:
-					/* These damn games will go to great lengths to switch to banks which are outside the valid range */
-					data &= prg_mask;
-					if (select_high)
-					{
-						memory_set_bankptr (2, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($A000) cmd 6 value: %02x\n", data);
-					}
-					else
-					{
-						memory_set_bankptr (1, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($8000) cmd 6 value: %02x\n", data);
-					}
-					break;
-				case 7:
-					data &= prg_mask;
-					if (select_high)
-					{
-						memory_set_bankptr (3, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($C000) cmd 7 value: %02x\n", data);
-					}
-					else
-					{
-						memory_set_bankptr (2, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($A000) cmd 7 value: %02x\n", data);
-					}
-					break;
-				case 8:
-					/* Switch 1k VROM at $0400 */
-					ppu2c0x_set_videorom_bank(0, 1, 1, data, 64);
-					break;
-				case 9:
-					/* Switch 1k VROM at $0C00 */
-					ppu2c0x_set_videorom_bank(0, 3, 1, data, 64);
-					break;
-				case 15:
-					data &= prg_mask;
-					if (select_high)
-					{
-						memory_set_bankptr (1, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($C000) cmd 15 value: %02x\n", data);
-					}
-					else
-					{
-						memory_set_bankptr (3, &nes.rom[0x2000 * (data) + 0x10000]);
-//						logerror("     Mapper 64 switch ($A000) cmd 15 value: %02x\n", data);
-					}
-					break;
+			if ( ( mapper64_cmd & 0x0F ) < 10 ) {
+				mapper64_data[ mapper64_cmd & 0x0F ] = data;
 			}
-			cmd = 16;
+			if ( ( mapper64_cmd & 0x0F ) == 0x0F ) {
+				mapper64_data[ 10 ] = data;
+			}
+			mapper64_set_banks();
 			break;
 		case 0x2000:
 			/* Not sure if the one-screen mirroring applies to this mapper */
@@ -2978,22 +3205,32 @@ static WRITE8_HANDLER( mapper64_w )
 			}
 			break;
 		case 0x4000: /* $c000 - IRQ scanline counter */
-			IRQ_count = data;
+			IRQ_count_latch = data;
+			if ( 0 ) {
+				IRQ_count = IRQ_count_latch;
+			}
 			logerror("     MMC3 copy/set irq latch: %02x\n", data);
 			break;
 
 		case 0x4001: /* $c001 - IRQ scanline latch */
-			IRQ_count_latch = data;
+			IRQ_count = IRQ_count_latch;
+			IRQ_mode = data & 0x01;
 			logerror("     MMC3 set latch: %02x\n", data);
 			break;
 
 		case 0x6000: /* $e000 - Disable IRQs */
 			IRQ_enable = 0;
+			if ( 0 ) {
+				IRQ_count = IRQ_count_latch;
+			}
 			logerror("     MMC3 disable irqs: %02x\n", data);
 			break;
 
 		case 0x6001: /* $e001 - Enable IRQs */
 			IRQ_enable = 1;
+			if ( 0 ) {
+				IRQ_count = IRQ_count_latch;
+			}
 			logerror("     MMC3 enable irqs: %02x\n", data);
 			break;
 
@@ -3009,7 +3246,7 @@ static void irem_irq ( int num, int scanline, int vblank, int blanked )
 	if (IRQ_enable)
 	{
 		if (--IRQ_count == 0)
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 	}
 }
 
@@ -3087,7 +3324,7 @@ static void sunsoft_irq ( int num, int scanline, int vblank, int blanked )
 	{
 		if (IRQ_count <= 114)
 		{
-			cpunum_set_input_line (Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
 		}
 		IRQ_count -= 114;
 	}
@@ -3616,6 +3853,95 @@ static WRITE8_HANDLER( mapper82_m_w )
 	}
 }
 
+static WRITE8_HANDLER( mapper83_l_w )
+{
+	mapper83_low_data[ offset & 0x03 ] = data;
+}
+
+static READ8_HANDLER( mapper83_l_r )
+{
+	return mapper83_low_data[ offset & 0x03 ];
+}
+
+static void mapper83_set_prg( void ) {
+	prg16_89ab( mapper83_data[8] & 0x3F );
+	prg16_cdef( ( mapper83_data[8] & 0x30 ) | 0x0F );
+}
+
+static void mapper83_set_chr( void ) {
+	chr1_0( mapper83_data[0] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_1( mapper83_data[1] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_2( mapper83_data[2] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_3( mapper83_data[3] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_4( mapper83_data[4] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_5( mapper83_data[5] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_6( mapper83_data[6] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+	chr1_7( mapper83_data[7] | ( ( mapper83_data[8] & 0x30 ) << 4 ) );
+}
+
+static WRITE8_HANDLER( mapper83_w )
+{
+	LOG_MMC(("mapper83_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch( offset ) {
+	case 0x0000:
+	case 0x3000:
+	case 0x30FF:
+	case 0x31FF:
+		mapper83_data[8] = data;
+		mapper83_set_prg();
+		mapper83_set_chr();
+		break;
+	case 0x0100:
+		switch( data & 0x03 ) {
+		case 0:
+			ppu2c0x_set_mirroring( 0, PPU_MIRROR_VERT );
+			break;
+		case 1:
+			ppu2c0x_set_mirroring( 0, PPU_MIRROR_HORZ );
+			break;
+		case 2:
+			ppu2c0x_set_mirroring(0, PPU_MIRROR_LOW);
+			break;
+		case 3:
+			ppu2c0x_set_mirroring(0, PPU_MIRROR_HIGH);
+			break;
+		}
+		break;
+	case 0x0200:
+		IRQ_count = ( IRQ_count & 0xFF00 ) | data;
+		break;
+	case 0x0201:
+		IRQ_enable = 1;
+		IRQ_count = ( data << 8 ) | ( IRQ_count & 0xFF );
+		break;
+	case 0x0300:
+		prg8_89( data );
+		break;
+	case 0x0301:
+		prg8_ab( data );
+		break;
+	case 0x0302:
+		prg8_cd( data );
+		break;
+	case 0x0310:
+	case 0x0311:
+	case 0x0312:
+	case 0x0313:
+	case 0x0314:
+	case 0x0315:
+	case 0x0316:
+	case 0x0317:
+		mapper83_data[ offset - 0x0310 ] = data;
+		mapper83_set_chr();
+		break;
+	case 0x0318:
+		mapper83_data[9] = data;
+		mapper83_set_prg();
+		break;
+	}
+}
+
 static WRITE8_HANDLER( konami_vrc7_w )
 {
 //	logerror("konami_vrc7_w offset: %04x, data: %02x, scanline: %d\n", offset, data, current_scanline);
@@ -3837,6 +4163,53 @@ static WRITE8_HANDLER( mapper101_w )
 
 	/* ??? */
 }
+
+static WRITE8_HANDLER( mapper112_w )
+{
+	LOG_MMC(("mapper112_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch( offset ) {
+	case 0x0000:
+		MMC1_bank1 = data;
+		break;
+	case 0x2000:
+		switch ( MMC1_bank1 ) {
+		case 0:
+			prg8_89( data );
+			break;
+		case 1:
+			prg8_ab( data );
+			break;
+		case 2:
+			data &= 0xFE;
+			chr1_0( data );
+			chr1_1( data + 1 );
+			break;
+		case 3:
+			data &= 0xFE;
+			chr1_2( data );
+			chr1_3( data + 1 );
+			break;
+		case 4:
+			chr1_4( data );
+			break;
+		case 5:
+			chr1_5( data );
+			break;
+		case 6:
+			chr1_6( data );
+			break;
+		case 7:
+			chr1_7( data );
+			break;
+		}
+		break;
+	case 0x6000:
+		ppu2c0x_set_mirroring( 0, ( data & 0x01 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+		break;
+	}
+}
+
 static WRITE8_HANDLER( mapper113_l_w )
 {
 	LOG_MMC(("mapper113_w %04x:%02x\n", offset, data));
@@ -3888,6 +4261,74 @@ static WRITE8_HANDLER( mapper180_w )
 
 	prg16_cdef(data&7);
 }
+
+static WRITE8_HANDLER( mapper182_w )
+{
+	LOG_MMC(("mapper182_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch( offset & 0x7003 ) {
+	case 0x0001:
+		ppu2c0x_set_mirroring( 0, ( data & 0x01 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+		break;
+	case 0x2000:
+		MMC1_bank1 = data;
+		break;
+	case 0x4000:
+		switch( MMC1_bank1 ) {
+		case 0:
+			chr2_0( data >> 1 );
+			break;
+		case 1:
+			chr1_5( data );
+			break;
+		case 2:
+			chr2_2( data >> 1 );
+			break;
+		case 3:
+			chr1_7( data );
+			break;
+		case 4:
+			prg8_89( data );
+			break;
+		case 5:
+			prg8_ab( data );
+			break;
+		case 6:
+			chr1_4( data );
+			break;
+		case 7:
+			chr1_6( data );
+			break;
+		}
+		break;
+	case 0x6003:
+		IRQ_count = data;
+		IRQ_enable = 1;
+		break;
+	}
+}
+
+static void mapper182_irq( int num, int scanline, int vblank, int blanked )
+{
+	if ((scanline < PPU_BOTTOM_VISIBLE_SCANLINE) /*|| (scanline == ppu_scanlines_per_frame-1)*/)
+	{
+		int priorCount = IRQ_count;
+		if ((IRQ_count == 0) || IRQ_reload)
+		{
+			IRQ_count = IRQ_count_latch;
+			IRQ_reload = 0;
+		}
+		else
+			IRQ_count --;
+
+		if (IRQ_enable && !blanked && (IRQ_count == 0) && priorCount)
+		{
+			logerror("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline, video_screen_get_vpos(0), video_screen_get_hpos(0));
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+		}
+	}
+}
+
 static WRITE8_HANDLER( mapper184_m_w )
 {
 	LOG_MMC(("* Mapper 184 switch, data: %02x\n", data));
@@ -3897,6 +4338,87 @@ static WRITE8_HANDLER( mapper184_m_w )
 		chr4_0(data&0x0F);
 		chr4_4((data>>4));
 	}
+}
+
+static WRITE8_HANDLER( mapper188_w )
+{
+	LOG_MMC(("mapper188_w, offset: %04x, data: %02x\n", offset, data ));
+
+	prg16_89ab( data ^ 0x08 );
+}
+
+static WRITE8_HANDLER( mapper193_m_w )
+{
+	LOG_MMC(("mapper193_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	switch( offset & 0x03 ) {
+	case 0:
+		chr4_0( data >> 2 );
+		break;
+	case 1:
+		chr2_4( data >> 1 );
+		break;
+	case 2:
+		chr2_6( data >> 1 );
+		break;
+	case 3:
+		prg16_89ab( data );
+		break;
+	}
+}
+
+static WRITE8_HANDLER( mapper200_w )
+{
+	LOG_MMC(("mapper200_w, offset: %04x, data: %02x\n", offset, data ));
+
+	prg16_89ab( offset & 0x07 );
+	prg16_cdef( offset & 0x07 );
+	chr8( offset & 0x07 );
+	
+	ppu2c0x_set_mirroring( 0, ( offset & 0x08 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+}
+
+static WRITE8_HANDLER( mapper201_w )
+{
+	LOG_MMC(("mapper201_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( offset & 0x08 ) {
+		prg32( offset & 0x03 );
+		chr8( offset & 0x03 );
+	} else {
+		prg32( 0 );
+		chr8( 0 );
+	}
+}
+
+static WRITE8_HANDLER( mapper202_w )
+{
+	int	bank = ( offset >> 1 ) & 0x07;
+
+	LOG_MMC(("mapper202_w, offset: %04x, data: %02x\n", offset, data));
+
+	prg16_89ab( bank );
+	prg16_cdef( bank + ( ( ( bank & 0x06 ) == 0x06 ) ? 1 : 0 ) );
+	chr8( bank );
+
+	ppu2c0x_set_mirroring( 0, ( offset & 0x01 ) ? PPU_MIRROR_HORZ: PPU_MIRROR_VERT );
+}
+
+static WRITE8_HANDLER( mapper203_w )
+{
+	LOG_MMC(("mapper203_w, offset: %04x, data: %02x\n", offset, data));
+
+	prg16_89ab( ( data >> 2 ) & 0x03 );
+	prg16_cdef( ( data >> 2 ) & 0x03 );
+	chr8( data & 0x03 );
+}
+
+static WRITE8_HANDLER( mapper206_w )
+{
+	if ( (offset & 0x6001) == 0x2000 )
+		return;
+
+	mapper4_w( offset, data );
 }
 
 static WRITE8_HANDLER( mapper225_w )
@@ -4081,6 +4603,23 @@ static WRITE8_HANDLER( mapper229_w )
 	}
 }
 
+static WRITE8_HANDLER( mapper230_w )
+{
+	LOG_MMC(("mapper230_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( 1 ) {
+		prg16_89ab( 7 );
+	} else {
+		if ( data & 0x20 ) {
+			prg16_89ab( ( data & 0x1F ) + 8 );
+			prg16_cdef( ( data & 0x1F ) + 8 );
+		} else {
+			prg32( ( ( data & 0x1E ) >> 1 ) + 4 );
+		}
+		ppu2c0x_set_mirroring( 0, ( data & 0x40 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+	}
+}
+
 static WRITE8_HANDLER( mapper231_w )
 {
 	int bank;
@@ -4090,6 +4629,210 @@ static WRITE8_HANDLER( mapper231_w )
 	bank = (data & 0x03) | ((data & 0x80) >> 5);
 	prg32 (bank);
 	chr8 ((data & 0x70) >> 4);
+}
+
+static void mapper232_set_prg( void )
+{
+	prg16_89ab( ( MMC1_bank2 & 0x03 ) | ( ( MMC1_bank1 & 0x18 ) >> 1 ) );
+	prg16_cdef( 3 | ( ( MMC1_bank1 & 0x18 ) >> 1 ) );
+}
+
+static WRITE8_HANDLER( mapper232_w )
+{
+	LOG_MMC(("mapper232_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( offset < 0x2000 ) {
+		MMC1_bank1 = data;
+	} else {
+		MMC1_bank2 = data;
+	}
+}
+
+static WRITE8_HANDLER( mapper240_l_w )
+{
+	LOG_MMC(("mapper240_l_w, offset: %04x, data: %02x\n", offset, data));
+
+	prg32( data >> 4 );
+	chr8( data & 0x0F );
+}
+
+static READ8_HANDLER( mapper241_l_r )
+{
+	return 0x50;
+}
+
+static WRITE8_HANDLER( mapper241_w )
+{
+	LOG_MMC(("mapper241_w, offset: %04x, data: %02x\n", offset, data));
+
+	prg32( data );
+}
+
+static WRITE8_HANDLER( mapper242_w )
+{
+	LOG_MMC(("mapper242_w, offset: %04x, data: %02x\n", offset, data));
+
+	prg32( ( offset >> 3 ) & 0x0F );
+
+	switch( data & 0x03 ) {
+	case 0:
+		ppu2c0x_set_mirroring( 0, PPU_MIRROR_VERT );
+		break;
+	case 1:
+		ppu2c0x_set_mirroring( 0, PPU_MIRROR_HORZ );
+		break;
+	case 2:
+		ppu2c0x_set_mirroring(0, PPU_MIRROR_LOW);
+		break;
+	case 3:
+		ppu2c0x_set_mirroring(0, PPU_MIRROR_HIGH);
+		break;
+	}
+}
+
+static WRITE8_HANDLER( mapper244_w )
+{
+	LOG_MMC(("mapper244_w, offset: %04x, data: %02x\n", offset, data));
+
+	if ( offset < 0x0065 )
+		return;
+	if ( offset < 0x00a5 ) {
+		prg32( ( offset - 0x0065 ) & 0x03 );
+		return;
+	}
+	if ( offset < 0x00e5 ) {
+		chr8( ( offset - 0x00a5 ) & 0x07 );
+	}
+}
+
+static WRITE8_HANDLER( mapper246_m_w )
+{
+	LOG_MMC(("mapper256_m_w, offset: %04x, data: %02x\n", offset, data ));
+
+	if ( offset < 0x0800 ) {
+		switch( offset & 0x0007 ) {
+		case 0x0000:
+			prg8_89( data );
+			break;
+		case 0x0001:
+			prg8_ab( data );
+			break;
+		case 0x0002:
+			prg8_cd( data );
+			break;
+		case 0x0003:
+			prg8_ef( data );
+			break;
+		case 0x0004:
+			chr2_0( data );
+			break;
+		case 0x0005:
+			chr2_2( data );
+			break;
+		case 0x0006:
+			chr2_4( data );
+			break;
+		case 0x0007:
+			chr2_6( data );
+			break;
+		}
+	} else {
+		nes.wram[offset] = data;
+	}
+}
+
+static void mapper248_set_prg( void ) {
+	if ( MMC1_bank4 & 0x80 ) {
+		prg16_89ab( MMC1_bank4 & 0x0F );
+	} else {
+		prg8_89( MMC1_bank2 & 0x1F );
+		prg8_ab( MMC1_bank3 & 0x1F );
+	}
+}
+
+static WRITE8_HANDLER( mapper248_m_w )
+{
+	LOG_MMC(("mapper248_m_w, offset: %04x, data: %02x\n", offset, data));
+
+	MMC1_bank4 = data;
+	mapper248_set_prg();
+}
+
+static WRITE8_HANDLER( mapper248_w )
+{
+	LOG_MMC(("mapper248_w, offset: %04x, data: %02x\n", offset, data));
+
+	switch( offset & 0x7001 ) {
+	case 0x0000:
+		MMC1_bank1 = data;
+		break;
+	case 0x0001:
+		switch( MMC1_bank1 & 0x07 ) {
+		case 0:
+			chr2_0( data >> 1 );
+			break;
+		case 1:
+			chr2_2( data >> 1 );
+			break;
+		case 2:
+			chr1_4( data );
+			break;
+		case 3:
+			chr1_5( data );
+			break;
+		case 4:
+			chr1_6( data );
+			break;
+		case 5:
+			chr1_7( data );
+			break;
+		case 6:
+			MMC1_bank2 = data;
+			mapper248_set_prg();
+			break;
+		case 7:
+			MMC1_bank3 = data;
+			mapper248_set_prg();
+			break;
+		}
+		break;
+	case 0x2000:
+		ppu2c0x_set_mirroring( 0, ( data & 0x01 ) ? PPU_MIRROR_HORZ : PPU_MIRROR_VERT );
+		break;
+	case 0x4000:
+		IRQ_count_latch = data;
+		break;
+	case 0x4001:
+		IRQ_count = IRQ_count_latch;
+		break;
+	case 0x6000:
+		IRQ_enable = 0;
+		break;
+	case 0x6001:
+		IRQ_enable = 1;
+		break;
+	}
+}
+
+static void mapper248_irq( int num, int scanline, int vblank, int blanked )
+{
+	if ((scanline < PPU_BOTTOM_VISIBLE_SCANLINE) /*|| (scanline == ppu_scanlines_per_frame-1)*/)
+	{
+		int priorCount = IRQ_count;
+		if ((IRQ_count == 0) || IRQ_reload)
+		{
+			IRQ_count = IRQ_count_latch;
+			IRQ_reload = 0;
+		}
+		else
+			IRQ_count --;
+
+		if (IRQ_enable && !blanked && (IRQ_count == 0) && priorCount)
+		{
+			logerror("irq fired, scanline: %d (MAME %d, beam pos: %d)\n", scanline, video_screen_get_vpos(0), video_screen_get_hpos(0));
+			cpunum_set_input_line(Machine, 0, M6502_IRQ_LINE, HOLD_LINE);
+		}
+	}
 }
 
 /*
@@ -4181,6 +4924,7 @@ int mapper_reset (int mapperNum)
 			break;
 		case 4:
 		case 118:
+		case 206:
 			/* Can switch 8k prg banks */
 			IRQ_enable = 0;
 			IRQ_count = IRQ_count_latch = 0;
@@ -4188,8 +4932,12 @@ int mapper_reset (int mapperNum)
 			MMC3_prg0 = 0xfe;
 			MMC3_prg1 = 0xff;
 			MMC3_cmd = 0;
-			prg16_89ab (nes.prg_chunks-1);
-			prg16_cdef (nes.prg_chunks-1);
+			MMC3_prg_base = 0;
+			MMC3_prg_mask = ( nes.prg_chunks << 1 ) - 1;
+			MMC3_chr_base = 0;
+			MMC3_chr_mask = ( nes.chr_chunks << 3 ) - 1;
+			mapper4_set_prg();
+			mapper4_set_chr();
 			break;
 		case 5:
 			/* Can switch 8k prg banks, but they are saved as 16k in size */
@@ -4310,6 +5058,75 @@ int mapper_reset (int mapperNum)
 			/* Can switch 32k prgm banks */
 			prg32(0);
 			break;
+		case 42:
+			/* Switch in the last 32KB */
+			prg32( 0xFF );
+			break;
+		case 43:
+			prg32(0);
+			memset( nes.wram, 0x2000, 0xFF );
+			break;
+		case 44:
+		case 47:
+		case 49:
+			IRQ_enable = 0;
+			IRQ_count = IRQ_count_latch = 0;
+			IRQ_reload = 0;
+			MMC3_prg0 = 0xfe;
+			MMC3_prg1 = 0xff;
+			MMC3_cmd = 0;
+			MMC3_prg_base = 0;
+			MMC3_prg_mask = 0x0F;
+			MMC3_chr_base = 0;
+			MMC3_chr_mask = 0x7F;
+			mapper4_set_prg();
+			mapper4_set_chr();
+			break;
+		case 45:
+			IRQ_enable = 0;
+			IRQ_count = IRQ_count_latch = 0;
+			IRQ_reload = 0;
+			MMC3_prg0 = 0xfe;
+			MMC3_prg1 = 0xff;
+			MMC3_cmd = 0;
+			MMC3_prg_base = 0x30;
+			MMC3_prg_mask = 0x0F;
+			MMC3_chr_base = 0;
+			MMC3_chr_mask = 0x7F;
+			mapper45_cmd = 0;
+			mapper45_data[0] = mapper45_data[1] = mapper45_data[2] = mapper45_data[3] = 0;
+			mapper4_set_prg();
+			mapper4_set_chr();
+			memory_set_bankptr( 5, nes.wram );
+			break;
+		case 46:
+			/* Reuseing some MMC1 variables here */
+			MMC1_bank1 = 0;
+			MMC1_bank2 = 0;
+			prg32(MMC1_bank1);
+			chr8(MMC1_bank2);
+			break;
+		case 51:
+			MMC1_bank1 = 0x01;
+			MMC1_bank2 = 0x00;
+			MMC1_bank3 = 0x00;
+			mapper51_set_banks();
+			break;
+		case 57:
+			MMC1_bank1 = 0x00;
+			MMC1_bank2 = 0x00;
+			prg16_89ab( 0 );
+			prg16_cdef( 0 );
+			chr8(0);
+			break;
+		case 58:
+			prg32(0);
+			chr8(0);
+			break;
+		case 61:
+		case 62:
+			prg32(0);
+			break;
 		case 70:
 //		case 86:
 			prg16_89ab (nes.prg_chunks-2);
@@ -4356,6 +5173,11 @@ int mapper_reset (int mapperNum)
 			prg16_89ab (0);
 			prg16_cdef (nes.prg_chunks-1);
 			break;
+		case 83:
+			mapper83_data[9] = 0x0F;
+			prg8_cd( 0x1E );
+			prg8_ef( 0x1F );
+			break;
 		case 89:
 			prg16_89ab(0);
 			prg16_cdef(nes.prg_chunks-1);
@@ -4378,6 +5200,10 @@ int mapper_reset (int mapperNum)
 			prg16_89ab (nes.prg_chunks-1);
 			prg16_cdef (nes.prg_chunks-1);
 			break;
+		case 112:
+			prg16_89ab( nes.prg_chunks-1 );
+			prg16_cdef( nes.prg_chunks-1 );
+			break;
 		case 113:
 		case 133:
 			prg32(0);
@@ -4390,6 +5216,32 @@ int mapper_reset (int mapperNum)
 		case 180:
 			prg16_89ab(0);
 			prg16_cdef(0);
+		case 182:
+			IRQ_enable = 0;
+			IRQ_count = 0;
+			prg32( ( nes.prg_chunks - 1 ) >> 1 );
+			break;
+		case 188:
+			prg16_89ab( 0 );
+			prg16_cdef( ( nes.prg_chunks - 1 ) ^ 0x08 );
+			break;
+		case 193:
+			prg32( ( nes.prg_chunks - 1 ) >> 1 );
+			break;
+		case 200:
+			prg16_89ab( nes.prg_chunks - 1 );
+			prg16_cdef( nes.prg_chunks - 1 );
+			break;
+		case 201:
+			prg32( 0 );
+			chr8( 0 );
+			break;
+		case 202:
+		case 203:
+			prg16_89ab( 0 );
+			prg16_cdef( 0 );
+			chr8( 0 );
+			break;
 		case 225:
 		case 226:
 		case 227:
@@ -4397,9 +5249,31 @@ int mapper_reset (int mapperNum)
 			prg16_89ab (0);
 			prg16_cdef (0);
 			break;
+		case 230:
+			prg16_89ab( 0 );
+			prg16_cdef( 7 );
+			break;
 		case 231:
 			prg16_89ab (nes.prg_chunks-2);
 			prg16_cdef (nes.prg_chunks-1);
+			break;
+		case 232:
+			MMC1_bank1 = 0x18;
+			MMC1_bank2 = 0x00;
+			mapper232_set_prg();
+			break;
+		case 240:
+		case 241:
+		case 242:
+		case 244:
+			prg32(0);
+			break;
+		case 246:
+			prg32( 0xFF );
+			break;
+		case 248:
+			MMC1_bank1 = MMC1_bank2 = MMC1_bank3 = MMC1_bank4 = 0;
+			prg32( 0xFF );
 			break;
 		default:
 			/* Mapper not supported */
@@ -4447,7 +5321,18 @@ static const mmc mmc_list[] =
 	{ 34, "Nina-1",					NULL, NULL, mapper34_m_w, mapper34_w, NULL, NULL, NULL },
 	{ 40, "SMB2j (bootleg)",		NULL, NULL, NULL, mapper40_w, NULL, NULL, mapper40_irq },
 	{ 41, "Caltron 6-in-1",			NULL, NULL, mapper41_m_w, mapper41_w, NULL, NULL, NULL },
-// 42 - "Mario Baby" pirate cart
+	{ 42, "Mario Baby",				NULL, NULL, NULL, mapper42_w, NULL, NULL, NULL },
+	{ 43, "150-in-1",				NULL, NULL, NULL, mapper43_w, NULL, NULL, NULL },
+	{ 44, "7-in-1 MMC3",			NULL, NULL, NULL, mapper44_w, NULL, NULL, mapper4_irq },
+	{ 45, "X-in-1 MMC3",			NULL, NULL, mapper45_m_w, mapper4_w, NULL, NULL, mapper4_irq },
+	{ 46, "15-in-1 Color Dreams",	NULL, NULL, mapper46_m_w, mapper46_w, NULL, NULL, NULL },
+	{ 47, "2-in-1 MMC3",			NULL, NULL, mapper47_m_w, mapper4_w, NULL, NULL, mapper4_irq },
+	{ 49, "4-in-1 MMC3",			NULL, NULL, mapper49_m_w, mapper4_w, NULL, NULL, mapper4_irq },
+	{ 51, "11-in-1",				NULL, NULL, mapper51_m_w, mapper51_w, NULL, NULL, NULL },
+	{ 57, "6-in-1",					NULL, NULL, NULL, mapper57_w, NULL, NULL, NULL },
+	{ 58, "X-in-1",					NULL, NULL, NULL, mapper58_w, NULL, NULL, NULL },
+	{ 61, "20-in-1",				NULL, NULL, NULL, mapper61_w, NULL, NULL, NULL },
+	{ 62, "X-in-1",					NULL, NULL, NULL, mapper62_w, NULL, NULL, NULL },
 	{ 64, "Tengen",					NULL, NULL, mapper64_m_w, mapper64_w, NULL, NULL, mapper4_irq },
 	{ 65, "Irem H3001",				NULL, NULL, NULL, mapper65_w, NULL, NULL, irem_irq },
 	{ 66, "74161/32 Jaleco",		NULL, NULL, NULL, mapper66_w, NULL, NULL, NULL },
@@ -4465,7 +5350,7 @@ static const mmc mmc_list[] =
 	{ 79, "Nina-3 (AVE)",			mapper79_l_w, NULL, mapper79_w, mapper79_w, NULL, NULL, NULL },
 	{ 80, "Taito X1-005",			NULL, NULL, mapper80_m_w, NULL, NULL, NULL, NULL },
 	{ 82, "Taito C075",				NULL, NULL, mapper82_m_w, NULL, NULL, NULL, NULL },
-// 83
+	{ 83, "Cony",					mapper83_l_w, mapper83_l_r, NULL, mapper83_w, NULL, NULL, NULL },
 	{ 84, "Pasofami",				NULL, NULL, NULL, NULL, NULL, NULL, NULL },
 	{ 85, "Konami VRC 7",			NULL, NULL, NULL, konami_vrc7_w, NULL, NULL, konami_irq },
 	{ 86, "Jaleco Early Mapper 2",	NULL, NULL, NULL, mapper86_w, NULL, NULL, NULL },
@@ -4483,6 +5368,7 @@ static const mmc mmc_list[] =
 // 99 - vs. system
 // 100 - images hacked to work with nesticle
 	{ 101, "?? LS161",				NULL, NULL, mapper101_m_w, mapper101_w, NULL, NULL, NULL },
+	{ 112, "Asper",					NULL, NULL, NULL, mapper112_w, NULL, NULL, NULL },
 	{ 113, "Sachen/Hacker/Nina",	mapper113_l_w, NULL, NULL, NULL, NULL, NULL, NULL },
 	{ 118, "MMC3?",					NULL, NULL, NULL, mapper118_w, NULL, NULL, mapper4_irq },
 // 119 - Pinbot
@@ -4490,15 +5376,30 @@ static const mmc mmc_list[] =
 	{ 140, "Jaleco",                        NULL, NULL, mapper_140_m_w, NULL, NULL, NULL, NULL },
 	{ 144, "AGCI 50282",			NULL, NULL, NULL, mapper144_w, NULL, NULL, NULL }, //Death Race only
 	{ 180, "Nihon Bussan - PRG HI",	NULL, NULL, NULL, mapper180_w, NULL, NULL, NULL },
+	{ 182, "Super games",			NULL, NULL, NULL, mapper182_w, NULL, NULL, mapper182_irq },
 	{ 184, "Sunsoft VROM/4K",		NULL, NULL, mapper184_m_w, NULL, NULL, NULL, NULL },
+	{ 188, "UNROM reversed",		NULL, NULL, NULL, mapper188_w, NULL, NULL, NULL },
+	{ 193, "Fighting Hero",			NULL, NULL, mapper193_m_w, NULL, NULL, NULL, NULL },
+	{ 200, "X-in-1",				NULL, NULL, NULL, mapper200_w, NULL, NULL, NULL },
+	{ 201, "X-in-1",				NULL, NULL, NULL, mapper201_w, NULL, NULL, NULL },
+	{ 202, "150-in-1",				NULL, NULL, NULL, mapper202_w, NULL, NULL, NULL },
+	{ 203, "35-in-1",				NULL, NULL, NULL, mapper203_w, NULL, NULL, NULL },
+	{ 206, "MMC3 no mirror",		NULL, NULL, NULL, mapper206_w, NULL, NULL, mapper4_irq },
 	{ 225, "72-in-1 bootleg",		NULL, NULL, NULL, mapper225_w, NULL, NULL, NULL },
 	{ 226, "76-in-1 bootleg",		NULL, NULL, NULL, mapper226_w, NULL, NULL, NULL },
 	{ 227, "1200-in-1 bootleg",		NULL, NULL, NULL, mapper227_w, NULL, NULL, NULL },
 	{ 228, "Action 52",				NULL, NULL, NULL, mapper228_w, NULL, NULL, NULL },
 	{ 229, "31-in-1",				NULL, NULL, NULL, mapper229_w, NULL, NULL, NULL },
-//	{ 230, "22-in-1",				NULL, NULL, NULL, mapper230_w, NULL, NULL, NULL },
-	{ 231, "Nina-7 (AVE)",			NULL, NULL, NULL, mapper231_w, NULL, NULL, NULL }
+	{ 230, "22-in-1",				NULL, NULL, NULL, mapper230_w, NULL, NULL, NULL },
+	{ 231, "Nina-7 (AVE)",			NULL, NULL, NULL, mapper231_w, NULL, NULL, NULL },
+	{ 232, "Quattro",				NULL, NULL, mapper232_w, mapper232_w, NULL, NULL, NULL },
 // 234 - maxi-15
+	{ 240, "Jing Ke Xin Zhuan",		mapper240_l_w, NULL, NULL, NULL, NULL, NULL, NULL },
+	{ 241, "Education 18-in-1",		NULL, mapper241_l_r, NULL, mapper241_w, NULL, NULL, NULL },
+	{ 242, "Wai Xing Zhan Shi",		NULL, NULL, NULL, mapper242_w, NULL, NULL, NULL },
+	{ 244, "Decathlon",				NULL, NULL, NULL, mapper244_w, NULL, NULL, NULL },
+	{ 246, "Fong Shen Bang",		NULL, NULL, mapper246_m_w, NULL, NULL, NULL, NULL },
+	{ 248, "Bao Qing Tian",			NULL, NULL, mapper248_m_w, mapper248_w, NULL, NULL, mapper248_irq },
 };
 
 

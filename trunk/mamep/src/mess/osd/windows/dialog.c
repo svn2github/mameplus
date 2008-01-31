@@ -13,7 +13,7 @@
 
 #include "dialog.h"
 #include "mame.h"
-#include "uitext.h"
+#include "mslegacy.h"
 #include "inputx.h"
 #include "utils.h"
 #include "strconv.h"

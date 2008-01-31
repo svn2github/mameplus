@@ -253,7 +253,7 @@ static void snes_machine_stop(running_machine *machine)
 static MACHINE_START( snes_mess )
 {
 	add_exit_callback(machine, snes_machine_stop);
-	machine_start_snes(machine);
+	MACHINE_START_CALL(snes);
 }
 
 static int device_load_snes_cart(mess_image *image)
@@ -265,7 +265,7 @@ static int device_load_snes_cart(mess_image *image)
 	UINT8 valid_mode20, valid_mode21;
 
 	/* Cart types */
-	static struct
+	static const struct
 	{
 		INT16 Code;
 		const char *Name;

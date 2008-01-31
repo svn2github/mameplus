@@ -52,6 +52,7 @@ enum {
 	MBC_TAMA5,		/*    ?? ROM     ?? RAM - What is this?          */
 	MBC_HUC1,		/*    ?? ROM,    ?? RAM - Hudson Soft Controller */
 	MBC_HUC3,		/*    ?? ROM,    ?? RAM - Hudson Soft Controller */
+	MBC_MBC6,		/*    ?? ROM,  32KB SRAM                         */
 	MBC_MBC7,		/*    ?? ROM,    ?? RAM                          */
 	MBC_WISDOM,		/*    ?? ROM,    ?? RAM - Wisdom tree controller */
 	MBC_MEGADUCK,	/* MEGADUCK style banking                        */
@@ -138,6 +139,9 @@ static WRITE8_HANDLER( gb_ram_bank_select_mbc3 );
 static WRITE8_HANDLER( gb_mem_mode_select_mbc3 );
 static WRITE8_HANDLER( gb_rom_bank_select_mbc5 );
 static WRITE8_HANDLER( gb_ram_bank_select_mbc5 );
+static WRITE8_HANDLER( gb_ram_bank_select_mbc6 );
+static WRITE8_HANDLER( gb_rom_bank_select_mbc6_1 );
+static WRITE8_HANDLER( gb_rom_bank_select_mbc6_2 );
 static WRITE8_HANDLER( gb_rom_bank_select_mbc7 );
 static WRITE8_HANDLER( gb_rom_bank_unknown_mbc7 );
 static WRITE8_HANDLER( gb_ram_tama5 );
@@ -162,16 +166,30 @@ static void gb_init_regs(void) {
 	gb_io_w( 0x06, 0x00 );		/* TIMEMOD */
 }
 
+static void gb_rom16_4000( UINT8 *addr ) {
+	memory_set_bankptr( 1, addr );
+	memory_set_bankptr( 4, addr + 0x2000 );
+}
+
+static void gb_rom8_4000( UINT8 *addr ) {
+	memory_set_bankptr( 1, addr );
+}
+
+static void gb_rom8_6000( UINT8 *addr ) {
+	memory_set_bankptr( 4, addr );
+}
+
 static void gb_init(void) {
 	/* Initialize the memory banks */
 	MBC1Mode = 0;
 	MBC3RTCBank = 0;
 	ROMBank = ROMBank00 + 1;
 	RAMBank = 0;
-	memory_set_bankptr (1, ROMMap[ROMBank] ? ROMMap[ROMBank] : gb_dummy_rom_bank);
 	if ( MBCType != MBC_MEGADUCK ) {
+		gb_rom16_4000( ROMMap[ROMBank] );
 		memory_set_bankptr (2, RAMMap[RAMBank] ? RAMMap[RAMBank] : gb_dummy_ram_bank);
 	} else {
+		memory_set_bankptr( 1, ROMMap[ROMBank] );
 		memory_set_bankptr( 10, ROMMap[0] );
 	}
 
@@ -179,10 +197,6 @@ static void gb_init(void) {
 	switch( MBCType )
 	{
 		case MBC_NONE:
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, MWA8_ROM );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x2000, 0x3fff, 0, 0, MWA8_ROM );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x4000, 0x5fff, 0, 0, MWA8_ROM );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, MWA8_ROM );
 			break;
 		case MBC_MMM01:
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, gb_rom_bank_mmm01_0000_w );
@@ -197,10 +211,7 @@ static void gb_init(void) {
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, gb_mem_mode_select_mbc1 );
 			break;
 		case MBC_MBC2:
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, MWA8_ROM );
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x2000, 0x3fff, 0, 0, gb_rom_bank_select_mbc2 );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x4000, 0x5fff, 0, 0, MWA8_ROM );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, MWA8_ROM );
 			break;
 		case MBC_MBC3:
 		case MBC_HUC1:	/* Possibly wrong */
@@ -214,7 +225,11 @@ static void gb_init(void) {
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, gb_ram_enable );
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x2000, 0x3fff, 0, 0, gb_rom_bank_select_mbc5 );
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x4000, 0x5fff, 0, 0, gb_ram_bank_select_mbc5 );
-			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, MWA8_ROM );
+			break;
+		case MBC_MBC6:
+			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, gb_ram_bank_select_mbc6 );
+			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x2000, 0x2fff, 0, 0, gb_rom_bank_select_mbc6_1 );
+			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x3000, 0x3fff, 0, 0, gb_rom_bank_select_mbc6_2 );
 			break;
 		case MBC_MBC7:
 			memory_install_write8_handler( 0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, gb_ram_enable );
@@ -258,6 +273,8 @@ MACHINE_RESET( gb )
 	/* Enable BIOS rom */
 	memory_set_bankptr(5, memory_region(REGION_CPU1) );
 	memory_set_bankptr(10, ROMMap[ROMBank00] + 0x0100 );
+
+	gb_timer.divcount = 0x0004;
 }
 
 MACHINE_RESET( sgb )
@@ -292,6 +309,8 @@ MACHINE_RESET( sgb )
 	{
 		sgb_hack = 1;
 	}
+
+	gb_timer.divcount = 0xABC8;
 }
 
 MACHINE_RESET( gbpocket )
@@ -310,6 +329,8 @@ MACHINE_RESET( gbpocket )
 	/* Enable BIOS rom if we have one */
 	memory_set_bankptr(5, ROMMap[ROMBank00] ? ROMMap[ROMBank00] : gb_dummy_rom_bank );
 	memory_set_bankptr(10, ROMMap[ROMBank00] ? ROMMap[ROMBank00] + 0x0100 : gb_dummy_rom_bank + 0x0100);
+
+	gb_timer.divcount = 0xABC8;
 }
 
 MACHINE_RESET( gbc )
@@ -368,7 +389,7 @@ static void gb_machine_stop(running_machine *machine)
 }
 
 static void gb_set_mbc1_banks( void ) {
-	memory_set_bankptr( 1, ROMMap[ ROMBank ] );
+	gb_rom16_4000( ROMMap[ ROMBank ] );
 	memory_set_bankptr( 2, RAMMap[ MBC1Mode ? ( ROMBank >> 5 ) : 0 ] );
 }
 
@@ -395,7 +416,7 @@ static WRITE8_HANDLER( gb_rom_bank_select_mbc2 )
 	if( offset & 0x0100 )
 		ROMBank = ( ROMBank & 0x100 ) | data;
 	/* Switch banks */
-	memory_set_bankptr (1, ROMMap[ROMBank] );
+	gb_rom16_4000( ROMMap[ROMBank] );
 }
 
 static WRITE8_HANDLER( gb_rom_bank_select_mbc3 )
@@ -408,7 +429,7 @@ static WRITE8_HANDLER( gb_rom_bank_select_mbc3 )
 
 	ROMBank = ( ROMBank & 0x0100 ) | data;
 	/* Switch banks */
-	memory_set_bankptr (1, ROMMap[ROMBank] );
+	gb_rom16_4000( ROMMap[ROMBank] );
 }
 
 static WRITE8_HANDLER( gb_rom_bank_select_mbc5 )
@@ -424,7 +445,33 @@ static WRITE8_HANDLER( gb_rom_bank_select_mbc5 )
 		ROMBank = (ROMBank & 0x100 ) | data;
 	}
 	/* Switch banks */
-	memory_set_bankptr (1, ROMMap[ROMBank] );
+	gb_rom16_4000( ROMMap[ROMBank] );
+}
+
+static WRITE8_HANDLER( gb_ram_bank_select_mbc6 ) {
+	logerror( "0x%04X: write to mbc6 ram enable area: %04X <- 0x%02X\n", activecpu_get_pc(), offset, data );
+}
+
+static WRITE8_HANDLER( gb_rom_bank_select_mbc6_1 ) {
+	logerror( "0x%04X: write to mbc6 rom area: 0x%04X <- 0x%02X\n", activecpu_get_pc(), 0x2000 + offset, data );
+	if ( offset & 0x0800 ) {
+		if ( data == 0x00 ) {
+			gb_rom8_4000( ROMMap[ROMBank>>1] + ( ( ROMBank & 0x01 ) ? 0x2000 : 0x0000 ) );
+		}
+	} else {
+		ROMBank = data;
+	}
+}
+
+static WRITE8_HANDLER( gb_rom_bank_select_mbc6_2 ) {
+	logerror( "0x%04X: write to mbc6 rom area: 0x%04X <- 0x%02X\n", activecpu_get_pc(), 0x3000 + offset, data );
+	if ( offset & 0x0800 ) {
+		if ( data == 0x00 ) {
+			gb_rom8_6000( ROMMap[ROMBank00>>1] + ( ( ROMBank00 & 0x01 ) ? 0x2000 : 0x0000 ) );
+		}
+	} else {
+		ROMBank00 = data;
+	}
 }
 
 static WRITE8_HANDLER( gb_rom_bank_select_mbc7 ) {
@@ -432,7 +479,7 @@ static WRITE8_HANDLER( gb_rom_bank_select_mbc7 ) {
 	/* Bit 12 must be set for writing to the mbc register */
 	if ( offset & 0x0100 ) {
 		ROMBank = data;
-		memory_set_bankptr( 1, ROMMap[ROMBank] );
+		gb_rom16_4000( ROMMap[ROMBank] );
 	}
 }
 
@@ -457,7 +504,7 @@ static WRITE8_HANDLER( gb_rom_bank_select_wisdom ) {
 	ROMBank = ( offset << 1 ) & 0x1FF;
 	memory_set_bankptr( 5, ROMMap[ ROMBank ] );
 	memory_set_bankptr( 10, ROMMap[ ROMBank ] + 0x0100 );
-	memory_set_bankptr( 1, ROMMap[ ROMBank + 1 ] );
+	gb_rom16_4000( ROMMap[ ROMBank + 1 ] );
 }
 
 static WRITE8_HANDLER( gb_ram_bank_select_mbc1 )
@@ -535,11 +582,11 @@ static WRITE8_HANDLER( gb_ram_tama5 ) {
 		switch( gbLastTama5Command ) {
 		case 0x00:      /* Bits 0-3 for rom bank selection */
 			ROMBank = ( ROMBank & 0xF0 ) | ( data & 0x0F );
-			memory_set_bankptr (1, ROMMap[ROMBank] );
+			gb_rom16_4000( ROMMap[ROMBank] );
 			break;
 		case 0x01:      /* Bit 4(-7?) for rom bank selection */
 			ROMBank = ( ROMBank & 0x0F ) | ( ( data & 0x0F ) << 4 );
-			memory_set_bankptr (1, ROMMap[ROMBank] );
+			gb_rom16_4000( ROMMap[ROMBank] );
 			break;
 		case 0x04:      /* Data to write lo */
 			gbTama5Byte = ( gbTama5Byte & 0xF0 ) | ( data & 0x0F );
@@ -616,7 +663,7 @@ static WRITE8_HANDLER( gb_rom_bank_mmm01_0000_w ) {
 		mmm01_bank_offset = mmm01_reg1;
 		memory_set_bankptr( 5, ROMMap[ mmm01_bank_offset ] );
 		memory_set_bankptr( 10, ROMMap[ mmm01_bank_offset ] + 0x0100 );
-		memory_set_bankptr( 1, ROMMap[ mmm01_bank_offset + mmm01_bank ] );
+		gb_rom16_4000( ROMMap[ mmm01_bank_offset + mmm01_bank ] );
 	}
 }
 
@@ -628,7 +675,7 @@ static WRITE8_HANDLER( gb_rom_bank_mmm01_2000_w ) {
 	if ( mmm01_bank == 0 ) {
 		mmm01_bank = 1;
 	}
-	memory_set_bankptr( 1, ROMMap[ mmm01_bank_offset + mmm01_bank ] );
+	gb_rom16_4000( ROMMap[ mmm01_bank_offset + mmm01_bank ] );
 }
 
 static WRITE8_HANDLER( gb_rom_bank_mmm01_4000_w ) {
@@ -1106,8 +1153,7 @@ WRITE8_HANDLER ( sgb_io_w )
 
 									for( I = 0; I < 2048; I++ )
 									{
-										col = program_read_byte_8 (0x8800 + (I*2));
-										col |= (UINT16)(program_read_byte_8 (0x8800 + (I*2) + 1)) << 8;
+										col = ( gb_vram[ 0x0800 + (I*2) + 1 ] << 8 ) | gb_vram[ 0x0800 + (I*2) ];
 										sgb_pal_data[I] = col;
 									}
 								}
@@ -1151,8 +1197,7 @@ WRITE8_HANDLER ( sgb_io_w )
 										memcpy( sgb_tile_map, gb_vram + 0x1000, 2048 );
 										for( I = 0; I < 64; I++ )
 										{
-											col = program_read_byte_8 (0x8800 + (I*2));
-											col |= (UINT16)(program_read_byte_8 (0x8800 + (I*2) + 1)) << 8;
+											col = ( gb_vram[ 0x0800 + (I*2) + 1 ] << 8 ) | gb_vram[ 0x0800 + (I*2) ];
 											sgb_pal[SGB_BORDER_PAL_OFFSET + I] = col;
 										}
 									}
@@ -1161,8 +1206,7 @@ WRITE8_HANDLER ( sgb_io_w )
 										memcpy( sgb_tile_map, gb_vram + 0x0800, 2048 );
 										for( I = 0; I < 64; I++ )
 										{
-											col = program_read_byte_8 (0x9000 + (I*2));
-											col |= (UINT16)(program_read_byte_8 (0x9000 + (I*2) + 1)) << 8;
+											col = ( gb_vram[ 0x1000 + (I*2) + 1 ] << 8 ) | gb_vram[ 0x1000 + (I*2) ];
 											sgb_pal[SGB_BORDER_PAL_OFFSET + I] = col;
 										}
 									}
@@ -1276,7 +1320,6 @@ READ8_HANDLER ( gb_io_r )
 			return gb_io[offset];
 		case 0x0F:
 			/* Make sure the internal states are up to date */
-			gb_video_up_to_date();
 			return 0xE0 | cpunum_get_reg( 0, Z80GB_IF );
 		default:
 			/* It seems unsupported registers return 0xFF */
@@ -1441,7 +1484,7 @@ DEVICE_LOAD(gb_cart)
 	int Checksum, I, J, filesize;
 	UINT16 reported_rom_banks;
 	UINT8	*gb_header;
-	int rambanks[8] = {0, 1, 1, 4, 16, 8, 0, 0};
+	static const int rambanks[8] = {0, 1, 1, 4, 16, 8, 0, 0};
 
 	filesize = image_length(image);
 
@@ -1520,6 +1563,7 @@ DEVICE_LOAD(gb_cart)
 	case 0x1C:	MBCType = MBC_MBC5;	CartType = RUMBLE;			break;
 	case 0x1D:	MBCType = MBC_MBC5;	CartType = RUMBLE | SRAM;		break;
 	case 0x1E:	MBCType = MBC_MBC5;	CartType = RUMBLE | SRAM | BATTERY;	break;
+	case 0x20:	MBCType = MBC_MBC6;	CartType = SRAM; break;
 	case 0x22:	MBCType = MBC_MBC7;	CartType = SRAM | BATTERY;		break;
 	case 0xBE:	MBCType = MBC_NONE;	CartType = 0;				break;	/* used in Flash2Advance GB Bridge boot program */
 	case 0xFD:	MBCType = MBC_TAMA5;	CartType = 0 /*RTC | BATTERY?*/;	break;
@@ -1627,7 +1671,7 @@ DEVICE_LOAD(gb_cart)
 	{
 		const char *P;
 		char S[50];
-		int ramsize[8] = { 0, 2, 8, 32, 128, 64, 0, 0 };
+		static const int ramsize[8] = { 0, 2, 8, 32, 128, 64, 0, 0 };
 
 
 		strncpy (S, (char *)&gb_header[0x0134], 16);
@@ -1664,11 +1708,6 @@ DEVICE_LOAD(gb_cart)
 
 	if (RAMBanks && MBCType)
 	{
-		/* Release any previously claimed memory */
-		if ( gb_cart_ram != NULL ) {
-			free( gb_cart_ram );
-			gb_cart_ram = NULL;
-		}
 		/* Claim memory */
 		gb_cart_ram = auto_malloc( RAMBanks * 0x2000 );
 
@@ -1729,7 +1768,7 @@ INLINE void gb_timer_check_irq( void ) {
 		gb_timer.triggering_irq = 0;
 		if ( TIMECNT == 0 ) {
 			TIMECNT = TIMEMOD;
-			cpunum_set_input_line( Machine, 0, TIM_INT, HOLD_LINE );
+			cpunum_set_input_line(Machine, 0, TIM_INT, HOLD_LINE );
 			gb_timer.reloading = 1;
 		}
 	}
@@ -1793,7 +1832,7 @@ READ8_HANDLER( gbc_io2_r ) {
 	default:
 		break;
 	}
-	return gb_video_r( offset );
+	return gbc_video_r( offset );
 }
 
 /****************************************************************************
@@ -1872,7 +1911,7 @@ WRITE8_HANDLER ( megaduck_video_w )
 
 /* Map megaduck audio offset to gameboy audio offsets */
 
-static UINT8 megaduck_sound_offsets[16] = { 0, 2, 1, 3, 4, 6, 5, 7, 8, 9, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
+static const UINT8 megaduck_sound_offsets[16] = { 0, 2, 1, 3, 4, 6, 5, 7, 8, 9, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F };
 
 WRITE8_HANDLER( megaduck_sound_w1 )
 {

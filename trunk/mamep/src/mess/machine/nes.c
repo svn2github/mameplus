@@ -168,7 +168,7 @@ int nes_ppu_vidaccess( int num, int address, int data )
 	return data;
 }
 
-static void nes_machine_reset(running_machine *machine)
+MACHINE_RESET( nes )
 {
 	/* Some carts have extra RAM and require it on at startup, e.g. Metroid */
 	nes.mid_ram_enable = 1;
@@ -188,7 +188,6 @@ MACHINE_START( nes )
 		nes.mapper = 20;
 
 	init_nes_core();
-	add_reset_callback(machine, nes_machine_reset);
 	add_exit_callback(machine, nes_machine_stop);
 
 //mamep: remove this hack to boot disk system
