@@ -94,7 +94,7 @@ EMUOBJS += \
 	$(EMUOBJ)/profiler.o
 endif
 
-ifneq ($(DEBUG),)
+ifneq ($(DEBUGGER),)
 EMUOBJS += \
 	$(EMUOBJ)/debug/debugcmd.o \
 	$(EMUOBJ)/debug/debugcmt.o \
@@ -203,7 +203,7 @@ include $(EMUSRC)/cpu/cpu.mak
 
 $(LIBCPU): $(CPUOBJS)
 
-ifneq ($(DEBUG),)
+ifneq ($(DEBUGGER),)
 $(LIBCPU): $(DBGOBJS)
 endif
 

@@ -7,6 +7,7 @@
 *********************************************************************/
 
 #include "cassette.h"
+#include "deprecat.h"
 #include "formats/cassimg.h"
 #include "ui.h"
 

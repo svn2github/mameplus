@@ -6,6 +6,7 @@
 ****************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "video/pong.h"
 #include "sound/samples.h"
 

@@ -92,6 +92,7 @@ Abnormalities:
 
 
 #include "driver.h"
+#include "deprecat.h"
 #include "toaplan1.h"
 #include "cpu/m68000/m68000.h"
 
@@ -1532,10 +1533,10 @@ static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitma
 		tinfo_sp++;
 	}
 
-	copybitmap(bitmap, tmpbitmap1, 
+	copybitmap_trans(bitmap, tmpbitmap1, 
 		fcu_flipscreen, fcu_flipscreen,
 		0, 0,
-		&machine->screen[0].visarea, TRANSPARENCY_PEN, 0
+		&machine->screen[0].visarea, 0
 	);
 
 }

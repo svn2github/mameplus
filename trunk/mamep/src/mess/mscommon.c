@@ -8,6 +8,7 @@
 
 #include <assert.h>
 #include "mscommon.h"
+#include "deprecat.h"
 
 /***************************************************************************
 

@@ -16,6 +16,7 @@
 #include <stdio.h>
 
 #include "driver.h"
+#include "deprecat.h"
 #include "state.h"
 #include "video/generic.h"
 #include "cpu/arm7/arm7core.h"

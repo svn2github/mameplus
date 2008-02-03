@@ -11,6 +11,7 @@
 #include "device.h"
 #include "mslegacy.h"
 #include "driver.h"
+#include "deprecat.h"
 #include "pool.h"
 
 

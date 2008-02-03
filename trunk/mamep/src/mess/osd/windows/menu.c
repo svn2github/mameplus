@@ -34,6 +34,7 @@
 #include "windows/window.h"
 #include "uimess.h"
 #include "winutf8.h"
+#include "deprecat.h"
 
 #ifdef UNDER_CE
 #include "invokegx.h"

@@ -16,6 +16,7 @@
 #include "uimenu.h"
 #include "uitext.h"
 #include "audit.h"
+#include "deprecat.h"
 #include "datafile.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"

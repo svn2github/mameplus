@@ -1,29 +1,27 @@
 /****************************************************************************
-10 Yard Fight Driver.
 
-L Taylor
-J Clegg
+    Irem M58 hardware
 
-Loosely based on the Kung Fu Master driver.
+    L Taylor
+    J Clegg
+
+    Loosely based on the Kung Fu Master driver.
 
 ****************************************************************************/
 
 #include "driver.h"
+#include "m58.h"
 #include "audio/irem.h"
 
-extern UINT8 *yard_scroll_x_low;
-extern UINT8 *yard_scroll_x_high;
-extern UINT8 *yard_scroll_y_low;
-extern UINT8 *yard_score_panel_disabled;
+#define MASTER_CLOCK		XTAL_18_432MHz
 
-extern WRITE8_HANDLER( yard_videoram_w );
-extern WRITE8_HANDLER( yard_scroll_panel_w );
 
-extern PALETTE_INIT( yard );
-extern VIDEO_START( yard );
-extern VIDEO_UPDATE( yard );
 
-/* Read/Write Handlers */
+/*************************************
+ *
+ *  Outputs
+ *
+ *************************************/
 
 static WRITE8_HANDLER( yard_flipscreen_w )
 {
@@ -33,7 +31,13 @@ static WRITE8_HANDLER( yard_flipscreen_w )
 	coin_counter_w(1, data & 0x20);
 }
 
-/* Memory Map */
+
+
+/*************************************
+ *
+ *  Memory maps
+ *
+ *************************************/
 
 static ADDRESS_MAP_START( yard_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x5fff) AM_ROM
@@ -52,7 +56,13 @@ static ADDRESS_MAP_START( yard_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0xe000, 0xefff) AM_RAM
 ADDRESS_MAP_END
 
-/* Input Ports */
+
+
+/*************************************
+ *
+ *  Port definitions
+ *
+ *************************************/
 
 static INPUT_PORTS_START( yard )
 	PORT_START_TAG("IN0")
@@ -86,89 +96,84 @@ static INPUT_PORTS_START( yard )
 	PORT_BIT( 0x80, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_COCKTAIL
 
 	PORT_START_TAG("DSW1")
-	PORT_DIPNAME( 0x01, 0x00, DEF_STR( Allow_Continue ) )
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Allow_Continue ) ) PORT_DIPLOCATION("SW1:1") /* Listed as "Unused" */
 	PORT_DIPSETTING(	0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x02, "Defensive Man Pause" )
+	PORT_DIPNAME( 0x02, 0x02, "Defensive Man Pause" ) PORT_DIPLOCATION("SW1:2") /* Listed as "Unused" */
 	PORT_DIPSETTING(	0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x0c, 0x0c, "Time Reduced by Ball Dead" )
+	PORT_DIPNAME( 0x0c, 0x0c, "Time Reduced by Ball Dead" ) PORT_DIPLOCATION("SW1:3,4")
 	PORT_DIPSETTING(    0x0c, DEF_STR( Normal ) )
 	PORT_DIPSETTING(    0x08, "x1.3" )
 	PORT_DIPSETTING(    0x04, "x1.5" )
 	PORT_DIPSETTING(    0x00, "x1.8" )
     // coin mode 1
-    PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coinage ) )      PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xa0, DEF_STR( 6C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xb0, DEF_STR( 5C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xc0, DEF_STR( 4C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xd0, DEF_STR( 3C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xe0, DEF_STR( 2C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x70, DEF_STR( 1C_2C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x60, DEF_STR( 1C_3C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x50, DEF_STR( 1C_4C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x40, DEF_STR( 1C_5C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x30, DEF_STR( 1C_6C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
-    PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )    PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00)
+	PORT_DIPNAME( 0xf0, 0xf0, DEF_STR( Coinage ) )      PORT_CONDITION("DSW2", 0x04, PORTCOND_NOTEQUALS, 0x00) PORT_DIPLOCATION("SW1:5,6,7,8")
+    PORT_DIPSETTING(    0xa0, DEF_STR( 6C_1C ) )
+    PORT_DIPSETTING(    0xb0, DEF_STR( 5C_1C ) )
+    PORT_DIPSETTING(    0xc0, DEF_STR( 4C_1C ) )
+    PORT_DIPSETTING(    0xd0, DEF_STR( 3C_1C ) )
+    PORT_DIPSETTING(    0xe0, DEF_STR( 2C_1C ) )
+    PORT_DIPSETTING(    0xf0, DEF_STR( 1C_1C ) )
+    PORT_DIPSETTING(    0x70, DEF_STR( 1C_2C ) )
+    PORT_DIPSETTING(    0x60, DEF_STR( 1C_3C ) )
+    PORT_DIPSETTING(    0x50, DEF_STR( 1C_4C ) )
+    PORT_DIPSETTING(    0x40, DEF_STR( 1C_5C ) )
+    PORT_DIPSETTING(    0x30, DEF_STR( 1C_6C ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
     // coin mode 2
-    PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )       PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )    PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coin_B ) )       PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x80, DEF_STR( 1C_3C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x40, DEF_STR( 1C_5C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
-    PORT_DIPSETTING(    0x00, DEF_STR( 1C_6C ) )        PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00)
+    PORT_DIPNAME( 0x30, 0x30, DEF_STR( Coin_A ) )       PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("SW1:5,6")
+    PORT_DIPSETTING(    0x10, DEF_STR( 3C_1C ) )
+    PORT_DIPSETTING(    0x20, DEF_STR( 2C_1C ) )
+    PORT_DIPSETTING(    0x30, DEF_STR( 1C_1C ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( Free_Play ) )
+    PORT_DIPNAME( 0xc0, 0xc0, DEF_STR( Coin_B ) )       PORT_CONDITION("DSW2", 0x04, PORTCOND_EQUALS, 0x00) PORT_DIPLOCATION("SW1:7,8")
+    PORT_DIPSETTING(    0xc0, DEF_STR( 1C_2C ) )
+    PORT_DIPSETTING(    0x80, DEF_STR( 1C_3C ) )
+    PORT_DIPSETTING(    0x40, DEF_STR( 1C_5C ) )
+    PORT_DIPSETTING(    0x00, DEF_STR( 1C_6C ) )
 
 	PORT_START_TAG("DSW2")
-	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) )
+	PORT_DIPNAME( 0x01, 0x01, DEF_STR( Flip_Screen ) ) PORT_DIPLOCATION("SW2:1")
 	PORT_DIPSETTING(    0x01, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) )
+	PORT_DIPNAME( 0x02, 0x00, DEF_STR( Cabinet ) ) PORT_DIPLOCATION("SW2:2")
 	PORT_DIPSETTING(    0x00, DEF_STR( Upright ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( Cocktail ) )
-	PORT_DIPNAME( 0x04, 0x04, "Coin Mode" )
+	PORT_DIPNAME( 0x04, 0x04, "Coin Mode" ) PORT_DIPLOCATION("SW2:3")
 	PORT_DIPSETTING(    0x04, "Mode 1" )
 	PORT_DIPSETTING(    0x00, "Mode 2" )
-	PORT_DIPNAME( 0x08, 0x08, "Slow Motion" )
+	PORT_DIPNAME( 0x08, 0x08, "Slow Motion" ) PORT_DIPLOCATION("SW2:4") /* Listed as "Unused" */
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x10, 0x10, "Stop Mode" )
+	PORT_DIPNAME( 0x10, 0x10, "Freeze Picture" ) PORT_DIPLOCATION("SW2:5") /* 2P Start stops gameplay, 1P Start continues */
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Level_Select ) )
+	PORT_DIPNAME( 0x20, 0x20, DEF_STR( Level_Select ) ) PORT_DIPLOCATION("SW2:6") /* Listed as "Unused" */
 	PORT_DIPSETTING(    0x20, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x40, 0x40, "Invulnerability" )
+	PORT_DIPNAME( 0x40, 0x40, "Invulnerability" ) PORT_DIPLOCATION("SW2:7")
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
-	PORT_SERVICE( 0x80, IP_ACTIVE_LOW )
+	PORT_SERVICE_DIPLOC(0x80, IP_ACTIVE_LOW, "SW2:8" )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( vsyard )
 	PORT_INCLUDE(yard)
 
 	PORT_MODIFY("DSW1")
-	PORT_DIPNAME( 0x01, 0x00, "Allow Continue (Vs. Mode)" )
+	PORT_DIPNAME( 0x01, 0x01, "Allow Continue (Vs. Mode)" ) PORT_DIPLOCATION("SW1:1")
 	PORT_DIPSETTING( 0x01, DEF_STR( No ) )
 	PORT_DIPSETTING( 0x00, DEF_STR( Yes ) )
 INPUT_PORTS_END
 
-/* Graphics Layouts */
 
-static const gfx_layout charlayout =
-{
-	8, 8,
-	RGN_FRAC(1,3),
-	3,
-	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },
-	{ 0, 1, 2, 3, 4, 5, 6, 7 },
-	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8 },
-	8*8
-};
+
+/*************************************
+ *
+ *  Graphics layouts
+ *
+ *************************************/
 
 static const gfx_layout spritelayout =
 {
@@ -176,53 +181,57 @@ static const gfx_layout spritelayout =
 	RGN_FRAC(1,3),
 	3,
 	{ RGN_FRAC(2,3), RGN_FRAC(1,3), RGN_FRAC(0,3) },
-	{ 0, 1, 2, 3, 4, 5, 6, 7,
-	  16*8+0, 16*8+1, 16*8+2, 16*8+3, 16*8+4, 16*8+5, 16*8+6, 16*8+7 },
-	{ 0*8, 1*8, 2*8, 3*8, 4*8, 5*8, 6*8, 7*8,
-	  8*8, 9*8, 10*8, 11*8, 12*8, 13*8, 14*8, 15*8 },
+	{ STEP8(0,1), STEP8(16*8,1) },
+	{ STEP16(0,8) },
 	32*8
 };
 
-/* Graphics Decode Information */
 
 static GFXDECODE_START( yard )
-	GFXDECODE_ENTRY( REGION_GFX1, 0, charlayout,      0, 32 )	// use colors 0-255
-	GFXDECODE_ENTRY( REGION_GFX2, 0, spritelayout, 32*8, 32 )	// use colors 256-271 with lookup table
-GFXDECODE_END// bitmapped radar uses colors 272-527
+	GFXDECODE_ENTRY( REGION_GFX1, 0, gfx_8x8x3_planar,   0, 32 )
+	GFXDECODE_ENTRY( REGION_GFX2, 0, spritelayout,     512, 32 )
+GFXDECODE_END
 
 
-/* Machine Driver */
+
+/*************************************
+ *
+ *  Machine drivers
+ *
+ *************************************/
 
 static MACHINE_DRIVER_START( yard )
-	// basic machine hardware
-	MDRV_CPU_ADD(Z80, 4000000)	// ???
+
+	/* basic machine hardware */
+	MDRV_CPU_ADD(Z80, MASTER_CLOCK/3/2)
 	MDRV_CPU_PROGRAM_MAP(yard_map, 0)
 	MDRV_CPU_VBLANK_INT(irq0_line_hold, 1)
 
-	MDRV_SCREEN_REFRESH_RATE(57)
-	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(1790))
-	/* accurate frequency, measured on a Moon Patrol board, is 56.75Hz.
-       the Lode Runner manual (similar but different hardware)
-       talks about 55Hz and 1790ms vblank duration. */
-
-	// video hardware
+	/* video hardware */
 	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_SCREEN_SIZE(32*8, 32*8)
-	MDRV_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 1*8, 31*8-1)
 	MDRV_GFXDECODE(yard)
-	MDRV_PALETTE_LENGTH(256+16+256)
-	MDRV_COLORTABLE_LENGTH(32*8+32*8)
+	MDRV_PALETTE_LENGTH(256+256+256)
+
+	MDRV_SCREEN_ADD("main", 0)
+	MDRV_SCREEN_RAW_PARAMS(MASTER_CLOCK/3, 384, 0, 256, 282, 42, 266)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 
 	MDRV_PALETTE_INIT(yard)
 	MDRV_VIDEO_START(yard)
 	MDRV_VIDEO_UPDATE(yard)
 
-	// sound hardware
-	MDRV_IMPORT_FROM(irem_audio)
+	/* sound hardware */
+	MDRV_IMPORT_FROM(m52_large_audio)
 MACHINE_DRIVER_END
 
-/* ROMs */
+
+
+/*************************************
+ *
+ *  ROM definitions
+ *
+ *************************************/
+
 ROM_START( 10yard )
 	ROM_REGION( 0x10000, REGION_CPU1, 0 )
 	ROM_LOAD( "yf-a-3p-b",    0x0000, 0x2000, CRC(2e205ec2) SHA1(fcfa08f45423b35f2c99d4e6b5474ab1b3a84fec) )
@@ -359,7 +368,13 @@ ROM_START( vs10yarj )
 	ROM_LOAD( "yard.2m",      0x0420, 0x0100, CRC(45384397) SHA1(e4c662ee81aef63efd8b4a45f85c4a78dc2d419e) ) /* radar palette high 4 bits */
 ROM_END
 
-/* Game Drivers */
+
+
+/*************************************
+ *
+ *  Game drivers
+ *
+ *************************************/
 
 GAME( 1983, 10yard,        0, yard, yard,   0, ROT0, "Irem", "10-Yard Fight (World)", 0 )
 GAME( 1983, 10yardj,  10yard, yard, yard,   0, ROT0, "Irem", "10-Yard Fight (Japan)", 0 )

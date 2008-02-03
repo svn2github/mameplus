@@ -1,6 +1,7 @@
 /* Monaco GP video hardware simulation */
 
 #include "driver.h"
+#include "deprecat.h"
 #include "video/generic.h"
 #include "monaco.h"
 

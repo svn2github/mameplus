@@ -9,6 +9,7 @@ make more configurable (select caches per game?)
 */
 
 #include "driver.h"
+#include "deprecat.h"
 
 #include "cpu/m68000/m68000.h"
 #include "machine/fd1094.h"
@@ -169,7 +170,7 @@ static void fd1094_postload(void)
 }
 
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 static void key_changed(void)
 {
 	int addr;
@@ -215,7 +216,7 @@ void fd1094_driver_init(void (*set_decrypted)(UINT8 *))
   	fd1094_current_cacheposition = 0;
 	fd1094_state = -1;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	/* key debugging */
 	if (Machine->debug_mode && memory_region(REGION_USER2) != NULL)
 	{

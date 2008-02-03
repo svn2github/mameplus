@@ -24,6 +24,7 @@
 #include "ui.h"
 #include "uimenu.h"
 #include "uigfx.h"
+#include "deprecat.h"
 #include "uitext.h"
 
 #define MESS
@@ -35,8 +36,6 @@
 #endif
 
 #include <ctype.h>
-#include <stdarg.h>
-#include <math.h>
 
 
 
@@ -2076,11 +2075,8 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 #endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
-#ifdef MAME_DEBUG
-	if (!Machine->debug_mode)
-#endif
-		if (input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
-			return ui_set_handler(handler_slider, 0);
+	if (!Machine->debug_mode && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
+		return ui_set_handler(handler_slider, 0);
 
 	/* handle a reset request */
 	if (input_ui_pressed(IPT_UI_RESET_MACHINE))

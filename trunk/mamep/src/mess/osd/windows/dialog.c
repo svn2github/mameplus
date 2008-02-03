@@ -24,6 +24,7 @@
 #include "windows/input.h"
 #include "windows/window.h"
 #include "winutf8.h"
+#include "deprecat.h"
 
 #ifdef UNDER_CE
 #include "invokegx.h"

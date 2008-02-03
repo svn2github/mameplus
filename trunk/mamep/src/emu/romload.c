@@ -16,8 +16,7 @@
 #include "harddisk.h"
 #include "config.h"
 #include "ui.h"
-#include <stdarg.h>
-#include <ctype.h>
+#include "deprecat.h"
 #ifdef USE_IPS
 #include "patch.h"
 #endif /* USE_IPS */

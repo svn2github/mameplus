@@ -12,6 +12,7 @@
 #include "inputx.h"
 #include "inptport.h"
 #include "mame.h"
+#include "deprecat.h"
 
 #ifdef MAME_DEBUG
 #include "debug/debugcon.h"

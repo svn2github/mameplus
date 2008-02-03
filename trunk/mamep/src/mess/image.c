@@ -21,6 +21,7 @@
 #include "hashfile.h"
 #include "mamecore.h"
 #include "messopts.h"
+#include "deprecat.h"
 
 
 

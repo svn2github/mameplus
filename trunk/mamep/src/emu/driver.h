@@ -162,6 +162,9 @@
 /* force VIDEO_UPDATE to be called even for skipped frames */
 #define VIDEO_ALWAYS_UPDATE				0x0080
 
+/* calls VIDEO_UPDATE for every visible scanline, even for skipped frames */
+#define VIDEO_UPDATE_SCANLINE			0x0100
+
 
 
 /* ----- flags for game drivers ----- */
@@ -300,7 +303,7 @@ struct _game_driver
 	driver_remove_cpu(machine, tag);									\
 	cpu = NULL;															\
 
-#define MDRV_CPU_REPLACE(tag, _type, _clock)								\
+#define MDRV_CPU_REPLACE(tag, _type, _clock)							\
 	cpu = driver_find_cpu(machine, tag);								\
 	cpu->type = (CPU_##_type);											\
 	cpu->clock = (_clock);												\
@@ -384,7 +387,7 @@ struct _game_driver
 	machine->video_attributes = (flags);								\
 
 #define MDRV_GFXDECODE(gfx)												\
-	machine->gfxdecodeinfo = (gfxdecodeinfo_##gfx);										\
+	machine->gfxdecodeinfo = (gfxdecodeinfo_##gfx);						\
 
 #define MDRV_PALETTE_LENGTH(length)										\
 	machine->total_colors = (length);									\
@@ -525,6 +528,7 @@ struct _game_driver
 	MDRV_SOUND_ROUTE_EX(_output, _target, _gain, -1)					\
 
 
+
 /***************************************************************************
     MACROS FOR BUILDING GAME DRIVERS
 ***************************************************************************/
@@ -573,6 +577,7 @@ extern const game_driver * const noncpudrivers[];
 #endif /* DRIVER_SWITCH */
 
 extern const game_driver driver_empty;
+
 
 
 /***************************************************************************

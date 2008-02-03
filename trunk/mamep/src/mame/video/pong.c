@@ -6,6 +6,7 @@
 ****************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "cpu/gensync/gensync.h"
 #include "video/pong.h"
 
@@ -186,8 +187,8 @@ VIDEO_UPDATE( pong )
 		}
 	}
 
-	copybitmap(bitmap,tmpbitmap,0,0,0,0,&Machine->screen[0].visarea,TRANSPARENCY_NONE,0);
-	fillbitmap(tmpbitmap, Machine->pens[0], &Machine->screen[0].visarea);
+	copybitmap(bitmap,tmpbitmap,0,0,0,0,cliprect);
+	fillbitmap(tmpbitmap, Machine->pens[0], cliprect);
 
 	/* reset the VPAD timers */
 	vpad1_timer = 0;

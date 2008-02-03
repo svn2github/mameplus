@@ -151,6 +151,7 @@ PRm-40		IC21			PRm-40		<both type 6331-1, 16 pin>
 */
 
 #include "driver.h"
+#include "deprecat.h"
 //#include "vidhrdw/generic.h"
 #include "sound/samples.h"
 #include "monaco.h"

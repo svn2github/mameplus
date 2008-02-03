@@ -1,5 +1,6 @@
 #include <ctype.h>
 #include "driver.h"
+#include "deprecat.h"
 #include "cartslot.h"
 
 

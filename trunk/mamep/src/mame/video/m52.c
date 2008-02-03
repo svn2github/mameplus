@@ -1,12 +1,12 @@
 /***************************************************************************
 
-  video.c
-
-  Functions to emulate the video hardware of the machine.
+    Irem M52 hardware
 
 ***************************************************************************/
 
 #include "driver.h"
+#include "m52.h"
+#include "video/resnet.h"
 
 #define BGHEIGHT 64
 
@@ -19,134 +19,79 @@ static UINT8 bgcontrol;
 static tilemap* bg_tilemap;
 
 
-/***************************************************************************
+/*************************************
+ *
+ *  Palette configuration
+ *
+ *************************************/
 
-  Convert the color PROMs into a more useable format.
-
-  Moon Patrol has one 256x8 character palette PROM, one 32x8 background
-  palette PROM, one 32x8 sprite palette PROM and one 256x4 sprite lookup
-  table PROM.
-
-  The character and background palette PROMs are connected to the RGB output
-  this way:
-
-  bit 7 -- 220 ohm resistor  -- BLUE
-        -- 470 ohm resistor  -- BLUE
-        -- 220 ohm resistor  -- GREEN
-        -- 470 ohm resistor  -- GREEN
-        -- 1  kohm resistor  -- GREEN
-        -- 220 ohm resistor  -- RED
-        -- 470 ohm resistor  -- RED
-  bit 0 -- 1  kohm resistor  -- RED
-
-  The sprite palette PROM is connected to the RGB output this way. Note that
-  RED and BLUE are swapped wrt the usual configuration.
-
-  bit 7 -- 220 ohm resistor  -- RED
-        -- 470 ohm resistor  -- RED
-        -- 220 ohm resistor  -- GREEN
-        -- 470 ohm resistor  -- GREEN
-        -- 1  kohm resistor  -- GREEN
-        -- 220 ohm resistor  -- BLUE
-        -- 470 ohm resistor  -- BLUE
-  bit 0 -- 1  kohm resistor  -- BLUE
-
-***************************************************************************/
-PALETTE_INIT( mpatrol )
+PALETTE_INIT( m52 )
 {
+	const UINT8 *char_pal = color_prom + 0x000;
+	const UINT8 *back_pal = color_prom + 0x200;
+	const UINT8 *sprite_pal = color_prom + 0x220;
+	const UINT8 *sprite_table = color_prom + 0x240;
+	static const int resistances_3[3] = { 1000, 470, 220 };
+	static const int resistances_2[2]  = { 470, 220 };
+	double weights_r[3], weights_g[3], weights_b[3], scale;
 	int i;
-	#define TOTAL_COLORS(gfxn) (machine->gfx[gfxn]->total_colors * machine->gfx[gfxn]->color_granularity)
-	#define COLOR(gfxn,offs) (colortable[machine->drv->gfxdecodeinfo[gfxn].color_codes_start + offs])
 
+	machine->colortable = colortable_alloc(machine, 512+32+32);
+
+	/* compute palette information for characters/backgrounds */
+	scale = compute_resistor_weights(0,	255, -1.0,
+			3, resistances_3, weights_r, 0, 0,
+			3, resistances_3, weights_g, 0, 0,
+			2, resistances_2, weights_b, 0, 0);
 
 	/* character palette */
-	for (i = 0;i < 512;i++)
+	for (i = 0; i < 512; i++)
 	{
-		int bit0,bit1,bit2,r,g,b;
+		UINT8 promval = char_pal[i];
+		int r = combine_3_weights(weights_r, BIT(promval,0), BIT(promval,1), BIT(promval,2));
+		int g = combine_3_weights(weights_g, BIT(promval,3), BIT(promval,4), BIT(promval,5));
+		int b = combine_2_weights(weights_b, BIT(promval,6), BIT(promval,7));
 
-		COLOR(0, i) = i;
-
-		/* red component */
-		bit0 = (*color_prom >> 0) & 0x01;
-		bit1 = (*color_prom >> 1) & 0x01;
-		bit2 = (*color_prom >> 2) & 0x01;
-		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* green component */
-		bit0 = (*color_prom >> 3) & 0x01;
-		bit1 = (*color_prom >> 4) & 0x01;
-		bit2 = (*color_prom >> 5) & 0x01;
-		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* blue component */
-		bit0 = 0;
-		bit1 = (*color_prom >> 6) & 0x01;
-		bit2 = (*color_prom >> 7) & 0x01;
-		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-
-		palette_set_color(machine,i,MAKE_RGB(r,g,b));
-		color_prom++;
+		colortable_palette_set_color(machine->colortable, i, MAKE_RGB(r,g,b));
 	}
 
 	/* background palette */
-	for (i = 0;i < 32;i++)
+	for (i = 0; i < 32; i++)
 	{
-		int bit0,bit1,bit2,r,g,b;
+		UINT8 promval = back_pal[i];
+		int r = combine_3_weights(weights_r, BIT(promval,0), BIT(promval,1), BIT(promval,2));
+		int g = combine_3_weights(weights_g, BIT(promval,3), BIT(promval,4), BIT(promval,5));
+		int b = combine_2_weights(weights_b, BIT(promval,6), BIT(promval,7));
 
-
-		/* red component */
-		bit0 = (*color_prom >> 0) & 0x01;
-		bit1 = (*color_prom >> 1) & 0x01;
-		bit2 = (*color_prom >> 2) & 0x01;
-		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* green component */
-		bit0 = (*color_prom >> 3) & 0x01;
-		bit1 = (*color_prom >> 4) & 0x01;
-		bit2 = (*color_prom >> 5) & 0x01;
-		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* blue component */
-		bit0 = 0;
-		bit1 = (*color_prom >> 6) & 0x01;
-		bit2 = (*color_prom >> 7) & 0x01;
-		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-
-		palette_set_color(machine,i+512,MAKE_RGB(r,g,b));
-		color_prom++;
+		colortable_palette_set_color(machine->colortable, 512+i, MAKE_RGB(r,g,b));
 	}
 
-	/* color_prom now points to the beginning of the sprite palette */
+	/* compute palette information for sprites */
+	compute_resistor_weights(0,	255, scale,
+			2, resistances_2, weights_r, 470, 0,
+			3, resistances_3, weights_g, 470, 0,
+			3, resistances_3, weights_b, 470, 0);
 
 	/* sprite palette */
-	for (i = 0;i < 32;i++)
+	for (i = 0; i < 32; i++)
 	{
-		int bit0,bit1,bit2,r,g,b;
+		UINT8 promval = sprite_pal[i];
+		int r = combine_2_weights(weights_r, BIT(promval,6), BIT(promval,7));
+		int g = combine_3_weights(weights_g, BIT(promval,3), BIT(promval,4), BIT(promval,5));
+		int b = combine_3_weights(weights_b, BIT(promval,0), BIT(promval,1), BIT(promval,2));
 
-
-		/* red component */
-		bit0 = 0;
-		bit1 = (*color_prom >> 6) & 0x01;
-		bit2 = (*color_prom >> 7) & 0x01;
-		r = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* green component */
-		bit0 = (*color_prom >> 3) & 0x01;
-		bit1 = (*color_prom >> 4) & 0x01;
-		bit2 = (*color_prom >> 5) & 0x01;
-		g = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-		/* blue component */
-		bit0 = (*color_prom >> 0) & 0x01;
-		bit1 = (*color_prom >> 1) & 0x01;
-		bit2 = (*color_prom >> 2) & 0x01;
-		b = 0x21 * bit0 + 0x47 * bit1 + 0x97 * bit2;
-
-		palette_set_color(machine,i+512+32,MAKE_RGB(r,g,b));
-		color_prom++;
+		colortable_palette_set_color(machine->colortable, 512+32+i, MAKE_RGB(r,g,b));
 	}
 
-	/* color_prom now points to the beginning of the sprite lookup table */
+	/* character lookup table */
+	for (i = 0; i < 512; i++)
+		colortable_entry_set_value(machine->colortable, i, i);
 
 	/* sprite lookup table */
-	for (i = 0;i < TOTAL_COLORS(1);i++)
+	for (i = 0; i < 16*4; i++)
 	{
-		COLOR(1,i) = 512+32 + (*color_prom++);
-		if (i % 4 == 3) color_prom += 4;	/* half of the PROM is unused */
+		UINT8 promval = sprite_table[(i & 3) | ((i & ~3) << 1)];
+		colortable_entry_set_value(machine->colortable, 512+i, 512+32+promval);
 	}
 
 	/* background */
@@ -155,21 +100,27 @@ PALETTE_INIT( mpatrol )
 	/* xbb00: mountains */
 	/* 0xxbb: hills */
 	/* 1xxbb: city */
-	COLOR(2,0) = 512;
-	COLOR(2,1) = 512+4;
-	COLOR(2,2) = 512+8;
-	COLOR(2,3) = 512+12;
-	COLOR(3,0) = 512;
-	COLOR(3,1) = 512+1;
-	COLOR(3,2) = 512+2;
-	COLOR(3,3) = 512+3;
-	COLOR(4,0) = 512;
-	COLOR(4,1) = 512+16+1;
-	COLOR(4,2) = 512+16+2;
-	COLOR(4,3) = 512+16+3;
+	colortable_entry_set_value(machine->colortable, 512+16*4+0*4+0, 512);
+	colortable_entry_set_value(machine->colortable, 512+16*4+0*4+1, 512+4);
+	colortable_entry_set_value(machine->colortable, 512+16*4+0*4+2, 512+8);
+	colortable_entry_set_value(machine->colortable, 512+16*4+0*4+3, 512+12);
+	colortable_entry_set_value(machine->colortable, 512+16*4+1*4+0, 512);
+	colortable_entry_set_value(machine->colortable, 512+16*4+1*4+1, 512+1);
+	colortable_entry_set_value(machine->colortable, 512+16*4+1*4+2, 512+2);
+	colortable_entry_set_value(machine->colortable, 512+16*4+1*4+3, 512+3);
+	colortable_entry_set_value(machine->colortable, 512+16*4+2*4+0, 512);
+	colortable_entry_set_value(machine->colortable, 512+16*4+2*4+1, 512+16+1);
+	colortable_entry_set_value(machine->colortable, 512+16*4+2*4+2, 512+16+2);
+	colortable_entry_set_value(machine->colortable, 512+16*4+2*4+3, 512+16+3);
 }
 
 
+
+/*************************************
+ *
+ *  Tilemap info callback
+ *
+ *************************************/
 
 static TILE_GET_INFO( get_tile_info )
 {
@@ -196,7 +147,13 @@ static TILE_GET_INFO( get_tile_info )
 
 
 
-VIDEO_START( mpatrol )
+/*************************************
+ *
+ *  Video startup
+ *
+ *************************************/
+
+VIDEO_START( m52 )
 {
 	bg_tilemap = tilemap_create(get_tile_info, tilemap_scan_rows, TILEMAP_TYPE_PEN, 8, 8, 32, 32);
 
@@ -214,7 +171,13 @@ VIDEO_START( mpatrol )
 
 
 
-WRITE8_HANDLER( mpatrol_scroll_w )
+/*************************************
+ *
+ *  Scroll registers
+ *
+ *************************************/
+
+WRITE8_HANDLER( m52_scroll_w )
 {
 
 /*
@@ -232,25 +195,37 @@ WRITE8_HANDLER( mpatrol_scroll_w )
 
 
 
-WRITE8_HANDLER( mpatrol_videoram_w )
+/*************************************
+ *
+ *  Video RAM write handlers
+ *
+ *************************************/
+
+WRITE8_HANDLER( m52_videoram_w )
 {
 	videoram[offset] = data;
 	tilemap_mark_tile_dirty(bg_tilemap, offset);
 }
 
 
-
-WRITE8_HANDLER( mpatrol_colorram_w )
+WRITE8_HANDLER( m52_colorram_w )
 {
 	colorram[offset] = data;
 	tilemap_mark_tile_dirty(bg_tilemap, offset);
 }
 
 
+
+/*************************************
+ *
+ *  Custom protection
+ *
+ *************************************/
+
 /* This looks like some kind of protection implemented by a custom chip on the
-   scroll board. It mangles the value written to the port mpatrol_bg1xpos_w, as
+   scroll board. It mangles the value written to the port m52_bg1xpos_w, as
    follows: result = popcount(value & 0x7f) ^ (value >> 7) */
-READ8_HANDLER( mpatrol_protection_r )
+READ8_HANDLER( m52_protection_r )
 {
 	int popcount = 0;
 	int temp;
@@ -261,30 +236,41 @@ READ8_HANDLER( mpatrol_protection_r )
 }
 
 
-WRITE8_HANDLER( mpatrol_bg1ypos_w )
+
+/*************************************
+ *
+ *  Background control write handlers
+ *
+ *************************************/
+
+WRITE8_HANDLER( m52_bg1ypos_w )
 {
 	bg1ypos = data;
 }
-WRITE8_HANDLER( mpatrol_bg1xpos_w )
+
+WRITE8_HANDLER( m52_bg1xpos_w )
 {
 	bg1xpos = data;
 }
-WRITE8_HANDLER( mpatrol_bg2xpos_w )
+
+WRITE8_HANDLER( m52_bg2xpos_w )
 {
 	bg2xpos = data;
 }
-WRITE8_HANDLER( mpatrol_bg2ypos_w )
+
+WRITE8_HANDLER( m52_bg2ypos_w )
 {
 	bg2ypos = data;
 }
-WRITE8_HANDLER( mpatrol_bgcontrol_w )
+
+WRITE8_HANDLER( m52_bgcontrol_w )
 {
 	bgcontrol = data;
 }
 
 
 
-WRITE8_HANDLER( mpatrol_flipscreen_w )
+WRITE8_HANDLER( m52_flipscreen_w )
 {
 	coin_counter_w(0, data & 0x02);
 	coin_counter_w(1, data & 0x20);
@@ -295,6 +281,12 @@ WRITE8_HANDLER( mpatrol_flipscreen_w )
 }
 
 
+
+/*************************************
+ *
+ *  Background rendering
+ *
+ *************************************/
 
 static void draw_background(running_machine *machine, mame_bitmap *bitmap, const rectangle *cliprect, int xpos, int ypos, int image)
 {
@@ -345,7 +337,13 @@ static void draw_background(running_machine *machine, mame_bitmap *bitmap, const
 
 
 
-VIDEO_UPDATE( mpatrol )
+/*************************************
+ *
+ *  Video render
+ *
+ *************************************/
+
+VIDEO_UPDATE( m52 )
 {
 	int offs;
 
@@ -409,7 +407,8 @@ VIDEO_UPDATE( mpatrol )
 
 		drawgfx(bitmap, machine->gfx[1],
 			code, color, flipx, flipy, sx, sy,
-			&clip, TRANSPARENCY_COLOR, 512+32);
+			&clip, TRANSPARENCY_PENS,
+			colortable_get_transpen_mask(machine->colortable, machine->gfx[1], color, 512+32));
 	}
 	return 0;
 }

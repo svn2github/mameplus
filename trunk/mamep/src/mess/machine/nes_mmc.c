@@ -29,6 +29,7 @@
 #include "video/ppu2c0x.h"
 #include "osdepend.h"
 #include "driver.h"
+#include "deprecat.h"
 #include "includes/nes.h"
 #include "nes_mmc.h"
 #include "sound/nes_apu.h"

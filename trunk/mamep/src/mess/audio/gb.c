@@ -40,6 +40,7 @@
 ***************************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "includes/gb.h"
 #include "streams.h"
 

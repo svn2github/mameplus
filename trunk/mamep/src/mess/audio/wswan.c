@@ -9,6 +9,7 @@
 **************************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "includes/wswan.h"
 #include "streams.h"
 

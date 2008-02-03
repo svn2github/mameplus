@@ -1,4 +1,5 @@
 #include "driver.h"
+#include "deprecat.h"
 #include "patch.h"
 #include "hash.h"
 

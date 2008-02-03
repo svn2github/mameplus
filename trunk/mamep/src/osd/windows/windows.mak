@@ -354,7 +354,7 @@ OSDOBJS += $(VCOBJS)
 CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
-ifneq ($(DEBUG),)
+ifneq ($(DEBUGGER),)
 OSDOBJS += \
 	$(WINOBJ)/debugwin.o
 endif
@@ -409,6 +409,8 @@ endif
 #-------------------------------------------------
 
 VERINFO = $(WINOBJ)/verinfo$(EXE)
+
+ifneq ($(CROSS_BUILD),1)
 BUILD += $(VERINFO)
 
 $(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
@@ -421,7 +423,7 @@ VERINFOOBJS = \
 $(VERINFO): $(VERINFOOBJS) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
+endif
 
 
 
