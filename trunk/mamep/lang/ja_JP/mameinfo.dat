@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u6      #
+#     Mameinfo.dat日本語版 v0.122u7      #
 #                                        #
-#            January 21, 2008            #
+#            January 30, 2008            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：914 翻訳済：879
-# 追加項目：343 合計：1257
+# Tester報告：922 翻訳済：888
+# 追加項目：343 合計：1265
 #
 
 
@@ -31,6 +31,23 @@ $mame
 
 - 画面反転のDIP設定が動作しない。
 またカクテルモード用のプレイヤー2の操作が割り当てられていない。 bigevglf0122u5gra, IceMan01
+
+$end
+
+$info=combascb
+$mame
+[バグ]
+
+- テキストと体力の表示はされているが、そのほかのグラフィックがほとんど表示されない。 combascb0122u7yel, Tafoid
+
+
+- 0.79からプレイヤー画面に表示化けあり。1面でスクロールの問題もあり。 combascb093u2gre, qapo
+
+
+- 3面でクラッシュする。
+また、キャラ化けも頻発している。
+「Game Over」画面でもクラッシュが起きる。
+また、デモ画面も何回も繰り返していると落ちることがある。 combascb36finalyel, Jeff B / TriggerFin / Pi
 
 $end
 
@@ -66,11 +83,19 @@ $mame
 
 $end
 
-$info=tylz
+$info=stunrun
 $mame
 [バグ]
 
-- 起動時にクラッシュする。 tylz0122u5red, Firewave
+- Coin3は使われていない。また、Coin1と2がダブっている。 stunrun0122u7gra, denzilla
+
+$end
+
+$info=jackal
+$mame
+[バグ]
+
+- ジープに乗ったところでBGMが止まる。 jackal.c0122u7yel, cibomatto2002
 
 $end
 
@@ -91,6 +116,14 @@ $mame
 
 
 - デモ対戦の画面左端が化けている。 kinst0118u5gre, Layne
+
+$end
+
+$info=pinbo
+$mame
+[バグ]
+
+- マスタ版以外では残ライフがおかしい。DIP設定とも合わない。 pinbo0122u7gra, Tafoid
 
 $end
 
@@ -242,20 +275,6 @@ $mame
 
 $end
 
-$info=stadhero
-$mame
-[バグ]
-
-- 画面反転をONにするとスプライトレイヤーが反転しない。 stadhero0122u3gre, IceMan01
-
-
-- 起動時にRAMテスト10-Jと13-Cがエラーと表示される。 stadhero0122u3ora, IceMan01
-
-
-- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
-
-$end
-
 $info=regulus
 $mame
 [バグ]
@@ -315,6 +334,14 @@ $mame
 [バグ]
 
 - 表示レイアウト"Dual Side by side, Gapless"を選択し、ウィンドウサイズを変更すると、両画面の隙間が現われる。 warriorb.c0122u5gre, Iaspis
+
+$end
+
+$info=10yard
+$mame
+[バグ]
+
+- [possible] イニシャル入力画面で最後の文字を入れると、カウントダウンの数字が画面左側に現われる。 10yard0122u7gre, Tafoid
 
 $end
 
@@ -405,14 +432,6 @@ MAMEでは3.8～3.9秒ほどなので、2倍までは速くないが、十分わ
 
 $end
 
-$info=asterix
-$mame
-[バグ]
-
-- 画面を反転すると、画面から左にずれて表示されるものがある。 asterix_1055gre, NeoGouki
-
-$end
-
 $info=bonzeadv
 $mame
 [バグ]
@@ -429,9 +448,6 @@ $mame
 [バグ]
 
 - アトラクトモード中で、TYが紹介される場面が一瞬ちらつく。他のバージョノンは問題ない。 pitfight099gre, Roger Coltrane
-
-
-- 起動時にクレジットが2つ勝手に入る。 pitfight0106u3ora, Roger Coltrane
 
 $end
 
@@ -514,16 +530,6 @@ $mame
 [バグ]
 
 - ゲーム中にサウンドが途切れがち。 mechatt072u1yel, Nerox91
-
-$end
-
-$info=blktiger
-$mame
-[バグ]
-
-- プレイ中にコインを受け付けない。
-コンティニュー画面ではOK。
-また、サービスキーだけは動作する。 blktiger37b15gre, Bugfinder / fart_flower / robiza
 
 $end
 
@@ -660,20 +666,6 @@ $mame
 
 
 - 2回目のFiring Range面で、画面の上下にゴミグラフィックが出る。0.118では正常。 combasc0119gre, izius
-
-$end
-
-$info=combascb
-$mame
-[バグ]
-
-- 0.79からプレイヤー画面に表示化けあり。1面でスクロールの問題もあり。 combascb093u2gre, qapo
-
-
-- 3面でクラッシュする。
-また、キャラ化けも頻発している。
-「Game Over」画面でもクラッシュが起きる。
-また、デモ画面も何回も繰り返していると落ちることがある。 combascb36finalyel, Jeff B / TriggerFin / Pi
 
 $end
 
@@ -1445,14 +1437,6 @@ $mame
 
 $end
 
-$info=kncljoe
-$mame
-[バグ]
-
-- グラフィック、サウンドなどにバグが多くある。 kncljoe0101u2yel, BlackTiger
-
-$end
-
 $info=hyperath
 $mame
 [バグ]
@@ -2069,14 +2053,6 @@ $mame
 
 $end
 
-$info=mnight
-$mame
-[バグ]
-
-- 面クリア画面のタイムボーナスのカウントが正しく更新されていない。 mnight0102gre, Kekule / Twisty
-
-$end
-
 $info=moo
 $mame
 [バグ]
@@ -2092,20 +2068,6 @@ $mame
 [バグ]
 
 - ゲーム中やキャラクタ選択画面で突然リセットする。 gfire20103red, russ h. / Twist
-
-$end
-
-$info=mpatrol
-$mame
-[情報]
-
-- F2キーを押しながらリセットでテストモードになる。
-RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
-
-
-[バグ]
-
-- グラフィックが全て右に1ピクセルずれている。 mpatrol0117u2gre, Ineedashield / twisty / Fujix
 
 $end
 
@@ -3823,25 +3785,6 @@ $mame
 
 $end
 
-$info=champwr
-$mame
-[バグ]
-
-- ラウンド3のVS画面で、左のキャラクタが色化けしている。 champwr37b15gre, Kale
-
-
-[TIPS]
-
-- クレジットを9にするコマンド：
-
-1) サービススイッチ(9キー)を押しながらリセット
-
-2) 1Pスタートx3　サービス　1Pスタート
-
-(by Mhk)
-
-$end
-
 $info=evilston
 $mame
 [バグ]
@@ -4169,15 +4112,6 @@ $mame
 
 $end
 
-$info=toki
-$mame
-[バグ]
-
-- 地面から現れる猿を倒したときの音が間違っている。
-また、16tジャンプの音もおかしい。 tokic060gre, Styxken / |Maccy| / Nick / BMF54123 / AS / Mamesick
-
-$end
-
 $info=topspeed
 $mame
 [バグ]
@@ -4294,6 +4228,14 @@ $mame
 
 - シールドを使うと、大体6割くらいの確率でボイスやサウンドがぐちゃぐちゃになり、
 敵にやられるまで、音が一切鳴らなくなる。 victory237b4gre, The tECHIDNA
+
+$end
+
+$info=balonfgt
+$mame
+[バグ]
+
+- 両方の画面を使ってプレイしようとすると、すぐにお互いの同期がとれなくなる。 balonfgt070u5gre, Y.M.I / Reip
 
 $end
 
@@ -4508,15 +4450,6 @@ $mame
 
 
 - やられて、再スタート時のサウンドがひどい。特に谷間に落ちたときにわかりやすい。 wiz37b15gre, Chook
-
-$end
-
-$info=wwfwfsta
-$mame
-[バグ]
-
-- プレイヤー3と4用のコインスロットが無い。
-(ただし、4人版を見たことがないので、もしかしたら2つだけかもしれない) wwfwfsta37b16gre1, Karasu
 
 $end
 
@@ -4884,6 +4817,14 @@ $mame
 
 $end
 
+$info=stadhero
+$mame
+[バグ]
+
+- 4種類のBGMがイニング毎にランダムに再生されるはずだが、MAMEでは1種類だけ。 stadhero0120ora, Siggy
+
+$end
+
 $info=cubybop
 $mame
 [バグ]
@@ -5211,14 +5152,6 @@ $mame
 
 $end
 
-$info=ninjakd2
-$mame
-[バグ]
-
-- カクテルモードでプレイヤー2の画面が反転しない。 ninjakd2_0111u3gra, Speedfreak
-
-$end
-
 $info=vandyke
 $mame
 [バグ]
@@ -5243,22 +5176,6 @@ $mame
 [バグ]
 
 - 2人プレーゲームなのにプレイヤー3のスタートボタンがマッピングされている。 quasar0111u1gra, Speedfreak
-
-$end
-
-$info=realbrk
-$mame
-[バグ]
-
-- 画面反転のDIPスイッチが動作しない。プレイヤー2のスタートボタンがマッピングされていない。 realbrk0111u4gra, Speedfreak
-
-$end
-
-$info=schmeisr
-$mame
-[バグ]
-
-- デモサウンドのDIP設定が逆。Tiltのキーがマッピングされていない。 schmeisr0111u5gra, Speedfreak
 
 $end
 
@@ -5328,14 +5245,6 @@ $mame
 - 2人プレーができない。プレイヤー2のスタートボタンが動作していないようだ。
 テストモードで調べると、1Pの操作が2Pとだぶっている。
 カクテル、アップライトどちらの筐体設定でも起こる。 usclssic088u1gra, Nomax
-
-$end
-
-$info=penbros
-$mame
-[バグ]
-
-- ボタン3がマッピングされているが、入力テストには現われない。 penbros0111u5gra, Speedfreak
 
 $end
 
@@ -5776,14 +5685,6 @@ $mame
 [バグ]
 
 - 最初の対戦しかBGMが鳴らない。ただし、対戦の間の音楽はきちんとかかる。 gstriker064gre, ShengLuc
-
-$end
-
-$info=hardyard
-$mame
-[バグ]
-
-- 初回起動時、タイトル画面が乱れる。 hardyard0106gre, cpukett
 
 $end
 
@@ -6414,14 +6315,6 @@ $mame
 - イージーモードでバグが２つある。
 
 左のステージを選ぶと、敵の色が変になる。また、右のステージでは、敵無しでスタートする。 jumpkids0105u2gre, Twisty
-
-$end
-
-$info=balonfgt
-$mame
-[バグ]
-
-- 両方の画面を使ってプレイしようとすると、すぐにお互いの同期がとれなくなる。 balonfgt070u5gre, Y.M.I / Reip
 
 $end
 
@@ -7261,6 +7154,15 @@ $mame
 [情報]
 
 - テストモードは、1Pスタートキーを押しながらリセット。
+
+$end
+
+$info=mpatrol
+$mame
+[情報]
+
+- F2キーを押しながらリセットでテストモードになる。
+RAM/ROMテスト後、2キーでメニューを進み、1キーで選択。
 
 $end
 
@@ -8283,6 +8185,20 @@ $mame
 [TIPS]
 
 - 面セレクト、ステータス設定コマンド：
+
+1) サービススイッチ(9キー)を押しながらリセット
+
+2) 1Pスタートx3　サービス　1Pスタート
+
+(by Mhk)
+
+$end
+
+$info=champwr
+$mame
+[TIPS]
+
+- クレジットを9にするコマンド：
 
 1) サービススイッチ(9キー)を押しながらリセット
 
