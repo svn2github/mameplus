@@ -56,7 +56,8 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
-	DRIVER( cawingb )
+	DRIVER( cawingb )	/* bootleg */
+	DRIVER( kodh )		/* bootleg */
 	DRIVER( ddtodd )	/* 12/04/1994 (c) 1993 (Euro) Phoenix Edition */
 	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
 	DRIVER( ringdstd )	/* 02/09/1994 (c) 1994 (Euro) Phoenix Edition */
