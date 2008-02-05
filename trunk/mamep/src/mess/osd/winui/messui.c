@@ -32,7 +32,7 @@
 #include "devview.h"
 #include "windows/window.h"
 #include "utils.h"
-#include "mslegacy.h"
+#include "uitext.h"
 #include "strconv.h"
 #include "messui.h"
 #include "winutf8.h"

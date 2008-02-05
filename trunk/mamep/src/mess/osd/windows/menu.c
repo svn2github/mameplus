@@ -23,7 +23,8 @@
 #include "windows/input.h"
 #include "dialog.h"
 #include "opcntrl.h"
-#include "mslegacy.h"
+#include "deprecat.h"
+#include "uitext.h"
 #include "strconv.h"
 #include "utils.h"
 #include "tapedlg.h"
@@ -34,7 +35,6 @@
 #include "windows/window.h"
 #include "uimess.h"
 #include "winutf8.h"
-#include "deprecat.h"
 
 #ifdef UNDER_CE
 #include "invokegx.h"
@@ -84,12 +84,15 @@ enum
 	DEVOPTION_MAX
 };
 
-#ifdef MAME_DEBUG
-#define HAS_PROFILER	1
+#ifdef ENABLE_DEBUGGER
 #define HAS_DEBUGGER	1
 #else
-#define HAS_PROFILER	0
 #define HAS_DEBUGGER	0
+#endif
+#ifdef MAME_PROFILER
+#define HAS_PROFILER	1
+#else
+#define HAS_PROFILER	0
 #endif
 
 #ifdef UNDER_CE

@@ -8,25 +8,13 @@
 *********************************************************************/
 
 #include "driver.h"
-#include "mslegacy.h"
+#include "uitext.h"
 
 
 const char *const mess_default_text[] =
 {
-	"OK",
-	"Off",
-	"On",
-	"Dip Switches",
-	"Driver Configuration",
-	"Analog Controls",
-	"Digital Speed",
-	"Autocenter Speed",
-	"Reverse",
-	"Sensitivity",
-	"\xc2\xab",
-	"\xc2\xbb",
-	"Return to Main Menu",
-
+	"The emulated system is a computer: ",
+	"The keyboard emulation may not be 100% accurate.",
 	"Keyboard Emulation Status",
 	"-------------------------",
 	"Mode: PARTIAL Emulation",

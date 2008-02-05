@@ -249,7 +249,7 @@ enum
 };
 
 //#ifdef MESS
-#include "muitext.h"
+#include "mslegacy.h"
 //#endif
 
 struct _lang_struct

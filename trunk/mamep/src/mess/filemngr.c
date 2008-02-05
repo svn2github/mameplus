@@ -12,7 +12,7 @@
 #include "image.h"
 #include "ui.h"
 #include "uimenu.h"
-#include "mslegacy.h"
+#include "uitext.h"
 
 #define SEL_BITS	12
 #define SEL_MASK	((1<<SEL_BITS)-1)

@@ -5,9 +5,9 @@
 ****************************************************************************/
 
 #include "mame.h"
+#include "deprecat.h"
 #include "options.h"
 #include "driver.h"
-#include "deprecat.h"
 #include "pool.h"
 #include "config.h"
 #include "xmlfile.h"

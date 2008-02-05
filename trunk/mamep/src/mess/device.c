@@ -9,9 +9,9 @@
 #include <stddef.h>
 
 #include "device.h"
-#include "mslegacy.h"
-#include "driver.h"
 #include "deprecat.h"
+#include "uitext.h"
+#include "driver.h"
 #include "pool.h"
 
 
@@ -456,4 +456,6 @@ int device_valididtychecks(void)
 	}
 	return error;
 }
+
+
 

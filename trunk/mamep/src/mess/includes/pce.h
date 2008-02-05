@@ -32,7 +32,7 @@ extern unsigned char *pce_user_ram; /* scratch RAM at F8 */
 extern UINT8 *pce_cd_ram;
 DEVICE_LOAD(pce_cart);
 NVRAM_HANDLER( pce );
-extern WRITE8_HANDLER ( pce_joystick_w );
+WRITE8_HANDLER ( pce_ms_joystick_w );
 READ8_HANDLER ( pce_ms_joystick_r );
 
 extern const struct MSM5205interface pce_cd_msm5205_interface;

@@ -28,8 +28,8 @@
 #include "cpu/m6502/m6502.h"
 #include "video/ppu2c0x.h"
 #include "osdepend.h"
-#include "driver.h"
 #include "deprecat.h"
+#include "driver.h"
 #include "includes/nes.h"
 #include "nes_mmc.h"
 #include "sound/nes_apu.h"
@@ -5415,4 +5415,6 @@ const mmc *nes_mapper_lookup(int mapper)
 	}
 	return NULL;
 }
+
+
 

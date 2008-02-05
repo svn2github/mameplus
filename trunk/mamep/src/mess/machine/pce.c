@@ -246,9 +246,8 @@ MACHINE_RESET( pce_ms ) {
 	pce_cd_init();
 }
 
-#if 0
 /* todo: how many input ports does the PCE have? */
-WRITE8_HANDLER ( pce_joystick_w )
+WRITE8_HANDLER ( pce_ms_joystick_w )
 {
 	h6280io_set_buffer(data);
     /* bump counter on a low-to-high transition of bit 1 */
@@ -266,7 +265,6 @@ WRITE8_HANDLER ( pce_joystick_w )
         joystick_port_select = 0;
     }
 }
-#endif
 
 READ8_HANDLER ( pce_ms_joystick_r )
 {

@@ -13,7 +13,8 @@
 
 #include "dialog.h"
 #include "mame.h"
-#include "mslegacy.h"
+#include "deprecat.h"
+#include "uitext.h"
 #include "inputx.h"
 #include "utils.h"
 #include "strconv.h"
@@ -24,7 +25,6 @@
 #include "windows/input.h"
 #include "windows/window.h"
 #include "winutf8.h"
-#include "deprecat.h"
 
 #ifdef UNDER_CE
 #include "invokegx.h"
@@ -1806,5 +1806,7 @@ BOOL win_file_dialog(HWND parent, win_file_dialog_type dlgtype, dialog_box *cust
 	snprintf(filename, filename_len, "%s", ofn.filename);
 	return result;
 }
+
+
 
 

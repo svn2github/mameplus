@@ -1,5 +1,4 @@
 #include "driver.h"
-#include "deprecat.h"
 #include "cpu/m6502/m6502.h"
 #include "video/ppu2c0x.h"
 #include "includes/nes.h"
@@ -8,6 +7,7 @@
 #include "zlib.h"
 #include "image.h"
 #include "hash.h"
+#include "deprecat.h"
 
 
 

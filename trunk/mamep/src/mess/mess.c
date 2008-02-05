@@ -14,7 +14,7 @@
 #include "deprecat.h"
 #include "devices/flopdrv.h"
 #include "utils.h"
-#include "mslegacy.h"
+#include "uitext.h"
 #include "image.h"
 #include "hash.h"
 #include "messopts.h"
