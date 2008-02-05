@@ -9258,7 +9258,7 @@ GAME( 1996, aof3k,    aof3,     neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Art 
 GAME( 1996, kof96,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 1)", 0 )
 GAME( 1996, kof96h,   kof96,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 2)", 0 )
 GAME( 1996, kof96ep,  kof96,    neogeo,   neogeo,   kof96ep,  ROT0, "bootleg", "The King of Fighters '96 (bootleg / hack)", 0 )
-GAME( 1996, ssideki4, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Ultimate 11 - The SNK Football Championship / Tokuten Ou - Honoo no Libero, The", 0 )
+GAME( 1996, ssideki4, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Ultimate 11 - The SNK Football Championship / Tokuten Ou - Honoo no Libero", 0 )
 GAME( 1996, kizuna,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Kizuna Encounter - Super Tag Battle / Fu'un Super Tag Battle", 0 )
 GAME( 1996, samsho4,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Samurai Shodown IV - Amakusa's Revenge / Samurai Spirits - Amakusa Kourin", 0 )
 /* Pae Wang Jeon Seol / Legend of Warrior - Korean / Chinese censored version of SamSho4, see http://www.kmrb.or.kr/Game_Image/1999/%EC%A0%9C2064%ED%98%B8.jpg */
@@ -9267,8 +9267,8 @@ GAME( 1997, kof97,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The 
 GAME( 1997, kof97a,   kof97,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '97 (set 2)", 0 )
 GAME( 1997, kof97pls, kof97,    neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "The King of Fighters '97 Plus (bootleg)", 0 )
 GAME( 1997, kog,      kof97,    neogeo,   kog,      kog,      ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg)", GAME_NOT_WORKING) // protected bootleg
-GAME( 1997, lastblad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Last Blade / Bakumatsu Roman - Gekka no Kenshi, The (set 1)", 0 )
-GAME( 1997, lastbldh, lastblad, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Last Blade / Bakumatsu Roman - Gekka no Kenshi, The (set 2)", 0 )
+GAME( 1997, lastblad, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (set 1)", 0 )
+GAME( 1997, lastbldh, lastblad, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Last Blade / Bakumatsu Roman - Gekka no Kenshi (set 2)", 0 )
 GAME( 1997, lastsold, lastblad, neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Last Soldier (Korean release of The Last Blade)", 0 )
 GAME( 1997, irrmaze,  neogeo,   neogeo,   irrmaze,  neogeo,   ROT0, "SNK / Saurus", "The Irritating Maze / Ultra Denryu Iraira Bou", 0 )
 GAME( 1998, rbff2,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Real Bout Fatal Fury 2 - The Newcomers / Real Bout Garou Densetsu 2 - the newcomers (set 1)", 0 )
@@ -9278,7 +9278,7 @@ GAME( 1998, mslug2,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Meta
 GAME( 1998, kof98,    neogeo,   neogeo,   neogeo,   kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends", 0 )
 GAME( 1998, kof98k,   kof98,    neogeo,   neogeo,   kof98,    ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (Korean board)", 0 )
 GAME( 1998, kof98n,   kof98,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '98 - The Slugfest / King of Fighters '98 - dream match never ends (not encrypted)", 0 )
-GAME( 1998, lastbld2, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Last Blade 2 / Bakumatsu Roman - Dai Ni Maku Gekka no Kenshi, The", 0 )
+GAME( 1998, lastbld2, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Last Blade 2 / Bakumatsu Roman - Dai Ni Maku Gekka no Kenshi", 0 )
 GAME( 1998, neocup98, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Neo-Geo Cup '98 - The Road to the Victory", 0 )
 GAME( 1999, mslugx,   neogeo,   neogeo,   neogeo,   mslugx,   ROT0, "SNK", "Metal Slug X - Super Vehicle-001", 0 )
 GAME( 1999, kof99,    neogeo,   neogeo,   neogeo,   kof99,    ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (set 1)" , 0 ) /* Encrypted Code & GFX */
