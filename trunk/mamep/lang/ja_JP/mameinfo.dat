@@ -1,8 +1,8 @@
 ﻿#****************************************#
 #                                        #
-#     Mameinfo.dat日本語版 v0.122u7      #
+#      Mameinfo.dat日本語版 v0.123       #
 #                                        #
-#            January 30, 2008            #
+#            February 5, 2008            #
 #                                        #
 #  MAME Testers                          #
 #  http://www.mametesters.org/           #
@@ -12,8 +12,8 @@
 #                                        #
 #****************************************#
 #
-# Tester報告：922 翻訳済：888
-# 追加項目：343 合計：1265
+# Tester報告：927 翻訳済：890
+# 追加項目：343 合計：1270
 #
 
 
@@ -31,6 +31,22 @@ $mame
 
 - 画面反転のDIP設定が動作しない。
 またカクテルモード用のプレイヤー2の操作が割り当てられていない。 bigevglf0122u5gra, IceMan01
+
+$end
+
+$info=pwrinst2
+$mame
+[バグ]
+
+- プレイヤー1の4つ目のボタンが割り当てられていない。プレイヤー2は問題ない。 pwrinst2_0122u8gra, rlipsett / Tafoid
+
+$end
+
+$info=plegends
+$mame
+[バグ]
+
+- プレイヤー1の4つ目のボタンが割り当てられていない。プレイヤー2は問題ない。 pwrinst2_0122u8gra, rlipsett / Tafoid
 
 $end
 
@@ -80,6 +96,14 @@ $mame
 [バグ]
 
 - カクテルモードのプレイヤー2画面が右にずれている。 zigzag0122u4gre, IceMan01
+
+$end
+
+$info=racedrvc
+$mame
+[バグ]
+
+- 入力初期化のときにBRAKE 255と文句が言われる。 racedrvc0122u8gra, Luigi30
 
 $end
 
@@ -171,6 +195,14 @@ $mame
 
 $end
 
+$info=ridgerac
+$mame
+[バグ]
+
+- 64-bit環境でクラッシュする。 ridgerac0122u8red, Scagazza
+
+$end
+
 $info=kof98
 $mame
 [バグ]
@@ -212,14 +244,6 @@ $mame
 
 $end
 
-$info=strahl
-$mame
-[バグ]
-
-- 0.122u6から全てのスプライトが表示されない。 strahl0122u6yel, Iaspis
-
-$end
-
 $info=martmast
 $mame
 [バグ]
@@ -233,14 +257,6 @@ $mame
 [バグ]
 
 - ときどきコイン入力が効かないことがある。 pgm.c0122u5gra, ooga
-
-$end
-
-$info=zerohour
-$mame
-[バグ]
-
-- ボーナスライフのDIPスイッチが動作しない。 zerohour0122u6gra, RansAckeR
 
 $end
 
@@ -299,6 +315,14 @@ $mame
 2) 1Pスタートx3　サービス　1Pスタート
 
 (by Mhk)
+
+$end
+
+$info=bsharkj
+$mame
+[バグ]
+
+- アナログ入力がおかしくなっている。 bsharkj0122u8gra, rlipsett / Tafoid
 
 $end
 
@@ -2063,14 +2087,6 @@ $mame
 
 $end
 
-$info=gfire2
-$mame
-[バグ]
-
-- ゲーム中やキャラクタ選択画面で突然リセットする。 gfire20103red, russ h. / Twist
-
-$end
-
 $info=mpu4met0
 $mame
 [バグ]
@@ -2346,22 +2362,6 @@ $mame
 [バグ]
 
 - 白い部分を撃っても反応しない。 nescross37b16yel, Kale / irish1982e / warlock / BSR / Zaphod
-
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
 
 $end
 
@@ -4245,22 +4245,6 @@ $mame
 
 - 実機に比べて色がおかしい。 excitebk0118u5gre, Mr. Do
 
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
 $end
 
 $info=rbibb
@@ -4295,22 +4279,6 @@ $mame
 分かりやすいのはカーブするとき。 vsnes055gre, Karasu
 
 
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-
 - Mt. Nastyの面でタイマーが表示されず、動作もしていない。 vsslalom054gre, Pika163 / John L.
 
 $end
@@ -4324,75 +4292,11 @@ $mame
 
 $end
 
-$info=tkoboxng
-$mame
-[バグ]
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-$end
-
-$info=vsgradus
-$mame
-[バグ]
-
-- 「vsnes.c」バグ
-
-vsslalom: 「GAME OVER」の文字の下側がずれている。
-
-tkoboxng: タイトル画面、紹介画面が点滅する。また観客席のスクロールもずれている。
-
-duckhunt: クレイ射撃でのお笑い犬のプライオリティが違う。
-
-excitebk: 背景の「Nintendo」の文字部分下のラインが正しくスクロールしない。
-
-excitbkj: 日本版の方は色がおかしい。またネームエントリー画面で文字が表示されない。
-3面の色がexcitebkと違う。5面の色が反転。
-
-vsgradus: 星が自機の手前に表示される。 vsnes37b11gre, Sports Dude / The tECHIDNA / gregf / labrat127 / Kurushimi / M.A.S.H. / Richter_X / BSR / John L.
-
-
-- 起動時の黒い画面が灰色になっている。0.53より。 vsnes_2055gre, Karasu / Smitdogg
-
-$end
-
 $info=vsskykid
 $mame
 [バグ]
 
-- 「vsnes.c」の問題
-
-vsskykidは7面で色違いがおこる。テキストが灰色、ベースが真っ白。
-
-vssoccerはスペインチームの色が違っている。緑のはずだが灰色になっている。 vsnesc062gre, Kale
-
-
 - 同期系の問題あり。 vsskykid055gre, Kale
-
-$end
-
-$info=vssoccer
-$mame
-[バグ]
-
-- 「vsnes.c」の問題
-
-vsskykidは7面で色違いがおこる。テキストが灰色、ベースが真っ白。
-
-vssoccerはスペインチームの色が違っている。緑のはずだが灰色になっている。 vsnesc062gre, Kale
 
 $end
 
@@ -5285,14 +5189,6 @@ $mame
 [バグ]
 
 - チルトスイッチが割り当てられているが、入力テストには出てこない。 jjparads0106u1gra, cpukett
-
-$end
-
-$info=wboy3
-$mame
-[バグ]
-
-- このバージョンではDIPスイッチの残ライフ設定が違う。3、4、5人の設定はそれぞれ、1、2、3人。 wboy3_0119u3gra, izius
 
 $end
 
@@ -6324,6 +6220,14 @@ $mame
 
 - 一番最初に現れる敵の色が違っている。Playchoice10版やNES版と比べても違うのがわかる。ただし、実機との比較が必要だろう。 cstlevna063gre, Nomax / StephenH
 
+
+- 起動時の黒い画面が灰色になっている。0.53より。 vsnes_2055gre, Karasu / Smitdogg
+
+$end
+
+$info=vsgradus
+$mame
+[バグ]
 
 - 起動時の黒い画面が灰色になっている。0.53より。 vsnes_2055gre, Karasu / Smitdogg
 
