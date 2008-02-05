@@ -1483,3 +1483,4 @@ Fire Hawk [David Haywood, Tomasz Slanina]
 New clones added
 ----------------
 World Class Bowling (v1.3) [Brian Troha]
+
