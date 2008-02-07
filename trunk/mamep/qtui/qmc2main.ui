@@ -52,113 +52,14 @@
          </layout>
         </item>
         <item>
-         <widget class="QLineEdit" name="lineEdit" >
+         <widget class="QLineEdit" name="lineEditSearch" >
           <property name="text" >
            <string>type a keyword</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QTreeWidget" name="treeWidgetHierarchy" >
-          <column>
-           <property name="text" >
-            <string>Description</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Name</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Manufacturer</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Driver</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Type</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Year</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Clone of</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Samples</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Trackball</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Played</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>Playtime</string>
-           </property>
-          </column>
-          <column>
-           <property name="text" >
-            <string>ROMs</string>
-           </property>
-          </column>
-          <item>
-           <property name="text" >
-            <string>Waiting for data...</string>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-           <property name="text" >
-            <string/>
-           </property>
-          </item>
-         </widget>
+         <widget class="QTreeView" name="treeViewGameList" />
         </item>
         <item>
          <widget class="QProgressBar" name="progressBarGamelist" />
@@ -263,11 +164,13 @@
     <property name="title" >
      <string>File</string>
     </property>
+    <addaction name="actionExitStop" />
    </widget>
    <widget class="QMenu" name="menuView" >
     <property name="title" >
      <string>View</string>
     </property>
+    <addaction name="actionRefresh" />
    </widget>
    <widget class="QMenu" name="menuOptions" >
     <property name="title" >
@@ -279,6 +182,7 @@
     <property name="title" >
      <string>Help</string>
     </property>
+    <addaction name="actionAbout" />
    </widget>
    <addaction name="menuFile" />
    <addaction name="menuView" />
@@ -300,6 +204,27 @@
   <action name="actionDefault_Options" >
    <property name="text" >
     <string>Default Options</string>
+   </property>
+  </action>
+  <action name="actionRefresh" >
+   <property name="text" >
+    <string>Refresh</string>
+   </property>
+   <property name="shortcut" >
+    <string>F5</string>
+   </property>
+  </action>
+  <action name="actionExitStop" >
+   <property name="text" >
+    <string>Exit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Alt+X</string>
+   </property>
+  </action>
+  <action name="actionAbout" >
+   <property name="text" >
+    <string>About</string>
    </property>
   </action>
  </widget>

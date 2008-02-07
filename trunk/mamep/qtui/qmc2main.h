@@ -18,7 +18,9 @@ class MainWindow : public QMainWindow, public Ui::MainWindow
 
   public slots:
     // game menu
+    void on_actionRefresh_activated();
     void on_actionReload_activated();
+	void on_actionExitStop_activated();
     void log(char, QString);
     void init();
 

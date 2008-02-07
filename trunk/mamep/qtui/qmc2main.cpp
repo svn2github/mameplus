@@ -59,29 +59,43 @@ MainWindow::~MainWindow()
 #endif
 }
 
+void MainWindow::on_actionRefresh_activated()
+{
+	qmc2Gamelist->auditthread.audit();
+}
+
 void MainWindow::on_actionReload_activated()
 {
 	qmc2Gamelist->load();
 }
 
+void MainWindow::on_actionExitStop_activated()
+{
+#ifdef QMC2_DEBUG
+  log(LOG_QMC2, "DEBUG: MainWindow::on_actionExitStop_activated()");
+#endif
+
+  close();
+}
+
 void MainWindow::init()
 {
 #ifdef QMC2_DEBUG
-  log(LOG_QMC2, "DEBUG: MainWindow::init()");
+	log(LOG_QMC2, "DEBUG: MainWindow::init()");
 #endif
-    on_actionReload_activated();
+	on_actionReload_activated();
 }
 
 int main(int argc, char *argv[])
  {
 	QApplication qmc2App(argc, argv);
 
-  qmc2ProcessManager = new ProcessManager(0);
+	qmc2ProcessManager = new ProcessManager(0);
 	qmc2MainWindow = new MainWindow(0);
 
-     qmc2MainWindow->show();
+	qmc2MainWindow->show();
 
-  qmc2GuiReady = TRUE;
+	qmc2GuiReady = TRUE;
 
-     return qmc2App.exec();
+	return qmc2App.exec();
  }

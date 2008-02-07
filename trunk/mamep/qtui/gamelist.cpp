@@ -1,6 +1,5 @@
 #include <QTextStream>
 #include <QHeaderView>
-#include <QTreeWidgetItem>
 #include <QStringList>
 #include <QFile>
 #include <QFontMetrics>
@@ -12,6 +11,9 @@
 #include <QBitArray>
 
 #include "qticohandler.h"
+
+#include "quazip.h"
+#include "quazipfile.h"
 
 #include "gamelist.h"
 #include "qmc2main.h"
@@ -25,31 +27,379 @@ extern bool qmc2EarlyReloadActive;
 extern bool qmc2StopParser;
 extern bool qmc2IconsPreloaded;
 MameGame *mamegame;
+TreeModel *model;
 static QIcon defIcon;
 
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 1
+#define S11N_VER 2
 
-void RenderThread::render()
+void LoadIconThread::render()
 {
     if (!isRunning())
         start(LowPriority);
 }
 
-void RenderThread::run()
+void LoadIconThread::run()
 {
-	QTreeWidgetItem *pItem;
+	QTime preloadTimer, elapsedTime;
+	preloadTimer.start();
+	QString icoDir = "D:/mame/icons/";
+	QDir iconDirectory(icoDir);
+	QStringList nameFilter;
+	nameFilter << "*.ico";
+	QStringList iconFiles = iconDirectory.entryList(nameFilter, QDir::Files | QDir::Readable);
+
+	emit progressSwitched(iconFiles.count());
+
+	//scan icon dir, assign icons to gameinfo	
+	for (int iconCount = 0; iconCount < iconFiles.count(); iconCount++)
+	{
+		if ( iconCount % 100 == 0 )
+			emit progressUpdated(iconCount);
+
+		QIcon icon = loadWinIco(icoDir + iconFiles[iconCount]);
+
+		QString icofname = iconFiles[iconCount].toLower().remove(".ico");
+		if (mamegame->gamenameGameInfoMap.contains(icofname))
+		{
+			GameInfo *gameinfo = mamegame->gamenameGameInfoMap[icofname];
+			gameinfo->icon = icon;
+		}
+	}
+	elapsedTime = elapsedTime.addMSecs(preloadTimer.elapsed());
+
+	emit progressSwitched(-1);
+}
+
+void AuditROMThread::audit()
+{
+    if (!isRunning())
+        start(LowPriority);
+}
+
+void AuditROMThread::run()
+{
+	QString romDir = "D:/mame/roms/";
+	QDir romDirectory(romDir);
+	QStringList nameFilter;
+	nameFilter << "*.zip";
+
+	QStringList romFiles = romDirectory.entryList(nameFilter, QDir::Files | QDir::Readable);
+
+	qmc2MainWindow->log(LOG_QMC2, "audit 0");
+	emit progressSwitched(romFiles.count());
+
+	for (int i = 0; i < romFiles.count(); i++)
+	{
+		if ( i % 100 == 0 )
+			emit progressUpdated(i);
 	
+		QString gamename = romFiles[i].toLower().remove(".zip");
+
+//		qmc2MainWindow->log(LOG_QMC2, QString("auditing zip: " + gamename));
+
+		if (mamegame->gamenameGameInfoMap.contains(gamename))
+		{
+			QuaZip zip(romDir + romFiles[i]);
+			if(!zip.open(QuaZip::mdUnzip))
+			{
+		//	  qWarning("testRead(): zip.open(): %d", zip.getZipError());
+			  continue;
+			}
+		//	printf("%d entries\n", zip.getEntriesCount());
+			QuaZipFileInfo info;
+			QuaZipFile zipFile(&zip);
+			GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+			for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+			{
+			  if(!zip.getCurrentFileInfo(&info))
+			  {
+//				qmc2MainWindow->log(LOG_QMC2, QString("zipfile err: " + zip.getZipError()));
+				continue;
+			  }
+
+			  quint32 crc = info.crc;
+			  if (gameinfo->crcRomInfoMap.contains(info.crc))
+				gameinfo->crcRomInfoMap[crc]->available = true; 
+			}
+		}
+	}
+
+	qmc2MainWindow->log(LOG_QMC2, "audit 1");
+	//see if any rom of a game is not available
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
-		pItem = mamegame->gamenameGameInfoMap[gamename]->pItem;
-		loadIcon(gamename, pItem);
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
+		{
+			RomInfo *rominfo = gameinfo->crcRomInfoMap.value(crc);
+			if (!rominfo->available)
+			{
+				gameinfo->available = false;
+				break;
+			}
+		}
+	}
+	qmc2MainWindow->log(LOG_QMC2, "audit 2");
+	emit progressSwitched(-1);
+}
+
+TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
+{
+    parentItem = parent;
+    itemData = data;
+}
+
+TreeItem::~TreeItem()
+{
+    qDeleteAll(childItems);
+}
+
+void TreeItem::appendChild(TreeItem *item)
+{
+    childItems.append(item);
+}
+
+TreeItem *TreeItem::child(int row)
+{
+    return childItems.value(row);
+}
+
+int TreeItem::childCount() const
+{
+    return childItems.count();
+}
+
+int TreeItem::columnCount() const
+{
+    return itemData.count();
+}
+
+QVariant TreeItem::data(int column) const
+{
+    return itemData.value(column);
+}
+
+int TreeItem::row() const
+{
+    if (parentItem)
+        return parentItem->childItems.indexOf(const_cast<TreeItem*>(this));
+
+    return 0;
+}
+
+TreeItem *TreeItem::parent()
+{
+    return parentItem;
+}
+
+bool TreeItem::setData(int column, const QVariant &value)
+{
+    if (column < 0 || column >= itemData.size())
+        return false;
+
+    itemData[column] = value;
+    return true;
+}
+
+TreeModel::TreeModel(const QStringList &headers, QObject *parent)
+    : QAbstractItemModel(parent)
+{
+    QList<QVariant> rootData;
+	
+    foreach (QString header, headers)
+        rootData << header;
+	
+    rootItem = new TreeItem(rootData);
+    setupModelData(rootItem, true);
+	setupModelData(rootItem, false);
+}
+
+TreeModel::~TreeModel()
+{
+    delete rootItem;
+}
+
+int TreeModel::columnCount(const QModelIndex &parent) const
+{
+	return rootItem->columnCount();
+}
+
+QVariant TreeModel::data(const QModelIndex &index, int role) const
+{
+	if (role == Qt::TextColorRole)
+	{
+		return qVariantFromValue(QColor(Qt::black));
+	}
+	
+    if (!index.isValid())
+        return QVariant();
+
+    TreeItem *item = getItem(index);
+
+	if (role == Qt::DecorationRole && index.column() == 0)
+	{
+		if (item->icon.isNull())
+		{
+			return defIcon;
+		}
+		return item->icon;
+	}
+
+    if (role != Qt::DisplayRole)
+        return QVariant();
+
+    return item->data(index.column());
+}
+
+Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return Qt::ItemIsEnabled;
+
+    return Qt::ItemIsEnabled | Qt::ItemIsSelectable;
+}
+
+TreeItem *TreeModel::getItem(const QModelIndex &index) const
+{
+    if (index.isValid())
+	{
+        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+        if (item)
+			return item;
+    }
+    return rootItem;
+}
+
+QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
+                               int role) const
+{
+    if (orientation == Qt::Horizontal && role == Qt::DisplayRole)
+        return rootItem->data(section);
+
+    return QVariant();
+}
+
+QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
+{
+    if (parent.isValid() && parent.column() != 0)
+        return QModelIndex();
+
+    TreeItem *parentItem = getItem(parent);
+
+    TreeItem *childItem = parentItem->child(row);
+    if (childItem)
+        return createIndex(row, column, childItem);
+    else
+        return QModelIndex();
+}
+
+QModelIndex TreeModel::index(int column, TreeItem *childItem) const
+{
+	if (childItem)
+		return createIndex(childItem->row(), column, childItem);
+    else
+        return QModelIndex();
+
+}
+
+
+QModelIndex TreeModel::parent(const QModelIndex &index) const
+{
+    if (!index.isValid())
+        return QModelIndex();
+
+    TreeItem *childItem = getItem(index);
+    TreeItem *parentItem = childItem->parent();
+
+    if (parentItem == rootItem)
+        return QModelIndex();
+
+    return createIndex(parentItem->row(), 0, parentItem);
+}
+
+int TreeModel::rowCount(const QModelIndex &parent) const
+{
+    TreeItem *parentItem = getItem(parent);
+
+    return parentItem->childCount();
+}
+
+bool TreeModel::setData(const QModelIndex &index, const QVariant &value,
+                        int role)
+{
+    TreeItem *item = getItem(index);
+
+	if (index.isValid())
+	{
+		switch (role)
+		{
+		case Qt::DisplayRole:
+			if (item->setData(index.column(), value))
+				emit dataChanged(index, index);
+				return true;
+			break;
+
+		case Qt::DecorationRole:
+			const QIcon icon(qvariant_cast<QIcon>(value));
+			if(!icon.isNull())
+			{
+				item->icon = icon;
+				emit dataChanged(index, index);
+				return true;
+			}
+			break;
+		}
+	}
+	return false;
+}
+
+bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
+                              const QVariant &value, int role)
+{
+    if (role != Qt::EditRole || orientation != Qt::Horizontal)
+        return false;
+
+    return rootItem->setData(section, value);
+}
+
+void TreeModel::setupModelData(TreeItem *parent, bool buildParent)
+{
+	GameInfo *gameinfo;
+	QList<QVariant> columnData;
+
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+		if ((gameinfo->cloneof.isEmpty() ^ buildParent))
+			continue;
+
+		columnData.clear();
+		columnData << gameinfo->description;
+		columnData << gamename;
+		columnData << "N/A";
+		columnData << gameinfo->manufacturer;
+		columnData << gameinfo->sourcefile;
+		columnData << gameinfo->year;
+		columnData << gameinfo->cloneof;
+
+		if (!buildParent)
+			//find parent and add to it
+			parent = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->pModItem;
+
+		// Append a new item to the current parent's list of children.
+		gameinfo->pModItem = new TreeItem(columnData, parent);
+		parent->appendChild(gameinfo->pModItem);
 	}
 }
+
 
 RomInfo::RomInfo(QObject *parent)
 : QObject(parent)
 {
+	available = false;
 	//	qmc2MainWindow->log(LOG_QMC2, "# RomInfo()");
 }
 
@@ -61,7 +411,7 @@ RomInfo::~RomInfo()
 GameInfo::GameInfo(QObject *parent)
 : QObject(parent)
 {
-	pItem = 0;
+	available = true;
 	//	qmc2MainWindow->log(LOG_QMC2, "# GameInfo()");
 }
 
@@ -90,9 +440,17 @@ Gamelist::Gamelist(QObject *parent)
 #ifdef QMC2_DEBUG
 	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::Gamelist()");
 #endif
+	connect(&iconthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
+	connect(&iconthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
+	connect(&iconthread, SIGNAL(finished()), this, SLOT(setupIcon()));
+
+	connect(&auditthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
+	connect(&auditthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
+	connect(&auditthread, SIGNAL(finished()), this, SLOT(setupAudit()));
+
 	numGames = numTotalGames = numCorrectGames = numMostlyCorrectGames = numIncorrectGames = numUnknownGames = numNotFoundGames = numSearchGames = -1;
 	loadProc = verifyProc = NULL;
-	defIcon = loadWinIco("win_roms.ico");
+	defIcon = loadWinIco(":/res/win_roms.ico");
 }
 
 Gamelist::~Gamelist()
@@ -108,6 +466,55 @@ Gamelist::~Gamelist()
 	//		verifyProc->terminate();
 }
 
+void Gamelist::updateProgress(int progress)
+{
+	qmc2MainWindow->progressBarGamelist->setValue(progress);
+}
+
+void Gamelist::switchProgress(int max)
+{
+	static int prevmax;
+	if (max != -1)
+	{
+		prevmax = qmc2MainWindow->progressBarGamelist->maximum();
+		qmc2MainWindow->progressBarGamelist->setRange(0, max);
+	}
+	else
+		qmc2MainWindow->progressBarGamelist->setRange(0, prevmax);
+
+	qmc2MainWindow->progressBarGamelist->reset();
+}
+
+void Gamelist::setupIcon()
+{
+	GameInfo *gameinfo;
+	QIcon icon;
+	
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+		//complete clone gameinfo with parent icons
+		icon = gameinfo->icon; 
+		if (icon.isNull() && !gameinfo->cloneof.isEmpty())
+			icon = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->icon;
+		model->setData(model->index(0, gameinfo->pModItem), icon, Qt::DecorationRole);
+	}
+}
+
+void Gamelist::setupAudit()
+{
+	GameInfo *gameinfo;
+	RomInfo *rominfo;
+	
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		model->setData(model->index(2, gameinfo->pModItem), 
+				gameinfo->available ? "Yes" : "No", Qt::DisplayRole);
+	}
+}
+
 void Gamelist::load()
 {
 #ifdef QMC2_DEBUG
@@ -120,21 +527,19 @@ void Gamelist::load()
 
 	if (!mamegame->des11n())
 	{
-		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::start tree()");
-		qmc2MainWindow->treeWidgetHierarchy->clear();
-		//start building tree
-		buildTree(true);  //parent
-		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::start tree2()");
-		buildTree(false); //clone
-		qmc2MainWindow->log(LOG_QMC2, "DEBUG: sGamelist::end tree()");
-		qApp->processEvents();
+		QStringList headers;
+		headers << "Description" << "Name" << "Available" << "Manufacturer" << "Driver" << "Year" << "Clone of";
 
-rthread.render();
+		model = new TreeModel(headers, qmc2MainWindow);
+		qmc2MainWindow->treeViewGameList->setModel(model);
+
+//		auditthread.audit();
+		iconthread.render();
 
 
 //fixme		delete mamegame;
 //		mamegame = 0;
-		
+
 		return;
 	}
 
@@ -160,10 +565,7 @@ void Gamelist::parse()
 {
 	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::prep parse()");
 
-	qmc2MainWindow->treeWidgetHierarchy->clear();
-	//  qApp->processEvents();
-
-	ListXMLHandler handler(qmc2MainWindow->treeWidgetHierarchy);
+	ListXMLHandler handler(0);
 	QXmlSimpleReader reader;
 	reader.setContentHandler(&handler);
 	reader.setErrorHandler(&handler);
@@ -178,9 +580,9 @@ void Gamelist::parse()
 
 	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::start tree()");
 	//start building tree
-	buildTree(true);	//parent
+//	buildTree(true);	//parent
 	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::start tree2()");
-	buildTree(false);	//clone
+//	buildTree(false);	//clone
 	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::end tree()");
 
 	mamegame->s11n();
@@ -261,68 +663,9 @@ void Gamelist::loadStateChanged(QProcess::ProcessState processState)
 
 }
 
-bool loadIcon(QString gameName, QTreeWidgetItem *item, bool checkOnly, QString *fileName)
+ListXMLHandler::ListXMLHandler(int d)
 {
-	static QIcon icon;
-	static QPixmap pm;
-
-	if (qmc2IconsPreloaded)
-	{
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		icon = gameinfo->icon;
-		if (icon.isNull() && !gameinfo->cloneof.isEmpty())
-			icon = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->icon;
-		if (!icon.isNull())	
-			item->setIcon(0, icon);
-		return FALSE;
-	}
-
-	// use icon directory
-	else {
-		QTime preloadTimer, elapsedTime;
-		preloadTimer.start();
-		QString icoDir = "D:/mame/icons/";
-		QDir iconDirectory(icoDir);
-		QStringList nameFilter;
-		nameFilter << "*.ico";
-		QStringList iconFiles = iconDirectory.entryList(nameFilter, QDir::Files | QDir::Readable);
-		int iconCount;
-		//save progress bar for restoration
-		int currentMax = qmc2MainWindow->progressBarGamelist->maximum();
-		qmc2MainWindow->progressBarGamelist->setRange(0, iconFiles.count());
-		qmc2MainWindow->progressBarGamelist->reset();
-		for (iconCount = 0; iconCount < iconFiles.count(); iconCount++) {
-			
-			if ( iconCount % 100 == 0 )
-			{
-				qmc2MainWindow->progressBarGamelist->setValue(iconCount);
-				qApp->processEvents();
-			}
-			
-#ifdef QMC2_DEBUG
-			qmc2MainWindow->log(LOG_QMC2, QString("DEBUG: loading %1").arg(iconFiles[iconCount]));
-#endif
-			icon = loadWinIco(icoDir + iconFiles[iconCount]);
-
-			QString icofname = iconFiles[iconCount].toLower().remove(".ico");
-			if (mamegame->gamenameGameInfoMap.contains(icofname))
-				mamegame->gamenameGameInfoMap[icofname]->icon = icon;
-		}
-		qmc2MainWindow->progressBarGamelist->setRange(0, currentMax);
-		elapsedTime = elapsedTime.addMSecs(preloadTimer.elapsed());
-		qmc2IconsPreloaded = TRUE;
-		return loadIcon(gameName, item, checkOnly);
-	}
-
-	return FALSE;
-}
-
-ListXMLHandler::ListXMLHandler(QTreeWidget *treeWidget)
-: treeWidget(treeWidget)
-{
-	item = 0;
 	gameinfo = 0;
-
 	metMameTag = false;
 
 	if (mamegame)
@@ -337,9 +680,9 @@ bool ListXMLHandler::startElement(const QString & /* namespaceURI */,
 {
 	if (!metMameTag && qName != "mame")
 		return false;
+
 	if (qName == "mame")
 		metMameTag = true;
-	
 	else if (qName == "game")
 	{
 		gameinfo = new GameInfo(mamegame);
@@ -355,7 +698,7 @@ bool ListXMLHandler::startElement(const QString & /* namespaceURI */,
 		rominfo->size = attributes.value("size").toULongLong();
 
 		bool ok;
-		gameinfo->crcRomInfoMap[attributes.value("crc").toInt(&ok, 16)] = rominfo;
+		gameinfo->crcRomInfoMap[attributes.value("crc").toUInt(&ok, 16)] = rominfo;
 	}
 
 	currentText.clear();
@@ -494,11 +837,10 @@ QIcon loadWinIco(const QString & fileName)
 	delete pIcoFile;
 	return icon;
 }
-
+/*
 void Gamelist::buildTree(bool isParent)
 {
-	//	qmc2MainWindow->treeWidgetHierarchy->setIconSize(QSize(32,32));
-
+	static int gameCount = 0;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
@@ -524,9 +866,17 @@ void Gamelist::buildTree(bool isParent)
 		childItem->setText(5, gameinfo->year);
 		childItem->setText(6, gameinfo->cloneof);
 
-		childItem->setIcon(0, defIcon);
+		childItem->setText(11, QString::number(gameinfo->crcRomInfoMap.count()));
 
+		childItem->setIcon(0, defIcon);
 		childItem->setSizeHint(0, QSize(200, 17));
+//		if (!gameinfo->available)
+//			childItem->setHidden(true);
+//		else
+			gameCount++;
 	}
+	qmc2MainWindow->log(LOG_QMC2, QString("DEBUG: available games %1").arg(gameCount));
 }
+*/
+
 
