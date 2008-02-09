@@ -688,6 +688,16 @@ void winwindow_video_window_create(int index, win_monitor_info *monitor, const w
 		osd_toggle_menubar(1);
 	else if (!video_config.windowed || !mess_use_new_ui())
 		osd_toggle_menubar(-1);
+
+	// mamep: adjust window
+	if (!window->fullscreen)
+	{
+		if (window->startmaximized)
+			maximize_window(window);
+		else
+			minimize_window(window);
+		adjust_window_position_after_major_change(window);
+	}
 #endif
 }
 
