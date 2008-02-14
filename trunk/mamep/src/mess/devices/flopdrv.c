@@ -16,6 +16,7 @@
 */
 
 #include "driver.h"
+#include "uitext.h"
 #include "flopdrv.h"
 
 

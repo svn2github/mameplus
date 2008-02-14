@@ -11,6 +11,7 @@
 
 #include "driver.h"
 #include "deprecat.h"
+#include "uitext.h"
 #include "hiscore.h"
 #include "cheat.h"
 

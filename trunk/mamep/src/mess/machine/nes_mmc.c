@@ -30,6 +30,7 @@
 #include "osdepend.h"
 #include "deprecat.h"
 #include "driver.h"
+#include "uitext.h"
 #include "includes/nes.h"
 #include "nes_mmc.h"
 #include "sound/nes_apu.h"
@@ -5415,6 +5416,4 @@ const mmc *nes_mapper_lookup(int mapper)
 	}
 	return NULL;
 }
-
-
 

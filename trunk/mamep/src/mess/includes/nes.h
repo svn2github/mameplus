@@ -68,6 +68,7 @@ struct fds_struct
 {
 	UINT8 *data;
 	UINT8 sides;
+	UINT8 *ram;
 
 	/* Variables which can change */
 	UINT8 motor_on;
@@ -84,6 +85,7 @@ extern struct fds_struct nes_fds;
 /* protos */
 
 DEVICE_LOAD(nes_cart);
+DEVICE_INIT(nes_disk);
 DEVICE_LOAD(nes_disk);
 DEVICE_UNLOAD(nes_disk);
 

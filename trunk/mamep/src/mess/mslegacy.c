@@ -9,6 +9,7 @@
 
 #include "driver.h"
 #include "uitext.h"
+#include "video/mc6845.h"
 
 
 const char *const mess_default_text[] =
@@ -90,6 +91,7 @@ const char * ui_getstring (int string_num)
 }
 */
 
+
 /***************************************************************************
     TIMER
 ***************************************************************************/
@@ -100,4 +102,47 @@ void timer_adjust(emu_timer *which, attotime duration, INT32 param, attotime per
 		timer_adjust_oneshot(which, duration, param);
 	else
 		timer_adjust_periodic(which, duration, param, period);
+}
+
+
+
+/***************************************************************************
+    MC6845
+***************************************************************************/
+
+mc6845_t *mslegacy_mc6845;
+
+void crtc6845_config(int index, const mc6845_interface *intf)
+{
+	assert(index == 0);
+	mslegacy_mc6845 = mc6845_config(intf);
+}
+
+
+
+WRITE8_HANDLER(crtc6845_0_address_w)
+{
+	mc6845_address_w(mslegacy_mc6845, data);
+}
+
+
+
+READ8_HANDLER(crtc6845_0_register_r)
+{
+	return mc6845_register_r(mslegacy_mc6845);
+}
+
+
+
+WRITE8_HANDLER(crtc6845_0_register_w)
+{
+	mc6845_register_w(mslegacy_mc6845, data);
+}
+
+
+
+VIDEO_UPDATE(crtc6845)
+{
+	mc6845_update(mslegacy_mc6845, bitmap, cliprect);
+	return 0;
 }

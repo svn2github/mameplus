@@ -19,7 +19,12 @@
 #define CD_SIG				0x00
 /* these might be used to indicate something, but they always seem to return 1 */
 #define CONST_SIG			0x30
+#endif
 
+/* the largest possible cartridge image (street fighter 2 - 2.5MB) */
+#define PCE_ROM_MAXSIZE		0x280000
+
+#if 0
 struct pce_struct
 {
 	UINT8 io_port_options; /*driver-specific options for the PCE*/
