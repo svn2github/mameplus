@@ -89,3 +89,15 @@ const char * ui_getstring (int string_num)
 	return mess_default_text[string_num];
 }
 */
+
+/***************************************************************************
+    TIMER
+***************************************************************************/
+
+void timer_adjust(emu_timer *which, attotime duration, INT32 param, attotime period)
+{
+	if (attotime_compare(period, attotime_zero) == 0)
+		timer_adjust_oneshot(which, duration, param);
+	else
+		timer_adjust_periodic(which, duration, param, period);
+}

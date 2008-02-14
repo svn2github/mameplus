@@ -245,7 +245,7 @@ enum
 	/* centering */
 	UI_center,
 	
-	UI_last_mame_entry
+	UI_last_mame_entry,
 };
 
 //#ifdef MESS
