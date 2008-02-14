@@ -405,29 +405,6 @@ endif
 
 
 #-------------------------------------------------
-# rule for making the verinfo tool
-#-------------------------------------------------
-
-VERINFO = $(WINOBJ)/verinfo$(EXE)
-
-ifneq ($(CROSS_BUILD),1)
-BUILD += $(VERINFO)
-
-$(WINOBJ)/verinfo.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -UWINUI -c $< -o $@
-
-VERINFOOBJS = \
-	$(WINOBJ)/verinfo.o
-
-$(VERINFO): $(VERINFOOBJS) $(LIBOCORE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-endif
-
-
-
-#-------------------------------------------------
 # generic rule for the resource compiler
 #-------------------------------------------------
 
@@ -444,6 +421,6 @@ $(WINOBJ)/%.res: $(WINSRC)/%.rc | $(OSPREBUILD)
 $(WINOBJ)/mame.res: $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
 $(WINOBJ)/version.res: $(WINOBJ)/mamevers.rc
 
-$(WINOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
+$(WINOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
 	@echo Emitting $@...
-	@$(VERINFO) $(SRC)/version.c > $@
+	@$(OBJ)/build/verinfo$(EXE) $(SRC)/version.c > $@

@@ -94,7 +94,7 @@ DEFS += \
 
 VERINFO32 = $(WINUIOBJ)/verinfo32$(EXE)
 
-$(WINUIOBJ)/verinfo32.o: $(WINSRC)/verinfo.c | $(OSPREBUILD)
+$(WINUIOBJ)/verinfo32.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
 	@echo Compiling $<...
 	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
 
