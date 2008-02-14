@@ -85,7 +85,7 @@ megadon	马嘉登火箭	马嘉登火箭	Epos Corporation (Photar Industries license)
 catapult	弹射大作战	弹射大作战	Epos Corporation
 suprglob	超级水滴	超级水滴	Epos Corporation
 theglob	水滴	水滴	Epos Corporation
-theglob2	水滴 (最初版)	水滴 (最初版)	Epos Corporation
+theglob2	水滴 (早期版)	水滴 (早期版)	Epos Corporation
 theglob3	超级水滴 (第3套)	超级水滴 (第3套)	Epos Corporation
 igmo	抢救同伴	抢救同伴	Epos Corporation
 dealer	商品买卖	商品买卖	Epos Corporation
@@ -94,6 +94,7 @@ galaxian	小蜜蜂 (Namco 第1套)	小蜜蜂 (Namco 第1套)	Namco
 galaxiaj	小蜜蜂 (Namco 第2套)	小蜜蜂 (Namco 第2套)	Namco
 galmidw	小蜜蜂 (Midway)	小蜜蜂 (Midway)	[Namco] (Midway license)
 galmidwo	小蜜蜂 (Midway, 旧版)	小蜜蜂 (Midway, 旧版)	[Namco] (Midway license)
+galtaito	小蜜蜂 (Taito)	小蜜蜂 (Taito)	[Namco] (Taito license)
 superg	小蜜蜂 - 超级小蜜蜂	小蜜蜂 - 超级小蜜蜂	hack
 galapx	小蜜蜂 PX	小蜜蜂 PX	hack
 moonaln	小蜜蜂 - 月球异形	小蜜蜂 - 月球异形	[Nichibutsu] (Karateco license)
@@ -210,7 +211,7 @@ mars	火星	火星	Artic
 devilfsh	魔神鱼类	魔神鱼类	Artic
 newsin7	新辛巴达 7	新辛巴达 7	ATW USA, Inc.
 mrkougar	鬼灵精先生	鬼灵精先生	ATW
-mrkougr2	鬼灵精先生 (最初版)	鬼灵精先生 (最初版)	ATW
+mrkougr2	鬼灵精先生 (早期版)	鬼灵精先生 (早期版)	ATW
 mrkougb	鬼灵精先生 (盗版 第1套)	鬼灵精先生 (盗版 第1套)	bootleg
 mrkougb2	鬼灵精先生 (盗版 第2套)	鬼灵精先生 (盗版 第2套)	bootleg
 hotshock	惊悚狂热	惊悚狂热	E.G. Felaco
@@ -591,8 +592,8 @@ paclandm	小精灵世界 (米德威)	小精灵世界 (米德威)	[Namco] (Bally Midway license)
 drgnbstr	屠龙记	屠龙记	Namco
 skykid	天堂鸟 (新版)	天堂鸟 (新版)	Namco
 skykido	天堂鸟 (旧版)	天堂鸟 (旧版)	Namco
-skykidd	天堂鸟 (60A1 Ver.)	天堂鸟 (60A1 Ver.)	Namco
-skykids	天堂鸟 (Manufactured by Sipem)	天堂鸟 (Manufactured by Sipem)	Namco [Sipem license]
+skykidd	天堂鸟 (CUS60 版)	天堂鸟 (CUS60 版)	Namco
+skykids	天堂鸟 (Sipem)	天堂鸟 (Sipem)	Namco [Sipem license]
 aliensec	爆突 (第1套)	爆突 (第1套)	Namco
 baraduke	爆突 (第2套)	爆突 (第2套)	Namco
 metrocrs	追赶跑跳碰 (第1套)	追赶跑跳碰 (第1套)	Namco
@@ -778,7 +779,7 @@ redclask	赤色冲击 (韩国语)	赤色冲击 (韩国语)	Kaneko
 magspot	摩斑射击	摩斑射击	Universal
 magspot2	摩斑射击 2	摩斑射击 2	Universal
 devzone	魔鬼地带	魔鬼地带	Universal
-devzone2	魔鬼地带 (最初版)	魔鬼地带 (最初版)	Universal
+devzone2	魔鬼地带 (早期版)	魔鬼地带 (早期版)	Universal
 nomnlnd	战国自卫队	战国自卫队	Universal
 nomnlndg	战国自卫队 (Gottlieb)	战国自卫队 (Gottlieb)	Universal (Gottlieb license)
 cheekyms	打老鼠	打老鼠	Universal
@@ -1186,7 +1187,7 @@ grudge	破坏赛手 (工程版)	破坏赛手 (工程版)	Bally/Midway
 shrike	星际复仇 (工程版)	星际复仇 (工程版)	Bally/Sente
 gridlee	立体跳跳球	立体跳跳球	Videa
 andromed	仙女座 (日版?)	仙女座 (日版?)	Irem
-ipminvad	宇宙侵略者 - IPM 入侵者	宇宙侵略者 - IPM 入侵者	Irem
+ipminvad	宇宙侵略者 - I P M	宇宙侵略者 - I P M	Irem
 skychut	天空导弹	天空导弹	Irem
 spacbeam	太空光束	太空光束	Irem
 greenber	绿兵团 (Irem)	绿兵团 (Irem)	Irem
@@ -1364,7 +1365,7 @@ complexx	复数射击 X	复数射击 X	Taito America Corporation
 spaceskr	太空探索	太空探索	Taito Corporation
 spacecr	太空巡洋舰	太空巡洋舰	Taito Corporation
 junglek	丛林求生记 - 丛林之王 (日版)	丛林求生记 - 丛林之王 (日版)	Taito Corporation
-junglkj2	丛林求生记 - 丛林之王 (日版, 最初版)	丛林求生记 - 丛林之王 (日版, 最初版)	Taito Corporation
+junglkj2	丛林求生记 - 丛林之王 (日版, 早期版)	丛林求生记 - 丛林之王 (日版, 早期版)	Taito Corporation
 jungleh	丛林求生记 - 丛林探险 (美版)	丛林求生记 - 丛林探险 (美版)	Taito America Corporation
 junglhbr	丛林求生记 - 丛林探险 (巴西版)	丛林求生记 - 丛林探险 (巴西版)	Taito do Brasil
 piratpet	海盗彼得	海盗彼得	Taito America Corporation
@@ -1855,6 +1856,7 @@ hellfire	地狱火 (2P Ver.)	地狱火 (2P Ver.)	Toaplan (Taito license)
 hellfir1	地狱火 (1P Ver.)	地狱火 (1P Ver.)	Toaplan (Taito license)
 hellfir2	地狱火 (2P Ver., first edition)	地狱火 (2P Ver., first edition)	Toaplan (Taito license)
 zerowing	零式战机	零式战机	Toaplan
+zerowng2	零式战机 (2 player simultaneous ver.)	零式战机 (2 player simultaneous ver.)	[Toaplan] Williams Electronics Games, Inc
 demonwld	步步惊魂	步步惊魂	Toaplan
 demonwl1	步步惊魂 (Taito license)	步步惊魂 (Taito license)	Toaplan (Taito license)
 demonwl2	步步惊魂 (第一版)	步步惊魂 (第一版)	Toaplan
@@ -3890,7 +3892,7 @@ hyprolyb	柯纳米运动会 - 疯狂奥运 (盗版)	柯纳米运动会 - 疯狂奥运 (盗版)	bootleg
 atlantol	柯纳米运动会 - 雅典奥运	柯纳米运动会 - 雅典奥运	bootleg
 wizzquiz	问答 巫师问答 (Konami version)	问答 巫师问答 (Konami version)	Konami
 wizzquza	问答 巫师问答 (version 4)	问答 巫师问答 (version 4)	Zilec - Zenitone
-reaktor	飞机打砖块 (Track & Field Conversion)	飞机打砖块 (Track & Field Conversion)	Zilec
+reaktor	飞机打砖块 (Track & Field conversion)	飞机打砖块 (Track & Field conversion)	Zilec
 mastkin	大师一族	大师一族	Du Tech
 rocnrope	凤凰猎人	凤凰猎人	Konami
 rocnropk	凤凰猎人 (韩国版)	凤凰猎人 (韩国版)	Konami + Kosuka
@@ -3898,7 +3900,7 @@ circusc	马戏团 - 小丑查理 (有选择模式 第1套)	马戏团 - 小丑查理 (有选择模式 第1套
 circusc2	马戏团 - 小丑查理 (有选择模式 第2套)	马戏团 - 小丑查理 (有选择模式 第2套)	Konami
 circusc3	马戏团 - 小丑查理 (没选择模式)	马戏团 - 小丑查理 (没选择模式)	Konami
 circuscc	马戏团 - 小丑查理 (Centuri)	马戏团 - 小丑查理 (Centuri)	Konami (Centuri license)
-circusce	马戏团 - 小丑查理 (Centuri, 最初版)	马戏团 - 小丑查理 (Centuri, 最初版)	Konami (Centuri license)
+circusce	马戏团 - 小丑查理 (Centuri, 早期版)	马戏团 - 小丑查理 (Centuri, 早期版)	Konami (Centuri license)
 tp84	时空大战’84 (第1套)	时空大战’84 (第1套)	Konami
 tp84a	时空大战’84 (第2套)	时空大战’84 (第2套)	Konami
 tp84b	时空大战 '84 (第3套)	时空大战 '84 (第3套)	Konami
@@ -3915,8 +3917,8 @@ roadf2	马路英雄 (第2套)	马路英雄 (第2套)	Konami
 yiear	功夫小子 (第1套)	功夫小子 (第1套)	Konami
 yiear2	功夫小子 (第2套)	功夫小子 (第2套)	Konami
 kicker	少林之道	少林之道	Konami
-shaolins	少林之道	少林之道	Konami
-pingpong	欢乐乒乓球	欢乐乒乓球	Konami
+shaolins	少林之道 Road	少林之道 Road	Konami
+pingpong	科乐美乒乓球	科乐美乒乓球	Konami
 merlinmm	金钱迷宫	金钱迷宫	Zilec - Zenitone
 cashquiz	金钱问答 (Type B, Version 5)	金钱问答 (Type B, Version 5)	Zilec - Zenitone
 gberet	绿色兵团	绿色兵团	Konami
@@ -3937,8 +3939,9 @@ topgunr	赤色要塞 (美版)	赤色要塞 (美版)	Konami
 jackalj	赤色要塞 (日版)	赤色要塞 (日版)	Konami
 topgunbl	赤色要塞 (盗版)	赤色要塞 (盗版)	bootleg
 ddribble	两次运球	两次运球	Konami
-contra	魂斗罗 (美版)	魂斗罗 (美版)	Konami
-contrab	魂斗罗 (美版 盗版)	魂斗罗 (美版 盗版)	bootleg
+contra	魂斗罗 (美版, 第1套)	魂斗罗 (美版, 第1套)	Konami
+contra1	魂斗罗 (美版, 第2套)	魂斗罗 (美版, 第2套)	Konami
+contrab	魂斗罗 (盗版)	魂斗罗 (盗版)	bootleg
 contraj	魂斗罗 (日版)	魂斗罗 (日版)	Konami
 contrajb	魂斗罗 (日版 盗版)	魂斗罗 (日版 盗版)	bootleg
 gryzor	魂斗罗 (第1套)	魂斗罗 (第1套)	Konami
@@ -4541,7 +4544,7 @@ steelta1	钢爪 (rev 1)	钢爪 (rev 1)	Atari Games
 steeltap	钢爪 (工程版)	钢爪 (工程版)	Atari Games
 strtdriv	街头四驱车 (工程版)	街头四驱车 (工程版)	Atari Games
 hdrivair	雅达利赛车 93 (工程版)	雅达利赛车 93 (工程版)	Atari Games
-hdrivaip	雅达利赛车 93 (工程版, 最初版)	雅达利赛车 93 (工程版, 最初版)	Atari Games
+hdrivaip	雅达利赛车 93 (工程版, 早期版)	雅达利赛车 93 (工程版, 早期版)	Atari Games
 gauntlet	圣铠 (rev 14)	圣铠 (rev 14)	Atari Games
 gaunts	圣铠 (西班牙版, rev 15)	圣铠 (西班牙版, rev 15)	Atari Games
 gauntj	圣铠 (日版, rev 13)	圣铠 (日版, rev 13)	Atari Games
@@ -5319,6 +5322,7 @@ cartfury	狂热赛车	狂热赛车	Midway Games
 tm	触碰大师	触碰大师	Midway
 tm3k	触碰大师 3000 (v5.01)	触碰大师 3000 (v5.01)	Midway
 tm4k	触碰大师 4000 (v6.02)	触碰大师 4000 (v6.02)	Midway
+galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	禁运	禁运	Cinematronics
 tripool	花式撞球 Tri-Pool (Casino Tech)	花式撞球 Tri-Pool (Casino Tech)	Noma (Casino Tech license)
 tripoola	花式撞球 Tri-Pool (Costal Games)	花式撞球 Tri-Pool (Costal Games)	Noma (Costal Games license)
@@ -5586,6 +5590,7 @@ gratiaa	第二地球 (91022-10 version)	第二地球 (91022-10 version)	Jaleco
 kirarast	流星雀士	流星雀士	Jaleco
 tp2m32	俄罗斯方块 Plus 2 (MegaSystem 32 Version)	俄罗斯方块 Plus 2 (MegaSystem 32 Version)	Jaleco
 bnstars	麻雀对战新星商标 (MegaSystem32 Version)	麻雀对战新星商标 (MegaSystem32 Version)	Jaleco
+wpksocv2	世界 PK 英式足球 V2 (ver 1.1)	世界 PK 英式足球 V2 (ver 1.1)	Jaleco
 f1superb	一级方程式超级争霸战	一级方程式超级争霸战	Jaleco
 bnstars1	麻雀对战新星商标	麻雀对战新星商标	Jaleco
 rabiolep	兔战士 (日版)	兔战士 (日版)	V-System Co.
@@ -5730,7 +5735,7 @@ aligatun	鳄鱼猎人 (未保护版)	鳄鱼猎人 (未保护版)	Gaelco
 biomtoy	生化玩具兵 (未保护版)	生化玩具兵 (未保护版)	Gaelco
 touchgo	打带跑 (新版)	打带跑 (新版)	Gaelco
 touchgon	打带跑 (非北美版)	打带跑 (非北美版)	Gaelco
-touchgoe	打带跑 (最初版)	打带跑 (最初版)	Gaelco
+touchgoe	打带跑 (早期版)	打带跑 (早期版)	Gaelco
 wrally2	世界拉力赛车 2	世界拉力赛车 2	Gaelco
 maniacsp	疯狂方块 (工程版)	疯狂方块 (工程版)	Gaelco
 maniacsq	疯狂方块 (未保护版)	疯狂方块 (未保护版)	Gaelco
@@ -5767,8 +5772,9 @@ mgcrystl	魔法水晶 (世界版, 92/01/10)	魔法水晶 (世界版, 92/01/10)	Kaneko
 mgcrysto	魔法水晶 (世界版, 91/12/10)	魔法水晶 (世界版, 91/12/10)	Kaneko
 mgcrystj	魔法水晶 (日版, 92/01/13)	魔法水晶 (日版, 92/01/13)	Kaneko (Atlus license)
 blazeon	魂之光辉 (日版)	魂之光辉 (日版)	Atlus
-sandscrp	沙漠之蝎 (第1套)	沙漠之蝎 (第1套)	Face
-sandscra	沙漠之蝎 (第2套)	沙漠之蝎 (第2套)	Face
+sandscrp	沙漠之蝎	沙漠之蝎	Face
+sandscra	沙漠之蝎 (早期版)	沙漠之蝎 (早期版)	Face
+sandscrb	沙漠之蝎 (Revised Hardware)	沙漠之蝎 (Revised Hardware)	Face
 explbrkr	爆裂战机 Explosive	爆裂战机 Explosive	Kaneko
 bakubrkr	爆裂战机	爆裂战机	Kaneko
 shogwarr	幕府快打	幕府快打	Kaneko
@@ -5804,7 +5810,7 @@ jjparads	雀雀天堂	雀雀天堂	Electro Design
 jjparad2	雀雀天堂 2	雀雀天堂 2	Electro Design
 ryouran	VS.麻雀乙女缭乱	VS.麻雀乙女缭乱	Electro Design
 teljan	电话麻将	电话麻将	Electro Design
-hanaawas	花合 (Flower Matching)	花合 (Flower Matching)	Seta
+hanaawas	花合	花合	Setakikaku, Ltd.
 speedatk	快攻扑克	快攻扑克	Seta Kikaku Corp.
 srmp1	超真实麻雀 Part 1 (日版)	超真实麻雀 Part 1 (日版)	Seta
 srmp2	超真实麻雀 PII (日版)	超真实麻雀 PII (日版)	Seta
@@ -6566,8 +6572,8 @@ othldrby	赛马黑白棋 (日版)	赛马黑白棋 (日版)	Sunwise
 mosaic	马赛克魔术方块	马赛克魔术方块	Space
 mosaica	马赛克魔术方块 (富贵商会)	马赛克魔术方块 (富贵商会)	Space (Fuuki license)
 gfire2	金牌太阳棋 2	金牌太阳棋 2	Topis Corp
-sprcros2	超级摩托车障碍赛 2 (日版 第1套)	超级摩托车障碍赛 2 (日版 第1套)	GM Shoji
-sprcrs2a	超级摩托车障碍赛 2 (日版 第2套)	超级摩托车障碍赛 2 (日版 第2套)	GM Shoji
+sprcros2	超级摩托车障碍赛 II (日版, 第1套)	超级摩托车障碍赛 II (日版, 第1套)	GM Shoji
+sprcrs2a	超级摩托车障碍赛 II (日版, 第2套)	超级摩托车障碍赛 II (日版, 第2套)	GM Shoji
 gcpinbal	太空弹珠台	太空弹珠台	Excellent System
 vmetal	钢铁任务	钢铁任务	Excellent Systems
 vmetaln	钢铁任务 (新路贸易公司)	钢铁任务 (新路贸易公司)	[Excellent Systems] New Ways Trading Co.
@@ -6813,12 +6819,14 @@ cybertnk	电子坦克 (v1.04)	电子坦克 (v1.04)	Coreland
 pkscram	对战足球	对战足球	Cosmo Electronics Corporation
 jollycrd	快乐纸牌 (奥地利)	快乐纸牌 (奥地利)	TAB-Austria
 jolycdae	快乐纸牌 (奥地利, 加密)	快乐纸牌 (奥地利, 加密)	TAB-Austria
+jolyc3x3	快乐纸牌 (3x3 deal)	快乐纸牌 (3x3 deal)	TAB-Austria
+jolyc980	快乐纸牌之星 2.0	快乐纸牌之星 2.0	Spale-Soft
 jolycdcr	快乐纸牌 (克罗地亚)	快乐纸牌 (克罗地亚)	Soft Design
-jolycdit	快乐纸牌 (意大利, 加密)	快乐纸牌 (意大利, 加密)	bootleg
-jolycdat	快乐纸牌 (奥地利, 欢乐世界)	快乐纸牌 (奥地利, 欢乐世界)	Fun World
+jolycdit	快乐纸牌 (意大利, blue TAB board, 加密)	快乐纸牌 (意大利, blue TAB board, 加密)	bootleg
 jolycdab	快乐纸牌 (奥地利, 欢乐世界, 盗版)	快乐纸牌 (奥地利, 欢乐世界, 盗版)	Inter Games
-bigdeal	大交易 (匈牙利, 第1套)	大交易 (匈牙利, 第1套)	Fun World
-bigdealb	大交易 (匈牙利, 第2套)	大交易 (匈牙利, 第2套)	Fun World
+bigdeal	大交易 (匈牙利, 第1套)	大交易 (匈牙利, 第1套)	Funworld
+bigdealb	大交易 (匈牙利, 第2套)	大交易 (匈牙利, 第2套)	Funworld
+jolycdat	快乐纸牌 (奥地利, 欢乐世界)	快乐纸牌 (奥地利, 欢乐世界)	Funworld
 cuoreuno	例行任务 1 (意大利)	例行任务 1 (意大利)	C.M.C.
 elephfam	大象一族 (意大利, 新版)	大象一族 (意大利, 新版)	C.M.C.
 elephfmb	大象一族 (意大利, 旧版)	大象一族 (意大利, 旧版)	C.M.C.
@@ -6828,11 +6836,17 @@ tortufam	海龟家族 (意大利)	海龟家族 (意大利)	C.M.C.
 royalcrd	皇家纸牌 (奥地利, 第1套)	皇家纸牌 (奥地利, 第1套)	TAB-Austria
 royalcdb	皇家纸牌 (奥地利, 第2套)	皇家纸牌 (奥地利, 第2套)	TAB-Austria
 royalcdc	皇家纸牌 (斯洛伐克, 加密)	皇家纸牌 (斯洛伐克, 加密)	Evona Electronic
-magiccrd	魔法纸牌 II (保加利亚, 盗版)	魔法纸牌 II (保加利亚, 盗版)	Impera
+lluck3x3	幸运女士 (3x3 deal)	幸运女士 (3x3 deal)	TAB-Austria
+lluck4x1	幸运女士 (4x1 aces)	幸运女士 (4x1 aces)	TAB-Austria
+magiccrd	魔法纸牌 II (保加利亚)	魔法纸牌 II (保加利亚)	Impera
+magiccda	魔法纸牌 II (green TAB or Impera board)	魔法纸牌 II (green TAB or Impera board)	Impera
+magiccdb	魔法纸牌 II (blue TAB board, 加密)	魔法纸牌 II (blue TAB board, 加密)	Impera
+vegasslw	皇家维加斯纸牌 (slow deal)	皇家维加斯纸牌 (slow deal)	Funworld
+vegasfst	皇家维加斯纸牌 (fast deal)	皇家维加斯纸牌 (fast deal)	Soft Design
 jokercrd	鬼牌 (Ver.A267BC, 加密)	鬼牌 (Ver.A267BC, 加密)	Vesely Svet
-monglfir	新热气球 (意大利)	新热气球 (意大利)	bootleg
+mongolnw	新热气球 (意大利)	新热气球 (意大利)	bootleg
 soccernw	新足球 (意大利)	新足球 (意大利)	bootleg
-snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandiy
+snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 saloon	酒吧(法语版, 加密版)	酒吧(法语版, 加密版)	Unknown
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
@@ -6957,7 +6971,8 @@ gamecstl	游戏羽冠	游戏羽冠	Cristaltec
 drw80pkr	扑克牌 -  八十分	扑克牌 -  八十分	IGT - International Gaming Technology
 blazlaz	炙热战机	炙热战机	Hudson Soft
 paranoia	偏执狂	偏执狂	Naxat Soft
-galgbios	Galaxy Games BIOS	Galaxy Games BIOS	Creative Electonics
+vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
+shadfgtr	暗影战士	暗影战士	Sega?
 knightsh	圆桌骑士 (hack)	圆桌骑士 (hack)	bootleg
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 sf2m8	街头霸王 II' - 四大天王 (M8)	街头霸王 II' - 四大天王 (M8)	bootleg
