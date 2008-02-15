@@ -76,10 +76,12 @@ const game_driver * const plusdrivers[] =
 	DRIVER( sfa3ud )	/* 04/09/1998 (c) 1998 (US) Phoenix Edition */
 	DRIVER( gwingjd )	/* 23/02/1999 (c) 1999 Takumi (Japan) Phoenix Edition */
 	DRIVER( 1944d )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) Phoenix Edition */
-	DRIVER( hsf2d )	/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
+	DRIVER( hsf2d )		/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
 	DRIVER( dstlku1d )	/* 05/07/1994 (c) 1994 (Phoenix Edition, US 940705) */
 	DRIVER( progerjd )	/* 17/01/2001 (c) 2001 Cave (Phoenix Edition, Japan) */
-	DRIVER( ssf2ud )		/* 11/09/1993 (c) 1993 (Phoenix Edition, US) */
+	DRIVER( ssf2ud )	/* 11/09/1993 (c) 1993 (Phoenix Edition, US) */
+	DRIVER( mshud )		/* 24/10/1995 (c) 1995 (Phoenix Edition, US) */
+	DRIVER( sfz2ad )	/* 27/02/1996 (c) 1996 (Phoenix Edition, ASIA) */
 
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
@@ -99,6 +101,9 @@ const game_driver * const plusdrivers[] =
 	/* CD to MVS Conversion */
 	DRIVER( zintrkcd )	/* 0211 hack - CD to MVS Conversion by Razoola */
 	DRIVER( fr2ch )
+
+	/* Kaneko 16 Bit Game  */
+	DRIVER( shogware )	/* 1992 (c) Shogun Warriors (Europe Rev.xx)(Kaneko 1992) */
 
 #ifndef NEOCPSMAME
 #if 1 /* SPCLONE */
