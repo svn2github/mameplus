@@ -8131,5 +8131,5 @@ GAME( 1994, dstlku1d, dstlk,   phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Dark
 GAME( 2001, progerjd, progear, phoenix, cps2_2p3b, cps2,   ROT0,   "hack", "Progear no Arashi (Japan 010117 Phoenix Edition)", 0 )
 GAME( 1993, ssf2ud,   ssf2,    phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Super Street Fighter II: The New Challengers (USA 930911 Phoenix Edition)", 0 )
 
-GAME( 1995, mshud,    msh,     phoenix, cps2_2p6b, cps2,   ROT0,   "Capcom", "Marvel Super Heroes (US 951024 Phoenix Edition)", 0 )
-GAME( 1996, sfz2ad,   sfa2,    phoenix, cps2_2p6b, cps2,   ROT0,   "Capcom", "Street Fighter Zero 2 (Asia 960227 Phoenix Edition)", 0 )
+GAME( 1995, mshud,    msh,     phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Marvel Super Heroes (US 951024 Phoenix Edition)", 0 )
+GAME( 1996, sfz2ad,   sfa2,    phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Street Fighter Zero 2 (Asia 960227 Phoenix Edition)", 0 )
