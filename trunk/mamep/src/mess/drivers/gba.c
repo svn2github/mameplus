@@ -16,7 +16,6 @@
 #include <stdio.h>
 
 #include "driver.h"
-#include "deprecat.h"
 #include "state.h"
 #include "video/generic.h"
 #include "cpu/arm7/arm7core.h"
@@ -24,6 +23,7 @@
 #include "includes/gba.h"
 #include "includes/gb.h"
 #include "sound/dac.h"
+#include "deprecat.h"
 
 #define VERBOSE_LEVEL ( 2 )
 
@@ -485,7 +485,7 @@ void draw_mode5_scanline(UINT16 *scanline, int y)
 
 static void draw_oam(UINT16 *scanline, int y, int priority)
 {
-	UINT8 oamindex;
+	INT16 oamindex;
 	UINT8 tilex, tiley;
 	UINT32 tilebytebase, tileindex, tiledrawindex;
 	UINT8 width, height;
@@ -493,7 +493,7 @@ static void draw_oam(UINT16 *scanline, int y, int priority)
 
 	if( gba.DISPCNT & DISPCNT_OBJ_EN )
 	{
-		for( oamindex = 0; oamindex < 128; oamindex++ )
+		for( oamindex = 127; oamindex >= 0; oamindex-- )
 		{
 			UINT16 attr0, attr1, attr2;
 
@@ -647,11 +647,11 @@ static void draw_oam(UINT16 *scanline, int y, int priority)
 							{
 								if ((attr0 & OBJ_PALMODE) == OBJ_PALMODE_16)
 								{
-									draw_4bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, vflip, hflip, 256+((attr2&0xf000)>>8), 0);
+									draw_4bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, 0, hflip, 256+((attr2&0xf000)>>8), 0);
 								}
 								else
 								{
-									draw_8bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, vflip, hflip, 256, 0);
+									draw_8bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, 0, hflip, 256, 0);
 									tiledrawindex++;
 								}
 								tiledrawindex--;
@@ -663,11 +663,11 @@ static void draw_oam(UINT16 *scanline, int y, int priority)
 							{
 								if ((attr0 & OBJ_PALMODE) == OBJ_PALMODE_16)
 								{
-									draw_4bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, vflip, hflip, 256+((attr2&0xf000)>>8), 0);
+									draw_4bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, 0, hflip, 256+((attr2&0xf000)>>8), 0);
 								}
 								else
 								{
-									draw_8bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, vflip, hflip, 256, 0);
+									draw_8bpp_tile(scanline, tilebytebase, tiledrawindex, sx+(tilex*8), tiley % 8, 0, hflip, 256, 0);
 									tiledrawindex++;
 								}
 								tiledrawindex++;
@@ -803,7 +803,7 @@ TIMER_CALLBACK( dma_complete )
 
 //	printf("dma complete: ch %d\n", ch);
 
-	timer_adjust(dma_timer[ch], attotime_never, 0, attotime_never);
+	timer_adjust_oneshot(dma_timer[ch], attotime_never, 0);
 
 	ctrl = dma_regs[(ch*3)+2] >> 16;
 
@@ -968,7 +968,7 @@ static void dma_exec(FPTR ch)
 	dma_dst[ch] = dst;
 
 //	printf("settng DMA timer %d for %d cycs (tmr %x)\n", ch, cnt, (UINT32)dma_timer[ch]);
-//	timer_adjust(dma_timer[ch], ATTOTIME_IN_CYCLES(0, cnt), ch, attotime_never);
+//	timer_adjust_oneshot(dma_timer[ch], ATTOTIME_IN_CYCLES(0, cnt), ch);
 	dma_complete(Machine, NULL, ch);
 
 	cpuintrf_pop_context();
@@ -1185,7 +1185,7 @@ TIMER_CALLBACK(handle_irq)
 {
 	gba_request_irq(gba.IF);
 
-	timer_adjust(irq_timer, attotime_never, 0, attotime_never);
+	timer_adjust_oneshot(irq_timer, attotime_never, 0);
 }
 
 static READ32_HANDLER( gba_io_r )
@@ -2283,7 +2283,7 @@ static WRITE32_HANDLER( gba_io_w )
 					// enable the timer
 					if( !(data & 0x40000) ) // if we're not in Count-Up mode
 					{
-						timer_adjust(tmr_timer[offset], ATTOTIME_IN_HZ(final), offset, ATTOTIME_IN_HZ(final));
+						timer_adjust_periodic(tmr_timer[offset], ATTOTIME_IN_HZ(final), offset, ATTOTIME_IN_HZ(final));
 					}
 				}
 			}
@@ -2404,7 +2404,7 @@ static WRITE32_HANDLER( gba_io_w )
 				// if we still have interrupts, yank the IRQ line again
 				if (gba.IF)
 				{
-					timer_adjust(irq_timer, ATTOTIME_IN_CYCLES(0, 120), 0, attotime_never);
+					timer_adjust_oneshot(irq_timer, ATTOTIME_IN_CYCLES(0, 120), 0);
 				}
 			}
 			break;
@@ -2426,7 +2426,7 @@ static WRITE32_HANDLER( gba_io_w )
 				gba.IME = ( gba.IME & mem_mask ) | ( data & ~mem_mask );
 				if (gba.IF)
 				{
-					timer_adjust(irq_timer, attotime_zero, 0, attotime_never);
+					timer_adjust_oneshot(irq_timer, attotime_zero, 0);
 				}
 			}
 			if( (~mem_mask) & 0xffff0000 )
@@ -2519,7 +2519,7 @@ TIMER_CALLBACK( perform_hbl )
 		}
 	}
 
-	timer_adjust(hbl_timer, attotime_never, 0, attotime_never);
+	timer_adjust_oneshot(hbl_timer, attotime_never, 0);
 
 	cpuintrf_pop_context();
 }
@@ -2602,8 +2602,8 @@ TIMER_CALLBACK( perform_scan )
 	}
 	#endif
 
-	timer_adjust(hbl_timer, video_screen_get_time_until_pos(0, scanline, 240), 0, attotime_never);
-	timer_adjust(scan_timer, video_screen_get_time_until_pos(0, ( scanline + 1 ) % 228, 0), 0, attotime_never);
+	timer_adjust_oneshot(hbl_timer, video_screen_get_time_until_pos(0, scanline, 240), 0);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, ( scanline + 1 ) % 228, 0), 0);
 
 	cpuintrf_pop_context();
 }
@@ -2624,12 +2624,12 @@ static MACHINE_RESET( gba )
 	temp = 0;
 	framecount = 0;
 
-	timer_adjust(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0, attotime_zero);
-	timer_adjust(hbl_timer, attotime_never, 0, attotime_never);
-	timer_adjust(dma_timer[0], attotime_never, 0, attotime_never);
-	timer_adjust(dma_timer[1], attotime_never, 1, attotime_never);
-	timer_adjust(dma_timer[2], attotime_never, 2, attotime_never);
-	timer_adjust(dma_timer[3], attotime_never, 3, attotime_never);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0);
+	timer_adjust_oneshot(hbl_timer, attotime_never, 0);
+	timer_adjust_oneshot(dma_timer[0], attotime_never, 0);
+	timer_adjust_oneshot(dma_timer[1], attotime_never, 1);
+	timer_adjust_oneshot(dma_timer[2], attotime_never, 2);
+	timer_adjust_oneshot(dma_timer[3], attotime_never, 3);
 
 	fifo_a_ptr = fifo_b_ptr = 17;	// indicate empty
 	fifo_a_in = fifo_b_in = 17;
@@ -2651,31 +2651,31 @@ static MACHINE_START( gba )
 	/* create a timer to fire scanline functions */
 	scan_timer = timer_alloc(perform_scan, 0);
 	hbl_timer = timer_alloc(perform_hbl, 0);
-	timer_adjust(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0, attotime_zero);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0);
 
 	/* and one for each DMA channel */
 	dma_timer[0] = timer_alloc(dma_complete, 0);
 	dma_timer[1] = timer_alloc(dma_complete, 0);
 	dma_timer[2] = timer_alloc(dma_complete, 0);
 	dma_timer[3] = timer_alloc(dma_complete, 0);
-	timer_adjust(dma_timer[0], attotime_never, 0, attotime_never);
-	timer_adjust(dma_timer[1], attotime_never, 1, attotime_never);
-	timer_adjust(dma_timer[2], attotime_never, 2, attotime_never);
-	timer_adjust(dma_timer[3], attotime_never, 3, attotime_never);
+	timer_adjust_oneshot(dma_timer[0], attotime_never, 0);
+	timer_adjust_oneshot(dma_timer[1], attotime_never, 1);
+	timer_adjust_oneshot(dma_timer[2], attotime_never, 2);
+	timer_adjust_oneshot(dma_timer[3], attotime_never, 3);
 
 	/* also one for each timer (heh) */
 	tmr_timer[0] = timer_alloc(timer_expire, 0);
 	tmr_timer[1] = timer_alloc(timer_expire, 0);
 	tmr_timer[2] = timer_alloc(timer_expire, 0);
 	tmr_timer[3] = timer_alloc(timer_expire, 0);
-	timer_adjust(tmr_timer[0], attotime_never, 0, attotime_never);
-	timer_adjust(tmr_timer[1], attotime_never, 1, attotime_never);
-	timer_adjust(tmr_timer[2], attotime_never, 2, attotime_never);
-	timer_adjust(tmr_timer[3], attotime_never, 3, attotime_never);
+	timer_adjust_oneshot(tmr_timer[0], attotime_never, 0);
+	timer_adjust_oneshot(tmr_timer[1], attotime_never, 1);
+	timer_adjust_oneshot(tmr_timer[2], attotime_never, 2);
+	timer_adjust_oneshot(tmr_timer[3], attotime_never, 3);
 
 	/* and an IRQ handling timer */
 	irq_timer = timer_alloc(handle_irq, 0);
-	timer_adjust(irq_timer, attotime_never, 0, attotime_never);
+	timer_adjust_oneshot(irq_timer, attotime_never, 0);
 
 	/* generate a table to make mosaic fast */
 	for (level = 0; level < 16; level++) 
