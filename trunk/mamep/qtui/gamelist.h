@@ -41,6 +41,7 @@ public:
 signals:
 	void progressSwitched(int max);
     void progressUpdated(int progress);
+	void logUpdated(char, QString);
 
 protected:
 	void run();
@@ -167,6 +168,7 @@ class Gamelist : public QObject
 	void switchProgress(int max);
 	void setupIcon();
 	void setupAudit();
+	void log(char, QString);
 };
 
 class RomInfo : public QObject
@@ -184,11 +186,12 @@ class RomInfo : public QObject
 class GameInfo : public QObject
 {
   public:
-    QString description, year, manufacturer, sourcefile, cloneof, lcDescription, reading;
+    QString description, year, manufacturer, sourcefile, cloneof, romof, lcDescription, reading;
     QHash<quint32, RomInfo *> crcRomInfoMap;
 	bool available;
 	QIcon icon;
 	TreeItem *pModItem;
+	QSet<QString> clones;
 	
 	GameInfo(QObject *parent = 0);
     ~GameInfo();

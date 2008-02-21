@@ -1,5 +1,4 @@
 ﻿mameui basic
-1 custom delegate with QQ2007 style highlighting, clone padding
 * generic multiple zip/folder reading, with parent/clone
 
 generic non-rom
@@ -21,8 +20,11 @@ rom
 roms/captcomm/rom1.bin (directly)
 roms/captcomm.zip/rom1.bin
 
-* crc checking
-* clone rom audit
+1 save GUI layout
+1 custom delegate with QQ2007 style highlighting, clone padding
+1 filter sorting
+1 check selected bios only
+* hide to systray when lauching mame
 * options dialog, bold changed items, with a reset button on the right
 * snapshot (timer delayed instead of cache)
 * history/mameinfo/story
@@ -31,6 +33,7 @@ roms/captcomm.zip/rom1.bin
 * heap check
 
 extension
+* faster icon cache
 * loading gif
 * command.dat parsing with rich text
 * dockable controls
