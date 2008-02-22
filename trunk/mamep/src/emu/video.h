@@ -15,6 +15,7 @@
 #define __VIDEO_H__
 
 #include "mamecore.h"
+#include "devintrf.h"
 #include "timer.h"
 
 
@@ -28,6 +29,27 @@
 /* number of levels of frameskipping supported */
 #define FRAMESKIP_LEVELS			12
 #define MAX_FRAMESKIP				(FRAMESKIP_LEVELS - 2)
+
+/* screen types */
+enum
+{
+	SCREEN_TYPE_INVALID = 0,
+	SCREEN_TYPE_RASTER,
+	SCREEN_TYPE_VECTOR,
+	SCREEN_TYPE_LCD
+};
+
+
+
+/***************************************************************************
+    MACROS
+***************************************************************************/
+
+/* these functions are macros primarily due to include file ordering */
+/* plus, they are very simple */
+#define video_screen_count(config)		device_list_items((config)->devicelist, VIDEO_SCREEN)
+#define video_screen_first(config)		device_list_first((config)->devicelist, VIDEO_SCREEN)
+#define video_screen_next(previous)		device_list_next((previous), VIDEO_SCREEN)
 
 
 
@@ -59,8 +81,7 @@ struct _screen_state
 typedef struct _screen_config screen_config;
 struct _screen_config
 {
-	const char *	tag;						/* nametag for the screen */
-	UINT32			palette_base;				/* base palette entry for this screen */
+	int				type;						/* type of screen */
 	screen_state	defstate;					/* default state */
 	float			xoffset, yoffset;			/* default X/Y offsets */
 	float			xscale, yscale;				/* default X/Y scale factor */
@@ -91,6 +112,9 @@ void video_screen_set_visarea(int scrnum, int min_x, int max_x, int min_y, int m
 /* force a partial update of the screen up to and including the requested scanline */
 void video_screen_update_partial(int scrnum, int scanline);
 
+/* force an update from the last beam position up to the current beam position */
+void video_screen_update_now(int scrnum);
+
 /* return the current vertical or horizontal position of the beam for a screen */
 int video_screen_get_vpos(int scrnum);
 int video_screen_get_hpos(int scrnum);
@@ -110,6 +134,14 @@ attotime video_screen_get_frame_period(int scrnum);
 
 /* returns whether a given screen exists */
 int video_screen_exists(int scrnum);
+
+
+
+/* ----- video screen device interface ----- */
+
+/* device get info callback */
+#define VIDEO_SCREEN video_screen_get_info
+void video_screen_get_info(running_machine *machine, void *token, UINT32 state, deviceinfo *info);
 
 
 
@@ -175,5 +207,6 @@ void video_crosshair_set_screenmask_callback(running_machine *machine, UINT32 (*
 void video_init_scale_effect(running_machine *machine);
 void video_exit_scale_effect(running_machine *machine);
 #endif /* USE_SCALE_EFFECTS */
+
 
 #endif	/* __VIDEO_H__ */

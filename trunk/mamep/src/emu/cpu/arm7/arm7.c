@@ -47,8 +47,8 @@
 static WRITE32_HANDLER(test_do_callback);
 static READ32_HANDLER(test_rt_r_callback);
 static WRITE32_HANDLER(test_rt_w_callback);
-static void test_dt_r_callback (UINT32 insn, UINT32* prn, UINT32 (*read32)(int addr));
-static void test_dt_w_callback (UINT32 insn, UINT32* prn, void (*write32)(int addr, UINT32 data));
+static void test_dt_r_callback(UINT32 insn, UINT32 *prn, UINT32 (*read32)(UINT32 addr));
+static void test_dt_w_callback(UINT32 insn, UINT32 *prn, void (*write32)(UINT32 addr, UINT32 data));
 #ifdef ENABLE_DEBUGGER
 static char *Spec_RT( char *pBuf, UINT32 opcode, char *pConditionCode, char *pBuf0);
 static char *Spec_DT( char *pBuf, UINT32 opcode, char *pConditionCode, char *pBuf0);
@@ -109,8 +109,6 @@ static void arm7_init(int index, int clock, const void *config, int (*irqcallbac
 	arm7_dasm_cop_do_callback = Spec_DO;
 #endif
 #endif
-
-	return;
 }
 
 static void arm7_reset(void)
@@ -128,7 +126,7 @@ static int arm7_execute( int cycles )
 {
 /*include the arm7 core execute code*/
 #include "arm7exec.c"
-} /* arm7_execute */
+}
 
 
 static void set_irq_line(int irqline, int state)
@@ -435,11 +433,11 @@ static WRITE32_HANDLER(test_rt_w_callback)
 {
 	LOG(("test_rt_w_callback opcode=%x, data from ARM7 register=%x\n",offset,data));
 }
-static void test_dt_r_callback (UINT32 insn, UINT32* prn, UINT32 (*read32)(int addr))
+static void test_dt_r_callback(UINT32 insn, UINT32 *prn, UINT32 (*read32)(UINT32 addr))
 {
 	LOG(("test_dt_r_callback: insn = %x\n",insn));
 }
-static void test_dt_w_callback (UINT32 insn, UINT32* prn, void (*write32)(int addr, UINT32 data))
+static void test_dt_w_callback(UINT32 insn, UINT32 *prn, void (*write32)(UINT32 addr, UINT32 data))
 {
 	LOG(("test_dt_w_callback: opcode = %x\n",insn));
 }
@@ -463,4 +461,3 @@ static char *Spec_DO( char *pBuf, UINT32 opcode, char *pConditionCode, char *pBu
 }
 #endif
 #endif
-

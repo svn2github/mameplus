@@ -96,7 +96,7 @@ void generic_machine_init(running_machine *machine)
 	config_register("counters", counters_load, counters_save);
 
 	/* for memory cards, request save state and an exit callback */
-	if (machine->drv->memcard_handler != NULL)
+	if (machine->config->memcard_handler != NULL)
 	{
 		state_save_register_global(memcard_inserted);
 		add_exit_callback(machine, memcard_eject);
@@ -289,10 +289,10 @@ mame_file *nvram_fopen(running_machine *machine, UINT32 openflags)
 
 void nvram_load(void)
 {
-	if (Machine->drv->nvram_handler != NULL)
+	if (Machine->config->nvram_handler != NULL)
 	{
 		mame_file *nvram_file = nvram_fopen(Machine, OPEN_FLAG_READ);
-		(*Machine->drv->nvram_handler)(Machine, nvram_file, 0);
+		(*Machine->config->nvram_handler)(Machine, nvram_file, 0);
 		if (nvram_file != NULL)
 			mame_fclose(nvram_file);
 	}
@@ -422,8 +422,8 @@ int memcard_create(int index, int overwrite)
 		return 1;
 
 	/* initialize and then save the card */
-	if (Machine->drv->memcard_handler)
-		(*Machine->drv->memcard_handler)(Machine, file, MEMCARD_CREATE);
+	if (Machine->config->memcard_handler)
+		(*Machine->config->memcard_handler)(Machine, file, MEMCARD_CREATE);
 
 	/* close the file */
 	mame_fclose(file);
@@ -459,8 +459,8 @@ int memcard_insert(int index)
 		return 1;
 
 	/* initialize and then load the card */
-	if (Machine->drv->memcard_handler)
-		(*Machine->drv->memcard_handler)(Machine, file, MEMCARD_INSERT);
+	if (Machine->config->memcard_handler)
+		(*Machine->config->memcard_handler)(Machine, file, MEMCARD_INSERT);
 
 	/* close the file */
 	mame_fclose(file);
@@ -499,8 +499,8 @@ void memcard_eject(running_machine *machine)
 	}
 
 	/* initialize and then load the card */
-	if (machine->drv->memcard_handler)
-		(*machine->drv->memcard_handler)(machine, file, MEMCARD_EJECT);
+	if (machine->config->memcard_handler)
+		(*machine->config->memcard_handler)(machine, file, MEMCARD_EJECT);
 
 	/* close the file */
 	mame_fclose(file);

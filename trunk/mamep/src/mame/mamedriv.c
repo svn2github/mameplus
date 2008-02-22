@@ -237,7 +237,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( luctoday )	/* 1980 Sigma */
 	DRIVER( chewing )	/* ?? unknown */
 	DRIVER( catacomb )	/* 1982 MTM Games */
-	DRIVER( ckongg )    /* 1981 bootleg */
+	DRIVER( ckongg )        /* 1981 bootleg */
 	DRIVER( kkgalax )   /* 1981 bootleg */
 	DRIVER( porter )    /* 19?? bootleg */
 
@@ -3301,7 +3301,7 @@ V-V                           TP-027
 	DRIVER( myherok )	/* 834-5755 (c) 1985 Coreland / Sega (S1) */
 	DRIVER( shtngmst )	/* 834-5719/5720 (c) 1985 (S2) */
 	DRIVER( shtngms1 )	/* 834-5719/5720 (c) 1985 (S2) */
- 	DRIVER( shtngmsa )	/* 834-5719/5720 (c) 1985 (S2) */
+	DRIVER( shtngmsa )	/* 834-5719/5720 (c) 1985 (S2) */
 	DRIVER( chplft )	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
 	DRIVER( chplftb )	/* 834-5795 (c) 1985, (c) 1982 Dan Gorlin (S2) */
 	DRIVER( chplftbl )	/* bootleg (S2) */
@@ -4002,6 +4002,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( hmgeo )
 	DRIVER( gwing2 )
 	DRIVER( suchie3 )
+	DRIVER( toyfight )
 	DRIVER( pjustic )
 	DRIVER( pstone )
 	DRIVER( pstone2 )
@@ -4485,7 +4486,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( jailbrek )	/* GX507 (c) 1986 */
 	DRIVER( manhatan )	/* GX507 (c) 1986 (Japan) */
    	DRIVER( jailbrkb )	/* bootleg */
-	DRIVER( scotrsht )	/* GX545 (c) 1985 */
+    DRIVER( scotrsht )	/* GX545 (c) 1985 */
 	DRIVER( finalizr )	/* GX523 (c) 1985 */
 	DRIVER( finalizb )	/* bootleg */
 	DRIVER( ironhors )	/* GX560 (c) 1986 */
@@ -5416,6 +5417,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( chopperb )	/* A7003 'KK' (c) 1988 */
 	DRIVER( legofair )	/* A7003 'KK' (c) 1988 */
 	DRIVER( fsoccer )	/* A6006 'FS' (c) 1988 */
+	DRIVER( fsoccerj )	/* A6006 'FS' (c) 1988 */
+
 	DRIVER( fsoccerb )	/*            (c) 1988 */
 	DRIVER( tdfever )	/* A6006 'TD' (c) 1987 */
 	DRIVER( tdfeverj )	/* A6006 'TD' (c) 1987 */
@@ -5657,7 +5660,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( sengoku3 )	/* 0261 (c) 2001 SNK */
 	DRIVER( kof2001 )	/* 0262 (c) 2001 Eolith / SNK */
 	DRIVER( kof2001h )	/* 0262 (c) 2001 Eolith / SNK */
-	DRIVER( cthd2003 )	/* bootleg of kof2001 */
+	DRIVER( cthd2003 )	/* bootleg of kof2001*/
 	DRIVER( ct2k3sp )	/* bootleg of kof2001 */
 	DRIVER( ct2k3sa )	/* bootleg of kof2001 */
 	DRIVER( mslug4 )	/* 0263 (c) 2002 Mega Enterprise */
@@ -7034,9 +7037,10 @@ Other Sun games
 	DRIVER( silkroad )	/* (c) 1999 */
 
 	/* Afega games */
-	DRIVER( twinactn )	/* (c) 1996 - bootleg of mustang in nmk16.c */
+	DRIVER( twinactn )	/* (c) 1996 - bootleg of US AFF Mustang */
 	DRIVER( stagger1 )	/* (c) 1998 */
 	DRIVER( redhawk )	/* (c) 1997 */
+	DRIVER( redhawke )	/* (c) 1997 Excellent Co., Ltd license */
 	DRIVER( redhawkb )	/* (c) 1997 */
 	DRIVER( grdnstrm )	/* (c) 1998 */
 	DRIVER( bubl2000 )	/* (c) 1998 Tuning */
@@ -7162,6 +7166,7 @@ Other Sun games
 	DRIVER( goldstar )	/* (c) 198? IGS */
 	DRIVER( goldstbl )	/* (c) 198? IGS */
 	DRIVER( moonlght )	/* bootleg */
+ 	DRIVER( cpoker )	/* (c) 198? IGS */
 	DRIVER( csk227it )	/* (c) 198? IGS */
 	DRIVER( csk234it )	/* (c) 198? IGS */
 	DRIVER( stellecu )	/* (c) 1998 */

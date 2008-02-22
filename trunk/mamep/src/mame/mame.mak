@@ -82,6 +82,7 @@ CPUS += V70
 CPUS += I8035
 CPUS += I8039
 CPUS += I8048
+CPUS += I8749
 CPUS += N7751
 CPUS += MB8884
 CPUS += M58715
@@ -320,7 +321,7 @@ SOUNDS += BEEP
 #SOUNDS += SID6581
 #SOUNDS += SID8580
 SOUNDS += SP0256
-
+SOUNDS += AICA
 
 
 #-------------------------------------------------
@@ -527,7 +528,7 @@ $(MAMEOBJ)/atari.a: \
 	$(DRIVERS)/gauntlet.o $(VIDEO)/gauntlet.o \
 	$(DRIVERS)/harddriv.o $(MACHINE)/harddriv.o $(AUDIO)/harddriv.o $(VIDEO)/harddriv.o \
 	$(DRIVERS)/irobot.o $(MACHINE)/irobot.o $(VIDEO)/irobot.o \
-	$(DRIVERS)/jedi.o $(VIDEO)/jedi.o \
+	$(DRIVERS)/jedi.o $(AUDIO)/jedi.o $(VIDEO)/jedi.o \
 	$(DRIVERS)/klax.o $(VIDEO)/klax.o \
 	$(DRIVERS)/liberatr.o $(VIDEO)/liberatr.o \
 	$(DRIVERS)/mediagx.o \
@@ -601,7 +602,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(MESS_DRIVERS)/cpschngr.o \
 	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
+	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o\
 	$(DRIVERS)/egghunt.o \
 	$(DRIVERS)/fcrash.o \
 	$(DRIVERS)/gng.o $(VIDEO)/gng.o \
@@ -671,7 +672,7 @@ $(MAMEOBJ)/dataeast.a: \
 	$(DRIVERS)/kingobox.o $(VIDEO)/kingobox.o \
 	$(DRIVERS)/lemmings.o $(VIDEO)/lemmings.o \
 	$(DRIVERS)/liberate.o $(VIDEO)/liberate.o \
-	$(DRIVERS)/madalien.o \
+	$(DRIVERS)/madalien.o $(VIDEO)/madalien.o \
 	$(DRIVERS)/madmotor.o $(VIDEO)/madmotor.o \
 	$(DRIVERS)/metlclsh.o $(VIDEO)/metlclsh.o \
 	$(DRIVERS)/pcktgal.o $(VIDEO)/pcktgal.o \
@@ -761,7 +762,7 @@ $(MAMEOBJ)/gaelco.a: \
 
 $(MAMEOBJ)/gameplan.a: \
 	$(DRIVERS)/enigma2.o \
-	$(DRIVERS)/gameplan.o \
+	$(DRIVERS)/gameplan.o $(VIDEO)/gameplan.o \
 	$(DRIVERS)/toratora.o \
 
 $(MAMEOBJ)/gametron.a: \
@@ -1080,7 +1081,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/playch10.o $(MACHINE)/playch10.o $(VIDEO)/playch10.o \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
-	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
+	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o\
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(MACHINE)/drakton.o \
 	$(MACHINE)/strtheat.o \

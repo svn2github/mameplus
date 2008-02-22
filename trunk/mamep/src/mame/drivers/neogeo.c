@@ -1032,48 +1032,48 @@ static MACHINE_RESET( neogeo )
 	case NEOGEO_BIOS_TYPE_EURO:
 		logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
 
-		/* Set up machine country */
-		src = readinputportbytag("HACK_IN5");
-		res = src & 0x3;
+			/* Set up machine country */
+			src = readinputportbytag("HACK_IN5");
+			res = src & 0x3;
 
-		/* Console/arcade mode */
-		if (src & 0x04) 
-			res |= 0x8000;
+			/* Console/arcade mode */
+			if (src & 0x04) 
+				res |= 0x8000;
 
-		/* write the ID in the system BIOS ROM */
-		mem16[0x0200] = res;
+			/* write the ID in the system BIOS ROM */
+			mem16[0x0200] = res;
 
-		if (memcard_manager==1)
-		{
-			memcard_manager=0;
+			if (memcard_manager==1)
+			{
+				memcard_manager=0;
 			mem16[0x11b1a/2] = 0x500a;
-		}
-		else
-		{
+			}
+			else
+			{
 			mem16[0x11b1a/2] = 0x1b6a;
-		}
+			}
 
 		break;
 
 	case NEOGEO_BIOS_TYPE_DEBUG:
 		logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
 
-		/* Set up machine country */
-		src = readinputportbytag("HACK_IN5");
-		res = src & 0x3;
+			/* Set up machine country */
+			src = readinputportbytag("HACK_IN5");
+			res = src & 0x3;
 
-		/* write the ID in the system BIOS ROM */
-		mem16[0x0200] = res;
+			/* write the ID in the system BIOS ROM */
+			mem16[0x0200] = res;
 
-		if (memcard_manager==1)
-		{
-			memcard_manager=0;
+			if (memcard_manager==1)
+			{
+				memcard_manager=0;
 			mem16[0x11b1a/2] = 0x3cac;
-		}
-		else
-		{
+			}
+			else
+			{
 			mem16[0x1194c/2] = 0x1b6a;
-		}
+	}
 
 		break;
 
@@ -1240,9 +1240,9 @@ static struct YM2610interface ym2610_interface =
 	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )
 
 
-#define STANDARD_IN0														\
-	PORT_START_TAG("IN0")													\
-	STANDARD_DIPS															\
+#define STANDARD_IN0											\
+	PORT_START_TAG("IN0")										\
+	STANDARD_DIPS												\
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)		\
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)		\
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)		\
@@ -1362,13 +1362,12 @@ static MACHINE_DRIVER_START( neogeo )
 	MDRV_MEMCARD_HANDLER(neogeo)
 
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_VIDEO_START(neogeo)
 	MDRV_VIDEO_RESET(neogeo)
 	MDRV_VIDEO_UPDATE(neogeo)
 	MDRV_DEFAULT_LAYOUT(layout_neogeo)
 
-	MDRV_SCREEN_ADD("main", 0)
+	MDRV_SCREEN_ADD("main", RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_RGB32)
 	MDRV_SCREEN_RAW_PARAMS(NEOGEO_PIXEL_CLOCK, NEOGEO_HTOTAL, NEOGEO_HBEND, NEOGEO_HBSTART, NEOGEO_VTOTAL, NEOGEO_VBEND, NEOGEO_VBSTART)
 
@@ -1421,7 +1420,7 @@ static DRIVER_INIT( neogeo )
 		break;
 
 	case NEOGEO_BIOS_TYPE_TRACKBALL:
-		/* irritating maze uses a trackball */
+	/* irritating maze uses a trackball */
 
 		logerror("BIOS Patch is applied for Trackball\n");
 
