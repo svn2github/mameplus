@@ -305,12 +305,12 @@ void nvram_load(void)
 
 void nvram_save(void)
 {
-	if (Machine->drv->nvram_handler != NULL && !Machine->record_file && !Machine->playback_file)
+	if (Machine->config->nvram_handler != NULL && !Machine->record_file && !Machine->playback_file)
 	{
 		mame_file *nvram_file = nvram_fopen(Machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		if (nvram_file != NULL)
 		{
-			(*Machine->drv->nvram_handler)(Machine, nvram_file, 1);
+			(*Machine->config->nvram_handler)(Machine, nvram_file, 1);
 			mame_fclose(nvram_file);
 		}
 	}

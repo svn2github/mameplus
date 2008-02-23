@@ -977,7 +977,7 @@ do { \
 		ADD_MENU(UI_cheat, menu_cheat, 1);
 
 	/* add memory card menu */
-	if (Machine->drv->memcard_handler != NULL)
+	if (Machine->config->memcard_handler != NULL)
 		ADD_MENU(UI_memorycard, menu_memory_card, 0);
 
 	/* add reset and exit menus */

@@ -347,20 +347,20 @@ void video_init(running_machine *machine)
 		if (info->config->yscale != 0)
 			render_container_set_yscale(container, info->config->yscale);
 
-			/* reset VBLANK timing */
-			info->vblank_time = attotime_sub_attoseconds(attotime_zero, machine->screen[0].vblank);
+		/* reset VBLANK timing */
+		info->vblank_time = attotime_sub_attoseconds(attotime_zero, machine->screen[0].vblank);
 
-			/* allocate a timer to generate per-scanline updates */
+		/* allocate a timer to generate per-scanline updates */
 		if (machine->config->video_attributes & VIDEO_UPDATE_SCANLINE)
-			{
-				info->scanline_timer = timer_alloc(scanline_update_callback, NULL);
-				timer_adjust_oneshot(info->scanline_timer, video_screen_get_time_until_pos(scrnum, 0, 0), scrnum);
-			}
-
-			/* register for save states */
-			state_save_register_item("video", scrnum, info->vblank_time.seconds);
-			state_save_register_item("video", scrnum, info->vblank_time.attoseconds);
+		{
+			info->scanline_timer = timer_alloc(scanline_update_callback, NULL);
+			timer_adjust_oneshot(info->scanline_timer, video_screen_get_time_until_pos(scrnum, 0, 0), scrnum);
 		}
+
+		/* register for save states */
+		state_save_register_item("video", scrnum, info->vblank_time.seconds);
+		state_save_register_item("video", scrnum, info->vblank_time.attoseconds);
+	}
 
 	/* create spriteram buffers if necessary */
 	if (machine->config->video_attributes & VIDEO_BUFFERS_SPRITERAM)
@@ -1265,9 +1265,9 @@ void video_frame_update(running_machine *machine, int debug)
 static int finish_screen_updates(running_machine *machine)
 {
 	video_private *viddata = machine->video_data;
+	const device_config *device;
 	int anything_changed = FALSE;
 	int livemask;
-	int scrnum;
 
 #ifdef USE_SCALE_EFFECTS
 	if (scale_xsize != scale_effect.xsize || scale_ysize != scale_effect.ysize)
@@ -1275,21 +1275,26 @@ static int finish_screen_updates(running_machine *machine)
 #endif /* USE_SCALE_EFFECTS */
 
 	/* finish updating the screens */
-	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
-		if (machine->drv->screen[scrnum].tag != NULL)
-			video_screen_update_partial(scrnum, machine->screen[scrnum].visarea.max_y);
+	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
+	{
+		int scrnum = device_list_index(machine->config->devicelist, VIDEO_SCREEN, device->tag);
+		video_screen_update_partial(scrnum, machine->screen[scrnum].visarea.max_y);
+	}
 
 	/* now add the quads for all the screens */
 	livemask = render_get_live_screens_mask();
-	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
+	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
 	{
+		int scrnum = device_list_index(machine->config->devicelist, VIDEO_SCREEN, device->tag);
 		internal_screen_info *screen = &viddata->scrinfo[scrnum];
 
 		/* only update if live */
 		if (livemask & (1 << scrnum))
 		{
+			const screen_config *scrconfig = device_list_find_by_index(Machine->config->devicelist, VIDEO_SCREEN, scrnum)->inline_config;
+
 			/* only update if empty and not a vector game; otherwise assume the driver did it directly */
-			if ((machine->drv->video_attributes & (VIDEO_TYPE_VECTOR | VIDEO_SELF_RENDER)) == 0)
+			if (scrconfig->type != SCREEN_TYPE_VECTOR && (machine->config->video_attributes & VIDEO_SELF_RENDER) == 0)
 			{
 				/* if we're not skipping the frame and if the screen actually changed, then update the texture */
 				if (!global.skipping_this_frame && screen->changed)
@@ -1300,10 +1305,10 @@ static int finish_screen_updates(running_machine *machine)
 					fixedvis.max_y++;
 #ifdef USE_SCALE_EFFECTS
 					if (scale_effect.effect)
-						texture_set_scalebitmap(screen, &fixedvis, machine->drv->screen[scrnum].palette_base);
+						texture_set_scalebitmap(screen, &fixedvis, 0);
 					else
 #endif /* USE_SCALE_EFFECTS */
-						render_texture_set_bitmap(screen->texture[screen->curbitmap], bitmap, &fixedvis, machine->drv->screen[scrnum].palette_base, screen->format);
+						render_texture_set_bitmap(screen->texture[screen->curbitmap], bitmap, &fixedvis, 0, screen->format);
 					screen->curtexture = screen->curbitmap;
 					screen->curbitmap = 1 - screen->curbitmap;
 				}

@@ -1826,10 +1826,14 @@ static void init_machine(running_machine *machine)
 	//mamep: prevent MESS crash #2
 	if(has_dummy_image())
 		return;
+
+	/* start up the devices */
+	device_list_start(machine);
+
 	/* call the driver's _START callbacks */
-	if (machine->drv->machine_start != NULL) (*machine->drv->machine_start)(machine);
-	if (machine->drv->sound_start != NULL) (*machine->drv->sound_start)(machine);
-	if (machine->drv->video_start != NULL) (*machine->drv->video_start)(machine);
+	if (machine->config->machine_start != NULL) (*machine->config->machine_start)(machine);
+	if (machine->config->sound_start != NULL) (*machine->config->sound_start)(machine);
+	if (machine->config->video_start != NULL) (*machine->config->video_start)(machine);
 
 	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
 	for (num = 0; num < MAX_MEMORY_REGIONS; num++)

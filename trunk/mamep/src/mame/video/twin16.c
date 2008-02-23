@@ -214,7 +214,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 		if(code==0x052E)code=0x0528;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
 		if(code==0x0536)code=0x0530;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
 
-//ÔøΩ@normal sprites
+//Å@normal sprites
 		if( code!=0xffff && (attributes&0x8000) && demo==0  && ((code&0xFF00)!=0x1800)){
 			int xpos = source[1];
 			int ypos = source[2];
@@ -286,7 +286,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 			draw_sprite( bitmap, pen_data, pal_base, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
 		}
 
-// ÔøΩ@demonstration sprites
+// Å@demonstration sprites
 		if( code!=0xffff && (attributes&0x8000) && (demo==1) && ((code&0xFF00)==0x1800)){
 			int xpos = source[1];
 			int ypos = source[2];
