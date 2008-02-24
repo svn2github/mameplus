@@ -43,10 +43,21 @@ static int pong_video[] = {
 
 static PALETTE_INIT( pong )
 {
-	palette_set_color_rgb(machine, 0,0x00,0x00,0x00); /* black */
-	palette_set_color_rgb(machine, 1,0xff,0xff,0xff); /* white (1k resistor) */
-	palette_set_color_rgb(machine, 2,0xd4,0xd4,0xd4); /* slightly darker white (1.2k resistor) */
-	memcpy(colortable,colortable_source,sizeof(colortable_source));
+	int i;
+
+	for (i = 0; i < sizeof(colortable_source) / sizeof(colortable_source[0]); i++) 
+	{
+		rgb_t color;
+
+		switch (colortable_source[i])
+		{
+		case 0:   color = RGB_BLACK; break;
+		case 1:   color = RGB_WHITE; break;
+		default:  color = MAKE_RGB(0xa0, 0xd4, 0xd4); break; /* slightly darker white (1.2k resistor) */
+		}
+
+	palette_set_color(machine, i, color);
+       }
 }
 
 static MACHINE_DRIVER_START( pong )
@@ -63,8 +74,7 @@ static MACHINE_DRIVER_START( pong )
 	MDRV_SCREEN_SIZE(PONG_MAX_H, PONG_MAX_V)
 	MDRV_SCREEN_VISIBLE_AREA(PONG_HBLANK, PONG_MAX_H-1, PONG_VBLANK, PONG_MAX_V-1)
 
-	MDRV_PALETTE_LENGTH(3)
-	MDRV_COLORTABLE_LENGTH(sizeof(colortable_source)/sizeof(colortable_source[0]))
+	MDRV_PALETTE_LENGTH(sizeof(colortable_source)/sizeof(colortable_source[0]))
 
 	MDRV_PALETTE_INIT(pong)
 	MDRV_VIDEO_START(pong)

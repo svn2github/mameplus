@@ -1147,17 +1147,13 @@ static MACHINE_DRIVER_START( monaco )
 	MDRV_CPU_PROGRAM_MAP(readmem,writemem)
 	MDRV_CPU_VBLANK_INT(monaco_interrupt,1)
 
-	MDRV_SCREEN_REFRESH_RATE(60)
-	MDRV_SCREEN_VBLANK_TIME(DEFAULT_REAL_60HZ_VBLANK_DURATION)
-
 	/* video hardware */
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
+	MDRV_SCREEN_ADD("main", RASTER)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500) /* not accurate */)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(SCREEN_WIDTH, SCREEN_HEIGHT)
 	MDRV_SCREEN_VISIBLE_AREA(0, SCREEN_WIDTH-1, 0, SCREEN_HEIGHT-1)
-	MDRV_GFXDECODE(monaco)
-	MDRV_PALETTE_LENGTH(1024)
-	MDRV_COLORTABLE_LENGTH(1024)
 
 	MDRV_VIDEO_START(monaco)
 	MDRV_VIDEO_UPDATE(monaco)
@@ -1201,13 +1197,13 @@ ROM_START( monaco )
 //	ROM_LOAD( "prm-40",	2*32, 32, CRC(8030dac8) )
 /*	PR40 is in the Fanfare sound circuit and seems to access the particular
  *	notes for the fanfare sound (so PR40 may contain timing and pointer info
- *	on the melody).  The switch (SW1) I mentioned before that helped in tuning
+ *	on the melody).ï¿½ The switch (SW1) I mentioned before that helped in tuning
  *	the fanfare sound with the 6 pots seems to help in making the tuning of each
  *	pot for output of one of three audio frequencies (262, 330, 392 Hz),
  *	instead of having to tune to 6 different frequencies (a production/test
  *	equipment issue).
  *	In any case, if we get a good sample of this fanfare sound, we will not
- *	need to bother with this circuit or PR40.  As far a I have seen, the
+ *	need to bother with this circuit or PR40.ï¿½ As far a I have seen, the
  *	fanfare sound only comes up at the end of the game if you have a top five
  *	score and possibly when you plug in the game.
  */
