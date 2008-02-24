@@ -1555,7 +1555,7 @@ static void destroy_machine(running_machine *machine)
 static void m68kcore_init(running_machine *machine)
 {
 	static const char *names[] = { "C", "DRC", "ASM" };
-	cpu_config *cpu_ptr = (cpu_config *)machine->drv->cpu;
+	cpu_config *cpu_ptr = (cpu_config *)machine->config->cpu;
 	int cpunum;
 	cpu_type type;
 	const char *stemp = options_get_string(mame_options(), OPTION_M68K_CORE);

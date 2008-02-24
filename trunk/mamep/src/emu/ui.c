@@ -1888,7 +1888,7 @@ int sprintf_game_info(char *buffer)
 
 		/* append the Sound: string */
 		if (sndnum == 0)
-			bufptr += sprintf(bufptr, "_(\nSound:\n)");
+			bufptr += sprintf(bufptr, _("\nSound:\n"));
 
 		/* count how many identical sound chips we have */
 		for (count = 1; sndnum + count < MAX_SOUND; count++)
@@ -1923,11 +1923,14 @@ int sprintf_game_info(char *buffer)
 		if (scrconfig->type == SCREEN_TYPE_VECTOR)
 			bufptr += sprintf(bufptr, _("Vector\n"));
 		else
-			bufptr += sprintf(bufptr, _("Resolution:\n%d ") UTF8_MULTIPLY " %d (%s) %f" UTF8_NBSP "Hz\n",
+		{
+			bufptr += sprintf(bufptr, _("Resolution:\n"));
+			bufptr += sprintf(bufptr, "%d" UTF8_MULTIPLY " %d (%s) %f" UTF8_NBSP "Hz\n",
 					Machine->screen[0].visarea.max_x - Machine->screen[0].visarea.min_x + 1,
 					Machine->screen[0].visarea.max_y - Machine->screen[0].visarea.min_y + 1,
 					(Machine->gamedrv->flags & ORIENTATION_SWAP_XY) ? "V" : "H",
 					ATTOSECONDS_TO_HZ(Machine->screen[0].refresh));
+		}
 	}
 
 	return bufptr - buffer;

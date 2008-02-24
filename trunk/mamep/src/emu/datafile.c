@@ -1504,14 +1504,12 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 {
 	const rom_entry *region, *rom, *chunk;
 	const game_driver *clone_of;
-	machine_config game;
 	int result = 1;
 	int i;
 
 	*buffer = 0;
 
 	strcat(buffer, "MAMEInfo:\n");
-	expand_machine_driver(drv->drv, &game);
 
 	/* List the game info 'flags' */
 	if (drv->flags &
@@ -1737,8 +1735,9 @@ int load_driver_statistics (char *buffer, int bufsize)
 	for (i = 0; drivers[i]; i++)
 	{ 
 		int controltmp[6];
-		machine_config drv;
-		expand_machine_driver(drivers[i]->drv, &drv);
+		machine_config *config = machine_config_alloc(drivers[i]->drv);
+		const device_config *screen = video_screen_first(config);
+		const screen_config *scrconfig = screen->inline_config;
  
 		all++;
 
@@ -1755,16 +1754,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 		/* Calc all graphic resolution and aspect ratio numbers */
 		if (drivers[i]->flags & ORIENTATION_SWAP_XY)
 		{
-			x = drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1;
-			y = drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1;
+			x = scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1;
+			y = scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1;
 		}
 		else
 		{
-			x = drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1;
-			y = drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1;
+			x = scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1;
+			y = scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1;
 		}
 
-		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
+		if (scrconfig->type == SCREEN_TYPE_VECTOR)
 		{
 	 		vec++;
 			if (clone) vecc++;
@@ -1793,7 +1792,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 		}
 
 		/* Calc all palettesize numbers */
-		x = drv.total_colors;
+		x = config->total_colors;
 		for (n = 0; n < ARRAY_LENGTH(palett) / 2; n++)
 		{
 			if (palett[n] == x)
@@ -1849,7 +1848,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 		x = 0;
 		for (y = 0; y < MAX_SPEAKER; y++)
-			if (drv.speaker[y].tag != NULL)
+			if (config->speaker[y].tag != NULL)
 				x++;
 
 		if (x > 1)
@@ -2007,7 +2006,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc all Frames_Per_Second numbers */
-		fps[0] = ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
+		fps[0] = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
 		for (n = 1; n < ARRAY_LENGTH(fps); n++)
 		{
 			if (fps[n] == fps[0])
@@ -2072,27 +2071,13 @@ int load_driver_statistics (char *buffer, int bufsize)
 				if (clone) flags[18]++;
 			}
 
-#if 0
-			if (drv.video_attributes & VIDEO_NEEDS_6BITS_PER_GUN)
-			{
-	 			bitx++;
-				if (clone) bitc++;
-			}
-
-			if (drv.video_attributes & VIDEO_RGB_DIRECT)
-			{
-	 			rgbd++;
-				if (clone) rgbdc++;
-			}
-#endif
-
-			if (drv.video_attributes & VIDEO_HAS_SHADOWS)
+			if (config->video_attributes & VIDEO_HAS_SHADOWS)
 			{
 	 			shad++;
 				if (clone) shadc++;
 			}
 
-			if (drv.video_attributes & VIDEO_HAS_HIGHLIGHTS)
+			if (config->video_attributes & VIDEO_HAS_HIGHLIGHTS)
 			{
 	 			hghs++;
 				if (clone) hghsc++;
@@ -2104,16 +2089,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 				/* Calc all CPU's only in ORIGINAL games */
 				y = 0;
 				n = 0;
-				while (n < MAX_CPU && drv.cpu[n].type)
+				while (n < MAX_CPU && config->cpu[n].type)
 				{
-					cpu_type type = drv.cpu[n].type;
+					cpu_type type = config->cpu[n].type;
 					int count = 0;
 					char cpu_name[256];
 
 					n++;
 
 					while (n < MAX_CPU
-						&& drv.cpu[n].type == type)
+						&& config->cpu[n].type == type)
 					{
 						count++;
 						n++;
@@ -2136,16 +2121,16 @@ int load_driver_statistics (char *buffer, int bufsize)
 				/* Calc all Sound hardware only in ORIGINAL games */
 				y = 0;
 				n = 0;
-				while (n < MAX_SOUND && drv.sound[n].type)
+				while (n < MAX_SOUND && config->sound[n].type)
 				{
-					sound_type type = drv.sound[n].type;
+					sound_type type = config->sound[n].type;
 					int count = 0;
 					char sound_name[256];
 
 					n++;
 
 					while (n < MAX_CPU
-						&& drv.sound[n].type == type)
+						&& config->sound[n].type == type)
 					{
 						count++;
 						n++;
@@ -2267,7 +2252,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 		if(rsum >= 50000)
 			romsize[9]++;
 		rsum = 0;
-
+		machine_config_free(config);
 	}
 
 	sum = sum/32;
