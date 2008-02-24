@@ -2,7 +2,6 @@
 #include "driver.h"
 #include "deprecat.h"
 #include "machine/pcecommn.h"
-#include "uitext.h"
 #include "video/vdc.h"
 #include "cpu/h6280/h6280.h"
 #include "includes/pce.h"
@@ -88,6 +87,7 @@ const struct MSM5205interface pce_cd_msm5205_interface = {
 static UINT8 *cartridge_ram;
 
 /* joystick related data*/
+
 #define JOY_CLOCK   0x01
 #define JOY_RESET   0x02
 
@@ -359,7 +359,7 @@ static void pce_cd_read_6( void ) {
 	if ( frame_count == 0 ) {
 		pce_cd_reply_status_byte( SCSI_STATUS_OK );
 	} else {
-		timer_adjust( pce_cd.data_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ) );
+		timer_adjust_periodic(pce_cd.data_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND ));
 	}
 }
 
@@ -791,7 +791,7 @@ static TIMER_CALLBACK( pce_cd_data_timer_callback ) {
 			/* We are done, disable the timer */
 			logerror("Last frame read from CD\n");
 			pce_cd.data_transferred = 1;
-			timer_adjust( pce_cd.data_timer, attotime_never, 0, attotime_never );
+			timer_adjust_oneshot(pce_cd.data_timer, attotime_never, 0);
 		} else {
 			pce_cd.data_transferred = 0;
 		}
@@ -836,9 +836,9 @@ static void pce_cd_init( void ) {
 	}
 
 	pce_cd.data_timer = timer_alloc( pce_cd_data_timer_callback , NULL);
-	timer_adjust( pce_cd.data_timer, attotime_never, 0, attotime_never );
+	timer_adjust_oneshot(pce_cd.data_timer, attotime_never, 0);
 	pce_cd.adpcm_dma_timer = timer_alloc( pce_cd_adpcm_dma_timer_callback , NULL);
-	timer_adjust( pce_cd.adpcm_dma_timer, attotime_never, 0, attotime_never );
+	timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0);
 }
 
 WRITE8_HANDLER( pce_cd_bram_w ) {
@@ -892,11 +892,11 @@ WRITE8_HANDLER( pce_cd_intf_w ) {
 	case 0x0B:	/* ADPCM DMA control */
 		if ( ! ( pce_cd.regs[0x0B] & 0x02 ) && ( data & 0x02 ) ) {
 			/* Start CD to ADPCM transfer */
-			timer_adjust( pce_cd.adpcm_dma_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ) );
+			timer_adjust_periodic(pce_cd.adpcm_dma_timer, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ), 0, ATTOTIME_IN_HZ( PCE_CD_DATA_FRAMES_PER_SECOND * 2048 ) );
 		}
 		if ( ( pce_cd.regs[0x0B] & 0x02 ) && ! ( data & 0x02 ) ) {
 			/* Stop CD to ADPCM transfer (?) */
-			timer_adjust( pce_cd.adpcm_dma_timer, attotime_never, 0, attotime_never );
+			timer_adjust_oneshot(pce_cd.adpcm_dma_timer, attotime_never, 0);
 		}
 		break;
 	case 0x0C:	/* ADPCM status */

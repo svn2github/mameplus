@@ -11,11 +11,11 @@
 #include <winuser.h>
 #include <tchar.h>
 
+#include "driver.h"
 #include "mui_util.h"
 #include "mui_opts.h"
 #include "optionsms.h"
 #include "emuopts.h"
-#include "driver.h"
 #include "messopts.h"
 #include "osd/windows/configms.h"
 #include "winmain.h"

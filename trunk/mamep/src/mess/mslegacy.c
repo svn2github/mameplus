@@ -8,7 +8,9 @@
 *********************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "uitext.h"
+#include "mslegacy.h"
 #include "video/mc6845.h"
 
 
@@ -94,20 +96,6 @@ const char * ui_getstring (int string_num)
 
 
 /***************************************************************************
-    TIMER
-***************************************************************************/
-
-void timer_adjust(emu_timer *which, attotime duration, INT32 param, attotime period)
-{
-	if (attotime_compare(period, attotime_zero) == 0)
-		timer_adjust_oneshot(which, duration, param);
-	else
-		timer_adjust_periodic(which, duration, param, period);
-}
-
-
-
-/***************************************************************************
     MC6845
 ***************************************************************************/
 
@@ -115,8 +103,9 @@ mc6845_t *mslegacy_mc6845;
 
 void crtc6845_config(int index, const mc6845_interface *intf)
 {
+	/* NPW 23-Feb-2008 - All usage of 6845 devices has probably been broken here */
 	assert(index == 0);
-	mslegacy_mc6845 = mc6845_config(intf);
+	mslegacy_mc6845 = devtag_get_token(Machine, MC6845, "crtc");
 }
 
 
@@ -147,3 +136,4 @@ VIDEO_UPDATE(crtc6845)
 	mc6845_update(mslegacy_mc6845, bitmap, cliprect);
 	return 0;
 }
+

@@ -2695,15 +2695,15 @@ static MACHINE_DRIVER_START( gba )
 	MDRV_CPU_ADD(ARM7, 16777216)
 	MDRV_CPU_PROGRAM_MAP(gba_map,0)
 
+	MDRV_SCREEN_ADD("main", RASTER)
+
 	MDRV_MACHINE_START(gba)
 	MDRV_MACHINE_RESET(gba)
 
-	MDRV_VIDEO_ATTRIBUTES(VIDEO_TYPE_RASTER)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_PALETTE_LENGTH(32768)
 	MDRV_PALETTE_INIT( gba )
 
-	MDRV_SCREEN_ADD("main", 0)	// htot hst vwid vtot vst vis
 	MDRV_SCREEN_RAW_PARAMS(16777216/4, 308, 0,  240, 228, 0,  160)
 
 	MDRV_VIDEO_START(generic_bitmapped)
@@ -3139,14 +3139,14 @@ static void gba_cartslot_getinfo(const device_class *devclass, UINT32 state, uni
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case DEVINFO_INT_COUNT:	 					info->i = 1; break;
-		case DEVINFO_INT_MUST_BE_LOADED:				info->i = 0; break;
+		case MESS_DEVINFO_INT_COUNT:	 					info->i = 1; break;
+		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 0; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case DEVINFO_PTR_LOAD: 						info->load = device_load_gba_cart; break;
+		case MESS_DEVINFO_PTR_LOAD: 						info->load = device_load_gba_cart; break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "gba,bin"); break;
+		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "gba,bin"); break;
 
 		default:   							cartslot_device_getinfo(devclass, state, info); break;
 	}

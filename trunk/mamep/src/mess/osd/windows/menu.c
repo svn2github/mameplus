@@ -804,7 +804,7 @@ static void build_generic_filter(const struct IODevice *dev, int is_save, char *
 	s = filter;
 
 	// common image types
-	file_extensions = device_get_info_string(&dev->devclass, DEVINFO_STR_FILE_EXTENSIONS);
+	file_extensions = mess_device_get_info_string(&dev->devclass, MESS_DEVINFO_STR_FILE_EXTENSIONS);
 
 	//mamep: add zip extension
 	if (!is_save)
