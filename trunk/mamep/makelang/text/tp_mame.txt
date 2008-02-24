@@ -4726,6 +4726,30 @@ Soft Reset
 Sound
 
 
+#
+\nSound:\n
+
+
+#
+\nVideo:\n
+
+
+#
+Screen %d: 
+
+
+#
+Vector\n
+
+
+#
+Resolution:\n
+
+
+#
+Please load an image
+
+
 # emu/inptport.c: 449 emu/uilang.c: 25 
 Spanish
 

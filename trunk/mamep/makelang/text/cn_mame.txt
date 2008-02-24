@@ -4278,6 +4278,30 @@ Soft Reset
 Sound
 声音
 
+#
+\nSound:\n
+\n声音:\n
+
+#
+\nVideo:\n
+\n视频:\n
+
+#
+Screen %d: 
+屏幕 %d: 
+
+#
+Vector\n
+矢量\n
+
+#
+Resolution:\n
+分辨率:\n
+
+#
+Please load an image
+请载入游戏ROM镜像
+
 # emu/inptport.c: 449 emu/uilang.c: 25 
 Spanish
 西班牙文

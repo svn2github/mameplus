@@ -4726,6 +4726,30 @@ Soft Reset
 Sound
 音源
 
+#
+\nSound:\n
+\n音源:\n
+
+#
+\nVideo:\n
+\nビデオ:\n
+
+#
+Screen %d: 
+画面 %d: 
+
+#
+Vector\n
+ベクタ\n
+
+#
+Resolution:\n
+解像度:\n
+
+#
+Please load an image
+
+
 # emu/inptport.c: 449 emu/uilang.c: 25 
 Spanish
 スペイン語
