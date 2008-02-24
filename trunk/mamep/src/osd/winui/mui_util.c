@@ -502,6 +502,45 @@ static void UpdateController(void)
 	free(cache);
 }
 
+BOOL isDriverVector(const machine_config *config)
+{
+	const device_config *screen = video_screen_first(config);
+
+	if (screen != NULL) {
+		const screen_config *scrconfig = screen->inline_config;
+
+		/* parse "vector.ini" for vector games */
+		if (SCREEN_TYPE_VECTOR == scrconfig->type)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+int numberOfSpeakers(const machine_config *config)
+{
+	int has_sound = FALSE;
+	int speakers = 0;
+	int sndnum;
+
+	/* see if we have any sound chips to report */
+	for (sndnum = 0; sndnum < ARRAY_LENGTH(config->sound); sndnum++)
+		if (config->sound[sndnum].type != SOUND_DUMMY)
+		{
+			has_sound = TRUE;
+			break;
+		}
+
+	/* if we have sound, count the number of speakers */
+	if (has_sound)
+		for (speakers = 0; speakers < ARRAY_LENGTH(config->speaker); speakers++)
+			if (config->speaker[speakers].tag == NULL)
+				break;
+
+	return speakers;
+}
+
 static struct DriversInfo* GetDriversInfo(int driver_index)
 {
 	if (drivers_info == NULL)
@@ -514,8 +553,12 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			int nParentIndex = GetParentRomSetIndex(gamedrv);
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
-			machine_config drv;
-			int speakernum, num_speakers;
+			machine_config *config;
+			int num_speakers;
+
+			/* Allocate machine config */
+			config = machine_config_alloc(gamedrv->drv);
+
 			gameinfo->isClone = (nParentIndex != -1);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
@@ -526,15 +569,12 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					gameinfo->isHarddisk = TRUE;
 					break;
 				}
-			expand_machine_driver(gamedrv->drv, &drv);
+			// expand_machine_driver(gamedrv->drv, &drv);
 
-			num_speakers = 0;
-			for (speakernum = 0; speakernum < MAX_SPEAKER; speakernum++)
-				if (drv.speaker[speakernum].tag != NULL)
-					num_speakers++;
+			num_speakers = numberOfSpeakers(config);
 
 			gameinfo->isStereo = (num_speakers > 1);
-			gameinfo->isVector = ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
+			gameinfo->isVector = isDriverVector(config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
 			gameinfo->hasOptionalBIOS = FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
@@ -547,14 +587,14 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 
 			gameinfo->usesSamples = FALSE;
 			gameinfo->usesYM3812 = FALSE;
-			for (i = 0; drv.sound[i].type && i < MAX_SOUND; i++)
+			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
 			{
 #if HAS_SAMPLES
-				if (drv.sound[i].type == SOUND_SAMPLES)
+				if (config->sound[i].type == SOUND_SAMPLES)
 				{
 					const char * const * samplenames = NULL;
 
-					samplenames = ((struct Samplesinterface *)drv.sound[i].config)->samplenames;
+					samplenames = ((struct Samplesinterface *)config->sound[i].config)->samplenames;
 
 					if (samplenames != NULL && samplenames[0] != NULL)
 						gameinfo->usesSamples = TRUE;
@@ -562,13 +602,13 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 #endif
 				if (0
 #if HAS_YM3812
-					|| drv.sound[i].type == SOUND_YM3812
+					|| config->sound[i].type == SOUND_YM3812
 #endif
 #if HAS_YM3526
-					|| drv.sound[i].type == SOUND_YM3526
+					|| config->sound[i].type == SOUND_YM3526
 #endif
 #if HAS_YM2413
-					|| drv.sound[i].type == SOUND_YM2413
+					|| config->sound[i].type == SOUND_YM2413
 #endif
 				)
 					gameinfo->usesYM3812 = TRUE;
@@ -583,26 +623,29 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			{
 				if (0
 #if (HAS_M68000)
-					|| drv.cpu[i].type == CPU_M68000
+					|| config->cpu[i].type == CPU_M68000
 #endif
 #if (HAS_M68008)
-					|| drv.cpu[i].type == CPU_M68008
+					|| config->cpu[i].type == CPU_M68008
 #endif
 #if (HAS_M68010)
-					|| drv.cpu[i].type == CPU_M68010
+					|| config->cpu[i].type == CPU_M68010
 #endif
 #if (HAS_M68EC020)
-					|| drv.cpu[i].type == CPU_M68EC020
+					|| config->cpu[i].type == CPU_M68EC020
 #endif
 #if (HAS_M68020)
-					|| drv.cpu[i].type == CPU_M68020
+					|| config->cpu[i].type == CPU_M68020
 #endif
 #if (HAS_M68040)
-					|| drv.cpu[i].type == CPU_M68040
+					|| config->cpu[i].type == CPU_M68040
 #endif
 				)
 					gameinfo->hasM68K = TRUE;
 			}
+			/* Free the structure */
+			machine_config_free(config);
+
 			gameinfo->parentIndex = -1;
 			if (gameinfo->isClone)
 			{

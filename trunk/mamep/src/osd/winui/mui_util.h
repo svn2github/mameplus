@@ -13,6 +13,7 @@
 
 #ifndef MUI_UTIL_H
 #define MUI_UTIL_H
+#include "mamecore.h"
 
 extern void __cdecl ErrorMsg(const char* fmt, ...);
 extern void __cdecl dprintf(const char* fmt, ...);
@@ -75,6 +76,9 @@ int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name);
 int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_index);
 LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name);
 #endif /* USE_IPS */
+
+BOOL isDriverVector(const machine_config *config);
+int numberOfSpeakers(const machine_config *config);
 
 void FlushFileCaches(void);
 void SetCorePathList(int file_type,const char *s);

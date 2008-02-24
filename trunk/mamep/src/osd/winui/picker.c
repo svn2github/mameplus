@@ -147,7 +147,7 @@ static BOOL ListViewOnErase(HWND hWnd, HDC hDC)
 
 	rgnBitmap = CreateRectRgnIndirect(&rcClient);
 	SelectClipRgn(hDC, rgnBitmap);
-	DeleteObject(rgnBitmap);
+	DeleteBitmap(rgnBitmap);
 
 	hPAL = (!hPALbg) ? CreateHalftonePalette(hDC) : hPALbg;
 
@@ -177,7 +177,7 @@ static BOOL ListViewOnErase(HWND hWnd, HDC hDC)
 
 	if (!pbmDesc->bmColors)
 	{
-		DeleteObject(hPAL);
+		DeletePalette(hPAL);
 		hPAL = 0;
 	}
 
@@ -1411,7 +1411,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		rgnBitmap = CreateRectRgnIndirect(&rcTmpBmp);
 		SelectClipRgn(hDC, rgnBitmap);
-		DeleteObject(rgnBitmap);
+		DeleteBitmap(rgnBitmap);
 
 		hPAL = GetBackgroundPalette();
 		if (hPAL == NULL)
@@ -1434,7 +1434,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 
 		if (GetBackgroundPalette() == NULL)
 		{
-			DeleteObject(hPAL);
+			DeletePalette(hPAL);
 			hPAL = NULL;
 		}
 	}
@@ -1475,7 +1475,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 		hOldBrush = SelectObject(hDC, hBrush);
 		FillRect(hDC, &rcAllLabels, hBrush);
 		SelectObject(hDC, hOldBrush);
-		DeleteObject(hBrush);
+		DeleteBrush(hBrush);
 	}
 	else
 	{
@@ -1485,7 +1485,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 			
 			hBrush = CreateSolidBrush(GetSysColor(COLOR_WINDOW));
 			FillRect(hDC, &rcAllLabels, hBrush);
-			DeleteObject(hBrush);
+			DeleteBrush(hBrush);
 		}
 
 		if (bItemBroken && pPickerInfo->pCallbacks->pfnGetUseBrokenColor && pPickerInfo->pCallbacks->pfnGetUseBrokenColor())

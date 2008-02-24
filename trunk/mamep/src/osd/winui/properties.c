@@ -801,107 +801,122 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
  *********************************************************************/
 
 /* Build CPU info string */
-static LPCWSTR GameInfoCPU(int nIndex)
+static LPCWSTR GameInfoCPU(UINT nIndex)
 {
-	int i;
+	int chipnum;
 	static WCHAR buf[1024];
-	machine_config drv;
-	expand_machine_driver(drivers[nIndex]->drv, &drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
 
-	buf[0] = '\0';
+	ZeroMemory(buf, sizeof(buf));
 
-	i = 0;
-	while (i < MAX_CPU && drv.cpu[i].type)
+	cpuintrf_init(NULL);
+
+	for (chipnum = 0; chipnum < ARRAY_LENGTH(config->cpu); chipnum++)
 	{
-		if (drv.cpu[i].clock >= 1000000)
-			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-					_Unicode(cputype_name(drv.cpu[i].type)),
-					drv.cpu[i].clock / 1000000,
-					drv.cpu[i].clock % 1000000);
-		else
-			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-					_Unicode(cputype_name(drv.cpu[i].type)),
-					drv.cpu[i].clock / 1000,
-					drv.cpu[i].clock % 1000);
+		if (config->cpu[chipnum].type != CPU_DUMMY)
+		{
+			if (config->cpu[chipnum].clock >= 1000000)
+			{
+				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
+					    _Unicode(cputype_name(config->cpu[chipnum].type)),
+					    config->cpu[chipnum].clock / 1000000,
+					    config->cpu[chipnum].clock % 1000000);
+			} else {
+				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
+					    _Unicode(cputype_name(config->cpu[chipnum].type)),
+					    config->cpu[chipnum].clock / 1000,
+					    config->cpu[chipnum].clock % 1000);
+			}
 
-		wcscat(buf, TEXT("\n"));
-
-		i++;
+			wcscat(buf, TEXT("\n"));
+		}
 	}
+	/* Free the structure */
+	machine_config_free(config);
 
 	return buf;
 }
 
 /* Build Sound system info string */
-static LPCWSTR GameInfoSound(int nIndex)
+static LPCWSTR GameInfoSound(UINT nIndex)
 {
-	int i;
+	int chipnum;
 	static WCHAR buf[1024];
-	machine_config drv;
-	expand_machine_driver(drivers[nIndex]->drv,&drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
 
 	buf[0] = '\0';
 
-	i = 0;
-	while (i < MAX_SOUND && drv.sound[i].type)
+		/* iterate over sound chips */
+	for (chipnum = 0; chipnum < ARRAY_LENGTH(config->sound); chipnum++)
 	{
-		int clock,sound_type,count;
-
-		sound_type = drv.sound[i].type;
-		clock = drv.sound[i].clock;
-
-		count = 1;
-		i++;
-
-		while (i < MAX_SOUND
-				&& drv.sound[i].type == sound_type
-				&& drv.sound[i].clock == clock)
+		if (config->sound[chipnum].type != SOUND_DUMMY)
 		{
-			count++;
-			i++;
-		}
+			int clock,sound_type,count;
 
-		if (count > 1)
-			swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
+			sound_type = config->sound[chipnum].type;
+			clock = config->sound[chipnum].clock;
 
-		wcscpy(&buf[wcslen(buf)], _Unicode(sndtype_name(sound_type)));
+			count = 1;
+			chipnum++;
 
-		if (clock)
-		{
-			if (clock >= 1000000)
-				swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
+			/* Matching chips at the same clock are aggregated */
+			while (chipnum < ARRAY_LENGTH(config->sound)
+				&& config->sound[chipnum].type == sound_type
+				&& config->sound[chipnum].clock == clock)
+			{
+				count++;
+				chipnum++;
+			}
+
+			if (count > 1)
+			{
+				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
+			}
+
+			wcscpy(&buf[wcslen(buf)], _Unicode(sndtype_name(sound_type)));
+
+			if (clock)
+			{
+				if (clock >= 1000000)
+				{
+					swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
 						clock / 1000000,
 						clock % 1000000);
-			else
+				} else {
 				swprintf(&buf[wcslen(buf)], TEXT(" %d.%03d kHz"),
 						clock / 1000,
 						clock % 1000);
+				}
+			}
 		}
-
 		wcscat(buf, TEXT("\n"));
 	}
+	/* Free the structure */
+	machine_config_free(config);
 
 	return buf;
 }
 
 /* Build Display info string */
-static LPCWSTR GameInfoScreen(int nIndex)
+static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config drv;
-	expand_machine_driver(drivers[nIndex]->drv, &drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
 
-	if (drv.video_attributes & VIDEO_TYPE_VECTOR)
+	const device_config *screen = video_screen_first(config);
+	const screen_config *scrconfig = screen->inline_config;
+
+	if (isDriverVector(config))
 	{
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-				drv.screen[0].defstate.refresh, drv.total_colors);
+				scrconfig->defstate.refresh, config->total_colors);
 		}
 		else
 		{
 			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-				drv.screen[0].defstate.refresh, drv.total_colors);
+				scrconfig->defstate.refresh, config->total_colors);
 		}
 	}
 	else
@@ -909,18 +924,19 @@ static LPCWSTR GameInfoScreen(int nIndex)
 		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
-				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
-				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
-				ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
-		}
-		else
-		{
+					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+					ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
+		} else {
 			swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
-				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
-				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
-				ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh), drv.total_colors);
+					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+					ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
 		}
 	}
+	/* Free the structure */
+	machine_config_free(config);
+
 	return buf;
 }
 
@@ -1001,11 +1017,11 @@ static LPCWSTR GameInfoInput(int nIndex)
 static LPCWSTR GameInfoColors(int nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config drv;
-	expand_machine_driver(drivers[nIndex]->drv, &drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
 
 	ZeroMemory(buf, sizeof(buf));
-	swprintf(buf, _UIW(TEXT("%d colors ")), drv.total_colors);
+	swprintf(buf, _UIW(TEXT("%d colors ")), config->total_colors);
+	machine_config_free(config);
 
 	return buf;
 }
@@ -3449,10 +3465,11 @@ static void BuildDataMap(void)
 
 	// trackbar ranges
 	datamap_set_trackbar_range(properties_datamap, IDC_PRESCALE,    1, 10, 1);
-	datamap_set_trackbar_range(properties_datamap, IDC_JDZ,         0.00,  1.00, 0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_JSAT,        0.00,  1.00, 0.05);
-	datamap_set_trackbar_range(properties_datamap, IDC_SPEED,       0.00,  3.00, 0.01);
-	datamap_set_trackbar_range(properties_datamap, IDC_BEAM,        0.10, 10.00, 0.10);       
+	datamap_set_trackbar_range(properties_datamap, IDC_JDZ,         0.00,  1.00, (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_JSAT,        0.00,  1.00, (float)0.05);
+	datamap_set_trackbar_range(properties_datamap, IDC_SPEED,       0.00,  3.00, (float)0.01);
+	datamap_set_trackbar_range(properties_datamap, IDC_BEAM,        (float)0.10, 10.00, (float)0.10);       
+	datamap_set_trackbar_range(properties_datamap, IDC_VOLUME,      -32,  0, 1);
 #ifdef TRANS_UI
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
@@ -4033,9 +4050,9 @@ void UpdateBackgroundBrush(HWND hwndTab)
 			bThemeActive = fnIsThemed();
 	}
 
-	// Destroy old brush
-	if (hBkBrush)
-		DeleteObject(hBkBrush);
+    // Destroy old brush
+    if (hBkBrush)
+        DeleteBrush(hBkBrush);
 
 	hBkBrush = NULL;
 
@@ -4067,10 +4084,10 @@ void UpdateBackgroundBrush(HWND hwndTab)
 		// Restore the bitmap
 		SelectObject(hDCMem, hBmpOld);
 
-		// Cleanup
-		DeleteObject(hBmp);
-		DeleteDC(hDCMem);
-		ReleaseDC(hwndTab, hDC);
+        // Cleanup
+        DeleteBitmap(hBmp);
+        DeleteDC(hDCMem);
+        ReleaseDC(hwndTab, hDC);
 	}
 }
 

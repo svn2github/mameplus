@@ -944,14 +944,17 @@ void CreateCPUFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		int n;
-		machine_config drv;
-		expand_machine_driver(drivers[jj]->drv,&drv);
-		for (n = 0; n < MAX_CPU; n++)
-			if (drv.cpu[n].type != CPU_DUMMY)
+		machine_config *config;
+		// expand_machine_driver(drivers[jj]->drv,&drv);
+		config = machine_config_alloc(drivers[jj]->drv);
+		for (n = 0; n < MAX_CPU; n++) {
+			if (config->cpu[n].type != CPU_DUMMY)
 			{
 			// cpu type #'s are one-based
-				AddGame(map[drv.cpu[n].type],jj);
+				AddGame(map[config->cpu[n].type],jj);
 			}
+		}
+		machine_config_free(config);
 	}
 }
 
@@ -986,22 +989,26 @@ void CreateSoundFolders(int parent_index)
 	for (jj = 0; jj < nGames; jj++)
 	{
 		int n;
-		machine_config drv;
+		machine_config *config;
 
-		expand_machine_driver(drivers[jj]->drv,&drv);
+		// expand_machine_driver(drivers[jj]->drv,&drv);
+		config = machine_config_alloc(drivers[jj]->drv);
 		// Additional range and null checking.
-		for (n = 0; n < MAX_SOUND ; n++)
-			if (drv.sound[n].type > SOUND_DUMMY &&
-				drv.sound[n].type != SOUND_FILTER_VOLUME &&
-				drv.sound[n].type != SOUND_FILTER_RC &&
-				drv.sound[n].type != SOUND_FILTER_LOWPASS)
+		for (n = 0; n < MAX_SOUND ; n++) {
+			if (config->sound[n].type > SOUND_DUMMY &&
+				config->sound[n].type != SOUND_FILTER_VOLUME &&
+				config->sound[n].type != SOUND_FILTER_RC &&
+				config->sound[n].type != SOUND_FILTER_LOWPASS)
 			{
-				if (map[drv.sound[n].type] != NULL) {
+				if (map[config->sound[n].type] != NULL) {
 					// sound type #'s are one-based, though that doesn't affect us here
-					AddGame(map[drv.sound[n].type],jj);
+					AddGame(map[config->sound[n].type],jj);
 				}
 			}
+		}
+		machine_config_free(config);
 	}
+
 }
 
 // mamep: updated mameui's horrible version
@@ -1243,7 +1250,8 @@ void CreateResolutionFolders(int parent_index)
 	int i,jj;
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
-	machine_config drv;
+	machine_config *config;
+	const screen_config *scrconfig;
 	TCHAR Resolution[20];
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
@@ -1259,9 +1267,11 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		expand_machine_driver(drivers[jj]->drv, &drv);
+		// expand_machine_driver(drivers[jj]->drv,&drv);
+		config = machine_config_alloc(drivers[jj]->drv);
+		scrconfig = video_screen_first(config)->inline_config;
 
-		if (drv.video_attributes & VIDEO_TYPE_VECTOR)
+		if (isDriverVector(config))
 		{
 			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 			{
@@ -1276,14 +1286,14 @@ void CreateResolutionFolders(int parent_index)
 		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 		{
 			swprintf(Resolution, TEXT("%dx%d (V)"),
-				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1,
-				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1);
+				scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+				scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1);
 		}
 		else
 		{
 			swprintf(Resolution, TEXT("%dx%d (H)"),
-				drv.screen[0].defstate.visarea.max_x - drv.screen[0].defstate.visarea.min_x + 1,
-				drv.screen[0].defstate.visarea.max_y - drv.screen[0].defstate.visarea.min_y + 1);
+				scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+				scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1);
 		}
 
 		for (i=numFolders-1;i>=start_folder;i--)
@@ -1301,6 +1311,7 @@ void CreateResolutionFolders(int parent_index)
 			AddFolder(lpTemp);
 			AddGame(lpTemp,jj);
 		}
+		machine_config_free(config);
 	}
 }
 
@@ -1321,10 +1332,12 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-		machine_config drv;
 
-		expand_machine_driver(drivers[i]->drv,&drv);
-		f = ATTOSECONDS_TO_HZ(drv.screen[0].defstate.refresh);
+		machine_config *config = machine_config_alloc(drivers[i]->drv);
+		const device_config *screen = video_screen_first(config);
+		const screen_config *scrconfig = screen->inline_config;
+
+		f = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
 
 		for (jj = 0; jj < nFPS; jj++)
 			if (fps[jj] == f)
@@ -1346,6 +1359,7 @@ void CreateFPSFolders(int parent_index)
 		}
 
 		AddGame(map[jj],i);
+		machine_config_free(config);
 	}
 }
 
@@ -2091,18 +2105,18 @@ static void TreeCtrlOnPaint(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DeleteDC(maskDC);
 		DeleteDC(imageDC);
 		DeleteDC(tempDC);
-		DeleteObject(bmpImage);
-		DeleteObject(maskBitmap);
+		DeleteBitmap(bmpImage);
+		DeleteBitmap(maskBitmap);
 
 		if (GetBackgroundPalette() == NULL)
 		{
-			DeleteObject(hPAL);
-			hPAL = 0;
+			DeletePalette(hPAL);
+			hPAL = NULL;
 		}
 	}
 
 	SelectObject(memDC, hOldBitmap);
-	DeleteObject(bitmap);
+	DeleteBitmap(bitmap);
 	DeleteDC(memDC);
 	EndPaint(hWnd, &ps);
 	ReleaseDC(hWnd, hDC);
