@@ -2093,40 +2093,37 @@ void video_exit_scale_effect(running_machine *machine)
 static void allocate_scalebitmap(running_machine *machine)
 {
 	video_private *viddata = machine->video_data;
-	int scrnum;
+	const device_config *device;
 
 	free_scalebitmap(machine);
 
 	scale_xsize = scale_effect.xsize;
 	scale_ysize = scale_effect.ysize;
 
-	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
+	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
 	{
+		int scrnum = device_list_index(machine->config->devicelist, VIDEO_SCREEN, device->tag);
 		internal_screen_info *screen = &viddata->scrinfo[scrnum];
+		int bank;
 
 		screen->scale_bank_offset = scrnum * 2;
 
-		if (machine->drv->screen[scrnum].tag != NULL)
+		for (bank = 0; bank < 2; bank++)
 		{
-			int bank;
+			screen->scale_dirty[bank] = 1;
 
-			for (bank = 0; bank < 2; bank++)
-			{
-				screen->scale_dirty[bank] = 1;
+			screen->scale_bitmap[bank] = bitmap_alloc(
+				screen->state[scrnum].width * scale_xsize,
+				screen->state[scrnum].height * scale_ysize,
+				(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 
-				screen->scale_bitmap[bank] = bitmap_alloc(
-					screen->state[scrnum].width * scale_xsize,
-					screen->state[scrnum].height * scale_ysize,
-					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
+			if (!use_work_bitmap)
+				continue;
 
-				if (!use_work_bitmap)
-					continue;
-
-				screen->work_bitmap[bank] = bitmap_alloc(
-					screen->state[scrnum].width,
-					screen->state[scrnum].height,
-					(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
-			}
+			screen->work_bitmap[bank] = bitmap_alloc(
+				screen->state[scrnum].width,
+				screen->state[scrnum].height,
+				(scale_depth == 15) ? BITMAP_FORMAT_RGB15 : BITMAP_FORMAT_RGB32);
 		}
 	}
 }
@@ -2134,34 +2131,32 @@ static void allocate_scalebitmap(running_machine *machine)
 static void free_scalebitmap(running_machine *machine)
 {
 	video_private *viddata = machine->video_data;
-	int scrnum;
+	const device_config *device;
 
-	for (scrnum = 0; scrnum < MAX_SCREENS; scrnum++)
+	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
 	{
-		if (machine->drv->screen[scrnum].tag != NULL)
+		int scrnum = device_list_index(machine->config->devicelist, VIDEO_SCREEN, device->tag);
+		internal_screen_info *screen = &viddata->scrinfo[scrnum];
+		int bank;
+
+		screen->changed &= ~UPDATE_HAS_NOT_CHANGED;
+
+		for (bank = 0; bank < 2; bank++)
 		{
-			internal_screen_info *screen = &viddata->scrinfo[scrnum];
-			int bank;
+			// restore mame screen
+			if ((screen->texture[bank]) && (screen->bitmap[bank]))
+				render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, 0, screen->format);
 
-			screen->changed &= ~UPDATE_HAS_NOT_CHANGED;
-
-			for (bank = 0; bank < 2; bank++)
+			if (screen->scale_bitmap[bank])
 			{
-				// restore mame screen
-				if ((screen->texture[bank]) && (screen->bitmap[bank]))
-					render_texture_set_bitmap(screen->texture[bank], screen->bitmap[bank], NULL, machine->drv->screen[scrnum].palette_base, screen->format);
+				bitmap_free(screen->scale_bitmap[bank]);
+				screen->scale_bitmap[bank] = NULL;
+			}
 
-				if (screen->scale_bitmap[bank])
-				{
-					bitmap_free(screen->scale_bitmap[bank]);
-					screen->scale_bitmap[bank] = NULL;
-				}
-
-				if (screen->work_bitmap[bank])
-				{
-					bitmap_free(screen->work_bitmap[bank]);
-					screen->work_bitmap[bank] = NULL;
-				}
+			if (screen->work_bitmap[bank])
+			{
+				bitmap_free(screen->work_bitmap[bank]);
+				screen->work_bitmap[bank] = NULL;
 			}
 		}
 	}
