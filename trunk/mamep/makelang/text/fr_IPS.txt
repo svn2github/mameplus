@@ -1,28 +1,8 @@
-# 14
+#
 Misc
 Divers
 
-# 7
+#
 Translation
 Traduction
-
-# 20
-CPS1
-
-
-# 30
-CPS2
-
-
-# Title
-IPS
-
-
-# 35
-Neo-Geo
-
-
-# 93
-PGM
-
 
