@@ -902,36 +902,40 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
-
-	const device_config *screen = video_screen_first(config);
-	const screen_config *scrconfig = screen->inline_config;
-
-	if (isDriverVector(config))
+	const device_config *screen;
+	const screen_config *scrconfig;
+	screen = video_screen_first(config);
+	if (screen != NULL)
 	{
-		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
+		scrconfig = screen->inline_config;
+
+		if (isDriverVector(config))
 		{
-			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-				scrconfig->defstate.refresh, config->total_colors);
+			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
+			{
+				swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
+					scrconfig->defstate.refresh, config->total_colors);
+			}
+			else
+			{
+				swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
+					scrconfig->defstate.refresh, config->total_colors);
+			}
 		}
 		else
 		{
-			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-				scrconfig->defstate.refresh, config->total_colors);
-		}
-	}
-	else
-	{
-		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
-		{
-			swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
-					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
-					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
-					ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
-		} else {
-			swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
-					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
-					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
-					ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
+			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
+			{
+				swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
+						scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+						scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+						ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
+			} else {
+				swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
+						scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+						scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+						ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh), config->total_colors);
+			}
 		}
 	}
 	/* Free the structure */

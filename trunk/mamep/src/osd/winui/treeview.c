@@ -1250,8 +1250,6 @@ void CreateResolutionFolders(int parent_index)
 	int i,jj;
 	int nGames = GetNumGames();
 	int start_folder = numFolders;
-	machine_config *config;
-	const screen_config *scrconfig;
 	TCHAR Resolution[20];
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
@@ -1267,49 +1265,54 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		// expand_machine_driver(drivers[jj]->drv,&drv);
-		config = machine_config_alloc(drivers[jj]->drv);
-		scrconfig = video_screen_first(config)->inline_config;
-
-		if (isDriverVector(config))
+		machine_config *config = machine_config_alloc(drivers[jj]->drv);
+		const device_config *screen;
+		const screen_config *scrconfig;
+		screen = video_screen_first(config);
+		if (screen != NULL)
 		{
+			scrconfig = screen->inline_config;
+
+			if (isDriverVector(config))
+			{
+				if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
+				{
+					AddGame(lpVectorV,jj);
+				}
+				else
+				{
+					AddGame(lpVectorH,jj);
+				}
+			}
+			else
 			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 			{
-				AddGame(lpVectorV,jj);
+				swprintf(Resolution, TEXT("%dx%d (V)"),
+					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
+					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1);
 			}
 			else
 			{
-				AddGame(lpVectorH,jj);
+				swprintf(Resolution, TEXT("%dx%d (H)"),
+					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
+					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1);
 			}
-		}
-		else
-		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
-		{
-			swprintf(Resolution, TEXT("%dx%d (V)"),
-				scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
-				scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1);
-		}
-		else
-		{
-			swprintf(Resolution, TEXT("%dx%d (H)"),
-				scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
-				scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1);
-		}
 
-		for (i=numFolders-1;i>=start_folder;i--)
-		{
-			if (wcscmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
+			for (i=numFolders-1;i>=start_folder;i--)
 			{
-				AddGame(treeFolders[i],jj);
-				break;
+				if (wcscmp(treeFolders[i]->m_lpTitle, Resolution) == 0)
+				{
+					AddGame(treeFolders[i],jj);
+					break;
+				}
 			}
-		}
-		if (i == start_folder-1)
-		{
-			LPTREEFOLDER lpTemp;
-			lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
-			AddFolder(lpTemp);
-			AddGame(lpTemp,jj);
+			if (i == start_folder-1)
+			{
+				LPTREEFOLDER lpTemp;
+				lpTemp = NewFolder(Resolution, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
+				AddFolder(lpTemp);
+				AddGame(lpTemp,jj);
+			}
 		}
 		machine_config_free(config);
 	}
@@ -1332,33 +1335,37 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-
 		machine_config *config = machine_config_alloc(drivers[i]->drv);
-		const device_config *screen = video_screen_first(config);
-		const screen_config *scrconfig = screen->inline_config;
-
-		f = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
-
-		for (jj = 0; jj < nFPS; jj++)
-			if (fps[jj] == f)
-				break;
-
-		if (nFPS == jj)
+		const device_config *screen;
+		const screen_config *scrconfig;
+		screen = video_screen_first(config);
+		if (screen != NULL)
 		{
-			TCHAR buf[50];
+			scrconfig = screen->inline_config;
 
-			assert(nFPS + 1 < ARRAY_LENGTH(fps));
-			assert(nFPS + 1 < ARRAY_LENGTH(map));
+			f = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
 
-			swprintf(buf, TEXT("%f Hz"), f);
+			for (jj = 0; jj < nFPS; jj++)
+				if (fps[jj] == f)
+					break;
 
-			lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
-			AddFolder(lpTemp);
-			map[nFPS] = treeFolders[nFolder++];
-			fps[nFPS++] = f;
+			if (nFPS == jj)
+			{
+				TCHAR buf[50];
+
+				assert(nFPS + 1 < ARRAY_LENGTH(fps));
+				assert(nFPS + 1 < ARRAY_LENGTH(map));
+
+				swprintf(buf, TEXT("%f Hz"), f);
+
+				lpTemp = NewFolder(buf, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
+				AddFolder(lpTemp);
+				map[nFPS] = treeFolders[nFolder++];
+				fps[nFPS++] = f;
+			}
+
+			AddGame(map[jj],i);
 		}
-
-		AddGame(map[jj],i);
 		machine_config_free(config);
 	}
 }
