@@ -3496,6 +3496,7 @@ ggram2	全日本职业摔角 (JPN, USA, EXP, KOR, AUS)	全日本职业摔角 (JPN, USA, EXP, K
 hmgeo	重装格斗 (JPN, USA, EUR, ASI, AUS)	重装格斗 (JPN, USA, EUR, ASI, AUS)	Capcom
 gwing2	雷鸟之翼 2 (JPN, USA, EXP, KOR, AUS)	雷鸟之翼 2 (JPN, USA, EXP, KOR, AUS)	Takumi / Capcom
 suchie3	偶像雀士 3 (JPN)	偶像雀士 3 (JPN)	Jaleco
+toyfight	玩具机器人	玩具机器人	Sega
 pjustic	燃烧正义学园 (JPN) / Project Justice (USA, EXP, KOR, AUS) 	燃烧正义学园 (JPN) / Project Justice (USA, EXP, KOR, AUS) 	Capcom
 pstone	力石战士 (JPN, USA, EUR, ASI, AUS)	力石战士 (JPN, USA, EUR, ASI, AUS)	Capcom
 pstone2	力石战士 2 (JPN, USA, EUR, ASI, AUS)	力石战士 2 (JPN, USA, EUR, ASI, AUS)	Capcom
@@ -4747,6 +4748,7 @@ choppera	航空骑兵物语 (美版 第2套)	航空骑兵物语 (美版 第2套)	SNK
 chopperb	航空骑兵物语 (美版 第3套)	航空骑兵物语 (美版 第3套)	SNK
 legofair	航空骑兵物语 (日版)	航空骑兵物语 (日版)	SNK
 fsoccer	战斗足球 (版本 4)	战斗足球 (版本 4)	SNK
+fsoccerj	战斗足球 (日版)	战斗足球 (日版)	SNK
 fsoccerb	战斗足球 (操纵杆 盗版)	战斗足球 (操纵杆 盗版)	bootleg
 tdfever	美式橄榄球	美式橄榄球	SNK
 tdfeverj	美式橄榄球 (日版)	美式橄榄球 (日版)	SNK
@@ -6134,6 +6136,7 @@ silkroad	丝绸之路	丝绸之路	Unico
 twinactn	孪生劫	孪生劫	Afega
 stagger1	红鹰 (日版)	红鹰 (日版)	Afega
 redhawk	红鹰 (美版)	红鹰 (美版)	Afega
+redhawke	红鹰 (Excellent Co., Ltd)	红鹰 (Excellent Co., Ltd)	Afega (Excellent Co. license)
 redhawkb	红鹰 (盗版)	红鹰 (盗版)	bootleg
 grdnstrm	圣战 - 守护风暴 (韩国版)	圣战 - 守护风暴 (韩国版)	Afega
 bubl2000	泡泡野人版 2000	泡泡野人版 2000	Tuning
@@ -6248,6 +6251,7 @@ spinner	大蜘蛛 Spinner	大蜘蛛 Spinner	bootleg
 goldstar	黄金星座	黄金星座	IGS
 goldstbl	黄金星座 (蓝色版本)	黄金星座 (蓝色版本)	IGS
 moonlght	月亮之光	月亮之光	unknown
+cpoker	冠军扑克	冠军扑克	IGS
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
@@ -6499,9 +6503,9 @@ connect4	碰碰车 4	碰碰车 4	Dolbeck Systems
 bctvidbs	微处理器视频固件	微处理器视频固件	Barcrest
 dealem	处理单元 (MPU4 Conversion Kit, v7.0)	处理单元 (MPU4 Conversion Kit, v7.0)	Zenitone
 timemchn	时间设计程序 v2.0	时间设计程序 v2.0	Barcrest
-crmaze	水晶迷宫: 组队挑战 (SWP)	水晶迷宫: 组队挑战 (SWP)	Barcrest
-crmazea	水晶迷宫 (AMLD version SWP)	水晶迷宫 (AMLD version SWP)	Barcrest
-crmazeb	水晶迷宫 - 新海洋地带特写版 (AMLD Version SWP)	水晶迷宫 - 新海洋地带特写版 (AMLD Version SWP)	Barcrest
+crmaze	水晶迷宫 - 组队挑战 (SWP)	水晶迷宫 - 组队挑战 (SWP)	Barcrest
+crmazea	水晶迷宫 (AMLD Version)	水晶迷宫 (AMLD Version)	Barcrest
+crmazeb	水晶迷宫 - 新海洋地带特写版 (AMLD Version)	水晶迷宫 - 新海洋地带特写版 (AMLD Version)	Barcrest
 turnover	翻覆	翻覆	Barcrest
 skiltrek	搬运技能	搬运技能	Barcrest
 mating	杂交游戏 (硬盘版)	杂交游戏 (硬盘版)	Barcrest
@@ -6913,7 +6917,7 @@ pmpoker	花花公子纸牌 (德国版)	花花公子纸牌 (德国版)	PlayMan
 goldnpkr	黄金扑克 (大男孩)	黄金扑克 (大男孩)	Bonanza Enterprises, Ltd
 goldnpkb	黄金扑克 (小男孩)	黄金扑克 (小男孩)	Bonanza Enterprises, Ltd
 goldnpkc	黄金扑克 (未加押)	黄金扑克 (未加押)	Bootleg
-jokerpkr	电动扑克	电动扑克	Bootleg in Coinmaster hardware
+jokerpkr	电动扑克	电动扑克	Bootleg on Coinmaster hardware
 pottnpkr	杰克的纸牌 (盗版)	杰克的纸牌 (盗版)	Bootleg
 pottnpkb	杰克的纸牌 (盗版2)	杰克的纸牌 (盗版2)	Bootleg
 gdrawpkr	赌博扑克	赌博扑克	Cal Omega / Casino Electronics Inc.
@@ -7035,8 +7039,8 @@ mslug5h	合金弹头 5 (第2套)	合金弹头 5 (第2套)	SNK Playmore
 kof2003h	拳皇 2003 (第2套)	拳皇 2003 (第2套)	SNK Playmore
 zintrkcd	诡计 / 挑战史来姆 (CD to MVS Conversion)	诡计 / 挑战史来姆 (CD to MVS Conversion)	hack
 fr2ch	偶像麻雀 - 最终罗曼史 2 (CD to MVS Conversion)	偶像麻雀 - 最终罗曼史 2 (CD to MVS Conversion)	hack
-shogware	幕府快打 (欧洲版)	幕府快打 (欧洲版)	Kaneko
 spclone	沙罗曼蛇 (version YY clone)	沙罗曼蛇 (version YY clone)	Konami
+shogware	幕府快打 (欧洲版)	幕府快打 (欧洲版)	Kaneko
 vantris	冲击俄罗斯方块 (Vanguard hardware)	冲击俄罗斯方块 (Vanguard hardware)	N.Kehrer
 frogfest	小青蛙	小青蛙	Rastersoft
 columnsn	宝石方块 (Neo-Geo)	宝石方块 (Neo-Geo)	Sega / hack
@@ -7090,7 +7094,7 @@ gbpocket	任天堂GB口袋游戏系统	任天堂GB口袋游戏系统	Nintendo
 gbcolor	任天堂GBC掌上游戏系统	任天堂GBC掌上游戏系统	Nintendo
 snes	超级任天堂游戏系统 (NTSC)	超级任天堂游戏系统 (NTSC)	Nintendo
 snespal	超级任天堂游戏系统 (PAL)	超级任天堂游戏系统 (PAL)	Nintendo
-gba	Game Boy Advance	Game Boy Advance	Nintendo
+gba	任天堂GBA掌上游戏系统	任天堂GBA掌上游戏系统	Nintendo
 megaduck	世嘉MCB掌上游戏系统	世嘉MCB掌上游戏系统	Creatronic/Videojet/Timlex/Cougar
 megadrij	世嘉MD驱动 (日版, NTSC)	世嘉MD驱动 (日版, NTSC)	Sega
 genesis	世嘉五代 (美版, NTSC)	世嘉五代 (美版, NTSC)	Sega
