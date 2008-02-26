@@ -3313,7 +3313,8 @@ static void BuildDataMap(void)
 	// core debugging options
 	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OPTION_LOG);
 #ifdef _DEBUG
-	datamap_add(properties_datamap, IDC_DEBUG,					DM_BOOL,	OPTION_DEBUG);
+	//mamep: we don't have checkbox for debugger
+	//datamap_add(properties_datamap, IDC_DEBUG,					DM_BOOL,	OPTION_DEBUG);
 #endif
 
 	// core misc options

@@ -469,7 +469,7 @@ void drc_append_standard_epilogue(drc_core *drc, INT32 cycles, INT32 pcdelta, in
 	if (allow_exit && cycles != 0)
 	{
 		emit_jcc(DRCTOP, COND_S, drc->out_of_cycles);							// js   out_of_cycles
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		emit_jcc(DRCTOP, COND_Z, drc->out_of_cycles);							// jz	out_of_cycles
 #endif
 	}

@@ -73,7 +73,7 @@ static int gensync_execute(int cycles)
 {
 	gensync_icount = cycles;
 
-#ifdef  MAME_DEBUG
+#ifdef  ENABLE_DEBUGGER
 	do
 	{
 		CALL_MAME_DEBUG;
@@ -102,7 +102,7 @@ static void gensync_set_context(void *reg)
 
 static offs_t gensync_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram)
 {
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	return gensyncd(buffer, pc);
 #else
 	sprintf(buffer, "%3d", pc);

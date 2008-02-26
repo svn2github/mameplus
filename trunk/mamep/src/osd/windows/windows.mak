@@ -214,8 +214,9 @@ DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
 ifneq ($(DEBUG),)
-DEFS += -DMALLOC_DEBUG
-LDFLAGS += -Wl,--allow-multiple-definition
+// mamep: disable malloc debug
+#DEFS += -DMALLOC_DEBUG
+#LDFLAGS += -Wl,--allow-multiple-definition
 endif
 
 # enable UNICODE flags for unicode builds

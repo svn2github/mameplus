@@ -826,7 +826,7 @@ emit_add_r32_imm(DRCTOP, REG_ESP, 8);
 #endif
 }
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 static void check_stack(uint32 sp)
 {
 	static uint32 old_sp;
@@ -1125,7 +1125,7 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	m68kdrc_code_verify_size = 0;
 	//m68kdrc_check_code_modify = 1;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	/* check stack pointer */
 	emit_push_r32(DRCTOP, REG_ESP);
 	emit_call(DRCTOP, (x86code *)check_stack);
@@ -1155,7 +1155,7 @@ static uint32 recompile_instruction(drc_core *drc, uint32 pc)
 	if (m68kdrc_check_code_modify)
 		m68kdrc_append_code_verify(drc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	if (m68kdrc_recompile_flag & (RECOMPILE_VNCZ_FLAGS_DIRTY | RECOMPILE_VNCXZ_FLAGS_DIRTY))
 	{
 		if (m68kdrc_recompile_flag & RECOMPILE_VNCXZ_FLAGS_DIRTY)
@@ -1311,7 +1311,7 @@ int m68kdrc_execute(int num_cycles)
 			m68ki_use_data_space(); /* auto-disable (see m68kcpu.h) */
 
 			/* Call external hook to peek at CPU */
-			m68ki_instr_hook(); /* auto-disable (see m68kcpu.h) */
+			m68ki_instr_hook(REG_PC); /* auto-disable (see m68kcpu.h) */
 
 			/* Compile and execute */
 			drc_execute(m68kdrc_cpu.drc);

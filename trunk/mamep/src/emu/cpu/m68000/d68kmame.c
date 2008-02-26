@@ -295,7 +295,7 @@ static void m68040_init(int index, int clock, const void *config, int (*irqcallb
  * Generic get_info
  **************************************************************************/
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 extern void m68kdrc_flag_str_mark_dirty(char *str);
 #endif
 
@@ -311,7 +311,7 @@ void m68000drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68000c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);
@@ -336,7 +336,7 @@ void m68008drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68008c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);
@@ -367,7 +367,7 @@ void m68010drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68010c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);
@@ -395,7 +395,7 @@ void m68020drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68020c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);
@@ -424,7 +424,7 @@ void m68ec020drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68ec020c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);
@@ -454,7 +454,7 @@ void m68040drc_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_EXIT:							info->exit = m68000_exit;				break;
 		case CPUINFO_PTR_EXECUTE:						info->execute = m68000_execute;			break;
 		case CPUINFO_PTR_BURN:							info->burn = NULL;						break;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		case CPUINFO_STR_FLAGS:
 			m68040c_get_info(state, info);
 			m68kdrc_flag_str_mark_dirty(info->s);

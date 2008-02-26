@@ -239,7 +239,7 @@ RM = @rm -f
 
 # debugger builds just get the 'd' suffix and nothing more
 ifneq ($(DEBUGGER),)
-DEBUGSUFFIX = $(SUFFIX)d
+DEBUGSUFFIX = d
 endif
 
 # the name is just 'target' if no subtarget; otherwise it is

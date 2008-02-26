@@ -62,7 +62,7 @@ int illegal_pc = 0 ;
 
 UINT32 mem_amask;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 void m68k_illegal_opcode(void)
 {
 	logerror("Illegal Opcode %4x at %8x\n",illegal_op,illegal_pc);
@@ -116,7 +116,7 @@ typedef struct
 	UINT32 BankID;			 /* Memory bank in use */
 	UINT32 CPUtype;		  	 /* CPU Type 0=68000,1=68010,2=68020 */
 	UINT32 FullPC;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	UINT32 asm68k_debug;     /* single step flag for debugger */
 #endif
 	struct m68k_memory_interface Memory_Interface;
@@ -146,7 +146,7 @@ extern void CONVENTION M68020_RUN(void);
 extern void CONVENTION M68020_RESET(void);
 #endif
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 extern unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigned char* opdata, const unsigned char* argdata, unsigned int cpu_type);
 
 #endif
@@ -629,7 +629,7 @@ static void m68000_reset(void)
 	M68000_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
 	M68000_regs.sr_high = 0x27;
 
-	#ifdef MAME_DEBUG
+	#ifdef ENABLE_DEBUGGER
 		M68000_regs.sr = 0x2700;
 	#endif
 
@@ -655,7 +655,7 @@ static int m68000_execute(int cycles)
 
 	m68k_ICount = cycles;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	do
 	{
 		M68000_regs.asm68k_debug = 0;
@@ -687,7 +687,7 @@ static int m68000_execute(int cycles)
 			m68k_ICount -= M68000_regs.IRQ_cycles;
 			M68000_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			mame_debug_hook();
+			mame_debug_hook(M68000_regs.pc);
 
 			if (Machine->debug_mode)
 				M68000_regs.asm68k_debug = -1;
@@ -710,7 +710,7 @@ static int m68000_execute(int cycles)
 
 	M68000_RUN();
 
-#endif /* MAME_DEBUG */
+#endif /* ENABLE_DEBUGGER */
 
 	return (cycles - m68k_ICount);
 }
@@ -775,7 +775,7 @@ static offs_t m68000_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 {
 	A68K_SET_PC_CALLBACK(pc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	m68k_memory_intf = a68k_memory_intf;
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68000);
 #else
@@ -842,7 +842,7 @@ static void m68008_reset(void)
 	M68000_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
 	M68000_regs.sr_high = 0x27;
 
-	#ifdef MAME_DEBUG
+	#ifdef ENABLE_DEBUGGER
 		M68000_regs.sr = 0x2700;
 	#endif
 
@@ -856,7 +856,7 @@ static offs_t m68008_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 {
 	A68K_SET_PC_CALLBACK(pc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	m68k_memory_intf = a68k_memory_intf;
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68008);
 #else
@@ -933,7 +933,7 @@ static void m68010_reset(void)
 	M68010_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
 	M68010_regs.sr_high = 0x27;
 
-	#ifdef MAME_DEBUG
+	#ifdef ENABLE_DEBUGGER
 		M68010_regs.sr = 0x2700;
 	#endif
 
@@ -954,7 +954,7 @@ static int m68010_execute(int cycles)
 
 	m68k_ICount = cycles;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	do
 	{
 		M68010_regs.asm68k_debug = 0;
@@ -986,7 +986,7 @@ static int m68010_execute(int cycles)
 			m68k_ICount -= M68010_regs.IRQ_cycles;
 			M68010_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			mame_debug_hook();
+			mame_debug_hook(M68010_regs.pc);
 
 			if (Machine->debug_mode)
 				M68010_regs.asm68k_debug = -1;
@@ -1008,7 +1008,7 @@ static int m68010_execute(int cycles)
 
 	M68010_RUN();
 
-#endif /* MAME_DEBUG */
+#endif /* ENABLE_DEBUGGER */
 
 	return (cycles - m68k_ICount);
 }
@@ -1071,7 +1071,7 @@ static offs_t m68010_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 {
 	A68K_SET_PC_CALLBACK(pc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	m68k_memory_intf = a68k_memory_intf;
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68010);
 #else
@@ -1129,7 +1129,7 @@ static void m68k32_reset_common(void)
 	M68020_regs.pc   = (( READOP(4) << 16 ) | READOP(6)) & 0xffffff;
 	M68020_regs.sr_high = 0x27;
 
-	#ifdef MAME_DEBUG
+	#ifdef ENABLE_DEBUGGER
 		M68020_regs.sr = 0x2700;
 	#endif
 
@@ -1158,7 +1158,7 @@ static int m68020_execute(int cycles)
 
 	m68k_ICount = cycles;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	do
 	{
 		M68020_regs.asm68k_debug = 0;
@@ -1190,7 +1190,7 @@ static int m68020_execute(int cycles)
 			m68k_ICount -= M68020_regs.IRQ_cycles;
 			M68020_regs.IRQ_cycles = 0;
 //			m68k_memory_intf = a68k_memory_intf;
-			mame_debug_hook();
+			mame_debug_hook(M68020_regs.pc);
 
 
 			if (Machine->debug_mode)
@@ -1213,7 +1213,7 @@ static int m68020_execute(int cycles)
 
 	M68020_RUN();
 
-#endif /* MAME_DEBUG */
+#endif /* ENABLE_DEBUGGER */
 
 	return (cycles - m68k_ICount);
 }
@@ -1276,7 +1276,7 @@ static offs_t m68020_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UIN
 {
 	A68K_SET_PC_CALLBACK(pc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	m68k_memory_intf = a68k_memory_intf;
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68020);
 #else
@@ -1313,7 +1313,7 @@ static offs_t m68ec020_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const U
 {
 	A68K_SET_PC_CALLBACK(pc);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	m68k_memory_intf = a68k_memory_intf;
 	return m68k_disassemble_raw(buffer, pc, oprom, opram, M68K_CPU_TYPE_68EC020);
 #else

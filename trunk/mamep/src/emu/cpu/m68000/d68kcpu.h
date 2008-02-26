@@ -469,9 +469,9 @@ extern emit_link m68kdrc_link_make_cc;
 
 #if M68K_INSTRUCTION_HOOK
 	#if M68K_INSTRUCTION_HOOK == OPT_SPECIFY_HANDLER
-		#define m68ki_instr_hook() M68K_INSTRUCTION_CALLBACK()
+		#define m68ki_instr_hook(pc) M68K_INSTRUCTION_CALLBACK(pc)
 	#else
-		#define m68ki_instr_hook() CALLBACK_INSTR_HOOK()
+		#define m68ki_instr_hook(pc) CALLBACK_INSTR_HOOK(pc)
 	#endif
 #else
 	#define m68ki_instr_hook()
@@ -1205,7 +1205,7 @@ typedef struct
 	int  (*tas_instr_callback)(void);                 /* Called when a TAS instruction is encountered, allows / disallows writeback */
 	void (*pc_changed_callback)(unsigned int new_pc); /* Called when the PC changes by a large amount */
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
-	void (*instr_hook_callback)(void);                /* Called every instruction cycle prior to execution */
+	void (*instr_hook_callback)(unsigned int pc);     /* Called every instruction cycle prior to execution */
 
 	/* DRC staff */
 	drc_core *drc;
@@ -1221,7 +1221,7 @@ typedef struct
 	void *generate_exception_interrupt;
 
 	int *flag_dirty;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	uint flags_dirty_mark;
 #endif
 } m68kdrc_cpu_core;
@@ -2037,7 +2037,7 @@ INLINE int m68kdrc_update_vncz_check(void)
 
 	if (INSTR_FLAG_DIRTY[next_ir])
 	{
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		m68kdrc_recompile_flag |= RECOMPILE_VNCZ_FLAGS_DIRTY;
 #endif
 		return 0;
@@ -2058,7 +2058,7 @@ INLINE int m68kdrc_update_vncxz_check(void)
 
 	if (INSTR_FLAG_DIRTY[next_ir] == 2)
 	{
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 		m68kdrc_recompile_flag |= RECOMPILE_VNCXZ_FLAGS_DIRTY;
 #endif
 		return 0;

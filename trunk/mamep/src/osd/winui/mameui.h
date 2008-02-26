@@ -16,6 +16,7 @@
 #undef assert
 #ifdef MAME_DEBUG
 #include "mui_util.h"
+#undef assert
 #define assert(x)	do { if (!(x)) { printf("assert: %s:%d: %s", __FILE__, __LINE__, #x); dprintf("assert: %s:%d: %s", __FILE__, __LINE__, #x); exit(-1); } } while (0)
 #else
 #define assert(x)

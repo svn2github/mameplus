@@ -21,7 +21,7 @@
 #include "bitmap.h"
 #include "coreutil.h"
 #include "corestr.h"
-#ifdef MAME_DEBUG
+#if defined(MAME_DEBUG) || defined(ENABLE_DEBUGGER)
 #include "uilang.h"
 #endif
 

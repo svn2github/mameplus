@@ -771,7 +771,7 @@ void Completed(void)
 	}
 	FlagProcess = 0;
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 
 	/* Check for Debug Active */
 
@@ -5707,7 +5707,7 @@ void illegal_opcode(void)
 	fprintf(fp, "\t\t mov [%sillegal_pc],esi\n", PREF);
 
 #if 1
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	fprintf(fp, "\t\t jmp ecx\n");
 	fprintf(fp, "\t\t pushad\n");
 	fprintf(fp, "\t\t call %sm68k_illegal_opcode\n", PREF);
@@ -7863,7 +7863,7 @@ void CodeSegmentBegin(void)
 	fprintf(fp, "\t\t EXTERN %sopcode_entry\n", PREF);
 //	fprintf(fp, "\t\t EXTERN %scur_mrhard\n", PREF);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	fprintf(fp, "\t\t EXTERN %sm68k_illegal_opcode\n", PREF);
 #endif
 
@@ -7991,7 +7991,7 @@ void CodeSegmentBegin(void)
 
 	/* If in Debug mode make normal SR register */
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 
 	ReadCCR(SizeWORD, ECX);
 	fprintf(fp, "\t\t mov   [%s],eax\n\n",REG_S);
@@ -8221,7 +8221,7 @@ void CodeSegmentEnd(void)
 	fprintf(fp, "CPUversion\t DD 0\n\n");
 	fprintf(fp, "FullPC\t DD 0\n\n");
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	fprintf(fp, "asm68k_debug\t DD 0\n\n");
 #endif
 

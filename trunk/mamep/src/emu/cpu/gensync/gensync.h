@@ -20,7 +20,7 @@ enum
 
 extern void gensync_get_info(UINT32 state, cpuinfo *info);
 
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 extern unsigned gensyncd(char *dst, unsigned PC);
 #endif
 

@@ -925,7 +925,7 @@ typedef struct
 	void *generate_exception_interrupt;
 
 	int *flag_dirty;
-#ifdef MAME_DEBUG
+#ifdef ENABLE_DEBUGGER
 	uint flags_dirty_mark;
 #endif
 } m68ki_cpu_core;
