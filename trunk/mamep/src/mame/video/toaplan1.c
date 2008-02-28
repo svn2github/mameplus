@@ -1016,7 +1016,7 @@ static void toaplan1_render (running_machine *machine, mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, machine->pens[0x120], &machine->screen[0].visarea);
+	fillbitmap (bitmap, 0x120, &machine->screen[0].visarea);
 
 #ifdef BGDBG
 
@@ -1133,7 +1133,7 @@ static void zerowing_render (running_machine *machine, mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, machine->pens[0x120], &machine->screen[0].visarea);
+	fillbitmap (bitmap, 0x120, &machine->screen[0].visarea);
 
 	if (bcu_flipscreen)
 		flip = 1;
@@ -1182,7 +1182,7 @@ static void demonwld_render (running_machine *machine, mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, machine->pens[0], &machine->screen[0].visarea);
+	fillbitmap (bitmap, 0, &machine->screen[0].visarea);
 
 #ifdef BGDBG
 
@@ -1212,7 +1212,7 @@ if (input_code_pressed_once(KEYCODE_B)) { toaplan_dbg_layer[3] ^= 1; }
 if( toaplan_dbg_priority != 0 ){
 
 	palette_set_color(0x120,0xf,0xf,0xf);
-	fillbitmap (bitmap, machine->pens[0x120], &machine->screen[0].visarea);
+	fillbitmap (bitmap, 0x120, &machine->screen[0].visarea);
 	priority = toaplan_dbg_priority - 1;
 				{
 		tinfo = tile_list[priority];
@@ -1293,7 +1293,7 @@ static void rallybik_render (running_machine *machine, mame_bitmap *bitmap)
 	int flip;
 	tile_struct *tinfo;
 
-	fillbitmap (bitmap, machine->pens[0], &machine->screen[0].visarea);
+	fillbitmap (bitmap, 0, &machine->screen[0].visarea);
 
 	if (bcu_flipscreen)
 		flip = 1;
@@ -1358,7 +1358,7 @@ static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitma
 	rectangle sp_rect;
 	rectangle clear_rect;
 
-	fillbitmap (tmpbitmap1, machine->pens[0],&machine->screen[0].visarea);
+	fillbitmap (tmpbitmap1, 0,&machine->screen[0].visarea);
 
 	flip = 0;
 
@@ -1405,7 +1405,7 @@ static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitma
 		flipx = (tinfo_sp->color & 0x0100);
 		flipy = (tinfo_sp->color & 0x0200);
 
-		fillbitmap (tmpbitmap2, machine->pens[0], &clear_rect);
+		fillbitmap (tmpbitmap2, 0, &clear_rect);
 
 		drawgfx(tmpbitmap2,machine->gfx[1],
 			tinfo_sp->tile_num,
@@ -1414,7 +1414,7 @@ static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitma
 			tinfo_sp->xpos,tinfo_sp->ypos,
 			&machine->screen[0].visarea,TRANSPARENCY_PEN,0
 		);
-		fillbitmap (tmpbitmap3, machine->pens[0], &clear_rect);
+		fillbitmap (tmpbitmap3, 0, &clear_rect);
 
 		priority = tinfo_sp->priority;
 		{
@@ -1494,7 +1494,7 @@ static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitma
 				tmpbitmap3,
 				&sp_rect
 			);
-			fillbitmap (tmpbitmap3, machine->pens[0], &clear_rect);
+			fillbitmap (tmpbitmap3, 0, &clear_rect);
 			drawgfx(tmpbitmap3,machine->gfx[1],
 				tinfo_sp->tile_num,
 				(tinfo_sp->color&0x3f),

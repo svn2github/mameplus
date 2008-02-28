@@ -1036,13 +1036,14 @@ CPUDEFS += -DHAS_M68040=$(if $(filter M68040,$(CPUS)),1,0)
 ifneq ($(filter M68000 M68008 M68010 M68EC020 M68020 M68040,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kmame.o $(CPUOBJ)/m68000/m68kops.o
+DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 ifneq ($(X86_M68K_DRC),)
 CPUDEFS += -DHAS_M68000DRC=1
 CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o $(DRCOBJ)
 else
 CPUDEFS += -DHAS_M68000DRC=0
 endif
-DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
+M68KMAKE = $(BUILDOUT)/m68kmake$(BUILD_EXE)
 
 # when we compile source files we need to include generated files from the OBJ directory
 $(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c
@@ -1324,8 +1325,9 @@ $(CPUOBJ)/v810/v810.o:	$(CPUSRC)/v810/v810.c \
 
 CPUDEFS += -DHAS_UPD7810=$(if $(filter UPD7810,$(CPUS)),1,0)
 CPUDEFS += -DHAS_UPD7807=$(if $(filter UPD7807,$(CPUS)),1,0)
+CPUDEFS += -DHAS_UPD7801=$(if $(filter UPD7801,$(CPUS)),1,0)
 
-ifneq ($(filter UPD7810 UPD7807,$(CPUS)),)
+ifneq ($(filter UPD7810 UPD7807 UPD7801,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/upd7810
 CPUOBJS += $(CPUOBJ)/upd7810/upd7810.o
 DBGOBJS += $(CPUOBJ)/upd7810/7810dasm.o

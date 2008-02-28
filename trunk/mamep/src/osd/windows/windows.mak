@@ -169,6 +169,7 @@ ifneq ($(MSVC_BUILD),)
     # make msvcprep into a pre-build step
     # OSPREBUILD = $(VCONV)
     
+	ifneq ($(CROSS_BUILD),1)
     # add VCONV to the build tools
     BUILD += $(VCONV)
     
@@ -179,9 +180,8 @@ ifneq ($(MSVC_BUILD),)
     $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	    @echo Compiling $<...
 	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
-
+	endif
 endif
-
 
 
 #-------------------------------------------------
@@ -293,6 +293,7 @@ OSDCOREOBJS += \
 endif
 
 
+
 #-------------------------------------------------
 # OSD Windows library
 #-------------------------------------------------
@@ -385,6 +386,7 @@ $(LIBOCORE): $(OSDCOREOBJS)
 $(LIBOSD): $(OSDOBJS)
 
 
+
 #-------------------------------------------------
 # rule for making the ledutil sample
 #-------------------------------------------------
@@ -422,6 +424,7 @@ $(WINOBJ)/%.res: $(WINSRC)/%.rc | $(OSPREBUILD)
 $(WINOBJ)/mame.res: $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
 $(WINOBJ)/version.res: $(WINOBJ)/mamevers.rc
 
-$(WINOBJ)/mamevers.rc: $(OBJ)/build/verinfo$(EXE) $(SRC)/version.c
+$(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 	@echo Emitting $@...
-	@$(OBJ)/build/verinfo$(EXE) $(SRC)/version.c > $@
+	@$(BUILDOUT)/verinfo$(BUILD_EXE) -b windows $(SRC)/version.c > $@
+

@@ -1067,7 +1067,6 @@ $(MAMEOBJ)/nichibut.a: \
 	$(DRIVERS)/terracre.o $(VIDEO)/terracre.o \
 	$(DRIVERS)/tubep.o $(VIDEO)/tubep.o \
 	$(DRIVERS)/wiping.o $(AUDIO)/wiping.o $(VIDEO)/wiping.o \
-	$(DRIVERS)/yamato.o \
 	$(MACHINE)/nb1413m3.o \
 
 $(MAMEOBJ)/nintendo.a: \
@@ -1219,7 +1218,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segaybd.o $(VIDEO)/segaybd.o \
 	$(DRIVERS)/ssf2md.o \
 	$(DRIVERS)/sg1000a.o \
-	$(DRIVERS)/stactics.o $(MACHINE)/stactics.o $(VIDEO)/stactics.o \
+	$(DRIVERS)/stactics.o $(VIDEO)/stactics.o \
 	$(DRIVERS)/stv.o $(DRIVERS)/stvinit.o $(MACHINE)/stvprot.o $(MACHINE)/stvcd.o \
 	$(DRIVERS)/suprloco.o $(VIDEO)/suprloco.o \
 	$(DRIVERS)/system1.o $(VIDEO)/system1.o \
@@ -1570,6 +1569,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/aztarac.o $(AUDIO)/aztarac.o $(VIDEO)/aztarac.o \
 	$(DRIVERS)/beaminv.o \
 	$(DRIVERS)/bmcbowl.o \
+	$(DRIVERS)/calomega.o $(VIDEO)/calomega.o \
 	$(DRIVERS)/carrera.o \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
 	$(DRIVERS)/cherrym.o \
@@ -1601,7 +1601,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
 	$(DRIVERS)/funworld.o $(VIDEO)/funworld.o \
 	$(DRIVERS)/gamecstl.o \
-	$(DRIVERS)/gdrawpkr.o $(VIDEO)/gdrawpkr.o \
 	$(DRIVERS)/gtipoker.o \
 	$(DRIVERS)/go2000.o \
 	$(DRIVERS)/good.o \
@@ -1777,6 +1776,8 @@ $(DRIVERS)/pmpoker.o:	$(LAYOUT)/pmpoker.lh \
 $(DRIVERS)/sbrkout.o:	$(LAYOUT)/sbrkout.lh
 
 $(DRIVERS)/sspeedr.o:	$(LAYOUT)/sspeedr.lh
+
+$(DRIVERS)/stactics.o:	$(LAYOUT)/stactics.lh
 
 $(DRIVERS)/tceptor.o:	$(LAYOUT)/tceptor2.lh
 
