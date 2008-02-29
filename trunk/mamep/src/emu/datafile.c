@@ -1735,7 +1735,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 	for (i = 0; drivers[i]; i++)
 	{ 
 		int controltmp[6];
-		machine_config *config = machine_config_alloc(drivers[i]->drv);
+		machine_config *config = machine_config_alloc(drivers[i]->machine_config);
 		const device_config *screen = video_screen_first(config);
 		const screen_config *scrconfig = screen->inline_config;
  
@@ -1846,10 +1846,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 			if (clone) horizontalc++;
 		}
 
-		x = 0;
-		for (y = 0; y < MAX_SPEAKER; y++)
-			if (config->speaker[y].tag != NULL)
-				x++;
+		x = speaker_output_count(config);
 
 		if (x > 1)
 		{
