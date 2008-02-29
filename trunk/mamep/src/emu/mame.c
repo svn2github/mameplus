@@ -1822,14 +1822,14 @@ static void init_machine(running_machine *machine)
 	/* start the video and audio hardware */
 	video_init(machine);
 
-	//mamep: prevent MESS crash #2
-	if(has_dummy_image())
-		return;
-
 	/* start up the devices */
 	device_list_start(machine);
 
 	sound_init(machine);
+
+	//mamep: prevent MESS crash #2
+	if(has_dummy_image())
+		return;
 
 	/* call the driver's _START callbacks */
 	if (machine->config->machine_start != NULL) (*machine->config->machine_start)(machine);
