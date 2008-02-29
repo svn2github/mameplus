@@ -2224,6 +2224,7 @@ ddtodu	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (USA版 940125)	だんじょんずあ
 ddtodur1	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (USA版 940113)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
 ddtodj	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (日本版 940125)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
 ddtodjr1	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (日本版 940113)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
+ddtodjr2	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (日本版 940113)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
 ddtoda	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (アジア版 940113)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
 ddtodh	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (ラテン版 940125)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	Capcom
 ssf2t	スーパーストリートファイターII X -グランドマスターチャレンジ / Super Street Fighter II Turbo (海外版 940223)	すーぱーすとりーとふぁいたー2_3えっくすぐらんどますたーちゃれんじ	Capcom
@@ -3466,9 +3467,9 @@ mp_mazin	マジンサーガ / Mazin Wars (Mega Play)	まじんさーが	Sega
 mp_col3	コラムスIII -対決！コラムスワールド / Columns III -Revenge of Columns (Mega Play)	こらむす_3	Sega
 ssf2ghw	スーパーストリートファイターII -ザ・ニューチャレンジャーズ (日本版 MegaDrive ver) (海賊版)	すーぱーすとりーとふぁいたー2_1ざにゅーちゃれんじゃーず	bootleg / Capcom
 aladbl	アラジン (日本版 Megadrive ver) (海賊版)	あらじん	bootleg / Sega
-csmash	コズミックスマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版)	こずみっくすまっしゅ	Sega
-vs2_2k	バーチャストライカー2 バージョン2000 (日本 / USA / 海外 / 韓国 / オーストラリア版 set 1)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
-vs2_2ka	バーチャストライカー2 バージョン2000 (日本 / USA / 海外 / 韓国 / オーストラリア版 set 2)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
+csmash	コズミックスマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版) (rev A)	こずみっくすまっしゅ	Sega
+csmasho	コズミックスマッシュ (日本 / USA / 海外 / 韓国 / オーストラリア版) (original)	こずみっくすまっしゅ	Sega
+vs2_2k	バーチャストライカー2 バージョン2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	ばーちゃすとらいかー_2_4ばーじょん2000	Sega
 smarinef	マリンフィッシング	まりんふぃっしんぐ	Sega
 cspike	ガンスパイク (日本 / USA / 海外/ 韓国 / オーストラリア版)	がんすぱいく	Psikyo / Capcom
 capsnk	カプコン VS. SNK ミレニアムファイト2000 (日本 / USA / 海外 / 韓国 / オーストラリア版)	かぷこんばーさすえすえぬけいみれにあむふぁいと2000	Capcom / SNK
@@ -4050,12 +4051,12 @@ vulcan	グラディウスII -ゴーファーの野望 / Vulcan Venture	ぐらでぃうす_2	Konami
 gradius2	グラディウスII -ゴーファーの野望 (日本版 new ver)	ぐらでぃうす_2	Konami
 grdius2a	グラディウスII -ゴーファーの野望 (日本版 old ver)	ぐらでぃうす_2	Konami
 grdius2b	グラディウスII -ゴーファーの野望 (日本版 older ver)	ぐらでぃうす_2	Konami
-cuebrckj	キューブリック (海外版 ver D)	きゅーぶりっく	Konami
+cuebrckj	キューブリック (日本版)	きゅーぶりっく	Konami
 fround	ハードパンチャー -血まみれの栄光 / The Final Round (ver M)	はーどぱんちゃー	Konami
 froundl	ハードパンチャー -血まみれの栄光 / The Final Round (ver L)	はーどぱんちゃー	Konami
 hpuncher	ハードパンチャー -血まみれの栄光 (日本版)	はーどぱんちゃー	Konami
 miaj	M.I.A. <ミッシング・イン・アクション> (日本版)	えむあいえー	Konami
-cuebrick	キューブリック (日本版)	きゅーぶりっく	Konami
+cuebrick	キューブリック (海外版 ver D)	きゅーぶりっく	Konami
 mia	M.I.A. <ミッシング・イン・アクション> (ver T)	えむあいえー	Konami
 mia2	M.I.A. <ミッシング・イン・アクション> (ver S)	えむあいえー	Konami
 tmnt	T.M.N.T. -スーパー亀忍者 / Teenage Mutant Ninja Turtles (海外版 4 players)	てぃーえむえぬてぃー_1	Konami
@@ -4853,6 +4854,7 @@ kabukikl	天外魔境真伝 -Far East of Eden	てんがいまきょうしんでん	Hudson
 neobombe	ネオ・ボンバーマン	ねおぼんばーまん	Hudson
 gowcaizr	超人学園ゴウカイザー	ちょうじんがくえんごうかいざー	Technos
 rbff1	リアルバウト餓狼伝説	りあるばうとがろうでんせつ_1_1	SNK
+rbff1a	リアルバウト餓狼伝説 (set 2)	りあるばうとがろうでんせつ_1_1	SNK
 aof3	アート・オブ・ファイティング 龍虎の拳外伝	あーとおぶふぁいてぃんぐりゅうこのけんがいでん	SNK
 aof3k	アート・オブ・ファイティング 龍虎の拳外伝 / Art of Fighting 3 -The Path of the Warrior (韓国版)	あーとおぶふぁいてぃんぐりゅうこのけんがいでん	SNK
 sonicwi3	ソニックウィングス3	そにっくうぃんぐす_3	Video System Co.
@@ -4955,6 +4957,7 @@ matrim	新豪血寺一族 闘婚 -Matrimelee	しんごうけつじいちぞくとうこん	Noise Factor
 pnyaa	ポチッとにゃ～	ぽちっとにゃー	Aiky / Taito
 ms5pcb	メタルスラッグ5 (JAMMA PCB)	めたるすらっぐ_5_1	SNK Playmore
 mslug5	メタルスラッグ5	めたるすらっぐ_5_1	SNK Playmore
+mslug5h	メタルスラッグ5 (set 2)	めたるすらっぐ_5_1	SNK Playmore
 ms5plus	メタルスラッグ5 / Metal Slug 5 Plus (海賊版)	めたるすらっぐ_5_2	bootleg
 svcpcb	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 1)	えすえぬけいばーさすかぷこん_1	SNK Playmore
 svcpcba	SNK VS. CAPCOM -SVC CHAOS (JAMMA PCB set 2)	えすえぬけいばーさすかぷこん_1	SNK Playmore
@@ -6473,7 +6476,7 @@ dealem	ディール・エム (MPU4 Conversion Kit ver 7.0)	でぃーるえむ	Zenitone
 timemchn	タイムマシン (ver 2.0)	たいむましん	Barcrest
 crmaze	ザ・クリスタルメイズ チームチャレンジ (SWP)	ざくりすたるめいずちーむちゃれんじ	Barcrest
 crmazea	ザ・クリスタルメイズ (AMLD ver)	ざくりすたるめいず	Barcrest
-crmazeb	ザ・クリスタルメイズ ナウ フィーチャリング オーシャンゾーン！ (AMLD ver)	ざくりすたるめいずなうふぃーちゃりんぐおーしゃんぞーん	Barcrest
+crmazeb	ザ・ニュークリスタルメイズ フィーチャリング オーシャンゾーン (AMLD ver)	ざにゅーくりすたるめいずふぃーちゃりんぐおーしゃんぞーん	Barcrest
 turnover	ターンオーバー	たーんおーばー	Barcrest
 skiltrek	スキルトレック	すきるとれっく	Barcrest
 mating	ザ・マッチングゲーム (Datapak)	ざまっちんぐげーむ	Barcrest
@@ -6791,8 +6794,11 @@ jollycrd	ジョリーカード (オーストリア版)	じょりーかーど_1	TAB-Austria
 jolycdae	ジョリーカード (オーストリア版 encrypted)	じょりーかーど_1	TAB-Austria
 jolyc3x3	ジョリーカード (3x3 deal)	じょりーかーど_1	TAB-Austria
 jolyc980	ジョリーカードプロフェッショナル2.0	じょりーかーど_2_ぷろふぇっしょなる2.0	Spale-Soft
-jolycdcr	ジョリーカード (クロアチア版)	じょりーかーど_1	Soft Design
+jolycdev	ジョリーカード (Evona Electronic)	じょりーかーど	TAB/Evona
+jolyccra	ジョリーカード (クロアチア版 set 1)	じょりーかーど_1	TAB-Austria
+jolyccrb	ジョリーカード (クロアチア版 set 2)	じょりーかーど_1	Soft Design
 jolycdit	ジョリーカード (イタリア版 blue TAB board encrypted)	じょりーかーど_1	bootleg
+sjcd2kx3	スーパージョリー2000 - 3x	すーぱーじょりー2000	M.P.
 jolycdab	ジョリーカード (オーストリア版 Fun World) (海賊版)	じょりーかーど_1	Inter Games
 bigdeal	ビッグディール (ハンガリー版 set 1)	びっぐでぃーる	Funworld
 bigdealb	ビッグディール (ハンガリー版 set 2)	びっぐでぃーる	Funworld
@@ -6813,6 +6819,9 @@ magiccda	マジックカードII (green TAB or Impera board)	まじっくかーど_2	Impera
 magiccdb	マジックカードII (blue TAB board encrypted)	まじっくかーど_2	Impera
 vegasslw	ロイヤルベガスジョーカーカード (slow deal)	ろいやるべがすじょーかーかーど	Funworld
 vegasfst	ロイヤルベガスジョーカーカード (fast deal)	ろいやるべがすじょーかーかーど	Soft Design
+vegasfte	ロイヤルベガスジョーカーカード (fast deal english gfx)	ろいやるべがすじょーかーかーど	Soft Design
+jolyjokr	ジョリージョーカー	じょりーじょーかー	Impera
+jolyjkra	ジョリージョーカー (50bet)	じょりーじょーかー	Impera
 jokercrd	ジョーカーカード (ver A267BC encrypted)	じょーかーかーど	Vesely Svet
 mongolnw	モンゴルフィエ・ニュー (イタリア版)	もんごるふぃえにゅー	bootleg
 soccernw	サッカー・ニュー (イタリア版)	さっかーにゅー	bootleg
@@ -6886,8 +6895,42 @@ goldnpkc	ゴールデンポーカー (no double up)	ごーるでんぽーかー	Bootleg
 jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Bootleg on Coinmaster hardware
 pottnpkr	ジャックポッテンズポーカー (海賊版 set 1)	じゃっくぽってんずぽーかー	Bootleg
 pottnpkb	ジャックポッテンズポーカー (海賊版 set 2)	じゃっくぽってんずぽーかー	Bootleg
-gdrawpkr	ゲーミングドローポーカー	げーみんぐどろーぽーかー	Cal Omega / Casino Electronics Inc.
+comg076	キャルオメガ ゲーム7.6 (Arcade Poker)	きゃるおめがげーむ7.6	Cal Omega Inc.
+comg079	キャルオメガ ゲーム7.9 (Arcade Poker)	きゃるおめがげーむ7.9	Cal Omega Inc.
+comg094	キャルオメガ ゲーム9.4 (Keno)	きゃるおめがげーむ9.4	Cal Omega Inc.
+comg107	キャルオメガ ゲーム10.7 (Big Game)	きゃるおめがげーむ10.7	Cal Omega Inc.
+comg125	キャルオメガ ゲーム12.5 (Bingo)	きゃるおめがげーむ12.5	Cal Omega Inc.
+comg127	キャルオメガ ゲーム12.7 (Keno)	きゃるおめがげーむ12.7	Cal Omega Inc.
+comg128	キャルオメガ ゲーム12.8 (Arcade Game)	きゃるおめがげーむ12.8	Cal Omega Inc.
+comg134	キャルオメガ ゲーム13.4 (Nudge Bingo)	きゃるおめがげーむ13.4	Cal Omega Inc.
+comg145	キャルオメガ ゲーム14.5 (Pixels)	きゃるおめがげーむ14.5	Cal Omega Inc.
+comg157	キャルオメガ ゲーム15.7 (Double-Draw Poker)	きゃるおめがげーむ15.7	Cal Omega Inc.
+comg159	キャルオメガ ゲーム15.9 (Wild Double-Up)	きゃるおめがげーむ15.9	Cal Omega Inc.
+comg164	キャルオメガ ゲーム16.4 (Keno)	きゃるおめがげーむ16.4	Cal Omega Inc.
+comg168	キャルオメガ ゲーム16.8 (Keno)	きゃるおめがげーむ16.8	Cal Omega Inc.
+comg172	キャルオメガ ゲーム17.2 (Double Double Poker)	きゃるおめがげーむ17.2	Cal Omega Inc.
+comg175	キャルオメガ ゲーム17.51 (Gaming Draw Poker)	きゃるおめがげーむ17.51	Cal Omega / Casino Electronics Inc.
+comg176	キャルオメガ ゲーム17.6 (Nudge Bingo)	きゃるおめがげーむ17.6	Cal Omega Inc.
+comg181	キャルオメガ ゲーム18.1 (Nudge Bingo)	きゃるおめがげーむ18.1	Cal Omega Inc.
+comg183	キャルオメガ ゲーム18.3 (Pixels)	きゃるおめがげーむ18.3	Cal Omega Inc.
+comg185	キャルオメガ ゲーム18.5 (Pixels)	きゃるおめがげーむ18.5	Cal Omega Inc.
+comg186	キャルオメガ ゲーム18.6 (Pixels)	きゃるおめがげーむ18.6	Cal Omega Inc.
+comg204	キャルオメガ ゲーム20.4 (Super Blackjack)	きゃるおめがげーむ20.4	Cal Omega Inc.
+comg208	キャルオメガ ゲーム20.8 (Winner's Choice)	きゃるおめがげーむ20.8	Cal Omega Inc.
+comg227	キャルオメガ ゲーム22.7 (Amusement Poker, d/d)	きゃるおめがげーむ22.7	Cal Omega Inc.
+comg236	キャルオメガ ゲーム23.6 (Hotline)	きゃるおめがげーむ23.6	Cal Omega Inc.
+comg239	キャルオメガ ゲーム23.9 (Gaming Draw Poker)	きゃるおめがげーむ23.9	Cal Omega / Casino Electronics Inc.
+comg246	キャルオメガ ゲーム24.6 (Hotline)	きゃるおめがげーむ24.6	Cal Omega Inc.
+comg272a	キャルオメガ ゲーム27.2 (Keno amusement)	きゃるおめがげーむ27.2	Cal Omega Inc.
+comg272b	キャルオメガ ゲーム27.2 (Keno gaming)	きゃるおめがげーむ27.2	Cal Omega Inc.
+comg903d	キャルオメガ システム903 Diag.PROM	きゃるおめがしすてむ903	Cal Omega Inc.
+comg905d	キャルオメガ システム905 Diag.PROM	きゃるおめがしすてむ905	Cal Omega Inc.
 elgrande	エルグランデ -5 Card Draw (new)	えるぐらんで	Tuni Electro Service / E.T. Marketing
+jjpoker	ジャックポットジョーカーポーカー (set 1)	じゃっくぽっとじょーかーぽーかー	Enter-Tech (ETL)
+jjpokerb	ジャックポットジョーカーポーカー (set 2)	じゃっくぽっとじょーかーぽーかー	Enter-Tech (ETL)
+ssipkr24	SSIポーカー (ver 2.4)	えすえすあいぽーかー	SSI
+ssipkr30	SSIポーカー (ver 3.0)	えすえすあいぽーかー	SSI
+ssipkr40	SSIポーカー (ver 4.0)	えすえすあいぽーかー	SSI
 altair	アルタイル	あるたいる	Cidelsa
 destryer	デストロイヤー (Cidelsa set 1)	ですとろいやー	Cidelsa
 destryea	デストロイヤー (Cidelsa set 2)	ですとろいやー	Cidelsa
@@ -7000,8 +7043,8 @@ kf2k2plc	ザ・キング・オブ・ファイターズ 2002 / The King of Fighters 2002 Super (
 kf2k4pls	ザ・キング・オブ・ファイターズ 2002 / The King of Fighters Special Edition 2004 Plus (海賊版)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
 matrimbl	新豪血寺一族 闘婚 -Matrimelee (海賊版)	しんごうけつじいちぞくとうこん	bootleg
 mslug5b	メタルスラッグ5 (海賊版)	めたるすらっぐ_5_1	bootleg
-rbff1a	リアルバウト餓狼伝説 (set 2)	りあるばうとがろうでんせつ_1_1	SNK
-mslug5h	メタルスラッグ5 (set 2)	めたるすらっぐ_5_1	SNK Playmore
+rbff1a	リアルバウト餓狼伝説 (bug fix rev)	りあるばうとがろうでんせつ_1_1	SNK
+mslug5h	メタルスラッグ5 (AES Cart)	めたるすらっぐ_5_1	SNK Playmore
 kof2003h	ザ・キング・オブ・ファイターズ 2003 (set 2)	ざきんぐおぶふぁいたーず_10_1_2003	SNK Playmore
 zintrkcd	押し出しジントリック (CD to MVS Conversion)	おしだしじんとりっく	hack
 fr2ch	アイドル麻雀ファイナルロマンス2 (CD to MVS Conversion)	あいどるまーじゃんふぁいなるろまんす_2	hack
