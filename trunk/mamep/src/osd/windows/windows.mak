@@ -214,7 +214,7 @@ DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
 ifneq ($(DEBUG),)
-// mamep: disable malloc debug
+# mamep: disable malloc debug
 #DEFS += -DMALLOC_DEBUG
 #LDFLAGS += -Wl,--allow-multiple-definition
 endif
@@ -242,7 +242,7 @@ CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
-// mamep: -lunicows MUST be in the first place
+# mamep: -lunicows MUST be in the first place
 LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
 ifdef PTR64
@@ -427,4 +427,5 @@ $(WINOBJ)/version.res: $(WINOBJ)/mamevers.rc
 $(WINOBJ)/mamevers.rc: $(BUILDOUT)/verinfo$(BUILD_EXE) $(SRC)/version.c
 	@echo Emitting $@...
 	@$(BUILDOUT)/verinfo$(BUILD_EXE) -b windows $(SRC)/version.c > $@
+
 

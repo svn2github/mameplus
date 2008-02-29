@@ -805,7 +805,7 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 {
 	int chipnum;
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	ZeroMemory(buf, sizeof(buf));
 
@@ -842,7 +842,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 {
 	int chipnum;
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	buf[0] = '\0';
 
@@ -901,7 +901,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 	const device_config *screen;
 	const screen_config *scrconfig;
 	screen = video_screen_first(config);
@@ -1021,7 +1021,7 @@ static LPCWSTR GameInfoInput(int nIndex)
 static LPCWSTR GameInfoColors(int nIndex)
 {
 	static WCHAR buf[1024];
-	machine_config *config = machine_config_alloc(drivers[nIndex]->drv);
+	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	ZeroMemory(buf, sizeof(buf));
 	swprintf(buf, _UIW(TEXT("%d colors ")), config->total_colors);

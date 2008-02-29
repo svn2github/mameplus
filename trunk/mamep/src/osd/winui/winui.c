@@ -5650,7 +5650,7 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 
 		case COLUMN_TYPE:
         {
-            machine_config *config = machine_config_alloc(drivers[nItem]->drv);
+            machine_config *config = machine_config_alloc(drivers[nItem]->machine_config);
 
 			/* Vector/Raster */
 			if (isDriverVector(config))
@@ -6094,13 +6094,13 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
 	case COLUMN_PLAYTIME:
-	   value = GetPlayTime(index1) - GetPlayTime(index2);
-	   break;
+		value = GetPlayTime(index1) - GetPlayTime(index2);
+		break;
 
 	case COLUMN_TYPE:
-    {
-		machine_config *config1 = machine_config_alloc(drivers[index1]->drv);
-		machine_config *config2 = machine_config_alloc(drivers[index2]->drv);
+		{
+			machine_config *config1 = machine_config_alloc(drivers[index1]->machine_config);
+			machine_config *config2 = machine_config_alloc(drivers[index2]->machine_config);
 
 			value = isDriverVector(config1) - isDriverVector(config2);
 

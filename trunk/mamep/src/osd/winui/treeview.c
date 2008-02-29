@@ -945,8 +945,7 @@ void CreateCPUFolders(int parent_index)
 	{
 		int n;
 		machine_config *config;
-		// expand_machine_driver(drivers[jj]->drv,&drv);
-		config = machine_config_alloc(drivers[jj]->drv);
+		config = machine_config_alloc(drivers[jj]->machine_config);
 		for (n = 0; n < MAX_CPU; n++) {
 			if (config->cpu[n].type != CPU_DUMMY)
 			{
@@ -991,8 +990,7 @@ void CreateSoundFolders(int parent_index)
 		int n;
 		machine_config *config;
 
-		// expand_machine_driver(drivers[jj]->drv,&drv);
-		config = machine_config_alloc(drivers[jj]->drv);
+		config = machine_config_alloc(drivers[jj]->machine_config);
 		// Additional range and null checking.
 		for (n = 0; n < MAX_SOUND ; n++) {
 			if (config->sound[n].type > SOUND_DUMMY &&
@@ -1265,7 +1263,7 @@ void CreateResolutionFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
-		machine_config *config = machine_config_alloc(drivers[jj]->drv);
+		machine_config *config = machine_config_alloc(drivers[jj]->machine_config);
 		const device_config *screen;
 		const screen_config *scrconfig;
 		screen = video_screen_first(config);
@@ -1335,7 +1333,7 @@ void CreateFPSFolders(int parent_index)
 	{
 		LPTREEFOLDER lpTemp;
 		float f;
-		machine_config *config = machine_config_alloc(drivers[i]->drv);
+		machine_config *config = machine_config_alloc(drivers[i]->machine_config);
 		const device_config *screen;
 		const screen_config *scrconfig;
 		screen = video_screen_first(config);

@@ -803,7 +803,7 @@ static TIMER_CALLBACK( sound_update )
 	/* play the result */
 	if (finalmix_offset > 0)
 	{
-		osd_update_audio_stream(finalmix, finalmix_offset / 2);
+		osd_update_audio_stream(machine, finalmix, finalmix_offset / 2);
 		if (wavfile != NULL && !mame_is_paused(Machine))
 			wav_add_data_16(wavfile, finalmix, finalmix_offset);
 	}

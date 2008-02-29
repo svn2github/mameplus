@@ -520,8 +520,8 @@ BOOL isDriverVector(const machine_config *config)
 
 int numberOfSpeakers(const machine_config *config)
 {
+	int speakers = speaker_output_count(config);
 	int has_sound = FALSE;
-	int speakers = 0;
 	int sndnum;
 
 	/* see if we have any sound chips to report */
@@ -532,11 +532,9 @@ int numberOfSpeakers(const machine_config *config)
 			break;
 		}
 
-	/* if we have sound, count the number of speakers */
-	if (has_sound)
-		for (speakers = 0; speakers < ARRAY_LENGTH(config->speaker); speakers++)
-			if (config->speaker[speakers].tag == NULL)
-				break;
+	/* if we don't have sound, set speaker count to 0 */
+	if (!has_sound)
+		speakers = 0;
 
 	return speakers;
 }
@@ -557,7 +555,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			int num_speakers;
 
 			/* Allocate machine config */
-			config = machine_config_alloc(gamedrv->drv);
+			config = machine_config_alloc(gamedrv->machine_config);
 
 			gameinfo->isClone = (nParentIndex != -1);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
@@ -569,7 +567,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					gameinfo->isHarddisk = TRUE;
 					break;
 				}
-			// expand_machine_driver(gamedrv->drv, &drv);
 
 			num_speakers = numberOfSpeakers(config);
 
@@ -1092,6 +1089,7 @@ void CenterWindow(HWND hWnd)
 /***************************************************************************
 	Internal functions
  ***************************************************************************/
+
 
 
 

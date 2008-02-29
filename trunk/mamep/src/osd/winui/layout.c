@@ -34,6 +34,7 @@
 // MAME/MAMEUI headers
 #include "bitmask.h"
 #include "treeview.h"
+#include "driver.h"
 #include "mui_util.h"
 #include "resource.h"
 #include "directories.h"
