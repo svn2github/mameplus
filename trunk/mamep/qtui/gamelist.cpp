@@ -1,14 +1,12 @@
 #include <QTextStream>
-#include <QHeaderView>
 #include <QStringList>
 #include <QFile>
-#include <QFontMetrics>
-#include <QFont>
 #include <QTimer>
 #include <QMap>
 #include <QSet>
 #include <QDir>
 #include <QBitArray>
+#include <QtGui>
 
 #include "qticohandler.h"
 
@@ -26,12 +24,87 @@ extern bool qmc2ReloadActive;
 extern bool qmc2EarlyReloadActive;
 extern bool qmc2StopParser;
 extern bool qmc2IconsPreloaded;
+
 MameGame *mamegame;
-TreeModel *model;
+static TreeModel *gameListModel;
+static QSortFilterProxyModel *gameListPModel;
+QTimer *searchTimer = NULL;
 static QIcon defIcon;
 
 #define MAMEPLUS_SIG 0x704c7553
 #define S11N_VER 3
+
+class ListXMLHandler : public QXmlDefaultHandler
+{
+public:
+	ListXMLHandler(int d = 0)
+	{
+		gameinfo = 0;
+		metMameTag = false;
+	
+		if (mamegame)
+			delete mamegame;
+		mamegame = new MameGame();
+	}
+
+	bool startElement(const QString & /* namespaceURI */,
+									  const QString & /* localName */,
+									  const QString &qName,
+									  const QXmlAttributes &attributes)
+	{
+		if (!metMameTag && qName != "mame")
+			return false;
+
+		if (qName == "mame")
+			metMameTag = true;
+		else if (qName == "game")
+		{
+			gameinfo = new GameInfo(mamegame);
+			gameinfo->sourcefile = attributes.value("sourcefile");
+			gameinfo->cloneof = attributes.value("cloneof");
+			gameinfo->romof = attributes.value("romof");
+			mamegame->gamenameGameInfoMap[attributes.value("name")] = gameinfo;
+		}
+		else if (qName == "rom")
+		{
+			RomInfo *rominfo = new RomInfo(gameinfo);
+			rominfo->name = attributes.value("name");
+			rominfo->status = attributes.value("status");
+			rominfo->size = attributes.value("size").toULongLong();
+
+			bool ok;
+			gameinfo->crcRomInfoMap[attributes.value("crc").toUInt(&ok, 16)] = rominfo;
+		}
+
+		currentText.clear();
+		return true;
+	}
+
+	bool ListXMLHandler::endElement(const QString & /* namespaceURI */,
+									const QString & /* localName */,
+									const QString &qName)
+	{
+		if (qName == "description")
+			gameinfo->description = currentText;
+		else if (qName == "manufacturer")
+			gameinfo->manufacturer = currentText;
+		else if (qName == "year")
+			gameinfo->year = currentText;
+		return true;
+	}
+
+	bool ListXMLHandler::characters(const QString &str)
+	{
+		currentText += str;
+		return true;
+	}	
+
+private:
+	GameInfo *gameinfo;
+    QString currentText;
+    bool metMameTag;
+};
+
 
 void LoadIconThread::render()
 {
@@ -469,313 +542,6 @@ MameGame::~MameGame()
 	qmc2MainWindow->log(LOG_QMC2, "# ~MameGame()");
 }
 
-
-Gamelist::Gamelist(QObject *parent)
-: QObject(parent)
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::Gamelist()");
-#endif
-	connect(&iconthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
-	connect(&iconthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
-	connect(&iconthread, SIGNAL(finished()), this, SLOT(setupIcon()));
-
-	connect(&auditthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
-	connect(&auditthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
-	connect(&auditthread, SIGNAL(finished()), this, SLOT(setupAudit()));
-
-	connect(&auditthread, SIGNAL(logUpdated(char, QString)), this, SLOT(log(char, QString)));
-
-	numGames = numTotalGames = numCorrectGames = numMostlyCorrectGames = numIncorrectGames = numUnknownGames = numNotFoundGames = numSearchGames = -1;
-	loadProc = verifyProc = NULL;
-	defIcon = loadWinIco(":/res/win_roms.ico");
-}
-
-Gamelist::~Gamelist()
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::~Gamelist()");
-#endif
-
-	if ( loadProc )
-		loadProc->terminate();
-
-	//	if ( verifyProc )
-	//		verifyProc->terminate();
-}
-
-void Gamelist::updateProgress(int progress)
-{
-	qmc2MainWindow->progressBarGamelist->setValue(progress);
-}
-
-void Gamelist::switchProgress(int max)
-{
-	static int prevmax;
-	if (max != -1)
-	{
-		prevmax = qmc2MainWindow->progressBarGamelist->maximum();
-		qmc2MainWindow->progressBarGamelist->setRange(0, max);
-	}
-	else
-		qmc2MainWindow->progressBarGamelist->setRange(0, prevmax);
-
-	qmc2MainWindow->progressBarGamelist->reset();
-}
-
-void Gamelist::log(char c, QString s)
-{
-	qmc2MainWindow->log(c, s);
-}
-
-void Gamelist::setupIcon()
-{
-	GameInfo *gameinfo;
-	QIcon icon;
-	int i = 0;
-	static int step = mamegame->gamenameGameInfoMap.count() / 8;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-		//complete clone gameinfo with parent icons
-		icon = gameinfo->icon; 
-		if (icon.isNull() && !gameinfo->cloneof.isEmpty())
-			icon = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->icon;
-		model->setData(model->index(0, gameinfo->pModItem), icon, Qt::DecorationRole);
-
-		//reduce stall time when updating icons
-		if (i++ % step == 0)
-			qApp->processEvents();
-	}
-}
-
-void Gamelist::setupAudit()
-{
-	GameInfo *gameinfo;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-		model->setData(model->index(2, gameinfo->pModItem), 
-			gameinfo->available ? "Yes" : "No", Qt::DisplayRole);
-	}
-}
-
-void Gamelist::load()
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::load()");
-#endif
-
-	qmc2ReloadActive = qmc2EarlyReloadActive = TRUE;
-	qmc2StopParser = FALSE;
-
-
-	if (!mamegame->des11n())
-	{
-		QStringList headers;
-		headers << "Description" << "Name" << "Available" << "Manufacturer" << "Driver" << "Year" << "Clone of";
-
-		model = new TreeModel(headers, qmc2MainWindow);
-		qmc2MainWindow->treeViewGameList->setModel(model);
-
-		//		auditthread.audit();
-		iconthread.render();
-
-
-		//fixme		delete mamegame;
-		//		mamegame = 0;
-
-		return;
-	}
-
-	QStringList args;
-	QString command;
-
-	gamelistBuffer = "";
-
-	loadTimer.start();
-	command = "mamep.exe";
-	args << "-listxml";
-
-	loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
-	connect(loadProc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(loadError(QProcess::ProcessError)));
-	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
-	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
-	connect(loadProc, SIGNAL(readyReadStandardError()), this, SLOT(loadReadyReadStandardError()));
-	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
-	connect(loadProc, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(loadStateChanged(QProcess::ProcessState)));
-}
-
-void Gamelist::parse()
-{
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::prep parse()");
-
-	ListXMLHandler handler(0);
-	QXmlSimpleReader reader;
-	reader.setContentHandler(&handler);
-	reader.setErrorHandler(&handler);
-
-	QXmlInputSource *pxmlInputSource = new QXmlInputSource();
-	pxmlInputSource->setData (gamelistBuffer);
-
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::start parse()");
-	reader.parse(*pxmlInputSource);
-
-	GameInfo *gameinfo, *gameinfo2;
-	RomInfo *rominfo;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-		if (!gameinfo->cloneof.isEmpty())
-		{
-			gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo->cloneof];
-			gameinfo2->clones.insert(gamename);
-		}
-	}
-
-	gamelistBuffer.clear();
-
-	mamegame->s11n();
-
-	delete mamegame;
-	mamegame = 0;
-}
-
-void Gamelist::loadStarted()
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
-#endif
-
-	qmc2MainWindow->progressBarGamelist->setRange(0, numTotalGames);
-	qmc2MainWindow->progressBarGamelist->reset();
-}
-
-void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	QProcess *proc = (QProcess *)sender();
-
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
-#endif
-
-	QTime elapsedTime;
-	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
-	qmc2MainWindow->log(LOG_QMC2, tr("done (loading XML gamelist data and (re)creating cache, elapsed time = %1)").arg(elapsedTime.toString("mm:ss.zzz")));
-	qmc2MainWindow->progressBarGamelist->reset();
-	qmc2ProcessManager->procMap.remove(proc);
-	qmc2ProcessManager->procCount--;
-	qmc2EarlyReloadActive = FALSE;
-	loadProc = NULL;
-
-	parse();
-}
-
-void Gamelist::loadReadyReadStandardOutput()
-{
-	QProcess *proc = (QProcess *)sender();
-
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardOutput(): proc = 0x" + QString::number((ulong)proc, 16));
-#endif
-
-	QString s = proc->readAllStandardOutput();
-	//mamep: remove windows endl
-	s.replace(QString("\r"), QString(""));
-
-	qmc2MainWindow->progressBarGamelist->setValue(qmc2MainWindow->progressBarGamelist->value() + s.count("<game name="));
-	gamelistBuffer += s;
-}
-
-void Gamelist::loadReadyReadStandardError()
-{
-	// QProcess *proc = (QProcess *)sender();
-
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardError(): proc = 0x" + QString::number((ulong)proc, 16));
-#endif
-
-}
-
-void Gamelist::loadError(QProcess::ProcessError processError)
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadError(QProcess::ProcessError processError = " + QString::number(processError) + ")");
-#endif
-
-}
-
-void Gamelist::loadStateChanged(QProcess::ProcessState processState)
-{
-#ifdef QMC2_DEBUG
-	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadStateChanged(QProcess::ProcessState = " + QString::number(processState) + ")");
-#endif
-
-}
-
-ListXMLHandler::ListXMLHandler(int d)
-{
-	gameinfo = 0;
-	metMameTag = false;
-
-	if (mamegame)
-		delete mamegame;
-	mamegame = new MameGame();
-}
-
-bool ListXMLHandler::startElement(const QString & /* namespaceURI */,
-								  const QString & /* localName */,
-								  const QString &qName,
-								  const QXmlAttributes &attributes)
-{
-	if (!metMameTag && qName != "mame")
-		return false;
-
-	if (qName == "mame")
-		metMameTag = true;
-	else if (qName == "game")
-	{
-		gameinfo = new GameInfo(mamegame);
-		gameinfo->sourcefile = attributes.value("sourcefile");
-		gameinfo->cloneof = attributes.value("cloneof");
-		gameinfo->romof = attributes.value("romof");
-		mamegame->gamenameGameInfoMap[attributes.value("name")] = gameinfo;
-	}
-	else if (qName == "rom")
-	{
-		RomInfo *rominfo = new RomInfo(gameinfo);
-		rominfo->name = attributes.value("name");
-		rominfo->status = attributes.value("status");
-		rominfo->size = attributes.value("size").toULongLong();
-
-		bool ok;
-		gameinfo->crcRomInfoMap[attributes.value("crc").toUInt(&ok, 16)] = rominfo;
-	}
-
-	currentText.clear();
-	return true;
-}
-
-bool ListXMLHandler::endElement(const QString & /* namespaceURI */,
-								const QString & /* localName */,
-								const QString &qName)
-{
-	if (qName == "description")
-		gameinfo->description = currentText;
-	else if (qName == "manufacturer")
-		gameinfo->manufacturer = currentText;
-	else if (qName == "year")
-		gameinfo->year = currentText;
-	return true;
-}
-
-bool ListXMLHandler::characters(const QString &str)
-{
-	currentText += str;
-	return true;
-}
-
 void MameGame::s11n()
 {
 	QFile file("gui.cache");
@@ -892,6 +658,279 @@ int MameGame::des11n()
 	return in.status();
 }
 
+Gamelist::Gamelist(QObject *parent)
+: QObject(parent)
+{
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::Gamelist()");
+#endif
+	connect(&iconthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
+	connect(&iconthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
+	connect(&iconthread, SIGNAL(finished()), this, SLOT(setupIcon()));
+
+	connect(&auditthread, SIGNAL(progressSwitched(int)), this, SLOT(switchProgress(int)));
+	connect(&auditthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
+	connect(&auditthread, SIGNAL(finished()), this, SLOT(setupAudit()));
+	connect(&auditthread, SIGNAL(logUpdated(char, QString)), this, SLOT(log(char, QString)));
+
+	if (!searchTimer)
+		searchTimer = new QTimer(this);
+	connect(searchTimer, SIGNAL(timeout()), this, SLOT(filterRegExpChanged()));
+
+	numGames = numTotalGames = numCorrectGames = numMostlyCorrectGames = numIncorrectGames = numUnknownGames = numNotFoundGames = numSearchGames = -1;
+	loadProc = verifyProc = NULL;
+	defIcon = loadWinIco(":/res/win_roms.ico");
+}
+
+Gamelist::~Gamelist()
+{
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::~Gamelist()");
+#endif
+
+	if ( loadProc )
+		loadProc->terminate();
+
+	//	if ( verifyProc )
+	//		verifyProc->terminate();
+}
+
+void Gamelist::updateProgress(int progress)
+{
+	qmc2MainWindow->progressBarGamelist->setValue(progress);
+}
+
+void Gamelist::switchProgress(int max)
+{
+	static int prevmax;
+	if (max != -1)
+	{
+		prevmax = qmc2MainWindow->progressBarGamelist->maximum();
+		qmc2MainWindow->progressBarGamelist->setRange(0, max);
+	}
+	else
+		qmc2MainWindow->progressBarGamelist->setRange(0, prevmax);
+
+	qmc2MainWindow->progressBarGamelist->reset();
+}
+
+void Gamelist::log(char c, QString s)
+{
+	qmc2MainWindow->log(c, s);
+}
+
+void Gamelist::setupIcon()
+{
+	GameInfo *gameinfo;
+	QIcon icon;
+	int i = 0;
+	static int step = mamegame->gamenameGameInfoMap.count() / 8;
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+		//complete clone gameinfo with parent icons
+		icon = gameinfo->icon; 
+		if (icon.isNull() && !gameinfo->cloneof.isEmpty())
+			icon = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->icon;
+		gameListModel->setData(gameListModel->index(0, gameinfo->pModItem), icon, Qt::DecorationRole);
+
+		//reduce stall time when updating icons
+		if (i++ % step == 0)
+			qApp->processEvents();
+	}
+}
+
+void Gamelist::setupAudit()
+{
+	GameInfo *gameinfo;
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		gameListModel->setData(gameListModel->index(2, gameinfo->pModItem), 
+			gameinfo->available ? "Yes" : "No", Qt::DisplayRole);
+	}
+}
+
+void Gamelist::load()
+{
+	//connect searchtimer after mainwindow init
+	connect(qmc2MainWindow->lineEditSearch, SIGNAL(textChanged(const QString &)), this, SLOT(filterTimer()));
+
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::load()");
+#endif
+
+	qmc2ReloadActive = qmc2EarlyReloadActive = TRUE;
+	qmc2StopParser = FALSE;
+
+
+	if (!mamegame->des11n())
+	{
+		QStringList headers;
+		headers << "Description" << "Name" << "Available" << "Manufacturer" << "Driver" << "Year" << "Clone of";
+
+		gameListModel = new TreeModel(headers, qmc2MainWindow);
+		gameListPModel = new QSortFilterProxyModel(qmc2MainWindow);
+		gameListPModel->setSourceModel(gameListModel);
+		gameListPModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+		qmc2MainWindow->treeViewGameList->setModel(gameListPModel);
+		qmc2MainWindow->treeViewGameList->setSortingEnabled(true);
+		qmc2MainWindow->treeViewGameList->sortByColumn(1, Qt::AscendingOrder);
+		qmc2MainWindow->treeViewGameList->setColumnWidth(0, 180);
+
+		//		auditthread.audit();
+		iconthread.render();
+
+		//fixme		delete mamegame;
+		//		mamegame = 0;
+
+		return;
+	}
+
+	QStringList args;
+	QString command;
+
+	gamelistBuffer = "";
+
+	loadTimer.start();
+	command = "mamep.exe";
+	args << "-listxml";
+
+	loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
+	connect(loadProc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(loadError(QProcess::ProcessError)));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(readyReadStandardError()), this, SLOT(loadReadyReadStandardError()));
+	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
+	connect(loadProc, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(loadStateChanged(QProcess::ProcessState)));
+}
+
+void Gamelist::parse()
+{
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::prep parse()");
+
+	ListXMLHandler handler(0);
+	QXmlSimpleReader reader;
+	reader.setContentHandler(&handler);
+	reader.setErrorHandler(&handler);
+
+	QXmlInputSource *pxmlInputSource = new QXmlInputSource();
+	pxmlInputSource->setData (gamelistBuffer);
+
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::start parse()");
+	reader.parse(*pxmlInputSource);
+
+	GameInfo *gameinfo, *gameinfo2;
+	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	{
+
+		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		if (!gameinfo->cloneof.isEmpty())
+		{
+			gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo->cloneof];
+			gameinfo2->clones.insert(gamename);
+		}
+	}
+	
+	delete pxmlInputSource;
+	gamelistBuffer.clear();
+	mamegame->s11n();
+	delete mamegame;
+	mamegame = 0;
+}
+
+void Gamelist::loadStarted()
+{
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
+#endif
+
+	qmc2MainWindow->progressBarGamelist->setRange(0, numTotalGames);
+	qmc2MainWindow->progressBarGamelist->reset();
+}
+
+void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
+#endif
+
+	QTime elapsedTime;
+	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
+	qmc2MainWindow->log(LOG_QMC2, tr("done (loading XML gamelist data and (re)creating cache, elapsed time = %1)").arg(elapsedTime.toString("mm:ss.zzz")));
+	qmc2MainWindow->progressBarGamelist->reset();
+	qmc2ProcessManager->procMap.remove(proc);
+	qmc2ProcessManager->procCount--;
+	qmc2EarlyReloadActive = FALSE;
+	loadProc = NULL;
+
+	parse();
+}
+
+void Gamelist::loadReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardOutput(): proc = 0x" + QString::number((ulong)proc, 16));
+#endif
+
+	QString s = proc->readAllStandardOutput();
+	//mamep: remove windows endl
+	s.replace(QString("\r"), QString(""));
+
+	qmc2MainWindow->progressBarGamelist->setValue(qmc2MainWindow->progressBarGamelist->value() + s.count("<game name="));
+	gamelistBuffer += s;
+}
+
+void Gamelist::loadReadyReadStandardError()
+{
+	// QProcess *proc = (QProcess *)sender();
+
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardError(): proc = 0x" + QString::number((ulong)proc, 16));
+#endif
+
+}
+
+void Gamelist::loadError(QProcess::ProcessError processError)
+{
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadError(QProcess::ProcessError processError = " + QString::number(processError) + ")");
+#endif
+
+}
+
+void Gamelist::loadStateChanged(QProcess::ProcessState processState)
+{
+#ifdef QMC2_DEBUG
+	qmc2MainWindow->log(LOG_QMC2, "DEBUG: Gamelist::loadStateChanged(QProcess::ProcessState = " + QString::number(processState) + ")");
+#endif
+
+}
+
+void Gamelist::filterRegExpChanged()
+{
+    QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);
+
+	// multiple space-separated keywords
+	QString text = qmc2MainWindow->lineEditSearch->text();
+	static QRegExp spaceRegex = QRegExp("\\s+");
+	text.replace(spaceRegex, "*");
+	
+    QRegExp regExp(text, Qt::CaseInsensitive, syntax);
+    gameListPModel->setFilterRegExp(regExp);
+}
+
+void Gamelist::filterTimer()
+{
+	searchTimer->start(200);
+	searchTimer->setSingleShot(true);
+}
+
 QIcon loadWinIco(const QString & fileName)
 {
 	QFile *pIcoFile = new QFile(fileName);
@@ -908,46 +947,4 @@ QIcon loadWinIco(const QString & fileName)
 	delete pIcoFile;
 	return icon;
 }
-/*
-void Gamelist::buildTree(bool isParent)
-{
-static int gameCount = 0;
-foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-{
-GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
-if ((gameinfo->cloneof.isEmpty() || isParent) && !(gameinfo->cloneof.isEmpty() && isParent)) //logical XOR
-continue;
-
-QTreeWidgetItem *childItem;
-if (isParent)
-//create a new item
-gameinfo->pItem = childItem = new QTreeWidgetItem(qmc2MainWindow->treeWidgetHierarchy);
-else
-{
-//find parent and add to it
-QTreeWidgetItem *parentItem = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->pItem;
-gameinfo->pItem = childItem = new QTreeWidgetItem(parentItem);
-}
-
-childItem->setData(0, Qt::UserRole, gamename);
-childItem->setText(0, gameinfo->description);
-childItem->setText(1, gamename);
-childItem->setText(2, gameinfo->manufacturer);
-childItem->setText(3, gameinfo->sourcefile);
-childItem->setText(5, gameinfo->year);
-childItem->setText(6, gameinfo->cloneof);
-
-childItem->setText(11, QString::number(gameinfo->crcRomInfoMap.count()));
-
-childItem->setIcon(0, defIcon);
-childItem->setSizeHint(0, QSize(200, 17));
-//		if (!gameinfo->available)
-//			childItem->setHidden(true);
-//		else
-gameCount++;
-}
-qmc2MainWindow->log(LOG_QMC2, QString("DEBUG: available games %1").arg(gameCount));
-}
-*/
-
 

@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"?>
+<optiontemplate version="1">
+<section name="Video">
+	<option name="cheat" guiname="Cheat" type="bool" default="0">
+		<description>enable cheat subsystem</description>
+	</option>
+	<option name="throttle" guiname="Throttle" type="bool" default="1">
+		<description>enable throttling to keep game running in sync with real time</description>
+	</option>
+	<option name="frameskip" guiname="Frameskip" type="int" default="0" min="0" max="10">
+		<description>set frameskip to fixed value, 0-10 (autoframeskip must be disabled)</description>
+	</option>
+	<option name="brightness" guiname="Brightness" type="float" default="1.0" min="0.1" max="2.0">
+		<description>default game screen brightness correction</description>
+	</option>
+	<option name="video" guiname="Video Output" type="string" default="d3d">
+		<description>video output method: none, gdi, ddraw, or d3d</description>
+		<value guivalue="None">none</value>
+		<value guivalue="GDI">gdi</value>
+		<value guivalue="DirectDraw">ddraw</value>
+		<value guivalue="Direct3D">d3d</value>
+	</option>
+</section>
+<section name="Audio">
+	<option name="audio_latency" guiname="Audio Latency" type="int" default="2" min="1" max="5">
+		<description>set audio latency (increase to reduce glitches)</description>
+	</option>
+</section>
+<section name="Path">
+	<option name="artpath" guiname="Artwork Directory" type="string" default="artwork">
+		<description>path to artwork files</description>
+	</option>
+</section>
+</optiontemplate>

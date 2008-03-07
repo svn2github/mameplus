@@ -1,5 +1,10 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-   <file>res/win_roms.ico</file>
-</qresource>
+<RCC>
+    <qresource prefix="/" >
+        <file>res/32x32/applications-system.png</file>
+        <file>res/32x32/help-browser.png</file>
+        <file>res/32x32/system-search.png</file>
+        <file>res/32x32/view-refresh.png</file>
+        <file>res/optiontemplate.xml</file>
+        <file>res/win_roms.ico</file>
+    </qresource>
 </RCC>

@@ -1,14 +1,24 @@
 #include <QScrollBar>
 #include <QProcess>
 #include <QTimer>
+#include <QApplication>
+#include <QHeaderView>
+#include <QItemSelectionModel>
+#include <QStandardItemModel>
+#include <QTableView>
+
 
 #include "qmc2main.h"
 #include "procmgr.h"
 #include "gamelist.h"
+#include "mameopt.h"
+
 
 // global variables
 MainWindow *qmc2MainWindow = NULL;
 Gamelist *qmc2Gamelist = NULL;
+MameOptions *mameopts;
+
 ProcessManager *qmc2ProcessManager = NULL;
 bool qmc2ReloadActive = FALSE;
 bool qmc2EarlyReloadActive = FALSE;
@@ -19,43 +29,44 @@ QStringList qmc2BiosROMs;
 
 void MainWindow::log(char logOrigin, QString message)
 {
-  if ( !qmc2GuiReady )
-    return;
+	if ( !qmc2GuiReady )
+		return;
 
-  QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
+	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
-  QString msg = timeString + ": " + message;
+	QString msg = timeString + ": " + message;
 
-  switch ( logOrigin ) {
-    case LOG_QMC2:
-      textBrowserFrontendLog->append(msg);
-      textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
-      break;
+	switch ( logOrigin ) {
+	case LOG_QMC2:
+		textBrowserFrontendLog->append(msg);
+		textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
+		break;
 
-    case LOG_MAME:
-      textBrowserMAMELog->append(msg);
-      textBrowserMAMELog->horizontalScrollBar()->setValue(0);
-      break;
+	case LOG_MAME:
+		textBrowserMAMELog->append(msg);
+		textBrowserMAMELog->horizontalScrollBar()->setValue(0);
+		break;
 
-    default:
-      break;
-  }
+	default:
+		break;
+	}
 }
 
 MainWindow::MainWindow(QWidget *parent)
-  : QMainWindow(parent)
+: QMainWindow(parent)
 {
-  setupUi(this);
+	setupUi(this);
 
-  qmc2Gamelist = new Gamelist(this);
+	qmc2Gamelist = new Gamelist(this);
+	mameopts = new MameOptions(this);
 
-  QTimer::singleShot(0, this, SLOT(init()));
+	QTimer::singleShot(0, this, SLOT(init()));
 }
 
 MainWindow::~MainWindow()
 {
 #ifdef QMC2_DEBUG
-  log(LOG_QMC2, "DEBUG: MainWindow::~MainWindow()");
+	log(LOG_QMC2, "DEBUG: MainWindow::~MainWindow()");
 #endif
 }
 
@@ -72,10 +83,10 @@ void MainWindow::on_actionReload_activated()
 void MainWindow::on_actionExitStop_activated()
 {
 #ifdef QMC2_DEBUG
-  log(LOG_QMC2, "DEBUG: MainWindow::on_actionExitStop_activated()");
+	log(LOG_QMC2, "DEBUG: MainWindow::on_actionExitStop_activated()");
 #endif
 
-  close();
+	close();
 }
 
 void MainWindow::init()
@@ -84,10 +95,11 @@ void MainWindow::init()
 	log(LOG_QMC2, "DEBUG: MainWindow::init()");
 #endif
 	on_actionReload_activated();
+	mameopts->load();
 }
 
 int main(int argc, char *argv[])
- {
+{
 	QApplication qmc2App(argc, argv);
 
 	qmc2ProcessManager = new ProcessManager(0);
@@ -98,4 +110,4 @@ int main(int argc, char *argv[])
 	qmc2GuiReady = TRUE;
 
 	return qmc2App.exec();
- }
+}
