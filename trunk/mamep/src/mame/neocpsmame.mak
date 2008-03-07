@@ -65,9 +65,8 @@ DRVLIBS = \
 
 ifneq ($(USE_DRIVER_SWITCH),)
 DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
-            $(MAMEOBJ)/mamencpudriv.o \
             $(MAMEOBJ)/mamehbdriv.o \
-            $(MAMEOBJ)/mameneoddriv.o \
+            $(MAMEOBJ)/mamedecrypteddriv.o \
             $(MAMEOBJ)/mameconsoledriv.o
 endif
 

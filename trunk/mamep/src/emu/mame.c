@@ -46,13 +46,14 @@
                 - calls rom_init() [romload.c] to load the game's ROMs
                 - calls memory_init() [memory.c] to process the game's memory maps
                 - calls cpuexec_init() [cpuexec.c] to initialize the CPUs
+                - calls watchdog_init() [watchdog.c] to initialize the watchdog system
                 - calls cpuint_init() [cpuint.c] to initialize the CPU interrupts
 // USE_HISCORE
                 - calls hiscore_init() [hiscore.c] to initialize the hiscores
-                - calls mame_debug_init() [debugcpu.c] to set up the debugger
                 - calls the driver's DRIVER_INIT callback
                 - calls video_init() [video.c] to start the video system
                 - calls sound_init() [sound.c] to start the audio system
+                - calls mame_debug_init() [debugcpu.c] to set up the debugger
                 - calls the driver's MACHINE_START, SOUND_START, and VIDEO_START callbacks
                 - disposes of regions marked as disposable
                 - calls saveload_init() [mame.c] to set up for save/load
@@ -194,7 +195,7 @@ static core_options *mame_opts;
 static UINT8 started_empty;
 
 /* output channels */
-static output_callback output_cb[OUTPUT_CHANNEL_COUNT];
+static output_callback_func output_cb[OUTPUT_CHANNEL_COUNT];
 static void *output_cb_param[OUTPUT_CHANNEL_COUNT];
 
 /* the "disclaimer" that should be printed when run with no parameters */
@@ -955,7 +956,7 @@ UINT32 memory_region_flags(running_machine *machine, int num)
     channel
 -------------------------------------------------*/
 
-void mame_set_output_channel(output_channel channel, output_callback callback, void *param, output_callback *prevcb, void **prevparam)
+void mame_set_output_channel(output_channel channel, output_callback_func callback, void *param, output_callback_func *prevcb, void **prevparam)
 {
 	assert(channel < OUTPUT_CHANNEL_COUNT);
 	assert(callback != NULL);
@@ -1794,6 +1795,7 @@ static void init_machine(running_machine *machine)
 	rom_init(machine, machine->gamedrv->rom);
 	memory_init(machine);
 	cpuexec_init(machine);
+	watchdog_init(machine);
 	cpuint_init(machine);
 
 #ifdef MESS
@@ -1805,12 +1807,6 @@ static void init_machine(running_machine *machine)
 	/* start the hiscore system -- remove me */
 	hiscore_init(machine, machine->gamedrv->name);
 #endif /* USE_HISCORE */
-
-#ifdef ENABLE_DEBUGGER
-	/* initialize the debugger */
-	if (machine->debug_mode)
-		mame_debug_init(machine);
-#endif
 
 	/* call the game driver's init function */
 	/* this is where decryption is done and memory maps are altered */
@@ -1826,6 +1822,13 @@ static void init_machine(running_machine *machine)
 	device_list_start(machine);
 
 	sound_init(machine);
+	input_port_post_init(machine);
+
+#ifdef ENABLE_DEBUGGER
+	/* initialize the debugger */
+	if (machine->debug_mode)
+		mame_debug_init(machine);
+#endif
 
 	//mamep: prevent MESS crash #2
 	if(has_dummy_image())

@@ -7991,14 +7991,6 @@ static UINT32 PrintASCII(char * buf, UINT32 data, UINT8 size)
 {
 	switch(size)
 	{
-		case kSearchSize_8Bit:
-		case kSearchSize_1Bit:
-		default:
-			buf[0] = (data >> 0) & 0xFF;
-			buf[1] = 0;
-
-			return 1;
-
 		case kSearchSize_16Bit:
 			buf[0] = (data >> 8) & 0xFF;
 			buf[1] = (data >> 0) & 0xFF;
@@ -8022,10 +8014,17 @@ static UINT32 PrintASCII(char * buf, UINT32 data, UINT8 size)
 			buf[4] = 0;
 
 			return 4;
+
+		case kSearchSize_8Bit:
+		case kSearchSize_1Bit:
+		default:
+			buf[0] = (data >> 0) & 0xFF;
+			buf[1] = 0;
+
+			return 1;
+
 	}
 
-	buf[0] = 0;
-	return 0;
 }
 
 /*---------------------------------------------
@@ -8968,7 +8967,7 @@ static void RestoreRegionBackup(SearchRegion * region)
 
 static UINT8 DefaultEnableRegion(running_machine *machine, SearchRegion * region, SearchInfo * info)
 {
-	write8_handler		handler = region->writeHandler->write.handler8;
+	write8_machine_func		handler = region->writeHandler->write.handler8;
 	FPTR				handlerAddress = (FPTR)handler;
 
 	switch(info->searchSpeed)
@@ -11301,12 +11300,15 @@ static void cheat_periodicOperation(CheatAction * action)
 
 		case kOperation_AddSubtract:
 		{
-			INT32	temp, bound;
+			//INT32 temp, bound;
 
 			/* ----- if extend data field is invalid, direct return ----- */
 			//if(action->flags & kActionFlag_IgnoreMask)
 				return;
 
+			/* FIXME: AddSubstract looks seriously broken
+             *        and being worked on. */
+#if 0
 			temp = ReadData(action);
 
 			/* ----- OperationParameter field stores add/subtract ----- */
@@ -11328,6 +11330,7 @@ static void cheat_periodicOperation(CheatAction * action)
 			}
 
 			WriteData(action, temp);
+#endif
 		}
 		break;
 

@@ -335,9 +335,8 @@ DRVLIBS = \
 
 ifneq ($(USE_DRIVER_SWITCH),)
 DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
-            $(MAMEOBJ)/mamencpudriv.o \
             $(MAMEOBJ)/mamehbdriv.o \
-            $(MAMEOBJ)/mameneoddriv.o \
+            $(MAMEOBJ)/mamedecrypteddriv.o \
             $(MAMEOBJ)/mameconsoledriv.o
 endif
 
@@ -965,7 +964,7 @@ $(MAMEOBJ)/midcoin.a: \
 
 $(MAMEOBJ)/midw8080.a: \
 	$(DRIVERS)/8080bw.o $(AUDIO)/8080bw.o $(VIDEO)/8080bw.o \
-	$(DRIVERS)/m79amb.o $(VIDEO)/m79amb.o \
+	$(DRIVERS)/m79amb.o \
 	$(DRIVERS)/mw8080bw.o $(MACHINE)/mw8080bw.o $(AUDIO)/mw8080bw.o $(VIDEO)/mw8080bw.o \
 	$(DRIVERS)/rotaryf.o \
 	$(DRIVERS)/sspeedr.o $(VIDEO)/sspeedr.o \
@@ -1553,8 +1552,6 @@ $(MESSOBJ)/bandai.a:     \
 #-------------------------------------------------
 
 $(MAMEOBJ)/misc.a: \
-	$(DRIVERS)/pong.o $(AUDIO)/pong.o $(VIDEO)/pong.o \
-	$(DRIVERS)/monaco.o $(VIDEO)/monaco.o \
 	$(DRIVERS)/39in1.o \
 	$(DRIVERS)/1945kiii.o \
 	$(DRIVERS)/2mindril.o \

@@ -263,6 +263,7 @@ INLINE void RM16( UINT32 Addr, PAIR *p )
 	p->b.l = RM(Addr);
 }
 
+#ifdef UNUSED_FUNCTION
 INLINE void WM16( UINT32 Addr, PAIR *p )
 {
 	WM( Addr, p->b.h );
@@ -270,6 +271,7 @@ INLINE void WM16( UINT32 Addr, PAIR *p )
 //  if( ++Addr > AMASK ) Addr = 0;
 	WM( Addr, p->b.l );
 }
+#endif
 
 #if (HAS_M68705)
 
@@ -1044,8 +1046,8 @@ void hd63705_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_PCI:		info->i = m6805.irq_state[HD63705_INT_PCI];	break;
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_SCI:		info->i = m6805.irq_state[HD63705_INT_SCI];	break;
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_ADCONV:	info->i = m6805.irq_state[HD63705_INT_ADCONV]; break;
-//		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:		info->i = m6805.irq_state[HD63705_INT_NMI];	break;
-		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:		info->i = m6805.nmi_state;	break; // FIXED, actual the same, but get rid of compiler warning
+ 		// FIXED, actual the same, but get rid of compiler warning
+		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:		info->i = m6805.nmi_state;	break;
 
 		case CPUINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 16;					break;
 

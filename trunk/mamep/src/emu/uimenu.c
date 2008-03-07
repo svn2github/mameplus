@@ -84,7 +84,7 @@ enum
 typedef struct _menu_state menu_state;
 struct _menu_state
 {
-	ui_menu_handler handler;			/* handler callback */
+	ui_menu_handler_func handler;			/* handler callback */
 	UINT32			state;				/* state value */
 };
 
@@ -133,7 +133,7 @@ static const game_driver **select_game_driver_list;
 
 static dip_descriptor dip_switch_model[MAX_PHYSICAL_DIPS];
 
-static mame_bitmap *hilight_bitmap;
+static bitmap_t *hilight_bitmap;
 static render_texture *hilight_texture;
 
 static render_texture *arrow_texture;
@@ -195,7 +195,7 @@ static UINT32 menu_scale_effect(UINT32 state);
 #endif /* USE_SCALE_EFFECTS */
 
 /* menu helpers */
-static void menu_render_triangle(mame_bitmap *dest, const mame_bitmap *source, const rectangle *sbounds, void *param);
+static void menu_render_triangle(bitmap_t *dest, const bitmap_t *source, const rectangle *sbounds, void *param);
 
 static int input_menu_get_items(input_item_data *itemlist, int group);
 static int input_menu_get_game_items(input_item_data *itemlist);
@@ -724,7 +724,7 @@ void ui_menu_stack_reset(void)
     stack
 -------------------------------------------------*/
 
-UINT32 ui_menu_stack_push(ui_menu_handler new_handler, UINT32 new_state)
+UINT32 ui_menu_stack_push(ui_menu_handler_func new_handler, UINT32 new_state)
 {
 	menu_state *state = &menu_stack[++menu_stack_index];
 	assert(menu_stack_index < MENU_STACK_DEPTH);
@@ -2504,7 +2504,7 @@ static UINT32 menu_scale_effect(UINT32 state)
     indicators
 -------------------------------------------------*/
 
-static void menu_render_triangle(mame_bitmap *dest, const mame_bitmap *source, const rectangle *sbounds, void *param)
+static void menu_render_triangle(bitmap_t *dest, const bitmap_t *source, const rectangle *sbounds, void *param)
 {
 	int halfwidth = dest->width / 2;
 	int height = dest->height;
@@ -2635,7 +2635,7 @@ static int input_menu_get_game_items(input_item_data *itemlist)
 		const char *name = input_port_name(in);
 
 		/* add if we match the group and we have a valid name */
-		if (name != NULL &&
+		if ((name != NULL) && (input_port_condition(in)) &&
 #ifdef MESS
 			(in->category == 0 || input_category_active(in->category)) &&
 #endif /* MESS */

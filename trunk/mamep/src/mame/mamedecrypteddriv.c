@@ -23,20 +23,45 @@
 
 /* step 1: declare all external references */
 #define DRIVER(NAME) extern game_driver driver_##NAME;
-#include "mameneoddriv.c"
+#include "mamedecrypteddriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
-const game_driver * const neoddrivers[] =
+const game_driver * const decrypteddrivers[] =
 {
-#include "mameneoddriv.c"
+#include "mamedecrypteddriv.c"
 	0	/* end of array */
 };
 
 #else	/* DRIVER_RECURSIVE */
+	/* CPS2 Phoenix Edition */
+	DRIVER( ddtodd )	/* 12/04/1994 (c) 1993 (Euro) Phoenix Edition */
+	DRIVER( avspd )		/* 20/05/1994 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( ringdstd )	/* 02/09/1994 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( xmcotad )	/* 05/01/1995 (c) 1994 (Euro) Phoenix Edition */
+	DRIVER( nwarrud )	/* 06/04/1995 (c) 1995 (US) Phoenix Edition */
+	DRIVER( sfad )		/* 27/07/1995 (c) 1995 (Euro) Phoenix Edition */
+	DRIVER( 19xxd )		/* 07/12/1995 (c) 1996 (US) Phoenix Edition */
+	DRIVER( ddsomud )	/* 19/06/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( spf2xjd )	/* 31/05/1996 (c) 1996 (Japan) Phoenix Edition */
+	DRIVER( megamn2d )	/* 08/07/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( sfz2aad )	/* 26/08/1996 (c) 1996 (Asia) Phoenix Edition */
+	DRIVER( xmvsfu1d )	/* 04/10/1996 (c) 1996 (US) Phoenix Edition */
+	DRIVER( batcird )	/* 19/03/1997 (c) 1997 (Euro) Phoenix Edition */
+	DRIVER( vsavd )		/* 19/05/1997 (c) 1997 (Euro) Phoenix Edition */
+	DRIVER( mvscud )	/* 23/01/1998 (c) 1998 (US) Phoenix Edition */
+	DRIVER( sfa3ud )	/* 04/09/1998 (c) 1998 (US) Phoenix Edition */
+	DRIVER( gwingjd )	/* 23/02/1999 (c) 1999 Takumi (Japan) Phoenix Edition */
+	DRIVER( 1944d )		/* 20/06/2000 (c) 2000 Eighting/Raizing (US) Phoenix Edition */
+	DRIVER( hsf2d )		/* 02/02/2004 (c) 2004 (Asia) Phoenix Edition */
+	DRIVER( dstlku1d )	/* 05/07/1994 (c) 1994 (Phoenix Edition, US 940705) */
+	DRIVER( progerjd )	/* 17/01/2001 (c) 2001 Cave (Phoenix Edition, Japan) */
+	DRIVER( ssf2ud )	/* 11/09/1993 (c) 1993 (Phoenix Edition, US) */
+	DRIVER( mshud )		/* 24/10/1995 (c) 1995 (Phoenix Edition, US) */
+	DRIVER( sfz2ad )	/* 27/02/1996 (c) 1996 (Phoenix Edition, ASIA) */
 
-	/* decrypted junk */
+	/* NeoGeo decrypted junk */
 	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
 	DRIVER( kof99d )	/* 0251 (c) 1999 SNK */
 	DRIVER( ganryud )	/* 0252 (c) 1999 Visco */

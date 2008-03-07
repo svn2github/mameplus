@@ -92,6 +92,7 @@ Abnormalities:
 
 
 #include "driver.h"
+#include "deprecat.h"
 #include "toaplan1.h"
 #include "cpu/m68000/m68000.h"
 
@@ -154,9 +155,9 @@ static tile_struct *tile_list[32];
 static int max_list_size[32];
 static int tile_count[32];
 
-static	mame_bitmap *tmpbitmap1;
-static	mame_bitmap *tmpbitmap2;
-static	mame_bitmap *tmpbitmap3;
+static	bitmap_t *tmpbitmap1;
+static	bitmap_t *tmpbitmap2;
+static	bitmap_t *tmpbitmap3;
 
 
 #undef BGDBG
@@ -379,7 +380,7 @@ WRITE16_HANDLER( toaplan1_bcu_control_w )
 	if (toaplan1_unk_reset_port && toaplan1_reset)
 	{
 		toaplan1_reset = 0;
-		toaplan1_reset_sound(0,0,0);
+		toaplan1_reset_sound(machine,0,0,0);
 	}
 
 }
@@ -406,7 +407,7 @@ READ16_HANDLER( toaplan1_colorram1_r )
 WRITE16_HANDLER( toaplan1_colorram1_w )
 {
 	COMBINE_DATA(&toaplan1_colorram1[offset]);
-	paletteram16_xBBBBBGGGGGRRRRR_word_w(offset, data, 0);
+	paletteram16_xBBBBBGGGGGRRRRR_word_w(machine,offset, data, 0);
 }
 
 /* sprite palette */
@@ -418,7 +419,7 @@ READ16_HANDLER( toaplan1_colorram2_r )
 WRITE16_HANDLER( toaplan1_colorram2_w )
 {
 	COMBINE_DATA(&toaplan1_colorram2[offset]);
-	paletteram16_xBBBBBGGGGGRRRRR_word_w(offset+(toaplan1_colorram1_size/2), data, 0);
+	paletteram16_xBBBBBGGGGGRRRRR_word_w(machine,offset+(toaplan1_colorram1_size/2), data, 0);
 }
 
 READ16_HANDLER( toaplan1_spriteram16_r )
@@ -521,7 +522,7 @@ WRITE16_HANDLER( toaplan1_scroll_regs_w )
 
 /***************************************************************************
 
-  Draw the game screen in the given mame_bitmap.
+  Draw the game screen in the given bitmap_t.
 
 ***************************************************************************/
 
@@ -709,8 +710,8 @@ static void rallybik_find_sprites (void)
 static void toaplan1_sprite_mask
 	(
 	running_machine *machine,
-	mame_bitmap *dest_bmp,
-	mame_bitmap *src_bmp,
+	bitmap_t *dest_bmp,
+	bitmap_t *src_bmp,
 	const rectangle *clip
 	)
 {
@@ -810,9 +811,9 @@ static void toaplan1_sprite_mask
 static void toaplan1_sprite_copy
 	(
 	running_machine *machine,
-	mame_bitmap *dest_bmp,
-	mame_bitmap *src_bmp,
-	mame_bitmap *look_bmp,
+	bitmap_t *dest_bmp,
+	bitmap_t *src_bmp,
+	bitmap_t *look_bmp,
 	const rectangle *clip
 	)
 {
@@ -912,8 +913,8 @@ static void toaplan1_sprite_copy
 static void toaplan1_sprite_0_copy
 	(
 	running_machine *machine,
-	mame_bitmap *dest_bmp,
-	mame_bitmap *look_bmp,
+	bitmap_t *dest_bmp,
+	bitmap_t *look_bmp,
 	const rectangle *clip
 	)
 {
@@ -1009,7 +1010,7 @@ static void toaplan1_sprite_0_copy
 
 
 
-static void toaplan1_render (running_machine *machine, mame_bitmap *bitmap)
+static void toaplan1_render (running_machine *machine, bitmap_t *bitmap)
 {
 	int i;
 	int priority,pen;
@@ -1126,7 +1127,7 @@ if ( toaplan_dbg_sprite_only == 0 ){
 
 
 
-static void zerowing_render (running_machine *machine, mame_bitmap *bitmap)
+static void zerowing_render (running_machine *machine, bitmap_t *bitmap)
 {
 	int i;
 	int priority,pen;
@@ -1175,7 +1176,7 @@ static void zerowing_render (running_machine *machine, mame_bitmap *bitmap)
 }
 
 
-static void demonwld_render (running_machine *machine, mame_bitmap *bitmap)
+static void demonwld_render (running_machine *machine, bitmap_t *bitmap)
 {
 	int i;
 	int priority,pen;
@@ -1286,7 +1287,7 @@ if( toaplan_dbg_priority != 0 ){
 }
 
 
-static void rallybik_render (running_machine *machine, mame_bitmap *bitmap)
+static void rallybik_render (running_machine *machine, bitmap_t *bitmap)
 {
 	int i;
 	int priority,pen;
@@ -1347,7 +1348,7 @@ static void rallybik_render (running_machine *machine, mame_bitmap *bitmap)
 
 
 
-static void toaplan1_sprite_render (running_machine *machine, mame_bitmap *bitmap)
+static void toaplan1_sprite_render (running_machine *machine, bitmap_t *bitmap)
 {
 	int i;
 	int j;
@@ -1599,7 +1600,7 @@ VIDEO_EOF( toaplan1 )
 
 VIDEO_EOF( rallybik )
 {
-	buffer_spriteram16_w(0, 0, 0);
+	buffer_spriteram16_w(machine, 0, 0, 0);
 }
 
 VIDEO_EOF( samesame )

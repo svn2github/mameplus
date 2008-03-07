@@ -381,9 +381,8 @@ void assign_drivers(core_options *options)
 #ifndef TINY_NAME
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
-		{ "neod",	neoddrivers },
+		{ "decrypted",	neoddrivers },
 		{ "console",	consoledrivers },
-		{ "noncpu",	noncpudrivers },
 #endif /* !TINY_NAME */
 		{ NULL }
 	};

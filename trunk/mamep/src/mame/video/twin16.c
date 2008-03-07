@@ -87,7 +87,7 @@ WRITE16_HANDLER( twin16_video_register_w )
 }
 
 static void draw_sprite( /* slow slow slow, but it's ok for now */
-	mame_bitmap *bitmap,
+	bitmap_t *bitmap,
 	const UINT16 *pen_data,
 	int pal_base,
 	int xpos, int ypos,
@@ -196,11 +196,11 @@ shadow bit?
 
  */
 
-static void draw_sprites( mame_bitmap *bitmap, int demo )
+static void draw_sprites( bitmap_t *bitmap, int demo )
 {
 	int count = 0;
 
-	const UINT16 *source = 0x1800+buffered_spriteram16 + 0x800 -4;
+	const UINT16 *source = 0x1800+buffered_spriteram16 + 0x800 - 4;
 	const UINT16 *finish = 0x1800+buffered_spriteram16;
 
 	for (; source >= finish; source -= 4) {
@@ -214,8 +214,8 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 		if(code==0x052E)code=0x0528;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
 		if(code==0x0536)code=0x0530;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
 
-//Å@normal sprites
-		if( code!=0xffff && (attributes&0x8000) && demo==0  && ((code&0xFF00)!=0x1800)){
+// normal sprites
+		if((code!=0xffff) && (attributes&0x8000) && demo==0  && ((code&0xFF00)!=0x1800)){
 			int xpos = source[1];
 			int ypos = source[2];
 
@@ -286,7 +286,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 			draw_sprite( bitmap, pen_data, pal_base, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
 		}
 
-// Å@demonstration sprites
+// demonstration sprites
 		if( code!=0xffff && (attributes&0x8000) && (demo==1) && ((code&0xFF00)==0x1800)){
 			int xpos = source[1];
 			int ypos = source[2];
@@ -342,7 +342,7 @@ static void draw_sprites( mame_bitmap *bitmap, int demo )
 	}
 }
 
-static void draw_layer( mame_bitmap *bitmap, int opaque ){
+static void draw_layer( bitmap_t *bitmap, int opaque ){
 	const UINT16 *gfx_base;
 	const UINT16 *source = videoram16;
 	int i, xxor, yxor;
@@ -500,7 +500,7 @@ VIDEO_EOF( twin16 )
 
 	need_process_spriteram = 1;
 
-	buffer_spriteram16_w(0,0,0);
+	buffer_spriteram16_w(machine,0,0,0);
 }
 
 VIDEO_UPDATE( twin16 )

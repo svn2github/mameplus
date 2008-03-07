@@ -1119,13 +1119,11 @@ BEGIN
                     WS_TABSTOP,10,69,70,10
     CONTROL         "Homebrew",IDC_DRV_HOMEBREW,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,82,56,70,10
-    CONTROL         "Neogeo Decrypted",IDC_DRV_NEOD,"Button",BS_AUTOCHECKBOX | 
+    CONTROL         "Decrypted",IDC_DRV_DECRYPTED,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,56,90,10
 #ifndef NEOCPSMAME
     CONTROL         "Console",IDC_DRV_CONSOLE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,82,69,70,10
-    CONTROL         "Non-CPU",IDC_DRV_NONCPU,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,153,69,90,10
 #endif /* NEOCPSMAME */
 #endif /* DRIVER_SWITCH */
     GROUPBOX        "BIOS1:",IDC_BIOSTEXT1,4,86,123,32

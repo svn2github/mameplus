@@ -42,24 +42,6 @@ endif
 
 
 #-------------------------------------------------
-# Generic Video Synchronization CPU
-#-------------------------------------------------
-
-CPUDEFS += -DHAS_GENSYNC=$(if $(filter GENSYNC,$(CPUS)),1,0)
-
-ifneq ($(filter GENSYNC,$(CPUS)),)
-OBJDIRS += $(CPUOBJ)/gensync
-CPUOBJS += $(CPUOBJ)/gensync/gensync.o
-DBGOBJS += $(CPUOBJ)/gensync/gensyncd.o
-endif
-
-$(CPUOBJ)/gensync/gensync.o: \
-	$(CPUSRC)/gensync/gensync.c \
-	$(CPUSRC)/gensync/gensyncd.c \
-	$(CPUSRC)/gensync/gensync.h
-
-
-#-------------------------------------------------
 # Acorn ARM series
 #-------------------------------------------------
 

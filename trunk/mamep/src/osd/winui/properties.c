@@ -464,9 +464,8 @@ static const struct
 	{"mame",        IDC_DRV_MAME},
 	{"plus",        IDC_DRV_PLUS},
 	{"homebrew",    IDC_DRV_HOMEBREW},
-	{"neod",        IDC_DRV_NEOD},
+	{"decrypted",   IDC_DRV_DECRYPTED},
 #ifndef NEOCPSMAME
-	{"noncpu",      IDC_DRV_NONCPU},
 	{"console",     IDC_DRV_CONSOLE},
 #endif /* NEOCPSMAME */
 	{0}

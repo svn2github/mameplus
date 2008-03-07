@@ -316,11 +316,11 @@ static int snk_rot( int which ){
 	return value;
 }
 
-static int snk_input_port_r( int which ){
+static int snk_input_port_r( running_machine *machine, int which ){
 	switch( snk_io[which] ){
 		case SNK_INP0:
 		{
-			int value = input_port_0_r( 0 );
+			int value = input_port_0_r( machine,0 );
 			if( (snk_sound_register & 0x04) == 0 ) value &= ~snk_sound_busy_bit;
 			return value;
 		}
@@ -328,17 +328,17 @@ static int snk_input_port_r( int which ){
 		case SNK_ROT_PLAYER1: return snk_rot( 0 );
 		case SNK_ROT_PLAYER2: return snk_rot( 1 );
 
-		case SNK_INP1: return input_port_1_r(0);
-		case SNK_INP2: return input_port_2_r(0);
-		case SNK_INP3: return input_port_3_r(0);
-		case SNK_INP4: return input_port_4_r(0);
-		case SNK_INP5: return input_port_5_r(0);
-		case SNK_INP6: return input_port_6_r(0);
-		case SNK_INP7: return input_port_7_r(0);
-		case SNK_INP8: return input_port_8_r(0);
-		case SNK_INP9: return input_port_9_r(0);
-		case SNK_INP10: return input_port_10_r(0);
-		case SNK_INP11: return input_port_11_r(0);
+		case SNK_INP1: return input_port_1_r(machine,0);
+		case SNK_INP2: return input_port_2_r(machine,0);
+		case SNK_INP3: return input_port_3_r(machine,0);
+		case SNK_INP4: return input_port_4_r(machine,0);
+		case SNK_INP5: return input_port_5_r(machine,0);
+		case SNK_INP6: return input_port_6_r(machine,0);
+		case SNK_INP7: return input_port_7_r(machine,0);
+		case SNK_INP8: return input_port_8_r(machine,0);
+		case SNK_INP9: return input_port_9_r(machine,0);
+		case SNK_INP10: return input_port_10_r(machine,0);
+		case SNK_INP11: return input_port_11_r(machine,0);
 
 		default:
 		logerror("read from unmapped input port:%d\n", which );
@@ -384,11 +384,11 @@ static const struct YM3812interface ym3812_interface = {
 
 static WRITE8_HANDLER( snk_soundlatch_w ){
 	snk_sound_register |= 0x08 | 0x04;
-	soundlatch_w( offset, data );
+	soundlatch_w( machine, offset, data );
 }
 
 static READ8_HANDLER( snk_soundlatch_clear_r ){ /* TNK3 */
-	soundlatch_w( 0, 0 );
+	soundlatch_w( machine, 0, 0 );
 	snk_sound_register = 0;
 	return 0x00;
 }
@@ -455,21 +455,21 @@ ADDRESS_MAP_END
 
 static READ8_HANDLER( cpuA_io_r ){
 	switch( offset ){
-		case 0x000: return snk_input_port_r( 0 );	// coin input, player start
-		case 0x100: return snk_input_port_r( 1 );	// joy1
-		case 0x180: return snk_input_port_r( 2 );	// joy2
-		case 0x200: return snk_input_port_r( 3 );	// joy3
-		case 0x280: return snk_input_port_r( 4 );	// joy4
-		case 0x300: return snk_input_port_r( 5 );	// aim1
-		case 0x380: return snk_input_port_r( 6 );	// aim2
-		case 0x400: return snk_input_port_r( 7 );	// aim3
-		case 0x480: return snk_input_port_r( 8 );	// aim4
-		case 0x500: return snk_input_port_r( 9 );	// unused by tdfever
-		case 0x580: return snk_input_port_r( 10 );	// dsw
-		case 0x600: return snk_input_port_r( 11 );	// dsw
-		case 0x080: return snk_input_port_r( 12 );	// player start (types C and D in 'fsoccer')
+		case 0x000: return snk_input_port_r( machine,0 );	// coin input, player start
+		case 0x100: return snk_input_port_r( machine,1 );	// joy1
+		case 0x180: return snk_input_port_r( machine,2 );	// joy2
+		case 0x200: return snk_input_port_r( machine,3 );	// joy3
+		case 0x280: return snk_input_port_r( machine,4 );	// joy4
+		case 0x300: return snk_input_port_r( machine,5 );	// aim1
+		case 0x380: return snk_input_port_r( machine,6 );	// aim2
+		case 0x400: return snk_input_port_r( machine,7 );	// aim3
+		case 0x480: return snk_input_port_r( machine,8 );	// aim4
+		case 0x500: return snk_input_port_r( machine,9 );	// unused by tdfever
+		case 0x580: return snk_input_port_r( machine,10 );	// dsw
+		case 0x600: return snk_input_port_r( machine,11 );	// dsw
+		case 0x080: return snk_input_port_r( machine,12 );	// player start (types C and D in 'fsoccer')
 
-		case 0x700: return(snk_cpuB_nmi_trigger_r(0));
+		case 0x700: return(snk_cpuB_nmi_trigger_r(machine,0));
 
 		/* "Hard Flags" */
 		case 0xe00:
@@ -490,11 +490,11 @@ static WRITE8_HANDLER( cpuA_io_w ){
 
 		case 0x400: /* most games */
 		case 0x500: /* tdfever */
-		snk_soundlatch_w( 0, data );
+		snk_soundlatch_w( machine, 0, data );
 		break;
 
 		case 0x700:
-		snk_cpuA_nmi_ack_w(0, 0);
+		snk_cpuA_nmi_ack_w(machine, 0, 0);
 		break;
 
 		default:
@@ -506,7 +506,7 @@ static WRITE8_HANDLER( cpuA_io_w ){
 static READ8_HANDLER( cpuB_io_r ){
 	switch( offset ){
 		case 0x000:
-		case 0x700: return(snk_cpuA_nmi_trigger_r(0));
+		case 0x700: return(snk_cpuA_nmi_trigger_r(machine, 0));
 
 		/* "Hard Flags" they are needed here, otherwise ikarijp/b doesn't work right */
 		case 0xe00:
@@ -524,7 +524,7 @@ static WRITE8_HANDLER( cpuB_io_w )
 {
 	io_ram[offset] = data;
 
-	if (offset==0 || offset==0x700) snk_cpuB_nmi_ack_w(0, 0);
+	if (offset==0 || offset==0x700) snk_cpuB_nmi_ack_w(machine, 0, 0);
 }
 
 /**********************  Tnk3, Athena, Fighting Golf ********************/
@@ -817,17 +817,16 @@ static MACHINE_DRIVER_START( tnk3 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(tnk3_cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(tnk3_cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_sound_map,0)
-	//MDRV_CPU_VBLANK_INT(irq0_line_hold,4)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,3)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,4)
 
 	MDRV_INTERLEAVE(100)
 
@@ -862,16 +861,16 @@ static MACHINE_DRIVER_START( athena )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(tnk3_cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(tnk3_cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_YM3526_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
 
 	MDRV_INTERLEAVE(300)
 
@@ -890,7 +889,7 @@ static MACHINE_DRIVER_START( athena )
 
 	MDRV_PALETTE_INIT(aso)
 	MDRV_VIDEO_START(snk)
-	MDRV_VIDEO_UPDATE(athena)
+	MDRV_VIDEO_UPDATE(tnk3)
 
 	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
@@ -910,16 +909,16 @@ static MACHINE_DRIVER_START( ikari )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_YM3526_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(100)
 
@@ -958,16 +957,16 @@ static MACHINE_DRIVER_START( victroad )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_13_4MHz/4) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(100)
 
@@ -1006,16 +1005,16 @@ static MACHINE_DRIVER_START( gwar )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(100)
 
@@ -1052,17 +1051,17 @@ static MACHINE_DRIVER_START( bermudat )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	// 5MHz gives CPUB higher priority or ROM test will fail if the first NMI is triggered too early by CPUA
 	MDRV_CPU_ADD(Z80, 5000000)
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(100)
 
@@ -1099,16 +1098,16 @@ static MACHINE_DRIVER_START( psychos )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
 
 	MDRV_INTERLEAVE(100)
 
@@ -1145,16 +1144,16 @@ static MACHINE_DRIVER_START( chopper1 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3812_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(100)
 
@@ -1191,16 +1190,16 @@ static MACHINE_DRIVER_START( tdfever )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(snk_irq_AB,1)
+	MDRV_CPU_VBLANK_INT("main", snk_irq_AB)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-//  MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+//  MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(300)
 
@@ -1239,16 +1238,16 @@ static MACHINE_DRIVER_START( tdfever2 )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(snk_irq_AB,1)
+	MDRV_CPU_VBLANK_INT("main", snk_irq_AB)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-//  MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+//  MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, 4000000)
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(YM3526_Y8950_sound_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_INTERLEAVE(300)
 
@@ -1287,16 +1286,16 @@ static MACHINE_DRIVER_START( fsoccer )
 	/* basic machine hardware */
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuA_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	MDRV_CPU_PROGRAM_MAP(cpuB_map,0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,1)
+	MDRV_CPU_VBLANK_INT("main", irq0_line_hold)
 
 	MDRV_CPU_ADD(Z80, XTAL_8MHz/2) /* verified on pcb */
 	/* audio CPU */
 	MDRV_CPU_PROGRAM_MAP(Y8950_sound_map, 0)
-	MDRV_CPU_VBLANK_INT(irq0_line_hold,2)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
 
 	MDRV_INTERLEAVE(100)
 
@@ -4601,9 +4600,8 @@ GAME( 1988, choppera, chopper,  chopper1, choppera, choppera, ROT270, "SNK", "Ch
 GAME( 1988, chopperb, chopper,  chopper1, legofair, chopper,  ROT270, "SNK", "Chopper I (US set 3)", GAME_NO_COCKTAIL )
 GAME( 1988, legofair, chopper,  chopper1, legofair, chopper,  ROT270, "SNK", "Koukuu Kihei Monogatari - The Legend of Air Cavalry (Japan)", GAME_NO_COCKTAIL )
 GAME( 1987, tdfever,  0,        tdfever,  tdfever,  tdfever,  ROT270, "SNK", "TouchDown Fever", GAME_NO_COCKTAIL )
-GAME( 1987, tdfeverj, tdfever,  tdfever,  tdfeverj,  tdfever,  ROT270, "SNK", "TouchDown Fever (Japan)", GAME_NO_COCKTAIL )
+GAME( 1987, tdfeverj, tdfever,  tdfever,  tdfeverj,  tdfever, ROT270, "SNK", "TouchDown Fever (Japan)", GAME_NO_COCKTAIL )
 GAME( 1988, tdfever2, tdfever,  tdfever2, tdfever,  tdfever2, ROT270, "SNK", "TouchDown Fever 2", GAME_NO_COCKTAIL ) /* upgrade kit for Touchdown Fever */
 GAME( 1988, fsoccer,  0,        fsoccer,  fsoccer,  fsoccer,  ROT0,   "SNK", "Fighting Soccer (version 4)", GAME_NO_COCKTAIL )
 GAME( 1988, fsoccerj, fsoccer,  fsoccer,  fsoccer,  fsoccer,  ROT0,   "SNK", "Fighting Soccer (Japan)", GAME_NO_COCKTAIL )
 GAME( 1988, fsoccerb, fsoccer,  fsoccer,  fsoccer,  fsoccer,  ROT0,   "bootleg", "Fighting Soccer (joystick hack bootleg)", GAME_NO_COCKTAIL )
-

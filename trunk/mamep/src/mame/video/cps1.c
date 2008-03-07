@@ -177,7 +177,6 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 ***************************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
 #include "cps1.h"
 
 #define VERBOSE 0
@@ -377,8 +376,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m13",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
 	{"sf2tlonb",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-	{"sfach",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"wofh",    HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
 	{"wofha",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 11 },
 	{"wofhfh",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
@@ -408,8 +405,11 @@ static const struct CPS1config cps1_config_table[]=
 	{"pnickj",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
 	{"pang3",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
 	{"pang3j",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 5 },	/* EEPROM port is among the CPS registers */
+	//#ifdef MESS
+	{"sfzch",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
+	//#endif
 
-	/* CPS2 games */
+    /* CPS2 games */
 	{"cps2",    NOBATTRY, 4,4,4, 0x0000,0xffff,0x0000,0xffff },
 	{"ssf2",    NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff },
 	{"ssf2u",   NOBATTRY, 4,4,0, 0x0000,0xffff,0x0000,0xffff },
@@ -577,7 +577,7 @@ READ16_HANDLER( cps1_output_r )
 
 	/* Pang 3 EEPROM interface */
 	if (cps1_game_config->kludge == 5 && offset == 0x7a/2)
-		return cps1_eeprom_port_r(0,mem_mask);
+		return cps1_eeprom_port_r(machine,0,mem_mask);
 
 	return cps1_output[offset];
 }
@@ -587,7 +587,7 @@ WRITE16_HANDLER( cps1_output_w )
 	/* Pang 3 EEPROM interface */
 	if (cps1_game_config->kludge == 5 && offset == 0x7a/2)
 	{
-		cps1_eeprom_port_w(0,data,mem_mask);
+		cps1_eeprom_port_w(machine,0,data,mem_mask);
 		return;
 	}
 
@@ -1355,11 +1355,11 @@ static void cps1_find_last_sprite(void)    /* Find the offset of last sprite */
 }
 
 
-static void cps1_render_sprites(running_machine *machine, mame_bitmap *bitmap, const rectangle *cliprect)
+static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, const rectangle *cliprect)
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)					\
 {																	\
-	if (flip_screen_get())												\
+	if (flip_screen_get())											\
 		pdrawgfx(bitmap,machine->gfx[2],							\
 				CODE,												\
 				COLOR,												\
@@ -1598,11 +1598,11 @@ static void cps2_find_last_sprite(void)    /* Find the offset of last sprite */
 #undef DRAWSPRITE
 }
 
-static void cps2_render_sprites(running_machine *machine, mame_bitmap *bitmap,const rectangle *cliprect,int *primasks)
+static void cps2_render_sprites(running_machine *machine, bitmap_t *bitmap,const rectangle *cliprect,int *primasks)
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)									\
 {																					\
-	if (flip_screen_get())																\
+	if (flip_screen_get())															\
 		pdrawgfx(bitmap,machine->gfx[2],											\
 				CODE,																\
 				COLOR,																\
@@ -1745,7 +1745,7 @@ static void cps2_render_sprites(running_machine *machine, mame_bitmap *bitmap,co
 
 
 
-static void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
+static void cps1_render_stars(bitmap_t *bitmap,const rectangle *cliprect)
 {
 	int offs;
 	UINT8 *stars_rom = memory_region(REGION_GFX2);
@@ -1775,7 +1775,7 @@ static void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (cpu_getcurrentframe()/16 & 0x0f);
+				col = ((col & 0xe0) >> 1) + (video_screen_get_frame_number(0)/16 & 0x0f);
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
 					sy >= cliprect->min_y && sy <= cliprect->max_y)
@@ -1801,7 +1801,7 @@ static void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
 					sy = 255 - sy;
 				}
 
-				col = ((col & 0xe0) >> 1) + (cpu_getcurrentframe()/16 & 0x0f);
+				col = ((col & 0xe0) >> 1) + (video_screen_get_frame_number(0)/16 & 0x0f);
 
 				if (sx >= cliprect->min_x && sx <= cliprect->max_x &&
 					sy >= cliprect->min_y && sy <= cliprect->max_y)
@@ -1812,7 +1812,7 @@ static void cps1_render_stars(mame_bitmap *bitmap,const rectangle *cliprect)
 }
 
 
-static void cps1_render_layer(running_machine *machine,mame_bitmap *bitmap,const rectangle *cliprect,int layer,int primask)
+static void cps1_render_layer(running_machine *machine,bitmap_t *bitmap,const rectangle *cliprect,int layer,int primask)
 {
 	switch (layer)
 	{
@@ -1827,7 +1827,7 @@ static void cps1_render_layer(running_machine *machine,mame_bitmap *bitmap,const
 	}
 }
 
-static void cps1_render_high_layer(mame_bitmap *bitmap, const rectangle *cliprect, int layer)
+static void cps1_render_high_layer(bitmap_t *bitmap, const rectangle *cliprect, int layer)
 {
 	switch (layer)
 	{

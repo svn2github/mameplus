@@ -78,6 +78,7 @@ EMUOBJS = \
 	$(EMUOBJ)/uitext.o \
 	$(EMUOBJ)/validity.o \
 	$(EMUOBJ)/video.o \
+	$(EMUOBJ)/watchdog.o \
 	$(EMUOBJ)/datafile.o \
 	$(EMUOBJ)/uilang.o
 

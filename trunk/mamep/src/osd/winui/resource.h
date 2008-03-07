@@ -443,8 +443,7 @@
 #define IDC_DRV_MAME                    1401 // DRIVER_SWITCH
 #define IDC_DRV_PLUS                    1402 // DRIVER_SWITCH
 #define IDC_DRV_HOMEBREW                1403 // DRIVER_SWITCH
-#define IDC_DRV_NEOD                    1404 // DRIVER_SWITCH
-#define IDC_DRV_NONCPU                  1405 // DRIVER_SWITCH
+#define IDC_DRV_DECRYPTED               1404 // DRIVER_SWITCH
 #define IDC_DRV_CONSOLE                 1406 // DRIVER_SWITCH
 
 #define ID_FILE_EXIT                    40001
