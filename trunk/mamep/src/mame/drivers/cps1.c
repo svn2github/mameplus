@@ -3956,7 +3956,7 @@ static MACHINE_DRIVER_START( wofb )
 	MDRV_IMPORT_FROM(cps1)
 	MDRV_CPU_REPLACE("main", M68000, 12000000)
 	MDRV_CPU_PROGRAM_MAP(wofb_readmem,wofb_writemem)
-	MDRV_CPU_VBLANK_INT(cps1_qsound_interrupt,1)  /* ??? interrupts per frame */
+	MDRV_CPU_VBLANK_INT("main", cps1_qsound_interrupt)  /* ??? interrupts per frame */
 
 	MDRV_CPU_REPLACE("sound", Z80, 8000000)
 	MDRV_CPU_PROGRAM_MAP(qsound_readmem,qsound_writemem)

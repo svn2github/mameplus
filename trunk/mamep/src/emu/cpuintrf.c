@@ -229,7 +229,6 @@ void minx_get_info(UINT32 state, cpuinfo *info);
 
 
 
-
 /*************************************
  *
  *  Debug logging
@@ -291,9 +290,6 @@ static const struct
 } cpuintrf_map[] =
 {
 	{ CPU_DUMMY, dummy_get_info },
-#if (HAS_GENSYNC)
-	{ CPU_GENSYNC, gensync_get_info },
-#endif
 #if (HAS_Z80)
 	{ CPU_Z80, z80_get_info },
 #endif

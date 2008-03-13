@@ -798,7 +798,7 @@ static void m68kdrc_reset(drc_core *drc)
 {
 	extern int activecpu;
 
-	logerror("cpu #%d: frame %d: DRC cache reset\n", activecpu, cpu_getcurrentframe());
+//	logerror("cpu #%d: frame %d: DRC cache reset\n", activecpu, cpu_getcurrentframe());
 	//printf("DRC reset: %p\n", drc->cache_top);
 
 	append_generate_exception(trap);

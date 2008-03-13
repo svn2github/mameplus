@@ -1555,9 +1555,9 @@ const char *video_get_speed_text(void)
 	static char buffer[1024];
 	char *dest = buffer;
 
-	*dest = '\0';
-
-	dest += sprintf(dest, _("frame:%d "), cpu_getcurrentframe());
+//fixme 0.123u4 cpuexec
+//	*dest = '\0';
+//	dest += sprintf(dest, _("frame:%d "), cpu_getcurrentframe());
 
 	/* if we're paused, just display Paused */
 	if (paused)

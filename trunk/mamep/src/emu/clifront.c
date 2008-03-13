@@ -120,7 +120,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	astring *exename = astring_alloc();
 	const char *gamename_option;
 	const game_driver *driver;
-	output_callback prevcb;
+	output_callback_func prevcb;
 	void *prevparam;
 	int result;
 
@@ -381,7 +381,7 @@ void assign_drivers(core_options *options)
 #ifndef TINY_NAME
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
-		{ "decrypted",	neoddrivers },
+		{ "decrypted",	decrypteddrivers },
 		{ "console",	consoledrivers },
 #endif /* !TINY_NAME */
 		{ NULL }

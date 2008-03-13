@@ -52,15 +52,6 @@ enum
 #define video_screen_next(previous)		device_list_next((previous), VIDEO_SCREEN)
 
 
-/*-------------------------------------------------
-    vblank_state_changed_func - callback that a
-    screen calls to notify of a change of
-    the VBLANK state
--------------------------------------------------*/
-
-typedef void (*vblank_state_changed_func)(running_machine *machine, screen_state *screen, int vblank_state);
-
-
 
 /***************************************************************************
     TYPE DEFINITIONS
@@ -95,6 +86,16 @@ struct _screen_config
 	float			xoffset, yoffset;			/* default X/Y offsets */
 	float			xscale, yscale;				/* default X/Y scale factor */
 };
+
+
+/*-------------------------------------------------
+    vblank_state_changed_func - callback that a
+    screen calls to notify of a change of
+    the VBLANK state
+-------------------------------------------------*/
+
+typedef void (*vblank_state_changed_func)(running_machine *machine, screen_state *screen, int vblank_state);
+
 
 
 /***************************************************************************

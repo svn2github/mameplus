@@ -10,7 +10,10 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "profiler.h"
+#include "xmlfile.h"
+#include "config.h"
 
 
 
@@ -197,11 +200,12 @@ void cpuexec_init(running_machine *machine)
 
 	/* save some stuff in the default tag */
 	state_save_push_tag(0);
-	state_save_register_item("cpu", 0, vblank);
-	state_save_register_item("cpu", 0, current_frame);
-	state_save_register_item("cpu", 0, watchdog_enabled);
-	state_save_register_item("cpu", 0, watchdog_counter);
-	state_save_register_item("cpu", 0, vblank_countdown);
+//fixme 0.123u4 cpuexec
+//	state_save_register_item("cpu", 0, vblank);
+//	state_save_register_item("cpu", 0, current_frame);
+//	state_save_register_item("cpu", 0, watchdog_enabled);
+//	state_save_register_item("cpu", 0, watchdog_counter);
+//	state_save_register_item("cpu", 0, vblank_countdown);
 	state_save_pop_tag();
 
 	config_register("cpu", cpu_load, cpu_save);
