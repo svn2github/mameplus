@@ -6,15 +6,12 @@
 #include <QProcess>
 #include <QIcon>
 #include <QFile>
-#include <QAbstractItemModel>
-#include <QModelIndex>
-#include <QList>
-#include <QTreeView>
 #include <QVariant>
 #include <QTextStream>
 #include <QXmlDefaultHandler>
 #include <QFileIconProvider>
 #include <QThread>
+#include <QtGui>
 
 class LoadIconThread : public QThread
 {
@@ -24,7 +21,7 @@ public:
 	void render();
 
 signals:
-	void progressSwitched(int max);
+	void progressSwitched(int max, QString title = "");
 	void progressUpdated(int progress);
 
 protected:
@@ -39,7 +36,7 @@ public:
 	void audit();
 
 signals:
-	void progressSwitched(int max);
+	void progressSwitched(int max, QString title = "");
 	void progressUpdated(int progress);
 	void logUpdated(char, QString);
 
@@ -87,21 +84,33 @@ public:
 	QModelIndex index(int column, TreeItem *childItem) const;
 	QModelIndex parent(const QModelIndex &index) const;
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
+	void rowChanged(const QModelIndex &index);
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
 	bool setData(const QModelIndex &index, const QVariant &value,
 		int role = Qt::EditRole);
 	bool setHeaderData(int section, Qt::Orientation orientation,
 		const QVariant &value, int role = Qt::EditRole);
 
+	TreeItem *getItem(const QModelIndex &index) const;
+	TreeItem *rootItem;
 
 private:
 	void setupModelData(TreeItem *parent, bool isParent);
-	TreeItem *getItem(const QModelIndex &index) const;
-
-	TreeItem *rootItem;
 };
 
+class GamelistDelegate : public QItemDelegate
+{
+	Q_OBJECT
 
+public:
+	GamelistDelegate(QObject *parent = 0);
+
+	QSize sizeHint ( const QStyleOptionViewItem & option, 
+		const QModelIndex & index ) const;
+
+	void paint(QPainter *painter, const QStyleOptionViewItem &option,
+		const QModelIndex &index ) const;
+};
 
 class Gamelist : public QObject
 {
@@ -165,7 +174,9 @@ public slots:
 	// internal methods
 	void parse();
 	void updateProgress(int progress);
-	void switchProgress(int max);
+	void switchProgress(int max, QString title);
+	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
+	void updateScreenshot(QString gameName);
 	void setupIcon();
 	void setupAudit();
 	void log(char, QString);
@@ -191,7 +202,7 @@ class GameInfo : public QObject
 public:
 	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDescription, reading;
 	QHash<quint32, RomInfo *> crcRomInfoMap;
-	bool available;
+	int available;
 	QIcon icon;
 	TreeItem *pModItem;
 	QSet<QString> clones;
@@ -202,6 +213,8 @@ public:
 
 class MameGame : public QObject
 {
+Q_OBJECT
+
 public:
 	QString mameVersion;
 	QHash<QString, GameInfo *> gamenameGameInfoMap;
@@ -216,5 +229,23 @@ public:
 bool loadIcon(QString, bool checkOnly = FALSE);
 QIcon loadWinIco(const QString & fileName);
 void auditROMs();
+
+class GameListSortFilterProxyModel : public QSortFilterProxyModel
+{
+Q_OBJECT
+
+public:
+GameListSortFilterProxyModel(QObject *parent = 0);
+
+protected:
+	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
+//	bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+};
+
+enum
+{
+	GL_USERROLE_FOCUS = 0,
+	GL_USERROLE_GUIVALLIST
+};
 
 #endif

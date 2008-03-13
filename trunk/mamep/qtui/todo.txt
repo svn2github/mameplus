@@ -1,7 +1,4 @@
-﻿mameui basic
-* generic multiple zip/folder reading, with parent/clone
-
-generic non-rom
+﻿generic non-rom
   chop off file ext, add .zip
 inp/captcomm.inp
 inp/captcomm.zip/captcomm.inp
@@ -20,26 +17,40 @@ rom
 roms/captcomm/rom1.bin (directly)
 roms/captcomm.zip/rom1.bin
 
-1 filter
-* check new/delete operator
-* ensure ->load() functions only called once, no multiple connect()
-1 save GUI layout
-* ini import/export, save GUI option
-* custom delegate with QQ2007 style highlighting, clone padding
-1 check selected bios only
-* hide to systray when lauching mame
-* options dialog, bold changed items, with a reset button on the right
-* snapshot (timer delayed instead of cache)
-* history/mameinfo/story
-* mess console game list
-* switch tree/combobox
-* heap check
-
-extension
+[basic]
+* col width should > 100
+* colum data structure
+1 list.xml export thread
+1 available filter
+1 start mame core
+* ROM capa column
+* generic multiple zip/folder reading, with parent/clone
+* multiple snapshot
+* column order
+* preliminary GUI options: path etc
+* other filters
+* ini import/export
+* audit selected bios only
 * faster icon cache
+* hide to systray when lauching mame
+* history/mameinfo/story
+* switch tree/combobox
+* selectable l&f
+* remove useless ini entries
+* fullscreen switch
+* export roms to folders
+* delete roms
+folders: orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
+
+
+[extension]
+* search history
+* bold changed option items, with a reset button on the right, section title
+* mess console game list
 * loading gif
 * command.dat parsing with rich text
-* dockable controls
 * controller setting
-* ui customization
-* 'save state' context menu
+
+[sanity check]
+* check new/delete operator
+* ensure ->load() functions only called once, no multiple connect()

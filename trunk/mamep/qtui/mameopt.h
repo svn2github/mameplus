@@ -28,10 +28,10 @@ class OptionDelegate : public QItemDelegate
 public:
 	OptionDelegate(QObject *parent = 0);
 
-	QSize OptionDelegate::sizeHint ( const QStyleOptionViewItem & option, 
+	QSize sizeHint ( const QStyleOptionViewItem & option, 
 		const QModelIndex & index ) const;
 
-	void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+	void paint(QPainter *painter, const QStyleOptionViewItem &option,
 		const QModelIndex &index ) const;
 
 	QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,

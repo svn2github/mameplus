@@ -2,6 +2,7 @@
 #define _QMC2_MAIN_H_
 
 #include <QApplication>
+#include <QtGui>
 #include "ui_qmc2main.h"
 
 #define LOG_QMC2	1
@@ -9,21 +10,29 @@
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
-  Q_OBJECT
+Q_OBJECT
 
-  public:
+public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+	
+	QLineEdit *lineEditSearch;
+	QLabel *labelProgress;
+	QProgressBar *progressBarGamelist;
+	QLabel *labelSnapshot;
 
-  public slots:
+public slots:
     // game menu
     void on_actionRefresh_activated();
     void on_actionReload_activated();
 	void on_actionExitStop_activated();
+	void on_actionDefaultOptions_activated();
     void log(char, QString);
-    void init();
-
-  protected:
+	void init();
+	void saveLayout();
+	void loadLayout();
+protected:
+    void closeEvent(QCloseEvent *event);
 };
 
 #endif

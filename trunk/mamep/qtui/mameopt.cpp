@@ -41,7 +41,6 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option
 				painter->fillRect(option.rect, option.palette.highlight());
 
 			QApplication::style()->drawControl(QStyle::CE_CheckBox, &ctrl, painter);
-
 			return;
 		}
 		default:
