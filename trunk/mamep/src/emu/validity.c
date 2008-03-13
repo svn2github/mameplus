@@ -450,7 +450,7 @@ static int validate_driver(int drivnum, const machine_config *config)
 		}
 
 	/* find shared ROM entries */
-#if 0 //ndef MESS
+#if 0
 	if (driver->rom && (driver->flags & GAME_IS_BIOS_ROOT) == 0)
 	{
 		crc = (FPTR)driver->rom;

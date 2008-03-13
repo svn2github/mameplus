@@ -49,7 +49,6 @@ OBJDIRS += \
 # only for MESS and so aren't included
 #-------------------------------------------------
 
-CPUS += GENSYNC
 CPUS += Z80
 CPUS += Z180
 CPUS += 8080

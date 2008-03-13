@@ -23,7 +23,9 @@
 #include "video.h"
 #endif /* USE_SCALE_EFFECTS */
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "uimess.h"
 #include "inputx.h"
@@ -165,9 +167,9 @@ static UINT32 menu_input_groups(UINT32 state);
 static UINT32 menu_input(UINT32 state);
 static UINT32 menu_switches(UINT32 state);
 static UINT32 menu_analog(UINT32 state);
-//#ifndef MESS
+#ifndef MESS
 static UINT32 menu_bookkeeping(UINT32 state);
-//#endif
+#endif
 static UINT32 menu_game_info(UINT32 state);
 static UINT32 menu_cheat(UINT32 state);
 static UINT32 menu_memory_card(UINT32 state);
@@ -543,9 +545,9 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 
 		/* add a box around that */
 		ui_draw_outlined_box(target_x - UI_BOX_LR_BORDER,
-						target_y - UI_BOX_TB_BORDER,
-						target_x + target_width  + UI_BOX_LR_BORDER,
-						target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
+						 target_y - UI_BOX_TB_BORDER,
+						 target_x + target_width + UI_BOX_LR_BORDER,
+						 target_y + target_height + UI_BOX_TB_BORDER, UI_FILLCOLOR);
 		ui_draw_text_full(item->subtext, target_x, target_y, target_width,
 					JUSTIFY_RIGHT, WRAP_WORD, DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
 	}
@@ -940,10 +942,10 @@ do { \
 	if (has_analog)
 		ADD_MENU(UI_analogcontrols, menu_analog, 0);
 
-//#ifndef MESS
+#ifndef MESS
   	/* add bookkeeping menu */
 	ADD_MENU(UI_bookkeeping, menu_bookkeeping, 0);
-//#endif
+#endif
 
 	/* add game info menu */
 	ADD_MENU(UI_gameinfo, menu_game_info, 0);
@@ -1326,7 +1328,7 @@ static UINT32 menu_analog(UINT32 state)
     bookkeeping information
 -------------------------------------------------*/
 
-//#ifndef MESS
+#ifndef MESS
 static UINT32 menu_bookkeeping(UINT32 state)
 {
 	char buf[2048];

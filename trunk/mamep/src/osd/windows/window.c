@@ -50,7 +50,9 @@
 #include "mameres.h"
 #endif /* WINUI */
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "menu.h"
 #include "uimess.h"

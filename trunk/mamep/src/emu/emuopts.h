@@ -27,6 +27,7 @@
 #define OPTION_PRIORITY_CMDLINE		OPTION_PRIORITY_HIGH
 #define OPTION_PRIORITY_INI			OPTION_PRIORITY_NORMAL
 
+
 /* core options */
 #define OPTION_GAMENAME				OPTION_UNADORNED(0)
 
@@ -38,9 +39,9 @@
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
-//#ifdef MESS
+#ifdef MAMEMESS
 #define OPTION_HASHPATH				"hashpath"
-//#endif
+#endif
 #define OPTION_SAMPLEPATH			"samplepath"
 #define OPTION_ARTPATH				"artpath"
 #define OPTION_CTRLRPATH			"ctrlrpath"
@@ -209,6 +210,7 @@
 ***************************************************************************/
 
 extern const options_entry mame_core_options[];
+
 
 
 /***************************************************************************

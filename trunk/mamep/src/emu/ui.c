@@ -27,12 +27,13 @@
 #include "deprecat.h"
 #include "uitext.h"
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "mess.h"
 #include "uimess.h"
 #include "inputx.h"
-#include "messopts.h"
 #endif
 
 #include <ctype.h>

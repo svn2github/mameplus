@@ -109,9 +109,9 @@ typedef UINT32 (*video_update_func)(running_machine *machine, int screen, bitmap
 #include "audio/generic.h"
 #include "video/generic.h"
 
-//#ifdef MESS
+#ifdef MAMEMESS
 #include "messdrv.h"
-//#endif
+#endif
 
 
 
@@ -139,10 +139,10 @@ typedef UINT32 (*video_update_func)(running_machine *machine, int screen, bitmap
 #define GAME_IS_BIOS_ROOT				0x1000	/* this driver entry is a BIOS root */
 #define GAME_NO_STANDALONE				0x2000	/* this driver cannot stand alone */
 
-//#ifdef MESS
+#ifdef MAMEMESS
 #define GAME_COMPUTER               	0x8000  /* Driver is a computer (needs full keyboard) */
 #define GAME_COMPUTER_MODIFIED      	0x4000	/* Official? Hack */
-//#endif
+#endif
 
 
 
@@ -169,10 +169,10 @@ struct _game_driver
 	void				(*driver_init)(running_machine *machine); /* DRIVER_INIT callback */
 	const rom_entry *	rom;						/* pointer to list of ROMs for the game */
 
-//#ifdef MESS
+#ifdef MAMEMESS
 	void (*sysconfig_ctor)(struct SystemConfigurationParamBlock *cfg);
 	const char *		compatible_with;
-//#endif
+#endif
 
 	UINT32				flags;						/* orientation and other flags; see defines below */
 	const char *		default_layout;				/* default internally defined layout */
@@ -187,6 +187,24 @@ struct _game_driver
 #define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)	\
 	GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,((const char *)0))
 
+#ifndef MAMEMESS
+#define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
+const game_driver driver_##NAME =					\
+{											\
+	__FILE__,								\
+	#PARENT,								\
+	#NAME,									\
+	FULLNAME,								\
+	#YEAR,									\
+	COMPANY,								\
+	machine_config_##MACHINE,				\
+	ipt_##INPUT,							\
+	driver_init_##INIT,						\
+	rom_##NAME,								\
+	(MONITOR)|(FLAGS),						\
+	&LAYOUT[0]								\
+};
+#else /* MAMEMESS */
 #define GAMEL(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS,LAYOUT)	\
 const game_driver driver_##NAME =					\
 {											\
@@ -205,6 +223,7 @@ const game_driver driver_##NAME =					\
 	(MONITOR)|(FLAGS),						\
 	&LAYOUT[0]								\
 };
+#endif /* MAMEMESS */
 
 /* this allows to leave the INIT field empty in the GAME() macro call */
 #define driver_init_0 0

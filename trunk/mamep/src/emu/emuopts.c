@@ -16,7 +16,9 @@
 
 #include <ctype.h>
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 
 /***************************************************************************
     BUILT-IN (CORE) OPTIONS

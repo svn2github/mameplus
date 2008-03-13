@@ -101,7 +101,9 @@
 #include <setjmp.h>
 #include <time.h>
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 
 /***************************************************************************
     CONSTANTS

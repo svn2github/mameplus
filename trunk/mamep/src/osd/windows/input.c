@@ -47,7 +47,9 @@
 #include "strconv.h"
 #include "config.h"
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "uimess.h"
 #endif

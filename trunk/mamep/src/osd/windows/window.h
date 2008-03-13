@@ -18,7 +18,7 @@
 //  PARAMETERS
 //============================================================
 
-#if 0 //ndef MESS
+#ifndef MAMEMESS
 #define HAS_WINDOW_MENU			FALSE
 #else
 #define HAS_WINDOW_MENU			TRUE

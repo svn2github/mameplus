@@ -22,10 +22,12 @@
 #include "osdcore.h"
 #include <ctype.h>
 
-//#ifdef MESS
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+#ifdef MESS
 #include "climess.h"
-#include "messopts.h"
-//#endif /* MESS */
+#endif /* MESS */
 
 
 
@@ -95,9 +97,9 @@ static const options_entry cli_options[] =
 	{ "verifyroms",               "0",        OPTION_COMMAND,    "report romsets that have problems" },
 	{ "verifysamples",            "0",        OPTION_COMMAND,    "report samplesets that have problems" },
 	{ "romident",                 "0",        OPTION_COMMAND,    "compare files with known MAME roms" },
-//#ifdef MESS
+#ifdef MESS
 	{ "listdevices",              "0",        OPTION_COMMAND,    "list available devices" },
-//#endif
+#endif
 
 	{ NULL }
 };
@@ -285,9 +287,9 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTCLONES,		cli_info_listclones },
 		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
 		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
-//#ifdef MESS
+#ifdef MESS
 		{ CLIOPTION_LISTDEVICES,	info_listdevices },
-//#endif
+#endif
 		{ CLIOPTION_LISTROMS,		cli_info_listroms },
 		{ CLIOPTION_LISTSAMPLES,	cli_info_listsamples },
 		{ CLIOPTION_VERIFYROMS,		info_verifyroms },

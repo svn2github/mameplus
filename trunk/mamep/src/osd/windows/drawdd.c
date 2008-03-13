@@ -31,7 +31,9 @@
 #include "window.h"
 #include "config.h"
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 
 //============================================================
 //  DEBUGGING

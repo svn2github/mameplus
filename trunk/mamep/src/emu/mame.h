@@ -21,9 +21,9 @@
 #include "uilang.h"
 #include <stdarg.h>
 
-//#ifdef MESS
+#ifdef MAMEMESS
 #include "device.h"
-//#endif /* MESS */
+#endif /* MESS */
 
 
 
@@ -205,9 +205,9 @@ struct _running_machine
 	int						debug_mode;			/* was debug mode enabled? */
 
 	/* MESS-specific information */
-//#ifdef MESS
+#ifdef MAMEMESS
 	struct IODevice *		devices;
-//#endif /* MESS */
+#endif /* MESS */
 
 	/* internal core information */
 	mame_private *			mame_data;			/* internal data from mame.c */
@@ -401,8 +401,8 @@ void mame_get_current_datetime(running_machine *machine, mame_system_time *systi
 
 
 
-//#ifdef MESS
+#ifdef MAMEMESS
 #include "mess.h"
-//#endif /* MESS */
+#endif /* MESS */
 
 #endif	/* __MAME_H__ */

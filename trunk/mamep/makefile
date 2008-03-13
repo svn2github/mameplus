@@ -395,6 +395,10 @@ ifneq ($(NEOCPSMAME),)
     DEFS += -DNEOCPSMAME
 endif
 
+ifneq ($(MAMEMESS),)
+    DEFS += -DMAMEMESS
+endif
+
 
 #-------------------------------------------------
 # compile flags
