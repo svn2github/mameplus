@@ -10,7 +10,6 @@
 
 #include "mess.h"
 #include "device.h"
-#include "uitext.h"
 #include "inputx.h"
 
 
@@ -20,7 +19,7 @@
  *
  *************************************/
 
-static int validate_device(const device_class *devclass)
+static int validate_device(const mess_device_class *devclass)
 {
 	int error = 0;
 	int is_invalid, i;
@@ -30,7 +29,7 @@ static int validate_device(const device_class *devclass)
 	char *s1;
 	char *s2;
 	iodevice_t devtype;
-	int (*validity_check)(const device_class *devclass);
+	int (*validity_check)(const mess_device_class *devclass);
 
 	/* critical information */
 	devtype = (iodevice_t) (int) mess_device_get_info_int(devclass, MESS_DEVINFO_INT_TYPE);
@@ -172,7 +171,7 @@ static int validate_device(const device_class *devclass)
 	}
 
 	/* is there a custom validity check? */
-	validity_check = (int (*)(const device_class *)) mess_device_get_info_fct(devclass, MESS_DEVINFO_PTR_VALIDITY_CHECK);
+	validity_check = (int (*)(const mess_device_class *)) mess_device_get_info_fct(devclass, MESS_DEVINFO_PTR_VALIDITY_CHECK);
 	if (validity_check)
 	{
 		if (validity_check(devclass))
@@ -190,7 +189,7 @@ static int validate_driver_devices(const game_driver *drv)
 	int i;
 	struct SystemConfigurationParamBlock cfg;
 	device_getinfo_handler handlers[64];
-	device_class devclass;
+	mess_device_class devclass;
 	int count_overrides[sizeof(handlers) / sizeof(handlers[0])];
 
 	if (drv->sysconfig_ctor)

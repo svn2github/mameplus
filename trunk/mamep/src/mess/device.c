@@ -89,7 +89,7 @@ int device_typeid(const char *name)
 
 
 
-static const char *internal_device_instancename(const device_class *devclass, int id,
+static const char *internal_device_instancename(const mess_device_class *devclass, int id,
 	UINT32 base, const char *(*get_dev_typename)(iodevice_t))
 {
 	iodevice_t type;
@@ -119,14 +119,14 @@ static const char *internal_device_instancename(const device_class *devclass, in
 
 
 
-const char *device_instancename(const device_class *devclass, int id)
+const char *device_instancename(const mess_device_class *devclass, int id)
 {
 	return internal_device_instancename(devclass, id, MESS_DEVINFO_STR_NAME, device_typename);
 }
 
 
 
-const char *device_briefinstancename(const device_class *devclass, int id)
+const char *device_briefinstancename(const mess_device_class *devclass, int id)
 {
 	return internal_device_instancename(devclass, id, MESS_DEVINFO_STR_SHORT_NAME, device_brieftypename);
 }
@@ -277,7 +277,6 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 				devices[i].must_be_loaded = 0;
 			}
 			devices[i].load_at_init			= mess_device_get_info_int(&devices[i].devclass, MESS_DEVINFO_INT_LOAD_AT_INIT) ? 1 : 0;
-			devices[i].not_working			= mess_device_get_info_int(&devices[i].devclass, MESS_DEVINFO_INT_NOT_WORKING) ? 1 : 0;
 
 			devices[i].init					= (device_init_handler) mess_device_get_info_fct(&devices[i].devclass, MESS_DEVINFO_PTR_INIT);
 			devices[i].exit					= (device_exit_handler) mess_device_get_info_fct(&devices[i].devclass, MESS_DEVINFO_PTR_EXIT);

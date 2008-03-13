@@ -556,7 +556,7 @@ static MACHINE_DRIVER_START( gameboy )
 	MDRV_CPU_ADD_TAG("main", Z80GB, 4194304)			/* 4.194304 Mhz */
 	MDRV_CPU_PROGRAM_MAP(gb_map, 0)
 	MDRV_CPU_CONFIG(dmg_cpu_reset)
-	MDRV_CPU_VBLANK_INT(gb_scanline_interrupt, 1)	/* 1 dummy int each frame */
+	MDRV_CPU_VBLANK_INT("main", gb_scanline_interrupt)	/* 1 dummy int each frame */
 
 	MDRV_SCREEN_ADD("main", LCD)
 	MDRV_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
@@ -625,7 +625,7 @@ static MACHINE_DRIVER_START( gbcolor )
 	MDRV_PALETTE_INIT(gbc)
 MACHINE_DRIVER_END
 
-static void gameboy_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void gameboy_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)
@@ -645,7 +645,7 @@ static void gameboy_cartslot_getinfo(const device_class *devclass, UINT32 state,
 	}
 }
 
-static void gameboy_cartslot_getinfo_gb(const device_class *devclass, UINT32 state, union devinfo *info)
+static void gameboy_cartslot_getinfo_gb(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	switch(state)
 	{
@@ -673,10 +673,10 @@ static MACHINE_DRIVER_START( megaduck )
 	/* basic machine hardware */
 	MDRV_CPU_ADD_TAG("main", Z80GB, 4194304)			/* 4.194304 Mhz */
 	MDRV_CPU_PROGRAM_MAP( megaduck_map, 0 )
-	MDRV_CPU_VBLANK_INT(gb_scanline_interrupt, 1)	/* 1 int each scanline ! */
+	MDRV_CPU_VBLANK_INT("main", gb_scanline_interrupt)	/* 1 int each scanline ! */
 	MDRV_CPU_CONFIG(megaduck_cpu_reset)
 
-	MDRV_SCREEN_ADD("main", RASTER)
+	MDRV_SCREEN_ADD("main", LCD)
 	MDRV_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
 	MDRV_SCREEN_VBLANK_TIME(0)
 	MDRV_INTERLEAVE(1)
@@ -701,7 +701,7 @@ static MACHINE_DRIVER_START( megaduck )
 	MDRV_SOUND_ROUTE(1, "right", 0.50)
 MACHINE_DRIVER_END
 
-static void megaduck_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void megaduck_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)

@@ -31,6 +31,7 @@
 ***************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "includes/wswan.h"
 #include "devices/cartslot.h"
 #include "sound/custom.h"
@@ -129,9 +130,9 @@ static MACHINE_DRIVER_START( wswan )
 	MDRV_CPU_ADD_TAG("main", V30MZ, 3072000)
 	MDRV_CPU_PROGRAM_MAP(wswan_mem, 0)
 	MDRV_CPU_IO_MAP(wswan_io, 0)
-	MDRV_CPU_VBLANK_INT(wswan_scanline_interrupt, 159)	/* 1 int each scanline */
+	MDRV_CPU_VBLANK_INT_HACK(wswan_scanline_interrupt, 159)	/* 1 int each scanline */
 
-	MDRV_SCREEN_ADD("main", RASTER)
+	MDRV_SCREEN_ADD("main", LCD)
 	MDRV_SCREEN_REFRESH_RATE(75)
 	MDRV_SCREEN_VBLANK_TIME(0)
 	MDRV_INTERLEAVE(1)
@@ -168,7 +169,7 @@ static MACHINE_DRIVER_START( wscolor )
 	MDRV_PALETTE_INIT( wscolor )
 MACHINE_DRIVER_END
 
-static void wswan_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void wswan_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)

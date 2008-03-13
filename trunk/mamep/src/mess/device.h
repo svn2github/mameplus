@@ -36,7 +36,6 @@ enum
 	MESS_DEVINFO_INT_MUST_BE_LOADED,
 	MESS_DEVINFO_INT_RESET_ON_LOAD,
 	MESS_DEVINFO_INT_LOAD_AT_INIT,
-	MESS_DEVINFO_INT_NOT_WORKING,
 	MESS_DEVINFO_INT_CREATE_OPTCOUNT,
 
 	MESS_DEVINFO_INT_DEV_SPECIFIC = 0x08000,					/* R/W: Device-specific values start here */
@@ -49,14 +48,13 @@ enum
 	MESS_DEVINFO_PTR_LOAD,
 	MESS_DEVINFO_PTR_UNLOAD,
 	MESS_DEVINFO_PTR_CREATE,
-	MESS_DEVINFO_PTR_STATUS,
 	MESS_DEVINFO_PTR_DISPLAY,
 	MESS_DEVINFO_PTR_PARTIAL_HASH,
 	MESS_DEVINFO_PTR_VERIFY,
 	MESS_DEVINFO_PTR_GET_DISPOSITIONS,
 	MESS_DEVINFO_PTR_CREATE_OPTGUIDE,
 	MESS_DEVINFO_PTR_CREATE_OPTSPEC,
-	MESS_DEVINFO_PTR_VALIDITY_CHECK = MESS_DEVINFO_PTR_CREATE_OPTSPEC + MESS_DEVINFO_CREATE_OPTMAX,	/* R/O: int (*validity_check)(const device_class *devclass) */
+	MESS_DEVINFO_PTR_VALIDITY_CHECK = MESS_DEVINFO_PTR_CREATE_OPTSPEC + MESS_DEVINFO_CREATE_OPTMAX,	/* R/O: int (*validity_check)(const mess_device_class *devclass) */
 
 	MESS_DEVINFO_PTR_DEV_SPECIFIC = 0x18000,					/* R/W: Device-specific values start here */
 
@@ -98,7 +96,7 @@ typedef void (*device_getdispositions_handler)(const struct IODevice *dev, int i
 typedef void (*device_display_handler)(mess_image *image);
 typedef const char *(*device_getname_handler)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
 
-struct _device_class;
+struct _mess_device_class;
 
 union devinfo
 {
@@ -121,16 +119,16 @@ union devinfo
 	device_display_handler display;
 	device_getname_handler name;
 
-	int (*validity_check)(const struct _device_class *devclass);
+	int (*validity_check)(const struct _mess_device_class *devclass);
 };
 
-typedef void (*device_getinfo_handler)(const struct _device_class *devclass, UINT32 state, union devinfo *info);
+typedef void (*device_getinfo_handler)(const struct _mess_device_class *devclass, UINT32 state, union devinfo *info);
 
-typedef struct _device_class
+typedef struct _mess_device_class
 {
 	device_getinfo_handler get_info;
 	const game_driver *gamedrv;
-} device_class;
+} mess_device_class;
 
 
 
@@ -140,7 +138,7 @@ typedef struct _device_class
  *
  *************************************/
 
-INLINE INT64 mess_device_get_info_int(const device_class *devclass, UINT32 state)
+INLINE INT64 mess_device_get_info_int(const mess_device_class *devclass, UINT32 state)
 {
 	union devinfo info;
 	info.i = 0;
@@ -150,7 +148,7 @@ INLINE INT64 mess_device_get_info_int(const device_class *devclass, UINT32 state
 
 
 
-INLINE void *mess_device_get_info_ptr(const device_class *devclass, UINT32 state)
+INLINE void *mess_device_get_info_ptr(const mess_device_class *devclass, UINT32 state)
 {
 	union devinfo info;
 	info.p = NULL;
@@ -158,7 +156,7 @@ INLINE void *mess_device_get_info_ptr(const device_class *devclass, UINT32 state
 	return info.p;
 }
 
-INLINE genf *mess_device_get_info_fct(const device_class *devclass, UINT32 state)
+INLINE genf *mess_device_get_info_fct(const mess_device_class *devclass, UINT32 state)
 {
 	union devinfo info;
 	info.f = NULL;
@@ -166,7 +164,7 @@ INLINE genf *mess_device_get_info_fct(const device_class *devclass, UINT32 state
 	return info.f;
 }
 
-INLINE const char *mess_device_get_info_string(const device_class *devclass, UINT32 state)
+INLINE const char *mess_device_get_info_string(const mess_device_class *devclass, UINT32 state)
 {
 	union devinfo info;
 	info.s = NULL;
@@ -174,7 +172,7 @@ INLINE const char *mess_device_get_info_string(const device_class *devclass, UIN
 	return info.s;
 }
 
-INLINE double mess_device_get_info_double(const device_class *devclass, UINT32 state)
+INLINE double mess_device_get_info_double(const mess_device_class *devclass, UINT32 state)
 {
 	union devinfo info;
 	info.d = 0.0;
@@ -188,8 +186,8 @@ INLINE char *device_temp_str(void)
 	return cpuintrf_temp_str();
 }
 
-const char *device_instancename(const device_class *devclass, int id);
-const char *device_briefinstancename(const device_class *devclass, int id);
+const char *device_instancename(const mess_device_class *devclass, int id);
+const char *device_briefinstancename(const mess_device_class *devclass, int id);
 
 
 
@@ -231,7 +229,7 @@ struct CreateImageOptions
 
 struct IODevice
 {
-	device_class devclass;
+	mess_device_class devclass;
 
 	/* the basics */
 	const char *tag;
@@ -249,7 +247,6 @@ struct IODevice
 	unsigned int reset_on_load : 1;
 	unsigned int must_be_loaded : 1;
 	unsigned int load_at_init : 1;
-	unsigned int not_working : 1;
 
 	/* image handling callbacks */
 	device_init_handler init;

@@ -52,6 +52,7 @@ Super System Card:
 **********************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "video/vdc.h"
 #include "cpu/h6280/h6280.h"
 #include "includes/pce.h"
@@ -143,7 +144,7 @@ static MACHINE_DRIVER_START( pce )
 	MDRV_CPU_ADD(H6280, MAIN_CLOCK/3)
 	MDRV_CPU_PROGRAM_MAP(pce_mem, 0)
 	MDRV_CPU_IO_MAP(pce_io, 0)
-	MDRV_CPU_VBLANK_INT(pce_interrupt, VDC_LPF)
+	MDRV_CPU_VBLANK_INT_HACK(pce_interrupt, VDC_LPF)
 	MDRV_INTERLEAVE(1)
 
 	MDRV_MACHINE_RESET( pce_ms )
@@ -182,7 +183,7 @@ static MACHINE_DRIVER_START( sgx )
 	MDRV_CPU_ADD(H6280, MAIN_CLOCK/3)
 	MDRV_CPU_PROGRAM_MAP(sgx_mem, 0)
 	MDRV_CPU_IO_MAP(sgx_io, 0)
-	MDRV_CPU_VBLANK_INT(sgx_interrupt, VDC_LPF)
+	MDRV_CPU_VBLANK_INT_HACK(sgx_interrupt, VDC_LPF)
 	MDRV_INTERLEAVE(1)
 
 	MDRV_MACHINE_RESET( pce_ms )
@@ -225,7 +226,7 @@ static void pce_partialhash(char *dest, const unsigned char *data,
 	}
 }
 
-static void pce_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void pce_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)
@@ -245,7 +246,7 @@ static void pce_cartslot_getinfo(const device_class *devclass, UINT32 state, uni
 	}
 }
 
-static void pce_chdcd_getinfo(const device_class *devclass, UINT32 state, union devinfo *info) {
+static void pce_chdcd_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info) {
 	switch( state ) {
 	case MESS_DEVINFO_INT_COUNT:			info->i = 1; break;
 	default:						cdrom_device_getinfo(devclass, state, info);

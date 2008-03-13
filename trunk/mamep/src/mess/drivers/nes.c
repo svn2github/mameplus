@@ -20,17 +20,17 @@
 
 static READ8_HANDLER( psg_4015_r )
 {
-	return NESPSG_0_r(0x15);
+	return NESPSG_0_r(machine, 0x15);
 }
 
 static WRITE8_HANDLER( psg_4015_w )
 {
-	NESPSG_0_w(0x15, data);
+	NESPSG_0_w(machine, 0x15, data);
 }
 
 static WRITE8_HANDLER( psg_4017_w )
 {
-	NESPSG_0_w(0x17, data);
+	NESPSG_0_w(machine, 0x17, data);
 }
 
 static WRITE8_HANDLER(nes_vh_sprite_dma_w)
@@ -339,7 +339,7 @@ static MACHINE_DRIVER_START( nespal )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
 MACHINE_DRIVER_END
 
-static void nes_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void nes_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)
@@ -363,7 +363,7 @@ SYSTEM_CONFIG_START(nes)
 	CONFIG_DEVICE(nes_cartslot_getinfo)
 SYSTEM_CONFIG_END
 
-static void famicom_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void famicom_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)
@@ -382,7 +382,7 @@ static void famicom_cartslot_getinfo(const device_class *devclass, UINT32 state,
 	}
 }
 
-static void famicom_floppy_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void famicom_floppy_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* floppy */
 	switch(state)

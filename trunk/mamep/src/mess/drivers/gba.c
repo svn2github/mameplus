@@ -684,7 +684,7 @@ void gba_draw_scanline(int y)
 {
 	UINT16 *ppram = (UINT16 *)pram, *scanline;
 	int prio;
-	mame_bitmap *bitmap = tmpbitmap;
+	bitmap_t *bitmap = tmpbitmap;
 	int i;
 	static UINT16 xferscan[240+2048];	// up to 1024 pixels of slop on either side to allow easier clip handling
 
@@ -1436,31 +1436,31 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0060/4:
-			retval = gb_sound_r(0) | gb_sound_r(1)<<16 | gb_sound_r(2)<<24;
+			retval = gb_sound_r(machine, 0) | gb_sound_r(machine, 1)<<16 | gb_sound_r(machine, 2)<<24;
 			break;
 		case 0x0064/4:
-			retval = gb_sound_r(3) | gb_sound_r(4)<<8;
+			retval = gb_sound_r(machine, 3) | gb_sound_r(machine, 4)<<8;
 			break;
 		case 0x0068/4:
-			retval = gb_sound_r(6) | gb_sound_r(7)<<8;
+			retval = gb_sound_r(machine, 6) | gb_sound_r(machine, 7)<<8;
 			break;
 		case 0x006c/4:
-			retval = gb_sound_r(8) | gb_sound_r(9)<<8;
+			retval = gb_sound_r(machine, 8) | gb_sound_r(machine, 9)<<8;
 			break;
 		case 0x0070/4:
-			retval = gb_sound_r(0xa) | gb_sound_r(0xb)<<16 | gb_sound_r(0xc)<<24;
+			retval = gb_sound_r(machine, 0xa) | gb_sound_r(machine, 0xb)<<16 | gb_sound_r(machine, 0xc)<<24;
 			break;
 		case 0x0074/4:
-			retval = gb_sound_r(0xd) | gb_sound_r(0xe)<<8;
+			retval = gb_sound_r(machine, 0xd) | gb_sound_r(machine, 0xe)<<8;
 			break;
 		case 0x0078/4:
-			retval = gb_sound_r(0x10) | gb_sound_r(0x11)<<8;
+			retval = gb_sound_r(machine, 0x10) | gb_sound_r(machine, 0x11)<<8;
 			break;
 		case 0x007c/4:
-			retval = gb_sound_r(0x12) | gb_sound_r(0x13)<<8;
+			retval = gb_sound_r(machine, 0x12) | gb_sound_r(machine, 0x13)<<8;
 			break;
 		case 0x0080/4:
-			retval = gb_sound_r(0x14) | gb_sound_r(0x15)<<8;
+			retval = gb_sound_r(machine, 0x14) | gb_sound_r(machine, 0x15)<<8;
 			if( (~mem_mask) & 0xffff0000 )
 			{
 				verboselog( 2, "GBA IO Register Read: SOUNDCNT_H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SOUNDCNT_H );
@@ -1468,7 +1468,7 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0084/4:
-			retval = gb_sound_r(0x16);
+			retval = gb_sound_r(machine, 0x16);
 			break;
 		case 0x0088/4:
 			if( (~mem_mask) & 0x0000ffff )
@@ -1482,16 +1482,16 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0090/4:
-			retval = gb_wave_r(0) | gb_wave_r(1)<<8 | gb_wave_r(2)<<16 | gb_wave_r(3)<<24;
+			retval = gb_wave_r(machine, 0) | gb_wave_r(machine, 1)<<8 | gb_wave_r(machine, 2)<<16 | gb_wave_r(machine, 3)<<24;
 			break;
 		case 0x0094/4:
-			retval = gb_wave_r(4) | gb_wave_r(5)<<8 | gb_wave_r(6)<<16 | gb_wave_r(7)<<24;
+			retval = gb_wave_r(machine, 4) | gb_wave_r(machine, 5)<<8 | gb_wave_r(machine, 6)<<16 | gb_wave_r(machine, 7)<<24;
 			break;
 		case 0x0098/4:
-			retval = gb_wave_r(8) | gb_wave_r(9)<<8 | gb_wave_r(10)<<16 | gb_wave_r(11)<<24;
+			retval = gb_wave_r(machine, 8) | gb_wave_r(machine, 9)<<8 | gb_wave_r(machine, 10)<<16 | gb_wave_r(machine, 11)<<24;
 			break;
 		case 0x009c/4:
-			retval = gb_wave_r(12) | gb_wave_r(13)<<8 | gb_wave_r(14)<<16 | gb_wave_r(15)<<24;
+			retval = gb_wave_r(machine, 12) | gb_wave_r(machine, 13)<<8 | gb_wave_r(machine, 14)<<16 | gb_wave_r(machine, 15)<<24;
 			break;
 		case 0x00a0/4:
 		case 0x00a4/4:
@@ -1958,99 +1958,99 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0060/4:
 			if( (~mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(0, data);
+				gb_sound_w(machine, 0, data);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(1, data>>16);	// SOUND1CNT_H
+				gb_sound_w(machine, 1, data>>16);	// SOUND1CNT_H
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(2, data>>24);
+				gb_sound_w(machine, 2, data>>24);
 			}
 			break;
 		case 0x0064/4:
 			if( (~mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(3, data);
+				gb_sound_w(machine, 3, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(4, data>>8);	// SOUND1CNT_H
+				gb_sound_w(machine, 4, data>>8);	// SOUND1CNT_H
 			}
 			break;
 		case 0x0068/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(6, data);
+				gb_sound_w(machine, 6, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(7, data>>8);
+				gb_sound_w(machine, 7, data>>8);
 			}
 			break;
 		case 0x006c/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(8, data);
+				gb_sound_w(machine, 8, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(9, data>>8);
+				gb_sound_w(machine, 9, data>>8);
 			}
 			break;
 		case 0x0070/4:	//SND3CNTL and H
 			if( (~mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(0xa, data);
+				gb_sound_w(machine, 0xa, data);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(0xb, data>>16);	// SOUND1CNT_H
+				gb_sound_w(machine, 0xb, data>>16);	// SOUND1CNT_H
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(0xc, data>>24);
+				gb_sound_w(machine, 0xc, data>>24);
 			}
 			break;
 		case 0x0074/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(0xd, data);
+				gb_sound_w(machine, 0xd, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(0xe, data>>8);
+				gb_sound_w(machine, 0xe, data>>8);
 			}
 			break;
 		case 0x0078/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(0x10, data);
+				gb_sound_w(machine, 0x10, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(0x11, data>>8);
+				gb_sound_w(machine, 0x11, data>>8);
 			}
 			break;
 		case 0x007c/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(0x12, data);
+				gb_sound_w(machine, 0x12, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(0x13, data>>8);
+				gb_sound_w(machine, 0x13, data>>8);
 			}
 			break;
 		case 0x0080/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(0x14, data);
+				gb_sound_w(machine, 0x14, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(0x15, data>>8);
+				gb_sound_w(machine, 0x15, data>>8);
 			}
 
 			if ((~mem_mask) & 0xffff0000)
@@ -2080,7 +2080,7 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0084/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(0x16, data);
+				gb_sound_w(machine, 0x16, data);
 				if ((data & 0x80) && !(gba.SOUNDCNT_X & 0x80))
 				{
 					fifo_a_ptr = fifo_a_in = 17;
@@ -2107,73 +2107,73 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0090/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(0, data);
+				gb_wave_w(machine, 0, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(1, data>>8);
+				gb_wave_w(machine, 1, data>>8);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(2, data>>16);
+				gb_wave_w(machine, 2, data>>16);
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(3, data>>24);
+				gb_wave_w(machine, 3, data>>24);
 			}
 			break;
 		case 0x0094/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(4, data);
+				gb_wave_w(machine, 4, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(5, data>>8);
+				gb_wave_w(machine, 5, data>>8);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(6, data>>16);
+				gb_wave_w(machine, 6, data>>16);
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(7, data>>24);
+				gb_wave_w(machine, 7, data>>24);
 			}
 			break;
 		case 0x0098/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(8, data);
+				gb_wave_w(machine, 8, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(9, data>>8);
+				gb_wave_w(machine, 9, data>>8);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(0xa, data>>16);
+				gb_wave_w(machine, 0xa, data>>16);
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(0xb, data>>24);
+				gb_wave_w(machine, 0xb, data>>24);
 			}
 			break;
 		case 0x009c/4:
 			if( (~mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(0xc, data);
+				gb_wave_w(machine, 0xc, data);
 			}
 			if( (~mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(0xd, data>>8);
+				gb_wave_w(machine, 0xd, data>>8);
 			}
 			if( (~mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(0xe, data>>16);
+				gb_wave_w(machine, 0xe, data>>16);
 			}
 			if( (~mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(0xf, data>>24);
+				gb_wave_w(machine, 0xf, data>>24);
 			}
 			break;
 		case 0x00a0/4:
@@ -2869,17 +2869,17 @@ static WRITE32_HANDLER( flash64k_w )
         case FLASH_IDENT:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( offset, data, mem_mask );
+            flash64k_w( machine, offset, data, mem_mask );
             break;
         case FLASH_ERASE_4K:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( offset, data, mem_mask );
+            flash64k_w( machine, offset, data, mem_mask );
             break;
         case FLASH_ERASE_ALL:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( offset, data, mem_mask );
+            flash64k_w( machine, offset, data, mem_mask );
             break;
         case FLASH_WRITE:
             COMBINE_DATA(&gba_flash64k[offset]);
@@ -3131,7 +3131,7 @@ static int device_load_gba_cart(mess_image *image)
 	return INIT_PASS;
 }
 
-static void gba_cartslot_getinfo(const device_class *devclass, UINT32 state, union devinfo *info)
+static void gba_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
 	switch(state)

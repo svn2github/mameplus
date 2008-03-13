@@ -42,8 +42,8 @@ void  SetSoftwareDirs(const WCHAR* paths);
 void SetHashDirs(const WCHAR *dir);
 const WCHAR *GetHashDirs(void);
 
-void SetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst, const WCHAR *software);
-const WCHAR *GetSelectedSoftware(int driver_index, const device_class *devclass, int device_inst);
+void SetSelectedSoftware(int driver_index, const mess_device_class *devclass, int device_inst, const WCHAR *software);
+const WCHAR *GetSelectedSoftware(int driver_index, const mess_device_class *devclass, int device_inst);
 
 void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths);
 const WCHAR *GetExtraSoftwarePaths(int driver_index);
