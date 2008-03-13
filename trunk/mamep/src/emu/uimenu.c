@@ -1374,7 +1374,7 @@ static UINT32 menu_bookkeeping(UINT32 state)
 	ui_menu_generic_keys(&selected, 1, 0);
 	return selected;
 }
-//#endif
+#endif
 
 
 /*-------------------------------------------------
