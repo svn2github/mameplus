@@ -1019,13 +1019,14 @@ ifneq ($(filter M68000 M68008 M68010 M68EC020 M68020 M68040,$(CPUS)),)
 OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kmame.o $(CPUOBJ)/m68000/m68kops.o
 DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
+M68KMAKE = $(BUILDOUT)/m68kmake$(BUILD_EXE)
 ifneq ($(X86_M68K_DRC),)
 CPUDEFS += -DHAS_M68000DRC=1
 CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o $(DRCOBJ)
 else
 CPUDEFS += -DHAS_M68000DRC=0
 endif
-M68KMAKE = $(BUILDOUT)/m68kmake$(BUILD_EXE)
+endif
 
 # when we compile source files we need to include generated files from the OBJ directory
 $(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c
@@ -1130,7 +1131,6 @@ $(CPUOBJ)/m68000/68010.o:  $(CPUOBJ)/m68000/68010.asm
 $(CPUOBJ)/m68000/68020.o:  $(CPUOBJ)/m68000/68020.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-endif
 
 
 
@@ -1472,19 +1472,19 @@ $(CPUOBJ)/mips/psx.o:	$(CPUSRC)/mips/psx.c \
 
 
 #-------------------------------------------------
-# SSP1610
+# SSP1601
 #-------------------------------------------------
 
-CPUDEFS += -DHAS_SSP1610=$(if $(filter SSP1610,$(CPUS)),1,0)
+CPUDEFS += -DHAS_SSP1601=$(if $(filter SSP1601,$(CPUS)),1,0)
 
-ifneq ($(filter SSP1610,$(CPUS)),)
-OBJDIRS += $(CPUOBJ)/ssp1610
-CPUOBJS += $(CPUOBJ)/ssp1610/ssp1610.o
-DBGOBJS += $(CPUOBJ)/ssp1610/ssp1610d.o
+ifneq ($(filter SSP1601,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/ssp1601
+CPUOBJS += $(CPUOBJ)/ssp1601/ssp1601.o
+DBGOBJS += $(CPUOBJ)/ssp1601/ssp1601d.o
 endif
 
-$(CPUOBJ)/ssp1610/ssp1610.o:	$(CPUSRC)/ssp1610/ssp1610.c \
-								$(CPUSRC)/ssp1610/ssp1610.h
+$(CPUOBJ)/ssp1610/ssp1601.o:	$(CPUSRC)/ssp1601/ssp1601.c \
+								$(CPUSRC)/ssp1610/ssp1601.h
 
 
 
