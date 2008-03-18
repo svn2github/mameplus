@@ -127,7 +127,7 @@ static void translate_menu(HMENU hMenu);
 //	customize_input
 //============================================================
 
-static void customize_input(HWND wnd, const char *title, artwork_cust_type cust_type, int player, int inputclass, const char *section)
+static void customize_input(running_machine *machine, HWND wnd, const char *title, artwork_cust_type cust_type, int player, int inputclass, const char *section)
 {
 	dialog_box *dlg;
 	input_port_entry *in;
@@ -161,7 +161,7 @@ static void customize_input(HWND wnd, const char *title, artwork_cust_type cust_
 		win_dialog_add_separator(dlg);
 	}
 
-	in = Machine->input_ports;
+	in = machine->input_ports;
 	while(in->type != IPT_END)
 	{
 		this_inputclass = input_classify_port(in);
@@ -238,9 +238,9 @@ done:
 //	customize_joystick
 //============================================================
 
-static void customize_joystick(HWND wnd, int joystick_num)
+static void customize_joystick(running_machine *machine, HWND wnd, int joystick_num)
 {
-	customize_input(wnd, _WINDOWS("Joysticks/Controllers"), ARTWORK_CUSTTYPE_JOYSTICK, joystick_num, INPUT_CLASS_CONTROLLER, NULL);
+	customize_input(machine, wnd, _WINDOWS("Joysticks/Controllers"), ARTWORK_CUSTTYPE_JOYSTICK, joystick_num, INPUT_CLASS_CONTROLLER, NULL);
 }
 
 
@@ -249,9 +249,9 @@ static void customize_joystick(HWND wnd, int joystick_num)
 //	customize_keyboard
 //============================================================
 
-static void customize_keyboard(HWND wnd)
+static void customize_keyboard(running_machine *machine, HWND wnd)
 {
-	customize_input(wnd, _WINDOWS("Emulated Keyboard"), ARTWORK_CUSTTYPE_KEYBOARD, 0, INPUT_CLASS_KEYBOARD, NULL);
+	customize_input(machine, wnd, _WINDOWS("Emulated Keyboard"), ARTWORK_CUSTTYPE_KEYBOARD, 0, INPUT_CLASS_KEYBOARD, NULL);
 }
 
 
@@ -260,9 +260,9 @@ static void customize_keyboard(HWND wnd)
 //	customize_miscinput
 //============================================================
 
-static void customize_miscinput(HWND wnd)
+static void customize_miscinput(running_machine *machine, HWND wnd)
 {
-	customize_input(wnd, _WINDOWS("Miscellaneous Input"), ARTWORK_CUSTTYPE_MISC, 0, INPUT_CLASS_MISC, NULL);
+	customize_input(machine, wnd, _WINDOWS("Miscellaneous Input"), ARTWORK_CUSTTYPE_MISC, 0, INPUT_CLASS_MISC, NULL);
 }
 
 
@@ -271,10 +271,10 @@ static void customize_miscinput(HWND wnd)
 //	customize_categorizedinput
 //============================================================
 
-static void customize_categorizedinput(HWND wnd, const char *section, int category)
+static void customize_categorizedinput(running_machine *machine, HWND wnd, const char *section, int category)
 {
 	assert(category > 0);
-	customize_input(wnd, _WINDOWS("Input"), ARTWORK_CUSTTYPE_JOYSTICK, category, INPUT_CLASS_CATEGORIZED, section);
+	customize_input(machine, wnd, _WINDOWS("Input"), ARTWORK_CUSTTYPE_JOYSTICK, category, INPUT_CLASS_CATEGORIZED, section);
 }
 
 
@@ -295,7 +295,7 @@ static void storeval_inputport(void *param, int val)
 //	customize_switches
 //============================================================
 
-static void customize_switches(HWND wnd, int title_string_num, UINT32 ipt_name, UINT32 ipt_setting)
+static void customize_switches(running_machine *machine, HWND wnd, int title_string_num, UINT32 ipt_name, UINT32 ipt_setting)
 {
 	dialog_box *dlg;
 	input_port_entry *in;
@@ -306,7 +306,7 @@ static void customize_switches(HWND wnd, int title_string_num, UINT32 ipt_name, 
 	if (!dlg)
 		goto done;
 
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	for (in = machine->input_ports; in->type != IPT_END; in++)
 	{
 		type = in->type;
 
@@ -349,9 +349,9 @@ done:
 //	customize_dipswitches
 //============================================================
 
-static void customize_dipswitches(HWND wnd)
+static void customize_dipswitches(running_machine *machine, HWND wnd)
 {
-	customize_switches(wnd, UI_dipswitches, IPT_DIPSWITCH_NAME, IPT_DIPSWITCH_SETTING);
+	customize_switches(machine, wnd, UI_dipswitches, IPT_DIPSWITCH_NAME, IPT_DIPSWITCH_SETTING);
 }
 
 
@@ -360,9 +360,9 @@ static void customize_dipswitches(HWND wnd)
 //	customize_configuration
 //============================================================
 
-static void customize_configuration(HWND wnd)
+static void customize_configuration(running_machine *machine, HWND wnd)
 {
-	customize_switches(wnd, UI_configuration, IPT_CONFIG_NAME, IPT_CONFIG_SETTING);
+	customize_switches(machine, wnd, UI_configuration, IPT_CONFIG_NAME, IPT_CONFIG_SETTING);
 }
 
 
@@ -399,7 +399,7 @@ static void store_sensitivity(void *param, int val)
 
 
 
-static void customize_analogcontrols(HWND wnd)
+static void customize_analogcontrols(running_machine *machine, HWND wnd)
 {
 	dialog_box *dlg;
 	input_port_entry *in;
@@ -411,7 +411,7 @@ static void customize_analogcontrols(HWND wnd)
 	if (!dlg)
 		goto done;
 
-	in = Machine->input_ports;
+	in = machine->input_ports;
 
 	while (in->type != IPT_END)
 	{
@@ -1178,7 +1178,7 @@ static void remove_menu_items_from_pos_until_id(HMENU menu, UINT pos, UINT id)
 //	setup_joystick_menu
 //============================================================
 
-static void setup_joystick_menu(HMENU menu_bar)
+static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 {
 	int joystick_count = 0;
 	HMENU joystick_menu;
@@ -1189,7 +1189,7 @@ static void setup_joystick_menu(HMENU menu_bar)
 	char buf[256];
 	int child_count = 0;
 
-	in = Machine->input_ports;
+	in = machine->input_ports;
 	use_input_categories = 0;
 	while(in->type != IPT_END)
 	{
@@ -1208,9 +1208,9 @@ static void setup_joystick_menu(HMENU menu_bar)
 	if (use_input_categories)
 	{
 		// using input categories
-		for (i = 0; Machine->input_ports[i].type != IPT_END; i++)
+		for (i = 0; machine->input_ports[i].type != IPT_END; i++)
 		{
-			in = &Machine->input_ports[i];
+			in = &machine->input_ports[i];
 			if ((in->type) == IPT_CATEGORY_NAME)
 			{
 				submenu = CreateMenu();
@@ -1218,9 +1218,9 @@ static void setup_joystick_menu(HMENU menu_bar)
 					return;
 
 				// append all of the category settings
-				for (j = i + 1; (Machine->input_ports[j].type) == IPT_CATEGORY_SETTING; j++)
+				for (j = i + 1; (machine->input_ports[j].type) == IPT_CATEGORY_SETTING; j++)
 				{
-					in_setting = &Machine->input_ports[j];
+					in_setting = &machine->input_ports[j];
 					append_menu_utf8(submenu, MF_STRING, ID_INPUT_0 + j, in_setting->name);
 				}
 
@@ -1290,7 +1290,7 @@ static int frameskip_level_count(void)
 //	prepare_menus
 //============================================================
 
-static void prepare_menus(HWND wnd)
+static void prepare_menus(running_machine *machine, HWND wnd)
 {
 	int i;
 	int pos = 0;
@@ -1324,7 +1324,7 @@ static void prepare_menus(HWND wnd)
 
 	if (!joystick_menu_setup)
 	{
-		setup_joystick_menu(menu_bar);
+		setup_joystick_menu(machine, menu_bar);
 		joystick_menu_setup = 1;
 	}
 
@@ -1340,7 +1340,7 @@ static void prepare_menus(HWND wnd)
 	has_misc		= input_has_input_class(INPUT_CLASS_MISC);
 
 	has_analog = 0;
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	for (in = machine->input_ports; in->type != IPT_END; in++)
 	{
 		if (port_type_is_analog(in->type))
 		{
@@ -1393,9 +1393,9 @@ static void prepare_menus(HWND wnd)
 	// if we are using categorized input, we need to properly checkmark the categories
 	if (use_input_categories)
 	{
-		for (i = 0; Machine->input_ports[i].type != IPT_END; i++)
+		for (i = 0; machine->input_ports[i].type != IPT_END; i++)
 		{
-			in = &Machine->input_ports[i];
+			in = &machine->input_ports[i];
 			switch(in->type) {
 			case IPT_CATEGORY_NAME:
 				in_cat_value = in->default_value;
@@ -1434,7 +1434,7 @@ static void prepare_menus(HWND wnd)
 	remove_menu_items_from_pos_until_id(file_menu, 0, ID_FILE_LOADSTATE);
 
 	// then set up the actual devices
-	for (dev = Machine->devices; dev->type < IO_COUNT; dev++)
+	for (dev = machine->devices; dev->type < IO_COUNT; dev++)
 	{
 		for (i = 0; i < dev->count; i++)
 		{
@@ -1698,10 +1698,10 @@ static void help_about_mess(HWND wnd)
 //	help_about_thissystem
 //============================================================
 
-static void help_about_thissystem(HWND wnd)
+static void help_about_thissystem(running_machine *machine, HWND wnd)
 {
 	char buf[256];
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), "mess.chm::/sysinfo/%s.htm", Machine->gamedrv->name);
+	snprintf(buf, sizeof(buf) / sizeof(buf[0]), "mess.chm::/sysinfo/%s.htm", machine->gamedrv->name);
 	help_display(wnd, buf);
 }
 
@@ -1757,7 +1757,7 @@ static int pause_for_command(UINT command)
 //	invoke_command
 //============================================================
 
-static int invoke_command(HWND wnd, UINT command)
+static int invoke_command(running_machine *machine, HWND wnd, UINT command)
 {
 	int handled = 1;
 	int dev_command, i;
@@ -1776,23 +1776,23 @@ static int invoke_command(HWND wnd, UINT command)
 	switch(command)
 	{
 		case ID_FILE_LOADSTATE:
-			state_load(wnd, Machine);
+			state_load(wnd, machine);
 			break;
 
 		case ID_FILE_SAVESTATE:
-			state_save(Machine);
+			state_save(machine);
 			break;
 
 		case ID_FILE_SAVESTATE_AS:
-			state_save_as(wnd, Machine);
+			state_save_as(wnd, machine);
 			break;
 
 		case ID_FILE_SAVESCREENSHOT:
-			video_save_active_screen_snapshots(Machine);
+			video_save_active_screen_snapshots(machine);
 			break;
 
 		case ID_FILE_EXIT:
-			mame_schedule_exit(Machine);
+			mame_schedule_exit(machine);
 			break;
 
 		case ID_EDIT_PASTE:
@@ -1808,7 +1808,7 @@ static int invoke_command(HWND wnd, UINT command)
 			break;
 
 		case ID_KEYBOARD_CUSTOMIZE:
-			customize_keyboard(wnd);
+			customize_keyboard(machine, wnd);
 			break;
 
 		case ID_VIDEO_ROTATE_0:
@@ -1828,15 +1828,15 @@ static int invoke_command(HWND wnd, UINT command)
 			break;
 
 		case ID_OPTIONS_PAUSE:
-			pause(Machine);
+			pause(machine);
 			break;
 
 		case ID_OPTIONS_HARDRESET:
-			mame_schedule_hard_reset(Machine);
+			mame_schedule_hard_reset(machine);
 			break;
 
 		case ID_OPTIONS_SOFTRESET:
-			mame_schedule_soft_reset(Machine);
+			mame_schedule_soft_reset(machine);
 			break;
 
 #if HAS_PROFILER
@@ -1852,19 +1852,19 @@ static int invoke_command(HWND wnd, UINT command)
 #endif // HAS_DEBUGGER
 
 		case ID_OPTIONS_CONFIGURATION:
-			customize_configuration(wnd);
+			customize_configuration(machine, wnd);
 			break;
 
 		case ID_OPTIONS_DIPSWITCHES:
-			customize_dipswitches(wnd);
+			customize_dipswitches(machine, wnd);
 			break;
 
 		case ID_OPTIONS_MISCINPUT:
-			customize_miscinput(wnd);
+			customize_miscinput(machine, wnd);
 			break;
 
 		case ID_OPTIONS_ANALOGCONTROLS:
-			customize_analogcontrols(wnd);
+			customize_analogcontrols(machine, wnd);
 			break;
 
 #if HAS_TOGGLEFULLSCREEN
@@ -1900,7 +1900,7 @@ static int invoke_command(HWND wnd, UINT command)
 			break;
 
 		case ID_HELP_ABOUTSYSTEM:
-			help_about_thissystem(wnd);
+			help_about_thissystem(machine, wnd);
 			break;
 
 		case ID_THROTTLE_50:
@@ -1931,7 +1931,7 @@ static int invoke_command(HWND wnd, UINT command)
 			// quickly come up with a port count, so we can upper bound commands
 			// near ID_INPUT_0
 			port_count = 0;
-			while(Machine->input_ports[port_count].type != IPT_END)
+			while(machine->input_ports[port_count].type != IPT_END)
 				port_count++;
 
 			if ((command >= ID_FRAMESKIP_0) && (command < ID_FRAMESKIP_0 + frameskip_level_count()))
@@ -1948,7 +1948,7 @@ static int invoke_command(HWND wnd, UINT command)
 			else if ((command >= ID_JOYSTICK_0) && (command < ID_JOYSTICK_0 + MAX_JOYSTICKS))
 			{
 				// customize joystick
-				customize_joystick(wnd, command - ID_JOYSTICK_0);
+				customize_joystick(machine, wnd, command - ID_JOYSTICK_0);
 			}
 			else if ((command >= ID_VIDEO_VIEW_0) && (command < ID_VIDEO_VIEW_0 + 1000))
 			{
@@ -1958,7 +1958,7 @@ static int invoke_command(HWND wnd, UINT command)
 			else if ((command >= ID_INPUT_0) && (command < ID_INPUT_0 + port_count))
 			{
 				// customize categorized input
-				in = &Machine->input_ports[command - ID_INPUT_0];
+				in = &machine->input_ports[command - ID_INPUT_0];
 				switch(in->type) {
 				case IPT_CATEGORY_NAME:
 					// customize the input type
@@ -1972,7 +1972,7 @@ static int invoke_command(HWND wnd, UINT command)
 							section = in[i].name;
 						}
 					}
-					customize_categorizedinput(wnd, section, category);
+					customize_categorizedinput(machine, wnd, section, category);
 					break;
 
 				case IPT_CATEGORY_SETTING:
@@ -2035,7 +2035,7 @@ static void set_menu_text(HMENU menu_bar, int command, const char *text)
 //	win_setup_menus
 //============================================================
 
-int win_setup_menus(HMODULE module, HMENU menu_bar)
+int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 {
 	HMENU frameskip_menu;
 	char buf[256];
@@ -2070,7 +2070,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 	DeleteMenu(menu_bar, ID_OPTIONS_PROFILER, MF_BYCOMMAND);
 #endif
 
-	if (!HAS_DEBUGGER || !Machine->debug_mode)
+	if (!HAS_DEBUGGER || !machine->debug_mode)
 		DeleteMenu(menu_bar, ID_OPTIONS_DEBUGGER, MF_BYCOMMAND);
 
 #if !HAS_TOGGLEFULLSCREEN
@@ -2092,7 +2092,7 @@ int win_setup_menus(HMODULE module, HMENU menu_bar)
 	}
 
 	// set the help menu to refer to this machine
-	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), _LST(Machine->gamedrv->description), Machine->gamedrv->name);
+	snprintf(buf, sizeof(buf) / sizeof(buf[0]), _WINDOWS("About %s (%s)..."), _LST(machine->gamedrv->description), machine->gamedrv->name);
 	set_menu_text(menu_bar, ID_HELP_ABOUTSYSTEM, buf);
 	translate_menu(menu_bar);
 	return 0;
@@ -2186,8 +2186,8 @@ static void translate_menu(HMENU hMenu)
 //	win_create_menu
 //============================================================
 
-#ifndef UNDER_CE
-int win_create_menu(HMENU *menus)
+#ifdef HAS_WINDOW_MENU
+int win_create_menu(running_machine *machine, HMENU *menus)
 {
 	HMENU menu_bar = NULL;
 	HMODULE module;
@@ -2204,11 +2204,11 @@ int win_create_menu(HMENU *menus)
 			goto error;
 
 		translate_menu(menu_bar);
-
-		if (win_setup_menus(module, menu_bar))
+		if (win_setup_menus(machine, module, menu_bar))
 			goto error;
 	}
 	translate_menu(menu_bar);
+
 	*menus = menu_bar;
 	return 0;
 
@@ -2217,7 +2217,7 @@ error:
 		DestroyMenu(menu_bar);
 	return 1;
 }
-#endif /* UNDER_CE */
+#endif /* HAS_WINDOW_MENU */
 
 
 
@@ -2298,7 +2298,7 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 	switch(message)
 	{
 		case WM_INITMENU:
-			prepare_menus(wnd);
+			prepare_menus(Machine, wnd);
 			menu_bar = GetMenu(wnd);
 			if (menu_bar)
 				translate_menu(menu_bar);
@@ -2310,7 +2310,7 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 			break;
 
 		case WM_COMMAND:
-			if (invoke_command(wnd, wparam))
+			if (invoke_command(Machine, wnd, wparam))
 				break;
 			/* fall through */
 

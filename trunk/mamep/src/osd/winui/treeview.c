@@ -1286,14 +1286,14 @@ void CreateResolutionFolders(int parent_index)
 			if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
 			{
 				swprintf(Resolution, TEXT("%dx%d (V)"),
-					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1,
-					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1);
+					scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
+					scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1);
 			}
 			else
 			{
 				swprintf(Resolution, TEXT("%dx%d (H)"),
-					scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1,
-					scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1);
+					scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
+					scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1);
 			}
 
 			for (i=numFolders-1;i>=start_folder;i--)
@@ -1341,7 +1341,7 @@ void CreateFPSFolders(int parent_index)
 		{
 			scrconfig = screen->inline_config;
 
-			f = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
+			f = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 
 			for (jj = 0; jj < nFPS; jj++)
 				if (fps[jj] == f)

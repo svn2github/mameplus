@@ -8,7 +8,6 @@
 *********************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
 #include "uitext.h"
 #include "mslegacy.h"
 

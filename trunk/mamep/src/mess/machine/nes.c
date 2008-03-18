@@ -81,8 +81,8 @@ static void init_nes_core (void)
 
 	/* Brutal hack put in as a consequence of the new memory system; we really
 	 * need to fix the NES code */
-	memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x07ff, 0, 0x1800, MRA8_BANK10);
-	memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x07ff, 0, 0x1800, MWA8_BANK10);
+	memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x07ff, 0, 0x1800, SMH_BANK10);
+	memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x0000, 0x07ff, 0, 0x1800, SMH_BANK10);
 	memory_set_bankptr(10, nes.rom);
 
 	battery_ram = nes.wram;
@@ -94,11 +94,11 @@ static void init_nes_core (void)
 			nes.slow_banking = 0;
 			nes_fds.data = auto_malloc( 0x8000 );
 			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x4030, 0x403f, 0, 0, fds_r);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0xdfff, 0, 0, MRA8_BANK2);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000, 0xffff, 0, 0, MRA8_BANK1);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0xdfff, 0, 0, SMH_BANK2);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000, 0xffff, 0, 0, SMH_BANK1);
 
 			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x4020, 0x402f, 0, 0, fds_w);
-			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0xdfff, 0, 0, MWA8_BANK2);
+			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0xdfff, 0, 0, SMH_BANK2);
 
 			memory_set_bankptr(1, &nes.rom[0xe000]);
 			memory_set_bankptr(2, nes_fds.data );
@@ -106,19 +106,19 @@ static void init_nes_core (void)
 		case 40:
 			nes.slow_banking = 1;
 			/* Game runs code in between banks, so we do things different */
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, MRA8_RAM);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0xffff, 0, 0, MRA8_ROM);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, SMH_RAM);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0xffff, 0, 0, SMH_ROM);
 
 			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, nes_mid_mapper_w);
 			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0xffff, 0, 0, nes_mapper_w);
 			break;
 		default:
 			nes.slow_banking = 0;
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, MRA8_BANK5);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0x9fff, 0, 0, MRA8_BANK1);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xa000, 0xbfff, 0, 0, MRA8_BANK2);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xc000, 0xdfff, 0, 0, MRA8_BANK3);
-			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000, 0xffff, 0, 0, MRA8_BANK4);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, SMH_BANK5);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0x9fff, 0, 0, SMH_BANK1);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xa000, 0xbfff, 0, 0, SMH_BANK2);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xc000, 0xdfff, 0, 0, SMH_BANK3);
+			memory_install_read8_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000, 0xffff, 0, 0, SMH_BANK4);
 
 			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x6000, 0x7fff, 0, 0, nes_mid_mapper_w);
 			memory_install_write8_handler(0, ADDRESS_SPACE_PROGRAM, 0x8000, 0xffff, 0, 0, nes_mapper_w);
@@ -199,7 +199,7 @@ static void nes_machine_stop(running_machine *machine)
 
 
 
-static int zapper_hit_pixel(const nes_input *input)
+static int zapper_hit_pixel(running_machine *machine, const nes_input *input)
 {
 	UINT16 pix = 0;
 	rgb_t col;
@@ -209,7 +209,7 @@ static int zapper_hit_pixel(const nes_input *input)
 	if (nes_zapper_hack)
 		pix = *BITMAP_ADDR16(nes_zapper_hack, input->i2, input->i1);
 
-	col = palette_get_color(Machine, pix);
+	col = palette_get_color(machine, pix);
 	r = (UINT8) (col >> 16);
 	g = (UINT8) (col >> 8);
 	b = (UINT8) (col >> 0);
@@ -239,7 +239,7 @@ static int zapper_hit_pixel(const nes_input *input)
 		retVal |= ((in_0.i0 & 0x01) << 4);
 
 		/* Look at the screen and see if the cursor is over a bright pixel */
-		if (zapper_hit_pixel(&in_0))
+		if (zapper_hit_pixel(machine, &in_0))
 			retVal &= ~0x08; /* sprite hit */
 		else
 			retVal |= 0x08;  /* no sprite hit */
@@ -274,7 +274,7 @@ static int zapper_hit_pixel(const nes_input *input)
 		retVal |= ((in_1.i0 & 0x01) << 4);
 
 		/* Look at the screen and see if the cursor is over a bright pixel */
-		if (zapper_hit_pixel(&in_1))
+		if (zapper_hit_pixel(machine, &in_1))
 			retVal &= ~0x08; /* sprite hit */
 		else
 			retVal |= 0x08;  /* no sprite hit */

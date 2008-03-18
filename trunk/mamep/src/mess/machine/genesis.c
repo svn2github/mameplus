@@ -21,7 +21,6 @@ io bug? controls don't work in decap attack
 */
 
 #include "driver.h"
-#include "deprecat.h"
 #include "includes/genesis.h"
 #include "sound/2612intf.h"
 #include "sound/sn76496.h"
@@ -84,7 +83,7 @@ static const gfx_layout charlayout =
 };
 
 
-void genesis_vdp_start (genvdp *current_vdp)
+static void genesis_vdp_start (running_machine *machine, genvdp *current_vdp)
 {
 	int gfx_index=0;
 
@@ -108,18 +107,18 @@ void genesis_vdp_start (genvdp *current_vdp)
 
 	/* find first empty slot to decode gfx */
 	for (gfx_index = 0; gfx_index < MAX_GFX_ELEMENTS; gfx_index++)
-		if (Machine->gfx[gfx_index] == 0)
+		if (machine->gfx[gfx_index] == 0)
 			break;
 
 //	if (gfx_index == MAX_GFX_ELEMENTS)
 //		return 1;
 
 	/* create the char set (gfx will then be updated dynamically from RAM) */
-	Machine->gfx[gfx_index] = allocgfx(&charlayout);
-	decodegfx(Machine->gfx[gfx_index] , (UINT8 *)&current_vdp->genesis_vdp_vram, 0, 1);
+	machine->gfx[gfx_index] = allocgfx(&charlayout);
+	decodegfx(machine->gfx[gfx_index] , (UINT8 *)&current_vdp->genesis_vdp_vram, 0, 1);
 
 	/* set the color information */
-	Machine->gfx[gfx_index]->total_colors = 0x4;
+	machine->gfx[gfx_index]->total_colors = 0x4;
 	current_vdp -> genesis_vdp_index = gfx_index;
 
 }
@@ -179,9 +178,9 @@ void genesis_vdp_draw_scanline (genvdp *current_vdp, int line)
 }
 
 
-void genesis_vdp_spritebuffer_scanline (genvdp *current_vdp, int line, int reqpri)
+static void genesis_vdp_spritebuffer_scanline (running_machine *machine, genvdp *current_vdp, int line, int reqpri)
 {
-	const gfx_element *gfx = Machine->gfx[0];
+	const gfx_element *gfx = machine->gfx[0];
 	UINT8 *srcgfx = gfx->gfxdata;
 	int shadowmode = genesis_vdp.genesis_vdp_regs[0x0c]&0x08;
 	int sbr = genesis_vdp.genesis_vdp_regs[0x05]<<9;
@@ -339,9 +338,9 @@ void genesis_vdp_spritebuffer_scanline (genvdp *current_vdp, int line, int reqpr
 c0-ff are unused
 */
 
-void genesis_vdp_render_scanline (genvdp *current_vdp, int line)
+static void genesis_vdp_render_scanline (running_machine *machine, genvdp *current_vdp, int line)
 {
-	const gfx_element *gfx = Machine->gfx[0];
+	const gfx_element *gfx = machine->gfx[0];
 
 	int _2tileblock;
 	UINT8 *srcgfx = gfx->gfxdata;
@@ -738,7 +737,7 @@ void genesis_vdp_render_scanline (genvdp *current_vdp, int line)
 		}
 	}
 
-	genesis_vdp_spritebuffer_scanline(current_vdp, line, 0);
+	genesis_vdp_spritebuffer_scanline(machine,current_vdp, line, 0);
 
 	/* Scroll B High */
 	renderto = current_vdp->genesis_vdp_bg_render_buffer;
@@ -1017,7 +1016,7 @@ void genesis_vdp_render_scanline (genvdp *current_vdp, int line)
 		}
 	}
 
-	genesis_vdp_spritebuffer_scanline(current_vdp, line, 1);
+	genesis_vdp_spritebuffer_scanline(machine, current_vdp, line, 1);
 
 
 }
@@ -1025,7 +1024,7 @@ void genesis_vdp_render_scanline (genvdp *current_vdp, int line)
 
 VIDEO_START(genesis)
 {
-	genesis_vdp_start (&genesis_vdp);
+	genesis_vdp_start (machine, &genesis_vdp);
 	oldscreenmode = 0xff; // driver specific
 	VIDEO_START_CALL(generic_bitmapped);
 }
@@ -1522,7 +1521,7 @@ UINT16 genesis_vdp_control_read ( genvdp *current_vdp )
 	if (current_vdp->sline>=224) retvalue |= 0x0008;
 	if (current_vdp->sline>=224) retvalue |= 0x0080;
 
-	if (video_screen_get_hpos(0) > 0xc0) retvalue |= 0x0004; // ??
+	if (video_screen_get_hpos(machine->primary_screen) > 0xc0) retvalue |= 0x0004; // ??
 	if (!genesis_is_ntsc) retvalue |= 0x0001;
 
 
@@ -1546,7 +1545,7 @@ UINT16 genesis_vdp_hvcounter_read ( genvdp *current_vdp )
 
 
 //	logerror("Read from HV Counters\n");
-	return (((vcnt))&0xff)<<8|(video_screen_get_hpos(0)&0xff);
+	return (((vcnt))&0xff)<<8|(video_screen_get_hpos(machine->primary_screen)&0xff);
 }
 
 UINT16 genesis_vdp_read ( genvdp *current_vdp, offs_t offset, UINT16 mem_mask )
@@ -2215,7 +2214,7 @@ Display
 
 */
 
-void genesis_init_frame(void)
+static void genesis_init_frame(running_machine *machine)
 {
 	int i;
 	if ((genesis_vdp.genesis_vdp_regs[0x0c]&0x81) != oldscreenmode)
@@ -2224,12 +2223,12 @@ void genesis_init_frame(void)
 		switch (genesis_vdp.genesis_vdp_regs[0x0c]&0x81)
 		{
 			case 0x00: // 32 cell
-				video_screen_set_visarea(0, 0, 32*8-1, 0, 224-1);
+				video_screen_set_visarea(machine->primary_screen, 0, 32*8-1, 0, 224-1);
 				break;
 			case 0x01: // 40 cell corrupted
 			case 0x80: // illegal!
 			case 0x81: // 40 cell
-				video_screen_set_visarea(0, 0, 40*8-1, 0, 224-1);
+				video_screen_set_visarea(machine->primary_screen, 0, 40*8-1, 0, 224-1);
 			break;
 		}
 	}
@@ -2238,7 +2237,7 @@ void genesis_init_frame(void)
 	{
 		if (genesis_vdp.genesis_vdp_vram_is_dirty[i])
 		{
-			decodechar(Machine->gfx[genesis_vdp.genesis_vdp_index], i,(UINT8 *)genesis_vdp.genesis_vdp_vram);
+			decodechar(machine->gfx[genesis_vdp.genesis_vdp_index], i,(UINT8 *)genesis_vdp.genesis_vdp_vram);
 			genesis_vdp.genesis_vdp_vram_is_dirty[i] = 0;
 		}
 	}
@@ -2253,7 +2252,7 @@ INTERRUPT_GEN( genesis_interrupt )
 
 	genesis_vdp.irq4_counter--;
 
-	if (scan == 0) genesis_init_frame(); // decode gfx tiles etc.
+	if (scan == 0) genesis_init_frame(machine); // decode gfx tiles etc.
 
 	if (scan==0) genesis_vdp.irq4_counter = genesis_vdp.genesis_vdp_regs[0x0a];
 
@@ -2281,7 +2280,7 @@ INTERRUPT_GEN( genesis_interrupt )
 
 	if (( scan>=0 ) && ( genesis_vdp.sline <224))
 	{
-		genesis_vdp_render_scanline(&genesis_vdp,genesis_vdp.sline);
+		genesis_vdp_render_scanline(machine, &genesis_vdp,genesis_vdp.sline);
 		genesis_vdp_draw_scanline(&genesis_vdp,genesis_vdp.sline);
 	}
 
@@ -2329,8 +2328,8 @@ void genesis_common_init( void )
 	memset( genesis_mainram, 0x00, 0x10000);
 
 	/* Another brutal hack to work around 0.101u1 memory changes */
-	memory_install_read8_handler(1, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, MRA8_BANK10);
-	memory_install_write8_handler(1, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, MWA8_BANK10);
+	memory_install_read8_handler(1, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, SMH_BANK10);
+	memory_install_write8_handler(1, ADDRESS_SPACE_PROGRAM, 0x0000, 0x1fff, 0, 0, SMH_BANK10);
 	memory_set_bankptr(10, memory_region(REGION_CPU2));
 
 //	memory_set_bankptr(1,memory_region(REGION_USER1)); /* cartridge at BANK1 */
