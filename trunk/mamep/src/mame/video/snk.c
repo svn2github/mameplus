@@ -292,7 +292,7 @@ VIDEO_UPDATE( athena )
 		int bg_scrolly = -ram[0xcb00] + 8;
 		if(attributes & 0x02) bg_scrollx += 256;
 		if(attributes & 0x10) bg_scrolly += 256;
-		tnk3_draw_background( machine, bitmap, cliprect, bg_scrollx, bg_scrolly, 64, 64, 0 );
+		tnk3_draw_background(screen->machine, bitmap, cliprect, bg_scrollx, bg_scrolly, 64, 64, 0 );
 	}
 
 	{
@@ -300,14 +300,14 @@ VIDEO_UPDATE( athena )
 		int sp_scrolly = ram[0xc900] + 9;
 		if(attributes & 0x01) sp_scrollx += 256;
 		if(attributes & 0x08) sp_scrolly += 256;
-		athena_draw_sprites( machine, bitmap, cliprect, sp_scrollx, sp_scrolly );
+		athena_draw_sprites(screen->machine, bitmap, cliprect, sp_scrollx, sp_scrolly );
 	}
 
 	{
 		int bank = (attributes & 0x40) ? 1:0;
 
-		tnk3_draw_text( machine, bitmap, cliprect, bank, &ram[0xf800] );
-		tnk3_draw_status( machine, bitmap, cliprect, bank, &ram[0xfc00] );
+		tnk3_draw_text(screen->machine, bitmap, cliprect, bank, &ram[0xf800] );
+		tnk3_draw_status(screen->machine, bitmap, cliprect, bank, &ram[0xfc00] );
 	}
 	return 0;
 }
