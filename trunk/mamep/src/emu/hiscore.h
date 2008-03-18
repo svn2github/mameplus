@@ -14,6 +14,6 @@
 #ifndef __HISCORE_H__
 #define __HISCORE_H__
 
-void hiscore_init(running_machine *machine, const char *name);
+void hiscore_init( running_machine *machine, const char *name);
 
 #endif	/* __HISCORE_H__ */

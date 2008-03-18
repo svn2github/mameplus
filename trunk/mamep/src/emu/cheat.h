@@ -14,11 +14,11 @@
 #ifndef __CHEAT_H__
 #define __CHEAT_H__
 
+#include "mamecore.h"
+
 #ifdef USE_HISCORE
 extern int he_did_cheat;
 #endif /* USE_HISCORE */
-
-#include "mamecore.h"
 
 void cheat_init(running_machine *machine);
 

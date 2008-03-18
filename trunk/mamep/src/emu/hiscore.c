@@ -10,10 +10,9 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
-#include "uitext.h"
 #include "hiscore.h"
 #include "cheat.h"
+#include "deprecat.h"
 
 #define MAX_CONFIG_LINE_SIZE 48
 
@@ -194,13 +193,13 @@ static void hiscore_free (void)
 
 static void hiscore_load (void)
 {
+	file_error filerr;
+	mame_file *f;
+	astring *fname;
 	if (is_highscore_enabled())
 	{
-		file_error filerr;
-		mame_file *f;
-		astring *fname;
-		fname = astring_assemble_2(astring_alloc(), Machine->basename, ".hi");
-		filerr = mame_fopen (SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_READ, &f);
+		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
+		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_READ, &f);
 		astring_free(fname);
 		state.hiscores_have_been_loaded = 1;
 		LOG(("hiscore_load\n"));
@@ -230,13 +229,13 @@ static void hiscore_load (void)
 
 static void hiscore_save (void)
 {
+	file_error filerr;
+	mame_file *f;
+	astring *fname;
 	if (is_highscore_enabled())
 	{
-		file_error filerr;
-		mame_file *f;
-		astring *fname;
-		fname = astring_assemble_2(astring_alloc(), Machine->basename, ".hi");
-		filerr = mame_fopen (SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
+		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
+		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
 		astring_free(fname);
 		LOG(("hiscore_save\n"));
 		if (filerr == FILERR_NONE)
@@ -265,7 +264,7 @@ static void hiscore_save (void)
 
 
 /* call hiscore_update periodically (i.e. once per frame) */
-static TIMER_CALLBACK( hiscore_periodic )
+static void hiscore_periodic (int param)
 {
 	if (state.mem_range)
 	{
@@ -278,6 +277,11 @@ static TIMER_CALLBACK( hiscore_periodic )
 			}
 		}
 	}
+}
+
+static TIMER_CALLBACK( hiscore_periodic_callback )
+{
+	hiscore_periodic(param);
 }
 
 
@@ -295,11 +299,10 @@ void hiscore_close (running_machine *machine)
 /* call hiscore_open once after loading a game */
 void hiscore_init (running_machine *machine, const char *name)
 {
-	memory_range *mem_range = state.mem_range;
 	file_error filerr;
-	mame_file *f;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE);
-
+	memory_range *mem_range = state.mem_range;
+	mame_file *f;
 	state.hiscores_have_been_loaded = 0;
 
 	while (mem_range)
@@ -319,10 +322,7 @@ void hiscore_init (running_machine *machine, const char *name)
 	}
 
 	state.mem_range = NULL;
-
-	LOG(("hiscore_open: '%s'\n", name));
-
-	filerr = mame_fopen (SEARCHPATH_HISCORE_DB, db_filename, OPEN_FLAG_READ, &f);
+	filerr = mame_fopen(SEARCHPATH_HISCORE_DB, db_filename, OPEN_FLAG_READ, &f);
 	if (filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];
@@ -382,8 +382,7 @@ void hiscore_init (running_machine *machine, const char *name)
 		mame_fclose (f);
 	}
 
-	timer = timer_alloc(hiscore_periodic, NULL);
-	timer_adjust_periodic(timer, video_screen_get_frame_period(machine->primary_screen), 0, video_screen_get_frame_period(machine->primary_screen));
-
+	timer = timer_alloc(hiscore_periodic_callback, NULL);
+	timer_adjust_periodic(timer, ATTOTIME_IN_HZ(60), 0, ATTOTIME_IN_HZ(60));
 	add_exit_callback(machine, hiscore_close);
 }

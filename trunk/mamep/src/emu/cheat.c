@@ -527,7 +527,7 @@ typedef struct MenuItemInfoStruct	MenuItemInfoStruct;
 ***************************************************************************/
 
 #ifdef USE_HISCORE
-int			he_did_cheat = 0;
+int							he_did_cheat = 0;
 #endif /* USE_HISCORE */
 static const char			* cheatfile = NULL;
 
@@ -1478,6 +1478,9 @@ static INT32 DoEditDecField(INT32 data, INT32 min, INT32 max)
 void cheat_init(running_machine *machine)
 {
 	/* ----- initialize lists ----- */
+#ifdef USE_HISCORE
+	he_did_cheat =			0;
+#endif /* USE_HISCORE */
 	cheatList =				NULL;
 	cheatListLength =		0;
 
@@ -1497,9 +1500,6 @@ void cheat_init(running_machine *machine)
 	cheatsDisabled =			0;
 	watchesDisabled =			0;
 	cheatOptions =				2;
-#ifdef USE_HISCORE
-	he_did_cheat =			0;
-#endif /* USE_HISCORE */
 
 	/* ----- initialize CPU info for cheat system ----- */
 	BuildCPUInfoList(machine);
@@ -11198,7 +11198,6 @@ static void ActivateCheat(CheatEntry * entry)
 	}
 
 	entry->flags |= kCheatFlag_Active;
-
 #ifdef USE_HISCORE
 	he_did_cheat = 1;
 #endif /* USE_HISCORE */

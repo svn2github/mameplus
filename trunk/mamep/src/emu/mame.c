@@ -1799,11 +1799,6 @@ static void init_machine(running_machine *machine)
 	devices_init(machine);
 #endif
 
-#ifdef USE_HISCORE
-	/* start the hiscore system -- remove me */
-	hiscore_init(machine, machine->gamedrv->name);
-#endif /* USE_HISCORE */
-
 	/* call the game driver's init function */
 	/* this is where decryption is done and memory maps are altered */
 	/* so this location in the init order is important */
@@ -1843,6 +1838,9 @@ static void init_machine(running_machine *machine)
 
 	/* initialize miscellaneous systems */
 	saveload_init(machine);
+#ifdef USE_HISCORE
+	hiscore_init(machine, machine->gamedrv->name);
+#endif /* USE_HISCORE */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		cheat_init(machine);
 }
