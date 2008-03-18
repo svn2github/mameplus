@@ -119,13 +119,7 @@ $(WINUIOBJ)/mameversui.rc: $(VERINFO32) $(SRC)/version.c
 	@echo Emitting $@...
 	@$(VERINFO32) $(SRC)/version.c > $@
 
-ifeq ($(NO_DLL),)
-    GUIRESFILE = $(WINUIOBJ)/mameui.res
-else
-    UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
-    GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
-endif
+GUIRESFILE = $(WINUIOBJ)/mameui.res
 
 #####################################################################
 # Linker
