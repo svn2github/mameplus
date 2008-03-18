@@ -383,7 +383,7 @@ void hiscore_init (running_machine *machine, const char *name)
 	}
 
 	timer = timer_alloc(hiscore_periodic, NULL);
-	timer_adjust_periodic(timer, attotime_make(0, Machine->screen[0].refresh), 0, attotime_make(0, Machine->screen[0].refresh));
+	timer_adjust_periodic(timer, video_screen_get_frame_period(machine->primary_screen), 0, video_screen_get_frame_period(machine->primary_screen));
 
 	add_exit_callback(machine, hiscore_close);
 }

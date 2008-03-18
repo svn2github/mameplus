@@ -1754,13 +1754,13 @@ int load_driver_statistics (char *buffer, int bufsize)
 		/* Calc all graphic resolution and aspect ratio numbers */
 		if (drivers[i]->flags & ORIENTATION_SWAP_XY)
 		{
-			x = scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1;
-			y = scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1;
+			x = scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1;
+			y = scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1;
 		}
 		else
 		{
-			x = scrconfig->defstate.visarea.max_x - scrconfig->defstate.visarea.min_x + 1;
-			y = scrconfig->defstate.visarea.max_y - scrconfig->defstate.visarea.min_y + 1;
+			x = scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1;
+			y = scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1;
 		}
 
 		if (scrconfig->type == SCREEN_TYPE_VECTOR)
@@ -2003,7 +2003,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 
 		/* Calc all Frames_Per_Second numbers */
-		fps[0] = ATTOSECONDS_TO_HZ(scrconfig->defstate.refresh);
+		fps[0] = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 		for (n = 1; n < ARRAY_LENGTH(fps); n++)
 		{
 			if (fps[n] == fps[0])

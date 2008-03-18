@@ -8983,7 +8983,7 @@ DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 	neogeo_fixed_layer_bank_type = 2;
 	driver_init_neogeo(machine);
 	install_pvc_protection();
-	memory_install_read16_handler( 0, ADDRESS_SPACE_PROGRAM, 0xc00000, 0xc7ffff, 0, 0, MRA16_BANK3 ); /* 512k bios */
+	memory_install_read16_handler( 0, ADDRESS_SPACE_PROGRAM, 0xc00000, 0xc7ffff, 0, 0, SMH_BANK3 ); /* 512k bios */
 }
 
 DRIVER_INIT( mslug5d ) // decrypted C & decrypted P

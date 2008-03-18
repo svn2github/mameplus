@@ -34,7 +34,8 @@
 #include "mess.h"
 #include "uimess.h"
 #include "inputx.h"
-#endif
+#include "messopts.h"
+#endif /* MESS */
 
 #include <ctype.h>
 
@@ -706,8 +707,8 @@ void ui_update_and_render(running_machine *machine)
 
 #ifdef MESS
 	/* let MESS display its stuff */
-	mess_ui_update();
-#endif
+	mess_ui_update(machine);
+#endif /* MESS */
 }
 
 
@@ -1805,7 +1806,7 @@ skip_comment:
 			}
 			if (next_caption_timer == 0)
 			{
-				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(Machine->screen[0].refresh);	// 5sec.
+				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds);	// 5sec.
 			}
 
 			strcpy(next_caption, &read_buf[i]);
@@ -2070,9 +2071,9 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 // mamep: we want to use both window UI and in-game UI
 #if 0 //def MESS
-	if (mess_disable_builtin_ui())
+	if (mess_disable_builtin_ui(machine))
 		return 0;
-#endif
+#endif /* MESS */
 
 	/* if the user pressed ESC, stop the emulation */
 	if (input_ui_pressed(IPT_UI_CANCEL))

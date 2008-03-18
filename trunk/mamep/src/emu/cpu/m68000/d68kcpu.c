@@ -43,6 +43,17 @@ static const char copyright_notice[] =
 /* ================================ DEFINES =============================== */
 /* ======================================================================== */
 
+/* from memory.c */
+/* ----- bit counts ----- */
+#define LEVEL1_BITS				18						/* number of address bits in the level 1 table */
+#define LEVEL2_BITS				(32 - LEVEL1_BITS)		/* number of address bits in the level 2 table */
+#define SUBTABLE_COUNT			64						/* number of slots reserved for subtables */
+#define SUBTABLE_BASE			(256 - SUBTABLE_COUNT)	/* first index of a subtable */
+
+/* table lookup helpers */
+#define LEVEL1_INDEX(a)			((a) >> LEVEL2_BITS)
+#define LEVEL2_INDEX(e,a)		((1 << LEVEL1_BITS) + (((e) - SUBTABLE_BASE) << LEVEL2_BITS) + ((a) & ((1 << LEVEL2_BITS) - 1)))
+
 #define CACHE_SIZE		(8 * 1024 * 1024)
 #define MAX_INSTRUCTIONS	512
 #define MAX_BPI			2048
@@ -853,7 +864,7 @@ static int is_memory_in_rom(uint32 pc)
 {
 	UINT8 entry;
 
-	pc &= active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	pc &= active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 	entry = active_address_space[ADDRESS_SPACE_PROGRAM].writelookup[LEVEL1_INDEX(pc)];
 	if (entry >= SUBTABLE_BASE)
 		entry = active_address_space[ADDRESS_SPACE_PROGRAM].writelookup[LEVEL2_INDEX(entry,pc)];

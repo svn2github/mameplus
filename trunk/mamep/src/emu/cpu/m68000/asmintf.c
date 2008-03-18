@@ -636,7 +636,7 @@ static void m68000_reset(void)
 	M68000_RESET();
 
 	a68k_memory_intf = M68000_regs.Memory_Interface;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 }
 
 static void m68000_exit(void)
@@ -728,7 +728,7 @@ static void m68000_set_context(void *src)
 	{
 		M68000_regs = *(a68k_cpu_context*)src;
 		a68k_memory_intf = M68000_regs.Memory_Interface;
-		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 	}
 }
 
@@ -849,7 +849,7 @@ static void m68008_reset(void)
 	M68000_RESET();
 
 	a68k_memory_intf = M68000_regs.Memory_Interface;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 }
 
 static offs_t m68008_dasm(char *buffer, offs_t pc, const UINT8 *oprom, const UINT8 *opram)
@@ -940,7 +940,7 @@ static void m68010_reset(void)
 	M68010_RESET();
 
 	a68k_memory_intf = M68010_regs.Memory_Interface;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 }
 
 static void m68010_exit(void)
@@ -1025,7 +1025,7 @@ static void m68010_set_context(void *src)
 	{
 		M68010_regs = *(a68k_cpu_context*)src;
 		a68k_memory_intf = M68010_regs.Memory_Interface;
-		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 	}
 }
 
@@ -1139,7 +1139,7 @@ static void m68k32_reset_common(void)
 static void m68020_reset(void)
 {
 	a68k_memory_intf = interface_d32;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 
 	m68k32_reset_common();
 
@@ -1230,7 +1230,7 @@ static void m68020_set_context(void *src)
 	{
 		M68020_regs = *(a68k_cpu_context*)src;
 		a68k_memory_intf = M68020_regs.Memory_Interface;
-		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+		mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 	}
 }
 
@@ -1301,7 +1301,7 @@ static void m68ec020_init(int index, int clock, const void *config, int (*irqcal
 static void m68ec020_reset(void)
 {
 	a68k_memory_intf = interface_d32;
-	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].addrmask;
+	mem_amask = active_address_space[ADDRESS_SPACE_PROGRAM].bytemask;
 
 	m68k32_reset_common();
 
