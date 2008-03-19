@@ -1184,6 +1184,12 @@ void input_port_init(running_machine *machine, const input_port_token *ipt)
 	memset(custom_button, 0, sizeof(custom_button));
 #endif /* USE_CUSTOM_BUTTON */
 
+	/* reset the pointers */
+	memset(&joystick_info, 0, sizeof(joystick_info));
+#ifdef USE_CUSTOM_BUTTON
+	memset(custom_button_info, 0, sizeof(custom_button_info));
+#endif /* USE_CUSTOM_BUTTON */
+
 	/* start with the raw defaults and ask the OSD to customize them in the backup array */
 	memcpy(default_ports_backup, default_ports_builtin, sizeof(default_ports_backup));
 	osd_customize_inputport_list(default_ports_backup);
@@ -1415,12 +1421,6 @@ static void input_port_postload(void)
 	input_port_entry *port;
 	int portnum, bitnum;
 	UINT32 mask;
-
-	/* reset the pointers */
-	memset(&joystick_info, 0, sizeof(joystick_info));
-#ifdef USE_CUSTOM_BUTTON
-	memset(custom_button_info, 0, sizeof(custom_button_info));
-#endif /* USE_CUSTOM_BUTTON */
 
 	/* loop over the ports and identify all the analog inputs */
 	portnum = -1;

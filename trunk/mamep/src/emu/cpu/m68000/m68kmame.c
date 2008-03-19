@@ -929,7 +929,7 @@ void m68020c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 2;							break;
-		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:			info->i = 16;							break;
+		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:			info->i = 20;							break;
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 4;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 158;							break;
 
@@ -1171,7 +1171,7 @@ void m68040c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;
 		case CPUINFO_INT_CLOCK_DIVIDER:					info->i = 1;							break;
 		case CPUINFO_INT_MIN_INSTRUCTION_BYTES:			info->i = 2;							break;
-		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:			info->i = 16;							break;
+		case CPUINFO_INT_MAX_INSTRUCTION_BYTES:			info->i = 20;							break;
 		case CPUINFO_INT_MIN_CYCLES:					info->i = 4;							break;
 		case CPUINFO_INT_MAX_CYCLES:					info->i = 158;							break;
 

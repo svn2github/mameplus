@@ -1467,6 +1467,7 @@ void render_target_compute_visible_area(render_target *target, INT32 target_widt
 void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT32 *minheight)
 {
 	float maxxscale = 1.0f, maxyscale = 1.0f;
+	int screens_considered = 0;
 	int layer;
 
 	/* scan the current view for all screens */
@@ -1512,11 +1513,17 @@ void render_target_get_minimum_size(render_target *target, INT32 *minwidth, INT3
 				}
 
 				/* pick the greater */
-				if (xscale > maxxscale)
-					maxxscale = xscale;
-				if (yscale > maxyscale)
-					maxyscale = yscale;
+				maxxscale = MAX(xscale, maxxscale);
+				maxyscale = MAX(yscale, maxyscale);
+				screens_considered++;
 			}
+	}
+
+	/* if there were no screens considered, pick a nominal default */
+	if (screens_considered == 0)
+	{
+		maxxscale = 640.0f;
+		maxyscale = 480.0f;
 	}
 
 	/* round up */
