@@ -213,8 +213,8 @@ void video_movie_end_recording(const device_config *screen);
 #ifdef USE_SCALE_EFFECTS
 /* ----- scale effect rendering ----- */
 
-void video_init_scale_effect(const device_config *screen);
-void video_exit_scale_effect(const device_config *screen);
+void video_init_scale_effect(running_machine *machine);
+void video_exit_scale_effect(running_machine *machine);
 #endif /* USE_SCALE_EFFECTS */
 
 

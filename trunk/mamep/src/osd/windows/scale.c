@@ -45,6 +45,11 @@
 #define SCALE_EFFECT_LQ4X			23
 #endif /* USE_4X_SCALE */
 
+/* fixme: No longer used by the core */
+#ifndef MAX_SCREENS
+/* maximum number of screens for one game */
+#define MAX_SCREENS					8
+#endif
 #define MAX_SCALE_BANK				(MAX_SCREENS * 2)
 
 
