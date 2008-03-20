@@ -1626,9 +1626,8 @@ const char *video_get_speed_text(running_machine *machine)
 	/* validate */
 	assert(machine != NULL);
 
-//fixme 0.123u4 cpuexec
-//	*dest = '\0';
-//	dest += sprintf(dest, _("frame:%d "), cpu_getcurrentframe());
+	*dest = '\0';
+	dest += sprintf(dest, _("frame:%ld "), (long)video_screen_get_frame_number(machine->primary_screen));
 
 	/* if we're paused, just display Paused */
 	if (paused)

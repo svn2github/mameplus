@@ -1768,8 +1768,7 @@ skip_comment:
 			next_caption_timer = 0;
 			if (next_caption_frame == 0)
 			{
-//fixme 0.123u4 cpuexec
-//				next_caption_frame = cpu_getcurrentframe();
+				next_caption_frame = (int)video_screen_get_frame_number(machine->primary_screen);
 				strcpy(next_caption, _("Error: illegal caption file"));
 				mame_fclose(machine->caption_file);
 				machine->caption_file = NULL;
@@ -1821,8 +1820,7 @@ skip_comment:
 			}
 		}
 	}
-//fixme 0.123u4 cpuexec
-//	if (next_caption_timer && next_caption_frame <= cpu_getcurrentframe())
+	if (next_caption_timer && next_caption_frame <= (int)video_screen_get_frame_number(machine->primary_screen))
 	{
 		caption_timer = next_caption_timer;
 		strcpy(caption_text, next_caption);
