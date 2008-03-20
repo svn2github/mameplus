@@ -1500,7 +1500,7 @@ Neogeo decriptado
 
 # 7736
 Non-CPU
-No CPU
+Não-CPU
 
 # 7652
 Plus!
@@ -1516,5 +1516,5 @@ caseiro
 
 # 7726
 Console
-
+Console
 

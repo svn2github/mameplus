@@ -272,11 +272,11 @@ Bonanza Enterprises, Ltd
 
 # Super Glob (Pac-Man hardware) German
 Bootleg
-Bootleg
+Pirata
 
 # Joker-Poker
 Bootleg in Coinmaster hardware
-Bootleg in Coinmaster hardware
+Pirata usando hardware da Coinmaster
 
 # Sky Lancer (Bordun International)
 Bordun International
@@ -312,11 +312,11 @@ Capcom
 
 # Progear (USA 010117)
 Capcom, supported by Cave
-Capcom, supported by Cave
+Capcom, com suporte da Cave
 
 # Giga Wing (USA 990222)
 Capcom, supported by Takumi
-Capcom, supported by Takumi
+Capcom, com suporte da Takumi
 
 # Cool Pool
 Catalina
@@ -1016,7 +1016,7 @@ Island Design
 
 # Quiz (Revision 2)
 Italian bootleg
-Italian bootleg
+Pirata Italiano
 
 # Major Havoc (Return to Vax)
 JMA
@@ -1292,7 +1292,7 @@ Mitchell
 
 # Mighty! Pang (USA 001010)
 Mitchell, distributed by Capcom
-Mitchell, distributed by Capcom
+Mitchell, distribuído pela Capcom
 
 # Space Invaders (Model Racing)
 Model Racing
@@ -1596,7 +1596,7 @@ Raizing
 
 # Dimahoo (Euro 000121)
 Raizing, distributed by Capcom
-Raizing, distributed by Capcom
+Raizing, distribuído pela Capcom
 
 # M79 Ambush
 RamTek
@@ -1800,7 +1800,7 @@ Sidam
 
 # Dig Dug (manufactured by Sidam)
 Sidam license
-Sidam license
+Licenciado para Sidam 
 
 # Astropal
 Sidam?
@@ -2096,7 +2096,7 @@ Terminal
 
 # Galaxian Test ROM
 Test ROM
-Test ROM
+ROM de Teste
 
 # Lethal Justice
 The Game Room
@@ -2180,7 +2180,7 @@ Uniwang
 
 # Saloon (France, encrypted)
 Unknown
-Unknown
+Desconhecido
 
 # Rabio Lepus (Japan)
 V-System Co.
@@ -2412,11 +2412,11 @@ Zilec-Zenitone
 
 # Crush Roller (bootleg)
 bootleg
-bootleg
+pirata
 
 # Omega
 bootleg?
-bootleg?
+pirata?
 
 # X-Files
 dgPIX Entertainment Inc.
@@ -2424,11 +2424,11 @@ dgPIX Entertainment Inc.
 
 # Puckman (Falcom?)
 hack
-hack
+modificação
 
 # NGEM2K (beta 2006-01-18)
 homebrew
-homebrew
+caseiro
 
 # Chewing Gum
 unknown

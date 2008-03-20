@@ -8,7 +8,7 @@ IPS
 
 # 64
 Misc
-Misto
+Miscelânea
 
 # 139
 Neo-Geo
@@ -20,9 +20,9 @@ Tradução
 
 # 286
 Bootleg And Clone
-
+Pirata e Clone
 
 # 105
 CPS All System
-
+Todos os Sistemas CPS
 
