@@ -169,7 +169,6 @@ ifneq ($(MSVC_BUILD),)
     # make msvcprep into a pre-build step
     # OSPREBUILD = $(VCONV)
     
-	ifneq ($(CROSS_BUILD),1)
     # add VCONV to the build tools
     BUILD += $(VCONV)
     
@@ -180,7 +179,6 @@ ifneq ($(MSVC_BUILD),)
     $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	    @echo Compiling $<...
 	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
-	endif
 endif
 
 
