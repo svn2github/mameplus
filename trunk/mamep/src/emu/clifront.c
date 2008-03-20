@@ -27,6 +27,8 @@
 #endif /* MAMEMESS */
 #ifdef MESS
 #include "climess.h"
+//mamep: for dynamic MESS options
+#include "messopts.h"
 #endif /* MESS */
 
 
@@ -354,7 +356,7 @@ static int execute_commands(core_options *options, const char *exename, const ga
 
 static void display_help(void)
 {
-#ifndef MESS
+#if 1	//#ifndef MESS
 	mame_printf_info(_("M.A.M.E. v%s - Multiple Arcade Machine Emulator\n"
 		   "Copyright Nicola Salmoria and the MAME Team\n\n"), build_version);
 	mame_printf_info("%s\n", _(mame_disclaimer));
