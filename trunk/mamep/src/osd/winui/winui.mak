@@ -84,8 +84,7 @@ $(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.h $(WINUISRC)/
 
 DEFS += \
 	-DWINVER=0x0500 \
-	-D_WIN32_IE=0x0500 \
-	-D_WIN32_WINNT=0x0400
+	-D_WIN32_IE=0x0500
 
 
 

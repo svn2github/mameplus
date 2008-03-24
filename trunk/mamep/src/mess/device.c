@@ -16,11 +16,9 @@
 
 
 
-/*************************************
- *
- *	Names and shortnames
- *
- *************************************/
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
 
 struct Devices
 {
@@ -28,6 +26,21 @@ struct Devices
 	const char *name;
 	const char *shortname;
 };
+
+
+
+typedef struct _device_list device_list;
+struct _device_list
+{
+	object_pool *pool;
+	struct IODevice devices[1];
+};
+
+
+
+/***************************************************************************
+    GLOBAL VARIABLES
+***************************************************************************/
 
 /* The List of Devices, with Associated Names - Be careful to ensure that   *
  * this list matches the ENUM from device.h, so searches can use IO_COUNT	*/
@@ -49,14 +62,11 @@ static const struct Devices device_info_array[] =
 	{ IO_CDROM,     "cdrom",        "cdrm" }, /* 13 */
 };
 
-typedef struct _device_list device_list;
-struct _device_list
-{
-	object_pool *pool;
-	struct IODevice devices[1];
-};
 
 
+/***************************************************************************
+    CORE IMPLEMENTATION
+***************************************************************************/
 
 const char *device_typename(iodevice_t type)
 {
@@ -295,28 +305,33 @@ const struct IODevice *devices_allocate(const game_driver *gamedrv)
 			createimage_optcount = (int) mess_device_get_info_int(&devices[i].devclass, MESS_DEVINFO_INT_CREATE_OPTCOUNT);
 			if (createimage_optcount > 0)
 			{
+				struct CreateImageOptions *createimage_options;
+
 				if (createimage_optcount > MESS_DEVINFO_CREATE_OPTMAX)
 					fatalerror("MESS_DEVINFO_INT_CREATE_OPTCOUNT: Too many options");
 
-				devices[i].createimage_options = pool_malloc(pool, (createimage_optcount + 1) *
-					sizeof(*devices[i].createimage_options));
-				if (!devices[i].createimage_options)
+				/* allocate the options */
+				createimage_options = pool_malloc(pool, (createimage_optcount + 1) * sizeof(*createimage_options));
+				if (!createimage_options)
 					goto error;
 
+				/* set up each option in the list */
 				for (j = 0; j < createimage_optcount; j++)
 				{
 					info_string = mess_device_get_info_string(&devices[i].devclass, MESS_DEVINFO_STR_CREATE_OPTNAME + j);
-					devices[i].createimage_options[j].name			= info_string ? pool_strdup(pool, info_string) : NULL;
+					createimage_options[j].name			= info_string ? pool_strdup(pool, info_string) : NULL;
 					info_string = mess_device_get_info_string(&devices[i].devclass, MESS_DEVINFO_STR_CREATE_OPTDESC + j);
-					devices[i].createimage_options[j].description	= info_string ? pool_strdup(pool, info_string) : NULL;
+					createimage_options[j].description	= info_string ? pool_strdup(pool, info_string) : NULL;
 					info_string = mess_device_get_info_string(&devices[i].devclass, MESS_DEVINFO_STR_CREATE_OPTEXTS + j);
-					devices[i].createimage_options[j].extensions	= info_string ? pool_strdup(pool, info_string) : NULL;
-					devices[i].createimage_options[j].optspec		= mess_device_get_info_ptr(&devices[i].devclass, MESS_DEVINFO_PTR_CREATE_OPTSPEC + j);
+					createimage_options[j].extensions	= info_string ? pool_strdup(pool, info_string) : NULL;
+					createimage_options[j].optspec		= mess_device_get_info_ptr(&devices[i].devclass, MESS_DEVINFO_PTR_CREATE_OPTSPEC + j);
 				}
 
 				/* terminate the list */
-				memset(&devices[i].createimage_options[createimage_optcount], 0,
-					sizeof(devices[i].createimage_options[createimage_optcount]));
+				memset(&createimage_options[createimage_optcount], 0, sizeof(createimage_options[createimage_optcount]));
+
+				/* place this list in the structure */
+				devices[i].createimage_options = createimage_options;
 			}
 
 			position += devices[i].count;
@@ -367,17 +382,23 @@ void devices_free(const struct IODevice *devices)
  *
  *************************************/
 
+static const struct IODevice *filter_device_array_termination(const struct IODevice *dev)
+{
+	return ((dev != NULL) && (dev->type < IO_COUNT)) ? dev : NULL;
+}
+
+
+
 const struct IODevice *mess_device_first_from_machine(const running_machine *machine)
 {
-	return machine->devices;
+	return filter_device_array_termination(machine->devices);
 }
 
 
 
 const struct IODevice *mess_device_next(const struct IODevice *dev)
 {
-	dev++;
-	return (dev->type < IO_COUNT) ? dev : NULL;
+	return filter_device_array_termination(dev + 1);
 }
 
 
@@ -442,10 +463,8 @@ const struct IODevice *device_find_from_machine(const running_machine *machine, 
 /* this function is deprecated */
 int device_count(iodevice_t type)
 {
-	const struct IODevice *dev = NULL;
-	if (Machine->devices)
-		dev = device_find(Machine->devices, type);
-	return dev ? dev->count : 0;
+	const struct IODevice *iodev = device_find_from_machine(Machine, type);
+	return (iodev != NULL) ? iodev->count : 0;
 }
 
 
