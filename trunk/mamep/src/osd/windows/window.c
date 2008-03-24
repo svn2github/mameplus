@@ -11,8 +11,6 @@
 #define LOG_TEMP_PAUSE		0
 
 // Needed for RAW Input
-#undef _WIN32_WINNT
-#define _WIN32_WINNT 0x501
 #define WM_INPUT 0x00FF
 
 // standard windows headers

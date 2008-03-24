@@ -73,7 +73,7 @@ OBJDIRS += $(WINOBJ)
 
 RC = @windres --use-temp-file
 
-RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
+RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
 RCFLAGS = -O coff -I $(WINOBJ)
 ifneq ($(NO_DLL),)
@@ -244,7 +244,11 @@ endif
 LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
 ifdef PTR64
+ifdef MSVC_BUILD
 LIBS += -lbufferoverflowu
+else
+DEFS += -D_COM_interface=struct
+endif
 endif
 
 
