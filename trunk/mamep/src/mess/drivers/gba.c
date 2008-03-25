@@ -13,8 +13,6 @@
 
 ***************************************************************************/
 
-#include <stdio.h>
-
 #include "driver.h"
 #include "state.h"
 #include "video/generic.h"
@@ -23,9 +21,10 @@
 #include "includes/gba.h"
 #include "includes/gb.h"
 #include "sound/dac.h"
-#include "deprecat.h"
 
-#define VERBOSE_LEVEL ( 2 )
+#define VERBOSE_LEVEL	(2)
+#define DISABLE_ROZ	(0)
+
 
 static emu_timer *dma_timer[4], *tmr_timer[4], *irq_timer;
 
@@ -140,11 +139,11 @@ void draw_4bpp_tile(UINT16 *scanline, UINT32 vrambase, UINT16 tilenum, int scnx,
 
 			if (pixel & 0xf0)
 			{
-				scanline[scnx+pixx] = Machine->pens[ppram[(pixel>>4)+pal]&0x7fff];
+				scanline[scnx+pixx] = ppram[(pixel>>4)+pal]&0x7fff;
 			}
 			if (pixel & 0x0f)
 			{
-				scanline[scnx+pixx+1] = Machine->pens[ppram[(pixel&0xf)+pal]&0x7fff];
+				scanline[scnx+pixx+1] = ppram[(pixel&0xf)+pal]&0x7fff;
 			}
 		}
 	}
@@ -156,11 +155,11 @@ void draw_4bpp_tile(UINT16 *scanline, UINT32 vrambase, UINT16 tilenum, int scnx,
 
 			if (pixel & 0x0f)
 			{
-				scanline[scnx+pixx] = Machine->pens[ppram[(pixel&0xf)+pal]&0x7fff];
+				scanline[scnx+pixx] = ppram[(pixel&0xf)+pal]&0x7fff;
 			}
 			if (pixel & 0xf0)
 			{
-				scanline[scnx+pixx+1] = Machine->pens[ppram[(pixel>>4)+pal]&0x7fff];
+				scanline[scnx+pixx+1] = ppram[(pixel>>4)+pal]&0x7fff;
 			}
 		}
 	}
@@ -189,7 +188,7 @@ void draw_8bpp_tile(UINT16 *scanline, UINT32 vrambase, UINT16 tilenum, int scnx,
 
 			if (pixel)
 			{
-				scanline[scnx+pixx] = Machine->pens[ppram[pixel+pal]&0x7fff];
+				scanline[scnx+pixx] = ppram[pixel+pal]&0x7fff;
 			}
 		}
 	}
@@ -201,7 +200,7 @@ void draw_8bpp_tile(UINT16 *scanline, UINT32 vrambase, UINT16 tilenum, int scnx,
 
 			if (pixel)
 			{
-				scanline[scnx+pixx] = Machine->pens[ppram[pixel+pal]&0x7fff];
+				scanline[scnx+pixx] = ppram[pixel+pal]&0x7fff;
 			}
 		}
 	}
@@ -209,6 +208,7 @@ void draw_8bpp_tile(UINT16 *scanline, UINT32 vrambase, UINT16 tilenum, int scnx,
 
 void draw_roz_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctrl, INT32 X, INT32 Y, INT32 PA, INT32 PB, INT32 PC, INT32 PD, int priority)
 {
+#if !DISABLE_ROZ
 	UINT32 base, mapbase, size, ovr;
 	INT32 sizes[4] = { 128, 256, 512, 1024 };
 	INT32 cx, cy, psx, psy, x, px, py;
@@ -246,11 +246,6 @@ void draw_roz_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctr
 
  x2-x0 = A*(x1-x0) + B*(y1-y0)
  y2-y0 = C*(x1-x0) + D*(y1-y0)
-
-
-
-
-
 		*/
 
 		for (x = 0; x < 240; x++)
@@ -275,10 +270,11 @@ void draw_roz_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctr
 			// plot it
 			if (pixel)
 			{
-				scanline[x] = Machine->pens[ppram[pixel]&0x7fff]; 
+				scanline[x] = ppram[pixel]&0x7fff;
 			}
 		}		
 	}
+#endif
 }
 
 void draw_bg_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctrl, UINT32 hofs, UINT32 vofs, int priority)
@@ -387,7 +383,7 @@ void draw_bg_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctrl
 						mapyofs += 64;
 					}
 
-					printf("%d yofs %d (ypos %d vofs %d my %d) tileofs %x\n", video_screen_get_vpos(0), mapyofs, ypos, vofs, my, (mapbase>>1) + (mapyofs * 32));
+					printf("%d yofs %d (ypos %d vofs %d my %d) tileofs %x\n", video_screen_get_vpos(machine->primary_screen), mapyofs, ypos, vofs, my, (mapbase>>1) + (mapyofs * 32));
 				}
 			#endif
 
@@ -432,7 +428,7 @@ void draw_mode3_scanline(UINT16 *scanline, int y)
 
 	for (x = 0; x < 240; x++)
 	{
-		scanline[x] = Machine->pens[pvram[(240*y)+x]&0x7fff];
+		scanline[x] = pvram[(240*y)+x]&0x7fff;
 	}
 }
 
@@ -457,7 +453,7 @@ void draw_mode4_scanline(UINT16 *scanline, int y)
 		pixel = pvram[base+(240*y)+x];
 		if (pixel > 0)
 		{
-			scanline[x] = Machine->pens[ppram[pixel]&0x7fff];
+			scanline[x] = ppram[pixel]&0x7fff;
 		}
 	}
 }
@@ -479,7 +475,7 @@ void draw_mode5_scanline(UINT16 *scanline, int y)
 
 	for (x = 0; x < 160; x++)
 	{
-		scanline[x] = Machine->pens[pvram[base+(160*y)+x]];
+		scanline[x] = pvram[base+(160*y)+x];
 	}
 }
 
@@ -696,7 +692,7 @@ void gba_draw_scanline(int y)
 		// forced blank is white
 		for (i = 0; i < 240; i++)
 		{
-			scanline[i] = Machine->pens[32767];
+			scanline[i] = 0x7fff;
 		}
 		return;
 	}
@@ -704,7 +700,7 @@ void gba_draw_scanline(int y)
 	// BG color
 	for (i = 0; i < 240; i++)
 	{
-		xferscan[1024+i] = Machine->pens[ppram[0]&0x7fff];
+		xferscan[1024+i] = ppram[0]&0x7fff;
 	}
 
 //	printf("mode %d\n", (gba.DISPCNT & 7));
@@ -773,9 +769,9 @@ void gba_draw_scanline(int y)
 	return;
 }
 
-static void dma_exec(FPTR ch);
+static void dma_exec(running_machine *machine, FPTR ch);
 
-static void gba_request_irq(UINT32 int_type)
+static void gba_request_irq(running_machine *machine, UINT32 int_type)
 {
 	// is this specific interrupt enabled?
 	int_type &= gba.IE;
@@ -788,7 +784,7 @@ static void gba_request_irq(UINT32 int_type)
 		if (gba.IME & 1)
 		{
 //			printf("IRQ %04x\n", int_type);
-			cpunum_set_input_line(Machine, 0, ARM7_IRQ_LINE, PULSE_LINE);
+			cpunum_set_input_line(machine, 0, ARM7_IRQ_LINE, PULSE_LINE);
 		}
 	}
 }
@@ -810,7 +806,7 @@ TIMER_CALLBACK( dma_complete )
 	// IRQ
 	if (ctrl & 0x4000)
 	{
-		gba_request_irq(ch_int[ch]);
+		gba_request_irq(machine, ch_int[ch]);
 	}
 
 	// if we're supposed to repeat, don't clear "active" and then the next vbl/hbl will retrigger us
@@ -836,7 +832,7 @@ TIMER_CALLBACK( dma_complete )
 	}
 }
 
-static void dma_exec(FPTR ch)
+static void dma_exec(running_machine *machine, FPTR ch)
 {
 	int i, cnt;
 	int ctrl;
@@ -969,7 +965,7 @@ static void dma_exec(FPTR ch)
 
 //	printf("settng DMA timer %d for %d cycs (tmr %x)\n", ch, cnt, (UINT32)dma_timer[ch]);
 //	timer_adjust_oneshot(dma_timer[ch], ATTOTIME_IN_CYCLES(0, cnt), ch);
-	dma_complete(Machine, NULL, ch);
+	dma_complete(machine, NULL, ch);
 
 	cpuintrf_pop_context();
 }
@@ -977,7 +973,7 @@ static void dma_exec(FPTR ch)
 static int fifo_a_ptr, fifo_b_ptr, fifo_a_in, fifo_b_in;
 static UINT8 fifo_a[20], fifo_b[20];
 
-static void audio_tick(int ref)
+static void audio_tick(running_machine *machine, int ref)
 {
 	if (!(gba.SOUNDCNT_X & 0x80))
 	{
@@ -1011,12 +1007,12 @@ static void audio_tick(int ref)
 			if ((dma_regs[(1*3)+1] == 0x40000a0) && ((dma_regs[(1*3)+2] & 0x30000000) == 0x30000000))
 			{
 				// channel 1 it is
-				dma_exec(1);
+				dma_exec(machine, 1);
 			}
 			if ((dma_regs[(2*3)+1] == 0x40000a0) && ((dma_regs[(2*3)+2] & 0x30000000) == 0x30000000))
 			{
 				// channel 2 it is
-				dma_exec(2);
+				dma_exec(machine, 2);
 			}
 		}
 	}
@@ -1046,12 +1042,12 @@ static void audio_tick(int ref)
 			if ((dma_regs[(1*3)+1] == 0x40000a4) && ((dma_regs[(1*3)+2] & 0x30000000) == 0x30000000))
 			{
 				// channel 1 it is
-				dma_exec(1);
+				dma_exec(machine, 1);
 			}
 			if ((dma_regs[(2*3)+1] == 0x40000a4) && ((dma_regs[(2*3)+2] & 0x30000000) == 0x30000000))
 			{
 				// channel 2 it is
-				dma_exec(2);
+				dma_exec(machine, 2);
 			}
 		}
 	}
@@ -1069,12 +1065,12 @@ static TIMER_CALLBACK(timer_expire)
 	{
 		if ((gba.SOUNDCNT_H & 0x400) == 0)
 		{
-			audio_tick(0);
+			audio_tick(machine, 0);
 		}
 
 		if ((gba.SOUNDCNT_H & 0x4000) == 0)
 		{
-			audio_tick(1);
+			audio_tick(machine, 1);
 		}
 	}
 
@@ -1082,12 +1078,12 @@ static TIMER_CALLBACK(timer_expire)
 	{
 		if ((gba.SOUNDCNT_H & 0x400) == 0x400)
 		{
-			audio_tick(0);
+			audio_tick(machine, 0);
 		}
 
 		if ((gba.SOUNDCNT_H & 0x4000) == 0x4000)
 		{
-			audio_tick(1);
+			audio_tick(machine, 1);
 		}
 	}
 
@@ -1103,7 +1099,7 @@ static TIMER_CALLBACK(timer_expire)
 		                timer_regs[1] |= timer_reload[1];
 		                if( ( timer_regs[1] & 0x400000 ) && ( gba.IME != 0 ) )
 		                {
-			                gba_request_irq( tmr_ints[1] );
+			                gba_request_irq( machine, tmr_ints[1] );
 		                }
 		                if( ( timer_regs[2] & 0x40000 ) )
 		                {
@@ -1113,7 +1109,7 @@ static TIMER_CALLBACK(timer_expire)
 			                        timer_regs[2] |= timer_reload[2];
 			                        if( ( timer_regs[2] & 0x400000 ) && ( gba.IME != 0 ) )
 			                        {
-				                        gba_request_irq( tmr_ints[2] );
+				                        gba_request_irq( machine, tmr_ints[2] );
 			                        }
 			                        if( ( timer_regs[3] & 0x40000 ) )
 			                        {
@@ -1123,7 +1119,7 @@ static TIMER_CALLBACK(timer_expire)
 				                                timer_regs[3] |= timer_reload[3];
 				                                if( ( timer_regs[3] & 0x400000 ) && ( gba.IME != 0 ) )
 				                                {
-					                                gba_request_irq( tmr_ints[3] );
+					                                gba_request_irq( machine, tmr_ints[3] );
 				                                }
 				                        }
 			                        }
@@ -1141,7 +1137,7 @@ static TIMER_CALLBACK(timer_expire)
 		                timer_regs[2] |= timer_reload[2];
 		                if( ( timer_regs[2] & 0x400000 ) && ( gba.IME != 0 ) )
 		                {
-			                gba_request_irq( tmr_ints[2] );
+			                gba_request_irq( machine, tmr_ints[2] );
 		                }
 		                if( ( timer_regs[3] & 0x40000 ) )
 		                {
@@ -1151,7 +1147,7 @@ static TIMER_CALLBACK(timer_expire)
 			                        timer_regs[2] |= timer_reload[2];
 			                        if( ( timer_regs[3] & 0x400000 ) && ( gba.IME != 0 ) )
 			                        {
-				                        gba_request_irq( tmr_ints[3] );
+				                        gba_request_irq( machine, tmr_ints[3] );
 			                        }
 			                }
 		                }
@@ -1167,7 +1163,7 @@ static TIMER_CALLBACK(timer_expire)
 		                timer_regs[3] |= timer_reload[3];
 		                if( ( timer_regs[3] & 0x400000 ) && ( gba.IME != 0 ) )
 		                {
-			                gba_request_irq( tmr_ints[3] );
+			                gba_request_irq( machine, tmr_ints[3] );
 		                }
 		        }
 	        }
@@ -1177,13 +1173,13 @@ static TIMER_CALLBACK(timer_expire)
 	// are we supposed to IRQ?
 	if ((timer_regs[tmr] & 0x400000) && (gba.IME != 0))
 	{
-		gba_request_irq(tmr_ints[tmr]);
+		gba_request_irq(machine, tmr_ints[tmr]);
 	}
 }
 
 TIMER_CALLBACK(handle_irq)
 {
-	gba_request_irq(gba.IF);
+	gba_request_irq(machine, gba.IF);
 
 	timer_adjust_oneshot(irq_timer, attotime_never, 0);
 }
@@ -1206,7 +1202,7 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0004/4:
-			retval = gba.DISPSTAT | (video_screen_get_vpos(0)<<16);
+			retval = gba.DISPSTAT | (video_screen_get_vpos(machine->primary_screen)<<16);
 			break;
 		case 0x0008/4:
 			if( (~mem_mask) & 0x0000ffff )
@@ -2240,7 +2236,7 @@ static WRITE32_HANDLER( gba_io_w )
                         // immediate start
 						if ((ctrl & 0x3000) == 0)
 						{
-							dma_exec(ch);
+							dma_exec(machine, ch);
 							return;
 						}
 				 	}
@@ -2461,8 +2457,8 @@ static WRITE32_HANDLER( gba_io_w )
 	}
 }
 
-static ADDRESS_MAP_START( gba_map, ADDRESS_SPACE_PROGRAM, 32 )
-	AM_RANGE(0x00000000, 0x00003fff) AM_ROM AM_READ(SMH_BANK1)
+static ADDRESS_MAP_START( gbadvance_map, ADDRESS_SPACE_PROGRAM, 32 )
+	AM_RANGE(0x00000000, 0x00003fff) AM_ROMBANK(1)
 	AM_RANGE(0x02000000, 0x0203ffff) AM_RAM AM_MIRROR(0xfc0000)
 	AM_RANGE(0x03000000, 0x03007fff) AM_RAM AM_MIRROR(0xff8000)
 	AM_RANGE(0x04000000, 0x040003ff) AM_READWRITE( gba_io_r, gba_io_w )
@@ -2474,7 +2470,7 @@ static ADDRESS_MAP_START( gba_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x0c000000, 0x0cffffff) AM_ROM AM_REGION(REGION_USER2, 0)	// final mirror
 ADDRESS_MAP_END
 
-INPUT_PORTS_START( gba )
+INPUT_PORTS_START( gbadv )
 	PORT_START
 	PORT_BIT( 0xfc00, IP_ACTIVE_HIGH, IPT_BUTTON6) PORT_UNUSED
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 R") PORT_PLAYER(1)	// R
@@ -2499,13 +2495,13 @@ TIMER_CALLBACK( perform_hbl )
 	// make the ARM7 current
 	cpuintrf_push_context(0);
 
-	gba_draw_scanline(video_screen_get_vpos(0));
+	gba_draw_scanline(video_screen_get_vpos(machine->primary_screen));
 
 	// we are now in hblank
 	gba.DISPSTAT |= DISPSTAT_HBL;
 	if ((gba.DISPSTAT & DISPSTAT_HBL_IRQ_EN ) != 0)
 	{
-		gba_request_irq(INT_HBL);
+		gba_request_irq(machine, INT_HBL);
 	}
 
 	for (ch = 0; ch < 4; ch++)
@@ -2515,7 +2511,7 @@ TIMER_CALLBACK( perform_hbl )
 		// HBL-triggered DMA?
 		if ((ctrl & 0x8000) && ((ctrl & 0x3000) == 0x2000))
 		{
-			dma_exec(ch);
+			dma_exec(machine, ch);
 		}
 	}
 
@@ -2534,14 +2530,14 @@ TIMER_CALLBACK( perform_scan )
 	// no longer in HBL
 	gba.DISPSTAT &= ~DISPSTAT_HBL;
 
-	scanline = video_screen_get_vpos(0);
+	scanline = video_screen_get_vpos(machine->primary_screen);
 
 	// check if VCNT is enabled
 	if ((gba.DISPSTAT & DISPSTAT_VCNT_IRQ_EN) && (scanline < 255))
 	{
 		if (scanline == ((gba.DISPSTAT >> 8) & 0xff))
 		{
-			gba_request_irq(INT_VCNT);
+			gba_request_irq(machine, INT_VCNT);
 		}
 	}
 
@@ -2558,7 +2554,7 @@ TIMER_CALLBACK( perform_scan )
 //		printf("DISPSTAT %x %x\n", gba.DISPSTAT, gba.DISPSTAT & DISPSTAT_VBL_IRQ_EN);
 		if ((gba.DISPSTAT & DISPSTAT_VBL_IRQ_EN) != 0)
 		{
-			gba_request_irq(INT_VBL);
+			gba_request_irq(machine, INT_VBL);
 			framecount++;
 		}
 
@@ -2569,7 +2565,7 @@ TIMER_CALLBACK( perform_scan )
 			// VBL-triggered DMA?
 			if ((ctrl & 0x8000) && ((ctrl & 0x3000) == 0x1000))
 			{
-				dma_exec(ch);
+				dma_exec(machine, ch);
 			}
 		}
 	}
@@ -2602,8 +2598,8 @@ TIMER_CALLBACK( perform_scan )
 	}
 	#endif
 
-	timer_adjust_oneshot(hbl_timer, video_screen_get_time_until_pos(0, scanline, 240), 0);
-	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, ( scanline + 1 ) % 228, 0), 0);
+	timer_adjust_oneshot(hbl_timer, video_screen_get_time_until_pos(machine->primary_screen, scanline, 240), 0);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(machine->primary_screen, ( scanline + 1 ) % 228, 0), 0);
 
 	cpuintrf_pop_context();
 }
@@ -2624,7 +2620,7 @@ static MACHINE_RESET( gba )
 	temp = 0;
 	framecount = 0;
 
-	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(machine->primary_screen, 1, 0), 0);
 	timer_adjust_oneshot(hbl_timer, attotime_never, 0);
 	timer_adjust_oneshot(dma_timer[0], attotime_never, 0);
 	timer_adjust_oneshot(dma_timer[1], attotime_never, 1);
@@ -2651,7 +2647,7 @@ static MACHINE_START( gba )
 	/* create a timer to fire scanline functions */
 	scan_timer = timer_alloc(perform_scan, 0);
 	hbl_timer = timer_alloc(perform_hbl, 0);
-	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(0, 1, 0), 0);
+	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(machine->primary_screen, 1, 0), 0);
 
 	/* and one for each DMA channel */
 	dma_timer[0] = timer_alloc(dma_complete, 0);
@@ -2691,9 +2687,9 @@ static MACHINE_START( gba )
 static struct CustomSound_interface gameboy_sound_interface =
 { gameboy_sh_start, 0, 0 };
 
-static MACHINE_DRIVER_START( gba )
+static MACHINE_DRIVER_START( gbadv )
 	MDRV_CPU_ADD(ARM7, 16777216)
-	MDRV_CPU_PROGRAM_MAP(gba_map,0)
+	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
 
 	MDRV_MACHINE_START(gba)
 	MDRV_MACHINE_RESET(gba)
@@ -3137,7 +3133,7 @@ static void gba_cartslot_getinfo(const mess_device_class *devclass, UINT32 state
 	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:	 					info->i = 1; break;
+		case MESS_DEVINFO_INT_COUNT:	 	   			info->i = 1; break;
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 0; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
@@ -3150,7 +3146,7 @@ static void gba_cartslot_getinfo(const mess_device_class *devclass, UINT32 state
 	}
 }
 
-SYSTEM_CONFIG_START(gba)
+SYSTEM_CONFIG_START(gbadv)
 	CONFIG_DEVICE(gba_cartslot_getinfo)
 SYSTEM_CONFIG_END
 
@@ -3171,7 +3167,7 @@ static OPBASE_HANDLER( gba_setopbase )
 	return address;
 }
 
-static DRIVER_INIT(gba)
+static DRIVER_INIT(gbadv)
 {
 	memory_set_opbase_handler(0, gba_setopbase);
 
@@ -3258,4 +3254,4 @@ static DRIVER_INIT(gba)
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT INIT CONFIG COMPANY      FULLNAME */
-CONS( 2001, gba, 0,     0,     gba,    gba,  gba, gba,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
