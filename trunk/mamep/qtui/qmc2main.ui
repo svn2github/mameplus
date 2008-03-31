@@ -5,12 +5,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>610</width>
-    <height>570</height>
+    <width>631</width>
+    <height>378</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.3 Alpha 1</string>
+   <string>MAME Plus! GUI 0.3 Alpha 2</string>
   </property>
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
@@ -72,7 +72,14 @@
        </layout>
       </item>
       <item>
-       <widget class="QTreeView" name="treeViewGameList" />
+       <widget class="QTreeView" name="treeViewGameList" >
+        <property name="rootIsDecorated" >
+         <bool>false</bool>
+        </property>
+        <property name="itemsExpandable" >
+         <bool>false</bool>
+        </property>
+       </widget>
       </item>
      </layout>
     </item>
@@ -83,7 +90,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>610</width>
+     <width>631</width>
      <height>21</height>
     </rect>
    </property>
@@ -160,27 +167,121 @@
   </widget>
   <widget class="QDockWidget" name="dockWidget" >
    <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::AllDockWidgetFeatures</set>
    </property>
    <property name="windowTitle" >
     <string>Option</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6" >
     <layout class="QGridLayout" >
      <item row="0" column="0" >
-      <widget class="QTreeView" name="treeViewOption" >
-       <property name="editTriggers" >
-        <set>QAbstractItemView::CurrentChanged|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+      <widget class="QTabWidget" name="tabOptions" >
+       <property name="currentIndex" >
+        <number>0</number>
        </property>
-       <property name="alternatingRowColors" >
-        <bool>true</bool>
-       </property>
-       <property name="rootIsDecorated" >
-        <bool>false</bool>
-       </property>
+       <widget class="QWidget" name="tab" >
+        <attribute name="title" >
+         <string>game</string>
+        </attribute>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QTreeView" name="treeCurrOpt" >
+           <property name="editTriggers" >
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="rootIsDecorated" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_3" >
+        <attribute name="title" >
+         <string>cloneof</string>
+        </attribute>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QTreeView" name="treeCloneofOpt" >
+           <property name="editTriggers" >
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="rootIsDecorated" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="bios" >
+        <attribute name="title" >
+         <string>bios</string>
+        </attribute>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QTreeView" name="treeBiosOpt" >
+           <property name="editTriggers" >
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="rootIsDecorated" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_4" >
+        <attribute name="title" >
+         <string>source</string>
+        </attribute>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QTreeView" name="treeSourceOpt" >
+           <property name="editTriggers" >
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="rootIsDecorated" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_2" >
+        <attribute name="title" >
+         <string>global</string>
+        </attribute>
+        <layout class="QGridLayout" >
+         <item row="0" column="0" >
+          <widget class="QTreeView" name="treeGlobalOpt" >
+           <property name="editTriggers" >
+            <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::NoEditTriggers</set>
+           </property>
+           <property name="alternatingRowColors" >
+            <bool>true</bool>
+           </property>
+           <property name="rootIsDecorated" >
+            <bool>false</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
     </layout>
@@ -194,7 +295,7 @@
     <string>GUI Log</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>2</number>
+    <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
     <layout class="QGridLayout" >
@@ -214,7 +315,7 @@
    <attribute name="dockWidgetArea" >
     <number>2</number>
    </attribute>
-   <widget class="QWidget" name="dockWidgetContents_9" >
+   <widget class="QWidget" name="snapWidget" >
     <layout class="QGridLayout" />
    </widget>
   </widget>

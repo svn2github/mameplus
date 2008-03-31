@@ -1,34 +1,270 @@
 ﻿<?xml version="1.0"?>
 <optiontemplate version="1">
-<section name="Video">
-	<option name="cheat" guiname="Cheat" type="bool" default="0">
-		<description>enable cheat subsystem</description>
+	<option name="driver_config" type="string">
+		<value guivalue="MAME">mame</value>
+		<value guivalue="MAME Plus!">plus</value>
+		<value>homebrew</value>
+		<value>decrypted</value>
+		<value>console</value>
 	</option>
-	<option name="throttle" guiname="Throttle" type="bool" default="1">
-		<description>enable throttling to keep game running in sync with real time</description>
+	<option name="readconfig" type="bool" />
+	
+	<option name="rompath" guiname="ROM Directory" type="dir" />
+	<option name="hashpath" type="dir" />
+	<option name="samplepath" type="dir" />
+	<option name="artpath" type="dir" />
+	<option name="ctrlrpath" type="dir" />
+	<option name="inipath" type="dir" />
+	<option name="fontpath" type="dir" />
+	<option name="translation_directory" type="dir" />
+	<option name="localized_directory" type="dir" />
+	<option name="ips_directory" type="dir" />
+	
+	<option name="cfg_directory" type="dir" />
+	<option name="nvram_directory" type="dir" />
+	<option name="memcard_directory" type="dir" />
+	<option name="input_directory" type="dir" />
+	<option name="state_directory" type="dir" />
+	<option name="snapshot_directory" type="dir" />
+	<option name="diff_directory" type="dir" />
+	<option name="comment_directory" type="dir" />
+	<option name="hiscore_directory" type="dir" />
+	
+	<option name="cheat_file" type="file" />
+	<option name="history_file" type="file" />
+	<option name="story_file" type="file" />
+	<option name="mameinfo_file" type="file" />
+	<option name="command_file" type="file" />
+	<option name="hiscore_file" type="file" />
+	
+	<option name="state" type="file" />
+	<option name="autosave" type="bool" />
+	<option name="playback" type="file" />
+	<option name="record" type="file" />
+	<option name="mngwrite" type="file" />
+	<option name="wavwrite" type="file" />
+
+	<option name="autoframeskip" type="bool" />
+	<option name="frameskip" type="int" min="0" max="10" />
+	<option name="seconds_to_run" type="int" />
+	<option name="throttle" type="bool" />
+	<option name="sleep" type="bool" />
+	<option name="speed" type="float" min="0.01" max="100" />
+	<option name="refreshspeed" type="bool" />
+	
+	<option name="rotate" type="bool" />
+	<option name="ror" type="bool" />
+	<option name="rol" type="bool" />
+	<option name="autoror" type="bool" />
+	<option name="autorol" type="bool" />
+	<option name="flipx" type="bool" />
+	<option name="flipy" type="bool" />
+
+	<option name="artwork_crop" type="bool" />
+	<option name="use_backdrops" type="bool" />
+	<option name="use_overlays" type="bool" />
+	<option name="use_bezels" type="bool" />
+
+	<option name="brightness" type="float" min="0.1" max="2.0" />
+	<option name="contrast" type="float" min="0.1" max="2.0" />
+	<option name="gamma" type="float" min="0.1" max="3.0" />
+	<option name="pause_brightness" type="bool" min="0.0" max="1.0" />
+	<option name="scale_effect" type="string" >
+		<value>none</value>
+		<value>scale2x</value>
+		<value>scale2x3</value>
+		<value>scale2x4</value>
+		<value>scale3x</value>
+		<value>superscale</value>
+		<value>superscale75</value>
+		<value>2xsai</value>
+		<value>super2xsai</value>
+		<value>supereagle</value>
+		<value>eagle</value>
+		<value>2xpm</value>
+		<value>hq2xasm</value>
+		<value>hq2x</value>
+		<value>hq2x3</value>
+		<value>hq2x4</value>
+		<value>lq2x</value>
+		<value>lq2x3</value>
+		<value>lq2x4</value>
+		<value>hq3xasm</value>
+		<value>hq3x</value>
+		<value>lq3x</value>
 	</option>
-	<option name="frameskip" guiname="Frameskip" type="int" default="0" min="0" max="10">
-		<description>set frameskip to fixed value, 0-10 (autoframeskip must be disabled)</description>
+	
+	<option name="antialias" type="bool" />
+	<option name="beam" type="float" />
+	<option name="flicker" type="float" min="0" max="1.0" />
+	
+	<option name="sound" type="bool" />
+	<option name="samplerate" type="string">
+		<value>11025</value>
+		<value>22050</value>
+		<value>44100</value>
+		<value>48000</value>
 	</option>
-	<option name="brightness" guiname="Brightness" type="float" default="1.0" min="0.1" max="2.0">
-		<description>default game screen brightness correction</description>
+	<option name="samples" type="bool" />
+	<option name="volume" type="int" min="-32" max="0" />
+	<option name="volume_adjust" type="bool" />
+	
+	<option name="ctrlr" type="string" />
+	<option name="mouse" type="bool" />
+	<option name="joystick" type="bool" />
+	<option name="lightgun" type="bool" />
+	<option name="multikeyboard" type="bool" />
+	<option name="multimouse" type="bool" />
+	<option name="steadykey" type="bool" />
+	<option name="offscreen_reload" type="bool" />
+	<option name="joystick_map" type="string" />
+	<option name="joystick_deadzone" type="float" min="0" max="1.0" />
+	<option name="joystick_saturation" type="float" min="0" max="1.0" />
+
+	<option name="paddle_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
 	</option>
-	<option name="video" guiname="Video Output" type="string" default="d3d">
-		<description>video output method: none, gdi, ddraw, or d3d</description>
-		<value guivalue="None">none</value>
+	<option name="adstick_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="pedal_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="dial_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="trackball_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="lightgun_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="positional_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+	<option name="mouse_device" type="string">
+		<value>keyboard</value>
+		<value>mouse</value>
+		<value>joystick</value>
+	</option>
+
+	<option name="log" type="bool" />
+	<option name="verbose" type="bool" />
+	<option name="update_in_pause" type="bool" />
+
+	<option name="bios" type="string" />
+	<option name="cheat" type="bool" />
+	<option name="skip_gameinfo" type="bool" />
+	<option name="ips" type="string" />
+	<option name="confirm_quit" type="bool" />
+	<option name="auto_pause_playback" type="bool" />
+	<option name="m68k_core" type="string">
+		<value>c</value>
+		<value>drc</value>
+	</option>
+	<option name="use_trans_ui" type="bool" />
+	<option name="ui_transparency" type="int" min="0" max="255" />
+
+	<option name="font_blank" type="color" />
+	<option name="font_normal" type="color" />
+	<option name="font_special" type="color" />
+	<option name="system_background" type="color" />
+	<option name="button_red" type="color" />
+	<option name="button_yellow" type="color" />
+	<option name="button_green" type="color" />
+	<option name="button_blue" type="color" />
+	<option name="button_purple" type="color" />
+	<option name="button_pink" type="color" />
+	<option name="button_aqua" type="color" />
+	<option name="button_silver" type="color" />
+	<option name="button_navy" type="color" />
+	<option name="button_lime" type="color" />
+	<option name="cursor" type="color" />
+
+	<option name="language" type="string" />
+	<option name="use_lang_list" type="bool" />
+
+	<option name="oslog" type="bool" />
+	
+	<option name="priority" type="bool" min="-15" max="1" />
+	<option name="multithreading" type="bool" />
+	
+	<option name="video" type="string">
+		<value>none</value>
 		<value guivalue="GDI">gdi</value>
 		<value guivalue="DirectDraw">ddraw</value>
 		<value guivalue="Direct3D">d3d</value>
 	</option>
-</section>
-<section name="Audio">
-	<option name="audio_latency" guiname="Audio Latency" type="int" default="2" min="1" max="5">
-		<description>set audio latency (increase to reduce glitches)</description>
-	</option>
-</section>
-<section name="Path">
-	<option name="artpath" guiname="Artwork Directory" type="string" default="artwork">
-		<description>path to artwork files</description>
-	</option>
-</section>
+	<option name="numscreens" type="int" min="1" max="4" />
+	<option name="window" type="bool" />
+	<option name="maximize" type="bool" />
+	<option name="keepaspect" type="bool" />
+	<option name="prescale" type="int" />
+	<option name="effect" type="string" />
+	<option name="waitvsync" type="bool" />
+	<option name="syncrefresh" type="bool" />
+	
+	<option name="hwstretch" type="bool" />
+	
+	<option name="d3dversion" type="int" min="8" max="9" />
+	<option name="filter" type="bool" />
+	
+	<option name="screen" type="string" />
+	<option name="aspect" type="string" />
+	<option name="resolution" type="string" />
+	<option name="view" type="string" />
+	<option name="screen0" type="string" />
+	<option name="aspect0" type="string" />
+	<option name="resolution0" type="string" />
+	<option name="view0" type="string" />
+	<option name="screen1" type="string" />
+	<option name="aspect1" type="string" />
+	<option name="resolution1" type="string" />
+	<option name="view1" type="string" />
+	<option name="screen2" type="string" />
+	<option name="aspect2" type="string" />
+	<option name="resolution2" type="string" />
+	<option name="view2" type="string" />
+	<option name="screen3" type="string" />
+	<option name="aspect3" type="string" />
+	<option name="resolution3" type="string" />
+	<option name="view3" type="string" />
+	
+	<option name="triplebuffer" type="bool" />
+	<option name="switchres" type="bool" />
+	<option name="full_screen_brightness" type="float" min="0.1" max="2.0" />
+	<option name="full_screen_contrast" type="float" min="0.1" max="2.0" />
+	<option name="full_screen_gamma" type="float" min="0.1" max="3.0" />
+	
+	<option name="audio_latency" type="int" min="1" max="5" />
+	
+	<option name="dual_lightgun" type="bool" />
+	<option name="joyid1" type="int" min="0" max="7" />
+	<option name="joyid2" type="int" min="0" max="7" />
+	<option name="joyid3" type="int" min="0" max="7" />
+	<option name="joyid4" type="int" min="0" max="7" />
+	<option name="joyid5" type="int" min="0" max="7" />
+	<option name="joyid6" type="int" min="0" max="7" />
+	<option name="joyid7" type="int" min="0" max="7" />
+	<option name="joyid8" type="int" min="0" max="7" />
+	
+	<option name="ramsize" type="bool" />
+	<option name="writeconfig" type="bool" />
+	<option name="skip_warnings" type="bool" />
+	<option name="newui" type="bool" />
+	<option name="natural" type="bool" />
 </optiontemplate>

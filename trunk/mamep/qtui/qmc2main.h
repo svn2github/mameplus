@@ -1,12 +1,19 @@
 #ifndef _QMC2_MAIN_H_
 #define _QMC2_MAIN_H_
 
+#include "qticohandler.h"
+#include "quazip.h"
+#include "quazipfile.h"
+
 #include <QApplication>
 #include <QtGui>
-#include "ui_qmc2main.h"
+#include <QtXml>
 
-#define LOG_QMC2	1
-#define LOG_MAME	2
+#include "ui_qmc2main.h"
+#include "procmgr.h"
+#include "gamelist.h"
+#include "utils.h"
+#include "mameopt.h"
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
@@ -29,10 +36,37 @@ public slots:
 	void on_actionDefaultOptions_activated();
     void log(char, QString);
 	void init();
-	void saveLayout();
+	void initSettings();
 	void loadLayout();
+	void saveLayout();
+	void loadSettings();
+	void saveSettings();
+	
 protected:
     void closeEvent(QCloseEvent *event);
 };
+
+#define LOG_QMC2	1
+#define LOG_MAME	2
+#define MAMEPLUS_SIG 0x704c7553
+#define S11N_VER 4
+
+// external global variables
+extern MainWindow *win;
+extern QSettings guisettings;
+
+extern QString icons_directory;
+extern QString roms_directory;
+extern QString snapshot_directory;
+
+extern QString currentGame;
+extern MameGame *mamegame;
+extern GameListSortFilterProxyModel *gameListPModel;
+
+extern ProcessManager *qmc2ProcessManager;
+
+extern OptionUtils *optUtils;
+
+extern Utils *utils;
 
 #endif

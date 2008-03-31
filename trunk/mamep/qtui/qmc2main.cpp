@@ -1,38 +1,17 @@
-#include <QProcess>
-#include <QTimer>
-#include <QSettings>
-#include <QApplication>
-
 #include "qmc2main.h"
-#include "procmgr.h"
-#include "gamelist.h"
-#include "mameopt.h"
-
 
 // global variables
-MainWindow *qmc2MainWindow = NULL;
-Gamelist *qmc2Gamelist = NULL;
-MameOptions *mameopts;
-QString currentGame;
-MameGame *mamegame;
+MainWindow *win;
+QSettings guisettings("mamepgui.ini", QSettings::IniFormat);
 
-ProcessManager *qmc2ProcessManager = NULL;
-bool qmc2ReloadActive = FALSE;
-bool qmc2EarlyReloadActive = FALSE;
-bool qmc2GuiReady = FALSE;
-bool qmc2IconsPreloaded = FALSE;
-bool qmc2StopParser = FALSE;
-QStringList qmc2BiosROMs;
+QString icons_directory;
+QString roms_directory;
+QString snapshot_directory;
 
-extern TreeModel *gameListModel;
-extern GameListSortFilterProxyModel *gameListPModel;
-
+static Gamelist *gamelist = NULL;
 
 void MainWindow::log(char logOrigin, QString message)
 {
-	if ( !qmc2GuiReady )
-		return;
-
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
 	QString msg = timeString + ": " + message;
@@ -57,32 +36,59 @@ MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
 	setupUi(this);
-	
+
 	lineEditSearch = new QLineEdit(centralwidget);
 	lineEditSearch->setStatusTip("type a keyword");
-    QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-    sizePolicy.setHorizontalStretch(0);
-    sizePolicy.setVerticalStretch(0);
-    sizePolicy.setHeightForWidth(lineEditSearch->sizePolicy().hasHeightForWidth());
-    lineEditSearch->setSizePolicy(sizePolicy);
+	QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
+	sizePolicy.setHorizontalStretch(0);
+	sizePolicy.setVerticalStretch(0);
+	sizePolicy.setHeightForWidth(lineEditSearch->sizePolicy().hasHeightForWidth());
+	lineEditSearch->setSizePolicy(sizePolicy);
 	toolBarSearch->addWidget(lineEditSearch);
 
-    labelSnapshot = new QLabel(dockWidgetContents_9);
-    labelSnapshot->setCursor(QCursor(Qt::PointingHandCursor));
-    labelSnapshot->setAlignment(Qt::AlignCenter);
-    gridLayout3->addWidget(labelSnapshot, 0, 0, 1, 1);
+	labelSnapshot = new QLabel(snapWidget);
+	labelSnapshot->setCursor(QCursor(Qt::PointingHandCursor));
+	labelSnapshot->setAlignment(Qt::AlignCenter);
+	snapWidget->layout()->addWidget(labelSnapshot);
 
 	labelProgress = new QLabel(centralwidget);
 	statusbar->addWidget(labelProgress);
 
-    progressBarGamelist = new QProgressBar(centralwidget);
+	progressBarGamelist = new QProgressBar(centralwidget);
 	progressBarGamelist->resize(256, 20);
 	progressBarGamelist->hide();
 
-	qmc2Gamelist = new Gamelist(this);
-	mameopts = new MameOptions(this);
+	gamelist = new Gamelist(this);
+	optUtils = new OptionUtils(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void MainWindow::init()
+{
+#ifdef QMC2_DEBUG
+	log(LOG_QMC2, "DEBUG: MainWindow::init()");
+#endif
+	initSettings();
+	loadSettings();
+
+	// must init after win, before show()
+	optUtils->initOption();
+	
+	on_actionReload_activated();
+	show();
+	loadLayout();
+
+	optUtils->loadDefault("default.ini");
+	optUtils->load();
+	optUtils->load(OPTNFO_GLOBAL, "mame.ini");
+	optUtils->setupModelData(OPTNFO_GLOBAL);
+
+	connect(gameListPModel,SIGNAL(layoutChanged()), gamelist, SLOT(restoreSelection()));
+	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
+	connect(treeViewGameList->selectionModel(),
+			SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+			gamelist, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
 }
 
 MainWindow::~MainWindow()
@@ -94,12 +100,12 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRefresh_activated()
 {
-	qmc2Gamelist->auditthread.audit();
+	gamelist->auditthread.audit();
 }
 
 void MainWindow::on_actionReload_activated()
 {
-	qmc2Gamelist->load();
+	gamelist->load();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -113,79 +119,49 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-	loadLayout();
+	
 }
 
-
-void MainWindow::init()
+void MainWindow::initSettings()
 {
-#ifdef QMC2_DEBUG
-	log(LOG_QMC2, "DEBUG: MainWindow::init()");
-#endif
-	on_actionReload_activated();
-	show();
-	loadLayout();
-	mameopts->load();
-}
-
-void MainWindow::saveLayout()
-{
-	QString fileName = "mamepgui.ini";
-	QSettings settings(fileName, QSettings::IniFormat);
-    settings.setFallbacksEnabled(false);
-
-	settings.setValue("window_geometry", saveGeometry());
-	settings.setValue("window_state", saveState());
-	settings.setValue("default_game", currentGame);
-
-	//save column widths
-	settings.setValue("column_widths", QString("%1,%2,%3,%4,%5,%6,%7")
-												.arg(treeViewGameList->columnWidth(0))
-												.arg(treeViewGameList->columnWidth(1))
-												.arg(treeViewGameList->columnWidth(2))
-												.arg(treeViewGameList->columnWidth(3))
-												.arg(treeViewGameList->columnWidth(4))
-												.arg(treeViewGameList->columnWidth(5))
-												.arg(treeViewGameList->columnWidth(6)));
+    guisettings.setFallbacksEnabled(false);
 }
 
 void MainWindow::loadLayout()
 {
- 	QString fileName = "mamepgui.ini";
-	QSettings settings(fileName, QSettings::IniFormat);
-    settings.setFallbacksEnabled(false);
+	restoreGeometry(guisettings.value("window_geometry").toByteArray());
+	restoreState(guisettings.value("window_state").toByteArray());
 
-	restoreGeometry(settings.value("window_geometry").toByteArray());
-	restoreState(settings.value("window_state").toByteArray());
-/*	
-	currentGame = settings.value("default_game").toString();
-	if (mamegame->gamenameGameInfoMap.contains(currentGame))
-	{
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
-		QModelIndex i = gameListModel->index(0, gameinfo->pModItem);
-		QModelIndex pi = gameListPModel->mapFromSource(i);
+	gamelist->restoreSelection(guisettings.value("default_game", "pacman").toString());
+}
 
-		QMessageBox::warning(qmc2MainWindow->treeViewOption, tr("MAME GUI error"),
-					  QString("%1, %2 . %3, %4")
-					  .arg(i.column())
-					  .arg(i.row())
-					  .arg(pi.column())
-					  .arg(pi.row()));
+void MainWindow::saveLayout()
+{
+	guisettings.setValue("window_geometry", saveGeometry());
+	guisettings.setValue("window_state", saveState());
+	guisettings.setValue("column_state", treeViewGameList->header()->saveState());
+	guisettings.setValue("sort_column", treeViewGameList->header()->sortIndicatorSection());
+	guisettings.setValue("sort_reverse", (treeViewGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
+	guisettings.setValue("default_game", currentGame);
+}
 
-		treeViewGameList->setCurrentIndex(i);
-		treeViewGameList->setFocus();
-        treeViewGameList->selectionModel()->select(pi,
-                                            QItemSelectionModel::Select | QItemSelectionModel::Rows );
-		treeViewGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
-	}
-*/
-	QStringList columnWidths = settings.value("column_widths").toString().split(",");
-	for (int col = 0; col < columnWidths.size(); col ++)
-		treeViewGameList->setColumnWidth(col, columnWidths[col].toUInt());
+void MainWindow::loadSettings()
+{
+	snapshot_directory = guisettings.value("snapshot_directory", "snap").toString();
+	icons_directory = guisettings.value("icons_directory", "icons").toString();
+	roms_directory = guisettings.value("roms_directory", "roms").toString();
+}
+
+void MainWindow::saveSettings()
+{
+	guisettings.setValue("snapshot_directory", snapshot_directory);
+	guisettings.setValue("icons_directory", icons_directory);
+	guisettings.setValue("roms_directory", roms_directory);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+	saveSettings();
 	saveLayout();
 	event->accept();
 }
@@ -193,11 +169,11 @@ void MainWindow::closeEvent(QCloseEvent *event)
 int main(int argc, char *argv[])
 {
 	QApplication qmc2App(argc, argv);
-
-	qmc2ProcessManager = new ProcessManager(0);
-	qmc2MainWindow = new MainWindow(0);
-
-	qmc2GuiReady = TRUE;
+	
+	utils = new Utils(0);
+	win = new MainWindow(0);
+	qmc2ProcessManager = new ProcessManager(win);
 
 	return qmc2App.exec();
 }
+

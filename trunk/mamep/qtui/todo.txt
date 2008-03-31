@@ -1,54 +1,43 @@
-﻿generic non-rom
-  chop off file ext, add .zip
-inp/captcomm.inp
-inp/captcomm.zip/captcomm.inp
-
-/cheat.dat
-/cheat.zip/cheat.dat
-
-GUI
+﻿rom
   add .zip to nearest folder name
-snap/captcomm.png
-snap/snap.zip/captcomm.png
-
-rom
-  add .zip to nearest folder name
-
 roms/captcomm/rom1.bin (directly)
 roms/captcomm.zip/rom1.bin
 
 [basic]
-* col width should > 100
-* colum data structure
-1 list.xml export thread
-1 available filter
-1 start mame core
-* ROM capa column
-* generic multiple zip/folder reading, with parent/clone
-* multiple snapshot
-* column order
+/ faster icon cache
+/ restore selection
+/ ini import
+/ ini export
+/ colum data structure, count, etc
+/ bold changed option items, with a reset button on the right
+/ option section title
+/ history/mameinfo/story parsing
+* reset settings button
+* settings dialog
+* list.xml export thread
+* start mame core
+* terminate threads on exit
 * preliminary GUI options: path etc
-* other filters
-* ini import/export
-* audit selected bios only
-* faster icon cache
-* hide to systray when lauching mame
-* history/mameinfo/story
+* all filters: orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
+* link option scrolling
+* bios support, audit selected bios only
 * switch tree/combobox
-* selectable l&f
-* remove useless ini entries
+* remove/add ini entries
 * fullscreen switch
 * export roms to folders
 * delete roms
-folders: orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
-
+* must select a game
 
 [extension]
+* ROM capa column
+* selectable l&f
+* multiple snapshot
+* delete snapshot
+* hide to systray when lauching mame
 * search history
-* bold changed option items, with a reset button on the right, section title
 * mess console game list
 * loading gif
-* command.dat parsing with rich text
+* command.dat parsing with image
 * controller setting
 
 [sanity check]

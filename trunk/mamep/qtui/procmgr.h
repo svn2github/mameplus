@@ -1,10 +1,7 @@
 #ifndef __PROCMGR_H__
 #define __PROCMGR_H__
 
-#include <QProcess>
-#include <QMap>
-#include <QString>
-#include <QStringList>
+#include <QtGui>
 
 class ProcessManager : public QObject
 {
