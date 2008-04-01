@@ -2,11 +2,10 @@
 
 MameGame *mamegame;
 QString currentGame;
+Gamelist *gamelist = NULL;
 GameListSortFilterProxyModel *gameListPModel;
 
 static TreeModel *gameListModel;
-static MyQueue *iconqueue;
-static LoadIconThread iconthread;
 static GamelistDelegate *gamelistDelegate;
 static QTimer *searchTimer = NULL;
 
@@ -210,21 +209,81 @@ void AuditROMThread::run()
 	emit progressSwitched(-1);
 }
 
+LoadIconThread::LoadIconThread(QObject *parent)
+: QThread(parent)
+{
+	abort = false;
+}
+
+LoadIconThread::~LoadIconThread()
+{
+	mutex.lock();
+	abort = true;
+	mutex.lock();
+	
+	wait();
+}
+
 void LoadIconThread::load()
 {
+	QMutexLocker locker(&mutex);
+
 	if (!isRunning())
 		start(LowPriority);
 }
 
 void LoadIconThread::run()
 {
-	while (!iconqueue->isEmpty())
+	while (!iconQueue.isEmpty() && !abort)
 	{
-		QString gameName = iconqueue->dequeue();
+		QString gameName = iconQueue.dequeue();
 		QIcon icon = utils->loadIcon(gameName);
 
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 		gameinfo->icon = icon;
+	}
+}
+
+UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
+: QThread(parent)
+{
+	abort = false;
+}
+
+UpdateSelectionThread::~UpdateSelectionThread()
+{
+	mutex.lock();
+	abort = true;
+	mutex.lock();
+	
+	wait();
+}
+
+void UpdateSelectionThread::update()
+{
+	QMutexLocker locker(&mutex);
+
+	if (!isRunning())
+		start(NormalPriority);
+}
+
+void UpdateSelectionThread::run()
+{
+	while (!myqueue.isEmpty() && !abort)
+	{
+		QString gameName = myqueue.dequeue();
+
+		pmSnap = utils->getScreenshot(gameName);
+		pmFlyer = utils->getScreenshot(gameName);
+		pmCabinet = utils->getScreenshot(gameName);
+		pmMarquee = utils->getScreenshot(gameName);
+		pmTitle = utils->getScreenshot(gameName);
+		pmCPanel = utils->getScreenshot(gameName);
+		pmPCB = utils->getScreenshot(gameName);
+		
+		historyText = utils->getHistory(gameName, "history.dat");
+		mameinfoText = utils->getHistory(gameName, "mameinfo.dat");
+		storyText = utils->getHistory(gameName, "story.dat");
 	}
 }
 
@@ -327,8 +386,9 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 		if (gameinfo->icon.isNull())
 		{
-			iconqueue->enqueue(gameName);
-			iconthread.load();
+			gamelist->iconThread.iconQueue.setSize(win->treeViewGameList->viewport()->height() / 17);
+			gamelist->iconThread.iconQueue.enqueue(gameName);
+			gamelist->iconThread.load();
 			return utils->deficon;
 		}
 		return gameinfo->icon;
@@ -725,12 +785,13 @@ Gamelist::Gamelist(QObject *parent)
 {
 //	win->log(LOG_QMC2, "DEBUG: Gamelist::Gamelist()");
 
-	connect(&auditthread, SIGNAL(progressSwitched(int, QString)), this, SLOT(switchProgress(int, QString)));
-	connect(&auditthread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
-	connect(&auditthread, SIGNAL(finished()), this, SLOT(setupAudit()));
-//	connect(&auditthread, SIGNAL(logUpdated(char, QString)), this, SLOT(log(char, QString)));
+	connect(&auditThread, SIGNAL(progressSwitched(int, QString)), this, SLOT(switchProgress(int, QString)));
+	connect(&auditThread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
+	connect(&auditThread, SIGNAL(finished()), this, SLOT(setupAudit()));
 
-	connect(&iconthread, SIGNAL(finished()), this, SLOT(setupIcon()));
+	connect(&iconThread, SIGNAL(finished()), this, SLOT(setupIcon()));
+	
+	connect(&selectThread, SIGNAL(finished()), this, SLOT(setupHistory()));
 	
 	if (!searchTimer)
 		searchTimer = new QTimer(this);
@@ -776,13 +837,9 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 	{
 		currentGame = utils->getViewString(current, COL_NAME);
 		
-		//fixme: move to a thread
-		//update screen shot
-		utils->updateScreenshot(currentGame);
-
 		//update statusbar
 		win->labelProgress->setText(utils->getViewString(current, COL_DESC));
-
+/*
 		//update mameopts
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
 		QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
@@ -801,10 +858,9 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		iniFileName = "ini/" + currentGame + ".ini";
 		optUtils->load(OPTNFO_CURR, iniFileName);
 		optUtils->setupModelData(OPTNFO_CURR);
-
-
-		win->textBrowserMAMELog->setText(utils->getHistory(currentGame, "mameinfo.dat"));
-
+*/
+		selectThread.myqueue.enqueue(currentGame);
+		selectThread.update();
 
 		//update selected rows
 		gameListModel->rowChanged(gameListPModel->mapToSource(current));
@@ -879,20 +935,27 @@ void Gamelist::setupAudit()
 	mamegame->s11n();
 }
 
+void Gamelist::setupHistory()
+{
+	win->lblSnap->setPixmap(selectThread.pmSnap);
+	win->lblFlyer->setPixmap(selectThread.pmFlyer);
+	win->lblCabinet->setPixmap(selectThread.pmCabinet);
+	win->lblMarquee->setPixmap(selectThread.pmMarquee);
+	win->lblTitle->setPixmap(selectThread.pmTitle);
+	win->lblCPanel->setPixmap(selectThread.pmCPanel);
+	win->lblPCB->setPixmap(selectThread.pmPCB);
+
+	win->tbHistory->setText(selectThread.historyText);
+	win->tbMameinfo->setText(selectThread.mameinfoText);
+	win->tbStory->setText(selectThread.storyText);
+}
+
 void Gamelist::load()
 {
 	win->log(LOG_QMC2, "DEBUG: Gamelist::load()");
 
 	if (!mamegame->des11n())
 	{
-		if (iconqueue)
-			delete iconqueue;
-
-		//fixme: get real time size
-		iconqueue = new MyQueue(
-			win->treeViewGameList->viewport()->height() / 17, 
-			win);
-	
 		gameListModel = new TreeModel(win);
 		gameListPModel = new GameListSortFilterProxyModel(win);
 		gameListPModel->setSourceModel(gameListModel);
@@ -902,7 +965,7 @@ void Gamelist::load()
 		//restore column state
 		win->treeViewGameList->header()->restoreState(guisettings.value("column_state").toByteArray());		
 		win->treeViewGameList->setSortingEnabled(true);
-		win->treeViewGameList->sortByColumn(	guisettings.value("sort_column").toInt(), 
+		win->treeViewGameList->sortByColumn(guisettings.value("sort_column").toInt(), 
 			(guisettings.value("sort_reverse").toInt() == 0) ? Qt::AscendingOrder : Qt::DescendingOrder);
 
 		if (gamelistDelegate)
@@ -913,7 +976,7 @@ void Gamelist::load()
 		win->treeViewGameList->expandAll();
 		win->treeViewGameList->setFocus();
 
-		//		auditthread.audit();
+		//		auditThread.audit();
 
 		//fixme		delete mamegame;
 		//		mamegame = 0;

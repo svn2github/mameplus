@@ -28,55 +28,6 @@ QString Utils::capitalizeStr(const QString & str)
 	return strlist.join(" ");
 }
 
-QPixmap Utils::updateScreenshot(const QString & gameName)
-{
-	QPixmap pm = QPixmap();
-
-	QString dirpath = snapshot_directory;
-	QDir dir(dirpath);
-	dirpath = dir.path() + "/";	//clean it up
-
-	// try to load directly	
-	if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
-	{
-		// try to add .zip to nearest folder name
-		QuaZip zip(dirpath + dir.dirName() + ".zip");
-		if (zip.open(QuaZip::mdUnzip))
-		{
-			QuaZipFile file(&zip);
-			if (zip.setCurrentFile(gameName + ".png"))
-			{
-				if(file.open(QIODevice::ReadOnly))
-				{
-					QByteArray data = file.readAll();
-					pm.loadFromData(data);
-				}
-				file.close();
-			}
-		}
-		zip.close();
-	}
-
-	// recursively load parent image
-	if (pm.isNull())
-	{
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		if (!gameinfo->cloneof.isEmpty())
-			pm = updateScreenshot(gameinfo->cloneof);
-
-		// fallback to default image, first updateScreenshot() can't reach here
-		if (pm.isNull())
-		{
-			pm = QPixmap(":/res/mamegui/about.png");
-			win->labelSnapshot->setPixmap(pm);
-		}
-	}
-	else
-		win->labelSnapshot->setPixmap(pm);
-	
-	return pm;
-}
-
 QIcon Utils::loadIcon(const QString & gameName)
 {
 	QIcon icon = QIcon();
@@ -149,6 +100,50 @@ QString Utils::getViewString(const QModelIndex &index, int column) const
 	return j.model()->data(j, Qt::DisplayRole).toString();
 }
 
+QPixmap Utils::getScreenshot(const QString & gameName)
+{
+	QPixmap pm = QPixmap();
+
+	QString dirpath = snapshot_directory;
+	QDir dir(dirpath);
+	dirpath = dir.path() + "/";	//clean it up
+
+	// try to load directly	
+	if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
+	{
+		// try to add .zip to nearest folder name
+		QuaZip zip(dirpath + dir.dirName() + ".zip");
+		if (zip.open(QuaZip::mdUnzip))
+		{
+			QuaZipFile file(&zip);
+			if (zip.setCurrentFile(gameName + ".png"))
+			{
+				if(file.open(QIODevice::ReadOnly))
+				{
+					QByteArray data = file.readAll();
+					pm.loadFromData(data);
+				}
+				file.close();
+			}
+		}
+		zip.close();
+	}
+
+	// recursively load parent image
+	if (pm.isNull())
+	{
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
+		if (!gameinfo->cloneof.isEmpty())
+			pm = getScreenshot(gameinfo->cloneof);
+
+		// fallback to default image, first getScreenshot() can't reach here
+		if (pm.isNull())
+			pm = QPixmap(":/res/mamegui/about.png");
+	}
+	
+	return pm;
+}
+
 QString Utils::getHistory(const QString &gameName, const QString &fileName)
 {
 	QFile datFile(fileName);
@@ -191,20 +186,35 @@ QString Utils::getHistory(const QString &gameName, const QString &fileName)
 		}
 		while (!line.isNull());
 	}
+
+	if (buf.trimmed().isEmpty())
+	{
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+		if (!gameInfo->cloneof.isEmpty())
+			buf = getHistory(gameInfo->cloneof, fileName);
+	}
 	
 	return buf.trimmed();
 }
 
 
-MyQueue::MyQueue(int c, QObject *parent)
+MyQueue::MyQueue(QObject *parent)
 : QObject(parent)
 {
+	capacity = 1;
+}
+
+void MyQueue::setSize(int c)
+{
+	QMutexLocker locker(&mutex);
 	capacity = c;
 }
 
 QString MyQueue::dequeue()
 {
 	QMutexLocker locker(&mutex);
+	emit logStatusUpdated(QString("deQueue: %1 %2").arg(queue.count()).arg(capacity));
+
 	return queue.dequeue();
 }
 
@@ -214,6 +224,8 @@ void MyQueue::enqueue(const QString & str)
 	queue.enqueue(str);
 	if (queue.count() > capacity)
 		queue.dequeue();
+	
+	emit logStatusUpdated(QString("enQueue: %1 %2").arg(queue.count()).arg(capacity));
 }
 
 bool MyQueue::isEmpty() const

@@ -173,7 +173,7 @@
     <string>Option</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_6" >
     <layout class="QGridLayout" >
@@ -287,6 +287,20 @@
     </layout>
    </widget>
   </widget>
+  <widget class="QToolBar" name="toolBarSearch" >
+   <property name="windowTitle" >
+    <string>Search</string>
+   </property>
+   <property name="floatable" >
+    <bool>false</bool>
+   </property>
+   <attribute name="toolBarArea" >
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak" >
+    <bool>false</bool>
+   </attribute>
+  </widget>
   <widget class="QDockWidget" name="dockWidget_2" >
    <property name="features" >
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
@@ -295,7 +309,7 @@
     <string>GUI Log</string>
    </property>
    <attribute name="dockWidgetArea" >
-    <number>1</number>
+    <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
     <layout class="QGridLayout" >
@@ -304,44 +318,6 @@
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_3" >
-   <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle" >
-    <string>Snapshot</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="snapWidget" >
-    <layout class="QGridLayout" />
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_4" >
-   <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle" >
-    <string>Flyer</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_10" />
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_5" >
-   <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle" >
-    <string>Cabinet</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_11" />
   </widget>
   <widget class="QDockWidget" name="dockWidget_6" >
    <property name="features" >
@@ -360,32 +336,6 @@
      </item>
     </layout>
    </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_7" >
-   <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
-   </property>
-   <property name="windowTitle" >
-    <string>MAMEInfo / History / Story</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_13" />
-  </widget>
-  <widget class="QToolBar" name="toolBarSearch" >
-   <property name="windowTitle" >
-    <string>Search</string>
-   </property>
-   <property name="floatable" >
-    <bool>false</bool>
-   </property>
-   <attribute name="toolBarArea" >
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak" >
-    <bool>false</bool>
-   </attribute>
   </widget>
   <action name="actionDefaultOptions" >
    <property name="icon" >

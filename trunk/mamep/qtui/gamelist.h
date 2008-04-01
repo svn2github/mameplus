@@ -2,6 +2,7 @@
 #define _GAMELIST_H_
 
 #include <QtGui>
+#include "utils.h"
 
 class AuditROMThread : public QThread
 {
@@ -24,10 +25,50 @@ class LoadIconThread : public QThread
 	Q_OBJECT
 
 public:
+	MyQueue iconQueue;
+
+	LoadIconThread(QObject *parent = 0);
+	~LoadIconThread();
+
 	void load();
 
 protected:
 	void run();
+
+private:
+	QMutex mutex;
+	bool abort;
+};
+
+class UpdateSelectionThread : public QThread
+{
+	Q_OBJECT
+
+public:
+	MyQueue myqueue;
+	QString historyText;
+	QString mameinfoText;
+	QString storyText;
+
+	QPixmap pmSnap;
+	QPixmap pmFlyer;
+	QPixmap pmCabinet;
+	QPixmap pmMarquee;
+	QPixmap pmTitle;
+	QPixmap pmCPanel;
+	QPixmap pmPCB;
+
+	UpdateSelectionThread(QObject *parent = 0);
+	~UpdateSelectionThread();
+
+	void update();
+
+protected:
+	void run();
+
+private:
+	QMutex mutex;
+	bool abort;
 };
 
 class TreeItem
@@ -128,7 +169,9 @@ public:
 	bool verifyCurrentOnly;
 	bool autoROMCheck;
 
-	AuditROMThread auditthread;
+	AuditROMThread auditThread;
+	LoadIconThread iconThread;
+	UpdateSelectionThread selectThread;
 
 	Gamelist(QObject *parent = 0);
 	~Gamelist();
@@ -153,6 +196,7 @@ public slots:
 	void restoreSelection();
 	void setupIcon();
 	void setupAudit();
+	void setupHistory();
 	void log(char, QString);
 
 	void filterRegExpChanged();

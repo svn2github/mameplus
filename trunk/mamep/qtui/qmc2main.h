@@ -10,9 +10,9 @@
 #include <QtXml>
 
 #include "ui_qmc2main.h"
+#include "utils.h"
 #include "procmgr.h"
 #include "gamelist.h"
-#include "utils.h"
 #include "mameopt.h"
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -26,7 +26,22 @@ public:
 	QLineEdit *lineEditSearch;
 	QLabel *labelProgress;
 	QProgressBar *progressBarGamelist;
-	QLabel *labelSnapshot;
+	
+	QLabel *lblSnap;
+	QLabel *lblFlyer;
+	QLabel *lblCabinet;
+	QLabel *lblMarquee;
+	QLabel *lblTitle;
+	QLabel *lblCPanel;
+	QLabel *lblPCB;
+
+	QTextBrowser *tbHistory;
+	QTextBrowser *tbMameinfo;
+	QTextBrowser *tbStory;
+	QTextBrowser *tbCommand;
+
+//	QTextBrowser *textBrowserMAMELog;
+//	QTextBrowser *textBrowserFrontendLog;
 
 public slots:
     // game menu
@@ -35,6 +50,7 @@ public slots:
 	void on_actionExitStop_activated();
 	void on_actionDefaultOptions_activated();
     void log(char, QString);
+	void logStatus(QString);
 	void init();
 	void initSettings();
 	void loadLayout();
@@ -44,6 +60,10 @@ public slots:
 	
 protected:
     void closeEvent(QCloseEvent *event);
+
+private:
+	void initHistory(QString);
+	void initSnap(QString);
 };
 
 #define LOG_QMC2	1
@@ -61,6 +81,7 @@ extern QString snapshot_directory;
 
 extern QString currentGame;
 extern MameGame *mamegame;
+extern Gamelist *gamelist;
 extern GameListSortFilterProxyModel *gameListPModel;
 
 extern ProcessManager *qmc2ProcessManager;

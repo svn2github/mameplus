@@ -8,8 +8,6 @@ QString icons_directory;
 QString roms_directory;
 QString snapshot_directory;
 
-static Gamelist *gamelist = NULL;
-
 void MainWindow::log(char logOrigin, QString message)
 {
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
@@ -32,6 +30,11 @@ void MainWindow::log(char logOrigin, QString message)
 	}
 }
 
+void MainWindow::logStatus(QString message)
+{
+	labelProgress->setText(message);
+}
+
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
@@ -46,14 +49,24 @@ MainWindow::MainWindow(QWidget *parent)
 	lineEditSearch->setSizePolicy(sizePolicy);
 	toolBarSearch->addWidget(lineEditSearch);
 
-	labelSnapshot = new QLabel(snapWidget);
-	labelSnapshot->setCursor(QCursor(Qt::PointingHandCursor));
-	labelSnapshot->setAlignment(Qt::AlignCenter);
-	snapWidget->layout()->addWidget(labelSnapshot);
-
 	labelProgress = new QLabel(centralwidget);
 	statusbar->addWidget(labelProgress);
 
+	initSnap("Snapshot");
+	initSnap("Flyer");
+	initSnap("Cabinet");
+	initSnap("Marquee");
+	initSnap("Title");
+	initSnap("Control Panel");
+	initSnap("PCB");
+
+	initHistory("History");
+	initHistory("MAMEInfo");
+	initHistory("Story");
+
+//	initHistory(textBrowserMAMELog, "MAME Log");
+//	initHistory(textBrowserFrontendLog, "GUI Log");
+	
 	progressBarGamelist = new QProgressBar(centralwidget);
 	progressBarGamelist->resize(256, 20);
 	progressBarGamelist->hide();
@@ -62,6 +75,90 @@ MainWindow::MainWindow(QWidget *parent)
 	optUtils = new OptionUtils(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
+}
+
+void MainWindow::initHistory(QString title)
+{
+	static QDockWidget *dockWidget0 = NULL;
+	
+	QDockWidget *dockWidget = new QDockWidget(this);
+
+	dockWidget->setObjectName("dockWidget_" + title);
+	dockWidget->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
+	QWidget *dockWidgetContents = new QWidget(dockWidget);
+	dockWidgetContents->setObjectName("dockWidgetContents_" + title);
+	QGridLayout *gridLayout = new QGridLayout(dockWidgetContents);
+	gridLayout->setObjectName("gridLayout_" + title);
+	gridLayout->setContentsMargins(0, 0, 0, 0);
+
+	QTextBrowser * tb;
+	if (title == "History")
+		tb = tbHistory = new QTextBrowser(dockWidgetContents);
+	else if (title == "MAMEInfo")
+		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
+	else if (title == "Story")
+		tb = tbStory = new QTextBrowser(dockWidgetContents);
+	
+	tb->setObjectName("textBrowser_" + title);
+
+	gridLayout->addWidget(tb);
+
+	dockWidget->setWidget(dockWidgetContents);
+	dockWidget->setWindowTitle(title);
+	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
+
+	// create tabbed history widgets
+	if (dockWidget0)
+		tabifyDockWidget(dockWidget0, dockWidget);
+	else
+		dockWidget0 = dockWidget;
+}
+
+void MainWindow::initSnap(QString title)
+{
+	static QDockWidget *dockWidget0 = NULL;
+	
+	QDockWidget *dockWidget = new QDockWidget(this);
+
+	dockWidget->setObjectName("dockWidget_" + title);
+	dockWidget->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
+	QWidget *dockWidgetContents = new QWidget(dockWidget);
+	dockWidgetContents->setObjectName("dockWidgetContents_" + title);
+	QGridLayout *gridLayout = new QGridLayout(dockWidgetContents);
+	gridLayout->setObjectName("gridLayout_" + title);
+	gridLayout->setContentsMargins(0, 0, 0, 0);
+
+	QLabel * lbl;
+	if (title == "Snapshot")
+		lbl = lblSnap = new QLabel(dockWidgetContents);
+	else if (title == "Flyer")
+		lbl = lblFlyer = new QLabel(dockWidgetContents);
+	else if (title == "Cabinet")
+		lbl = lblCabinet = new QLabel(dockWidgetContents);
+	else if (title == "Marquee")
+		lbl = lblMarquee = new QLabel(dockWidgetContents);
+	else if (title == "Title")
+		lbl = lblTitle = new QLabel(dockWidgetContents);
+	else if (title == "Control Panel")
+		lbl = lblCPanel = new QLabel(dockWidgetContents);
+	else if (title == "PCB")
+		lbl = lblPCB = new QLabel(dockWidgetContents);
+
+	lbl->setObjectName("label_" + title);
+	lbl->setCursor(QCursor(Qt::PointingHandCursor));
+	lbl->setAlignment(Qt::AlignCenter);
+
+	gridLayout->addWidget(lbl);
+
+	dockWidget->setWidget(dockWidgetContents);
+	dockWidget->setWindowTitle(title);
+	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
+
+	// create tabbed history widgets
+	if (dockWidget0)
+		tabifyDockWidget(dockWidget0, dockWidget);
+	else
+		dockWidget0 = dockWidget;
 }
 
 void MainWindow::init()
@@ -89,6 +186,7 @@ void MainWindow::init()
 	connect(treeViewGameList->selectionModel(),
 			SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 			gamelist, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 }
 
 MainWindow::~MainWindow()
@@ -100,7 +198,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRefresh_activated()
 {
-	gamelist->auditthread.audit();
+	gamelist->auditThread.audit();
 }
 
 void MainWindow::on_actionReload_activated()

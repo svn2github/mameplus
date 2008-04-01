@@ -11,10 +11,10 @@ public:
 	
 	Utils(QObject *parent = 0);
 
-	QPixmap updateScreenshot(const QString & gameName);
 	QIcon loadIcon(const QString & gameName);
 	QIcon loadWinIco(QIODevice *device);
 	QString getViewString(const QModelIndex &index, int column) const;
+	QPixmap getScreenshot(const QString & gameName);
 	QString getHistory(const QString &, const QString &);
 
 	QString capitalizeStr(const QString & str);
@@ -25,10 +25,15 @@ class MyQueue : public QObject
 	Q_OBJECT
 
 public:
-	MyQueue(int c, QObject *parent = 0);
+	MyQueue(QObject *parent = 0);
+	void setSize(int);
 	QString dequeue();
 	void enqueue(const QString & str);
 	bool isEmpty() const;
+
+signals:
+	void logStatusUpdated(QString);
+	
 private:
 	int capacity;
 	QQueue<QString> queue;
