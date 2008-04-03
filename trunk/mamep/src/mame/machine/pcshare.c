@@ -34,23 +34,8 @@
 #include "machine/pckeybrd.h"
 
 #ifdef MESS
-#include "machine/uart8250.h"
-#include "video/pc_vga.h"
-#include "video/pc_cga.h"
-#include "video/pc_mda.h"
-#include "video/pc_aga.h"
-
-#include "includes/pc_mouse.h"
 #include "machine/pc_fdc.h"
-
-#include "includes/pclpt.h"
-#include "machine/centroni.h"
-
 #include "machine/pc_hdc.h"
-#include "machine/nec765.h"
-#include "audio/pc.h"
-
-#include "mscommon.h"
 #endif /* MESS */
 
 #define VERBOSE_DBG 0       /* general debug messages */
@@ -61,171 +46,12 @@
 #define JOY_LOG(N,M,A) \
 	if(VERBOSE_JOY>=N){ if( M )logerror("%11.6f: %-24s",attotime_to_double(timer_get_time()),(char*)M ); logerror A; }
 
-#define FDC_DMA 2
-
 
 static emu_timer *pc_keyboard_timer;
 
 static TIMER_CALLBACK( pc_keyb_timer );
 
 #define LOG_PORT80 0
-
-
-
-/* ---------------------------------------------------------------------- */
-
-#ifdef MESS
-/* called when a interrupt is set/cleared from com hardware */
-static void pc_com_interrupt(int nr, int state)
-{
-	static const int irq[4] = {4, 3, 4, 3};
-
-	/* issue COM1/3 IRQ4, COM2/4 IRQ3 */
-	pic8259_set_irq_line(0, irq[nr], state);
-}
-
-/* called when com registers read/written - used to update peripherals that
-are connected */
-static void pc_com_refresh_connected(int n, int data)
-{
-	/* mouse connected to this port? */
-	if (readinputport(3) & (0x80>>n))
-		pc_mouse_handshake_in(n,data);
-}
-
-/* PC interface to PC-com hardware. Done this way because PCW16 also
-uses PC-com hardware and doesn't have the same setup! */
-static const uart8250_interface com_interface[4]=
-{
-	{
-		TYPE8250,
-		1843200,
-		pc_com_interrupt,
-		NULL,
-		pc_com_refresh_connected
-	},
-	{
-		TYPE8250,
-		1843200,
-		pc_com_interrupt,
-		NULL,
-		pc_com_refresh_connected
-	},
-	{
-		TYPE8250,
-		1843200,
-		pc_com_interrupt,
-		NULL,
-		pc_com_refresh_connected
-	},
-	{
-		TYPE8250,
-		1843200,
-		pc_com_interrupt,
-		NULL,
-		pc_com_refresh_connected
-	}
-};
-#endif /* MESS */
-
-
-
-static void pc_timer0_w(int state)
-{
-	pic8259_set_irq_line(0, 0, state);
-}
-
-
-
-/*
- * timer0   heartbeat IRQ
- * timer1   DRAM refresh (ignored)
- * timer2   PIO port C pin 4 and speaker polling
- */
-static const struct pit8253_config pc_pit8253_config =
-{
-	TYPE8253,
-	{
-		{
-			4772720/4,				/* heartbeat IRQ */
-			pc_timer0_w,
-			NULL
-		}, {
-			4772720/4,				/* dram refresh */
-			NULL,
-			NULL
-		}, {
-			4772720/4,				/* pio port c pin 4, and speaker polling enough */
-			NULL,
-#ifdef MESS
-			pc_sh_speaker_change_clock
-#else
-			NULL //pc_sh_speaker_change_clock
-#endif /* MESS */
-		}
-	}
-};
-
-static const struct pit8253_config pc_pit8254_config =
-{
-	TYPE8254,
-	{
-		{
-			4772720/4,				/* heartbeat IRQ */
-			pc_timer0_w,
-			NULL
-		}, {
-			4772720/4,				/* dram refresh */
-			NULL,
-			NULL
-		}, {
-			4772720/4,				/* pio port c pin 4, and speaker polling enough */
-			NULL,
-#ifdef MESS
-			pc_sh_speaker_change_clock
-#else
-			NULL //pc_sh_speaker_change_clock
-#endif /* MESS */
-		}
-	}
-};
-
-
-#ifdef MESS
-static const PC_LPT_CONFIG lpt_config[3]={
-	{
-		1,
-		LPT_UNIDIRECTIONAL,
-		NULL
-	},
-	{
-		1,
-		LPT_UNIDIRECTIONAL,
-		NULL
-	},
-	{
-		1,
-		LPT_UNIDIRECTIONAL,
-		NULL
-	}
-};
-
-static const CENTRONICS_CONFIG cent_config[3]={
-	{
-		PRINTER_IBM,
-		pc_lpt_handshake_in
-	},
-	{
-		PRINTER_IBM,
-		pc_lpt_handshake_in
-	},
-	{
-		PRINTER_IBM,
-		pc_lpt_handshake_in
-	}
-};
-#endif
-
 
 
 /*************************************************************************
@@ -381,33 +207,6 @@ static const struct dma8237_interface pc_dma =
 
 /* ----------------------------------------------------------------------- */
 
-#ifdef MESS
-static void pc_fdc_interrupt(int state)
-{
-	pic8259_set_irq_line(0, 6, state);
-}
-
-
-
-static void pc_fdc_dma_drq(int state, int read_)
-{
-	dma8237_drq_write(0, FDC_DMA, state);
-}
-
-
-
-static const struct pc_fdc_interface fdc_interface =
-{
-	NEC765A,
-	pc_fdc_interrupt,
-	pc_fdc_dma_drq,
-};
-#endif /* MESS */
-
-
-
-/* ----------------------------------------------------------------------- */
-
 static void pc_pic_set_int_line(int which, int interrupt)
 {
 	switch(which)
@@ -428,48 +227,6 @@ static void pc_pic_set_int_line(int which, int interrupt)
 
 void init_pc_common(UINT32 flags)
 {
-#ifdef MESS
-	/* MESS managed RAM */
-	if (mess_ram)
-		memory_set_bankptr(10, mess_ram);
-#endif /* MESS */
-
-	/* PIT */
-	if (flags & PCCOMMON_TIMER_8254)
-		pit8253_init(1, &pc_pit8254_config);
-	else if (flags & PCCOMMON_TIMER_8253)
-		pit8253_init(1, &pc_pit8253_config);
-
-#ifdef MESS
-	/* FDC/HDC hardware */
-	pc_fdc_init(&fdc_interface);
-	pc_hdc_setup();
-
-	/* com hardware */
-	uart8250_init(0, com_interface);
-	uart8250_reset(0);
-	uart8250_init(1, com_interface+1);
-	uart8250_reset(1);
-	uart8250_init(2, com_interface+2);
-	uart8250_reset(2);
-	uart8250_init(3, com_interface+3);
-	uart8250_reset(3);
-
-	pc_lpt_config(0, lpt_config);
-	centronics_config(0, cent_config);
-	pc_lpt_set_device(0, &CENTRONICS_PRINTER_DEVICE);
-	pc_lpt_config(1, lpt_config+1);
-	centronics_config(1, cent_config+1);
-	pc_lpt_set_device(1, &CENTRONICS_PRINTER_DEVICE);
-	pc_lpt_config(2, lpt_config+2);
-	centronics_config(2, cent_config+2);
-	pc_lpt_set_device(2, &CENTRONICS_PRINTER_DEVICE);
-
-	/* serial mouse */
-	pc_mouse_set_serial_port(0);
-	pc_mouse_initialise();
-#endif /* MESS */
-
 	/* PC-XT keyboard */
 	if (flags & PCCOMMON_KEYBOARD_AT)
 		at_keyboard_init(AT_KEYBOARD_TYPE_AT);
@@ -506,6 +263,7 @@ void init_pc_common(UINT32 flags)
 static struct {
 	UINT8 data;
 	int on;
+	int self_test;
 } pc_keyb= { 0 };
 
 UINT8 pc_keyb_read(void)
@@ -517,8 +275,13 @@ UINT8 pc_keyb_read(void)
 
 static TIMER_CALLBACK( pc_keyb_timer )
 {
-	at_keyboard_reset();
-	pc_keyboard();
+	if ( pc_keyb.on ) {
+		pc_keyboard();
+	} else {
+		/* Clock has been low for more than 5 msec, start diagnostic test */
+		at_keyboard_reset();
+		pc_keyb.self_test = 1;
+	}
 }
 
 
@@ -529,10 +292,18 @@ void pc_keyb_set_clock(int on)
 
 	if (pc_keyb.on != on)
 	{
-		if (on)
+		if (!on)
 			timer_adjust_oneshot(pc_keyboard_timer, ATTOTIME_IN_MSEC(5), 0);
-		else
-			timer_reset(pc_keyboard_timer, attotime_never);
+		else {
+			if ( pc_keyb.self_test ) {
+				/* The self test of the keyboard takes some time. 2 msec seems to work. */
+				/* This still needs to verified against a real keyboard. */
+				timer_adjust_oneshot(pc_keyboard_timer, ATTOTIME_IN_MSEC( 2 ), 0);
+			} else {
+				timer_reset(pc_keyboard_timer, attotime_never);
+				pc_keyb.self_test = 0;
+			}
+		}
 
 		pc_keyb.on = on;
 	}
@@ -541,6 +312,7 @@ void pc_keyb_set_clock(int on)
 void pc_keyb_clear(void)
 {
 	pc_keyb.data = 0;
+	pic8259_set_irq_line(0, 1, 0);
 }
 
 void pc_keyboard(void)
@@ -555,7 +327,7 @@ void pc_keyboard(void)
 			pc_keyb.data = data;
 			DBG_LOG(1,"KB_scancode",("$%02x\n", pc_keyb.data));
 			pic8259_set_irq_line(0, 1, 1);
-			pic8259_set_irq_line(0, 1, 0);
+			pc_keyb.self_test = 0;
 		}
 	}
 }

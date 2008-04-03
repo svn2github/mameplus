@@ -171,6 +171,9 @@ BUILD_ZLIB = 1
 # uncomment next line to generate a link map for exception handling in windows
 # MAP = 1
 
+# uncomment next line to generate verbose build information
+# VERBOSE = 1
+
 # specify optimization level or leave commented to use the default
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
 # OPTIMIZE = 3
@@ -419,6 +422,11 @@ endif
 # add -g if we need symbols
 ifneq ($(SYMBOLS),)
 CFLAGS += -g
+endif
+
+# add -v if we need verbose build information
+ifdef VERBOSE
+CFLAGS += -v
 endif
 
 # add a basic set of warnings
