@@ -14,7 +14,7 @@ public:
 	QIcon loadIcon(const QString & gameName);
 	QIcon loadWinIco(QIODevice *device);
 	QString getViewString(const QModelIndex &index, int column) const;
-	QPixmap getScreenshot(const QString & gameName);
+	QPixmap getScreenshot(const QString &, const QString &, const QSize &);
 	QString getHistory(const QString &, const QString &);
 
 	QString capitalizeStr(const QString & str);

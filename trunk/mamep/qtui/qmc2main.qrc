@@ -16,5 +16,6 @@
         <file>res/optiontemplate.xml</file>
         <file>res/win_roms.ico</file>
         <file>res/reset_property.png</file>
+        <file>lang/mamepgui_zh_CN.qm</file>
     </qresource>
 </RCC>

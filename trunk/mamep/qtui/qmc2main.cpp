@@ -4,7 +4,14 @@
 MainWindow *win;
 QSettings guisettings("mamepgui.ini", QSettings::IniFormat);
 
-QString icons_directory;
+QString flyer_directory,
+		cabinet_directory,
+		marquee_directory,
+		title_directory,
+		cpanel_directory,
+		pcb_directory,
+		icons_directory;
+
 QString roms_directory;
 QString snapshot_directory;
 
@@ -40,6 +47,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setupUi(this);
 
+	setDockOptions(dockOptions()|QMainWindow::VerticalTabs);
+
 	lineEditSearch = new QLineEdit(centralwidget);
 	lineEditSearch->setStatusTip("type a keyword");
 	QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
@@ -52,24 +61,34 @@ MainWindow::MainWindow(QWidget *parent)
 	labelProgress = new QLabel(centralwidget);
 	statusbar->addWidget(labelProgress);
 
-	initSnap("Snapshot");
-	initSnap("Flyer");
-	initSnap("Cabinet");
-	initSnap("Marquee");
-	initSnap("Title");
-	initSnap("Control Panel");
-	initSnap("PCB");
+	initSnap(QT_TR_NOOP("Snapshot"));
+	initSnap(QT_TR_NOOP("Flyer"));
+	initSnap(QT_TR_NOOP("Cabinet"));
+	initSnap(QT_TR_NOOP("Marquee"));
+	initSnap(QT_TR_NOOP("Title"));
+	initSnap(QT_TR_NOOP("Control Panel"));
+	initSnap(QT_TR_NOOP("PCB"));
 
-	initHistory("History");
-	initHistory("MAMEInfo");
-	initHistory("Story");
+	initHistory(QT_TR_NOOP("History"));
+	initHistory(QT_TR_NOOP("MAMEInfo"));
+	initHistory(QT_TR_NOOP("Story"));
 
 //	initHistory(textBrowserMAMELog, "MAME Log");
 //	initHistory(textBrowserFrontendLog, "GUI Log");
 	
 	progressBarGamelist = new QProgressBar(centralwidget);
-	progressBarGamelist->resize(256, 20);
+	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
+
+	QFont font;
+	font.setPointSize(9);
+	setFont(font);
+	statusbar->setFont(font);
+	menubar->setFont(font);
+    menuFile->setFont(font);
+    menuView->setFont(font);
+    menuOptions->setFont(font);
+    menuHelp->setFont(font);
 
 	gamelist = new Gamelist(this);
 	optUtils = new OptionUtils(this);
@@ -104,7 +123,7 @@ void MainWindow::initHistory(QString title)
 	gridLayout->addWidget(tb);
 
 	dockWidget->setWidget(dockWidgetContents);
-	dockWidget->setWindowTitle(title);
+	dockWidget->setWindowTitle(tr(qPrintable(title)));
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
 
 	// create tabbed history widgets
@@ -147,11 +166,13 @@ void MainWindow::initSnap(QString title)
 	lbl->setObjectName("label_" + title);
 	lbl->setCursor(QCursor(Qt::PointingHandCursor));
 	lbl->setAlignment(Qt::AlignCenter);
+	//so that we can shrink image
+	lbl->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 
 	gridLayout->addWidget(lbl);
 
 	dockWidget->setWidget(dockWidgetContents);
-	dockWidget->setWindowTitle(title);
+	dockWidget->setWindowTitle(tr(qPrintable(title)));
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
 
 	// create tabbed history widgets
@@ -217,7 +238,8 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-	
+//	Ui::dlgOption dialog();
+//	dialog.exec();
 }
 
 void MainWindow::initSettings()
@@ -246,15 +268,29 @@ void MainWindow::saveLayout()
 void MainWindow::loadSettings()
 {
 	snapshot_directory = guisettings.value("snapshot_directory", "snap").toString();
-	icons_directory = guisettings.value("icons_directory", "icons").toString();
 	roms_directory = guisettings.value("roms_directory", "roms").toString();
+	
+	flyer_directory = guisettings.value("flyer_directory", "flyers").toString();
+	cabinet_directory = guisettings.value("cabinet_directory", "cabinets").toString();
+	marquee_directory = guisettings.value("marquee_directory", "marquees").toString();
+	title_directory = guisettings.value("title_directory", "titles").toString();
+	cpanel_directory = guisettings.value("cpanel_directory", "cpanel").toString();
+	pcb_directory = guisettings.value("pcb_directory", "pcb").toString();
+	icons_directory = guisettings.value("icons_directory", "icons").toString();
 }
 
 void MainWindow::saveSettings()
 {
 	guisettings.setValue("snapshot_directory", snapshot_directory);
-	guisettings.setValue("icons_directory", icons_directory);
 	guisettings.setValue("roms_directory", roms_directory);
+
+	guisettings.setValue("flyer_directory", flyer_directory);
+	guisettings.setValue("cabinet_directory", cabinet_directory);
+	guisettings.setValue("marquee_directory", marquee_directory);
+	guisettings.setValue("title_directory", title_directory);
+	guisettings.setValue("cpanel_directory", cpanel_directory);
+	guisettings.setValue("pcb_directory", pcb_directory);
+	guisettings.setValue("icons_directory", icons_directory);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -267,6 +303,12 @@ void MainWindow::closeEvent(QCloseEvent *event)
 int main(int argc, char *argv[])
 {
 	QApplication qmc2App(argc, argv);
+
+	QTranslator appTranslator;
+//	appTranslator.load("lang/mamepgui_" + QLocale::system().name());
+	appTranslator.load(":/lang/mamepgui_zh_CN");
+
+	qmc2App.installTranslator(&appTranslator);
 	
 	utils = new Utils(0);
 	win = new MainWindow(0);

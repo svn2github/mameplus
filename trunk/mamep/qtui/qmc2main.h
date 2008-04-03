@@ -10,6 +10,8 @@
 #include <QtXml>
 
 #include "ui_qmc2main.h"
+#include "ui_option.h"
+
 #include "utils.h"
 #include "procmgr.h"
 #include "gamelist.h"
@@ -75,7 +77,14 @@ private:
 extern MainWindow *win;
 extern QSettings guisettings;
 
-extern QString icons_directory;
+extern QString flyer_directory,
+		cabinet_directory,
+		marquee_directory,
+		title_directory,
+		cpanel_directory,
+		pcb_directory,
+		icons_directory;
+
 extern QString roms_directory;
 extern QString snapshot_directory;
 

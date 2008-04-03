@@ -100,13 +100,11 @@ QString Utils::getViewString(const QModelIndex &index, int column) const
 	return j.model()->data(j, Qt::DisplayRole).toString();
 }
 
-QPixmap Utils::getScreenshot(const QString & gameName)
+QPixmap Utils::getScreenshot(const QString &dirpath0, const QString &gameName, const QSize &size)
 {
 	QPixmap pm = QPixmap();
-
-	QString dirpath = snapshot_directory;
-	QDir dir(dirpath);
-	dirpath = dir.path() + "/";	//clean it up
+	QDir dir(dirpath0);
+	QString dirpath = dir.path() + "/";	//clean it up
 
 	// try to load directly	
 	if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
@@ -134,14 +132,14 @@ QPixmap Utils::getScreenshot(const QString & gameName)
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 		if (!gameinfo->cloneof.isEmpty())
-			pm = getScreenshot(gameinfo->cloneof);
+			pm = getScreenshot(dirpath, gameinfo->cloneof, size);
 
 		// fallback to default image, first getScreenshot() can't reach here
 		if (pm.isNull())
 			pm = QPixmap(":/res/mamegui/about.png");
 	}
 	
-	return pm;
+	return pm.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
 }
 
 QString Utils::getHistory(const QString &gameName, const QString &fileName)
@@ -213,7 +211,7 @@ void MyQueue::setSize(int c)
 QString MyQueue::dequeue()
 {
 	QMutexLocker locker(&mutex);
-	emit logStatusUpdated(QString("deQueue: %1 %2").arg(queue.count()).arg(capacity));
+//	emit logStatusUpdated(QString("deQueue: %1 %2").arg(queue.count()).arg(capacity));
 
 	return queue.dequeue();
 }
@@ -225,7 +223,7 @@ void MyQueue::enqueue(const QString & str)
 	if (queue.count() > capacity)
 		queue.dequeue();
 	
-	emit logStatusUpdated(QString("enQueue: %1 %2").arg(queue.count()).arg(capacity));
+//	emit logStatusUpdated(QString("enQueue: %1 %2").arg(queue.count()).arg(capacity));
 }
 
 bool MyQueue::isEmpty() const

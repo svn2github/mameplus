@@ -4,6 +4,26 @@
 #include <QtGui>
 #include "utils.h"
 
+class MameThread : public QThread
+{
+	Q_OBJECT
+
+public:
+	MyQueue queue;
+
+	MameThread(QObject *parent = 0);
+	~MameThread();
+
+	void load();
+
+protected:
+	void run();
+
+private:
+	QMutex mutex;
+	bool abort;
+};
+
 class AuditROMThread : public QThread
 {
 	Q_OBJECT
@@ -183,9 +203,6 @@ public slots:
 	void loadStarted();
 	void loadFinished(int, QProcess::ExitStatus);
 	void loadReadyReadStandardOutput();
-	void loadReadyReadStandardError();
-	void loadError(QProcess::ProcessError);
-	void loadStateChanged(QProcess::ProcessState);
 
 	// internal methods
 	void parse();

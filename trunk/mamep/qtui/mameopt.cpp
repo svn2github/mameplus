@@ -249,11 +249,13 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 				resetWidget->setWidget(ctrl);
 				return resetWidget;
 			}
-			// fallback to default
+			//fall to default
 		}
 	default:
 		{
-			return 0;
+			QLineEdit *ctrl = new QLineEdit(resetWidget);
+			resetWidget->setWidget(ctrl);
+			return resetWidget;
 		}
 	}
 }
@@ -299,13 +301,20 @@ void OptionDelegate::setEditorData(QWidget *editor,
 			QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
 
 			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-			QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
-			ctrl->setCurrentIndex(guivalues.indexOf(guivalue));
-			break;
+			if (guivalues.size() > 0)
+			{
+				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
+				ctrl->setCurrentIndex(guivalues.indexOf(guivalue));
+				break;
+			}
 		}
 	default:
 		{
-			QItemDelegate::setEditorData(editor, index);
+			QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
+			
+			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+			ctrl->setText(guivalue);
+//			QItemDelegate::setEditorData(editor, index);
 		}
 	}
 }
@@ -347,13 +356,19 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		}
 	case MAMEOPT_TYPE_STRING:
 		{
-			QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
-			dispValue = ctrl->currentText();
-			break;
+			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+			if (guivalues.size() > 0)
+			{
+				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
+				dispValue = ctrl->currentText();
+				break;
+			}
 		}
 	default:
 		{
-			QItemDelegate::setModelData(editor, model, index);
+			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+			dispValue = ctrl->text();
+//			QItemDelegate::setModelData(editor, model, index);
 		}
 	}
 	

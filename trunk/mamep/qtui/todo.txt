@@ -1,28 +1,29 @@
 ﻿[basic]
-/ terminate threads properly
-/ multiple snap, history widgets
-/ improved thread queue
-1 scale snap
-* more responsive threading
-1 reset settings button
+/ added translation
+/ moved cache to .ini
+/ responsive list.xml export
+/ scale snap
 1 settings dialog
-1 list.xml export thread
+1 reset settings button
 1 start mame core
-1 preliminary GUI options: path etc
 1 all filters: orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
-* link option scrolling
 1 bios support, audit selected bios only
-* switch tree/combobox
 1 remove/add ini entries
+* switch tree/combobox
 * fullscreen switch
 * export roms to folders
-* delete roms
+* delete roms,cfg,nvram...
 * general info page
-1 must select a game
+* UI style: compact, full, MAMEUI classic
+* ips
+* link option scrolling
+* more responsive threading
+* adjust snap with a/r	
 
 [extension]
 * export fixdat, selected fixdat only
 * ROM capa column
+* gamelist editor
 * selectable l&f
 * multiple snapshot
 * delete snapshot
@@ -30,6 +31,7 @@
 * search history
 * mess console game list
 * loading gif
+* mng playback
 * command.dat parsing with image
 * controller setting
 

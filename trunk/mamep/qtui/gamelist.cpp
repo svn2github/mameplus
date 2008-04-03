@@ -6,7 +6,6 @@ Gamelist *gamelist = NULL;
 GameListSortFilterProxyModel *gameListPModel;
 
 static TreeModel *gameListModel;
-static GamelistDelegate *gamelistDelegate;
 static QTimer *searchTimer = NULL;
 
 enum
@@ -55,6 +54,11 @@ public:
 			metMameTag = true;
 		else if (qName == "game")
 		{
+			//update progress
+			static int i;
+			gamelist->updateProgress(i++);
+			qApp->processEvents();
+			
 			gameinfo = new GameInfo(mamegame);
 			gameinfo->sourcefile = attributes.value("sourcefile");
 			gameinfo->cloneof = attributes.value("cloneof");
@@ -209,6 +213,34 @@ void AuditROMThread::run()
 	emit progressSwitched(-1);
 }
 
+MameThread::MameThread(QObject *parent)
+: QThread(parent)
+{
+	abort = false;
+}
+
+MameThread::~MameThread()
+{
+	mutex.lock();
+	abort = true;
+	mutex.lock();
+	
+	wait();
+}
+
+void MameThread::load()
+{
+	QMutexLocker locker(&mutex);
+
+	if (!isRunning())
+		start(LowPriority);
+}
+
+void MameThread::run()
+{
+
+}
+
 LoadIconThread::LoadIconThread(QObject *parent)
 : QThread(parent)
 {
@@ -273,14 +305,16 @@ void UpdateSelectionThread::run()
 	{
 		QString gameName = myqueue.dequeue();
 
-		pmSnap = utils->getScreenshot(gameName);
-		pmFlyer = utils->getScreenshot(gameName);
-		pmCabinet = utils->getScreenshot(gameName);
-		pmMarquee = utils->getScreenshot(gameName);
-		pmTitle = utils->getScreenshot(gameName);
-		pmCPanel = utils->getScreenshot(gameName);
-		pmPCB = utils->getScreenshot(gameName);
-		
+		pmSnap = utils->getScreenshot(snapshot_directory, gameName, win->lblSnap->size());
+		pmFlyer = utils->getScreenshot(flyer_directory, gameName, win->lblFlyer->size());
+		pmCabinet = utils->getScreenshot(cabinet_directory, gameName, win->lblCabinet->size());
+		pmMarquee = utils->getScreenshot(marquee_directory, gameName, win->lblMarquee->size());
+		pmTitle = utils->getScreenshot(title_directory, gameName, win->lblTitle->size());
+		pmCPanel = utils->getScreenshot(cpanel_directory, gameName, win->lblCPanel->size());
+//		pmPCB = utils->getScreenshot(pcb_directory, gameName, win->lblPCB->size());
+		static QMovie movie( "xxx.mng" );
+		win->lblPCB->setMovie( &movie );
+
 		historyText = utils->getHistory(gameName, "history.dat");
 		mameinfoText = utils->getHistory(gameName, "mameinfo.dat");
 		storyText = utils->getHistory(gameName, "story.dat");
@@ -562,6 +596,10 @@ void TreeModel::setupModelData(TreeItem *parent, bool buildParent)
 		gameinfo->pModItem = new TreeItem(columnData, parent);
 		parent->appendChild(gameinfo->pModItem);
 	}
+
+	// share delegate among all opt treeviews
+	static GamelistDelegate gamelistDelegate(win);
+	win->treeViewGameList->setItemDelegate(&gamelistDelegate);
 }
 
 
@@ -604,9 +642,8 @@ MameGame::~MameGame()
 
 void MameGame::s11n()
 {
-	QFile file("gui.cache");
-	file.open(QIODevice::WriteOnly);
-	QDataStream out(&file);
+	QByteArray ba;
+	QDataStream out(&ba, QIODevice::WriteOnly);
 
 	out << (quint32)MAMEPLUS_SIG; //mameplus signature
 	out << (qint16)S11N_VER; //s11n version
@@ -614,10 +651,16 @@ void MameGame::s11n()
 
 	out << mamegame->gamenameGameInfoMap.count();
 
+	//fixme: should place in thread and use mamegame directly
+	gamelist->switchProgress(gamelist->numTotalGames, tr("Saving listxml"));
 	GameInfo *gameinfo;
 	RomInfo *rominfo;
+	int i = 0;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
+		gamelist->updateProgress(i++);
+		qApp->processEvents();
+	
 		gameinfo = mamegame->gamenameGameInfoMap[gamename];
 		out << gamename;
 		out << gameinfo->description;
@@ -642,14 +685,15 @@ void MameGame::s11n()
 			out << rominfo->size;
 		}
 	}
-	file.close();//fixme check
+	gamelist->switchProgress(-1, "");
+	
+	guisettings.setValue("list_cache", qCompress(ba, 9));
 }
 
 int MameGame::des11n()
 {
-	QFile file("gui.cache");
-	file.open(QIODevice::ReadOnly);
-	QDataStream in(&file);
+	QByteArray ba = qUncompress(guisettings.value("list_cache").toByteArray());
+	QDataStream in(ba);
 
 	// Read and check the header
 	quint32 mamepSig;
@@ -839,6 +883,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		
 		//update statusbar
 		win->labelProgress->setText(utils->getViewString(current, COL_DESC));
+		
 /*
 		//update mameopts
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
@@ -870,16 +915,20 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 void Gamelist::restoreSelection(QString gameName)
 {
+	QModelIndex i;
+
 	if (mamegame && mamegame->gamenameGameInfoMap.contains(gameName))
 	{
-//		QMessageBox::warning(win->treeViewOption, tr("MAME GUI error"),
-//						  tr("asdfasdf 1"));	
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		QModelIndex i = gameListModel->index(0, gameinfo->pModItem);
-		i = gameListPModel->mapFromSource(i);
-		win->treeViewGameList->setCurrentIndex(i);
-		win->treeViewGameList->scrollTo(i, QAbstractItemView::PositionAtCenter);
+		i = gameListModel->index(0, gameinfo->pModItem);
 	}
+	else
+		i = gameListModel->index(0, 0, QModelIndex());
+
+	QModelIndex pi = gameListPModel->mapFromSource(i);
+	win->treeViewGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
+	win->treeViewGameList->setCurrentIndex(pi);
+	updateSelection(pi, pi);
 }
 
 void Gamelist::restoreSelection()
@@ -968,11 +1017,6 @@ void Gamelist::load()
 		win->treeViewGameList->sortByColumn(guisettings.value("sort_column").toInt(), 
 			(guisettings.value("sort_reverse").toInt() == 0) ? Qt::AscendingOrder : Qt::DescendingOrder);
 
-		if (gamelistDelegate)
-			delete gamelistDelegate;
-		gamelistDelegate = new GamelistDelegate(win);
-		win->treeViewGameList->setItemDelegate(gamelistDelegate);
-
 		win->treeViewGameList->expandAll();
 		win->treeViewGameList->setFocus();
 
@@ -994,12 +1038,9 @@ void Gamelist::load()
 	args << "-listxml";
 
 	loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
-	connect(loadProc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(loadError(QProcess::ProcessError)));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
-	connect(loadProc, SIGNAL(readyReadStandardError()), this, SLOT(loadReadyReadStandardError()));
 	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
-	connect(loadProc, SIGNAL(stateChanged(QProcess::ProcessState)), this, SLOT(loadStateChanged(QProcess::ProcessState)));
 }
 
 void Gamelist::parse()
@@ -1015,7 +1056,10 @@ void Gamelist::parse()
 	pxmlInputSource->setData (gamelistBuffer);
 
 	win->log(LOG_QMC2, "DEBUG: Gamelist::start parse()");
+	
+	switchProgress(numTotalGames, tr("Parsing listxml"));
 	reader.parse(*pxmlInputSource);
+	switchProgress(-1, "");
 
 	GameInfo *gameinfo, *gameinfo2;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
@@ -1031,6 +1075,7 @@ void Gamelist::parse()
 
 	delete pxmlInputSource;
 	gamelistBuffer.clear();
+	win->log(LOG_QMC2, "DEBUG: Gamelist::start s11n()");
 	mamegame->s11n();
 
 	//fixme
@@ -1040,21 +1085,16 @@ void Gamelist::parse()
 void Gamelist::loadStarted()
 {
 	win->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
-
-	win->progressBarGamelist->setRange(0, numTotalGames);
-	win->progressBarGamelist->reset();
 }
 
 void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	QProcess *proc = (QProcess *)sender();
+	QTime elapsedTime;
+	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
 
 	win->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
 
-	QTime elapsedTime;
-	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
-	win->log(LOG_QMC2, tr("done (loading XML gamelist data and (re)creating cache, elapsed time = %1)").arg(elapsedTime.toString("mm:ss.zzz")));
-	win->progressBarGamelist->reset();
 	qmc2ProcessManager->procMap.remove(proc);
 	qmc2ProcessManager->procCount--;
 	loadProc = NULL;
@@ -1065,35 +1105,15 @@ void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
 void Gamelist::loadReadyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-
-//	win->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardOutput(): proc = 0x" + QString::number((ulong)proc, 16));
-
-	QString s = proc->readAllStandardOutput();
+	QString buf = proc->readAllStandardOutput();
+	
 	//mamep: remove windows endl
-	s.replace(QString("\r"), QString(""));
+	buf.replace(QString("\r"), QString(""));
+	
+	numTotalGames += buf.count("<game name=");
+	gamelistBuffer += buf;
 
-	win->progressBarGamelist->setValue(win->progressBarGamelist->value() + s.count("<game name="));
-	gamelistBuffer += s;
-}
-
-void Gamelist::loadReadyReadStandardError()
-{
-	// QProcess *proc = (QProcess *)sender();
-
-//	win->log(LOG_QMC2, "DEBUG: Gamelist::loadReadyReadStandardError(): proc = 0x" + QString::number((ulong)proc, 16));
-}
-
-void Gamelist::loadError(QProcess::ProcessError processError)
-{
-#ifdef QMC2_DEBUG
-	win->log(LOG_QMC2, "DEBUG: Gamelist::loadError(QProcess::ProcessError processError = " + QString::number(processError) + ")");
-#endif
-
-}
-
-void Gamelist::loadStateChanged(QProcess::ProcessState processState)
-{
-//	win->log(LOG_QMC2, "DEBUG: Gamelist::loadStateChanged(QProcess::ProcessState = " + QString::number(processState) + ")");
+	win->labelProgress->setText(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
 }
 
 void Gamelist::filterRegExpChanged()
