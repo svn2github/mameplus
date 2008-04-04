@@ -306,7 +306,7 @@ WRITE16_HANDLER( toaplan1_tile_offsets_w )
 
 WRITE16_HANDLER( rallybik_bcu_flipscreen_w )
 {
-	if ((ACCESSING_BITS_0_7)
+	if (ACCESSING_BITS_0_7)
 	{
 		logerror("Setting BCU controller flipscreen port to %04x\n",data);
 		bcu_flipscreen = data & 0x01;		/* 0x0001 = flip, 0x0000 = no flip */
@@ -332,8 +332,8 @@ WRITE16_HANDLER( rallybik_bcu_flipscreen_w )
 
 WRITE16_HANDLER( toaplan1_bcu_flipscreen_w )
 {
-//	if ((ACCESSING_BITS_0_7 && (data != bcu_flipscreen))
-	if ((ACCESSING_BITS_0_7)
+//	if (ACCESSING_BITS_0_7 && (data != bcu_flipscreen))
+	if (ACCESSING_BITS_0_7)
 	{
 		logerror("Setting BCU controller flipscreen port to %04x\n",data);
 		bcu_flipscreen = data & 0x01;		/* 0x0001 = flip, 0x0000 = no flip */
