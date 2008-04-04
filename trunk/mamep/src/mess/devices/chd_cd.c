@@ -6,6 +6,7 @@
 
 *********************************************************************/
 
+#include "mame.h"
 #include "cdrom.h"
 #include "chd_cd.h"
 
@@ -64,7 +65,7 @@ struct mess_cd
 	cdrom_file *cdrom_handle;
 };
 
-static struct mess_cd *get_drive(mess_image *img)
+static struct mess_cd *get_drive(const device_config *img)
 {
 	return image_lookuptag(img, MESSCDTAG);
 }
@@ -89,37 +90,30 @@ static struct mess_cd *get_drive(mess_image *img)
 
 /*************************************
  *
- *	device_init_mess_cd()
+ *	DEVICE_START_NAME(mess_cd)
  *
  *	Device init
  *
  *************************************/
 
-static int device_init_mess_cd(mess_image *image)
+static DEVICE_START( mess_cd )
 {
 	struct mess_cd *cd;
-
-	cd = image_alloctag(image, MESSCDTAG, sizeof(struct mess_cd));
-	if (!cd)
-		return INIT_FAIL;
-
-        cd->cdrom_handle = NULL;
-
-	return INIT_PASS;
+	cd = image_alloctag(device, MESSCDTAG, sizeof(struct mess_cd));
+	cd->cdrom_handle = NULL;
 }
 
 
 
 /*************************************
  *
- *	device_load_mess_cd()
- *	device_create_mess_cd()
+ *	DEVICE_IMAGE_LOAD_NAME(mess_cd)
  *
- *	Device load and create
+ *	Device load
  *
  *************************************/
 
-static int internal_load_mess_cd(mess_image *image, const char *metadata)
+static int internal_load_mess_cd(const device_config *image, const char *metadata)
 {
 	chd_error err = 0;
 	struct mess_cd *cd;
@@ -151,7 +145,7 @@ error:
 
 
 
-static int device_load_mess_cd(mess_image *image)
+static DEVICE_IMAGE_LOAD( mess_cd )
 {
 	return internal_load_mess_cd(image, NULL);
 }
@@ -160,13 +154,13 @@ static int device_load_mess_cd(mess_image *image)
 
 /*************************************
  *
- *	device_unload_mess_cd()
+ *	DEVICE_IMAGE_UNLOAD_NAME(mess_cd)
  *
  *	Device unload
  *
  *************************************/
 
-static void device_unload_mess_cd(mess_image *image)
+static DEVICE_IMAGE_UNLOAD( mess_cd )
 {
 	struct mess_cd *cd = get_drive(image);
 	assert(cd->cdrom_handle);
@@ -183,7 +177,7 @@ static void device_unload_mess_cd(mess_image *image)
  *
  *************************************/
 
-cdrom_file *mess_cd_get_cdrom_file(mess_image *image)
+cdrom_file *mess_cd_get_cdrom_file(const device_config *image)
 {
 	struct mess_cd *cd = get_drive(image);
 	return cd->cdrom_handle;
@@ -198,7 +192,7 @@ cdrom_file *mess_cd_get_cdrom_file(mess_image *image)
  *
  *************************************/
 
-chd_file *mess_cd_get_chd_file(mess_image *image)
+chd_file *mess_cd_get_chd_file(const device_config *image)
 {
 	return NULL;	// not supported by the src/cdrom.c core at this time
 }
@@ -223,9 +217,9 @@ void cdrom_device_getinfo(const mess_device_class *devclass, UINT32 state, union
 		case MESS_DEVINFO_INT_CREATE_OPTCOUNT:			info->i = 1; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_INIT:						info->init = device_init_mess_cd; break;
-		case MESS_DEVINFO_PTR_LOAD:						info->load = device_load_mess_cd; break;
-		case MESS_DEVINFO_PTR_UNLOAD:					info->unload = device_unload_mess_cd; break;
+		case MESS_DEVINFO_PTR_START:						info->start = DEVICE_START_NAME(mess_cd); break;
+		case MESS_DEVINFO_PTR_LOAD:						info->load = DEVICE_IMAGE_LOAD_NAME(mess_cd); break;
+		case MESS_DEVINFO_PTR_UNLOAD:					info->unload = DEVICE_IMAGE_UNLOAD_NAME(mess_cd); break;
 		case MESS_DEVINFO_PTR_CREATE_OPTGUIDE:			info->p = (void *) mess_cd_option_guide; break;
 		case MESS_DEVINFO_PTR_CREATE_OPTSPEC+0:			info->p = (void *) mess_cd_option_spec;
 

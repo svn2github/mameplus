@@ -1,7 +1,6 @@
 #include <ctype.h>
 #include "driver.h"
 #include "cartslot.h"
-#include "deprecat.h"
 
 
 static int is_cart_roment(const rom_entry *roment)
@@ -31,7 +30,7 @@ static int parse_rom_name(const rom_entry *roment, int *position, const char **e
 
 
 
-static int load_cartridge(const rom_entry *romrgn, const rom_entry *roment, mess_image *image)
+static int load_cartridge(const rom_entry *romrgn, const rom_entry *roment, const device_config *image)
 {
 	UINT32 region, flags;
 	offs_t offset, length, read_length, pos = 0, len;
@@ -76,7 +75,7 @@ static int load_cartridge(const rom_entry *romrgn, const rom_entry *roment, mess
 		/* if the region is inverted, do that now */
 		if (type >= REGION_CPU1 && type < REGION_CPU1 + MAX_CPU)
 		{
-			int cputype = Machine->config->cpu[type - REGION_CPU1].type;
+			int cputype = image->machine->config->cpu[type - REGION_CPU1].type;
 			if (cputype != 0)
 			{
 				datawidth = cputype_databus_width(cputype, ADDRESS_SPACE_PROGRAM) / 8;
@@ -112,12 +111,12 @@ static int load_cartridge(const rom_entry *romrgn, const rom_entry *roment, mess
 
 
 
-static int process_cartridge(mess_image *image, mess_image *file)
+static int process_cartridge(const device_config *image, const device_config *file)
 {
 	const rom_entry *romrgn, *roment;
 	int position = 0, result;
 
-	romrgn = rom_first_region(Machine->gamedrv);
+	romrgn = rom_first_region(image->machine->gamedrv);
 	while(romrgn)
 	{
 		roment = romrgn + 1;
@@ -142,18 +141,17 @@ static int process_cartridge(mess_image *image, mess_image *file)
 
 
 
-static int device_init_cartslot_specified(mess_image *image)
+static DEVICE_START( cartslot_specified )
 {
-	process_cartridge(image, NULL);
-	return 0;
+	process_cartridge(device, NULL);
 }
 
-static int device_load_cartslot_specified(mess_image *image)
+static DEVICE_IMAGE_LOAD( cartslot_specified )
 {
 	return process_cartridge(image, image);
 }
 
-static void device_unload_cartslot_specified(mess_image *image)
+static DEVICE_IMAGE_UNLOAD( cartslot_specified )
 {
 	process_cartridge(image, NULL);
 }
@@ -207,9 +205,9 @@ void cartslot_device_getinfo(const mess_device_class *devclass, UINT32 state, un
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:			info->i = must_be_loaded; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_INIT:						info->init = (count > 0) ? device_init_cartslot_specified : NULL; break;
-		case MESS_DEVINFO_PTR_LOAD:						info->load = (count > 0) ? device_load_cartslot_specified : NULL; break;
-		case MESS_DEVINFO_PTR_UNLOAD:					info->unload = (count > 0) ? device_unload_cartslot_specified : NULL; break;
+		case MESS_DEVINFO_PTR_START:						info->start = (count > 0) ? DEVICE_START_NAME(cartslot_specified) : NULL; break;
+		case MESS_DEVINFO_PTR_LOAD:						info->load = (count > 0) ? DEVICE_IMAGE_LOAD_NAME(cartslot_specified) : NULL; break;
+		case MESS_DEVINFO_PTR_UNLOAD:					info->unload = (count > 0) ? DEVICE_IMAGE_UNLOAD_NAME(cartslot_specified) : NULL; break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case MESS_DEVINFO_STR_DEV_FILE:					strcpy(info->s = device_temp_str(), __FILE__); break;

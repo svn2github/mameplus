@@ -5,7 +5,7 @@ Megadrive / Genesis Rewrite, Take 65498465432356345250432.3  August 06
 Thanks to:
 Charles Macdonald for much useful information (cgfm2.emuviews.com)
 
-Long Description names mostly taken from the Good Gen database
+Long Description names mostly taken from the GoodGen database
 
 ToDo:
 
@@ -55,6 +55,13 @@ MESS adaptation by R. Belmont
 #include "../../mame/drivers/megadriv.h"
 
 static int is_ssf2 = 0;
+static int is_redcliff = 0;
+static int is_radica = 0;
+static int is_kof99 = 0;
+static int is_soulb = 0;
+static int is_mjlovr = 0;
+static int is_squir = 0;
+static int squirrel_king_extra = 0;
 
 static UINT8 *genesis_sram;
 static int genesis_sram_start;
@@ -170,7 +177,7 @@ static int genesis_isSMD(unsigned char *buf,unsigned int len)
 }
 
 
-static int device_load_genesis_cart(mess_image *image)
+static DEVICE_IMAGE_LOAD( genesis_cart )
 {
 	unsigned char *tmpROMnew, *tmpROM;
 	unsigned char *secondhalf;
@@ -181,7 +188,8 @@ static int device_load_genesis_cart(mess_image *image)
 	unsigned char *ROM;
 
 	genesis_sram = NULL;
-	genesis_sram_start = genesis_sram_len = genesis_sram_active = genesis_sram_readonly = is_ssf2 = 0;
+	genesis_sram_start = genesis_sram_len = genesis_sram_active = genesis_sram_readonly = 0;
+	is_ssf2 = is_redcliff = is_radica = is_kof99 = is_soulb = is_mjlovr = is_squir = 0;
 
 	rawROM = memory_region(REGION_CPU1);
         ROM = rawROM /*+ 512 */;
@@ -194,7 +202,7 @@ static int device_load_genesis_cart(mess_image *image)
 		tmpROMnew = ROM;
 		tmpROM = ROM + 0x2000 + 512;
 
-		for (ptr = 0; ptr < (0x400000) / (8192); ptr += 2)
+		for (ptr = 0; ptr < (0x500000) / (8192); ptr += 2)
 		{
 			for (x = 0; x < 8192; x++)
 			{
@@ -238,10 +246,78 @@ static int device_load_genesis_cart(mess_image *image)
 	{
 		relocate = 0x2000;
 
-		if (!strncmp((char *)&ROM[0x2120], "SUPER STREET FIGHTER2", 20))
+		if (!strncmp((char *)&ROM[0x0120+relocate], "SUPER STREET FIGHTER2", 21))
 		{
 			is_ssf2 = 1;
 		}
+		// detect the 'Romance of the Three Kingdoms - Battle of Red Cliffs' rom, already decoded from .mdx format
+		if (length == 0x200000)
+		{
+		 	static unsigned char redcliffsig[] = { 0x10, 0x39, 0x00, 0x40, 0x00, 0x04}; // move.b  ($400004).l,d0
+		 	if (!memcmp(&ROM[0xce560+relocate],&redcliffsig[0],sizeof(redcliffsig)))
+			{
+				is_redcliff = 1;
+			}
+		}
+		// detect the Radica TV games.. these probably should be a seperate driver since they are a seperate 'console'
+		if (length == 0x400000)
+		{
+		 	static unsigned char radicasig[] = { 0xd0, 0x30, 0x39, 0x00, 0xa1, 0x30}; // jmp (a0) move.w ($a130xx),d0
+
+		 	if (!memcmp(&ROM[0x3c031d+relocate],&radicasig[0],sizeof(radicasig))) // ssf+gng
+			{
+				is_radica = 1;
+			}
+		 	if (!memcmp(&ROM[0x3f031d+relocate],&radicasig[0],sizeof(radicasig))) // 6in1 vol 1
+			{
+				is_radica = 1;
+			}
+
+		}
+
+		// detect the King of Fighters '99 unlicensed game
+		if (length == 0x300000)
+		{
+		 	static unsigned char kof99sig[] = { 0x20, 0x3c, 0x30, 0x00, 0x00, 0xa1}; // move.l  #$300000A1,d0
+
+		 	if (!memcmp(&ROM[0x1fd0d2+relocate],&kof99sig[0],sizeof(kof99sig)))
+			{
+				is_kof99 = 1;
+			}
+		}
+
+		// detect the Soul Blade unlicensed game
+		if (length == 0x400000)
+		{
+		 	static unsigned char soulbsig[] = { 0x33, 0xfc, 0x00, 0x0c, 0x00, 0xff}; // move.w  #$C,($FF020A).l (what happens if check fails)
+
+		 	if (!memcmp(&ROM[0x028460+relocate],&soulbsig[0],sizeof(soulbsig)))
+			{
+				is_soulb = 1;
+			}
+		}
+
+		// detect Mahjong Lover unlicensed game
+		if (length == 0x100000)
+		{
+		 	static unsigned char mjlovrsig[] = { 0x13, 0xf9, 0x00, 0x40, 0x00, 0x00}; // move.b  ($400000).l,($FFFF0C).l (partial)
+
+		 	if (!memcmp(&ROM[0x01b24+relocate],&mjlovrsig[0],sizeof(mjlovrsig)))
+			{
+				is_mjlovr = 1;
+			}
+		}
+		// detect Squirrel King unlicensed game
+		if (length == 0x100000)
+		{
+		 	static unsigned char squirsig[] = { 0x26, 0x79, 0x00, 0xff, 0x00, 0xfa};
+
+		 	if (!memcmp(&ROM[0x03b4+relocate],&squirsig[0],sizeof(squirsig)))
+			{
+				is_squir = 1;
+			}
+		}
+
 	}
 
 	ROM = memory_region(REGION_CPU1);	/* 68000 ROM region */
@@ -261,13 +337,20 @@ static int device_load_genesis_cart(mess_image *image)
 
 	if (is_ssf2)
 	{
-		tmpROM = malloc(0x500000);
-		memcpy(tmpROM, &ROM[0], 0x500000);
-		memcpy(&ROM[0x400000], tmpROM, 0x500000);
-		free(tmpROM);
+		memcpy(&ROM[0x800000],&ROM[0x400000],0x100000);
+		memcpy(&ROM[0x400000],&ROM[0x000000],0x400000);
 	}
 
+	if (is_radica)
+	{
+		memcpy(&ROM[0x400000], &ROM[0], 0x400000); // keep a copy for later banking.. making use of huge ROM_REGION allocated to genesis driver
+		memcpy(&ROM[0x800000], &ROM[0], 0x400000); // wraparound banking (from hazemd code)
+	}
+
+
         /* check if cart has battery save */
+	genesis_sram_len = 0;
+	genesis_sram = NULL;
 	if (ROM[0x1b1] == 'R' && ROM[0x1b0] == 'A')
 	{
 		genesis_sram_start = (ROM[0x1b5] << 24 | ROM[0x1b4] << 16 | ROM[0x1b7] << 8 | ROM[0x1b6]);
@@ -283,11 +366,12 @@ static int device_load_genesis_cart(mess_image *image)
 		genesis_sram_len -= (genesis_sram_start - 1);
 		genesis_sram = auto_malloc (genesis_sram_len);
 		memset(genesis_sram, 0, genesis_sram_len);
-		printf("Attempting to load SRM . . .\n");
-		image_battery_load(image, genesis_sram, genesis_sram_len);
+		image_battery_load(image_from_devtype_and_index(IO_CARTSLOT,0), genesis_sram, genesis_sram_len);
 
                 if (length - 0x200 < genesis_sram_start)
+		{
                         genesis_sram_active = 1;
+		}
 
                 memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, genesis_sram_start & 0x3fffff, (genesis_sram_start + genesis_sram_len - 1) & 0x3fffff, 0, 0, genesis_sram_read);
 
@@ -323,6 +407,15 @@ ROM_START(megadrij)
 	ROM_REGION( 0x10000, REGION_CPU2, ROMREGION_ERASEFF)
 ROM_END
 
+static DEVICE_IMAGE_UNLOAD( genesis_cart )
+{
+	/* Write out the battery file if necessary */
+	if ((genesis_sram != NULL) && (genesis_sram_len > 0))
+	{
+		image_battery_save(image_from_devtype_and_index(IO_CARTSLOT, 0), genesis_sram, genesis_sram_len);
+	}
+}
+
 static void genesis_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
 	/* cartslot */
@@ -333,8 +426,9 @@ static void genesis_cartslot_getinfo(const mess_device_class *devclass, UINT32 s
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 1; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD:							info->load = device_load_genesis_cart; break;
-		case MESS_DEVINFO_PTR_PARTIAL_HASH:					info->partialhash = NULL;	/*genesis_partialhash*/ break;
+		case MESS_DEVINFO_PTR_LOAD:							info->load = DEVICE_IMAGE_LOAD_NAME(genesis_cart); break;
+		case MESS_DEVINFO_PTR_PARTIAL_HASH:					info->partialhash = NULL;
+		case MESS_DEVINFO_PTR_UNLOAD:						info->unload = DEVICE_IMAGE_UNLOAD_NAME(genesis_cart); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "smd,bin,md,gen"); break;
@@ -349,50 +443,137 @@ SYSTEM_CONFIG_END
 
 static WRITE16_HANDLER( genesis_ssf2_bank_w )
 {
+	static int lastoffset = -1,lastdata = -1;
 	UINT8 *ROM = memory_region(REGION_CPU1);
 
-	switch (offset<<1)
-	{
-		case 0x00: // write protect register
-			break;
-		case 0x02: /* 0x080000 - 0x0FFFFF */
-			memcpy(ROM + 0x080000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x04: /* 0x100000 - 0x17FFFF */
-			memcpy(ROM + 0x100000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x06: /* 0x180000 - 0x1FFFFF */
-			memcpy(ROM + 0x180000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x08: /* 0x200000 - 0x27FFFF */
-			memcpy(ROM + 0x200000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x0a: /* 0x280000 - 0x2FFFFF */
-			memcpy(ROM + 0x280000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x0c: /* 0x300000 - 0x37FFFF */
-			memcpy(ROM + 0x300000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-		case 0x0e: /* 0x380000 - 0x3FFFFF */
-			memcpy(ROM + 0x380000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
-			break;
-
+	if ((lastoffset != offset) || (lastdata != data)) {
+		lastoffset = offset; lastdata = data;
+		switch (offset<<1)
+		{
+			case 0x00: // write protect register // this is not a write protect, but seems to do nothing useful but reset bank0 after the checksum test (red screen otherwise)
+				if (data == 2) {
+					memcpy(ROM + 0x000000, ROM + 0x400000+(((data&0xf)-2)*0x080000), 0x080000);
+				}
+				break;
+			case 0x02: /* 0x080000 - 0x0FFFFF */
+				memcpy(ROM + 0x080000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x04: /* 0x100000 - 0x17FFFF */
+				memcpy(ROM + 0x100000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x06: /* 0x180000 - 0x1FFFFF */
+				memcpy(ROM + 0x180000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x08: /* 0x200000 - 0x27FFFF */
+				memcpy(ROM + 0x200000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x0a: /* 0x280000 - 0x2FFFFF */
+				memcpy(ROM + 0x280000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x0c: /* 0x300000 - 0x37FFFF */
+				memcpy(ROM + 0x300000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+			case 0x0e: /* 0x380000 - 0x3FFFFF */
+				memcpy(ROM + 0x380000, ROM + 0x400000+((data&0xf)*0x080000), 0x080000);
+				break;
+		}
 	}
+}
+
+// Soulblade handler from HazeMD
+READ16_HANDLER( soulb_0x400006_r )
+{
+	return 0xf000;
+}
+
+READ16_HANDLER( soulb_0x400002_r )
+{
+	return 0x9800;
+}
+
+READ16_HANDLER( soulb_0x400004_r )
+{
+	return 0xc900;
+}
+
+// Mahjong Lover handler from HazeMD
+READ16_HANDLER( mjlovr_prot_1_r )
+{
+	return 0x9000;
+}
+
+READ16_HANDLER( mjlovr_prot_2_r )
+{
+	return 0xd300;
+}
+
+// KOF99 handler from HazeMD
+READ16_HANDLER( kof99_0xA13002_r )
+{
+	// write 02 to a13002.. shift right 1?
+	return 0x01;
+}
+
+READ16_HANDLER( kof99_00A1303E_r )
+{
+	// write 3e to a1303e.. shift right 1?
+	return 0x1f;
+}
+
+READ16_HANDLER( kof99_0xA13000_r )
+{
+	// no write, startup check, chinese message if != 0
+	return 0x0;
+}
+
+// Radica handler from HazeMD
+
+READ16_HANDLER( radica_bank_select )
+{
+	int bank = offset&0x3f;
+	UINT8 *ROM = memory_region(REGION_CPU1);
+	memcpy(ROM, ROM +  (bank*0x10000)+0x400000, 0x400000);
+
+//	printf("bank %02x\n",offset);
+	return 0;
+}
+
+// Red Cliff handler from HazeMD
+
+READ16_HANDLER( redclif_prot_r )
+{
+	return -0x56 << 8;
+}
+
+READ16_HANDLER( redclif_prot2_r )
+{
+	return 0x55 << 8;
+}
+
+// Squirrel King handler from HazeMD, this does not give screen garbage like HazeMD compile If you reset it twice
+READ16_HANDLER( squirrel_king_extra_r )
+{
+	return squirrel_king_extra;
+
+}
+WRITE16_HANDLER( squirrel_king_extra_w )
+{
+	squirrel_king_extra = data;
+}
+
+
+static WRITE16_HANDLER( genesis_TMSS_bank_w )
+{
+	/* this probably should do more, like make Genesis V2 'die' if the SEGA string is not written promptly */
 }
 
 static void genesis_machine_stop(running_machine *machine)
 {
-	/* Write out the battery file if necessary */
-	if ((genesis_sram != NULL) && (genesis_sram_len > 0))
-		image_battery_save(image_from_devtype_and_index(IO_CARTSLOT, 0), genesis_sram, genesis_sram_len);
 }
-
 
 static DRIVER_INIT( gencommon )
 {
-	genesis_sram_len = 0;
-
-        if (genesis_sram)
+	if (genesis_sram)
 	{
                 add_exit_callback(machine, genesis_machine_stop);
 	}
@@ -401,6 +582,45 @@ static DRIVER_INIT( gencommon )
 	{
 		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA130F0, 0xA130FF, 0, 0, genesis_ssf2_bank_w);
 	}
+
+	if (is_radica)
+	{
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xa13000, 0xa1307f, 0, 0, radica_bank_select );
+	}
+
+	if (is_kof99) {
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13000, 0xA13001, 0, 0, kof99_0xA13000_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA13002, 0xA13003, 0, 0, kof99_0xA13002_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA1303e, 0xA1303f, 0, 0, kof99_00A1303E_r );
+	}
+
+	if (is_soulb) {
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400006, 0x400007, 0, 0, soulb_0x400006_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400002, 0x400003, 0, 0, soulb_0x400002_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, soulb_0x400004_r );
+	}
+
+	if (is_redcliff)
+	{
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, redclif_prot2_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400004, 0x400005, 0, 0, redclif_prot_r );
+	}
+
+	if (is_mjlovr)
+	{
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400001, 0, 0, mjlovr_prot_1_r );
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x401000, 0x401001, 0, 0, mjlovr_prot_2_r );
+	}
+
+	if (is_squir)
+	{
+		memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_r);
+		memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0x400000, 0x400007, 0, 0, squirrel_king_extra_w);
+	}
+
+	/* install NOP handler for TMSS */
+	memory_install_write16_handler(0, ADDRESS_SPACE_PROGRAM, 0xA14000, 0xA14003, 0, 0, genesis_TMSS_bank_w);
+
 }
 
 static DRIVER_INIT( genusa )

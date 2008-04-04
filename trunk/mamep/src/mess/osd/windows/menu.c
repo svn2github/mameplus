@@ -839,13 +839,13 @@ static void build_generic_filter(const struct IODevice *dev, int is_save, char *
 //	change_device
 //============================================================
 
-static void change_device(HWND wnd, mess_image *img, int is_save)
+static void change_device(HWND wnd, const device_config *img, int is_save)
 {
 	dialog_box *dialog = NULL;
 	char filter[2048];
 	char filename[MAX_PATH];
 	char buffer[512];
-	const struct IODevice *dev = image_device(img);
+	const struct IODevice *dev = mess_device_from_core_device(img);
 	const char *initial_dir;
 	BOOL result;
 	int create_format = 0;
@@ -1236,7 +1236,7 @@ static void setup_joystick_menu(running_machine *machine, HMENU menu_bar)
 	{
 		// set up joystick menu
 #ifndef UNDER_CE
-		joystick_count = input_count_players();
+		joystick_count = input_count_players(machine);
 #endif
 		if (joystick_count > 0)
 		{
@@ -1306,7 +1306,7 @@ static void prepare_menus(running_machine *machine, HWND wnd)
 	UINT flags;
 	UINT flags_for_exists;
 	UINT flags_for_writing;
-	mess_image *img;
+	const device_config *img;
 	int has_config, has_dipswitch, has_keyboard, has_analog, has_misc;
 	const input_port_entry *in;
 	UINT16 in_cat_value = 0;
@@ -1334,10 +1334,10 @@ static void prepare_menus(running_machine *machine, HWND wnd)
 
 	speed = video_get_throttle() ? video_get_speed_factor() : 0;
 
-	has_config		= input_has_input_class(INPUT_CLASS_CONFIG);
-	has_dipswitch	= input_has_input_class(INPUT_CLASS_DIPSWITCH);
-	has_keyboard	= input_has_input_class(INPUT_CLASS_KEYBOARD);
-	has_misc		= input_has_input_class(INPUT_CLASS_MISC);
+	has_config		= input_has_input_class(machine, INPUT_CLASS_CONFIG);
+	has_dipswitch	= input_has_input_class(machine, INPUT_CLASS_DIPSWITCH);
+	has_keyboard	= input_has_input_class(machine, INPUT_CLASS_KEYBOARD);
+	has_misc		= input_has_input_class(machine, INPUT_CLASS_MISC);
 
 	has_analog = 0;
 	for (in = machine->input_ports; in->type != IPT_END; in++)
@@ -1434,57 +1434,53 @@ static void prepare_menus(running_machine *machine, HWND wnd)
 	remove_menu_items_from_pos_until_id(file_menu, 0, ID_FILE_LOADSTATE);
 
 	// then set up the actual devices
-	for (dev = mess_device_first_from_machine(machine); dev != NULL; dev = mess_device_next(dev))
+	for (img = image_device_first(machine->config); img != NULL; img = image_device_next(img))
 	{
-		for (i = 0; i < dev->count; i++)
-		{
-			img = image_from_device_and_index(dev, i);
+		dev = mess_device_from_core_device(img);
 
-			new_item = ID_DEVICE_0 + (image_absolute_index(img) * DEVOPTION_MAX);
-			flags_for_exists = MF_STRING;
+		new_item = ID_DEVICE_0 + (image_absolute_index(img) * DEVOPTION_MAX);
+		flags_for_exists = MF_STRING;
 
-			if (!image_exists(img))
-				flags_for_exists |= MF_GRAYED;
+		if (!image_exists(img))
+			flags_for_exists |= MF_GRAYED;
 
-			flags_for_writing = flags_for_exists;
-			if (!image_is_writable(img))
-				flags_for_writing |= MF_GRAYED;
+		flags_for_writing = flags_for_exists;
+		if (!image_is_writable(img))
+			flags_for_writing |= MF_GRAYED;
 
-			sub_menu = CreateMenu();
-			append_menu_uistring(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		UI_mount);
+		sub_menu = CreateMenu();
+		append_menu_uistring(sub_menu, MF_STRING,		new_item + DEVOPTION_OPEN,		UI_mount);
 
-			if (dev->creatable)
-				append_menu_uistring(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	UI_create);
+		if (dev->creatable)
+			append_menu_uistring(sub_menu, MF_STRING,	new_item + DEVOPTION_CREATE,	UI_create);
 
-			append_menu_uistring(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	UI_unmount);
+		append_menu_uistring(sub_menu, flags_for_exists,	new_item + DEVOPTION_CLOSE,	UI_unmount);
 
 #if HAS_WAVE
-			if ((dev->type == IO_CASSETTE) && !strcmp(dev->file_extensions, "wav"))
-			{
-				cassette_state state;
-				state = image_exists(img) ? (cassette_get_state(img) & CASSETTE_MASK_UISTATE) : CASSETTE_STOPPED;
-				append_menu_uistring(sub_menu, MF_SEPARATOR, 0, -1);
-				append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	UI_pauseorstop);
-				append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			UI_play);
-				append_menu_uistring(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		UI_record);
+		if ((dev->type == IO_CASSETTE) && !strcmp(dev->file_extensions, "wav"))
+		{
+			cassette_state state;
+			state = image_exists(img) ? (cassette_get_state(img) & CASSETTE_MASK_UISTATE) : CASSETTE_STOPPED;
+			append_menu_uistring(sub_menu, MF_SEPARATOR, 0, -1);
+			append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_STOPPED)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_STOPPAUSE,	UI_pauseorstop);
+			append_menu_uistring(sub_menu, flags_for_exists	| ((state == CASSETTE_PLAY)		? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_PLAY,			UI_play);
+			append_menu_uistring(sub_menu, flags_for_writing	| ((state == CASSETTE_RECORD)	? MF_CHECKED : 0),	new_item + DEVOPTION_CASSETTE_RECORD,		UI_record);
 #if USE_TAPEDLG
-				append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_DIALOG,		UI_tapecontrol);
+			append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_DIALOG,		UI_tapecontrol);
 #else
-				append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		UI_rewind);
-				append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	UI_fastforward);
+			append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_REWIND,		UI_rewind);
+			append_menu_uistring(sub_menu, flags_for_exists,														new_item + DEVOPTION_CASSETTE_FASTFORWARD,	UI_fastforward);
 #endif
-			}
-#endif /* HAS_WAVE */
-			s = image_exists(img) ? image_filename(img) : ui_getstring(UI_emptyslot);
-			flags = MF_POPUP;
-
-			snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%s: %s", image_typename_id(img), s);
-			append_menu_by_pos_utf8(file_menu, pos++, flags, 0, sub_menu, buf);
 		}
+#endif /* HAS_WAVE */
+		s = image_exists(img) ? image_filename(img) : ui_getstring(UI_emptyslot);
+		flags = MF_POPUP;
 
-		if (pos)
-			append_menu_by_pos_utf8(file_menu, pos++, MF_SEPARATOR, 0, NULL, NULL);
+		snprintf(buf, sizeof(buf) / sizeof(buf[0]), "%s: %s", image_typename_id(img), s);
+		append_menu_by_pos_utf8(file_menu, pos++, flags, 0, sub_menu, buf);
 	}
+	if (pos)
+		append_menu_by_pos_utf8(file_menu, pos++, MF_SEPARATOR, 0, NULL, NULL);
 }
 
 
@@ -1585,7 +1581,7 @@ void osd_toggle_menubar(int state)
 //	device_command
 //============================================================
 
-static void device_command(HWND wnd, mess_image *img, int devoption)
+static void device_command(HWND wnd, const device_config *img, int devoption)
 {
 	switch(devoption)
 	{
@@ -1711,7 +1707,7 @@ static void help_about_thissystem(running_machine *machine, HWND wnd)
 //	decode_deviceoption
 //============================================================
 
-static mess_image *decode_deviceoption(int command, int *devoption)
+static const device_config *decode_deviceoption(running_machine *machine, int command, int *devoption)
 {
 	int absolute_index;
 
@@ -1721,7 +1717,7 @@ static mess_image *decode_deviceoption(int command, int *devoption)
 	if (devoption)
 		*devoption = command % DEVOPTION_MAX;
 
-	return image_from_absolute_index(absolute_index);
+	return image_from_absolute_index(machine, absolute_index);
 }
 
 
@@ -1761,7 +1757,7 @@ static int invoke_command(running_machine *machine, HWND wnd, UINT command)
 {
 	int handled = 1;
 	int dev_command, i;
-	mess_image *img;
+	const device_config *img;
 	int port_count;
 	UINT16 setting, category;
 	input_port_entry *in;
@@ -1942,7 +1938,7 @@ static int invoke_command(running_machine *machine, HWND wnd, UINT command)
 			else if ((command >= ID_DEVICE_0) && (command < ID_DEVICE_0 + (MAX_DEV_INSTANCES*IO_COUNT*DEVOPTION_MAX)))
 			{
 				// change device
-				img = decode_deviceoption(command, &dev_command);
+				img = decode_deviceoption(machine, command, &dev_command);
 				device_command(wnd, img, dev_command);
 			}
 			else if ((command >= ID_JOYSTICK_0) && (command < ID_JOYSTICK_0 + MAX_JOYSTICKS))

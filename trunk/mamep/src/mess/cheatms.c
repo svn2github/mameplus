@@ -1,6 +1,21 @@
+/****************************************************************************
+
+	cheatms.c
+
+	MESS sepcific cheat code
+
+****************************************************************************/
+
+
+#include "mame.h"
 #include "mess.h"
 #include "image.h"
 #include "cheatms.h"
+
+
+/***************************************************************************
+    GLOBALS
+***************************************************************************/
 
 static UINT32				* deviceCRCList = NULL;
 static INT32				deviceCRCListLength = 0;
@@ -8,9 +23,14 @@ UINT32				thisGameCRC = 0;
 
 
 
-static void BuildCRCTable(void)
+/***************************************************************************
+    CODE
+***************************************************************************/
+
+static void BuildCRCTable(running_machine *machine)
 {
-	int	deviceType, deviceID, listIdx;
+	int	listIdx;
+	const device_config *img;
 
 	free(deviceCRCList);
 
@@ -18,49 +38,45 @@ static void BuildCRCTable(void)
 	deviceCRCList = calloc(1, sizeof(UINT32));
 	deviceCRCListLength = 1;
 
-	for(deviceType = 0; deviceType < IO_COUNT; deviceType++)
+	for (img = image_device_first(machine->config); img != NULL; img = image_device_next(img))
 	{
-		for(deviceID = 0; deviceID < device_count(deviceType); deviceID++)
+		if (image_exists(img))
 		{
-			mess_image *img = image_from_devtype_and_index(deviceType, deviceID);
-			if (image_exists(img))
+			UINT32	crc = image_crc(img);
+			int		isUnique = 1;
+
+			for(listIdx = 0; listIdx < deviceCRCListLength; listIdx++)
 			{
-				UINT32	crc = image_crc(img);
-				int		isUnique = 1;
-
-				for(listIdx = 0; listIdx < deviceCRCListLength; listIdx++)
+				if(deviceCRCList[listIdx] == crc)
 				{
-					if(deviceCRCList[listIdx] == crc)
-					{
-						isUnique = 0;
+					isUnique = 0;
 
-						break;
-					}
+					break;
 				}
+			}
 
-				if(isUnique)
-				{
-					if(!thisGameCRC)
-						thisGameCRC = crc;
+			if(isUnique)
+			{
+				if(!thisGameCRC)
+					thisGameCRC = crc;
 
-					deviceCRCList = realloc(deviceCRCList, (deviceCRCListLength + 1) * sizeof(UINT32));
+				deviceCRCList = realloc(deviceCRCList, (deviceCRCListLength + 1) * sizeof(UINT32));
 
-					deviceCRCList[deviceCRCListLength] = crc;
-					deviceCRCListLength++;
-				}
+				deviceCRCList[deviceCRCListLength] = crc;
+				deviceCRCListLength++;
 			}
 		}
 	}
 }
 
 
-void InitMessCheats(void)
+void InitMessCheats(running_machine *machine)
 {
 	deviceCRCList =			NULL;
 	deviceCRCListLength =	0;
 	thisGameCRC =			0;
 
-	BuildCRCTable();
+	BuildCRCTable(machine);
 }
 
 

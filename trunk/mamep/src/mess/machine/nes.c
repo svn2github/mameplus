@@ -4,10 +4,8 @@
 #include "includes/nes.h"
 #include "machine/nes_mmc.h"
 #include "sound/nes_apu.h"
-#include "zlib.h"
 #include "image.h"
 #include "hash.h"
-#include "deprecat.h"
 
 
 
@@ -66,7 +64,7 @@ static void nes_machine_stop(running_machine *machine);
     FUNCTIONS
 ***************************************************************************/
 
-static mess_image *cartslot_image(void)
+static const device_config *cartslot_image(void)
 {
 	return image_from_devtype_and_index(IO_CARTSLOT, 0);
 }
@@ -379,7 +377,7 @@ WRITE8_HANDLER ( nes_IN1_w )
 
 
 
-DEVICE_LOAD(nes_cart)
+DEVICE_IMAGE_LOAD(nes_cart)
 {
 	const char *mapinfo;
 	int mapint1=0,mapint2=0,mapint3=0,mapint4=0,goodcrcinfo = 0;
@@ -465,13 +463,13 @@ DEVICE_LOAD(nes_cart)
 	if (nes.four_screen_vram) logerror("-- 4-screen VRAM\n");
 
 	/* Free the regions that were allocated by the ROM loader */
-	free_memory_region (Machine, REGION_CPU1);
-	free_memory_region (Machine, REGION_GFX1);
+	free_memory_region (image->machine, REGION_CPU1);
+	free_memory_region (image->machine, REGION_GFX1);
 
 	/* Allocate them again with the proper size */
-	new_memory_region(Machine, REGION_CPU1, 0x10000 + (nes.prg_chunks+1) * 0x4000,0);
+	new_memory_region(image->machine, REGION_CPU1, 0x10000 + (nes.prg_chunks+1) * 0x4000,0);
 	if (nes.chr_chunks)
-		new_memory_region(Machine, REGION_GFX1, nes.chr_chunks * 0x2000,0);
+		new_memory_region(image->machine, REGION_GFX1, nes.chr_chunks * 0x2000,0);
 
 	nes.rom = memory_region(REGION_CPU1);
 	nes.vrom = memory_region(REGION_GFX1);
@@ -554,7 +552,7 @@ void nes_partialhash(char *dest, const unsigned char *data,
 }
 
 
-DEVICE_INIT(nes_disk)
+DEVICE_START(nes_disk)
 {
 	/* clear some of the cart variables we don't use */
 	nes.trainer = 0;
@@ -567,12 +565,10 @@ DEVICE_INIT(nes_disk)
 
 	nes_fds.sides = 0;
 	nes_fds.data = NULL;
-
-	return INIT_PASS;
 }
 
 
-DEVICE_LOAD(nes_disk)
+DEVICE_IMAGE_LOAD(nes_disk)
 {
 	unsigned char magic[4];
 
@@ -604,7 +600,7 @@ DEVICE_LOAD(nes_disk)
 	return INIT_PASS;
 }
 
-DEVICE_UNLOAD(nes_disk)
+DEVICE_IMAGE_UNLOAD(nes_disk)
 {
 	/* TODO: should write out changes here as well */
 	nes_fds.data = NULL;

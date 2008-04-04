@@ -1382,7 +1382,7 @@ READ8_HANDLER ( gb_io_r )
 	}
 }
 
-DEVICE_INIT(gb_cart)
+DEVICE_START(gb_cart)
 {
 	int I;
 
@@ -1405,10 +1405,9 @@ DEVICE_INIT(gb_cart)
 	CartType = 0;
 	ROMMask = 0;
 	RAMMask = 0;
-	return INIT_PASS;
 }
 
-DEVICE_LOAD(gb_cart)
+DEVICE_IMAGE_LOAD(gb_cart)
 {
 	static const char *const CartTypes[] =
 	{
@@ -2035,7 +2034,7 @@ WRITE8_HANDLER( megaduck_rom_bank_select_type2 )
 	}
 }
 
-DEVICE_LOAD(megaduck_cart)
+DEVICE_IMAGE_LOAD(megaduck_cart)
 {
 	int I, filesize;
 

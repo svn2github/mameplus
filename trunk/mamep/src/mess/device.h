@@ -9,15 +9,22 @@
 #ifndef DEVICE_H
 #define DEVICE_H
 
+// MAME headers
 #include "mamecore.h"
+#include "devintrf.h"
+
+// MESS headers
 #include "osdmess.h"
 #include "opresolv.h"
+
 
 /*************************************
  *
  *  Device information constants
  *
  *************************************/
+
+#define MESS_DEVICE		DEVICE_GET_INFO_NAME(mess_device)
 
 #define MAX_DEV_INSTANCES	5
 
@@ -43,8 +50,8 @@ enum
 	/* --- the following bits of info are returned as pointers to data or functions --- */
 	MESS_DEVINFO_PTR_FIRST = 0x10000,
 
-	MESS_DEVINFO_PTR_INIT,
-	MESS_DEVINFO_PTR_EXIT,
+	MESS_DEVINFO_PTR_START,
+	MESS_DEVINFO_PTR_STOP,
 	MESS_DEVINFO_PTR_LOAD,
 	MESS_DEVINFO_PTR_UNLOAD,
 	MESS_DEVINFO_PTR_CREATE,
@@ -84,19 +91,18 @@ enum
 
 struct IODevice;
 
-typedef int (*device_init_handler)(mess_image *image);
-typedef void (*device_exit_handler)(mess_image *image);
-typedef int (*device_load_handler)(mess_image *image);
-typedef int (*device_create_handler)(mess_image *image, int format_type, option_resolution *format_options);
-typedef void (*device_unload_handler)(mess_image *image);
-typedef int (*device_verify_handler)(const UINT8 *buf, size_t size);
-typedef void (*device_partialhash_handler)(char *, const unsigned char *, unsigned long, unsigned int);
-typedef void (*device_getdispositions_handler)(const struct IODevice *dev, int id,
+typedef int (*device_image_load_func)(const device_config *image);
+typedef int (*device_image_create_func)(const device_config *image, int format_type, option_resolution *format_options);
+typedef void (*device_image_unload_func)(const device_config *image);
+typedef int (*device_image_verify_func)(const UINT8 *buf, size_t size);
+typedef void (*device_image_partialhash_func)(char *, const unsigned char *, unsigned long, unsigned int);
+typedef void (*device_getdispositions_func)(const struct IODevice *dev, int id,
 	unsigned int *readable, unsigned int *writeable, unsigned int *creatable);
-typedef void (*device_display_handler)(mess_image *image);
-typedef const char *(*device_getname_handler)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
+typedef void (*device_display_func)(const device_config *image);
+typedef const char *(*device_getname_func)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
 
 struct _mess_device_class;
+struct _machine_config;
 
 union devinfo
 {
@@ -106,18 +112,18 @@ union devinfo
 	char *s;											/* generic strings */
 	double	d;											/* generic floating points */
 
-	device_init_handler init;
-	device_exit_handler exit;
-	device_load_handler load;
-	device_create_handler create;
-	device_unload_handler unload;
+	device_start_func start;
+	device_stop_func stop;
+	device_image_load_func load;
+	device_image_create_func create;
+	device_image_unload_func unload;
 
-	device_partialhash_handler partialhash;
-	device_verify_handler imgverify;
-	device_getdispositions_handler getdispositions;
+	device_image_partialhash_func partialhash;
+	device_image_verify_func imgverify;
+	device_getdispositions_func getdispositions;
 
-	device_display_handler display;
-	device_getname_handler name;
+	device_display_func display;
+	device_getname_func name;
 
 	int (*validity_check)(const struct _mess_device_class *devclass);
 };
@@ -230,12 +236,13 @@ struct CreateImageOptions
 struct IODevice
 {
 	mess_device_class devclass;
+	const device_config *devconfig;
 
 	/* the basics */
 	const char *tag;
 	iodevice_t type;
 	int position;
-	int count;
+	int index_in_device;
 	const char *file_extensions;
 
 	/* open dispositions */
@@ -247,20 +254,15 @@ struct IODevice
 	unsigned int reset_on_load : 1;
 	unsigned int must_be_loaded : 1;
 	unsigned int load_at_init : 1;
+	unsigned int multiple : 1;
 
 	/* image handling callbacks */
-	device_init_handler init;
-	device_exit_handler exit;
-	device_load_handler load;
-	device_create_handler create;
-	device_unload_handler unload;
+	device_start_func start;
+	device_stop_func stop;
 	int (*imgverify)(const UINT8 *buf, size_t size);
-	device_partialhash_handler partialhash;
-	void (*getdispositions)(const struct IODevice *dev, int id,
-		unsigned int *readable, unsigned int *writeable, unsigned int *creatable);
+	device_image_partialhash_func partialhash;
 
 	/* cosmetic/UI callbacks */
-	void (*display)(mess_image *img);
 	const char *(*name)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
 
 	/* image creation options */
@@ -268,6 +270,10 @@ struct IODevice
 	const struct CreateImageOptions *createimage_options;
 };
 
+/* interoperability with MAME devices */
+DEVICE_GET_INFO(mess_device);
+struct _machine_config *machine_config_alloc_with_mess_devices(const game_driver *gamedrv);
+const struct IODevice *mess_device_from_core_device(const device_config *device);
 
 /* device naming */
 const char *device_uiname(iodevice_t devtype);
@@ -276,22 +282,27 @@ const char *device_brieftypename(iodevice_t type);
 int device_typeid(const char *name);
 
 /* device allocation */
-const struct IODevice *devices_allocate(const game_driver *gamedrv);
-void devices_free(const struct IODevice *devices);
-
-/* device enumeration */
-const struct IODevice *mess_device_first_from_machine(const running_machine *machine);
-const struct IODevice *mess_device_next(const struct IODevice *dev);
+void mess_devices_setup(machine_config *config, const game_driver *gamedrv);
 
 /* device lookup */
-const struct IODevice *device_find_tag(const struct IODevice *devices, const char *tag);
-int device_count_tag(const struct IODevice *devices, const char *tag);
 int device_count_tag_from_machine(const running_machine *machine, const char *tag);
 
 /* deprecated: device lookup; both of these function assume only one of each type of device */
-const struct IODevice *device_find(const struct IODevice *devices, iodevice_t type);
 const struct IODevice *device_find_from_machine(const running_machine *machine, iodevice_t type);
-int device_count(iodevice_t type);
+int device_count(running_machine *machine, iodevice_t type);
+
+/* deprecated tag management functions; only works on legacy devices */
+void *image_alloctag(const device_config *device, const char *tag, size_t size);
+void *image_lookuptag(const device_config *device, const char *tag);
+
+/* deprecated device access functions */
+int image_index_in_device(const device_config *device);
+const device_config *image_from_device(const struct IODevice *iodev);
+const device_config *image_from_devtag_and_index(const char *devtag, int id);
+
+/* deprecated device access functions that assume one device of any given type */
+iodevice_t image_devtype(const device_config *device);
+const device_config *image_from_devtype_and_index(iodevice_t type, int id);
 
 /* diagnostics */
 int device_valididtychecks(void);

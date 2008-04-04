@@ -2258,13 +2258,13 @@ static WRITE32_HANDLER( gba_io_w )
 
 //				printf("%x to timer %d (mask %x PC %x)\n", data, offset, mem_mask, activecpu_get_pc());
 
-				if (ACCESSING_LSW32)
+				if (ACCESSING_BITS_0_15)
 				{
 				        timer_reload[offset] = ( timer_reload[offset] & mem_mask ) | ( ( data & 0x0000ffff ) & ~mem_mask );
 				}
 
 				// enabling this timer?
-				if ((ACCESSING_MSW32) && (data & 0x800000))
+				if ((ACCESSING_BITS_16_31) && (data & 0x800000))
 				{
 					double final;
 
@@ -3042,7 +3042,7 @@ static WRITE32_HANDLER( eeprom_w )
 	}
 }
 
-static int device_load_gba_cart(mess_image *image)
+static DEVICE_IMAGE_LOAD( gba_cart )
 {
 	UINT8 *ROM = memory_region(REGION_USER2);
 	int i;
@@ -3137,7 +3137,7 @@ static void gba_cartslot_getinfo(const mess_device_class *devclass, UINT32 state
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 0; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD: 						info->load = device_load_gba_cart; break;
+		case MESS_DEVINFO_PTR_LOAD: 						info->load = DEVICE_IMAGE_LOAD_NAME(gba_cart); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "gba,bin"); break;

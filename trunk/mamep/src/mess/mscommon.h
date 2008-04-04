@@ -24,6 +24,7 @@ extern "C" {
 struct terminal;
 
 struct terminal *terminal_create(
+	running_machine *machine,
 	int gfx, int blank_char, int char_bits,
 	int (*getcursorcode)(int original_code),
 	int num_cols, int num_rows);
@@ -52,7 +53,7 @@ void terminal_clear(struct terminal *terminal);
  * the value of 'valueorcolor' is a mask when lowercase letters are in the led
  * string or is a color when '1' characters are in the led string
  */
-void draw_led(bitmap_t *bitmap, const char *led, int valueorcolor, int x, int y);
+void draw_led(running_machine *machine, bitmap_t *bitmap, const char *led, int valueorcolor, int x, int y);
 
 /* a radius two led:
  *

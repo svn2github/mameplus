@@ -12,8 +12,9 @@
 #include "uimenu.h"
 #include "uitext.h"
 #include "devices/cassette.h"
+#include "deprecat.h"
 
-void tapecontrol_gettime(char *timepos, size_t timepos_size, mess_image *img, int *curpos, int *endpos)
+void tapecontrol_gettime(char *timepos, size_t timepos_size, const device_config *img, int *curpos, int *endpos)
 {
 	double t0, t1;
 
@@ -37,7 +38,7 @@ int tapecontrol(int selected)
 	char timepos[32];
 	ui_menu_item menu_item[40];
 	char name[64];
-	mess_image *img;
+	const device_config *img;
 
 	int sel;
 	int total;
@@ -150,7 +151,7 @@ int tapecontrol(int selected)
 		{
 		case 0:
 			id--;
-			if (id < 0) id = device_count(IO_CASSETTE)-1;
+			if (id < 0) id = device_count(Machine, IO_CASSETTE)-1;
 			break;
 		}
 	}
@@ -161,7 +162,7 @@ int tapecontrol(int selected)
 		{
 		case 0:
 			id++;
-			if (id > device_count(IO_CASSETTE)-1) id = 0;
+			if (id > device_count(Machine, IO_CASSETTE)-1) id = 0;
 			break;
 		}
 	}
@@ -176,7 +177,7 @@ int tapecontrol(int selected)
 			switch (sel)
 			{
 			case 0:
-				id = (id + 1) % device_count(IO_CASSETTE);
+				id = (id + 1) % device_count(Machine, IO_CASSETTE);
 				break;
 			case 2:
 				/* Pause/stop */

@@ -1262,7 +1262,7 @@ static const char* wswan_determine_romsize( UINT8 data ) {
 }
 #endif
 
-DEVICE_INIT(wswan_cart)
+DEVICE_START(wswan_cart)
 {
 	/* Initialize EEPROM structure */
 	memset( &eeprom, 0, sizeof( eeprom ) );
@@ -1280,11 +1280,9 @@ DEVICE_INIT(wswan_cart)
 	rtc.minute = 0;
 	rtc.second = 0;
 	rtc.setting = 0xFF;
-
-	return INIT_PASS;
 }
 
-DEVICE_LOAD(wswan_cart)
+DEVICE_IMAGE_LOAD(wswan_cart)
 {
 	UINT32 ii;
 	const char *sram_str;
@@ -1356,7 +1354,7 @@ DEVICE_LOAD(wswan_cart)
 INTERRUPT_GEN(wswan_scanline_interrupt)
 {
 	if( vdp.current_line < 144 ) {
-		wswan_refresh_scanline( machine );
+		wswan_refresh_scanline();
 	}
 
 	/* Decrement 12kHz (HBlank) counter */

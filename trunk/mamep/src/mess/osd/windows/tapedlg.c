@@ -10,6 +10,7 @@
 #include <commctrl.h>
 
 // MAME/MESS headers
+#include "mame.h"
 #include "tapedlg.h"
 #include "mess.h"
 #include "messres.h"
@@ -56,7 +57,7 @@ static void CALLBACK tapedialog_timerproc(HWND dialog, UINT msg, UINT_PTR ideven
 	int id;
 	int curpos, endpos;
 	char tapestatus[32];
-	mess_image *img;
+	const device_config *img;
 
 	dlg = get_tapedialog(dialog);
 	id = dlg - tape_dialogs;

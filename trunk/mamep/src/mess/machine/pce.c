@@ -100,7 +100,7 @@ static void pce_cd_set_irq_line( running_machine *machine, int num, int state );
 static TIMER_CALLBACK( pce_cd_adpcm_dma_timer_callback );
 
 
-static mess_image *cdrom_device_image( void ) {
+static const device_config *cdrom_device_image( void ) {
 	return image_from_devtype_and_index( IO_CDROM, 0 );
 }
 
@@ -114,13 +114,13 @@ static WRITE8_HANDLER( pce_cartridge_ram_w ) {
 	cartridge_ram[ offset ] = data;
 }
 
-DEVICE_LOAD(pce_cart)
+DEVICE_IMAGE_LOAD(pce_cart)
 {
 	int size;
 	int split_rom = 0;
 	const char *extrainfo;
 	unsigned char *ROM;
-	logerror("*** DEVICE_LOAD(pce_cart) : %s\n", image_filename(image));
+	logerror("*** DEVICE_IMAGE_LOAD(pce_cart) : %s\n", image_filename(image));
 
 	/* open file to get size */
 	ROM = memory_region(REGION_USER1);
@@ -130,7 +130,7 @@ DEVICE_LOAD(pce_cart)
 	/* handle header accordingly */
 	if((size/512)&1)
 	{
-		logerror("*** DEVICE_LOAD(pce_cart) : Header present\n");
+		logerror("*** DEVICE_IMAGE_LOAD(pce_cart) : Header present\n");
 		size -= 512;
 		image_fseek(image, 512, SEEK_SET);
 	}
@@ -152,7 +152,7 @@ DEVICE_LOAD(pce_cart)
 		int i;
 		UINT8 decrypted[256];
 
-		logerror( "*** DEVICE_LOAD(pce_cart) : ROM image seems encrypted, decrypting...\n" );
+		logerror( "*** DEVICE_IMAGE_LOAD(pce_cart) : ROM image seems encrypted, decrypting...\n" );
 
 		/* Initialize decryption table */
 		for( i = 0; i < 256; i++ )
@@ -520,7 +520,7 @@ static void pce_cd_nec_get_subq( void ) {
 /* 0xDE - GET DIR INFO (NEC) */
 static void pce_cd_nec_get_dir_info( void ) {
 	UINT32 frame, msf, track = 0;
-	mess_image *img = cdrom_device_image();
+	const device_config *img = cdrom_device_image();
 	const cdrom_toc	*toc;
 	logerror("nec get dir info\n");
 
