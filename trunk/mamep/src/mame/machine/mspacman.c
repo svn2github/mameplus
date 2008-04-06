@@ -113,6 +113,7 @@ static void mspacman_decode(void)
 	RAM[0x12000+i] = RAM[0x2000+i];
 	RAM[0x1a000+i] = RAM[0x2000+i];  /*not needed but it's there*/
 	RAM[0x1b000+i] = RAM[0x3000+i];  /*not needed but it's there*/
+
 	}
 #else
 	// ICC works fine

@@ -34,7 +34,9 @@ const game_driver * const consoledrivers[] =
 	0	/* end of array */
 };
 
-#else	/* DRIVER_RECURSIVE */
+#else /* DRIVER_RECURSIVE */
+
+/****************CONSOLES****************************************************/
 
 #ifdef MAMEMESS
 	/* NINTENDO */
@@ -53,14 +55,26 @@ const game_driver * const consoledrivers[] =
 	DRIVER( megaduck )	/* Megaduck											*/
 
 	/* SEGA */
+	DRIVER( gamegear )	/* Sega GameGear									*/
+	DRIVER( gamegeaj )	/* Sega GameGear (Japan)							*/
+	DRIVER( sms )		/* Sega Master System II (NTSC)						*/
+	DRIVER( sms1 )		/* Sega Master System I (NTSC)						*/
+	DRIVER( sms1pal )	/* Sega Master System I (PAL)						*/
+	DRIVER( smspal )	/* Sega Master System II (PAL)						*/
+	DRIVER( smsj )		/* Sega Master System (Japan) with FM Chip			*/
+	DRIVER( sg1000m3 )	/* Sega SG-1000 Mark III (Japan)					*/
+	DRIVER( sms2kr )	/* Samsung Gam*Boy II (Korea)						*/
+	DRIVER( smssdisp )	/* Sega Master System Store Display Unit			*/
+
 	DRIVER( megadrij )	/* 1988 Sega Mega Drive (Japan)						*/
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
+	DRIVER( gensvp )	/* 1993 Sega Genesis (USA w/SVP chip)					*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
 
 	/* NEC */
-//	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/
-//	DRIVER( tg16 )		/* Turbo Grafix-16  NEC 1989-1993					*/
-//	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
+	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/
+	DRIVER( tg16 )		/* Turbo Grafix-16  NEC 1989-1993					*/
+	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
 
 	/* CAPCOM */
 	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/

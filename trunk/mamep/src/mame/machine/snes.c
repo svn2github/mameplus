@@ -282,7 +282,7 @@ static void snes_init_ram(running_machine *machine)
 	memset( snes_vram, 0, SNES_VRAM_SIZE );
 
 	/* Init Colour RAM */
-	memset( (UINT8 *)snes_cgram, 0, SNES_CGRAM_SIZE );
+	memset( (UINT8 *)snes_cgram, 0, SNES_CGRAM_SIZE);
 
 	/* Init oam RAM */
 	memset( snes_oam, 0xff, SNES_OAM_SIZE );

@@ -1240,9 +1240,9 @@ static struct YM2610interface ym2610_interface =
 	PORT_DIPSETTING(	  0x0000, DEF_STR( On ) )
 
 
-#define STANDARD_IN0											\
-	PORT_START_TAG("IN0")										\
-	STANDARD_DIPS												\
+#define STANDARD_IN0														\
+	PORT_START_TAG("IN0")													\
+	STANDARD_DIPS															\
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_JOYSTICK_UP ) PORT_PLAYER(1)		\
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_PLAYER(1)		\
 	PORT_BIT( 0x0400, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_PLAYER(1)		\
@@ -1378,8 +1378,6 @@ static MACHINE_DRIVER_START( neogeo )
 	MDRV_SOUND_CONFIG(ym2610_interface)
 	MDRV_SOUND_ROUTE(0, "left",  0.60)
 	MDRV_SOUND_ROUTE(0, "right", 0.60)
-	//MDRV_SOUND_ROUTE(1, "left",  1.0)
-	//MDRV_SOUND_ROUTE(2, "right", 1.0)
 	MDRV_SOUND_ROUTE(1, "left",  0.75)
 	MDRV_SOUND_ROUTE(2, "right", 0.75)
 MACHINE_DRIVER_END

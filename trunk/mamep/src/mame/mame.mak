@@ -1195,6 +1195,10 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/gpworld.o \
 	$(DRIVERS)/hshavoc.o \
 	$(DRIVERS)/kopunch.o $(VIDEO)/kopunch.o \
+	$(MESS_DRIVERS)/genesis.o	\
+	$(MESS_VIDEO)/smsvdp.o	\
+	$(MESS_MACHINE)/sms.o		\
+	$(MESS_DRIVERS)/sms.o		\
 	$(DRIVERS)/megadriv.o \
 	$(DRIVERS)/megaplay.o \
 	$(DRIVERS)/megatech.o \
@@ -1229,7 +1233,6 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/turbo.o $(AUDIO)/turbo.o $(VIDEO)/turbo.o \
 	$(DRIVERS)/vicdual.o $(AUDIO)/vicdual.o $(VIDEO)/vicdual.o \
 	$(DRIVERS)/zaxxon.o $(AUDIO)/zaxxon.o $(VIDEO)/zaxxon.o \
-	$(MESS_DRIVERS)/genesis.o	\
 	$(MACHINE)/fd1089.o \
 	$(MACHINE)/fd1094.o \
 	$(MACHINE)/fddebug.o \

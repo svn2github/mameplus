@@ -645,13 +645,13 @@ void decrypt_kof2k4se_68k( void )
 	UINT8 *dst = malloc_or_die(0x400000);
 	int i;
 	static const int sec[] = {0x300000,0x200000,0x100000,0x000000};
-	memcpy(dst,src,0x400000);
+		memcpy(dst,src,0x400000);
 
-	for(i = 0; i < 4; ++i)
-	{
+		for(i = 0; i < 4; ++i)
+		{
 		memcpy(src+i*0x100000,dst+sec[i],0x100000);
-	}
-	free(dst);
+		}
+			free(dst);
 }
 
 /* Lans2004 (bootleg of Shock Troopers 2) */

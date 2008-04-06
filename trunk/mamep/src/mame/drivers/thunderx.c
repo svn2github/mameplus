@@ -701,7 +701,6 @@ static MACHINE_DRIVER_START( scontra )
 	MDRV_CPU_PROGRAM_MAP(scontra_readmem,scontra_writemem)
 	MDRV_CPU_VBLANK_INT("main", scontra_interrupt)
 
-	//MDRV_CPU_ADD(Z80, 3579545)
 	MDRV_CPU_ADD(Z80, 3579545*2)		// I'm not sure.
 	/* audio CPU */		/* ? */
 	MDRV_CPU_PROGRAM_MAP(scontra_readmem_sound,scontra_writemem_sound)
