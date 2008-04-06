@@ -92,18 +92,18 @@ dealer	ザ・ディーラー	ざでぃーらー	Epos Corporation
 revenger	リベンジャー	りべんじゃー	Epos Corporation
 galaxian	ギャラクシアン (Namco set 1)	ぎゃらくしあん	Namco
 galaxiaj	ギャラクシアン (Namco set 2)	ぎゃらくしあん	Namco
-galmidw	ギャラクシアン (Midway)	ぎゃらくしあん	[Namco] (Midway license)
-galmidwo	ギャラクシアン (Midway old rev)	ぎゃらくしあん	[Namco] (Midway license)
+galmidw	ギャラクシアン (Midway set 1)	ぎゃらくしあん	[Namco] (Midway license)
+galmidwo	ギャラクシアン (Midway set 2)	ぎゃらくしあん	[Namco] (Midway license)
 galtaito	ギャラクシアン (Taito)	ぎゃらくしあん	[Namco] (Taito license)
-superg	ギャラクシアン / Super Galaxians	ぎゃらくしあん	hack
-galapx	ギャラクシアン / Galaxian Part X	ぎゃらくしあん	hack
+superg	ギャラクシアン / Super Galaxians (ハック)	ぎゃらくしあん	hack
+galapx	ギャラクシアン / Galaxian Part X (ハック)	ぎゃらくしあん	hack
 moonaln	ムーンエイリアン	むーんえいりあん_1	[Nichibutsu] (Karateco license)
-galap1	ギャラクシアン / Space Invaders Galactica	ぎゃらくしあん	hack
-galap4	ギャラクシアン / Galaxian Part 4	ぎゃらくしあん	hack
-galturbo	ギャラクシアン / Galaxian Turbo	ぎゃらくしあん	hack
-swarm	ギャラクシアン / Swarm (ハック)	ぎゃらくしあん	[Namco] (Sub-Electro bootleg)
+galap1	ギャラクシアン / Space Invaders Galactica (ハック)	ぎゃらくしあん	hack
+galap4	ギャラクシアン / Galaxian Part 4 (ハック)	ぎゃらくしあん	G.G.I
+galturbo	ギャラクシアン / Galaxian Turbo (ハック)	ぎゃらくしあん	hack
+swarm	ギャラクシアン / Swarm (海賊版?)	ぎゃらくしあん	Subelectro
 zerotime	ギャラクシアン / Zero Time	ぎゃらくしあん	Petaco S.A.
-starfght	ギャラクシアン / Star Fighter (海賊版)	ぎゃらくしあん	Jeutel
+starfght	ギャラクシアン / Star Fighter	ぎゃらくしあん	Jeutel
 galaxbsf	ギャラクシアン (海賊版)	ぎゃらくしあん	bootleg
 tst_galx	ギャラクシアン / Test ROM	ぎゃらくしあん	Test ROM
 gmgalax	パックマン / Ghostmuncher Galaxian (海賊版)	ぱっくまん	bootleg
@@ -146,7 +146,7 @@ mooncrs3	ムーンクレスタ (海賊版 set 3)	むーんくれすた	bootleg
 fantazia	ムーンクレスタ / Fantazia (海賊版?)	むーんくれすた	Subelectro
 moonqsr	ムーンクエーサー	むーんくえーさー	Nichibutsu
 mshuttle	ムーンシャトル / Moon Shuttle (USA版?)	むーんしゃとる	Nichibutsu
-mshuttlj	ムーンシャトル (日本版 set 1)	むーんしゃとる	Nichibutsu
+mshuttlj	ムーンシャトル (日本版)	むーんしゃとる	Nichibutsu
 mshutlj2	ムーンシャトル (日本版 set 2)	むーんしゃとる	Nichibutsu
 moonal2	ムーンエイリアン Part2	むーんえいりあん_2ぱーと2	Nichibutsu
 moonal2b	ムーンエイリアン Part2 (older ver)	むーんえいりあん_2ぱーと2	Nichibutsu
@@ -201,7 +201,7 @@ theends	ジ・エンド (Stern)	じえんど	[Konami] (Stern license)
 omega	ジ・エンド / Omega	じえんど	bootleg?
 ckongs	ドンキーコング / Crazy Kong (Scramble hardware)	どんきーこんぐ_1	bootleg
 froggers	フロッガー / Frog	ふろっがー	bootleg
-frogf	フロッガー (Falcon) (海賊版)	ふろっがー	Falcon
+frogf	フロッガー / Flog (Falcon) (海賊版)	ふろっがー	Falcon
 amidars	アミダー (Scramble hardware)	あみだー	Konami
 triplep	トリプルパンチ	とりぷるぱんち	KKI
 knockout	トリプルパンチ / Knock Out!!	とりぷるぱんち	KKK
@@ -255,7 +255,7 @@ hustlerb	ビデオハスラー (海賊版)	びでおはすらー	bootleg
 frogger	フロッガー	ふろっがー	Konami
 frogseg1	フロッガー (Sega set 1)	ふろっがー	[Konami] (Sega license)
 frogseg2	フロッガー (Sega set 2)	ふろっがー	[Konami] (Sega license)
-froggrmc	フロッガー (Moon Cresta hardware)	ふろっがー	bootleg?
+froggrmc	フロッガー (Moon Cresta hardware)	ふろっがー	[Konami] (Sega license)
 amidar	アミダー	あみだー	Konami
 amidaru	アミダー (Stern)	あみだー	Konami (Stern license)
 amidaro	アミダー (Olympia)	あみだー	Konami (Olympia license)
@@ -835,6 +835,7 @@ dkongjr	ドンキーコングJr. (USA版)	どんきーこんぐ_2じゅにあ	Nintendo of America
 dkongjrj	ドンキーコングJr. (日本版)	どんきーこんぐ_2じゅにあ	Nintendo
 dkngjnrj	ドンキーコングJr. (日本版?)	どんきーこんぐ_2じゅにあ	Nintendo
 dkongjrb	ドンキーコングJr. (海賊版)	どんきーこんぐ_2じゅにあ	bootleg
+jrking	ドンキーコングJr. / Junior King (海賊版.)	どんきーこんぐ_2じゅにあ	bootleg
 dkongjre	ドンキーコングJr. (easy)	どんきーこんぐ_2じゅにあ	Nintendo of America
 dkong3	ドンキーコング3 (USA版)	どんきーこんぐ_3	Nintendo of America
 dkong3j	ドンキーコング3 (日本版)	どんきーこんぐ_3	Nintendo
@@ -970,6 +971,7 @@ smgolfb	VS.ゴルフ / Stroke & Match Golf (men ver set 2)	ばーさすごるふ	Nintendo
 vsbbaljb	VS.ベースボール (日本版 set 3)	ばーさすべーすぼーる	Nintendo of America
 multigam	マルチゲーム (set 1)	まるちげーむ	unknown
 multigmb	マルチゲーム (set 2)	まるちげーむ	unknown
+multigm3	マルチゲームIII	まるちげーむすりー	Seo Jin
 cham24	カメレオン24	かめれおん24	bootleg
 nss_ssoc	スーパーフォーメーションサッカー / Super Soccer (Nintendo Super System)	すーぱーふぉーめーしょんさっかー	Human Inc.
 nss_actr	アクトレイザー (Nintendo Super System)	あくとれいざー	Enix
@@ -1674,6 +1676,7 @@ groundfx	グランドエフェクト / スーパーグランドエフェクト (日本版)	ぐらんどえふぇ
 undrfire	アンダーファイアー (海外版)	あんだーふぁいあー	Taito Corporation Japan
 undrfiru	アンダーファイアー (USA版)	あんだーふぁいあー	Taito America Corporation
 undrfirj	アンダーファイアー (日本版)	あんだーふぁいあー	Taito Corporation
+cbombers	チェイスボンバーズ	ちぇいすぼんばーず	Taito Corporation
 finalb	ファイナルブロー (海外版)	ふぁいなるぶろー	Taito Corporation Japan
 finalbj	ファイナルブロー (日本版)	ふぁいなるぶろー	Taito Corporation
 finalbu	ファイナルブロー (USA版)	ふぁいなるぶろー	Taito America Corporation
@@ -2611,7 +2614,8 @@ ddrs2k	ダンスダンスレボリューション Solo 2000 (GC905 ver AAA)	だんすだんすれぼり
 ddrs2kj	ダンスダンスレボリューション Solo 2000 (GC905 ver JAA)	だんすだんすれぼりゅーしょん_4_そろ_1_2000	Konami
 dsfdct	ダンシングステージ featuring Dreams Come True (GC910 ver JCA)	だんしんぐすてーじ_1_1_ふぃーちゃりんぐどりーむずかむとぅるー	Konami
 dsfdcta	ダンシングステージ featuring Dreams Come True (GC910 ver JAA)	だんしんぐすてーじ_1_1_ふぃーちゃりんぐどりーむずかむとぅるー	Konami
-drmn2m	ドラムマニア 2nd Mix (GE912 ver JAA)	どらむまにあ_2_せかんどみっくす	Konami
+drmn2m	ドラムマニア 2nd Mix (GE912 ver JAB)	どらむまにあ_2_せかんどみっくす_1	Konami
+drmn2mpu	ドラムマニア 2nd Mix セッションパワーアップキット (GE912 ver JAB)	どらむまにあ_2_せかんどみっくす_2_せっしょんぱわーあっぷきっと	Konami
 dncfrks	ダンスマニアックス / Dance Freaks (G*874 ver KAA)	だんすまにあっくす_1	Konami
 dmx	ダンスマニアックス (G*874 ver JAA)	だんすまにあっくす_1	Konami
 gtrfrk3m	ギターフリークス 3rd Mix (GE949 ver JAC)	ぎたーふりーくす_03_さーどみっくす	Konami
@@ -4151,6 +4155,7 @@ dbz	ドラゴンボールZ	どらごんぼーるぜっと_1	Banpresto
 dbz2	ドラゴンボールZ 2 -スーパーバトル	どらごんぼーるぜっと_2	Banpresto
 bishi	ビシバシチャンプ -ミニゲーム選手権 (ver JAA)	びしばしちゃんぷ	Konami
 sbishi	スーパービシバシチャンプ (ver JAA)	すーぱーびしばしちゃんぷ	Konami
+sbishik	スーパービシバシチャンプ (ver KAA)	すーぱーびしばしちゃんぷ	Konami
 overdriv	オーバードライブ	おーばーどらいぶ	Konami
 gradius3	グラディウスIII -伝説から神話へ (日本版)	ぐらでぃうす_3	Konami
 grdius3a	グラディウスIII -伝説から神話へ (アジア版)	ぐらでぃうす_3	Konami
@@ -4604,6 +4609,7 @@ skullxb1	スカル&クロスボーンズ (rev 1)	すかるあんどくろすぼーんず	Atari Games
 cyberbt	トーナメントサイバーボール2072 (rev 2)	とーなめんとさいばーぼーる2072	Atari Games
 cyberbt1	トーナメントサイバーボール2072 (rev 1)	とーなめんとさいばーぼーる2072	Atari Games
 badlands	バッドランズ	ばっどらんず	Atari Games
+badlandb	バッドランズ (海賊版)	ばっどらんず	[Atari Games] (Playmark bootleg)
 klax	クラックス (set 1)	くらっくす	Atari Games
 klax2	クラックス (set 2)	くらっくす	Atari Games
 klax3	クラックス (set 3)	くらっくす	Atari Games
@@ -4775,7 +4781,8 @@ sengokh	戦国伝承 (set 2)	せんごくでんしょう_1	SNK
 burningf	バーニングファイト (set 1)	ばーにんぐふぁいと	SNK
 burningh	バーニングファイト (set 2)	ばーにんぐふぁいと	SNK
 lbowling	リーグ・ボウリング	りーぐぼうりんぐ	SNK
-gpilots	ゴーストパイロット	ごーすとぱいろっと	SNK
+gpilots	ゴーストパイロット (set 1)	ごーすとぱいろっと	SNK
+gpilotsh	ゴーストパイロット (set 2)	ごーすとぱいろっと	SNK
 joyjoy	ジョイジョイキッド	じょいじょいきっど	SNK
 bjourney	ラギ	らぎ	Alpha Denshi Co.
 quizdais	クイズ大捜査線 -ザ・ラストカウントダウン	くいずだいそうさせん	SNK
@@ -4788,8 +4795,7 @@ legendos	あしたのジョー伝説	あしたのじょーでんせつ	SNK
 2020bbh	2020年スーパーベースボール (set 3)	にせんにじゅうねんすーぱーべーすぼーる	SNK / Pallas
 socbrawl	サッカーブロール (set 1)	さっかーぶろーる	SNK
 socbrala	サッカーブロール (set 2)	さっかーぶろーる	SNK
-roboarmy	ロボアーミー (set 1)	ろぼあーみー	SNK
-roboarma	ロボアーミー (set 2)	ろぼあーみー	SNK
+roboarmy	ロボアーミー	ろぼあーみー	SNK
 fatfury1	餓狼伝説 -宿命の闘い	がろうでんせつ_1	SNK
 fbfrenzy	フットボールフレンジー	ふっとぼーるふれんじー	SNK
 bakatono	バカ殿様麻雀漫遊記	ばかとのさままーじゃんまんゆうき	Monolith Corp.
@@ -4801,7 +4807,8 @@ bstars2	ベースボールスターズ2	べーすぼーるすたーず_2	SNK
 quizdai2	クイズ迷探偵ネオ&ジオ -クイズ大捜査線パート2	くいずめいたんていねおあんどじお	SNK
 3countb	ファイヤー・スープレックス	ふぁいやーすーぷれっくす	SNK
 aof	龍虎の拳	りゅうこのけん_1	SNK
-samsho	サムライスピリッツ	さむらいすぴりっつ_1	SNK
+samsho	サムライスピリッツ (set 1)	さむらいすぴりっつ_1	SNK
+samshoh	サムライスピリッツ (set 2)	さむらいすぴりっつ_1	SNK
 tophuntr	トップハンター -Roddy & Cathy (set 1)	とっぷはんたー	SNK
 tophunta	トップハンター -Roddy & Cathy (set 2)	とっぷはんたー	SNK
 fatfury2	餓狼伝説2 -新たなる闘い	がろうでんせつ_2_1	SNK
@@ -4973,7 +4980,7 @@ samsho5	サムライスピリッツ零 (set 1)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise 
 samsho5h	サムライスピリッツ零 (set 2)	さむらいすぴりっつ_6_1ぜろ	Yuki Enterprise / SNK Playmore
 samsho5b	サムライスピリッツ零 (海賊版)	さむらいすぴりっつ_6_1ぜろ	bootleg
 kf2k3pcb	ザ・キング・オブ・ファイターズ 2003 (日本版 JAMMA PCB)	ざきんぐおぶふぁいたーず_10_1_2003	SNK Playmore
-kof2003	ザ・キング・オブ・ファイターズ 2003 (海外 / USA版 MVS)	ざきんぐおぶふぁいたーず_10_1_2003	SNK Playmore
+kof2003	ザ・キング・オブ・ファイターズ 2003	ざきんぐおぶふぁいたーず_10_1_2003	SNK Playmore
 kf2k3bl	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 1)	ざきんぐおぶふぁいたーず_10_1_2003	bootleg
 kf2k3bla	ザ・キング・オブ・ファイターズ 2003 (海賊版 set 2)	ざきんぐおぶふぁいたーず_10_1_2003	bootleg
 kf2k3pl	ザ・キング・オブ・ファイターズ 2003 / The King of Fighters 2004 Plus / Hero (海賊版)	ざきんぐおぶふぁいたーず_10_2_2003	bootleg
@@ -5061,6 +5068,7 @@ ddragonw	双截龍 <ダブルドラゴン> (海外版 set 1)	だぶるどらごん_1	[Technos] (Tait
 ddragnw1	双截龍 <ダブルドラゴン> (海外版 set 2)	だぶるどらごん_1	[Technos] (Taito license)
 ddragonb	双截龍 <ダブルドラゴン> (海賊版 with HD6309)	だぶるどらごん_1	bootleg
 ddragnba	双截龍 <ダブルドラゴン> (海賊版 with M6803)	だぶるどらごん_1	bootleg
+ddgn6809	双截龍 <ダブルドラゴン> (海賊版 with 3xM6809)	だぶるどらごん_1	bootleg
 spdodgeb	熱血高校ドッジボール部 / Super Dodge Ball (USA版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodge	熱血高校ドッジボール部 (日本版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodgeb	熱血高校ドッジボール部 (日本版) (海賊版)	ねっけつこうこうどっじぼーるぶ	Technos
@@ -5164,7 +5172,8 @@ blkhearj	ブラックハート (日本版)	ぶらっくはーと	UPL
 acrobatm	アクロバットミッション	あくろばっとみっしょん	UPL (Taito license)
 strahl	鋼鉄要塞シュトラール (日本版 set 1)	こうてつようさいしゅとらーる	UPL
 strahla	鋼鉄要塞シュトラール (日本版 set 2)	こうてつようさいしゅとらーる	UPL
-bjtwin	ボンジャック ツイン	ぼんじゃっくついん	NMK
+bjtwin	ボンジャック ツイン (set 1)	ぼんじゃっくついん	NMK
+bjtwina	ボンジャック ツイン (set 2)	ぼんじゃっくついん	NMK
 tdragon2	サンダードラゴン2 <雷龍2> (9th Nov 1993)	さんだーどらごん_2	NMK
 tdragn2a	サンダードラゴン2 <雷龍2> (1st Oct 1993)	さんだーどらごん_2	NMK
 bigbang	サンダードラゴン2 <雷龍2> / Big Bang -Power Shooting (9th Nov 1993)	さんだーどらごん_2	NMK
@@ -5175,8 +5184,8 @@ macross	超時空要塞マクロス	ちょうじくうようさいまくろす_1	Banpresto
 riot	雷軋斗	らいあっと	NMK
 gunnail	ガンネイル (28th May 1992)	がんねいる	NMK / Tecmo
 macross2	超時空要塞マクロス II	ちょうじくうようさいまくろす_2	Banpresto
-sabotenb	サボテンボンバーズ (9th Mar 1992 set 1)	さぼてんぼんばーず	NMK / Tecmo
-sabotnba	サボテンボンバーズ (9th Mar 1992 set 2)	さぼてんぼんばーず	NMK / Tecmo
+sabotenb	サボテンボンバーズ (set 1)	さぼてんぼんばーず	NMK / Tecmo
+sabotnba	サボテンボンバーズ (set 2)	さぼてんぼんばーず	NMK / Tecmo
 nouryoku	脳力向上委員会	のうりょくこうじょういいんかい	Tecmo
 raphero	ラピッドヒーロー (日本版?)	らぴっどひーろー	Media Trading Corp
 mustangb	US AAF ムスタング (海賊版)	ゆーえすえーえーえふむすたんぐ	bootleg
@@ -5266,7 +5275,9 @@ crusnwld	クルージンワールド (rev L2.4)	くるーじん_2わーるど	Midway
 crusnw23	クルージンワールド (rev L2.3)	くるーじん_2わーるど	Midway
 crusnw20	クルージンワールド (rev L2.0)	くるーじん_2わーるど	Midway
 crusnw13	クルージンワールド (rev L1.3)	くるーじん_2わーるど	Midway
-offroadc	オフロードチャレンジ	おふろーどちゃれんじ	Midway
+offroadc	オフロードチャレンジ (ver 1.40)	おふろーどちゃれんじ	Midway
+offrodc3	オフロードチャレンジ (ver 1.30)	おふろーどちゃれんじ	Midway
+offrodc1	オフロードチャレンジ (ver 1.10)	おふろーどちゃれんじ	Midway
 wargods	ウォーゴッド	うぉーごっど	Midway
 mk4	モータルコンバット4 (ver 3.0)	もーたるこんばっと_4	Midway
 mk4a	モータルコンバット4 (ver 2.1)	もーたるこんばっと_4	Midway
@@ -5861,6 +5872,7 @@ penbros	ペンギンブラザーズ (日本版)	ぺんぎんぶらざーず	Subsino
 deerhunt	ディアハンティングUSA (ver 4.3)	でぃあはんてぃんぐゆーえすえー	Sammy USA Corporation
 deerhuna	ディアハンティングUSA (ver 4.2)	でぃあはんてぃんぐゆーえすえー	Sammy USA Corporation
 deerhunb	ディアハンティングUSA (ver 4.0)	でぃあはんてぃんぐゆーえすえー	Sammy USA Corporation
+deerhunc	ディアハンティングUSA (ver 2)	でぃあはんてぃんぐゆーえすえー	Sammy USA Corporation
 turkhunt	ターキーハンティングUSA (ver 1.0)	たーきーはんてぃんぐゆーえすえー	Sammy USA Corporation
 wschamp	ウィングシューティングチャンピオンシップ (ver 2.0)	うぃんぐしゅーてぃんぐちゃんぴおんしっぷ	Sammy USA Corporation
 wschampa	ウィングシューティングチャンピオンシップ (ver 1.01)	うぃんぐしゅーてぃんぐちゃんぴおんしっぷ	Sammy USA Corporation
@@ -6456,6 +6468,7 @@ evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
 inquiztr	インクイジター	いんくいじたー	BFM
 escounts	エブリセカンドカウンツ (39-360-053)	えぶりせかんどかうんつ	BFM
 trebltop	トレブルトップ (39-360-070)	とれぶるとっぷ	BFM
+beeline	ビーライン (39-360-075)	びーらいん	BFM
 quizvadr	クイズベーダース (39-360-078)	くいずべーだーす	BFM
 qos	ア・クエスチョン・オブ・スポーツ (39-960-107)	あくえすちょんおぶすぽーつ	BFM
 qosa	ア・クエスチョン・オブ・スポーツ (39-960-099)	あくえすちょんおぶすぽーつ	BFM
@@ -6492,6 +6505,10 @@ quickjac	クイックジャック	くいっくじゃっく	ADP
 skattv	スカットTV	すかっとてぃーびー	ADP
 skattva	スカットTV (ver TS3)	すかっとてぃーびー	ADP
 fashiong	ファッションギャンブラー	ふぁっしょんぎゃんぶらー	ADP
+guab	ギブ・アス・ア・ブレイク (6th edition)	ぎぶあすあぶれいく	JPM
+guab3	ギブ・アス・ア・ブレイク (3rd edition)	ぎぶあすあぶれいく	JPM
+tenup	テンアップ (compendium 17)	てんあっぷ	JPM
+tenup3	テンアップ (compendium 3)	てんあっぷ	JPM
 cluedo	クルード (prod 2D)	くるーど	JPM
 cluedo2c	クルード (prod 2C)	くるーど	JPM
 cluedo2	クルード (prod 2)	くるーど	JPM
@@ -6995,6 +7012,7 @@ blazlaz	ブレイジングレーザーズ	ぶれいじんぐれーざーず	Hudson Soft
 paranoia	パラノイア	ぱらのいあ	Naxat Soft
 vcombat	バーチャルコンバット	ばーちゃるこんばっと	VR8 Inc.
 shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	Sega?
+showhand	ショーハンド	しょーはんど	Astro Corp.
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海外版 911127) (海賊版)	ないつおぶざらうんど	bootleg
 sf2m8	ストリートファイターII' -チャンピオンエディション (M8)	すとりーとふぁいたー_2_2だっしゅ	bootleg
@@ -7079,4 +7097,27 @@ pnyaad	ポチッとにゃ～ (decrypted C)	ぽちっとにゃー	Aiky / Taito
 bangbedp	バンビード (prototype)	ばんびーど	Visco
 pong	ポン	ぽん	Atari
 monaco	モナコGP	もなこぐらんぷり	Sega
+ddtodd	ダンジョンズ&ドラゴンズ -タワーオブドゥーム (欧州版 940412 Phoenix Edition)	だんじょんずあんどどらごんず_1たわーおぶどぅーむ	hack
+avspd	エイリアン VS. プレデター (欧州版 940520 Phoenix Edition)	えいりあんばーさすぷれでたー	hack
+ringdstd	スーパーマッスルボマー -インターナショナル・ブロウアウト / Ring of Destruction -Slam Masters II (欧州版 940902 Phoenix Edition)	すーぱーまっするぼまー	hack
+xmcotad	X-MEN -チルドレンオブジアトム (欧州版 950105 Phoenix Edition)	えっくすめん_2	hack
+nwarrud	ヴァンパイアハンター -ダークストーカーズリベンジ / Night Warriors -Darkstalkers' Revenge (USA版 950406 Phoenix Edition)	ばんぱいあ_2はんたー	hack
+sfad	ストリートファイターZERO / Street Fighter Alpha -Warriors' Dreams (欧州版 950727 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_1	hack
+19xxd	19XX -The War Against Destiny (USA版 951207 Phoenix Edition)	ないんてぃーんだぶるえっくす	hack
+ddsomud	ダンジョンズ&ドラゴンズ -シャドーオーバーミスタラ (USA版 960619 Phoenix Edition)	だんじょんずあんどどらごんず_2しゃどーおーばーみすたら	hack
+spf2xjd	スーパーパズルファイターII X (日本版 960531 Phoenix Edition)	すーぱーぱずるふぁいたー2えっくす	hack
+megamn2d	ロックマン2 ザ・パワーファイターズ / Mega Man 2 -The Power Fighters (USA版 960708 Phoenix Edition)	ろっくまん_2	hack
+sfz2aad	ストリートファイターZERO2 Alpha (アジア版 960826 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_2_2あるふぁ	hack
+xmvsfu1d	X-MEN VS. ストリートファイター (USA版 961004 Phoenix Edition)	えっくすめん_3ばーさすすとりーとふぁいたー	hack
+batcird	バトルサーキット (欧州版 970319 Phoenix Edition)	ばとるさーきっと	hack
+vsavd	ヴァンパイアセイヴァー -ザ・ロードオブヴァンパイア (欧州版 970519 Phoenix Edition)	ばんぱいあ_3せいばー_1	hack
+mvscud	マーヴル VS. カプコン -クラッシュオブスーパーヒーローズ (USA版 9810123 Phoenix Edition)	まーぶるばーさすかぷこん_1	hack
+sfa3ud	ストリートファイターZERO3 / Street Fighter Alpha 3 (USA版 980904 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_3	hack
+gwingjd	ギガウィング (日本版 990223 Phoenix Edition)	ぎがうぃんぐ_1	hack
+1944d	1944 -ザ・ループマスター (USA版 000620 Phoenix Edition)	いちきゅうよん_4よん	hack
+hsf2d	ハイパーストリートファイターII -The Anniversary Edition (アジア版 040202 Phoenix Edition)	はいぱーすとりーとふぁいたー_2	hack
+dstlku1d	ヴァンパイア -ザ・ナイトウォリアーズ / Dark Stalkers -The Night Warriors (USA版 940705 Phoenix Edition)	ばんぱいあ_1	hack
 progerjd	プロギアの嵐 (日本版 010117 Phoenix Edition)	ぷろぎあのあらし	hack
+ssf2ud	スーパーストリートファイターII -ザ・ニューチャレンジャーズ (USA版 930911 Phoenix Edition)	すーぱーすとりーとふぁいたー2_1ざにゅーちゃれんじゃーず	hack
+mshud	マーヴル・スーパーヒーローズ (USA版 951024 Phoenix Edition)	まーぶるすーぱーひーろーず_1	hack
+sfz2ad	ストリートファイターZERO2 (アジア版 960227 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_2_1	hack
