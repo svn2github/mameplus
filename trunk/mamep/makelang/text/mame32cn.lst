@@ -92,18 +92,18 @@ dealer	商品买卖	商品买卖	Epos Corporation
 revenger	复仇者	复仇者	Epos Corporation
 galaxian	小蜜蜂 (Namco 第1套)	小蜜蜂 (Namco 第1套)	Namco
 galaxiaj	小蜜蜂 (Namco 第2套)	小蜜蜂 (Namco 第2套)	Namco
-galmidw	小蜜蜂 (Midway)	小蜜蜂 (Midway)	[Namco] (Midway license)
-galmidwo	小蜜蜂 (Midway, 旧版)	小蜜蜂 (Midway, 旧版)	[Namco] (Midway license)
+galmidw	小蜜蜂 (Midway 第1套)	小蜜蜂 (Midway 第1套)	[Namco] (Midway license)
+galmidwo	小蜜蜂 (Midway 第2套)	小蜜蜂 (Midway 第2套)	[Namco] (Midway license)
 galtaito	小蜜蜂 (Taito)	小蜜蜂 (Taito)	[Namco] (Taito license)
-superg	小蜜蜂 - 超级小蜜蜂	小蜜蜂 - 超级小蜜蜂	hack
-galapx	小蜜蜂 PX	小蜜蜂 PX	hack
+superg	超级小蜜蜂 (galaxiaj hack)	超级小蜜蜂 (galaxiaj hack)	hack
+galapx	小蜜蜂 PX (moonaln hack)	小蜜蜂 PX (moonaln hack)	hack
 moonaln	小蜜蜂 - 月球异形	小蜜蜂 - 月球异形	[Nichibutsu] (Karateco license)
-galap1	小蜜蜂 P1	小蜜蜂 P1	hack
-galap4	小蜜蜂 P4	小蜜蜂 P4	hack
-galturbo	小蜜蜂 - 极速版	小蜜蜂 - 极速版	hack
-swarm	小蜜蜂 (hack of Galaxian)	小蜜蜂 (hack of Galaxian)	[Namco] (Sub-Electro bootleg)
+galap1	小蜜蜂 P1 (galaxiaj hack)	小蜜蜂 P1 (galaxiaj hack)	hack
+galap4	小蜜蜂 P4 (hack)	小蜜蜂 P4 (hack)	G.G.I
+galturbo	小蜜蜂 - 极速版 (superg hack)	小蜜蜂 - 极速版 (superg hack)	hack
+swarm	小蜜蜂 (盗版?)	小蜜蜂 (盗版?)	Subelectro
 zerotime	小蜜蜂 - 难度加强版	小蜜蜂 - 难度加强版	Petaco S.A.
-starfght	小蜜蜂 (盗版 of Galaxian)	小蜜蜂 (盗版 of Galaxian)	Jeutel
+starfght	小蜜蜂	小蜜蜂	Jeutel
 galaxbsf	小蜜蜂 (盗版)	小蜜蜂 (盗版)	bootleg
 tst_galx	小蜜蜂 - 测试版	小蜜蜂 - 测试版	Test ROM
 gmgalax	小精灵 Galaxian (盗版)	小精灵 Galaxian (盗版)	bootleg
@@ -146,7 +146,7 @@ mooncrs3	月冠登陆艇 (盗版 第3套)	月冠登陆艇 (盗版 第3套)	bootleg
 fantazia	月冠登陆艇 (盗版?)	月冠登陆艇 (盗版?)	Subelectro
 moonqsr	月球类星体 - 三台合体	月球类星体 - 三台合体	Nichibutsu
 mshuttle	登月火箭 (美版?)	登月火箭 (美版?)	Nichibutsu
-mshuttlj	登月火箭 (日版 第1套)	登月火箭 (日版 第1套)	Nichibutsu
+mshuttlj	登月火箭 (日版)	登月火箭 (日版)	Nichibutsu
 mshutlj2	登月火箭 (日版 第2套)	登月火箭 (日版 第2套)	Nichibutsu
 moonal2	小蜜蜂 2 - 月球异形 2	小蜜蜂 2 - 月球异形 2	Nichibutsu
 moonal2b	小蜜蜂 2 - 月球异形 2 (旧版)	小蜜蜂 2 - 月球异形 2 (旧版)	Nichibutsu
@@ -255,7 +255,7 @@ hustlerb	电视撞球 (盗版)	电视撞球 (盗版)	bootleg
 frogger	青蛙过河	青蛙过河	Konami
 frogseg1	青蛙过河 (Sega 第1套)	青蛙过河 (Sega 第1套)	[Konami] (Sega license)
 frogseg2	青蛙过河 (Sega 第2套)	青蛙过河 (Sega 第2套)	[Konami] (Sega license)
-froggrmc	青蛙过河 (Moon Cresta 硬件)	青蛙过河 (Moon Cresta 硬件)	bootleg?
+froggrmc	青蛙过河 (Moon Cresta 硬件)	青蛙过河 (Moon Cresta 硬件)	[Konami] (Sega license)
 amidar	雷达	雷达	Konami
 amidaru	雷达 (Stern)	雷达 (Stern)	Konami (Stern license)
 amidaro	雷达 (Olympia)	雷达 (Olympia)	Konami (Olympia license)
@@ -835,6 +835,7 @@ dkongjr	大金刚 Junior (美版)	大金刚 Junior (美版)	Nintendo of America
 dkongjrj	大金刚 Jr. (日版)	大金刚 Jr. (日版)	Nintendo
 dkngjnrj	大金刚 Junior (日版?)	大金刚 Junior (日版?)	Nintendo
 dkongjrb	大金刚 Jr. (盗版)	大金刚 Jr. (盗版)	bootleg
+jrking	大金刚 (盗版 大金刚 Jr.)	大金刚 (盗版 大金刚 Jr.)	bootleg
 dkongjre	大金刚 Jr. (容易版)	大金刚 Jr. (容易版)	Nintendo of America
 dkong3	大金刚 3 (美版)	大金刚 3 (美版)	Nintendo of America
 dkong3j	大金刚 3 (日版)	大金刚 3 (日版)	Nintendo
@@ -971,6 +972,7 @@ smgolfb	VS.男子高尔夫 (男士版, 第2套)	VS.男子高尔夫 (男士版, 第2套)	Nintendo
 vsbbaljb	VS.棒球 (日版 第3套)	VS.棒球 (日版 第3套)	Nintendo of America
 multigam	Multi 游戏 (第1套)	Multi 游戏 (第1套)	unknown
 multigmb	Multi 游戏 (第2套)	Multi 游戏 (第2套)	unknown
+multigm3	Multi 游戏 III	Multi 游戏 III	Seo Jin
 cham24	变色龙 24	变色龙 24	bootleg
 nss	Nintendo Super System BIOS	Nintendo Super System BIOS	Nintendo
 nss_ssoc	超级足球 (任天堂 Super System)	超级足球 (任天堂 Super System)	Human Inc.
@@ -1676,6 +1678,7 @@ groundfx	地面效应 (日版)	地面效应 (日版)	Taito Corporation
 undrfire	枪火之下 (世界版)	枪火之下 (世界版)	Taito Corporation Japan
 undrfiru	枪火之下 (美版)	枪火之下 (美版)	Taito America Corporation
 undrfirj	枪火之下 (日版)	枪火之下 (日版)	Taito Corporation
+cbombers	追踪轰炸机	追踪轰炸机	Taito Corporation
 finalb	最终打击 (世界版)	最终打击 (世界版)	Taito Corporation Japan
 finalbj	最终打击 (日版)	最终打击 (日版)	Taito Corporation
 finalbu	最终打击 (美版)	最终打击 (美版)	Taito America Corporation
@@ -2623,7 +2626,8 @@ ddrs2k	劲舞革命 2000 (GC905 VER. AAA)	劲舞革命 2000 (GC905 VER. AAA)	Konami
 ddrs2kj	劲舞革命 2000 (GC905 VER. JAA)	劲舞革命 2000 (GC905 VER. JAA)	Konami
 dsfdct	劲舞革命 - 美梦成真 (GC910 VER. JCA)	劲舞革命 - 美梦成真 (GC910 VER. JCA)	Konami
 dsfdcta	劲舞革命 - 美梦成真 (GC910 VER. JAA)	劲舞革命 - 美梦成真 (GC910 VER. JAA)	Konami
-drmn2m	青春鼓王 2度混合 (GE912 VER. JAA)	青春鼓王 2度混合 (GE912 VER. JAA)	Konami
+drmn2m	青春鼓王 2度混合 (GE912 VER. JAB)	青春鼓王 2度混合 (GE912 VER. JAB)	Konami
+drmn2mpu	青春鼓王 2度混合 Session Power Up Kit (GE912 VER. JAB)	青春鼓王 2度混合 Session Power Up Kit (GE912 VER. JAB)	Konami
 dncfrks	疯狂劲舞 (G*874 VER. KAA)	疯狂劲舞 (G*874 VER. KAA)	Konami
 dmx	疯狂劲舞 (G*874 VER. JAA)	疯狂劲舞 (G*874 VER. JAA)	Konami
 gtrfrk3m	吉他旋律 3度混合 (GE949 VER. JAC)	吉他旋律 3度混合 (GE949 VER. JAC)	Konami
@@ -4171,6 +4175,7 @@ dbz	七龙珠 Z	七龙珠 Z	Banpresto
 dbz2	七龙珠 Z 2 - 超武斗大会	七龙珠 Z 2 - 超武斗大会	Banpresto
 bishi	柯纳米迷你游戏 96 (ver JAA)	柯纳米迷你游戏 96 (ver JAA)	Konami
 sbishi	柯纳米迷你游戏 98 (ver JAA)	柯纳米迷你游戏 98 (ver JAA)	Konami
+sbishik	柯纳米迷你游戏 98 (ver KAA)	柯纳米迷你游戏 98 (ver KAA)	Konami
 overdriv	赛车 OD 档	赛车 OD 档	Konami
 gradius3	宇宙巡航舰 Ⅲ (日版)	宇宙巡航舰 Ⅲ (日版)	Konami
 grdius3a	宇宙巡航舰 Ⅲ (亚洲版)	宇宙巡航舰 Ⅲ (亚洲版)	Konami
@@ -4626,6 +4631,7 @@ skullxb1	神鬼奇航 - 鬼盗船魔咒 (rev 1)	神鬼奇航 - 鬼盗船魔咒 (rev 1)	Atari Games
 cyberbt	2072 年未来橄榄球 (rev 2)	2072 年未来橄榄球 (rev 2)	Atari Games
 cyberbt1	2072 年未来橄榄球 (rev 1)	2072 年未来橄榄球 (rev 1)	Atari Games
 badlands	环绕赛车 - 崎岖之路	环绕赛车 - 崎岖之路	Atari Games
+badlandb	环绕赛车 - 崎岖之路 (盗版)	环绕赛车 - 崎岖之路 (盗版)	[Atari Games] (Playmark bootleg)
 klax	旋转方块 (第1套)	旋转方块 (第1套)	Atari Games
 klax2	旋转方块 (第2套)	旋转方块 (第2套)	Atari Games
 klax3	旋转方块 (第3套)	旋转方块 (第3套)	Atari Games
@@ -4798,7 +4804,8 @@ sengokh	战国传承 (第2套)	战国传承 (第2套)	SNK
 burningf	热血快打 (第1套)	热血快打 (第1套)	SNK
 burningh	热血快打 (第2套)	热血快打 (第2套)	SNK
 lbowling	爆笑保龄球	爆笑保龄球	SNK
-gpilots	魔鬼战将	魔鬼战将	SNK
+gpilots	魔鬼战将 / 幽灵战区 (第1套)	魔鬼战将 / 幽灵战区 (第1套)	SNK
+gpilotsh	魔鬼战将 / 幽灵战区 (第2套)	魔鬼战将 / 幽灵战区 (第2套)	SNK
 joyjoy	阳光方块	阳光方块	SNK
 bjourney	拉吉少年	拉吉少年	Alpha Denshi Co.
 quizdais	问答大搜查线 - 最后倒计时	问答大搜查线 - 最后倒计时	SNK
@@ -4811,8 +4818,7 @@ legendos	小拳王	小拳王	SNK
 2020bbh	2020 年超级棒球 (第3套)	2020 年超级棒球 (第3套)	SNK / Pallas
 socbrawl	喧哗足球 / 机器人足球 (第1套)	喧哗足球 / 机器人足球 (第1套)	SNK
 socbrala	喧哗足球 / 机器人足球 (第2套)	喧哗足球 / 机器人足球 (第2套)	SNK
-roboarmy	机甲神兵 (第1套)	机甲神兵 (第1套)	SNK
-roboarma	机甲神兵 (第2套)	机甲神兵 (第2套)	SNK
+roboarmy	机甲神兵	机甲神兵	SNK
 fatfury1	饿狼传说 - 宿命之战	饿狼传说 - 宿命之战	SNK
 fbfrenzy	疯狂橄榄球	疯狂橄榄球	SNK
 bakatono	傻瓜殿下麻雀漫游记	傻瓜殿下麻雀漫游记	Monolith Corp.
@@ -4824,7 +4830,8 @@ bstars2	棒球之星 2	棒球之星 2	SNK
 quizdai2	问答 大搜查线 Part 2 - 问答迷侦探 Neo & Geo	问答 大搜查线 Part 2 - 问答迷侦探 Neo & Geo	SNK
 3countb	火线摔跤	火线摔跤	SNK
 aof	龙虎之拳	龙虎之拳	SNK
-samsho	侍魂 - 十二剑手	侍魂 - 十二剑手	SNK
+samsho	侍魂 - 十二剑手 (第1套)	侍魂 - 十二剑手 (第1套)	SNK
+samshoh	侍魂 - 十二剑手 (第2套)	侍魂 - 十二剑手 (第2套)	SNK
 tophuntr	顶尖猎人 - 罗迪 & 凯茜 (第1套)	顶尖猎人 - 罗迪 & 凯茜 (第1套)	SNK
 tophunta	顶尖猎人 - 罗迪 & 凯茜 (第2套)	顶尖猎人 - 罗迪 & 凯茜 (第2套)	SNK
 fatfury2	饿狼传说 2 - 新的战斗	饿狼传说 2 - 新的战斗	SNK
@@ -4996,7 +5003,7 @@ samsho5	侍魂 Ⅴ / 侍魂 零 (第1套)	侍魂 Ⅴ / 侍魂 零 (第1套)	Yuki Enterprise / SN
 samsho5h	侍魂 Ⅴ / 侍魂 零 (第2套)	侍魂 Ⅴ / 侍魂 零 (第2套)	Yuki Enterprise / SNK Playmore
 samsho5b	侍魂 Ⅴ / 侍魂 零 (盗版)	侍魂 Ⅴ / 侍魂 零 (盗版)	bootleg
 kf2k3pcb	拳皇 2003 (日版, JAMMA PCB)	拳皇 2003 (日版, JAMMA PCB)	SNK Playmore
-kof2003	拳皇 2003 (世界版 / 美版, MVS)	拳皇 2003 (世界版 / 美版, MVS)	SNK Playmore
+kof2003	拳皇 2003	拳皇 2003	SNK Playmore
 kf2k3bl	拳皇 2003 (盗版 第1套)	拳皇 2003 (盗版 第1套)	bootleg
 kf2k3bla	拳皇 2003 (盗版 第2套)	拳皇 2003 (盗版 第2套)	bootleg
 kf2k3pl	拳皇 2004 Plus / Hero (盗版)	拳皇 2004 Plus / Hero (盗版)	bootleg
@@ -5083,8 +5090,9 @@ ddragonu	双截龙 (美版 第1套)	双截龙 (美版 第1套)	[Technos] (Taito America licens
 ddragoua	双截龙 (美版 第2套)	双截龙 (美版 第2套)	[Technos] (Taito America license)
 ddragonw	双截龙 (世界版 第1套)	双截龙 (世界版 第1套)	[Technos] (Taito license)
 ddragnw1	双截龙 (世界版 第2套)	双截龙 (世界版 第2套)	[Technos] (Taito license)
-ddragonb	双截龙 (盗版 with HD6309)	双截龙 (盗版 with HD6309)	bootleg
+ddragonb	双截龙 (盗版 HD6309)	双截龙 (盗版 HD6309)	bootleg
 ddragnba	双截龙 (盗版 M6803)	双截龙 (盗版 M6803)	bootleg
+ddgn6809	双截龙 (盗版 3xM6809)	双截龙 (盗版 3xM6809)	bootleg
 spdodgeb	热血高校躲避球 (美版)	热血高校躲避球 (美版)	Technos
 nkdodge	热血高校躲避球 (日版)	热血高校躲避球 (日版)	Technos
 nkdodgeb	热血高校躲避球 (日版, 盗版)	热血高校躲避球 (日版, 盗版)	Technos
@@ -5188,7 +5196,8 @@ blkhearj	暗黑之心 (日版)	暗黑之心 (日版)	UPL
 acrobatm	风云战机	风云战机	UPL (Taito license)
 strahl	钢铁要塞 (日版 第1套)	钢铁要塞 (日版 第1套)	UPL
 strahla	钢铁要塞 (日版 第2套)	钢铁要塞 (日版 第2套)	UPL
-bjtwin	炸弹杰克 2	炸弹杰克 2	NMK
+bjtwin	炸弹杰克 (第1套)	炸弹杰克 (第1套)	NMK
+bjtwina	炸弹杰克 (第2套)	炸弹杰克 (第2套)	NMK
 tdragon2	雷龙 2 (9th Nov. 1993)	雷龙 2 (9th Nov. 1993)	NMK
 tdragn2a	雷龙 2 (1st Oct. 1993)	雷龙 2 (1st Oct. 1993)	NMK
 bigbang	大轰动 (9th Nov. 1993)	大轰动 (9th Nov. 1993)	NMK
@@ -5199,8 +5208,8 @@ macross	超时空要塞	超时空要塞	Banpresto
 riot	雷轧斗	雷轧斗	NMK
 gunnail	炮钉 (28th May. 1992)	炮钉 (28th May. 1992)	NMK / Tecmo
 macross2	超时空要塞 II	超时空要塞 II	Banpresto
-sabotenb	仙人掌兄弟 (9th Mar. 1992 / 第1套)	仙人掌兄弟 (9th Mar. 1992 / 第1套)	NMK / Tecmo
-sabotnba	仙人掌兄弟 (9th Mar. 1992 / 第2套)	仙人掌兄弟 (9th Mar. 1992 / 第2套)	NMK / Tecmo
+sabotenb	仙人掌兄弟 (第1套)	仙人掌兄弟 (第1套)	NMK / Tecmo
+sabotnba	仙人掌兄弟 (第2套)	仙人掌兄弟 (第2套)	NMK / Tecmo
 nouryoku	脑力向上委员会	脑力向上委员会	Tecmo
 raphero	雷豹英雄 (日版?)	雷豹英雄 (日版?)	Media Trading Corp
 mustangb	野马战机 (盗版)	野马战机 (盗版)	bootleg
@@ -5290,7 +5299,9 @@ crusnwld	极速狂飙 (rev L2.4)	极速狂飙 (rev L2.4)	Midway
 crusnw23	极速狂飙 2 (rev L2.3)	极速狂飙 2 (rev L2.3)	Midway
 crusnw20	极速狂飙 2 (rev L2.0)	极速狂飙 2 (rev L2.0)	Midway
 crusnw13	极速狂飙 2 (rev L1.3)	极速狂飙 2 (rev L1.3)	Midway
-offroadc	越野车队	越野车队	Midway
+offroadc	越野车队 (v1.40)	越野车队 (v1.40)	Midway
+offrodc3	越野车队 (v1.30)	越野车队 (v1.30)	Midway
+offrodc1	越野车队 (v1.10)	越野车队 (v1.10)	Midway
 wargods	斗神传说	斗神传说	Midway
 mk4	真人快打 4 (版本 3.0)	真人快打 4 (版本 3.0)	Midway
 mk4a	真人快打 4 (版本 2.1)	真人快打 4 (版本 2.1)	Midway
@@ -5886,6 +5897,7 @@ penbros	企鹅兄弟 (日版)	企鹅兄弟 (日版)	Subsino
 deerhunt	猎鹿 USA V4.3	猎鹿 USA V4.3	Sammy USA Corporation
 deerhuna	猎鹿 USA V4.2	猎鹿 USA V4.2	Sammy USA Corporation
 deerhunb	猎鹿 USA V4.0	猎鹿 USA V4.0	Sammy USA Corporation
+deerhunc	猎鹿 USA V2	猎鹿 USA V2	Sammy USA Corporation
 turkhunt	猎鹿 USA V1.0	猎鹿 USA V1.0	Sammy USA Corporation
 wschamp	飞行射击冠军 V2.0	飞行射击冠军 V2.0	Sammy USA Corporation
 wschampa	飞行射击冠军 V1.01	飞行射击冠军 V1.01	Sammy USA Corporation
@@ -6487,6 +6499,7 @@ evosocc	进化足球 EVO	进化足球 EVO	Evoga
 inquiztr	反馈	反馈	BFM
 escounts	每秒计算 (39-360-053)	每秒计算 (39-360-053)	BFM
 trebltop	三倍完成 (39-360-070)	三倍完成 (39-360-070)	BFM
+beeline	直线 (39-360-075)	直线 (39-360-075)	BFM
 quizvadr	测试数据 (39-360-078)	测试数据 (39-360-078)	BFM
 qos	运动问答 (39-960-107)	运动问答 (39-960-107)	BFM
 qosa	运动问答 (39-960-099)	运动问答 (39-960-099)	BFM
@@ -6524,6 +6537,10 @@ quickjac	音速杰克	音速杰克	ADP
 skattv	史卡特电视台	史卡特电视台	ADP
 skattva	史卡特电视台 (版本 TS3)	史卡特电视台 (版本 TS3)	ADP
 fashiong	时尚赌徒	时尚赌徒	ADP
+guab	Give us a Break (6th edition)	Give us a Break (6th edition)	JPM
+guab3	Give us a Break (3rd edition)	Give us a Break (3rd edition)	JPM
+tenup	十上 (compendium 17)	十上 (compendium 17)	JPM
+tenup3	十上 (compendium 3)	十上 (compendium 3)	JPM
 cluedo	妙探寻凶 (prod. 2D)	妙探寻凶 (prod. 2D)	JPM
 cluedo2c	妙探寻凶 (prod. 2C)	妙探寻凶 (prod. 2C)	JPM
 cluedo2	妙探寻凶 (prod. 2)	妙探寻凶 (prod. 2)	JPM
@@ -6940,32 +6957,32 @@ pottnpkr	杰克的纸牌 (盗版)	杰克的纸牌 (盗版)	Bootleg
 pottnpkb	杰克的纸牌 (盗版2)	杰克的纸牌 (盗版2)	Bootleg
 comg076	欧米伽 - 游戏 7.6 (街机 扑克)	欧米伽 - 游戏 7.6 (街机 扑克)	Cal Omega Inc.
 comg079	欧米伽 - 游戏 7.9 (街机 扑克)	欧米伽 - 游戏 7.9 (街机 扑克)	Cal Omega Inc.
-comg094	欧米伽 - 游戏 9.4 (赌博)	欧米伽 - 游戏 9.4 (赌博)	Cal Omega Inc.
-comg107	欧米伽 - 游戏 10.7 (赌博游戏)	欧米伽 - 游戏 10.7 (赌博游戏)	Cal Omega Inc.
-comg125	欧米伽 - 游戏 12.5 (赌博)	欧米伽 - 游戏 12.5 (赌博)	Cal Omega Inc.
-comg127	欧米伽 - 游戏 12.7 (赌博)	欧米伽 - 游戏 12.7 (赌博)	Cal Omega Inc.
-comg128	欧米伽 - 游戏 12.8 (街机游戏)	欧米伽 - 游戏 12.8 (街机游戏)	Cal Omega Inc.
-comg134	欧米伽 - 游戏 13.4 (推杆 赌博)	欧米伽 - 游戏 13.4 (推杆 赌博)	Cal Omega Inc.
-comg145	欧米伽 - 游戏 14.5 (Pixels)	欧米伽 - 游戏 14.5 (Pixels)	Cal Omega Inc.
-comg157	欧米伽 - 游戏 15.7 (Double-Draw Poker)	欧米伽 - 游戏 15.7 (Double-Draw Poker)	Cal Omega Inc.
-comg159	欧米伽 - 游戏 15.9 (Wild Double-Up)	欧米伽 - 游戏 15.9 (Wild Double-Up)	Cal Omega Inc.
-comg164	欧米伽 - 游戏 16.4 (赌博)	欧米伽 - 游戏 16.4 (赌博)	Cal Omega Inc.
-comg168	欧米伽 - 游戏 16.8 (赌博)	欧米伽 - 游戏 16.8 (赌博)	Cal Omega Inc.
-comg172	欧米伽 - 游戏 17.2 (Double Double Poker)	欧米伽 - 游戏 17.2 (Double Double Poker)	Cal Omega Inc.
-comg175	欧米伽 - 游戏 17.51 (Gaming Draw Poker)	欧米伽 - 游戏 17.51 (Gaming Draw Poker)	Cal Omega / Casino Electronics Inc.
-comg176	欧米伽 - 游戏 17.6 (推杆 赌博)	欧米伽 - 游戏 17.6 (推杆 赌博)	Cal Omega Inc.
-comg181	欧米伽 - 游戏 18.1 (推杆 赌博)	欧米伽 - 游戏 18.1 (推杆 赌博)	Cal Omega Inc.
-comg183	欧米伽 - 游戏 18.3 (Pixels)	欧米伽 - 游戏 18.3 (Pixels)	Cal Omega Inc.
-comg185	欧米伽 - 游戏 18.5 (Pixels)	欧米伽 - 游戏 18.5 (Pixels)	Cal Omega Inc.
-comg186	欧米伽 - 游戏 18.6 (Pixels)	欧米伽 - 游戏 18.6 (Pixels)	Cal Omega Inc.
-comg204	欧米伽 - 游戏 20.4 (Super Blackjack)	欧米伽 - 游戏 20.4 (Super Blackjack)	Cal Omega Inc.
-comg208	欧米伽 - 游戏 20.8 (Winner's Choice)	欧米伽 - 游戏 20.8 (Winner's Choice)	Cal Omega Inc.
-comg227	欧米伽 - 游戏 22.7 (Amusement Poker, d/d)	欧米伽 - 游戏 22.7 (Amusement Poker, d/d)	Cal Omega Inc.
-comg236	欧米伽 - 游戏 23.6 (Hotline)	欧米伽 - 游戏 23.6 (Hotline)	Cal Omega Inc.
-comg239	欧米伽 - 游戏 23.9 (Gaming Draw Poker)	欧米伽 - 游戏 23.9 (Gaming Draw Poker)	Cal Omega / Casino Electronics Inc.
-comg246	欧米伽 - 游戏 24.6 (Hotline)	欧米伽 - 游戏 24.6 (Hotline)	Cal Omega Inc.
-comg272a	欧米伽 - 游戏 27.2 (赌博, 娱乐)	欧米伽 - 游戏 27.2 (赌博, 娱乐)	Cal Omega Inc.
-comg272b	欧米伽 - 游戏 27.2 (Keno, gaming)	欧米伽 - 游戏 27.2 (Keno, gaming)	Cal Omega Inc.
+comg094	欧米伽 - 游戏 9.4 (基诺)	欧米伽 - 游戏 9.4 (基诺)	Cal Omega Inc.
+comg107	欧米伽 - 游戏 10.7 (梭哈)	欧米伽 - 游戏 10.7 (梭哈)	Cal Omega Inc.
+comg125	欧米伽 - 游戏 12.5 (宾果)	欧米伽 - 游戏 12.5 (宾果)	Cal Omega Inc.
+comg127	欧米伽 - 游戏 12.7 (基诺)	欧米伽 - 游戏 12.7 (基诺)	Cal Omega Inc.
+comg128	欧米伽 - 游戏 12.8 (梭哈)	欧米伽 - 游戏 12.8 (梭哈)	Cal Omega Inc.
+comg134	欧米伽 - 游戏 13.4 (宾果)	欧米伽 - 游戏 13.4 (宾果)	Cal Omega Inc.
+comg145	欧米伽 - 游戏 14.5 (画素)	欧米伽 - 游戏 14.5 (画素)	Cal Omega Inc.
+comg157	欧米伽 - 游戏 15.7 (梭哈)	欧米伽 - 游戏 15.7 (梭哈)	Cal Omega Inc.
+comg159	欧米伽 - 游戏 15.9 (梭哈)	欧米伽 - 游戏 15.9 (梭哈)	Cal Omega Inc.
+comg164	欧米伽 - 游戏 16.4 (基诺)	欧米伽 - 游戏 16.4 (基诺)	Cal Omega Inc.
+comg168	欧米伽 - 游戏 16.8 (基诺)	欧米伽 - 游戏 16.8 (基诺)	Cal Omega Inc.
+comg172	欧米伽 - 游戏 17.2 (梭哈)	欧米伽 - 游戏 17.2 (梭哈)	Cal Omega Inc.
+comg175	欧米伽 - 游戏 17.51 (梭哈)	欧米伽 - 游戏 17.51 (梭哈)	Cal Omega / Casino Electronics Inc.
+comg176	欧米伽 - 游戏 17.6 (宾果)	欧米伽 - 游戏 17.6 (宾果)	Cal Omega Inc.
+comg181	欧米伽 - 游戏 18.1 (宾果)	欧米伽 - 游戏 18.1 (宾果)	Cal Omega Inc.
+comg183	欧米伽 - 游戏 18.3 (画素)	欧米伽 - 游戏 18.3 (画素)	Cal Omega Inc.
+comg185	欧米伽 - 游戏 18.5 (画素)	欧米伽 - 游戏 18.5 (画素)	Cal Omega Inc.
+comg186	欧米伽 - 游戏 18.6 (画素)	欧米伽 - 游戏 18.6 (画素)	Cal Omega Inc.
+comg204	欧米伽 - 游戏 20.4 (超级21点)	欧米伽 - 游戏 20.4 (超级21点)	Cal Omega Inc.
+comg208	欧米伽 - 游戏 20.8 (赢家的选择)	欧米伽 - 游戏 20.8 (赢家的选择)	Cal Omega Inc.
+comg227	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	Cal Omega Inc.
+comg236	欧米伽 - 游戏 23.6 (热线)	欧米伽 - 游戏 23.6 (热线)	Cal Omega Inc.
+comg239	欧米伽 - 游戏 23.9 (梭哈)	欧米伽 - 游戏 23.9 (梭哈)	Cal Omega / Casino Electronics Inc.
+comg246	欧米伽 - 游戏 24.6 (热线)	欧米伽 - 游戏 24.6 (热线)	Cal Omega Inc.
+comg272a	欧米伽 - 游戏 27.2 (基诺, 娱乐)	欧米伽 - 游戏 27.2 (基诺, 娱乐)	Cal Omega Inc.
+comg272b	欧米伽 - 游戏 27.2 (基诺, 赌博)	欧米伽 - 游戏 27.2 (基诺, 赌博)	Cal Omega Inc.
 comg903d	欧米伽 - 系统 903 Diag.PROM	欧米伽 - 系统 903 Diag.PROM	Cal Omega Inc.
 comg905d	欧米伽 - 系统 905 Diag.PROM	欧米伽 - 系统 905 Diag.PROM	Cal Omega Inc.
 elgrande	盛大的El - 5张牌平局 (新版)	盛大的El - 5张牌平局 (新版)	Tuni Electro Service / E.T. Marketing
@@ -7029,6 +7046,7 @@ blazlaz	炙热战机	炙热战机	Hudson Soft
 paranoia	偏执狂	偏执狂	Naxat Soft
 vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
 shadfgtr	暗影战士	暗影战士	Sega?
+showhand	梭哈	梭哈	Astro Corp.
 knightsh	圆桌骑士 (hack)	圆桌骑士 (hack)	bootleg
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 sf2m8	街头霸王 II' - 四大天王 (M8)	街头霸王 II' - 四大天王 (M8)	bootleg
@@ -7146,8 +7164,19 @@ snes	超级任天堂游戏系统 (NTSC)	超级任天堂游戏系统 (NTSC)	Nintendo
 snespal	超级任天堂游戏系统 (PAL)	超级任天堂游戏系统 (PAL)	Nintendo
 gba	任天堂GBA掌上游戏系统	任天堂GBA掌上游戏系统	Nintendo
 megaduck	世嘉MCB掌上游戏系统	世嘉MCB掌上游戏系统	Creatronic/Videojet/Timlex/Cougar
+gamegear	Game Gear (Europe/America)	Game Gear (Europe/America)	Sega
+gamegeaj	Game Gear (日版)	Game Gear (日版)	Sega
+sms	世嘉四代 II	世嘉四代 II	Sega
+sms1	世嘉四代 I	世嘉四代 I	Sega
+sms1pal	世嘉四代 I (PAL)	世嘉四代 I (PAL)	Sega
+smspal	世嘉四代 II (PAL)	世嘉四代 II (PAL)	Sega
+smsj	世嘉四代 (日版)	世嘉四代 (日版)	Sega
+sg1000m3	SG-1000 Mark III	SG-1000 Mark III	Sega
+sms2kr	Gam*Boy II (Korea)	Gam*Boy II (Korea)	Samsung
+smssdisp	Master System Store Display Unit	Master System Store Display Unit	Sega
 megadrij	世嘉MD驱动 (日版, NTSC)	世嘉MD驱动 (日版, NTSC)	Sega
 genesis	世嘉五代 (美版, NTSC)	世嘉五代 (美版, NTSC)	Sega
+gensvp	世嘉五代 (美版, NTSC, w/SVP)	世嘉五代 (美版, NTSC, w/SVP)	Sega
 megadriv	世嘉MD驱动 (欧版, PAL)	世嘉MD驱动 (欧版, PAL)	Sega
 pce	PC Engine	PC Engine	Nippon Electronic Company
 tg16	TurboGrafx 16	TurboGrafx 16	Nippon Electronic Company
