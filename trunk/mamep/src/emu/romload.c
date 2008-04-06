@@ -397,7 +397,7 @@ static void display_loading_rom_message(const char *name, rom_load_data *romdata
 {
 	char buffer[200];
 
-	if (name != NULL)
+	if (name != NULL && romdata->romstotal > 0 /* fixed crash in sms */)
 		sprintf(buffer, _("Loading (%d%%)"), 100 * romdata->romsloaded / romdata->romstotal);
 	else
 		sprintf(buffer, _("Loading Complete"));
