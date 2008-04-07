@@ -1564,8 +1564,10 @@ static void m68kcore_init(running_machine *machine)
 			m68k_core = 0;
 		else if (mame_stricmp(stemp, "drc") == 0)
 			m68k_core = 1;
+#if (HAS_M68000ASM)
 		else if (mame_stricmp(stemp, "asm") == 0)
 			m68k_core = 2;
+#endif
 		else
 		{
 			m68k_core = options_get_int(mame_options(), OPTION_M68K_CORE);
