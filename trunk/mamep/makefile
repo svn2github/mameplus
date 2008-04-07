@@ -132,10 +132,10 @@ X86_MIPS3_DRC = 1
 X86_PPC_DRC = 1
 
 # uncomment next line to use Assembler 68000 engine
-X86_ASM_68000 = 1
+# X86_ASM_68000 = 1
 
 # uncomment next line to use Assembler 68010 engine
-X86_ASM_68010 = 1
+# X86_ASM_68010 = 1
 
 # uncomment next line to use Assembler 68020 engine
 # X86_ASM_68020 = 1
