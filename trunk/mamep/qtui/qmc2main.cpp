@@ -93,6 +93,8 @@ MainWindow::MainWindow(QWidget *parent)
 	gamelist = new Gamelist(this);
 	optUtils = new OptionUtils(this);
 
+	dlgOptions = new Options(this);
+
 	QTimer::singleShot(0, this, SLOT(init()));
 }
 
@@ -192,15 +194,12 @@ void MainWindow::init()
 
 	// must init after win, before show()
 	optUtils->initOption();
-	
-	on_actionReload_activated();
+	gamelist->load();
 	show();
 	loadLayout();
 
-	optUtils->loadDefault("default.ini");
-	optUtils->load();
-	optUtils->load(OPTNFO_GLOBAL, "mame.ini");
-	optUtils->setupModelData(OPTNFO_GLOBAL);
+	//fixme: chain with gamelist->load(), s11n
+	gamelist->loadDefaultIni();
 
 	connect(gameListPModel,SIGNAL(layoutChanged()), gamelist, SLOT(restoreSelection()));
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
@@ -208,6 +207,17 @@ void MainWindow::init()
 			SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 			gamelist, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
 	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
+
+	connect(dlgOptions->lvGlobalOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+			optUtils, SLOT(updateModel(QListWidgetItem *)));
+	connect(dlgOptions->lvSourceOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+			optUtils, SLOT(updateModel(QListWidgetItem *)));
+	connect(dlgOptions->lvBiosOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+			optUtils, SLOT(updateModel(QListWidgetItem *)));
+	connect(dlgOptions->lvCloneofOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+			optUtils, SLOT(updateModel(QListWidgetItem *)));
+	connect(dlgOptions->lvCurrOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+			optUtils, SLOT(updateModel(QListWidgetItem *)));
 }
 
 MainWindow::~MainWindow()
@@ -238,8 +248,7 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-//	Ui::dlgOption dialog();
-//	dialog.exec();
+	dlgOptions->exec();
 }
 
 void MainWindow::initSettings()
@@ -251,6 +260,7 @@ void MainWindow::loadLayout()
 {
 	restoreGeometry(guisettings.value("window_geometry").toByteArray());
 	restoreState(guisettings.value("window_state").toByteArray());
+	dlgOptionsGeo = guisettings.value("option_geometry").toByteArray();
 
 	gamelist->restoreSelection(guisettings.value("default_game", "pacman").toString());
 }
@@ -259,6 +269,7 @@ void MainWindow::saveLayout()
 {
 	guisettings.setValue("window_geometry", saveGeometry());
 	guisettings.setValue("window_state", saveState());
+	guisettings.setValue("option_geometry", dlgOptionsGeo);
 	guisettings.setValue("column_state", treeViewGameList->header()->saveState());
 	guisettings.setValue("sort_column", treeViewGameList->header()->sortIndicatorSection());
 	guisettings.setValue("sort_reverse", (treeViewGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
@@ -312,7 +323,7 @@ int main(int argc, char *argv[])
 	
 	utils = new Utils(0);
 	win = new MainWindow(0);
-	qmc2ProcessManager = new ProcessManager(win);
+	procMan = new ProcessManager(win);
 
 	return qmc2App.exec();
 }

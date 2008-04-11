@@ -1,6 +1,6 @@
 #include "qmc2main.h"
 
-ProcessManager *qmc2ProcessManager = NULL;
+ProcessManager *procMan = NULL;
 
 ProcessManager::ProcessManager(QWidget *parent)
   : QObject(parent)

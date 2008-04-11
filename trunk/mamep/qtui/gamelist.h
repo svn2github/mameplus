@@ -165,7 +165,7 @@ class Gamelist : public QObject
 
 public:
 	QProcess *loadProc;
-	QString gamelistBuffer;
+	QString mameOutputBuf;
 	QStringList xmlLines;
 	static QStringList phraseTranslatorList;
 	QTime loadTimer;
@@ -198,11 +198,14 @@ public:
 
 public slots:
 	void load();
+	void loadDefaultIni();
 
 	// process management
 	void loadStarted();
 	void loadFinished(int, QProcess::ExitStatus);
 	void loadReadyReadStandardOutput();
+	void loadDefaultIniFinished(int, QProcess::ExitStatus);
+	void loadDefaultIniReadyReadStandardOutput();
 
 	// internal methods
 	void parse();

@@ -82,14 +82,15 @@ public:
 	bool isTitle(const QModelIndex &);
 
 public slots:
-	void loadDefault(const QString &);
+	void loadDefault(QString);
 	void load();
 	void load(int, const QString &);
 	void save(int , const QString &, const QString &);
 	QHash<QString, QString> readIniFile(const QString &);
 
 	void initOption();
-	void setupModelData(int optType);
+	void updateModel(QListWidgetItem *currItem);
+	void setupModelData(QString, int);
 //	void exportToIni(QString useFileName = QString());
 //	void importFromIni(QString useFileName = QString());
 };
@@ -108,10 +109,11 @@ enum
 class OptionInfo : public QObject
 {
 public:
+	QListWidget *catView;
 	QTreeView *optView;
 	QStandardItemModel *optModel;
 	
-	OptionInfo(QTreeView *optView, QObject *parent = 0);
+	OptionInfo(QListWidget *, QTreeView *, QObject *parent = 0);
 };
 
 #endif

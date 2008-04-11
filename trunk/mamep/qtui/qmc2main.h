@@ -10,8 +10,8 @@
 #include <QtXml>
 
 #include "ui_qmc2main.h"
-#include "ui_option.h"
 
+#include "options.h"
 #include "utils.h"
 #include "procmgr.h"
 #include "gamelist.h"
@@ -75,6 +75,8 @@ private:
 
 // external global variables
 extern MainWindow *win;
+extern Options *dlgOptions;
+
 extern QSettings guisettings;
 
 extern QString flyer_directory,
@@ -88,12 +90,14 @@ extern QString flyer_directory,
 extern QString roms_directory;
 extern QString snapshot_directory;
 
+extern QByteArray dlgOptionsGeo;
+
 extern QString currentGame;
 extern MameGame *mamegame;
 extern Gamelist *gamelist;
 extern GameListSortFilterProxyModel *gameListPModel;
 
-extern ProcessManager *qmc2ProcessManager;
+extern ProcessManager *procMan;
 
 extern OptionUtils *optUtils;
 

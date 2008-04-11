@@ -1,26 +1,25 @@
 ﻿[basic]
-/ added translation
-/ moved cache to .ini
-/ responsive list.xml export
-/ scale snap
-1 settings dialog
+/ settings dialog
 1 reset settings button
 1 start mame core
 1 all filters: orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
 1 bios support, audit selected bios only
 1 remove/add ini entries
-* switch tree/combobox
-* fullscreen switch
-* export roms to folders
-* delete roms,cfg,nvram...
 * general info page
-* UI style: compact, full, MAMEUI classic
-* ips
-* link option scrolling
+* switch tree/combobox
+* path chooser dialog
 * more responsive threading
-* adjust snap with a/r	
+* background image
+* ips
+* UI style: compact, full, MAMEUI classic
+* helpid
+* fullscreen switch
+* adjust snap with a/r
+* if ini readonly, cannot read cache
 
 [extension]
+* export roms to folders
+* delete roms,cfg,nvram...
 * export fixdat, selected fixdat only
 * ROM capa column
 * gamelist editor

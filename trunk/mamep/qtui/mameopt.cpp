@@ -29,9 +29,10 @@ enum
 	USERROLE_GUIVALLIST
 };
 
-OptionInfo::OptionInfo(QTreeView *optv, QObject *parent)
+OptionInfo::OptionInfo(QListWidget *catv, QTreeView *optv, QObject *parent)
 : QObject(parent)
 {
+	catView = catv;
 	optView = optv;
 	optModel = NULL;
 }
@@ -135,13 +136,11 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 	{
 		brush = QBrush(optUtils->inheritColor(index));
 		//render option name
-		if (index.column() == 0)
-		{
-			if (optUtils->isChanged(index))
-				option.font.setBold(true);
-		}
+		if (optUtils->isChanged(index))
+			option.font.setBold(true);
+
 		//render option value
-		else
+		if (index.column() == 1)
 		{
 			int optType = optUtils->getField(index, USERROLE_TYPE).toInt();
 			switch (optType)
@@ -193,7 +192,7 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 									  const QStyleOptionViewItem & option,
 									  const QModelIndex & index) const
 {
-	if (index.column() == 0)
+	if (index.column() == 0 || optUtils->isTitle(index))
 		return 0;
 
 	ResetWidget *resetWidget = new ResetWidget(parent);
@@ -390,7 +389,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			
 			pMameOpt->globalvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = win->treeGlobalOpt->model();
+			overrideModel = dlgOptions->treeGlobalOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 			// fall to next case
@@ -405,7 +404,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			{
 				pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-				overrideModel = win->treeSourceOpt->model();
+				overrideModel = dlgOptions->treeSourceOpt->model();
 				overrideIndex = overrideModel->index(index.row(), 1);
 				overrideModel->setData(overrideIndex, dispValue);
 				// fall to next case
@@ -422,7 +421,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			{
 				pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-				overrideModel = win->treeBiosOpt->model();
+				overrideModel = dlgOptions->treeBiosOpt->model();
 				overrideIndex = overrideModel->index(index.row(), 1);
 				overrideModel->setData(overrideIndex, dispValue);
 			}
@@ -438,7 +437,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			{
 				pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-				overrideModel = win->treeCloneofOpt->model();
+				overrideModel = dlgOptions->treeCloneofOpt->model();
 				overrideIndex = overrideModel->index(index.row(), 1);
 				overrideModel->setData(overrideIndex, dispValue);
 			}
@@ -454,7 +453,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			{
 				pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
 			
-				overrideModel = win->treeCurrOpt->model();
+				overrideModel = dlgOptions->treeCurrOpt->model();
 				overrideIndex = overrideModel->index(index.row(), 1);
 				overrideModel->setData(overrideIndex, dispValue);
 			}
@@ -676,10 +675,11 @@ QColor OptionUtils::inheritColor(const QModelIndex &index)
 	QString compVal;
 	MameOption *pMameOpt = mameOpts[optName];
 
+	// return a different color if value is not default
 	if (dispVal == optUtils->getLongValue(optName, pMameOpt->defvalue))
 		return Qt::transparent;
 	else
-		return QColor(0, 255, 0, 32);
+		return QColor(0, 255, 0, 24);
 }
 
 bool OptionUtils::isChanged(const QModelIndex &index)
@@ -740,8 +740,10 @@ OptionUtils::OptionUtils(QObject *parent)
 {
 }
 
-void OptionUtils::loadDefault(const QString &iniFileName)
+void OptionUtils::loadDefault(QString text)
 {
+	win->log(LOG_QMC2, "loadDefault(QString text)");
+
 	const QStringList optCatList = (QStringList()
 			<< "00_Global Misc_00_CORE CONFIGURATION"
 			<< "00_Global Misc_01_CORE PALETTE"
@@ -751,14 +753,15 @@ void OptionUtils::loadDefault(const QString &iniFileName)
 			<< "01_Global Path_01_CORE OUTPUT DIRECTORY"
 			<< "01_Global Path_02_CORE FILENAME"
 
-			<< "02_Video_00_CORE PERFORMANCE"
-			<< "02_Video_01_CORE ROTATION"
-			<< "02_Video_02_CORE SCREEN"
-			<< "02_Video_03_WINDOWS VIDEO"
-			<< "02_Video_04_DIRECTDRAW-SPECIFIC"
-			<< "02_Video_05_DIRECT3D-SPECIFIC"
-			<< "02_Video_06_PER-WINDOW VIDEO"
-			<< "02_Video_07_FULL SCREEN"
+			<< "02_Video_02_CORE ROTATION"
+			<< "02_Video_03_CORE SCREEN"
+			<< "02_Video_04_FULL SCREEN"
+			<< "02_Video_05_WINDOWS VIDEO"
+			<< "02_Video_06_DIRECTDRAW-SPECIFIC"
+			<< "02_Video_07_DIRECT3D-SPECIFIC"
+			<< "02_Video_08_CORE PERFORMANCE"
+			<< "02_Video_09_WINDOWS PERFORMANCE"
+			<< "02_Video_10_PER-WINDOW VIDEO"
 
 			<< "03_Audio_00_CORE SOUND"
 			<< "03_Audio_01_WINDOWS SOUND"
@@ -770,71 +773,66 @@ void OptionUtils::loadDefault(const QString &iniFileName)
 			<< "05_Vector_00_CORE VECTOR"
 
 			<< "06_Misc_00_CORE MISC"
-			<< "06_Misc_01_CORE STATE/PLAYBACK"
-			<< "06_Misc_02_CORE ARTWORK"
-			<< "06_Misc_03_WINDOWS PERFORMANCE"
-			<< "06_Misc_04_CORE DEBUGGING"
-			<< "06_Misc_05_WINDOWS DEBUGGING"
-			<< "06_Misc_06_MESS SPECIFIC"
-			<< "06_Misc_07_WINDOWS MESS SPECIFIC"
+			<< "06_Misc_01_CORE ARTWORK"
+			<< "06_Misc_02_CORE STATE/PLAYBACK"
+			<< "06_Misc_03_MESS SPECIFIC"
+			<< "06_Misc_04_WINDOWS MESS SPECIFIC"
+			<< "06_Misc_05_CORE DEBUGGING"
+			<< "06_Misc_06_WINDOWS DEBUGGING"
 			);
 
-	QFile inFile(iniFileName);
 	QString line, line0;
 
-	if (inFile.open(QFile::ReadOnly | QFile::Text))
+	QTextStream in(&text);
+	in.setCodec("UTF-8");
+
+	QString header = "Error";
+
+	do
 	{
-		QTextStream in(&inFile);
-		in.setCodec("UTF-8");
-
-		QString header = "Error";
-
-		do
+		line0 = line = in.readLine().trimmed();
+		
+		//init option headers
+		if (line.startsWith("#"))
 		{
-			line0 = line = in.readLine().trimmed();
-			
-			//init option headers
-			if (line.startsWith("#"))
+			if (line.size() > 2)
 			{
-				if (line.size() > 2)
-				{
-					line.remove("#");
-					line.remove("OPTIONS");
-					line = line.trimmed();
-					
-					int c = optCatList.indexOf (QRegExp(".*" + line + ".*"));
-					if (c > 0)
-						header = optCatList[c];
-					else
-						header = "06_Misc_99_" + line;
-					
-				//	win->log(LOG_QMC2, "header: " + header);
-				}
+				line.remove("#");
+				line.remove("OPTIONS");
+				line = line.trimmed();
+				
+				int c = optCatList.indexOf (QRegExp(".*" + line + ".*"));
+				if (c > 0)
+					header = optCatList[c];
+				else
+					header = "06_Misc_99_" + line;
+				
+			//	win->log(LOG_QMC2, "header: " + header);
 			}
-			else
+		}
+		else
+		{
+			line.replace(QRegExp("(\\w+)\\s+.*"), "\\1");
+			if (line.size() > 0)
 			{
-				line.replace(QRegExp("(\\w+)\\s+.*"), "\\1");
-				if (line.size() > 0)
-				{
-					optCatMap[header] << line;
+				optCatMap[header] << line;
 
-					QStringList list = line0.split(QRegExp("\\s+"));
-					MameOption *pMameOpt = new MameOption(0);	//fixme parent
-					if (list.count() == 2)
-					{
-						pMameOpt->defvalue = list[1];
-						mameOpts[list[0]] = pMameOpt;
-					}
-					else
-					{
-						pMameOpt->defvalue = "";
-						mameOpts[line0.trimmed()] = pMameOpt;
-					}
+				QStringList list = line0.split(QRegExp("\\s+"));
+				MameOption *pMameOpt = new MameOption(0);	//fixme parent
+				if (list.count() == 2)
+				{
+					pMameOpt->defvalue = list[1];
+					mameOpts[list[0]] = pMameOpt;
+				}
+				else
+				{
+					pMameOpt->defvalue = "";
+					mameOpts[line0.trimmed()] = pMameOpt;
 				}
 			}
 		}
-		while (!line.isNull());
 	}
+	while (!line.isNull());
 }
 
 //open option template file
@@ -1058,101 +1056,154 @@ QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 void OptionUtils::initOption()
 {
 	optInfos = (QList<OptionInfo *>() 
-			<< new OptionInfo(0, win)
-			<< new OptionInfo(win->treeGlobalOpt, win)
-			<< new OptionInfo(win->treeSourceOpt, win)
-			<< new OptionInfo(win->treeBiosOpt, win)
-			<< new OptionInfo(win->treeCloneofOpt, win)
-			<< new OptionInfo(win->treeCurrOpt, win));
+			<< new OptionInfo(0, 0, dlgOptions)
+			<< new OptionInfo(dlgOptions->lvGlobalOpt, dlgOptions->treeGlobalOpt, dlgOptions)
+			<< new OptionInfo(dlgOptions->lvSourceOpt, dlgOptions->treeSourceOpt, dlgOptions)
+			<< new OptionInfo(dlgOptions->lvBiosOpt, dlgOptions->treeBiosOpt, dlgOptions)
+			<< new OptionInfo(dlgOptions->lvCloneofOpt, dlgOptions->treeCloneofOpt, dlgOptions)
+			<< new OptionInfo(dlgOptions->lvCurrOpt, dlgOptions->treeCurrOpt, dlgOptions));
+
+	for (int optType = OPTNFO_GLOBAL; optType < OPTNFO_LAST; optType++)
+	{
+		QListWidget *catView = optInfos[optType]->catView;
+		if(catView->count() == 0)
+		{
+			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), "Video", catView));
+			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/audio-x-generic.png"), "Audio", catView));
+			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/input-gaming.png"), "Control", catView));
+			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), "Vector", catView));
+			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), "Misc", catView));
+
+			catView->setViewMode(QListView::IconMode);
+			catView->setMovement(QListView::Static);
+			catView->setMaximumWidth(100);
+			catView->setSpacing(8);
+		}
+	}
 }
 
-void OptionUtils::setupModelData(int optType)
+void OptionUtils::updateModel(QListWidgetItem * currItem)
 {
-	QStandardItemModel *optModel = optInfos[optType]->optModel;
+	//fixme: hack index
+	int optType = dlgOptions->tabOptions->currentIndex();
+
+	QString filter = currItem->text();
+
+	//update mameopts
+	optUtils->load(OPTNFO_GLOBAL, "mame.ini");
+	if (optType == OPTNFO_GLOBAL)
+	{
+		win->log(LOG_QMC2, "g");
+		optUtils->setupModelData(filter, OPTNFO_GLOBAL);
+		return;
+	}
+
+	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
+	QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
+	optUtils->load(OPTNFO_SRC, iniFileName);
+	if (optType == OPTNFO_SRC)
+	{
+		win->log(LOG_QMC2, "s");
+		optUtils->setupModelData(filter, OPTNFO_SRC);
+		return;
+	}
+
+	iniFileName = "ini/fixmebios.ini";	//fixme
+	optUtils->load(OPTNFO_BIOS, iniFileName);
+	if (optType == OPTNFO_BIOS)
+	{
+		win->log(LOG_QMC2, "b");
+		optUtils->setupModelData(filter, OPTNFO_BIOS);
+		return;
+	}
+
+	iniFileName = "ini/" + gameinfo->cloneof + ".ini";
+	optUtils->load(OPTNFO_CLONEOF, iniFileName);
+	if (optType == OPTNFO_CLONEOF)
+	{
+		win->log(LOG_QMC2, "c");
+		optUtils->setupModelData(filter, OPTNFO_CLONEOF);
+		return;
+	}
+
+	iniFileName = "ini/" + currentGame + ".ini";
+	optUtils->load(OPTNFO_CURR, iniFileName);
+	if (optType == OPTNFO_CURR)
+	{
+		optUtils->setupModelData(filter, OPTNFO_CURR);
+		return;
+	}
+}
+
+void OptionUtils::setupModelData(QString filter, int optType)
+{
+	QStandardItem *item, *item2;
+	QStandardItemModel *optModel0, *optModel;
 	QTreeView *optView = optInfos[optType]->optView;
 
 	//init option listview
-	//fixme: not needed every time
-	if (optModel)
-		delete optModel;
-	optModel = new QStandardItemModel(mameOpts.size(), 2, win);
+	optModel0 = optInfos[optType]->optModel;	//preserve model and delete it later, so that scroll pos is kept
+	//fixme: not needed every time?
+	optModel = optInfos[optType]->optModel = new QStandardItemModel(win);
 	optModel->setObjectName(QString("optModel%1").arg(optType));
-	optView->setModel(optModel);
-
+	optModel->setColumnCount(2);
 	optModel->setHeaderData(0, Qt::Horizontal, QObject::tr("Option"));
 	optModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Value"));
+	optView->setModel(optModel);
 
 	int row = 0;
-	
 	foreach (QString optCatName, optCatMap.keys())
 	{
 		QStringList optNames = optCatMap[optCatName];
+		QStringList optCatNameL = optCatName.split('_');
 
-		QModelIndex index = optModel->index(row, 0, QModelIndex());
-		optModel->setData(index, optCatName.split('_').last(), Qt::DisplayRole);
-		optModel->setData(index, "OPTIONTITLE", Qt::UserRole + USERROLE_TITLE);
-		row++;
-		
-		foreach (QString optName, optNames)
+		if (filter == optCatNameL[1])
 		{
-//			win->log(LOG_QMC2, QString("%1//%2").arg(optCatName).arg(optName));
-		
-			MameOption *pMameOpt = mameOpts[optName];
+			item = new QStandardItem(optCatNameL.last());
+			item->setData("OPTIONTITLE", Qt::UserRole + USERROLE_TITLE);
+			optModel->appendRow(item);
 			
-			if (pMameOpt == NULL)
-				continue;
-	
-			QString tooltip = "[" + optName + "] " + pMameOpt->description;
-
-			// prepare GUI value desc
-			for (int i=0; i<pMameOpt->guivalues.size(); i++)
-			{
-				if (pMameOpt->guivalues[i].isEmpty())
-					pMameOpt->guivalues[i] = utils->capitalizeStr(pMameOpt->values[i]);
-			}
-
-			index = optModel->index(row, 0, QModelIndex());
-			optModel->setData(index, optUtils->getLongName(optName), Qt::DisplayRole);
-			optModel->setData(index, optName, Qt::UserRole + USERROLE_KEY);
-			optModel->setData(index, tooltip, Qt::ToolTipRole);
-
-			index = optModel->index(row, 1, QModelIndex());
-			optModel->setData(index, optUtils->getLongValue(optName, pMameOpt->currvalue));
-			optModel->setData(index, tooltip, Qt::ToolTipRole);
-
 			row++;
+			
+			foreach (QString optName, optNames)
+			{
+	//			win->log(LOG_QMC2, QString("%1//%2").arg(optCatName).arg(optName));
+			
+				MameOption *pMameOpt = mameOpts[optName];
+				
+				if (pMameOpt == NULL)
+					continue;
+		
+				QString tooltip = "[" + optName + "] " + pMameOpt->description;
+
+				// prepare GUI value desc
+				for (int i=0; i<pMameOpt->guivalues.size(); i++)
+				{
+					if (pMameOpt->guivalues[i].isEmpty())
+						pMameOpt->guivalues[i] = utils->capitalizeStr(pMameOpt->values[i]);
+				}
+
+				item = new QStandardItem(optUtils->getLongName(optName));
+				item->setData(optName, Qt::UserRole + USERROLE_KEY);
+				item->setData(tooltip, Qt::ToolTipRole);
+
+				item2 = new QStandardItem(optUtils->getLongValue(optName, pMameOpt->currvalue));
+				item2->setData(tooltip, Qt::ToolTipRole);
+
+				optModel->appendRow(QList<QStandardItem *>() << item << item2);
+
+				row++;
+			}
 		}
 	}
-/*
-	foreach (QString optName, mameOpts.keys())
-	{
-		MameOption *pMameOpt = mameOpts[optName];
 
-		QString tooltip = "[" + optName + "] " + pMameOpt->description;
+	if (optModel0)
+		delete optModel0;
 
-		// prepare GUI value desc
-		for (int i=0; i<pMameOpt->guivalues.size(); i++)
-		{
-			if (pMameOpt->guivalues[i].isEmpty())
-				pMameOpt->guivalues[i] = utils->capitalizeStr(pMameOpt->values[i]);
-		}
-
-		QModelIndex index = optModel->index(row, 0, QModelIndex());
-		optModel->setData(index, optUtils->getLongName(optName), Qt::DisplayRole);
-		optModel->setData(index, optName, Qt::UserRole + USERROLE_KEY);
-		optModel->setData(index, tooltip, Qt::ToolTipRole);
-
-		index = optModel->index(row, 1, QModelIndex());
-		optModel->setData(index, optUtils->getLongValue(optName, pMameOpt->currvalue));
-		optModel->setData(index, tooltip, Qt::ToolTipRole);
-
-		row++;
-	}
-*/
 	// share delegate among all opt treeviews
 	static OptionDelegate optdelegate(win);
 	optView->setItemDelegate(&optdelegate);
-	
+
 	optView->resizeColumnToContents(1);
 }
 

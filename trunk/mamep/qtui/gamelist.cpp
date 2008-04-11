@@ -883,27 +883,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		
 		//update statusbar
 		win->labelProgress->setText(utils->getViewString(current, COL_DESC));
-		
-/*
-		//update mameopts
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
-		QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
 
-		optUtils->load(OPTNFO_SRC, iniFileName);
-		optUtils->setupModelData(OPTNFO_SRC);
-
-		iniFileName = "ini/fixmebios.ini";	//fixme
-		optUtils->load(OPTNFO_BIOS, iniFileName);
-		optUtils->setupModelData(OPTNFO_BIOS);
-
-		iniFileName = "ini/" + gameinfo->cloneof + ".ini";
-		optUtils->load(OPTNFO_CLONEOF, iniFileName);
-		optUtils->setupModelData(OPTNFO_CLONEOF);
-
-		iniFileName = "ini/" + currentGame + ".ini";
-		optUtils->load(OPTNFO_CURR, iniFileName);
-		optUtils->setupModelData(OPTNFO_CURR);
-*/
 		selectThread.myqueue.enqueue(currentGame);
 		selectThread.update();
 
@@ -915,9 +895,12 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 void Gamelist::restoreSelection(QString gameName)
 {
+	if (!gameListModel)
+		return;
+
 	QModelIndex i;
 
-	if (mamegame && mamegame->gamenameGameInfoMap.contains(gameName))
+	if (mamegame->gamenameGameInfoMap.contains(gameName))
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 		i = gameListModel->index(0, gameinfo->pModItem);
@@ -1028,19 +1011,104 @@ void Gamelist::load()
 		return;
 	}
 
+	mameOutputBuf = "";
+	QString command = "mamep.exe";
 	QStringList args;
-	QString command;
-
-	gamelistBuffer = "";
-
-	loadTimer.start();
-	command = "mamep.exe";
 	args << "-listxml";
 
-	loadProc = qmc2ProcessManager->process(qmc2ProcessManager->start(command, args, FALSE));
-	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
-	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
+	loadTimer.start();
+
+	loadProc = procMan->process(procMan->start(command, args, FALSE));
 	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
+}
+
+void Gamelist::loadStarted()
+{
+	win->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
+}
+
+void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+	QTime elapsedTime;
+	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
+
+	win->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	parse();
+
+	//chain
+//	loadDefaultIni();
+}
+
+void Gamelist::loadReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+	QString buf = proc->readAllStandardOutput();
+	
+	//mamep: remove windows endl
+	buf.replace(QString("\r"), QString(""));
+	
+	numTotalGames += buf.count("<game name=");
+	mameOutputBuf += buf;
+
+	win->labelProgress->setText(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
+}
+
+void Gamelist::loadDefaultIni()
+{
+	mameOutputBuf = "";
+	QString command = "mamep.exe";
+	QStringList args;
+	args << "-showconfig" << "-norc";
+
+	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
+}
+
+void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	optUtils->loadDefault(mameOutputBuf);
+	optUtils->load();
+}
+
+void Gamelist::loadDefaultIniReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+	QString buf = proc->readAllStandardOutput();
+	
+	mameOutputBuf += buf;
+}
+
+void Gamelist::filterRegExpChanged()
+{
+	// multiple space-separated keywords
+	QString text = win->lineEditSearch->text();
+	// do not search less than 2 chars
+	if (text.count() == 1 && text.at(0).unicode() < 0x3000 /* CJK symbols start */)
+		return;
+
+	QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
+	text.replace(utils->spaceRegex, "*");
+
+	QRegExp regExp(text, Qt::CaseInsensitive, syntax);
+	gameListPModel->setFilterRegExp(regExp);
+	
+	win->treeViewGameList->expandAll();
+	restoreSelection(currentGame);
 }
 
 void Gamelist::parse()
@@ -1053,7 +1121,7 @@ void Gamelist::parse()
 	reader.setErrorHandler(&handler);
 
 	QXmlInputSource *pxmlInputSource = new QXmlInputSource();
-	pxmlInputSource->setData (gamelistBuffer);
+	pxmlInputSource->setData (mameOutputBuf);
 
 	win->log(LOG_QMC2, "DEBUG: Gamelist::start parse()");
 	
@@ -1074,64 +1142,12 @@ void Gamelist::parse()
 	}
 
 	delete pxmlInputSource;
-	gamelistBuffer.clear();
+	mameOutputBuf.clear();
 	win->log(LOG_QMC2, "DEBUG: Gamelist::start s11n()");
 	mamegame->s11n();
 
 	//fixme
 	load();
-}
-
-void Gamelist::loadStarted()
-{
-	win->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
-}
-
-void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	QProcess *proc = (QProcess *)sender();
-	QTime elapsedTime;
-	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
-
-	win->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
-
-	qmc2ProcessManager->procMap.remove(proc);
-	qmc2ProcessManager->procCount--;
-	loadProc = NULL;
-
-	parse();
-}
-
-void Gamelist::loadReadyReadStandardOutput()
-{
-	QProcess *proc = (QProcess *)sender();
-	QString buf = proc->readAllStandardOutput();
-	
-	//mamep: remove windows endl
-	buf.replace(QString("\r"), QString(""));
-	
-	numTotalGames += buf.count("<game name=");
-	gamelistBuffer += buf;
-
-	win->labelProgress->setText(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
-}
-
-void Gamelist::filterRegExpChanged()
-{
-	// multiple space-separated keywords
-	QString text = win->lineEditSearch->text();
-	// do not search less than 2 chars
-	if (text.count() == 1 && text.at(0).unicode() < 0x3000 /* CJK symbols start */)
-		return;
-
-	QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
-	text.replace(utils->spaceRegex, "*");
-
-	QRegExp regExp(text, Qt::CaseInsensitive, syntax);
-	gameListPModel->setFilterRegExp(regExp);
-	
-	win->treeViewGameList->expandAll();
-	restoreSelection(currentGame);
 }
 
 void Gamelist::filterTimer()
