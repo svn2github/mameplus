@@ -1202,28 +1202,28 @@ static READ32_HANDLER( bnstars1_r )
 			return 0xffffffff;
 
 		case 0x0000:
-			return readinputport(0);
+			return input_port_read_indexed(machine, 0);
 
 		case 0x0080:
-			return readinputport(1);
+			return input_port_read_indexed(machine, 1);
 
 		case 0x2000:
-			return readinputport(2);
+			return input_port_read_indexed(machine, 2);
 
 		case 0x2080:
-			return readinputport(3);
+			return input_port_read_indexed(machine, 3);
 
 	}
 }
 
 static READ32_HANDLER( bnstars2_r )
 {
-	return readinputport(4);
+	return input_port_read_indexed(machine, 4);
 }
 
 static READ32_HANDLER( bnstars3_r )
 {
-	return readinputport(5);
+	return input_port_read_indexed(machine, 5);
 }
 
 static WRITE32_HANDLER( bnstars1_mahjong_select_w )
@@ -1289,13 +1289,13 @@ static const struct YMF271interface ymf271_interface2 =
 
 static UINT16 irqreq;
 
-static int irq_callback(int irqline)
+static IRQ_CALLBACK(irq_callback)
 {
 	int i;
 	for(i=15; i>=0 && !(irqreq & (1<<i)); i--);
 	irqreq &= ~(1<<i);
 	if(!irqreq)
-		cpunum_set_input_line(Machine, 0, 0, CLEAR_LINE);
+		cpunum_set_input_line(machine, 0, 0, CLEAR_LINE);
 	return i;
 }
 

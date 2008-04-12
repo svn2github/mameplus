@@ -33,6 +33,7 @@
 #include "osdepend.h"
 #include "driver.h"
 #include "ui.h"
+#include "deprecat.h"
 
 // MAMEOS headers
 #include "winmain.h"
@@ -434,11 +435,11 @@ const int win_key_trans_table[][4] =
 //  INLINE FUNCTIONS
 //============================================================
 
-INLINE void poll_if_necessary(void)
+INLINE void poll_if_necessary(running_machine *machine)
 {
 	// make sure we poll at least once every 1/4 second
 	if (GetTickCount() > last_poll + 1000 / 4)
-		wininput_poll();
+		wininput_poll(machine);
 }
 
 
@@ -550,7 +551,7 @@ void wininput_init(running_machine *machine)
 
 	// poll once to get the initial states
 	input_enabled = TRUE;
-	wininput_poll();
+	wininput_poll(machine);
 }
 
 
@@ -585,7 +586,7 @@ static void wininput_exit(running_machine *machine)
 //  wininput_poll
 //============================================================
 
-void wininput_poll(void)
+void wininput_poll(running_machine *machine)
 {
 	int hasfocus = winwindow_has_focus() && input_enabled;
 
@@ -597,7 +598,7 @@ void wininput_poll(void)
 
 		// periodically process events, in case they're not coming through
 		// this also will make sure the mouse state is up-to-date
-		winwindow_process_events_periodic();
+		winwindow_process_events_periodic(machine);
 
 		// track if mouse/lightgun is enabled, for mouse hiding purposes
 		mouse_enabled = input_device_class_enabled(DEVICE_CLASS_MOUSE);
@@ -932,7 +933,7 @@ static INT32 generic_button_get_state(void *device_internal, void *item_internal
 	BYTE *itemdata = item_internal;
 
 	// return the current state
-	poll_if_necessary();
+	poll_if_necessary(Machine);
 	return *itemdata >> 7;
 }
 
@@ -946,7 +947,7 @@ static INT32 generic_axis_get_state(void *device_internal, void *item_internal)
 	LONG *axisdata = item_internal;
 
 	// return the current state
-	poll_if_necessary();
+	poll_if_necessary(Machine);
 	return *axisdata;
 }
 
@@ -1314,7 +1315,7 @@ static const char *dinput_device_item_name(device_info *devinfo, int offset, con
 		return utf8_from_tstring(namestring);
 
 	// otherwise, allocate space to add the suffix
-	combined = malloc_or_die(_tcslen(namestring) + 1 + _tcslen(suffix) + 1);
+	combined = malloc_or_die(sizeof(TCHAR) * (_tcslen(namestring) + 1 + _tcslen(suffix) + 1));
 	_tcscpy(combined, namestring);
 	_tcscat(combined, TEXT(" "));
 	_tcscat(combined, suffix);
@@ -1652,7 +1653,7 @@ static INT32 dinput_joystick_pov_get_state(void *device_internal, void *item_int
 	DWORD pov;
 
 	// get the current state
-	poll_if_necessary();
+	poll_if_necessary(Machine);
 	pov = devinfo->joystick.state.rgdwPOV[povnum];
 
 	// if invalid, return 0
@@ -2153,7 +2154,7 @@ static void rawinput_mouse_update(HANDLE device, RAWMOUSE *data)
 
 static void rawinput_mouse_poll(device_info *devinfo)
 {
-	poll_if_necessary();
+	poll_if_necessary(Machine);
 
 	// copy the accumulated raw state to the actual state
 	osd_lock_acquire(input_lock);

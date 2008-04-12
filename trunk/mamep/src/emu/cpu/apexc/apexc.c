@@ -448,12 +448,12 @@ static void word_write(int address, UINT32 data, UINT32 mask)
 
 static int papertape_read(void)
 {
-	return io_read_byte_8(0) & 0x1f;
+	return io_read_byte_8be(0) & 0x1f;
 }
 
 static void papertape_punch(int data)
 {
-	io_write_byte_8(0, data);
+	io_write_byte_8be(0, data);
 }
 
 /*
@@ -854,7 +854,7 @@ void apexc_get_info(UINT32 state, cpuinfo *info)
 	switch (state)
 	{
 	case CPUINFO_INT_CONTEXT_SIZE:					info->i = sizeof(apexc);				break;
-	case CPUINFO_INT_INPUT_LINES:					info->i = 0;							break;
+	case CPUINFO_INT_INPUT_LINES:						info->i = 0;							break;
 	case CPUINFO_INT_DEFAULT_IRQ_VECTOR:			info->i = 0;							break;
 	case CPUINFO_INT_ENDIANNESS:					info->i = CPU_IS_BE;	/*don't care*/	break;
 	case CPUINFO_INT_CLOCK_MULTIPLIER:				info->i = 1;							break;

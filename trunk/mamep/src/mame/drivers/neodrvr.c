@@ -8702,7 +8702,7 @@ static DRIVER_INIT( ms5plus )
 
 static TIMER_CALLBACK( svcpcb_bios_timer_callback )
 {
-	int harddip3 = readinputportbytag("HARDDIP") & 1;
+	int harddip3 = input_port_read(machine, "HARDDIP") & 1;
 	memory_set_bankptr(NEOGEO_BANK_BIOS, memory_region(NEOGEO_REGION_MAIN_CPU_BIOS)+0x20000+harddip3*0x20000);
 }
 
@@ -8744,6 +8744,7 @@ static DRIVER_INIT( svcplus )
 {
 	svcplus_px_decrypt();
 	svcboot_cx_decrypt();
+//  svcplus_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(1);
 	svcplus_px_hack();
 	DRIVER_INIT_CALL(neogeo);
@@ -8760,6 +8761,7 @@ static DRIVER_INIT( svcplusa )
 static DRIVER_INIT( svcsplus )
 {
 	svcsplus_px_decrypt();
+//  svcsplus_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(2);
 	svcboot_cx_decrypt();
 	svcsplus_px_hack();
@@ -8869,6 +8871,7 @@ static DRIVER_INIT( kof2003h )
 
 static DRIVER_INIT( kof2003b )
 {
+//  kof2003b_sx_decrypt();
 	neogeo_bootleg_sx_decrypt(1);
 	DRIVER_INIT_CALL(neogeo);
 	kof2003b_install_protection();
@@ -8877,6 +8880,7 @@ static DRIVER_INIT( kof2003b )
 static DRIVER_INIT( kof2k3pl )
 {
 	kof2k3pl_px_decrypt();
+	//decrypt_ms5plus_s1();
     neogeo_bootleg_sx_decrypt(1);
 	DRIVER_INIT_CALL(neogeo);
 	kf2k3pl_install_protection();

@@ -99,10 +99,10 @@ static void s24_fd1094_cmp_callback(UINT32 val, int reg)
 }
 
 /* Callback when the s24_fd1094 enters interrupt code */
-static int s24_fd1094_int_callback (int irq)
+static IRQ_CALLBACK(s24_fd1094_int_callback)
 {
 	s24_fd1094_setstate_and_decrypt(FD1094_STATE_IRQ);
-	return (0x60+irq*4)/4; // vector address
+	return (0x60+irqline*4)/4; // vector address
 }
 
 static void s24_fd1094_rte_callback (void)
@@ -136,7 +136,7 @@ void s24_fd1094_machine_init(void)
 	cpunum_set_irq_callback(1, s24_fd1094_int_callback);
 }
 
-static void s24_fd1094_postload(void)
+static STATE_POSTLOAD( s24_fd1094_postload )
 {
 	if (fd1094_state != -1)
 	{
@@ -178,5 +178,5 @@ void s24_fd1094_driver_init(void)
 
 	state_save_register_global(fd1094_selected_state);
 	state_save_register_global(fd1094_state);
-	state_save_register_func_postload(s24_fd1094_postload);
+	state_save_register_postload(Machine, s24_fd1094_postload, NULL);
 }

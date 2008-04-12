@@ -76,14 +76,14 @@ static void update_irq_state(void)
 }
 
 
-static int irq_callback(int which)
+static IRQ_CALLBACK(irq_callback)
 {
 	/* auto-ack the IRQ */
-	irq_state[which] = 0;
+	irq_state[irqline] = 0;
 	update_irq_state();
 
 	/* vector is 0x40 + index */
-	return 0x40 + which;
+	return 0x40 + irqline;
 }
 
 
@@ -128,13 +128,13 @@ static MACHINE_START( dcheese )
 
 static READ16_HANDLER( port_0_r )
 {
-	return (readinputport(0) & 0xff7f) | (EEPROM_read_bit() << 7);
+	return (input_port_read_indexed(machine, 0) & 0xff7f) | (EEPROM_read_bit() << 7);
 }
 
 
 static READ16_HANDLER( port_2_r )
 {
-	return (readinputport(2) & 0xff1f) | (!soundlatch_full << 7) | (ticket_dispenser_r(machine, 0) >> 2);
+	return (input_port_read_indexed(machine, 2) & 0xff1f) | (!soundlatch_full << 7) | (ticket_dispenser_r(machine, 0) >> 2);
 }
 
 

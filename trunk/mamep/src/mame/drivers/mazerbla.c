@@ -299,7 +299,7 @@ static READ8_HANDLER( cfb_zpu_int_req_clr )
 }
 
 
-static int irq_callback(int irqline)
+static IRQ_CALLBACK(irq_callback)
 {
 /* all data lines are tied to +5V via 10K resistors */
 /* D1 is set to GND when INT comes from CFB */
@@ -440,7 +440,7 @@ static READ8_HANDLER( zpu_inputs_r )
 
 	if (bcd_7445<10)
 	{
-		ret = readinputport( bcd_7445 );
+		ret = input_port_read_indexed(machine,  bcd_7445 );
 	}
 	return ret;
 }
