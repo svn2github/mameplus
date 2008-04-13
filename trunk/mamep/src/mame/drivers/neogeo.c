@@ -1038,7 +1038,7 @@ static MACHINE_RESET( neogeo )
 		logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
 
 			/* Set up machine country */
-			src = readinputportbytag("HACK_IN5");
+			src = input_port_read(machine, "HACK_IN5");
 			res = src & 0x3;
 
 			/* Console/arcade mode */
@@ -1064,7 +1064,7 @@ static MACHINE_RESET( neogeo )
 		logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
 
 			/* Set up machine country */
-			src = readinputportbytag("HACK_IN5");
+			src = input_port_read(machine, "HACK_IN5");
 			res = src & 0x3;
 
 			/* write the ID in the system BIOS ROM */
@@ -1086,7 +1086,7 @@ static MACHINE_RESET( neogeo )
 		logerror("BIOS Hack enabled for Trackball\n");
 
 		/* Set up machine country */
-		src = readinputportbytag("HACK_IN5");
+		src = input_port_read(machine, "HACK_IN5");
 		res = src & 0x3;
 
 		/* Console/arcade mode */
