@@ -649,7 +649,7 @@ void winwindow_video_window_create(running_machine *machine, int index, win_moni
 
 	// set the specific view
 	sprintf(option, "view%d", index);
-	set_starting_view(index, window, options_get_string(mame_options(), option));
+	set_starting_view(machine, index, window, options_get_string(mame_options(), option));
 
 	// remember the current values in case they change
 	window->targetview = render_target_get_view(window->target);
