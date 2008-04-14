@@ -635,7 +635,7 @@ static MACHINE_DRIVER_START( ninjaw )
 	MDRV_CPU_PROGRAM_MAP(ninjaw_cpub_readmem,ninjaw_cpub_writemem)
 	MDRV_CPU_VBLANK_INT("left", irq4_line_hold)
 
-	MDRV_INTERLEAVE(10)	/* CPU slices */
+	MDRV_INTERLEAVE(100)	/* CPU slices */
 
 	MDRV_MACHINE_START(ninjaw)
 	MDRV_MACHINE_RESET(ninjaw)

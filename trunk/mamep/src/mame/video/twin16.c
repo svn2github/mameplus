@@ -196,7 +196,7 @@ shadow bit?
 
  */
 
-static void draw_sprites( bitmap_t *bitmap, int demo )
+static void draw_sprites( bitmap_t *bitmap )
 {
 	int count = 0;
 
@@ -207,15 +207,7 @@ static void draw_sprites( bitmap_t *bitmap, int demo )
 		UINT16 attributes = source[3];
 		UINT16 code = source[0];
 
-		if(code==0x21C8)code=0x21C0;// fix "in the ending, ship is glitched"
-		if(code==0x0516)code=0x0510;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
-		if(code==0x051E)code=0x0518;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
-		if(code==0x0526)code=0x0520;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
-		if(code==0x052E)code=0x0528;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
-		if(code==0x0536)code=0x0530;// fix "In the boss of 2nd stage (Big Eye), when hands move, tips of them are glitched. "
-
-// normal sprites
-		if((code!=0xffff) && (attributes&0x8000) && demo==0  && ((code&0xFF00)!=0x1800)){
+		if((code!=0xffff) && (attributes&0x8000)) {
 			int xpos = source[1];
 			int ypos = source[2];
 
@@ -286,58 +278,6 @@ static void draw_sprites( bitmap_t *bitmap, int demo )
 			draw_sprite( bitmap, pen_data, pal_base, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
 		}
 
-// demonstration sprites
-		if( code!=0xffff && (attributes&0x8000) && (demo==1) && ((code&0xFF00)==0x1800)){
-			int xpos = source[1];
-			int ypos = source[2];
-
-			const pen_t *pal_data = Machine->pens+((attributes&0xf)+0x10)*16;
-			int height	= 16<<((attributes>>6)&0x3);
-			int width	= 16<<((attributes>>4)&0x3);
-			const UINT16 *pen_data = 0;
-			int flipy = attributes&0x0200;
-			int flipx = attributes&0x0100;
-
-			if( twin16_custom_video ){
-				pen_data = twin16_gfx_rom + 0x80000;
-			}
-			else {
-				switch( (code>>12)&0x3 ){ /* bank select */
-					case 0:
-					pen_data = twin16_gfx_rom;
-					break;
-
-					case 1:
-					pen_data = twin16_gfx_rom + 0x40000;
-					break;
-
-					case 2:
-					pen_data = twin16_gfx_rom + 0x80000;
-					if( code&0x4000 ) pen_data += 0x40000;
-					break;
-
-					case 3:
-					pen_data = twin16_sprite_gfx_ram;
-					break;
-				}
-				code &= 0xfff;
-			}
-			pen_data += code*0x40;
-
-			if( video_register&TWIN16_SCREEN_FLIPY ){
-				if (ypos>65000) ypos=ypos-65536; /* Bit hacky */
-				ypos = 256-ypos-height;
-				flipy = !flipy;
-			}
-			if( video_register&TWIN16_SCREEN_FLIPX ){
-				if (xpos>65000) xpos=xpos-65536; /* Bit hacky */
-				xpos = 320-xpos-width;
-				flipx = !flipx;
-			}
-
-			//if( sprite_which==count || !keyboard_pressed( KEYCODE_B ) )
-			draw_sprite( bitmap, pen_data, pal_data, xpos, ypos, width, height, flipx, flipy, (attributes&0x4000) );
-		}
 		count++;
 	}
 }
@@ -508,7 +448,7 @@ VIDEO_UPDATE( twin16 )
 	fillbitmap(priority_bitmap,0,cliprect);
 	draw_layer( bitmap,1 );
 	draw_layer( bitmap,0 );
-	draw_sprites( bitmap,0 );
+	draw_sprites( bitmap );
 	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
 	return 0;
 }
@@ -517,20 +457,8 @@ VIDEO_UPDATE( vulcan )
 {
 	fillbitmap(priority_bitmap,0,cliprect);
 	draw_layer( bitmap,1 );
-	draw_sprites( bitmap, 1 );
-	draw_sprites( bitmap, 0 );
+	draw_sprites( bitmap );
 	draw_layer( bitmap,0 );
-	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
-	return 0;
-}
-
-VIDEO_UPDATE( miaj )
-{
-	fillbitmap(priority_bitmap,0,cliprect);
-	draw_layer( bitmap,1 );
-	draw_layer( bitmap,0 );
-	draw_sprites( bitmap, 1 );
-	draw_sprites( bitmap, 0 );
 	tilemap_draw(bitmap, cliprect, fg_tilemap, 0, 0);
 	return 0;
 }

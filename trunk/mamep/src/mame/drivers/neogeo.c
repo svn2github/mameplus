@@ -1383,8 +1383,8 @@ static MACHINE_DRIVER_START( neogeo )
 	MDRV_SOUND_CONFIG(ym2610_interface)
 	MDRV_SOUND_ROUTE(0, "left",  0.60)
 	MDRV_SOUND_ROUTE(0, "right", 0.60)
-	MDRV_SOUND_ROUTE(1, "left",  0.75)
-	MDRV_SOUND_ROUTE(2, "right", 0.75)
+	MDRV_SOUND_ROUTE(1, "left",  1.0)
+	MDRV_SOUND_ROUTE(2, "right", 1.0)
 MACHINE_DRIVER_END
 
 /*************************************

@@ -4235,3 +4235,4 @@ GAME( 1991, thndrx2a, thndrx2,  thndrx2,  thndrx2,  gfx,      ROT0,  "Konami", "
 
 GAME( 1993, prmrsocr, 0,        prmrsocr, prmrsocr, glfgreat, ROT0,  "Konami", "Premier Soccer (ver EAB)", 0 )
 GAME( 1993, prmrsocj, prmrsocr, prmrsocr, prmrsocr, glfgreat, ROT0,  "Konami", "Premier Soccer (ver JAB)", 0 )
+

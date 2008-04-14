@@ -2026,10 +2026,10 @@ ROM_START( csclubh )
 
 	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
 	ROM_FILL(              0x000000, 0x800000, 0 )
-	ROMX_LOAD( "csc.14m",   0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
-	ROMX_LOAD( "csc.16m",   0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
-	ROMX_LOAD( "csc.18m",   0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
-	ROMX_LOAD( "csc.20m",   0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
+	ROMX_LOAD( "csc.14m",  0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
+	ROMX_LOAD( "csc.16m",  0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
+	ROMX_LOAD( "csc.18m",  0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
+	ROMX_LOAD( "csc.20m",  0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
 
 	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "csc.01",   0x00000, 0x08000, CRC(ee162111) SHA1(ce8d4bd32bb10ee8b0274ba6fcef05a583b39d48) )

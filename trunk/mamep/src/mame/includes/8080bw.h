@@ -30,7 +30,6 @@ WRITE8_HANDLER( cosmo_sh_port_2_w );
 
 WRITE8_HANDLER( ballbomb_sh_port_1_w );
 WRITE8_HANDLER( ballbomb_sh_port_2_w );
-WRITE8_HANDLER( ballbomb_tone_w );
 
 WRITE8_HANDLER( indianbt_sh_port_1_w );
 WRITE8_HANDLER( indianbt_sh_port_2_w );
@@ -55,13 +54,7 @@ WRITE8_HANDLER( invrvnge_sh_port_w );
 
 WRITE8_HANDLER( lupin3_sh_port_1_w );
 WRITE8_HANDLER( lupin3_sh_port_2_w );
-WRITE8_HANDLER( lupin3_tone_w );
-WRITE8_HANDLER( lupin3_sound_1_w );
-WRITE8_HANDLER( lupin3_sound_2_w );
-extern struct Samplesinterface lupin3_samples_interface;
-extern struct CustomSound_interface lupin3_custom_interface;
-extern struct CustomSound_interface ballbomb_custom_interface;
- 
+
 WRITE8_HANDLER( schasrcv_sh_port_1_w );
 WRITE8_HANDLER( schasrcv_sh_port_2_w );
 

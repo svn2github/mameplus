@@ -1065,31 +1065,6 @@ void samsh5bl_px_decrypt( void )
 	free( buf );
 }
 
-void samsh5bl_cx_decrypt( void )
-{
-	int cx_size = memory_region_length( NEOGEO_REGION_SPRITES );
-	UINT8 *rom = memory_region( NEOGEO_REGION_SPRITES );
-	UINT8 *buf = malloc( cx_size );
-	int i;
-
-	memcpy( buf, rom, cx_size );
-
-	for( i = 0; i < cx_size / 0x40; i++ ) {
-		memcpy( &rom[ i * 0x40 ], &buf[ (i ^ 1) * 0x40 ], 0x40 );
-	}
-	free( buf );
-}
-
-void samsh5bl_vx_decrypt( void )
-{
-	int vx_size = memory_region_length( NEOGEO_REGION_AUDIO_DATA_1 );
-	UINT8 *rom = memory_region( NEOGEO_REGION_AUDIO_DATA_1 );
-	int i;
-
-	for( i = 0; i < vx_size; i++ ) {
-		rom[ i ] = BITSWAP8( rom[ i ], 0, 1, 5, 4, 3, 2, 6, 7 );
-	}
-}
 
 void kof96ep_px_decrypt(void)
 {

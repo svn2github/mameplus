@@ -381,12 +381,6 @@ if (input_code_pressed(KEYCODE_F) && (pri & 1)) color = rand();
 
 static void draw_roz(bitmap_t *bitmap, const rectangle *cliprect,int priority)
 {
-		int startx, starty;
-		int start2x, start2y;
-		int incxx, incxy;
-		int incyy, incyx;
-		int offsx, offsy;
-
 	/* TODO: registers 0x40/4 / 0x44/4 and 0x50/4 / 0x54/4 are used, meaning unknown */
 
 	if (ms32_roz_ctrl[0x5c/4] & 1)	/* "super" mode */
@@ -404,14 +398,14 @@ static void draw_roz(bitmap_t *bitmap, const rectangle *cliprect,int priority)
 		{
 			UINT32 *lineaddr = ms32_lineram + 8 * (y & 0xff);
 
-			start2x = (lineaddr[0x00/4] & 0xffff) | ((lineaddr[0x04/4] & 3) << 16);
-			start2y = (lineaddr[0x08/4] & 0xffff) | ((lineaddr[0x0c/4] & 3) << 16);
-			incxx  = (lineaddr[0x10/4] & 0xffff) | ((lineaddr[0x14/4] & 1) << 16);
-			incxy  = (lineaddr[0x18/4] & 0xffff) | ((lineaddr[0x1c/4] & 1) << 16);
-			startx = (ms32_roz_ctrl[0x00/4] & 0xffff) | ((ms32_roz_ctrl[0x04/4] & 3) << 16);
-			starty = (ms32_roz_ctrl[0x08/4] & 0xffff) | ((ms32_roz_ctrl[0x0c/4] & 3) << 16);
-			offsx  = ms32_roz_ctrl[0x30/4];
-			offsy  = ms32_roz_ctrl[0x34/4];
+			int start2x = (lineaddr[0x00/4] & 0xffff) | ((lineaddr[0x04/4] & 3) << 16);
+			int start2y = (lineaddr[0x08/4] & 0xffff) | ((lineaddr[0x0c/4] & 3) << 16);
+			int incxx  = (lineaddr[0x10/4] & 0xffff) | ((lineaddr[0x14/4] & 1) << 16);
+			int incxy  = (lineaddr[0x18/4] & 0xffff) | ((lineaddr[0x1c/4] & 1) << 16);
+			int startx = (ms32_roz_ctrl[0x00/4] & 0xffff) | ((ms32_roz_ctrl[0x04/4] & 3) << 16);
+			int starty = (ms32_roz_ctrl[0x08/4] & 0xffff) | ((ms32_roz_ctrl[0x0c/4] & 3) << 16);
+			int offsx  = ms32_roz_ctrl[0x30/4];
+			int offsy  = ms32_roz_ctrl[0x34/4];
 
 			my_clip.min_y = my_clip.max_y = y;
 
@@ -437,14 +431,14 @@ static void draw_roz(bitmap_t *bitmap, const rectangle *cliprect,int priority)
 	}
 	else	/* "simple" mode */
 	{
-		startx = (ms32_roz_ctrl[0x00/4] & 0xffff) | ((ms32_roz_ctrl[0x04/4] & 3) << 16);
-		starty = (ms32_roz_ctrl[0x08/4] & 0xffff) | ((ms32_roz_ctrl[0x0c/4] & 3) << 16);
-		incxx  = (ms32_roz_ctrl[0x10/4] & 0xffff) | ((ms32_roz_ctrl[0x14/4] & 1) << 16);
-		incxy  = (ms32_roz_ctrl[0x18/4] & 0xffff) | ((ms32_roz_ctrl[0x1c/4] & 1) << 16);
-		incyy  = (ms32_roz_ctrl[0x20/4] & 0xffff) | ((ms32_roz_ctrl[0x24/4] & 1) << 16);
-		incyx  = (ms32_roz_ctrl[0x28/4] & 0xffff) | ((ms32_roz_ctrl[0x2c/4] & 1) << 16);
-		offsx  = ms32_roz_ctrl[0x30/4];
-		offsy  = ms32_roz_ctrl[0x34/4];
+		int startx = (ms32_roz_ctrl[0x00/4] & 0xffff) | ((ms32_roz_ctrl[0x04/4] & 3) << 16);
+		int starty = (ms32_roz_ctrl[0x08/4] & 0xffff) | ((ms32_roz_ctrl[0x0c/4] & 3) << 16);
+		int incxx  = (ms32_roz_ctrl[0x10/4] & 0xffff) | ((ms32_roz_ctrl[0x14/4] & 1) << 16);
+		int incxy  = (ms32_roz_ctrl[0x18/4] & 0xffff) | ((ms32_roz_ctrl[0x1c/4] & 1) << 16);
+		int incyy  = (ms32_roz_ctrl[0x20/4] & 0xffff) | ((ms32_roz_ctrl[0x24/4] & 1) << 16);
+		int incyx  = (ms32_roz_ctrl[0x28/4] & 0xffff) | ((ms32_roz_ctrl[0x2c/4] & 1) << 16);
+		int offsx  = ms32_roz_ctrl[0x30/4];
+		int offsy  = ms32_roz_ctrl[0x34/4];
 
 		offsx += (ms32_roz_ctrl[0x38/4] & 1) * 0x400;	// ??? gratia, hayaosi1...
 		offsy += (ms32_roz_ctrl[0x3c/4] & 1) * 0x400;	// ??? gratia, hayaosi1...

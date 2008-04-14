@@ -2224,7 +2224,7 @@ static const struct VLM5030interface vlm5030_interface =
     0              /* memory length */
 };
 
-static struct VLM5030interface gx400_vlm5030_interface =
+static const struct VLM5030interface gx400_vlm5030_interface =
 {
     REGION_SOUND1, /* memory region  */
     0x800,         /* memory length */

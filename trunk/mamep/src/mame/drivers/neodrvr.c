@@ -6219,8 +6219,8 @@ ROM_END
 	/* alt PCB version, this one has the same program roms as the MVS set, and different GFX / Sound rom arrangements */
 ROM_START( svcpcba ) /* Encrypted Set, JAMMA PCB */
 	ROM_REGION( 0x800000, NEOGEO_REGION_MAIN_CPU_CARTRIDGE, 0 )
-	ROM_LOAD32_WORD_SWAP( "269-p1a.bin", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097) )
-	ROM_LOAD32_WORD_SWAP( "269-p2a.bin", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7) )
+	ROM_LOAD32_WORD_SWAP( "269-p1a.bin", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097)  )
+	ROM_LOAD32_WORD_SWAP( "269-p2a.bin", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7)  )
 
 	ROM_REGION( 0x80000, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE, 0 ) /* larger char set */
 	ROM_FILL( 0x000000, 0x80000, 0 )
@@ -6525,7 +6525,13 @@ ROM_START( samsho5b ) /* bootleg */
 	ROM_LOAD16_WORD_SWAP( "270-p2bl.bin", 0x000000, 0x400000, CRC(5023067f) SHA1(b1d682fa7d158f19664356a919da6572e8cfeee0) )
 	ROM_LOAD16_WORD_SWAP( "270-p1bl.bin", 0x400000, 0x400000, CRC(b6cbe386) SHA1(99c2407361116c2b2c5fe72df53e05c5f99163c1) )
 
-	NEO_SFIX_128K( "270-s1b.bin", CRC(70f667d0) )
+	ROM_Y_ZOOM
+
+	/* The Encrypted Boards do _not_ have an s1 rom, data for it comes from the Cx ROMs */
+	ROM_REGION( 0x80000, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE, 0 ) /* larger char set */
+	ROM_FILL( 0x000000, 0x80000, 0 )
+	ROM_REGION( 0x20000, NEOGEO_REGION_FIXED_LAYER_BIOS, 0 )
+	ROM_LOAD( "sfix.sfx", 0x000000, 0x20000, CRC(354029fc) SHA1(4ae4bf23b4c2acff875775d4cbff5583893ce2a1) )
 
 	ROM_REGION( 0x80000, NEOGEO_REGION_AUDIO_CPU_ENCRYPTED, 0 )
 	/* Encrypted, we load it here for reference and replace with decrypted ROM */
@@ -6534,19 +6540,22 @@ ROM_START( samsho5b ) /* bootleg */
 	NEO_BIOS_AUDIO_256K( "270-m1_decrypted.bin", CRC(e94a5e2b) SHA1(53ef2ad6583060af69fdde73576e09ba88affa55) ) /* not a 100% match for encrypted version */
 
 	ROM_REGION( 0x1000000, NEOGEO_REGION_AUDIO_DATA_1, 0 )
-	ROM_LOAD( "270-v1b.bin", 0x000000, 0x400000, CRC(a3609761) )
-	ROM_LOAD( "270-v2b.bin", 0x400000, 0x400000, CRC(cbd6ebd5) )
-	ROM_LOAD( "270-v3b.bin", 0x800000, 0x400000, CRC(6f1c2703) )
-	ROM_LOAD( "270-v4b.bin", 0xc00000, 0x400000, CRC(5020c055) )
+	/* Encrypted */
+	ROM_LOAD( "270-v1.bin", 0x000000, 0x800000, CRC(62e434eb) SHA1(1985f5e88f8e866f9683b6cea901aa28c04b80bf) )
+	ROM_LOAD( "270-v2.bin", 0x800000, 0x800000, CRC(180f3c9a) SHA1(6d7dc2605ead6e78704efa127e7e0dfe621e2c54) )
 
 	NO_DELTAT_REGION
 
 	ROM_REGION( 0x4000000, NEOGEO_REGION_SPRITES, ROMREGION_DISPOSE )
 	/* Encrypted */
-	ROM_LOAD16_BYTE( "270-c1b.bin", 0x0000000, 0x1000000, CRC(9c564a01) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "270-c2b.bin", 0x0000001, 0x1000000, CRC(4b73b8da) ) /* Plane 2,3 */
-	ROM_LOAD16_BYTE( "270-c3b.bin", 0x2000000, 0x1000000, CRC(029f9bb5) ) /* Plane 0,1 */
-	ROM_LOAD16_BYTE( "270-c4b.bin", 0x2000001, 0x1000000, CRC(75722430) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "270-c1.bin", 0x0000000, 0x800000, CRC(14ffffac) SHA1(2ccebfdd0c7907679ae95bf6eca85b8d322441e2) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "270-c2.bin", 0x0000001, 0x800000, CRC(401f7299) SHA1(94e48cdf1682b1250f53c59f3f71d995e928d17b) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "270-c3.bin", 0x1000000, 0x800000, CRC(838f0260) SHA1(d5c8d3c6e7221d04e0b20882a847752e5ba95635) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "270-c4.bin", 0x1000001, 0x800000, CRC(041560a5) SHA1(d165e533699f15b1e079c82f97db3542b3a7dd66) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "270-c5.bin", 0x2000000, 0x800000, CRC(bd30b52d) SHA1(9f8282e684415b4045218cf764ef7d75a70e3240) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "270-c6.bin", 0x2000001, 0x800000, CRC(86a69c70) SHA1(526732cdb408cf680af9da39057bce6a4dfb5e13) ) /* Plane 2,3 */
+	ROM_LOAD16_BYTE( "270-c7.bin", 0x3000000, 0x800000, CRC(d28fbc3c) SHA1(a82a6ba6760fad14d9309f9147cb7d80bd6f70fc) ) /* Plane 0,1 */
+	ROM_LOAD16_BYTE( "270-c8.bin", 0x3000001, 0x800000, CRC(02c530a6) SHA1(7a3fafa6075506c6ef78cc4ec2cb72118ec83cb9) ) /* Plane 2,3 */
 ROM_END
 
 ROM_START( kf2k3pcb ) /* Encrypted Set, JAMMA PCB */
@@ -8692,7 +8701,7 @@ static DRIVER_INIT( ms5plus )
 	cmc50_neogeo_gfx_decrypt(0x19);
 	neo_pcm2_swap(2);
 //  decrypt_ms5plus_s1();
-	neogeo_bootleg_sx_decrypt(1);
+    neogeo_bootleg_sx_decrypt(1);
 	neogeo_fixed_layer_bank_type = 1;
 	DRIVER_INIT_CALL(neogeo);
 	install_ms5plus_protection();
@@ -8780,10 +8789,10 @@ static DRIVER_INIT( samsho5 )
 
 static DRIVER_INIT( samsho5b )
 {
-	neogeo_bootleg_sx_decrypt(1);
+	neo_pcm2_swap(4);
+	neogeo_fixed_layer_bank_type = 1;
+	kof2000_neogeo_gfx_decrypt(0x0f);
 	samsh5bl_px_decrypt();
-	samsh5bl_cx_decrypt();
-	samsh5bl_vx_decrypt();
 	DRIVER_INIT_CALL(neogeo);
 }
 
@@ -8940,7 +8949,7 @@ static DRIVER_INIT( vliner )
 	memory_set_bankptr(NEOGEO_BANK_EXTRA_RAM, extra_ram);
 
 	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x280000, 0x280001, 0, 0, port_tag_to_handler16("IN5") );
-	memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2c0000, 0x2c0001, 0, 0, port_tag_to_handler16("IN6") );
+    memory_install_read16_handler(0, ADDRESS_SPACE_PROGRAM, 0x2c0000, 0x2c0001, 0, 0, port_tag_to_handler16("IN6") );
 
 	DRIVER_INIT_CALL(neogeo);
 }
@@ -8970,8 +8979,8 @@ static DRIVER_INIT( kog )
 static DRIVER_INIT( kof10th )
 {
 	decrypt_kof10th();
-	install_kof10th_protection();
 	DRIVER_INIT_CALL(neogeo);
+	install_kof10th_protection();
 }
 
 static DRIVER_INIT( kf10thep )

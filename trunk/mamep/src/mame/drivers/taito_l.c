@@ -2475,14 +2475,6 @@ static MACHINE_DRIVER_START( puzznic )
 	MDRV_CPU_PROGRAM_MAP(puzznic_readmem,puzznic_writemem)
 
 	MDRV_MACHINE_RESET(puzznic)
-
-	/* sound hardware */
-	MDRV_SOUND_REPLACE("2203", YM2203, 3000000)
-	MDRV_SOUND_CONFIG(ym2203_interface_single)
-	MDRV_SOUND_ROUTE(0, "mono", 0.20)
-	MDRV_SOUND_ROUTE(1, "mono", 0.20)
-	MDRV_SOUND_ROUTE(2, "mono", 0.20)
-	MDRV_SOUND_ROUTE(3, "mono", 0.80)
 MACHINE_DRIVER_END
 
 
@@ -2494,14 +2486,6 @@ static MACHINE_DRIVER_START( horshoes )
 	MDRV_CPU_PROGRAM_MAP(horshoes_readmem,horshoes_writemem)
 
 	MDRV_MACHINE_RESET(horshoes)
-
-	/* sound hardware */
-	MDRV_SOUND_REPLACE("2203", YM2203, 3000000)
-	MDRV_SOUND_CONFIG(ym2203_interface_single)
-	MDRV_SOUND_ROUTE(0, "mono", 0.20)
-	MDRV_SOUND_ROUTE(1, "mono", 0.20)
-	MDRV_SOUND_ROUTE(2, "mono", 0.20)
-	MDRV_SOUND_ROUTE(3, "mono", 0.80)
 MACHINE_DRIVER_END
 
 
@@ -2513,14 +2497,6 @@ static MACHINE_DRIVER_START( palamed )
 	MDRV_CPU_PROGRAM_MAP(palamed_readmem,palamed_writemem)
 
 	MDRV_MACHINE_RESET(palamed)
-
-	/* sound hardware */
-	MDRV_SOUND_REPLACE("2203", YM2203, 3000000)
-	MDRV_SOUND_CONFIG(ym2203_interface_single)
-	MDRV_SOUND_ROUTE(0, "mono", 0.20)
-	MDRV_SOUND_ROUTE(1, "mono", 0.20)
-	MDRV_SOUND_ROUTE(2, "mono", 0.20)
-	MDRV_SOUND_ROUTE(3, "mono", 0.80)
 MACHINE_DRIVER_END
 
 
@@ -2532,14 +2508,6 @@ static MACHINE_DRIVER_START( cachat )
 	MDRV_CPU_PROGRAM_MAP(cachat_readmem,cachat_writemem)
 
 	MDRV_MACHINE_RESET(cachat)
-
-	/* sound hardware */
-	MDRV_SOUND_REPLACE("2203", YM2203, 3000000)
-	MDRV_SOUND_CONFIG(ym2203_interface_single)
-	MDRV_SOUND_ROUTE(0, "mono", 0.20)
-	MDRV_SOUND_ROUTE(1, "mono", 0.20)
-	MDRV_SOUND_ROUTE(2, "mono", 0.20)
-	MDRV_SOUND_ROUTE(3, "mono", 0.80)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( evilston )

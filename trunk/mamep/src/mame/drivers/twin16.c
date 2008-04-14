@@ -70,7 +70,7 @@ extern VIDEO_START( fround );
 extern VIDEO_UPDATE( twin16 );
 extern VIDEO_EOF( twin16 );
 extern VIDEO_UPDATE( vulcan );
-extern VIDEO_UPDATE( miaj );
+
 
 extern void twin16_spriteram_process( void );
 
@@ -1070,7 +1070,7 @@ static MACHINE_DRIVER_START( mia )
 	MDRV_SCREEN_MODIFY("main")
 	MDRV_SCREEN_VISIBLE_AREA(1*8, 39*8-1, 2*8, 30*8-1)
 	MDRV_VIDEO_START(fround)
-	MDRV_VIDEO_UPDATE(miaj)
+
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( vulcan )
