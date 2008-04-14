@@ -3042,63 +3042,6 @@ profiler_mark(PROFILER_END);
 
 /*************************************
  *
- *  Playback/record helper
- *
- *************************************/
-
-static void update_playback_record(running_machine *machine, int portnum, UINT32 portvalue)
-{
-	/* handle playback */
-	if (machine->playback_file != NULL)
-	{
-		UINT32 result;
-
-		/* a successful read goes into the playback field which overrides everything else */
-		if (mame_fread(machine->playback_file, &result, sizeof(result)) == sizeof(result))
-			portvalue = port_info[portnum].playback = BIG_ENDIANIZE_INT32(result);
-
-		/* a failure causes us to close the playback file and stop playback */
-		else
-		{
-			mame_fclose(machine->playback_file);
-			machine->playback_file = NULL;
-			if (!extended_inp)
-				popmessage(_("End of playback"));
-			else
-			{
-				popmessage(_("End of playback - %i frames - Average speed %f%%"), framecount, (double)totalspeed/framecount);
-				printf(_("End of playback - %i frames - Average speed %f%%\n"), framecount, (double)totalspeed/framecount);
-			}
-
-#ifdef AUTO_PAUSE_PLAYBACK
-			if (options_get_bool(mame_options(), OPTION_AUTO_PAUSE_PLAYBACK))
-				ui_auto_pause();
-#endif /* AUTO_PAUSE_PLAYBACK */
-		}
-	}
-
-	/* handle recording */
-	if (machine->record_file != NULL)
-	{
-		UINT32 result = BIG_ENDIANIZE_INT32(portvalue);
-
-		/* a successful write just works */
-		if (mame_fwrite(machine->record_file, &result, sizeof(result)) == sizeof(result))
-			;
-
-		/* a failure causes us to close the record file and stop recording */
-		else
-		{
-			mame_fclose(machine->record_file);
-			machine->record_file = NULL;
-		}
-	}
-}
-
-
-
-/*************************************
- *
  *  Update default ports
  *
  *************************************/
@@ -3189,7 +3132,7 @@ profiler_mark(PROFILER_INPUT);
 
 		/* now loop back and modify based on the inputs */
 		portinfo->digital = 0;
-		for (bitnum = 0, info = &portinfo->bit[0]; bitnum < MAX_BITS_PER_PORT && info->port; bitnum++, info++)
+		for (bitnum = 0, info = &portinfo->bit[0]; bitnum < MAX_BITS_PER_PORT && info->portentry; bitnum++, info++)
 			if (input_port_condition(info->portentry))
 			{
 				input_port_entry *portentry = info->portentry;
@@ -3313,7 +3256,7 @@ profiler_mark(PROFILER_INPUT);
 
 #ifdef MESS
 	/* less MESS to MESSy things */
-	inputx_update();
+	inputx_update(machine);
 #endif
 
 	/* handle playback/record */
@@ -3769,9 +3712,9 @@ static int auto_pressed(input_bit_info *info)
 	     5,   3,   3
 	     6,   4,   3
 */
-	input_port_entry *port = info->port;
-	int pressed = input_seq_pressed(input_port_seq(port, SEQ_TYPE_STANDARD));
-	int is_auto = IS_AUTOKEY(port);
+	input_port_entry *portentry = info->portentry;
+	int pressed = input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD));
+	int is_auto = IS_AUTOKEY(portentry);
 
 #ifdef USE_CUSTOM_BUTTON
 
@@ -3782,7 +3725,7 @@ static int auto_pressed(input_bit_info *info)
 		int custom;
 
 		for (custom = 0; custom < custom_buttons; custom++)
-			if (custom_button[port->player][custom] & button_mask)
+			if (custom_button[portentry->player][custom] & button_mask)
 			{
 				input_bit_info *custom_info = custom_button_info[portentry->player][custom];
 
@@ -4163,6 +4106,16 @@ static void playback_end(running_machine *machine, const char *message)
 		playback_accumulated_speed /= playback_accumulated_frames;
 		mame_printf_info("Total playback frames: %d\n", (UINT32)playback_accumulated_frames);
 		mame_printf_info("Average recorded speed: %d%%\n", (UINT32)((playback_accumulated_speed * 200 + 1) >> 21));
+
+		if (!strcmp(message, "End of file"))
+		{
+			popmessage("End of playback - %d frames - Average speed %d%%", (UINT32)playback_accumulated_frames, (UINT32)((playback_accumulated_speed * 200 + 1) >> 21));
+
+#ifdef AUTO_PAUSE_PLAYBACK
+			if (options_get_bool(mame_options(), OPTION_AUTO_PAUSE_PLAYBACK))
+				ui_auto_pause();
+#endif /* AUTO_PAUSE_PLAYBACK */
+		}
 	}
 }
 
