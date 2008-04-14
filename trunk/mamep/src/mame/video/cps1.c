@@ -978,8 +978,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2v004",  NOBATTRY, 0x8000, mapper_S9263B },
 	{"sf2accp2", NOBATTRY, 0x8000, mapper_S9263B },
 	{"sf2m1",    NOBATTRY, 0x8000, mapper_S9263B },
-	{"sf2m2",    NOBATTRY, 0x8000, mapper_S9263B },
-	{"sf2m3",    HACK_B_3, 0x8000, mapper_S9263B },
+	{"sf2m2",    NOBATTRY, 0x8000, mapper_S9263B, 1 },
+	{"sf2m3",    HACK_B_3, 0x8000, mapper_S9263B, 1 },
 	{"sf2m4",    HACK_B_1, 0x8000, mapper_S9263B, 1 },
 	{"sf2m5",    NOBATTRY, 0x8000, mapper_S9263B, 1 },
 	{"sf2m6",    NOBATTRY, 0x8000, mapper_S9263B, 1 },
@@ -998,30 +998,6 @@ static const struct CPS1config cps1_config_table[]=
 	{"dino",     QSOUND_2, 0x8000, mapper_CD63B },	/* layer enable never used */
 	{"dinou",    QSOUND_2, 0x8000, mapper_CD63B },	/* layer enable never used */
 	{"dinoj",    QSOUND_2, 0x8000, mapper_CD63B },	/* layer enable never used */
-
-//	{"cawingb", CPS_B_16, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 12 },
-//	{"kodh",    NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* bootleg, doesn't use multiply protection */
-//	{"dinoh",   NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-//	{"dinoha",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-//	{"dinohb",  QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-//	{"dinob",   QSOUND_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff },	/* layer enable never used */
-//	{"knightsh",NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 3 },
-//	{"knightsb",BATTRY_4, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 13 },
-//	{"sf2m8",   HACK_B_3, 2,2,2, 0x0000,0xffff,0x0000,0xffff },
-//	{"sf2m13",  NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-//	{"sf2tlona",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-//	{"sf2tlonb",NOBATTRY, 2,2,2, 0x0000,0xffff,0x0000,0xffff, 10 },
-//	{"wofh",    HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wofha",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wofhfh",  NOBATTRY, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-//	{"wof3js",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-//	{"wofsj",   HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wofsja",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wofsjb",  CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-//	{"wof3sj",  HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wof3sja", HACK_B_2, 0,0,0, 0x0000,0xffff,0x0000,0xffff, 14 },
-//	{"wofb",    CPS_B_01, 0,0,0, 0x0000,0xffff,0x0000,0xffff },
-
 	{"punisher", QSOUND_3, 0x8000, mapper_PS63B },
 	{"punishru", QSOUND_3, 0x8000, mapper_PS63B },
 	{"punishrj", QSOUND_3, 0x8000, mapper_PS63B },
@@ -1041,6 +1017,28 @@ static const struct CPS1config cps1_config_table[]=
 	{"pnickj",   NOBATTRY, 0x8000, mapper_pnickj },
 	{"pang3",    NOBATTRY, 0x8000, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
 	{"pang3j",   NOBATTRY, 0x8000, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
+	{"cawingb",  CPS_B_16, 0x8000, mapper_CA24B, 2 },
+	{"kodh",     NOBATTRY, 0x8000, mapper_KD29B },	/* bootleg, doesn't use multiply protection */
+	{"dinoh",    NOBATTRY, 0x8000, mapper_CD63B },	/* layer enable never used */
+	{"dinoha",   NOBATTRY, 0x8000, mapper_CD63B },	/* layer enable never used */
+	{"dinohb",   QSOUND_2, 0x8000, mapper_CD63B },	/* layer enable never used */
+	{"dinob",    QSOUND_2, 0x8000, mapper_CD63B },	/* layer enable never used */
+	{"knightsh", NOBATTRY, 0x8000, mapper_KR63B },
+	{"knightsb", BATTRY_4, 0x8000, mapper_KR63B, 3 },
+	{"sf2m8",    HACK_B_3, 0x8000, mapper_S9263B },
+	{"sf2m13",   NOBATTRY, 0x8000, mapper_S9263B, 1 },
+	{"sf2tlona", NOBATTRY, 0x8000, mapper_S9263B, 1 },
+	{"sf2tlonb", NOBATTRY, 0x8000, mapper_S9263B, 1 },
+	{"wofh",     HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wofha",    HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wofhfh",   NOBATTRY, 0x8000, mapper_TK263B },
+	{"wof3js",   CPS_B_01, 0x8000, mapper_TK263B },
+	{"wofsj",    HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wofsja",   HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wofsjb",   CPS_B_01, 0x8000, mapper_TK263B },
+	{"wof3sj",   HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wof3sja",  HACK_B_2, 0x8000, mapper_TK263B, 4 },
+	{"wofb",     CPS_B_01, 0x8000, mapper_TK263B },
 	//#ifdef MESS
 	{"sfzch",    NOBATTRY, 0x8000, mapper_cps2 },
 	//#endif
@@ -1306,14 +1304,14 @@ if (cps1_game_config->priority[0] && offset == cps1_game_config->priority[0]/2 &
 #endif
 }
 
-/*
+	/*
     The main CPU writes the palette to gfxram, and the CPS-B custom copies it
     to the real palette RAM, which is separated from gfxram.
     This is done ONLY after the palette base register is written to. It is not
     known what the exact timing should be, how long it should take and when it
     should happen. We are assuming that the copy happens immediately, since it
     fixes glitches in the ghouls intro, but it might happen at next vblank.
-*/
+    */
 	if (offset == CPS1_PALETTE_BASE/2)
 		cps1_build_palette(machine, cps1_base(CPS1_PALETTE_BASE,cps1_palette_align));
 }
@@ -1443,19 +1441,19 @@ void cps1_get_video_base(void )
 		scroll2xoff = -0x0e;
 		scroll3xoff = -0x10;
 	}
-	else if (cps1_game_config->bootleg_kludge == 14)
-	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
-		scroll1xoff = 0xffc0;
-		scroll2xoff = 0xffc0;
-		scroll3xoff = 0xffc0;
-	}
-	else if (cps1_game_config->bootleg_kludge == 12)
+	else if (cps1_game_config->bootleg_kludge == 2)
 	{
 		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
+	}
+	else if (cps1_game_config->bootleg_kludge == 4)
+	{
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		scroll1xoff = 0xffc0;
+		scroll2xoff = 0xffc0;
+		scroll3xoff = 0xffc0;
 	}
 	else
 	{
@@ -1628,8 +1626,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-       roms have been mixed to be reproduced (ffightua) -- it looks like each column
-       should alternate between the left and right side of the 16x16 tiles */
+         roms have been mixed to be reproduced (ffightua) -- it looks like each column
+         should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -1709,7 +1707,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-    MACHINE_RESET_CALL(cps);
+	MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -1792,7 +1790,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-	{
+		{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);
@@ -1899,7 +1897,7 @@ static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, cons
 	UINT16 *base=cps1_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (cps1_game_config->bootleg_kludge == 1)
+	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 3)
 	{
 		base += cps1_last_sprite_offset;
 		baseadd = -4;

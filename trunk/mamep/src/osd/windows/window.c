@@ -658,9 +658,9 @@ void winwindow_video_window_create(running_machine *machine, int index, win_moni
 
 	// make the window title
 	if (video_config.numscreens == 1)
-		sprintf(window->title, APPNAME ": %s [%s]", _LST(Machine->gamedrv->description), Machine->gamedrv->name);
+		sprintf(window->title, APPNAME ": %s [%s]", _LST(machine->gamedrv->description), machine->gamedrv->name);
 	else
-		sprintf(window->title, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), _LST(Machine->gamedrv->description), Machine->gamedrv->name, index);
+		sprintf(window->title, _WINDOWS(APPNAME ": %s [%s] - Screen %d"), _LST(machine->gamedrv->description), machine->gamedrv->name, index);
 
 	// set the initial maximized state
 	window->startmaximized = options_get_bool(mame_options(), WINOPTION_MAXIMIZE);
