@@ -1560,7 +1560,7 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0130/4:
 			if( (~mem_mask) & 0x0000ffff )	// KEYINPUT
 			{
-				return readinputport(0);
+				return input_port_read_indexed(machine, 0);
 			}
 			if( (~mem_mask) & 0xffff0000 )
 			{
