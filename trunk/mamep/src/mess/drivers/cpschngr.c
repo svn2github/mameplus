@@ -21,7 +21,7 @@ merged Street Fighter Zero for MESS
 #endif
 
 #define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)
-MACHINE_DRIVER_EXTERN(cps1);
+MACHINE_DRIVER_EXTERN(cps1_10MHz);
 extern void driver_init_cps1(running_machine *machine);
 
 /*
@@ -135,4 +135,5 @@ SYSTEM_CONFIG_END
 ***************************************************************************/
 
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE   INPUT     INIT    CONFIG  COMPANY     FULLNAME */
-CONS( 1995, sfzch,    0,        0,		cps1,	  sfzch,    cps1,	cpschngr,	"Capcom", "CPS Changer (Street Fighter Zero)" , 0)
+CONS( 1995, sfzch,    0,        0,		cps1_10MHz,	  sfzch,    cps1,	cpschngr,	"Capcom", "CPS Changer (Street Fighter Zero)" , 0)
+

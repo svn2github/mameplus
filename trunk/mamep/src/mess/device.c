@@ -48,7 +48,8 @@ struct _mess_device_token
 
 
 
-struct Devices
+typedef struct _mess_device_type_info mess_device_type_info;
+struct _mess_device_type_info
 {
 	iodevice_t type;
 	const char *name;
@@ -63,7 +64,7 @@ struct Devices
 
 /* The List of Devices, with Associated Names - Be careful to ensure that   *
  * this list matches the ENUM from device.h, so searches can use IO_COUNT	*/
-static const struct Devices device_info_array[] =
+static const mess_device_type_info device_info_array[] =
 {
 	{ IO_CARTSLOT,	"cartridge",	"cart" }, /*  0 */
 	{ IO_FLOPPY,	"floppydisk",	"flop" }, /*  1 */
@@ -87,77 +88,44 @@ static const struct Devices device_info_array[] =
     CORE IMPLEMENTATION
 ***************************************************************************/
 
+static const mess_device_type_info *find_device_type(iodevice_t type)
+{
+	int i;
+	for (i = 0; i < ARRAY_LENGTH(device_info_array); i++)
+	{
+		if (device_info_array[i].type == type)
+			return &device_info_array[i];
+	}
+	return NULL;
+}
+
+
+
 const char *device_typename(iodevice_t type)
 {
-	assert(type >= 0);
-	assert(type < IO_COUNT);
-	return device_info_array[type].name;
+	const mess_device_type_info *info = find_device_type(type);
+	return (info != NULL) ? info->name : NULL;
 }
 
 
 
 const char *device_brieftypename(iodevice_t type)
 {
-	assert(type >= 0);
-	assert(type < IO_COUNT);
-	return device_info_array[type].shortname;
+	const mess_device_type_info *info = find_device_type(type);
+	return (info != NULL) ? info->shortname : NULL;
 }
 
 
 
-int device_typeid(const char *name)
+iodevice_t device_typeid(const char *name)
 {
 	int i;
 	for (i = 0; i < sizeof(device_info_array) / sizeof(device_info_array[0]); i++)
 	{
 		if (!mame_stricmp(name, device_info_array[i].name) || !mame_stricmp(name, device_info_array[i].shortname))
-			return i;
+			return device_info_array[i].type;
 	}
 	return -1;
-}
-
-
-
-static const char *internal_device_instancename(const mess_device_class *devclass, int id,
-	UINT32 base, const char *(*get_dev_typename)(iodevice_t))
-{
-	iodevice_t type;
-	int count;
-	const char *result;
-	char *s;
-
-	/* retrieve info about the device instance */
-	result = mess_device_get_info_string(devclass, base + id);
-	if (!result)
-	{
-		/* not specified? default to device names based on the device type */
-		type = (iodevice_t) (int) mess_device_get_info_int(devclass, MESS_DEVINFO_INT_TYPE);
-		count = (int) mess_device_get_info_int(devclass, MESS_DEVINFO_INT_COUNT);
-		result = get_dev_typename(type);
-
-		/* need to number if there is more than one device */
-		if (count > 1)
-		{
-			s = device_temp_str();
-			sprintf(s, "%s%d", result, id + 1);
-			result = s;
-		}
-	}
-	return result;
-}
-
-
-
-const char *device_instancename(const mess_device_class *devclass, int id)
-{
-	return internal_device_instancename(devclass, id, MESS_DEVINFO_STR_NAME, device_typename);
-}
-
-
-
-const char *device_briefinstancename(const mess_device_class *devclass, int id)
-{
-	return internal_device_instancename(devclass, id, MESS_DEVINFO_STR_SHORT_NAME, device_brieftypename);
 }
 
 
@@ -171,31 +139,6 @@ const char *device_briefinstancename(const mess_device_class *devclass, int id)
 const char *device_uiname(iodevice_t devtype)
 {
 	return ui_getstring((UI_cartridge - IO_CARTSLOT) + devtype);
-}
-
-
-
-static const char *default_device_name(const struct IODevice *dev, int id,
-	char *buf, size_t bufsize)
-{
-	const char *name;
-
-	/* use the cool new device string technique */
-	name = mess_device_get_info_string(&dev->devclass, MESS_DEVINFO_STR_DESCRIPTION+id);
-	if (name)
-	{
-		snprintf(buf, bufsize, "%s", name);
-		return buf;
-	}
-
-	name = device_uiname(dev->type);
-	if (dev->multiple)
-	{
-		/* for the average user counting starts at #1 ;-) */
-		snprintf(buf, bufsize, "%s #%d", name, id + 1);
-		name = buf;
-	}
-	return name;
 }
 
 
@@ -241,6 +184,37 @@ static DEVICE_STOP(mess_device)
 
 
 /*-------------------------------------------------
+    DEVICE_GET_NAME(mess_device) - device get name
+    callback
+-------------------------------------------------*/
+
+static DEVICE_GET_NAME(mess_device)
+{
+	const char *name;
+	const struct IODevice *iodev = mess_device_from_core_device(device);
+	int id = iodev->index_in_device;
+
+	/* use the cool new device string technique */
+	name = mess_device_get_info_string(&iodev->devclass, MESS_DEVINFO_STR_DESCRIPTION + id);
+	if (name)
+	{
+		snprintf(buffer, buffer_length, "%s", name);
+		return buffer;
+	}
+
+	name = device_uiname(iodev->type);
+	if (iodev->multiple)
+	{
+		/* for the average user counting starts at #1 ;-) */
+		snprintf(buffer, buffer_length, "%s #%d", name, id + 1);
+		name = buffer;
+	}
+	return name;
+}
+
+
+
+/*-------------------------------------------------
     DEVICE_GET_INFO(mess_device) - device get info
     callback
 -------------------------------------------------*/
@@ -255,6 +229,12 @@ DEVICE_GET_INFO(mess_device)
 		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = sizeof(mess_device_config);			break;
 		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(mess_device_token);			break;
 		case DEVINFO_INT_CLASS:					info->i = DEVICE_CLASS_OTHER;					break;
+		case DEVINFO_INT_IMAGE_READABLE:		info->i = mess_device->io_device.readable;		break;
+		case DEVINFO_INT_IMAGE_WRITEABLE:		info->i = mess_device->io_device.writeable;		break;
+		case DEVINFO_INT_IMAGE_CREATABLE:		info->i = mess_device->io_device.creatable;		break;
+		case DEVINFO_INT_IMAGE_TYPE:			info->i = mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_TYPE); break;
+		case DEVINFO_INT_IMAGE_MUST_BE_LOADED:	info->i = mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_MUST_BE_LOADED); break;
+		case DEVINFO_INT_IMAGE_RESET_ON_LOAD:	info->i = mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_RESET_ON_LOAD); break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
 		case DEVINFO_FCT_SET_INFO:				/* Nothing */									break;
@@ -264,7 +244,10 @@ DEVICE_GET_INFO(mess_device)
 		case DEVINFO_FCT_IMAGE_LOAD:			info->f = mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_LOAD); break;
 		case DEVINFO_FCT_IMAGE_CREATE:			info->f	= mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_CREATE); break;
 		case DEVINFO_FCT_IMAGE_UNLOAD:			info->f = mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_UNLOAD); break;
+		case DEVINFO_FCT_IMAGE_VERIFY:			info->f = mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_VERIFY); break;
 		case DEVINFO_FCT_DISPLAY:				info->f = mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_DISPLAY); break;
+		case DEVINFO_FCT_IMAGE_PARTIAL_HASH:	info->f = mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_PARTIAL_HASH); break;
+		case DEVINFO_FCT_GET_NAME:				info->f = (genf *) DEVICE_GET_NAME_NAME(mess_device);	break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case DEVINFO_STR_NAME:					info->s = "Legacy MESS Device";					break;
@@ -272,6 +255,9 @@ DEVICE_GET_INFO(mess_device)
 		case DEVINFO_STR_VERSION:				info->s = "1.0";								break;
 		case DEVINFO_STR_SOURCE_FILE:			info->s = __FILE__;								break;
 		case DEVINFO_STR_CREDITS:				info->s = "Copyright the MESS Team";			break;
+		case DEVINFO_STR_IMAGE_FILE_EXTENSIONS:	info->s = mess_device_get_info_string(&mess_device->io_device.devclass, MESS_DEVINFO_STR_FILE_EXTENSIONS); break;
+		case DEVINFO_STR_IMAGE_INSTANCE_NAME:	info->s = mess_device_get_info_string(&mess_device->io_device.devclass, MESS_DEVINFO_STR_NAME); break;
+		case DEVINFO_STR_IMAGE_BRIEF_INSTANCE_NAME:	info->s = mess_device_get_info_string(&mess_device->io_device.devclass, MESS_DEVINFO_STR_SHORT_NAME); break;
 	}
 }
 
@@ -333,7 +319,6 @@ static void create_mess_device(device_config **listheadptr, device_getinfo_handl
 	char dynamic_tag[32];
 	device_config *device;
 	mess_device_config *mess_device;
-	const char *file_extensions;
 	int i, j, count;
 	size_t string_buffer_pos = 0;
 	int createimage_optcount;
@@ -374,24 +359,6 @@ static void create_mess_device(device_config **listheadptr, device_getinfo_handl
 		info_string = mess_tag;
 		mess_tag = string_buffer_putstr(mess_device->string_buffer, ARRAY_LENGTH(mess_device->string_buffer), &string_buffer_pos, info_string);
 
-		/* convert file extensions from comma delimited to null delimited */
-		file_extensions = mess_device_get_info_string(&mess_devclass, MESS_DEVINFO_STR_FILE_EXTENSIONS);
-		if (file_extensions != NULL)
-		{
-			const char *file_extensions_copy = &mess_device->string_buffer[string_buffer_pos];
-
-			/* copy the file extensions over to the buffer */
-			for (j = 0; file_extensions[j] != '\0'; j++)
-			{
-				string_buffer_putc(mess_device->string_buffer, ARRAY_LENGTH(mess_device->string_buffer), &string_buffer_pos,
-					(file_extensions[j] != ',') ? file_extensions[j] : '\0');
-			}
-			string_buffer_putc(mess_device->string_buffer, ARRAY_LENGTH(mess_device->string_buffer), &string_buffer_pos, '\0');
-			string_buffer_putc(mess_device->string_buffer, ARRAY_LENGTH(mess_device->string_buffer), &string_buffer_pos, '\0');
-
-			file_extensions = file_extensions_copy;
-		}
-
 		/* populate the legacy MESS device */
 		mess_device->io_device.tag					= mess_tag;
 		mess_device->io_device.devconfig			= device;
@@ -399,30 +366,12 @@ static void create_mess_device(device_config **listheadptr, device_getinfo_handl
 		mess_device->io_device.type					= mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_TYPE);
 		mess_device->io_device.position				= *position;
 		mess_device->io_device.index_in_device		= i;
-		mess_device->io_device.file_extensions		= file_extensions;
 
 		mess_device->io_device.reset_on_load		= mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_RESET_ON_LOAD) ? 1 : 0;
-//		mess_device->io_device.must_be_loaded		= mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_MUST_BE_LOADED) ? 1 : 0;
-		if (mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_MUST_BE_LOADED))
-		{
-			if (has_dummy_image() == -1)
-				set_dummy_image(1);
-			mess_device->io_device.must_be_loaded = 1;
-		}
-		else
-		{
-			if (has_dummy_image() == -1)
-				set_dummy_image(0);
-			mess_device->io_device.must_be_loaded = 0;
-		}
 		mess_device->io_device.load_at_init			= mess_device_get_info_int(&mess_device->io_device.devclass, MESS_DEVINFO_INT_LOAD_AT_INIT) ? 1 : 0;
 
 		mess_device->io_device.start				= (device_start_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_START);
 		mess_device->io_device.stop					= (device_stop_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_STOP);
-		mess_device->io_device.imgverify			= (device_image_verify_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_VERIFY);
-		mess_device->io_device.partialhash			= (device_image_partialhash_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_PARTIAL_HASH);
-
-		mess_device->io_device.name					= default_device_name;
 
 		mess_device->io_device.createimage_optguide	= (const struct OptionGuide *) mess_device_get_info_ptr(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_CREATE_OPTGUIDE);
 
@@ -458,7 +407,7 @@ static void create_mess_device(device_config **listheadptr, device_getinfo_handl
 		getdispositions = (device_getdispositions_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_GET_DISPOSITIONS);
 		if (getdispositions != NULL)
 		{
-			getdispositions(&mess_device->io_device, i, &readable, &writeable, &creatable);
+			getdispositions(i, &readable, &writeable, &creatable);
 		}
 		else
 		{
@@ -656,13 +605,13 @@ const device_config *image_from_device(const struct IODevice *device)
 
 
 
-const device_config *image_from_devtag_and_index(const char *devtag, int id)
+const device_config *image_from_devtag_and_index(running_machine *machine, const char *devtag, int id)
 {
 	const device_config *image = NULL;
 	const device_config *dev;
 	const struct IODevice *iodev;
 
-	for (dev = device_list_first(Machine->config->devicelist, MESS_DEVICE); dev != NULL; dev = device_list_next(dev, MESS_DEVICE))
+	for (dev = device_list_first(machine->config->devicelist, MESS_DEVICE); dev != NULL; dev = device_list_next(dev, MESS_DEVICE))
 	{
 		iodev = mess_device_from_core_device(dev);
 		if ((iodev->tag != NULL) && !strcmp(iodev->tag, devtag) && (iodev->index_in_device == id))
@@ -726,22 +675,9 @@ int device_valididtychecks(void)
 	int error = 0;
 	int i;
 
-	if ((sizeof(device_info_array) / sizeof(device_info_array[0])) != IO_COUNT)
-	{
-		mame_printf_error("device_info_array array should match size of IO_* enum\n");
-		error = 1;
-	}
-
 	/* Check the device struct array */
 	for (i = 0; i < sizeof(device_info_array) / sizeof(device_info_array[0]); i++)
 	{
-		if (device_info_array[i].type != i)
-		{
-			mame_printf_error("Device struct array order mismatch\n");
-			error = 1;
-			break;
-		}
-
 		if (!device_info_array[i].name)
 		{
 			mame_printf_error("device_info_array[%d].name appears to be NULL\n", i);

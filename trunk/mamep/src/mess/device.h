@@ -16,6 +16,7 @@
 // MESS headers
 #include "osdmess.h"
 #include "opresolv.h"
+#include "image.h"
 
 
 /*************************************
@@ -91,14 +92,7 @@ enum
 
 struct IODevice;
 
-typedef int (*device_image_load_func)(const device_config *image);
-typedef int (*device_image_create_func)(const device_config *image, int format_type, option_resolution *format_options);
-typedef void (*device_image_unload_func)(const device_config *image);
-typedef int (*device_image_verify_func)(const UINT8 *buf, size_t size);
-typedef void (*device_image_partialhash_func)(char *, const unsigned char *, unsigned long, unsigned int);
-typedef void (*device_getdispositions_func)(const struct IODevice *dev, int id,
-	unsigned int *readable, unsigned int *writeable, unsigned int *creatable);
-typedef void (*device_display_func)(const device_config *image);
+typedef void (*device_getdispositions_func)(int id, unsigned int *readable, unsigned int *writeable, unsigned int *creatable);
 typedef const char *(*device_getname_func)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
 
 struct _mess_device_class;
@@ -192,9 +186,6 @@ INLINE char *device_temp_str(void)
 	return cpuintrf_temp_str();
 }
 
-const char *device_instancename(const mess_device_class *devclass, int id);
-const char *device_briefinstancename(const mess_device_class *devclass, int id);
-
 
 
 /*************************************
@@ -202,28 +193,6 @@ const char *device_briefinstancename(const mess_device_class *devclass, int id);
  *  Other
  *
  *************************************/
-
-typedef enum
-{
-	/* List of all supported devices.  Refer to the device by these names only */
-	IO_CARTSLOT,	/*  0 - Cartridge Port, as found on most console and on some computers */
-	IO_FLOPPY,		/*  1 - Floppy Disk unit */
-	IO_HARDDISK,	/*  2 - Hard Disk unit */
-	IO_CYLINDER,	/*  3 - Magnetically-Coated Cylinder */
-	IO_CASSETTE,	/*  4 - Cassette Recorder (common on early home computers) */
-	IO_PUNCHCARD,	/*  5 - Card Puncher/Reader */
-	IO_PUNCHTAPE,	/*  6 - Tape Puncher/Reader (reels instead of punchcards) */
-	IO_PRINTER,		/*  7 - Printer device */
-	IO_SERIAL,		/*  8 - Generic Serial Port */
-	IO_PARALLEL,    /*  9 - Generic Parallel Port */
-	IO_SNAPSHOT,	/* 10 - Complete 'snapshot' of the state of the computer */
-	IO_QUICKLOAD,	/* 11 - Allow to load program/data into memory, without matching any actual device */
-	IO_MEMCARD,		/* 12 - Memory card */
-	IO_CDROM,		/* 13 - optical CD-ROM disc */
-	IO_COUNT		/* 14 - Total Number of IO_devices for searching */
-} iodevice_t;
-
-
 
 struct CreateImageOptions
 {
@@ -243,7 +212,6 @@ struct IODevice
 	iodevice_t type;
 	int position;
 	int index_in_device;
-	const char *file_extensions;
 
 	/* open dispositions */
 	unsigned int readable : 1;
@@ -252,18 +220,12 @@ struct IODevice
 
 	/* miscellaneous flags */
 	unsigned int reset_on_load : 1;
-	unsigned int must_be_loaded : 1;
 	unsigned int load_at_init : 1;
 	unsigned int multiple : 1;
 
 	/* image handling callbacks */
 	device_start_func start;
 	device_stop_func stop;
-	int (*imgverify)(const UINT8 *buf, size_t size);
-	device_image_partialhash_func partialhash;
-
-	/* cosmetic/UI callbacks */
-	const char *(*name)(const struct IODevice *dev, int id, char *buf, size_t bufsize);
 
 	/* image creation options */
 	const struct OptionGuide *createimage_optguide;
@@ -279,7 +241,7 @@ const struct IODevice *mess_device_from_core_device(const device_config *device)
 const char *device_uiname(iodevice_t devtype);
 const char *device_typename(iodevice_t type);
 const char *device_brieftypename(iodevice_t type);
-int device_typeid(const char *name);
+iodevice_t device_typeid(const char *name);
 
 /* device allocation */
 void mess_devices_setup(machine_config *config, const game_driver *gamedrv);
@@ -298,7 +260,7 @@ void *image_lookuptag(const device_config *device, const char *tag);
 /* deprecated device access functions */
 int image_index_in_device(const device_config *device);
 const device_config *image_from_device(const struct IODevice *iodev);
-const device_config *image_from_devtag_and_index(const char *devtag, int id);
+const device_config *image_from_devtag_and_index(running_machine *machine, const char *devtag, int id);
 
 /* deprecated device access functions that assume one device of any given type */
 iodevice_t image_devtype(const device_config *device);

@@ -34,11 +34,13 @@ struct _image_slot_data
 	/* variables that persist across image mounts */
 	object_pool *mempool;
 	const device_config *dev;
+	image_device_info info;
 
 	/* callbacks */
 	device_image_load_func load;
 	device_image_create_func create;
 	device_image_unload_func unload;
+	device_image_verify_func verify;
 
 	/* error related info */
 	image_error_t err;
@@ -88,6 +90,76 @@ static void image_exit(running_machine *machine);
 static void image_clear(image_slot_data *image);
 static void image_clear_error(image_slot_data *image);
 static void image_unload_internal(image_slot_data *slot);
+
+
+
+/***************************************************************************
+    INLINE FUNCTIONS
+***************************************************************************/
+
+/*-------------------------------------------------
+    device_get_info_int_offline - return an integer
+	state value from an allocated device; can be
+	called offline
+-------------------------------------------------*/
+
+INLINE INT64 device_get_info_int_offline(const device_config *device, UINT32 state)
+{
+	deviceinfo info;
+
+	assert(device != NULL);
+	assert(device->type != NULL);
+	assert(state >= DEVINFO_INT_FIRST && state <= DEVINFO_INT_LAST);
+
+	/* retrieve the value */
+	info.i = 0;
+	(*device->type)(device, state, &info);
+	return info.i;
+}
+
+
+
+/*-------------------------------------------------
+    device_get_info_fct_offline - return an integer
+	state value from an allocated device; can be
+	called offline
+-------------------------------------------------*/
+
+INLINE genf *device_get_info_fct_offline(const device_config *device, UINT32 state)
+{
+	deviceinfo info;
+
+	assert(device != NULL);
+	assert(device->type != NULL);
+	assert(state >= DEVINFO_FCT_FIRST && state <= DEVINFO_FCT_LAST);
+
+	/* retrieve the value */
+	info.f = 0;
+	(*device->type)(device, state, &info);
+	return info.f;
+}
+
+
+
+/*-------------------------------------------------
+    device_get_info_str_offline - return an integer
+	state value from an allocated device; can be
+	called offline
+-------------------------------------------------*/
+
+INLINE const char *device_get_info_string_offline(const device_config *device, UINT32 state)
+{
+	deviceinfo info;
+
+	assert(device != NULL);
+	assert(device->type != NULL);
+	assert(state >= DEVINFO_STR_FIRST && state <= DEVINFO_STR_LAST);
+
+	/* retrieve the value */
+	info.s = 0;
+	(*device->type)(device, state, &info);
+	return info.s;
+}
 
 
 
@@ -143,12 +215,14 @@ void image_init(running_machine *machine)
 		slot->mempool = pool_alloc(memory_error);
 
 		/* setup the device */
-		machine->images_data->slots[indx].dev = dev;
+		slot->dev = dev;
+		slot->info = image_device_getinfo(machine->config, dev);
 
 		/* callbacks */
 		slot->load = (device_image_load_func) device_get_info_fct(slot->dev, DEVINFO_FCT_IMAGE_LOAD);
 		slot->create = (device_image_create_func) device_get_info_fct(slot->dev, DEVINFO_FCT_IMAGE_CREATE);
 		slot->unload = (device_image_unload_func) device_get_info_fct(slot->dev, DEVINFO_FCT_IMAGE_UNLOAD);
+		slot->verify = (device_image_verify_func) device_get_info_fct(slot->dev, DEVINFO_FCT_IMAGE_VERIFY);
 
 		indx++;
 	}
@@ -210,7 +284,9 @@ static void image_exit(running_machine *machine)
 
 static int is_image_device(const device_config *device)
 {
-	return (device->type == MESS_DEVICE);
+	return (device->type == MESS_DEVICE)
+		|| (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_READABLE) != 0)
+		|| (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) != 0);
 }
 
 
@@ -263,6 +339,219 @@ int image_device_count(const machine_config *config)
 		count++;
 	}
 	return count;
+}
+
+
+
+/****************************************************************************
+    ANALYSIS
+****************************************************************************/
+
+/*-------------------------------------------------
+    get_device_name - retrieves the name of a
+	device
+-------------------------------------------------*/
+
+static void get_device_name(const device_config *device, char *buffer, size_t buffer_len)
+{
+	const char *name = NULL;
+	device_get_name_func get_name;
+	
+	if (name == NULL)
+	{
+		/* first try a get_name function */
+		get_name = (device_get_name_func) device_get_info_fct_offline(device, DEVINFO_FCT_GET_NAME);
+		if (get_name != NULL)
+			name = get_name(device, buffer, buffer_len);
+	}
+
+	if (name == NULL)
+	{
+		/* next try DEVINFO_STR_NAME */
+		name = device_get_info_string_offline(device, DEVINFO_STR_NAME);
+	}
+
+	/* make sure that the name is put into the buffer */
+	if (name != buffer)
+		snprintf(buffer, buffer_len, "%s", (name != NULL) ? name : "");
+}
+
+
+
+/*-------------------------------------------------
+    get_device_file_extensions - retrieves the file
+	extensions used by a device
+-------------------------------------------------*/
+
+static void get_device_file_extensions(const device_config *device,
+	char *buffer, size_t buffer_len)
+{
+	const char *file_extensions;
+	char *s;
+
+	/* be pedantic - we need room for a string list */
+	assert(buffer_len > 0);
+	buffer_len--;
+
+	/* copy the string */
+	file_extensions = device_get_info_string_offline(device, DEVINFO_STR_IMAGE_FILE_EXTENSIONS);
+	snprintf(buffer, buffer_len, "%s", (file_extensions != NULL) ? file_extensions : "");
+
+	/* convert the comma delimited list to a NUL delimited list */
+	s = buffer;
+	while((s = strchr(s, ',')) != NULL)
+		*(s++) = '\0';
+}
+
+
+
+/*-------------------------------------------------
+    get_device_instance_name - retrieves the device
+	instance name or brief instance name
+-------------------------------------------------*/
+
+static void get_device_instance_name(const machine_config *config, const device_config *device,
+	char *buffer, size_t buffer_len, iodevice_t type, UINT32 state, const char *(*get_dev_typename)(iodevice_t))
+{
+	const char *result;
+	const device_config *that_device;
+	int count, index;
+
+	/* retrieve info about the device instance */
+	result = device_get_info_string_offline(device, state);
+	if (result != NULL)
+	{
+		/* we got info directly */
+		snprintf(buffer, buffer_len, "%s", result);
+	}
+	else
+	{
+		/* not specified? default to device names based on the device type */
+		result = get_dev_typename(type);
+
+		/* are there multiple devices of the same type */
+		count = 0;
+		index = -1;
+		for (that_device = image_device_first(config); that_device != NULL; that_device = image_device_next(that_device))
+		{
+			if (device == that_device)
+				index = count;
+			if (device_get_info_int_offline(device, DEVINFO_INT_IMAGE_TYPE) == type)
+				count++;
+		}
+
+		/* need to number if there is more than one device */
+		if (that_device != NULL)
+			snprintf(buffer, buffer_len, "%s #%d", result, index + 1);
+		else
+			snprintf(buffer, buffer_len, "%s", result);
+	}
+}
+
+
+
+/*-------------------------------------------------
+    image_device_getinfo - returns info on a device;
+	can be called by front end code
+-------------------------------------------------*/
+
+image_device_info image_device_getinfo(const machine_config *config, const device_config *device)
+{
+	image_device_info info;
+
+	/* sanity checks */
+	assert((device->machine == NULL) || (device->machine->config == config));
+
+	/* clear return value */
+	memset(&info, 0, sizeof(info));
+
+	/* retrieve type */
+	info.type = (iodevice_t) (int) device_get_info_int_offline(device, DEVINFO_INT_IMAGE_TYPE);
+
+	/* retrieve flags */
+	info.readable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_READABLE) ? 1 : 0;
+	info.writeable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) ? 1 : 0;
+	info.creatable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_CREATABLE) ? 1 : 0;
+	info.must_be_loaded = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_MUST_BE_LOADED) ? 1 : 0;
+	if (info.must_be_loaded && has_dummy_image() == -1)
+		set_dummy_image(1);
+	else if (has_dummy_image() == -1)
+			set_dummy_image(0);
+	info.reset_on_load = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_RESET_ON_LOAD) ? 1 : 0;
+	info.has_partial_hash = device_get_info_fct_offline(device, DEVINFO_FCT_IMAGE_PARTIAL_HASH) ? 1 : 0;
+
+	/* retrieve name */
+	get_device_name(device, info.name, ARRAY_LENGTH(info.name));
+
+	/* retrieve file extensions */
+	get_device_file_extensions(device, info.file_extensions, ARRAY_LENGTH(info.file_extensions));
+
+	/* retrieve instance name */
+	get_device_instance_name(config, device, info.instance_name, ARRAY_LENGTH(info.instance_name),
+		info.type, DEVINFO_STR_IMAGE_INSTANCE_NAME, device_typename);
+
+	/* retrieve brief instance name */
+	get_device_instance_name(config, device, info.brief_instance_name, ARRAY_LENGTH(info.brief_instance_name),
+		info.type, DEVINFO_STR_IMAGE_BRIEF_INSTANCE_NAME, device_brieftypename);
+
+	return info;
+}
+
+
+
+/*-------------------------------------------------
+    image_device_uses_file_extension - checks to
+	see if a particular devices uses a certain
+	file extension
+-------------------------------------------------*/
+
+int image_device_uses_file_extension(const device_config *device, const char *file_extension)
+{
+	int result = FALSE;
+	const char *s;
+	char file_extension_list[256];
+	
+	/* skip initial period, if present */
+	if (file_extension[0] == '.')
+		file_extension++;
+
+	/* retrieve file extension list */
+	get_device_file_extensions(device, file_extension_list, ARRAY_LENGTH(file_extension_list));
+
+	/* find the extensions */
+	s = file_extension_list;
+	while(!result && (*s != '\0'))
+	{
+		if (!mame_stricmp(s, file_extension))
+		{
+			result = TRUE;
+			break;
+		}
+		s += strlen(s) + 1;
+	}
+	return result;
+}
+
+
+
+/*-------------------------------------------------
+    image_device_compute_hash - compute a hash,
+	using this device's partial hash if appropriate
+-------------------------------------------------*/
+
+void image_device_compute_hash(char *dest, const device_config *device,
+	const void *data, size_t length, unsigned int functions)
+{
+	device_image_partialhash_func partialhash;
+
+	/* retrieve the partial hash func */
+	partialhash = (device_image_partialhash_func) device_get_info_fct_offline(device, DEVINFO_FCT_IMAGE_PARTIAL_HASH);
+
+	/* compute the hash */
+	if (partialhash != NULL)
+		partialhash(dest, data, length, functions);
+	else
+		hash_compute(dest, data, length, functions);
 }
 
 
@@ -553,26 +842,16 @@ static image_error_t load_image_by_path(image_slot_data *image, const char *soft
 
 static void determine_open_plan(image_slot_data *image, int is_create, UINT32 *open_plan)
 {
-	unsigned int readable, writeable, creatable;
 	int i = 0;
-	const struct IODevice *iodev;
-
-	/* access legacy MESS device */
-	iodev = mess_device_from_core_device(image->dev);
-
-	/* determine disposition */
-	readable = iodev->readable;
-	writeable = iodev->writeable;
-	creatable = iodev->creatable;
 
 	/* emit flags */
-	if (!is_create && readable && writeable)
+	if (!is_create && image->info.readable && image->info.writeable)
 		open_plan[i++] = OPEN_FLAG_READ | OPEN_FLAG_WRITE;
-	if (!is_create && !readable && writeable)
+	if (!is_create && !image->info.readable && image->info.writeable)
 		open_plan[i++] = OPEN_FLAG_WRITE;
-	if (!is_create && readable)
+	if (!is_create && image->info.readable)
 		open_plan[i++] = OPEN_FLAG_READ;
-	if (writeable && creatable)
+	if (image->info.writeable && image->info.creatable)
 		open_plan[i++] = OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE;
 	open_plan[i] = 0;
 }
@@ -617,7 +896,6 @@ static int image_load_internal(const device_config *image, const char *path,
 	UINT32 open_plan[4];
 	int i;
 	image_slot_data *slot = find_image_slot(image);
-	const struct IODevice *iodev = mess_device_from_core_device(image);
 
 	/* sanity checks */
 	assert_always(image != NULL, "image_load(): image is NULL");
@@ -635,7 +913,7 @@ static int image_load_internal(const device_config *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	if ((has_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && iodev->reset_on_load)
+	if ((has_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && slot->info.reset_on_load)
 		mame_schedule_hard_reset(machine);
 
 	/* determine open plan */
@@ -674,7 +952,7 @@ static int image_load_internal(const device_config *image, const char *path,
 	}
 
 	/* if applicable, call device verify */
-	if (iodev->imgverify && !image_has_been_created(image))
+	if ((slot->verify != NULL) && !image_has_been_created(image))
 	{
 		/* access the memory */
 		buffer = image_ptr(image);
@@ -685,7 +963,7 @@ static int image_load_internal(const device_config *image, const char *path,
 		}
 
 		/* verify the file */
-		err = iodev->imgverify(buffer, core_fsize(slot->file));
+		err = (*slot->verify)(buffer, core_fsize(slot->file));
 		if (err)
 		{
 			slot->err = IMAGE_ERROR_INVALIDIMAGE;
@@ -947,8 +1225,8 @@ static void run_hash(const device_config *image,
 static int image_checkhash(image_slot_data *image)
 {
 	const game_driver *drv;
-	const struct IODevice *dev;
 	char hash_string[HASH_BUF_SIZE];
+	device_image_partialhash_func partialhash;
 	int rc;
 
 	/* this call should not be made when the image is not loaded */
@@ -957,15 +1235,15 @@ static int image_checkhash(image_slot_data *image)
 	/* only calculate CRC if it hasn't been calculated, and the open_mode is read only */
 	if (!image->hash && !image->writeable && !image->created)
 	{
-		/* initialize key variables */
-		dev = mess_device_from_core_device(image->dev);
-
 		/* do not cause a linear read of 600 megs please */
 		/* TODO: use SHA/MD5 in the CHD header as the hash */
-		if (dev->type == IO_CDROM)
+		if (image->info.type == IO_CDROM)
 			return FALSE;
 
-		run_hash(image->dev, dev->partialhash, hash_string, HASH_CRC | HASH_MD5 | HASH_SHA1);
+		/* retrieve the partial hash func */
+		partialhash = (device_image_partialhash_func) device_get_info_fct_offline(image->dev, DEVINFO_FCT_IMAGE_PARTIAL_HASH);
+
+		run_hash(image->dev, partialhash, hash_string, HASH_CRC | HASH_MD5 | HASH_SHA1);
 
 		image->hash = image_strdup(image->dev, hash_string);
 
@@ -1105,13 +1383,9 @@ core_file *image_core_file(const device_config *image)
 
 const char *image_typename_id(const device_config *image)
 {
-	const struct IODevice *dev;
-	int id;
-	static char buf[64];
-
-	dev = mess_device_from_core_device(image);
-	id = image_index_in_device(image);
-	return dev->name(dev, id, buf, sizeof(buf) / sizeof(buf[0]));
+	static char buffer[64];
+	get_device_name(image, buffer, ARRAY_LENGTH(buffer));
+	return buffer;
 }
 
 

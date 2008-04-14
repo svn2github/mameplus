@@ -22,6 +22,37 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
+typedef int (*device_image_load_func)(const device_config *image);
+typedef int (*device_image_create_func)(const device_config *image, int format_type, option_resolution *format_options);
+typedef void (*device_image_unload_func)(const device_config *image);
+typedef int (*device_image_verify_func)(const UINT8 *buf, size_t size);
+typedef void (*device_display_func)(const device_config *image);
+typedef void (*device_image_partialhash_func)(char *, const unsigned char *, unsigned long, unsigned int);
+typedef const char *(*device_get_name_func)(const device_config *device, char *buffer, size_t buffer_length);
+
+typedef enum
+{
+	/* List of all supported devices.  Refer to the device by these names only */
+	IO_UNKNOWN,
+	IO_CARTSLOT,	/*  1 - Cartridge Port, as found on most console and on some computers */
+	IO_FLOPPY,		/*  2 - Floppy Disk unit */
+	IO_HARDDISK,	/*  3 - Hard Disk unit */
+	IO_CYLINDER,	/*  4 - Magnetically-Coated Cylinder */
+	IO_CASSETTE,	/*  5 - Cassette Recorder (common on early home computers) */
+	IO_PUNCHCARD,	/*  6 - Card Puncher/Reader */
+	IO_PUNCHTAPE,	/*  7 - Tape Puncher/Reader (reels instead of punchcards) */
+	IO_PRINTER,		/*  8 - Printer device */
+	IO_SERIAL,		/*  9 - Generic Serial Port */
+	IO_PARALLEL,    /* 10 - Generic Parallel Port */
+	IO_SNAPSHOT,	/* 11 - Complete 'snapshot' of the state of the computer */
+	IO_QUICKLOAD,	/* 12 - Allow to load program/data into memory, without matching any actual device */
+	IO_MEMCARD,		/* 13 - Memory card */
+	IO_CDROM,		/* 14 - optical CD-ROM disc */
+	IO_COUNT		/* 15 - Total Number of IO_devices for searching */
+} iodevice_t;
+
+
+
 typedef enum
 {
 	IMAGE_ERROR_SUCCESS,
@@ -34,6 +65,22 @@ typedef enum
 	IMAGE_ERROR_UNSPECIFIED
 } image_error_t;
 
+typedef struct _image_device_info image_device_info;
+struct _image_device_info
+{
+	iodevice_t type : 8;
+	unsigned int readable : 1;
+	unsigned int writeable : 1;
+	unsigned int creatable : 1;
+	unsigned int must_be_loaded : 1;
+	unsigned int reset_on_load : 1;
+	unsigned int has_partial_hash : 1;
+	char name[62];
+	char file_extensions[32];
+	char instance_name[32];
+	char brief_instance_name[16];
+};
+
 struct _images_private;
 typedef struct _images_private images_private;
 
@@ -41,13 +88,33 @@ typedef struct _images_private images_private;
 /* state constants specific for mountable images */
 enum
 {
+	/* --- the following bits of info are returned as integers --- */
+	DEVINFO_INT_IMAGE_FIRST = DEVINFO_INT_FIRST + 0x7000,
+	DEVINFO_INT_IMAGE_TYPE,
+	DEVINFO_INT_IMAGE_READABLE,
+	DEVINFO_INT_IMAGE_WRITEABLE,
+	DEVINFO_INT_IMAGE_CREATABLE,
+	DEVINFO_INT_IMAGE_MUST_BE_LOADED,
+	DEVINFO_INT_IMAGE_RESET_ON_LOAD,
+	DEVINFO_INT_IMAGE_LAST = DEVINFO_INT_IMAGE_FIRST + 0x0fff,
+
 	/* --- the following bits of info are returned as pointers to functions --- */
 	DEVINFO_FCT_IMAGE_FIRST = DEVINFO_FCT_FIRST + 0x7000,
-	DEVINFO_FCT_IMAGE_LOAD,										/* R/O: device_load_handler */
-	DEVINFO_FCT_IMAGE_CREATE,									/* R/O: device_create_handler */
-	DEVINFO_FCT_IMAGE_UNLOAD,									/* R/O: device_unload_handler */
+	DEVINFO_FCT_IMAGE_LOAD,										/* R/O: device_image_load_func */
+	DEVINFO_FCT_IMAGE_CREATE,									/* R/O: device_image_create_func */
+	DEVINFO_FCT_IMAGE_UNLOAD,									/* R/O: device_image_unload_func */
+	DEVINFO_FCT_IMAGE_VERIFY,									/* R/O: device_image_verify_func */
 	DEVINFO_FCT_DISPLAY,										/* R/O: device_display_func */
-	DEVINFO_FCT_IMAGE_LAST = DEVINFO_FCT_FIRST + 0x0fff
+	DEVINFO_FCT_IMAGE_PARTIAL_HASH,								/* R/O: device_image_partialhash_func */
+	DEVINFO_FCT_GET_NAME,										/* R/O: device_get_name_func */
+	DEVINFO_FCT_IMAGE_LAST = DEVINFO_FCT_FIRST + 0x0fff,
+
+	/* --- the following bits of info are returned as NULL-terminated strings --- */
+	DEVINFO_STR_IMAGE_FIRST = DEVINFO_STR_FIRST + 0x7000,
+	DEVINFO_STR_IMAGE_FILE_EXTENSIONS,
+	DEVINFO_STR_IMAGE_INSTANCE_NAME,
+	DEVINFO_STR_IMAGE_BRIEF_INSTANCE_NAME,
+	DEVINFO_STR_IMAGE_LAST = DEVINFO_STR_IMAGE_FIRST + 0x0fff
 };
 
 
@@ -73,6 +140,18 @@ const device_config *image_device_next(const device_config *prevdevice);
 
 /* counts the number of devices that support images */
 int image_device_count(const machine_config *config);
+
+/* ----- analysis ----- */
+
+/* returns info on a device - can be called by front end code */
+image_device_info image_device_getinfo(const machine_config *config, const device_config *device);
+
+/* checks to see if a particular devices uses a certain file extension */
+int image_device_uses_file_extension(const device_config *device, const char *file_extension);
+
+/* compute a hash, using this device's partial hash if appropriate */
+void image_device_compute_hash(char *dest, const device_config *device,
+	const void *data, size_t length, unsigned int functions);
 
 
 
@@ -199,5 +278,8 @@ const device_config *image_from_absolute_index(running_machine *machine, int abs
 
 #define DEVICE_IMAGE_UNLOAD_NAME(name)	device_unload_##name
 #define DEVICE_IMAGE_UNLOAD(name)		void DEVICE_IMAGE_UNLOAD_NAME(name)(const device_config *image)
+
+#define DEVICE_GET_NAME_NAME(name)		device_get_name_##name
+#define DEVICE_GET_NAME(name)			const char *DEVICE_GET_NAME_NAME(name)(const device_config *device, char *buffer, size_t buffer_length)
 
 #endif /* __IMAGE_H__ */

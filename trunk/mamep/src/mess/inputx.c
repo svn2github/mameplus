@@ -10,7 +10,6 @@
 #include <assert.h>
 #include <wctype.h>
 #include "inputx.h"
-#include "deprecat.h"
 #include "inptport.h"
 #include "mame.h"
 
@@ -924,7 +923,7 @@ static TIMER_CALLBACK(inputx_timerproc)
 
 
 
-void inputx_update(void)
+void inputx_update(running_machine *machine)
 {
 	const key_buffer *keybuf;
 	const mess_input_code *code;
@@ -949,7 +948,7 @@ void inputx_update(void)
 				for (i = 0; i < ARRAY_LENGTH(code->ipt) && code->ipt[i]; i++)
 				{
 					value = code->ipt[i]->mask;
-					input_port_set_digital_value(code->port[i], value, value);
+					input_port_set_digital_value(machine, code->port[i], value, value);
 				}
 			}
 		}
