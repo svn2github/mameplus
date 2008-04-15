@@ -474,18 +474,18 @@ musobana	梦想花 (日版)	梦想花 (日版)	Nichibutsu/Yubis
 niyanpai	娘牌 (日版)	娘牌 (日版)	Nichibutsu
 safarir	丛林赛车 (日版)	丛林赛车 (日版)	SNK
 phoenix	火凤凰 (Amstar)	火凤凰 (Amstar)	Amstar
-phoenixa	火凤凰 (Centuri), 第1套	火凤凰 (Centuri), 第1套	Amstar (Centuri license)
-phoenixb	火凤凰 (Centuri), 第2套	火凤凰 (Centuri), 第2套	Amstar (Centuri license)
+phoenixa	火凤凰 (Centuri, 第1套)	火凤凰 (Centuri, 第1套)	Amstar (Centuri license)
+phoenixb	火凤凰 (Centuri, 第2套)	火凤凰 (Centuri, 第2套)	Amstar (Centuri license)
 phoenixt	火凤凰 (Taito)	火凤凰 (Taito)	Taito
 phoenix3	火凤凰 (T.P.N.)	火凤凰 (T.P.N.)	bootleg
 phoenixc	火凤凰 (IRECSA, G.G.I Corp)	火凤凰 (IRECSA, G.G.I Corp)	bootleg?
 condor	秃鹰 (盗版 火凤凰)	秃鹰 (盗版 火凤凰)	Sidam (bootleg)
 fenix	火凤凰 (盗版 火凤凰)	火凤凰 (盗版 火凤凰)	bootleg
-falcon	猎鹰 (盗版 火凤凰) (第1套)	猎鹰 (盗版 火凤凰) (第1套)	bootleg
-vautour	火凤凰 Vautour (盗版 火凤凰) (第1套)	火凤凰 Vautour (盗版 火凤凰) (第1套)	Jeutel (bootleg)
-vautour2	火凤凰 Vautour (盗版 火凤凰) (第2套)	火凤凰 Vautour (盗版 火凤凰) (第2套)	bootleg
+falcon	猎鹰 (盗版 火凤凰) (8085A CPU)	猎鹰 (盗版 火凤凰) (8085A CPU)	bootleg
+vautour	火凤凰 Vautour (盗版 火凤凰) (8085A CPU)	火凤凰 Vautour (盗版 火凤凰) (8085A CPU)	Jeutel (bootleg)
+falconz	猎鹰 (盗版 火凤凰) (Z80 CPU)	猎鹰 (盗版 火凤凰) (Z80 CPU)	bootleg
+vautourz	火凤凰 Vautour (盗版 火凤凰) (Z80 CPU)	火凤凰 Vautour (盗版 火凤凰) (Z80 CPU)	bootleg
 griffon	火凤凰 Griffon (盗版 火凤凰)	火凤凰 Griffon (盗版 火凤凰)	Videotron (bootleg)
-falcona	猎鹰 (盗版 火凤凰) (第2套)	猎鹰 (盗版 火凤凰) (第2套)	bootleg
 nextfase	火凤凰 Next Fase (盗版 火凤凰)	火凤凰 Next Fase (盗版 火凤凰)	Petaco S.A. (bootleg)
 pleiads	火凤凰 2 (Tehkan)	火凤凰 2 (Tehkan)	Tehkan
 pleiadbl	火凤凰 2 (盗版)	火凤凰 2 (盗版)	bootleg
@@ -1823,6 +1823,7 @@ dendeg2	电车向前走 2 - 高速编	电车向前走 2 - 高速编	Taito
 dendeg2x	电车向前走 2 - 高速编 3000 番台	电车向前走 2 - 高速编 3000 番台	Taito
 sidebs	机动赛车	机动赛车	Taito
 sidebs2	机动赛车 2	机动赛车 2	Taito
+sidebs2j	机动赛车 2 (日版)	机动赛车 2 (日版)	Taito
 dangcurv	威力肌肉	威力肌肉	Taito
 pf2012	超能力大战 2012	超能力大战 2012	Taito
 perfrman	火蚁超人 (日版)	火蚁超人 (日版)	[Toaplan] Data East Corporation
@@ -3175,14 +3176,15 @@ rachero	摩托英雄 (FD1094 317-0144)	摩托英雄 (FD1094 317-0144)	Sega
 abcop	宇宙骑警 (FD1094 317-0169b)	宇宙骑警 (FD1094 317-0169b)	Sega
 gprider	超真实 GP 摩托车 (第2套, 世界版, FD1094 317-0163)	超真实 GP 摩托车 (第2套, 世界版, FD1094 317-0163)	Sega
 gprider1	超真实 GP 摩托车 (第1套, 美版, FD1094 317-0162)	超真实 GP 摩托车 (第1套, 美版, FD1094 317-0162)	Sega
-smgp	超级摩纳哥GP赛车 (第8套, 世界版, Rev B, 'Twin', FD1094 317-0126a)	超级摩纳哥GP赛车 (第8套, 世界版, Rev B, 'Twin', FD1094 317-0126a)	Sega
-smgp6	超级摩纳哥GP赛车 (第7套, 世界版, Rev A, FD1094 317-0126a)	超级摩纳哥GP赛车 (第7套, 世界版, Rev A, FD1094 317-0126a)	Sega
-smgp5	超级摩纳哥GP赛车 (第6套, 世界版, 'Air Drive Cabinet', FD1094 317-0126)	超级摩纳哥GP赛车 (第6套, 世界版, 'Air Drive Cabinet', FD1094 317-0126)	Sega
-smgpu	超级摩纳哥GP赛车 (第5套, 美版, Rev C, FD1094 317-0125a)	超级摩纳哥GP赛车 (第5套, 美版, Rev C, FD1094 317-0125a)	Sega
-smgpu3	超级摩纳哥GP赛车 (第2套, 美版, FD1094 317-0125a)	超级摩纳哥GP赛车 (第2套, 美版, FD1094 317-0125a)	Sega
-smgpu2	超级摩纳哥GP赛车 (第3套, 美版, Rev A, FD1094 317-0125a)	超级摩纳哥GP赛车 (第3套, 美版, Rev A, FD1094 317-0125a)	Sega
-smgpu1	超级摩纳哥GP赛车 (第4套, 美版, Rev B, FD1094 317-0125a)	超级摩纳哥GP赛车 (第4套, 美版, Rev B, FD1094 317-0125a)	Sega
-smgpj	超级摩纳哥GP赛车 (第1套, 日版, Rev B, FD1094 317-0124a)	超级摩纳哥GP赛车 (第1套, 日版, Rev B, FD1094 317-0124a)	Sega
+smgp	超级摩纳哥GP赛车 (第9套, 世界版, Rev B, 'Twin', FD1094 317-0126a)	超级摩纳哥GP赛车 (第9套, 世界版, Rev B, 'Twin', FD1094 317-0126a)	Sega
+smgp6	超级摩纳哥GP赛车 (第8套, 世界版, Rev A, FD1094 317-0126a)	超级摩纳哥GP赛车 (第8套, 世界版, Rev A, FD1094 317-0126a)	Sega
+smgp5	超级摩纳哥GP赛车 (第7套, 世界版, 'Air Drive Cabinet', FD1094 317-0126)	超级摩纳哥GP赛车 (第7套, 世界版, 'Air Drive Cabinet', FD1094 317-0126)	Sega
+smgpu	超级摩纳哥GP赛车 (第6套, 美版, Rev C, FD1094 317-0125a)	超级摩纳哥GP赛车 (第6套, 美版, Rev C, FD1094 317-0125a)	Sega
+smgpu3	超级摩纳哥GP赛车 (第3套, 美版, FD1094 317-0125a)	超级摩纳哥GP赛车 (第3套, 美版, FD1094 317-0125a)	Sega
+smgpu2	超级摩纳哥GP赛车 (第4套, 美版, Rev A, FD1094 317-0125a)	超级摩纳哥GP赛车 (第4套, 美版, Rev A, FD1094 317-0125a)	Sega
+smgpu1	超级摩纳哥GP赛车 (第5套, 美版, Rev B, FD1094 317-0125a)	超级摩纳哥GP赛车 (第5套, 美版, Rev B, FD1094 317-0125a)	Sega
+smgpj	超级摩纳哥GP赛车 (第2套, 日版, Rev B, FD1094 317-0124a)	超级摩纳哥GP赛车 (第2套, 日版, Rev B, FD1094 317-0124a)	Sega
+smgpja	超级摩纳哥GP赛车 (第1套, 日版, Rev A, FD1094 317-0124a)	超级摩纳哥GP赛车 (第1套, 日版, Rev A, FD1094 317-0124a)	Sega
 gforce2	星际大争霸 2	星际大争霸 2	Sega
 gforce2j	星际大争霸 2 (日版)	星际大争霸 2 (日版)	Sega
 gloc	空战神兵 (美版)	空战神兵 (美版)	Sega
@@ -5339,9 +5341,11 @@ nbanfl	美国职业篮球 1999	美国职业篮球 1999	Midway Games
 gauntdl	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	Midway Games
 gauntd24	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	Midway Games
 cartfury	狂热赛车	狂热赛车	Midway Games
-tm	触碰大师	触碰大师	Midway
-tm3k	触碰大师 3000 (v5.01)	触碰大师 3000 (v5.01)	Midway
-tm4k	触碰大师 4000 (v6.02)	触碰大师 4000 (v6.02)	Midway
+tm	触摸大师	触摸大师	Midway
+tm3k	触摸大师 3000 (v5.01)	触摸大师 3000 (v5.01)	Midway
+tm4k	触摸大师 4000 (v6.02)	触摸大师 4000 (v6.02)	Midway
+tm5k	触摸大师 5000 (v7.10)	触摸大师 5000 (v7.10)	Midway
+tm7k	触摸大师 7000 (v8.00)	触摸大师 7000 (v8.00)	Midway
 galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	禁运	禁运	Cinematronics
 tripool	花式撞球 Tri-Pool (Casino Tech)	花式撞球 Tri-Pool (Casino Tech)	Noma (Casino Tech license)
@@ -5518,10 +5522,11 @@ heatbrlu	狂热印地安 (美版)	狂热印地安 (美版)	Tad
 godzilla	酷斯拉	酷斯拉	Banpresto
 denjinmk	电神魔傀	电神魔傀	Banpresto
 sdgndmrb	机动战士 93 系列 SD 钢弹三国志 - 彩虹大陆战记	机动战士 93 系列 SD 钢弹三国志 - 彩虹大陆战记	Banpresto
-cupsoc	西武杯足球 (第1套)	西武杯足球 (第1套)	Seibu
-cupsoc2	西武杯足球 (第2套)	西武杯足球 (第2套)	Seibu
+cupsoc	西武杯足球	西武杯足球	Seibu
+cupsocs	西武杯足球 (第1套)	西武杯足球 (第1套)	Seibu
+cupsocs2	西武杯足球 (第2套)	西武杯足球 (第2套)	Seibu
+cupsocsb	西武杯足球 (盗版)	西武杯足球 (盗版)	bootleg
 olysoc92	西武杯足球 Olympic Soccer 92	西武杯足球 Olympic Soccer 92	Seibu
-cupsocbl	西武杯足球 (盗版)	西武杯足球 (盗版)	bootleg
 goal92	西武杯足球 Goal! 92	西武杯足球 Goal! 92	bootleg
 exerion	浮游基地	浮游基地	Jaleco
 exeriont	浮游基地 (Taito)	浮游基地 (Taito)	Jaleco (Taito America license)
@@ -5644,7 +5649,7 @@ pspikes	能量排球 (世界版)	能量排球 (世界版)	Video System Co.
 pspikesk	能量排球 (韩国版)	能量排球 (韩国版)	Video System Co.
 svolly91	能量排球 (日版)	能量排球 (日版)	Video System Co.
 pspikesb	能量排球 (盗版)	能量排球 (盗版)	bootleg
-pallavol	能量排球 (意大利 盗版)	能量排球 (意大利 盗版)	bootleg
+spikes91	1991 Spikes (Italian bootleg)	1991 Spikes (Italian bootleg)	bootleg
 pspikesc	能量排球 (中文版)	能量排球 (中文版)	bootleg
 karatblz	斗神光辉 (世界版?)	斗神光辉 (世界版?)	Video System Co.
 karatblu	斗神光辉 (美版)	斗神光辉 (美版)	Video System Co.
