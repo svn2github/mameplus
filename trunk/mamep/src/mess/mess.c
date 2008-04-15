@@ -124,7 +124,7 @@ void mess_predevice_init(running_machine *machine)
 int has_dummy_image()
 {
 // mamep: Arcade games don't have dummy image
-	if (!Machine->gamedrv->sysconfig_ctor)
+	if (!Machine || !Machine->gamedrv->sysconfig_ctor)
  		return 0;
 	return _has_dummy_image;
 }

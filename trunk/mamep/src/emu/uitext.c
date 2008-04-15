@@ -419,5 +419,9 @@ int uistring_init (void)
 
 const char * ui_getstring (int string_num)
 {
+	//mamep: fixme: since 124u2
+	if (trans_text)
 		return trans_text[string_num];
+	else 
+		return "";
 }
