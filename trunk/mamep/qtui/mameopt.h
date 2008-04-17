@@ -15,12 +15,13 @@ public:
 	void setResetEnabled(bool enabled);
 /*	void setValueText(const QString &text);
 	void setValueIcon(const QIcon &icon);*/
-	void setSpacing(int spacing);/*
+	void setSpacing(int spacing);
+
 signals:
-	void resetProperty(QtProperty *property);
-	private slots:
-		void slotClicked();
-*/
+//	void resetProperty(QtProperty *property);
+private slots:
+	void slotClicked();
+
 private:
 //	QtProperty *m_property;
 	QLabel *m_textLabel;
@@ -48,6 +49,11 @@ public:
 	void updateEditorGeometry(QWidget *editor,
 		const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
+public slots:
+	void sync();
+
+private:
+	bool isReset;
 };
 
 class MameOption : public QObject
@@ -83,13 +89,13 @@ public:
 
 public slots:
 	void loadDefault(QString);
-	void load();
+	void loadTemplate();
 	void load(int, const QString &);
-	void save(int , const QString &, const QString &);
+	void save(int , const QString &);
 	QHash<QString, QString> readIniFile(const QString &);
 
 	void initOption();
-	void updateModel(QListWidgetItem *currItem);
+	void updateModel(QListWidgetItem *currItem, int optType = -1);
 	void setupModelData(QString, int);
 //	void exportToIni(QString useFileName = QString());
 //	void importFromIni(QString useFileName = QString());

@@ -186,20 +186,17 @@ void MainWindow::initSnap(QString title)
 
 void MainWindow::init()
 {
-#ifdef QMC2_DEBUG
-	log(LOG_QMC2, "DEBUG: MainWindow::init()");
-#endif
 	initSettings();
 	loadSettings();
 
 	// must init after win, before show()
 	optUtils->initOption();
+
+	// must load() before loadLayout()
 	gamelist->load();
+
 	show();
 	loadLayout();
-
-	//fixme: chain with gamelist->load(), s11n
-	gamelist->loadDefaultIni();
 
 	connect(gameListPModel,SIGNAL(layoutChanged()), gamelist, SLOT(restoreSelection()));
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
@@ -248,6 +245,10 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
+	//init ctlrs
+	for (int i = OPTNFO_GLOBAL; i < OPTNFO_LAST; i++)
+		optUtils->updateModel(0, i);
+
 	dlgOptions->exec();
 }
 

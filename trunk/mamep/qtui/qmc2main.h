@@ -71,7 +71,7 @@ private:
 #define LOG_QMC2	1
 #define LOG_MAME	2
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 4
+#define S11N_VER 5
 
 // external global variables
 extern MainWindow *win;

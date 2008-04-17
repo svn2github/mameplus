@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.6 Alpha 1</string>
+   <string>MAME Plus! GUI 0.7 Alpha</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>

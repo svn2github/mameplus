@@ -157,6 +157,9 @@
      </item>
      <item>
       <widget class="QDialogButtonBox" name="buttonBox" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
        <property name="sizePolicy" >
         <sizepolicy vsizetype="Fixed" hsizetype="Fixed" >
          <horstretch>0</horstretch>

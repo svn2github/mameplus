@@ -202,10 +202,10 @@ public slots:
 
 	// process management
 	void loadStarted();
-	void loadFinished(int, QProcess::ExitStatus);
 	void loadReadyReadStandardOutput();
-	void loadDefaultIniFinished(int, QProcess::ExitStatus);
+	void loadFinished(int, QProcess::ExitStatus);
 	void loadDefaultIniReadyReadStandardOutput();
+	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 
 	// internal methods
 	void parse();
@@ -226,7 +226,7 @@ public slots:
 class RomInfo : public QObject
 {
 public:
-	QString name, status;
+	QString name, bios, status;
 	quint64 size;
 	bool available;
 
@@ -234,12 +234,23 @@ public:
 	~RomInfo();
 };
 
+class BiosInfo : public QObject
+{
+public:
+	QString description;
+	bool isdefault;
+
+	BiosInfo(QObject *parent = 0);
+	~BiosInfo();
+};
 
 class GameInfo : public QObject
 {
 public:
 	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDescription, reading;
+	bool isbios;
 	QHash<quint32, RomInfo *> crcRomInfoMap;
+	QHash<QString, BiosInfo *> nameBiosInfoMap;
 	int available;
 	QIcon icon;
 	TreeItem *pModItem;
@@ -247,6 +258,7 @@ public:
 
 	GameInfo(QObject *parent = 0);
 	~GameInfo();
+	QString biosof();
 };
 
 class MameGame : public QObject
@@ -255,6 +267,7 @@ Q_OBJECT
 
 public:
 	QString mameVersion;
+	QString mameDefaultIni;
 	QHash<QString, GameInfo *> gamenameGameInfoMap;
 
 	MameGame(QObject *parent = 0);

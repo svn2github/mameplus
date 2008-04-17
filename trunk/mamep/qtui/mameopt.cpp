@@ -5,6 +5,7 @@ OptionUtils *optUtils;
 static QHash<QString, MameOption*> mameOpts;
 static QList<OptionInfo *> optInfos;
 static QMap<QString, QStringList> optCatMap;
+static OptionDelegate optdelegate(win);
 
 enum
 {
@@ -51,7 +52,8 @@ m_spacing(-1)
 	m_button->setIcon(QIcon(":/res/reset_property.png"));
 	m_button->setIconSize(QSize(8,8));
 	m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
-	//	connect(m_button, SIGNAL(clicked()), this, SLOT(slotClicked()));
+	connect(m_button, SIGNAL(clicked()), &optdelegate, SLOT(sync()));
+
 	QLayout *layout = new QHBoxLayout(this);
 	layout->setMargin(0);
 	layout->setSpacing(m_spacing);
@@ -108,16 +110,19 @@ void ResetWidget::setValueIcon(const QIcon &icon)
 		m_iconLabel->setPixmap(pix);
 	}
 }
+*/
 
 void ResetWidget::slotClicked()
 {
-	emit resetProperty(m_property);
+	//emit resetProperty(m_property);
+	
+//	emit commitData(w);
 }
-*/
 
 OptionDelegate::OptionDelegate(QObject *parent)
 : QItemDelegate(parent)
 {
+	isReset = false;
 }
 
 QSize OptionDelegate::sizeHint ( const QStyleOptionViewItem & option, 
@@ -324,163 +329,200 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	if (index.column() == 0)
 		return;
 
-	// update control's display value
 	QVariant dispValue;
 	ResetWidget *resetWidget = static_cast<ResetWidget*>(editor);
 	int optType = optUtils->getField(index, USERROLE_TYPE).toInt();
+	int optInfoType = index.model()->objectName().remove("optModel").toInt();
 	QString optName = optUtils->getField(index, USERROLE_KEY).toString();
+	MameOption *pMameOpt = mameOpts[optName];
+
+	// update control's display value
 	
-	switch (optType)
+	if (isReset)
 	{
-	case MAMEOPT_TYPE_BOOL:
+		switch (optInfoType)
 		{
-			QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
-			dispValue = (ctrl->checkState() == Qt::Checked) ? true : false;
+
+		case OPTNFO_GLOBAL:
+			dispValue = pMameOpt->defvalue;
 			break;
-		}
-	case MAMEOPT_TYPE_INT:
-		{
-			QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
-			ctrl->interpretText();
-			dispValue = ctrl->value();
+				
+		case OPTNFO_SRC:
+			dispValue = pMameOpt->globalvalue;
 			break;
-		}
-	case MAMEOPT_TYPE_FLOAT:
-		{
-			QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
-			ctrl->interpretText();
-			// ensure .00 display
-			dispValue = optUtils->getLongValue(optName, QString::number(ctrl->value()));
+		
+		case OPTNFO_BIOS:
+			dispValue = pMameOpt->srcvalue;
 			break;
+		
+		case OPTNFO_CLONEOF:
+			dispValue = pMameOpt->biosvalue;
+			break;
+		
+		case OPTNFO_CURR:
+		default:
+			dispValue = pMameOpt->cloneofvalue;
 		}
-	case MAMEOPT_TYPE_STRING:
+
+		dispValue = optUtils->getLongValue(optName, dispValue.toString());
+	}
+	else
+		switch (optType)
 		{
-			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-			if (guivalues.size() > 0)
+		case MAMEOPT_TYPE_BOOL:
 			{
-				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
-				dispValue = ctrl->currentText();
+				QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
+				dispValue = (ctrl->checkState() == Qt::Checked) ? true : false;
 				break;
 			}
+		case MAMEOPT_TYPE_INT:
+			{
+				QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
+				ctrl->interpretText();
+				dispValue = ctrl->value();
+				break;
+			}
+		case MAMEOPT_TYPE_FLOAT:
+			{
+				QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
+				ctrl->interpretText();
+				// ensure .00 display
+				dispValue = optUtils->getLongValue(optName, QString::number(ctrl->value()));
+				break;
+			}
+		case MAMEOPT_TYPE_STRING:
+			{
+				QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+				if (guivalues.size() > 0)
+				{
+					QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
+					dispValue = ctrl->currentText();
+					break;
+				}
+			}
+		default:
+			{
+				QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+				dispValue = ctrl->text();
+	//			QItemDelegate::setModelData(editor, model, index);
+			}
 		}
-	default:
-		{
-			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
-			dispValue = ctrl->text();
-//			QItemDelegate::setModelData(editor, model, index);
-		}
-	}
-	
+
 	model->setData(index, dispValue);
 
-
 	// process inherited value overrides
-	MameOption *pMameOpt = mameOpts[optName];
-	int optInfoType = index.model()->objectName().remove("optModel").toInt();
 	QString prevVal;
 	QAbstractItemModel *overrideModel;
 	QModelIndex overrideIndex;
+	QString iniFileName;
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[currentGame];
 	
 	switch (optInfoType)
 	{
 	case OPTNFO_GLOBAL:
-		{
-			prevVal = pMameOpt->globalvalue;
-			
-			pMameOpt->globalvalue = optUtils->getShortValue(optName, dispValue.toString());
+		iniFileName = "mame.ini";
+		
+		prevVal = pMameOpt->globalvalue;
+		
+		pMameOpt->globalvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = dlgOptions->treeGlobalOpt->model();
+		overrideModel = dlgOptions->treeGlobalOpt->model();
+		overrideIndex = overrideModel->index(index.row(), 1);
+		overrideModel->setData(overrideIndex, dispValue);
+		// fall to next case
+
+	case OPTNFO_SRC:
+		if (iniFileName.isNull())
+			iniFileName = "ini/source/" + gameInfo->sourcefile.remove(".c") + ".ini";
+		
+		// prevent overwrite prevVal from prev case
+		if (optInfoType == OPTNFO_SRC)
+			prevVal = pMameOpt->srcvalue;
+
+		if (pMameOpt->srcvalue == prevVal)
+		{
+			pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
+
+			overrideModel = dlgOptions->treeSourceOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 			// fall to next case
 		}
-	case OPTNFO_SRC:
-		{
-			// prevent overwrite prevVal from prev case
-			if (optInfoType == OPTNFO_SRC)
-				prevVal = pMameOpt->srcvalue;
+		else
+			break;
 
-			if (pMameOpt->srcvalue == prevVal)
-			{
-				pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
-
-				overrideModel = dlgOptions->treeSourceOpt->model();
-				overrideIndex = overrideModel->index(index.row(), 1);
-				overrideModel->setData(overrideIndex, dispValue);
-				// fall to next case
-			}
-			else
-				break;
-		}
 	case OPTNFO_BIOS:
-		{
-			if (optInfoType == OPTNFO_BIOS)
-				prevVal = pMameOpt->biosvalue;
-
-			if (pMameOpt->biosvalue == prevVal)
-			{
-				pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
-
-				overrideModel = dlgOptions->treeBiosOpt->model();
-				overrideIndex = overrideModel->index(index.row(), 1);
-				overrideModel->setData(overrideIndex, dispValue);
-			}
-			else
-				break;
-		}
-	case OPTNFO_CLONEOF:
-		{
-			if (optInfoType == OPTNFO_CLONEOF)
-				prevVal = pMameOpt->cloneofvalue;
-
-			if (pMameOpt->currvalue == prevVal)
-			{
-				pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
-
-				overrideModel = dlgOptions->treeCloneofOpt->model();
-				overrideIndex = overrideModel->index(index.row(), 1);
-				overrideModel->setData(overrideIndex, dispValue);
-			}
-			else
-				break;
-		}
-	case OPTNFO_CURR:
-		{
-			if (optInfoType == OPTNFO_CURR)
-				prevVal = pMameOpt->currvalue;
+		if (iniFileName.isNull())
+			iniFileName = "ini/" + gameInfo->biosof() + ".ini";
 		
-			if (pMameOpt->currvalue == prevVal)
-			{
-				pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
-			
-				overrideModel = dlgOptions->treeCurrOpt->model();
-				overrideIndex = overrideModel->index(index.row(), 1);
-				overrideModel->setData(overrideIndex, dispValue);
-			}
+		if (optInfoType == OPTNFO_BIOS)
+			prevVal = pMameOpt->biosvalue;
+
+		if (pMameOpt->biosvalue == prevVal)
+		{
+			pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
+
+			overrideModel = dlgOptions->treeBiosOpt->model();
+			overrideIndex = overrideModel->index(index.row(), 1);
+			overrideModel->setData(overrideIndex, dispValue);
 		}
+		else
+			break;
+
+	case OPTNFO_CLONEOF:
+		if (iniFileName.isNull())
+			iniFileName = "ini/" + gameInfo->cloneof + ".ini";
+		
+		if (optInfoType == OPTNFO_CLONEOF)
+			prevVal = pMameOpt->cloneofvalue;
+
+		if (pMameOpt->cloneofvalue == prevVal)
+		{
+			pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
+
+			overrideModel = dlgOptions->treeCloneofOpt->model();
+			overrideIndex = overrideModel->index(index.row(), 1);
+			overrideModel->setData(overrideIndex, dispValue);
+		}
+		else
+			break;
+
+	case OPTNFO_CURR:
+		if (iniFileName.isNull())
+			iniFileName = "ini/" + currentGame + ".ini";
+		
+		if (optInfoType == OPTNFO_CURR)
+			prevVal = pMameOpt->currvalue;
+	
+		if (pMameOpt->currvalue == prevVal)
+		{
+			pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
+		
+			overrideModel = dlgOptions->treeCurrOpt->model();
+			overrideIndex = overrideModel->index(index.row(), 1);
+			overrideModel->setData(overrideIndex, dispValue);
+		}
+		break;
 	}
 
-	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[currentGame];
-
-	optUtils->save(OPTNFO_GLOBAL, optName, "mame.ini");
-	
-	QString iniFileName = "ini/source/" + gameInfo->sourcefile.remove(".c") + ".ini";
-	optUtils->save(OPTNFO_SRC, optName, iniFileName);
-	
-//	iniFileName = "ini/fixmebios.ini";	//fixme
-//	optUtils->save(O, optName, iniFileName);
-
-	iniFileName = "ini/" + gameInfo->cloneof + ".ini";
-	optUtils->save(OPTNFO_CLONEOF, optName, iniFileName);
-	
-	iniFileName = "ini/" + currentGame + ".ini";
-	optUtils->save(OPTNFO_CURR, optName, iniFileName);
+	optUtils->save(optInfoType, iniFileName);
 }
 
 void OptionDelegate::updateEditorGeometry(QWidget *editor,
 										  const QStyleOptionViewItem &option, const QModelIndex &/* index */) const
 {
 	editor->setGeometry(option.rect);
+}
+
+void OptionDelegate::sync()
+{
+    ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
+    if (w == 0)
+        return;
+	isReset = true;
+	emit commitData(w);
+    emit closeEditor(w, QAbstractItemDelegate::EditNextItem);
+	isReset = false;
 }
 
 // parse listxml and init default mame opts
@@ -585,33 +627,25 @@ QVariant OptionUtils::getField(const QModelIndex &index, int field)
 		switch (field)
 		{
 		case USERROLE_KEY:
-			{
-				return optname;
-			}
+			return optname;
+
 		case USERROLE_TYPE:
-			{
-				return mameOpts[optname]->type;
-			}
+			return mameOpts[optname]->type;
+
 		case USERROLE_MIN:
-			{
-				return mameOpts[optname]->min;
-			}
+			return mameOpts[optname]->min;
+
 		case USERROLE_MAX:
-			{
-				return mameOpts[optname]->max;
-			}
+			return mameOpts[optname]->max;
+
 		case USERROLE_DEFAULT:
-			{
-				return mameOpts[optname]->defvalue;
-			}
+			return mameOpts[optname]->defvalue;
+
 		case USERROLE_VALLIST:
-			{
-				return QVariant(mameOpts[optname]->values);
-			}
+			return QVariant(mameOpts[optname]->values);
+
 		case USERROLE_GUIVALLIST:
-			{
-				return QVariant(mameOpts[optname]->guivalues);
-			}
+			return QVariant(mameOpts[optname]->guivalues);
 		}
 	}
 
@@ -679,7 +713,7 @@ QColor OptionUtils::inheritColor(const QModelIndex &index)
 	if (dispVal == optUtils->getLongValue(optName, pMameOpt->defvalue))
 		return Qt::transparent;
 	else
-		return QColor(0, 255, 0, 24);
+		return QColor(255, 255, 0, 64);
 }
 
 bool OptionUtils::isChanged(const QModelIndex &index)
@@ -721,7 +755,6 @@ bool OptionUtils::isChanged(const QModelIndex &index)
 	}
 
 	compVal = optUtils->getLongValue(optName, compVal);
-//	win->log(LOG_QMC2, QString("%1 / %2").arg(dispVal).arg(compVal));
 
 	if (dispVal != compVal)
 		return true;
@@ -742,16 +775,16 @@ OptionUtils::OptionUtils(QObject *parent)
 
 void OptionUtils::loadDefault(QString text)
 {
-	win->log(LOG_QMC2, "loadDefault(QString text)");
+	win->log(LOG_QMC2, "loadDefault()");
 
 	const QStringList optCatList = (QStringList()
 			<< "00_Global Misc_00_CORE CONFIGURATION"
 			<< "00_Global Misc_01_CORE PALETTE"
 			<< "00_Global Misc_02_CORE LANGUAGE"
 
-			<< "01_Global Path_00_CORE SEARCH PATH"
-			<< "01_Global Path_01_CORE OUTPUT DIRECTORY"
-			<< "01_Global Path_02_CORE FILENAME"
+			<< "01_Directory_00_CORE SEARCH PATH"
+			<< "01_Directory_01_CORE OUTPUT DIRECTORY"
+			<< "01_Directory_02_CORE FILENAME"
 
 			<< "02_Video_02_CORE ROTATION"
 			<< "02_Video_03_CORE SCREEN"
@@ -806,8 +839,6 @@ void OptionUtils::loadDefault(QString text)
 					header = optCatList[c];
 				else
 					header = "06_Misc_99_" + line;
-				
-			//	win->log(LOG_QMC2, "header: " + header);
 			}
 		}
 		else
@@ -836,7 +867,7 @@ void OptionUtils::loadDefault(QString text)
 }
 
 //open option template file
-void OptionUtils::load()
+void OptionUtils::loadTemplate()
 {
 	QFile file(":/res/optiontemplate.xml");
 
@@ -902,12 +933,12 @@ void OptionUtils::load(int optInfoType, const QString &iniFileName)
 				}
 			case OPTNFO_BIOS:
 				{
-					pMameOpt->currvalue = pMameOpt->biosvalue = pMameOpt->globalvalue;
+					pMameOpt->currvalue = pMameOpt->biosvalue = pMameOpt->srcvalue;
 					break;
 				}
 			case OPTNFO_CLONEOF:
 				{
-					pMameOpt->currvalue = pMameOpt->cloneofvalue= pMameOpt->srcvalue;
+					pMameOpt->currvalue = pMameOpt->cloneofvalue= pMameOpt->biosvalue;
 					break;
 				}
 			case OPTNFO_CURR:
@@ -917,94 +948,154 @@ void OptionUtils::load(int optInfoType, const QString &iniFileName)
 				}
 			}
 		}
-/*		win->log(LOG_QMC2, QString("%1: %2 / %3 / %4 / %5 / %6 / %7\n")
-				.arg(optName)
-				.arg(pMameOpt->defvalue)
-				.arg(pMameOpt->globalvalue)
-				.arg(pMameOpt->currvalue)
-				.arg(pMameOpt->srcvalue)
-				.arg(pMameOpt->cloneofvalue)
-				.arg(inisettings[optName])
-				);*/
 	}
 }
 
-void OptionUtils::save(int optInfoType, const QString &optName, const QString &iniFileName)
+void OptionUtils::save(int optInfoType, const QString &iniFileName)
 {
-//load ini text
-	
-//get option map
-//compare with current value
-//update/new/delete the spec entry
-//save text	
 
-	MameOption *pMameOpt = mameOpts[optName];
-	QString currVal;
-	switch (optInfoType)
+	QFile outFile(iniFileName);
+	QString line;
+	QStringList headers;
+	QString mameIni;
+
+	if (outFile.open(QFile::WriteOnly | QFile::Text))
 	{
-	case OPTNFO_GLOBAL:
-		{
-			currVal = pMameOpt->globalvalue;
-			break;
-		}
-	case OPTNFO_SRC:
-		{
-			currVal = pMameOpt->srcvalue;
-			break;
-		}
-	case OPTNFO_BIOS:
-		{
-			currVal = pMameOpt->biosvalue;
-			break;
-		}
-	case OPTNFO_CLONEOF:
-		{
-			currVal = pMameOpt->cloneofvalue;
-			break;
-		}
-	case OPTNFO_CURR:
-		{
-			currVal = pMameOpt->currvalue;
-			break;
-		}
-	}
-
-
-	QFile inFile(iniFileName);
-	QTemporaryFile outFile;
-	bool changed = false;
-	QString line, line0;
-
-	if (inFile.open(QFile::ReadOnly | QFile::Text) &&
-		outFile.open())
-	{
-		outFile.setTextModeEnabled(true);
-		QTextStream in(&inFile);
+		QTextStream in(&mamegame->mameDefaultIni);
+		QTextStream out0(&mameIni);
 		QTextStream out(&outFile);
 		in.setCodec("UTF-8");
+		out0.setCodec("UTF-8");
 		out.setCodec("UTF-8");
+		bool isHeader, isChanged;
+		QString optName;
 
 		do
 		{
-			line0 = line = in.readLine().trimmed();
-			if (line.startsWith(optName) && line.remove(optName).trimmed() != currVal)
+			QString currVal, defVal;
+
+			line = in.readLine();
+
+			// process # headers
+			if (line.startsWith("#"))
 			{
-				//replace value
-				line = line0;
-				line.replace(QRegExp("(\\w+\\s+).*"), QString("\\1%1").arg(currVal));
-				changed = true;
+				headers << line;
+				isHeader = true;
 			}
-			if (!line.isNull())
-				out << line << endl;
+			// process empty lines
+			else if (line.isEmpty())
+				out0 << endl;
+			// process option entry
+			else
+			{
+				int sep = line.indexOf(QRegExp("\\s+"));
+				optName = line.left(sep);
+
+				MameOption *pMameOpt = mameOpts[optName];
+
+				switch (optInfoType)
+				{
+				case OPTNFO_GLOBAL:
+					currVal = pMameOpt->globalvalue;
+					defVal = pMameOpt->defvalue;
+					break;
+				
+				case OPTNFO_SRC:
+					currVal = pMameOpt->srcvalue;
+					defVal = pMameOpt->globalvalue;
+					break;
+				
+				case OPTNFO_BIOS:
+					currVal = pMameOpt->biosvalue;
+					defVal = pMameOpt->srcvalue;
+					break;
+				
+				case OPTNFO_CLONEOF:
+					currVal = pMameOpt->cloneofvalue;
+					defVal = pMameOpt->biosvalue;
+					break;
+				
+				case OPTNFO_CURR:
+				default:
+					currVal = pMameOpt->currvalue;
+					defVal = pMameOpt->cloneofvalue;
+				}
+
+				if (optUtils->getLongValue(optName, currVal) == 
+					optUtils->getLongValue(optName, defVal))
+					isChanged = false;
+				else
+					isChanged = true;
+
+				isHeader = false;
+			}
+
+			if (!isHeader && !line.isEmpty())
+			{
+				// write header
+				if (!headers.isEmpty())
+				{
+					foreach (QString header, headers)
+						out0 << header << endl;
+					headers.clear();
+				}
+
+				// write option entry
+				if (isChanged || optInfoType == OPTNFO_GLOBAL)
+				{
+					win->log(LOG_QMC2, QString("%1 / %2")
+									.arg(currVal)
+									.arg(defVal)
+									);
+				
+					out0.setFieldWidth(26);
+					out0.setFieldAlignment(QTextStream::AlignLeft);
+					out0 << optName;
+					out0.setFieldWidth(0);
+					out0 << currVal << endl;
+				}
+			}
 		}
 		while (!line.isNull());
+
+		// eat empty headers 		
+		QStringList bufs = mameIni.split(QRegExp("[\\r\\n]+"));
+		// read in reverse order
+		for (int i = bufs.count() - 1; i >= 0; i --)
+		{
+			static int c = 0;
+			line = bufs[i];
+			if (line.startsWith("#"))
+				c --;
+			else if (!line.isEmpty())
+				c = 3;	// each header has 3 '#' lines max
+
+			if (c < 0)
+				bufs.removeAt(i); 
+		}
+
+		// make a line between sections
+		foreach (QString buf, bufs)
+		{
+			static bool isEntry = false;
+
+			if (buf.startsWith("#"))
+			{
+				if (isEntry)
+					// add it when prev line is an entry and curr line is a header
+					out << endl;
+
+				isEntry = false;
+			}
+			else
+				isEntry = true;
+
+			out << buf << endl;
+		}
 	}
-	
-	if (changed)
-	{
-		inFile.remove();
-		outFile.copy(inFile.fileName());
-	}
+
+	if (outFile.size() == 0)
+		outFile.remove();
 }
 
 QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
@@ -1068,51 +1159,61 @@ void OptionUtils::initOption()
 		QListWidget *catView = optInfos[optType]->catView;
 		if(catView->count() == 0)
 		{
+			if (optType == OPTNFO_GLOBAL)
+				catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), "Directory", catView));
 			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), "Video", catView));
 			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/audio-x-generic.png"), "Audio", catView));
 			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/input-gaming.png"), "Control", catView));
 			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), "Vector", catView));
 			catView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), "Misc", catView));
 
-			catView->setViewMode(QListView::IconMode);
-			catView->setMovement(QListView::Static);
+//			catView->setViewMode(QListView::IconMode);
+			catView->setIconSize(QSize(24, 24));
+//			catView->setFlow(QListView::TopToBottom);
+//			catView->setMovement(QListView::Static);
 			catView->setMaximumWidth(100);
-			catView->setSpacing(8);
+			catView->setSpacing(4);
 		}
 	}
 }
 
-void OptionUtils::updateModel(QListWidgetItem * currItem)
+void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 {
 	//fixme: hack index
-	int optType = dlgOptions->tabOptions->currentIndex();
+	if (optType == -1)
+		optType = dlgOptions->tabOptions->currentIndex();
 
-	QString filter = currItem->text();
+	QString filter;
+	if (currItem)
+		filter = currItem->text();
+	else
+		filter = "Video";
 
 	//update mameopts
 	optUtils->load(OPTNFO_GLOBAL, "mame.ini");
 	if (optType == OPTNFO_GLOBAL)
 	{
-		win->log(LOG_QMC2, "g");
 		optUtils->setupModelData(filter, OPTNFO_GLOBAL);
 		return;
 	}
 
 	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
 	QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
+	//fixme: create source folder
 	optUtils->load(OPTNFO_SRC, iniFileName);
 	if (optType == OPTNFO_SRC)
 	{
-		win->log(LOG_QMC2, "s");
 		optUtils->setupModelData(filter, OPTNFO_SRC);
 		return;
 	}
 
-	iniFileName = "ini/fixmebios.ini";	//fixme
+	QString biosof = gameinfo->biosof();
+	if (!biosof.isEmpty())
+		iniFileName = "ini/" + biosof + ".ini";
+
 	optUtils->load(OPTNFO_BIOS, iniFileName);
 	if (optType == OPTNFO_BIOS)
 	{
-		win->log(LOG_QMC2, "b");
 		optUtils->setupModelData(filter, OPTNFO_BIOS);
 		return;
 	}
@@ -1121,7 +1222,6 @@ void OptionUtils::updateModel(QListWidgetItem * currItem)
 	optUtils->load(OPTNFO_CLONEOF, iniFileName);
 	if (optType == OPTNFO_CLONEOF)
 	{
-		win->log(LOG_QMC2, "c");
 		optUtils->setupModelData(filter, OPTNFO_CLONEOF);
 		return;
 	}
@@ -1167,8 +1267,6 @@ void OptionUtils::setupModelData(QString filter, int optType)
 			
 			foreach (QString optName, optNames)
 			{
-	//			win->log(LOG_QMC2, QString("%1//%2").arg(optCatName).arg(optName));
-			
 				MameOption *pMameOpt = mameOpts[optName];
 				
 				if (pMameOpt == NULL)
@@ -1200,8 +1298,6 @@ void OptionUtils::setupModelData(QString filter, int optType)
 	if (optModel0)
 		delete optModel0;
 
-	// share delegate among all opt treeviews
-	static OptionDelegate optdelegate(win);
 	optView->setItemDelegate(&optdelegate);
 
 	optView->resizeColumnToContents(1);

@@ -61,6 +61,7 @@ public:
 			
 			gameinfo = new GameInfo(mamegame);
 			gameinfo->sourcefile = attributes.value("sourcefile");
+			gameinfo->isbios = attributes.value("isbios") == "yes";
 			gameinfo->cloneof = attributes.value("cloneof");
 			gameinfo->romof = attributes.value("romof");
 			mamegame->gamenameGameInfoMap[attributes.value("name")] = gameinfo;
@@ -69,11 +70,20 @@ public:
 		{
 			RomInfo *rominfo = new RomInfo(gameinfo);
 			rominfo->name = attributes.value("name");
-			rominfo->status = attributes.value("status");
+			rominfo->bios = attributes.value("bios");
 			rominfo->size = attributes.value("size").toULongLong();
+			rominfo->status = attributes.value("status");
 
 			bool ok;
 			gameinfo->crcRomInfoMap[attributes.value("crc").toUInt(&ok, 16)] = rominfo;
+		}
+		else if (gameinfo->isbios && qName == "biosset")
+		{
+			BiosInfo *biosinfo = new BiosInfo(gameinfo);
+			biosinfo->description = attributes.value("description");
+			biosinfo->isdefault = attributes.value("default") == "yes";
+
+			gameinfo->nameBiosInfoMap[attributes.value("name")] = biosinfo;
 		}
 
 		currentText.clear();
@@ -615,6 +625,17 @@ RomInfo::~RomInfo()
 	//    win->log(LOG_QMC2, "# ~RomInfo()");
 }
 
+BiosInfo::BiosInfo(QObject *parent)
+: QObject(parent)
+{
+	//	win->log(LOG_QMC2, "# BiosInfo()");
+}
+
+BiosInfo::~BiosInfo()
+{
+	//    win->log(LOG_QMC2, "# ~BiosInfo()");
+}
+
 GameInfo::GameInfo(QObject *parent)
 : QObject(parent)
 {
@@ -625,6 +646,29 @@ GameInfo::~GameInfo()
 {
 	available = -1;
 	//  win->log(LOG_QMC2, "# ~GameInfo()");
+}
+
+QString GameInfo::biosof()
+{
+	QString biosof;
+	GameInfo *gameinfo;
+
+	if (!romof.isEmpty())
+	{
+		biosof = romof;
+		gameinfo = mamegame->gamenameGameInfoMap[romof];
+
+		if (!gameinfo->romof.isEmpty())
+		{
+			biosof = gameinfo->romof;
+			gameinfo = mamegame->gamenameGameInfoMap[gameinfo->romof];
+		}
+	}
+	
+	if (gameinfo->isbios)
+		return biosof;
+	else
+		return NULL;
 }
 
 MameGame::MameGame(QObject *parent)
@@ -642,6 +686,8 @@ MameGame::~MameGame()
 
 void MameGame::s11n()
 {
+	win->log(LOG_QMC2, "start s11n()");
+
 	QByteArray ba;
 	QDataStream out(&ba, QIODevice::WriteOnly);
 
@@ -649,24 +695,25 @@ void MameGame::s11n()
 	out << (qint16)S11N_VER; //s11n version
 	out.setVersion(QDataStream::Qt_4_3);
 
+	out << mamegame->mameDefaultIni;	//default.ini
+
 	out << mamegame->gamenameGameInfoMap.count();
 
 	//fixme: should place in thread and use mamegame directly
 	gamelist->switchProgress(gamelist->numTotalGames, tr("Saving listxml"));
-	GameInfo *gameinfo;
-	RomInfo *rominfo;
 	int i = 0;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
 		gamelist->updateProgress(i++);
 		qApp->processEvents();
 	
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gamename];
 		out << gamename;
 		out << gameinfo->description;
 		out << gameinfo->year;
 		out << gameinfo->manufacturer;
 		out << gameinfo->sourcefile;
+		out << gameinfo->isbios;
 		out << gameinfo->cloneof;
 		out << gameinfo->romof;
 		out << gameinfo->available;
@@ -678,11 +725,20 @@ void MameGame::s11n()
 		out << gameinfo->crcRomInfoMap.count();
 		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
 		{
-			rominfo = gameinfo->crcRomInfoMap[crc];
+			RomInfo *rominfo = gameinfo->crcRomInfoMap[crc];
 			out << crc;
 			out << rominfo->name;
 			out << rominfo->status;
 			out << rominfo->size;
+		}
+
+		out << gameinfo->nameBiosInfoMap.count();
+		foreach (QString name, gameinfo->nameBiosInfoMap.keys())
+		{
+			BiosInfo *biosinfo = gameinfo->nameBiosInfoMap[name];
+			out << name;
+			out << biosinfo->description;
+			out << biosinfo->isdefault;
 		}
 	}
 	gamelist->switchProgress(-1, "");
@@ -713,27 +769,26 @@ int MameGame::des11n()
 		in.setVersion(QDataStream::Qt_4_3);
 
 	//finished checking
+	if (mamegame)
+		delete mamegame;
+	mamegame = new MameGame(win);
+	
+	in >> mamegame->mameDefaultIni;	//default.ini
+	win->log(LOG_QMC2, QString("mamegame->mameDefaultIni.count %1").arg(mamegame->mameDefaultIni.count()));
+	
 	int gamecount;
 	in >> gamecount;
 
-	if (gamecount > 0)
-	{
-		if (mamegame)
-			delete mamegame;
-		mamegame = new MameGame(win);
-	}
-
-	GameInfo *gameinfo;
-	QString gamename;
-	RomInfo *rominfo;
 	for (int i = 0; i < gamecount; i++)
 	{
-		gameinfo = new GameInfo(mamegame);
+		GameInfo *gameinfo = new GameInfo(mamegame);
+		QString gamename;
 		in >> gamename;
 		in >> gameinfo->description;
 		in >> gameinfo->year;
 		in >> gameinfo->manufacturer;
 		in >> gameinfo->sourcefile;
+		in >> gameinfo->isbios;
 		in >> gameinfo->cloneof;
 		in >> gameinfo->romof;
 		in >> gameinfo->available;
@@ -752,12 +807,23 @@ int MameGame::des11n()
 		in >> count;
 		for (int j = 0; j < count; j++)
 		{
-			rominfo = new RomInfo(gameinfo);
+			RomInfo *rominfo = new RomInfo(gameinfo);
 			in >> crc;
 			in >> rominfo->name;
 			in >> rominfo->status;
 			in >> rominfo->size;
 			gameinfo->crcRomInfoMap[crc] = rominfo;
+		}
+
+		QString name;
+		in >> count;
+		for (int j = 0; j < count; j++)
+		{
+			BiosInfo *biosinfo = new BiosInfo(gameinfo);
+			in >> name;
+			in >> biosinfo->description;
+			in >> biosinfo->isdefault;
+			gameinfo->nameBiosInfoMap[name] = biosinfo;
 		}
 	}
 
@@ -964,7 +1030,7 @@ void Gamelist::setupAudit()
 		gameListModel->setData(gameListModel->index(2, gameinfo->pModItem), 
 			gameinfo->available, Qt::DisplayRole);
 	}
-	mamegame->s11n();
+//	mamegame->s11n();
 }
 
 void Gamelist::setupHistory()
@@ -984,9 +1050,11 @@ void Gamelist::setupHistory()
 
 void Gamelist::load()
 {
-	win->log(LOG_QMC2, "DEBUG: Gamelist::load()");
+	int des11n_status = QDataStream::Ok;
+	if (!mamegame)
+		des11n_status = mamegame->des11n();
 
-	if (!mamegame->des11n())
+	if (des11n_status == QDataStream::Ok)
 	{
 		gameListModel = new TreeModel(win);
 		gameListPModel = new GameListSortFilterProxyModel(win);
@@ -1003,48 +1071,33 @@ void Gamelist::load()
 		win->treeViewGameList->expandAll();
 		win->treeViewGameList->setFocus();
 
+		optUtils->loadDefault(mamegame->mameDefaultIni);
+		optUtils->loadTemplate();
+
 		//		auditThread.audit();
 
 		//fixme		delete mamegame;
 		//		mamegame = 0;
-
-		return;
 	}
+	else
+	{
+		mameOutputBuf = "";
+		QString command = "mamep.exe";
+		QStringList args;
+		args << "-listxml";
 
-	mameOutputBuf = "";
-	QString command = "mamep.exe";
-	QStringList args;
-	args << "-listxml";
+		loadTimer.start();
 
-	loadTimer.start();
-
-	loadProc = procMan->process(procMan->start(command, args, FALSE));
-	connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
-	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
-	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
+		loadProc = procMan->process(procMan->start(command, args, FALSE));
+		connect(loadProc, SIGNAL(started()), this, SLOT(loadStarted()));
+		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadReadyReadStandardOutput()));
+		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadFinished(int, QProcess::ExitStatus)));
+	}
 }
 
 void Gamelist::loadStarted()
 {
 	win->log(LOG_QMC2, "DEBUG: Gamelist::loadStarted()");
-}
-
-void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
-{
-	QProcess *proc = (QProcess *)sender();
-	QTime elapsedTime;
-	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
-
-	win->log(LOG_QMC2, "DEBUG: Gamelist::loadFinished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = " + QString::number(exitStatus) + "): proc = 0x" + QString::number((ulong)proc, 16));
-
-	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
-
-	parse();
-
-	//chain
-//	loadDefaultIni();
 }
 
 void Gamelist::loadReadyReadStandardOutput()
@@ -1061,9 +1114,26 @@ void Gamelist::loadReadyReadStandardOutput()
 	win->labelProgress->setText(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
 }
 
+void Gamelist::loadFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+	QTime elapsedTime;
+	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	parse();
+
+	//chain
+	loadDefaultIni();
+	win->log(LOG_QMC2, "end of gamelist->loadFin()");
+}
+
 void Gamelist::loadDefaultIni()
 {
-	mameOutputBuf = "";
+	mamegame->mameDefaultIni = "";
 	QString command = "mamep.exe";
 	QStringList args;
 	args << "-showconfig" << "-norc";
@@ -1071,6 +1141,14 @@ void Gamelist::loadDefaultIni()
 	loadProc = procMan->process(procMan->start(command, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
+}
+
+void Gamelist::loadDefaultIniReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+	QString buf = proc->readAllStandardOutput();
+	
+	mamegame->mameDefaultIni += buf;
 }
 
 void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -1081,16 +1159,14 @@ void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitSta
 	procMan->procCount--;
 	loadProc = NULL;
 
-	optUtils->loadDefault(mameOutputBuf);
-	optUtils->load();
-}
+	optUtils->loadDefault(mamegame->mameDefaultIni);
+	optUtils->loadTemplate();
 
-void Gamelist::loadDefaultIniReadyReadStandardOutput()
-{
-	QProcess *proc = (QProcess *)sender();
-	QString buf = proc->readAllStandardOutput();
+	mamegame->s11n();
 	
-	mameOutputBuf += buf;
+	//reload gamelist
+	load();
+	win->log(LOG_QMC2, "end of gamelist->loadDefFin()");
 }
 
 void Gamelist::filterRegExpChanged()
@@ -1143,11 +1219,6 @@ void Gamelist::parse()
 
 	delete pxmlInputSource;
 	mameOutputBuf.clear();
-	win->log(LOG_QMC2, "DEBUG: Gamelist::start s11n()");
-	mamegame->s11n();
-
-	//fixme
-	load();
 }
 
 void Gamelist::filterTimer()
