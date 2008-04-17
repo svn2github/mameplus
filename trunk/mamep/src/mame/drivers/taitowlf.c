@@ -18,8 +18,19 @@
 #include "machine/idectrl.h"
 #include "cpu/i386/i386.h"
 
+static void ide_interrupt(const device_config *device, int state);
+
 static UINT32 *cga_ram;
 static UINT32 *bios_ram;
+
+static struct {
+	const device_config	*pit8254;
+	const device_config	*pic8259_1;
+	const device_config	*pic8259_2;
+	const device_config	*dma8237_1;
+	const device_config	*dma8237_2;
+} taitowlf_devices;
+
 
 static const rgb_t cga_palette[16] =
 {
@@ -268,25 +279,25 @@ static WRITE32_HANDLER( pnp_data_w )
 
 
 
-static READ32_HANDLER( ide0_r )
+static READ32_DEVICE_HANDLER( ide_r )
 {
-	return ide_controller32_0_r(machine, 0x1f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, 0x1f0/4 + offset, mem_mask);
 }
 
-static WRITE32_HANDLER( ide0_w )
+static WRITE32_DEVICE_HANDLER( ide_w )
 {
-	ide_controller32_0_w(machine, 0x1f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, 0x1f0/4 + offset, data, mem_mask);
 }
 
-static READ32_HANDLER( fdc_r )
+static READ32_DEVICE_HANDLER( fdc_r )
 {
-	return ide_controller32_0_r(machine, 0x3f0/4 + offset, mem_mask);
+	return ide_controller32_r(device, 0x3f0/4 + offset, mem_mask);
 }
 
-static WRITE32_HANDLER( fdc_w )
+static WRITE32_DEVICE_HANDLER( fdc_w )
 {
 	//mame_printf_debug("FDC: write %08X, %08X, %08X\n", data, offset, mem_mask);
-	ide_controller32_0_w(machine, 0x3f0/4 + offset, data, mem_mask);
+	ide_controller32_w(device, 0x3f0/4 + offset, data, mem_mask);
 }
 
 
@@ -419,6 +430,7 @@ static WRITE32_HANDLER(at_page32_w)
 
 DEV_READWRITE8TO32LE( taitowlf_pit8254_32le, pit8253_r, pit8253_w )
 DEV_READWRITE8TO32LE( taitowlf_dma8237_32le, dma8237_r, dma8237_w )
+DEV_READWRITE8TO32LE( taitowlf_pic8259_32le, pic8259_r, pic8259_w )
 
 
 /*****************************************************************************/
@@ -436,19 +448,19 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(taitowlf_io, ADDRESS_SPACE_IO, 32)
 	AM_RANGE(0x0000, 0x001f) AM_DEVREADWRITE(DMA8237, "dma8237_1", taitowlf_dma8237_32le_r, taitowlf_dma8237_32le_w)
-	AM_RANGE(0x0020, 0x003f) AM_READWRITE(pic8259_32le_0_r,			pic8259_32le_0_w)
+	AM_RANGE(0x0020, 0x003f) AM_DEVREADWRITE(PIC8259, "pic8259_1", taitowlf_pic8259_32le_r, taitowlf_pic8259_32le_w)
 	AM_RANGE(0x0040, 0x005f) AM_DEVREADWRITE(PIT8254, "pit8254", taitowlf_pit8254_32le_r, taitowlf_pit8254_32le_w)
 	AM_RANGE(0x0060, 0x006f) AM_READWRITE(kbdc8042_32le_r,			kbdc8042_32le_w)
 	AM_RANGE(0x0070, 0x007f) AM_READWRITE(mc146818_port32le_r,		mc146818_port32le_w)
 	AM_RANGE(0x0080, 0x009f) AM_READWRITE(at_page32_r,				at_page32_w)
-	AM_RANGE(0x00a0, 0x00bf) AM_READWRITE(pic8259_32le_1_r,			pic8259_32le_1_w)
+	AM_RANGE(0x00a0, 0x00bf) AM_DEVREADWRITE(PIC8259, "pic8259_2", taitowlf_pic8259_32le_r, taitowlf_pic8259_32le_w)
 	AM_RANGE(0x00c0, 0x00df) AM_DEVREADWRITE(DMA8237, "dma8237_2", at32_dma8237_2_r, at32_dma8237_2_w)
 	AM_RANGE(0x00e8, 0x00eb) AM_NOP
-	AM_RANGE(0x01f0, 0x01f7) AM_READWRITE(ide0_r, ide0_w)
+	AM_RANGE(0x01f0, 0x01f7) AM_DEVREADWRITE(IDE_CONTROLLER, "ide", ide_r, ide_w)
 	AM_RANGE(0x0300, 0x03af) AM_NOP
 	AM_RANGE(0x03b0, 0x03df) AM_NOP
 	AM_RANGE(0x0278, 0x027b) AM_WRITE(pnp_config_w)
-	AM_RANGE(0x03f0, 0x03ff) AM_READWRITE(fdc_r, fdc_w)
+	AM_RANGE(0x03f0, 0x03ff) AM_DEVREADWRITE(IDE_CONTROLLER, "ide", fdc_r, fdc_w)
 	AM_RANGE(0x0a78, 0x0a7b) AM_WRITE(pnp_data_w)
 	AM_RANGE(0x0cf8, 0x0cff) AM_READWRITE(pci_32le_r,				pci_32le_w)
 ADDRESS_MAP_END
@@ -514,10 +526,10 @@ INPUT_PORTS_END
 static IRQ_CALLBACK(irq_callback)
 {
 	int r = 0;
-	r = pic8259_acknowledge(1);
+	r = pic8259_acknowledge( taitowlf_devices.pic8259_2);
 	if (r==0)
 	{
-		r = pic8259_acknowledge(0);
+		r = pic8259_acknowledge( taitowlf_devices.pic8259_1);
 	}
 	return r;
 }
@@ -527,11 +539,50 @@ static MACHINE_RESET(taitowlf)
 	memory_set_bankptr(1, memory_region(REGION_USER1) + 0x30000);
 
 	cpunum_set_irq_callback(0, irq_callback);
+
+	taitowlf_devices.pit8254 = device_list_find_by_tag( machine->config->devicelist, PIT8254, "pit8254" );
+	taitowlf_devices.pic8259_1 = device_list_find_by_tag( machine->config->devicelist, PIC8259, "pic8259_1" );
+	taitowlf_devices.pic8259_2 = device_list_find_by_tag( machine->config->devicelist, PIC8259, "pic8259_2" );
+	taitowlf_devices.dma8237_1 = device_list_find_by_tag( machine->config->devicelist, DMA8237, "dma8237_1" );
+	taitowlf_devices.dma8237_2 = device_list_find_by_tag( machine->config->devicelist, DMA8237, "dma8237_2" );
 }
+
+
+/*************************************************************
+ *
+ * pic8259 configuration
+ *
+ *************************************************************/
+
+static PIC8259_SET_INT_LINE( taitowlf_pic8259_1_set_int_line ) {
+	cpunum_set_input_line(device->machine, 0, 0, interrupt ? HOLD_LINE : CLEAR_LINE);
+}
+
+
+static PIC8259_SET_INT_LINE( taitowlf_pic8259_2_set_int_line ) {
+	pic8259_set_irq_line( taitowlf_devices.pic8259_1, 2, interrupt);
+}
+
+
+static const struct pic8259_interface taitowlf_pic8259_1_config = {
+	taitowlf_pic8259_1_set_int_line
+};
+
+
+static const struct pic8259_interface taitowlf_pic8259_2_config = {
+	taitowlf_pic8259_2_set_int_line
+};
+
+
+/*************************************************************
+ *
+ * pit8254 configuration
+ *
+ *************************************************************/
 
 static PIT8253_OUTPUT_CHANGED( pc_timer0_w )
 {
-	pic8259_set_irq_line(0, 0, state);
+	pic8259_set_irq_line(taitowlf_devices.pic8259_1, 0, state);
 }
 
 static const struct pit8253_config taitowlf_pit8254_config =
@@ -571,6 +622,14 @@ static MACHINE_DRIVER_START(taitowlf)
 	MDRV_DEVICE_ADD( "dma8237_2", DMA8237 )
 	MDRV_DEVICE_CONFIG( dma8237_2_config )
 
+	MDRV_DEVICE_ADD( "pic8259_1", PIC8259 )
+	MDRV_DEVICE_CONFIG( taitowlf_pic8259_1_config )
+
+	MDRV_DEVICE_ADD( "pic8259_2", PIC8259 )
+	MDRV_DEVICE_CONFIG( taitowlf_pic8259_2_config )
+
+	MDRV_IDE_CONTROLLER_ADD("ide", 0, ide_interrupt)
+
 	MDRV_NVRAM_HANDLER( mc146818 )
 
  	/* video hardware */
@@ -608,16 +667,16 @@ static void set_gate_a20(int a20)
 
 static void keyboard_interrupt(int state)
 {
-	pic8259_set_irq_line(0, 1, state);
+	pic8259_set_irq_line(taitowlf_devices.pic8259_1, 1, state);
 }
 
-static void ide_interrupt(int state)
+static void ide_interrupt(const device_config *device, int state)
 {
-	pic8259_set_irq_line(1, 6, state);
+	pic8259_set_irq_line(taitowlf_devices.pic8259_2, 6, state);
 }
 
 static int taitowlf_get_out2(running_machine *machine) {
-	return pit8253_get_output((device_config*)device_list_find_by_tag( machine->config->devicelist, PIT8254, "pit8254" ), 2 );
+	return pit8253_get_output(taitowlf_devices.pit8254, 2 );
 }
 
 static const struct kbdc8042_interface at8042 =
@@ -625,16 +684,15 @@ static const struct kbdc8042_interface at8042 =
 	KBDC8042_AT386, set_gate_a20, keyboard_interrupt, taitowlf_get_out2
 };
 
-static const struct ide_interface ide_intf =
-{
-	ide_interrupt
-};
+static void taitowlf_set_keyb_int(int state) {
+	pic8259_set_irq_line(taitowlf_devices.pic8259_1, 1, state);
+}
 
 static DRIVER_INIT( taitowlf )
 {
 	bios_ram = auto_malloc(0x10000);
 
-	init_pc_common(PCCOMMON_KEYBOARD_AT);
+	init_pc_common(PCCOMMON_KEYBOARD_AT, taitowlf_set_keyb_int);
 	mc146818_init(MC146818_STANDARD);
 
 	intel82439tx_init();
@@ -644,8 +702,6 @@ static DRIVER_INIT( taitowlf )
 	pci_add_device(0, 7, &intel82371ab);
 
 	kbdc8042_init(&at8042);
-
-	ide_controller_init(0, &ide_intf);
 }
 
 /*****************************************************************************/

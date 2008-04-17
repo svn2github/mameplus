@@ -14,6 +14,8 @@
 #ifndef __INPTPORT_H__
 #define __INPTPORT_H__
 
+#include <time.h>
+
 #include "memory.h"
 #include "inputseq.h"
 #include "tokenize.h"
@@ -888,7 +890,6 @@ struct _inp_header
 	TOKEN_UINT64_PACK3(INPUT_TOKEN_CATEGORY_SETTING, 8, _default, 32, _category, 16), \
 	TOKEN_STRING(_name),
 #endif /* MESS */
-
 
 
 /***************************************************************************
