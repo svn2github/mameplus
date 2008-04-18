@@ -3254,4 +3254,4 @@ static DRIVER_INIT(gbadv)
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT INIT CONFIG COMPANY      FULLNAME */
-CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_IMPERFECT_GRAPHICS |GAME_SUPPORTS_SAVE )

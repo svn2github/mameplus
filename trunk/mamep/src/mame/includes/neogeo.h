@@ -5,26 +5,6 @@
 *************************************************************************/
 
 
-#ifndef __NEOGEO_H__
-#define __NEOGEO_H__
-
-//#define USE_NEOGEO_HACKS
-
-
-#ifdef USE_NEOGEO_HACKS
-enum
-{
-	NEOGEO_BIOS_TYPE_NORMAL,
-	NEOGEO_BIOS_TYPE_EURO,		// Europe MVS (Ver. 2)
-	NEOGEO_BIOS_TYPE_DEBUG,		// Debug MVS (Hack?)
-	NEOGEO_BIOS_TYPE_TRACKBALL	// Irritating Maze (Trackball)
-};
-
-// in emu/romload.c
-int determine_neogeo_bios(void);
-#endif /* USE_NEOGEO_HACKS */
-
-
 #define NEOGEO_MASTER_CLOCK					(24000000)
 #define NEOGEO_MAIN_CPU_CLOCK				(NEOGEO_MASTER_CLOCK / 2)
 #define NEOGEO_AUDIO_CPU_CLOCK				(NEOGEO_MASTER_CLOCK / 6)
@@ -186,6 +166,3 @@ WRITE16_HANDLER( neogeo_paletteram_w );
 void neogeo_set_fixed_layer_source(UINT8 data);
 
 UINT8 neogeo_get_auto_animation_counter(void);
-
-
-#endif /* __NEOGEO_H__ */

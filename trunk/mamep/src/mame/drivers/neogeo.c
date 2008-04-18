@@ -1027,89 +1027,6 @@ static MACHINE_RESET( neogeo )
 {
 	offs_t offs;
 
-#ifdef USE_NEOGEO_HACKS
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
-	int memcard_manager = 0; // FIXME
-	UINT16 src, res;
-
-	switch (determine_neogeo_bios())
-	{
-	case NEOGEO_BIOS_TYPE_EURO:
-		logerror("BIOS Hack enabled for NEOGEO_BIOS_EURO\n");
-
-			/* Set up machine country */
-			src = input_port_read(machine, "HACK_IN5");
-			res = src & 0x3;
-
-			/* Console/arcade mode */
-			if (src & 0x04) 
-				res |= 0x8000;
-
-			/* write the ID in the system BIOS ROM */
-			mem16[0x0200] = res;
-
-			if (memcard_manager==1)
-			{
-				memcard_manager=0;
-			mem16[0x11b1a/2] = 0x500a;
-			}
-			else
-			{
-			mem16[0x11b1a/2] = 0x1b6a;
-			}
-
-		break;
-
-	case NEOGEO_BIOS_TYPE_DEBUG:
-		logerror("BIOS Hack enabled for NEOGEO_BIOS_DEBUG\n");
-
-			/* Set up machine country */
-			src = input_port_read(machine, "HACK_IN5");
-			res = src & 0x3;
-
-			/* write the ID in the system BIOS ROM */
-			mem16[0x0200] = res;
-
-			if (memcard_manager==1)
-			{
-				memcard_manager=0;
-			mem16[0x11b1a/2] = 0x3cac;
-			}
-			else
-			{
-			mem16[0x1194c/2] = 0x1b6a;
-	}
-
-		break;
-
-	case NEOGEO_BIOS_TYPE_TRACKBALL:
-		logerror("BIOS Hack enabled for Trackball\n");
-
-		/* Set up machine country */
-		src = input_port_read(machine, "HACK_IN5");
-		res = src & 0x3;
-
-		/* Console/arcade mode */
-		if (src & 0x04) 
-			res |= 0x8000;
-
-		/* write the ID in the system BIOS ROM */
-		mem16[0x0200] = res;
-
-		if (memcard_manager==1)
-		{
-			memcard_manager=0;
-			mem16[0x10c44/2] = 0x4366;
-		}
-		else
-		{
-			mem16[0x10c44/2] = 0x0c94;
-		}
-
-		break;
-	}
-#endif /* USE_NEOGEO_HACKS */
-
 	/* reset system control registers */
 	for (offs = 0; offs < 8; offs++)
 		system_control_w(machine, offs, 0, 0xff00);
@@ -1307,24 +1224,6 @@ static struct YM2610interface ym2610_interface =
 	PORT_BIT( 0xff00, IP_ACTIVE_LOW, IPT_UNUSED )
 
 
-#ifdef USE_NEOGEO_HACKS
-#define HACK_IN5																			\
-	PORT_START_TAG("HACK_IN5")												\
-	PORT_DIPNAME( 0x03, 0x02,"Territory" )												\
-	PORT_DIPSETTING(	0x00,DEF_STR( Japan ) )												\
-	PORT_DIPSETTING(	0x01,DEF_STR( USA ) )												\
-	PORT_DIPSETTING(	0x02,DEF_STR( Europe ) )												\
-	PORT_DIPNAME( 0x04, 0x04,"Machine Mode" )												\
-	PORT_DIPSETTING(	0x00,"Home" )												\
-	PORT_DIPSETTING(	0x04,"Arcade" )												\
-	PORT_DIPNAME( 0x60, 0x60,"Game Slots" )		/* Stored at 0x47 of NVRAM */									\
-	PORT_DIPSETTING(	0x60,"2" )												\
-	/* PORT_DIPSETTING(	0x40,"2" ) */												\
-	PORT_DIPSETTING(	0x20,"4" )												\
-	PORT_DIPSETTING(	0x00,"6" )
-#endif /* USE_NEOGEO_HACKS */
-
-
 static INPUT_PORTS_START( neogeo )
 	STANDARD_IN0
 
@@ -1335,10 +1234,6 @@ static INPUT_PORTS_START( neogeo )
 	STANDARD_IN3
 
 	STANDARD_IN4
-
-#ifdef USE_NEOGEO_HACKS
-	HACK_IN5
-#endif /* USE_NEOGEO_HACKS */
 INPUT_PORTS_END
 
 
@@ -1395,61 +1290,6 @@ MACHINE_DRIVER_END
 
 static DRIVER_INIT( neogeo )
 {
-#ifdef USE_NEOGEO_HACKS
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_BIOS);
-
-	switch (determine_neogeo_bios())
-	{
-	case NEOGEO_BIOS_TYPE_EURO:
-		logerror("BIOS Patch is applied for NEOGEO_BIOS_EURO\n");
-
-		/* Remove memory check for now */
-		mem16[0x11b00/2] = 0x4e71;
-		mem16[0x11b02/2] = 0x4e71;
-		mem16[0x11b16/2] = 0x4ef9;
-		mem16[0x11b18/2] = 0x00c1;
-		mem16[0x11b1a/2] = 0x1b6a;
-
-		/* Patch bios rom, for Calendar errors */
-		mem16[0x11c14/2] = 0x4e71;
-		mem16[0x11c16/2] = 0x4e71;
-		mem16[0x11c1c/2] = 0x4e71;
-		mem16[0x11c1e/2] = 0x4e71;
-
-		/* Rom internal checksum fails for now.. */
-		mem16[0x11c62/2] = 0x4e71;
-		mem16[0x11c64/2] = 0x4e71;
-
-		break;
-
-	case NEOGEO_BIOS_TYPE_TRACKBALL:
-	/* irritating maze uses a trackball */
-
-		logerror("BIOS Patch is applied for Trackball\n");
-
-		/* TODO: check the memcard manager patch in neogeo_init_machine(), */
-		/* it probably has to be moved as well */
-		/* Remove memory check for now */
-		mem16[0x10c2a/2] = 0x4e71;
-		mem16[0x10c2c/2] = 0x4e71;
-		mem16[0x10c40/2] = 0x4ef9;
-		mem16[0x10c42/2] = 0x00c1;
-		mem16[0x10c44/2] = 0x0c94;
-
-		/* Patch bios rom, for Calendar errors */
-		mem16[0x10d3e/2] = 0x4e71;
-		mem16[0x10d40/2] = 0x4e71;
-		mem16[0x10d46/2] = 0x4e71;
-		mem16[0x10d48/2] = 0x4e71;
-
-		/* Rom internal checksum fails for now.. */
-		mem16[0x10d8c/2] = 0x4e71;
-		mem16[0x10d8e/2] = 0x4e71;
-
-		break;
-	}
-#endif /* USE_NEOGEO_HACKS */
-
 	/* set the Delta-T sample region */
 	ym2610_interface.pcmromb = memory_region(NEOGEO_REGION_AUDIO_DATA_2) ? NEOGEO_REGION_AUDIO_DATA_2 : NEOGEO_REGION_AUDIO_DATA_1;
 }

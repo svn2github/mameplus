@@ -509,7 +509,7 @@ static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 	display_loading_rom_message(ROM_GETNAME(romp), romdata);
 
 	/* Attempt reading up the chain through the parents. It automatically also
-         attempts any kind of load by checksum supported by the archives. */
+       attempts any kind of load by checksum supported by the archives. */
 	romdata->file = NULL;
 	for (drv = Machine->gamedrv; !romdata->file && drv; drv = driver_get_clone(drv))
 		if (drv->name && *drv->name)
@@ -1089,14 +1089,14 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 
 	/* reset the romdata struct */
 	memset(&romdata, 0, sizeof(romdata));
+
+	/* determine the correct biosset to load based on OPTION_BIOS string */
+	system_bios = determine_bios_rom(mame_options(), romp);
 	romdata.romstotal = count_roms(romp);
 
 	/* reset the disk list */
 	chd_list = NULL;
 	chd_list_tailptr = &chd_list;
-
-	/* determine the correct biosset to load based on OPTION_BIOS string */
-	system_bios = determine_bios_rom(mame_options(), romp);
 
 #ifdef USE_IPS
 	if (patchname && *patchname)
@@ -1203,49 +1203,3 @@ int rom_load_warnings(void)
 {
 	return total_rom_load_warnings;
 }
-
-
-#ifdef USE_NEOGEO_HACKS
-#include "neogeo.h"
-
-#define BIOS_CRC_EURO 		0x9036d879
-#define BIOS_CRC_DEBUG		0x698ebb7d
-#define BIOS_CRC_TRACKBALL	0x853e6b96
-
-int determine_neogeo_bios(void)
-{
-	extern int system_bios;
-	const rom_entry *romp = Machine->gamedrv->rom;
-	const rom_entry *rom;
-
-	system_bios = determine_bios_rom(mame_options(), romp);
-
-	for (rom = romp; !ROMENTRY_ISEND(rom); rom++)
-	{
-		if (ROMENTRY_ISFILE(rom))
-		{
-			int bios_flags = ROM_GETBIOSFLAGS(rom);
-
-			if (!bios_flags || (bios_flags == system_bios))
-			{
-				const char *hash = ROM_GETHASHDATA(rom);
-				UINT8 crcs[4];
-
-				if (hash_data_extract_binary_checksum(hash, HASH_CRC, crcs))
-				{
-					UINT32 crc = (crcs[0] << 24) | (crcs[1] << 16) | (crcs[2] << 8) | crcs[3];
-
-					if (crc == BIOS_CRC_TRACKBALL)
-						return NEOGEO_BIOS_TYPE_TRACKBALL;
-					if (crc == BIOS_CRC_EURO)
-						return NEOGEO_BIOS_TYPE_EURO;
-					if (crc == BIOS_CRC_DEBUG)
-						return NEOGEO_BIOS_TYPE_DEBUG;
-				}
-			}
-		}
-	}
-
-	return NEOGEO_BIOS_TYPE_NORMAL;
-}
-#endif /* USE_NEOGEO_HACKS */

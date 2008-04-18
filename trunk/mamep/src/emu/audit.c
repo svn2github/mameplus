@@ -56,24 +56,11 @@ INLINE void set_status(audit_record *record, UINT8 status, UINT8 substatus)
 
 int audit_images(core_options *options, const game_driver *gamedrv, UINT32 validation, audit_record **audit)
 {
-#define CHECK_SELECTED_BIOS_ONLY
-
 	const rom_entry *region, *rom;
 	audit_record *record;
 	int foundany = FALSE;
 	int allshared = TRUE;
 	int records;
-
-#ifdef CHECK_SELECTED_BIOS_ONLY
-	int system_bios;
-#endif /* CHECK_SELECTED_BIOS_ONLY */
-
-	if (!gamedrv->rom)
-		return 0;
-
-#ifdef CHECK_SELECTED_BIOS_ONLY
-	system_bios = determine_bios_rom(options, gamedrv->rom);
-#endif /* CHECK_SELECTED_BIOS_ONLY */
 
 	/* determine the number of records we will generate */
 	records = 0;
@@ -102,15 +89,8 @@ int audit_images(core_options *options, const game_driver *gamedrv, UINT32 valid
 				/* audit a file */
 				if (ROMREGION_ISROMDATA(region))
 				{
-#ifdef CHECK_SELECTED_BIOS_ONLY
-					if (!ROMENTRY_ISSYSTEM_BIOS(rom) && !(ROM_GETBIOSFLAGS(rom) && (ROM_GETBIOSFLAGS(rom) != system_bios))) /* alternate bios sets */
-					{
-#endif /* CHECK_SELECTED_BIOS_ONLY */
 					if (audit_one_rom(options, rom, gamedrv, validation, record++) && (!shared || allshared))
 						foundany = TRUE;
-#ifdef CHECK_SELECTED_BIOS_ONLY
-					}
-#endif /* CHECK_SELECTED_BIOS_ONLY */
 				}
 
 				/* audit a disk */
@@ -213,7 +193,7 @@ int audit_samples(core_options *options, const game_driver *gamedrv, audit_recor
 						else
 							set_status(record++, AUDIT_STATUS_NOT_FOUND, SUBSTATUS_NOT_FOUND);
 					}
-			}
+				}
 		}
 
 skip:

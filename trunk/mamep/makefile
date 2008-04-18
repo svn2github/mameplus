@@ -362,10 +362,6 @@ ifneq ($(USE_JOY_EXTRA_BUTTONS),)
     DEFS += -DUSE_JOY_EXTRA_BUTTONS
 endif
 
-ifneq ($(USE_NEOGEO_HACKS),)
-    DEFS+= -DUSE_NEOGEO_HACKS
-endif
-
 ifneq ($(USE_HISCORE),)
 DEFS += -DUSE_HISCORE
 endif

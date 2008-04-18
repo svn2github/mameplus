@@ -292,6 +292,7 @@ chd_error open_disk_image_options(core_options *options, const game_driver *game
 chd_file *get_disk_handle(int diskindex);
 
 /* get bios number */
+//mamep: fixme: remove it when new GUI is done
 int determine_bios_rom(core_options *options, const rom_entry *romp);
 
 /* ROM processing */
