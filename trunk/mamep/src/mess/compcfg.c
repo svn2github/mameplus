@@ -128,7 +128,7 @@ const char *ram_string(char *buffer, UINT32 ram)
 
 
 /* ----------------------------------------------------------------------- */
-
+/*
 UINT8 *memory_install_ram8_handler(int cpunum, int spacenum, offs_t start, offs_t end, offs_t ram_offset, int bank)
 {
 	read8_machine_func read_bank = (read8_machine_func) (FPTR)(STATIC_BANK1 + bank - 1);
@@ -149,5 +149,5 @@ UINT8 *memory_install_ram8_handler(int cpunum, int spacenum, offs_t start, offs_
 	}
 	return mess_ram + ram_offset;
 }
-
+*/
 

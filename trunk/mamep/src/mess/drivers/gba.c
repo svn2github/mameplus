@@ -3061,13 +3061,13 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 
 			if (image_length(image) <= (16*1024*1024))
 			{
-				memory_install_read32_handler(0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_w);
+				memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_r);
+				memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_w);
 			}
 			else
 			{
-				memory_install_read32_handler(0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
+				memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
+				memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
 			}
 			break;
 		}
@@ -3076,8 +3076,8 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 			nvptr = (UINT8 *)&gba_sram;
 			nvsize = 0x10000;
 
-			memory_install_read32_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_r);
-			memory_install_write32_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_w);
+			memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_r);
+			memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_w);
 			break;
 		}
 		else if (!memcmp(&ROM[i], "FLASH1M_", 8))
@@ -3090,8 +3090,8 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 			nvptr = (UINT8 *)&gba_flash64k;
 			nvsize = 0x10000;
 
-			memory_install_read32_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_r);
-			memory_install_write32_handler(0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_w);
+			memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_r);
+			memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_w);
 			break;
 		}
 		else if (!memcmp(&ROM[i], "SIIRTC_V", 8))

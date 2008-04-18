@@ -341,6 +341,8 @@ static const char_info charinfo[] =
 	{ UCHAR_MAMEKEY(CANCEL),	"Break",		NULL }		/* Break/Pause key */
 };
 
+
+
 #define INVALID_CHAR '?'
 
 /***************************************************************************
@@ -969,9 +971,9 @@ void mess_input_port_update_hook(int portnum, UINT32 *digital)
 			if (code != NULL)
 			{
 				for (i = 0; i < ARRAY_LENGTH(code->ipt) && (code->ipt[i] != NULL); i++)
-			{
-					if (code->port[i] == portnum)
 				{
+					if (code->port[i] == portnum)
+					{
 						value = code->ipt[i]->mask;
 						*digital |= value;
 					}
