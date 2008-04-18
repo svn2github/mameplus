@@ -463,8 +463,9 @@ ROM_START(smspal)
 	ROM_REGION(0x40000, REGION_USER1, 0)
 	ROM_SYSTEM_BIOS( 0, "alexkidd", "US/European BIOS with Alex Kidd in Miracle World (1990)" )
 	ROMX_LOAD("akbios.rom", 0x0000, 0x20000, CRC(CF4A09EA) SHA1(3af7b66248d34eb26da40c92bf2fa4c73a46a051), ROM_BIOS(1))
-	ROM_SYSTEM_BIOS( 1, "sonic", "European/Brazilian BIOS with Sonic the Hedgehog (1991)" )
-	ROMX_LOAD("sonbios.rom", 0x0000, 0x40000, CRC(81C3476B) SHA1(6aca0e3dffe461ba1cb11a86cd4caf5b97e1b8df), ROM_BIOS(2))
+// mamep: doesn't support multi bios yet?
+//	ROM_SYSTEM_BIOS( 1, "sonic", "European/Brazilian BIOS with Sonic the Hedgehog (1991)" )
+//	ROMX_LOAD("sonbios.rom", 0x0000, 0x40000, CRC(81C3476B) SHA1(6aca0e3dffe461ba1cb11a86cd4caf5b97e1b8df), ROM_BIOS(2))
 ROM_END
 
 ROM_START(sg1000m3)
@@ -493,8 +494,9 @@ ROM_START(gamegear)
 	ROM_FILL(0x0000,0x4000,0xFF)
 	ROM_REGION(0x0400, REGION_USER1, 0)
 	ROM_SYSTEM_BIOS( 0, "none", "No BIOS" ) /* gamegear */
-	ROM_SYSTEM_BIOS( 1, "majesco", "Majesco BIOS" ) /* gamg */
-	ROMX_LOAD("majbios.rom", 0x0000, 0x0400, CRC(0EBEA9D4) SHA1(914aa165e3d879f060be77870d345b60cfeb4ede), ROM_BIOS(2))
+// mamep: doesn't support multi bios yet?
+//	ROM_SYSTEM_BIOS( 1, "majesco", "Majesco BIOS" ) /* gamg */
+//	ROMX_LOAD("majbios.rom", 0x0000, 0x0400, CRC(0EBEA9D4) SHA1(914aa165e3d879f060be77870d345b60cfeb4ede), ROM_BIOS(2))
 ROM_END
 
 #define rom_gamegeaj rom_gamegear
