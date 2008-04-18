@@ -434,10 +434,10 @@ static void erase_sprites(running_machine* const machine, bitmap_t* const bitmap
 
 				if (pal < 0xc || pal == 0xf)
 					*ptr = 15;
-				}
 			}
 		}
 	}
+}
 
 
 static void update_sprites(running_machine* const machine)

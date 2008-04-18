@@ -1046,8 +1046,7 @@ void hd63705_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_PCI:		info->i = m6805.irq_state[HD63705_INT_PCI];	break;
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_SCI:		info->i = m6805.irq_state[HD63705_INT_SCI];	break;
 		case CPUINFO_INT_INPUT_STATE + HD63705_INT_ADCONV:	info->i = m6805.irq_state[HD63705_INT_ADCONV]; break;
- 		// FIXED, actual the same, but get rid of compiler warning
-		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:		info->i = m6805.nmi_state;	break;
+		case CPUINFO_INT_INPUT_STATE + INPUT_LINE_NMI:		info->i = m6805.irq_state[HD63705_INT_NMI];	break;
 
 		case CPUINFO_INT_ADDRBUS_WIDTH + ADDRESS_SPACE_PROGRAM: info->i = 16;					break;
 

@@ -8525,7 +8525,6 @@ static DRIVER_INIT( kof2000n )
 	neogeo_fixed_layer_bank_type = 2;
 	kof2000_neogeo_gfx_decrypt(0x00);
 	DRIVER_INIT_CALL(neogeo);
-	//kof2000n_install_protection(machine);
 	kof2000_AES_protection();
 }
 
@@ -8949,7 +8948,7 @@ static DRIVER_INIT( vliner )
 	memory_set_bankptr(NEOGEO_BANK_EXTRA_RAM, extra_ram);
 
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x280000, 0x280001, 0, 0, port_tag_to_handler16("IN5") );
-	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x2c0000, 0x2c0001, 0, 0, port_tag_to_handler16("IN6") );
+    memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x2c0000, 0x2c0001, 0, 0, port_tag_to_handler16("IN6") );
 
 	DRIVER_INIT_CALL(neogeo);
 }
@@ -8999,9 +8998,9 @@ static DRIVER_INIT( kf2k5uni )
 static DRIVER_INIT( cthd2003 )
 {
 	decrypt_cthd2003();
+ 	DRIVER_INIT_CALL(neogeo);
 	patch_cthd2003(machine);
 	cthd2003_AES_protection();
- 	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT( cthd2k3a )
@@ -9015,9 +9014,9 @@ DRIVER_INIT( cthd2k3a )
 static DRIVER_INIT ( ct2k3sp )
 {
 	decrypt_ct2k3sp();
+	DRIVER_INIT_CALL(neogeo);
 	patch_cthd2003(machine);
 	cthd2003_AES_protection();
-	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT ( ct2k3sa )

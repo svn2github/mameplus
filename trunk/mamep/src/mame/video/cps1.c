@@ -728,7 +728,7 @@ static const struct gfx_range mapper_RT22B_table[] =
 	// bank 2 = pin 14
 	// bank 3 = pin 12
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x4000, 0x53ff, 1 },
@@ -851,12 +851,12 @@ static const struct gfx_range mapper_CD63B_table[] =
 #define mapper_PS63B	{ 0x8000, 0x8000, 0, 0 }, mapper_PS63B_table
 static const struct gfx_range mapper_PS63B_table[] =
 {
-	/* type            start   end     bank */
-	{ GFXTYPE_SCROLL1, 0x0000, 0x0fff, 0 },
-	{ GFXTYPE_SPRITES, 0x1000, 0x7fff, 0 },
+	/* type                              start   end     bank */
+	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
+	{ GFXTYPE_SPRITES,                   0x1000, 0x7fff, 0 },
 
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x8000, 0xdbff, 1 },
-	{ GFXTYPE_SCROLL3, 0xdc00, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3,                   0xdc00, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -880,7 +880,7 @@ static const struct gfx_range mapper_QD22B_table[] =
 	// verified from PAL dump:
 	// bank 0 = pin 19
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x3fff, 0 },
@@ -1051,8 +1051,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2v004",  NOBATTRY, mapper_S9263B },
 	{"sf2accp2", NOBATTRY, mapper_S9263B },
 	{"sf2m1",    NOBATTRY, mapper_S9263B },
-	{"sf2m2",    NOBATTRY, mapper_S9263B },
-	{"sf2m3",    HACK_B_3, mapper_S9263B, 1 },
+//	{"sf2m2",    NOBATTRY, mapper_S9263B },
+//	{"sf2m3",    NOBATTRY, mapper_S9263B },
 	{"sf2m4",    HACK_B_1, mapper_S9263B, 1 },
 	{"sf2m5",    NOBATTRY, mapper_S9263B, 1 },
 	{"sf2m6",    NOBATTRY, mapper_S9263B, 1 },
@@ -1098,6 +1098,8 @@ static const struct CPS1config cps1_config_table[]=
 	{"dinob",    QSOUND_2, mapper_CD63B },	/* layer enable never used */
 	{"knightsh", NOBATTRY, mapper_KR63B },
 	{"knightsb", BATTRY_4, mapper_KR63B, 3 },
+	{"sf2m2",    NOBATTRY, mapper_S9263B, 1 },
+	{"sf2m3",    HACK_B_3, mapper_S9263B, 1 },
 	{"sf2m8",    HACK_B_3, mapper_S9263B },
 	{"sf2m13",   NOBATTRY, mapper_S9263B, 1 },
 	{"sf2tlona", NOBATTRY, mapper_S9263B, 1 },
@@ -1377,14 +1379,14 @@ if (cps1_game_config->priority[0] && offset == cps1_game_config->priority[0]/2 &
 #endif
 }
 
-/*
+	/*
     The main CPU writes the palette to gfxram, and the CPS-B custom copies it
     to the real palette RAM, which is separated from gfxram.
     This is done ONLY after the palette base register is written to. It is not
     known what the exact timing should be, how long it should take and when it
     should happen. We are assuming that the copy happens immediately, since it
     fixes glitches in the ghouls intro, but it might happen at next vblank.
-*/
+    */
 	if (offset == CPS1_PALETTE_BASE/2)
 		cps1_build_palette(machine, cps1_base(CPS1_PALETTE_BASE,cps1_palette_align));
 }
@@ -1705,8 +1707,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-       roms have been mixed to be reproduced (ffightua) -- it looks like each column
-       should alternate between the left and right side of the 16x16 tiles */
+         roms have been mixed to be reproduced (ffightua) -- it looks like each column
+         should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -1786,7 +1788,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-    MACHINE_RESET_CALL(cps);
+	MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -1869,7 +1871,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-	{
+		{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);
