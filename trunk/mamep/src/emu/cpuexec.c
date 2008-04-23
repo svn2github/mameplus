@@ -1006,14 +1006,6 @@ static void cpu_inittimers(running_machine *machine)
 
 static short default_clocks[MAX_CPU];
 
-static void set_overclock(void)
-{
-	const char *name = Machine->gamedrv->name;
-
-	if (!strcmp(name, "s1945p") || !strcmp(name, "s1945pd"))
-		cpunum_set_clockscale(Machine, 0, 3.0);
-}
-
 static void cpu_load(int config_type, xml_data_node *parentnode)
 {
 	xml_data_node *childnode;
@@ -1021,8 +1013,6 @@ static void cpu_load(int config_type, xml_data_node *parentnode)
 	if (default_clocks[0] == 0)
 	{
 		int i;
-
-		set_overclock();
 
 		for (i = 0; i < cpu_gettotalcpu(); i++)
 			default_clocks[i] = cpunum_get_clockscale(i) * 100.0 + 0.5;
