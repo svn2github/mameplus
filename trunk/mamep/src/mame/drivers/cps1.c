@@ -161,17 +161,16 @@ Stephh's log (2006.09.20) :
 
 #include "cps1.h"       /* External CPS1 definitions */
 
-READ16_HANDLER( cps1_input_r )
+READ16_HANDLER( cps1_dsw_r )
 {
 	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
 	int in = input_port_read(machine, dswname[offset]);
-	return in << 8;
+	return (in << 8) | 0xff;
 }
 
 READ16_HANDLER( cps1_in1_r )
 {
-	int buttons = input_port_read(machine, "IN1");
-	return buttons;
+	return input_port_read(machine, "IN1");
 }
 
 READ16_HANDLER( cps1_in2_r )
@@ -213,18 +212,14 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 static WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	UINT8 *RAM = memory_region(REGION_CPU2);
-	int length = memory_region_length(REGION_CPU2) - 0x10000;
 	int bankaddr;
 
-	bankaddr = (data * 0x4000) & (length-1);
+	bankaddr = ((data & 1) * 0x4000);
 	memory_set_bankptr(1,&RAM[0x10000 + bankaddr]);
-
-	if (data & 0xfe) logerror("%04x: write %02x to f004\n",activecpu_get_pc(),data);
 }
 
 static WRITE8_HANDLER( cps1_oki_pin7_w )
 {
-	logerror("%04x: write %02x to f006 (Oki Pin 7)\n",activecpu_get_pc(),data);
 	OKIM6295_set_pin7(0, (data & 1));
 }
 
@@ -242,8 +237,6 @@ static WRITE16_HANDLER( cps1_soundlatch2_w )
 
 WRITE16_HANDLER( cps1_coinctrl_w )
 {
-//  popmessage("coinctrl %04x",data);
-
 	if (ACCESSING_BITS_8_15)
 	{
 		coin_counter_w(0,data & 0x0100);
@@ -252,15 +245,6 @@ WRITE16_HANDLER( cps1_coinctrl_w )
 		coin_lockout_w(1,~data & 0x0800);
 
 		// bit 15 = CPS-A custom reset?
-	}
-
-	// there's no trace of this in the Forgotten Worlds schematics
-	if (ACCESSING_BITS_0_7)
-	{
-		/* mercs sets bit 0 */
-		set_led_status(0,data & 0x02);
-		set_led_status(1,data & 0x04);
-		set_led_status(2,data & 0x08);
 	}
 }
 
@@ -278,8 +262,7 @@ static WRITE16_HANDLER( cpsq_coinctrl2_w )
 INTERRUPT_GEN( cps1_interrupt )
 {
 	/* Strider also has a IRQ4 handler. It is input port related, but the game */
-	/* works without it (maybe it's used to multiplex controls). It is the */
-	/* *only* game to have that. */
+	/* works without it. It is the *only* CPS1 game to have that. */
 	cpunum_set_input_line(machine, 0, 2, HOLD_LINE);
 }
 
@@ -438,26 +421,141 @@ WRITE16_HANDLER( cps1_eeprom_port_w )
 
 
 
+/*
+PAL PRG1 (16P8B @ 12H):
+
+I0 = AS
+I1 = /BGACKB
+I2 = A23
+I3 = A22
+I4 = A21
+I5 = A20
+I6 = A19
+I7 = A18
+I8 = A17
+I9 = A16
+
+n.c.      = pin19 =   ( !I0 &  I1 )
+n.c.      = pin18 =   ( !I0 &  I1 )
+n.c.      = pin17 = ! (  I0 &  I1 & (!I2 | !I3 | !I4 | !I5 | !I6 | !I7) )
+n.c.      = pin16 = ! (  I2 &  I3 &  I4 &  I5 &  I6 &  I7 )
+/IOCS     = pin15 = ! (  I0 &  I1 &  I2 & !I3 & !I4 & !I5 )
+/ONE WAIT = pin14 = ! (  I0 &  I1 & ((!I2 & !I3) | ( I2 & !I3) | ( I2 &  I3)) )
+/databus  = pin13 = ! (  I0 &  I1 & (!I2 | !I3 | !I4 | !I5 | !I6 | !I7) )
+/workram  = pin12 = ! (  I0 &  I1 &  I2 &  I3 &  I4 &  I5 &  I6 &  I7 )
+
+
+PAL IOA1 (16P8B @ 12F):
+
+I0 = /IOCS
+I1 = /RDB
+I2 = /UDSWR
+I3 = /LDSWR
+I4 = AB8
+I5 = AB7
+I6 = AB6
+I7 = AB5
+I8 = AB4
+I9 = AB3
+
+player input      = pin19 = ! ( !I0 & !I1 & !I4 & !I5 & !I6 & !I7 & !I8 & !I9 )
+system input/dips = pin18 = ! ( !I0 & !I1 & !I4 & !I5 & !I6 & !I7 &  I8 &  I9 )
+outputs           = pin17 = ! ( !I0 & !I2 & !I4 & !I5 & !I6 &  I7 &  I8 & !I9 )
+sound 1B          = pin16 = ! ( !I0 & !I3 &  I4 &  I5 & !I6 & !I7 & !I8 &  I9 )
+sound 0B          = pin15 = ! ( !I0 & !I3 &  I4 &  I5 & !I6 & !I7 & !I8 & !I9 )
+n.c.              = pin14 =   ( !I1 & !I2 )
+/PPU1             = pin13 = ! ( !I0 &  I4 & !I5 & !I6 )
+n.c.              = pin12 =   ( !I1 & !I2 )
+
+
+PAL BUF1 (16P8B @ 16H):
+
+I0 = A23 (all address lines can come both from 68000 and CPS-A custom)
+I1 = A22
+I2 = A21
+I3 = A20
+I4 = A19
+I5 = A18
+I6 = A17
+I7 = A16
+I8 = ASB
+
+BUF0 = pin19 = ! ( I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 & !I7 )
+BUF1 = pin18 = ! ( I0 & !I1 & !I2 &  I3 & !I4 & !I5 & !I6 &  I7 )
+BUF2 = pin17 = ! ( I0 & !I1 & !I2 &  I3 & !I4 & !I5 &  I6 & !I7 )
+BUF3 = pin16 = ! ( I0 & !I1 & !I2 &  I3 & !I4 & !I5 &  I6 &  I7 )
+BUF4 = pin15 = ! ( I0 & !I1 & !I2 &  I3 & !I4 &  I5 & !I6 & !I7 )
+BUF5 = pin14 = ! ( I0 & !I1 & !I2 &  I3 & !I4 &  I5 & !I6 &  I7 )
+BUF6 = pin13 = ! ( I0 & !I1 & !I2 &  I3 & !I4 &  I5 &  I6 & !I7 )
+/RDB = pin12 =   ( I0 & !I1 & !I2 &  I3 & !I8 )
+
+BUF0-BUF2 are gfxram on A-board. BUF3-BUF6 go to B-board (provision for expansion, never used)
+
+
+PAL ROM1 (16P8B @ 15H):
+
+I0 = A23 (all address lines can come both from 68000 and CPS-A custom)
+I1 = A22
+I2 = A21
+I3 = A20
+I4 = A19
+I5 = A18
+I6 = A17
+I7 = A16
+I8 = ASB
+
+PRG0 = pin17 = ! ( !I8 & !I0 & !I1 & !I2 & !I3 & !I4 & !I5 )
+PRG1 = pin16 = ! ( !I8 & !I0 & !I1 & !I2 & !I3 & !I4 &  I5 )
+PRG2 = pin15 = ! ( !I8 & !I0 & !I1 & !I2 & !I3 &  I4 & !I5 )
+PRG3 = pin14 = ! ( !I8 & !I0 & !I1 & !I2 & !I3 &  I4 &  I5 )
+PRG4 = pin19 = ! ( !I8 & !I0 & !I1 & !I2 &  I3 & !I4 )
+PRG5 = pin18 = ! ( !I8 & !I0 & !I1 & !I2 &  I3 &  I4 )
+PRG6 = pin13 = ! ( !I8 & !I0 & !I1 &  I2 & !I3 & !I4 )
+/RDB = pin12 =   ( !I8 & !I0 & !I1 )
+
+All PRGx go to B-board. Provision for up to 4MB of ROM space, which was never used in full.
+
+*/
+
 static ADDRESS_MAP_START( main_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x800000, 0x800001) AM_READ(cps1_in1_r)            /* Player input ports */
-	AM_RANGE(0x800010, 0x800011) AM_READ(cps1_in1_r)            /* mirror? */
-	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_input_r)          /* System input ports / Dip Switches */
-	AM_RANGE(0x800020, 0x800021) AM_READNOP                     /* ? Used by Rockman ? */
-	AM_RANGE(0x800030, 0x800031) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800040, 0x800041) AM_WRITE(forgottn_dial_0_reset_w)
-	AM_RANGE(0x800048, 0x800049) AM_WRITE(forgottn_dial_1_reset_w)
-	AM_RANGE(0x800052, 0x800055) AM_READ(forgottn_dial_0_r)     /* Forgotten Worlds */
-	AM_RANGE(0x80005a, 0x80005d) AM_READ(forgottn_dial_1_r)     /* Forgotten Worlds */
-	AM_RANGE(0x800176, 0x800177) AM_READ(cps1_in2_r)            /* Extra input ports (on C-board) */
-	AM_RANGE(0x800178, 0x800179) AM_READ(cps1_in3_r)            /* Player 4 controls (on C-board) ("Captain Commando") */
+	AM_RANGE(0x000000, 0x3fffff) AM_ROM
+	AM_RANGE(0x800000, 0x800007) AM_READ(cps1_in1_r)            /* Player input ports */
+	/* forgottn, willow, cawing, nemo, varth read from 800010. Probably debug input leftover from development */
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)            /* System input ports / Dip Switches */
+	AM_RANGE(0x800020, 0x800021) AM_READNOP                     /* ? Used by Rockman ? not mapped according to PAL */
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	/* Forgotten Worlds has dial controls on B-board mapped at 800040-80005f. See DRIVER_INIT */
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom */
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w) 	/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
-	AM_RANGE(0x8001fc, 0x8001fd) AM_READ(cps1_in2_r)            /* Extra input ports ("SF Rev E") */
-	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_output_r, cps1_output_w) AM_BASE(&cps1_output) AM_SIZE(&cps1_output_size)  /* CPS-B custom */
+	AM_RANGE(0x8001c0, 0x8001ff) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)	/* mirror (SF2 revision "E" US 910228) */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
+
+/*
+PAL SOU1 (16P8 @ 13E):
+
+I0 = /MREQ
+I1 = A15
+I2 = A14
+I3 = A13
+I4 = A12
+I5 = bank latch
+I6 = /RD
+I7 = /WR
+I8 = /BANK
+
+bank latch = pin19 = ! ( !I0 & !I7 & !I8 )
+/SWR       = pin18 = ! ( !I0 & !I7 )
+/SRD       = pin17 = ! ( !I0 & !I6 )
+ls138      = pin16 = ! ( !I0 &  I1 &  I2 &  I3 &  I4 )
+workram    = pin15 = ! ( !I0 &  I1 &  I2 & !I3 &  I4 )
+SOUNDA14   = pin14 = ! ( !I0 & ((!I1 & !I2) | ( I1 & !I2 & !I5)) )
+SOUNDA15   = pin13 =   (  I1 )
+/SOUNDCE   = pin12 = ! ( !I0 & (!I1 | ( I1 & !I2)) )
+*/
 
 static ADDRESS_MAP_START( sub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
@@ -475,11 +573,11 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( qsound_main_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x800000, 0x800001) AM_READ(cps1_in1_r)            /* Player input ports */
-	AM_RANGE(0x800010, 0x800011) AM_READ(cps1_in1_r)            /* mirror? */
-	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_input_r)          /* System input ports / Dip Switches */
-	AM_RANGE(0x800030, 0x800031) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_output_r, cps1_output_w) AM_BASE(&cps1_output) AM_SIZE(&cps1_output_size)  /* CPS-B custom */
+	AM_RANGE(0x800000, 0x800007) AM_READ(cps1_in1_r)            /* Player input ports */
+	AM_RANGE(0x800018, 0x80001f) AM_READ(cps1_dsw_r)            /* System input ports / Dip Switches */
+	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
+	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
+	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xf00000, 0xf0ffff) AM_READ(qsound_rom_r)		/* Slammasters protection */
 	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)  /* Q RAM */
@@ -506,7 +604,7 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( wofb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x1fffff) AM_ROM
-	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_output_r, cps1_output_w) AM_BASE(&cps1_output) AM_SIZE(&cps1_output_size)  /* CPS-B custom */
+	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)   /* mirror (SF2 revision "E" US 910228) */
 	AM_RANGE(0x800030, 0x800031) AM_WRITE(cps1_coinctrl_w)
 	AM_RANGE(0x880000, 0x880001) AM_READ(input_port_4_word_r) /* Player input ports */
 	AM_RANGE(0x880006, 0x88000f) AM_READ(input_port_0_word_r) /* Player 3 controls (later games) + Input ports */
@@ -514,7 +612,7 @@ static ADDRESS_MAP_START( wofb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xf18000, 0xf19fff) AM_READWRITE(qsound_sharedram1_r, qsound_sharedram1_w)  /* Q RAM */
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READWRITE(cps1_eeprom_port_r, cps1_eeprom_port_w)
 	AM_RANGE(0xf1e000, 0xf1ffff) AM_READWRITE(qsound_sharedram2_r, qsound_sharedram2_w)  /* Q RAM */
-	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)     /* Coin control2 (later games) */
+	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)   /* Coin control2 (later games) */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -524,9 +622,9 @@ static ADDRESS_MAP_START( cawingb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800030, 0x800031) AM_WRITE(cps1_coinctrl_w)
 	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w) 	/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
-	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_output_r, cps1_output_w) AM_BASE(&cps1_output) AM_SIZE(&cps1_output_size)  /* CPS-B custom */
+	AM_RANGE(0x800100, 0x8001ff) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)   /* mirror (SF2 revision "E" US 910228) */
 	AM_RANGE(0x882000, 0x882001) AM_READ(cps1_in1_r)            /* Player input ports */
-	AM_RANGE(0x882006, 0x88200f) AM_READ(cps1_input_r)          /* System input ports / Dip Switches */
+	AM_RANGE(0x882006, 0x88200f) AM_READ(cps1_dsw_r)          /* System input ports / Dip Switches */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
@@ -3798,7 +3896,7 @@ MACHINE_DRIVER_END
 
 ***************************************************************************/
 
-#define CODE_SIZE 0x200000
+#define CODE_SIZE 0x400000
 
 ROM_START( forgottn )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )
@@ -4126,8 +4224,8 @@ ROM_START( dynwar )
 	ROM_CONTINUE(              0x10000, 0x08000 )
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 ) /* Samples */
-	ROM_LOAD( "tke19.12c",  0x20000, 0x20000, CRC(068741db) SHA1(ab48aff639a7ac218b7d5304145e10e92d61fd9f) )
 	ROM_LOAD( "tke18.11c",  0x00000, 0x20000, CRC(ac6e307d) SHA1(b490ce625bb7ce0904b0fd121fbfbd5252790f7a) )
+	ROM_LOAD( "tke19.12c",  0x20000, 0x20000, CRC(068741db) SHA1(ab48aff639a7ac218b7d5304145e10e92d61fd9f) )
 ROM_END
 
 /* the content of the smaller roms in this set is 99% identical, just japanese program roms
@@ -4312,8 +4410,9 @@ ROM_START( unsquad )
 	ROM_LOAD( "unsquad.09",    0x00000, 0x08000, CRC(f3dd1367) SHA1(09eef72e862ac6b1a5cce5a45938b45bf4e456ad) )
 	ROM_CONTINUE(              0x10000, 0x08000 )
 
-	ROM_REGION( 0x20000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "unsquad.18",   0x00000, 0x20000, CRC(584b43a9) SHA1(7820815c8c67d484baf2fdad7e55d8c14b98b860) )
+	/* 20000-3ffff empty */
 ROM_END
 
 ROM_START( area88 )
@@ -4337,8 +4436,9 @@ ROM_START( area88 )
 	ROM_LOAD( "unsquad.09",    0x00000, 0x08000, CRC(f3dd1367) SHA1(09eef72e862ac6b1a5cce5a45938b45bf4e456ad) )
 	ROM_CONTINUE(              0x10000, 0x08000 )
 
-	ROM_REGION( 0x20000, REGION_SOUND1, 0 )	/* Samples */
+	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "unsquad.18",   0x00000, 0x20000, CRC(584b43a9) SHA1(7820815c8c67d484baf2fdad7e55d8c14b98b860) )
+	/* 20000-3ffff empty */
 ROM_END
 
 ROM_START( ffight )
@@ -5569,7 +5669,6 @@ ROM_START( wonder3 )
 	ROM_LOAD16_BYTE( "rtj42.bin",    0x00001, 0x20000, CRC(b4baa117) SHA1(44486b3d50f9b0a8c32c2c2dc5f1a046aface7b6) )
 	ROM_LOAD16_BYTE( "rtj37.bin",    0x40000, 0x20000, CRC(a1f677b0) SHA1(e1511ea0fa4a689d1355119ac37c075192880dde) )
 	ROM_LOAD16_BYTE( "rtj43.bin",    0x40001, 0x20000, CRC(85337a47) SHA1(0a247aa56c5cc17b1e888df7b502f65e88715469) )
-
 	ROM_LOAD16_BYTE( "3wonders.28",  0x80000, 0x20000, CRC(054137c8) SHA1(e4c406e0a32198323a5931093fbaa6836510b8ad) )
 	ROM_LOAD16_BYTE( "3wonders.33",  0x80001, 0x20000, CRC(7264cb1b) SHA1(b367acb9f6579569321ecaa98a14e29dd775b9db) )
 	ROM_LOAD16_BYTE( "rtj35.bin",    0xc0000, 0x20000, CRC(e72f9ea3) SHA1(c63df200416bd61af73e8589204f7daef743041e) )
@@ -7488,7 +7587,7 @@ ROM_START( megaman )
 
 	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "rcm_09.rom",    0x00000, 0x08000, CRC(9632d6ef) SHA1(2bcb6f17005ffbc9ef8fa4478a814f24b2e6e0b6) )
-	ROM_CONTINUE(              0x10000, 0x18000 )
+	ROM_CONTINUE(              0x10000, 0x18000 )	// second half of ROM is empty, not mapped in memory
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "rcm_18.rom",    0x00000, 0x20000, CRC(80f1f8aa) SHA1(4a5b7b2a6941ad68da7472c63362c7bcd353fa54) )
@@ -7524,7 +7623,7 @@ ROM_START( rockmanj )
 
 	ROM_REGION( 0x28000, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "rcm_09.rom",    0x00000, 0x08000, CRC(9632d6ef) SHA1(2bcb6f17005ffbc9ef8fa4478a814f24b2e6e0b6) )
-	ROM_CONTINUE(              0x10000, 0x18000 )
+	ROM_CONTINUE(              0x10000, 0x18000 )	// second half of ROM is empty, not mapped in memory
 
 	ROM_REGION( 0x40000, REGION_SOUND1, 0 )	/* Samples */
 	ROM_LOAD( "rcm_18.rom",    0x00000, 0x20000, CRC(80f1f8aa) SHA1(4a5b7b2a6941ad68da7472c63362c7bcd353fa54) )
@@ -8202,6 +8301,18 @@ ROM_END
 
 
 #ifndef MESS
+
+static DRIVER_INIT( forgottn )
+{
+	/* Forgotten Worlds has extra inputs on the B-board CN-MOWS connector for the dial controls. */
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800040, 0x800041, 0, 0, forgottn_dial_0_reset_w);
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800048, 0x800049, 0, 0, forgottn_dial_1_reset_w);
+	memory_install_read16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x800052, 0x800055, 0, 0, forgottn_dial_0_r);
+	memory_install_read16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x80005a, 0x80005d, 0, 0, forgottn_dial_1_r);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
 static DRIVER_INIT( wof )
 {
 	wof_decode();
@@ -8215,7 +8326,7 @@ static DRIVER_INIT( dino )
 }
 
 static DRIVER_INIT( punisher )
-{
+{	
 	punisher_decode();
 	DRIVER_INIT_CALL(cps1);
 }
@@ -8228,7 +8339,8 @@ static DRIVER_INIT( slammast )
 
 static DRIVER_INIT( pang3 )
 {
-	/* Pang 3 EEPROM interface is at a different address */
+	/* Pang 3 is the only non-QSound game to have an EEPROM. */
+	/* It is mapped in the CPS-B address range so probably is on the C-board. */
 	memory_install_readwrite16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x80017a, 0x80017b, 0, 0, cps1_eeprom_port_r, cps1_eeprom_port_w);
 
 	DRIVER_INIT_CALL(cps1);
@@ -8240,7 +8352,7 @@ static DRIVER_INIT( pang3j )
 	int A,src,dst;
 
 	for (A = 0x80000;A < 0x100000;A += 2)
-	{
+{
 		/* only the low 8 bits of each word are encrypted */
 		src = rom[A/2];
 		dst = src & 0xff00;
@@ -8253,7 +8365,7 @@ static DRIVER_INIT( pang3j )
 		if ( src & 0x40) dst ^= 0x08;
 		if (~src & 0x80) dst ^= 0x88;
 		rom[A/2] = dst;
-	}
+}
 
 	DRIVER_INIT_CALL(pang3);
 }
@@ -8510,7 +8622,7 @@ static DRIVER_INIT( sf2m13 )
 }
 
 static DRIVER_INIT( dinoh )
-{	
+{
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800180, 0x800181, 0, 0, dinoh_sound_command_w);
 	dino_decode();	
 	DRIVER_INIT_CALL(cps1);
@@ -8658,7 +8770,7 @@ static DRIVER_INIT( wof3js )
 }
 
 static DRIVER_INIT( wof3sj )
-{
+	{
 	UINT8 *mem8 = memory_region(REGION_CPU1);
 	// Disable Sprite Recoding
 	mem8[0x5de96] = 0x00;
@@ -8773,7 +8885,7 @@ static DRIVER_INIT( wof3sj )
 	mem8[0x5EE69] = 0x5A;
 	wof_decode();
 	DRIVER_INIT_CALL(cps1);
-}
+	}
 
 static DRIVER_INIT( wofh )
 {
@@ -8902,10 +9014,10 @@ static DRIVER_INIT( wofh )
 #endif
 
 
-GAME( 1988, forgottn, 0,        cps1_10MHz, forgottn, cps1,     ROT0,   "Capcom", "Forgotten Worlds (US)", 0 )
-GAME( 1988, lostwrld, forgottn, cps1_10MHz, forgottn, cps1,     ROT0,   "Capcom", "Lost Worlds (Japan)", 0 )
-GAME( 1988, ghouls,   0,        cps1_10MHz, ghouls,   cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)" , 0)						// Wed.26.10.1988 in the ROMS
-GAME( 1988, ghoulsu,  ghouls,   cps1_10MHz, ghoulsu,  cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (US)" , 0)						// Wed.26.10.1988 in the ROMS
+GAME( 1988, forgottn, 0,        cps1_10MHz, forgottn, forgottn, ROT0,   "Capcom", "Forgotten Worlds (US)", 0 )
+GAME( 1988, lostwrld, forgottn, cps1_10MHz, forgottn, forgottn, ROT0,   "Capcom", "Lost Worlds (Japan)", 0 )
+GAME( 1988, ghouls,   0,        cps1_10MHz, ghouls,   cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (World)", 0 )						// Wed.26.10.1988 in the ROMS
+GAME( 1988, ghoulsu,  ghouls,   cps1_10MHz, ghoulsu,  cps1,     ROT0,   "Capcom", "Ghouls'n Ghosts (US)", 0 )						// Wed.26.10.1988 in the ROMS
 GAME( 1988, daimakai, ghouls,   cps1_10MHz, daimakai, cps1,     ROT0,   "Capcom", "Dai Makai-Mura (Japan)" , 0)						// Wed.26.10.1988 in the ROMS
 GAME( 1989, strider,  0,        cps1_10MHz, strider,  cps1,     ROT0,   "Capcom", "Strider (US set 1)", 0 )
 GAME( 1989, stridrua, strider,  cps1_10MHz, stridrua, cps1,     ROT0,   "Capcom", "Strider (US set 2)", 0 )
@@ -8942,32 +9054,32 @@ GAME( 1990, cawingu,  cawing,   cps1_10MHz, cawing,   cps1,     ROT0,   "Capcom"
 GAME( 1990, cawingj,  cawing,   cps1_10MHz, cawing,   cps1,     ROT0,   "Capcom", "U.S. Navy (Japan 901012)", 0 )
 GAME( 1990, nemo,     0,        cps1_10MHz, nemo,     cps1,     ROT0,   "Capcom", "Nemo (World 901130)" , 0)						// "ETC"
 GAME( 1990, nemoj,    nemo,     cps1_10MHz, nemo,     cps1,     ROT0,   "Capcom", "Nemo (Japan 901120)", 0 )
-GAME( 1991, sf2,      0,        cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)" , 0)	// "ETC"
-GAME( 1991, sf2eb,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)" , 0)	// "ETC"
-GAME( 1991, sf2ua,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910206)", 0 )
-GAME( 1991, sf2ub,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910214)", 0 )
-GAME( 1991, sf2ud,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910318)", 0 )
-GAME( 1991, sf2ue,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910228)", 0 )
-GAME( 1991, sf2uf,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910411)", 0 )
-GAME( 1991, sf2ui,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910522)", 0 )
-GAME( 1991, sf2uk,    sf2,      cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 911101)", 0 )
-GAME( 1991, sf2j,     sf2,      cps1_12MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 911210)", 0 )
-GAME( 1991, sf2ja,    sf2,      cps1_12MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910214)", 0 )
-GAME( 1991, sf2jc,    sf2,      cps1_12MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910306)", 0 )
-GAME( 1991, 3wonders, 0,        cps1_10MHz, 3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)" , 0)					// "ETC"
+GAME( 1991, sf2,      0,        cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910522)" , 0)	// "ETC"
+GAME( 1991, sf2eb,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (World 910214)" , 0)	// "ETC"
+GAME( 1991, sf2ua,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910206)", 0 )
+GAME( 1991, sf2ub,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910214)", 0 )
+GAME( 1991, sf2ud,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910318)", 0 )
+GAME( 1991, sf2ue,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910228)", 0 )
+GAME( 1991, sf2uf,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910411)", 0 )
+GAME( 1991, sf2ui,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 910522)", 0 )
+GAME( 1991, sf2uk,    sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (US 911101)", 0 )
+GAME( 1991, sf2j,     sf2,      cps1_10MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 911210)", 0 )
+GAME( 1991, sf2ja,    sf2,      cps1_10MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910214)", 0 )
+GAME( 1991, sf2jc,    sf2,      cps1_10MHz, sf2j,     cps1,     ROT0,   "Capcom", "Street Fighter II - The World Warrior (Japan 910306)", 0 )
+GAME( 1991, 3wonders, 0,        cps1_10MHz, 3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (World 910520)", 0 )					// "ETC"
 GAME( 1991, 3wonderu, 3wonders, cps1_10MHz, 3wonders, cps1,     ROT0,   "Capcom", "Three Wonders (US 910520)", 0 )
 GAME( 1991, wonder3,  3wonders, cps1_10MHz, 3wonders, cps1,     ROT0,   "Capcom", "Wonder 3 (Japan 910520)", 0 )
-GAME( 1991, kod,      0,        cps1_10MHz, kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)" , 0)				// "ETC"
+GAME( 1991, kod,      0,        cps1_10MHz, kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (World 910711)", 0 )				// "ETC"
 GAME( 1991, kodu,     kod,      cps1_10MHz, kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (US 910910)", 0 )
 GAME( 1991, kodj,     kod,      cps1_10MHz, kodj,     cps1,     ROT0,   "Capcom", "The King of Dragons (Japan 910805)", 0 )
 //GAME( 1991, kodb,     kod,      cps1_10MHz, kod,      cps1,     ROT0,   "Capcom", "The King of Dragons (bootleg)", GAME_NOT_WORKING )		// 910731  "ETC"
-GAME( 1991, captcomm, 0,        cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)" , 0)				// "OTHER COUNTRY"
+GAME( 1991, captcomm, 0,        cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)", 0 )				// "OTHER COUNTRY"
 GAME( 1991, captcomu, captcomm, cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (US 910928)", 0 )
 GAME( 1991, captcomj, captcomm, cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)", 0 )
-GAME( 1991, knights,  0,        cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" , 0)				// "ETC"
+GAME( 1991, knights,  0,        cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)", 0 )				// "ETC"
 GAME( 1991, knightsu, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)", 0 )
 GAME( 1991, knightsj, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", 0 )
-GAME( 1992, sf2ce,    0,        cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)" , 0)	// "ETC"
+GAME( 1992, sf2ce,    0,        cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)", 0 )	// "ETC"
 GAME( 1992, sf2ceua,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", 0 )
 GAME( 1992, sf2ceub,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", 0 )
 GAME( 1992, sf2ceuc,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920803)", 0 )
@@ -8986,10 +9098,10 @@ GAME( 1992, sf2m5,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1992, sf2m7,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7)", 0 )
 GAME( 1992, sf2yyc,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC)", 0 )
 //GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Kouryu)", 0 )
-GAME( 1992, varth,    0,        cps1_10MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , 0)		// "ETC"
-GAME( 1992, varthr1,  varth,    cps1_10MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , 0)		// "ETC"
-GAME( 1992, varthu,   varth,    cps1_10MHz, varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", 0 )
-GAME( 1992, varthj,   varth,    cps1_10MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)", 0 )
+GAME( 1992, varth,    0,        cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , 0)		// "ETC"
+GAME( 1992, varthr1,  varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , 0)		// "ETC"
+GAME( 1992, varthu,   varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", 0 )
+GAME( 1992, varthj,   varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (Japan 920714)", 0 )
 GAME( 1992, cworld2j, 0,        cps1_10MHz, cworld2j, cps1,     ROT0,   "Capcom", "Capcom World 2 (Japan 920611)", 0 )
 GAME( 1992, sf2hf,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Hyper Fighting (World 921209)", 0 )
 GAME( 1992, sf2t,     sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Hyper Fighting (US 921209)", 0 )
@@ -9007,10 +9119,10 @@ GAME( 1992, wofj,     wof,      qsound,     wof,      wof,      ROT0,   "Capcom"
 GAME( 1993, dino,     0,        qsound,     dino,     dino,     ROT0,   "Capcom", "Cadillacs and Dinosaurs (World 930201)" , 0)			// "ETC"
 GAME( 1993, dinou,    dino,     qsound,     dino,     dino ,    ROT0,   "Capcom", "Cadillacs and Dinosaurs (US 930201)", 0 )
 GAME( 1993, dinoj,    dino,     qsound,     dino,     dino ,    ROT0,   "Capcom", "Cadillacs Kyouryuu-Shinseiki (Japan 930201)", 0 )
-GAME( 1993, punisher, 0,        qsound,     punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)" , 0)					// "ETC"
+GAME( 1993, punisher, 0,        qsound,     punisher, punisher, ROT0,   "Capcom", "The Punisher (World 930422)", 0 )					// "ETC"
 GAME( 1993, punishru, punisher, qsound,     punisher, punisher, ROT0,   "Capcom", "The Punisher (US 930422)", 0 )
 GAME( 1993, punishrj, punisher, qsound,     punisher, punisher, ROT0,   "Capcom", "The Punisher (Japan 930422)", 0 )
-GAME( 1993, slammast, 0,        qsound,     slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)" , 0)		// "ETC"
+GAME( 1993, slammast, 0,        qsound,     slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (World 930713)", 0 )		// "ETC"
 GAME( 1993, slammasu, slammast, qsound,     slammast, slammast, ROT0,   "Capcom", "Saturday Night Slam Masters (US 930713)", 0 )
 GAME( 1993, mbomberj, slammast, qsound,     slammast, slammast, ROT0,   "Capcom", "Muscle Bomber - The Body Explosion (Japan 930713)", 0 )
 GAME( 1993, mbombrd,  slammast, qsound,     slammast, slammast, ROT0,   "Capcom", "Muscle Bomber Duo - Ultimate Team Battle (World 931206)" , 0)  // "ETC"
