@@ -5,12 +5,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>631</width>
-    <height>378</height>
+    <width>624</width>
+    <height>403</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.7 Alpha</string>
+   <string>MAME Plus! GUI 0.85a</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
@@ -18,62 +18,22 @@
   <widget class="QWidget" name="centralwidget" >
    <layout class="QGridLayout" >
     <property name="leftMargin" >
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="topMargin" >
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="rightMargin" >
-     <number>2</number>
+     <number>0</number>
     </property>
     <property name="bottomMargin" >
-     <number>2</number>
+     <number>0</number>
     </property>
     <item row="0" column="0" >
      <layout class="QVBoxLayout" >
-      <item>
-       <layout class="QHBoxLayout" >
-        <item>
-         <widget class="QComboBox" name="comboBox" >
-          <item>
-           <property name="text" >
-            <string>All Arcades</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>Available Arcades</string>
-           </property>
-          </item>
-          <item>
-           <property name="text" >
-            <string>All Consoles</string>
-           </property>
-          </item>
-         </widget>
-        </item>
-        <item>
-         <widget class="QComboBox" name="comboBox_2" >
-          <property name="enabled" >
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer>
-          <property name="orientation" >
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" >
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </item>
+      <property name="topMargin" >
+       <number>2</number>
+      </property>
       <item>
        <widget class="QTreeView" name="treeViewGameList" >
         <property name="rootIsDecorated" >
@@ -93,7 +53,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>631</width>
+     <width>624</width>
      <height>21</height>
     </rect>
    </property>
@@ -107,7 +67,6 @@
     <property name="title" >
      <string>View</string>
     </property>
-    <addaction name="actionFolder_List" />
     <addaction name="actionPicture_Area" />
     <addaction name="separator" />
     <addaction name="actionLarge_Icons" />
@@ -155,7 +114,6 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
-   <addaction name="actionFolder_List" />
    <addaction name="actionPicture_Area" />
    <addaction name="separator" />
    <addaction name="actionLarge_Icons" />
@@ -194,6 +152,18 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
     <layout class="QGridLayout" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
      <item row="0" column="0" >
       <widget class="QTextBrowser" name="textBrowserFrontendLog" />
      </item>
@@ -212,15 +182,69 @@
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_12" >
     <layout class="QGridLayout" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
      <item row="0" column="0" >
       <widget class="QTextBrowser" name="textBrowserMAMELog" />
      </item>
     </layout>
    </widget>
   </widget>
+  <widget class="QDockWidget" name="dockWidget_7" >
+   <property name="sizePolicy" >
+    <sizepolicy vsizetype="Preferred" hsizetype="Ignored" >
+     <horstretch>0</horstretch>
+     <verstretch>0</verstretch>
+    </sizepolicy>
+   </property>
+   <property name="features" >
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+   </property>
+   <property name="windowTitle" >
+    <string>Folder List</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="dockWidgetContents_14" >
+    <layout class="QGridLayout" >
+     <property name="leftMargin" >
+      <number>0</number>
+     </property>
+     <property name="topMargin" >
+      <number>0</number>
+     </property>
+     <property name="rightMargin" >
+      <number>0</number>
+     </property>
+     <property name="bottomMargin" >
+      <number>0</number>
+     </property>
+     <item row="0" column="0" >
+      <widget class="QTreeWidget" name="treeFolders" >
+       <column>
+        <property name="text" >
+         <string>1</string>
+        </property>
+       </column>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionDefaultOptions" >
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/32x32/applications-system.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/32x32/applications-system.png</iconset>
    </property>
    <property name="text" >
     <string>Default Options</string>
@@ -228,7 +252,7 @@
   </action>
   <action name="actionRefresh" >
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/32x32/view-refresh.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/32x32/view-refresh.png</iconset>
    </property>
    <property name="text" >
     <string>Refresh</string>
@@ -246,67 +270,80 @@
    </property>
   </action>
   <action name="actionAbout" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/32x32/help-browser.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/32x32/help-browser.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
    </property>
   </action>
   <action name="actionSmall_Icons" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-view-sicon.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-sicon.png</iconset>
    </property>
    <property name="text" >
     <string>Small Icons</string>
    </property>
   </action>
   <action name="actionList" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-view-list.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-list.png</iconset>
    </property>
    <property name="text" >
     <string>List</string>
    </property>
   </action>
   <action name="actionDetails" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-view-detail.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-detail.png</iconset>
    </property>
    <property name="text" >
     <string>Details</string>
    </property>
   </action>
   <action name="actionGrouped" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="checked" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-view-group.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-group.png</iconset>
    </property>
    <property name="text" >
     <string>Grouped</string>
    </property>
   </action>
   <action name="actionLarge_Icons" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-view-licon.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-licon.png</iconset>
    </property>
    <property name="text" >
     <string>Large Icons</string>
    </property>
   </action>
-  <action name="actionFolder_List" >
-   <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-show-tree.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Folder List</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+D</string>
-   </property>
-  </action>
   <action name="actionPicture_Area" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="qmc2main.qrc" >:/res/mame32-show-snap.png</iconset>
+    <iconset resource="mamepguimain.qrc" >:/res/mame32-show-snap.png</iconset>
    </property>
    <property name="text" >
     <string>Picture Area</string>
@@ -317,7 +354,7 @@
   </action>
  </widget>
  <resources>
-  <include location="qmc2main.qrc" />
+  <include location="mamepguimain.qrc" />
  </resources>
  <connections/>
 </ui>

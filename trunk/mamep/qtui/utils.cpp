@@ -1,4 +1,4 @@
-#include "qmc2main.h"
+#include "mamepguimain.h"
 
 Utils *utils;
 
@@ -28,13 +28,17 @@ QString Utils::capitalizeStr(const QString & str)
 	return strlist.join(" ");
 }
 
+QString Utils::getPath(QString dirpath)
+{
+	QDir dir(dirpath);
+	return dir.path() + "/";	//clean it up
+}
+
 QIcon Utils::loadIcon(const QString & gameName)
 {
 	QIcon icon = QIcon();
-
-	QString dirpath = icons_directory;
+	QString dirpath = getPath(icons_directory);
 	QDir dir(dirpath);
-	dirpath = dir.path() + "/";	//clean it up
 
 	// try to load directly
 	QFile icoFile(dirpath + gameName + ".ico");
@@ -97,14 +101,17 @@ QIcon Utils::loadWinIco(QIODevice *device)
 QString Utils::getViewString(const QModelIndex &index, int column) const
 {
 	QModelIndex j = index.sibling(index.row(), column);
-	return j.model()->data(j, Qt::DisplayRole).toString();
+	//fixme: sometime model's NULL...
+	if (!index.model())
+		return "";
+	return index.model()->data(j, Qt::DisplayRole).toString();
 }
 
 QPixmap Utils::getScreenshot(const QString &dirpath0, const QString &gameName, const QSize &size)
 {
 	QPixmap pm = QPixmap();
-	QDir dir(dirpath0);
-	QString dirpath = dir.path() + "/";	//clean it up
+	QString dirpath = getPath(dirpath0);
+	QDir dir(dirpath);
 
 	// try to load directly	
 	if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
@@ -131,7 +138,8 @@ QPixmap Utils::getScreenshot(const QString &dirpath0, const QString &gameName, c
 	if (pm.isNull())
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		if (!gameinfo->cloneof.isEmpty())
+		// fixme: QT bug??
+ 		if (!gameinfo->cloneof.isEmpty())
 			pm = getScreenshot(dirpath, gameinfo->cloneof, size);
 
 		// fallback to default image, first getScreenshot() can't reach here
@@ -193,6 +201,23 @@ QString Utils::getHistory(const QString &gameName, const QString &fileName)
 	}
 	
 	return buf.trimmed();
+}
+
+void Utils::tranaparentBg(QWidget * w)
+{
+	QPalette palette;
+	QBrush brush(QColor(255, 255, 255, 140));
+	brush.setStyle(Qt::SolidPattern);
+	palette.setBrush(QPalette::Active, QPalette::Base, brush);
+	palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
+	palette.setBrush(QPalette::Disabled, QPalette::Base, brush);
+/*	QBrush brushText(QColor(255, 255, 255, 255));
+	brushText.setStyle(Qt::SolidPattern);
+	palette.setBrush(QPalette::Active, QPalette::Text, brushText);
+	palette.setBrush(QPalette::Inactive, QPalette::Text, brushText);
+	palette.setBrush(QPalette::Disabled, QPalette::Text, brushText);
+*/
+	w->setPalette(palette);
 }
 
 

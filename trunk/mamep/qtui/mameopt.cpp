@@ -1,8 +1,8 @@
-#include "qmc2main.h"
+#include "mamepguimain.h"
 
 OptionUtils *optUtils;
+QHash<QString, MameOption*> mameOpts;
 
-static QHash<QString, MameOption*> mameOpts;
 static QList<OptionInfo *> optInfos;
 static QMap<QString, QStringList> optCatMap;
 static OptionDelegate optdelegate(win);
@@ -879,7 +879,7 @@ void OptionUtils::loadTemplate()
 	reader.parse(xmlInputSource);
 }
 
-void OptionUtils::load(int optInfoType, const QString &iniFileName)
+void OptionUtils::loadIni(int optInfoType, const QString &iniFileName)
 {
 	QHash<QString, QString> inisettings = optUtils->readIniFile(iniFileName);
 	
@@ -1190,7 +1190,8 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 		filter = "Video";
 
 	//update mameopts
-	optUtils->load(OPTNFO_GLOBAL, "mame.ini");
+	// loaded before
+//	optUtils->loadIni(OPTNFO_GLOBAL, "mame.ini");
 	if (optType == OPTNFO_GLOBAL)
 	{
 		optUtils->setupModelData(filter, OPTNFO_GLOBAL);
@@ -1200,7 +1201,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
 	QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
 	//fixme: create source folder
-	optUtils->load(OPTNFO_SRC, iniFileName);
+	optUtils->loadIni(OPTNFO_SRC, iniFileName);
 	if (optType == OPTNFO_SRC)
 	{
 		optUtils->setupModelData(filter, OPTNFO_SRC);
@@ -1211,7 +1212,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 	if (!biosof.isEmpty())
 		iniFileName = "ini/" + biosof + ".ini";
 
-	optUtils->load(OPTNFO_BIOS, iniFileName);
+	optUtils->loadIni(OPTNFO_BIOS, iniFileName);
 	if (optType == OPTNFO_BIOS)
 	{
 		optUtils->setupModelData(filter, OPTNFO_BIOS);
@@ -1219,7 +1220,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 	}
 
 	iniFileName = "ini/" + gameinfo->cloneof + ".ini";
-	optUtils->load(OPTNFO_CLONEOF, iniFileName);
+	optUtils->loadIni(OPTNFO_CLONEOF, iniFileName);
 	if (optType == OPTNFO_CLONEOF)
 	{
 		optUtils->setupModelData(filter, OPTNFO_CLONEOF);
@@ -1227,7 +1228,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 	}
 
 	iniFileName = "ini/" + currentGame + ".ini";
-	optUtils->load(OPTNFO_CURR, iniFileName);
+	optUtils->loadIni(OPTNFO_CURR, iniFileName);
 	if (optType == OPTNFO_CURR)
 	{
 		optUtils->setupModelData(filter, OPTNFO_CURR);

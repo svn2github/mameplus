@@ -1,4 +1,4 @@
-#include "qmc2main.h"
+#include "mamepguimain.h"
 
 // global variables
 MainWindow *win;
@@ -11,9 +11,6 @@ QString flyer_directory,
 		cpanel_directory,
 		pcb_directory,
 		icons_directory;
-
-QString roms_directory;
-QString snapshot_directory;
 
 void MainWindow::log(char logOrigin, QString message)
 {
@@ -80,6 +77,14 @@ MainWindow::MainWindow(QWidget *parent)
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
 
+
+	QAction *actionFolderList = dockWidget_7->toggleViewAction();
+	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
+	
+	menuView->insertAction(actionPicture_Area, actionFolderList);
+	toolBar->insertAction(actionPicture_Area, actionFolderList);
+
+	//override font for CJK OS
 	QFont font;
 	font.setPointSize(9);
 	setFont(font);
@@ -121,6 +126,8 @@ void MainWindow::initHistory(QString title)
 		tb = tbStory = new QTextBrowser(dockWidgetContents);
 	
 	tb->setObjectName("textBrowser_" + title);
+	
+	utils->tranaparentBg(tb);
 
 	gridLayout->addWidget(tb);
 
@@ -193,16 +200,20 @@ void MainWindow::init()
 	optUtils->initOption();
 
 	// must load() before loadLayout()
-	gamelist->load();
+	gamelist->init();
 
+	//show UI
 	show();
 	loadLayout();
 
-	connect(gameListPModel,SIGNAL(layoutChanged()), gamelist, SLOT(restoreSelection()));
+	QPalette palette;
+	palette.setBrush(this->backgroundRole(), QBrush(QImage("background.png")));
+	this->setPalette(palette);
+
+	utils->tranaparentBg(treeViewGameList);
+	utils->tranaparentBg(treeFolders);
+
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
-	connect(treeViewGameList->selectionModel(),
-			SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-			gamelist, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
 	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
 	connect(dlgOptions->lvGlobalOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
@@ -231,7 +242,7 @@ void MainWindow::on_actionRefresh_activated()
 
 void MainWindow::on_actionReload_activated()
 {
-	gamelist->load();
+	gamelist->init();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -262,8 +273,6 @@ void MainWindow::loadLayout()
 	restoreGeometry(guisettings.value("window_geometry").toByteArray());
 	restoreState(guisettings.value("window_state").toByteArray());
 	dlgOptionsGeo = guisettings.value("option_geometry").toByteArray();
-
-	gamelist->restoreSelection(guisettings.value("default_game", "pacman").toString());
 }
 
 void MainWindow::saveLayout()
@@ -279,9 +288,6 @@ void MainWindow::saveLayout()
 
 void MainWindow::loadSettings()
 {
-	snapshot_directory = guisettings.value("snapshot_directory", "snap").toString();
-	roms_directory = guisettings.value("roms_directory", "roms").toString();
-	
 	flyer_directory = guisettings.value("flyer_directory", "flyers").toString();
 	cabinet_directory = guisettings.value("cabinet_directory", "cabinets").toString();
 	marquee_directory = guisettings.value("marquee_directory", "marquees").toString();
@@ -289,13 +295,12 @@ void MainWindow::loadSettings()
 	cpanel_directory = guisettings.value("cpanel_directory", "cpanel").toString();
 	pcb_directory = guisettings.value("pcb_directory", "pcb").toString();
 	icons_directory = guisettings.value("icons_directory", "icons").toString();
+
+	currentGame = guisettings.value("default_game", "pacman").toString();
 }
 
 void MainWindow::saveSettings()
 {
-	guisettings.setValue("snapshot_directory", snapshot_directory);
-	guisettings.setValue("roms_directory", roms_directory);
-
 	guisettings.setValue("flyer_directory", flyer_directory);
 	guisettings.setValue("cabinet_directory", cabinet_directory);
 	guisettings.setValue("marquee_directory", marquee_directory);

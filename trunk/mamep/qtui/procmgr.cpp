@@ -1,4 +1,4 @@
-#include "qmc2main.h"
+#include "mamepguimain.h"
 
 ProcessManager *procMan = NULL;
 

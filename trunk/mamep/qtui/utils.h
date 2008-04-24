@@ -18,6 +18,8 @@ public:
 	QString getHistory(const QString &, const QString &);
 
 	QString capitalizeStr(const QString & str);
+	QString getPath(QString);
+	void tranaparentBg(QWidget *);
 };
 
 class MyQueue : public QObject

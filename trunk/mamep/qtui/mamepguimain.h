@@ -9,7 +9,7 @@
 #include <QtGui>
 #include <QtXml>
 
-#include "ui_qmc2main.h"
+#include "ui_mamepguimain.h"
 
 #include "options.h"
 #include "utils.h"
@@ -77,6 +77,7 @@ private:
 extern MainWindow *win;
 extern Options *dlgOptions;
 
+extern QHash<QString, MameOption*> mameOpts;
 extern QSettings guisettings;
 
 extern QString flyer_directory,
@@ -86,9 +87,6 @@ extern QString flyer_directory,
 		cpanel_directory,
 		pcb_directory,
 		icons_directory;
-
-extern QString roms_directory;
-extern QString snapshot_directory;
 
 extern QByteArray dlgOptionsGeo;
 

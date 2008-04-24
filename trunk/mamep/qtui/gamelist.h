@@ -172,10 +172,7 @@ public:
 	QTime verifyTimer;
 	QTime parseTimer;
 	QTime miscTimer;
-	QFile romCache;
 	QFile gamelistCache;
-	QTextStream tsRomCache;
-	QTextStream tsGamelistCache;
 	int numTotalGames;
 	int numGames;
 	int numCorrectGames;
@@ -185,9 +182,8 @@ public:
 	int numUnknownGames;
 	int numSearchGames;
 	QString mameVersion;
-	QString mameTarget;
-	bool verifyCurrentOnly;
-	bool autoROMCheck;
+
+	QStringList folderList, mftrList, yearList, srcList, biosList;
 
 	AuditROMThread auditThread;
 	LoadIconThread iconThread;
@@ -197,13 +193,16 @@ public:
 	~Gamelist();
 
 public slots:
-	void load();
+	void init();
 	void loadDefaultIni();
+	void initFolders();
+
+	void runMame();
 
 	// process management
-	void loadStarted();
-	void loadReadyReadStandardOutput();
-	void loadFinished(int, QProcess::ExitStatus);
+	void loadListXmlStarted();
+	void loadListXmlReadyReadStandardOutput();
+	void loadListXmlFinished(int, QProcess::ExitStatus);
 	void loadDefaultIniReadyReadStandardOutput();
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 
@@ -212,15 +211,15 @@ public slots:
 	void updateProgress(int progress);
 	void switchProgress(int max, QString title);
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
-	void restoreSelection(QString gameName);
 	void restoreSelection();
 	void setupIcon();
 	void setupAudit();
 	void setupHistory();
 	void log(char, QString);
 
-	void filterRegExpChanged();
 	void filterTimer();
+	void filterRegExpChanged();
+	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *);
 };
 
 class RomInfo : public QObject
@@ -282,7 +281,9 @@ class GameListSortFilterProxyModel : public QSortFilterProxyModel
 Q_OBJECT
 
 public:
-GameListSortFilterProxyModel(QObject *parent = 0);
+	QString searchText, filterText;
+
+	GameListSortFilterProxyModel(QObject *parent = 0);
 
 protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;

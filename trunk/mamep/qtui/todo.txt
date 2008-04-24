@@ -1,15 +1,17 @@
-﻿[basic]
-/ settings dialog 0.7
-/ proper ini entries handling 0.8
-/ reset settings button 0.75
-1 start mame core 0.85
-1 all filters: 0.9 orientation, manu, year, driver, bios, cpu, sound, emu status, dumping status, working, not working, orignals, clones, raster, vector, resolution, fps, savestate, control type, stereo, chd, samples, artwork
+﻿[bug]
+
+[basic]
+1 multi path
+1 path with space
+/ start mame core 0.85
+/ some filters: 0.9
 1 unify method to get inherited default value
+1 icon view, list view 0.9
 1 replace optview with custom render
-1 bios support: audit selected bios only, bios.ini(biosof(), top romof isbios()), select bios (loop rominfo, see bios="")
+1 bios support: select bios (loop rominfo, see bios="")
+1 lst translation 0.95
 * vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
 * general info page
-* switch tree/combobox
 * path chooser dialog
 * more responsive threading
 * background image
@@ -18,7 +20,6 @@
 * helpid
 * fullscreen switch
 * adjust snap with a/r
-* if ini readonly, cannot read cache
 
 [extension]
 * export roms to folders

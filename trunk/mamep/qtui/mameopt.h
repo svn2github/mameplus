@@ -90,7 +90,7 @@ public:
 public slots:
 	void loadDefault(QString);
 	void loadTemplate();
-	void load(int, const QString &);
+	void loadIni(int, const QString &);
 	void save(int , const QString &);
 	QHash<QString, QString> readIniFile(const QString &);
 
