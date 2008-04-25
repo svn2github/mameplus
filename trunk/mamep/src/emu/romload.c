@@ -1095,6 +1095,7 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 
 	/* determine the correct biosset to load based on OPTION_BIOS string */
 	system_bios = determine_bios_rom(mame_options(), romp);
+
 	romdata.romstotal = count_roms(romp);
 
 	/* reset the disk list */

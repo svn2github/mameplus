@@ -34,7 +34,7 @@ READ8_HANDLER( msm6242_r )
 {
 	mame_system_time curtime, *systime = &curtime;
 
-	if (Machine->record_file != NULL || Machine->playback_file != NULL)
+	if (machine->record_file != NULL || machine->playback_file != NULL)
 		return 0;
 
 	if ( msm6264_reg[0] & 1 ) /* if HOLD is set, use the hold time */
