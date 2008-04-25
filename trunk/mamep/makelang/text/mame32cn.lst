@@ -1610,7 +1610,7 @@ champwru	冠军摔跤 (美版)	冠军摔跤 (美版)	Taito America Corporation
 champwrj	冠军摔跤 (日版)	冠军摔跤 (日版)	Taito Corporation
 puzznic	宝石仓库番 (世界版)	宝石仓库番 (世界版)	Taito Corporation Japan
 puzznicj	宝石仓库番 (日版)	宝石仓库番 (日版)	Taito Corporation
-puzznici	宝石仓库番 (意大利)	宝石仓库番 (意大利)	Taito Corporation
+puzznici	宝石仓库番 (意大利 盗版)	宝石仓库番 (意大利 盗版)	bootleg
 horshoes	美国马蹄铁比赛 (美版)	美国马蹄铁比赛 (美版)	Taito America Corporation
 palamed	骰子方块 (日版)	骰子方块 (日版)	Taito Corporation
 cachat	能源方块 (日版)	能源方块 (日版)	Taito Corporation
@@ -2095,6 +2095,7 @@ lstduelb	行星战争 2012 (盗版)	行星战争 2012 (盗版)	bootleg
 madgear	疯狂机车 (美版)	疯狂机车 (美版)	Capcom
 madgearj	疯狂机车 (日版)	疯狂机车 (日版)	Capcom
 ledstorm	道路风暴 (美版)	道路风暴 (美版)	Capcom
+ledstrm2	道路风暴 2011 (美版)	道路风暴 2011 (美版)	Capcom
 forgottn	失落的世界 (美版)	失落的世界 (美版)	Capcom
 lostwrld	失落的世界 (日版)	失落的世界 (日版)	Capcom
 ghouls	大魔界村 (世界版)	大魔界村 (世界版)	Capcom
@@ -2104,7 +2105,7 @@ strider	出击飞龙 (美版 第1套)	出击飞龙 (美版 第1套)	Capcom
 stridrua	出击飞龙 (美版 第2套)	出击飞龙 (美版 第2套)	Capcom
 striderj	出击飞龙 (日版 第1套)	出击飞龙 (日版 第1套)	Capcom
 stridrja	出击飞龙 (日版 第2套)	出击飞龙 (日版 第2套)	Capcom
-dynwar	吞食天地 (世界版)	吞食天地 (世界版)	Capcom
+dynwar	吞食天地 (美版)	吞食天地 (美版)	Capcom
 dynwarj	吞食天地 (日版)	吞食天地 (日版)	Capcom
 willow	威洛之旅 (美版)	威洛之旅 (美版)	Capcom
 willowj	威洛之旅 (日版, 日语)	威洛之旅 (日版, 日语)	Capcom
@@ -3034,7 +3035,7 @@ alexkid1	天空魔城 (第1套, FD1089A 317-unknown)	天空魔城 (第1套, FD1089A 317-unkn
 fantzone	神奇地带 (第2套, 未保护版)	神奇地带 (第2套, 未保护版)	Sega
 fantzon1	神奇地带 (第1套, 未保护版)	神奇地带 (第1套, 未保护版)	Sega
 sdi	SDI - 战略防卫构想 (欧洲版, 系统 16A, FD1089B 317-0027)	SDI - 战略防卫构想 (欧洲版, 系统 16A, FD1089B 317-0027)	Sega
-shinobi	超级忍 (第5套, 系统 16A, 未保护版)	超级忍 (第5套, 系统 16A, 未保护版)	Sega
+shinobi	超级忍 (第6套, 系统 16A, 未保护版)	超级忍 (第6套, 系统 16A, 未保护版)	Sega
 shinobi1	超级忍 (第1套, 系统 16A, FD1094 317-0050)	超级忍 (第1套, 系统 16A, FD1094 317-0050)	Sega
 shinobls	超级忍 (Star 盗版, 系统 16A)	超级忍 (Star 盗版, 系统 16A)	[Sega] (Star bootleg)
 sjryuko1	麻雀雀狼会 (第1套, 系统 16A, FD1089B 317-5021)	麻雀雀狼会 (第1套, 系统 16A, FD1089B 317-5021)	White Board
@@ -3089,7 +3090,8 @@ ryukyu	琉球 (日版, FD1094 317-5023)	琉球 (日版, FD1094 317-5023)	Success / Sega
 sdib	SDI - 战略防卫构想 (系统 16B, FD1089A 317-0028)	SDI - 战略防卫构想 (系统 16B, FD1089A 317-0028)	Sega
 sdibl	SDI - 战略防卫构想 (盗版)	SDI - 战略防卫构想 (盗版)	bootleg
 defense	SDI - 守护者 (系统 16B, FD1089A 317-0028)	SDI - 守护者 (系统 16B, FD1089A 317-0028)	Sega
-shinobi4	超级忍 (第4套, 系统 16B, 未保护版)	超级忍 (第4套, 系统 16B, 未保护版)	Sega
+shinobi5	超级忍 (第5套, 系统 16B, 未保护版)	超级忍 (第5套, 系统 16B, 未保护版)	Sega
+shinobi4	超级忍 (第4套, 系统 16B, MC-8123B 317-0054)	超级忍 (第4套, 系统 16B, MC-8123B 317-0054)	Sega
 shinobi3	超级忍 (第3套, 系统 16B, MC-8123B 317-0054)	超级忍 (第3套, 系统 16B, MC-8123B 317-0054)	Sega
 shinobi2	超级忍 (第2套, 系统 16B, FD1094 317-0049)	超级忍 (第2套, 系统 16B, FD1094 317-0049)	Sega
 sonicbom	音速轰炸机 (FD1094 317-0053)	音速轰炸机 (FD1094 317-0053)	Sega
@@ -5171,9 +5173,9 @@ raidrs5t	大战略 5 (日版)	大战略 5 (日版)	UPL (Taito license)
 pkunwar	企鹅大战 (美版)	企鹅大战 (美版)	UPL
 pkunwarj	企鹅大战 (日版)	企鹅大战 (日版)	UPL
 xxmissio	XX 任务	XX 任务	UPL
-ninjakd2	忍者君 - 阿修罗之章 (第1套)	忍者君 - 阿修罗之章 (第1套)	UPL
-ninjak2a	忍者君 - 阿修罗之章 (第2套)	忍者君 - 阿修罗之章 (第2套)	UPL
-ninjak2b	忍者君 - 阿修罗之章 (第3套)	忍者君 - 阿修罗之章 (第3套)	UPL
+ninjakd2	忍者君 II - 阿修罗之章 (第1套)	忍者君 II - 阿修罗之章 (第1套)	UPL
+ninjak2a	忍者君 II - 阿修罗之章 (第2套, 盗版?)	忍者君 II - 阿修罗之章 (第2套, 盗版?)	UPL
+ninjak2b	忍者君 II - 阿修罗之章 (第3套, 盗版?)	忍者君 II - 阿修罗之章 (第3套, 盗版?)	UPL
 rdaction	忍者君 - 阿修罗之章	忍者君 - 阿修罗之章	UPL (World Games license)
 mnight	突变之夜	突变之夜	UPL (Kawakus license)
 arkarea	宇宙飞艇	宇宙飞艇	UPL
@@ -5562,6 +5564,7 @@ f1gpstr2	一级方程式 GP 巨星 2	一级方程式 GP 巨星 2	Jaleco
 scudhamm	彩票机 - 出气筒	彩票机 - 出气筒	Jaleco
 tetrisp2	俄罗斯方块 Plus 2 (世界版)	俄罗斯方块 Plus 2 (世界版)	Jaleco / The Tetris Company
 teplus2j	俄罗斯方块 Plus 2 (日版)	俄罗斯方块 Plus 2 (日版)	Jaleco / The Tetris Company
+nndmseal	Nandemo Seal Iinkai	Nandemo Seal Iinkai	I'Max/Jaleco
 stepstag	步进舞台	步进舞台	Jaleco
 rockn	摇滚乐队 1 (日版, 盗版)	摇滚乐队 1 (日版, 盗版)	Jaleco
 rockna	摇滚节奏踢踏踩 (日版, 替换版)	摇滚节奏踢踏踩 (日版, 替换版)	Jaleco
@@ -5649,7 +5652,7 @@ pspikes	能量排球 (世界版)	能量排球 (世界版)	Video System Co.
 pspikesk	能量排球 (韩国版)	能量排球 (韩国版)	Video System Co.
 svolly91	能量排球 (日版)	能量排球 (日版)	Video System Co.
 pspikesb	能量排球 (盗版)	能量排球 (盗版)	bootleg
-spikes91	1991 Spikes (Italian bootleg)	1991 Spikes (Italian bootleg)	bootleg
+spikes91	能量排球 1991 (意大利 盗版)	能量排球 1991 (意大利 盗版)	bootleg
 pspikesc	能量排球 (中文版)	能量排球 (中文版)	bootleg
 karatblz	斗神光辉 (世界版?)	斗神光辉 (世界版?)	Video System Co.
 karatblu	斗神光辉 (美版)	斗神光辉 (美版)	Video System Co.
@@ -5659,7 +5662,8 @@ aerofgt	四国战机	四国战机	Video System Co.
 aerofgtb	四国战机 (加速力量 硬件 第1套)	四国战机 (加速力量 硬件 第1套)	Video System Co.
 aerofgtc	四国战机 (加速力量 硬件 第2套)	四国战机 (加速力量 硬件 第2套)	Video System Co.
 sonicwi	四国战机 (日版)	四国战机 (日版)	Video System Co.
-aerfboot	四国战机 (盗版)	四国战机 (盗版)	bootleg
+aerfboot	四国战机 (盗版 第1套)	四国战机 (盗版 第1套)	bootleg
+aerfboo2	四国战机 (盗版 第2套)	四国战机 (盗版 第2套)	bootleg
 wbbc97	海滩球世界冠军1997	海滩球世界冠军1997	Comad
 welltris	立体空间俄罗斯 (世界版?, 2 players)	立体空间俄罗斯 (世界版?, 2 players)	Video System Co.
 welltrij	立体空间俄罗斯 (日版, 2 players)	立体空间俄罗斯 (日版, 2 players)	Video System Co.
