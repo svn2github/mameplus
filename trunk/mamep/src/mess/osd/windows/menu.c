@@ -804,30 +804,39 @@ static int add_filter_entry(char *dest, size_t dest_len, const char *description
 static void build_generic_filter(const device_config *device, int is_save, char *filter, size_t filter_len)
 {
 	char *s;
-	const char *file_extensions;
-	char *temp = NULL;
+	char *file_extensions = NULL;
 	image_device_info info = image_device_getinfo(device->machine->config, device);
 
-	s = filter;
+	// make the file extension list be comma delimited
+	s = info.file_extensions;
+	do
+	{
+		s += strlen(s);
+		if (s[1] != '\0')
+		{
+			*(s++) = ',';
+		}
+	}
+	while(*s != '\0');
 
-	// common image types
-	file_extensions = info.file_extensions;
+	// start writing the filter
+	s = filter;
 
 	//mamep: add zip extension
 	if (!is_save)
 	{
-		temp = malloc(strlen(file_extensions) + sizeof(",zip"));
-		strcpy(temp, file_extensions);
-		strcat(temp, ",zip");
-		file_extensions = temp;
+		file_extensions = malloc(strlen(info.file_extensions) + sizeof(",zip"));
+		strcpy(file_extensions, info.file_extensions);
+		strcat(file_extensions, ",zip");
 	}
 
+	// common image types
 	s += add_filter_entry(filter, filter_len, _WINDOWS("Common image types"), file_extensions);
 
-	if (temp)
+	if (file_extensions)
 	{
-		free(temp);
-		temp = NULL;
+		free(file_extensions);
+		file_extensions = NULL;
 	}
 
 	// all files
