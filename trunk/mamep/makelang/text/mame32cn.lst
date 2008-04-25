@@ -1570,6 +1570,7 @@ gigandsj	潜艇卫星 (日版)	潜艇卫星 (日版)	East Technology
 kyustrkr	最后足球	最后足球	East Technology
 ballbros	气球兄弟	气球兄弟	East Technology
 plumppop	狗狗乐园 (日版)	狗狗乐园 (日版)	Taito Corporation
+jpopnics	吸尘器小子 (Nics, 韩国 盗版 狗狗乐园)	吸尘器小子 (Nics, 韩国 盗版 狗狗乐园)	Nics
 extrmatn	异星毁灭者 (美版)	异星毁灭者 (美版)	[Taito] World Games
 extrmatj	异星毁灭者 (日版)	异星毁灭者 (日版)	Taito Corporation
 arknoid2	打砖块 - DOH 复仇 (世界版)	打砖块 - DOH 复仇 (世界版)	Taito Corporation Japan
@@ -1817,12 +1818,12 @@ landmkrp	方城战略物语 (Ver 2.02O 1998/06/02) (工程版)	方城战略物语 (Ver 2.02O 19
 recalh	魔笛物语 (Ver 1.42J 1994/5/11) (工程版)	魔笛物语 (Ver 1.42J 1994/5/11) (工程版)	Taito Corporation
 commandw	超级战斗棋 (Ver 0.0J) (工程版)	超级战斗棋 (Ver 0.0J) (工程版)	Taito Corporation
 landgear	飞行模拟	飞行模拟	Taito
-dendeg	电车向前走	电车向前走	Taito
-dendegx	电车向前走 EX	电车向前走 EX	Taito
-dendeg2	电车向前走 2 - 高速编	电车向前走 2 - 高速编	Taito
-dendeg2x	电车向前走 2 - 高速编 3000 番台	电车向前走 2 - 高速编 3000 番台	Taito
-sidebs	机动赛车	机动赛车	Taito
-sidebs2	机动赛车 2	机动赛车 2	Taito
+dendeg	电车向前走 (日版)	电车向前走 (日版)	Taito
+dendegx	电车向前走 Ex (日版)	电车向前走 Ex (日版)	Taito
+dendeg2	电车向前走 2 (日版)	电车向前走 2 (日版)	Taito
+dendeg2x	电车向前走 2 Ex (日版)	电车向前走 Go 2 Ex (日版)	Taito
+sidebs	机动赛车 (日版)	机动赛车 (日版)	Taito
+sidebs2	机动赛车 2 (North/South America)	机动赛车 2 (North/South America)	Taito
 sidebs2j	机动赛车 2 (日版)	机动赛车 2 (日版)	Taito
 dangcurv	威力肌肉	威力肌肉	Taito
 pf2012	超能力大战 2012	超能力大战 2012	Taito
@@ -2022,9 +2023,10 @@ vulgusj	决战异星球 (日版?)	决战异星球 (日版?)	Capcom
 sonson	西游记	西游记	Capcom
 sonsonj	西游记 (日版)	西游记 (日版)	Capcom
 higemaru	海盗船水手	海盗船水手	Capcom
-1942	1942 - 空中大战 (第1套)	1942 - 空中大战 (第1套)	Capcom
-1942a	1942 - 空中大战 (第2套)	1942 - 空中大战 (第2套)	Capcom
-1942b	1942 - 空中大战 (第3套)	1942 - 空中大战 (第3套)	Capcom
+1942	1942 - 空中大战 (Revision B)	1942 - 空中大战 (Revision B)	Capcom
+1942a	1942 - 空中大战 (Revision A)	1942 - 空中大战 (Revision A)	Capcom
+1942b	1942 - 空中大战 (First Version)	1942 - 空中大战 (First Version)	Capcom
+1942w	1942 - 空中大战 (Williams Electronics license)	1942 - 空中大战 (Williams Electronics license)	Capcom (Williams Electronics license)
 exedexes	超浮游要塞	超浮游要塞	Capcom
 savgbees	超浮游要塞 - 致命大黄蜂	超浮游要塞 - 致命大黄蜂	Capcom (Memetron license)
 commando	战场之狼 (世界版)	战场之狼 (世界版)	Capcom
@@ -2036,6 +2038,7 @@ sinvasnb	战场之狼 (盗版)	战场之狼 (盗版)	bootleg
 gng	魔界村 (世界版? 第1套)	魔界村 (世界版? 第1套)	Capcom
 gnga	魔界村 (世界版? 第2套)	魔界村 (世界版? 第2套)	Capcom
 gngbl	魔界村 (盗版 with Cross)	魔界村 (盗版 with Cross)	Capcom
+gngblita	魔界村 (意大利 盗版, 硬件)	魔界村 (意大利 盗版, 硬件)	Capcom
 gngt	魔界村 (美版)	魔界村 (美版)	Capcom (Taito America license)
 makaimur	魔界村 (日版)	魔界村 (日版)	Capcom
 makaimuc	魔界村 (日版 Revision C)	魔界村 (日版 Revision C)	Capcom
@@ -3851,6 +3854,7 @@ solomon	所罗门之钥 (美版)	所罗门之钥 (美版)	Tecmo
 solomonj	所罗门之钥 (日版)	所罗门之钥 (日版)	Tecmo
 rygar	阿尔卑斯古战士 (美版 第1套)	阿尔卑斯古战士 (美版 第1套)	Tecmo
 rygar2	阿尔卑斯古战士 (美版 第2套)	阿尔卑斯古战士 (美版 第2套)	Tecmo
+rygar3	阿尔卑斯古战士 (美版 第3套 旧版)	阿尔卑斯古战士 (美版 第3套 旧版)	Tecmo
 rygarj	阿尔卑斯古战士 (日版)	阿尔卑斯古战士 (日版)	Tecmo
 gemini	虫虫特攻队	虫虫特攻队	Tecmo
 silkworm	中东战争 (第1套)	中东战争 (第1套)	Tecmo
@@ -5343,11 +5347,11 @@ nbanfl	美国职业篮球 1999	美国职业篮球 1999	Midway Games
 gauntdl	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	Midway Games
 gauntd24	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	Midway Games
 cartfury	狂热赛车	狂热赛车	Midway Games
-tm	触摸大师	触摸大师	Midway
-tm3k	触摸大师 3000 (v5.01)	触摸大师 3000 (v5.01)	Midway
-tm4k	触摸大师 4000 (v6.02)	触摸大师 4000 (v6.02)	Midway
-tm5k	触摸大师 5000 (v7.10)	触摸大师 5000 (v7.10)	Midway
-tm7k	触摸大师 7000 (v8.00)	触摸大师 7000 (v8.00)	Midway
+tm	触摸大师 (v3.00 Euro)	触摸大师 (v3.00 Euro)	Midway
+tm3k	触摸大师 3000 (v5.01 标准)	触摸大师 3000 (v5.01 标准)	Midway
+tm4k	触摸大师 4000 (v6.02 标准)	触摸大师 4000 (v6.02 标准)	Midway
+tm5k	触摸大师 5000 (v7.10 标准)	触摸大师 5000 (v7.10 标准)	Midway
+tm7k	触摸大师 7000 (v8.00 标准)	触摸大师 7000 (v8.00 标准)	Midway
 galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	禁运	禁运	Cinematronics
 tripool	花式撞球 Tri-Pool (Casino Tech)	花式撞球 Tri-Pool (Casino Tech)	Noma (Casino Tech license)
@@ -6304,8 +6308,8 @@ lordgun	枪火贵族	枪火贵族	IGS
 hfh	形意拳 - 黄飞鸿	形意拳 - 黄飞鸿	IGS
 tarzan	泰山	泰山	IGS
 dunhuang	麻雀 敦煌	麻雀 敦煌	Spirit
-iqblocka	数字方块 (V127M)	数字方块 (V127M)	IGS
-iqblockf	数字方块 (V113FR)	数字方块 (V113FR)	IGS
+iqblocka	数字乐园 (V127M)	数字乐园 (V127M)	IGS
+iqblockf	数字乐园 (V113FR)	数字乐园 (V113FR)	IGS
 tjsb	麻雀 - 天降神兵	麻雀 - 天降神兵	IGS
 lhzb2	麻雀 - 龙虎争霸 2 (第1套)	麻雀 - 龙虎争霸 2 (第1套)	IGS
 lhzb2a	麻雀 - 龙虎争霸 2 (第2套)	麻雀 - 龙虎争霸 2 (第2套)	IGS
@@ -6894,8 +6898,10 @@ jolyjkra	快乐鬼牌 (50bet)	快乐鬼牌 (50bet)	Impera
 jokercrd	鬼牌 (Ver.A267BC, 加密)	鬼牌 (Ver.A267BC, 加密)	Vesely Svet
 mongolnw	新热气球 (意大利)	新热气球 (意大利)	bootleg
 soccernw	新足球 (意大利)	新足球 (意大利)	bootleg
-snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 saloon	酒吧(法语版, 加密版)	酒吧(法语版, 加密版)	Unknown
+snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
+apple10	苹果 10 (Ver 1.21)	苹果 10 (Ver 1.21)	Sandii'
+tenballs	Ten Balls (Ver 1.05)	Ten Balls (Ver 1.05)	unknown
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
 cmv801	樱桃水果盘 (v8.01)	樱桃水果盘 (v8.01)	Corsica
