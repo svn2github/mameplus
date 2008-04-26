@@ -193,7 +193,7 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 	const char *specbios = options_get_string(options, OPTION_BIOS);
 	const rom_entry *rom;
 	int bios_count = 0;
-	int bios_no = 0;
+	int bios_no = 1;
 
 	for (rom = romp;!ROMENTRY_ISEND(rom);rom++)
 		if (ROMENTRY_ISSYSTEM_BIOS(rom))
@@ -209,6 +209,11 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 			bios_count++;
 		}
 
+// mamep: temp. solution, will be removed when new GUI is released
+#if 1
+	if (bios_count == 0)
+		bios_no = 0;
+#else
 	if (bios_no == 0 && bios_count > 0)
 	{
 		if (specbios[0] != 0)
@@ -216,7 +221,7 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 		/* set to default */
 		bios_no = 1;
 	}
-
+#endif
 	debugload("Using System BIOS: %d\n", bios_no);
 
 	return bios_no;
