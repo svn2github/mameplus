@@ -1031,6 +1031,9 @@ static MACHINE_RESET( neogeo )
 	for (offs = 0; offs < 8; offs++)
 		system_control_w(machine, offs, 0, 0x00ff);
 
+	// mamep: Hack for AES BIOS
+	neogeo_set_fixed_layer_source(1);
+
 	neogeo_reset_rng();
 
 	start_interrupt_timers(machine);
