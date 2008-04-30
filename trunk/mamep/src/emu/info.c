@@ -16,13 +16,16 @@
 #include "info.h"
 #include "xmlfile.h"
 #include "hash.h"
-
+	
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "infomess.h"
 #endif /* MESS */
 
 /* MESS/MAME configuration */
-#ifdef MESS
+#if 0 //def MESS
 #define XML_ROOT "mess"
 #define XML_TOP "machine"
 #else

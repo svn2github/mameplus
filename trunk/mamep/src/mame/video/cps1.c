@@ -1148,7 +1148,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"dinob",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 3 },
-	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x35, 0, 0, 1 },
+	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0 },
 	{"sf2m13",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1401,8 +1401,11 @@ READ16_HANDLER( cps1_cps_b_r )
 				cps1_cps_b_regs[cps1_game_config->mult_factor2/2]) >> 16;
 
 	if (offset == cps1_game_config->in2_addr/2)	/* Extra input ports (on C-board) */
-		return input_port_read(machine, "IN2");
-
+	{
+		int buttons = input_port_read(machine, "IN2");
+		return buttons << 8 | buttons;
+	}
+	
 	if (offset == cps1_game_config->in3_addr/2)	/* Player 4 controls (on C-board) ("Captain Commando") */
 		return input_port_read(machine, "IN3");
 
