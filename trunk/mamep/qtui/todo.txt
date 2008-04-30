@@ -1,25 +1,47 @@
 ﻿[bug]
+**1 crash when scrolling gamel?
+1 保存完xml后 迅速点击选项 即可一击必杀 
+1 CJK path encoding
 
 [basic]
-1 multi path
-1 path with space
-/ start mame core 0.85
-/ some filters: 0.9
-1 unify method to get inherited default value
-1 icon view, list view 0.9
-1 replace optview with custom render
-1 bios support: select bios (loop rominfo, see bios="")
-1 lst translation 0.95
+1 gui options +0.1
+1 path chooser dialog +0.1
+1 icon view, list view +0.1
+1*lst translation +0.1
+1*ips +0.2
+1*command.dat parsing with image +0.2
+
+1 adjust snap with a/r, with or without strething
+1 restore selected folder
+1 About page, some link to the test board
+1 iconized snap tab
+1 horz./vert. tab position
+1 could be cool to have behind the XX% - "name of the rom beeing audited"
+1 bios icons in folder list
+1 return update thread immediately if some folders doesnt even exist
+1 onclick to select ss tab
+1 preserve audit result when mamever changes
+1 -driver_config
+1 ips doesnt inherit
+1 能像MAMEUIFX32在可用游戏图标一样，把无问题游戏，有问题游戏，不能玩游戏用不同的颜色加以区分
+
+P more responsive item selection (enque the snap/history loading thread)
+P more responsive threading (separate snap/history loading, skip or delay invisible widget loading)
+P s11n() in a working thread
+P folder list switching halts > 1s
+C replace optview with custom render
+C unify method to get inherited default value
+
+* multi ini path
+* bios support: select bios opt
 * vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
+* other filters
+* gamename0000 snap
 * general info page
-* path chooser dialog
-* more responsive threading
-* background image
-* ips
 * UI style: compact, full, MAMEUI classic
+* non compressed roms
 * helpid
 * fullscreen switch
-* adjust snap with a/r
 
 [extension]
 * export roms to folders
@@ -27,17 +49,20 @@
 * export fixdat, selected fixdat only
 * ROM capa column
 * gamelist editor
-* selectable l&f
+* selectable l&f +0.2
 * multiple snapshot
 * delete snapshot
 * hide to systray when lauching mame
 * search history
-* mess console game list
+* mess console game list +0.5
 * loading gif
 * mng playback
-* command.dat parsing with image
 * controller setting
+* SDL integration for monitor/joystick
 
 [sanity check]
 * check new/delete operator
 * ensure ->load() functions only called once, no multiple connect()
+
+[ads]
+auditing roms several times faster than old mame32

@@ -17,6 +17,34 @@
 #include "gamelist.h"
 #include "mameopt.h"
 
+class Screenshot : public QDockWidget
+{
+    Q_OBJECT
+
+public:
+    Screenshot(const QString &, QWidget *parent = 0);
+	void setPixmap(const QPixmap &);
+
+protected:
+    void resizeEvent(QResizeEvent *);
+	void mousePressEvent(QMouseEvent *);
+
+/*
+private slots:
+    void newScreenshot();
+    void saveScreenshot();
+    void shootScreen();
+    void updateCheckBox();
+*/
+private:
+    void updateScreenshotLabel();
+
+	QLabel *screenshotLabel;
+    QPixmap originalPixmap;
+	QGridLayout *mainLayout;
+	QWidget *dockWidgetContents;
+};
+
 class MainWindow : public QMainWindow, public Ui::MainWindow
 {
 Q_OBJECT
@@ -29,13 +57,13 @@ public:
 	QLabel *labelProgress;
 	QProgressBar *progressBarGamelist;
 	
-	QLabel *lblSnap;
-	QLabel *lblFlyer;
-	QLabel *lblCabinet;
-	QLabel *lblMarquee;
-	QLabel *lblTitle;
-	QLabel *lblCPanel;
-	QLabel *lblPCB;
+	Screenshot *ssSnap;
+	Screenshot *ssFlyer;
+	Screenshot *ssCabinet;
+	Screenshot *ssMarquee;
+	Screenshot *ssTitle;
+	Screenshot *ssCPanel;
+	Screenshot *ssPCB;
 
 	QTextBrowser *tbHistory;
 	QTextBrowser *tbMameinfo;
@@ -48,10 +76,10 @@ public:
 public slots:
     // game menu
     void on_actionRefresh_activated();
-    void on_actionReload_activated();
 	void on_actionExitStop_activated();
 	void on_actionDefaultOptions_activated();
-    void log(char, QString);
+    void log(QString, char logOrigin = 1);
+	void poplog(QString);
 	void logStatus(QString);
 	void init();
 	void initSettings();
@@ -65,17 +93,18 @@ protected:
 
 private:
 	void initHistory(QString);
-	void initSnap(QString);
+	Screenshot * initSnap(QString);
 };
 
 #define LOG_QMC2	1
 #define LOG_MAME	2
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 5
+#define S11N_VER 6
 
 // external global variables
 extern MainWindow *win;
 extern Options *dlgOptions;
+extern QList<QListWidget *> optCtrlList;
 
 extern QHash<QString, MameOption*> mameOpts;
 extern QSettings guisettings;
@@ -86,7 +115,9 @@ extern QString flyer_directory,
 		title_directory,
 		cpanel_directory,
 		pcb_directory,
-		icons_directory;
+		icons_directory,
+		background_directory,
+		mame_binary;
 
 extern QByteArray dlgOptionsGeo;
 

@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0"?>
 <optiontemplate version="1">
 	<option name="driver_config" type="string">
-		<value guivalue="MAME">mame</value>
+		<!--value guivalue="MAME">mame</value>
 		<value guivalue="MAME Plus!">plus</value>
 		<value>homebrew</value>
 		<value>decrypted</value>
-		<value>console</value>
+		<value>console</value-->
 	</option>
 	<option name="readconfig" type="bool" />
 	

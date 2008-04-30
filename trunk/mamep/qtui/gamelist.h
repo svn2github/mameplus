@@ -195,6 +195,7 @@ public:
 public slots:
 	void init();
 	void loadDefaultIni();
+
 	void initFolders();
 
 	void runMame();
@@ -215,7 +216,6 @@ public slots:
 	void setupIcon();
 	void setupAudit();
 	void setupHistory();
-	void log(char, QString);
 
 	void filterTimer();
 	void filterRegExpChanged();

@@ -31,6 +31,7 @@ enum
 	FOLDER_YEAR,
 	FOLDER_SOURCE,
 	FOLDER_BIOS,
+	/*
 	FOLDER_CPU,
 	FOLDER_SND,
 	FOLDER_ORIENTATION,
@@ -49,7 +50,7 @@ enum
 	FOLDER_STEREO,
 	FOLDER_HARDDISK,
 	FOLDER_SAMPLES,
-	FOLDER_ARTWORK,
+	FOLDER_ARTWORK,*/
 	MAX_FOLDERS
 };
 
@@ -84,7 +85,10 @@ public:
 			return false;
 
 		if (qName == "mame")
+		{
 			metMameTag = true;
+			mamegame->mameVersion = attributes.value("build");
+		}
 		else if (qName == "game")
 		{
 			//update progress
@@ -156,62 +160,70 @@ void AuditROMThread::audit()
 
 void AuditROMThread::run()
 {
-	QString dirpath = utils->getPath(mameOpts["rompath"]->currvalue);
-	win->log(LOG_QMC2, mameOpts["rompath"]->currvalue);
-	QDir dir(dirpath);
-	QStringList nameFilter;
-	nameFilter << "*.zip";
-	
-	QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-
-	win->log(LOG_QMC2, "audit 0");
-	emit progressSwitched(romFiles.count(), "Auditing games");
+	QStringList dirpaths = mameOpts["rompath"]->currvalue.split(";");
 
 	GameInfo *gameinfo, *gameinfo2;
 	RomInfo *rominfo;
-	//iterate romfiles
-	for (int i = 0; i < romFiles.count(); i++)
+
+	foreach (QString dirpath, dirpaths)
 	{
-		if ( i % 100 == 0 )
-			emit progressUpdated(i);
+//		QString dirpath = utils->getPath(dirpath);
+		QDir dir(dirpath);
 
-		QString gamename = romFiles[i].toLower().remove(".zip");
+		QStringList nameFilter;
+		nameFilter << "*.zip";
+		
+		QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 
-		if (mamegame->gamenameGameInfoMap.contains(gamename))
+		emit progressSwitched(romFiles.count(), "Auditing " + dirpath);
+		win->log(QString("auditing %1, %2").arg(dirpath).arg(romFiles.count()));
+
+		//iterate romfiles
+		for (int i = 0; i < romFiles.count(); i++)
 		{
-			QuaZip zip(dirpath + romFiles[i]);
+			//update progressbar
+			if ( i % 100 == 0 )
+				emit progressUpdated(i);
 
-			if(!zip.open(QuaZip::mdUnzip))
-				continue;
+			QString gamename = romFiles[i].toLower().remove(".zip");
 
-			QuaZipFileInfo info;
-			QuaZipFile zipFile(&zip);
-			gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-			for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+			if (mamegame->gamenameGameInfoMap.contains(gamename))
 			{
-				if(!zip.getCurrentFileInfo(&info))
+				QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
+
+				if(!zip.open(QuaZip::mdUnzip))
 					continue;
 
-				quint32 crc = info.crc;
-				//romfile == gamename
-				if (gameinfo->crcRomInfoMap.contains(crc))
-					gameinfo->crcRomInfoMap[crc]->available = true; 
-				//check romfile in clones
-				else
+				QuaZipFileInfo info;
+				QuaZipFile zipFile(&zip);
+				gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+				//iterate all files in the zip
+				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
 				{
-					foreach (QString clonename, gameinfo->clones)
+					if(!zip.getCurrentFileInfo(&info))
+						continue;
+
+					quint32 crc = info.crc;
+					// file crc recognized
+					if (gameinfo->crcRomInfoMap.contains(crc))
+						gameinfo->crcRomInfoMap[crc]->available = true; 
+					//check rom for clones
+					else
 					{
-						gameinfo2 = mamegame->gamenameGameInfoMap[clonename];
-						if (gameinfo2->crcRomInfoMap.contains(crc))
-							gameinfo2->crcRomInfoMap[crc]->available = true; 
+						foreach (QString clonename, gameinfo->clones)
+						{
+							gameinfo2 = mamegame->gamenameGameInfoMap[clonename];
+							if (gameinfo2->crcRomInfoMap.contains(crc))
+								gameinfo2->crcRomInfoMap[crc]->available = true; 
+						}
 					}
 				}
 			}
 		}
 	}
 
-	win->log(LOG_QMC2, "audit 1");
+	win->log("audit 1");
 	//see if any rom of a game is not available
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
@@ -252,7 +264,7 @@ void AuditROMThread::run()
 			}
 		}
 	}
-	win->log(LOG_QMC2, "audit 2");
+	win->log("audit 2");
 	emit progressSwitched(-1);
 }
 
@@ -348,19 +360,31 @@ void UpdateSelectionThread::run()
 	{
 		QString gameName = myqueue.dequeue();
 
-		pmSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName, win->lblSnap->size());
-		pmFlyer = utils->getScreenshot(flyer_directory, gameName, win->lblFlyer->size());
-		pmCabinet = utils->getScreenshot(cabinet_directory, gameName, win->lblCabinet->size());
-		pmMarquee = utils->getScreenshot(marquee_directory, gameName, win->lblMarquee->size());
-		pmTitle = utils->getScreenshot(title_directory, gameName, win->lblTitle->size());
-		pmCPanel = utils->getScreenshot(cpanel_directory, gameName, win->lblCPanel->size());
-//		pmPCB = utils->getScreenshot(pcb_directory, gameName, win->lblPCB->size());
+		//fixme: do not update tabbed docks
+
+		if (win->ssSnap->isVisible())
+			pmSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName, QSize());
+		if (win->ssFlyer->isVisible())
+			pmFlyer = utils->getScreenshot(flyer_directory, gameName, QSize());
+		if (win->ssCabinet->isVisible())
+			pmCabinet = utils->getScreenshot(cabinet_directory, gameName, QSize());
+		if (win->ssMarquee->isVisible())			
+			pmMarquee = utils->getScreenshot(marquee_directory, gameName, QSize());
+		if (win->ssTitle->isVisible())
+			pmTitle = utils->getScreenshot(title_directory, gameName, QSize());
+		if (win->ssCPanel->isVisible())
+			pmCPanel = utils->getScreenshot(cpanel_directory, gameName, QSize());
+		if (win->ssPCB->isVisible())
+			pmPCB = utils->getScreenshot(pcb_directory, gameName, QSize());
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
 
-		historyText = utils->getHistory(gameName, "history.dat");
-		mameinfoText = utils->getHistory(gameName, "mameinfo.dat");
-		storyText = utils->getHistory(gameName, "story.dat");
+		if (win->tbHistory->isVisible())
+			historyText = utils->getHistory(gameName, "history.dat");
+		if (win->tbMameinfo->isVisible())
+			mameinfoText = utils->getHistory(gameName, "mameinfo.dat");
+		if (win->tbStory->isVisible())
+			storyText = utils->getHistory(gameName, "story.dat");
 	}
 }
 
@@ -649,36 +673,36 @@ RomInfo::RomInfo(QObject *parent)
 : QObject(parent)
 {
 	available = false;
-	//	win->log(LOG_QMC2, "# RomInfo()");
+	//	win->log("# RomInfo()");
 }
 
 RomInfo::~RomInfo()
 {
-	//    win->log(LOG_QMC2, "# ~RomInfo()");
+	//    win->log("# ~RomInfo()");
 }
 
 BiosInfo::BiosInfo(QObject *parent)
 : QObject(parent)
 {
-	//	win->log(LOG_QMC2, "# BiosInfo()");
+	//	win->log("# BiosInfo()");
 }
 
 BiosInfo::~BiosInfo()
 {
-	//    win->log(LOG_QMC2, "# ~BiosInfo()");
+	//    win->log("# ~BiosInfo()");
 }
 
 GameInfo::GameInfo(QObject *parent)
 : QObject(parent)
 {
 	available = 0;
-	//	win->log(LOG_QMC2, "# GameInfo()");
+	//	win->log("# GameInfo()");
 }
 
 GameInfo::~GameInfo()
 {
 	available = -1;
-	//  win->log(LOG_QMC2, "# ~GameInfo()");
+	//  win->log("# ~GameInfo()");
 }
 
 QString GameInfo::biosof()
@@ -707,19 +731,19 @@ QString GameInfo::biosof()
 MameGame::MameGame(QObject *parent)
 : QObject(parent)
 {
-	win->log(LOG_QMC2, "# MameGame()");
+	win->log("# MameGame()");
 
 	this->mameVersion = mameVersion;
 }
 
 MameGame::~MameGame()
 {
-	win->log(LOG_QMC2, "# ~MameGame()");
+	win->log("# ~MameGame()");
 }
 
 void MameGame::s11n()
 {
-	win->log(LOG_QMC2, "start s11n()");
+	win->log("start s11n()");
 
 	QByteArray ba;
 	QDataStream out(&ba, QIODevice::WriteOnly);
@@ -727,6 +751,7 @@ void MameGame::s11n()
 	out << (quint32)MAMEPLUS_SIG; //mameplus signature
 	out << (qint16)S11N_VER; //s11n version
 	out.setVersion(QDataStream::Qt_4_3);
+	out << mamegame->mameVersion;
 
 	out << mamegame->mameDefaultIni;	//default.ini
 
@@ -805,9 +830,20 @@ int MameGame::des11n()
 	if (mamegame)
 		delete mamegame;
 	mamegame = new MameGame(win);
-	
-	in >> mamegame->mameDefaultIni;	//default.ini
-	win->log(LOG_QMC2, QString("mamegame->mameDefaultIni.count %1").arg(mamegame->mameDefaultIni.count()));
+
+	// verify MAME Version
+	mamegame->mameVersion = utils->getMameVersion();
+	QString mameVersion0;
+	in >> mameVersion0;
+
+	if (mamegame->mameVersion != mameVersion0)
+	{
+//		win->poplog(QString("new mame version: %1 / %2").arg(mameVersion0).arg(mamegame->mameVersion));
+			return QDataStream::ReadCorruptData;
+	}
+
+	in >> mamegame->mameDefaultIni;
+	win->log(QString("mamegame->mameDefaultIni.count %1").arg(mamegame->mameDefaultIni.count()));
 	
 	int gamecount;
 	in >> gamecount;
@@ -862,6 +898,7 @@ int MameGame::des11n()
 
 	return in.status();
 }
+
 
 GamelistDelegate::GamelistDelegate(QObject *parent)
 : QItemDelegate(parent)
@@ -926,7 +963,7 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 Gamelist::Gamelist(QObject *parent)
 : QObject(parent)
 {
-//	win->log(LOG_QMC2, "DEBUG: Gamelist::Gamelist()");
+//	win->log("DEBUG: Gamelist::Gamelist()");
 
 	connect(&auditThread, SIGNAL(progressSwitched(int, QString)), this, SLOT(switchProgress(int, QString)));
 	connect(&auditThread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
@@ -946,7 +983,7 @@ Gamelist::Gamelist(QObject *parent)
 
 Gamelist::~Gamelist()
 {
-//	win->log(LOG_QMC2, "DEBUG: Gamelist::~Gamelist()");
+//	win->log("DEBUG: Gamelist::~Gamelist()");
 
 	if ( loadProc )
 		loadProc->terminate();
@@ -978,8 +1015,10 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 {
 	if (current.isValid())
 	{
-		currentGame = utils->getViewString(current, COL_NAME);
-		win->log(LOG_QMC2, QString("C: %1").arg(currentGame));
+		QString sel = utils->getViewString(current, COL_NAME);
+		if (sel.isEmpty())
+			return;
+		currentGame = sel;
 		
 		//update statusbar
 		win->labelProgress->setText(utils->getViewString(current, COL_DESC));
@@ -1003,12 +1042,12 @@ void Gamelist::restoreSelection()
 	QModelIndex i;
 	
 	// select current game
-	win->log(LOG_QMC2, "#: " + gameName);
+//	win->log("#: " + gameName);
 	if (mamegame->gamenameGameInfoMap.contains(gameName))
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 		i = gameListModel->index(0, gameinfo->pModItem);
-		win->log(LOG_QMC2, "R: " + gameName);
+//		win->log("R: " + gameName);
 	}
 
 	QModelIndex pi = gameListPModel->mapFromSource(i);
@@ -1017,17 +1056,12 @@ void Gamelist::restoreSelection()
 	{
 		// select first row otherwise
 		pi = gameListPModel->index(0, 0, QModelIndex());
-		win->log(LOG_QMC2, "R: 0");
+//		win->log("R: 0");
 	}
 
 	win->treeViewGameList->setCurrentIndex(pi);
 	//fixme: PositionAtCenter doesnt work well (auto scroll right)
 	win->treeViewGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
-}
-
-void Gamelist::log(char c, QString s)
-{
-	win->log(c, s);
 }
 
 void Gamelist::setupIcon()
@@ -1036,7 +1070,7 @@ void Gamelist::setupIcon()
 	QIcon icon;
 	int i = 0;
 	static int step = mamegame->gamenameGameInfoMap.count() / 8;
-//	win->log(LOG_QMC2, "setupIcon()");
+//	win->log("setupIcon()");
 
 /*	
 	int viewport_h = win->treeViewGameList->viewport()->height();
@@ -1074,13 +1108,13 @@ void Gamelist::setupAudit()
 
 void Gamelist::setupHistory()
 {
-	win->lblSnap->setPixmap(selectThread.pmSnap);
-	win->lblFlyer->setPixmap(selectThread.pmFlyer);
-	win->lblCabinet->setPixmap(selectThread.pmCabinet);
-	win->lblMarquee->setPixmap(selectThread.pmMarquee);
-	win->lblTitle->setPixmap(selectThread.pmTitle);
-	win->lblCPanel->setPixmap(selectThread.pmCPanel);
-	win->lblPCB->setPixmap(selectThread.pmPCB);
+	win->ssSnap->setPixmap(selectThread.pmSnap);
+	win->ssFlyer->setPixmap(selectThread.pmFlyer);
+	win->ssCabinet->setPixmap(selectThread.pmCabinet);
+	win->ssMarquee->setPixmap(selectThread.pmMarquee);
+	win->ssTitle->setPixmap(selectThread.pmTitle);
+	win->ssCPanel->setPixmap(selectThread.pmCPanel);
+	win->ssPCB->setPixmap(selectThread.pmPCB);
 
 	win->tbHistory->setText(selectThread.historyText);
 	win->tbMameinfo->setText(selectThread.mameinfoText);
@@ -1091,7 +1125,7 @@ void Gamelist::init()
 {
 	int des11n_status = QDataStream::Ok;
 	if (!mamegame)
-		des11n_status = mamegame->des11n();
+		des11n_status = mamegame->des11n();	//fixme: illogical call before mamegame init
 
 	if (des11n_status == QDataStream::Ok)
 	{
@@ -1137,6 +1171,9 @@ void Gamelist::init()
 		// restore view selection
 		restoreSelection();
 
+		win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
+		win->actionDefaultOptions->setEnabled(true);
+
 		// auditThread.audit();
 
 		//fixme delete mamegame;
@@ -1145,13 +1182,15 @@ void Gamelist::init()
 	else
 	{
 		mameOutputBuf = "";
-		QString command = "mamep.exe";
+		QString command = mame_binary;
 		QStringList args;
+
 		args << "-listxml";
 
 		loadTimer.start();
 
 		loadProc = procMan->process(procMan->start(command, args, FALSE));
+
 		connect(loadProc, SIGNAL(started()), this, SLOT(loadListXmlStarted()));
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
@@ -1160,7 +1199,7 @@ void Gamelist::init()
 
 void Gamelist::loadListXmlStarted()
 {
-	win->log(LOG_QMC2, "DEBUG: Gamelist::loadListXmlStarted()");
+	win->log("DEBUG: Gamelist::loadListXmlStarted()");
 }
 
 void Gamelist::loadListXmlReadyReadStandardOutput()
@@ -1191,13 +1230,13 @@ void Gamelist::loadListXmlFinished(int exitCode, QProcess::ExitStatus exitStatus
 
 	//chain
 	loadDefaultIni();
-	win->log(LOG_QMC2, "end of gamelist->loadFin()");
+	win->log("end of gamelist->loadFin()");
 }
 
 void Gamelist::loadDefaultIni()
 {
 	mamegame->mameDefaultIni = "";
-	QString command = "mamep.exe";
+	QString command = mame_binary;
 	QStringList args;
 	args << "-showconfig" << "-norc";
 
@@ -1229,12 +1268,12 @@ void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitSta
 	
 	//reload gamelist
 	init();
-	win->log(LOG_QMC2, "end of gamelist->loadDefFin()");
+	win->log("end of gamelist->loadDefFin()");
 }
 
 void Gamelist::parse()
 {
-	win->log(LOG_QMC2, "DEBUG: Gamelist::prep parse()");
+	win->log("DEBUG: Gamelist::prep parse()");
 
 	ListXMLHandler handler(0);
 	QXmlSimpleReader reader;
@@ -1244,7 +1283,7 @@ void Gamelist::parse()
 	QXmlInputSource *pxmlInputSource = new QXmlInputSource();
 	pxmlInputSource->setData (mameOutputBuf);
 
-	win->log(LOG_QMC2, "DEBUG: Gamelist::start parse()");
+	win->log("DEBUG: Gamelist::start parse()");
 	
 	switchProgress(numTotalGames, tr("Parsing listxml"));
 	reader.parse(*pxmlInputSource);
@@ -1344,6 +1383,7 @@ void Gamelist::initFolders()
 		<< QT_TR_NOOP("Year")
 		<< QT_TR_NOOP("Driver")
 		<< QT_TR_NOOP("BIOS")
+		/*
 		<< QT_TR_NOOP("CPU")
 		<< QT_TR_NOOP("Sound")
 		<< QT_TR_NOOP("Orientation")
@@ -1362,7 +1402,8 @@ void Gamelist::initFolders()
 		<< QT_TR_NOOP("Stereo")
 		<< QT_TR_NOOP("CHD")
 		<< QT_TR_NOOP("Samples")
-		<< QT_TR_NOOP("Artwork");
+		<< QT_TR_NOOP("Artwork")*/
+		;
 
 	GameInfo *gameinfo;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
@@ -1416,7 +1457,11 @@ void Gamelist::initFolders()
 
 void Gamelist::runMame()
 {
-	QString command = "mamep.exe";
+	// doesnt support multi mame session for now
+//	if (procMan->procCount > 0)
+//		return;
+
+	QString command = mame_binary;
 	QStringList args;
 	args << currentGame;
 	procMan->process(procMan->start(command, args));
@@ -1438,7 +1483,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	
 	QRegExp regExpFilter(filterText);
 		
-//	win->log(LOG_QMC2, QString("filter: %1, %2").arg(searchText).arg(filterText));
+//	win->log(QString("filter: %1, %2").arg(searchText).arg(filterText));
 
 	// apply search filter
 	index0 = sourceModel()->index(sourceRow, COL_DESC, sourceParent);

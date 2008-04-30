@@ -2,11 +2,20 @@
 
 Options *dlgOptions = NULL;
 QByteArray dlgOptionsGeo;
+QList<QListWidget *> optCtrlList;
 
 Options::Options(QWidget *parent)
   : QDialog(parent)
 {
 	setupUi(this);
+
+	if (optCtrlList.isEmpty())
+		optCtrlList << 0	//place holder for GUI
+					<< lvGlobalOpt
+					<< lvSourceOpt
+					<< lvBiosOpt
+					<< lvCloneofOpt
+					<< lvCurrOpt;
 }
 
 Options::~Options()

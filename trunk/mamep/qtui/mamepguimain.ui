@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.85a</string>
+   <string>MAME GUI Plus! 0.9 alpha 1</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
@@ -84,6 +84,9 @@
     <addaction name="actionDefaultOptions" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
+    <property name="enabled" >
+     <bool>false</bool>
+    </property>
     <property name="title" >
      <string>Help</string>
     </property>
@@ -122,7 +125,6 @@
    <addaction name="actionDetails" />
    <addaction name="actionGrouped" />
    <addaction name="separator" />
-   <addaction name="actionRefresh" />
    <addaction name="actionDefaultOptions" />
    <addaction name="actionAbout" />
   </widget>
@@ -243,6 +245,9 @@
    </widget>
   </widget>
   <action name="actionDefaultOptions" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >:/res/32x32/applications-system.png</iconset>
    </property>
@@ -318,7 +323,7 @@
     <bool>true</bool>
    </property>
    <property name="checked" >
-    <bool>false</bool>
+    <bool>true</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >:/res/mame32-view-group.png</iconset>

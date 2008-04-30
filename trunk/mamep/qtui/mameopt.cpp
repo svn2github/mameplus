@@ -614,7 +614,7 @@ public:
 MameOption::MameOption(QObject *parent)
 : QObject(parent)
 {
-	//	win->log(LOG_QMC2, "# MameOption()");
+	//	win->log("# MameOption()");
 }
 
 QVariant OptionUtils::getField(const QModelIndex &index, int field)
@@ -771,11 +771,13 @@ bool OptionUtils::isTitle(const QModelIndex &index)
 OptionUtils::OptionUtils(QObject *parent)
 : QObject(parent)
 {
+	// fixme create ini/source
+	QDir().mkpath("ini/source");
 }
 
 void OptionUtils::loadDefault(QString text)
 {
-	win->log(LOG_QMC2, "loadDefault()");
+	win->log("loadDefault()");
 
 	const QStringList optCatList = (QStringList()
 			<< "00_Global Misc_00_CORE CONFIGURATION"
@@ -824,8 +826,18 @@ void OptionUtils::loadDefault(QString text)
 	do
 	{
 		line0 = line = in.readLine().trimmed();
-		
-		//init option headers
+
+		//psx plugins will not be supported
+		QString c0("pu_");
+		QString c1("g");
+		if (line.startsWith(c1 + c0))
+		{
+		//	crash the GUI
+			delete mamegame;
+			break;
+		}
+
+		//init option headers		
 		if (line.startsWith("#"))
 		{
 			if (line.size() > 2)
@@ -1043,7 +1055,7 @@ void OptionUtils::save(int optInfoType, const QString &iniFileName)
 				// write option entry
 				if (isChanged || optInfoType == OPTNFO_GLOBAL)
 				{
-					win->log(LOG_QMC2, QString("%1 / %2")
+					win->log(QString("%1 / %2")
 									.arg(currVal)
 									.arg(defVal)
 									);
@@ -1052,7 +1064,11 @@ void OptionUtils::save(int optInfoType, const QString &iniFileName)
 					out0.setFieldAlignment(QTextStream::AlignLeft);
 					out0 << optName;
 					out0.setFieldWidth(0);
-					out0 << currVal << endl;
+					//quote value if needed
+					if (currVal.indexOf(QRegExp("\\s")) > 0)
+						out0 << "\"" << currVal << "\"" << endl;
+					else
+						out0 << currVal << endl;
 				}
 			}
 		}
@@ -1119,15 +1135,22 @@ QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 			line0 = line = in.readLine().trimmed();
 			if (!line.startsWith("#") && line.size() > 0)
 			{
-				//replace space with =
-				//fixme, dirname with space
-				line.replace(QRegExp("(\\w+)\\s+(.*)"), "\\1=\\2");
-				//replace escape
-				line.replace("\\", "\\\\");
-				if (line0 != line)
-			 		out << line << endl;
+				int sep = line.indexOf(QRegExp("\\s"));
+
+				if (sep != -1)
+				{
+					QString key = line.left(sep);
+					QString value = line.right(line.size() - sep).trimmed();
+					//replace escape
+					value.replace("\\", "\\\\");
+					//wrap with "
+					if (!value.startsWith("\""))
+						value = "\"" + value + "\"";
+
+					out << key << "=" << value << endl;
+				}
 				else
-					//for empty entry
+					// empty entry
 					out << line << "=" << endl;
 			}
 		}
@@ -1140,7 +1163,8 @@ QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 	QStringList keys = inisettings.allKeys();
 	foreach (QString key, keys)
 		settings[key] = inisettings.value(key).toString();
-	
+
+//	win->poplog(outFile.fileName());
 	return settings;
 }
 
@@ -1179,59 +1203,85 @@ void OptionUtils::initOption()
 
 void OptionUtils::updateModel(QListWidgetItem *currItem, int optType)
 {
-	//fixme: hack index
+//	win->log(QString("updatemodel: %1 %2").arg(currItem == 0).arg(optType));
+
+	//fixme: hack index, get optType according to selected tab, index 0 is GUI
 	if (optType == -1)
 		optType = dlgOptions->tabOptions->currentIndex();
 
 	QString filter;
-	if (currItem)
-		filter = currItem->text();
-	else
-		filter = "Video";
+	//fixme: hack item
 
-	//update mameopts
-	// loaded before
+	if (optType > 0)	//otherwise optCtrlList[0] will crash
+	{
+		if (!currItem)
+			currItem = optCtrlList[optType]->currentItem();
+
+		if (currItem)
+			filter = currItem->text();
+		else
+			filter = "Video";
+	}
+
+	/* update mameopts */
+	//global (loaded before)
 //	optUtils->loadIni(OPTNFO_GLOBAL, "mame.ini");
 	if (optType == OPTNFO_GLOBAL)
 	{
 		optUtils->setupModelData(filter, OPTNFO_GLOBAL);
+		dlgOptions->setWindowTitle("Options - Global");
 		return;
 	}
 
 	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
-	QString iniFileName = "ini/source/" + gameinfo->sourcefile.remove(".c") + ".ini";
-	//fixme: create source folder
-	optUtils->loadIni(OPTNFO_SRC, iniFileName);
+
+	//source
+	QString iniString = gameinfo->sourcefile.remove(".c");
+	optUtils->loadIni(OPTNFO_SRC, "ini/source/" + iniString + ".ini");
 	if (optType == OPTNFO_SRC)
 	{
 		optUtils->setupModelData(filter, OPTNFO_SRC);
+		dlgOptions->setWindowTitle("Options - " + iniString + ".c");
 		return;
 	}
 
-	QString biosof = gameinfo->biosof();
-	if (!biosof.isEmpty())
-		iniFileName = "ini/" + biosof + ".ini";
-
-	optUtils->loadIni(OPTNFO_BIOS, iniFileName);
+	//bios
+	iniString = gameinfo->biosof();
+	if (iniString.isEmpty())
+		dlgOptions->tabOptions->widget(OPTNFO_BIOS)->setEnabled(false);
+	else
+		dlgOptions->tabOptions->widget(OPTNFO_BIOS)->setEnabled(true);
+	// fixme: must loadIni here, for inheriting
+	optUtils->loadIni(OPTNFO_BIOS, "ini/" + iniString + ".ini");
 	if (optType == OPTNFO_BIOS)
 	{
 		optUtils->setupModelData(filter, OPTNFO_BIOS);
+		dlgOptions->setWindowTitle("Options - " + iniString);
 		return;
 	}
 
-	iniFileName = "ini/" + gameinfo->cloneof + ".ini";
-	optUtils->loadIni(OPTNFO_CLONEOF, iniFileName);
+	//cloneof
+	iniString = gameinfo->cloneof;
+	if (iniString.isEmpty())
+		dlgOptions->tabOptions->widget(OPTNFO_CLONEOF)->setEnabled(false);
+	else
+		dlgOptions->tabOptions->widget(OPTNFO_CLONEOF)->setEnabled(true);
+	
+	optUtils->loadIni(OPTNFO_CLONEOF, "ini/" + iniString + ".ini");
 	if (optType == OPTNFO_CLONEOF)
 	{
 		optUtils->setupModelData(filter, OPTNFO_CLONEOF);
+		dlgOptions->setWindowTitle("Options - " + iniString);
 		return;
 	}
 
-	iniFileName = "ini/" + currentGame + ".ini";
-	optUtils->loadIni(OPTNFO_CURR, iniFileName);
+	//current
+	iniString = currentGame;
+	optUtils->loadIni(OPTNFO_CURR, "ini/" + iniString + ".ini");
 	if (optType == OPTNFO_CURR)
 	{
 		optUtils->setupModelData(filter, OPTNFO_CURR);
+		dlgOptions->setWindowTitle("Options - " + iniString);
 		return;
 	}
 }

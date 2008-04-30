@@ -36,44 +36,51 @@ QString Utils::getPath(QString dirpath)
 
 QIcon Utils::loadIcon(const QString & gameName)
 {
-	QIcon icon = QIcon();
-	QString dirpath = getPath(icons_directory);
-	QDir dir(dirpath);
+	QStringList dirpaths = icons_directory.split(";");
+	QIcon icon = QIcon();	
 
-	// try to load directly
-	QFile icoFile(dirpath + gameName + ".ico");
-	if (icoFile.open(QIODevice::ReadOnly))
+	foreach (QString _dirpath, dirpaths)
 	{
-		QByteArray data = icoFile.readAll();
-		QBuffer buf(&data);
-		buf.open(QIODevice::ReadOnly);
-		icon = loadWinIco(&buf);
-	}
-	icoFile.close();
-	
-	if (icon.isNull())
-	{
-		// try to add .zip to nearest folder name
-		QuaZip zip(dirpath + dir.dirName() + ".zip");
-		if (zip.open(QuaZip::mdUnzip))
+		QDir dir(_dirpath);
+		QString dirpath = getPath(_dirpath);
+
+		// try to load directly
+		QFile icoFile(dirpath + gameName + ".ico");
+		if (icoFile.open(QIODevice::ReadOnly))
 		{
-			QuaZipFile *pZipFile = new QuaZipFile(&zip);
-			if (zip.setCurrentFile(gameName + ".ico"))
-			{
-				if(pZipFile->open(QIODevice::ReadOnly))
-				{
-					QByteArray data = pZipFile->readAll();
-					QBuffer buf(&data);
-					buf.open(QIODevice::ReadOnly);
-					icon = loadWinIco(&buf);
-				}
-				pZipFile->close();
-			}
-			delete pZipFile;
+			QByteArray data = icoFile.readAll();
+			QBuffer buf(&data);
+			buf.open(QIODevice::ReadOnly);
+			icon = loadWinIco(&buf);
 		}
-		zip.close();
-	}
+		icoFile.close();
 
+		// try to add .zip to nearest folder name	
+		if (icon.isNull())
+		{
+			QuaZip zip(dirpath + dir.dirName() + ".zip");
+			if (zip.open(QuaZip::mdUnzip))
+			{
+				QuaZipFile *pZipFile = new QuaZipFile(&zip);
+				if (zip.setCurrentFile(gameName + ".ico"))
+				{
+					if(pZipFile->open(QIODevice::ReadOnly))
+					{
+						QByteArray data = pZipFile->readAll();
+						QBuffer buf(&data);
+						buf.open(QIODevice::ReadOnly);
+						icon = loadWinIco(&buf);
+					}
+					pZipFile->close();
+				}
+				delete pZipFile;
+			}
+			zip.close();
+		}
+
+		if (!icon.isNull())
+			break;
+	}
 
 	// recursively load parent image
 	if (icon.isNull())
@@ -86,6 +93,7 @@ QIcon Utils::loadIcon(const QString & gameName)
 		if (icon.isNull())
 			icon = deficon;
 	}
+
 	return icon;
 }
 
@@ -109,45 +117,52 @@ QString Utils::getViewString(const QModelIndex &index, int column) const
 
 QPixmap Utils::getScreenshot(const QString &dirpath0, const QString &gameName, const QSize &size)
 {
+	QStringList dirpaths = dirpath0.split(";");
 	QPixmap pm = QPixmap();
-	QString dirpath = getPath(dirpath0);
-	QDir dir(dirpath);
 
-	// try to load directly	
-	if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
+	foreach (QString _dirpath, dirpaths)
 	{
-		// try to add .zip to nearest folder name
-		QuaZip zip(dirpath + dir.dirName() + ".zip");
-		if (zip.open(QuaZip::mdUnzip))
+		QDir dir(_dirpath);
+		QString dirpath = getPath(_dirpath);
+
+		// try to load directly	
+		if (dir.exists() && !pm.load(dirpath + gameName + ".png"))
 		{
-			QuaZipFile file(&zip);
-			if (zip.setCurrentFile(gameName + ".png"))
+			// try to add .zip to nearest folder name
+			QuaZip zip(dirpath + dir.dirName() + ".zip");
+			if (zip.open(QuaZip::mdUnzip))
 			{
-				if(file.open(QIODevice::ReadOnly))
+				QuaZipFile file(&zip);
+				if (zip.setCurrentFile(gameName + ".png"))
 				{
-					QByteArray data = file.readAll();
-					pm.loadFromData(data);
+					if(file.open(QIODevice::ReadOnly))
+					{
+						QByteArray data = file.readAll();
+						pm.loadFromData(data);
+					}
+					file.close();
 				}
-				file.close();
 			}
+			zip.close();
 		}
-		zip.close();
+
+		if (!pm.isNull())
+			break;
 	}
 
 	// recursively load parent image
 	if (pm.isNull())
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		// fixme: QT bug??
  		if (!gameinfo->cloneof.isEmpty())
-			pm = getScreenshot(dirpath, gameinfo->cloneof, size);
+			pm = getScreenshot(dirpath0, gameinfo->cloneof, size);
 
 		// fallback to default image, first getScreenshot() can't reach here
 		if (pm.isNull())
 			pm = QPixmap(":/res/mamegui/about.png");
 	}
 	
-	return pm.scaled(size, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	return pm;
 }
 
 QString Utils::getHistory(const QString &gameName, const QString &fileName)
@@ -219,6 +234,42 @@ void Utils::tranaparentBg(QWidget * w)
 */
 	w->setPalette(palette);
 }
+
+QString Utils::getMameVersion()
+{
+	QString command = mame_binary;
+	QStringList args;
+	args << "-help";
+	
+	mameVersion = "";
+
+	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	//block calling thread
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(getMameVersionReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(getMameVersionFinished(int, QProcess::ExitStatus)));
+	loadProc->waitForFinished();
+	return mameVersion;
+}
+
+void Utils::getMameVersionReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+	mameVersion += proc->readAllStandardOutput();
+}
+
+void Utils::getMameVersionFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	mameVersion.replace(QRegExp(".*(\\d+\\.[^ ]+\\s+\\([\\w\\s]+\\)).*"), "\\1");
+//	0.124u4a (Apr 24 2008)
+	win->log(QString("mamever: %1").arg(mameVersion));
+}
+
 
 
 MyQueue::MyQueue(QObject *parent)

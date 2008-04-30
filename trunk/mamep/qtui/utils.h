@@ -5,9 +5,11 @@
 
 class Utils : public QObject
 {
+Q_OBJECT
 public:
 	QIcon deficon;
 	QRegExp spaceRegex;
+	QProcess *loadProc;
 	
 	Utils(QObject *parent = 0);
 
@@ -20,6 +22,14 @@ public:
 	QString capitalizeStr(const QString & str);
 	QString getPath(QString);
 	void tranaparentBg(QWidget *);
+	QString getMameVersion();
+
+public slots:
+	void getMameVersionReadyReadStandardOutput();
+	void getMameVersionFinished(int, QProcess::ExitStatus);
+
+private:
+	QString mameVersion;
 };
 
 class MyQueue : public QObject

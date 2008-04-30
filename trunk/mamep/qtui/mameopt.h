@@ -95,7 +95,7 @@ public slots:
 	QHash<QString, QString> readIniFile(const QString &);
 
 	void initOption();
-	void updateModel(QListWidgetItem *currItem, int optType = -1);
+	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
 	void setupModelData(QString, int);
 //	void exportToIni(QString useFileName = QString());
 //	void importFromIni(QString useFileName = QString());

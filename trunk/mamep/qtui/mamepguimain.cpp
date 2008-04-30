@@ -10,9 +10,11 @@ QString flyer_directory,
 		title_directory,
 		cpanel_directory,
 		pcb_directory,
-		icons_directory;
+		icons_directory,
+		background_directory,
+		mame_binary;
 
-void MainWindow::log(char logOrigin, QString message)
+void MainWindow::log(QString message, char logOrigin)
 {
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
@@ -32,6 +34,11 @@ void MainWindow::log(char logOrigin, QString message)
 	default:
 		break;
 	}
+}
+
+void MainWindow::poplog(QString message)
+{
+	QMessageBox::critical(this, "Debug", message); 
 }
 
 void MainWindow::logStatus(QString message)
@@ -58,21 +65,6 @@ MainWindow::MainWindow(QWidget *parent)
 	labelProgress = new QLabel(centralwidget);
 	statusbar->addWidget(labelProgress);
 
-	initSnap(QT_TR_NOOP("Snapshot"));
-	initSnap(QT_TR_NOOP("Flyer"));
-	initSnap(QT_TR_NOOP("Cabinet"));
-	initSnap(QT_TR_NOOP("Marquee"));
-	initSnap(QT_TR_NOOP("Title"));
-	initSnap(QT_TR_NOOP("Control Panel"));
-	initSnap(QT_TR_NOOP("PCB"));
-
-	initHistory(QT_TR_NOOP("History"));
-	initHistory(QT_TR_NOOP("MAMEInfo"));
-	initHistory(QT_TR_NOOP("Story"));
-
-//	initHistory(textBrowserMAMELog, "MAME Log");
-//	initHistory(textBrowserFrontendLog, "GUI Log");
-	
 	progressBarGamelist = new QProgressBar(centralwidget);
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
@@ -142,46 +134,12 @@ void MainWindow::initHistory(QString title)
 		dockWidget0 = dockWidget;
 }
 
-void MainWindow::initSnap(QString title)
+Screenshot * MainWindow::initSnap(QString title)
 {
-	static QDockWidget *dockWidget0 = NULL;
+	static Screenshot *dockWidget0 = NULL;
 	
-	QDockWidget *dockWidget = new QDockWidget(this);
+	Screenshot *dockWidget = new Screenshot(title, this);
 
-	dockWidget->setObjectName("dockWidget_" + title);
-	dockWidget->setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
-	QWidget *dockWidgetContents = new QWidget(dockWidget);
-	dockWidgetContents->setObjectName("dockWidgetContents_" + title);
-	QGridLayout *gridLayout = new QGridLayout(dockWidgetContents);
-	gridLayout->setObjectName("gridLayout_" + title);
-	gridLayout->setContentsMargins(0, 0, 0, 0);
-
-	QLabel * lbl;
-	if (title == "Snapshot")
-		lbl = lblSnap = new QLabel(dockWidgetContents);
-	else if (title == "Flyer")
-		lbl = lblFlyer = new QLabel(dockWidgetContents);
-	else if (title == "Cabinet")
-		lbl = lblCabinet = new QLabel(dockWidgetContents);
-	else if (title == "Marquee")
-		lbl = lblMarquee = new QLabel(dockWidgetContents);
-	else if (title == "Title")
-		lbl = lblTitle = new QLabel(dockWidgetContents);
-	else if (title == "Control Panel")
-		lbl = lblCPanel = new QLabel(dockWidgetContents);
-	else if (title == "PCB")
-		lbl = lblPCB = new QLabel(dockWidgetContents);
-
-	lbl->setObjectName("label_" + title);
-	lbl->setCursor(QCursor(Qt::PointingHandCursor));
-	lbl->setAlignment(Qt::AlignCenter);
-	//so that we can shrink image
-	lbl->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
-
-	gridLayout->addWidget(lbl);
-
-	dockWidget->setWidget(dockWidgetContents);
-	dockWidget->setWindowTitle(tr(qPrintable(title)));
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
 
 	// create tabbed history widgets
@@ -189,26 +147,54 @@ void MainWindow::initSnap(QString title)
 		tabifyDockWidget(dockWidget0, dockWidget);
 	else
 		dockWidget0 = dockWidget;
+
+	return dockWidget;
 }
 
 void MainWindow::init()
 {
+	//fixme: should be in constructor
+	ssSnap = initSnap(QT_TR_NOOP("Snapshot"));
+	ssFlyer = initSnap(QT_TR_NOOP("Flyer"));
+	ssCabinet = initSnap(QT_TR_NOOP("Cabinet"));
+	ssMarquee = initSnap(QT_TR_NOOP("Marquee"));
+	ssTitle = initSnap(QT_TR_NOOP("Title"));
+	ssCPanel = initSnap(QT_TR_NOOP("Control Panel"));
+	ssPCB = initSnap(QT_TR_NOOP("PCB"));
+
+	initHistory(QT_TR_NOOP("History"));
+	initHistory(QT_TR_NOOP("MAMEInfo"));
+	initHistory(QT_TR_NOOP("Story"));
+
+//	initHistory(textBrowserMAMELog, "MAME Log");
+//	initHistory(textBrowserFrontendLog, "GUI Log");
+
 	initSettings();
 	loadSettings();
+
+	// validate mame_binary
+	QFile mamebin(mame_binary);
+	if (!mamebin.exists())
+		win->poplog(QString("Could not find %1").arg(mame_binary));
 
 	// must init after win, before show()
 	optUtils->initOption();
 
-	// must load() before loadLayout()
+	// must gamelist->init() before loadLayout()
 	gamelist->init();
 
 	//show UI
 	show();
 	loadLayout();
 
-	QPalette palette;
-	palette.setBrush(this->backgroundRole(), QBrush(QImage("background.png")));
-	this->setPalette(palette);
+	// setup background
+	QImage bkground(utils->getPath(background_directory) + "bkground.png");
+	if (!bkground.isNull())
+	{
+		QPalette palette;
+		palette.setBrush(this->backgroundRole(), QBrush(bkground));
+		this->setPalette(palette);
+	}
 
 	utils->tranaparentBg(treeViewGameList);
 	utils->tranaparentBg(treeFolders);
@@ -216,16 +202,13 @@ void MainWindow::init()
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
 	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
-	connect(dlgOptions->lvGlobalOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-			optUtils, SLOT(updateModel(QListWidgetItem *)));
-	connect(dlgOptions->lvSourceOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-			optUtils, SLOT(updateModel(QListWidgetItem *)));
-	connect(dlgOptions->lvBiosOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-			optUtils, SLOT(updateModel(QListWidgetItem *)));
-	connect(dlgOptions->lvCloneofOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-			optUtils, SLOT(updateModel(QListWidgetItem *)));
-	connect(dlgOptions->lvCurrOpt, SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-			optUtils, SLOT(updateModel(QListWidgetItem *)));
+	for (int i = 0; i < optCtrlList.count(); i++)
+	{
+		connect(optCtrlList[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+				optUtils, SLOT(updateModel(QListWidgetItem *)));
+	}
+
+	connect(dlgOptions->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
 }
 
 MainWindow::~MainWindow()
@@ -240,11 +223,6 @@ void MainWindow::on_actionRefresh_activated()
 	gamelist->auditThread.audit();
 }
 
-void MainWindow::on_actionReload_activated()
-{
-	gamelist->init();
-}
-
 void MainWindow::on_actionExitStop_activated()
 {
 #ifdef QMC2_DEBUG
@@ -256,7 +234,7 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-	//init ctlrs
+	//init ctlrs, 
 	for (int i = OPTNFO_GLOBAL; i < OPTNFO_LAST; i++)
 		optUtils->updateModel(0, i);
 
@@ -295,6 +273,9 @@ void MainWindow::loadSettings()
 	cpanel_directory = guisettings.value("cpanel_directory", "cpanel").toString();
 	pcb_directory = guisettings.value("pcb_directory", "pcb").toString();
 	icons_directory = guisettings.value("icons_directory", "icons").toString();
+	background_directory = guisettings.value("background_directory", "bkground").toString();
+
+	mame_binary = guisettings.value("mame_binary", "mamep.exe").toString();
 
 	currentGame = guisettings.value("default_game", "pacman").toString();
 }
@@ -302,12 +283,15 @@ void MainWindow::loadSettings()
 void MainWindow::saveSettings()
 {
 	guisettings.setValue("flyer_directory", flyer_directory);
-	guisettings.setValue("cabinet_directory", cabinet_directory);
+	guisettings.setValue("cabinet_directory", "cabinet"/* cabinet_directory*/);
 	guisettings.setValue("marquee_directory", marquee_directory);
 	guisettings.setValue("title_directory", title_directory);
 	guisettings.setValue("cpanel_directory", cpanel_directory);
 	guisettings.setValue("pcb_directory", pcb_directory);
 	guisettings.setValue("icons_directory", icons_directory);
+	guisettings.setValue("background_directory", background_directory);
+
+	guisettings.setValue("mame_binary", mame_binary);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -317,19 +301,80 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	event->accept();
 }
 
+Screenshot::Screenshot(const QString & title, QWidget *parent)
+: QDockWidget(parent)
+{
+	setObjectName("dockWidget_" + title);
+	setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
+	dockWidgetContents = new QWidget(this);
+	dockWidgetContents->setObjectName("dockWidgetContents_" + title);
+	mainLayout = new QGridLayout(dockWidgetContents);
+	mainLayout->setObjectName("mainLayout_" + title);
+	mainLayout->setContentsMargins(0, 0, 0, 0);
+
+	screenshotLabel = new QLabel(dockWidgetContents);
+	screenshotLabel->setObjectName("label_" + title);
+	screenshotLabel->setCursor(QCursor(Qt::PointingHandCursor));
+    screenshotLabel->setAlignment(Qt::AlignCenter);
+
+//    screenshotLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+	//so that we can shrink image
+	screenshotLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
+	
+//    screenshotLabel->setMinimumSize(320, 240);
+
+	mainLayout->addWidget(screenshotLabel);
+
+	setWidget(dockWidgetContents);
+	setWindowTitle(tr(qPrintable(title)));
+
+//	dockWidgetContents->setLayout(mainLayout);
+
+
+//	resize(300, 200);
+}
+
+void Screenshot::resizeEvent(QResizeEvent * /* event */)
+{
+    QSize scaledSize = originalPixmap.size();
+    scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
+    if (!screenshotLabel->pixmap() || scaledSize != screenshotLabel->pixmap()->size())
+        updateScreenshotLabel();
+}
+//fixme: listen on label
+void Screenshot::mousePressEvent(QMouseEvent * event)
+{
+//	if (event->button() == Qt::LeftButton)
+		win->log(objectName());
+}
+
+
+void Screenshot::setPixmap(const QPixmap &pixmap)
+{
+    originalPixmap = pixmap;
+    updateScreenshotLabel();
+}
+
+void Screenshot::updateScreenshotLabel()
+{
+    screenshotLabel->setPixmap(originalPixmap.scaled(screenshotLabel->size(),
+                                                     Qt::KeepAspectRatio,
+                                                     Qt::SmoothTransformation));
+}
+
 int main(int argc, char *argv[])
 {
 	QApplication qmc2App(argc, argv);
 
 	QTranslator appTranslator;
 //	appTranslator.load("lang/mamepgui_" + QLocale::system().name());
-	appTranslator.load(":/lang/mamepgui_zh_CN");
+//	appTranslator.load(":/lang/mamepgui_zh_CN");
 
 	qmc2App.installTranslator(&appTranslator);
-	
+
+	procMan = new ProcessManager(0);	
 	utils = new Utils(0);
 	win = new MainWindow(0);
-	procMan = new ProcessManager(win);
 
 	return qmc2App.exec();
 }
