@@ -875,7 +875,7 @@ struct _inp_header
 #ifdef MAMEMESS
 /* keyboard chars */
 #define PORT_CHAR(_ch) \
-	TOKEN_UINT32_PACK2(INPUT_TOKEN_CHAR, 8, _ch, 24),
+	TOKEN_UINT64_PACK2(INPUT_TOKEN_CHAR, 8, _ch, 32), \
 
 /* categories */
 #define PORT_CATEGORY(_category) \

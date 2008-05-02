@@ -111,6 +111,9 @@
 #include "inputx.h"
 #endif
 
+#ifdef USE_NEOGEO_HACKS
+#include "neogeo.h"
+#endif /* USE_NEOGEO_HACKS */
 
 /***************************************************************************
     CONSTANTS
@@ -2321,7 +2324,7 @@ static void input_port_detokenize(input_port_init_params *param, const input_por
 #ifdef MESS
 			case INPUT_TOKEN_CHAR:
 				TOKEN_UNGET_UINT32(ipt);
-				TOKEN_GET_UINT32_UNPACK2(ipt, entrytype, 8, val, 24);
+				TOKEN_GET_UINT64_UNPACK2(ipt, entrytype, 8, val, 32);
 				{
 					int ch;
 					for (ch = 0; portentry->keyboard.chars[ch] != 0; ch++)
@@ -2459,6 +2462,39 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 	input_port_init_params iip;
 	input_port_entry *port;
 
+#ifdef USE_NEOGEO_HACKS
+	int remove_neogeo_territory = 0;
+	int remove_neogeo_arcade = 0;
+
+	if (Machine && Machine->gamedrv &&
+	     (!mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
+	      || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c")))
+	{
+		/* first mark all items to disable */
+		remove_neogeo_territory = 1;
+		remove_neogeo_arcade = 1;
+
+		switch (determine_neogeo_bios())
+		{
+		case NEOGEO_BIOS_TYPE_EURO:
+			// enable arcade/console and territory
+			remove_neogeo_arcade = 0;
+			remove_neogeo_territory = 0;
+			break;
+
+		case NEOGEO_BIOS_TYPE_DEBUG:
+			// enable territory
+			remove_neogeo_territory = 0;
+			break;
+
+		case NEOGEO_BIOS_TYPE_TRACKBALL:
+			// enable arcade/console and territory
+			remove_neogeo_arcade = 0;
+			remove_neogeo_territory = 0;
+			break;
+		}
+	}
+#endif /* USE_NEOGEO_HACKS */
 
 	/* set up the port parameter structure */
 	iip.max_ports = MAX_INPUT_PORTS * MAX_BITS_PER_PORT;
@@ -2486,6 +2522,32 @@ input_port_entry *input_port_allocate(const input_port_token *ipt, input_port_en
 
 	/* append final IPT_END */
 	input_port_initialize(&iip, IPT_END, NULL, 0, 0);
+
+#ifdef USE_NEOGEO_HACKS
+	{
+		for (port = iip.ports; port->type != IPT_END; port++)
+		{
+			int n = 0;
+
+			while (port[n].type == IPT_DIPSWITCH_NAME)
+			{
+				if ((remove_neogeo_territory && !strcmp(port[n].name, "Territory")) ||
+				    (remove_neogeo_arcade && (!strcmp(port[n].name, "Machine Mode") ||
+				                              !strcmp(port[n].name, "Game Slots"))))
+				{
+					while (port[++n].type == IPT_DIPSWITCH_SETTING)
+						;
+				}
+				else
+					break;
+			}
+
+			if (n)
+				memmove(port, &port[n], n * sizeof *port);
+		}
+
+	}
+#endif /* USE_NEOGEO_HACKS */
 
 	// Install buttons if needed
 	{
@@ -3688,7 +3750,7 @@ static int auto_pressed(input_bit_info *info)
 
 #ifdef USE_CUSTOM_BUTTON
 	if (portentry->type >= IPT_BUTTON1 && portentry->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
-	{
+{
 		UINT16 button_mask = 1 << (portentry->type - IPT_BUTTON1);
 		input_bit_info temp;
 		int custom;

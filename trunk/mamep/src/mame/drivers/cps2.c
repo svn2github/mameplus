@@ -584,6 +584,7 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 ***************************************************************************/
 
 #include "driver.h"
+#include "deprecat.h"
 #include "machine/eeprom.h"
 #include "cpu/m68000/m68000.h"
 #include "sound/qsound.h"
@@ -863,22 +864,22 @@ static READ16_HANDLER( joy_or_paddle_r )
 static ADDRESS_MAP_START( cps2_readmem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_READ(SMH_ROM)                   /* 68000 ROM */
 	AM_RANGE(0x400000, 0x40000b) AM_READ(SMH_RAM)                   /* CPS2 object output */
-	AM_RANGE(0x618000, 0x619fff) AM_READ(qsound_sharedram1_r)       /* Q RAM */
+	AM_RANGE(0x618000, 0x619fff) AM_READ(qsound_sharedram1_r)         /* Q RAM */
 	AM_RANGE(0x662000, 0x662001) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x662008, 0x662009) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x662020, 0x662021) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x660000, 0x663fff) AM_READ(SMH_RAM)                   /* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
 	AM_RANGE(0x664000, 0x664001) AM_READ(SMH_RAM)                   /* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
-	AM_RANGE(0x708000, 0x709fff) AM_READ(cps2_objram2_r)            /* Object RAM */
-	AM_RANGE(0x70a000, 0x70bfff) AM_READ(cps2_objram2_r)            /* mirror */
-	AM_RANGE(0x70c000, 0x70dfff) AM_READ(cps2_objram2_r)            /* mirror */
-	AM_RANGE(0x70e000, 0x70ffff) AM_READ(cps2_objram2_r)            /* mirror */
+	AM_RANGE(0x708000, 0x709fff) AM_READ(cps2_objram2_r)              /* Object RAM */
+	AM_RANGE(0x70a000, 0x70bfff) AM_READ(cps2_objram2_r)              /* mirror */
+	AM_RANGE(0x70c000, 0x70dfff) AM_READ(cps2_objram2_r)              /* mirror */
+	AM_RANGE(0x70e000, 0x70ffff) AM_READ(cps2_objram2_r)              /* mirror */
 	AM_RANGE(0x800140, 0x80017f) AM_READ(cps1_cps_b_r)              /* mirror (sfa) */
-	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                /* IN0 */
-	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                /* IN1 */
-	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                /* IN2 + EEPROM */
-	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      /* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
-	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)                  /* unknown (xmcotaj hangs if this is 0) */
+	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                  /* IN0 */
+	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                  /* IN1 */
+	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                  /* IN2 + EEPROM */
+	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)        /* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
+	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)                    /* unknown (xmcotaj hangs if this is 0) */
 	AM_RANGE(0x804140, 0x80417f) AM_READ(cps1_cps_b_r)              /* CPS-B custom */
 	AM_RANGE(0x900000, 0x92ffff) AM_READ(SMH_RAM)                   /* Video RAM */
 	AM_RANGE(0xff0000, 0xffffff) AM_READ(SMH_RAM)                   /* RAM */
@@ -2030,10 +2031,10 @@ ROM_START( csclubh )
 
 	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
 	ROM_FILL(              0x000000, 0x800000, 0 )
-	ROMX_LOAD( "csc.14m",  0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
-	ROMX_LOAD( "csc.16m",  0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
-	ROMX_LOAD( "csc.18m",  0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
-	ROMX_LOAD( "csc.20m",  0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
+	ROMX_LOAD( "csc.14m",   0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
+	ROMX_LOAD( "csc.16m",   0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
+	ROMX_LOAD( "csc.18m",   0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
+	ROMX_LOAD( "csc.20m",   0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
 
 	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "csc.01",   0x00000, 0x08000, CRC(ee162111) SHA1(ce8d4bd32bb10ee8b0274ba6fcef05a583b39d48) )
@@ -5088,6 +5089,35 @@ ROM_END
 
 ROM_START( sfa2 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "sz2e.03", 0x000000, 0x80000, CRC(1061e6bb) SHA1(f9b05e5cbcb1dc874de6874b01058defd6e4c407) )
+	ROM_LOAD16_WORD_SWAP( "sz2e.04", 0x080000, 0x80000, CRC(22d17b26) SHA1(2d7a9cedae1bb2b7cfb80d2bfcf24cb7738df0bf) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05",  0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
+	ROM_LOAD16_WORD_SWAP( "sz2.06",  0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
+	ROM_LOAD16_WORD_SWAP( "sz2.07",  0x200000, 0x80000, CRC(8e184246) SHA1(c51f6480cfa1dcec6c4713fd38c7a27338c3fa65) )
+	ROM_LOAD16_WORD_SWAP( "sz2.08",  0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
+
+	ROM_REGION( 0x1400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "sz2.13m",   0x0000000, 0x400000, CRC(4d1f1f22) SHA1(659fb4305bcf0cbbbbec97ede6e68a8323b13308) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.15m",   0x0000002, 0x400000, CRC(19cea680) SHA1(4cb88963a0fbcef191c8419b6379387c01b4c81e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.17m",   0x0000004, 0x400000, CRC(e01b4588) SHA1(c2936608fd75ff6cd5fa94c6d6d6f0c77c44a450) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.19m",   0x0000006, 0x400000, CRC(0feeda64) SHA1(f5b350601437bd94b70d97feb23d791df19da6b3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.14m",   0x1000000, 0x100000, CRC(0560c6aa) SHA1(f2bed3a8efef18052b51a7f0f6a888a18db813a1) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.16m",   0x1000002, 0x100000, CRC(ae940f87) SHA1(39ee26333abbe302ba76dced0196a2e6b3b1d02a) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.18m",   0x1000004, 0x100000, CRC(4bc3c8bc) SHA1(6256963c515bf56f39b6e559afefd653ead56c54) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "sz2.20m",   0x1000006, 0x100000, CRC(39e674c0) SHA1(8e771a2d8c2accad0463bccd21d7b23af0c895a1) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "sz2.01a",   0x00000, 0x08000, CRC(1bc323cf) SHA1(83fbd6e9b327700dc9f1c59700b7385bc3705749) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+	ROM_LOAD( "sz2.02a",   0x28000, 0x20000, CRC(ba6a5013) SHA1(7814f3e56b69529b9860dd61c3b1e8d700244b03) )
+
+	ROM_REGION( 0x400000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "sz2.11m",   0x000000, 0x200000, CRC(aa47a601) SHA1(a4d1ee89c84a3b9db06469bb66e85293b5aa9ac9) )
+	ROM_LOAD16_WORD_SWAP( "sz2.12m",   0x200000, 0x200000, CRC(2237bc53) SHA1(96d5693047e4cf1ed10a8ee1905cea267a278e92) )
+ROM_END
+
+ROM_START( sfa2u )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2u.03", 0x000000, 0x80000, CRC(84a09006) SHA1(334c33f9eb324d71443cc9c44e94f5a72451fa3f) )
 	ROM_LOAD16_WORD_SWAP( "sz2u.04", 0x080000, 0x80000, CRC(ac46e5ed) SHA1(a01b57daba4c255d5f07465c553bcbfe51d9ab0d) )
 	ROM_LOAD16_WORD_SWAP( "sz2u.05", 0x100000, 0x80000, CRC(6c0c79d3) SHA1(ae2a4e2903beec1f10fff6edac1a2385d6ac1c38) )
@@ -5119,7 +5149,7 @@ ROM_START( sfz2j )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2j.03a", 0x000000, 0x80000, CRC(97461e28) SHA1(8fbe4c9a59f51612f86adb8ef5057e43be0348bf) )
 	ROM_LOAD16_WORD_SWAP( "sz2j.04a", 0x080000, 0x80000, CRC(ae4851a9) SHA1(4771bc22fe1b376b753a68506c012c52bd4b886d) )
-	ROM_LOAD16_WORD_SWAP( "sz2.05",   0x100000, 0x80000, CRC(98e8e992) SHA1(41745b63e6b3888081d189b8315ed3b7526b3d20) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05a",  0x100000, 0x80000, CRC(98e8e992) SHA1(41745b63e6b3888081d189b8315ed3b7526b3d20) )
 	ROM_LOAD16_WORD_SWAP( "sz2.06",   0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
 	ROM_LOAD16_WORD_SWAP( "sz2j.07a", 0x200000, 0x80000, CRC(d910b2a2) SHA1(aa201660caa9cef993c147a1077c9e7767b34a78) )
 	ROM_LOAD16_WORD_SWAP( "sz2.08",   0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
@@ -5148,7 +5178,7 @@ ROM_START( sfz2a )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2a.03a", 0x000000, 0x80000, CRC(30d2099f) SHA1(d4c7d8c2ad08cae228544bd692aedecd4fab829c) )
 	ROM_LOAD16_WORD_SWAP( "sz2a.04a", 0x080000, 0x80000, CRC(1cc94db1) SHA1(518151f443ff5219b20c9fd59b7614920302aecd) )
-	ROM_LOAD16_WORD_SWAP( "sz2.05",   0x100000, 0x80000, CRC(98e8e992) SHA1(41745b63e6b3888081d189b8315ed3b7526b3d20) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05a",  0x100000, 0x80000, CRC(98e8e992) SHA1(41745b63e6b3888081d189b8315ed3b7526b3d20) )
 	ROM_LOAD16_WORD_SWAP( "sz2.06",   0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
 	ROM_LOAD16_WORD_SWAP( "sz2a.07a", 0x200000, 0x80000, CRC(0aed2494) SHA1(7beb1a394f17cd78a27128292b626aae28754ca2) )
 	ROM_LOAD16_WORD_SWAP( "sz2.08",   0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
@@ -5235,7 +5265,7 @@ ROM_START( sfz2br1 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2b.03", 0x000000, 0x80000, CRC(e6ce530b) SHA1(044c3f6f6c64d18f4f9ce96b67ff86b3c8bcd065) )
 	ROM_LOAD16_WORD_SWAP( "sz2b.04", 0x080000, 0x80000, CRC(1605a0cb) SHA1(5041c87dbb3ed41fe1cb3e9eade195bc2f7cba2a) )
-	ROM_LOAD16_WORD_SWAP( "sz2b.05", 0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05",  0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
 	ROM_LOAD16_WORD_SWAP( "sz2.06",  0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
 	ROM_LOAD16_WORD_SWAP( "sz2b.07", 0x200000, 0x80000, CRC(947e8ac6) SHA1(da82be7cba9cd557da3ee35be9194130a959d5cb) )
 	ROM_LOAD16_WORD_SWAP( "sz2b.08", 0x280000, 0x80000, CRC(92b66e01) SHA1(f09cb38aa49b22a9c98219fb2ad8a66b11fa5872) )
@@ -5264,7 +5294,7 @@ ROM_START( sfz2h )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2h.03", 0x000000, 0x80000, CRC(bfeddf5b) SHA1(dd4a748ba8674725a399b78e721ff9c7adaaf890) )
 	ROM_LOAD16_WORD_SWAP( "sz2h.04", 0x080000, 0x80000, CRC(ea5009fb) SHA1(9186c702994f99488d52d4dbccb3823d2b9a6dd9) )
-	ROM_LOAD16_WORD_SWAP( "sz2b.05", 0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05",  0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
 	ROM_LOAD16_WORD_SWAP( "sz2.06",  0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
 	ROM_LOAD16_WORD_SWAP( "sz2b.07", 0x200000, 0x80000, CRC(947e8ac6) SHA1(da82be7cba9cd557da3ee35be9194130a959d5cb) )
 	ROM_LOAD16_WORD_SWAP( "sz2b.08", 0x280000, 0x80000, CRC(92b66e01) SHA1(f09cb38aa49b22a9c98219fb2ad8a66b11fa5872) )
@@ -5293,9 +5323,9 @@ ROM_START( sfz2n )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_WORD_SWAP( "sz2n.03", 0x000000, 0x80000, CRC(58924741) SHA1(b077867a6a601b5f87a644ebfe9b8d0c87d0471f) )
 	ROM_LOAD16_WORD_SWAP( "sz2n.04", 0x080000, 0x80000, CRC(592a17c5) SHA1(7262f9017834e932858e81dadfba9d9feb946530) )
-	ROM_LOAD16_WORD_SWAP( "sz2b.05", 0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
+	ROM_LOAD16_WORD_SWAP( "sz2.05",  0x100000, 0x80000, CRC(4b442a7c) SHA1(a0d7d229cff8efb2a253ff06270258b0b4d2761e) )
 	ROM_LOAD16_WORD_SWAP( "sz2.06",  0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
-	ROM_LOAD16_WORD_SWAP( "sz2n.07", 0x200000, 0x80000, CRC(8e184246) SHA1(c51f6480cfa1dcec6c4713fd38c7a27338c3fa65) )
+	ROM_LOAD16_WORD_SWAP( "sz2.07",  0x200000, 0x80000, CRC(8e184246) SHA1(c51f6480cfa1dcec6c4713fd38c7a27338c3fa65) )
 	ROM_LOAD16_WORD_SWAP( "sz2.08",  0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
 
 	ROM_REGION( 0x1400000, REGION_GFX1, 0 )
@@ -8034,7 +8064,8 @@ GAME( 1996, ddsomj,   ddsom,    cps2, cps2_4p4b, cps2,     ROT0,   "Capcom", "Du
 GAME( 1996, ddsomjr1, ddsom,    cps2, cps2_4p4b, cps2,     ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Japan 960206)", 0 )
 GAME( 1996, ddsoma,   ddsom,    cps2, cps2_4p4b, cps2,     ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Asia 960619)", 0 )
 GAME( 1996, ddsomb,   ddsom,    cps2, cps2_4p4b, cps2,     ROT0,   "Capcom", "Dungeons & Dragons: Shadow over Mystara (Brazil 960223)", 0 )
-GAME( 1996, sfa2,     0,        cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 2 (USA 960306)", 0 )
+GAME( 1996, sfa2,     0,        cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 2 (Euro 960229)", 0 )
+GAME( 1996, sfa2u,    sfa2,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Alpha 2 (USA 960306)", 0 )
 GAME( 1996, sfz2j,    sfa2,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 2 (Japan 960227)", 0 )
 GAME( 1996, sfz2a,    sfa2,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 2 (Asia 960227)", 0 )
 GAME( 1996, sfz2b,    sfa2,     cps2, cps2_2p6b, cps2,     ROT0,   "Capcom", "Street Fighter Zero 2 (Brazil 960531)", 0 )

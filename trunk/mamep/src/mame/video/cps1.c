@@ -27,25 +27,30 @@ Ghouls 'n Ghosts (World / US)               1988  88620B-2  DM620            LWI
 Strider                                     1989  89624B-2  ST24M1           LWIO  88622-C-1  CPS-B-01  DL-0411-10001  None
   (alt B-board revision)                          89624B-2  ST24M2           LWIO  88622-C-2  CPS-B-01  DL-0411-10001  None
   (alt B-board revision)                          89624B-3  ST24B2           LWIO  88622-C-2  CPS-B-01  DL-0411-10001  None
-  (alt B-board revision)                          ?         ST22B            ?
-Dynasty Wars                                1989  88624B-3  TK24B?           ?     88622-C-2  CPS-B-02  DL-0411-10002
+  (alt B-board revision - Japan)                  ?         ST22B            ?
+Dynasty Wars                                1989  89624B-3  TK24B?           ?     88622-C-2  CPS-B-02  DL-0411-10002  None
   (alt B-board revision - Japan)                  88622B-3  TK22B            IOB1
 Willow                                      1989  89624B-3  WL24B            LWIO  88622-C-4  CPS-B-03  DL-0411-10003  None
-  (alt C-board revision)                                                           88622-C-2
+  (alt B-board revision - Japan)                  88622B-3  WL22B            LWIO  88622-C-2  CPS-B-03  DL-0411-10003  None
 UN Squadron / Area 88                       1989  89624B-3  AR24B            LWIO  88622-C-4  CPS-B-11  DL-0411-10004  None
   (alt B-board revision - Japan)                  88622B-2  AR22B            LWIO
 Final Fight (first rev)                     1989  89624B-3  S224B            IOB1  88622-C-5  CPS-B-04  DL-0411-10005  None
-Final Fight (US 900112)                                                            ?          CPS-B-04@ DL-0411-10001  None
-Final Fight (US 900613)                                                            88622-C-5  CPS-B-05  DL-0411-10006
-Final Fight (Japan 900305) (alt B-board revision) 88622B-2  S222B?           LWIO  88622-C-5  CPS-B-02  DL-0411-10002
+Final Fight (US/Japan 900112)                                                      ?          CPS-B-04@ DL-0411-10001  None
+Final Fight (US 900613)                           89624B-3                   IOB1  88622-C-5  CPS-B-05  DL-0411-10006  None
+Final Fight (Japan 900305) (alt B-board revision) 88622B-2  S222B            LWIO  88622-C-5  CPS-B-02  DL-0411-10002  None
 1941                                        1990  ?         YI24B            ?     88622-C-5  CPS-B-05  DL-0411-10006  ?
-Mercs                                       1990  89624B-3  0224B            IOB1  90628-C-1  CPS-B-12  DL-0411-10007  C628
+  (alt B-board revision - Japan)                  ?         ?                ?
+Mercs                                       1990  89624B-3  O224B            IOB1  90628-C-1  CPS-B-12  DL-0411-10007  C628
+  (alt B-board revision - Japan)                  ?         ?                ?
   (alt C-board revision)                                                           90628-C-2
 Magic Sword                                 1990  89624B-3  MS24B            IOB1  88622-C-5  CPS-B-13  DL-0411-10008  None
+  (alt B-board revision - Japan)                  89625B-1  MS22B            IOB1
 Chiki Chiki Boys / Mega Twins               1990  89624B-3  CK24B            IOB1  88622-C-5  CPS-B-14  DL-0411-10009  None
+  (alt B-board revision - Japan)                  ?         ?                ?
 Nemo                                        1990  89624B-3  NM24B            IOB1  88622-C-5  CPS-B-15  DL-0411-10010  None
+  (alt B-board revision - Japan)                  89625B-1  NM22B            ?
 Carrier Air Wing / U.S. Navy                1990  89624B-3  CA24B            IOB1  88622-C-5  CPS-B-16  DL-0411-10011  None
-  (alt B-board revision - Japan)                  89625B-1  CA22B
+  (alt B-board revision - Japan)                  89625B-1  CA22B            LWIO
 Street Fighter II (910214)                  1991  90629B-2  STF29            IOB1  90632C-1   CPS-B-17  DL-0411-10012  C632
 Street Fighter II (US 910206)                                                                 CPS-B-17  DL-0411-10012
 Street Fighter II (US 910228)                                                                 CPS-B-18  DL-0411-10013  C632B
@@ -56,15 +61,18 @@ Street Fighter II (World 910522)                                                
 Street Fighter II (US 910522)                                                                 CPS-B-14  DL-0411-10009
 Street Fighter II (US 911101)                                                                 CPS-B-17  DL-0411-10012
 Street Fighter II (Japan 911210)                                                              CPS-B-13  DL-0411-10008
-Three Wonders*                              1991  89624B-3  RT24B            IOB1  90630C-4   CPS-B-21  DL-0921-10014        IOC1
+Three Wonders*                              1991  89624B-3  RT24B            LWIO  90630C-4   CPS-B-21  DL-0921-10014        IOC1
   (alt B-board revision - Japan)                  89625B-1  RT22B            IOB1
-  (alt B-board revision)                          91634B-2  ?                ?
+  (alt B-board revision)                          91634B-2  ?                IOB1
 King of Dragons*                            1991  90629B-3  KD29B            IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
 Captain Commando*                           1991  91635B-2  CC63B     CCPRG  IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
 Knights of the Round*                       1991  91635B-2  KR63B     BPRG1  IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
+  (alt B-board revision)                          ?         ?                ?
 Street Fighter II' Champion Edition         1992  91635B-2  S9263B    BPRG1  IOB1  92631C-6   CPS-B-21  DL-0921-10014  C632  IOC1
-Varth (World / US)                          1992  89624B-3  VA24B            IOB1  88622-C-5  CPS-B-04  DL-0411-10005  None
-Varth (Japan)*                              1992  ?         ?                      ?          CPS-B-21  DL-0921-10014  ?
+  (alt B-board revision - Japan)                  91634B-2  S9263B    BPRG1  IOB1
+Varth (World)                               1992  89624B-3  VA24B            IOB1  88622-C-5  CPS-B-04  DL-0411-10005  None
+  (alt B-board revision - US)                     ?         VA63B?           ?
+Varth (Japan)*                                    ?         ?                      ?          CPS-B-21  DL-0921-10014  ?
 Capcom World 2*                             1992  ?         Q522B            IOB1  ?          CPS-B-21  DL-0921-10014        IOC1
 Quiz and Dragons (US)*                      1992  89625B-1  QD22B            IOB1  92641C-1   CPS-B-21  DL-0921-10014        IOC1
 Quiz and Dragons (Japan)*                   1994  ?         ?                IOB1  ?          CPS-B-21  DL-0921-10014        IOC1
@@ -77,7 +85,7 @@ Muscle Bomber Duo*                          1993  ?         ?                   
 Quiz Tonosama no Yabou 2                    1995  ?         ?                      ?          ?
 Pnickies                                    1994  ?         ?                      ?          CPS-B-21? DL-0921-10014? ?
 Pang 3                                      1995  94916-10  CP1B1F,CP1B8K,CP1B9KA  92631C-6   CPS-B-21  DL-0921-10014  C632  IOC1
-Megaman the Power Battle                    1995  ?         RCM63B   BPRG1   IOB1  ?          CPS-B-21  DL-0921-10014  C632  IOC1
+Megaman the Power Battle                    1995  91634B-2  RCM63B   BPRG1   IOB1  ?          CPS-B-21  DL-0921-10014  C632  IOC1
 
 @actually CPS-B-01, the original number was scratched out and "04" stamped over it
 *denotes Suicide Battery
@@ -445,6 +453,9 @@ static const struct gfx_range mapper_LWCHR_table[] =
 };
 
 
+// DM620 and DM22A are equivalent as far as the game is concerned, though
+// the equations are quite different
+
 #define mapper_DM620	{ 0x8000, 0x2000, 0x2000, 0 }, mapper_DM620_table
 static const struct gfx_range mapper_DM620_table[] =
 {
@@ -466,15 +477,57 @@ static const struct gfx_range mapper_DM620_table[] =
 	{ 0 }
 };
 
-
-#define mapper_ST22B	{ 0x4000, 0x4000, 0x4000, 0x4000 }, mapper_ST22B_table
-static const struct gfx_range mapper_ST22B_table[] =
+#define mapper_DM22A	{ 0x4000, 0x4000, 0x2000, 0x2000 }, mapper_DM22A_table
+static const struct gfx_range mapper_DM22A_table[] =
 {
-	// verified from PAL dump (PAL # is not certain):
+	// verified from PAL dump
 	// bank 0 = pin 19
 	// bank 1 = pin 16
 	// bank 2 = pin 14
 	// bank 3 = pin 12
+
+	/* type            start   end     bank */
+	{ GFXTYPE_SPRITES, 0x00000, 0x01fff, 0 },
+	{ GFXTYPE_SCROLL1, 0x02000, 0x03fff, 0 },
+
+	{ GFXTYPE_SCROLL2, 0x04000, 0x07fff, 1 },
+
+	{ GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 2 },
+
+	{ GFXTYPE_SPRITES, 0x02000, 0x03fff, 3 },
+	{ 0 }
+};
+
+
+// ST24M1 and ST22B are equivalent except for the stars range which is
+// different. This has no practical effect.
+
+#define mapper_ST24M1	{ 0x8000, 0x8000, 0, 0 }, mapper_ST24M1_table
+static const struct gfx_range mapper_ST24M1_table[] =
+{
+	// verified from PAL dump
+	// bank 0 = pin 19 (ROMs 2,4,6,8)
+	// bank 1 = pin 16 (ROMs 1,3,5,7)
+	// pin 12 and pin 14 are never enabled
+
+	/* type            start    end      bank */
+	{ GFXTYPE_STARS,   0x00000, 0x003ff, 0 },
+	{ GFXTYPE_SPRITES, 0x00000, 0x04fff, 0 },
+	{ GFXTYPE_SCROLL2, 0x04000, 0x07fff, 0 },
+
+	{ GFXTYPE_SCROLL3, 0x00000, 0x07fff, 1 },
+	{ GFXTYPE_SCROLL1, 0x07000, 0x07fff, 1 },
+	{ 0 }
+};
+
+#define mapper_ST22B	{ 0x4000, 0x4000, 0x4000, 0x4000 }, mapper_ST22B_table
+static const struct gfx_range mapper_ST22B_table[] =
+{
+	// verified from PAL dump
+	// bank 0 = pin 19 (ROMs 1,5, 9,13,17,24,32,38)
+	// bank 1 = pin 16 (ROMs 2,6,10,14,18,25,33,39)
+	// bank 2 = pin 14 (ROMs 3,7,11,15,19,21,26,28)
+	// bank 3 = pin 12 (ROMS 4,8,12,16,20,22,27,29)
 
 	/* type            start    end      bank */
 	{ GFXTYPE_STARS,   0x00000, 0x1ffff, 0 },
@@ -580,6 +633,9 @@ static const struct gfx_range mapper_YI24B_table[] =
 };
 
 
+// AR24B and AR22B are equivalent, but since we could dump both PALs we are
+// documenting both.
+
 #define mapper_AR24B	{ 0x8000, 0, 0, 0 }, mapper_AR24B_table
 static const struct gfx_range mapper_AR24B_table[] =
 {
@@ -603,9 +659,26 @@ static const struct gfx_range mapper_AR24B_table[] =
 	{ 0 }
 };
 
+#define mapper_AR22B	{ 0x4000, 0x4000, 0, 0 }, mapper_AR22B_table
+static const struct gfx_range mapper_AR22B_table[] =
+{
+	// verified from PAL dump:
+	// bank 0 = pin 19 (ROMs 1,5, 9,13,17,24,32,38)
+	// bank 1 = pin 16 (ROMs 2,6,10,14,18,25,33,39)
+	// pin 14 is always enabled and pin 12 looks wrong
 
-#define mapper_0224B	{ 0x8000, 0x8000, 0, 0 }, mapper_0224B_table
-static const struct gfx_range mapper_0224B_table[] =
+	/* type            start   end     bank */
+	{ GFXTYPE_SPRITES, 0x0000, 0x2fff, 0 },
+	{ GFXTYPE_SCROLL1, 0x3000, 0x3fff, 0 },
+
+	{ GFXTYPE_SCROLL2, 0x4000, 0x5fff, 1 },
+	{ GFXTYPE_SCROLL3, 0x6000, 0x7fff, 1 },
+	{ 0 }
+};
+
+
+#define mapper_O224B	{ 0x8000, 0x4000, 0, 0 }, mapper_O224B_table
+static const struct gfx_range mapper_O224B_table[] =
 {
 	// verified from PAL dump:
 	// bank 0 = pin 19 (ROMs 2,4,6,8)
@@ -692,6 +765,9 @@ static const struct gfx_range mapper_NM24B_table[] =
 };
 
 
+// CA24B and CA22B are equivalent, but since we could dump both PALs we are
+// documenting both.
+
 #define mapper_CA24B	{ 0x8000, 0, 0, 0 }, mapper_CA24B_table
 static const struct gfx_range mapper_CA24B_table[] =
 {
@@ -717,6 +793,26 @@ static const struct gfx_range mapper_CA24B_table[] =
 	{ GFXTYPE_SCROLL1, 0x5000, 0x57ff, 0 },
 	{ GFXTYPE_SPRITES, 0x5800, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x5800, 0x7fff, 0 },
+	{ 0 }
+};
+
+#define mapper_CA22B	{ 0x4000, 0x4000, 0, 0 }, mapper_CA22B_table
+static const struct gfx_range mapper_CA22B_table[] =
+{
+	// verified from PAL dump:
+	// bank 0 = pin 19 (ROMs 1,5, 9,13,17,24,32,38)
+	// bank 1 = pin 16 (ROMs 2,6,10,14,18,25,33,39)
+	// pin 12 and pin 14 are never enabled
+
+	/* type            start   end     bank */
+	{ GFXTYPE_SPRITES, 0x0000, 0x2fff, 0 },
+	{ GFXTYPE_SCROLL2, 0x0000, 0x2fff, 0 },
+	{ GFXTYPE_SCROLL3, 0x3000, 0x3fff, 0 },
+
+	{ GFXTYPE_SCROLL3, 0x4000, 0x4fff, 1 },
+	{ GFXTYPE_SCROLL1, 0x5000, 0x57ff, 1 },
+	{ GFXTYPE_SPRITES, 0x5800, 0x7fff, 1 },
+	{ GFXTYPE_SCROLL2, 0x5800, 0x7fff, 1 },
 	{ 0 }
 };
 
@@ -769,12 +865,12 @@ static const struct gfx_range mapper_RT24B_table[] =
 static const struct gfx_range mapper_RT22B_table[] =
 {
 	// verified from PAL dump:
-	// bank 0 = pin 19
-	// bank 1 = pin 16
-	// bank 2 = pin 14
-	// bank 3 = pin 12
+	// bank 0 = pin 19 (ROMs 1,5, 9,13,17,24,32,38)
+	// bank 1 = pin 16 (ROMs 2,6,10,14,18,25,33,39)
+	// bank 2 = pin 14 (ROMs 3,7,11,15,19,21,26,28)
+	// bank 3 = pin 12 (ROMS 4,8,12,16,20,22,27,29)
 
-	/* type            start   end     bank */
+	/* type                              start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x4000, 0x53ff, 1 },
@@ -793,6 +889,11 @@ static const struct gfx_range mapper_RT22B_table[] =
 #define mapper_KD29B	{ 0x8000, 0x8000, 0, 0 }, mapper_KD29B_table
 static const struct gfx_range mapper_KD29B_table[] =
 {
+	// verified from PAL dump:
+	// bank 0 = pin 19 (ROMs 1,2,3,4)
+	// bank 1 = pin 14 (ROMs 10,11,12,13)
+	// pin 12 is never enabled
+
 	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
 
@@ -807,13 +908,19 @@ static const struct gfx_range mapper_KD29B_table[] =
 #define mapper_CC63B	{ 0x8000, 0x8000, 0, 0 }, mapper_CC63B_table
 static const struct gfx_range mapper_CC63B_table[] =
 {
+	// verified from PAL dump:
+	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
+	// bank1 = pin 17 (ROMs 5,7) & pin 16 (ROMs 6,8)
+	// pins 12,13,14,15 are always enabled
+
 	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
+	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
 
-	{ GFXTYPE_SPRITES, 0x8000, 0x9fff, 1 },
-	{ GFXTYPE_SCROLL3, 0xa000, 0xbfff, 1 },
-	{ GFXTYPE_SCROLL1, 0xc000, 0xcfff, 1 },
-	{ GFXTYPE_SCROLL2, 0xd000, 0xffff, 1 },
+	{ GFXTYPE_SPRITES, 0x8000, 0xffff, 1 },
+	{ GFXTYPE_SCROLL1, 0x8000, 0xffff, 1 },
+	{ GFXTYPE_SCROLL2, 0x8000, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3, 0x8000, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -821,12 +928,18 @@ static const struct gfx_range mapper_CC63B_table[] =
 #define mapper_KR63B	{ 0x8000, 0x8000, 0, 0 }, mapper_KR63B_table
 static const struct gfx_range mapper_KR63B_table[] =
 {
+	// verified from PAL dump:
+	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
+	// bank1 = pin 17 (ROMs 5,7) & pin 16 (ROMs 6,8)
+	// pins 12,13,14,15 are always enabled
+
 	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
+	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
 
-	{ GFXTYPE_SPRITES, 0x8000, 0x87ff, 1 },
-	{ GFXTYPE_SCROLL1, 0x8800, 0x97ff, 1 },
-	{ GFXTYPE_SCROLL2, 0x9800, 0xcfff, 1 },
+	{ GFXTYPE_SCROLL1, 0x8000, 0x9fff, 1 },
+	{ GFXTYPE_SPRITES, 0x8000, 0xcfff, 1 },
+	{ GFXTYPE_SCROLL2, 0x8000, 0xcfff, 1 },
 	{ GFXTYPE_SCROLL3, 0xd000, 0xffff, 1 },
 	{ 0 }
 };
@@ -835,26 +948,39 @@ static const struct gfx_range mapper_KR63B_table[] =
 #define mapper_S9263B	{ 0x8000, 0x8000, 0x8000, 0 }, mapper_S9263B_table
 static const struct gfx_range mapper_S9263B_table[] =
 {
+	// verified from PAL dump:
+	// FIXME there is some problem with this dump since pin 14 is never enabled
+	// instead of being the same as pin 15 as expected
+	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
+	// bank1 = pin 17 (ROMs 5,7) & pin 16 (ROMs 6,8)
+	// bank2 = pin 15 (ROMs 10,12) & pin 14 (ROMs 11,13)
+	// pins 12 and 13 are the same as 14 and 15
+
 	/* type            start    end      bank */
 	{ GFXTYPE_SPRITES, 0x00000, 0x07fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x08000, 0x0ffff, 1 },
 
 	{ GFXTYPE_SPRITES, 0x10000, 0x11fff, 2 },
-	{ GFXTYPE_SCROLL3, 0x02000, 0x03fff, 2 },	// 12000-13fff physical
-	{ GFXTYPE_SCROLL1, 0x04000, 0x04fff, 2 },	// 14000-14fff physical
-	{ GFXTYPE_SCROLL2, 0x05000, 0x07fff, 2 },	// 15000-17fff physical
+	{ GFXTYPE_SCROLL3, 0x02000, 0x03fff, 2 },
+	{ GFXTYPE_SCROLL1, 0x04000, 0x04fff, 2 },
+	{ GFXTYPE_SCROLL2, 0x05000, 0x07fff, 2 },
 	{ 0 }
 };
 
 
-#define mapper_VA24B	{ 0x8000, 0, 0, 0 }, mapper_VA24B_table
-static const struct gfx_range mapper_VA24B_table[] =
+#define mapper_VA63B	{ 0x8000, 0, 0, 0 }, mapper_VA63B_table
+static const struct gfx_range mapper_VA63B_table[] =
 {
+	// verified from PAL dump (PAL # uncertain):
+	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
+	// pins 12,13,14,15,16,17 are never enabled
+
 	/* type                              start   end     bank */
-	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x0000, 0x57ff, 0 },
-	{ GFXTYPE_SCROLL1,                   0x5800, 0x5fff, 0 },
-	{ GFXTYPE_SCROLL3,                   0x6000, 0x7fff, 0 },
+	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
+	{ GFXTYPE_SCROLL1, 0x0000, 0x7fff, 0 },
+	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
+	{ GFXTYPE_SCROLL3, 0x0000, 0x7fff, 0 },
 	{ 0 }
 };
 
@@ -899,12 +1025,12 @@ static const struct gfx_range mapper_CD63B_table[] =
 #define mapper_PS63B	{ 0x8000, 0x8000, 0, 0 }, mapper_PS63B_table
 static const struct gfx_range mapper_PS63B_table[] =
 {
-	/* type                              start   end     bank */
-	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
-	{ GFXTYPE_SPRITES,                   0x1000, 0x7fff, 0 },
+	/* type            start   end     bank */
+	{ GFXTYPE_SCROLL1, 0x0000, 0x0fff, 0 },
+	{ GFXTYPE_SPRITES, 0x1000, 0x7fff, 0 },
 
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x8000, 0xdbff, 1 },
-	{ GFXTYPE_SCROLL3,                   0xdc00, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3, 0xdc00, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -930,7 +1056,7 @@ static const struct gfx_range mapper_QD22B_table[] =
 	// verified from PAL dump:
 	// bank 0 = pin 19
 
-	/* type            start   end     bank */
+	/* type                              start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x3fff, 0 },
@@ -1004,6 +1130,19 @@ static const struct gfx_range mapper_pang3_table[] =
 };
 
 
+//#ifdef MESS
+
+#define mapper_sfzch	{ 0x20000, 0, 0, 0 }, mapper_sfzch_table
+static const struct gfx_range mapper_sfzch_table[] =
+{
+	/* type                                                                  start    end      bank */
+	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 0 },
+	{ 0 }
+};
+
+//#endif
+
+
 
 /*
   I don't know if CPS2 ROM boards use PALs as well; since all games seem to be
@@ -1015,7 +1154,7 @@ static const struct gfx_range mapper_pang3_table[] =
 static const struct gfx_range mapper_cps2_table[] =
 {
 	/* type                                                start    end      bank */
-	{ GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3 | GFXTYPE_SPRITES, 0x00000, 0x1ffff, 1 },	// 20000-3ffff physical
+	{ GFXTYPE_SCROLL1 | GFXTYPE_SCROLL2 | GFXTYPE_SCROLL3, 0x00000, 0x1ffff, 1 },	// 20000-3ffff physical
 	{ 0 }
 };
 
@@ -1025,15 +1164,17 @@ static const struct CPS1config cps1_config_table[]=
 {
 	/* name       CPSB         gfx mapper   in2  in3  out2   kludge */
 	{"forgottn", CPS_B_01,     mapper_LWCHR },
+	{"forgottu", CPS_B_01,     mapper_LWCHR },
 	{"lostwrld", CPS_B_01,     mapper_LWCHR },
 	{"ghouls",   CPS_B_01,     mapper_DM620 },
 	{"ghoulsu",  CPS_B_01,     mapper_DM620 },
-	{"daimakai", CPS_B_01,     mapper_DM620 },
-	{"strider",  CPS_B_01,     mapper_ST22B },
-	{"stridrua", CPS_B_01,     mapper_ST22B },
-	{"striderj", CPS_B_01,     mapper_ST22B },
-	{"stridrja", CPS_B_01,     mapper_ST22B },
+	{"daimakai", CPS_B_01,     mapper_DM22A },	// equivalent to DM620
+	{"strider",  CPS_B_01,     mapper_ST24M1 },
+	{"stridrua", CPS_B_01,     mapper_ST24M1 },
+	{"striderj", CPS_B_01,     mapper_ST24M1 },
+	{"stridrja", CPS_B_01,     mapper_ST22B },	// equivalent to ST24M1
 	{"dynwar",   CPS_B_02,     mapper_TK22B },
+	{"dynwaru",  CPS_B_02,     mapper_TK22B },
 	{"dynwarj",  CPS_B_02,     mapper_TK22B },
 	{"willow",   CPS_B_03,     mapper_WL24B },
 	{"willowj",  CPS_B_03,     mapper_WL24B },
@@ -1044,14 +1185,15 @@ static const struct CPS1config cps1_config_table[]=
 	{"ffightub", CPS_B_05,     mapper_S224B },
 	{"ffightj",  CPS_B_04,     mapper_S224B },
 	{"ffightj1", CPS_B_02,     mapper_S224B },
+	{"ffightj2", CPS_B_01,     mapper_S224B },
 	{"1941",     CPS_B_05,     mapper_YI24B },
 	{"1941j",    CPS_B_05,     mapper_YI24B },
 	{"unsquad",  CPS_B_11,     mapper_AR24B },	/* CPSB ID not checked, but it's the same as sf2eg */
-	{"area88",   CPS_B_11,     mapper_AR24B },	/* CPSB ID not checked, but it's the same as sf2eg */
-	{"mercs",    CPS_B_12,     mapper_0224B,  0x36, 0, 0x34 },
-	{"mercsu",   CPS_B_12,     mapper_0224B,  0x36, 0, 0x34 },
-	{"mercsua",  CPS_B_12,     mapper_0224B,  0x36, 0, 0x34 },
-	{"mercsj",   CPS_B_12,     mapper_0224B,  0x36, 0, 0x34 },
+	{"area88",   CPS_B_11,     mapper_AR22B },	// equivalent to AR24B
+	{"mercs",    CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsu",   CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsua",  CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
+	{"mercsj",   CPS_B_12,     mapper_O224B,  0x36, 0, 0x34 },
 	{"msword",   CPS_B_13,     mapper_MS24B },	/* CPSB ID not checked, but it's the same as sf2j */
 	{"mswordr1", CPS_B_13,     mapper_MS24B },	/* CPSB ID not checked, but it's the same as sf2j */
 	{"mswordu",  CPS_B_13,     mapper_MS24B },	/* CPSB ID not checked, but it's the same as sf2j */
@@ -1063,7 +1205,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"cawing",   CPS_B_16,     mapper_CA24B },
 	{"cawingr1", CPS_B_16,     mapper_CA24B },
 	{"cawingu",  CPS_B_16,     mapper_CA24B },
-	{"cawingj",  CPS_B_16,     mapper_CA24B },
+	{"cawingj",  CPS_B_16,     mapper_CA22B },	// equivalent to CA24B
 	{"sf2",      CPS_B_11,     mapper_STF29,  0x36 },
 	{"sf2eb",    CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2ua",    CPS_B_17,     mapper_STF29,  0x36 },
@@ -1103,16 +1245,16 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m4",    HACK_B_1, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"varth",    CPS_B_04,     mapper_VA24B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
-	{"varthr1",  CPS_B_04,     mapper_VA24B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
-	{"varthu",   CPS_B_04,     mapper_VA24B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
-	{"varthj",   CPS_B_21_BT5, mapper_VA24B },	/* CPSB test has been patched out (72=0001) register is also written to, possibly leftover from development */
+	{"varth",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
+	{"varthr1",  CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
+	{"varthu",   CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
+	{"varthj",   CPS_B_21_BT5, mapper_VA63B },	/* CPSB test has been patched out (72=0001) register is also written to, possibly leftover from development */
 	{"cworld2j", CPS_B_21_BT6, mapper_Q522B,  0x36, 0, 0x34 },	/* (ports 36, 34 probably leftover input code from another game) */
 	{"wof",      CPS_B_21_DEF, mapper_TK263B },	/* bootleg? */
 	{"wofa",     CPS_B_21_DEF, mapper_TK263B },	/* bootleg? */
@@ -1165,7 +1307,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
 	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
 	//#ifdef MESS
-	{"sfzch",    CPS_B_21_DEF, mapper_cps2 },
+	{"sfzch",    CPS_B_21_DEF, mapper_sfzch },
 	//#endif
 
     /* CPS2 games */
@@ -1405,7 +1547,7 @@ READ16_HANDLER( cps1_cps_b_r )
 		int buttons = input_port_read(machine, "IN2");
 		return buttons << 8 | buttons;
 	}
-	
+
 	if (offset == cps1_game_config->in3_addr/2)	/* Player 4 controls (on C-board) ("Captain Commando") */
 		return input_port_read(machine, "IN3");
 
@@ -1605,33 +1747,33 @@ void cps1_get_video_base(void )
 	if (cps1_game_config->bootleg_kludge == 1)
 	{
 		cps1_cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = -0x0c;
 		scroll2xoff = -0x0e;
 		scroll3xoff = -0x10;
 	}
 	else if (cps1_game_config->bootleg_kludge == 2)
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
 	else if (cps1_game_config->bootleg_kludge == 4)
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
 	}
 	else
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
-	cps1_other = cps1_base(CPS1_OTHER_BASE,cps1_other_size);
+	cps1_other=cps1_base(CPS1_OTHER_BASE,cps1_other_size);
 
 	/* Get scroll values */
 	cps1_scroll1x = cps1_cps_a_regs[CPS1_SCROLL1_SCROLLX] + scroll1xoff;
@@ -1775,8 +1917,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-         roms have been mixed to be reproduced (ffightua) -- it looks like each column
-         should alternate between the left and right side of the 16x16 tiles */
+       roms have been mixed to be reproduced (ffightua) -- it looks like each column
+       should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -1856,7 +1998,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-	MACHINE_RESET_CALL(cps);
+    MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -1940,7 +2082,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-		{
+	{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);
