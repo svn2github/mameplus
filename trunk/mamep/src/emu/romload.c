@@ -195,7 +195,6 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 	int bios_count = 0;
 	int bios_no = 1;
 
-	/* look for a BIOS with a matching name */
 	for (rom = romp;!ROMENTRY_ISEND(rom);rom++)
 		if (ROMENTRY_ISSYSTEM_BIOS(rom))
 		{
@@ -210,15 +209,13 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 			bios_count++;
 		}
 
-// mamep: temp. solution, will be removed when new GUI is released
+// mamep: fixme: temp. solution, will be removed when new GUI is released
 #if 1
 	if (bios_count == 0)
 		bios_no = 0;
 #else
-	/* if none found, use the default */
 	if (bios_no == 0 && bios_count > 0)
 	{
-		/* if we got neither an empty string nor 'default' then warn the user */
 		if (specbios[0] != 0)
 			fatalerror("%s: no such bios\n", specbios);
 		/* set to default */
@@ -226,6 +223,7 @@ int determine_bios_rom(core_options *options, const rom_entry *romp)
 	}
 #endif
 	debugload("Using System BIOS: %d\n", bios_no);
+
 	return bios_no;
 }
 
