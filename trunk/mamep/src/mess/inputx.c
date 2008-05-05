@@ -14,6 +14,7 @@
 #include "mame.h"
 
 #ifdef ENABLE_DEBUGGER
+#include "deprecat.h"
 #include "debug/debugcon.h"
 #endif /* ENABLE_DEBUGGER */
 
@@ -25,7 +26,6 @@
 
 #define NUM_SIMUL_KEYS	(UCHAR_SHIFT_END - UCHAR_SHIFT_BEGIN + 1)
 #define LOG_INPUTX		0
-#define DUMP_CODES		0
 #define SPACE_COUNT		3
 
 
@@ -381,26 +381,34 @@ static const char_info *find_charinfo(unicode_char target_char)
 
 ***************************************************************************/
 
-static const char *charstr(unicode_char ch)
+/*-------------------------------------------------
+    code_point_string - obtain a string representation of a
+	given code; used for logging and debugging
+-------------------------------------------------*/
+
+static const char *code_point_string(unicode_char ch)
 {
 	static char buf[16];
 	const char *result = buf;
 
 	switch(ch)
 	{
+		/* check some magic values */
 		case '\0':	strcpy(buf, "\\0");		break;
 		case '\r':	strcpy(buf, "\\r");		break;
 		case '\n':	strcpy(buf, "\\n");		break;
 		case '\t':	strcpy(buf, "\\t");		break;
 
 		default:
-			if (ch < 128)
+			if ((ch >= 32) && (ch < 128))
 			{
+				/* seven bit ASCII is easy */
 				buf[0] = (char) ch;
 				buf[1] = '\0';
 			}
 			else if ((ch >= UCHAR_MAMEKEY_BEGIN) && (ch < UCHAR_MAMEKEY_BEGIN + 1024))
 			{
+				/* try to obtain a codename with input_code_name(); this can result in an empty string */
 				astring *astr = astring_alloc();
 				input_code_name(astr, (input_code) ch - UCHAR_MAMEKEY_BEGIN);
 				snprintf(buf, ARRAY_LENGTH(buf), "%s", astring_c(astr));
@@ -408,8 +416,13 @@ static const char *charstr(unicode_char ch)
 			}
 			else
 			{
-				snprintf(buf, ARRAY_LENGTH(buf), "U+%04X", (unsigned) ch);
+				/* empty string; resolve later */
+				buf[0] = '\0';
 			}
+
+			/* did we fail to resolve? if so, we have a last resort */
+			if (buf[0] == '\0')
+				snprintf(buf, ARRAY_LENGTH(buf), "U+%04X", (unsigned) ch);
 			break;
 	}
 	return result;
@@ -467,7 +480,7 @@ static int scan_keys(const input_port_entry *input_ports, mess_input_code *codes
 						code_count++;
 
 						if (LOG_INPUTX)
-							logerror("inputx: code=%i (%s) port=%i ipt->name='%s'\n", (int) code, charstr(code), port, ipt->name);
+							logerror("inputx: code=%i (%s) port=%i ipt->name='%s'\n", (int) code, code_point_string(code), port, ipt->name);
 					}
 				}
 				break;
@@ -595,9 +608,7 @@ int inputx_validitycheck(const game_driver *gamedrv, input_port_entry **memory)
 
 
 /***************************************************************************
-
-	Core
-
+    CORE IMPLEMENTATION
 ***************************************************************************/
 
 static mess_input_code *codes;
@@ -613,10 +624,8 @@ static TIMER_CALLBACK(inputx_timerproc);
 
 
 #ifdef ENABLE_DEBUGGER
-static void execute_input(int ref, int params, const char *param[])
-{
-	inputx_post_coded(param[0]);
-}
+static void execute_input(int ref, int params, const char *param[]);
+static void execute_dumpkbd(int ref, int params, const char *param[]);
 #endif /* ENABLE_DEBUGGER */
 
 
@@ -640,32 +649,6 @@ static void setup_keybuffer(running_machine *machine)
 
 
 
-/*-------------------------------------------------
-    dump_codes - output all natural keyboard data
-	to a text file
--------------------------------------------------*/
-
-static void dump_codes(void)
-{
-	FILE *f;
-	int i;
-
-	f = fopen("codes.txt", "w");
-	if (!f)
-		return;
-
-	if (codes)
-	{
-		for (i = 0; codes[i].ch; i++)
-		{
-			fprintf(f, "%-10d (%s)\n", codes[i].ch, charstr(codes[i].ch));
-		}
-	}
-	fclose(f);
-}
-
-
-
 void inputx_init(running_machine *machine)
 {
 	codes = NULL;
@@ -677,15 +660,16 @@ void inputx_init(running_machine *machine)
 
 #ifdef ENABLE_DEBUGGER
 	if (machine->debug_mode)
+	{
 		debug_console_register_command("input", CMDFLAG_NONE, 0, 1, 1, execute_input);
+		debug_console_register_command("dumpkbd", CMDFLAG_NONE, 0, 0, 1, execute_dumpkbd);
+	}
 #endif /* ENABLE_DEBUGGER */
 
 	/* posting keys directly only makes sense for a computer */
 	if (machine->gamedrv->flags & GAME_COMPUTER)
 	{
 		codes = build_codes(machine->input_ports);
-		if (DUMP_CODES)
-			dump_codes();
 		setup_keybuffer(machine);
 	}
 }
@@ -702,14 +686,14 @@ void inputx_setup_natural_keyboard(
 	charqueue_empty = charqueue_empty_;
 }
 
-int inputx_can_post(void)
+int inputx_can_post(running_machine *machine)
 {
 	return queue_chars || codes;
 }
 
-static key_buffer *get_buffer(void)
+static key_buffer *get_buffer(running_machine *machine)
 {
-	assert(inputx_can_post());
+	assert(inputx_can_post(machine));
 	return (key_buffer *) keybuffer;
 }
 
@@ -776,9 +760,9 @@ static int can_post_key_alternate(unicode_char ch)
 
 
 
-int inputx_can_post_key(unicode_char ch)
+int inputx_can_post_key(running_machine *machine, unicode_char ch)
 {
-	return inputx_can_post() && (can_post_key_directly(ch) || can_post_key_alternate(ch));
+	return inputx_can_post(machine) && (can_post_key_directly(ch) || can_post_key_alternate(ch));
 }
 
 
@@ -812,11 +796,11 @@ static attotime choose_delay(unicode_char ch)
 
 
 
-static void internal_post_key(unicode_char ch)
+static void internal_post_key(running_machine *machine, unicode_char ch)
 {
 	key_buffer *keybuf;
 
-	keybuf = get_buffer();
+	keybuf = get_buffer(machine);
 
 	/* need to start up the timer? */
 	if (keybuf->begin_pos == keybuf->end_pos)
@@ -831,16 +815,16 @@ static void internal_post_key(unicode_char ch)
 
 
 
-static int buffer_full(void)
+static int buffer_full(running_machine *machine)
 {
 	key_buffer *keybuf;
-	keybuf = get_buffer();
+	keybuf = get_buffer(machine);
 	return ((keybuf->end_pos + 1) % (sizeof(keybuf->buffer) / sizeof(keybuf->buffer[0]))) == keybuf->begin_pos;
 }
 
 
 
-void inputx_postn_rate(const unicode_char *text, size_t text_len, attotime rate)
+void inputx_postn_rate(running_machine *machine, const unicode_char *text, size_t text_len, attotime rate)
 {
 	int last_cr = 0;
 	unicode_char ch;
@@ -850,9 +834,9 @@ void inputx_postn_rate(const unicode_char *text, size_t text_len, attotime rate)
 
 	current_rate = rate;
 
-	if (inputx_can_post())
+	if (inputx_can_post(machine))
 	{
-		while((text_len > 0) && !buffer_full())
+		while((text_len > 0) && !buffer_full(machine))
 		{
 			ch = *(text++);
 			text_len--;
@@ -868,13 +852,13 @@ void inputx_postn_rate(const unicode_char *text, size_t text_len, attotime rate)
 				if (LOG_INPUTX)
 				{
 					code = find_code(ch);
-					logerror("inputx_postn(): code=%i (%s) port=%i ipt->name='%s'\n", (int) ch, charstr(ch), code ? code->port[0] : -1, (code && code->ipt[0]) ? code->ipt[0]->name : "<null>");
+					logerror("inputx_postn(): code=%i (%s) port=%i ipt->name='%s'\n", (int) ch, code_point_string(ch), code ? code->port[0] : -1, (code && code->ipt[0]) ? code->ipt[0]->name : "<null>");
 				}
 
 				if (can_post_key_directly(ch))
 				{
 					/* we can post this key in the queue directly */
-					internal_post_key(ch);
+					internal_post_key(machine, ch);
 				}
 				else if (can_post_key_alternate(ch))
 				{
@@ -885,7 +869,7 @@ void inputx_postn_rate(const unicode_char *text, size_t text_len, attotime rate)
 					while(*s)
 					{
 						s += uchar_from_utf8(&ch, s, strlen(s));
-						internal_post_key(ch);
+						internal_post_key(machine, ch);
 					}
 				}
 			}
@@ -904,7 +888,7 @@ static TIMER_CALLBACK(inputx_timerproc)
 	key_buffer *keybuf;
 	attotime delay;
 
-	keybuf = get_buffer();
+	keybuf = get_buffer(machine);
 
 	if (queue_chars)
 	{
@@ -948,7 +932,7 @@ static TIMER_CALLBACK(inputx_timerproc)
 	called from core to allow for natural keyboard	
 -------------------------------------------------*/
 
-void mess_input_port_update_hook(int portnum, UINT32 *digital)
+void mess_input_port_update_hook(running_machine *machine, int portnum, UINT32 *digital)
 {
 	const key_buffer *keybuf;
 	const mess_input_code *code;
@@ -956,9 +940,9 @@ void mess_input_port_update_hook(int portnum, UINT32 *digital)
 	int i;
 	UINT32 value;
 
-	if (inputx_can_post())
+	if (inputx_can_post(machine))
 	{
-		keybuf = get_buffer();
+		keybuf = get_buffer(machine);
 
 		/* is the key down right now? */
 		if (keybuf->status_keydown && (keybuf->begin_pos != keybuf->end_pos))
@@ -971,10 +955,10 @@ void mess_input_port_update_hook(int portnum, UINT32 *digital)
 			if (code != NULL)
 			{
 				for (i = 0; i < ARRAY_LENGTH(code->ipt) && (code->ipt[i] != NULL); i++)
-				{
+			{
 					if (code->port[i] == portnum)
-					{
-						value = code->ipt[i]->mask;
+				{
+					value = code->ipt[i]->mask;
 						*digital |= value;
 					}
 				}
@@ -1052,10 +1036,10 @@ const char *inputx_key_name(unicode_char ch)
 
 /* --------------------------------------------------------------------- */
 
-int inputx_is_posting(void)
+int inputx_is_posting(running_machine *machine)
 {
 	const key_buffer *keybuf;
-	keybuf = get_buffer();
+	keybuf = get_buffer(machine);
 	return (keybuf->begin_pos != keybuf->end_pos) || (charqueue_empty && !charqueue_empty());
 }
 
@@ -1067,7 +1051,7 @@ int inputx_is_posting(void)
 
 ***************************************************************************/
 
-void inputx_postn_coded_rate(const char *text, size_t text_len, attotime rate)
+void inputx_postn_coded_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
 {
 	size_t i, j, key_len, increment;
 	unicode_char ch;
@@ -1131,7 +1115,7 @@ void inputx_postn_coded_rate(const char *text, size_t text_len, attotime rate)
 		}
 
 		if (ch)
-			inputx_postc_rate(ch, rate);
+			inputx_postc_rate(machine, ch, rate);
 		i += increment;
 	}
 }
@@ -1144,45 +1128,45 @@ void inputx_postn_coded_rate(const char *text, size_t text_len, attotime rate)
 
 ***************************************************************************/
 
-void inputx_postn(const unicode_char *text, size_t text_len)
+void inputx_postn(running_machine *machine, const unicode_char *text, size_t text_len)
 {
-	inputx_postn_rate(text, text_len, attotime_make(0, 0));
+	inputx_postn_rate(machine, text, text_len, attotime_make(0, 0));
 }
 
 
 
-void inputx_post_rate(const unicode_char *text, attotime rate)
+void inputx_post_rate(running_machine *machine, const unicode_char *text, attotime rate)
 {
 	size_t len = 0;
 	while(text[len])
 		len++;
-	inputx_postn_rate(text, len, rate);
+	inputx_postn_rate(machine, text, len, rate);
 }
 
 
 
-void inputx_post(const unicode_char *text)
+void inputx_post(running_machine *machine, const unicode_char *text)
 {
-	inputx_post_rate(text, attotime_make(0, 0));
+	inputx_post_rate(machine, text, attotime_make(0, 0));
 }
 
 
 
-void inputx_postc_rate(unicode_char ch, attotime rate)
+void inputx_postc_rate(running_machine *machine, unicode_char ch, attotime rate)
 {
-	inputx_postn_rate(&ch, 1, rate);
+	inputx_postn_rate(machine, &ch, 1, rate);
 }
 
 
 
-void inputx_postc(unicode_char ch)
+void inputx_postc(running_machine *machine, unicode_char ch)
 {
-	inputx_postc_rate(ch, attotime_make(0, 0));
+	inputx_postc_rate(machine, ch, attotime_make(0, 0));
 }
 
 
 
-void inputx_postn_utf16_rate(const utf16_char *text, size_t text_len, attotime rate)
+void inputx_postn_utf16_rate(running_machine *machine, const utf16_char *text, size_t text_len, attotime rate)
 {
 	size_t len = 0;
 	unicode_char c;
@@ -1193,7 +1177,7 @@ void inputx_postn_utf16_rate(const utf16_char *text, size_t text_len, attotime r
 	{
 		if (len == (sizeof(buf) / sizeof(buf[0])))
 		{
-			inputx_postn(buf, len);
+			inputx_postn(machine, buf, len);
 			len = 0;
 		}
 
@@ -1232,36 +1216,36 @@ void inputx_postn_utf16_rate(const utf16_char *text, size_t text_len, attotime r
 		}
 		buf[len++] = c;
 	}
-	inputx_postn_rate(buf, len, rate);
+	inputx_postn_rate(machine, buf, len, rate);
 }
 
 
 
-void inputx_postn_utf16(const utf16_char *text, size_t text_len)
+void inputx_postn_utf16(running_machine *machine, const utf16_char *text, size_t text_len)
 {
-	inputx_postn_utf16_rate(text, text_len, attotime_make(0, 0));
+	inputx_postn_utf16_rate(machine, text, text_len, attotime_make(0, 0));
 }
 
 
 
-void inputx_post_utf16_rate(const utf16_char *text, attotime rate)
+void inputx_post_utf16_rate(running_machine *machine, const utf16_char *text, attotime rate)
 {
 	size_t len = 0;
 	while(text[len])
 		len++;
-	inputx_postn_utf16_rate(text, len, rate);
+	inputx_postn_utf16_rate(machine, text, len, rate);
 }
 
 
 
-void inputx_post_utf16(const utf16_char *text)
+void inputx_post_utf16(running_machine *machine, const utf16_char *text)
 {
-	inputx_post_utf16_rate(text, attotime_make(0, 0));
+	inputx_post_utf16_rate(machine, text, attotime_make(0, 0));
 }
 
 
 
-void inputx_postn_utf8_rate(const char *text, size_t text_len, attotime rate)
+void inputx_postn_utf8_rate(running_machine *machine, const char *text, size_t text_len, attotime rate)
 {
 	size_t len = 0;
 	unicode_char buf[256];
@@ -1272,7 +1256,7 @@ void inputx_postn_utf8_rate(const char *text, size_t text_len, attotime rate)
 	{
 		if (len == (sizeof(buf) / sizeof(buf[0])))
 		{
-			inputx_postn(buf, len);
+			inputx_postn(machine, buf, len);
 			len = 0;
 		}
 
@@ -1286,49 +1270,49 @@ void inputx_postn_utf8_rate(const char *text, size_t text_len, attotime rate)
 		text_len -= rc;
 		buf[len++] = c;
 	}
-	inputx_postn_rate(buf, len, rate);
+	inputx_postn_rate(machine, buf, len, rate);
 }
 
 
 
-void inputx_postn_utf8(const char *text, size_t text_len)
+void inputx_postn_utf8(running_machine *machine, const char *text, size_t text_len)
 {
-	inputx_postn_utf8_rate(text, text_len, attotime_make(0, 0));
+	inputx_postn_utf8_rate(machine, text, text_len, attotime_make(0, 0));
 }
 
 
 
-void inputx_post_utf8_rate(const char *text, attotime rate)
+void inputx_post_utf8_rate(running_machine *machine, const char *text, attotime rate)
 {
-	inputx_postn_utf8_rate(text, strlen(text), rate);
+	inputx_postn_utf8_rate(machine, text, strlen(text), rate);
 }
 
 
 
-void inputx_post_utf8(const char *text)
+void inputx_post_utf8(running_machine *machine, const char *text)
 {
-	inputx_post_utf8_rate(text, attotime_make(0, 0));
+	inputx_post_utf8_rate(machine, text, attotime_make(0, 0));
 }
 
 
 
-void inputx_post_coded(const char *text)
+void inputx_post_coded(running_machine *machine, const char *text)
 {
-	inputx_postn_coded(text, strlen(text));
+	inputx_postn_coded(machine, text, strlen(text));
 }
 
 
 
-void inputx_post_coded_rate(const char *text, attotime rate)
+void inputx_post_coded_rate(running_machine *machine, const char *text, attotime rate)
 {
-	inputx_postn_coded_rate(text, strlen(text), rate);
+	inputx_postn_coded_rate(machine, text, strlen(text), rate);
 }
 
 
 
-void inputx_postn_coded(const char *text, size_t text_len)
+void inputx_postn_coded(running_machine *machine, const char *text, size_t text_len)
 {
-	inputx_postn_coded_rate(text, text_len, attotime_make(0, 0));
+	inputx_postn_coded_rate(machine, text, text_len, attotime_make(0, 0));
 }
 
 
@@ -1475,3 +1459,97 @@ int input_category_active(running_machine *machine, int category)
 	}
 	return FALSE;
 }
+
+
+
+/***************************************************************************
+    DEBUGGER SUPPORT
+***************************************************************************/
+
+/*-------------------------------------------------
+    execute_input - debugger command to enter
+	natural keyboard input
+-------------------------------------------------*/
+
+#ifdef ENABLE_DEBUGGER
+static void execute_input(int ref, int params, const char *param[])
+{
+	inputx_post_coded(Machine, param[0]);
+}
+#endif /* ENABLE_DEBUGGER */
+
+
+
+/*-------------------------------------------------
+    execute_dumpkbd - debugger command to natural
+	keyboard codes
+-------------------------------------------------*/
+
+#ifdef ENABLE_DEBUGGER
+static void execute_dumpkbd(int ref, int params, const char *param[])
+{
+	const char *filename;
+	FILE *file = NULL;
+	const mess_input_code *code;
+	char buffer[512];
+	size_t pos;
+	int i, j;
+	size_t left_column_width = 24;
+
+	/* was there a file specified? */
+	filename = (params > 0) ? param[0] : NULL;
+	if (filename != NULL)
+	{
+		/* if so, open it */
+		file = fopen(filename, "w");
+		if (file == NULL)
+		{
+			debug_console_printf("Cannot open \"%s\"\n", filename);
+			return;
+		}
+	}
+
+	if ((codes != NULL) && (codes[0].ch != 0))
+	{
+		/* loop through all codes */
+		for (i = 0; codes[i].ch; i++)
+		{
+			code = &codes[i];
+			pos = 0;
+
+			/* describe the character code */
+			pos += snprintf(&buffer[pos], ARRAY_LENGTH(buffer) - pos, "%08X (%s) ",
+				code->ch,
+				code_point_string(code->ch));
+
+			/* pad with spaces */
+			while(pos < left_column_width)
+				buffer[pos++] = ' ';
+			buffer[pos] = '\0';
+
+			/* identify the keys used */
+			for (j = 0; j < ARRAY_LENGTH(code->ipt) && (code->ipt[j] != NULL); j++)
+			{
+				pos += snprintf(&buffer[pos], ARRAY_LENGTH(buffer) - pos, "%s'%s'",
+					(j > 0) ? ", " : "",
+					code->ipt[j]->name);
+			}
+
+			/* and output it as appropriate */
+			if (file != NULL)
+				fprintf(file, "%s\n", buffer);
+			else
+				debug_console_printf("%s\n", buffer);
+		}
+	}
+	else
+	{
+		debug_console_printf("No natural keyboard support\n");
+	}
+
+	/* cleanup */
+	if (file != NULL)
+		fclose(file);
+
+}
+#endif /* ENABLE_DEBUGGER */

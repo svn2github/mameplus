@@ -1910,7 +1910,7 @@ MACHINE_RESET( megaduck )
 }
 
 /*
- Map megaduck video related area on to regular Gameboy video area
+ Map megaduck video related area on to regular Game Boy video area
 
  Different locations of the video registers:
  Register      GameBoy    MegaDuck

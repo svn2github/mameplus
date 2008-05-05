@@ -459,7 +459,7 @@ static void gb_update_scanline( running_machine *machine ) {
 	profiler_mark(PROFILER_END);
 }
 
-/* --- Super Gameboy Specific --- */
+/* --- Super Game Boy Specific --- */
 
 INLINE void sgb_update_sprites (void)
 {
@@ -792,7 +792,7 @@ static void sgb_update_scanline( running_machine *machine ) {
 	profiler_mark(PROFILER_END);
 }
 
-/* --- Gameboy Color Specific --- */
+/* --- Game Boy Color Specific --- */
 
 INLINE void cgb_update_sprites ( running_machine *machine ) {
 	bitmap_t *bitmap = tmpbitmap;
@@ -1367,7 +1367,7 @@ static TIMER_CALLBACK(gb_lcd_timer_proc)
 			gb_lcd.oam_locked = UNLOCKED;
 			gb_lcd.vram_locked = UNLOCKED;
 			/*
-				There seems to a kind of feature in the gameboy hardware when the lowest bits of the
+				There seems to a kind of feature in the Game Boy hardware when the lowest bits of the
 				SCROLLX register equals 3 or 7, then the delayed M0 irq is triggered 4 cycles later
 				than usual.
 				The SGB probably has the same bug.
@@ -1598,7 +1598,7 @@ static TIMER_CALLBACK(gbc_lcd_timer_proc)
 			gb_lcd.oam_locked = UNLOCKED;
 			gb_lcd.vram_locked = UNLOCKED;
 			/*
-				There seems to a kind of feature in the gameboy hardware when the lowest bits of the
+				There seems to a kind of feature in the Game Boy hardware when the lowest bits of the
 				SCROLLX register equals 3 or 7, then the delayed M0 irq is triggered 4 cycles later
 				than usual.
 				The SGB probably has the same bug.
