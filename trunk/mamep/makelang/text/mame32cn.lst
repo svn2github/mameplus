@@ -1594,6 +1594,7 @@ insectx	杀虫战记 (世界版)	杀虫战记 (世界版)	Taito Corporation Japan
 champbwl	冠军保龄球	冠军保龄球	Seta / Romstar Inc.
 raimais	光速飞跃车 (世界版)	光速飞跃车 (世界版)	Taito Corporation Japan
 raimaisj	光速飞跃车 (日版)	光速飞跃车 (日版)	Taito Corporation
+raimaijo	光速飞跃车 (日版 / First Revision)	光速飞跃车 (日版 / First Revision)	Taito Corporation
 kurikint	功里金团 (世界版)	功里金团 (世界版)	Taito Corporation Japan
 kurikinu	功里金团 (美版)	功里金团 (美版)	Taito America Corporation
 kurikinj	功里金团 (日版)	功里金团 (日版)	Taito Corporation
@@ -1821,7 +1822,7 @@ landgear	飞行模拟	飞行模拟	Taito
 dendeg	电车向前走 (日版)	电车向前走 (日版)	Taito
 dendegx	电车向前走 Ex (日版)	电车向前走 Ex (日版)	Taito
 dendeg2	电车向前走 2 (日版)	电车向前走 2 (日版)	Taito
-dendeg2x	电车向前走 2 Ex (日版)	电车向前走 Go 2 Ex (日版)	Taito
+dendeg2x	电车向前走 2 Ex (日版)	电车向前走 2 Ex (日版)	Taito
 sidebs	机动赛车 (日版)	机动赛车 (日版)	Taito
 sidebs2	机动赛车 2 (North/South America)	机动赛车 2 (North/South America)	Taito
 sidebs2j	机动赛车 2 (日版)	机动赛车 2 (日版)	Taito
@@ -2100,6 +2101,7 @@ madgearj	疯狂机车 (日版)	疯狂机车 (日版)	Capcom
 ledstorm	道路风暴 (美版)	道路风暴 (美版)	Capcom
 ledstrm2	道路风暴 2011 (美版)	道路风暴 2011 (美版)	Capcom
 forgottn	失落的世界 (美版)	失落的世界 (美版)	Capcom
+forgott1	失落的世界 (世界版?)	失落的世界 (世界版?)	Capcom
 lostwrld	失落的世界 (日版)	失落的世界 (日版)	Capcom
 ghouls	大魔界村 (世界版)	大魔界村 (世界版)	Capcom
 ghoulsu	大魔界村 (美版)	大魔界村 (美版)	Capcom
@@ -2108,7 +2110,8 @@ strider	出击飞龙 (美版 第1套)	出击飞龙 (美版 第1套)	Capcom
 stridrua	出击飞龙 (美版 第2套)	出击飞龙 (美版 第2套)	Capcom
 striderj	出击飞龙 (日版 第1套)	出击飞龙 (日版 第1套)	Capcom
 stridrja	出击飞龙 (日版 第2套)	出击飞龙 (日版 第2套)	Capcom
-dynwar	吞食天地 (美版)	吞食天地 (美版)	Capcom
+dynwar	吞食天地 (美版 第1套)	吞食天地 (美版 第1套)	Capcom
+dynwaru	吞食天地 (美版 第2套)	吞食天地 (美版 第2套)	Capcom
 dynwarj	吞食天地 (日版)	吞食天地 (日版)	Capcom
 willow	威洛之旅 (美版)	威洛之旅 (美版)	Capcom
 willowj	威洛之旅 (日版, 日语)	威洛之旅 (日版, 日语)	Capcom
@@ -2121,6 +2124,7 @@ ffightua	快打旋风 (美版 900112)	快打旋风 (美版 900112)	Capcom
 ffightub	快打旋风 (美版 900613)	快打旋风 (美版 900613)	Capcom
 ffightj	快打旋风 (日版)	快打旋风 (日版)	Capcom
 ffightj1	快打旋风 (日版 900305)	快打旋风 (日版 900305)	Capcom
+ffightj2	快打旋风 (日版 900112)	快打旋风 (日版 900112)	Capcom
 1941	1941 - 反击战 (世界版)	1941 - 反击战 (世界版)	Capcom
 1941j	1941 - 反击战 (日版)	1941 - 反击战 (日版)	Capcom
 mercs	战场之狼 II (世界版 900302)	战场之狼 II (世界版 900302)	Capcom
@@ -2320,7 +2324,8 @@ ddsomjr1	龙与地下城 2 - 暗黑秘影 (日版 960206)	龙与地下城 2 - 暗黑秘影 (日版 960
 ddsomj	龙与地下城 2 - 暗黑秘影 (日版 960619)	龙与地下城 2 - 暗黑秘影 (日版 960619)	Capcom
 ddsoma	龙与地下城 2 - 暗黑秘影 (亚洲版 960619)	龙与地下城 2 - 暗黑秘影 (亚洲版 960619)	Capcom
 ddsomb	龙与地下城 2 - 暗黑秘影 (巴西版 960223)	龙与地下城 2 - 暗黑秘影 (巴西版 960223)	Capcom
-sfa2	少年街霸 2 (美版 960306)	少年街霸 2 (美版 960306)	Capcom
+sfa2	少年街霸 2 (欧洲版 960229)	少年街霸 2 (欧洲版 960229)	Capcom
+sfa2u	少年街霸 2 (美版 960306)	少年街霸 2 (美版 960306)	Capcom
 sfz2j	少年街霸 2 (日版 960227)	少年街霸 2 (日版 960227)	Capcom
 sfz2a	少年街霸 2 (亚洲版 960227)	少年街霸 2 (亚洲版 960227)	Capcom
 sfz2b	少年街霸 2 (巴西版 960531)	少年街霸 2 (巴西版 960531)	Capcom
@@ -5348,7 +5353,8 @@ gauntdl	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	圣铠传说 - 暗黑之遗产 (版本 DL 2.52
 gauntd24	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	Midway Games
 cartfury	狂热赛车	狂热赛车	Midway Games
 tm	触摸大师 (v3.00 Euro)	触摸大师 (v3.00 Euro)	Midway
-tm3k	触摸大师 3000 (v5.01 标准)	触摸大师 3000 (v5.01 标准)	Midway
+tm3k	触摸大师 3000 (v5.02 标准)	触摸大师 3000 (v5.02 标准)	Midway
+tm3ka	触摸大师 3000 (v5.01 标准)	触摸大师 3000 (v5.01 标准)	Midway
 tm4k	触摸大师 4000 (v6.02 标准)	触摸大师 4000 (v6.02 标准)	Midway
 tm5k	触摸大师 5000 (v7.10 标准)	触摸大师 5000 (v7.10 标准)	Midway
 tm7k	触摸大师 7000 (v8.00 标准)	触摸大师 7000 (v8.00 标准)	Midway
@@ -5465,10 +5471,11 @@ raiden2b	雷电 II (第3套, 日版)	雷电 II (第3套, 日版)	Seibu Kaihatsu
 raiden2c	雷电 II (第4套, 日版)	雷电 II (第4套, 日版)	Seibu Kaihatsu
 raiden2d	雷电 II (第5套)	雷电 II (第5套)	Seibu Kaihatsu
 raiden2e	雷电 II (第6套, 容易的版本)	雷电 II (第6套, 容易的版本)	Seibu Kaihatsu
+raiden2f	雷电 II (第7套)	雷电 II (第7套)	Seibu Kaihatsu
 raidndx	雷电DX (第1套)	雷电DX (第1套)	Seibu Kaihatsu
-raidndxa	雷电DX (第2套)	雷电DX (第2套)	Seibu Kaihatsu
-raidndxj	雷电DX (日版)	雷电DX (日版)	Seibu Kaihatsu
-raidndxm	雷电DX (Metrotainment license)	雷电DX (Metrotainment license)	Seibu Kaihatsu
+raidndxa	雷电 DX (第2套)	雷电 DX (第2套)	Seibu Kaihatsu
+raidndxj	雷电 DX (日版)	雷电 DX (日版)	Seibu Kaihatsu
+raidndxm	雷电 DX (Metrotainment license)	雷电 DX (Metrotainment license)	Seibu Kaihatsu
 zeroteam	零组特攻队 (第1套)	零组特攻队 (第1套)	Seibu Kaihatsu
 zeroteaa	零组特攻队 (第2套)	零组特攻队 (第2套)	Seibu Kaihatsu
 zeroteab	零组特攻队 (第3套)	零组特攻队 (第3套)	Seibu Kaihatsu
@@ -5522,7 +5529,8 @@ weststry	勇士们 - 血兄弟	勇士们 - 血兄弟	bootleg
 skysmash	空中打击	空中打击	Nihon System
 legionna	格斗贵族 (世界版)	格斗贵族 (世界版)	Tad
 legionnu	格斗贵族 (美版)	格斗贵族 (美版)	Tad (Fabtek license)
-heatbrl	狂热印地安 (世界版)	狂热印地安 (世界版)	Tad
+heatbrl	狂热印地安 (世界版 版本 3)	狂热印地安 (世界版 版本 3)	Tad
+heatbrl2	狂热印地安 (世界版 版本 2)	狂热印地安 (世界版 版本 2)	Tad
 heatbrlo	狂热印地安 (世界版 旧版)	狂热印地安 (世界版 旧版)	Tad
 heatbrlu	狂热印地安 (美版)	狂热印地安 (美版)	Tad
 godzilla	酷斯拉	酷斯拉	Banpresto
@@ -6134,6 +6142,7 @@ paradlx	华丽天堂	华丽天堂	Yun Sung
 tgtball	目标撞球 (裸体)	目标撞球 (裸体)	Yun Sung
 tgtballa	目标撞球	目标撞球	Yun Sung
 torus	试管方块	试管方块	Yun Sung
+paprazzi	Paparazzi	Paparazzi	Yun Sung
 madball	疯狂弹球 V2.0	疯狂弹球 V2.0	Yun Sung
 madballn	疯狂弹球 V2.0 (With Nudity)	疯狂弹球 V2.0 (With Nudity)	Yun Sung
 cannball	加农球气泡 (Yun Sung)	加农球气泡 (Yun Sung)	Yun Sung / Soft Vision
@@ -6832,11 +6841,12 @@ couplei	出双入对 (第3套)	出双入对 (第3套)	Merit
 pitboss2	赌场大亨 II	赌场大亨 II	Merit
 spitboss	超级赌场大亨	超级赌场大亨	Merit
 pitbossm	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
-megat3	非常接触 3	非常接触 3	Merit
-megat4	非常接触 IV	非常接触 IV	Merit
-megat4te	非常接触 IV Tournament Edition	非常接触 IV Tournament Edition	Merit
+megat3	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
+megat4	非常接触 IV (9255-40-01 ROE)	非常接触 IV (9255-40-01 ROE)	Merit
+megat4a	非常接触 IV (9255-40-01 ROD)	非常接触 IV (9255-40-01 ROD)	Merit
+megat4te	非常接触 IV 联赛版 (9255-50-01 ROD)	非常接触 IV 联赛版 (9255-50-01 ROD)	Merit
 megat5	非常接触 5	非常接触 5	Merit
-megat6	非常接触 6	非常接触 6	Merit
+megat6	非常接触 6 (9255-80-01 ROA)	非常接触 6 (9255-80-01 ROA)	Merit
 suprgolf	超级皇冠高尔夫	超级皇冠高尔夫	Nasco/Face?
 hotblock	俄罗斯方块解谜对战	俄罗斯方块解谜对战	Nics? / Nix?
 pntnpuzl	绘画与解谜	绘画与解谜	Century?
@@ -6901,7 +6911,7 @@ soccernw	新足球 (意大利)	新足球 (意大利)	bootleg
 saloon	酒吧(法语版, 加密版)	酒吧(法语版, 加密版)	Unknown
 snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 apple10	苹果 10 (Ver 1.21)	苹果 10 (Ver 1.21)	Sandii'
-tenballs	Ten Balls (Ver 1.05)	Ten Balls (Ver 1.05)	unknown
+tenballs	十球 (Ver 1.05)	十球 (Ver 1.05)	unknown
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
 cmv801	樱桃水果盘 (v8.01)	樱桃水果盘 (v8.01)	Corsica
