@@ -406,7 +406,7 @@ static const char *code_point_string(unicode_char ch)
 				buf[0] = (char) ch;
 				buf[1] = '\0';
 			}
-			else if ((ch >= UCHAR_MAMEKEY_BEGIN) && (ch < UCHAR_MAMEKEY_BEGIN + 1024))
+			else if (ch >= UCHAR_MAMEKEY_BEGIN)
 			{
 				/* try to obtain a codename with input_code_name(); this can result in an empty string */
 				astring *astr = astring_alloc();
@@ -955,10 +955,10 @@ void mess_input_port_update_hook(running_machine *machine, int portnum, UINT32 *
 			if (code != NULL)
 			{
 				for (i = 0; i < ARRAY_LENGTH(code->ipt) && (code->ipt[i] != NULL); i++)
-			{
-					if (code->port[i] == portnum)
 				{
-					value = code->ipt[i]->mask;
+					if (code->port[i] == portnum)
+					{
+						value = code->ipt[i]->mask;
 						*digital |= value;
 					}
 				}

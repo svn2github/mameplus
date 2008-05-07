@@ -1078,7 +1078,7 @@ C1996 MII
 C1996 MII
 
 
-ActualMegatouch 6 rom labels
+Actual Megatouch 6 rom labels
 --------------------------------
 
 9255-60-01
@@ -1138,6 +1138,7 @@ ROM_START( megat3te )
 	ROM_LOAD( "sc3980.u40",     0x000, 0x117, CRC(ee0cdab5) SHA1(216fef50a8a0f6a33b704d3501a4c5c3cbac2bad) )
 	ROM_LOAD( "sc3981-0a.u51",  0x000, 0x117, CRC(4fc750d0) SHA1(d09ff7a8c66aeb5c49e9fec84bd1521e3f5d8d0a) )
 ROM_END
+
 
 ROM_START( megat4 )
 	ROM_REGION( 0x400000, REGION_CPU1, 0 )

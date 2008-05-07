@@ -180,7 +180,7 @@ void mess_postdevice_init(running_machine *machine)
 			if (info.must_be_loaded)
 			{
 				//mamep: prevent MESS window from quitting
-				mame_printf_warning("Driver requires that device %s must have an image to load\n", info.name);
+				mame_printf_warning("Driver requires that device \"%s\" must have an image to load\n", info.instance_name);
 				_has_dummy_image = 1;
 			}
 		}

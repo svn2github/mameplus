@@ -458,10 +458,22 @@ static void get_device_instance_name(const machine_config *config, const device_
 
 image_device_info image_device_getinfo(const machine_config *config, const device_config *device)
 {
+	const device_config *this_device;
 	image_device_info info;
+	int found;
 
 	/* sanity checks */
 	assert((device->machine == NULL) || (device->machine->config == config));
+	if (device->machine == NULL)
+	{
+		found = FALSE;
+		for (this_device = image_device_first(config); this_device != NULL; this_device = image_device_next(this_device))
+		{
+			if (this_device == device)
+				found = TRUE;
+		}
+		assert(found);
+	}
 
 	/* clear return value */
 	memset(&info, 0, sizeof(info));
@@ -1196,7 +1208,7 @@ void image_message(const device_config *device, const char *format, ...)
 static int read_hash_config(const char *sysname, image_slot_data *image)
 {
 	hash_file *hashfile = NULL;
-	const struct hash_info *info = NULL;
+	const hash_info *info = NULL;
 
 	/* open the hash file */
 	hashfile = hashfile_open(sysname, FALSE, NULL);
