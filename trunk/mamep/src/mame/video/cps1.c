@@ -318,6 +318,10 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #include "driver.h"
 #include "cps1.h"
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 #define VERBOSE 0
 
 /********************************************************************
@@ -870,7 +874,7 @@ static const struct gfx_range mapper_RT22B_table[] =
 	// bank 2 = pin 14 (ROMs 3,7,11,15,19,21,26,28)
 	// bank 3 = pin 12 (ROMS 4,8,12,16,20,22,27,29)
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x4000, 0x53ff, 1 },
@@ -976,7 +980,7 @@ static const struct gfx_range mapper_VA63B_table[] =
 	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
 	// pins 12,13,14,15,16,17 are never enabled
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
@@ -1025,12 +1029,12 @@ static const struct gfx_range mapper_CD63B_table[] =
 #define mapper_PS63B	{ 0x8000, 0x8000, 0, 0 }, mapper_PS63B_table
 static const struct gfx_range mapper_PS63B_table[] =
 {
-	/* type            start   end     bank */
-	{ GFXTYPE_SCROLL1, 0x0000, 0x0fff, 0 },
-	{ GFXTYPE_SPRITES, 0x1000, 0x7fff, 0 },
+	/* type                              start   end     bank */
+	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
+	{ GFXTYPE_SPRITES,                   0x1000, 0x7fff, 0 },
 
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x8000, 0xdbff, 1 },
-	{ GFXTYPE_SCROLL3, 0xdc00, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3,                   0xdc00, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -1056,7 +1060,7 @@ static const struct gfx_range mapper_QD22B_table[] =
 	// verified from PAL dump:
 	// bank 0 = pin 19
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x3fff, 0 },
@@ -1130,7 +1134,7 @@ static const struct gfx_range mapper_pang3_table[] =
 };
 
 
-//#ifdef MESS
+#ifdef MESS
 
 #define mapper_sfzch	{ 0x20000, 0, 0, 0 }, mapper_sfzch_table
 static const struct gfx_range mapper_sfzch_table[] =
@@ -1140,7 +1144,7 @@ static const struct gfx_range mapper_sfzch_table[] =
 	{ 0 }
 };
 
-//#endif
+#endif
 
 
 
@@ -1164,7 +1168,7 @@ static const struct CPS1config cps1_config_table[]=
 {
 	/* name       CPSB         gfx mapper   in2  in3  out2   kludge */
 	{"forgottn", CPS_B_01,     mapper_LWCHR },
-	{"forgottu", CPS_B_01,     mapper_LWCHR },
+	{"forgott1", CPS_B_01,     mapper_LWCHR },
 	{"lostwrld", CPS_B_01,     mapper_LWCHR },
 	{"ghouls",   CPS_B_01,     mapper_DM620 },
 	{"ghoulsu",  CPS_B_01,     mapper_DM620 },
@@ -1245,7 +1249,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m4",    HACK_B_1, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1306,9 +1310,9 @@ static const struct CPS1config cps1_config_table[]=
 	{"wof3sj",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
 	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
 	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
-	//#ifdef MESS
+	#ifdef MESS
 	{"sfzch",    CPS_B_21_DEF, mapper_sfzch },
-	//#endif
+	#endif
 
     /* CPS2 games */
 	{"cps2",     CPS_B_21_DEF, mapper_cps2 },
@@ -1452,18 +1456,20 @@ static MACHINE_RESET( cps )
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
 		rom[0xe5332/2] = 0x6014;
 	}
-	if (strcmp(gamename, "dinoh" )==0)
+	if (strcmp(gamename, "sf2m2" )==0)
+	{
+		/* Patch out protection check */
+		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+		rom[0xc0670/2] = 0x4e71;
+	}
+	if ((strcmp(gamename, "dinoh" )==0) ||
+		(strcmp(gamename, "dinoha" )==0))
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
 		rom[0xaacf4/2] = 0x4e71;
 	}
-	if (strcmp(gamename, "dinoha" )==0)
-	{
-		/* Patch out Q-Sound test */
-		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
-		rom[0xaacf4/2] = 0x4e71;
-	}
+
 #if 0
 	if (strcmp(gamename, "sf2accp2" )==0)
 	{
@@ -1747,33 +1753,33 @@ void cps1_get_video_base(void )
 	if (cps1_game_config->bootleg_kludge == 1)
 	{
 		cps1_cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = -0x0c;
 		scroll2xoff = -0x0e;
 		scroll3xoff = -0x10;
 	}
 	else if (cps1_game_config->bootleg_kludge == 2)
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
 	else if (cps1_game_config->bootleg_kludge == 4)
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
 	}
 	else
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
-	cps1_other=cps1_base(CPS1_OTHER_BASE,cps1_other_size);
+	cps1_other = cps1_base(CPS1_OTHER_BASE,cps1_other_size);
 
 	/* Get scroll values */
 	cps1_scroll1x = cps1_cps_a_regs[CPS1_SCROLL1_SCROLLX] + scroll1xoff;
@@ -1917,8 +1923,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-       roms have been mixed to be reproduced (ffightua) -- it looks like each column
-       should alternate between the left and right side of the 16x16 tiles */
+         roms have been mixed to be reproduced (ffightua) -- it looks like each column
+         should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -1998,7 +2004,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-    MACHINE_RESET_CALL(cps);
+	MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -2082,7 +2088,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-	{
+		{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);
