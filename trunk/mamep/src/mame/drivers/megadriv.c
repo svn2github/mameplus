@@ -53,6 +53,13 @@ Known Non-Issues (confirmed on Real Genesis)
 
 #define MEGADRIV_VDP_VRAM(address) megadrive_vdp_vram[(address)&0x7fff]
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+#ifdef MESS
+extern void setup_megadriv_custom_mappers(running_machine *);
+#endif
+
 /* the same on all systems? */
 #define MASTER_CLOCK		53693100
 /* timing details */
@@ -4816,6 +4823,9 @@ MACHINE_RESET( megadriv )
 
 	memset(megadrive_ram,0x00,0x10000);
 
+#ifdef MESS
+	setup_megadriv_custom_mappers(machine);
+#endif
 
 }
 
@@ -5244,4 +5254,5 @@ void megatech_set_megadrive_z80_as_megadrive_z80(running_machine *machine)
 	memory_install_readwrite8_handler(machine, 1, ADDRESS_SPACE_PROGRAM, 0x7f00, 0x7fff, 0, 0, megadriv_z80_vdp_read, megadriv_z80_vdp_write);
 	memory_install_readwrite8_handler(machine, 1, ADDRESS_SPACE_PROGRAM, 0x8000, 0xffff, 0, 0, z80_read_68k_banked_data, z80_write_68k_banked_data);
 }
+
 
