@@ -1393,6 +1393,12 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
 			parse_ini_file(options, gparent->name);
 		if (parent != NULL)
 			parse_ini_file(options, parent->name);
+
+#ifdef USE_IPS
+		// mamep: hack, DO NOT INHERIT IPS CONFIGURATION
+		options_set_string(options, OPTION_IPS, NULL, OPTION_PRIORITY_INI);
+#endif /* USE_IPS */		
+		
 		parse_ini_file(options, driver->name);
 	}
 }
@@ -1418,11 +1424,6 @@ int parse_ini_file(core_options *options, const char *name)
 	astring_free(fname);
 	if (filerr != FILERR_NONE)
 		return FALSE;
-
-#ifdef USE_IPS
-	// HACK: DO NOT INHERIT IPS CONFIGURATION
-	options_set_string(options, OPTION_IPS, NULL, OPTION_PRIORITY_INI);
-#endif /* USE_IPS */
 
 	/* parse the file and close it */
 	mame_printf_verbose("Parsing %s.ini\n", name);
