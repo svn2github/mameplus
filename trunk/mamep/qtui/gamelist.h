@@ -4,31 +4,12 @@
 #include <QtGui>
 #include "utils.h"
 
-class MameThread : public QThread
-{
-	Q_OBJECT
-
-public:
-	MyQueue queue;
-
-	MameThread(QObject *parent = 0);
-	~MameThread();
-
-	void load();
-
-protected:
-	void run();
-
-private:
-	QMutex mutex;
-	bool abort;
-};
-
 class AuditROMThread : public QThread
 {
 	Q_OBJECT
 
 public:
+	~AuditROMThread();
 	void audit();
 
 signals:
@@ -38,6 +19,9 @@ signals:
 
 protected:
 	void run();
+
+private:
+	QMutex mutex;
 };
 
 class LoadIconThread : public QThread
@@ -47,17 +31,21 @@ class LoadIconThread : public QThread
 public:
 	MyQueue iconQueue;
 
-	LoadIconThread(QObject *parent = 0);
+//	LoadIconThread(QObject *parent = 0);
 	~LoadIconThread();
 
 	void load();
+
+signals:
+	void icoUpdated(QString);
 
 protected:
 	void run();
 
 private:
+	bool done;
+	bool restart;
 	QMutex mutex;
-	bool abort;
 };
 
 class UpdateSelectionThread : public QThread
@@ -70,13 +58,13 @@ public:
 	QString mameinfoText;
 	QString storyText;
 
-	QPixmap pmSnap;
-	QPixmap pmFlyer;
-	QPixmap pmCabinet;
-	QPixmap pmMarquee;
-	QPixmap pmTitle;
-	QPixmap pmCPanel;
-	QPixmap pmPCB;
+	QByteArray pmdataSnap;
+	QByteArray pmdataFlyer;
+	QByteArray pmdataCabinet;
+	QByteArray pmdataMarquee;
+	QByteArray pmdataTitle;
+	QByteArray pmdataCPanel;
+	QByteArray pmdataPCB;
 
 	UpdateSelectionThread(QObject *parent = 0);
 	~UpdateSelectionThread();
@@ -167,20 +155,8 @@ public:
 	QProcess *loadProc;
 	QString mameOutputBuf;
 	QStringList xmlLines;
-	static QStringList phraseTranslatorList;
 	QTime loadTimer;
-	QTime verifyTimer;
-	QTime parseTimer;
-	QTime miscTimer;
-	QFile gamelistCache;
 	int numTotalGames;
-	int numGames;
-	int numCorrectGames;
-	int numMostlyCorrectGames;
-	int numIncorrectGames;
-	int numNotFoundGames;
-	int numUnknownGames;
-	int numSearchGames;
 	QString mameVersion;
 
 	QStringList folderList, mftrList, yearList, srcList, biosList;
@@ -213,13 +189,13 @@ public slots:
 	void switchProgress(int max, QString title);
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
 	void restoreSelection();
-	void setupIcon();
+	void setupIcon(QString);
 	void setupAudit();
 	void setupHistory();
 
 	void filterTimer();
 	void filterRegExpChanged();
-	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *);
+	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = 0);
 };
 
 class RomInfo : public QObject
@@ -251,7 +227,7 @@ public:
 	QHash<quint32, RomInfo *> crcRomInfoMap;
 	QHash<QString, BiosInfo *> nameBiosInfoMap;
 	int available;
-	QIcon icon;
+	QByteArray icondata;
 	TreeItem *pModItem;
 	QSet<QString> clones;
 

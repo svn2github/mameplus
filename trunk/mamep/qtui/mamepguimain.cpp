@@ -1,5 +1,7 @@
 #include "mamepguimain.h"
 
+#include <QtPlugin>
+
 // global variables
 MainWindow *win;
 QSettings guisettings("mamepgui.ini", QSettings::IniFormat);
@@ -114,7 +116,7 @@ void MainWindow::initHistory(QString title)
 		tb = tbHistory = new QTextBrowser(dockWidgetContents);
 	else if (title == "MAMEInfo")
 		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
-	else if (title == "Story")
+	else// if (title == "Story")
 		tb = tbStory = new QTextBrowser(dockWidgetContents);
 	
 	tb->setObjectName("textBrowser_" + title);
@@ -202,7 +204,7 @@ void MainWindow::init()
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
 	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
-	for (int i = 0; i < optCtrlList.count(); i++)
+	for (int i = 1; i < optCtrlList.count(); i++)
 	{
 		connect(optCtrlList[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
 				optUtils, SLOT(updateModel(QListWidgetItem *)));
@@ -262,6 +264,14 @@ void MainWindow::saveLayout()
 	guisettings.setValue("sort_column", treeViewGameList->header()->sortIndicatorSection());
 	guisettings.setValue("sort_reverse", (treeViewGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
 	guisettings.setValue("default_game", currentGame);
+
+	QString currentFolder = "";
+	if (win->treeFolders->currentItem()->parent())
+		currentFolder += win->treeFolders->currentItem()->parent()->text(0);
+	currentFolder += "/" + win->treeFolders->currentItem()->text(0);
+	
+
+	guisettings.setValue("folder_current", currentFolder);
 }
 
 void MainWindow::loadSettings()
@@ -337,10 +347,12 @@ Screenshot::Screenshot(const QString & title, QWidget *parent)
 void Screenshot::resizeEvent(QResizeEvent * /* event */)
 {
     QSize scaledSize = originalPixmap.size();
-    scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
-    if (!screenshotLabel->pixmap() || scaledSize != screenshotLabel->pixmap()->size())
-        updateScreenshotLabel();
+	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
+
+	if (!screenshotLabel->pixmap() || scaledSize != screenshotLabel->pixmap()->size())
+		updateScreenshotLabel();
 }
+
 //fixme: listen on label
 void Screenshot::mousePressEvent(QMouseEvent * event)
 {
@@ -348,16 +360,28 @@ void Screenshot::mousePressEvent(QMouseEvent * event)
 		win->log(objectName());
 }
 
-
-void Screenshot::setPixmap(const QPixmap &pixmap)
+void Screenshot::setPixmap(const QByteArray &pmdata)
 {
-    originalPixmap = pixmap;
+	QPixmap pm;
+	pm.loadFromData(pmdata);
+    originalPixmap = pm;
     updateScreenshotLabel();
 }
 
 void Screenshot::updateScreenshotLabel()
 {
-    screenshotLabel->setPixmap(originalPixmap.scaled(screenshotLabel->size(),
+    QSize scaledSize, origSize;
+	scaledSize = origSize = originalPixmap.size();
+	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
+
+	// do not enlarge
+	if (scaledSize.width() > origSize.width() || 
+		scaledSize.height() > origSize.height())
+	{
+		scaledSize = origSize;
+	}
+
+    screenshotLabel->setPixmap(originalPixmap.scaled(scaledSize,
                                                      Qt::KeepAspectRatio,
                                                      Qt::SmoothTransformation));
 }

@@ -7,22 +7,25 @@ class Utils : public QObject
 {
 Q_OBJECT
 public:
-	QIcon deficon;
+	QByteArray deficondata;
+	QByteArray defsnapdata;
+
 	QRegExp spaceRegex;
 	QProcess *loadProc;
 	
 	Utils(QObject *parent = 0);
 
-	QIcon loadIcon(const QString & gameName);
-	QIcon loadWinIco(QIODevice *device);
 	QString getViewString(const QModelIndex &index, int column) const;
-	QPixmap getScreenshot(const QString &, const QString &, const QSize &);
+	QByteArray getScreenshot(const QString &, const QString &);
 	QString getHistory(const QString &, const QString &);
 
 	QString capitalizeStr(const QString & str);
 	QString getPath(QString);
 	void tranaparentBg(QWidget *);
 	QString getMameVersion();
+
+signals:
+	void icoUpdated(QString);
 
 public slots:
 	void getMameVersionReadyReadStandardOutput();
@@ -40,8 +43,11 @@ public:
 	MyQueue(QObject *parent = 0);
 	void setSize(int);
 	QString dequeue();
-	void enqueue(const QString & str);
+	void enqueue(const QString &);
 	bool isEmpty() const;
+	bool contains(const QString &) const;
+	QString value(int);
+	int count() const;
 
 signals:
 	void logStatusUpdated(QString);

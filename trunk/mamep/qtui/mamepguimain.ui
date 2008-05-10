@@ -10,23 +10,22 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME GUI Plus! 0.9 alpha 1</string>
+   <string>MAME Plus! GUI 0.9 alpha 3</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget" >
+   <property name="geometry" >
+    <rect>
+     <x>260</x>
+     <y>47</y>
+     <width>104</width>
+     <height>337</height>
+    </rect>
+   </property>
    <layout class="QGridLayout" >
-    <property name="leftMargin" >
-     <number>0</number>
-    </property>
-    <property name="topMargin" >
-     <number>0</number>
-    </property>
-    <property name="rightMargin" >
-     <number>0</number>
-    </property>
-    <property name="bottomMargin" >
+    <property name="margin" >
      <number>0</number>
     </property>
     <item row="0" column="0" >
@@ -97,8 +96,25 @@
    <addaction name="menuOptions" />
    <addaction name="menuHelp" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" />
+  <widget class="QStatusBar" name="statusbar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>384</y>
+     <width>624</width>
+     <height>19</height>
+    </rect>
+   </property>
+  </widget>
   <widget class="QToolBar" name="toolBar" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>21</y>
+     <width>208</width>
+     <height>26</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>Toolbar</string>
    </property>
@@ -129,6 +145,14 @@
    <addaction name="actionAbout" />
   </widget>
   <widget class="QToolBar" name="toolBarSearch" >
+   <property name="geometry" >
+    <rect>
+     <x>208</x>
+     <y>21</y>
+     <width>416</width>
+     <height>26</height>
+    </rect>
+   </property>
    <property name="windowTitle" >
     <string>Search</string>
    </property>
@@ -143,8 +167,16 @@
    </attribute>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2" >
+   <property name="geometry" >
+    <rect>
+     <x>368</x>
+     <y>47</y>
+     <width>256</width>
+     <height>167</height>
+    </rect>
+   </property>
    <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle" >
     <string>GUI Log</string>
@@ -153,17 +185,16 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>256</width>
+      <height>145</height>
+     </rect>
+    </property>
     <layout class="QGridLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item row="0" column="0" >
@@ -173,8 +204,16 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_6" >
+   <property name="geometry" >
+    <rect>
+     <x>368</x>
+     <y>218</y>
+     <width>256</width>
+     <height>166</height>
+    </rect>
+   </property>
    <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle" >
     <string>MAME Log</string>
@@ -183,17 +222,16 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_12" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>256</width>
+      <height>144</height>
+     </rect>
+    </property>
     <layout class="QGridLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item row="0" column="0" >
@@ -203,6 +241,14 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_7" >
+   <property name="geometry" >
+    <rect>
+     <x>0</x>
+     <y>47</y>
+     <width>256</width>
+     <height>337</height>
+    </rect>
+   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Ignored" >
      <horstretch>0</horstretch>
@@ -210,7 +256,7 @@
     </sizepolicy>
    </property>
    <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures</set>
+    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
    <property name="windowTitle" >
     <string>Folder List</string>
@@ -219,21 +265,23 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_14" >
+    <property name="geometry" >
+     <rect>
+      <x>0</x>
+      <y>22</y>
+      <width>256</width>
+      <height>315</height>
+     </rect>
+    </property>
     <layout class="QGridLayout" >
-     <property name="leftMargin" >
-      <number>0</number>
-     </property>
-     <property name="topMargin" >
-      <number>0</number>
-     </property>
-     <property name="rightMargin" >
-      <number>0</number>
-     </property>
-     <property name="bottomMargin" >
+     <property name="margin" >
       <number>0</number>
      </property>
      <item row="0" column="0" >
       <widget class="QTreeWidget" name="treeFolders" >
+       <property name="headerHidden" >
+        <bool>true</bool>
+       </property>
        <column>
         <property name="text" >
          <string>1</string>
@@ -249,15 +297,20 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/32x32/applications-system.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/32x32/applications-system.png</normaloff>:/res/32x32/applications-system.png</iconset>
    </property>
    <property name="text" >
     <string>Default Options</string>
    </property>
   </action>
   <action name="actionRefresh" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/32x32/view-refresh.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/32x32/view-refresh.png</normaloff>:/res/32x32/view-refresh.png</iconset>
    </property>
    <property name="text" >
     <string>Refresh</string>
@@ -279,7 +332,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/32x32/help-browser.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/32x32/help-browser.png</normaloff>:/res/32x32/help-browser.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
@@ -290,7 +344,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-sicon.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-view-sicon.png</normaloff>:/res/mame32-view-sicon.png</iconset>
    </property>
    <property name="text" >
     <string>Small Icons</string>
@@ -301,7 +356,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-list.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-view-list.png</normaloff>:/res/mame32-view-list.png</iconset>
    </property>
    <property name="text" >
     <string>List</string>
@@ -312,7 +368,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-detail.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-view-detail.png</normaloff>:/res/mame32-view-detail.png</iconset>
    </property>
    <property name="text" >
     <string>Details</string>
@@ -326,7 +383,8 @@
     <bool>true</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-group.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-view-group.png</normaloff>:/res/mame32-view-group.png</iconset>
    </property>
    <property name="text" >
     <string>Grouped</string>
@@ -337,7 +395,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-view-licon.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-view-licon.png</normaloff>:/res/mame32-view-licon.png</iconset>
    </property>
    <property name="text" >
     <string>Large Icons</string>
@@ -348,7 +407,8 @@
     <bool>false</bool>
    </property>
    <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >:/res/mame32-show-snap.png</iconset>
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/mame32-show-snap.png</normaloff>:/res/mame32-show-snap.png</iconset>
    </property>
    <property name="text" >
     <string>Picture Area</string>

@@ -1,33 +1,53 @@
 ﻿[bug]
 **1 crash when scrolling gamel?
-1 保存完xml后 迅速点击选项 即可一击必杀 
 1 CJK path encoding
 
-[basic]
+[qt 4.4]
+QAbstractItemView Add autoScrollMargin property.    * [162547] Make the current index stay in the viewport when sorting.
+QTreeView 192104] scrollTo(PositionAtCenter) can scroll beyond the item if item is at 0
+
+[snapshot]
+args:
+dirpath, zipname, extname, gamename
+
+if !empty
+  return 
+
+iteratre split dirpath
+{
+  load path + gamename
+  if empty, add zip
+  if empty, add subdir
+  if empty recursively call cloneof
+  if empty recursively call romof?
+}
+
+if empty return default
+
+[todo]
+1 game counter in statusbar
+1 horz./vert. tab position
+1 could be cool to have behind the XX% - "name of the rom beeing audited"
+1 bios icons in folder list
+1 more responsive threading (separate snap/history loading, skip or delay invisible widget loading)
+1 s11n() in a working thread
+
 1 gui options +0.1
 1 path chooser dialog +0.1
 1 icon view, list view +0.1
 1*lst translation +0.1
 1*ips +0.2
 1*command.dat parsing with image +0.2
-
+* disable filters for 3D hardware
 1 adjust snap with a/r, with or without strething
-1 restore selected folder
 1 About page, some link to the test board
 1 iconized snap tab
-1 horz./vert. tab position
-1 could be cool to have behind the XX% - "name of the rom beeing audited"
-1 bios icons in folder list
 1 return update thread immediately if some folders doesnt even exist
 1 onclick to select ss tab
-1 preserve audit result when mamever changes
+* preserve audit result when mamever changes
 1 -driver_config
 1 ips doesnt inherit
 1 能像MAMEUIFX32在可用游戏图标一样，把无问题游戏，有问题游戏，不能玩游戏用不同的颜色加以区分
-
-P more responsive item selection (enque the snap/history loading thread)
-P more responsive threading (separate snap/history loading, skip or delay invisible widget loading)
-P s11n() in a working thread
 P folder list switching halts > 1s
 C replace optview with custom render
 C unify method to get inherited default value
@@ -66,3 +86,9 @@ C unify method to get inherited default value
 
 [ads]
 auditing roms several times faster than old mame32
+
+[config]
+configure -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde
+
+[test]
+ips does not inherit

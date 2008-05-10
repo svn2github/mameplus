@@ -167,7 +167,6 @@ void AuditROMThread::run()
 
 	foreach (QString dirpath, dirpaths)
 	{
-//		QString dirpath = utils->getPath(dirpath);
 		QDir dir(dirpath);
 
 		QStringList nameFilter;
@@ -206,6 +205,8 @@ void AuditROMThread::run()
 
 					quint32 crc = info.crc;
 					// file crc recognized
+					if (!gameinfo)
+						win->log(QString("err: %1").arg(gamename));
 					if (gameinfo->crcRomInfoMap.contains(crc))
 						gameinfo->crcRomInfoMap[crc]->available = true; 
 					//check rom for clones
@@ -224,11 +225,13 @@ void AuditROMThread::run()
 	}
 
 	win->log("audit 1");
+
 	//see if any rom of a game is not available
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
 		gameinfo = mamegame->gamenameGameInfoMap[gamename];
 		gameinfo->available = 1;
+
 		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
 		{
 			rominfo = gameinfo->crcRomInfoMap[crc];
@@ -264,50 +267,26 @@ void AuditROMThread::run()
 			}
 		}
 	}
+
 	win->log("audit 2");
 	emit progressSwitched(-1);
 }
 
-MameThread::MameThread(QObject *parent)
-: QThread(parent)
+AuditROMThread::~AuditROMThread()
 {
-	abort = false;
-}
-
-MameThread::~MameThread()
-{
-	mutex.lock();
-	abort = true;
-	mutex.lock();
-	
 	wait();
 }
 
-void MameThread::load()
-{
-	QMutexLocker locker(&mutex);
-
-	if (!isRunning())
-		start(LowPriority);
-}
-
-void MameThread::run()
-{
-
-}
-
+/*
 LoadIconThread::LoadIconThread(QObject *parent)
 : QThread(parent)
 {
-	abort = false;
 }
+*/
 
 LoadIconThread::~LoadIconThread()
 {
-	mutex.lock();
-	abort = true;
-	mutex.lock();
-	
+	done = true;
 	wait();
 }
 
@@ -315,19 +294,133 @@ void LoadIconThread::load()
 {
 	QMutexLocker locker(&mutex);
 
-	if (!isRunning())
+	if (isRunning())
+	{
+		restart = true;
+	}
+	else
+	{
+		restart = false;
+		done = false;
+		
 		start(LowPriority);
+	}
 }
 
 void LoadIconThread::run()
 {
-	while (!iconQueue.isEmpty() && !abort)
-	{
-		QString gameName = iconQueue.dequeue();
-		QIcon icon = utils->loadIcon(gameName);
+	GameInfo *gameInfo, *gameInfo2;
 
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-		gameinfo->icon = icon;
+	win->log(QString("count: %1").arg(mamegame->gamenameGameInfoMap.count()));
+
+	while(!done)
+	{
+		// iteratre split dirpath
+		QStringList dirpaths = icons_directory.split(";");
+		foreach (QString _dirpath, dirpaths)
+		{
+			QDir dir(_dirpath);
+			QString dirpath = utils->getPath(_dirpath);
+		
+			QStringList nameFilter;
+			nameFilter << "*.ico";
+			
+			// iterate all files in the path
+			QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+			for (int i = 0; i < files.count(); i++)
+			{
+				QString gameName = files[i].toLower().remove(".ico");
+
+				if (mamegame->gamenameGameInfoMap.contains(gameName))
+				{
+					gameInfo = mamegame->gamenameGameInfoMap[gameName];
+
+					if (iconQueue.contains(gameName) && gameInfo->icondata.isNull())
+					{
+						QFile icoFile(dirpath + gameName + ".ico");
+						if (icoFile.open(QIODevice::ReadOnly))
+						{
+							gameInfo->icondata = icoFile.readAll();
+							emit icoUpdated(gameName);
+		//					win->log(QString("icoUpdated f: %1").arg(gameName));
+						}
+					}
+				}
+
+				if (restart)
+					break;
+			}
+
+			if (restart)
+				break;
+
+			// iterate all files in the zip
+			QuaZip zip(dirpath + "icons.zip");
+
+			if(!zip.open(QuaZip::mdUnzip))
+				continue;
+			
+			QuaZipFileInfo info;
+			QuaZipFile zipFile(&zip);
+			for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile())
+			{
+				if(!zip.getCurrentFileInfo(&info))
+					continue;
+
+				QString gameName = info.name.toLower().remove(".ico");
+
+				if (mamegame->gamenameGameInfoMap.contains(gameName))
+				{
+					gameInfo = mamegame->gamenameGameInfoMap[gameName];
+					// fixme: read cloneof first
+					if (iconQueue.contains(gameName) &&
+						gameInfo->icondata.isNull())
+					{
+						QuaZipFile icoFile(&zip);
+						if (icoFile.open(QIODevice::ReadOnly))
+						{
+							gameInfo->icondata = icoFile.readAll();
+							emit icoUpdated(gameName);
+		//					win->log(QString("icoUpdated z: %1").arg(gameName));
+						}
+					}
+				}
+				if (restart)
+					break;
+			}
+			if (restart)
+				break;
+		}
+
+		// get clone icons from parent
+		mutex.lock();
+		for (int i = 0; i < iconQueue.count(); i++)
+		{
+			QString gameName = iconQueue.value(i);
+
+			if (mamegame->gamenameGameInfoMap.contains(gameName))
+			{
+				gameInfo = mamegame->gamenameGameInfoMap[gameName];
+				if (gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
+				{
+					gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo->cloneof];
+					if (!gameInfo2->icondata.isNull())
+					{
+						gameInfo->icondata = gameInfo2->icondata;
+						emit icoUpdated(gameName);
+		//				win->log(QString("icoUpdated c: %1").arg(gameName));
+					}
+				}
+			}
+//			else
+//				win->log(QString("errico: %1 %2").arg(gameName).arg(mamegame->gamenameGameInfoMap.count()));
+		}
+		mutex.unlock();
+
+		if (!restart)
+			done = true;
+
+		restart = false;
 	}
 }
 
@@ -339,10 +432,7 @@ UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
 
 UpdateSelectionThread::~UpdateSelectionThread()
 {
-	mutex.lock();
 	abort = true;
-	mutex.lock();
-	
 	wait();
 }
 
@@ -363,19 +453,19 @@ void UpdateSelectionThread::run()
 		//fixme: do not update tabbed docks
 
 		if (win->ssSnap->isVisible())
-			pmSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName, QSize());
+			pmdataSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName);
 		if (win->ssFlyer->isVisible())
-			pmFlyer = utils->getScreenshot(flyer_directory, gameName, QSize());
+			pmdataFlyer = utils->getScreenshot(flyer_directory, gameName);
 		if (win->ssCabinet->isVisible())
-			pmCabinet = utils->getScreenshot(cabinet_directory, gameName, QSize());
+			pmdataCabinet = utils->getScreenshot(cabinet_directory, gameName);
 		if (win->ssMarquee->isVisible())			
-			pmMarquee = utils->getScreenshot(marquee_directory, gameName, QSize());
+			pmdataMarquee = utils->getScreenshot(marquee_directory, gameName);
 		if (win->ssTitle->isVisible())
-			pmTitle = utils->getScreenshot(title_directory, gameName, QSize());
+			pmdataTitle = utils->getScreenshot(title_directory, gameName);
 		if (win->ssCPanel->isVisible())
-			pmCPanel = utils->getScreenshot(cpanel_directory, gameName, QSize());
+			pmdataCPanel = utils->getScreenshot(cpanel_directory, gameName);
 		if (win->ssPCB->isVisible())
-			pmPCB = utils->getScreenshot(pcb_directory, gameName, QSize());
+			pmdataPCB = utils->getScreenshot(pcb_directory, gameName);
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
 
@@ -485,14 +575,20 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 	
 	if (role == Qt::DecorationRole && index.column() == COL_DESC)
 	{
-		if (gameinfo->icon.isNull())
+		QByteArray icondata;
+		if (gameinfo->icondata.isNull())
 		{
-			gamelist->iconThread.iconQueue.setSize(win->treeViewGameList->viewport()->height() / 17);
+			gamelist->iconThread.iconQueue.setSize(win->treeViewGameList->viewport()->height() / 17 + 2);
 			gamelist->iconThread.iconQueue.enqueue(gameName);
 			gamelist->iconThread.load();
-			return utils->deficon;
+			icondata = utils->deficondata;
 		}
-		return gameinfo->icon;
+		else
+			icondata = gameinfo->icondata;
+		
+		QPixmap pm;
+		pm.loadFromData(icondata, "ico");
+		return QIcon(pm);
 	}
 	
 	if (role == Qt::UserRole + FOLDER_BIOS)
@@ -614,12 +710,8 @@ bool TreeModel::setData(const QModelIndex &index, const QVariant &value,
 			break;
 
 		case Qt::DecorationRole:
-			const QIcon icon(qvariant_cast<QIcon>(value));
-			if(!icon.isNull())
+			if(!value.isNull())
 			{
-				QString gameName = item->data(1).toString();
-				GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
-				gameinfo->icon = icon;
 				emit dataChanged(index, index);
 				return true;
 			}
@@ -708,21 +800,21 @@ GameInfo::~GameInfo()
 QString GameInfo::biosof()
 {
 	QString biosof;
-	GameInfo *gameinfo;
+	GameInfo *gameInfo = NULL;
 
 	if (!romof.isEmpty())
 	{
 		biosof = romof;
-		gameinfo = mamegame->gamenameGameInfoMap[romof];
+		gameInfo = mamegame->gamenameGameInfoMap[romof];
 
-		if (!gameinfo->romof.isEmpty())
+		if (!gameInfo->romof.isEmpty())
 		{
-			biosof = gameinfo->romof;
-			gameinfo = mamegame->gamenameGameInfoMap[gameinfo->romof];
+			biosof = gameInfo->romof;
+			gameInfo = mamegame->gamenameGameInfoMap[gameInfo->romof];
 		}
 	}
 	
-	if (gameinfo && gameinfo->isbios)
+	if (gameInfo && gameInfo->isbios)
 		return biosof;
 	else
 		return NULL;
@@ -932,10 +1024,18 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		p.setX(p.x() + 2);
 		rc = QRect(p, rc.bottomRight());
 
-		QVariant v = j.model()->data(j, Qt::DecorationRole);
-		v.convert(QVariant::Icon);
-		QIcon icon = qvariant_cast<QIcon>(v);
-		QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, icon.pixmap(QSize(32,32)));
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
+
+		QByteArray icondata;
+		if (gameinfo->icondata.isNull())
+			icondata = utils->deficondata;
+		else
+			icondata = gameinfo->icondata;
+		
+		QPixmap pm;
+		pm.loadFromData(icondata, "ico");
+
+		QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, pm);
 
 		// calc text rect
 		p = rc.topLeft();
@@ -969,7 +1069,7 @@ Gamelist::Gamelist(QObject *parent)
 	connect(&auditThread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
 	connect(&auditThread, SIGNAL(finished()), this, SLOT(setupAudit()));
 
-	connect(&iconThread, SIGNAL(finished()), this, SLOT(setupIcon()));
+	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
 	
 	connect(&selectThread, SIGNAL(finished()), this, SLOT(setupHistory()));
 	
@@ -977,7 +1077,7 @@ Gamelist::Gamelist(QObject *parent)
 		searchTimer = new QTimer(this);
 	connect(searchTimer, SIGNAL(timeout()), this, SLOT(filterRegExpChanged()));
 
-	numGames = numTotalGames = numCorrectGames = numMostlyCorrectGames = numIncorrectGames = numUnknownGames = numNotFoundGames = numSearchGames = -1;
+	numTotalGames = -1;
 	loadProc = NULL;
 }
 
@@ -1064,34 +1164,14 @@ void Gamelist::restoreSelection()
 	win->treeViewGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
 }
 
-void Gamelist::setupIcon()
+void Gamelist::setupIcon(QString gameName)
 {
-	GameInfo *gameinfo;
-	QIcon icon;
-	int i = 0;
-	static int step = mamegame->gamenameGameInfoMap.count() / 8;
-//	win->log("setupIcon()");
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
 
-/*	
-	int viewport_h = win->treeViewGameList->viewport()->height();
+	gameListModel->setData(gameListModel->index(0, gameInfo->pModItem), 
+		gameInfo->icondata, Qt::DecorationRole);
 
-	for (int h = 0; h < viewport_h; h += 17)
-	{
-		gameListModel->rowChanged(gameListPModel->mapToSource(
-			win->treeViewGameList->indexAt(QPoint(0, h))));	
-	}
-*/
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-		gameListModel->setData(gameListModel->index(0, gameinfo->pModItem), 
-			gameinfo->icon, Qt::DecorationRole);
-
-		//reduce stall time when updating icons
-		if (i++ % step == 0)
-			qApp->processEvents();
-	}
+//	win->log(QString("setupico %1 %2").arg(gameName).arg(gameInfo->icondata.isNull()));
 }
 
 void Gamelist::setupAudit()
@@ -1103,18 +1183,22 @@ void Gamelist::setupAudit()
 		gameListModel->setData(gameListModel->index(2, gameinfo->pModItem), 
 			gameinfo->available, Qt::DisplayRole);
 	}
+
+	//refresh current list
+	filterRegExpChanged2(win->treeFolders->currentItem());
+	
 	mamegame->s11n();
 }
 
 void Gamelist::setupHistory()
 {
-	win->ssSnap->setPixmap(selectThread.pmSnap);
-	win->ssFlyer->setPixmap(selectThread.pmFlyer);
-	win->ssCabinet->setPixmap(selectThread.pmCabinet);
-	win->ssMarquee->setPixmap(selectThread.pmMarquee);
-	win->ssTitle->setPixmap(selectThread.pmTitle);
-	win->ssCPanel->setPixmap(selectThread.pmCPanel);
-	win->ssPCB->setPixmap(selectThread.pmPCB);
+	win->ssSnap->setPixmap(selectThread.pmdataSnap);
+	win->ssFlyer->setPixmap(selectThread.pmdataFlyer);
+	win->ssCabinet->setPixmap(selectThread.pmdataCabinet);
+	win->ssMarquee->setPixmap(selectThread.pmdataMarquee);
+	win->ssTitle->setPixmap(selectThread.pmdataTitle);
+	win->ssCPanel->setPixmap(selectThread.pmdataCPanel);
+	win->ssPCB->setPixmap(selectThread.pmdataPCB);
 
 	win->tbHistory->setText(selectThread.historyText);
 	win->tbMameinfo->setText(selectThread.mameinfoText);
@@ -1173,6 +1257,7 @@ void Gamelist::init()
 
 		win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
 		win->actionDefaultOptions->setEnabled(true);
+		win->actionRefresh->setEnabled(true);
 
 		// auditThread.audit();
 
@@ -1323,11 +1408,13 @@ void Gamelist::filterRegExpChanged()
 	text.replace(utils->spaceRegex, "*");
 
 	//fixme: doesnt use filterregexp
-	QRegExp regExp(text, Qt::CaseInsensitive, syntax);
-	gameListPModel->searchText = text;
+	static QRegExp regExp("");
+	// set it for a callback to refresh the list
 	gameListPModel->setFilterRegExp(regExp);
+	gameListPModel->searchText = text;
 	win->treeViewGameList->expandAll();
 	restoreSelection();
+
 }
 
 void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *previous)
@@ -1364,12 +1451,13 @@ void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAMES);
 	}
 
-	//fixme: doesnt use filterregexp
-	QRegExp regExp(filterText);
-	gameListPModel->filterText = filterText;
+	static QRegExp regExp("");
+	// set it for a callback to refresh the list
 	gameListPModel->setFilterRegExp(regExp);
+	gameListPModel->filterText = filterText;
 	win->treeViewGameList->expandAll();
 	restoreSelection();
+
 }
 
 void Gamelist::initFolders()
@@ -1451,8 +1539,49 @@ void Gamelist::initFolders()
 	}
 	connect(win->treeFolders, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		this, SLOT(filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *)));
-			
-	win->treeFolders->header()->hide();
+
+
+	// restore folder selection
+	QString currentFolder = guisettings.value("folder_current", "/" + folderList[0]).toString();
+	int sep = currentFolder.indexOf("/");
+	QString parentFolder = currentFolder.left(sep);
+	QString subFolder = currentFolder.right(currentFolder.size() - sep - 1);
+
+	if (parentFolder.isEmpty())
+	{
+		parentFolder = subFolder;
+		subFolder = "";
+	}
+
+	QTreeWidgetItem *rootItem = win->treeFolders->invisibleRootItem();
+
+	for (int i = 0; i < rootItem->childCount(); i++)
+	{
+		QTreeWidgetItem *subItem = rootItem->child(i);
+		if (subItem->text(0) == parentFolder)
+		{
+			if (subFolder.isEmpty())
+			{
+				win->treeFolders->setCurrentItem(subItem);
+				return;
+			}
+			else
+			{
+				subItem->setExpanded(true);
+				for (int j = 0; j < subItem->childCount(); j++)
+				{
+					QTreeWidgetItem *subsubItem = subItem->child(j);
+					if (subsubItem->text(0) == subFolder)
+					{
+						win->treeFolders->setCurrentItem(subsubItem);
+						return;
+					}
+				}
+			}
+		}
+	}
+	//fallback
+	win->treeFolders->setCurrentItem(rootItem->child(0));
 }
 
 void Gamelist::runMame()
@@ -1475,52 +1604,54 @@ GameListSortFilterProxyModel::GameListSortFilterProxyModel(QObject *parent)
 
 bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
-	bool result;
+	bool result = true;
 	QModelIndex index0, index1, index2;
-
-	QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
-	QRegExp regExpSearch(searchText, Qt::CaseInsensitive, syntax);
+	const QAbstractItemModel *srcModel = sourceModel();
 	
-	QRegExp regExpFilter(filterText);
+	if (!searchText.isEmpty())
+	{
+//		win->log(QString("search: %1").arg(searchText));
+	
+		QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
+		QRegExp regExpSearch(searchText, Qt::CaseInsensitive, syntax);
 		
-//	win->log(QString("filter: %1, %2").arg(searchText).arg(filterText));
+		// apply search filter
+		index0 = srcModel->index(sourceRow, COL_DESC, sourceParent);
+		index1 = srcModel->index(sourceRow, COL_NAME, sourceParent);
 
-	// apply search filter
-	index0 = sourceModel()->index(sourceRow, COL_DESC, sourceParent);
-	index1 = sourceModel()->index(sourceRow, COL_NAME, sourceParent);
-
-	result = (sourceModel()->data(index0).toString().contains(regExpSearch)
-			||sourceModel()->data(index1).toString().contains(regExpSearch));
+		result = (srcModel->data(index0).toString().contains(regExpSearch)
+				||srcModel->data(index1).toString().contains(regExpSearch));
+	}
 
 	// apply folder filter
 	if (filterRole() == Qt::UserRole + FOLDER_AVAILABLE)
 	{
-		index2 = sourceModel()->index(sourceRow, COL_ROM, sourceParent);
-		result = result && sourceModel()->data(index2).toString() == "Yes";
+		index2 = srcModel->index(sourceRow, COL_ROM, sourceParent);
+		result = result && srcModel->data(index2).toString() == "Yes";
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_UNAVAILABLE)
 	{
-		index2 = sourceModel()->index(sourceRow, COL_ROM, sourceParent);
-		result = result && sourceModel()->data(index2).toString() != "Yes";
+		index2 = srcModel->index(sourceRow, COL_ROM, sourceParent);
+		result = result && srcModel->data(index2).toString() != "Yes";
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_MANUFACTURER)
 	{
-		index2 = sourceModel()->index(sourceRow, COL_MFTR, sourceParent);
-		result = result && sourceModel()->data(index2).toString() == filterText;
+		index2 = srcModel->index(sourceRow, COL_MFTR, sourceParent);
+		result = result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_YEAR)
 	{
-		index2 = sourceModel()->index(sourceRow, COL_YEAR, sourceParent);
-		result = result && sourceModel()->data(index2).toString() == filterText;
+		index2 = srcModel->index(sourceRow, COL_YEAR, sourceParent);
+		result = result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_SOURCE)
 	{
-		index2 = sourceModel()->index(sourceRow, COL_SRC, sourceParent);
-		result = result && sourceModel()->data(index2).toString() == filterText;
+		index2 = srcModel->index(sourceRow, COL_SRC, sourceParent);
+		result = result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_BIOS)
 	{
-		result = result && sourceModel()->data(index0, Qt::UserRole + FOLDER_BIOS).toString() == filterText;
+		result = result && srcModel->data(index0, Qt::UserRole + FOLDER_BIOS).toString() == filterText;
 	}
 
 	return result;

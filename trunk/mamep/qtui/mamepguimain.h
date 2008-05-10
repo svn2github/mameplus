@@ -1,13 +1,15 @@
 #ifndef _QMC2_MAIN_H_
 #define _QMC2_MAIN_H_
 
-#include "qticohandler.h"
 #include "quazip.h"
 #include "quazipfile.h"
 
 #include <QApplication>
 #include <QtGui>
 #include <QtXml>
+
+Q_IMPORT_PLUGIN(qico)
+//Q_IMPORT_PLUGIN(qmng)
 
 #include "ui_mamepguimain.h"
 
@@ -23,7 +25,7 @@ class Screenshot : public QDockWidget
 
 public:
     Screenshot(const QString &, QWidget *parent = 0);
-	void setPixmap(const QPixmap &);
+	void setPixmap(const QByteArray &);
 
 protected:
     void resizeEvent(QResizeEvent *);
