@@ -199,10 +199,10 @@ atlants2	亚特兰蒂斯大作战 (第2套)	亚特兰蒂斯大作战 (第2套)	Comsoft
 theend	射蜘蛛	射蜘蛛	Konami
 theends	射蜘蛛 (Stern)	射蜘蛛 (Stern)	[Konami] (Stern license)
 omega	甲虫护蛋	甲虫护蛋	bootleg?
-ckongs	大金刚 (Scramble 硬件)	大金刚 (Scramble 硬件)	bootleg
+ckongs	大金刚 (紧急起飞 硬件)	大金刚 (紧急起飞 硬件)	bootleg
 froggers	青蛙过河	青蛙过河	bootleg
 frogf	青蛙过河 (Falcon 盗版)	青蛙过河 (Falcon 盗版)	Falcon
-amidars	雷达 (Scramble 硬件)	雷达 (Scramble 硬件)	Konami
+amidars	雷达 (紧急起飞 硬件)	雷达 (紧急起飞 硬件)	Konami
 triplep	占地为王	占地为王	KKI
 knockout	占地为王 Knock Out!!	占地为王 Knock Out!!	KKK
 mariner	海底潜航 - 水手	海底潜航 - 水手	Amenip
@@ -216,13 +216,13 @@ mrkougb	鬼灵精先生 (盗版 第1套)	鬼灵精先生 (盗版 第1套)	bootleg
 mrkougb2	鬼灵精先生 (盗版 第2套)	鬼灵精先生 (盗版 第2套)	bootleg
 hotshock	惊悚狂热	惊悚狂热	E.G. Felaco
 conquer	征服	征服	<unknown>
-hunchbks	驼背骑士 (Scramble 硬件)	驼背骑士 (Scramble 硬件)	Century Electronics
-hncholms	驼背骑士运动会 (Scramble 硬件)	驼背骑士运动会 (Scramble 硬件)	Century Electronics
+hunchbks	驼背骑士 (紧急起飞 硬件)	驼背骑士 (紧急起飞 硬件)	Century Electronics
+hncholms	驼背骑士运动会 (紧急起飞 硬件)	驼背骑士运动会 (紧急起飞 硬件)	Century Electronics
 cavelon	骑士之剑	骑士之剑	Jetsoft
 sfx	超级火箭	超级火箭	Nichibutsu
 skelagon	战斗火箭	战斗火箭	Nichibutsu USA
 monsterz	怪兽大战争	怪兽大战争	Nihon
-mimonscr	世纪猴王 (盗版 on Scramble 硬件)	世纪猴王 (盗版 on Scramble 硬件)	bootleg
+mimonscr	世纪猴王 (盗版 紧急起飞 硬件)	世纪猴王 (盗版 紧急起飞 硬件)	bootleg
 mimonkey	世纪猴王	世纪猴王	Universal Video Games
 mimonsco	世纪猴王 (盗版 on Super Cobra 硬件)	世纪猴王 (盗版 on Super Cobra 硬件)	bootleg
 scobra	超级眼镜蛇	超级眼镜蛇	Konami
@@ -276,7 +276,7 @@ scorpion	魔蝎 (第1套)	魔蝎 (第1套)	Zaccaria
 scrpiona	魔蝎 (第2套)	魔蝎 (第2套)	Zaccaria
 scrpionb	魔蝎 (第3套)	魔蝎 (第3套)	Zaccaria
 ad2083	太空核战 2083	太空核战 2083	Midcoin
-turpins	小乌龟 (盗版 on Scramble 硬件)	小乌龟 (盗版 on Scramble 硬件)	[Sega] (bootleg)
+turpins	小乌龟 (盗版 紧急起飞 硬件)	小乌龟 (盗版 紧急起飞 硬件)	[Sega] (bootleg)
 cclimber	疯狂爬梯者 (美版)	疯狂爬梯者 (美版)	Nichibutsu
 cclimbrj	疯狂爬梯者 (日版)	疯狂爬梯者 (日版)	Nichibutsu
 ccboot	疯狂爬梯者 (盗版 第1套)	疯狂爬梯者 (盗版 第1套)	bootleg
@@ -859,9 +859,9 @@ herbiedk	驼背骑士运动会 (DK 转换)	驼背骑士运动会 (DK 转换)	CVS
 herodk	英雄 (DK 转换)	英雄 (DK 转换)	Seatongrove Ltd (Crown license)
 herodku	英雄 (DK 转换 未加密)	英雄 (DK 转换 未加密)	Seatongrove Ltd (Crown license)
 skyskipr	天空船长	天空船长	Nintendo
-popeye	大力水手 (revision D)	大力水手 (revision D)	Nintendo
-popeyeu	大力水手 (revision D 未保护版)	大力水手 (revision D 未保护版)	Nintendo
-popeyef	大力水手 (revision F)	大力水手 (revision F)	Nintendo
+popeye	大力水手 (校正版 D)	大力水手 (校正版 D)	Nintendo
+popeyeu	大力水手 (校正版 D 未保护版)	大力水手 (校正版 D 未保护版)	Nintendo
+popeyef	大力水手 (校正版 F)	大力水手 (校正版 F)	Nintendo
 popeyebl	大力水手 (盗版)	大力水手 (盗版)	bootleg
 punchout	泰森拳击	泰森拳击	Nintendo
 punchita	泰森拳击 (意大利 盗版)	泰森拳击 (意大利 盗版)	bootleg
@@ -1142,8 +1142,8 @@ nflfoot	NFL 足球	NFL 足球	Bally Midway
 demoderb	德贝冲撞赛车	德贝冲撞赛车	Bally Midway
 demoderm	德贝冲撞赛车 (2-Player 单板)	德贝冲撞赛车 (2-Player 单板)	Bally Midway
 sarge	沙戟战争	沙戟战争	Bally Midway
-rampage	城市大金刚 (revision 3)	城市大金刚 (revision 3)	Bally Midway
-rampage2	城市大金刚 (revision 2)	城市大金刚 (revision 2)	Bally Midway
+rampage	城市大金刚 (校正版 3)	城市大金刚 (校正版 3)	Bally Midway
+rampage2	城市大金刚 (校正版 2)	城市大金刚 (校正版 2)	Bally Midway
 powerdrv	动力越野	动力越野	Bally Midway
 stargrds	星际卫兵	星际卫兵	Bally Midway
 maxrpm	最大转速	最大转速	Bally Midway
@@ -1594,7 +1594,7 @@ insectx	杀虫战记 (世界版)	杀虫战记 (世界版)	Taito Corporation Japan
 champbwl	冠军保龄球	冠军保龄球	Seta / Romstar Inc.
 raimais	光速飞跃车 (世界版)	光速飞跃车 (世界版)	Taito Corporation Japan
 raimaisj	光速飞跃车 (日版)	光速飞跃车 (日版)	Taito Corporation
-raimaijo	光速飞跃车 (日版 / First Revision)	光速飞跃车 (日版 / First Revision)	Taito Corporation
+raimaijo	光速飞跃车 (日版 / 初版)	光速飞跃车 (日版 / 初版)	Taito Corporation
 kurikint	功里金团 (世界版)	功里金团 (世界版)	Taito Corporation Japan
 kurikinu	功里金团 (美版)	功里金团 (美版)	Taito America Corporation
 kurikinj	功里金团 (日版)	功里金团 (日版)	Taito Corporation
@@ -1994,25 +1994,25 @@ colony7	殖民地 7 - 星球保卫战 (第1套)	殖民地 7 - 星球保卫战 (第1套)	Taito
 colony7a	殖民地 7 - 星球保卫战 (第2套)	殖民地 7 - 星球保卫战 (第2套)	Taito
 jin	真天蚕变	真天蚕变	Falcon
 stargate	星际之门	星际之门	Williams
-robotron	机器人 2084 (Solid Blue label)	机器人 2084 (Solid Blue label)	Williams
-robotryo	机器人 2084 (Yellow/Orange label)	机器人 2084 (Yellow/Orange label)	Williams
-joust	鸵鸟骑士 (White/Green label)	鸵鸟骑士 (White/Green label)	Williams
-joustr	鸵鸟骑士 (Solid Red label)	鸵鸟骑士 (Solid Red label)	Williams
-joustwr	鸵鸟骑士 (White/Red label)	鸵鸟骑士 (White/Red label)	Williams
+robotron	机器人 2084 (蓝标签)	机器人 2084 (蓝标签)	Williams
+robotryo	机器人 2084 (黄/橘标签)	机器人 2084 (黄/橘标签)	Williams
+joust	鸵鸟骑士 (绿标签)	鸵鸟骑士 (绿标签)	Williams
+joustr	鸵鸟骑士 (红标签)	鸵鸟骑士 (红标签)	Williams
+joustwr	鸵鸟骑士 (白标签)	鸵鸟骑士 (白标签)	Williams
 bubbles	水滴物语	水滴物语	Williams
-bubblesr	水滴物语 (Solid Red label)	水滴物语 (Solid Red label)	Williams
+bubblesr	水滴物语 (红标签)	水滴物语 (红标签)	Williams
 bubblesp	水滴物语 (工程版本)	水滴物语 (工程版本)	Williams
 splat	砸派	砸派	Williams
-sinistar	星风血雨 (revision 3)	星风血雨 (revision 3)	Williams
-sinista1	星风血雨 (工程版本)	星风血雨 (工程版本)	Williams
-sinista2	星风血雨 (revision 2)	星风血雨 (revision 2)	Williams
+sinistar	星风血雨 (校正版 3)	星风血雨 (校正版 3)	Williams
+sinista1	星风血雨 (工程版)	星风血雨 (工程版)	Williams
+sinista2	星风血雨 (校正版 2)	星风血雨 (校正版 2)	Williams
 playball	玩球 (工程版)	玩球 (工程版)	Williams
 blaster	立体太空射击	立体太空射击	Williams
 blast30	立体太空射击 (30 初波版)	立体太空射击 (30 初波版)	Williams
 blastkit	立体太空射击 (kit)	立体太空射击 (kit)	Williams
 spdball	快速球 (工程版)	快速球 (工程版)	Williams
 alienar	异形竞技场	异形竞技场	Duncan Brown
-alienaru	异形竞技场 (Stargate 升级版)	异形竞技场 (Stargate 升级版)	Duncan Brown
+alienaru	异形竞技场 (星际之门 升级版)	异形竞技场 (星际之门 升级版)	Duncan Brown
 mysticm	神秘马拉松	神秘马拉松	Williams
 tshoot	土耳其射击	土耳其射击	Williams
 inferno	太空地狱	太空地狱	Williams
@@ -2024,10 +2024,10 @@ vulgusj	决战异星球 (日版?)	决战异星球 (日版?)	Capcom
 sonson	西游记	西游记	Capcom
 sonsonj	西游记 (日版)	西游记 (日版)	Capcom
 higemaru	海盗船水手	海盗船水手	Capcom
-1942	1942 - 空中大战 (Revision B)	1942 - 空中大战 (Revision B)	Capcom
-1942a	1942 - 空中大战 (Revision A)	1942 - 空中大战 (Revision A)	Capcom
-1942b	1942 - 空中大战 (First Version)	1942 - 空中大战 (First Version)	Capcom
-1942w	1942 - 空中大战 (Williams Electronics license)	1942 - 空中大战 (Williams Electronics license)	Capcom (Williams Electronics license)
+1942	1942 - 空中大战 (校正版 B)	1942 - 空中大战 (校正版 B)	Capcom
+1942a	1942 - 空中大战 (校正版 A)	1942 - 空中大战 (校正版 A)	Capcom
+1942b	1942 - 空中大战 (初版)	1942 - 空中大战 (初版)	Capcom
+1942w	1942 - 空中大战 (威廉斯电子)	1942 - 空中大战 (威廉斯电子)	Capcom (Williams Electronics license)
 exedexes	超浮游要塞	超浮游要塞	Capcom
 savgbees	超浮游要塞 - 致命大黄蜂	超浮游要塞 - 致命大黄蜂	Capcom (Memetron license)
 commando	战场之狼 (世界版)	战场之狼 (世界版)	Capcom
@@ -2042,8 +2042,8 @@ gngbl	魔界村 (盗版 with Cross)	魔界村 (盗版 with Cross)	Capcom
 gngblita	魔界村 (意大利 盗版, 硬件)	魔界村 (意大利 盗版, 硬件)	Capcom
 gngt	魔界村 (美版)	魔界村 (美版)	Capcom (Taito America license)
 makaimur	魔界村 (日版)	魔界村 (日版)	Capcom
-makaimuc	魔界村 (日版 Revision C)	魔界村 (日版 Revision C)	Capcom
-makaimug	魔界村 (日版 Revision G)	魔界村 (日版 Revision G)	Capcom
+makaimuc	魔界村 (日版 校正版 C)	魔界村 (日版 校正版 C)	Capcom
+makaimug	魔界村 (日版 校正版 G)	魔界村 (日版 校正版 G)	Capcom
 diamond	挖钻石	挖钻石	KH Video
 gunsmoke	荒野大镖客 (世界版)	荒野大镖客 (世界版)	Capcom
 gunsmoku	荒野大镖客 (美版 第1套)	荒野大镖客 (美版 第1套)	Capcom (Romstar license)
@@ -2725,7 +2725,7 @@ capbowl	卡普空保龄球 (第1套)	卡普空保龄球 (第1套)	Incredible Technologies
 capbowl2	卡普空保龄球 (第2套)	卡普空保龄球 (第2套)	Incredible Technologies
 capbowl3	卡普空保龄球 (第3套)	卡普空保龄球 (第3套)	Incredible Technologies
 capbowl4	卡普空保龄球 (第4套)	卡普空保龄球 (第4套)	Incredible Technologies
-clbowl	卡普空保龄球 / Coors Light Bowling	卡普空保龄球 / Coors Light Bowling	Incredible Technologies
+clbowl	卡普空保龄球 / 酷尔斯保龄球	卡普空保龄球 / 酷尔斯保龄球	Incredible Technologies
 bowlrama	保龄球三合一	保龄球三合一	P&P Marketing
 wfortune	命运转轮	命运转轮	GameTek
 wfortuna	命运转轮 (替换版)	命运转轮 (替换版)	GameTek
@@ -2884,10 +2884,10 @@ digger	挖陷阱	挖陷阱	Sega
 pulsar	异域坦克	异域坦克	Sega
 heiankyo	平安京异形	平安京异形	Denki Onkyo
 alphaho	粉红赛车	粉红赛车	Data East Corporation
-spacfury	太空愤战 (revision C)	太空愤战 (revision C)	Sega
-spacfura	太空愤战 (revision A)	太空愤战 (revision A)	Sega
-spacfurb	太空愤战 (revision B)	太空愤战 (revision B)	Sega
-zektor	太空轮廓战机 (revision B)	太空轮廓战机 (revision B)	Sega
+spacfury	太空愤战 (校正版 C)	太空愤战 (校正版 C)	Sega
+spacfura	太空愤战 (校正版 A)	太空愤战 (校正版 A)	Sega
+spacfurb	太空愤战 (校正版 B)	太空愤战 (校正版 B)	Sega
+zektor	太空轮廓战机 (校正版 B)	太空轮廓战机 (校正版 B)	Sega
 tacscan	太空机队	太空机队	Sega
 elim2	太空射击 (2 Players, 第1套)	太空射击 (2 Players, 第1套)	Gremlin
 elim2a	太空射击 (2 Players, 第2套)	太空射击 (2 Players, 第2套)	Gremlin
@@ -3620,7 +3620,7 @@ kchamp	空手道 (美版)	空手道 (美版)	Data East USA
 karatedo	空手道 (日版)	空手道 (日版)	Data East Corporation
 kchampvs	対战空手道 - 青春美少女编 (美版 VS 版本)	対战空手道 - 青春美少女编 (美版 VS 版本)	Data East USA
 karatevs	対战空手道 - 青春美少女编 (日版 VS 版本)	対战空手道 - 青春美少女编 (日版 VS 版本)	Data East Corporation
-compgolf	高尔夫球公开赛 - 最后圆心 (revision 3)	高尔夫球公开赛 - 最后圆心 (revision 3)	Data East
+compgolf	高尔夫球公开赛 - 最后圆心 (校正版 3)	高尔夫球公开赛 - 最后圆心 (校正版 3)	Data East
 compglfo	高尔夫球公开赛 - 最后圆心 (旧版)	高尔夫球公开赛 - 最后圆心 (旧版)	Data East
 cntsteer	逆转舵赛车	逆转舵赛车	Data East Corporation
 zerotrgt	击坠王 (世界版)	击坠王 (世界版)	Data East Corporation
@@ -3654,16 +3654,16 @@ spool3i	美女花式桌球 (I-Vics)	美女花式桌球 (I-Vics)	Data East Corporation (I-Vic
 battlera	突击血狼 (世界版)	突击血狼 (世界版)	Data East Corporation
 bldwolf	突击血狼 (美版)	突击血狼 (美版)	Data East USA
 bldwolfj	突击血狼 (日版)	突击血狼 (日版)	Data East Corporation
-actfancr	战斗机器 (世界版 revision 2)	战斗机器 (世界版 revision 2)	Data East Corporation
-actfanc1	战斗机器 (世界版 revision 1)	战斗机器 (世界版 revision 1)	Data East Corporation
-actfancj	战斗机器 (日版 revision 1)	战斗机器 (日版 revision 1)	Data East Corporation
+actfancr	战斗机器 (世界版 校正版 2)	战斗机器 (世界版 校正版 2)	Data East Corporation
+actfanc1	战斗机器 (世界版 校正版 1)	战斗机器 (世界版 校正版 1)	Data East Corporation
+actfancj	战斗机器 (日版 校正版 1)	战斗机器 (日版 校正版 1)	Data East Corporation
 triothep	艳拳三强男 - 胜负拳 (世界版)	艳拳三强男 - 胜负拳 (世界版)	Data East Corporation
 triothej	艳拳三强男 - 胜负拳 (日版)	艳拳三强男 - 胜负拳 (日版)	Data East Corporation
-lastmisn	最终任务 (美版 revision 6)	最终任务 (美版 revision 6)	Data East USA
-lastmsno	最终任务 (美版 revision 5)	最终任务 (美版 revision 5)	Data East USA
+lastmisn	最终任务 (美版 校正版 6)	最终任务 (美版 校正版 6)	Data East USA
+lastmsno	最终任务 (美版 校正版 5)	最终任务 (美版 校正版 5)	Data East USA
 lastmsnj	最终任务 (日版)	最终任务 (日版)	Data East Corporation
 shackled	链狱谜城 (美版)	链狱谜城 (美版)	Data East USA
-breywood	链狱谜城 (日版 revision 2)	链狱谜城 (日版 revision 2)	Data East Corporation
+breywood	链狱谜城 (日版 校正版 2)	链狱谜城 (日版 校正版 2)	Data East Corporation
 csilver	锡鲁巴船长 (世界版)	锡鲁巴船长 (世界版)	Data East Corporation
 csilverj	锡鲁巴船长 (日版)	锡鲁巴船长 (日版)	Data East Corporation
 ghostb	迷宫猎人 G (美版 2 Players)	迷宫猎人 G (美版 2 Players)	Data East USA
@@ -3675,12 +3675,12 @@ srdarwnj	黑暗之风 2 (日版)	黑暗之风 2 (日版)	Data East Corporation
 gondo	魔境战士 - 绝对合体 (美版)	魔境战士 - 绝对合体 (美版)	Data East USA
 makyosen	魔境战士 - 绝对合体 (日版)	魔境战士 - 绝对合体 (日版)	Data East Corporation
 garyoret	卧龙列传 (日版)	卧龙列传 (日版)	Data East Corporation
-cobracom	眼睛蛇指令 (世界版 revision 5)	眼睛蛇指令 (世界版 revision 5)	Data East Corporation
+cobracom	眼睛蛇指令 (世界版 校正版 5)	眼睛蛇指令 (世界版 校正版 5)	Data East Corporation
 cobracmj	眼睛蛇指令 (日版)	眼睛蛇指令 (日版)	Data East Corporation
 oscar	钢铁金刚 (美版)	钢铁金刚 (美版)	Data East USA
-oscarj	钢铁金刚 (日版 revision 2)	钢铁金刚 (日版 revision 2)	Data East Corporation
-oscarj1	钢铁金刚 (日版 revision 1)	钢铁金刚 (日版 revision 1)	Data East Corporation
-oscarj0	钢铁金刚 (日版 revision 0)	钢铁金刚 (日版 revision 0)	Data East Corporation
+oscarj	钢铁金刚 (日版 校正版 2)	钢铁金刚 (日版 校正版 2)	Data East Corporation
+oscarj1	钢铁金刚 (日版 校正版 1)	钢铁金刚 (日版 校正版 1)	Data East Corporation
+oscarj0	钢铁金刚 (日版 校正版 0)	钢铁金刚 (日版 校正版 0)	Data East Corporation
 karnov	卡洛夫 (美版)	卡洛夫 (美版)	Data East USA
 karnovj	卡洛夫 (日版)	卡洛夫 (日版)	Data East Corporation
 wndrplnt	奇幻星球 (日版)	奇幻星球 (日版)	Data East Corporation
@@ -3692,17 +3692,17 @@ hbarrelw	致命武器 (世界版)	致命武器 (世界版)	Data East Corporation
 baddudes	龙行忍者 (美版)	龙行忍者 (美版)	Data East USA
 drgninja	龙行忍者 (日版)	龙行忍者 (日版)	Data East Corporation
 birdtry	博蒂物语 (日版)	博蒂物语 (日版)	Data East Corporation
-robocop	铁甲威龙 (世界版 revision 4)	铁甲威龙 (世界版 revision 4)	Data East Corporation
-robocopw	铁甲威龙 (世界版 revision 3)	铁甲威龙 (世界版 revision 3)	Data East Corporation
+robocop	铁甲威龙 (世界版 校正版 4)	铁甲威龙 (世界版 校正版 4)	Data East Corporation
+robocopw	铁甲威龙 (世界版 校正版 3)	铁甲威龙 (世界版 校正版 3)	Data East Corporation
 robocopj	铁甲威龙 (日版)	铁甲威龙 (日版)	Data East Corporation
-robocopu	铁甲威龙 (美版 revision 1)	铁甲威龙 (美版 revision 1)	Data East USA
-robocpu0	铁甲威龙 (美版 revision 0)	铁甲威龙 (美版 revision 0)	Data East USA
+robocopu	铁甲威龙 (美版 校正版 1)	铁甲威龙 (美版 校正版 1)	Data East USA
+robocpu0	铁甲威龙 (美版 校正版 0)	铁甲威龙 (美版 校正版 0)	Data East USA
 robocopb	铁甲威龙 (世界版 盗版)	铁甲威龙 (世界版 盗版)	bootleg
 hippodrm	竞技场 (美版)	竞技场 (美版)	Data East USA
-ffantasy	激斗幻想 (日版 revision 2)	激斗幻想 (日版 revision 2)	Data East Corporation
+ffantasy	激斗幻想 (日版 校正版 2)	激斗幻想 (日版 校正版 2)	Data East Corporation
 ffantasa	激斗幻想 (日版)	激斗幻想 (日版)	Data East Corporation
-slyspy	狡猾间谍 (美版 revision 3)	狡猾间谍 (美版 revision 3)	Data East USA
-slyspy2	狡猾间谍 (美版 revision 2)	狡猾间谍 (美版 revision 2)	Data East USA
+slyspy	狡猾间谍 (美版 校正版 3)	狡猾间谍 (美版 校正版 3)	Data East USA
+slyspy2	狡猾间谍 (美版 校正版 2)	狡猾间谍 (美版 校正版 2)	Data East USA
 secretag	间谍末日 (世界版)	间谍末日 (世界版)	Data East Corporation
 secretab	间谍末日 (盗版)	间谍末日 (盗版)	bootleg
 midres	午夜攻击 (世界版)	午夜攻击 (世界版)	Data East Corporation
@@ -3713,18 +3713,18 @@ bouldash	钻石小子 (世界版)	钻石小子 (世界版)	Data East Corporation (licensed fro
 bouldshj	钻石小子 (日版)	钻石小子 (日版)	Data East Corporation (licensed from First Star)
 stadhero	棒球英雄 (日版)	棒球英雄 (日版)	Data East Corporation
 madmotor	疯狂摩托	疯狂摩托	Mitchell
-vaportra	空牙 - 行动代号 (世界版 revision 1)	空牙 - 行动代号 (世界版 revision 1)	Data East Corporation
+vaportra	空牙 - 行动代号 (世界版 校正版 1)	空牙 - 行动代号 (世界版 校正版 1)	Data East Corporation
 vaportru	空牙 - 行动代号 (美版)	空牙 - 行动代号 (美版)	Data East USA
-kuhga	空牙 - 行动代号 (日版 revision 3)	空牙 - 行动代号 (日版 revision 3)	Data East Corporation
+kuhga	空牙 - 行动代号 (日版 校正版 3)	空牙 - 行动代号 (日版 校正版 3)	Data East Corporation
 cbuster	暴力克星 (世界版 FX 版本)	暴力克星 (世界版 FX 版本)	Data East Corporation
 cbusterw	暴力克星 (世界版 FU 版本)	暴力克星 (世界版 FU 版本)	Data East Corporation
 cbusterj	暴力克星 (日版)	暴力克星 (日版)	Data East Corporation
 twocrude	暴力克星 (美版)	暴力克星 (美版)	Data East USA
-darkseal	暗黑封印 - 毁灭之门 (世界版 revision 3)	暗黑封印 - 毁灭之门 (世界版 revision 3)	Data East Corporation
-darksea1	暗黑封印 - 毁灭之门 (世界版 revision 1)	暗黑封印 - 毁灭之门 (世界版 revision 1)	Data East Corporation
+darkseal	暗黑封印 - 毁灭之门 (世界版 校正版 3)	暗黑封印 - 毁灭之门 (世界版 校正版 3)	Data East Corporation
+darksea1	暗黑封印 - 毁灭之门 (世界版 校正版 1)	暗黑封印 - 毁灭之门 (世界版 校正版 1)	Data East Corporation
 darkseaj	暗黑封印 - 毁灭之门 (日版)	暗黑封印 - 毁灭之门 (日版)	Data East Corporation
-gatedoom	暗黑封印 - 毁灭之门 (美版 revision 4)	暗黑封印 - 毁灭之门 (美版 revision 4)	Data East Corporation
-gatedom1	暗黑封印 - 毁灭之门 (美版 revision 1)	暗黑封印 - 毁灭之门 (美版 revision 1)	Data East Corporation
+gatedoom	暗黑封印 - 毁灭之门 (美版 校正版 4)	暗黑封印 - 毁灭之门 (美版 校正版 4)	Data East Corporation
+gatedom1	暗黑封印 - 毁灭之门 (美版 校正版 1)	暗黑封印 - 毁灭之门 (美版 校正版 1)	Data East Corporation
 edrandy	爱德华 - 蓝迪 (世界版 ver 3)	爱德华 - 蓝迪 (世界版 ver 3)	Data East Corporation
 edrandy2	爱德华 - 蓝迪 (世界版 ver 2)	爱德华 - 蓝迪 (世界版 ver 2)	Data East Corporation
 edrandy1	爱德华 - 蓝迪 (世界版 ver 1)	爱德华 - 蓝迪 (世界版 ver 1)	Data East Corporation
@@ -3851,8 +3851,8 @@ pbactio3	弹珠台 (第3套, 加密版)	弹珠台 (第3套, 加密版)	Tehkan
 ponttehk	益智扑克 (Tehkan)	益智扑克 (Tehkan)	Tehkan
 lvpoker	可爱扑克 [BET]	可爱扑克 [BET]	Tehkan
 lvcards	美女 5PK	美女 5PK	Tehkan
-tehkanwc	Tehkan 世界杯足球 (第1套)	Tehkan 世界杯足球 (第1套)	Tehkan
-tehkanwb	Tehkan 世界杯足球 (第2套, 盗版?)	Tehkan 世界杯足球 (第2套, 盗版?)	Tehkan
+tehkanwc	世界杯足球赛 (第1套)	世界杯足球赛 (第1套)	Tehkan
+tehkanwb	世界杯足球赛 (第2套, 盗版?)	世界杯足球赛 (第2套, 盗版?)	Tehkan
 gridiron	橄榄球争霸	橄榄球争霸	Tehkan
 teedoff	Tecmo 高尔夫 86 (日版)	Tecmo 高尔夫 86 (日版)	Tecmo
 solomon	所罗门之钥 (美版)	所罗门之钥 (美版)	Tecmo
@@ -4278,8 +4278,8 @@ carpolo	汽车足球	汽车足球	Exidy
 sidetrac	转换轨道	转换轨道	Exidy
 targ	赛车杀阵	赛车杀阵	Exidy
 targc	赛车杀阵 (台面型?)	赛车杀阵 (台面型?)	Exidy
-spectar	吃豆赛车 (revision 3)	吃豆赛车 (revision 3)	Exidy
-spectar1	吃豆赛车 (revision 1?)	吃豆赛车 (revision 1?)	Exidy
+spectar	吃豆赛车 (校正版 3)	吃豆赛车 (校正版 3)	Exidy
+spectar1	吃豆赛车 (校正版 1?)	吃豆赛车 (校正版 1?)	Exidy
 rallys	吃豆赛车 (盗版?)	吃豆赛车 (盗版?)	Novar
 phantoma	幽灵车	幽灵车	Jeutel
 venture	迷宫冒险 (版本 5 第1套)	迷宫冒险 (版本 5 第1套)	Exidy
@@ -4359,8 +4359,8 @@ cascade	雪崩 Cascade	雪崩 Cascade	Sidam
 firetrk	消防车	消防车	Atari
 skydiver	定点跳伞	定点跳伞	Atari
 sbrkout	超级打砖王	超级打砖王	Atari
-atarifb	雅达利橄榄球 78 (revision 2)	雅达利橄榄球 78 (revision 2)	Atari
-atarifb1	雅达利橄榄球 78 (revision 1)	雅达利橄榄球 78 (revision 1)	Atari
+atarifb	雅达利橄榄球 78 (校正版 2)	雅达利橄榄球 78 (校正版 2)	Atari
+atarifb1	雅达利橄榄球 78 (校正版 1)	雅达利橄榄球 78 (校正版 1)	Atari
 orbit	太空轨道	太空轨道	Atari
 boxer	拳击 (工程版)	拳击 (工程版)	Atari
 wolfpack	鱼雷 (工程版)	鱼雷 (工程版)	Atari
@@ -4421,8 +4421,8 @@ alphaone	太空浩劫 (工程版, 3 lives)	太空浩劫 (工程版, 3 lives)	Atari
 alphaona	太空浩劫 (工程版, 5 lives)	太空浩劫 (工程版, 5 lives)	Atari
 esb	星际大战 - 帝国大反击	星际大战 - 帝国大反击	Atari Games
 warlords	恶枭城堡	恶枭城堡	Atari
-centiped	蜈蚣 (revision 3)	蜈蚣 (revision 3)	Atari
-centipd2	蜈蚣 (revision 2)	蜈蚣 (revision 2)	Atari
+centiped	蜈蚣 (校正版 3)	蜈蚣 (校正版 3)	Atari
+centipd2	蜈蚣 (校正版 2)	蜈蚣 (校正版 2)	Atari
 centtime	蜈蚣 (1 player, timed)	蜈蚣 (1 player, timed)	Atari
 centipdb	蜈蚣 (盗版)	蜈蚣 (盗版)	bootleg
 caterplr	蜈蚣	蜈蚣	bootleg
@@ -4778,7 +4778,7 @@ tdfeverj	美式橄榄球 (日版)	美式橄榄球 (日版)	SNK
 tdfever2	美式橄榄球 II	美式橄榄球 II	SNK
 ikari3	怒 III (Rotary 操纵杆)	怒 III (Rotary 操纵杆)	SNK
 ikari3nr	怒 III - 援救 (8-Way 操纵杆)	怒 III - 援救 (8-Way 操纵杆)	SNK
-pow	脱狱 - 战俘 (美版)	脱狱 - 战俘 (美版)	SNK
+pow	脱狱 - 战俘 (美版 版本 1)	脱狱 - 战俘 (美版 版本 1)	SNK
 powj	脱狱 - 战俘 (日版)	脱狱 - 战俘 (日版)	SNK
 searchar	异型大作战 (世界版)	异型大作战 (世界版)	SNK
 sercharu	异型大作战 (美版)	异型大作战 (美版)	SNK
@@ -5357,7 +5357,8 @@ tm3k	触摸大师 3000 (v5.02 标准)	触摸大师 3000 (v5.02 标准)	Midway
 tm3ka	触摸大师 3000 (v5.01 标准)	触摸大师 3000 (v5.01 标准)	Midway
 tm4k	触摸大师 4000 (v6.02 标准)	触摸大师 4000 (v6.02 标准)	Midway
 tm5k	触摸大师 5000 (v7.10 标准)	触摸大师 5000 (v7.10 标准)	Midway
-tm7k	触摸大师 7000 (v8.00 标准)	触摸大师 7000 (v8.00 标准)	Midway
+tm7k	触摸大师 7000 (v8.04 标准)	触摸大师 7000 (v8.04 标准)	Midway
+tm7ka	触摸大师 7000 (v8.00 标准)	触摸大师 7000 (v8.00 标准)	Midway
 galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	禁运	禁运	Cinematronics
 tripool	花式撞球 Tri-Pool (Casino Tech)	花式撞球 Tri-Pool (Casino Tech)	Noma (Casino Tech license)
@@ -5371,7 +5372,7 @@ jack3	杰克与魔豆 (第3套)	杰克与魔豆 (第3套)	Cinematronics
 treahunt	杰克与魔豆 (盗版?)	杰克与魔豆 (盗版?)	Hara Industries
 zzyzzyxx	虫虫救美 (第1套)	虫虫救美 (第1套)	Cinematronics + Advanced Microcomputer Systems
 zzyzzyx2	虫虫救美 (第2套)	虫虫救美 (第2套)	Cinematronics + Advanced Microcomputer Systems
-brix	虫虫救美 Brix	虫虫救美 Brix	Cinematronics + Advanced Microcomputer Systems
+brix	芭莉斯公丝	芭莉斯公丝	Cinematronics + Advanced Microcomputer Systems
 freeze	太空人迷宫	太空人迷宫	Cinematronics
 sucasino	超级赌城	超级赌城	Data Amusement
 spacewar	宇宙大战	宇宙大战	Cinematronics
@@ -5379,16 +5380,16 @@ barrier	方格游戏	方格游戏	Vectorbeam
 starcas	星堡 (版本 3)	星堡 (版本 3)	Cinematronics
 starcas1	星堡 (旧版)	星堡 (旧版)	Cinematronics
 starcasp	星堡 (工程版)	星堡 (工程版)	Cinematronics
-starcase	星堡 (Mottoeis)	星堡 (Mottoeis)	Cinematronics (Mottoeis license)
+starcase	星堡 (摩特斯)	星堡 (摩特斯)	Cinematronics (Mottoeis license)
 stellcas	星堡 (Elettronolo)	星堡 (Elettronolo)	bootleg
-spaceftr	星堡 (Zaccaria)	星堡 (Zaccaria)	Zaccaria
+spaceftr	星堡 (沙卡莱亚)	星堡 (沙卡莱亚)	Zaccaria
 tailg	追踪炮	追踪炮	Cinematronics
 ripoff	偷窃	偷窃	Cinematronics
 armora	武装袭击	武装袭击	Cinematronics
 armorap	武装袭击 (工程版)	武装袭击 (工程版)	Cinematronics
 armorar	武装袭击 (Rock-ola)	武装袭击 (Rock-ola)	Cinematronics (Rock-ola license)
 wotw	机战	机战	Cinematronics
-wotwc	机战 (color)	机战 (color)	Cinematronics
+wotwc	机战 (彩色版)	机战 (彩色版)	Cinematronics
 warrior	剑击	剑击	Vectorbeam
 starhawk	星鹰	星鹰	Cinematronics
 solarq	太阳探索	太阳探索	Cinematronics
@@ -5540,8 +5541,8 @@ cupsoc	西武杯足球	西武杯足球	Seibu
 cupsocs	西武杯足球 (第1套)	西武杯足球 (第1套)	Seibu
 cupsocs2	西武杯足球 (第2套)	西武杯足球 (第2套)	Seibu
 cupsocsb	西武杯足球 (盗版)	西武杯足球 (盗版)	bootleg
-olysoc92	西武杯足球 Olympic Soccer 92	西武杯足球 Olympic Soccer 92	Seibu
-goal92	西武杯足球 Goal! 92	西武杯足球 Goal! 92	bootleg
+olysoc92	奥林匹克足球 92	奥林匹克足球 92	Seibu
+goal92	射门! 92	射门! 92	bootleg
 exerion	浮游基地	浮游基地	Jaleco
 exeriont	浮游基地 (Taito)	浮游基地 (Taito)	Jaleco (Taito America license)
 exerionb	浮游基地 (盗版)	浮游基地 (盗版)	Jaleco
@@ -5574,9 +5575,9 @@ armchm2o	武装合集 II v1.7	武装合集 II v1.7	Jaleco
 wildplt	壮志凌云	壮志凌云	Jaleco
 f1gpstr2	一级方程式 GP 巨星 2	一级方程式 GP 巨星 2	Jaleco
 scudhamm	彩票机 - 出气筒	彩票机 - 出气筒	Jaleco
-tetrisp2	俄罗斯方块 Plus 2 (世界版)	俄罗斯方块 Plus 2 (世界版)	Jaleco / The Tetris Company
-teplus2j	俄罗斯方块 Plus 2 (日版)	俄罗斯方块 Plus 2 (日版)	Jaleco / The Tetris Company
-nndmseal	Nandemo Seal Iinkai	Nandemo Seal Iinkai	I'Max/Jaleco
+tetrisp2	俄罗斯方块加强版 2 (世界版)	俄罗斯方块加强版 2 (世界版)	Jaleco / The Tetris Company
+teplus2j	俄罗斯方块加强版 2 (日版)	俄罗斯方块加强版 2 (日版)	Jaleco / The Tetris Company
+nndmseal	开运鉴定委员会	开运鉴定委员会	I'Max/Jaleco
 stepstag	步进舞台	步进舞台	Jaleco
 rockn	摇滚乐队 1 (日版, 盗版)	摇滚乐队 1 (日版, 盗版)	Jaleco
 rockna	摇滚节奏踢踏踩 (日版, 替换版)	摇滚节奏踢踏踩 (日版, 替换版)	Jaleco
@@ -6142,9 +6143,9 @@ paradlx	华丽天堂	华丽天堂	Yun Sung
 tgtball	目标撞球 (裸体)	目标撞球 (裸体)	Yun Sung
 tgtballa	目标撞球	目标撞球	Yun Sung
 torus	试管方块	试管方块	Yun Sung
-paprazzi	Paparazzi	Paparazzi	Yun Sung
+paprazzi	美女杀手	美女杀手	Yun Sung
 madball	疯狂弹球 V2.0	疯狂弹球 V2.0	Yun Sung
-madballn	疯狂弹球 V2.0 (With Nudity)	疯狂弹球 V2.0 (With Nudity)	Yun Sung
+madballn	疯狂弹球 V2.0 (裸露版)	疯狂弹球 V2.0 (裸露版)	Yun Sung
 cannball	加农球气泡 (Yun Sung)	加农球气泡 (Yun Sung)	Yun Sung / Soft Vision
 magix	马吉斯俄罗斯方块	马吉斯俄罗斯方块	Yun Sung
 rocktris	摇摆俄罗斯方块	摇摆俄罗斯方块	Yun Sung
@@ -6559,10 +6560,10 @@ quickjac	音速杰克	音速杰克	ADP
 skattv	史卡特电视台	史卡特电视台	ADP
 skattva	史卡特电视台 (版本 TS3)	史卡特电视台 (版本 TS3)	ADP
 fashiong	时尚赌徒	时尚赌徒	ADP
-guab	Give us a Break (6th edition)	Give us a Break (6th edition)	JPM
-guab3	Give us a Break (3rd edition)	Give us a Break (3rd edition)	JPM
-tenup	十上 (compendium 17)	十上 (compendium 17)	JPM
-tenup3	十上 (compendium 3)	十上 (compendium 3)	JPM
+guab	问答撞球 (6th edition)	问答撞球 (6th edition)	JPM
+guab3	问答撞球 (3rd edition)	问答撞球 (3rd edition)	JPM
+tenup	十上 (特辑 17)	十上 (特辑 17)	JPM
+tenup3	十上 (特辑 3)	十上 (特辑 3)	JPM
 cluedo	妙探寻凶 (prod. 2D)	妙探寻凶 (prod. 2D)	JPM
 cluedo2c	妙探寻凶 (prod. 2C)	妙探寻凶 (prod. 2C)	JPM
 cluedo2	妙探寻凶 (prod. 2)	妙探寻凶 (prod. 2)	JPM
@@ -6654,8 +6655,8 @@ gt103aa	问答 百科 (版本 1.03a 替换问题 1)	问答 百科 (版本 1.03a 替换问题 1)	Grey
 gt103ab	问答 百科 (版本 1.03a 替换问题 2)	问答 百科 (版本 1.03a 替换问题 2)	Greyhound Electronics
 reelfun	卷轴趣味 (版本 7.01)	卷轴趣味 (版本 7.01)	Grayhound Electronics
 findout	大发现 (版本 4.04)	大发现 (版本 4.04)	Elettronolo
-quiz	问答 (Revision 2)	问答 (Revision 2)	Italian bootleg
-quiz211	问答 (Revision 2.11)	问答 (Revision 2.11)	Elettronolo
+quiz	问答 (校正版 2)	问答 (校正版 2)	Italian bootleg
+quiz211	问答 (校正版 2.11)	问答 (校正版 2.11)	Elettronolo
 jokpoker	鬼牌扑克 (版本 16.03B)	鬼牌扑克 (版本 16.03B)	Greyhound Electronics
 superbwl	超级板球 (版本 16.03B)	超级板球 (版本 16.03B)	Greyhound Electronics
 amuse	娱乐 (版本 50.08 IBA)	娱乐 (版本 50.08 IBA)	Greyhound Electronics
@@ -6670,12 +6671,12 @@ gtsers3	益智问答 (问题系列 3)	益智问答 (问题系列 3)	Greyhound Electronics
 gtsers4	益智问答 (问题系列 4)	益智问答 (问题系列 4)	Greyhound Electronics
 gtsers5	益智问答 (问题系列 5)	益智问答 (问题系列 5)	Greyhound Electronics
 gtsers7	益智问答 (问题系列 7)	益智问答 (问题系列 7)	Greyhound Electronics
-gtsersa	益智问答 (Alt revision 问题 第1套)	益智问答 (Alt revision 问题 第1套)	Greyhound Electronics
-gtsersb	益智问答 (Alt revision 问题 第2套)	益智问答 (Alt revision 问题 第2套)	Greyhound Electronics
+gtsersa	益智问答 (替换版 第1套)	益智问答 (替换版 第1套)	Greyhound Electronics
+gtsersb	益智问答 (替换版 问题 第2套)	益智问答 (替换版 问题 第2套)	Greyhound Electronics
 sextriv1	问答 两性百科 (版本 1.02SB, 第1套)	问答 两性百科 (版本 1.02SB, 第1套)	Kinky Kit and Game Co.
 sextriv2	问答 两性百科 (版本 1.02SB, 第2套)	问答 两性百科 (版本 1.02SB, 第2套)	Kinky Kit and Game Co.
 dribling	绿茵足球	绿茵足球	Model Racing
-driblino	绿茵足球 (Olympia)	绿茵足球 (Olympia)	Model Racing (Olympia license)
+driblino	绿茵足球 (奥林匹亚)	绿茵足球 (奥林匹亚)	Model Racing (Olympia license)
 ace	飞机大战	飞机大战	Allied Leisure
 clayshoo	飞靶射击	飞靶射击	Allied Leisure
 pirates	海盗 [经典枪战]	海盗 [经典枪战]	NIX
@@ -6842,6 +6843,7 @@ pitboss2	赌场大亨 II	赌场大亨 II	Merit
 spitboss	超级赌场大亨	超级赌场大亨	Merit
 pitbossm	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
 megat3	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
+megat3te	非常接触 III 联赛版 (9255-30-01 ROE)	非常接触 III 联赛版 (9255-30-01 ROE)	Merit
 megat4	非常接触 IV (9255-40-01 ROE)	非常接触 IV (9255-40-01 ROE)	Merit
 megat4a	非常接触 IV (9255-40-01 ROD)	非常接触 IV (9255-40-01 ROD)	Merit
 megat4te	非常接触 IV 联赛版 (9255-50-01 ROD)	非常接触 IV 联赛版 (9255-50-01 ROD)	Merit
