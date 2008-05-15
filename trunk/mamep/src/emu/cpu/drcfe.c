@@ -5,7 +5,7 @@
     Generic dynamic recompiler frontend structures and utilities.
 
     Copyright Aaron Giles
-    Released for general use under the MAME license
+    Released for general non-commercial use under the MAME license
     Visit http://mamedev.org for licensing and usage restrictions.
 
 ***************************************************************************/

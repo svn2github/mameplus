@@ -44,6 +44,7 @@ struct _mame_file
 #ifdef DEBUG_COOKIE
 	UINT32			debug_cookie;					/* sanity checking for debugging */
 #endif
+	astring *		filename;						/* full filename */
 	core_file *		file;							/* core file pointer */
 	UINT32			openflags;						/* flags we used for the open */
 	char			hash[HASH_BUF_SIZE];			/* hash data for the file */
@@ -214,7 +215,6 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 {
 	file_error filerr = FILERR_NOT_FOUND;
 	path_iterator iterator;
-	astring *fullname;
 
 	/* can either have a hash or open for write, but not both */
 	if ((openflags & OPEN_FLAG_HAS_CRC) && (openflags & OPEN_FLAG_WRITE))
@@ -240,16 +240,16 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 	path_iterator_init(&iterator, opts, searchpath);
 
 	/* loop over paths */
-	fullname = astring_alloc();
-	while (path_iterator_get_next(&iterator, fullname))
+	(*file)->filename = astring_alloc();
+	while (path_iterator_get_next(&iterator, (*file)->filename))
 	{
 		/* compute the full pathname */
-		if (astring_len(fullname) > 0)
-			astring_catc(fullname, PATH_SEPARATOR);
-		astring_catc(fullname, filename);
+		if (astring_len((*file)->filename) > 0)
+			astring_catc((*file)->filename, PATH_SEPARATOR);
+		astring_catc((*file)->filename, filename);
 
 		/* attempt to open the file directly */
-		filerr = core_fopen(astring_c(fullname), openflags, &(*file)->file);
+		filerr = core_fopen(astring_c((*file)->filename), openflags, &(*file)->file);
 		if (filerr == FILERR_NONE)
 			break;
 
@@ -259,8 +259,8 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 			astring *zipped_fullname;
 
 			zipped_fullname = astring_alloc();
-			astring_cpyc(zipped_fullname, astring_c(fullname));
-			filerr = fopen_attempt_zipped(zipped_fullname, crc, openflags, *file);
+			astring_cpyc(zipped_fullname, astring_c((*file)->filename));
+			filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
 			astring_free(zipped_fullname);
 			zipped_fullname = NULL;
 
@@ -270,13 +270,13 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 #if 1	// mamep: load zipped inp file
 			{
 				int offset = 0;
-				int n = astring_rchr(fullname, offset, '.');
+				int n = astring_rchr((*file)->filename, offset, '.');
 
 				if (n > 0)
 					offset = n;
 
 				zipped_fullname = astring_alloc();
-				astring_cpych(zipped_fullname, astring_c(fullname), offset);
+				astring_cpych(zipped_fullname, astring_c((*file)->filename), offset);
 				astring_catc(zipped_fullname, PATH_SEPARATOR);
 				astring_catc(zipped_fullname, filename);
 
@@ -289,7 +289,6 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 #endif
 		}
 	}
-	astring_free(fullname);
 
 	/* handle errors and return */
 	if (filerr != FILERR_NONE)
@@ -407,6 +406,8 @@ void mame_fclose(mame_file *file)
 		core_fclose(file->file);
 	if (file->zipdata != NULL)
 		free(file->zipdata);
+	if (file->filename != NULL)
+		astring_free(file->filename);
 	free(file);
 }
 
@@ -726,6 +727,20 @@ core_file *mame_core_file(mame_file *file)
 
 	/* return the core file */
 	return file->file;
+}
+
+
+/*-------------------------------------------------
+    mame_file_full_name - return the full filename
+    for a given mame_file
+-------------------------------------------------*/
+
+const char *mame_file_full_name(mame_file *file)
+{
+	/* return a pointer to the string if we have one; otherwise, return NULL */
+	if (file->filename != NULL)
+		return astring_c(file->filename);
+	return NULL;
 }
 
 

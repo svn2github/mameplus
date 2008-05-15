@@ -22,31 +22,32 @@ NAME                                        Year  B-board #      B-board PALs   
 ------------------------------------------- ----  --------  ---------------------  ---------  -----------------------  -------------
 Forgotten Worlds / Lost Worlds              1988  88618B-2  LWCHR            LWIO  None       CPS-B-01  DL-0411-10001  None
   (alt B-board revision)                          88621B-2  LW621            LWIO  ?
-Ghouls 'n Ghosts (World / US)               1988  88620B-2  DM620            LWIO  None       CPS-B-01  DL-0411-10001  None
+Ghouls 'n Ghosts (World / US)               1988  88620-B-2 DM620            LWIO  None       CPS-B-01  DL-0411-10001  None
   (alt B-board revision - Japan)                  88622B-2  DM22A            LWIO  88622-C-1  CPS-B-01  DL-0411-10001  None
 Strider                                     1989  89624B-2  ST24M1           LWIO  88622-C-1  CPS-B-01  DL-0411-10001  None
   (alt B-board revision)                          89624B-2  ST24M2           LWIO  88622-C-2  CPS-B-01  DL-0411-10001  None
   (alt B-board revision)                          89624B-3  ST24B2           LWIO  88622-C-2  CPS-B-01  DL-0411-10001  None
   (alt B-board revision - Japan)                  ?         ST22B            ?
 Dynasty Wars                                1989  89624B-3  TK24B?           ?     88622-C-2  CPS-B-02  DL-0411-10002  None
-  (alt B-board revision - Japan)                  88622B-3  TK22B            IOB1
+  (alt B-board revision - Japan)                  88622B-3  TK22B            LWIO
 Willow                                      1989  89624B-3  WL24B            LWIO  88622-C-4  CPS-B-03  DL-0411-10003  None
   (alt B-board revision - Japan)                  88622B-3  WL22B            LWIO  88622-C-2  CPS-B-03  DL-0411-10003  None
 UN Squadron / Area 88                       1989  89624B-3  AR24B            LWIO  88622-C-4  CPS-B-11  DL-0411-10004  None
   (alt B-board revision - Japan)                  88622B-2  AR22B            LWIO
+  (alt B-board revision - Japan)                  88622B-3  AR22B            LWIO
 Final Fight (first rev)                     1989  89624B-3  S224B            IOB1  88622-C-5  CPS-B-04  DL-0411-10005  None
 Final Fight (US/Japan 900112)                                                      ?          CPS-B-04@ DL-0411-10001  None
 Final Fight (US 900613)                           89624B-3                   IOB1  88622-C-5  CPS-B-05  DL-0411-10006  None
 Final Fight (Japan 900305) (alt B-board revision) 88622B-2  S222B            LWIO  88622-C-5  CPS-B-02  DL-0411-10002  None
 1941                                        1990  ?         YI24B            ?     88622-C-5  CPS-B-05  DL-0411-10006  ?
-  (alt B-board revision - Japan)                  ?         ?                ?
+  (alt B-board revision - Japan)                  ?         YI22B?           ?
 Mercs                                       1990  89624B-3  O224B            IOB1  90628-C-1  CPS-B-12  DL-0411-10007  C628
-  (alt B-board revision - Japan)                  ?         ?                ?
+  (alt B-board revision - Japan)                  ?         O222B?           ?
   (alt C-board revision)                                                           90628-C-2
 Magic Sword                                 1990  89624B-3  MS24B            IOB1  88622-C-5  CPS-B-13  DL-0411-10008  None
   (alt B-board revision - Japan)                  89625B-1  MS22B            IOB1
 Chiki Chiki Boys / Mega Twins               1990  89624B-3  CK24B            IOB1  88622-C-5  CPS-B-14  DL-0411-10009  None
-  (alt B-board revision - Japan)                  ?         ?                ?
+  (alt B-board revision - Japan)                  ?         CK22B?           ?
 Nemo                                        1990  89624B-3  NM24B            IOB1  88622-C-5  CPS-B-15  DL-0411-10010  None
   (alt B-board revision - Japan)                  89625B-1  NM22B            ?
 Carrier Air Wing / U.S. Navy                1990  89624B-3  CA24B            IOB1  88622-C-5  CPS-B-16  DL-0411-10011  None
@@ -63,16 +64,16 @@ Street Fighter II (US 911101)                                                   
 Street Fighter II (Japan 911210)                                                              CPS-B-13  DL-0411-10008
 Three Wonders*                              1991  89624B-3  RT24B            LWIO  90630C-4   CPS-B-21  DL-0921-10014        IOC1
   (alt B-board revision - Japan)                  89625B-1  RT22B            IOB1
-  (alt B-board revision)                          91634B-2  ?                IOB1
+  (alt B-board revision)                          91634B-2  RT63B?           IOB1
 King of Dragons*                            1991  90629B-3  KD29B            IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
 Captain Commando*                           1991  91635B-2  CC63B     CCPRG  IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
 Knights of the Round*                       1991  91635B-2  KR63B     BPRG1  IOB1  90631C-5   CPS-B-21  DL-0921-10014  C632  IOC1
-  (alt B-board revision)                          ?         ?                ?
+  (alt B-board revision)                          ?         KR29B?           ?
 Street Fighter II' Champion Edition         1992  91635B-2  S9263B    BPRG1  IOB1  92631C-6   CPS-B-21  DL-0921-10014  C632  IOC1
   (alt B-board revision - Japan)                  91634B-2  S9263B    BPRG1  IOB1
 Varth (World)                               1992  89624B-3  VA24B            IOB1  88622-C-5  CPS-B-04  DL-0411-10005  None
   (alt B-board revision - US)                     ?         VA63B?           ?
-Varth (Japan)*                                    ?         ?                      ?          CPS-B-21  DL-0921-10014  ?
+Varth (Japan)*                                    ?         VA22B?           ?     ?          CPS-B-21  DL-0921-10014  ?
 Capcom World 2*                             1992  ?         Q522B            IOB1  ?          CPS-B-21  DL-0921-10014        IOC1
 Quiz and Dragons (US)*                      1992  89625B-1  QD22B            IOB1  92641C-1   CPS-B-21  DL-0921-10014        IOC1
 Quiz and Dragons (Japan)*                   1994  ?         ?                IOB1  ?          CPS-B-21  DL-0921-10014        IOC1
@@ -874,7 +875,7 @@ static const struct gfx_range mapper_RT22B_table[] =
 	// bank 2 = pin 14 (ROMs 3,7,11,15,19,21,26,28)
 	// bank 3 = pin 12 (ROMS 4,8,12,16,20,22,27,29)
 
-	/* type            start   end     bank */
+	/* type                              start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x4000, 0x53ff, 1 },
@@ -980,7 +981,7 @@ static const struct gfx_range mapper_VA63B_table[] =
 	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
 	// pins 12,13,14,15,16,17 are never enabled
 
-	/* type            start   end     bank */
+	/* type                              start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
@@ -1029,12 +1030,12 @@ static const struct gfx_range mapper_CD63B_table[] =
 #define mapper_PS63B	{ 0x8000, 0x8000, 0, 0 }, mapper_PS63B_table
 static const struct gfx_range mapper_PS63B_table[] =
 {
-	/* type                              start   end     bank */
-	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
-	{ GFXTYPE_SPRITES,                   0x1000, 0x7fff, 0 },
+	/* type            start   end     bank */
+	{ GFXTYPE_SCROLL1, 0x0000, 0x0fff, 0 },
+	{ GFXTYPE_SPRITES, 0x1000, 0x7fff, 0 },
 
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x8000, 0xdbff, 1 },
-	{ GFXTYPE_SCROLL3,                   0xdc00, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3, 0xdc00, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -1060,7 +1061,7 @@ static const struct gfx_range mapper_QD22B_table[] =
 	// verified from PAL dump:
 	// bank 0 = pin 19
 
-	/* type            start   end     bank */
+	/* type                              start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x3fff, 0 },
@@ -1249,7 +1250,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m4",    HACK_B_1, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1459,7 +1460,7 @@ static MACHINE_RESET( cps )
 	if (strcmp(gamename, "sf2m2" )==0)
 	{
 		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
+		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
 		rom[0xc0670/2] = 0x4e71;
 	}
 	if ((strcmp(gamename, "dinoh" )==0) ||
@@ -1753,33 +1754,33 @@ void cps1_get_video_base(void )
 	if (cps1_game_config->bootleg_kludge == 1)
 	{
 		cps1_cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = -0x0c;
 		scroll2xoff = -0x0e;
 		scroll3xoff = -0x10;
 	}
 	else if (cps1_game_config->bootleg_kludge == 2)
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
 	else if (cps1_game_config->bootleg_kludge == 4)
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
 	}
 	else
 	{
-		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
-	cps1_other = cps1_base(CPS1_OTHER_BASE,cps1_other_size);
+	cps1_other=cps1_base(CPS1_OTHER_BASE,cps1_other_size);
 
 	/* Get scroll values */
 	cps1_scroll1x = cps1_cps_a_regs[CPS1_SCROLL1_SCROLLX] + scroll1xoff;
@@ -1923,8 +1924,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-         roms have been mixed to be reproduced (ffightua) -- it looks like each column
-         should alternate between the left and right side of the 16x16 tiles */
+       roms have been mixed to be reproduced (ffightua) -- it looks like each column
+       should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -2004,7 +2005,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-	MACHINE_RESET_CALL(cps);
+    MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -2088,7 +2089,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-		{
+	{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);

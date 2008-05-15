@@ -738,7 +738,6 @@ try_again:
 	d3d->presentation.MultiSampleType				= D3DMULTISAMPLE_NONE;
 	d3d->presentation.SwapEffect					= D3DSWAPEFFECT_DISCARD;
 	d3d->presentation.hDeviceWindow					= window->hwnd;
-	//mamep: should use runtime option instead of compile-time HAS_WINDOW_MENU
 	d3d->presentation.Windowed						= !window->fullscreen || win_has_menu(window);
 	d3d->presentation.EnableAutoDepthStencil		= FALSE;
 	d3d->presentation.AutoDepthStencilFormat		= D3DFMT_D16;
@@ -1140,7 +1139,6 @@ static int config_adapter_mode(running_machine *machine, win_window_info *window
 	}
 
 	// choose a resolution: window mode case
-	//mamep: should use runtime option instead of compile-time HAS_WINDOW_MENU
 	if (!window->fullscreen || !video_config.switchres || win_has_menu(window))
 	{
 		RECT client;

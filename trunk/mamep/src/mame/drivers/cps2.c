@@ -864,22 +864,22 @@ static READ16_HANDLER( joy_or_paddle_r )
 static ADDRESS_MAP_START( cps2_readmem, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x000000, 0x3fffff) AM_READ(SMH_ROM)                   /* 68000 ROM */
 	AM_RANGE(0x400000, 0x40000b) AM_READ(SMH_RAM)                   /* CPS2 object output */
-	AM_RANGE(0x618000, 0x619fff) AM_READ(qsound_sharedram1_r)       /* Q RAM */
+	AM_RANGE(0x618000, 0x619fff) AM_READ(qsound_sharedram1_r)         /* Q RAM */
 	AM_RANGE(0x662000, 0x662001) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x662008, 0x662009) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x662020, 0x662021) AM_READ(SMH_RAM)                   /* Network adapter related, accessed in SSF2TB */
 	AM_RANGE(0x660000, 0x663fff) AM_READ(SMH_RAM)                   /* When bit 14 of 0x804030 equals 0 this space is available. Many games store highscores and other info here if available. */
 	AM_RANGE(0x664000, 0x664001) AM_READ(SMH_RAM)                   /* Unknown - Only used if 0x660000-0x663fff available (could be RAM enable?) */
-	AM_RANGE(0x708000, 0x709fff) AM_READ(cps2_objram2_r)            /* Object RAM */
-	AM_RANGE(0x70a000, 0x70bfff) AM_READ(cps2_objram2_r)            /* mirror */
-	AM_RANGE(0x70c000, 0x70dfff) AM_READ(cps2_objram2_r)            /* mirror */
-	AM_RANGE(0x70e000, 0x70ffff) AM_READ(cps2_objram2_r)            /* mirror */
+	AM_RANGE(0x708000, 0x709fff) AM_READ(cps2_objram2_r)              /* Object RAM */
+	AM_RANGE(0x70a000, 0x70bfff) AM_READ(cps2_objram2_r)              /* mirror */
+	AM_RANGE(0x70c000, 0x70dfff) AM_READ(cps2_objram2_r)              /* mirror */
+	AM_RANGE(0x70e000, 0x70ffff) AM_READ(cps2_objram2_r)              /* mirror */
 	AM_RANGE(0x800140, 0x80017f) AM_READ(cps1_cps_b_r)              /* mirror (sfa) */
-	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                /* IN0 */
-	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                /* IN1 */
-	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                /* IN2 + EEPROM */
-	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)      /* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
-	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)                  /* unknown (xmcotaj hangs if this is 0) */
+	AM_RANGE(0x804000, 0x804001) AM_READ_PORT("IN0")                  /* IN0 */
+	AM_RANGE(0x804010, 0x804011) AM_READ_PORT("IN1")                  /* IN1 */
+	AM_RANGE(0x804020, 0x804021) AM_READ_PORT("IN2")                  /* IN2 + EEPROM */
+	AM_RANGE(0x804030, 0x804031) AM_READ(cps2_qsound_volume_r)        /* Master volume. Also when bit 14=0 addon memory is present, when bit 15=0 network adapter present. */
+	AM_RANGE(0x8040b0, 0x8040b3) AM_READ(kludge_r)                    /* unknown (xmcotaj hangs if this is 0) */
 	AM_RANGE(0x804140, 0x80417f) AM_READ(cps1_cps_b_r)              /* CPS-B custom */
 	AM_RANGE(0x900000, 0x92ffff) AM_READ(SMH_RAM)                   /* Video RAM */
 	AM_RANGE(0xff0000, 0xffffff) AM_READ(SMH_RAM)                   /* RAM */
@@ -2031,10 +2031,10 @@ ROM_START( csclubh )
 
 	ROM_REGION( 0x1000000, REGION_GFX1, 0 )
 	ROM_FILL(              0x000000, 0x800000, 0 )
-	ROMX_LOAD( "csc.14m",  0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
-	ROMX_LOAD( "csc.16m",  0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
-	ROMX_LOAD( "csc.18m",  0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
-	ROMX_LOAD( "csc.20m",  0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
+	ROMX_LOAD( "csc.14m",   0x800000, 0x200000, CRC(e8904afa) SHA1(39713ffca4e3a754c7c44c0ef4d99fb5a77d8da7) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 73 to 76 joined in all eprom version */
+	ROMX_LOAD( "csc.16m",   0x800002, 0x200000, CRC(c98c8079) SHA1(22d68ba2ef62b51981bb3e99ec2cde8d1b36514b) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 63 to 66 joined in all eprom version */
+	ROMX_LOAD( "csc.18m",   0x800004, 0x200000, CRC(c030df5a) SHA1(6d5e5a05531e168d0d44c591f9185ae300908fc2) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 83 to 86 joined in all eprom version */
+	ROMX_LOAD( "csc.20m",   0x800006, 0x200000, CRC(b4e55863) SHA1(da66f0a36266b906e4c149aec152c323bb184c57) , ROM_GROUPWORD | ROM_SKIP(6) ) /* roms 93 to 96 joined in all eprom version */
 
 	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
 	ROM_LOAD( "csc.01",   0x00000, 0x08000, CRC(ee162111) SHA1(ce8d4bd32bb10ee8b0274ba6fcef05a583b39d48) )
@@ -5208,9 +5208,9 @@ ROM_START( sfz2ad )
 	ROM_LOAD16_WORD_SWAP( "sz2ad.03a", 0x000000, 0x80000, CRC(017f8fab) SHA1(5546d935c569464c29999914c697c2a171659f42) )
 	ROM_LOAD16_WORD_SWAP( "sz2ad.04a", 0x080000, 0x80000, CRC(f50e5ea2) SHA1(ec75aa69bd18cdfac4f5783d9c6c3691bb4914c9) )
 	ROM_LOAD16_WORD_SWAP( "sz2.05a",   0x100000, 0x80000, CRC(98e8e992) SHA1(41745b63e6b3888081d189b8315ed3b7526b3d20) )
-	ROM_LOAD16_WORD_SWAP( "sz2.06",    0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
-	ROM_LOAD16_WORD_SWAP( "sz2a.07a",  0x200000, 0x80000, CRC(0aed2494) SHA1(7beb1a394f17cd78a27128292b626aae28754ca2) )
-	ROM_LOAD16_WORD_SWAP( "sz2.08",    0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
+	ROM_LOAD16_WORD_SWAP( "sz2.06",   0x180000, 0x80000, CRC(5b1d49c0) SHA1(f0a0c894c9cbe2b18e7f59058665949ee0025732) )
+	ROM_LOAD16_WORD_SWAP( "sz2a.07a", 0x200000, 0x80000, CRC(0aed2494) SHA1(7beb1a394f17cd78a27128292b626aae28754ca2) )
+	ROM_LOAD16_WORD_SWAP( "sz2.08",   0x280000, 0x80000, CRC(0fe8585d) SHA1(0cd5369a5aa90c98d8dc1ff3342cd4d990631cff) )
 
 	ROM_REGION( 0x1400000, REGION_GFX1, 0 )
 	ROMX_LOAD( "sz2.13m",   0x0000000, 0x400000, CRC(4d1f1f22) SHA1(659fb4305bcf0cbbbbec97ede6e68a8323b13308) , ROM_GROUPWORD | ROM_SKIP(6) )
@@ -8159,7 +8159,7 @@ GAME( 2000, mpang,    0,        cps2, cps2_2p1b, cps2,     ROT0,   "Mitchell, di
 GAME( 2000, mpangj,   mpang,    cps2, cps2_2p1b, cps2,     ROT0,   "Mitchell, distributed by Capcom", "Mighty! Pang (Japan 001011)", 0 )
 GAME( 2001, pzloop2,  0,        cps2, pzloop2,   pzloop2,  ROT0,   "Mitchell, distributed by Capcom", "Puzz Loop 2 (Euro 010302)", 0 )
 GAME( 2001, pzloop2j, pzloop2,  cps2, pzloop2,   pzloop2,  ROT0,   "Mitchell, distributed by Capcom", "Puzz Loop 2 (Japan 010205)", 0 )
-GAME( 2001, choko,    0,        cps2, choko,     cps2,     ROT0,   "Mitchell, distributed by Capcom", "Choko (Japan 010820)", 0 )
+GAME( 2001, choko,    0,        cps2, choko,     cps2,     ROT0,   "Mitchell, distributed by Capcom", "Janpai Puzzle Choukou (Japan 010820)", 0 )
 
 /* Games released on CPS-2 hardware by Eighting/Raizing */
 

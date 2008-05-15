@@ -112,6 +112,7 @@ enum
 	XTAL_28MHz   		= 28000000,
 	XTAL_28_37516MHz	= 28375160,		/* Amiga PAL systems */
 	XTAL_28_63636MHz  	= 28636360,		/* Later Leland games and Atari GT, Amiga NTSC , Raiden2 h/w */
+	XTAL_30MHz   		= 30000000,		/* Impera Magic Card */
 	XTAL_30_4761MHz  	= 30476100,		/* Taito JC */
 	XTAL_32MHz   		= 32000000,
 	XTAL_32_22MHz  		= 32220000,		/* Typically used on 90's Data East PCBs */
@@ -139,8 +140,8 @@ enum
 	XTAL_66_6667MHz   	= 66666700,		/* Later Midway games */
 	XTAL_67_7376MHz  	= 67737600,		/* PSX-based h/w, Sony ZN1-2-based */
 	XTAL_73_728MHz  	= 73728000,		/* Ms. Pac-Man/Galaga 20th Anniversary */
-	XTAL_100MHz  		= 100000000,	/* PSX-based Namco System 12, Vegas, Sony ZN1-2-based */
-	XTAL_101_4912MHz  	= 101491200,	/* PSX-based Namco System 10 */
+	XTAL_100MHz  		= 100000000,		/* PSX-based Namco System 12, Vegas, Sony ZN1-2-based */
+	XTAL_101_4912MHz  	= 101491200,		/* PSX-based Namco System 10 */
 
 /* Resonators (There are probably more. Almost always used for driving OKI sound chips) */
 

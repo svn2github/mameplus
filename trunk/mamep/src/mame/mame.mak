@@ -90,6 +90,7 @@ CPUS += I8051
 CPUS += I8052
 CPUS += I8751
 CPUS += I8752
+CPUS += DS5002FP
 CPUS += M6800
 CPUS += M6801
 CPUS += M6802
@@ -747,7 +748,7 @@ $(MAMEOBJ)/fuuki.a: \
 	$(DRIVERS)/fuukifg3.o $(VIDEO)/fuukifg3.o \
 
 $(MAMEOBJ)/gaelco.a: \
-	$(DRIVERS)/gaelco.o $(VIDEO)/gaelco.o \
+	$(DRIVERS)/gaelco.o $(VIDEO)/gaelco.o $(MACHINE)/gaelcrpt.o \
 	$(DRIVERS)/gaelco2.o $(MACHINE)/gaelco2.o $(VIDEO)/gaelco2.o \
 	$(DRIVERS)/gaelco3d.o $(VIDEO)/gaelco3d.o \
 	$(DRIVERS)/glass.o $(VIDEO)/glass.o \
@@ -1603,6 +1604,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
 	$(DRIVERS)/funworld.o $(VIDEO)/funworld.o \
 	$(DRIVERS)/gamecstl.o \
+	$(DRIVERS)/gatron.o \
 	$(DRIVERS)/gtipoker.o \
 	$(DRIVERS)/go2000.o \
 	$(DRIVERS)/good.o \
@@ -1777,7 +1779,7 @@ $(DRIVERS)/pmpoker.o:	$(LAYOUT)/pmpoker.lh \
 						$(LAYOUT)/goldnpkr.lh \
 						$(LAYOUT)/pottnpkr.lh
 
-$(DRIVERS)/qix.o:		$(LAYOUT)/elecyoyo.lh
+$(DRIVERS)/qix.o:	$(LAYOUT)/elecyoyo.lh
 
 $(DRIVERS)/sbrkout.o:	$(LAYOUT)/sbrkout.lh
 
