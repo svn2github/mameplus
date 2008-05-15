@@ -513,7 +513,7 @@ static void sms_cartslot_getinfo(const mess_device_class *devclass, UINT32 state
 		case MESS_DEVINFO_PTR_LOAD:				info->load = DEVICE_IMAGE_LOAD_NAME(sms_cart); break;
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:		strcpy(info->s = device_temp_str(), "sms"); break;
+		case MESS_DEVINFO_STR_FILE_EXTENSIONS:		strcpy(info->s = device_temp_str(), "sms,bin"); break;
 
 		default:					cartslot_device_getinfo(devclass, state, info); break;
 	}
@@ -523,7 +523,8 @@ SYSTEM_CONFIG_START(sms)
 	CONFIG_DEVICE(sms_cartslot_getinfo)
 SYSTEM_CONFIG_END
 
-static void sg1000_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info) {
+
+static void sg1000m3_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info) {
 	/* cartslot */
 	switch(state) {
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:		info->i = 1; break;
@@ -531,8 +532,8 @@ static void sg1000_cartslot_getinfo(const mess_device_class *devclass, UINT32 st
 	}
 }
 
-SYSTEM_CONFIG_START(sg1000)
-	CONFIG_DEVICE(sg1000_cartslot_getinfo)
+SYSTEM_CONFIG_START(sg1000m3)
+	CONFIG_DEVICE(sg1000m3_cartslot_getinfo)
 SYSTEM_CONFIG_END
 
 static void smssdisp_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info) {
@@ -554,7 +555,7 @@ static void gamegear_cartslot_getinfo(const mess_device_class *devclass, UINT32 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case MESS_DEVINFO_INT_COUNT:				info->i = 1; break;
 		case MESS_DEVINFO_INT_MUST_BE_LOADED:		info->i = 1; break;
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:		strcpy(info->s = device_temp_str(), "gg"); break;
+		case MESS_DEVINFO_STR_FILE_EXTENSIONS:		strcpy(info->s = device_temp_str(), "gg,bin"); break;
 
 		default:					sms_cartslot_getinfo(devclass, state, info); break;
 	}
@@ -610,7 +611,7 @@ SYSTEM_CONFIG_END
 ***************************************************************************/
 
 /*    YEAR  NAME        PARENT      COMPAT  MACHINE     INPUT   INIT    CONFIG      COMPANY     FULLNAME                            FLAGS */
-CONS( 1984, sg1000m3,   sms,        0,      smsfm,      sms,    0,      sg1000,     "Sega",     "SG-1000 Mark III",                 FLAG_REGION_JAPAN | FLAG_FM )
+CONS( 1984, sg1000m3,   sms,        0,      smsfm,      sms,    0,      sg1000m3,   "Sega",     "SG-1000 Mark III",                 FLAG_REGION_JAPAN | FLAG_FM )
 CONS( 1986, sms1,       sms,        0,      sms1ntsc,   sms,    0,      sms,        "Sega",     "Master System I",                  FLAG_BIOS_FULL )
 CONS( 1986, sms1pal,    sms,        0,      sms1pal,    sms,    0,      sms,        "Sega",     "Master System I (PAL)" ,           FLAG_BIOS_FULL )
 CONS( 1986, smssdisp,   sms,        0,      smssdisp,   sms,    0,      smssdisp,   "Sega",     "Master System Store Display Unit", GAME_NOT_WORKING )
