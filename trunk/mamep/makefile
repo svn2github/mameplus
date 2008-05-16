@@ -18,7 +18,6 @@
 
 include config.def
 
-
 #-------------------------------------------------
 # specify core target: mame, mess, etc.
 # specify subtarget: mame, mess, tiny, etc.
@@ -39,9 +38,6 @@ ifeq ($(SUBTARGET),)
 SUBTARGET = $(TARGET)
 endif
 
-ifndef CROSS_BUILD_OSD
-CROSS_BUILD_OSD = $(OSD)
-endif
 
 
 #-------------------------------------------------
@@ -52,6 +48,10 @@ endif
 
 ifeq ($(OSD),)
 OSD = windows
+endif
+
+ifndef CROSS_BUILD_OSD
+CROSS_BUILD_OSD = $(OSD)
 endif
 
 ifneq ($(NO_DLL),)
@@ -134,15 +134,6 @@ endif
 # uncomment next line to use DRC PowerPC engine
 X86_PPC_DRC = 1
 
-# uncomment next line to use Assembler 68000 engine
-# X86_ASM_68000 = 1
-
-# uncomment next line to use Assembler 68010 engine
-# X86_ASM_68010 = 1
-
-# uncomment next line to use Assembler 68020 engine
-# X86_ASM_68020 = 1
-
 # uncomment next line to use DRC 68K engine
 X86_M68K_DRC = 1
 
@@ -194,10 +185,6 @@ BUILD_ZLIB = 1
 # disable DRC cores for 64-bit builds
 ifneq ($(PTR64),)
 X86_PPC_DRC =
-X86_VOODOO_DRC =
-X86_ASM_68000 =
-X86_ASM_68010 =
-X86_ASM_68020 =
 X86_M68K_DRC =
 endif
 
@@ -363,10 +350,6 @@ endif
 
 ifneq ($(USE_JOY_EXTRA_BUTTONS),)
     DEFS += -DUSE_JOY_EXTRA_BUTTONS
-endif
-
-ifneq ($(USE_NEOGEO_HACKS),)
-    DEFS+= -DUSE_NEOGEO_HACKS
 endif
 
 ifneq ($(USE_HISCORE),)
@@ -580,6 +563,7 @@ LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
 VERSIONOBJ = $(OBJ)/version.o
+
 
 
 #-------------------------------------------------

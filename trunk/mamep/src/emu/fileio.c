@@ -256,35 +256,30 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 		/* if we're opening for read-only we have other options */
 		if ((openflags & (OPEN_FLAG_READ | OPEN_FLAG_WRITE)) == OPEN_FLAG_READ)
 		{
-			astring *zipped_fullname;
-
-			zipped_fullname = astring_alloc();
-			astring_cpyc(zipped_fullname, astring_c((*file)->filename));
 			filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
-			astring_free(zipped_fullname);
-			zipped_fullname = NULL;
 
 			if (filerr == FILERR_NONE)
 				break;
 
 #if 1	// mamep: load zipped inp file
 			{
-				int offset = 0;
-				int n = astring_rchr((*file)->filename, offset, '.');
+			    astring *zipped_fullname;
+			    int offset = 0;
+			    int n = astring_rchr((*file)->filename, offset, '.');
+    
+			    if (n > 0)
+				    offset = n;
+    
+			    zipped_fullname = astring_alloc();
+			    astring_cpych(zipped_fullname, astring_c((*file)->filename), offset);
+			    astring_catc(zipped_fullname, PATH_SEPARATOR);
+			    astring_catc(zipped_fullname, filename);
+    
+			    filerr = fopen_attempt_zipped(zipped_fullname, crc, openflags, *file);
+			    astring_free(zipped_fullname);
 
-				if (n > 0)
-					offset = n;
-
-				zipped_fullname = astring_alloc();
-				astring_cpych(zipped_fullname, astring_c((*file)->filename), offset);
-				astring_catc(zipped_fullname, PATH_SEPARATOR);
-				astring_catc(zipped_fullname, filename);
-
-				filerr = fopen_attempt_zipped(zipped_fullname, crc, openflags, *file);
-				astring_free(zipped_fullname);
-
-				if (filerr == FILERR_NONE)
-					break;
+			if (filerr == FILERR_NONE)
+				break;
 			}
 #endif
 		}
