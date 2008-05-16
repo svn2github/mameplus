@@ -588,7 +588,7 @@ C&lones
 
 # mess/osd/winui/layoutms.c: 50 osd/winui/layout.c: 62
 CPU
-CPU оƬ
+
 
 # osd/winui/dialogs.c: 255 osd/winui/winuiopt.c: 427
 Cabinet

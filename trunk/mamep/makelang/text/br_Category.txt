@@ -136,15 +136,15 @@ Labirinto / Contorno para Adultos
 
 # 2056
 Maze / Shooter Large
-Labirinto / Tiro  em Área Grande
+Labirinto / Tiro em Área Grande
 
 # 2133
 Maze / Shooter Small
-Labirinto / Tiro  em Área Pequena
+Labirinto / Tiro em Área Pequena
 
 # 2195
 Maze / Shooter Small *Mature*
-Labirinto / Tiro  em Área Pequena para Adultos
+Labirinto / Tiro em Área Pequena para Adultos
 
 # 2199
 Maze / Surround
@@ -376,7 +376,7 @@ Tiro / Vôo na Diagonal
 
 # 4544
 Shooter / Flying Horizontal
-Tiro / vôo na Horizontal
+Tiro / Vôo na Horizontal
 
 # 4774
 Shooter / Flying Horizontal *Mature*
@@ -504,7 +504,7 @@ Esportes / Tênis de Mesa
 
 # 6451
 Sports / Pool
-Esportes / BIlhar
+Esportes / Bilhar
 
 # 6489
 Sports / Pool *Mature*
@@ -512,7 +512,7 @@ Esportes / Bilhar para Adultos
 
 # 6503
 Sports / Shuffleboard
-Esportes / Shuffeboard
+Esportes / Shuffleboard
 
 # 6509
 Sports / Skateboarding
