@@ -1406,6 +1406,7 @@ gsword2	击剑士 (日版?)	击剑士 (日版?)	Taito Corporation
 pitnrun	追击赛车 (第1套)	追击赛车 (第1套)	Taito Corporation
 pitnruna	追击赛车 (第2套)	追击赛车 (第2套)	Taito Corporation
 lkage	影子传说	影子传说	Taito Corporation
+lkageo	影子传说 (旧版)	影子传说 (旧版)	Taito Corporation
 lkageb	影子传说 (盗版 第1套)	影子传说 (盗版 第1套)	bootleg
 lkageb2	影子传说 (盗版 第2套)	影子传说 (盗版 第2套)	bootleg
 lkageb3	影子传说 (盗版 第3套)	影子传说 (盗版 第3套)	bootleg
@@ -1865,8 +1866,9 @@ hellfir2	地狱火 (2P Ver., first edition)	地狱火 (2P Ver., first edition)	Toaplan
 zerowing	零式战机	零式战机	Toaplan
 zerowng2	零式战机 (2 player simultaneous ver.)	零式战机 (2 player simultaneous ver.)	[Toaplan] Williams Electronics Games, Inc
 demonwld	步步惊魂	步步惊魂	Toaplan
-demonwl1	步步惊魂 (Taito license)	步步惊魂 (Taito license)	Toaplan (Taito license)
-demonwl2	步步惊魂 (第一版)	步步惊魂 (第一版)	Toaplan
+demonwl1	步步惊魂 (Taito 许可)	步步惊魂 (Taito 许可)	Toaplan (Taito license)
+demonwl2	步步惊魂 (早期版)	步步惊魂 (早期版)	Toaplan
+demonwl3	步步惊魂 (第一版)	步步惊魂 (第一版)	Toaplan
 fireshrk	鲛! 鲛! 鲛! Fire Shark	鲛! 鲛! 鲛! Fire Shark	Toaplan
 samesame	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
 samesam2	鲛! 鲛! 鲛! (2P Ver.)	鲛! 鲛! 鲛! (2P Ver.)	Toaplan
@@ -1899,7 +1901,8 @@ moremorp	益智迷你游戏 加强版	益智迷你游戏 加强版	SemiCom / Exit
 snowbro3	雪人兄弟 3 不可思议的冒险	雪人兄弟 3 不可思议的冒险	Syrmex (bootleg/hack)
 finalttr	俄罗斯方块终结者 - 对战篇	俄罗斯方块终结者 - 对战篇	Jeil Computer System
 tekipaki	机器人方块	机器人方块	Toaplan
-ghox	打砖块飞行台	打砖块飞行台	Toaplan
+ghox	打砖块飞行台 (第1套)	打砖块飞行台 (第1套)	Toaplan
+ghoxa	打砖块飞行台 (第2套)	打砖块飞行台 (第2套)	Toaplan
 dogyuun	雷射战机	雷射战机	Toaplan
 kbash	猫王	猫王	Toaplan
 kbash2	猫王 2 (盗版)	猫王 2 (盗版)	bootleg
@@ -2060,6 +2063,7 @@ rushcrsh	高速追击令 (日版)	高速追击令 (日版)	Capcom
 lwings	翼人 (美版 第1套)	翼人 (美版 第1套)	Capcom
 lwings2	翼人 (美版 第2套)	翼人 (美版 第2套)	Capcom
 lwingsjp	翼人 (日版)	翼人 (日版)	Capcom
+lwingsb	翼人 (盗版)	翼人 (盗版)	bootleg
 sidearms	绝对合体 (世界版)	绝对合体 (世界版)	Capcom
 sidearmr	绝对合体 (美版)	绝对合体 (美版)	Capcom (Romstar license)
 sidearjp	绝对合体 (日版)	绝对合体 (日版)	Capcom
@@ -2419,7 +2423,7 @@ progearj	能源之岚 (日版 010117)	能源之岚 (日版 010117)	Capcom, supported by Cave
 progeara	能源之岚 (亚洲版 010117)	能源之岚 (亚洲版 010117)	Capcom, supported by Cave
 pzloop2	智力循环 2 (欧洲版 010302)	智力循环 2 (欧洲版 010302)	Mitchell, distributed by Capcom
 pzloop2j	智力循环 2 (日版 010205)	智力循环 2 (日版 010205)	Mitchell, distributed by Capcom
-choko	麻将牌 - 长江 (日版 010820)	麻将牌 - 长江 (日版 010820)	Mitchell, distributed by Capcom
+choko	日本益智麻将牌 - 长江 (日版 010820)	日本益智麻将牌 - 长江 (日版 010820)	Mitchell, distributed by Capcom
 hsf2j	终极街头霸王 II : 十五周年纪念版 (日版 031222)	终极街头霸王 II : 十五周年纪念版 (日版 031222)	Capcom
 hsf2	终极街头霸王 II : 十五周年纪念版 (亚洲版 040202)	终极街头霸王 II : 十五周年纪念版 (亚洲版 040202)	Capcom
 sfiii	街头霸王 III - 新世纪 (日版, 970204)	街头霸王 III - 新世纪 (日版, 970204)	Capcom
@@ -4244,6 +4248,7 @@ bmcompm2	狂热节拍 全部混合版 2 (ver JA-A)	狂热节拍 全部混合版 2 (ver JA-A)	Konam
 hmcompm2	狂热节拍 全部混合版 2 (ver UA-A)	狂热节拍 全部混合版 2 (ver UA-A)	Konami
 bm6thmix	狂热节拍 六次混合版 (ver JA-A)	狂热节拍 六次混合版 (ver JA-A)	Konami
 bm7thmix	狂热节拍 七次混合版 (ver JA-B)	狂热节拍 七次混合版 (ver JA-B)	Konami
+bmfinal	狂热节拍 THE FINAL (ver JA-A)	狂热节拍 THE FINAL (ver JA-A)	Konami
 ppp	劲舞天堂	劲舞天堂	Konami
 ppd	动感热舞	动感热舞	Konami
 ppp11	劲舞天堂 v1.1	劲舞天堂 v1.1	Konami
@@ -5767,7 +5772,7 @@ thoop	闪电投篮	闪电投篮	Gaelco
 squash	壁球 (Ver. 1.0)	壁球 (Ver. 1.0)	Gaelco
 wrally	世界拉力赛车 (第1套)	世界拉力赛车 (第1套)	Gaelco
 wrallya	世界拉力赛车 (第2套)	世界拉力赛车 (第2套)	Gaelco
-wrallyb	世界拉力赛车 (第3套 - 930217)	世界拉力赛车 (第3套 - 930217)	Gaelco
+wrallyb	世界拉力赛车 (美版, 930217)	世界拉力赛车 (美版, 930217)	Gaelco (Atari license)
 glass	玻璃 (Ver 1.1)	玻璃 (Ver 1.1)	Gaelco
 glass10	玻璃 (Ver 1.0, 第1套)	玻璃 (Ver 1.0, 第1套)	Gaelco
 glass10a	玻璃 (Ver 1.0, 第2套)	玻璃 (Ver 1.0, 第2套)	Gaelco
@@ -6613,7 +6618,6 @@ saeuro	太空超人 (欧版)	太空超人 (欧版)	Atari
 aztarac	太空舰队	太空舰队	Centuri
 mole	打地鼠	打地鼠	Yachiyo Electronics, Ltd.
 thehand	小手大进击	小手大进击	T.I.C.
-gotya	小手大进击 (12/24/1981, 工程版?)	小手大进击 (12/24/1981, 工程版?)	Game-A-Tron
 mrjong	麻将先生 (日版)	麻将先生 (日版)	Kiwako
 crazyblk	疯狂砖块	疯狂砖块	Kiwako (ECI license)
 blkbustr	大野狼与小红帽	大野狼与小红帽	Kiwako (ECI license)
@@ -6747,8 +6751,6 @@ ripribit	青蛙食物 (版本 2.8.4)	青蛙食物 (版本 2.8.4)	LAI Games
 cfarm	鸡畜场 (版本 2.0)	鸡畜场 (版本 2.0)	LAI Games
 cclownz	戏弄小丑 (版本 1.0)	戏弄小丑 (版本 1.0)	LAI Games
 rotaryf	宇宙侵略者 - 旋式战机	宇宙侵略者 - 旋式战机	<unknown>
-sbugger	太空异形 (第1套)	太空异形 (第1套)	Game-A-Tron
-sbuggera	太空异形 (第2套)	太空异形 (第2套)	Game-A-Tron
 portrait	森林狩猎 (第1套)	森林狩猎 (第1套)	Olympia
 portrata	森林狩猎 (第2套)	森林狩猎 (第2套)	Olympia
 enigma2	谜之侵略者 II	谜之侵略者 II	GamePlan (Zilec Electronics license)
@@ -6841,13 +6843,15 @@ couplep	出双入对 (第2套)	出双入对 (第2套)	Merit
 couplei	出双入对 (第3套)	出双入对 (第3套)	Merit
 pitboss2	赌场大亨 II	赌场大亨 II	Merit
 spitboss	超级赌场大亨	超级赌场大亨	Merit
-pitbossm	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
-megat3	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
+pitbosss	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
+pitbossm	赌场大亨 Megastar	赌场大亨 Megastar	Merit
+megat3	非常接触 III (9255-20-06 RON)	非常接触 III (9255-20-06 RON)	Merit
+megat3a	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
 megat3te	非常接触 III 联赛版 (9255-30-01 ROE)	非常接触 III 联赛版 (9255-30-01 ROE)	Merit
 megat4	非常接触 IV (9255-40-01 ROE)	非常接触 IV (9255-40-01 ROE)	Merit
 megat4a	非常接触 IV (9255-40-01 ROD)	非常接触 IV (9255-40-01 ROD)	Merit
 megat4te	非常接触 IV 联赛版 (9255-50-01 ROD)	非常接触 IV 联赛版 (9255-50-01 ROD)	Merit
-megat5	非常接触 5	非常接触 5	Merit
+megat5	非常接触 5 (9255-60-01 ROC)	非常接触 5 (9255-60-01 ROC)	Merit
 megat6	非常接触 6 (9255-80-01 ROA)	非常接触 6 (9255-80-01 ROA)	Merit
 suprgolf	超级皇冠高尔夫	超级皇冠高尔夫	Nasco/Face?
 hotblock	俄罗斯方块解谜对战	俄罗斯方块解谜对战	Nics? / Nix?
@@ -6914,6 +6918,11 @@ saloon	酒吧(法语版, 加密版)	酒吧(法语版, 加密版)	Unknown
 snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 apple10	苹果 10 (Ver 1.21)	苹果 10 (Ver 1.21)	Sandii'
 tenballs	十球 (Ver 1.05)	十球 (Ver 1.05)	unknown
+gotya	小手大进击 (12/24/1981, 工程版?)	小手大进击 (12/24/1981, 工程版?)	Game-A-Tron
+sbugger	太空异形 (第1套)	太空异形 (第1套)	Game-A-Tron
+sbuggera	太空异形 (第2套)	太空异形 (第2套)	Game-A-Tron
+gatcards	卡片游戏?	卡片游戏?	Game-A-Tron
+gatslots	投币游戏?	投币游戏?	Game-A-Tron
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
 cmv801	樱桃水果盘 (v8.01)	樱桃水果盘 (v8.01)	Corsica
@@ -7183,10 +7192,10 @@ nes	任天堂游戏系统 (NTSC)	任天堂游戏系统 (NTSC)	Nintendo
 nespal	任天堂游戏系统 (PAL)	任天堂游戏系统 (PAL)	Nintendo
 famicom	任天堂红白机	任天堂红白机	Nintendo
 famitwin	任天堂红白机 Twin	任天堂红白机 Twin	Sharp
-gameboy	任天堂GB掌上游戏系统	任天堂GB掌上游戏系统	Nintendo
-supergb	超级任天堂GB掌上游戏系统	超级任天堂GB掌上游戏系统	Nintendo
-gbpocket	任天堂GB口袋游戏系统	任天堂GB口袋游戏系统	Nintendo
-gbcolor	任天堂GBC掌上游戏系统	任天堂GBC掌上游戏系统	Nintendo
+gameboy	Game Boy	Game Boy	Nintendo
+supergb	Super Game Boy	Super Game Boy	Nintendo
+gbpocket	Game Boy Pocket	Game Boy Pocket	Nintendo
+gbcolor	Game Boy Color	Game Boy Color	Nintendo
 snes	超级任天堂游戏系统 (NTSC)	超级任天堂游戏系统 (NTSC)	Nintendo
 snespal	超级任天堂游戏系统 (PAL)	超级任天堂游戏系统 (PAL)	Nintendo
 gba	任天堂GBA掌上游戏系统	任天堂GBA掌上游戏系统	Nintendo
