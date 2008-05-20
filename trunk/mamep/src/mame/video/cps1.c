@@ -1247,7 +1247,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2red",   CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2v004",  CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2accp2", CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
+//	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2m4",    HACK_B_1, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1291,10 +1291,12 @@ static const struct CPS1config cps1_config_table[]=
 	{"kodh",     CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
 	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
-	{"dinohb",   CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
-	{"dinob",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
+	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 4 },	/* layer enable never used */
+	{"dinob",    CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 4 },	/* layer enable never used */
 	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 3 },
+	{"punishrb", CPS_B_21_QS3, mapper_PS63B, 0, 0, 0, 4 },
+	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 4 },
 	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0 },

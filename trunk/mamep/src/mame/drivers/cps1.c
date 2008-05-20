@@ -8162,6 +8162,46 @@ ROM_START( kodh )
 	ROM_LOAD( "kd19.bin",      0x20000, 0x20000, CRC(92941b80) SHA1(5fa7c2793e6febee54a83042d118ddd4f2b7d127) )
 ROM_END
 
+ROM_START( punishrb )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_BYTE( "3.bin",  0x000001, 0x80000, CRC(8c2593ac) SHA1(4261bc72b96c3a5690df35c5d8b71524765693d9) )
+	ROM_LOAD16_BYTE( "5.bin",  0x000000, 0x80000, CRC(c3151563) SHA1(61d3a20c25fea8a94ae6e473a87c21968867cba0) )
+	ROM_LOAD16_BYTE( "2.bin",  0x100001, 0x80000, CRC(d7b13f39) SHA1(eb7cd92b44fdef3b72672b0be6786c526421b627) )
+	ROM_LOAD16_BYTE( "4.bin",  0x100000, 0x80000, CRC(665a5485) SHA1(c07920d110ca9c35f6cbff94a6a889c17300f994) )
+
+	ROM_REGION( 0x400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "9.bin",   0x000000, 0x40000, CRC(9b9a887a) SHA1(8805b36fc18837bd7c64c751b435d72b763b2235), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000004, 0x40000 )
+	ROMX_LOAD( "8.bin",   0x000001, 0x40000, CRC(2b94287a) SHA1(815d88e66f537e17550fc0483616f02f7126bfb1), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000005, 0x40000 )
+	ROMX_LOAD( "7.bin",   0x000002, 0x40000, CRC(e9bd74f5) SHA1(8ed7098c69d1c70093c99956bf82e532bd6fc7ac), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000006, 0x40000 )
+	ROMX_LOAD( "6.bin",   0x000003, 0x40000, CRC(a5e1c8a4) SHA1(3596265a45cf6bbf16c623f0fce7cdc65f9338ad), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x000007, 0x40000 )
+	ROMX_LOAD( "13.bin",  0x200000, 0x40000, CRC(6d75a193) SHA1(6c5a89517926d7ba4a925a3df800d4bdb8a6938d), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200004, 0x40000 )
+	ROMX_LOAD( "12.bin",  0x200001, 0x40000, CRC(a3c205c1) SHA1(6317cc49434dbbb9a249ddd4b50bd791803b3ebe), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200005, 0x40000 )
+	ROMX_LOAD( "11.bin",  0x200002, 0x40000, CRC(22f2ec92) SHA1(9186bfc5db71dc5b099c9a985e8fdd5710772d1c), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200006, 0x40000 )
+	ROMX_LOAD( "10.bin",  0x200003, 0x40000, CRC(763974c9) SHA1(f9b93c7cf0cb8c212fc21c57c85459b7d2e4e2fd), ROM_GROUPBYTE | ROM_SKIP(7) )
+	ROM_CONTINUE(              0x200007, 0x40000 )
+
+	ROM_REGION( 0x8000, REGION_GFX2, 0 )
+	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
+
+	ROM_REGION( 0x80000, REGION_CPU2, 0 ) /* QSound Z80 code */
+	ROM_LOAD( "1.bin",          0x00000, 0x80000, CRC(aeec9dc6) SHA1(56fd62e8db8aa96cdd242d8c705849a413567780) )
+	ROM_LOAD( "ps_q.rom",       0x00000, 0x08000, CRC(49ff4446) SHA1(87af12f87a940a6c5428b4574ad44a4b54867bc3) )
+	ROM_CONTINUE(               0x10000, 0x18000 )
+
+	ROM_REGION( 0x200000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD( "ps_q1.rom",      0x000000, 0x80000, CRC(31fd8726) SHA1(1d73a76682e9fb908db0c55b9a18163f7539fea1) )
+	ROM_LOAD( "ps_q2.rom",      0x080000, 0x80000, CRC(980a9eef) SHA1(36571381f349bc726508a7e618ba1c635ec9d271) )
+	ROM_LOAD( "ps_q3.rom",      0x100000, 0x80000, CRC(0dd44491) SHA1(903cea1d7f3120545ea3229d30fbd687d11ad68f) )
+	ROM_LOAD( "ps_q4.rom",      0x180000, 0x80000, CRC(bed42f03) SHA1(21302f7e75f9c795392a3b34e16a959fc5f6e4e9) )
+ROM_END
+
 ROM_START( sf2m8 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
 	ROM_LOAD16_BYTE( "k4-222",   0x000000, 0x80000, CRC(db567b66) SHA1(315bfbf2786ef67a95afb87de836ab348523dbbe) )
@@ -9010,6 +9050,253 @@ static DRIVER_INIT( kodb )
 	DRIVER_INIT_CALL(cps1);
 }
 
+static DRIVER_INIT( punishrb )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(REGION_CPU1);
+	mem8[0xAB3] = 0x33;
+	mem8[0xAB4] = 0x30;
+	mem8[0xAB6] = 0x80;
+	mem8[0xAB7] = 0x0;
+	mem8[0xAB8] = 0x56;
+	mem8[0xAB9] = 0x1;
+	mem8[0xABA] = 0xED;
+	mem8[0xABB] = 0x33;
+	mem8[0xABC] = 0x32;
+	mem8[0xABD] = 0xDB;
+	mem8[0xABE] = 0x80;
+	mem8[0xABF] = 0x0;
+	mem8[0xAC0] = 0x48;
+	mem8[0xAC1] = 0x1;
+	mem8[0xAC2] = 0xED;
+	mem8[0xAC3] = 0x33;
+	mem8[0xAC4] = 0x34;
+	mem8[0xAC5] = 0xDB;
+	mem8[0xAC6] = 0x80;
+	mem8[0xAC7] = 0x0;
+	mem8[0xAC8] = 0x4A;
+	mem8[0xAC9] = 0x1;
+	mem8[0xACA] = 0xED;
+	mem8[0xACB] = 0x33;
+	mem8[0xACC] = 0x2E;
+	mem8[0xACD] = 0xDB;
+	mem8[0xACE] = 0x80;
+	mem8[0xAD0] = 0x52;
+	mem8[0xAD1] = 0x1;
+	mem8[0xAD2] = 0xED;
+	mem8[0xAD3] = 0x33;
+	mem8[0xAD4] = 0x88;
+	mem8[0xAD5] = 0xDB;
+	mem8[0xAD6] = 0x80;
+	mem8[0xAD7] = 0x0;
+	mem8[0xAD8] = 0x0;
+	mem8[0xAD9] = 0x1;
+	mem8[0xADA] = 0xED;
+	mem8[0xADB] = 0x33;
+	mem8[0xADC] = 0x8A;
+	mem8[0xADD] = 0xDB;
+	mem8[0xADE] = 0x80;
+	mem8[0xADF] = 0x0;
+	mem8[0xAE0] = 0x2;
+	mem8[0xAE1] = 0x1;
+	mem8[0xAE2] = 0xED;
+	mem8[0xAE3] = 0x33;
+	mem8[0xAE4] = 0x8C;
+	mem8[0xAE5] = 0xDB;
+	mem8[0xAE6] = 0x80;
+	mem8[0xAE7] = 0x0;
+	mem8[0xAE8] = 0x4;
+	mem8[0xAE9] = 0x1;
+	mem8[0xAEA] = 0xED;
+	mem8[0xAEB] = 0x33;
+	mem8[0xAEC] = 0x8E;
+	mem8[0xAED] = 0xDB;
+	mem8[0xAEE] = 0x80;
+	mem8[0xAEF] = 0x0;
+	mem8[0xAF0] = 0x6;
+	mem8[0xAF1] = 0x1;
+	mem8[0xAF2] = 0xED;
+	mem8[0xAF3] = 0x33;
+	mem8[0xAF4] = 0x90;
+	mem8[0xAF5] = 0xDB;
+	mem8[0xAF6] = 0x80;
+	mem8[0xAF7] = 0x0;
+	mem8[0xAF8] = 0x8;
+	mem8[0xAF9] = 0x1;
+	mem8[0xAFA] = 0xED;
+	mem8[0xAFB] = 0x50;
+	mem8[0xAFC] = 0x49;
+	mem8[0xAFD] = 0xDB;
+	mem8[0xAFE] = 0xFC;
+	mem8[0xAFF] = 0x33;
+	mem8[0xB00] = 0x3F;
+	mem8[0xB02] = 0x80;
+	mem8[0xB03] = 0x0;
+	mem8[0xB04] = 0x4C;
+	mem8[0xB05] = 0x1;
+	mem8[0xB06] = 0xFC;
+	mem8[0xB07] = 0x33;
+	mem8[0xB08] = 0x40;
+	mem8[0xB09] = 0x91;
+	mem8[0xB0A] = 0x80;
+	mem8[0xB0C] = 0xA;
+	mem8[0xB0D] = 0x1;
+	mem8[0xBA8] = 0x80;
+	mem8[0xBAA] = 0xC;
+	mem8[0xBAB] = 0x1;
+	mem8[0xBBA] = 0x80;
+	mem8[0xBBC] = 0x10;
+	mem8[0xBBD] = 0x1;
+	mem8[0xBCC] = 0x80;
+	mem8[0xBCE] = 0x14;
+	mem8[0xBCF] = 0x1;
+	mem8[0xBDA] = 0x80;
+	mem8[0xBDC] = 0xE;
+	mem8[0xBDD] = 0x1;
+	mem8[0xBEE] = 0x80;
+	mem8[0xBF0] = 0x12;
+	mem8[0xBF1] = 0x1;
+	mem8[0xC02] = 0x80;
+	mem8[0xC04] = 0x16;
+	mem8[0xC05] = 0x1;
+	mem8[0x4DBC] = 0x0;
+	mem8[0x4DBE] = 0x58;
+	mem8[0x4DBF] = 0x0;
+	mem8[0x4DC0] = 0xF9;
+	mem8[0x4DC1] = 0x41;
+	mem8[0x4DC2] = 0xF1;
+	mem8[0x4DC3] = 0x0;
+	mem8[0x4DC4] = 0x0;
+	mem8[0x4DC5] = 0x80;
+	mem8[0x4DC6] = 0x28;
+	mem8[0x4DC7] = 0x4A;
+	mem8[0x4DC8] = 0x1F;
+	mem8[0x4DC9] = 0x0;
+	mem8[0x4DCA] = 0x0;
+	mem8[0x4DCB] = 0x6A;
+	mem8[0x4DCC] = 0x4A;
+	mem8[0x4DCD] = 0x0;
+	mem8[0x4DCE] = 0xED;
+	mem8[0x4DCF] = 0x49;
+	mem8[0x4DD0] = 0x96;
+	mem8[0x4DD1] = 0xE2;
+	mem8[0x4DD2] = 0xF4;
+	mem8[0x4DD3] = 0x49;
+	mem8[0x4DD4] = 0x0;
+	mem8[0x4DD5] = 0x0;
+	mem8[0x4DD6] = 0x40;
+	mem8[0x4DD7] = 0x6;
+	mem8[0x4DD8] = 0x10;
+	mem8[0x4DDA] = 0x40;
+	mem8[0x4DDB] = 0x2;
+	mem8[0x4DDC] = 0xFF;
+	mem8[0x4DDD] = 0xF;
+	mem8[0x4DDE] = 0x40;
+	mem8[0x4DDF] = 0x3B;
+	mem8[0x4DE0] = 0xE8;
+	mem8[0x4DE1] = 0xDA;
+	mem8[0x4DE2] = 0x5C;
+	mem8[0x4DE3] = 0x11;
+	mem8[0x4DE4] = 0x1;
+	mem8[0x4DE6] = 0x5C;
+	mem8[0x4DE7] = 0x11;
+	mem8[0x4DE8] = 0x3;
+	mem8[0x4DE9] = 0x0;
+	mem8[0x4DEA] = 0x5C;
+	mem8[0x4DEB] = 0x11;
+	mem8[0x4DEC] = 0x7;
+	mem8[0x4DED] = 0x0;
+	mem8[0x4DEE] = 0x5C;
+	mem8[0x4DEF] = 0x11;
+	mem8[0x4DF0] = 0x9;
+	mem8[0x4DF1] = 0x0;
+	mem8[0x4DF2] = 0x1C;
+	mem8[0x4DF3] = 0x30;
+	mem8[0x4DF4] = 0x40;
+	mem8[0x4DF5] = 0x11;
+	mem8[0x4DF6] = 0xD;
+	mem8[0x4DF7] = 0x0;
+	mem8[0x4DF8] = 0x5C;
+	mem8[0x4DF9] = 0x11;
+	mem8[0x4DFA] = 0xF;
+	mem8[0x4DFB] = 0x0;
+	mem8[0x4DFC] = 0x5C;
+	mem8[0x4DFD] = 0x11;
+	mem8[0x4DFE] = 0x11;
+	mem8[0x4E00] = 0x5C;
+	mem8[0x4E01] = 0x11;
+	mem8[0x4E02] = 0x17;
+	mem8[0x4E04] = 0x5C;
+	mem8[0x4E05] = 0x11;
+	mem8[0x4E06] = 0x19;
+	mem8[0x4E07] = 0x0;
+	mem8[0x4E08] = 0x5C;
+	mem8[0x4E09] = 0x11;
+	mem8[0x4E0A] = 0x13;
+	mem8[0x4E0B] = 0x0;
+	mem8[0x4E0C] = 0x5C;
+	mem8[0x4E0D] = 0x11;
+	mem8[0x4E0E] = 0x15;
+	mem8[0x4E0F] = 0x0;
+	mem8[0x4E10] = 0x7C;
+	mem8[0x4E11] = 0x11;
+	mem8[0x4E12] = 0x0;
+	mem8[0x4E14] = 0x1F;
+	mem8[0x4E16] = 0x75;
+	mem8[0x4E17] = 0x4E;
+	mem8[0x14CA0] = 0x90;
+	mem8[0x14CA3] = 0x0;
+	mem8[0x14CB0] = 0x90;
+	mem8[0x14CB3] = 0x40;
+	mem8[0x14F68] = 0xFC;
+	mem8[0x14F69] = 0x28;
+	mem8[0x14F6A] = 0x0;
+	mem8[0x14F6D] = 0x1;
+
+	punisher_decode();
+	init_cps1();
+}
+
+static DRIVER_INIT( sf2m1 )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(REGION_CPU1);
+	UINT16 *mem16 = (UINT16 *)memory_region(REGION_CPU1);
+	int i;
+	unsigned int data0[0x100] = {
+		0x3C, 0x03, 0xED, 0x33, 0x26, 0x00, 0x80, 0x00, 0x00, 0x01, 0xED, 0x33, 0x2E, 0x00, 0x80, 0x00, 
+		0x08, 0x01, 0xED, 0x33, 0x2A, 0x00, 0x80, 0x00, 0x04, 0x01, 0xED, 0x33, 0x28, 0x00, 0x80, 0x00, 
+		0x02, 0x01, 0xED, 0x33, 0x2C, 0x00, 0x80, 0x00, 0x06, 0x01, 0xED, 0x33, 0x64, 0x00, 0x80, 0x00, 
+		0x14, 0x01, 0xED, 0x33, 0x5C, 0x00, 0x80, 0x00, 0x0C, 0x01, 0xED, 0x33, 0x60, 0x00, 0x80, 0x00, 
+		0x10, 0x01, 0xED, 0x33, 0x62, 0x00, 0x80, 0x00, 0x12, 0x01, 0xED, 0x33, 0x5E, 0x00, 0x80, 0x00, 
+		0x0E, 0x01, 0xED, 0x33, 0x66, 0x00, 0x80, 0x00, 0x16, 0x01, 0xED, 0x33, 0x70, 0x00, 0x80, 0x00, 
+		0x20, 0x01, 0x2D, 0x10, 0xCE, 0x02, 0x2D, 0x12, 0xDB, 0x02, 0x00, 0xB3, 0x40, 0x1B, 0x89, 0x00, 
+		0x48, 0xE1, 0x6D, 0x80, 0x48, 0x00, 0xC0, 0x33, 0x80, 0x00, 0x22, 0x01, 0xED, 0x33, 0x4E, 0x00, 
+		0x80, 0x00, 0x66, 0x01, 0xED, 0x13, 0xD7, 0x02, 0x80, 0x00, 0x30, 0x00, 0xED, 0x33, 0x50, 0x00, 
+		0x80, 0x00, 0x68, 0x01, 0xED, 0x33, 0x52, 0x00, 0x80, 0x00, 0x6A, 0x01, 0xED, 0x33, 0x54, 0x00, 
+		0x80, 0x00, 0x6C, 0x01, 0xED, 0x33, 0x56, 0x00, 0x80, 0x00, 0x6E, 0x01, 0x00, 0x61, 0x78, 0x0E, 
+		0xED, 0x33, 0x58, 0x00, 0x80, 0x00, 0x70, 0x01, 0xED, 0x33, 0x30, 0x00, 0x80, 0x00, 0x0A, 0x01, 
+		0xB8, 0x4E, 0x68, 0x14, 0xB8, 0x4E, 0x02, 0x63, 0x00, 0x61, 0x32, 0x11, 0x00, 0x61, 0x40, 0x12, 
+		0x00, 0x61, 0xBC, 0x0F, 0x2D, 0x52, 0x1C, 0x00, 0xED, 0x50, 0x0E, 0x82, 0x2D, 0x42, 0xDE, 0x02, 
+		0xED, 0x41, 0x00, 0x80, 0x3C, 0x30, 0x0F, 0x00, 0x28, 0x0C, 0x01, 0x00, 0x00, 0x00, 0x0C, 0x66, 
+		0x28, 0x53, 0x01, 0x00, 0x06, 0x66, 0x7C, 0x11, 0x04, 0x00, 0x00, 0x00, 0xE8, 0x41, 0x20, 0x00
+	};
+
+	unsigned int data1[8] = {
+		0xC8, 0x51, 0xE6, 0xFF, 0x3C, 0x30, 0x50, 0x00
+	};
+
+	for (i = 0; i < 0x100; i++)
+		mem8[i+0x5D8] = data0[i];
+
+	for (i = 0; i < 0x008; i++)
+		mem8[i+0x6D8] = data1[i];
+
+	mem16[0x06E2/2] = 0xFFFE; // Black scr
+//	mem16[0x15A4/2] = 0xFFC0; // Alignment
+	mem16[0x6322/2] = 0x0181; // SFX
+
+	init_cps1();
+}
+
 static DRIVER_INIT( sf2m13 )
 {
 	UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);
@@ -9050,9 +9337,39 @@ static DRIVER_INIT( dinohb )
 {
 	UINT8 *mem8 = memory_region(REGION_CPU1);
 	// Fix draw scroll
-	mem8[0x006c2] = 0xC0;
-	mem8[0x006c3] = 0xFF;
+//	mem8[0x006c2] = 0xC0;
+//	mem8[0x006c3] = 0xFF;
 	// Fix gfx
+	mem8[0x472] = 0xFC;
+	mem8[0x473] = 0x33;
+	mem8[0x474] = 0x0;
+	mem8[0x475] = 0x90;
+	mem8[0x476] = 0x80;
+	mem8[0x478] = 0x0;
+	mem8[0x479] = 0x1;
+	mem8[0x47A] = 0xFC;
+	mem8[0x47B] = 0x33;
+	mem8[0x47C] = 0x80;
+	mem8[0x47D] = 0x90;
+	mem8[0x47E] = 0x80;
+	mem8[0x480] = 0x2;
+	mem8[0x481] = 0x1;
+	mem8[0x482] = 0xFC;
+	mem8[0x483] = 0x33;
+	mem8[0x484] = 0xC0;
+	mem8[0x485] = 0x90;
+	mem8[0x486] = 0x80;
+	mem8[0x487] = 0x0;
+	mem8[0x488] = 0x4;
+	mem8[0x489] = 0x1;
+	mem8[0x48A] = 0xFC;
+	mem8[0x48B] = 0x33;
+	mem8[0x48C] = 0x0;
+	mem8[0x48D] = 0x91;
+	mem8[0x48E] = 0x80;
+	mem8[0x48F] = 0x0;
+	mem8[0x490] = 0x6;
+	mem8[0x491] = 0x1;
 	mem8[0x006cc] = 0x80;
 	mem8[0x006cd] = 0x00;
 	mem8[0x006ce] = 0x0C;
@@ -9096,6 +9413,32 @@ static DRIVER_INIT( dinohb )
 
 	dino_decode();
 	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( wofb )
+{
+	UINT8 *mem8 = memory_region(REGION_CPU1);
+	// Fix gfx
+	mem8[0x506] = 0xE7;
+	mem8[0x507] = 0x48;
+	mem8[0x508] = 0xFE;
+	mem8[0x509] = 0xFF;
+	mem8[0x50A] = 0xF8;
+	mem8[0x50B] = 0x4B;
+	mem8[0x6ABC] = 0x6;
+	mem8[0x6ABD] = 0x1;
+	// Fix sound
+	mem8[0x764E] = 0x71;
+	mem8[0x7650] = 0x71;
+	mem8[0x7651] = 0x4E;
+	// Fix screen transitions
+	mem8[0x5D236] = 0xFC;
+	mem8[0x5D237] = 0x28;
+	mem8[0x5D238] = 0x0;
+	mem8[0x5D23B] = 0x1;
+
+	wof_decode();
+	init_cps1();
 }
 
 static DRIVER_INIT( wofsjb )
@@ -9510,7 +9853,7 @@ GAME( 1992, sf2rb2,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1992, sf2red,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave)" , 0)		// 920313 - based on World version
 GAME( 1992, sf2v004,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004)", 0 )		// "102092" !!! - based on (heavily modified) World version
 GAME( 1992, sf2accp2, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II)" , 0)  // 920313 - based on USA version
-GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
+//GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
 //GAME( 1992, sf2m2,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2)", GAME_NOT_WORKING )
 GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3)", GAME_NOT_WORKING )
 GAME( 1992, sf2m4,    sf2ce,    cps1_12MHz, sf2j,     cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4)", 0 )
@@ -9559,6 +9902,7 @@ GAME( 1991, kodb,     kod,      kodb,       kod,      kodb,     ROT0,   "bootleg
 GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg","The King of Dragons (hack)", 0 )
 GAME( 1991, knightsb, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg","Knights of the Round (bootleg)", 0 )
 GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "bootleg","Knights of the Round (hack)" , 0 )
+GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1)", GAME_NOT_WORKING )
 GAME( 1992, sf2m2,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2)", 0 )
 GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Subdue the Dragon set 2)", 0 )
 GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8)", GAME_NOT_WORKING )
@@ -9566,7 +9910,7 @@ GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2j,     sf2m13,   ROT0,   "bootleg
 GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 1)", 0 )
 GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 2)", 0 )
 GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Subdue the Dragon set 1)", 0 )
-GAME( 1992, wofb,     wof,      qsound,     wof,      wof,      ROT0,   "bootleg","Sangokushi II (bootleg)", GAME_NOT_WORKING )
+GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
 GAME( 1995, wofsj,    wof,      wofb,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsja,   wof,      wofb,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 2)", GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 3)", GAME_UNEMULATED_PROTECTION )
@@ -9576,7 +9920,8 @@ GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg
 GAME( 1999, wofh,     wof,      wofb,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II (Legend of Three Kingdoms' Heroes set 1)", GAME_IMPERFECT_SOUND )
 GAME( 1999, wofha,    wof,      wofb,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II (Legend of Three Kingdoms' Heroes set 2)", GAME_IMPERFECT_SOUND )
 GAME( 1999, wofhfh,   wof,      wofhfh,     wof3js,   cps1,     ROT0,   "bootleg","Sangokushi II (Fire Phoenix)", 0 )
-GAME( 1993, dinob,    dino,     qsound,     dino,     dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (bootleg)", GAME_IMPERFECT_GRAPHICS )
-GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (bootleg, set 1)" , 0)
-GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (bootleg, set 2)", 0 )
-GAME( 1997, dinohb,   dino,     qsound,     dinoh,    dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (bootleg, set 3)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1993, dinob,    dino,     qsound,     dino,     dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (bootleg)", 0 )
+GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 1)" , 0)
+GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 2)", 0 )
+GAME( 1997, dinohb,   dino,     qsound,     dinoh,    dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 3)", 0 )
+GAME( 1993, punishrb, punisher, qsound,     punisher, punishrb, ROT0,   "bootleg","The Punisher (bootleg)", 0 )
