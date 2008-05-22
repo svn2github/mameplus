@@ -115,13 +115,10 @@ enum
 	IPT_END,
 	IPT_UNKNOWN,
 	IPT_PORT,
-	IPT_DIPSWITCH_NAME,
-	IPT_DIPSWITCH_SETTING,
+	IPT_DIPSWITCH,
 	IPT_VBLANK,
-	IPT_CONFIG_NAME,			/* MESS only */
-	IPT_CONFIG_SETTING,			/* MESS only */
-	IPT_CATEGORY_NAME,			/* MESS only */
-	IPT_CATEGORY_SETTING,		/* MESS only */
+	IPT_CONFIG,
+	IPT_CATEGORY,				/* MESS only */
 
 	/* start buttons */
 	IPT_START1,
@@ -265,6 +262,7 @@ enum
 	IPT_ADJUSTER,
 
 	/* the following are special codes for user interface handling - not to be used by drivers! */
+#define __ipt_ui_start IPT_UI_CONFIGURE
 	IPT_UI_CONFIGURE,
 	IPT_UI_ON_SCREEN_DISPLAY,
 	IPT_UI_DEBUG_BREAK,
@@ -337,6 +335,7 @@ enum
 	IPT_OSD_14,
 	IPT_OSD_15,
 	IPT_OSD_16,
+#define __ipt_ui_end IPT_OSD_16
 
 	/* other meaning not mapped to standard defaults */
 	IPT_OTHER,
@@ -357,7 +356,7 @@ enum
 	INPUT_TOKEN_START,
 	INPUT_TOKEN_START_TAG,
 	INPUT_TOKEN_MODIFY,
-	INPUT_TOKEN_BIT,
+	INPUT_TOKEN_FIELD,
 	INPUT_TOKEN_SPECIAL_ONOFF,
 	INPUT_TOKEN_CODE,
 	INPUT_TOKEN_CODE_DEC,
@@ -531,13 +530,25 @@ enum
     TYPE DEFINITIONS
 ***************************************************************************/
 
-/* this is an opaque type */
-typedef struct _input_port_init_params input_port_init_params;
+/* input ports support up to 32 bits each */
+typedef UINT32 input_port_value;
 
 
-/* a custom input port callback function */
-typedef UINT32 (*input_port_custom_func)(running_machine *machine, void *param);
-typedef void (*input_port_changed_func)(running_machine *machine, void *param, UINT32 oldval, UINT32 newval);
+/* opaque types pointing to live state */
+typedef struct _input_port_state input_port_state;
+typedef struct _input_field_state input_field_state;
+
+
+/* forward declarations */
+typedef struct _input_port_config input_port_config;
+typedef struct _input_field_config input_field_config;
+
+
+/* custom input port callback function */
+typedef UINT32 (*input_field_custom_func)(const input_field_config *field, void *param);
+
+/* input port changed callback function */
+typedef void (*input_field_changed_func)(const input_field_config *field, void *param, UINT32 oldval, UINT32 newval);
 
 
 /* this type is used to encode input port definitions */
@@ -716,7 +727,7 @@ struct _inp_header
 
 /* input bit definition */
 #define PORT_BIT(_mask, _default, _type) \
-	TOKEN_UINT32_PACK2(INPUT_TOKEN_BIT, 8, _type, 24), \
+	TOKEN_UINT32_PACK2(INPUT_TOKEN_FIELD, 8, _type, 24), \
 	TOKEN_UINT64_PACK2(_mask, 32, _default, 32),
 
 #define PORT_SPECIAL_ONOFF(_mask, _default, _strindex) \
@@ -890,7 +901,6 @@ struct _inp_header
 #define PORT_CATEGORY_ITEM(_default, _name, _category) \
 	TOKEN_UINT64_PACK3(INPUT_TOKEN_CATEGORY_SETTING, 8, _default, 32, _category, 16), \
 	TOKEN_STRING(_name),
-#endif /* MESS */
 
 
 /***************************************************************************

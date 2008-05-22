@@ -169,15 +169,19 @@ typedef struct _mame_private mame_private;
 typedef struct _palette_private palette_private;
 typedef struct _streams_private streams_private;
 typedef struct _devices_private devices_private;
+typedef struct _input_port_private input_port_private;
 
 
 /* description of the currently-running machine */
 /* typedef struct _running_machine running_machine; -- in mamecore.h */
 struct _running_machine
 {
+	/* configuration data */
+	const machine_config *	config;				/* points to the constructed machine_config */
+	const input_port_config *portconfig;		/* points to a list of input port configurations */
+
 	/* game-related information */
 	const game_driver *		gamedrv;			/* points to the definition of the game machine */
-	const machine_config *	config;				/* points to the constructed machine_config */
 	const char *			basename;			/* basename used for game-related paths */
 
 	/* video-related information */
@@ -193,14 +197,6 @@ struct _running_machine
 	/* audio-related information */
 	int						sample_rate;		/* the digital audio sample rate */
 
-	/* input-related information */
-	input_port_entry *		input_ports;		/* the input ports definition from the driver is copied here and modified */
-	mame_file *				record_file;		/* recording file (NULL if not recording) */
-	mame_file *				playback_file;		/* playback file (NULL if not playing) */
-#ifdef INP_CAPTION
-	mame_file *				caption_file;		/* caption file for playback (NULL if not playing) */
-#endif /* INP_CAPTION */
-
 	/* debugger-related information */
 	int						debug_mode;			/* was debug mode enabled? */
 
@@ -209,6 +205,7 @@ struct _running_machine
 	palette_private *		palette_data;		/* internal data from palette.c */
 	streams_private *		streams_data;		/* internal data from streams.c */
 	devices_private *		devices_data;		/* internal data from devices.c */
+	input_port_private *	input_port_data;	/* internal data from inptport.c */
 #ifdef MAMEMESS
 	images_private *		images_data;		/* internal data from image.c */
 #endif /* MESS */

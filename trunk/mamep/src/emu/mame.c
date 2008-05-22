@@ -1502,9 +1502,7 @@ static void prepare_machine(running_machine *machine)
 	machine->sample_rate = options_get_int(mame_options(), OPTION_SAMPLERATE);
 
 	/* input-related information */
-	machine->input_ports = NULL;
-	machine->record_file = NULL;
-	machine->playback_file = NULL;
+	machine->portconfig = NULL;
 
 	/* debugger-related information */
 #ifdef ENABLE_DEBUGGER
@@ -1835,9 +1833,12 @@ static void init_machine(running_machine *machine)
 		return;
 
 	/* call the driver's _START callbacks */
-	if (machine->config->machine_start != NULL) (*machine->config->machine_start)(machine);
-	if (machine->config->sound_start != NULL) (*machine->config->sound_start)(machine);
-	if (machine->config->video_start != NULL) (*machine->config->video_start)(machine);
+	if (machine->config->machine_start != NULL)
+		(*machine->config->machine_start)(machine);
+	if (machine->config->sound_start != NULL)
+		(*machine->config->sound_start)(machine);
+	if (machine->config->video_start != NULL)
+		(*machine->config->video_start)(machine);
 
 	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
 	for (num = 0; num < MAX_MEMORY_REGIONS; num++)
@@ -2135,7 +2136,6 @@ static void get_tm_time(struct tm *t, mame_system_tm *systm)
 }
 
 
-
 /*-------------------------------------------------
     fill_systime - fills out a mame_system_time
     structure
@@ -2149,7 +2149,6 @@ static void fill_systime(mame_system_time *systime, time_t t)
 }
 
 
-
 /*-------------------------------------------------
     mame_get_base_datetime - retrieve the time of
     the host system; useful for RTC implementations
@@ -2160,7 +2159,6 @@ void mame_get_base_datetime(running_machine *machine, mame_system_time *systime)
 	mame_private *mame = machine->mame_data;
 	fill_systime(systime, mame->base_time);
 }
-
 
 
 /*-------------------------------------------------

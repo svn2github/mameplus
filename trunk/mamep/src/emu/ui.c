@@ -90,8 +90,8 @@ struct _slider_state
 	INT32			defval;				/* default value */
 	INT32			maxval;				/* maximum value */
 	INT32			incval;				/* increment value */
-	INT32			(*update)(running_machine *machine, INT32 newval, char *buffer, int arg); /* callback */
-	int				arg;				/* argument */
+	INT32			(*update)(running_machine *machine, INT32 newval, char *buffer, void *arg); /* callback */
+	void *			arg;				/* argument */
 };
 
 
@@ -195,24 +195,24 @@ static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state);
 static void slider_init(running_machine *machine);
 static void slider_display(const char *text, int minval, int maxval, int defval, int curval);
 static void slider_draw_bar(float leftx, float topy, float width, float height, float percentage, float default_percentage);
-static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, void *arg);
 static char *slider_get_screen_desc(const device_config *screen);
 #ifdef MAME_DEBUG
-static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, int arg);
-static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, int arg);
+static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, void *arg);
+static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, void *arg);
 #endif
 
 static void build_bgtexture(running_machine *machine);
@@ -240,7 +240,7 @@ INLINE UINT32 ui_set_handler(UINT32 (*callback)(running_machine *, UINT32), UINT
 -------------------------------------------------*/
 
 INLINE void slider_config(slider_state *state, INT32 minval, INT32 defval, INT32 maxval, INT32 incval,
-						  INT32 (*update)(running_machine *, INT32, char *, int), int arg)
+						  INT32 (*update)(running_machine *, INT32, char *, void *), void *arg)
 {
 	state->minval = minval;
 	state->defval = defval;
@@ -2183,7 +2183,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 #endif /* USE_SHOW_INPUT_LOG */
 
 	/* toggle movie recording */
-	if (input_ui_pressed(IPT_UI_RECORD_MOVIE))
+	if (input_ui_pressed(machine, IPT_UI_RECORD_MOVIE))
 	{
 		if (!video_mng_is_movie_active(machine->primary_screen))
 		{
@@ -2198,19 +2198,19 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	}
 
 	/* toggle profiler display */
-	if (input_ui_pressed(IPT_UI_SHOW_PROFILER))
+	if (input_ui_pressed(machine, IPT_UI_SHOW_PROFILER))
 		ui_set_show_profiler(!ui_get_show_profiler());
 
 	/* toggle FPS display */
-	if (input_ui_pressed(IPT_UI_SHOW_FPS))
+	if (input_ui_pressed(machine, IPT_UI_SHOW_FPS))
 		ui_set_show_fps(!ui_get_show_fps());
 
 	/* toggle crosshair display */
-	if (input_ui_pressed(IPT_UI_TOGGLE_CROSSHAIR))
+	if (input_ui_pressed(machine, IPT_UI_TOGGLE_CROSSHAIR))
 		crosshair_toggle(machine);
 
 	/* increment frameskip? */
-	if (input_ui_pressed(IPT_UI_FRAMESKIP_INC))
+	if (input_ui_pressed(machine, IPT_UI_FRAMESKIP_INC))
 	{
 		/* get the current value and increment it */
 		int newframeskip = video_get_frameskip() + 1;
@@ -2223,7 +2223,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	}
 
 	/* decrement frameskip? */
-	if (input_ui_pressed(IPT_UI_FRAMESKIP_DEC))
+	if (input_ui_pressed(machine, IPT_UI_FRAMESKIP_DEC))
 	{
 		/* get the current value and decrement it */
 		int newframeskip = video_get_frameskip() - 1;
@@ -2236,11 +2236,11 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	}
 
 	/* toggle throttle? */
-	if (input_ui_pressed(IPT_UI_THROTTLE))
+	if (input_ui_pressed(machine, IPT_UI_THROTTLE))
 		video_set_throttle(!video_get_throttle());
 
 	/* check for fast forward */
-	if (input_port_type_pressed(IPT_UI_FAST_FORWARD, 0))
+	if (input_type_pressed(machine, IPT_UI_FAST_FORWARD, 0))
 	{
 		video_set_fastforward(TRUE);
 		ui_show_fps_temp(0.5);
@@ -2250,7 +2250,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 #ifdef MESS
 	/* paste? */
-	if (input_ui_pressed(IPT_UI_PASTE))
+	if (input_ui_pressed(machine, IPT_UI_PASTE))
 		ui_paste(machine);
 #endif /* MESS */
 
@@ -2270,9 +2270,9 @@ static UINT32 handler_slider(running_machine *machine, UINT32 state)
 	char textbuf[256];
 
 	/* left/right control the increment */
-	if (input_ui_pressed_repeat(IPT_UI_LEFT,6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,6))
 		increment = -cur->incval;
-	if (input_ui_pressed_repeat(IPT_UI_RIGHT,6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,6))
 		increment = cur->incval;
 
 	/* alt goes to 1, shift goes 10x smaller, control goes 10x larger */
@@ -2290,7 +2290,7 @@ static UINT32 handler_slider(running_machine *machine, UINT32 state)
 	newval = (*cur->update)(machine, 0, NULL, cur->arg) + increment;
 
 	/* select resets to the default value */
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 		newval = cur->defval;
 
 	/* clamp within bounds */
@@ -2306,17 +2306,17 @@ static UINT32 handler_slider(running_machine *machine, UINT32 state)
 	slider_display(textbuf, cur->minval, cur->maxval, cur->defval, newval);
 
 	/* up/down select which slider to control */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN,6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN,6))
 		slider_current = (slider_current + 1) % slider_count;
-	if (input_ui_pressed_repeat(IPT_UI_UP,6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_UP,6))
 		slider_current = (slider_current + slider_count - 1) % slider_count;
 
 	/* the slider toggle or ESC will cancel out of our display */
-	if (input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY) || input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_ON_SCREEN_DISPLAY) || input_ui_pressed(machine, IPT_UI_CANCEL))
 		return UI_HANDLER_CANCEL;
 
 	/* the menu key will take us directly to the menu */
-	if (input_ui_pressed(IPT_UI_CONFIGURE))
+	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	return 0;
@@ -2345,7 +2345,7 @@ static UINT32 handler_load_save(running_machine *machine, UINT32 state)
 		ui_draw_message_window(_("Select position to load from"));
 
 	/* check for cancel key */
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL))
 	{
 		/* display a popup indicating things were cancelled */
 		if (state == LOADSAVE_SAVE)
@@ -2435,14 +2435,15 @@ static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state)
 static void slider_init(running_machine *machine)
 {
 	int numscreens = video_screen_count(machine->config);
+	const input_port_config *port;
+	const input_field_config *field;
 	const device_config *device;
 	int numitems, item;
-	input_port_entry *in;
 
 	slider_count = 0;
 
 	/* add overall volume */
-	slider_config(&slider_list[slider_count++], -32, 0, 0, 1, slider_volume, 0);
+	slider_config(&slider_list[slider_count++], -32, 0, 0, 1, slider_volume, NULL);
 
 	/* add per-channel volume */
 	numitems = sound_get_user_gain_count();
@@ -2499,20 +2500,22 @@ static void slider_init(running_machine *machine)
 		if (scrconfig->type == SCREEN_TYPE_VECTOR)
 		{
 			/* add flicker control */
-			slider_config(&slider_list[slider_count++], 0, 0, 1000, 10, slider_flicker, 0);
-			slider_config(&slider_list[slider_count++], 10, 100, 1000, 10, slider_beam, 0);
+			slider_config(&slider_list[slider_count++], 0, 0, 1000, 10, slider_flicker, NULL);
+			slider_config(&slider_list[slider_count++], 10, 100, 1000, 10, slider_beam, NULL);
 			break;
 		}
 	}
 
 #ifdef MAME_DEBUG
 	/* add crosshair adjusters */
-	for (in = machine->input_ports; in && in->type != IPT_END; in++)
-		if (in->analog.crossaxis != CROSSHAIR_AXIS_NONE && in->player == 0)
-		{
-			slider_config(&slider_list[slider_count++], -3000, 1000, 3000, 100, slider_crossscale, in->analog.crossaxis);
-			slider_config(&slider_list[slider_count++], -3000, 0, 3000, 100, slider_crossoffset, in->analog.crossaxis);
-		}
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+			if (field->crossaxis != CROSSHAIR_AXIS_NONE && field->player == 0)
+			{
+				void *param = (void *)field;
+				slider_config(&slider_list[slider_count++], -3000, 1000, 3000, 100, slider_crossscale, param);
+				slider_config(&slider_list[slider_count++], -3000, 0, 3000, 100, slider_crossoffset, param);
+			}
 #endif
 }
 
@@ -2587,7 +2590,7 @@ static void slider_draw_bar(float leftx, float topy, float width, float height, 
     slider_volume - global volume slider callback
 -------------------------------------------------*/
 
-static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
 	if (buffer != NULL)
 	{
@@ -2651,15 +2654,15 @@ static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buff
     slider_refresh - refresh rate slider callback
 -------------------------------------------------*/
 
-static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const screen_config *scrconfig = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg)->inline_config;
+	const device_config *screen = arg;
+	const screen_config *scrconfig = screen->inline_config;
 	double defrefresh = ATTOSECONDS_TO_HZ(scrconfig->refresh);
 	double refresh;
 
 	if (buffer != NULL)
 	{
-		const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
 		int width = video_screen_get_width(screen);
 		int height = video_screen_get_height(screen);
 		const rectangle *visarea = video_screen_get_visible_area(screen);
@@ -2677,9 +2680,9 @@ static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer
     callback
 -------------------------------------------------*/
 
-static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2695,9 +2698,9 @@ static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buf
     callback
 -------------------------------------------------*/
 
-static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2712,9 +2715,9 @@ static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffe
     slider_gamma - screen gamma slider callback
 -------------------------------------------------*/
 
-static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2730,9 +2733,9 @@ static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, 
     callback
 -------------------------------------------------*/
 
-static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2748,9 +2751,9 @@ static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer,
     callback
 -------------------------------------------------*/
 
-static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2766,9 +2769,9 @@ static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer,
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2784,9 +2787,9 @@ static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, arg);
+	const device_config *screen = arg;
 	render_container *container = render_container_get_screen(screen);
 	if (buffer != NULL)
 	{
@@ -2802,7 +2805,7 @@ static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer
     callback
 -------------------------------------------------*/
 
-static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
 	if (buffer != NULL)
 	{
@@ -2818,7 +2821,7 @@ static INT32 slider_flicker(running_machine *machine, INT32 newval, char *buffer
     callback
 -------------------------------------------------*/
 
-static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_beam(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
 	if (buffer != NULL)
 	{
@@ -2854,24 +2857,16 @@ static char *slider_get_screen_desc(const device_config *screen)
 -------------------------------------------------*/
 
 #ifdef MAME_DEBUG
-static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	input_port_entry *in;
+	input_field_config *field = arg;
 
 	if (buffer != NULL)
 	{
-		for (in = machine->input_ports; in && in->type != IPT_END; in++)
-			if (in->analog.crossaxis == arg)
-			{
-				in->analog.crossscale = (float)newval * 0.001f;
-				break;
-			}
-		sprintf(buffer, "%s %s %1.3f", "Crosshair Scale", (in->analog.crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
+		field->crossscale = (float)newval * 0.001f;
+		sprintf(buffer, "%s %s %1.3f", "Crosshair Scale", (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
 	}
-	for (in = machine->input_ports; in && in->type != IPT_END; in++)
-		if (in->analog.crossaxis == arg)
-			return floor(in->analog.crossscale * 1000.0f + 0.5f);
-	return 0;
+	return floor(field->crossscale * 1000.0f + 0.5f);
 }
 #endif
 
@@ -2882,24 +2877,16 @@ static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buf
 -------------------------------------------------*/
 
 #ifdef MAME_DEBUG
-static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	input_port_entry *in;
+	input_field_config *field = arg;
 
 	if (buffer != NULL)
 	{
-		for (in = machine->input_ports; in && in->type != IPT_END; in++)
-			if (in->analog.crossaxis == arg)
-			{
-				in->analog.crossoffset = (float)newval * 0.001f;
-				break;
-			}
-		sprintf(buffer, "%s %s %1.3f", "Crosshair Offset", (in->analog.crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
+		field->crossoffset = (float)newval * 0.001f;
+		sprintf(buffer, "%s %s %1.3f", "Crosshair Offset", (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
 	}
-	for (in = machine->input_ports; in && in->type != IPT_END; in++)
-		if (in->analog.crossaxis == arg)
-			return floor(in->analog.crossoffset * 1000.0f + 0.5f);
-	return 0;
+	return field->crossoffset;
 }
 #endif
 

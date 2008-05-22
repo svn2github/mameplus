@@ -49,6 +49,8 @@
 #define VISIBLE_GAMES_IN_LIST	15
 
 #define MAX_PHYSICAL_DIPS		10
+#define MAX_INPUT_PORTS			32
+#define MAX_BITS_PER_PORT		32
 
 /* DIP switch rendering parameters */
 #define DIP_SWITCH_HEIGHT		0.05f
@@ -94,13 +96,16 @@ struct _menu_state
 typedef struct _input_item_data input_item_data;
 struct _input_item_data
 {
-	input_seq *		seq;				/* pointer to the sequence we are operating on */
-	const input_seq *defseq;			/* pointer to the sequence we are operating on */
+	const input_type_desc *typedesc;		/* reference to type description for global inputs */
+	const input_field_config *field;		/* reference to field for game inputs */
+	int				seqtype;				/* sequence type */
+	input_seq		seq;					/* copy of the live sequence */
+	const input_seq *defseq;				/* pointer to the default sequence */
 	const char *	name;
 	const char *	seqname;
-	UINT16 			sortorder;			/* sorting information */
-	UINT8 			type;				/* type of port */
-	UINT8 			invert;				/* type of port */
+	UINT16 			sortorder;				/* sorting information */
+	UINT8 			type;					/* type of port */
+	UINT8 			invert;					/* type of port */
 };
 
 
@@ -686,7 +691,7 @@ int ui_menu_generic_keys(UINT32 *selected, int num_items, int visible_items)
 	}
 
 	/* page down advances by visible_items */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN, 6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_DOWN, 6))
 	{
 		*selected += visible_items - 1;
 		if (*selected >= num_items)
@@ -694,15 +699,15 @@ int ui_menu_generic_keys(UINT32 *selected, int num_items, int visible_items)
 	}
 
 	/* home goes to the start */
-	if (input_ui_pressed(IPT_UI_HOME))
+	if (input_ui_pressed(machine, IPT_UI_HOME))
 		*selected = 0;
 
 	/* end goes to the last */
-	if (input_ui_pressed(IPT_UI_END))
+	if (input_ui_pressed(machine, IPT_UI_END))
 		*selected = num_items - 1;
 
 	/* pause enables/disables pause */
-	if (input_ui_pressed(IPT_UI_PAUSE))
+	if (input_ui_pressed(machine, IPT_UI_PAUSE))
 		mame_pause(Machine, !mame_is_paused(Machine));
 
 	return 0;
@@ -882,7 +887,7 @@ int ui_menu_is_force_game_select(void)
     menu_main - main UI menu
 -------------------------------------------------*/
 
-static UINT32 menu_main(UINT32 state)
+static UINT32 menu_main(running_machine *machine, UINT32 state)
 {
 #define ADD_MENU(name, _handler, _param) \
 do { \
@@ -892,28 +897,29 @@ do { \
 	menu_items++; \
 } while (0)
 
+	const input_port_config *port;
+	const input_field_config *field;
 	menu_state handler_list[20];
 	ui_menu_item item_list[20];
 	int has_categories = FALSE;
 	int has_configs = FALSE;
 	int has_analog = FALSE;
 	int has_dips = FALSE;
-	input_port_entry *in;
 	int menu_items = 0;
 	int visible_items;
 
 	/* scan the input port array to see what options we need to enable */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
-		if (input_port_active(in))
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
-			if (in->type == IPT_DIPSWITCH_NAME)
+			if (field->type == IPT_DIPSWITCH)
 				has_dips = TRUE;
-			if (port_type_is_analog(in->type))
-				has_analog = TRUE;
-			if (in->type == IPT_CONFIG_NAME)
+			if (field->type == IPT_CONFIG)
 				has_configs = TRUE;
-			if (in->category > 0)
+			if (field->category > 0)
 				has_categories = TRUE;
+			if (input_type_is_analog(field->type))
+				has_analog = TRUE;
 		}
 
 	/* reset the menu */
@@ -990,9 +996,9 @@ do { \
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
-	if (ui_menu_generic_keys(&state, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &state, menu_items, visible_items))
 		return state;
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 		return ui_menu_stack_push(handler_list[state].handler, handler_list[state].state);
 
 	return state;
@@ -1006,7 +1012,7 @@ do { \
     groups
 -------------------------------------------------*/
 
-static UINT32 menu_input_groups(UINT32 state)
+static UINT32 menu_input_groups(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[IPG_TOTAL_GROUPS + 2];
 	int menu_items = 0;
@@ -1026,9 +1032,9 @@ static UINT32 menu_input_groups(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
-	if (ui_menu_generic_keys(&state, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &state, menu_items, visible_items))
 		return state;
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 		return ui_menu_stack_push(menu_input, state << 16);
 
 	return state;
@@ -1039,7 +1045,7 @@ static UINT32 menu_input_groups(UINT32 state)
     menu_input - display a menu for inputs
 -------------------------------------------------*/
 
-static UINT32 menu_input(UINT32 state)
+static UINT32 menu_input(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[MAX_INPUT_PORTS * MAX_BITS_PER_PORT / 2];
 	input_item_data item_data[MAX_INPUT_PORTS * MAX_BITS_PER_PORT / 2];
@@ -1048,13 +1054,19 @@ static UINT32 menu_input(UINT32 state)
 	int record_next = (state >> 14) & 1;
 	int polling = (state >> 15) & 1;
 	int group = state >> 16;
+	int changed = FALSE;
 	int visible_items;
 	int menu_items;
 	int item;
 
 	/* get the list of items */
 	menu_string_pool_offset = 0;
-	menu_items = input_menu_get_items(item_data, group);
+
+	/* an out of range group is special; it just means the game-specific inputs */
+	if (group > IPG_TOTAL_GROUPS)
+		menu_items = input_menu_get_game_items(machine, item_data);
+	else
+		menu_items = input_menu_get_items(machine, item_data, group);
 
 	/* build the menu */
 	memset(item_list, 0, sizeof(item_list));
@@ -1095,10 +1107,11 @@ static UINT32 menu_input(UINT32 state)
 		input_seq newseq;
 
 		/* if UI_CANCEL is pressed, abort */
-		if (input_ui_pressed(IPT_UI_CANCEL))
+		if (input_ui_pressed(machine, IPT_UI_CANCEL))
 		{
 			record_next = polling = FALSE;
-			input_menu_toggle_none_default(selected_item_data->seq, &starting_seq, selected_item_data->defseq);
+			input_menu_toggle_none_default(&selected_item_data->seq, &starting_seq, selected_item_data->defseq);
+			changed = TRUE;
 		}
 
 		/* poll again; if finished, update the sequence */
@@ -1106,7 +1119,8 @@ static UINT32 menu_input(UINT32 state)
 		{
 			record_next = TRUE;
 			polling = FALSE;
-			*selected_item_data->seq = newseq;
+			selected_item_data->seq = newseq;
+			changed = TRUE;
 		}
 	}
 
@@ -1116,27 +1130,46 @@ static UINT32 menu_input(UINT32 state)
 		int prevsel = selected;
 
 		/* handle generic menu keys */
-		if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+		if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 			return selected;
 
 		/* if an item was selected, start polling on it */
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
-			input_seq_poll_start((selected_item_data->type == INPUT_TYPE_ANALOG) ? ITEM_CLASS_ABSOLUTE : ITEM_CLASS_SWITCH, record_next ? selected_item_data->seq : NULL);
-			starting_seq = *selected_item_data->seq;
+			input_seq_poll_start((selected_item_data->type == INPUT_TYPE_ANALOG) ? ITEM_CLASS_ABSOLUTE : ITEM_CLASS_SWITCH, record_next ? &selected_item_data->seq : NULL);
+			starting_seq = selected_item_data->seq;
 			polling = TRUE;
 		}
 
 		/* if the clear key was pressed, reset the selected item */
-		if (input_ui_pressed(IPT_UI_CLEAR))
+		if (input_ui_pressed(machine, IPT_UI_CLEAR))
 		{
-			input_menu_toggle_none_default(selected_item_data->seq, selected_item_data->seq, selected_item_data->defseq);
+			input_menu_toggle_none_default(&selected_item_data->seq, &selected_item_data->seq, selected_item_data->defseq);
 			record_next = FALSE;
+			changed = TRUE;
 		}
 
 		/* if the selection changed, update and reset the "record first" flag */
 		if (selected != prevsel)
 			record_next = FALSE;
+	}
+
+	/* if the sequence changed, update it */
+	if (changed)
+	{
+		if (group > IPG_TOTAL_GROUPS)
+		{
+			input_field_user_settings settings;
+
+			input_field_get_user_settings(selected_item_data->field, &settings);
+			settings.seq[selected_item_data->seqtype] = selected_item_data->seq;
+			input_field_set_user_settings(selected_item_data->field, &settings);
+		}
+		else
+		{
+			const input_type_desc *typedesc = selected_item_data->typedesc;
+			input_type_set_seq(machine, typedesc->type, typedesc->player, selected_item_data->seqtype, &selected_item_data->seq);
+		}
 	}
 
 	return selected | (record_next << 14) | (polling << 15) | (group << 16);
@@ -1148,14 +1181,14 @@ static UINT32 menu_input(UINT32 state)
     switches
 -------------------------------------------------*/
 
-static UINT32 menu_switches(UINT32 state)
+static UINT32 menu_switches(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[MAX_INPUT_PORTS * MAX_BITS_PER_PORT / 2];
-	int switch_entry = (state >> 24) & 0xff;
 	int switch_name = (state >> 16) & 0xff;
 	UINT32 selected = state & 0xffff;
-	input_port_entry *selected_in = NULL;
-	input_port_entry *in;
+	const input_port_config *port;
+	const input_field_config *field;
+	const input_field_config *selected_field = NULL;
 	int menu_items = 0;
 	int changed = FALSE;
 	int visible_items;
@@ -1167,18 +1200,18 @@ static UINT32 menu_switches(UINT32 state)
 	memset(dip_switch_model, 0, sizeof(dip_switch_model));
 
 	/* loop over input ports and set up the current values */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
-		if (in->type == switch_name && input_port_active(in) && input_port_condition(in))
-		{
-			switches_menu_add_item(&item_list[menu_items], in, switch_entry, in);
-			if (in->type == IPT_DIPSWITCH_NAME)
-				dip_switch_build_model(in, menu_items == selected);
-			menu_items++;
-		}
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+			if (field->type == switch_name && input_condition_true(machine, &field->condition))
+			{
+				switches_menu_add_item(&item_list[menu_items], field);
+				if (field->type == IPT_DIPSWITCH)
+					dip_switch_build_model(field, menu_items == selected);
+				menu_items++;
+			}
 
 	/* sort the list */
-//  qsort(item_list, menu_items, sizeof(item_list[0]), switches_menu_compare_items);
-	selected_in = item_list[selected].ref;
+	selected_field = item_list[selected].ref;
 
 	/* add an item to return */
 	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
@@ -1193,18 +1226,18 @@ static UINT32 menu_switches(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, selected, (dip_switch_model[0].dip_name) ? &extra : NULL);
 
 	/* handle generic menu keys */
-	if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 		return selected;
 
 	/* handle left/right arrows */
-	if (input_ui_pressed(IPT_UI_LEFT) && (item_list[selected].flags & MENU_FLAG_LEFT_ARROW))
+	if (input_ui_pressed(machine, IPT_UI_LEFT) && (item_list[selected].flags & MENU_FLAG_LEFT_ARROW))
 	{
-		switches_menu_select_previous(selected_in, switch_entry);
+		switches_menu_select_previous(selected_field);
 		changed = TRUE;
 	}
-	if (input_ui_pressed(IPT_UI_RIGHT) && (item_list[selected].flags & MENU_FLAG_RIGHT_ARROW))
+	if (input_ui_pressed(machine, IPT_UI_RIGHT) && (item_list[selected].flags & MENU_FLAG_RIGHT_ARROW))
 	{
-		switches_menu_select_next(selected_in, switch_entry);
+		switches_menu_select_next(selected_field);
 		changed = TRUE;
 	}
 
@@ -1212,21 +1245,21 @@ static UINT32 menu_switches(UINT32 state)
 	/* due to conditional DIPs changing things */
 	if (changed)
 	{
-		int newsel = 0;
-		input_port_update_defaults();
-		for (in = Machine->input_ports; in->type != IPT_END; in++)
-			if (in->type == switch_name && input_port_active(in) && input_port_condition(in))
-			{
-				if (selected_in == in)
+		int newselected = 0;
+		for (port = machine->portconfig; port != NULL; port = port->next)
+			for (field = port->fieldlist; field != NULL; field = field->next)
+				if (field->type == switch_name && input_condition_true(machine, &field->condition))
 				{
-					selected = newsel;
-					break;
+					if (field == selected_field)
+					{
+						selected = newselected;
+						break;
+					}
+					newselected++;
 				}
-				newsel++;
-			}
 	}
 
-	return selected | (switch_name << 16) | (switch_entry << 24);
+	return selected | (switch_name << 16);
 }
 
 
@@ -1235,11 +1268,12 @@ static UINT32 menu_switches(UINT32 state)
     control settings
 -------------------------------------------------*/
 
-static UINT32 menu_analog(UINT32 state)
+static UINT32 menu_analog(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[MAX_INPUT_PORTS * 4 * ANALOG_ITEM_COUNT];
-	input_port_entry *selected_in = NULL;
-	input_port_entry *in;
+	const input_port_config *port;
+	const input_field_config *field;
+	const input_field_config *selected_field = NULL;
 	int menu_items = 0;
 	int selected_item = 0;
 	int visible_items;
@@ -1298,26 +1332,32 @@ static UINT32 menu_analog(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle generic menu keys */
-	if (ui_menu_generic_keys(&state, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &state, menu_items, visible_items))
 		return state;
 
 	/* handle left/right arrows */
-	if (input_ui_pressed_repeat(IPT_UI_LEFT,6) && (item_list[state].flags & MENU_FLAG_LEFT_ARROW))
+	if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,6) && (item_list[state].flags & MENU_FLAG_LEFT_ARROW))
 		delta = -1;
-	if (input_ui_pressed_repeat(IPT_UI_RIGHT,6) && (item_list[state].flags & MENU_FLAG_RIGHT_ARROW))
+	if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,6) && (item_list[state].flags & MENU_FLAG_RIGHT_ARROW))
 		delta = 1;
 	if (input_code_pressed(KEYCODE_LSHIFT))
 		delta *= 10;
 
 	/* adjust the appropriate value */
-	if (delta != 0 && selected_in)
+	if (delta != 0 && selected_field != NULL)
+	{
+		input_field_user_settings settings;
+
+		input_field_get_user_settings(selected_field, &settings);
 		switch (selected_item)
 		{
-			case ANALOG_ITEM_KEYSPEED:		selected_in->analog.delta += delta;			break;
-			case ANALOG_ITEM_CENTERSPEED:	selected_in->analog.centerdelta += delta;	break;
-			case ANALOG_ITEM_REVERSE:		selected_in->analog.reverse += delta;		break;
-			case ANALOG_ITEM_SENSITIVITY:	selected_in->analog.sensitivity += delta;	break;
+			case ANALOG_ITEM_KEYSPEED:		settings.delta += delta;		break;
+			case ANALOG_ITEM_CENTERSPEED:	settings.centerdelta += delta;	break;
+			case ANALOG_ITEM_REVERSE:		settings.reverse += delta;		break;
+			case ANALOG_ITEM_SENSITIVITY:	settings.sensitivity += delta;	break;
 		}
+		input_field_set_user_settings(selected_field, &settings);
+	}
 
 	return state;
 }
@@ -1329,7 +1369,7 @@ static UINT32 menu_analog(UINT32 state)
 -------------------------------------------------*/
 
 #ifndef MESS
-static UINT32 menu_bookkeeping(UINT32 state)
+static UINT32 menu_bookkeeping(running_machine *machine, UINT32 state)
 {
 	char buf[2048];
 	char *bufptr = buf;
@@ -1371,7 +1411,7 @@ static UINT32 menu_bookkeeping(UINT32 state)
 	ui_menu_draw_text_box(buf);
 
 	/* handle the keys */
-	ui_menu_generic_keys(&selected, 1, 0);
+	ui_menu_generic_keys(machine, &selected, 1, 0);
 	return selected;
 }
 #endif
@@ -1382,20 +1422,20 @@ static UINT32 menu_bookkeeping(UINT32 state)
     game information
 -------------------------------------------------*/
 
-static UINT32 menu_game_info(UINT32 state)
+static UINT32 menu_game_info(running_machine *machine, UINT32 state)
 {
 	char buf[2048];
 	char *bufptr = buf;
 	UINT32 selected = 0;
 
 	/* add the game info */
-	bufptr += sprintf_game_info(Machine, bufptr);
+	bufptr += sprintf_game_info(machine, bufptr);
 
 	/* draw the text */
 	ui_menu_draw_text_box(buf);
 
 	/* handle the keys */
-	ui_menu_generic_keys(&selected, 1, 0);
+	ui_menu_generic_keys(machine, &selected, 1, 0);
 	return selected;
 }
 
@@ -1418,7 +1458,7 @@ static UINT32 menu_cheat(UINT32 state)
     card options
 -------------------------------------------------*/
 
-static UINT32 menu_memory_card(UINT32 state)
+static UINT32 menu_memory_card(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[5];
 	int menu_items = 0;
@@ -1453,15 +1493,15 @@ static UINT32 menu_memory_card(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle the keys */
-	if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 		return selected;
-	if (selected == 0 && input_ui_pressed(IPT_UI_LEFT) && cardnum > 0)
+	if (selected == 0 && input_ui_pressed(machine, IPT_UI_LEFT) && cardnum > 0)
 		cardnum--;
-	if (selected == 0 && input_ui_pressed(IPT_UI_RIGHT) && cardnum < 1000)
+	if (selected == 0 && input_ui_pressed(machine, IPT_UI_RIGHT) && cardnum < 1000)
 		cardnum++;
 
 	/* handle actions */
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		/* handle load */
 		if (selected == insertindex)
@@ -1501,7 +1541,7 @@ static UINT32 menu_memory_card(UINT32 state)
     menu_video - display a menu for video options
 -------------------------------------------------*/
 
-static UINT32 menu_video(UINT32 state)
+static UINT32 menu_video(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[100];
 	render_target *targetlist[16];
@@ -1532,7 +1572,7 @@ static UINT32 menu_video(UINT32 state)
 
 		/* if we only ended up with one, auto-select it */
 		if (menu_items == 1)
-			return menu_video(0 << 16 | render_target_get_view(render_target_get_indexed(0)));
+			return menu_video(machine, 0 << 16 | render_target_get_view(render_target_get_indexed(0)));
 
 		/* add an item for moving the UI */
 		item_list[menu_items++].text = _("Move User Interface");
@@ -1544,11 +1584,11 @@ static UINT32 menu_video(UINT32 state)
 		visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
 		/* handle the keys */
-		if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+		if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 			return selected;
 
 		/* handle actions */
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
 			if (selected == menu_items - 2)
 			{
@@ -1624,11 +1664,11 @@ static UINT32 menu_video(UINT32 state)
 		visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
 		/* handle the keys */
-		if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+		if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 			return selected;
 
 		/* handle actions */
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
 			/* rotate */
 			if (selected == menu_items - 6)
@@ -1681,10 +1721,10 @@ static UINT32 menu_video(UINT32 state)
     quitting the game
 -------------------------------------------------*/
 
-static UINT32 menu_quit_game(UINT32 state)
+static UINT32 menu_quit_game(running_machine *machine, UINT32 state)
 {
 	/* request a reset */
-	mame_schedule_exit(Machine);
+	mame_schedule_exit(machine);
 
 	/* reset the menu stack */
 	ui_menu_stack_reset();
@@ -1697,7 +1737,7 @@ static UINT32 menu_quit_game(UINT32 state)
     menu
 -------------------------------------------------*/
 
-static UINT32 menu_select_game(UINT32 state)
+static UINT32 menu_select_game(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[VISIBLE_GAMES_IN_LIST + 2];
 	int error = (state >> 17) & 1;
@@ -1795,7 +1835,7 @@ static UINT32 menu_select_game(UINT32 state)
 			recompute |= select_game_handle_key(curkey, curkey - KEYCODE_0_PAD + '0');
 
 		/* escape pressed with non-empty text clears the text */
-		if (input_ui_pressed(IPT_UI_CANCEL))
+		if (input_ui_pressed(machine, IPT_UI_CANCEL))
 		{
 			if (select_game_buffer[0] == 0)
 				return ui_menu_stack_pop();
@@ -1811,14 +1851,14 @@ static UINT32 menu_select_game(UINT32 state)
 			selected = 0;
 
 		/* ignore pause keys by swallowing them */
-		input_ui_pressed(IPT_UI_PAUSE);
+		input_ui_pressed(machine, IPT_UI_PAUSE);
 
 		/* handle the generic keys */
-		if (!recompute && ui_menu_generic_keys(&selected, menu_items, visible_items))
+		if (!recompute && ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 			return selected;
 
 		/* handle actions */
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
 			/* control config */
 			if (ui_menu_is_force_game_select() && selected == menu_items - 2)
@@ -1840,7 +1880,7 @@ static UINT32 menu_select_game(UINT32 state)
 				/* if everything looks good, schedule the new driver */
 				if (audit_result == CORRECT || audit_result == BEST_AVAILABLE)
 				{
-					mame_schedule_new_driver(Machine, select_game_list[selected]);
+					mame_schedule_new_driver(machine, select_game_list[selected]);
 					ui_menu_stack_reset();
 					return 0;
 				}
@@ -1864,9 +1904,9 @@ static UINT32 menu_select_game(UINT32 state)
 -------------------------------------------------*/
 
 #ifdef MESS
-static UINT32 menu_file_manager(UINT32 state)
+static UINT32 menu_file_manager(running_machine *machine, UINT32 state)
 {
-	int result = filemanager(state);
+	int result = filemanager(machine, state);
 	if (result == 0)
 	return ui_menu_stack_pop();
 	return result;
@@ -1880,9 +1920,9 @@ static UINT32 menu_file_manager(UINT32 state)
 
 #ifdef MESS
 #if HAS_WAVE
-static UINT32 menu_tape_control(UINT32 state)
+static UINT32 menu_tape_control(running_machine *machine, UINT32 state)
 {
-	int result = tapecontrol(state);
+	int result = tapecontrol(machine, state);
 	if (result == 0)
 	return ui_menu_stack_pop();
 	return result;
@@ -2790,26 +2830,41 @@ static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *i
     previous item in the switches list
 -------------------------------------------------*/
 
-static void switches_menu_select_previous(input_port_entry *in, int switch_entry)
+static void switches_menu_select_previous(const input_field_config *field)
 {
-	int last_value = in->default_value;
-	const input_port_entry *tin;
+	const input_setting_config *setting, *prevsetting;
+	input_field_user_settings settings;
+	int found_match = FALSE;
 
-	/* scan for the current selection in the list */
-	for (tin = in + 1; tin->type == switch_entry; tin++)
-		if (input_port_condition(tin))
+	/* get the current configured settings */
+	input_field_get_user_settings(field, &settings);
+
+	/* scan the list of settings looking for a match on the current value */
+	prevsetting = NULL;
+	for (setting = field->settinglist; setting != NULL; setting = setting->next)
+	{
+		if (setting->value == settings.value)
 		{
-			/* if this is a match, we're done */
-			if (in->default_value == tin->default_value)
-			{
-				in->default_value = last_value;
-				return;
-			}
-
-			/* otherwise, keep track of last one found */
-			else
-				last_value = tin->default_value;
+			found_match = TRUE;
+			if (prevsetting != NULL)
+				break;
 		}
+		if (input_condition_true(field->port->machine, &setting->condition))
+			prevsetting = setting;
+	}
+
+	/* if we didn't find a matching value, select the first */
+	if (!found_match)
+	{
+		for (prevsetting = field->settinglist; prevsetting != NULL; prevsetting = prevsetting->next)
+			if (input_condition_true(field->port->machine, &prevsetting->condition))
+				break;
+	}
+
+	/* update the value to the previous one */
+	if (prevsetting != NULL)
+		settings.value = prevsetting->value;
+	input_field_set_user_settings(field, &settings);
 }
 
 
@@ -2818,44 +2873,37 @@ static void switches_menu_select_previous(input_port_entry *in, int switch_entry
     next item in the switches list
 -------------------------------------------------*/
 
-static void switches_menu_select_next(input_port_entry *in, int switch_entry)
+static void switches_menu_select_next(const input_field_config *field)
 {
-	const input_port_entry *tin;
-	int foundit = FALSE;
+	const input_setting_config *setting, *nextsetting;
+	input_field_user_settings settings;
 
-	/* scan for the current selection in the list */
-	for (tin = in + 1; tin->type == switch_entry; tin++)
-		if (input_port_condition(tin))
-		{
-			/* if we found the current selection, we pick the next one */
-			if (foundit)
-			{
-				in->default_value = tin->default_value;
-				return;
-			}
+	/* get the current configured settings */
+	input_field_get_user_settings(field, &settings);
 
-			/* if this is a match, note it */
-			if (in->default_value == tin->default_value)
-				foundit = TRUE;
-		}
+	/* scan the list of settings looking for a match on the current value */
+	nextsetting = NULL;
+	for (setting = field->settinglist; setting != NULL; setting = setting->next)
+		if (setting->value == settings.value)
+			break;
+
+	/* if we found one, scan forward for the next valid one */
+	if (setting != NULL)
+		for (nextsetting = setting->next; nextsetting != NULL; nextsetting = nextsetting->next)
+			if (input_condition_true(field->port->machine, &nextsetting->condition))
+				break;
+
+	/* if we hit the end, search from the beginning */
+	if (nextsetting == NULL)
+		for (nextsetting = field->settinglist; nextsetting != NULL; nextsetting = nextsetting->next)
+			if (input_condition_true(field->port->machine, &nextsetting->condition))
+				break;
+
+	/* update the value to the previous one */
+	if (nextsetting != NULL)
+		settings.value = nextsetting->value;
+	input_field_set_user_settings(field, &settings);
 }
-
-
-/*-------------------------------------------------
-    switches_menu_compare_items - compare two
-    switches items for quicksort purposes
--------------------------------------------------*/
-
-/*
-static int switches_menu_compare_items(const void *i1, const void *i2)
-{
-    const ui_menu_item *item1 = i1;
-    const ui_menu_item *item2 = i2;
-    const input_port_entry *data1 = item1->ref;
-    const input_port_entry *data2 = item2->ref;
-    return strcmp(input_port_name(data1), input_port_name(data2));
-}
-*/
 
 
 /*-------------------------------------------------
@@ -2916,40 +2964,44 @@ static void analog_menu_add_item(ui_menu_item *item, const input_port_entry *in,
     for DIP switches
 -------------------------------------------------*/
 
-static void dip_switch_build_model(input_port_entry *entry, int item_is_selected)
+static void dip_switch_build_model(const input_field_config *field, int item_is_selected)
 {
-	int dip_declaration_index = 0;
-	int value_mask_temp = entry->mask;
+	input_port_value value_mask_temp = field->mask;
+	const input_field_diplocation *diploc;
+	input_port_value toggle_switch_mask;
+	input_field_user_settings settings;
 	int value_mask_bit = 0;
-	int toggle_switch_mask;
-	int model_index = 0;
+	int model_index;
 	int toggle_num;
 
-	if (entry->diploc[dip_declaration_index].swname == NULL)
+	diploc = field->diploclist;
+	if (diploc == NULL || diploc->swname == NULL)
 		return;
 
+	input_field_get_user_settings(field, &settings);
+
 	/* get the entry in the model to work with */
-	do
+	for (model_index = 0; model_index < MAX_PHYSICAL_DIPS; model_index++)
 	{
 		/* use this entry if it's not used */
 		if (dip_switch_model[model_index].dip_name == NULL)
 		{
-			dip_switch_model[model_index].dip_name = entry->diploc[dip_declaration_index].swname;
+			dip_switch_model[model_index].dip_name = diploc->swname;
 			break;
 		}
 
 		/* reuse this entry if the switch name matches */
-		if (!strcmp(entry->diploc[dip_declaration_index].swname, dip_switch_model[model_index].dip_name))
+		if (!strcmp(diploc->swname, dip_switch_model[model_index].dip_name))
 			break;
 
 		// todo: add a check here to see if we go over the max dips and throw an error.
-	} while (++model_index < MAX_PHYSICAL_DIPS);
+	}
 
 	/* Create a mask depicting the number of toggles on the physical switch */
-	while (entry->diploc[dip_declaration_index].swname)
+	for ( ; diploc != NULL; diploc = diploc->next)
 	{
 		/* get the Nth DIP toggle number */
-		toggle_num = entry->diploc[dip_declaration_index].swnum;
+		toggle_num = diploc->swnum;
 
 		/* get the Nth mask bit -
          * should probably put a check here to avoid bad driver definitions
@@ -2968,18 +3020,16 @@ static void dip_switch_build_model(input_port_entry *entry, int item_is_selected
 		dip_switch_model[model_index].total_dip_mask |= toggle_switch_mask;
 
 		/* if it's inverted, mark it as such */
-		if (entry->diploc[dip_declaration_index].invert)
+		if (diploc->invert)
 			dip_switch_model[model_index].dip_invert_mask |= toggle_switch_mask;
 
 		/* if isolated bit is on, set the toggle on */
-		if ((1 << value_mask_bit) & entry->default_value)
+		if ((1 << value_mask_bit) & settings.value)
 			dip_switch_model[model_index].total_dip_settings |= toggle_switch_mask;
 
 		/* indicate if the toggle is selected */
 		if (item_is_selected)
 			dip_switch_model[model_index].selected_dip_feature_mask |= toggle_switch_mask;
-
-		++dip_declaration_index;
 	}
 }
 

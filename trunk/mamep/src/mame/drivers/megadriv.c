@@ -1308,7 +1308,7 @@ static READ16_HANDLER( megadriv_vdp_r )
 		case 0x06:
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read control port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_vdp_ctrl_port_r();
-		//  retvalue = mame_rand(Machine);
+		//  retvalue = mame_rand(machine);
 		//  mame_printf_debug("%06x: Read Control Port at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
@@ -1318,7 +1318,7 @@ static READ16_HANDLER( megadriv_vdp_r )
 		case 0x0e:
 		//  if ((!ACCESSING_BITS_8_15) || (!ACCESSING_BITS_0_7)) mame_printf_debug("8-bit VDP read HV counter port access, offset %04x mem_mask %04x\n",offset,mem_mask);
 			retvalue = megadriv_read_hv_counters();
-		//  retvalue = mame_rand(Machine);
+		//  retvalue = mame_rand(machine);
 		//  mame_printf_debug("%06x: Read HV counters at scanline %d hpos %d (return %04x)\n",activecpu_get_pc(),genesis_scanline_counter, get_hposition(),retvalue);
 			break;
 
@@ -1974,7 +1974,7 @@ static READ16_HANDLER( megadriv_68k_io_read )
           D0 : Bit 0 of version number
       */
 
-	//return (mame_rand(Machine)&0x0f0f)|0xf0f0;//0x0000;
+	//return (mame_rand(machine)&0x0f0f)|0xf0f0;//0x0000;
 	switch (offset)
 	{
 		case 0:
@@ -2185,7 +2185,7 @@ static READ16_HANDLER( megadriv_68k_read_z80_ram )
 	else
 	{
 		logerror("%06x: 68000 attempting to access Z80 (read) address space without bus\n", activecpu_get_pc());
-		return mame_rand(Machine);
+		return mame_rand(machine);
 	}
 }
 
@@ -2227,7 +2227,7 @@ static READ16_HANDLER( megadriv_68k_check_z80_bus )
        the value is never zero.  Time Killers is the most fussy, and doesn't like the
        read_next_instruction function from system16, so I just return a random value
        in the unused bits */
-	UINT16 nextvalue = mame_rand(Machine);//read_next_instruction()&0xff00;
+	UINT16 nextvalue = mame_rand(machine);//read_next_instruction()&0xff00;
 
 
 	/* Check if the 68k has the z80 bus */
@@ -2438,7 +2438,7 @@ static WRITE8_HANDLER( z80_write_68k_banked_data )
 static READ8_HANDLER( megadriv_z80_vdp_read )
 {
 	mame_printf_debug("megadriv_z80_vdp_read %02x\n",offset);
-	return mame_rand(Machine);
+	return mame_rand(machine);
 }
 
 static READ8_HANDLER( megadriv_z80_unmapped_read )
@@ -2479,7 +2479,7 @@ ADDRESS_MAP_END
 
 static READ16_HANDLER( _32x_reg_r )
 {
-	return mame_rand(Machine);
+	return mame_rand(machine);
 }
 
 static UINT16 _32x_68k_comms[0x8];
@@ -4323,7 +4323,7 @@ static void genesis_render_videobuffer_to_screenbuffer(running_machine *machine,
 
 				case 0xa000: // shadow set, highlight set - not possible
 				case 0xe000: // shadow set, highlight set, normal set, not possible
-					lineptr[x] = megadrive_vdp_palette_lookup_highlight[mame_rand(Machine)&0x3f];
+					lineptr[x] = megadrive_vdp_palette_lookup_highlight[mame_rand(machine)&0x3f];
 					break;
 
 
@@ -5015,7 +5015,7 @@ static NVRAM_HANDLER( megadriv )
 			{
 				int x;
 				for (x=0;x<megadriv_backupram_length/2;x++)
-					megadriv_backupram[x]=0xffff;//mame_rand(Machine); // dino dini's needs 0xff or game rules are broken
+					megadriv_backupram[x]=0xffff;//mame_rand(machine); // dino dini's needs 0xff or game rules are broken
 			}
 		}
 	}
