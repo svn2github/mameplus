@@ -30,14 +30,12 @@ static const char *const mame_default_text[] =
 
 	/* misc stuff */
 	"Return to Main Menu",
-	"Return to Prior Menu",
 	"Press Any Key",
 	"Press Select Key/Button",	// Added for usrintrf.c
 	"On",
 	"Off",
 	"NA",
 	"OK",
-	"INVALID",
 	"(none)",
 	"CPU",
 	"Address",
@@ -48,14 +46,12 @@ static const char *const mame_default_text[] =
 	"Vector Game",
 	"Screen Resolution",
 	"Text",
-	"Volume",
 	"Relative",
 	"ALL CHANNELS",
 	"Brightness",
 	"Contrast",
 	"Gamma",
 	"Vector Flicker",
-	"Overclock",
 	"ALL CPUS",
 	HISTORYNAME " not available",
 #ifdef STORY_DATAFILE
@@ -124,12 +120,6 @@ static const char *const mame_default_text[] =
 	"Show Command List",
 #endif /* CMD_LIST */
 
-	/* input */
-	"Digital Speed",
-	"Autocenter Speed",
-	"Reverse",
-	"Sensitivity",
-
 	/* input groups */
 	"User Interface",
 	"Player 1 Controls",
@@ -154,12 +144,6 @@ static const char *const mame_default_text[] =
 	"Load Selected Card",
 	"Eject Current Card",
 	"Create New Card",
-	"Error loading memory card",
-	"Memory card loaded",
-	"Memory card ejected",
-	"Memory card created",
-	"Error creating memory card",
-	"(Card may already exist)",
 
 	/* cheats */
 	"Enable/Disable a Cheat",
@@ -227,7 +211,6 @@ static const char *const mame_default_text[] =
 	"Decoding Graphics",
 
 	"Video Options",
-	"Screen #",
 	"Rotate Clockwise",
 	"Rotate Counter-clockwise",
 	"Flip X",

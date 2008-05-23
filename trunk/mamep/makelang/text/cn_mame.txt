@@ -218,10 +218,6 @@
 (BAD) 
 (错误) 
 
-# emu/uitext.c: 162
-(Card may already exist)
-(记忆卡可能已存在)
-
 # emu/uitext.c: 150
 (locked)
 (锁定)
@@ -1259,8 +1255,8 @@ Error
 错误
 
 # emu/uitext.c: 161
-Error creating memory card
-创建记忆卡时发生错误
+Error creating memory card\n(Card may already exist)
+创建记忆卡时发生错误\n(记忆卡可能已存在)
 
 # emu/uitext.c: 157
 Error loading memory card
@@ -2215,8 +2211,8 @@ Overall: Working
 总体: 可以运行
 
 # emu/uitext.c: 58
-Overclock
-超频
+Overclock CPU %d %3.0f%%
+超频 CPU %d %3.0f%%
 
 # mame/drivers/deadang.c: 136, 203 mame/drivers/tail2nos.c: 209
 Overseas
@@ -4059,8 +4055,8 @@ Screen
 屏幕
 
 # emu/uitext.c: 230
-Screen #
-屏幕 #
+Screen #%d
+屏幕 #%d
 
 # emu/ui.c: 2631, 2649, 2666, 2682, 2699, 2716, 2733, 2750
 Screen %d %s %.3f
@@ -4856,7 +4852,7 @@ Usage of emulators in conjunction with ROMs you don't own is forbidden by copyri
 
 # emu/uitext.c: 134
 User Interface
-用户界面
+用户菜单界面
 
 # emu/cheat.c: 3525
 User Select
@@ -4939,8 +4935,12 @@ Voice
 语音
 
 # emu/uitext.c: 51
-Volume
-音量
+%s Volume %4.2f
+%s 音量 %4.2f
+
+# emu/uitext.c: 51
+Master Volume %3ddB
+主音量 %3ddB
 
 # emu/inptport.c: 895
 Volume Down
@@ -5836,7 +5836,7 @@ Mode: PARTIAL Emulation
 
 # emu/uimenu.c: 1532
 Move User Interface
-
+移动用户菜单界面
 
 # mame/machine/cubocd32.c: 246 
 NVRAM

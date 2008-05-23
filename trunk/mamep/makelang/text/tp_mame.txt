@@ -234,10 +234,6 @@
 (BAD) 
 
 
-# emu/uitext.c: 162
-(Card may already exist)
-
-
 # emu/emuopts.c: 190, 191
 (debugger-only command)
 
@@ -1483,7 +1479,7 @@ Error
 
 
 # emu/uitext.c: 161
-Error creating memory card
+Error creating memory card\n(Card may already exist)
 
 
 # emu/uitext.c: 157
@@ -2603,7 +2599,7 @@ Overall: Working
 
 
 # emu/uitext.c: 58
-Overclock
+Overclock CPU %d %3.0f%%
 
 
 # mame/drivers/deadang.c: 136, 203 mame/drivers/tail2nos.c: 209
@@ -4499,7 +4495,7 @@ Screen
 
 
 # emu/uitext.c: 230
-Screen #
+Screen #%d
 
 
 # emu/ui.c: 2631, 2649, 2666, 2682, 2699, 2716, 2733, 2750
@@ -5463,7 +5459,11 @@ Voice
 
 
 # emu/uitext.c: 51
-Volume
+%s Volume %4.2f
+
+
+# emu/uitext.c: 51
+Master Volume %3ddB
 
 
 # emu/inptport.c: 895

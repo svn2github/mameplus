@@ -1135,8 +1135,8 @@ Otherwise, type OK or move the joystick left then right to continue
 Ansonsten, tippe OK oder bewege den Joystick nach links und dann nach rechts zum Fortsetzen
 
 # emu/uitext.c: 59
-Overclock
-Übertakten
+Overclock CPU %d %3.0f%%
+Übertakten CPU %d %3.0f%%
 
 # mame/drivers/deadang.c: 178, 248 mame/drivers/tail2nos.c: 209
 Overseas
@@ -2215,8 +2215,8 @@ Voice
 Sprache
 
 # emu/uitext.c: 52
-Volume
-Lautstärke
+%s Volume %4.2f
+%s Lautstärke %4.2f
 
 # emu/datafile.c: 2269
 WRONG COLORS       : %3d  %3d\n

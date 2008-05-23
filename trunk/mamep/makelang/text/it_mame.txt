@@ -343,10 +343,6 @@ NON ESISTONO DUMP BUONI
 (CATTIVO)
 
 #
-(Card may already exist)
-(Scheda forse già esistente)
-
-#
 (debugger-only command)
 (comando solo per debugger)
 
@@ -1543,8 +1539,8 @@ Error
 Errore
 
 #
-Error creating memory card
-Errore creando la memory card
+Error creating memory card\n(Card may already exist)
+Errore creando la memory card\n(Scheda forse già esistente)
 
 #
 Error loading memory card
@@ -4471,8 +4467,8 @@ Screen
 Schermo
 
 #
-Screen #
-Schermo #
+Screen #%d
+Schermo #%d
 
 #
 Screen %d %s %.3f
@@ -5379,8 +5375,8 @@ Voice
 Voce
 
 #
-Volume
-Volume
+%s Volume %4.2f
+%s Volume %4.2f
 
 #
 Volume Down

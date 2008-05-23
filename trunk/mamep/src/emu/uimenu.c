@@ -167,24 +167,24 @@ static const rgb_t sel_bgcolor = MAKE_ARGB(0xe0,0x80,0x80,0x00);
 static void ui_menu_exit(running_machine *machine);
 
 /* menu handlers */
-static UINT32 menu_main(UINT32 state);
-static UINT32 menu_input_groups(UINT32 state);
-static UINT32 menu_input(UINT32 state);
-static UINT32 menu_switches(UINT32 state);
-static UINT32 menu_analog(UINT32 state);
+static UINT32 menu_main(running_machine *machine, UINT32 state);
+static UINT32 menu_input_groups(running_machine *machine, UINT32 state);
+static UINT32 menu_input(running_machine *machine, UINT32 state);
+static UINT32 menu_switches(running_machine *machine, UINT32 state);
+static UINT32 menu_analog(running_machine *machine, UINT32 state);
 #ifndef MESS
-static UINT32 menu_bookkeeping(UINT32 state);
+static UINT32 menu_bookkeeping(running_machine *machine, UINT32 state);
 #endif
-static UINT32 menu_game_info(UINT32 state);
-static UINT32 menu_cheat(UINT32 state);
-static UINT32 menu_memory_card(UINT32 state);
-static UINT32 menu_video(UINT32 state);
-static UINT32 menu_quit_game(UINT32 state);
-static UINT32 menu_select_game(UINT32 state);
+static UINT32 menu_game_info(running_machine *machine, UINT32 state);
+static UINT32 menu_cheat(running_machine *machine, UINT32 state);
+static UINT32 menu_memory_card(running_machine *machine, UINT32 state);
+static UINT32 menu_video(running_machine *machine, UINT32 state);
+static UINT32 menu_quit_game(running_machine *machine, UINT32 state);
+static UINT32 menu_select_game(running_machine *machine, UINT32 state);
 #ifdef MESS
-static UINT32 menu_file_manager(UINT32 state);
+static UINT32 menu_file_manager(running_machine *machine, UINT32 state);
 #if HAS_WAVE
-static UINT32 menu_tape_control(UINT32 state);
+static UINT32 menu_tape_control(running_machine *machine, UINT32 state);
 #endif /* HAS_WAVE */
 #endif /* MESS */
 #ifdef USE_CUSTOM_BUTTON
@@ -204,18 +204,17 @@ static UINT32 menu_scale_effect(UINT32 state);
 /* menu helpers */
 static void menu_render_triangle(bitmap_t *dest, const bitmap_t *source, const rectangle *sbounds, void *param);
 
-static int input_menu_get_items(input_item_data *itemlist, int group);
-static int input_menu_get_game_items(input_item_data *itemlist);
+static int input_menu_get_items(running_machine *machine, input_item_data *itemlist, int group);
+static int input_menu_get_game_items(running_machine *machine, input_item_data *itemlist);
 static void input_menu_toggle_none_default(input_seq *selected_seq, input_seq *original_seq, const input_seq *selected_defseq);
 static int input_menu_compare_items(const void *i1, const void *i2);
-static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *in, int switch_entry, void *ref);
-static void switches_menu_select_previous(input_port_entry *in, int switch_entry);
-static void switches_menu_select_next(input_port_entry *in, int switch_entry);
-//static int switches_menu_compare_items(const void *i1, const void *i2);
-static void analog_menu_add_item(ui_menu_item *item, const input_port_entry *in, int append_string, int which_item);
+static void switches_menu_add_item(ui_menu_item *item, const input_field_config *field);
+static void switches_menu_select_previous(const input_field_config *field);
+static void switches_menu_select_next(const input_field_config *field);
+static void analog_menu_add_item(ui_menu_item *item, const input_field_config *field, const char *append_string, int which_item);
 
 /* DIP switch helpers */
-static void dip_switch_build_model(input_port_entry *entry, int item_is_selected);
+static void dip_switch_build_model(const input_field_config *field, int item_is_selected);
 static void dip_switch_draw_one(float dip_menu_x1, float dip_menu_y1, float dip_menu_x2, float dip_menu_y2, int model_index);
 static void dip_switch_render(const menu_extra *extra, float x1, float y1, float x2, float y2);
 
@@ -586,7 +585,7 @@ int ui_menu_draw_fixed_width(const ui_menu_item *items, int numitems, int select
 
 static void ui_menu_draw_text_box(const char *text)
 {
-	const char *priortext = ui_getstring(UI_returntoprior);
+	const char *priortext = _("Return to Prior Menu");
 	float line_height = ui_get_line_height();
 	float lr_arrow_width = 0.4f * line_height * render_get_ui_aspect();
 	float gutter_width = lr_arrow_width;
@@ -644,45 +643,28 @@ static void ui_menu_draw_text_box(const char *text)
     keys for a menu
 -------------------------------------------------*/
 
-int ui_menu_generic_keys(UINT32 *selected, int num_items, int visible_items)
+int ui_menu_generic_keys(running_machine *machine, UINT32 *selected, int num_items, int visible_items)
 {
 	static int counter = 0;
 	static int fast = 6;
 
 	/* hitting cancel or selecting the last item returns to the previous menu */
-	if (input_ui_pressed(IPT_UI_CANCEL) || (*selected == num_items - 1 && input_ui_pressed(IPT_UI_SELECT)))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL) || (*selected == num_items - 1 && input_ui_pressed(machine, IPT_UI_SELECT)))
 	{
 		*selected = ui_menu_stack_pop();
 		return 1;
 	}
 
 	/* up backs up by one item */
-	if (input_ui_pressed_repeat(IPT_UI_UP, fast))
+	if (input_ui_pressed_repeat(machine, IPT_UI_UP, 6))
 		*selected = (*selected + num_items - 1) % num_items;
 
 	/* down advances by one item */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
+	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, 6))
 		*selected = (*selected + 1) % num_items;
 
-	if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
-	{
-		if (++counter == 25)
-		{
-			fast--;
-			if (fast < 2)
-				fast = 2;
-
-			counter = 0;
-		}
-	}
-	else
-	{
-		fast = 6;
-		counter = 0;
-	}
-
 	/* page up backs up by visible_items */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP, 6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_UP, 6))
 	{
 		if (*selected >= visible_items - 1)
 			*selected -= visible_items - 1;
@@ -811,32 +793,14 @@ UINT32 ui_menu_ui_handler(running_machine *machine, UINT32 state)
 		ui_menu_stack_push(menu_main, 0);
 
 	/* update the menu state */
-	newstate = (*menu_stack[menu_stack_index].handler)(menu_stack[menu_stack_index].state);
+	newstate = (*menu_stack[menu_stack_index].handler)(machine, menu_stack[menu_stack_index].state);
 	menu_stack[menu_stack_index].state = newstate;
 
 	/* if the menus are to be hidden, return a cancel here */
-	if (state == SHORTCUT_MENU_CHEAT)
-	{
-		if (input_ui_pressed(IPT_UI_CHEAT) || menu_stack[menu_stack_index].handler == NULL)
-			return UI_HANDLER_CANCEL;
-	}
-	else
-#ifdef CMD_LIST
-	if (state == SHORTCUT_MENU_COMMAND)
-	{
-		if (input_ui_pressed(IPT_UI_COMMAND) || menu_stack[menu_stack_index].handler == NULL)
-			return UI_HANDLER_CANCEL;
-	}
-	else
-#endif /* CMD_LIST */
-
-	if ((input_ui_pressed(IPT_UI_CONFIGURE) && !ui_menu_is_force_game_select()) || menu_stack[menu_stack_index].handler == NULL)
-	{
-		osd_toggle_menubar(-1);
+	if ((input_ui_pressed(machine, IPT_UI_CONFIGURE) && !ui_menu_is_force_game_select()) || menu_stack[menu_stack_index].handler == NULL)
 		return UI_HANDLER_CANCEL;
-	}
 
-	return state;
+	return 0;
 }
 
 
@@ -891,7 +855,7 @@ static UINT32 menu_main(running_machine *machine, UINT32 state)
 {
 #define ADD_MENU(name, _handler, _param) \
 do { \
-	item_list[menu_items].text = ui_getstring(name); \
+	item_list[menu_items].text = name; \
 	handler_list[menu_items].handler = _handler; \
 	handler_list[menu_items].state = _param; \
 	menu_items++; \
@@ -926,71 +890,57 @@ do { \
 	memset(item_list, 0, sizeof(item_list));
 
 	/* add input menu items */
-	ADD_MENU(UI_inputgeneral, menu_input_groups, 0);
-	ADD_MENU(UI_inputspecific, menu_input, 1000 << 16);
-
-#ifdef USE_CUSTOM_BUTTON
-	if (custom_buttons)
-		ADD_MENU(UI_custombuttons, menu_custom_button, 0);
-#endif /* USE_CUSTOM_BUTTON */
-
-	ADD_MENU(UI_autofire, menu_autofire, 0);
+	ADD_MENU("Input (general)", menu_input_groups, 0);
+	ADD_MENU("Input (this " CAPSTARTGAMENOUN ")", menu_input, 1000 << 16);
 
 	/* add optional input-related menus */
 	if (has_dips)
-		ADD_MENU(UI_dipswitches, menu_switches, (IPT_DIPSWITCH_NAME << 16) | (IPT_DIPSWITCH_SETTING << 24));
+		ADD_MENU("Dip Switches", menu_switches, IPT_DIPSWITCH << 16);
 	if (has_configs)
-		ADD_MENU(UI_configuration, menu_switches, (IPT_CONFIG_NAME << 16) | (IPT_CONFIG_SETTING << 24));
+		ADD_MENU("Driver Configuration", menu_switches, IPT_CONFIG << 16);
 #ifdef MESS
 	if (has_categories)
-		ADD_MENU(UI_categories, menu_switches, (IPT_CATEGORY_NAME << 16) | (IPT_CATEGORY_SETTING << 24));
+		ADD_MENU("Categories", menu_switches, IPT_CATEGORY << 16);
 #endif
 	if (has_analog)
-		ADD_MENU(UI_analogcontrols, menu_analog, 0);
+		ADD_MENU("Analog Controls", menu_analog, 0);
 
 #ifndef MESS
   	/* add bookkeeping menu */
-	ADD_MENU(UI_bookkeeping, menu_bookkeeping, 0);
+	ADD_MENU("Bookkeeping Info", menu_bookkeeping, 0);
 #endif
 
 	/* add game info menu */
-	ADD_MENU(UI_gameinfo, menu_game_info, 0);
+	ADD_MENU(CAPSTARTGAMENOUN " Information", menu_game_info, 0);
 
 #ifdef MESS
   	/* add image info menu */
-	ADD_MENU(UI_imageinfo, ui_menu_image_info, 0);
+	ADD_MENU("Image Information", ui_menu_image_info, 0);
 
   	/* add image info menu */
-	ADD_MENU(UI_filemanager, menu_file_manager, 1);
+	ADD_MENU("File Manager", menu_file_manager, 1);
 
 #if HAS_WAVE
   	/* add tape control menu */
-	if (device_find_from_machine(Machine, IO_CASSETTE))
-		ADD_MENU(UI_tapecontrol, menu_tape_control, 1);
+	if (device_find_from_machine(machine, IO_CASSETTE))
+		ADD_MENU("Tape Control", menu_tape_control, 1);
 #endif /* HAS_WAVE */
 #endif /* MESS */
 
-	/* add game document menu */
-	ADD_MENU(UI_gamedocuments, menu_documents, 0);
-
 	/* add video options menu */
-	ADD_MENU(UI_video, menu_video, 1000 << 16);
-
-#ifdef USE_SCALE_EFFECTS
-	ADD_MENU(UI_scaleeffect, menu_scale_effect, scale_effect.effect);
-#endif /* USE_SCALE_EFFECTS */
+	ADD_MENU("Video Options", menu_video, 1000 << 16);
 
 	/* add cheat menu */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
-		ADD_MENU(UI_cheat, menu_cheat, 1);
+		ADD_MENU("Cheat", menu_cheat, 1);
 
 	/* add memory card menu */
-	if (Machine->config->memcard_handler != NULL)
-		ADD_MENU(UI_memorycard, menu_memory_card, 0);
+	if (machine->config->memcard_handler != NULL)
+		ADD_MENU("Memory Card", menu_memory_card, 0);
 
 	/* add reset and exit menus */
-	ADD_MENU(UI_selectgame, menu_select_game, 1 << 16);
-	ADD_MENU(UI_returntogame, NULL, 0);
+	ADD_MENU("Select New " CAPSTARTGAMENOUN, menu_select_game, 1 << 16);
+	ADD_MENU("Return to " CAPSTARTGAMENOUN, NULL, 0);
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
@@ -1026,7 +976,7 @@ static UINT32 menu_input_groups(running_machine *machine, UINT32 state)
 		item_list[menu_items].text = ui_getstring(UI_uigroup + menu_items);
 
 	/* add an item for the return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
@@ -1088,7 +1038,7 @@ static UINT32 menu_input(running_machine *machine, UINT32 state)
 	qsort(item_list, menu_items, sizeof(item_list[0]), input_menu_compare_items);
 
 	/* add an item to return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* if we're polling, just put an empty entry and arrows for the subitem */
 	if (polling)
@@ -1214,7 +1164,7 @@ static UINT32 menu_switches(running_machine *machine, UINT32 state)
 	selected_field = item_list[selected].ref;
 
 	/* add an item to return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* configure the extra menu */
 	extra.top = 0;
@@ -1285,48 +1235,51 @@ static UINT32 menu_analog(running_machine *machine, UINT32 state)
 	menu_string_pool_offset = 0;
 
 	/* loop over input ports and add the items */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
-		if (port_type_is_analog(in->type))
-		{
-			use_autocenter = 0;
-			switch (in->type)
+	for (port = Machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+			if (input_type_is_analog(field->type))
 			{
-				/* Autocenter Speed is only used for these devices */
-				case IPT_POSITIONAL:
-				case IPT_POSITIONAL_V:
-					if (in->analog.wraps) break;
+				use_autocenter = FALSE;
+				switch (field->type)
+				{
+					/* Autocenter Speed is only used for these devices */
+					case IPT_POSITIONAL:
+					case IPT_POSITIONAL_V:
+						if (field->flags & ANALOG_FLAG_WRAPS)
+							break;
 
-				case IPT_PEDAL:
-				case IPT_PEDAL2:
-				case IPT_PEDAL3:
-				case IPT_PADDLE:
-				case IPT_PADDLE_V:
-				case IPT_AD_STICK_X:
-				case IPT_AD_STICK_Y:
-				case IPT_AD_STICK_Z:
-					use_autocenter = 1;
-					break;
+					case IPT_PEDAL:
+					case IPT_PEDAL2:
+					case IPT_PEDAL3:
+					case IPT_PADDLE:
+					case IPT_PADDLE_V:
+					case IPT_AD_STICK_X:
+					case IPT_AD_STICK_Y:
+					case IPT_AD_STICK_Z:
+						use_autocenter = TRUE;
+						break;
+				}
+
+				/* track the selected item */
+				if (state >= menu_items && state < menu_items + 3 + use_autocenter)
+				{
+					selected_field = field;
+					selected_item = state - menu_items;
+					// shift menu for missing Autocenter
+					if (selected_item && !use_autocenter)
+						selected_item++;
+				}
+
+				/* add the needed items for each analog input */
+				analog_menu_add_item(&item_list[menu_items++], field, _("Digital Speed"), ANALOG_ITEM_KEYSPEED);
+				if (use_autocenter)
+					analog_menu_add_item(&item_list[menu_items++], field, _("Autocenter Speed"), ANALOG_ITEM_CENTERSPEED);
+				analog_menu_add_item(&item_list[menu_items++], field, _("Reverse"), ANALOG_ITEM_REVERSE);
+				analog_menu_add_item(&item_list[menu_items++], field, _("Sensitivity"), ANALOG_ITEM_SENSITIVITY);
 			}
-
-			/* track the selected item */
-			if (state >= menu_items && state < menu_items + 3 + use_autocenter)
-			{
-				selected_in = in;
-				selected_item = state - menu_items;
-				// shift menu for missing Autocenter
-				if (selected_item && !use_autocenter) selected_item++;
-			}
-
-			/* add the needed items for each analog input */
-			analog_menu_add_item(&item_list[menu_items++], in, UI_keyjoyspeed, ANALOG_ITEM_KEYSPEED);
-			if (use_autocenter)
-				analog_menu_add_item(&item_list[menu_items++], in, UI_centerspeed, ANALOG_ITEM_CENTERSPEED);
-			analog_menu_add_item(&item_list[menu_items++], in, UI_reverse, ANALOG_ITEM_REVERSE);
-			analog_menu_add_item(&item_list[menu_items++], in, UI_sensitivity, ANALOG_ITEM_SENSITIVITY);
-		}
 
 	/* add an item to return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
@@ -1444,12 +1397,12 @@ static UINT32 menu_game_info(running_machine *machine, UINT32 state)
     menu_cheat - display a menu for cheat options
 -------------------------------------------------*/
 
-static UINT32 menu_cheat(UINT32 state)
+static UINT32 menu_cheat(running_machine *machine, UINT32 state)
 {
-	if ((state & ((1 << 8) - 1)) == 0)
+	int result = cheat_menu(machine, state);
+	if (result == 0)
 		return ui_menu_stack_pop();
-
-	return cheat_menu(Machine, state);
+	return result;
 }
 
 
@@ -1487,7 +1440,7 @@ static UINT32 menu_memory_card(running_machine *machine, UINT32 state)
 	item_list[createindex = menu_items++].text = ui_getstring(UI_createcard);
 
 	/* add an item for the return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
@@ -1508,28 +1461,28 @@ static UINT32 menu_memory_card(running_machine *machine, UINT32 state)
 		{
 			if (memcard_insert(cardnum) == 0)
 			{
-				popmessage("%s", ui_getstring(UI_loadok));
+				popmessage(_("Memory card loaded"));
 				ui_menu_stack_reset();
 				return 0;
 			}
 			else
-				popmessage("%s", ui_getstring(UI_loadfailed));
+				popmessage(_("Error loading memory card"));
 		}
 
 		/* handle eject */
 		else if (selected == ejectindex)
 		{
-			memcard_eject(Machine);
-			popmessage("%s", ui_getstring(UI_cardejected));
+			memcard_eject(machine);
+			popmessage(_("Memory card ejected"));
 		}
 
 		/* handle create */
 		else if (selected == createindex)
 		{
 			if (memcard_create(cardnum, FALSE) == 0)
-				popmessage("%s", ui_getstring(UI_cardcreated));
+				popmessage(_("Memory card created"));
 			else
-				popmessage("%s\n%s", ui_getstring(UI_cardcreatedfailed), ui_getstring(UI_cardcreatedfailed2));
+				popmessage(_("Error creating memory card\n(Card may already exist))");
 		}
 	}
 
@@ -1567,8 +1520,8 @@ static UINT32 menu_video(running_machine *machine, UINT32 state)
 	if (curtarget == 1000)
 	{
 		/* count up the targets, creating menu items for them */
-		for ( ; menu_items < targets; menu_items++)
-			item_list[menu_items].text = menu_string_pool_add("%s%d", ui_getstring(UI_screen), menu_items);
+		for (; menu_items < targets; menu_items++)
+			item_list[menu_items].text = menu_string_pool_add(_("Screen #%d"), menu_items);
 
 		/* if we only ended up with one, auto-select it */
 		if (menu_items == 1)
@@ -1578,7 +1531,7 @@ static UINT32 menu_video(running_machine *machine, UINT32 state)
 		item_list[menu_items++].text = _("Move User Interface");
 
 		/* add an item to return */
-		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+		item_list[menu_items++].text = _("Return to Prior Menu");
 
 		/* draw the menu */
 		visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
@@ -1658,7 +1611,7 @@ static UINT32 menu_video(running_machine *machine, UINT32 state)
 			item_list[menu_items++].text = _("Crop to Screen");
 
 		/* add an item to return */
-		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+		item_list[menu_items++].text = _("Return to Prior Menu");
 
 		/* draw the menu */
 		visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
@@ -1793,7 +1746,7 @@ static UINT32 menu_select_game(running_machine *machine, UINT32 state)
 
 	/* add an item to return, but only if we're not going to pop to the quit handler */
 	if (!ui_menu_is_force_game_select())
-		item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+		item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* otherwise, add a general input configuration and exit menus */
 	else
@@ -2154,7 +2107,7 @@ static UINT32 menu_documents(UINT32 state)
 		item_list[menu_items].text = ui_getstring(UI_history + menu_items);
 
 	/* add an item for the return */
-	item_list[menu_items++].text = ui_getstring(UI_returntoprior);
+	item_list[menu_items++].text = _("Return to Prior Menu");
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
@@ -2228,7 +2181,7 @@ static UINT32 menu_document_contents(UINT32 state)
 				strcat(bufptr, "\n\t");
 				strcat(bufptr, ui_getstring(UI_lefthilight));
 				strcat(bufptr, " ");
-				strcat(bufptr, ui_getstring(UI_returntoprior));
+				strcat(bufptr, _("Return to Prior Menu"));
 				strcat(bufptr, " ");
 				strcat(bufptr, ui_getstring(UI_righthilight));
 				strcat(bufptr, "\n");
@@ -2288,7 +2241,7 @@ static UINT32 menu_document_contents(UINT32 state)
 		strcat(msg, "\n\n\t");
 		strcat(msg, ui_getstring(UI_lefthilight));
 		strcat(msg, " ");
-		strcat(msg, ui_getstring(UI_returntoprior));
+		strcat(msg, _("Return to Prior Menu"));
 		strcat(msg, " ");
 		strcat(msg, ui_getstring(UI_righthilight));
 
@@ -2331,7 +2284,7 @@ static UINT32 menu_command(UINT32 state)
 		item_list[menu_items++].text = "";
 
 		/* add an item for the return */
-		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : ui_getstring(UI_returntoprior));
+		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : _("Return to Prior Menu"));
 
 		/* draw the menu */
 		visible_items = ui_menu_draw_fixed_width(item_list, menu_items, selected, NULL);
@@ -2372,7 +2325,7 @@ static UINT32 menu_command(UINT32 state)
 		if (shortcut)
 			strcat(buf, ui_getstring(UI_returntogame));
 		else
-			strcat(buf, ui_getstring(UI_returntoprior));
+			strcat(buf, _("Return to Prior Menu"));
 		strcat(buf, " ");
 		strcat(buf, ui_getstring(UI_righthilight));
 
@@ -2435,7 +2388,7 @@ static UINT32 menu_command_contents(UINT32 state)
 				if (shortcut)
 					strcat(bufptr, ui_getstring(UI_returntogame));
 				else
-					strcat(bufptr, ui_getstring(UI_returntoprior));
+					strcat(bufptr, _("Return to Prior Menu"));
 				strcat(bufptr, " ");
 				strcat(bufptr, ui_getstring(UI_righthilight));
 				strcat(bufptr, "\n");
@@ -2466,7 +2419,7 @@ static UINT32 menu_command_contents(UINT32 state)
 		if (shortcut)
 			strcat(buf, ui_getstring(UI_returntogame));
 		else
-			strcat(buf, ui_getstring(UI_returntoprior));
+			strcat(buf, _("Return to Prior Menu"));
 		strcat(buf, " ");
 		strcat(buf, ui_getstring(UI_righthilight));
 
@@ -2600,55 +2553,56 @@ static void menu_render_triangle(bitmap_t *dest, const bitmap_t *source, const r
     for a given group of inputs
 -------------------------------------------------*/
 
-static int input_menu_get_items(input_item_data *itemlist, int group)
+static int input_menu_get_items(running_machine *machine, input_item_data *itemlist, int group)
 {
 	input_item_data *item = itemlist;
-	const input_port_default_entry *indef;
-	input_port_default_entry *in;
+	const input_type_desc *typedesc;
 	astring *seqstring;
-
-	/* an out of range group is special; it just means the game-specific inputs */
-	if (group > IPG_TOTAL_GROUPS)
-		return input_menu_get_game_items(itemlist);
 
 	/* iterate over the input ports and add menu items */
 	seqstring = astring_alloc();
-	for (in = get_input_port_list(), indef = get_input_port_list_defaults(); in->type != IPT_END; in++, indef++)
+	for (typedesc = input_type_list(machine); typedesc != NULL; typedesc = typedesc->next)
 
 		/* add if we match the group and we have a valid name */
-		if (in->group == group && in->name && in->name[0] != 0)
+		if (typedesc->group == group && typedesc->name != NULL && typedesc->name[0] != 0)
 		{
 			/* build an entry for the standard sequence */
-			item->seq = &in->defaultseq;
-			item->defseq = &indef->defaultseq;
+			item->typedesc = typedesc;
+			item->seqtype = SEQ_TYPE_STANDARD;
+			item->seq = *input_type_seq(machine, typedesc->type, typedesc->player, item->seqtype);
+			item->defseq = &typedesc->seq[item->seqtype];
 			item->sortorder = item - itemlist;
-			item->type = port_type_is_analog(in->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
-			item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
-			item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, item->seq)));
-			item->invert = input_seq_cmp(item->seq, item->defseq);
+			item->type = input_type_is_analog(typedesc->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
+			item->name = menu_string_pool_add(_(input_format[item->type]), _(typedesc->name));
+			item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+			item->invert = input_seq_cmp(&item->seq, item->defseq);
 			item++;
 
 			/* if we're analog, add more entries */
 			if (item[-1].type == INPUT_TYPE_ANALOG)
 			{
 				/* build an entry for the decrement sequence */
-				item->seq = &in->defaultdecseq;
-				item->defseq = &indef->defaultdecseq;
+				item->typedesc = typedesc;
+				item->seqtype = SEQ_TYPE_DECREMENT;
+				item->seq = *input_type_seq(machine, typedesc->type, typedesc->player, item->seqtype);
+				item->defseq = &typedesc->seq[item->seqtype];
 				item->sortorder = item - itemlist;
 				item->type = INPUT_TYPE_ANALOG_DEC;
-				item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
-				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, item->seq)));
-				item->invert = input_seq_cmp(item->seq, item->defseq);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(typedesc->name));
+				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+				item->invert = input_seq_cmp(&item->seq, item->defseq);
 				item++;
 
 				/* build an entry for the increment sequence */
-				item->seq = &in->defaultincseq;
-				item->defseq = &indef->defaultincseq;
+				item->typedesc = typedesc;
+				item->seqtype = SEQ_TYPE_INCREMENT;
+				item->seq = *input_type_seq(machine, typedesc->type, typedesc->player, item->seqtype);
+				item->defseq = &typedesc->seq[item->seqtype];
 				item->sortorder = item - itemlist;
 				item->type = INPUT_TYPE_ANALOG_INC;
-				item->name = menu_string_pool_add(_(input_format[item->type]), _(in->name));
-				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, item->seq)));
-				item->invert = input_seq_cmp(item->seq, item->defseq);
+				item->name = menu_string_pool_add(_(input_format[item->type]), _(typedesc->name));
+				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+				item->invert = input_seq_cmp(&item->seq, item->defseq);
 				item++;
 			}
 		}
@@ -2660,85 +2614,93 @@ static int input_menu_get_items(input_item_data *itemlist, int group)
 
 
 /*-------------------------------------------------
+    get_field_default_seq - return a pointer
+    to the default sequence for the given field
+-------------------------------------------------*/
+
+static const input_seq *get_field_default_seq(const input_field_config *field, int seqtype)
+{
+	if (input_seq_get_1(&field->seq[seqtype]) == SEQCODE_DEFAULT)
+		return input_type_seq(field->port->machine, field->type, field->player, seqtype);
+	else
+		return &field->seq[seqtype];
+}
+
+
+/*-------------------------------------------------
     input_menu_get_game_items - build a list of
     items for the game-specific inputs
 -------------------------------------------------*/
 
-static int input_menu_get_game_items(input_item_data *itemlist)
+static int input_menu_get_game_items(running_machine *machine, input_item_data *itemlist)
 {
-	static const input_seq default_seq = SEQ_DEF_1(SEQCODE_DEFAULT);
 	astring *seqstring = astring_alloc();
 	input_item_data *item = itemlist;
-	input_port_entry *in;
+	const input_port_config *port;
+	const input_field_config *field;
 
 	/* iterate over the input ports and add menu items */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
-	{
-		const char *name = input_port_name(in);
-
-		/* add if we match the group and we have a valid name */
-		if ((name != NULL) && (input_port_condition(in)) &&
-#ifdef MESS
-			(in->category == 0 || input_category_active(Machine, in->category)) &&
-#endif /* MESS */
-			((in->type == IPT_OTHER && in->name != IP_NAME_DEFAULT) || port_type_to_group(in->type, in->player) != IPG_INVALID))
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
-			UINT16 sortorder;
-			const input_seq *curseq, *defseq;
+			const char *name = input_field_name(field);
 
-			/* determine the sorting order */
-			if (in->type >= IPT_START1 && in->type <= __ipt_analog_end)
-				sortorder = (in->type << 2) | (in->player << 12);
-			else
-				sortorder = in->type | 0xf000;
-
-			/* fetch data for the standard sequence */
-			curseq = input_port_seq(in, SEQ_TYPE_STANDARD);
-			defseq = input_port_default_seq(in->type, in->player, SEQ_TYPE_STANDARD);
-
-			/* build an entry for the standard sequence */
-			item->seq = &in->seq;
-			item->defseq = &default_seq;
-			item->sortorder = sortorder;
-			item->type = port_type_is_analog(in->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
-			item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
-			item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, curseq)));
-			item->invert = input_seq_cmp(curseq, defseq);
-			item++;
-
-			/* if we're analog, add more entries */
-			if (item[-1].type == INPUT_TYPE_ANALOG)
+			/* add if we match the group and we have a valid name */
+			if (name != NULL && input_condition_true(machine, &field->condition) &&
+#ifdef MESS
+				(field->category == 0 || input_category_active(machine, field->category)) &&
+#endif /* MESS */
+				((field->type == IPT_OTHER && field->name != NULL) || input_type_group(machine, field->type, field->player) != IPG_INVALID))
 			{
-				/* fetch data for the decrement sequence */
-				curseq = input_port_seq(in, SEQ_TYPE_DECREMENT);
-				defseq = input_port_default_seq(in->type, in->player, SEQ_TYPE_DECREMENT);
+				UINT16 sortorder;
 
-				/* build an entry for the decrement sequence */
-				item->seq = &in->analog.decseq;
-				item->defseq = &default_seq;
+				/* determine the sorting order */
+				if (field->type >= IPT_START1 && field->type <= __ipt_analog_end)
+					sortorder = (field->type << 2) | (field->player << 12);
+				else
+					sortorder = field->type | 0xf000;
+
+				/* build an entry for the standard sequence */
+				item->field = field;
+				item->seqtype = SEQ_TYPE_STANDARD;
+				item->seq = *input_field_seq(field, item->seqtype);
+				item->defseq = get_field_default_seq(field, item->seqtype);
 				item->sortorder = sortorder;
-				item->type = INPUT_TYPE_ANALOG_DEC;
+				item->type = input_type_is_analog(field->type) ? INPUT_TYPE_ANALOG : INPUT_TYPE_DIGITAL;
 				item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
-				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, curseq)));
-				item->invert = input_seq_cmp(curseq, defseq);
+				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+				item->invert = input_seq_cmp(&item->seq, item->defseq);
 				item++;
 
-				/* fetch data for the increment sequence */
-				curseq = input_port_seq(in, SEQ_TYPE_INCREMENT);
-				defseq = input_port_default_seq(in->type, in->player, SEQ_TYPE_INCREMENT);
+				/* if we're analog, add more entries */
+				if (item[-1].type == INPUT_TYPE_ANALOG)
+				{
+					/* build an entry for the decrement sequence */
+					item->field = field;
+					item->seqtype = SEQ_TYPE_DECREMENT;
+					item->seq = *input_field_seq(field, item->seqtype);
+					item->defseq = get_field_default_seq(field, item->seqtype);
+					item->sortorder = sortorder;
+					item->type = INPUT_TYPE_ANALOG_DEC;
+					item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
+					item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+					item->invert = input_seq_cmp(&item->seq, item->defseq);
+					item++;
 
-				/* build an entry for the increment sequence */
-				item->seq = &in->analog.incseq;
-				item->defseq = &default_seq;
-				item->sortorder = sortorder;
-				item->type = INPUT_TYPE_ANALOG_INC;
-				item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
-				item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, curseq)));
-				item->invert = input_seq_cmp(curseq, defseq);
-				item++;
+					/* build an entry for the increment sequence */
+					item->field = field;
+					item->seqtype = SEQ_TYPE_INCREMENT;
+					item->seq = *input_field_seq(field, item->seqtype);
+					item->defseq = get_field_default_seq(field, item->seqtype);
+					item->sortorder = sortorder;
+					item->type = INPUT_TYPE_ANALOG_INC;
+					item->name = menu_string_pool_add(_(input_format[item->type]), _(name));
+					item->seqname = menu_string_pool_add("%s", astring_c(input_seq_name(seqstring, &item->seq)));
+					item->invert = input_seq_cmp(&item->seq, item->defseq);
+					item++;
+				}
 			}
 		}
-	}
 
 	/* return the number of items */
 	astring_free(seqstring);
@@ -2791,24 +2753,26 @@ static int input_menu_compare_items(const void *i1, const void *i2)
     switches menu list
 -------------------------------------------------*/
 
-static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *in, int switch_entry, void *ref)
+static void switches_menu_add_item(ui_menu_item *item, const input_field_config *field)
 {
-	const input_port_entry *tin;
+	const input_setting_config *setting;
+	input_field_user_settings settings;
 
 	/* set the text to the name and the subitem text to invalid */
-	item->text = _(input_port_name(in));
+	input_field_get_user_settings(field, &settings);
+	item->text = input_field_name(field);
 	item->subtext = NULL;
 
 	/* scan for the current selection in the list */
-	for (tin = in + 1; tin->type == switch_entry; tin++)
-		if (input_port_condition(tin))
+	for (setting = field->settinglist; setting != NULL; setting = setting->next)
+		if (input_condition_true(field->port->machine, &setting->condition))
 		{
 			/* if this is a match, set the subtext */
-			if (in->default_value == tin->default_value)
-				item->subtext = _(input_port_name(tin));
+			if (setting->value == settings.value)
+				item->subtext = setting->name;
 
 			/* else if we haven't seen a match yet, show a left arrow */
-			else if (!item->subtext)
+			else if (item->subtext == NULL)
 				item->flags |= MENU_FLAG_LEFT_ARROW;
 
 			/* else if we have seen a match, show a right arrow */
@@ -2817,11 +2781,11 @@ static void switches_menu_add_item(ui_menu_item *item, const input_port_entry *i
 		}
 
 	/* if no matches, we're invalid */
-	if (!item->subtext)
-		item->subtext = ui_getstring(UI_INVALID);
+	if (item->subtext == NULL)
+		item->subtext = _("INVALID");
 
 	/* stash our reference */
-	item->ref = ref;
+	item->ref = (void *)field;
 }
 
 
@@ -2911,40 +2875,43 @@ static void switches_menu_select_next(const input_field_config *field)
     analog controls menu
 -------------------------------------------------*/
 
-static void analog_menu_add_item(ui_menu_item *item, const input_port_entry *in, int append_string, int which_item)
+static void analog_menu_add_item(ui_menu_item *item, const input_field_config *field, const char *append_string, int which_item)
 {
+	input_field_user_settings settings;
 	int value, minval, maxval;
 
+	input_field_get_user_settings(field, &settings);
+
 	/* set the item text using the formatting string provided */
-	item->text = menu_string_pool_add("%s %s", input_port_name(in), ui_getstring(append_string));
+	item->text = menu_string_pool_add("%s %s", input_field_name(field), append_string);
 
 	/* set the subitem text */
 	switch (which_item)
 	{
 		default:
 		case ANALOG_ITEM_KEYSPEED:
-			value = in->analog.delta;
+			value = settings.delta;
 			minval = 0;
 			maxval = 255;
 			item->subtext = menu_string_pool_add("%d", value);
 			break;
 
 		case ANALOG_ITEM_CENTERSPEED:
-			value = in->analog.centerdelta;
+			value = settings.centerdelta;
 			minval = 0;
 			maxval = 255;
 			item->subtext = menu_string_pool_add("%d", value);
 			break;
 
 		case ANALOG_ITEM_REVERSE:
-			value = in->analog.reverse;
+			value = settings.reverse;
 			minval = 0;
 			maxval = 1;
-			item->subtext = value ? ui_getstring(UI_on) : ui_getstring(UI_off);
+			item->subtext = value ? _("On") : _("Off");
 			break;
 
 		case ANALOG_ITEM_SENSITIVITY:
-			value = in->analog.sensitivity;
+			value = settings.sensitivity;
 			minval = 1;
 			maxval = 255;
 			item->subtext = menu_string_pool_add("%d%%", value);

@@ -2355,7 +2355,7 @@ static int EnableDisableCheatMenu(running_machine *machine, int selection, int f
  	if (shortcut)
  		menu_item[total] = ui_getstring(UI_returntogame);
  	else
- 		menu_item[total] = ui_getstring(UI_returntoprior);
+ 		menu_item[total] = _("Return to Prior Menu");
 
 	menu_subitem[total] = NULL;
 	flagBuf[total++] = 0;
@@ -2723,7 +2723,7 @@ static int AddEditCheatMenu(running_machine *machine, int selection)
 			menu_item[total++] = "(none)";
 	}
 
-	menu_item[total++] = ui_getstring(UI_returntoprior);		// return
+	menu_item[total++] = _("Return to Prior Menu");		// return
 
 	menu_item[total] = NULL;					// terminate array
 
@@ -3712,7 +3712,7 @@ static int EditCheatMenu(running_machine *machine, CheatEntry * entry, int index
 
 	menuItemInfo[total].subcheat =	0;				// return
 	menuItemInfo[total].fieldType =	kType_Return;
-	menuItem[total] =				ui_getstring(UI_returntoprior);
+	menuItem[total] =				_("Return to Prior Menu");
 	menuSubItem[total++] =			NULL;
 
 	menuItemInfo[total].subcheat =	0;				// terminate arrey
@@ -4890,7 +4890,7 @@ static int DoSearchMenuMinimum(running_machine *machine, int selection)
 	menuItem[total] = ui_getstring(UI_restoreresults);	// restore result
 	menuSubItem[total++] = NULL;
 
-	menuItem[total] = ui_getstring(UI_returntoprior);	// return
+	menuItem[total] = _("Return to Prior Menu");	// return
 	menuSubItem[total++] = NULL;
 
 	menuItem[total] = NULL;								// terminate array
@@ -5477,7 +5477,7 @@ static int DoSearchMenuClassic(running_machine *machine, int selection)
 	menuItem[total] = ui_getstring(UI_restoreresults);	// restore result
 	menuSubItem[total++] = NULL;
 
-	menuItem[total] = ui_getstring(UI_returntoprior);	// return
+	menuItem[total] = _("Return to Prior Menu");	// return
 	menuSubItem[total++] = NULL;
 
 	menuItem[total] = NULL;								// terminate array
@@ -6024,7 +6024,7 @@ static int DoSearchMenu(running_machine *machine, int selection)
 	menu_item[total] = ui_getstring(UI_restoreresults);		// restore result
 	menu_subitem[total++] = NULL;
 
-	menu_item[total] = ui_getstring(UI_returntoprior);		// return
+	menu_item[total] = _("Return to Prior Menu");		// return
 	menu_subitem[total++] = NULL;
 
 	menu_item[total] = NULL;								// terminate array
@@ -6366,7 +6366,7 @@ static int SelectSearchRegions(running_machine *machine, int selection, SearchIn
 	menuItem[total] = "Search Speed";
 	menuSubItem[total++] = kSearchSpeedList[search->searchSpeed];
 
-	menuItem[total] = ui_getstring(UI_returntoprior);		// return item
+	menuItem[total] = _("Return to Prior Menu");		// return item
 	menuSubItem[total++] = NULL;
 
 	menuItem[total] = NULL;			// terminate array
@@ -6643,7 +6643,7 @@ static int ViewSearchResults(running_machine *machine, int selection, int firstT
 			menu_item[total++] = _("no results found");
 	}
 
-	menu_item[total++] = ui_getstring(UI_returntoprior);		// return
+	menu_item[total++] = _("Return to Prior Menu");		// return
 
 	menu_item[total] = NULL;									// terminate array
 
@@ -6908,7 +6908,7 @@ static int ChooseWatch(running_machine *machine, int selection)
 		total++;
 	}
 
-	menuItem[total++] = ui_getstring(UI_returntoprior);		// return
+	menuItem[total++] = _("Return to Prior Menu");		// return
 
 	menuItem[total] = NULL;									// terminate array
 
@@ -7213,7 +7213,7 @@ static int EditWatch(running_machine *machine, WatchInfo * entry, int selection)
 	menuSubItem[total] = buf[total];
 	total++;
 
-	menuItem[total] = ui_getstring(UI_returntoprior);		// return
+	menuItem[total] = _("Return to Prior Menu");		// return
 	menuSubItem[total++] = NULL;
 
 	menuItem[total] = NULL;									// terminate array
@@ -7665,7 +7665,7 @@ static int SelectOptions(running_machine *machine, int selection)
 	menuItem[total] =		_("Debug");
 	menuSubItem[total++] =	ui_getstring(TEST_FIELD(cheatOptions, Debug) ? UI_on : UI_off);
 
-	menuItem[total] =		ui_getstring(UI_returntoprior);		// return
+	menuItem[total] =		_("Return to Prior Menu");		// return
 	menuSubItem[total++] =	NULL;
 
 	menuItem[total] =		NULL;								// terminate array
@@ -7839,7 +7839,7 @@ static int SelectSearch(running_machine *machine, int selection)
 		total++;
 	}
 
-	menuItem[total++] = ui_getstring(UI_returntoprior);		// return
+	menuItem[total++] = _("Return to Prior Menu");		// return
 
 	menuItem[total] = NULL;									// terminate array
 

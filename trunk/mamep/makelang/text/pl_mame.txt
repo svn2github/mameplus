@@ -1543,8 +1543,8 @@ Out of memory reading ROM %s\n
 Za ma³o pamiêci aby wczytaæ ROM %s\n
 
 # ui_text.c: 59
-Overclock
-Przetaktowanie
+Overclock CPU %d %3.0f%%
+Przetaktowanie %d %3.0f%%
 
 # drivers/deadang.c: 179, 249 drivers/tail2nos.c: 210
 Overseas
@@ -3351,8 +3351,8 @@ Voice
 G³os
 
 # ui_text.c: 52
-Volume
-G³oœnoœæ
+%s Volume %4.2f
+%s G³oœnoœæ %4.2f
 
 # romload.c: 392
 WARNING: the game might not run correctly.\n

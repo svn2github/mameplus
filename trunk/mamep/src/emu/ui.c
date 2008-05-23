@@ -1977,11 +1977,11 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 	if (res == 0)
 	{
 		/* an 'O' or left joystick kicks us to the next state */
-		if (state == 0 && (input_code_pressed_once(KEYCODE_O) || input_ui_pressed(IPT_UI_LEFT)))
+		if (state == 0 && (input_code_pressed_once(KEYCODE_O) || input_ui_pressed(machine, IPT_UI_LEFT)))
 			state++;
 
 		/* a 'K' or right joystick exits the state */
-		else if (state == 1 && (input_code_pressed_once(KEYCODE_K) || input_ui_pressed(IPT_UI_RIGHT)))
+		else if (state == 1 && (input_code_pressed_once(KEYCODE_K) || input_ui_pressed(machine, IPT_UI_RIGHT)))
 			state = UI_HANDLER_CANCEL;
 	}
 
@@ -1997,9 +1997,9 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 
 
 /*-------------------------------------------------
-    handler_messagebox_selectkey - displays the
+    handler_messagebox_anykey - displays the
     current messagebox_text string and waits for
-    selectkey press
+    any keypress
 -------------------------------------------------*/
 
 static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
@@ -2074,36 +2074,36 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 #endif /* MESS */
 
 	/* if the user pressed ESC, stop the emulation */
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL))
 		return ui_set_handler(handler_confirm_quit, 0);
 
 	/* turn on menus if requested */
-	if (input_ui_pressed(IPT_UI_CONFIGURE))
+	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 	{
 		osd_toggle_menubar(1);
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
-	if (options_get_bool(mame_options(), OPTION_CHEAT) && input_ui_pressed(IPT_UI_CHEAT))
+	if (options_get_bool(mame_options(), OPTION_CHEAT) && input_ui_pressed(machine, IPT_UI_CHEAT))
 		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);
 
 #ifdef CMD_LIST
-	if (input_ui_pressed(IPT_UI_COMMAND))
+	if (input_ui_pressed(machine, IPT_UI_COMMAND))
 		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_COMMAND);
 #endif /* CMD_LIST */
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
-	if (!machine->debug_mode && input_ui_pressed(IPT_UI_ON_SCREEN_DISPLAY))
+	if (!machine->debug_mode && input_ui_pressed(machine, IPT_UI_ON_SCREEN_DISPLAY))
 		return ui_set_handler(handler_slider, 0);
 
 	/* handle a reset request */
-	if (input_ui_pressed(IPT_UI_RESET_MACHINE))
+	if (input_ui_pressed(machine, IPT_UI_RESET_MACHINE))
 		mame_schedule_hard_reset(machine);
-	if (input_ui_pressed(IPT_UI_SOFT_RESET))
+	if (input_ui_pressed(machine, IPT_UI_SOFT_RESET))
 		mame_schedule_soft_reset(machine);
 
 	/* handle a request to display graphics/palette */
-	if (input_ui_pressed(IPT_UI_SHOW_GFX))
+	if (input_ui_pressed(machine, IPT_UI_SHOW_GFX))
 	{
 		if (!is_paused)
 			mame_pause(machine, TRUE);
@@ -2111,21 +2111,21 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	}
 
 	/* handle a save state request */
-	if (input_ui_pressed(IPT_UI_SAVE_STATE))
+	if (input_ui_pressed(machine, IPT_UI_SAVE_STATE))
 	{
 		mame_pause(machine, TRUE);
 		return ui_set_handler(handler_load_save, LOADSAVE_SAVE);
 	}
 
 	/* handle a load state request */
-	if (input_ui_pressed(IPT_UI_LOAD_STATE))
+	if (input_ui_pressed(machine, IPT_UI_LOAD_STATE))
 	{
 		mame_pause(machine, TRUE);
 		return ui_set_handler(handler_load_save, LOADSAVE_LOAD);
 	}
 
 	/* handle a save snapshot request */
-	if (input_ui_pressed(IPT_UI_SNAPSHOT))
+	if (input_ui_pressed(machine, IPT_UI_SNAPSHOT))
 		video_save_active_screen_snapshots(machine);
 
 #ifdef INP_CAPTION
@@ -2133,7 +2133,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 #endif /* INP_CAPTION */
 
 	/* toggle pause */
-	if (input_ui_pressed(IPT_UI_PAUSE))
+	if (input_ui_pressed(machine, IPT_UI_PAUSE))
 	{
 		/* with a shift key, it is single step */
 		if (is_paused && (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT)))
@@ -2147,7 +2147,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 
 #ifdef USE_SHOW_TIME
-	if (input_ui_pressed(IPT_UI_TIME))
+	if (input_ui_pressed(machine, IPT_UI_TIME))
 	{
 		if (show_time)
 		{
@@ -2171,7 +2171,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 #endif /* USE_SHOW_TIME */
 
 #ifdef USE_SHOW_INPUT_LOG
-	if (input_ui_pressed(IPT_UI_SHOW_INPUT_LOG))
+	if (input_ui_pressed(machine, IPT_UI_SHOW_INPUT_LOG))
 	{
 		show_input_log ^= 1;
 		command_buffer[0].code = '\0';
@@ -2455,43 +2455,49 @@ static void slider_init(running_machine *machine)
 		if (defval > 1000)
 			maxval = 2 * defval;
 
-		slider_config(&slider_list[slider_count++], 0, defval, maxval, 20, slider_mixervol, item);
+		slider_config(&slider_list[slider_count++], 0, defval, maxval, 20, slider_mixervol, (void *)(FPTR)item);
 	}
 
 	/* add analog adjusters */
-	for (in = machine->input_ports; in && in->type != IPT_END; in++)
-		if ((in->type & 0xff) == IPT_ADJUSTER)
-			slider_config(&slider_list[slider_count++], 0, in->default_value >> 8, 100, 1, slider_adjuster, in - machine->input_ports);
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+			if (field->type == IPT_ADJUSTER)
+			{
+				void *param = (void *)field;
+				slider_config(&slider_list[slider_count++], 0, field->defvalue, 100, 1, slider_adjuster, param);
+			}
 
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
 		/* add CPU overclocking */
 		numitems = cpu_gettotalcpu();
 		for (item = 0; item < numitems; item++)
-			slider_config(&slider_list[slider_count++], 50, 1000, 4000, 50, slider_overclock, item);
+			slider_config(&slider_list[slider_count++], 10, 1000, 2000, 1, slider_overclock, (void *)(FPTR)item);
 
 		/* add refresh rate tweaker */
-		slider_config(&slider_list[slider_count++], -10000, 0, 10000, 1000, slider_refresh, 0);
+		slider_config(&slider_list[slider_count++], -10000, 0, 10000, 1000, slider_refresh, NULL);
 	}
 
 	for (item = 0; item < numscreens; item++)
 	{
-		const screen_config *scrconfig = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, item)->inline_config;
+		const device_config *screen = device_list_find_by_index(machine->config->devicelist, VIDEO_SCREEN, item);
+		const screen_config *scrconfig = screen->inline_config;
 		int defxscale = floor(scrconfig->xscale * 1000.0f + 0.5f);
 		int defyscale = floor(scrconfig->yscale * 1000.0f + 0.5f);
 		int defxoffset = floor(scrconfig->xoffset * 1000.0f + 0.5f);
 		int defyoffset = floor(scrconfig->yoffset * 1000.0f + 0.5f);
+		void *param = (void *)screen;
 
 		/* add standard brightness/contrast/gamma controls per-screen */
-		slider_config(&slider_list[slider_count++], 100, 1000, 2000, 10, slider_brightness, item);
-		slider_config(&slider_list[slider_count++], 100, 1000, 2000, 50, slider_contrast, item);
-		slider_config(&slider_list[slider_count++], 100, 1000, 3000, 50, slider_gamma, item);
+		slider_config(&slider_list[slider_count++], 100, 1000, 2000, 10, slider_brightness, param);
+		slider_config(&slider_list[slider_count++], 100, 1000, 2000, 50, slider_contrast, param);
+		slider_config(&slider_list[slider_count++], 100, 1000, 3000, 50, slider_gamma, param);
 
 		/* add scale and offset controls per-screen */
-		slider_config(&slider_list[slider_count++], 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_xscale, item);
-		slider_config(&slider_list[slider_count++], -500, defxoffset, 500, 2, slider_xoffset, item);
-		slider_config(&slider_list[slider_count++], 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_yscale, item);
-		slider_config(&slider_list[slider_count++], -500, defyoffset, 500, 2, slider_yoffset, item);
+		slider_config(&slider_list[slider_count++], 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_xscale, param);
+		slider_config(&slider_list[slider_count++], -500, defxoffset, 500, 2, slider_xoffset, param);
+		slider_config(&slider_list[slider_count++], 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_yscale, param);
+		slider_config(&slider_list[slider_count++], -500, defyoffset, 500, 2, slider_yoffset, param);
 	}
 
 	for (device = video_screen_first(machine->config); device != NULL; device = video_screen_next(device))
@@ -2595,7 +2601,7 @@ static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer,
 	if (buffer != NULL)
 	{
 		sound_set_attenuation(newval);
-		sprintf(buffer, "%s %3ddB", ui_getstring(UI_volume), sound_get_attenuation());
+		sprintf(buffer, _("Master Volume %3ddB"), sound_get_attenuation());
 	}
 	return sound_get_attenuation();
 }
@@ -2606,14 +2612,15 @@ static INT32 slider_volume(running_machine *machine, INT32 newval, char *buffer,
     slider callback
 -------------------------------------------------*/
 
-static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
+	int which = (FPTR)arg;
 	if (buffer != NULL)
 	{
-		sound_set_user_gain(arg, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s %4.2f", sound_get_user_gain_name(arg), ui_getstring(UI_volume), sound_get_user_gain(arg));
+		sound_set_user_gain(which, (float)newval * 0.001f);
+		sprintf(buffer, _("%s Volume %4.2f"), sound_get_user_gain_name(which), sound_get_user_gain(which));
 	}
-	return floor(sound_get_user_gain(arg) * 1000.0f + 0.5f);
+	return floor(sound_get_user_gain(which) * 1000.0f + 0.5f);
 }
 
 
@@ -2622,15 +2629,19 @@ static INT32 slider_mixervol(running_machine *machine, INT32 newval, char *buffe
     callback
 -------------------------------------------------*/
 
-static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
-	input_port_entry *in = &machine->input_ports[arg];
+	const input_field_config *field = arg;
+	input_field_user_settings settings;
+
+	input_field_get_user_settings(field, &settings);
 	if (buffer != NULL)
 	{
-		in->default_value = (in->default_value & ~0xff) | (newval & 0xff);
-		sprintf(buffer, "%s %d%%", _(in->name), in->default_value & 0xff);
+		settings.value = newval;
+		input_field_set_user_settings(field, &settings);
+		sprintf(buffer, "%s %d%%", _(field->name), settings.value);
 	}
-	return in->default_value & 0xff;
+	return settings.value;
 }
 
 
@@ -2639,14 +2650,15 @@ static INT32 slider_adjuster(running_machine *machine, INT32 newval, char *buffe
     callback
 -------------------------------------------------*/
 
-static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, int arg)
+static INT32 slider_overclock(running_machine *machine, INT32 newval, char *buffer, void *arg)
 {
+	int which = (FPTR)arg;
 	if (buffer != NULL)
 	{
-		cpunum_set_clockscale(machine, arg, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s%d %3.0f%%", ui_getstring(UI_overclock), ui_getstring(UI_cpu), arg, floor(cpunum_get_clockscale(arg) * 100.0f + 0.5f));
+		cpunum_set_clockscale(machine, which, (float)newval * 0.001f);
+		sprintf(buffer, _("Overclock CPU %d %3.0f%%"), which, floor(cpunum_get_clockscale(which) * 100.0f + 0.5f));
 	}
-	return floor(cpunum_get_clockscale(arg) * 1000.0f + 0.5f);
+	return floor(cpunum_get_clockscale(which) * 1000.0f + 0.5f);
 }
 
 

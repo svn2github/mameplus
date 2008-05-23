@@ -343,10 +343,6 @@
 (불량)
 
 #
-(Card may already exist)
-(카드가 이미 존재합니다)
-
-#
 (debugger-only command)
 (디버거-전용 명령)
 
@@ -1583,8 +1579,8 @@ Error
 오류
 
 #
-Error creating memory card
-메모리카드 생성 오류
+Error creating memory card\n(Card may already exist)
+메모리카드 생성 오류\n(카드가 이미 존재합니다)
 
 #
 Error loading memory card
@@ -2703,8 +2699,8 @@ Overall: Working
 종합: 실행 가능
 
 #
-Overclock
-오버클럭
+Overclock CPU %d %3.0f%%
+오버클럭 CPU %d %3.0f%%
 
 #
 Overseas
@@ -4599,8 +4595,8 @@ Screen
 화면
 
 #
-Screen #
-화면 #
+Screen #%d
+화면 #%d
 
 #
 Screen %d %s %.3f
@@ -5539,8 +5535,8 @@ Voice
 음성
 
 #
-Volume
-볼륨
+%s Volume %4.2f
+%s 볼륨 %4.2f
 
 #
 Volume Down

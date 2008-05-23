@@ -226,10 +226,6 @@
 (BAD) 
 (HIBÁS)
 
-# emu/uitext.c: 161
-(Card may already exist)
-(A kártya talán már létezik)
-
 # emu/emuopts.c: 163, 164
 (debugger-only command)
 (csak hibakeresõ parancs)
@@ -1391,8 +1387,8 @@ Error
 Hiba
 
 # emu/uitext.c: 160
-Error creating memory card
-Hiba a memória kártya létrehozásakor
+Error creating memory card\n(Card may already exist)
+Hiba a memória kártya létrehozásakor\n(A kártya talán már létezik)
 
 # emu/uitext.c: 156
 Error loading memory card
@@ -2363,8 +2359,8 @@ Otherwise, type OK or move the joystick left then right to continue
 Ellenkezõ esetben, gépeljen OK-t vagy mozgassa a joystick-et balra aztán jobbra a folytatáshoz
 
 # emu/uitext.c: 59
-Overclock
-Túlpörgetés
+Overclock CPU %d %3.0f%%
+Túlpörgetés CPU %d %3.0f%%
 
 # mame/drivers/deadang.c: 178, 248 mame/drivers/tail2nos.c: 209
 Overseas
@@ -4027,8 +4023,8 @@ Screen
 Képernyõ
 
 # emu/uitext.c: 229
-Screen #
-Képernyõ #
+Screen #%d
+Képernyõ #%d
 
 # emu/ui.c: 2506, 2524, 2541, 2557, 2574, 2591, 2608, 2625
 Screen %d %s %.3f
@@ -4911,8 +4907,8 @@ Voice
 Hang
 
 # emu/uitext.c: 52
-Volume
-Hangerõ
+%s Volume %4.2f
+%s Hangerõ %4.2f
 
 # emu/inptport.c: 852
 Volume Down

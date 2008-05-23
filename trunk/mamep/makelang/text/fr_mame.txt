@@ -5462,7 +5462,7 @@ Voice
 
 
 # emu/uitext.c: 51
-Volume
+%s Volume %4.2f
 
 
 # emu/inptport.c: 895

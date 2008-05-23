@@ -222,10 +222,6 @@
 (BAD) 
 (損壞) 
 
-# emu/uitext.c: 162
-(Card may already exist)
-(記憶卡可能已經存在)
-
 # emu/emuopts.c: 190, 191
 (debugger-only command)
 (指令僅適用除錯程式)
@@ -1427,8 +1423,8 @@ Error
 錯誤
 
 # emu/uitext.c: 161
-Error creating memory card
-建立記憶卡時發生錯誤
+Error creating memory card\n(Card may already exist)
+建立記憶卡時發生錯誤\n(記憶卡可能已經存在)
 
 # emu/uitext.c: 157
 Error loading memory card
@@ -2539,8 +2535,8 @@ Overall: Working
 整體: 可以執行
 
 # emu/uitext.c: 58
-Overclock
-超頻
+Overclock CPU %d %3.0f%%
+超頻 CPU %d %3.0f%%
 
 # mame/drivers/deadang.c: 136, 203 mame/drivers/tail2nos.c: 209
 Overseas
@@ -4435,8 +4431,8 @@ Screen
 畫面
 
 # emu/uitext.c: 230
-Screen #
-畫面 #
+Screen #%d
+畫面 #%d
 
 # emu/ui.c: 2631, 2649, 2666, 2682, 2699, 2716, 2733, 2750
 Screen %d %s %.3f
@@ -5399,8 +5395,12 @@ Voice
 語音
 
 # emu/uitext.c: 51
-Volume
-音量
+%s Volume %4.2f
+%s 音量 %4.2f
+
+# emu/uitext.c: 51
+Master Volume %3ddB
+主音量 %3ddB
 
 # emu/inptport.c: 895
 Volume Down

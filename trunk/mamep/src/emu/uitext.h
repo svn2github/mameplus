@@ -29,14 +29,12 @@ enum
 
 	/* misc menu stuff */
 	UI_returntomain,
-	UI_returntoprior,
 	UI_anykey,
 	UI_selectkey,	// Added for usrintrf.c
 	UI_on,
 	UI_off,
 	UI_NA,
 	UI_OK,
-	UI_INVALID,
 	UI_none,
 	UI_cpu,
 	UI_address,
@@ -47,14 +45,12 @@ enum
 	UI_vectorgame,
 	UI_screenres,
 	UI_text,
-	UI_volume,
 	UI_relative,
 	UI_allchannels,
 	UI_brightness,
 	UI_contrast,
 	UI_gamma,
 	UI_vectorflicker,
-	UI_overclock,
 	UI_allcpus,
 	UI_historymissing,
 #ifdef STORY_DATAFILE
@@ -121,12 +117,6 @@ enum
 	UI_command,
 #endif /* CMD_LIST */
 
-	/* input stuff */
-	UI_keyjoyspeed,
-	UI_centerspeed,
-	UI_reverse,
-	UI_sensitivity,
-
 	/* input groups */
 	UI_uigroup,
 	UI_p1group,
@@ -151,12 +141,6 @@ enum
 	UI_loadcard,
 	UI_ejectcard,
 	UI_createcard,
-	UI_loadfailed,
-	UI_loadok,
-	UI_cardejected,
-	UI_cardcreated,
-	UI_cardcreatedfailed,
-	UI_cardcreatedfailed2,
 
 	/* cheat stuff */
 	UI_enablecheat,
@@ -224,7 +208,6 @@ enum
 	UI_decoding_gfx,
 
 	UI_video,
-	UI_screen,
 	UI_rotate_clockwise,
 	UI_rotate_counterclockwise,
 	UI_flip_x,

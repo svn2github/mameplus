@@ -234,10 +234,6 @@ ENCONTRADO: %s\n
 (BAD) 
 (MALO)
 
-# emu/uitext.c: 162
-(Card may already exist)
-(La tarjeta debería existir)
-
 # emu/emuopts.c: 190, 191
 (debugger-only command)
 (solo comandos de depurador)
@@ -1483,8 +1479,8 @@ Error
 Error
 
 # emu/uitext.c: 161
-Error creating memory card
-Error creando tarjeta de memoria
+Error creating memory card\n(Card may already exist)
+Error creando tarjeta de memoria\n(La tarjeta debería existir)
 
 # emu/uitext.c: 157
 Error loading memory card
@@ -4499,8 +4495,8 @@ Screen
 Pantalla
 
 # emu/uitext.c: 230
-Screen #
-Pantalla #
+Screen #%d
+Pantalla #%d
 
 # emu/ui.c: 2631, 2649, 2666, 2682, 2699, 2716, 2733, 2750
 Screen %d %s %.3f
@@ -5439,8 +5435,8 @@ Voice
 Voz
 
 # emu/uitext.c: 51
-Volume
-Volumen
+%s Volume %4.2f
+%s Volumen %4.2f
 
 # emu/inptport.c: 895
 Volume Down

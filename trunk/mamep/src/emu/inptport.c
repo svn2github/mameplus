@@ -102,6 +102,11 @@
 #include <ctype.h>
 #include <time.h>
 
+#include "rendfont.h"
+
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 #include "inputx.h"
 #endif
@@ -210,6 +215,7 @@ struct _input_field_state
 	UINT8						last;				/* were we pressed last time? */
 	UINT8						toggle;				/* current toggle state */
 	UINT8						joydir;				/* digital joystick direction index */
+	int							autopressed;		/* autofire status */
 };
 
 
@@ -254,9 +260,6 @@ struct _input_port_private
 	/* playback/record information */
 	mame_file *					record_file;		/* recording file (NULL if not recording) */
 	mame_file *					playback_file;		/* playback file (NULL if not recording) */
-#ifdef INP_CAPTION
-	mame_file *					caption_file;		/* caption file (NULL if not playing) */
-#endif /* INP_CAPTION */
 	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
 	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
 };
@@ -274,6 +277,10 @@ struct _input_port_private
 #define RECIP_SCALE(s)				(((INT64)1 << 48) / (s))
 #define APPLY_SCALE(x,s)			(((INT64)(x) * (s)) >> 24)
 
+#define IS_AUTOKEY(port)		((port->autofire_setting & AUTOFIRE_ON) || ((port->autofire_setting & AUTOFIRE_TOGGLE) && (autofire_toggle_port->defvalue & (1 << port->player))))
+
+/* original input_ports without modifications */
+static input_port_entry *input_ports_default;
 
 
 /***************************************************************************
@@ -1078,6 +1085,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			result = (result & ~custom->field->mask) | ((newbits << custom->shift) & custom->field->mask);
 		}
 
+static int auto_pressed(input_bit_info *info);
 
 	/* update VBLANK bits */
 	if (port->state->vblank != 0)
@@ -3089,6 +3097,17 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 			load_game_config(machine, portnode, type, player, newseq);
 	}
 
+	if (config_type == CONFIG_TYPE_GAME)
+	{
+		for (portnode = xml_get_sibling(parentnode->child, "autofire"); portnode; portnode = xml_get_sibling(portnode->next, "autofire"))
+		{
+			int player = xml_get_attribute_int(portnode, "player", 0);
+
+			if (player > 0 && player <= MAX_PLAYERS)
+				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
+		}
+	}
+
 	/* after applying the controller config, push that back into the backup, since that is */
 	/* what we will diff against */
 	if (config_type == CONFIG_TYPE_CONTROLLER)
@@ -3359,6 +3378,19 @@ static void save_default_inputs(running_machine *machine, xml_data_node *parentn
 						if (input_seq_cmp(&typestate->seq[seqtype], &typestate->typedesc.seq[seqtype]) != 0)
 							save_sequence(portnode, seqtype, typestate->typedesc.type, &typestate->seq[seqtype]);
 				}
+			}
+		}
+	}
+
+	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
+	{
+		if (autofiredelay[portnum] != 1)
+		{
+			xml_data_node *childnode = xml_add_child(parentnode, "autofire", NULL);
+			if (childnode)
+			{
+				xml_set_attribute_int(childnode, "player", portnum + 1);
+				xml_set_attribute_int(childnode, "delay", autofiredelay[portnum]);
 			}
 		}
 	}
@@ -3837,3 +3869,202 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
+#ifdef USE_SHOW_INPUT_LOG
+INLINE void copy_command_buffer(char log)
+{
+	char buf[UTF8_CHAR_MAX + 1];
+	unicode_char uchar;
+	int len;
+
+	for (len = 0; command_buffer[len].code; len++)
+		;
+
+	if (len >= ARRAY_LENGTH(command_buffer) - 1)
+	{
+		int i;
+
+		for (i = 0; command_buffer[i + 1].code; i++)
+			command_buffer[i] = command_buffer[i + 1];
+
+		command_buffer[--len].code = '\0';
+	}
+
+	buf[0] = '_';
+	buf[1] = log;
+	buf[2] = '\0';
+	convert_command_glyph(buf, ARRAY_LENGTH(buf));
+
+	if (uchar_from_utf8(&uchar, buf, ARRAY_LENGTH(buf)) == -1)
+		return;
+
+	command_buffer[len].code = uchar;
+	command_buffer[len].time = attotime_to_double(timer_get_time());
+	command_buffer[++len].code = '\0';
+}
+
+static void make_input_log(void)
+{
+	input_port_entry *portentry = Machine->input_ports;
+	int player = 0; /* player 1 */
+
+	if (portentry == 0)
+		return;
+
+	/* loop over all the joysticks for player 1*/
+	if (player == 0) /* player 1 */
+	{
+		int joyindex;
+		static int old_dir = -1;
+		static int now_dir = 0;
+
+		for (joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
+		{
+			digital_joystick_info *info = &joystick_info[player][joyindex];
+
+			if (info->inuse)
+			{
+				/* set the status of neutral (assumed to be only in the defaults) */
+				now_dir = 0;
+
+				/* if this is a digital joystick type, apply 4-way rules */
+				switch(info->current)
+				{
+					case JOYDIR_DOWN_BIT:
+						now_dir = 2;
+						break;
+					case JOYDIR_LEFT_BIT:
+						now_dir = 4;
+						break;
+					case JOYDIR_RIGHT_BIT:
+						now_dir = 6;
+						break;
+					case JOYDIR_UP_BIT:
+						now_dir = 8;
+						break;
+				}
+
+				/* if this is a digital joystick type, apply 8-way rules */
+				//if (portentry->way == 8)
+				switch(info->current)
+				{
+					case JOYDIR_DOWN_BIT | JOYDIR_LEFT_BIT:
+						now_dir = 1;
+						break;
+					case JOYDIR_DOWN_BIT | JOYDIR_RIGHT_BIT:
+						now_dir = 3;
+						break;
+					case JOYDIR_UP_BIT | JOYDIR_LEFT_BIT:
+						now_dir = 7;
+						break;
+					case JOYDIR_UP_BIT | JOYDIR_RIGHT_BIT:
+						now_dir = 9;
+						break;
+				}
+
+				/* if we're not pressed, reset old_dir = -1 */
+				if (now_dir == 0)
+					old_dir = -1;
+			}
+		}
+
+		/* if this is the first press, show input log */
+		if (old_dir != now_dir)
+		{
+			if (now_dir != 0)
+			{
+				char colorbutton = '0';
+				copy_command_buffer(colorbutton + now_dir);
+				old_dir = now_dir;
+			}
+		}
+	}
+	/* End of loop over all the joysticks for player 1*/
+
+
+	/* loop over all the buttons */
+	if (normal_buttons > 0)
+	{
+		int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
+		                || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c");
+		static UINT16 old_btn = 0;
+		static UINT16 now_btn;
+		int is_pressed = 0;
+
+		now_btn = 0;
+
+		for (portentry = Machine->input_ports; portentry->type != IPT_END; portentry++)
+		{
+			/* if this is current player, read input port */
+			if (portentry->player == player)
+			{
+				int i;
+
+				/* if this is normal buttons type, apply usable buttons */
+				for (i = 0; i < normal_buttons; i++)
+					if (input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_BUTTON1 + i)
+						now_btn |= 1 << (portentry->type - IPT_BUTTON1);
+
+				/* if this is start button type */
+				if ((input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_START1) ||
+					(input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_START))
+						now_btn |= 1 << normal_buttons;
+
+				/* if this is select button type (MESS only) */
+				if (input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_SELECT)
+					now_btn |= 1 << (normal_buttons + 1);
+
+#ifdef USE_CUSTOM_BUTTON
+				/* if this is custon buttons type, apply usable buttons */
+				for (i = 0; i < custom_buttons; i++)
+					if (custom_button[0][i] != 0)
+					{
+						input_bit_info *custom_info = custom_button_info[0][i];
+
+						if (input_seq_pressed(input_port_seq(custom_info->portentry, SEQ_TYPE_STANDARD)))
+							now_btn |= custom_button[0][i];
+					}
+
+				/* if buttons press, leave is_pressed = 1 */
+				if (now_btn != 0)
+					is_pressed |= 1;
+#endif /* USE_CUSTOM_BUTTON */
+			}
+		}
+
+		/* if we're not pressed, reset old_btn = -1 */
+		if (!is_pressed)
+			old_btn = 1 << (normal_buttons + 2);
+
+		/* if this is the first press, show input log */
+		if (old_btn != now_btn)
+		{
+			if (now_btn != 0)
+			{
+				/* if this is Neo-Geo games, than alphabetic button type */
+				/*                           else numerical  button type */
+				char colorbutton = is_neogeo ? 'A' : 'a';
+				int n = 1;
+				int i;
+
+				for (i = 0; i < normal_buttons; i++, n <<= 1)
+				{
+					if ((now_btn & n) != 0 && (old_btn & n) == 0)
+						copy_command_buffer(colorbutton + i);
+				}
+
+				/* if this is start button */
+				if (now_btn & 1 << normal_buttons)
+					copy_command_buffer('S');
+
+				/* if this is select button (MESS only) */
+				if (now_btn & 1 << (normal_buttons + 1))
+					copy_command_buffer('s');
+
+				old_btn = now_btn;
+				now_btn = 0;
+			}
+		}
+	}
+	/* End of loop over all the buttons */
+}
+#endif /* USE_SHOW_INPUT_LOG */
