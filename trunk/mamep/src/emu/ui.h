@@ -158,5 +158,5 @@ int sprintf_game_info(running_machine *machine, char *buffer);
 
 void ui_auto_pause(void);
 
-int ui_window_scroll_keys(void);
+int ui_window_scroll_keys(running_machine *machine);
 #endif	/* __USRINTRF_H__ */

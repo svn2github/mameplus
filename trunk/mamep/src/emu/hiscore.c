@@ -45,8 +45,8 @@ static struct
 static int is_highscore_enabled(void)
 {
 	/* disable high score when record/playback is on */
-	if (Machine->record_file != NULL || Machine->playback_file != NULL)
-		return FALSE;
+//	if (Machine->record_file != NULL || Machine->playback_file != NULL)
+//		return FALSE;
 
 	/* disable high score when cheats are used */
 	if (he_did_cheat != 0)

@@ -273,10 +273,7 @@ mame_file *nvram_fopen(running_machine *machine, UINT32 openflags)
 	astring *fname;
 
 	fname = astring_assemble_2(astring_alloc(), machine->basename, ".nv");
-	if ( Machine->record_file || Machine->playback_file)
-		filerr = mame_fopen(SEARCHPATH_INPUTLOG, astring_c(fname), openflags, &file);
-	else
-		filerr = mame_fopen(SEARCHPATH_NVRAM, astring_c(fname), openflags, &file);
+	filerr = mame_fopen(SEARCHPATH_NVRAM, astring_c(fname), openflags, &file);
 	astring_free(fname);
 
 	return (filerr == FILERR_NONE) ? file : NULL;
@@ -305,7 +302,7 @@ void nvram_load(void)
 
 void nvram_save(void)
 {
-	if (Machine->config->nvram_handler != NULL && !Machine->record_file && !Machine->playback_file)
+	if (Machine->config->nvram_handler != NULL)
 	{
 		mame_file *nvram_file = nvram_fopen(Machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		if (nvram_file != NULL)

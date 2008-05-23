@@ -122,8 +122,8 @@ static TIMER_CALLBACK( trigger_partial_frame_interrupt );
 static void compute_perfect_interleave(running_machine *machine);
 
 /* CPU clock setting load/save */
-static void cpu_load(int config_type, xml_data_node *parentnode);
-static void cpu_save(int config_type, xml_data_node *parentnode);
+static void cpu_load(running_machine *machine, int config_type, xml_data_node *parentnode);
+static void cpu_save(running_machine *machine, int config_type, xml_data_node *parentnode);
 
 
 
@@ -208,7 +208,7 @@ void cpuexec_init(running_machine *machine)
 //	state_save_register_item("cpu", 0, vblank_countdown);
 	state_save_pop_tag();
 
-	config_register("cpu", cpu_load, cpu_save);
+	config_register(machine, "cpu", cpu_load, cpu_save);
 }
 
 
@@ -1006,7 +1006,7 @@ static void cpu_inittimers(running_machine *machine)
 
 static short default_clocks[MAX_CPU];
 
-static void cpu_load(int config_type, xml_data_node *parentnode)
+static void cpu_load(running_machine *machine, int config_type, xml_data_node *parentnode)
 {
 	xml_data_node *childnode;
 
@@ -1039,7 +1039,7 @@ static void cpu_load(int config_type, xml_data_node *parentnode)
 	}
 }
 
-static void cpu_save(int config_type, xml_data_node *parentnode)
+static void cpu_save(running_machine *machine, int config_type, xml_data_node *parentnode)
 {
 	int i;
 

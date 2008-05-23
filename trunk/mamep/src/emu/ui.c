@@ -29,6 +29,8 @@
 
 #ifdef MAMEMESS
 #define MESS
+#else /* MAMEMESS */
+#define has_dummy_image(a) 0
 #endif /* MAMEMESS */
 #ifdef MESS
 #include "mess.h"
@@ -1271,7 +1273,7 @@ void ui_draw_text_box_reset_scroll(void)
 }
 
 
-int ui_window_scroll_keys(void)
+int ui_window_scroll_keys(running_machine *machine)
 {
 	static int counter = 0;
 	static int fast = 6;
@@ -1289,42 +1291,42 @@ int ui_window_scroll_keys(void)
 	}
 
 	/* up backs up by one item */
-	if (input_ui_pressed_repeat(IPT_UI_UP, fast))
+	if (input_ui_pressed_repeat(machine, IPT_UI_UP, fast))
 	{
 		message_window_scroll--;
 		do_scroll = TRUE;
 	}
 
 	/* down advances by one item */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN, fast))
+	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, fast))
 	{
 		message_window_scroll++;
 		do_scroll = TRUE;
 	}
 
 	/* pan-up goes to previous page */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP,8))
+	if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_UP,8))
 	{
 		message_window_scroll -= pan_lines;
 		do_scroll = TRUE;
 	}
 
 	/* pan-down goes to next page */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN,8))
+	if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_DOWN,8))
 	{
 		message_window_scroll += pan_lines;
 		do_scroll = TRUE;
 	}
 
 	/* home goes to the start */
-	if (input_ui_pressed(IPT_UI_HOME))
+	if (input_ui_pressed(machine, IPT_UI_HOME))
 	{
 		message_window_scroll = 0;
 		do_scroll = TRUE;
 	}
 
 	/* end goes to the last */
-	if (input_ui_pressed(IPT_UI_END))
+	if (input_ui_pressed(machine, IPT_UI_END))
 	{
 		message_window_scroll = max_scroll;
 		do_scroll = TRUE;
@@ -1335,7 +1337,7 @@ int ui_window_scroll_keys(void)
 	if (message_window_scroll > max_scroll)
 		message_window_scroll = max_scroll;
 
-	if (input_port_type_pressed(IPT_UI_UP,0) || input_port_type_pressed(IPT_UI_DOWN,0))
+	if (input_type_pressed(machine, IPT_UI_UP,0) || input_type_pressed(machine, IPT_UI_DOWN,0))
 	{
 		if (++counter == 25)
 		{
@@ -1355,12 +1357,12 @@ int ui_window_scroll_keys(void)
 	if (do_scroll)
 		return -1;
 
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		message_window_scroll = 0;
 		return 1;
 	}
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL))
 	{
 		message_window_scroll = 0;
 		return 2;
@@ -1973,7 +1975,7 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 	/* draw a standard message window */
 	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
-	res = ui_window_scroll_keys();
+	res = ui_window_scroll_keys(machine);
 	if (res == 0)
 	{
 		/* an 'O' or left joystick kicks us to the next state */
@@ -2009,7 +2011,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 	/* draw a standard message window */
 	ui_draw_text_box(messagebox_text, JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
-	res = ui_window_scroll_keys();
+	res = ui_window_scroll_keys(machine);
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
@@ -2408,13 +2410,13 @@ static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state)
 
 	ui_draw_message_window(_(quit_message));
 
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		mame_schedule_exit(machine);
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL))
 	{
 		return UI_HANDLER_CANCEL;
 	}

@@ -388,7 +388,7 @@ int mame_execute(core_options *options)
 			/* call end_resource_tracking followed by begin_resource_tracking */
 			/* to clear out resources allocated between resets */
 			begin_resource_tracking();
-
+#ifdef MESS
 			//mamep: prevent MESS crash #1
 			if (has_dummy_image())
 			{
@@ -396,6 +396,7 @@ int mame_execute(core_options *options)
 				mame->hard_reset_pending = TRUE;
 			}
 			else
+#endif /* MESS */
 			{
 				/* perform a soft reset -- this takes us to the running phase */
 				soft_reset(machine, NULL, 0);
@@ -403,7 +404,6 @@ int mame_execute(core_options *options)
 				/* run the CPUs until a reset or exit */
 				mame->hard_reset_pending = FALSE;
 			}
-			
 			while ((!mame->hard_reset_pending && !mame->exit_pending) || mame->saveload_pending_file != NULL)
 			{
 				profiler_mark(PROFILER_EXTRA);
@@ -431,7 +431,6 @@ int mame_execute(core_options *options)
 
 			/* save the NVRAM and configuration */
 			nvram_save();
-			if (!machine->playback_file)
 			config_save_settings(machine);
 		}
 		mame->fatal_error_jmpbuf_valid = FALSE;
@@ -464,7 +463,8 @@ int mame_execute(core_options *options)
 		/* destroy the machine */
 		destroy_machine(machine);
 
-		Machine = NULL;
+		/* reset the options */
+		mame_opts = NULL;
 	}
 
 	/* return an error */
@@ -1828,9 +1828,11 @@ static void init_machine(running_machine *machine)
 		mame_debug_init(machine);
 #endif
 
+#ifdef MESS
 	//mamep: prevent MESS crash #2
 	if(has_dummy_image())
 		return;
+#endif /* MESS */
 
 	/* call the driver's _START callbacks */
 	if (machine->config->machine_start != NULL)

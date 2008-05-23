@@ -5799,7 +5799,7 @@ static int DoSearchMenuClassic(running_machine *machine, int selection)
 		}
 	}
 
-	if(input_ui_pressed(IPT_UI_CANCEL))
+	if(input_ui_pressed(machine, IPT_UI_CANCEL))
 	{
 		/* ----- if cursor is now on the return item, adjust cursor keeper ----- */
 		if(sel == kMenu_Return)

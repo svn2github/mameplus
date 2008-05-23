@@ -280,7 +280,7 @@ struct _input_port_private
 #define IS_AUTOKEY(port)		((port->autofire_setting & AUTOFIRE_ON) || ((port->autofire_setting & AUTOFIRE_TOGGLE) && (autofire_toggle_port->defvalue & (1 << port->player))))
 
 /* original input_ports without modifications */
-static input_port_entry *input_ports_default;
+//fixme: static input_port_entry *input_ports_default;
 
 
 /***************************************************************************
@@ -1085,7 +1085,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			result = (result & ~custom->field->mask) | ((newbits << custom->shift) & custom->field->mask);
 		}
 
-static int auto_pressed(input_bit_info *info);
+//fixme: static int auto_pressed(input_bit_info *info);
 
 	/* update VBLANK bits */
 	if (port->state->vblank != 0)
@@ -3096,7 +3096,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 		else
 			load_game_config(machine, portnode, type, player, newseq);
 	}
-
+/* fixme:
 	if (config_type == CONFIG_TYPE_GAME)
 	{
 		for (portnode = xml_get_sibling(parentnode->child, "autofire"); portnode; portnode = xml_get_sibling(portnode->next, "autofire"))
@@ -3107,7 +3107,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
 		}
 	}
-
+*/
 	/* after applying the controller config, push that back into the backup, since that is */
 	/* what we will diff against */
 	if (config_type == CONFIG_TYPE_CONTROLLER)
@@ -3381,7 +3381,7 @@ static void save_default_inputs(running_machine *machine, xml_data_node *parentn
 			}
 		}
 	}
-
+/* fixme:
 	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
 	{
 		if (autofiredelay[portnum] != 1)
@@ -3394,6 +3394,7 @@ static void save_default_inputs(running_machine *machine, xml_data_node *parentn
 			}
 		}
 	}
+*/
 }
 
 
@@ -3869,6 +3870,7 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
+#if 0
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(char log)
 {
@@ -4068,3 +4070,4 @@ static void make_input_log(void)
 	/* End of loop over all the buttons */
 }
 #endif /* USE_SHOW_INPUT_LOG */
+#endif

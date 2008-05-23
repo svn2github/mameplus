@@ -426,29 +426,13 @@ static void calendar_init(running_machine *machine)
 	mame_get_base_datetime(machine, &systime);
 	time = systime.local_time;
 
-	/* Disable Real Time Clock if the user selects to record or playback an .inp file   */
-	/* This is needed in order to playback correctly an .inp on several games,as these  */
-	/* use the RTC of the NEC pd4990a as pseudo-random number generator   -kal 8 apr 02 */
-	if( machine->record_file != NULL || machine->playback_file != NULL )
-	{
-		pd4990a.seconds = 0;
-		pd4990a.minutes = 0;
-		pd4990a.hours = 0;
-		pd4990a.days = 0;
-		pd4990a.month = 0;
-		pd4990a.year = 0;
-		pd4990a.weekday = 0;
-	}
-	else
-	{
-		pd4990a.seconds = ((time.second / 10) << 4) + (time.second % 10);
-		pd4990a.minutes = ((time.minute / 10) << 4) + (time.minute % 10);
-		pd4990a.hours = ((time.hour / 10) <<4 ) + (time.hour % 10);
-		pd4990a.days = ((time.mday / 10) << 4) + (time.mday % 10);
-		pd4990a.month = time.month + 1;
-		pd4990a.year = ((((time.year - 1900) % 100) / 10) << 4) + ((time.year - 1900) % 10);
-		pd4990a.weekday = time.weekday;
-	}
+	pd4990a.seconds = ((time.second / 10) << 4) + (time.second % 10);
+	pd4990a.minutes = ((time.minute / 10) << 4) + (time.minute % 10);
+	pd4990a.hours = ((time.hour / 10) <<4 ) + (time.hour % 10);
+	pd4990a.days = ((time.mday / 10) << 4) + (time.mday % 10);
+	pd4990a.month = time.month + 1;
+	pd4990a.year = ((((time.year - 1900) % 100) / 10) << 4) + ((time.year - 1900) % 10);
+	pd4990a.weekday = time.weekday;
 }
 
 

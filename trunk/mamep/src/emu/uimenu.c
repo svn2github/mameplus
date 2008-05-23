@@ -408,12 +408,7 @@ int ui_menu_draw(const ui_menu_item *items, int numitems, int selected, const me
 	y1 = visible_top - UI_BOX_TB_BORDER;
 	x2 = visible_left + visible_width + UI_BOX_LR_BORDER;
 	y2 = visible_top + visible_main_menu_height + UI_BOX_TB_BORDER;
-
-	ui_draw_outlined_box(	x1,
-					y1,
-					x2,
-					y2,
-					UI_FILLCOLOR);
+	ui_draw_outlined_box(x1, y1, x2, y2, UI_FILLCOLOR);
 
 	/* determine the first visible line based on the current selection */
 	top_line = selected - visible_lines / 2;
@@ -1482,7 +1477,7 @@ static UINT32 menu_memory_card(running_machine *machine, UINT32 state)
 			if (memcard_create(cardnum, FALSE) == 0)
 				popmessage(_("Memory card created"));
 			else
-				popmessage(_("Error creating memory card\n(Card may already exist))");
+				popmessage(_("Error creating memory card\n(Card may already exist)"));
 		}
 	}
 
@@ -2115,7 +2110,7 @@ static UINT32 menu_documents(UINT32 state)
 	/* handle the keys */
 	if (ui_menu_generic_keys(&state, menu_items, visible_items))
 		return state;
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 #ifdef CMD_LIST
 		if (state + UI_history == UI_command)
@@ -2303,7 +2298,7 @@ static UINT32 menu_command(UINT32 state)
 		}
 
 		/* handle actions */
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
 			if (selected < total)
 			{
@@ -2476,7 +2471,7 @@ static UINT32 menu_scale_effect(UINT32 state)
 		return selected;
 
 	/* handle actions */
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		video_exit_scale_effect(Machine);
 		scale_decode(scale_name(selected)); 
