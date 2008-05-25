@@ -7,15 +7,26 @@
 *********************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
 #include "utils.h"
 #include "image.h"
 #include "ui.h"
 #include "uimenu.h"
 #include "uitext.h"
 
+
+
+/***************************************************************************
+    PARAMETERS
+***************************************************************************/
+
 #define SEL_BITS	12
 #define SEL_MASK	((1<<SEL_BITS)-1)
+
+
+
+/***************************************************************************
+    LOCAL VARIABLES
+***************************************************************************/
 
 static int count_chars_entered;
 static char *enter_string;
@@ -24,6 +35,12 @@ static int enter_filename_mode;
 static char curdir[260];
 
 static char entered_filename[512];
+
+
+
+/***************************************************************************
+    IMPLEMENTATION
+***************************************************************************/
 
 static void start_enter_string(char *string_buffer, int max_string_size, int filename_mode)
 {
@@ -304,7 +321,7 @@ static void fs_generate_filelist(void)
 
 	/* insert blank line */
 	n = fs_alloc();
-	fs_item[n].text = "-";
+	fs_item[n].text = MENU_SEPARATOR_ITEM;
 	fs_types[n] = FILESELECT_NONE;
 
 	/* current directory */
@@ -314,7 +331,7 @@ static void fs_generate_filelist(void)
 
 	/* blank line */
 	n = fs_alloc();
-	fs_item[n].text = "-";
+	fs_item[n].text = MENU_SEPARATOR_ITEM;
 	fs_types[n] = FILESELECT_NONE;
 
 	/* file specification */
@@ -325,7 +342,7 @@ static void fs_generate_filelist(void)
 
 	/* insert blank line */
 	n = fs_alloc();
-	fs_item[n].text = "-";
+	fs_item[n].text = MENU_SEPARATOR_ITEM;
 	fs_types[n] = FILESELECT_NONE;
 
 	/* insert empty specifier */
@@ -431,7 +448,7 @@ static int string_ends_with(const char *str, const char *target)
 /* and mask to get bits */
 #define SEL_BITS_MASK			(~SEL_MASK)
 
-static int fileselect(int selected, const char *default_selection, const char *working_directory)
+static int fileselect(running_machine *machine, int selected, const char *default_selection, const char *working_directory)
 {
 	int sel, total, arrowize;
 	int visible;
@@ -517,15 +534,15 @@ static int fileselect(int selected, const char *default_selection, const char *w
 		/* Maybe the following code up to IPT_UI_PAUSE can be replaced with a call to ui_menu_generic_keys() */
 
 		/* up backs up by one item */
-		if (input_ui_pressed_repeat(IPT_UI_UP, 6))
+		if (input_ui_pressed_repeat(machine, IPT_UI_UP, 6))
 			sel = (sel + total - 1) % total;
 
 		/* down advances by one item */
-		if (input_ui_pressed_repeat(IPT_UI_DOWN, 6))
+		if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, 6))
 			sel = (sel +  1) % total;
 
 		/* page up backs up by visible_items */
-		if (input_ui_pressed_repeat(IPT_UI_PAGE_UP, 6))
+		if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_UP, 6))
 		{
 			if (sel >= visible - 1)
 				sel -= visible - 1;
@@ -534,7 +551,7 @@ static int fileselect(int selected, const char *default_selection, const char *w
 		}
 
 		/* page down advances by visible_items */
-		if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN, 6))
+		if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_DOWN, 6))
 		{
 			sel += visible - 1;
 			if (sel >= total)
@@ -542,18 +559,18 @@ static int fileselect(int selected, const char *default_selection, const char *w
 		}
 
 		/* home goes to the start */
-		if (input_ui_pressed(IPT_UI_HOME))
+		if (input_ui_pressed(machine, IPT_UI_HOME))
 			sel = 0;
 
 		/* end goes to the last */
-		if (input_ui_pressed(IPT_UI_END))
+		if (input_ui_pressed(machine, IPT_UI_END))
 			sel = total - 1;
 
 		/* pause enables/disables pause */
-		if (input_ui_pressed(IPT_UI_PAUSE))
-			mame_pause(Machine, !mame_is_paused(Machine));
+		if (input_ui_pressed(machine, IPT_UI_PAUSE))
+			mame_pause(machine, !mame_is_paused(machine));
 
-		if (input_ui_pressed(IPT_UI_SELECT))
+		if (input_ui_pressed(machine, IPT_UI_SELECT))
 		{
 			if (sel < SEL_MASK)
 			{
@@ -624,10 +641,10 @@ static int fileselect(int selected, const char *default_selection, const char *w
 			}
 		}
 
-		if (input_ui_pressed(IPT_UI_CANCEL))
+		if (input_ui_pressed(machine, IPT_UI_CANCEL))
 			sel = -1;
 
-		if (input_ui_pressed(IPT_UI_CONFIGURE))
+		if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 			sel = -2;
 	}
 	else
@@ -646,21 +663,21 @@ static int fileselect(int selected, const char *default_selection, const char *w
 	return sel + 1;
 }
 
-int filemanager(int selected)
+int filemanager(running_machine *machine, int selected)
 {
 	static int previous_sel;
 	const char *name;
 	ui_menu_item menu_items[40];
 	const device_config *devices[40];
 	char names[40][64];
-	int sel, total, visible, arrowize;
+	UINT32 sel, total, visible, arrowize;
 	const device_config *image;
 
 	sel = selected - 1;
 	total = 0;
 
 	/* Cycle through all devices for this system */
-	for (image = image_device_first(Machine->config); image != NULL; image = image_device_next(image))
+	for (image = image_device_first(machine->config); image != NULL; image = image_device_next(image))
 	{
 		strcpy( names[total], image_typename_id(image) );
 		name = image_filename(image);
@@ -679,7 +696,7 @@ int filemanager(int selected)
 	if (sel & (2 << SEL_BITS))
 	{
 		image = devices[previous_sel & SEL_MASK];
-		sel = fileselect(selected & ~(2 << SEL_BITS), image_filename(image), image_working_directory(image));
+		sel = fileselect(machine, selected & ~(2 << SEL_BITS), image_filename(image), image_working_directory(image));
 		if (sel != 0 && sel != -1 && sel!=-2)
 			return sel | (2 << SEL_BITS);
 
@@ -737,46 +754,7 @@ int filemanager(int selected)
 
 	visible = ui_menu_draw(menu_items, total, sel, NULL);
 
-	/* Maybe the following code up to IPT_UI_PAUSE can be replaced with a call to ui_menu_generic_keys() */
-
-	/* up backs up by one item */
-	if (input_ui_pressed_repeat(IPT_UI_UP, 6))
-		sel = (sel + total - 1) % total;
-
-	/* down advances by one item */
-	if (input_ui_pressed_repeat(IPT_UI_DOWN, 6))
-		sel = (sel +  1) % total;
-
-	/* page up backs up by visible_items */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_UP, 6))
-	{
-		if (sel >= visible - 1)
-			sel -= visible - 1;
-		else
-			sel = 0;
-	}
-
-	/* page down advances by visible_items */
-	if (input_ui_pressed_repeat(IPT_UI_PAGE_DOWN, 6))
-	{
-		sel += visible - 1;
-		if (sel >= total)
-			sel = total - 1;
-	}
-
-	/* home goes to the start */
-	if (input_ui_pressed(IPT_UI_HOME))
-		sel = 0;
-
-	/* end goes to the last */
-	if (input_ui_pressed(IPT_UI_END))
-		sel = total - 1;
-
-	/* pause enables/disables pause */
-	if (input_ui_pressed(IPT_UI_PAUSE))
-		mame_pause(Machine, !mame_is_paused(Machine));
-
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		int os_sel;
 
@@ -826,11 +804,16 @@ int filemanager(int selected)
 			sel |= 1 << SEL_BITS;	/* we'll ask for a key */
 		}
 	}
-
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	else if (input_ui_pressed(machine, IPT_UI_CANCEL))
+	{
 		sel = -1;
+	}
+	else
+	{
+		ui_menu_generic_keys(machine, &sel, total, visible);
+	}
 
-	if (input_ui_pressed(IPT_UI_CONFIGURE))
+	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 		sel = -2;
 
 	return sel + 1;

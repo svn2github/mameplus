@@ -12,7 +12,12 @@
 #include "uimenu.h"
 #include "uitext.h"
 #include "devices/cassette.h"
-#include "deprecat.h"
+
+
+
+/***************************************************************************
+    IMPLEMENTATION
+***************************************************************************/
 
 void tapecontrol_gettime(char *timepos, size_t timepos_size, const device_config *img, int *curpos, int *endpos)
 {
@@ -32,7 +37,7 @@ void tapecontrol_gettime(char *timepos, size_t timepos_size, const device_config
 		*endpos = t1;
 }
 
-int tapecontrol(int selected)
+int tapecontrol(running_machine *machine, int selected)
 {
 	static int id = 0;
 	char timepos[32];
@@ -59,9 +64,9 @@ int tapecontrol(int selected)
 		strcat(name, ui_getstring(UI_righthilight));
 		ui_draw_message_window(name);
 
-		if (input_ui_pressed(IPT_UI_SELECT) || input_ui_pressed(IPT_UI_CANCEL))
+		if (input_ui_pressed(machine, IPT_UI_SELECT) || input_ui_pressed(machine, IPT_UI_CANCEL))
 			sel = -1;
-		if (input_ui_pressed(IPT_UI_CONFIGURE))
+		if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 			sel = -2;
 
 		return sel + 1;
@@ -132,42 +137,42 @@ int tapecontrol(int selected)
 
 	ui_menu_draw(menu_item, total, sel, NULL);
 
-	if (input_ui_pressed_repeat(IPT_UI_DOWN,8))
+	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN,8))
 	{
 		if (sel < total - 1) sel++;
 		else sel = 0;
 	}
 
-	if (input_ui_pressed_repeat(IPT_UI_UP,8))
+	if (input_ui_pressed_repeat(machine, IPT_UI_UP,8))
 	{
 		if (sel > 0) sel--;
 		else sel = total - 1;
 	}
 
 
-	if (input_ui_pressed(IPT_UI_LEFT))
+	if (input_ui_pressed(machine, IPT_UI_LEFT))
 	{
 		switch (sel)
 		{
 		case 0:
 			id--;
-			if (id < 0) id = device_count(Machine, IO_CASSETTE)-1;
+			if (id < 0) id = device_count(machine, IO_CASSETTE)-1;
 			break;
 		}
 	}
 
-	if (input_ui_pressed(IPT_UI_RIGHT))
+	if (input_ui_pressed(machine, IPT_UI_RIGHT))
 	{
 		switch (sel)
 		{
 		case 0:
 			id++;
-			if (id > device_count(Machine, IO_CASSETTE)-1) id = 0;
+			if (id > device_count(machine, IO_CASSETTE)-1) id = 0;
 			break;
 		}
 	}
 
-	if (input_ui_pressed(IPT_UI_SELECT))
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
 		if (sel == total - 1)
 			sel = -1;
@@ -177,7 +182,7 @@ int tapecontrol(int selected)
 			switch (sel)
 			{
 			case 0:
-				id = (id + 1) % device_count(Machine, IO_CASSETTE);
+				id = (id + 1) % device_count(machine, IO_CASSETTE);
 				break;
 			case 2:
 				/* Pause/stop */
@@ -203,10 +208,10 @@ int tapecontrol(int selected)
 		}
 	}
 
-	if (input_ui_pressed(IPT_UI_CANCEL))
+	if (input_ui_pressed(machine, IPT_UI_CANCEL))
 		sel = -1;
 
-	if (input_ui_pressed(IPT_UI_CONFIGURE))
+	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 		sel = -2;
 
 	return sel + 1;
