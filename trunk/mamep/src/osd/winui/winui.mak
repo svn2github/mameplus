@@ -57,9 +57,10 @@ WINUIOBJS += \
 	$(WINUIOBJ)/layout.o \
 	$(WINUIOBJ)/translate.o \
 	$(WINUIOBJ)/helpids.o \
-	$(MESS_WINUIOBJ)/optionsms.o \
 
-
+ifdef MAMEMESS
+    WINUIOBJS += $(MESS_WINUIOBJ)/optionsms.o
+endif
 ifneq ($(USE_UI_COLOR_PALETTE),)
     WINUIOBJS += $(WINUIOBJ)/paletteedit.o
 endif

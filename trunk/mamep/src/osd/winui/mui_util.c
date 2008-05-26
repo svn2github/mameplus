@@ -386,7 +386,9 @@ static void UpdateController(void)
 
 		if (cache[i].ipt != last_ipt)
 		{
-			const input_port_entry *input;
+			const input_port_config *input_ports;
+			const input_port_config *port;
+
 			int w = CONTROLLER_JOY8WAY;
 			BOOL lr = FALSE;
 			BOOL ud = FALSE;
@@ -397,87 +399,88 @@ static void UpdateController(void)
 			b = 0;
 			p = 0;
 
-			begin_resource_tracking();
-			input = input_port_allocate(last_ipt, NULL);
+			input_ports = input_port_config_alloc(last_ipt);
 
-			while (input->type != IPT_END)
+			for (port = input_ports; port != NULL; port = port->next)
 			{
-				int n;
-
-				if (p < input->player + 1)
-					p = input->player + 1;
-
-				n = input->type - IPT_BUTTON1 + 1;
-				if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
+				const input_field_config *field;
+				for (field = port->fieldlist; field != NULL; field = field->next)
 				{
-					b = n;
-					continue;
+				    int n;
+    
+				    if (p < field->player + 1)
+					    p = field->player + 1;
+    
+				    n = field->type - IPT_BUTTON1 + 1;
+				    if (n >= 1 && n <= MAX_NORMAL_BUTTONS && n > b)
+				    {
+					    b = n;
+					    continue;
+				    }
+    
+				    switch (field->type)
+				    {
+				    case IPT_JOYSTICKRIGHT_LEFT:
+				    case IPT_JOYSTICKRIGHT_RIGHT:	
+				    case IPT_JOYSTICKLEFT_LEFT:
+				    case IPT_JOYSTICKLEFT_RIGHT:
+					    dual = TRUE;
+    
+				    case IPT_JOYSTICK_LEFT:
+				    case IPT_JOYSTICK_RIGHT:
+					    lr = TRUE;
+    
+					    if (field->way == 4)
+						    w = CONTROLLER_JOY4WAY;
+					    else if (field->way == 16)
+						    w = CONTROLLER_JOY16WAY;
+					    break;
+    
+				    case IPT_JOYSTICKRIGHT_UP:
+				    case IPT_JOYSTICKRIGHT_DOWN:
+				    case IPT_JOYSTICKLEFT_UP:
+				    case IPT_JOYSTICKLEFT_DOWN:
+					    dual = TRUE;
+    
+				    case IPT_JOYSTICK_UP:
+				    case IPT_JOYSTICK_DOWN:
+					    ud = TRUE;
+    
+					    if (field->way == 4)
+						    w = CONTROLLER_JOY4WAY;
+					    else if (field->way == 16)
+						    w = CONTROLLER_JOY16WAY;
+					    break;
+    
+				    case IPT_PADDLE:
+					    flags[CONTROLLER_PADDLE] = TRUE;
+					    break;
+    
+				    case IPT_DIAL:
+					    flags[CONTROLLER_DIAL] = TRUE;
+					    break;
+    
+				    case IPT_TRACKBALL_X:
+				    case IPT_TRACKBALL_Y:
+					    flags[CONTROLLER_TRACKBALL] = TRUE;
+					    break;
+    
+				    case IPT_AD_STICK_X:
+				    case IPT_AD_STICK_Y:
+					    flags[CONTROLLER_ADSTICK] = TRUE;
+					    break;
+    
+				    case IPT_LIGHTGUN_X:
+				    case IPT_LIGHTGUN_Y:
+					    flags[CONTROLLER_LIGHTGUN] = TRUE;
+					    break;
+				    case IPT_PEDAL:
+					    flags[CONTROLLER_PEDAL] = TRUE;
+					    break;
+				    }
 				}
-
-				switch (input->type)
-				{
-				case IPT_JOYSTICKRIGHT_LEFT:
-				case IPT_JOYSTICKRIGHT_RIGHT:	
-				case IPT_JOYSTICKLEFT_LEFT:
-				case IPT_JOYSTICKLEFT_RIGHT:
-					dual = TRUE;
-
-				case IPT_JOYSTICK_LEFT:
-				case IPT_JOYSTICK_RIGHT:
-					lr = TRUE;
-
-					if (input->way == 4)
-						w = CONTROLLER_JOY4WAY;
-					else if (input->way == 16)
-						w = CONTROLLER_JOY16WAY;
-					break;
-
-				case IPT_JOYSTICKRIGHT_UP:
-				case IPT_JOYSTICKRIGHT_DOWN:
-				case IPT_JOYSTICKLEFT_UP:
-				case IPT_JOYSTICKLEFT_DOWN:
-					dual = TRUE;
-
-				case IPT_JOYSTICK_UP:
-				case IPT_JOYSTICK_DOWN:
-					ud = TRUE;
-
-					if (input->way == 4)
-						w = CONTROLLER_JOY4WAY;
-					else if (input->way == 16)
-						w = CONTROLLER_JOY16WAY;
-					break;
-
-				case IPT_PADDLE:
-					flags[CONTROLLER_PADDLE] = TRUE;
-					break;
-
-				case IPT_DIAL:
-					flags[CONTROLLER_DIAL] = TRUE;
-					break;
-
-				case IPT_TRACKBALL_X:
-				case IPT_TRACKBALL_Y:
-					flags[CONTROLLER_TRACKBALL] = TRUE;
-					break;
-
-				case IPT_AD_STICK_X:
-				case IPT_AD_STICK_Y:
-					flags[CONTROLLER_ADSTICK] = TRUE;
-					break;
-
-				case IPT_LIGHTGUN_X:
-				case IPT_LIGHTGUN_Y:
-					flags[CONTROLLER_LIGHTGUN] = TRUE;
-					break;
-				case IPT_PEDAL:
-					flags[CONTROLLER_PEDAL] = TRUE;
-					break;
-				}
-				++input;
 			}
-
-			end_resource_tracking();
+			input_port_config_free(input_ports);
 
 			if (lr || ud)
 			{
@@ -760,11 +763,6 @@ BOOL DriverUsesRoms(int driver_index)
 BOOL DriverUsesSamples(int driver_index)
 {
 	return GetDriversInfo(driver_index)->usesSamples;
-}
-
-BOOL DriverUsesYM3812(int driver_index)
-{
-	return GetDriversInfo(driver_index)->usesYM3812;
 }
 
 int DriverNumPlayers(int driver_index)
@@ -1089,6 +1087,7 @@ void CenterWindow(HWND hWnd)
 /***************************************************************************
 	Internal functions
  ***************************************************************************/
+
 
 
 

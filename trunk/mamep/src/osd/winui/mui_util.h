@@ -49,7 +49,6 @@ int DriverBiosIndex(int driver_index);
 int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
-BOOL DriverUsesYM3812(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);

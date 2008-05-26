@@ -1686,21 +1686,10 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 		ParseClose ();
 	}
 
-/* Redundant Info
-	strcat(buffer,"\nGAMES SUPPORTED:\n");
-	for (i = 0; drivers[i]; i++)
-	{
-		if (!mame_stricmp (drv->source_file, drivers[i]->source_file)) 
-		{
-			strcat(buffer, _LST(drivers[i]->description));
-			strcat(buffer,"\n");
-		}
-	}
-*/
-
 	return (drivinfo == 0);
 }
 
+#if 0
 int load_driver_statistics (char *buffer, int bufsize)
 {
 	const rom_entry *region, *rom, *chunk;
@@ -2639,7 +2628,7 @@ int load_driver_statistics (char *buffer, int bufsize)
 
 	return 0;
 }
-
+#endif
 
 #ifdef CMD_LIST
 /**************************************************************************

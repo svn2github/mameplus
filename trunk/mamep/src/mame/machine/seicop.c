@@ -88,7 +88,7 @@ void copd2_set_tableoffset(UINT16 data, running_machine *machine)
 	copd2_table_2[copd2_offs/8] = cop_438;
 	copd2_table_3[copd2_offs/8] = cop_43a;
 	copd2_table_4[copd2_offs/8] = cop_43c;
-
+/*
 	{
 		FILE *fp;
 		char filename[256];
@@ -122,14 +122,14 @@ void copd2_set_tableoffset(UINT16 data, running_machine *machine)
 			fclose(fp);
 		}
 	}
-
+*/
 }
 
 void copd2_set_tabledata(UINT16 data, running_machine *machine)
 {
 	copd2_table[copd2_offs] = data;
 	logerror("mcu_data %04x\n", data);
-
+/*
 	{
 		FILE *fp;
 		char filename[256];
@@ -141,6 +141,7 @@ void copd2_set_tabledata(UINT16 data, running_machine *machine)
 			fclose(fp);
 		}
 	}
+*/
 }
 
 

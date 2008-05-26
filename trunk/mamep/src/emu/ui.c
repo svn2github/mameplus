@@ -593,7 +593,9 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 					{
 						bufptr += sprintf(bufptr, "\n\t%s", _("Please load an image"));
 						ui_set_handler(handler_messagebox_anykey, 0);
+#ifdef MAMEMESS
 						osd_toggle_menubar(1);
+#endif
 					}
 					else
 					{
@@ -2082,7 +2084,9 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	/* turn on menus if requested */
 	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
 	{
+#ifdef MAMEMESS
 		osd_toggle_menubar(1);
+#endif
 		return ui_set_handler(ui_menu_ui_handler, 0);
 	}
 

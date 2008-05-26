@@ -722,7 +722,7 @@ int filemanager(running_machine *machine, int selected)
 	}
 
 	memset(&menu_items[total], 0, sizeof(menu_items[total]));
-	menu_items[total].text = "Return to Prior Menu";
+	menu_items[total].text = _("Return to Prior Menu");
 	total++;
 
 	arrowize = 0;
@@ -818,4 +818,5 @@ int filemanager(running_machine *machine, int selected)
 
 	return sel + 1;
 }
+
 

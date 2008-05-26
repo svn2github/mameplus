@@ -994,6 +994,18 @@ const input_type_desc *input_type_list(running_machine *machine)
 
 
 
+int has_record_file(running_machine *machine)
+{
+	return machine->input_port_data->record_file != NULL;
+}
+
+int has_playback_file(running_machine *machine)
+{
+	return machine->input_port_data->playback_file != NULL;
+}
+
+
+
 /***************************************************************************
     USER INTERFACE SEQUENCE READING
 ***************************************************************************/
@@ -1875,7 +1887,7 @@ profiler_mark(PROFILER_INPUT);
 
 #ifdef MESS
 		/* hook for MESS's natural keyboard support */
-		mess_input_port_update_hook(machine, port, &portinfo->digital);
+		mess_input_port_update_hook(machine, port, &port->state->digital);
 #endif /* MESS */
 
 		/* call changed handlers */

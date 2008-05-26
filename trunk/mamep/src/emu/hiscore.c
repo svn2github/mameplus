@@ -41,12 +41,11 @@ static struct
 	memory_range *mem_range;
 } state;
 
-
-static int is_highscore_enabled(void)
+static int is_highscore_enabled(running_machine *machine)
 {
 	/* disable high score when record/playback is on */
-//	if (Machine->record_file != NULL || Machine->playback_file != NULL)
-//		return FALSE;
+	if (has_record_file(machine) || has_playback_file(machine))
+		return FALSE;
 
 	/* disable high score when cheats are used */
 	if (he_did_cheat != 0)
@@ -191,12 +190,12 @@ static void hiscore_free (void)
 	state.mem_range = NULL;
 }
 
-static void hiscore_load (void)
+static void hiscore_load (running_machine *machine)
 {
 	file_error filerr;
 	mame_file *f;
 	astring *fname;
-	if (is_highscore_enabled())
+	if (is_highscore_enabled(machine))
 	{
 		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_READ, &f);
@@ -227,12 +226,12 @@ static void hiscore_load (void)
 	}
 }
 
-static void hiscore_save (void)
+static void hiscore_save (running_machine *machine)
 {
 	file_error filerr;
 	mame_file *f;
 	astring *fname;
-	if (is_highscore_enabled())
+	if (is_highscore_enabled(machine))
 	{
 		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
@@ -264,7 +263,7 @@ static void hiscore_save (void)
 
 
 /* call hiscore_update periodically (i.e. once per frame) */
-static void hiscore_periodic (int param)
+static void hiscore_periodic (int param, running_machine *machine)
 {
 	if (state.mem_range)
 	{
@@ -272,7 +271,7 @@ static void hiscore_periodic (int param)
 		{
 			if (safe_to_load())
 			{
-				hiscore_load();
+				hiscore_load(machine);
 				timer_enable(timer, FALSE);
 			}
 		}
@@ -281,14 +280,14 @@ static void hiscore_periodic (int param)
 
 static TIMER_CALLBACK( hiscore_periodic_callback )
 {
-	hiscore_periodic(param);
+	hiscore_periodic(param,machine);
 }
 
 
 /* call hiscore_close when done playing game */
 void hiscore_close (running_machine *machine)
 {
-	if (state.hiscores_have_been_loaded) hiscore_save();
+	if (state.hiscores_have_been_loaded) hiscore_save(machine);
 	hiscore_free();
 }
 

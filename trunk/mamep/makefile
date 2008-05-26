@@ -611,13 +611,17 @@ all: maketree buildtools emulator
 include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
-include $(SRC)/mess/messcore.mak
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+ifdef MAMEMESS
+# include MESS core defines
+include $(SRC)/mess/messcore.mak
 include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
+endif
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
 include $(SRC)/tools/tools.mak
+# mamep: must stay at the end for png2bdc
 include $(SRC)/emu/emu.mak
 
 # combine the various definitions to one
@@ -651,7 +655,7 @@ clean:
 	$(RM) $(EMULATORALL)
 	@echo Deleting $(TOOLS)...
 	$(RM) $(TOOLS)
-ifneq ($(MAP),)
+ifdef MAP
 	@echo Deleting $(FULLNAME).map...
 	$(RM) $(FULLNAME).map
 endif

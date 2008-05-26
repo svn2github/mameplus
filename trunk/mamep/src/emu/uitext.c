@@ -13,7 +13,9 @@
 #include "driver.h"
 #include "uitext.h"
 
+#ifdef MAMEMESS
 #define MESS
+#endif /* MAMEMESS */
 #ifdef MESS
 extern const char *mess_default_text[];
 #endif /* MESS */
@@ -87,27 +89,9 @@ static const char *const mame_default_text[] =
 	"Type OK or move the joystick left then right to continue",
 
 	/* main menu */
-	"Input (general)",
-	"Dip Switches",
-	"Analog Controls",
 	"Calibrate Joysticks",
-#ifdef USE_CUSTOM_BUTTON
-	"Custom Buttons",
-#endif /* USE_CUSTOM_BUTTON */
-	"Bookkeeping Info",
-
-	"Input (this " GAMENOUN ")",
-	CAPSTARTGAMENOUN " Information",
-	CAPSTARTGAMENOUN " Documents",
-	"Autofire Setting",
 	"Reset " CAPSTARTGAMENOUN,
-	"Select New " CAPSTARTGAMENOUN,
-	"Return to " CAPSTARTGAMENOUN,
 	"Exit",
-
-	"Cheat",
-	"Memory Card",
-
 	/* documents menu */
 	CAPSTARTGAMENOUN " " HISTORYNAME,
 #ifdef STORY_DATAFILE
@@ -210,17 +194,10 @@ static const char *const mame_default_text[] =
 	"Refresh rate",
 	"Decoding Graphics",
 
-	"Video Options",
 	"Rotate Clockwise",
 	"Rotate Counter-clockwise",
 	"Flip X",
 	"Flip Y",
-
-	"Driver Configuration",
-
-#ifdef USE_SCALE_EFFECTS
-	"Image Enhancement",
-#endif /* USE_SCALE_EFFECTS */
 
 	/* autofire stuff */
 	"Off",

@@ -433,6 +433,20 @@ static void calendar_init(running_machine *machine)
 	pd4990a.month = time.month + 1;
 	pd4990a.year = ((((time.year - 1900) % 100) / 10) << 4) + ((time.year - 1900) % 10);
 	pd4990a.weekday = time.weekday;
+
+	/* Disable Real Time Clock if the user selects to record or playback an .inp file   */
+	/* This is needed in order to playback correctly an .inp on several games,as these  */
+	/* use the RTC of the NEC pd4990a as pseudo-random number generator   -kal 8 apr 02 */
+	if(has_record_file(machine) || has_playback_file(machine))
+	{
+		pd4990a.seconds = 0;
+		pd4990a.minutes = 0;
+		pd4990a.hours = 0;
+		pd4990a.days = 0;
+		pd4990a.month = 0;
+		pd4990a.year = 0;
+		pd4990a.weekday = 0;
+	}
 }
 
 

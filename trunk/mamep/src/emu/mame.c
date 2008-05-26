@@ -431,7 +431,9 @@ int mame_execute(core_options *options)
 
 			/* save the NVRAM and configuration */
 			nvram_save();
-			config_save_settings(machine);
+			// mamep: dont save settings during playback
+			if (!has_playback_file(machine))
+				config_save_settings(machine);
 		}
 		mame->fatal_error_jmpbuf_valid = FALSE;
 

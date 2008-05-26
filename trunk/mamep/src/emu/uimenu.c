@@ -188,17 +188,17 @@ static UINT32 menu_tape_control(running_machine *machine, UINT32 state);
 #endif /* HAS_WAVE */
 #endif /* MESS */
 #ifdef USE_CUSTOM_BUTTON
-static UINT32 menu_custom_button(UINT32 state);
+static UINT32 menu_custom_button(running_machine *machine, UINT32 state);
 #endif /* USE_CUSTOM_BUTTON */
-static UINT32 menu_autofire(UINT32 state);
-static UINT32 menu_documents(UINT32 state);
-static UINT32 menu_document_contents(UINT32 state);
+static UINT32 menu_autofire(running_machine *machine, UINT32 state);
+static UINT32 menu_documents(running_machine *machine, UINT32 state);
+static UINT32 menu_document_contents(running_machine *machine, UINT32 state);
 #ifdef CMD_LIST
-static UINT32 menu_command(UINT32 state);
-static UINT32 menu_command_contents(UINT32 state);
+static UINT32 menu_command(running_machine *machine, UINT32 state);
+static UINT32 menu_command_contents(running_machine *machine, UINT32 state);
 #endif
 #ifdef USE_SCALE_EFFECTS
-static UINT32 menu_scale_effect(UINT32 state);
+static UINT32 menu_scale_effect(running_machine *machine, UINT32 state);
 #endif /* USE_SCALE_EFFECTS */
 
 /* menu helpers */
@@ -885,57 +885,69 @@ do { \
 	memset(item_list, 0, sizeof(item_list));
 
 	/* add input menu items */
-	ADD_MENU("Input (general)", menu_input_groups, 0);
-	ADD_MENU("Input (this " CAPSTARTGAMENOUN ")", menu_input, 1000 << 16);
+	ADD_MENU(_("Input (general)"), menu_input_groups, 0);
+	ADD_MENU(_("Input (this " GAMENOUN ")"), menu_input, 1000 << 16);
+
+	ADD_MENU(_("Autofire Setting"), menu_autofire, 0);
+#ifdef USE_CUSTOM_BUTTON
+//	if (custom_buttons)
+//		ADD_MENU(_("Custom Buttons"), menu_custom_button, 0);
+#endif /* USE_CUSTOM_BUTTON */
 
 	/* add optional input-related menus */
 	if (has_dips)
-		ADD_MENU("Dip Switches", menu_switches, IPT_DIPSWITCH << 16);
+		ADD_MENU(_("Dip Switches"), menu_switches, IPT_DIPSWITCH << 16);
 	if (has_configs)
-		ADD_MENU("Driver Configuration", menu_switches, IPT_CONFIG << 16);
+		ADD_MENU(_("Driver Configuration"), menu_switches, IPT_CONFIG << 16);
 #ifdef MESS
 	if (has_categories)
-		ADD_MENU("Categories", menu_switches, IPT_CATEGORY << 16);
+		ADD_MENU(_("Categories"), menu_switches, IPT_CATEGORY << 16);
 #endif
 	if (has_analog)
-		ADD_MENU("Analog Controls", menu_analog, 0);
+		ADD_MENU(_("Analog Controls"), menu_analog, 0);
 
 #ifndef MESS
   	/* add bookkeeping menu */
-	ADD_MENU("Bookkeeping Info", menu_bookkeeping, 0);
+	ADD_MENU(_("Bookkeeping Info"), menu_bookkeeping, 0);
 #endif
 
 	/* add game info menu */
-	ADD_MENU(CAPSTARTGAMENOUN " Information", menu_game_info, 0);
+	ADD_MENU(_(CAPSTARTGAMENOUN " Information"), menu_game_info, 0);
 
 #ifdef MESS
   	/* add image info menu */
-	ADD_MENU("Image Information", ui_menu_image_info, 0);
+//	ADD_MENU(_("Image Information"), ui_menu_image_info, 0);
 
   	/* add image info menu */
-	ADD_MENU("File Manager", menu_file_manager, 1);
+	ADD_MENU(_("File Manager"), menu_file_manager, 1);
 
 #if HAS_WAVE
   	/* add tape control menu */
 	if (device_find_from_machine(machine, IO_CASSETTE))
-		ADD_MENU("Tape Control", menu_tape_control, 1);
+		ADD_MENU(_("Tape Control"), menu_tape_control, 1);
 #endif /* HAS_WAVE */
 #endif /* MESS */
 
+	/* add game document menu */
+	ADD_MENU(_(CAPSTARTGAMENOUN " Documents"), menu_documents, 0);
+
 	/* add video options menu */
-	ADD_MENU("Video Options", menu_video, 1000 << 16);
+	ADD_MENU(_("Video Options"), menu_video, 1000 << 16);
+#ifdef USE_SCALE_EFFECTS
+	ADD_MENU(_("Image Enhancement"), menu_scale_effect, scale_effect.effect);
+#endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
-		ADD_MENU("Cheat", menu_cheat, 1);
+		ADD_MENU(_("Cheat"), menu_cheat, 1);
 
 	/* add memory card menu */
 	if (machine->config->memcard_handler != NULL)
-		ADD_MENU("Memory Card", menu_memory_card, 0);
+		ADD_MENU(_("Memory Card"), menu_memory_card, 0);
 
 	/* add reset and exit menus */
-	ADD_MENU("Select New " CAPSTARTGAMENOUN, menu_select_game, 1 << 16);
-	ADD_MENU("Return to " CAPSTARTGAMENOUN, NULL, 0);
+	ADD_MENU(_("Select New " CAPSTARTGAMENOUN), menu_select_game, 1 << 16);
+	ADD_MENU(_("Return to " CAPSTARTGAMENOUN), NULL, 0);
 
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
@@ -1879,8 +1891,8 @@ static UINT32 menu_tape_control(running_machine *machine, UINT32 state)
 #endif /* MESS */
 
 
-#ifdef USE_CUSTOM_BUTTON
-static UINT32 menu_custom_button(UINT32 state)
+#if 0//def USE_CUSTOM_BUTTON
+static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[MAX_PLAYERS * MAX_CUSTOM_BUTTONS + 2];
 	int selected = state;
@@ -1958,7 +1970,7 @@ static UINT32 menu_custom_button(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle generic menu keys */
-	if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 		return selected;
 
 	if (selected != menu_items - 1)
@@ -1977,49 +1989,46 @@ static UINT32 menu_custom_button(UINT32 state)
 }
 #endif /* USE_CUSTOM_BUTTON */
 
-
-static UINT32 menu_autofire(UINT32 state)
+static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[200];
 	int selected = state;
 	int visible_items;
 	int menu_items = 0;
 	int item_autofire_delay;
-	input_port_entry *entry[200];
-	input_port_entry *in;
+	const input_port_config *port;
+	const input_field_config *field;
+	input_field_config *entry[200];
 	int players = 0;
 	int i;
 
 	/* reset the menu and string pool */
 	memset(item_list, 0, sizeof(item_list));
 	menu_string_pool_offset = 0;
-
-	if (Machine->input_ports == 0)
-		return ui_menu_stack_pop();
-
 	memset(entry, 0, sizeof(entry));
 
 	/* iterate over the input ports and add menu items */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	for (port = machine->portconfig; port != NULL; port = port->next)
 	{
-		int type = in->type;
-
-		if (input_port_name(in)	&& (
-		    (type >= IPT_BUTTON1 && type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
-#ifdef USE_CUSTOM_BUTTON
-		    || (type >= IPT_CUSTOM1 && type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
-#endif /* USE_CUSTOM_BUTTON */
-		   ))
+		for (field = port->fieldlist; field != NULL; field = field->next)
 		{
-			int value = in->autofire_setting;
+			if (input_field_name(field)	&& (
+			    (field->type >= IPT_BUTTON1 && field->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+	#ifdef USE_CUSTOM_BUTTON
+			    || (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+	#endif /* USE_CUSTOM_BUTTON */
+			   ))
+			{
+				int value = 0;//fixme: field->autofire_setting;
 
-			entry[menu_items] = in;
+				entry[menu_items] = field;
 
-			if (players < in->player + 1)
-				players = in->player + 1;
+				if (players < field->player + 1)
+					players = field->player + 1;
 
-			item_list[menu_items].text = _(input_port_name(in));
-			item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + value);
+				item_list[menu_items].text = _(input_field_name(field));
+				item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + value);
+			}
 		}
 	}
 
@@ -2031,7 +2040,7 @@ static UINT32 menu_autofire(UINT32 state)
 	for (i = 0; i < players; i++)
 	{
 		item_list[menu_items].text = menu_string_pool_add("P%d %s", i + 1, ui_getstring(UI_autofiredelay));
-		item_list[menu_items++].subtext = menu_string_pool_add("%d", get_autofiredelay(i));
+		item_list[menu_items++].subtext = menu_string_pool_add("%d", 1/*fixme get_autofiredelay(i)*/);
 	}
 
 	item_list[menu_items++].text = ui_getstring (UI_returntomain);
@@ -2039,7 +2048,7 @@ static UINT32 menu_autofire(UINT32 state)
 	/* draw the menu */
 	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
-	if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 		return selected;
 
 	if (selected >= item_autofire_delay && selected < item_autofire_delay + players)
@@ -2047,48 +2056,48 @@ static UINT32 menu_autofire(UINT32 state)
 		int autofire_delay;
 
 		i = selected - item_autofire_delay;
-		autofire_delay = get_autofiredelay(i);
+		autofire_delay = 1/*fixmeget_autofiredelay(i)*/;
 
-		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
+		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
 		{
 			autofire_delay++;
 			if (autofire_delay > 99)
 				autofire_delay = 99;
 		}
-		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
+		if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,8))
 		{
 			autofire_delay--;
 			if (autofire_delay < 1)
 				autofire_delay = 1;
 		}
 
-		set_autofiredelay(i, autofire_delay);
+		/* fixme set_autofiredelay(i, autofire_delay);*/
 	}
 	else if (selected < item_autofire_delay)
 	{
-		int selected_value = entry[selected]->autofire_setting;
+		int selected_value = 1/*fixme entry[selected]->autofire_setting*/;
 
-		if (input_ui_pressed_repeat(IPT_UI_RIGHT,8))
+		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
 		{
 			if (++selected_value > 2)
 				selected_value = 0;
 		}
-		if (input_ui_pressed_repeat(IPT_UI_LEFT,8))
+		if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,8))
 		{
 			if (--selected_value < 0)
 				selected_value = 2;
 		}
 
-		entry[selected]->autofire_setting = selected_value;
+		/*fixme entry[selected]->autofire_setting = selected_value; */
 	}
 
 	return selected;
 }
 
-
-static UINT32 menu_documents(UINT32 state)
+static UINT32 menu_documents(running_machine *machine, UINT32 state)
 {
-#define NUM_DOCUMENTS	(UI_keyjoyspeed - UI_history)
+//fixme: #ifdef STORY_DATAFILE #ifdef CMD_LIST
+#define NUM_DOCUMENTS	6
 
 	ui_menu_item item_list[NUM_DOCUMENTS + 2];
 	int menu_items = 0;
@@ -2108,7 +2117,7 @@ static UINT32 menu_documents(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, state, NULL);
 
 	/* handle the keys */
-	if (ui_menu_generic_keys(&state, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &state, menu_items, visible_items))
 		return state;
 	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
@@ -2126,8 +2135,7 @@ static UINT32 menu_documents(UINT32 state)
 #undef NUM_DOCUMENT
 }
 
-
-static UINT32 menu_document_contents(UINT32 state)
+static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 {
 	static char *bufptr = NULL;
 	static const game_driver *last_drv;
@@ -2167,7 +2175,7 @@ static UINT32 menu_document_contents(UINT32 state)
 #endif /* STORY_DATAFILE */
 			 || (dattype == UI_mameinfo && (load_driver_mameinfo(Machine->gamedrv, bufptr, bufsize) == 0))
 			 || (dattype == UI_drivinfo && (load_driver_drivinfo(Machine->gamedrv, bufptr, bufsize) == 0))
-			 || (dattype == UI_statistics && (load_driver_statistics(bufptr, bufsize) == 0)))
+			 /*|| (dattype == UI_statistics && (load_driver_statistics(bufptr, bufsize) == 0))*/)
 			{
 				last_drv = Machine->gamedrv;
 				last_selected = selected;
@@ -2243,7 +2251,7 @@ static UINT32 menu_document_contents(UINT32 state)
 		ui_draw_message_window(msg);
 	}
 
-	res = ui_window_scroll_keys();
+	res = ui_window_scroll_keys(machine);
 	if (res > 0)
 		return ui_menu_stack_pop();
 
@@ -2252,7 +2260,7 @@ static UINT32 menu_document_contents(UINT32 state)
 
 
 #ifdef CMD_LIST
-static UINT32 menu_command(UINT32 state)
+static UINT32 menu_command(running_machine *machine, UINT32 state)
 {
 	int selected = state & ((1 << 24) - 1);
 	int shortcut = state >> 24;
@@ -2279,13 +2287,13 @@ static UINT32 menu_command(UINT32 state)
 		item_list[menu_items++].text = "";
 
 		/* add an item for the return */
-		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? ui_getstring(UI_returntogame) : _("Return to Prior Menu"));
+		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? _("Return to " CAPSTARTGAMENOUN) : _("Return to Prior Menu"));
 
 		/* draw the menu */
 		visible_items = ui_menu_draw_fixed_width(item_list, menu_items, selected, NULL);
 
 		/* handle generic menu keys */
-		if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+		if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 			return selected;
 
 		/* skip empty line */
@@ -2318,7 +2326,7 @@ static UINT32 menu_command(UINT32 state)
 		strcat(buf, ui_getstring(UI_lefthilight));
 		strcat(buf, " ");
 		if (shortcut)
-			strcat(buf, ui_getstring(UI_returntogame));
+			strcat(buf, _("Return to " CAPSTARTGAMENOUN));
 		else
 			strcat(buf, _("Return to Prior Menu"));
 		strcat(buf, " ");
@@ -2326,7 +2334,7 @@ static UINT32 menu_command(UINT32 state)
 
 		ui_draw_message_window(buf);
 
-		res = ui_window_scroll_keys();
+		res = ui_window_scroll_keys(machine);
 		if (res > 0)
 			return ui_menu_stack_pop();
 	}
@@ -2335,7 +2343,7 @@ static UINT32 menu_command(UINT32 state)
 }
 
 
-static UINT32 menu_command_contents(UINT32 state)
+static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
 {
 	static char *bufptr = NULL;
 	static const game_driver *last_drv;
@@ -2381,7 +2389,7 @@ static UINT32 menu_command_contents(UINT32 state)
 				strcat(bufptr, ui_getstring(UI_lefthilight));
 				strcat(bufptr, " ");
 				if (shortcut)
-					strcat(bufptr, ui_getstring(UI_returntogame));
+					strcat(bufptr, _("Return to " CAPSTARTGAMENOUN));
 				else
 					strcat(bufptr, _("Return to Prior Menu"));
 				strcat(bufptr, " ");
@@ -2412,7 +2420,7 @@ static UINT32 menu_command_contents(UINT32 state)
 		strcat(buf, ui_getstring(UI_lefthilight));
 		strcat(buf, " ");
 		if (shortcut)
-			strcat(buf, ui_getstring(UI_returntogame));
+			strcat(buf, _("Return to " CAPSTARTGAMENOUN));
 		else
 			strcat(buf, _("Return to Prior Menu"));
 		strcat(buf, " ");
@@ -2421,7 +2429,7 @@ static UINT32 menu_command_contents(UINT32 state)
 		ui_draw_message_window(buf);
 	}
 
-	res = ui_window_scroll_keys();
+	res = ui_window_scroll_keys(machine);
 	if (res > 0)
 		return ui_menu_stack_pop();
 
@@ -2437,7 +2445,7 @@ static UINT32 menu_command_contents(UINT32 state)
  *
  *************************************/
 
-static UINT32 menu_scale_effect(UINT32 state)
+static UINT32 menu_scale_effect(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[100];
 	int selected = state;
@@ -2467,7 +2475,7 @@ static UINT32 menu_scale_effect(UINT32 state)
 	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
 
 	/* handle the keys */
-	if (ui_menu_generic_keys(&selected, menu_items, visible_items))
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
 		return selected;
 
 	/* handle actions */
@@ -2755,7 +2763,7 @@ static void switches_menu_add_item(ui_menu_item *item, const input_field_config 
 
 	/* set the text to the name and the subitem text to invalid */
 	input_field_get_user_settings(field, &settings);
-	item->text = input_field_name(field);
+	item->text = _(input_field_name(field));
 	item->subtext = NULL;
 
 	/* scan for the current selection in the list */
@@ -2764,7 +2772,7 @@ static void switches_menu_add_item(ui_menu_item *item, const input_field_config 
 		{
 			/* if this is a match, set the subtext */
 			if (setting->value == settings.value)
-				item->subtext = setting->name;
+				item->subtext = _(setting->name);
 
 			/* else if we haven't seen a match yet, show a left arrow */
 			else if (item->subtext == NULL)

@@ -1035,6 +1035,11 @@ void input_field_set_user_settings(const input_field_config *field, const input_
 
 
 
+int has_record_file(running_machine *machine);
+int has_playback_file(running_machine *machine);
+
+
+
 /* ----- user interface sequence reading ----- */
 
 /* return TRUE if a key down for the given user interface sequence is detected */

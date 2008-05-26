@@ -353,7 +353,7 @@ done:
 
 static void customize_dipswitches(running_machine *machine, HWND wnd)
 {
-	customize_switches(machine, wnd, UI_dipswitches, IPT_DIPSWITCH);
+	customize_switches(machine, wnd, _("Dip Switches"), IPT_DIPSWITCH);
 }
 
 
@@ -364,7 +364,7 @@ static void customize_dipswitches(running_machine *machine, HWND wnd)
 
 static void customize_configuration(running_machine *machine, HWND wnd)
 {
-	customize_switches(machine, wnd, UI_configuration, IPT_CONFIG);
+	customize_switches(machine, wnd, _("Driver Configuration"), IPT_CONFIG);
 }
 
 
@@ -447,7 +447,7 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 	char buf[255];
 	static const struct dialog_layout layout = { 120, 52 };
 
-	dlg = win_dialog_init(ui_getstring(UI_analogcontrols), &layout);
+	dlg = win_dialog_init(_("Analog Controls"), &layout);
 	if (!dlg)
 		goto done;
 
@@ -461,17 +461,17 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 				name = _(input_field_name(field));
 
 				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
-					"%s %s", name, ui_getstring(UI_keyjoyspeed));
+					"%s %s", name, _("Digital Speed"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.delta, 1, 255, FALSE, store_delta, (void *) field))
 					goto done;
 
 				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
-					"%s %s", name, ui_getstring(UI_centerspeed));
+					"%s %s", name, _("Autocenter Speed"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.centerdelta, 1, 255, FALSE, store_centerdelta, (void *) field))
 					goto done;
 
 				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
-					"%s %s", name, ui_getstring(UI_reverse));
+					"%s %s", name, _("Reverse"));
 				if (win_dialog_add_combobox(dlg, buf, settings.reverse ? 1 : 0, store_reverse, (void *) field))
 					goto done;
 				if (win_dialog_add_combobox_item(dlg, ui_getstring(UI_off), 0))
@@ -480,7 +480,7 @@ static void customize_analogcontrols(running_machine *machine, HWND wnd)
 					goto done;
 
 				_snprintf(buf, sizeof(buf) / sizeof(buf[0]),
-					"%s %s", name, ui_getstring(UI_sensitivity));
+					"%s %s", name, _("Sensitivity"));
 				if (win_dialog_add_adjuster(dlg, buf, settings.sensitivity, 1, 255, TRUE, store_sensitivity, (void *) field))
 					goto done;
 			}

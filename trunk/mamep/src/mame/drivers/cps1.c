@@ -9252,7 +9252,7 @@ static DRIVER_INIT( punishrb )
 	mem8[0x14F6D] = 0x1;
 
 	punisher_decode();
-	init_cps1();
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( sf2m1 )
@@ -9293,7 +9293,7 @@ static DRIVER_INIT( sf2m1 )
 //	mem16[0x15A4/2] = 0xFFC0; // Alignment
 	mem16[0x6322/2] = 0x0181; // SFX
 
-	init_cps1();
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( sf2m13 )
@@ -9437,7 +9437,7 @@ static DRIVER_INIT( wofb )
 	mem8[0x5D23B] = 0x1;
 
 	wof_decode();
-	init_cps1();
+	DRIVER_INIT_CALL(cps1);
 }
 
 static DRIVER_INIT( wofsjb )

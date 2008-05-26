@@ -2353,7 +2353,7 @@ static int EnableDisableCheatMenu(running_machine *machine, int selection, int f
 
 	/* ----- set return item ----- */
  	if (shortcut)
- 		menu_item[total] = ui_getstring(UI_returntogame);
+ 		menu_item[total] = _("Return to " CAPSTARTGAMENOUN);
  	else
  		menu_item[total] = _("Return to Prior Menu");
 

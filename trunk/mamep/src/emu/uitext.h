@@ -86,25 +86,9 @@ enum
 	UI_typeok,
 
 	/* main menu */
-	UI_inputgeneral,
-	UI_dipswitches,
-	UI_analogcontrols,
 	UI_calibrate,
-#ifdef USE_CUSTOM_BUTTON
-	UI_custombuttons,
-#endif /* USE_CUSTOM_BUTTON */
-	UI_bookkeeping,
-	UI_inputspecific,
-	UI_gameinfo,
-	UI_gamedocuments,
-	UI_autofire,
 	UI_resetgame,
-	UI_selectgame,
-	UI_returntogame,
 	UI_exit,
-	UI_cheat,
-	UI_memorycard,
-
 	/* documents menu */
 	UI_history,
 #ifdef STORY_DATAFILE
@@ -207,17 +191,10 @@ enum
 	UI_refresh_rate,
 	UI_decoding_gfx,
 
-	UI_video,
 	UI_rotate_clockwise,
 	UI_rotate_counterclockwise,
 	UI_flip_x,
 	UI_flip_y,
-
-	UI_configuration,
-
-#ifdef USE_SCALE_EFFECTS
-	UI_scaleeffect,
-#endif /* USE_SCALE_EFFECTS */
 
 	/* autofire stuff */
 	UI_autofireoff,

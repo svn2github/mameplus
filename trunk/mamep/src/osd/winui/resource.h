@@ -174,7 +174,6 @@
 #define IDC_SAMPLES_INCORRECT           1043
 #define IDC_SAMPLES_TOTAL               1044
 #define IDC_AUDIT_DETAILS               1045
-#define IDC_USE_FM_YM3812               1046
 #define IDC_DIR_COMBO                   1047
 #define IDC_DIR_LIST                    1048
 #define IDC_DIR_BROWSE                  1049

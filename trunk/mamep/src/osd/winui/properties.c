@@ -243,7 +243,6 @@ static void save_options_ex(OPTIONS_TYPE opt_type, core_options *opts, int game_
 static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam);
 
 static void SetStereoEnabled(HWND hWnd, int nIndex);
-static void SetYM3812Enabled(HWND hWnd, int nIndex);
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled);
 static void InitializeOptions(HWND hDlg);
 static void InitializeMisc(HWND hDlg);
@@ -2694,7 +2693,6 @@ static void SetPropEnabledControls(HWND hWnd)
 #endif /* USE_VOLUME_AUTO_ADJUST */
 		SetSamplesEnabled(hWnd, nIndex, sound);
 		SetStereoEnabled(hWnd, nIndex);
-		SetYM3812Enabled(hWnd, nIndex);
 	}
 
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_AUTOFRAMESKIP)))
@@ -3532,25 +3530,7 @@ static void SetStereoEnabled(HWND hWnd, int nIndex)
 		EnableWindow(hCtrl, enabled);
 	}
 }
-
-static void SetYM3812Enabled(HWND hWnd, int nIndex)
-{
-	BOOL enabled = FALSE;
-	HWND hCtrl;
-
-	if ( nIndex > -1)
-		enabled = DriverUsesYM3812(nIndex);
-
-	hCtrl = GetDlgItem(hWnd, IDC_USE_FM_YM3812);
-	if (hCtrl)
-	{
-		if (nIndex <= -1)
-			enabled = TRUE;
-
-		EnableWindow(hCtrl, enabled);
-	}
-}
-
+	
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 {
 	BOOL enabled = FALSE;
