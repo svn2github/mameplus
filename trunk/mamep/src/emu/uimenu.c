@@ -651,12 +651,29 @@ int ui_menu_generic_keys(running_machine *machine, UINT32 *selected, int num_ite
 	}
 
 	/* up backs up by one item */
-	if (input_ui_pressed_repeat(machine, IPT_UI_UP, 6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_UP, fast))
 		*selected = (*selected + num_items - 1) % num_items;
 
 	/* down advances by one item */
-	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, 6))
+	if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, fast))
 		*selected = (*selected + 1) % num_items;
+
+	if (input_type_pressed(machine, IPT_UI_UP,0) || input_type_pressed(machine, IPT_UI_DOWN,0))
+	{
+		if (++counter == 25)
+		{
+			fast--;
+			if (fast < 2)
+				fast = 2;
+
+			counter = 0;
+		}
+	}
+	else
+	{
+		fast = 6;
+		counter = 0;
+	}
 
 	/* page up backs up by visible_items */
 	if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_UP, 6))
@@ -792,10 +809,30 @@ UINT32 ui_menu_ui_handler(running_machine *machine, UINT32 state)
 	menu_stack[menu_stack_index].state = newstate;
 
 	/* if the menus are to be hidden, return a cancel here */
-	if ((input_ui_pressed(machine, IPT_UI_CONFIGURE) && !ui_menu_is_force_game_select()) || menu_stack[menu_stack_index].handler == NULL)
+	if (state == SHORTCUT_MENU_CHEAT)
+	{
+		if (input_ui_pressed(machine, IPT_UI_CHEAT) || menu_stack[menu_stack_index].handler == NULL)
 		return UI_HANDLER_CANCEL;
+	}
+	else
+#ifdef CMD_LIST
+	if (state == SHORTCUT_MENU_COMMAND)
+	{
+		if (input_ui_pressed(machine, IPT_UI_COMMAND) || menu_stack[menu_stack_index].handler == NULL)
+			return UI_HANDLER_CANCEL;
+	}
+	else
+#endif /* CMD_LIST */
 
-	return 0;
+	if ((input_ui_pressed(machine, IPT_UI_CONFIGURE) && !ui_menu_is_force_game_select()) || menu_stack[menu_stack_index].handler == NULL)
+	{
+#ifdef MESS
+		osd_toggle_menubar(-1);
+#endif /* MESS */
+		return UI_HANDLER_CANCEL;
+	}
+
+	return state;
 }
 
 
@@ -1406,10 +1443,10 @@ static UINT32 menu_game_info(running_machine *machine, UINT32 state)
 
 static UINT32 menu_cheat(running_machine *machine, UINT32 state)
 {
-	int result = cheat_menu(machine, state);
-	if (result == 0)
+	if ((state & ((1 << 8) - 1)) == 0)
 		return ui_menu_stack_pop();
-	return result;
+
+	return cheat_menu(machine, state);
 }
 
 
@@ -2019,7 +2056,8 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 	#endif /* USE_CUSTOM_BUTTON */
 			   ))
 			{
-				int value = 0;//fixme: field->autofire_setting;
+				input_field_user_settings settings;
+				input_field_get_user_settings(field, &settings);
 
 				entry[menu_items] = field;
 
@@ -2027,7 +2065,7 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 					players = field->player + 1;
 
 				item_list[menu_items].text = _(input_field_name(field));
-				item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + value);
+				item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + settings.autofire);
 			}
 		}
 	}
@@ -2040,7 +2078,7 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 	for (i = 0; i < players; i++)
 	{
 		item_list[menu_items].text = menu_string_pool_add("P%d %s", i + 1, ui_getstring(UI_autofiredelay));
-		item_list[menu_items++].subtext = menu_string_pool_add("%d", 1/*fixme get_autofiredelay(i)*/);
+		item_list[menu_items++].subtext = menu_string_pool_add("%d", get_autofiredelay(i));
 	}
 
 	item_list[menu_items++].text = ui_getstring (UI_returntomain);
@@ -2056,7 +2094,7 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 		int autofire_delay;
 
 		i = selected - item_autofire_delay;
-		autofire_delay = 1/*fixmeget_autofiredelay(i)*/;
+		autofire_delay = get_autofiredelay(i);
 
 		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
 		{
@@ -2071,11 +2109,13 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 				autofire_delay = 1;
 		}
 
-		/* fixme set_autofiredelay(i, autofire_delay);*/
+		set_autofiredelay(i, autofire_delay);
 	}
 	else if (selected < item_autofire_delay)
 	{
-		int selected_value = 1/*fixme entry[selected]->autofire_setting*/;
+		input_field_user_settings settings;
+		input_field_get_user_settings(entry[selected], &settings);
+		int selected_value = settings.autofire;
 
 		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
 		{
@@ -2088,7 +2128,8 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 				selected_value = 2;
 		}
 
-		/*fixme entry[selected]->autofire_setting = selected_value; */
+		settings.autofire = selected_value;
+		input_field_set_user_settings(entry[selected], &settings);
 	}
 
 	return selected;

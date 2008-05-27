@@ -644,6 +644,7 @@ typedef struct _input_field_user_settings input_field_user_settings;
 struct _input_field_user_settings
 {
 	input_port_value			value;			/* for DIP switches */
+	int							autofire;		/* autofire */
 	input_seq					seq[SEQ_TYPE_TOTAL];/* sequences of all types */
 	INT32						sensitivity;	/* for analog controls */
 	INT32						delta;			/* for analog controls */
@@ -1087,5 +1088,8 @@ read16_machine_func input_port_read_handler16(const input_port_config *portlist,
 read32_machine_func input_port_read_handler32(const input_port_config *portlist, const char *tag);
 read64_machine_func input_port_read_handler64(const input_port_config *portlist, const char *tag);
 
+/* autofire functions */
+int get_autofiredelay(int player);
+void set_autofiredelay(int player, int delay);
 
 #endif	/* __INPTPORT_H__ */

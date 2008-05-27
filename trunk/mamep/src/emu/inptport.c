@@ -129,6 +129,8 @@
 #define JOYDIR_LEFT_BIT		(1 << JOYDIR_LEFT)
 #define JOYDIR_RIGHT_BIT	(1 << JOYDIR_RIGHT)
 
+#define AUTOFIRE_ON			1	/* Autofire enable bit */
+#define AUTOFIRE_TOGGLE		2	/* Autofire toggle enable bit */
 
 
 /***************************************************************************
@@ -215,6 +217,7 @@ struct _input_field_state
 	UINT8						last;				/* were we pressed last time? */
 	UINT8						toggle;				/* current toggle state */
 	UINT8						joydir;				/* digital joystick direction index */
+	int							autofire;			/* autofire */
 	int							autopressed;		/* autofire status */
 };
 
@@ -289,6 +292,7 @@ struct _input_port_private
 
 /* XML attributes for the different types */
 static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
+static int autofiredelay[MAX_PLAYERS];
 
 
 
@@ -620,6 +624,7 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 {
 	input_port_private *portdata;
 	time_t basetime;
+	int player;
 
 	/* allocate memory for our data structure */
 	machine->input_port_data = auto_malloc(sizeof(*machine->input_port_data));
@@ -629,6 +634,9 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	/* add an exit callback and a frame callback */
 	add_exit_callback(machine, input_port_exit);
 	add_frame_callback(machine, frame_update_callback);
+
+	for (player = 0; player < MAX_PLAYERS; player++)
+		autofiredelay[player] = 1;
 
 	/* initialize the default port info from the OSD */
 	init_port_types(machine);
@@ -810,6 +818,8 @@ void input_field_get_user_settings(const input_field_config *field, input_field_
 		settings->centerdelta = field->state->analog->centerdelta;
 		settings->reverse = field->state->analog->reverse;
 	}
+	else
+		settings->autofire = field->state->autofire;
 }
 
 
@@ -845,6 +855,8 @@ void input_field_set_user_settings(const input_field_config *field, const input_
 		field->state->analog->centerdelta = settings->centerdelta;
 		field->state->analog->reverse = settings->reverse;
 	}
+	else
+		field->state->autofire = settings->autofire;
 }
 
 
@@ -1500,7 +1512,7 @@ static void init_port_state(running_machine *machine)
 			for (seqtype = 0; seqtype < ARRAY_LENGTH(fieldstate->seq); seqtype++)
 				fieldstate->seq[seqtype] = field->seq[seqtype];
 			fieldstate->value = field->defvalue;
-
+//fixme: init autofire
 			/* if this is an analog field, allocate memory for the analog data */
 			if (field->type >= __ipt_analog_start && field->type <= __ipt_analog_end)
 			{
@@ -1595,7 +1607,7 @@ static void init_autoselect_devices(const input_port_config *portlist, int type1
 		return;
 	}
 	else if (strcmp(stemp, "keyboard") != 0)
-		mame_printf_error("Invalid %s value %s; reverting to keyboard\n", option, stemp);
+		mame_printf_error(_("Invalid %s value %s; reverting to keyboard\n"), option, stemp);
 
 	/* only scan the list if we haven't already enabled this class of control */
 	if (!input_device_class_enabled(autoenable))
@@ -1607,7 +1619,7 @@ static void init_autoselect_devices(const input_port_config *portlist, int type1
 					(type2 != 0 && field->type == type2) ||
 					(type3 != 0 && field->type == type3))
 				{
-					mame_printf_verbose("Input: Autoenabling %s due to presence of a %s\n", autostring, ananame);
+					mame_printf_verbose(_("Input: Autoenabling %s due to presence of a %s\n"), autostring, ananame);
 					input_device_class_enable(autoenable, TRUE);
 					break;
 				}
@@ -3108,7 +3120,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 		else
 			load_game_config(machine, portnode, type, player, newseq);
 	}
-/* fixme:
+
 	if (config_type == CONFIG_TYPE_GAME)
 	{
 		for (portnode = xml_get_sibling(parentnode->child, "autofire"); portnode; portnode = xml_get_sibling(portnode->next, "autofire"))
@@ -3119,7 +3131,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
 		}
 	}
-*/
+
 	/* after applying the controller config, push that back into the backup, since that is */
 	/* what we will diff against */
 	if (config_type == CONFIG_TYPE_CONTROLLER)
@@ -3262,7 +3274,15 @@ static int load_game_config(running_machine *machine, xml_data_node *portnode, i
 
 					/* for non-analog fields, fetch the value */
 					if (field->state->analog == NULL)
+					{
 						field->state->value = xml_get_attribute_int(portnode, "value", field->defvalue);
+						if (strcmp(xml_get_attribute_string(portnode, "autofire", "off"), "on") == 0)
+							field->state->autofire = AUTOFIRE_ON;
+						else if (strcmp(xml_get_attribute_string(portnode, "autofire", "off"), "toggle") == 0)
+							field->state->autofire = AUTOFIRE_TOGGLE;
+						else
+							field->state->autofire = 0;
+					}
 
 					/* for analog fields, fetch configurable analog attributes */
 					else
@@ -3393,20 +3413,6 @@ static void save_default_inputs(running_machine *machine, xml_data_node *parentn
 			}
 		}
 	}
-/* fixme:
-	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
-	{
-		if (autofiredelay[portnum] != 1)
-		{
-			xml_data_node *childnode = xml_add_child(parentnode, "autofire", NULL);
-			if (childnode)
-			{
-				xml_set_attribute_int(childnode, "player", portnum + 1);
-				xml_set_attribute_int(childnode, "delay", autofiredelay[portnum]);
-			}
-		}
-	}
-*/
 }
 
 
@@ -3419,6 +3425,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 {
 	const input_field_config *field;
 	const input_port_config *port;
+	int portnum;
 
 	/* iterate over ports */
 	for (port = machine->portconfig; port != NULL; port = port->next)
@@ -3434,8 +3441,10 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 
 				/* non-analog changes */
 				if (field->state->analog == NULL)
+				{
 					changed |= ((field->state->value & field->mask) != (field->defvalue & field->mask));
-
+					changed |= field->state->autofire;
+				}
 				/* analog changes */
 				else
 				{
@@ -3468,6 +3477,10 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 						{
 							if ((field->state->value & field->mask) != (field->defvalue & field->mask))
 								xml_set_attribute_int(portnode, "value", field->state->value & field->mask);
+							if (field->state->autofire & AUTOFIRE_ON)
+								xml_set_attribute(portnode, "autofire", "on");
+							else if (field->state->autofire & AUTOFIRE_TOGGLE)
+								xml_set_attribute(portnode, "autofire", "toggle");
 						}
 
 						/* write out analog changes */
@@ -3485,6 +3498,19 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 					}
 				}
 			}
+
+	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
+	{
+		if (autofiredelay[portnum] != 1)
+		{
+			xml_data_node *childnode = xml_add_child(parentnode, "autofire", NULL);
+			if (childnode)
+			{
+				xml_set_attribute_int(childnode, "player", portnum + 1);
+				xml_set_attribute_int(childnode, "delay", autofiredelay[portnum]);
+			}
+		}
+	}
 }
 
 
@@ -3882,6 +3908,17 @@ static void record_port(const input_port_config *port)
 		}
 	}
 }
+
+int get_autofiredelay(int player)
+{
+	return autofiredelay[player];
+}
+
+void set_autofiredelay(int player, int delay)
+{
+	autofiredelay[player] = delay;
+}
+
 #if 0
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(char log)
