@@ -1404,6 +1404,7 @@ gsword2	グレートソードマン (日本版?)	ぐれーとそーどまん	Taito Corporation
 pitnrun	ピット&ラン -F-1レース (set 1)	ぴっとあんどらん	Taito Corporation
 pitnruna	ピット&ラン -F-1レース (set 2)	ぴっとあんどらん	Taito Corporation
 lkage	影の伝説	かげのでんせつ	Taito Corporation
+lkageo	影の伝説 (older)	かげのでんせつ	Taito Corporation
 lkageb	影の伝説 (海賊版 set 1)	かげのでんせつ	bootleg
 lkageb2	影の伝説 (海賊版 set 2)	かげのでんせつ	bootleg
 lkageb3	影の伝説 (海賊版 set 3)	かげのでんせつ	bootleg
@@ -1864,7 +1865,8 @@ zerowing	ゼロウィング	ぜろうぃんぐ	Toaplan
 zerowng2	ゼロウィング (2 player simultaneous ver)	ぜろうぃんぐ	[Toaplan] Williams Electronics Games, Inc
 demonwld	ホラーストーリー	ほらーすとーりー	Toaplan
 demonwl1	ホラーストーリー (Taito license)	ほらーすとーりー	Toaplan (Taito license)
-demonwl2	ホラーストーリー (first edition)	ほらーすとーりー	Toaplan
+demonwl2	ホラーストーリー (early edition)	ほらーすとーりー	Toaplan
+demonwl3	ホラーストーリー (first edition)	ほらーすとーりー	Toaplan
 fireshrk	鮫！鮫！鮫！ / Fire Shark	さめさめさめ	Toaplan
 samesame	鮫！鮫！鮫！	さめさめさめ	Toaplan
 samesam2	鮫！鮫！鮫！ (2p ver)	さめさめさめ	Toaplan
@@ -1897,7 +1899,8 @@ moremorp	モアモアプラス -パズルエクスプレス	もあもあ_2ぷらす	SemiCom / Exit
 snowbro3	スノーブラザーズ3 -Magical Adventure	すのーぶらざーず_3	Syrmex (bootleg/hack)
 finalttr	ファイナルテトリス	ふぁいなるてとりす	Jeil Computer System
 tekipaki	洗脳ゲーム テキ・パキ	せんのうげーむてきぱき	Toaplan
-ghox	ゴークス	ごーくす	Toaplan
+ghox	ゴークス (set 1)	ごーくす	Toaplan
+ghoxa	ゴークス (set 2)	ごーくす	Toaplan
 dogyuun	ドギューン！！	どぎゅーん	Toaplan
 kbash	ナックルバッシュ	なっくるばっしゅ	Toaplan
 kbash2	ナックルバッシュ / Knuckle Bash 2 (海賊版)	なっくるばっしゅ	bootleg
@@ -2058,6 +2061,7 @@ rushcrsh	ラッシュ&クラッシュ (日本版)	らっしゅあんどくらっしゅ	Capcom
 lwings	アレスの翼 -The Legendary Soldiers / Legendary Wings (USA版 set 1)	あれすのつばさ	Capcom
 lwings2	アレスの翼 -The Legendary Soldiers / Legendary Wings (USA版 set 2)	あれすのつばさ	Capcom
 lwingsjp	アレスの翼 -The Legendary Soldiers (日本版)	あれすのつばさ	Capcom
+lwingsb	アレスの翼 -The Legendary Soldiers / Legendary Wings (海賊版)	あれすのつばさ	bootleg
 sidearms	サイドアーム -Hyper Dyne (海外版)	さいどあーむ	Capcom
 sidearmr	サイドアーム -Hyper Dyne (USA版)	さいどあーむ	Capcom (Romstar license)
 sidearjp	サイドアーム -Hyper Dyne (日本版)	さいどあーむ	Capcom
@@ -4222,7 +4226,8 @@ bmdct	ビートマニア featuring Dreams Come True (ver JA-A)	びーとまにあ_2_4_ふぃー
 bmcompm2	ビートマニア complete MIX2 (ver JA-A)	びーとまにあ_2_2_こんぷりーとみっくす_2	Konami
 hmcompm2	ビートマニア complete MIX2 / Hiphopmania Complete MIX 2 (ver UA-A)	びーとまにあ_2_2_こんぷりーとみっくす_2	Konami
 bm6thmix	ビートマニア 6th MIX -The UK underground music (ver JA-A)	びーとまにあ_1_6_しっくすすみっくす	Konami
-bm7thmix	ビートマニア 7th MIX (ver JA-B)	びーとまにあ_1_7_せぶんすすみっくす	Konami
+bm7thmix	ビートマニア 7th MIX -keepin' evolution (ver JA-B)	びーとまにあ_1_7_せぶんすすみっくす	Konami
+bmfinal	ビートマニア THE FINAL (ver JA-A)	びーとまにあ_3_1_ざふぁいなる	Konami
 ppp	パラパラパラダイス	ぱらぱらぱらだいす_1	Konami
 ppd	パラパラダンシング	ぱらぱらだんしんぐ	Konami
 ppp11	パラパラパラダイス (ver 1.1)	ぱらぱらぱらだいす_1	Konami
@@ -5330,11 +5335,11 @@ gauntd24	ガントレット ダークレガシー (ver DL 2.4)	がんとれっと_4だーくれがしー	M
 cartfury	カートフューリー -Championship Racing	かーとふゅーりー	Midway Games
 tm	タッチマスター (欧州版 Ver 3.00)	たっちますたー_1	Midway
 tm3k	タッチマスター3000 (ver 5.02 standard)	たっちますたー_3000	Midway
-tm3ka	タッチマスター3000 (ver 5.01 Standard)	たっちますたー_3000	Midway
+tm3ka	タッチマスター3000 (ver 5.01 standard)	たっちますたー_3000	Midway
 tm4k	タッチマスター4000 (ver 6.02 standard)	たっちますたー_4000	Midway
 tm5k	タッチマスター5000 (ver 7.10 standard)	たっちますたー_5000	Midway
 tm7k	タッチマスター7000 (ver 8.04 standard)	たっちますたー_7000	Midway
-tm7ka	タッチマスター7000 (ver 8.00 Standard)	たっちますたー_7000	Midway
+tm7ka	タッチマスター7000 (ver 8.00 standard)	たっちますたー_7000	Midway
 galgbios	ギャラクシーゲームズ (BIOS ver 1.90)	ぎゃらくしーげーむず	Creative Electonics &amp; Software
 embargo	エンバーゴ	えんばーご	Cinematronics
 tripool	トライ・プール (Casino Tech)	とらいぷーる	Noma (Casino Tech license)
@@ -5743,7 +5748,7 @@ thoop	サンダーフープ (ver 1)	さんだーふーぷ	Gaelco
 squash	スカッシュ (ver 1.0)	すかっしゅ	Gaelco
 wrally	ワールドラリー (set 1)	わーるどらりー_1	Gaelco
 wrallya	ワールドラリー (set 2)	わーるどらりー_1	Gaelco
-wrallyb	ワールドラリー (set 3 930217)	わーるどらりー_1	Gaelco
+wrallyb	ワールドラリー (USA版 930217)	わーるどらりー_1	Gaelco (Atari license)
 glass	グラス (ver 1.1)	ぐらす_1.1	Gaelco
 glass10	グラス (ver 1.0 set 1)	ぐらす_1.0	Gaelco
 glass10a	グラス (ver 1.0 set 2)	ぐらす_1.0	Gaelco
@@ -6581,7 +6586,6 @@ saeuro	スペースエース (欧州版)	すぺーすえーす	Atari
 aztarac	アズタラック	あずたらっく	Centuri
 mole	モールアタック	もーるあたっく	Yachiyo Electronics, Ltd.
 thehand	ギャンブラー / The Hand	ぎゃんぶらー	T.I.C.
-gotya	ギャンブラー / Got-Ya (12/24/1981 prototype?)	ぎゃんぶらー	Game-A-Tron
 mrjong	ミスタージャン (日本版)	みすたーじゃん	Kiwako
 crazyblk	ミスタージャン / Crazy Blocks	みすたーじゃん	Kiwako (ECI license)
 blkbustr	ミスタージャン / BlockBuster	みすたーじゃん	Kiwako (ECI license)
@@ -6715,8 +6719,6 @@ ripribit	リッパーリビット(ver 2.8.4)	りっぱーりびっと	LAI Games
 cfarm	チキンファーム (ver 2.0)	ちきんふぁーむ	LAI Games
 cclownz	クレージークラウンズ (ver 1.0)	くれーじーくらうんず	LAI Games
 rotaryf	ロータリーファイター	ろーたりーふぁいたー	<unknown>
-sbugger	スペースバガー (set 1)	すぺーすばがー	Game-A-Tron
-sbuggera	スペースバガー (set 2)	すぺーすばがー	Game-A-Tron
 portrait	ポートレート (set 1)	ぽーとれーと	Olympia
 portrata	ポートレート (set 2)	ぽーとれーと	Olympia
 enigma2	エニグマII	えにぐま2	GamePlan (Zilec Electronics license)
@@ -6807,14 +6809,16 @@ couplep	ザ・カップルズ (set 2)	ざかっぷるず	Merit
 couplei	ザ・カップルズ (set 3)	ざかっぷるず	Merit
 pitboss2	ピットボス II	ぴっとぼす_2	Merit
 spitboss	スーパーピットボス	すーぱーぴっとぼす	Merit
+pitbosss	ピットボススーパースター	ぴっとぼすすーぱーすたー	Merit
 pitbossm	ピットボス メガスター	ぴっとぼす_3めがすたー	Merit
-megat3	メガタッチ III (9255-20-01 ROF)	めがたっち_3_1	Merit
+megat3	メガタッチ III (9255-20-06 RON)	めがたっち_3_1	Merit
+megat3a	メガタッチ III (9255-20-01 ROF)	めがたっち_3_1	Merit
 megat3te	メガタッチ III トーナメントエディション (9255-30-01 ROE)	めがたっち_3_2とーなめんとえでぃしょん	Merit
 megat4	メガタッチ IV (9255-40-01 ROE)	めがたっち_4_1	Merit
 megat4a	メガタッチ IV (9255-40-01 ROD)	めがたっち_4_1	Merit
 megat4te	メガタッチ IV トーナメントエディション (9255-50-01 ROD)	めがたっち_4_2とーなめんとえでぃしょん	Merit
-megat5	メガタッチ5	めがたっち_5_ふぁいぶ	Merit
-megat6	メガタッチ6 (9255-80-01 ROA)	めがたっち_6_しっくす	Merit
+megat5	メガタッチ5 (9255-60-01 ROC)	めがたっち_5	Merit
+megat6	メガタッチ6 (9255-80-01 ROA)	めがたっち_6	Merit
 suprgolf	スーパークラウンズゴルフ	すーぱーくらうんずごるふ	Nasco/Face?
 hotblock	ホットブロックス -テトリックスII	ほっとぶろっくす	Nics? / Nix?
 pntnpuzl	ペイント&パズル	ぺいんとあんどぱずる	Century?
@@ -6880,6 +6884,11 @@ saloon	サルーン (encrypted) (フランス版)	さるーん	Unknown
 snookr10	スヌーカー10 (ver 1.11)	すぬーかーてん	Sandii'
 apple10	アップル10 (ver 1.21)	あっぷるてん	Sandii'
 tenballs	テンボールス (ver 1.05)	てんぼーるす	unknown
+gotya	ギャンブラー / Got-Ya (12/24/1981 prototype?)	ぎゃんぶらー	Game-A-Tron
+sbugger	スペースバガー (set 1)	すぺーすばがー	Game-A-Tron
+sbuggera	スペースバガー (set 2)	すぺーすばがー	Game-A-Tron
+gatcards	カードゲームズ?	かーどげーむず	Game-A-Tron
+gatslots	スロットゲーム?	すろっとげーむ	Game-A-Tron
 vroulet	ベガスルーレット	べがするーれっと	World Game
 rcasino	ロイヤルカジノ	ろいやるかじの	Dyna Electronics
 cmv801	チェリーマスター (ver 8.01)	ちぇりーますたー_1	Corsica
