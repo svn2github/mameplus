@@ -280,8 +280,6 @@ struct _input_port_private
 #define RECIP_SCALE(s)				(((INT64)1 << 48) / (s))
 #define APPLY_SCALE(x,s)			(((INT64)(x) * (s)) >> 24)
 
-#define IS_AUTOKEY(port)		((port->autofire_setting & AUTOFIRE_ON) || ((port->autofire_setting & AUTOFIRE_TOGGLE) && (autofire_toggle_port->defvalue & (1 << port->player))))
-
 /* original input_ports without modifications */
 //fixme: static input_port_entry *input_ports_default;
 
@@ -293,7 +291,7 @@ struct _input_port_private
 /* XML attributes for the different types */
 static const char *const seqtypestrings[] = { "standard", "decrement", "increment" };
 static int autofiredelay[MAX_PLAYERS];
-
+static int autofiretoggle[MAX_PLAYERS];
 
 
 /***************************************************************************
@@ -536,6 +534,9 @@ static void record_end(running_machine *machine, const char *message);
 static void record_frame(running_machine *machine, attotime curtime);
 static void record_port(const input_port_config *port);
 
+/* autofire */
+static int auto_pressed(const input_field_config *field);
+const input_port_config *input_port_config_custom(const input_port_token *tokens);
 
 
 /***************************************************************************
@@ -636,7 +637,10 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	add_frame_callback(machine, frame_update_callback);
 
 	for (player = 0; player < MAX_PLAYERS; player++)
-		autofiredelay[player] = 1;
+	{
+		autofiredelay[player] = 3;	//mamep: 1 is too short for some games
+		autofiretoggle[player] = 1;
+	}
 
 	/* initialize the default port info from the OSD */
 	init_port_types(machine);
@@ -644,7 +648,7 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 	/* if we have a token list, proceed */
 	if (tokens != NULL)
 	{
-		machine->portconfig = input_port_config_alloc(tokens);
+		machine->portconfig = input_port_config_custom(tokens);
 		init_port_state(machine);
 	}
 
@@ -1512,7 +1516,7 @@ static void init_port_state(running_machine *machine)
 			for (seqtype = 0; seqtype < ARRAY_LENGTH(fieldstate->seq); seqtype++)
 				fieldstate->seq[seqtype] = field->seq[seqtype];
 			fieldstate->value = field->defvalue;
-//fixme: init autofire
+
 			/* if this is an analog field, allocate memory for the analog data */
 			if (field->type >= __ipt_analog_start && field->type <= __ipt_analog_end)
 			{
@@ -2165,7 +2169,8 @@ static void frame_update_analog_field(analog_field_state *analog)
 
 static int frame_get_digital_field_state(const input_field_config *field)
 {
-	int curstate = input_seq_pressed(input_field_seq(field, SEQ_TYPE_STANDARD));
+//	int curstate = input_seq_pressed(input_field_seq(field, SEQ_TYPE_STANDARD));
+	int curstate = auto_pressed(field);
 	int changed = FALSE;
 
 	/* if the state changed, look for switch down/switch up */
@@ -3128,7 +3133,7 @@ static void load_config_callback(running_machine *machine, int config_type, xml_
 			int player = xml_get_attribute_int(portnode, "player", 0);
 
 			if (player > 0 && player <= MAX_PLAYERS)
-				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 1);
+				autofiredelay[player - 1] = xml_get_attribute_int(portnode, "delay", 3);
 		}
 	}
 
@@ -3501,7 +3506,7 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 
 	for (portnum = 0; portnum < MAX_PLAYERS; portnum++)
 	{
-		if (autofiredelay[portnum] != 1)
+		if (autofiredelay[portnum] != 3)
 		{
 			xml_data_node *childnode = xml_add_child(parentnode, "autofire", NULL);
 			if (childnode)
@@ -3907,6 +3912,208 @@ static void record_port(const input_port_config *port)
 			record_write_uint8(port->machine, analog->reverse);
 		}
 	}
+}
+
+const input_port_config *input_port_config_custom(const input_port_token *tokens)
+{
+	input_port_config *portconfig;
+	const input_port_config *port;
+	const input_field_config *field;
+	int nplayer = 0;
+
+	static INPUT_PORTS_START( custom1p )
+		PORT_START_TAG("CUSTOM1P")
+		PORT_BIT( 1 << 0, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(1) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(1)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(1)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom2p )
+		PORT_START_TAG("CUSTOM2P")
+		PORT_BIT( 1 << 1, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(2) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(2)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(2)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom3p )
+		PORT_START_TAG("CUSTOM3P")
+		PORT_BIT( 1 << 2, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(3) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(3)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(3)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom4p )
+		PORT_START_TAG("CUSTOM4P")
+		PORT_BIT( 1 << 3, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(4) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(4)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(4)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom5p )
+		PORT_START_TAG("CUSTOM5P")
+		PORT_BIT( 1 << 4, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(5) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(5)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(5)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom6p )
+		PORT_START_TAG("CUSTOM6P")
+		PORT_BIT( 1 << 5, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(6) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(6)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(6)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom7p )
+		PORT_START_TAG("CUSTOM7P")
+		PORT_BIT( 1 << 6, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(7) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(7)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(7)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	static INPUT_PORTS_START( custom8p )
+		PORT_START_TAG("CUSTOM8P")
+		PORT_BIT( 1 << 7, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(8) PORT_TOGGLE
+#ifdef USE_CUSTOM_BUTTON
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM2 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM3 ) PORT_PLAYER(8)
+		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM4 ) PORT_PLAYER(8)
+#endif /* USE_CUSTOM_BUTTON */
+	INPUT_PORTS_END
+
+	portconfig = port_config_detokenize(NULL, tokens);
+
+	// calc total players
+	for (port = portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (nplayer < field->player+1)
+				nplayer = field->player+1;
+		}
+
+	// mamep: append custom ports if needed
+	if (nplayer > 0)
+		portconfig = port_config_detokenize(portconfig, ipt_custom1p);
+	if (nplayer > 1)
+		portconfig = port_config_detokenize(portconfig, ipt_custom2p);
+	if (nplayer > 2)
+		portconfig = port_config_detokenize(portconfig, ipt_custom3p);
+	if (nplayer > 3)
+		portconfig = port_config_detokenize(portconfig, ipt_custom4p);
+	if (nplayer > 4)
+		portconfig = port_config_detokenize(portconfig, ipt_custom5p);
+	if (nplayer > 5)
+		portconfig = port_config_detokenize(portconfig, ipt_custom6p);
+	if (nplayer > 6)
+		portconfig = port_config_detokenize(portconfig, ipt_custom7p);
+	if (nplayer > 7)
+		portconfig = port_config_detokenize(portconfig, ipt_custom8p);
+
+	return portconfig;
+}
+
+static int auto_pressed(const input_field_config *field)
+{
+/*
+	autofire setting:
+	 delay,  on, off
+	     1,   1,   1
+	     2,   2,   1
+	     3,   2,   2
+	     4,   3,   2
+	     5,   3,   3
+	     6,   4,   3
+*/
+
+#define IS_AUTOKEY(field)	((field->state->autofire & AUTOFIRE_ON) \
+							|| ((field->state->autofire & AUTOFIRE_TOGGLE) \
+							&& autofiretoggle[field->player]))
+
+	int pressed = input_seq_pressed(input_field_seq(field, SEQ_TYPE_STANDARD));
+	int is_auto = IS_AUTOKEY(field);
+
+	if (pressed && (field->flags & FIELD_FLAG_TOGGLE))
+		autofiretoggle[field->player] = field->state->toggle;
+
+#if 0 //def USE_CUSTOM_BUTTON
+	if (portentry->type >= IPT_BUTTON1 && portentry->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+	{
+		UINT16 button_mask = 1 << (portentry->type - IPT_BUTTON1);
+		input_bit_info temp;
+		int custom;
+
+		for (custom = 0; custom < custom_buttons; custom++)
+			if (custom_button[portentry->player][custom] & button_mask)
+			{
+				input_bit_info *custom_info = custom_button_info[portentry->player][custom];
+
+				if (input_seq_pressed(input_port_seq(custom_info->portentry, SEQ_TYPE_STANDARD)))
+				{
+					if (IS_AUTOKEY(custom_info->portentry))
+					{
+						if (pressed)
+							is_auto &= 1;
+						else
+							is_auto = 1;
+
+						temp = *custom_info;
+						info = &temp;
+					}
+					else
+						is_auto = 0;
+
+					pressed = 1;
+				}
+			}
+	}
+#endif /* USE_CUSTOM_BUTTON */
+
+	if (is_auto)
+	{
+		if (pressed)
+		{
+			if (field->state->autopressed > autofiredelay[field->player])
+				field->state->autopressed = 0;
+			else if (field->state->autopressed > autofiredelay[field->player] / 2)
+				pressed = 0;
+
+			field->state->autopressed ++;
+		}
+		else
+			field->state->autopressed = 0;
+	}
+
+	return pressed;
+
+#undef IS_AUTOKEY
 }
 
 int get_autofiredelay(int player)

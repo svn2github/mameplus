@@ -2113,9 +2113,10 @@ static UINT32 menu_autofire(running_machine *machine, UINT32 state)
 	}
 	else if (selected < item_autofire_delay)
 	{
+		int selected_value;
 		input_field_user_settings settings;
 		input_field_get_user_settings(entry[selected], &settings);
-		int selected_value = settings.autofire;
+		selected_value = settings.autofire;
 
 		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
 		{

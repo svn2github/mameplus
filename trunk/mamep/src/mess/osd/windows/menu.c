@@ -301,7 +301,7 @@ static void storeval_inputport(void *param, int val)
 //	customize_switches
 //============================================================
 
-static void customize_switches(running_machine *machine, HWND wnd, int title_string_num, UINT32 ipt_name)
+static void customize_switches(running_machine *machine, HWND wnd, const char * title_string, UINT32 ipt_name)
 {
 	dialog_box *dlg;
 	const input_port_config *port;
@@ -310,7 +310,7 @@ static void customize_switches(running_machine *machine, HWND wnd, int title_str
 	const char *switch_name = NULL;
 	UINT32 type;
 
-	dlg = win_dialog_init(ui_getstring(title_string_num), NULL);
+	dlg = win_dialog_init(title_string, NULL);
 	if (!dlg)
 		goto done;
 
