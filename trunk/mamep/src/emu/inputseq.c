@@ -11,7 +11,7 @@
 
 #include "inputseq.h"
 #include "restrack.h"
-#include "driver.h"
+#include "uilang.h"
 #include <ctype.h>
 
 

@@ -327,18 +327,18 @@ static void dump_wrong_and_correct_checksums(rom_load_data* romdata, const char*
        activate this only in debug buils, but many developers only use
        release builds, so I keep it as is for now. */
 	wrong_functions = 0;
-	for (i=0;i<HASH_NUM_FUNCTIONS;i++)
-		if (hash_data_extract_printable_checksum(hash, 1<<i, chksum) == 2)
-			wrong_functions |= 1<<i;
+	for (i = 0; i < HASH_NUM_FUNCTIONS; i++)
+		if (hash_data_extract_printable_checksum(hash, 1 << i, chksum) == 2)
+			wrong_functions |= 1 << i;
 
 	if (wrong_functions)
 	{
-		for (i=0;i<HASH_NUM_FUNCTIONS;i++)
-			if (wrong_functions & (1<<i))
+		for (i = 0; i < HASH_NUM_FUNCTIONS; i++)
+			if (wrong_functions & (1 << i))
 			{
 				sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 					_("\tInvalid %s checksum treated as 0 (check leading zeros)\n"),
-					hash_function_name(1<<i));
+					hash_function_name(1 << i));
 
 				romdata->warnings++;
 			}

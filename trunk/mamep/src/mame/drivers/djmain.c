@@ -1461,7 +1461,7 @@ ROM_START( bmclubmx )
 	DISK_REGION( REGION_DISKS )			/* IDE HARD DRIVE */
 	DISK_IMAGE( "993jaa11.chd", 0, NO_DUMP )
 	// this image has not been verified
-//  DISK_IMAGE( "993jaa11.chd", 0, MD5(e26eb62d7cf3357585f5066da6063143) )  /* ver 1.00 JA */
+	//  DISK_IMAGE( "993jaa11.chd", 0, MD5(e26eb62d7cf3357585f5066da6063143) )  /* ver 1.00 JA */
 ROM_END
 
 ROM_START( bmcompm2 )

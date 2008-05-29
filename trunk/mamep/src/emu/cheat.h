@@ -22,7 +22,7 @@ extern int he_did_cheat;
 
 void cheat_init(running_machine *machine);
 
-UINT32 cheat_menu(running_machine *machine, UINT32 state);
+int cheat_menu(running_machine *machine, int selection);
 
 void cheat_display_watches(void);
 

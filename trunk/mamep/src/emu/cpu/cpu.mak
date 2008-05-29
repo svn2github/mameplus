@@ -46,8 +46,8 @@ DRCOBJ += \
 
 DRCDEPS += \
 	$(CPUSRC)/x86emit.h \
-			$(CPUSRC)/x64drc.c \
-			$(CPUSRC)/x64drc.h \
+	$(CPUSRC)/x64drc.c \
+	$(CPUSRC)/x64drc.h \
 
 DEFS += -DNATIVE_DRC=drcbe_x64_be_interface
 
@@ -60,8 +60,8 @@ DRCOBJ += \
 
 DRCDEPS += \
 	$(CPUSRC)/x86emit.h \
-			$(CPUSRC)/x86drc.c \
-			$(CPUSRC)/x86drc.h \
+	$(CPUSRC)/x86drc.c \
+	$(CPUSRC)/x86drc.h \
 
 DEFS += -DNATIVE_DRC=drcbe_x86_be_interface
 
@@ -1816,5 +1816,3 @@ $(CPUOBJ)/z8000/z8000.o:	$(CPUSRC)/z8000/z8000.c \
 							$(CPUSRC)/z8000/z8000dab.h \
 							$(CPUSRC)/z8000/z8000ops.c \
 							$(CPUSRC)/z8000/z8000tbl.c
-
-

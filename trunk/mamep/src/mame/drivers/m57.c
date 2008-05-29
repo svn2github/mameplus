@@ -208,7 +208,7 @@ static const gfx_layout spritelayout =
 
 static GFXDECODE_START( m57 )
 	GFXDECODE_ENTRY( REGION_GFX1, 0x0000, gfx_8x8x3_planar,    0, 32 )
-	GFXDECODE_ENTRY( REGION_GFX2, 0x0000, spritelayout,     32*8, 32 )
+	GFXDECODE_ENTRY( REGION_GFX2, 0x0000, spritelayout, 32*8, 32 )
 	GFXDECODE_ENTRY( REGION_GFX2, 0x1000, spritelayout, 32*8, 32 )
 	GFXDECODE_ENTRY( REGION_GFX2, 0x2000, spritelayout, 32*8, 32 )
 	GFXDECODE_ENTRY( REGION_GFX2, 0x3000, spritelayout, 32*8, 32 )

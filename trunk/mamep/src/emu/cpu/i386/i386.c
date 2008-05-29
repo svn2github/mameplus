@@ -90,7 +90,6 @@ static UINT32 get_flags(void)
 	f |= I.IF << 9;
 	f |= I.DF << 10;
 	f |= I.OF << 11;
-	f |= I.flag_reserved & 0xf000;
 	return (I.eflags & 0xFFFF0000) | (f & 0xFFFF);
 }
 
@@ -105,7 +104,6 @@ static void set_flags( UINT32 f )
 	I.IF = (f & 0x200) ? 1 : 0;
 	I.DF = (f & 0x400) ? 1 : 0;
 	I.OF = (f & 0x800) ? 1 : 0;
-	I.flag_reserved = f & 0xf000;
 }
 
 static void sib_byte(UINT8 mod, UINT32* out_ea, UINT8* out_segment)

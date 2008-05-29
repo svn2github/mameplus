@@ -875,7 +875,7 @@ static const struct gfx_range mapper_RT22B_table[] =
 	// bank 2 = pin 14 (ROMs 3,7,11,15,19,21,26,28)
 	// bank 3 = pin 12 (ROMS 4,8,12,16,20,22,27,29)
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 
 	{ GFXTYPE_SPRITES, 0x4000, 0x53ff, 1 },
@@ -981,7 +981,7 @@ static const struct gfx_range mapper_VA63B_table[] =
 	// bank0 = pin 19 (ROMs 1,3) & pin 18 (ROMs 2,4)
 	// pins 12,13,14,15,16,17 are never enabled
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x7fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x7fff, 0 },
@@ -1030,12 +1030,12 @@ static const struct gfx_range mapper_CD63B_table[] =
 #define mapper_PS63B	{ 0x8000, 0x8000, 0, 0 }, mapper_PS63B_table
 static const struct gfx_range mapper_PS63B_table[] =
 {
-	/* type            start   end     bank */
-	{ GFXTYPE_SCROLL1, 0x0000, 0x0fff, 0 },
-	{ GFXTYPE_SPRITES, 0x1000, 0x7fff, 0 },
+	/* type                              start   end     bank */
+	{ GFXTYPE_SCROLL1,                   0x0000, 0x0fff, 0 },
+	{ GFXTYPE_SPRITES,                   0x1000, 0x7fff, 0 },
 
 	{ GFXTYPE_SPRITES | GFXTYPE_SCROLL2, 0x8000, 0xdbff, 1 },
-	{ GFXTYPE_SCROLL3, 0xdc00, 0xffff, 1 },
+	{ GFXTYPE_SCROLL3,                   0xdc00, 0xffff, 1 },
 	{ 0 }
 };
 
@@ -1061,7 +1061,7 @@ static const struct gfx_range mapper_QD22B_table[] =
 	// verified from PAL dump:
 	// bank 0 = pin 19
 
-	/* type                              start   end     bank */
+	/* type            start   end     bank */
 	{ GFXTYPE_SPRITES, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL1, 0x0000, 0x3fff, 0 },
 	{ GFXTYPE_SCROLL2, 0x0000, 0x3fff, 0 },
@@ -1250,7 +1250,7 @@ static const struct CPS1config cps1_config_table[]=
 //	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 //	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-	{"sf2m4",    HACK_B_1, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1528,6 +1528,10 @@ WRITE16_HANDLER( cps1_cps_a_w )
 	if (offset == CPS1_PALETTE_BASE)
 		cps1_build_palette(machine, cps1_base(CPS1_PALETTE_BASE,cps1_palette_align));
 
+	// pzloop2 write to register 24 on startup. This is probably just a bug.
+	if (offset == 0x24/2 && cps_version == 2)
+		return;
+
 	if (offset > CPS1_VIDEOCONTROL)
 		popmessage("write to CPS-A register %02x contact MAMEDEV", offset*2);
 }
@@ -1632,7 +1636,8 @@ WRITE16_HANDLER( cps1_cps_b_w )
 			offset != cps1_game_config->priority[2]/2 &&
 			offset != cps1_game_config->priority[3]/2 &&
 			offset != cps1_game_config->palette_control/2 &&
-			offset != cps1_game_config->out2_addr/2)
+			offset != cps1_game_config->out2_addr/2 &&
+			!cps1_game_config->bootleg_kludge)
 		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset*2);
 }
 
@@ -1756,7 +1761,7 @@ void cps1_get_video_base(void )
 	if (cps1_game_config->bootleg_kludge == 1)
 	{
 		cps1_cps_a_regs[CPS1_OBJ_BASE] = 0x9100;
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = -0x0c;
 		scroll2xoff = -0x0e;
 		scroll3xoff = -0x10;
@@ -1777,12 +1782,12 @@ void cps1_get_video_base(void )
 	}
 	else
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
-	cps1_other=cps1_base(CPS1_OTHER_BASE,cps1_other_size);
+	cps1_other = cps1_base(CPS1_OTHER_BASE,cps1_other_size);
 
 	/* Get scroll values */
 	cps1_scroll1x = cps1_cps_a_regs[CPS1_SCROLL1_SCROLLX] + scroll1xoff;
@@ -1825,7 +1830,7 @@ void cps1_get_video_base(void )
 	enablemask = cps1_game_config->layer_enable_mask[0] | cps1_game_config->layer_enable_mask[1]
 			| cps1_game_config->layer_enable_mask[2]
 			| cps1_game_config->layer_enable_mask[3] | cps1_game_config->layer_enable_mask[4];
-	if (((layercontrol & ~enablemask) & 0xc03e) != 0)
+	if (((layercontrol & ~enablemask) & 0x003e) != 0)
 		popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
 }
 
@@ -1926,8 +1931,8 @@ static TILE_GET_INFO( get_tile0_info )
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
-       roms have been mixed to be reproduced (ffightua) -- it looks like each column
-       should alternate between the left and right side of the 16x16 tiles */
+         roms have been mixed to be reproduced (ffightua) -- it looks like each column
+         should alternate between the left and right side of the 16x16 tiles */
 	gfxset = (tile_index & 0x20) >> 5;
 
 	SET_TILE_INFO(
@@ -2007,7 +2012,7 @@ static VIDEO_START( cps )
 {
 	int i;
 
-    MACHINE_RESET_CALL(cps);
+	MACHINE_RESET_CALL(cps);
 
 	cps1_bg_tilemap[0] = tilemap_create(get_tile0_info,tilemap0_scan, 8, 8,64,64);
 	cps1_bg_tilemap[1] = tilemap_create(get_tile1_info,tilemap1_scan,16,16,64,64);
@@ -2091,7 +2096,7 @@ static void cps1_build_palette(running_machine *machine, const UINT16* const pal
 	for (page = 0; page < 6; ++page)
 	{
 		if (BIT(ctrl,page))
-	{
+		{
 			for (offset = 0; offset < 0x200; ++offset)
 			{
 				int palette = *(palette_ram++);

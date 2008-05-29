@@ -461,7 +461,6 @@ void stream_set_input(sound_stream *stream, int index, sound_stream *input_strea
 }
 
 
-
 /*-------------------------------------------------
     stream_update - force a stream to update to
     the current emulated time
@@ -472,10 +471,6 @@ void stream_update(sound_stream *stream)
 	streams_private *strdata = stream->machine->streams_data;
 	INT32 update_sampindex = time_to_sampindex(strdata, stream, timer_get_time());
 
-	/* To avoid crash it doesn't update a stream when YM2610 state is loaded */
-	if (stream->new_sample_rate)
-		return;
-
 	/* generate samples to get us up to the appropriate time */
 	assert(stream->output_sampindex - stream->output_base_sampindex >= 0);
 	assert(update_sampindex - stream->output_base_sampindex <= stream->output_bufalloc);
@@ -484,7 +479,6 @@ void stream_update(sound_stream *stream)
 	/* remember this info for next time */
 	stream->output_sampindex = update_sampindex;
 }
-
 
 
 /*-------------------------------------------------
@@ -584,7 +578,6 @@ sound_stream *stream_find_by_tag(void *streamtag, int streamindex)
 }
 
 
-
 /*-------------------------------------------------
     stream_get_inputs - return the number of
     inputs for a given stream
@@ -596,7 +589,6 @@ int stream_get_inputs(sound_stream *stream)
 }
 
 
-
 /*-------------------------------------------------
     stream_get_outputs - return the number of
     outputs for a given stream
@@ -606,7 +598,6 @@ int stream_get_outputs(sound_stream *stream)
 {
 	return stream->outputs;
 }
-
 
 
 /*-------------------------------------------------

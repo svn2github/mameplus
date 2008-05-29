@@ -809,5 +809,3 @@ READ32_HANDLER( input_port_29_dword_r ) { return input_port_read_indexed(machine
 READ32_HANDLER( input_port_30_dword_r ) { return input_port_read_indexed(machine, 30); }
 READ32_HANDLER( input_port_31_dword_r ) { return input_port_read_indexed(machine, 31); }
 
-
-

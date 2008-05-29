@@ -911,7 +911,7 @@ typedef struct
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(unsigned int pc);     /* Called every instruction cycle prior to execution */
 
-	/* DRC staff */
+	/* DRC stuff */
 	struct _drc_core *drc;
 	void *generate_exception_trap;
 	void *generate_exception_trapN;

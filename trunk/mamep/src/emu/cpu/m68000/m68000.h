@@ -69,14 +69,13 @@ struct m68k_encryption_interface
 #define MC68000_INT_ACK_AUTOVECTOR    -1
 #define MC68000_INT_ACK_SPURIOUS      -2
 
-extern void m68000_memory_interface_set(int Entry,void * memory_routine);
-
 #define m68000c_ICount                   m68k_ICount
 
 //ks hcmame s switch m68k core
 void m68000c_get_info(UINT32 state, cpuinfo *info);
 void m68000drc_get_info(UINT32 state, cpuinfo *info);
 void m68000asm_get_info(UINT32 state, cpuinfo *info);
+extern void m68000_memory_interface_set(int Entry,void * memory_routine);
 
 /****************************************************************************
  * M68008 section

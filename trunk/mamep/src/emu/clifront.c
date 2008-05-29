@@ -1236,51 +1236,28 @@ static void identify_data(const char *name, const UINT8 *data, int length, romid
 
 
 static void namecopy(char *name_ref, const char *desc)
-
 {
-
 	char name[200];
 
-
-
 	if (lang_message_is_enabled(UI_MSG_LIST))
-
 	{
-
 		strcpy(name, _LST(desc));
-
 		if (strstr(name," (")) *strstr(name," (") = 0;
-
 		sprintf(name_ref,"%s",name);
-
 		return;
-
 	}
-
-
 
 	strcpy(name,desc);
 
-
-
 	/* remove details in parenthesis */
-
 	if (strstr(name," (")) *strstr(name," (") = 0;
 
-
-
 	/* Move leading "The" to the end */
-
 	if (strncmp(name,"The ",4) == 0)
-
 		sprintf(name_ref,"%s, The",name+4);
-
 	else
-
 		sprintf(name_ref,"%s",name);
-
 }
-
 
 
 /*-------------------------------------------------

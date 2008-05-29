@@ -143,7 +143,7 @@ typedef struct
 /* Opcode handler table */
 static const opcode_handler_struct m68k_opcode_handler_table[] =
 {
-/*	function                       mask    match    000  010  020 */
+/*   function                      mask    match    000  010  020 */
 
 
 

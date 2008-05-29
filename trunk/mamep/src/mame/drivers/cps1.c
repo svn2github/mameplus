@@ -167,6 +167,13 @@ READ16_HANDLER( cps1_dsw_r )
 	return (in << 8) | in;
 }
 
+READ16_HANDLER( cps1_hack_dsw_r )
+{
+	static const char *const dswname[] = { "IN0", "DSWA", "DSWB", "DSWC" };
+	int in = input_port_read(machine, dswname[offset]);
+	return (in << 8) | in;
+}
+
 READ16_HANDLER( cps1_in1_r )
 {
 	return input_port_read(machine, "IN1");
@@ -174,14 +181,12 @@ READ16_HANDLER( cps1_in1_r )
 
 READ16_HANDLER( cps1_in2_r )
 {
-	int buttons = input_port_read(machine, "IN2");
-	return buttons << 8 | buttons;
+	return input_port_read(machine, "IN2");
 }
 
 READ16_HANDLER( cps1_in3_r )
 {
-	int buttons = input_port_read(machine, "IN3");
-	return buttons << 8 | buttons;
+	return input_port_read(machine, "IN3");
 }
 
 
@@ -353,7 +358,7 @@ static WRITE16_HANDLER( dinoh_sound_command_w )
 ********************************************************************/
 
 #ifndef MESS
-static const struct EEPROM_interface qsound_eeprom_interface =
+static const eeprom_interface qsound_eeprom_interface =
 {
 	7,		/* address bits */
 	8,		/* data bits */
@@ -362,7 +367,7 @@ static const struct EEPROM_interface qsound_eeprom_interface =
 	"0111"	/* erase command */
 };
 
-static const struct EEPROM_interface pang3_eeprom_interface =
+static const eeprom_interface pang3_eeprom_interface =
 {
 	6,		/* address bits */
 	16,		/* data bits */
@@ -374,33 +379,33 @@ static const struct EEPROM_interface pang3_eeprom_interface =
 static NVRAM_HANDLER( qsound )
 {
 	if (read_or_write)
-		EEPROM_save(file);
+		eeprom_save(file);
 	else
 	{
-		EEPROM_init(&qsound_eeprom_interface);
+		eeprom_init(&qsound_eeprom_interface);
 
 		if (file)
-			EEPROM_load(file);
+			eeprom_load(file);
 	}
 }
 
 static NVRAM_HANDLER( pang3 )
 {
 	if (read_or_write)
-		EEPROM_save(file);
+		eeprom_save(file);
 	else
 	{
-		EEPROM_init(&pang3_eeprom_interface);
+		eeprom_init(&pang3_eeprom_interface);
 
 		if (file)
-			EEPROM_load(file);
+			eeprom_load(file);
 	}
 }
 #endif
 
 READ16_HANDLER( cps1_eeprom_port_r )
 {
-	return EEPROM_read_bit();
+	return eeprom_read_bit();
 }
 
 WRITE16_HANDLER( cps1_eeprom_port_w )
@@ -412,9 +417,9 @@ WRITE16_HANDLER( cps1_eeprom_port_w )
         bit 6 = clock
         bit 7 = cs
         */
-		EEPROM_write_bit(data & 0x01);
-		EEPROM_set_cs_line((data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
-		EEPROM_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
+		eeprom_write_bit(data & 0x01);
+		eeprom_set_cs_line((data & 0x80) ? CLEAR_LINE : ASSERT_LINE);
+		eeprom_set_clock_line((data & 0x40) ? ASSERT_LINE : CLEAR_LINE);
 	}
 }
 
@@ -802,8 +807,8 @@ static INPUT_PORTS_START( ghouls )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x01, "5" )
 	PORT_DIPSETTING(    0x00, "6" )
-	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW(C):3" )
-	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SW(C):4" )
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW(C):3" )
+	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(C):4" )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )		PORT_DIPLOCATION("SW(C):5")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -874,8 +879,8 @@ static INPUT_PORTS_START( ghoulsu )
 	PORT_DIPSETTING(    0x03, "3" )
 	PORT_DIPSETTING(    0x02, "4" )
 	PORT_DIPSETTING(    0x01, "5" )
-	PORT_DIPUNUSED_DIPLOC( 0x40, 0x40, "SW(C):3" )
-	PORT_DIPUNUSED_DIPLOC( 0x80, 0x80, "SW(C):4" )
+	PORT_DIPUNUSED_DIPLOC( 0x04, 0x04, "SW(C):3" )
+	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(C):4" )
 	PORT_DIPNAME( 0x10, 0x10, DEF_STR( Flip_Screen ) )			PORT_DIPLOCATION("SW(C):5")
 	PORT_DIPSETTING(    0x10, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -2568,8 +2573,8 @@ static INPUT_PORTS_START( knights )
 	PORT_START_TAG("DSWA")
 	CPS1_COINAGE_2( "SW(A)" )
 	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(A):4" )
-	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(A):5" )
-	PORT_DIPUNUSED_DIPLOC( 0x08, 0x08, "SW(A):6" )
+	PORT_DIPUNUSED_DIPLOC( 0x10, 0x10, "SW(A):5" )
+	PORT_DIPUNUSED_DIPLOC( 0x20, 0x20, "SW(A):6" )
 	PORT_DIPNAME( 0x40, 0x40, "2 Coins to Start, 1 to Continue" )	PORT_DIPLOCATION("SW(A):7")
 	PORT_DIPSETTING(    0x40, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
@@ -5515,6 +5520,41 @@ ROM_START( nemoj )
 	ROM_LOAD( "nm_30.12c",  0x00000, 0x20000, CRC(bab333d4) SHA1(c1d0fb61ec46f17eb7edf69e1ad5ac91b5d51daa) )	// == nm_18.11c
 	ROM_LOAD( "nm_31.13c",  0x20000, 0x20000, CRC(2650a0a8) SHA1(e9e8cc1b27a2cb3e87124061fabcf42982f0611f) )	// == nm_19.12c
 ROM_END
+
+/*
+B-Board 90629B
+
+for gfx can use either mask ROMs (HN62404P-17) in the upper four rows, or
+EPROMS (HN27C4096G-15) in the lower four rows.
+
+euro version has mask ROMs laid out like this:
+sf2-5m.4a  in socket 2
+sf2-7m.6a  in socket 4
+sf2-1m.3a  in socket 1
+sf2-3m.5a  in socket 3
+sf2-6m.4c  in socket 11
+sf2-8m.6c  in socket 13
+sf2-2m.3c  in socket 10
+sf2-4m.5c  in socket 12
+sf2-13m.4d in socket 21
+sf2-15m.6d in socket 23
+sf2-9m.3d  in socket 20
+sf2-11m.5d in socket 22
+
+the Japanese version has EPROMS laid out like this:
+sf2_06.8a
+sf2_08.10a
+sf2_05.7a
+sf2_07.9a
+sf2_15.8c
+sf2_17.10c
+sf2_14.7c
+sf2_16.9c
+sf2_25.8d
+sf2_27.10d
+sf2_24.7d
+sf2_26.9d
+*/
 
 ROM_START( sf2 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
@@ -8775,6 +8815,14 @@ static DRIVER_INIT( forgottn )
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800048, 0x800049, 0, 0, forgottn_dial_1_reset_w);
 	memory_install_read16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x800052, 0x800055, 0, 0, forgottn_dial_0_r);
 	memory_install_read16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x80005a, 0x80005d, 0, 0, forgottn_dial_1_r);
+
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2hack )
+{
+	/* some SF2 hacks have some inputs wired to the LSB instead of MSB */
+	memory_install_read16_handler (machine, 0, ADDRESS_SPACE_PROGRAM, 0x800018, 0x80001f, 0, 0, cps1_hack_dsw_r);
 
 	DRIVER_INIT_CALL(cps1);
 }

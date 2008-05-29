@@ -57,7 +57,7 @@ struct _drcfe_state
 	UINT32				window_end;					/* code window end offset = startpc + window_end */
 	UINT32				max_sequence;				/* maximum instructions to include in a sequence */
 
-	drcfe_describe_func		describe;					/* callback to describe a single instruction */
+	drcfe_describe_func	describe;					/* callback to describe a single instruction */
 	void *				param;						/* parameter for the callback */
 
 	/* CPU parameters */

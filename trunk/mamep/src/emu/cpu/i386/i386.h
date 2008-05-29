@@ -271,7 +271,6 @@ typedef struct {
 
 	UINT8 *cycle_table_pm;
 	UINT8 *cycle_table_rm;
-	UINT16 flag_reserved;
 } I386_REGS;
 
 
