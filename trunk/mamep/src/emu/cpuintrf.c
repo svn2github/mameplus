@@ -1318,7 +1318,7 @@ offs_t activecpu_get_physical_pc_byte(void)
 	else
 		pc >>= shift;
 	if (cpu[activecpu].intf.translate)
-		(*cpu[activecpu].intf.translate)(ADDRESS_SPACE_PROGRAM, &pc);
+		(*cpu[activecpu].intf.translate)(ADDRESS_SPACE_PROGRAM, TRANSLATE_FETCH, &pc);
 	return pc;
 }
 
@@ -1575,7 +1575,7 @@ offs_t cpunum_get_physical_pc_byte(int cpunum)
 	else
 		pc >>= shift;
 	if (cpu[activecpu].intf.translate)
-		(*cpu[activecpu].intf.translate)(ADDRESS_SPACE_PROGRAM, &pc);
+		(*cpu[activecpu].intf.translate)(ADDRESS_SPACE_PROGRAM, TRANSLATE_FETCH, &pc);
 	cpuintrf_pop_context();
 	return pc;
 }
