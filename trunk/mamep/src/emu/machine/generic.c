@@ -258,8 +258,8 @@ mame_file *nvram_fopen(running_machine *machine, UINT32 openflags)
 	astring *fname;
 
 	fname = astring_assemble_2(astring_alloc(), machine->basename, ".nv");
-	// mamep: playback with nvram
-	filerr = mame_fopen( (has_record_file(machine) || has_playback_file(machine)) ? SEARCHPATH_INPUTLOG : SEARCHPATH_NVRAM, astring_c(fname), openflags, &file);
+	// fixme: mamep: playback with nvram, but this causes some confusion
+	filerr = mame_fopen(/* (has_playback_file(machine)) ? SEARCHPATH_INPUTLOG : */ SEARCHPATH_NVRAM, astring_c(fname), openflags, &file);
 	astring_free(fname);
 
 	return (filerr == FILERR_NONE) ? file : NULL;
@@ -289,7 +289,7 @@ void nvram_load(void)
 void nvram_save(void)
 {
 	// mamep: dont save nvram during playback
-	if (Machine->config->nvram_handler != NULL && !has_record_file(Machine) && !has_playback_file(Machine))
+	if (Machine->config->nvram_handler != NULL && !has_playback_file(Machine))
 	{
 		mame_file *nvram_file = nvram_fopen(Machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
 		if (nvram_file != NULL)
