@@ -427,8 +427,8 @@ static const struct CPS1config *cps1_game_config;
 #define CPS_B_21_QS3 0x0e,0x0c00,  -1,  -1,  -1,  -1,  0x2c, -1,  -1,   0x12,{0x14,0x16,0x08,0x0a},0x0c, {0x04,0x02,0x20,0x00,0x00}
 #define CPS_B_21_QS4 0x2e,0x0c01,  -1,  -1,  -1,  -1,  0x1c,0x1e,0x08,  0x16,{0x00,0x02,0x28,0x2a},0x2c, {0x04,0x08,0x10,0x00,0x00}
 #define CPS_B_21_QS5 0x1e,0x0c02,  -1,  -1,  -1,  -1,  0x0c, -1,  -1,   0x2a,{0x2c,0x2e,0x30,0x32},0x1c, {0x04,0x08,0x10,0x00,0x00}
-#define HACK_B_1      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x14,{0x12,0x10,0x0e,0x0c},0x0a/*0x1c*/, {0xff,0xff,0xff,0x00,0x00}
-#define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1, 0x08,  -1,  -1,   0x20,{0x28,0x2a,0x2c,0x2e},0x2a/*0x30*/, {0x02,0x04,0x08,0x00,0x00}
+#define HACK_B_1      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x14,{0x12,0x10,0x0e,0x0c},0x0a, {0x0e,0x0e,0x0e,0x30,0x30}
+#define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1,  0x08, -1,  -1,   0x20,{0x28,0x2a,0x2c,0x2e},0x2a, {0x02,0x04,0x08,0x00,0x00}
 #define HACK_B_3      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x04,{0x12,0x10,0x0e,0x0c},0x0a, {0xff,0xff,0xff,0x00,0x00}
 
 /*
@@ -1557,8 +1557,10 @@ READ16_HANDLER( cps1_cps_b_r )
 
 	if (offset == cps1_game_config->in2_addr/2)	/* Extra input ports (on C-board) */
 	{
-		int buttons = input_port_read(machine, "IN2");
-		return buttons << 8 | buttons;
+		if (cps1_game_config->bootleg_kludge == 1)
+			return input_port_read(machine, "IN2") << 8;
+		else
+			return input_port_read(machine, "IN2");
 	}
 
 	if (offset == cps1_game_config->in3_addr/2)	/* Player 4 controls (on C-board) ("Captain Commando") */
@@ -1566,6 +1568,11 @@ READ16_HANDLER( cps1_cps_b_r )
 
 	if (cps_version == 2)
 	{
+		if (offset == 0x10/2)
+		{
+			// UNKNOWN--only mmatrix appears to read this, and I'm not sure if the result is actuallyused
+			return cps1_cps_b_regs[0x10/2];
+		}
 		if (offset == 0x12/2)
 		{
 			return cps1_cps_b_regs[0x12/2];
@@ -1768,14 +1775,14 @@ void cps1_get_video_base(void )
 	}
 	else if (cps1_game_config->bootleg_kludge == 2)
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
 	else if (cps1_game_config->bootleg_kludge == 4)
 	{
-		cps1_obj=cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;

@@ -8301,21 +8301,21 @@ static DRIVER_INIT( gfxdec52 )
 {
 	neogeo_fixed_layer_bank_type = 0;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( gfxdec42 )
 {
 	neogeo_fixed_layer_bank_type = 1;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( gfxdec50 )
 {
 	neogeo_fixed_layer_bank_type = 2;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( fatfury2 )
@@ -8328,7 +8328,7 @@ static DRIVER_INIT( fatfury2 )
 static DRIVER_INIT( kof96ep )
 {
 	kof96ep_px_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( mslugx )
@@ -8376,7 +8376,7 @@ static DRIVER_INIT( garoud )
 	garou_decrypt_68k();
 	neogeo_fixed_layer_bank_type = 1;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	garou_install_protection(machine);
 }
 
@@ -8439,7 +8439,7 @@ static DRIVER_INIT( mslug4 )
 static DRIVER_INIT( mslug4d )
 {
 	neo_pcm2_snk_1999(8);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	mslug4_AES_protection();
 }
 
@@ -8453,7 +8453,7 @@ static DRIVER_INIT( kof99n )
 static DRIVER_INIT( kf2k1pls )
 {
 	cmc50_neogeo_gfx_decrypt(0x1e);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( kf2k1pa )
@@ -8461,7 +8461,7 @@ static DRIVER_INIT( kf2k1pa )
 	neogeo_fixed_layer_bank_type = 1;
 	kf2k1pa_sx_decrypt();
 	cmc50_neogeo_gfx_decrypt(0x1e);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( ganryu )
@@ -8548,7 +8548,7 @@ static READ16_HANDLER( popbounc_sfix_16_r )
 /* Pop and Bounce and use a custom Spinner for Controls */
 static DRIVER_INIT( popbounc )
 {
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 
 	/* the game hangs after a while without this patch */
 	if (!Machine->sample_rate)
@@ -8569,7 +8569,7 @@ DRIVER_INIT( rotdd )
 	neo_pcm2_snk_1999(16);
 	neogeo_fixed_layer_bank_type = 1;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	rotd_AES_protection();
 } 
 
@@ -8613,7 +8613,7 @@ static DRIVER_INIT( kof2002d )
 	neogeo_fixed_layer_bank_type = 0;
 	neogeo_sfix_decrypt();
 	neo_pcm2_swap(0);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( kof2002b )
@@ -8622,7 +8622,7 @@ static DRIVER_INIT( kof2002b )
 	neo_pcm2_swap(0);
 	kof2002b_gfx_decrypt(memory_region(NEOGEO_REGION_SPRITES),0x4000000);
 	kof2002b_gfx_decrypt(memory_region(NEOGEO_REGION_FIXED_LAYER_CARTRIDGE),0x20000);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( matrim )
@@ -8845,7 +8845,7 @@ static DRIVER_INIT( kof2003h )
 	neo_pcm2_swap(5);
 	neogeo_fixed_layer_bank_type = 2;
 	kof2000_neogeo_gfx_decrypt(0x9d);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	install_pvc_protection(machine);
 }
 
@@ -8932,7 +8932,7 @@ DRIVER_INIT( matrimd )
 	neogeo_fixed_layer_bank_type = 2;
 	neo_pcm2_swap(1);
 	matrim_AES_protection();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( kog )
@@ -8980,7 +8980,7 @@ DRIVER_INIT( cthd2k3a )
 	cthd2k3a_px_decrypt();
 	decrypt_cthd2003();
 	cthd2003_AES_protection();
- 	driver_init_neogeo(machine);
+ 	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT ( ct2k3sp )
@@ -9024,7 +9024,7 @@ DRIVER_INIT( matrimbl )
 {
 	decrypt_matrimbl();
 	matrim_AES_protection();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT( kf2k2plc )
@@ -9034,7 +9034,7 @@ DRIVER_INIT( kf2k2plc )
 	neogeo_bootleg_sx_decrypt(2);
 	cmc50_neogeo_gfx_decrypt(0xec);
 	neo_pcm2_swap(0);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT( kf2k4pls )
@@ -9057,7 +9057,7 @@ DRIVER_INIT( kf2k4pls )
 		free(dst);
 	}
 	neogeo_bootleg_sx_decrypt(1);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 /* new decrypted */
 DRIVER_INIT( kof2003d ) // decrypted C & decrypted P
@@ -9074,7 +9074,7 @@ DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 	/* rom[i] = BITSWAP8(rom[i], 5, 6, 1, 4, 3, 0, 7, 2) -- extra encrypted m1 swap? not confirmed */
 	neo_pcm2_swap(5);
 	neogeo_fixed_layer_bank_type = 2;
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	install_pvc_protection(machine);
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0xc00000, 0xc7ffff, 0, 0, SMH_BANK3 ); /* 512k bios */
 }
@@ -9089,7 +9089,7 @@ DRIVER_INIT( mslug5d ) // decrypted C & decrypted P
 DRIVER_INIT( kof10thd ) // decrypted P
 {
 	neo_pcm2_swap(0);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT( svcd ) // decrypted C
@@ -9110,7 +9110,7 @@ DRIVER_INIT( kof97pla )
 	mem8[0x1394E] = 0x6C;
 	mem8[0x1394F] = 0x91;
 	neogeo_bootleg_sx_decrypt(1);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 DRIVER_INIT( pnyaad ) // decrypted C
@@ -9210,7 +9210,7 @@ static DRIVER_INIT( fr2ch )
 {
 	fr2ch_patches();
 	fr2ch_cx_hack(machine);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static UINT16 *brza_sram;
@@ -9242,7 +9242,7 @@ DRIVER_INIT( mslug5b )
 	neogeo_fixed_layer_bank_type = 1;
 	kof2000_neogeo_gfx_decrypt(0x19);
 	neo_pcm2_swap(2);
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	install_pvc_protection(machine);
 	mslug5_AES_protection();
 }
@@ -9251,13 +9251,13 @@ DRIVER_INIT( mslug5b )
 
 DRIVER_INIT( ms4plus )
 {
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	mslug4_AES_protection();
 }
 
 DRIVER_INIT( zupapad )
 {
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	zupapa_AES_protection();
 }
 
@@ -9265,7 +9265,7 @@ DRIVER_INIT( sengo3d )
 {
 	neogeo_fixed_layer_bank_type = 0;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	sengoku3_AES_protection();
 }
 
@@ -9273,13 +9273,13 @@ DRIVER_INIT( nitdd )
 {
 	neogeo_fixed_layer_bank_type = 1;
 	neogeo_sfix_decrypt();
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	nitd_AES_protection();
 }
 
 DRIVER_INIT( cthd2k3d )
 {
-	driver_init_neogeo(machine);
+	DRIVER_INIT_CALL(neogeo);
 	cthd2003_AES_protection();
 }
 
