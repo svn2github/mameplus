@@ -399,7 +399,7 @@ static void UpdateController(void)
 			b = 0;
 			p = 0;
 
-			input_ports = input_port_config_alloc(last_ipt);
+			input_ports = input_port_config_alloc(last_ipt, NULL, 0);
 
 			for (port = input_ports; port != NULL; port = port->next)
 			{
