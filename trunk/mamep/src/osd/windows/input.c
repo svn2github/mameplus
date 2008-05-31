@@ -786,7 +786,7 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
 					typedesc->name = _WINDOWS("Toggle Menubar");
-					input_seq_set_1 (&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_TAB);
+					input_seq_set_1 (&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
 				}
 				break;
 /*
@@ -1617,7 +1617,6 @@ static void assign_joystick_to_player(device_info *devinfo)
 		free((void *)name);
 	}
 }
-
 
 
 //============================================================

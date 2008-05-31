@@ -3404,11 +3404,11 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_JOYID7,				DM_INT,		WINOPTION_JOYID7);
 	datamap_add(properties_datamap, IDC_JOYID8,				DM_INT,		WINOPTION_JOYID8);
 #endif /* JOYSTICK_ID */
-//#ifdef MESS
+#ifdef MESS
 #if defined(WIN32) && !defined(SDLMAME_WIN32)
 	datamap_add(properties_datamap, IDC_USE_NEW_UI,				DM_BOOL,	WINOPTION_NEWUI);
 #endif
-//#endif
+#endif
 
 	// driver options
 	{

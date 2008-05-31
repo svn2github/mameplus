@@ -16,9 +16,9 @@
 #include "deprecat.h"
 #include "includes/snes.h"
 #include "cpu/g65816/g65816.h"
-//#ifdef MESS
+#ifdef MAMEMESS
 #include "image.h"
-//#endif
+#endif
 
 // add-on chip emulators
 #include "machine/snesdsp1.c"

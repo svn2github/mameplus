@@ -2,7 +2,7 @@
 
   gb.c
 
-  Video file to handle emulation of the Nintendo GameBoy.
+  Video file to handle emulation of the Nintendo Game Boy.
 
   Original code                               Carsten Sorensen   1998
   Mess modifications, bug fixes and speedups  Hans de Goede      1998
@@ -128,7 +128,7 @@ static const unsigned char palette[] =
 	0x84,0x80,0x4E,		/* Medium */
 	0x4E,0x4E,0x4E,		/* Dark */
 
-/* Palette for GameBoy Pocket/Light */
+/* Palette for Game Boy Pocket/Light */
 	0xC4,0xCF,0xA1,		/* Background */
 	0x8B,0x95,0x6D,		/* Light      */
 	0x6B,0x73,0x53,		/* Medium     */

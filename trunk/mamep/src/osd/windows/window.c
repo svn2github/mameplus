@@ -53,7 +53,6 @@
 #endif /* MAMEMESS */
 #ifdef MESS
 #include "menu.h"
-#include "uimess.h"
 #endif /* MESS */
 
 extern int drawnone_init(win_draw_callbacks *callbacks);
@@ -524,14 +523,6 @@ void winwindow_toggle_full_screen(void)
 	for (window = win_window_list; window != NULL; window = window->next)
 		SendMessage(window->hwnd, WM_USER_SET_FULLSCREEN, !video_config.windowed, 0);
 	SetForegroundWindow(win_window_list->hwnd);
-
-#if HAS_WINDOW_MENU
-	//mamep: auto disable menubar if fullscreen
-	if(has_dummy_image())
-		osd_toggle_menubar(1);
-	else if (!video_config.windowed)
-		osd_toggle_menubar(-1);
-#endif
 }
 
 
@@ -681,24 +672,6 @@ void winwindow_video_window_create(running_machine *machine, int index, win_moni
 	// handle error conditions
 	if (window->init_state == -1)
 		fatalerror(_WINDOWS("Unable to complete window creation"));
-
-#if HAS_WINDOW_MENU
-	//mamep: auto disable menubar if fullscreen
-	if(has_dummy_image())
-		osd_toggle_menubar(1);
-	else if (!video_config.windowed || !mess_use_new_ui())
-		osd_toggle_menubar(-1);
-
-	// mamep: adjust window
-	if (!window->fullscreen)
-	{
-		if (window->startmaximized)
-			maximize_window(window);
-		else
-			minimize_window(window);
-		adjust_window_position_after_major_change(window);
-	}
-#endif
 }
 
 
@@ -1871,23 +1844,12 @@ static void adjust_window_position_after_major_change(win_window_info *window)
 
 static void set_fullscreen(win_window_info *window, int fullscreen)
 {
-	BOOL force_init = FALSE;
-
 	assert(GetCurrentThreadId() == window_threadid);
 
 	// if we're in the right state, punt
-	// mamep: window mode doesn't need a force_init
-	if (window->fullscreen == fullscreen || (!window->fullscreen && fullscreen == -1))
+	if (window->fullscreen == fullscreen)
 		return;
-	
-	//mamep: set force_init for menubar
-	if (fullscreen == -1)
-	{
-		force_init = TRUE;
-		fullscreen = window->fullscreen;
-	}
-	else
-		window->fullscreen = fullscreen;
+	window->fullscreen = fullscreen;
 
 	// kill off the drawers
 	(*draw.window_destroy)(window);
@@ -1942,7 +1904,7 @@ static void set_fullscreen(win_window_info *window, int fullscreen)
 	adjust_window_position_after_major_change(window);
 
 	// show ourself
-	if (!window->fullscreen || window->fullscreen_safe || force_init)
+	if (!window->fullscreen || window->fullscreen_safe)
 	{
 		if (video_config.mode != VIDEO_MODE_NONE)
 			ShowWindow(window->hwnd, SW_SHOW);

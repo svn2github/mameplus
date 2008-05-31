@@ -9,9 +9,6 @@
 
 #include "options.h"
 
-#define WINOPTION_NEWUI		"newui"
-#define WINOPTION_NATURAL	"natural"
-
 
 //============================================================
 //	GLOBAL VARIABLES

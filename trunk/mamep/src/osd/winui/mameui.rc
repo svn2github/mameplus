@@ -738,10 +738,6 @@ BEGIN
     CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
 #endif /* AUTO_PAUSE_PLAYBACK */
-#if 1 // MESS
-    CONTROL         "Use New UI",IDC_USE_NEW_UI,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
-#endif // MESS
 #ifdef TRANS_UI
     GROUPBOX        "",IDC_STATIC,4,171,140,33,WS_DISABLED
     CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",

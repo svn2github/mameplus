@@ -1536,10 +1536,10 @@ static void set_speed(int speed)
 
 
 //============================================================
-//	osd_toggle_menubar
+//	win_toggle_menubar
 //============================================================
 
-void osd_toggle_menubar(int state)
+void win_toggle_menubar(void)
 {
 	win_window_info *window;
 	LONG width_diff;
@@ -1547,13 +1547,6 @@ void osd_toggle_menubar(int state)
 	DWORD style, exstyle;
 	HWND hwnd;
 	HMENU menu;
-
-	//mamep: save as default state if menubar is disabled manually
-	static int defstate = -1;
-	if (state == 0)
-		defstate = state;
-	if (state < 0)
-		state = defstate;
 
 	for (window = win_window_list; window != NULL; window = window->next)
 	{
@@ -1565,10 +1558,6 @@ void osd_toggle_menubar(int state)
 		// get current menu
 		menu = GetMenu(hwnd);
 
-		// mamep: if "-nonewui", we can only turn off the menu enabled by dummy image
-		if (!mess_use_new_ui() && !menu)
-			return;
-
 		// get before rect
 		style = GetWindowLong(hwnd, GWL_STYLE);
 		exstyle = GetWindowLong(hwnd, GWL_EXSTYLE);
@@ -1577,17 +1566,12 @@ void osd_toggle_menubar(int state)
 		// toggle the menu
 		if (menu)
 		{
-			//mamep: prevent auto hide in window mode
-			if (state == 0 || (state < 0 && (!is_windowed() || !mess_use_new_ui())))
-			{
-				SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
-				menu = NULL;
-			}
+			SetProp(hwnd, TEXT("menu"), (HANDLE) menu);
+			menu = NULL;
 		}
 		else
 		{
-			if(state >= 0)
-				menu = (HMENU) GetProp(hwnd, TEXT("menu"));
+			menu = (HMENU) GetProp(hwnd, TEXT("menu"));
 		}
 		SetMenu(hwnd, menu);
 
@@ -1606,9 +1590,7 @@ void osd_toggle_menubar(int state)
 				SWP_NOMOVE | SWP_NOZORDER);
 		}
 
-		//RedrawWindow(hwnd, NULL, NULL, 0);
-		//mamep: callback draw.window_init() to refresh d3d->presentation.Windowed
-		SendMessage(window->hwnd, WM_USER_SET_FULLSCREEN, -1, 0);
+		RedrawWindow(hwnd, NULL, NULL, 0);
 	}
 }
 
@@ -1624,8 +1606,6 @@ static void device_command(HWND wnd, const device_config *img, int devoption)
 	{
 		case DEVOPTION_OPEN:
 			change_device(wnd, img, FALSE);
-			if(!is_windowed())
-				osd_toggle_menubar(-1);
 			break;
 
 		case DEVOPTION_CREATE:
@@ -1922,7 +1902,7 @@ static int invoke_command(running_machine *machine, HWND wnd, UINT command)
 
 #if HAS_TOGGLEMENUBAR
 		case ID_OPTIONS_TOGGLEMENUBAR:
-			osd_toggle_menubar(0);
+			win_toggle_menubar();
 			break;
 #endif
 
@@ -2239,10 +2219,9 @@ int win_create_menu(running_machine *machine, HMENU *menus)
 	HMODULE module;
 
 	// determine whether we are using the natural keyboard or not
-	win_use_natural_keyboard = options_get_bool(mame_options(), WINOPTION_NATURAL);
+	win_use_natural_keyboard = options_get_bool(mame_options(), "natural");
 
-	// mamep:create menu anyway for dummy image
-	//if (mess_use_new_ui())
+	if (mess_use_new_ui())
 	{
 		module = win_resource_module();
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));

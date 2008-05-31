@@ -108,9 +108,7 @@ void osd_wait_for_debugger(void);
 ******************************************************************************/
 
 void osd_update(running_machine *machine, int skip_redraw);
-#ifdef MAMEMESS
-void osd_toggle_menubar(int);
-#endif
+
 
 
 
