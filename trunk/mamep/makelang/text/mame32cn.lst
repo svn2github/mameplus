@@ -1212,7 +1212,8 @@ motorace	横越美国 摩托大赛	横越美国 摩托大赛	Irem (Williams license)
 shtrider	射击机车手	射击机车手	Seibu Kaihatsu
 shtridra	射击机车手 (Sigma license)	射击机车手 (Sigma license)	Seibu Kaihatsu (Sigma license)
 wilytowr	威利电厂	威利电厂	Irem
-atomboy	原子男孩	原子男孩	Irem (Memetron license)
+atomboy	原子男孩 (校正版 B)	原子男孩 (校正版 B)	Irem (Memetron license)
+atomboya	原子男孩 (校正版 A)	原子男孩 (校正版 A)	Irem (Memetron license)
 fghtbskt	战斗篮球	战斗篮球	Paradise Co. Ltd.
 kungfum	成龙踢馆	成龙踢馆	Irem
 kungfud	成龙踢馆 (Data East)	成龙踢馆 (Data East)	Irem (Data East license)
@@ -2416,7 +2417,8 @@ mmatrix	火星 矩阵: 超固体射击 (美版 000412)	火星 矩阵: 超固体射击 (美版 000412)	
 mmatrixj	火星 矩阵: 超固体射击 (日版 000412)	火星 矩阵: 超固体射击 (日版 000412)	Capcom, supported by Takumi
 1944	1944 - 征服世界 (美版 000620)	1944 - 征服世界 (美版 000620)	Capcom, supported by Eighting/Raizing
 1944j	1944 - 征服世界 (日版 000620)	1944 - 征服世界 (日版 000620)	Capcom, supported by Eighting/Raizing
-mpang	超强! 魔法气泡 (美版 001010)	超强! 魔法气泡 (美版 001010)	Mitchell, distributed by Capcom
+mpang	超强! 魔法气泡 (欧洲版 001010)	超强! 魔法气泡 (欧洲版 001010)	Mitchell, distributed by Capcom
+mpangu	超强! 魔法气泡 (美版 001010)	超强! 魔法气泡 (美版 001010)	Mitchell, distributed by Capcom
 mpangj	超强! 魔法气泡 (日版 001011)	超强! 魔法气泡 (日版 001011)	Mitchell, distributed by Capcom
 progear	能源之岚 (美版 010117)	能源之岚 (美版 010117)	Capcom, supported by Cave
 progearj	能源之岚 (日版 010117)	能源之岚 (日版 010117)	Capcom, supported by Cave
@@ -3137,6 +3139,7 @@ passshtb	网球绝招 - 近身攻击 (2 Players) (盗版)	网球绝招 - 近身攻击 (2 Players) 
 shinoblb	超级忍 (测试版 盗版)	超级忍 (测试版 盗版)	[Sega] (Beta bootleg)
 shinobld	超级忍 (数据版 盗版)	超级忍 (数据版 盗版)	[Sega] (Datsu bootleg)
 tetrisbl	俄罗斯方块 (盗版)	俄罗斯方块 (盗版)	bootleg
+beautyb	Beauty Block	Beauty Block	AMT
 tturfbl	硬汉 (盗版)	硬汉 (盗版)	bootleg
 wb3bbl	神奇男孩 Ⅲ (盗版)	神奇男孩 Ⅲ (盗版)	bootleg
 astorm	异形风暴 (第4套, 2 Players, FD1094 317-?)	异形风暴 (第4套, 2 Players, FD1094 317-?)	Sega
@@ -3350,10 +3353,10 @@ vf2	VR 战士 2 (ver 2.1)	VR 战士 2 (ver 2.1)	Sega
 vf2b	VR 战士 2 (ver B)	VR 战士 2 (ver B)	Sega
 vf2o	VR 战士 2	VR 战士 2	Sega
 vcop2	VR 战警 2	VR 战警 2	Sega
-dynamcop	终极警探 2 (Model 2A)	终极警探 2 (Model 2A)	Sega
-dyndeka2	终极警探 2 (日版, Model 2A)	终极警探 2 (日版, Model 2A)	Sega
 doaa	死或生 (Model 2A)	死或生 (Model 2A)	Sega
 zeroguna	零式枪手 (Model 2A)	零式枪手 (Model 2A)	Psikyo
+dynamcop	终极警探 (出口版, Model 2A)	终极警探 (出口版, Model 2A)	Sega
+dyndeka2	终极警探 2 (日版, Model 2A)	终极警探 2 (日版, Model 2A)	Sega
 pltkidsa	飞行小子 (Model 2A)	飞行小子 (Model 2A)	Psikyo
 vstriker	VR 射手 (Rev A)	VR 射手 (Rev A)	Sega
 vstrikro	VR 射手	VR 射手	Sega
@@ -3361,7 +3364,6 @@ fvipers	格斗之蛇	格斗之蛇	Sega
 gunblade	纽约风暴	纽约风暴	Sega
 indy500	印第安纳波利斯 500 英里大奖赛	印第安纳波利斯 500 英里大奖赛	Sega
 skytargt	铁翼雄风	铁翼雄风	Sega
-dynmcopb	终极警探 2 (Model 2B)	终极警探 2 (Model 2B)	Sega
 schamp	索尼克格斗	索尼克格斗	Sega
 lastbrnx	东京番外地 (出口版, Rev A)	东京番外地 (出口版, Rev A)	Sega
 lastbrnj	东京番外地 (日版, Rev A)	东京番外地 (日版, Rev A)	Sega
@@ -3370,9 +3372,10 @@ sgt24h	超级 GT 赛车 24 小时	超级 GT 赛车 24 小时	Jaleco
 von	电脑战机 (日版, Rev B)	电脑战机 (日版, Rev B)	Sega
 vonusa	电脑战机 (美版, Rev B)	电脑战机 (美版, Rev B)	Sega
 dynabb	爆裂棒球 97	爆裂棒球 97	Sega
-dyndek2b	终极警探 2 (日版, Model 2B)	终极警探 2 (日版, Model 2B)	Sega
 zerogun	零式枪手 (Model 2B)	零式枪手 (Model 2B)	Psikyo
 zerogunj	零式枪手 (日版 Model 2B)	零式枪手 (日版 Model 2B)	Psikyo
+dynmcopb	终极警探 (出口版, Model 2B)	终极警探 (出口版, Model 2B)	Sega
+dyndek2b	终极警探 2 (日版, Model 2B)	终极警探 2 (日版, Model 2B)	Sega
 pltkids	飞行小子 (Model 2B)	飞行小子 (Model 2B)	Psikyo
 skisuprg	世嘉超级滑雪 G	世嘉超级滑雪 G	Sega
 stcc	世嘉冠军房车赛	世嘉冠军房车赛	Sega
@@ -3380,6 +3383,7 @@ hotd	死亡之屋	死亡之屋	Sega
 overrev	终极回转	终极回转	Jaleco
 topskatr	顶尖滑板	顶尖滑板	Sega
 bel	敌后战线	敌后战线	Sega/EPL Productions
+dynmcopc	终极警探 (美版, Model 2C)	终极警探 (美版, Model 2C)	Sega
 vf3	VR 战士 3	VR 战士 3	Sega
 vf3tb	VR 战士 3 组队战	VR 战士 3 组队战	Sega
 bass	世嘉黑巴斯钓鱼	世嘉黑巴斯钓鱼	Sega
@@ -5847,6 +5851,7 @@ vblokbrk	VS.战斗打砖王 (亚洲版)	VS.战斗打砖王 (亚洲版)	Kaneko / Mediaworks
 sarukani	VS.战斗打砖王 (日版)	VS.战斗打砖王 (日版)	Kaneko / Mediaworks
 cyvern	机甲飞龙 (日版)	机甲飞龙 (日版)	Kaneko
 galpans2	天蚕变 S2 (日版)	天蚕变 S2 (日版)	Kaneko
+galpansu	天蚕变 SU (韩国版)	天蚕变 SU (韩国版)	Kaneko
 panicstr	罪恶之街 (日版)	罪恶之街 (日版)	Kaneko
 senknow	线脑 (日版)	线脑 (日版)	Kaneko / Kouyousha
 gutsn	勇敢小护士 - 箔菌解谜 (日版)	勇敢小护士 - 箔菌解谜 (日版)	Kaneko / Kouyousha
@@ -6113,6 +6118,7 @@ dharma	达摩道场	达摩道场	Metro
 dharmak	达摩道场 (韩国版)	达摩道场 (韩国版)	Metro
 lastfort	牌砦	牌砦	Metro
 lastfero	牌砦 (色情版)	牌砦 (色情版)	Metro
+lastfork	牌砦 (韩国版)	牌砦 (韩国版)	Metro
 lastforg	牌砦 (德国版)	牌砦 (德国版)	Metro
 toride2g	牌砦 II - 仇讨外传	牌砦 II - 仇讨外传	Metro
 torid2gg	牌砦 II - 仇讨外传 (德国版)	牌砦 II - 仇讨外传 (德国版)	Metro
@@ -6575,6 +6581,7 @@ cluedo2	妙探寻凶 (prod. 2)	妙探寻凶 (prod. 2)	JPM
 trivialp	追根究底 (prod. 1D)	追根究底 (prod. 1D)	JPM
 scrabble	字母之迷 (rev. F)	字母之迷 (rev. F)	JPM
 hngmnjpm	绞刑文字狱 (JPM)	绞刑文字狱 (JPM)	JPM
+coronatn	Coronation Street Quiz Game	Coronation Street Quiz Game	JPM
 astinvad	银河侵略者	银河侵略者	Stern
 kosmokil	宇宙杀手	宇宙杀手	bootleg
 kamikaze	自杀攻击	自杀攻击	Leijac Corporation
@@ -6713,6 +6720,7 @@ coolpool	花式撞球 Cool Pool	花式撞球 Cool Pool	Catalina
 9ballsh2	花式撞 9 球 Shootout (第2套)	花式撞 9 球 Shootout (第2套)	E-Scape EnterMedia (Bundra license)
 9ballsh3	花式撞 9 球 Shootout (第3套)	花式撞 9 球 Shootout (第3套)	E-Scape EnterMedia (Bundra license)
 gumbo	美女方块	美女方块	Min Corp.
+mspuzzlg	美少女解谜拼图 (美女方块的克隆)	美少女解谜拼图 (美女方块的克隆)	Min Corp.
 mspuzzle	美少女解谜拼图	美少女解谜拼图	Min Corp.
 mspuzzln	美少女解谜拼图 (裸女)	美少女解谜拼图 (裸女)	Min Corp.
 msbingo	宾果小姐拼图方块	宾果小姐拼图方块	Min Corp.
@@ -6801,7 +6809,13 @@ funybubl	性感谜球回路	性感谜球回路	In Chang Electronic Co
 funybubc	性感谜球回路 (Comad 版本)	性感谜球回路 (Comad 版本)	Comad Industry Co Ltd
 dcheese	大起司	大起司	HAR
 lottof2	趣味乐透 2	趣味乐透 2	HAR
-fredmem	摩登原始人	摩登原始人	Coastal Amusements
+fredmem	摩登原始人 (世界版?, Ticket version, 3/17/95)	摩登原始人 (世界版?, Ticket version, 3/17/95)	Coastal Amusements
+fredmeus	摩登原始人 (美版, 高分版本, 3/10/95)	摩登原始人 (美版, 高分版本, 3/10/95)	Coastal Amusements
+fredmeuk	摩登原始人 (UK, 3/17/95)	摩登原始人 (UK, 3/17/95)	Coastal Amusements
+fredmemj	摩登原始人 (日版, 高分版本, 3/20/95)	摩登原始人 (日版, 高分版本, 3/20/95)	Coastal Amusements
+fredmemc	摩登原始人 (Mandarin Chinese, 3/17/95)	摩登原始人 (Mandarin Chinese, 3/17/95)	Coastal Amusements
+fredmesp	摩登原始人 (西班牙, 3/17/95)	摩登原始人 (西班牙, 3/17/95)	Coastal Amusements
+cecmatch	ChuckECheese's Match Game	ChuckECheese's Match Game	Coastal Amusements
 f15se	F-15 飞鹰 (rev. 2.2 02/25/91)	F-15 飞鹰 (rev. 2.2 02/25/91)	Microprose
 f15se21	F-15 飞鹰 (rev. 2.1 02/04/91)	F-15 飞鹰 (rev. 2.1 02/04/91)	Microprose
 botss	决战太阳系 (rev. 1.1)	决战太阳系 (rev. 1.1)	Microprose
@@ -6943,7 +6957,6 @@ starspnr	星饵传说 (Dutch/Nederlands)	星饵传说 (Dutch/Nederlands)	ACE
 attckufo	袭击 UFO	袭击 UFO	Ryoto Electric Co.
 fortecar	闪亮纸牌	闪亮纸牌	unknown
 jackpool	奖金撞球 (意大利, 盗版)	奖金撞球 (意大利, 盗版)	Electronic Projects
-suprpool	超级撞球 (意大利)	超级撞球 (意大利)	Nazionale Elettronica Giochi S.A.S.
 murogem	摩纳哥 (第1套)	摩纳哥 (第1套)	unknown
 murogema	摩纳哥 (第2套)	摩纳哥 (第2套)	unknown
 lasvegas	拉斯维加斯, 内华达	拉斯维加斯, 内华达	hack
@@ -6954,6 +6967,7 @@ egghunt	鸡蛋方块	鸡蛋方块	Invi Image
 magic10	魔法扑克 (ver. 16.55)	魔法扑克 (ver. 16.55)	A.W.P. Games
 magic10a	魔法扑克 (ver. 16.45)	魔法扑克 (ver. 16.45)	A.W.P. Games
 magic102	魔法扑克 2 (ver 1.1)	魔法扑克 2 (ver 1.1)	ABM Games
+suprpool	超级撞球 (9743 Rev.01)	超级撞球 (9743 Rev.01)	ABM Games
 dwarfd	侏儒兽穴	侏儒兽穴	Electro-Sport
 trvquest	琐事问答	琐事问答	Sunn / Techstar
 wheelfir	火焰车轮	火焰车轮	TCH
@@ -7070,6 +7084,7 @@ peke1012	游戏者的利刃 Plus (KE1012) Keno	游戏者的利刃 Plus (KE1012) Keno	IGT - I
 peps0615	游戏者的利刃 Plus (PS0615) Chaos Slots	游戏者的利刃 Plus (PS0615) Chaos Slots	IGT - International Gaming Technology
 peps0716	游戏者的利刃 Plus (PS0716) Quarter Mania Slots	游戏者的利刃 Plus (PS0716) Quarter Mania Slots	IGT - International Gaming Technology
 pexp0019	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	IGT - International Gaming Technology
+pexp0112	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	IGT - International Gaming Technology
 pexs0006	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	IGT - International Gaming Technology
 pexmp006	游戏者的利刃 Plus (XMP00006) Multi-Poker	游戏者的利刃 Plus (XMP00006) Multi-Poker	IGT - International Gaming Technology
 mirage	妖兽麻雀传 (日版)	妖兽麻雀传 (日版)	Mitchell
@@ -7100,9 +7115,10 @@ wofh	三国志 II (三国英雄传, 第1套)	三国志 II (三国英雄传, 第1套)	bootleg
 wofha	三国志 II (三国英雄传, 第2套)	三国志 II (三国英雄传, 第2套)	bootleg
 wofhfh	三国志 II (火凤凰)	三国志 II (火凤凰)	bootleg
 dinob	恐龙新世纪 (盗版)	恐龙新世纪 (盗版)	bootleg
-dinoh	恐龙新世纪 (盗版, 第1套)	恐龙新世纪 (盗版, 第1套)	bootleg
-dinoha	恐龙新世纪 (盗版, 第2套)	恐龙新世纪 (盗版, 第2套)	bootleg
-dinohb	恐龙新世纪 (盗版, 第3套)	恐龙新世纪 (盗版, 第3套)	bootleg
+dinoh	恐龙新世纪 (hack 第1套)	恐龙新世纪 (hack 第1套)	bootleg
+dinoha	恐龙新世纪 (hack 第2套)	恐龙新世纪 (hack 第2套)	bootleg
+dinohb	恐龙新世纪 (hack 第3套)	恐龙新世纪 (hack 第3套)	bootleg
+punishrb	惩罚者 (盗版)	惩罚者 (盗版)	bootleg
 cawingb	雌虎战机 (盗版)	雌虎战机 (盗版)	bootleg
 kodh	龙王战士 (hack)	龙王战士 (hack)	bootleg
 kof96ep	拳皇 '96 (盗版)	拳皇 '96 (盗版)	bootleg
