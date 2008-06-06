@@ -3893,7 +3893,8 @@ spbactnj	弹珠台超级版 (日版)	弹珠台超级版 (日版)	Tecmo
 fstarfrc	最终星际武力 (美版)	最终星际武力 (美版)	Tecmo
 ginkun	前代末间大爆笑	前代末间大爆笑	Tecmo
 deroon	益智迪诺	益智迪诺	Tecmo
-tkdensho	斗姬传承 - 天使之眼	斗姬传承 - 天使之眼	Tecmo
+tkdensho	斗姬传承 - 天使之眼 (VER. 960614)	斗姬传承 - 天使之眼 (VER. 960614)	Tecmo
+tkdensha	斗姬传承 - 天使之眼 (VER. 960427)	斗姬传承 - 天使之眼 (VER. 960427)	Tecmo
 tutankhm	图坦卡门	图坦卡门	Konami
 tutankst	图坦卡门 (Stern)	图坦卡门 (Stern)	[Konami] (Stern license)
 junofrst	第一战机	第一战机	Konami
@@ -5114,7 +5115,8 @@ ddragonw	双截龙 (世界版 第1套)	双截龙 (世界版 第1套)	[Technos] (Taito license)
 ddragnw1	双截龙 (世界版 第2套)	双截龙 (世界版 第2套)	[Technos] (Taito license)
 ddragonb	双截龙 (盗版 HD6309)	双截龙 (盗版 HD6309)	bootleg
 ddragnba	双截龙 (盗版 M6803)	双截龙 (盗版 M6803)	bootleg
-ddgn6809	双截龙 (盗版 3xM6809)	双截龙 (盗版 3xM6809)	bootleg
+ddgn6809	双截龙 (盗版 3xM6809, 第1套)	双截龙 (盗版 3xM6809, 第1套)	bootleg
+dd6809a	双截龙 (盗版 3xM6809, 第2套)	双截龙 (盗版 3xM6809, 第2套)	bootleg
 spdodgeb	热血高校躲避球 (美版)	热血高校躲避球 (美版)	Technos
 nkdodge	热血高校躲避球 (日版)	热血高校躲避球 (日版)	Technos
 nkdodgeb	热血高校躲避球 (日版, 盗版)	热血高校躲避球 (日版, 盗版)	Technos
@@ -5515,6 +5517,7 @@ rdft2	雷电战机 2	雷电战机 2	Seibu Kaihatsu (Tuning license)
 rdft2a	雷电战机 2 (亚洲版, Metrotainment license, SPI)	雷电战机 2 (亚洲版, Metrotainment license, SPI)	Seibu Kaihatsu (Metrotainment license)
 rdft2a2	雷电战机 2 (亚洲版, Dream Island license, SPI)	雷电战机 2 (亚洲版, Dream Island license, SPI)	Seibu Kaihatsu (Dream Island license)
 rdft2j	雷电战机 2 (日版, SPI)	雷电战机 2 (日版, SPI)	Seibu Kaihatsu
+rdft2t	雷电战机 2 (台湾版, SPI)	雷电战机 2 (台湾版, SPI)	Seibu Kaihatsu
 rdft2us	雷电战机 2 (美版, 单机版)	雷电战机 2 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
 rdft22kc	雷电战机 2 (中国版)	雷电战机 2 (中国版)	Seibu Kaihatsu
 rfjet	雷电喷气战机	雷电喷气战机	Seibu Kaihatsu (Tuning license)
@@ -5614,6 +5617,7 @@ rodlandj	妖精物语 (日版)	妖精物语 (日版)	Jaleco
 rodlndjb	妖精物语 (日版 盗版)	妖精物语 (日版 盗版)	Jaleco
 avspirit	复仇精灵	复仇精灵	Jaleco
 phantasm	复仇幽灵 (日版)	复仇幽灵 (日版)	Jaleco
+monkelf	复仇幽灵 (韩国盗版)	复仇幽灵 (韩国盗版)	bootleg
 edf	E.D.F. - 地球防卫军	E.D.F. - 地球防卫军	Jaleco
 edfu	E.D.F. - 地球防卫军 (北美版)	E.D.F. - 地球防卫军 (北美版)	Jaleco
 64street	64 街 - 一个侦探的故事 (世界版)	64 街 - 一个侦探的故事 (世界版)	Jaleco
@@ -6236,6 +6240,7 @@ janptr96	纯真日语 '96 (日版)	纯真日语 '96 (日版)	Dynax
 sprtmtch	脑力激荡	脑力激荡	Dynax (Fabtek license)
 maya	消除牌 - 玛雅	消除牌 - 玛雅	Promat
 inca	消除牌 - 印卡	消除牌 - 印卡	<unknown>
+blktouch	黑色接触 (韩国版)	黑色接触 (韩国版)	Yang Gi Co Ltd.
 mcnpshnt	麻雀校园狩猎 (日版)	麻雀校园狩猎 (日版)	Dynax
 7jigen	7 次元之妖精达 (日版)	7 次元之妖精达 (日版)	Dynax
 neruton	麻雀男女牌鲸团 (日版)	麻雀男女牌鲸团 (日版)	Dynax / Yukiyoshi Tokoro
@@ -6530,6 +6535,8 @@ zortonbr	索特兄弟 (西班牙)	索特兄弟 (西班牙)	Web Picmatic
 crysbios	Crystal System BIOS	Crystal System BIOS	Brezzasoft
 crysking	王者水晶	王者水晶	Brezzasoft
 evosocc	进化足球 EVO	进化足球 EVO	Evoga
+topbladv	刀刃 V	刀刃 V	unknown
+officeye	Office Yeo ln Cheon Ha	Office Yeo ln Cheon Ha	unknown
 inquiztr	反馈	反馈	BFM
 escounts	每秒计算 (39-360-053)	每秒计算 (39-360-053)	BFM
 trebltop	三倍完成 (39-360-070)	三倍完成 (39-360-070)	BFM
@@ -6935,8 +6942,8 @@ tenballs	十球 (Ver 1.05)	十球 (Ver 1.05)	unknown
 gotya	小手大进击 (12/24/1981, 工程版?)	小手大进击 (12/24/1981, 工程版?)	Game-A-Tron
 sbugger	太空异形 (第1套)	太空异形 (第1套)	Game-A-Tron
 sbuggera	太空异形 (第2套)	太空异形 (第2套)	Game-A-Tron
-gatcards	卡片游戏?	卡片游戏?	Game-A-Tron
-gatslots	投币游戏?	投币游戏?	Game-A-Tron
+poker41	扑克 4-1	扑克 4-1	Game-A-Tron
+pulltabs	卡片游戏	卡片游戏	Game-A-Tron
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
 cmv801	樱桃水果盘 (v8.01)	樱桃水果盘 (v8.01)	Corsica
@@ -7059,7 +7066,8 @@ pangofun	欢乐小子 (意大利)	欢乐小子 (意大利)	InfoCube
 koikoi	恋来花札 2	恋来花札 2	Kiwako
 good	好极了 (韩国版)	好极了 (韩国版)	unknown
 filetto	菲力德 (v1.05 901009)	菲力德 (v1.05 901009)	Novarmatic
-quizo	问答奥林匹克	问答奥林匹克	Seoul Coin Corp.
+quizo	问答奥林匹克 (第1套)	问答奥林匹克 (第1套)	Seoul Coin Corp.
+quizoa	问答奥林匹克 (第2套)	问答奥林匹克 (第2套)	Seoul Coin Corp.
 gstream	雷霆之翼 G2020	雷霆之翼 G2020	Oriental Soft Japan
 miniboy7	迷你男孩 7	迷你男孩 7	Bonanza Enterprises, Ltd
 39in1	39 合 1 MAME 盗版	39 合 1 MAME 盗版	????
@@ -7097,6 +7105,22 @@ blazlaz	炙热战机	炙热战机	Hudson Soft
 paranoia	偏执狂	偏执狂	Naxat Soft
 vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
 shadfgtr	暗影战士	暗影战士	Sega?
+blackt96	黑色接触 '96	黑色接触 '96	D.G.R.M.
+laperla	La Perla Nera (Ver 2.0)	La Perla Nera (Ver 2.0)	Nazionale Elettronica
+laperlag	La Perla Nera Gold (Ver 2.0)	La Perla Nera Gold (Ver 2.0)	Nazionale Elettronica
+capunc	Capitan Uncino (Ver 1.2)	Capitan Uncino (Ver 1.2)	Nazionale Elettronica
+capcor	Capitani Coraggiosi (Ver 1.3)	Capitani Coraggiosi (Ver 1.3)	Nazionale Elettronica
+euro2k2	Europa 2002 (Ver 2.0, set 1)	Europa 2002 (Ver 2.0, set 1)	Nazionale Elettronica
+euro2k2a	Europa 2002 (Ver 2.0, set 2)	Europa 2002 (Ver 2.0, set 2)	Nazionale Elettronica
+laser2k1	激光 2001 (Ver 1.2)	激光 2001 (Ver 1.2)	Unknown
+mdrink	魔法饮料 (Ver 1.2)	魔法饮料 (Ver 1.2)	Unknown
+ntcash	NtCash	NtCash	Unknown
+wizard	术士 (Ver 1.0)	术士 (Ver 1.0)	Unknown
+te0144	Unknown italian gambling game	Unknown italian gambling game	Unknown
+cmagica	Carta Magica (Ver 1.8)	Carta Magica (Ver 1.8)	Unknown
+millsun	千年太阳	千年太阳	Unknown
+sspac2k1	超级空间 2001	超级空间 2001	Unknown
+elvis	Elvis?	Elvis?	Unknown
 showhand	梭哈	梭哈	Astro Corp.
 knightsh	圆桌骑士 (hack)	圆桌骑士 (hack)	bootleg
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
@@ -7175,6 +7199,9 @@ progerjd	能源之岚 (日版 010117 / 凤凰版)	能源之岚 (日版 010117 / 凤凰版)	hack
 ssf2ud	超级街头霸王 II - 新的来者 (美版 930911 / 凤凰版)	超级街头霸王 II - 新的来者 (美版 930911 / 凤凰版)	hack
 mshud	超级漫画英雄 (美版 951024 / 凤凰版)	超级漫画英雄 (美版 951024 / 凤凰版)	hack
 sfz2ad	少年街霸 2 (亚洲版 960227 / 凤凰版)	少年街霸 2 (亚洲版 960227 / 凤凰版)	hack
+ssf2tbd	超级街头霸王 II - 战斗联赛 (世界版 931119 / 凤凰版)	超级街头霸王 II - 战斗联赛 (世界版 931119 / 凤凰版)	hack
+ssf2xjd	超级街头霸王 II X 向最强挑战 (日版 940223 / 凤凰版)	超级街头霸王 II X 向最强挑战 (日版 940223 / 凤凰版)	hack
+sgemfd	超级口袋战士 (美版 970904 / 凤凰版)	超级口袋战士 (美版 970904 / 凤凰版)	hack
 zupapad	星星大作战! (custom C 解密)	星星大作战! (custom C 解密)	SNK
 kof99d	拳皇 '99 - 千年之战 (C 解密)	拳皇 '99 - 千年之战 (C 解密)	SNK
 ganryud	武藏严流记 (C 解密)	武藏严流记 (C 解密)	Visco
