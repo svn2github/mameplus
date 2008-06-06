@@ -131,11 +131,8 @@ endif
 # a native backend
 # FORCE_DRC_C_BACKEND = 1
 
-# uncomment next line to use DRC PowerPC engine
-X86_PPC_DRC = 1
-
 # uncomment next line to use DRC 68K engine
-X86_M68K_DRC = 1
+#X86_M68K_DRC = 1
 
 
 
@@ -184,7 +181,6 @@ BUILD_ZLIB = 1
 
 # disable DRC cores for 64-bit builds
 ifneq ($(PTR64),)
-X86_PPC_DRC =
 X86_M68K_DRC =
 endif
 
