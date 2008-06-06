@@ -3341,7 +3341,7 @@ vf2o	バーチャファイター2	ばーちゃふぁいたー_2	Sega
 vcop2	バーチャコップ2	ばーちゃこっぷ_2	Sega
 doaa	デッドオアアライブ (Model 2A)	でっどおああらいぶ_1_1	Sega
 zeroguna	ゼロガンナー (Model 2A)	ぜろがんなー	Psikyo
-dynamcop	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (Model 2A)	だいなまいとでか_2	Sega
+dynamcop	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (海外版 Model 2A)	だいなまいとでか_2	Sega
 dyndeka2	ダイナマイト刑事2 -カリブの海賊編 (日本版 Model 2A)	だいなまいとでか_2	Sega
 pltkidsa	パイロットキッズ (Model 2A)	ぱいろっときっず	Psikyo
 vstriker	バーチャストライカー (rev A)	ばーちゃすとらいかー_1	Sega
@@ -3360,7 +3360,7 @@ vonusa	電脳戦機バーチャロン / Cyber Troopers Virtual-On (USA版 rev B)	でんのうせ
 dynabb	ダイナマイトベースボール97	だいなまいとべーすぼーる97	Sega
 zerogun	ゼロガンナー (Model 2B)	ぜろがんなー	Psikyo
 zerogunj	ゼロガンナー (日本版 Model 2B)	ぜろがんなー	Psikyo
-dynmcopb	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (Model 2B)	だいなまいとでか_2	Sega
+dynmcopb	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (海外版 Model 2B)	だいなまいとでか_2	Sega
 dyndek2b	ダイナマイト刑事2 -カリブの海賊編 (日本版 Model 2B)	だいなまいとでか_2	Sega
 pltkids	パイロットキッズ (Model 2B)	ぱいろっときっず	Psikyo
 skisuprg	セガスキー スーパーG	せがすきーすーぱーじー	Sega
@@ -3873,7 +3873,8 @@ spbactnj	スーパーピンボールアクション (日本版)	すーぱーぴんぼーるあくしょん	Tecm
 fstarfrc	ファイナル・スターフォース (USA版)	ふぁいなるすたーふぉーす	Tecmo
 ginkun	がんばれギンくん -アクションミニゲーム集	がんばれぎんくん	Tecmo
 deroon	でろ～んでろでろ	でろーんでろでろ	Tecmo
-tkdensho	闘姫伝承 -Angel Eyes	とうきでんしょう	Tecmo
+tkdensho	闘姫伝承 -Angel Eyes (ver 960614)	とうきでんしょう	Tecmo
+tkdensha	闘姫伝承 -Angel Eyes (Ver 960427)	とうきでんしょう	Tecmo
 tutankhm	ツタンカーム	つたんかーむ	Konami
 tutankst	ツタンカーム (Stern)	つたんかーむ	[Konami] (Stern license)
 junofrst	ジュノファースト	じゅのふぁーすと	Konami
@@ -5090,7 +5091,8 @@ ddragonw	双截龍 <ダブルドラゴン> (海外版 set 1)	だぶるどらごん_1	[Technos] (Tait
 ddragnw1	双截龍 <ダブルドラゴン> (海外版 set 2)	だぶるどらごん_1	[Technos] (Taito license)
 ddragonb	双截龍 <ダブルドラゴン> (海賊版 with HD6309)	だぶるどらごん_1	bootleg
 ddragnba	双截龍 <ダブルドラゴン> (海賊版 with M6803)	だぶるどらごん_1	bootleg
-ddgn6809	双截龍 <ダブルドラゴン> (海賊版 with 3xM6809)	だぶるどらごん_1	bootleg
+ddgn6809	双截龍 <ダブルドラゴン> (海賊版 with 3xM6809 set 1)	だぶるどらごん_1	bootleg
+dd6809a	双截龍 <ダブルドラゴン> (海賊版 with 3xM6809 set 2)	だぶるどらごん_1	bootleg
 spdodgeb	熱血高校ドッジボール部 / Super Dodge Ball (USA版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodge	熱血高校ドッジボール部 (日本版)	ねっけつこうこうどっじぼーるぶ	Technos
 nkdodgeb	熱血高校ドッジボール部 (日本版) (海賊版)	ねっけつこうこうどっじぼーるぶ	Technos
@@ -5491,6 +5493,7 @@ rdft2	ライデンファイターズ2 -オペレーション・ヘルダイヴ	らいでん_5ふぁいたーず_2
 rdft2a	ライデンファイターズ2 -オペレーション・ヘルダイヴ (アジア版 Metrotainment license SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Metrotainment license)
 rdft2a2	ライデンファイターズ2 -オペレーション・ヘルダイヴ (アジア版 Dream Island license SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Dream Island license)
 rdft2j	ライデンファイターズ2 -オペレーション・ヘルダイヴ (日本版 SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu
+rdft2t	ライデンファイターズ2 -オペレーション・ヘルダイヴ (台湾版 SPI)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu
 rdft2us	ライデンファイターズ2 -オペレーション・ヘルダイヴ (USA版 Single Board)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu (Fabtek license)
 rdft22kc	ライデンファイターズ2 -オペレーション・ヘルダイヴ2000 (中国版)	らいでん_5ふぁいたーず_2	Seibu Kaihatsu
 rfjet	ライデンファイターズJET	らいでん_6ふぁいたーずじぇっと	Seibu Kaihatsu (Tuning license)
@@ -5590,6 +5593,7 @@ rodlandj	妖精物語ロッドランド (日本版)	ようせいものがたりろっどらんど	Jaleco
 rodlndjb	妖精物語ロッドランド (日本版) (海賊版)	ようせいものがたりろっどらんど	Jaleco
 avspirit	ファンタズム / Avenging Spirit	ふぁんたずむ	Jaleco
 phantasm	ファンタズム (日本版)	ふぁんたずむ	Jaleco
+monkelf	ファンタズム / Monky Elf (韓国版) (海賊版 of Avenging Spirit)	ふぁんたずむ	bootleg
 edf	E.D.F. <アースディフェンスフォース>	いーでぃーえふ	Jaleco
 edfu	E.D.F. <アースディフェンスフォース> (USA版)	いーでぃーえふ	Jaleco
 64street	64番街 -A Detective Story (海外版)	ろくじゅうよんばんがい	Jaleco
@@ -6210,6 +6214,7 @@ janptr96	ジャンピューター'96 (日本版)	じゃんぴゅーたーないんてぃーんしっくす	Dyn
 sprtmtch	ドラゴンパンチ / Sports Match	どらごんぱんち	Dynax (Fabtek license)
 maya	マヤ	まや	Promat
 inca	インカ	いんか	<unknown>
+blktouch	ブラックタッチ (韓国版)	ぶらっくたっち_1	Yang Gi Co Ltd.
 mcnpshnt	麻雀キャンパスハンティング (日本版)	まーじゃんきゃんぱすはんてぃんぐ	Dynax
 7jigen	7次元の妖精達 -Mahjong 7 Dimensions (日本版)	ななじげんのようせいたち	Dynax
 neruton	まーじゃんねるとん牌鯨団 (日本版)	まーじゃんねるとんはいくじらだん	Dynax / Yukiyoshi Tokoro
@@ -6499,6 +6504,8 @@ aplatoon	プラトーン (USA版 ver ??)	ぷらとーん	Nova?
 zortonbr	ゾートンブラザース (Los Justicieros)	ぞーとんぶらざーす	Web Picmatic
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
+topbladv	トップブレードV	とっぷぶれーど5	unknown
+officeye	オフィスイェオ・イン・チェオンハ	おふぃすいぇおいんちぇおんは	unknown
 inquiztr	インクイジター	いんくいじたー	BFM
 escounts	エブリセカンドカウンツ (39-360-053)	えぶりせかんどかうんつ	BFM
 trebltop	トレブルトップ (39-360-070)	とれぶるとっぷ	BFM
@@ -6901,8 +6908,8 @@ tenballs	テンボールス (ver 1.05)	てんぼーるす	unknown
 gotya	ギャンブラー / Got-Ya (12/24/1981 prototype?)	ぎゃんぶらー	Game-A-Tron
 sbugger	スペースバガー (set 1)	すぺーすばがー	Game-A-Tron
 sbuggera	スペースバガー (set 2)	すぺーすばがー	Game-A-Tron
-gatcards	カードゲームズ?	かーどげーむず	Game-A-Tron
-gatslots	スロットゲーム?	すろっとげーむ	Game-A-Tron
+poker41	ポーカー4-1	ぽーかー4-1	Game-A-Tron
+pulltabs	プルタブス	ぷるたぶす	Game-A-Tron
 vroulet	ベガスルーレット	べがするーれっと	World Game
 rcasino	ロイヤルカジノ	ろいやるかじの	Dyna Electronics
 cmv801	チェリーマスター (ver 8.01)	ちぇりーますたー_1	Corsica
@@ -6933,7 +6940,7 @@ egghunt	エッグハント	えっぐはんと	Invi Image
 magic10	マジックス10 (ver 16.55)	まじっくす_2_1てん	A.W.P. Games
 magic10a	マジックス10 (ver 16.45)	まじっくす_2_1てん	A.W.P. Games
 magic102	マジックス10 2 (ver 1.1)	まじっくす_2_2てんつー	ABM Games
-suprpool	スーパープール (イタリア版)	すーぱーぷーる	ABM Games
+suprpool	スーパープール (9743 rev 01)	すーぱーぷーる	ABM Games
 dwarfd	ドワーフスデン	どわーふすでん	Electro-Sport
 trvquest	トリビアクエスト	とりびあくえすと	Sunn / Techstar
 wheelfir	ホイールズ&ファイア	ほいーるずあんどふぁいあ	TCH
@@ -7025,7 +7032,8 @@ pangofun	パンゴファン (イタリア版)	ぱんごふぁん	InfoCube
 koikoi	恋来パート2	こいこいぱーと_2	Kiwako
 good	グッド (韓国版)	ぐっど	unknown
 filetto	フィレット (ver 1.05 901009)	ふぃれっと	Novarmatic
-quizo	クイズオリンピック	くいずおりんぴっく	Seoul Coin Corp.
+quizo	クイズオリンピック (set 1)	くいずおりんぴっく	Seoul Coin Corp.
+quizoa	クイズオリンピック (set 2)	くいずおりんぴっく	Seoul Coin Corp.
 gstream	Gストリーム -G2020	じーすとりーむ	Oriental Soft Japan
 miniboy7	ミニボーイ7	みにぼーいせぶん	Bonanza Enterprises, Ltd
 39in1	39 in 1 MAME海賊版	さーてぃーないんいんわんめいむかいぞくばん	????
@@ -7063,6 +7071,22 @@ blazlaz	ブレイジングレーザーズ	ぶれいじんぐれーざーず	Hudson Soft
 paranoia	パラノイア	ぱらのいあ	Naxat Soft
 vcombat	バーチャルコンバット	ばーちゃるこんばっと	VR8 Inc.
 shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	Sega?
+blackt96	ブラックタッチ'96	ぶらっくたっち_96	D.G.R.M.
+laperla	ラ・ペルラネラ (ver 2.0)	らぺるらねら_1	Nazionale Elettronica
+laperlag	ラ・ペルラネラ ゴールド (ver 2.0)	らぺるらねら_2ごーるど	Nazionale Elettronica
+capunc	キャプテンウンチーノ (ver 1.2)	きゃぷてんうんちーの	Nazionale Elettronica
+capcor	カピターニコラッジョシ (ver 1.3)	かぴたーにこらっじょし	Nazionale Elettronica
+euro2k2	ヨーロッパ 2002 (ver 2.0 set 1)	よーろっぱ2002	Nazionale Elettronica
+euro2k2a	ヨーロッパ 2002 (ver 2.0 set 2)	よーろっぱ2002	Nazionale Elettronica
+laser2k1	レーザー 2001 (ver 1.2)	レーザー2001	Unknown
+mdrink	マジックドリンク (ver 1.2)	まじっくどりんく	Unknown
+ntcash	Ntキャッシュ	えぬてぃきゃっしゅ	Unknown
+wizard	ウィザード (ver 1.0)	うぃざーど	Unknown
+te0144	アンノウンイタリアンギャンブリングゲーム	あんのうんいたりあんぎゃんぶりんぐげーむ	Unknown
+cmagica	カルタマギカ (ver 1.8)	かるたまぎか	Unknown
+millsun	ミレニアムサン	みれにあむさん	Unknown
+sspac2k1	スーパースペース2001	すーぱーすぺーす2001	Unknown
+elvis	エルビス?	えるびす	Unknown
 showhand	ショーハンド	しょーはんど	Astro Corp.
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海外版 911127) (海賊版)	ないつおぶざらうんど	bootleg
@@ -7128,6 +7152,9 @@ progerjd	プロギアの嵐 (日本版 010117 Phoenix Edition)	ぷろぎあのあらし	hack
 ssf2ud	スーパーストリートファイターII -ザ・ニューチャレンジャーズ (USA版 930911 Phoenix Edition)	すーぱーすとりーとふぁいたー2_1ざにゅーちゃれんじゃーず	hack
 mshud	マーヴル・スーパーヒーローズ (USA版 951024 Phoenix Edition)	まーぶるすーぱーひーろーず_1	hack
 sfz2ad	ストリートファイターZERO2 (アジア版 960227 Phoenix Edition)	すとりーとふぁいたー_6ぜろ_2_1	hack
+sgemfd	ポケットファイター / Super Gem Fighter -Mini Mix (USA版 970904 Phoenix Edition)	ぽけっとふぁいたー	hack
+ssf2tbd	スーパーストリートファイターII -ザ・トーナメントバトル (海外版 931119 Phoenix Edition)	すーぱーすとりーとふぁいたー2_2ざとーなめんとばとる	hack
+ssf2xjd	スーパーストリートファイターII X -グランドマスターチャレンジ (日本版 940223 Phoenix Edition)	すーぱーすとりーとふぁいたー2_3えっくすぐらんどますたーちゃれんじ	hack
 vantris	ヴァントリス (Vanguard hardware)	ばんとりす	N.Kehrer
 frogfest	フロッグフィースト	ふろっぐふぃーすと	Rastersoft
 columnsn	コラムス (Neo-Geo)	こらむす	Sega / hack
