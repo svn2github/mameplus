@@ -2762,7 +2762,7 @@ static int user_select_label_menu(running_machine *machine, cheat_menu_stack *me
 	}
 
 	/* ##### RETURN ##### */
-	menu_item[total++] = "Return to Prior Menu";
+	menu_item[total++] = _("Return to Prior Menu");
 
 	/* ##### TERMINATE ARRAY ##### */
 	menu_item[total] = NULL;
@@ -2946,38 +2946,38 @@ static int cheat_main_menu(running_machine *machine, cheat_menu_stack *menu)
 
 	/********** MENU CONSTRUCION **********/
 	/* ##### Enable/Disable a Cheat ##### */
-	menu_item[total++].text = "Enable/Disable a Cheat";
+	menu_item[total++].text = _("Enable/Disable a Cheat");
 
 	/* ##### Add/Edit a Cheat ##### */
-	menu_item[total++].text = "Add/Edit a Cheat";
+	menu_item[total++].text = _("Add/Edit a Cheat");
 
 	/* ##### Search a Cheat ##### */
 	switch(EXTRACT_FIELD(cheat_options, SearchBox))
 	{
 		case kSearchBox_Minimum:
-			menu_item[total++].text = "Search a Cheat (Minimum Mode)";
+			menu_item[total++].text = _("Search a Cheat (Minimum Mode)");
 			break;
 
 		case kSearchBox_Standard:
-			menu_item[total++].text = "Search a Cheat (Standard Mode)";
+			menu_item[total++].text = _("Search a Cheat (Standard Mode)");
 			break;
 
 		case kSearchBox_Advanced:
-			menu_item[total++].text = "Search a Cheat (Advanced Mode)";
+			menu_item[total++].text = _("Search a Cheat (Advanced Mode)");
 			break;
 
 		default:
-			menu_item[total++].text = "Unknown Search Menu";
+			menu_item[total++].text = _("Unknown Search Menu");
 	}
 
 	/* ##### View Last Result ##### */
-	menu_item[total++].text = "View Last Results";
+	menu_item[total++].text = _("View Last Results");
 
 	/* ##### Configure Watchpoints ##### */
-	menu_item[total++].text = "Configure Watchpoints";
+	menu_item[total++].text = _("Configure Watchpoints");
 
 	/* ##### Options ##### */
-	menu_item[total++].text = "Options";
+	menu_item[total++].text = _("Options");
 
 #ifdef MAME_DEBUG
 	/* ##### Debug  ##### */
@@ -3253,9 +3253,9 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 
 	/* ##### RETURN ##### */
 	if(current_layer)
-		menu_item[total]	= "Return to Root Layer";
+		menu_item[total]	= _("Return to Root Layer");
 	else
-		menu_item[total]	= "Return to Prior Menu";
+		menu_item[total]	= _("Return to Prior Menu");
 	menu_sub_item[total]	= NULL;
 	flag_buf[total++]		= 0;
 
@@ -3622,7 +3622,7 @@ static int add_edit_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	}
 
 	/* ##### RETURN ##### */
-	menu_item[total++] = "Return to Prior Menu";
+	menu_item[total++] = _("Return to Prior Menu");
 
 	/* ##### TERMINATE ARRAY ##### */
 	menu_item[total] = NULL;
@@ -3786,7 +3786,7 @@ static int command_add_edit_menu(running_machine *machine, cheat_menu_stack *men
 		menu_item[total++].text = "Convert To Old Format";
 	menu_item[total++].text = "Analyse Code";
 #endif
-	menu_item[total++].text = "Return to Prior Menu";
+	menu_item[total++].text = _("Return to Prior Menu");
 	menu_item[total].text = NULL;
 
 	/* adjust cursor position */
@@ -4665,7 +4665,7 @@ static int edit_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	/* ##### RETURN ##### */
 	menuItemInfo[total].sub_cheat = 0;
 	menuItemInfo[total].field_type = kType_Return;
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARREY ##### */
@@ -6021,7 +6021,7 @@ static int view_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	}
 
 	/* ##### RETURN ##### */
-	ADD_MENU_3_ITEMS("Return to Prior Menu", NULL, kViewMenu_Return);
+	ADD_MENU_3_ITEMS(_("Return to Prior Menu"), NULL, kViewMenu_Return);
 
 	/* ##### TERMINATE ARRAY ##### */
 	TERMINATE_MENU_2_ITEMS;
@@ -6153,7 +6153,7 @@ static int analyse_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	}
 
 	menu_item[total++] = "Edit This Entry";
-	menu_item[total++] = "Return to Prior Menu";
+	menu_item[total++] = _("Return to Prior Menu");
 	menu_item[total] = NULL;
 
 	/* adjust cursor position */
@@ -6405,7 +6405,7 @@ static int search_minimum_menu(running_machine *machine, cheat_menu_stack *menu)
 	menuSubItem[total++] = NULL;
 
 	/* ##### RETURN ##### */
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
@@ -6991,7 +6991,7 @@ static int search_standard_menu(running_machine *machine, cheat_menu_stack *menu
 	menuSubItem[total++] = NULL;
 
 	/* ##### RETURN ##### */
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
@@ -7482,7 +7482,7 @@ static int search_advanced_menu(running_machine *machine, cheat_menu_stack *menu
 	menu_item[total] = "Restore Previous Results";		// restore result
 	menu_subitem[total++] = NULL;
 
-	menu_item[total] = "Return to Prior Menu";		// return
+	menu_item[total] = _("Return to Prior Menu");		// return
 	menu_subitem[total++] = NULL;
 
 	menu_item[total] = NULL;								// terminate array
@@ -7844,7 +7844,7 @@ static int select_search_region_menu(running_machine *machine, cheat_menu_stack 
 	}
 
 	/* ##### RETURN ##### */
-	menu_item[total] = "Return to Prior Menu";
+	menu_item[total] = _("Return to Prior Menu");
 	menu_sub_item[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
@@ -8131,7 +8131,7 @@ static int view_search_result_menu(running_machine *machine, cheat_menu_stack *m
 	}
 
 	/* ##### RETURN ##### */
-	menu_item[total++] = "Return to Prior Menu";
+	menu_item[total++] = _("Return to Prior Menu");
 
 	/* ##### TERMINATE ARRAY ##### */
 	menu_item[total] = NULL;
@@ -8439,7 +8439,7 @@ static int choose_watch_menu(running_machine *machine, cheat_menu_stack *menu)
 	}
 
 	/* ##### RETURN ##### */
-	menuItem[total++] = "Return to Prior Menu";
+	menuItem[total++] = _("Return to Prior Menu");
 
 	/* ##### TERMINATE ARRAY ##### */
 	menuItem[total] = NULL;
@@ -8704,7 +8704,7 @@ static int command_watch_menu(running_machine *machine, cheat_menu_stack *menu)
 	menuItem[total++].text = "Save as Watch Code";
 	menuItem[total++].text = "Add New Watchpoint";
 	menuItem[total++].text = "Delete Watchpoint";
-	menuItem[total++].text = "Return to Prior Menu";
+	menuItem[total++].text = _("Return to Prior Menu");
 	menuItem[total].text = NULL;
 
 	/* adjust current cursor position */
@@ -8944,7 +8944,7 @@ static int edit_watch_menu(running_machine *machine, cheat_menu_stack *menu)
 	total++;
 
 	/* ##### RETURN ##### */
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
@@ -9378,7 +9378,7 @@ static int select_option_menu(running_machine *machine, cheat_menu_stack *menu)
 #endif
 
 	/* ##### RETURN ##### */
-	ADD_MENU_2_ITEMS("Return to Prior Menu", NULL);
+	ADD_MENU_2_ITEMS(_("Return to Prior Menu"), NULL);
 
 	/* ##### TERMINATE ALLAY ##### */
 	TERMINATE_MENU_2_ITEMS;
@@ -9565,7 +9565,7 @@ static int select_search_menu(running_machine *machine, cheat_menu_stack *menu)
 		total++;
 	}
 
-	menuItem[total++] = "Return to Prior Menu";		// return
+	menuItem[total++] = _("Return to Prior Menu");		// return
 
 	menuItem[total] = NULL;									// terminate array
 
@@ -9784,7 +9784,7 @@ static int view_cpu_region_info_list_menu(running_machine *machine, cheat_menu_s
 	menuSubItem[total++] = addressShiftBuf;
 
 	/* ##### RETURN ##### */
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
@@ -9965,7 +9965,7 @@ static int debug_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	menuSubItem[total++] = NULL;
 
 	/* ##### RETURN ##### */
-	menuItem[total] = "Return to Prior Menu";
+	menuItem[total] = _("Return to Prior Menu");
 	menuSubItem[total++] = NULL;
 
 	/* ##### TERMINATE ARRAY ##### */
