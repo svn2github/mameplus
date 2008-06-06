@@ -8005,6 +8005,34 @@ ROM_START( ssf2xjd )
 	ROM_LOAD16_WORD_SWAP( "sfx.12m",   0x200000, 0x200000, CRC(a05e3aab) SHA1(d4eb9cae66c74e956569fea8b815156fbd420f83) )
 ROM_END
 
+ROM_START( sgemfd )
+	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "pcfud.03",0x000000, 0x80000, CRC(8b83674a) SHA1(053a2cb6aab9aa43f4c0d4ba9f0eb5a964133b28) )
+	ROM_LOAD16_WORD_SWAP( "pcfd.04", 0x080000, 0x80000, CRC(b58f1d03) SHA1(592649956471363967b9920f47bde23da3e9cc2b) )
+	ROM_LOAD16_WORD_SWAP( "pcf.05",  0x100000, 0x80000, CRC(215655f6) SHA1(242c0f4401520f2a3b0deafc3a807b18b987e496) )
+	ROM_LOAD16_WORD_SWAP( "pcf.06",  0x180000, 0x80000, CRC(ea6f13ea) SHA1(1bc924a8a9da1d2ad7667685cdb92fe317a39aba) )
+	ROM_LOAD16_WORD_SWAP( "pcf.07",  0x200000, 0x80000, CRC(5ac6d5ea) SHA1(9ce8e4668b565658597a868830545fb75a5eeaa6) )
+
+	ROM_REGION( 0x1400000, REGION_GFX1, 0 )
+	ROMX_LOAD( "pcf.13m",   0x0000000, 0x400000, CRC(22d72ab9) SHA1(653efd95c34b4b9d2ab0d219f41a99ca84e12214) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.15m",   0x0000002, 0x400000, CRC(16a4813c) SHA1(bf5fce6008214f353414d1b64bea4ed0c7673670) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.17m",   0x0000004, 0x400000, CRC(1097e035) SHA1(4bd51e4e9447af27d2cac1f6d2201e37c949912b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.19m",   0x0000006, 0x400000, CRC(d362d874) SHA1(30c42af18440496cc05e4418e4efa41172ae4ced) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.14m",   0x1000000, 0x100000, CRC(0383897c) SHA1(aba14afa1d0c971afcee4317f480e88117d77b5e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.16m",   0x1000002, 0x100000, CRC(76f91084) SHA1(3d1e32467f2aa5dd6fb96bd5c866ecc9691660fc) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.18m",   0x1000004, 0x100000, CRC(756c3754) SHA1(be2f709b90222a567f198f851cf07ffb0ad433d7) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "pcf.20m",   0x1000006, 0x100000, CRC(9ec9277d) SHA1(b7ceeaca30dfcdf498b61a6961f0aa1a068b8ec4) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( QSOUND_SIZE, REGION_CPU2, 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "pcf.01",   0x00000, 0x08000, CRC(254e5f33) SHA1(c413ec0630b9bdd15e64f42893eba8958a09b573) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+	ROM_LOAD( "pcf.02",   0x28000, 0x20000, CRC(6902f4f9) SHA1(9bfe4ddade3c666076d26a2b545120f6d059fd7c) )
+
+	ROM_REGION( 0x800000, REGION_SOUND1, 0 ) /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "pcf.11m",   0x000000, 0x400000, CRC(a5dea005) SHA1(3ae79baf6ff5bd527f82b26f164c7e3c65423ae2) )
+	ROM_LOAD16_WORD_SWAP( "pcf.12m",   0x400000, 0x400000, CRC(4ce235fe) SHA1(795b94557e954cc0e45fd3778b609064d57a34a2) )
+ROM_END
+
 
 /*************************************
  *
@@ -8290,3 +8318,5 @@ GAME( 2001, progerjd, progear, phoenix, cps2_2p3b, cps2,   ROT0,   "hack", "Prog
 GAME( 2004, hsf2d,    hsf2,    phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202 Phoenix Edition)", 0 )
 GAME( 1993, ssf2tbd,  ssf2,    phoenix, cps2_2p6b, ssf2tb, ROT0,   "hack", "Super Street Fighter II: The Tournament Battle (World 931119 Phoenix Edition)", 0 )
 GAME( 1994, ssf2xjd,  ssf2,    phoenix, cps2_2p6b, cps2,   ROT0,   "hack", "Super Street Fighter II X: Grand Master Challenge (Japan 940223 Phoenix Edition)", 0 )
+GAME( 1997, sgemfd,   sgemf,   phoenix, cps2_2p3b, cps2,   ROT0,   "hack", "Super Gem Fighter Mini Mix (USA 970904 Phoenix Edition)", 0 )
+

@@ -62,6 +62,7 @@ const game_driver * const decrypteddrivers[] =
 	DRIVER( sfz2ad )	/* 27/02/1996 (c) 1996 (Phoenix Edition, ASIA) */
 	DRIVER( ssf2tbd )	/* 11/19/1993 (c) 1993 (Phoenix Edition, World) */
 	DRIVER( ssf2xjd )	/* 23/02/1994 (c) 1994 (Phoenix Edition, Japan) */
+	DRIVER( sgemfd )	/* 04/09/1997 (c) 1997 (Phoenix Edition, US) */
 
 	/* NeoGeo decrypted junk */
 	DRIVER( zupapad )	/* 0070 Zupapa - released in 2001, 1994 prototype probably exists */
