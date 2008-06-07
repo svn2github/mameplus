@@ -52,10 +52,13 @@ else
 
 DRCOBJ += \
 	$(CPUOBJ)/drcbex86.o \
-	$(CPUOBJ)/x86log.o
+	$(CPUOBJ)/x86log.o \
+	$(CPUOBJ)/x86drc.o
 
 DRCDEPS += \
-	$(CPUSRC)/x86emit.h
+	$(CPUSRC)/x86emit.h \
+	$(CPUSRC)/x86drc.c \
+	$(CPUSRC)/x86drc.h
 
 DEFS += -DNATIVE_DRC=drcbe_x86_be_interface
 

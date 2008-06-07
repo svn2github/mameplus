@@ -69,9 +69,10 @@ static const translation_info gcc_translate[] =
 #ifdef ICC_BUILD
 	{ 0,		"-O3",					"/O3 /Qip /Qvec_report0" },
 #else
-	{ 0,		"-O1",					"/O2" },
-	{ 0,		"-O2",					"/O2" },
-	{ 0,		"-O3",					"/O2" },
+	{ 0,		"-O1",					"/O2 /Qfast_transcendentals" },
+	{ 0,		"-O2",					"/O2 /Qfast_transcendentals" },
+	{ 0,		"-O3",					"/O2 /Qfast_transcendentals" },
+		
 	// mamep: disable /Og implied by -O2
 	{ 0,		"-Ong",					"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy" }, 
 #endif

@@ -132,7 +132,7 @@ endif
 # FORCE_DRC_C_BACKEND = 1
 
 # uncomment next line to use DRC 68K engine
-#X86_M68K_DRC = 1
+X86_M68K_DRC = 1
 
 
 
