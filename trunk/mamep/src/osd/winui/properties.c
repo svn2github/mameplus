@@ -1146,7 +1146,7 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	if (!DriverIsBios(nIndex))
 		return desc;
 
-	swprintf(info, _UIW(TEXT("Global BIOS driver options\nCustom options used by all games using BIOS %s")), desc);
+	swprintf(info, _UIW(TEXT("Global BIOS driver options\nCustom options used by all games in the %s")), desc);
 	return info;
 }
 
@@ -2947,7 +2947,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 
 	// reset the controllers dropdown
 	(void)ComboBox_ResetContent(control);
-	(void)ComboBox_InsertString(control, index, _UIW(TEXT("N/A")));
+	(void)ComboBox_InsertString(control, index, _UIW(TEXT("None")));
 	(void)ComboBox_SetItemData(control, index, "");
 	index++;
 

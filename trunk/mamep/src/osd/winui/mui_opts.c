@@ -101,7 +101,6 @@ static void  build_default_bios(void);
 
 extern DWORD create_path_recursive(const TCHAR *path);
 
-static void  generate_default_ctrlr(void);
 static void  generate_default_dirs(void);
 
 #ifdef _MSC_VER
@@ -711,7 +710,6 @@ BOOL OptionsInit()
 //#endif
 
 	generate_default_dirs();
-	generate_default_ctrlr();
 
 	return TRUE;
 }
@@ -1370,7 +1368,6 @@ const WCHAR* GetCtrlrDir(void)
 void SetCtrlrDir(const WCHAR* path)
 {
 	options_set_wstring(global, OPTION_CTRLRPATH, path, OPTION_PRIORITY_CMDLINE);
-	generate_default_ctrlr();
 }
 
 const WCHAR* GetCommentDir(void)
@@ -2743,54 +2740,6 @@ static void generate_default_dirs(void)
 		}
 		free(paths);
 	};
-}
-
-static void generate_default_ctrlr(void)
-{
-#if 0
-	static const char *default_ctrlr = 
-		"<mameconfig version=\"10\">\n"
-		"\t<system name=\"default\">\n"
-		"\t\t<!--\n"
-		"\t\t\tStandard input customization file\n"
-		"\t\t\t(dummy file for GUI)\n"
-		"\t\t-->\n"
-		"\t</system>\n"
-		"</mameconfig>\n";
-	const WCHAR *ctrlrpath = GetCtrlrDir();
-	const char *ctrlr = options_get_string(mamecore, OPTION_CTRLR);
-
-	mame_file *file;
-	file_error filerr;
-	WCHAR fname[MAX_PATH];
-	char *stemp;
-	BOOL DoCreate;
-
-	snwprintf(fname, ARRAY_LENGTH(fname), L"%s%hs%hs.cfg", ctrlrpath, PATH_SEPARATOR, ctrlr);
-
-	stemp = utf8_from_wstring(fname);
-	filerr = mame_fopen_options(mamecore, SEARCHPATH_RAW, stemp, OPEN_FLAG_READ, &file);
-	if (filerr == FILERR_NONE)
-		mame_fclose(file);
-
-	DoCreate = (filerr != FILERR_NONE);
-
-	dprintf("I %shave ctrlr %s", DoCreate ? "don't " : "", ctrlr);
-
-	if (DoCreate)
-	{
-		create_path_recursive(ctrlrpath);
-
-		filerr = mame_fopen_options(mamecore, SEARCHPATH_RAW, stemp, OPEN_FLAG_READ | OPEN_FLAG_WRITE | OPEN_FLAG_CREATE, &file);
-		if (filerr == FILERR_NONE)
-		{
-			mame_fputs(file, default_ctrlr);
-			mame_fclose(file);
-		}
-	}
-
-	free(stemp);
-#endif
 }
 
 static void  CusColorEncodeString(const COLORREF *value, char* str)

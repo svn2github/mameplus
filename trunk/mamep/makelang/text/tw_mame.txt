@@ -244,7 +244,7 @@
 
 # emu/emuopts.c: 57, 81, 87, 92, 158, 207, 213, 219, 225, 226, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262 
 (disabled by compiling option)
-(由編譯選項停用)
+(已由編譯選項停用)
 
 # emu/uitext.c: 124
 (locked)
@@ -5703,8 +5703,8 @@ center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 搖桿的中心無反應區範圍，在此範圍的變化將被忽略 (0.0 - 1.0)
 
 # emu/emuopts.c: 217
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-變更 M68000 CPU 核心 (0:C, 1:DRC, 2:ASM+DRC)
+change m68k core (c|drc)
+變更 M68000 CPU 核心 (c|drc)
 
 # emu/cheat.c: 3232
 cheat database not found

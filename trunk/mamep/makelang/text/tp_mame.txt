@@ -5899,7 +5899,7 @@ center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 
 
 # emu/emuopts.c: 217
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
+change m68k core (c|drc)
 
 
 # emu/cheat.c: 3232

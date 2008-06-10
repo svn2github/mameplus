@@ -1219,7 +1219,7 @@ General
 
 
 # osd/winui/properties.c: 1149
-Global BIOS driver options\nCustom options used by all games using BIOS %s
+Global BIOS driver options\nCustom options used by all games in the %s
 
 
 # osd/winui/properties.c: 1137

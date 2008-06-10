@@ -1219,8 +1219,8 @@ General
 一般
 
 # osd/winui/properties.c: 1149
-Global BIOS driver options\nCustom options used by all games using BIOS %s
-通用 BIOS 選項\n供 BIOS %s 全部遊戲使用的自訂選項
+Global BIOS driver options\nCustom options used by all games in the %s
+通用 BIOS 選項\n供 %s 全部遊戲使用的自訂選項
 
 # osd/winui/properties.c: 1137
 Global driver options\nCustom options used by all games in the %s

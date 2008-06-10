@@ -214,7 +214,7 @@ const options_entry mame_core_options[] =
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	/* ks hcmame s switch m68k core */
-	{ "m68k_core",                   "c",         0,                 "change m68k core (0:C, 1:DRC, 2:ASM+DRC)" },
+	{ "m68k_core",                   "c",         0,                 "change m68k core (c|drc)" },
 #else /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 	{ "m68k_core",                   "c",         OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
