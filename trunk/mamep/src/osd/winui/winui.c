@@ -988,7 +988,7 @@ static void override_options(core_options *opts, void *param)
 	if (playopts->wavwrite != NULL)
 		options_set_wstring(opts, OPTION_WAVWRITE, playopts->wavwrite, OPTION_PRIORITY_CMDLINE);
 	if (playopts->mngwrite != NULL)
-		options_set_wstring(opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
+		options_set_wstring(opts, OPTION_MNGWRITE, playopts->mngwrite, OPTION_PRIORITY_CMDLINE);
 	if (playopts->aviwrite != NULL)
 		options_set_wstring(opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
 }
