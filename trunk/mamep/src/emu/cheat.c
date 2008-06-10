@@ -2985,7 +2985,7 @@ static int cheat_main_menu(running_machine *machine, cheat_menu_stack *menu)
 #endif
 
 	/* ##### Return to the MAME general menu ##### */
-	menu_item[total++].text = "Return to Main Menu";
+	menu_item[total++].text = _("Return to Main Menu");
 
 	/* ##### Terminate Array ##### */
 	menu_item[total].text = NULL;
@@ -3144,7 +3144,7 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 				if(traverse->flags & kCheatFlag_HasWrongCode)
 				{
 					/* "LOCKED" if wrong code */
-					menu_sub_item[total] = "Locked";
+					menu_sub_item[total] = _("Locked");
 					traverse->selection = 0;
 					traverse->flags &= ~kCheatFlag_RequestArrow;
 				}
@@ -3161,7 +3161,7 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 				else if(traverse->flags & kCheatFlag_ExtendComment)
 				{
 					/* "READ" if extend comment code */
-					menu_sub_item[total] = "Read";
+					menu_sub_item[total] = _("Read");
 					traverse->flags &= ~kCheatFlag_RequestArrow;
 				}
 				else if(traverse->flags & kCheatFlag_LayerIndex)
@@ -3205,7 +3205,7 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 				if(traverse->comment)
 					menu_item[total] = traverse->comment;
 				else
-					menu_item[total] = "Return to Prior Layer";
+					menu_item[total] = _("Return to Prior Layer");
 				menu_sub_item[total] = "<<<";
 				flag_buf[total] = 0;
 				menu_index[total++] = i;
@@ -3229,12 +3229,12 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 		else
 		{
 			/* the database itself is not found */
-			menu_item[total]		= "cheat database not found";
+			menu_item[total]		= _("cheat database not found");
 			menu_sub_item[total]	= NULL;
 			menu_index[total]		= total;
 			flag_buf[total++]		= 0;
 
-			menu_item[total]		= "unzip it and place it in the MAME directory";
+			menu_item[total]		= _("unzip it and place it in the MAME directory");
 			menu_sub_item[total]	= NULL;
 			menu_index[total]		= total;
 			flag_buf[total++]		= 0;
@@ -3244,7 +3244,7 @@ static int enable_disable_cheat_menu(running_machine *machine, cheat_menu_stack 
 	else if(current_layer && total == 1)
 	{
 		/* selected layer doesn't have code */
-		menu_item[total]		= "selected layer doesn't have sub code";
+		menu_item[total]		= _("selected layer doesn't have sub code");
 		menu_sub_item[total]	= NULL;
 		menu_index[total]		= menu_index[total - 1];
 		flag_buf[total++]		= 0;
@@ -3768,17 +3768,17 @@ static int command_add_edit_menu(running_machine *machine, cheat_menu_stack *men
 
 	/********** MENU CONSTRUCION **********/
 	if(entry->flags & kCheatFlag_OldFormat)
-		menu_item[total++].text = "Edit Code";
+		menu_item[total++].text = _("Edit Code");
 	else
-		menu_item[total++].text = "View Code";
-	menu_item[total++].text = "Reload Database";
-	menu_item[total++].text = "Watch Code";
-	menu_item[total++].text = "Save Code";
-	menu_item[total++].text = "Save Activation Key";
-	menu_item[total++].text = "Save PreEnable";
-	menu_item[total++].text = "Save All Codes";
-	menu_item[total++].text = "Add New Code";
-	menu_item[total++].text = "Delete Code";
+		menu_item[total++].text = _("View Code");
+	menu_item[total++].text = _("Reload Database");
+	menu_item[total++].text = _("Watch Code");
+	menu_item[total++].text = _("Save Code");
+	menu_item[total++].text = _("Save Activation Key");
+	menu_item[total++].text = _("Save PreEnable");
+	menu_item[total++].text = _("Save All Codes");
+	menu_item[total++].text = _("Add New Code");
+	menu_item[total++].text = _("Delete Code");
 #ifdef MAME_DEBUG
 	if(entry->flags & kCheatFlag_OldFormat)
 		menu_item[total++].text = "Convert To New Format";
@@ -4178,14 +4178,14 @@ static int edit_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 			menuItemInfo[total].field_type = kType_ActivationKey1;
 
 			if(locationType == kLocation_Custom && locationParameter == kCustomLocation_Select)
-				menuItem[total] = "Activation Key - Prev";
+				menuItem[total] = _("Activation Key - Prev");
 			else
-				menuItem[total] = "Activation Key - 1st";
+				menuItem[total] = _("Activation Key - 1st");
 
 			if(entry->flags & kCheatFlag_HasActivationKey1)
 				menuSubItem[total++] = astring_c(input_code_name(tempString1, entry->activationKey1));
 			else
-				menuSubItem[total++] = "(none)";
+				menuSubItem[total++] = _("(none)");
 		}
 
 		{
@@ -4194,14 +4194,14 @@ static int edit_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 			menuItemInfo[total].field_type = kType_ActivationKey2;
 
 			if(locationType == kLocation_Custom && locationParameter == kCustomLocation_Select)
-				menuItem[total] = "Activation Key - Next";
+				menuItem[total] = _("Activation Key - Next");
 			else
-				menuItem[total] = "Activation Key - 2nd";
+				menuItem[total] = _("Activation Key - 2nd");
 
 			if(entry->flags & kCheatFlag_HasActivationKey2)
 				menuSubItem[total++] = astring_c(input_code_name(tempString2, entry->activationKey2));
 			else
-				menuSubItem[total++] = "(none)";
+				menuSubItem[total++] = _("(none)");
 		}
 
 		{
@@ -7830,7 +7830,7 @@ static int select_search_region_menu(running_machine *machine, cheat_menu_stack 
 			menu_item[total] = region->name;
 
 			if(region->flags & kRegionFlag_HasError)
-				menu_sub_item[total++] = "Locked";
+				menu_sub_item[total++] = _("Locked");
 			else
 				menu_sub_item[total++] = region->flags & kRegionFlag_Enabled ? "On" : "Off";
 		}
@@ -9918,7 +9918,7 @@ static int debug_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 
 	/********** MENU CONSTRUCTION **********/
 	/* ##### DRIVER NAME ##### */
-	menuItem[total] = "Driver";
+	menuItem[total] = _("Driver");
 	{
 		astring * driverName = astring_alloc();
 
@@ -9929,9 +9929,9 @@ static int debug_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 
 	/* ##### GAME / MACHINE NAME ##### */
 #ifdef MESS
-	menuItem[total]			= "Machine";
+	menuItem[total]			= _("Machine");
 #else
-	menuItem[total] 		= "Game";
+	menuItem[total] 		= _("Game");
 #endif
 	menuSubItem[total++]	= machine->gamedrv->name;
 
@@ -9943,12 +9943,12 @@ static int debug_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 #endif
 
 	/* ##### FULL PAGE MENU HEIGHT ##### */
-	menuItem[total] = "Default Menu Height";
+	menuItem[total] = _("Default Menu Height");
 	sprintf(heightBuf, "%d", fullMenuPageHeight);
 	menuSubItem[total++] = heightBuf;
 
 	/* ##### CHEAT LIST LENGTH ##### */
-	menuItem[total] = "Total Code Entries";
+	menuItem[total] = _("Total Code Entries");
 	sprintf(numCodeBuf, "%d", cheat_list_length);
 	menuSubItem[total++] = numCodeBuf;
 
@@ -9957,11 +9957,11 @@ static int debug_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 	menuSubItem[total++] = NULL;
 
 	/* ##### CPU/REGION INFO ##### */
-	menuItem[total] = "View CPU/Region Info";
+	menuItem[total] = _("View CPU/Region Info");
 	menuSubItem[total++] = NULL;
 
 	/* ##### ACTIVATION KEY CODE CHEAKCER ##### */
-	menuItem[total] = "Check Activation Key Code";
+	menuItem[total] = _("Check Activation Key Code");
 	menuSubItem[total++] = NULL;
 
 	/* ##### RETURN ##### */
