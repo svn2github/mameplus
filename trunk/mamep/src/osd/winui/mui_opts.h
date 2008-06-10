@@ -160,9 +160,6 @@ BOOL GetFilterInherit(void);
 void SetOffsetClones(BOOL offset);
 BOOL GetOffsetClones(void);
 
-void SetGameCaption(BOOL caption);
-BOOL GetGameCaption(void);
-
 void SetBroadcast(BOOL broadcast);
 BOOL GetBroadcast(void);
 
@@ -313,6 +310,9 @@ void SetHistoryFileName(const WCHAR *path);
 const WCHAR *GetMAMEInfoFileName(void);
 void SetMAMEInfoFileName(const WCHAR *path);
 
+const char* GetSnapName(void);
+void SetSnapName(const char* pattern);
+
 void ResetGameOptions(int driver_index);
 
 int GetRomAuditResults(int driver_index);
@@ -451,8 +451,9 @@ void set_core_state_directory(const WCHAR *dir);
 void set_core_state(const WCHAR *name);
 void set_core_playback(const WCHAR *name);
 void set_core_record(const WCHAR *name);
-void set_core_mngwrite(const WCHAR *filename);
 void set_core_wavwrite(const WCHAR *filename);
+void set_core_mngwrite(const WCHAR *filename);
+void set_core_aviwrite(const WCHAR *filename);
 void set_core_localized_directory(const WCHAR *dir);
 
 void set_core_history_filename(const WCHAR *filename);

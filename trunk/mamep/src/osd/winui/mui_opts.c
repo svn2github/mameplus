@@ -134,7 +134,6 @@ static void  generate_default_dirs(void);
 #ifdef TREE_SHEET
 #define MUIOPTION_SHOW_TREE_SHEET			"show_tree_sheet"
 #endif /* TREE_SHEET */
-#define MUIOPTION_GAME_CAPTION					"game_caption"
 //#define MUIOPTION_BROADCAST_GAME_NAME			"broadcast_game_name"
 #define MUIOPTION_BROADCAST_GAME_NAME			"broadcast"
 //#define MUIOPTION_RANDOM_BACKGROUND				"random_background"
@@ -359,7 +358,6 @@ static const options_entry regSettings[] =
 #ifdef TREE_SHEET
 	{ MUIOPTION_SHOW_TREE_SHEET,			"1",        OPTION_BOOLEAN,    NULL },
 #endif /* TREE_SHEET */
-	{ MUIOPTION_GAME_CAPTION,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_STRETCH_SCREENSHOT_LARGER,	"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_CYCLE_SCREENSHOT,			"0",        0,                 NULL },
  	{ MUIOPTION_SCREENSHOT_BORDER_SIZE,		"11",       0,                 NULL },
@@ -967,16 +965,6 @@ void SetOffsetClones(BOOL offset)
 BOOL GetOffsetClones(void)
 {
 	return options_get_bool(settings, MUIOPTION_OFFSET_CLONES);
-}
-
-void SetGameCaption(BOOL caption)
-{
-	options_set_bool(settings, MUIOPTION_GAME_CAPTION, caption, OPTION_PRIORITY_CMDLINE);
-}
-
-BOOL GetGameCaption(void)
-{
-	return options_get_bool(settings, MUIOPTION_GAME_CAPTION);
 }
 
 void SetBroadcast(BOOL broadcast)
@@ -1594,6 +1582,16 @@ const WCHAR* GetMAMEInfoFileName(void)
 void SetMAMEInfoFileName(const WCHAR* path)
 {
 	options_set_wstring(settings, OPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
+}
+
+const char* GetSnapName(void)
+{
+	return options_get_string(global, OPTION_SNAPNAME);
+}
+
+void SetSnapName(const char* pattern)
+{
+	options_set_string(global, OPTION_SNAPNAME, pattern, OPTION_PRIORITY_CMDLINE);
 }
 
 void ResetGameOptions(int driver_index)
@@ -2687,14 +2685,19 @@ void set_core_record(const WCHAR *name)
 	options_set_wstring(mamecore, OPTION_RECORD, name, OPTION_PRIORITY_CMDLINE);
 }
 
+void set_core_wavwrite(const WCHAR *filename)
+{
+	options_set_wstring(mamecore, OPTION_WAVWRITE, filename, OPTION_PRIORITY_CMDLINE);
+}
+
 void set_core_mngwrite(const WCHAR *filename)
 {
 	options_set_wstring(mamecore, OPTION_MNGWRITE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
-void set_core_wavwrite(const WCHAR *filename)
+void set_core_aviwrite(const WCHAR *filename)
 {
-	options_set_wstring(mamecore, OPTION_WAVWRITE, filename, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(mamecore, OPTION_AVIWRITE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_history_filename(const WCHAR *filename)

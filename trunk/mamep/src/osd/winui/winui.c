@@ -254,6 +254,7 @@ enum
 	FILETYPE_SAVESTATE_FILES,
 	FILETYPE_WAVE_FILES,
 	FILETYPE_MNG_FILES,
+	FILETYPE_AVI_FILES,
 	FILETYPE_IMAGE_FILES,
 	FILETYPE_GAMELIST_FILES,
 	FILETYPE_MAX
@@ -287,6 +288,7 @@ struct _play_options
 	const WCHAR *state;		// OPTION_STATE
 	const WCHAR *wavwrite;		// OPTION_WAVWRITE
 	const WCHAR *mngwrite;		// OPTION_MNGWRITE
+	const WCHAR *aviwrite;		// OPTION_AVIWRITE
 };
 
 /***************************************************************************
@@ -350,6 +352,7 @@ static void             MamePlayRecordGame(void);
 static void             MamePlayBackGame(LPCWSTR fname_playback);
 static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
+static void             MamePlayRecordAVI(void);
 static void				MameLoadState(LPCWSTR fname_state);
 static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
 static void             MamePlayGameWithOptions(int nGame, const play_options *playopts);
@@ -537,8 +540,9 @@ static struct
 	{ ID_GAME_AUDIT,			IDI_CHECKMARK },
 	{ ID_FILE_PLAY,				IDI_WIN_ROMS },
 	{ ID_FILE_EXIT,				IDI_WIN_REDX },
-	{ ID_FILE_PLAY_RECORD_MNG,	IDI_VIDEO },
 	{ ID_FILE_PLAY_RECORD_WAVE,	IDI_SOUND },
+	{ ID_FILE_PLAY_RECORD_MNG,	IDI_VIDEO },
+	{ ID_FILE_PLAY_RECORD_AVI,	IDI_VIDEO },
 	{ ID_FILE_PLAY_RECORD,		IDI_JOYSTICK },
 	{ ID_OPTIONS_DIR,			IDI_FOLDER },
 	{ ID_VIEW_GROUPED,			IDI_GROUP },
@@ -843,6 +847,13 @@ static struct
 		TEXT("mng")
 	},
 	{
+		TEXT("Videos (*.avi)\0*.avi;\0All files (*.*)\0*.*\0"),
+		NULL,
+		TEXT("Select a avi file to record"),
+		GetLastDir,
+		TEXT("avi")
+	},
+	{
 		TEXT("Image Files (*.png,*.bmp)\0*.png;*.bmp\0"),
 		TEXT("Select a Background Image"),
 		NULL,
@@ -977,7 +988,9 @@ static void override_options(core_options *opts, void *param)
 	if (playopts->wavwrite != NULL)
 		options_set_wstring(opts, OPTION_WAVWRITE, playopts->wavwrite, OPTION_PRIORITY_CMDLINE);
 	if (playopts->mngwrite != NULL)
-		options_set_wstring(opts, OPTION_MNGWRITE, playopts->mngwrite, OPTION_PRIORITY_CMDLINE);
+		options_set_wstring(opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
+	if (playopts->aviwrite != NULL)
+		options_set_wstring(opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
 }
 
 static DWORD RunMAME(int nGameIndex, const play_options *playopts)
@@ -1044,8 +1057,6 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	{
 		ShowWindow(hMain, SW_HIDE);
 		SendIconToProcess(&pi, nGameIndex);
-		if( ! GetGameCaption() )
-		{
 			hGameWnd = GetGameWindow(&pi);
 			if( hGameWnd )
 			{
@@ -1054,7 +1065,6 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 				SetWindowLong(hGameWnd, GWL_STYLE, lGameWndStyle);
 				SetWindowPos(hGameWnd,0,0,0,0,0,SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
 			}
-		}
 		time(&start);
 
 		// Wait until child process exits.
@@ -4939,6 +4949,10 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		MamePlayRecordMNG();
 		return TRUE;
 
+	case ID_FILE_PLAY_RECORD_AVI:
+		MamePlayRecordAVI();
+		return TRUE;
+
 	case ID_FILE_LOADSTATE :
 		MameLoadState(NULL);
 		return TRUE;
@@ -6687,6 +6701,24 @@ static void MamePlayRecordMNG()
 		MamePlayGameWithOptions(nGame, &playopts);
 	}	
 }
+
+static void MamePlayRecordAVI()
+{
+	int  nGame;
+	WCHAR filename[MAX_PATH] = { 0, };
+	play_options playopts;
+
+	nGame = Picker_GetSelectedItem(hwndList);
+	wcscpy(filename, driversw[nGame]->name);
+
+	if (CommonFileDialog(TRUE, filename, FILETYPE_AVI_FILES))
+	{
+		memset(&playopts, 0, sizeof(playopts));
+		playopts.aviwrite = filename;
+		MamePlayGameWithOptions(nGame, &playopts);
+	}	
+}
+
 
 static void MamePlayGameWithOptions(int nGame, const play_options *playopts)
 {

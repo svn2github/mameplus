@@ -424,7 +424,7 @@ static struct ComboBoxSelectScreen
 	const int	m_pData;
 } g_ComboBoxSelectScreen[] = 
 {
-	{ TEXT("Default setting"),      0    },
+	{ TEXT("All screens"),      0    },
 	{ TEXT("First screen"),         1    },
 	{ TEXT("Second screen"),        2    },
 	{ TEXT("Third screen"),         3    },

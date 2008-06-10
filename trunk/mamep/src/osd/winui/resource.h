@@ -318,7 +318,6 @@
 #define IDC_DUAL_LIGHTGUN               1220
 #define IDC_NOOFFSET_CLONES             1221
 #define IDC_HISTORY_TAB                 1223
-#define IDC_GAME_CAPTION                1224
 #define IDC_SCREENSHOT_BORDERSIZE       1225
 #define IDC_SCREENSHOT_BORDERCOLOR      1226
 #define IDC_CYCLETIMESECTXT             1230
@@ -353,6 +352,7 @@
 #define IDC_SPEEDDISP                   1257
 #define IDC_FILTER_HORIZONTAL           1265
 #define IDC_FILTER_VERTICAL             1266
+#define IDC_SNAPNAME                    1267
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
@@ -465,7 +465,8 @@
 #define ID_FILE_PLAY_BACK               40020
 #define ID_FILE_PLAY_RECORD_WAVE        40021
 #define ID_FILE_PLAY_RECORD_MNG         40022
-#define ID_VIEW_PICTURE_AREA            40023
+#define ID_FILE_PLAY_RECORD_AVI         40023
+#define ID_VIEW_PICTURE_AREA            40024
 #define ID_HELP_CONTENTS                40025
 #define ID_HELP_WHATS_NEW32             40026
 #define ID_HELP_TROUBLE                 40027
