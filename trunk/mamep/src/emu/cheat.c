@@ -4247,7 +4247,7 @@ static int edit_cheat_menu(running_machine *machine, cheat_menu_stack *menu)
 			/* do type code field */
 			menuItemInfo[total].sub_cheat = i;
 			menuItemInfo[total].field_type = kType_Code;
-			menuItem[total] = _(Code");
+			menuItem[total] = _("Code");
 
 			sprintf(typeBuf[i], "%8.8X", traverse->type);
 			menuSubItem[total++] = typeBuf[i];
@@ -8166,7 +8166,7 @@ static int view_search_result_menu(running_machine *machine, cheat_menu_stack *m
 	if(!hadResults)
 	{
 		if(search->num_results)
-			menu_item[total++] = _("no results for this region);
+			menu_item[total++] = _("no results for this region");
 		else
 			menu_item[total++] = _("no results found");
 	}
