@@ -2636,7 +2636,7 @@ by Times &Played
 
 # osd/winui/dialogs.c: 138
 requires exiting 
-需要結束程式 
+需要結束 
 
 # osd/winui/dialogs.c: 126
 to the default settings:\n\n
