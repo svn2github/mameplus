@@ -663,7 +663,7 @@ static int fileselect(running_machine *machine, int selected, const char *defaul
 	return sel + 1;
 }
 
-int filemanager(running_machine *machine, int selected)
+static int filemanager(running_machine *machine, int selected)
 {
 	static int previous_sel;
 	const char *name;
@@ -820,3 +820,15 @@ int filemanager(running_machine *machine, int selected)
 }
 
 
+
+/*-------------------------------------------------
+    menu_file_manager - MESS-specific menu
+-------------------------------------------------*/
+
+UINT32 menu_file_manager(running_machine *machine, UINT32 state)
+{
+	int result = filemanager(machine, state);
+	if (result == 0)
+		return ui_menu_stack_pop();
+	return result;
+}
