@@ -1,9 +1,17 @@
+# Grand Prix
+4fun
+
+
 # Conquer
 <unknown>
 
 
 # Sea Bass Fishing (JUET 971110 V0.001)
 A wave inc.
+
+
+# Wizard (Ver 1.0)
+A.A.
 
 
 # Magic's 10 (ver. 16.55)
@@ -1054,6 +1062,10 @@ Island Design
 Italian bootleg
 
 
+# Squash (Itisa)
+Itisa
+
+
 # Major Havoc (Return to Vax)
 JMA
 
@@ -1212,6 +1224,10 @@ Logitec
 
 # Star Wars Trilogy (ver A)
 LucasArts
+
+
+# Mystery Number
+M.M. - B.R.L.
 
 
 # Super Joly 2000 - 3x
@@ -1908,6 +1924,10 @@ Soft Art Co.
 
 # Jolly Card (croatian, set 2)
 Soft Design
+
+
+# Euro Jolly X5
+Solar Games
 
 
 # Dambusters (UK)
