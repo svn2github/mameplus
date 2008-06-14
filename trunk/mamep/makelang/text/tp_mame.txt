@@ -6574,3 +6574,82 @@ writes configuration to (driver).ini on exit
 year, manufacturer and full name
 
 
+# emu/cheat.c: 3010
+Unknown Search Menu
+
+
+# emu/cheat.c: 3016
+Cheat Commands
+
+
+# emu/cheat.c: 3015
+Cheat Options
+
+
+# emu/cheat.c: 9369
+Select Search
+
+
+# emu/cheat.c: 9372
+Load Cheat Options
+
+
+# emu/cheat.c: 9375
+Save Cheat Options
+
+
+# emu/cheat.c: 9378
+Reset Cheat Options
+
+
+# emu/cheat.c: 9384
+Search Dialog Style
+
+
+# emu/cheat.c: 9388
+Minimum
+
+
+# emu/cheat.c: 9392
+Standard
+
+
+# emu/cheat.c: 9396
+Advanced
+
+
+# emu/cheat.c: 9400
+<< No Search Box >>
+
+
+# emu/cheat.c: 9405
+Show Search Labels
+
+
+# emu/cheat.c: 9718
+Reload Cheat Codes
+
+
+# emu/cheat.c: 9720
+Cheat OFF
+
+
+# emu/cheat.c: 9721
+Cheat ON
+
+
+# emu/cheat.c: 9722
+Watchpoints OFF
+
+
+# emu/cheat.c: 9723
+Watchpoints ON
+
+
+# emu/cheat.c: 9725
+Save Description
+
+
+# emu/cheat.c: 9726
+Save Raw Code
+

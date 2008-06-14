@@ -6454,3 +6454,83 @@ video_screen_configure(): visible area must be contained within the width/height
 writes configuration to (driver).ini on exit
 
 
+# emu/cheat.c: 3010
+Unknown Search Menu
+未知搜索菜单
+
+# emu/cheat.c: 3016
+Cheat Commands
+作弊命令
+
+# emu/cheat.c: 3015
+Cheat Options
+作弊选项
+
+# emu/cheat.c: 9369
+Select Search
+选择搜索
+
+# emu/cheat.c: 9372
+Load Cheat Options
+载入作弊选项
+
+# emu/cheat.c: 9375
+Save Cheat Options
+保存作弊选项
+
+# emu/cheat.c: 9378
+Reset Cheat Options
+重置作弊选项
+
+# emu/cheat.c: 9384
+Search Dialog Style
+搜索对话框样式
+
+# emu/cheat.c: 9388
+Minimum
+最小
+
+# emu/cheat.c: 9392
+Standard
+标准
+
+# emu/cheat.c: 9396
+Advanced
+高级
+
+# emu/cheat.c: 9400
+<< No Search Box >>
+<< 没有搜索盒子 >>
+
+# emu/cheat.c: 9405
+Show Search Labels
+显示搜索标签
+
+# emu/cheat.c: 9718
+Reload Cheat Codes
+重新载入作弊代码
+
+# emu/cheat.c: 9720
+Cheat OFF
+作弊 关闭
+
+# emu/cheat.c: 9721
+Cheat ON
+作弊 打开
+
+# emu/cheat.c: 9722
+Watchpoints OFF
+监视点 关闭
+
+# emu/cheat.c: 9723
+Watchpoints ON
+监视点 打开
+
+# emu/cheat.c: 9725
+Save Description
+保存 描述
+
+# emu/cheat.c: 9726
+Save Raw Code
+保存 Raw 代码
+

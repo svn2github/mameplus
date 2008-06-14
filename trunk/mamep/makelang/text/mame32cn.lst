@@ -169,8 +169,8 @@ frogg	青蛙过河 (Galaxian 硬件)	青蛙过河 (Galaxian 硬件)	bootleg
 bagmanmc	推销员 (Moon Cresta 硬件)	推销员 (Moon Cresta 硬件)	bootleg
 dkongjrm	大金刚 Jr. (Moon Cresta 硬件)	大金刚 Jr. (Moon Cresta 硬件)	bootleg
 ozon1	自走炮 1	自走炮 1	Proma
-ladybugg	小瓢虫 (盗版 on Galaxian 硬件)	小瓢虫 (盗版 on Galaxian 硬件)	bootleg
-vpool	电视撞球台 (盗版 on Moon Cresta 硬件)	电视撞球台 (盗版 on Moon Cresta 硬件)	bootleg
+ladybugg	瓢虫小姐 (盗版 Galaxian 硬件)	瓢虫小姐 (盗版 Galaxian 硬件)	bootleg
+vpool	电视撞球台 (盗版 Moon Cresta 硬件)	电视撞球台 (盗版 Moon Cresta 硬件)	bootleg
 drivfrcg	方程式赛车 Force (小蜜蜂 转换)	方程式赛车 Force (小蜜蜂 转换)	Shinkai Inc. (Magic Eletronics USA licence)
 drivfrcb	方程式赛车 Force (小蜜蜂 转换 盗版)	方程式赛车 Force (小蜜蜂 转换 盗版)	bootleg
 bongo	阿古历险记	阿古历险记	Jetsoft
@@ -248,7 +248,7 @@ aponow	拯救直升机 Apocaljpse Now	拯救直升机 Apocaljpse Now	bootleg
 minefld	布雷区	布雷区	Stern
 losttomb	盗募者 (容易版)	盗募者 (容易版)	Stern
 losttmbh	盗募者 (困难版)	盗募者 (困难版)	Stern
-superbon	超级庞德	超级庞德	bootleg
+superbon	超级庞德 (Scobra 硬件)	超级庞德 (Scobra 硬件)	Signatron USA
 hustler	电视撞球	电视撞球	Konami
 billiard	弹子房	弹子房	bootleg
 hustlerb	电视撞球 (盗版)	电视撞球 (盗版)	bootleg
@@ -639,7 +639,8 @@ pistoldm	手枪大名冒险 (日版)	手枪大名冒险 (日版)	Namco
 boxyboy	仓库番豪华版 (美版)	仓库番豪华版 (美版)	Namco
 soukobdx	仓库番豪华版 (日版)	仓库番豪华版 (日版)	Namco
 puzlclub	解谜俱乐部 (日版 工程版)	解谜俱乐部 (日版 工程版)	Namco
-tankfrce	坦克部队 (美版)	坦克部队 (美版)	Namco
+tankfrce	坦克部队 (美版, 2 Player)	坦克部队 (美版, 2 Player)	Namco
+tankfrc4	坦克部队 (美版, 4 Player)	坦克部队 (美版, 4 Player)	Namco
 tankfrcj	坦克部队 (日版)	坦克部队 (日版)	Namco
 finallap	最后冲剌 (Rev E)	最后冲剌 (Rev E)	Namco
 finalapd	最后冲剌 (Rev D)	最后冲剌 (Rev D)	Namco
@@ -1558,7 +1559,7 @@ scessjoe	拳王 - 乔 (世界版)	拳王 - 乔 (世界版)	WAVE / Taito Corporation
 ashnojoe	小拳王 (日版)	小拳王 (日版)	WAVE / Taito Corporation
 ninjaw	忍者武士 (世界版)	忍者武士 (世界版)	Taito Corporation Japan
 ninjawj	忍者武士 (日版)	忍者武士 (日版)	Taito Corporation
-darius2	太空战斗机 2 (日版)	太空战斗机 2 (日版)	Taito Corporation
+darius2	太空战斗机 II (日版)	太空战斗机 II (日版)	Taito Corporation
 darius2d	太空战斗机 2 (双屏幕版) (日版)	太空战斗机 2 (双屏幕版) (日版)	Taito Corporation
 drius2do	太空战斗机 2 (双屏幕版) (日版 旧版)	太空战斗机 2 (双屏幕版) (日版 旧版)	Taito Corporation
 warriorb	王者之剑 Ⅲ (日版)	王者之剑 Ⅲ (日版)	Taito Corporation
@@ -4984,7 +4985,7 @@ garoubl	饿狼 - 群狼之证 / 狼之烙印 (盗版)	饿狼 - 群狼之证 / 狼之烙印 (盗版)	boot
 s1945p	打击者 1945 加强版	打击者 1945 加强版	Psikyo
 preisle2	原始岛 2	原始岛 2	Yumekobo
 mslug3	合金弹头 3	合金弹头 3	SNK
-mslug3n	合金弹头 3 (程序未加密)	合金弹头 3 (程序未加密)	SNK
+mslug3h	合金弹头 3 (程序未加密)	合金弹头 3 (程序未加密)	SNK
 mslug3b6	合金弹头 6 (盗版)	合金弹头 6 (盗版)	bootleg
 kof2000	拳皇 2000	拳皇 2000	SNK
 kof2000n	拳皇 2000 (程序未加密)	拳皇 2000 (程序未加密)	SNK
@@ -5437,6 +5438,7 @@ sbagman	超级袋子人	超级袋子人	Valadon Automation
 sbagmans	超级袋子人 (Stern)	超级袋子人 (Stern)	Valadon Automation (Stern license)
 pickin	组合游戏	组合游戏	Valadon Automation
 botanic	毛毛虫历险记	毛毛虫历险记	Valadon Automation (Itisa license)
+squaitsa	壁球 (Itisa)	壁球 (Itisa)	Itisa
 tankbust	坦克破坏者	坦克破坏者	Valadon Automation
 stinger	赤猬战机	赤猬战机	Seibu Denshi
 stinger2	赤猬战机 (工程版?)	赤猬战机 (工程版?)	Seibu Denshi
@@ -6207,8 +6209,10 @@ multchmp	Multi 冠军 (世界版)	Multi 冠军 (世界版)	ESD
 multchmk	Multi 冠军 (韩国版)	Multi 冠军 (韩国版)	ESD
 mchampdx	Multi 冠军豪华版 (ver. 1126)	Multi 冠军豪华版 (ver. 1126)	ESD
 mchampda	Multi 冠军豪华版 (ver. 1126, 26/11/1999)	Multi 冠军豪华版 (ver. 1126, 26/11/1999)	ESD
-hedpanic	头槌小子 (韩国版, ver. 0315)	头槌小子 (韩国版, ver. 0315)	ESD / Fuuki
+hedpanic	头槌小子 (ver. 0117, 17/01/2000)	头槌小子 (ver. 0117, 17/01/2000)	ESD
+hedpanif	头槌小子 (韩国版, ver. 0315)	头槌小子 (韩国版, ver. 0315)	ESD / Fuuki
 tangtang	堂堂 (ver. 0526, 26/05/2000)	堂堂 (ver. 0526, 26/05/2000)	ESD
+swatpolc	SWAT 特警组	SWAT 特警组	ESD
 royalmj	皇家麻雀 (日版, v1.13)	皇家麻雀 (日版, v1.13)	Nichibutsu
 openmj	皇家麻雀 [BET] (日版)	皇家麻雀 [BET] (日版)	Sapporo Mechanic
 royalmah	皇家麻雀 (Falcon 盗版, v1.01)	皇家麻雀 (Falcon 盗版, v1.01)	bootleg
@@ -6536,7 +6540,7 @@ crysbios	Crystal System BIOS	Crystal System BIOS	Brezzasoft
 crysking	王者水晶	王者水晶	Brezzasoft
 evosocc	进化足球 EVO	进化足球 EVO	Evoga
 topbladv	刀刃 V	刀刃 V	unknown
-officeye	Office Yeo ln Cheon Ha	Office Yeo ln Cheon Ha	unknown
+officeye	Office Yeo In Cheon Ha	Office Yeo In Cheon Ha	unknown
 inquiztr	反馈	反馈	BFM
 escounts	每秒计算 (39-360-053)	每秒计算 (39-360-053)	BFM
 trebltop	三倍完成 (39-360-070)	三倍完成 (39-360-070)	BFM
@@ -6955,6 +6959,7 @@ ampkr2b2	美式扑克 II (盗版，第2套)	美式扑克 II (盗版，第2套)	Bootleg
 ampkr2b3	美式扑克 II (盗版，第3套)	美式扑克 II (盗版，第3套)	Bootleg
 pkrdewin	扑克大赢家	扑克大赢家	Bootleg
 ampkr95	美式扑克 95	美式扑克 95	Bootleg
+videomat	视频分析 (polish bootleg)	视频分析 (polish bootleg)	Bootleg
 sigmapkr	思格玛扑克	思格玛扑克	Sigma Inc.
 sigma2k	思格玛扑克 2000	思格玛扑克 2000	Sigma Inc.
 lucky8	幸运 8 线	幸运 8 线	Falcon
@@ -6986,6 +6991,12 @@ wyvernwg	铁翼飞龙	铁翼飞龙	SemiCom (Game Vision License)
 rbmk	实战 - 麻将王 加强版	实战 - 麻将王 加强版	GMS
 go2000	射门 2000	射门 2000	SA
 mirax	鲸鱼星座	鲸鱼星座	Current Technologies
+victor5	征服者 5	征服者 5	Subsino
+victor21	征服者 21	征服者 21	Subsino
+sharkpy	狂鲨任务	狂鲨任务	Subsino
+sharkpya	狂鲨任务 (alt)	狂鲨任务 (alt)	Subsino
+smoto20	超级骑士 (意大利, v2.0)	超级骑士 (意大利, v2.0)	Subsino
+smoto16	超级摩托 (意大利, v1.6)	超级摩托 (意大利, v1.6)	Subsino
 lastfght	最终之战	最终之战	Subsino
 bishjan	美笑雀	美笑雀	Subsino
 sliver	长条	长条	Hollow Corp
@@ -7032,6 +7043,7 @@ comg181	欧米伽 - 游戏 18.1 (宾果)	欧米伽 - 游戏 18.1 (宾果)	Cal Omega Inc.
 comg183	欧米伽 - 游戏 18.3 (画素)	欧米伽 - 游戏 18.3 (画素)	Cal Omega Inc.
 comg185	欧米伽 - 游戏 18.5 (画素)	欧米伽 - 游戏 18.5 (画素)	Cal Omega Inc.
 comg186	欧米伽 - 游戏 18.6 (画素)	欧米伽 - 游戏 18.6 (画素)	Cal Omega Inc.
+comg187	欧米伽 - 游戏 18.7 (趣味扑克)	欧米伽 - 游戏 18.7 (趣味扑克)	Cal Omega Inc.
 comg204	欧米伽 - 游戏 20.4 (超级21点)	欧米伽 - 游戏 20.4 (超级21点)	Cal Omega Inc.
 comg208	欧米伽 - 游戏 20.8 (赢家的选择)	欧米伽 - 游戏 20.8 (赢家的选择)	Cal Omega Inc.
 comg227	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	Cal Omega Inc.
@@ -7089,8 +7101,13 @@ pepp0447	游戏者的利刃 Plus (PP0447) Standard Draw Poker	游戏者的利刃 Plus (PP044
 pepp0516	加押扑克	加押扑克	IGT - International Gaming Technology
 pebe0014	游戏者的利刃 Plus (BE0014) Blackjack	游戏者的利刃 Plus (BE0014) Blackjack	IGT - International Gaming Technology
 peke1012	游戏者的利刃 Plus (KE1012) Keno	游戏者的利刃 Plus (KE1012) Keno	IGT - International Gaming Technology
+peps0014	游戏者的利刃 Plus (PS0014) Super Joker Slots	游戏者的利刃 Plus (PS0014) Super Joker Slots	IGT - International Gaming Technology
+peps0022	游戏者的利刃 Plus (PS0022) Red White & Blue Slots	游戏者的利刃 Plus (PS0022) Red White & Blue Slots	IGT - International Gaming Technology
+peps0043	游戏者的利刃 Plus (PS0043) Double Diamond Slots	游戏者的利刃 Plus (PS0043) Double Diamond Slots	IGT - International Gaming Technology
+peps0045	游戏者的利刃 Plus (PS0045) Red White & Blue Slots	游戏者的利刃 Plus (PS0045) Red White & Blue Slots	IGT - International Gaming Technology
+peps0308	游戏者的利刃 Plus (PS0308) Double Jackpot Slots	游戏者的利刃 Plus (PS0308) Double Jackpot Slots	IGT - International Gaming Technology
 peps0615	游戏者的利刃 Plus (PS0615) Chaos Slots	游戏者的利刃 Plus (PS0615) Chaos Slots	IGT - International Gaming Technology
-peps0716	游戏者的利刃 Plus (PS0716) Quarter Mania Slots	游戏者的利刃 Plus (PS0716) Quarter Mania Slots	IGT - International Gaming Technology
+peps0716	游戏者的利刃 Plus (PS0716) River Gambler Slots	游戏者的利刃 Plus (PS0716) River Gambler Slots	IGT - International Gaming Technology
 pexp0019	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	IGT - International Gaming Technology
 pexp0112	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	IGT - International Gaming Technology
 pexs0006	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	IGT - International Gaming Technology
@@ -7110,17 +7127,20 @@ laperla	La Perla Nera (Ver 2.0)	La Perla Nera (Ver 2.0)	Nazionale Elettronica
 laperlag	La Perla Nera Gold (Ver 2.0)	La Perla Nera Gold (Ver 2.0)	Nazionale Elettronica
 capunc	Capitan Uncino (Ver 1.2)	Capitan Uncino (Ver 1.2)	Nazionale Elettronica
 capcor	Capitani Coraggiosi (Ver 1.3)	Capitani Coraggiosi (Ver 1.3)	Nazionale Elettronica
-euro2k2	Europa 2002 (Ver 2.0, set 1)	Europa 2002 (Ver 2.0, set 1)	Nazionale Elettronica
-euro2k2a	Europa 2002 (Ver 2.0, set 2)	Europa 2002 (Ver 2.0, set 2)	Nazionale Elettronica
+euro2k2	梦回欧罗巴 2002 (Ver 2.0, set 1)	梦回欧罗巴 2002 (Ver 2.0, set 1)	Nazionale Elettronica
+euro2k2a	梦回欧罗巴 2002 (Ver 2.0, set 2)	梦回欧罗巴 2002 (Ver 2.0, set 2)	Nazionale Elettronica
+mnumber	神秘数字	神秘数字	M.M. - B.R.L.
+ntcash	NtCash	NtCash	Unknown
+wizard	术士 (Ver 1.0)	术士 (Ver 1.0)	A.A.
 laser2k1	激光 2001 (Ver 1.2)	激光 2001 (Ver 1.2)	Unknown
 mdrink	魔法饮料 (Ver 1.2)	魔法饮料 (Ver 1.2)	Unknown
-ntcash	NtCash	NtCash	Unknown
-wizard	术士 (Ver 1.0)	术士 (Ver 1.0)	Unknown
 te0144	Unknown italian gambling game	Unknown italian gambling game	Unknown
 cmagica	Carta Magica (Ver 1.8)	Carta Magica (Ver 1.8)	Unknown
 millsun	千年太阳	千年太阳	Unknown
 sspac2k1	超级空间 2001	超级空间 2001	Unknown
 elvis	Elvis?	Elvis?	Unknown
+ejollyx5	快乐欧洲 X5	快乐欧洲 X5	Solar Games
+grandprx	长途赛车	长途赛车	4fun
 showhand	梭哈	梭哈	Astro Corp.
 knightsh	圆桌骑士 (hack)	圆桌骑士 (hack)	bootleg
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
