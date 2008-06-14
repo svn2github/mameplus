@@ -27,6 +27,7 @@ const DWORD dwHelpIDs[] =
 	IDC_CYCLETIMESEC              ,HIDC_CYCLETIMESEC,
 	IDC_D3D_FILTER                ,HIDC_D3D_FILTER,
 	IDC_D3D_VERSION               ,HIDC_D3D_VERSION,
+	IDC_DEBUG                     ,HIDC_DEBUG,
 	IDC_DEFAULT_INPUT             ,HIDC_DEFAULT_INPUT,
 	IDC_DIAL                      ,HIDC_DIAL,
 	IDC_DUAL_LIGHTGUN             ,HIDC_DUAL_LIGHTGUN,

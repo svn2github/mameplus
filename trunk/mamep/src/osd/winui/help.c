@@ -23,6 +23,7 @@
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 #include <windows.h>
+
 // MAME/MAMEUI headers
 #include "help.h"
 

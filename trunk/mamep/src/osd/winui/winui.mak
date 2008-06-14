@@ -111,7 +111,7 @@ UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 UI_RCFLAGS = -O coff --include-dir $(WINUISRC) --include-dir $(WINUIOBJ) --include-dir $(MESS_WINUISRC)
 
 $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
-	@echo Compiling mame32 resources $<...
+	@echo Compiling mameui resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 
 $(WINUIOBJ)/mameversui.rc: $(VERINFO32) $(SRC)/version.c

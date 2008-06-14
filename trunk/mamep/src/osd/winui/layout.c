@@ -122,25 +122,26 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Marquees"),              GetMarqueeDir,       SetMarqueeDir,       TRUE,  0 },
 	{ TEXT("Titles"),                GetTitlesDir,        SetTitlesDir,        TRUE,  0 },
 	{ TEXT("Control Panels"),        GetControlPanelDir,  SetControlPanelDir,  TRUE,  0 },
-//	{ TEXT("PCBs"),                  GetPcbDir,           SetPcbDir,           FALSE, 0 },
+	{ TEXT("PCBs"),                  GetPcbDir,           SetPcbDir,           FALSE, 0 },
 	{ TEXT("NVRAM"),                 GetNvramDir,         SetNvramDir,         FALSE, 0 },
 	{ TEXT("Controller Files"),      GetCtrlrDir,         SetCtrlrDir,         FALSE, DIRDLG_CTRLR },
 	{ TEXT("Hard Drive Difference"), GetDiffDir,          SetDiffDir,          FALSE, 0 },
 	{ TEXT("Icons"),                 GetIconsDir,         SetIconsDir,         TRUE,  0 },
 	{ TEXT("Background Images"),     GetBgDir,            SetBgDir,            FALSE, 0 },
 	{ TEXT("Comment Files"),         GetCommentDir,       SetCommentDir,       FALSE, DIRDLG_COMMENT },
+	{ TEXT("Font Files"),            GetFontDir,          SetFontDir,          TRUE,  0 },
 	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
+#ifdef USE_IPS
+	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
+#endif /* USE_IPS */
 #ifdef USE_HISCORE
 	{ TEXT("High Scores"),           GetHiDir,            SetHiDir,            FALSE, DIRDLG_HI },
 #endif /* USE_HISCORE */
 #ifdef USE_VIEW_PCBINFO
-	{ TEXT("PCB Info Files"),        GetPcbDir,           SetPcbDir,           FALSE, 0 },
+	{ TEXT("PCB Info Files"),        GetPcbInfoDir,       SetPcbInfoDir,       FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */
 	{ TEXT("Translation Files"),     GetTranslationDir,   SetTranslationDir,   FALSE, 0 },
 	{ TEXT("Localized Files"),       GetLocalizedDir,     SetLocalizedDir,     FALSE, 0 },
-#ifdef USE_IPS
-	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
-#endif /* USE_IPS */
 	{ NULL }
 };
 

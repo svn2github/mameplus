@@ -84,6 +84,7 @@ enum
 	TAB_MARQUEE,
 	TAB_TITLE,
 	TAB_CONTROL_PANEL,
+	TAB_PCB,
 	TAB_HISTORY,
 #ifdef STORY_DATAFILE
 	TAB_STORY,
@@ -278,9 +279,12 @@ void SetTitlesDir(const WCHAR *path);
 const WCHAR *GetControlPanelDir(void);
 void SetControlPanelDir(const WCHAR *path);
 
-#ifdef USE_VIEW_PCBINFO
-const WCHAR *GetPcbDir(void);
+const WCHAR * GetPcbDir(void);
 void SetPcbDir(const WCHAR *path);
+
+#ifdef USE_VIEW_PCBINFO
+const WCHAR *GetPcbInfoDir(void);
+void SetPcbInfoDir(const WCHAR *path);
 #endif /* USE_VIEW_PCBINFO */
 
 const WCHAR *GetDiffDir(void);
@@ -300,6 +304,9 @@ void SetCommentDir(const WCHAR *path);
 
 const WCHAR *GetFolderDir(void);
 void SetFolderDir(const WCHAR *path);
+
+const WCHAR* GetFontDir(void);
+void  SetFontDir(const WCHAR* paths);
 
 const WCHAR *GetCheatFileName(void);
 void SetCheatFileName(const WCHAR *path);

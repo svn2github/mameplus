@@ -1,4 +1,4 @@
-// Microsoft Visual C++ generated resource script.
+//Microsoft Developer Studio generated resource script.
 //
 #include "resourcems.h"
 
@@ -20,7 +20,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Englisch (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -41,7 +41,7 @@ BEGIN
     END
     POPUP "&Help"
     BEGIN
-        MENUITEM "&About MAME32",               ID_ABOUT
+        MENUITEM "&About MAMEUI",               ID_ABOUT
     END
 END
 
@@ -91,6 +91,7 @@ BEGIN
             MENUITEM "&Title",                      ID_TOGGLE_TAB_TITLE
             MENUITEM "Control &Panel",              ID_TOGGLE_TAB_CONTROL_PANEL
 
+            MENUITEM "PC&B",                        ID_TOGGLE_TAB_PCB
             MENUITEM "&History",                    ID_TOGGLE_TAB_HISTORY
 #ifdef STORY_DATAFILE
             MENUITEM "St&ory",                      ID_TOGGLE_TAB_STORY
@@ -171,7 +172,7 @@ BEGIN
         MENUITEM "&Contents\tF1",               ID_HELP_CONTENTS
         MENUITEM "&Troubleshooting",            ID_HELP_TROUBLE
         MENUITEM SEPARATOR
-        MENUITEM "&New Game Changes",           ID_HELP_WHATS_NEW32
+        MENUITEM "&New Game Changes",           ID_HELP_WHATS_NEWUI
         MENUITEM "&Mame Release Notes",         ID_HELP_WHATS_NEW
         MENUITEM SEPARATOR
         MENUITEM "&About",                      ID_HELP_ABOUT
@@ -253,6 +254,7 @@ BEGIN
             MENUITEM "&Title",                      ID_TOGGLE_TAB_TITLE
             MENUITEM "Control &Panel",              ID_TOGGLE_TAB_CONTROL_PANEL
 
+            MENUITEM "PC&B",                        ID_TOGGLE_TAB_PCB
             MENUITEM "&History",                    ID_TOGGLE_TAB_HISTORY
 #ifdef STORY_DATAFILE
             MENUITEM "St&ory",                      ID_TOGGLE_TAB_STORY
@@ -265,6 +267,7 @@ BEGIN
         MENUITEM "&Marquee",                    ID_VIEW_TAB_MARQUEE
         MENUITEM "&Title",                      ID_VIEW_TAB_TITLE
         MENUITEM "Control &Panel",              ID_VIEW_TAB_CONTROL_PANEL
+        MENUITEM "PC&B",                        ID_VIEW_TAB_PCB
         MENUITEM "&History",                    ID_VIEW_TAB_HISTORY
 #ifdef STORY_DATAFILE
         MENUITEM "St&ory",                      ID_VIEW_TAB_STORY
@@ -308,7 +311,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDI_MAME32_ICON         ICON    DISCARDABLE     "res\\mameui.ico"
+IDI_MAMEUI_ICON         ICON    DISCARDABLE     "res\\mameui.ico"
 IDI_WIN_ROMS            ICON    DISCARDABLE     "res\\win_roms.ico"
 IDI_WIN_NOROMS          ICON    DISCARDABLE     "res\\win_noro.ico"
 IDI_WIN_UNKNOWN         ICON    DISCARDABLE     "res\\win_unkn.ico"
@@ -354,7 +357,7 @@ IDI_VIDEO               ICON    DISCARDABLE     "res\\video.ico"
 
 IDD_ABOUT DIALOG DISCARDABLE  0, 0, 296, 129
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "About MAME32"
+CAPTION "About MAME Plus!"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "&OK",IDOK,200,109,50,14,WS_GROUP
@@ -363,22 +366,23 @@ BEGIN
     CTEXT           "Version 0",IDC_VERSION,147,18,142,11,NOT WS_GROUP
     CTEXT           "Copyright (C) 1997-2008 The MAME Team",IDC_STATIC,147,
                     29,142,10,NOT WS_GROUP
-    CTEXT           "MAME32 version by",IDC_STATIC,147,51,142,10,NOT 
+    CTEXT           "MAMEUI version by",IDC_STATIC,147,51,142,10,NOT 
                     WS_GROUP
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,147,44,142,1
-    CTEXT           "Additional MAME32 code by",IDC_STATIC,147,74,142,9
-    CTEXT           "Christopher Kirmse and Michael Soderstrom",IDC_STATIC,
-                    147,62,142,9,NOT WS_GROUP
+    CTEXT           "Christopher Kirmse and the MAMEUI team",IDC_STATIC,147,
+                    62,142,9,NOT WS_GROUP
+    CTEXT           "Additional MAMEUI code by",IDC_STATIC,147,74,142,9
     CTEXT           "Mike Haaland, Andrew Kirmse, Jeff Miller",IDC_STATIC,
                     147,85,142,9
-    CTEXT           "and John Hardy IV",IDC_STATIC,147,96,142,9
+    CTEXT           "John Hardy IV and Michael Soderstrom",IDC_STATIC,147,96,
+                    142,9
     CTEXT           "                                ",IDC_STATIC,7,107,135,17
     CONTROL         "",IDC_ABOUT,"Static",SS_BITMAP | SS_SUNKEN,7,7,16,14
 END
 
 IDD_DIRECTX DIALOG DISCARDABLE  0, 0, 236, 69
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "MAME32"
+CAPTION "MAMEUI"
 FONT 8, "MS Sans Serif"
 BEGIN
     DEFPUSHBUTTON   "Go to Microsoft's DirectX Web Page",IDB_WEB_PAGE,48,52,
@@ -467,7 +471,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "General"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_MAME32_ICON,IDC_GAME_ICON,20,10,20,20
+    ICON            IDI_MAMEUI_ICON,IDC_GAME_ICON,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
@@ -716,7 +720,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "Miscellaneous"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
+    ICON            IDI_MAMEUI_ICON,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
@@ -777,7 +781,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "Vector"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
+    ICON            IDI_MAMEUI_ICON,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
@@ -802,7 +806,7 @@ IDD_MAIN DIALOGEX 0, 0, 304, 206
 STYLE DS_3DLOOK | DS_NOFAILCREATE | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | 
     WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_CONTROLPARENT
-CAPTION "MAME32 - overwritten at runtime"
+CAPTION "MAMEUI - overwritten at runtime"
 CLASS "MainClass"
 FONT 8, "MS Sans Serif"
 BEGIN
@@ -882,7 +886,7 @@ BEGIN
     CONTROL         "&Folder 'filters'",IDC_RESET_FILTERS,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,18,62,166,10,0,
                     HIDC_RESET_FILTERS
-    CTEXT           "Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.",
+    CTEXT           "Select the options to be restored to the default settings.",
                     IDC_STATIC,7,92,188,32
     DEFPUSHBUTTON   "&OK",IDOK,45,133,50,14
     PUSHBUTTON      "&Cancel",IDCANCEL,102,133,50,14
@@ -1104,7 +1108,7 @@ STYLE WS_CHILD | WS_CAPTION
 CAPTION "Driver"
 FONT 8, "MS Sans Serif"
 BEGIN
-    ICON            IDI_MAME32_ICON,IDC_STATIC,20,10,20,20
+    ICON            IDI_MAMEUI_ICON,IDC_STATIC,20,10,20,20
     LTEXT           "Title\nDirectory\nExtra",IDC_PROP_TITLE,52,9,190,25,
                     SS_NOPREFIX
     CONTROL         "",IDC_STATIC,"Static",SS_ETCHEDHORZ,10,38,240,1
@@ -1178,9 +1182,10 @@ BEGIN
     "4",            ID_VIEW_TAB_MARQUEE,       VIRTKEY, ALT,     NOINVERT
     "5",            ID_VIEW_TAB_TITLE,         VIRTKEY, ALT,     NOINVERT
     "6",            ID_VIEW_TAB_CONTROL_PANEL, VIRTKEY, ALT,     NOINVERT
-    "7",            ID_VIEW_TAB_HISTORY,       VIRTKEY, ALT,     NOINVERT
+    "7",            ID_VIEW_TAB_PCB,           VIRTKEY, ALT, NOINVERT
+    "8",            ID_VIEW_TAB_HISTORY,       VIRTKEY, ALT,     NOINVERT
 #ifdef STORY_DATAFILE
-    "8",            ID_VIEW_TAB_STORY,         VIRTKEY, ALT,     NOINVERT
+    "9",            ID_VIEW_TAB_STORY,         VIRTKEY, ALT,     NOINVERT
 #endif /* STORY_DATAFILE */
     "A",            ID_GAME_AUDIT,          VIRTKEY, ALT, NOINVERT
     "B",            ID_VIEW_PAGETAB,        VIRTKEY, ALT, NOINVERT
@@ -1418,6 +1423,10 @@ BEGIN
     IDS_UI_FILE             "Contains commands for working with the selected items"
     IDS_UI_VIEW             "Contains commands for manupulating the view"
     IDS_UI_OPTIONS          "Contains commands for user interface options"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
     IDS_UI_HELP             "Contains commands for displaying help"
 END
 
@@ -1456,15 +1465,7 @@ BEGIN
 #ifdef UI_COLOR_PALETTE
     ID_OPTIONS_PALETTE      "Set in-game UI color palette"
 #endif /* UI_COLOR_PALETTE */
-    ID_OPTIONS_BG           "Select a background image file"
     ID_OPTIONS_MMO2LST      "Save game list in specified lst file"
-    ID_FOLDER_SOURCEPROPERTIES "Display the driver properties of the selected game"
-    ID_BIOS_PROPERTIES      "Display the bios properties of the selected game"
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_FILE_LOADSTATE       "Play a game starting with the given savestate"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1479,7 +1480,7 @@ BEGIN
     ID_FILE_PLAY_RECORD_AVI "Record the complete output of a game"
     ID_VIEW_PICTURE_AREA    "Show or hide the picture area"
     ID_HELP_CONTENTS        "Display help contents"
-    ID_HELP_WHATS_NEW32     "New game changes"
+    ID_HELP_WHATS_NEWUI     "New game changes"
     ID_HELP_TROUBLE         "Troubleshooting Documentation"
     ID_HELP_RELEASE         "MAME release notes"
     ID_HELP_WHATS_NEW       "What's new in MAME"
@@ -1488,28 +1489,59 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_CUSTOMIZE_FIELDS     "Customize which columns are used in the game list"
-    ID_GAME_PROPERTIES      "Display the properties of the selected items"
-    ID_VIEW_FOLDERS         "Show or hide the folder list"
-    ID_VIEW_TOOLBARS        "Show or hide the toolbar"
-    ID_VIEW_STATUS          "Show or hide the status bar"
-    ID_VIEW_PAGETAB         "Show or hide the screen shot tab"
-    ID_VIEW_FULLSCREEN      "Select fullscreen or window mode in GUI"
-    ID_VIEW_SHOWPICTURES    "Show or hide the pictures"
-    ID_CONTEXT_FILTERS      "Allows filtering out games from a folder"
-    ID_CONTEXT_ADD_CUSTOM   "Add currently selected game to a custom folder"
-    ID_CONTEXT_REMOVE_CUSTOM "Remove currently selected game from this folder"
-    ID_CONTEXT_RENAME_CUSTOM "Rename currently selected folder"
-    ID_CONTEXT_SELECT_RANDOM "Randomly select a game."
-    ID_CONTEXT_RESET_PLAYCOUNT "Reset playcount of currently selected game"
     ID_CONTEXT_RESET_PLAYTIME "Reset play time of currently selected game"
+    ID_CONTEXT_RESET_PLAYCOUNT "Reset playcount of currently selected game"
+    ID_FOLDER_PROPERTIES    "Display the properties of the currently selected folder"
+    ID_FOLDER_AUDIT         "Audit ROM and samples sets"
+    ID_FILE_LOADSTATE       "Play a game starting with the given savestate"
 #ifdef USE_VIEW_PCBINFO
     ID_VIEW_PCBINFO         "Show game PCB information"
 #endif /* USE_VIEW_PCBINFO */
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TAB_CABINET     "Select the cabinet image"
+    ID_VIEW_TAB_MARQUEE     "Select the marquee image"
+    ID_VIEW_TAB_TITLE       "Select the title image"
+    ID_VIEW_TAB_CONTROL_PANEL "Select the control panel image"
+    ID_VIEW_TAB_PCB         "Select the pcb image"
+    ID_VIEW_TAB_HISTORY     "Select the history information"
+    ID_OPTIONS_BG           "Select a background image file"
+    ID_TOGGLE_TAB_SCREENSHOT "Show or hide the screen shot image"
+    ID_TOGGLE_TAB_FLYER     "Show or hide the flyer image"
+    ID_TOGGLE_TAB_CABINET   "Show or hide the cabinet image"
+    ID_TOGGLE_TAB_MARQUEE   "Show or hide the marquee image"
+    ID_TOGGLE_TAB_TITLE     "Show or hide the title image"
+    ID_TOGGLE_TAB_CONTROL_PANEL "Show or hide the control panel image"
+    ID_TOGGLE_TAB_PCB       "Enable the PCB tab"
+    ID_TOGGLE_TAB_HISTORY   "Show or hide the history information"
+    ID_VIEW_FULLSCREEN      "Select fullscreen or window mode in GUI"
+#ifdef STORY_DATAFILE
+    ID_TOGGLE_TAB_STORY     "Show or hide the story information"
+#endif /* STORY_DATAFILE */
+#ifdef STORY_DATAFILE
+    ID_VIEW_TAB_STORY       "Select the story information"
+#endif /* STORY_DATAFILE */
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_CUSTOMIZE_FIELDS     "Customize which columns are used in the game list"
+    ID_GAME_PROPERTIES      "Display the properties of the selected items"
+    ID_VIEW_PAGETAB         "Show or hide the screen shot tab"
+    ID_VIEW_FOLDERS         "Show or hide the folder list"
+    ID_VIEW_TOOLBARS        "Show or hide the toolbar"
+    ID_VIEW_STATUS          "Show or hide the status bar"
+    ID_VIEW_SHOWPICTURES    "Show or hide the pictures"
+    ID_CONTEXT_FILTERS      "Allows filtering out games from a folder"
+    ID_CONTEXT_RENAME_CUSTOM "Rename currently selected folder"
+    ID_CONTEXT_ADD_CUSTOM   "Add currently selected game to a custom folder"
+    ID_CONTEXT_REMOVE_CUSTOM "Remove currently selected game from this folder"
     ID_GAME_AUDIT           "Audit ROM and samples sets"
-    ID_CONTEXT_SHOW_FOLDER  "Show or hide folder"
-    ID_FOLDER_AUDIT         "Audit ROM and samples sets"
-    ID_FOLDER_PROPERTIES    "Display the properties of the currently selected folder"
+    ID_CONTEXT_SELECT_RANDOM "Randomly select a game."
+    ID_VIEW_TAB_SCREENSHOT  "Select the screen shot image"
+    ID_VIEW_TAB_FLYER       "Select the flyer image"
 END
 
 STRINGTABLE DISCARDABLE 
@@ -1528,30 +1560,8 @@ END
 
 STRINGTABLE DISCARDABLE 
 BEGIN
-    ID_TOGGLE_TAB_SCREENSHOT "Show or hide the screen shot image"
-    ID_TOGGLE_TAB_FLYER     "Show or hide the flyer image"
-    ID_TOGGLE_TAB_CABINET   "Show or hide the cabinet image"
-    ID_TOGGLE_TAB_MARQUEE   "Show or hide the marquee image"
-    ID_TOGGLE_TAB_TITLE     "Show or hide the title image"
-    ID_TOGGLE_TAB_CONTROL_PANEL "Show or hide the control panel image"
-    ID_TOGGLE_TAB_HISTORY   "Show or hide the history information"
-#ifdef STORY_DATAFILE
-    ID_TOGGLE_TAB_STORY     "Show or hide the story information"
-#endif /* STORY_DATAFILE */
-END
-
-STRINGTABLE DISCARDABLE 
-BEGIN
-    ID_VIEW_TAB_SCREENSHOT  "Select the screen shot image"
-    ID_VIEW_TAB_FLYER       "Select the flyer image"
-    ID_VIEW_TAB_CABINET     "Select the cabinet image"
-    ID_VIEW_TAB_MARQUEE     "Select the marquee image"
-    ID_VIEW_TAB_TITLE       "Select the title image"
-    ID_VIEW_TAB_CONTROL_PANEL "Select the control panel image"
-    ID_VIEW_TAB_HISTORY     "Select the history information"
-#ifdef STORY_DATAFILE
-    ID_VIEW_TAB_STORY       "Select the story information"
-#endif /* STORY_DATAFILE */
+    ID_FOLDER_SOURCEPROPERTIES "Display the driver properties of the selected game"
+    ID_BIOS_PROPERTIES      "Display the bios properties of the selected game"
 END
 
 STRINGTABLE DISCARDABLE 

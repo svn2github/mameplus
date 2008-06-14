@@ -115,12 +115,9 @@ static void  generate_default_dirs(void);
 #define DEFAULT_OPTIONS_INI_FILENAME CONFIGNAME ".ini"
 
 #define MUIOPTION_LIST_MODE						"list_mode"
-//#define MUIOPTION_CHECK_GAME					"check_game"
-#define MUIOPTION_CHECK_GAME					"game_check"
-//#define MUIOPTION_JOYSTICK_IN_INTERFACE			"joystick_in_interface"
-#define MUIOPTION_JOYSTICK_IN_INTERFACE			"joygui"
-//#define MUIOPTION_KEYBOARD_IN_INTERFACE			"keyboard_in_interface"
-#define MUIOPTION_KEYBOARD_IN_INTERFACE			"keygui"
+#define MUIOPTION_CHECK_GAME					"check_game"
+#define MUIOPTION_JOYSTICK_IN_INTERFACE			"joystick_in_interface"
+#define MUIOPTION_KEYBOARD_IN_INTERFACE			"keyboard_in_interface"
 #define MUIOPTION_CYCLE_SCREENSHOT				"cycle_screenshot"
 #define MUIOPTION_STRETCH_SCREENSHOT_LARGER		"stretch_screenshot_larger"
 #define MUIOPTION_SCREENSHOT_BORDER_SIZE		"screenshot_bordersize"
@@ -133,24 +130,17 @@ static void  generate_default_dirs(void);
 #ifdef TREE_SHEET
 #define MUIOPTION_SHOW_TREE_SHEET			"show_tree_sheet"
 #endif /* TREE_SHEET */
-//#define MUIOPTION_BROADCAST_GAME_NAME			"broadcast_game_name"
-#define MUIOPTION_BROADCAST_GAME_NAME			"broadcast"
-//#define MUIOPTION_RANDOM_BACKGROUND				"random_background"
-#define MUIOPTION_RANDOM_BACKGROUND				"random_bg"
-//#define MUIOPTION_DEFAULT_FOLDER_PATH				"default_folder_path"
+#define MUIOPTION_BROADCAST_GAME_NAME			"broadcast_game_name"
+#define MUIOPTION_RANDOM_BACKGROUND				"random_background"
+//#define MUIOPTION_DEFAULT_FOLDER_ID				"default_folder_path"
 #define MUIOPTION_DEFAULT_FOLDER_PATH				"folder_current"
-//#define MUIOPTION_SHOW_IMAGE_SECTION			"show_image_section"
-#define MUIOPTION_SHOW_IMAGE_SECTION			"show_screenshot"
-//#define MUIOPTION_SHOW_FOLDER_SECTION			"show_folder_section"
-#define MUIOPTION_SHOW_FOLDER_SECTION			"show_folderlist"
+#define MUIOPTION_SHOW_IMAGE_SECTION			"show_image_section"
+#define MUIOPTION_SHOW_FOLDER_SECTION			"show_folder_section"
 //#define MUIOPTION_HIDE_FOLDERS					"hide_folders"
 #define MUIOPTION_HIDE_FOLDERS					"folder_hide"
-//#define MUIOPTION_SHOW_STATUS_BAR				"show_status_bar"
-#define MUIOPTION_SHOW_STATUS_BAR				"show_statusbar"
-//#define MUIOPTION_SHOW_TABS						"show_tabs"
-#define MUIOPTION_SHOW_TABS						"show_screenshottab"
-//#define MUIOPTION_SHOW_TOOLBAR					"show_tool_bar"
-#define MUIOPTION_SHOW_TOOLBAR					"show_toolbar"
+#define MUIOPTION_SHOW_STATUS_BAR				"show_status_bar"
+#define MUIOPTION_SHOW_TABS						"show_tabs"
+#define MUIOPTION_SHOW_TOOLBAR					"show_tool_bar"
 #define MUIOPTION_CURRENT_TAB					"current_tab"
 #define MUIOPTION_WINDOW_X						"window_x"
 #define MUIOPTION_WINDOW_Y						"window_y"
@@ -162,20 +152,17 @@ static void  generate_default_dirs(void);
 #define MUIOPTION_USE_BROKEN_ICON				"use_broken_icon"
 #define MUIOPTION_LIST_FONT						"list_font"
 #define MUIOPTION_LIST_FONTFACE						"list_fontface"
-//#define MUIOPTION_TEXT_COLOR					"text_color"
-#define MUIOPTION_TEXT_COLOR					"font_color"
+#define MUIOPTION_TEXT_COLOR					"text_color"
 #define MUIOPTION_CLONE_COLOR					"clone_color"
 #define MUIOPTION_BROKEN_COLOR					"broken_color"
 #define MUIOPTION_HIDE_TABS						"hide_tabs"
-//#define MUIOPTION_HISTORY_TAB					"history_tab"
-#define MUIOPTION_HISTORY_TAB					"datafile_tab"
+#define MUIOPTION_HISTORY_TAB					"history_tab"
 #define MUIOPTION_COLUMN_WIDTHS					"column_widths"
 #define MUIOPTION_COLUMN_ORDER					"column_order"
 #define MUIOPTION_COLUMN_SHOWN					"column_shown"
 #define MUIOPTION_SPLITTERS						"splitters"
 #define MUIOPTION_SORT_COLUMN					"sort_column"
-//#define MUIOPTION_SORT_REVERSED					"sort_reversed"
-#define MUIOPTION_SORT_REVERSED					"sort_reverse"
+#define MUIOPTION_SORT_REVERSED					"sort_reversed"
 #ifdef IMAGE_MENU
 #define MUIOPTION_IMAGEMENU_STYLE				"imagemenu_style"
 #endif /* IMAGE_MENU */
@@ -185,6 +172,9 @@ static void  generate_default_dirs(void);
 #define MUIOPTION_TITLE_DIRECTORY				"title_directory"
 #define MUIOPTION_CPANEL_DIRECTORY				"cpanel_directory"
 #define MUIOPTION_PCB_DIRECTORY				    "pcb_directory"
+#ifdef USE_VIEW_PCBINFO
+#define MUIOPTION_PCBINFO_DIRECTORY				    "pcbinfo_directory"
+#endif /* USE_VIEW_PCBINFO */
 #define MUIOPTION_ICONS_DIRECTORY				"icons_directory"
 #define MUIOPTION_BACKGROUND_DIRECTORY			"background_directory"
 #define MUIOPTION_FOLDER_DIRECTORY				"folder_directory"
@@ -222,8 +212,7 @@ static void  generate_default_dirs(void);
 #define MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE		"ui_key_view_tab_marquee"
 #define MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT	"ui_key_view_tab_screenshot"
 #define MUIOPTION_UI_KEY_VIEW_TAB_TITLE			"ui_key_view_tab_title"
-//mamep: TODO
-//#define MUIOPTION_UI_KEY_VIEW_TAB_PCB   		"ui_key_view_tab_pcb"
+#define MUIOPTION_UI_KEY_VIEW_TAB_PCB   		"ui_key_view_tab_pcb"
 #define MUIOPTION_UI_KEY_QUIT					"ui_key_quit"
 #define MUIOPTION_UI_JOY_UP						"ui_joy_up"
 #define MUIOPTION_UI_JOY_DOWN					"ui_joy_down"
@@ -291,7 +280,7 @@ static core_options *global = NULL;			// Global 'default' options
 
 static core_options *mamecore = NULL;			// running mame core setting
 
-// UI options in mame32ui.ini
+// UI options in mameui.ini
 static const options_entry regSettings[] =
 {
 	// UI options
@@ -307,12 +296,12 @@ static const options_entry regSettings[] =
 #ifdef MESS
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"0",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_HIDE_TABS,					"flyer, cabinet, marquee, title, cpanel, pcb", 0, NULL },
+	{ MUIOPTION_HIDE_TABS,					"cpanel, pcb, history, story", 0, NULL },
 	{ MUIOPTION_HISTORY_TAB,				"1",        0,                 NULL },
 #else
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"1",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_HIDE_TABS,					"marquee, title, cpanel, pcb, history", 0, NULL },
+	{ MUIOPTION_HIDE_TABS,					"cpanel, pcb, history, story", 0, NULL },
 	{ MUIOPTION_HISTORY_TAB,				"0",        0,                 NULL },
 #endif
 
@@ -344,7 +333,7 @@ static const options_entry regSettings[] =
 
 	{ NULL,									NULL,       OPTION_HEADER,     "INTERFACE OPTIONS" },
 	{ MUIOPTION_CHECK_GAME,					"1",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_JOYSTICK_IN_INTERFACE,		"0",        OPTION_BOOLEAN,    NULL },
+	{ MUIOPTION_JOYSTICK_IN_INTERFACE,		"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_KEYBOARD_IN_INTERFACE,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_RANDOM_BACKGROUND,			"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_BROADCAST_GAME_NAME,		"0",        OPTION_BOOLEAN,    NULL },
@@ -370,11 +359,13 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_MARQUEE_DIRECTORY,			"marquees", 0,                 NULL },
 	{ MUIOPTION_TITLE_DIRECTORY,			"titles",   0,                 NULL },
 	{ MUIOPTION_CPANEL_DIRECTORY,			"cpanel",   0,                 NULL },
-	{ MUIOPTION_PCB_DIRECTORY,			    "pcb",      0,                 NULL },
+	{ MUIOPTION_PCB_DIRECTORY,		        "pcb",      0,                 NULL },
 	{ MUIOPTION_BACKGROUND_DIRECTORY,		"bkground", 0,                 NULL },
 	{ MUIOPTION_FOLDER_DIRECTORY,			"folders",  0,                 NULL },
 	{ MUIOPTION_ICONS_DIRECTORY,			"icons",    0,                 NULL },
-
+#ifdef USE_VIEW_PCBINFO
+	{ MUIOPTION_PCBINFO_DIRECTORY,		        "pcbinfo",  0,                 NULL },
+#endif /* USE_VIEW_PCBINFO */
 
 //	{ NULL,									NULL,       OPTION_HEADER,     "FILENAME OPTIONS" },
 //	{ MUIOPTION_HISTORY_FILE,				MUIHISTORY_FILE, 0,              NULL },
@@ -405,21 +396,20 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_UI_KEY_VIEW_PAGETAB,		"KEYCODE_LALT KEYCODE_B",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_PICTURE_AREA,	"KEYCODE_LALT KEYCODE_P",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_STATUS,			"KEYCODE_LALT KEYCODE_S",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TOOLBARS,		"KEYCODE_LALT KEYCODE_T",     0, NULL },
+        { MUIOPTION_UI_KEY_VIEW_TOOLBARS,		"KEYCODE_LALT KEYCODE_T",     0, NULL },
 
 	{ MUIOPTION_UI_KEY_VIEW_TAB_CABINET,	"KEYCODE_LALT KEYCODE_3",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TAB_CPANEL,		"KEYCODE_LALT KEYCODE_6",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TAB_FLYER,		"KEYCODE_LALT KEYCODE_2",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TAB_HISTORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_CPANEL,		"KEYCODE_LALT KEYCODE_6",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_FLYER,		"KEYCODE_LALT KEYCODE_2",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_HISTORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
 #ifdef STORY_DATAFILE
 	{ MUIOPTION_UI_KEY_VIEW_TAB_STORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
 #endif /* STORY_DATAFILE */
-    { MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE,	"KEYCODE_LALT KEYCODE_4",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
-    { MUIOPTION_UI_KEY_VIEW_TAB_TITLE,		"KEYCODE_LALT KEYCODE_5",     0, NULL },
-//mamep: TODO
-//  { MUIOPTION_UI_KEY_VIEW_TAB_PCB,		"KEYCODE_LALT KEYCODE_7",     0, NULL },
-    { MUIOPTION_UI_KEY_QUIT,				"KEYCODE_LALT KEYCODE_Q",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE,	"KEYCODE_LALT KEYCODE_4",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_TITLE,		"KEYCODE_LALT KEYCODE_5",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_PCB,		"KEYCODE_LALT KEYCODE_7",     0, NULL },
+	{ MUIOPTION_UI_KEY_QUIT,				"KEYCODE_LALT KEYCODE_Q",     0, NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION JOYSTICK CODES" },
 	{ MUIOPTION_UI_JOY_UP,					"1,1,1,1",         0,                 NULL },
@@ -487,6 +477,7 @@ static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 	L"Marquee",
 	L"Title",
 	L"Control Panel",
+	L"PCB",
 #ifdef STORY_DATAFILE
 	L"History",
 	L"Story"
@@ -503,6 +494,7 @@ static const char* image_tabs_short_name[MAX_TAB_TYPES] =
 	"marquee",
 	"title",
 	"cpanel",
+	"pcb",
 #ifdef STORY_DATAFILE
 	"history",
 	"story"
@@ -1450,6 +1442,16 @@ void SetMemcardDir(const WCHAR* path)
 	options_set_wstring(global, OPTION_MEMCARD_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 
+const WCHAR* GetFontDir(void)
+{
+	return options_get_wstring(global, OPTION_FONTPATH);
+}
+
+void SetFontDir(const WCHAR* paths)
+{
+	options_set_wstring(global, OPTION_FONTPATH, paths, OPTION_PRIORITY_CMDLINE);
+}
+
 const WCHAR* GetFlyerDir(void)
 {
 	return options_get_wstring(settings, MUIOPTION_FLYER_DIRECTORY);
@@ -1509,6 +1511,18 @@ void SetPcbDir(const WCHAR *path)
 {
 	options_set_wstring(settings, MUIOPTION_PCB_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
+
+#ifdef USE_VIEW_PCBINFO
+const WCHAR * GetPcbInfoDir(void)
+{
+	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
+}
+
+void SetPcbInfoDir(const WCHAR *path)
+{
+	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_VIEW_PCBINFO */
 
 const WCHAR * GetDiffDir(void)
 {
@@ -1875,13 +1889,10 @@ input_seq* Get_ui_key_view_tab_title(void)
 {
 	return options_get_input_seq(settings, MUIOPTION_UI_KEY_VIEW_TAB_TITLE);
 }
-//mamep:TODO
-#if 0
 input_seq* Get_ui_key_view_tab_pcb(void)
 {
 	return options_get_input_seq(settings, MUIOPTION_UI_KEY_VIEW_TAB_PCB);
 }
-#endif
 input_seq* Get_ui_key_quit(void)
 {
 	return options_get_input_seq(settings, MUIOPTION_UI_KEY_QUIT);
@@ -3026,11 +3037,11 @@ static void LoadOptionsAndSettings(void)
 {
 	char buffer[MAX_PATH];
 
-	// parse global options imame.ini
+	// parse global options mame.ini
 	GetGlobalOptionsFileName(buffer, ARRAY_LENGTH(buffer));
 	LoadSettingsFile(global, buffer);
 
-	// parse MAME32ui.ini 
+	// parse ui/mameui.ini 
 	GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
 	LoadSettingsFile(settings, buffer);
 

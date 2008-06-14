@@ -235,6 +235,10 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		basedir = GetControlPanelDir();
 		zip_name = TEXT("cpanel");
 		break;
+        case TAB_PCB :
+		basedir = GetPcbDir();
+		zip_name = TEXT("pcb");
+			break;
 	case BACKGROUND :
 		basedir = GetBgDir();
 		zip_name = TEXT("bkground");

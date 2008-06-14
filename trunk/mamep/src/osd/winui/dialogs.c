@@ -137,7 +137,7 @@ INT_PTR CALLBACK ResetDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					_tcscat(temp, _UIW(TEXT("Resetting the User Interface options\n")));
 					_tcscat(temp, _UIW(TEXT("requires exiting ")));
 					_tcscat(temp, TEXT(MAMEUINAME));
-					_tcscat(temp, TEXT(".\n"));
+					_tcscat(temp, _UIW(TEXT(".\n")));
 				}
 				_tcscat(temp, _UIW(TEXT("\nDo you wish to continue?")));
 				if (MessageBox(hDlg, temp, _UIW(TEXT("Restore Settings")), IDOK) == IDOK)
@@ -238,6 +238,8 @@ INT_PTR CALLBACK InterfaceDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM 
 		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nTabCount++, TAB_TITLE);
 		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("Control Panel")));
 		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nTabCount++, TAB_CONTROL_PANEL);
+		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("PCB")));
+		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nTabCount++, TAB_PCB);
 		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("All")));
 		(void)ComboBox_SetItemData(GetDlgItem(hDlg, IDC_HISTORY_TAB), nTabCount++, TAB_ALL);
 		(void)ComboBox_AddString(GetDlgItem(hDlg, IDC_HISTORY_TAB), _UIW(TEXT("None")));
@@ -850,7 +852,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			WCHAR szGame[MAX_PATH];
 			WCHAR buf[MAX_PATH];
 			char *stemp;
-			const WCHAR *szDir = GetPcbDir();
+			const WCHAR *szDir = GetPcbInfoDir();
 			mame_file *mfile;
 			file_error filerr;
 			long filelen;
@@ -907,7 +909,7 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			free(stemp);
 			if (filerr != FILERR_NONE)
 			{
-				swprintf(buf, TEXT("%s\\pcb\\%s.txt"), szDir, szGame);
+				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
 				filerr = mame_fopen_options(get_core_options(), SEARCHPATH_DATAFILE, stemp, OPEN_FLAG_READ, &mfile);
 				free(stemp);

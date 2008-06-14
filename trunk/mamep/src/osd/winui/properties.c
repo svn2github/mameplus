@@ -652,7 +652,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.hInstance    = hInst;
 	pshead.pszCaption   = _UIW(TEXT("Default Game"));
 	pshead.nStartPage   = 0;
-	pshead.pszIcon      = MAKEINTRESOURCE(IDI_MAME32_ICON);
+	pshead.pszIcon      = MAKEINTRESOURCE(IDI_MAMEUI_ICON);
 	pshead.ppsp         = pspage;
 
 #ifdef TREE_SHEET
@@ -775,7 +775,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	pshead.pfnCallback= PropSheetCallbackProc;
 	pshead.hInstance  = hInst;
 	pshead.nStartPage = start_page;
-	pshead.pszIcon    = MAKEINTRESOURCE(IDI_MAME32_ICON);
+	pshead.pszIcon    = MAKEINTRESOURCE(IDI_MAMEUI_ICON);
 	pshead.ppsp       = pspage;
 
 #ifdef TREE_SHEET

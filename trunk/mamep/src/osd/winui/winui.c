@@ -535,7 +535,7 @@ static struct
 	UINT iconID;
 } menu_icon_table[] =
 {
-	{ ID_HELP_ABOUT,			IDI_MAME32_ICON },
+	{ ID_HELP_ABOUT,			IDI_MAMEUI_ICON },
 	{ ID_FILE_AUDIT,			IDI_CHECKMARK },
 	{ ID_GAME_AUDIT,			IDI_CHECKMARK },
 	{ ID_FILE_PLAY,				IDI_WIN_ROMS },
@@ -662,6 +662,7 @@ static const GUISequence GUISequenceControl[]=
 	{"gui_key_view_tab_marquee",     SEQ_DEF_0,  ID_VIEW_TAB_MARQUEE,       Get_ui_key_view_tab_marquee },
 	{"gui_key_view_tab_screenshot",  SEQ_DEF_0,  ID_VIEW_TAB_SCREENSHOT,    Get_ui_key_view_tab_screenshot },
 	{"gui_key_view_tab_title",       SEQ_DEF_0,  ID_VIEW_TAB_TITLE,         Get_ui_key_view_tab_title },
+	{"gui_key_view_tab_pcb",         SEQ_DEF_0,  ID_VIEW_TAB_PCB,   	      Get_ui_key_view_tab_pcb },
 	{"gui_key_quit",                 SEQ_DEF_0,  ID_FILE_EXIT,              Get_ui_key_quit },
 };
 
@@ -901,7 +902,6 @@ LPCTSTR column_names[COLUMN_MAX] =
 	TEXT("Driver"),
 	TEXT("Play Time")
 };
-
 
 /***************************************************************************
     Message Macros
@@ -2270,7 +2270,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	wndclass.cbClsExtra    = 0;
 	wndclass.cbWndExtra    = DLGWINDOWEXTRA;
 	wndclass.hInstance     = hInstance;
-	wndclass.hIcon         = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MAME32_ICON));
+	wndclass.hIcon         = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
 	wndclass.hCursor       = NULL;
 	wndclass.hbrBackground = (HBRUSH)(COLOR_3DFACE + 1);
 	wndclass.lpszMenuName  = MAKEINTRESOURCE(IDR_UI_MENU);
@@ -5135,6 +5135,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_VIEW_TAB_MARQUEE :
 	case ID_VIEW_TAB_TITLE :
 	case ID_VIEW_TAB_CONTROL_PANEL :
+	case ID_VIEW_TAB_PCB :
 	case ID_VIEW_TAB_HISTORY :
 #ifdef STORY_DATAFILE
 	case ID_VIEW_TAB_STORY :
@@ -5156,6 +5157,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_TOGGLE_TAB_MARQUEE :
 	case ID_TOGGLE_TAB_TITLE :
 	case ID_TOGGLE_TAB_CONTROL_PANEL :
+	case ID_TOGGLE_TAB_PCB :
 	case ID_TOGGLE_TAB_HISTORY :
 #ifdef STORY_DATAFILE
 	case ID_TOGGLE_TAB_STORY :
@@ -8055,12 +8057,12 @@ void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
 				hIcon = LoadIconFromFile(drivers[nParentIndex]->name); 
 			if( hIcon == NULL) 
 			{
-				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON));
+				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
 			}
 		}
 		else
 		{
-			hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAME32_ICON));
+			hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
 		}
 	}
 	WaitForInputIdle( pi->hProcess, INFINITE );

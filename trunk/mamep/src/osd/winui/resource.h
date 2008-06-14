@@ -1,5 +1,5 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Visual C++ generated include file.
+// Microsoft Developer Studio generated include file.
 // Used by mameui.rc
 //
 #define IDPAUSE                         3
@@ -28,7 +28,7 @@
 #define ID_TOOLBAR_EDIT                 99
 #define IDD_MAIN                        101
 #define IDA_TAB_KEYS                    106
-#define IDI_MAME32_ICON                 107
+#define IDI_MAMEUI_ICON                 107
 #define IDD_ABOUT                       108
 #define IDR_MAIN_MENU                   109
 #define IDR_UI_MENU                     110
@@ -118,7 +118,7 @@
 #define IDI_DETAILS                     705
 #define IDI_GROUP                       706
 #define IDI_PROPERTY                    707
-#define IDI_PCB                         708
+#define IDI_PCB                         708 // USE_VIEW_PCBINFO
 #define IDI_SND                         709
 #define IDI_BIOS                        710
 #define IDI_VIDEO                       711
@@ -353,6 +353,7 @@
 #define IDC_FILTER_HORIZONTAL           1265
 #define IDC_FILTER_VERTICAL             1266
 #define IDC_SNAPNAME                    1267
+#define IDC_DEBUG                       0    // N/A
 
 #define ID_CONTEXT_SHOW_FOLDER_START    39000
 #define ID_CONTEXT_SHOW_FOLDER_END      39200
@@ -468,7 +469,7 @@
 #define ID_FILE_PLAY_RECORD_AVI         40023
 #define ID_VIEW_PICTURE_AREA            40024
 #define ID_HELP_CONTENTS                40025
-#define ID_HELP_WHATS_NEW32             40026
+#define ID_HELP_WHATS_NEWUI             40026
 #define ID_HELP_TROUBLE                 40027
 #define ID_HELP_RELEASE                 40028
 #define ID_HELP_WHATS_NEW               40029
@@ -496,32 +497,32 @@
 #define ID_VIEW_TOOLBARS                40056
 #define ID_VIEW_SHOWPICTURES            40052	// status bar (ID_VIEW_PAGETAB + 2)
 #define ID_VIEW_STATUS                  40053
-#define ID_CONTEXT_FILTERS              40055
-#define ID_CONTEXT_RENAME_CUSTOM        40054
-#define ID_CONTEXT_ADD_CUSTOM           40061
-#define ID_CONTEXT_SHOW_FOLDER          40057	// status bar (ID_CONTEXT_RENAME_CUSTOM + 3, ID_CONTEXT_FILTERS + 2)
+#define ID_CONTEXT_FILTERS              40054
+#define ID_CONTEXT_RENAME_CUSTOM        40055
+#define ID_CONTEXT_ADD_CUSTOM           40057
 #define ID_CONTEXT_REMOVE_CUSTOM        40058
 #define ID_GAME_AUDIT                   40059
 #define ID_CONTEXT_SELECT_RANDOM        40060
 #define ID_OPTIONS_LANGUAGE             0	  // N/A
+#define ID_OPTIONS_BG                   40061
 #define ID_VIEW_TAB_SCREENSHOT          40062
 #define ID_VIEW_TAB_FLYER               40063
 #define ID_VIEW_TAB_CABINET             40064
 #define ID_VIEW_TAB_MARQUEE             40065
 #define ID_VIEW_TAB_TITLE               40066
 #define ID_VIEW_TAB_CONTROL_PANEL       40067
-#define ID_VIEW_TAB_HISTORY             40068
-#define ID_VIEW_TAB_STORY               40069 // STORY_DATAFILE
-#define ID_OPTIONS_BG                   40070
+#define ID_VIEW_TAB_PCB                 40068
+#define ID_VIEW_TAB_HISTORY             40069
+#define ID_VIEW_TAB_STORY               40070 // STORY_DATAFILE
 #define ID_TOGGLE_TAB_SCREENSHOT        40071
 #define ID_TOGGLE_TAB_FLYER             40072
 #define ID_TOGGLE_TAB_CABINET           40073
 #define ID_TOGGLE_TAB_MARQUEE           40074
 #define ID_TOGGLE_TAB_TITLE             40075
 #define ID_TOGGLE_TAB_CONTROL_PANEL     40076
-#define ID_TOGGLE_TAB_HISTORY           40077
-#define ID_TOGGLE_TAB_STORY             40078 // STORY_DATAFILE
-#define ID_VIEW_FULLSCREEN              40079
+#define ID_TOGGLE_TAB_PCB               40077
+#define ID_TOGGLE_TAB_HISTORY           40078
+#define ID_TOGGLE_TAB_STORY             40079 // STORY_DATAFILE
 #define ID_CONTEXT_RESET_PLAYTIME       40080
 #define ID_CONTEXT_RESET_PLAYCOUNT      40081
 #define ID_FOLDER_PROPERTIES            40082
@@ -540,12 +541,13 @@
 #define ID_FILE_LOADSTATE               40095
 #define ID_FOLDER_SOURCEPROPERTIES      40096
 #define ID_FOLDER_VECTORPROPERTIES      40097
-#define ID_OPTIONS_PALETTE              40098 // UI_COLOR_PALETTE
-#define ID_OPTIONS_MMO2LST              40099
-#define ID_VIEW_PCBINFO                 40100 // USE_VIEW_PCBINFO
-#define IDC_PCBINFO                     40101 // USE_VIEW_PCBINFO
+#define ID_VIEW_FULLSCREEN              40099
+
+#define ID_OPTIONS_PALETTE              40100 // UI_COLOR_PALETTE
+#define ID_OPTIONS_MMO2LST              40101
 #define ID_BIOS_PROPERTIES		40102
-#define ID_HELP_WHATS_NEWUI             40104
+#define ID_VIEW_PCBINFO                 40105 // USE_VIEW_PCBINFO
+#define IDC_PCBINFO                     40106 // USE_VIEW_PCBINFO
 	
 #define ID_STYLE_NONE                   40190 // IMAGE_MENU
 #define ID_STYLE_BASIC                  40191 // IMAGE_MENU
