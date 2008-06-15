@@ -2644,7 +2644,7 @@ ddrs2kj	劲舞革命 2000 (GC905 VER. JAA)	劲舞革命 2000 (GC905 VER. JAA)	Konami
 dsfdct	劲舞革命 - 美梦成真 (GC910 VER. JCA)	劲舞革命 - 美梦成真 (GC910 VER. JCA)	Konami
 dsfdcta	劲舞革命 - 美梦成真 (GC910 VER. JAA)	劲舞革命 - 美梦成真 (GC910 VER. JAA)	Konami
 drmn2m	青春鼓王 2度混合 (GE912 VER. JAB)	青春鼓王 2度混合 (GE912 VER. JAB)	Konami
-drmn2mpu	青春鼓王 2度混合 Session Power Up Kit (GE912 VER. JAB)	青春鼓王 2度混合 Session Power Up Kit (GE912 VER. JAB)	Konami
+drmn2mpu	青春鼓王 2度混合 - 力量升级版 (GE912 VER. JAB)	青春鼓王 2度混合 - 力量升级版 (GE912 VER. JAB)	Konami
 dncfrks	疯狂劲舞 (G*874 VER. KAA)	疯狂劲舞 (G*874 VER. KAA)	Konami
 dmx	疯狂劲舞 (G*874 VER. JAA)	疯狂劲舞 (G*874 VER. JAA)	Konami
 gtrfrk3m	吉他旋律 3度混合 (GE949 VER. JAC)	吉他旋律 3度混合 (GE949 VER. JAC)	Konami
@@ -3140,7 +3140,7 @@ passshtb	网球绝招 - 近身攻击 (2 Players) (盗版)	网球绝招 - 近身攻击 (2 Players) 
 shinoblb	超级忍 (测试版 盗版)	超级忍 (测试版 盗版)	[Sega] (Beta bootleg)
 shinobld	超级忍 (数据版 盗版)	超级忍 (数据版 盗版)	[Sega] (Datsu bootleg)
 tetrisbl	俄罗斯方块 (盗版)	俄罗斯方块 (盗版)	bootleg
-beautyb	Beauty Block	Beauty Block	AMT
+beautyb	美丽方块	美丽方块	AMT
 tturfbl	硬汉 (盗版)	硬汉 (盗版)	bootleg
 wb3bbl	神奇男孩 Ⅲ (盗版)	神奇男孩 Ⅲ (盗版)	bootleg
 astorm	异形风暴 (第4套, 2 Players, FD1094 317-?)	异形风暴 (第4套, 2 Players, FD1094 317-?)	Sega
@@ -3880,8 +3880,8 @@ shadowwa	忍者龙剑传 (世界版, 第2套)	忍者龙剑传 (世界版, 第2套)	Tecmo
 gaiden	忍者龙剑传 (美版)	忍者龙剑传 (美版)	Tecmo
 ryukendn	忍者龙剑传 (日版, 第1套)	忍者龙剑传 (日版, 第1套)	Tecmo
 ryukenda	忍者龙剑传 (日版, 第2套)	忍者龙剑传 (日版, 第2套)	Tecmo
-wildfang	邪城风云	邪城风云	Tecmo
-tknight	邪城风云 Tecmo Knight	邪城风云 Tecmo Knight	Tecmo
+wildfang	邪城风云 / Tecmo 骑士	邪城风云 / Tecmo 骑士	Tecmo
+tknight	邪城风云	邪城风云	Tecmo
 stratof	雷牙 (美版)	雷牙 (美版)	Tecmo
 raiga	雷牙 (日版)	雷牙 (日版)	Tecmo
 drgnbowl	七龙珠	七龙珠	Nics
@@ -6539,8 +6539,8 @@ zortonbr	索特兄弟 (西班牙)	索特兄弟 (西班牙)	Web Picmatic
 crysbios	Crystal System BIOS	Crystal System BIOS	Brezzasoft
 crysking	王者水晶	王者水晶	Brezzasoft
 evosocc	进化足球 EVO	进化足球 EVO	Evoga
-topbladv	刀刃 V	刀刃 V	unknown
-officeye	Office Yeo In Cheon Ha	Office Yeo In Cheon Ha	unknown
+topbladv	草叶飞机 V	草叶飞机 V	unknown
+officeye	办公室 Yeo In Cheon Ha	办公室 Yeo In Cheon Ha	unknown
 inquiztr	反馈	反馈	BFM
 escounts	每秒计算 (39-360-053)	每秒计算 (39-360-053)	BFM
 trebltop	三倍完成 (39-360-070)	三倍完成 (39-360-070)	BFM
@@ -6592,7 +6592,7 @@ cluedo2	妙探寻凶 (prod. 2)	妙探寻凶 (prod. 2)	JPM
 trivialp	追根究底 (prod. 1D)	追根究底 (prod. 1D)	JPM
 scrabble	字母之迷 (rev. F)	字母之迷 (rev. F)	JPM
 hngmnjpm	绞刑文字狱 (JPM)	绞刑文字狱 (JPM)	JPM
-coronatn	Coronation Street Quiz Game	Coronation Street Quiz Game	JPM
+coronatn	街头问答游戏	街头问答游戏	JPM
 astinvad	银河侵略者	银河侵略者	Stern
 kosmokil	宇宙杀手	宇宙杀手	bootleg
 kamikaze	自杀攻击	自杀攻击	Leijac Corporation
@@ -6822,11 +6822,11 @@ dcheese	大起司	大起司	HAR
 lottof2	趣味乐透 2	趣味乐透 2	HAR
 fredmem	摩登原始人 (世界版?, Ticket version, 3/17/95)	摩登原始人 (世界版?, Ticket version, 3/17/95)	Coastal Amusements
 fredmeus	摩登原始人 (美版, 高分版本, 3/10/95)	摩登原始人 (美版, 高分版本, 3/10/95)	Coastal Amusements
-fredmeuk	摩登原始人 (UK, 3/17/95)	摩登原始人 (UK, 3/17/95)	Coastal Amusements
+fredmeuk	摩登原始人 (英版, 3/17/95)	摩登原始人 (英版, 3/17/95)	Coastal Amusements
 fredmemj	摩登原始人 (日版, 高分版本, 3/20/95)	摩登原始人 (日版, 高分版本, 3/20/95)	Coastal Amusements
-fredmemc	摩登原始人 (Mandarin Chinese, 3/17/95)	摩登原始人 (Mandarin Chinese, 3/17/95)	Coastal Amusements
+fredmemc	摩登原始人 (中文版, 3/17/95)	摩登原始人 (中文版, 3/17/95)	Coastal Amusements
 fredmesp	摩登原始人 (西班牙, 3/17/95)	摩登原始人 (西班牙, 3/17/95)	Coastal Amusements
-cecmatch	ChuckECheese's Match Game	ChuckECheese's Match Game	Coastal Amusements
+cecmatch	印度飞盘比赛游戏	印度飞盘比赛游戏	Coastal Amusements
 f15se	F-15 飞鹰 (rev. 2.2 02/25/91)	F-15 飞鹰 (rev. 2.2 02/25/91)	Microprose
 f15se21	F-15 飞鹰 (rev. 2.1 02/04/91)	F-15 飞鹰 (rev. 2.1 02/04/91)	Microprose
 botss	决战太阳系 (rev. 1.1)	决战太阳系 (rev. 1.1)	Microprose
@@ -6959,7 +6959,7 @@ ampkr2b2	美式扑克 II (盗版，第2套)	美式扑克 II (盗版，第2套)	Bootleg
 ampkr2b3	美式扑克 II (盗版，第3套)	美式扑克 II (盗版，第3套)	Bootleg
 pkrdewin	扑克大赢家	扑克大赢家	Bootleg
 ampkr95	美式扑克 95	美式扑克 95	Bootleg
-videomat	视频分析 (polish bootleg)	视频分析 (polish bootleg)	Bootleg
+videomat	扑克输赢 (polish 盗版)	扑克输赢 (polish 盗版)	Bootleg
 sigmapkr	思格玛扑克	思格玛扑克	Sigma Inc.
 sigma2k	思格玛扑克 2000	思格玛扑克 2000	Sigma Inc.
 lucky8	幸运 8 线	幸运 8 线	Falcon
@@ -7123,24 +7123,24 @@ paranoia	偏执狂	偏执狂	Naxat Soft
 vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
 shadfgtr	暗影战士	暗影战士	Sega?
 blackt96	黑色接触 '96	黑色接触 '96	D.G.R.M.
-laperla	La Perla Nera (Ver 2.0)	La Perla Nera (Ver 2.0)	Nazionale Elettronica
-laperlag	La Perla Nera Gold (Ver 2.0)	La Perla Nera Gold (Ver 2.0)	Nazionale Elettronica
-capunc	Capitan Uncino (Ver 1.2)	Capitan Uncino (Ver 1.2)	Nazionale Elettronica
-capcor	Capitani Coraggiosi (Ver 1.3)	Capitani Coraggiosi (Ver 1.3)	Nazionale Elettronica
+laperla	快乐啦啦队 (Ver 2.0)	快乐啦啦队 (Ver 2.0)	Nazionale Elettronica
+laperlag	快乐黄金啦啦队 (Ver 2.0)	快乐黄金啦啦队 (Ver 2.0)	Nazionale Elettronica
+capunc	双倍打击 (Ver 1.2)	双倍打击 (Ver 1.2)	Nazionale Elettronica
+capcor	双倍打击 (Ver 1.3)	双倍打击 (Ver 1.3)	Nazionale Elettronica
 euro2k2	梦回欧罗巴 2002 (Ver 2.0, set 1)	梦回欧罗巴 2002 (Ver 2.0, set 1)	Nazionale Elettronica
 euro2k2a	梦回欧罗巴 2002 (Ver 2.0, set 2)	梦回欧罗巴 2002 (Ver 2.0, set 2)	Nazionale Elettronica
-mnumber	神秘数字	神秘数字	M.M. - B.R.L.
-ntcash	NtCash	NtCash	Unknown
-wizard	术士 (Ver 1.0)	术士 (Ver 1.0)	A.A.
+mnumber	神秘韵律	神秘韵律	M.M. - B.R.L.
+ntcash	圣经	圣经	Unknown
+wizard	巫士 (Ver 1.0)	巫士 (Ver 1.0)	A.A.
 laser2k1	激光 2001 (Ver 1.2)	激光 2001 (Ver 1.2)	Unknown
 mdrink	魔法饮料 (Ver 1.2)	魔法饮料 (Ver 1.2)	Unknown
-te0144	Unknown italian gambling game	Unknown italian gambling game	Unknown
-cmagica	Carta Magica (Ver 1.8)	Carta Magica (Ver 1.8)	Unknown
+te0144	未知的意大利游戏	未知的意大利游戏	Unknown
+cmagica	手套魔法 (Ver 1.8)	手套魔法 (Ver 1.8)	Unknown
 millsun	千年太阳	千年太阳	Unknown
 sspac2k1	超级空间 2001	超级空间 2001	Unknown
-elvis	Elvis?	Elvis?	Unknown
-ejollyx5	快乐欧洲 X5	快乐欧洲 X5	Solar Games
-grandprx	长途赛车	长途赛车	4fun
+elvis	恶魔?	恶魔?	Unknown
+ejollyx5	澳洲扑克 X5	澳洲扑克 X5	Solar Games
+grandprx	国际长途大赛车	国际长途大赛车	4fun
 showhand	梭哈	梭哈	Astro Corp.
 knightsh	圆桌骑士 (hack)	圆桌骑士 (hack)	bootleg
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
