@@ -6653,3 +6653,12 @@ Save Description
 # emu/cheat.c: 9726
 Save Raw Code
 
+
+# emu/cheat.c: 2998
+Search a Cheat (Minimum Mode)
+
+
+# emu/cheat.c: 3002
+Search a Cheat (Standard Mode)
+
+

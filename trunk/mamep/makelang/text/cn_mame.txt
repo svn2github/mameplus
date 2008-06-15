@@ -6534,3 +6534,12 @@ Save Description
 Save Raw Code
 保存 Raw 代码
 
+# emu/cheat.c: 2998
+Search a Cheat (Minimum Mode)
+搜索作弊码 (最小方式)
+
+# emu/cheat.c: 3002
+Search a Cheat (Standard Mode)
+搜索作弊码 (标准方式)
+
+
