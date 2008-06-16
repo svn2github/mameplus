@@ -181,12 +181,6 @@ static UINT32 menu_memory_card(running_machine *machine, UINT32 state);
 static UINT32 menu_video(running_machine *machine, UINT32 state);
 static UINT32 menu_quit_game(running_machine *machine, UINT32 state);
 static UINT32 menu_select_game(running_machine *machine, UINT32 state);
-#ifdef MESS
-static UINT32 menu_file_manager(running_machine *machine, UINT32 state);
-#if HAS_WAVE
-static UINT32 menu_tape_control(running_machine *machine, UINT32 state);
-#endif /* HAS_WAVE */
-#endif /* MESS */
 #ifdef USE_CUSTOM_BUTTON
 static UINT32 menu_custom_button(running_machine *machine, UINT32 state);
 #endif /* USE_CUSTOM_BUTTON */
@@ -1897,37 +1891,6 @@ static UINT32 menu_select_game(running_machine *machine, UINT32 state)
 	return selected | (recompute << 16) | (error << 17);
 }
 
-
-/*-------------------------------------------------
-    menu_file_manager - MESS-specific menu
--------------------------------------------------*/
-
-#ifdef MESS
-static UINT32 menu_file_manager(running_machine *machine, UINT32 state)
-{
-	int result = filemanager(machine, state);
-	if (result == 0)
-	return ui_menu_stack_pop();
-	return result;
-}
-#endif
-
-
-/*-------------------------------------------------
-    menu_tape_control - MESS-specific menu
--------------------------------------------------*/
-
-#ifdef MESS
-#if HAS_WAVE
-static UINT32 menu_tape_control(running_machine *machine, UINT32 state)
-{
-	int result = tapecontrol(machine, state);
-	if (result == 0)
-	return ui_menu_stack_pop();
-	return result;
-}
-#endif /* HAS_WAVE */
-#endif /* MESS */
 
 
 #if 0//def USE_CUSTOM_BUTTON
