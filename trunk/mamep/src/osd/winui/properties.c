@@ -545,7 +545,6 @@ static int GetSelectedScreen(HWND hWnd)
 
 	if ((nSelectedScreen < 0) || (nSelectedScreen >= MAX_SCREENS + 1))
 		nSelectedScreen = 0;
-
 	return nSelectedScreen;
 
 }
@@ -2535,10 +2534,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
 
-	//mamep: handle text
-	EnableWindow(GetDlgItem(hWnd, IDC_D3D_TEXT),               d3d);
-	EnableWindow(GetDlgItem(hWnd, IDC_DDRAW_TEXT),             ddraw);
-
 //mamep: gdi is ok
 /*
 	//Switchres and D3D or ddraw enable the per screen parameters
@@ -2918,6 +2913,7 @@ static BOOL ViewPopulateControl(datamap *map, HWND dialog, HWND control, core_op
 	return FALSE;
 }
 
+
 static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	WIN32_FIND_DATA FindFileData;
@@ -3290,6 +3286,7 @@ static void BuildDataMap(void)
 #endif /* USE_VOLUME_AUTO_ADJUST */
 
 	// core input options 
+	datamap_add(properties_datamap, IDC_COINLOCKOUT,			DM_BOOL,	OPTION_COIN_LOCKOUT);
 	datamap_add(properties_datamap, IDC_DEFAULT_INPUT,			DM_STRING,	OPTION_CTRLR);
 	datamap_add(properties_datamap, IDC_USE_MOUSE,				DM_BOOL,	OPTION_MOUSE);
 	datamap_add(properties_datamap, IDC_JOYSTICK,				DM_BOOL,	OPTION_JOYSTICK);
@@ -3712,7 +3709,7 @@ static void InitializeD3DVersionUI(HWND hwnd)
 		int i;
 		for (i = 0; i < NUMD3DVERSIONS; i++)
 		{
-			(void)ComboBox_InsertString(hCtrl, i, g_ComboBoxD3DVersion[i].m_pText);
+			(void)ComboBox_InsertString(hCtrl, i, _UIW(g_ComboBoxD3DVersion[i].m_pText));
 			(void)ComboBox_SetItemData( hCtrl, i, g_ComboBoxD3DVersion[i].m_pData);
 		}
 	}

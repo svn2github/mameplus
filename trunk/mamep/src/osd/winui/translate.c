@@ -218,7 +218,7 @@ void TranslateMenu(HMENU hMenu, int uiString)
 
 		// View
 		popstr[1].hMenu    = GetSubMenu(hMenu, 1);
-		popstr[1].uiString = IDS_UI_TOOLBAR;
+		popstr[1].uiString = IDS_VIEW_TOOLBAR;
 
 		// Options
 		popstr[2].hMenu    = GetSubMenu(hMenu, 2);

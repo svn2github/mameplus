@@ -50,6 +50,7 @@ int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
+BOOL DriverIsVertical(int driver_index);
 BOOL DriverHasM68K(int driver_index);
 int DriverParentIndex(int driver_index);
 
@@ -94,3 +95,4 @@ void CenterWindow(HWND hWnd);
 #endif /* TREE_SHEET */
 
 #endif /* MUI_UTIL_H */
+

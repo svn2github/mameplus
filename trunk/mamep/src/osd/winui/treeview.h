@@ -88,17 +88,16 @@ void CreateYearFolders(int parent_index);
 void CreateSourceFolders(int parent_index);
 void CreateCPUFolders(int parent_index);
 void CreateSoundFolders(int parent_index);
-void CreateOrientationFolders(int parent_index);
-void CreateDeficiencyFolders(int parent_index);
-void CreateDumpingFolders(int parent_index);
 #ifdef MISC_FOLDER
+void CreateOrientationFolders(int parent_index);
 void CreateBIOSFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
 #endif /* MISC_FOLDER */
-
+void CreateDeficiencyFolders(int parent_index);
+void CreateDumpingFolders(int parent_index);
 
 /***************************************************************************/
 
@@ -117,7 +116,6 @@ enum
 	FOLDER_SOURCE,
 	FOLDER_CPU,
 	FOLDER_SND,
-	FOLDER_ORIENTATION,
 	FOLDER_DEFICIENCY,
 	FOLDER_WORKING,
 	FOLDER_NONWORKING,
@@ -126,6 +124,7 @@ enum
 	FOLDER_RASTER,
 	FOLDER_VECTOR,
 #ifdef MISC_FOLDER
+	FOLDER_ORIENTATION,
 	FOLDER_RESOLUTION,
 	FOLDER_FPS,
 	FOLDER_CONTROL,
@@ -140,6 +139,8 @@ enum
 	FOLDER_DUMPING,
 	FOLDER_SAVESTATE,
 	FOLDER_BIOS,
+	FOLDER_HORIZONTAL,
+	FOLDER_VERTICAL,
 #ifdef MESS
 	FOLDER_CONSOLE,
 	FOLDER_COMPUTER,
@@ -159,6 +160,8 @@ typedef enum
 	F_ORIGINALS     = 0x00000020,
 	F_WORKING       = 0x00000040,
 	F_AVAILABLE     = 0x00000080,
+	F_HORIZONTAL    = 0x00001000,
+	F_VERTICAL      = 0x00002000,
 #ifdef MESS
 	F_COMPUTER      = 0x00000200,
 	F_CONSOLE       = 0x00000400,

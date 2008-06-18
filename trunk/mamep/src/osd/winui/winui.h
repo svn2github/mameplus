@@ -100,4 +100,6 @@ int MameUIMain(HINSTANCE	hInstance,
                    int      nCmdShow);
 
 BOOL MouseHasBeenMoved(void);
+
+
 #endif

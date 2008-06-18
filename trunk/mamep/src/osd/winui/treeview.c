@@ -65,7 +65,6 @@
 
 #define MAX_EXTRA_FOLDERS 256
 
-
 /***************************************************************************
     public structures
  ***************************************************************************/
@@ -90,6 +89,8 @@ static TREEICON treeIconNames[] =
 	{ IDI_FOLDER_UNAVAILABLE,  "foldunav" },
 	{ IDI_FOLDER_YEAR,         "foldyear" },
 	{ IDI_FOLDER_SOURCE,       "foldsrc" },
+	{ IDI_FOLDER_HORIZONTAL,   "horz" },
+	{ IDI_FOLDER_VERTICAL,     "vert" },
 	{ IDI_MANUFACTURER,        "manufact" },
 	{ IDI_WORKING,             "working" },
 	{ IDI_NONWORKING,          "nonwork" },
@@ -1163,6 +1164,7 @@ void CreateYearFolders(int parent_index)
 	}
 }
 
+#ifdef MISC_FOLDER
 void CreateOrientationFolders(int parent_index)
 {
 	int jj;
@@ -1172,10 +1174,10 @@ void CreateOrientationFolders(int parent_index)
 	// create our two subfolders
 	LPTREEFOLDER lpVert, lpHorz;
 
-	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
+	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER_VERTICAL);
 	AddFolder(lpVert);
 
-	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER);
+	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER_HORIZONTAL);
 	AddFolder(lpHorz);
 
 	// no games in top level folder
@@ -1194,7 +1196,6 @@ void CreateOrientationFolders(int parent_index)
 	}
 }
 
-#ifdef MISC_FOLDER
 void CreateBIOSFolders(int parent_index)
 {
 	int i,jj;
@@ -2745,7 +2746,6 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 			   for (i=0;i<GetNumGames();i++)
 			   {
 				   int driver_index = GetIndexFromSortedIndex(i); 
-
 				   if (TestBit(folder_data->m_lpGameBits,driver_index))
 				   {
 					   fprintf(fp,"%s\n",drivers[driver_index]->name);

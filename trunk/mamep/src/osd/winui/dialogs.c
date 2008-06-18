@@ -550,6 +550,22 @@ INT_PTR CALLBACK FilterDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPa
 							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_AVAILABLE), strText);
 							bShowExplanation = TRUE;
 						}
+						if( (dwpFilters & F_HORIZONTAL) && !(dwFilters & F_HORIZONTAL) )
+						{
+							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_HORIZONTAL), strText, 250);
+							wcscat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_HORIZONTAL), strText);
+							bShowExplanation = TRUE;
+						}
+						if( (dwpFilters & F_VERTICAL) && !(dwFilters & F_VERTICAL) )
+						{
+							/*Add a Specifier to the Checkbox to show it was inherited from the parent*/
+							Edit_GetText(GetDlgItem(hDlg, IDC_FILTER_VERTICAL), strText, 250);
+							wcscat(strText, TEXT(" (*)"));
+							Edit_SetText(GetDlgItem(hDlg, IDC_FILTER_VERTICAL), strText);
+							bShowExplanation = TRUE;
+						}
 						/*Do not or in the Values of the parent, so that the values of the folder still can be set*/
 						//dwFilters |= dwpFilters;
 					}

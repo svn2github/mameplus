@@ -551,7 +551,7 @@ static struct
 	{ ID_VIEW_SMALL_ICON,		IDI_SMALL },
 	{ ID_VIEW_LARGE_ICON,		IDI_LARGE },
 	{ ID_GAME_PROPERTIES,		IDI_PROPERTY },
-	{ ID_VIEW_PCBINFO,			IDI_PCB },
+	{ ID_VIEW_PCBINFO,			IDI_PCBINFO },
 	{ 0 }
 };
 #endif /* IMAGE_MENU */
@@ -890,6 +890,7 @@ static HDC              hMemoryDC;
 LPCTSTR column_names[COLUMN_MAX] =
 {
 	TEXT("Description"),
+	TEXT("Screen"),
 	TEXT("ROMs"),
 	TEXT("Samples"),
 	TEXT("Name"),
@@ -1816,6 +1817,7 @@ int GetGameNameIndex(const char *name)
 		return -1;
 
 	return driver_index_info->index;
+
 }
 
 int GetIndexFromSortedIndex(int sorted_index)
@@ -4991,6 +4993,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 
 	/* Arrange Icons submenu */
 	case ID_VIEW_BYGAME:
+	case ID_VIEW_ORIENTATION:
 	case ID_VIEW_BYROMS:
 	case ID_VIEW_BYSAMPLES:
 	case ID_VIEW_BYDIRECTORY:
@@ -5139,10 +5142,8 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_VIEW_TAB_HISTORY :
 #ifdef STORY_DATAFILE
 	case ID_VIEW_TAB_STORY :
-		if ((id == ID_VIEW_TAB_HISTORY || id == ID_VIEW_TAB_STORY) && GetShowTab(TAB_HISTORY) == FALSE)
-#else /* STORY_DATAFILE */
-		if (id == ID_VIEW_TAB_HISTORY && GetShowTab(TAB_HISTORY) == FALSE)
 #endif /* STORY_DATAFILE */
+		if (id == ID_VIEW_TAB_HISTORY && GetShowTab(TAB_HISTORY) == FALSE)
 			break;
 
 		TabView_SetCurrentTab(hTabCtrl, id - ID_VIEW_TAB_SCREENSHOT);
@@ -5627,6 +5628,10 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 				driversw[nItem]->modify_the;
 			break;
 
+		case COLUMN_ORIENTATION:
+			s = DriverIsVertical(nItem) ? _UIW(TEXT("Vertical")) : _UIW(TEXT("Horizontal")); 
+			break;
+
 		case COLUMN_ROMS:
 			/* Has Roms */
 			s = GetAuditString(GetRomAuditResults(nItem));
@@ -5657,7 +5662,6 @@ static const TCHAR *GamePicker_GetItemString(HWND hwndPicker, int nItem, int nCo
 		case COLUMN_TYPE:
         {
             machine_config *config = machine_config_alloc(drivers[nItem]->machine_config);
-
 			/* Vector/Raster */
 			if (isDriverVector(config))
 				s = _UIW(TEXT("Vector"));
@@ -6025,6 +6029,12 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 
 		break;
 
+	case COLUMN_ORIENTATION:
+		nTemp1 = DriverIsVertical(index1) ? 1 : 0;
+		nTemp2 = DriverIsVertical(index2) ? 1 : 0;
+		value = nTemp1 - nTemp2;
+		break;
+
 	case COLUMN_ROMS:
 		nTemp1 = -1;
 		{
@@ -6087,7 +6097,6 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 			else
 				nTemp2 = 0;
 		}
-
 		value = nTemp2 - nTemp1;
 		break;
 
@@ -6096,7 +6105,7 @@ static int GamePicker_Compare(HWND hwndPicker, int index1, int index2, int sort_
 		break;
 
    	case COLUMN_SRCDRIVERS:
-		value = _tcsicmp(GetDriverFilename(index1), GetDriverFilename(index2));
+		value = mame_stricmp(drivers[index1]->source_file, drivers[index2]->source_file);
 		break;
 
 	case COLUMN_PLAYTIME:
@@ -7263,7 +7272,11 @@ static void UpdateMenu(HMENU hMenu)
 	else
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES,MF_GRAYED);
 
+#ifdef STORY_DATAFILE
+	CheckMenuRadioItem(hMenu, ID_VIEW_TAB_SCREENSHOT, ID_VIEW_TAB_STORY,
+#else /* STORY_DATAFILE */
 	CheckMenuRadioItem(hMenu, ID_VIEW_TAB_SCREENSHOT, ID_VIEW_TAB_HISTORY,
+#endif /* STORY_DATAFILE */
 					   ID_VIEW_TAB_SCREENSHOT + TabView_GetCurrentTab(hTabCtrl), MF_BYCOMMAND);
 
 	// set whether we're showing the tab control or not

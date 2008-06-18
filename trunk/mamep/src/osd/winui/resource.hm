@@ -16,6 +16,7 @@
 #define HIDC_BRIGHTCORRECT              0x809a0400    // IDD_PROP_DISPLAY [Englisch (USA)]
 #define HIDC_BROADCAST                  0x80ad0486    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
 #define HIDC_CHEAT                      0x809e03f8    // IDD_PROP_MISC [Englisch (USA)]
+#define HIDC_COINLOCKOUT                0x809e04d6    // IDD_PROP_MISC [Englisch (USA)]
 #define HIDC_CONTRAST                   0x809a0402    // IDD_PROP_DISPLAY [Englisch (USA)]
 #define HIDC_CYCLETIMESEC               0x80ad04a6    // IDD_INTERFACE_OPTIONS [Englisch (USA)]
 #define HIDC_D3D_FILTER                 0x809a04a0    // IDD_PROP_DISPLAY [Englisch (USA)]

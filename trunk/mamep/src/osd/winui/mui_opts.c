@@ -240,8 +240,8 @@ static void  generate_default_dirs(void);
 // Option values
 #define MUIDEFAULT_SELECTION					"nes"
 #define MUIDEFAULT_SPLITTERS					"152,310,468"
-//#define M32HISTORY_FILE							"sysinfo.dat"
-//#define M32MAMEINFO_FILE						"messinfo.dat"
+//#define MUIHISTORY_FILE							"sysinfo.dat"
+//#define MUIMAMEINFO_FILE						"messinfo.dat"
 #else
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_game"
@@ -250,8 +250,8 @@ static void  generate_default_dirs(void);
 // Options values
 #define MUIDEFAULT_SELECTION					"puckman"
 #define MUIDEFAULT_SPLITTERS					"152,362"
-//#define M32HISTORY_FILE							"history.dat"
-//#define M32MAMEINFO_FILE						"mameinfo.dat"
+//#define MUIHISTORY_FILE							"history.dat"
+//#define MUIMAMEINFO_FILE						"mameinfo.dat"
 #endif
 
 
@@ -326,10 +326,10 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_LIST_MODE,					"Grouped",        0,                 NULL },
 	{ MUIOPTION_SPLITTERS,					MUIDEFAULT_SPLITTERS, 0,       NULL },
 	{ MUIOPTION_LIST_FONT,					"-8,0,0,0,400,0,0,0,0,0,0,0,0", 0, NULL },
-	{ MUIOPTION_LIST_FONTFACE,				"MS Sans Serif", 0, NULL },
-	{ MUIOPTION_COLUMN_WIDTHS,				"185,78,84,84,64,88,74,108,60,144,84,60", 0, NULL },
-	{ MUIOPTION_COLUMN_ORDER,				"0,2,3,4,5,6,7,8,9,1,10,11", 0, NULL },
-	{ MUIOPTION_COLUMN_SHOWN,				"1,0,1,1,1,1,1,1,1,1,0,0", 0,  NULL },
+	{ MUIOPTION_LIST_FONTFACE,		         	"MS Sans Serif", 0, NULL },
+	{ MUIOPTION_COLUMN_WIDTHS,		        	"185,78,84,84,64,88,74,108,60,144,84,60,60", 0, NULL },
+	{ MUIOPTION_COLUMN_ORDER,				"0,1,3,4,5,6,7,8,9,10,11,12,2", 0, NULL },
+	{ MUIOPTION_COLUMN_SHOWN,				"1,1,0,1,1,1,1,1,1,1,1,1,1", 0,  NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "INTERFACE OPTIONS" },
 	{ MUIOPTION_CHECK_GAME,					"1",        OPTION_BOOLEAN,    NULL },
@@ -366,6 +366,7 @@ static const options_entry regSettings[] =
 #ifdef USE_VIEW_PCBINFO
 	{ MUIOPTION_PCBINFO_DIRECTORY,		        "pcbinfo",  0,                 NULL },
 #endif /* USE_VIEW_PCBINFO */
+
 
 //	{ NULL,									NULL,       OPTION_HEADER,     "FILENAME OPTIONS" },
 //	{ MUIOPTION_HISTORY_FILE,				MUIHISTORY_FILE, 0,              NULL },
@@ -414,16 +415,16 @@ static const options_entry regSettings[] =
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION JOYSTICK CODES" },
 	{ MUIOPTION_UI_JOY_UP,					"1,1,1,1",         0,                 NULL },
 	{ MUIOPTION_UI_JOY_DOWN,				"1,1,1,2",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_LEFT,				"0,0,0,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_RIGHT,				"0,0,0,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_LEFT,				"1,1,2,1",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_RIGHT,				"1,1,2,2",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_START,				"1,0,1,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_PGUP,				"1,1,2,1",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_PGDWN,				"1,1,2,2",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_PGUP,				"2,1,2,1",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_PGDWN,				"2,1,2,2",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_HOME,				"0,0,0,0",         0,                 NULL },
 	{ MUIOPTION_UI_JOY_END,					"0,0,0,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_SS_CHANGE,			"1,0,4,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_HISTORY_UP,			"1,0,2,0",         0,                 NULL },
-	{ MUIOPTION_UI_JOY_HISTORY_DOWN,		"1,0,3,0",         0,                 NULL },
+	{ MUIOPTION_UI_JOY_SS_CHANGE,			"2,0,3,0",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_HISTORY_UP,			"2,0,4,0",  0,                 NULL },
+	{ MUIOPTION_UI_JOY_HISTORY_DOWN,		"2,0,1,0",  0,                 NULL },
 	{ MUIOPTION_UI_JOY_EXEC,				"0,0,0,0",         0,                 NULL },
 
 #ifndef MESS

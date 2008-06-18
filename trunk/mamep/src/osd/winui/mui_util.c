@@ -67,8 +67,8 @@ static struct DriversInfo
 	BOOL isVector;
 	BOOL usesRoms;
 	BOOL usesSamples;
-	BOOL usesYM3812;
 	BOOL supportsSaveState;
+	BOOL isVertical;
 	BOOL hasM68K;
 	int numPlayers;
 	int numButtons;
@@ -564,6 +564,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
+			gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
 			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
 				if (ROMREGION_ISDISKDATA(region))
 				{
@@ -586,7 +587,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				}
 
 			gameinfo->usesSamples = FALSE;
-			gameinfo->usesYM3812 = FALSE;
 			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
 			{
 #if HAS_SAMPLES
@@ -600,18 +600,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 						gameinfo->usesSamples = TRUE;
 				}
 #endif
-				if (0
-#if HAS_YM3812
-					|| config->sound[i].type == SOUND_YM3812
-#endif
-#if HAS_YM3526
-					|| config->sound[i].type == SOUND_YM3526
-#endif
-#if HAS_YM2413
-					|| config->sound[i].type == SOUND_YM2413
-#endif
-				)
-					gameinfo->usesYM3812 = TRUE;
 			}
 
 			gameinfo->numPlayers = 0;
@@ -721,6 +709,7 @@ BOOL DriverIsBios(int driver_index)
 	return bBios;
 }
 
+
 BOOL DriverHasOptionalBIOS(int driver_index)
 {
 	return GetDriversInfo(driver_index)->hasOptionalBIOS;
@@ -783,6 +772,10 @@ BOOL DriverUsesController(int driver_index, int type)
 BOOL DriverSupportsSaveState(int driver_index)
 {
 	return GetDriversInfo(driver_index)->supportsSaveState;
+}
+
+BOOL DriverIsVertical(int driver_index) {
+	return GetDriversInfo(driver_index)->isVertical; 
 }
 
 BOOL DriverHasM68K(int driver_index)
