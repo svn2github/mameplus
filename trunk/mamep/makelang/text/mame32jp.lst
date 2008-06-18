@@ -248,7 +248,7 @@ aponow	レスキュー / Apocaljpse Now	れすきゅー	bootleg
 minefld	マインフィールド	まいんふぃーるど	Stern
 losttomb	ロストトゥーム (easy)	ろすととぅーむ	Stern
 losttmbh	ロストトゥーム (hard)	ろすととぅーむ	Stern
-superbon	スーパーボンド	すーぱーぼんど	bootleg
+superbon	エージェントスーパーボンド (Scobra hardware)	えーじぇんとすーぱーぼんど	Signatron USA
 hustler	ビデオハスラー	びでおはすらー	Konami
 billiard	ビデオハスラー / The Billiards	びでおはすらー	bootleg
 hustlerb	ビデオハスラー (海賊版)	びでおはすらー	bootleg
@@ -639,7 +639,8 @@ pistoldm	ピストル大名の冒険 (日本版)	ぴすとるだいみょうのぼうけん	Namco
 boxyboy	倉庫番デラックス / Boxy Boy (USA版)	そうこばんでらっくす	Namco
 soukobdx	倉庫番デラックス (日本版)	そうこばんでらっくす	Namco
 puzlclub	パズルクラブ (日本版 prototype)	ぱずるくらぶ	Namco
-tankfrce	タンクフォース (USA版)	たんくふぉーす	Namco
+tankfrce	タンクフォース (USA版 2 player)	たんくふぉーす	Namco
+tankfrc4	タンクフォース (USA版 4 player)	たんくふぉーす	Namco
 tankfrcj	タンクフォース (日本版)	たんくふぉーす	Namco
 finallap	ファイナルラップ (rev E)	ふぁいなるらっぷ_1	Namco
 finalapd	ファイナルラップ (rev D)	ふぁいなるらっぷ_1	Namco
@@ -3874,7 +3875,7 @@ fstarfrc	ファイナル・スターフォース (USA版)	ふぁいなるすたーふぉーす	Tecmo
 ginkun	がんばれギンくん -アクションミニゲーム集	がんばれぎんくん	Tecmo
 deroon	でろ～んでろでろ	でろーんでろでろ	Tecmo
 tkdensho	闘姫伝承 -Angel Eyes (ver 960614)	とうきでんしょう	Tecmo
-tkdensha	闘姫伝承 -Angel Eyes (Ver 960427)	とうきでんしょう	Tecmo
+tkdensha	闘姫伝承 -Angel Eyes (ver 960427)	とうきでんしょう	Tecmo
 tutankhm	ツタンカーム	つたんかーむ	Konami
 tutankst	ツタンカーム (Stern)	つたんかーむ	[Konami] (Stern license)
 junofrst	ジュノファースト	じゅのふぁーすと	Konami
@@ -4961,7 +4962,7 @@ garoubl	餓狼 -マーク・オブ・ザ・ウルヴス (海賊版)	がろうまーくおぶざうるぶす	boo
 s1945p	ストライカーズ1945 プラス	すとらいかーず_1_31945ぷらす	Psikyo
 preisle2	原始島2 / Prehistoric Isle 2	げんしとう_2	Yumekobo
 mslug3	メタルスラッグ3	めたるすらっぐ_3_1	SNK
-mslug3n	メタルスラッグ3 (not encrypted)	めたるすらっぐ_3_1	SNK
+mslug3h	メタルスラッグ3 (not encrypted)	めたるすらっぐ_3_1	SNK
 mslug3b6	メタルスラッグ3 / Metal Slug 6 (海賊版)	めたるすらっぐ_3_2	bootleg
 kof2000	ザ・キング・オブ・ファイターズ 2000	ざきんぐおぶふぁいたーず_07_1_2000	SNK
 kof2000n	ザ・キング・オブ・ファイターズ 2000 (not encrypted)	ざきんぐおぶふぁいたーず_07_1_2000	SNK
@@ -5413,6 +5414,7 @@ sbagman	スーパーバッグマン	すーぱーばっぐまん	Valadon Automation
 sbagmans	スーパーバッグマン (Stern)	すーぱーばっぐまん	Valadon Automation (Stern license)
 pickin	ピッキン	ぴっきん	Valadon Automation
 botanic	ボタニック	ぼたにっく	Valadon Automation (Itisa license)
+squaitsa	スカッシュ (Itisa)	すかっしゅ	Itisa
 tankbust	タンクバスターズ	たんくばすたーず	Valadon Automation
 stinger	スティンガー	すてぃんがー	Seibu Denshi
 stinger2	スティンガー (prototype?)	すてぃんがー	Seibu Denshi
@@ -5593,7 +5595,7 @@ rodlandj	妖精物語ロッドランド (日本版)	ようせいものがたりろっどらんど	Jaleco
 rodlndjb	妖精物語ロッドランド (日本版) (海賊版)	ようせいものがたりろっどらんど	Jaleco
 avspirit	ファンタズム / Avenging Spirit	ふぁんたずむ	Jaleco
 phantasm	ファンタズム (日本版)	ふぁんたずむ	Jaleco
-monkelf	ファンタズム / Monky Elf (韓国版) (海賊版 of Avenging Spirit)	ふぁんたずむ	bootleg
+monkelf	ファンタズム / Monky Elf (韓国版) (海賊版)	ふぁんたずむ	bootleg
 edf	E.D.F. <アースディフェンスフォース>	いーでぃーえふ	Jaleco
 edfu	E.D.F. <アースディフェンスフォース> (USA版)	いーでぃーえふ	Jaleco
 64street	64番街 -A Detective Story (海外版)	ろくじゅうよんばんがい	Jaleco
@@ -6181,8 +6183,10 @@ multchmp	マルチチャンプ (海外版)	まるちちゃんぷ_1	ESD
 multchmk	マルチチャンプ (韓国版)	まるちちゃんぷ_1	ESD
 mchampdx	マルチチャンプデラックス (ver 0106 06/01/2000)	まるちちゃんぷ_2でらっくす	ESD
 mchampda	マルチチャンプデラックス (ver 1126 26/11/1999)	まるちちゃんぷ_2でらっくす	ESD
-hedpanic	ヘッドパニック -Polly & Sally Adventure (ver 0315 15/03/2000)	へっどぱにっく	ESD / Fuuki
+hedpanic	ヘッドパニック -Polly & Sally Adventure (ver 0117 17/01/2000)	へっどぱにっく	ESD
+hedpanif	ヘッドパニック -Polly & Sally Adventure (ver 0315 15/03/2000)	へっどぱにっく	ESD / Fuuki
 tangtang	タンタン (ver 0526 26/05/2000)	たんたん	ESD
+swatpolc	スワットポリス	すわっとぽりす	ESD
 royalmj	ロイヤルマージャン (日本版 ver 1.13)	ろいやるまーじゃん	Nichibutsu
 openmj	オープンマージャン [BET] (日本版)	おーぷんまーじゃん	Sapporo Mechanic
 royalmah	ロイヤルマージャン (Falcon) (海賊版 ver 1.01)	ろいやるまーじゃん	bootleg
@@ -6921,6 +6925,7 @@ ampkr2b2	アメリカンポーカーII (海賊版 set 2)	あめりかんぽーかー_2	Bootleg
 ampkr2b3	アメリカンポーカーII (海賊版 set 3)	あめりかんぽーかー_2	Bootleg
 pkrdewin	アメリカンポーカーII / Poker De Win	あめりかんぽーかー_2	Bootleg
 ampkr95	アメリカンポーカーII / American Poker 95	あめりかんぽーかー_2	Bootleg
+videomat	アメリカンポーカーII / Videomat (海賊版)	あめりかんぽーかー_2	Bootleg
 sigmapkr	シグマポーカー	しぐまぽーか_1	Sigma Inc.
 sigma2k	シグマポーカー2000	しぐまぽーかー_2_2000	Sigma Inc.
 lucky8	ラッキー8ラインズ	らっきーえいとらいんず	Falcon
@@ -6952,6 +6957,12 @@ wyvernwg	ワイヴァーン・ウィングズ	わいばーんうぃんぐず	SemiCom (Game Vision Lice
 rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
 mirax	ミラックス	みらっくす	Current Technologies
+victor5	ビクター5	びくたー5	Subsino
+victor21	ビクター21	びくたー21	Subsino
+sharkpy	シャークパーティ	しゃーくぱーてぃ	Subsino
+sharkpya	シャークパーティ (alt)	しゃーくぱーてぃ	Subsino
+smoto20	スーパーライダー (イタリア版 ver 2.0)	すーぱーらいだー	Subsino
+smoto16	スーパーモト (イタリア版 ver 1.6)	すーぱーもと	Subsino
 lastfght	ラストファイティング	らすとふぁいてぃんぐ	Subsino
 bishjan	美笑雀	びしょうじゃん	Subsino
 sliver	スリバー	すりばー	Hollow Corp
@@ -6978,34 +6989,35 @@ goldnpkc	ゴールデンポーカー (no double up)	ごーるでんぽーかー	Bootleg
 jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Bootleg on Coinmaster hardware
 pottnpkr	ジャックポッテンズポーカー (海賊版 set 1)	じゃっくぽってんずぽーかー	Bootleg
 pottnpkb	ジャックポッテンズポーカー (海賊版 set 2)	じゃっくぽってんずぽーかー	Bootleg
-comg076	キャルオメガ ゲーム7.6 (Arcade Poker)	きゃるおめがげーむ7.6	Cal Omega Inc.
-comg079	キャルオメガ ゲーム7.9 (Arcade Poker)	きゃるおめがげーむ7.9	Cal Omega Inc.
-comg094	キャルオメガ ゲーム9.4 (Keno)	きゃるおめがげーむ9.4	Cal Omega Inc.
-comg107	キャルオメガ ゲーム10.7 (Big Game)	きゃるおめがげーむ10.7	Cal Omega Inc.
-comg125	キャルオメガ ゲーム12.5 (Bingo)	きゃるおめがげーむ12.5	Cal Omega Inc.
-comg127	キャルオメガ ゲーム12.7 (Keno)	きゃるおめがげーむ12.7	Cal Omega Inc.
-comg128	キャルオメガ ゲーム12.8 (Arcade Game)	きゃるおめがげーむ12.8	Cal Omega Inc.
-comg134	キャルオメガ ゲーム13.4 (Nudge Bingo)	きゃるおめがげーむ13.4	Cal Omega Inc.
-comg145	キャルオメガ ゲーム14.5 (Pixels)	きゃるおめがげーむ14.5	Cal Omega Inc.
-comg157	キャルオメガ ゲーム15.7 (Double-Draw Poker)	きゃるおめがげーむ15.7	Cal Omega Inc.
-comg159	キャルオメガ ゲーム15.9 (Wild Double-Up)	きゃるおめがげーむ15.9	Cal Omega Inc.
-comg164	キャルオメガ ゲーム16.4 (Keno)	きゃるおめがげーむ16.4	Cal Omega Inc.
-comg168	キャルオメガ ゲーム16.8 (Keno)	きゃるおめがげーむ16.8	Cal Omega Inc.
-comg172	キャルオメガ ゲーム17.2 (Double Double Poker)	きゃるおめがげーむ17.2	Cal Omega Inc.
-comg175	キャルオメガ ゲーム17.51 (Gaming Draw Poker)	きゃるおめがげーむ17.51	Cal Omega / Casino Electronics Inc.
-comg176	キャルオメガ ゲーム17.6 (Nudge Bingo)	きゃるおめがげーむ17.6	Cal Omega Inc.
-comg181	キャルオメガ ゲーム18.1 (Nudge Bingo)	きゃるおめがげーむ18.1	Cal Omega Inc.
-comg183	キャルオメガ ゲーム18.3 (Pixels)	きゃるおめがげーむ18.3	Cal Omega Inc.
-comg185	キャルオメガ ゲーム18.5 (Pixels)	きゃるおめがげーむ18.5	Cal Omega Inc.
-comg186	キャルオメガ ゲーム18.6 (Pixels)	きゃるおめがげーむ18.6	Cal Omega Inc.
-comg204	キャルオメガ ゲーム20.4 (Super Blackjack)	きゃるおめがげーむ20.4	Cal Omega Inc.
-comg208	キャルオメガ ゲーム20.8 (Winner's Choice)	きゃるおめがげーむ20.8	Cal Omega Inc.
-comg227	キャルオメガ ゲーム22.7 (Amusement Poker d/d)	きゃるおめがげーむ22.7	Cal Omega Inc.
-comg236	キャルオメガ ゲーム23.6 (Hotline)	きゃるおめがげーむ23.6	Cal Omega Inc.
-comg239	キャルオメガ ゲーム23.9 (Gaming Draw Poker)	きゃるおめがげーむ23.9	Cal Omega / Casino Electronics Inc.
-comg246	キャルオメガ ゲーム24.6 (Hotline)	きゃるおめがげーむ24.6	Cal Omega Inc.
-comg272a	キャルオメガ ゲーム27.2 (Keno amusement)	きゃるおめがげーむ27.2	Cal Omega Inc.
-comg272b	キャルオメガ ゲーム27.2 (Keno gaming)	きゃるおめがげーむ27.2	Cal Omega Inc.
+comg076	キャルオメガ ゲーム7.6 (arcade poker)	きゃるおめがげーむ7.6	Cal Omega Inc.
+comg079	キャルオメガ ゲーム7.9 (arcade poker)	きゃるおめがげーむ7.9	Cal Omega Inc.
+comg094	キャルオメガ ゲーム9.4 (keno)	きゃるおめがげーむ9.4	Cal Omega Inc.
+comg107	キャルオメガ ゲーム10.7 (big game)	きゃるおめがげーむ10.7	Cal Omega Inc.
+comg125	キャルオメガ ゲーム12.5 (bingo)	きゃるおめがげーむ12.5	Cal Omega Inc.
+comg127	キャルオメガ ゲーム12.7 (keno)	きゃるおめがげーむ12.7	Cal Omega Inc.
+comg128	キャルオメガ ゲーム12.8 (arcade game)	きゃるおめがげーむ12.8	Cal Omega Inc.
+comg134	キャルオメガ ゲーム13.4 (nudge bingo)	きゃるおめがげーむ13.4	Cal Omega Inc.
+comg145	キャルオメガ ゲーム14.5 (pixels)	きゃるおめがげーむ14.5	Cal Omega Inc.
+comg157	キャルオメガ ゲーム15.7 (double-draw poker)	きゃるおめがげーむ15.7	Cal Omega Inc.
+comg159	キャルオメガ ゲーム15.9 (wild double-up)	きゃるおめがげーむ15.9	Cal Omega Inc.
+comg164	キャルオメガ ゲーム16.4 (keno)	きゃるおめがげーむ16.4	Cal Omega Inc.
+comg168	キャルオメガ ゲーム16.8 (keno)	きゃるおめがげーむ16.8	Cal Omega Inc.
+comg172	キャルオメガ ゲーム17.2 (double double poker)	きゃるおめがげーむ17.2	Cal Omega Inc.
+comg175	キャルオメガ ゲーム17.51 (gaming draw poker)	きゃるおめがげーむ17.51	Cal Omega / Casino Electronics Inc.
+comg176	キャルオメガ ゲーム17.6 (nudge bingo)	きゃるおめがげーむ17.6	Cal Omega Inc.
+comg181	キャルオメガ ゲーム18.1 (nudge bingo)	きゃるおめがげーむ18.1	Cal Omega Inc.
+comg183	キャルオメガ ゲーム18.3 (pixels)	きゃるおめがげーむ18.3	Cal Omega Inc.
+comg185	キャルオメガ ゲーム18.5 (pixels)	きゃるおめがげーむ18.5	Cal Omega Inc.
+comg186	キャルオメガ ゲーム18.6 (pixels)	きゃるおめがげーむ18.6	Cal Omega Inc.
+comg187	キャルオメガ ゲーム18.7 (amusement poker)	きゃるおめがげーむ18.7	Cal Omega Inc.
+comg204	キャルオメガ ゲーム20.4 (super blackjack)	きゃるおめがげーむ20.4	Cal Omega Inc.
+comg208	キャルオメガ ゲーム20.8 (winner's choice)	きゃるおめがげーむ20.8	Cal Omega Inc.
+comg227	キャルオメガ ゲーム22.7 (amusement poker d/d)	きゃるおめがげーむ22.7	Cal Omega Inc.
+comg236	キャルオメガ ゲーム23.6 (hotline)	きゃるおめがげーむ23.6	Cal Omega Inc.
+comg239	キャルオメガ ゲーム23.9 (gaming draw poker)	きゃるおめがげーむ23.9	Cal Omega / Casino Electronics Inc.
+comg246	キャルオメガ ゲーム24.6 (hotline)	きゃるおめがげーむ24.6	Cal Omega Inc.
+comg272a	キャルオメガ ゲーム27.2 (keno amusement)	きゃるおめがげーむ27.2	Cal Omega Inc.
+comg272b	キャルオメガ ゲーム27.2 (keno gaming)	きゃるおめがげーむ27.2	Cal Omega Inc.
 comg903d	キャルオメガ システム903 Diag.PROM	きゃるおめがしすてむ903	Cal Omega Inc.
 comg905d	キャルオメガ システム905 Diag.PROM	きゃるおめがしすてむ905	Cal Omega Inc.
 elgrande	エルグランデ -5 Card Draw (new)	えるぐらんで	Tuni Electro Service / E.T. Marketing
@@ -7055,8 +7067,13 @@ pepp0447	プレイヤーズエッジプラス スタンダードドローポーカー (PP0447)	ぷれいやー
 pepp0516	プレイヤーズエッジプラス ダブルボーナスポーカー (PP0516)	ぷれいやーずえっじぷらすだぶるぼーなすぽーかー	IGT - International Gaming Technology
 pebe0014	プレイヤーズエッジプラス ブラックジャック (BE0014)	ぷれいやーずえっじぷらすぶらっくじゃっく	IGT - International Gaming Technology
 peke1012	プレイヤーズエッジプラス キノ (KE1012)	ぷれいやーずえっじぷらすきの	IGT - International Gaming Technology
+peps0014	プレイヤーズエッジプラス スーパージョーカースロッツ (PS0014)	ぷれいやーずえっじぷらすすーぱーじょーかーすろっつ	IGT - International Gaming Technology
+peps0022	プレイヤーズエッジプラス レッドホワイトアンドブルースロッツ (PS0022)	ぷれいやーずえっじぷらすれっどほわいとあんどすろっつ	IGT - International Gaming Technology
+peps0043	プレイヤーズエッジプラス ダブルダイヤモンドスロッツ (PS0043)	ぷれいやーずえっじぷらすだぶるだいやもんどすろっつ	IGT - International Gaming Technology
+peps0045	プレイヤーズエッジプラス レッドホワイトアンドブルースロッツ (PS0045)	ぷれいやーずえっじぷらすれっどほわいとあんどぶるーすろっつ	IGT - International Gaming Technology
+peps0308	プレイヤーズエッジプラス ダブルジャックポットスロッツ (PS0308)	ぷれいやーずえっじぷらすだぶるじゃっくぽっとすろっつ	IGT - International Gaming Technology
 peps0615	プレイヤーズエッジプラス カオススロッツ (PS0615)	ぷれいやーずえっじぷらすかおすすろっつ	IGT - International Gaming Technology
-peps0716	プレイヤーズエッジプラス クォーターマニアスロッツ (PS0716)	ぷれいやーずえっじぷらすくぉーたーまにあすろっつ	IGT - International Gaming Technology
+peps0716	プレイヤーズエッジプラス リバーギャンブラースロッツ (PS0716)	ぷれいやーずえっじぷらすりばーぎゃんぶらーすろっつ	IGT - International Gaming Technology
 pexp0019	プレイヤーズエッジプラス デュースワイルドポーカー (XP000019)	ぷれいやーずえっじぷらすでゅーすわいるどぽーかー	IGT - International Gaming Technology
 pexp0112	プレイヤーズエッジプラス ホワイトホットエースズポーカー (XP000112)	ぷれいやーずえっじぷらすほわいとほっとえーすずぽーかー	IGT - International Gaming Technology
 pexs0006	プレイヤーズエッジプラス トリプルトリプルダイアモンドスロッツ (XS000006)	ぷれいやーずえっじぷらすとりぷるとりぷるだいあもんどすろっつ	IGT - International Gaming Technology
@@ -7074,19 +7091,22 @@ shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	Sega?
 blackt96	ブラックタッチ'96	ぶらっくたっち_96	D.G.R.M.
 laperla	ラ・ペルラネラ (ver 2.0)	らぺるらねら_1	Nazionale Elettronica
 laperlag	ラ・ペルラネラ ゴールド (ver 2.0)	らぺるらねら_2ごーるど	Nazionale Elettronica
-capunc	キャプテンウンチーノ (ver 1.2)	きゃぷてんうんちーの	Nazionale Elettronica
+capunc	キャピタンウンチーノ (ver 1.2)	きゃぴたんうんちーの	Nazionale Elettronica
 capcor	カピターニコラッジョシ (ver 1.3)	かぴたーにこらっじょし	Nazionale Elettronica
 euro2k2	ヨーロッパ 2002 (ver 2.0 set 1)	よーろっぱ2002	Nazionale Elettronica
 euro2k2a	ヨーロッパ 2002 (ver 2.0 set 2)	よーろっぱ2002	Nazionale Elettronica
-laser2k1	レーザー 2001 (ver 1.2)	レーザー2001	Unknown
-mdrink	マジックドリンク (ver 1.2)	まじっくどりんく	Unknown
+mnumber	ミステリーナンバー	みすてりーなんばー	M.M. - B.R.L.
 ntcash	Ntキャッシュ	えぬてぃきゃっしゅ	Unknown
-wizard	ウィザード (ver 1.0)	うぃざーど	Unknown
+wizard	ウィザード (ver 1.0)	うぃざーど	A.A.
+laser2k1	レーザー 2001 (ver 1.2)	れーざー2001	Unknown
+mdrink	マジックドリンク (ver 1.2)	まじっくどりんく	Unknown
 te0144	アンノウンイタリアンギャンブリングゲーム	あんのうんいたりあんぎゃんぶりんぐげーむ	Unknown
 cmagica	カルタマギカ (ver 1.8)	かるたまぎか	Unknown
 millsun	ミレニアムサン	みれにあむさん	Unknown
 sspac2k1	スーパースペース2001	すーぱーすぺーす2001	Unknown
 elvis	エルビス?	えるびす	Unknown
+ejollyx5	ユーロジョリーX5	ゆーろじょりーえっくす5	Solar Games
+grandprx	グランプリ	ぐらんぷり	4fun
 showhand	ショーハンド	しょーはんど	Astro Corp.
 knightsh	ナイツ オブ ザ ラウンド -円卓の騎士 (ハック)	ないつおぶざらうんど	bootleg
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海外版 911127) (海賊版)	ないつおぶざらうんど	bootleg
