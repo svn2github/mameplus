@@ -506,6 +506,10 @@ Daiichi Denshi
 Daiki
 
 
+# Office Yeo In Cheon Ha (version 1.2)
+Danbi
+
+
 # Vamp 1/2 (Korea version)
 Danbi & F2 System
 
@@ -1952,6 +1956,10 @@ Soft Design
 
 # Euro Jolly X5
 Solar Games
+
+
+# Top Blade V
+SonoKong
 
 
 # Dambusters (UK)

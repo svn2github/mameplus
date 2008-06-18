@@ -10,10 +10,6 @@
  Inc
 
 
-# mess/osd/windows/menu.c: 523
-%s State.sta
-
-
 # mess/osd/windows/mess.rc: 57
 &Analog Controls...
 

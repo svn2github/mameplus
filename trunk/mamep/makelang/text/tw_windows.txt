@@ -168,7 +168,7 @@ Direct3D: 裝置 get_render_target 呼叫時發生錯誤 %08X\n
 
 # osd/windows/drawd3d.c: 658
 Direct3D: Error %08X during device present call\n
-Direct3D: 裝置 present 呼叫時發生錯誤 %08X\n
+Direct3D: 裝置提交呼叫時發生錯誤 %08X\n
 
 # osd/windows/drawd3d.c: 362, 369, 376, 383
 Direct3D: Error %08X during device set_render_state call\n
@@ -212,19 +212,19 @@ Direct3D: 頂點緩衝 lock 呼叫時發生錯誤 %08X\n
 
 # osd/windows/drawd3d.c: 1605, 2402
 Direct3D: Error %08X during vertex buffer unlock call\n
-Direct3D: 頂點緩衝 unlock 呼叫時發生錯誤 %08X\n
+Direct3D: 頂點緩衝解鎖呼叫時發生錯誤 %08X\n
 
 # osd/windows/drawd3d.c: 1001
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
-Direct3D: 錯誤 - 裝置不支援 dest alpha blending 搭配 inverted source alpha\n
+Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配 inverted source alpha\n
 
 # osd/windows/drawd3d.c: 996
 Direct3D: Error - Device does not support dest alpha blending with one\n
-Direct3D: 錯誤 - 裝置不支援 dest alpha blending 搭配係數 1\n
+Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配係數 1\n
 
 # osd/windows/drawd3d.c: 991
 Direct3D: Error - Device does not support dest alpha blending with zero\n
-Direct3D: 錯誤 - 裝置不支援 dest alpha blending 搭配係數 0\n
+Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配係數 0\n
 
 # osd/windows/drawd3d.c: 949
 Direct3D: Error - Device does not support immediate presentations\n
@@ -236,7 +236,7 @@ Direct3D: 錯誤 - 裝置不支援每個更新頻率演示\n
 
 # osd/windows/drawd3d.c: 982
 Direct3D: Error - Device does not support source alpha blending with destination color\n
-Direct3D: 錯誤 - 裝置不支援 source alpha blending 搭配 destination color\n
+Direct3D: 錯誤 - 裝置不支援 source alpha blending 搭配目標色彩\n
 
 # osd/windows/drawd3d.c: 977
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
@@ -1049,8 +1049,4 @@ thread priority for the main game thread; range from -15 to 1
 # osd/windows/winmain.c: 137
 video output method: none, gdi, ddraw, or d3d
 視訊輸出方式: none, gdi, ddraw 或 d3d
-
-# mess/osd/windows/menu.c: 523
-%s State.sta
-
 

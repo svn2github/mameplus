@@ -1,12 +1,12 @@
-# osd/winui/dialogs.c: 933
+# osd/winui/dialogs.c: 949
  PCB Info: %s [%s]
  電路板資訊: %s [%s]
 
-# osd/winui/dialogs.c: 812
+# osd/winui/dialogs.c: 828
  again.\r\n
 。\r\n
 
-# osd/winui/dialogs.c: 812
+# osd/winui/dialogs.c: 828
  requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
  需要 Microsoft Windows 9x/NT/2000 作業系統\r\n延伸套件 DirectX 版本 3 或更新的版本。\r\n\r\n拜訪 Microsoft 的 DirectX 網頁 http://www.microsoft.com/directx\r\n下載 DirectX 安裝，然後再重新啟動 
 
@@ -14,55 +14,55 @@
  will now reset the following\n
  現在將會重設下列項目\n
 
-# osd/winui/properties.c: 1032
+# osd/winui/properties.c: 1031
 %d colors 
 %d 色 
 
-# osd/winui/winui.c: 276, 3701
+# osd/winui/winui.c: 276, 3703
 %d games
 %d 個遊戲
 
-# osd/winui/properties.c: 939
+# osd/winui/properties.c: 938
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d 色)
 
-# osd/winui/properties.c: 934
+# osd/winui/properties.c: 933
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d 色)
 
-# osd/winui/treeview.c: 1294
+# osd/winui/treeview.c: 1295
 %dx%d (H)
 %dx%d (H)
 
-# osd/winui/treeview.c: 1288
+# osd/winui/treeview.c: 1289
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 1009
+# osd/winui/properties.c: 1008
 %s (%d player)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 1020
+# osd/winui/properties.c: 1019
 %s (%d player, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 1018
+# osd/winui/properties.c: 1017
 %s (%d player, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 1006
+# osd/winui/properties.c: 1005
 %s (%d players)
 %s (%d 玩家)
 
-# osd/winui/properties.c: 1015
+# osd/winui/properties.c: 1014
 %s (%d players, %d button)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/properties.c: 1012
+# osd/winui/properties.c: 1011
 %s (%d players, %d buttons)
 %s (%d 玩家, %d 按鈕)
 
-# osd/winui/mameui.rc: 178
+# osd/winui/mameui.rc: 185
 &About
 關於(&A)
 
@@ -70,15 +70,15 @@
 &About MAMEUI
 關於 MAMEUI(&A)
 
-# osd/winui/mameui.rc: 65, 191
+# osd/winui/mameui.rc: 65, 197
 &Add to Custom Folder...
 加入到自訂資料夾(&A)...
 
-# osd/winui/mameui.rc: 883
+# osd/winui/mameui.rc: 1000
 &All games to use default options
 全部遊戲都使用預設選項(&A)
 
-# osd/winui/mameui.rc: 236
+# osd/winui/mameui.rc: 242
 &Audit
 驗證(&A)
 
@@ -86,27 +86,27 @@
 &Audit all games
 驗證全部遊戲(&A)
 
-# osd/winui/mameui.rc: 148
+# osd/winui/mameui.rc: 155
 &Background Image...
 背景圖像(&B)...
 
-# osd/winui/mameui.rc: 912
+# osd/winui/mameui.rc: 1029
 &Broadcast selected game to all windows
 將選取的遊戲廣播到所有視窗(&B)
 
-# osd/winui/mameui.rc: 89, 252, 266
+# osd/winui/mameui.rc: 89, 258, 272
 &Cabinet
 筐體圖(&C)
 
-# osd/winui/mameui.rc: 400, 867, 892, 956, 984
+# osd/winui/mameui.rc: 409, 984, 1009, 1073, 1116
 &Cancel
 取消(&C)
 
-# osd/winui/mameui.rc: 1165 osd/winui/mui_audit.c: 492
+# osd/winui/mameui.rc: 1179 osd/winui/mui_audit.c: 492
 &Close
 關閉(&C)
 
-# osd/winui/mameui.rc: 172
+# osd/winui/mameui.rc: 179
 &Contents\tF1
 內容(&C)\tF1
 
@@ -114,19 +114,19 @@
 &Continue
 繼續(&C)
 
-# osd/winui/mameui.rc: 193, 228
+# osd/winui/mameui.rc: 199, 234
 &Custom Filters...
 自訂篩選程式(&C)...
 
-# osd/winui/mameui.rc: 132
+# osd/winui/mameui.rc: 139
 &Custom Filters...\tCtrl+F
 自訂篩選程式(&C)...\tCtrl+F
 
-# osd/winui/mameui.rc: 880
+# osd/winui/mameui.rc: 997
 &Default game options
 預設遊戲選項(&D)
 
-# osd/winui/mameui.rc: 863
+# osd/winui/mameui.rc: 980
 &Description filter
 篩選描述(&D)
 
@@ -134,7 +134,7 @@
 &Details
 詳細資料(&D)
 
-# osd/winui/mameui.rc: 140
+# osd/winui/mameui.rc: 147
 &Directories...
 目錄(&D)...
 
@@ -142,7 +142,7 @@
 &Exit
 結束(&E)
 
-# osd/winui/mameui.rc: 149
+# osd/winui/mameui.rc: 156
 &Export Game List...
 匯出遊戲清單(&E)...
 
@@ -150,11 +150,11 @@
 &File
 檔案(&F)
 
-# osd/winui/mameui.rc: 88, 251, 265
+# osd/winui/mameui.rc: 88, 257, 271
 &Flyer
 廣告圖(&F)
 
-# osd/winui/mameui.rc: 886
+# osd/winui/mameui.rc: 1003
 &Folder 'filters'
 資料夾篩選程式(&F)
 
@@ -166,19 +166,23 @@
 &Grouped
 群組(&G)
 
-# osd/winui/mameui.rc: 42, 170
+# osd/winui/mameui.rc: 42, 177
 &Help
 說明(&H)
 
-# osd/winui/mameui.rc: 95, 258, 271
+# osd/winui/mameui.rc: 95, 264, 277
 &History
 歷史(&H)
 
-# osd/winui/mameui.rc: 147
+# osd/winui/mameui.rc: 960
+&Horizontal
+水平(&H)
+
+# osd/winui/mameui.rc: 154
 &Interface Options...
 介面選項(&I)...
 
-# osd/winui/mameui.rc: 151
+# osd/winui/mameui.rc: 158
 &Language
 語言(&L)
 
@@ -186,35 +190,35 @@
 &List
 清單(&L)
 
-# osd/winui/mameui.rc: 176
+# osd/winui/mameui.rc: 183
 &Mame Release Notes
 MAME 版本資訊(&M)
 
-# osd/winui/mameui.rc: 90, 253, 267
+# osd/winui/mameui.rc: 90, 259, 273
 &Marquee
 標籤圖(&M)
 
-# osd/winui/mameui.rc: 119
+# osd/winui/mameui.rc: 126
 &Menu Style
 功\能表樣式(&M)
 
-# osd/winui/mameui.rc: 175
+# osd/winui/mameui.rc: 182
 &New Game Changes
 遊戲新增異動(&N)
 
-# osd/winui/mameui.rc: 363, 866, 891, 955, 983
+# osd/winui/mameui.rc: 372, 983, 1008, 1072, 1115
 &OK
 確定(&O)
 
-# osd/winui/mameui.rc: 135
+# osd/winui/mameui.rc: 142
 &Options
 選項(&O)
 
-# osd/winui/mameui.rc: 143
+# osd/winui/mameui.rc: 150
 &Palette Setting...
 色盤設定(&P)...
 
-# osd/winui/mameui.rc: 399 osd/winui/mui_audit.c: 358
+# osd/winui/mameui.rc: 408 osd/winui/mui_audit.c: 358
 &Pause
 暫停(&P)
 
@@ -222,47 +226,47 @@ MAME 版本資訊(&M)
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 52, 186 osd/winui/winui.c: 3862
+# osd/winui/mameui.rc: 52, 193 osd/winui/winui.c: 3864
 &Play
 執行(&P)
 
-# osd/winui/winui.c: 275, 3907, 7159, 7206
+# osd/winui/winui.c: 275, 3909, 7168, 7215
 &Play %s
 執行 %s(&P)
 
-# osd/winui/mameui.rc: 238
+# osd/winui/mameui.rc: 244
 &Properties
 內容(&P)
 
-# osd/winui/mameui.rc: 851
+# osd/winui/mameui.rc: 966
 &Raster Graphics
 點陣圖形(&R)
 
-# osd/winui/mameui.rc: 131
+# osd/winui/mameui.rc: 138
 &Refresh\tF5
 重新整理(&R)\tF5
 
-# osd/winui/mameui.rc: 227
+# osd/winui/mameui.rc: 233
 &Rename
 重新命名(&R)
 
-# osd/winui/mameui.rc: 146
+# osd/winui/mameui.rc: 153
 &Reset to Default...
 重設為預設值(&R)...
 
-# osd/winui/mameui.rc: 902
+# osd/winui/mameui.rc: 1019
 &Search for new games on start
 啟動時搜尋新的遊戲(&S)
 
-# osd/winui/mameui.rc: 63, 195
+# osd/winui/mameui.rc: 63, 201
 &Select Random Game
 隨機選取遊戲(&S)
 
-# osd/winui/mameui.rc: 230
+# osd/winui/mameui.rc: 236
 &Show Folders
 顯示資料夾(&S)
 
-# osd/winui/mameui.rc: 87, 250, 264
+# osd/winui/mameui.rc: 87, 256, 270
 &Snapshot
 遊戲圖(&S)
 
@@ -270,7 +274,7 @@ MAME 版本資訊(&M)
 &Status bar\tAlt+S
 狀態列(&S)\tAlt+S
 
-# osd/winui/mameui.rc: 91, 254, 268
+# osd/winui/mameui.rc: 91, 260, 274
 &Title
 標題圖(&T)
 
@@ -278,35 +282,39 @@ MAME 版本資訊(&M)
 &Toolbar\tAlt+T
 工具列(&T)\tAlt+T
 
-# osd/winui/mameui.rc: 173
+# osd/winui/mameui.rc: 180
 &Troubleshooting
 疑難排解(&T)
 
-# osd/winui/mameui.rc: 848
+# osd/winui/mameui.rc: 963
 &Unavailable
 沒有遊戲(&U)
 
-# osd/winui/mameui.rc: 877
+# osd/winui/mameui.rc: 994
 &User Interface (Fonts, Colors, Sizes)
 使用介面 (字型、色彩、大小)(&U)
 
-# osd/winui/mameui.rc: 840
+# osd/winui/mameui.rc: 952
 &Vector Graphics
 向量圖形(&V)
+
+# osd/winui/mameui.rc: 974
+&Vertical
+垂直(&V)
 
 # osd/winui/mameui.rc: 75
 &View
 檢視(&V)
 
-# osd/winui/mameui.rc: 857
+# osd/winui/mameui.rc: 972
 &Working
 可以執行(&W)
 
-# osd/winui/winui.c: 6588
+# osd/winui/winui.c: 6597
 '%s' is not a valid savestate file for game '%s'.
 '%s' 不是遊戲 '%s' 的有效儲存狀態檔。
 
-# osd/winui/mameui.rc: 859
+# osd/winui/mameui.rc: 976
 (*) = inherited from parent folder
 (*) = 繼承自主資料夾的設定值
 
@@ -314,11 +322,11 @@ MAME 版本資訊(&M)
 .\n
 。\n
 
-# osd/winui/mameui.rc: 457
+# osd/winui/mameui.rc: 466
 <- Remove
 <- 移除
 
-# osd/winui/treeview.c: 578, 598, 1159
+# osd/winui/treeview.c: 579, 599, 1160
 <unknown>
 <未知的>
 
@@ -326,15 +334,15 @@ MAME 版本資訊(&M)
 A sharing violation occurred.
 發生共用違規。
 
-# osd/winui/mameui.rc: 204
+# osd/winui/mameui.rc: 210
 A&udit
 驗證(&U)
 
-# osd/winui/properties.c: 984 osd/winui/treeview.c: 1426
+# osd/winui/properties.c: 983 osd/winui/treeview.c: 1427
 AD Stick
 AD 搖桿
 
-# osd/winui/mameui.rc: 1015
+# osd/winui/mameui.rc: 490
 ADStick device
 AD 搖桿裝置
 
@@ -342,27 +350,27 @@ AD 搖桿裝置
 About
 關於
 
-# osd/winui/mameui.rc: 360
+# osd/winui/mameui.rc: 369
 About MAME Plus!
 關於 MAME Plus!
 
-# osd/winui/mameui.rc: 456
+# osd/winui/mameui.rc: 465
 Add ->
 加入 ->
 
-# osd/winui/mameui.rc: 990
+# osd/winui/mameui.rc: 1078
 Add Game To Custom Folder
 加入遊戲到自定資料夾
 
-# osd/winui/mameui.rc: 1530
-Add currently selected game to a custom folder
-加入目前選取的遊戲到自定資料夾
+# osd/winui/mameui.rc: 1548
+Add selected item to custom folder
+加入選定項目到自定資料夾
 
-# osd/winui/mameui.rc: 374
+# osd/winui/mameui.rc: 383
 Additional MAMEUI code by
 額外的 MAMEUI 編碼作者
 
-# osd/winui/mameui.rc: 617
+# osd/winui/mameui.rc: 727
 Advanced
 進階
 
@@ -382,23 +390,23 @@ All files (*.*)
 All screens
 所有畫面
 
-# osd/winui/mameui.rc: 905
+# osd/winui/mameui.rc: 1022
 Allow game selection by a &joystick (requires restart)
 允許\使用搖桿選擇遊戲 (需重新啟動)(&J)
 
-# osd/winui/mameui.rc: 908
+# osd/winui/mameui.rc: 1025
 Allow game selection by custom &key sequences
 允許\使用自定鍵組合選擇遊戲(&K)
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Allow restoring options to 'sane' values.
 允許\將選項還原成預設的設定值。
 
-# osd/winui/mameui.rc: 1530
+# osd/winui/mameui.rc: 1452, 1548
 Allows filtering out games from a folder
 允許\自資料夾篩選出遊戲
 
-# osd/winui/properties.c: 3682
+# osd/winui/properties.c: 3679
 Anti-clockwise
 逆時針
 
@@ -406,31 +414,31 @@ Anti-clockwise
 Arrange &Icons
 排列圖示(&I)
 
-# osd/winui/mameui.rc: 1435, 1549
+# osd/winui/mameui.rc: 1452, 1568
 Arranges icons in a grid
 在格線上排列圖示
 
-# osd/winui/layout.c: 118
+# osd/winui/layout.c: 125
 Artwork
 Artwork
 
-# osd/winui/mameui.rc: 754
+# osd/winui/mameui.rc: 866
 Artwork options
 Artwork 圖片選項
 
-# osd/winui/mameui.rc: 1083
+# osd/winui/mameui.rc: 556
 Aspect ratio:
 長寬比例:
 
-# osd/winui/mameui.rc: 605
+# osd/winui/mameui.rc: 715
 Audio latency
 音訊等待時間
 
-# osd/winui/mameui.rc: 510
+# osd/winui/mameui.rc: 620
 Audit
 驗證
 
-# osd/winui/mameui.rc: 1473, 1492, 1530
+# osd/winui/mameui.rc: 1491
 Audit ROM and samples sets
 驗證 ROM 與樣本檔的集合
 
@@ -438,31 +446,39 @@ Audit ROM and samples sets
 Audit complete.\n
 驗證完成。\n
 
-# osd/winui/properties.c: 441, 508, 3069, 3075
+# osd/winui/mameui.rc: 1510
+Audit items in this folder
+驗證在這個資料夾裡的項目
+
+# osd/winui/mameui.rc: 1548
+Audit the selected item
+驗證選定項目
+
+# osd/winui/properties.c: 441, 508, 3065, 3071
 Auto
 自動
 
-# osd/winui/properties.c: 3685
+# osd/winui/properties.c: 3682
 Auto anti-clockwise
 自動逆時針
 
-# osd/winui/properties.c: 3684
+# osd/winui/properties.c: 3681
 Auto clockwise
 自動順時針
 
-# osd/winui/mameui.rc: 743
+# osd/winui/mameui.rc: 855
 Auto pause when playback is finished
 輸入檔播放結束時自動暫停
 
-# osd/winui/mameui.rc: 634
+# osd/winui/mameui.rc: 744
 Auto refresh speed
 自動更新頻率速度
 
-# osd/winui/mameui.rc: 735
+# osd/winui/mameui.rc: 845
 Auto restore and save (only if available)
-自動在啟動時回存與結束時儲存
+自動載入與儲存狀態 (只在支援時)
 
-# osd/winui/mameui.rc: 556, 1084
+# osd/winui/mameui.rc: 557, 666
 Automatic
 自動
 
@@ -470,35 +486,35 @@ Automatic
 Available Arcades
 擁有業務機
 
-# osd/winui/mameui.rc: 451
+# osd/winui/mameui.rc: 460
 Available fields:
 可用的欄位:
 
-# osd/winui/layout.c: 64, 90 osd/winui/mameui.rc: 771
+# osd/winui/layout.c: 69, 95 osd/winui/mameui.rc: 883
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1103
+# osd/winui/properties.c: 1102
 BIOS missing
 BIOS 遺失
 
-# osd/winui/mameui.rc: 755
+# osd/winui/mameui.rc: 867
 Backdrops
 背景圖
 
-# osd/winui/layout.c: 130
+# osd/winui/layout.c: 137
 Background Images
 背景圖像
 
-# osd/winui/treeview.c: 1080
+# osd/winui/treeview.c: 1081
 Bad Dump
 錯誤 DUMP
 
-# osd/winui/mameui.rc: 123
+# osd/winui/mameui.rc: 130
 Basic
 基本
 
-# osd/winui/mameui.rc: 791
+# osd/winui/mameui.rc: 903
 Beam width
 光束寬度
 
@@ -506,23 +522,23 @@ Beam width
 Best available
 最佳的可用狀態
 
-# osd/winui/mameui.rc: 757
+# osd/winui/mameui.rc: 869
 Bezels
 外框圖
 
-# osd/winui/mameui.rc: 629
+# osd/winui/mameui.rc: 739
 Bilinear filtering
 雙線過濾
 
-# osd/winui/mameui.rc: 935
+# osd/winui/mameui.rc: 1052
 Bookkeeping
 記錄
 
-# osd/winui/mameui.rc: 564
+# osd/winui/mameui.rc: 674
 Brightness Correction
 亮度值修正
 
-# osd/winui/mameui.rc: 441
+# osd/winui/mameui.rc: 450
 Browse...
 瀏覽...
 
@@ -566,63 +582,63 @@ Button (P or 6)
 Button (S or 7)
 按鈕 (S 或 7)
 
-# osd/winui/treeview.c: 1440
+# osd/winui/treeview.c: 1441
 Button 1
 按鈕數 1
 
-# osd/winui/treeview.c: 1449
+# osd/winui/treeview.c: 1450
 Buttons 10
 按鈕數 10
 
-# osd/winui/treeview.c: 1441
+# osd/winui/treeview.c: 1442
 Buttons 2
 按鈕數 2
 
-# osd/winui/treeview.c: 1442
+# osd/winui/treeview.c: 1443
 Buttons 3
 按鈕數 3
 
-# osd/winui/treeview.c: 1443
+# osd/winui/treeview.c: 1444
 Buttons 4
 按鈕數 4
 
-# osd/winui/treeview.c: 1444
+# osd/winui/treeview.c: 1445
 Buttons 5
 按鈕數 5
 
-# osd/winui/treeview.c: 1445
+# osd/winui/treeview.c: 1446
 Buttons 6
 按鈕數 6
 
-# osd/winui/treeview.c: 1446
+# osd/winui/treeview.c: 1447
 Buttons 7
 按鈕數 7
 
-# osd/winui/treeview.c: 1447
+# osd/winui/treeview.c: 1448
 Buttons 8
 按鈕數 8
 
-# osd/winui/treeview.c: 1448
+# osd/winui/treeview.c: 1449
 Buttons 9
 按鈕數 9
 
-# osd/winui/mameui.rc: 843
+# osd/winui/mameui.rc: 955
 C&lones
 仿製版(&L)
 
-# osd/winui/layout.c: 66
+# osd/winui/layout.c: 71
 CPU
 CPU
 
-# osd/winui/dialogs.c: 233 osd/winui/mui_opts.c: 476
+# osd/winui/dialogs.c: 233 osd/winui/mui_opts.c: 477
 Cabinet
 筐體圖
 
-# osd/winui/layout.c: 121
+# osd/winui/layout.c: 128
 Cabinets
 筐體圖 (cabinets)
 
-# osd/winui/mameui.rc: 440, 466, 1000
+# osd/winui/mameui.rc: 449, 475, 1088
 Cancel
 取消
 
@@ -630,7 +646,7 @@ Cancel
 Cannot Move Selected Item
 不能移動選取的項目
 
-# osd/winui/mameui.rc: 876
+# osd/winui/mameui.rc: 993
 Categories
 類別
 
@@ -642,27 +658,27 @@ Changing this item is not permitted
 Checking Game %s - %s
 正在檢查遊戲 %s - %s
 
-# osd/winui/mameui.rc: 518, 520
+# osd/winui/mameui.rc: 628, 630
 Checking...
 正在檢查...
 
-# osd/winui/mameui.rc: 372
+# osd/winui/mameui.rc: 381
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 與 MAMEUI 開發團隊
 
-# osd/winui/properties.c: 3681
+# osd/winui/properties.c: 3678
 Clockwise
 順時針
 
-# osd/winui/winui.c: 901
+# osd/winui/winui.c: 902
 Clone Of
 原作
 
-# osd/winui/mameui.rc: 504
+# osd/winui/mameui.rc: 614
 Clone of:
 原作:
 
-# osd/winui/layout.c: 73
+# osd/winui/layout.c: 78
 Clones
 仿製版
 
@@ -670,31 +686,35 @@ Clones
 Cocktail
 檯面型
 
-# osd/winui/properties.c: 1071
+# osd/winui/mameui.rc: 850
+Coin lockout
+投幣裝置停工
+
+# osd/winui/properties.c: 1070
 Colors are completely wrong
 色彩是完全錯誤的
 
-# osd/winui/properties.c: 1076
+# osd/winui/properties.c: 1075
 Colors aren't 100% accurate
 色彩尚未達到 100% 精確
 
-# osd/winui/mameui.rc: 497
+# osd/winui/mameui.rc: 607
 Colors:
 色彩:
 
-# osd/winui/layout.c: 131
+# osd/winui/layout.c: 138
 Comment Files
 註解檔
 
-# osd/winui/layout.c: 114
+# osd/winui/layout.c: 121
 Config
 組態檔
 
-# osd/winui/mameui.rc: 1077
+# osd/winui/mameui.rc: 550
 Configure for:
 設定對象:
 
-# osd/winui/mameui.rc: 1126 osd/winui/mui_opts.c: 435
+# osd/winui/mameui.rc: 1140 osd/winui/mui_opts.c: 436
 Console
 家用機台
 
@@ -702,83 +722,87 @@ Console
 Consoles
 家用機台
 
-# osd/winui/mameui.rc: 1430
+# osd/winui/mameui.rc: 1437
 Contains commands for displaying help
 包含顯示說明用的命令
 
-# osd/winui/mameui.rc: 1423
-Contains commands for manupulating the view
+# osd/winui/mameui.rc: 1430
+Contains commands for manipulating the view
 包含處理檢視的命令
 
-# osd/winui/mameui.rc: 1435
+# osd/winui/mameui.rc: 1452
 Contains commands for sorting by various columns
 包含在視窗中排列項目用的命令
 
-# osd/winui/mameui.rc: 1423
+# osd/winui/mameui.rc: 1430
 Contains commands for user interface options
 包含使用介面選項的命令
 
-# osd/winui/mameui.rc: 1423
+# osd/winui/mameui.rc: 1430
 Contains commands for working with the selected items
 包含用於操作選定項目的命令
 
-# osd/winui/mameui.rc: 569
+# osd/winui/mameui.rc: 1437, 1548
+Contains commands to select tabs shown in the picture area
+包含顯示選定預覽圖索引標籤的命令
+
+# osd/winui/mameui.rc: 679
 Contrast Correction
 對比值修正
 
-# osd/winui/mameui.rc: 92, 255, 269
+# osd/winui/mameui.rc: 92, 261, 275
 Control &Panel
 控制器(&P)
 
-# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 479
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 480
 Control Panel
 控制器
 
-# osd/winui/layout.c: 124
+# osd/winui/layout.c: 131
 Control Panels
 控制器圖 (cpanel)
 
-# osd/winui/layout.c: 83
+# osd/winui/layout.c: 88
 Control Type
 控制類型
 
-# osd/winui/mameui.rc: 494
+# osd/winui/mameui.rc: 604
 Control Type:
 控制類型:
 
-# osd/winui/layout.c: 127
+# osd/winui/layout.c: 134
 Controller Files
 控制器設定檔
 
-# osd/winui/mameui.rc: 1037
+# osd/winui/mameui.rc: 512
 Controller ID layout
 控制器 ID 配置
 
-# osd/winui/mameui.rc: 1005
+# osd/winui/mameui.rc: 480
 Controller Mapping
 控制器對應
 
-# osd/winui/mameui.rc: 677
+# osd/winui/mameui.rc: 787
 Controllers
 控制器
 
-# osd/winui/mameui.rc: 367
+# osd/winui/mameui.rc: 376
 Copyright (C) 1997-2008 The MAME Team
 著作權 (C) 1997-2008 MAME 開發團隊
 
-# osd/winui/mameui.rc: 403, 413
+# osd/winui/mameui.rc: 412, 422
 Correct:
 正確:
 
-# osd/winui/winui.c: 6464
+# osd/winui/winui.c: 6473
 Could not open '%s' as a valid input file.
 無法開啟 '%s' 為有效的輸入檔。
 
-# osd/winui/winui.c: 6530, 6602
+# osd/winui/winui.c: 6539, 6611
 Could not open '%s' as a valid savestate file.
 無法開啟 '%s' 為有效的儲存狀態檔。
 
-# osd/winui/mameui.rc: 761
+# osd/winui/mameui.rc: 873
 Crop artwork
 裁切 Artwork 圖片
 
@@ -786,11 +810,11 @@ Crop artwork
 Cursor
 游標
 
-# osd/winui/winui.c: 4682, 4710
+# osd/winui/winui.c: 4684, 4712
 Custom
 自訂
 
-# osd/winui/mameui.rc: 901
+# osd/winui/mameui.rc: 1018
 Custom Options
 自訂選項
 
@@ -798,47 +822,47 @@ Custom Options
 Custom folder filters\n
 自訂的資料夾篩選\n
 
-# osd/winui/mameui.rc: 133, 219
+# osd/winui/mameui.rc: 140, 225
 Customi&ze Fields...
 自訂欄位(&Z)...
 
-# osd/winui/mameui.rc: 448
+# osd/winui/mameui.rc: 457
 Customize Fields
 自訂欄位
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Customize interface options.
 自定介面選項。
 
-# osd/winui/mameui.rc: 1435, 1530
+# osd/winui/mameui.rc: 1465, 1548
 Customize which columns are used in the game list
 自訂遊戲清單中所顯示的欄位
 
-# osd/winui/mameui.rc: 1123
+# osd/winui/mameui.rc: 1137
 Decrypted
 解密版
 
-# osd/winui/properties.c: 3680
+# osd/winui/properties.c: 3677
 Default
 預設
 
-# osd/winui/properties.c: 653
+# osd/winui/properties.c: 652
 Default Game
 預設遊戲
 
-# osd/winui/mameui.rc: 141
+# osd/winui/mameui.rc: 148
 Default Game &Options...
 預設遊戲選項(&O)...
 
-# osd/winui/properties.c: 761
+# osd/winui/properties.c: 760
 Default Settings
 預設的設定值
 
-# osd/winui/mameui.rc: 710
+# osd/winui/mameui.rc: 820
 Default input layout
 預設輸入配置
 
-# osd/winui/mameui.rc: 443
+# osd/winui/mameui.rc: 452
 Delete
 刪除
 
@@ -846,15 +870,15 @@ Delete
 Description
 描述
 
-# osd/winui/mameui.rc: 419, 521 osd/winui/mui_opts.c: 464 osd/winui/winui.c: 732
+# osd/winui/mameui.rc: 428, 631 osd/winui/mui_opts.c: 465 osd/winui/winui.c: 732
 Details
 詳細資料
 
-# osd/winui/properties.c: 986 osd/winui/treeview.c: 1428
+# osd/winui/properties.c: 985 osd/winui/treeview.c: 1429
 Dial
 方向盤
 
-# osd/winui/mameui.rc: 1021
+# osd/winui/mameui.rc: 496
 Dial device
 方向盤裝置
 
@@ -862,11 +886,11 @@ Dial device
 Direct3D
 Direct3D
 
-# osd/winui/mameui.rc: 428 
+# osd/winui/mameui.rc: 437 
 Directories
 目錄
 
-# osd/winui/mameui.rc: 434
+# osd/winui/mameui.rc: 443
 Directories:
 目錄:
 
@@ -878,127 +902,127 @@ Directory does not exist, continue anyway?
 Directory name:
 目錄名稱:
 
-# osd/winui/mameui.rc: 121
+# osd/winui/mameui.rc: 128
 Disabled
 停用
 
-# osd/winui/mameui.rc: 529
+# osd/winui/mameui.rc: 639
 Display
 顯示
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1510
+Display folder properties
+顯示資料夾內容
+
+# osd/winui/mameui.rc: 1491
 Display help contents
 顯示說明內容
 
-# osd/winui/mameui.rc: 1435, 1453
+# osd/winui/mameui.rc: 1452, 1471
 Display items by using large icons.
 使用大圖示顯示項目。
 
-# osd/winui/mameui.rc: 1435, 1453
+# osd/winui/mameui.rc: 1452, 1471
 Display items by using small icons.
 使用小圖示顯示項目。
 
-# osd/winui/mameui.rc: 921
+# osd/winui/mameui.rc: 1589
+Display properties for all games in this bios
+顯示這個 BIOS 的全部遊戲內容
+
+# osd/winui/mameui.rc: 1589
+Display properties for all games in this driver
+顯示這個驅動的全部遊戲內容
+
+# osd/winui/mameui.rc: 1038
 Display splash screen on start
 啟動時顯示宣告畫面
 
-# osd/winui/mameui.rc: 1563
-Display the bios properties of the selected game
-顯示選定遊戲的 BIOS 內容
-
-# osd/winui/mameui.rc: 1563
-Display the driver properties of the selected game
-顯示選定遊戲的驅動內容
-
-# osd/winui/mameui.rc: 1492
-Display the properties of the currently selected folder
-顯示目前選定資料夾的內容
-
-# osd/winui/mameui.rc: 1530
-Display the properties of the selected items
+# osd/winui/mameui.rc: 1548
+Display the properties of the selected item
 顯示選定項目的內容
 
-# osd/winui/mameui.rc: 1435, 1453
+# osd/winui/mameui.rc: 1452, 1471
 Displays detailed information about each item in the window.
 顯示視窗中每個項目的詳細資訊。
 
-# osd/winui/mameui.rc: 1453
-Displays detailed information and group items in the window by parent.
-顯示詳細資訊並在視窗中將項目分組。
+# osd/winui/mameui.rc: 1452
+Displays items grouped by parent game
+依照主版本遊戲顯示項目群組
 
-# osd/winui/mameui.rc: 1435, 1453
+# osd/winui/mameui.rc: 1452, 1471
 Displays items in a list.
 將項目顯示成清單。
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Displays program and copyright information
 顯示程式資訊與著作權資訊
 
-# osd/winui/treeview.c: 1424
+# osd/winui/treeview.c: 1425
 Double Joy 16-Way
 16 方向雙搖桿
 
-# osd/winui/treeview.c: 1421
+# osd/winui/treeview.c: 1422
 Double Joy 2-Way
 2 方向雙搖桿
 
-# osd/winui/treeview.c: 1425
+# osd/winui/treeview.c: 1426
 Double Joy 2-Way (V)
 2 方向雙搖桿 (V)
 
-# osd/winui/treeview.c: 1422
+# osd/winui/treeview.c: 1423
 Double Joy 4-Way
 4 方向雙搖桿
 
-# osd/winui/treeview.c: 1423
+# osd/winui/treeview.c: 1424
 Double Joy 8-Way
 8 方向雙搖桿
 
-# osd/winui/properties.c: 982
+# osd/winui/properties.c: 981
 Double Joystick 16-Way
 16 方向雙搖桿
 
-# osd/winui/properties.c: 979
+# osd/winui/properties.c: 978
 Double Joystick 2-Way
 2 方向雙搖桿
 
-# osd/winui/properties.c: 983
+# osd/winui/properties.c: 982
 Double Joystick 2-Way Vertical
 垂直 2 方向雙搖桿
 
-# osd/winui/properties.c: 980
+# osd/winui/properties.c: 979
 Double Joystick 4-Way
 4 方向雙搖桿
 
-# osd/winui/properties.c: 981
+# osd/winui/properties.c: 980
 Double Joystick 8-Way
 8 方向雙搖桿
 
-# osd/winui/mameui.rc: 788
+# osd/winui/mameui.rc: 900
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# osd/winui/properties.c: 3648
+# osd/winui/properties.c: 3645
 Draw every frame
 描繪出全部畫格
 
-# osd/winui/layout.c: 62 osd/winui/mameui.rc: 1108 osd/winui/winui.c: 902
+# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903
 Driver
 驅動
 
-# osd/winui/mameui.rc: 1116
+# osd/winui/mameui.rc: 1130
 Driver options
 驅動選項
 
-# osd/winui/mameui.rc: 502
+# osd/winui/mameui.rc: 612
 Driver:
 驅動:
 
-# osd/winui/mameui.rc: 700
+# osd/winui/mameui.rc: 810
 Dual lightgun
 雙光線槍
 
-# osd/winui/layout.c: 69
+# osd/winui/layout.c: 74
 Dumping Status
 DUMP 狀況
 
@@ -1006,67 +1030,99 @@ DUMP 狀況
 E&xit
 結束(&X)
 
-# osd/winui/mameui.rc: 727
+# osd/winui/mameui.rc: 837
 Enable game cheats
 啟用遊戲作弊引擎
 
-# osd/winui/mameui.rc: 684
+# osd/winui/mameui.rc: 794
 Enable joystick input
 啟用搖桿輸入
 
-# osd/winui/mameui.rc: 696
+# osd/winui/mameui.rc: 806
 Enable lightgun input
 啟用光線槍輸入
 
-# osd/winui/mameui.rc: 687
+# osd/winui/mameui.rc: 797
 Enable mouse input
 啟用滑鼠輸入
 
-# osd/winui/mameui.rc: 737
+# osd/winui/mameui.rc: 847
 Enable multi-threading
 啟用多執行緒
 
-# osd/winui/mameui.rc: 691
+# osd/winui/mameui.rc: 801
 Enable multiple keyboards
 啟用多鍵盤
 
-# osd/winui/mameui.rc: 689
+# osd/winui/mameui.rc: 799
 Enable multiple mice
 啟用多滑鼠
 
-# osd/winui/mameui.rc: 588
+# osd/winui/mameui.rc: 698
 Enable sound and sound CPUs
 啟用聲音與聲音 CPU
 
-# osd/winui/mameui.rc: 693
+# osd/winui/mameui.rc: 803
 Enable steadykey support
 啟用多個按鍵同時輸入支援
 
-# osd/winui/mameui.rc: 1504
+# osd/winui/mameui.rc: 1531
 Enable the PCB tab
 啟用電路板索引標籤
 
-# osd/winui/mameui.rc: 540
+# osd/winui/mameui.rc: 1531
+Enable the cabinet tab
+啟用框體圖索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the control panel tab
+啟用控制器索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the flyer tab
+啟用廣告圖索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the history tab
+啟用歷史索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the marquee tab
+啟用標籤圖索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the snapshot tab
+啟用遊戲圖索引標籤
+
+# osd/winui/mameui.rc: 1541
+Enable the story tab
+啟用故事索引標籤
+
+# osd/winui/mameui.rc: 1531
+Enable the title tab
+啟用標題圖索引標籤
+
+# osd/winui/mameui.rc: 650
 Enforce aspect ratio
 強制長寬比例
 
-# osd/winui/mui_audit.c: 103 osd/winui/properties.c: 672, 795, 1660
+# osd/winui/mui_audit.c: 103 osd/winui/properties.c: 671, 794, 1659
 Error
 錯誤
 
-# osd/winui/treeview.c: 2690
+# osd/winui/treeview.c: 2691
 Error finding custom file name to save
 尋找自訂檔名儲存時發生錯誤
 
-# osd/winui/mameui.rc: 729
+# osd/winui/mameui.rc: 839
 Error log (for developers)
 錯誤記錄 (程式開發用)
 
-# osd/winui/winui.c: 7609
+# osd/winui/winui.c: 7622
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
-# osd/winui/treeview.c: 2618
+# osd/winui/treeview.c: 2619
 Error while renaming custom file %s to %s
 自訂檔案 %s 重新命名成 %s 時發生錯誤
 
@@ -1074,15 +1130,15 @@ Error while renaming custom file %s to %s
 Error while saving custom file %s
 儲存自訂檔案 %s 時發生錯誤\n\n注意: 無法編輯唯讀屬性的外部資料夾清單檔案。
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Exit the application
 結束應用程式
 
-# osd/winui/layout.c: 133
+# osd/winui/layout.c: 140
 External Folder List
 外部資料夾清單
 
-# osd/winui/layout.c: 81
+# osd/winui/layout.c: 86
 FPS
 FPS
 
@@ -1090,7 +1146,7 @@ FPS
 Failed
 失敗
 
-# osd/winui/mameui.rc: 396 osd/winui/mui_audit.c: 297
+# osd/winui/mameui.rc: 405 osd/winui/mui_audit.c: 297
 File Audit
 檔案驗證
 
@@ -1102,23 +1158,23 @@ Filters for %s Folder
 First screen
 第一個畫面
 
-# osd/winui/mameui.rc: 795
+# osd/winui/mameui.rc: 907
 Flicker
 閃爍度
 
-# osd/winui/mameui.rc: 549
+# osd/winui/mameui.rc: 659
 Flip screen left-right
 左右翻轉畫面
 
-# osd/winui/mameui.rc: 547
+# osd/winui/mameui.rc: 657
 Flip screen upside-down
 上下翻轉畫面
 
-# osd/winui/dialogs.c: 231 osd/winui/mui_opts.c: 475
+# osd/winui/dialogs.c: 231 osd/winui/mui_opts.c: 476
 Flyer
 廣告圖
 
-# osd/winui/layout.c: 120
+# osd/winui/layout.c: 127
 Flyers
 廣告圖 (flyers)
 
@@ -1138,7 +1194,7 @@ Font (normal)
 Font (special)
 字型 (特殊)
 
-# osd/winui/layout.c: 132
+# osd/winui/layout.c: 139
 Font Files
 字型檔
 
@@ -1146,31 +1202,31 @@ Font Files
 Fourth screen
 第四個畫面
 
-# osd/winui/mameui.rc: 555
+# osd/winui/mameui.rc: 665
 Frame skipping
 略過畫格
 
-# osd/winui/mameui.rc: 662
+# osd/winui/mameui.rc: 772
 Full screen brightness
 全螢幕亮度值
 
-# osd/winui/mameui.rc: 666
+# osd/winui/mameui.rc: 776
 Full screen contrast
 全螢幕對比值
 
-# osd/winui/mameui.rc: 658
+# osd/winui/mameui.rc: 768
 Full screen gamma
 全螢幕 Gamma 值
 
-# osd/winui/mameui.rc: 836
+# osd/winui/mameui.rc: 948
 Game Filters
 遊戲篩選
 
-# osd/winui/mameui.rc: 138
+# osd/winui/mameui.rc: 145
 Game List &Clone Color...
 仿製版遊戲清單色彩(&C)...
 
-# osd/winui/mameui.rc: 137
+# osd/winui/mameui.rc: 144
 Game List &Font...
 遊戲清單字型(&F)...
 
@@ -1178,23 +1234,23 @@ Game List &Font...
 Game List Files (*.lst)
 遊戲清單檔 (*.lst)
 
-# osd/winui/mameui.rc: 839
+# osd/winui/mameui.rc: 951
 Game filters
 遊戲篩選
 
-# osd/winui/mameui.rc: 861
+# osd/winui/mameui.rc: 978
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 遊戲篩選程式能夠在各個資料夾中\n自訂隱藏所符合篩選條件的遊戲。
 
-# osd/winui/properties.c: 1086
+# osd/winui/properties.c: 1085
 Game lacks sound
 遊戲缺少聲音
 
-# osd/winui/properties.c: 1066
+# osd/winui/properties.c: 1065
 Game protection isn't fully emulated
 遊戲的保護尚未完全模擬
 
-# osd/winui/winui.c: 3502
+# osd/winui/winui.c: 3504
 Game search %d%% complete
 完成 %d%% 遊戲搜尋
 
@@ -1218,23 +1274,23 @@ Gamename/Gamename + Increment
 Gamename/Increment
 遊戲名稱/編號遞增
 
-# osd/winui/mameui.rc: 633
+# osd/winui/mameui.rc: 743
 Gameplay speed
 遊戲執行速度
 
-# osd/winui/mameui.rc: 560
+# osd/winui/mameui.rc: 670
 Gamma Correction
 Gamma 值修正
 
-# osd/winui/mameui.rc: 471
+# osd/winui/mameui.rc: 581
 General
 一般
 
-# osd/winui/properties.c: 1149
+# osd/winui/properties.c: 1148
 Global BIOS driver options\nCustom options used by all games in the %s
 通用 BIOS 選項\n供 %s 全部遊戲使用的自訂選項
 
-# osd/winui/properties.c: 1137
+# osd/winui/properties.c: 1136
 Global driver options\nCustom options used by all games in the %s
 通用驅動選項\n供 %s 全部遊戲使用的自訂選項
 
@@ -1242,31 +1298,31 @@ Global driver options\nCustom options used by all games in the %s
 Global game options\n
 通用遊戲選項\n
 
-# osd/winui/properties.c: 1128
+# osd/winui/properties.c: 1127
 Global game options\nDefault options used by all games
 通用遊戲選項\n供全部遊戲使用的預設選項
 
-# osd/winui/properties.c: 1131
+# osd/winui/properties.c: 1130
 Global vector options\nCustom options used by all games in the Vector
 通用向量選項\n供向量全部遊戲使用的自訂選項
 
-# osd/winui/mameui.rc: 388
+# osd/winui/mameui.rc: 397
 Go to Microsoft's DirectX Web Page
 前往 Microsoft 的 DirectX 網頁
 
-# osd/winui/mameui.rc: 124
+# osd/winui/mameui.rc: 131
 Gray
 灰階
 
-# osd/winui/mui_opts.c: 326, 465 osd/winui/winui.c: 733
+# osd/winui/mui_opts.c: 326, 466 osd/winui/winui.c: 733
 Grouped
 群組
 
-# osd/winui/layout.c: 128
+# osd/winui/layout.c: 135
 Hard Drive Difference
 硬碟差異檔
 
-# osd/winui/mameui.rc: 631
+# osd/winui/mameui.rc: 741
 Hardware stretching
 硬體延展
 
@@ -1274,27 +1330,27 @@ Hardware stretching
 Help
 說明
 
-# osd/winui/mameui.rc: 914
+# osd/winui/mameui.rc: 1031
 Hide &mouse cursor (requires restart)
 隱藏滑鼠指標 (需重新啟動)(&M)
 
-# osd/winui/layout.c: 138
+# osd/winui/layout.c: 145
 High Scores
 高分記錄
 
-# osd/winui/mui_opts.c: 482, 485
+# osd/winui/mui_opts.c: 483, 486
 History
 歷史
 
-# osd/winui/mameui.rc: 1121
+# osd/winui/mameui.rc: 1135
 Homebrew
 自製遊戲
 
-# osd/winui/treeview.c: 1178
+# osd/winui/layout.c: 62 osd/winui/treeview.c: 1180 osd/winui/winui.c: 5632
 Horizontal
 水平
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 How cheats work
 如何使用作弊引擎
 
@@ -1302,15 +1358,15 @@ How cheats work
 INTERFACE OPTIONS
 介面選項
 
-# osd/winui/layout.c: 135
+# osd/winui/layout.c: 142
 IPS Files
 IPS 檔案
 
-# osd/winui/layout.c: 129
+# osd/winui/layout.c: 136
 Icons
 圖示 (icons)
 
-# osd/winui/mameui.rc: 642
+# osd/winui/mameui.rc: 752
 Image Enhancement
 影像增強
 
@@ -1318,23 +1374,23 @@ Image Enhancement
 Image Files (*.png,*.bmp)
 圖像檔案 (*.png,*.bmp)
 
-# osd/winui/layout.c: 68
+# osd/winui/layout.c: 73
 Imperfect
 不完美
 
-# osd/winui/treeview.c: 1032
+# osd/winui/treeview.c: 1033
 Imperfect Colors
 色彩不完美
 
-# osd/winui/treeview.c: 1033
+# osd/winui/treeview.c: 1034
 Imperfect Graphics
 圖形不完美
 
-# osd/winui/treeview.c: 1035
+# osd/winui/treeview.c: 1036
 Imperfect Sound
 聲音不完美
 
-# osd/winui/mameui.rc: 405, 414
+# osd/winui/mameui.rc: 414, 423
 Incorrect:
 不正確:
 
@@ -1342,47 +1398,47 @@ Incorrect:
 Individual game options\n
 個別的遊戲選像\n
 
-# osd/winui/mameui.rc: 916
+# osd/winui/mameui.rc: 1033
 Inheritable Filters
 繼承篩選程式的設定值
 
-# osd/winui/layout.c: 113
+# osd/winui/layout.c: 120
 Ini Files
 INI 檔案
 
-# osd/winui/layout.c: 116
+# osd/winui/layout.c: 123
 Input Files (*.inp)
 輸入檔 (*.inp)
 
-# osd/winui/mameui.rc: 442
+# osd/winui/mameui.rc: 451
 Insert
 插入
 
-# osd/winui/mameui.rc: 898
+# osd/winui/mameui.rc: 1015
 Interface Options
 介面選項
 
-# osd/winui/mameui.rc: 377
+# osd/winui/mameui.rc: 386
 John Hardy IV and Michael Soderstrom
 John Hardy IV 與 Michael Soderstrom
 
-# osd/winui/treeview.c: 1419
+# osd/winui/treeview.c: 1420
 Joy 16-Way
 16 方向搖桿
 
-# osd/winui/treeview.c: 1416
+# osd/winui/treeview.c: 1417
 Joy 2-Way
 2 方向搖桿
 
-# osd/winui/treeview.c: 1420
+# osd/winui/treeview.c: 1421
 Joy 2-Way (V)
 2 方向搖桿 (V)
 
-# osd/winui/treeview.c: 1417
+# osd/winui/treeview.c: 1418
 Joy 4-Way
 4 方向搖桿
 
-# osd/winui/treeview.c: 1418
+# osd/winui/treeview.c: 1419
 Joy 8-Way
 8 方向搖桿
 
@@ -1390,31 +1446,31 @@ Joy 8-Way
 Joystick
 搖桿
 
-# osd/winui/properties.c: 977
+# osd/winui/properties.c: 976
 Joystick 16-Way
 16 方向搖桿
 
-# osd/winui/properties.c: 974
+# osd/winui/properties.c: 973
 Joystick 2-Way
 2 方向搖桿
 
-# osd/winui/properties.c: 978
+# osd/winui/properties.c: 977
 Joystick 2-Way Vertical
 垂直 2 方向搖桿
 
-# osd/winui/properties.c: 975
+# osd/winui/properties.c: 974
 Joystick 4-Way
 4 方向搖桿
 
-# osd/winui/properties.c: 976
+# osd/winui/properties.c: 975
 Joystick 8-Way
 8 方向搖桿
 
-# osd/winui/mameui.rc: 702
+# osd/winui/mameui.rc: 812
 Joystick deadzone
 搖桿的無反應區
 
-# osd/winui/mameui.rc: 706
+# osd/winui/mameui.rc: 816
 Joystick saturation
 搖桿的飽和值
 
@@ -1426,23 +1482,23 @@ Keyboard
 L&arge Icons
 大圖示(&A)
 
-# osd/winui/mui_opts.c: 461 osd/winui/winui.c: 729
+# osd/winui/mui_opts.c: 462 osd/winui/winui.c: 729
 Large Icons
 大圖示
 
-# osd/winui/layout.c: 78 osd/winui/properties.c: 458, 988 osd/winui/treeview.c: 1430
+# osd/winui/layout.c: 83 osd/winui/properties.c: 458, 987 osd/winui/treeview.c: 1431
 Lightgun
 光線槍
 
-# osd/winui/mameui.rc: 1027
+# osd/winui/mameui.rc: 502
 Lightgun device
 光線槍裝置
 
-# osd/winui/mameui.rc: 116
+# osd/winui/mameui.rc: 123
 Line &Up Icons
 對齊圖示(&U)
 
-# osd/winui/mui_opts.c: 463 osd/winui/winui.c: 731
+# osd/winui/mui_opts.c: 464 osd/winui/winui.c: 731
 List
 清單
 
@@ -1450,15 +1506,15 @@ List
 Loa&d Savestate...
 載入儲存狀態(&D)...
 
-# osd/winui/mameui.rc: 1569
+# osd/winui/mameui.rc: 1465
 Localize GUI and MAME core.
 當地化的圖形使用介面與 MAME 核心。
 
-# osd/winui/layout.c: 144
+# osd/winui/layout.c: 151
 Localized Files
 當地化 DAT 檔案
 
-# osd/winui/mameui.rc: 768
+# osd/winui/mameui.rc: 880
 M68000 CPU Core
 M68000 CPU 核心
 
@@ -1466,7 +1522,7 @@ M68000 CPU 核心
 MAME input files (*.inp,*.zip)
 MAME 輸入檔 (*.inp, *.zip)
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 MAME release notes
 MAME 版本資訊
 
@@ -1474,39 +1530,39 @@ MAME 版本資訊
 MAME savestate files (*.sta)
 MAME 儲存狀態檔 (*.sta)
 
-# osd/winui/mameui.rc: 369
+# osd/winui/mameui.rc: 378
 MAMEUI version by
 MAMEUI 版本作者
 
-# osd/winui/mameui.rc: 360, 385, 396, 428, 448, 471, 510, 529, 580, 617, 677, 720, 781, 809, 836, 873, 898, 962, 990, 1005, 1064, 1108, 1162 osd/winui/mui_opts.c: 329 osd/winui/translate.c: 103
+# osd/winui/mameui.rc: 369, 394, 405, 437, 457, 480, 537, 581, 620, 639, 690, 727, 787, 830, 893, 921, 948, 990, 1015, 1078, 1094, 1122, 1176 osd/winui/mui_opts.c: 329 osd/winui/translate.c: 103
 MS Sans Serif
 新細明體
 
-# osd/winui/mameui.rc: 478
+# osd/winui/mameui.rc: 588
 Manufactured:
 製造廠商:
 
-# osd/winui/layout.c: 60 osd/winui/winui.c: 899
+# osd/winui/layout.c: 65 osd/winui/winui.c: 900
 Manufacturer
 製造廠商
 
-# osd/winui/dialogs.c: 235 osd/winui/mui_opts.c: 477
+# osd/winui/dialogs.c: 235 osd/winui/mui_opts.c: 478
 Marquee
 標籤圖
 
-# osd/winui/layout.c: 122
+# osd/winui/layout.c: 129
 Marquees
 標籤圖 (marquees)
 
-# osd/winui/layout.c: 119
+# osd/winui/layout.c: 126
 Memory Card
 記憶卡
 
-# osd/winui/mameui.rc: 720
+# osd/winui/mameui.rc: 830
 Miscellaneous
 雜項
 
-# osd/winui/treeview.c: 1034
+# osd/winui/treeview.c: 1035
 Missing Sound
 缺少聲音
 
@@ -1514,11 +1570,11 @@ Missing Sound
 Mouse
 滑鼠
 
-# osd/winui/mameui.rc: 1033
+# osd/winui/mameui.rc: 508
 Mouse device
 滑鼠裝置
 
-# osd/winui/mameui.rc: 464
+# osd/winui/mameui.rc: 473
 Move Down
 下移
 
@@ -1526,51 +1582,51 @@ Move Down
 Move Item
 移動項目
 
-# osd/winui/mameui.rc: 463
+# osd/winui/mameui.rc: 472
 Move Up
 上移
 
-# osd/winui/layout.c: 126
+# osd/winui/layout.c: 133
 NVRAM
 NVRAM
 
-# osd/winui/winui.c: 895
+# osd/winui/winui.c: 896
 Name
 名稱
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 New game changes
 遊戲的新增異動
 
-# osd/winui/mui_audit.c: 124 osd/winui/winui.c: 5674
+# osd/winui/mui_audit.c: 124 osd/winui/winui.c: 5678
 No
 否
 
-# osd/winui/treeview.c: 1036
+# osd/winui/treeview.c: 1037
 No Cocktail
 無檯面型
 
-# osd/winui/treeview.c: 1082
+# osd/winui/treeview.c: 1083
 No Dump
 尚未 DUMP
 
-# osd/winui/dialogs.c: 977
+# osd/winui/dialogs.c: 993
 No PCB Info available for this game.
 這個遊戲沒有可供查看的電路板資訊。
 
-# osd/winui/winui.c: 3889
+# osd/winui/winui.c: 3891
 No Selection
 未選取遊戲
 
-# osd/winui/mameui.rc: 918
+# osd/winui/mameui.rc: 1035
 No offset for clones missing parent in view
 群組檢視中未列出原作的仿製版遊戲清單不後移
 
-# osd/winui/mameui.rc: 845
+# osd/winui/mameui.rc: 957
 Non-Wor&king
-不可執行(&k)
+不可執行(&K)
 
-# osd/winui/dialogs.c: 245 osd/winui/properties.c: 454, 2950, 3683, 3763
+# osd/winui/dialogs.c: 245 osd/winui/properties.c: 454, 2946, 3680, 3760
 None
 無
 
@@ -1578,7 +1634,7 @@ None
 None required
 不需要
 
-# osd/winui/layout.c: 71
+# osd/winui/layout.c: 76
 Not Working
 不可執行
 
@@ -1586,83 +1642,83 @@ Not Working
 Not found
 找不到
 
-# osd/winui/properties.c: 1055
+# osd/winui/properties.c: 1054
 Not working
 不可執行
 
-# osd/winui/mameui.rc: 1072
+# osd/winui/mameui.rc: 545
 Number of screens to create
 建立的畫面總數
 
-# osd/winui/mameui.rc: 439, 465, 999
+# osd/winui/mameui.rc: 448, 474, 1087
 OK
 確定
 
-# osd/winui/mameui.rc: 126
+# osd/winui/mameui.rc: 133
 Office 2003
 Office 2003
 
-# osd/winui/mameui.rc: 127
+# osd/winui/mameui.rc: 134
 Office 2007
 Office 2007
 
-# osd/winui/mameui.rc: 125
+# osd/winui/mameui.rc: 132
 Office XP
 Office XP
 
-# osd/winui/mameui.rc: 698
+# osd/winui/mameui.rc: 808
 Offscreen shots reload
 射擊畫面外區域即重新填補
 
-# osd/winui/mameui.rc: 854
+# osd/winui/mameui.rc: 969
 Ori&ginals
 原作版(&G)
 
-# osd/winui/layout.c: 59
+# osd/winui/layout.c: 60
 Orientation
 方向
 
-# osd/winui/layout.c: 72
+# osd/winui/layout.c: 77
 Originals
 原作版
 
-# osd/winui/mameui.rc: 759
+# osd/winui/mameui.rc: 871
 Overlays
 覆疊圖
 
-# osd/winui/mameui.rc: 55, 189
+# osd/winui/mameui.rc: 55
 P&layback Input...
 播放輸入檔(&L)...
 
-# osd/winui/mameui.rc: 94, 257, 270
+# osd/winui/mameui.rc: 94, 263, 276
 PC&B
 電路板(&B)
 
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 480
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 481
 PCB
 電路板
 
-# osd/winui/mameui.rc: 1162
+# osd/winui/mameui.rc: 1176
 PCB Info
 電路板資訊
 
-# osd/winui/layout.c: 141
+# osd/winui/layout.c: 148
 PCB Info Files
 電路板資訊檔案
 
-# osd/winui/layout.c: 125
+# osd/winui/layout.c: 132
 PCBs
 電路板圖 (pcb)
 
-# osd/winui/properties.c: 985 osd/winui/treeview.c: 1427
+# osd/winui/properties.c: 984 osd/winui/treeview.c: 1428
 Paddle
 操縱桿
 
-# osd/winui/mameui.rc: 1012
+# osd/winui/mameui.rc: 487
 Paddle device
 操縱桿裝置
 
-# osd/winui/mameui.rc: 962
+# osd/winui/mameui.rc: 1094
 Palette
 色盤
 
@@ -1670,23 +1726,23 @@ Palette
 Passed
 通過
 
-# osd/winui/mameui.rc: 551
+# osd/winui/mameui.rc: 661
 Pause Brightness
 暫停時亮度
 
-# osd/winui/properties.c: 989 osd/winui/treeview.c: 1431
+# osd/winui/properties.c: 988 osd/winui/treeview.c: 1432
 Pedal
 踏板
 
-# osd/winui/mameui.rc: 1018
+# osd/winui/mameui.rc: 493
 Pedal device
 踏板裝置
 
-# osd/winui/mameui.rc: 1076
+# osd/winui/mameui.rc: 549
 Per-screen video options
 各畫面的視訊選項
 
-# osd/winui/mameui.rc: 1080
+# osd/winui/mameui.rc: 553
 Physical monitor:
 實體顯示器:
 
@@ -1694,15 +1750,15 @@ Physical monitor:
 Pixel Aspect
 像素長寬
 
-# osd/winui/winui.c: 903
+# osd/winui/winui.c: 904
 Play Time
 執行時間
 
-# osd/winui/mameui.rc: 1492
+# osd/winui/mameui.rc: 1510
 Play a game starting with the given savestate
 以指定的儲存狀態開始執行遊戲
 
-# osd/winui/mameui.rc: 54, 188
+# osd/winui/mameui.rc: 54, 195
 Play and &Record Input...
 執行並記錄輸入檔(&R)...
 
@@ -1716,189 +1772,189 @@ Play and Record &WAV Sound...
 
 # osd/winui/mameui.rc: 59
 Play and Record &uncompressed AVI Output...
-執行並錄製未壓縮的 AVI 影片(&W)...
+執行並錄製未壓縮的 AVI 影片(&U)...
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Play currently selected game
 執行目前所選取的遊戲
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Playback a recorded game
 播放已記錄的遊戲
 
-# osd/winui/winui.c: 898
+# osd/winui/winui.c: 899
 Played
 執行次數
 
-# osd/winui/treeview.c: 1432
+# osd/winui/treeview.c: 1433
 Player 1
 玩家數 1
 
-# osd/winui/treeview.c: 1433
+# osd/winui/treeview.c: 1434
 Players 2
 玩家數 2
 
-# osd/winui/treeview.c: 1434
+# osd/winui/treeview.c: 1435
 Players 3
 玩家數 3
 
-# osd/winui/treeview.c: 1435
+# osd/winui/treeview.c: 1436
 Players 4
 玩家數 4
 
-# osd/winui/treeview.c: 1436
+# osd/winui/treeview.c: 1437
 Players 5
 玩家數 5
 
-# osd/winui/treeview.c: 1437
+# osd/winui/treeview.c: 1438
 Players 6
 玩家數 6
 
-# osd/winui/treeview.c: 1438
+# osd/winui/treeview.c: 1439
 Players 7
 玩家數 7
 
-# osd/winui/treeview.c: 1439
+# osd/winui/treeview.c: 1440
 Players 8
 玩家數 8
 
-# osd/winui/mameui.rc: 1030
+# osd/winui/mameui.rc: 505
 Positional device
 定位器裝置
 
-# osd/winui/mameui.rc: 69, 208
+# osd/winui/mameui.rc: 69, 214
 Pr&operties
 內容(&O)
 
-# osd/winui/winui.c: 3919, 7173, 7216
+# osd/winui/winui.c: 3921, 7182, 7225
 Propert&ies for %s
 %s 內容(&I)
 
-# osd/winui/mameui.rc: 67, 206 osd/winui/winui.c: 3869
+# osd/winui/mameui.rc: 67, 212 osd/winui/winui.c: 3871
 Propert&ies for Driver
 驅動內容(&I)
 
-# osd/winui/winui.c: 3931, 7187
+# osd/winui/winui.c: 3933, 7196
 Properties &for %s BIOS
 %s BIOS 內容(&F)
 
-# osd/winui/mameui.rc: 68, 207 osd/winui/winui.c: 3876, 3937, 7193, 7229
+# osd/winui/mameui.rc: 68, 213 osd/winui/winui.c: 3878, 3939, 7202, 7238
 Properties &for BIOS
 BIOS 內容(&F)
 
-# osd/winui/properties.c: 671, 794
+# osd/winui/properties.c: 670, 793
 Propery Sheet Error %d %X
 內容表錯誤 %d %X
 
-# osd/winui/mameui.rc: 740
+# osd/winui/mameui.rc: 852
 Quit game with confirmation
 離開遊戲時先確認
 
-# osd/winui/mameui.rc: 66, 192
+# osd/winui/mameui.rc: 66, 198
 R&emove From This Folder
 從這個資料夾中移除(&E)
 
-# osd/winui/mameui.rc: 968
+# osd/winui/mameui.rc: 1100
 RGB setting:
 RGB 設定:
 
-# osd/winui/mameui.rc: 517
+# osd/winui/mameui.rc: 627
 ROM check:
 ROM 檢查:
 
-# osd/winui/layout.c: 111 osd/winui/mameui.rc: 404 osd/winui/winui.c: 893
+# osd/winui/layout.c: 118 osd/winui/mameui.rc: 413 osd/winui/winui.c: 894
 ROMs
 ROM
 
-# osd/winui/properties.c: 1105
+# osd/winui/properties.c: 1104
 ROMs missing
 ROM 檔遺失
 
-# osd/winui/mameui.rc: 1530
+# osd/winui/mameui.rc: 1548
 Randomly select a game.
 隨機選取一個遊戲。
 
-# osd/winui/layout.c: 74 osd/winui/winui.c: 5665
+# osd/winui/layout.c: 79 osd/winui/winui.c: 5669
 Raster
 點陣
 
-# osd/winui/winui.c: 3634
+# osd/winui/winui.c: 3636
 Ready
 準備完畢
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Record a game for later playback
 記錄遊戲留待以後播放
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Record the audio output of a game
 錄製一個遊戲的聲音輸出
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Record the complete output of a game
 錄製一個遊戲的完整輸出
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Record the video output of a game
 錄製一個遊戲的視訊輸出
 
-# osd/winui/mameui.rc: 1435, 1549
+# osd/winui/mameui.rc: 1452, 1568
 Refresh game list
 重新整理遊戲清單
 
-# osd/winui/mameui.rc: 1530
-Remove currently selected game from this folder
-從自定資料夾中移除目前選取的遊戲
+# osd/winui/mameui.rc: 1548
+Remove selected item from this folder
+從這個資料夾中移除選定現目
 
-# osd/winui/mameui.rc: 1530
-Rename currently selected folder
-重新命名目前選取的資料夾
+# osd/winui/mameui.rc: 1548
+Rename this folder
+重新命名這個資料夾
 
-# osd/winui/mameui.rc: 197
+# osd/winui/mameui.rc: 203
 Rese&t Playcount
 重置執行次數(&T)
 
-# osd/winui/mameui.rc: 573, 610, 670, 713, 774, 800, 1057, 1101, 1154
+# osd/winui/mameui.rc: 530, 574, 683, 720, 780, 823, 886, 912, 1168
 Reset
 重設
 
-# osd/winui/mameui.rc: 873
+# osd/winui/mameui.rc: 990
 Reset Options
 重設選項
 
-# osd/winui/mameui.rc: 198
+# osd/winui/mameui.rc: 204
 Reset Pla&y Time
 重置執行時間(&Y)
 
-# osd/winui/mameui.rc: 938
+# osd/winui/mameui.rc: 1055
 Reset all Play Times
 重置全部執行時間
 
-# osd/winui/mameui.rc: 936
+# osd/winui/mameui.rc: 1053
 Reset all Playcounts
 重置全部執行次數
 
-# osd/winui/mameui.rc: 1492
-Reset play time of currently selected game
-重置目前選取遊戲的執行時間
+# osd/winui/mameui.rc: 1510
+Reset number of plays for selected item
+重置選定項目的執行總數
 
-# osd/winui/mameui.rc: 1492
-Reset playcount of currently selected game
-重置目前選取遊戲的執行次數
+# osd/winui/mameui.rc: 1510
+Reset time played for selected item
+重置選定項目的執行時間
 
 # osd/winui/dialogs.c: 137
 Resetting the User Interface options\n
 重設使用介面選項設定值\n
 
-# osd/winui/layout.c: 80
+# osd/winui/layout.c: 85
 Resolution
 解析度
 
-# osd/winui/mameui.rc: 1091
+# osd/winui/mameui.rc: 564
 Resolution:
 解析度:
 
-# osd/winui/mameui.rc: 574, 611, 671, 714, 775, 801, 1058, 1102, 1155
+# osd/winui/mameui.rc: 531, 575, 684, 721, 781, 824, 887, 913, 1169
 Restore Default Settings
 還原預設值
 
@@ -1906,15 +1962,15 @@ Restore Default Settings
 Restore Settings
 還原設定值
 
-# osd/winui/mameui.rc: 544
+# osd/winui/mameui.rc: 654
 Rotation
 旋轉
 
-# osd/winui/mameui.rc: 536
+# osd/winui/mameui.rc: 646
 Run in a window
 以視窗模式執行
 
-# osd/winui/mameui.rc: 85, 248
+# osd/winui/mameui.rc: 85, 254
 S&how Pictures
 顯示圖片(&H)
 
@@ -1922,67 +1978,67 @@ S&how Pictures
 S&mall Icons
 小圖示(&M)
 
-# osd/winui/mameui.rc: 941
+# osd/winui/mameui.rc: 1058
 S&tretch screenshot larger than natural size
 延展預覽圖至合適的大小(&T)
 
-# osd/winui/mameui.rc: 519
+# osd/winui/mameui.rc: 629
 Sample check:
 樣本檔檢查:
 
-# osd/winui/mameui.rc: 597
+# osd/winui/mameui.rc: 707
 Sample rate
 取樣頻率
 
-# osd/winui/layout.c: 87, 112 osd/winui/mameui.rc: 410 osd/winui/winui.c: 894
+# osd/winui/layout.c: 92, 119 osd/winui/mameui.rc: 419 osd/winui/winui.c: 895
 Samples
 樣本檔
 
-# osd/winui/layout.c: 82, 89
+# osd/winui/layout.c: 87, 94
 Save State
 儲存狀態
 
-# osd/winui/mameui.rc: 500
+# osd/winui/mameui.rc: 610
 Save State:
 儲存狀態:
 
-# osd/winui/mameui.rc: 1468
+# osd/winui/mameui.rc: 1486
 Save game list in specified lst file
 儲存遊戲清單到指定的 lst 檔案
 
-# osd/winui/mameui.rc: 654
+# osd/winui/mameui.rc: 764
 Scale screen
 縮放畫面
 
-# osd/winui/mameui.rc: 1064
+# osd/winui/mameui.rc: 537 osd/winui/winui.c: 893
 Screen
 畫面
 
-# osd/winui/winui.c: 3461
+# osd/winui/winui.c: 3463
 Screen flip support is missing
 尚未支援畫面翻轉
 
-# osd/winui/properties.c: 1096
+# osd/winui/properties.c: 1095
 Screen flipping is not supported
 尚未支援畫面翻轉
 
-# osd/winui/mameui.rc: 1071
+# osd/winui/mameui.rc: 544
 Screen setting
 畫面設定
 
-# osd/winui/mameui.rc: 491
+# osd/winui/mameui.rc: 601
 Screen:
 畫面:
 
-# osd/winui/mameui.rc: 940
+# osd/winui/mameui.rc: 1057
 Screenshot Area
 預覽圖區域
 
-# osd/winui/mameui.rc: 948
+# osd/winui/mameui.rc: 1065
 Screenshot Bordersize
 預覽圖外框大小
 
-# osd/winui/mameui.rc: 944
+# osd/winui/mameui.rc: 1061
 Screenshot Cycletime in Seconds
 循環預覽圖秒數
 
@@ -1994,21 +2050,53 @@ Screenshot Ta&b\tAlt+B
 Second screen
 第二個畫面
 
-# osd/winui/mameui.rc: 910
+# osd/winui/mameui.rc: 1027
 Select &random background image on start
 啟動時隨機選取背景圖像(&R)
+
+# osd/winui/mameui.rc: 1522
+Select Cabinet tab
+選取框體圖索引標籤
+
+# osd/winui/mameui.rc: 1522
+Select Control panel tab
+選取控制器索引標籤
+
+# osd/winui/mameui.rc: 1548
+Select Flyer tab
+選取廣告圖索引標籤
+
+# osd/winui/mameui.rc: 1522
+Select History tab
+選取歷史索引標籤
 
 # osd/winui/columnedit.c: 258
 Select Item
 選取項目
 
+# osd/winui/mameui.rc: 1522
+Select Marquee tab
+選取標籤圖索引標籤
+
+# osd/winui/mameui.rc: 1522
+Select PCB tab
+選取電路板索引標籤
+
+# osd/winui/mameui.rc: 1548
+Select Snapshot tab
+選取遊戲圖索引標籤
+
+# osd/winui/mameui.rc: 1529
+Select Story tab
+選取故事索引標籤
+
+# osd/winui/mameui.rc: 1522
+Select Title tab
+選取標題圖索引標籤
+
 # osd/winui/winui.c: 859
 Select a Background Image
 選取一個背景圖像
-
-# osd/winui/mameui.rc: 1504
-Select a background image file
-選取背景圖像檔案
 
 # osd/winui/winui.c: 825
 Select a file to record
@@ -2034,271 +2122,247 @@ Select a savestate file
 Select a sound file to record
 選取一個聲音檔供錄製
 
-# osd/winui/mameui.rc: 1504
-Select fullscreen or window mode in GUI
-選取全螢幕或視窗模式的圖形使用介面
+# osd/winui/mameui.rc: 1452
+Select menu style
+選取功\能表樣式
 
-# osd/winui/mameui.rc: 1504
-Select the cabinet image
-選取筐體圖
-
-# osd/winui/mameui.rc: 1504
-Select the control panel image
-選取控制器圖
-
-# osd/winui/mameui.rc: 1530
-Select the flyer image
-選取廣告圖
-
-# osd/winui/mameui.rc: 1504
-Select the history information
-選取歷史資訊
-
-# osd/winui/mameui.rc: 1504
-Select the marquee image
-選取標籤圖
-
-# osd/winui/mameui.rc: 889
+# osd/winui/mameui.rc: 1006
 Select the options to be restored to the default settings.
 選取的選項將會還原為預設的設定值。
 
-# osd/winui/mameui.rc: 1504
-Select the pcb image
-選取電路板圖
-
-# osd/winui/mameui.rc: 1530
-Select the screen shot image
-選取遊戲圖
-
-# osd/winui/mameui.rc: 1524
-Select the story information
-選取故事資訊
-
-# osd/winui/mameui.rc: 1504
-Select the title image
-選取標題圖
-
-# osd/winui/mameui.rc: 931
+# osd/winui/mameui.rc: 1048
 Set Game List Not Working Color
 設定不可執行的遊戲清單色彩
 
-# osd/winui/mameui.rc: 952
+# osd/winui/mameui.rc: 1069
 Set Screenshot Border Color
 設定預覽圖外框色彩
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Set default game options
 設定預設遊戲選項
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Set directory configuration
 設定目錄組態
 
-# osd/winui/mameui.rc: 1453
+# osd/winui/mameui.rc: 1471
 Set game list and folder list font
 設定遊戲清單與資料夾清單字型
 
-# osd/winui/mameui.rc: 1466
+# osd/winui/mameui.rc: 1484
 Set in-game UI color palette
 設定遊戲中設定選單的色盤
 
-# osd/winui/mameui.rc: 1453
-Set list font color for clone games
+# osd/winui/mameui.rc: 1531
+Set the background image
+設定背景圖像
+
+# osd/winui/mameui.rc: 1471
+Set the clone font color
 設定仿製版遊戲清單字型色彩
 
-# osd/winui/mameui.rc: 953
+# osd/winui/mameui.rc: 1070
 Show History on Tab
 顯示歷史在預覽圖索引標籤
 
-# osd/winui/mameui.rc: 246
+# osd/winui/mameui.rc: 252
 Show Tab &Control
 顯示預覽圖索引標籤(&C)
 
-# osd/winui/mameui.rc: 431
+# osd/winui/mameui.rc: 440
 Show directories for:
 顯示目錄類型:
 
-# osd/winui/mameui.rc: 1498
+# osd/winui/mameui.rc: 1516
 Show game PCB information
 顯示遊戲電路板資訊
 
-# osd/winui/mameui.rc: 1504
-Show or hide the cabinet image
-顯示或隱藏筐體圖
+# osd/winui/mameui.rc: 1471
+Show items grouped by parent game
+依照主版本遊戲顯示項目群組
 
-# osd/winui/mameui.rc: 1504
-Show or hide the control panel image
-顯示或隱藏控制器圖片
+# osd/winui/mameui.rc: 1548
+Show or hide folder
+顯示或隱藏資料夾
 
-# osd/winui/mameui.rc: 1504
-Show or hide the flyer image
-顯示或隱藏廣告圖
+# osd/winui/mameui.rc: 1437
+Show or hide tabs in the picture area
+顯示或隱藏預覽圖索引標籤
 
-# osd/winui/mameui.rc: 1435, 1530
+# osd/winui/mameui.rc: 1437, 1548
 Show or hide the folder list
 顯示或隱藏資料夾清單
 
-# osd/winui/mameui.rc: 1504
-Show or hide the history information
-顯示或隱藏歷史資訊
-
-# osd/winui/mameui.rc: 1504
-Show or hide the marquee image
-顯示或隱藏標籤圖
-
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Show or hide the picture area
 顯示或隱藏預覽圖
 
-# osd/winui/mameui.rc: 1530, 1569
-Show or hide the pictures
-顯示或隱藏圖片
+# osd/winui/mameui.rc: 1437
+Show or hide the screen shot
+顯示或隱藏預覽圖
 
-# osd/winui/mameui.rc: 1504
-Show or hide the screen shot image
-顯示或隱藏遊戲圖
-
-# osd/winui/mameui.rc: 1530
-Show or hide the screen shot tab
-顯示或隱藏預覽圖索引標籤
-
-# osd/winui/mameui.rc: 1435, 1530
+# osd/winui/mameui.rc: 1437, 1548
 Show or hide the status bar
 顯示或隱藏狀態列
 
-# osd/winui/mameui.rc: 1521
-Show or hide the story information
-顯示或隱藏故事資訊
+# osd/winui/mameui.rc: 1548
+Show or hide the tabs in the picture area
+顯示或隱藏預覽圖索引標籤
 
-# osd/winui/mameui.rc: 1504
-Show or hide the title image
-顯示或隱藏標題圖
-
-# osd/winui/mameui.rc: 1435, 1530
+# osd/winui/mameui.rc: 1437, 1548
 Show or hide the toolbar
 顯示或隱藏工具列
 
-# osd/winui/mameui.rc: 965
+# osd/winui/mameui.rc: 1097
 Show palette for:
 顯示色盤類型:
 
-# osd/winui/mameui.rc: 458
+# osd/winui/mameui.rc: 467
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# osd/winui/properties.c: 3650
+# osd/winui/properties.c: 3647
 Skip 1 of 10 frames
 略過 1/10 畫格
 
-# osd/winui/properties.c: 3668
+# osd/winui/properties.c: 3665
 Skip 10 of 10 frames
 略過 10/10 畫格
 
-# osd/winui/properties.c: 3652
+# osd/winui/properties.c: 3649
 Skip 2 of 10 frames
 略過 2/10 畫格
 
-# osd/winui/properties.c: 3654
+# osd/winui/properties.c: 3651
 Skip 3 of 10 frames
 略過 3/10 畫格
 
-# osd/winui/properties.c: 3656
+# osd/winui/properties.c: 3653
 Skip 4 of 10 frames
 略過 4/10 畫格
 
-# osd/winui/properties.c: 3658
+# osd/winui/properties.c: 3655
 Skip 5 of 10 frames
 略過 5/10 畫格
 
-# osd/winui/properties.c: 3660
+# osd/winui/properties.c: 3657
 Skip 6 of 10 frames
 略過 6/10 畫格
 
-# osd/winui/properties.c: 3662
+# osd/winui/properties.c: 3659
 Skip 7 of 10 frames
 略過 7/10 畫格
 
-# osd/winui/properties.c: 3664
+# osd/winui/properties.c: 3661
 Skip 8 of 10 frames
 略過 8/10 畫格
 
-# osd/winui/properties.c: 3666
+# osd/winui/properties.c: 3663
 Skip 9 of 10 frames
 略過 9/10 畫格
 
-# osd/winui/mameui.rc: 733
+# osd/winui/mameui.rc: 843
 Skip game info
 略過顯示遊戲資訊畫面
 
-# osd/winui/mameui.rc: 731
+# osd/winui/mameui.rc: 841
 Sleep when possible
 適時釋放佔用中的系統資源
 
-# osd/winui/mui_opts.c: 462 osd/winui/winui.c: 730
+# osd/winui/mui_opts.c: 463 osd/winui/winui.c: 730
 Small Icons
 小圖示
 
-# osd/winui/dialogs.c: 229 osd/winui/mui_opts.c: 474
+# osd/winui/dialogs.c: 229 osd/winui/mui_opts.c: 475
 Snapshot
 遊戲圖
 
-# osd/winui/mameui.rc: 932
+# osd/winui/mameui.rc: 1049
 Snapshot Pattern
 擷圖存放形式
 
-# osd/winui/layout.c: 115
+# osd/winui/layout.c: 122
 Snapshots
 遊戲圖 (snap)
 
-# osd/winui/mameui.rc: 216
+# osd/winui/mameui.rc: 222
 Sort &Ascending
 遞增排序(&A)
 
-# osd/winui/mameui.rc: 217
+# osd/winui/mameui.rc: 223
 Sort &Descending
 遞減排序(&D)
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort by number of plays
 依執行次數排列項目
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort column in ascending (A-Z) order
 以遞增 (A-Z) 順序排序欄位
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort column in descending (Z-A) order
 以遞減(Z-A) 順序排序欄位
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
+Sort items by clone of
+依原作排列項目
+
+# osd/winui/mameui.rc: 1568
+Sort items by driver
+依驅動排列項目
+
+# osd/winui/mameui.rc: 1568
 Sort items by game description
 依遊戲描述排列項目
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort items by manufacturer
 依製造廠商排列項目
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort items by name
 依名稱排列項目
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
+Sort items by play time
+依執行時間排列項目
+
+# osd/winui/mameui.rc: 1568
+Sort items by roms
+依 ROM 排列項目
+
+# osd/winui/mameui.rc: 1568
+Sort items by samples
+依樣本檔排列項目
+
+# osd/winui/mameui.rc: 1568
+Sort items by screen
+依畫面排列項目
+
+# osd/winui/mameui.rc: 1568
+Sort items by trackball
+依軌跡球排列項目
+
+# osd/winui/mameui.rc: 1568
 Sort items by type
 依類型排列項目
 
-# osd/winui/mameui.rc: 1549
+# osd/winui/mameui.rc: 1568
 Sort items by year
 依年代排列項目
 
-# osd/winui/layout.c: 67 osd/winui/mameui.rc: 580
+# osd/winui/layout.c: 72 osd/winui/mameui.rc: 690
 Sound
 聲音
 
-# osd/winui/properties.c: 1091
+# osd/winui/properties.c: 1090
 Sound emulation isn't 100% accurate
 聲音模擬尚未達到 100% 精確
 
-# osd/winui/mameui.rc: 487
+# osd/winui/mameui.rc: 597
 Sound:
 聲音:
 
@@ -2306,7 +2370,7 @@ Sound:
 Sounds (*.wav)
 聲音檔 (*.wav)
 
-# osd/winui/mameui.rc: 97, 260, 273
+# osd/winui/mameui.rc: 97, 266, 279
 St&ory
 故事(&O)
 
@@ -2314,35 +2378,35 @@ St&ory
 Standard
 標準
 
-# osd/winui/mameui.rc: 538
+# osd/winui/mameui.rc: 648
 Start out maximized
 啟動時最大化
 
-# osd/winui/layout.c: 117
+# osd/winui/layout.c: 124
 State
 狀態檔
 
-# osd/winui/mameui.rc: 480
+# osd/winui/mameui.rc: 590
 Status:
 狀況:
 
-# osd/winui/layout.c: 85
+# osd/winui/layout.c: 90
 Stereo
 立體聲
 
-# osd/winui/mui_opts.c: 483
+# osd/winui/mui_opts.c: 484
 Story
 故事
 
-# osd/winui/properties.c: 1178 osd/winui/treeview.c: 1379
+# osd/winui/properties.c: 1177 osd/winui/treeview.c: 1380
 Supported
 已支援
 
-# osd/winui/mameui.rc: 652
+# osd/winui/mameui.rc: 762
 Switch resolutions to fit
 切換至最符合的解析度
 
-# osd/winui/mameui.rc: 648
+# osd/winui/mameui.rc: 758
 Sync to monitor refresh
 同步於顯示器的更新頻率
 
@@ -2370,19 +2434,19 @@ There was not enough memory to complete the operation.
 Third screen
 第三個畫面
 
-# osd/winui/mameui.rc: 763
+# osd/winui/mameui.rc: 875
 Thread priority
 執行緒優先權
 
-# osd/winui/mameui.rc: 542
+# osd/winui/mameui.rc: 652
 Throttle
 限制速度
 
-# osd/winui/dialogs.c: 237 osd/winui/mui_opts.c: 478
+# osd/winui/dialogs.c: 237 osd/winui/mui_opts.c: 479
 Title
 標題圖
 
-# osd/winui/layout.c: 123
+# osd/winui/layout.c: 130
 Titles
 標題圖 (titles)
 
@@ -2390,99 +2454,107 @@ Titles
 Toggle Folder List
 切換資料夾清單
 
+# osd/winui/mameui.rc: 1543
+Toggle Fullscreen mode
+切換全螢幕模式
+
 # osd/winui/winui.c: 728
 Toggle Screen Shot
 切換預覽圖
 
-# osd/winui/mameui.rc: 406, 415
+# osd/winui/mameui.rc: 1437
+Toggle full screen mode
+切換全螢幕模式
+
+# osd/winui/mameui.rc: 415, 424
 Total:
 總數:
 
-# osd/winui/layout.c: 77 osd/winui/properties.c: 987 osd/winui/treeview.c: 1429 osd/winui/winui.c: 897
+# osd/winui/layout.c: 82 osd/winui/properties.c: 986 osd/winui/treeview.c: 1430 osd/winui/winui.c: 898
 Trackball
 軌跡球
 
-# osd/winui/mameui.rc: 1024
+# osd/winui/mameui.rc: 499
 Trackball device
 軌跡球裝置
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Catalan
 加泰羅尼亞文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into English (US)
 英文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into French
 法文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into German
 德文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Hungarian
 匈牙利文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Italian
 義大利文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Japanese
 日文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Korean
 韓文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Polish
 波蘭文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Portuguese (BRA)
 葡萄牙文 (巴西) 翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Portuguese (PT)
 葡萄牙文 (葡萄牙) 翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Simplified Chinese
 簡體中文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Spanish
 西班牙文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Traditional Chinese
 繁體中文翻譯
 
-# osd/winui/mameui.rc: 1575
+# osd/winui/mameui.rc: 1595
 Translate into Valencian
 瓦倫西亞文翻譯
 
-# osd/winui/layout.c: 143
+# osd/winui/layout.c: 150
 Translation Files
 翻譯檔案
 
-# osd/winui/mameui.rc: 748
+# osd/winui/mameui.rc: 860
 Transparent in-game UI
 半透明的遊戲中設定選單
 
-# osd/winui/mameui.rc: 650
+# osd/winui/mameui.rc: 760
 Triple buffering
 三重緩衝
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 Troubleshooting Documentation
 疑難排解文件
 
-# osd/winui/winui.c: 896
+# osd/winui/winui.c: 897
 Type
 類型
 
@@ -2490,11 +2562,11 @@ Type
 Unable to Load Riched32.dll
 無法載入 Riched32.dll
 
-# osd/winui/treeview.c: 2629
+# osd/winui/treeview.c: 2630
 Unable to add game to non-custom folder
 無法加入遊戲到非自訂資料夾
 
-# osd/winui/treeview.c: 2646
+# osd/winui/treeview.c: 2647
 Unable to remove game from non-custom folder
 無法從非自訂資料夾中移除遊戲
 
@@ -2502,11 +2574,11 @@ Unable to remove game from non-custom folder
 Unavailable
 沒有遊戲
 
-# osd/winui/treeview.c: 1030
+# osd/winui/treeview.c: 1031
 Unemulated Protection
 未模擬保護
 
-# osd/winui/mui_audit.c: 531 osd/winui/properties.c: 1003, 1049 
+# osd/winui/mui_audit.c: 531 osd/winui/properties.c: 1002, 1048 
 Unknown
 未知的
 
@@ -2514,7 +2586,7 @@ Unknown
 Unknown error.
 未知的錯誤。
 
-# osd/winui/properties.c: 1180 osd/winui/treeview.c: 1381
+# osd/winui/properties.c: 1179 osd/winui/treeview.c: 1382
 Unsupported
 未支援
 
@@ -2522,19 +2594,19 @@ Unsupported
 Use Local Language Game List
 使用中文遊戲清單
 
-# osd/winui/mameui.rc: 925
+# osd/winui/mameui.rc: 1042
 Use TreeView in property pages
 在內容頁中使用樹狀檢視
 
-# osd/winui/mameui.rc: 591
+# osd/winui/mameui.rc: 701
 Use samples
 使用樣本檔
 
-# osd/winui/mameui.rc: 929
+# osd/winui/mameui.rc: 1046
 Use various icon for Not Working game
 使用不同圖示在不可執行的遊戲
 
-# osd/winui/mameui.rc: 594
+# osd/winui/mameui.rc: 704
 Use volume auto adjust
 使用音量自動調整
 
@@ -2542,23 +2614,23 @@ Use volume auto adjust
 User interface settings\n\n
 使用介面設定值\n\n
 
-# osd/winui/layout.c: 75 osd/winui/mameui.rc: 781 osd/winui/treeview.c: 319 osd/winui/winui.c: 5663
+# osd/winui/layout.c: 80 osd/winui/mameui.rc: 893 osd/winui/treeview.c: 320 osd/winui/winui.c: 5667
 Vector
 向量
 
-# osd/winui/treeview.c: 1258
+# osd/winui/treeview.c: 1259
 Vector (H)
 向量 (H)
 
-# osd/winui/properties.c: 926
+# osd/winui/properties.c: 925
 Vector (H) %f Hz (%d colors)
 Vector (H) %f Hz (%d 色)
 
-# osd/winui/treeview.c: 1256
+# osd/winui/treeview.c: 1257
 Vector (V)
 向量 (V)
 
-# osd/winui/properties.c: 921
+# osd/winui/properties.c: 920
 Vector (V) %f Hz (%d colors)
 Vector (V) %f Hz (%d 色)
 
@@ -2570,15 +2642,15 @@ Version 8
 Version 9
 版本 9
 
-# osd/winui/treeview.c: 1175
+# osd/winui/layout.c: 63 osd/winui/treeview.c: 1177 osd/winui/winui.c: 5632
 Vertical
 垂直
 
-# osd/winui/properties.c: 1081
+# osd/winui/properties.c: 1080
 Video emulation isn't 100% accurate
 視訊模擬尚未達到 100% 精確
 
-# osd/winui/mameui.rc: 624
+# osd/winui/mameui.rc: 734
 Video output method
 視訊輸出方式
 
@@ -2590,27 +2662,27 @@ Videos (*.avi)
 Videos (*.mng)
 視訊檔 (*.mng)
 
-# osd/winui/mameui.rc: 201
+# osd/winui/mameui.rc: 207
 View PC&B Info
 檢視電路板資訊(&B)
 
-# osd/winui/mameui.rc: 1098
+# osd/winui/mameui.rc: 571
 View:
 檢視方式:
 
-# osd/winui/mameui.rc: 639
+# osd/winui/mameui.rc: 749
 Visual Effects
 視覺效果
 
-# osd/winui/mameui.rc: 601
+# osd/winui/mameui.rc: 711
 Volume attenuation
 音量衰減
 
-# osd/winui/mameui.rc: 646
+# osd/winui/mameui.rc: 756
 Wait for vertical sync
 等待垂直同步
 
-# osd/winui/mameui.rc: 1473
+# osd/winui/mameui.rc: 1491
 What's new in MAME
 MAME 的新增異動
 
@@ -2618,19 +2690,19 @@ MAME 的新增異動
 Window background
 視窗的背景色
 
-# osd/winui/layout.c: 70 osd/winui/properties.c: 1057
+# osd/winui/layout.c: 75 osd/winui/properties.c: 1056
 Working
 可以執行
 
-# osd/winui/treeview.c: 1031
+# osd/winui/treeview.c: 1032
 Wrong Colors
 色彩錯誤
 
-# osd/winui/layout.c: 61 osd/winui/winui.c: 900
+# osd/winui/layout.c: 66 osd/winui/winui.c: 901
 Year
 年代
 
-# osd/winui/mui_audit.c: 120 osd/winui/winui.c: 5672
+# osd/winui/mui_audit.c: 120 osd/winui/winui.c: 5676
 Yes
 是
 
@@ -2638,29 +2710,57 @@ Yes
 \nDo you wish to continue?
 \n您要繼續嗎?
 
+# osd/winui/mameui.rc: 118
+by &Clone Of
+依原作(&C)
+
 # osd/winui/mameui.rc: 109
 by &Description
 依描述(&D)
 
-# osd/winui/mameui.rc: 111
+# osd/winui/mameui.rc: 116
 by &Manufacturer
 依製造廠商(&M)
 
-# osd/winui/mameui.rc: 110
+# osd/winui/mameui.rc: 112
 by &Name
 依名稱(&N)
+
+# osd/winui/mameui.rc: 115
+by &Played
+依執行次數(&P)
+
+# osd/winui/mameui.rc: 110
+by &Screen
+依畫面(&S)
 
 # osd/winui/mameui.rc: 113
 by &Type
 依類型(&T)
 
-# osd/winui/mameui.rc: 114
+# osd/winui/mameui.rc: 117
 by &Year
 依年代(&Y)
 
-# osd/winui/mameui.rc: 112
-by Times &Played
-依執行次數(&P)
+# osd/winui/mameui.rc: 119
+by Dr&iver
+依驅動(&I)
+
+# osd/winui/mameui.rc: 120
+by P&lay Time
+依執行時間(&L)
+
+# osd/winui/mameui.rc: 121
+by R&OMs
+依 ROM(&O)
+
+# osd/winui/mameui.rc: 111
+by S&amples
+依樣本檔(&A)
+
+# osd/winui/mameui.rc: 114
+by T&rackball
+依軌跡球(&R)
 
 # osd/winui/dialogs.c: 138
 requires exiting 
