@@ -12,6 +12,7 @@
 
 #include "driver.h"
 #include "video/ppu2c0x.h"
+#include "machine/nes_mmc.h"
 #include "includes/nes.h"
 #include "cpu/m6502/m6502.h"
 #include "devices/cartslot.h"
@@ -289,7 +290,7 @@ static void nes_cartslot_getinfo(const mess_device_class *devclass, UINT32 state
 	}
 }
 
-SYSTEM_CONFIG_START(nes)
+static SYSTEM_CONFIG_START(nes)
 	CONFIG_DEVICE(nes_cartslot_getinfo)
 SYSTEM_CONFIG_END
 
@@ -334,7 +335,7 @@ static void famicom_floppy_getinfo(const mess_device_class *devclass, UINT32 sta
 	}
 }
 
-SYSTEM_CONFIG_START(famicom)
+static SYSTEM_CONFIG_START(famicom)
 	CONFIG_DEVICE(famicom_cartslot_getinfo)
 	CONFIG_DEVICE(famicom_floppy_getinfo)
 SYSTEM_CONFIG_END

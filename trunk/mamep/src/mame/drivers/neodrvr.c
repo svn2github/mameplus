@@ -8596,7 +8596,7 @@ static DRIVER_INIT( popbounc )
 	DRIVER_INIT_CALL(neogeo);
 
 	/* the game hangs after a while without this patch */
-	if (!Machine->sample_rate)
+	if (!machine->sample_rate)
 		memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
 }
 
