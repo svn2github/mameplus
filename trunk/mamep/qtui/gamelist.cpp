@@ -1,11 +1,12 @@
 #include "mamepguimain.h"
 
 MameGame *mamegame;
-QString currentGame;
+QString currentGame, currentFolder;
 Gamelist *gamelist = NULL;
-GameListSortFilterProxyModel *gameListPModel;
+QStringList consoleGamesL;
 
-static TreeModel *gameListModel;
+TreeModel *gameListModel;
+static GameListSortFilterProxyModel *gameListPModel;
 static QTimer *searchTimer = NULL;
 static GamelistDelegate gamelistDelegate(0);
 
@@ -23,7 +24,8 @@ enum
 
 enum
 {
-	FOLDER_ALLGAMES = 0,
+	FOLDER_ALLGAME = 0,
+	FOLDER_ALLARC,
 	FOLDER_AVAILABLE,
 	FOLDER_UNAVAILABLE,
 	FOLDER_CONSOLE,
@@ -52,6 +54,22 @@ enum
 	FOLDER_SAMPLES,
 	FOLDER_ARTWORK,*/
 	MAX_FOLDERS
+};
+
+enum
+{
+	DOCK_SNAP,
+	DOCK_FLYER,
+	DOCK_CABINET,
+	DOCK_MARQUEE,
+	DOCK_TITLE,
+	DOCK_CPANEL,
+	DOCK_PCB,
+	
+	DOCK_HISTORY,
+	DOCK_MAMEINFO,
+	DOCK_STORY,
+	DOCK_LAST
 };
 
 static QStringList columnList = (QStringList() 
@@ -97,10 +115,14 @@ public:
 			qApp->processEvents();
 			
 			gameinfo = new GameInfo(mamegame);
+			currentDevice = "";
 			gameinfo->sourcefile = attributes.value("sourcefile");
-			gameinfo->isbios = attributes.value("isbios") == "yes";
+			gameinfo->isBios = attributes.value("isbios") == "yes";
+			gameinfo->isExtRom = false;
 			gameinfo->cloneof = attributes.value("cloneof");
 			gameinfo->romof = attributes.value("romof");
+			if (attributes.value("name").isEmpty())
+				win->poplog("empty 1");
 			mamegame->gamenameGameInfoMap[attributes.value("name")] = gameinfo;
 		}
 		else if (qName == "rom")
@@ -114,13 +136,27 @@ public:
 			bool ok;
 			gameinfo->crcRomInfoMap[attributes.value("crc").toUInt(&ok, 16)] = rominfo;
 		}
-		else if (gameinfo->isbios && qName == "biosset")
+		else if (gameinfo->isBios && qName == "biosset")
 		{
 			BiosInfo *biosinfo = new BiosInfo(gameinfo);
 			biosinfo->description = attributes.value("description");
 			biosinfo->isdefault = attributes.value("default") == "yes";
 
 			gameinfo->nameBiosInfoMap[attributes.value("name")] = biosinfo;
+		}
+		else if (qName == "device")
+		{
+			DeviceInfo *deviceinfo = new DeviceInfo(gameinfo);
+			deviceinfo->type = attributes.value("type");
+			currentDevice = deviceinfo->type;
+			deviceinfo->mandatory = attributes.value("mandatory") == "1";
+
+			gameinfo->nameDeviceInfoMap[currentDevice] = deviceinfo;
+		}
+		else if (!currentDevice.isEmpty() && qName == "extension")
+		{
+			DeviceInfo *deviceinfo = gameinfo->nameDeviceInfoMap[currentDevice];
+			deviceinfo->extension << attributes.value("name");
 		}
 
 		currentText.clear();
@@ -149,13 +185,47 @@ public:
 private:
 	GameInfo *gameinfo;
 	QString currentText;
+	QString currentDevice;
 	bool metMameTag;
 };
 
 void AuditROMThread::audit()
 {
 	if (!isRunning())
+	{
+		// disable ctrl updating before deleting its model
+		win->lvGameList->hide();
+		win->layMainView->removeWidget(win->lvGameList);
+		win->tvGameList->hide();
+		win->layMainView->removeWidget(win->tvGameList);
+		win->treeFolders->setEnabled(false);
+
+		if (gameListModel)
+		{
+			delete gameListModel;
+			gameListModel = NULL;
+		}
+
+		if (gameListPModel)
+		{
+			delete gameListPModel;
+			gameListPModel = NULL;
+		}
+
+		//must clear console list in the main thread
+		foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
+		{
+			GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+			if (gameInfo->isExtRom)
+			{
+//				win->log(QString("delete: %1").arg(gameName));
+				mamegame->gamenameGameInfoMap.remove(gameName);
+				delete gameInfo;
+			}
+		}
+
 		start(LowPriority);
+	}
 }
 
 void AuditROMThread::run()
@@ -224,12 +294,16 @@ void AuditROMThread::run()
 		}
 	}
 
-	win->log("audit 1");
+	win->log(QString("audit 1.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 
 	//see if any rom of a game is not available
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
 		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+		//fixme: skip auditing for consoles
+		if (gameinfo->isExtRom)
+			continue;
+
 		gameinfo->available = 1;
 
 		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
@@ -268,7 +342,16 @@ void AuditROMThread::run()
 		}
 	}
 
-	win->log("audit 2");
+	win->log("audit arc finished");
+
+	foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
+	{
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+			gamelist->loadConsole(gameName);
+	}
+	win->log("audit con finished");
+
 	emit progressSwitched(-1);
 }
 
@@ -311,12 +394,12 @@ void LoadIconThread::run()
 {
 	GameInfo *gameInfo, *gameInfo2;
 
-	win->log(QString("count: %1").arg(mamegame->gamenameGameInfoMap.count()));
+//	win->log(QString("ico count: %1").arg(mamegame->gamenameGameInfoMap.count()));
 
 	while(!done)
 	{
 		// iteratre split dirpath
-		QStringList dirpaths = icons_directory.split(";");
+		QStringList dirpaths = mameOpts["icons_directory"]->globalvalue.split(";");
 		foreach (QString _dirpath, dirpaths)
 		{
 			QDir dir(_dirpath);
@@ -391,7 +474,7 @@ void LoadIconThread::run()
 			if (restart)
 				break;
 		}
-
+///*
 		// get clone icons from parent
 		mutex.lock();
 		for (int i = 0; i < iconQueue.count(); i++)
@@ -401,7 +484,7 @@ void LoadIconThread::run()
 			if (mamegame->gamenameGameInfoMap.contains(gameName))
 			{
 				gameInfo = mamegame->gamenameGameInfoMap[gameName];
-				if (gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
+				if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
 				{
 					gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo->cloneof];
 					if (!gameInfo2->icondata.isNull())
@@ -416,7 +499,7 @@ void LoadIconThread::run()
 //				win->log(QString("errico: %1 %2").arg(gameName).arg(mamegame->gamenameGameInfoMap.count()));
 		}
 		mutex.unlock();
-
+//*/
 		if (!restart)
 			done = true;
 
@@ -453,28 +536,58 @@ void UpdateSelectionThread::run()
 		//fixme: do not update tabbed docks
 
 		if (win->ssSnap->isVisible())
+		{
 			pmdataSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_SNAP);
+		}
 		if (win->ssFlyer->isVisible())
-			pmdataFlyer = utils->getScreenshot(flyer_directory, gameName);
+		{
+			pmdataFlyer = utils->getScreenshot(mameOpts["flyer_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_FLYER);
+		}
 		if (win->ssCabinet->isVisible())
-			pmdataCabinet = utils->getScreenshot(cabinet_directory, gameName);
+		{
+			pmdataCabinet = utils->getScreenshot(mameOpts["cabinet_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_CABINET);
+		}
 		if (win->ssMarquee->isVisible())			
-			pmdataMarquee = utils->getScreenshot(marquee_directory, gameName);
+		{
+			pmdataMarquee = utils->getScreenshot(mameOpts["marquee_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_MARQUEE);
+		}
 		if (win->ssTitle->isVisible())
-			pmdataTitle = utils->getScreenshot(title_directory, gameName);
+		{
+			pmdataTitle = utils->getScreenshot(mameOpts["title_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_TITLE);
+		}
 		if (win->ssCPanel->isVisible())
-			pmdataCPanel = utils->getScreenshot(cpanel_directory, gameName);
+		{
+			pmdataCPanel = utils->getScreenshot(mameOpts["cpanel_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_CPANEL);
+		}
 		if (win->ssPCB->isVisible())
-			pmdataPCB = utils->getScreenshot(pcb_directory, gameName);
+		{
+			pmdataPCB = utils->getScreenshot(mameOpts["pcb_directory"]->globalvalue, gameName);
+			emit snapUpdated(DOCK_PCB);
+		}
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
 
 		if (win->tbHistory->isVisible())
+		{
 			historyText = utils->getHistory(gameName, "history.dat");
+			emit snapUpdated(DOCK_HISTORY);
+		}
 		if (win->tbMameinfo->isVisible())
+		{
 			mameinfoText = utils->getHistory(gameName, "mameinfo.dat");
+			emit snapUpdated(DOCK_MAMEINFO);
+		}
 		if (win->tbStory->isVisible())
+		{
 			storyText = utils->getHistory(gameName, "story.dat");
+			emit snapUpdated(DOCK_STORY);
+		}
 	}
 }
 
@@ -536,7 +649,7 @@ bool TreeItem::setData(int column, const QVariant &value)
 	return true;
 }
 
-TreeModel::TreeModel(QObject *parent)
+TreeModel::TreeModel(QObject *parent, bool isGroup)
 : QAbstractItemModel(parent)
 {
 	QList<QVariant> rootData;
@@ -545,8 +658,48 @@ TreeModel::TreeModel(QObject *parent)
 		rootData << header;
 
 	rootItem = new TreeItem(rootData);
-	setupModelData(rootItem, true);
-	setupModelData(rootItem, false);
+
+	foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
+	{
+		if (gameName.trimmed()=="")
+		win->log("ERR1");
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+
+		// build parent
+		if (!isGroup || gameInfo->cloneof.isEmpty())
+		{
+			TreeItem *parent = buildItem(rootItem, gameName, isGroup);
+
+			// build clones
+			if (isGroup)
+			foreach (QString cloneName, gameInfo->clones)
+				buildItem(parent, cloneName, isGroup);
+		}
+	}
+}
+
+TreeItem * TreeModel::buildItem(TreeItem *parent, QString gameName, bool isGroup)
+{
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+
+	if (gameName.trimmed()=="")
+		win->log("ERR2");
+
+	QList<QVariant> columnData;
+	columnData << gameInfo->description;
+	columnData << gameName;
+	columnData << gameInfo->available;
+	columnData << gameInfo->manufacturer;
+	columnData << gameInfo->sourcefile;
+	columnData << gameInfo->year;
+	columnData << gameInfo->cloneof;
+
+	// Append a new item to the current parent's list of children
+//	if (gameInfo->pModItem)
+//		delete gameInfo->pModItem;
+	gameInfo->pModItem = new TreeItem(columnData, parent);
+	parent->appendChild(gameInfo->pModItem);
+	return gameInfo->pModItem;
 }
 
 TreeModel::~TreeModel()
@@ -571,20 +724,24 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 	TreeItem *item = getItem(index);
 	QString gameName = item->data(1).toString();
-	GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
+	if (gameName.trimmed()=="")
+		win->poplog("ERR3");
+
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
 	
 	if (role == Qt::DecorationRole && index.column() == COL_DESC)
 	{
 		QByteArray icondata;
-		if (gameinfo->icondata.isNull())
+		if (gameInfo->icondata.isNull())
 		{
-			gamelist->iconThread.iconQueue.setSize(win->treeViewGameList->viewport()->height() / 17 + 2);
+			gamelist->iconThread.iconQueue.setSize(win->tvGameList->viewport()->height() / 17 + 2);
+			gamelist->iconThread.iconQueue.setSize(64);
 			gamelist->iconThread.iconQueue.enqueue(gameName);
 			gamelist->iconThread.load();
 			icondata = utils->deficondata;
 		}
 		else
-			icondata = gameinfo->icondata;
+			icondata = gameInfo->icondata;
 		
 		QPixmap pm;
 		pm.loadFromData(icondata, "ico");
@@ -592,10 +749,24 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 	}
 	
 	if (role == Qt::UserRole + FOLDER_BIOS)
-		return gameinfo->biosof();
-		
+		return gameInfo->biosof();
+
+	if (role == Qt::UserRole + FOLDER_CONSOLE)
+		return gameInfo->isExtRom ? true : false;
+
+	//convert 'Name' column for Console
+	if (index.column() == COL_NAME && gameInfo->isExtRom)
+	{
+		if (role == Qt::UserRole)
+			return item->data(index.column());
+	}
+
 	if (role != Qt::DisplayRole)
 		return QVariant();
+	if (index.column() == COL_NAME && gameInfo->isExtRom)
+	{
+		return gameInfo->romof;
+	}
 
 	//convert 'ROMs' column
 	if (index.column() == COL_ROM)
@@ -660,9 +831,7 @@ QModelIndex TreeModel::index(int column, TreeItem *childItem) const
 		return createIndex(childItem->row(), column, childItem);
 	else
 		return QModelIndex();
-
 }
-
 
 QModelIndex TreeModel::parent(const QModelIndex &index) const
 {
@@ -730,36 +899,6 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
 	return rootItem->setData(section, value);
 }
 
-void TreeModel::setupModelData(TreeItem *parent, bool buildParent)
-{
-	GameInfo *gameinfo;
-	QList<QVariant> columnData;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-		if ((gameinfo->cloneof.isEmpty() ^ buildParent))
-			continue;
-
-		columnData.clear();
-		columnData << gameinfo->description;
-		columnData << gamename;
-		columnData << gameinfo->available;
-		columnData << gameinfo->manufacturer;
-		columnData << gameinfo->sourcefile;
-		columnData << gameinfo->year;
-		columnData << gameinfo->cloneof;
-
-		if (!buildParent)
-			//find parent and add to it
-			parent = mamegame->gamenameGameInfoMap[gameinfo->cloneof]->pModItem;
-
-		// Append a new item to the current parent's list of children.
-		gameinfo->pModItem = new TreeItem(columnData, parent);
-		parent->appendChild(gameinfo->pModItem);
-	}
-}
-
 
 RomInfo::RomInfo(QObject *parent)
 : QObject(parent)
@@ -779,9 +918,10 @@ BiosInfo::BiosInfo(QObject *parent)
 	//	win->log("# BiosInfo()");
 }
 
-BiosInfo::~BiosInfo()
+DeviceInfo::DeviceInfo(QObject *parent)
+: QObject(parent)
 {
-	//    win->log("# ~BiosInfo()");
+	//	win->log("# DeviceInfo()");
 }
 
 GameInfo::GameInfo(QObject *parent)
@@ -794,7 +934,7 @@ GameInfo::GameInfo(QObject *parent)
 GameInfo::~GameInfo()
 {
 	available = -1;
-	//  win->log("# ~GameInfo()");
+//	win->log("# ~GameInfo()");
 }
 
 QString GameInfo::biosof()
@@ -805,16 +945,20 @@ QString GameInfo::biosof()
 	if (!romof.isEmpty())
 	{
 		biosof = romof;
+			if (romof.trimmed()=="")
+		win->log("ERR4");
 		gameInfo = mamegame->gamenameGameInfoMap[romof];
 
 		if (!gameInfo->romof.isEmpty())
 		{
 			biosof = gameInfo->romof;
+				if (gameInfo->romof.trimmed()=="")
+		win->log("ERR5");
 			gameInfo = mamegame->gamenameGameInfoMap[gameInfo->romof];
 		}
 	}
 	
-	if (gameInfo && gameInfo->isbios)
+	if (gameInfo && gameInfo->isBios)
 		return biosof;
 	else
 		return NULL;
@@ -844,10 +988,10 @@ void MameGame::s11n()
 	out << (qint16)S11N_VER; //s11n version
 	out.setVersion(QDataStream::Qt_4_3);
 	out << mamegame->mameVersion;
-
 	out << mamegame->mameDefaultIni;	//default.ini
-
 	out << mamegame->gamenameGameInfoMap.count();
+
+	win->log(QString("xxx1 %1").arg(mamegame->gamenameGameInfoMap.count()));
 
 	//fixme: should place in thread and use mamegame directly
 	gamelist->switchProgress(gamelist->numTotalGames, tr("Saving listxml"));
@@ -863,7 +1007,8 @@ void MameGame::s11n()
 		out << gameinfo->year;
 		out << gameinfo->manufacturer;
 		out << gameinfo->sourcefile;
-		out << gameinfo->isbios;
+		out << gameinfo->isBios;
+		out << gameinfo->isExtRom;
 		out << gameinfo->cloneof;
 		out << gameinfo->romof;
 		out << gameinfo->available;
@@ -890,28 +1035,43 @@ void MameGame::s11n()
 			out << biosinfo->description;
 			out << biosinfo->isdefault;
 		}
+
+		out << gameinfo->nameDeviceInfoMap.count();
+		foreach (QString name, gameinfo->nameDeviceInfoMap.keys())
+		{
+			DeviceInfo *deviceinfo = gameinfo->nameDeviceInfoMap[name];
+			out << name;
+			out << deviceinfo->mandatory;
+			out << deviceinfo->extension;
+		}
 	}
 	gamelist->switchProgress(-1, "");
 	
-	guisettings.setValue("list_cache", qCompress(ba, 9));
+	guiSettings.setValue("list_cache", qCompress(ba, 9));
 }
 
 int MameGame::des11n()
 {
-	QByteArray ba = qUncompress(guisettings.value("list_cache").toByteArray());
+	QByteArray ba = qUncompress(guiSettings.value("list_cache").toByteArray());
 	QDataStream in(ba);
 
 	// Read and check the header
 	quint32 mamepSig;
 	in >> mamepSig;
 	if (mamepSig != MAMEPLUS_SIG)
+	{
+		win->log("sig err");
 		return QDataStream::ReadCorruptData;
+	}
 
 	// Read the version
 	qint16 version;
 	in >> version;
 	if (version != S11N_VER)
+	{
+		win->log("ver err");
 		return QDataStream::ReadCorruptData;
+	}
 
 	if (version < 1)
 		in.setVersion(QDataStream::Qt_4_2);
@@ -930,8 +1090,8 @@ int MameGame::des11n()
 
 	if (mamegame->mameVersion != mameVersion0)
 	{
-//		win->poplog(QString("new mame version: %1 / %2").arg(mameVersion0).arg(mamegame->mameVersion));
-			return QDataStream::ReadCorruptData;
+		win-> log(QString("new mame version: %1 / %2").arg(mameVersion0).arg(mamegame->mameVersion));
+		 return QDataStream::ReadCorruptData;
 	}
 
 	in >> mamegame->mameDefaultIni;
@@ -949,7 +1109,8 @@ int MameGame::des11n()
 		in >> gameinfo->year;
 		in >> gameinfo->manufacturer;
 		in >> gameinfo->sourcefile;
-		in >> gameinfo->isbios;
+		in >> gameinfo->isBios;
+		in >> gameinfo->isExtRom;
 		in >> gameinfo->cloneof;
 		in >> gameinfo->romof;
 		in >> gameinfo->available;
@@ -986,7 +1147,19 @@ int MameGame::des11n()
 			in >> biosinfo->isdefault;
 			gameinfo->nameBiosInfoMap[name] = biosinfo;
 		}
+
+		in >> count;
+		for (int j = 0; j < count; j++)
+		{
+			DeviceInfo *deviceinfo = new DeviceInfo(gameinfo);
+			in >> name;
+			in >> deviceinfo->mandatory;
+			in >> deviceinfo->extension;
+			gameinfo->nameDeviceInfoMap[name] = deviceinfo;
+		}
 	}
+
+	win->log(QString("des11n2.gamecount %1").arg(gamecount));
 
 	return in.status();
 }
@@ -1000,9 +1173,22 @@ GamelistDelegate::GamelistDelegate(QObject *parent)
 QSize GamelistDelegate::sizeHint (const QStyleOptionViewItem & option, 
 								  const QModelIndex & index) const
 {
-	QString str = utils->getViewString(index, COL_NAME);
+	QString gameName = gamelist->getViewString(index, COL_NAME);
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+//fixme: combine @ console gamename
+	if (!gameInfo->nameDeviceInfoMap.isEmpty())
+	{
+		QString gameName2 = gamelist->getViewString(index, COL_NAME + COL_LAST);
 
-	if (currentGame == str)
+		if (!gameName2.isEmpty())
+		{
+			gameInfo = mamegame->gamenameGameInfoMap[gameName2];
+			if (gameInfo && gameInfo->isExtRom)
+				gameName = gameName2;
+		}
+	}
+
+	if (currentGame == gameName)
 		return QSize(1,33);
 	else
 		return QSize(1,17);
@@ -1011,26 +1197,46 @@ QSize GamelistDelegate::sizeHint (const QStyleOptionViewItem & option,
 void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 							 const QModelIndex &index ) const
 {
-	QModelIndex j = index.sibling(index.row(), COL_NAME);
-	QString str = j.model()->data(j, Qt::DisplayRole).toString();
-
-	if (currentGame == str && index.column() == COL_DESC)
+	QString gameName = gamelist->getViewString(index, COL_NAME);
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+//fixme: combine @ console gamename
+	if (!gameInfo->nameDeviceInfoMap.isEmpty())
 	{
-		j = index.sibling(index.row(), COL_DESC);
-
+		QString gameName2 = gamelist->getViewString(index, COL_NAME + COL_LAST);
+		if (!gameName2.isEmpty())
+		{
+			gameInfo = mamegame->gamenameGameInfoMap[gameName2];
+			if (gameInfo && gameInfo->isExtRom)
+				gameName = gameName2;
+		}
+	}
+	
+	QString gameDesc = gamelist->getViewString(index, COL_DESC);
+	
+	if (currentGame == gameName && index.column() == COL_DESC)
+	{
 		//draw big icon
 		QRect rc = option.rect;
 		QPoint p = rc.topLeft();
 		p.setX(p.x() + 2);
 		rc = QRect(p, rc.bottomRight());
 
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[currentGame];
+		if (gameName.trimmed()=="")
+			win->log("ERRb");
+
+		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
 
 		QByteArray icondata;
 		if (gameinfo->icondata.isNull())
+		{
 			icondata = utils->deficondata;
+//			win->log("paint def ico: " + gameName);
+		}
 		else
+		{
 			icondata = gameinfo->icondata;
+//			win->log("paint game ico: " + gameName);
+		}
 		
 		QPixmap pm;
 		pm.loadFromData(icondata, "ico");
@@ -1050,8 +1256,8 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		p = rc.topLeft();
 		p.setX(p.x() + 2);
 		rc = QRect(p, rc.bottomRight());
-		str = j.model()->data(j, Qt::DisplayRole).toString();
-		QApplication::style()->drawItemText (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, option.palette, true, str, QPalette::HighlightedText);
+		QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, option.palette, true, 
+											gameDesc, QPalette::HighlightedText);
 		return;
 	}
 
@@ -1065,13 +1271,14 @@ Gamelist::Gamelist(QObject *parent)
 {
 //	win->log("DEBUG: Gamelist::Gamelist()");
 
+	inited = false;
+
 	connect(&auditThread, SIGNAL(progressSwitched(int, QString)), this, SLOT(switchProgress(int, QString)));
 	connect(&auditThread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
 	connect(&auditThread, SIGNAL(finished()), this, SLOT(setupAudit()));
 
 	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
-	
-	connect(&selectThread, SIGNAL(finished()), this, SLOT(setupHistory()));
+	connect(&selectThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 	
 	if (!searchTimer)
 		searchTimer = new QTimer(this);
@@ -1096,7 +1303,7 @@ void Gamelist::updateProgress(int progress)
 
 void Gamelist::switchProgress(int max, QString title)
 {
-	win->labelProgress->setText(title);
+	win->logStatus(title);
 
 	if (max != -1)
 	{
@@ -1111,18 +1318,68 @@ void Gamelist::switchProgress(int max, QString title)
 	}
 }
 
+QString Gamelist::getViewString(const QModelIndex &index, int column) const
+{
+	bool isUserValue = false;
+	if (column >= COL_LAST)
+	{
+		column -= COL_LAST;
+		isUserValue = true;
+	}
+
+	QModelIndex j = index.sibling(index.row(), column);
+	//fixme: sometime model's NULL...
+	if (!index.model())
+		return "";
+
+	if (isUserValue)
+		return index.model()->data(j, Qt::UserRole).toString();
+	else
+		return index.model()->data(j, Qt::DisplayRole).toString();
+}
+
 void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & previous)
 {
 	if (current.isValid())
 	{
-		QString sel = utils->getViewString(current, COL_NAME);
-		if (sel.isEmpty())
+		QString gameName = getViewString(current, COL_NAME);
+		if (gameName.isEmpty())
 			return;
-		currentGame = sel;
+
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+			if (gameName.trimmed()=="")
+		win->log("ERRc");
+		QString gameDesc = gameInfo->description;
+		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+		{
+			QString gameName2 = getViewString(current, COL_NAME + COL_LAST);
+			if (!gameName2.isEmpty())
+			{
+					if (gameName2.trimmed()=="")
+				win->log("ERRd");
+
+				gameInfo = mamegame->gamenameGameInfoMap[gameName2];
+				if (gameInfo && gameInfo->isExtRom)
+				{
+					gameName = gameName2;
+					gameDesc = gameInfo->description;
+				}
+			}
+		}
+
+		currentGame = gameName;
 		
 		//update statusbar
-		win->labelProgress->setText(utils->getViewString(current, COL_DESC));
-
+		win->logStatus(gameDesc);
+		win->log(QString("%1").arg(currentGame));
+/*
+		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+		{
+			DeviceInfo *deviceinfo = gameInfo->nameDeviceInfoMap["cartridge"];
+			if (deviceinfo)
+				win->log(deviceinfo->extension.join(", "));
+		}
+*/
 		selectThread.myqueue.enqueue(currentGame);
 		selectThread.update();
 
@@ -1130,6 +1387,8 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		gameListModel->rowChanged(gameListPModel->mapToSource(current));
 		gameListModel->rowChanged(gameListPModel->mapToSource(previous));
 	}
+	else
+		currentGame = "";
 }
 
 void Gamelist::restoreSelection()
@@ -1140,9 +1399,9 @@ void Gamelist::restoreSelection()
 
 	QString gameName = currentGame;
 	QModelIndex i;
-	
+
 	// select current game
-//	win->log("#: " + gameName);
+//	win->log("restore callback: " + gameName);
 	if (mamegame->gamenameGameInfoMap.contains(gameName))
 	{
 		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
@@ -1159,9 +1418,13 @@ void Gamelist::restoreSelection()
 //		win->log("R: 0");
 	}
 
-	win->treeViewGameList->setCurrentIndex(pi);
+	win->tvGameList->setCurrentIndex(pi);
+	win->lvGameList->setCurrentIndex(pi);
 	//fixme: PositionAtCenter doesnt work well (auto scroll right)
-	win->treeViewGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
+	win->tvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
+	win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
+
+	win->labelGameCount->setText(QString("%1 Games").arg(gameListPModel->rowCount()));
 }
 
 void Gamelist::setupIcon(QString gameName)
@@ -1176,98 +1439,227 @@ void Gamelist::setupIcon(QString gameName)
 
 void Gamelist::setupAudit()
 {
+init(true);
+/*
 	GameInfo *gameinfo;
 	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 	{
 		gameinfo = mamegame->gamenameGameInfoMap[gamename];
+
+		//fixme: skip auditing for consoles
+		if (gameinfo->isExtRom)
+			continue;
+
 		gameListModel->setData(gameListModel->index(2, gameinfo->pModItem), 
 			gameinfo->available, Qt::DisplayRole);
 	}
 
 	//refresh current list
 	filterRegExpChanged2(win->treeFolders->currentItem());
-	
-	mamegame->s11n();
+
+win->log(QString("xxx %1").arg(mamegame->gamenameGameInfoMap.count()));
+*/
+//fixme0610
+//	mamegame->s11n();
 }
 
-void Gamelist::setupHistory()
+void Gamelist::setupSnap(int snapType)
 {
-	win->ssSnap->setPixmap(selectThread.pmdataSnap);
-	win->ssFlyer->setPixmap(selectThread.pmdataFlyer);
-	win->ssCabinet->setPixmap(selectThread.pmdataCabinet);
-	win->ssMarquee->setPixmap(selectThread.pmdataMarquee);
-	win->ssTitle->setPixmap(selectThread.pmdataTitle);
-	win->ssCPanel->setPixmap(selectThread.pmdataCPanel);
-	win->ssPCB->setPixmap(selectThread.pmdataPCB);
+	switch (snapType)
+	{
+	case DOCK_SNAP:
+		win->ssSnap->setPixmap(selectThread.pmdataSnap);
+		break;
+	case DOCK_FLYER:
+		win->ssFlyer->setPixmap(selectThread.pmdataFlyer);
+		break;
+	case DOCK_CABINET:
+		win->ssCabinet->setPixmap(selectThread.pmdataCabinet);
+		break;
+	case DOCK_MARQUEE:
+		win->ssMarquee->setPixmap(selectThread.pmdataMarquee);
+		break;
+	case DOCK_TITLE:
+		win->ssTitle->setPixmap(selectThread.pmdataTitle);
+		break;
+	case DOCK_CPANEL:
+		win->ssCPanel->setPixmap(selectThread.pmdataCPanel);
+		break;
+	case DOCK_PCB:
+		win->ssPCB->setPixmap(selectThread.pmdataPCB);
+		break;
 
-	win->tbHistory->setText(selectThread.historyText);
-	win->tbMameinfo->setText(selectThread.mameinfoText);
-	win->tbStory->setText(selectThread.storyText);
+	case DOCK_HISTORY:
+		win->tbHistory->setText(selectThread.historyText);
+		break;
+	case DOCK_MAMEINFO:
+		win->tbMameinfo->setText(selectThread.mameinfoText);
+		break;
+	case DOCK_STORY:
+		win->tbStory->setText(selectThread.storyText);
+	}
 }
 
-void Gamelist::init()
+void Gamelist::init(bool toggleState)
 {
+	if (!toggleState)
+		return;
+
+	if (win->actionGrouped->isChecked())
+		list_mode = win->actionGrouped->text();
+	else if (win->actionLargeIcons->isChecked())
+		list_mode = win->actionLargeIcons->text();
+	else
+		list_mode = win->actionDetails->text();
+
 	int des11n_status = QDataStream::Ok;
 	if (!mamegame)
 		des11n_status = mamegame->des11n();	//fixme: illogical call before mamegame init
 
+//	win->poplog(QString("des11n status: %1").arg(des11n_status));
+
 	if (des11n_status == QDataStream::Ok)
 	{
-		gameListModel = new TreeModel(win);
+		// disable ctrl updating before deleting its model
+		win->lvGameList->hide();
+		win->layMainView->removeWidget(win->lvGameList);
+		win->tvGameList->hide();
+		win->layMainView->removeWidget(win->tvGameList);
+
+		if (gameListModel)
+			delete gameListModel;
+
+		// Grouped
+		if (list_mode == win->actionGrouped->text())
+		{
+			gameListModel = new TreeModel(win, true);
+
+			win->layMainView->addWidget(win->tvGameList);		
+//			win->tvGameList->show();
+		}
+		// Large Icons
+		else if (list_mode == win->actionLargeIcons->text())
+		{
+			gameListModel = new TreeModel(win, false);
+
+			win->layMainView->addWidget(win->lvGameList);		
+//			win->lvGameList->show();
+		}
+		// Details
+		else
+		{
+			gameListModel = new TreeModel(win, false);
+
+			win->layMainView->addWidget(win->tvGameList);		
+//			win->tvGameList->show();
+		}
+
+		if (gameListPModel)
+			delete gameListPModel;
 		gameListPModel = new GameListSortFilterProxyModel(win);
+
 		gameListPModel->setSourceModel(gameListModel);
 		gameListPModel->setSortCaseSensitivity(Qt::CaseInsensitive);
-		win->treeViewGameList->setModel(gameListPModel);
 
-		/* init everything else here after we have mamegame */
- 
-		// init folders
-		gamelist->initFolders();
+		if (list_mode == win->actionLargeIcons->text())
+			win->lvGameList->setModel(gameListPModel);
+		else
+		{
+			win->tvGameList->setModel(gameListPModel);
+			win->tvGameList->setItemDelegate(&gamelistDelegate);
+		}
 
-		// init options
-		optUtils->loadDefault(mamegame->mameDefaultIni);
-		optUtils->loadTemplate();
-		
-		optUtils->loadIni(OPTNFO_GLOBAL, "mame.ini");
+		if (!inited)
+		{
+			/* init everything else here after we have mamegame */
+			// init folders
+			gamelist->initFolders();
+
+			// init options from default mame.ini
+			optUtils->loadDefault(mamegame->mameDefaultIni);
+			// assign option type, defvalue, min, max, etc. from template
+			optUtils->loadTemplate();
+			// load mame.ini overrides
+			optUtils->loadIni(OPTNFO_GLOBAL, "mame.ini");
+			
+			// add GUI MESS extra software paths
+			foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
+			{
+				GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+				if (!gameInfo->nameDeviceInfoMap.isEmpty())
+				{
+					MameOption *pMameOpt = new MameOption(0);	//fixme parent
+					pMameOpt->guivisible = true;
+					mameOpts[gameName + "_extra_software"] = pMameOpt;
+					//save a list of console system for later use
+					consoleGamesL << gameName;
+				}
+			}
+			consoleGamesL.sort();
+
+			// load GUI path overrides
+			foreach (QString optName, mameOpts.keys())
+			{
+				MameOption *pMameOpt = mameOpts[optName];
+			
+				if (!pMameOpt->guivisible)
+					continue;
+
+				if (guiSettings.contains(optName))
+					pMameOpt->globalvalue = guiSettings.value(optName).toString();
+			}
+
+			// misc win init
+			win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
+			win->actionDefaultOptions->setEnabled(true);
+			win->actionRefresh->setEnabled(true);
+
+			connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+			connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+		}
 
 		// connect gameListModel/gameListPModel signals after the view init completed
 		// connect gameListModel/gameListPModel signals after mameOpts init
 		connect(gameListPModel, SIGNAL(layoutChanged()), this, SLOT(restoreSelection()));
-		connect(win->treeViewGameList->selectionModel(),
+		connect(win->tvGameList->selectionModel(),
 				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
-
-		connect(win->treeViewGameList,
-				SIGNAL(activated(const QModelIndex &)),
-				this, SLOT(runMame()));
-
-		win->treeViewGameList->setItemDelegate(&gamelistDelegate);
-
+		connect(win->lvGameList->selectionModel(),
+				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
+				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+		
 		// restore view column state
-		win->treeViewGameList->header()->restoreState(guisettings.value("column_state").toByteArray());		
-		win->treeViewGameList->setSortingEnabled(true);
-		win->treeViewGameList->sortByColumn(guisettings.value("sort_column").toInt(), 
-			(guisettings.value("sort_reverse").toInt() == 0) ? Qt::AscendingOrder : Qt::DescendingOrder);
+		win->tvGameList->header()->restoreState(guiSettings.value("column_state").toByteArray());
+		win->log("sorting");
+		
+		win->tvGameList->setSortingEnabled(true);
+		win->tvGameList->sortByColumn(guiSettings.value("sort_column").toInt(), 
+			(guiSettings.value("sort_reverse").toInt() == 0) ? Qt::AscendingOrder : Qt::DescendingOrder);
+		win->tvGameList->setFocus();
 
-		win->treeViewGameList->expandAll();
-		win->treeViewGameList->setFocus();
+		//refresh current list
+		filterRegExpChanged2(win->treeFolders->currentItem());
 
-		// restore view selection
-		restoreSelection();
+		inited = true;
 
-		win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
-		win->actionDefaultOptions->setEnabled(true);
-		win->actionRefresh->setEnabled(true);
+		// Grouped
+		if (list_mode == win->actionGrouped->text())
+			win->tvGameList->show();
+		// Large Icons
+		else if (list_mode == win->actionLargeIcons->text())
+			win->lvGameList->show();
+		// Details
+		else
+			win->tvGameList->show();
 
-		// auditThread.audit();
+		win->treeFolders->setEnabled(true);
 
-		//fixme delete mamegame;
-		// mamegame = 0;
+		win->log(QString("inited.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 	}
 	else
 	{
 		mameOutputBuf = "";
-		QString command = mame_binary;
+		QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 		QStringList args;
 
 		args << "-listxml";
@@ -1280,6 +1672,46 @@ void Gamelist::init()
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
+}
+
+void Gamelist::loadConsole(QString consoleName)
+{
+	GameInfo *gameInfo;
+
+	// clear list
+
+	QString _dirpath = mameOpts[consoleName + "_extra_software"]->globalvalue;
+	QDir dir(_dirpath);
+	if (_dirpath.isEmpty() || !dir.exists())
+		return;
+	QString dirpath = utils->getPath(_dirpath);
+
+	gameInfo = mamegame->gamenameGameInfoMap[consoleName];
+	DeviceInfo *deviceinfo = gameInfo->nameDeviceInfoMap["cartridge"];
+	QString sourcefile = gameInfo->sourcefile;
+
+	QStringList nameFilter;
+	foreach (QString ext, deviceinfo->extension)
+		nameFilter << "*." + ext;
+	nameFilter << "*.zip";
+
+	// iterate all files in the path
+	QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+	for (int i = 0; i < files.count(); i++)
+	{
+		QString gameName = files[i];
+		QFileInfo fi(files[i]);
+		gameInfo = new GameInfo(mamegame);
+		gameInfo->description = fi.completeBaseName();
+		gameInfo->isBios = false;
+		gameInfo->isExtRom = true;
+		gameInfo->romof = consoleName;
+		gameInfo->sourcefile = sourcefile;
+		gameInfo->available = 1;
+		mamegame->gamenameGameInfoMap[dirpath + gameName] = gameInfo;
+	}
+
+//	win->poplog(QString("%1, %2").arg(consoleName).arg(_dirpath));
 }
 
 void Gamelist::loadListXmlStarted()
@@ -1298,7 +1730,7 @@ void Gamelist::loadListXmlReadyReadStandardOutput()
 	numTotalGames += buf.count("<game name=");
 	mameOutputBuf += buf;
 
-	win->labelProgress->setText(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
+	win->logStatus(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
 }
 
 void Gamelist::loadListXmlFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -1321,7 +1753,7 @@ void Gamelist::loadListXmlFinished(int exitCode, QProcess::ExitStatus exitStatus
 void Gamelist::loadDefaultIni()
 {
 	mamegame->mameDefaultIni = "";
-	QString command = mame_binary;
+	QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QStringList args;
 	args << "-showconfig" << "-norc";
 
@@ -1349,10 +1781,10 @@ void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitSta
 	optUtils->loadDefault(mamegame->mameDefaultIni);
 	optUtils->loadTemplate();
 
-	mamegame->s11n();
+//	mamegame->s11n();
 	
 	//reload gamelist
-	init();
+	init(true);
 	win->log("end of gamelist->loadDefFin()");
 }
 
@@ -1410,35 +1842,51 @@ void Gamelist::filterRegExpChanged()
 	//fixme: doesnt use filterregexp
 	static QRegExp regExp("");
 	// set it for a callback to refresh the list
+	gameListPModel->searchText = text;	// must set before regExp
 	gameListPModel->setFilterRegExp(regExp);
-	gameListPModel->searchText = text;
-	win->treeViewGameList->expandAll();
+	win->tvGameList->expandAll();
 	restoreSelection();
-
 }
 
 void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *previous)
 {
 	QString filterText;
 
+	// the selection could be empty
+	if (!current)
+		return;
+
+	currentFolder= "";
+	if (win->treeFolders->currentItem()->parent())
+		currentFolder += win->treeFolders->currentItem()->parent()->text(0);
+	currentFolder += "/" + win->treeFolders->currentItem()->text(0);
+
 	if (!current->parent())
 	{
 		QString folderName = current->text(0);
 		filterText = "";
 
-		if (folderName == folderList[FOLDER_AVAILABLE])
+		if (folderName == folderList[FOLDER_ALLGAME])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAME);
+		else if (folderName == folderList[FOLDER_ALLARC])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLARC);
+		else if (folderName == folderList[FOLDER_AVAILABLE])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_AVAILABLE);
 		else if (folderName == folderList[FOLDER_UNAVAILABLE])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_UNAVAILABLE);
+		else if (folderName == folderList[FOLDER_CONSOLE])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE);
 		else
-			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAMES);
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAME);
 	}
 	else
 	{
 		QString folderName = current->parent()->text(0);
 		filterText = current->text(0);
 
-		if (folderName == folderList[FOLDER_MANUFACTURER])
+		if (folderName == folderList[FOLDER_CONSOLE])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE + MAX_FOLDERS);	//hack for console subfolders
+		else if (folderName == folderList[FOLDER_MANUFACTURER])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_MANUFACTURER);
 		else if (folderName == folderList[FOLDER_YEAR])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_YEAR);
@@ -1448,21 +1896,24 @@ void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS);
 		//fixme
 		else
-			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAMES);
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAME);
 	}
 
 	static QRegExp regExp("");
 	// set it for a callback to refresh the list
+	gameListPModel->filterText = filterText;	// must set before regExp
 	gameListPModel->setFilterRegExp(regExp);
-	gameListPModel->filterText = filterText;
-	win->treeViewGameList->expandAll();
-	restoreSelection();
 
+	//fixme: must have this, otherwise the list cannot be expanded properly
+	qApp->processEvents();
+	win->tvGameList->expandAll();
+	restoreSelection();
 }
 
 void Gamelist::initFolders()
 {
 	folderList
+		<< QT_TR_NOOP("All Games")
 		<< QT_TR_NOOP("All Arcades")
 		<< QT_TR_NOOP("Available Arcades")
 		<< QT_TR_NOOP("Unavailable Arcades")
@@ -1493,27 +1944,30 @@ void Gamelist::initFolders()
 		<< QT_TR_NOOP("Artwork")*/
 		;
 
-	GameInfo *gameinfo;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
+	QStringList consoleList, mftrList, yearList, srcList, biosList;
+	GameInfo *gameInfo;
+	foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
 	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-		if (gameinfo->isbios)
-			biosList << gamename;
-		if (!mftrList.contains(gameinfo->manufacturer))
-			mftrList << gameinfo->manufacturer;
-		if (!yearList.contains(gameinfo->year))
-			yearList << gameinfo->year;
-		if (!srcList.contains(gameinfo->sourcefile))
-			srcList << gameinfo->sourcefile;
+		gameInfo = mamegame->gamenameGameInfoMap[gameName];
+		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+			consoleList << gameName;
+		if (gameInfo->isBios)
+			biosList << gameName;
+		if (!mftrList.contains(gameInfo->manufacturer))
+			mftrList << gameInfo->manufacturer;
+		if (!yearList.contains(gameInfo->year))
+			yearList << gameInfo->year;
+		if (!srcList.contains(gameInfo->sourcefile))
+			srcList << gameInfo->sourcefile;
 	}
-	
+
+	consoleList.sort();
 	mftrList.sort();
 	yearList.sort();
 	srcList.sort();
 	biosList.sort();
 	
 	QIcon icoFolder(":/res/32x32/folder.png");
-	
 	QList<QTreeWidgetItem *> items;
 	for (int i = 0; i < folderList.size(); i++)
 	{
@@ -1522,27 +1976,32 @@ void Gamelist::initFolders()
 		win->treeFolders->insertTopLevelItems(0, items);
 		items[i]->setIcon(0, icoFolder);
 
-		if (i == FOLDER_MANUFACTURER)
+		if (i == FOLDER_CONSOLE)
+			foreach (QString name, consoleList)
+				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
+
+		else if (i == FOLDER_MANUFACTURER)
 			foreach (QString name, mftrList)
 				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
 
-		if (i == FOLDER_YEAR)
+		else if (i == FOLDER_YEAR)
 			foreach (QString name, yearList)
 				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
 
-		if (i == FOLDER_SOURCE)
+		else if (i == FOLDER_SOURCE)
 			foreach (QString name, srcList)
 				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
-		if (i == FOLDER_BIOS)
+
+		else if (i == FOLDER_BIOS)
 			foreach (QString name, biosList)
 				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
 	}
+
 	connect(win->treeFolders, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		this, SLOT(filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *)));
 
-
 	// restore folder selection
-	QString currentFolder = guisettings.value("folder_current", "/" + folderList[0]).toString();
+	currentFolder = guiSettings.value("folder_current", "/" + folderList[0]).toString();
 	int sep = currentFolder.indexOf("/");
 	QString parentFolder = currentFolder.left(sep);
 	QString subFolder = currentFolder.right(currentFolder.size() - sep - 1);
@@ -1560,6 +2019,7 @@ void Gamelist::initFolders()
 		QTreeWidgetItem *subItem = rootItem->child(i);
 		if (subItem->text(0) == parentFolder)
 		{
+		win->log(QString("tree lv1.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 			if (subFolder.isEmpty())
 			{
 				win->treeFolders->setCurrentItem(subItem);
@@ -1574,6 +2034,7 @@ void Gamelist::initFolders()
 					if (subsubItem->text(0) == subFolder)
 					{
 						win->treeFolders->setCurrentItem(subsubItem);
+						win->log(QString("treeb.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 						return;
 					}
 				}
@@ -1589,9 +2050,16 @@ void Gamelist::runMame()
 	// doesnt support multi mame session for now
 //	if (procMan->procCount > 0)
 //		return;
-
-	QString command = mame_binary;
+	QString command = mameOpts["mame_binary"]->globalvalue;
 	QStringList args;
+
+	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[currentGame];
+	if (gameInfo->isExtRom)
+	{
+		args << gameInfo->romof;
+		args << "-cart";
+	}
+
 	args << currentGame;
 	procMan->process(procMan->start(command, args));
 }
@@ -1605,55 +2073,84 @@ GameListSortFilterProxyModel::GameListSortFilterProxyModel(QObject *parent)
 bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	bool result = true;
-	QModelIndex index0, index1, index2;
+	bool isExtRom, isConsole;
+	QModelIndex indexGameDesc, indexGameName, index2;
 	const QAbstractItemModel *srcModel = sourceModel();
+
+	indexGameDesc = srcModel->index(sourceRow, COL_DESC, sourceParent);
+	indexGameName = srcModel->index(sourceRow, COL_NAME, sourceParent);
 	
+	GameInfo *gameInfo = NULL;
+	QString gameName = srcModel->data(indexGameName).toString();
+	if (gameName.trimmed() != "")
+		gameInfo = mamegame->gamenameGameInfoMap[gameName];
+
 	if (!searchText.isEmpty())
 	{
 //		win->log(QString("search: %1").arg(searchText));
 	
 		QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
 		QRegExp regExpSearch(searchText, Qt::CaseInsensitive, syntax);
-		
-		// apply search filter
-		index0 = srcModel->index(sourceRow, COL_DESC, sourceParent);
-		index1 = srcModel->index(sourceRow, COL_NAME, sourceParent);
 
-		result = (srcModel->data(index0).toString().contains(regExpSearch)
-				||srcModel->data(index1).toString().contains(regExpSearch));
+		// apply search filter
+		result = (srcModel->data(indexGameDesc).toString().contains(regExpSearch)
+				|| gameName.contains(regExpSearch));
 	}
 
+	isConsole = gameName == "sfzch" || gameInfo && !gameInfo->nameDeviceInfoMap.isEmpty();
+	isExtRom = srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_CONSOLE).toBool();
+
 	// apply folder filter
-	if (filterRole() == Qt::UserRole + FOLDER_AVAILABLE)
+	if (filterRole() == Qt::UserRole + FOLDER_ALLGAME)
+	{
+		return result;
+	}
+	else if (filterRole() == Qt::UserRole + FOLDER_ALLARC)
+	{
+		return result && !isExtRom && !isConsole;
+	}
+	else if (filterRole() == Qt::UserRole + FOLDER_AVAILABLE)
 	{
 		index2 = srcModel->index(sourceRow, COL_ROM, sourceParent);
-		result = result && srcModel->data(index2).toString() == "Yes";
+		return result && srcModel->data(index2).toString() == "Yes"
+						&& !isExtRom && !isConsole;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_UNAVAILABLE)
 	{
 		index2 = srcModel->index(sourceRow, COL_ROM, sourceParent);
-		result = result && srcModel->data(index2).toString() != "Yes";
+		return result && srcModel->data(index2).toString() != "Yes"
+						&& srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_CONSOLE).toString() != "Yes"
+						&& !isExtRom && !isConsole;
+	}
+	else if (filterRole() == Qt::UserRole + FOLDER_CONSOLE)
+	{
+		return result && isExtRom;
+	}
+	else if (filterRole() == Qt::UserRole + FOLDER_CONSOLE + MAX_FOLDERS)	//hack for console subfolders
+	{
+		return result && srcModel->data(indexGameName).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_MANUFACTURER)
 	{
 		index2 = srcModel->index(sourceRow, COL_MFTR, sourceParent);
-		result = result && srcModel->data(index2).toString() == filterText;
+		return result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_YEAR)
 	{
 		index2 = srcModel->index(sourceRow, COL_YEAR, sourceParent);
-		result = result && srcModel->data(index2).toString() == filterText;
+		return result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_SOURCE)
 	{
 		index2 = srcModel->index(sourceRow, COL_SRC, sourceParent);
-		result = result && srcModel->data(index2).toString() == filterText;
+		return result && srcModel->data(index2).toString() == filterText;
 	}
 	else if (filterRole() == Qt::UserRole + FOLDER_BIOS)
 	{
-		result = result && srcModel->data(index0, Qt::UserRole + FOLDER_BIOS).toString() == filterText;
+		return result && srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_BIOS).toString() == filterText;
 	}
 
-	return result;
+	// empty list otherwise
+	return false;
 }
 

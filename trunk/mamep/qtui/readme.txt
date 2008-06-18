@@ -1,8 +1,30 @@
-﻿--- MAME Plus GUI 0.9 内测版 说明 ---
---- MAME Plus GUI 0.9 Alpha README ---
+﻿--- MAME Plus GUI 0.96a 更新 ---
+* GUI路径选项(Options - Global - Directory - GUI Directory)
+* 家用机路径选项(Options - Global - Directory - MESS Software Directory)
+* 家用机列表 (在选项中设置家用机路径后，F5刷新)
+* 左侧家用机目录 (Console)
+* 仅在程序退出时保存刷新结果，加速刷新
+
+--- MAME Plus GUI 0.92a1 更新 ---
+* 可选垂直标签 View - Vertical Tabs
+* 添加无缩进和大图标模式(初步)
+* 加速图标读取速度
+* 加速图片预览速度(初步)
+* 修复某些电脑上拖动列表就crash的问题
+* 修复F5 刷新后列表更新问题
+* 可恢复上次选择的目录
+
+--- MAME Plus GUI 0.9a 说明 ---
+--- MAME Plus GUI 0.9a README ---
 
 General 概述
 ----------------
+
+removed MESS menu bar, it's only avai for launching console games
+
+开发中的MAMEPlus GUI已经实现街机与家用机无差别整合，无论是列表显示还是游戏中
+the GUI has been completely re-written, with similar functionality and interface as MAMEUI.
+新GUI代码完全重写，保持与MAMEUI相似的功能和界面。
 
 * mamepgui.exe 必须与 mamep.exe 处于同一目录
 * mamepgui.exe must stay in the same directory as mamep.exe
@@ -21,9 +43,6 @@ General 概述
 
 * 除游戏列表以外的各组件可以随意拖动、进行标签组合、关闭
 * drag and drop support for all components, could be stacked, tabbed or closed
-
-* 程序主窗口位置、组件位置、栏目顺序、栏目排序均可在启动时恢复上次设置
-* save/restore main window position, components position, column order, column sorting
 
 Options 选项
 ----------------

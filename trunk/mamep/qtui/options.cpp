@@ -1,7 +1,7 @@
 #include "mamepguimain.h"
 
 Options *dlgOptions = NULL;
-QByteArray dlgOptionsGeo;
+QByteArray option_geometry;
 QList<QListWidget *> optCtrlList;
 
 Options::Options(QWidget *parent)
@@ -25,13 +25,13 @@ Options::~Options()
 
 void Options::showEvent(QShowEvent *e)
 {
-	restoreGeometry(dlgOptionsGeo);
+	restoreGeometry(option_geometry);
 	e->accept();
 }
 
 void Options::closeEvent(QCloseEvent *event)
 {
-	dlgOptionsGeo = saveGeometry();
+	option_geometry = saveGeometry();
 	event->accept();
 }
 

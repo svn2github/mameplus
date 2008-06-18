@@ -54,9 +54,12 @@ Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+	QTreeView *tvGameList;
+	QListView *lvGameList;
 	
 	QLineEdit *lineEditSearch;
-	QLabel *labelProgress;
+	QLabel *labelProgress, *labelGameCount;
 	QProgressBar *progressBarGamelist;
 	
 	Screenshot *ssSnap;
@@ -72,7 +75,6 @@ public:
 	QTextBrowser *tbStory;
 	QTextBrowser *tbCommand;
 
-//	QTextBrowser *textBrowserMAMELog;
 //	QTextBrowser *textBrowserFrontendLog;
 
 public slots:
@@ -86,9 +88,9 @@ public slots:
 	void init();
 	void initSettings();
 	void loadLayout();
-	void saveLayout();
 	void loadSettings();
 	void saveSettings();
+	void setDockOptions();
 	
 protected:
     void closeEvent(QCloseEvent *event);
@@ -101,7 +103,7 @@ private:
 #define LOG_QMC2	1
 #define LOG_MAME	2
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 6
+#define S11N_VER 7
 
 // external global variables
 extern MainWindow *win;
@@ -109,24 +111,17 @@ extern Options *dlgOptions;
 extern QList<QListWidget *> optCtrlList;
 
 extern QHash<QString, MameOption*> mameOpts;
-extern QSettings guisettings;
+extern QSettings guiSettings;
+extern QByteArray option_column_state;
 
-extern QString flyer_directory,
-		cabinet_directory,
-		marquee_directory,
-		title_directory,
-		cpanel_directory,
-		pcb_directory,
-		icons_directory,
-		background_directory,
-		mame_binary;
+extern QString list_mode;
 
-extern QByteArray dlgOptionsGeo;
+extern QByteArray option_geometry;
 
-extern QString currentGame;
+extern QString currentGame, currentFolder;
 extern MameGame *mamegame;
 extern Gamelist *gamelist;
-extern GameListSortFilterProxyModel *gameListPModel;
+extern QStringList consoleGamesL;
 
 extern ProcessManager *procMan;
 

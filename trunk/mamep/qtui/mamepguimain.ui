@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.9 alpha 3</string>
+   <string>MAME Plus! GUI 0.96a</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
@@ -29,20 +29,10 @@
      <number>0</number>
     </property>
     <item row="0" column="0" >
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout" name="layMainView" >
       <property name="topMargin" >
        <number>2</number>
       </property>
-      <item>
-       <widget class="QTreeView" name="treeViewGameList" >
-        <property name="rootIsDecorated" >
-         <bool>false</bool>
-        </property>
-        <property name="itemsExpandable" >
-         <bool>false</bool>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>
@@ -67,10 +57,9 @@
      <string>View</string>
     </property>
     <addaction name="actionPicture_Area" />
+    <addaction name="actionVerticalTabs" />
     <addaction name="separator" />
-    <addaction name="actionLarge_Icons" />
-    <addaction name="actionSmall_Icons" />
-    <addaction name="actionList" />
+    <addaction name="actionLargeIcons" />
     <addaction name="actionDetails" />
     <addaction name="actionGrouped" />
     <addaction name="separator" />
@@ -111,7 +100,7 @@
     <rect>
      <x>0</x>
      <y>21</y>
-     <width>208</width>
+     <width>162</width>
      <height>26</height>
     </rect>
    </property>
@@ -135,9 +124,7 @@
    </attribute>
    <addaction name="actionPicture_Area" />
    <addaction name="separator" />
-   <addaction name="actionLarge_Icons" />
-   <addaction name="actionSmall_Icons" />
-   <addaction name="actionList" />
+   <addaction name="actionLargeIcons" />
    <addaction name="actionDetails" />
    <addaction name="actionGrouped" />
    <addaction name="separator" />
@@ -147,9 +134,9 @@
   <widget class="QToolBar" name="toolBarSearch" >
    <property name="geometry" >
     <rect>
-     <x>208</x>
+     <x>162</x>
      <y>21</y>
-     <width>416</width>
+     <width>462</width>
      <height>26</height>
     </rect>
    </property>
@@ -172,7 +159,7 @@
      <x>368</x>
      <y>47</y>
      <width>256</width>
-     <height>167</height>
+     <height>337</height>
     </rect>
    </property>
    <property name="features" >
@@ -190,7 +177,7 @@
       <x>0</x>
       <y>22</y>
       <width>256</width>
-      <height>145</height>
+      <height>315</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -199,43 +186,6 @@
      </property>
      <item row="0" column="0" >
       <widget class="QTextBrowser" name="textBrowserFrontendLog" />
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="dockWidget_6" >
-   <property name="geometry" >
-    <rect>
-     <x>368</x>
-     <y>218</y>
-     <width>256</width>
-     <height>166</height>
-    </rect>
-   </property>
-   <property name="features" >
-    <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
-   </property>
-   <property name="windowTitle" >
-    <string>MAME Log</string>
-   </property>
-   <attribute name="dockWidgetArea" >
-    <number>2</number>
-   </attribute>
-   <widget class="QWidget" name="dockWidgetContents_12" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>256</width>
-      <height>144</height>
-     </rect>
-    </property>
-    <layout class="QGridLayout" >
-     <property name="margin" >
-      <number>0</number>
-     </property>
-     <item row="0" column="0" >
-      <widget class="QTextBrowser" name="textBrowserMAMELog" />
      </item>
     </layout>
    </widget>
@@ -339,33 +289,9 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionSmall_Icons" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/mame32-view-sicon.png</normaloff>:/res/mame32-view-sicon.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Small Icons</string>
-   </property>
-  </action>
-  <action name="actionList" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/mame32-view-list.png</normaloff>:/res/mame32-view-list.png</iconset>
-   </property>
-   <property name="text" >
-    <string>List</string>
-   </property>
-  </action>
   <action name="actionDetails" >
-   <property name="enabled" >
-    <bool>false</bool>
+   <property name="checkable" >
+    <bool>true</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
@@ -390,9 +316,9 @@
     <string>Grouped</string>
    </property>
   </action>
-  <action name="actionLarge_Icons" >
-   <property name="enabled" >
-    <bool>false</bool>
+  <action name="actionLargeIcons" >
+   <property name="checkable" >
+    <bool>true</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
@@ -415,6 +341,14 @@
    </property>
    <property name="shortcut" >
     <string>Alt+P</string>
+   </property>
+  </action>
+  <action name="actionVerticalTabs" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Vertical Tabs</string>
    </property>
   </action>
  </widget>

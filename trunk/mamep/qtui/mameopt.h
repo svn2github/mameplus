@@ -63,11 +63,10 @@ public:
 		globalvalue, srcvalue, biosvalue, cloneofvalue;
 	
 	int type;
+	bool guivisible, globalvisible, srcvisible, biosvisible, cloneofvisible, gamevisible;
 	QList<QString> values;
 	QList<QString> guivalues;
 
-	QStandardItemModel *model;
-	
 	MameOption(QObject *parent = 0);
 };
 
@@ -97,6 +96,11 @@ public slots:
 	void initOption();
 	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
 	void setupModelData(QString, int);
+	void updateHeaderSize(int, int, int);
+
+private:
+	void addModelItemTitle(QStandardItemModel*, QString);
+	void addModelItem(QStandardItemModel*, QString);
 //	void exportToIni(QString useFileName = QString());
 //	void importFromIni(QString useFileName = QString());
 };

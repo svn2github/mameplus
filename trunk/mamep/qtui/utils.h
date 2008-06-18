@@ -15,7 +15,6 @@ public:
 	
 	Utils(QObject *parent = 0);
 
-	QString getViewString(const QModelIndex &index, int column) const;
 	QByteArray getScreenshot(const QString &, const QString &);
 	QString getHistory(const QString &, const QString &);
 

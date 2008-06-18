@@ -1,13 +1,24 @@
 ﻿<?xml version="1.0"?>
 <optiontemplate version="1">
-	<option name="driver_config" type="string">
+	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
+	<option name="cabinet_directory" default="cabinets" type="dir" guivisible="1" />
+	<option name="cpanel_directory" default="cpanel" guiname="Control Panel Directory" type="dir" guivisible="1" />
+	<option name="flyer_directory" default="flyers" type="dir" guivisible="1" />
+	<option name="icons_directory" default="icons" type="dir" guivisible="1" />
+	<option name="marquee_directory" default="marquees" type="dir" guivisible="1" />
+	<option name="pcb_directory" default="pcb" guiname="PCB Directory" type="dir" guivisible="1" />
+	<option name="title_directory" default="titles" type="dir" guivisible="1" />
+	
+	<option name="mame_binary" default="mamep.exe" type="file" guivisible="1" />
+
+	<option name="driver_config" type="string" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0">
 		<!--value guivalue="MAME">mame</value>
 		<value guivalue="MAME Plus!">plus</value>
 		<value>homebrew</value>
 		<value>decrypted</value>
 		<value>console</value-->
 	</option>
-	<option name="readconfig" type="bool" />
+	<option name="readconfig" type="bool" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	
 	<option name="rompath" guiname="ROM Directory" type="dir" />
 	<option name="hashpath" type="dir" />
@@ -37,12 +48,13 @@
 	<option name="command_file" type="file" />
 	<option name="hiscore_file" type="file" />
 	
-	<option name="state" type="file" />
+	<option name="state" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="autosave" type="bool" />
-	<option name="playback" type="file" />
-	<option name="record" type="file" />
-	<option name="mngwrite" type="file" />
-	<option name="wavwrite" type="file" />
+	<option name="playback" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="record" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="mngwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="aviwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="wavwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 
 	<option name="autoframeskip" type="bool" />
 	<option name="frameskip" type="int" min="0" max="10" />
@@ -68,7 +80,7 @@
 	<option name="brightness" type="float" min="0.1" max="2.0" />
 	<option name="contrast" type="float" min="0.1" max="2.0" />
 	<option name="gamma" type="float" min="0.1" max="3.0" />
-	<option name="pause_brightness" type="bool" min="0.0" max="1.0" />
+	<option name="pause_brightness" type="float" min="0.0" max="1.0" />
 	<option name="scale_effect" type="string" >
 		<value>none</value>
 		<value>scale2x</value>
@@ -166,10 +178,10 @@
 	<option name="verbose" type="bool" />
 	<option name="update_in_pause" type="bool" />
 
-	<option name="bios" type="string" />
+	<option name="bios" type="string" globalvisible="0" srcvisible="0" />
 	<option name="cheat" type="bool" />
 	<option name="skip_gameinfo" type="bool" />
-	<option name="ips" type="string" />
+	<option name="ips" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" />
 	<option name="confirm_quit" type="bool" />
 	<option name="auto_pause_playback" type="bool" />
 	<option name="m68k_core" type="string">
@@ -195,10 +207,11 @@
 	<option name="button_lime" type="color" />
 	<option name="cursor" type="color" />
 
-	<option name="language" type="string" />
-	<option name="use_lang_list" type="bool" />
+	<option name="language" type="string" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="use_lang_list" type="bool" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 
 	<option name="oslog" type="bool" />
+	<option name="watchdog" type="bool" />
 	
 	<option name="priority" type="bool" min="-15" max="1" />
 	<option name="multithreading" type="bool" />
@@ -223,26 +236,81 @@
 	<option name="d3dversion" type="int" min="8" max="9" />
 	<option name="filter" type="bool" />
 	
-	<option name="screen" type="string" />
+	<option name="screen" type="string">
+		<value>auto</value>
+		<value>\\.\DISPLAY1</value>
+		<value>\\.\DISPLAY2</value>
+		<value>\\.\DISPLAY3</value>
+		<value>\\.\DISPLAY4</value>
+	</option>
 	<option name="aspect" type="string" />
 	<option name="resolution" type="string" />
-	<option name="view" type="string" />
-	<option name="screen0" type="string" />
+	<option name="view" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="Pixel Aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen0" type="string">
+		<value>auto</value>
+		<value>\\.\DISPLAY1</value>
+		<value>\\.\DISPLAY2</value>
+		<value>\\.\DISPLAY3</value>
+		<value>\\.\DISPLAY4</value>
+	</option>
 	<option name="aspect0" type="string" />
 	<option name="resolution0" type="string" />
-	<option name="view0" type="string" />
-	<option name="screen1" type="string" />
+	<option name="view0" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="Pixel Aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen1" type="string">
+		<value>auto</value>
+		<value>\\.\DISPLAY1</value>
+		<value>\\.\DISPLAY2</value>
+		<value>\\.\DISPLAY3</value>
+		<value>\\.\DISPLAY4</value>
+	</option>
 	<option name="aspect1" type="string" />
 	<option name="resolution1" type="string" />
-	<option name="view1" type="string" />
-	<option name="screen2" type="string" />
+	<option name="view1" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="Pixel Aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen2" type="string">
+		<value>auto</value>
+		<value>\\.\DISPLAY1</value>
+		<value>\\.\DISPLAY2</value>
+		<value>\\.\DISPLAY3</value>
+		<value>\\.\DISPLAY4</value>
+	</option>
 	<option name="aspect2" type="string" />
 	<option name="resolution2" type="string" />
-	<option name="view2" type="string" />
-	<option name="screen3" type="string" />
+	<option name="view2" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="Pixel Aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen3" type="string">
+		<value>auto</value>
+		<value>\\.\DISPLAY1</value>
+		<value>\\.\DISPLAY2</value>
+		<value>\\.\DISPLAY3</value>
+		<value>\\.\DISPLAY4</value>
+	</option>
 	<option name="aspect3" type="string" />
 	<option name="resolution3" type="string" />
-	<option name="view3" type="string" />
+	<option name="view3" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="Pixel Aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
 	
 	<option name="triplebuffer" type="bool" />
 	<option name="switchres" type="bool" />

@@ -32,15 +32,6 @@ QString Utils::getPath(QString dirpath)
 	return dir.path() + "/";	//clean it up
 }
 
-QString Utils::getViewString(const QModelIndex &index, int column) const
-{
-	QModelIndex j = index.sibling(index.row(), column);
-	//fixme: sometime model's NULL...
-	if (!index.model())
-		return "";
-	return index.model()->data(j, Qt::DisplayRole).toString();
-}
-
 QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName)
 {
 	QStringList dirpaths = dirpath0.split(";");
@@ -162,7 +153,7 @@ void Utils::tranaparentBg(QWidget * w)
 
 QString Utils::getMameVersion()
 {
-	QString command = mame_binary;
+	QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QStringList args;
 	args << "-help";
 	

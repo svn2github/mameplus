@@ -71,6 +71,9 @@ public:
 
 	void update();
 
+signals:
+	void snapUpdated(int);
+
 protected:
 	void run();
 
@@ -106,7 +109,7 @@ class TreeModel : public QAbstractItemModel
 	Q_OBJECT
 
 public:
-	TreeModel(QObject *parent = 0);
+	TreeModel(QObject *parent = 0, bool isGroup = true);
 	~TreeModel();
 
 	QVariant data(const QModelIndex &index, int role) const;
@@ -130,7 +133,7 @@ public:
 	TreeItem *rootItem;
 
 private:
-	void setupModelData(TreeItem *parent, bool isParent);
+	TreeItem * TreeModel::buildItem(TreeItem *, QString, bool);
 };
 
 class GamelistDelegate : public QItemDelegate
@@ -159,7 +162,7 @@ public:
 	int numTotalGames;
 	QString mameVersion;
 
-	QStringList folderList, mftrList, yearList, srcList, biosList;
+	QStringList folderList;
 
 	AuditROMThread auditThread;
 	LoadIconThread iconThread;
@@ -169,9 +172,9 @@ public:
 	~Gamelist();
 
 public slots:
-	void init();
+	void init(bool);
 	void loadDefaultIni();
-
+	void loadConsole(QString);
 	void initFolders();
 
 	void runMame();
@@ -187,15 +190,19 @@ public slots:
 	void parse();
 	void updateProgress(int progress);
 	void switchProgress(int max, QString title);
+	QString getViewString(const QModelIndex &index, int column) const;
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
-	void restoreSelection();
 	void setupIcon(QString);
 	void setupAudit();
-	void setupHistory();
+	void setupSnap(int);
 
 	void filterTimer();
 	void filterRegExpChanged();
 	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = 0);
+
+private:
+	bool inited;
+	void restoreSelection();
 };
 
 class RomInfo : public QObject
@@ -216,16 +223,27 @@ public:
 	bool isdefault;
 
 	BiosInfo(QObject *parent = 0);
-	~BiosInfo();
+};
+
+class DeviceInfo : public QObject
+{
+public:
+	QString type;
+	QStringList extension;
+	bool mandatory;
+
+	DeviceInfo(QObject *parent = 0);
 };
 
 class GameInfo : public QObject
 {
 public:
 	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDescription, reading;
-	bool isbios;
+	bool isBios;
+	bool isExtRom;
 	QHash<quint32, RomInfo *> crcRomInfoMap;
 	QHash<QString, BiosInfo *> nameBiosInfoMap;
+	QHash<QString, DeviceInfo *> nameDeviceInfoMap;
 	int available;
 	QByteArray icondata;
 	TreeItem *pModItem;

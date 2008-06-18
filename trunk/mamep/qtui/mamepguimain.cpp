@@ -4,17 +4,8 @@
 
 // global variables
 MainWindow *win;
-QSettings guisettings("mamepgui.ini", QSettings::IniFormat);
-
-QString flyer_directory,
-		cabinet_directory,
-		marquee_directory,
-		title_directory,
-		cpanel_directory,
-		pcb_directory,
-		icons_directory,
-		background_directory,
-		mame_binary;
+QSettings guiSettings("mamepgui.ini", QSettings::IniFormat);
+QString list_mode;
 
 void MainWindow::log(QString message, char logOrigin)
 {
@@ -22,20 +13,8 @@ void MainWindow::log(QString message, char logOrigin)
 
 	QString msg = timeString + ": " + message;
 
-	switch ( logOrigin ) {
-	case LOG_QMC2:
-		textBrowserFrontendLog->append(msg);
-		textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
-		break;
-
-	case LOG_MAME:
-		textBrowserMAMELog->append(msg);
-		textBrowserMAMELog->horizontalScrollBar()->setValue(0);
-		break;
-
-	default:
-		break;
-	}
+	textBrowserFrontendLog->append(msg);
+	textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
 }
 
 void MainWindow::poplog(QString message)
@@ -53,7 +32,25 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setupUi(this);
 
-	setDockOptions(dockOptions()|QMainWindow::VerticalTabs);
+	// View action group
+    QActionGroup *viewActions = new QActionGroup(this);
+    viewActions->setExclusive(true);
+    viewActions->addAction(actionDetails);
+    viewActions->addAction(actionGrouped);
+    viewActions->addAction(actionLargeIcons);
+
+	// init controls
+    tvGameList = new QTreeView(centralwidget);
+    tvGameList->setRootIsDecorated(false);
+    tvGameList->setItemsExpandable(false);
+	tvGameList->hide();
+
+	lvGameList = new QListView(centralwidget);
+	lvGameList->setMovement(QListView::Static);
+	lvGameList->setResizeMode(QListView::Adjust);
+	lvGameList->setViewMode(QListView::IconMode);
+	lvGameList->setUniformItemSizes(true);
+	lvGameList->hide();
 
 	lineEditSearch = new QLineEdit(centralwidget);
 	lineEditSearch->setStatusTip("type a keyword");
@@ -66,11 +63,12 @@ MainWindow::MainWindow(QWidget *parent)
 
 	labelProgress = new QLabel(centralwidget);
 	statusbar->addWidget(labelProgress);
+	labelGameCount = new QLabel(centralwidget);
+	statusbar->addPermanentWidget(labelGameCount);
 
 	progressBarGamelist = new QProgressBar(centralwidget);
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
-
 
 	QAction *actionFolderList = dockWidget_7->toggleViewAction();
 	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
@@ -91,7 +89,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 	gamelist = new Gamelist(this);
 	optUtils = new OptionUtils(this);
-
 	dlgOptions = new Options(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
@@ -155,6 +152,7 @@ Screenshot * MainWindow::initSnap(QString title)
 
 void MainWindow::init()
 {
+	win->log("win->init()");
 	//fixme: should be in constructor
 	ssSnap = initSnap(QT_TR_NOOP("Snapshot"));
 	ssFlyer = initSnap(QT_TR_NOOP("Flyer"));
@@ -168,29 +166,31 @@ void MainWindow::init()
 	initHistory(QT_TR_NOOP("MAMEInfo"));
 	initHistory(QT_TR_NOOP("Story"));
 
-//	initHistory(textBrowserMAMELog, "MAME Log");
 //	initHistory(textBrowserFrontendLog, "GUI Log");
 
 	initSettings();
 	loadSettings();
 
 	// validate mame_binary
+	QString mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QFile mamebin(mame_binary);
 	if (!mamebin.exists())
 		win->poplog(QString("Could not find %1").arg(mame_binary));
 
-	// must init after win, before show()
+	// must optUtils->initOption() after win, before show()
 	optUtils->initOption();
 
-	// must gamelist->init() before loadLayout()
-	gamelist->init();
-
 	//show UI
+	win->log("win->show()");
 	show();
 	loadLayout();
+	qApp->processEvents();
+
+	// must gamelist->init(true) before loadLayout()
+	gamelist->init(true);
 
 	// setup background
-	QImage bkground(utils->getPath(background_directory) + "bkground.png");
+	QImage bkground(utils->getPath(guiSettings.value("background_directory", "bkground").toString()) + "bkground.png");
 	if (!bkground.isNull())
 	{
 		QPalette palette;
@@ -198,8 +198,15 @@ void MainWindow::init()
 		this->setPalette(palette);
 	}
 
-	utils->tranaparentBg(treeViewGameList);
+	utils->tranaparentBg(tvGameList);
+	utils->tranaparentBg(lvGameList);
 	utils->tranaparentBg(treeFolders);
+
+	// connect misc signal and slots
+	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
+	connect(actionLargeIcons, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
+	connect(actionDetails, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
+	connect(actionGrouped, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
 	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
@@ -236,6 +243,10 @@ void MainWindow::on_actionExitStop_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
+	//prevent crash when list is empty
+	if (currentGame.isEmpty())
+		return;
+
 	//init ctlrs, 
 	for (int i = OPTNFO_GLOBAL; i < OPTNFO_LAST; i++)
 		optUtils->updateModel(0, i);
@@ -245,71 +256,90 @@ void MainWindow::on_actionDefaultOptions_activated()
 
 void MainWindow::initSettings()
 {
-    guisettings.setFallbacksEnabled(false);
+    guiSettings.setFallbacksEnabled(false);
 }
 
 void MainWindow::loadLayout()
 {
-	restoreGeometry(guisettings.value("window_geometry").toByteArray());
-	restoreState(guisettings.value("window_state").toByteArray());
-	dlgOptionsGeo = guisettings.value("option_geometry").toByteArray();
-}
+	restoreGeometry(guiSettings.value("window_geometry").toByteArray());
+	restoreState(guiSettings.value("window_state").toByteArray());
+	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
-void MainWindow::saveLayout()
-{
-	guisettings.setValue("window_geometry", saveGeometry());
-	guisettings.setValue("window_state", saveState());
-	guisettings.setValue("option_geometry", dlgOptionsGeo);
-	guisettings.setValue("column_state", treeViewGameList->header()->saveState());
-	guisettings.setValue("sort_column", treeViewGameList->header()->sortIndicatorSection());
-	guisettings.setValue("sort_reverse", (treeViewGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
-	guisettings.setValue("default_game", currentGame);
+	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
 
-	QString currentFolder = "";
-	if (win->treeFolders->currentItem()->parent())
-		currentFolder += win->treeFolders->currentItem()->parent()->text(0);
-	currentFolder += "/" + win->treeFolders->currentItem()->text(0);
-	
-
-	guisettings.setValue("folder_current", currentFolder);
+	list_mode = guiSettings.value("list_mode").toString();
+	if (list_mode == win->actionGrouped->text())
+		win->actionGrouped->setChecked(true);
+	else if (list_mode == win->actionLargeIcons->text())
+		win->actionLargeIcons->setChecked(true);
+	else
+		win->actionDetails->setChecked(true);
 }
 
 void MainWindow::loadSettings()
 {
-	flyer_directory = guisettings.value("flyer_directory", "flyers").toString();
-	cabinet_directory = guisettings.value("cabinet_directory", "cabinets").toString();
-	marquee_directory = guisettings.value("marquee_directory", "marquees").toString();
-	title_directory = guisettings.value("title_directory", "titles").toString();
-	cpanel_directory = guisettings.value("cpanel_directory", "cpanel").toString();
-	pcb_directory = guisettings.value("pcb_directory", "pcb").toString();
-	icons_directory = guisettings.value("icons_directory", "icons").toString();
-	background_directory = guisettings.value("background_directory", "bkground").toString();
-
-	mame_binary = guisettings.value("mame_binary", "mamep.exe").toString();
-
-	currentGame = guisettings.value("default_game", "pacman").toString();
+	currentGame = guiSettings.value("default_game", "pacman").toString();
+	option_column_state = guiSettings.value("option_column_state").toByteArray();
 }
 
 void MainWindow::saveSettings()
 {
-	guisettings.setValue("flyer_directory", flyer_directory);
-	guisettings.setValue("cabinet_directory", "cabinet"/* cabinet_directory*/);
-	guisettings.setValue("marquee_directory", marquee_directory);
-	guisettings.setValue("title_directory", title_directory);
-	guisettings.setValue("cpanel_directory", cpanel_directory);
-	guisettings.setValue("pcb_directory", pcb_directory);
-	guisettings.setValue("icons_directory", icons_directory);
-	guisettings.setValue("background_directory", background_directory);
+	guiSettings.setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
+	guiSettings.setValue("cabinet_directory", mameOpts["cabinet_directory"]->globalvalue);
+	guiSettings.setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
+	guiSettings.setValue("title_directory", mameOpts["title_directory"]->globalvalue);
+	guiSettings.setValue("cpanel_directory", mameOpts["cpanel_directory"]->globalvalue);
+	guiSettings.setValue("pcb_directory", mameOpts["pcb_directory"]->globalvalue);
+	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
+	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 
-	guisettings.setValue("mame_binary", mame_binary);
+	guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
+
+	//save console dirs
+	foreach (QString optName, mameOpts.keys())
+	{
+		MameOption *pMameOpt = mameOpts[optName];
+
+		if (pMameOpt->guivisible && optName.contains("_extra_software"))
+		{
+			QString v = mameOpts[optName]->globalvalue;
+			if (!v.trimmed().isEmpty())
+				guiSettings.setValue(optName, mameOpts[optName]->globalvalue);
+		}
+	}
+
+	//save layout
+	guiSettings.setValue("window_geometry", saveGeometry());
+	guiSettings.setValue("window_state", saveState());
+	guiSettings.setValue("option_geometry", option_geometry);
+	guiSettings.setValue("option_column_state", option_column_state);
+	guiSettings.setValue("column_state", tvGameList->header()->saveState());
+	guiSettings.setValue("sort_column", tvGameList->header()->sortIndicatorSection());
+	guiSettings.setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
+	guiSettings.setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
+	guiSettings.setValue("default_game", currentGame);
+	guiSettings.setValue("folder_current", currentFolder);//fixme: rename
+	guiSettings.setValue("list_mode", list_mode);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+	hide();
 	saveSettings();
-	saveLayout();
+	mamegame->s11n();
 	event->accept();
 }
+
+void MainWindow::setDockOptions()
+{
+	DockOptions opts = dockOptions();
+    if (actionVerticalTabs->isChecked())
+	    opts |= VerticalTabs;
+    else
+	    opts &= ~VerticalTabs;
+	QMainWindow::setDockOptions(opts);
+}
+
 
 Screenshot::Screenshot(const QString & title, QWidget *parent)
 : QDockWidget(parent)
