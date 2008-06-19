@@ -341,6 +341,7 @@ youmab2	妖魔忍法帖 (Game Electronics) (海賊版 set 2)	ようまにんぽうちょう	bootle
 legion	超時迷宮レジオン (ver 2.03)	ちょうじめいきゅうれじおん	Nichibutsu
 legiono	超時迷宮レジオン (ver 1.05)	ちょうじめいきゅうれじおん	Nichibutsu
 terraf	テラフォース (set 1)	てらふぉーす	Nichibutsu
+terrafb	テラフォース (海賊版 with additional Z80)	てらふぉーす	bootleg
 terrafa	テラフォース (set 2)	てらふぉーす	Nichibutsu
 terrafu	テラフォース (USA版)	てらふぉーす	Nichibutsu USA
 kodure	子連れ狼 (日本版)	こづれおおかみ	Nichibutsu
@@ -3033,7 +3034,7 @@ quart2	カルテット2 (unprotected)	かるてっと_2	Sega
 aceattaa	エースアタッカー (日本版 System16A FD1094 317-0060)	えーすあたっかー	Sega
 afighter	アクションファイター (FD1089A 317-0018)	あくしょんふぁいたー	Sega
 alexkidd	アレックスキッド ザ ロストスターズ (set 2 unprotected)	あれっくすきっどざろすとすたーず	Sega
-alexkid1	アレックスキッド ザ ロストスターズ (set 1 FD1089A 317-unknown)	あれっくすきっどざろすとすたーず	Sega
+alexkid1	アレックスキッド ザ ロストスターズ (set 1 FD1089A 317-0021)	あれっくすきっどざろすとすたーず	Sega
 fantzone	ファンタジーゾーン (set 2 unprotected)	ふぁんたじーぞーん_1	Sega
 fantzon1	ファンタジーゾーン (set 1 unprotected)	ふぁんたじーぞーん_1	Sega
 sdi	SDI <Strategic Defense Initiative> (欧州版 System16A FD1089B 317-0027)	えすでぃーあい	Sega
@@ -3045,6 +3046,7 @@ tetris	テトリス (日本版 set 4 System16A FD1094 317-0093)	てとりす_1_2sega	Sega
 tetris3	テトリス (日本版 set 3 System16A FD1094 317-0093a)	てとりす_1_2sega	Sega
 timesca1	タイムスキャナー (set 1 System16A FD1089B 317-0024)	たいむすきゃなー	Sega
 wb31	ワンダーボーイIII モンスターレア (set 1 System16A FD1094 317-0084)	わんだーぼーい_3	Sega / Westone
+wb35	ワンダーボーイIII モンスターレア (set 5 System16A FD1089A 317-xxxx)	わんだーぼーい_3	Sega / Westone
 pshot16a	パッシングショット (日本版 4 players System16A FD1094 317-0071)	ぱっしんぐしょっと	Sega
 aceattac	エースアタッカー (FD1094 317-0059)	えーすあたっかー	Sega
 aliensyn	エイリアンシンドローム (set 4 System16B unprotected)	えいりあんしんどろーむ	Sega
@@ -3130,7 +3132,7 @@ tetrisbl	テトリス (海賊版)	てとりす_1_2sega	bootleg
 beautyb	ビューティーブロック	びゅーてぃーぶろっく	AMT
 tturfbl	タフターフ (海賊版)	たふたーふ	bootleg
 wb3bbl	ワンダーボーイIII モンスターレア (海賊版)	わんだーぼーい_3	bootleg
-astorm	エイリアンストーム (set 4 2 players FD1094 317-?)	えいりあんすとーむ	Sega
+astorm	エイリアンストーム (海外版 set 4 2 players FD1094 317-0154)	えいりあんすとーむ	Sega
 astorm3	エイリアンストーム (海外版 set 3 3 players FD1094 317-0148)	えいりあんすとーむ	Sega
 astormu	エイリアンストーム (USA版 set 2 3 players FD1094 317-0147)	えいりあんすとーむ	Sega
 astormj	エイリアンストーム (日本版 set 1 2 players FD1094 317-0146)	えいりあんすとーむ	Sega
@@ -3162,9 +3164,10 @@ outrun	アウトラン (sitdown/upright rev B)	あうとらん_1	Sega
 outrun2	アウトラン (sitdown/upright rev A)	あうとらん_1	Sega
 outrun1	アウトラン (deluxe sitdown)	あうとらん_1	Sega
 outrunb	アウトラン (海賊版)	あうとらん_1	bootleg
-toutrun	ターボアウトラン (Out Run upgrade FD1094 317-0118)	たーぼあうとらん	Sega
+toutrun	ターボアウトラン (cockpit FD1094 317-0109)	たーぼあうとらん	Sega
 toutrun2	ターボアウトラン (upright FD1094 317-unknown)	たーぼあうとらん	Sega
 toutrun1	ターボアウトラン (cockpit FD1094 317-unknown)	たーぼあうとらん	Sega
+toutrunu	ターボアウトラン (Out Run upgrade, FD1094 317-0118)	たーぼあうとらん	Sega
 shangon	スーパーハングオン (sitdown/upright unprotected)	すーぱーはんぐおん	Sega
 shangon3	スーパーハングオン (sitdown/upright FD1089B 317-0034)	すーぱーはんぐおん	Sega
 shangon2	スーパーハングオン (mini ride-on rev A FD1089B 317-0034)	すーぱーはんぐおん	Sega
@@ -5118,6 +5121,7 @@ tstrikea	サンダーストライク (older)	さんだーすとらいく	East Coast Coin Company (
 ctribe	ザ・コンバットライブス (USA版)	ざこんばっとらいぶす	Technos
 ctribe1	ザ・コンバットライブス (USA版 set 1?)	ざこんばっとらいぶす	Technos
 ctribeb	ザ・コンバットライブス (海賊版)	ざこんばっとらいぶす	bootleg
+ctribb2	ザ・コンバットライブス (イタリア版) (海賊版)	ざこんばっとらいぶす	bootleg
 blockout	ブロックアウト (set 1)	ぶろっくあうと	Technos + California Dreams
 blckout2	ブロックアウト (set 2)	ぶろっくあうと	Technos + California Dreams
 blckoutj	ブロックアウト (日本版)	ぶろっくあうと	Technos + California Dreams
@@ -6277,6 +6281,7 @@ hanayara	華をやらねば！ (日本版)	はなをやらねば	Dynax
 mjelctrn	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3a	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3 alt)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
+mjelctrb	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4 (海賊版)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 majxtal7	麻雀クリスタル7 (日本版)	まーじゃんくりすたるせぶん	Dynax
 nyny	ニューヨークニューヨーク	にゅーよーくにゅーよーく	Sigma Enterprises Inc.
 nynyg	ニューヨークニューヨーク (Gottlieb)	にゅーよーくにゅーよーく	Sigma Enterprises Inc. (Gottlieb license)
@@ -6508,8 +6513,8 @@ aplatoon	プラトーン (USA版 ver ??)	ぷらとーん	Nova?
 zortonbr	ゾートンブラザース (Los Justicieros)	ぞーとんぶらざーす	Web Picmatic
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
-topbladv	トップブレードV	とっぷぶれーど5	unknown
-officeye	オフィスイェオ・イン・チェオンハ	おふぃすいぇおいんちぇおんは	unknown
+topbladv	トップブレードV	とっぷぶれーど5	SonoKong / Expotato
+officeye	オフィスイェオ・イン・チェオンハ (ver1.2)	おふぃすいぇおいんちぇおんは	Danbi
 inquiztr	インクイジター	いんくいじたー	BFM
 escounts	エブリセカンドカウンツ (39-360-053)	えぶりせかんどかうんつ	BFM
 trebltop	トレブルトップ (39-360-070)	とれぶるとっぷ	BFM
@@ -6925,7 +6930,7 @@ ampkr2b2	アメリカンポーカーII (海賊版 set 2)	あめりかんぽーかー_2	Bootleg
 ampkr2b3	アメリカンポーカーII (海賊版 set 3)	あめりかんぽーかー_2	Bootleg
 pkrdewin	アメリカンポーカーII / Poker De Win	あめりかんぽーかー_2	Bootleg
 ampkr95	アメリカンポーカーII / American Poker 95	あめりかんぽーかー_2	Bootleg
-videomat	アメリカンポーカーII / Videomat (海賊版)	あめりかんぽーかー_2	Bootleg
+videomat	アメリカンポーカーII / Videomat (ポーランド版) (海賊版)	あめりかんぽーかー_2	Bootleg
 sigmapkr	シグマポーカー	しぐまぽーか_1	Sigma Inc.
 sigma2k	シグマポーカー2000	しぐまぽーかー_2_2000	Sigma Inc.
 lucky8	ラッキー8ラインズ	らっきーえいとらいんず	Falcon
@@ -6957,7 +6962,7 @@ wyvernwg	ワイヴァーン・ウィングズ	わいばーんうぃんぐず	SemiCom (Game Vision Lice
 rbmk	実戦麻将王	じっせんまーじゃんおう	GMS
 go2000	ゴー2000	ごーつーさうざん	SA
 mirax	ミラックス	みらっくす	Current Technologies
-victor5	ビクター5	びくたー5	Subsino
+victor5	ビクター5	びくたー05	Subsino
 victor21	ビクター21	びくたー21	Subsino
 sharkpy	シャークパーティ	しゃーくぱーてぃ	Subsino
 sharkpya	シャークパーティ (alt)	しゃーくぱーてぃ	Subsino
