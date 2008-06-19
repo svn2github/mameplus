@@ -1,6 +1,26 @@
 /**
 Namco System 21
 
+**********************************************************************************************************
+June 15, 2008, by Naibo
+
+the communication work between CPU and 3D DSP should be limited to the master M68000, if the address mapping is done in the shared memory, master CPU would be disturbed by the slave one.
+
+DIP3 ON for Screen on the left
+DIP4 ON for Screen on the right
+should not toggle on both
+
+Left, center and right screens have separate programs and boards, each would work independantly, how these 3 boards communicate and coordinate is yet unknown.
+
+About projection angles of left and right screen. The angle is correct on "DRIVER'S EYES" title screen, however in the tracks of demo mode it doesn't seem correct.
+
+On demo screen, should fog effects be turned off?
+
+The game also features a pretty nice 2D sprite layer, which still doesn't show up yet.
+it is known that the CPU does constantly feed the 2D video memory some meaningful and logical data.
+mame system21 driver does not emulate this 2D sprite layer, we have to use namcoic and namco system-II emulator instead, possibly they are not compatible with system21.
+
+**********************************************************************************************************
 Winning Run
     polygon glitches/flicker
     posirq effects for bitmap layer not working
@@ -1450,6 +1470,13 @@ static ADDRESS_MAP_START( driveyes_68k_master, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x100000, 0x10ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) /* private work RAM */
 	AM_RANGE(0x180000, 0x183fff) AM_READ(NAMCOS2_68K_eeprom_R) AM_WRITE(NAMCOS2_68K_eeprom_W)// AM_BASE(&namcos2_eeprom) AM_SIZE(&namcos2_eeprom_size)
 	AM_RANGE(0x1c0000, 0x1fffff) AM_READ(namcos2_68k_master_C148_r) AM_WRITE(namcos2_68k_master_C148_w)
+	////////////////////////////////////////
+	AM_RANGE(0x250000, 0x25ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) AM_BASE( &winrun_polydata )
+	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_BASE(&winrun_dspbios)
+	AM_RANGE(0x380000, 0x38000f) AM_READ(winrun_dspcomram_control_r) AM_WRITE(winrun_dspcomram_control_w)
+	AM_RANGE(0x3c0000, 0x3c1fff) AM_READ(winrun_68k_dspcomram_r) AM_WRITE(winrun_68k_dspcomram_w)
+	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w)
+	AM_RANGE(0x440000, 0x440001) AM_READ(pointram_data_r) AM_WRITE(pointram_data_w)
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( driveyes_68k_slave, ADDRESS_SPACE_PROGRAM, 16 )
@@ -1459,12 +1486,37 @@ static ADDRESS_MAP_START( driveyes_68k_slave, ADDRESS_SPACE_PROGRAM, 16 )
 ADDRESS_MAP_END
 
 static ADDRESS_MAP_START( driveyes_68k_common, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x700000, 0x71ffff) AM_READ(namco_obj16_r) AM_WRITE(namco_obj16_w)
+	AM_RANGE(0x720000, 0x720007) AM_READ(namco_spritepos16_r) AM_WRITE(namco_spritepos16_w)
+	AM_RANGE(0x740000, 0x75ffff) AM_READ(paletteram16_r ) AM_WRITE(paletteram16_w) AM_BASE(&paletteram16)
+	AM_RANGE(0x760000, 0x760001) AM_READ(namcos21_video_enable_r) AM_WRITE(namcos21_video_enable_w)
+	AM_RANGE(0x800000, 0x8fffff) AM_READ(datarom_r)
+	AM_RANGE(0x900000, 0x90ffff) AM_READ(shareram1_r) AM_WRITE(shareram1_w) AM_BASE(&mpSharedRAM1)
+	AM_RANGE(0xa00000, 0xa00fff) AM_READ(namcos2_68k_dualportram_word_r) AM_WRITE(namcos2_68k_dualportram_word_w)
+	AM_RANGE(0xb00000, 0xb03fff) AM_READ(NAMCO_C139_SCI_buffer_r) AM_WRITE(NAMCO_C139_SCI_buffer_w)
+	AM_RANGE(0xb80000, 0xb8000f) AM_READ(NAMCO_C139_SCI_register_r) AM_WRITE(NAMCO_C139_SCI_register_w)
+ADDRESS_MAP_END
+/*
+static ADDRESS_MAP_START( driveyes_68k_master_left, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x03ffff) AM_READ(SMH_ROM) AM_WRITE(SMH_ROM)
+	AM_RANGE(0x100000, 0x10ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) // private work RAM
+	AM_RANGE(0x180000, 0x183fff) AM_READ(NAMCOS2_68K_EEPROM_R) AM_WRITE(NAMCOS2_68K_eeprom_W)// AM_BASE(&namcos2_eeprom) AM_SIZE(&namcos2_eeprom_size)
+	AM_RANGE(0x1c0000, 0x1fffff) AM_READ(namcos2_68k_master_C148_r) AM_WRITE(namcos2_68k_master_C148_w)
 	AM_RANGE(0x250000, 0x25ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) AM_BASE( &winrun_polydata )
 	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_BASE(&winrun_dspbios)
 	AM_RANGE(0x380000, 0x38000f) AM_READ(winrun_dspcomram_control_r) AM_WRITE(winrun_dspcomram_control_w)
 	AM_RANGE(0x3c0000, 0x3c1fff) AM_READ(winrun_68k_dspcomram_r) AM_WRITE(winrun_68k_dspcomram_w)
 	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w)
 	AM_RANGE(0x440000, 0x440001) AM_READ(pointram_data_r) AM_WRITE(pointram_data_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( driveyes_68k_slave_left, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x03ffff) AM_READ(SMH_ROM) AM_WRITE(SMH_ROM)
+	AM_RANGE(0x100000, 0x10ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) // private work RAM
+	AM_RANGE(0x1c0000, 0x1fffff) AM_READ(namcos2_68k_slave_C148_r) AM_WRITE(namcos2_68k_slave_C148_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( driveyes_68k_common_left, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x700000, 0x71ffff) AM_READ(namco_obj16_r) AM_WRITE(namco_obj16_w)
 	AM_RANGE(0x720000, 0x720007) AM_READ(namco_spritepos16_r) AM_WRITE(namco_spritepos16_w)
 	AM_RANGE(0x740000, 0x75ffff) AM_READ(paletteram16_r ) AM_WRITE(paletteram16_w) AM_BASE(&paletteram16)
@@ -1476,6 +1528,37 @@ static ADDRESS_MAP_START( driveyes_68k_common, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xb80000, 0xb8000f) AM_READ(NAMCO_C139_SCI_register_r) AM_WRITE(NAMCO_C139_SCI_register_w)
 ADDRESS_MAP_END
 
+static ADDRESS_MAP_START( driveyes_68k_master_right, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x03ffff) AM_READ(SMH_ROM) AM_WRITE(SMH_ROM)
+	AM_RANGE(0x100000, 0x10ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) // private work RAM
+	AM_RANGE(0x180000, 0x183fff) AM_READ(NAMCOS2_68K_EEPROM_R) AM_WRITE(NAMCOS2_68K_EEPROM_W)// AM_BASE(&namcos2_eeprom) AM_SIZE(&namcos2_eeprom_size)
+	AM_RANGE(0x1c0000, 0x1fffff) AM_READ(namcos2_68k_master_C148_r) AM_WRITE(namcos2_68k_master_C148_w)
+	AM_RANGE(0x250000, 0x25ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) AM_BASE( &winrun_polydata )
+	AM_RANGE(0x280000, 0x281fff) AM_WRITE(winrun_dspbios_w) AM_BASE(&winrun_dspbios)
+	AM_RANGE(0x380000, 0x38000f) AM_READ(winrun_dspcomram_control_r) AM_WRITE(winrun_dspcomram_control_w)
+	AM_RANGE(0x3c0000, 0x3c1fff) AM_READ(winrun_68k_dspcomram_r) AM_WRITE(winrun_68k_dspcomram_w)
+	AM_RANGE(0x400000, 0x400001) AM_WRITE(pointram_control_w)
+	AM_RANGE(0x440000, 0x440001) AM_READ(pointram_data_r) AM_WRITE(pointram_data_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( driveyes_68k_slave_right, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x000000, 0x03ffff) AM_READ(SMH_ROM) AM_WRITE(SMH_ROM)
+	AM_RANGE(0x100000, 0x10ffff) AM_READ(SMH_RAM) AM_WRITE(SMH_RAM) // private work RAM
+	AM_RANGE(0x1c0000, 0x1fffff) AM_READ(namcos2_68k_slave_C148_r) AM_WRITE(namcos2_68k_slave_C148_w)
+ADDRESS_MAP_END
+
+static ADDRESS_MAP_START( driveyes_68k_common_right, ADDRESS_SPACE_PROGRAM, 16 )
+	AM_RANGE(0x700000, 0x71ffff) AM_READ(namco_obj16_r) AM_WRITE(namco_obj16_w)
+	AM_RANGE(0x720000, 0x720007) AM_READ(namco_spritepos16_r) AM_WRITE(namco_spritepos16_w)
+	AM_RANGE(0x740000, 0x75ffff) AM_READ(paletteram16_r ) AM_WRITE(paletteram16_w) AM_BASE(&paletteram16)
+	AM_RANGE(0x760000, 0x760001) AM_READ(namcos21_video_enable_r) AM_WRITE(namcos21_video_enable_w)
+	AM_RANGE(0x800000, 0x8fffff) AM_READ(datarom_r)
+	AM_RANGE(0x900000, 0x90ffff) AM_READ(shareram1_r) AM_WRITE(shareram1_w) AM_BASE(&mpSharedRAM1)
+	AM_RANGE(0xa00000, 0xa00fff) AM_READ(namcos2_68k_dualportram_word_r) AM_WRITE(namcos2_68k_dualportram_word_w)
+	AM_RANGE(0xb00000, 0xb03fff) AM_READ(NAMCO_C139_SCI_buffer_r) AM_WRITE(NAMCO_C139_SCI_buffer_w)
+	AM_RANGE(0xb80000, 0xb8000f) AM_READ(NAMCO_C139_SCI_register_r) AM_WRITE(NAMCO_C139_SCI_register_w)
+ADDRESS_MAP_END
+*/
 static const gfx_layout tile_layout =
 {
 	16,16,
@@ -1617,7 +1700,43 @@ static MACHINE_DRIVER_START( driveyes )
 	MDRV_CPU_DATA_MAP(winrun_dsp_data,0)
 	MDRV_CPU_IO_MAP(winrun_dsp_io,0)
 
-	MDRV_INTERLEAVE(100) /* 100 CPU slices per frame */
+/*	MDRV_CPU_ADD(M68000,12288000) // Master
+	MDRV_CPU_PROGRAM_MAP(driveyes_68k_master_left, driveyes_68k_common)
+	MDRV_CPU_VBLANK_INT("left", namcos2_68k_master_vblank)
+
+	MDRV_CPU_ADD(M68000,12288000) // Slave
+	MDRV_CPU_PROGRAM_MAP(driveyes_68k_slave_left, driveyes_68k_common)
+	MDRV_CPU_VBLANK_INT("left", namcos2_68k_slave_vblank)
+
+	MDRV_CPU_ADD(M6809,3072000) // Sound
+	MDRV_CPU_PROGRAM_MAP(readmem_sound,writemem_sound)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
+	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
+
+	MDRV_CPU_ADD(TMS32025,40000000)
+	MDRV_CPU_PROGRAM_MAP(winrun_dsp_program_left,0)
+	MDRV_CPU_DATA_MAP(winrun_dsp_data_left,0)
+	MDRV_CPU_IO_MAP(winrun_dsp_io_left,0)
+
+	MDRV_CPU_ADD(M68000,12288000) // Master
+	MDRV_CPU_PROGRAM_MAP(driveyes_68k_master_right, driveyes_68k_common)
+	MDRV_CPU_VBLANK_INT("right", namcos2_68k_master_vblank)
+
+	MDRV_CPU_ADD(M68000,12288000) // Slave
+	MDRV_CPU_PROGRAM_MAP(driveyes_68k_slave_right, driveyes_68k_common)
+	MDRV_CPU_VBLANK_INT("right", namcos2_68k_slave_vblank)
+
+	MDRV_CPU_ADD(M6809,3072000) // Sound
+	MDRV_CPU_PROGRAM_MAP(readmem_sound,writemem_sound)
+	MDRV_CPU_VBLANK_INT_HACK(irq0_line_hold,2)
+	MDRV_CPU_PERIODIC_INT(irq1_line_hold,120)
+
+	MDRV_CPU_ADD(TMS32025,40000000)
+	MDRV_CPU_PROGRAM_MAP(winrun_dsp_program_right,0)
+	MDRV_CPU_DATA_MAP(winrun_dsp_data_right,0)
+	MDRV_CPU_IO_MAP(winrun_dsp_io_right,0)
+*/
+	MDRV_INTERLEAVE(200) /* 100 CPU slices per frame */
 
 	MDRV_MACHINE_START(namcos2)
 	MDRV_MACHINE_RESET(namcos2)
@@ -1631,6 +1750,20 @@ static MACHINE_DRIVER_START( driveyes )
 	MDRV_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
 	MDRV_SCREEN_VISIBLE_AREA(0,495,0,479)
 
+/*	MDRV_SCREEN_ADD("left", RASTER)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500)) // not accurate 
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
+	MDRV_SCREEN_VISIBLE_AREA(0,495,0,479)
+
+	MDRV_SCREEN_ADD("right", RASTER)
+	MDRV_SCREEN_REFRESH_RATE(60)
+	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC(2500))
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_SCREEN_SIZE(NAMCOS21_POLY_FRAME_WIDTH,NAMCOS21_POLY_FRAME_HEIGHT)
+	MDRV_SCREEN_VISIBLE_AREA(0,495,0,479)
+*/
 	MDRV_GFXDECODE(namcos21)
 	MDRV_PALETTE_LENGTH(NAMCOS21_NUM_COLORS)
 
@@ -1676,7 +1809,7 @@ static MACHINE_DRIVER_START( winrun_c140_typeB )
 	MDRV_CPU_PROGRAM_MAP(am_gpu_winrun,0)
 	MDRV_CPU_VBLANK_INT("main", namcos2_68k_gpu_vblank)
 
-	MDRV_INTERLEAVE(100) /* 100 CPU slices per frame */
+	MDRV_INTERLEAVE(200) /* 100 CPU slices per frame */
 
 	MDRV_MACHINE_START(namcos2)
 	MDRV_MACHINE_RESET(namcos2)
@@ -2358,7 +2491,7 @@ static INPUT_PORTS_START( winrun )
 	PORT_START      /* 63B05Z0 - 8 CHANNEL ANALOG - CHANNEL 1 */
 	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Y ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(15) PORT_KEYDELTA(10) /* gas */
 	PORT_START      /* 63B05Z0 - 8 CHANNEL ANALOG - CHANNEL 2 */
-	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_X ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(15) PORT_KEYDELTA(10) /* steering */
+	PORT_BIT( 0xff, 0x00, IPT_AD_STICK_X ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(15) PORT_KEYDELTA(10) /* steering */
 	PORT_START		/* 63B05Z0 - 8 CHANNEL ANALOG - CHANNEL 3 */
 	PORT_BIT( 0xff, 0x80, IPT_AD_STICK_Z ) PORT_MINMAX(0x00,0xff) PORT_SENSITIVITY(15) PORT_KEYDELTA(10) /* break */
 	PORT_START		/* 63B05Z0 - 8 CHANNEL ANALOG - CHANNEL 4 */
@@ -2387,10 +2520,10 @@ static INPUT_PORTS_START( winrun )
 	PORT_DIPNAME( 0x02, 0x02, "DIP2")
 	PORT_DIPSETTING(	0x02, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x04, 0x04, "DIP3")
+	PORT_DIPNAME( 0x04, 0x04, "DIP3 (Ecran Gauche)")
 	PORT_DIPSETTING(	0x04, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
-	PORT_DIPNAME( 0x08, 0x08, "DIP4")
+	PORT_DIPNAME( 0x08, 0x08, "DIP4 (Ecran Droite)")
 	PORT_DIPSETTING(	0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(	0x00, DEF_STR( On ) )
 	PORT_DIPNAME( 0x10, 0x10, "DIP5")
@@ -2585,4 +2718,4 @@ GAME( 1991, starblad, 0,       poly_c140_typeA,   s21default,   starblad, ROT0, 
 GAME( 1991, winrun91, 0,       winrun_c140_typeB, winrun,       winrun,   ROT0,    "Namco", "Winning Run 91",                GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 GAME( 1989, winrun,   0,       winrun_c140_typeB, winrun,       winrun,   ROT0,    "Namco", "Winning Run Suzuka Grand Prix", GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
 /* 1988, Winning Run */
-GAME( 1987, driveyes, 0,       driveyes,          winrun,       driveyes, ROT0,    "Namco", "Driver's Eyes",                 GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
+GAME( 1991, driveyes, 0,       driveyes,          winrun,       driveyes, ROT0,    "Namco", "Driver's Eyes",                 GAME_NOT_WORKING|GAME_IMPERFECT_GRAPHICS )
