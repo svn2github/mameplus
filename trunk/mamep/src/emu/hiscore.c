@@ -4,7 +4,7 @@
 
     Manages the hiscore system.
 
-    Copyright (c) 1996-2006, Nicola Salmoria and the MAME Team.
+    Copyright Nicola Salmoria and the MAME Team.
     Visit http://mamedev.org for licensing and usage restrictions.
 
 ***************************************************************************/
@@ -45,10 +45,6 @@ static int is_highscore_enabled(running_machine *machine)
 {
 	/* disable high score when record/playback is on */
 	if (has_record_file(machine) || has_playback_file(machine))
-		return FALSE;
-
-	/* disable high score when cheats are used */
-	if (he_did_cheat != 0)
 		return FALSE;
 
 	return TRUE;
@@ -197,7 +193,7 @@ static void hiscore_load (running_machine *machine)
 	astring *fname;
 	if (is_highscore_enabled(machine))
 	{
-		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
+		fname = astring_assemble_2(astring_alloc(), machine->basename, ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_READ, &f);
 		astring_free(fname);
 		state.hiscores_have_been_loaded = 1;
@@ -233,7 +229,7 @@ static void hiscore_save (running_machine *machine)
 	astring *fname;
 	if (is_highscore_enabled(machine))
 	{
-		fname = astring_assemble_2(astring_alloc(), Machine->gamedrv->name, ".hi");
+		fname = astring_assemble_2(astring_alloc(), machine->basename, ".hi");
 		filerr = mame_fopen(SEARCHPATH_HISCORE, astring_c(fname), OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS, &f);
 		astring_free(fname);
 		LOG(("hiscore_save\n"));
@@ -263,7 +259,7 @@ static void hiscore_save (running_machine *machine)
 
 
 /* call hiscore_update periodically (i.e. once per frame) */
-static void hiscore_periodic (int param, running_machine *machine)
+static TIMER_CALLBACK (hiscore_periodic)
 {
 	if (state.mem_range)
 	{
@@ -278,16 +274,12 @@ static void hiscore_periodic (int param, running_machine *machine)
 	}
 }
 
-static TIMER_CALLBACK( hiscore_periodic_callback )
-{
-	hiscore_periodic(param,machine);
-}
-
 
 /* call hiscore_close when done playing game */
 void hiscore_close (running_machine *machine)
 {
-	if (state.hiscores_have_been_loaded) hiscore_save(machine);
+	if (state.hiscores_have_been_loaded)
+		hiscore_save(machine);
 	hiscore_free();
 }
 
@@ -298,9 +290,9 @@ void hiscore_close (running_machine *machine)
 /* call hiscore_open once after loading a game */
 void hiscore_init (running_machine *machine, const char *name)
 {
+	memory_range *mem_range = state.mem_range;
 	file_error filerr;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE);
-	memory_range *mem_range = state.mem_range;
 	mame_file *f;
 	state.hiscores_have_been_loaded = 0;
 
@@ -381,7 +373,8 @@ void hiscore_init (running_machine *machine, const char *name)
 		mame_fclose (f);
 	}
 
-	timer = timer_alloc(hiscore_periodic_callback, NULL);
-	timer_adjust_periodic(timer, ATTOTIME_IN_HZ(60), 0, ATTOTIME_IN_HZ(60));
+	timer = timer_alloc(hiscore_periodic, NULL);
+	timer_adjust_periodic(timer, video_screen_get_frame_period(machine->primary_screen), 0, video_screen_get_frame_period(machine->primary_screen));
+
 	add_exit_callback(machine, hiscore_close);
 }
