@@ -2680,7 +2680,7 @@ static INT32 slider_refresh(running_machine *machine, INT32 newval, char *buffer
 		const rectangle *visarea = video_screen_get_visible_area(screen);
 
 		video_screen_configure(screen, width, height, visarea, HZ_TO_ATTOSECONDS(defrefresh + (double)newval * 0.001));
-		sprintf(buffer, "%s Refresh Rate %.3ffps", slider_get_screen_desc(screen), ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds));
+		sprintf(buffer, _("%s Refresh Rate %.3ffps"), slider_get_screen_desc(screen), ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds));
 	}
 	refresh = ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds);
 	return floor((refresh - defrefresh) * 1000.0f + 0.5f);
@@ -2699,7 +2699,7 @@ static INT32 slider_brightness(running_machine *machine, INT32 newval, char *buf
 	if (buffer != NULL)
 	{
 		render_container_set_brightness(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s Brightness %.3f", slider_get_screen_desc(screen), render_container_get_brightness(container));
+		sprintf(buffer, _("%s Brightness %.3f"), slider_get_screen_desc(screen), render_container_get_brightness(container));
 	}
 	return floor(render_container_get_brightness(container) * 1000.0f + 0.5f);
 }
@@ -2717,7 +2717,7 @@ static INT32 slider_contrast(running_machine *machine, INT32 newval, char *buffe
 	if (buffer != NULL)
 	{
 		render_container_set_contrast(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s Contrast %.3f", slider_get_screen_desc(screen), render_container_get_contrast(container));
+		sprintf(buffer, _("%s Contrast %.3f"), slider_get_screen_desc(screen), render_container_get_contrast(container));
 	}
 	return floor(render_container_get_contrast(container) * 1000.0f + 0.5f);
 }
@@ -2734,7 +2734,7 @@ static INT32 slider_gamma(running_machine *machine, INT32 newval, char *buffer, 
 	if (buffer != NULL)
 	{
 		render_container_set_gamma(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s Gamma %.3f", slider_get_screen_desc(screen), render_container_get_gamma(container));
+		sprintf(buffer, _("%s Gamma %.3f"), slider_get_screen_desc(screen), render_container_get_gamma(container));
 	}
 	return floor(render_container_get_gamma(container) * 1000.0f + 0.5f);
 }
@@ -2752,7 +2752,7 @@ static INT32 slider_xscale(running_machine *machine, INT32 newval, char *buffer,
 	if (buffer != NULL)
 	{
 		render_container_set_xscale(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), "Horiz Stretch", render_container_get_xscale(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), _("Horiz Stretch"), render_container_get_xscale(container));
 	}
 	return floor(render_container_get_xscale(container) * 1000.0f + 0.5f);
 }
@@ -2770,7 +2770,7 @@ static INT32 slider_yscale(running_machine *machine, INT32 newval, char *buffer,
 	if (buffer != NULL)
 	{
 		render_container_set_yscale(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), "Vert Stretch", render_container_get_yscale(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), _("Vert Stretch"), render_container_get_yscale(container));
 	}
 	return floor(render_container_get_yscale(container) * 1000.0f + 0.5f);
 }
@@ -2788,7 +2788,7 @@ static INT32 slider_xoffset(running_machine *machine, INT32 newval, char *buffer
 	if (buffer != NULL)
 	{
 		render_container_set_xoffset(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), "Horiz Position", render_container_get_xoffset(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), _("Horiz Position"), render_container_get_xoffset(container));
 	}
 	return floor(render_container_get_xoffset(container) * 1000.0f + 0.5f);
 }
@@ -2806,7 +2806,7 @@ static INT32 slider_yoffset(running_machine *machine, INT32 newval, char *buffer
 	if (buffer != NULL)
 	{
 		render_container_set_yoffset(container, (float)newval * 0.001f);
-		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), "Vert Position", render_container_get_yoffset(container));
+		sprintf(buffer, "%s %s %.3f", slider_get_screen_desc(screen), _("Vert Position"), render_container_get_yoffset(container));
 	}
 	return floor(render_container_get_yoffset(container) * 1000.0f + 0.5f);
 }
@@ -2876,7 +2876,7 @@ static INT32 slider_crossscale(running_machine *machine, INT32 newval, char *buf
 	if (buffer != NULL)
 	{
 		field->crossscale = (float)newval * 0.001f;
-		sprintf(buffer, "%s %s %1.3f", "Crosshair Scale", (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
+		sprintf(buffer, "%s %s %1.3f", _("Crosshair Scale"), (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
 	}
 	return floor(field->crossscale * 1000.0f + 0.5f);
 }
@@ -2896,7 +2896,7 @@ static INT32 slider_crossoffset(running_machine *machine, INT32 newval, char *bu
 	if (buffer != NULL)
 	{
 		field->crossoffset = (float)newval * 0.001f;
-		sprintf(buffer, "%s %s %1.3f", "Crosshair Offset", (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
+		sprintf(buffer, "%s %s %1.3f", _("Crosshair Offset"), (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y", (float)newval * 0.001f);
 	}
 	return field->crossoffset;
 }

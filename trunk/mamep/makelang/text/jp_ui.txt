@@ -898,7 +898,7 @@ Draw antialiased vectors
 Draw every frame
 フレームスキップなし
 
-# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903
+# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903, 7225
 Driver
 ドライバ
 
@@ -966,7 +966,7 @@ Enforce aspect ratio
 Error
 エラー
 
-# osd/winui/treeview.c: 2691
+# osd/winui/treeview.c: 2712
 Error finding custom file name to save
 保存するカスタムファイルが見つかりません
 
@@ -978,11 +978,11 @@ Error log (for developers)
 Error searching for custom folder
 カスタムフォルダが見つかりません
 
-# osd/winui/treeview.c: 2619
+# osd/winui/treeview.c: 2640
 Error while renaming custom file %s to %s
 カスタムファイルの名前を %s から %s への変更でエラーが発生しました
 
-# osd/winui/treeview.c: 2764
+# osd/winui/treeview.c: 2785
 Error while saving custom file %s
 カスタムファイル %s の保存でエラーが発生しました
 
@@ -2218,11 +2218,11 @@ Type
 Unable to Load Riched32.dll
 Riched32.dllが読み込めません
 
-# osd/winui/treeview.c: 2630
+# osd/winui/treeview.c: 2651
 Unable to add game to non-custom folder
 カスタムフォルダ以外にはゲームを追加出来ません
 
-# osd/winui/treeview.c: 2647
+# osd/winui/treeview.c: 2668
 Unable to remove game from non-custom folder
 カスタムフォルダ以外からゲームを削除出来ません
 
@@ -2518,6 +2518,10 @@ Enable the title tab
 Font Files
 
 
+# osd/winui/winui.c: 7215
+Game
+
+
 # osd/winui/dialogs.c: 253
 Gamename
 
@@ -2539,7 +2543,7 @@ Gamename/Increment
 
 
 # osd/winui/properties.c: 1148
-Global BIOS driver options\nCustom options used by all games in the %s
+Global BIOS options\nCustom options used by all games in the %s
 
 
 # osd/winui/dialogs.c: 129
