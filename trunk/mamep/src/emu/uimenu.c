@@ -694,7 +694,7 @@ int ui_menu_generic_keys(running_machine *machine, UINT32 *selected, int num_ite
 
 	/* pause enables/disables pause */
 	if (input_ui_pressed(machine, IPT_UI_PAUSE))
-		mame_pause(Machine, !mame_is_paused(Machine));
+		mame_pause(machine, !mame_is_paused(machine));
 
 	return 0;
 }
@@ -914,8 +914,7 @@ do { \
 
 	ADD_MENU(_("Autofire Setting"), menu_autofire, 0);
 #ifdef USE_CUSTOM_BUTTON
-//	if (custom_buttons)
-//		ADD_MENU(_("Custom Buttons"), menu_custom_button, 0);
+	ADD_MENU(_("Custom Buttons"), menu_custom_button, 0);
 #endif /* USE_CUSTOM_BUTTON */
 
 	/* add optional input-related menus */
@@ -1275,7 +1274,7 @@ static UINT32 menu_analog(running_machine *machine, UINT32 state)
 	menu_string_pool_offset = 0;
 
 	/* loop over input ports and add the items */
-	for (port = Machine->portconfig; port != NULL; port = port->next)
+	for (port = machine->portconfig; port != NULL; port = port->next)
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (input_type_is_analog(field->type))
 			{
@@ -1893,7 +1892,7 @@ static UINT32 menu_select_game(running_machine *machine, UINT32 state)
 
 
 
-#if 0//def USE_CUSTOM_BUTTON
+#ifdef USE_CUSTOM_BUTTON
 static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 {
 	ui_menu_item item_list[MAX_PLAYERS * MAX_CUSTOM_BUTTONS + 2];
@@ -1901,28 +1900,30 @@ static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 	int visible_items;
 	int menu_items = 0;
 	UINT16 *custom_item[MAX_PLAYERS * MAX_CUSTOM_BUTTONS];
-	int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
-	                || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c");
+	int is_neogeo = !mame_stricmp(machine->gamedrv->source_file+17, "neogeo.c")
+	                || !mame_stricmp(machine->gamedrv->source_file+17, "neodrvr.c");
 	int buttons = 0;
-	input_port_entry *in;
+	const input_port_config *port;
+	const input_field_config *field;
 	int i;
 
 	/* reset the menu and string pool */
 	memset(item_list, 0, sizeof(item_list));
 	menu_string_pool_offset = 0;
 
-	if (custom_buttons == 0 || Machine->input_ports == 0)
+	if (!machine->portconfig)
 		return ui_menu_stack_pop();
 
 	memset(custom_item, 0, sizeof custom_item);
 
 	/* iterate over the input ports and add menu items */
-	for (in = Machine->input_ports; in->type != IPT_END; in++)
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
 	{
 		int b, p;
 
-		p = in->player;
-		b = in->type;
+		p = field->player;
+		b = field->type;
 
 		if (b >= IPT_BUTTON1 && b < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
 		{
@@ -1932,13 +1933,13 @@ static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 			continue;
 		}
 
-		if (b >= IPT_CUSTOM1 && b < IPT_CUSTOM1 + custom_buttons)
+		if (b >= IPT_CUSTOM1 && b < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
 		{
 			char colorbutton = is_neogeo ? 'A' : 'a';
 			int menu_string_pool_start = menu_string_pool_offset;
 			int n = 1;
 
-			item_list[menu_items].text = _(input_port_name(in));
+			item_list[menu_items].text = _(input_field_name(field));
 
 			b -= IPT_CUSTOM1;
 			custom_item[menu_items] = &custom_button[p][b];
@@ -1984,7 +1985,10 @@ static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 				keycode = KEYCODE_0;
 
 			if (input_code_pressed_once(keycode))
+			{
 				*custom_item[selected] ^= 1 << i;
+				mame_printf_verbose("custom_item[selected] %u\n", custom_button[0][0]);
+			}
 		}
 
 	return selected;
@@ -2155,7 +2159,7 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 
 	if (bufptr)
 	{
-		if (Machine->gamedrv != last_drv || selected != last_selected || dattype != last_dattype)
+		if (machine->gamedrv != last_drv || selected != last_selected || dattype != last_dattype)
 		{
 			/* force buffer to be recreated */
 			free (bufptr);
@@ -2170,21 +2174,21 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 
 		if (bufptr)
 		{
-			int game_paused = mame_is_paused(Machine);
+			int game_paused = mame_is_paused(machine);
 
 			/* Disable sound to prevent strange sound*/
 			if (!game_paused)
-				mame_pause(Machine, TRUE);
+				mame_pause(machine, TRUE);
 
-			if ((dattype == UI_history && (load_driver_history(Machine->gamedrv, bufptr, bufsize) == 0))
+			if ((dattype == UI_history && (load_driver_history(machine->gamedrv, bufptr, bufsize) == 0))
 #ifdef STORY_DATAFILE
-			 || (dattype == UI_story && (load_driver_story(Machine->gamedrv, bufptr, bufsize) == 0))
+			 || (dattype == UI_story && (load_driver_story(machine->gamedrv, bufptr, bufsize) == 0))
 #endif /* STORY_DATAFILE */
-			 || (dattype == UI_mameinfo && (load_driver_mameinfo(Machine->gamedrv, bufptr, bufsize) == 0))
-			 || (dattype == UI_drivinfo && (load_driver_drivinfo(Machine->gamedrv, bufptr, bufsize) == 0))
+			 || (dattype == UI_mameinfo && (load_driver_mameinfo(machine->gamedrv, bufptr, bufsize) == 0))
+			 || (dattype == UI_drivinfo && (load_driver_drivinfo(machine->gamedrv, bufptr, bufsize) == 0))
 			 /*|| (dattype == UI_statistics && (load_driver_statistics(bufptr, bufsize) == 0))*/)
 			{
-				last_drv = Machine->gamedrv;
+				last_drv = machine->gamedrv;
 				last_selected = selected;
 				last_dattype = dattype;
 
@@ -2203,7 +2207,7 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 			}
 
 			if (!game_paused)
-				mame_pause(Machine, FALSE);
+				mame_pause(machine, FALSE);
 		}
 	}
 
@@ -2276,7 +2280,7 @@ static UINT32 menu_command(running_machine *machine, UINT32 state)
 	const char *item[256];
 	int total;
 
-	total = command_sub_menu(Machine->gamedrv, item);
+	total = command_sub_menu(machine->gamedrv, item);
 	if (total)
 	{
 		int last_selected = selected;
@@ -2363,7 +2367,7 @@ static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
 
 	if (bufptr)
 	{
-		if (Machine->gamedrv != last_drv || selected != last_selected || shortcut != last_shortcut)
+		if (machine->gamedrv != last_drv || selected != last_selected || shortcut != last_shortcut)
 		{
 			/* force buffer to be recreated */
 			free (bufptr);
@@ -2378,15 +2382,15 @@ static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
 
 		if (bufptr)
 		{
-			int game_paused = mame_is_paused(Machine);
+			int game_paused = mame_is_paused(machine);
 
 			/* Disable sound to prevent strange sound*/
 			if (!game_paused)
-				mame_pause(Machine, TRUE);
+				mame_pause(machine, TRUE);
 
-			if (load_driver_command_ex(Machine->gamedrv, bufptr, bufsize, selected) == 0)
+			if (load_driver_command_ex(machine->gamedrv, bufptr, bufsize, selected) == 0)
 			{
-				last_drv = Machine->gamedrv;
+				last_drv = machine->gamedrv;
 				last_selected = selected;
 				last_shortcut = shortcut;
 
@@ -2410,7 +2414,7 @@ static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
 			}
 
 			if (!game_paused)
-				mame_pause(Machine, FALSE);
+				mame_pause(machine, FALSE);
 		}
 	}
 
@@ -2488,9 +2492,9 @@ static UINT32 menu_scale_effect(running_machine *machine, UINT32 state)
 	/* handle actions */
 	if (input_ui_pressed(machine, IPT_UI_SELECT))
 	{
-		video_exit_scale_effect(Machine);
+		video_exit_scale_effect(machine);
 		scale_decode(scale_name(selected)); 
-		video_init_scale_effect(Machine);
+		video_init_scale_effect(machine);
 	}
 
 	return selected;

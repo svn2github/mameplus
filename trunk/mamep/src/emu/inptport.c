@@ -295,6 +295,11 @@ static const char *const seqtypestrings[] = { "standard", "decrement", "incremen
 static int autofiredelay[MAX_PLAYERS];
 static int autofiretoggle[MAX_PLAYERS];
 
+#ifdef USE_CUSTOM_BUTTON
+UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
+static const input_field_config *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
+#endif /* USE_CUSTOM_BUTTON */
+
 
 
 /***************************************************************************
@@ -700,6 +705,11 @@ time_t input_port_init(running_machine *machine, const input_port_token *tokens)
 		autofiredelay[player] = 3;	//mamep: 1 is too short for some games
 		autofiretoggle[player] = 1;
 	}
+
+#ifdef USE_CUSTOM_BUTTON
+	memset(custom_button, 0, sizeof(custom_button));
+	memset(custom_button_info, 0, sizeof(custom_button_info));
+#endif /* USE_CUSTOM_BUTTON */
 
 	/* initialize the default port info from the OSD */
 	init_port_types(machine);
@@ -1262,8 +1272,6 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			result = (result & ~custom->field->mask) | ((newbits << custom->shift) & custom->field->mask);
 		}
 
-//fixme: static int auto_pressed(input_bit_info *info);
-
 	/* update VBLANK bits */
 	if (port->state->vblank != 0)
 	{
@@ -1669,6 +1677,11 @@ static void init_port_state(running_machine *machine)
 				fieldstate->seq[seqtype] = field->seq[seqtype];
 			fieldstate->value = field->defvalue;
 
+#ifdef USE_CUSTOM_BUTTON
+			if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+				custom_button_info[field->player][field->type - IPT_CUSTOM1] = field;
+#endif /* USE_CUSTOM_BUTTON */
+
 			/* if this is an analog field, allocate memory for the analog data */
 			if (field->type >= __ipt_analog_start && field->type <= __ipt_analog_end)
 			{
@@ -2053,6 +2066,24 @@ profiler_mark(PROFILER_INPUT);
 		for (field = port->fieldlist; field != NULL; field = field->next)
 			if (input_condition_true(port->machine, &field->condition))
 			{
+#ifdef USE_CUSTOM_BUTTON
+				/* update autofire status */
+				if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+				{
+					if (input_seq_pressed(input_field_seq(field, SEQ_TYPE_STANDARD)))
+					{
+						if (field->state->autopressed > autofiredelay[field->player])
+							field->state->autopressed = 0;
+
+						field->state->autopressed ++;
+					}
+					else
+						field->state->autopressed = 0;
+
+					continue;
+				}
+#endif /* USE_CUSTOM_BUTTON */
+
 				/* accumulate VBLANK bits */
 				if (field->type == IPT_VBLANK)
 					port->state->vblank ^= field->mask;
@@ -3634,6 +3665,11 @@ static int load_game_config(running_machine *machine, xml_data_node *portnode, i
 							field->state->autofire = AUTOFIRE_TOGGLE;
 						else
 							field->state->autofire = 0;
+
+#ifdef USE_CUSTOM_BUTTON
+						if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+							custom_button[field->player][field->type - IPT_CUSTOM1] = xml_get_attribute_int(portnode, "custom", 0);
+#endif /* USE_CUSTOM_BUTTON */
 					}
 
 					/* for analog fields, fetch configurable analog attributes */
@@ -3796,6 +3832,10 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 				{
 					changed |= ((field->state->value & field->mask) != (field->defvalue & field->mask));
 					changed |= field->state->autofire;
+#ifdef USE_CUSTOM_BUTTON
+					changed |= field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS &&
+						custom_button[field->player][field->type - IPT_CUSTOM1];
+#endif /* USE_CUSTOM_BUTTON */
 				}
 				/* analog changes */
 				else
@@ -3831,10 +3871,17 @@ static void save_game_inputs(running_machine *machine, xml_data_node *parentnode
 						{
 							if ((field->state->value & field->mask) != (field->defvalue & field->mask))
 								xml_set_attribute_int(portnode, "value", field->state->value & field->mask);
+
 							if (field->state->autofire & AUTOFIRE_ON)
 								xml_set_attribute(portnode, "autofire", "on");
 							else if (field->state->autofire & AUTOFIRE_TOGGLE)
 								xml_set_attribute(portnode, "autofire", "toggle");
+
+#ifdef USE_CUSTOM_BUTTON
+							if (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS &&
+							    custom_button[field->player][field->type - IPT_CUSTOM1])
+								xml_set_attribute_int(portnode, "custom", custom_button[field->player][field->type - IPT_CUSTOM1]);
+#endif /* USE_CUSTOM_BUTTON */
 						}
 
 						/* write out analog changes */
@@ -4415,21 +4462,21 @@ static int auto_pressed(const input_field_config *field)
 	if (pressed && (field->flags & FIELD_FLAG_TOGGLE))
 		autofiretoggle[field->player] = field->state->toggle;
 
-#if 0 //def USE_CUSTOM_BUTTON
-	if (portentry->type >= IPT_BUTTON1 && portentry->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+#ifdef USE_CUSTOM_BUTTON
+	if (field->type >= IPT_BUTTON1 && field->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
 	{
-		UINT16 button_mask = 1 << (portentry->type - IPT_BUTTON1);
-		input_bit_info temp;
+		UINT16 button_mask = 1 << (field->type - IPT_BUTTON1);
+		input_field_config temp;
+
 		int custom;
-
-		for (custom = 0; custom < custom_buttons; custom++)
-			if (custom_button[portentry->player][custom] & button_mask)
+		for (custom = 0; custom < MAX_CUSTOM_BUTTONS; custom++)
+			if (custom_button[field->player][custom] & button_mask)
 			{
-				input_bit_info *custom_info = custom_button_info[portentry->player][custom];
+				const input_field_config *custom_info = custom_button_info[field->player][custom];
 
-				if (input_seq_pressed(input_port_seq(custom_info->portentry, SEQ_TYPE_STANDARD)))
+				if (input_seq_pressed(input_field_seq(custom_info, SEQ_TYPE_STANDARD)))
 				{
-					if (IS_AUTOKEY(custom_info->portentry))
+					if (IS_AUTOKEY(custom_info))
 					{
 						if (pressed)
 							is_auto &= 1;
@@ -4437,7 +4484,7 @@ static int auto_pressed(const input_field_config *field)
 							is_auto = 1;
 
 						temp = *custom_info;
-						info = &temp;
+						field = &temp;
 					}
 					else
 						is_auto = 0;
@@ -4625,7 +4672,7 @@ static void make_input_log(void)
 
 #ifdef USE_CUSTOM_BUTTON
 				/* if this is custon buttons type, apply usable buttons */
-				for (i = 0; i < custom_buttons; i++)
+				for (i = 0; i < MAX_CUSTOM_BUTTONS; i++)
 					if (custom_button[0][i] != 0)
 					{
 						input_bit_info *custom_info = custom_button_info[0][i];
