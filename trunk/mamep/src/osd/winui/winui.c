@@ -5252,6 +5252,28 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		UpdateStatusBar();
 		break;
 
+	case ID_FOLDER_PROPERTIES:
+		if (!oldControl)
+		{
+			folder = GetSelectedFolder();
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
+		}
+		/* Just in case the toggle MMX on/off */
+		UpdateStatusBar();
+		break;
+
+	case ID_FOLDER_SOURCEPROPERTIES:
+		if (!oldControl)
+		{
+			folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
+		}
+		/* Just in case the toggle MMX on/off */
+		UpdateStatusBar();
+		break;
+
 	case ID_BIOS_PROPERTIES:
 		if (!oldControl)
 		{
@@ -5272,28 +5294,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				}
 #endif
 			}
-		}
-		/* Just in case the toggle MMX on/off */
-		UpdateStatusBar();
-		break;
-
-	case ID_FOLDER_PROPERTIES:
-		if (!oldControl)
-		{
-			folder = GetSelectedFolder();
-			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
-			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
-		}
-		/* Just in case the toggle MMX on/off */
-		UpdateStatusBar();
-		break;
-
-	case ID_FOLDER_SOURCEPROPERTIES:
-		if (!oldControl)
-		{
-			folder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
-			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
-			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */
 		UpdateStatusBar();
@@ -7212,7 +7212,7 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")), TEXT("..."));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")), _UIW(TEXT("Game")));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -7222,7 +7222,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Propert&ies for %s")), TEXT("..."));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Propert&ies for %s")), _UIW(TEXT("Driver")));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;
@@ -7267,7 +7267,7 @@ static void UpdateMenu(HMENU hMenu)
 		EnableMenuItem(hMenu,ID_CONTEXT_RENAME_CUSTOM,MF_GRAYED);
 	}
 
-	if (lpFolder && (IsSourceFolder(lpFolder) || IsVectorFolder(lpFolder) || IsBiosFolder(lpFolder)))
+	if (lpFolder->m_dwFlags & F_INIEDIT)
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES,MF_ENABLED);
 	else
 		EnableMenuItem(hMenu,ID_FOLDER_PROPERTIES,MF_GRAYED);

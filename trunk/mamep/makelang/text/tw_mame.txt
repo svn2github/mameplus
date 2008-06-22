@@ -1562,7 +1562,7 @@ French
 GAME: 
 遊戲: 
 
-# mame/drivers/bublbobl.c: 558 mame/drivers/cps1.c: 822, 894, 1092, 1176, 1228, 1330, 1508, 1594, 1671, 1835, 1926, 2004, 2078, 2145, 2225, 2326, 2409, 2520, 2631, 2714, 2797, 3082, 3170, 3258, 3343, 3487 mame/drivers/fcrash.c: 384 mame/drivers/ksys573.c: 2837 mame/drivers/macs.c: 242 mame/drivers/missile.c: 821 mame/drivers/pacman.c: 1440 mame/drivers/turbo.c: 978 mame/drivers/vegas.c: 2049
+# mame/drivers/bublbobl.c: 558 mame/drivers/cps1.c: 822, 894, 1092, 1176, 1228, 1330, 1508, 1594, 1671, 1835, 1926, 2004, 2078, 2145, 2225, 2326, 2409, 2520, 2631, 2714, 2797, 3082, 3170, 3258, 3343, 3487 mame/drivers/fcrash.c: 384 mame/drivers/ksys573.c: 2837 mame/drivers/macs.c: 242 mame/drivers/missile.c: 821 mame/drivers/pacman.c: 1440 mame/drivers/turbo.c: 978 mame/drivers/vegas.c: 2049 
 Game
 遊戲
 
@@ -4456,7 +4456,7 @@ Screen #%d
 
 # mame/layout/neogeo.lay: 15
 Screen %d Cropped (%dx%d)
-畫面 %d 已裁切 (%dx%d)
+畫面 %d 裁切 (%dx%d)
 
 # emu/layout/dualhovu.lay: 15, 21 emu/layout/dualhsxs.lay: 15, 21 emu/layout/dualhuov.lay: 15, 21 emu/layout/triphsxs.lay: 21, 27, 33 mame/layout/darius.lay: 21, 27, 33 mame/layout/rocknms.lay: 16, 22
 Screen %d Pixel Aspect (%d:%d)
@@ -4468,7 +4468,7 @@ Screen %d Standard (%d:%d)
 
 # mame/layout/neogeo.lay: 27
 Screen %d Stretched (%dx%d)
-畫面 %d 已延展 (%dx%d)
+畫面 %d 延展 (%dx%d)
 
 # emu/ui.c: 2858
 Screen '%s'
@@ -4778,7 +4778,7 @@ Test
 Test Mode
 測試模式
 
-# mame/drivers/kinst.c: 553, 657 mame/drivers/mcr68.c: 735 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 948 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 350, 561, 627, 722, 814 mame/drivers/midzeus.c: 693, 798, 896 mame/drivers/mpu4.c: 1146 mame/drivers/mpu4drvr.c: 1129 mame/drivers/namcos21.c: 2269, 2350, 2429, 2506 mame/drivers/neodrvr.c: 51 mame/drivers/neogeo.c: 1141 mame/drivers/seattle.c: 2168, 2293, 2391 mame/drivers/vegas.c: 2071
+# mame/drivers/kinst.c: 553, 657 mame/drivers/mcr68.c: 735 mame/drivers/midtunit.c: 112, 219, 322, 425, 528 mame/drivers/midvunit.c: 948 mame/drivers/midwunit.c: 158, 311, 373, 497, 550 mame/drivers/midxunit.c: 135 mame/drivers/midyunit.c: 350, 561, 627, 722, 814 mame/drivers/midzeus.c: 693, 798, 896 mame/drivers/mpu4.c: 1146 mame/drivers/mpu4drvr.c: 1129 mame/drivers/namcos21.c: 2402, 2483, 2562, 2639 mame/drivers/neodrvr.c: 51 mame/drivers/neogeo.c: 1141 mame/drivers/seattle.c: 2168, 2293, 2391 mame/drivers/vegas.c: 2071
 Test Switch
 測試開關
 

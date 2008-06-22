@@ -688,7 +688,7 @@ Cocktail
 
 # osd/winui/mameui.rc: 850
 Coin lockout
-投幣裝置停工
+投幣停工
 
 # osd/winui/properties.c: 1070
 Colors are completely wrong
@@ -1006,7 +1006,7 @@ Draw antialiased vectors
 Draw every frame
 描繪出全部畫格
 
-# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903
+# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903, 7225
 Driver
 驅動
 
@@ -1110,7 +1110,7 @@ Enforce aspect ratio
 Error
 錯誤
 
-# osd/winui/treeview.c: 2691
+# osd/winui/treeview.c: 2712
 Error finding custom file name to save
 尋找自訂檔名儲存時發生錯誤
 
@@ -1122,11 +1122,11 @@ Error log (for developers)
 Error searching for custom folder
 尋找自訂資料夾時發生錯誤
 
-# osd/winui/treeview.c: 2619
+# osd/winui/treeview.c: 2640
 Error while renaming custom file %s to %s
 自訂檔案 %s 重新命名成 %s 時發生錯誤
 
-# osd/winui/treeview.c: 2764
+# osd/winui/treeview.c: 2785
 Error while saving custom file %s
 儲存自訂檔案 %s 時發生錯誤\n\n注意: 無法編輯唯讀屬性的外部資料夾清單檔案。
 
@@ -1218,6 +1218,10 @@ Full screen contrast
 Full screen gamma
 全螢幕 Gamma 值
 
+# osd/winui/winui.c: 7215
+Game
+遊戲
+
 # osd/winui/mameui.rc: 948
 Game Filters
 遊戲篩選
@@ -1260,7 +1264,7 @@ Gamename
 
 # osd/winui/dialogs.c: 255
 Gamename + Increment
-遊戲名稱 + 編號遞增
+遊戲名稱 + 索引編號
 
 # osd/winui/dialogs.c: 257
 Gamename/Gamename
@@ -1268,11 +1272,11 @@ Gamename/Gamename
 
 # osd/winui/dialogs.c: 259
 Gamename/Gamename + Increment
-遊戲名稱/遊戲名稱 + 編號遞增
+遊戲名稱/遊戲名稱 + 索引編號
 
 # osd/winui/dialogs.c: 261
 Gamename/Increment
-遊戲名稱/編號遞增
+遊戲名稱/索引編號
 
 # osd/winui/mameui.rc: 743
 Gameplay speed
@@ -1287,7 +1291,7 @@ General
 一般
 
 # osd/winui/properties.c: 1148
-Global BIOS driver options\nCustom options used by all games in the %s
+Global BIOS options\nCustom options used by all games in the %s
 通用 BIOS 選項\n供 %s 全部遊戲使用的自訂選項
 
 # osd/winui/properties.c: 1136
@@ -2562,11 +2566,11 @@ Type
 Unable to Load Riched32.dll
 無法載入 Riched32.dll
 
-# osd/winui/treeview.c: 2630
+# osd/winui/treeview.c: 2651
 Unable to add game to non-custom folder
 無法加入遊戲到非自訂資料夾
 
-# osd/winui/treeview.c: 2647
+# osd/winui/treeview.c: 2668
 Unable to remove game from non-custom folder
 無法從非自訂資料夾中移除遊戲
 

@@ -720,6 +720,7 @@ int DriverBiosIndex(int driver_index)
 	return GetDriversInfo(driver_index)->biosIndex;
 }
 
+/*
 int DriverSystemBiosIndex(int driver_index)
 {
 	int i;
@@ -733,6 +734,7 @@ int DriverSystemBiosIndex(int driver_index)
 
 	return -1;
 }
+*/
 
 BOOL DriverIsStereo(int driver_index)
 {

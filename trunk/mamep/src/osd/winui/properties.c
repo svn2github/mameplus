@@ -1145,7 +1145,7 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	if (!DriverIsBios(nIndex))
 		return desc;
 
-	swprintf(info, _UIW(TEXT("Global BIOS driver options\nCustom options used by all games in the %s")), desc);
+	swprintf(info, _UIW(TEXT("Global BIOS options\nCustom options used by all games in the %s")), desc);
 	return info;
 }
 

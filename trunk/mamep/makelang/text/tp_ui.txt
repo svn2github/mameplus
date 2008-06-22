@@ -1006,7 +1006,7 @@ Draw antialiased vectors
 Draw every frame
 
 
-# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903
+# osd/winui/layout.c: 67 osd/winui/mameui.rc: 1122 osd/winui/winui.c: 903, 7225
 Driver
 
 
@@ -1110,7 +1110,7 @@ Enforce aspect ratio
 Error
 
 
-# osd/winui/treeview.c: 2691
+# osd/winui/treeview.c: 2712
 Error finding custom file name to save
 
 
@@ -1122,11 +1122,11 @@ Error log (for developers)
 Error searching for custom folder
 
 
-# osd/winui/treeview.c: 2619
+# osd/winui/treeview.c: 2640
 Error while renaming custom file %s to %s
 
 
-# osd/winui/treeview.c: 2764
+# osd/winui/treeview.c: 2785
 Error while saving custom file %s
 
 
@@ -1218,6 +1218,10 @@ Full screen contrast
 Full screen gamma
 
 
+# osd/winui/winui.c: 7215
+Game
+
+
 # osd/winui/mameui.rc: 948
 Game Filters
 
@@ -1287,7 +1291,7 @@ General
 
 
 # osd/winui/properties.c: 1148
-Global BIOS driver options\nCustom options used by all games in the %s
+Global BIOS options\nCustom options used by all games in the %s
 
 
 # osd/winui/properties.c: 1136
@@ -2562,11 +2566,11 @@ Type
 Unable to Load Riched32.dll
 
 
-# osd/winui/treeview.c: 2630
+# osd/winui/treeview.c: 2651
 Unable to add game to non-custom folder
 
 
-# osd/winui/treeview.c: 2647
+# osd/winui/treeview.c: 2668
 Unable to remove game from non-custom folder
 
 

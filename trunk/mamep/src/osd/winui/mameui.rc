@@ -20,7 +20,7 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Englisch (USA) resources
+// English (USA) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 #ifdef _WIN32
@@ -158,20 +158,20 @@ BEGIN
         POPUP "&Language"
         BEGIN
             MENUITEM "English (United States)",     ID_LANGUAGE_ENGLISH_US
+            MENUITEM "Catalan",                     ID_LANGUAGE_CATALAN
             MENUITEM "Chinese (PRC)",               ID_LANGUAGE_SMPL_CHINESE
             MENUITEM "Chinese (Taiwan)",            ID_LANGUAGE_TRAD_CHINESE
             MENUITEM "French",                      ID_LANGUAGE_FRENCH
             MENUITEM "German",                      ID_LANGUAGE_GERMAN
+            MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
             MENUITEM "Italian",                     ID_LANGUAGE_ITALIAN
             MENUITEM "Japanese",                    ID_LANGUAGE_JAPANESE
             MENUITEM "Korean",                      ID_LANGUAGE_KOREAN
-            MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
-            MENUITEM "Catalan",                     ID_LANGUAGE_CATALAN
-            MENUITEM "Valencian",                   ID_LANGUAGE_VALENCIAN
             MENUITEM "Polish",                      ID_LANGUAGE_POLISH
-            MENUITEM "Portuguese (Portugal)",       ID_LANGUAGE_PORTUGUESE_PT
             MENUITEM "Portuguese (Brazil)",         ID_LANGUAGE_PORTUGUESE_BRA
-            MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN
+            MENUITEM "Portuguese (Portugal)",       ID_LANGUAGE_PORTUGUESE_PT
+            MENUITEM "Spanish",                     ID_LANGUAGE_SPANISH
+            MENUITEM "Valencian",                   ID_LANGUAGE_VALENCIAN
         END
     END
     POPUP "&Help"
@@ -209,8 +209,8 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "A&udit",                      ID_GAME_AUDIT
         MENUITEM SEPARATOR
-          MENUITEM "Propert&ies for Driver",    ID_FOLDER_SOURCEPROPERTIES
-          MENUITEM "Properties &for BIOS",      ID_BIOS_PROPERTIES
+        MENUITEM "Propert&ies for Driver",      ID_FOLDER_SOURCEPROPERTIES
+        MENUITEM "Properties &for BIOS",        ID_BIOS_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
     END
 END

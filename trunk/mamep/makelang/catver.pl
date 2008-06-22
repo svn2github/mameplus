@@ -10,9 +10,8 @@ $CRLF = "\r\n";
 
 %EXTRA = (
 	'plus' => 'Plus!',
-	'homebrew' => 'home-brew',
-	'neod' => 'Neogeo decrypted',
-	'noncpu' => 'Non-CPU',
+	'homebrew' => 'Homebrew',
+	'decrypted' => 'Decrypted',
 	'console' => 'Console'
 );
 

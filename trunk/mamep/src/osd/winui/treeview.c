@@ -1741,6 +1741,22 @@ static void SelectTreeViewFolderPath(const char *path)
 	SelectTreeViewFolder(0);
 }
 
+/* 
+ * Does this folder have an INI associated with it?
+ * Currently only TRUE for FOLDER_VECTOR and children
+ * of FOLDER_SOURCE.
+ */
+static BOOL FolderHasIni(LPTREEFOLDER lpFolder) {
+	if (FOLDER_VECTOR == lpFolder->m_nFolderId) {
+		return TRUE;
+	}
+	if (lpFolder->m_nParent != -1
+		&& FOLDER_SOURCE == treeFolders[lpFolder->m_nParent]->m_nFolderId) {
+		return TRUE;
+	}
+	return FALSE;
+}
+
 /* Add a folder to the list.  Does not allocate */
 static BOOL AddFolder(LPTREEFOLDER lpFolder)
 {
@@ -1748,6 +1764,11 @@ static BOOL AddFolder(LPTREEFOLDER lpFolder)
 	{
 		folderArrayLength += 500;
 		treeFolders = realloc(treeFolders,sizeof(TREEFOLDER **) * folderArrayLength);
+	}
+
+	/* Is there an folder.ini that can be edited? */
+	if (FolderHasIni(lpFolder)) {
+		lpFolder->m_dwFlags |= F_INIEDIT;
 	}
 
 	treeFolders[numFolders] = lpFolder;
