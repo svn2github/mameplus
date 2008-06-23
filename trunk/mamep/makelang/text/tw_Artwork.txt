@@ -1,3 +1,31 @@
+# 1688
+Backdrop
+背景圖
+
+# 1733
+Bezel
+外框圖
+
+# 2762
+CP Graphics
+控制面板圖
+
+# 2776
+Inst. Card
+指令卡
+
+# 3511
+Lamps or LEDs
+燈號或 LED
+
+# 3570
+Marquee
+標籤圖
+
+# 3786
+Overlay
+覆疊圖
+
 # Title
 Artwork
 

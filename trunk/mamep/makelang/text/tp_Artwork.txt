@@ -2,3 +2,31 @@
 Artwork
 
 
+# 1688
+Backdrop
+
+
+# 1733
+Bezel
+
+
+# 2762
+CP Graphics
+
+
+# 2776
+Inst. Card
+
+
+# 3511
+Lamps or LEDs
+
+
+# 3570
+Marquee
+
+
+# 3786
+Overlay
+
+
