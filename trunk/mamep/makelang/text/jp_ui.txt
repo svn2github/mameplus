@@ -1,3 +1,7 @@
+# osd/winui/dialogs.c: 949
+ PCB Info: %s [%s]
+ PCB情報: %s [%s]
+
 # osd/winui/properties.c: 1031
 %d colors 
 %d 色 
@@ -49,6 +53,10 @@
 # osd/winui/mameui.rc: 185
 &About
 このソ\フトについて(&A)
+
+# osd/winui/mameui.rc: 44
+&About MAMEUI
+MAMEUIについて(&A)
 
 # osd/winui/mameui.rc: 65, 197
 &Add to Custom Folder...
@@ -153,6 +161,10 @@
 # osd/winui/mameui.rc: 95, 264, 277
 &History
 ゲームの歴史(&H)
+
+# osd/winui/mameui.rc: 960
+&Horizontal
+横型(&H)
 
 # osd/winui/mameui.rc: 154
 &Interface Options...
@@ -274,6 +286,10 @@
 &Vector Graphics
 ベクタグラフィック(&V)
 
+# osd/winui/mameui.rc: 974
+&Vertical
+縦型(&V)
+
 # osd/winui/mameui.rc: 75
 &View
 表\示(&V)
@@ -318,6 +334,10 @@ ADスティックデバイス
 About
 このソ\フトウェアについて
 
+# osd/winui/mameui.rc: 369
+About MAME Plus!
+MAME Plus!について
+
 # osd/winui/mameui.rc: 465
 Add ->
 追加 ->
@@ -341,6 +361,10 @@ All Arcades
 # osd/winui/winui.c: 823, 830, 837, 844, 851
 All files (*.*)
 全てのファイル (*.*)
+
+# osd/winui/properties.c: 427
+All screens
+全画面
 
 # osd/winui/mameui.rc: 1022
 Allow game selection by a &joystick (requires restart)
@@ -397,6 +421,14 @@ Audit ROM and samples sets
 # osd/winui/mui_audit.c: 491
 Audit complete.\n
 チェック終了\n
+
+# osd/winui/mameui.rc: 1510
+Audit items in this folder
+このフォルダ内の項目を監査
+
+# osd/winui/mameui.rc: 1548
+Audit the selected item
+選択した項目を監査
 
 # osd/winui/properties.c: 441, 508, 3065, 3071
 Auto
@@ -742,6 +774,10 @@ Custom
 Custom Options
 カスタムオプション
 
+# osd/winui/dialogs.c: 133
+Custom folder filters\n
+カスタムフォルダフィルタ\n
+
 # osd/winui/mameui.rc: 140, 225
 Customi&ze Fields...
 フィールド項目(&Z)...
@@ -957,6 +993,42 @@ Enable sound and sound CPUs
 # osd/winui/mameui.rc: 803
 Enable steadykey support
 ボタンの同時押し認識を容易
+
+# osd/winui/mameui.rc: 1531
+Enable the PCB tab
+PCBタブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the cabinet tab
+筐体タブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the control panel tab
+コントロールパネルタブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the flyer tab
+広告ポスタータブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the history tab
+ヒストリータブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the marquee tab
+マーキータブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the snapshot tab
+スクリーンショットタブを有効
+
+# osd/winui/mameui.rc: 1541
+Enable the story tab
+ストーリータブを有効
+
+# osd/winui/mameui.rc: 1531
+Enable the title tab
+タイトルタブを有効
 
 # osd/winui/mameui.rc: 650
 Enforce aspect ratio
@@ -1502,6 +1574,14 @@ Overlays
 P&layback Input...
 入力の再現(&L)...
 
+# osd/winui/mameui.rc: 94, 263, 276
+PC&B
+PC&B
+
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 481
+PCB
+PCB
+
 # osd/winui/mameui.rc: 1176
 PCB Info
 PCB情報
@@ -1509,6 +1589,10 @@ PCB情報
 # osd/winui/layout.c: 148
 PCB Info Files
 PCB情報ファイル
+
+# osd/winui/layout.c: 132
+PCBs
+PCB
 
 # osd/winui/properties.c: 984 osd/winui/treeview.c: 1428
 Paddle
@@ -1569,6 +1653,10 @@ MNGビデオを保存しながら実行(&M)...
 # osd/winui/mameui.rc: 57
 Play and Record &WAV Sound...
 WAVサウンドを保存しながら実行(&W)...
+
+# osd/winui/mameui.rc: 59
+Play and Record &uncompressed AVI Output...
+無圧縮AVIを保存しながら実行(&u)...
 
 # osd/winui/mameui.rc: 1471
 Play currently selected game
@@ -1685,6 +1773,10 @@ Record a game for later playback
 # osd/winui/mameui.rc: 1452, 1568
 Refresh game list
 ゲームリストを最新の情報に更新します
+
+# osd/winui/mameui.rc: 1548
+Remove selected item from this folder
+このフォルダから選択した項目を削除
 
 # osd/winui/mameui.rc: 203
 Rese&t Playcount
@@ -1818,9 +1910,45 @@ Second screen
 Select &random background image on start
 背景画像をランダムに選択する(&R)
 
+# osd/winui/mameui.rc: 1522
+Select Cabinet tab
+筐体タブの選択
+
+# osd/winui/mameui.rc: 1522
+Select Control panel tab
+コントロールパネルタブの選択
+
+# osd/winui/mameui.rc: 1548
+Select Flyer tab
+広告ポスタータブの選択
+
+# osd/winui/mameui.rc: 1522
+Select History tab
+ヒストリータブの選択
+
 # osd/winui/columnedit.c: 258
 Select Item
 項目の選択
+
+# osd/winui/mameui.rc: 1522
+Select Marquee tab
+マーキータブの選択
+
+# osd/winui/mameui.rc: 1522
+Select PCB tab
+PCBタブの選択
+
+# osd/winui/mameui.rc: 1548
+Select Snapshot tab
+スクリーンショットタブの選択
+
+# osd/winui/mameui.rc: 1529
+Select Story tab
+ストーリータブの選択
+
+# osd/winui/mameui.rc: 1522
+Select Title tab
+タイトルタブの選択
 
 # osd/winui/winui.c: 859
 Select a Background Image
@@ -1850,6 +1978,10 @@ Select a savestate file
 Select a sound file to record
 記録するサウンドファイルを選択
 
+# osd/winui/mameui.rc: 1452
+Select menu style
+メニュースタイルの選択
+
 # osd/winui/mameui.rc: 1048
 Set Game List Not Working Color
 ゲームリストの動作不可の色を設定
@@ -1874,6 +2006,14 @@ Set game list and folder list font
 Set in-game UI color palette
 ゲーム中のUIカラーパレットを設定します
 
+# osd/winui/mameui.rc: 1531
+Set the background image
+背景画像の設定
+
+# osd/winui/mameui.rc: 1471
+Set the clone font color
+クローン文字色の設定
+
 # osd/winui/mameui.rc: 1070
 Show History on Tab
 歴史情報を表\示するタブ
@@ -1894,6 +2034,10 @@ Show game PCB information
 Show or hide folder
 フォルダの表\示/非表\示を切り替えます
 
+# osd/winui/mameui.rc: 1437
+Show or hide tabs in the picture area
+画像エリア内のタブの表\示/非表\示を切り替えます
+
 # osd/winui/mameui.rc: 1437, 1548
 Show or hide the folder list
 フォルダリストの表\示/非表\示を切り替えます
@@ -1902,9 +2046,17 @@ Show or hide the folder list
 Show or hide the picture area
 画像の表\示/非表\示を切り替えます
 
+# osd/winui/mameui.rc: 1437
+Show or hide the screen shot
+スクリーンショットの表\示/非表\示を切り替えます
+
 # osd/winui/mameui.rc: 1437, 1548
 Show or hide the status bar
 ステータスバーの表\示/非表\示を切り替えます
+
+# osd/winui/mameui.rc: 1548
+Show or hide the tabs in the picture area
+画像エリア内のタブの表\示/非表\示を切り替えます
 
 # osd/winui/mameui.rc: 1437, 1548
 Show or hide the toolbar
@@ -1974,6 +2126,10 @@ Small Icons
 Snapshot
 スクリーンショット
 
+# osd/winui/mameui.rc: 1049
+Snapshot Pattern
+スクリーンショットパターン
+
 # osd/winui/layout.c: 122
 Snapshots
 スクリーンショット
@@ -1999,6 +2155,14 @@ Sort column in descending (Z-A) order
 降順で整列します
 
 # osd/winui/mameui.rc: 1568
+Sort items by clone of
+原作で整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by driver
+ドライバで整列します
+
+# osd/winui/mameui.rc: 1568
 Sort items by game description
 ゲーム名で整列します
 
@@ -2009,6 +2173,26 @@ Sort items by manufacturer
 # osd/winui/mameui.rc: 1568
 Sort items by name
 名前で整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by play time
+プレイ時間で整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by roms
+ROMの所有で整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by samples
+サンプルの有無で整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by screen
+画面の向きで整列します
+
+# osd/winui/mameui.rc: 1568
+Sort items by trackball
+トラックボールで整列します
 
 # osd/winui/mameui.rc: 1568
 Sort items by type
@@ -2118,9 +2302,17 @@ Titles
 Toggle Folder List
 フォルダリスト
 
+# osd/winui/mameui.rc: 1543
+Toggle Fullscreen mode
+フルスクリーンの切換
+
 # osd/winui/winui.c: 728
 Toggle Screen Shot
 スクリーンショット
+
+# osd/winui/mameui.rc: 1437
+Toggle full screen mode
+フルスクリーンの切換
 
 # osd/winui/mameui.rc: 415, 424
 Total:
@@ -2370,10 +2562,6 @@ by &Year
 type a keyword
 キーワードを入力
 
-# osd/winui/dialogs.c: 949
- PCB Info: %s [%s]
-
-
 # osd/winui/dialogs.c: 828
  again.\r\n
 
@@ -2386,24 +2574,8 @@ type a keyword
  will now reset the following\n
 
 
-# osd/winui/mameui.rc: 44
-&About MAMEUI
-
-
-# osd/winui/mameui.rc: 960
-&Horizontal
-
-
-# osd/winui/mameui.rc: 974
-&Vertical
-
-
 # osd/winui/dialogs.c: 140
 .\n
-
-
-# osd/winui/mameui.rc: 369
-About MAME Plus!
 
 
 # osd/winui/mameui.rc: 1548
@@ -2412,18 +2584,6 @@ Add selected item to custom folder
 
 # osd/winui/mameui.rc: 383
 Additional MAMEUI code by
-
-
-# osd/winui/properties.c: 427
-All screens
-
-
-# osd/winui/mameui.rc: 1510
-Audit items in this folder
-
-
-# osd/winui/mameui.rc: 1548
-Audit the selected item
 
 
 # osd/winui/mameui.rc: 381
@@ -2444,10 +2604,6 @@ Contains commands to select tabs shown in the picture area
 
 # osd/winui/mameui.rc: 376
 Copyright (C) 1997-2008 The MAME Team
-
-
-# osd/winui/dialogs.c: 133
-Custom folder filters\n
 
 
 # osd/winui/mameui.rc: 1137
@@ -2476,42 +2632,6 @@ Display the properties of the selected item
 
 # osd/winui/mameui.rc: 1452
 Displays items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1531
-Enable the PCB tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the cabinet tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the control panel tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the flyer tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the history tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the marquee tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the snapshot tab
-
-
-# osd/winui/mameui.rc: 1541
-Enable the story tab
-
-
-# osd/winui/mameui.rc: 1531
-Enable the title tab
 
 
 # osd/winui/layout.c: 139
@@ -2562,22 +2682,6 @@ John Hardy IV and Michael Soderstrom
 MAMEUI version by
 
 
-# osd/winui/mameui.rc: 94, 263, 276
-PC&B
-
-
-# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 481
-PCB
-
-
-# osd/winui/layout.c: 132
-PCBs
-
-
-# osd/winui/mameui.rc: 59
-Play and Record &uncompressed AVI Output...
-
-
 # osd/winui/mameui.rc: 1491
 Record the audio output of a game
 
@@ -2588,10 +2692,6 @@ Record the complete output of a game
 
 # osd/winui/mameui.rc: 1491
 Record the video output of a game
-
-
-# osd/winui/mameui.rc: 1548
-Remove selected item from this folder
 
 
 # osd/winui/mameui.rc: 1548
@@ -2610,112 +2710,12 @@ Reset time played for selected item
 Resetting the User Interface options\n
 
 
-# osd/winui/mameui.rc: 1522
-Select Cabinet tab
-
-
-# osd/winui/mameui.rc: 1522
-Select Control panel tab
-
-
-# osd/winui/mameui.rc: 1548
-Select Flyer tab
-
-
-# osd/winui/mameui.rc: 1522
-Select History tab
-
-
-# osd/winui/mameui.rc: 1522
-Select Marquee tab
-
-
-# osd/winui/mameui.rc: 1522
-Select PCB tab
-
-
-# osd/winui/mameui.rc: 1548
-Select Snapshot tab
-
-
-# osd/winui/mameui.rc: 1529
-Select Story tab
-
-
-# osd/winui/mameui.rc: 1522
-Select Title tab
-
-
-# osd/winui/mameui.rc: 1452
-Select menu style
-
-
 # osd/winui/mameui.rc: 1006
 Select the options to be restored to the default settings.
 
 
-# osd/winui/mameui.rc: 1531
-Set the background image
-
-
-# osd/winui/mameui.rc: 1471
-Set the clone font color
-
-
 # osd/winui/mameui.rc: 1471
 Show items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1437
-Show or hide tabs in the picture area
-
-
-# osd/winui/mameui.rc: 1437
-Show or hide the screen shot
-
-
-# osd/winui/mameui.rc: 1548
-Show or hide the tabs in the picture area
-
-
-# osd/winui/mameui.rc: 1049
-Snapshot Pattern
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by clone of
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by driver
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by play time
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by roms
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by samples
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by screen
-
-
-# osd/winui/mameui.rc: 1568
-Sort items by trackball
-
-
-# osd/winui/mameui.rc: 1543
-Toggle Fullscreen mode
-
-
-# osd/winui/mameui.rc: 1437
-Toggle full screen mode
 
 
 # osd/winui/dialogs.c: 136
