@@ -149,6 +149,7 @@ static const char *str_desc[] =
 
 static void scale_allocate_local_buffer(int width, int height, int bank);
 
+#ifndef PTR64
 // functions from scale2x
 static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void (*scale_scale2x_line_16)(UINT16 *dst0, UINT16 *dst1, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
@@ -161,9 +162,11 @@ static void (*scale_scale2x3_line_32)(UINT32 *dst0, UINT32 *dst1, UINT32 *dst2, 
 static int scale_perform_scale2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void (*scale_scale2x4_line_16)(UINT16 *dst0, UINT16 *dst1, UINT16 *dst2, UINT16 *dst3, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
 static void (*scale_scale2x4_line_32)(UINT32 *dst0, UINT32 *dst1, UINT32 *dst2, UINT32 *dst3, const UINT32 *src0, const UINT32 *src1, const UINT32 *src2, unsigned count);
+#endif /* PTR64 */
 
 static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
+#ifndef PTR64
 // functions from superscale.asm
 void superscale_line(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
 void superscale_line_75(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
@@ -185,6 +188,7 @@ void  Init_2xSaIMMX(UINT32 BitFormat);
 
 static void (*scale_2xsai_line)(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
 static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
+#endif /* PTR64 */
 
 // functions from 2xpm
 static int scale_perform_2xpm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
@@ -283,7 +287,7 @@ int scale_exit(void)
 //============================================================
 //	x86_get_features
 //============================================================
-
+#ifndef PTR64
 static UINT32 x86_get_features(void)
 {
 	UINT32 features = 0;
@@ -315,7 +319,7 @@ static UINT32 x86_get_features(void)
 #endif /* MSC_VER */
 	return features;
 }
-
+#endif /* PTR64 */
 
 //============================================================
 //	scale_init
@@ -325,8 +329,10 @@ int scale_init(void)
 {
 	static char name[64];
 
+#ifndef PTR64
 	UINT32 features = x86_get_features();
 	use_mmx = (features & (1 << 23));
+#endif /* PTR64 */
 
 	scale_exit();
 
@@ -366,6 +372,7 @@ int scale_init(void)
 			scale_effect.xsize = scale_effect.ysize = 3;
 			break;
 		}
+#ifndef PTR64
 		case SCALE_EFFECT_EAGLE:
 		{
 			sprintf(name, "Eagle (mmx optimised)");
@@ -424,7 +431,7 @@ int scale_init(void)
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
-		
+#endif /* PTR64 */
 		case SCALE_EFFECT_2XPM:
 		{
 			sprintf(name, "2xPM");
@@ -690,14 +697,17 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 	{
 		case SCALE_EFFECT_NONE:
 			return 0;
+#ifndef PTR64
 		case SCALE_EFFECT_SCALE2X:
 			return scale_perform_scale2x(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_SCALE2X3:
 			return scale_perform_scale2x3(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
 		case SCALE_EFFECT_SCALE2X4:
 			return scale_perform_scale2x4(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
+#endif /* PTR64 */
 		case SCALE_EFFECT_SCALE3X:
 			return scale_perform_scale3x(src, dst, src_pitch, dst_pitch, width, height, depth);
+#ifndef PTR64
 		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
 			return scale_perform_superscale(src, dst, src_pitch, dst_pitch, width, height, depth);
@@ -709,6 +719,7 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			if (update)
 				scale_allocate_local_buffer(src_pitch, height, bank);
 			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
+#endif /* PTR64 */
 		case SCALE_EFFECT_2XPM:
 			return scale_perform_2xpm(src, dst, src_pitch, dst_pitch, width, height, depth);
 #ifdef ASM_HQ
@@ -741,12 +752,12 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 	}
 }
 
-
+#ifdef USE_MMX_INTERP_SCALE
 //============================================================
 //	scale_emms
 //============================================================
 
-static inline void scale_emms(void)
+INLINE void scale_emms(void)
 {
 	if (use_mmx)
 	{
@@ -761,6 +772,7 @@ static inline void scale_emms(void)
 #endif
 	}
 }
+#endif /* USE_MMX_INTERP_SCALE */
 
 //============================================================
 //	scale_allocate_local_buffer
@@ -780,7 +792,7 @@ static void scale_allocate_local_buffer(int width, int height, int bank)
 //============================================================
 //	scale_perform_scale2x
 //============================================================
-
+#ifndef PTR64
 static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank)
 {
 	int y;
@@ -845,7 +857,9 @@ static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 	else
 		scale_scale2x_line_32((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 
 	return 0;
 }
@@ -920,7 +934,9 @@ static int scale_perform_scale2x3(UINT8 *src, UINT8 *dst, int src_pitch, int dst
 	else
 		scale_scale2x3_line_32((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 
 	return 0;
 }
@@ -994,11 +1010,13 @@ static int scale_perform_scale2x4(UINT8 *src, UINT8 *dst, int src_pitch, int dst
 	else
 		scale_scale2x4_line_32((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)(dst + 3 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 
 	return 0;
 }
-
+#endif /* PTR64 */
 
 //============================================================
 //	scale_perform_scale3x
@@ -1054,7 +1072,7 @@ static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 }
 
 
-
+#ifndef PTR64
 //============================================================
 //	scale_perform_superscale
 //============================================================
@@ -1085,7 +1103,9 @@ static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int d
 		dst0 += dst_pitch;
 		dst1 += dst_pitch;
 	}
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 	
 	return 0;
 }
@@ -1110,11 +1130,13 @@ static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 	for (y = 0; y < height; y++, src += src_pitch, dst += 2 * dst_pitch)
 		_eagle_mmx16((unsigned long *)src, (unsigned long *)(src + src_pitch), width, (unsigned long *)dst, (unsigned long *)(dst + dst_pitch));
 
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 
 	return 0;
 }
-
+#endif /* PTR64 */
 
 
 //============================================================
@@ -1136,7 +1158,7 @@ static int scale_perform_2xpm(UINT8 *src, UINT8 *dest, int src_pitch, int dst_pi
 }
 
 
-
+#ifndef PTR64
 //============================================================
 //	scale_perform_2xsai
 //============================================================
@@ -1182,7 +1204,7 @@ static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 
 	return 0;
 }
-
+#endif /* PTR64 */
 
 
 //============================================================
@@ -1194,7 +1216,9 @@ static int scale_perform_hq2xasm(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 	interp_init();
 
 	hq2x_16((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
+#ifdef USE_MMX_INTERP_SCALE
 	scale_emms();
+#endif /* USE_MMX_INTERP_SCALE */
 
 	return 0;
 }

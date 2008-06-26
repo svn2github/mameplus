@@ -75,15 +75,7 @@ RC = @windres --use-temp-file
 
 RCDEFS = -DNDEBUG -D_WIN32_IE=0x0501
 
-RCFLAGS = -O coff -I $(WINOBJ)
-ifneq ($(NO_DLL),)
-ifneq ($(WINUI),)
-else
-RCFLAGS += -I $(WINSRC)
-endif
-else
-RCFLAGS += -I $(WINSRC)
-endif
+RCFLAGS = -O coff -I $(WINSRC) -I $(WINOBJ)
 
 
 
@@ -115,7 +107,7 @@ else
     endif
 endif
 
-ifneq ($(MSVC_BUILD),)
+ifdef MSVC_BUILD
 
     VCONV = $(WINOBJ)/vconv$(EXE)
 
@@ -138,7 +130,7 @@ ifneq ($(MSVC_BUILD),)
     endif
     
     # turn on link-time codegen if the MAXOPT flag is also set
-    ifneq ($(MAXOPT),)
+    ifdef MAXOPT
         ifneq ($(ICC_BUILD),)
             CC += /Qipo /Qipo_obj
         else
@@ -164,7 +156,7 @@ ifneq ($(MSVC_BUILD),)
     endif
 
     # add some VC++-specific defines
-    DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -Dinline=__inline -D__inline__=__inline -Dsnprintf=_snprintf
+    DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -D__inline__=__inline -Dsnprintf=_snprintf
     
     # make msvcprep into a pre-build step
     # OSPREBUILD = $(VCONV)
@@ -211,7 +203,7 @@ DEFS += -DX64_WINDOWS_ABI
 DEFS += -Dmain=utf8_main
 
 # debug build: enable guard pages on all memory allocations
-ifneq ($(DEBUG),)
+ifdef DEBUG
 # mamep: disable malloc debug
 #DEFS += -DMALLOC_DEBUG
 #LDFLAGS += -Wl,--allow-multiple-definition
@@ -231,17 +223,16 @@ endif
 # add our prefix files to the mix
 CFLAGS += -include $(WINSRC)/winprefix.h
 
-ifneq ($(NO_FORCEINLINE),)
+ifdef NO_FORCEINLINE
 DEFS += -DNO_FORCEINLINE
 endif
 
-ifneq ($(WIN95_MULTIMON),)
+ifdef WIN95_MULTIMON
 CFLAGS += -DWIN95_MULTIMON
 endif
 
 # add the windows libaries
-# mamep: -lunicows MUST be in the first place
-LIBS += -lunicows -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
+LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
 ifdef PTR64
 ifdef MSVC_BUILD
@@ -255,7 +246,6 @@ endif
 
 DEFS += -DMAMENAME=APPNAME
 
-#DEFS+= -DNONAMELESSUNION
 DEFS+= -DDIRECTSOUND_VERSION=0x0300
 DEFS+= -DDIRECTDRAW_VERSION=0x0300
 DEFS+= -DCLIB_DECL=__cdecl
@@ -323,12 +313,19 @@ ifneq ($(USE_SCALE_EFFECTS),)
 OSDOBJS += $(WINOBJ)/scale.o
 
 OBJDIRS += $(WINOBJ)/scale
-OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
-ifneq ($(ASM_HQ),)
-DEFS += -DASM_HQ
-OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
+ifndef PTR64
+  OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
+  ifneq ($(ASM_HQ),)
+    DEFS += -DASM_HQ
+    OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
+  endif
+OSDOBJS += $(WINOBJ)/scale/scale2x.o
 endif
-OSDOBJS += $(WINOBJ)/scale/scale2x.o $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
+OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
+
+ifdef PTR64
+USE_MMX_INTERP_SCALE =
+endif
 
 ifneq ($(USE_MMX_INTERP_SCALE),)
 DEFS += -DUSE_MMX_INTERP_SCALE
@@ -358,7 +355,7 @@ OSDOBJS += $(VCOBJS)
 CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
-ifneq ($(DEBUGGER),)
+ifdef DEBUGGER
 OSDOBJS += \
 	$(WINOBJ)/debugwin.o
 endif
@@ -368,12 +365,19 @@ CLIRESFILE = $(WINOBJ)/mame.res
 VERSIONRES = $(WINOBJ)/version.res
 
 
+ifdef MSVC_BUILD
+DLLLINK = lib
+else
+DLLLINK = dll
+endif
 
+
+
+ifdef WINUI
 #-------------------------------------------------
 # if building with a UI, include the ui.mak
 #-------------------------------------------------
 
-ifneq ($(WINUI),)
 include $(SRC)/osd/winui/winui.mak
 endif
 
@@ -403,10 +407,6 @@ $(LEDUTIL): $(LEDUTILOBJS) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
-# if we are not using x86drc.o, we should
-ifeq ($(X86_MIPS3_DRC),)
-COREOBJS += $(OBJ)/x86drc.o
-endif
 
 
 #-------------------------------------------------

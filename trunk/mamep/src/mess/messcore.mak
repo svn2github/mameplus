@@ -13,6 +13,13 @@
 
 #COREDEFS += -DMESS
 
+# add some additional include libraries for the mess files
+CFLAGS += \
+	-I$(SRC)/mess \
+	-I$(SRC)/mess/includes \
+	-I$(OBJ)/mess/layout \
+	-I$(SRC)/mess/osd/$(OSD)
+
 
 # Root object directories
 MAMESRC = $(SRC)/mame
@@ -62,6 +69,8 @@ OBJDIRS += \
 #-------------------------------------------------
 # MESS core objects
 #-------------------------------------------------
+
+LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\

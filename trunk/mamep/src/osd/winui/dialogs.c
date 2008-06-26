@@ -888,8 +888,8 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 
 			hPcbInfo = hDlg;
 
-			g_lpPcbInfoWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_WNDPROC);
-			SetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWL_WNDPROC, (LONG)PcbInfoWndProc);
+			g_lpPcbInfoWndProc = (WNDPROC)(LONG)(int)GetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWLP_WNDPROC);
+			SetWindowLong(GetDlgItem(hDlg, IDC_PCBINFO), GWLP_WNDPROC, (LONG)PcbInfoWndProc);
 
 			memset((void *)&font, 0, sizeof(font));
 			font.lfHeight = -13;

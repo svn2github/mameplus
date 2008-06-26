@@ -28,8 +28,7 @@ MESSLIBOSD += \
 	$(MESS_WINOBJ)/tapedlg.o
 
 ifeq ($(NO_DLL),)
-    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
-    MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
+MESSLIBOSD += $(CLIRESFILE)
 else
     ifeq ($(WINUI),)
         $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
@@ -65,4 +64,5 @@ $(OBJ)/ui/%.res: src/ui/%.rc
 $(MESS_WINUIOBJ)/%.res: $(MESS_WINUISRC)/%.rc
 	@echo Compiling mame32 resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+
 

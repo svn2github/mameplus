@@ -12,8 +12,6 @@
 
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
-MESSSRC = $(SRC)/mess
-MESSOBJ = $(OBJ)/mess
 
 AUDIO = $(MAMEOBJ)/audio
 DRIVERS = $(MAMEOBJ)/drivers
@@ -21,27 +19,13 @@ LAYOUT = $(MAMEOBJ)/layout
 MACHINE = $(MAMEOBJ)/machine
 VIDEO = $(MAMEOBJ)/video
 
-MESS_AUDIO = $(MESSOBJ)/audio
-MESS_DEVICES = $(MESSOBJ)/devices
-MESS_DRIVERS = $(MESSOBJ)/drivers
-MESS_FORMATS = $(MESSOBJ)/formats
-MESS_LAYOUT = $(MESSOBJ)/layout
-MESS_MACHINE = $(MESSOBJ)/machine
-MESS_VIDEO = $(MESSOBJ)/video
-
 OBJDIRS += \
 	$(AUDIO) \
 	$(DRIVERS) \
 	$(LAYOUT) \
 	$(MACHINE) \
 	$(VIDEO) \
-	$(MESS_AUDIO) \
-	$(MESS_DEVICES) \
-	$(MESS_DRIVERS) \
-	$(MESS_FORMATS) \
-	$(MESS_LAYOUT) \
-	$(MESS_MACHINE) \
-	$(MESS_VIDEO) \
+
 
 
 #-------------------------------------------------

@@ -70,12 +70,12 @@ const game_driver * const consoledrivers[] =
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
 	DRIVER( gensvp )	/* 1993 Sega Genesis (USA w/SVP chip)					*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
-
+#ifndef NEOCPSMAME	//fixme: compile bug?
 	/* NEC */
 	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/
 	DRIVER( tg16 )		/* Turbo Grafix-16  NEC 1989-1993					*/
 	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
-
+#endif 
 	/* CAPCOM */
 	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/
 

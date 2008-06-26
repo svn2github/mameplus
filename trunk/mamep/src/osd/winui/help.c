@@ -101,7 +101,6 @@ HWND HelpFunction(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwD
 
 static void Help_Load(void)
 {
-#if defined(__GNUC__)
 	g_hHelpLib = LoadLibrary(TEXT("hhctrl.ocx"));
 	if (g_hHelpLib)
 	{
@@ -117,7 +116,4 @@ static void Help_Load(void)
 			g_hHelpLib = NULL;
 		}
 	}
-#else
-	g_pHtmlHelp = (HtmlHelpProc)HtmlHelp;
-#endif
 }

@@ -83,22 +83,22 @@ EMUOBJS = \
 	$(EMUOBJ)/datafile.o \
 	$(EMUOBJ)/uilang.o
 
-ifneq ($(USE_IPS),)
+ifdef USE_IPS
 EMUOBJS += \
 	$(EMUOBJ)/patch.o
 endif
 
-ifneq ($(USE_HISCORE),)
+ifdef USE_HISCORE
 EMUOBJS += \
 	$(EMUOBJ)/hiscore.o
 endif
 
-ifneq ($(PROFILER),)
+ifdef PROFILER
 EMUOBJS += \
 	$(EMUOBJ)/profiler.o
 endif
 
-ifneq ($(DEBUGGER),)
+ifdef DEBUGGER
 EMUOBJS += \
 	$(EMUOBJ)/debug/debugcmd.o \
 	$(EMUOBJ)/debug/debugcmt.o \
@@ -210,7 +210,7 @@ include $(EMUSRC)/cpu/cpu.mak
 
 $(LIBCPU): $(CPUOBJS)
 
-ifneq ($(DEBUGGER),)
+ifdef DEBUGGER
 $(LIBCPU): $(DBGOBJS)
 endif
 

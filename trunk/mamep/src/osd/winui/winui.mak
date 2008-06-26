@@ -138,8 +138,7 @@ endif
 		-ladvapi32 \
 		-lddraw \
 		-ldinput \
-		-ldxguid \
-		-lunicows
+		-ldxguid
 ifeq ($(MSVC_BUILD),)
     ifneq ($(USE_IMAGE_MENU),)
     LIBS += \

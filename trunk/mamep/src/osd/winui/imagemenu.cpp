@@ -1088,7 +1088,7 @@ LRESULT CALLBACK ImageMenu_ParentProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM
             menuPopups.clear();
             
             //Unsubclass main window
-            SetWindowLong(hwnd, GWL_WNDPROC, (LONG)originalProc);
+            SetWindowLong(hwnd, GWLP_WNDPROC, (LONG)originalProc);
             RemoveProp(hwnd, ORIGINALPROCPROP);
         }
         break;
@@ -1177,7 +1177,7 @@ BOOL ImageMenu_Create(HWND hwnd, HMENU menuHandle, BOOL isMenuBar)
     }
     
     //Subclass the main window to handle WM_DRAWITEM & WM_MEASUREITEM
-    WNDPROC originalProc = (WNDPROC)GetWindowLong(hwnd, GWL_WNDPROC);
+    WNDPROC originalProc = (WNDPROC)GetWindowLong(hwnd, GWLP_WNDPROC);
     if (originalProc != ImageMenu_ParentProc)
     {
         //Windows ME(98?) with an UNICODE build returns a different
@@ -1190,7 +1190,7 @@ BOOL ImageMenu_Create(HWND hwnd, HMENU menuHandle, BOOL isMenuBar)
         //procedure will end up being caught in an infinite loop.
         if ( !GetProp(hwnd, ORIGINALPROCPROP) )
             if ( SetProp(hwnd, ORIGINALPROCPROP, (HANDLE)originalProc) )
-                SetWindowLong(hwnd, GWL_WNDPROC, (LONG)ImageMenu_ParentProc);
+                SetWindowLong(hwnd, GWLP_WNDPROC, (LONG)ImageMenu_ParentProc);
     }
     
     return ImageMenu_Fill(hwnd, menuHandle, isMenuBar);

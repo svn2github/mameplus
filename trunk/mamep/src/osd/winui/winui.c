@@ -301,7 +301,7 @@ static void             Win32UI_exit(void);
 static BOOL             PumpMessage(void);
 static BOOL             OnIdle(HWND hWnd);
 static void             OnSize(HWND hwnd, UINT state, int width, int height);
-static long WINAPI      MameWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam);
+static LRESULT CALLBACK MameWindowProc(HWND hwnd,UINT message,UINT wParam,LONG lParam);
 
 static void             SetView(int menu_id);
 static void             ResetListView(void);
@@ -1116,7 +1116,7 @@ int MameUIMain(HINSTANCE    hInstance,
 	if (__argc != 1)
 	{
 		/* Rename main because gcc will use it instead of WinMain even with -mwindows */
-		extern int DECL_SPEC mame_main(int, char**);
+		extern int /*DECL_SPEC*/ mame_main(int, char**);
 		exit(mame_main(__argc, __argv));
 	}
 	if (!Win32UI_init(hInstance, lpCmdLine, nCmdShow))
