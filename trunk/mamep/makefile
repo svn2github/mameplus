@@ -25,16 +25,15 @@ include config.def
 # src/$(TARGET)/$(SUBTARGET).mak
 #-------------------------------------------------
 
-ifneq ($(NEOCPSMAME),)
-    TARGET = mame
-    SUBTARGET = neocpsmame
-else
-    ifeq ($(TARGET),)
-        TARGET = mame
-    endif
+ifndef TARGET
+TARGET = mame
 endif
 
-ifeq ($(SUBTARGET),)
+ifdef NEOCPSMAME
+SUBTARGET = neocpsmame
+endif
+
+ifndef SUBTARGET
 SUBTARGET = $(TARGET)
 endif
 
@@ -46,7 +45,7 @@ endif
 # src/osd/$(OSD)/$(OSD).mak
 #-------------------------------------------------
 
-ifeq ($(OSD),)
+ifndef OSD
 OSD = windows
 endif
 
@@ -55,16 +54,16 @@ CROSS_BUILD_OSD = $(OSD)
 endif
 
 ifneq ($(NO_DLL),)
-    ifneq ($(WINUI),)
-        SUFFIX = guinodll
-    else
-        SUFFIX = nodll
-    endif
+  ifneq ($(WINUI),)
+    SUFFIX = guinodll
+  else
+    SUFFIX = nodll
+  endif
 # no dll version
-    DONT_USE_DLL=1
+  DONT_USE_DLL=1
 else
 # always define WINUI = 1 for mamelib.dll
-    WINUI=1
+  WINUI=1
 endif
 
 
@@ -75,7 +74,7 @@ endif
 # win32, unix, macosx, os2
 #-------------------------------------------------
 
-ifeq ($(TARGETOS),)
+ifndef TARGETOS
 ifeq ($(OSD),windows)
 TARGETOS = win32
 else
@@ -179,14 +178,9 @@ BUILD_ZLIB = 1
 # sanity check the configuration
 #-------------------------------------------------
 
-# disable DRC cores for 64-bit builds
-ifneq ($(PTR64),)
-X86_M68K_DRC =
-endif
-
 # specify a default optimization level if none explicitly stated
-ifeq ($(OPTIMIZE),)
-ifeq ($(SYMBOLS),)
+ifndef OPTIMIZE
+ifndef SYMBOLS
 OPTIMIZE = 3
 else
 OPTIMIZE = 0
@@ -194,8 +188,8 @@ endif
 endif
 
 # profiler defaults to on for DEBUG builds
-ifneq ($(DEBUG),)
-ifneq ($(PROFILER),)
+ifdef DEBUG
+ifndef PROFILER
 PROFILER = 1
 endif
 endif
@@ -234,7 +228,7 @@ RM = @rm -f
 #-------------------------------------------------
 
 # debugger builds just get the 'd' suffix and nothing more
-ifneq ($(DEBUGGER),)
+ifdef DEBUGGER
 DEBUGSUFFIX = d
 endif
 
@@ -249,6 +243,18 @@ endif
 # fullname is prefix+name+suffix+debugsuffix
 FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)$(DEBUGSUFFIX)
 
+ifeq ($(NO_DLL),)
+DEFS += -DWIN32 -DWINNT
+
+EMULATORCLI = $(FULLNAME)$(EXE)
+EMULATORDLL = $(FULLNAME)lib.dll
+EMULATORGUI = $(FULLNAME)gui$(EXE)
+EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
+else
+# add an EXE suffix to get the final emulator name
+EMULATOR = $(FULLNAME)$(EXE)
+EMULATORALL = $(EMULATOR)
+endif
 
 
 #-------------------------------------------------
@@ -289,8 +295,10 @@ endif
 DEFS += -DXML_STATIC -Drestrict=__restrict
 
 # define PTR64 if we are a 64-bit target
-ifneq ($(PTR64),)
+ifdef PTR64
 DEFS += -DPTR64
+# disable DRC cores for 64-bit builds
+X86_M68K_DRC =
 endif
 
 # define ENABLE_DEBUGGER if we are a debugger-enabled build
@@ -299,14 +307,14 @@ DEFS += -DENABLE_DEBUGGER
 endif
 
 # define MAME_DEBUG if we are a debugging build
-ifneq ($(DEBUG),)
+ifdef DEBUG
     DEFS += -DMAME_DEBUG
 else
     DEFS += -DNDEBUG 
 endif
 
 # define MAME_PROFILER if we are a profiling build
-ifneq ($(PROFILER),)
+ifdef PROFILER
 DEFS += -DMAME_PROFILER
 endif
 
@@ -395,14 +403,8 @@ CFLAGS = -std=gnu89
 # this speeds it up a bit by piping between the preprocessor/compiler/assembler
 CFLAGS += -pipe
 
-ifneq ($(W_ERROR),)
-    CFLAGS += -Werror
-else
-    CFLAGS += -Wno-error
-endif
-
 # add -g if we need symbols
-ifneq ($(SYMBOLS),)
+ifdef SYMBOLS
 CFLAGS += -g
 endif
 
@@ -424,7 +426,7 @@ CFLAGS += \
 	-Wno-pointer-sign \
 
 # add profiling information for the compiler
-ifneq ($(PROFILE),)
+ifdef PROFILE
 CFLAGS += -pg
 endif
 
@@ -439,24 +441,12 @@ CFLAGS += -O$(OPTIMIZE)
 # if we are optimizing, include optimization options
 # and make all errors into warnings
 ifneq ($(OPTIMIZE),0)
-CFLAGS += $(ARCHOPTS) -fno-strict-aliasing
+CFLAGS += -Wno-error $(ARCHOPTS) -fno-strict-aliasing
 endif
 
 # if symbols are on, make sure we have frame pointers
-ifneq ($(SYMBOLS),)
+ifdef SYMBOLS
 CFLAGS += -fno-omit-frame-pointer
-endif
-
-ifeq ($(NO_DLL),)
-    DEFS += -DWIN32 -DWINNT
-
-    EMULATORCLI = $(FULLNAME)$(EXE)
-    EMULATORDLL = $(FULLNAME)lib.dll
-    EMULATORGUI = $(FULLNAME)gui$(EXE)
-    EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
-else
-    EMULATOR = $(FULLNAME)$(EXE)
-    EMULATORALL = $(EMULATOR)
 endif
 
 
@@ -477,19 +467,7 @@ CFLAGS += \
 	-I$(SRC)/osd \
 	-I$(SRC)/osd/$(OSD) \
 
-CFLAGS += \
-	-I$(SRC)/mess \
-	-I$(SRC)/mess/includes \
-	-I$(OBJ)/mess/layout \
-	-I$(SRC)/mess/osd/$(OSD)
 
-#-------------------------------------------------
-# defines needed by multiple make files 
-#-------------------------------------------------
-
-BUILDSRC = $(SRC)/build
-BUILDOBJ = $(OBJ)/build
-BUILDOUT = $(BUILDOBJ)
 
 #-------------------------------------------------
 # linking flags
@@ -501,16 +479,15 @@ LDFLAGS = -Wl,--warn-common -Lextra/lib
 LDFLAGSEMULATOR =
 
 # add profiling information for the linker
-ifneq ($(PROFILE),)
-    LDFLAGS += -pg
+ifdef PROFILE
+LDFLAGS += -pg
 endif
 
 # strip symbols and other metadata in non-symbols and non profiling builds
-
-ifeq ($(SYMBOLS),)
-    ifeq ($(PROFILE),)
-        LDFLAGS += -s
-    endif
+ifndef SYMBOLS
+ifndef PROFILE
+LDFLAGS += -s
+endif
 endif
 
 # output a map file (emulator only)
@@ -555,7 +532,6 @@ LIBCPU = $(OBJ)/libcpu.a
 LIBSOUND = $(OBJ)/libsound.a
 LIBUTIL = $(OBJ)/libutil.a
 LIBOCORE = $(OBJ)/libocore.a
-LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
 VERSIONOBJ = $(OBJ)/version.o
@@ -571,7 +547,7 @@ VERSIONOBJ = $(OBJ)/version.o
 LIBS = 
 
 # add expat XML library
-ifneq ($(BUILD_EXPAT),)
+ifdef BUILD_EXPAT
 CFLAGS += -I$(SRC)/lib/expat
 EXPAT = $(OBJ)/libexpat.a
 else
@@ -580,7 +556,7 @@ EXPAT =
 endif
 
 # add ZLIB compression library
-ifneq ($(BUILD_ZLIB),)
+ifdef BUILD_ZLIB
 CFLAGS += -I$(SRC)/lib/zlib
 ZLIB = $(OBJ)/libz.a
 else
@@ -597,22 +573,30 @@ endif
 
 all: maketree buildtools emulator
 
+#-------------------------------------------------
+# defines needed by multiple make files 
+#-------------------------------------------------
 
+BUILDSRC = $(SRC)/build
+BUILDOBJ = $(OBJ)/build
+BUILDOUT = $(BUILDOBJ)
 
 #-------------------------------------------------
 # include the various .mak files
 #-------------------------------------------------
+
+# mamep: must stay before MAME OSD
+ifdef MAMEMESS
+# include MESS core defines
+include $(SRC)/mess/messcore.mak
+include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
+endif
 
 # include OSD-specific rules first
 include $(SRC)/osd/$(OSD)/$(OSD).mak
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
-ifdef MAMEMESS
-# include MESS core defines
-include $(SRC)/mess/messcore.mak
-include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
-endif
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak
@@ -623,13 +607,6 @@ include $(SRC)/emu/emu.mak
 # combine the various definitions to one
 CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
 
-ifneq ($(BUILD_EXPAT),)
-COREOBJS += $(EXPAT)
-endif
-
-ifneq ($(BUILD_ZLIB),)
-COREOBJS += $(ZLIB)
-endif
 
 
 #-------------------------------------------------
@@ -671,15 +648,10 @@ $(sort $(OBJDIRS)):
 # executable targets and dependencies
 #-------------------------------------------------
 
-ifdef MSVC_BUILD
-DLLLINK=lib
-else
-DLLLINK=dll
-endif
-
 ifndef EXECUTABLE_DEFINED
 
 ifeq ($(NO_DLL),)
+
 $(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 # always recompile the version string
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
@@ -692,13 +664,13 @@ $(EMULATORGUI):	$(EMULATORDLL) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE)
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/winui/guimain.o $(GUIRESFILE) $(LIBS) -o $@ $(MAPGUIFLAGS)
 
 # cli target
-$(EMULATORCLI): $(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
+$(EMULATORCLI):	$(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $(FULLNAME)lib.$(DLLLINK) $(OBJ)/osd/windows/climain.o $(CLIRESFILE) $(LIBS) -o $@ $(MAPCLIFLAGS)
 else
-  ifneq ($(WINUI),)
-# gui target
-$(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
+  ifdef WINUI
+  # gui target
+$(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPFLAGS)
@@ -709,11 +681,8 @@ $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(MESSLIBOSD) $(LI
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPFLAGS)
   endif
+  endif
 endif
-
-endif
-
-
 
 #-------------------------------------------------
 # generic rules
