@@ -24,6 +24,6 @@ void cheat_init(running_machine *machine);
 
 UINT32 cheat_menu(running_machine *machine, UINT32 state);
 
-void cheat_display_watches(void);
+void cheat_display_watches(running_machine *machine);
 
 #endif	/* __CHEAT_H__ */

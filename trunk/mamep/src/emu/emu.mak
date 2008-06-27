@@ -45,6 +45,7 @@ EMUOBJS = \
 	$(EMUOBJ)/cpuint.o \
 	$(EMUOBJ)/cpuintrf.o \
 	$(EMUOBJ)/crsshair.o \
+	$(EMUOBJ)/debugger.o \
 	$(EMUOBJ)/devintrf.o \
 	$(EMUOBJ)/drawgfx.o \
 	$(EMUOBJ)/driver.o \
@@ -76,11 +77,19 @@ EMUOBJS = \
 	$(EMUOBJ)/ui.o \
 	$(EMUOBJ)/uigfx.o \
 	$(EMUOBJ)/uimenu.o \
-	$(EMUOBJ)/uitext.o \
 	$(EMUOBJ)/validity.o \
 	$(EMUOBJ)/video.o \
 	$(EMUOBJ)/watchdog.o \
+	$(EMUOBJ)/debug/debugcmd.o \
+	$(EMUOBJ)/debug/debugcmt.o \
+	$(EMUOBJ)/debug/debugcon.o \
+	$(EMUOBJ)/debug/debugcpu.o \
+	$(EMUOBJ)/debug/debughlp.o \
+	$(EMUOBJ)/debug/debugvw.o \
+	$(EMUOBJ)/debug/express.o \
+	$(EMUOBJ)/debug/textbuf.o
 	$(EMUOBJ)/datafile.o \
+	$(EMUOBJ)/uitext.o \
 	$(EMUOBJ)/uilang.o
 
 ifdef USE_IPS
@@ -96,18 +105,6 @@ endif
 ifdef PROFILER
 EMUOBJS += \
 	$(EMUOBJ)/profiler.o
-endif
-
-ifdef DEBUGGER
-EMUOBJS += \
-	$(EMUOBJ)/debug/debugcmd.o \
-	$(EMUOBJ)/debug/debugcmt.o \
-	$(EMUOBJ)/debug/debugcon.o \
-	$(EMUOBJ)/debug/debugcpu.o \
-	$(EMUOBJ)/debug/debughlp.o \
-	$(EMUOBJ)/debug/debugvw.o \
-	$(EMUOBJ)/debug/express.o \
-	$(EMUOBJ)/debug/textbuf.o
 endif
 
 EMUSOUNDOBJS = \
@@ -208,11 +205,7 @@ $(LIBEMU): $(EMUOBJS) $(EMUSOUNDOBJS) $(EMUAUDIOOBJS) $(EMUDRIVEROBJS) $(EMUMACH
 
 include $(EMUSRC)/cpu/cpu.mak
 
-$(LIBCPU): $(CPUOBJS)
-
-ifdef DEBUGGER
-$(LIBCPU): $(DBGOBJS)
-endif
+$(LIBCPU): $(CPUOBJS) $(DBGOBJS)
 
 
 

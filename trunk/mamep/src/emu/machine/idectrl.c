@@ -418,7 +418,9 @@ static void swap_strncpy(UINT8 *dst, const char *src, int field_size_in_words)
 {
 	int i;
 
-	for (i = 0; i < field_size_in_words * 2 && src[i] != 0; i++)
+	assert(strlen(src) <= (field_size_in_words*2));
+
+	for (i = 0; i < strlen(src); i++)
 		dst[i ^ 1] = src[i];
 	for ( ; i < field_size_in_words * 2; i++)
 		dst[i ^ 1] = ' ';
@@ -1160,7 +1162,7 @@ static void handle_command(ide_state *ide, UINT8 command)
 
 		default:
 			LOGPRINT(("IDE unknown command (%02X)\n", command));
-			DEBUGGER_BREAK;
+			debugger_break(ide->device->machine);
 			break;
 	}
 }

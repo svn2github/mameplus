@@ -15,6 +15,7 @@
 #include "uitext.h"
 #include "machine/eeprom.h"
 #include "cheat.h"
+#include "deprecat.h"
 #include <ctype.h>
 #include <math.h>
 
@@ -22,7 +23,7 @@
 #include "cheatms.h"
 #endif
 
-#define OSD_READKEY_KLUDGE	1
+#define OSD_READKEY_KLUDGE 1
 
 /***************************************************************************
     MACROS
@@ -280,7 +281,7 @@ enum		// operands
 	kSearchOperand_First,
 	kSearchOperand_Value,
 
-	kSearchOperand_Max = kSearchOperand_Value
+	kSearchOperand_Max
 };
 
 enum		// bits
@@ -742,6 +743,33 @@ static const char *const kWatchDisplayTypeStringList[] =
 	"ASCII"
 };
 
+static const struct _cheat_format cheat_format_table[] =
+{
+		/* option - :_command:TYPE */
+	{	":_command:%[^:\n\r]",																	1,	8,	0,	0	},
+#ifdef MESS
+		/* code (new) - :MACHINE_NAME::CRC::TYPE::ADDRESS::DATA::EXTEND_DATA:(DESCRIPTION:COMMENT) */
+	{	":%8[^:\n\r]::%8X::%10[^:\n\r]::%X::%8[^:\n\r]::%8[^:\n\r]:%[^:\n\r]:%[^:\n\r]",	6,	10,	8,	8	},
+		/* code (old) - :MACHINE_NAME:CRC:TYPE:ADDRESS:DATA:EXTEND_DATA:(DESCRIPTION:COMMENT) */
+	{	":%8[^:\n\r]:8X:%8[^:\n\r]:%X:%8[^:\n\r]:%8[^:\n\r]:%[^:\n\r]:%[^:\n\r]",		6,	8,	8,	0	},
+		/* code (older) - :MACHINE_NAME:CRC:CPU:ADDRESS:DATA:TYPE:(DESCRIPTION:COMMENT) */
+	{	"%8[^:\n\r]:%8X:%d:%X:%X:%d:%[^:\n\r]:%[^:\n\r]",										5,	0,	0,	8	},
+		/* user region - :MACHINE_NAME:CRC:CPU:ADDRESS_SPACE:START_ADDRESS:END_ADDRESS:STATUS:(DESCRIPTION) */
+	{	":%8[^:\n\r]:%8X:%2X:%2X:%X:%X:%1X:%[^:\n\r]",											7,	0,	0,	0	},
+#else
+		/* code (new) - :GAME_NAME::TYPE::ADDRESS::DATA::EXTEND_DATA:(DESCRIPTION:COMMENT) */
+	{	":%8[^:\n\r]::%10[^:\n\r]::%X::%8[^:\n\r]::%8[^:\n\r]:%[^:\n\r]:%[^:\n\r]",		5,	10,	8,	7	},
+		/* code (old) - :GAME_NAME:TYPE:ADDRESS:DATA:EXTEND_DATA:(DESCRIPTION:COMMENT) */
+	{	":%8[^:\n\r]:%8[^:\n\r]:%X:%8[^:\n\r]:%8[^:\n\r]:%[^:\n\r]:%[^:\n\r]",			5,	8,	8,	0	},
+		/* code (older) - :GAME_NAME:CPU:ADDRESS:DATA:TYPE:(DESCRIPTION:COMMENT) */
+	{	"%8[^:\n\r]:%d:%X:%X:%d:%[^:\n\r]:%[^:\n\r]",											4,	0,	0,	7	},
+		/* user region - :GAME_NAME:CPU:ADDRESS_SPACE:START_ADDRESS:END_ADDRESS:STATUS:(DESCRIPTION) */
+	{	":%8[^:\n\r]:%2X:%2X:%X:%X:%1X:%[^:\n\r]",												6,	0,	0,	0	},
+#endif	/* MESS */
+	/* end of table */
+	{	0	}
+};
+
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
@@ -799,6 +827,10 @@ static int		EditWatch(running_machine *machine, WatchInfo * entry, int selection
 
 static int		SelectOptions(running_machine *machine, int selection);
 static int		SelectSearch(running_machine *machine, int selection);
+
+/********** PRINTER **********/
+static UINT32	print_binary(char *buf, UINT32 data, UINT32 mask);
+static UINT32	print_ascii(char *buf, UINT32 data, UINT8 size);
 
 /********** ENTRY LIST **********/
 static void		ResizeCheatList(UINT32 newLength);
@@ -1154,7 +1186,7 @@ static int ReadKeyAsync(int flush)
 	}
 }
 
-#define osd_readkey_unicode ReadKeyAsync
+#define osd_readkey_unicode read_key_async
 
 #endif
 
@@ -1289,7 +1321,7 @@ static char * DoDynamicEditTextField(char * buf)
 		/* ----- backspace ----- */
 		if(buf)
 		{
-			size_t	length = strlen(buf);
+			size_t length = strlen(buf);
 
 			if(length > 0)
 			{
@@ -1300,7 +1332,6 @@ static char * DoDynamicEditTextField(char * buf)
 				else
 				{
 					free(buf);
-
 					buf = NULL;
 				}
 			}
@@ -1433,11 +1464,11 @@ static UINT32 DoEditHexFieldSigned(UINT32 data, UINT32 mask)
 	return data;
 }
 
-/*--------------------------------------------------------
-  DoEditDecField - edit dec field with direct key input
---------------------------------------------------------*/
+/*-----------------------------------------------------------
+  do_edit_dec_field - edit dec field with direct key input
+-----------------------------------------------------------*/
 
-static INT32 DoEditDecField(INT32 data, INT32 min, INT32 max)
+static INT32 do_edit_dec_field(INT32 data, INT32 min, INT32 max)
 {
 	char	code = osd_readkey_unicode(0) & 0xFF;
 
@@ -1810,10 +1841,10 @@ static UINT32 DoShift(UINT32 input, INT8 shift)
 }
 
 /*----------------------------------------
-  BCDToDecimal - convert a value to hex
+  bcd_to_decimal - convert a value to hex
 ----------------------------------------*/
 
-static UINT32 BCDToDecimal(UINT32 value)
+static UINT32 bcd_to_decimal(UINT32 value)
 {
 	UINT32	accumulator = 0;
 	UINT32	multiplier = 1;
@@ -1831,10 +1862,10 @@ static UINT32 BCDToDecimal(UINT32 value)
 }
 
 /*----------------------------------------
-  DecimalToBCD - convert a value to dec
+  decimal_to_bcd - convert a value to dec
 ----------------------------------------*/
 
-static UINT32 DecimalToBCD(UINT32 value)
+static UINT32 decimal_to_bcd(UINT32 value)
 {
 	UINT32	accumulator = 0;
 	UINT32	divisor = 10;
@@ -1996,6 +2027,24 @@ static char * CreateStringCopy(char * buf)
 	}
 
 	return temp;
+}
+/*-------------------------------------------------------------
+  create_strings_with_edit_cursor - strings with edit cursor
+-------------------------------------------------------------*/
+
+static char *create_strings_with_edit_cursor(char *buf, int data, int total_digits, INT8 current_cursor)
+{
+	int i;
+
+	for(i = total_digits; i >= 0; i--)
+	{
+		if(i == current_cursor)
+			buf += sprintf(buf, "[%X]", (data & kIncrementMaskTable[i]) / kIncrementValueTable[i]);
+		else
+			buf += sprintf(buf, "%X", (data & kIncrementMaskTable[i]) / kIncrementValueTable[i]);
+	}
+
+	return buf;
 }
 
 /*------------------------------------------------------------
@@ -8861,6 +8910,29 @@ static SearchInfo *	GetCurrentSearch(void)
 	return &searchList[currentSearchIdx];
 }
 
+/*---------------------------------------------------------------------
+  resize_menu_item_info - memory allocation for cheat menu item info
+---------------------------------------------------------------------*/
+
+static void resize_menu_item_info(UINT32 new_length)
+{
+	if(new_length != menu_item_info_length)
+	{
+		/* reallocate cheat menu item info */
+		menu_item_info = realloc(menu_item_info, new_length * sizeof(cheat_menu_item_info));
+
+		if(menu_item_info == NULL && new_length != 0)
+			fatalerror(	"cheat: [menu item info] memory allocation error\n"
+						"	length =			%.8X"
+						"	menu_item_info =	%p",
+						menu_item_info_length, menu_item_info);
+
+		memset(menu_item_info, 0, new_length * sizeof(cheat_menu_item_info));
+
+		menu_item_info_length = new_length;
+	}
+}
+
 /*-------------------------------------------------------
   FillBufferFromRegion - set a data into search region
 -------------------------------------------------------*/
@@ -9160,7 +9232,10 @@ static void AllocateSearchRegions(SearchInfo * info)
 
 static void BuildSearchRegions(running_machine *machine, SearchInfo * info)
 {
-	info->comparison = kSearchComparison_EqualTo;
+	if(EXTRACT_FIELD(cheat_options, SearchBox) == SEARCH_BOX_MINIMUM)
+		info->comparison = MINIMUM_ITEM_EQUAL;
+	else
+		info->comparison = kSearchComparison_EqualTo;
 
 	DisposeSearchRegions(info);
 
@@ -10254,7 +10329,7 @@ static UINT32 DoSearchComparisonBit(SearchInfo * search, UINT32 lhs, UINT32 rhs)
 /*
 static UINT8 IsRegionOffsetValid(SearchInfo * search, SearchRegion * region, UINT32 offset)
 {
-    switch(kSearchByteIncrementTable[search->bytes])
+    switch(BYTE_INCREMENT_TABLE[search->bytes])
     {
         case 1:
             return *((UINT8  *)&region->status[offset]) == 0xFF;
@@ -10279,7 +10354,7 @@ static UINT8 IsRegionOffsetValid(SearchInfo * search, SearchRegion * region, UIN
 
 static UINT8 IsRegionOffsetValidBit(SearchInfo * search, SearchRegion * region, UINT32 offset)
 {
-	switch(kSearchByteStep[search->bytes])
+	switch(SEARCH_BYTE_STEP[search->bytes])
 	{
 		case 1:
 			return *((UINT8  *)&region->status[offset]) != 0;
@@ -10307,7 +10382,7 @@ static UINT8 IsRegionOffsetValidBit(SearchInfo * search, SearchRegion * region, 
 
 static void InvalidateRegionOffset(SearchInfo * search, SearchRegion * region, UINT32 offset)
 {
-	switch(kSearchByteStep[search->bytes])
+	switch(SEARCH_BYTE_STEP[search->bytes])
 	{
 		case 1:
 			*((UINT8  *)&region->status[offset]) = 0;
@@ -10334,7 +10409,7 @@ static void InvalidateRegionOffset(SearchInfo * search, SearchRegion * region, U
 
 static void InvalidateRegionOffsetBit(SearchInfo * search, SearchRegion * region, UINT32 offset, UINT32 invalidate)
 {
-	switch(kSearchByteStep[search->bytes])
+	switch(SEARCH_BYTE_STEP[search->bytes])
 	{
 		case 1:
 			*((UINT8  *)&region->status[offset]) &= ~invalidate;

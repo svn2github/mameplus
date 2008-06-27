@@ -116,9 +116,6 @@ endif
 # for details
 #-------------------------------------------------
 
-# uncomment next line to enable the debugger
-# DEBUGGER = 1
-
 # uncomment next line to build a debug version
 # DEBUG = 1
 
@@ -227,8 +224,8 @@ RM = @rm -f
 # form the name of the executable
 #-------------------------------------------------
 
-# debugger builds just get the 'd' suffix and nothing more
-ifdef DEBUGGER
+# debug builds just get the 'd' suffix and nothing more
+ifdef DEBUG
 DEBUGSUFFIX = d
 endif
 
@@ -299,11 +296,6 @@ ifdef PTR64
 DEFS += -DPTR64
 # disable DRC cores for 64-bit builds
 X86_M68K_DRC =
-endif
-
-# define ENABLE_DEBUGGER if we are a debugger-enabled build
-ifdef DEBUGGER
-DEFS += -DENABLE_DEBUGGER
 endif
 
 # define MAME_DEBUG if we are a debugging build

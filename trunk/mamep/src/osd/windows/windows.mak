@@ -159,7 +159,7 @@ ifdef MSVC_BUILD
     DEFS += -D_CRT_SECURE_NO_DEPRECATE -DXML_STATIC -D__inline__=__inline -Dsnprintf=_snprintf
     
     # make msvcprep into a pre-build step
-    # OSPREBUILD = $(VCONV)
+    OSPREBUILD = $(VCONV)
     
     # add VCONV to the build tools
     BUILD += $(VCONV)
@@ -355,10 +355,8 @@ OSDOBJS += $(VCOBJS)
 CLIOBJS = $(WINOBJ)/climain.o
 
 # add debug-specific files
-ifdef DEBUGGER
 OSDOBJS += \
 	$(WINOBJ)/debugwin.o
-endif
 
 # add a stub resource file
 CLIRESFILE = $(WINOBJ)/mame.res
