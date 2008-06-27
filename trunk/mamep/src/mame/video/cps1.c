@@ -1462,14 +1462,14 @@ static MACHINE_RESET( cps )
 	if (strcmp(gamename, "sf2m2" )==0)
 	{
 		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
+		UINT16 *rom = (UINT16 *)memory_region(machine, REGION_CPU1);	
 		rom[0xc0670/2] = 0x4e71;
 	}
 	if ((strcmp(gamename, "dinoh" )==0) ||
 		(strcmp(gamename, "dinoha" )==0))
 	{
 		/* Patch out Q-Sound test */
-		UINT16 *rom = (UINT16 *)memory_region(REGION_CPU1);	
+		UINT16 *rom = (UINT16 *)memory_region(machine, REGION_CPU1);	
 		rom[0xaacf4/2] = 0x4e71;
 	}
 
