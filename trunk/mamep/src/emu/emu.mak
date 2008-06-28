@@ -87,7 +87,7 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/debughlp.o \
 	$(EMUOBJ)/debug/debugvw.o \
 	$(EMUOBJ)/debug/express.o \
-	$(EMUOBJ)/debug/textbuf.o
+	$(EMUOBJ)/debug/textbuf.o \
 	$(EMUOBJ)/datafile.o \
 	$(EMUOBJ)/uitext.o \
 	$(EMUOBJ)/uilang.o

@@ -1288,6 +1288,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"pang3",    CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
 	{"pang3j",   CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
 	{"cawingb",  CPS_B_16,     mapper_CA24B, 0, 0, 0, 2 },
+	{"daimakb",  CPS_B_01,     mapper_DM22A },	// equivalent to DM620
 	{"kodh",     CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
 	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
@@ -1296,6 +1297,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 3 },
 	{"punishrb", CPS_B_21_QS3, mapper_PS63B, 0, 0, 0, 4 },
+	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 4 },
 	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
@@ -1303,6 +1305,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2m13",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
 	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
 	{"wofhfh",   CPS_B_21_DEF, mapper_TK263B },
