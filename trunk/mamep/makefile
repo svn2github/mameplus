@@ -524,6 +524,7 @@ LIBCPU = $(OBJ)/libcpu.a
 LIBSOUND = $(OBJ)/libsound.a
 LIBUTIL = $(OBJ)/libutil.a
 LIBOCORE = $(OBJ)/libocore.a
+LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
 LIBOSD = $(OBJ)/libosd.a
 
 VERSIONOBJ = $(OBJ)/version.o
@@ -662,7 +663,7 @@ $(EMULATORCLI):	$(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
 else
   ifdef WINUI
   # gui target
-$(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
+$(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPFLAGS)

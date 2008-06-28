@@ -122,8 +122,8 @@ ifeq ($(NO_DLL),)
     GUIRESFILE = $(WINUIOBJ)/mameui.res
 else
     UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(MESS_WINUIOBJ)/messgui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
-    GUIRESFILE = $(MESS_WINUIOBJ)/messgui.res
+    $(WINUIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
+    GUIRESFILE =  $(WINUIOBJ)/mameui.res
 endif
 
 #####################################################################

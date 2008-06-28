@@ -70,8 +70,6 @@ OBJDIRS += \
 # MESS core objects
 #-------------------------------------------------
 
-LIBOCORE_NOMAIN = $(OBJ)/libocore_nomain.a
-
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\
 	$(MESSOBJ)/messopts.o	\
