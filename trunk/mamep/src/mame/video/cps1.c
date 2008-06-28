@@ -1297,6 +1297,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 3 },
 	{"punishrb", CPS_B_21_QS3, mapper_PS63B, 0, 0, 0, 4 },
+	{"punishrh", CPS_B_21_DEF, mapper_PS63B },
 	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 4 },
 	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },

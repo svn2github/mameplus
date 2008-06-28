@@ -57,7 +57,9 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
 	DRIVER( punishrb )	/* bootleg */
+	DRIVER( punishrh )	/* Biao Feng Zhan Jing */
 	DRIVER( cawingb )	/* bootleg */
+	DRIVER( daimakb )	/* bootleg */
 	DRIVER( kodh )		/* bootleg */
 
 	DRIVER( kof96ep )	/* 0214 bootleg */
