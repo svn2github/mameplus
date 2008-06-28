@@ -179,12 +179,12 @@ void install_kof10th_protection ( running_machine *machine )
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x240000, 0x2fffff, 0, 0, kof10th_bankswitch_w);
 }
 
-void decrypt_kof10th( void )
+void decrypt_kof10th( running_machine *machine )
 {
 	int i, j;
 	UINT8 *dst = malloc_or_die(0x900000);
-	UINT8 *src = memory_region( NEOGEO_REGION_MAIN_CPU_CARTRIDGE );
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT8 *src = memory_region( machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE );
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 
 		memcpy(dst + 0x000000, src + 0x700000, 0x100000); // Correct (Verified in Uni-bios)
 		memcpy(dst + 0x100000, src + 0x000000, 0x800000);
@@ -276,31 +276,31 @@ static void kf2k5uni_px_decrypt( running_machine *machine )
 	memcpy(src, src + 0x600000, 0x100000); // Seems to be the same as kof10th
 }
 
-static void kf2k5uni_sx_decrypt( void )
+static void kf2k5uni_sx_decrypt( running_machine *machine )
 {
 	int i;
-	UINT8 *srom = memory_region( NEOGEO_REGION_FIXED_LAYER_CARTRIDGE );
+	UINT8 *srom = memory_region( machine, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE );
 
 	for (i = 0; i < 0x20000; i++)
 		srom[i] = BITSWAP8(srom[i], 4, 5, 6, 7, 0, 1, 2, 3);
 }
 
-static void kf2k5uni_mx_decrypt( void )
+static void kf2k5uni_mx_decrypt( running_machine *machine )
 {
 	int i;
-	UINT8 *mrom = memory_region( NEOGEO_REGION_AUDIO_CPU_CARTRIDGE );
+	UINT8 *mrom = memory_region( machine, NEOGEO_REGION_AUDIO_CPU_CARTRIDGE );
 
 	for (i = 0; i < 0x30000; i++)
 		mrom[i] = BITSWAP8(mrom[i], 4, 5, 6, 7, 0, 1, 2, 3);
 }
 
-void decrypt_kf2k5uni(void)
+void decrypt_kf2k5uni(running_machine *machine)
 {
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 
-	kf2k5uni_px_decrypt();
-	kf2k5uni_sx_decrypt();
-	kf2k5uni_mx_decrypt();
+	kf2k5uni_px_decrypt(machine);
+	kf2k5uni_sx_decrypt(machine);
+	kf2k5uni_mx_decrypt(machine);
 
 	// Thanks to IQ_132 for the patch
 	mem16[0xDF6B0/2] = 0x4e71;
@@ -311,11 +311,11 @@ void decrypt_kf2k5uni(void)
 
 /* Kof2002 Magic Plus */
 
-void kf2k2mp_decrypt( void )
+void kf2k2mp_decrypt( running_machine *machine )
 {
 	int i,j;
 
-	UINT8 *src = memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT8 *src = memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	UINT8 *dst = malloc_or_die(0x80);
 
 	memmove(src, src + 0x300000, 0x500000);
@@ -533,15 +533,15 @@ void decrypt_ct2k3sp( running_machine *machine )
 
 	free(tmp);
 	memcpy(romdata-0x10000,romdata,0x10000);
-	ct2k3sp_sx_decrypt();
-	cthd2003_c(0);
+	ct2k3sp_sx_decrypt(machine);
+	cthd2003_c(machine, 0);
 }
 
 
 #define MATRIMBLFIX(i) (i^(BITSWAP8(i&0x3,4,3,1,2,0,7,6,5)<<8))
-void decrypt_matrimbl(void)
+void decrypt_matrimbl(running_machine *machine)
 {
-	UINT8 *src2 = memory_region(NEOGEO_REGION_AUDIO_CPU_CARTRIDGE)+0x10000;
+	UINT8 *src2 = memory_region(machine, NEOGEO_REGION_AUDIO_CPU_CARTRIDGE)+0x10000;
 	UINT8 *dst2 = malloc(0x20000);
 	int i, j=0;
 	memcpy(dst2,src2,0x20000);
@@ -575,17 +575,17 @@ void decrypt_matrimbl(void)
 	}
 	free(dst2);
 	memcpy(src2-0x10000,src2,0x10000);
-	kof2002_decrypt_68k();
-	cthd2003_c(0);
-	neogeo_sfix_decrypt();
+	kof2002_decrypt_68k(machine);
+	cthd2003_c(machine, 0);
+	neogeo_sfix_decrypt(machine);
 	neogeo_fixed_layer_bank_type = 2;
 }
 
 /* Crouching Tiger Hidden Dragon 2003 Super Plus alternate (bootleg of King of Fighters 2001) */
 
-void decrypt_ct2k3sa(void)
+void decrypt_ct2k3sa(running_machine *machine)
 {
-	UINT8 *romdata = memory_region(NEOGEO_REGION_AUDIO_CPU_CARTRIDGE)+0x10000;
+	UINT8 *romdata = memory_region(machine, NEOGEO_REGION_AUDIO_CPU_CARTRIDGE)+0x10000;
 	UINT8*tmp = malloc_or_die(8*128*128);
 	memcpy(tmp+8*0*128, romdata+8*0*128, 8*32*128);
 	memcpy(tmp+8*32*128, romdata+8*64*128, 8*32*128);
@@ -1066,10 +1066,10 @@ void samsh5bl_px_decrypt( running_machine *machine )
 }
 
 
-void kof96ep_px_decrypt(void)
+void kof96ep_px_decrypt(running_machine *machine)
 {
 	int i,j;
-	UINT8 *rom = memory_region( NEOGEO_REGION_MAIN_CPU_CARTRIDGE );
+	UINT8 *rom = memory_region( machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE );
 	for ( i=0; i < 0x080000; i++ )
 	{
 		j=i+0x300000;
@@ -1078,16 +1078,16 @@ void kof96ep_px_decrypt(void)
 	memcpy(rom, rom+0x300000, 0x080000);
 }
 
-void kf2k1pa_sx_decrypt(void)
+void kf2k1pa_sx_decrypt(running_machine *machine)
 {
-	UINT8 *rom = memory_region(NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
+	UINT8 *rom = memory_region(machine, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
 	int i;
 
 	for (i = 0; i < 0x20000; i++)
 		rom[i] = BITSWAP8(rom[i], 3, 2, 4, 5, 1, 6, 0, 7);
 }
 
-void cthd2k3a_px_decrypt(void)
+void cthd2k3a_px_decrypt(running_machine *machine)
 {
 	INT32 i;
 	UINT8 nBank[] = {
@@ -1098,7 +1098,7 @@ void cthd2k3a_px_decrypt(void)
 		0x09, 0x20, 0x18, 0x1F, 0x1E, 0x12, 0x0D, 0x11
 	};
 
-	UINT8 *src = (UINT8*)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT8 *src = (UINT8*)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	UINT8 *dst = (UINT8*)malloc(0x500000);
 
 	if (dst)
@@ -1112,9 +1112,9 @@ void cthd2k3a_px_decrypt(void)
 	}
 }
 
-void kf2k2mp_px_decrypt(void)
+void kf2k2mp_px_decrypt(running_machine *machine)
 {
-	unsigned char *src = memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	unsigned char *src = memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	unsigned char *dst = (unsigned char*)malloc(0x80);
 	int i, j;
 
@@ -1135,7 +1135,7 @@ void kf2k2mp_px_decrypt(void)
 
 
 // Decryption code by IQ_132 -- http;//neosource.1emulation.com
-void kof2002b_gfx_decrypt(UINT8 *src, int size)
+void kof2002b_gfx_decrypt(running_machine *machine, UINT8 *src, int size)
 {
 	int i, j;
 	int t[8][10] =
@@ -1167,10 +1167,10 @@ void kof2002b_gfx_decrypt(UINT8 *src, int size)
 	free(dst);
 }
 
-void cthd2003_AES_protection()
+void cthd2003_AES_protection(running_machine *machine)
 {
 	// Thanks to IQ_132 for the patch
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 
 	// Game sets itself to MVS & English mode, patch this out
 	mem16[0xED00E/2] = 0x4E71;

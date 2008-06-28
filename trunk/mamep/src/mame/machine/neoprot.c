@@ -528,62 +528,62 @@ void install_pvc_protection( running_machine *machine )
   To allow console mode
 ***************************************************************/
 
-void mslug4_AES_protection(void)
+void mslug4_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0xad8c >> 1] = 0x4e75;
 }
 
 
-void rotd_AES_protection(void)
+void rotd_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x1020 >> 1] = 0x4e71;
 	mem16[0x2400 >> 1] = 0x4e71;
 }
 
 
-void matrim_AES_protection(void)
+void matrim_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x1050 >> 1] = 0x4e75;
 }
 
-void mslug5_AES_protection(void)
+void mslug5_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x122A >> 1] = 0x4e75;
 }
 
 
-void zupapa_AES_protection(void)
+void zupapa_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x80290 >> 1] = 0x4e71;
 }
 
-void sengoku3_AES_protection(void)
+void sengoku3_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x00d04 >> 1] = 0x4e71;
 }
 
-void nitd_AES_protection(void)
+void nitd_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0x19978 >> 1] = 0x4e75;
 }
 
-void kof2000_AES_protection(void)
+void kof2000_AES_protection(running_machine *machine)
 {
 	/* Patch out loop to disable console mode */
-	UINT16 *mem16 = (UINT16 *)memory_region(NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, NEOGEO_REGION_MAIN_CPU_CARTRIDGE);
 	mem16[0xa226e >> 1] = 0x4e75;
 }

@@ -56,7 +56,7 @@ void kof99_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
 void kof2000_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
 void cmc50_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
 void cmc42_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
-void neogeo_sfix_decrypt(void);
+void neogeo_sfix_decrypt(running_machine *machine);
 void kof99_decrypt_68k(running_machine *machine);
 void garou_decrypt_68k(running_machine *machine);
 void garouo_decrypt_68k(running_machine *machine);
@@ -93,14 +93,14 @@ void mslug3_install_protection(running_machine *machine);
 void kof2000_install_protection(running_machine *machine);
 void install_kof98_protection(running_machine *machine);
 void install_pvc_protection(running_machine *machine);
-void sengoku3_AES_protection(void);
-void kof2000_AES_protection(void);
-void mslug4_AES_protection(void);
-void nitd_AES_protection(void);
-void zupapa_AES_protection(void);
-void rotd_AES_protection(void);
-void matrim_AES_protection(void);
-void mslug5_AES_protection(void);
+void sengoku3_AES_protection(running_machine *machine);
+void kof2000_AES_protection(running_machine *machine);
+void mslug4_AES_protection(running_machine *machine);
+void nitd_AES_protection(running_machine *machine);
+void zupapa_AES_protection(running_machine *machine);
+void rotd_AES_protection(running_machine *machine);
+void matrim_AES_protection(running_machine *machine);
+void mslug5_AES_protection(running_machine *machine);
 
 
 /*----------- defined in machine/neoboot.c -----------*/
@@ -119,15 +119,15 @@ void patch_cthd2003(running_machine *machine);
 void decrypt_ct2k3sp(running_machine *machine);
 void decrypt_ct2k3sa(running_machine *machine);
 void patch_ct2k3sa(running_machine *machine);
-void decrypt_matrimbl(void);
+void decrypt_matrimbl(running_machine *machine);
 void decrypt_kof2k4se_68k(running_machine *machine);
 void lans2004_decrypt_68k(running_machine *machine);
 void lans2004_vx_decrypt(running_machine *machine);
-void kof96ep_px_decrypt(void);
-void kf2k1pa_sx_decrypt(void);
-void cthd2k3a_px_decrypt(void);
-void kf2k2mp_px_decrypt(void);
-void kof2002b_gfx_decrypt(UINT8 *src, int size);
+void kof96ep_px_decrypt(running_machine *machine);
+void kf2k1pa_sx_decrypt(running_machine *machine);
+void cthd2k3a_px_decrypt(running_machine *machine);
+void kf2k2mp_px_decrypt(running_machine *machine);
+void kof2002b_gfx_decrypt(running_machine *machine, UINT8 *src, int size);
 void install_ms5plus_protection(running_machine *machine);
 void svcboot_px_decrypt(running_machine *machine);
 void svcboot_cx_decrypt(running_machine *machine);
@@ -143,8 +143,8 @@ void kof2k3up_px_decrypt(running_machine *machine);
 void kof2k3up_install_protection(running_machine *machine);
 void kf2k3pl_install_protection(running_machine *machine);
 void samsh5bl_px_decrypt(running_machine *machine);
-void cthd2003_AES_protection(void);
-void kof10thu_decrypt_68K(void);
+void cthd2003_AES_protection(running_machine *machine);
+void kof10thu_decrypt_68K(running_machine *machine);
 
 
 /*----------- defined in video/neogeo.c -----------*/

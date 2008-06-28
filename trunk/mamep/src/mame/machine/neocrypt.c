@@ -587,13 +587,13 @@ static void neogeo_gfx_decrypt(running_machine *machine, int extra_xor)
 
 
 /* the S data comes from the end of the C data */
-void neogeo_sfix_decrypt(void)
+void neogeo_sfix_decrypt(running_machine *machine)
 {
 	int i;
-	int rom_size = memory_region_length(NEOGEO_REGION_SPRITES);
-	int tx_size = memory_region_length(NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
-	UINT8 *src = memory_region(NEOGEO_REGION_SPRITES)+rom_size-tx_size;
-	UINT8 *dst = memory_region(NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
+	int rom_size = memory_region_length(machine, NEOGEO_REGION_SPRITES);
+	int tx_size = memory_region_length(machine, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
+	UINT8 *src = memory_region(machine, NEOGEO_REGION_SPRITES)+rom_size-tx_size;
+	UINT8 *dst = memory_region(machine, NEOGEO_REGION_FIXED_LAYER_CARTRIDGE);
 
 	for (i = 0;i < tx_size;i++)
 		dst[i] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
