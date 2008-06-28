@@ -247,7 +247,7 @@ WRITE8_HANDLER(sms_version_w) {
 	}
 }
 
- READ8_HANDLER(sms_version_r) {
+READ8_HANDLER(sms_version_r) {
 	UINT8 temp;
 
 	if (biosPort & IO_CHIP) {
@@ -292,7 +292,7 @@ void sms_check_pause_button( running_machine *machine ) {
 	}
 }
 
- READ8_HANDLER(sms_input_port_0_r) {
+READ8_HANDLER(sms_input_port_0_r) {
 	if (biosPort & IO_CHIP) {
 		return (0xFF);
 	} else {

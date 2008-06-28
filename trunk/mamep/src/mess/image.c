@@ -582,10 +582,15 @@ static image_error_t set_image_filename(image_slot_data *image, const char *file
 {
 	image_error_t err = IMAGE_ERROR_SUCCESS;
 	astring *alloc_filename = NULL;
+	char *full_filename = NULL;
 	char *new_name;
 	char *new_dir;
 	char *new_working_directory;
 	int pos;
+
+	/* get the full path */
+	if (osd_get_full_path(&full_filename, filename) == FILERR_NONE)
+		filename = full_filename;
 
 	/* create the directory string */
 	new_dir = filename ? image_strdup(image->dev, filename) : NULL;
@@ -635,6 +640,8 @@ static image_error_t set_image_filename(image_slot_data *image, const char *file
 done:
 	if (alloc_filename != NULL)
 		astring_free(alloc_filename);
+	if (full_filename != NULL)
+		free(full_filename);
 	return err;
 }
 
@@ -773,20 +780,12 @@ done:
 	specific path
 -------------------------------------------------*/
 
-static image_error_t load_image_by_path(image_slot_data *image, const char *software_path,
-	const game_driver *gamedrv, UINT32 open_flags, const char *path)
+static image_error_t load_image_by_path(image_slot_data *image, UINT32 open_flags, const char *path)
 {
 	file_error filerr = FILERR_NOT_FOUND;
 	image_error_t err = IMAGE_ERROR_FILENOTFOUND;
 	astring *full_path = NULL;
 	const char *file_extension;
-
-	/* assemble the path */
-	if (software_path)
-	{
-		full_path = astring_assemble_5(astring_alloc(), software_path, PATH_SEPARATOR, gamedrv->name, PATH_SEPARATOR, path);
-		path = astring_c(full_path);
-	}
 
 	/* quick check to see if the file is a ZIP file */
 	file_extension = strrchr(path, '.');
@@ -902,10 +901,7 @@ static int image_load_internal(const device_config *image, const char *path,
 {
 	running_machine *machine = image->machine;
 	image_error_t err;
-	const char *software_path;
-	char *software_path_list = NULL;
 	const void *buffer;
-	const game_driver *gamedrv;
 	UINT32 open_plan[4];
 	int i;
 	image_slot_data *slot = find_image_slot(image);
@@ -935,26 +931,10 @@ static int image_load_internal(const device_config *image, const char *path,
 	/* attempt to open the file in various ways */
 	for (i = 0; !slot->file && open_plan[i]; i++)
 	{
-		software_path = software_path_list;
-		do
-		{
-			gamedrv = machine->gamedrv;
-			while(!is_loaded(slot) && (gamedrv != NULL))
-			{
-				/* open the file */
-				slot->err = load_image_by_path(slot, software_path, gamedrv, open_plan[i], path);
-				if (slot->err && (slot->err != IMAGE_ERROR_FILENOTFOUND))
-					goto done;
-
-				/* move on to the next driver */
-				gamedrv = mess_next_compatible_driver(gamedrv);
-			}
-
-			/* move on to the next entry in the software path; if we can */
-			if (software_path)
-				software_path += strlen(software_path) + 1;
-		}
-		while(!is_loaded(slot) && software_path && *software_path);
+		/* open the file */
+		slot->err = load_image_by_path(slot, open_plan[i], path);
+		if (slot->err && (slot->err != IMAGE_ERROR_FILENOTFOUND))
+			goto done;
 	}
 
 	/* did we fail to find the file? */
@@ -1010,8 +990,6 @@ static int image_load_internal(const device_config *image, const char *path,
 	/* success! */
 
 done:
-	if (software_path_list)
-		free(software_path_list);
 	if (slot->err)
 		image_clear(slot);
 	slot->is_loading = 1;
@@ -1729,8 +1707,8 @@ void image_set_working_directory(const device_config *image, const char *working
 {
 	image_slot_data *slot = find_image_slot(image);
 
-	char *new_working_directory = mame_strdup(working_directory);
-	if (slot->working_directory)
+	char *new_working_directory = (working_directory != NULL) ? mame_strdup(working_directory) : NULL;
+	if (slot->working_directory != NULL)
 		free(slot->working_directory);
 	slot->working_directory = new_working_directory;
 }

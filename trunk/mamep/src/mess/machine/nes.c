@@ -475,10 +475,10 @@ DEVICE_IMAGE_LOAD(nes_cart)
 	if (nes.chr_chunks)
 		new_memory_region(image->machine, REGION_GFX1, nes.chr_chunks * 0x2000,0);
 
-	nes.rom = memory_region(REGION_CPU1);
-	nes.vrom = memory_region(REGION_GFX1);
-	nes.vram = memory_region(REGION_GFX2);
-	nes.wram = memory_region(REGION_USER1);
+	nes.rom = memory_region(image->machine, REGION_CPU1);
+	nes.vrom = memory_region(image->machine, REGION_GFX1);
+	nes.vram = memory_region(image->machine, REGION_GFX2);
+	nes.wram = memory_region(image->machine, REGION_USER1);
 
 	/* Position past the header */
 	image_fseek (image, 16, SEEK_SET);

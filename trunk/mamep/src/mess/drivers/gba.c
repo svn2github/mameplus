@@ -3044,7 +3044,7 @@ static WRITE32_HANDLER( eeprom_w )
 
 static DEVICE_IMAGE_LOAD( gba_cart )
 {
-	UINT8 *ROM = memory_region(REGION_USER2);
+	UINT8 *ROM = memory_region(image->machine, REGION_USER2);
 	int i;
 
 	nvsize = 0;
@@ -3157,11 +3157,11 @@ static OPBASE_HANDLER( gba_setopbase )
 {
 	if (address > 0x4000)
 	{
-		memory_set_bankptr(1, memory_region(REGION_USER1)+0x4000);
+		memory_set_bankptr(1, memory_region(machine, REGION_USER1)+0x4000);
 	}
 	else
 	{
-		memory_set_bankptr(1, memory_region(REGION_USER1));
+		memory_set_bankptr(1, memory_region(machine, REGION_USER1));
 	}
 
 	return address;

@@ -1,26 +1,64 @@
 /*********************************************************************
 
-  filemngr.c
+	filemngr.c
 
-  MESS's clunky built-in file manager
+	MESS's clunky built-in file manager
+
+	TODO
+		- Support image creation arguments
+		- Restrict directory listing by file extension
+		- Support file manager invocation from the main menu for
+		  required images
+		- Restrict empty slot if image required
 
 *********************************************************************/
 
 #include "driver.h"
-#include "utils.h"
 #include "image.h"
 #include "ui.h"
 #include "uimenu.h"
-#include "uitext.h"
+#include "zippath.h"
 
 
 
 /***************************************************************************
-    PARAMETERS
+    CONSTANTS
 ***************************************************************************/
 
-#define SEL_BITS	12
-#define SEL_MASK	((1<<SEL_BITS)-1)
+#define SLOT_EMPTY		"[empty slot]"
+#define SLOT_CREATE		"[create]"
+
+
+
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
+
+/* state of the file creator menu */
+typedef union _filecreator_state filecreator_state;
+union _filecreator_state
+{
+	UINT32 i;
+	struct
+	{
+		int selected : 16;
+		unsigned int is_built : 1;
+	} s;
+};
+
+
+
+/* state of the file selector menu */
+typedef union _fileselector_state fileselector_state;
+union _fileselector_state
+{
+	UINT32 i;
+	struct
+	{
+		int selected : 16;
+		unsigned int menu_is_built : 1;
+	} s;
+};
 
 
 
@@ -28,807 +66,797 @@
     LOCAL VARIABLES
 ***************************************************************************/
 
-static int count_chars_entered;
-static char *enter_string;
-static int enter_string_size;
-static int enter_filename_mode;
-static char curdir[260];
 
-static char entered_filename[512];
+
+static const device_config *selected_device;
+static astring *current_directory;
+static astring *current_file;
 
 
 
 /***************************************************************************
-    IMPLEMENTATION
+    MENU HELPERS
 ***************************************************************************/
 
-static void start_enter_string(char *string_buffer, int max_string_size, int filename_mode)
-{
-	enter_string = string_buffer;
-	count_chars_entered = strlen(string_buffer);
-	enter_string_size = max_string_size;
-	enter_filename_mode = filename_mode;
-}
-
-
-/* code, lower case (w/o shift), upper case (with shift), control */
-static const int code_to_char_table[] =
-{
-	KEYCODE_0, '0', ')', 0,
-	KEYCODE_1, '1', '!', 0,
-	KEYCODE_2, '2', '"', 0,
-	KEYCODE_3, '3', '#', 0,
-	KEYCODE_4, '4', '$', 0,
-	KEYCODE_5, '5', '%', 0,
-	KEYCODE_6, '6', '^', 0,
-	KEYCODE_7, '7', '&', 0,
-	KEYCODE_8, '8', '*', 0,
-	KEYCODE_9, '9', '(', 0,
-	KEYCODE_A, 'a', 'A', 1,
-	KEYCODE_B, 'b', 'B', 2,
-	KEYCODE_C, 'c', 'C', 3,
-	KEYCODE_D, 'd', 'D', 4,
-	KEYCODE_E, 'e', 'E', 5,
-	KEYCODE_F, 'f', 'F', 6,
-	KEYCODE_G, 'g', 'G', 7,
-	KEYCODE_H, 'h', 'H', 8,
-	KEYCODE_I, 'i', 'I', 9,
-	KEYCODE_J, 'j', 'J', 10,
-	KEYCODE_K, 'k', 'K', 11,
-	KEYCODE_L, 'l', 'L', 12,
-	KEYCODE_M, 'm', 'M', 13,
-	KEYCODE_N, 'n', 'N', 14,
-	KEYCODE_O, 'o', 'O', 15,
-	KEYCODE_P, 'p', 'P', 16,
-	KEYCODE_Q, 'q', 'Q', 17,
-	KEYCODE_R, 'r', 'R', 18,
-	KEYCODE_S, 's', 'S', 19,
-	KEYCODE_T, 't', 'T', 20,
-	KEYCODE_U, 'u', 'U', 21,
-	KEYCODE_V, 'v', 'V', 22,
-	KEYCODE_W, 'w', 'W', 23,
-	KEYCODE_X, 'x', 'X', 24,
-	KEYCODE_Y, 'y', 'Y', 25,
-	KEYCODE_Z, 'z', 'Z', 26,
-	KEYCODE_OPENBRACE, '[', '{', 27,
-	KEYCODE_BACKSLASH, '\\', '|', 28,
-	KEYCODE_CLOSEBRACE, ']', '}', 29,
-	KEYCODE_TILDE, '^', '~', 30,
-	KEYCODE_BACKSPACE, 127, 127, 31,
-	KEYCODE_COLON, ':', ';', 0,
-	KEYCODE_EQUALS, '=', '+', 0,
-	KEYCODE_MINUS, '-', '_', 0,
-	KEYCODE_STOP, '.', '<', 0,
-	KEYCODE_COMMA, ',', '>', 0,
-	KEYCODE_SLASH, '/', '?', 0,
-	KEYCODE_ENTER, 13, 13, 13,
-	KEYCODE_ESC, 27, 27, 27
-};
-
-/*
- * For now I use a lookup table for valid filename characters.
- * Maybe change this for different platforms?
- * Put it to osd_cpu? Make it an osd_... function?
- */
-static const char valid_filename_char[256] =
-{
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 00-0f */
-	0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 10-1f */
-	1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 	/*	!"#$%&'()*+,-./ */
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 	/* 0123456789:;<=>? */
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 	/* @ABCDEFGHIJKLMNO */
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 	/* PQRSTUVWXYZ[\]^_ */
-	0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 	/* `abcdefghijklmno */
-	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 	/* pqrstuvwxyz{|}~	*/
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 80-8f */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 90-9f */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* a0-af */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* b0-bf */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* c0-cf */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* d0-df */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* e0-ef */
-	0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0		/* f0-ff */
-};
+/*-------------------------------------------------
+    code_to_ascii - converts an input_code to its
+	ASCII equivalent
+-------------------------------------------------*/
 
 static char code_to_ascii(input_code code)
 {
-	int i;
-
-	for (i = 0; i < (sizeof (code_to_char_table) / (sizeof (int) * 4)); i++)
-
+	/* code, lower case (w/o shift), upper case (with shift), control */
+	static const struct
 	{
-		if (code_to_char_table[i * 4] == code)
+		input_code code;
+		char ch;
+		char shift_ch;
+		char ctrl_ch;
+	} code_to_char_table[] =
+	{
+		{ KEYCODE_0, '0', ')', 0},
+		{ KEYCODE_1, '1', '!', 0},
+		{ KEYCODE_2, '2', '"', 0},
+		{ KEYCODE_3, '3', '#', 0},
+		{ KEYCODE_4, '4', '$', 0},
+		{ KEYCODE_5, '5', '%', 0},
+		{ KEYCODE_6, '6', '^', 0},
+		{ KEYCODE_7, '7', '&', 0},
+		{ KEYCODE_8, '8', '*', 0},
+		{ KEYCODE_9, '9', '(', 0},
+		{ KEYCODE_A, 'a', 'A', 1},
+		{ KEYCODE_B, 'b', 'B', 2},
+		{ KEYCODE_C, 'c', 'C', 3},
+		{ KEYCODE_D, 'd', 'D', 4},
+		{ KEYCODE_E, 'e', 'E', 5},
+		{ KEYCODE_F, 'f', 'F', 6},
+		{ KEYCODE_G, 'g', 'G', 7},
+		{ KEYCODE_H, 'h', 'H', 8},
+		{ KEYCODE_I, 'i', 'I', 9},
+		{ KEYCODE_J, 'j', 'J', 10},
+		{ KEYCODE_K, 'k', 'K', 11},
+		{ KEYCODE_L, 'l', 'L', 12},
+		{ KEYCODE_M, 'm', 'M', 13},
+		{ KEYCODE_N, 'n', 'N', 14},
+		{ KEYCODE_O, 'o', 'O', 15},
+		{ KEYCODE_P, 'p', 'P', 16},
+		{ KEYCODE_Q, 'q', 'Q', 17},
+		{ KEYCODE_R, 'r', 'R', 18},
+		{ KEYCODE_S, 's', 'S', 19},
+		{ KEYCODE_T, 't', 'T', 20},
+		{ KEYCODE_U, 'u', 'U', 21},
+		{ KEYCODE_V, 'v', 'V', 22},
+		{ KEYCODE_W, 'w', 'W', 23},
+		{ KEYCODE_X, 'x', 'X', 24},
+		{ KEYCODE_Y, 'y', 'Y', 25},
+		{ KEYCODE_Z, 'z', 'Z', 26},
+		{ KEYCODE_OPENBRACE, '[', '{', 27},
+		{ KEYCODE_BACKSLASH, '\\', '|', 28},
+		{ KEYCODE_CLOSEBRACE, ']', '}', 29},
+		{ KEYCODE_TILDE, '^', '~', 30},
+		{ KEYCODE_BACKSPACE, 127, 127, 31},
+		{ KEYCODE_COLON, ':', ';', 0},
+		{ KEYCODE_EQUALS, '=', '+', 0},
+		{ KEYCODE_MINUS, '-', '_', 0},
+		{ KEYCODE_STOP, '.', '<', 0},
+		{ KEYCODE_COMMA, ',', '>', 0},
+		{ KEYCODE_SLASH, '/', '?', 0},
+		{ KEYCODE_ENTER, 13, 13, 13},
+		{ KEYCODE_ESC, 27, 27, 27 }
+	};
+
+	int i;
+	char result = 0;
+
+	for (i = 0; i < ARRAY_LENGTH(code_to_char_table); i++)
+	{
+		if (code_to_char_table[i].code == code)
 		{
 			if (input_code_pressed(KEYCODE_LCONTROL) || input_code_pressed(KEYCODE_RCONTROL))
-				return code_to_char_table[i * 4 + 3];
-			if (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT))
-				return code_to_char_table[i * 4 + 2];
-			return code_to_char_table[i * 4 + 1];
-		}
-	}
-
-	return -1;
-}
-
-static char *update_entered_string(void)
-{
-	input_code code;
-	int ascii_char;
-
-	/* get key */
-	code = input_code_poll_switches(FALSE);
-
-	/* key was pressed? */
-	if (code == INPUT_CODE_INVALID)
-		return NULL;
-
-	ascii_char = code_to_ascii(code);
-
-	switch (ascii_char)
-	{
-		/* char could not be converted to ascii */
-	case -1:
-		return NULL;
-
-	case 13:	/* Return */
-		return enter_string;
-
-	case 25:	/* Ctrl-Y (clear line) */
-		count_chars_entered = 0;
-		enter_string[count_chars_entered] = '\0';
-		break;
-
-	case 27:	/* Escape */
-		return NULL;
-
-		/* delete */
-	case 127:
-		count_chars_entered--;
-		if (count_chars_entered < 0)
-			count_chars_entered = 0;
-		enter_string[count_chars_entered] = '\0';
-		break;
-
-		/* got a char - add to string */
-	default:
-		if (count_chars_entered < enter_string_size)
-		{
-			if ((enter_filename_mode && valid_filename_char[(unsigned)ascii_char]) ||
-				!enter_filename_mode)
-			{
-				/* store char */
-				enter_string[count_chars_entered] = ascii_char;
-				/* update count of chars entered */
-				count_chars_entered++;
-				/* add null to end of string */
-				enter_string[count_chars_entered] = '\0';
-			}
-		}
-		break;
-	}
-
-	return NULL;
-}
-
-
-static char current_filespecification[32] = "*.*";
-static const char fs_directory[] = "[DIR]";
-static const char fs_device[] = "[DRIVE]";
-static const char fs_file[] = "[FILE]";
-/*const char fs_archive[] = "[ARCHIVE]"; */
-
-static ui_menu_item *fs_item;
-static int *fs_types;
-static int *fs_order;
-static int fs_chunk;
-static int fs_total;
-static int fs_insession;
-
-enum {
-	FILESELECT_NONE,
-	FILESELECT_QUIT,
-	FILESELECT_FILESPEC,
-	FILESELECT_DEVICE,
-	FILESELECT_DIRECTORY,
-	FILESELECT_FILE
-};
-
-
-static void fs_free(void)
-{
-	if (fs_chunk > 0)
-	{
-		int i;
-		/* free duplicated strings of file and directory names */
-		for (i = 0; i < fs_total; i++)
-		{
-			switch(fs_types[i]) {
-			case FILESELECT_FILE:
-			case FILESELECT_DIRECTORY:
-				if (fs_item[i].text != ui_getstring(UI_emptyslot))
-					free((char *) fs_item[i].text);
-				break;
-			}
-		}
-		free(fs_item);
-		free(fs_types);
-		free(fs_order);
-		fs_chunk = 0;
-		fs_total = 0;
-	}
-}
-
-static int fs_alloc(void)
-{
-	if (fs_total >= fs_chunk)
-	{
-		if (fs_chunk)
-		{
-			fs_chunk += 256;
-			logerror("fs_alloc() next chunk (total %d)\n", fs_chunk);
-			fs_item = realloc(fs_item, fs_chunk * sizeof(*fs_item));
-			fs_types = realloc(fs_types, fs_chunk * sizeof(int));
-			fs_order = realloc(fs_order, fs_chunk * sizeof(int));
-		}
-		else
-		{
-			fs_chunk = 512;
-			logerror("fs_alloc() first chunk %d\n", fs_chunk);
-			fs_item = malloc(fs_chunk * sizeof(*fs_item));
-			fs_types = malloc(fs_chunk * sizeof(int));
-			fs_order = malloc(fs_chunk * sizeof(int));
-		}
-
-		/* what do we do if reallocation fails? raise(SIGABRT) seems a way outa here */
-		if (!fs_item || !fs_types || !fs_order)
-		{
-			logerror("failed to allocate fileselect buffers!\n");
-			exit(-1);
-		}
-	}
-
-	memset(&fs_item[fs_total], 0, sizeof(fs_item[fs_total]));
-	fs_order[fs_total] = fs_total;
-	return fs_total++;
-}
-
-static int DECL_SPEC fs_compare(const void *p1, const void *p2)
-{
-	int i1 = *(int *)p1;
-	int i2 = *(int *)p2;
-
-	if (fs_types[i1] != fs_types[i2])
-		return fs_types[i1] - fs_types[i2];
-	return strcmp(fs_item[i1].text, fs_item[i2].text);
-}
-
-#define MAX_ENTRIES_IN_MENU ((1<<12)-2)
-
-static void fs_generate_filelist(void)
-{
-	osd_directory *dir;
-	int qsort_start, count, i, n;
-	ui_menu_item *tmp_menu_item;
-	int *tmp_types;
-
-	/* just to be safe */
-	fs_free();
-
-	/* quit back to main menu option at top */
-	n = fs_alloc();
-	fs_item[n].text = ui_getstring(UI_quitfileselector);
-	fs_types[n] = FILESELECT_QUIT;
-
-	/* insert blank line */
-	n = fs_alloc();
-	fs_item[n].text = MENU_SEPARATOR_ITEM;
-	fs_types[n] = FILESELECT_NONE;
-
-	/* current directory */
-	n = fs_alloc();
-	fs_item[n].text = curdir;
-	fs_types[n] = FILESELECT_NONE;
-
-	/* blank line */
-	n = fs_alloc();
-	fs_item[n].text = MENU_SEPARATOR_ITEM;
-	fs_types[n] = FILESELECT_NONE;
-
-	/* file specification */
-	n = fs_alloc();
-	fs_item[n].text = ui_getstring(UI_filespecification);
-	fs_item[n].subtext = current_filespecification;
-	fs_types[n] = FILESELECT_FILESPEC;
-
-	/* insert blank line */
-	n = fs_alloc();
-	fs_item[n].text = MENU_SEPARATOR_ITEM;
-	fs_types[n] = FILESELECT_NONE;
-
-	/* insert empty specifier */
-	n = fs_alloc();
-	fs_item[n].text = ui_getstring(UI_emptyslot);
-	fs_item[n].subtext = "";
-	fs_types[n] = FILESELECT_FILE;
-
-	qsort_start = fs_total;
-
-	/* devices first */
-	count = osd_num_devices();
-	if (count > 0)
-	{
-		logerror("fs_generate_filelist: %d devices\n", count);
-		for (i = 0; i < count; i++)
-		{
-			if (fs_total >= MAX_ENTRIES_IN_MENU)
-				break;
-			n = fs_alloc();
-			fs_item[n].text = osd_get_device_name(i);
-			fs_item[n].subtext = fs_device;
-			fs_types[n] = FILESELECT_DEVICE;
-		}
-	}
-
-	/* directory entries */
-	dir = osd_opendir(curdir);
-	if (dir)
-	{
-		const osd_directory_entry *dirent;
-
-		while((dirent = osd_readdir(dir)) != NULL)
-		{
-			if (fs_total >= MAX_ENTRIES_IN_MENU)
-				break;
-
-			switch(dirent->type)
-			{
-				case ENTTYPE_DIR:
-					n = fs_alloc();
-					fs_item[n].text = mame_strdup(dirent->name);
-					fs_types[n] = FILESELECT_DIRECTORY;
-					fs_item[n].subtext = fs_directory;
-					break;
-
-				case ENTTYPE_FILE:
-					n = fs_alloc();
-					fs_item[n].text = mame_strdup(dirent->name);
-					fs_types[n] = FILESELECT_FILE;
-					fs_item[n].subtext = fs_file;
-					break;
-
-				default:
-					/* ignore other file types */
-					break;
-			}
-		}
-		osd_closedir(dir);
-	}
-
-	logerror("fs_generate_filelist: sorting %d entries\n", n - qsort_start);
-	qsort(&fs_order[qsort_start], n - qsort_start, sizeof(int), fs_compare);
-
-	tmp_menu_item = malloc(n * sizeof(*tmp_menu_item));
-	tmp_types = malloc(n * sizeof(int));
-
-	/* no space to sort? have to leave now... */
-	if (!tmp_menu_item || !tmp_types )
-		return;
-
-	/* copy items in original order */
-	memcpy(tmp_menu_item, fs_item, n * sizeof(*tmp_menu_item));
-	memcpy(tmp_types, fs_types, n * sizeof(int));
-
-	for (i = qsort_start; i < n; i++)
-	{
-		int j = fs_order[i];
-		fs_item[i] = tmp_menu_item[j];
-		fs_types[i] = tmp_types[j];
-	}
-
-	free(tmp_menu_item);
-	free(tmp_types);
-}
-
-
-
-static int string_ends_with(const char *str, const char *target)
-{
-	size_t str_length = strlen(str);
-	size_t target_length = strlen(target);
-
-	return (str_length >= target_length)
-		&& !strcmp(&str[str_length - target_length], target);
-
-}
-
-
-
-#define UI_SHIFT_PRESSED               (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT))
-
-/* and mask to get bits */
-#define SEL_BITS_MASK			(~SEL_MASK)
-
-static int fileselect(running_machine *machine, int selected, const char *default_selection, const char *working_directory)
-{
-	int sel, total, arrowize;
-	int visible;
-
-	sel = selected - 1;
-
-	/* beginning a file manager session */
-	if (fs_insession == 0)
-	{
-		fs_insession = 1;
-		strncpyz(curdir, working_directory, MIN(strlen(working_directory)+1, 260));
-	}
-
-	/* generate menu? */
-	if (fs_total == 0)
-	{
-		fs_generate_filelist();
-	}
-
-	total = fs_total;
-
-	if (total > 0)
-	{
-		/* make sure it is in range - might go out of range if
-		 * we were stepping up and down directories */
-		if ((sel & SEL_MASK) >= total)
-			sel = (sel & SEL_BITS_MASK) | (total - 1);
-
-		arrowize = 0;
-		if (sel < total)
-		{
-			switch (fs_types[sel])
-			{
-				/* arrow pointing inwards (arrowize = 1) */
-				case FILESELECT_QUIT:
-				case FILESELECT_FILE:
-					break;
-
-				case FILESELECT_FILESPEC:
-				case FILESELECT_DIRECTORY:
-				case FILESELECT_DEVICE:
-					/* arrow pointing to right -
-					 * indicating more available if
-					 * selected, or editable */
-					arrowize = 2;
-					break;
-			}
-		}
-
-		if (sel & (1 << SEL_BITS))	/* are we waiting for a new key? */
-		{
-			char *name;
-
-			/* change menu item to show this filename */
-			fs_item[sel & SEL_MASK].subtext = current_filespecification;
-
-			/* display the menu */
-			visible = ui_menu_draw(fs_item, fs_total, sel & SEL_MASK, NULL);
-
-			/* update string with any keys that are pressed */
-			name = update_entered_string();
-
-			/* finished entering filename? */
-			if (name)
-			{
-				/* yes */
-				sel &= SEL_MASK;
-
-				/* if no name entered - go back to default all selection */
-				if (strlen(name) == 0)
-					strcpy(current_filespecification, "*");
-				else
-					strcpy(current_filespecification, name);
-				fs_free();
-			}
-
-			return sel + 1;
-		}
-
-
-		visible = ui_menu_draw(fs_item, fs_total, sel, NULL);
-
-		/* Maybe the following code up to IPT_UI_PAUSE can be replaced with a call to ui_menu_generic_keys() */
-
-		/* up backs up by one item */
-		if (input_ui_pressed_repeat(machine, IPT_UI_UP, 6))
-			sel = (sel + total - 1) % total;
-
-		/* down advances by one item */
-		if (input_ui_pressed_repeat(machine, IPT_UI_DOWN, 6))
-			sel = (sel +  1) % total;
-
-		/* page up backs up by visible_items */
-		if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_UP, 6))
-		{
-			if (sel >= visible - 1)
-				sel -= visible - 1;
+				result = code_to_char_table[i].ctrl_ch;
+			else if (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT))
+				result = code_to_char_table[i].shift_ch;
 			else
-				sel = 0;
-		}
-
-		/* page down advances by visible_items */
-		if (input_ui_pressed_repeat(machine, IPT_UI_PAGE_DOWN, 6))
-		{
-			sel += visible - 1;
-			if (sel >= total)
-				sel = total - 1;
-		}
-
-		/* home goes to the start */
-		if (input_ui_pressed(machine, IPT_UI_HOME))
-			sel = 0;
-
-		/* end goes to the last */
-		if (input_ui_pressed(machine, IPT_UI_END))
-			sel = total - 1;
-
-		/* pause enables/disables pause */
-		if (input_ui_pressed(machine, IPT_UI_PAUSE))
-			mame_pause(machine, !mame_is_paused(machine));
-
-		if (input_ui_pressed(machine, IPT_UI_SELECT))
-		{
-			if (sel < SEL_MASK)
-			{
-				switch (fs_types[sel])
-				{
-				case FILESELECT_QUIT:
-					sel = -1;
-					break;
-
-				case FILESELECT_FILESPEC:
-					start_enter_string(current_filespecification, 32, 0);
-
-					/* flush keyboard buffer */
-					while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
-						;
-
-					sel |= 1 << SEL_BITS; /* we'll ask for a key */
-					break;
-
-				case FILESELECT_FILE:
-					/* copy filename */
-					if (fs_item[sel].text == ui_getstring(UI_emptyslot))
-					{
-						entered_filename[0] = '\0';
-					}
-					else
-					{
-						snprintf(entered_filename, ARRAY_LENGTH(entered_filename), "%s%s%s",
-							curdir,
-							string_ends_with(curdir, PATH_SEPARATOR) ? "" : PATH_SEPARATOR,
-							fs_item[sel].text);
-					}
-
-					fs_free();
-					sel = -3;
-					break;
-
-				case FILESELECT_DEVICE:
-					strncpyz(curdir, fs_item[sel].text, MIN(strlen(fs_item[sel].text)+1, 260));
-					fs_free();
-					break;
-
-				case FILESELECT_DIRECTORY:
-					if( strcmp(fs_item[sel].text, "..") == 0 )
-					{
-						char* sep = strrchr(curdir, PATH_SEPARATOR[0]);
-						if( sep ) {
-							*sep = '\0';
-							sep = strrchr(curdir, PATH_SEPARATOR[0]);
-							if( sep )
-								*(++sep) = '\0';
-						}
-					}
-					else if( strcmp(fs_item[sel].text, ".") == 0 )
-					{
-						break;
-					}
-					else {
-						strncatz(curdir, fs_item[sel].text, 260);
-						strncatz(curdir, PATH_SEPARATOR, 260);
-					}
-					fs_free();
-					break;
-
-				default:
-					break;
-				}
-			}
-		}
-
-		if (input_ui_pressed(machine, IPT_UI_CANCEL))
-			sel = -1;
-
-		if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
-			sel = -2;
-	}
-	else
-	{
-		sel = -1;
-	}
-
-	if (sel == -1 || sel == -3)
-		fs_free();
-
-	if (sel == -1 || sel == -2 || sel == -3)
-	{
-		fs_insession = 0;
-	}
-
-	return sel + 1;
-}
-
-static int filemanager(running_machine *machine, int selected)
-{
-	static int previous_sel;
-	const char *name;
-	ui_menu_item menu_items[40];
-	const device_config *devices[40];
-	char names[40][64];
-	UINT32 sel, total, visible, arrowize;
-	const device_config *image;
-
-	sel = selected - 1;
-	total = 0;
-
-	/* Cycle through all devices for this system */
-	for (image = image_device_first(machine->config); image != NULL; image = image_device_next(image))
-	{
-		strcpy( names[total], image_typename_id(image) );
-		name = image_filename(image);
-
-		memset(&menu_items[total], 0, sizeof(menu_items[total]));
-		menu_items[total].text = (names[total]) ? names[total] : "---";
-		menu_items[total].subtext = (name) ? name : "---";
-
-		devices[total] = image;
-		
-		total++;
-	}
-
-
-	/* if the fileselect() mode is active */
-	if (sel & (2 << SEL_BITS))
-	{
-		image = devices[previous_sel & SEL_MASK];
-		sel = fileselect(machine, selected & ~(2 << SEL_BITS), image_filename(image), image_working_directory(image));
-		if (sel != 0 && sel != -1 && sel!=-2)
-			return sel | (2 << SEL_BITS);
-
-		if (sel==-2)
-		{
-			/* selected a file */
-
-			/* finish entering name */
-			previous_sel = previous_sel & SEL_MASK;
-
-			/* attempt a filename change */
-			image = devices[previous_sel];
-			if (entered_filename[0])
-				image_load(image, entered_filename);
-			else
-				image_unload(image);
-		}
-
-		sel = previous_sel;
-
-		/* change menu item to show this filename */
-		menu_items[sel & SEL_MASK].subtext = entered_filename;
-	}
-
-	memset(&menu_items[total], 0, sizeof(menu_items[total]));
-	menu_items[total].text = _("Return to Prior Menu");
-	total++;
-
-	arrowize = 0;
-	if (sel < total - 1)
-		arrowize = 2;
-
-	if (sel & (1 << SEL_BITS))	/* are we waiting for a new key? */
-	{
-		/* change menu item to show this filename */
-		menu_items[sel & SEL_MASK].subtext = entered_filename;
-
-		/* display the menu */
-		visible = ui_menu_draw(menu_items, total, sel & SEL_MASK, NULL);
-
-		/* update string with any keys that are pressed */
-		name = update_entered_string();
-
-		/* finished entering filename? */
-		if (name)
-		{
-			/* yes */
-			sel &= SEL_MASK;
-			image = devices[sel];
-			image_load(image, NULL);
-		}
-
-		return sel + 1;
-	}
-
-	visible = ui_menu_draw(menu_items, total, sel, NULL);
-
-	if (input_ui_pressed(machine, IPT_UI_SELECT))
-	{
-		int os_sel;
-
-		image = NULL;
-
-		/* Return to main menu? */
-		if (sel == total-1)
-		{
-			sel = -1;
-			os_sel = -1;
-		}
-		/* no, let the osd code have a crack at changing files */
-		else
-		{
-			image = devices[sel];
-			os_sel = 0;
-		}
-
-		if (os_sel != 0)
-		{
-			if (os_sel == 1)
-			{
-				/* attempt a filename change */
-				image_load(image, entered_filename);
-			}
-		}
-		/* osd code won't handle it, lets use our clunky interface */
-		else if (!UI_SHIFT_PRESSED)
-		{
-			/* save selection and switch to fileselect() */
-			previous_sel = sel;
-			sel = (2 << SEL_BITS);
-			fs_total = 0;
-		}
-		else
-		{
-			if (strcmp(menu_items[sel].text, "---") == 0)
-				entered_filename[0] = '\0';
-			else
-				strcpy(entered_filename, menu_items[sel].text);
-			start_enter_string(entered_filename, (sizeof(entered_filename) / sizeof(entered_filename[0])) - 1, 1);
-
-			/* flush keyboard buffer */
-			while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
-				;
-
-			sel |= 1 << SEL_BITS;	/* we'll ask for a key */
+				result = code_to_char_table[i].ch;
+			break;
 		}
 	}
-	else if (input_ui_pressed(machine, IPT_UI_CANCEL))
-	{
-		sel = -1;
-	}
-	else
-	{
-		ui_menu_generic_keys(machine, &sel, total, visible);
-	}
-
-	if (input_ui_pressed(machine, IPT_UI_CONFIGURE))
-		sel = -2;
-
-	return sel + 1;
+	return result;
 }
 
 
 
 /*-------------------------------------------------
-    menu_file_manager - MESS-specific menu
+    poll_keyboard - polls the keyboard and appends
+	the result to the specified buffer
+-------------------------------------------------*/
+
+static void poll_keyboard(char *buffer, size_t buffer_length, int (*filter)(unicode_char))
+{
+	input_code code;
+	char ascii_char;
+	int length;
+
+	/* poll keyboard */
+	code = input_code_poll_switches(FALSE);
+	if (code != INPUT_CODE_INVALID)
+	{
+		ascii_char = code_to_ascii(code);
+
+		switch (ascii_char)
+		{
+			case 0:		/* NUL */
+			case 13:	/* return */
+			case 27:	/* escape */
+				break;
+
+			case 25:	/* Ctrl-Y (clear line) */
+				buffer[0] = '\0';
+				break;
+
+			case 127:	/* delete */
+				length = strlen(buffer);
+				if (length > 0)
+					buffer[length - 1] = '\0';
+				break;
+
+			default:
+				if ((filter == NULL) || (*filter)(ascii_char))
+				{
+					/* got a char - add to string */
+					snprintf(buffer + strlen(buffer), buffer_length - strlen(buffer), "%c", ascii_char);
+				}
+				break;
+		}
+	}
+}
+
+
+
+/*-------------------------------------------------
+    extra_text_draw_box - generically adds header
+	or footer text
+-------------------------------------------------*/
+
+static void extra_text_draw_box(float origx1, float origx2, float origy, float yspan, const char *text, int direction)
+{
+	float width, maxwidth;
+	float x1, y1, x2, y2, temp;
+
+	/* get the size of the text */
+	ui_draw_text_full(text, 0.0f, 0.0f, 1.0f, JUSTIFY_CENTER, WRAP_TRUNCATE,
+		DRAW_NONE, ARGB_WHITE, ARGB_BLACK, &width, NULL);
+	width += 2 * UI_BOX_LR_BORDER;
+	maxwidth = MAX(width, origx2 - origx1);
+
+	/* compute our bounds */
+	x1 = 0.5f - 0.5f * maxwidth;
+	x2 = x1 + maxwidth;
+	y1 = origy + (yspan * direction);
+	y2 = origy + (UI_BOX_TB_BORDER * direction);
+
+	if (y1 > y2)
+	{
+		temp = y1;
+		y1 = y2;
+		y2 = temp;
+	}
+
+	/* draw a box */
+	ui_draw_outlined_box(x1, y1, x2, y2, UI_FILLCOLOR);
+
+	/* take off the borders */
+	x1 += UI_BOX_LR_BORDER;
+	x2 -= UI_BOX_LR_BORDER;
+	y1 += UI_BOX_TB_BORDER;
+	y2 -= UI_BOX_TB_BORDER;
+
+	/* draw the text within it */
+	ui_draw_text_full(text, x1, y1, x2 - x1, JUSTIFY_CENTER, WRAP_TRUNCATE,
+					  DRAW_NORMAL, ARGB_WHITE, ARGB_BLACK, NULL, NULL);
+}
+
+
+
+/*-------------------------------------------------
+    extra_text_render - generically adds header
+	and footer text
+-------------------------------------------------*/
+
+static void extra_text_render(const menu_extra *extra, float origx1, float origy1, float origx2, float origy2,
+	const char *header, const char *footer)
+{
+	header = ((header != NULL) && (header[0] != '\0')) ? header : NULL;
+	footer = ((footer != NULL) && (footer[0] != '\0')) ? footer : NULL;
+
+	if (header != NULL)
+		extra_text_draw_box(origx1, origx2, origy1, extra->top, header, -1);
+	if (footer != NULL)
+		extra_text_draw_box(origx1, origx2, origy2, extra->bottom, footer, +1);
+}
+
+
+
+/***************************************************************************
+    FILE CREATE MENU
+***************************************************************************/
+
+/*-------------------------------------------------
+    is_valid_filename_char - tests to see if a
+	character is valid in a filename 
+-------------------------------------------------*/
+
+static int is_valid_filename_char(unicode_char ch)
+{
+	/* this should really be in the OSD layer */
+	static const char valid_filename_char[] =
+	{
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 00-0f */
+		0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	/* 10-1f */
+		1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 0, 	/*	!"#$%&'()*+,-./ */
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 	/* 0123456789:;<=>? */
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 	/* @ABCDEFGHIJKLMNO */
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 	/* PQRSTUVWXYZ[\]^_ */
+		0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 	/* `abcdefghijklmno */
+		1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 0, 	/* pqrstuvwxyz{|}~	*/
+	};
+	return (ch < ARRAY_LENGTH(valid_filename_char)) && valid_filename_char[ch];
+}
+
+
+
+/*-------------------------------------------------
+    file_creator_render_extra - perform our
+    special rendering
+-------------------------------------------------*/
+
+static void file_creator_render_extra(const menu_extra *extra, float origx1, float origy1, float origx2, float origy2)
+{
+	extra_text_render(extra, origx1, origy1, origx2, origy2, astring_c(current_directory), NULL);
+}
+
+
+
+/*-------------------------------------------------
+    menu_file_create - file creator menu
+-------------------------------------------------*/
+
+static UINT32 menu_file_create(running_machine *machine, UINT32 state)
+{
+	static char filename_buffer[1024];
+
+	astring *new_path;
+	ui_menu_item item_list[200];
+	int menu_items = 0;
+	filecreator_state fc_state;
+	UINT32 selected;
+	int visible_items;
+	int underscore_pos = -1;
+	menu_extra extra;
+
+	/* disassemble state */
+	fc_state.i = state;
+	selected = fc_state.s.selected;
+
+	/* is this the first time that we've been called? */
+	if (!fc_state.s.is_built)
+	{
+		filename_buffer[0] = '\0';
+		fc_state.s.is_built = TRUE;
+	}
+	
+	/* add the "[empty slot]" entry */
+	memset(&item_list[menu_items], 0, sizeof(item_list[menu_items]));
+	item_list[menu_items].text = "New Image Name:";
+	item_list[menu_items].subtext = filename_buffer;
+	menu_items++;
+
+	/* add an item for the return */
+	memset(&item_list[menu_items], 0, sizeof(item_list[menu_items]));
+	item_list[menu_items].text = _("Return to Prior Menu");
+	menu_items++;
+
+	/* compute extras */
+	memset(&extra, 0, sizeof(extra));
+	extra.top = ui_get_line_height() + 3.0f * UI_BOX_TB_BORDER;
+	extra.render = file_creator_render_extra;
+
+	/* features that are only enabled when selecting the file name */
+	if (selected == 0)
+	{
+		/* poll the keyboard */
+		poll_keyboard(filename_buffer, ARRAY_LENGTH(filename_buffer), is_valid_filename_char);
+
+		/* put the underscore in the menu */
+		underscore_pos = strlen(filename_buffer);
+		snprintf(filename_buffer + underscore_pos, ARRAY_LENGTH(filename_buffer) - underscore_pos, "_");
+	}
+
+	/* draw the menu */
+	visible_items = ui_menu_draw(item_list, menu_items, selected, &extra);
+
+	/* remove the underscore, if present */
+	if (underscore_pos >= 0)
+		filename_buffer[underscore_pos] = '\0';
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
+		goto done;
+
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
+	{
+		switch(selected)
+		{
+			case 0:
+				/* create the image */
+				new_path = zippath_combine(astring_alloc(), astring_c(current_directory), filename_buffer);
+				image_create(selected_device, astring_c(new_path), 0, NULL);
+				astring_free(new_path);
+
+				/* pop ourselves out */
+				ui_menu_stack_pop();
+				fc_state.i = ui_menu_stack_pop();
+				goto done;
+		}
+	}
+
+	fc_state.s.selected = selected;
+
+done:
+	return fc_state.i;
+}
+
+
+
+/***************************************************************************
+    FILE SELECTOR MENU
+***************************************************************************/
+
+/*-------------------------------------------------
+    alloc_directory_entry - allocates a struct
+	of type osd_directory_entry
+-------------------------------------------------*/
+
+static osd_directory_entry *alloc_directory_entry(const char *name, osd_dir_entry_type type, UINT64 size)
+{
+	char *name_dupe = NULL;
+	osd_directory_entry *new_entry;
+	size_t name_length;
+	
+	/* allocate the new entry */
+	name_length = (name != NULL) ? strlen(name) + 1 : 0;
+	new_entry = malloc_or_die(sizeof(*new_entry) + name_length);
+
+	/* copy the name, if specified */
+	if (name != NULL)
+	{
+		name_dupe = ((char *) new_entry) + sizeof(*new_entry);
+		strcpy(name_dupe, name);
+	}
+
+	new_entry->name = name_dupe;
+	new_entry->type = type;
+	new_entry->size = size;
+	return new_entry;
+}
+
+
+
+/*-------------------------------------------------
+    dupe_directory_entry - duplicates a struct
+	of type osd_directory_entry
+-------------------------------------------------*/
+
+static osd_directory_entry *dupe_directory_entry(const osd_directory_entry *entry)
+{
+	return alloc_directory_entry(entry->name, entry->type, entry->size);
+}
+
+
+
+/*-------------------------------------------------
+    file_selector_render_extra - perform our
+    special rendering
+-------------------------------------------------*/
+
+static void file_selector_render_extra(const menu_extra *extra, float origx1, float origy1, float origx2, float origy2)
+{
+	extra_text_render(extra, origx1, origy1, origx2, origy2, astring_c(current_directory), NULL);
+}
+
+
+
+/*-------------------------------------------------
+    build_file_selector_menu_items - creates and
+	allocates all menu items for a directory
+-------------------------------------------------*/
+
+static file_error build_file_selector_menu_items(const device_config *device, const char *path,
+	ui_menu_item *item_list, size_t item_list_length, int *menu_items, int *selected)
+{
+	zippath_directory *directory = NULL;
+	file_error err = FILERR_NONE;
+	const osd_directory_entry *dirent;
+	osd_directory_entry *dirent_dupe;
+	const char *subtext;
+	int count, i;
+	image_device_info info;
+
+	/* reset count */
+	*menu_items = 0;
+	*selected = 0;
+
+	/* open the directory */
+	err = zippath_opendir(path, &directory);
+	if (err != FILERR_NONE)
+		goto done;
+
+	/* add the "[empty slot]" entry */
+	memset(&item_list[*menu_items], 0, sizeof(item_list[*menu_items]));
+	item_list[*menu_items].text = SLOT_EMPTY;
+	item_list[*menu_items].ref = alloc_directory_entry(NULL, ENTTYPE_FILE, 0);
+	(*menu_items)++;
+
+	info = image_device_getinfo(device->machine->config, device);
+	if (info.creatable && !zippath_is_zip(directory))
+	{
+		/* add the "[create]" entry */
+		memset(&item_list[*menu_items], 0, sizeof(item_list[*menu_items]));
+		item_list[*menu_items].text = SLOT_CREATE;
+		item_list[*menu_items].ref = alloc_directory_entry(NULL, ENTTYPE_FILE, 0);
+		(*menu_items)++;
+	}
+
+	/* add the drives */
+	count = osd_num_devices();
+	for (i = 0; i < count; i++)
+	{
+		memset(&item_list[*menu_items], 0, sizeof(item_list[*menu_items]));
+		item_list[*menu_items].text = osd_get_device_name(i);
+		item_list[*menu_items].subtext = "[DRIVE]";
+		item_list[*menu_items].ref = alloc_directory_entry(item_list[*menu_items].text, ENTTYPE_DIR, 0);
+		(*menu_items)++;
+	}
+
+	/* build the menu for each item */
+	while((dirent = zippath_readdir(directory)) != NULL)
+	{
+		/* if there are too many entries... */
+		if (*menu_items >= item_list_length - 10)
+			break;
+
+		/* set the selected item to be the first non-parent directory or file */
+		if ((*selected == 0) && strcmp(dirent->name, ".."))
+			*selected = *menu_items;
+
+		/* choose text for the entry type */
+		switch(dirent->type)
+		{
+			case ENTTYPE_FILE:
+				subtext = "[FILE]";
+				break;
+			case ENTTYPE_DIR:
+				subtext = "[DIR]";
+				break;
+			default:
+				subtext = "[UNK]";
+				break;
+		}
+
+		/* dupe the menu item */
+		dirent_dupe = dupe_directory_entry(dirent);
+
+		/* do we have to select this file? */
+		if (!mame_stricmp(astring_c(current_file), dirent_dupe->name))
+			*selected = *menu_items;
+
+		/* record the menu item */
+		memset(&item_list[*menu_items], 0, sizeof(item_list[*menu_items]));
+		item_list[*menu_items].text = dirent_dupe->name;
+		item_list[*menu_items].subtext = subtext;
+		item_list[*menu_items].ref = dirent_dupe;
+		(*menu_items)++;
+	}
+
+	/* add an item for the return */
+	memset(&item_list[*menu_items], 0, sizeof(item_list[*menu_items]));
+	item_list[*menu_items].text = _("Return to Prior Menu");
+	(*menu_items)++;
+
+done:
+	if (directory != NULL)
+		zippath_closedir(directory);
+	return err;
+}
+
+
+
+/*-------------------------------------------------
+    check_path - performs a quick check to see if
+	a path exists
+-------------------------------------------------*/
+
+static file_error check_path(const char *path)
+{
+	return zippath_opendir(path, NULL);
+}
+
+
+
+/*-------------------------------------------------
+    menu_file_selector - file selector menu
+-------------------------------------------------*/
+
+static UINT32 menu_file_selector(running_machine *machine, UINT32 state)
+{
+	static ui_menu_item item_list[200];
+	static int menu_items;
+
+	file_error err;
+	const osd_directory_entry *dirent;
+	int visible_items, selected, i;
+	astring *new_path;
+	fileselector_state fs_state;
+	int menu_is_built;
+	menu_extra extra;
+
+	/* interpret the state */
+	fs_state.i = state;
+	selected = fs_state.s.selected;
+	menu_is_built = fs_state.s.menu_is_built;
+
+	/* do we have to build the menu? */
+	if (!menu_is_built)
+	{
+		err = build_file_selector_menu_items(selected_device, astring_c(current_directory),
+			item_list, ARRAY_LENGTH(item_list), &menu_items, &selected);
+		if (err != FILERR_NONE)
+		{
+			/* if we error here, we must pop out */
+			fs_state.i = ui_menu_stack_pop();
+			goto done;
+		}
+
+		menu_is_built = TRUE;
+	}
+
+	/* compute extras */
+	memset(&extra, 0, sizeof(extra));
+	extra.top = ui_get_line_height() + 3.0f * UI_BOX_TB_BORDER;
+	extra.render = file_selector_render_extra;
+
+	/* draw the menu */
+	visible_items = ui_menu_draw(item_list, menu_items, selected, &extra);
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(machine, (UINT32 *) &selected, menu_items, visible_items))
+	{
+		menu_is_built = FALSE;
+		goto done;
+	}
+
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
+	{
+		dirent = (const osd_directory_entry *) item_list[selected].ref;
+		menu_is_built = FALSE;
+
+		switch(dirent->type)
+		{
+			case ENTTYPE_DIR:
+				/* prepare the selection in the new directory */
+				selected = 1;
+				if (!strcmp(dirent->name, ".."))
+					zippath_parent_basename(current_file, astring_c(current_directory));
+
+				/* change the directory */
+				new_path = zippath_combine(astring_alloc(), astring_c(current_directory), dirent->name);
+				err = check_path(astring_c(new_path));
+				if (err != FILERR_NONE)
+				{
+					/* this path is problematic; present the user with an error and bail */
+					ui_popup_time(1, "Error accessing %s", astring_c(new_path));
+					astring_free(new_path);
+					break;
+				}
+				astring_free(current_directory);
+				current_directory = new_path;
+				break;
+
+			case ENTTYPE_FILE:
+				if (dirent->name != NULL)
+				{
+					/* specified a file */
+					new_path = zippath_combine(astring_alloc(), astring_c(current_directory), dirent->name);
+					image_load(selected_device, astring_c(new_path));
+					astring_free(new_path);
+				}
+				else if (!strcmp(item_list[selected].text, SLOT_EMPTY))
+				{
+					/* empty slot - unload */
+					image_unload(selected_device);
+				}
+				else if (!strcmp(item_list[selected].text, SLOT_CREATE))
+				{
+					/* create */
+					fs_state.i = ui_menu_stack_push(menu_file_create, 0);
+					goto done;
+				}
+				else
+				{
+					fatalerror("Should not reach here");
+				}
+				fs_state.i = ui_menu_stack_pop();
+				goto done;
+
+			default:
+				/* do nothing */
+				break;
+		}
+	}
+
+	/* reassemble state */
+	fs_state.s.selected = selected;
+	fs_state.s.menu_is_built = menu_is_built;
+
+done:
+	if (!menu_is_built)
+	{
+		/* time to tear down the menus */
+		for (i = 0; i < menu_items; i++)
+		{
+			if (item_list[i].ref != NULL)
+			{
+				free(item_list[i].ref);
+				item_list[i].ref = NULL;
+			}
+		}
+	}
+
+	return fs_state.i;
+}
+
+
+
+/***************************************************************************
+    FILE MANAGER
+***************************************************************************/
+
+/*-------------------------------------------------
+    fix_working_directory - checks the working
+	directory for this device to ensure that it
+	"makes sense"
+-------------------------------------------------*/
+
+static void fix_working_directory(const device_config *device)
+{
+	/* if the image exists, set the working directory to the parent directory */
+	if (image_exists(device))
+	{
+		astring *astr = astring_alloc();
+		zippath_parent(astr, image_filename(selected_device));
+		image_set_working_directory(device, astring_c(astr));
+		astring_free(astr);
+	}
+
+	/* check to see if the path exists; if not clear it */
+	if (check_path(image_working_directory(device)) != FILERR_NONE)
+		image_set_working_directory(device, NULL);
+}
+
+
+
+/*-------------------------------------------------
+    file_manager_render_extra - perform our
+    special rendering
+-------------------------------------------------*/
+
+static void file_manager_render_extra(const menu_extra *extra, float origx1, float origy1, float origx2, float origy2)
+{
+	const char *path = (selected_device != NULL) ? image_filename(selected_device) : NULL;
+	extra_text_render(extra, origx1, origy1, origx2, origy2, NULL, path);
+}
+
+
+
+/*-------------------------------------------------
+    menu_file_manager - main file manager menu
 -------------------------------------------------*/
 
 UINT32 menu_file_manager(running_machine *machine, UINT32 state)
 {
-	int result = filemanager(machine, state);
-	if (result == 0)
-		return ui_menu_stack_pop();
-	return result;
+	const device_config *device;
+	ui_menu_item item_list[40];
+	int menu_items = 0;
+	char buffer[2048];
+	int buffer_pos = 0;
+	const char *entry_typename;
+	const char *entry_basename;
+	int visible_items;
+	int selected_absolute_index = -1;
+	fileselector_state fs_state;
+	menu_extra extra;
+
+	/* possible cleanups from the file selector - ugly global variable usage */
+	selected_device = NULL;
+	if (current_directory != NULL)
+	{
+		astring_free(current_directory);
+		current_directory = NULL;
+	}
+	if (current_file != NULL)
+	{
+		astring_free(current_file);
+		current_file = NULL;
+	}
+
+	/* cycle through all devices for this system */
+	for (device = image_device_first(machine->config); device != NULL; device = image_device_next(device))
+	{
+		/* sanity check */
+		if ((buffer_pos >= ARRAY_LENGTH(buffer) || (menu_items >= ARRAY_LENGTH(item_list))))
+			break;
+
+		/* is this selected? */
+		if (state == menu_items)
+		{
+			selected_device = device;
+			selected_absolute_index = image_absolute_index(device);
+		}
+
+		/* get the image type/id */
+		entry_typename = &buffer[buffer_pos];
+		buffer_pos += snprintf(&buffer[buffer_pos],
+			ARRAY_LENGTH(buffer) - buffer_pos,
+			"%s",
+			image_typename_id(device)) + 1;
+
+		/* get the base name */
+		entry_basename = image_basename(device);
+
+		/* record the menu item */
+		memset(&item_list[menu_items], 0, sizeof(item_list[menu_items]));
+		item_list[menu_items].text = entry_typename;
+		item_list[menu_items].subtext = (entry_basename != NULL) ? entry_basename : "---";
+		menu_items++;
+	}
+
+	/* add an item for the return */
+	memset(&item_list[menu_items], 0, sizeof(item_list[menu_items]));
+	item_list[menu_items++].text = _("Return to Prior Menu");
+
+	/* compute extras */
+	memset(&extra, 0, sizeof(extra));
+	extra.bottom = ui_get_line_height() + 3.0f * UI_BOX_TB_BORDER;
+	extra.render = file_manager_render_extra;
+
+	/* draw the menu */
+	visible_items = ui_menu_draw(item_list, menu_items, state, &extra);
+
+	/* handle the keys */
+	if (ui_menu_generic_keys(machine, &state, menu_items, visible_items))
+		return state;
+
+	/* was selected pressed? */
+	if (input_ui_pressed(machine, IPT_UI_SELECT))
+	{
+		if (selected_absolute_index >= 0)
+		{
+			/* ensure that the working directory for this device exists */
+			fix_working_directory(selected_device);
+
+			/* set up current_directory and current_file - depends on whether we have an image */
+			current_directory = astring_cpyc(astring_alloc(), image_working_directory(selected_device));
+			current_file = astring_cpyc(astring_alloc(),
+				image_exists(selected_device) ? image_basename(selected_device) : "");
+
+			memset(&fs_state, 0, sizeof(fs_state));
+			return ui_menu_stack_push(menu_file_selector, fs_state.i);
+		}
+		else
+		{
+			return ui_menu_stack_pop();
+		}
+	}
+
+	return state;
 }

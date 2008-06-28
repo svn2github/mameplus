@@ -194,7 +194,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 	genesis_sram = NULL;
 	genesis_sram_start = genesis_sram_len = genesis_sram_active = genesis_sram_readonly = 0;
 
-	rawROM = memory_region(REGION_CPU1);
+	rawROM = memory_region(image->machine, REGION_CPU1);
 	ROM = rawROM /*+ 512 */;
 
 	length = image_fread(image, rawROM + 0x2000, 0x600000);
@@ -251,7 +251,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 		genesis_last_loaded_image_length = length; // this will be -1 for MD and SMD so can't map those roms to custom mappers (yet)
 
 
-		ROM = memory_region(REGION_CPU1);	/* 68000 ROM region */
+		ROM = memory_region(image->machine, REGION_CPU1);	/* 68000 ROM region */
 
  		for (ptr = 0; ptr < 0x502000; ptr += 2)		/* mangle bytes for littleendian machines */
 		{
