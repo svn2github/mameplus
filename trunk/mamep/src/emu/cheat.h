@@ -16,9 +16,13 @@
 
 #include "mamecore.h"
 
+#ifdef USE_HISCORE
+extern int he_did_cheat;
+#endif /* USE_HISCORE */
+
 void cheat_init(running_machine *machine);
 
-int cheat_menu(running_machine *machine, int selection);
+UINT32 cheat_menu(running_machine *machine, UINT32 state);
 
 void cheat_display_watches(running_machine *machine);
 

@@ -2145,7 +2145,7 @@ static void cheat_exit(running_machine *machine)
   cheat_menu - handle cheat menus
 ----------------------------------*/
 
-int cheat_menu(running_machine *machine, int selection)
+UINT32 cheat_menu(running_machine *machine, UINT32 selection)
 {
 	cheat_menu_stack *menu = &menu_stack[stack_index];
 
