@@ -1,6 +1,6 @@
 //Microsoft Developer Studio generated resource script.
 //
-#include "resourcems.h"
+#include "resource.h"
 
 // Generated Help ID header file
 #define APSTUDIO_HIDDEN_SYMBOLS
@@ -838,30 +838,32 @@ BEGIN
                     WS_TABSTOP,10,45,135,10,0,HIDC_CHEAT
     CONTROL         "Error log (for developers)",IDC_LOG,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,135,10,0,HIDC_LOG
+    CONTROL         "Enable game debugger",IDC_DEBUG,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,135,10,0,HIDC_DEBUG
     CONTROL         "Sleep when possible",IDC_SLEEP,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,73,135,10,0,HIDC_SLEEP
+                    WS_TABSTOP,10,87,135,10,0,HIDC_SLEEP
     CONTROL         "Skip game info",IDC_SKIP_GAME_INFO,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,135,10,0,HIDC_SKIP_GAME_INFO
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_SKIP_GAME_INFO
     CONTROL         "Auto restore and save (only if available)",IDC_ENABLE_AUTOSAVE,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,135,10,0,HIDC_ENABLE_AUTOSAVE
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10,0,HIDC_ENABLE_AUTOSAVE
     CONTROL         "Enable multi-threading",IDC_MULTITHREAD_RENDERING,
-                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,115,135,10,0,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,10,129,135,10,0,
                     HIDC_MULTITHREAD_RENDERING
     CONTROL         "Coin lockout",IDC_COINLOCKOUT,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,129,135,10,0,HIDC_COINLOCKOUT
+                    WS_TABSTOP,10,143,135,10,0,HIDC_COINLOCKOUT
     CONTROL         "Quit game with confirmation",IDC_CONFIRM_QUIT,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,143,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
 #ifdef AUTO_PAUSE_PLAYBACK
     CONTROL         "Auto pause when playback is finished",IDC_AUTO_PAUSE_PLAYBACK,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,157,135,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,171,135,10
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-    GROUPBOX        "",IDC_STATIC,4,171,140,33,WS_DISABLED
+    GROUPBOX        "",IDC_STATIC,4,185,140,33,WS_DISABLED
     CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,171,120,10
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,185,120,10
     CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,187,105,10
-    CTEXT           "255",IDC_TRANSPARENCYDISP,120,187,20,10,NOT WS_GROUP
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,201,105,10
+    CTEXT           "255",IDC_TRANSPARENCYDISP,120,201,20,10,NOT WS_GROUP
 #endif /* TRANS_UI */
     GROUPBOX        "Artwork options",IDC_STATIC,147,45,108,73
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 

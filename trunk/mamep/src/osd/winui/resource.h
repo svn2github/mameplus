@@ -361,7 +361,7 @@
 #define IDC_SCREENSELECTTEXT            1227
 #define IDC_CHECK2                      0    // N/A
 #define IDC_MULTIMOUSE                  1230
-#define IDC_DEBUG                       0    // N/A
+#define IDC_DEBUG                       1231
 #define IDC_REFRESHSPEED                1232
 #define IDC_SPEEDTEXT                   0    // N/A
 #define IDC_SPEED                       1234

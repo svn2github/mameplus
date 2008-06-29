@@ -27,7 +27,7 @@
 // MAME/MAMEUI headers
 #include "help.h"
 
-typedef HWND (WINAPI *HtmlHelpProc)(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwData);
+typedef HWND (WINAPI *HtmlHelpProc)(HWND hwndCaller, LPCSTR pszFile, UINT uCommand, DWORD_PTR dwData);
 
 /***************************************************************************
  Internal structures
@@ -84,7 +84,7 @@ void HelpExit(void)
 	}
 }
 
-HWND HelpFunction(HWND hwndCaller, LPCTSTR pszFile, UINT uCommand, DWORD_PTR dwData)
+HWND HelpFunction(HWND hwndCaller, LPCSTR pszFile, UINT uCommand, DWORD_PTR dwData)
 {
 	if (g_pHtmlHelp == NULL)
 		Help_Load();

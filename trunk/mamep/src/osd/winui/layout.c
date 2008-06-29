@@ -161,11 +161,11 @@ const SPLITTERINFO g_splitterInfo[] =
 
 const MAMEHELPINFO g_helpInfo[] =
 {
-	{ ID_HELP_CONTENTS,		TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_overview.htm") },
-	{ ID_HELP_WHATS_NEWUI,	TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_changes.txt") },
-	{ ID_HELP_TROUBLE,		TRUE,	TEXT(MAMEUIHELP) TEXT("::/html/mameui_support.htm") },
-	{ ID_HELP_RELEASE,		FALSE,	TEXT("windows.txt") },
-	{ ID_HELP_WHATS_NEW,	TRUE,	TEXT(MAMEUIHELP) TEXT("::/docs/whatsnew.txt") },
+	{ ID_HELP_CONTENTS,		TRUE,	MAMEUIHELP "::/html/mameui_overview.htm" },
+	{ ID_HELP_WHATS_NEWUI,	TRUE,	MAMEUIHELP "::/html/mameui_changes.txt" },
+	{ ID_HELP_TROUBLE,		TRUE,	MAMEUIHELP "::/html/mameui_support.htm" },
+	{ ID_HELP_RELEASE,		FALSE,	"windows.txt" },
+	{ ID_HELP_WHATS_NEW,	TRUE,	MAMEUIHELP "::/docs/whatsnew.txt" },
 	{ -1 }
 };
 
