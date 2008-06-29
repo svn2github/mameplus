@@ -8,8 +8,13 @@
 ***************************************************************************/
 
 #include "express.h"
-#include "uilang.h"
 #include <ctype.h>
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+#ifdef MESS
+#include "inputx.h"
+#endif /* MESS */
 
 
 

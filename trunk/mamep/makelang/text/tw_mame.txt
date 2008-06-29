@@ -4640,7 +4640,7 @@ Show Overlays
 
 # emu/inpttype.h: 624
 Show Profiler
-顯示數據
+顯示性能分析
 
 # emu/cheat.c: 7653
 Show Search Labels
