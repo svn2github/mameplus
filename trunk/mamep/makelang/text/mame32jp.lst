@@ -3167,7 +3167,7 @@ outrunb	アウトラン (海賊版)	あうとらん_1	bootleg
 toutrun	ターボアウトラン (cockpit FD1094 317-0109)	たーぼあうとらん	Sega
 toutrun2	ターボアウトラン (upright FD1094 317-unknown)	たーぼあうとらん	Sega
 toutrun1	ターボアウトラン (cockpit FD1094 317-unknown)	たーぼあうとらん	Sega
-toutrunu	ターボアウトラン (Out Run upgrade, FD1094 317-0118)	たーぼあうとらん	Sega
+toutrunu	ターボアウトラン (Out Run upgrade FD1094 317-0118)	たーぼあうとらん	Sega
 shangon	スーパーハングオン (sitdown/upright unprotected)	すーぱーはんぐおん	Sega
 shangon3	スーパーハングオン (sitdown/upright FD1089B 317-0034)	すーぱーはんぐおん	Sega
 shangon2	スーパーハングオン (mini ride-on rev A FD1089B 317-0034)	すーぱーはんぐおん	Sega
@@ -5120,8 +5120,8 @@ tstrike	サンダーストライク (newer)	さんだーすとらいく	East Coast Coin Company (M
 tstrikea	サンダーストライク (older)	さんだーすとらいく	East Coast Coin Company (Melbourne)
 ctribe	ザ・コンバットライブス (USA版)	ざこんばっとらいぶす	Technos
 ctribe1	ザ・コンバットライブス (USA版 set 1?)	ざこんばっとらいぶす	Technos
-ctribeb	ザ・コンバットライブス (海賊版)	ざこんばっとらいぶす	bootleg
-ctribb2	ザ・コンバットライブス (イタリア版) (海賊版)	ざこんばっとらいぶす	bootleg
+ctribeb	ザ・コンバットライブス (海賊版 set 1)	ざこんばっとらいぶす	bootleg
+ctribb2	ザ・コンバットライブス (海賊版 set 2)	ざこんばっとらいぶす	bootleg
 blockout	ブロックアウト (set 1)	ぶろっくあうと	Technos + California Dreams
 blckout2	ブロックアウト (set 2)	ぶろっくあうと	Technos + California Dreams
 blckoutj	ブロックアウト (日本版)	ぶろっくあうと	Technos + California Dreams
@@ -6281,7 +6281,7 @@ hanayara	華をやらねば！ (日本版)	はなをやらねば	Dynax
 mjelctrn	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 mjelct3a	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 3 alt)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
-mjelctrb	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4 (海賊版)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
+mjelctrb	マージャン電子基盤 スーパーエクスプレス (日本版 parts 2 & 4) (海賊版)	まーじゃんでんしきばんすーぱーえくすぷれす	Dynax
 majxtal7	麻雀クリスタル7 (日本版)	まーじゃんくりすたるせぶん	Dynax
 nyny	ニューヨークニューヨーク	にゅーよーくにゅーよーく	Sigma Enterprises Inc.
 nynyg	ニューヨークニューヨーク (Gottlieb)	にゅーよーくにゅーよーく	Sigma Enterprises Inc. (Gottlieb license)
@@ -6514,7 +6514,7 @@ zortonbr	ゾートンブラザース (Los Justicieros)	ぞーとんぶらざーす	Web Picmatic
 crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
 topbladv	トップブレードV	とっぷぶれーど5	SonoKong / Expotato
-officeye	オフィスイェオ・イン・チェオンハ (ver1.2)	おふぃすいぇおいんちぇおんは	Danbi
+officeye	オフィスイェオ・イン・チェオンハ (ver 1.2)	おふぃすいぇおいんちぇおんは	Danbi
 inquiztr	インクイジター	いんくいじたー	BFM
 escounts	エブリセカンドカウンツ (39-360-053)	えぶりせかんどかうんつ	BFM
 trebltop	トレブルトップ (39-360-070)	とれぶるとっぷ	BFM
@@ -6679,8 +6679,8 @@ genix	ジェニックスファミリー	じぇにっくすふぁみりー	NIX
 fitfight	龍虎の拳 / Fit of Fighting	りゅうこのけん_1	bootleg
 histryma	ファイターズヒストリー / The History of Martial Arts	ふぁいたーずひすとりー_1	bootleg
 bbprot	アンタイトルドファイター 'BB' (prototype)	あんたいとるふぁいたーびーびー	<unknown>
-flower	フラワー	ふらわー	Komax
-flowerbl	フラワー (海賊版)	ふらわー	bootleg
+flower	フラワー (Sega/Alpha)	ふらわー	Sega/Alpha
+flowerk	フラワー (Komax)	ふらわー	Komax
 beaminv	ビームインベーダー (set 1)	びーむいんべーだー	Tekunon Kougyou
 beaminva	ビームインベーダー (set 2)	びーむいんべーだー	Tekunon Kougyou
 mcatadv	マジカルキャットアドベンチャー	まじかるきゃっとあどべんちゃー	Wintechno
@@ -6994,10 +6994,12 @@ goldnpkc	ゴールデンポーカー (no double up)	ごーるでんぽーかー	Bootleg
 jokerpkr	ジョーカーポーカー	じょーかーぽーかー	Bootleg on Coinmaster hardware
 pottnpkr	ジャックポッテンズポーカー (海賊版 set 1)	じゃっくぽってんずぽーかー	Bootleg
 pottnpkb	ジャックポッテンズポーカー (海賊版 set 2)	じゃっくぽってんずぽーかー	Bootleg
-comg076	キャルオメガ ゲーム7.6 (arcade poker)	きゃるおめがげーむ7.6	Cal Omega Inc.
-comg079	キャルオメガ ゲーム7.9 (arcade poker)	きゃるおめがげーむ7.9	Cal Omega Inc.
-comg094	キャルオメガ ゲーム9.4 (keno)	きゃるおめがげーむ9.4	Cal Omega Inc.
-comg107	キャルオメガ ゲーム10.7 (big game)	きゃるおめがげーむ10.7	Cal Omega Inc.
+comg076	キャルオメガ ゲーム7.6 (arcade poker)	きゃるおめがげーむ07.6	Cal Omega Inc.
+comg079	キャルオメガ ゲーム7.9 (arcade poker)	きゃるおめがげーむ07.9	Cal Omega Inc.
+comg080	キャルオメガ ゲーム8.0 (arcade black jack)	きゃるおめがげーむ08.0	Cal Omega Inc.
+comg094	キャルオメガ ゲーム9.4 (keno)	きゃるおめがげーむ09.4	Cal Omega Inc.
+comg107	キャルオメガ ゲーム10.7c (big game)	きゃるおめがげーむ10.7c	Cal Omega Inc.
+comg123	キャルオメガ ゲーム12.3 (ticket poker)	きゃるおめがげーむ12.3	Cal Omega Inc.
 comg125	キャルオメガ ゲーム12.5 (bingo)	きゃるおめがげーむ12.5	Cal Omega Inc.
 comg127	キャルオメガ ゲーム12.7 (keno)	きゃるおめがげーむ12.7	Cal Omega Inc.
 comg128	キャルオメガ ゲーム12.8 (arcade game)	きゃるおめがげーむ12.8	Cal Omega Inc.
@@ -7018,6 +7020,7 @@ comg187	キャルオメガ ゲーム18.7 (amusement poker)	きゃるおめがげーむ18.7	Cal Ome
 comg204	キャルオメガ ゲーム20.4 (super blackjack)	きゃるおめがげーむ20.4	Cal Omega Inc.
 comg208	キャルオメガ ゲーム20.8 (winner's choice)	きゃるおめがげーむ20.8	Cal Omega Inc.
 comg227	キャルオメガ ゲーム22.7 (amusement poker d/d)	きゃるおめがげーむ22.7	Cal Omega Inc.
+comg230	キャルオメガ ゲーム23.0 (fc bingo (4-card))	きゃるおめがげーむ23.0	Cal Omega Inc.
 comg236	キャルオメガ ゲーム23.6 (hotline)	きゃるおめがげーむ23.6	Cal Omega Inc.
 comg239	キャルオメガ ゲーム23.9 (gaming draw poker)	きゃるおめがげーむ23.9	Cal Omega / Casino Electronics Inc.
 comg246	キャルオメガ ゲーム24.6 (hotline)	きゃるおめがげーむ24.6	Cal Omega Inc.
@@ -7134,7 +7137,9 @@ dinoh	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (アジア版 930223) (
 dinoha	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (アジア版 930223) (ハック set 2)	きゃでぃらっくす	bootleg
 dinohb	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (海外版 930201) (ハック set 3)	きゃでぃらっくす	bootleg
 punishrb	パニッシャー (海賊版)	ぱにっしゃー	bootleg
+punishrh	パニッシャー (Wild Wild West)	ぱにっしゃー	bootleg
 cawingb	U.S.ネイビー / Carrier Air Wing (海賊版)	ゆーえすねいびー	bootleg
+daimakb	大魔界村 (日本版) (海賊版)	だいまかいむら	bootleg
 kodh	ザ・キングオブドラゴンズ (ハック)	ざきんぐおぶどらごんず	bootleg
 kof96ep	ザ・キング・オブ・ファイターズ '96 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_03_1996	bootleg
 kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus 2003 (海賊版 / ハック)	ざきんぐおぶふぁいたーず_04_2_1997	bootleg
