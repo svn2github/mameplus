@@ -187,11 +187,11 @@ UINT32 ui_menu_image_info(running_machine *machine, UINT32 state)
 
 
 
-int mess_use_new_ui(void)
+int mess_use_new_ui(running_machine *machine)
 {
-#if (defined(WIN32) || defined(_MSVC_VER)) && !defined(SDLMAME_WIN32)
+#if (defined(WIN32) || !defined(__GNUC__)) && !defined(SDLMAME_WIN32)
 	//mamep: force new ui if dummy image is used, always disable newui otherwise
-	if (/*options_get_bool(mame_options(), "newui") ||*/ has_dummy_image())
+	if (/*options_get_bool(mame_options(), "newui") ||*/ has_dummy_image(machine))
 		return TRUE;
 #endif
 	return FALSE;
@@ -201,7 +201,7 @@ int mess_use_new_ui(void)
 
 int mess_disable_builtin_ui(running_machine *machine)
 {
-	return mess_use_new_ui() || ((machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active());
+	return mess_use_new_ui(machine) || ((machine->gamedrv->flags & GAME_COMPUTER) && !mess_ui_active());
 }
 
 

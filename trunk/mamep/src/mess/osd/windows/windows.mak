@@ -28,7 +28,8 @@ MESSLIBOSD += \
 	$(MESS_WINOBJ)/tapedlg.o
 
 ifeq ($(NO_DLL),)
-MESSLIBOSD += $(CLIRESFILE)
+    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
+    MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
 else
     ifeq ($(WINUI),)
         $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc

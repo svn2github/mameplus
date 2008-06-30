@@ -388,7 +388,7 @@ int mame_execute(core_options *options)
 			begin_resource_tracking();
 #ifdef MESS
 			//mamep: prevent MESS crash #1
-			if (has_dummy_image())
+			if (has_dummy_image(machine))
 			{
 				set_dummy_image(0);
 				mame->hard_reset_pending = TRUE;
@@ -1835,7 +1835,7 @@ static void init_machine(running_machine *machine)
 
 #ifdef MESS
 	//mamep: prevent MESS crash #2
-	if(has_dummy_image())
+	if(has_dummy_image(machine))
 		return;
 #endif /* MESS */
 

@@ -486,9 +486,9 @@ image_device_info image_device_getinfo(const machine_config *config, const devic
 	info.writeable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) ? 1 : 0;
 	info.creatable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_CREATABLE) ? 1 : 0;
 	info.must_be_loaded = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_MUST_BE_LOADED) ? 1 : 0;
-	if (info.must_be_loaded && has_dummy_image() == -1)
+	if (info.must_be_loaded && has_dummy_image(device->machine) == -1)
 		set_dummy_image(1);
-	else if (has_dummy_image() == -1)
+	else if (has_dummy_image(device->machine) == -1)
 			set_dummy_image(0);
 	info.reset_on_load = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_RESET_ON_LOAD) ? 1 : 0;
 	info.has_partial_hash = device_get_info_fct_offline(device, DEVINFO_FCT_IMAGE_PARTIAL_HASH) ? 1 : 0;
@@ -922,7 +922,7 @@ static int image_load_internal(const device_config *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	if ((has_dummy_image() || attotime_compare(timer_get_time(), attotime_zero) > 0) && slot->info.reset_on_load)
+	if ((has_dummy_image(machine) || attotime_compare(timer_get_time(), attotime_zero) > 0) && slot->info.reset_on_load)
 		mame_schedule_hard_reset(machine);
 
 	/* determine open plan */

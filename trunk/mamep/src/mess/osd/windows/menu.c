@@ -2221,7 +2221,7 @@ int win_create_menu(running_machine *machine, HMENU *menus)
 	// determine whether we are using the natural keyboard or not
 	win_use_natural_keyboard = options_get_bool(mame_options(), "natural");
 
-	if (mess_use_new_ui())
+	if (mess_use_new_ui(machine))
 	{
 		module = win_resource_module();
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));

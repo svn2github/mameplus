@@ -582,7 +582,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 				break;
 
 			case 2:
-				if ((show_gameinfo || has_dummy_image() > 0) && sprintf_game_info(machine, messagebox_text))
+				if ((show_gameinfo || has_dummy_image(machine) > 0) && sprintf_game_info(machine, messagebox_text))
 				{
 					char *bufptr = messagebox_text + strlen(messagebox_text);
 
@@ -590,7 +590,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 					bufptr += sprintf(bufptr, "\n\t%s %s", ui_getstring(UI_mame), build_version);
 					
 					// mamep: prepare a screen for console with dummy image
-					if(has_dummy_image() > 0)
+					if(has_dummy_image(machine) > 0)
 					{
 						bufptr += sprintf(bufptr, "\n\t%s", _("Please load an image"));
 						ui_set_handler(handler_messagebox_anykey, 0);
@@ -2020,7 +2020,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 	}
 
 	/* if select key is pressed, just exit */
-	if (res == 1 && has_dummy_image() <= 0)
+	if (res == 1 && has_dummy_image(machine) <= 0)
 	{
 		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
 			state = UI_HANDLER_CANCEL;
@@ -2471,7 +2471,8 @@ static void slider_init(running_machine *machine)
 		/* add CPU overclocking */
 		numitems = cpu_gettotalcpu();
 		for (item = 0; item < numitems; item++)
-			slider_config(&slider_list[slider_count++], 10, 1000, 2000, 1, slider_overclock, (void *)(FPTR)item);
+			//mamep: 4x overclock
+			slider_config(&slider_list[slider_count++], 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
 	}
 
 	for (item = 0; item < numscreens; item++)

@@ -62,7 +62,7 @@ UINT32 hash_data_extract_crc32(const char *d);
 #define IMAGE_VERIFY_PASS 0
 #define IMAGE_VERIFY_FAIL 1
 
-int has_dummy_image(void);
+int has_dummy_image(running_machine *machine);
 void set_dummy_image(int di);
 
 /* runs checks to see if device code is proper */

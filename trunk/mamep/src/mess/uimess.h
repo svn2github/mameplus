@@ -13,7 +13,7 @@
 
 int mess_ui_active(void);
 void mess_ui_update(running_machine *machine);
-int mess_use_new_ui(void);
+int mess_use_new_ui(running_machine *machine);
 int mess_disable_builtin_ui(running_machine *machine);
 
 /* image info screen */

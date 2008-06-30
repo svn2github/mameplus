@@ -582,11 +582,14 @@ BUILDOUT = $(BUILDOBJ)
 ifdef MAMEMESS
 # include MESS core defines
 include $(SRC)/mess/messcore.mak
-include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
 endif
 
 # include OSD-specific rules first
 include $(SRC)/osd/$(OSD)/$(OSD).mak
+
+ifdef MAMEMESS
+include $(SRC)/mess/osd/$(OSD)/$(OSD).mak
+endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak

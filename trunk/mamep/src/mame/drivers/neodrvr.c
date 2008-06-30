@@ -9674,7 +9674,7 @@ GAME( 2003, mslug5d,  mslug5,   neogeo,   neogeo,   mslug5d,  ROT0, "SNK / Playm
 GAME( 2003, samsho5d, samsho5,  neogeo,   neogeo,   samsho5d, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V / Samurai Spirits Zero (decrypted C)", 0 ) // different program scrambling
 GAME( 2003, samsh5sd, samsh5sp, neogeo,   neogeo,   samsh5sd, ROT0, "Yuki Enterprise / SNK Playmore", "Samurai Shodown V Special / Samurai Spirits Zero Special (decrypted C)", 0 )
 GAME( 2004, lans2k4d, shocktr2, neogeo,   neogeo,   neogeo,   ROT0, "bootleg", "Lansquenet 2004 (Shock Troopers - 2nd Squad Bootleg / fully decrypted)", 0 )
-GAME( 2003, svcd,     svc,      neogeo,   neogeo,   svcd,     ROT0, "bootleg", "SVC Chaos - SNK vs CAPCOM (MVS / decrypted C)",0 )
+GAME( 2003, svcd,     svc,      neogeo,   neogeo,   svcd,     ROT0, "SNK Playmore", "SVC Chaos - SNK vs CAPCOM (MVS / decrypted C)",0 )
 GAME( 2001, jckeygpd, jockeygp, neogeo,   jockeygp, jckeygpd, ROT0, "Sun Amusement / BrezzaSoft", "Jockey Grand Prix (decrypted C)", 0 )
 GAME( 2003, kf2k3pcd, kf2k3pcb, neogeo,   neogeo,   kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C&Bios)" , 0 ) /* Encrypted Code & Sound */
 GAME( 2005, kogd,     kof97,    neogeo,   kog,      neogeo,   ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg / fully decrypted)", 0 )

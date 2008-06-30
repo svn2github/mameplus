@@ -759,7 +759,7 @@ BOOL wininput_handle_raw(HANDLE device)
 //  osd_customize_mapping_list
 //============================================================
 
-void osd_customize_input_type_list(input_type_desc *typelist)
+void osd_customize_input_type_list(running_machine *machine, input_type_desc *typelist)
 {
 	input_type_desc *typedesc;
 
@@ -782,7 +782,7 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 
 #ifdef MESS
 			case IPT_OSD_2:
-				if (mess_use_new_ui())
+				if (mess_use_new_ui(machine))
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
 					typedesc->name = _WINDOWS("Toggle Menubar");
