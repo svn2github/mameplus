@@ -3045,7 +3045,7 @@ quartet1	星战四人组 (8751 315-5194)	星战四人组 (8751 315-5194)	Sega
 quart21	星战四人组 2 (8751 317-0010)	星战四人组 2 (8751 317-0010)	Sega
 quart2	星战四人组 2 (未保护版)	星战四人组 2 (未保护版)	Sega
 aceattaa	王牌攻击者 (日版, 系统 16A, FD1094 317-0060)	王牌攻击者 (日版, 系统 16A, FD1094 317-0060)	Sega
-afighter	战斗任务	战斗任务	Sega
+afighter	战斗任务 (FD1089A 317-0018)	战斗任务 (FD1089A 317-0018)	Sega
 alexkidd	天空魔城 (第2套, 未保护版)	天空魔城 (第2套, 未保护版)	Sega
 alexkid1	天空魔城 (第1套, FD1089A 317-unknown)	天空魔城 (第1套, FD1089A 317-unknown)	Sega
 fantzone	神奇地带 (第2套, 未保护版)	神奇地带 (第2套, 未保护版)	Sega
@@ -5143,9 +5143,9 @@ darktowr	黑暗之塔	黑暗之塔	Game Room
 tstrike	闪电出击	闪电出击	East Coast Coin Company (Melbourne)
 tstrikea	闪电出击 (旧版)	闪电出击 (旧版)	East Coast Coin Company (Melbourne)
 ctribe	流氓大混战 (美版)	流氓大混战 (美版)	Technos
-ctribe1	流氓大混战 (美版) - 第1套?	流氓大混战 (美版) - 第1套?	Technos
-ctribeb	流氓大混战 (盗版)	流氓大混战 (盗版)	bootleg
-ctribb2	流氓大混战 (意大利 盗版)	流氓大混战 (意大利 盗版)	bootleg
+ctribe1	流氓大混战 (美版 第1套?)	流氓大混战 (美版 第1套?)	Technos
+ctribeb	流氓大混战 (盗版 第1套)	流氓大混战 (盗版 第1套)	bootleg
+ctribb2	流氓大混战 (盗版 第2套)	流氓大混战 (盗版 第2套)	bootleg
 blockout	立体空间方块 (第1套)	立体空间方块 (第1套)	Technos + California Dreams
 blckout2	立体空间方块 (第2套)	立体空间方块 (第2套)	Technos + California Dreams
 blckoutj	立体空间方块 (日版)	立体空间方块 (日版)	Technos + California Dreams
@@ -6711,8 +6711,8 @@ genix	魔鬼气泡牛仔版	魔鬼气泡牛仔版	NIX
 fitfight	龙虎之拳	龙虎之拳	bootleg
 histryma	武术的历史	武术的历史	bootleg
 bbprot	无名战士 (工程版)	无名战士 (工程版)	<unknown>
-flower	花殒石	花殒石	Komax
-flowerbl	花殒石 (盗版)	花殒石 (盗版)	bootleg
+flower	花殒石 (Sega/Alpha)	花殒石 (Sega/Alpha)	Sega/Alpha
+flowerk	花殒石 (Komax)	花殒石 (Komax)	Komax
 beaminv	宇宙侵略者 - 射线入侵者 (第1套)	宇宙侵略者 - 射线入侵者 (第1套)	Tekunon Kougyou
 beaminva	宇宙侵略者 - 射线入侵者 (第2套)	宇宙侵略者 - 射线入侵者 (第2套)	Tekunon Kougyou
 mcatadv	魔猫森林	魔猫森林	Wintechno
@@ -7030,8 +7030,10 @@ pottnpkr	杰克的纸牌 (盗版)	杰克的纸牌 (盗版)	Bootleg
 pottnpkb	杰克的纸牌 (盗版2)	杰克的纸牌 (盗版2)	Bootleg
 comg076	欧米伽 - 游戏 7.6 (街机 扑克)	欧米伽 - 游戏 7.6 (街机 扑克)	Cal Omega Inc.
 comg079	欧米伽 - 游戏 7.9 (街机 扑克)	欧米伽 - 游戏 7.9 (街机 扑克)	Cal Omega Inc.
+comg080	欧米伽 - 游戏 8.0 (街机 扑克)	欧米伽 - 游戏 8.0 (街机 扑克)	Cal Omega Inc.
 comg094	欧米伽 - 游戏 9.4 (基诺)	欧米伽 - 游戏 9.4 (基诺)	Cal Omega Inc.
-comg107	欧米伽 - 游戏 10.7 (梭哈)	欧米伽 - 游戏 10.7 (梭哈)	Cal Omega Inc.
+comg107	欧米伽 - 游戏 10.7c (Big Game)	欧米伽 - 游戏 10.7c (Big Game)	Cal Omega Inc.
+comg123	欧米伽 - 游戏 12.3 (Ticket Poker)	欧米伽 - 游戏 12.3 (Ticket Poker)	Cal Omega Inc.
 comg125	欧米伽 - 游戏 12.5 (宾果)	欧米伽 - 游戏 12.5 (宾果)	Cal Omega Inc.
 comg127	欧米伽 - 游戏 12.7 (基诺)	欧米伽 - 游戏 12.7 (基诺)	Cal Omega Inc.
 comg128	欧米伽 - 游戏 12.8 (梭哈)	欧米伽 - 游戏 12.8 (梭哈)	Cal Omega Inc.
@@ -7052,6 +7054,7 @@ comg187	欧米伽 - 游戏 18.7 (趣味扑克)	欧米伽 - 游戏 18.7 (趣味扑克)	Cal Omega In
 comg204	欧米伽 - 游戏 20.4 (超级21点)	欧米伽 - 游戏 20.4 (超级21点)	Cal Omega Inc.
 comg208	欧米伽 - 游戏 20.8 (赢家的选择)	欧米伽 - 游戏 20.8 (赢家的选择)	Cal Omega Inc.
 comg227	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	欧米伽 - 游戏 22.7 (趣味扑克, d/d)	Cal Omega Inc.
+comg230	欧米伽 - 游戏 23.0 (FC Bingo (4-card))	欧米伽 - 游戏 23.0 (FC Bingo (4-card))	Cal Omega Inc.
 comg236	欧米伽 - 游戏 23.6 (热线)	欧米伽 - 游戏 23.6 (热线)	Cal Omega Inc.
 comg239	欧米伽 - 游戏 23.9 (梭哈)	欧米伽 - 游戏 23.9 (梭哈)	Cal Omega / Casino Electronics Inc.
 comg246	欧米伽 - 游戏 24.6 (热线)	欧米伽 - 游戏 24.6 (热线)	Cal Omega Inc.
@@ -7168,7 +7171,9 @@ dinoh	恐龙新世纪 (hack 第1套)	恐龙新世纪 (hack 第1套)	bootleg
 dinoha	恐龙新世纪 (hack 第2套)	恐龙新世纪 (hack 第2套)	bootleg
 dinohb	恐龙新世纪 (hack 第3套)	恐龙新世纪 (hack 第3套)	bootleg
 punishrb	惩罚者 (盗版)	惩罚者 (盗版)	bootleg
+punishrh	惩罚者 (飙风战警)	惩罚者 (飙风战警)	bootleg
 cawingb	雌虎战机 (盗版)	雌虎战机 (盗版)	bootleg
+daimakb	大魔界村 (日版, 盗版)	大魔界村 (日版, 盗版)	bootleg
 kodh	龙王战士 (hack)	龙王战士 (hack)	bootleg
 kof96ep	拳皇 '96 (盗版)	拳皇 '96 (盗版)	bootleg
 kof97pla	拳皇 '97 重出江湖 PLUS 2003 (盗版)	拳皇 '97 重出江湖 PLUS 2003 (盗版)	bootleg
