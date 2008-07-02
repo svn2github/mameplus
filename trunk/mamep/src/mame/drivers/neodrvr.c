@@ -9114,6 +9114,7 @@ DRIVER_INIT( kof2003d ) // decrypted C & decrypted P
 DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 {
 	kf2k3pcb_decrypt_68k(machine);
+	neogeo_sfix_decrypt(machine);
 	kf2k3pcb_decrypt_s1data(machine);
 //	kof2003biosdecode(machine);
 	/* rom[i] = BITSWAP8(rom[i], 5, 6, 1, 4, 3, 0, 7, 2) -- extra encrypted m1 swap? not confirmed */
