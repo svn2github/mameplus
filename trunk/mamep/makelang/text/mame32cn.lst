@@ -1037,6 +1037,7 @@ galxwar2	ÒøºÓÕ½Õù (Universal µÚ2Ì×)	ÒøºÓÕ½Õù (Universal µÚ2Ì×)	Universal
 galxwart	ÒøºÓÕ½Õù (Taito?)	ÒøºÓÕ½Õù (Taito?)	Taito?
 starw	ÒøºÓÕ½Õù Star Wars	ÒøºÓÕ½Õù Star Wars	bootleg
 lrescue	ÔÂÇòÓª¾È	ÔÂÇòÓª¾È	Taito
+mlander	µÇÂ½ÔÂÇò³µ (µÁ°æ ÔÂÇòÓª¾È)	µÇÂ½ÔÂÇò³µ (µÁ°æ ÔÂÇòÓª¾È)	[Taito] (Leisure Time Electronics bootleg)
 lrescuem	ÔÂÇòÓª¾È Lunar Rescue (Model Racing µÁ°æ)	ÔÂÇòÓª¾È Lunar Rescue (Model Racing µÁ°æ)	Taito (Model Racing bootleg)
 grescue	ÔÂÇòÓª¾È Galaxy Rescue	ÔÂÇòÓª¾È Galaxy Rescue	Taito (Universal license?)
 desterth	ÔÂÇòÓª¾È Destination Earth	ÔÂÇòÓª¾È Destination Earth	bootleg
@@ -1150,6 +1151,7 @@ powerdrv	¶¯Á¦Ô½Ò°	¶¯Á¦Ô½Ò°	Bally Midway
 stargrds	ĞÇ¼ÊÎÀ±ø	ĞÇ¼ÊÎÀ±ø	Bally Midway
 maxrpm	×î´ó×ªËÙ	×î´ó×ªËÙ	Bally Midway
 spyhunt	×¥¼äµı	×¥¼äµı	Bally Midway
+spyhuntp	×¥¼äµı (Playtronic Ğí¿É)	×¥¼äµı (Playtronic Ğí¿É)	Bally Midway
 turbotag	³å×²Èü³µ (¹¤³Ì°æ)	³å×²Èü³µ (¹¤³Ì°æ)	Bally Midway
 crater	Ì«¿Õ¾ÈÄÑÍ§	Ì«¿Õ¾ÈÄÑÍ§	Bally Midway
 zwackery	´ó·¨Ê¦	´ó·¨Ê¦	Bally Midway
@@ -1553,6 +1555,7 @@ wgpj	¹ú¼Ê»ú³µ´ó½±Èü (ÈÕ°æ)	¹ú¼Ê»ú³µ´ó½±Èü (ÈÕ°æ)	Taito Corporation
 wgpjoy	¹ú¼Ê»ú³µ´ó½±Èü (²Ù×İ¸Ë°æ) (ÈÕ°æ, µÚ1Ì×)	¹ú¼Ê»ú³µ´ó½±Èü (²Ù×İ¸Ë°æ) (ÈÕ°æ, µÚ1Ì×)	Taito Corporation
 wgpjoya	¹ú¼Ê»ú³µ´ó½±Èü (²Ù×İ¸Ë°æ) (ÈÕ°æ, µÚ2Ì×)	¹ú¼Ê»ú³µ´ó½±Èü (²Ù×İ¸Ë°æ) (ÈÕ°æ, µÚ2Ì×)	Taito Corporation
 wgp2	¹ú¼Ê»ú³µ´ó½±Èü WGP2 (ÈÕ°æ)	¹ú¼Ê»ú³µ´ó½±Èü WGP2 (ÈÕ°æ)	Taito Corporation
+galastrm	ÒøºÓ·ç±© (ÈÕ°æ)	ÒøºÓ·ç±© (ÈÕ°æ)	Taito Corporation
 slapshot	»ğ±¬ÈºÁú - ÊØÃÅ´ó¶Ô¾ö (ÈÕ°æ)	»ğ±¬ÈºÁú - ÊØÃÅ´ó¶Ô¾ö (ÈÕ°æ)	Taito Corporation
 opwolf3	ÎÚ×È³å·æÇ¹ 3 - Ò°ÀÇĞĞ¶¯ (ÊÀ½ç°æ)	ÎÚ×È³å·æÇ¹ 3 - Ò°ÀÇĞĞ¶¯ (ÊÀ½ç°æ)	Taito Corporation Japan
 opwolf3u	ÎÚ×È³å·æÇ¹ 3 - Ò°ÀÇĞĞ¶¯ (ÃÀ°æ)	ÎÚ×È³å·æÇ¹ 3 - Ò°ÀÇĞĞ¶¯ (ÃÀ°æ)	Taito America Corporation
@@ -1662,7 +1665,9 @@ contcrua	·½³ÌÊ½Èü³µ - F1 Ñ²»ØÈü (ÃÀ°æ µÚ2Ì×)	·½³ÌÊ½Èü³µ - F1 Ñ²»ØÈü (ÃÀ°æ µÚ2Ì×)
 chasehq	×·×Ù H.Q (ÊÀ½ç°æ)	×·×Ù H.Q (ÊÀ½ç°æ)	Taito Corporation Japan
 chasehqj	×·×Ù H.Q (ÈÕ°æ)	×·×Ù H.Q (ÈÕ°æ)	Taito Corporation
 enforce	³¬Ç¿»ğÁ¦ (ÈÕ°æ)	³¬Ç¿»ğÁ¦ (ÈÕ°æ)	Taito Corporation
-nightstr	ÎçÒ¹³ö»÷ (ÃÀ°æ)	ÎçÒ¹³ö»÷ (ÃÀ°æ)	Taito America Corporation
+nightstr	ÎçÒ¹³ö»÷ (ÊÀ½ç°æ)	ÎçÒ¹³ö»÷ (ÊÀ½ç°æ)	Taito Corporation Japan
+nghtstrj	ÎçÒ¹³ö»÷ (ÈÕ°æ)	ÎçÒ¹³ö»÷ (ÈÕ°æ)	Taito Corporation
+nghtstru	ÎçÒ¹³ö»÷ (ÃÀ°æ)	ÎçÒ¹³ö»÷ (ÃÀ°æ)	Taito America Corporation
 sci	ÌØ±ğĞÌÊÂµ÷²é×é (ÊÀ½ç°æ µÚ1Ì×)	ÌØ±ğĞÌÊÂµ÷²é×é (ÊÀ½ç°æ µÚ1Ì×)	Taito Corporation Japan
 scia	ÌØ±ğĞÌÊÂµ÷²é×é (ÊÀ½ç°æ µÚ2Ì×)	ÌØ±ğĞÌÊÂµ÷²é×é (ÊÀ½ç°æ µÚ2Ì×)	Taito Corporation Japan
 scij	ÌØ±ğĞÌÊÂµ÷²é×é (ÈÕ°æ)	ÌØ±ğĞÌÊÂµ÷²é×é (ÈÕ°æ)	Taito Corporation
@@ -2172,6 +2177,7 @@ kodb	ÁúÍõÕ½Ê¿ (µÁ°æ)	ÁúÍõÕ½Ê¿ (µÁ°æ)	bootleg
 captcomm	Ãû½« (ÊÀ½ç°æ 911014)	Ãû½« (ÊÀ½ç°æ 911014)	Capcom
 captcomu	Ãû½« (ÃÀ°æ 910928)	Ãû½« (ÃÀ°æ 910928)	Capcom
 captcomj	Ãû½« (ÈÕ°æ 911202)	Ãû½« (ÈÕ°æ 911202)	Capcom
+captcomb	Ãû½« (µÁ°æ)	Ãû½« (µÁ°æ)	bootleg
 knights	Ô²×ÀÆïÊ¿ (ÊÀ½ç°æ 911127)	Ô²×ÀÆïÊ¿ (ÊÀ½ç°æ 911127)	Capcom
 knightsu	Ô²×ÀÆïÊ¿ (ÃÀ°æ 911127)	Ô²×ÀÆïÊ¿ (ÃÀ°æ 911127)	Capcom
 knightsj	Ô²×ÀÆïÊ¿ (ÈÕ°æ 911127)	Ô²×ÀÆïÊ¿ (ÈÕ°æ 911127)	Capcom
@@ -2209,9 +2215,14 @@ sf2tj	½ÖÍ·°ÔÍõ II' ĞıÎĞ - Õ½¶·ĞûÑÔ (ÈÕ°æ 921209)	½ÖÍ·°ÔÍõ II' ĞıÎĞ - Õ½¶·ĞûÑÔ (È
 dino	¿ÖÁúĞÂÊÀ¼Í (ÊÀ½ç°æ 930201)	¿ÖÁúĞÂÊÀ¼Í (ÊÀ½ç°æ 930201)	Capcom
 dinou	¿ÖÁúĞÂÊÀ¼Í (ÃÀ°æ 930201)	¿ÖÁúĞÂÊÀ¼Í (ÃÀ°æ 930201)	Capcom
 dinoj	¿ÖÁúĞÂÊÀ¼Í (ÈÕ°æ 930201)	¿ÖÁúĞÂÊÀ¼Í (ÈÕ°æ 930201)	Capcom
+dinopic	¿ÖÁúĞÂÊÀ¼Í (µÁ°æ PIC16c57, µÚ1Ì×)	¿ÖÁúĞÂÊÀ¼Í (µÁ°æ PIC16c57, µÚ1Ì×)	bootleg
+dinopic2	¿ÖÁúĞÂÊÀ¼Í (µÁ°æ PIC16c57, µÚ2Ì×)	¿ÖÁúĞÂÊÀ¼Í (µÁ°æ PIC16c57, µÚ2Ì×)	bootleg
 punisher	³Í·£Õß (ÊÀ½ç°æ 930422)	³Í·£Õß (ÊÀ½ç°æ 930422)	Capcom
 punishru	³Í·£Õß (ÃÀ°æ 930422)	³Í·£Õß (ÃÀ°æ 930422)	Capcom
 punishrj	³Í·£Õß (ÈÕ°æ 930422)	³Í·£Õß (ÈÕ°æ 930422)	Capcom
+punipic	³Í·£Õß (µÁ°æ PIC16c57, µÚ1Ì×)	³Í·£Õß (µÁ°æ PIC16c57, µÚ1Ì×)	Capcom
+punipic2	³Í·£Õß (µÁ°æ PIC16c57, µÚ2Ì×)	³Í·£Õß (µÁ°æ PIC16c57, µÚ2Ì×)	Capcom
+punipic3	³Í·£Õß (µÁ°æ PIC16c57, µÚ3Ì×)	³Í·£Õß (µÁ°æ PIC16c57, µÚ3Ì×)	Capcom
 slammast	Ë¤õÓ°ÔÍõ (ÊÀ½ç°æ 930713)	Ë¤õÓ°ÔÍõ (ÊÀ½ç°æ 930713)	Capcom
 slammasu	Ë¤õÓ°ÔÍõ (ÃÀ°æ 930713)	Ë¤õÓ°ÔÍõ (ÃÀ°æ 930713)	Capcom
 mbomberj	Ë¤½Ç°ÔÍõ - ¼¡Èâ±¬µ¯ (ÈÕ°æ 930713)	Ë¤½Ç°ÔÍõ - ¼¡Èâ±¬µ¯ (ÈÕ°æ 930713)	Capcom
@@ -2241,7 +2252,7 @@ ecofghtu	»·±£Õ½Ê¿ (ÃÀ°æ 940215)	»·±£Õ½Ê¿ (ÃÀ°æ 940215)	Capcom
 ecofgtu1	»·±£Õ½Ê¿ (ÃÀ°æ 931203)	»·±£Õ½Ê¿ (ÃÀ°æ 931203)	Capcom
 ecofghta	»·±£Õ½Ê¿ (ÑÇÖŞ°æ 931203)	»·±£Õ½Ê¿ (ÑÇÖŞ°æ 931203)	Capcom
 uecology	»·±£Õ½Ê¿ (ÈÕ°æ 931203)	»·±£Õ½Ê¿ (ÈÕ°æ 931203)	Capcom
-ddtod	ÁúÓëµØÏÂ³Ç (Å·ÖŞ°æ 940412)	ÁúÓëµØÏÂ³Ç (Å·ÖŞ°æ 940412)	Capcom
+ddtod	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940412)	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940412)	Capcom
 ddtodr1	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940113)	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940113)	Capcom
 ddtodu	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (ÃÀ°æ 940125)	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (ÃÀ°æ 940125)	Capcom
 ddtodur1	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (ÃÀ°æ 940113)	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (ÃÀ°æ 940113)	Capcom
@@ -3853,6 +3864,7 @@ senjyo	Õ½³¡¸ßÉäÅÚ	Õ½³¡¸ßÉäÅÚ	Tehkan
 starforc	ĞÇ¼ÊÎäÁ¦	ĞÇ¼ÊÎäÁ¦	Tehkan
 starfore	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ)	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ)	Tehkan
 starforb	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ,µÁ°æ)	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ,µÁ°æ)	[Tehkan] (bootleg)
+starfora	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ, µÚ2Ì×)	ĞÇ¼ÊÎäÁ¦ (¼ÓÃÜ°æ, µÚ2Ì×)	Tehkan
 megaforc	ĞÇ¼ÊÎäÁ¦ Mega force	ĞÇ¼ÊÎäÁ¦ Mega force	Tehkan (Video Ware license)
 baluba	°ÍÂ³°Í¿ó¹¤´«Ëµ	°ÍÂ³°Í¿ó¹¤´«Ëµ	Able Corp, Ltd.
 bombjack	Õ¨µ¯½Ü¿Ë (µÚ1Ì×)	Õ¨µ¯½Ü¿Ë (µÚ1Ì×)	Tehkan
@@ -4288,6 +4300,7 @@ totlvice	¶ñ¹áÂúÓ¯ (ver JAA)	¶ñ¹áÂúÓ¯ (ver JAA)	Konami
 btltryst	Ô¼»áÕ½ÒÛ (ver JAC)	Ô¼»áÕ½ÒÛ (ver JAC)	Konami
 heatof11	Ê¤ÀûÊ®Ò»ÈË '98 (ver EAA)	Ê¤ÀûÊ®Ò»ÈË '98 (ver EAA)	Konami
 evilngt	×ï¶ñÖ®Ò¹ (ver EAA)	×ï¶ñÖ®Ò¹ (ver EAA)	Konami
+hellngt	µØÓüÖ®Ò¹ (ver EAA)	µØÓüÖ®Ò¹ (ver EAA)	Konami
 carpolo	Æû³µ×ãÇò	Æû³µ×ãÇò	Exidy
 sidetrac	×ª»»¹ìµÀ	×ª»»¹ìµÀ	Exidy
 targ	Èü³µÉ±Õó	Èü³µÉ±Õó	Exidy
@@ -5375,6 +5388,7 @@ tm4k	´¥Ãş´óÊ¦ 4000 (v6.02 ±ê×¼)	´¥Ãş´óÊ¦ 4000 (v6.02 ±ê×¼)	Midway
 tm5k	´¥Ãş´óÊ¦ 5000 (v7.10 ±ê×¼)	´¥Ãş´óÊ¦ 5000 (v7.10 ±ê×¼)	Midway
 tm7k	´¥Ãş´óÊ¦ 7000 (v8.04 ±ê×¼)	´¥Ãş´óÊ¦ 7000 (v8.04 ±ê×¼)	Midway
 tm7ka	´¥Ãş´óÊ¦ 7000 (v8.00 ±ê×¼)	´¥Ãş´óÊ¦ 7000 (v8.00 ±ê×¼)	Midway
+tm8k	´¥Ãş´óÊ¦ 8000 (v9.04 ±ê×¼)	´¥Ãş´óÊ¦ 8000 (v9.04 ±ê×¼)	Midway
 galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	½ûÔË	½ûÔË	Cinematronics
 tripool	»¨Ê½×²Çò Tri-Pool (Casino Tech)	»¨Ê½×²Çò Tri-Pool (Casino Tech)	Noma (Casino Tech license)
@@ -5451,7 +5465,8 @@ scionc	×éºÏºäÕ¨ (Cinematronics)	×éºÏºäÕ¨ (Cinematronics)	Seibu Denshi (Cinematro
 kungfut	¹¦·ò´ó¾ı	¹¦·ò´ó¾ı	Seibu Kaihatsu Inc.
 kungfuta	¹¦·ò´ó¾ı (Ìæ»»°æ)	¹¦·ò´ó¾ı (Ìæ»»°æ)	Seibu Kaihatsu Inc.
 wiz	Î×Ê¦	Î×Ê¦	Seibu Kaihatsu Inc.
-wizt	Î×Ê¦ (Taito)	Î×Ê¦ (Taito)	[Seibu] (Taito license)
+wizt	Î×Ê¦ (Taito, µÚ1Ì×)	Î×Ê¦ (Taito, µÚ1Ì×)	[Seibu] (Taito license)
+wizta	Î×Ê¦ (Taito, µÚ2Ì×)	Î×Ê¦ (Taito, µÚ2Ì×)	[Seibu] (Taito license)
 kncljoe	³Í¼é³ú¶ñ (µÚ1Ì×)	³Í¼é³ú¶ñ (µÚ1Ì×)	[Seibu Kaihatsu] (Taito license)
 kncljoea	³Í¼é³ú¶ñ (µÚ2Ì×)	³Í¼é³ú¶ñ (µÚ2Ì×)	[Seibu Kaihatsu] (Taito license)
 bcrusher	³Í¼é³ú¶ñ	³Í¼é³ú¶ñ	bootleg
@@ -6711,8 +6726,8 @@ genix	Ä§¹íÆøÅİÅ£×Ğ°æ	Ä§¹íÆøÅİÅ£×Ğ°æ	NIX
 fitfight	Áú»¢Ö®È­	Áú»¢Ö®È­	bootleg
 histryma	ÎäÊõµÄÀúÊ·	ÎäÊõµÄÀúÊ·	bootleg
 bbprot	ÎŞÃûÕ½Ê¿ (¹¤³Ì°æ)	ÎŞÃûÕ½Ê¿ (¹¤³Ì°æ)	<unknown>
-flower	»¨éæÊ¯ (Sega/Alpha)	»¨éæÊ¯ (Sega/Alpha)	Sega/Alpha
-flowerk	»¨éæÊ¯ (Komax)	»¨éæÊ¯ (Komax)	Komax
+flower	»¨éæÊ¯ (Komax)	»¨éæÊ¯ (Komax)	Komax
+flowers	»¨éæÊ¯ (Sega/Alpha)	»¨éæÊ¯ (Sega/Alpha)	Sega/Alpha
 beaminv	ÓîÖæÇÖÂÔÕß - ÉäÏßÈëÇÖÕß (µÚ1Ì×)	ÓîÖæÇÖÂÔÕß - ÉäÏßÈëÇÖÕß (µÚ1Ì×)	Tekunon Kougyou
 beaminva	ÓîÖæÇÖÂÔÕß - ÉäÏßÈëÇÖÕß (µÚ2Ì×)	ÓîÖæÇÖÂÔÕß - ÉäÏßÈëÇÖÕß (µÚ2Ì×)	Tekunon Kougyou
 mcatadv	Ä§Ã¨É­ÁÖ	Ä§Ã¨É­ÁÖ	Wintechno
@@ -6853,6 +6868,7 @@ witch	¹Ú¾üµ¯ÖéÌ¨ 92	¹Ú¾üµ¯ÖéÌ¨ 92	Sega / Vic Tokai
 pbchmp95	¹Ú¾üµ¯ÖéÌ¨ 95 (µÁ°æ?)	¹Ú¾üµ¯ÖéÌ¨ 95 (µÁ°æ?)	Veltmeijer Automaten
 cardline	¿¨Æ¬Ê«¾ä	¿¨Æ¬Ê«¾ä	Veltmeijer
 bmcbowl	¹öÇòÖ®ĞÇ	¹öÇòÖ®ĞÇ	BMC
+koftball	×ãÇòÍõ	×ãÇòÍõ	BMC
 pitboss	¶Ä³¡´óºà	¶Ä³¡´óºà	Merit
 casino5	ÓéÀÖ³¡ 5	ÓéÀÖ³¡ 5	Merit
 trvwzh	ÎÊ´ğ °Ù¿Æ¸ßÊÖ (Ì¨ÃæĞÍ - ÎÊ´ğ µÚ1Ì×)	ÎÊ´ğ °Ù¿Æ¸ßÊÖ (Ì¨ÃæĞÍ - ÎÊ´ğ µÚ1Ì×)	Merit
@@ -7205,7 +7221,7 @@ ngem2k	ÖÇÁ¦·ûºÅ 2000 (beta 2006-01-18)	ÖÇÁ¦·ûºÅ 2000 (beta 2006-01-18)	homebrew
 cnbe	¿ÕÕ½´úºÅ - ÑªĞÈÌìÊ¹ (2006-01-19)	¿ÕÕ½´úºÅ - ÑªĞÈÌìÊ¹ (2006-01-19)	homebrew
 ltorb1	Ó¡µÚ°²ÄÈÇíË¹ (20050717)	Ó¡µÚ°²ÄÈÇíË¹ (20050717)	Blastar
 beast	Ò°ÊŞÖ®Í« (Neo Demo)	Ò°ÊŞÖ®Í« (Neo Demo)	Psygnosis
-ddtodd	ÁúÓëµØÏÂ³Ç (Å·ÖŞ°æ 940412 / ·ï»Ë°æ)	ÁúÓëµØÏÂ³Ç (Å·ÖŞ°æ 940412 / ·ï»Ë°æ)	hack
+ddtodd	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940412 / ·ï»Ë°æ)	ÁúÓëµØÏÂ³Ç - »ÙÃğÖ®Ëş (Å·ÖŞ°æ 940412 / ·ï»Ë°æ)	hack
 avspd	ÒìĞÎ ¶Ô ÌúÑªÕ½Ê¿ (Å·ÖŞ°æ 940520 / ·ï»Ë°æ)	ÒìĞÎ ¶Ô ÌúÑªÕ½Ê¿ (Å·ÖŞ°æ 940520 / ·ï»Ë°æ)	hack
 ringdstd	Ë¤õÓ°ÔÍõ II (Å·ÖŞ°æ 940902 / ·ï»Ë°æ)	Ë¤õÓ°ÔÍõ II (Å·ÖŞ°æ 940902 / ·ï»Ë°æ)	hack
 xmcotad	X - Õ½¾¯: ´Å³¡Ô­×ÓÈË (Å·ÖŞ°æ 950105 / ·ï»Ë°æ)	X - Õ½¾¯: ´Å³¡Ô­×ÓÈË (Å·ÖŞ°æ 950105 / ·ï»Ë°æ)	hack
@@ -7255,7 +7271,7 @@ mslug5d	ºÏ½ğµ¯Í· 5 (ÍêÈ«½âÃÜ)	ºÏ½ğµ¯Í· 5 (ÍêÈ«½âÃÜ)	SNK / Playmore
 samsho5d	ÊÌ»ê ¢õ / ÊÌ»ê Áã (C ½âÃÜ)	ÊÌ»ê ¢õ / ÊÌ»ê Áã (C ½âÃÜ)	Yuki Enterprise / SNK Playmore
 samsh5sd	ÊÌ»ê ¢õ SPECIAL / ÊÌ»ê Áã ÌØ±ğ°æ (C ½âÃÜ)	ÊÌ»ê ¢õ SPECIAL / ÊÌ»ê Áã ÌØ±ğ°æ (C ½âÃÜ)	Yuki Enterprise / SNK Playmore
 lans2k4d	Í»»÷Æï±ø / ¹ÍÓµ±ø 2004 (µÁ°æ / ÍêÈ«½âÃÜ)	Í»»÷Æï±ø / ¹ÍÓµ±ø 2004 (µÁ°æ / ÍêÈ«½âÃÜ)	bootleg
-svcd	È­»Ê vs. ½Ö°Ô (MVS / C ½âÃÜ)	È­»Ê vs. ½Ö°Ô (MVS / C ½âÃÜ)	bootleg
+svcd	È­»Ê vs. ½Ö°Ô (MVS / C ½âÃÜ)	È­»Ê vs. ½Ö°Ô (MVS / C ½âÃÜ)	SNK Playmore
 jckeygpd	¶ÄÂí (C ½âÃÜ)	¶ÄÂí (C ½âÃÜ)	Sun Amusement / BrezzaSoft
 kf2k3pcd	È­»Ê 2003 (ÈÕ°æ, JAMMA PCB / C&Bios ½âÃÜ)	È­»Ê 2003 (ÈÕ°æ, JAMMA PCB / C&Bios ½âÃÜ)	SNK Playmore
 kogd	È­»Ê¹«¿ª¸ñ¶·¾öÈü (µÁ°æ / ÍêÈ«½âÃÜ)	È­»Ê¹«¿ª¸ñ¶·¾öÈü (µÁ°æ / ÍêÈ«½âÃÜ)	bootleg
