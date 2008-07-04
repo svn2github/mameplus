@@ -2563,6 +2563,9 @@ static void copy_from_nvram(running_machine *machine)
 
 	}
 
+	romdata  += 0x800000/4;
+	romdata2 += 0x800000/4;
+
 	for (i=0;i<0x800000;i+=4)
 	{
 		UINT32 data;
@@ -2574,8 +2577,8 @@ static void copy_from_nvram(running_machine *machine)
 		data = ((ptr1[i/4]<<24) | (ptr2[i/4]<<16) | (ptr3[i/4]<<8) | (ptr4[i/4]<<0));
 
 	//  printf("%08x %08x %08x %08x\n",romdata[i/4],data, romdata2[i/4],  data ^ cps3_mask(i+0x6800000, cps3_key1, cps3_key2) );
-		romdata[0x800000/4 + i/4] = data;
-		romdata2[0x800000/4 + i/4] = data ^ cps3_mask(i+0x6800000, cps3_key1, cps3_key2);
+		romdata[i/4] = data;
+		romdata2[i/4] = data ^ cps3_mask(i+0x6800000, cps3_key1, cps3_key2);
 	}
 
 	/* copy gfx from loaded flashroms to user reigon 5, where it's used */
