@@ -285,19 +285,19 @@ Puzzle / Pile ou Face *Adulte*
 
 # 3746
 Quiz / Chinese
-Quizz / Chinois
+Quiz / Chinois
 
 # 3750
 Quiz / English
-Quizz / Anglais
+Quiz / Anglais
 
 # 3817
 Quiz / English *Mature*
-Quizz / Anglais *Adulte*
+Quiz / Anglais *Adulte*
 
 # 3833
 Quiz / French
-Quizz / Français
+Quiz / Français
 
 # 3837
 Quiz / German
@@ -305,31 +305,31 @@ Quiz / Allemand
 
 # 3841
 Quiz / Italian
-Quizz / Italien
+Quiz / Italien
 
 # 3849
 Quiz / Japanese
-Quizz / Japonais
+Quiz / Japonais
 
 # 3912
 Quiz / Japanese *Mature*
-Quizz / Japonais *Adulte*
+Quiz / Japonais *Adulte*
 
 # 3919
 Quiz / Korean
-Quizz / Coréen
+Quiz / Coréen
 
 # 3925
 Quiz / Music English
-Quizz / Musique Anglaise
+Quiz / Musique Anglaise
 
 # 3929
 Quiz / Music Japanese
-Quizz / Musique Japonaise
+Quiz / Musique Japonaise
 
 # 3933
 Quiz / Spanish
-Quizz / Espagnol
+Quiz / Espagnol
 
 # 3937
 Rhythm
@@ -533,11 +533,11 @@ Sports / Ping pong
 
 # 6451
 Sports / Pool
-Sports / Billard
+Sports / Piscine
 
 # 6489
 Sports / Pool *Mature*
-Sports / Billard *Adulte*
+Sports / Piscine *Adulte*
 
 # 6503
 Sports / Shuffleboard
@@ -577,7 +577,7 @@ Sports / Track & Field
 
 # 6737
 Sports / VolleyBall
-Sports / VolleyBall
+Sports / Volley-Ball
 
 # 6765
 Sports / Wrestling

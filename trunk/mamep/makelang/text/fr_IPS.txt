@@ -16,7 +16,7 @@ IPS
 
 # 64
 Misc
-Diverd
+Divers
 
 # 139
 Neo-Geo

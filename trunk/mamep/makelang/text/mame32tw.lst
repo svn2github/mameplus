@@ -169,7 +169,7 @@ frogg	青蛙過街 ( 小蜜蜂硬體 )	青蛙過街 ( 小蜜蜂硬體 )	bootleg
 bagmanmc	盜礦人 ( 盜版 )	盜礦人 ( 盜版 )	bootleg
 dkongjrm	大金剛 2 ( 盜版 )	大金剛 2 ( 盜版 )	bootleg
 ozon1	坦克轟炸機 	坦克轟炸機 	Proma
-ladybugg	Lady Bug (bootleg on Galaxian hardware)	Lady Bug (bootleg on Galaxian hardware)	bootleg
+ladybugg	瓢蟲小姐 ( 盜版 )	瓢蟲小姐 ( 盜版 )	bootleg
 vpool	電視撞球 ( 盜版  )	電視撞球 ( 盜版  )	bootleg
 drivfrcg	方程式賽車 ( 小蜜蜂轉換 )	方程式賽車 ( 小蜜蜂轉換 )	Shinkai Inc. (Magic Eletronics USA licence)
 drivfrcb	方程式賽車 ( 盜版 )	方程式賽車 ( 盜版 )	bootleg
@@ -248,7 +248,7 @@ aponow	救難直昇機 ( 盜版 )	救難直昇機 ( 盜版 )	bootleg
 minefld	佈雷區	佈雷區	Stern
 losttomb	失落的古墓 ( 容易版 )	失落的古墓 ( 容易版 )	Stern
 losttmbh	失落的古墓 ( 困難版 )	失落的古墓 ( 困難版 )	Stern
-superbon	Agent Super Bond (Scobra Hardware)	Agent Super Bond (Scobra Hardware)	Signatron USA
+superbon	超級龐德	超級龐德	Signatron USA
 hustler	電視老千	電視老千	Konami
 billiard	撞球 ( 盜版 )	撞球 ( 盜版 )	bootleg
 hustlerb	電視老千 ( 盜版 )	電視老千 ( 盜版 )	bootleg
@@ -341,6 +341,7 @@ youmab2	妖魔忍法帖 ( 盜版 2 )	妖魔忍法帖 ( 盜版 2 )	bootleg
 legion	超時迷宮 ( 2.03 )	超時迷宮 ( 2.03 )	Nichibutsu
 legiono	超時迷宮 ( 1.05 )	超時迷宮 ( 1.05 )	Nichibutsu
 terraf	地球自衛隊 ( 一版 )	地球自衛隊 ( 一版 )	Nichibutsu
+terrafb	地球自衛隊 ( 盜版 )	地球自衛隊 ( 盜版 )	bootleg
 terrafa	地球自衛隊 ( 二版 )	地球自衛隊 ( 二版 )	Nichibutsu
 terrafu	地球自衛隊 ( 美版 )	地球自衛隊 ( 美版 )	Nichibutsu USA
 kodure	帶子狼	帶子狼	Nichibutsu
@@ -639,8 +640,8 @@ pistoldm	手槍大名的冒險	手槍大名的冒險	Namco
 boxyboy	倉庫番 ( 美版 )	倉庫番 ( 美版 )	Namco
 soukobdx	倉庫番 ( 日版 )	倉庫番 ( 日版 )	Namco
 puzlclub	解謎俱樂部	解謎俱樂部	Namco
-tankfrce	Tank Force (US, 2 Player)	Tank Force (US, 2 Player)	Namco
-tankfrc4	Tank Force (US, 4 Player)	Tank Force (US, 4 Player)	Namco
+tankfrce	坦克部隊 ( 美版, 2 Player )	坦克部隊 ( 美版, 2 Player )	Namco
+tankfrc4	坦克部隊 ( 美版, 4 Player )	坦克部隊 ( 美版, 4 Player )	Namco
 tankfrcj	坦克部隊 ( 日版 )	坦克部隊 ( 日版 )	Namco
 finallap	最後衝刺 ( E 版 )	最後衝刺 ( E 版 )	Namco
 finalapd	最後衝刺 ( D 版 )	最後衝刺 ( D 版 )	Namco
@@ -722,7 +723,7 @@ gslgr94u	強棒出擊 94	強棒出擊 94	Namco
 sws95	拿姆科棒球 95	拿姆科棒球 95	Namco
 sws96	拿姆科棒球 96	拿姆科棒球 96	Namco
 sws97	拿姆科棒球 97	拿姆科棒球 97	Namco
-vshoot	J 聯盟足球: 勝利射門	J 聯盟足球: 勝利射門	Namco
+vshoot	J-聯盟足球: 勝利射門	J-聯盟足球: 勝利射門	Namco
 outfxies	終極殺手 	終極殺手 	Namco
 outfxesj	終極殺手 ( 日版 ) 	終極殺手 ( 日版 ) 	Namco
 machbrkr	競技超人 2	競技超人 2	Namco
@@ -1036,6 +1037,7 @@ galxwar2	銀河大戰 ( 世界版 2 )	銀河大戰 ( 世界版 2 )	Universal
 galxwart	銀河大戰 ( 泰德? )	銀河大戰 ( 泰德? )	Taito?
 starw	星際大戰 ( 盜版 )	星際大戰 ( 盜版 )	bootleg
 lrescue	月球營救	月球營救	Taito
+mlander	Moon Lander (bootleg of Lunar Rescue)	Moon Lander (bootleg of Lunar Rescue)	[Taito] (Leisure Time Electronics bootleg)
 lrescuem	月球營救 ( 盜版 )	月球營救 ( 盜版 )	Taito (Model Racing bootleg)
 grescue	銀河援救	銀河援救	Taito (Universal license?)
 desterth	回到地球 ( 盜版 )	回到地球 ( 盜版 )	bootleg
@@ -1149,6 +1151,7 @@ powerdrv	大腳怪賽車	大腳怪賽車	Bally Midway
 stargrds	星際衛兵	星際衛兵	Bally Midway
 maxrpm	最高轉速	最高轉速	Bally Midway
 spyhunt	間諜獵人	間諜獵人	Bally Midway
+spyhuntp	Spy Hunter (Playtronic license)	Spy Hunter (Playtronic license)	Bally Midway
 turbotag	渦輪衝撞	渦輪衝撞	Bally Midway
 crater	火山口入侵者	火山口入侵者	Bally Midway
 zwackery	大法師	大法師	Bally Midway
@@ -1552,6 +1555,7 @@ wgpj	世界機車大賽 ( 日版 )	世界機車大賽 ( 日版 )	Taito Corporation
 wgpjoy	世界機車大賽 ( 搖桿版 1 )	世界機車大賽 ( 搖桿版 1 )	Taito Corporation
 wgpjoya	世界機車大賽 ( 搖桿版 2 )	世界機車大賽 ( 搖桿版 2 )	Taito Corporation
 wgp2	世界機車大賽 2 ( 日版 )	世界機車大賽 2 ( 日版 )	Taito Corporation
+galastrm	Galactic Storm (Japan)	Galactic Storm (Japan)	Taito Corporation
 slapshot	火爆群龍	火爆群龍	Taito Corporation
 opwolf3	野狼行動 3 ( 世界版 )	野狼行動 3 ( 世界版 )	Taito Corporation Japan
 opwolf3u	野狼行動 3 ( 美版 )	野狼行動 3 ( 美版 )	Taito America Corporation
@@ -1661,7 +1665,9 @@ contcrua	F-1 大陸巡迴賽 ( 美二版 )	F-1 大陸巡迴賽 ( 美二版 )	Taito America Corpo
 chasehq	追蹤 H.Q ( 世界版 )	追蹤 H.Q ( 世界版 )	Taito Corporation Japan
 chasehqj	追蹤 H.Q ( 日版 )	追蹤 H.Q ( 日版 )	Taito Corporation
 enforce	雙重火力	雙重火力	Taito Corporation
-nightstr	午夜攻擊	午夜攻擊	Taito America Corporation
+nightstr	Night Striker (World)	Night Striker (World)	Taito Corporation Japan
+nghtstrj	Night Striker (Japan)	Night Striker (Japan)	Taito Corporation
+nghtstru	午夜攻擊	午夜攻擊	Taito America Corporation
 sci	追蹤 H.Q 二代 ( 世界一版 )	追蹤 H.Q 二代 ( 世界一版 )	Taito Corporation Japan
 scia	追蹤 H.Q 二代 ( 世界二版 )	追蹤 H.Q 二代 ( 世界二版 )	Taito Corporation Japan
 scij	追蹤 H.Q 二代 ( 日版 )	追蹤 H.Q 二代 ( 日版 )	Taito Corporation
@@ -2171,6 +2177,7 @@ kodb	龍王 ( 盜版 )	龍王 ( 盜版 )	bootleg
 captcomm	上尉密令 ( 世界版 )	上尉密令 ( 世界版 )	Capcom
 captcomu	上尉密令 ( 美版 )	上尉密令 ( 美版 )	Capcom
 captcomj	上尉密令 ( 日版 )	上尉密令 ( 日版 )	Capcom
+captcomb	Captain Commando (bootleg)	Captain Commando (bootleg)	bootleg
 knights	圓桌武士 ( 世界版 )	圓桌武士 ( 世界版 )	Capcom
 knightsu	圓桌武士 ( 美版 )	圓桌武士 ( 美版 )	Capcom
 knightsj	圓桌武士 ( 日版 )	圓桌武士 ( 日版 )	Capcom
@@ -2198,9 +2205,9 @@ varthr1	威虎戰機 ( 世界版 920612 )	威虎戰機 ( 世界版 920612 )	Capcom
 varthu	威虎戰機 ( 美版 920612 )	威虎戰機 ( 美版 920612 )	Capcom (Romstar license)
 varthj	威虎戰機 ( 日版 920714 )	威虎戰機 ( 日版 920714 )	Capcom
 cworld2j	卡普空世界 2	卡普空世界 2	Capcom
-wof	天命戰士 ( 世界版 )	天命戰士 ( 世界版 )	Capcom
+wof	三國誌 2 ( 世界版 )	三國誌 2 ( 世界版 )	Capcom
 wofa	三國誌 2 ( 亞版 )	三國誌 2 ( 亞版 )	Capcom
-wofu	天命戰士 ( 美版 )	天命戰士 ( 美版 )	Capcom
+wofu	三國誌 2 ( 美版 )	三國誌 2 ( 美版 )	Capcom
 wofj	吞食天地 2: 赤壁之戰 ( 日版 )	吞食天地 2: 赤壁之戰 ( 日版 )	Capcom
 sf2hf	快打旋風 2: 四大天王 ( 極快打旋風, 世界版 )	快打旋風 2: 四大天王 ( 極快打旋風, 世界版 )	Capcom
 sf2t	快打旋風 2: 四大天王 ( 極快打旋風, 美版 )	快打旋風 2: 四大天王 ( 極快打旋風, 美版 )	Capcom
@@ -2208,14 +2215,19 @@ sf2tj	快打旋風 2: 四大天王 ( 渦輪快打 )	快打旋風 2: 四大天王 ( 渦輪快打 )	Capcom
 dino	恐龍新世紀 ( 世界版 )	恐龍新世紀 ( 世界版 )	Capcom
 dinou	恐龍新世紀 ( 美版 )	恐龍新世紀 ( 美版 )	Capcom
 dinoj	恐龍新世紀 ( 日版 )	恐龍新世紀 ( 日版 )	Capcom
+dinopic	Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)	Cadillacs and Dinosaurs (bootleg with PIC16c57, set 1)	bootleg
+dinopic2	Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)	Cadillacs and Dinosaurs (bootleg with PIC16c57, set 2)	bootleg
 punisher	懲罰者 ( 世界版 )	懲罰者 ( 世界版 )	Capcom
 punishru	懲罰者 ( 美版 )	懲罰者 ( 美版 )	Capcom
 punishrj	懲罰者 ( 日版 )	懲罰者 ( 日版 )	Capcom
+punipic	The Punisher (bootleg with PIC16c57, set 1)	The Punisher (bootleg with PIC16c57, set 1)	Capcom
+punipic2	The Punisher (bootleg with PIC16c57, set 2)	The Punisher (bootleg with PIC16c57, set 2)	Capcom
+punipic3	The Punisher (bootleg with PIC16c57, set 3)	The Punisher (bootleg with PIC16c57, set 3)	Capcom
 slammast	霸王摔角 ( 世界版 )	霸王摔角 ( 世界版 )	Capcom
 slammasu	霸王摔角 ( 美版 )	霸王摔角 ( 美版 )	Capcom
 mbomberj	霸王摔角 ( 日版 )	霸王摔角 ( 日版 )	Capcom
-mbombrd	霸王摔角 - 終極組隊戰 ( 世界版 )	霸王摔角 - 終極組隊戰 ( 世界版 )	Capcom
-mbombrdj	霸王摔角 - 終極組隊戰 ( 日版 )	霸王摔角 - 終極組隊戰 ( 日版 )	Capcom
+mbombrd	霸王摔角特別版 ( 世界版 )	霸王摔角特別版 ( 世界版 )	Capcom
+mbombrdj	霸王摔角特別版 ( 日版 )	霸王摔角特別版 ( 日版 )	Capcom
 pnickj	寶石方塊	寶石方塊	Compile (Capcom license)
 qad	神龍之謎 ( 美版 )	神龍之謎 ( 美版 )	Capcom
 qadj	神龍之謎 ( 日版 )	神龍之謎 ( 日版 )	Capcom
@@ -2540,7 +2552,7 @@ souledgc	刀魂 ( SO1 / VER.A )	刀魂 ( SO1 / VER.A )	Namco
 dunkmnia	瘋狂籃球 ( DM2 )	瘋狂籃球 ( DM2 )	Namco
 dunkmnic	瘋狂籃球 ( DM1 )	瘋狂籃球 ( DM1 )	Namco
 xevi3dg	立體鐵板陣	立體鐵板陣	Namco
-primglex	J 聯盟足球: 旗開得勝 EX	J 聯盟足球: 旗開得勝 EX	Namco
+primglex	J-聯盟足球: 旗開得勝 EX	J-聯盟足球: 旗開得勝 EX	Namco
 danceyes	麗舞之眼	麗舞之眼	Namco
 pocketrc	實感賽車袖珍版	實感賽車袖珍版	Namco
 starswep	流星方塊	流星方塊	Axela/Namco
@@ -2665,7 +2677,7 @@ ddr4mps	勁爆熱舞 4 Plus ( 單人版 )	勁爆熱舞 4 Plus ( 單人版 )	Konami
 dmx2m	瘋狂熱舞 2	瘋狂熱舞 2	Konami
 gtrfrk5m	吉他高手 5	吉他高手 5	Konami
 ddr5m	勁爆熱舞 5	勁爆熱舞 5	Konami
-dmx2majp	瘋狂熱舞 2 極樂版	瘋狂熱舞 2 極樂版	Konami
+dmx2majp	瘋狂熱舞 2: 極樂版	瘋狂熱舞 2: 極樂版	Konami
 gtrfrk6m	吉他高手 6	吉他高手 6	Konami
 gtrfrk7m	吉他高手 7	吉他高手 7	Konami
 ddrmax	勁爆熱舞 6	勁爆熱舞 6	Konami
@@ -3058,6 +3070,7 @@ tetris	魔術方塊 ( 四版 )	魔術方塊 ( 四版 )	Sega
 tetris3	魔術方塊 ( 三版 )	魔術方塊 ( 三版 )	Sega
 timesca1	時空彈珠台 ( 一版 )	時空彈珠台 ( 一版 )	Sega
 wb31	神奇男孩 3 ( 一版 )	神奇男孩 3 ( 一版 )	Sega / Westone
+wb35	神奇男孩 3 ( 五版 )	神奇男孩 3 ( 五版 )	Sega / Westone
 pshot16a	世嘉網球 ( 日版 4P )	世嘉網球 ( 日版 4P )	Sega
 aceattac	王牌攻擊手	王牌攻擊手	Sega
 aliensyn	異形入侵 ( 四版 )	異形入侵 ( 四版 )	Sega
@@ -3178,6 +3191,7 @@ outrunb	瘋狂大賽車 ( 盜版 )	瘋狂大賽車 ( 盜版 )	bootleg
 toutrun	美國狂飆	美國狂飆	Sega
 toutrun2	美國狂飆 ( 直立型 )	美國狂飆 ( 直立型 )	Sega
 toutrun1	美國狂飆 ( 駕駛艙 )	美國狂飆 ( 駕駛艙 )	Sega
+toutrunu	美國狂飆 ( 高級版 )	美國狂飆 ( 高級版 )	Sega
 shangon	超級摩托車	超級摩托車	Sega
 shangon3	超級摩托車 ( 直立型 )	超級摩托車 ( 直立型 )	Sega
 shangon2	超級摩托車 ( 迷你型 A 版 )	超級摩托車 ( 迷你型 A 版 )	Sega
@@ -3242,7 +3256,7 @@ mahmajn2	所先生的麻麻將 2	所先生的麻麻將 2	Sega
 holo	虛擬格鬥	虛擬格鬥	Sega
 svf	超級對戰足球	超級對戰足球	Sega
 svs	超級對戰足球 ( 美版 )	超級對戰足球 ( 美版 )	Sega
-jleague	J 聯盟足球 94 ( 日版 )	J 聯盟足球 94 ( 日版 )	Sega
+jleague	J-聯盟足球 94 ( 日版 )	J-聯盟足球 94 ( 日版 )	Sega
 brival	燃燒的敵手 ( 世界版 )	燃燒的敵手 ( 世界版 )	Sega
 brivalj	燃燒的敵手 ( 日版 )	燃燒的敵手 ( 日版 )	Sega
 radm	疾風賽車 ( 世界版 )	疾風賽車 ( 世界版 )	Sega
@@ -3431,7 +3445,7 @@ borench	戰術保齡球	戰術保齡球	Sega
 tfrceac	雷霆力量 3	雷霆力量 3	Sega / Technosoft
 tfrceacj	雷霆力量 3 ( 日版 )	雷霆力量 3 ( 日版 )	Sega / Technosoft
 tfrceacb	雷霆力量 3 ( 盜版 )	雷霆力量 3 ( 盜版 )	bootleg
-twinsqua	雙人迴力球	雙人迴力球	Sega
+twinsqua	雙打迴力球	雙打迴力球	Sega
 ribbit	覓食青蛙	覓食青蛙	Sega
 tantr	最佳拍檔 ( 日版 )	最佳拍檔 ( 日版 )	Sega
 tantrkor	最佳拍檔 ( 韓版 )	最佳拍檔 ( 韓版 )	Sega
@@ -3850,6 +3864,7 @@ senjyo	星戰	星戰	Tehkan
 starforc	雷鳥號	雷鳥號	Tehkan
 starfore	雷鳥號 ( 加密版 )	雷鳥號 ( 加密版 )	Tehkan
 starforb	雷鳥號 ( 盜版 )	雷鳥號 ( 盜版 )	[Tehkan] (bootleg)
+starfora	Star Force (encrypted, set 2)	Star Force (encrypted, set 2)	Tehkan
 megaforc	雷鳥號 ( video ware )	雷鳥號 ( video ware )	Tehkan (Video Ware license)
 baluba	寶藏傳說	寶藏傳說	Able Corp, Ltd.
 bombjack	炸彈傑克 ( 一版 )	炸彈傑克 ( 一版 )	Tehkan
@@ -4285,6 +4300,7 @@ totlvice	狙擊雙槍	狙擊雙槍	Konami
 btltryst	戰鬥之約	戰鬥之約	Konami
 heatof11	狂熱 11 人足球 98	狂熱 11 人足球 98	Konami
 evilngt	邪惡之夜	邪惡之夜	Konami
+hellngt	Hell Night (ver EAA)	Hell Night (ver EAA)	Konami
 carpolo	汽車馬球	汽車馬球	Exidy
 sidetrac	切換軌道	切換軌道	Exidy
 targ	太空殺陣 ( 伊賽帝 )	太空殺陣 ( 伊賽帝 )	Exidy
@@ -4896,8 +4912,8 @@ strhoop	街頭籃球 / 夢幻籃球	街頭籃球 / 夢幻籃球	Data East Corporation
 quizkof	問答拳皇	問答拳皇	Saurus
 ssideki3	得點王 3	得點王 3	SNK
 doubledr	格鬥雙截龍 ( Neo-Geo )	格鬥雙截龍 ( Neo-Geo )	Technos
-pbobblen	魔法泡泡龍 ( Neo-Geo 一版 )	魔法泡泡龍 ( Neo-Geo 一版 )	Taito
-pbobblna	魔法泡泡龍 ( Neo-Geo 二版 )	魔法泡泡龍 ( Neo-Geo 二版 )	Taito
+pbobblen	魔法泡泡龍 ( Neo-Geo, 一版 )	魔法泡泡龍 ( Neo-Geo, 一版 )	Taito
+pbobblna	魔法泡泡龍 ( Neo-Geo, 二版 )	魔法泡泡龍 ( Neo-Geo, 二版 )	Taito
 kof95	格鬥天王 95 ( 一版 )	格鬥天王 95 ( 一版 )	SNK
 kof95a	格鬥天王 95 ( 二版 )	格鬥天王 95 ( 二版 )	SNK
 tws96	特庫磨足球 96	特庫磨足球 96	Tecmo
@@ -4996,16 +5012,16 @@ sengoku3	戰國傳承 3	戰國傳承 3	SNK
 kof2001	格鬥天王 2001 ( 一版 )	格鬥天王 2001 ( 一版 )	Eolith / SNK
 kof2001h	格鬥天王 2001 ( 二版 )	格鬥天王 2001 ( 二版 )	Eolith / SNK
 cthd2003	臥虎藏龍 2003 ( 盜版 )	臥虎藏龍 2003 ( 盜版 )	bootleg
-ct2k3sp	臥虎藏龍 2003 風雲加強版 ( 盜版 )	臥虎藏龍 2003 風雲加強版 ( 盜版 )	bootleg
-ct2k3sa	臥虎藏龍 2003 超級加強版 ( 盜版 )	臥虎藏龍 2003 超級加強版 ( 盜版 )	bootleg
+ct2k3sp	臥虎藏龍 2003 Super Plus ( 盜版 )	臥虎藏龍 2003 Super Plus ( 盜版 )	bootleg
+ct2k3sa	臥虎藏龍 2003 Super Plus ( 盜版, 替換版 )	臥虎藏龍 2003 Super Plus ( 盜版, 替換版 )	bootleg
 mslug4	越南大戰 4	越南大戰 4	Mega
 ms4plus	越南大戰 4 增強型 Plus ( 盜版 )	越南大戰 4 增強型 Plus ( 盜版 )	bootleg
 rotd	龍拳	龍拳	Evoga / Playmore
 kof2002	格鬥天王 2002	格鬥天王 2002	Eolith / Playmore
-kf2k2pls	格鬥天王 2002 風雲再起 ( 盜版 1 )	格鬥天王 2002 風雲再起 ( 盜版 1 )	bootleg
-kf2k2pla	格鬥天王 2002 風雲再起加強版 ( 盜版 2 )	格鬥天王 2002 風雲再起加強版 ( 盜版 2 )	bootleg
-kf2k2mp	格鬥天王 2002 魔法加強版 ( 盜版 )	格鬥天王 2002 魔法加強版 ( 盜版 )	bootleg
-kf2k2mp2	格鬥天王 2002 魔法加強版 2 ( 盜版 )	格鬥天王 2002 魔法加強版 2 ( 盜版 )	bootleg
+kf2k2pls	格鬥天王 2002 風雲再起 ( 盜版 )	格鬥天王 2002 風雲再起 ( 盜版 )	bootleg
+kf2k2pla	格鬥天王 2002 風雲再起 Plus ( 盜版 )	格鬥天王 2002 風雲再起 Plus ( 盜版 )	bootleg
+kf2k2mp	格鬥天王 2002 Magic Plus ( 盜版 )	格鬥天王 2002 Magic Plus ( 盜版 )	bootleg
+kf2k2mp2	格鬥天王 2002 Magic Plus II ( 盜版 )	格鬥天王 2002 Magic Plus II ( 盜版 )	bootleg
 kof10th	拳皇十週年紀念版 ( 盜版 )	拳皇十週年紀念版 ( 盜版 )	bootleg
 kf2k5uni	拳皇十週年獨一無二紀念版 ( 盜版 )	拳皇十週年獨一無二紀念版 ( 盜版 )	bootleg
 kf10thep	拳皇十週年紀念特別加強版 ( 盜版 )	拳皇十週年紀念特別加強版 ( 盜版 )	bootleg
@@ -5020,9 +5036,9 @@ svcpcb	夢幻格鬥: SNK Vs.卡普空 ( 基板 1 )	夢幻格鬥: SNK Vs.卡普空 ( 基板 1 )	SNK
 svcpcba	夢幻格鬥: SNK Vs.卡普空 ( 基板 2 )	夢幻格鬥: SNK Vs.卡普空 ( 基板 2 )	SNK Playmore
 svc	夢幻格鬥: SNK Vs.卡普空	夢幻格鬥: SNK Vs.卡普空	SNK Playmore
 svcboot	夢幻格鬥: SNK Vs.卡普空 ( 盜版 )	夢幻格鬥: SNK Vs.卡普空 ( 盜版 )	bootleg
-svcplus	夢幻格鬥: SNK Vs.卡普空 ( 加強版, 盜版 1 )	夢幻格鬥: SNK Vs.卡普空 ( 加強版, 盜版 1 )	bootleg
-svcplusa	夢幻格鬥: SNK Vs.卡普空 ( 加強版, 盜版 2 )	夢幻格鬥: SNK Vs.卡普空 ( 加強版, 盜版 2 )	bootleg
-svcsplus	夢幻格鬥: SNK Vs.卡普空 ( 超級加強版, 盜版 )	夢幻格鬥: SNK Vs.卡普空 ( 超級加強版, 盜版 )	bootleg
+svcplus	夢幻格鬥: SNK Vs.卡普空 Plus ( 盜版 1 )	夢幻格鬥: SNK Vs.卡普空 Plus ( 盜版 1 )	bootleg
+svcplusa	夢幻格鬥: SNK Vs.卡普空 Plus ( 盜版 2 )	夢幻格鬥: SNK Vs.卡普空 Plus ( 盜版 2 )	bootleg
+svcsplus	夢幻格鬥: SNK Vs.卡普空 Super Plus ( 盜版 )	夢幻格鬥: SNK Vs.卡普空 Super Plus ( 盜版 )	bootleg
 samsho5	侍魂零 ( 一版 ) 	侍魂零 ( 一版 ) 	Yuki Enterprise / SNK Playmore
 samsho5h	侍魂零 ( 二版 )	侍魂零 ( 二版 )	Yuki Enterprise / SNK Playmore
 samsho5b	侍魂零 ( 盜版 )	侍魂零 ( 盜版 )	bootleg
@@ -5030,7 +5046,7 @@ kf2k3pcb	格鬥天王 2003 ( 基板 )	格鬥天王 2003 ( 基板 )	SNK Playmore
 kof2003	格鬥天王 2003	格鬥天王 2003	SNK Playmore
 kf2k3bl	格鬥天王 2003 ( 盜版 1 )	格鬥天王 2003 ( 盜版 1 )	bootleg
 kf2k3bla	格鬥天王 2003 ( 盜版 2 )	格鬥天王 2003 ( 盜版 2 )	bootleg
-kf2k3pl	格鬥天王 2004 英雄 ( 盜版 )	格鬥天王 2004 英雄 ( 盜版 )	bootleg
+kf2k3pl	格鬥天王 2004 Hero ( 盜版 )	格鬥天王 2004 Hero ( 盜版 )	bootleg
 kf2k3upl	格鬥天王 2004 風雲 Plus ( 盜版 )	格鬥天王 2004 風雲 Plus ( 盜版 )	bootleg
 samsh5sp	侍魂零特別版 ( 一版 )	侍魂零特別版 ( 一版 )	Yuki Enterprise / SNK Playmore
 samsh5sh	侍魂零特別版 ( 二版 )	侍魂零特別版 ( 二版 )	Yuki Enterprise / SNK Playmore
@@ -5141,7 +5157,8 @@ tstrike	閃電攻擊 ( 新版 )	閃電攻擊 ( 新版 )	East Coast Coin Company (Melbourne)
 tstrikea	閃電攻擊 ( 舊版 )	閃電攻擊 ( 舊版 )	East Coast Coin Company (Melbourne)
 ctribe	龐克勇士 ( 世界版 )	龐克勇士 ( 世界版 )	Technos
 ctribe1	龐克勇士 ( 美版 )	龐克勇士 ( 美版 )	Technos
-ctribeb	龐克勇士 ( 盜版 )	龐克勇士 ( 盜版 )	bootleg
+ctribeb	龐克勇士 ( 盜版 1 )	龐克勇士 ( 盜版 1 )	bootleg
+ctribb2	龐克勇士 ( 盜版 2 )	龐克勇士 ( 盜版 2 )	bootleg
 blockout	虛擬方塊 ( 一版 )	虛擬方塊 ( 一版 )	Technos + California Dreams
 blckout2	虛擬方塊 ( 二版 )	虛擬方塊 ( 二版 )	Technos + California Dreams
 blckoutj	虛擬方塊 ( 日版 )	虛擬方塊 ( 日版 )	Technos + California Dreams
@@ -5371,6 +5388,7 @@ tm4k	觸碰大師 4000 ( v6.02 )	觸碰大師 4000 ( v6.02 )	Midway
 tm5k	觸碰大師 5000 ( v7.10 )	觸碰大師 5000 ( v7.10 )	Midway
 tm7k	觸碰大師 7000 ( v8.04 )	觸碰大師 7000 ( v8.04 )	Midway
 tm7ka	觸碰大師 7000 ( v8.00 )	觸碰大師 7000 ( v8.00 )	Midway
+tm8k	Touchmaster 8000 (v9.04 Standard)	Touchmaster 8000 (v9.04 Standard)	Midway
 galgbios	Galaxy Games (BIOS v1.90)	Galaxy Games (BIOS v1.90)	Creative Electonics & Software
 embargo	禁運	禁運	Cinematronics
 tripool	撞球 3 合 1  ( Casino Tech )	撞球 3 合 1  ( Casino Tech )	Noma (Casino Tech license)
@@ -5438,7 +5456,7 @@ sbagman	超級盜礦人	超級盜礦人	Valadon Automation
 sbagmans	超級盜礦人 ( Stern )	超級盜礦人 ( Stern )	Valadon Automation (Stern license)
 pickin	採集寶石	採集寶石	Valadon Automation
 botanic	植物園	植物園	Valadon Automation (Itisa license)
-squaitsa	Squash (Itisa)	Squash (Itisa)	Itisa
+squaitsa	迴力球 ( Itisa )	迴力球 ( Itisa )	Itisa
 tankbust	坦克終結者	坦克終結者	Valadon Automation
 stinger	針刺戰機	針刺戰機	Seibu Denshi
 stinger2	針刺戰機 ( 工程版? )	針刺戰機 ( 工程版? )	Seibu Denshi
@@ -5447,7 +5465,8 @@ scionc	子母戰機 ( 西尼馬特羅尼斯 )	子母戰機 ( 西尼馬特羅尼斯 )	Seibu Denshi (Cin
 kungfut	功夫大君	功夫大君	Seibu Kaihatsu Inc.
 kungfuta	功夫大君 ( 替換版 )	功夫大君 ( 替換版 )	Seibu Kaihatsu Inc.
 wiz	大法師	大法師	Seibu Kaihatsu Inc.
-wizt	大法師 ( 泰德 )	大法師 ( 泰德 )	[Seibu] (Taito license)
+wizt	Wiz (Taito, set 1)	Wiz (Taito, set 1)	[Seibu] (Taito license)
+wizta	Wiz (Taito, set 2)	Wiz (Taito, set 2)	[Seibu] (Taito license)
 kncljoe	懲奸鋤惡 ( 一版 )	懲奸鋤惡 ( 一版 )	[Seibu Kaihatsu] (Taito license)
 kncljoea	懲奸鋤惡 ( 二版 )	懲奸鋤惡 ( 二版 )	[Seibu Kaihatsu] (Taito license)
 bcrusher	懲奸鋤惡 ( 盜版 )	懲奸鋤惡 ( 盜版 )	bootleg
@@ -5978,7 +5997,7 @@ mayjisn2	早指將棋 - 五月陣戰 2	早指將棋 - 五月陣戰 2	Seta
 koikois	超真實花札	超真實花札	Visco
 srmp6	超真實麻雀 6	超真實麻雀 6	Seta
 aleck64	Aleck64 PIF BIOS	Aleck64 PIF BIOS	Nintendo/Seta
-11beat	J 聯盟足球: 最強 11 人	J 聯盟足球: 最強 11 人	Hudson
+11beat	J-聯盟足球: 最強 11 人	J-聯盟足球: 最強 11 人	Hudson
 mtetrisc	迪士尼魔術方塊	迪士尼魔術方塊	Capcom
 starsldr	星際戰士	星際戰士	Hudson/Seta
 vivdolls	寫真女郎	寫真女郎	Visco
@@ -6131,8 +6150,8 @@ torid2gg	牌砦 2 ( 德版 )	牌砦 2 ( 德版 )	Metro
 toride2j	牌砦 2 ( 日版 )	牌砦 2 ( 日版 )	Metro
 gunmast	槍王	槍王	Metro
 daitorid	大牌砦	大牌砦	Metro
-dokyusei	麻雀同級生	麻雀同級生	Make Software / Elf / Media Trading
-dokyusp	麻雀同級生特別版	麻雀同級生特別版	Make Software / Elf / Media Trading
+dokyusei	同級生麻雀	同級生麻雀	Make Software / Elf / Media Trading
+dokyusp	同級生麻雀限定版	同級生麻雀限定版	Make Software / Elf / Media Trading
 puzzli	泡泡魚	泡泡魚	Metro / Banpresto
 3kokushi	三刻志	三刻志	Mitchell
 pururun	魔法普璐璐	魔法普璐璐	Metro / Banpresto
@@ -6209,10 +6228,10 @@ multchmp	趣味 4 合 1 ( 世界版 )	趣味 4 合 1 ( 世界版 )	ESD
 multchmk	趣味 4 合 1 ( 韓版 ) 	趣味 4 合 1 ( 韓版 ) 	ESD
 mchampdx	趣味 6 合 1 ( 一版 )	趣味 6 合 1 ( 一版 )	ESD
 mchampda	趣味 6 合 1 ( 二版 )	趣味 6 合 1 ( 二版 )	ESD
-hedpanic	Head Panic (ver. 0117, 17/01/2000)	Head Panic (ver. 0117, 17/01/2000)	ESD
-hedpanif	怪頭兄妹	怪頭兄妹	ESD / Fuuki
+hedpanic	怪頭兄妹 ( 一版 )	怪頭兄妹 ( 一版 )	ESD
+hedpanif	怪頭兄妹 ( 二版 )	怪頭兄妹 ( 二版 )	ESD / Fuuki
 tangtang	唐唐家族	唐唐家族	ESD
-swatpolc	SWAT Police 	SWAT Police 	ESD
+swatpolc	霹靂雙警 	霹靂雙警 	ESD
 royalmj	皇家麻雀 ( 日版 )	皇家麻雀 ( 日版 )	Nichibutsu
 openmj	開放麻雀 ( 博奕版 )	開放麻雀 ( 博奕版 )	Sapporo Mechanic
 royalmah	皇家麻雀 ( 盜版 )	皇家麻雀 ( 盜版 )	bootleg
@@ -6302,7 +6321,8 @@ hjingi	華真姬	華真姬	Dynax
 hanayara	華無為	華無為	Dynax
 mjelctrn	電子基盤	電子基盤	Dynax
 mjelct3	電子基盤 ( 三版 )	電子基盤 ( 三版 )	Dynax
-mjelct3a	電子基盤 ( 替換版 )	電子基盤 ( 替換版 )	Dynax
+mjelct3a	電子基盤 ( 三版, 替換版 )	電子基盤 ( 三版, 替換版 )	Dynax
+mjelctrb	電子基盤 ( 盜版 )	電子基盤 ( 盜版 )	Dynax
 majxtal7	麻雀七水晶	麻雀七水晶	Dynax
 nyny	拯救紐約	拯救紐約	Sigma Enterprises Inc.
 nynyg	拯救紐約 ( 戈特利布 )	拯救紐約 ( 戈特利布 )	Sigma Enterprises Inc. (Gottlieb license)
@@ -6515,10 +6535,10 @@ upscope	潛艦大作戰	潛艦大作戰	Grand Products
 cd32	Amiga CD32 Bios	Amiga CD32 Bios	Commodore
 cndypuzl	糖果泡泡	糖果泡泡	CD Express
 haremchl	閨房挑戰	閨房挑戰	CD Express
-lsrquiz	拉瑟問答	拉瑟問答	CD Express
-lsrquiz2	拉瑟問答 2	拉瑟問答 2	CD Express
-mgprem11	魔法獎金	魔法獎金	CD Express
-lasstixx	雷射攻擊	雷射攻擊	CD Express
+lsrquiz	快問快答	快問快答	CD Express
+lsrquiz2	快問快答 2	快問快答 2	CD Express
+mgprem11	魔法賞金	魔法賞金	CD Express
+lasstixx	Laser Strixx	Laser Strixx	CD Express
 alg_bios	American Laser Games BIOS	American Laser Games BIOS	American Laser Games
 maddoga	瘋狗 ( A 版 )	瘋狗 ( A 版 )	American Laser Games
 wsjr	誰殺了強尼洛克 ( 1.6 )	誰殺了強尼洛克 ( 1.6 )	American Laser Games
@@ -6539,8 +6559,8 @@ zortonbr	索特兄弟 ( 西班牙 )	索特兄弟 ( 西班牙 )	Web Picmatic
 crysbios	Crystal System BIOS	Crystal System BIOS	Brezzasoft
 crysking	國王水晶	國王水晶	Brezzasoft
 evosocc	進化足球	進化足球	Evoga
-topbladv	頂尖對決 5	頂尖對決 5	unknown
-officeye	Office Yeo In Cheon Ha	Office Yeo In Cheon Ha	unknown
+topbladv	頂尖對決 5	頂尖對決 5	SonoKong / Expotato
+officeye	Office Yeo In Cheon Ha (version 1.2)	Office Yeo In Cheon Ha (version 1.2)	Danbi
 inquiztr	金鐘系列: 問卷調查	金鐘系列: 問卷調查	BFM
 escounts	金鐘系列: 分秒必爭	金鐘系列: 分秒必爭	BFM
 trebltop	金鐘系列: 三倍分飛鏢	金鐘系列: 三倍分飛鏢	BFM
@@ -6706,8 +6726,8 @@ genix	吉尼斯家族	吉尼斯家族	NIX
 fitfight	龍虎拳 ( 盜版 )	龍虎拳 ( 盜版 )	bootleg
 histryma	格鬥列傳 ( 盜版 )	格鬥列傳 ( 盜版 )	bootleg
 bbprot	無稱號戰士	無稱號戰士	<unknown>
-flower	花之殞石	花之殞石	Komax
-flowerbl	花之殞石 ( 盜版 )	花之殞石 ( 盜版 )	bootleg
+flower	花之隕石 ( Komax )	花之隕石 ( Komax )	Komax
+flowers	花之隕石 ( Sega/Alpha )	花之隕石 ( Sega/Alpha )	Sega/Alpha
 beaminv	光束侵略者 ( 一版 )	光束侵略者 ( 一版 )	Tekunon Kougyou
 beaminva	光束侵略者 ( 二版 )	光束侵略者 ( 二版 )	Tekunon Kougyou
 mcatadv	魔貓歷險記	魔貓歷險記	Wintechno
@@ -6848,6 +6868,7 @@ witch	女巫彈子台	女巫彈子台	Sega / Vic Tokai
 pbchmp95	彈子台冠軍 95	彈子台冠軍 95	Veltmeijer Automaten
 cardline	紙牌連線 	紙牌連線 	Veltmeijer
 bmcbowl	滾球之星 	滾球之星 	BMC
+koftball	King of Football	King of Football	BMC
 pitboss	賭場大亨	賭場大亨	Merit
 casino5	賭城 5	賭城 5	Merit
 trvwzh	問答百科高手 ( 檯面型, 一版 )	問答百科高手 ( 檯面型, 一版 )	Merit
@@ -6959,7 +6980,7 @@ ampkr2b2	美國撲克 2 ( 盜版 2 )	美國撲克 2 ( 盜版 2 )	Bootleg
 ampkr2b3	美國撲克 2 ( 盜版 3 )	美國撲克 2 ( 盜版 3 )	Bootleg
 pkrdewin	撲克大贏家	撲克大贏家	Bootleg
 ampkr95	美國撲克 95	美國撲克 95	Bootleg
-videomat	Videomat (polish bootleg)	Videomat (polish bootleg)	Bootleg
+videomat	電視撲克 ( 盜版 )	電視撲克 ( 盜版 )	Bootleg
 sigmapkr	Σ 撲克	Σ 撲克	Sigma Inc.
 sigma2k	Σ 撲克 2000	Σ 撲克 2000	Sigma Inc.
 lucky8	幸運 8 連線	幸運 8 連線	Falcon
@@ -6991,12 +7012,12 @@ wyvernwg	鐵翼飛龍	鐵翼飛龍	SemiCom (Game Vision License)
 rbmk	實戰麻將王加強版	實戰麻將王加強版	GMS
 go2000	前進 2000	前進 2000	SA
 mirax	梅拉斯戰記	梅拉斯戰記	Current Technologies
-victor5	Victor 5	Victor 5	Subsino
-victor21	Victor 21	Victor 21	Subsino
-sharkpy	Shark Party	Shark Party	Subsino
-sharkpya	Shark Party (alt)	Shark Party (alt)	Subsino
-smoto20	Super Rider (Italy, v2.0)	Super Rider (Italy, v2.0)	Subsino
-smoto16	Super Moto (Italy, v1.6)	Super Moto (Italy, v1.6)	Subsino
+victor5	勝利者 5	勝利者 5	Subsino
+victor21	勝利者 21	勝利者 21	Subsino
+sharkpy	狂鯊任務	狂鯊任務	Subsino
+sharkpya	狂鯊任務 ( 替換版 )	狂鯊任務 ( 替換版 )	Subsino
+smoto20	超級飆族 ( 2.0 )	超級飆族 ( 2.0 )	Subsino
+smoto16	超級飆族 ( 1.6 )	超級飆族 ( 1.6 )	Subsino
 lastfght	絕地大反攻	絕地大反攻	Subsino
 bishjan	美笑雀	美笑雀	Subsino
 sliver	撕裂玫瑰	撕裂玫瑰	Hollow Corp
@@ -7025,8 +7046,10 @@ pottnpkr	傑克波頓撲克 ( 盜版 1 )	傑克波頓撲克 ( 盜版 1 )	Bootleg
 pottnpkb	傑克波頓撲克 ( 盜版 2 )	傑克波頓撲克 ( 盜版 2 )	Bootleg
 comg076	歐米茄博奕遊戲: 街機撲克 ( 7.6 )	歐米茄博奕遊戲: 街機撲克 ( 7.6 )	Cal Omega Inc.
 comg079	歐米茄博奕遊戲: 街機撲克 ( 7.9 )	歐米茄博奕遊戲: 街機撲克 ( 7.9 )	Cal Omega Inc.
+comg080	歐米茄博奕遊戲: 廿一點 ( 8.0 )	歐米茄博奕遊戲: 廿一點 ( 8.0 )	Cal Omega Inc.
 comg094	歐米茄博奕遊戲: 基諾 ( 9.4 )	歐米茄博奕遊戲: 基諾 ( 9.4 )	Cal Omega Inc.
-comg107	歐米茄博奕遊戲: 梭哈 ( 10.7 )	歐米茄博奕遊戲: 梭哈 ( 10.7 )	Cal Omega Inc.
+comg107	歐米茄博奕遊戲: 豪賭 ( 10.7 )	歐米茄博奕遊戲: 豪賭 ( 10.7 )	Cal Omega Inc.
+comg123	歐米茄博奕遊戲: 紙票撲克 ( 12.3 )	歐米茄博奕遊戲: 紙票撲克 ( 12.3 )	Cal Omega Inc.
 comg125	歐米茄博奕遊戲: 賓果 ( 12.5 )	歐米茄博奕遊戲: 賓果 ( 12.5 )	Cal Omega Inc.
 comg127	歐米茄博奕遊戲: 基諾 ( 12.7 )	歐米茄博奕遊戲: 基諾 ( 12.7 )	Cal Omega Inc.
 comg128	歐米茄博奕遊戲: 梭哈 ( 12.8 )	歐米茄博奕遊戲: 梭哈 ( 12.8 )	Cal Omega Inc.
@@ -7043,17 +7066,18 @@ comg181	歐米茄博奕遊戲: 賓果 ( 18.1 )	歐米茄博奕遊戲: 賓果 ( 18.1 )	Cal Omega In
 comg183	歐米茄博奕遊戲: 畫素 ( 18.3 )	歐米茄博奕遊戲: 畫素 ( 18.3 )	Cal Omega Inc.
 comg185	歐米茄博奕遊戲: 畫素 ( 18.5 )	歐米茄博奕遊戲: 畫素 ( 18.5 )	Cal Omega Inc.
 comg186	歐米茄博奕遊戲: 畫素 ( 18.6 )	歐米茄博奕遊戲: 畫素 ( 18.6 )	Cal Omega Inc.
-comg187	Cal Omega - Game 18.7 (Amusement Poker)	Cal Omega - Game 18.7 (Amusement Poker)	Cal Omega Inc.
+comg187	歐米茄博奕遊戲: 趣味撲克 ( 18.7 )	歐米茄博奕遊戲: 趣味撲克 ( 18.7 )	Cal Omega Inc.
 comg204	歐米茄博奕遊戲: 超級廿一點 ( 20.4 )	歐米茄博奕遊戲: 超級廿一點 ( 20.4 )	Cal Omega Inc.
 comg208	歐米茄博奕遊戲: 贏家的選擇 ( 20.8 )	歐米茄博奕遊戲: 贏家的選擇 ( 20.8 )	Cal Omega Inc.
 comg227	歐米茄博奕遊戲: 趣味撲克 ( 22.7 )	歐米茄博奕遊戲: 趣味撲克 ( 22.7 )	Cal Omega Inc.
+comg230	歐米茄博奕遊戲: 賓果 ( 23.0 )	歐米茄博奕遊戲: 賓果 ( 23.0 )	Cal Omega Inc.
 comg236	歐米茄博奕遊戲: 熱線 ( 23.6 )	歐米茄博奕遊戲: 熱線 ( 23.6 )	Cal Omega Inc.
 comg239	歐米茄博奕遊戲: 梭哈 ( 23.9 )	歐米茄博奕遊戲: 梭哈 ( 23.9 )	Cal Omega / Casino Electronics Inc.
 comg246	歐米茄博奕遊戲: 熱線 ( 24.6 )	歐米茄博奕遊戲: 熱線 ( 24.6 )	Cal Omega Inc.
 comg272a	歐米茄博奕遊戲: 基諾 ( 趣味 )	歐米茄博奕遊戲: 基諾 ( 趣味 )	Cal Omega Inc.
 comg272b	歐米茄博奕遊戲: 基諾 ( 賭博 )	歐米茄博奕遊戲: 基諾 ( 賭博 )	Cal Omega Inc.
-comg903d	歐米茄博奕遊戲: Diag.PROM ( 903 )	歐米茄博奕遊戲: Diag.PROM ( 903 )	Cal Omega Inc.
-comg905d	歐米茄博奕遊戲: Diag.PROM ( 905 )	歐米茄博奕遊戲: Diag.PROM ( 905 )	Cal Omega Inc.
+comg903d	歐米茄博奕系統: Diag.PROM ( 903 )	歐米茄博奕系統: Diag.PROM ( 903 )	Cal Omega Inc.
+comg905d	歐米茄博奕系統: Diag.PROM ( 905 )	歐米茄博奕系統: Diag.PROM ( 905 )	Cal Omega Inc.
 elgrande	5 牌梭哈	5 牌梭哈	Tuni Electro Service / E.T. Marketing
 jjpoker	彩金撲克 ( 一版 )	彩金撲克 ( 一版 )	Enter-Tech (ETL)
 jjpokerb	彩金撲克 ( 二版 )	彩金撲克 ( 二版 )	Enter-Tech (ETL)
@@ -7092,26 +7116,26 @@ esh	太空奇兵 ( 一版 )	太空奇兵 ( 一版 )	Funai/Gakken
 esha	太空奇兵 ( 二版 )	太空奇兵 ( 二版 )	Funai/Gakken
 eshb	太空奇兵 ( 三版 )	太空奇兵 ( 三版 )	Funai/Gakken
 comebaby	來吧寶貝	來吧寶貝	ExPotato
-peset038	IGT 賭博機: 孤注一擲	IGT 賭博機: 孤注一擲	IGT - International Gaming Technology
-pepp0065	IGT 賭博機: 百搭撲克	IGT 賭博機: 百搭撲克	IGT - International Gaming Technology
-pepp0158	IGT 賭博機: 4A 彩金撲克	IGT 賭博機: 4A 彩金撲克	IGT - International Gaming Technology
-pepp0188	IGT 賭博機: 梭哈	IGT 賭博機: 梭哈	IGT - International Gaming Technology
-pepp0250	IGT 賭博機: 雙倍注撲克	IGT 賭博機: 雙倍注撲克	IGT - International Gaming Technology
-pepp0447	IGT 賭博機: 皇家撲克	IGT 賭博機: 皇家撲克	IGT - International Gaming Technology
-pepp0516	IGT 賭博機: 雙倍獎金撲克	IGT 賭博機: 雙倍獎金撲克	IGT - International Gaming Technology
-pebe0014	IGT 賭博機: 廿一點	IGT 賭博機: 廿一點	IGT - International Gaming Technology
-peke1012	IGT 賭博機: 基諾	IGT 賭博機: 基諾	IGT - International Gaming Technology
-peps0014	Player's Edge Plus (PS0014) Super Joker Slots	Player's Edge Plus (PS0014) Super Joker Slots	IGT - International Gaming Technology
-peps0022	Player's Edge Plus (PS0022) Red White & Blue Slots	Player's Edge Plus (PS0022) Red White & Blue Slots	IGT - International Gaming Technology
-peps0043	Player's Edge Plus (PS0043) Double Diamond Slots	Player's Edge Plus (PS0043) Double Diamond Slots	IGT - International Gaming Technology
-peps0045	Player's Edge Plus (PS0045) Red White & Blue Slots	Player's Edge Plus (PS0045) Red White & Blue Slots	IGT - International Gaming Technology
-peps0308	Player's Edge Plus (PS0308) Double Jackpot Slots	Player's Edge Plus (PS0308) Double Jackpot Slots	IGT - International Gaming Technology
-peps0615	IGT 賭博機: 吃角子老虎	IGT 賭博機: 吃角子老虎	IGT - International Gaming Technology
-peps0716	Player's Edge Plus (PS0716) River Gambler Slots	Player's Edge Plus (PS0716) River Gambler Slots	IGT - International Gaming Technology
-pexp0019	IGT 賭博機: 狂野撲克	IGT 賭博機: 狂野撲克	IGT - International Gaming Technology
-pexp0112	IGT 賭博機: 白熱王牌撲克	IGT 賭博機: 白熱王牌撲克	IGT - International Gaming Technology
-pexs0006	IGT 賭博機: 三倍鑽吃角子老虎	IGT 賭博機: 三倍鑽吃角子老虎	IGT - International Gaming Technology
-pexmp006	IGT 賭博機: 多功能撲克	IGT 賭博機: 多功能撲克	IGT - International Gaming Technology
+peset038	IGT 賭博機: 孤注一擲 ( Set038 )	IGT 賭博機: 孤注一擲 ( Set038 )	IGT - International Gaming Technology
+pepp0065	IGT 賭博機: 百搭撲克 ( PP0065 )	IGT 賭博機: 百搭撲克 ( PP0065 )	IGT - International Gaming Technology
+pepp0158	IGT 賭博機: 4A 彩金撲克 ( PP0158 )	IGT 賭博機: 4A 彩金撲克 ( PP0158 )	IGT - International Gaming Technology
+pepp0188	IGT 賭博機: 梭哈 ( PP0188 )	IGT 賭博機: 梭哈 ( PP0188 )	IGT - International Gaming Technology
+pepp0250	IGT 賭博機: 雙倍注撲克 ( PP0250 )	IGT 賭博機: 雙倍注撲克 ( PP0250 )	IGT - International Gaming Technology
+pepp0447	IGT 賭博機: 皇家撲克 ( PP0447 )	IGT 賭博機: 皇家撲克 ( PP0447 )	IGT - International Gaming Technology
+pepp0516	IGT 賭博機: 雙倍獎金撲克 ( PP0516 )	IGT 賭博機: 雙倍獎金撲克 ( PP0516 )	IGT - International Gaming Technology
+pebe0014	IGT 賭博機: 廿一點 ( BE0014 )	IGT 賭博機: 廿一點 ( BE0014 )	IGT - International Gaming Technology
+peke1012	IGT 賭博機: 基諾 ( KE1012 )	IGT 賭博機: 基諾 ( KE1012 )	IGT - International Gaming Technology
+peps0014	IGT 賭博機: 超級小丑吃角子老虎 ( PS0014 )	IGT 賭博機: 超級小丑吃角子老虎 ( PS0014 )	IGT - International Gaming Technology
+peps0022	IGT 賭博機: 紅白藍吃角子老虎 ( PS0022 )	IGT 賭博機: 紅白藍吃角子老虎 ( PS0022 )	IGT - International Gaming Technology
+peps0043	IGT 賭博機: 二倍鑽吃角子老虎 ( PS0043 )	IGT 賭博機: 二倍鑽吃角子老虎 ( PS0043 )	IGT - International Gaming Technology
+peps0045	IGT 賭博機: 紅白藍吃角子老虎 ( PS0045 )	IGT 賭博機: 紅白藍吃角子老虎 ( PS0045 )	IGT - International Gaming Technology
+peps0308	IGT 賭博機: 二倍彩金吃角子老虎 ( PS0308 )	IGT 賭博機: 二倍彩金吃角子老虎 ( PS0308 )	IGT - International Gaming Technology
+peps0615	IGT 賭博機: 吃角子老虎 ( PS0615 )	IGT 賭博機: 吃角子老虎 ( PS0615 )	IGT - International Gaming Technology
+peps0716	IGT 賭博機: 三倍彩金吃角子老虎 ( PS0716 )	IGT 賭博機: 三倍彩金吃角子老虎 ( PS0716 )	IGT - International Gaming Technology
+pexp0019	IGT 賭博機: 狂野撲克 ( XP000019 )	IGT 賭博機: 狂野撲克 ( XP000019 )	IGT - International Gaming Technology
+pexp0112	IGT 賭博機: 白熱王牌撲克 ( XP000112 )	IGT 賭博機: 白熱王牌撲克 ( XP000112 )	IGT - International Gaming Technology
+pexs0006	IGT 賭博機: 三倍鑽吃角子老虎 ( XS000006 )	IGT 賭博機: 三倍鑽吃角子老虎 ( XS000006 )	IGT - International Gaming Technology
+pexmp006	IGT 賭博機: 多功能撲克 ( XMP00006 )	IGT 賭博機: 多功能撲克 ( XMP00006 )	IGT - International Gaming Technology
 mirage	妖獸麻雀傳	妖獸麻雀傳	Mitchell
 dominob	美女敲磚塊	美女敲磚塊	Wonwoo Systems
 jongkyo	雀校	雀校	Kiwako
@@ -7129,7 +7153,7 @@ capunc	鐵鉤船長	鐵鉤船長	Nazionale Elettronica
 capcor	怒海餘生	怒海餘生	Nazionale Elettronica
 euro2k2	歐洲大陸 2002 ( 一版 )	歐洲大陸 2002 ( 一版 )	Nazionale Elettronica
 euro2k2a	歐洲大陸 2002 ( 二版 )	歐洲大陸 2002 ( 二版 )	Nazionale Elettronica
-mnumber	Mystery Number	Mystery Number	M.M. - B.R.L.
+mnumber	神秘數字	神秘數字	M.M. - B.R.L.
 ntcash	台幣	台幣	Unknown
 wizard	巫師	巫師	A.A.
 laser2k1	拉瑟 2001	拉瑟 2001	Unknown
@@ -7139,8 +7163,8 @@ cmagica	漂移魔術	漂移魔術	Unknown
 millsun	千禧陽光	千禧陽光	Unknown
 sspac2k1	超太空 2001	超太空 2001	Unknown
 elvis	艾維斯	艾維斯	Unknown
-ejollyx5	Euro Jolly X5	Euro Jolly X5	Solar Games
-grandprx	Grand Prix	Grand Prix	4fun
+ejollyx5	歡樂紙牌 X5	歡樂紙牌 X5	Solar Games
+grandprx	格蘭披治賽車	格蘭披治賽車	4fun
 showhand	梭哈	梭哈	Astro Corp.
 knightsh	圓桌武士 ( 改版 )	圓桌武士 ( 改版 )	bootleg
 knightsb	圓桌武士 ( 盜版 )	圓桌武士 ( 盜版 )	bootleg
@@ -7163,7 +7187,9 @@ dinoh	恐龍新世紀 ( 盜版 1 )	恐龍新世紀 ( 盜版 1 )	bootleg
 dinoha	恐龍新世紀 ( 盜版 2 )	恐龍新世紀 ( 盜版 2 )	bootleg
 dinohb	恐龍新世紀 ( 盜版 3 )	恐龍新世紀 ( 盜版 3 )	bootleg
 punishrb	懲罰者 ( 盜版 )	懲罰者 ( 盜版 )	bootleg
+punishrh	懲罰者 ( 飆風戰警 )	懲罰者 ( 飆風戰警 )	bootleg
 cawingb	美國海軍 ( 盜版 )	美國海軍 ( 盜版 )	bootleg
+daimakb	大魔界村 ( 盜版 )	大魔界村 ( 盜版 )	bootleg
 kodh	龍王 ( 改版 )	龍王 ( 改版 )	bootleg
 kof96ep	格鬥天王 96 ( 盜版 )	格鬥天王 96 ( 盜版 )	bootleg
 kof97pla	格鬥天王 97 重出江湖 ( 盜版 )	格鬥天王 97 重出江湖 ( 盜版 )	bootleg
@@ -7245,7 +7271,7 @@ mslug5d	越南大戰 5 ( 完全解密版 )	越南大戰 5 ( 完全解密版 )	SNK / Playmore
 samsho5d	侍魂零 ( 解密 C )	侍魂零 ( 解密 C )	Yuki Enterprise / SNK Playmore
 samsh5sd	侍魂零特別版 ( 解密 C )	侍魂零特別版 ( 解密 C )	Yuki Enterprise / SNK Playmore
 lans2k4d	突擊奇兵 2004 ( 盜版 / 完全解密版 )	突擊奇兵 2004 ( 盜版 / 完全解密版 )	bootleg
-svcd	夢幻格鬥: SNK Vs.卡普空 ( 卡帶 / 解密 C )	夢幻格鬥: SNK Vs.卡普空 ( 卡帶 / 解密 C )	bootleg
+svcd	夢幻格鬥: SNK Vs.卡普空 ( 卡帶 / 解密 C )	夢幻格鬥: SNK Vs.卡普空 ( 卡帶 / 解密 C )	SNK Playmore
 jckeygpd	賽馬大亨 ( 解密 C )	賽馬大亨 ( 解密 C )	Sun Amusement / BrezzaSoft
 kf2k3pcd	格鬥天王 2003 ( 基板 / 解密 C&Bios )	格鬥天王 2003 ( 基板 / 解密 C&Bios )	SNK Playmore
 kogd	格鬥天王 ( 格鬥天王 97 盜版 / 完全解密版 )	格鬥天王 ( 格鬥天王 97 盜版 / 完全解密版 )	bootleg
