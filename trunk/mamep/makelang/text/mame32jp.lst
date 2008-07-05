@@ -1035,6 +1035,7 @@ galxwar2	ギャラクシーウォーズ (Universal set 2)	ぎゃらくしーうぉーず	Universal
 galxwart	ギャラクシーウォーズ (Taito?)	ぎゃらくしーうぉーず	Taito?
 starw	ギャラクシーウォーズ / Star Wars	ぎゃらくしーうぉーず	bootleg
 lrescue	ルナレスキュー	るなれすきゅー	Taito
+mlander	ルナレスキュー / Moon Lander (海賊版)	るなれすきゅー	[Taito] (Leisure Time Electronics bootleg)
 lrescuem	ルナレスキュー (Model Racing) (海賊版)	るなれすきゅー	Taito (Model Racing bootleg)
 grescue	ルナレスキュー / Galaxy Rescue	るなれすきゅー	Taito (Universal license?)
 desterth	ルナレスキュー / Destination Earth	るなれすきゅー	bootleg
@@ -1148,6 +1149,7 @@ powerdrv	パワードライブ	ぱわーどらいぶ	Bally Midway
 stargrds	スターガード	すたーがーど	Bally Midway
 maxrpm	マックスRPM	まっくすあーるぴーえむ	Bally Midway
 spyhunt	スパイハンター	すぱいはんたー_1	Bally Midway
+spyhuntp	スパイハンター (Playtronic license)	すぱいはんたー_1	Bally Midway
 turbotag	ターボタグ (prototype)	たーぼたぐ	Bally Midway
 crater	クレーターレイダー	くれーたーれいだー	Bally Midway
 zwackery	ツワッケリー	つわっけりー	Bally Midway
@@ -1551,6 +1553,7 @@ wgpj	WGP -リアルレースフィーリング (日本版)	わーるどぐらんぷり_1	Taito Corporati
 wgpjoy	WGP -リアルレースフィーリング (joystick ver 日本版 set 1)	わーるどぐらんぷり_1	Taito Corporation
 wgpjoya	WGP -リアルレースフィーリング (joystick ver 日本版 set 2)	わーるどぐらんぷり_1	Taito Corporation
 wgp2	WGP2 -リアルレースフィーリング (日本版)	わーるどぐらんぷり_2	Taito Corporation
+galastrm	ギャラクティックストーム (日本版)	ぎゃらくてぃっくすとーむ	Taito Corporation
 slapshot	スラップショット (日本版)	すらっぷしょっと	Taito Corporation
 opwolf3	オペレーションウルフ3 (海外版)	おぺれーしょんうるふ_3	Taito Corporation Japan
 opwolf3u	オペレーションウルフ3 (USA版)	おぺれーしょんうるふ_3	Taito America Corporation
@@ -1660,7 +1663,9 @@ contcrua	コンチネンタルサーカス (USA版 set 2)	こんちねんたるさーかす	Taito Ameri
 chasehq	チェイスH.Q. (海外版)	ちぇいすえいちきゅー	Taito Corporation Japan
 chasehqj	チェイスH.Q. (日本版)	ちぇいすえいちきゅー	Taito Corporation
 enforce	エンフォース (日本版)	えんふぉーす	Taito Corporation
-nightstr	ナイトストライカー (USA版)	ないとすとらいかー	Taito America Corporation
+nightstr	ナイトストライカー (海外版)	ないとすとらいかー	Taito Corporation Japan
+nghtstrj	ナイトストライカー (日本版)	ないとすとらいかー	Taito Corporation
+nghtstru	ナイトストライカー (USA版)	ないとすとらいかー	Taito America Corporation
 sci	S.C.I. <Special Criminal Investigation> (海外版 set 1)	えすしーあい	Taito Corporation Japan
 scia	S.C.I. <Special Criminal Investigation> (海外版 set 2)	えすしーあい	Taito Corporation Japan
 scij	S.C.I. <Special Criminal Investigation> (日本版)	えすしーあい	Taito Corporation
@@ -2170,6 +2175,7 @@ kodb	ザ・キングオブドラゴンズ (海外版 910731) (海賊版)	ざきんぐおぶどらごんず	bo
 captcomm	キャプテンコマンドー (海外版 911014)	きゃぷてんこまんどー	Capcom
 captcomu	キャプテンコマンドー (USA版 910928)	きゃぷてんこまんどー	Capcom
 captcomj	キャプテンコマンドー (日本版 911202)	きゃぷてんこまんどー	Capcom
+captcomb	キャプテンコマンドー (海賊版)	きゃぷてんこまんどー	bootleg
 knights	ナイツ オブ ザ ラウンド -円卓の騎士 (海外版 911127)	ないつおぶざらうんど	Capcom
 knightsu	ナイツ オブ ザ ラウンド -円卓の騎士 (USA版 911127)	ないつおぶざらうんど	Capcom
 knightsj	ナイツ オブ ザ ラウンド -円卓の騎士 (日本版 911127)	ないつおぶざらうんど	Capcom
@@ -2207,9 +2213,14 @@ sf2tj	ストリートファイターII'ターボ -ハイパーファイティング (日本版 921209)	すと
 dino	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (海外版 930201)	きゃでぃらっくす	Capcom
 dinou	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (USA版 930201)	きゃでぃらっくす	Capcom
 dinoj	キャディラックス -恐竜新世紀 (日本版 930201)	きゃでぃらっくす	Capcom
+dinopic	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (海賊版 with PIC16c57 set 1)	きゃでぃらっくす	bootleg
+dinopic2	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (海賊版 with PIC16c57 set 2)	きゃでぃらっくす	bootleg
 punisher	パニッシャー (海外版 930422)	ぱにっしゃー	Capcom
 punishru	パニッシャー (USA版 930422)	ぱにっしゃー	Capcom
 punishrj	パニッシャー (日本版 930422)	ぱにっしゃー	Capcom
+punipic	パニッシャー (海賊版 with PIC16c57 set 1)	ぱにっしゃー	Capcom
+punipic2	パニッシャー (海賊版 with PIC16c57 set 2)	ぱにっしゃー	Capcom
+punipic3	パニッシャー (海賊版 with PIC16c57 set 3)	ぱにっしゃー	Capcom
 slammast	マッスルボマー -ザ・ボディーエクスプロージョン / Saturday Night Slam Masters (海外版 930713)	まっするぼまー_1	Capcom
 slammasu	マッスルボマー -ザ・ボディーエクスプロージョン / Saturday Night Slam Masters (USA版 930713)	まっするぼまー_1	Capcom
 mbomberj	マッスルボマー -ザ・ボディーエクスプロージョン (日本版 930713)	まっするぼまー_1	Capcom
@@ -3833,6 +3844,7 @@ senjyo	センジョウ	せんじょう	Tehkan
 starforc	スターフォース	すたーふぉーす	Tehkan
 starfore	スターフォース (encrypted)	すたーふぉーす	Tehkan
 starforb	スターフォース (encrypted) (海賊版)	すたーふぉーす	[Tehkan] (bootleg)
+starfora	スターフォース (encrypted set 2)	すたーふぉーす	Tehkan
 megaforc	スターフォース / Mega Force	すたーふぉーす	Tehkan (Video Ware license)
 baluba	バルバルークの伝説	ばるばるーくのでんせつ	Able Corp, Ltd.
 bombjack	ボンジャック (set 1)	ぼんじゃっく	Tehkan
@@ -4267,6 +4279,7 @@ totlvice	トータルバイス (ver JAD)	とーたるばいす	Konami
 btltryst	バトルトライスト (ver JAC)	ばとるとらいすと	Konami
 heatof11	ワールドサッカーチャンピオンシップ / Heat of Eleven '98 (ver EAA)	わーるどさっかーちゃんぴおんしっぷ	Konami
 evilngt	エヴィルナイト (ver EAA)	えびるないと	Konami
+hellngt	エヴィルナイト / Hell Night (ver EAA)	えびるないと	Konami
 carpolo	カーポロ	かーぽろ	Exidy
 sidetrac	サイドトラック	さいどとらっく	Exidy
 targ	ターグ	たーぐ	Exidy
@@ -5351,6 +5364,7 @@ tm4k	タッチマスター4000 (ver 6.02 standard)	たっちますたー_4000	Midway
 tm5k	タッチマスター5000 (ver 7.10 standard)	たっちますたー_5000	Midway
 tm7k	タッチマスター7000 (ver 8.04 standard)	たっちますたー_7000	Midway
 tm7ka	タッチマスター7000 (ver 8.00 standard)	たっちますたー_7000	Midway
+tm8k	タッチマスター8000 (ver 9.04 standard)	たっちますたー_8000	Midway
 galgbios	ギャラクシーゲームズ (BIOS ver 1.90)	ぎゃらくしーげーむず	Creative Electonics &amp; Software
 embargo	エンバーゴ	えんばーご	Cinematronics
 tripool	トライ・プール (Casino Tech)	とらいぷーる	Noma (Casino Tech license)
@@ -5427,7 +5441,8 @@ scionc	サイオン (Cinematronics)	さいおん	Seibu Denshi (Cinematronics license)
 kungfut	功夫大君	かんふーたいくん	Seibu Kaihatsu Inc.
 kungfuta	功夫大君 (alt)	かんふーたいくん	Seibu Kaihatsu Inc.
 wiz	ウィズ	うぃず	Seibu Kaihatsu Inc.
-wizt	ウィズ (Taito)	うぃず	[Seibu] (Taito license)
+wizt	ウィズ (Taito set 1)	うぃず	[Seibu] (Taito license)
+wizta	ウィズ (Taito set 2)	うぃず	[Seibu] (Taito license)
 kncljoe	ナックルジョー (set 1)	なっくるじょー	[Seibu Kaihatsu] (Taito license)
 kncljoea	ナックルジョー (set 2)	なっくるじょー	[Seibu Kaihatsu] (Taito license)
 bcrusher	ナックルジョー / Bone Crusher	なっくるじょー	bootleg
@@ -6679,8 +6694,8 @@ genix	ジェニックスファミリー	じぇにっくすふぁみりー	NIX
 fitfight	龍虎の拳 / Fit of Fighting	りゅうこのけん_1	bootleg
 histryma	ファイターズヒストリー / The History of Martial Arts	ふぁいたーずひすとりー_1	bootleg
 bbprot	アンタイトルドファイター 'BB' (prototype)	あんたいとるふぁいたーびーびー	<unknown>
-flower	フラワー (Sega/Alpha)	ふらわー	Sega/Alpha
-flowerk	フラワー (Komax)	ふらわー	Komax
+flower	フラワー (Komax)	ふらわー	Komax
+flowers	フラワー (Sega/Alpha)	ふらわー	Sega/Alpha
 beaminv	ビームインベーダー (set 1)	びーむいんべーだー	Tekunon Kougyou
 beaminva	ビームインベーダー (set 2)	びーむいんべーだー	Tekunon Kougyou
 mcatadv	マジカルキャットアドベンチャー	まじかるきゃっとあどべんちゃー	Wintechno
@@ -6819,6 +6834,7 @@ witch	ウィッチ	うぃっち	Sega / Vic Tokai
 pbchmp95	ウィッチ / Pinball Champ '95 (海賊版?)	うぃっち	Veltmeijer Automaten
 cardline	カードライン	かーどらいん	Veltmeijer
 bmcbowl	滾球の星	こんきゅうのほし	BMC
+koftball	キングオブフットボール	きんぐおぶふっとぼーる	BMC
 pitboss	ピットボス	ぴっとぼす_1	Merit
 casino5	カジノ5	かじのふぁいぶ	Merit
 trvwzh	トリビア? ウィズ (horizontal - question set 1)	とりびあうぃず	Merit
@@ -7137,7 +7153,6 @@ dinoh	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (アジア版 930223) (
 dinoha	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (アジア版 930223) (ハック set 2)	きゃでぃらっくす	bootleg
 dinohb	キャディラックス -恐竜新世紀 / Cadillacs and Dinosaurs (海外版 930201) (ハック set 3)	きゃでぃらっくす	bootleg
 punishrb	パニッシャー (海賊版)	ぱにっしゃー	bootleg
-punishrh	パニッシャー (Wild Wild West)	ぱにっしゃー	bootleg
 cawingb	U.S.ネイビー / Carrier Air Wing (海賊版)	ゆーえすねいびー	bootleg
 daimakb	大魔界村 (日本版) (海賊版)	だいまかいむら	bootleg
 kodh	ザ・キングオブドラゴンズ (ハック)	ざきんぐおぶどらごんず	bootleg
