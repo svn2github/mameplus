@@ -241,14 +241,20 @@ LONG GetCommonControlVersion()
 	return PACKVERSION(0,0);
 }
 
-void DisplayTextFile(HWND hWnd, const WCHAR *cName)
+void DisplayTextFile(HWND hWnd, const char *cName)
 {
 	HINSTANCE hErr;
-	LPCWSTR	  msg = 0;
+	LPCTSTR	  msg = 0;
+	LPTSTR    tName;
+	
+	tName = tstring_from_utf8(cName);
+	if( !tName )
+		return;
 
-	hErr = ShellExecute(hWnd, NULL, cName, NULL, NULL, SW_SHOWNORMAL);
+	hErr = ShellExecute(hWnd, NULL, tName, NULL, NULL, SW_SHOWNORMAL);
 	if ((FPTR)hErr > 32) 
 	{
+		free(tName);
 		return;
 	}
 
@@ -282,7 +288,9 @@ void DisplayTextFile(HWND hWnd, const WCHAR *cName)
 		msg = _UIW(TEXT("Unknown error."));
 	}
  
-	MessageBox(NULL, msg, cName, MB_OK);
+	MessageBox(NULL, msg, tName, MB_OK);
+	
+	free(tName);
 }
 
 LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)

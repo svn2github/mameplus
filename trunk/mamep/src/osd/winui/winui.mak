@@ -71,7 +71,7 @@ endif
 
 $(LIBOSD): $(WINUIOBJS)
 
-$(WINUIOBJ)/mameui.res: $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
+$(WINUIOBJ)/mameui.res: $(WINUISRC)/mameui.rc $(WINUIOBJ)/mamevers.rc
 
 $(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.h $(WINUISRC)/opthndlr.c
 
@@ -114,7 +114,7 @@ $(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
 	@echo Compiling mameui resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 
-$(WINUIOBJ)/mameversui.rc: $(VERINFO32) $(SRC)/version.c
+$(WINUIOBJ)/mamevers.rc: $(VERINFO32) $(SRC)/version.c
 	@echo Emitting $@...
 	@$(VERINFO32) $(SRC)/version.c > $@
 
@@ -122,7 +122,7 @@ ifeq ($(NO_DLL),)
     GUIRESFILE = $(WINUIOBJ)/mameui.res
 else
     UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(WINUIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mameversui.rc
+    $(WINUIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mamevers.rc
     GUIRESFILE =  $(WINUIOBJ)/mameui.res
 endif
 
