@@ -39,7 +39,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( knightsh )	/* hack */
 	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2m8 )		/* hack */
-	DRIVER( sf2m13 )	/* hack */
+	DRIVER( sf2khbd )	/* hack */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
 	DRIVER( wofb )		/* bootleg */
@@ -51,13 +51,10 @@ const game_driver * const plusdrivers[] =
 	DRIVER( wof3sja )	/* 1997  Three Holy Swords / San Sheng Jian */
 	DRIVER( wofh ) 		/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
 	DRIVER( wofha ) 	/* 1999  Legend of Three Kingdoms' Heroes / Sanguo Yingxiong Zhuan */
-	DRIVER( wofhfh ) 	/* 1999  Fire Phoenix / Huo Fenghuang */
-	DRIVER( dinob )		/* bootleg */
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
-	DRIVER( punishrb )	/* bootleg */
-//	DRIVER( punishrh )	/* Biao Feng Zhan Jing */
+	DRIVER( punishrh )	/* Biao Feng Zhan Jing */
 	DRIVER( cawingb )	/* bootleg */
 	DRIVER( daimakb )	/* bootleg */
 	DRIVER( kodh )		/* bootleg */
