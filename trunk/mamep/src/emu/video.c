@@ -435,11 +435,8 @@ static void video_exit(running_machine *machine)
 #endif /* USE_SCALE_EFFECTS */
 
 	/* stop recording any movie */
-	if (machine->primary_screen != NULL)
-	{
-		video_mng_end_recording(machine);
-		video_avi_end_recording(machine);
-	}
+	video_mng_end_recording(machine);
+	video_avi_end_recording(machine);
 
 	/* free all the graphics elements */
 	for (i = 0; i < MAX_GFX_ELEMENTS; i++)
