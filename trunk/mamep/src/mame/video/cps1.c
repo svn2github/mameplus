@@ -1231,13 +1231,16 @@ static const struct CPS1config cps1_config_table[]=
 	{"kodu",     CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodj",     CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },
 	{"kodb",     CPS_B_21_BT2, mapper_KD29B,  0x36, 0, 0x34 },	/* bootleg, doesn't use multiply protection */
+	{"kodh",     CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
 	{"captcomm", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcomu", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
 	{"captcomj", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
-	{"captcomb", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34 },
+	{"captcomb", CPS_B_21_BT3, mapper_CC63B,  0x36, 0x38, 0x34, 2 },
 	{"knights",  CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsu", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
 	{"knightsj", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34 },
+	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 4 },
+	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
 	{"sf2ce",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceua",  CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2ceub",  CPS_B_21_DEF, mapper_S9263B, 0x36 },
@@ -1248,15 +1251,21 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2red",   CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2v004",  CPS_B_21_DEF, mapper_S9263B, 0x36 },
 	{"sf2accp2", CPS_B_21_DEF, mapper_S9263B, 0x36 },
-//	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-//	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
-//	{"sf2m3",    CPS_B_21_DEF, mapper_S9263B, 0x36 },
+	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
+	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 5 },
+	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0 },
+	{"sf2khbd",  CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
 	{"varthr1",  CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
 	{"varthu",   CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
@@ -1266,6 +1275,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"wofa",     CPS_B_21_DEF, mapper_TK263B },	/* bootleg? */
 	{"wofu",     CPS_B_21_QS1, mapper_TK263B },
 	{"wofj",     CPS_B_21_QS1, mapper_TK263B },
+	{"wofhfh",   CPS_B_21_DEF, mapper_TK263B }, /* Chinese bootleg */
 	{"dino",     CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinou",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
 	{"dinoj",    CPS_B_21_QS2, mapper_CD63B },	/* layer enable never used */
@@ -1293,35 +1303,20 @@ static const struct CPS1config cps1_config_table[]=
 	{"pnickj",   CPS_B_21_DEF, mapper_pnickj },
 	{"pang3",    CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
 	{"pang3j",   CPS_B_21_DEF, mapper_pang3 },	/* EEPROM port is among the CPS registers (handled by DRIVER_INIT) */
-	{"cawingb",  CPS_B_16,     mapper_CA24B, 0, 0, 0, 2 },
+	{"cawingb",  CPS_B_16,     mapper_CA24B, 0, 0, 0, 3 },
 	{"daimakb",  CPS_B_01,     mapper_DM22A },	// equivalent to DM620
-	{"kodh",     CPS_B_21_DEF, mapper_KD29B,  0x36, 0, 0x34 },
 	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
-	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 4 },	/* layer enable never used */
-	{"dinob",    CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 4 },	/* layer enable never used */
-	{"knightsh", CPS_B_21_DEF, mapper_KR63B,  0x36, 0, 0x34 },
-	{"knightsb", CPS_B_21_BT4, mapper_KR63B,  0x36, 0, 0x34, 3 },
-	{"punishrb", CPS_B_21_QS3, mapper_PS63B, 0, 0, 0, 4 },
+	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 5 },	/* layer enable never used */
 	{"punishrh", CPS_B_21_DEF, mapper_PS63B },
-	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
-	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 4 },
-	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0 },
-	{"sf2m13",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
-	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
-	{"wofhfh",   CPS_B_21_DEF, mapper_TK263B },
+	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
 	{"wof3js",   CPS_B_21_DEF, mapper_TK263B },
-	{"wofsj",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
-	{"wofsja",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
+	{"wofsj",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wofsja",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
 	{"wofsjb",   CPS_B_21_DEF, mapper_TK263B },
-	{"wof3sj",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
-	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 4 },
+	{"wof3sj",   HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
+	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
 	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
 	#ifdef MESS
 	{"sfzch",    CPS_B_21_DEF, mapper_sfzch },
@@ -1786,11 +1781,18 @@ void cps1_get_video_base(void )
 	else if (cps1_game_config->bootleg_kludge == 2)
 	{
 		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		scroll1xoff = -0x08;
+		scroll2xoff = -0x0a;
+		scroll3xoff = -0x0c;
+	}
+	else if (cps1_game_config->bootleg_kludge == 3)
+	{
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
 		scroll2xoff = 0;
 		scroll3xoff = 0;
 	}
-	else if (cps1_game_config->bootleg_kludge == 4)
+	else if (cps1_game_config->bootleg_kludge == 5)
 	{
 		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
 		scroll1xoff = 0xffc0;
@@ -2221,7 +2223,7 @@ static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, cons
 	UINT16 *base=cps1_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 3)
+	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 2 || cps1_game_config->bootleg_kludge == 4)
 	{
 		base += cps1_last_sprite_offset;
 		baseadd = -4;
