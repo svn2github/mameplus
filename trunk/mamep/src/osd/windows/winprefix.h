@@ -58,13 +58,6 @@ void *__cdecl _alloca(size_t);
 #ifdef _MSC_VER
 #define snprintf _snprintf
 
-#ifdef NO_FORCEINLINE
-#undef INLINE
-
-//#define INLINE static __forceinline
-#define INLINE static __inline
-#endif /* NO_FORCEINLINE */
-
 /* Turn off type mismatch warnings */
 #pragma warning(disable:592)		// "variable is used before its value is set"
 #pragma warning(disable:4018)		// "signed/unsigned mismatch"

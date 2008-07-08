@@ -54,8 +54,6 @@ static const translation_info gcc_translate[] =
 #else
 	{ 0,		"-Drestrict=*",		"/Drestrict=" },
 #endif
-	{ 0,		"-DINLINE=*",		"/DINLINE=\"static __forceinline\"" },
-
 	{ 0,		"-D*",					"/D*" },
 	{ 0,		"-U*",					"/U*" },
 	{ 0,		"-I*",					"/I*" },
@@ -72,11 +70,15 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-O1",					"/O2 /Qfast_transcendentals" },
 	{ 0,		"-O2",					"/O2 /Qfast_transcendentals" },
 	{ 0,		"-O3",					"/O2 /Qfast_transcendentals" },
-		
-	// mamep: disable /Og implied by -O2
-	{ 0,		"-Ong",					"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy" }, 
 #endif
 	{ 0,		"-Os",					"/O1" },
+//============================================================
+	{ 0,		"-Opgoc",				"/O2 /GL" },
+	// mamep: disable /Og implied by -O2
+	{ 0,		"-Ong",					"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy /Qfast_transcendentals" },
+	{ 0,		"-Ongc",				"/Oi /Ot /Oy /Ob2 /Gs /GF /Gy /GL" },
+	{ 0,		"-pgoc",				"/GL" },
+//============================================================
 	{ 0,		"-g",					"/Zi" },
 	{ VS2005,	"-fno-strict-aliasing",	"" },		// deprecated in VS2005
 	{ 0,		"-fno-strict-aliasing",	"/Oa" },
@@ -102,6 +104,9 @@ static const translation_info gcc_translate[] =
 #else
 	{ 0,		"-march=pentium-m",		"/G6" },
 #endif
+//============================================================
+	{ 0,		"-mmmx",				"" },
+//============================================================
 	{ 0,		"-msee",				"/arch:SSE" },
 	{ VS71,		"-msse2",				"/arch:SSE2" },
 	{ 0,		"-msse2",				"" },
@@ -110,7 +115,7 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-mwindows",			"" },
 	{ 0,		"-mno-cygwin",			"" },
 #ifdef ICC_BUILD
-	{ 0,		"-std=gnu89",			"/Qc99" },
+	{ 0,		"-std=gnu89",			"" },
 #else
 	{ 0,		"-std=gnu89",			"" },
 #endif
@@ -126,6 +131,12 @@ static const translation_info ld_translate[] =
 	{ 0,		"-Wl,-Map,*",		"/map:*" },
  	{ 0,		"-Wl,--allow-multiple-definition", "/force:multiple" },
 	{ 0,		"-Wl,--warn-common",	"" },
+//============================================================
+	{ 0,		"-ni",				"/INCREMENTAL:NO" },
+	{ 0,		"-ref",				"/OPT:NOREF" },
+	{ 0,		"-pgoi",			"/LTCG:PGINSTRUMENT" },
+	{ 0,		"-pgoo",			"/LTCG:PGOPTIMIZE" },
+//============================================================
 	{ 0,		"-mno-cygwin",		"" },
 	{ 0,		"-s",				"" },
 	{ 0,		"-WO",				"" },

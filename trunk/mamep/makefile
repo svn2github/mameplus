@@ -280,8 +280,16 @@ ifeq ($(TARGETOS),os2)
 DEFS = -DCRLF=3
 endif
 
+ifdef MSVC_BUILD
+    ifdef NO_FORCEINLINE
+        DEFS += -DINLINE="static __inline"
+    else
+        DEFS += -DINLINE="static __forceinline"
+    endif
+else
 # map the INLINE to something digestible by GCC
-DEFS += -DINLINE="static __inline__"
+    DEFS += -DINLINE="static __inline__"
+endif
 
 # define LSB_FIRST if we are a little-endian target
 ifndef BIGENDIAN

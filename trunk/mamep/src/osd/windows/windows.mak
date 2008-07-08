@@ -223,10 +223,6 @@ endif
 # add our prefix files to the mix
 CFLAGS += -include $(WINSRC)/winprefix.h
 
-ifdef NO_FORCEINLINE
-DEFS += -DNO_FORCEINLINE
-endif
-
 ifdef WIN95_MULTIMON
 CFLAGS += -DWIN95_MULTIMON
 endif

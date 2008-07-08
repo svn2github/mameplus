@@ -39,7 +39,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( knightsh )	/* hack */
 	DRIVER( knightsb )	/* bootleg */
 	DRIVER( sf2m8 )		/* hack */
-	DRIVER( sf2khbd )	/* hack */
+	DRIVER( sf2m13 )	/* hack */
 	DRIVER( sf2tlona )	/* hack, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* hack, Tu Long set 2 */
 	DRIVER( wofb )		/* bootleg */
@@ -54,7 +54,7 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoh )		/* hack */
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
-	DRIVER( punishrh )	/* Biao Feng Zhan Jing */
+//	DRIVER( punishrh )	/* Biao Feng Zhan Jing */
 	DRIVER( cawingb )	/* bootleg */
 	DRIVER( daimakb )	/* bootleg */
 	DRIVER( kodh )		/* bootleg */
