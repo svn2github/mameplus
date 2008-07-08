@@ -1264,7 +1264,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2khbd",  CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0 },
 	{"sf2tlona", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2tlonb", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"varth",    CPS_B_04,     mapper_VA63B },	/* CPSB test has been patched out (60=0008) register is also written to, possibly leftover from development */
@@ -2224,7 +2224,7 @@ static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, cons
 	UINT16 *base=cps1_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 2 || cps1_game_config->bootleg_kludge == 4)
+	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 4)
 	{
 		base += cps1_last_sprite_offset;
 		baseadd = -4;

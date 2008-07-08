@@ -7445,19 +7445,19 @@ ROM_START( sf2mdt )
 	ROM_LOAD16_BYTE( "4.ic176",   0x100000, 0x20000, CRC(1073b7b6) SHA1(81ca1eab65ceac69520584bb23a684ccb9d92f89) )
 	ROM_LOAD16_BYTE( "2.ic175",   0x100001, 0x20000, CRC(924c6ce2) SHA1(676a912652bd75da5087f0c7eae047b7681a993c) )
 
-	ROM_REGION( 0x600000, REGION_GFX1, 0 ) /* rearranged in init */
-	ROMX_LOAD( "7.ic90",    0x000000, 0x80000, CRC(896eaf48) SHA1(5a13ae8b554e05eed3d5749aaf5845d499bce45b) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "10.ic88",   0x000002, 0x80000, CRC(ef3f5be8) SHA1(d4e1de7d7caf6977e48544d6701618ae70c717f9) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "13.ic89",   0x000004, 0x80000, CRC(305dd72a) SHA1(c373b517c23f3b019abb06e21f6b9ab6e1e47909) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "16.ic87",   0x000006, 0x80000, CRC(e57f6db9) SHA1(b37f95737804002ec0e237472eaacf0bc1e868e8) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "6.ic91",    0x200000, 0x80000, CRC(054cd5c4) SHA1(07f275e118c141a84ca15a2e9edc81694af37cf2) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "9.ic93",    0x200002, 0x80000, CRC(818ca33d) SHA1(dfb707e17c83216f8a62e905f8c7cd6d406b417b) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "12.ic92",   0x200004, 0x80000, CRC(87e069e8) SHA1(cddd3be84f8379134590bfbbb080518f28120e49) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "15.ic94",   0x200006, 0x80000, CRC(5dfb44d1) SHA1(08e44b8efc84f9cfc829aabf704155ddc700de76) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "8.ic86",    0x400000, 0x80000, CRC(34bbb3fa) SHA1(7794e89258f12b17d38c3d302dc15c502a8c8eb6) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "11.ic84",   0x400002, 0x80000, CRC(cea6d1d6) SHA1(9c953db42f0d877e43c0c239f69a00df39a18295) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "14.ic85",   0x400004, 0x80000, CRC(7d9f1a67) SHA1(6deb7fff867c42b13a32bb11eda798cfdb4cbaa8) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "17.ic83",   0x400006, 0x80000, CRC(91a9a05d) SHA1(5266ceddd2df925e79b4200843dec2f7aa9297b3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROM_REGION( 0x600000, REGION_GFX1, 0 )
+	ROMX_LOAD( "7.ic90",    0x000000, 0x80000, CRC(896eaf48) SHA1(5a13ae8b554e05eed3d5749aaf5845d499bce45b), ROM_SKIP(3) )
+	ROMX_LOAD( "13.ic89",   0x000001, 0x80000, CRC(305dd72a) SHA1(c373b517c23f3b019abb06e21f6b9ab6e1e47909), ROM_SKIP(3) )
+	ROMX_LOAD( "10.ic88",   0x000002, 0x80000, CRC(ef3f5be8) SHA1(d4e1de7d7caf6977e48544d6701618ae70c717f9), ROM_SKIP(3) )
+	ROMX_LOAD( "16.ic87",   0x000003, 0x80000, CRC(e57f6db9) SHA1(b37f95737804002ec0e237472eaacf0bc1e868e8), ROM_SKIP(3) )
+	ROMX_LOAD( "6.ic91",    0x200000, 0x80000, CRC(054cd5c4) SHA1(07f275e118c141a84ca15a2e9edc81694af37cf2), ROM_SKIP(3) )
+	ROMX_LOAD( "12.ic92",   0x200001, 0x80000, CRC(87e069e8) SHA1(cddd3be84f8379134590bfbbb080518f28120e49), ROM_SKIP(3) )
+	ROMX_LOAD( "9.ic93",    0x200002, 0x80000, CRC(818ca33d) SHA1(dfb707e17c83216f8a62e905f8c7cd6d406b417b), ROM_SKIP(3) )
+	ROMX_LOAD( "15.ic94",   0x200003, 0x80000, CRC(5dfb44d1) SHA1(08e44b8efc84f9cfc829aabf704155ddc700de76), ROM_SKIP(3) )
+	ROMX_LOAD( "8.ic86",    0x400000, 0x80000, CRC(34bbb3fa) SHA1(7794e89258f12b17d38c3d302dc15c502a8c8eb6), ROM_SKIP(3) )
+	ROMX_LOAD( "14.ic85",   0x400001, 0x80000, CRC(7d9f1a67) SHA1(6deb7fff867c42b13a32bb11eda798cfdb4cbaa8), ROM_SKIP(3) )
+	ROMX_LOAD( "11.ic84",   0x400002, 0x80000, CRC(cea6d1d6) SHA1(9c953db42f0d877e43c0c239f69a00df39a18295), ROM_SKIP(3) )
+	ROMX_LOAD( "17.ic83",   0x400003, 0x80000, CRC(91a9a05d) SHA1(5266ceddd2df925e79b4200843dec2f7aa9297b3), ROM_SKIP(3) )
 
 	ROM_REGION( 0x8000, REGION_GFX2, 0 )
 	ROM_COPY( REGION_GFX1, 0x000000, 0x000000, 0x8000 )	/* stars */
@@ -9046,12 +9046,12 @@ ROM_START( sf2m8 )
 	ROM_LOAD( "s92_19.bin",    0x20000, 0x20000, CRC(beade53f) SHA1(277c397dc12752719ec6b47d2224750bd1c07f79) )
 ROM_END
 
-ROM_START( sf2khbd )
+ROM_START( sf2m13 )
 	ROM_REGION( CODE_SIZE, REGION_CPU1, 0 )      /* 68000 code */
-	ROM_LOAD16_BYTE( "u222.040",   0x000000, 0x80000, CRC(ec6f5cb3) SHA1(24b3fc88a08a721985b053120997090bc394bc8e) )
-	ROM_LOAD16_BYTE( "u196.040",   0x000001, 0x80000, CRC(0e9ac52b) SHA1(2c5faf7d8b598f2110f389aefa1a02e2281382ee) )
-	ROM_LOAD16_BYTE( "u221.010",   0x100000, 0x20000, CRC(8226c11c) SHA1(9588bd64e338901394805aca8a234f880674dc60) )
-	ROM_LOAD16_BYTE( "u195.010",   0x100001, 0x20000, CRC(924c6ce2) SHA1(676a912652bd75da5087f0c7eae047b7681a993c) )
+	ROM_LOAD16_BYTE( "222-040.13",   0x000000, 0x80000, CRC(ec6f5cb3) SHA1(24b3fc88a08a721985b053120997090bc394bc8e) )
+	ROM_LOAD16_BYTE( "196-040.13",   0x000001, 0x80000, CRC(0e9ac52b) SHA1(2c5faf7d8b598f2110f389aefa1a02e2281382ee) )
+	ROM_LOAD16_BYTE( "221-010.13",   0x100000, 0x20000, CRC(8226c11c) SHA1(9588bd64e338901394805aca8a234f880674dc60) )
+	ROM_LOAD16_BYTE( "195-010.13",   0x100001, 0x20000, CRC(924c6ce2) SHA1(676a912652bd75da5087f0c7eae047b7681a993c) )
 
 	ROM_REGION( 0x600000, REGION_GFX1, 0 )
 	ROMX_LOAD( "s92_01.bin",   0x000000, 0x80000, CRC(03b0d852) SHA1(f370f25c96ad2b94f8c53d6b7139100285a25bef) , ROM_GROUPWORD | ROM_SKIP(6) )
@@ -9546,6 +9546,22 @@ ROM_END
 
 #ifndef MESS
 
+static DRIVER_INIT( captcomb )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(REGION_CPU1);
+	mem8[0x4B8A] = 0x91;
+	mem8[0x4B8D] = 0x0;
+	mem8[0x4B8E] = 0x2D;
+	mem8[0x4B8F] = 0x8;
+	mem8[0x4F22] = 0x6D;
+	mem8[0x4F23] = 0x8;
+	mem8[0x4F24] = 0x6;
+	mem8[0x4F26] = 0x1B;
+	mem8[0x4F27] = 0x28;
+
+	DRIVER_INIT_CALL(cps1);
+}
+
 static DRIVER_INIT( forgottn )
 {
 	/* Forgotten Worlds has a NEC uPD4701AC on the B-board handling dial inputs from the CN-MOWS connector. */
@@ -9876,7 +9892,7 @@ static DRIVER_INIT( sf2m1 )
 	DRIVER_INIT_CALL(cps1);
 }
 
-static DRIVER_INIT( sf2khbd )
+static DRIVER_INIT( sf2m13 )
 {
 	UINT16 *rom = (UINT16 *)memory_region(machine, REGION_CPU1);
 
@@ -10360,20 +10376,6 @@ static READ16_HANDLER( sf2mdt_r )
 
 static DRIVER_INIT( sf2mdt )
 {
-	int i;
-	UINT32 gfx_size = memory_region_length( machine, REGION_GFX1 );
-	UINT8 *rom = memory_region( machine, REGION_GFX1 );
-	UINT8 tmp;
-
-	for( i = 0; i < gfx_size; i += 8 )
-	{
-		tmp = rom[i+1];
-		rom[i+1] = rom[i+4];
-		rom[i+4] = tmp;
-		tmp = rom[i+3];
-		rom[i+3] = rom[i+6];
-		rom[i+6] = tmp;
-	}
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01a, 0x70c01b, 0, 0, sf2mdt_r);
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01c, 0x70c01d, 0, 0, sf2mdt_r);
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01e, 0x70c01f, 0, 0, sf2mdt_r);
@@ -10450,7 +10452,7 @@ GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg
 GAME( 1991, captcomm, 0,        cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (World 911014)" , 0)				// "OTHER COUNTRY"
 GAME( 1991, captcomu, captcomm, cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (US 910928)", 0 )
 GAME( 1991, captcomj, captcomm, cps1_10MHz, captcomm, cps1,     ROT0,   "Capcom", "Captain Commando (Japan 911202)", 0 )
-GAME( 1991, captcomb, captcomm, cps1_10MHz, captcomm, cps1,     ROT0,   "bootleg","Captain Commando (bootleg)", GAME_NOT_WORKING )
+GAME( 1991, captcomb, captcomm, cps1_10MHz, captcomm, captcomb, ROT0,   "bootleg","Captain Commando (bootleg)", 0 )
 GAME( 1991, knights,  0,        cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" , 0)			// "ETC"
 GAME( 1991, knightsu, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)", 0 )
 GAME( 1991, knightsj, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", 0 )
@@ -10474,12 +10476,12 @@ GAME( 1992, sf2m5,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg
 GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long set 2, Chinese bootleg)", 0 )
 GAME( 1992, sf2m7,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7, bootleg)", 0 )
 GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8, bootleg)", GAME_NOT_WORKING )
-GAME( 1992, sf2khbd,  sf2ce,    cps1_12MHz, sf2j,     sf2khbd,  ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (Sunflower Bible, bootleg)", 0 )
+GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2j,     sf2m13,   ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (M13, bootleg)", 0 )
 GAME( 1992, sf2yyc,   sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC, bootleg)", 0 )
 GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long set 1, Chinese bootleg)", 0 )
 GAME( 1992, sf2mdt,   sf2ce,    sf2mdt,     sf2,      sf2mdt,   ROT0,   "bootleg","Street Fighter II' - Champion Edition (Magic Delta Turbo, bootleg)", GAME_NOT_WORKING|GAME_NO_SOUND ); // heavily modified, different sound & gfx hardware
-GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 1, Chinese bootleg)", 0 )
-GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Slay the Dragon set 2, Chinese bootleg)", 0 )
+GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Tu Long set 1, Chinese bootleg)", 0 )
+GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Tu Long set 2, Chinese bootleg)", 0 )
 GAME( 1992, varth,    0,        cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920714)" , 0)		// "ETC"    12MHz not verified but game slows down at 10MHz
 GAME( 1992, varthr1,  varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom", "Varth - Operation Thunderstorm (World 920612)" , 0)		// "ETC"
 GAME( 1992, varthu,   varth,    cps1_12MHz, varth,    cps1,     ROT270, "Capcom (Romstar license)", "Varth - Operation Thunderstorm (US 920612)", 0 )
@@ -10524,17 +10526,17 @@ GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchel
 GAME( 1990, cawingb,  cawing,   cawingb,    cawing,   cps1,     ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING )
 GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, cps1,     ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )					// Wed.26.10.1988 in the ROMS
 GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING )
-GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack)", GAME_NOT_WORKING )
+GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING )
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
-GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II (Holy Sword Three Kingdoms set 3)", GAME_UNEMULATED_PROTECTION )
-GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II (Three Holy Swords set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II (Three Holy Swords set 2)", GAME_IMPERFECT_SOUND )
-GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg","Sangokushi II (Three Sword Masters)", 0 )
-GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II (Legend of Three Kingdoms' Heroes set 1)", GAME_IMPERFECT_SOUND )
-GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II (Legend of Three Kingdoms' Heroes set 2)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 3, Chinese bootleg)", GAME_UNEMULATED_PROTECTION )
+GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg","Sangokushi II: San Jian Sheng (Chinese bootleg)", 0 )
+GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
 GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 1)" , 0)
 GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 2)", 0 )
 GAME( 1997, dinohb,   dino,     qsound,     dinoh,    dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 3)", 0 )
-GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg","The Punisher (Wild Wild West)", 0 )
+GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg","The Punisher: Biaofeng Zhanjing (Chinese bootleg)", 0 )
