@@ -9548,7 +9548,7 @@ ROM_END
 
 static DRIVER_INIT( captcomb )
 {
-	UINT8 *mem8 = (UINT8 *)memory_region(REGION_CPU1);
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, REGION_CPU1);
 	mem8[0x4B8A] = 0x91;
 	mem8[0x4B8D] = 0x0;
 	mem8[0x4B8E] = 0x2D;
