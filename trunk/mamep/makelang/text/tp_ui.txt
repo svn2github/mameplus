@@ -2778,3 +2778,11 @@ to the default settings:\n\n
 type a keyword
 
 
+# osd/winui/mameui.rc: 842
+Enable game debugger
+
+
+# osd/winui/mameui.rc: 853
+Coin lockout
+
+

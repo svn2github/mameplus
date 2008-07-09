@@ -2674,3 +2674,12 @@ requires exiting
 to the default settings:\n\n
 
 
+# osd/winui/mameui.rc: 842
+Enable game debugger
+启用游戏调试器
+
+# osd/winui/mameui.rc: 853
+Coin lockout
+投币锁定
+
+
