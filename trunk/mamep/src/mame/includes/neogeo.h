@@ -93,14 +93,6 @@ void mslug3_install_protection(running_machine *machine);
 void kof2000_install_protection(running_machine *machine);
 void install_kof98_protection(running_machine *machine);
 void install_pvc_protection(running_machine *machine);
-void sengoku3_AES_protection(running_machine *machine);
-void kof2000_AES_protection(running_machine *machine);
-void mslug4_AES_protection(running_machine *machine);
-void nitd_AES_protection(running_machine *machine);
-void zupapa_AES_protection(running_machine *machine);
-void rotd_AES_protection(running_machine *machine);
-void matrim_AES_protection(running_machine *machine);
-void mslug5_AES_protection(running_machine *machine);
 
 
 /*----------- defined in machine/neoboot.c -----------*/
