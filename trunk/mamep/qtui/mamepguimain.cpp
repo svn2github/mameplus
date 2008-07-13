@@ -5,6 +5,8 @@
 // global variables
 MainWindow *win;
 QSettings guiSettings("mamepgui.ini", QSettings::IniFormat);
+QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
+
 QString list_mode;
 
 void MainWindow::log(QString message, char logOrigin)
@@ -208,8 +210,12 @@ void MainWindow::init()
 	connect(actionDetails, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 
+	connect(&gamelist->auditor, SIGNAL(progressSwitched(int, QString)), gamelist, SLOT(switchProgress(int, QString)));
+	connect(&gamelist->auditor, SIGNAL(progressUpdated(int)), gamelist, SLOT(updateProgress(int)));
+	connect(&gamelist->auditor, SIGNAL(finished()), gamelist->mAuditor, SLOT(init()));
+
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
-	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
+//	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
 	for (int i = 1; i < optCtrlList.count(); i++)
 	{
@@ -229,7 +235,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_actionRefresh_activated()
 {
-	gamelist->auditThread.audit();
+	gamelist->auditor.audit();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -261,8 +267,16 @@ void MainWindow::initSettings()
 
 void MainWindow::loadLayout()
 {
-	restoreGeometry(guiSettings.value("window_geometry").toByteArray());
-	restoreState(guiSettings.value("window_state").toByteArray());
+	if (guiSettings.value("window_geometry").isValid())
+		restoreGeometry(guiSettings.value("window_geometry").toByteArray());
+	else
+		restoreGeometry(defSettings.value("window_geometry").toByteArray());
+
+	if (guiSettings.value("window_state").isValid())
+		restoreState(guiSettings.value("window_state").toByteArray());
+	else
+		restoreState(defSettings.value("window_state").toByteArray());
+	
 	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
 	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
@@ -421,8 +435,11 @@ int main(int argc, char *argv[])
 	QApplication qmc2App(argc, argv);
 
 	QTranslator appTranslator;
-//	appTranslator.load("lang/mamepgui_" + QLocale::system().name());
-//	appTranslator.load(":/lang/mamepgui_zh_CN");
+
+	QString local = guiSettings.value("locale").toString();
+	if (local.isEmpty())
+		local = QLocale::system().name();
+	appTranslator.load(":/lang/mamepgui_" + local);
 
 	qmc2App.installTranslator(&appTranslator);
 

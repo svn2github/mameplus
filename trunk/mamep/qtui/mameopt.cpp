@@ -853,7 +853,7 @@ void OptionUtils::loadDefault(QString text)
 	QTextStream in(&text);
 	in.setCodec("UTF-8");
 
-	QString header = "Error";
+	QString header = "ERROR_MAGIC";
 
 	do
 	{
@@ -885,7 +885,7 @@ void OptionUtils::loadDefault(QString text)
 					header = "06_Misc_99_" + line;
 			}
 		}
-		else
+		else// if (header != "ERROR_MAGIC")
 		{
 			line.replace(QRegExp("(\\w+)\\s+.*"), "\\1");
 			if (line.size() > 0)
@@ -1011,7 +1011,7 @@ void OptionUtils::save(int optInfoType, const QString &iniFileName)
 		in.setCodec("UTF-8");
 		outBuf.setCodec("UTF-8");
 		out.setCodec("UTF-8");
-		bool isHeader, isChanged;
+		bool isHeader = false, isChanged = false;
 		QString optName;
 
 		do
@@ -1323,7 +1323,6 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optType /*= -1*/)
 
 void OptionUtils::setupModelData(QString filter, int optType)
 {
-	QStandardItem *item, *item2;
 	QStandardItemModel *optModel0, *optModel;
 	QTreeView *optView = optInfos[optType]->optView;
 	bool guiHasAdded = false;

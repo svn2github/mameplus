@@ -23,6 +23,9 @@ public:
 	void tranaparentBg(QWidget *);
 	QString getMameVersion();
 
+	bool isAuditFolder(QString);
+	bool isConsoleFolder();
+
 signals:
 	void icoUpdated(QString);
 

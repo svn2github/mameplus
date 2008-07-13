@@ -4,11 +4,11 @@ MameGame *mamegame;
 QString currentGame, currentFolder;
 Gamelist *gamelist = NULL;
 QStringList consoleGamesL;
-
 TreeModel *gameListModel;
-static GameListSortFilterProxyModel *gameListPModel;
-static QTimer *searchTimer = NULL;
-static GamelistDelegate gamelistDelegate(0);
+GameListSortFilterProxyModel *gameListPModel;
+
+QTimer *searchTimer = NULL;
+GamelistDelegate gamelistDelegate(0);
 
 enum
 {
@@ -188,177 +188,6 @@ private:
 	QString currentDevice;
 	bool metMameTag;
 };
-
-void AuditROMThread::audit()
-{
-	if (!isRunning())
-	{
-		// disable ctrl updating before deleting its model
-		win->lvGameList->hide();
-		win->layMainView->removeWidget(win->lvGameList);
-		win->tvGameList->hide();
-		win->layMainView->removeWidget(win->tvGameList);
-		win->treeFolders->setEnabled(false);
-
-		if (gameListModel)
-		{
-			delete gameListModel;
-			gameListModel = NULL;
-		}
-
-		if (gameListPModel)
-		{
-			delete gameListPModel;
-			gameListPModel = NULL;
-		}
-
-		//must clear console list in the main thread
-		foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
-		{
-			GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
-			if (gameInfo->isExtRom)
-			{
-//				win->log(QString("delete: %1").arg(gameName));
-				mamegame->gamenameGameInfoMap.remove(gameName);
-				delete gameInfo;
-			}
-		}
-
-		start(LowPriority);
-	}
-}
-
-void AuditROMThread::run()
-{
-	QStringList dirpaths = mameOpts["rompath"]->currvalue.split(";");
-
-	GameInfo *gameinfo, *gameinfo2;
-	RomInfo *rominfo;
-
-	foreach (QString dirpath, dirpaths)
-	{
-		QDir dir(dirpath);
-
-		QStringList nameFilter;
-		nameFilter << "*.zip";
-		
-		QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-
-		emit progressSwitched(romFiles.count(), "Auditing " + dirpath);
-		win->log(QString("auditing %1, %2").arg(dirpath).arg(romFiles.count()));
-
-		//iterate romfiles
-		for (int i = 0; i < romFiles.count(); i++)
-		{
-			//update progressbar
-			if ( i % 100 == 0 )
-				emit progressUpdated(i);
-
-			QString gamename = romFiles[i].toLower().remove(".zip");
-
-			if (mamegame->gamenameGameInfoMap.contains(gamename))
-			{
-				QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
-
-				if(!zip.open(QuaZip::mdUnzip))
-					continue;
-
-				QuaZipFileInfo info;
-				QuaZipFile zipFile(&zip);
-				gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-				//iterate all files in the zip
-				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
-				{
-					if(!zip.getCurrentFileInfo(&info))
-						continue;
-
-					quint32 crc = info.crc;
-					// file crc recognized
-					if (!gameinfo)
-						win->log(QString("err: %1").arg(gamename));
-					if (gameinfo->crcRomInfoMap.contains(crc))
-						gameinfo->crcRomInfoMap[crc]->available = true; 
-					//check rom for clones
-					else
-					{
-						foreach (QString clonename, gameinfo->clones)
-						{
-							gameinfo2 = mamegame->gamenameGameInfoMap[clonename];
-							if (gameinfo2->crcRomInfoMap.contains(crc))
-								gameinfo2->crcRomInfoMap[crc]->available = true; 
-						}
-					}
-				}
-			}
-		}
-	}
-
-	win->log(QString("audit 1.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
-
-	//see if any rom of a game is not available
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-		//fixme: skip auditing for consoles
-		if (gameinfo->isExtRom)
-			continue;
-
-		gameinfo->available = 1;
-
-		foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
-		{
-			rominfo = gameinfo->crcRomInfoMap[crc];
-			if (!rominfo->available)
-			{
-				if (rominfo->status == "nodump")
-					continue;
-
-				//check parent
-				if (!gameinfo->romof.isEmpty())
-				{
-					gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo->romof];
-					if (gameinfo2->crcRomInfoMap.contains(crc) && gameinfo2->crcRomInfoMap[crc]->available)
-						continue;
-					else
-						emit logUpdated(LOG_QMC2, gameinfo->romof + "/" + rominfo->name + " not found");
-
-					//check bios
-					if (!gameinfo2->romof.isEmpty())
-					{
-						gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo2->romof];
-						if (gameinfo2->crcRomInfoMap.contains(crc) && gameinfo2->crcRomInfoMap[crc]->available)
-							continue;
-						else
-							emit logUpdated(LOG_QMC2, gameinfo2->romof + "/" + rominfo->name + " not found");
-					}
-				}
-				//failed audit
-				emit logUpdated(LOG_QMC2, gamename + "/" + rominfo->name + " failed");
-
-				gameinfo->available = 0;
-				break;
-			}
-		}
-	}
-
-	win->log("audit arc finished");
-
-	foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
-	{
-		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
-		if (!gameInfo->nameDeviceInfoMap.isEmpty())
-			gamelist->loadConsole(gameName);
-	}
-	win->log("audit con finished");
-
-	emit progressSwitched(-1);
-}
-
-AuditROMThread::~AuditROMThread()
-{
-	wait();
-}
 
 /*
 LoadIconThread::LoadIconThread(QObject *parent)
@@ -735,7 +564,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		if (gameInfo->icondata.isNull())
 		{
 			gamelist->iconThread.iconQueue.setSize(win->tvGameList->viewport()->height() / 17 + 2);
-			gamelist->iconThread.iconQueue.setSize(64);
+//			gamelist->iconThread.iconQueue.setSize(64);
 			gamelist->iconThread.iconQueue.enqueue(gameName);
 			gamelist->iconThread.load();
 			icondata = utils->deficondata;
@@ -1269,13 +1098,7 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 Gamelist::Gamelist(QObject *parent)
 : QObject(parent)
 {
-//	win->log("DEBUG: Gamelist::Gamelist()");
-
 	inited = false;
-
-	connect(&auditThread, SIGNAL(progressSwitched(int, QString)), this, SLOT(switchProgress(int, QString)));
-	connect(&auditThread, SIGNAL(progressUpdated(int)), this, SLOT(updateProgress(int)));
-	connect(&auditThread, SIGNAL(finished()), this, SLOT(setupAudit()));
 
 	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
 	connect(&selectThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
@@ -1283,6 +1106,8 @@ Gamelist::Gamelist(QObject *parent)
 	if (!searchTimer)
 		searchTimer = new QTimer(this);
 	connect(searchTimer, SIGNAL(timeout()), this, SLOT(filterRegExpChanged()));
+
+	mAuditor = new MergedRomAuditor(parent);
 
 	numTotalGames = -1;
 	loadProc = NULL;
@@ -1437,32 +1262,6 @@ void Gamelist::setupIcon(QString gameName)
 //	win->log(QString("setupico %1 %2").arg(gameName).arg(gameInfo->icondata.isNull()));
 }
 
-void Gamelist::setupAudit()
-{
-init(true);
-/*
-	GameInfo *gameinfo;
-	foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
-	{
-		gameinfo = mamegame->gamenameGameInfoMap[gamename];
-
-		//fixme: skip auditing for consoles
-		if (gameinfo->isExtRom)
-			continue;
-
-		gameListModel->setData(gameListModel->index(2, gameinfo->pModItem), 
-			gameinfo->available, Qt::DisplayRole);
-	}
-
-	//refresh current list
-	filterRegExpChanged2(win->treeFolders->currentItem());
-
-win->log(QString("xxx %1").arg(mamegame->gamenameGameInfoMap.count()));
-*/
-//fixme0610
-//	mamegame->s11n();
-}
-
 void Gamelist::setupSnap(int snapType)
 {
 	switch (snapType)
@@ -1612,7 +1411,6 @@ void Gamelist::init(bool toggleState)
 			// misc win init
 			win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
 			win->actionDefaultOptions->setEnabled(true);
-			win->actionRefresh->setEnabled(true);
 
 			connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
 			connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
@@ -1629,7 +1427,11 @@ void Gamelist::init(bool toggleState)
 				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
 		
 		// restore view column state
-		win->tvGameList->header()->restoreState(guiSettings.value("column_state").toByteArray());
+		if (guiSettings.value("column_state").isValid())
+			win->tvGameList->header()->restoreState(guiSettings.value("column_state").toByteArray());
+		else
+			win->tvGameList->header()->restoreState(defSettings.value("column_state").toByteArray());
+		
 		win->log("sorting");
 		
 		win->tvGameList->setSortingEnabled(true);
@@ -1653,6 +1455,7 @@ void Gamelist::init(bool toggleState)
 			win->tvGameList->show();
 
 		win->treeFolders->setEnabled(true);
+		win->actionRefresh->setEnabled(true);
 
 		win->log(QString("inited.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 	}
@@ -1672,46 +1475,6 @@ void Gamelist::init(bool toggleState)
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
-}
-
-void Gamelist::loadConsole(QString consoleName)
-{
-	GameInfo *gameInfo;
-
-	// clear list
-
-	QString _dirpath = mameOpts[consoleName + "_extra_software"]->globalvalue;
-	QDir dir(_dirpath);
-	if (_dirpath.isEmpty() || !dir.exists())
-		return;
-	QString dirpath = utils->getPath(_dirpath);
-
-	gameInfo = mamegame->gamenameGameInfoMap[consoleName];
-	DeviceInfo *deviceinfo = gameInfo->nameDeviceInfoMap["cartridge"];
-	QString sourcefile = gameInfo->sourcefile;
-
-	QStringList nameFilter;
-	foreach (QString ext, deviceinfo->extension)
-		nameFilter << "*." + ext;
-	nameFilter << "*.zip";
-
-	// iterate all files in the path
-	QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-	for (int i = 0; i < files.count(); i++)
-	{
-		QString gameName = files[i];
-		QFileInfo fi(files[i]);
-		gameInfo = new GameInfo(mamegame);
-		gameInfo->description = fi.completeBaseName();
-		gameInfo->isBios = false;
-		gameInfo->isExtRom = true;
-		gameInfo->romof = consoleName;
-		gameInfo->sourcefile = sourcefile;
-		gameInfo->available = 1;
-		mamegame->gamenameGameInfoMap[dirpath + gameName] = gameInfo;
-	}
-
-//	win->poplog(QString("%1, %2").arg(consoleName).arg(_dirpath));
 }
 
 void Gamelist::loadListXmlStarted()
@@ -1788,6 +1551,44 @@ void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitSta
 	win->log("end of gamelist->loadDefFin()");
 }
 
+// extract a rom from the merged file
+void Gamelist::extractMerged(QString mergedFileName, QString fileName)
+{
+	QString command = "bin/7z";
+	QStringList args;
+	args << "e" << "-y" << mergedFileName << fileName <<"-o" + QDir::tempPath();
+	currentTempROM = QDir::tempPath() + "/" + fileName;
+
+	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractMergedFinished(int, QProcess::ExitStatus)));
+}
+
+// call the emulator after the rom has been extracted
+void Gamelist::extractMergedFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	runMame(true);
+}
+
+// delete the extracted rom
+void Gamelist::runMergedFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+	QProcess *proc = (QProcess *)sender();
+
+	procMan->procMap.remove(proc);
+	procMan->procCount--;
+	loadProc = NULL;
+
+	QFile file(currentTempROM);
+	file.remove();
+	currentTempROM.clear();
+}
+
 void Gamelist::parse()
 {
 	win->log("DEBUG: Gamelist::prep parse()");
@@ -1836,7 +1637,6 @@ void Gamelist::filterRegExpChanged()
 	if (text.count() == 1 && text.at(0).unicode() < 0x3000 /* CJK symbols start */)
 		return;
 
-	QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
 	text.replace(utils->spaceRegex, "*");
 
 	//fixme: doesnt use filterregexp
@@ -1860,6 +1660,8 @@ void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *p
 	if (win->treeFolders->currentItem()->parent())
 		currentFolder += win->treeFolders->currentItem()->parent()->text(0);
 	currentFolder += "/" + win->treeFolders->currentItem()->text(0);
+
+	win->actionRefresh->setText("Refresh " + currentFolder);
 
 	if (!current->parent())
 	{
@@ -2045,19 +1847,43 @@ void Gamelist::initFolders()
 	win->treeFolders->setCurrentItem(rootItem->child(0));
 }
 
-void Gamelist::runMame()
+void Gamelist::runMame(bool runMerged)
 {
-	// doesnt support multi mame session for now
-//	if (procMan->procCount > 0)
-//		return;
+	//block multi mame session for now
+	//if (procMan->procCount > 0)
+	//	return;
+
 	QString command = mameOpts["mame_binary"]->globalvalue;
 	QStringList args;
 
 	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[currentGame];
+
+	// run console roms, add necessary params
 	if (gameInfo->isExtRom)
 	{
+		// console system
 		args << gameInfo->romof;
+		// console device
 		args << "-cart";
+
+		QStringList paths = currentGame.split(".7z/");
+		// run extracted rom
+		if (runMerged)
+		{
+			// use temp rom name instead
+			args << currentTempROM;
+			loadProc = procMan->process(procMan->start(command, args, FALSE));
+			// delete the extracted rom
+			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
+			return;
+		}
+
+		// extract merged rom
+		if (currentGame.contains(".7z/"))
+		{
+			extractMerged(paths[0] + ".7z", paths[1]);
+			return;
+		}
 	}
 
 	args << currentGame;

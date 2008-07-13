@@ -8,10 +8,15 @@ QTreeView 192104] scrollTo(PositionAtCenter) can scroll beyond the item if item 
 [todo]
 
 BETA
+1 fix official mame compatible, still crash on opt saving
 bug: few select model
+bug: if mame.ini is 0, crash
+bug: crash after refresh immediately click folder
+bug: crash on F5 when iconthread is active
+bug: dup entries on init
+bug: some icons doesnt load
 1 game counter in statusbar
-1 load default layout from preset ini
-1 preserve audit result when mamever changes
+1 preserve audit result
 
 1 could be cool to have behind the XX% - "name of the rom beeing audited"
 1 add/remove items from game list model
@@ -21,6 +26,9 @@ reduce restore sele //win->log("restore callback: " + gameName);
 1 bios icons in folder list
 1 ips doesnt inherit
 
+display region/hack info of console rom
+goodmerge database xmdb
+console snapshot
 * bios support: select bios opt
 1 path chooser dialog +0.1
 1 about page, some link to the test board

@@ -186,6 +186,33 @@ void Utils::getMameVersionFinished(int exitCode, QProcess::ExitStatus exitStatus
 	win->log(QString("mamever: %1").arg(mameVersion));
 }
 
+bool Utils::isAuditFolder(QString consoleName)
+{
+	QStringList paths = currentFolder.split("/");
+	if (paths.size() == 2)
+	{
+		if(paths[1] == consoleName)
+		{
+		win->log("current audit: " + consoleName);
+		return true;
+		}
+	}
+
+	return false;		
+}
+
+bool Utils::isConsoleFolder()
+{
+	QStringList paths = currentFolder.split("/");
+	if (paths.size() == 2 && mamegame->gamenameGameInfoMap.contains(paths[1]))
+	{
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[paths[1]];
+		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+			return true;
+	}
+
+	return false;
+}
 
 
 MyQueue::MyQueue(QObject *parent)

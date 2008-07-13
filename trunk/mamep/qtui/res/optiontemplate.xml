@@ -49,39 +49,39 @@
 	<option name="hiscore_file" type="file" />
 	
 	<option name="state" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
-	<option name="autosave" type="bool" />
+	<option name="autosave" guiname="Auto restore and save" type="bool" />
 	<option name="playback" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="record" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="mngwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="aviwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="wavwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 
-	<option name="autoframeskip" type="bool" />
-	<option name="frameskip" type="int" min="0" max="10" />
+	<option name="autoframeskip" guiname="Auto frame skipping" type="bool" />
+	<option name="frameskip" guiname="Frame skipping" type="int" min="0" max="10" />
 	<option name="seconds_to_run" type="int" />
 	<option name="throttle" type="bool" />
-	<option name="sleep" type="bool" />
-	<option name="speed" type="float" min="0.01" max="100" />
-	<option name="refreshspeed" type="bool" />
+	<option name="sleep" guiname="Sleep when possible" type="bool" />
+	<option name="speed" guiname="Gameplay speed" type="float" min="0.01" max="100" />
+	<option name="refreshspeed" guiname="Auto refresh speed" type="bool" />
 	
 	<option name="rotate" type="bool" />
-	<option name="ror" type="bool" />
-	<option name="rol" type="bool" />
-	<option name="autoror" type="bool" />
-	<option name="autorol" type="bool" />
-	<option name="flipx" type="bool" />
-	<option name="flipy" type="bool" />
+	<option name="ror" guiname="Rotate clockwise" type="bool" />
+	<option name="rol" guiname="Rotate anti-clockwise" type="bool" />
+	<option name="autoror" guiname="Auto rotate clockwise" type="bool" />
+	<option name="autorol" guiname="Auto rotate anti-clockwise" type="bool" />
+	<option name="flipx" guiname="Flip screen left-right" type="bool" />
+	<option name="flipy" guiname="Flip screen upside-down" type="bool" />
 
-	<option name="artwork_crop" type="bool" />
+	<option name="artwork_crop" guiname="Crop artwork" type="bool" />
 	<option name="use_backdrops" type="bool" />
 	<option name="use_overlays" type="bool" />
 	<option name="use_bezels" type="bool" />
 
-	<option name="brightness" type="float" min="0.1" max="2.0" />
-	<option name="contrast" type="float" min="0.1" max="2.0" />
-	<option name="gamma" type="float" min="0.1" max="3.0" />
+	<option name="brightness" guiname="Brightness Correction" type="float" min="0.1" max="2.0" />
+	<option name="contrast" guiname="Contrast Correction" type="float" min="0.1" max="2.0" />
+	<option name="gamma" guiname="Gamma Correction" type="float" min="0.1" max="3.0" />
 	<option name="pause_brightness" type="float" min="0.0" max="1.0" />
-	<option name="scale_effect" type="string" >
+	<option name="scale_effect" guiname="Image Enhancement" type="string" >
 		<value>none</value>
 		<value>scale2x</value>
 		<value>scale2x3</value>
@@ -106,29 +106,29 @@
 		<value>lq3x</value>
 	</option>
 	
-	<option name="antialias" type="bool" />
-	<option name="beam" type="float" />
+	<option name="antialias" guiname="Draw antialiased vectors" type="bool" />
+	<option name="beam" guiname="Beam width" type="float" />
 	<option name="flicker" type="float" min="0" max="1.0" />
 	
-	<option name="sound" type="bool" />
-	<option name="samplerate" type="string">
+	<option name="sound" guiname="Enable sound and sound CPUs" type="bool" />
+	<option name="samplerate" guiname="Sample rate" type="string">
 		<value>11025</value>
 		<value>22050</value>
 		<value>44100</value>
 		<value>48000</value>
 	</option>
-	<option name="samples" type="bool" />
-	<option name="volume" type="int" min="-32" max="0" />
-	<option name="volume_adjust" type="bool" />
+	<option name="samples" guiname="Use samples" type="bool" />
+	<option name="volume" guiname="Volume attenuation" type="int" min="-32" max="0" />
+	<option name="volume_adjust" guiname="Use volume auto adjust" type="bool" />
 	
-	<option name="ctrlr" type="string" />
-	<option name="mouse" type="bool" />
-	<option name="joystick" type="bool" />
-	<option name="lightgun" type="bool" />
-	<option name="multikeyboard" type="bool" />
-	<option name="multimouse" type="bool" />
-	<option name="steadykey" type="bool" />
-	<option name="offscreen_reload" type="bool" />
+	<option name="ctrlr" guiname="Default input layout" type="string" />
+	<option name="mouse" guiname="Enable mouse input" type="bool" />
+	<option name="joystick" guiname="Enable joystick input" type="bool" />
+	<option name="lightgun" guiname="Enable lightgun input" type="bool" />
+	<option name="multikeyboard" guiname="Enable multiple keyboards" type="bool" />
+	<option name="multimouse" guiname="Enable multiple mice" type="bool" />
+	<option name="steadykey" guiname="Enable steadykey support" type="bool" />
+	<option name="offscreen_reload" guiname="Offscreen shots reload" type="bool" />
 	<option name="joystick_map" type="string" />
 	<option name="joystick_deadzone" type="float" min="0" max="1.0" />
 	<option name="joystick_saturation" type="float" min="0" max="1.0" />
@@ -179,11 +179,11 @@
 	<option name="update_in_pause" type="bool" />
 
 	<option name="bios" type="string" globalvisible="0" srcvisible="0" />
-	<option name="cheat" type="bool" />
-	<option name="skip_gameinfo" type="bool" />
+	<option name="cheat" guiname="Enable game cheats" type="bool" />
+	<option name="skip_gameinfo" guiname="Skip game info" type="bool" />
 	<option name="ips" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" />
-	<option name="confirm_quit" type="bool" />
-	<option name="auto_pause_playback" type="bool" />
+	<option name="confirm_quit" guiname="Quit game with confirmation" type="bool" />
+	<option name="auto_pause_playback" guiname="Auto pause when playback is finished" type="bool" />
 	<option name="m68k_core" type="string">
 		<value>c</value>
 		<value>drc</value>
@@ -213,28 +213,28 @@
 	<option name="oslog" type="bool" />
 	<option name="watchdog" type="bool" />
 	
-	<option name="priority" type="bool" min="-15" max="1" />
-	<option name="multithreading" type="bool" />
+	<option name="priority" guiname="Thread priority" type="bool" min="-15" max="1" />
+	<option name="multithreading" guiname="Enable multi-threading" type="bool" />
 	
-	<option name="video" type="string">
+	<option name="video" guiname="Video output method" type="string">
 		<value>none</value>
 		<value guivalue="GDI">gdi</value>
 		<value guivalue="DirectDraw">ddraw</value>
 		<value guivalue="Direct3D">d3d</value>
 	</option>
-	<option name="numscreens" type="int" min="1" max="4" />
-	<option name="window" type="bool" />
-	<option name="maximize" type="bool" />
-	<option name="keepaspect" type="bool" />
-	<option name="prescale" type="int" />
-	<option name="effect" type="string" />
-	<option name="waitvsync" type="bool" />
-	<option name="syncrefresh" type="bool" />
+	<option name="numscreens" guiname="Number of screens to create" type="int" min="1" max="4" />
+	<option name="window" guiname="Run in a window" type="bool" />
+	<option name="maximize" guiname="Start out maximized" type="bool" />
+	<option name="keepaspect" guiname="Enforce aspect ratio" type="bool" />
+	<option name="prescale" guiname="Scale screen" type="int" min="1" max="10" />
+	<option name="effect" guiname="Visual Effects" type="string" />
+	<option name="waitvsync" guiname="Wait for vertical sync" type="bool" />
+	<option name="syncrefresh" guiname="Sync to monitor refresh" type="bool" />
 	
-	<option name="hwstretch" type="bool" />
+	<option name="hwstretch" guiname="Hardware stretching" type="bool" />
 	
-	<option name="d3dversion" type="int" min="8" max="9" />
-	<option name="filter" type="bool" />
+	<option name="d3dversion" guiname="D3D version" type="int" min="8" max="9" />
+	<option name="filter" guiname="Bilinear filtering" type="bool" />
 	
 	<option name="screen" type="string">
 		<value>auto</value>
@@ -312,8 +312,8 @@
 		<value>cocktail</value>
 	</option>
 	
-	<option name="triplebuffer" type="bool" />
-	<option name="switchres" type="bool" />
+	<option name="triplebuffer" guiname="Triple buffering" type="bool" />
+	<option name="switchres" guiname="Switch resolutions to fit" type="bool" />
 	<option name="full_screen_brightness" type="float" min="0.1" max="2.0" />
 	<option name="full_screen_contrast" type="float" min="0.1" max="2.0" />
 	<option name="full_screen_gamma" type="float" min="0.1" max="3.0" />

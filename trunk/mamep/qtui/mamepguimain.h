@@ -13,11 +13,12 @@ Q_IMPORT_PLUGIN(qico)
 
 #include "ui_mamepguimain.h"
 
-#include "options.h"
-#include "utils.h"
-#include "procmgr.h"
+#include "audit.h"
 #include "gamelist.h"
 #include "mameopt.h"
+#include "options.h"
+#include "procmgr.h"
+#include "utils.h"
 
 class Screenshot : public QDockWidget
 {
@@ -111,7 +112,7 @@ extern Options *dlgOptions;
 extern QList<QListWidget *> optCtrlList;
 
 extern QHash<QString, MameOption*> mameOpts;
-extern QSettings guiSettings;
+extern QSettings guiSettings, defSettings;
 extern QByteArray option_column_state;
 
 extern QString list_mode;

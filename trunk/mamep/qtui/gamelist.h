@@ -2,27 +2,8 @@
 #define _GAMELIST_H_
 
 #include <QtGui>
+#include "audit.h"
 #include "utils.h"
-
-class AuditROMThread : public QThread
-{
-	Q_OBJECT
-
-public:
-	~AuditROMThread();
-	void audit();
-
-signals:
-	void progressSwitched(int max, QString title = "");
-	void progressUpdated(int progress);
-	void logUpdated(char, QString);
-
-protected:
-	void run();
-
-private:
-	QMutex mutex;
-};
 
 class LoadIconThread : public QThread
 {
@@ -164,9 +145,12 @@ public:
 
 	QStringList folderList;
 
-	AuditROMThread auditThread;
+	// interactive threads used by the game list
+	RomAuditor auditor;
 	LoadIconThread iconThread;
 	UpdateSelectionThread selectThread;
+
+	MergedRomAuditor *mAuditor;
 
 	Gamelist(QObject *parent = 0);
 	~Gamelist();
@@ -174,17 +158,19 @@ public:
 public slots:
 	void init(bool);
 	void loadDefaultIni();
-	void loadConsole(QString);
 	void initFolders();
 
-	void runMame();
+	void runMame(bool = false);
 
-	// process management
+	// external process management
 	void loadListXmlStarted();
 	void loadListXmlReadyReadStandardOutput();
 	void loadListXmlFinished(int, QProcess::ExitStatus);
 	void loadDefaultIniReadyReadStandardOutput();
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
+	void extractMerged(QString, QString);
+	void extractMergedFinished(int, QProcess::ExitStatus);
+	void runMergedFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 	// internal methods
 	void parse();
@@ -193,7 +179,6 @@ public slots:
 	QString getViewString(const QModelIndex &index, int column) const;
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
 	void setupIcon(QString);
-	void setupAudit();
 	void setupSnap(int);
 
 	void filterTimer();
@@ -202,6 +187,8 @@ public slots:
 
 private:
 	bool inited;
+	QString currentTempROM;
+
 	void restoreSelection();
 };
 
