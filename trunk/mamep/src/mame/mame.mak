@@ -321,13 +321,12 @@ SOUNDS += AICA
 #-------------------------------------------------
 
 DRVLIBS = \
-	$(MAMEOBJ)/mamedriv.o
+	$(MAMEOBJ)/mamedriv.o \
 
 ifneq ($(USE_DRIVER_SWITCH),)
 DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
             $(MAMEOBJ)/mamehbdriv.o \
-            $(MAMEOBJ)/mamedecrypteddriv.o \
-            $(MAMEOBJ)/mameconsoledriv.o
+            $(MAMEOBJ)/mamedecrypteddriv.o
 endif
 
 DRVLIBS += \
@@ -417,8 +416,6 @@ DRVLIBS += \
 	$(MAMEOBJ)/vsystem.a \
 	$(MAMEOBJ)/yunsung.a \
 	$(MAMEOBJ)/zaccaria.a \
-	$(MESSOBJ)/bandai.a \
-	$(MESSOBJ)/nec.a \
 	$(MAMEOBJ)/misc.a \
 	$(MAMEOBJ)/shared.a \
 
@@ -437,15 +434,6 @@ $(MAMEOBJ)/shared.a: \
 	$(MACHINE)/segacrpt.o \
 	$(MACHINE)/ticket.o \
 	$(VIDEO)/avgdvg.o \
-	$(MESS_FORMATS)/ioprocs.o	\
-	$(MESS_FORMATS)/flopimg.o	\
-	$(MESS_FORMATS)/cassimg.o	\
-	$(MESS_DEVICES)/mflopimg.o	\
-	$(MESS_DEVICES)/cassette.o	\
-	$(MESS_DEVICES)/cartslot.o	\
-	$(MESS_DEVICES)/flopdrv.o	\
-	$(MESS_DEVICES)/chd_cd.o	\
-	$(MESS_FORMATS)/wavfile.o
 
 
 
@@ -588,9 +576,8 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cbasebal.o $(VIDEO)/cbasebal.o \
 	$(DRIVERS)/commando.o $(VIDEO)/commando.o \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
-	$(MESS_DRIVERS)/cpschngr.o \
 	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o\
+	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
 	$(DRIVERS)/egghunt.o \
 	$(DRIVERS)/fcrash.o \
 	$(DRIVERS)/gng.o $(VIDEO)/gng.o \
@@ -1072,19 +1059,9 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/playch10.o $(MACHINE)/playch10.o $(VIDEO)/playch10.o \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
-	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o\
+	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(VIDEO)/ppu2c0x.o \
-	$(MESS_AUDIO)/gb.o		\
-	$(MESS_VIDEO)/gb.o		\
-	$(MESS_MACHINE)/gb.o		\
-	$(MESS_DRIVERS)/gb.o		\
-	$(MESS_MACHINE)/nes_mmc.o	\
-	$(MESS_VIDEO)/nes.o		\
-	$(MESS_MACHINE)/nes.o		\
-	$(MESS_DRIVERS)/nes.o		\
-	$(MESS_DRIVERS)/snes.o	 	\
-	$(MESS_DRIVERS)/gba.o \
 
 $(MAMEOBJ)/nix.a: \
 	$(DRIVERS)/fitfight.o $(VIDEO)/fitfight.o \
@@ -1184,10 +1161,6 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/gpworld.o \
 	$(DRIVERS)/hshavoc.o \
 	$(DRIVERS)/kopunch.o $(VIDEO)/kopunch.o \
-	$(MESS_DRIVERS)/genesis.o	\
-	$(MESS_VIDEO)/smsvdp.o	\
-	$(MESS_MACHINE)/sms.o		\
-	$(MESS_DRIVERS)/sms.o		\
 	$(DRIVERS)/megadriv.o \
 	$(DRIVERS)/megaplay.o \
 	$(DRIVERS)/megatech.o \
@@ -1530,16 +1503,6 @@ $(MAMEOBJ)/zaccaria.a: \
 	$(DRIVERS)/zac2650.o $(VIDEO)/zac2650.o \
 	$(DRIVERS)/zaccaria.o $(VIDEO)/zaccaria.o \
 
-$(MESSOBJ)/nec.a:	   \
-	$(MESS_MACHINE)/pce.o	 \
-	$(MESS_DRIVERS)/pce.o
-
-$(MESSOBJ)/bandai.a:     \
-	$(MESS_DRIVERS)/wswan.o   \
-	$(MESS_MACHINE)/wswan.o   \
-	$(MESS_VIDEO)/wswan.o   \
-	$(MESS_AUDIO)/wswan.o
-
 
 
 #-------------------------------------------------
@@ -1803,7 +1766,6 @@ $(DRIVERS)/warpwarp.o:	$(LAYOUT)/geebee.lh \
 
 $(DRIVERS)/zac2650.o:	$(LAYOUT)/tinv2650.lh
 
-$(MESS_DRIVERS)/gb.o:	$(MESS_LAYOUT)/gb.lh
 
 
 #-------------------------------------------------

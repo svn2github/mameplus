@@ -30,6 +30,10 @@ static int atari = 0;
 #define ATARI_600XL 3
 #define ATARI_800XL 4
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 #ifdef MESS
 static int a800_cart_loaded = 0;
 static int a800_cart_is_16k = 0;

@@ -601,6 +601,7 @@ endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
+include $(SRC)/mess/mess.mak
 include $(SRC)/lib/lib.mak
 include $(SRC)/build/build.mak
 -include $(SRC)/osd/$(CROSS_BUILD_OSD)/build.mak

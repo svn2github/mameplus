@@ -1,21 +1,19 @@
 /******************************************************************************
 
-    mamedriv.c
+  messdriv.c
 
-    Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
-    Visit http://mamedev.org for licensing and usage restrictions.
+  The list of all available drivers. Drivers have to be included here to be
+  recognized by the executable.
 
-    The list of all available drivers. Drivers have to be included here to be
-    recognized by the executable.
-
-    To save some typing, we use a hack here. This file is recursively #included
-    twice, with different definitions of the DRIVER() macro. The first one
-    declares external references to the drivers; the second one builds an array
-    storing all the drivers.
+  To save some typing, we use a hack here. This file is recursively #included
+  twice, with different definitions of the DRIVER() macro. The first one
+  declares external references to the drivers; the second one builds an array
+  storing all the drivers.
 
 ******************************************************************************/
 
 #include "driver.h"
+
 
 #ifndef DRIVER_RECURSIVE
 
@@ -23,14 +21,14 @@
 
 /* step 1: declare all external references */
 #define DRIVER(NAME) extern game_driver driver_##NAME;
-#include "mameconsoledriv.c"
+#include "messdriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
-const game_driver * const consoledrivers[] =
+const game_driver *const consoledrivers[] =
 {
-#include "mameconsoledriv.c"
+#include "messdriv.c"
 	0	/* end of array */
 };
 
@@ -39,15 +37,24 @@ const game_driver * const consoledrivers[] =
 /****************CONSOLES****************************************************/
 
 #ifdef MAMEMESS
+
+	/* ATARI */
+	DRIVER( a2600 )		/* Atari 2600										*/
+	DRIVER( a2600p )	/* Atari 2600 PAL									*/
+	DRIVER( a5200 )		/* Atari 5200										*/
+	DRIVER( a5200a )	/* Atari 5200 alt									*/
+	DRIVER( a7800 )		/* Atari 7800 NTSC									*/
+	DRIVER( a7800p )	/* Atari 7800 PAL									*/
+
 	/* NINTENDO */
 	DRIVER( nes )		/* Nintendo Entertainment System					*/
 	DRIVER( nespal )	/* Nintendo Entertainment System					*/
 	DRIVER( famicom )
 	DRIVER( famitwin )	/* Sharp Famicom Twin System						*/
-	DRIVER( gameboy )	/* Nintendo GameBoy Handheld						*/
-	DRIVER( supergb )	/* Nintendo Super GameBoy SNES Cartridge			*/
-	DRIVER( gbpocket )	/* Nintendo GameBoy Pocket Handheld					*/
-	DRIVER( gbcolor )	/* Nintendo GameBoy Color Handheld					*/
+	DRIVER( gameboy )	/* Nintendo Game Boy Handheld						*/
+	DRIVER( supergb )	/* Nintendo Super Game Boy SNES Cartridge			*/
+	DRIVER( gbpocket )	/* Nintendo Game Boy Pocket Handheld				*/
+	DRIVER( gbcolor )	/* Nintendo Game Boy Color Handheld					*/
 	DRIVER( snes )		/* Nintendo Super Nintendo NTSC						*/
 	DRIVER( snespal )	/* Nintendo Super Nintendo PAL						*/
 	DRIVER( gba )
@@ -82,6 +89,14 @@ const game_driver * const consoledrivers[] =
 	/* BANDAI */
 	DRIVER( wswan )		/* Bandai WonderSwan Handheld						*/
 	DRIVER( wscolor )	/* Bandai WonderSwan Color Handheld					*/
+
+
+
+/****************COMPUTERS***************************************************/
+	/* ASCII & MICROSOFT */
+//	DRIVER( msx )		/* 1983 MSX 										*/
+//	DRIVER( msx2 )		/* 1985 MSX2										*/
+//	DRIVER( msx2p )		/* 1988 MSX2+ Japan									*/
 #endif /* MAMEMESS */
 
-#endif	/* DRIVER_RECURSIVE */
+#endif /* DRIVER_RECURSIVE */
