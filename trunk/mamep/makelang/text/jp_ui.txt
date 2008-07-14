@@ -346,6 +346,10 @@ Add ->
 Add Game To Custom Folder
 ゲームをカスタムフォルダに追加
 
+# osd/winui/mameui.rc: 1548
+Add selected item to custom folder
+選択した項目をカスタムフォルダに追加
+
 # osd/winui/mameui.rc: 727
 Advanced
 高度な設定
@@ -658,6 +662,10 @@ Clones
 Cocktail
 カクテル
 
+# osd/winui/mameui.rc: 853
+Coin lockout
+起動中のコイン投入を抑制する
+
 # osd/winui/properties.c: 1070
 Colors are completely wrong
 色が再現されない
@@ -794,6 +802,10 @@ Customize interface options.
 Customize which columns are used in the game list
 ゲームリストに用いる表\示項目を設定します
 
+# osd/winui/mameui.rc: 1137
+Decrypted
+暗号解除
+
 # osd/winui/properties.c: 3677
 Default
 デフォルト
@@ -858,6 +870,10 @@ Disabled
 Display
 画面
 
+# osd/winui/mameui.rc: 1510
+Display folder properties
+フォルダのプロパティを表\示
+
 # osd/winui/mameui.rc: 1491
 Display help contents
 ヘルプコンテンツを表\示します
@@ -870,13 +886,29 @@ Display items by using large icons.
 Display items by using small icons.
 小さいアイコン形式で表\示します
 
+# osd/winui/mameui.rc: 1589
+Display properties for all games in this bios
+このbiosを使用する全てのゲームのプロパティを表\示
+
+# osd/winui/mameui.rc: 1589
+Display properties for all games in this driver
+このドライバを使用する全てのゲームのプロパティを表\示
+
 # osd/winui/mameui.rc: 1038
 Display splash screen on start
 起動時にスプラッシュ画面を表\示
 
+# osd/winui/mameui.rc: 1548
+Display the properties of the selected item
+選択した項目のプロパティを表\示
+
 # osd/winui/mameui.rc: 1452, 1471
 Displays detailed information about each item in the window.
 詳細な情報形式で表\示します
+
+# osd/winui/mameui.rc: 1452
+Displays items grouped by parent game
+原作のゲームでグループ化した形式で表\示します
 
 # osd/winui/mameui.rc: 1452, 1471
 Displays items in a list.
@@ -961,6 +993,10 @@ E&xit
 # osd/winui/mameui.rc: 837
 Enable game cheats
 ゲームチートを有効化
+
+# osd/winui/mameui.rc: 842
+Enable game debugger
+ゲームデバッガを有効にする
 
 # osd/winui/mameui.rc: 794
 Enable joystick input
@@ -1770,6 +1806,18 @@ Ready
 Record a game for later playback
 現在のゲームを実行し、その入力を保存します
 
+# osd/winui/mameui.rc: 1491
+Record the audio output of a game
+ゲームの音声出力を記録します
+
+# osd/winui/mameui.rc: 1491
+Record the complete output of a game
+ゲームの完全な出力を記録します
+
+# osd/winui/mameui.rc: 1491
+Record the video output of a game
+ゲームの映像出力を記録します
+
 # osd/winui/mameui.rc: 1452, 1568
 Refresh game list
 ゲームリストを最新の情報に更新します
@@ -1777,6 +1825,10 @@ Refresh game list
 # osd/winui/mameui.rc: 1548
 Remove selected item from this folder
 このフォルダから選択した項目を削除
+
+# osd/winui/mameui.rc: 1548
+Rename this folder
+このフォルダの名前変更します
 
 # osd/winui/mameui.rc: 203
 Rese&t Playcount
@@ -1801,6 +1853,14 @@ Reset all Play Times
 # osd/winui/mameui.rc: 1053
 Reset all Playcounts
 全てのプレイ回数をリセットする
+
+# osd/winui/mameui.rc: 1510
+Reset number of plays for selected item
+選択した項目のプレイ回数をリセットします
+
+# osd/winui/mameui.rc: 1510
+Reset time played for selected item
+選択した項目のプレイ時間をリセットします
 
 # osd/winui/layout.c: 85
 Resolution
@@ -1981,6 +2041,10 @@ Select a sound file to record
 # osd/winui/mameui.rc: 1452
 Select menu style
 メニュースタイルの選択
+
+# osd/winui/mameui.rc: 1006
+Select the options to be restored to the default settings.
+選択したオプションを標準の設定に復元します。
 
 # osd/winui/mameui.rc: 1048
 Set Game List Not Working Color
@@ -2458,6 +2522,10 @@ Use various icon for Not Working game
 Use volume auto adjust
 自動音量調整機能\を使用
 
+# osd/winui/dialogs.c: 136
+User interface settings\n\n
+ユーザインターフェース\n\n
+
 # osd/winui/layout.c: 80 osd/winui/mameui.rc: 893 osd/winui/treeview.c: 320 osd/winui/winui.c: 5667
 Vector
 ベクタ
@@ -2538,6 +2606,14 @@ Year
 Yes
 はい
 
+# osd/winui/dialogs.c: 142
+\nDo you wish to continue?
+\n続けますか？
+
+# osd/winui/mameui.rc: 118
+by &Clone Of
+原作(&C)
+
 # osd/winui/mameui.rc: 109
 by &Description
 ゲーム(&D)
@@ -2550,6 +2626,14 @@ by &Manufacturer
 by &Name
 名前(&N)
 
+# osd/winui/mameui.rc: 115
+by &Played
+プレイ回数(P)
+
+# osd/winui/mameui.rc: 110
+by &Screen
+画面(&S)
+
 # osd/winui/mameui.rc: 113
 by &Type
 種別(&T)
@@ -2557,6 +2641,26 @@ by &Type
 # osd/winui/mameui.rc: 117
 by &Year
 製造年(&Y)
+
+# osd/winui/mameui.rc: 119
+by Dr&iver
+ドライバ(&i)
+
+# osd/winui/mameui.rc: 120
+by P&lay Time
+プレイ時間(&l)
+
+# osd/winui/mameui.rc: 121
+by R&OMs
+&ROM
+
+# osd/winui/mameui.rc: 111
+by S&amples
+サンプル(&a)
+
+# osd/winui/mameui.rc: 114
+by T&rackball
+トラックボール(&r)
 
 # osd/winui/winui.h: 24
 type a keyword
@@ -2578,20 +2682,12 @@ type a keyword
 .\n
 
 
-# osd/winui/mameui.rc: 1548
-Add selected item to custom folder
-
-
 # osd/winui/mameui.rc: 383
 Additional MAMEUI code by
 
 
 # osd/winui/mameui.rc: 381
 Christopher Kirmse and the MAMEUI team
-
-
-# osd/winui/mameui.rc: 850
-Coin lockout
 
 
 # osd/winui/mameui.rc: 1430
@@ -2606,32 +2702,8 @@ Contains commands to select tabs shown in the picture area
 Copyright (C) 1997-2008 The MAME Team
 
 
-# osd/winui/mameui.rc: 1137
-Decrypted
-
-
 # osd/winui/properties.c: 760
 Default Settings
-
-
-# osd/winui/mameui.rc: 1510
-Display folder properties
-
-
-# osd/winui/mameui.rc: 1589
-Display properties for all games in this bios
-
-
-# osd/winui/mameui.rc: 1589
-Display properties for all games in this driver
-
-
-# osd/winui/mameui.rc: 1548
-Display the properties of the selected item
-
-
-# osd/winui/mameui.rc: 1452
-Displays items grouped by parent game
 
 
 # osd/winui/layout.c: 139
@@ -2682,44 +2754,12 @@ John Hardy IV and Michael Soderstrom
 MAMEUI version by
 
 
-# osd/winui/mameui.rc: 1491
-Record the audio output of a game
-
-
-# osd/winui/mameui.rc: 1491
-Record the complete output of a game
-
-
-# osd/winui/mameui.rc: 1491
-Record the video output of a game
-
-
-# osd/winui/mameui.rc: 1548
-Rename this folder
-
-
-# osd/winui/mameui.rc: 1510
-Reset number of plays for selected item
-
-
-# osd/winui/mameui.rc: 1510
-Reset time played for selected item
-
-
 # osd/winui/dialogs.c: 137
 Resetting the User Interface options\n
 
 
-# osd/winui/mameui.rc: 1006
-Select the options to be restored to the default settings.
-
-
 # osd/winui/mameui.rc: 1471
 Show items grouped by parent game
-
-
-# osd/winui/dialogs.c: 136
-User interface settings\n\n
 
 
 # osd/winui/properties.c: 416
@@ -2732,42 +2772,6 @@ Version 9
 
 # osd/winui/winui.c: 851
 Videos (*.avi)
-
-
-# osd/winui/dialogs.c: 142
-\nDo you wish to continue?
-
-
-# osd/winui/mameui.rc: 118
-by &Clone Of
-
-
-# osd/winui/mameui.rc: 115
-by &Played
-
-
-# osd/winui/mameui.rc: 110
-by &Screen
-
-
-# osd/winui/mameui.rc: 119
-by Dr&iver
-
-
-# osd/winui/mameui.rc: 120
-by P&lay Time
-
-
-# osd/winui/mameui.rc: 121
-by R&OMs
-
-
-# osd/winui/mameui.rc: 111
-by S&amples
-
-
-# osd/winui/mameui.rc: 114
-by T&rackball
 
 
 # osd/winui/dialogs.c: 138
