@@ -1,11 +1,8 @@
 @echo off
-set PSDK_DIR=%ProgramFiles%\Microsoft SDKs\Windows\v6.0A
 set MINGW_ROOT=..\MinGW
-set PATH=%MINGW_ROOT%\bin;extra\bin;%PSDK_DIR%\bin\
+set PATH=%MINGW_ROOT%\bin;extra\bin;%PATH%
 
 set C_INCLUDE_PATH=extra\include
 set LIBRARY_PATH=extra\lib
-set INCLUDE=extravc\include\;%PSDK_DIR%\Include\
-set LIB=extravc\lib\;%PSDK_DIR%\Lib\
 
 gcc -v

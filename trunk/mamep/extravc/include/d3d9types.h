@@ -23,7 +23,7 @@
 #pragma warning(push)
 #endif
 #pragma warning(disable:4201) // anonymous unions warning
-#if defined(_X86_) || defined(_IA64)
+#if defined(_X86_) || defined(_IA64_)
 #pragma pack(4)
 #endif
 
@@ -224,6 +224,14 @@ typedef enum _D3DBLEND {
     D3DBLEND_BOTHINVSRCALPHA    = 13,
     D3DBLEND_BLENDFACTOR        = 14, /* Only supported if D3DPBLENDCAPS_BLENDFACTOR is on */
     D3DBLEND_INVBLENDFACTOR     = 15, /* Only supported if D3DPBLENDCAPS_BLENDFACTOR is on */
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+    D3DBLEND_SRCCOLOR2          = 16,
+    D3DBLEND_INVSRCCOLOR2       = 17,
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
     D3DBLEND_FORCE_DWORD        = 0x7fffffff, /* force 32-bit size enum */
 } D3DBLEND;
 
@@ -625,6 +633,13 @@ typedef enum _D3DTEXTUREFILTERTYPE
     D3DTEXF_ANISOTROPIC     = 3,    // anisotropic
     D3DTEXF_PYRAMIDALQUAD   = 6,    // 4-sample tent
     D3DTEXF_GAUSSIANQUAD    = 7,    // 4-sample gaussian
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+    D3DTEXF_CONVOLUTIONMONO = 8,    // Convolution filter for monochrome textures
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
     D3DTEXF_FORCE_DWORD     = 0x7fffffff,   // force 32-bit size enum
 } D3DTEXTUREFILTERTYPE;
 
@@ -1377,6 +1392,16 @@ typedef enum _D3DFORMAT
     D3DFMT_D32F_LOCKABLE        = 82,
     D3DFMT_D24FS8               = 83,
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+    /* Z-Stencil formats valid for CPU access */
+    D3DFMT_D32_LOCKABLE         = 84,
+    D3DFMT_S8_LOCKABLE          = 85,
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
 
     D3DFMT_L16                  = 81,
 
@@ -1401,6 +1426,19 @@ typedef enum _D3DFORMAT
     D3DFMT_A32B32G32R32F        = 116,
 
     D3DFMT_CxV8U8               = 117,
+
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+    // Monochrome 1 bit per pixel format
+    D3DFMT_A1                   = 118,
+
+
+    // Binary format indicating that the data has no inherent type
+    D3DFMT_BINARYBUFFER         = 199,
+    
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
 
 
     D3DFMT_FORCE_DWORD          =0x7fffffff
@@ -1480,6 +1518,15 @@ typedef struct _D3DPRESENT_PARAMETERS_
 #define D3DPRESENTFLAG_DEVICECLIP               0x00000004
 #define D3DPRESENTFLAG_VIDEO                    0x00000010
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DPRESENTFLAG_NOAUTOROTATE             0x00000020
+#define D3DPRESENTFLAG_UNPRUNEDMODE             0x00000040
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
 /* Gamma Ramp: Same as DX7 */
 
 typedef struct _D3DGAMMARAMP
@@ -1508,7 +1555,7 @@ typedef enum _D3DRESOURCETYPE {
     D3DRTYPE_VOLUMETEXTURE          =  4,
     D3DRTYPE_CUBETEXTURE            =  5,
     D3DRTYPE_VERTEXBUFFER           =  6,
-    D3DRTYPE_INDEXBUFFER            =  7,
+    D3DRTYPE_INDEXBUFFER            =  7,           //if this changes, change _D3DDEVINFO_RESOURCEMANAGER definition
 
 
     D3DRTYPE_FORCE_DWORD            = 0x7fffffff
@@ -1518,6 +1565,14 @@ typedef enum _D3DRESOURCETYPE {
 #define D3DUSAGE_RENDERTARGET       (0x00000001L)
 #define D3DUSAGE_DEPTHSTENCIL       (0x00000002L)
 #define D3DUSAGE_DYNAMIC            (0x00000200L)
+
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DUSAGE_NONSECURE          (0x00800000L)
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
 
 // When passed to CheckDeviceFormat, D3DUSAGE_AUTOGENMIPMAP may return
 // D3DOK_NOAUTOGEN if the device doesn't support autogeneration for that format.
@@ -1542,6 +1597,20 @@ typedef enum _D3DRESOURCETYPE {
 #define D3DUSAGE_POINTS             (0x00000040L)
 #define D3DUSAGE_RTPATCHES          (0x00000080L)
 #define D3DUSAGE_NPATCHES           (0x00000100L)
+
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DUSAGE_TEXTAPI            (0x10000000L)
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
+
+
+
+
+
 
 
 
@@ -1788,7 +1857,11 @@ typedef struct _D3DRESOURCESTATS
 
 typedef struct _D3DDEVINFO_RESOURCEMANAGER
 {
+#ifndef WOW64_ENUM_WORKAROUND
     D3DRESOURCESTATS    stats[D3DRTYPECOUNT];
+#else
+    D3DRESOURCESTATS    stats[8];
+#endif
 } D3DDEVINFO_RESOURCEMANAGER, *LPD3DDEVINFO_RESOURCEMANAGER;
 
 typedef struct _D3DDEVINFO_D3DVERTEXSTATS
@@ -1799,7 +1872,7 @@ typedef struct _D3DDEVINFO_D3DVERTEXSTATS
 
 
 typedef struct _D3DDEVINFO_VCACHE {
-    DWORD   Pattern;                    /* bit pattern, return value must be FOUR_CC(‘C’, ‘A’, ‘C’, ‘H’) */
+    DWORD   Pattern;                    /* bit pattern, return value must be FOUR_CC('C', 'A', 'C', 'H') */
     DWORD   OptMethod;                  /* optimization method 0 means longest strips, 1 means vertex cache based */
     DWORD   CacheSize;                  /* cache size to optimize for  (only required if type is 1) */
     DWORD   MagicNumber;                /* used to determine when to restart strips (only required if type is 1)*/
@@ -1842,6 +1915,90 @@ typedef struct _D3DDEVINFO_D3D9CACHEUTILIZATION
     FLOAT TextureCacheHitRate; // Percentage of cache hits
     FLOAT PostTransformVertexCacheHitRate;
 } D3DDEVINFO_D3D9CACHEUTILIZATION;
+
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+typedef enum _D3DCOMPOSERECTSOP{
+    D3DCOMPOSERECTS_COPY     = 1,
+    D3DCOMPOSERECTS_OR       = 2,
+    D3DCOMPOSERECTS_AND      = 3,
+    D3DCOMPOSERECTS_NEG      = 4,
+    D3DCOMPOSERECTS_FORCE_DWORD    = 0x7fffffff, /* force 32-bit size enum */
+} D3DCOMPOSERECTSOP;
+
+typedef struct _D3DCOMPOSERECTDESC
+{
+    USHORT  X, Y;           // Top-left coordinates of a rect in the source surface
+    USHORT  Width, Height;  // Dimensions of the rect
+} D3DCOMPOSERECTDESC;
+
+typedef struct _D3DCOMPOSERECTDESTINATION
+{
+    USHORT SrcRectIndex;    // Index of D3DCOMPOSERECTDESC
+    USHORT Reserved;        // For alignment
+    SHORT  X, Y;            // Top-left coordinates of the rect in the destination surface
+} D3DCOMPOSERECTDESTINATION;
+
+#define D3DCOMPOSERECTS_MAXNUMRECTS 0xFFFF
+#define D3DCONVOLUTIONMONO_MAXWIDTH  7
+#define D3DCONVOLUTIONMONO_MAXHEIGHT D3DCONVOLUTIONMONO_MAXWIDTH
+#define D3DFMT_A1_SURFACE_MAXWIDTH  8192
+#define D3DFMT_A1_SURFACE_MAXHEIGHT 2048
+
+
+typedef struct _D3DPRESENTSTATS {
+    UINT PresentCount;
+    UINT PresentRefreshCount;
+    UINT SyncRefreshCount;
+    LARGE_INTEGER SyncQPCTime;
+    LARGE_INTEGER SyncGPUTime;
+} D3DPRESENTSTATS;
+
+typedef enum D3DSCANLINEORDERING
+{
+    D3DSCANLINEORDERING_UNKNOWN                    = 0, 
+    D3DSCANLINEORDERING_PROGRESSIVE                = 1,
+    D3DSCANLINEORDERING_INTERLACED                 = 2,
+} D3DSCANLINEORDERING;
+
+
+typedef struct D3DDISPLAYMODEEX
+{
+    UINT                    Size;
+    UINT                    Width;
+    UINT                    Height;
+    UINT                    RefreshRate;
+    D3DFORMAT               Format;
+    D3DSCANLINEORDERING     ScanLineOrdering;
+} D3DDISPLAYMODEEX;
+
+typedef struct D3DDISPLAYMODEFILTER
+{
+    UINT                    Size;
+    D3DFORMAT               Format;
+    D3DSCANLINEORDERING     ScanLineOrdering;
+} D3DDISPLAYMODEFILTER;
+
+
+typedef enum D3DDISPLAYROTATION
+{
+    D3DDISPLAYROTATION_IDENTITY = 1, // No rotation.           
+    D3DDISPLAYROTATION_90       = 2, // Rotated 90 degrees.
+    D3DDISPLAYROTATION_180      = 3, // Rotated 180 degrees.
+    D3DDISPLAYROTATION_270      = 4  // Rotated 270 degrees.
+} D3DDISPLAYROTATION;
+
+/* For use in ID3DResource9::SetPriority calls */
+#define D3D9_RESOURCE_PRIORITY_MINIMUM       0x28000000
+#define D3D9_RESOURCE_PRIORITY_LOW           0x50000000
+#define D3D9_RESOURCE_PRIORITY_NORMAL        0x78000000
+#define D3D9_RESOURCE_PRIORITY_HIGH          0xa0000000
+#define D3D9_RESOURCE_PRIORITY_MAXIMUM       0xc8000000
+
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
 
 #pragma pack()
 #if _MSC_VER >= 1200

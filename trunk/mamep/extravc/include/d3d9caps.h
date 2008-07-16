@@ -17,7 +17,7 @@
 // include this file content only if compiling for DX9 interfaces
 #if(DIRECT3D_VERSION >= 0x0900)
 
-#if defined(_X86_) || defined(_IA64)
+#if defined(_X86_) || defined(_IA64_)
 #pragma pack(4)
 #endif
 
@@ -179,6 +179,14 @@ typedef struct _D3DCAPS9
 #define D3DCAPS2_DYNAMICTEXTURES        0x20000000L
 #define D3DCAPS2_CANAUTOGENMIPMAP       0x40000000L
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DCAPS2_CANSHARERESOURCE       0x80000000L
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
 //
 // Caps3
 //
@@ -261,6 +269,15 @@ typedef struct _D3DCAPS9
 #define D3DPMISCCAPS_MRTPOSTPIXELSHADERBLENDING 0x00080000L /* Device supports post-pixel shader operations for MRT */
 #define D3DPMISCCAPS_FOGVERTEXCLAMPED           0x00100000L /* Device clamps fog blend factor per vertex */
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DPMISCCAPS_POSTBLENDSRGBCONVERT       0x00200000L /* Indicates device can perform conversion to sRGB after blending. */
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
+
 //
 // LineCaps
 //
@@ -321,6 +338,16 @@ typedef struct _D3DCAPS9
 #define D3DPBLENDCAPS_BOTHINVSRCALPHA   0x00001000L
 #define D3DPBLENDCAPS_BLENDFACTOR       0x00002000L /* Supports both D3DBLEND_BLENDFACTOR and D3DBLEND_INVBLENDFACTOR */
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DPBLENDCAPS_SRCCOLOR2         0x00004000L
+#define D3DPBLENDCAPS_INVSRCCOLOR2      0x00008000L
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
+
 //
 // ShadeCaps
 //
@@ -364,6 +391,15 @@ typedef struct _D3DCAPS9
 #define D3DPTFILTERCAPS_MINFGAUSSIANQUAD    0x00001000L
 #define D3DPTFILTERCAPS_MIPFPOINT           0x00010000L /* Mip Filter */
 #define D3DPTFILTERCAPS_MIPFLINEAR          0x00020000L
+
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
+
+#define D3DPTFILTERCAPS_CONVOLUTIONMONO     0x00040000L /* Min and Mag for the convolution mono filter */
+
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
+
 #define D3DPTFILTERCAPS_MAGFPOINT           0x01000000L /* Mag Filter */
 #define D3DPTFILTERCAPS_MAGFLINEAR          0x02000000L
 #define D3DPTFILTERCAPS_MAGFANISOTROPIC     0x04000000L
