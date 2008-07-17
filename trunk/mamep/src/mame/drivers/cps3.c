@@ -683,6 +683,7 @@ static const struct game_keys2 keys_table2[] =
 	{ "sfiii3an", { 0xa55432b4, 0x0c129981 },0 },
 	{ "warzard",  { 0x9e300ab1, 0xa175b82c },0 },
 	{ "redearth", { 0x9e300ab1, 0xa175b82c },0 },
+	{ "redeartn", { 0x9e300ab1, 0xa175b82c },0 },
 	{ 0 }	// end of table
 };
 
@@ -1597,6 +1598,7 @@ static const struct cps3_test_hacks testhack_table[] =
 	{ "sfiii3an",  0x0011c42,         0x613ab46  },
 	{ "warzard",   0x001652e,         0x60105ee  },
 	{ "redearth",  0x001652e,         0x60105ee  },
+	{ "redeartn",  0x0016530,         0x60105f0  },
 	{ 0 }	// end of table
 };
 
@@ -2638,21 +2640,41 @@ static void copy_from_nvram(running_machine *machine)
 static NVRAM_HANDLER( cps3 )
 {
 	int i;
+	const char *gamename = machine->gamedrv->name;
 
 	if (read_or_write)
 	{
 		//printf("read_write\n");
 		mame_fwrite(file, cps3_eeprom, 0x400);
-		for (i=0;i<48;i++)
-			nvram_handler_intelflash( machine, i, file, read_or_write );
+		if (strcmp(gamename, "sfiii") == 0 || strcmp(gamename, "sfiiiu") == 0
+			|| strcmp(gamename, "sfiii2") == 0 || strcmp(gamename, "sfiii2u") == 0
+			|| strcmp(gamename, "sfiii3") == 0 || strcmp(gamename, "sfiii3a") == 0
+			|| strcmp(gamename, "jojo") == 0 || strcmp(gamename, "jojoalt") == 0
+			|| strcmp(gamename, "jojoba") == 0 || strcmp(gamename, "redearth") == 0
+			|| strcmp(gamename, "warzard") == 0)
+		{
+			for (i=0;i<48;i++)
+				nvram_handler_intelflash( machine, i, file, read_or_write );
+		}
 	}
 	else if (file)
 	{
 		//printf("file\n");
 		mame_fread(file, cps3_eeprom, 0x400);
-		for (i=0;i<48;i++)
-			nvram_handler_intelflash( machine, i, file, read_or_write );
-
+		if (strcmp(gamename, "sfiii") == 0 || strcmp(gamename, "sfiiiu") == 0
+			|| strcmp(gamename, "sfiii2") == 0 || strcmp(gamename, "sfiii2u") == 0
+			|| strcmp(gamename, "sfiii3") == 0 || strcmp(gamename, "sfiii3a") == 0
+			|| strcmp(gamename, "jojo") == 0 || strcmp(gamename, "jojoalt") == 0
+			|| strcmp(gamename, "jojoba") == 0 || strcmp(gamename, "redearth") == 0
+			|| strcmp(gamename, "warzard") == 0)
+		{
+			for (i=0;i<48;i++)
+				nvram_handler_intelflash( machine, i, file, read_or_write );
+		}
+		else
+		{
+			precopy_to_flash(machine);
+		}
 		copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
 	}
 	else
@@ -2960,7 +2982,7 @@ ROM_END
 
 ROM_START( redeartn )
 	ROM_REGION32_BE( 0x080000, REGION_USER1, 0 ) /* bios region */
-	ROM_LOAD( "redearth_nocd.bios", 0x000000, 0x080000, NO_DUMP )
+	ROM_LOAD( "warzard_euro.29f400.u2", 0x000000, 0x080000, CRC(02e0f336) SHA1(acc37e830dfeb9674f5a0fb24f4cc23217ae4ff5) )
 
 	ROM_REGION32_BE( 0x800000*2, REGION_USER4, ROMREGION_ERASEFF ) /* cd content region */
 	ROM_LOAD( "10",  0x000000, 0x800000, CRC(68188016) SHA1(93aaac08cb5566c33aabc16457085b0a36048019) )
@@ -3005,6 +3027,7 @@ static const struct cps3_speedups speedup_table[] =
 	{ "sfiii3an",  0x0d794,         0x6000882  },
 	{ "warzard",   0x2136c,         0x600194c  },
 	{ "redearth",  0x2136c,         0x600194c  },
+	{ "redeartn",  0x2136c,         0x600194e  },
 	{ 0 }	// end of table
 };
 
@@ -3132,6 +3155,29 @@ static DRIVER_INIT( warzard )
 }
 
 
+static DRIVER_INIT( redeartn )
+{
+	// JAPAN 1
+	// ASIA 2
+	// EURO 3
+	// USA 4
+	// HISPANIC 5
+	// BRAZIL 6
+	// OCEANIA 7
+	// ASIA NCD 8
+
+	UINT32 *rom =  (UINT32*)memory_region ( machine, REGION_USER1 );
+	//rom[0x1fed8/4]^=0x00000001; // clear region to 0 (invalid)
+	rom[0x1fed8/4]|=0x0000000f; // enforce the region to 8 - ASIA NO CD
+
+	DRIVER_INIT_CALL(cps3crpt);
+	DRIVER_INIT_CALL(cps3_speedups);
+	DRIVER_INIT_CALL(cps3_testhacks);
+
+	cps3_use_fastboot = 1; // required due to cd check, even with ASIA NO CD selected, not req. with CD emulation
+}
+
+
 static DRIVER_INIT( sfiii )
 {
 	// JAPAN 1
@@ -3240,4 +3286,4 @@ GAME( 1999, jojoban, jojoba,   cps3, cps3, jojoba, ROT0,   "Capcom", "JoJo's Biz
 GAME( 1999, jojobane,jojoba,   cps3, cps3, jojoba, ROT0,   "Capcom", "JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro, 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // We don't have any actual warzard / red earth no cd bios sets, but keep this here anyway
-GAME( 1996, redeartn,redearth, cps3, cps3, warzard,ROT0,   "Capcom", "Red Earth (961121, NO CD)", GAME_NOT_WORKING )
+GAME( 1996, redeartn,redearth, cps3, cps3, redeartn,ROT0,   "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )

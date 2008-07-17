@@ -377,8 +377,8 @@ static void draw_background(running_machine *machine, bitmap_t *bitmap, const re
 				if(((psikyosh_bgram[(BG_TYPE(i)*0x800)/4 + 0x400/4 - 0x4000/4] & 0xff000000) >> 24) == req_pri)
 					draw_bglayerscroll(machine, i, bitmap, cliprect);
 				break;
-			default:
-				popmessage	("Unknown layer type %02x", BG_TYPE(i));
+//			default:
+//				popmessage	("Unknown layer type %02x", BG_TYPE(i));
 		}
 	}
 }
