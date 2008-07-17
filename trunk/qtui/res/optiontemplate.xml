@@ -58,7 +58,7 @@
 
 	<option name="autoframeskip" guiname="Auto frame skipping" type="bool" />
 	<option name="frameskip" guiname="Frame skipping" type="int" min="0" max="10" />
-	<option name="seconds_to_run" type="int" />
+	<option name="seconds_to_run" type="int" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="throttle" type="bool" />
 	<option name="sleep" guiname="Sleep when possible" type="bool" />
 	<option name="speed" guiname="Gameplay speed" type="float" min="0.01" max="100" />
@@ -188,8 +188,8 @@
 		<value>c</value>
 		<value>drc</value>
 	</option>
-	<option name="use_trans_ui" type="bool" />
-	<option name="ui_transparency" type="int" min="0" max="255" />
+	<option name="use_trans_ui" guiname="Transparent in-game UI" type="bool" />
+	<option name="ui_transparency" guiname="In-game UI transparency" type="int" min="0" max="255" />
 
 	<option name="font_blank" type="color" />
 	<option name="font_normal" type="color" />

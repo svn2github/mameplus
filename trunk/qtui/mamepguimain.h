@@ -16,7 +16,7 @@ Q_IMPORT_PLUGIN(qico)
 #include "audit.h"
 #include "gamelist.h"
 #include "mameopt.h"
-#include "options.h"
+#include "dialogs.h"
 #include "procmgr.h"
 #include "utils.h"
 
@@ -25,7 +25,7 @@ class Screenshot : public QDockWidget
     Q_OBJECT
 
 public:
-    Screenshot(const QString &, QWidget *parent = 0);
+    Screenshot(QString, QWidget *parent = 0);
 	void setPixmap(const QByteArray &);
 
 protected:
@@ -83,6 +83,7 @@ public slots:
     void on_actionRefresh_activated();
 	void on_actionExitStop_activated();
 	void on_actionDefaultOptions_activated();
+	void on_actionAbout_activated();
     void log(QString, char logOrigin = 1);
 	void poplog(QString);
 	void logStatus(QString);
@@ -109,7 +110,9 @@ private:
 // external global variables
 extern MainWindow *win;
 extern Options *dlgOptions;
-extern QList<QListWidget *> optCtrlList;
+extern About *dlgAbout;
+
+extern QList<QListWidget *> optCtrls;
 
 extern QHash<QString, MameOption*> mameOpts;
 extern QSettings guiSettings, defSettings;

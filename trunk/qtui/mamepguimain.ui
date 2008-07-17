@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.96a</string>
+   <string>MAME Plus! GUI 0.98a</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
@@ -19,9 +19,9 @@
    <property name="geometry" >
     <rect>
      <x>260</x>
-     <y>47</y>
+     <y>49</y>
      <width>104</width>
-     <height>337</height>
+     <height>333</height>
     </rect>
    </property>
    <layout class="QGridLayout" >
@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -72,9 +72,6 @@
     <addaction name="actionDefaultOptions" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
-    <property name="enabled" >
-     <bool>false</bool>
-    </property>
     <property name="title" >
      <string>Help</string>
     </property>
@@ -89,9 +86,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>384</y>
+     <y>382</y>
      <width>624</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -99,7 +96,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>21</y>
+     <y>23</y>
      <width>162</width>
      <height>26</height>
     </rect>
@@ -135,7 +132,7 @@
    <property name="geometry" >
     <rect>
      <x>162</x>
-     <y>21</y>
+     <y>23</y>
      <width>462</width>
      <height>26</height>
     </rect>
@@ -157,9 +154,9 @@
    <property name="geometry" >
     <rect>
      <x>368</x>
-     <y>47</y>
+     <y>49</y>
      <width>256</width>
-     <height>337</height>
+     <height>333</height>
     </rect>
    </property>
    <property name="features" >
@@ -177,7 +174,7 @@
       <x>0</x>
       <y>22</y>
       <width>256</width>
-      <height>315</height>
+      <height>311</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -194,9 +191,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>47</y>
+     <y>49</y>
      <width>256</width>
-     <height>337</height>
+     <height>333</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -220,7 +217,7 @@
       <x>0</x>
       <y>22</y>
       <width>256</width>
-      <height>315</height>
+      <height>311</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -265,9 +262,6 @@
    <property name="text" >
     <string>Refresh</string>
    </property>
-   <property name="shortcut" >
-    <string>F5</string>
-   </property>
   </action>
   <action name="actionExitStop" >
    <property name="text" >
@@ -278,9 +272,6 @@
    </property>
   </action>
   <action name="actionAbout" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
      <normaloff>:/res/32x32/help-browser.png</normaloff>:/res/32x32/help-browser.png</iconset>
@@ -319,6 +310,9 @@
   <action name="actionLargeIcons" >
    <property name="checkable" >
     <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >

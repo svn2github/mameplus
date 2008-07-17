@@ -7,56 +7,70 @@ QTreeView 192104] scrollTo(PositionAtCenter) can scroll beyond the item if item 
 
 [todo]
 
-BETA
-1 fix official mame compatible, still crash on opt saving
-bug: few select model
-bug: if mame.ini is 0, crash
-bug: crash after refresh immediately click folder
-bug: crash on F5 when iconthread is active
-bug: dup entries on init
-bug: some icons doesnt load
-1 game counter in statusbar
-1 preserve audit result
+PUBLIC BETA
+/ translation of options
+/ about dialog
+/ preserve audit result on new mame version
 
-1 could be cool to have behind the XX% - "name of the rom beeing audited"
-1 add/remove items from game list model
-bug: update options from right to left
-reduce restore sele //win->log("restore callback: " + gameName);
+//Icon
+1 rewrite icon thread, cache all icons, s11n
+  bug: crash on F5 when iconthread is active
+  bug: some icons doesnt load
+
+//Options
+1 fix official mame compatible, still crash on opt saving
+* path chooser dialog +0.1
+* multi ini path
+  bug: dup option entries on init
+  bug: if mame.ini is 0, crash?
+  bug: update options from right to left
+* vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
 1 -driver_config
-1 bios icons in folder list
+* bios support: select bios opt
 1 ips doesnt inherit
+* unify method to get inherited default value
+* option help
+
+//GameList
+1 game counter in statusbar
+  bug: few rows select model
+  bug: crash after refresh immediately click folder
+1 replace progressbar with xx%
+* display different colors for different status
+* add/remove items from game list model
+optimize: reduce restore sele //win->log("restore callback: " + gameName);
+
+//Misc
+* onclick to select ss tab
+1 bios icons in folder list
+* context menus
+
+----------------------------------------
 
 display region/hack info of console rom
-goodmerge database xmdb
-console snapshot
-* bios support: select bios opt
-1 path chooser dialog +0.1
-1 about page, some link to the test board
+1 console game info from GameFAQs?
 1 lst translation +0.1
 1 ips +0.2
 1 command.dat parsing with image +0.2
 * disable filters for 3D hardware
-* skip or delay invisible widget loading)
+optimize: skip or delay invisible widget loading
 * adjust snap with a/r, with or without stretching
 * iconized snap tab
-* onclick to select ss tab
 1 return update thread immediately if some folders doesnt even exist
-* display different colors for different status
-* console list auditing
-C replace optview with custom render
-C unify method to get inherited default value
-* multi ini path
-* vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
 * other filters
 * gamename0000 snap
 * general info page
 * UI style: compact, full, MAMEUI classic
 * non compressed roms
-* helpid
 * fullscreen switch
 * move datafile.c statistics to GUI
 
-[extension]
+1 wildcard console gamename
+  snapshot
+  use mess hsi(goodxxx)
+  use xmdb directly? (name based)
+  add manufacturer from offline dat (name based, one time, submit to MESS)
+  snap/snes/parent game name (without tags)
 * export roms to folders
 * delete roms,cfg,nvram...
 * export fixdat, selected fixdat only
@@ -78,7 +92,7 @@ C unify method to get inherited default value
 [ads]
 auditing roms several times faster than old mame32
 
-[config]
+[qt compile config]
 configure -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde
 
 [test]
@@ -91,21 +105,3 @@ neogeo playback rtc
 
 [mamep core bug]
 cfg volume_multiplier always presents
-
-[snapshot]
-args:
-dirpath, zipname, extname, gamename
-
-if !empty
-  return 
-
-iteratre split dirpath
-{
-  load path + gamename
-  if empty, add zip
-  if empty, add subdir
-  if empty recursively call cloneof
-  if empty recursively call romof?
-}
-
-if empty return default

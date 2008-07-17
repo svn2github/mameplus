@@ -1,7 +1,8 @@
-#ifndef _OPTIONS_H_
-#define _OPTIONS_H_
+#ifndef _DIALOGS_H_
+#define _DIALOGS_H_
 
 #include "ui_options.h"
+#include "ui_about.h"
 
 class Options: public QDialog, public Ui::Options
 {
@@ -17,4 +18,13 @@ class Options: public QDialog, public Ui::Options
     void showEvent(QShowEvent *);
 	void closeEvent(QCloseEvent *);
 };
+
+class About: public QDialog, public Ui::About
+{
+  Q_OBJECT
+
+  public:
+    About(QWidget *parent = 0);
+};
+
 #endif

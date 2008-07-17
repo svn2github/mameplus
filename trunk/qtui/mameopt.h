@@ -76,7 +76,7 @@ class OptionUtils : public QObject
 
 public:
 	OptionUtils(QObject *parent = 0);
-
+	void initOption();
 	int getType(const QModelIndex &);
 	QVariant getField(const QModelIndex &, int);
 	const QString getLongName(QString);
@@ -92,38 +92,34 @@ public slots:
 	void loadIni(int, const QString &);
 	void save(int , const QString &);
 	QHash<QString, QString> readIniFile(const QString &);
-
-	void initOption();
 	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
-	void setupModelData(QString, int);
 	void updateHeaderSize(int, int, int);
 
 private:
 	void addModelItemTitle(QStandardItemModel*, QString);
 	void addModelItem(QStandardItemModel*, QString);
-//	void exportToIni(QString useFileName = QString());
-//	void importFromIni(QString useFileName = QString());
+	void updateModelData(QString, int);
 };
 
 enum
 {
-	OPTNFO_DEF = 0,
-	OPTNFO_GLOBAL,
-	OPTNFO_SRC,
-	OPTNFO_BIOS,
-	OPTNFO_CLONEOF,
-	OPTNFO_CURR,
-	OPTNFO_LAST
+	OPTLEVEL_DEF = 0,
+	OPTLEVEL_GLOBAL,
+	OPTLEVEL_SRC,
+	OPTLEVEL_BIOS,
+	OPTLEVEL_CLONEOF,
+	OPTLEVEL_CURR,
+	OPTLEVEL_LAST
 };
 
-class OptionInfo : public QObject
+class OptInfo : public QObject
 {
 public:
-	QListWidget *catView;
+	QListWidget *lstCatView;
 	QTreeView *optView;
 	QStandardItemModel *optModel;
-	
-	OptionInfo(QListWidget *, QTreeView *, QObject *parent = 0);
+
+	OptInfo(QListWidget *, QTreeView *, QObject *parent = 0);
 };
 
 #endif

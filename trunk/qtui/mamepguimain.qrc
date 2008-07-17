@@ -18,6 +18,7 @@
         <file>res/mame32-view-sicon.png</file>
         <file>res/mame32-view-the.png</file>
         <file>res/mamegui/about.png</file>
+	<file>res/mamegui/mamemess.png</file>
         <file>res/optiontemplate.xml</file>
         <file>res/reset_property.png</file>
         <file>res/win_roms.ico</file>

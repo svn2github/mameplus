@@ -78,6 +78,11 @@ MainWindow::MainWindow(QWidget *parent)
 	menuView->insertAction(actionPicture_Area, actionFolderList);
 	toolBar->insertAction(actionPicture_Area, actionFolderList);
 
+	gamelist = new Gamelist(this);
+	optUtils = new OptionUtils(this);
+	dlgOptions = new Options(this);
+	dlgAbout = new About(this);
+
 	//override font for CJK OS
 	QFont font;
 	font.setPointSize(9);
@@ -88,10 +93,13 @@ MainWindow::MainWindow(QWidget *parent)
     menuView->setFont(font);
     menuOptions->setFont(font);
     menuHelp->setFont(font);
-
-	gamelist = new Gamelist(this);
-	optUtils = new OptionUtils(this);
-	dlgOptions = new Options(this);
+	
+	dlgOptions->tabOptions->setFont(font);
+	dlgOptions->lvGlobalOpt->setFont(font);
+	dlgOptions->lvSourceOpt->setFont(font);
+	dlgOptions->lvBiosOpt->setFont(font);
+	dlgOptions->lvCloneofOpt->setFont(font);
+	dlgOptions->lvCurrOpt->setFont(font);
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -200,29 +208,33 @@ void MainWindow::init()
 		this->setPalette(palette);
 	}
 
+	// setup background alpha
 	utils->tranaparentBg(tvGameList);
 	utils->tranaparentBg(lvGameList);
 	utils->tranaparentBg(treeFolders);
 
 	// connect misc signal and slots
+	// Actions
 	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
 	connect(actionLargeIcons, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 	connect(actionDetails, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
 
+	// Auditor
 	connect(&gamelist->auditor, SIGNAL(progressSwitched(int, QString)), gamelist, SLOT(switchProgress(int, QString)));
 	connect(&gamelist->auditor, SIGNAL(progressUpdated(int)), gamelist, SLOT(updateProgress(int)));
 	connect(&gamelist->auditor, SIGNAL(finished()), gamelist->mAuditor, SLOT(init()));
 
+	// Game List
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
 //	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
-	for (int i = 1; i < optCtrlList.count(); i++)
+	// Options
+	for (int i = 1; i < optCtrls.count(); i++)
 	{
-		connect(optCtrlList[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
+		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
 				optUtils, SLOT(updateModel(QListWidgetItem *)));
 	}
-
 	connect(dlgOptions->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
 }
 
@@ -254,10 +266,15 @@ void MainWindow::on_actionDefaultOptions_activated()
 		return;
 
 	//init ctlrs, 
-	for (int i = OPTNFO_GLOBAL; i < OPTNFO_LAST; i++)
+	for (int i = OPTLEVEL_GLOBAL; i < OPTLEVEL_LAST; i++)
 		optUtils->updateModel(0, i);
 
 	dlgOptions->exec();
+}
+
+void MainWindow::on_actionAbout_activated()
+{
+	dlgAbout->exec();
 }
 
 void MainWindow::initSettings()
@@ -282,12 +299,12 @@ void MainWindow::loadLayout()
 	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
 
 	list_mode = guiSettings.value("list_mode").toString();
-	if (list_mode == win->actionGrouped->text())
-		win->actionGrouped->setChecked(true);
-	else if (list_mode == win->actionLargeIcons->text())
+	if (list_mode == win->actionDetails->objectName().remove("action"))
+		win->actionDetails->setChecked(true);
+	else if (list_mode == win->actionLargeIcons->objectName().remove("action"))
 		win->actionLargeIcons->setChecked(true);
 	else
-		win->actionDetails->setChecked(true);
+		win->actionGrouped->setChecked(true);
 }
 
 void MainWindow::loadSettings()
@@ -355,7 +372,7 @@ void MainWindow::setDockOptions()
 }
 
 
-Screenshot::Screenshot(const QString & title, QWidget *parent)
+Screenshot::Screenshot(QString title, QWidget *parent)
 : QDockWidget(parent)
 {
 	setObjectName("dockWidget_" + title);
@@ -380,7 +397,7 @@ Screenshot::Screenshot(const QString & title, QWidget *parent)
 	mainLayout->addWidget(screenshotLabel);
 
 	setWidget(dockWidgetContents);
-	setWindowTitle(tr(qPrintable(title)));
+	setWindowTitle(MainWindow::tr(qPrintable(title)));
 
 //	dockWidgetContents->setLayout(mainLayout);
 
