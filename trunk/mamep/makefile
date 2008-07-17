@@ -272,7 +272,7 @@ OBJ = obj/$(OSD)/$(FULLNAME)
 
 # CR/LF setup: use both on win32/os2, CR only on everything else
 DEFS = -DCRLF=2
-  
+
 ifeq ($(TARGETOS),win32)
 DEFS = -DCRLF=3
 endif

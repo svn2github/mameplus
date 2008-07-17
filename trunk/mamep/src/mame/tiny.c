@@ -59,5 +59,6 @@ const game_driver * const mamedrivers[] =
 	DRIVER( starfira )	/* (c) 1979 Exidy */
 	DRIVER( fireone )	/* (c) 1979 Exidy */
 	DRIVER( starfir2 )	/* (c) 1979 Exidy */
+	DRIVER( wrally )	/* (c) 1993 - Ref 930705 */
 
 #endif	/* DRIVER_RECURSIVE */

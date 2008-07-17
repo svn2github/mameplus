@@ -93,6 +93,7 @@
 #include "render.h"
 #include "ui.h"
 #include "uimenu.h"
+#include "uiinput.h"
 #include "deprecat.h"
 #include "debug/debugcon.h"
 #include "clifront.h"
@@ -1793,6 +1794,9 @@ static void init_machine(running_machine *machine)
 	newbase = input_port_init(machine, machine->gamedrv->ipt);
 	if (newbase != 0)
 		mame->base_time = newbase;
+
+	/* intialize UI input */
+	ui_input_init(machine);
 
 	/* first load ROMs, then populate memory, and finally initialize CPUs */
 	/* these operations must proceed in this order */

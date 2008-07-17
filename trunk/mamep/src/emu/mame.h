@@ -187,6 +187,7 @@ typedef struct _palette_private palette_private;
 typedef struct _streams_private streams_private;
 typedef struct _devices_private devices_private;
 typedef struct _input_port_private input_port_private;
+typedef struct _ui_input_private ui_input_private;
 
 
 /* description of the currently-running machine */
@@ -223,6 +224,7 @@ struct _running_machine
 	streams_private *		streams_data;		/* internal data from streams.c */
 	devices_private *		devices_data;		/* internal data from devices.c */
 	input_port_private *	input_port_data;	/* internal data from inptport.c */
+	ui_input_private *		ui_input_data;		/* internal data from uiinput.c */
 #ifdef MAMEMESS
 	images_private *		images_data;		/* internal data from image.c */
 #endif /* MESS */
