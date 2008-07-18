@@ -1635,8 +1635,8 @@ Horizontally
 Horizontalmente
 
 # emu/uitext.c: 28
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-SE VOCÊ NÃO ESTÁ LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+SE VOCÊ NÃO ESTÁ LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.\n\n
 
 # emu/datafile.c: 2304
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2267,8 +2267,8 @@ One match found - added to list
 Encontrado um equivalente - adicionado na lista
 
 # emu/uitext.c: 90
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-Um ou mais ROMs/CHDs para esse jogo estão incorretos. O jogo pode não rodar corretamente.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+Um ou mais ROMs/CHDs para esse jogo estão incorretos. O jogo pode não rodar corretamente.\n
 
 # emu/cheat.c: 3362
 Operation
@@ -4282,10 +4282,6 @@ As cores estão completamente erradas.
 The colors are completely wrong.\n
 As cores estão completamente erradas.\n
 
-# emu/uitext.c: 81
-The colors aren't 100% accurate.
-As cores não estão 100% corretas.
-
 # emu/datafile.c: 1538
 The colors aren't 100% accurate.\n
 As cores não estão 100% corretas.\n
@@ -4323,12 +4319,12 @@ The video emulation isn't 100% accurate.\n
 A emulação do vídeo não está 100% correta.\n
 
 # emu/uitext.c: 80
-There are known problems with this game:
-Há problemas conhecidos com este jogo:
+There are known problems with this game\n\n
+Há problemas conhecidos com este jogo\n\n
 
 # emu/uitext.c: 89
-There are working clones of this game. They are:
-Há clones funcionando deste jogo. São eles:
+\n\nThere are working clones of this game. They are:\n\n
+\n\nHá clones funcionando deste jogo. São eles:\n\n
 
 # emu/inptport.c: 1071 
 Throttle
@@ -4463,8 +4459,8 @@ Type
 Tipo
 
 # emu/uitext.c: 91
-Type OK or move the joystick left then right to continue
-Digite OK ou mova o joystick para esquerda e direita para continuar
+\n\nType OK or move the joystick left then right to continue
+\n\nDigite OK ou mova o joystick para esquerda e direita para continuar
 
 # emu/inptport.c: 1096
 UI Cancel
@@ -4715,8 +4711,8 @@ Uptime
 Tempo ligado
 
 # emu/uitext.c: 27
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-O uso de emuladores em conjunto de ROMs que você não possui é proibido por leis de copyright.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+O uso de emuladores em conjunto de ROMs que você não possui é proibido por leis de copyright.\n\n
 
 # emu/uitext.c: 134
 User Interface

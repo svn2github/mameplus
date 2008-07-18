@@ -1851,8 +1851,8 @@ Horizontally
 Orizzontalmente
 
 #
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-SE NON SEI LEGALMENTE AUTORIZZATO A GIOCARE \"%s\" SU QUESTO EMULATORE, PREMI ESC
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+SE NON SEI LEGALMENTE AUTORIZZATO A GIOCARE \"%s\" SU QUESTO EMULATORE, PREMI ESC.\n\n
 
 #
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2571,8 +2571,8 @@ One match found - added to list
 Una corrispondenza trovata - aggiunta alla lista
 
 #
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-Una o più ROMs/CHDs per questo gioco sono errate. Il gioco può non funzionare correttamente.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+Una o più ROMs/CHDs per questo gioco sono errate. Il gioco può non funzionare correttamente.\n
 
 #
 Operation
@@ -4851,12 +4851,12 @@ The video emulation isn't 100% accurate.\n
 L'emulazione del video non è accurata al 100%.\n
 
 #
-There are known problems with this game:
-Ci sono problemi noti con questo gioco :
+There are known problems with this game\n\n
+Ci sono problemi noti con questo gioco\n\n
 
 #
-There are working clones of this game. They are:
-Ci sono cloni funzionanti di questo gioco. Essi sono:
+\n\nThere are working clones of this game. They are:\n\n
+\n\nCi sono cloni funzionanti di questo gioco. Essi sono:\n\n
 
 #
 This INP file is not an extended INP file, extra info not available\n
@@ -4999,8 +4999,8 @@ Type
 Tipo
 
 #
-Type OK or move the joystick left then right to continue
-Digita OK o muovi la leva a sinistra e poi a destra per continuare
+\n\nType OK or move the joystick left then right to continue
+\n\nDigita OK o muovi la leva a sinistra e poi a destra per continuare
 
 #
 Type name or select: %s_
@@ -5271,8 +5271,8 @@ Uptime
 Tempo attivo
 
 #
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-L'uso degli emulatori unitamente alle ROMs di cui non si è proprietari è proibito dalle leggi sul diritto d'autore.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+L'uso degli emulatori unitamente alle ROMs di cui non si è proprietari è proibito dalle leggi sul diritto d'autore.\n\n
 
 #
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n

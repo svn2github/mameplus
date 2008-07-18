@@ -1775,8 +1775,8 @@ Horizontally
 水平
 
 # emu/uitext.c: 30
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-「%s」を合法的に遊ぶ権利がなければESCを押してください。
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+「%s」を合法的に遊ぶ権利がなければESCを押してください。\n\n
 
 # emu/datafile.c: 2275
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2551,8 +2551,8 @@ One match found - added to list
 一致する値が見つかりました - リストに追加します
 
 # emu/uitext.c: 88
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-このゲーム用のROMまたはCHDが正しくありません。このゲームは正しく実行できないかも知れません。
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+このゲーム用のROMまたはCHDが正しくありません。このゲームは正しく実行できないかも知れません。\n
 
 # emu/cheat.c: 3362
 Operation
@@ -4895,12 +4895,12 @@ The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
 # emu/uitext.c: 78
-There are known problems with this game:
-このゲームには以下の問題があります:
+There are known problems with this game\n\n
+このゲームには以下の問題があります\n\n
 
 # emu/uitext.c: 87
-There are working clones of this game. They are:
-このゲームには以下の動作可能\なクローンが存在します:
+\n\nThere are working clones of this game. They are:\n\n
+\n\nこのゲームには以下の動作可能\なクローンが存在します:\n\n
 
 # emu/clifront.c: 772
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
@@ -5039,8 +5039,8 @@ Type
 種別
 
 # emu/uitext.c: 89
-Type OK or move the joystick left then right to continue
-続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
+\n\nType OK or move the joystick left then right to continue
+\n\n続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
 # emu/uimenu.c: 3157
 Type name or select: %s_
@@ -5319,8 +5319,8 @@ Uptime
 起動時間
 
 # emu/uitext.c: 29
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。\n\n
 
 # emu/clifront.c: 363
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n

@@ -791,8 +791,8 @@ Horizontally
 Horizontal
 
 # emu/uitext.c: 29
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-WENN DU NICHT LEGAL BERECHTIGT BIST \"%s\" AUF DIESEM EMULATOR ZU SPIELEN, DRÜCKE ESC.
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+WENN DU NICHT LEGAL BERECHTIGT BIST \"%s\" AUF DIESEM EMULATOR ZU SPIELEN, DRÜCKE ESC.\n\n
 
 # emu/datafile.c: 2271
 IMPERFECT COLORS   : %3d  %3d\n
@@ -1866,10 +1866,6 @@ Die Farben sind komplett falsch.
 The colors are completely wrong.\n
 Die Farben sind komplett falsch.\n
 
-# emu/uitext.c: 82
-The colors aren't 100% accurate.
-Die Farben sind nicht 100% akkurat.
-
 # emu/datafile.c: 1525
 The colors aren't 100% accurate.\n
 Die Farben sind nicht 100% akkurat.\n
@@ -1907,12 +1903,12 @@ The video emulation isn't 100% accurate.\n
 Die Video-Emulation ist nicht 100% akkurat.\n
 
 # emu/uitext.c: 81
-There are known problems with this game:
-Es gibt bekannte Probleme mit diesem Spiel:
+There are known problems with this game\n\n
+Es gibt bekannte Probleme mit diesem Spiel\n\n
 
 # emu/uitext.c: 90
-There are working clones of this game. They are:
-Es gibt Versionen dieses Spiel die laufen. Diese sind:
+\n\nThere are working clones of this game. They are:\n\n
+\n\nEs gibt Versionen dieses Spiel die laufen. Diese sind:\n\n
 
 # emu/inptport.c: 1028 
 Throttle
@@ -2175,8 +2171,8 @@ Upright 1
 Aufrecht 1
 
 # emu/uitext.c: 28
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-Das Benutzen von Emulatoren zusammen mit ROMs die du nicht besitzt ist durch das Copyright-Gesetz verboten.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+Das Benutzen von Emulatoren zusammen mit ROMs die du nicht besitzt ist durch das Copyright-Gesetz verboten.\n\n
 
 # emu/cheat.c: 4825, 5843, 5979 emu/uitext.c: 45
 Value
@@ -3607,7 +3603,7 @@ OPTIONAL %s NOT FOUND\n
 
 
 # emu/uitext.c: 91
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 
 
 # mame/drivers/findout.c: 309 
@@ -4927,7 +4923,7 @@ Triple Side-by-Side (Gapless)
 
 
 # emu/uitext.c: 92
-Type OK or move the joystick left then right to continue
+\n\nType OK or move the joystick left then right to continue
 
 
 # emu/inptport.c: 1054

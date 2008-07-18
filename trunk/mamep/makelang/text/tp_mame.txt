@@ -1815,7 +1815,7 @@ Horizontally
 
 
 # emu/uitext.c: 30
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 
 
 # emu/datafile.c: 2275
@@ -2607,7 +2607,7 @@ One match found - added to list
 
 
 # emu/uitext.c: 88
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 
 
 # emu/cheat.c: 3362
@@ -4914,10 +4914,6 @@ The colors are completely wrong.
 The colors are completely wrong.\n
 
 
-# emu/uitext.c: 79
-The colors aren't 100% accurate.
-
-
 # emu/datafile.c: 1536
 The colors aren't 100% accurate.\n
 
@@ -4967,11 +4963,11 @@ The video emulation isn't 100% accurate.\n
 
 
 # emu/uitext.c: 78
-There are known problems with this game:
+There are known problems with this game\n\n
 
 
 # emu/uitext.c: 87
-There are working clones of this game. They are:
+\n\nThere are working clones of this game. They are:\n\n
 
 
 # emu/clifront.c: 772
@@ -5111,7 +5107,7 @@ Type
 
 
 # emu/uitext.c: 89
-Type OK or move the joystick left then right to continue
+\n\nType OK or move the joystick left then right to continue
 
 
 # emu/uimenu.c: 3157
@@ -5403,7 +5399,7 @@ Uptime
 
 
 # emu/uitext.c: 29
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 
 
 # emu/clifront.c: 363

@@ -1551,8 +1551,8 @@ Horizontally
 水平
 
 # emu/uitext.c: 28
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-如果您没有合法的权利在本模拟器上运行 \"%s\" ，请按 ESC 键。
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+如果您没有合法的权利在本模拟器上运行 \"%s\" ，请按 ESC 键。\n\n
 
 # emu/datafile.c: 2304
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2171,8 +2171,8 @@ One match found - added to list
 找到一个匹配值 - 已添加到列表
 
 # emu/uitext.c: 90
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-这个游戏的一个或更多的 ROM/CHD 是不正确的。游戏可能无法正确运行。
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+这个游戏的一个或更多的 ROM/CHD 是不正确的。游戏可能无法正确运行。\n
 
 # emu/cheat.c: 3362
 Operation
@@ -4418,10 +4418,6 @@ The colors are completely wrong.
 The colors are completely wrong.\n
 颜色完全错误\n
 
-# emu/uitext.c: 81
-The colors aren't 100% accurate.
-颜色不是100%精确。
-
 # emu/datafile.c: 1538
 The colors aren't 100% accurate.\n
 颜色不是100%精确\n
@@ -4463,12 +4459,12 @@ The video emulation isn't 100% accurate.\n
 视频模拟不是100%精确\n
 
 # emu/uitext.c: 80
-There are known problems with this game:
-这个游戏存在以下已知问题:
+There are known problems with this game\n\n
+这个游戏存在以下已知问题\n\n
 
 # emu/uitext.c: 89
-There are working clones of this game. They are:
-这个游戏存在以下可以运行的克隆版:
+\n\nThere are working clones of this game. They are:\n\n
+\n\n这个游戏存在以下可以运行的克隆版:\n\n
 
 # emu/inptport.c: 1071 
 Throttle
@@ -4591,8 +4587,8 @@ Type
 类型
 
 # emu/uitext.c: 91
-Type OK or move the joystick left then right to continue
-请键入 OK 或先向左再向右移动游戏杆以便继续。
+\n\nType OK or move the joystick left then right to continue
+\n\n请键入 OK 或先向左再向右移动游戏杆以便继续。
 
 # emu/uimenu.c: 3201
 Type name or select: %s_
@@ -4847,8 +4843,8 @@ Uptime
 运行时间
 
 # emu/uitext.c: 27
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-版权法禁止在模拟器中使用非法持有的 ROM 映像。
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+版权法禁止在模拟器中使用非法持有的 ROM 映像。\n\n
 
 # emu/uitext.c: 134
 User Interface

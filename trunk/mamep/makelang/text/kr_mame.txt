@@ -1907,8 +1907,8 @@ Horizontally
 수평
 
 #
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 플레이한다면, ESC 를 누르십시오.
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 플레이한다면, ESC 를 누르십시오.\n\n
 
 #
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2659,8 +2659,8 @@ One match found - added to list
 한개 발견 - 리스트에 추가됨
 
 #
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.\n
 
 #
 Operation
@@ -4999,12 +4999,12 @@ The video emulation isn't 100% accurate.\n
 화면 에뮬레이션이 100% 정확하지 않습니다.\n
 
 #
-There are known problems with this game:
-이 게임은 다음과 같은 문제점이 있습니다:
+There are known problems with this game\n\n
+이 게임은 다음과 같은 문제점이 있습니다\n\n
 
 #
-There are working clones of this game. They are:
-이 게임의 실행 가능한 클론롬은:
+\n\nThere are working clones of this game. They are:\n\n
+\n\n이 게임의 실행 가능한 클론롬은:\n\n
 
 #
 This INP file is not an extended INP file, extra info not available\n
@@ -5147,8 +5147,8 @@ Type
 유형
 
 #
-Type OK or move the joystick left then right to continue
-OK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
+\n\nType OK or move the joystick left then right to continue
+\n\nOK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
 
 #
 Type name or select: %s_
@@ -5431,8 +5431,8 @@ Uptime
 시간종료
 
 #
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.\n\n
 
 #
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n

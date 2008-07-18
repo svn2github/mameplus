@@ -1807,8 +1807,8 @@ Horizontally
 Horizontalmente
 
 # emu/uitext.c: 28
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-SI NO ESTAS LEGALMENTE AUTORIZADO A JUGAR \"%s\" EN ESTE EMULADOR, PULSE ESC. 
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+SI NO ESTAS LEGALMENTE AUTORIZADO A JUGAR \"%s\" EN ESTE EMULADOR, PULSE ESC.\n\n
 
 # emu/datafile.c: 2304
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2559,8 +2559,8 @@ One match found - added to list
 Un juego encontrado - añadido a la lista
 
 # emu/uitext.c: 90
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-Uno o más ROMs/CHDs para este juego son incorrectos. El juego no debería ejecutarse correctamente.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+Uno o más ROMs/CHDs para este juego son incorrectos. El juego no debería ejecutarse correctamente.\n
 
 # emu/cheat.c: 3362
 Operation
@@ -4846,10 +4846,6 @@ Los colores están completamente mal.
 The colors are completely wrong.\n
 Los colores están completamente mal.\n
 
-# emu/uitext.c: 81
-The colors aren't 100% accurate.
-Los colores no son 100% exactos.
-
 # emu/datafile.c: 1538
 The colors aren't 100% accurate.\n
 Los colores no están 100% exactos.\n
@@ -4899,12 +4895,12 @@ The video emulation isn't 100% accurate.\n
 La emulación del vídeo no es 100% exacta.\n
 
 # emu/uitext.c: 80
-There are known problems with this game:
-Hay problemas conocidos con este juego:
+There are known problems with this game\n\n
+Hay problemas conocidos con este juego\n\n
 
 # emu/uitext.c: 89
-There are working clones of this game. They are:
-Hay clones funcionando en este juego. Son:
+\n\nThere are working clones of this game. They are:\n\n
+\n\nHay clones funcionando en este juego. Son:\n\n
 
 # emu/inptport.c: 1310
 This INP file is not an extended INP file, extra info not available\n
@@ -5047,8 +5043,8 @@ Type
 Tipo
 
 # emu/uitext.c: 91
-Type OK or move the joystick left then right to continue
-Pulsa OK o mueve el joystick de izquierda a derecha para continuar
+\n\nType OK or move the joystick left then right to continue
+\n\nPulsa OK o mueve el joystick de izquierda a derecha para continuar
 
 # emu/uimenu.c: 3201
 Type name or select: %s_
@@ -5331,8 +5327,8 @@ Uptime
 Aumentar tiempo
 
 # emu/uitext.c: 27
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-Usar emuladores con ROMS que no te pertenecen está prohibido por las leyes de derechos de autor.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+Usar emuladores con ROMS que no te pertenecen está prohibido por las leyes de derechos de autor.\n\n
 
 # emu/clifront.c: 357
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n

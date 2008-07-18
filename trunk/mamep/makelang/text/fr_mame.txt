@@ -1810,8 +1810,8 @@ Horizontally
 Horizontallement
 
 # emu/uitext.c: 28
-IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.
-SI VOUS N'ETES PAS LEGALEMENT AUTORISE A JOUER A \"%s\" SUR CETTE EMULATEUR, PRESSEZ ESC.
+IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
+SI VOUS N'ETES PAS LEGALEMENT AUTORISE A JOUER A \"%s\" SUR CETTE EMULATEUR, PRESSEZ ESC.\n\n
 
 # emu/datafile.c: 2304
 IMPERFECT COLORS   : %3d  %3d\n
@@ -2562,8 +2562,8 @@ One match found - added to list
 1 correspondance trouvé - est ajouté à la liste
 
 # emu/uitext.c: 90
-One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.
-Une ROMs/CHDs ou plus pour ce jeu ne sont pas correcte. Le jeu peut ne pas fonctionner correctement.
+One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
+Une ROMs/CHDs ou plus pour ce jeu ne sont pas correcte. Le jeu peut ne pas fonctionner correctement.\n
 
 # emu/cheat.c: 3362
 Operation
@@ -4926,12 +4926,12 @@ The video emulation isn't 100% accurate.\n
 L'émulation vidéo n'est pas précise à 100%.\n
 
 # emu/uitext.c: 80
-There are known problems with this game:
-Il y a des problèmes connus avec ce jeu :
+There are known problems with this game\n\n
+Il y a des problèmes connus avec ce jeu\n\n
 
 # emu/uitext.c: 89
-There are working clones of this game. They are:
-Il y a des clones fonctionnels pour ce jeu. Ils sont :
+\n\nThere are working clones of this game. They are:\n\n
+\n\nIl y a des clones fonctionnels pour ce jeu. Ils sont :\n\n
 
 # emu/inptport.c: 1310
 This INP file is not an extended INP file, extra info not available\n
@@ -5074,8 +5074,8 @@ Type
 Taper
 
 # emu/uitext.c: 91
-Type OK or move the joystick left then right to continue
-Taper Ok ou bouger le joystick de gauche à droite pour continuer
+\n\nType OK or move the joystick left then right to continue
+\n\nTaper Ok ou bouger le joystick de gauche à droite pour continuer
 
 # emu/uimenu.c: 3201
 Type name or select: %s_
@@ -5358,8 +5358,8 @@ Uptime
 
 
 # emu/uitext.c: 27
-Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.
-L'utilisation des émulateurs avec les ROMS qui ne vous appartiennent pas est interdits par les lois sur les droits d'auteurs.
+Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
+L'utilisation des émulateurs avec les ROMS qui ne vous appartiennent pas est interdits par les lois sur les droits d'auteurs.\n\n
 
 # emu/clifront.c: 357
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n

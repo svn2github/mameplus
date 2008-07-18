@@ -154,7 +154,7 @@ int ui_is_menu_active(void);
 int ui_is_slider_active(void);
 
 /* print the game info string into a buffer */
-int sprintf_game_info(running_machine *machine, char *buffer);
+astring *game_info_astring(running_machine *machine, astring *string);
 
 void ui_auto_pause(void);
 
