@@ -4,7 +4,7 @@
 #
 #   MAME target makefile
 #
-#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
+#   Copyright Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
@@ -36,6 +36,7 @@ OBJDIRS += \
 CPUS += Z80
 CPUS += M68000
 CPUS += SH2
+CPUS += PIC16C57
 
 
 
@@ -45,8 +46,10 @@ CPUS += SH2
 #-------------------------------------------------
 
 SOUNDS += CUSTOM
+SOUNDS += YM2203
 SOUNDS += YM2151
 SOUNDS += OKIM6295
+SOUNDS += MSM5205
 SOUNDS += QSOUND
 SOUNDS += YM2610
 SOUNDS += YM2610B
@@ -61,13 +64,12 @@ SOUNDS += CDDA
 #-------------------------------------------------
 
 DRVLIBS = \
-	$(MAMEOBJ)/mamedriv.o
+	$(MAMEOBJ)/mamedriv.o \
 
 ifneq ($(USE_DRIVER_SWITCH),)
 DRVLIBS += $(MAMEOBJ)/mameplusdriv.o \
             $(MAMEOBJ)/mamehbdriv.o \
-            $(MAMEOBJ)/mamedecrypteddriv.o \
-            $(MAMEOBJ)/mameconsoledriv.o
+            $(MAMEOBJ)/mamedecrypteddriv.o
 endif
 
 DRVLIBS += \
@@ -84,6 +86,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(DRIVERS)/cps2.o \
 	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
+	$(DRIVERS)/fcrash.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 

@@ -9,12 +9,6 @@
 
 #include "express.h"
 #include <ctype.h>
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-#ifdef MESS
-#include "inputx.h"
-#endif /* MESS */
 
 
 
@@ -1847,7 +1841,7 @@ int symtable_add(symbol_table *table, const char *name, const symbol_entry *entr
 			break;
 		}
 	}
-	assert_always(!all_digits, "All-digit symbols are not allowed");
+//	assert_always(!all_digits, "All-digit symbols are not allowed");
 
 	/* see if we already have an entry and just overwrite it if we do */
 	oldentry = (symbol_entry *)symtable_find(table, name);
