@@ -10,6 +10,7 @@
 #define UIMESS_H
 
 #include "ui.h"
+#include "uimenu.h"
 
 int mess_ui_active(void);
 void mess_ui_update(running_machine *machine);
@@ -17,15 +18,14 @@ int mess_use_new_ui(running_machine *machine);
 int mess_disable_builtin_ui(running_machine *machine);
 
 /* image info screen */
-int ui_sprintf_image_info(running_machine *machine, char *buf);
-UINT32 ui_menu_image_info(running_machine *machine, UINT32 state);
+void ui_menu_image_info(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 
 /* file manager */
-UINT32 menu_file_manager(running_machine *machine, UINT32 state);
+void menu_file_manager(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 
 /* tape control */
-UINT32 menu_tape_control(running_machine *machine, UINT32 state);
-void tapecontrol_gettime(char *timepos, size_t timepos_size, const device_config *img, int *curpos, int *endpos);
+void menu_tape_control(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+astring *tapecontrol_gettime(astring *dest, const device_config *device, int *curpos, int *endpos);
 
 /* paste */
 void ui_paste(running_machine *machine);

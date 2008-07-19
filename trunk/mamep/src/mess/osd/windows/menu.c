@@ -84,11 +84,6 @@ enum
 	DEVOPTION_MAX
 };
 
-#ifdef ENABLE_DEBUGGER
-#define HAS_DEBUGGER	1
-#else
-#define HAS_DEBUGGER	0
-#endif
 #ifdef MAME_PROFILER
 #define HAS_PROFILER	1
 #else
@@ -1747,7 +1742,12 @@ static void set_window_orientation(win_window_info *window, int orientation)
 {
 	render_target_set_orientation(window->target, orientation);
 	if (window->target == render_get_ui_target())
-		render_container_set_orientation(render_container_get_ui(), orientation);
+	{
+		render_container_user_settings settings;
+		render_container_get_user_settings(render_container_get_ui(), &settings);
+		settings.orientation = orientation;
+		render_container_set_user_settings(render_container_get_ui(), &settings);
+	}
 	winwindow_video_window_update(window);
 }
 
@@ -1860,11 +1860,9 @@ static int invoke_command(running_machine *machine, HWND wnd, UINT command)
 			break;
 #endif // HAS_PROFILER
 
-#if HAS_DEBUGGER
 		case ID_OPTIONS_DEBUGGER:
-			debug_halt_on_next_instruction();
+			debug_cpu_halt_on_next_instruction(machine);
 			break;
-#endif // HAS_DEBUGGER
 
 		case ID_OPTIONS_CONFIGURATION:
 			customize_configuration(machine, wnd);
@@ -2096,7 +2094,7 @@ int win_setup_menus(running_machine *machine, HMODULE module, HMENU menu_bar)
 	DeleteMenu(menu_bar, ID_OPTIONS_PROFILER, MF_BYCOMMAND);
 #endif
 
-	if (!HAS_DEBUGGER || ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0))
+	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0)
 		DeleteMenu(menu_bar, ID_OPTIONS_DEBUGGER, MF_BYCOMMAND);
 
 #if !HAS_TOGGLEFULLSCREEN
