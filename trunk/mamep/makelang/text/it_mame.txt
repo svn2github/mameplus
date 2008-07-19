@@ -104,7 +104,7 @@ nREGIONE ROM:\n
 
 #
 \nWARNING: FPS number too high!\n
-\nATTENZIONE: N.° di FPS eccessivi!\n
+\nATTENZIONE: N.?di FPS eccessivi!\n
 
 #
           DIAL:  %4d\n
@@ -320,7 +320,7 @@ NON ESISTONO DUMP BUONI
 
 #
 %s'%s' is not a valid savestate file for game '%s'.
-%s'%s' non è un file salvataggi valido per il gioco '%s'.
+%s'%s' non ?un file salvataggi valido per il gioco '%s'.
 
 #
 %s: CAN'T OPEN DIFF FILE\n
@@ -332,7 +332,7 @@ NON ESISTONO DUMP BUONI
 
 #
 %sThis is not a MAME save file
-%sQuesto non è un file salvataggi MAME
+%sQuesto non ?un file salvataggi MAME
 
 #
 %sWrong version in save file (%d, 1 expected)
@@ -351,8 +351,8 @@ NON ESISTONO DUMP BUONI
 (disattivato dall'opzione di compilazione)
 
 #
-(locked)
-(bloccato)
+ (locked)
+ (bloccato)
 
 #
 (more)
@@ -412,7 +412,7 @@ NON ESISTONO DUMP BUONI
 
 #
 1st Bonus Life
-1° Bonus Vita
+1?Bonus Vita
 
 #
 2 Coins/1 Credit
@@ -460,7 +460,7 @@ SCHERMO 24-BIT     : %3d  + %3d\n
 
 #
 2nd Bonus Life
-2° Bonus Vita
+2?Bonus Vita
 
 #
 3 Coins/1 Credit
@@ -564,19 +564,19 @@ SCHERMO 24-BIT     : %3d  + %3d\n
 
 #
 :1st Activation Key (%s)\n
-:1° Tasto Attivazione (%s)\n
+:1?Tasto Attivazione (%s)\n
 
 #
 :1st Activation Key for %s (%s)\n
-:1° Tasto Attivazione per %s (%s)\n
+:1?Tasto Attivazione per %s (%s)\n
 
 #
 :2nd Activation Key (%s)\n
-:2° Tasto Attivazione (%s)\n
+:2?Tasto Attivazione (%s)\n
 
 #
 :2nd Activation Key for %s (%s)\n
-:2° Tasto Attivazione per %s (%s)\n
+:2?Tasto Attivazione per %s (%s)\n
 
 #
 AD Stick X
@@ -692,11 +692,11 @@ Tasto Attivazione
 
 #
 Activation Key (1st)
-Tasto Attivazione (1°)
+Tasto Attivazione (1?
 
 #
 Activation Key (2nd)
-Tasto Attivazione (1°)
+Tasto Attivazione (1?
 
 #
 Add
@@ -795,8 +795,8 @@ Auto Save Cheats
 Auto Salvataggio Trucchi
 
 #
-Autocenter Speed
-Velocità Autocentramento
+%s Autocenter Speed
+%s Velocit?Autocentramento
 
 #
 Autofire (in some games)
@@ -820,7 +820,7 @@ Disponibile
 
 #
 Average speed: %.2f%% (%d seconds)\n
-Velocità media: %.2f%% (%d secondi)\n
+Velocit?media: %.2f%% (%d secondi)\n
 
 #
 BANK%.2d
@@ -876,7 +876,7 @@ Interrompi al Debugger
 
 #
 Brightness
-Luminosità
+Luminosit?
 
 #
 Button 1
@@ -1054,6 +1054,10 @@ Codice
 Coin
 Gettone
 
+# emu/uitext.c: 123
+Coin %c: 
+Gettone %c: 
+
 #
 Coin 1
 Gettone 1
@@ -1104,7 +1108,7 @@ Fessura Monete?
 
 #
 Coin Mode
-Modalità Gettoni
+Modalit?Gettoni
 
 #
 Coin Slot
@@ -1160,7 +1164,7 @@ Continua
 
 #
 Continue Mode
-Modalità Continua
+Modalit?Continua
 
 #
 Continue Price
@@ -1276,7 +1280,7 @@ Predefinito
 
 #
 Default Search Speed
-Velocità Ricerca Predefinita
+Velocit?Ricerca Predefinita
 
 #
 Delay
@@ -1360,19 +1364,19 @@ Chiama V 8
 
 #
 Difficulty
-Difficoltà
+Difficolt?
 
 #
 Difficulty 1
-Difficoltà 1
+Difficolt?1
 
 #
 Difficulty 2
-Difficoltà 2
+Difficolt?2
 
 #
-Digital Speed
-Velocità Digitale
+%s Digital Speed
+%s Velocit?Digitale
 
 #
 Dip Switches
@@ -1456,7 +1460,7 @@ ERRORE: %s/%s: dati IPS vuoti\n
 
 #
 ERROR: required files are missing, the game cannot be run.
-ERRORE: mancano i files necessari, il gioco non può essere avviato.
+ERRORE: mancano i files necessari, il gioco non pu?essere avviato.
 
 #
 EXPECTED: %s\n
@@ -1464,11 +1468,11 @@ ATTESO: %s\n
 
 #
 Easier
-Più Facile
+Pi?Facile
 
 #
 Easiest
-Più semplice
+Pi?semplice
 
 #
 Easy
@@ -1500,11 +1504,11 @@ Fine della riproduzione
 
 #
 End of playback - %i frames - Average speed %f%%
-Fine riproduzione - %i frames - Velocità media %f%%
+Fine riproduzione - %i frames - Velocit?media %f%%
 
 #
 End of playback - %i frames - Average speed %f%%\n
-Fine riproduzione - %i frames - Velocità media %f%%\n
+Fine riproduzione - %i frames - Velocit?media %f%%\n
 
 #
 Endianness
@@ -1540,7 +1544,7 @@ Errore
 
 #
 Error creating memory card\n(Card may already exist)
-Errore creando la memory card\n(Scheda forse già esistente)
+Errore creando la memory card\n(Scheda forse gi?esistente)
 
 #
 Error loading memory card
@@ -1568,7 +1572,7 @@ Errore: file intestazione illegale
 
 #
 Error: option %s expected a parameter\n
-Errore: l'opzione %s è in attesa del parametro\n
+Errore: l'opzione %s ?in attesa del parametro\n
 
 #
 Error: unknown option: %s\n
@@ -1748,7 +1752,7 @@ Grigio
 
 #
 Greater
-Più Grande
+Pi?Grande
 
 #
 Greater Or Equal
@@ -1772,7 +1776,7 @@ Difficile
 
 #
 Harder
-Più Difficile
+Pi?Difficile
 
 #
 Hardest
@@ -1812,7 +1816,7 @@ Punteggi Massimi
 
 #
 Higher
-Più Alto
+Pi?Alto
 
 #
 Highest
@@ -1952,7 +1956,7 @@ Input (questo gioco)
 
 #
 Input file is for game '%s', not for current game '%s'\n
-Il file input è per il gioco '%s', non per l'attuale gioco '%s'\n
+Il file input ?per il gioco '%s', non per l'attuale gioco '%s'\n
 
 #
 Input: Adding %s #%d: %s\n
@@ -2004,11 +2008,11 @@ Invertito
 
 #
 Invincibility
-Invincibilità
+Invincibilit?
 
 #
 Invulnerability
-Invulnerabilità
+Invulnerabilit?
 
 #
 Italian
@@ -2084,7 +2088,7 @@ Lingua
 
 #
 Left Half
-Metà Sinistra
+Met?Sinistra
 
 #
 Length
@@ -2240,7 +2244,7 @@ Statistiche MAME
 
 #
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-Il MAME è un emulatore: esso riproduce, più o meno fedelmente, il funzionamento di\nsvariate macchine arcade. Ma l'hardware è inutilizzabile senza il software, così è necessaria\nuna copia immagine della ROM operante sull'hardware. Tali ROMs, come qualsiasi\n software commerciale, sono protette dal diritto d'autore ed è illegale usarle\nse non se ne possiede l'originale macchina arcade. È perciò superfluo dire,\nche le ROM non possono essere distribuite col MAME.\nLa distribuzione delle immagini delle ROM insieme al MAME è una violazione delle\n leggi sul diritto d'autore e deve essere riferita agli autori\ncosì che si possa intraprendere le necessarie azioni legali.\n\n
+Il MAME ?un emulatore: esso riproduce, pi?o meno fedelmente, il funzionamento di\nsvariate macchine arcade. Ma l'hardware ?inutilizzabile senza il software, cos??necessaria\nuna copia immagine della ROM operante sull'hardware. Tali ROMs, come qualsiasi\n software commerciale, sono protette dal diritto d'autore ed ?illegale usarle\nse non se ne possiede l'originale macchina arcade. ?perci?superfluo dire,\nche le ROM non possono essere distribuite col MAME.\nLa distribuzione delle immagini delle ROM insieme al MAME ?una violazione delle\n leggi sul diritto d'autore e deve essere riferita agli autori\ncos?che si possa intraprendere le necessarie azioni legali.\n\n
 
 #
 MAMEInfo:\n
@@ -2248,7 +2252,7 @@ MAMEInfo:\n
 
 #
 Machine Mode
-Modalità Macchina
+Modalit?Macchina
 
 #
 Main Screen Pixel Aspect (%d:%d)
@@ -2511,8 +2515,8 @@ No Driver Loaded
 Nessun Driver Caricato
 
 #
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
-Nessun gioco trovato. Controllare il percorso delle ROM nel file mame.ini.\n\nSe è la prima volta che si utilizza il MAME, controllare il file config.txt nella cartella docs per ottenere le informazioni su come configurare il MAME.\n\nPremere un tasto per uscire
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+Nessun gioco trovato. Controllare il percorso delle ROM nel file mame.ini.\n\nSe ?la prima volta che si utilizza il MAME, controllare il file config.txt nella cartella docs per ottenere le informazioni su come configurare il MAME.
 
 #
 No previous values saved
@@ -2572,7 +2576,7 @@ Una corrispondenza trovata - aggiunta alla lista
 
 #
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
-Una o più ROMs/CHDs per questo gioco sono errate. Il gioco può non funzionare correttamente.\n
+Una o pi?ROMs/CHDs per questo gioco sono errate. Il gioco pu?non funzionare correttamente.\n
 
 #
 Operation
@@ -2704,7 +2708,7 @@ P1 Personalizzato 4
 
 #
 P1 Down
-P1 Giù
+P1 Gi?
 
 #
 P1 Left
@@ -2712,7 +2716,7 @@ P1 Sinistra
 
 #
 P1 Left/Down
-P1 Sinistra/Giù
+P1 Sinistra/Gi?
 
 #
 P1 Left/Left
@@ -2800,7 +2804,7 @@ P1 Mahjong L
 
 #
 P1 Mahjong Last Chance
-P1 Mahjong Ultima Possibilità
+P1 Mahjong Ultima Possibilit?
 
 #
 P1 Mahjong M
@@ -2860,7 +2864,7 @@ P1 Destra
 
 #
 P1 Right/Down
-P1 Destra/Giù
+P1 Destra/Gi?
 
 #
 P1 Right/Left
@@ -2976,7 +2980,7 @@ P2 Personalizzato 4
 
 #
 P2 Down
-P2 Giù
+P2 Gi?
 
 #
 P2 Left
@@ -2984,7 +2988,7 @@ P2 Sinistra
 
 #
 P2 Left/Down
-P2 Sinistra/Giù
+P2 Sinistra/Gi?
 
 #
 P2 Left/Left
@@ -3072,7 +3076,7 @@ P2 Mahjong L
 
 #
 P2 Mahjong Last Chance
-P2 Mahjong Ultima Possibilità
+P2 Mahjong Ultima Possibilit?
 
 #
 P2 Mahjong M
@@ -3132,7 +3136,7 @@ P2 Destra
 
 #
 P2 Right/Down
-P2 Destra/Giù
+P2 Destra/Gi?
 
 #
 P2 Right/Left
@@ -3244,7 +3248,7 @@ P3 Personalizzato 4
 
 #
 P3 Down
-P3 Giù
+P3 Gi?
 
 #
 P3 Left
@@ -3284,7 +3288,7 @@ P3 Destra
 
 #
 P3 Right/Down
-P3 Destra/Giù
+P3 Destra/Gi?
 
 #
 P3 Right/Left
@@ -3396,7 +3400,7 @@ P4 Personalizzato 4
 
 #
 P4 Down
-P4 Giù
+P4 Gi?
 
 #
 P4 Left
@@ -3436,7 +3440,7 @@ P4 Destra
 
 #
 P4 Right/Down
-P4 Destra/Giù
+P4 Destra/Gi?
 
 #
 P4 Right/Left
@@ -3548,7 +3552,7 @@ P5 Personalizzato 4
 
 #
 P5 Down
-P5 Giù
+P5 Gi?
 
 #
 P5 Left
@@ -3556,7 +3560,7 @@ P5 Sinistra
 
 #
 P5 Left/Down
-P5 Sinistra/Giù
+P5 Sinistra/Gi?
 
 #
 P5 Left/Left
@@ -3588,7 +3592,7 @@ P5 Destra
 
 #
 P5 Right/Down
-P5 Destra/Giù
+P5 Destra/Gi?
 
 #
 P5 Right/Left
@@ -3700,7 +3704,7 @@ P6 Personalizzato 4
 
 #
 P6 Down
-P6 Giù
+P6 Gi?
 
 #
 P6 Left
@@ -3740,7 +3744,7 @@ P6 Destra
 
 #
 P6 Right/Down
-P6 Destra/Giù
+P6 Destra/Gi?
 
 #
 P6 Right/Left
@@ -3852,7 +3856,7 @@ P7 Personalizzato 4
 
 #
 P7 Down
-P7 Giù
+P7 Gi?
 
 #
 P7 Left
@@ -3860,7 +3864,7 @@ P7 Sinistra
 
 #
 P7 Left/Down
-P7 Sinistra/Giù
+P7 Sinistra/Gi?
 
 #
 P7 Left/Left
@@ -3892,7 +3896,7 @@ P7 Destra
 
 #
 P7 Right/Down
-P7 Destra/Giù
+P7 Destra/Gi?
 
 #
 P7 Right/Left
@@ -4004,7 +4008,7 @@ P8 Personalizzato 4
 
 #
 P8 Down
-P8 Giù
+P8 Gi?
 
 #
 P8 Left
@@ -4012,7 +4016,7 @@ P8 Sinistra
 
 #
 P8 Left/Down
-P8 Sinistra/Giù
+P8 Sinistra/Gi?
 
 #
 P8 Left/Left
@@ -4044,7 +4048,7 @@ P8 Destra
 
 #
 P8 Right/Down
-P8 Destra/Giù
+P8 Destra/Gi?
 
 #
 P8 Right/Left
@@ -4159,8 +4163,8 @@ Player %d
 Giocatore %d
 
 #
-Player 1 Controls
-Giocatore 1 Controlli
+Player %d Controls
+Giocatore %d Controlli
 
 #
 Player 2 Controls
@@ -4288,7 +4292,7 @@ Gioco Precedente
 
 #
 Previous values already restored
-Dati precedenti già reimpostati
+Dati precedenti gi?reimpostati
 
 #
 Program Space
@@ -4395,12 +4399,12 @@ Return to Prior Menu
 Ritorna al Menu Precedente
 
 #
-Reverse
-Inverti
+%s Reverse
+%s Inverti
 
 #
 Right Half
-Matà Destra
+Mat?Destra
 
 #
 Rockn Megasession Custom
@@ -4488,11 +4492,11 @@ Risoluzione Schermo
 
 #
 Screen flipping in cocktail mode is not supported.
-Il ribaltamento schermo nella modalità cocktail non è supportato.
+Il ribaltamento schermo nella modalit?cocktail non ?supportato.
 
 #
 Screen flipping in cocktail mode is not supported.\n
-Il ribaltamento schermo nella modalità cocktail non è supportato.\n
+Il ribaltamento schermo nella modalit?cocktail non ?supportato.\n
 
 #
 Search Dialog Style
@@ -4500,19 +4504,19 @@ Stile Riquadro Ricerca
 
 #
 Search Speed
-Velocità Ricerca
+Velocit?Ricerca
 
 #
 Search a Cheat (Advanced Mode)
-Ricerca Trucco (Modalità Avanzata)
+Ricerca Trucco (Modalit?Avanzata)
 
 #
 Search a Cheat (Classic Mode)
-Ricerca Trucco (Modalità Classica)
+Ricerca Trucco (Modalit?Classica)
 
 #
 Search a Cheat (Minimum Mode)
-Ricerca Trucco (Modalità Base)
+Ricerca Trucco (Modalit?Base)
 
 #
 Search not initialized
@@ -4551,8 +4555,8 @@ Select position to save to
 Seleziona la posizione in cui salvare
 
 #
-Sensitivity
-Sensibilità
+%s Sensitivity
+%s Sensibilit?
 
 #
 Service
@@ -4576,11 +4580,11 @@ Servizio 4
 
 #
 Service Mode
-Modalità di Servizio
+Modalit?di Servizio
 
 #
 Service Mode/Free Play
-Modalità di Servizio/Partita Libera
+Modalit?di Servizio/Partita Libera
 
 #
 Set
@@ -4784,7 +4788,7 @@ Prova
 
 #
 Test Mode
-Modalità Test
+Modalit?Test
 
 #
 Test Switch
@@ -4816,11 +4820,11 @@ I colori non sono acurati al 100%.\n
 
 #
 The game has protection which isn't fully emulated.
-Il gioco ha una protezione che non è pienamente emulata.
+Il gioco ha una protezione che non ?pienamente emulata.
 
 #
 The game has protection which isn't fully emulated.\n
-Il gioco ha una protezione che non è pienamente emulata.\n
+Il gioco ha una protezione che non ?pienamente emulata.\n
 
 #
 The game lacks sound.
@@ -4832,23 +4836,23 @@ Il gioco manca del sonoro.\n
 
 #
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
-Il gioco selezionato non ha una o più ROM necessarie o immagini CHD. Selezionare un gioco diverso.\n\nPremere un tasto per continuare.
+Il gioco selezionato non ha una o pi?ROM necessarie o immagini CHD. Selezionare un gioco diverso.\n\nPremere un tasto per continuare.
 
 #
 The sound emulation isn't 100% accurate.
-L'emulazione del sonoro non è accurata al 100%.
+L'emulazione del sonoro non ?accurata al 100%.
 
 #
 The sound emulation isn't 100% accurate.\n
-L'emulazione del sonoro non è accurata al 100%.\n
+L'emulazione del sonoro non ?accurata al 100%.\n
 
 #
 The video emulation isn't 100% accurate.
-L'emulazione del video non è accurata al 100%.
+L'emulazione del video non ?accurata al 100%.
 
 #
 The video emulation isn't 100% accurate.\n
-L'emulazione del video non è accurata al 100%.\n
+L'emulazione del video non ?accurata al 100%.\n
 
 #
 There are known problems with this game\n\n
@@ -4860,19 +4864,19 @@ Ci sono problemi noti con questo gioco\n\n
 
 #
 This INP file is not an extended INP file, extra info not available\n
-Questo file INP non è un file INP esteso, informazioni extra non disponibili\n
+Questo file INP non ?un file INP esteso, informazioni extra non disponibili\n
 
 #
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-Questo è l'elenco delle ROMs richieste per il driver \"%s\".\nNome            Size Checksum\n
+Questo ?l'elenco delle ROMs richieste per il driver \"%s\".\nNome            Size Checksum\n
 
 #
 Throttle
 Acceleratore
 
 #
-Tickets dispensed
-Accessi distribuiti
+Tickets dispensed: %d\n\n
+Accessi distribuiti: %d\n\n
 
 #
 Tilt
@@ -5020,7 +5024,7 @@ Pulisci UI
 
 #
 UI Down
-Giù UI
+Gi?UI
 
 #
 UI End
@@ -5040,7 +5044,7 @@ UI Gruppo Successivo
 
 #
 UI Page Down
-UI Pagina Giù
+UI Pagina Gi?
 
 #
 UI Page Up
@@ -5266,13 +5270,17 @@ Su-destro
 Upright 1
 Su-destro 1
 
-#
-Uptime
-Tempo attivo
+# emu/uitext.c: 121
+Uptime: %d:%02d:%02d\n\n
+Tempo attivo: %d:%02d:%02d\n\n
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
+Tempo attivo: %d:%02d\n\n
 
 #
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
-L'uso degli emulatori unitamente alle ROMs di cui non si è proprietari è proibito dalle leggi sul diritto d'autore.\n\n
+L'uso degli emulatori unitamente alle ROMs di cui non si ?proprietari ?proibito dalle leggi sul diritto d'autore.\n\n
 
 #
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
@@ -5380,7 +5388,7 @@ Voce
 
 #
 Volume Down
-Volume Giù
+Volume Gi?
 
 #
 Volume Up
@@ -5476,7 +5484,7 @@ Posizione Y
 
 #
 Yes
-Sì
+S?
 
 #
 Zoom = %d
@@ -5496,7 +5504,7 @@ tutte le informazioni disponibili sul driver in formato XML
 
 #
 amount to scale the screen brightness when paused
-quantità per scalare la luminosità schermo quando è in pausa
+quantit?per scalare la luminosit?schermo quando ?in pausa
 
 #
 analog joystick
@@ -5608,7 +5616,7 @@ colore cursore
 
 #
 default game screen brightness correction
-correzione luminosità predefinita dello schermo di gioco
+correzione luminosit?predefinita dello schermo di gioco
 
 #
 default game screen contrast correction
@@ -5688,35 +5696,35 @@ file sorgente driver
 
 #
 enable (keyboard|mouse|joystick) if a dial control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo chiamata
+attiva (tastiera|mouse|joystick) se ?presente un controllo chiamata
 
 #
 enable (keyboard|mouse|joystick) if a lightgun control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo lightgun
+attiva (tastiera|mouse|joystick) se ?presente un controllo lightgun
 
 #
 enable (keyboard|mouse|joystick) if a mouse control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo mouse
+attiva (tastiera|mouse|joystick) se ?presente un controllo mouse
 
 #
 enable (keyboard|mouse|joystick) if a paddle control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo paddle
+attiva (tastiera|mouse|joystick) se ?presente un controllo paddle
 
 #
 enable (keyboard|mouse|joystick) if a pedal control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo pedale
+attiva (tastiera|mouse|joystick) se ?presente un controllo pedale
 
 #
 enable (keyboard|mouse|joystick) if a positional control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo posizionale
+attiva (tastiera|mouse|joystick) se ?presente un controllo posizionale
 
 #
 enable (keyboard|mouse|joystick) if a trackball control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo sfera
+attiva (tastiera|mouse|joystick) se ?presente un controllo sfera
 
 #
 enable (keyboard|mouse|joystick) if an analog joystick control is present
-attiva (tastiera|mouse|joystick) se è presente un controllo joystick
+attiva (tastiera|mouse|joystick) se ?presente un controllo joystick
 
 #
 enable automatic frameskip selection
@@ -5728,11 +5736,11 @@ attiva ripristino automatico all'avvio, e salvat. automatico in uscita
 
 #
 enable backdrops if artwork is enabled and available
-attiva fondali se la locandina è attivata e disponibile
+attiva fondali se la locandina ?attivata e disponibile
 
 #
 enable bezels if artwork is enabled and available
-attiva smussature se la locandina è attivata e disponibile
+attiva smussature se la locandina ?attivata e disponibile
 
 #
 enable cheat subsystem
@@ -5756,7 +5764,7 @@ attiva input mouse
 
 #
 enable overlays if artwork is enabled and available
-attiva overlays se la locandina è attivata e disponibile
+attiva overlays se la locandina ?attivata e disponibile
 
 #
 enable separate input from each keyboard device (if present)
@@ -5768,7 +5776,7 @@ attiva input separato da ogni periferica mouse (se presente)
 
 #
 enable sleeping, which gives time back to other applications when idle
-attiva ibernazione, darà il tempo di tornare indietro alle altre applicazioni se inattive
+attiva ibernazione, dar?il tempo di tornare indietro alle altre applicazioni se inattive
 
 #
 enable sound output
@@ -5876,15 +5884,15 @@ nome datfile ips
 
 #
 is bad\n
-è cattivo\n
+?cattivo\n
 
 #
 is best available\n
-è il migliore disponibile\n
+?il migliore disponibile\n
 
 #
 is good\n
-è buono\n
+?buono\n
 
 #
 lightgun
@@ -5928,7 +5936,7 @@ nessuna ricerca regioni
 
 #
 not
-né
+n?
 
 #
 null name
@@ -6088,7 +6096,7 @@ salvato stato da caricare
 
 #
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-scale_effect \"%s\" non supporta le profondità 15 e 32. L'effetto scale è disattivato.
+scale_effect \"%s\" non supporta le profondit?15 e 32. L'effetto scale ?disattivato.
 
 #
 script for debugger
@@ -6217,4 +6225,5 @@ colore sfondo finestra
 #
 year, manufacturer and full name
 anno, produttore e nome completo
+
 

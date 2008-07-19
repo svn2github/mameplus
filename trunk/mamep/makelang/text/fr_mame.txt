@@ -147,11 +147,11 @@ AUCUN BOUTONS :  %4d\n
 
 # mame/layout/tceptor2.lay: 3
 %dD Glasses Side-by-Side
-%dD Verres Côte-à-Côte
+%dD Verres Côte-?Côte
 
 # emu/cheat.c: 11636
 %s : %s selected
-%s : %s sélectionné
+%s : %s sélectionn?
 
 # emu/uimenu.c: 143
 %s Analog
@@ -195,19 +195,19 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/romload.c: 363
 %s WRONG LENGTH (expected: %08x found: %08x)\n
-%s LONGUEUR INCORRECTE (espéré : %08x trouvé : %08x)\n
+%s LONGUEUR INCORRECTE (espér?: %08x trouv?: %08x)\n
 
 # emu/cheat.c: 2608
 %s activated
-%s activé
+%s activ?
 
 # emu/cheat.c: 11634, 11692
 %s disabled
-%s désactivé
+%s désactiv?
 
 # emu/cheat.c: 11700
 %s enabled
-%s activé
+%s activ?
 
 # emu/state.c: 685
 %s'%s' is not a valid savestate file for game '%s'.
@@ -219,7 +219,7 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/state.c: 697
 %sIncompatible save file (signature %08x, expected %08x)
-%sSauvegarde Incompatible (signature %08x, espéré %08x)
+%sSauvegarde Incompatible (signature %08x, espér?%08x)
 
 # emu/state.c: 669
 %sThis is not a MAME save file
@@ -227,7 +227,7 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/state.c: 677
 %sWrong version in save file (%d, 1 expected)
-%sVersion incorrecte dans le fichier de sauvegarde (%d, 1 espéré)
+%sVersion incorrecte dans le fichier de sauvegarde (%d, 1 espér?
 
 # emu/clifront.c: 1304
 (BAD) 
@@ -235,7 +235,7 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/uitext.c: 162
 (Card may already exist)
-(La carte peut déjà existé)
+(La carte peut déj?exist?
 
 # emu/emuopts.c: 190, 191
 (debugger-only command)
@@ -243,11 +243,11 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/emuopts.c: 55, 79, 85, 90, 154, 202, 208, 214, 220, 221, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257 
 (disabled by compiling option)
-(désactivé par l'option de compilation)
+(désactiv?par l'option de compilation)
 
 # emu/uitext.c: 150
-(locked)
-(fermé)
+ (locked)
+ (ferm?
 
 # emu/uitext.c: 74, 75
 (more)
@@ -311,7 +311,7 @@ AUCUN BOUTONS :  %4d\n
 
 # emu/cheat.c: 5269, 5798, 6256
 1 result found, added to list
-1 résultat trouvé, est ajouté à la liste
+1 résultat trouv? est ajout??la liste
 
 # emu/cheat.c: 2955, 7111
 16 Bit
@@ -471,19 +471,19 @@ AFFICHAGE 24-BIT : %3d  + %3d\n
 
 # emu/cheat.c: 9933
 :1st Activation Key (%s)\n
-:1ère Touche Activé (%s)\n
+:1ère Touche Activ?(%s)\n
 
 # emu/cheat.c: 9931
 :1st Activation Key for %s (%s)\n
-:1ère Touche Activé pour %s (%s)\n
+:1ère Touche Activ?pour %s (%s)\n
 
 # emu/cheat.c: 9943
 :2nd Activation Key (%s)\n
-:2nde Touche Activé (%s)\n
+:2nde Touche Activ?(%s)\n
 
 # emu/cheat.c: 9941
 :2nd Activation Key for %s (%s)\n
-:2nde Touche Activé pour %s (%s)\n
+:2nde Touche Activ?pour %s (%s)\n
 
 # emu/inptport.c: 997
 AD Stick X
@@ -591,19 +591,19 @@ TOUS LES CPU
 
 # mame/layout/mpu4.lay: 414
 AWP Simulated Video (No Artwork)
-Vidéo AWP Simulé (Pas d'Artwork)
+Vidéo AWP Simul?(Pas d'Artwork)
 
 # emu/uitext.c: 183
 Activation Key
-Touche Activé
+Touche Activ?
 
 # emu/cheat.c: 3179
 Activation Key (1st)
-Touche Activé (1ère)
+Touche Activ?(1ère)
 
 # emu/cheat.c: 3191
 Activation Key (2nd)
-Touche Activé (2nde)
+Touche Activ?(2nde)
 
 # emu/cheat.c: 2894
 Add
@@ -671,7 +671,7 @@ Toutes les Valeurs Sauvegardés
 
 # emu/inptport.c: 477
 Allow Continue
-Autoriser à Continuer
+Autoriser ?Continuer
 
 # emu/inptport.c: 486
 Alternate
@@ -706,8 +706,8 @@ Auto Save Cheats
 Sauvegarde de Cheats Auto
 
 # emu/uitext.c: 129
-Autocenter Speed
-Vitesse Centrer Auto
+%s Autocenter Speed
+%s Vitesse Centrer Auto
 
 # mame/drivers/neogeo.c: 1216
 Autofire (in some games)
@@ -791,7 +791,7 @@ Pause dans le Débugueur
 
 # emu/uitext.c: 54 mame/drivers/namcos1.c: 642
 Brightness
-Luminosité
+Luminosit?
 
 # mame/drivers/m107.c: 375 mame/drivers/m92.c: 855 mame/drivers/usgames.c: 139 
 Button 1
@@ -939,11 +939,11 @@ Cheat
 
 # emu/cheat.c: 9780
 Cheat Database reloaded
-Rechargé la BDD des Cheats
+Recharg?la BDD des Cheats
 
 # emu/uitext.c: 187
 Cheat conflict found: disabling
-Conflit de cheat trouvé : désactivation
+Conflit de cheat trouv?: désactivation
 
 # emu/uitext.c: 177
 Cheats
@@ -980,6 +980,10 @@ Code
 # emu/uitext.c: 149 mame/drivers/igs_blit.c: 1814
 Coin
 Pièce
+
+# emu/uitext.c: 123
+Coin
+Pièce %c: 
 
 # emu/inptport.c: 877 mame/drivers/mexico86.c: 294 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 702, 771
 Coin 1
@@ -1151,7 +1155,7 @@ Créer...
 
 # emu/uimenu.c: 1612
 Crop to Screen
-Crop à l'Ecran
+Crop ?l'Ecran
 
 # emu/cheat.c: 5844
 Current Data
@@ -1299,19 +1303,19 @@ Dial V 8
 
 # emu/inptport.c: 386 mame/drivers/pktgaldx.c: 251
 Difficulty
-Difficulté
+Difficult?
 
 # mame/drivers/cps1.c: 2381 mame/drivers/dominob.c: 190 mame/drivers/pipedrm.c: 445 mame/drivers/speedbal.c: 125
 Difficulty 1
-Difficulté 1
+Difficult?1
 
 # mame/drivers/cps1.c: 2390 mame/drivers/dominob.c: 195 mame/drivers/hcastle.c: 165 mame/drivers/pipedrm.c: 450 mame/drivers/speedbal.c: 130
 Difficulty 2
-Difficulté 2
+Difficult?2
 
 # emu/uitext.c: 128
-Digital Speed
-Vitesse Numérique
+%s Digital Speed
+%s Vitesse Numérique
 
 # emu/uitext.c: 95
 Dip Switches
@@ -1327,7 +1331,7 @@ Désactiver Toutes les Pièces
 
 # emu/uitext.c: 176 mame/drivers/blockade.c: 311 mame/drivers/hyperspt.c: 260, 361 mame/drivers/junofrst.c: 328 mame/drivers/lvcards.c: 336, 414 mame/drivers/metro.c: 2384 mame/drivers/midvunit.c: 831 mame/drivers/nemesis.c: 833, 1434, 1528, 1545, 1737, 1834, 1922 mame/drivers/pacman.c: 1269, 1331 mame/drivers/rallyx.c: 591 mame/drivers/rocnrope.c: 129 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 436, 531 mame/drivers/tutankhm.c: 325 mame/drivers/twin16.c: 378 
 Disabled
-Désactivé
+Désactiv?
 
 # mame/drivers/cclimber.c: 465 mame/drivers/pacman.c: 2948 
 Display
@@ -1399,7 +1403,7 @@ ERREUR : %s/%s: donnée IPS est vide\n
 
 # emu/romload.c: 430
 ERROR: required files are missing, the game cannot be run.
-ERREUR : les fichiers requis sont manquants, le jeu ne peut pas être lancé.
+ERREUR : les fichiers requis sont manquants, le jeu ne peut pas être lanc?
 
 # emu/audit.c: 282
 EXPECTED: %s\n
@@ -1503,7 +1507,7 @@ Erreur : Echec lors de la Sauvegarde d'Etat
 
 # emu/mame.c: 1924
 Error: Unable to save state due to illegal registrations. See error.log for details.
-Erreur : Ne peut pas sauvegarder l'état  à cause d'enregistrement illégale. Consultez le fichier error.log pour plus de détails.
+Erreur : Ne peut pas sauvegarder l'état  ?cause d'enregistrement illégale. Consultez le fichier error.log pour plus de détails.
 
 # emu/ui.c: 1780
 Error: illegal caption file
@@ -1511,7 +1515,7 @@ Erreur : fichier de capture illégale
 
 # lib/util/options.c: 452
 Error: option %s expected a parameter\n
-Erreur : option %s espéré en paramètre\n
+Erreur : option %s espér?en paramètre\n
 
 # lib/util/options.c: 435
 Error: unknown option: %s\n
@@ -1539,15 +1543,15 @@ COMMANDES DU FRONTEND
 
 # emu/restrack.c: 88
 Failed to allocate %d bytes (%s:%d)
-Echec à l'allocation de %d bytes (%s:%d)
+Echec ?l'allocation de %d bytes (%s:%d)
 
 # emu/inptport.c: 1300
 Failed to open file for playback
-Echec à l'ouverture du fichier pour le Playback
+Echec ?l'ouverture du fichier pour le Playback
 
 # emu/inptport.c: 1380
 Failed to open file for recording
-Echec à l'ouverture du fichier pour l'Enregistrement
+Echec ?l'ouverture du fichier pour l'Enregistrement
 
 # emu/cheat.c: 6333 emu/uitext.c: 210 mame/drivers/4enraya.c: 119 mame/drivers/alpha68k.c: 1572, 1626 mame/drivers/amidar.c: 284 mame/drivers/angelkds.c: 480 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 160 mame/drivers/brkthru.c: 233, 236, 278, 281 mame/drivers/cninja.c: 729 mame/drivers/cps1.c: 1253, 1548 mame/drivers/darius.c: 677, 715, 753 mame/drivers/ddenlovr.c: 3442 mame/drivers/ddragon3.c: 424 mame/drivers/deniam.c: 275 mame/drivers/epos.c: 151, 154, 160 mame/drivers/fuukifg3.c: 423 mame/drivers/galaxian.c: 2610, 2646 mame/drivers/gameplan.c: 587, 1038 mame/drivers/jcross.c: 191 mame/drivers/karnov.c: 461 mame/drivers/m62.c: 620, 671, 722, 772, 824, 876, 930, 1030, 1083 mame/drivers/mcr.c: 1139 mame/drivers/megaplay.c: 270 mame/drivers/metro.c: 2631, 2937, 3235, 3534 mame/drivers/ninjaw.c: 524 mame/drivers/nmg5.c: 434, 494, 587, 594, 629, 634 mame/drivers/nmk16.c: 2770 mame/drivers/phoenix.c: 324 mame/drivers/quizdna.c: 153, 241, 343 mame/drivers/rohga.c: 445, 513 mame/drivers/safarir.c: 242 mame/drivers/segas16a.c: 1559 mame/drivers/segas16b.c: 2661 mame/drivers/shisen.c: 142 mame/drivers/sidepckt.c: 231 mame/drivers/slapfght.c: 538 mame/drivers/snowbros.c: 761 mame/drivers/sstrangr.c: 248 mame/drivers/ssv.c: 2315 mame/drivers/suprridr.c: 251 mame/drivers/system1.c: 972, 1963 mame/drivers/system16.c: 1710 mame/drivers/taito_f2.c: 3107 mame/drivers/taito_l.c: 1835, 1988 mame/drivers/taito_z.c: 2227 mame/drivers/tecmo16.c: 207 mame/drivers/thepit.c: 267, 322, 363 mame/drivers/trackfld.c: 588, 599 mame/drivers/vigilant.c: 240 mame/drivers/vsnes.c: 1072, 1474, 1698, 1756, 1782 mame/drivers/wallc.c: 180 mame/drivers/warriorb.c: 317 mame/drivers/wc90b.c: 267 mame/drivers/xain.c: 400 mame/drivers/yamato.c: 381 mame/drivers/zac2650.c: 73, 123 mame/drivers/zerozone.c: 148
 Fast
@@ -1563,7 +1567,7 @@ Erreur Fatale : %s (%s:%d)
 
 # emu/mamecore.h: 167
 Fatal error: %s\nCaused by assert: %s:%d: %s
-Erreur Fatale :%s\nProvoqué par un assert : %s:%d: %s
+Erreur Fatale :%s\nProvoqu?par un assert : %s:%d: %s
 
 # mess/muitext.c: 16
 File Manager
@@ -1927,7 +1931,7 @@ Contrôleur : Ajout %s #%d: %s\n
 
 # emu/inptport.c: 4076
 Input: Autoenabling %s due to presence of a %s\n
-Contrôleur : Activation Auto %s est dû à la présence d'un %s\n
+Contrôleur : Activation Auto %s est d??la présence d'un %s\n
 
 # emu/input.c: 598
 Input: Changing default joystick map
@@ -1967,15 +1971,15 @@ Définition du Joystick Invalide : %s\n
 
 # mame/drivers/ajax.c: 171 mame/drivers/taito_z.c: 2596, 2613
 Inverted
-Inversé
+Invers?
 
 # emu/cheat.c: 575 mame/drivers/bwing.c: 266 mame/drivers/cop01.c: 345 mame/drivers/liberate.c: 315 mame/drivers/runaway.c: 237
 Invincibility
-Invincibilité
+Invincibilit?
 
 # mame/drivers/cps1.c: 891, 1210 mame/drivers/equites.c: 563 mame/drivers/fantland.c: 414, 488, 603 mame/drivers/m72.c: 912, 978, 1043, 1107, 1231 mame/drivers/namcos1.c: 695 mame/drivers/namcos86.c: 804, 883 mame/drivers/oneshot.c: 269 mame/drivers/seicross.c: 351 mame/drivers/snowbros.c: 619, 693 mame/drivers/system1.c: 2366 mame/drivers/toaplan1.c: 585, 654, 723, 792, 862, 945, 1029, 1106, 1174, 1249, 1319, 1394, 1483 mame/drivers/toaplan2.c: 2099, 2164, 2221, 2285, 2324, 2432, 2492, 2554, 2628, 2674, 2727, 2997, 3113 mame/drivers/yard.c: 145
 Invulnerability
-Invulnérabilité
+Invulnérabilit?
 
 # emu/inptport.c: 448 emu/uilang.c: 22 
 Italian
@@ -2055,7 +2059,7 @@ Langage
 
 # mame/layout/darius.lay: 51
 Left Half
-Moitié Gauche
+Moiti?Gauche
 
 # emu/cheat.c: 7153
 Length
@@ -2167,7 +2171,7 @@ Charger l'ancien Format de Code
 
 # emu/uitext.c: 154
 Load Selected Card
-Charger la Carte Sélectionné
+Charger la Carte Sélectionn?
 
 # emu/inptport.c: 1109
 Load State
@@ -2175,7 +2179,7 @@ Chargement d'Etat
 
 # emu/ui.c: 2337
 Load cancelled
-Chargement Annulé
+Chargement Annul?
 
 # emu/ui.c: 2368
 Load from position %c
@@ -2191,7 +2195,7 @@ Chargement de la foncte BDF... (%d caractères chargés)\n
 
 # emu/romload.c: 404
 Loading Complete
-Chargement Terminé
+Chargement Termin?
 
 # emu/cheat.c: 3597
 Location
@@ -2211,7 +2215,7 @@ Statistiques MAME
 
 # emu/mame.c: 200
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-MAME est un émulateur : il reproduit, plus ou moins bien, le comportement de\nplusieurs machines d'arcades. Sauf que le matériel est inutile sans le logiciel, donc une image\nde la ROM laquelle est lancé sur le matériel est requise. De tels ROMs, comme n'importe quel autre\nlogiciel commercial, sont sous droit d'auteur et il est donc illégale de\nles utiliser, si vous ne possèder pas les originaux. Les ROMs\nne sont pas distribués avec MAME. Distribué MAME avec des images\nROMS est une violation de la loi des droits d'auteurs et seront rapportés aux\nauteurs afin qu'ils puissent engager des actions légales.\n
+MAME est un émulateur : il reproduit, plus ou moins bien, le comportement de\nplusieurs machines d'arcades. Sauf que le matériel est inutile sans le logiciel, donc une image\nde la ROM laquelle est lanc?sur le matériel est requise. De tels ROMs, comme n'importe quel autre\nlogiciel commercial, sont sous droit d'auteur et il est donc illégale de\nles utiliser, si vous ne possèder pas les originaux. Les ROMs\nne sont pas distribués avec MAME. Distribu?MAME avec des images\nROMS est une violation de la loi des droits d'auteurs et seront rapportés aux\nauteurs afin qu'ils puissent engager des actions légales.\n
 
 # emu/datafile.c: 1513
 MAMEInfo:\n
@@ -2243,7 +2247,7 @@ Développeur
 
 # emu/cheat.c: 2931
 Mapped Memory
-Mémoire mappé
+Mémoire mapp?
 
 # emu/cheat.c: 3396
 Mask
@@ -2251,11 +2255,11 @@ Masque
 
 # emu/cheat.c: 3479
 Match to Write
-Correspond à l'Ecriture
+Correspond ?l'Ecriture
 
 # emu/uitext.c: 216
 Matches found
-Correspondances Trouvé
+Correspondances Trouv?
 
 # emu/uitext.c: 185 mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 271 mame/drivers/travrusa.c: 90
 Max
@@ -2283,11 +2287,11 @@ Carte Mémoire Crée
 
 # emu/uitext.c: 159
 Memory card ejected
-Carte Mémoire Ejecté
+Carte Mémoire Eject?
 
 # emu/uitext.c: 158
 Memory card loaded
-Carte Mémoire Chargé
+Carte Mémoire Charg?
 
 # emu/cheat.c: 7641 mame/drivers/tempest.c: 509
 Minimum
@@ -2299,7 +2303,7 @@ Limite Minimum
 
 # emu/cheat.c: 3535
 Minimum Displayed Value
-Valeur Affiché Minimum
+Valeur Affich?Minimum
 
 # emu/cheat.c: 3543
 Minimum Value
@@ -2447,7 +2451,7 @@ PAS TROUVE (BIOS)\n
 
 # emu/audit.c: 307
 NOT FOUND (shared with parent)\n
-PAS TROUVE (partagé avec le parent)\n
+PAS TROUVE (partag?avec le parent)\n
 
 # emu/audit.c: 297
 NOT FOUND - NO GOOD DUMP KNOWN\n
@@ -2495,15 +2499,15 @@ Non
 
 # emu/drivers/empty.c: 81
 No Driver Loaded
-Aucun Driver Localisé
+Aucun Driver Localis?
 
 # mess/muitext.c: 19
 No Tape Image loaded
-Aucune Image K7 Chargé
+Aucune Image K7 Charg?
 
 # emu/uimenu.c: 1716
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
-Aucun jeux trouvé. Veuillez vérifier le chemin de la ROM dans le fichier mame.ini\n\nSi vous utilisez MAME pour la première fois, veuillez consulter le fichier config.txt se trouvant dans le répertoire Docs.\n\nPressez une touche pour quitter.
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+Aucun jeux trouv? Veuillez vérifier le chemin de la ROM dans le fichier mame.ini\n\nSi vous utilisez MAME pour la première fois, veuillez consulter le fichier config.txt se trouvant dans le répertoire Docs.
 
 # emu/uitext.c: 218
 No previous values saved
@@ -2559,7 +2563,7 @@ Un Tir
 
 # emu/uitext.c: 223
 One match found - added to list
-1 correspondance trouvé - est ajouté à la liste
+1 correspondance trouv?- est ajout??la liste
 
 # emu/uitext.c: 90
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
@@ -2583,7 +2587,7 @@ Autres Contrôles
 
 # emu/uitext.c: 29
 Otherwise, type OK or move the joystick left then right to continue
-Autrement, taper OK ou bouger le joystick de gauche à droite pour continuer.
+Autrement, taper OK ou bouger le joystick de gauche ?droite pour continuer.
 
 # mess/formats/flopimg.c: 938 mess/image.c: 826 mess/opresolv.c: 571 
 Out of memory
@@ -2595,7 +2599,7 @@ En Tout : NE FONCTIONNE PAS
 
 # emu/uimenu.c: 3245
 Overall: Unemulated Protection
-En Tout : Protection Non Emulé
+En Tout : Protection Non Emul?
 
 # emu/uimenu.c: 3247
 Overall: Working
@@ -3219,19 +3223,19 @@ J3 Bouton 9
 
 # emu/inptport.c: 669
 P3 Custom 1
-J3 Personnalisé 1
+J3 Personnalis?1
 
 # emu/inptport.c: 670
 P3 Custom 2
-J3 Personnalisé 2
+J3 Personnalis?2
 
 # emu/inptport.c: 671
 P3 Custom 3
-J3 Personnalisé 3
+J3 Personnalis?3
 
 # emu/inptport.c: 672
 P3 Custom 4
-J3 Personnalisé 4
+J3 Personnalis?4
 
 # emu/inptport.c: 641
 P3 Down
@@ -3371,19 +3375,19 @@ J4 Bouton 9
 
 # emu/inptport.c: 707
 P4 Custom 1
-J4 Personnalisé 1
+J4 Personnalis?1
 
 # emu/inptport.c: 708
 P4 Custom 2
-J4 Personnalisé 2
+J4 Personnalis?2
 
 # emu/inptport.c: 709
 P4 Custom 3
-J4 Personnalisé 3
+J4 Personnalis?3
 
 # emu/inptport.c: 710
 P4 Custom 4
-J4 Personnalisé 4
+J4 Personnalis?4
 
 # emu/inptport.c: 679
 P4 Down
@@ -3523,19 +3527,19 @@ J5 Bouton 9
 
 # emu/inptport.c: 745
 P5 Custom 1
-J5 Personnalisé 1
+J5 Personnalis?1
 
 # emu/inptport.c: 746
 P5 Custom 2
-J5 Personnalisé 2
+J5 Personnalis?2
 
 # emu/inptport.c: 747
 P5 Custom 3
-J5 Personnalisé 3
+J5 Personnalis?3
 
 # emu/inptport.c: 748
 P5 Custom 4
-J5 Personnalisé 4
+J5 Personnalis?4
 
 # emu/inptport.c: 717
 P5 Down
@@ -3675,19 +3679,19 @@ J6 Bouton 9
 
 # emu/inptport.c: 783
 P6 Custom 1
-J6 Personnalisé 1
+J6 Personnalis?1
 
 # emu/inptport.c: 784
 P6 Custom 2
-J6 Personnalisé 2
+J6 Personnalis?2
 
 # emu/inptport.c: 785
 P6 Custom 3
-J6 Personnalisé 3
+J6 Personnalis?3
 
 # emu/inptport.c: 786
 P6 Custom 4
-J6 Personnalisé 4
+J6 Personnalis?4
 
 # emu/inptport.c: 755
 P6 Down
@@ -3827,19 +3831,19 @@ J7 Bouton 9
 
 # emu/inptport.c: 821
 P7 Custom 1
-J7 Personnalisé 1
+J7 Personnalis?1
 
 # emu/inptport.c: 822
 P7 Custom 2
-J7 Personnalisé 2
+J7 Personnalis?2
 
 # emu/inptport.c: 823
 P7 Custom 3
-J7 Personnalisé 3
+J7 Personnalis?3
 
 # emu/inptport.c: 824
 P7 Custom 4
-J7 Personnalisé 4
+J7 Personnalis?4
 
 # emu/inptport.c: 793
 P7 Down
@@ -3979,19 +3983,19 @@ J8 Bouton 9
 
 # emu/inptport.c: 859
 P8 Custom 1
-J8 Personnalisé 1
+J8 Personnalis?1
 
 # emu/inptport.c: 860
 P8 Custom 2
-J8 Personnalisé 2
+J8 Personnalis?2
 
 # emu/inptport.c: 861
 P8 Custom 3
-J8 Personnalisé 3
+J8 Personnalis?3
 
 # emu/inptport.c: 862
 P8 Custom 4
-J8 Personnalisé 4
+J8 Personnalis?4
 
 # emu/inptport.c: 831
 P8 Down
@@ -4162,8 +4166,8 @@ Player %d
 Joueur %d
 
 # emu/uitext.c: 135
-Player 1 Controls
-Contrôles Joueur 1
+Player %d Controls
+Contrôles Joueur %d
 
 # emu/uitext.c: 136
 Player 2 Controls
@@ -4271,7 +4275,7 @@ Positional V 8
 
 # emu/cheat.c: 3562
 Prefill
-Pré Remplir
+Pr?Remplir
 
 # emu/uitext.c: 34
 Press Any Key
@@ -4291,7 +4295,7 @@ Jeu précédent
 
 # emu/uitext.c: 219
 Previous values already restored
-Valeurs précédentes déjà restorés
+Valeurs précédentes déj?restorés
 
 # mess/muitext.c: 44
 Printer
@@ -4335,7 +4339,7 @@ RHS
 
 # emu/datafile.c: 2314
 ROM NEEDS REDUMP   : %3d  %3d\n(%3d ROMS IN %d GAMES)\n
-ROM à REDUMPER   : %3d  %3d\n(%3d ROMS DANs %d JEUX)\n 
+ROM ?REDUMPER   : %3d  %3d\n(%3d ROMS DANs %d JEUX)\n 
 
 # emu/cheat.c: 3462
 Range Maximum
@@ -4422,8 +4426,8 @@ Return to Prior Menu
 Revenir au Menu
 
 # emu/inptport.c: 485 emu/uitext.c: 130
-Reverse
-Inverser
+%s Reverse
+%s Inverser
 
 # mess/muitext.c: 28
 Rewind
@@ -4431,7 +4435,7 @@ Rembobiner
 
 # mame/layout/darius.lay: 61
 Right Half
-Moitié Droite
+Moiti?Droite
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
@@ -4487,7 +4491,7 @@ Sauvegarde d'Etat
 
 # emu/ui.c: 2335
 Save cancelled
-Sauvegarde Annulé
+Sauvegarde Annul?
 
 # emu/ui.c: 2363
 Save to position %c
@@ -4519,11 +4523,11 @@ Résolution de l'Ecran
 
 # emu/uitext.c: 86
 Screen flipping in cocktail mode is not supported.
-L'inversion d'écran en mode cocktail n'est pas supporté.
+L'inversion d'écran en mode cocktail n'est pas support?
 
 # emu/datafile.c: 1547
 Screen flipping in cocktail mode is not supported.\n
-L'inversion d'écran en mode cocktail n'est pas supporté.\n
+L'inversion d'écran en mode cocktail n'est pas support?\n
 
 # emu/cheat.c: 7637
 Search Dialog Style
@@ -4547,7 +4551,7 @@ Rechercher un Cheat (Mode Minimum)
 
 # emu/uitext.c: 217
 Search not initialized
-La Recherche n'est pas initialisé
+La Recherche n'est pas initialis?
 
 # mame/drivers/ninjakid.c: 293 mame/drivers/royalmah.c: 3083
 Second Bonus
@@ -4582,8 +4586,8 @@ Select position to save to
 Sélection de la position de sauvegarde vers
 
 # emu/uitext.c: 131
-Sensitivity
-Sensibilité
+%s Sensitivity
+%s Sensibilit?
 
 # mess/muitext.c: 45
 Serial Port
@@ -4631,7 +4635,7 @@ Choisir/ Vider les Bits
 
 # emu/cheat.c: 7659
 Show Activation Key Message
-Afficher le Message Touche Activé
+Afficher le Message Touche Activ?
 
 # emu/uimenu.c: 1594
 Show Backdrops
@@ -4687,7 +4691,7 @@ Afficher la Recherche d'Etiquettes
 
 # emu/cheat.c: 5996
 Signed
-Signé
+Sign?
 
 # mame/layout/buckrog.lay: 9 mame/layout/dlair.lay: 9 mame/layout/sspeedr.lay: 70 mame/layout/subroc3d.lay: 9 mame/layout/turbo.lay: 60
 Simple LEDs
@@ -4711,7 +4715,7 @@ Lent
 
 # emu/uitext.c: 208
 Slow But Sure (changed or not)
-Lent mais sûr (changé ou pas)
+Lent mais sûr (chang?ou pas)
 
 # mess/muitext.c: 47 
 Snapshot
@@ -4875,23 +4879,23 @@ Les couleurs sont totalement fausse.\n
 
 # emu/uitext.c: 81
 The colors aren't 100% accurate.
-Les couleurs ne sont pas précise à 100%.
+Les couleurs ne sont pas précise ?100%.
 
 # emu/datafile.c: 1538
 The colors aren't 100% accurate.\n
-Les couleurs ne sont pas précise à 100%.\n
+Les couleurs ne sont pas précise ?100%.\n
 
 # mess/muitext.c: 5
 The emulated system is a computer: 
-Le système émulé est un ordinateur :
+Le système émul?est un ordinateur :
 
 # emu/uitext.c: 88
 The game has protection which isn't fully emulated.
-Le jeu possède une protection qui n'est pas complètement émulé.
+Le jeu possède une protection qui n'est pas complètement émul?
 
 # emu/datafile.c: 1529
 The game has protection which isn't fully emulated.\n
-Le jeu possède une protection qui n'est pas complètement émulé.\n
+Le jeu possède une protection qui n'est pas complètement émul?\n
 
 # emu/uitext.c: 85
 The game lacks sound.
@@ -4903,7 +4907,7 @@ Le son manque dans le jeu.\n
 
 # mess/muitext.c: 6
 The keyboard emulation may not be 100% accurate.
-L'émulation du clavier pêut ne pas être précis à 100%.
+L'émulation du clavier pêut ne pas être précis ?100%.
 
 # emu/uimenu.c: 1771
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
@@ -4911,19 +4915,19 @@ Il peut manquer un ou plusieurs fichiers ROM ou images CHD pour le jeu. Veuillez
 
 # emu/uitext.c: 84
 The sound emulation isn't 100% accurate.
-L'émulation du son n'est pas précise à 100%.
+L'émulation du son n'est pas précise ?100%.
 
 # emu/datafile.c: 1544
 The sound emulation isn't 100% accurate.\n
-L'émulation du son n'est pas précise à 100%.\n
+L'émulation du son n'est pas précise ?100%.\n
 
 # emu/uitext.c: 83
 The video emulation isn't 100% accurate.
-L'émulation vidéo n'est pas précise à 100%.
+L'émulation vidéo n'est pas précise ?100%.
 
 # emu/datafile.c: 1532
 The video emulation isn't 100% accurate.\n
-L'émulation vidéo n'est pas précise à 100%.\n
+L'émulation vidéo n'est pas précise ?100%.\n
 
 # emu/uitext.c: 80
 There are known problems with this game\n\n
@@ -4946,8 +4950,8 @@ Throttle
 Accélérer
 
 # emu/uitext.c: 148
-Tickets dispensed
-Tickets dispensés
+Tickets dispensed: %d\n\n
+Tickets dispensés: %d\n\n
 
 # emu/inptport.c: 433, 893
 Tilt
@@ -5063,11 +5067,11 @@ Triple
 
 # emu/layout/triphsxs.lay: 39 mame/layout/darius.lay: 39
 Triple Side-by-Side
-Triple Côte-à-Côte
+Triple Côte-?Côte
 
 # emu/layout/triphsxs.lay: 51
 Triple Side-by-Side (Gapless)
-Triple Côte-à-Côte (Gapless)
+Triple Côte-?Côte (Gapless)
 
 # emu/cheat.c: 3218 mame/drivers/lastduel.c: 418 
 Type
@@ -5075,7 +5079,7 @@ Taper
 
 # emu/uitext.c: 91
 \n\nType OK or move the joystick left then right to continue
-\n\nTaper Ok ou bouger le joystick de gauche à droite pour continuer
+\n\nTaper Ok ou bouger le joystick de gauche ?droite pour continuer
 
 # emu/uimenu.c: 3201
 Type name or select: %s_
@@ -5155,11 +5159,11 @@ UI Zoom Out
 
 # mess/muitext.c: 12
 UI:   Disabled
-UI :   Désactivé
+UI :   Désactiv?
 
 # mess/muitext.c: 11
 UI:   Enabled
-UI :   Activé
+UI :   Activ?
 
 # emu/datafile.c: 2298
 UNEMULATED PROTEC. : %3d  %3d\n
@@ -5187,11 +5191,11 @@ Ne peut pas créer un fichier mame.ini\n
 
 # emu/mame.c: 1995
 Unable to load due to pending anonymous timers. See error.log for details.
-Ne peut pas charger à cause d'un problème de compteur anonyme. Consultez error.log pour plus de détails
+Ne peut pas charger ?cause d'un problème de compteur anonyme. Consultez error.log pour plus de détails
 
 # emu/mame.c: 1909
 Unable to save due to pending anonymous timers. See error.log for details.
-Ne peut pas sauvegarder à cause d'un problème de compteur anonyme. Consultez error.log pour plus de détails 
+Ne peut pas sauvegarder ?cause d'un problème de compteur anonyme. Consultez error.log pour plus de détails 
 
 # lib/util/options.c: 838
 Unexpected boolean option %s queried\n
@@ -5207,7 +5211,7 @@ Option intégrale inattendu %s queried\n
 
 # emu/uimenu.c: 3256 mess/machine/nes.c: 585, 590
 Unimplemented
-Non Implémenté
+Non Implément?
 
 # emu/inptport.c: 483 emu/machine/laserdsc.c: 955 lib/util/chd.c: 1568 tools/regrep.c: 93
 Unknown
@@ -5215,7 +5219,7 @@ Inconnu
 
 # mame/drivers/aerofgt.c: 909 mame/drivers/csk.c: 261 mame/drivers/goldstar.c: 164, 172, 196 mame/drivers/segas16a.c: 1135 mame/drivers/segas16b.c: 2011, 2876, 2877 mame/drivers/spy.c: 492 mame/drivers/system16.c: 1963, 1964 
 Unlimited
-Illimité
+Illimit?
 
 # mess/muitext.c: 32 
 Unmount
@@ -5223,127 +5227,127 @@ Pas monter
 
 # emu/inptport.c: 482 mame/drivers/actfancr.c: 207, 231, 237, 240, 287, 314, 317, 320 mame/drivers/aeroboto.c: 162, 191, 194, 197 mame/drivers/aliens.c: 180, 183, 186, 202, 206 mame/drivers/megasys1.c: 1702 mame/drivers/seta.c: 3676, 3679 mame/drivers/seta2.c: 733, 736 mame/drivers/ssv.c: 1280, 1338, 1339, 1392, 1403, 1910, 1911, 2049, 2068, 2081, 2085
 Unused
-Inutilisé
+Inutilis?
 
 # emu/cheat.c: 2945
 Unused (10)
-Inutilisé(10)
+Inutilis?10)
 
 # emu/cheat.c: 2945
 Unused (11)
-Inutilisé(11)
+Inutilis?11)
 
 # emu/cheat.c: 2945
 Unused (12)
-Inutilisé(12)
+Inutilis?12)
 
 # emu/cheat.c: 2946
 Unused (13)
-Inutilisé(13)
+Inutilis?13)
 
 # emu/cheat.c: 2946
 Unused (14)
-Inutilisé(14)
+Inutilis?14)
 
 # emu/cheat.c: 2946
 Unused (15)
-Inutilisé(15)
+Inutilis?15)
 
 # emu/cheat.c: 2946
 Unused (16)
-Inutilisé(16)
+Inutilis?16)
 
 # emu/cheat.c: 2946
 Unused (17)
-Inutilisé(17)
+Inutilis?17)
 
 # emu/cheat.c: 2947
 Unused (18)
-Inutilisé(18)
+Inutilis?18)
 
 # emu/cheat.c: 2947
 Unused (19)
-Inutilisé(19)
+Inutilis?19)
 
 # emu/cheat.c: 2947
 Unused (20)
-Inutilisé(20)
+Inutilis?20)
 
 # emu/cheat.c: 2947
 Unused (21)
-Inutilisé(21)
+Inutilis?21)
 
 # emu/cheat.c: 2947
 Unused (22)
-Inutilisé(22)
+Inutilis?22)
 
 # emu/cheat.c: 2948
 Unused (23)
-Inutilisé(23)
+Inutilis?23)
 
 # emu/cheat.c: 2948
 Unused (24)
-Inutilisé(24)
+Inutilis?24)
 
 # emu/cheat.c: 2948
 Unused (25)
-Inutilisé(25)
+Inutilis?25)
 
 # emu/cheat.c: 2948
 Unused (26)
-Inutilisé(26)
+Inutilis?26)
 
 # emu/cheat.c: 2948
 Unused (27)
-Inutilisé(27)
+Inutilis?27)
 
 # emu/cheat.c: 2949
 Unused (28)
-Inutilisé(28)
+Inutilis?28)
 
 # emu/cheat.c: 2949
 Unused (29)
-Inutilisé(29)
+Inutilis?29)
 
 # emu/cheat.c: 2944
 Unused (3)
-Inutilisé(3)
+Inutilis?3)
 
 # emu/cheat.c: 2949
 Unused (30)
-Inutilisé(30)
+Inutilis?30)
 
 # emu/cheat.c: 2949
 Unused (31)
-Inutilisé(31)
+Inutilis?31)
 
 # emu/cheat.c: 2944
 Unused (4)
-Inutilisé(4)
+Inutilis?4)
 
 # emu/cheat.c: 2887, 2944
 Unused (5)
-Inutilisé(5)
+Inutilis?5)
 
 # emu/cheat.c: 2888, 2935, 2944
 Unused (6)
-Inutilisé(6)
+Inutilis?6)
 
 # emu/cheat.c: 2936, 2944
 Unused (7)
-Inutilisé(7)
+Inutilis?7)
 
 # emu/cheat.c: 2945
 Unused (8)
-Inutilisé(8)
+Inutilis?8)
 
 # emu/cheat.c: 2945
 Unused (9)
-Inutilisé(9)
+Inutilis?9)
 
 # emu/ui.c: 687
 Updating Artwork...
-Mise à jour de l'Artwork...
+Mise ?jour de l'Artwork...
 
 # emu/inptport.c: 427
 Upright
@@ -5503,31 +5507,31 @@ Watch %.8X (%d)
 
 # emu/cheat.c: 3337
 Watch Add Value
-Ajout de Valeur Surveillé
+Ajout de Valeur Surveill?
 
 # emu/cheat.c: 3345
 Watch Format
-Format Surveillé
+Format Surveill?
 
 # emu/cheat.c: 3353
 Watch Label
-Etiquette Surveillé
+Etiquette Surveill?
 
 # emu/cheat.c: 3320
 Watch Per Line
-Par Ligne Surveillé
+Par Ligne Surveill?
 
 # emu/cheat.c: 3300
 Watch Size
-Taille Surveillé
+Taille Surveill?
 
 # emu/cheat.c: 3310
 Watch Skip
-Saut Surveillé
+Saut Surveill?
 
 # emu/inptport.c: 1113
 Watch Value
-Valeur Surveillé
+Valeur Surveill?
 
 # emu/uitext.c: 175
 Watchpoint
@@ -5591,7 +5595,7 @@ Zoom Auto
 
 # emu/video.c: 1270
 \n%d partial updates
-\n%d mise à jour partiel
+\n%d mise ?jour partiel
 
 # emu/datafile.c: 1627, 1641
 \nORIGINAL:\n
@@ -5615,7 +5619,7 @@ Zoom Auto
 
 # emu/datafile.c: 2531
 \nWARNING: FPS number too high!\n
-\nAVERTISSEMENT : nombre de FPS trop élevé !\n
+\nAVERTISSEMENT : nombre de FPS trop élev?!\n
 
 # emu/clifront.c: 190
 \n\"%s\" approximately matches the following\nsupported games (best match first):\n\n
@@ -5683,11 +5687,11 @@ Zoom Auto
 
 # emu/romload.c: 333
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
-\tChecksums %s invalides traités comme 0 (vérification méne à zéro)\n
+\tChecksums %s invalides traités comme 0 (vérification méne ?zéro)\n
 
 # emu/cheat.c: 2644, 2794, 4667
 activation key saved
-touche activé sauvegardé
+touche activ?sauvegard?
 
 # emu/clifront.c: 87
 all available info on driver in XML format
@@ -5711,19 +5715,19 @@ auto%2d/%d
 
 # emu/emuopts.c: 206
 automatic pause when playback is finished
-pause auto quand le playback est terminé
+pause auto quand le playback est termin?
 
 # emu/emuopts.c: 110
 automatically adjusts the speed of gameplay to keep the refresh rate lower than the screen
-Ajuster auto la vitesse du gameplay pour conserver le taux de rafraî. inférieur à l'écran
+Ajuster auto la vitesse du gameplay pour conserver le taux de rafra? inférieur ?l'écran
 
 # emu/emuopts.c: 117
 automatically rotate screen clockwise 90 degrees if vertical
-rotation auto de l'écran de 90° dans le sens horaire si vertical
+rotation auto de l'écran de 90?dans le sens horaire si vertical
 
 # emu/emuopts.c: 118
 automatically rotate screen counterclockwise 90 degrees if vertical
-rotation auto de l'écran de 90° dans le sens anti horaire si vertical
+rotation auto de l'écran de 90?dans le sens anti horaire si vertical
 
 # emu/emuopts.c: 237
 button color (aqua)
@@ -5767,7 +5771,7 @@ couleur du bouton (jaune)
 
 # emu/emuopts.c: 168
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-centrer la plage de zone morte du joystick ou le changement est ignoré (0.0 centrer, 1.0 fin)
+centrer la plage de zone morte du joystick ou le changement est ignor?(0.0 centrer, 1.0 fin)
 
 # emu/emuopts.c: 212
 change m68k core (0:C, 1:DRC, 2:ASM+DRC)
@@ -5775,7 +5779,7 @@ changer le m68k (0:C, 1:DRC, 2:ASM+DRC)
 
 # emu/cheat.c: 2344
 cheat database not found
-bdd cheat non trouvé
+bdd cheat non trouv?
 
 # emu/emuopts.c: 74
 cheat filename
@@ -5783,7 +5787,7 @@ nom de fichier cheat
 
 # emu/cheat.c: 7787
 command code saved
-code commande sauvegardé
+code commande sauvegard?
 
 # emu/emuopts.c: 83
 command list database name
@@ -5815,7 +5819,7 @@ couleur du curseur
 
 # emu/emuopts.c: 131
 default game screen brightness correction
-correction par défaut de la luminosité de l'écran
+correction par défaut de la luminosit?de l'écran
 
 # emu/emuopts.c: 132
 default game screen contrast correction
@@ -5827,7 +5831,7 @@ correction par défaut du gamme de l'écran
 
 # mess/messopts.c: 29
 device-specific options have been added
-options des périphériques ont été ajoutés
+options des périphériques ont ét?ajoutés
 
 # emu/info.c: 90 emu/inptport.c: 1226
 dial
@@ -5839,7 +5843,7 @@ répertoire pour les fichiers ips
 
 # emu/emuopts.c: 51
 directory for localized data files
-répertoire pour les fichiers de donnée localisé
+répertoire pour les fichiers de donnée localis?
 
 # emu/emuopts.c: 50
 directory for translation table data
@@ -5883,7 +5887,7 @@ répertoire pour les sauvegardes d'états
 
 # emu/debug/debugcmd.c: 1080, 1264
 disabled
-désactivé
+désactiv?
 
 # emu/emuopts.c: 185
 display additional diagnostic information
@@ -5939,11 +5943,11 @@ activer la restoration auto au démarrage, et la sauvegarde auto en quittant
 
 # emu/emuopts.c: 125
 enable backdrops if artwork is enabled and available
-activer les backdrops si l'artwork est activé et dispo
+activer les backdrops si l'artwork est activ?et dispo
 
 # emu/emuopts.c: 127
 enable bezels if artwork is enabled and available
-activer les bezels si l'artwork est activé et dispo
+activer les bezels si l'artwork est activ?et dispo
 
 # emu/emuopts.c: 197
 enable cheat subsystem
@@ -5967,11 +5971,11 @@ activer la souris
 
 # emu/emuopts.c: 126
 enable overlays if artwork is enabled and available
-activer la transparence si l'artwork est activé et dispo
+activer la transparence si l'artwork est activ?et dispo
 
 # emu/emuopts.c: 163
 enable separate input from each keyboard device (if present)
-activer la séparation du contrôleur à partir de chaque clavier (si présent)
+activer la séparation du contrôleur ?partir de chaque clavier (si présent)
 
 # emu/emuopts.c: 164
 enable separate input from each mouse device (if present)
@@ -6011,11 +6015,11 @@ enable/disable volume auto adjust
 
 # emu/debug/debugcmd.c: 1080, 1264
 enabled
-activé
+activ?
 
 # emu/emuopts.c: 169
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
-fin de la plage de saturation des axes du joysticks ou le changement est ignoré (0.0 centrer, 1.0 fin)
+fin de la plage de saturation des axes du joysticks ou le changement est ignor?(0.0 centrer, 1.0 fin)
 
 # emu/clifront.c: 503
 error: invalid value for language: %s\nUse %s\n
@@ -6123,7 +6127,7 @@ n/a
 
 # emu/cheat.c: 2647, 2797, 4670
 no activation key
-pas de touche activé
+pas de touche activ?
 
 # emu/cheat.c: 6641
 no results for this region
@@ -6147,7 +6151,7 @@ nom nul
 
 # emu/emuopts.c: 106
 number of emulated seconds to run before automatically exiting
-nombre de secondes émulés à lancer avant de quitter automatiquement
+nombre de secondes émulés ?lancer avant de quitter automatiquement
 
 # emu/emuopts.c: 99
 optional filename to write a MNG movie of the current session
@@ -6263,7 +6267,7 @@ romset %s
 
 # emu/clifront.c: 943
 romset \"%s\" not found!\n
-romset \"%s\" pas trouvé !\n
+romset \"%s\" pas trouv?!\n
 
 # emu/clifront.c: 945
 romset \"%s\" not supported!\n
@@ -6271,11 +6275,11 @@ romset \"%s\" non supportés !\n
 
 # emu/emuopts.c: 115
 rotate screen clockwise 90 degrees
-Rotation de l'écran de 90° dans le sens horaire
+Rotation de l'écran de 90?dans le sens horaire
 
 # emu/emuopts.c: 116
 rotate screen counterclockwise 90 degrees
-Rotation de l'écran de 90° dans le sens anti-horaire
+Rotation de l'écran de 90?dans le sens anti-horaire
 
 # emu/emuopts.c: 114
 rotate the game screen according to the game's orientation needs it
@@ -6291,11 +6295,11 @@ sampleset %s
 
 # emu/clifront.c: 1020
 sampleset \"%s\" not found!\n
-sampleset \"%s\" pas trouvé !\n
+sampleset \"%s\" pas trouv?!\n
 
 # emu/clifront.c: 1022
 sampleset \"%s\" not supported!\n
-sampleset \"%s\" non supporté !\n
+sampleset \"%s\" non support?!\n
 
 # emu/cheat.c: 5261, 5790, 6248, 6265
 saved all memory regions
@@ -6303,11 +6307,11 @@ sauvegarde de toutes les régions mémoires
 
 # emu/emuopts.c: 95
 saved state to load
-sauvegardé l'état à charger
+sauvegard?l'état ?charger
 
 # emu/video.c: 1934
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-scale_effect \"%s\" ne supporte pas les profondeurs 15 et 32.L'effet scale est désactivé.
+scale_effect \"%s\" ne supporte pas les profondeurs 15 et 32.L'effet scale est désactiv?
 
 # emu/emuopts.c: 188
 script for debugger
@@ -6315,7 +6319,7 @@ script pour le débugeur
 
 # emu/emuopts.c: 196
 select the system BIOS to use
-choix du BIOS à utiliser
+choix du BIOS ?utiliser
 
 # emu/emuopts.c: 262
 select translation language
@@ -6327,7 +6331,7 @@ choix %s
 
 # emu/emuopts.c: 105
 set frameskip to fixed value, 0-10 (autoframeskip must be disabled)
-choix du saut d'image pour la valeur corrigé, 0-10 (saut d'image auto doit être désactivé)
+choix du saut d'image pour la valeur corrig? 0-10 (saut d'image auto doit être désactiv?
 
 # emu/emuopts.c: 148
 set sound output sample rate
@@ -6359,19 +6363,19 @@ Afficher cette aide
 
 # mess/messopts.c: 25
 size of RAM (if supported by driver)
-Taille de la RAM (si supporté par le driver)
+Taille de la RAM (si support?par le driver)
 
 # emu/video.c: 1262
 skip %d/%d
-sauté %d/%d
+saut?%d/%d
 
 # emu/emuopts.c: 198
 skip displaying the information screen at startup
-sauté l'affichage de l'écran d'information au démarrage
+saut?l'affichage de l'écran d'information au démarrage
 
 # mess/messopts.c: 27
 skip displaying the warnings screen
-sauté l'affichage de l'écran d'avertissement
+saut?l'affichage de l'écran d'avertissement
 
 # emu/emuopts.c: 147 emu/emuopts.h: 129 emu/uitext.c: 46 mame/drivers/harddriv.c: 3335 mame/drivers/segas16b.c: 962, 1034 
 sound
@@ -6387,7 +6391,7 @@ stéréo
 
 # mess/muitext.c: 24
 stopped
-arrêté
+arrêt?
 
 # emu/emuopts.c: 77
 story database name
@@ -6439,7 +6443,7 @@ valeurs restorées
 
 # emu/video.c: 691
 video_screen_configure(): visible area must be contained within the width/height!
-video_screen_configure(): la zone visible doit être contenuà l'intérieur de la largeur/hauteur !
+video_screen_configure(): la zone visible doit être contenu?l'intérieur de la largeur/hauteur !
 
 # emu/emuopts.c: 230
 window background color
@@ -6452,4 +6456,5 @@ writes configuration to (driver).ini on exit
 # emu/clifront.c: 88
 year, manufacturer and full name
 année, développeur et nom complet
+
 

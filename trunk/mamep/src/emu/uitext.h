@@ -27,7 +27,6 @@ enum
 	UI_anykey,
 	UI_on,
 	UI_off,
-	UI_NA,
 	UI_OK,
 	UI_address,
 	UI_value,
@@ -63,7 +62,6 @@ enum
 	/* main menu */
 	UI_calibrate,
 	UI_resetgame,
-	UI_exit,
 	/* documents menu */
 	UI_history,
 #ifdef STORY_DATAFILE
@@ -75,35 +73,6 @@ enum
 #ifdef CMD_LIST
 	UI_command,
 #endif /* CMD_LIST */
-
-	/* input groups */
-	UI_uigroup,
-	UI_p1group,
-	UI_p2group,
-	UI_p3group,
-	UI_p4group,
-	UI_p5group,
-	UI_p6group,
-	UI_p7group,
-	UI_p8group,
-	UI_othergroup,
-	UI_returntogroup,
-
-	/* stats */
-	UI_totaltime,
-	UI_tickets,
-	UI_coin,
-	UI_locked,
-
-	/* memory card */
-	UI_selectcard,
-	UI_loadcard,
-	UI_ejectcard,
-	UI_createcard,
-
-	/* refresh rate */
-	UI_refresh_rate,
-	UI_decoding_gfx,
 
 	UI_rotate_clockwise,
 	UI_rotate_counterclockwise,

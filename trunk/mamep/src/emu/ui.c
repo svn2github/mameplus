@@ -2965,8 +2965,8 @@ static void build_bgtexture(running_machine *machine)
 
 		if (gradual > 1.0f)
 			gradual = 1.0f;
-		else if (gradual < 0.2f)
-			gradual = 0.2f;
+		else if (gradual < 0.1f)
+			gradual = 0.1f;
 
 		*BITMAP_ADDR32(bgbitmap, i, 0) = MAKE_ARGB(a, (UINT8)(r * gradual), (UINT8)(g * gradual), (UINT8)(b * gradual));
 	}

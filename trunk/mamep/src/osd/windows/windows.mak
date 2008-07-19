@@ -50,7 +50,7 @@
 # turn on unicode for all 64-bit builds regardless
 ifndef UNICODE
 ifdef PTR64
-UNICODE = 1
+#UNICODE = 1
 endif
 endif
 

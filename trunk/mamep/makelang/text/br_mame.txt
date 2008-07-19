@@ -184,7 +184,7 @@ DUPLOJOYSTICK4VIAS:  %4d\n
 
 # emu/state.c: 685
 %s'%s' is not a valid savestate file for game '%s'.
-%s'%s' não é um arquivo savestate válido para o jogo '%s'.
+%s'%s' não ?um arquivo savestate válido para o jogo '%s'.
 
 # emu/romload.c: 1047
 %s: CAN'T OPEN DIFF FILE\n
@@ -196,7 +196,7 @@ DUPLOJOYSTICK4VIAS:  %4d\n
 
 # emu/state.c: 669
 %sThis is not a MAME save file
-%sEsse não é um arquivo salvo do MAME
+%sEsse não ?um arquivo salvo do MAME
 
 # emu/state.c: 677
 %sWrong version in save file (%d, 1 expected)
@@ -211,8 +211,8 @@ DUPLOJOYSTICK4VIAS:  %4d\n
 (desabilitado por opção de compilação)
 
 # emu/uitext.c: 150
-(locked)
-(travado)
+ (locked)
+ (travado)
 
 # emu/uitext.c: 74, 75
 (more)
@@ -655,8 +655,8 @@ Auto Save Cheats
 Auto-Salvar Trapaças
 
 # emu/uitext.c: 129
-Autocenter Speed
-Velocidade Autocenter
+%s Autocenter Speed
+%s Velocidade Autocenter
 
 # mame/drivers/neogeo.c: 1216
 Autofire (in some games)
@@ -889,6 +889,10 @@ Código
 # emu/uitext.c: 149 mame/drivers/igs_blit.c: 1814
 Coin
 Ficha
+
+# emu/uitext.c: 123
+Coin %c: 
+Ficha %c: 
 
 # emu/inptport.c: 877 mame/drivers/mexico86.c: 294 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 702, 771
 Coin 1
@@ -1199,8 +1203,8 @@ Difficulty 2
 Dificuldade 2
 
 # emu/uitext.c: 128
-Digital Speed
-Velocidade Digital
+%s Digital Speed
+%s Velocidade Digital
 
 # emu/uitext.c: 95
 Dip Switches
@@ -1636,7 +1640,7 @@ Horizontalmente
 
 # emu/uitext.c: 28
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
-SE VOCÊ NÃO ESTÁ LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.\n\n
+SE VOC?NÃO EST?LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.\n\n
 
 # emu/datafile.c: 2304
 IMPERFECT COLORS   : %3d  %3d\n
@@ -1724,7 +1728,7 @@ Entradas (este jogo)
 
 # emu/inptport.c: 1321, 1341
 Input file is for game '%s', not for current game '%s'\n
-Arquivo de input é para o jogo '%s', não para o jogo atual '%s'\n
+Arquivo de input ?para o jogo '%s', não para o jogo atual '%s'\n
 
 # mame/drivers/funworld.c: 917, 1227 
 Insert
@@ -1964,7 +1968,7 @@ Estatísticas do MAME
 
 # emu/mame.c: 200
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
-MAME é um emulador: ele reproduz, mais ou menos corretamente, o comportamento de\nvárias máquinas arcade. Mas a máquina é inúti sem programa, então uma imagem das ROMs que rodam na máquina é necessária. Essas ROMs, como qualquer\nprograma comercial, é protegido pelas leis de copyright e o seu uso é ilegal\nse você não possui a máquina de arcade original. Desnecessário dizer, ROMs não\nsão distribuídas com o MAME. A distribuição do MAME juntamente com imagens de\nROMs é uma violação das leis de copyright e deve ser notificado imediatamente\nàs autoridades para que a ação legal adequada seja tomada.\n
+MAME ?um emulador: ele reproduz, mais ou menos corretamente, o comportamento de\nvárias máquinas arcade. Mas a máquina ?inúti sem programa, então uma imagem das ROMs que rodam na máquina ?necessária. Essas ROMs, como qualquer\nprograma comercial, ?protegido pelas leis de copyright e o seu uso ?ilegal\nse voc?não possui a máquina de arcade original. Desnecessário dizer, ROMs não\nsão distribuídas com o MAME. A distribuição do MAME juntamente com imagens de\nROMs ?uma violação das leis de copyright e deve ser notificado imediatamente\nàs autoridades para que a ação legal adequada seja tomada.\n
 
 # emu/datafile.c: 1513
 MAMEInfo:\n
@@ -3647,8 +3651,8 @@ Player %d
 Jogador %d
 
 # emu/uitext.c: 135
-Player 1 Controls
-Controles Jogador 1 
+Player %d Controls
+Controles Jogador %d 
 
 # emu/uitext.c: 136
 Player 2 Controls
@@ -3776,7 +3780,7 @@ Jogo Anterior
 
 # emu/uitext.c: 219
 Previous values already restored
-Valores anteriores já restaurados
+Valores anteriores j?restaurados
 
 # emu/cheat.c: 2934
 Program Space
@@ -3883,8 +3887,8 @@ Return to Prior Menu
 Retornar ao Menu Anterior
 
 # emu/inptport.c: 485 emu/uitext.c: 130
-Reverse
-Reverso
+%s Reverse
+%s Reverso
 
 # mame/layout/darius.lay: 61
 Right Half
@@ -4031,8 +4035,8 @@ Select position to save to
 Selecione a posição para salvar
 
 # emu/uitext.c: 131
-Sensitivity
-Sensibilidade
+%s Sensitivity
+%s Sensibilidade
 
 # emu/inptport.c: 892 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1820, 1853, 1942 mame/drivers/gdrawpkr.c: 300, 370 mame/drivers/pgm.c: 866 mame/drivers/wallc.c: 182
 Service
@@ -4196,7 +4200,7 @@ State gravado com sucesso.
 
 # emu/mame.c: 1956
 State successfully saved.\nWarning: Save states are not officially supported for this game.
-Posição salva com sucesso.\nAviso: Salvar posições não é oficialmente suportado para este jogo.
+Posição salva com sucesso.\nAviso: Salvar posições não ?oficialmente suportado para este jogo.
 
 # emu/uitext.c: 66
 Statistics not available
@@ -4236,11 +4240,11 @@ Trocar
 
 # emu/uitext.c: 87
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.
-ESSE JOGO NÃO FUNCIONA. Você não irá conseguir rodar esse jogo corretamente. Deixe pra lá.
+ESSE JOGO NÃO FUNCIONA. Voc?não ir?conseguir rodar esse jogo corretamente. Deixe pra l?
 
 # emu/datafile.c: 1526
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
-ESSE JOGO NÃO FUNCIONA. Você não irá conseguir rodar esse jogo corretamente. Deixe pra lá.\n
+ESSE JOGO NÃO FUNCIONA. Voc?não ir?conseguir rodar esse jogo corretamente. Deixe pra l?\n
 
 # mame/drivers/aerofgt.c: 1091, 1182 mame/drivers/cave.c: 1745 mame/drivers/f1gp.c: 375 mame/drivers/midzeus.c: 432 mame/drivers/pgm.c: 1010, 1100, 1191, 1287, 1480 mame/drivers/psikyo.c: 649, 769, 1007, 1211 mame/drivers/toaplan1.c: 1190, 1265, 1335, 1410, 1499 mame/drivers/toaplan2.c: 2074, 2120, 2186, 2252, 2300, 2343, 2453, 2515, 2577, 2646, 2690, 2743
 Taiwan
@@ -4304,35 +4308,35 @@ O jogo não tem som.\n
 
 # emu/uitext.c: 84
 The sound emulation isn't 100% accurate.
-A emulação do som não está 100% correta.
+A emulação do som não est?100% correta.
 
 # emu/datafile.c: 1544
 The sound emulation isn't 100% accurate.\n
-A emulação do som não está 100% correta.\n
+A emulação do som não est?100% correta.\n
 
 # emu/uitext.c: 83
 The video emulation isn't 100% accurate.
-A emulação do vídeo não está 100% correta.
+A emulação do vídeo não est?100% correta.
 
 # emu/datafile.c: 1532
 The video emulation isn't 100% accurate.\n
-A emulação do vídeo não está 100% correta.\n
+A emulação do vídeo não est?100% correta.\n
 
 # emu/uitext.c: 80
 There are known problems with this game\n\n
-Há problemas conhecidos com este jogo\n\n
+H?problemas conhecidos com este jogo\n\n
 
 # emu/uitext.c: 89
 \n\nThere are working clones of this game. They are:\n\n
-\n\nHá clones funcionando deste jogo. São eles:\n\n
+\n\nH?clones funcionando deste jogo. São eles:\n\n
 
 # emu/inptport.c: 1071 
 Throttle
 Desaceleração
 
 # emu/uitext.c: 148
-Tickets dispensed
-Tickets dispensados
+Tickets dispensed: %d\n\n
+Tickets dispensados: %d\n\n
 
 # emu/inptport.c: 433, 893
 Tilt
@@ -4706,13 +4710,17 @@ Upright
 Upright 1
 Upright 1
 
-# emu/uitext.c: 147
-Uptime
-Tempo ligado
+# emu/uitext.c: 121
+Uptime: %d:%02d:%02d\n\n
+Tempo ligado: %d:%02d:%02d\n\n
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
+Tempo ligado: %d:%02d\n\n
 
 # emu/uitext.c: 27
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
-O uso de emuladores em conjunto de ROMs que você não possui é proibido por leis de copyright.\n\n
+O uso de emuladores em conjunto de ROMs que voc?não possui ?proibido por leis de copyright.\n\n
 
 # emu/uitext.c: 134
 User Interface
@@ -5016,7 +5024,7 @@ Zoom Automático
 
 # emu/romload.c: 333
 \tInvalid %s checksum treated as 0 (check leading zeros)\n
-\tChecksum %s inválido tratado como 0 (verificar zeros à esquerda)\n
+\tChecksum %s inválido tratado como 0 (verificar zeros ?esquerda)\n
 
 # emu/cheat.c: 2644, 2794, 4667
 activation key saved
@@ -5024,7 +5032,7 @@ chave de ativação salva
 
 # emu/emuopts.c: 134
 amount to scale the screen brightness when paused
-igualar à escala o brilho de tela quando pausado
+igualar ?escala o brilho de tela quando pausado
 
 # emu/mamecore.h: 166 
 assert: %s:%d: %s
@@ -5436,7 +5444,7 @@ posição salva para carregar
 
 # emu/video.c: 1934
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-scale_effect \"%s\" não suporta ambos bpp de 15 e 32. efeito de escala está desabilitado.
+scale_effect \"%s\" não suporta ambos bpp de 15 e 32. efeito de escala est?desabilitado.
 
 # emu/emuopts.c: 188
 script for debugger
@@ -5496,11 +5504,11 @@ trocar drivers
 
 # emu/cheat.c: 2338
 there are no cheats for this game
-não há trapaças para este jogo
+não h?trapaças para este jogo
 
 # emu/cheat.c: 8934
 there are no old values
-não há valores antigos
+não h?valores antigos
 
 # emu/info.c: 90 emu/inptport.c: 1227 
 trackball
@@ -5803,7 +5811,7 @@ Mouse
 
 # emu/clifront.c: 1214
 NOT A ROM\n
-NÃO É UMA ROM\n?
+NÃO ?UMA ROM\n?
 
 # mame/machine/cubocd32.c: 246 
 NVRAM
@@ -5826,8 +5834,8 @@ No Tape Image loaded
 Imagem de Fita não carregada
 
 # emu/uimenu.c: 1716
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
-Jogos não encontrados. Favor checar o caminho da ROM especificado no arquivo mame.ini.\n\nSe esta é sua primeira vez usando o MAME, favor consulte o arquivo config.txt no diretório "docs" para informações de configuração do MAME.\n\nPressione qualquer tecla para sair
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+Jogos não encontrados. Favor checar o caminho da ROM especificado no arquivo mame.ini.\n\nSe esta ?sua primeira vez usando o MAME, favor consulte o arquivo config.txt no diretório "docs" para informações de configuração do MAME.
 
 # mess/formats/flopimg.c: 938 mess/image.c: 826 mess/opresolv.c: 571 
 Out of memory
@@ -6128,7 +6136,7 @@ Controle de Fita
 
 # mess/muitext.c: 5
 The emulated system is a computer: 
-O sistema emulado é um computador:
+O sistema emulado ?um computador:
 
 # mess/muitext.c: 6
 The keyboard emulation may not be 100% accurate.
@@ -6140,11 +6148,11 @@ O jogo selecionado não possui todas as ROMs ou Imagens de CHD necessárias. Favor
 
 # emu/inptport.c: 1310
 This INP file is not an extended INP file, extra info not available\n
-Este arquivo INP não é um arquivo INP estendido, informação extra não disponível\n
+Este arquivo INP não ?um arquivo INP estendido, informação extra não disponível\n
 
 # emu/clifront.c: 769
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
-Esta é a lista de ROMs requisitadas pelo driver \ "%s\".n Nome            Tamanho Checksum\n
+Esta ?a lista de ROMs requisitadas pelo driver \ "%s\".n Nome            Tamanho Checksum\n
 
 # emu/uimenu.c: 3201
 Type name or select: %s_
@@ -6212,7 +6220,7 @@ ajusta automaticamente a velocidade da jogabilidade para manter a taxa de atuali
 
 # emu/emuopts.c: 168
 center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
-centralizar o alcance da zona morta para o joystick onde a mudança é ignorada (0.0 centro, 1.0 fim)
+centralizar o alcance da zona morta para o joystick onde a mudança ?ignorada (0.0 centro, 1.0 fim)
 
 # emu/cheat.c: 7787
 command code saved
@@ -6319,7 +6327,7 @@ habilitar suporte para teclas de aderência
 
 # emu/emuopts.c: 169
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
-final de alcance de saturação de eixo para o joystick onde a mudança é ignorada (0.0 centro, 1.0 fim)
+final de alcance de saturação de eixo para o joystick onde a mudança ?ignorada (0.0 centro, 1.0 fim)
 
 # emu/clifront.c: 503
 error: invalid value for language: %s\nUse %s\n
@@ -6335,15 +6343,15 @@ jogo
 
 # emu/clifront.c: 919, 999
 is bad\n
-é ruim\n
+?ruim\n
 
 # emu/clifront.c: 929, 1009
 is best available\n
-é o melhor disponível\n
+?o melhor disponível\n
 
 # emu/clifront.c: 924, 1004
 is good\n
-é bom\n
+?bom\n
 
 # emu/clifront.c: 99
 list available devices
@@ -6458,4 +6466,5 @@ escreve configuração no (driver).ini ao sair
 # emu/clifront.c: 88
 year, manufacturer and full name
 ano, fabricante e nome completo
+
 

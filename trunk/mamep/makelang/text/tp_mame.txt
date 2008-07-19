@@ -259,7 +259,7 @@
 
 
 # emu/uitext.c: 124
-(locked)
+ (locked)
 
 
 # emu/uitext.c: 72, 73
@@ -695,7 +695,7 @@ Auto Save Cheats
 
 
 # emu/uimenu.c: 1315 
-Autocenter Speed
+%s Autocenter Speed
 
 
 # mame/drivers/neogeo.c: 1141
@@ -972,6 +972,10 @@ Code
 
 # emu/uitext.c: 123 mame/drivers/igs_blit.c: 1813
 Coin
+
+
+# emu/uitext.c: 123
+Coin %c: 
 
 
 # emu/inpttype.h: 398 mame/drivers/mexico86.c: 277 mame/drivers/midyunit.c: 544 mame/drivers/pmpoker.c: 701, 770
@@ -1331,7 +1335,7 @@ Difficulty 2
 
 
 # emu/uimenu.c: 1313 
-Digital Speed
+%s Digital Speed
 
 
 # emu/uimenu.c: 922 
@@ -2543,7 +2547,7 @@ No Tape Image loaded
 
 
 # emu/uimenu.c: 1754
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 
 
 # emu/uitext.c: 186
@@ -4219,7 +4223,7 @@ Player %d
 
 
 # emu/uitext.c: 109
-Player 1 Controls
+Player %d Controls
 
 
 # emu/uitext.c: 110
@@ -4487,7 +4491,7 @@ Return to Prior Menu
 
 
 # emu/inptport.c: 464 emu/uimenu.c: 1316 
-Reverse
+%s Reverse
 
 
 # mess/mslegacy.c: 40
@@ -4651,7 +4655,7 @@ Select position to save to
 
 
 # emu/uimenu.c: 1317 
-Sensitivity
+%s Sensitivity
 
 
 # mess/mslegacy.c: 57
@@ -4979,7 +4983,7 @@ Throttle
 
 
 # emu/uitext.c: 122
-Tickets dispensed
+Tickets dispensed: %d\n\n
 
 
 # emu/inptport.c: 412 emu/inpttype.h: 414
@@ -5395,7 +5399,11 @@ Upright 1
 
 
 # emu/uitext.c: 121
-Uptime
+Uptime: %d:%02d:%02d\n\n
+
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
 
 
 # emu/uitext.c: 29
@@ -6468,5 +6476,6 @@ writes configuration to (driver).ini on exit
 
 # emu/clifront.c: 92
 year, manufacturer and full name
+
 
 

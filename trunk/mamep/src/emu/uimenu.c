@@ -233,9 +233,9 @@ static const char *exittext = "Exit";
 
 static const rgb_t text_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
 static const rgb_t text_bgcolor = MAKE_ARGB(0xe0,0x80,0x80,0x80);
-static const rgb_t sel_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0x00);
-static const rgb_t sel_bgcolor = MAKE_ARGB(0xe0,0x80,0x80,0x00);
-static const rgb_t mouseover_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0x80);
+static const rgb_t sel_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
+#define sel_bgcolor ui_get_rgb_color(CURSOR_COLOR)
+static const rgb_t mouseover_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
 static const rgb_t mouseover_bgcolor = MAKE_ARGB(0x70,0x40,0x40,0x00);
 static const rgb_t mousedown_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0x80);
 static const rgb_t mousedown_bgcolor = MAKE_ARGB(0xB0,0x60,0x60,0x00);
@@ -497,11 +497,11 @@ void ui_menu_reset(ui_menu *menu, ui_menu_reset_options options)
 
 	/* add an item to return */
 	if (menu->parent == NULL)
-		ui_menu_item_append(menu, backtext, NULL, 0, NULL);
+		ui_menu_item_append(menu, _(backtext), NULL, 0, NULL);
 	else if (menu->parent->handler == menu_quit_game)
-		ui_menu_item_append(menu, exittext, NULL, 0, NULL);
+		ui_menu_item_append(menu, _(exittext), NULL, 0, NULL);
 	else
-		ui_menu_item_append(menu, priortext, NULL, 0, NULL);
+		ui_menu_item_append(menu, _(priortext), NULL, 0, NULL);
 }
 
 
@@ -830,15 +830,16 @@ static void ui_menu_draw(ui_menu *menu)
 		/* if we're selected, draw with a different background */
 		if (itemnum == menu->selected)
 		{
+			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_COLOR);
 			fgcolor = sel_fgcolor;
-			bgcolor = sel_bgcolor;
+			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
 		}
 
 		/* else if the mouse is over this item, draw with a different background */
 		else if (menu->hover == itemnum)
 		{
 			fgcolor = mouseover_fgcolor;
-			bgcolor = mouseover_bgcolor;
+			bgcolor = ui_get_rgb_color(CURSOR_COLOR);
 		}
 
 		/* if we have some background hilighting to do, add a quad behind everything else */
@@ -1527,14 +1528,14 @@ static void menu_input_groups_populate(running_machine *machine, ui_menu *menu, 
 	int player;
 
 	/* build up the menu */
-	ui_menu_item_append(menu, "User Interface", NULL, 0, (void *)(IPG_UI + 1));
+	ui_menu_item_append(menu, _("User Interface"), NULL, 0, (void *)(IPG_UI + 1));
 	for (player = 0; player < MAX_PLAYERS; player++)
 	{
 		char buffer[40];
 		sprintf(buffer, "Player %d Controls", player + 1);
-		ui_menu_item_append(menu, buffer, NULL, 0, (void *)(FPTR)(IPG_PLAYER1 + player + 1));
+		ui_menu_item_append(menu, _(buffer), NULL, 0, (void *)(FPTR)(IPG_PLAYER1 + player + 1));
 	}
-	ui_menu_item_append(menu, "Other Controls", NULL, 0, (void *)(FPTR)(IPG_OTHER + 1));
+	ui_menu_item_append(menu, _("Other Controls"), NULL, 0, (void *)(FPTR)(IPG_OTHER + 1));
 }
 
 
@@ -2293,7 +2294,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 						{
 							default:
 							case ANALOG_ITEM_KEYSPEED:
-								astring_printf(text, "%s Digital Speed", input_field_name(field));
+								astring_printf(text, _("%s Digital Speed"), input_field_name(field));
 								astring_printf(subtext, "%d", settings.delta);
 								data->min = 0;
 								data->max = 255;
@@ -2301,7 +2302,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_CENTERSPEED:
-								astring_printf(text, "%s Autocenter Speed", input_field_name(field));
+								astring_printf(text, _("%s Autocenter Speed"), input_field_name(field));
 								astring_printf(subtext, "%d", settings.centerdelta);
 								data->min = 0;
 								data->max = 255;
@@ -2309,7 +2310,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_REVERSE:
-								astring_printf(text, "%s Reverse", input_field_name(field));
+								astring_printf(text, _("%s Reverse"), input_field_name(field));
 								astring_cpyc(subtext, settings.reverse ? _("On") : _("Off"));
 								data->min = 0;
 								data->max = 1;
@@ -2317,7 +2318,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_SENSITIVITY:
-								astring_printf(text, "%s Sensitivity", input_field_name(field));
+								astring_printf(text, _("%s Sensitivity"), input_field_name(field));
 								astring_printf(subtext, "%d", settings.sensitivity);
 								data->min = 1;
 								data->max = 255;
@@ -2386,29 +2387,29 @@ static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, a
 
 	/* show total time first */
 	if (curtime->seconds >= 60 * 60)
-		astring_catprintf(tempstring, "Uptime: %d:%02d:%02d\n\n", curtime->seconds / (60*60), (curtime->seconds / 60) % 60, curtime->seconds % 60);
+		astring_catprintf(tempstring, _("Uptime: %d:%02d:%02d\n\n"), curtime->seconds / (60*60), (curtime->seconds / 60) % 60, curtime->seconds % 60);
 	else
-		astring_catprintf(tempstring, "Uptime: %d:%02d\n\n", (curtime->seconds / 60) % 60, curtime->seconds % 60);
+		astring_catprintf(tempstring, _("Uptime: %d:%02d\n\n"), (curtime->seconds / 60) % 60, curtime->seconds % 60);
 
 	/* show tickets at the top */
 	if (dispensed_tickets > 0)
-		astring_catprintf(tempstring, "Tickets dispensed: %d\n\n", dispensed_tickets);
+		astring_catprintf(tempstring, _("Tickets dispensed: %d\n\n"), dispensed_tickets);
 
 	/* loop over coin counters */
 	for (ctrnum = 0; ctrnum < COIN_COUNTERS; ctrnum++)
 	{
 		/* display the coin counter number */
-		astring_catprintf(tempstring, "Coin %c: ", ctrnum + 'A');
+		astring_catprintf(tempstring, _("Coin %c: "), ctrnum + 'A');
 
 		/* display how many coins */
 		if (coin_count[ctrnum] == 0)
-			astring_catc(tempstring, "NA");
+			astring_catc(tempstring, _("NA"));
 		else
 			astring_catprintf(tempstring, "%d", coin_count[ctrnum]);
 
 		/* display whether or not we are locked out */
 		if (coinlockedout[ctrnum])
-			astring_catc(tempstring, " (locked)");
+			astring_catc(tempstring, _(" (locked)"));
 		astring_catc(tempstring, "\n");
 	}
 
@@ -2475,25 +2476,25 @@ static void menu_memory_card(running_machine *machine, ui_menu *menu, void *para
 				case MEMCARD_ITEM_LOAD:
 					if (memcard_insert(menu->machine, *cardnum) == 0)
 					{
-						popmessage("Memory card loaded");
+						popmessage(_("Memory card loaded"));
 						ui_menu_stack_reset(menu->machine);
 					}
 					else
-						popmessage("Error loading memory card");
+						popmessage(_("Error loading memory card"));
 					break;
 
 				/* handle card ejecting */
 				case MEMCARD_ITEM_EJECT:
 					memcard_eject(menu->machine);
-					popmessage("Memory card ejected");
+					popmessage(_("Memory card ejected"));
 					break;
 
 				/* handle card creating */
 				case MEMCARD_ITEM_CREATE:
 					if (memcard_create(menu->machine, *cardnum, FALSE) == 0)
-						popmessage("Memory card created");
+						popmessage(_("Memory card created"));
 					else
-						popmessage("Error creating memory card\n(Card may already exist)");
+						popmessage(_("Error creating memory card\n(Card may already exist)"));
 					break;
 			}
 		}
@@ -2534,13 +2535,13 @@ static void menu_memory_card_populate(running_machine *machine, ui_menu *menu, i
 		flags |= MENU_FLAG_LEFT_ARROW;
 	if (cardnum < 1000)
 		flags |= MENU_FLAG_RIGHT_ARROW;
-	ui_menu_item_append(menu, "Card Number:", tempstring, flags, (void *)MEMCARD_ITEM_SELECT);
+	ui_menu_item_append(menu, _("Card Number:"), tempstring, flags, (void *)MEMCARD_ITEM_SELECT);
 
 	/* add the remaining items */
-	ui_menu_item_append(menu, "Load Selected Card", NULL, 0, (void *)MEMCARD_ITEM_LOAD);
+	ui_menu_item_append(menu, _("Load Selected Card"), NULL, 0, (void *)MEMCARD_ITEM_LOAD);
 	if (memcard_present() != -1)
-		ui_menu_item_append(menu, "Eject Current Card", NULL, 0, (void *)MEMCARD_ITEM_EJECT);
-	ui_menu_item_append(menu, "Create New Card", NULL, 0, (void *)MEMCARD_ITEM_CREATE);
+		ui_menu_item_append(menu, _("Eject Current Card"), NULL, 0, (void *)MEMCARD_ITEM_EJECT);
+	ui_menu_item_append(menu, _("Create New Card"), NULL, 0, (void *)MEMCARD_ITEM_CREATE);
 }
 
 
@@ -2673,7 +2674,7 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	/* add items for each view */
 	for (viewnum = 0; ; viewnum++)
 	{
-		const char *name = render_target_get_view_name(target, viewnum);
+		const char *name = render_target_get_translated_view_name(target, viewnum);
 		if (name == NULL)
 			break;
 
@@ -2835,8 +2836,8 @@ static void menu_select_game(running_machine *machine, ui_menu *menu, void *para
 
 	/* if we're in an error state, overlay an error message */
 	if (menustate->error)
-		ui_draw_text_box("The selected game is missing one or more required ROM or CHD images. "
-		                 "Please select a different game.\n\nPress any key to continue.",
+		ui_draw_text_box(_("The selected game is missing one or more required ROM or CHD images. "
+		                 "Please select a different game.\n\nPress any key to continue."),
 		                 JUSTIFY_CENTER, 0.5f, 0.5f, UI_REDCOLOR);
 
 	/* if we changed, force a redraw on the next go */
@@ -2865,9 +2866,9 @@ static void menu_select_game_populate(running_machine *machine, ui_menu *menu, s
 	/* if nothing there, add a single multiline item and return */
 	if (matchcount == 0)
 	{
-		ui_menu_item_append(menu, "No games found. Please check the rompath specified in the mame.ini file.\n\n"
+		ui_menu_item_append(menu, _("No games found. Please check the rompath specified in the mame.ini file.\n\n"
 								  "If this is your first time using MAME, please see the config.txt file in "
-								  "the docs directory for information on configuring MAME.", NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
+								  "the docs directory for information on configuring MAME."), NULL, MENU_FLAG_MULTILINE | MENU_FLAG_REDTEXT, NULL);
 		return;
 	}
 
@@ -2891,7 +2892,7 @@ static void menu_select_game_populate(running_machine *machine, ui_menu *menu, s
 	if (ui_menu_is_force_game_select())
 	{
 		ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
-		ui_menu_item_append(menu, "Configure General Inputs", NULL, 0, (void *)1);
+		ui_menu_item_append(menu, _("Configure General Inputs"), NULL, 0, (void *)1);
 	}
 
 	/* configure the custom rendering */
@@ -3803,4 +3804,5 @@ static void menu_render_triangle(bitmap_t *dest, const bitmap_t *source, const r
 /***************************************************************************
     ACCESSORS
 ***************************************************************************/
+
 

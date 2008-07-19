@@ -243,8 +243,8 @@ ENCONTRADO: %s\n
 (desactivado por opción de compilación)
 
 # emu/uitext.c: 150
-(locked)
-(cerrado)
+ (locked)
+ (cerrado)
 
 # emu/uitext.c: 74, 75
 (more)
@@ -316,7 +316,7 @@ Jugador 1 - Comenzar
 
 # mame/drivers/cop01.c: 263 mame/drivers/gottlieb.c: 744 mame/drivers/marineb.c: 164, 360 mame/drivers/marvins.c: 274 mame/drivers/nova2001.c: 108 mame/drivers/omegrace.c: 392
 1st Bonus Life
-1ª Vida Extra
+1?Vida Extra
 
 # emu/inptport.c: 400
 2 Coins/1 Credit
@@ -364,7 +364,7 @@ Jugador 2 - Comenzar
 
 # mame/drivers/cop01.c: 266 mame/drivers/marineb.c: 167, 355 mame/drivers/marvins.c: 283
 2nd Bonus Life
-2ª Vida Extra
+2?Vida Extra
 
 # emu/inptport.c: 397
 3 Coins/1 Credit
@@ -596,11 +596,11 @@ Activación de Tecla
 
 # emu/cheat.c: 3179
 Activation Key (1st)
-Activación Tecla (1ª)
+Activación Tecla (1?
 
 # emu/cheat.c: 3191
 Activation Key (2nd)
-Activación Tecla (2ª)
+Activación Tecla (2?
 
 # emu/cheat.c: 2894
 Add
@@ -703,8 +703,8 @@ Auto Save Cheats
 Auto Guardar Trucos
 
 # emu/uitext.c: 129
-Autocenter Speed
-Auto centrar Velocidad
+%s Autocenter Speed
+%s Auto centrar Velocidad
 
 # mame/drivers/neogeo.c: 1216
 Autofire (in some games)
@@ -978,6 +978,10 @@ Codigo
 Coin
 Crédito
 
+# emu/uitext.c: 123
+Coin %c: 
+Crédito %c: 
+
 # emu/inptport.c: 877 mame/drivers/mexico86.c: 294 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 702, 771
 Coin 1
 Crédito 1
@@ -1068,7 +1072,7 @@ Opción de comparación
 
 # emu/inptport.c: 1064
 Config Menu
-Menú de Configuración
+Men?de Configuración
 
 # emu/uimenu.c: 1755
 Configure General Inputs
@@ -1307,8 +1311,8 @@ Difficulty 2
 Dificultad 2
 
 # emu/uitext.c: 128
-Digital Speed
-Velocidad Digital
+%s Digital Speed
+%s Velocidad Digital
 
 # emu/uitext.c: 95
 Dip Switches
@@ -2499,8 +2503,8 @@ No Tape Image loaded
 Imagen de Cinta no cargada
 
 # emu/uimenu.c: 1716
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
-Juegos no econtrados. Compruebe la carpeta especificado en el archivo mame.ini.\n\nSi es la primera vez que usa MAME, mire el archivo config.txt en la carpeta DOCS para informacion de configuracion de MAME.\n\nPulse una tecla para salir 
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+Juegos no econtrados. Compruebe la carpeta especificado en el archivo mame.ini.\n\nSi es la primera vez que usa MAME, mire el archivo config.txt en la carpeta DOCS para informacion de configuracion de MAME.
 
 # emu/uitext.c: 218
 No previous values saved
@@ -2548,7 +2552,7 @@ Activado
 
 # emu/inptport.c: 1062
 On Screen Display
-Menú en Pantalla
+Men?en Pantalla
 
 # emu/cheat.c: 3255 emu/sound/discrete.h: 3838
 One Shot
@@ -4159,8 +4163,8 @@ Player %d
 Jugador %d
 
 # emu/uitext.c: 135
-Player 1 Controls
-Controles Jugador 1
+Player %d Controls
+Controles Jugador %d
 
 # emu/uitext.c: 136
 Player 2 Controls
@@ -4412,15 +4416,15 @@ Volver Atrás
 
 # emu/uitext.c: 32
 Return to Main Menu
-Volver al Menú Principal
+Volver al Men?Principal
 
 # emu/uitext.c: 33
 Return to Prior Menu
-Volver al Menú Anterior
+Volver al Men?Anterior
 
 # emu/inptport.c: 485 emu/uitext.c: 130
-Reverse
-Inverso
+%s Reverse
+%s Inverso
 
 # mess/muitext.c: 28
 Rewind
@@ -4516,11 +4520,11 @@ Resolución de Pantalla
 
 # emu/uitext.c: 86
 Screen flipping in cocktail mode is not supported.
-Volver al modo anterior no está admitido.
+Volver al modo anterior no est?admitido.
 
 # emu/datafile.c: 1547
 Screen flipping in cocktail mode is not supported.\n
-Volver al modo anterior no está admitido.\n
+Volver al modo anterior no est?admitido.\n
 
 # emu/cheat.c: 7637
 Search Dialog Style
@@ -4579,8 +4583,8 @@ Select position to save to
 Elegir posición para guardar a
 
 # emu/uitext.c: 131
-Sensitivity
-Sensibilidad
+%s Sensitivity
+%s Sensibilidad
 
 # mess/muitext.c: 45
 Serial Port
@@ -4756,7 +4760,7 @@ Estado guardado satisfactoriamente.
 
 # emu/mame.c: 1956
 State successfully saved.\nWarning: Save states are not officially supported for this game.
-Estado guardado satisfactoriamente.\nAtencion!: Los estados guardados no está oficialmente soportado para este juego.
+Estado guardado satisfactoriamente.\nAtencion!: Los estados guardados no est?oficialmente soportado para este juego.
 
 # emu/uitext.c: 66
 Statistics not available
@@ -4860,11 +4864,11 @@ El sistema emulado es un ordenador:
 
 # emu/uitext.c: 88
 The game has protection which isn't fully emulated.
-El juego tiene protección la cual no está completamente emulada.
+El juego tiene protección la cual no est?completamente emulada.
 
 # emu/datafile.c: 1529
 The game has protection which isn't fully emulated.\n
-El juego tiene protección la cual no está completamente emulada.\n
+El juego tiene protección la cual no est?completamente emulada.\n
 
 # emu/uitext.c: 85
 The game lacks sound.
@@ -4919,8 +4923,8 @@ Throttle
 Acelerar
 
 # emu/uitext.c: 148
-Tickets dispensed
-Tickets repartidos
+Tickets dispensed: %d\n\n
+Tickets repartidos: %d\n\n
 
 # emu/inptport.c: 433, 893
 Tilt
@@ -5326,13 +5330,17 @@ Derecha vertical
 Upright 1
 Derecha vertical 1
 
-# emu/uitext.c: 147
-Uptime
-Aumentar tiempo
+# emu/uitext.c: 121
+Uptime: %d:%02d:%02d\n\n
+Aumentar tiempo: %d:%02d:%02d\n\n
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
+Aumentar tiempo: %d:%02d\n\n
 
 # emu/uitext.c: 27
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
-Usar emuladores con ROMS que no te pertenecen está prohibido por las leyes de derechos de autor.\n\n
+Usar emuladores con ROMS que no te pertenecen est?prohibido por las leyes de derechos de autor.\n\n
 
 # emu/clifront.c: 357
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
@@ -6425,4 +6433,5 @@ escribe configuracion en (driver).ini al salir
 # emu/clifront.c: 88
 year, manufacturer and full name
 Año, creador y nombre completo
+
 

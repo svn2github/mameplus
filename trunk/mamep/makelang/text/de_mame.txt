@@ -67,8 +67,8 @@
 %s aktiviert
 
 # emu/uitext.c: 149
-(locked)
-(gesperrt)
+ (locked)
+ (gesperrt)
 
 # emu/cheat.c: 2215, 2725, 3144, 3159, 3171, 3183, 3195, 6003, 7163 emu/uitext.c: 42 tools/chdman.c: 742, 1488
 (none)
@@ -366,6 +366,10 @@ Code
 Coin
 Geld-Einwurf
 
+# emu/uitext.c: 123
+Coin %c: 
+Geld-Einwurf %c: 
+
 # emu/inptport.c: 834 mame/drivers/mexico86.c: 281 mame/drivers/midyunit.c: 420
 Coin 1
 Geld-Einwurf 1
@@ -432,7 +436,7 @@ Vergleich
 
 # emu/inptport.c: 1021
 Config Menu
-Konfigurations-Menü
+Konfigurations-Men?
 
 # emu/uitext.c: 170
 Configure Watchpoints
@@ -1116,7 +1120,7 @@ On Screen Display
 
 # emu/cheat.c: 3254 emu/sound/discrete.h: 3386
 One Shot
-Ein Schuß
+Ein Schu?
 
 # emu/uitext.c: 222
 One match found - added to list
@@ -1604,15 +1608,15 @@ Zurück zum Spiel
 
 # emu/uitext.c: 33
 Return to Main Menu
-Zurück zum Hauptmenü
+Zurück zum Hauptmen?
 
 # emu/uitext.c: 34
 Return to Prior Menu
-Zurück zum vorherigen Menü
+Zurück zum vorherigen Men?
 
 # emu/inptport.c: 464 emu/uitext.c: 129
-Reverse
-Umgekehrt
+%s Reverse
+%s Umgekehrt
 
 # mame/drivers/system24.c: 1887
 Ron
@@ -1640,7 +1644,7 @@ Speicher sichern
 
 # emu/inptport.c: 1030
 Save Snapshot
-Schnappschuß speichern
+Schnappschu?speichern
 
 # emu/inptport.c: 1065 
 Save State
@@ -1707,8 +1711,8 @@ Select position to save to
 Speicher-Position wählen
 
 # emu/uitext.c: 130
-Sensitivity
-Empfindlichkeit
+%s Sensitivity
+%s Empfindlichkeit
 
 # emu/inptport.c: 844
 Service 1
@@ -1915,8 +1919,8 @@ Throttle
 Gashebel
 
 # emu/uitext.c: 147
-Tickets dispensed
-Karten verschenkt
+Tickets dispensed: %d\n\n
+Karten verschenkt: %d\n\n
 
 # emu/inptport.c: 412, 850
 Tilt
@@ -3103,7 +3107,7 @@ Dial V 8
 
 
 # emu/uitext.c: 127
-Digital Speed
+%s Digital Speed
 
 
 # emu/inptport.c: 851
@@ -4587,7 +4591,7 @@ Player %d
 
 
 # emu/uitext.c: 134
-Player 1 Controls
+Player %d Controls
 
 
 # emu/uitext.c: 135
@@ -5564,5 +5568,6 @@ use transparent background for UI text
 
 # emu/emuopts.c: 191
 window background color
+
 
 

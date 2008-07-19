@@ -31,7 +31,6 @@ static const char *const mame_default_text[] =
 	"Press Any Key",
 	"On",
 	"Off",
-	"NA",
 	"OK",
 	"Address",
 	"Value",
@@ -67,7 +66,6 @@ static const char *const mame_default_text[] =
 	/* main menu */
 	"Calibrate Joysticks",
 	"Reset " CAPSTARTGAMENOUN,
-	"Exit",
 	/* documents menu */
 	CAPSTARTGAMENOUN " " HISTORYNAME,
 #ifdef STORY_DATAFILE
@@ -79,35 +77,6 @@ static const char *const mame_default_text[] =
 #ifdef CMD_LIST
 	"Show Command List",
 #endif /* CMD_LIST */
-
-	/* input groups */
-	"User Interface",
-	"Player 1 Controls",
-	"Player 2 Controls",
-	"Player 3 Controls",
-	"Player 4 Controls",
-	"Player 5 Controls",
-	"Player 6 Controls",
-	"Player 7 Controls",
-	"Player 8 Controls",
-	"Other Controls",
-	"Return to Groups",
-
-	/* stats */
-	"Uptime",
-	"Tickets dispensed",
-	"Coin",
-	"(locked)",
-
-	/* memory card */
-	"Card Number:",
-	"Load Selected Card",
-	"Eject Current Card",
-	"Create New Card",
-
-	/* refresh rate */
-	"Refresh rate",
-	"Decoding Graphics",
 
 	"Rotate Clockwise",
 	"Rotate Counter-clockwise",

@@ -351,8 +351,8 @@
 (컴파일 옵션에서 제외됨)
 
 #
-(locked)
-(잠김)
+ (locked)
+ (잠김)
 
 #
 (more)
@@ -811,8 +811,8 @@ Auto Save Cheats
 치트 자동 저장
 
 #
-Autocenter Speed
-자동 중간속도
+%s Autocenter Speed
+%s 자동 중간속도
 
 #
 Autofire (in some games)
@@ -1081,6 +1081,10 @@ Code
 #
 Coin
 동전
+
+# emu/uitext.c: 123
+Coin %c: 
+동전 %c: 
 
 #
 Coin 1
@@ -1407,8 +1411,8 @@ Difficulty 2
 난이도 2
 
 #
-Digital Speed
-디지털 속도
+%s Digital Speed
+%s 디지털 속도
 
 #
 Dip Switches
@@ -2599,8 +2603,8 @@ No Tape Image loaded
 테이프 이미지 불러오지 않았음
 
 #
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.\n\nPress any key to exit
-게임을 찾을 수 없습니다. mame.ini에 지정된 롬 경로를 확인하십시오.\n\n만약 MAME를 처음 실행 하는 것이라면 doc폴더의 config.txt 파일을 참고해 MAME를 설정하시기 바랍니다.\n\n아무키나 누르면 종료
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+게임을 찾을 수 없습니다. mame.ini에 지정된 롬 경로를 확인하십시오.\n\n만약 MAME를 처음 실행 하는 것이라면 doc폴더의 config.txt 파일을 참고해 MAME를 설정하시기 바랍니다.
 
 #
 No previous values saved
@@ -4259,8 +4263,8 @@ Player %d
 플레이어 %d
 
 #
-Player 1 Controls
-플레이어 1 조작
+Player %d Controls
+플레이어 %d 조작
 
 #
 Player 2 Controls
@@ -4519,8 +4523,8 @@ Return to Prior Menu
 이전 메뉴로 돌아감
 
 #
-Reverse
-반전
+%s Reverse
+%s 반전
 
 #
 Rewind
@@ -4679,8 +4683,8 @@ Select position to save to
 저장할 위치(0-9,A-Z) 선택
 
 #
-Sensitivity
-감도
+%s Sensitivity
+%s 감도
 
 #
 Serial Port
@@ -5019,8 +5023,8 @@ Throttle
 감속기능
 
 #
-Tickets dispensed
-티켓 분배
+Tickets dispensed: %d\n\n
+티켓 분배: %d\n\n
 
 #
 Tilt
@@ -5426,9 +5430,13 @@ Upright
 Upright 1
 오른쪽위 1
 
-#
-Uptime
-시간종료
+# emu/uitext.c: 121
+Uptime: %d:%02d:%02d\n\n
+시간종료: %d:%02d:%02d\n\n
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
+시간종료: %d:%02d\n\n
 
 #
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
@@ -6417,4 +6425,5 @@ writes configuration to (driver).ini on exit
 #
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
+
 

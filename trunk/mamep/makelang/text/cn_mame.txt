@@ -175,6 +175,10 @@
 %s 未支持的 CHD 版本\n
 
 # emu/romload.c: 377, 1027
+%s Volume %4.2f
+%s 音量 %4.2f
+
+# emu/romload.c: 384, 1034
 %s WRONG CHECKSUMS:\n
 %s 错误的校验码:\n
 
@@ -219,8 +223,8 @@
 (错误) 
 
 # emu/uitext.c: 150
-(locked)
-(锁定)
+ (locked)
+ (锁定)
 
 # emu/uitext.c: 74, 75
 (more)
@@ -647,8 +651,8 @@ Auto Save Cheats
 自动保存作弊码
 
 # emu/uitext.c: 129
-Autocenter Speed
-自动居中速度
+%s Autocenter Speed
+%s 自动居中速度
 
 # mame/drivers/neogeo.c: 1216
 Autofire (in some games)
@@ -817,6 +821,10 @@ Code
 # emu/uitext.c: 149 mame/drivers/igs_blit.c: 1814
 Coin
 投币
+
+# emu/uitext.c: 123
+Coin %c: 
+投币 %c: 
 
 # emu/inptport.c: 877 mame/drivers/mexico86.c: 294 mame/drivers/midyunit.c: 426 mame/drivers/pmpoker.c: 702, 771
 Coin 1
@@ -1131,8 +1139,8 @@ Difficulty 2
 难度 2
 
 # emu/uitext.c: 128
-Digital Speed
-数字式速度
+%s Digital Speed
+%s 数字式速度
 
 # emu/uitext.c: 95
 Dip Switches
@@ -1891,6 +1899,10 @@ Mask
 掩码
 
 # emu/uitext.c: 216
+Master Volume %3ddB
+主音量 %3ddB
+
+# emu/uitext.c: 184
 Matches found
 找到匹配的值
 
@@ -2031,6 +2043,10 @@ Mouse Y 8
 鼠标 Y 8
 
 # emu/uitext.c: 38
+Move User Interface
+移动用户菜单界面
+
+# emu/uitext.c: 39
 NA
 不可用
 
@@ -3763,8 +3779,8 @@ Player %d
 玩家 %d
 
 # emu/uitext.c: 135
-Player 1 Controls
-玩家 1 控制
+Player %d Controls
+玩家 %d 控制
 
 # emu/uitext.c: 136
 Player 2 Controls
@@ -3799,6 +3815,10 @@ Players
 玩家数
 
 # mame/drivers/system24.c: 1877
+Please load an image
+请载入游戏ROM镜像
+
+# mame/drivers/segas24.c: 1809
 Pon
 碰
 
@@ -3995,8 +4015,8 @@ Return to Prior Menu
 回到上一层菜单
 
 # emu/inptport.c: 485 emu/uitext.c: 130
-Reverse
-反转
+%s Reverse
+%s 反转
 
 # mame/drivers/system24.c: 1887
 Ron
@@ -4139,8 +4159,8 @@ Select position to save to
 选定保存的位置
 
 # emu/uitext.c: 131
-Sensitivity
-敏感度
+%s Sensitivity
+%s 敏感度
 
 # emu/inptport.c: 892 mame/drivers/djmain.c: 499 mame/drivers/firebeat.c: 1820, 1853, 1942 mame/drivers/gdrawpkr.c: 300, 370 mame/drivers/pgm.c: 866 mame/drivers/wallc.c: 182
 Service
@@ -4471,8 +4491,8 @@ Throttle
 限制速度
 
 # emu/uitext.c: 148
-Tickets dispensed
-发券数
+Tickets dispensed: %d\n\n
+发券数: %d\n\n
 
 # emu/inptport.c: 433, 893
 Tilt
@@ -4838,9 +4858,13 @@ Upright
 Upright 1
 直立型 1
 
-# emu/uitext.c: 147
-Uptime
-运行时间
+# emu/uitext.c: 121
+Uptime: %d:%02d:%02d\n\n
+运行时间: %d:%02d:%02d\n\n
+
+# emu/uitext.c: 121
+Uptime: %d:%02d\n\n
+运行时间: %d:%02d\n\n
 
 # emu/uitext.c: 27
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
@@ -4875,6 +4899,10 @@ Vector Game
 矢量游戏
 
 # emu/inptport.c: 434 emu/uitext.c: 333
+Vector\n
+矢量\n
+
+# emu/inptport.c: 413 emu/uitext.c: 293
 Version
 版本
 
@@ -5075,10 +5103,18 @@ Zoom Auto
 \n源代码: %s\n
 
 # emu/datafile.c: 1485
+\nSound:\n
+\n声音:\n
+
+# emu/datafile.c: 1485
 \nStory:\n
 \n游戏故事:\n
 
 # emu/datafile.c: 2531
+\nVideo:\n
+\n视频:\n
+
+# emu/datafile.c: 2502
 \nWARNING: FPS number too high!\n
 \n警告: FPS 值太高!\n
 
@@ -5127,6 +5163,14 @@ Zoom Auto
 \n\n典型 ROM 组合大小   (总计)\n
 
 # emu/datafile.c: 2621
+\n\nThere are working clones of this game. They are:\n\n
+\n\n这个游戏存在以下可以运行的克隆版:\n\n
+
+# emu/uitext.c: 89
+\n\nType OK or move the joystick left then right to continue
+\n\n请键入 OK 或先向左再向右移动游戏杆以便继续。
+
+# emu/datafile.c: 2592
 \n\nVERSION - DRIVERS - SUPPORT:\n\n
 \n\n版本   -  驱动数  - 支持游戏:\n\n
 
