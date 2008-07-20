@@ -286,6 +286,10 @@ static void menu_video_targets(running_machine *machine, ui_menu *menu, void *pa
 static void menu_video_targets_populate(running_machine *machine, ui_menu *menu);
 static void menu_video_options(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_video_options_populate(running_machine *machine, ui_menu *menu, render_target *target);
+#ifdef USE_SCALE_EFFECTS
+static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu);
+#endif /* USE_SCALE_EFFECTS */
 static void menu_quit_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game_populate(running_machine *machine, ui_menu *menu, select_game_state *menustate);
@@ -1479,11 +1483,9 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 #endif
 	/* add video options menu */
 	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? menu_video_targets : menu_video_options);
-#if 0
 #ifdef USE_SCALE_EFFECTS
 	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
 #endif /* USE_SCALE_EFFECTS */
-#endif
 
 	/* add cheat menu */
 //  if (options_get_bool(mame_options(), OPTION_CHEAT))
@@ -2715,6 +2717,62 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	astring_free(tempstring);
 }
 
+#ifdef USE_SCALE_EFFECTS
+#define VIDEO_SCALE_EFFECT 0
+/*************************************
+ *  Scale Effect menu
+ *************************************/
+
+static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	int changed = FALSE;
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+		menu_scale_effect_populate(machine, menu);
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+
+	if (event != NULL && event->itemref != NULL && 
+		event->iptkey == IPT_UI_SELECT && (int)(FPTR)event->itemref >= VIDEO_SCALE_EFFECT)
+	{
+		video_exit_scale_effect(machine);
+		scale_decode(scale_name((FPTR)event->itemref - VIDEO_SCALE_EFFECT));
+		video_init_scale_effect(machine);
+		changed = TRUE;
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
+}
+
+
+/*-------------------------------------------------
+    menu_scale_effect_populate - populate the
+    Scale Effect menu
+-------------------------------------------------*/
+
+static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu)
+{
+	int scaler;
+	ui_menu_item_append(menu, _("None"), NULL, 0, (void *)VIDEO_SCALE_EFFECT);
+
+	/* add items for each scaler */
+	for (scaler = 1; ; scaler++)
+	{
+		const char *desc = scale_desc(scaler);
+		if (desc == NULL)
+			break;
+
+		/* create a string for the item */
+		ui_menu_item_append(menu, desc, NULL, 0, (void *)(VIDEO_SCALE_EFFECT + scaler));
+	}
+}
+#undef VIDEO_SCALE_EFFECT
+#endif /* USE_SCALE_EFFECTS */
 
 /*-------------------------------------------------
     menu_quit_game - handle the "menu" for
@@ -3685,60 +3743,7 @@ static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
 	return (shortcut << 24) | selected;
 }
 #endif /* CMD_LIST */
-
-
-#ifdef USE_SCALE_EFFECTS
-/*************************************
- *
- *  Scale Effect menu
- *
- *************************************/
-
-static UINT32 menu_scale_effect(running_machine *machine, UINT32 state)
-{
-	ui_menu_item item_list[100];
-	int selected = state;
-	int menu_items = 0;
-	int visible_items;
-
-	/* reset the menu */
-	memset(item_list, 0, sizeof(item_list));
-
-	item_list[0].text = _("None");
-
-	/* count up the targets, creating menu items for them */
-	for (menu_items = 1 ; menu_items < ARRAY_LENGTH(item_list); menu_items++)
-	{
-		const char *desc = scale_desc(menu_items);
-		if (desc == NULL)
-			break;
-
-		/* create a string for the item */
-		item_list[menu_items].text = desc;
-	}
-
-	/* add an item to return */
-	item_list[menu_items++].text = ui_getstring(UI_returntomain);
-
-	/* draw the menu */
-	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
-
-	/* handle the keys */
-	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
-		return selected;
-
-	/* handle actions */
-	if (input_ui_pressed(machine, IPT_UI_SELECT))
-	{
-		video_exit_scale_effect(machine);
-		scale_decode(scale_name(selected)); 
-		video_init_scale_effect(machine);
-	}
-
-	return selected;
-}
-#endif /* USE_SCALE_EFFECTS */
-#endif
+#endif //0
 
 
 /***************************************************************************
