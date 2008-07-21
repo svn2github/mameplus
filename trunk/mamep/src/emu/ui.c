@@ -103,10 +103,6 @@ struct _slider_state
     GLOBAL VARIABLES
 ***************************************************************************/
 
-#ifdef INP_CAPTION
-static int next_caption_frame, caption_timer;
-#endif /* INP_CAPTION */
-
 static rgb_t uifont_colortable[MAX_COLORTABLE];
 static render_texture *bgtexture;
 static bitmap_t *bgbitmap;
@@ -466,11 +462,6 @@ int ui_init(running_machine *machine)
 	/* allocate the font and messagebox string */
 	ui_font = render_font_alloc("ui.bdf");
 	messagebox_text = astring_alloc();
-
-#ifdef INP_CAPTION
-	next_caption_frame = -1;
-	caption_timer = 0;
-#endif /* INP_CAPTION */
 
 	/* initialize the other UI bits */
 	ui_menu_init(machine);
@@ -1731,117 +1722,6 @@ static void display_input_log(void)
 }
 #endif /* USE_SHOW_INPUT_LOG */
 
-
-
-#ifdef INP_CAPTION
-//============================================================
-//	draw_caption
-//============================================================
-
-static void draw_caption(running_machine *machine)
-{
-	static char next_caption[512], caption_text[512];
-	static int next_caption_timer;
-
-	if (machine->caption_file && next_caption_frame < 0)
-	{
-		char	read_buf[512];
-skip_comment:
-		if (mame_fgets(read_buf, 511, machine->caption_file) == NULL)
-		{
-			mame_fclose(machine->caption_file);
-			machine->caption_file = NULL;
-		}
-		else
-		{
-			char	buf[16] = "";
-			int		i, j;
-
-			for (i = 0, j = 0; i < 16; i++)
-			{
-				if (read_buf[i] == '\t' || read_buf[i] == ' ')
-					continue;
-				if ((read_buf[i] == '#' || read_buf[i] == '\r' || read_buf[i] == '\n') && j == 0)
-					goto skip_comment;
-				if (read_buf[i] < '0' || read_buf[i] > '9')
-				{
-					buf[j++] ='\0';
-					break;
-				}
-				buf[j++] = read_buf[i];
-			}
-
-			next_caption_frame = strtol(buf, NULL, 10);
-			next_caption_timer = 0;
-			if (next_caption_frame == 0)
-			{
-				next_caption_frame = (int)video_screen_get_frame_number(machine->primary_screen);
-				strcpy(next_caption, _("Error: illegal caption file"));
-				mame_fclose(machine->caption_file);
-				machine->caption_file = NULL;
-			}
-
-			for (;;i++)
-			{
-				if (read_buf[i] == '(')
-				{
-					for (i++, j = 0;;i++)
-					{
-						if (read_buf[i] == '\t' || read_buf[i] == ' ')
-							continue;
-						if (read_buf[i] < '0' || read_buf[i] > '9')
-						{
-							buf[j++] ='\0';
-							break;
-						}
-						buf[j++] = read_buf[i];
-					}
-
-					next_caption_timer = strtol(buf, NULL, 10);
-
-					for (;;i++)
-					{
-						if (read_buf[i] == '\t' || read_buf[i] == ' ')
-							continue;
-						if (read_buf[i] == ':')
-							break;
-					}
-				}
-				if (read_buf[i] != '\t' && read_buf[i] != ' ' && read_buf[i] != ':')
-					break;
-			}
-			if (next_caption_timer == 0)
-			{
-				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds);	// 5sec.
-			}
-
-			strcpy(next_caption, &read_buf[i]);
-
-			for (i = 0; next_caption[i] != '\0'; i++)
-			{
-				if (next_caption[i] == '\r' || next_caption[i] == '\n')
-				{
-					next_caption[i] = '\0';
-					break;
-				}
-			}
-		}
-	}
-	if (next_caption_timer && next_caption_frame <= (int)video_screen_get_frame_number(machine->primary_screen))
-	{
-		caption_timer = next_caption_timer;
-		strcpy(caption_text, next_caption);
-		next_caption_frame = -1;
-		next_caption_timer = 0;
-	}
-
-	if (caption_timer)
-	{
-		ui_draw_text_box(caption_text, JUSTIFY_LEFT, 0.5, 1.0, messagebox_backcolor);
-		caption_timer--;
-	}
-}
-#endif /* INP_CAPTION */
 
 
 /*-------------------------------------------------

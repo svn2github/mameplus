@@ -266,6 +266,9 @@ struct _input_port_private
 	/* playback/record information */
 	mame_file *					record_file;		/* recording file (NULL if not recording) */
 	mame_file *					playback_file;		/* playback file (NULL if not recording) */
+#ifdef INP_CAPTION
+	mame_file *					caption_file;		/* caption file for playback (NULL if not playing) */
+#endif /* INP_CAPTION */
 	UINT64						playback_accumulated_speed;/* accumulated speed during playback */
 	UINT32						playback_accumulated_frames;/* accumulated frames during playback */
 };
@@ -309,6 +312,10 @@ int show_input_log = 0;
 
 static void make_input_log(running_machine *machine);
 #endif /* USE_SHOW_INPUT_LOG */
+
+#ifdef INP_CAPTION
+static int next_caption_frame, caption_timer;
+#endif /* INP_CAPTION */
 
 
 
@@ -4033,6 +4040,11 @@ static time_t playback_init(running_machine *machine)
 	file_error filerr;
 	time_t basetime;
 
+#ifdef INP_CAPTION
+	next_caption_frame = -1;
+	caption_timer = 0;
+#endif /* INP_CAPTION */
+
 	/* if no file, nothing to do */
 	if (filename[0] == 0)
 		return 0;
@@ -4061,6 +4073,20 @@ static time_t playback_init(running_machine *machine)
 	if (memcmp(machine->gamedrv->name, header + 0x14, strlen(machine->gamedrv->name) + 1) != 0)
 		fatalerror(_("Input file is for " GAMENOUN " '%s', not for current " GAMENOUN " '%s'\n"), header + 0x14, machine->gamedrv->name);
 
+#ifdef INP_CAPTION
+	if (strlen(filename) > 4)
+	{
+		char *fname = mame_strdup(filename);
+
+		if (fname)
+		{
+			strcpy(fname + strlen(fname) - 4, ".cap");
+			filerr = mame_fopen(SEARCHPATH_INPUTLOG, fname, OPEN_FLAG_READ, &portdata->caption_file);
+			free(fname);
+		}
+	}
+#endif /* INP_CAPTION */
+
 	return basetime;
 }
 
@@ -4079,6 +4105,12 @@ static void playback_end(running_machine *machine, const char *message)
 		/* close the file */
 		mame_fclose(portdata->playback_file);
 		portdata->playback_file = NULL;
+
+#ifdef INP_CAPTION
+		if (portdata->caption_file != NULL)
+			mame_fclose(portdata->caption_file);
+		portdata->caption_file = NULL;
+#endif /* INP_CAPTION */
 
 		/* pop a message */
 		if (message != NULL)
@@ -4747,3 +4779,115 @@ static void make_input_log(running_machine *machine)
 	/* End of loop over all the buttons */
 }
 #endif /* USE_SHOW_INPUT_LOG */
+
+
+#ifdef INP_CAPTION
+//============================================================
+//	draw_caption
+//============================================================
+
+void draw_caption(running_machine *machine)
+{
+	input_port_private *portdata = machine->input_port_data;
+	static char next_caption[512], caption_text[512];
+	static int next_caption_timer;
+
+	if (portdata->caption_file && next_caption_frame < 0)
+	{
+		char	read_buf[512];
+skip_comment:
+		if (mame_fgets(read_buf, 511, portdata->caption_file) == NULL)
+		{
+			mame_fclose(portdata->caption_file);
+			portdata->caption_file = NULL;
+		}
+		else
+		{
+			char	buf[16] = "";
+			int		i, j;
+
+			for (i = 0, j = 0; i < 16; i++)
+			{
+				if (read_buf[i] == '\t' || read_buf[i] == ' ')
+					continue;
+				if ((read_buf[i] == '#' || read_buf[i] == '\r' || read_buf[i] == '\n') && j == 0)
+					goto skip_comment;
+				if (read_buf[i] < '0' || read_buf[i] > '9')
+				{
+					buf[j++] ='\0';
+					break;
+				}
+				buf[j++] = read_buf[i];
+			}
+
+			next_caption_frame = strtol(buf, NULL, 10);
+			next_caption_timer = 0;
+			if (next_caption_frame == 0)
+			{
+				next_caption_frame = (int)video_screen_get_frame_number(machine->primary_screen);
+				strcpy(next_caption, _("Error: illegal caption file"));
+				mame_fclose(portdata->caption_file);
+				portdata->caption_file = NULL;
+			}
+
+			for (;;i++)
+			{
+				if (read_buf[i] == '(')
+				{
+					for (i++, j = 0;;i++)
+					{
+						if (read_buf[i] == '\t' || read_buf[i] == ' ')
+							continue;
+						if (read_buf[i] < '0' || read_buf[i] > '9')
+						{
+							buf[j++] ='\0';
+							break;
+						}
+						buf[j++] = read_buf[i];
+					}
+
+					next_caption_timer = strtol(buf, NULL, 10);
+
+					for (;;i++)
+					{
+						if (read_buf[i] == '\t' || read_buf[i] == ' ')
+							continue;
+						if (read_buf[i] == ':')
+							break;
+					}
+				}
+				if (read_buf[i] != '\t' && read_buf[i] != ' ' && read_buf[i] != ':')
+					break;
+			}
+			if (next_caption_timer == 0)
+			{
+				next_caption_timer = 5 * ATTOSECONDS_TO_HZ(video_screen_get_frame_period(machine->primary_screen).attoseconds);	// 5sec.
+			}
+
+			strcpy(next_caption, &read_buf[i]);
+
+			for (i = 0; next_caption[i] != '\0'; i++)
+			{
+				if (next_caption[i] == '\r' || next_caption[i] == '\n')
+				{
+					next_caption[i] = '\0';
+					break;
+				}
+			}
+		}
+	}
+	if (next_caption_timer && next_caption_frame <= (int)video_screen_get_frame_number(machine->primary_screen))
+	{
+		caption_timer = next_caption_timer;
+		strcpy(caption_text, next_caption);
+		next_caption_frame = -1;
+		next_caption_timer = 0;
+	}
+
+	if (caption_timer)
+	{
+		ui_draw_text_box(caption_text, JUSTIFY_LEFT, 0.5, 1.0, UI_FILLCOLOR);
+		caption_timer--;
+	}
+}
+#endif /* INP_CAPTION */

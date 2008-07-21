@@ -966,6 +966,10 @@ extern input_log command_buffer[];
 extern int show_input_log;
 #endif /* USE_SHOW_INPUT_LOG */
 
+#ifdef INP_CAPTION
+void draw_caption(running_machine *machine);
+#endif /* INP_CAPTION */
+
 
 /***************************************************************************
     FUNCTION PROTOTYPES
