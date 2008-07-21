@@ -1841,20 +1841,20 @@ pf2012	超能力大战 2012	超能力大战 2012	Taito
 perfrman	火蚁超人 (日版)	火蚁超人 (日版)	[Toaplan] Data East Corporation
 perfrmau	火蚁超人 (美版)	火蚁超人 (美版)	[Toaplan] Data East USA
 tigerh	老虎直升机 (美版)	老虎直升机 (美版)	Taito America Corp.
-tigerh2	老虎直升机 (日版 第1套)	老虎直升机 (日版 第1套)	Taito
-tigerhj	老虎直升机 (日版 第2套)	老虎直升机 (日版 第2套)	Taito
+tigerhj	老虎直升机 (日版)	老虎直升机 (日版)	Taito
 tigerhb1	老虎直升机 (盗版 第1套)	老虎直升机 (盗版 第1套)	bootleg
 tigerhb2	老虎直升机 (盗版 第2套)	老虎直升机 (盗版 第2套)	bootleg
+tigerhb3	老虎直升机 (盗版 第3套)	老虎直升机 (盗版 第3套)	bootleg
 slapfigh	电子作战 (第1套)	电子作战 (第1套)	Taito
 slapfiga	电子作战 (第2套)	电子作战 (第2套)	Taito
 slapbtjp	电子作战 (日版 盗版)	电子作战 (日版 盗版)	bootleg
 slapbtuk	电子作战 (英国版 盗版)	电子作战 (英国版 盗版)	bootleg
 slapfgtr	电子作战 (盗版)	电子作战 (盗版)	bootleg
 alcon	电子作战 Alcon	电子作战 Alcon	Taito America Corp.
-getstar	星球守护者	星球守护者	Taito
+getstar	星球守护者 (美版)	星球守护者 (美版)	Taito America Corporation (Kitkorp license)
 getstarj	星球守护者 (日版)	星球守护者 (日版)	Taito
-getstarb	星球守护者 (盗版 第1套)	星球守护者 (盗版 第1套)	bootleg
-gtstarba	星球守护者 (盗版 第2套)	星球守护者 (盗版 第2套)	bootleg
+gtstarb1	星球守护者 (盗版 第1套)	星球守护者 (盗版 第1套)	bootleg
+gtstarb2	星球守护者 (盗版 第2套)	星球守护者 (盗版 第2套)	bootleg
 mjsister	麻雀姐妹 (日版)	麻雀姐妹 (日版)	Toaplan
 fshark	飞翔鲛 (世界版)	飞翔鲛 (世界版)	[Toaplan] Taito Corporation
 skyshark	飞翔鲛 (美版)	飞翔鲛 (美版)	[Toaplan] Taito America Corporation (Romstar license)
@@ -2174,7 +2174,7 @@ wonder3	奇迹三合一 (日版 910520)	奇迹三合一 (日版 910520)	Capcom
 kod	龙王战士 (世界版 910711)	龙王战士 (世界版 910711)	Capcom
 kodu	龙王战士 (美版 910910)	龙王战士 (美版 910910)	Capcom
 kodj	龙王战士 (日版 910805)	龙王战士 (日版 910805)	Capcom
-kodb	龙王战士 (盗版)	龙王战士 (盗版)	bootleg
+kodb	龙王战士 (盗版)	龙王战士 (盗版)	[Capcom] (Playmark bootleg)
 captcomm	名将 (世界版 911014)	名将 (世界版 911014)	Capcom
 captcomu	名将 (美版 910928)	名将 (美版 910928)	Capcom
 captcomj	名将 (日版 911202)	名将 (日版 911202)	Capcom
@@ -2239,7 +2239,7 @@ pang3	魔鬼气泡 3 (欧洲版 950511)	魔鬼气泡 3 (欧洲版 950511)	Mitchell
 pang3j	魔鬼气泡 3 (日版 950511)	魔鬼气泡 3 (日版 950511)	Mitchell
 megaman	洛克人 - 力量对决 (CPS1 亚洲版 951006)	洛克人 - 力量对决 (CPS1 亚洲版 951006)	Capcom
 rockmanj	洛克人 - 力量对决 (CPS1 日版 950922)	洛克人 - 力量对决 (CPS1 日版 950922)	Capcom
-fcrash	快打旋风 (世界版, 盗版)	快打旋风 (世界版, 盗版)	Playmark, bootleg [Capcom]
+fcrash	快打旋风 (盗版 CPS1 快打旋风)	快打旋风 (盗版 CPS1 快打旋风)	[Capcom] (Playmark bootleg)
 ssf2	超级街头霸王 II - 新的来者 (世界版 930911)	超级街头霸王 II - 新的来者 (世界版 930911)	Capcom
 ssf2u	超级街头霸王 II - 新的来者 (美版 930911)	超级街头霸王 II - 新的来者 (美版 930911)	Capcom
 ssf2a	超级街头霸王 II - 新的来者 (亚洲版 931005)	超级街头霸王 II - 新的来者 (亚洲版 931005)	Capcom
@@ -2791,6 +2791,7 @@ drivedge	方程式赛车 Edge	方程式赛车 Edge	Strata/Incredible Technologies
 wcbowl	世界杯保龄球 (v1.66)	世界杯保龄球 (v1.66)	Incredible Technologies
 wcbwl165	世界杯保龄球 (v1.65)	世界杯保龄球 (v1.65)	Incredible Technologies
 wcbwl161	世界杯保龄球 (v1.61)	世界杯保龄球 (v1.61)	Incredible Technologies
+wcbwl16	世界杯保龄球 (v1.6)	世界杯保龄球 (v1.6)	Incredible Technologies
 wcbwl140	世界杯保龄球豪华版 (v1.40)	世界杯保龄球豪华版 (v1.40)	Incredible Technologies
 wcbwl15	世界杯保龄球 (v1.5)	世界杯保龄球 (v1.5)	Incredible Technologies
 wcbwl13	世界杯保龄球 (v1.3)	世界杯保龄球 (v1.3)	Incredible Technologies
@@ -3359,6 +3360,7 @@ sfish2j	业余钓鱼 2 (J 951201 V1.100)	业余钓鱼 2 (J 951201 V1.100)	Sega
 magzun	梦游美国 - 能量	梦游美国 - 能量	Sega
 nclubv3	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	Sega
 daytona	梦游美国 (日版) (校正版 A)	梦游美国 (日版) (校正版 A)	Sega
+dayton93	梦游美国 豪华版 '93	梦游美国 豪华版 '93	Sega
 daytonas	梦游美国 (With Saturn Adverts)	梦游美国 (With Saturn Adverts)	Sega
 daytonat	梦游美国 (日版, 加速修改版)	梦游美国 (日版, 加速修改版)	Sega
 daytonam	梦游美国 (日版, To The MAXX)	梦游美国 (日版, To The MAXX)	Sega
@@ -3369,6 +3371,7 @@ motoraid	摩托竞赛	摩托竞赛	Sega
 srallyc	世嘉拉力 锦标赛	世嘉拉力 锦标赛	Sega
 vf2	VR 战士 2 (ver 2.1)	VR 战士 2 (ver 2.1)	Sega
 vf2b	VR 战士 2 (校正版 B)	VR 战士 2 (校正版 B)	Sega
+vf2a	VR 战士 2 (校正版 A)	VR 战士 2 (校正版 A)	Sega
 vf2o	VR 战士 2	VR 战士 2	Sega
 vcop2	VR 战警 2	VR 战警 2	Sega
 doaa	死或生 (Model 2A) (校正版 A)	死或生 (Model 2A) (校正版 A)	Sega
@@ -3560,7 +3563,9 @@ doa2	死或生 2 (JPN, USA, EXP, KOR, AUS)	死或生 2 (JPN, USA, EXP, KOR, AUS)	Tecmo
 doa2m	死或生 2 千禧版 (JPN, USA, EXP, KOR, AUS)	死或生 2 千禧版 (JPN, USA, EXP, KOR, AUS)	Tecmo
 dybbnao	火爆棒球 NAOMI (JPN)	火爆棒球 NAOMI (JPN)	Sega
 naomigd	Naomi GD-ROM Bios	Naomi GD-ROM Bios	Sega
-sfz3ugd	Street Fighter Zero 3 Upper	Street Fighter Zero 3 Upper	Capcom
+sfz3ugd	少年街霸 3 Upper	少年街霸 3 Upper	Capcom
+cvs2gd	街霸 Vs. 拳皇 2	街霸 Vs. 拳皇 2	Capcom
+hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
 naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
 awbios	Atomiswave Bios	Atomiswave Bios	Sammy
 hikaru	Hikaru Bios	Hikaru Bios	Sega
@@ -5366,7 +5371,7 @@ thegrid	超人竞技场 (版本 1.2)	超人竞技场 (版本 1.2)	Midway
 thegrida	超人竞技场 (版本 1.1)	超人竞技场 (版本 1.1)	Midway
 wg3dh	韦恩格雷兹基 3D立体曲棍球	韦恩格雷兹基 3D立体曲棍球	Atari Games
 mace	黑暗世纪 (盗版 ROM 1.0ce, HDD 1.0b)	黑暗世纪 (盗版 ROM 1.0ce, HDD 1.0b)	Atari Games
-macea	黑暗世纪 (HDD 1.0a	黑暗世纪 (HDD 1.0a	Atari Games
+macea	黑暗世纪 (HDD 1.0a)	黑暗世纪 (HDD 1.0a)	Atari Games
 sfrush	旧金山大赛车	旧金山大赛车	Atari Games
 sfrushrk	旧金山大赛车 The Rock	旧金山大赛车 The Rock	Atari Games
 calspeed	加州飙车 (版本 2.1a, 4/17/98)	加州飙车 (版本 2.1a, 4/17/98)	Atari Games
@@ -7288,6 +7293,12 @@ kf2k3pcd	拳皇 2003 (日版, JAMMA PCB / C&Bios 解密)	拳皇 2003 (日版, JAMMA PCB / 
 kogd	拳皇公开格斗决赛 (盗版 / 完全解密)	拳皇公开格斗决赛 (盗版 / 完全解密)	bootleg
 pnyaad	宠物方块 (C 解密)	宠物方块 (C 解密)	Aiky / Taito
 bangbedp	碰碰球 (工程版)	碰碰球 (工程版)	Visco
+a2600	Atari 2600 (NTSC)	Atari 2600 (NTSC)	Atari
+a2600p	Atari 2600 (PAL)	Atari 2600 (PAL)	Atari
+a5200	Atari 5200	Atari 5200	Atari
+a5200a	Atari 5200 (alt)	Atari 5200 (alt)	Atari
+a7800	Atari 7800 NTSC	Atari 7800 NTSC	Atari
+a7800p	Atari 7800 PAL	Atari 7800 PAL	Atari
 nes	任天堂游戏系统 (NTSC)	任天堂游戏系统 (NTSC)	Nintendo
 nespal	任天堂游戏系统 (PAL)	任天堂游戏系统 (PAL)	Nintendo
 famicom	任天堂红白机	任天堂红白机	Nintendo
