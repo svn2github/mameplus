@@ -301,6 +301,15 @@ UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 static const input_field_config *custom_button_info[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 #endif /* USE_CUSTOM_BUTTON */
 
+#ifdef USE_SHOW_INPUT_LOG
+#define COMMAND_LOG_BUFSIZE	128
+
+input_log command_buffer[COMMAND_LOG_BUFSIZE];
+int show_input_log = 0;
+
+static void make_input_log(running_machine *machine);
+#endif /* USE_SHOW_INPUT_LOG */
+
 
 
 /***************************************************************************
@@ -2130,6 +2139,12 @@ profiler_mark(PROFILER_INPUT);
 		playback_port(port);
 		record_port(port);
 	}
+
+#ifdef USE_SHOW_INPUT_LOG
+	/* show input log */
+	if (show_input_log && (portdata->playback_file == NULL))
+		make_input_log(machine);
+#endif /* USE_SHOW_INPUT_LOG */
 
 profiler_mark(PROFILER_END);
 }
@@ -4533,7 +4548,6 @@ void set_autofiredelay(int player, int delay)
 	autofiredelay[player] = delay;
 }
 
-#if 0
 #ifdef USE_SHOW_INPUT_LOG
 INLINE void copy_command_buffer(char log)
 {
@@ -4567,13 +4581,13 @@ INLINE void copy_command_buffer(char log)
 	command_buffer[++len].code = '\0';
 }
 
-static void make_input_log(void)
+static void make_input_log(running_machine *machine)
 {
-	input_port_entry *portentry = Machine->input_ports;
+	input_port_private *portdata = machine->input_port_data;
+	const input_port_config *port;
+	int i;
 	int player = 0; /* player 1 */
-
-	if (portentry == 0)
-		return;
+	int normal_buttons = 6;
 
 	/* loop over all the joysticks for player 1*/
 	if (player == 0) /* player 1 */
@@ -4584,15 +4598,15 @@ static void make_input_log(void)
 
 		for (joyindex = 0; joyindex < DIGITAL_JOYSTICKS_PER_PLAYER; joyindex++)
 		{
-			digital_joystick_info *info = &joystick_info[player][joyindex];
+			digital_joystick_state *joystick = &portdata->joystick_info[player][joyindex];
 
-			if (info->inuse)
+			if (joystick->inuse)
 			{
 				/* set the status of neutral (assumed to be only in the defaults) */
 				now_dir = 0;
 
 				/* if this is a digital joystick type, apply 4-way rules */
-				switch(info->current)
+				switch(joystick->current)
 				{
 					case JOYDIR_DOWN_BIT:
 						now_dir = 2;
@@ -4610,7 +4624,7 @@ static void make_input_log(void)
 
 				/* if this is a digital joystick type, apply 8-way rules */
 				//if (portentry->way == 8)
-				switch(info->current)
+				switch(joystick->current)
 				{
 					case JOYDIR_DOWN_BIT | JOYDIR_LEFT_BIT:
 						now_dir = 1;
@@ -4645,56 +4659,56 @@ static void make_input_log(void)
 	}
 	/* End of loop over all the joysticks for player 1*/
 
-
 	/* loop over all the buttons */
 	if (normal_buttons > 0)
 	{
-		int is_neogeo = !mame_stricmp(Machine->gamedrv->source_file+17, "neogeo.c")
-		                || !mame_stricmp(Machine->gamedrv->source_file+17, "neodrvr.c");
+		int is_neogeo = !mame_stricmp(machine->gamedrv->source_file+17, "neogeo.c")
+		                || !mame_stricmp(machine->gamedrv->source_file+17, "neodrvr.c");
 		static UINT16 old_btn = 0;
 		static UINT16 now_btn;
 		int is_pressed = 0;
 
 		now_btn = 0;
 
-		for (portentry = Machine->input_ports; portentry->type != IPT_END; portentry++)
+		for (port = machine->portconfig; port != NULL; port = port->next)
 		{
-			/* if this is current player, read input port */
-			if (portentry->player == player)
+			const input_field_config *field;
+
+			for (field = port->fieldlist; field != NULL; field = field->next)
 			{
-				int i;
+				/* if this is current player, read input port */
+				if (field->player == player && input_seq_pressed(input_field_seq(field, SEQ_TYPE_STANDARD)))
+				{
+					/* if this is normal buttons type, apply usable buttons */
+					if ((field->type >= IPT_BUTTON1) && (field->type < IPT_BUTTON1 + normal_buttons))
+						now_btn |= 1 << (field->type - IPT_BUTTON1);
 
-				/* if this is normal buttons type, apply usable buttons */
-				for (i = 0; i < normal_buttons; i++)
-					if (input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_BUTTON1 + i)
-						now_btn |= 1 << (portentry->type - IPT_BUTTON1);
+					/* if this is start button type */
+					else if ((field->type == IPT_START1) || (field->type == IPT_START))
+							now_btn |= 1 << normal_buttons;
 
-				/* if this is start button type */
-				if ((input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_START1) ||
-					(input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_START))
-						now_btn |= 1 << normal_buttons;
-
-				/* if this is select button type (MESS only) */
-				if (input_seq_pressed(input_port_seq(portentry, SEQ_TYPE_STANDARD)) && portentry->type == IPT_SELECT)
-					now_btn |= 1 << (normal_buttons + 1);
-
-#ifdef USE_CUSTOM_BUTTON
-				/* if this is custon buttons type, apply usable buttons */
-				for (i = 0; i < MAX_CUSTOM_BUTTONS; i++)
-					if (custom_button[0][i] != 0)
-					{
-						input_bit_info *custom_info = custom_button_info[0][i];
-
-						if (input_seq_pressed(input_port_seq(custom_info->portentry, SEQ_TYPE_STANDARD)))
-							now_btn |= custom_button[0][i];
-					}
-
-				/* if buttons press, leave is_pressed = 1 */
-				if (now_btn != 0)
-					is_pressed |= 1;
-#endif /* USE_CUSTOM_BUTTON */
+					/* if this is select button type (MESS only) */
+					else if (field->type == IPT_SELECT)
+						now_btn |= 1 << (normal_buttons + 1);
+				}
 			}
 		}
+
+#ifdef USE_CUSTOM_BUTTON
+		/* if this is custon buttons type, apply usable buttons */
+		for (i = 0; i < MAX_CUSTOM_BUTTONS; i++)
+			if (custom_button[0][i] != 0)
+			{
+				const input_field_config *custom_field = custom_button_info[0][i];
+	
+				if (input_seq_pressed(input_field_seq(custom_field, SEQ_TYPE_STANDARD)))
+					now_btn |= custom_button[0][i];
+			}
+#endif /* USE_CUSTOM_BUTTON */
+
+		/* if buttons press, leave is_pressed = 1 */
+		if (now_btn != 0)
+			is_pressed |= 1;
 
 		/* if we're not pressed, reset old_btn = -1 */
 		if (!is_pressed)
@@ -4733,4 +4747,3 @@ static void make_input_log(void)
 	/* End of loop over all the buttons */
 }
 #endif /* USE_SHOW_INPUT_LOG */
-#endif
