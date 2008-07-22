@@ -83,12 +83,6 @@ static const char *const mame_default_text[] =
 	"Flip X",
 	"Flip Y",
 
-	/* autofire stuff */
-	"Off",
-	"On",
-	"Toggle",
-	"Autofire Delay",
-
 	/* centering */
 	"Center",
 

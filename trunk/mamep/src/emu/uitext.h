@@ -79,12 +79,6 @@ enum
 	UI_flip_x,
 	UI_flip_y,
 
-	/* autofire stuff */
-	UI_autofireoff,
-	UI_autofireon,
-	UI_autofiretoggle,
-	UI_autofiredelay,
-
 	/* centering */
 	UI_center,
 	

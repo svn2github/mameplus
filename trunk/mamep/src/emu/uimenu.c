@@ -290,6 +290,8 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu);
 #endif /* USE_SCALE_EFFECTS */
+static void menu_autofire(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+static void menu_autofire_populate(running_machine *machine, ui_menu *menu);
 static void menu_quit_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game_populate(running_machine *machine, ui_menu *menu, select_game_state *menustate);
@@ -1440,8 +1442,8 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	/* add input menu items */
 	ui_menu_item_append(menu, _("Input (general)"), NULL, 0, menu_input_groups);
 	ui_menu_item_append(menu, _("Input (this " GAMENOUN ")"), NULL, 0, menu_input_specific);
-#if 0
 	ui_menu_item_append(menu, _("Autofire Setting"), NULL, 0, menu_autofire);
+#if 0
 #ifdef USE_CUSTOM_BUTTON
 	ui_menu_item_append(menu, _("Custom Buttons"), NULL, 0, menu_custom_button);
 #endif /* USE_CUSTOM_BUTTON */
@@ -2718,10 +2720,10 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 }
 
 #ifdef USE_SCALE_EFFECTS
-#define VIDEO_SCALE_EFFECT 0
-/*************************************
- *  Scale Effect menu
- *************************************/
+#define SCALE_ITEM_NONE 0
+/*-------------------------------------------------
+     Scale Effect menu
+-------------------------------------------------*/
 
 static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
@@ -2736,10 +2738,10 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 	event = ui_menu_process(menu, 0);
 
 	if (event != NULL && event->itemref != NULL && 
-		event->iptkey == IPT_UI_SELECT && (int)(FPTR)event->itemref >= VIDEO_SCALE_EFFECT)
+		event->iptkey == IPT_UI_SELECT && (int)(FPTR)event->itemref >= SCALE_ITEM_NONE)
 	{
 		video_exit_scale_effect(machine);
-		scale_decode(scale_name((FPTR)event->itemref - VIDEO_SCALE_EFFECT));
+		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 		video_init_scale_effect(machine);
 		changed = TRUE;
 	}
@@ -2758,7 +2760,7 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu)
 {
 	int scaler;
-	ui_menu_item_append(menu, _("None"), NULL, 0, (void *)VIDEO_SCALE_EFFECT);
+	ui_menu_item_append(menu, _("None"), NULL, 0, (void *)SCALE_ITEM_NONE);
 
 	/* add items for each scaler */
 	for (scaler = 1; ; scaler++)
@@ -2768,11 +2770,151 @@ static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu)
 			break;
 
 		/* create a string for the item */
-		ui_menu_item_append(menu, desc, NULL, 0, (void *)(VIDEO_SCALE_EFFECT + scaler));
+		ui_menu_item_append(menu, desc, NULL, 0, (void *)(SCALE_ITEM_NONE + scaler));
 	}
 }
-#undef VIDEO_SCALE_EFFECT
+#undef SCALE_ITEM_NONE
 #endif /* USE_SCALE_EFFECTS */
+
+
+#define AUTOFIRE_ITEM_P1_DELAY 1
+/*-------------------------------------------------
+     autofire menu
+-------------------------------------------------*/
+
+static void menu_autofire(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	int changed = FALSE;
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+		menu_autofire_populate(machine, menu);
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+	
+	/* handle events */
+	if (event != NULL && event->itemref != NULL)
+	{
+		if (event->iptkey == IPT_UI_LEFT || event->iptkey == IPT_UI_RIGHT)
+		{
+			int player = (int)(FPTR)event->itemref - AUTOFIRE_ITEM_P1_DELAY;
+			//autofire delay
+			if (player >= 0 && player < MAX_PLAYERS)
+			{
+				int autofire_delay = get_autofiredelay(player);
+
+				if (event->iptkey == IPT_UI_LEFT)
+				{
+					autofire_delay--;
+					if (autofire_delay < 1)
+						autofire_delay = 1;
+				}
+				else
+				{
+					autofire_delay++;
+					if (autofire_delay > 99)
+						autofire_delay = 99;
+				}
+
+				set_autofiredelay(player, autofire_delay);
+
+				changed = TRUE;
+			}
+			//anything else is a toggle item
+			else
+			{
+				const input_field_config *field = event->itemref;
+				input_field_user_settings settings;
+				int selected_value;
+				input_field_get_user_settings(field, &settings);
+				selected_value = settings.autofire;
+
+				if (event->iptkey == IPT_UI_LEFT)
+				{
+					if (--selected_value < 0)
+					selected_value = 2;
+				}
+				else
+				{
+					if (++selected_value > 2)
+					selected_value = 0;	
+				}
+
+				settings.autofire = selected_value;
+				input_field_set_user_settings(field, &settings);
+
+				changed = TRUE;
+			}
+		}
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
+}
+
+/*-------------------------------------------------
+     populate the autofire menu
+-------------------------------------------------*/
+
+static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
+{
+	astring *subtext = astring_alloc();
+	astring *text = astring_alloc();
+	const input_field_config *field;
+	const input_port_config *port;
+	int players = 0;
+	int i;
+
+	/* iterate over the input ports and add autofire toggle items */
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			const char *name = input_field_name(field);
+
+			if (name != NULL && (
+			    (field->type >= IPT_BUTTON1 && field->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+	#ifdef USE_CUSTOM_BUTTON
+			    || (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+	#endif /* USE_CUSTOM_BUTTON */
+			   ))
+			{
+				input_field_user_settings settings;
+				input_field_get_user_settings(field, &settings);
+//				entry[menu_items] = field;
+
+				if (players < field->player + 1)
+					players = field->player + 1;
+
+				/* add an autofire item */
+				switch (settings.autofire)
+				{
+					case 0:	astring_cpyc(subtext, _("Off"));	break;
+					case 1:	astring_cpyc(subtext, _("On"));		break;
+					case 2:	astring_cpyc(subtext, _("Toggle"));	break;
+				}
+				ui_menu_item_append(menu, _(input_field_name(field)), astring_c(subtext), MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)field);
+			}
+		}
+	
+	/* add autofire delay items */
+	for (i = 0; i < players; i++)
+	{
+		astring_printf(text, "P%d %s", i + 1, _("Autofire Delay"));
+		astring_printf(subtext, "%d", get_autofiredelay(i));
+
+		/* append a menu item */
+		ui_menu_item_append(menu, astring_c(text), astring_c(subtext), MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)(i + AUTOFIRE_ITEM_P1_DELAY));
+	}
+
+	/* release our temporary strings */
+	astring_free(subtext);
+	astring_free(text);
+}
+#undef AUTOFIRE_ITEM_P1_DELAY
+
 
 /*-------------------------------------------------
     menu_quit_game - handle the "menu" for
@@ -3290,116 +3432,6 @@ static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
 	return selected;
 }
 #endif /* USE_CUSTOM_BUTTON */
-
-static UINT32 menu_autofire(running_machine *machine, UINT32 state)
-{
-	ui_menu_item item_list[200];
-	int selected = state;
-	int visible_items;
-	int menu_items = 0;
-	int item_autofire_delay;
-	const input_port_config *port;
-	const input_field_config *field;
-	input_field_config *entry[200];
-	int players = 0;
-	int i;
-
-	/* reset the menu and string pool */
-	memset(item_list, 0, sizeof(item_list));
-	menu_string_pool_offset = 0;
-	memset(entry, 0, sizeof(entry));
-
-	/* iterate over the input ports and add menu items */
-	for (port = machine->portconfig; port != NULL; port = port->next)
-	{
-		for (field = port->fieldlist; field != NULL; field = field->next)
-		{
-			if (input_field_name(field)	&& (
-			    (field->type >= IPT_BUTTON1 && field->type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
-	#ifdef USE_CUSTOM_BUTTON
-			    || (field->type >= IPT_CUSTOM1 && field->type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
-	#endif /* USE_CUSTOM_BUTTON */
-			   ))
-			{
-				input_field_user_settings settings;
-				input_field_get_user_settings(field, &settings);
-
-				entry[menu_items] = field;
-
-				if (players < field->player + 1)
-					players = field->player + 1;
-
-				item_list[menu_items].text = _(input_field_name(field));
-				item_list[menu_items++].subtext = ui_getstring(UI_autofireoff + settings.autofire);
-			}
-		}
-	}
-
-	if (menu_items == 0)
-		return ui_menu_stack_pop();
-
-	item_autofire_delay = menu_items;
-
-	for (i = 0; i < players; i++)
-	{
-		item_list[menu_items].text = menu_string_pool_add("P%d %s", i + 1, ui_getstring(UI_autofiredelay));
-		item_list[menu_items++].subtext = menu_string_pool_add("%d", get_autofiredelay(i));
-	}
-
-	item_list[menu_items++].text = ui_getstring (UI_returntomain);
-
-	/* draw the menu */
-	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
-
-	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
-		return selected;
-
-	if (selected >= item_autofire_delay && selected < item_autofire_delay + players)
-	{
-		int autofire_delay;
-
-		i = selected - item_autofire_delay;
-		autofire_delay = get_autofiredelay(i);
-
-		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
-		{
-			autofire_delay++;
-			if (autofire_delay > 99)
-				autofire_delay = 99;
-		}
-		if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,8))
-		{
-			autofire_delay--;
-			if (autofire_delay < 1)
-				autofire_delay = 1;
-		}
-
-		set_autofiredelay(i, autofire_delay);
-	}
-	else if (selected < item_autofire_delay)
-	{
-		int selected_value;
-		input_field_user_settings settings;
-		input_field_get_user_settings(entry[selected], &settings);
-		selected_value = settings.autofire;
-
-		if (input_ui_pressed_repeat(machine, IPT_UI_RIGHT,8))
-		{
-			if (++selected_value > 2)
-				selected_value = 0;
-		}
-		if (input_ui_pressed_repeat(machine, IPT_UI_LEFT,8))
-		{
-			if (--selected_value < 0)
-				selected_value = 2;
-		}
-
-		settings.autofire = selected_value;
-		input_field_set_user_settings(entry[selected], &settings);
-	}
-
-	return selected;
-}
 
 static UINT32 menu_documents(running_machine *machine, UINT32 state)
 {
