@@ -128,15 +128,14 @@ static ADDRESS_MAP_START( gg_io, ADDRESS_SPACE_IO, 8 )
 	AM_RANGE(0x40, 0x7F)                 AM_READWRITE(sms_count_r, SN76496_0_w)
 	AM_RANGE(0x80, 0x80) AM_MIRROR(0x3e) AM_READWRITE(sms_ms_vdp_data_r, sms_ms_vdp_data_w)
 	AM_RANGE(0x80, 0x81) AM_MIRROR(0x3e) AM_READWRITE(sms_ms_vdp_ctrl_r, sms_ms_vdp_ctrl_w)
-	AM_RANGE(0xC0, 0xC0)				 AM_READ(input_port_0_r)
-	AM_RANGE(0xC1, 0xC1)				 AM_READ(input_port_1_r)
-	AM_RANGE(0xDC, 0xDC)				 AM_READ(input_port_0_r)
-	AM_RANGE(0xDD, 0xDD)				 AM_READ(input_port_1_r)
+	AM_RANGE(0xC0, 0xC0)				 AM_READ_PORT("JOY0")
+	AM_RANGE(0xC1, 0xC1)				 AM_READ_PORT("JOY1")
+	AM_RANGE(0xDC, 0xDC)				 AM_READ_PORT("JOY0")
+	AM_RANGE(0xDD, 0xDD)				 AM_READ_PORT("JOY1")
 ADDRESS_MAP_END
 
 
 static INPUT_PORTS_START( sms )
-
 	PORT_START_TAG("JOY0")
 	PORT_BIT ( 0x01, IP_ACTIVE_LOW, IPT_JOYSTICK_UP) PORT_CATEGORY(10) PORT_PLAYER(1) PORT_8WAY
 	PORT_BIT ( 0x02, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN) PORT_CATEGORY(10) PORT_PLAYER(1) PORT_8WAY
@@ -292,7 +291,7 @@ static VIDEO_START(sega_store_315_5124) {
 
 static MACHINE_DRIVER_START(sms1ntsc)
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", Z80, XTAL_53_693175MHz/15)
+	MDRV_CPU_ADD("main", Z80, XTAL_53_693175MHz/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(sms_io, 0)
 
@@ -328,7 +327,7 @@ static MACHINE_DRIVER_START(smssdisp)
 
 	MDRV_VIDEO_START(sega_store_315_5124)
 
-	MDRV_CPU_ADD_TAG("control", Z80, XTAL_53_693175MHz/15)
+	MDRV_CPU_ADD("control", Z80, XTAL_53_693175MHz/15)
 	MDRV_CPU_PROGRAM_MAP(sms_store_mem, 0)
 	/* Both CPUs seem to communicate with the VDP etc? */
 	MDRV_CPU_IO_MAP(sms_io, 0)
@@ -337,7 +336,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START(sms1pal)
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", Z80, MASTER_CLOCK_PAL/15)
+	MDRV_CPU_ADD("main", Z80, MASTER_CLOCK_PAL/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(sms_io, 0)
 
@@ -384,7 +383,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START(gamegear)
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", Z80, XTAL_53_693175MHz/15)
+	MDRV_CPU_ADD("main", Z80, XTAL_53_693175MHz/15)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(gg_io, 0)
 

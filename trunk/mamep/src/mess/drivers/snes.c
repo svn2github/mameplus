@@ -443,10 +443,10 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 
 static MACHINE_DRIVER_START( snes )
 	/* basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", G65816, MCLK_NTSC/6)	/* 2.68Mhz, also 3.58Mhz */
+	MDRV_CPU_ADD("main", G65816, MCLK_NTSC/6)	/* 2.68Mhz, also 3.58Mhz */
 	MDRV_CPU_PROGRAM_MAP(snes_map, 0)
 
-	MDRV_CPU_ADD_TAG("sound", SPC700, 1024000)	/* 1.024 Mhz */
+	MDRV_CPU_ADD("sound", SPC700, 1024000)	/* 1.024 Mhz */
 	MDRV_CPU_PROGRAM_MAP(spc_map, 0)
 	MDRV_CPU_VBLANK_INT_HACK(NULL, 0)
 

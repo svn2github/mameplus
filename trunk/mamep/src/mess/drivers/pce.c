@@ -142,7 +142,7 @@ INPUT_PORTS_END
 
 static MACHINE_DRIVER_START( pce )
 	/* basic machine hardware */
-	MDRV_CPU_ADD(H6280, MAIN_CLOCK/3)
+	MDRV_CPU_ADD("main", H6280, MAIN_CLOCK/3)
 	MDRV_CPU_PROGRAM_MAP(pce_mem, 0)
 	MDRV_CPU_IO_MAP(pce_io, 0)
 	MDRV_CPU_VBLANK_INT_HACK(pce_interrupt, VDC_LPF)

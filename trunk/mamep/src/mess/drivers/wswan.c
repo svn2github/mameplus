@@ -129,7 +129,7 @@ static const struct CustomSound_interface wswan_sound_interface =
 
 static MACHINE_DRIVER_START( wswan )
 	/* Basic machine hardware */
-	MDRV_CPU_ADD_TAG("main", V30MZ, 3072000)
+	MDRV_CPU_ADD("main", V30MZ, 3072000)
 	MDRV_CPU_PROGRAM_MAP(wswan_mem, 0)
 	MDRV_CPU_IO_MAP(wswan_io, 0)
 	MDRV_CPU_VBLANK_INT_HACK(wswan_scanline_interrupt, 159)	/* 1 int each scanline */
