@@ -2704,17 +2704,17 @@ static MACHINE_DRIVER_START( gbadv )
 	MDRV_VIDEO_UPDATE(generic_bitmapped)
 
 	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	MDRV_SOUND_ADD(CUSTOM, 0)		// legacy GB sound
+	MDRV_SOUND_ADD("custom", CUSTOM, 0)		// legacy GB sound
 	MDRV_SOUND_CONFIG(gameboy_sound_interface)
 	MDRV_SOUND_ROUTE(0, "left", 0.50)
 	MDRV_SOUND_ROUTE(1, "right", 0.50)
-	MDRV_SOUND_ADD(DAC, 0)			// GBA direct sound A left
+	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound A left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD(DAC, 0)			// GBA direct sound A right
+	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound A right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
-	MDRV_SOUND_ADD(DAC, 0)			// GBA direct sound B left
+	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound B left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD(DAC, 0)			// GBA direct sound B right
+	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound B right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
 MACHINE_DRIVER_END
 

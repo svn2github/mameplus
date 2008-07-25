@@ -527,7 +527,7 @@ static int open_rom_file(rom_load_data *romdata, const rom_entry *romp)
 #ifdef USE_IPS
 			romdata->patch = assign_ips_patch(romp);
 			if (romdata->patch)
-				debugload("ROM %s: has ips\n", ROM_GETNAME(romp));
+				LOG(("ROM %s: has ips\n", ROM_GETNAME(romp)));
 #endif /* USE_IPS */
 		}
 
