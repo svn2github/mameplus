@@ -1560,7 +1560,7 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0130/4:
 			if( (mem_mask) & 0x0000ffff )	// KEYINPUT
 			{
-				return input_port_read_indexed(machine, 0);
+				return input_port_read(machine, "IO");
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
@@ -2688,7 +2688,7 @@ static struct CustomSound_interface gameboy_sound_interface =
 { gameboy_sh_start, 0, 0 };
 
 static MACHINE_DRIVER_START( gbadv )
-	MDRV_CPU_ADD(ARM7, 16777216)
+	MDRV_CPU_ADD("GBADV", ARM7, 16777216)
 	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
 
 	MDRV_MACHINE_START(gba)
