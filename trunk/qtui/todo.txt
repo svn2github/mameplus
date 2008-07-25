@@ -1,28 +1,22 @@
-﻿[bug]
-1 CJK path encoding
-
-[qt 4.4]
+﻿[qt 4.4]
 QAbstractItemView Add autoScrollMargin property.    * [162547] Make the current index stay in the viewport when sorting.
 QTreeView 192104] scrollTo(PositionAtCenter) can scroll beyond the item if item is at 0
 
 [todo]
 
 PUBLIC BETA
-/ translation of options
-/ about dialog
-/ preserve audit result on new mame version
 
-//Icon
-1 rewrite icon thread, cache all icons, s11n
-  bug: crash on F5 when iconthread is active
-  bug: some icons doesnt load
+原版刷新时左边是灰色不可选
+但是我按了几下工具按钮时
+左边居然可选
+而且还可以双击执行游戏
+但是游戏刚开始显示黑屏就自动退出
+
 
 //Options
-1 fix official mame compatible, still crash on opt saving
+* unify method of getting def values
 * path chooser dialog +0.1
 * multi ini path
-  bug: dup option entries on init
-  bug: if mame.ini is 0, crash?
   bug: update options from right to left
 * vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
 1 -driver_config
@@ -32,6 +26,10 @@ PUBLIC BETA
 * option help
 
 //GameList
+check compat across new=>old mame
+in-place zooming for icons
+snap拉伸
+snap 打开的时候不显示，必须要换个游戏才出现
 1 game counter in statusbar
   bug: few rows select model
   bug: crash after refresh immediately click folder

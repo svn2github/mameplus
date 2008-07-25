@@ -25,7 +25,7 @@ protected:
 
 private:
 	bool done;
-	bool restart;
+	bool cancel;
 	QMutex mutex;
 };
 

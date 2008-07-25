@@ -1112,6 +1112,7 @@ void OptionUtils::loadDefault(QString text)
 	QTextStream in(&text);
 	in.setCodec("UTF-8");
 	QString optHeader = "ERROR_MAGIC";
+	optCatMap.clear();
 
 	do
 	{
@@ -1281,6 +1282,10 @@ void OptionUtils::save(int optLevel, const QString &iniFileName)
 			QString currVal, defVal;
 
 			line = in.readLine();
+
+			// ignore <UNADORNED>
+			if (line.startsWith("<"))
+				continue;
 
 			// process # headers
 			if (line.startsWith("#"))
@@ -1607,7 +1612,7 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 			if (!guiHasAdded && optLevel == OPTLEVEL_GLOBAL && optCat == tr("Directory"))
 			{
 				//add GUI options
-				addModelItemTitle(optModel, "GUI DIRECTORY");
+				addModelItemTitle(optModel, QT_TR_NOOP("GUI DIRECTORY"));
 			
 				foreach (QString optName, mameOpts.keys())
 				{
@@ -1619,7 +1624,7 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 					addModelItem(optModel, optName);
 				}
 
-				addModelItemTitle(optModel, "MESS SOFTWARE DIRECTORY");
+				addModelItemTitle(optModel, QT_TR_NOOP("MESS SOFTWARE DIRECTORY"));
 
 				//add console dir options
 				foreach (QString consoleName, consoleGamesL)
@@ -1649,7 +1654,7 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 void OptionUtils::addModelItemTitle(QStandardItemModel *optModel, QString title)
 {
 	//fill title
-	QStandardItem *item = new QStandardItem(tr(qPrintable(title)));
+	QStandardItem *item = new QStandardItem(tr(qPrintable(title)).toUpper());
 	item->setData("OPTIONTITLE", Qt::UserRole + USERROLE_TITLE);
 	optModel->appendRow(item);
 }
@@ -1668,7 +1673,7 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 //	QString tooltip = "[" + optName + "] " + pMameOpt->description;
 
 	// fill key
-	QStandardItem *itemKey = new QStandardItem(tr(qPrintable(getLongName(optName).toLower())));
+	QStandardItem *itemKey = new QStandardItem(utils->capitalizeStr(tr(qPrintable(getLongName(optName).toLower()))));
 	itemKey->setData(optName, Qt::UserRole + USERROLE_KEY);
 //	itemKey->setData(tooltip, Qt::ToolTipRole);
 	// fill value
@@ -1680,9 +1685,12 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 
 void OptionUtils::updateHeaderSize(int logicalIndex, int oldSize, int newSize)
 {
+	if (logicalIndex > 0)
+		return;
+
 	int optLevel = dlgOptions->tabOptions->currentIndex();
 	option_column_state = optInfos[optLevel]->optView->header()->saveState();
 	
-//	win->log(QString("header: %1, %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize));
+	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));
 }
 

@@ -2,7 +2,7 @@ TEMPLATE =  app
 TARGET =  mamepguix
 INCLUDEPATH += quazip/ D:/Qt/$$QT_VERSION/src/3rdparty/zlib/
 FORMS += mamepguimain.ui options.ui about.ui untitled.ui
-TRANSLATIONS    = lang/mamepgui_zh_CN.ts
+TRANSLATIONS    = lang/mamepgui_zh_CN.ts lang/mamepgui_ja_JP.ts
 win32 {
 RC_FILE = mamepgui.rc
 }

@@ -2,8 +2,6 @@
 
 void RomAuditor::audit()
 {
-win->log(QString("que: %1").arg(gamelist->iconThread.iconQueue.count()));
-
 	if (!isRunning())
 	{
 		// disable ctrl updating before deleting its model

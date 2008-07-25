@@ -117,7 +117,7 @@ extern QList<QListWidget *> optCtrls;
 extern QHash<QString, MameOption*> mameOpts;
 extern QSettings guiSettings, defSettings;
 extern QByteArray option_column_state;
-
+extern QString mame_binary;
 extern QString list_mode;
 
 extern QByteArray option_geometry;

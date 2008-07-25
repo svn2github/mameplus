@@ -1,8 +1,15 @@
-﻿--- MAME Plus GUI 0.98a 更新 ---
+﻿--- MAME Plus GUI 0.98b 更新 ---
+* 更新了关于对话框的图片
+* 游戏列表缓存移出ini，加速程序退出
+* mame更新时保留上次的校验结果
+* 修复图标读取中刷ROM会崩的bug
+* 家用机可批量校验(选Console目录)或单独校验(选相应系统)
+* 保存垂直页签选项
+
+--- MAME Plus GUI 0.98a 更新 ---
 * 大部分中文翻译
 * 支持7z GoodMerge家用机ROM, 需bin/7z.exe
 * 分离街机和家用机的校验，例如刷MD游戏需在genesis目录单独刷新
-* bug: 图标读取中刷ROM会崩
 
 --- MAME Plus GUI 0.96a 更新 ---
 * GUI路径选项(Options - Global - Directory - GUI Directory)
@@ -26,25 +33,50 @@
 General 概述
 ----------------
 
-MAME Plus!全新界面，可直接运行7z Merge的家用机
-尽量保持了与MAMEUI相似的功能和界面。
+MAME Plus!全新界面，国内首发公测
+New MAME Plus! GUI [dockable components, fast loading, 7z GoodMerged roms and more]
+
+2月开始写这个程序，断断续续到现在，虽然之前预告的一些功能还没有来得及实现，不过现在的完成度应该可以拿来用了。
+尽量保持了与MAMEUI相似的功能和界面，比MAMEUI和现有MAMEPlus缺少的部分不用报告，会慢慢完善。
+
+I've been rewriting the GUI for MAME since Feburary, although some features are still missing, it is time for a public preview. this is a pure front-end, with similar functionality and interface as MAMEUI. 
+* if you are using official MAME, anything related to console games does not apply
 
 [启动]
-mamepguix.exe 必须与 mamep.exe 处于同一目录
-首次运行或mame更新时，程序会从 mamep.exe 自动更新游戏列表
+解压缩至MAMEPlus目录即可使用。mamepguix.exe 必须与 mamep.exe 处于同一目录。
+
+Starting
+
+extract to official MAME or MAME Plus! folder. mamepguix.exe should stay in the same directory as mame.exe/mamep.exe
 
 [组件组合，拖动中图，完成效果图]
-各组件如可以随意拖动、组合、关闭
+按住组件的标题部分，可以随意拖动、组合、关闭
 
-[Gamelist 图]
+Dockable GUI components
+click and hold the title bar of any component, the component may be stacked, tabbed or closed.
+
+[Game list]
 实现了街机与家用机列表无差别整合，游戏列表可以按任意机种分别显示或者混合显示
+
+Game List
+display arcade and console games in a unified list style
 
 [路径选项 图]
 打开 "选项 - 全局"标签页，选择左侧"目录"设置，多个目录以分号(;)分隔, 例如 d:\mame\snap;d:\mame\snap2
 在"MESS软件目录"下，可以设置家用机的ROM路径，然后在左侧分类中按F5刷新
 
+Path Settings
+open "Options - Global" tab, select "Directory" on the left to set paths. multiple directories should be separated with ';' e.g. d:\mame\snap;d:\mame\snap2
+set console ROM paths in "MESS Software Directory" section, then go to the "Console" folder and press F5 to refresh.
+
 [ROM校验]
-速度少于MAMEUI耗时的1/3，需要注意的是，街机与家用机的校验是分离的，在家用机分类中对该机种校验。支持未压缩、zip压缩或者7z GoodMerge合并压缩的ROM
+速度少于MAMEUI耗时的1/3。
+需要注意的是，街机与家用机的校验是分离的，在家用机或者家用机的某个具体分类中对该机种校验。
+支持未压缩、zip压缩或者7z GoodMerge合并压缩的ROM
+
+ROM Auditing
+MUCH faster than MAMEUI, usually takes less than 30 seconds to complete all games
+auditing for arcade and console games are separated, depends on which Console folder are you in.
 
 [Option 图]
 相比原有界面，新界面的游戏选项部分改变比较大。直观的引入了MAME选项的继承概念，分为5个级别，优先级从低到高分别为: 全局、驱动、BIOS、原作和当前游戏。
@@ -55,38 +87,38 @@ mamepguix.exe 必须与 mamep.exe 处于同一目录
 更改某选项后光标必须移动到其他项或者按Enter才能确认更改
 编辑选项时右边出现的恢复默认按钮可以恢复继承值
 
+Options
+the Options dialog is completely different from MAMEUI. directly introduced the concept of option inheriting. there are 5 levels of options: Global, Source, BIOS, Clone of and Current Game, from highest priority to lowest respectively.
+an option that is different from default value displays in a yellow background
+an option that is different from inherited value displays a bold font
+you must press Enter or move to another item to submit the changes to an option
+a button is available on the right of option editor to reset to inherited value
 
-
-
-
-the GUI has been completely re-written, with similar functionality and interface as MAMEUI.
-
-* mamepgui.exe must stay in the same directory as mamep.exe
-
-* on first run or when a new version of mame is detected, GUI will export game list from mamep.exe, which takes some time
-
-* 游戏搜索可使用空格分隔多个模糊关键字，对 Description 和 Name 栏目进行搜索
-* support multiple fuzzy search keywords separated with spaces, for either Description or Name columns
-
-* F5 or View - Refresh to audit roms, it takes less than 1/3 of the time compared with MAMEUI
-
-* 背景图 默认 bkground\bkground.png
-* default background image bkground\bkground.png
-
-* drag and drop support for all components, could be stacked, tabbed or closed
-
-Options 选项
-----------------
-
-* 右键菜单未完成，游戏选项使用工具栏的选项图标设置，目录设置在Global标签内
-* shortcut menu is not finished, please use Options button in the toolbar, Directory options are in the Global tab
-
-* an option that is different from inherited value display bold font, option that is different from default value display in yellow background. a button is available on the right of option editor to reset it to inherited value
-
-* multiple directories should be separated with ;  e.g. d:\mame\snap;d:\mame\snap2
-
-* 支持压缩目录, 例如设置路径 d:\mame\snap;d:\mame\snap2, 程序也会搜索 d:\mame\snap\snap.zip 和 d:\mame\snap2\snap2.zip
-* support zipped directories. e.g. with d:\mame\snap;d:\mame\snap2, the GUI will also search d:\mame\snap\snap.zip and d:\mame\snap2\snap2.zip
 
 Emuman@MAME Plus!
 20080428
+
+
+
+New MAME Plus! GUI [dockable components, 7z GoodMerged ROMs, also runs official MAME]
+I've been rewriting the GUI for MAME since February, although some features are still missing, it is time for a public preview. the new GUI is a pure front-end, with similar functionality and interface as MAMEUI.
+* if you are using official MAME, anything related to console games does not apply
+Starting
+extract to official MAME or MAME Plus! folder. mamepguix.exe should stay in the same directory as mame.exe/mamep.exe
+Dockable GUI components
+click and hold the title bar of any component, the component may be stacked, tabbed or closed.
+Game List
+display arcade and console games in a unified game list, the following is a list of nes, gbcolor, genesis and arcade versions of ‘Double Dragon’ 
+Path Settings
+open "Options - Global" tab, select "Directory" on the left to set paths. multiple directories should be separated with ';' e.g. d:\mame\snap;d:\mame\snap2
+set console ROM paths in "MESS Software Directory" section, then go to the "Console" folder and press F5 to refresh.
+ROM Auditing
+MUCH faster than MAMEUI, usually takes less than 30 seconds to complete all games
+auditing for arcade and console games are separated, depends on which Console folder are you in.
+
+Options
+the Options dialog is completely different from MAMEUI. introduced the concept of option inheriting in a intuitive way. there are 5 levels of options: Global, Source, BIOS, Clone of and Current Game, from highest priority to lowest respectively.
+an option that is different from default value displays in a yellow background
+an option that is different from inherited value displays a bold font
+you must press Enter or move to another item to submit the changes to an option
+a button is available on the right of option editor to reset to inherited value

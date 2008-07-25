@@ -6,17 +6,19 @@
 MainWindow *win;
 QSettings guiSettings("mamepgui.ini", QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
-
+QString mame_binary;
 QString list_mode;
 
 void MainWindow::log(QString message, char logOrigin)
 {
+/*
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
 	QString msg = timeString + ": " + message;
 
 	textBrowserFrontendLog->append(msg);
 	textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
+//*/
 }
 
 void MainWindow::poplog(QString message)
@@ -182,10 +184,17 @@ void MainWindow::init()
 	loadSettings();
 
 	// validate mame_binary
-	QString mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
+	mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QFile mamebin(mame_binary);
 	if (!mamebin.exists())
-		win->poplog(QString("Could not find %1").arg(mame_binary));
+	{
+		//fixme: hack
+		mame_binary = "mame.exe";
+		QFile mamebin2(mame_binary);
+
+		if (!mamebin2.exists())
+			win->poplog(QString("Could not find %1").arg(mame_binary));
+	}
 
 	// must optUtils->initOption() after win, before show()
 	optUtils->initOption();
@@ -194,6 +203,7 @@ void MainWindow::init()
 	win->log("win->show()");
 	show();
 	loadLayout();
+	setDockOptions();
 	qApp->processEvents();
 
 	// must gamelist->init(true) before loadLayout()
@@ -206,12 +216,12 @@ void MainWindow::init()
 		QPalette palette;
 		palette.setBrush(this->backgroundRole(), QBrush(bkground));
 		this->setPalette(palette);
-	}
 
-	// setup background alpha
-	utils->tranaparentBg(tvGameList);
-	utils->tranaparentBg(lvGameList);
-	utils->tranaparentBg(treeFolders);
+		// setup background alpha
+		utils->tranaparentBg(tvGameList);
+		utils->tranaparentBg(lvGameList);
+		utils->tranaparentBg(treeFolders);
+	}
 
 	// connect misc signal and slots
 	// Actions
@@ -227,7 +237,6 @@ void MainWindow::init()
 
 	// Game List
 	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
-//	connect(&gamelist->iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), this, SLOT(logStatus(QString)));
 
 	// Options
 	for (int i = 1; i < optCtrls.count(); i++)
@@ -280,6 +289,39 @@ void MainWindow::on_actionAbout_activated()
 void MainWindow::initSettings()
 {
     guiSettings.setFallbacksEnabled(false);
+
+	//remove invalid settings
+	static const QStringList validSettings = (QStringList() 
+		<< "flyer_directory"
+		<< "cabinet_directory"
+		<< "marquee_directory"
+		<< "title_directory"
+		<< "cpanel_directory"
+		<< "pcb_directory"
+		<< "icons_directory"
+		<< "background_directory"
+		<< "mame_binary"
+		<< "option_geometry"
+		<< "sort_column"
+		<< "sort_reverse"
+		<< "default_game"
+		<< "folder_current"
+		<< "vertical_tabs"
+		<< "list_mode"
+		<< "option_column_state"
+		<< "window_geometry"
+		<< "window_state"
+		<< "column_state");
+
+	QStringList keys = guiSettings.allKeys();
+	foreach(QString key, keys)
+	{
+		if (key.contains("_extra_software") || validSettings.contains(key))
+			continue;
+
+		guiSettings.remove(key);
+	}
+
 }
 
 void MainWindow::loadLayout()
@@ -296,7 +338,10 @@ void MainWindow::loadLayout()
 	
 	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
-	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
+	if (guiSettings.value("vertical_tabs").isValid())
+		actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
+	else
+		actionVerticalTabs->setChecked(defSettings.value("vertical_tabs").toInt() == 1);
 
 	list_mode = guiSettings.value("list_mode").toString();
 	if (list_mode == win->actionDetails->objectName().remove("action"))
@@ -310,7 +355,11 @@ void MainWindow::loadLayout()
 void MainWindow::loadSettings()
 {
 	currentGame = guiSettings.value("default_game", "pacman").toString();
-	option_column_state = guiSettings.value("option_column_state").toByteArray();
+
+	if (defSettings.value("option_column_state").isValid())
+		option_column_state = defSettings.value("option_column_state").toByteArray();
+	else
+		option_column_state = guiSettings.value("option_column_state").toByteArray();
 }
 
 void MainWindow::saveSettings()

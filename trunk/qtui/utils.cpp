@@ -153,13 +153,12 @@ void Utils::tranaparentBg(QWidget * w)
 
 QString Utils::getMameVersion()
 {
-	QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QStringList args;
 	args << "-help";
 	
 	mameVersion = "";
 
-	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	//block calling thread
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(getMameVersionReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(getMameVersionFinished(int, QProcess::ExitStatus)));
@@ -191,10 +190,13 @@ bool Utils::isAuditFolder(QString consoleName)
 	QStringList paths = currentFolder.split("/");
 	if (paths.size() == 2)
 	{
-		if(paths[1] == consoleName)
+		if (paths[1] == "Consoles")
+			return true;
+
+		else if(paths[1] == consoleName)
 		{
-		win->log("current audit: " + consoleName);
-		return true;
+			win->log("current audit: " + consoleName);
+			return true;
 		}
 	}
 
@@ -204,11 +206,17 @@ bool Utils::isAuditFolder(QString consoleName)
 bool Utils::isConsoleFolder()
 {
 	QStringList paths = currentFolder.split("/");
-	if (paths.size() == 2 && mamegame->gamenameGameInfoMap.contains(paths[1]))
+	if (paths.size() == 2)
 	{
-		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[paths[1]];
-		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+		if (paths[1] == "Consoles")
 			return true;
+
+		else if (mamegame->gamenameGameInfoMap.contains(paths[1]))
+		{
+			GameInfo *gameInfo = mamegame->gamenameGameInfoMap[paths[1]];
+			if (!gameInfo->nameDeviceInfoMap.isEmpty())
+				return true;
+		}
 	}
 
 	return false;

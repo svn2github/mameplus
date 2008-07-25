@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI 0.98a</string>
+   <string>MAME Plus! GUI</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
@@ -19,9 +19,9 @@
    <property name="geometry" >
     <rect>
      <x>260</x>
-     <y>49</y>
+     <y>47</y>
      <width>104</width>
-     <height>333</height>
+     <height>337</height>
     </rect>
    </property>
    <layout class="QGridLayout" >
@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -86,9 +86,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>382</y>
+     <y>384</y>
      <width>624</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
@@ -96,7 +96,7 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>23</y>
+     <y>21</y>
      <width>162</width>
      <height>26</height>
     </rect>
@@ -132,7 +132,7 @@
    <property name="geometry" >
     <rect>
      <x>162</x>
-     <y>23</y>
+     <y>21</y>
      <width>462</width>
      <height>26</height>
     </rect>
@@ -154,9 +154,9 @@
    <property name="geometry" >
     <rect>
      <x>368</x>
-     <y>49</y>
+     <y>47</y>
      <width>256</width>
-     <height>333</height>
+     <height>337</height>
     </rect>
    </property>
    <property name="features" >
@@ -174,7 +174,7 @@
       <x>0</x>
       <y>22</y>
       <width>256</width>
-      <height>311</height>
+      <height>315</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -191,9 +191,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>49</y>
+     <y>47</y>
      <width>256</width>
-     <height>333</height>
+     <height>337</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -217,7 +217,7 @@
       <x>0</x>
       <y>22</y>
       <width>256</width>
-      <height>311</height>
+      <height>315</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -261,6 +261,9 @@
    </property>
    <property name="text" >
     <string>Refresh</string>
+   </property>
+   <property name="shortcut" >
+    <string>F5</string>
    </property>
   </action>
   <action name="actionExitStop" >

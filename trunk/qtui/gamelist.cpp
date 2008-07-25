@@ -205,11 +205,11 @@ void LoadIconThread::load()
 
 	if (isRunning())
 	{
-		restart = true;
+		cancel = true;
 	}
 	else
 	{
-		restart = false;
+		cancel = false;
 		done = false;
 		
 		start(LowPriority);
@@ -251,16 +251,16 @@ void LoadIconThread::run()
 						{
 							gameInfo->icondata = icoFile.readAll();
 							emit icoUpdated(gameName);
-		//					win->log(QString("icoUpdated f: %1").arg(gameName));
+//							win->log(QString("icoUpdated f: %1").arg(gameName));
 						}
 					}
 				}
 
-				if (restart)
+				if (cancel)
 					break;
 			}
 
-			if (restart)
+			if (cancel)
 				break;
 
 			// iterate all files in the zip
@@ -290,46 +290,50 @@ void LoadIconThread::run()
 						{
 							gameInfo->icondata = icoFile.readAll();
 							emit icoUpdated(gameName);
-		//					win->log(QString("icoUpdated z: %1").arg(gameName));
+//							win->log(QString("icoUpdated z: %1").arg(gameName));
 						}
 					}
 				}
-				if (restart)
+				if (cancel)
 					break;
 			}
-			if (restart)
+			if (cancel)
 				break;
 		}
-///*
-		// get clone icons from parent
-		mutex.lock();
-		for (int i = 0; i < iconQueue.count(); i++)
-		{
-			QString gameName = iconQueue.value(i);
 
-			if (mamegame->gamenameGameInfoMap.contains(gameName))
+		if (!cancel)
+		{
+	///*
+			// get clone icons from parent
+			mutex.lock();
+			for (int i = 0; i < iconQueue.count(); i++)
 			{
-				gameInfo = mamegame->gamenameGameInfoMap[gameName];
-				if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
+				QString gameName = iconQueue.value(i);
+	
+				if (mamegame->gamenameGameInfoMap.contains(gameName))
 				{
-					gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo->cloneof];
-					if (!gameInfo2->icondata.isNull())
+					gameInfo = mamegame->gamenameGameInfoMap[gameName];
+					if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
 					{
-						gameInfo->icondata = gameInfo2->icondata;
-						emit icoUpdated(gameName);
-		//				win->log(QString("icoUpdated c: %1").arg(gameName));
+						gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo->cloneof];
+						if (!gameInfo2->icondata.isNull())
+						{
+							gameInfo->icondata = gameInfo2->icondata;
+							emit icoUpdated(gameName);
+	//						win->log(QString("icoUpdated c: %1").arg(gameName));
+						}
 					}
 				}
+	//			else
+	//				win->log(QString("errico: %1 %2").arg(gameName).arg(mamegame->gamenameGameInfoMap.count()));
 			}
-//			else
-//				win->log(QString("errico: %1 %2").arg(gameName).arg(mamegame->gamenameGameInfoMap.count()));
-		}
-		mutex.unlock();
-//*/
-		if (!restart)
-			done = true;
+			mutex.unlock();
+	//*/
 
-		restart = false;
+			done = true;
+		}
+
+		cancel = false;
 	}
 }
 
@@ -794,7 +798,6 @@ MameGame::MameGame(QObject *parent)
 : QObject(parent)
 {
 	win->log("# MameGame()");
-
 	this->mameVersion = mameVersion;
 }
 
@@ -807,8 +810,10 @@ void MameGame::s11n()
 {
 	win->log("start s11n()");
 
-	QByteArray ba;
-	QDataStream out(&ba, QIODevice::WriteOnly);
+	QDir().mkpath("cache");
+	QFile file("cache/gamelist.cache");
+	file.open(QIODevice::WriteOnly);
+	QDataStream out(&file);
 
 	out << (quint32)MAMEPLUS_SIG; //mameplus signature
 	out << (qint16)S11N_VER; //s11n version
@@ -873,13 +878,14 @@ void MameGame::s11n()
 	}
 	gamelist->switchProgress(-1, "");
 	
-	guiSettings.setValue("list_cache", qCompress(ba, 9));
+	file.close();
 }
 
 int MameGame::des11n()
 {
-	QByteArray ba = qUncompress(guiSettings.value("list_cache").toByteArray());
-	QDataStream in(ba);
+	QFile file("cache/gamelist.cache");
+	file.open(QIODevice::ReadOnly);
+	QDataStream in(&file);
 
 	// Read and check the header
 	quint32 mamepSig;
@@ -1101,6 +1107,8 @@ Gamelist::Gamelist(QObject *parent)
 	inited = false;
 
 	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
+//	connect(&iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), win, SLOT(logStatus(QString)));
+
 	connect(&selectThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 	
 	if (!searchTimer)
@@ -1218,7 +1226,6 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 void Gamelist::restoreSelection()
 {
-	//fixme: hack?
 	if (!gameListModel || !gameListPModel)
 		return;
 
@@ -1249,16 +1256,18 @@ void Gamelist::restoreSelection()
 	win->tvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
 	win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
 
-	win->labelGameCount->setText(QString("%1 Games").arg(gameListPModel->rowCount()));
+	win->labelGameCount->setText(QString("%1 unique games").arg(gameListPModel->rowCount()));
 }
 
 void Gamelist::setupIcon(QString gameName)
 {
+	if (!gameListModel || !gameListPModel)
+		return;
+
 	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
 
 	gameListModel->setData(gameListModel->index(0, gameInfo->pModItem), 
 		gameInfo->icondata, Qt::DecorationRole);
-
 //	win->log(QString("setupico %1 %2").arg(gameName).arg(gameInfo->icondata.isNull()));
 }
 
@@ -1466,12 +1475,11 @@ void Gamelist::init(bool toggleState)
 	else
 	{
 		mameOutputBuf = "";
-		QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 		QStringList args;
 
 		args << "-listxml";
 		loadTimer.start();
-		loadProc = procMan->process(procMan->start(command, args, FALSE));
+		loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 
 		connect(loadProc, SIGNAL(started()), this, SLOT(loadListXmlStarted()));
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
@@ -1518,11 +1526,10 @@ void Gamelist::loadListXmlFinished(int exitCode, QProcess::ExitStatus exitStatus
 void Gamelist::loadDefaultIni()
 {
 	mamegame->mameDefaultIni = "";
-	QString command = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QStringList args;
 	args << "-showconfig" << "-norc";
 
-	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
 }
@@ -1886,7 +1893,6 @@ void Gamelist::runMame(bool runMerged)
 	//if (procMan->procCount > 0)
 	//	return;
 
-	QString command = mameOpts["mame_binary"]->globalvalue;
 	QStringList args;
 
 	GameInfo *gameInfo = mamegame->gamenameGameInfoMap[currentGame];
@@ -1905,7 +1911,7 @@ void Gamelist::runMame(bool runMerged)
 		{
 			// use temp rom name instead
 			args << currentTempROM;
-			loadProc = procMan->process(procMan->start(command, args, FALSE));
+			loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 			// delete the extracted rom
 			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
 			return;
@@ -1920,7 +1926,7 @@ void Gamelist::runMame(bool runMerged)
 	}
 
 	args << currentGame;
-	procMan->process(procMan->start(command, args));
+	procMan->process(procMan->start(mame_binary, args));
 }
 
 

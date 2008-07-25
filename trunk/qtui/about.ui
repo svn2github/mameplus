@@ -5,12 +5,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>312</width>
-    <height>216</height>
+    <width>276</width>
+    <height>204</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>About MAME Plus! GUI</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2" >
    <property name="leftMargin" >
@@ -25,23 +25,32 @@
    <item>
     <layout class="QVBoxLayout" name="verticalLayout" >
      <item>
-      <widget class="QLabel" name="label" >
+      <widget class="QLabel" name="lblLogo" >
+       <property name="styleSheet" >
+        <string notr="true" >border-bottom-width:2px;
+border-bottom-style: solid;
+border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));</string>
+       </property>
        <property name="text" >
         <string/>
        </property>
        <property name="pixmap" >
-        <pixmap resource="mamepguimain.qrc" >:/res/mamegui/mamemess.png</pixmap>
+        <pixmap resource="mamepguimain.qrc" >:/res/mamegui/mamep_brush.png</pixmap>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_2" >
+       <property name="styleSheet" >
+        <string notr="true" >padding: 0 10px;</string>
+       </property>
        <property name="text" >
         <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
 &lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
 p, li { white-space: pre-wrap; }
 &lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-size:8pt;">(c) 2008 &lt;/span>&lt;a href="http://mameicons.free.fr/mame32p/">&lt;span style=" text-decoration: underline; color:#0000ff;">MAME Plus!&lt;/span>&lt;/a>&lt;/p>&lt;/body>&lt;/html></string>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">&lt;span style=" font-size:10pt; font-weight:600;">MAME Plus! GUI &lt;/span>&lt;span style=" font-size:10pt;"> 0.98b3 20080725&lt;/span>&lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;">© 2008 Emuman @ &lt;a href="http://mameicons.free.fr/mame32p/">&lt;span style=" text-decoration: underline; color:#006d9f;">MAME Plus!&lt;/span>&lt;/a>&lt;/p>&lt;/body>&lt;/html></string>
        </property>
        <property name="scaledContents" >
         <bool>false</bool>
@@ -64,6 +73,8 @@ p, li { white-space: pre-wrap; }
     </widget>
    </item>
   </layout>
+  <zorder>buttonBox</zorder>
+  <zorder></zorder>
  </widget>
  <resources>
   <include location="mamepguimain.qrc" />

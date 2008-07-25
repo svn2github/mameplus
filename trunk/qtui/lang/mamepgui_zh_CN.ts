@@ -713,82 +713,83 @@
         <translation type="obsolete">杂项</translation>
     </message>
 </context>
-<context>
+<context encoding="UTF-8">
     <name>About</name>
-    <message>
-        <location filename="../about.ui" line="13"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../about.ui" line="40"/>
+    <message encoding="UTF-8">
+        <location filename="../about.ui" line="48"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
 &lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:&apos;MS Shell Dlg 2&apos;; font-size:8.25pt; font-weight:400; font-style:normal;&quot;&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-size:8pt;&quot;&gt;(c) 2008 &lt;/span&gt;&lt;a href=&quot;http://mameicons.free.fr/mame32p/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#0000ff;&quot;&gt;MAME Plus!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;MAME Plus! GUI &lt;/span&gt;&lt;span style=&quot; font-size:10pt;&quot;&gt; 0.98b 20080724&lt;/span&gt;&lt;/p&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;&quot;&gt;© 2008 Emuman @ &lt;a href=&quot;http://mameicons.free.fr/mame32p/&quot;&gt;&lt;span style=&quot; text-decoration: underline; color:#006d9f;&quot;&gt;MAME Plus!&lt;/span&gt;&lt;/a&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../about.ui" line="13"/>
+        <source>About MAME Plus! GUI</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="1608"/>
+        <location filename="../gamelist.cpp" line="1615"/>
         <source>Parsing listxml</source>
         <translation type="unfinished">正在解析 listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1498"/>
+        <location filename="../gamelist.cpp" line="1506"/>
         <source>Loading listxml: %1 games</source>
         <translation type="unfinished">载入 listxml: %1 个游戏</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1756"/>
+        <location filename="../gamelist.cpp" line="1765"/>
         <source>Year</source>
         <translation type="unfinished">发行年代</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1752"/>
+        <location filename="../gamelist.cpp" line="1761"/>
         <source>Available Arcades</source>
         <translation type="unfinished">拥有街机</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1753"/>
+        <location filename="../gamelist.cpp" line="1762"/>
         <source>Unavailable Arcades</source>
         <translation type="unfinished">未拥有街机</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1754"/>
+        <location filename="../gamelist.cpp" line="1763"/>
         <source>Consoles</source>
         <translation type="unfinished">家用机</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1755"/>
+        <location filename="../gamelist.cpp" line="1764"/>
         <source>Manufacturer</source>
         <translation type="unfinished">制造厂商</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1757"/>
+        <location filename="../gamelist.cpp" line="1766"/>
         <source>Driver</source>
         <translation type="unfinished">游戏驱动</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1758"/>
+        <location filename="../gamelist.cpp" line="1767"/>
         <source>BIOS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1751"/>
+        <location filename="../gamelist.cpp" line="1760"/>
         <source>All Arcades</source>
         <translation type="unfinished">所有街机</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1750"/>
+        <location filename="../gamelist.cpp" line="1759"/>
         <source>All Games</source>
         <translation type="unfinished">所有游戏</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1695"/>
+        <location filename="../gamelist.cpp" line="1704"/>
         <source>Refresh</source>
         <translation type="unfinished">刷新</translation>
     </message>
@@ -891,52 +892,52 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="167"/>
+        <location filename="../mamepguimain.cpp" line="169"/>
         <source>Snapshot</source>
         <translation type="unfinished">快照</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="168"/>
+        <location filename="../mamepguimain.cpp" line="170"/>
         <source>Flyer</source>
         <translation type="unfinished">广告</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="169"/>
+        <location filename="../mamepguimain.cpp" line="171"/>
         <source>Cabinet</source>
         <translation>机台</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="170"/>
+        <location filename="../mamepguimain.cpp" line="172"/>
         <source>Marquee</source>
         <translation>贴画</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="171"/>
+        <location filename="../mamepguimain.cpp" line="173"/>
         <source>Title</source>
         <translation type="unfinished">标题</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="172"/>
+        <location filename="../mamepguimain.cpp" line="174"/>
         <source>Control Panel</source>
         <translation type="unfinished">控制</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="173"/>
+        <location filename="../mamepguimain.cpp" line="175"/>
         <source>PCB</source>
         <translation type="unfinished">电路</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="175"/>
+        <location filename="../mamepguimain.cpp" line="177"/>
         <source>History</source>
         <translation type="unfinished">历史</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="176"/>
+        <location filename="../mamepguimain.cpp" line="178"/>
         <source>MAMEInfo</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="177"/>
+        <location filename="../mamepguimain.cpp" line="179"/>
         <source>Story</source>
         <translation type="unfinished">故事</translation>
     </message>
@@ -957,14 +958,14 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="13"/>
-        <source>MAME Plus! GUI 0.98a</source>
+        <source>MAME Plus! GUI</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="823"/>
+        <location filename="../gamelist.cpp" line="828"/>
         <source>Saving listxml</source>
         <translation type="unfinished">正在保存 listxml</translation>
     </message>
@@ -1652,7 +1653,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">游戏中菜单界面透明度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1607"/>
+        <location filename="../mameopt.cpp" line="1612"/>
         <source>Directory</source>
         <translation type="unfinished">目录<byte value="x9"/></translation>
     </message>
@@ -1677,7 +1678,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">杂项</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1485"/>
+        <location filename="../mameopt.cpp" line="1490"/>
         <source>Video</source>
         <translation type="unfinished">视频</translation>
     </message>
@@ -2002,19 +2003,29 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1572"/>
+        <location filename="../mameopt.cpp" line="1577"/>
         <source>Option</source>
         <translation type="unfinished">选项</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1573"/>
+        <location filename="../mameopt.cpp" line="1578"/>
         <source>Value</source>
         <translation type="unfinished">值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1491"/>
+        <location filename="../mameopt.cpp" line="1496"/>
         <source>Options</source>
         <translation type="unfinished">选项</translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1615"/>
+        <source>GUI DIRECTORY</source>
+        <translation type="unfinished">图形界面目录</translation>
+    </message>
+    <message>
+        <location filename="../mameopt.cpp" line="1627"/>
+        <source>MESS SOFTWARE DIRECTORY</source>
+        <translation type="unfinished">MESS软件目录</translation>
     </message>
 </context>
 <context>
@@ -2025,32 +2036,32 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">选项</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="23"/>
+        <location filename="../options.ui" line="31"/>
         <source>GUI</source>
         <translation type="unfinished">图形界面</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="28"/>
+        <location filename="../options.ui" line="44"/>
         <source>Global</source>
         <translation type="unfinished">全局</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="51"/>
+        <location filename="../options.ui" line="75"/>
         <source>Source</source>
         <translation type="unfinished">驱动</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="74"/>
+        <location filename="../options.ui" line="106"/>
         <source>BIOS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../options.ui" line="97"/>
+        <location filename="../options.ui" line="137"/>
         <source>Clone Of</source>
         <translation type="unfinished">原作</translation>
     </message>
     <message>
-        <location filename="../options.ui" line="120"/>
+        <location filename="../options.ui" line="168"/>
         <source>Game</source>
         <translation type="unfinished">游戏</translation>
     </message>
