@@ -99,8 +99,16 @@
 \n소스: %s\n
 
 #
+\nSound:\n
+\n사운드:\n
+
+#
 \nStory:\n
 \n줄거리:\n
+
+#
+\nVideo:\n
+\n비디오:\n
 
 #
 \nWARNING: FPS number too high!\n
@@ -231,10 +239,6 @@
 %.8X-%.8X 메모리
 
 #
-%d cheats saved
-%d 개의 치트저장
-
-#
 %d results found
 %d 결과를 찾음
 
@@ -267,12 +271,24 @@
 %s 아날로그
 
 #
+%s Brightness %.3f
+%s 밝기 %.3f
+
+#
 %s CHD NEEDS REDUMP\n
 %s CHD 재덤프 필요\n
 
 #
+%s Contrast %.3f
+%s 대비 %.3f
+
+#
 %s Dec
 %s 감소
+
+#
+%s Gamma %.3f
+%s 감마 %.3f
 
 #
 %s Inc
@@ -295,8 +311,16 @@
 %s 롬의 재덤프 필요\n
 
 #
+%s Refresh Rate %.3ffps
+%s 표시 빈도 %.3ffps
+
+#
 %s UNSUPPORTED CHD VERSION\n
 %s 지원되지 않는 CHD 버전\n
+
+#
+%s Volume %4.2f
+%s 볼륨 %4.2f
 
 #
 %s WRONG CHECKSUMS:\n
@@ -305,10 +329,6 @@
 #
 %s WRONG LENGTH (expected: %08x found: %08x)\n
 %s 잘못된 길이 (기대값: %08x 확인결과: %08x)\n
-
-#
-%s activated
-%s 활성화
 
 #
 %s disabled
@@ -343,6 +363,10 @@
 (불량)
 
 #
+(Unknown Default)
+(확인불가 기본)
+
+#
 (debugger-only command)
 (디버거-전용 명령)
 
@@ -351,8 +375,8 @@
 (컴파일 옵션에서 제외됨)
 
 #
- (locked)
- (잠김)
+(locked)
+(잠김)
 
 #
 (more)
@@ -575,22 +599,6 @@
 9 코인/1 크레딧
 
 #
-:1st Activation Key (%s)\n
-:1차 활성키 (%s)\n
-
-#
-:1st Activation Key for %s (%s)\n
-:%s 1차 활성키 (%s)\n
-
-#
-:2nd Activation Key (%s)\n
-:2차 활성키 (%s)\n
-
-#
-:2nd Activation Key for %s (%s)\n
-:%s 2차 활성키 (%s)\n
-
-#
 AD Stick X
 AD 스틱 X
 
@@ -701,14 +709,6 @@ AWP 시뮬레이트 비디오 (아트워크 없음)
 #
 Activation Key
 활성키
-
-#
-Activation Key (1st)
-활성 키 (1차)
-
-#
-Activation Key (2nd)
-활성 키 (2차)
 
 #
 Add
@@ -831,8 +831,8 @@ Automatic
 자동
 
 #
-Available
-이용가능
+Average recorded speed: %d%%\n
+평균 기록 속도: %d%%\n
 
 #
 Average speed: %.2f%% (%d seconds)\n
@@ -1031,16 +1031,16 @@ Cassette
 카세트
 
 #
+Categories
+카테고리
+
+#
 Center
 원점 복귀
 
 #
 Cheat
 치트
-
-#
-Cheat Database reloaded
-치트 데이터베이스 불러옴
 
 #
 Cheat conflict found: disabling
@@ -1081,10 +1081,6 @@ Code
 #
 Coin
 동전
-
-# emu/uitext.c: 123
-Coin %c: 
-동전 %c: 
 
 #
 Coin 1
@@ -1151,8 +1147,16 @@ Coinage
 동전
 
 #
+Coinlock disabled %s.
+코인잠금 해제됨 %s.
+
+#
 Color Overlay
 컬러 오버레이
+
+#
+Color_Overlay
+컬러_오버레이
 
 #
 Command List not available
@@ -1169,10 +1173,6 @@ Common
 #
 Comparison
 비교
-
-#
-Comparison Option
-비교 옵션
 
 #
 Config Menu
@@ -1215,6 +1215,10 @@ Control Panel
 조종 패널
 
 #
+Control Panel / Laser LEDs
+제어판 / Laser LED
+
+#
 Control Type
 조종장치 종류
 
@@ -1251,8 +1255,16 @@ Create...
 생성...
 
 #
+Created %s
+생성됨 %s
+
+#
 Crop to Screen
 화면에 맞게 잘라냄
+
+#
+Cropped Corners
+크롭된 모퉁이
 
 #
 Current Data
@@ -1289,6 +1301,10 @@ Data Shift
 #
 Debug
 디버그
+
+#
+Debug Lamps
+디버그 램프
 
 #
 Decimal
@@ -1539,24 +1555,12 @@ Enable/Disable a Cheat
 치트 활성/비활성
 
 #
-End of playback
-재생 종료
-
-#
-End of playback - %i frames - Average speed %f%%
-재생 종료 - %i 프레임 - 평균 속도 %f%%
-
-#
-End of playback - %i frames - Average speed %f%%\n
-재생종료 - %i 프레임 - 평균 속도 %f%%\n
+End of file
+파일 끝
 
 #
 Endianness
 엔디아니스
-
-#
-Energy (Less or Greater)
-에너지 (작게 / 크게)
 
 #
 Energy (greater or less)
@@ -1584,7 +1588,7 @@ Error
 
 #
 Error creating memory card\n(Card may already exist)
-메모리카드 생성 오류\n(카드가 이미 존재합니다)
+메모리 카드 생성 오류\n(카드가 이미 존재합니다)
 
 #
 Error loading memory card
@@ -1629,10 +1633,6 @@ Exit
 #
 Expert
 전문가
-
-#
-Extended INP file info:\n
-확장 INP 파일 정보:\n
 
 #
 FRONTEND COMMANDS
@@ -1759,8 +1759,8 @@ Game Mameinfo
 게임 마메정보
 
 #
-Game Slots
-게임 슬롯
+Game Mode
+게임 모드
 
 #
 Game Story
@@ -1895,12 +1895,12 @@ Hong Kong
 홍콩
 
 #
-Horiz position
+Horiz Position
 수평 위치
 
 #
-Horiz stretch
-수평 늘리기
+Horiz Stretch
+수평 늘림
 
 #
 Horizontal
@@ -1933,6 +1933,10 @@ INCORRECT CHECKSUM:\n
 #
 INCORRECT LENGTH: %d bytes\n
 잘못된 길이:: %d bytes\n
+
+#
+INP version %d.%d\n
+INP 버전 %d.%d\n
 
 #
 INVALID
@@ -2019,8 +2023,28 @@ Input Devices
 입력 장치
 
 #
+Input file format version mismatch
+입력 파일 형식 버전 불일치
+
+#
+Input file invalid or in an older, unsupported format
+입력 파일이 잘못되거나 구버전, 또는 지원되지 않는 형식입니다
+
+#
+Input file is corrupt or invalid (missing header)
+입력 파일이 손상되었거나 잘못된 파일입니다
+
+#
 Input file is for game '%s', not for current game '%s'\n
  '%s' 게임의 입력 파일 입니다(현재 '%s')\n
+
+#
+Input file: %s\n
+입력 파일: %s\n
+
+#
+Input port errors:\n%s
+입력 포트 오류:\n%s
 
 #
 Input: Adding %s #%d: %s\n
@@ -2065,6 +2089,10 @@ Invalid bitmap format!
 #
 Invalid joystick map: %s\n
 잘못된 조이스틱 배치: %s\n
+
+#
+Invalid token %d in input ports\n
+입력 포트에 잘못된 토큰 %d\n
 
 #
 Inverted
@@ -2117,6 +2145,10 @@ Keyboard Emulation Status
 #
 Korea
 한국
+
+#
+LCD with square pixels
+정사각 픽셀의 LCD
 
 #
 LCD%d Pixel Aspect (%d:%d)
@@ -2299,12 +2331,12 @@ Location
 위치
 
 #
-Low
-낮음
+Locked
+잠김
 
 #
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - 멀티플 아케이드 머신 에뮬레이터\nCopyright (C) 1997-2007 by Nicola Salmoria and the MAME Team\n\n
+Low
+낮음
 
 #
 MAME Statistics
@@ -2321,10 +2353,6 @@ MAME정보:\n
 #
 MESS SPECIFIC OPTIONS
 MESS 전용 옵션
-
-#
-Machine Mode
-기기 모드
 
 #
 Main Screen Pixel Aspect (%d:%d)
@@ -2351,8 +2379,8 @@ Mask
 마스크
 
 #
-Match to Write
-기록 일치
+Master Volume %3ddB
+마스터 볼륨 %3ddB
 
 #
 Matches found
@@ -2615,6 +2643,10 @@ None
 없음
 
 #
+None\n
+없음\n
+
+#
 Normal
 보통
 
@@ -2689,6 +2721,14 @@ Otherwise, type OK or move the joystick left then right to continue
 #
 Out of memory
 메모리 부족
+
+#
+Out of space
+공간 부족
+
+#
+Out of sync
+싱크 어긋남
 
 #
 Overall: NOT WORKING
@@ -4259,6 +4299,10 @@ Play Time
 플레이 시간
 
 #
+Playback Ended\nReason: %s
+재상 종료됨\n원인: %s
+
+#
 Player %d
 플레이어 %d
 
@@ -4299,8 +4343,8 @@ Players
 플레이어
 
 #
-Playing back previously recorded game %s\n
-이전에 기록된 게임 재생 %s\n
+Please load an image
+이미지를 불러오십시오
 
 #
 Pon
@@ -4399,10 +4443,6 @@ Printer
 프린터
 
 #
-Program Space
-프로그램 공간
-
-#
 Punched Card
 펀치 카드
 
@@ -4451,6 +4491,10 @@ Rapid Fire
 속사
 
 #
+Raster
+래스터
+
+#
 Reach
 리치
 
@@ -4461,6 +4505,14 @@ Record
 #
 Record Movie
 동영상 기록
+
+#
+Recorded using %s\n
+%s-기록됨\n
+
+#
+Recording Ended\nReason: %s
+기록 종료됨\n원인: %s
 
 #
 Refresh rate
@@ -4600,11 +4652,11 @@ Screen
 
 #
 Screen #%d
-화면 #%d
+스크린 #%d
 
 #
-Screen %d %s %.3f
-화면 %d %s %.3f
+Screen %d Cropped (%dx%d)
+스크린 %d 크롭 됨 (%dx%d)
 
 #
 Screen %d Pixel Aspect (%d:%d)
@@ -4613,6 +4665,14 @@ Screen %d Pixel Aspect (%d:%d)
 #
 Screen %d Standard (%d:%d)
 화면 %d 일반비율 (%d:%d)
+
+#
+Screen %d Stretched (%dx%d)
+스크린 %d 늘림 (%dx%d)
+
+#
+Screen '%s'
+스크린 '%s'
 
 #
 Screen Resolution
@@ -4637,10 +4697,6 @@ Search Speed
 #
 Search a Cheat (Advanced Mode)
 치트 검색 (고급 모드)
-
-#
-Search a Cheat (Classic Mode)
-치트 검색 (이전 모드)
 
 #
 Search a Cheat (Minimum Mode)
@@ -4721,6 +4777,10 @@ Service Mode/Free Play
 #
 Set
 세트
+
+#
+Set Chip Lamps
+칩 램프 설정
 
 #
 Set/Clear
@@ -4843,10 +4903,6 @@ Start a New Cheat Search
 새 치트 검색 시작
 
 #
-Start time: %s\n
-시작 시간: %s\n
-
-#
 State
 상태
 
@@ -4865,10 +4921,6 @@ State successfully saved.\nWarning: Save states are not officially supported for
 #
 Statistics not available
 표시할 통계내용이 없습니다
-
-#
-Status (Same or Different)
-상태 (동일 / 변화)
 
 #
 Status (bits or flags)
@@ -5011,10 +5063,6 @@ There are known problems with this game\n\n
 \n\n이 게임의 실행 가능한 클론롬은:\n\n
 
 #
-This INP file is not an extended INP file, extra info not available\n
-현재 INP 파일은 확장 INP 파일이 아닙니니다. 추가 정보를 이용할 수 없습니다\n
-
-#
 This is the list of the ROMs required for driver \"%s\".\nName            Size Checksum\n
 드라이버가 필요한 롬 목록입니다 \"%s\".\n이름            크기 체크섬\n
 
@@ -5039,10 +5087,6 @@ Timer
 타이머
 
 #
-Timer (+ or -)
-타이머 (+ / -)
-
-#
 Timers (+/- some value)
 타이머 (+/- 일부 값)
 
@@ -5065,6 +5109,14 @@ Toggle Crosshair
 #
 Toggle Debugger
 디버거 켜기/끄기
+
+#
+Toggle Fullscreen
+전체화면 전환
+
+#
+Total playback frames: %d\n
+전체 실행 프레임: %d\n
 
 #
 Track X
@@ -5199,6 +5251,10 @@ UI Page Up
 UI 위 페이지
 
 #
+UI Paste Text
+UI 텍스트 붙여넣기
+
+#
 UI Previous Group
 UI 이전 그룹
 
@@ -5255,8 +5311,8 @@ USA
 미국
 
 #
-Unable to allocate snapshot render target\n
-스크린샷 생성 타겟을 위치할 수 없습니다\n
+Unable to construct input ports!
+입력 포트를 생성할 수 없습니다!
 
 #
 Unable to create file mame.ini\n
@@ -5265,6 +5321,10 @@ mame.ini를 생성할 수 없음\n
 #
 Unable to load due to pending anonymous timers. See error.log for details.
 알수없는 타이머로 인해 불러올 수 없음. 자세한 내용은 error.log에
+
+#
+Unable to locate input port '%s'
+'%s'입력 포트를 위치할 수 없습니다
 
 #
 Unable to save due to pending anonymous timers. See error.log for details.
@@ -5430,11 +5490,11 @@ Upright
 Upright 1
 오른쪽위 1
 
-# emu/uitext.c: 121
+#
 Uptime: %d:%02d:%02d\n\n
 시간종료: %d:%02d:%02d\n\n
 
-# emu/uitext.c: 121
+#
 Uptime: %d:%02d\n\n
 시간종료: %d:%02d\n\n
 
@@ -5471,12 +5531,8 @@ Value
 값
 
 #
-Value (Equal)
-값 (동일)
-
-#
-Value (NearTo)
-값 (근사)
+Vector\n
+벡터\n
 
 #
 Vector Flicker
@@ -5491,16 +5547,12 @@ Version
 버전
 
 #
-Version string: %s\n
-버전 스트링: %s\n
+Vert Position
+세로 위치
 
 #
-Vert position
-수직 위치
-
-#
-Vert stretch
-수직 늘리기
+Vert Stretch
+세로 늘리기
 
 #
 Vertical
@@ -5541,10 +5593,6 @@ View Last Results
 #
 Voice
 음성
-
-#
-%s Volume %4.2f
-%s 볼륨 %4.2f
 
 #
 Volume Down
@@ -5625,10 +5673,6 @@ World
 #
 Write
 작성
-
-#
-Write If Match
-일치시 기록
 
 #
 X Position
@@ -5743,8 +5787,8 @@ center deadzone range for joystick where change is ignored (0.0 center, 1.0 end)
 움직임을 무시할 조이스틱 데드존 영역 중심 (0.0 가운데, 1.0 끝)
 
 #
-change m68k core (0:C, 1:DRC, 2:ASM+DRC)
-m68k 코어 변경 (0:C, 1:DRC, 2:ASM+DRC)
+change m68k core (c|drc)
+m68k 코어 변경 (c|drc)
 
 #
 cheat database not found
@@ -5753,10 +5797,6 @@ cheat database not found
 #
 cheat filename
 치트 파일명
-
-#
-command code saved
-기술 코드 저장됨
 
 #
 command list database name
@@ -5855,10 +5895,6 @@ directory to save states
 상태 저장 디렉토리
 
 #
-disabled
-비활성화
-
-#
 display additional diagnostic information
 부가 분석 정보 표시
 
@@ -5923,6 +5959,10 @@ enable cheat subsystem
 치트 서브시스템 사용
 
 #
+enable coin lockouts to actually lock out coins
+실제 코인 잠금을 위해 코인잠금 기능 사용
+
+#
 enable joystick input
 조이스틱 입력 사용
 
@@ -5983,10 +6023,6 @@ enable/disable volume auto adjust
 볼륨 자동조절 사용/사용안함
 
 #
-enabled
-활성화
-
-#
 end of axis saturation range for joystick where change is ignored (0.0 center, 1.0 end)
 움직임을 무시할 조이스틱 축 초과 범위 (0.0 가운데, 1.0 끝)
 
@@ -6025,10 +6061,6 @@ font normal color
 #
 font special color
 특수문자 색상
-
-#
-frame:%d 
-프레임:%d 
 
 #
 game
@@ -6071,6 +6103,10 @@ is good\n
  양호\n
 
 #
+keep calling video updates while in pause
+일시정지 상태에서 비디오 업데이트 수행
+
+#
 lightgun
 라이트건
 
@@ -6093,10 +6129,6 @@ mameinfo database name
 #
 n/a
 이용불가
-
-#
-no activation key
-활성키 없음
 
 #
 no results for this region
@@ -6131,6 +6163,10 @@ optional filename to write a WAV file of the current session
 현재 세션에 사용할 WAV 파일명
 
 #
+optional filename to write an AVI movie of the current session
+현재 세션의 AVI 동영상 저장을 위한 부가 파일명
+
+#
 or
 또는
 
@@ -6139,12 +6175,8 @@ out of memory while adding search
 검색을 추가하는데 메모리가 부족합니다
 
 #
-out of memory while adding watch
-검사를 추가하는데 메모리가 부족합니다
-
-#
-out of memory while loading cheat database
-치트데이터 베이스를 불러오는데 메모리가 부족합니다
+override of the default snapshot/movie naming; %g == gamename, %i == index
+기본 스냅샷/동영상 이름 규칙 무시; %g == 게임이름, %i == 인덱스
 
 #
 paddle
@@ -6217,10 +6249,6 @@ record an input file
 #
 recording
 기록중
-
-#
-region invalidated - %d results remain
-지역 무효화 - %d 결과가 남음
 
 #
 report romsets that have problems
@@ -6355,6 +6383,14 @@ sound volume in decibels (-32 min, 0 max)
 사운드 볼륨 (최소 -32, 최대 0)
 
 #
+specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
+스냅샷/동영상 해상도 설정 (<폭>x<높이>) 또는 '자동'으로 최소 크기 설정
+
+#
+specify snapshot/movie view or 'internal' to use internal pixel-aspect views
+스냅샷/동영상 보기 설정 또는 '내부'로 내부 픽셀 비율 보기 사용
+
+#
 stereo
 스테레오
 
@@ -6391,10 +6427,6 @@ unable to open log file
 로그 파일을 불러올 수 없습니다
 
 #
-undefined menu switching : %x
-미정의 메뉴 스위칭: %x
-
-#
 unzip it and place it in the MAME directory
 MAME 디렉토리에 압축을 해제해 주십시요
 
@@ -6411,10 +6443,6 @@ values restored
 값 복구됨
 
 #
-video_screen_configure(): visible area must be contained within the width/height!
-video_screen_configure(): 가시영역은 폭/높이 영역 안에 있어야 합니다!
-
-#
 window background color
 창 배경 색상
 
@@ -6425,5 +6453,4 @@ writes configuration to (driver).ini on exit
 #
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
-
 

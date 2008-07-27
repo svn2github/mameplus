@@ -1,6 +1,22 @@
 #
-                                
-한국어 : 과자두개 / 사부 / exako
+\nDo you wish to continue?
+\n계속 하시겠습니까?
+
+#
+ PCB Info: %s [%s]
+ PCB 정보: %s [%s]
+
+#
+ again.\r\n
+다시\r\n
+
+#
+ requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
+Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft DirectX 버전 3 이상이 필요합니다.\r\n\r\n설치 및 실행을 위해선 Microsoft의 DirectX 웹페이지를 참고하세요.http://www.microsoft.com/directx\r\ndownload DirectX
+
+#
+ will now reset the following\n
+다음 ..리셋 할 것입니다\n
 
 #
 %d colors 
@@ -25,10 +41,6 @@
 #
 %dx%d (V)
 %dx%d (V)
-
-#
-%s\nThis is also global driver options in the %s
-%s\n 이것은 %s의 전체 드라이버 옵션이기도 합니다
 
 #
 %s (%d player)
@@ -59,8 +71,8 @@
 MAME32 정보(&A)
 
 #
-&About MAME32
-MAME32 정보(&A)
+&About MAMEUI
+MAMEUI 정보(&A)
 
 #
 &Add to Custom Folder...
@@ -165,6 +177,10 @@ MAME32 정보(&A)
 #
 &History
 역사(&H)
+
+#
+&Horizontal
+가로(&H)
 
 #
 &Interface Options...
@@ -287,6 +303,10 @@ Mame 릴리즈 일지(&M)
 벡터 그래픽(&V)
 
 #
+&Vertical
+세로(&V)
+
+#
 &View
 보기(&V)
 
@@ -331,8 +351,8 @@ About
 MAME32 정보
 
 #
-About MAME32
-MAME32 정보
+About MAME Plus!
+MAME Plus! 정보
 
 #
 Add ->
@@ -343,12 +363,12 @@ Add Game To Custom Folder
 사용자 폴더에 게임 추가
 
 #
-Add currently selected game to a custom folder
-현재 선택한 게임을 사용자 정의 폴더로 추가합니다.
+Add selected item to custom folder
+사용자 폴더에 선택 항목 추가
 
 #
-Additional MAME32 code by
-추가 MAME32 코드 작성
+Additional MAMEUI code by
+추가 MAMEUI 코드 제작 :
 
 #
 Advanced
@@ -359,12 +379,16 @@ All
 전체
 
 #
-All Games
-모든 게임
+All Arcades
+전체 아케이드
 
 #
 All files (*.*)
 모든 파일 (*.*)
+
+#
+All screens
+모든 스크린
 
 #
 Allow game selection by a &joystick (requires restart)
@@ -423,6 +447,14 @@ Audit complete.\n
 검사 완료.\n
 
 #
+Audit items in this folder
+현재 폴더의 항목 확인
+
+#
+Audit the selected item
+선택 항목 확인
+
+#
 Auto
 자동
 
@@ -451,8 +483,8 @@ Automatic
 자동
 
 #
-Available
-보유 게임
+Available Arcades
+보유 아케이드
 
 #
 Available fields:
@@ -631,8 +663,8 @@ Checking...
 검사중...
 
 #
-Christopher Kirmse and Michael Soderstrom
-Christopher Kirmse, Michael Soderstrom
+Christopher Kirmse and the MAMEUI team
+Christopher Kirmse 및 MAMEUI 팀
 
 #
 Clockwise
@@ -653,6 +685,10 @@ Clones
 #
 Cocktail
 칵테일
+
+#
+Coin lockout
+코인 차단
 
 #
 Colors are completely wrong
@@ -689,10 +725,6 @@ Consoles
 #
 Contains commands for displaying help
 도움말을 보여주기 위한 명령을 포함합니다.
-
-#
-Contains commands for manupulating the view
-화면을 조절하기 위한 명령을 포함합니다.
 
 #
 Contains commands for sorting by various columns
@@ -775,6 +807,10 @@ Custom Options
 사용자 설정
 
 #
+Custom folder filters\n
+사용자 폴더 필터\n
+
+#
 Customi&ze Fields...
 사용자 지정 필드(&Z)...
 
@@ -791,6 +827,10 @@ Customize which columns are used in the game list
 게임목록에서 사용될 열을 지정
 
 #
+Decrypted
+암호화
+
+#
 Default
 기본값
 
@@ -801,6 +841,10 @@ Default Game
 #
 Default Game &Options...
 기본 게임 설정(&O)...
+
+#
+Default Settings
+기본 설정
 
 #
 Default input layout
@@ -855,6 +899,10 @@ Display
 디스플레이
 
 #
+Display folder properties
+폴더 속성 표시
+
+#
 Display help contents
 도움말을 출력합니다
 
@@ -867,32 +915,28 @@ Display items by using small icons.
 작은 아이콘으로 보여줍니다.
 
 #
+Display properties for all games in this bios
+현재 바이오스를 사용하는 게임의 속성 표시
+
+#
+Display properties for all games in this driver
+현재 드라이버를 사용한 게임의 속성 표시
+
+#
 Display splash screen on start
 시작시 스플래시 화면 보임
 
 #
-Display the bios properties of the selected game
-선택된 게임의 바이오스 속성 표시
-
-#
-Display the driver properties of the selected game
-선택된 게임의 드라이버 속성을 보임
-
-#
-Display the properties of the currently selected folder
-현재 선택된 폴더의 속성을 보임
-
-#
-Display the properties of the selected items
-선택된 항목의 속성을 보임
+Display the properties of the selected item
+선택 항목 속성 표시
 
 #
 Displays detailed information about each item in the window.
 각 항목들의 세부 정보를 보여줍니다.
 
 #
-Displays detailed information and group items in the window by parent.
-각 항목들의 세부 정보를 보여주고 부모롬에 따른 항목을 묶어줍니다.
+Displays items grouped by parent game
+부모 게임으로 묶은 항목 표시
 
 #
 Displays items in a list.
@@ -901,10 +945,6 @@ Displays items in a list.
 #
 Displays program and copyright information
 프로그램과 저작권 정보를 보여줍니다.
-
-#
-Do you wish to continue?
-계속합니까?
 
 #
 Double Joy 16-Way
@@ -979,12 +1019,12 @@ E&xit
 종료(&X)
 
 #
-Emulation
-에뮬레이션
-
-#
 Enable game cheats
 게임 치트 사용
+
+#
+Enable game debugger
+게임 디버거 사용
 
 #
 Enable joystick input
@@ -1017,6 +1057,42 @@ Enable sound and sound CPUs
 #
 Enable steadykey support
 고정키 사용
+
+#
+Enable the PCB tab
+PCB 탭 사용
+
+#
+Enable the cabinet tab
+캐비넷 탭 사용
+
+#
+Enable the control panel tab
+콘트롤 패널 탭 사용
+
+#
+Enable the flyer tab
+포스터 이미지 탭 사용
+
+#
+Enable the history tab
+역사 탭 사용
+
+#
+Enable the marquee tab
+간판 탭 사용
+
+#
+Enable the snapshot tab
+스냅샷 탭 사용
+
+#
+Enable the story tab
+줄거리 탭 사용
+
+#
+Enable the title tab
+타이틀 탭 사용
 
 #
 Enforce aspect ratio
@@ -1053,10 +1129,6 @@ Exit the application
 #
 External Folder List
 외부 폴더 목록
-
-#
-FOLDER LIST HIDE OPTIONS
-폴더 목록 숨김 옵션
 
 #
 FPS
@@ -1115,6 +1187,10 @@ Font (special)
 글꼴 (전용)
 
 #
+Font Files
+폰트 파일
+
+#
 Fourth screen
 네번째 스크린
 
@@ -1133,18 +1209,6 @@ Full screen contrast
 #
 Full screen gamma
 전체 화면 감마
-
-#
-GENERAL OPTIONS
-일반 옵션
-
-#
-GUI JOYSTICK OPTIONS
-GUI 조이스틱 옵션
-
-#
-GUI KEYBOARD OPTIONS
-GUI 키보드 옵션
 
 #
 Game Filters
@@ -1183,6 +1247,26 @@ Game search %d%% complete
 게임 찾기 %d%% 완료
 
 #
+Gamename
+게임이름
+
+#
+Gamename + Increment
+게임이름 + 증가
+
+#
+Gamename/Gamename
+게임이름/게임이름
+
+#
+Gamename/Gamename + Increment
+게임이름/게임이름 + 증가
+
+#
+Gamename/Increment
+게임이름/증가
+
+#
 Gameplay speed
 게임실행 속도
 
@@ -1195,8 +1279,16 @@ General
 일반
 
 #
+Global BIOS driver options\nCustom options used by all games in the %s
+전체 BIOS 드라이버 옵션\n%s 내의 모든 게임에 사용할 사용자 옵션
+
+#
 Global driver options\nCustom options used by all games in the %s
 전체 드라이버 설정\n%s에 포함된 모든 게임에 사용될 사용자 설정
+
+#
+Global game options\n
+전체 게임 옵션\n
 
 #
 Global game options\nDefault options used by all games
@@ -1295,6 +1387,10 @@ Incorrect:
 불량:
 
 #
+Individual game options\n
+개별 게임 옵션\n
+
+#
 Inheritable Filters
 상속가능한 필터
 
@@ -1313,6 +1409,10 @@ Insert
 #
 Interface Options
 인터페이스 옵션
+
+#
+John Hardy IV and Michael Soderstrom
+John Hardy IV 와 Michael Soderstrom
 
 #
 Joy 16-Way
@@ -1375,14 +1475,6 @@ L&arge Icons
 큰 아이콘(&A)
 
 #
-LIST FONT OPTIONS
-목록 폰트 옵션
-
-#
-LISTVIEW OPTIONS
-목록보기 옵션
-
-#
 Large Icons
 큰 아이콘
 
@@ -1429,22 +1521,6 @@ MAME 발표 일지
 #
 MAME savestate files (*.sta)
 MAMEW 상태저장 파일 (*.sta)
-
-#
-MAME32 PCB Info: %s [%s]
-MAME32 PCB 정보: %s [%s]
-
-#
-MAME32 has changed *.ini file directory.\n\nWould you like to migrate old configurations to the new directory?
-MAME32 의 *.ini 파일 디렉토리가 바뀌었습니다.\n\n예전 설정들을 새로운 디렉토리로 옮길까요?
-
-#
-MAME32 version by
-MAME32 버전 제작자
-
-#
-MAME32 will now reset the selected\nitems to the original, installation\nsettings then exit.\n\n
-MAME32가 선택된 항목을\n설치 초기값으로 되돌린 후\n종료할 것입니다.\n\n
 
 #
 MS Sans Serif
@@ -1507,10 +1583,6 @@ Name
 이름
 
 #
-Neogeo Decrypted
-Neogeo 비암호화
-
-#
 New game changes
 새로 추가된 게임과 변경된 게임들의 정보
 
@@ -1537,10 +1609,6 @@ No Selection
 #
 No offset for clones missing parent in view
 부족한 부모롬에 대한 오프셋 표시안함
-
-#
-Non-CPU
-Non-CPU
 
 #
 Non-Wor&king
@@ -1611,8 +1679,8 @@ P&layback Input...
 리플레이 재생(&l)...
 
 #
-PATH AND DIRECTORY OPTIONS
-경로 및 디렉토리 옵션
+PC&B
+PCB(&B)
 
 #
 PCB Info
@@ -1621,6 +1689,10 @@ PCB 정보
 #
 PCB Info Files
 PCB 정보 파일
+
+#
+PCBs
+PCB
 
 #
 Paddle
@@ -1681,6 +1753,10 @@ Play and Record &MNG Video...
 #
 Play and Record &WAV Sound...
 게임 실행후, WAV 사운드 기록(&W)...
+
+#
+Play and Record &uncompressed AVI Output...
+무압축 AVI 출력 재생 및 기록(&U)...
 
 #
 Play currently selected game
@@ -1795,20 +1871,28 @@ Record a game for later playback
 자신의 플레이 장면을 다시 보기위해 리플레이 파일 기록
 
 #
+Record the audio output of a game
+게임 오디오 기록
+
+#
+Record the complete output of a game
+게임 출력 전체 기록
+
+#
+Record the video output of a game
+게임 비디오 기록
+
+#
 Refresh game list
 게임 목록을 갱신
 
 #
-Reload configurations
-환경설정을 다시 불러옴
+Remove selected item from this folder
+현재 폴더에서 선택 항목 삭제
 
 #
-Remove currently selected game from this folder
-현재 선택한 게임을 이 폴더에서 제거합니다.
-
-#
-Rename currently selected folder
-현재 선택한 폴더의 이름을 변경합니다.
+Rename this folder
+현재 폴더 이름 변경
 
 #
 Rese&t Playcount
@@ -1835,12 +1919,16 @@ Reset all Playcounts
 모든 실행 횟수 초기화
 
 #
-Reset play time of currently selected game
-현재 선택된 게임의 실행 시간 초기화
+Reset number of plays for selected item
+선택 항목의 실행 수 초기화
 
 #
-Reset playcount of currently selected game
-현재 선택된 게임의 실행 횟수 초기화
+Reset time played for selected item
+현재 항목의 실행 시간 초기화
+
+#
+Resetting the User Interface options\n
+사용자 인터페이스 초기화 옵션\n
 
 #
 Resolution
@@ -1903,14 +1991,6 @@ Save game list in specified lst file
 게임 목록 을 lst 파일로 저장
 
 #
-Save sound in wav file
-wav 파일로 사운드 저장
-
-#
-Save video in specified mng file
-비디오를 mng 파일로 저장
-
-#
 Scale screen
 화면 크기 조절
 
@@ -1959,16 +2039,48 @@ Select &random background image on start
 시작시 무작위로 배경 이미지 선택(&R)
 
 #
+Select Cabinet tab
+캐비넷 탭 선택
+
+#
+Select Control panel tab
+콘트롤 패널 탭 선택
+
+#
+Select Flyer tab
+포스터 탭 선택
+
+#
+Select History tab
+역사 탭 선택
+
+#
 Select Item
 항목 선택
 
 #
-Select a Background Image
-배경 이미지 선택
+Select Marquee tab
+간판 탭 선택
 
 #
-Select a background image file
-배경 이미지 파일을 선택
+Select PCB tab
+PCB 탭 선택
+
+#
+Select Snapshot tab
+스냅샷 탭 선택
+
+#
+Select Story tab
+줄거리 탭 선택
+
+#
+Select Title tab
+타이틀 탭 선택
+
+#
+Select a Background Image
+배경 이미지 선택
 
 #
 Select a file to record
@@ -1995,44 +2107,12 @@ Select a sound file to record
 기록할 사운드 파일 선택
 
 #
-Select fullscreen or window mode in GUI
-GUI 화면모드를 전체화면이나 창 모드로 선택할 수 있습니다.
+Select menu style
+메뉴 스타일 선택
 
 #
-Select the cabinet image
-캐비넷 이미지 선택
-
-#
-Select the control panel image
-조종장치 이미지 선택
-
-#
-Select the flyer image
-포스터 이미지 선택
-
-#
-Select the history information
-역사 정보 선택
-
-#
-Select the marquee image
-간판 이미지 선택
-
-#
-Select the options to be restored to the default settings.  The options will be restored when MAME32 is run next.
-기본값으로 되돌릴 항목을 선택하세요. 이 설정은 MAME32를 재시작해야 적용됩니다.
-
-#
-Select the screen shot image
-스크린 샷 이미지 선택
-
-#
-Select the story information
-줄거리 정보 선택
-
-#
-Select the title image
-타이틀 이미지 선택
+Select the options to be restored to the default settings.
+기본 설정을 복원할 옵션을 선택하십시오.
 
 #
 Set Game List Not Working Color
@@ -2059,12 +2139,12 @@ Set in-game UI color palette
 게임중의 UI 컬러 팔레트를 지정
 
 #
-Set list font color for clone games
-목록에 표시할 클론 게임의 글꼴 색상을 지정합니다.
+Set the background image
+배경 이미지 설정
 
 #
-Show Game Ca&ption
-게임 캡션 표시(&P)
+Set the clone font color
+클론롬 폰트 색 선택
 
 #
 Show History on Tab
@@ -2083,60 +2163,36 @@ Show game PCB information
 게임 PCB 정보 보이기
 
 #
+Show items grouped by parent game
+부모롬으로 정렬된 항목 보이기
+
+#
 Show or hide folder
-탐색 창에서 폴더를 표시하거나 숨깁니다
+폴더 보이기/숨기기
 
 #
-Show or hide the cabinet image
-캐비넷 이미지를 표시하거나 숨깁니다
-
-#
-Show or hide the control panel image
-콘트롤 패널 이미지를 표시하거나 숨깁니다
-
-#
-Show or hide the flyer image
-포스터 이미지를 표시하거나 숨깁니다
+Show or hide tabs in the picture area
+이미지 영역에 탭 보이기/숨기기
 
 #
 Show or hide the folder list
 탐색 창을 보이거나 숨깁니다
 
 #
-Show or hide the history information
-역사 정보를 표시하거나 숨깁니다
-
-#
-Show or hide the marquee image
-간판 이미지를 표시하거나 숨깁니다
-
-#
 Show or hide the picture area
 사진 영역을 표시하거나 숨깁니다
 
 #
-Show or hide the pictures
-사진을 표시하거나 숨깁니다
-
-#
-Show or hide the screen shot image
-스크린 샷 이미지를 표시하거나 숨깁니다
-
-#
-Show or hide the screen shot tab
-스크린 샷 탭을 표시하거나 숨깁니다
+Show or hide the screen shot
+스크린샷 보이기/숨기기
 
 #
 Show or hide the status bar
 상태줄을 보이거나 숨깁니다
 
 #
-Show or hide the story information
-줄거리 정보를 보이거나 숨깁니다
-
-#
-Show or hide the title image
-타이틀 이미지를 표시하거나 숨깁니다
+Show or hide the tabs in the picture area
+이미지 영역에 탭 보이기/숨기기
 
 #
 Show or hide the toolbar
@@ -2207,6 +2263,10 @@ Snapshot
 스냅샷
 
 #
+Snapshot Pattern
+스크린샷 패턴
+
+#
 Snapshots
 스냅샷
 
@@ -2231,6 +2291,14 @@ Sort column in descending (Z-A) order
 열을 내림차순(Z-A)으로 정렬합니다.
 
 #
+Sort items by clone of
+클론롬으로 정렬
+
+#
+Sort items by driver
+드라이버로 정렬
+
+#
 Sort items by game description
 게임 설명으로 정렬
 
@@ -2241,6 +2309,26 @@ Sort items by manufacturer
 #
 Sort items by name
 이름으로 정렬
+
+#
+Sort items by play time
+실행 시간으로 정렬
+
+#
+Sort items by roms
+롬파일로 정렬
+
+#
+Sort items by samples
+샘플로 정렬
+
+#
+Sort items by screen
+화면으로 정렬
+
+#
+Sort items by trackball
+트랙볼로 정렬
 
 #
 Sort items by type
@@ -2307,10 +2395,6 @@ Sync to monitor refresh
 모니터 주사율 동기화
 
 #
-The new settings will take effect\nthe next time MAME32 is run.\n\n
-새로운 설정은\n 다음 MAME32 실행시 적용됩니다.\n\n
-
-#
 The operating system is out of memory or resources.
 운영체제의 메모리나 자원이 부족합니다.
 
@@ -2355,8 +2439,16 @@ Toggle Folder List
 탐색 창을 보이거나 숨깁니다
 
 #
+Toggle Fullscreen mode
+전체화면 모드 전환
+
+#
 Toggle Screen Shot
 스크린샷을 표시하거나 숨깁니다
+
+#
+Toggle full screen mode
+전체화면 모드 전환
 
 #
 Total:
@@ -2487,10 +2579,6 @@ Use Local Language Game List
 게임 목록에 지역 언어를 사용
 
 #
-Use New UI
-새로운 UI 사용
-
-#
 Use TreeView in property pages
 속성 페이지에 TreeView 사용
 
@@ -2505,6 +2593,10 @@ Use various icon for Not Working game
 #
 Use volume auto adjust
 자동 볼륨 조절 사용
+
+#
+User interface settings\n\n
+사용자 인터페이스 설정\n\n
 
 #
 Vector
@@ -2527,6 +2619,14 @@ Vector (V) %f Hz (%d colors)
 벡터 (V) %f Hz (%d 색상)
 
 #
+Version 8
+버전 8
+
+#
+Version 9
+버전 9
+
+#
 Vertical
 세로화면
 
@@ -2537,6 +2637,10 @@ Video emulation isn't 100% accurate
 #
 Video output method
 비디오 출력 방법
+
+#
+Videos (*.avi)
+비디오 (*.avi)
 
 #
 Videos (*.mng)
@@ -2557,10 +2661,6 @@ Visual Effects
 #
 Volume attenuation
 볼륨 감소
-
-#
-WINDOW POSITION OPTIONS
-윈도우 위치 옵션
 
 #
 Wait for vertical sync
@@ -2591,8 +2691,8 @@ Yes
 예
 
 #
-and John Hardy IV
-, John Hardy IV
+by &Clone Of
+부모(&C)
 
 #
 by &Description
@@ -2607,6 +2707,14 @@ by &Name
 게임 이름(&N)
 
 #
+by &Played
+실행(&P)
+
+#
+by &Screen
+화면(&S)
+
+#
 by &Type
 게임 유형(&T)
 
@@ -2615,8 +2723,32 @@ by &Year
 제작년도(&Y)
 
 #
-by Times &Played
-실행 횟수(&P)
+by Dr&iver
+드라이버(&I)
+
+#
+by P&lay Time
+실행시간(&L)
+
+#
+by R&OMs
+롬(&O)
+
+#
+by S&amples
+샘플(&A)
+
+#
+by T&rackball
+트랙볼(&R)
+
+#
+requires exiting 
+종료해야 합니다
+
+#
+to the default settings:\n\n
+기본 설정으로:\n\n
 
 #
 type a keyword

@@ -51,10 +51,6 @@ Alpha Co
 알파
 
 #
-Alpha Denshi
-알파전자
-
-#
 Alpha Denshi Co.
 알파전자
 
@@ -411,10 +407,6 @@ Ocean
 오션
 
 #
-Playmore
-플레이모어
-
-#
 Psygnosis
 시그노시스
 
@@ -591,10 +583,6 @@ Taito America Corporation
 타이토 아메리카
 
 #
-Taito Corp.
-타이토
-
-#
 Taito Corporation
 타이토
 
@@ -647,6 +635,18 @@ Tecno Soft
 테크노소프트
 
 #
+Test ROM
+테스트 롬
+
+#
+The Game Room
+게임 룸
+
+#
+Thunderhead Inc.
+썬더헤드
+
+#
 Time Warner
 타임 워너
 
@@ -655,12 +655,28 @@ Time Warner Interactive
 타임 워너 인터엑티브
 
 #
+Toaplan
+토아플랜
+
+#
 Toei
 토에이
 
 #
 Treasure
 트레져
+
+#
+Tuni Electro Service
+튜니 일렉트로 서비스
+
+#
+Tuning
+터닝
+
+#
+U.S. Games
+U.S. 게임즈
 
 #
 Unico
@@ -683,6 +699,10 @@ Unknown
 알수없음
 
 #
+V-System Co.
+V-시스템
+
+#
 Viccom
 빅컴
 
@@ -699,8 +719,20 @@ Visco
 비스코
 
 #
+WAVE
+웨이브
+
+#
+WSAC Systems?
+WSAC 시스템
+
+#
 Warashi
 와라시
+
+#
+Web Picmatic
+웹 피크매틱
 
 #
 White Board
@@ -709,6 +741,62 @@ White Board
 #
 Whiteboard
 화이트보드
+
+#
+Williams
+윌리엄스
+
+#
+Windom
+윈돔
+
+#
+Wing
+윙
+
+#
+Wintechno
+윈테크노
+
+#
+Wonwoo Systems
+원우 시스템
+
+#
+Woodplace
+우드플래이스
+
+#
+Woodplace Inc.
+우드플래이스
+
+#
+World Games Inc
+월드 게임즈
+
+#
+Yachiyo Electronics, Ltd.
+야치요 전자
+
+#
+Yang Cheng
+양쳉
+
+#
+Yang Gi Co Ltd.
+양기
+
+#
+Yanyaka
+얀야카
+
+#
+Yonatech
+요나테크
+
+#
+Yoshimoto Kougyou
+요시모토 코우규
 
 #
 Yubis/AV JAPAN
