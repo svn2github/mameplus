@@ -1598,7 +1598,7 @@ static const struct cps3_test_hacks testhack_table[] =
 	{ "sfiii3an",  0x0011c42,         0x613ab46  },
 	{ "warzard",   0x001652e,         0x60105ee  },
 	{ "redearth",  0x001652e,         0x60105ee  },
-	{ "redeartn",  0x0016530,         0x60105f0  },
+	{ "redeartn",  0x001652e,         0x60105ee  },
 	{ 0 }	// end of table
 };
 
@@ -3027,7 +3027,7 @@ static const struct cps3_speedups speedup_table[] =
 	{ "sfiii3an",  0x0d794,         0x6000882  },
 	{ "warzard",   0x2136c,         0x600194c  },
 	{ "redearth",  0x2136c,         0x600194c  },
-	{ "redeartn",  0x2136c,         0x600194e  },
+	{ "redeartn",  0x2136c,         0x600194c  },
 	{ 0 }	// end of table
 };
 
