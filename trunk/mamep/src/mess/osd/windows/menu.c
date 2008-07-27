@@ -2326,12 +2326,13 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 			if (menu_bar)
 				translate_menu(menu_bar);
 			break;
-
+//mamep: hack for in-game UI, should be fixed by MESS soon
+#if 0
 		case WM_CHAR:
 			if (win_use_natural_keyboard)
 				inputx_postc(Machine, wparam);
 			break;
-
+#endif
 		case WM_PASTE:
 			ui_paste(Machine);
 			break;
