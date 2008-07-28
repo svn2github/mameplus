@@ -292,6 +292,10 @@ static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu);
 #endif /* USE_SCALE_EFFECTS */
 static void menu_autofire(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_autofire_populate(running_machine *machine, ui_menu *menu);
+#ifdef USE_CUSTOM_BUTTON
+static void menu_custom_button(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+static void menu_custom_button_populate(running_machine *machine, ui_menu *menu);
+#endif /* USE_CUSTOM_BUTTON */
 static void menu_quit_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_select_game_populate(running_machine *machine, ui_menu *menu, select_game_state *menustate);
@@ -1443,11 +1447,9 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	ui_menu_item_append(menu, _("Input (general)"), NULL, 0, menu_input_groups);
 	ui_menu_item_append(menu, _("Input (this " GAMENOUN ")"), NULL, 0, menu_input_specific);
 	ui_menu_item_append(menu, _("Autofire Setting"), NULL, 0, menu_autofire);
-#if 0
 #ifdef USE_CUSTOM_BUTTON
 	ui_menu_item_append(menu, _("Custom Buttons"), NULL, 0, menu_custom_button);
 #endif /* USE_CUSTOM_BUTTON */
-#endif
 	/* add optional input-related menus */
 	if (has_dips)
 		ui_menu_item_append(menu, _("Dip Switches"), NULL, 0, menu_settings_dip_switches);
@@ -2739,8 +2741,10 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 	/* process the menu */
 	event = ui_menu_process(menu, 0);
 
-	if (event != NULL && event->itemref != NULL && 
-		event->iptkey == IPT_UI_SELECT && (int)(FPTR)event->itemref >= SCALE_ITEM_NONE)
+	if (event->iptkey == IPT_UI_SELECT && 
+		event != NULL && 
+		event->itemref != NULL && 
+		(int)(FPTR)event->itemref >= SCALE_ITEM_NONE)
 	{
 		video_exit_scale_effect(machine);
 		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
@@ -2916,6 +2920,127 @@ static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 	astring_free(text);
 }
 #undef AUTOFIRE_ITEM_P1_DELAY
+
+
+#ifdef USE_CUSTOM_BUTTON
+/*-------------------------------------------------
+     custom button menu
+-------------------------------------------------*/
+
+static void menu_custom_button(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	int changed = FALSE;
+	int custom_buttons_count = 0;
+	const input_field_config *field;
+	const input_port_config *port;
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+		menu_custom_button_populate(machine, menu);
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+
+	/* handle events */
+	if (event != NULL && event->itemref != NULL)
+	{
+		UINT16 *selected_custom_button = (UINT16 *)(FPTR)event->itemref;
+		int i;
+		
+		//count the number of custom buttons
+		for (port = machine->portconfig; port != NULL; port = port->next)
+			for (field = port->fieldlist; field != NULL; field = field->next)
+			{
+				int type = field->type;
+
+				if (type >= IPT_BUTTON1 && type < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
+				{
+					type -= IPT_BUTTON1;
+					if (type >= custom_buttons_count)
+						custom_buttons_count = type + 1;
+				}
+			}
+
+		for (i = 0; i < custom_buttons_count; i++)
+		{
+			int keycode = KEYCODE_1 + i;
+
+			if (i == 9)
+				keycode = KEYCODE_0;
+
+			//fixme: input_code_pressed_once() doesn't work well
+			if (input_code_pressed(keycode))
+			{
+				*selected_custom_button ^= 1 << i;
+				changed = TRUE;
+				break;
+			}
+		}
+	}
+
+	/* if something changed, rebuild the menu */
+	if (changed)
+		ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
+}
+
+
+/*-------------------------------------------------
+     populate the custom button menu
+-------------------------------------------------*/
+
+static void menu_custom_button_populate(running_machine *machine, ui_menu *menu)
+{
+	astring *subtext = astring_alloc();
+	astring *text = astring_alloc();
+	const input_field_config *field;
+	const input_port_config *port;
+	int menu_items = 0;
+	int is_neogeo = !mame_stricmp(machine->gamedrv->source_file+17, "neodrvr.c");
+	int i;
+
+//	ui_menu_item_append(menu, _("Press 1-9 to Config"), NULL, 0, NULL);
+//	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
+
+	/* loop over the input ports and add autofire toggle items */
+	for (port = machine->portconfig; port != NULL; port = port->next)
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			int player = field->player;
+			int type = field->type;
+			const char *name = input_field_name(field);
+
+			if (name != NULL && type >= IPT_CUSTOM1 && type < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
+			{
+				const char colorbutton1 = is_neogeo ? 'A' : 'a';
+				int n = 1;
+				static char commandbuf[256];
+
+				type -= IPT_CUSTOM1;
+				astring_cpyc(subtext, "");
+
+				//unpack the custom button value
+				for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
+					if (custom_button[player][type] & n)
+					{
+						if (astring_len(subtext) > 0)
+							astring_catc(subtext, "_+");
+						astring_catprintf(subtext, "_%c", colorbutton1 + i);
+					}
+
+				strcpy(commandbuf, astring_c(subtext));
+				convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
+				ui_menu_item_append(menu, _(name), commandbuf, 0, (void *)(FPTR)&custom_button[player][type]);
+
+				menu_items++;
+			}
+		}
+
+	/* release our temporary strings */
+	astring_free(subtext);
+	astring_free(text);
+}
+#endif /* USE_CUSTOM_BUTTON */
 
 
 /*-------------------------------------------------
@@ -3332,109 +3457,6 @@ static void menu_select_game_custom_render(running_machine *machine, ui_menu *me
 
 
 #if 0
-#ifdef USE_CUSTOM_BUTTON
-static UINT32 menu_custom_button(running_machine *machine, UINT32 state)
-{
-	ui_menu_item item_list[MAX_PLAYERS * MAX_CUSTOM_BUTTONS + 2];
-	int selected = state;
-	int visible_items;
-	int menu_items = 0;
-	UINT16 *custom_item[MAX_PLAYERS * MAX_CUSTOM_BUTTONS];
-	int is_neogeo = !mame_stricmp(machine->gamedrv->source_file+17, "neogeo.c")
-	                || !mame_stricmp(machine->gamedrv->source_file+17, "neodrvr.c");
-	int buttons = 0;
-	const input_port_config *port;
-	const input_field_config *field;
-	int i;
-
-	/* reset the menu and string pool */
-	memset(item_list, 0, sizeof(item_list));
-	menu_string_pool_offset = 0;
-
-	if (!machine->portconfig)
-		return ui_menu_stack_pop();
-
-	memset(custom_item, 0, sizeof custom_item);
-
-	/* iterate over the input ports and add menu items */
-	for (port = machine->portconfig; port != NULL; port = port->next)
-		for (field = port->fieldlist; field != NULL; field = field->next)
-	{
-		int b, p;
-
-		p = field->player;
-		b = field->type;
-
-		if (b >= IPT_BUTTON1 && b < IPT_BUTTON1 + MAX_NORMAL_BUTTONS)
-		{
-			b -= IPT_BUTTON1;
-			if (b >= buttons)
-				buttons = b + 1;
-			continue;
-		}
-
-		if (b >= IPT_CUSTOM1 && b < IPT_CUSTOM1 + MAX_CUSTOM_BUTTONS)
-		{
-			char colorbutton = is_neogeo ? 'A' : 'a';
-			int menu_string_pool_start = menu_string_pool_offset;
-			int n = 1;
-
-			item_list[menu_items].text = _(input_field_name(field));
-
-			b -= IPT_CUSTOM1;
-			custom_item[menu_items] = &custom_button[p][b];
-
-			for (i = 0; i < MAX_NORMAL_BUTTONS; i++, n <<= 1)
-				if (*custom_item[menu_items] & n)
-				{
-					if (menu_string_pool_offset != menu_string_pool_start)
-					{
-						menu_string_pool[menu_string_pool_offset++] = '_';
-						menu_string_pool[menu_string_pool_offset++] = '+';
-					}
-
-					menu_string_pool[menu_string_pool_offset++] = '_';
-					menu_string_pool[menu_string_pool_offset++] = colorbutton + i;
-				}
-
-			menu_string_pool[menu_string_pool_offset++] = '\0';
-
-			convert_command_glyph(menu_string_pool + menu_string_pool_start, ARRAY_LENGTH(menu_string_pool) - menu_string_pool_start);
-			menu_string_pool_offset = menu_string_pool_start + strlen(&menu_string_pool[menu_string_pool_start]) + 1;
-
-			item_list[menu_items++].subtext = &menu_string_pool[menu_string_pool_start];
-		}
-	}
-
-	/* add an item to return */
-	item_list[menu_items++].text = ui_getstring(UI_returntomain);
-
-	/* draw the menu */
-	visible_items = ui_menu_draw(item_list, menu_items, selected, NULL);
-
-	/* handle generic menu keys */
-	if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
-		return selected;
-
-	if (selected != menu_items - 1)
-		for (i = 0; i < buttons; i++)
-		{
-			int keycode = KEYCODE_1 + i;
-
-			if (i == 9)
-				keycode = KEYCODE_0;
-
-			if (input_code_pressed_once(keycode))
-			{
-				*custom_item[selected] ^= 1 << i;
-				mame_printf_verbose("custom_item[selected] %u\n", custom_button[0][0]);
-			}
-		}
-
-	return selected;
-}
-#endif /* USE_CUSTOM_BUTTON */
-
 static UINT32 menu_documents(running_machine *machine, UINT32 state)
 {
 //fixme: #ifdef STORY_DATAFILE #ifdef CMD_LIST
