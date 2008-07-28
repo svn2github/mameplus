@@ -1266,7 +1266,8 @@ dbreed	龙族少年 (M81 PCB 版本)	龙族少年 (M81 PCB 版本)	Irem
 dbreed72	龙族少年 (M72 PCB 版本)	龙族少年 (M72 PCB 版本)	Irem
 rtype2	异形战机 II	异形战机 II	Irem
 rtype2j	异形战机 II (日版)	异形战机 II (日版)	Irem
-majtitle	主题高尔夫 (日版)	主题高尔夫 (日版)	Irem
+majtitle	主题高尔夫 (世界版)	主题高尔夫 (世界版)	Irem
+majtitlj	主题高尔夫 (日版)	主题高尔夫 (日版)	Irem
 hharry	大工之源先生 - 部乱目町骚动记 (世界版)	大工之源先生 - 部乱目町骚动记 (世界版)	Irem
 hharryu	大工之源先生 - 部乱目町骚动记 (美版)	大工之源先生 - 部乱目町骚动记 (美版)	Irem America
 dkgensan	大工之源先生 - 部乱目町骚动记 (日版)	大工之源先生 - 部乱目町骚动记 (日版)	Irem
@@ -1874,10 +1875,11 @@ hellfir1	地狱火 (1P Ver.)	地狱火 (1P Ver.)	Toaplan (Taito license)
 hellfir2	地狱火 (2P Ver., first edition)	地狱火 (2P Ver., first edition)	Toaplan (Taito license)
 zerowing	零式战机	零式战机	Toaplan
 zerowng2	零式战机 (2 player simultaneous ver.)	零式战机 (2 player simultaneous ver.)	[Toaplan] Williams Electronics Games, Inc
-demonwld	步步惊魂	步步惊魂	Toaplan
-demonwl1	步步惊魂 (Taito 许可)	步步惊魂 (Taito 许可)	Toaplan (Taito license)
-demonwl2	步步惊魂 (早期版)	步步惊魂 (早期版)	Toaplan
-demonwl3	步步惊魂 (第一版)	步步惊魂 (第一版)	Toaplan
+demonwld	步步惊魂 (第1套)	步步惊魂 (第1套)	Toaplan
+demonwl1	步步惊魂 (Taito 许可, 第2套)	步步惊魂 (Taito 许可, 第2套)	Toaplan
+demonwl2	步步惊魂 (第3套)	步步惊魂 (第3套)	Toaplan
+demonwl3	步步惊魂 (第4套)	步步惊魂 (第4套)	Toaplan
+demonwl4	步步惊魂 (第5套)	步步惊魂 (第5套)	Toaplan
 fireshrk	鲛! 鲛! 鲛! Fire Shark	鲛! 鲛! 鲛! Fire Shark	Toaplan
 samesame	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
 samesam2	鲛! 鲛! 鲛! (2P Ver.)	鲛! 鲛! 鲛! (2P Ver.)	Toaplan
@@ -3399,6 +3401,7 @@ dynmcopb	终极警探 (出口版, Model 2B)	终极警探 (出口版, Model 2B)	Sega
 dyndek2b	终极警探 2 (日版, Model 2B)	终极警探 2 (日版, Model 2B)	Sega
 pltkids	飞行小子 (Model 2B) (校正版 A)	飞行小子 (Model 2B) (校正版 A)	Psikyo
 waverunr	御风者 (校正版 A)	御风者 (校正版 A)	Sega
+rchase2	铁道逃生 2 (校正版 A)	铁道逃生 2 (校正版 A)	Sega
 skisuprg	世嘉超级滑雪 G	世嘉超级滑雪 G	Sega
 stcc	世嘉冠军房车赛 (校正版 A)	世嘉冠军房车赛 (校正版 A)	Sega
 hotd	死亡之屋	死亡之屋	Sega
@@ -3530,6 +3533,7 @@ mp_twc	Tecmo 世界杯足球 (Mega Play)	Tecmo 世界杯足球 (Mega Play)	Sega
 mp_sor2	怒之铁拳 II (Mega Play)	怒之铁拳 II (Mega Play)	Sega
 mp_bio	亚生命战争 (Mega Play)	亚生命战争 (Mega Play)	Sega
 mp_soni2	索尼克 2 (Mega Play)	索尼克 2 (Mega Play)	Sega
+mp_shnb3	超级忍 III (Mega Play)	超级忍 III (Mega Play)	Sega
 mp_mazin	合金战役 / Mazin Saga (Mega Play)	合金战役 / Mazin Saga (Mega Play)	Sega
 mp_col3	魔法方块 3 (Mega Play)	魔法方块 3 (Mega Play)	Sega
 ssf2ghw	超级街头霸王 II - 新的来者 (街机 盗版 日版 Mega 驱动版本)	超级街头霸王 II - 新的来者 (街机 盗版 日版 Mega 驱动版本)	bootleg / Capcom
@@ -4309,9 +4313,10 @@ sscope2	狙击手 2	狙击手 2	Konami
 racingj	极度挑战	极度挑战	Konami
 racingj2	极度挑战 2	极度挑战 2	Konami
 thrilld	惊悚驾驶	惊悚驾驶	Konami
-midnrun	午夜狂飙	午夜狂飙	Konami
-windheat	劲风赛车	劲风赛车	Konami
-jetwave	喷射波动	喷射波动	Konami
+midnrun	午夜狂飙 (欧洲版 v1.11)	午夜狂飙 (欧洲版 v1.11)	Konami
+windheat	劲风赛车 (EAA, 欧洲版 v2.11)	劲风赛车 (EAA, 欧洲版 v2.11)	Konami
+windheau	劲风赛车 (UBC, 美版 v2.22)	劲风赛车 (UBC, 美版 v2.22)	Konami
+jetwave	喷射波动 (UAB, 美版 v1.04)	喷射波动 (UAB, 美版 v1.04)	Konami
 polystar	到此! 保罗之星 (ver JAA)	到此! 保罗之星 (ver JAA)	Konami
 totlvice	恶贯满盈 (ver JAA)	恶贯满盈 (ver JAA)	Konami
 btltryst	约会战役 (ver JAC)	约会战役 (ver JAC)	Konami
@@ -7150,6 +7155,7 @@ peps0045	游戏者的利刃 Plus (PS0045) Red White & Blue Slots	游戏者的利刃 Plus (PS
 peps0308	游戏者的利刃 Plus (PS0308) Double Jackpot Slots	游戏者的利刃 Plus (PS0308) Double Jackpot Slots	IGT - International Gaming Technology
 peps0615	游戏者的利刃 Plus (PS0615) Chaos Slots	游戏者的利刃 Plus (PS0615) Chaos Slots	IGT - International Gaming Technology
 peps0716	游戏者的利刃 Plus (PS0716) River Gambler Slots	游戏者的利刃 Plus (PS0716) River Gambler Slots	IGT - International Gaming Technology
+pex2069p	游戏者的利刃 Plus (X002069P) Double Double Bonus Poker	游戏者的利刃 Plus (X002069P) Double Double Bonus Poker	IGT - International Gaming Technology
 pexp0019	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	IGT - International Gaming Technology
 pexp0112	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	IGT - International Gaming Technology
 pexs0006	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	IGT - International Gaming Technology
