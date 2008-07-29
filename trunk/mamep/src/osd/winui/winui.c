@@ -247,18 +247,8 @@ static int MIN_HEIGHT = DBU_MIN_HEIGHT;
 
 #define NO_FOLDER -1
 #define STATESAVE_VERSION 1
-
-enum
-{
-	FILETYPE_INPUT_FILES = 0,
-	FILETYPE_SAVESTATE_FILES,
-	FILETYPE_WAVE_FILES,
-	FILETYPE_MNG_FILES,
-	FILETYPE_AVI_FILES,
-	FILETYPE_IMAGE_FILES,
-	FILETYPE_GAMELIST_FILES,
-	FILETYPE_MAX
-};
+//I could not find a predefined value for this event and docs just say it has 1 for the parameter
+#define TOOLBAR_EDIT_ACCELERATOR_PRESSED 1
 
 typedef BOOL (WINAPI *common_file_dialog_procW)(LPOPENFILENAMEW lpofn);
 typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
@@ -354,7 +344,6 @@ static void             MamePlayRecordWave(void);
 static void             MamePlayRecordMNG(void);
 static void             MamePlayRecordAVI(void);
 static void				MameLoadState(LPCWSTR fname_state);
-static BOOL             CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
 static void             MamePlayGameWithOptions(int nGame, const play_options *playopts);
 static BOOL             GameCheck(void);
 static BOOL             FolderCheck(void);
@@ -759,10 +748,20 @@ static const int s_nPickers[] =
 #endif
 };
 
+
+/* How to resize toolbar sub window */
+static ResizeItem toolbar_resize_items[] =
+{
+	{ RA_ID,   { ID_TOOLBAR_EDIT },  TRUE, RA_RIGHT | RA_TOP,     NULL },
+	{ RA_END,  { 0 },            FALSE, 0,                                 NULL }
+};
+
+static Resize toolbar_resize = { {0, 0, 0, 0}, toolbar_resize_items };
+
 /* How to resize main window */
 static ResizeItem main_resize_items[] =
 {
-	{ RA_HWND, { 0 },            FALSE, RA_LEFT  | RA_RIGHT  | RA_TOP,     NULL },
+	{ RA_HWND, { 0 },            FALSE, RA_LEFT  | RA_RIGHT  | RA_TOP,     &toolbar_resize },
 	{ RA_HWND, { 0 },            FALSE, RA_LEFT  | RA_RIGHT  | RA_BOTTOM,  NULL },
 	{ RA_ID,   { IDC_DIVIDER },  FALSE, RA_LEFT  | RA_RIGHT  | RA_TOP,     NULL },
 	{ RA_ID,   { IDC_TREE },     TRUE,	RA_LEFT  | RA_BOTTOM | RA_TOP,     NULL },
@@ -820,7 +819,7 @@ static struct
 } cfg_data[FILETYPE_MAX] =
 {
 	{
-		TEXT(MAMENAME) TEXT(" input files (*.inp,*.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0"),
+		TEXT(MAMENAME) TEXT(" input files (*.inp, *.zip)\0*.inp;*.zip\0All files (*.*)\0*.*\0"),
 		TEXT("Select a recorded file"),
 		TEXT("Select a file to record"),
 		GetInpDir,
@@ -855,7 +854,42 @@ static struct
 		TEXT("avi")
 	},
 	{
-		TEXT("Image Files (*.png,*.bmp)\0*.png;*.bmp\0"),
+		TEXT("maps (*.map, *.txt)\0*.map;*.txt;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a joystick map"),
+		NULL,
+		GetLastDir,
+		TEXT("map")
+	},
+	{
+		TEXT("scripts (*.txt, *.dat)\0*.txt;*.dat;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a debugger script"),
+		NULL,
+		GetLastDir,
+		TEXT("txt")
+	},
+	{
+		TEXT("cheats (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a cheats"),
+		NULL,
+		GetLastDir,
+		TEXT("dat")
+	},
+	{
+		TEXT("history (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a history"),
+		NULL,
+		GetLastDir,
+		TEXT("dat")
+	},
+	{
+		TEXT("mameinfo (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
+		TEXT("Select a mameinfo"),
+		NULL,
+		GetLastDir,
+		TEXT("dat")
+	},
+	{
+		TEXT("Image Files (*.png)\0*.png\0"),
 		TEXT("Select a Background Image"),
 		NULL,
 		GetBgDir,
@@ -863,8 +897,8 @@ static struct
 	},
 	{
 		TEXT("Game List Files (*.lst)\0*.lst\0"),
-		TEXT("Select a folder to save game list"),
 		NULL,
+		TEXT("Select a list file to export"),
 		GetTranslationDir,
 		TEXT("lst")
 	},
@@ -2165,10 +2199,7 @@ static void SetMainTitle(void)
 	WCHAR buffer[100];
 
 	sscanf(build_version,"%s",version);
-	swprintf(buffer, TEXT("%s Plus! %s"),
-	TEXT(MAMENAME),
-	_Unicode(version));
-
+	swprintf(buffer, TEXT("%s Plus! %s"), TEXT(MAMENAME), _Unicode(version));
 	SetWindowText(hMain, buffer);
 }
 
@@ -3335,11 +3366,15 @@ static void SetAllWindowsFont(HWND hParent, const Resize *r, HFONT hTheFont, BOO
 
 	for (i = 0; r->items[i].type != RA_END; i++)
 	{
+		hControl = GetResizeItemWindow(hParent, &r->items[i]);
 		if (r->items[i].setfont)
 		{
-			hControl = GetResizeItemWindow(hParent, &r->items[i]);
 			SetWindowFont(hControl, hTheFont, bRedraw);
 		}
+		/* Take care of subcontrols, if appropriate */
+		if (r->items[i].subwindow != NULL)
+			SetAllWindowsFont(hControl, r->items[i].subwindow, hTheFont, bRedraw);
+		
 	}
 
 	hControl = GetDlgItem(hwndList, 0);
@@ -3351,7 +3386,7 @@ static void SetAllWindowsFont(HWND hParent, const Resize *r, HFONT hTheFont, BOO
 
 static void ResizeWindow(HWND hParent, Resize *r)
 {
-	int cmkindex = 0, dx, dy, dx1, dtempx;
+	int cmkindex = 0, dx, dy;
 	HWND hControl;
 	RECT parent_rect, rect;
 	const ResizeItem *ri;
@@ -3362,15 +3397,13 @@ static void ResizeWindow(HWND hParent, Resize *r)
 
 	/* Calculate change in width and height of parent window */
 	GetClientRect(hParent, &parent_rect);
-	//dx = parent_rect.right - r->rect.right;
-	dtempx = parent_rect.right - r->rect.right;
 	dy = parent_rect.bottom - r->rect.bottom;
-	dx = dtempx/2;
-	dx1 = dtempx - dx;
+	dx = parent_rect.right - r->rect.right;
 	ClientToScreen(hParent, &p);
 
 	while (r->items[cmkindex].type != RA_END)
 	{
+		int width, height;
 		ri = &r->items[cmkindex];
 		if (ri->type == RA_ID)
 			hControl = GetDlgItem(hParent, ri->u.id);
@@ -3386,6 +3419,8 @@ static void ResizeWindow(HWND hParent, Resize *r)
 		/* Get control's rectangle relative to parent */
 		GetWindowRect(hControl, &rect);
 		OffsetRect(&rect, -p.x, -p.y);
+		width = rect.right - rect.left;
+		height = rect.bottom - rect.top;
 
 		if (!(ri->action & RA_LEFT))
 			rect.left += dx;
@@ -3398,7 +3433,27 @@ static void ResizeWindow(HWND hParent, Resize *r)
 
 		if (ri->action & RA_BOTTOM)
 			rect.bottom += dy;
-
+		//Sanity Check the child rect
+		if (parent_rect.top > rect.top)
+			rect.top = parent_rect.top;
+		if (parent_rect.left > rect.left)
+			rect.left = parent_rect.left;
+		if (parent_rect.bottom < rect.bottom) {
+			rect.bottom = parent_rect.bottom;
+			//ensure we have at least a minimal height
+			rect.top = rect.bottom - height;
+			if (rect.top < parent_rect.top) {
+				rect.top = parent_rect.top;
+			}
+		}
+		if (parent_rect.right < rect.right) {
+			rect.right = parent_rect.right;
+			//ensure we have at least a minimal width
+			rect.left = rect.right - width;
+			if (rect.left < parent_rect.left) {
+				rect.left = parent_rect.left;
+			}
+		}
 		MoveWindow(hControl, rect.left, rect.top,
 				   (rect.right - rect.left),
 				   (rect.bottom - rect.top), TRUE);
@@ -4811,7 +4866,7 @@ static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
 
-	swprintf(filename, TEXT_MAMEUINAME TEXT("%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
+	swprintf(filename, TEXT("gamelist_%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
 	_tcslwr(filename); 
 
 	if (!CommonFileDialog(TRUE, filename, FILETYPE_GAMELIST_FILES))
@@ -5066,10 +5121,15 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_TOOLBAR_EDIT:
 		{
 			WCHAR buf[256];
+			HWND hToolbarEdit;
 
 			Edit_GetText(hwndCtl, buf, ARRAY_LENGTH(buf));
 			switch (codeNotify)
 			{
+			case TOOLBAR_EDIT_ACCELERATOR_PRESSED: 
+				hToolbarEdit = GetDlgItem( hToolBar, ID_TOOLBAR_EDIT);
+				SetFocus(hToolbarEdit);
+				break;
 			case EN_CHANGE:
 				//put search routine here first, add a 200ms timer later.
 				if ((!_wcsicmp(buf, _UIW(TEXT(SEARCH_PROMPT))) && !_wcsicmp(g_SearchText, TEXT(""))) ||
@@ -5416,6 +5476,38 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 				  hMain, PaletteDialogProc);
 		return TRUE;
 #endif /* UI_COLOR_PALETTE */
+
+	case ID_OPTIONS_CHEAT:
+		{
+			WCHAR filename[MAX_PATH];
+			_tcscpy(filename, GetCheatFileName());
+			if (CommonFileDialog(FALSE, filename, FILETYPE_CHEAT_FILE))
+			{
+				SetCheatFileName(filename);
+				SaveDefaultOptions();
+			}
+			return TRUE;
+		}
+	case ID_OPTIONS_HISTORY:
+		{
+			WCHAR filename[MAX_PATH];
+			_tcscpy(filename, GetHistoryFileName());
+			if (CommonFileDialog(FALSE, filename, FILETYPE_HISTORY_FILE))
+			{
+				SetHistoryFileName(filename);
+			}
+			return TRUE;
+		}
+	case ID_OPTIONS_MAMEINFO:
+		{
+			WCHAR filename[MAX_PATH];
+			_tcscpy(filename, GetMAMEInfoFileName());
+			if (CommonFileDialog(FALSE, filename, FILETYPE_MAMEINFO_FILE))
+			{
+				SetMAMEInfoFileName(filename);
+			}
+			return TRUE;
+		}
 
 	case ID_HELP_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT),

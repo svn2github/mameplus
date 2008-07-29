@@ -31,6 +31,24 @@ enum
 	NUM_TABS
 };
 
+enum
+{
+	FILETYPE_INPUT_FILES = 0,
+	FILETYPE_SAVESTATE_FILES,
+	FILETYPE_WAVE_FILES,
+	FILETYPE_MNG_FILES,
+	FILETYPE_AVI_FILES,
+	FILETYPE_JOYMAP_FILES,
+	FILETYPE_DEBUGSCRIPT_FILES,
+	FILETYPE_CHEAT_FILE,
+	FILETYPE_HISTORY_FILE,
+	FILETYPE_MAMEINFO_FILE,
+	FILETYPE_IMAGE_FILES,
+	FILETYPE_GAMELIST_FILES,
+	FILETYPE_MAX
+};
+
+
 typedef struct
 {
 	INT resource;
@@ -49,6 +67,8 @@ struct _driverw
 
 /* in winui.c */
 extern struct _driverw **driversw;
+
+BOOL CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
 
 
 HWND GetMainWindow(void);

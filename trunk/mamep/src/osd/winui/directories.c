@@ -206,7 +206,7 @@ static TCHAR * FixSlash(TCHAR *s)
 	if (s)
 		len = _tcslen(s);
 
-	if (len && s[len - 1] == *PATH_SEPARATOR)
+	if (len>3 && s[len - 1] == *PATH_SEPARATOR)
 		s[len - 1] = '\0';
 
 	return s;

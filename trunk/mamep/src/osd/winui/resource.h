@@ -1,10 +1,10 @@
 //{{NO_DEPENDENCIES}}
-// Microsoft Developer Studio generated include file.
+// Microsoft Visual C++ generated include file.
 // Used by mameui.rc
 //
 #define IDPAUSE                         3
 #define IDAPPLY                         4
-#define IDS_UI_FONT                     53 // status bar (plus)
+#define IDS_UI_FONT                     53 // status bar (mamep)
 #define IDS_UI_FILE                     61
 #define IDS_UI_VIEW                     62
 #define IDS_UI_OPTIONS                  63
@@ -101,6 +101,7 @@
 #define IDD_PROP_DIRECT3D               184
 #define IDD_PROP_CONTROLLER             185
 #define IDD_PROP_SCREEN                 187
+#define IDD_PROP_DEBUG                  188
 
 #define IDD_PALETTE                     190 // UI_COLOR_PALETTE
 #define IDD_PROP_DRIVER                 191
@@ -174,10 +175,12 @@
 #define IDB_WEB_PAGE                    1037
 #define IDC_FSCONTRAST                  1038
 #define IDC_ROMS_PROGRESS               1039
+#define IDC_SECONDSTORUN                1039
 #define IDC_CONTRASTDISP                1040
 #define IDC_ROMS_CORRECT                1041
 #define IDC_FSCONTRASTDISP              1042
 #define IDC_ROMS_INCORRECT              1043
+#define IDC_SECONDSTORUNDISP            1043
 #define IDC_NUMSCREENSDISP              1044
 #define IDC_ROMS_TOTAL                  1045
 #define IDC_SAMPLES_PROGRESS            1046
@@ -369,10 +372,21 @@
 #define IDC_FILTER_VERTICAL             1236
 #define IDC_SNAPNAME                    1237
 #define IDC_COINLOCKOUT                 1238
+#define IDC_SECONDSTORUNTEXT            1239
+#define IDC_OSLOG                       1240
+#define IDC_VERBOSE                     1241
+#define IDC_UPDATEINPAUSE               1242
+#define IDC_DEBUGSCRIPT                 1243
+#define IDC_SELECT_DEBUGSCRIPT          1244
+#define IDC_RESET_DEBUGSCRIPT           1245
+#define IDC_SELECT_JOYSTICKMAP          1246
+#define IDC_RESET_JOYSTICKMAP           1247
+#define IDC_JOYSTICKMAP                 1248
 
-#define IDC_PRESCALETEXT                1241
-#define IDC_DISPLAY_SPLASH_SCREEN       1242
-#define IDC_SHOW_TREE_SHEET             1243 // USE_TREE_SHEET
+
+#define IDC_PRESCALETEXT                1251
+#define IDC_DISPLAY_SPLASH_SCREEN       1252
+#define IDC_SHOW_TREE_SHEET             1253 // USE_TREE_SHEET
 
 #define IDC_AUTO_PAUSE_PLAYBACK         1301 // USE_AUTO_PAUSE_PLAYBACK
 #define IDC_CONFIRM_QUIT                1302 // confirm_quit
@@ -551,21 +565,24 @@
 #define ID_FOLDER_SOURCEPROPERTIES      40096
 #define ID_FOLDER_VECTORPROPERTIES      0     // N/A
 #define ID_ARRANGE_ICONS                0     // N/A
-#define ID_BIOS_PROPERTIES		40098
+#define ID_OPTIONS_CHEAT                40099
+#define ID_OPTIONS_MAMEINFO             40101
+#define ID_OPTIONS_HISTORY              40102
+#define ID_BIOS_PROPERTIES		40104
 
-#define ID_VIEW_BYGAME                  40101
-#define ID_VIEW_ORIENTATION             40102
-#define ID_VIEW_BYROMS                  40103
-#define ID_VIEW_BYSAMPLES               40104
-#define ID_VIEW_BYDIRECTORY             40105
-#define ID_VIEW_BYTYPE                  40106
-#define ID_VIEW_TRACKBALL               40107
-#define ID_VIEW_BYTIMESPLAYED           40108
-#define ID_VIEW_BYMANUFACTURER          40109
-#define ID_VIEW_BYYEAR                  40110
-#define ID_VIEW_BYCLONE                 40111
-#define ID_VIEW_BYSRCDRIVERS            40112
-#define ID_VIEW_BYPLAYTIME              40113
+#define ID_VIEW_BYGAME                  40151 // sort items
+#define ID_VIEW_ORIENTATION             40152 // sort items
+#define ID_VIEW_BYROMS                  40153 // sort items
+#define ID_VIEW_BYSAMPLES               40154 // sort items
+#define ID_VIEW_BYDIRECTORY             40155 // sort items
+#define ID_VIEW_BYTYPE                  40156 // sort items
+#define ID_VIEW_TRACKBALL               40157 // sort items
+#define ID_VIEW_BYTIMESPLAYED           40158 // sort items
+#define ID_VIEW_BYMANUFACTURER          40159 // sort items
+#define ID_VIEW_BYYEAR                  40160 // sort items
+#define ID_VIEW_BYCLONE                 40161 // sort items
+#define ID_VIEW_BYSRCDRIVERS            40162 // sort items
+#define ID_VIEW_BYPLAYTIME              40163 // sort items
 
 
 #define ID_STYLE_NONE                   40190 // IMAGE_MENU
@@ -601,9 +618,9 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                1
-#define _APS_NEXT_RESOURCE_VALUE        188
-#define _APS_NEXT_COMMAND_VALUE         40099
-#define _APS_NEXT_CONTROL_VALUE         1239
+#define _APS_NEXT_RESOURCE_VALUE        189
+#define _APS_NEXT_COMMAND_VALUE         40103
+#define _APS_NEXT_CONTROL_VALUE         1249
 #define _APS_NEXT_SYMED_VALUE           93
 #endif
 #endif

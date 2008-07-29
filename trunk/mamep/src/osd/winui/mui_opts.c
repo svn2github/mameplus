@@ -40,6 +40,7 @@
 
 // MAME/MAMEUI headers
 #include "bitmask.h"
+#include "winui.h"
 #include "mameui.h"
 #include "mui_util.h"
 #include "treeview.h"
