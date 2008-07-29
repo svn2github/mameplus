@@ -1477,7 +1477,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 //	ui_menu_item_append(menu, _("Image Information"), NULL, 0, ui_menu_image_info);
 
   	/* add image info menu */
-	ui_menu_item_append(menu, _("File Manager"), NULL, 0, menu_file_manager);
+//	ui_menu_item_append(menu, _("File Manager"), NULL, 0, menu_file_manager);
 
 #if HAS_WAVE
   	/* add tape control menu */
@@ -1888,7 +1888,7 @@ static void menu_input_populate_and_sort(ui_menu *menu, input_item_data *itemlis
 		}
 
 		/* add the item */
-		ui_menu_item_append(menu, astring_c(text), astring_c(subtext), flags, item);
+		ui_menu_item_append(menu, _(astring_c(text)), astring_c(subtext), flags, item);
 	}
 
 	/* free our temporary strings */
@@ -2019,7 +2019,7 @@ static void menu_settings_populate(running_machine *machine, ui_menu *menu, sett
 					flags |= MENU_FLAG_RIGHT_ARROW;
 
 				/* add the menu item */
-				ui_menu_item_append(menu, input_field_name(field), input_field_setting_name(field), flags, (void *)field);
+				ui_menu_item_append(menu, _(input_field_name(field)), _(input_field_setting_name(field)), flags, (void *)field);
 
 				/* for DIP switches, build up the model */
 				if (type == IPT_DIPSWITCH && field->diploclist != NULL)
