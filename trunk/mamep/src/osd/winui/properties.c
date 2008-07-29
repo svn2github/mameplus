@@ -4122,13 +4122,13 @@ static BOOL SelectJoystickMap(HWND hWnd)
 	BOOL changed = FALSE;
 
 	*filename = 0;
-	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_JOYMAP_FILES))
+	if (CommonFileDialog(FALSE, filename, FILETYPE_JOYMAP_FILES))
 	{
-		if (strcmp(filename, options_get_string(pCurrentOpts, OPTION_JOYSTICK_MAP)))
+		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
 		{
 			HWND control = GetDlgItem(hWnd, IDC_JOYSTICKMAP);
-			options_set_string(pCurrentOpts, OPTION_JOYSTICK_MAP, filename, OPTION_PRIORITY_CMDLINE);
-			win_set_window_text_utf8(control, filename);
+			options_set_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP, filename, OPTION_PRIORITY_CMDLINE);
+			SetWindowTextW(control, filename);
 			changed = TRUE;
 		}
 	}
@@ -4138,13 +4138,13 @@ static BOOL SelectJoystickMap(HWND hWnd)
 static BOOL ResetJoystickMap(HWND hWnd)
 {
 	BOOL changed = FALSE;
-	const WCHAR *new_value = "auto";
+	const WCHAR *new_value = TEXT("auto");
 
-	if (strcmp(new_value, options_get_string(pCurrentOpts, OPTION_JOYSTICK_MAP)))
+	if (wcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
 	{
 		HWND control = GetDlgItem(hWnd, IDC_JOYSTICKMAP);
-		options_set_string(pCurrentOpts, OPTION_JOYSTICK_MAP, new_value, OPTION_PRIORITY_CMDLINE);
-		win_set_window_text_utf8(control, new_value);
+		options_set_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP, new_value, OPTION_PRIORITY_CMDLINE);
+		SetWindowTextW(control, new_value);
 		changed = TRUE;
 	}
 	return changed;
@@ -4156,13 +4156,13 @@ static BOOL SelectDebugscript(HWND hWnd)
 	BOOL changed = FALSE;
 
 	*filename = 0;
-	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_DEBUGSCRIPT_FILES))
+	if (CommonFileDialog(FALSE, filename, FILETYPE_DEBUGSCRIPT_FILES))
 	{
-		if (strcmp(filename, options_get_string(pCurrentOpts, OPTION_DEBUGSCRIPT)))
+		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
 		{
 			HWND control = GetDlgItem(hWnd, IDC_DEBUGSCRIPT);
-			options_set_string(pCurrentOpts, OPTION_DEBUGSCRIPT, filename, OPTION_PRIORITY_CMDLINE);
-			win_set_window_text_utf8(control, filename);
+			options_set_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT, filename, OPTION_PRIORITY_CMDLINE);
+			SetWindowTextW(control, filename);
 			changed = TRUE;
 		}
 	}
@@ -4172,13 +4172,13 @@ static BOOL SelectDebugscript(HWND hWnd)
 static BOOL ResetDebugscript(HWND hWnd)
 {
 	BOOL changed = FALSE;
-	const WCHAR *new_value = "";
+	const WCHAR *new_value = TEXT("");
 
-	if (strcmp(new_value, options_get_string(pCurrentOpts, OPTION_DEBUGSCRIPT)))
+	if (wcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
 	{
 		HWND control = GetDlgItem(hWnd, IDC_DEBUGSCRIPT);
-		options_set_string(pCurrentOpts, OPTION_DEBUGSCRIPT, new_value, OPTION_PRIORITY_CMDLINE);
-		win_set_window_text_utf8(control, new_value);
+		options_set_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT, new_value, OPTION_PRIORITY_CMDLINE);
+		SetWindowTextW(control, new_value);
 		changed = TRUE;
 	}
 	return changed;
