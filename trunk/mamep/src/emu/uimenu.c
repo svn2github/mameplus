@@ -280,6 +280,10 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime);
 #endif
 static void menu_game_info(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+#ifdef CMD_LIST
+static void menu_command(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+static void menu_command_content(running_machine *machine, ui_menu *menu, void *parameter, void *state);
+#endif /* CMD_LIST */
 static void menu_memory_card(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_memory_card_populate(running_machine *machine, ui_menu *menu, int cardnum);
 static void menu_video_targets(running_machine *machine, ui_menu *menu, void *parameter, void *state);
@@ -1481,10 +1485,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 		ui_menu_item_append(menu, _("Tape Control"), NULL, 0, menu_tape_control);
 #endif /* HAS_WAVE */
 #endif /* MESS */
-#if 0
-	/* add game document menu */
-	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Documents"), NULL, 0, menu_documents);
-#endif
+
 	/* add video options menu */
 	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? menu_video_targets : menu_video_options);
 #ifdef USE_SCALE_EFFECTS
@@ -1498,6 +1499,10 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	/* add memory card menu */
 	if (machine->config->memcard_handler != NULL)
 		ui_menu_item_append(menu, _("Memory Card"), NULL, 0, menu_memory_card);
+
+#ifdef CMD_LIST
+	ui_menu_item_append(menu, _("Show Command List"), NULL, 0, menu_command);
+#endif /* CMD_LIST */
 
 	/* add reset and exit menus */
 	ui_menu_item_append(menu, _("Select New " CAPSTARTGAMENOUN), NULL, 0, menu_select_game);
@@ -2446,6 +2451,69 @@ static void menu_game_info(running_machine *machine, ui_menu *menu, void *parame
 	/* process the menu */
 	ui_menu_process(menu, 0);
 }
+
+
+#ifdef CMD_LIST
+/*-------------------------------------------------
+    menu_command - handle the command.dat
+    menu
+-------------------------------------------------*/
+
+static void menu_command(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+	{
+		const char *item[256];
+		int menu_items;
+		int total = command_sub_menu(machine->gamedrv, item);
+		
+		if (total)
+		{
+			for (menu_items = 0; menu_items < total; menu_items++)
+				ui_menu_item_append(menu, item[menu_items], NULL, 0, (void *)menu_items);
+		}
+	}
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+	if (event != NULL && event->iptkey == IPT_UI_SELECT)
+		ui_menu_stack_push(ui_menu_alloc(machine, menu_command_content, event->itemref));
+}
+
+
+static void menu_command_content(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+	{
+	char commandbuf[64 * 1024]; // 64KB of command.dat buffer, enough for everything
+
+	int game_paused = mame_is_paused(machine);
+
+	/* Disable sound to prevent strange sound*/
+	if (!game_paused)
+		mame_pause(machine, TRUE);
+
+	if (load_driver_command_ex(machine->gamedrv, commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)parameter) == 0)
+	{
+		const game_driver *last_drv = machine->gamedrv;
+		convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
+
+//		ui_menu_item_append(menu, commandbuf, NULL, MENU_FLAG_MULTILINE, NULL);
+		ui_draw_message_window_fixed_width(commandbuf);
+	}
+
+	if (!game_paused)
+		mame_pause(machine, FALSE);
+
+	if (ui_window_scroll_keys(machine) > 0)
+		ui_menu_stack_pop(machine);
+	}
+}
+#endif /* CMD_LIST */
 
 
 /*-------------------------------------------------
@@ -3620,185 +3688,6 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 
 	return ((dattype - UI_history) << 24) | selected;
 }
-
-
-#ifdef CMD_LIST
-static UINT32 menu_command(running_machine *machine, UINT32 state)
-{
-	int selected = state & ((1 << 24) - 1);
-	int shortcut = state >> 24;
-	int menu_items = 0;
-	int visible_items;
-	const char *item[256];
-	int total;
-
-	total = command_sub_menu(machine->gamedrv, item);
-	if (total)
-	{
-		int last_selected = selected;
-
-		ui_menu_item item_list[256 + 2];
-
-		/* reset the menu and string pool */
-		memset(item_list, 0, sizeof(item_list));
-		menu_string_pool_offset = 0;
-
-		for (menu_items = 0; menu_items < total; menu_items++)
-			item_list[menu_items].text = item[menu_items];
-
-		/* add empty line */
-		item_list[menu_items++].text = "";
-
-		/* add an item for the return */
-		item_list[menu_items++].text = menu_string_pool_add("\t%s",shortcut ? _("Return to " CAPSTARTGAMENOUN) : _("Return to Prior Menu"));
-
-		/* draw the menu */
-		visible_items = ui_menu_draw_fixed_width(item_list, menu_items, selected, NULL);
-
-		/* handle generic menu keys */
-		if (ui_menu_generic_keys(machine, &selected, menu_items, visible_items))
-			return selected;
-
-		/* skip empty line */
-		if (selected == total)
-		{
-			if (last_selected > selected)
-				selected = total - 1;
-			else
-				selected = menu_items - 1;
-		}
-
-		/* handle actions */
-		if (input_ui_pressed(machine, IPT_UI_SELECT))
-		{
-			if (selected < total)
-			{
-				ui_draw_text_box_reset_scroll();
-				return ui_menu_stack_push(menu_command_contents, (shortcut << 24) | selected);
-			}
-		}
-	}
-	else
-	{
-		char buf[120];
-		int res;
-
-		strcpy(buf, "\t");
-		strcat(buf, ui_getstring(UI_commandmissing));
-		strcat(buf, "\n\n\t");
-		strcat(buf, ui_getstring(UI_lefthilight));
-		strcat(buf, " ");
-		if (shortcut)
-			strcat(buf, _("Return to " CAPSTARTGAMENOUN));
-		else
-			strcat(buf, _("Return to Prior Menu"));
-		strcat(buf, " ");
-		strcat(buf, ui_getstring(UI_righthilight));
-
-		ui_draw_message_window(buf);
-
-		res = ui_window_scroll_keys(machine);
-		if (res > 0)
-			return ui_menu_stack_pop();
-	}
-
-	return (shortcut << 24) | selected;
-}
-
-
-static UINT32 menu_command_contents(running_machine *machine, UINT32 state)
-{
-	static char *bufptr = NULL;
-	static const game_driver *last_drv;
-	static int last_selected;
-	static int last_shortcut;
-	int bufsize = 64 * 1024; // 64KB of command.dat buffer, enough for everything
-	int selected = state & ((1 << 24) - 1);
-	int shortcut = state >> 24;
-	int res;
-
-	if (bufptr)
-	{
-		if (machine->gamedrv != last_drv || selected != last_selected || shortcut != last_shortcut)
-		{
-			/* force buffer to be recreated */
-			free (bufptr);
-			bufptr = NULL;
-		}
-	}
-
-	if (!bufptr)
-	{
-		/* allocate a buffer for the text */
-		bufptr = malloc(bufsize);
-
-		if (bufptr)
-		{
-			int game_paused = mame_is_paused(machine);
-
-			/* Disable sound to prevent strange sound*/
-			if (!game_paused)
-				mame_pause(machine, TRUE);
-
-			if (load_driver_command_ex(machine->gamedrv, bufptr, bufsize, selected) == 0)
-			{
-				last_drv = machine->gamedrv;
-				last_selected = selected;
-				last_shortcut = shortcut;
-
-				convert_command_glyph(bufptr, bufsize);
-
-				strcat(bufptr, "\n\t");
-				strcat(bufptr, ui_getstring(UI_lefthilight));
-				strcat(bufptr, " ");
-				if (shortcut)
-					strcat(bufptr, _("Return to " CAPSTARTGAMENOUN));
-				else
-					strcat(bufptr, _("Return to Prior Menu"));
-				strcat(bufptr, " ");
-				strcat(bufptr, ui_getstring(UI_righthilight));
-				strcat(bufptr, "\n");
-			}
-			else
-			{
-				free(bufptr);
-				bufptr = NULL;
-			}
-
-			if (!game_paused)
-				mame_pause(machine, FALSE);
-		}
-	}
-
-	/* draw the text */
-	if (bufptr)
-		ui_draw_message_window_fixed_width(bufptr);
-	else
-	{
-		char buf[120];
-
-		strcpy(buf, "\t");
-		strcat(buf, ui_getstring(UI_commandmissing));
-		strcat(buf, "\n\n\t");
-		strcat(buf, ui_getstring(UI_lefthilight));
-		strcat(buf, " ");
-		if (shortcut)
-			strcat(buf, _("Return to " CAPSTARTGAMENOUN));
-		else
-			strcat(buf, _("Return to Prior Menu"));
-		strcat(buf, " ");
-		strcat(buf, ui_getstring(UI_righthilight));
-
-		ui_draw_message_window(buf);
-	}
-
-	res = ui_window_scroll_keys(machine);
-	if (res > 0)
-		return ui_menu_stack_pop();
-
-	return (shortcut << 24) | selected;
-}
-#endif /* CMD_LIST */
 #endif //0
 
 
