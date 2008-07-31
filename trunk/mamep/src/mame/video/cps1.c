@@ -430,6 +430,7 @@ static const struct CPS1config *cps1_game_config;
 #define HACK_B_1      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x14,{0x12,0x10,0x0e,0x0c},0x0a, {0x0e,0x0e,0x0e,0x30,0x30}
 #define HACK_B_2      -1,   -1,    -1,  -1,  -1,  -1,  0x08, -1,  -1,   0x20,{0x28,0x2a,0x2c,0x2e},0x2a, {0x02,0x04,0x08,0x00,0x00}
 #define HACK_B_3      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x04,{0x12,0x10,0x0e,0x0c},0x0a, {0xff,0xff,0xff,0x00,0x00}
+#define HACK_B_4      -1,   -1,    -1,  -1,  -1,  -1,   -1,  -1,  -1,   0x30,{0x2e,0x2c,0x2a,0x28},0x26, {0x02,0x04,0x08,0x00,0x00}
 
 /*
 CPS_B_21_DEF is CPS-B-21 at default settings (no battery)
@@ -1254,14 +1255,14 @@ static const struct CPS1config cps1_config_table[]=
 	{"sf2b",     CPS_B_17,     mapper_STF29,  0x36 },
 	{"sf2m1",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 5 },
 	{"sf2m2",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m3",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 6 },
 	{"sf2th",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m4",    HACK_B_1,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m5",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m6",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2m7",    CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
-	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0 },
-	{"sf2khbd",  CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
+	{"sf2m8",    HACK_B_3,     mapper_S9263B, 0x36, 0, 0, 6 },
+	{"sf2m13",   HACK_B_4,     mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2yyc",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2koryu", CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0, 1 },
 	{"sf2mdt",   CPS_B_21_DEF, mapper_S9263B, 0x36, 0, 0 },
@@ -1800,6 +1801,13 @@ void cps1_get_video_base(void )
 		scroll2xoff = 0xffc0;
 		scroll3xoff = 0xffc0;
 	}
+	else if (cps1_game_config->bootleg_kludge == 6)
+	{
+		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
+		scroll1xoff = -0x10;
+		scroll2xoff = -0x10;
+		scroll3xoff = -0x10;
+	}
 	else
 	{
 		cps1_obj = cps1_base(CPS1_OBJ_BASE, cps1_obj_size);
@@ -1948,6 +1956,11 @@ static TILE_GET_INFO( get_tile0_info )
 	int attr = cps1_scroll1[2*tile_index+1];
 	int gfxset;
 
+	if ((!strcmp(machine->gamedrv->name,"sf2m8")) && code > 0x5000)
+	{
+		code -= 0x5000;
+	}
+
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
 
 	/* allows us to reproduce a problem seen with a ffight board where USA and Japanese
@@ -1991,6 +2004,11 @@ static TILE_GET_INFO( get_tile2_info )
 {
 	int code = cps1_scroll3[2*tile_index] & 0x3fff;
 	int attr = cps1_scroll3[2*tile_index+1];
+
+	if ((!strcmp(machine->gamedrv->name,"sf2m8")) && code > 0x2000)
+	{
+		code -= 0x2000;
+	}
 
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL3, code);
 
@@ -2224,7 +2242,7 @@ static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, cons
 	UINT16 *base=cps1_buffered_obj;
 
 	/* some sf2 hacks draw the sprites in reverse order */
-	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 4)
+	if (cps1_game_config->bootleg_kludge == 1 || cps1_game_config->bootleg_kludge == 4 || cps1_game_config->bootleg_kludge == 6)
 	{
 		base += cps1_last_sprite_offset;
 		baseadd = -4;

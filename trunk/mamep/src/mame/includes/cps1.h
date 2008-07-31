@@ -14,11 +14,15 @@ WRITE16_HANDLER( cps1_eeprom_port_w );
 INTERRUPT_GEN( cps1_qsound_interrupt );
 
 extern const struct QSound_interface qsound_interface;
+extern const struct YM2151interface ym2151_interface;
 
 READ16_HANDLER( cps1_dsw_r );
 READ16_HANDLER( cps1_in1_r );
 READ16_HANDLER( cps1_in2_r );
 READ16_HANDLER( cps1_in3_r );
+WRITE8_HANDLER( cps1_snd_bankswitch_w );
+WRITE16_HANDLER( cps1_soundlatch_w );
+WRITE16_HANDLER( cps1_soundlatch2_w );
 WRITE16_HANDLER( cps1_coinctrl_w );
 INTERRUPT_GEN( cps1_interrupt );
 

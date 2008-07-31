@@ -218,7 +218,7 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 }
 
 
-static WRITE8_HANDLER( cps1_snd_bankswitch_w )
+WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	UINT8 *RAM = memory_region(machine, REGION_CPU2);
 	int bankaddr;
@@ -232,13 +232,13 @@ static WRITE8_HANDLER( cps1_oki_pin7_w )
 	OKIM6295_set_pin7(0, (data & 1));
 }
 
-static WRITE16_HANDLER( cps1_soundlatch_w )
+WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch_w(machine,0,data & 0xff);
 }
 
-static WRITE16_HANDLER( cps1_soundlatch2_w )
+WRITE16_HANDLER( cps1_soundlatch2_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch2_w(machine,0,data & 0xff);
@@ -632,26 +632,15 @@ static ADDRESS_MAP_START( cawingb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
 	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom */
-	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w) 	/* Sound command */
+	AM_RANGE(0x882005, 0x882006) AM_WRITE(cps1_soundlatch_w) 	/* Sound command */
 	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
 	AM_RANGE(0x882000, 0x882001) AM_READ(cps1_in1_r)            /* Player input ports */
-	AM_RANGE(0x882006, 0x88200f) AM_READ(cps1_dsw_r)          /* System input ports / Dip Switches */
+	AM_RANGE(0x882008, 0x88200f) AM_READ(cps1_dsw_r)          /* System input ports / Dip Switches */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
-#if 0
-static ADDRESS_MAP_START( kodb_sub_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK(1)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_WRITE(YM2151_register_port_0_w)
-	AM_RANGE(0xe001, 0xe001) AM_READWRITE(YM2151_status_port_0_r, YM2151_data_port_0_w)
-	AM_RANGE(0xe400, 0xe400) AM_READWRITE(OKIM6295_status_0_r, OKIM6295_data_0_w)
-	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
-	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)	/* Sound command */
-ADDRESS_MAP_END
-#endif
+
 /***********************************************************
              INPUT PORTS, DIPs
 ***********************************************************/
@@ -3924,7 +3913,7 @@ static void cps1_irq_handler_mus(running_machine *machine, int irq)
 	cpunum_set_input_line(machine, 1,0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
-static const struct YM2151interface ym2151_interface =
+const struct YM2151interface ym2151_interface =
 {
 	cps1_irq_handler_mus
 };
@@ -4143,16 +4132,7 @@ static MACHINE_DRIVER_START( sf2mdt )
 	MDRV_SOUND_CONFIG(msm5205_interface2)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.25)
 MACHINE_DRIVER_END
-#if 0
-static MACHINE_DRIVER_START( kodb )
 
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(cps1_10MHz)
-
-	MDRV_CPU_MODIFY("sound")
-	MDRV_CPU_PROGRAM_MAP(kodb_sub_map,0)
-MACHINE_DRIVER_END
-#endif
 static MACHINE_DRIVER_START( wofh )
 
 	/* basic machine hardware */
@@ -9488,6 +9468,12 @@ ROM_END
 
 #ifndef MESS
 
+static READ16_HANDLER( cps1_hack_in2_r )
+{
+	int in = input_port_read(machine, "IN2");
+	return (in << 8) | in;
+}
+
 static DRIVER_INIT( captcomb )
 {
 	UINT8 *mem8 = (UINT8 *)memory_region(machine, REGION_CPU1);
@@ -9580,220 +9566,6 @@ static DRIVER_INIT( pang3j )
 	DRIVER_INIT_CALL(pang3);
 }
 
-#if 0
-static DRIVER_INIT( kodb )
-{
-	UINT8 *mem8 = memory_region(machine, REGION_CPU1);
-	// Patch protection? check
-	mem8[0x412] = 0x6;
-	mem8[0x414] = 0x64;
-	mem8[0x415] = 0x71;
-	mem8[0xC44] = 0x1C;
-	mem8[0xC45] = 0x10;
-	mem8[0xC46] = 0x88;
-	mem8[0xC47] = 0xEF;
-	mem8[0xC48] = 0x1C;
-	mem8[0xC49] = 0x12;
-	mem8[0x34FE] = 0x7C;
-	mem8[0x34FF] = 0x22;
-	mem8[0x3500] = 0x90;
-	mem8[0x3502] = 0x0;
-	mem8[0x3503] = 0x0;
-	mem8[0x36AA] = 0xFA;
-	mem8[0x36AB] = 0x45;
-	mem8[0x36AC] = 0x2E;
-	mem8[0x36AE] = 0x1A;
-	mem8[0x36AF] = 0x30;
-	mem8[0x4999] = 0x49;
-	mem8[0x499A] = 0x90;
-	mem8[0x499C] = 0x0;
-	mem8[0x499D] = 0x0;
-	mem8[0x5E64] = 0x0;
-	mem8[0x5E65] = 0x61;
-	mem8[0x5E66] = 0x3E;
-	mem8[0x5E68] = 0x6D;
-	mem8[0x5E69] = 0x8;
-	mem8[0x5E92] = 0x0;
-	mem8[0x5E93] = 0x0;
-	mem8[0x5EA0] = 0x0;
-	mem8[0x5EA1] = 0x40;
-	mem8[0x610A] = 0xC2;
-	mem8[0x610B] = 0x38;
-	mem8[0x610C] = 0xC3;
-	mem8[0x610D] = 0x38;
-	mem8[0x610E] = 0xE9;
-	mem8[0x610F] = 0x38;
-	mem8[0x6168] = 0xC2;
-	mem8[0x6169] = 0x38;
-	mem8[0x616A] = 0xC3;
-	mem8[0x616B] = 0x38;
-	mem8[0x616C] = 0xC0;
-	mem8[0x616D] = 0x38;
-	mem8[0x616E] = 0xC4;
-	mem8[0x616F] = 0x38;
-	mem8[0x6188] = 0xC2;
-	mem8[0x6189] = 0x38;
-	mem8[0x618A] = 0xC3;
-	mem8[0x618B] = 0x38;
-	mem8[0x618C] = 0xC0;
-	mem8[0x618D] = 0x38;
-	mem8[0x618E] = 0xC4;
-	mem8[0x618F] = 0x38;
-	mem8[0x61A0] = 0xC2;
-	mem8[0x61A1] = 0x38;
-	mem8[0x61A2] = 0xC3;
-	mem8[0x61A3] = 0x38;
-	mem8[0x61A4] = 0xC0;
-	mem8[0x61A5] = 0x38;
-	mem8[0x61A6] = 0xC4;
-	mem8[0x61A7] = 0x38;
-	mem8[0x61B8] = 0xC2;
-	mem8[0x61B9] = 0x38;
-	mem8[0x61BA] = 0xC3;
-	mem8[0x61BB] = 0x38;
-	mem8[0x61BC] = 0xC0;
-	mem8[0x61BD] = 0x38;
-	mem8[0x61BE] = 0xC4;
-	mem8[0x61BF] = 0x38;
-	mem8[0x6232] = 0xC0;
-	mem8[0x6233] = 0x38;
-	mem8[0x6234] = 0xC3;
-	mem8[0x6235] = 0x38;
-	mem8[0x6236] = 0xC1;
-	mem8[0x6237] = 0x38;
-	mem8[0x6238] = 0xC4;
-	mem8[0x6239] = 0x38;
-	mem8[0x623A] = 0x6C;
-	mem8[0x623B] = 0x2;
-	mem8[0x623C] = 0xFF;
-	mem8[0x623E] = 0xFE;
-	mem8[0x623F] = 0xFF;
-	mem8[0x6284] = 0xC0;
-	mem8[0x6285] = 0x38;
-	mem8[0x6286] = 0xC3;
-	mem8[0x6287] = 0x38;
-	mem8[0x6288] = 0xC1;
-	mem8[0x6289] = 0x38;
-	mem8[0x628A] = 0xC4;
-	mem8[0x628B] = 0x38;
-	mem8[0x62CE] = 0xC0;
-	mem8[0x62CF] = 0x38;
-	mem8[0x62D0] = 0xC3;
-	mem8[0x62D1] = 0x38;
-	mem8[0x62D2] = 0xC1;
-	mem8[0x62D3] = 0x38;
-	mem8[0x62D4] = 0xC4;
-	mem8[0x62D5] = 0x38;
-	mem8[0x6318] = 0xC0;
-	mem8[0x6319] = 0x38;
-	mem8[0x631A] = 0xC3;
-	mem8[0x631B] = 0x38;
-	mem8[0x631C] = 0xC1;
-	mem8[0x631D] = 0x38;
-	mem8[0x631E] = 0xC4;
-	mem8[0x631F] = 0x38;
-	mem8[0x63B0] = 0xC0;
-	mem8[0x63B1] = 0x38;
-	mem8[0x63B2] = 0xC3;
-	mem8[0x63B3] = 0x38;
-	mem8[0x63B4] = 0xC1;
-	mem8[0x63B5] = 0x38;
-	mem8[0x63B6] = 0xD9;
-	mem8[0x63B7] = 0x38;
-	mem8[0x640A] = 0xC0;
-	mem8[0x640B] = 0x38;
-	mem8[0x640C] = 0xC3;
-	mem8[0x640D] = 0x38;
-	mem8[0x640E] = 0xC1;
-	mem8[0x640F] = 0x38;
-	mem8[0x6410] = 0xD9;
-	mem8[0x6411] = 0x38;
-	mem8[0x645C] = 0xC0;
-	mem8[0x645D] = 0x38;
-	mem8[0x645E] = 0xC3;
-	mem8[0x645F] = 0x38;
-	mem8[0x6460] = 0xC1;
-	mem8[0x6461] = 0x38;
-	mem8[0x6462] = 0xD9;
-	mem8[0x6463] = 0x38;
-	mem8[0x64AE] = 0xC0;
-	mem8[0x64AF] = 0x38;
-	mem8[0x64B0] = 0xC3;
-	mem8[0x64B1] = 0x38;
-	mem8[0x64B2] = 0xC1;
-	mem8[0x64B3] = 0x38;
-	mem8[0x64B4] = 0xD9;
-	mem8[0x64B5] = 0x38;
-	mem8[0x657E] = 0xC0;
-	mem8[0x657F] = 0x38;
-	mem8[0x6580] = 0xC3;
-	mem8[0x6581] = 0x38;
-	mem8[0x6582] = 0xC1;
-	mem8[0x6583] = 0x38;
-	mem8[0x6584] = 0xC4;
-	mem8[0x6585] = 0x38;
-	mem8[0x65D4] = 0xC0;
-	mem8[0x65D5] = 0x38;
-	mem8[0x65D6] = 0xC3;
-	mem8[0x65D7] = 0x38;
-	mem8[0x65D8] = 0xC1;
-	mem8[0x65D9] = 0x38;
-	mem8[0x65DA] = 0xC4;
-	mem8[0x65DB] = 0x38;
-	mem8[0x6622] = 0xC0;
-	mem8[0x6623] = 0x38;
-	mem8[0x6624] = 0xC3;
-	mem8[0x6625] = 0x38;
-	mem8[0x6626] = 0xC1;
-	mem8[0x6627] = 0x38;
-	mem8[0x6628] = 0xC4;
-	mem8[0x6629] = 0x38;
-	mem8[0x6670] = 0xC0;
-	mem8[0x6671] = 0x38;
-	mem8[0x6672] = 0xC3;
-	mem8[0x6673] = 0x38;
-	mem8[0x6674] = 0xC1;
-	mem8[0x6675] = 0x38;
-	mem8[0x6676] = 0xC4;
-	mem8[0x6677] = 0x38;
-	mem8[0x6708] = 0xC1;
-	mem8[0x6709] = 0x38;
-	mem8[0x670A] = 0xC2;
-	mem8[0x670B] = 0x38;
-	mem8[0x670C] = 0xC3;
-	mem8[0x670D] = 0x38;
-	mem8[0x6870] = 0xC2;
-	mem8[0x6871] = 0x38;
-	mem8[0x6872] = 0xC3;
-	mem8[0x6873] = 0x38;
-	mem8[0x6874] = 0xFC;
-	mem8[0x6875] = 0x38;
-	mem8[0x9D96] = 0x69;
-	mem8[0x9D97] = 0x42;
-	mem8[0x9D98] = 0x4;
-	mem8[0x9D9A] = 0x69;
-	mem8[0x9D9B] = 0x42;
-	mem8[0xE1A6] = 0x0;
-	mem8[0xE1A7] = 0x7A;
-	mem8[0xE1A8] = 0x2D;
-	mem8[0xE1A9] = 0x1A;
-	mem8[0xE1AA] = 0x49;
-	mem8[0xE1AB] = 0x8E;
-	mem8[0x69958] = 0x91;
-	mem8[0x69959] = 0x42;
-	mem8[0x6995A] = 0xE9;
-	mem8[0x6995B] = 0x43;
-	mem8[0x6995C] = 0x80;
-	mem8[0x6995D] = 0x0;
-	mem8[0x7A12E] = 0x80;
-	mem8[0x7A130] = 0x6C;
-	mem8[0x7A131] = 0x1;
-	mem8[0x7A134] = 0x80;
-	mem8[0x7A136] = 0x6A;
-	mem8[0x7A137] = 0x1;
-	DRIVER_INIT_CALL(cps1);
-}
-#endif
 static DRIVER_INIT( sf2m1 )
 {
 	UINT8 *mem8 = (UINT8 *)memory_region(machine, REGION_CPU1);
@@ -9830,8 +9602,29 @@ static DRIVER_INIT( sf2m1 )
 
 	mem16[0x06E2/2] = 0xFFFE; // Black scr
 //	mem16[0x15A4/2] = 0xFFC0; // Alignment
-	mem16[0x6322/2] = 0x0181; // SFX
+//	mem16[0x6322/2] = 0x0181; // SFX
 
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800012, 0x800013, 0, 0, cps1_hack_in2_r); /* Extra input ports */
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800005, 0x800006, 0, 0, cps1_soundlatch_w); /* Sound command */
+	DRIVER_INIT_CALL(cps1);
+}
+
+static DRIVER_INIT( sf2m3 )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, REGION_CPU1);
+	mem8[0x5E8] = 0x8;
+	mem8[0x608] = 0x14;
+	mem8[0x610] = 0xC;
+	mem8[0x618] = 0x10;
+	mem8[0x620] = 0x12;
+	mem8[0x628] = 0xE;
+	mem8[0x630] = 0x16;
+	mem8[0x638] = 0x20;
+
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800010, 0x800011, 0, 0, cps1_in1_r); /* Player input ports */
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800028, 0x80002f, 0, 0, cps1_hack_dsw_r); /* System input ports / Dip Switches */
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800186, 0x800187, 0, 0, cps1_hack_in2_r); /* Extra input ports */
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800190, 0x800191, 0, 0, cps1_soundlatch_w); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 
@@ -9842,9 +9635,9 @@ static DRIVER_INIT( sf2m13 )
 	// Fix scroll
 	rom[0x1d22a/2] = 0x0120;
 	// Fix bg layer
-	rom[0x1d270/2] = 0x0166;
+//	rom[0x1d270/2] = 0x0166;
 	// Fix gfx
-	rom[0x1d470/2] = 0x0170;
+//	rom[0x1d470/2] = 0x0170;
 
 	// Fix title gfx
 	rom[0x21bec/2] = 0x0083;
@@ -10310,6 +10103,12 @@ static DRIVER_INIT( wofh )
 	wof_decode(machine);
 	DRIVER_INIT_CALL(cps1);
 }
+
+static DRIVER_INIT( daimakb )
+{
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800005, 0x800006, 0, 0, cps1_soundlatch_w); /* Sound command */
+	DRIVER_INIT_CALL(cps1);
+}
 #endif
 
 static READ16_HANDLER( sf2mdt_r )
@@ -10410,14 +10209,14 @@ GAME( 1992, sf2rb2,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1992, sf2red,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave, bootleg)" , 0)		// 920313 - based on World version
 GAME( 1992, sf2v004,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004, bootleg)", 0 )			// "102092" !!! - based on (heavily modified) World version
 GAME( 1992, sf2accp2, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II, bootleg)" , 0)  // 920313 - based on USA version
-GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1, bootleg)", GAME_NOT_WORKING )
+GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1, bootleg)", 0 )
 GAME( 1992, sf2m2,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2, bootleg)", 0 )
-GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", GAME_NOT_WORKING )
+GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", 0 )
 GAME( 1992, sf2m4,    sf2ce,    cps1_12MHz, sf2j,     sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4, bootleg)", 0 )
 GAME( 1992, sf2m5,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M5, bootleg)", 0 )
 GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long set 2, Chinese bootleg)", 0 )
 GAME( 1992, sf2m7,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M7, bootleg)", 0 )
-GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8, bootleg)", GAME_NOT_WORKING )
+GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8, bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2j,     sf2m13,   ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (M13, bootleg)", 0 )
 GAME( 1992, sf2yyc,   sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (YYC, bootleg)", 0 )
 GAME( 1992, sf2koryu, sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long set 1, Chinese bootleg)", 0 )
@@ -10466,7 +10265,7 @@ GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchel
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
 
 GAME( 1990, cawingb,  cawing,   cawingb,    cawing,   cps1,     ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING )
-GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, cps1,     ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )					// Wed.26.10.1988 in the ROMS
+GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )					// Wed.26.10.1988 in the ROMS
 GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING )
 GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING )
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
