@@ -48,7 +48,7 @@ extern const PROPERTYSHEETINFO g_propSheets[];
 
 
 BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num);
-BOOL PropSheetFilter_Driver(OPTIONS_TYPE opt_type, int folder_id, int game_num);
+BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num);
 
 INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);

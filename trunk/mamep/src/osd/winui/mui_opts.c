@@ -2210,7 +2210,7 @@ const WCHAR* GetMAMEInfoFile(void)
 	return options_get_wstring(global, OPTION_MAMEINFO_FILE);
 }
 
-int GetSystemBiosDriver(int bios_index)
+int GetSystemBiosInfo(int bios_index)
 {
 	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
 

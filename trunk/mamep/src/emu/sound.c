@@ -454,7 +454,7 @@ static void route_sound(void)
 
                         /* speaker name, if more than one speaker */
 						if (speaker_output_count(Machine->config) > 1)
-							sprintf(namebuf, "%sSpeaker '%s': ", namebuf, speaker->tag);
+							sprintf(namebuf, _("%sSpeaker '%s': "), namebuf, speaker->tag);
 
                         /* device name */
 						sprintf(namebuf, "%s%s ", namebuf, sndnum_name(sndnum));

@@ -182,7 +182,7 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_DEBUG,			GameOptionsProc },
 	{ TRUE,		PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
-	{ TRUE,		PropSheetFilter_Driver,	IDD_PROP_DRIVER,		GameOptionsProc },
+	{ TRUE,		PropSheetFilter_BIOS,	IDD_PROP_BIOS,		GameOptionsProc },
 	{ FALSE }
 };
 

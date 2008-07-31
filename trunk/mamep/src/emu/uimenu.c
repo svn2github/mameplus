@@ -2499,7 +2499,8 @@ static void menu_command_content(running_machine *machine, ui_menu *menu, void *
 
 	if (load_driver_command_ex(machine->gamedrv, commandbuf, ARRAY_LENGTH(commandbuf), (FPTR)parameter) == 0)
 	{
-		const game_driver *last_drv = machine->gamedrv;
+		const game_driver *last_drv;
+		last_drv = machine->gamedrv;
 		convert_command_glyph(commandbuf, ARRAY_LENGTH(commandbuf));
 
 //		ui_menu_item_append(menu, commandbuf, NULL, MENU_FLAG_MULTILINE, NULL);

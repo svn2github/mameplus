@@ -735,7 +735,7 @@ int DriverSystemBiosIndex(int driver_index)
 
 	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
 	{
-		int bios_driver = GetSystemBiosDriver(i);
+		int bios_driver = GetSystemBiosInfo(i);
 		if (bios_driver != -1 && bios_driver == DriverBiosIndex(driver_index))
 			return i;
 	}

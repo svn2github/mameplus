@@ -104,7 +104,7 @@
 #define IDD_PROP_DEBUG                  188
 
 #define IDD_PALETTE                     190 // UI_COLOR_PALETTE
-#define IDD_PROP_DRIVER                 191
+#define IDD_PROP_BIOS                   191
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_CN                  194
@@ -466,6 +466,7 @@
 #define IDC_BIOSTEXT15                  1396
 #define IDC_BIOSTEXT16                  1397
 
+#define IDC_DRV_TEXT                    1400 // DRIVER_SWITCH
 #define IDC_DRV_MAME                    1401 // DRIVER_SWITCH
 #define IDC_DRV_PLUS                    1402 // DRIVER_SWITCH
 #define IDC_DRV_HOMEBREW                1403 // DRIVER_SWITCH

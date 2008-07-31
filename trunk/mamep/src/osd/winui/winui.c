@@ -867,6 +867,7 @@ static struct
 		GetLastDir,
 		TEXT("txt")
 	},
+#if 0
 	{
 		TEXT("cheats (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
 		TEXT("Select a cheats"),
@@ -888,6 +889,7 @@ static struct
 		GetLastDir,
 		TEXT("dat")
 	},
+#endif
 	{
 		TEXT("Image Files (*.png)\0*.png\0"),
 		TEXT("Select a Background Image"),
@@ -5477,6 +5479,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 #endif /* UI_COLOR_PALETTE */
 
+#if 0
 	case ID_OPTIONS_CHEAT:
 		{
 			WCHAR filename[MAX_PATH];
@@ -5508,6 +5511,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			}
 			return TRUE;
 		}
+#endif
 
 	case ID_HELP_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT),

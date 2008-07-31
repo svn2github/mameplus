@@ -499,7 +499,7 @@ const WCHAR *GetHiscoreFile(void);
 void SetHiscoreFile(const WCHAR *);
 #endif /* USE_HISCORE */
 
-int GetSystemBiosDriver(int bios_index);
+int GetSystemBiosInfo(int bios_index);
 
 #ifdef UI_COLOR_PALETTE
 const char *GetUIPaletteString(int n);

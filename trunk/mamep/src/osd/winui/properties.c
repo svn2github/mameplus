@@ -385,15 +385,15 @@ BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num)
 	return DriverIsVector(game_num);
 }
 
-BOOL PropSheetFilter_Driver(OPTIONS_TYPE opt_type, int folder_id, int game_num)
+BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num)
 {
-#ifdef DRIVER_SWITCH
-	// driver switch config is in bios page
+#if 0
+	// if driver switch config is in BIOS page
 	return opt_type == OPTIONS_GLOBAL;
 #else /* DRIVER_SWITCH */
 
 	if (opt_type == OPTIONS_GLOBAL)
-		return (GetSystemBiosDriver(0) != 0);
+		return (GetSystemBiosInfo(0) != 0);
 
 	return 0;
 #endif /* DRIVER_SWITCH */
@@ -625,7 +625,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 
 		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
 		{
-			int nIndex = GetSystemBiosDriver(n);
+			int nIndex = GetSystemBiosInfo(n);
 
 			pBiosName[n] = NULL;
 
@@ -2046,7 +2046,7 @@ static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARA
 
 			for (n = 0; pBiosName[n]; n++)
 			{
-				int nIndex = GetSystemBiosDriver(n);
+				int nIndex = GetSystemBiosInfo(n);
 				core_options *opts = load_options(OPTIONS_GAME, nIndex);
 
 				options_set_string(opts, OPTION_BIOS, pBiosName[n], OPTION_PRIORITY_CMDLINE);
@@ -2223,6 +2223,16 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			ShowWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), SW_HIDE);
 		else
 			EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+
+#ifdef DRIVER_SWITCH
+		// if driver switch config is in MISC page
+		{
+			int i;
+			for (i=0; drivers_table[i].name; i++)
+				ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
+				ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
+		}
+#endif /* DRIVER_SWITCH */
 
 		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
 		ShowWindow(hDlg, SW_SHOW);
@@ -2760,7 +2770,7 @@ static void SetPropEnabledControls(HWND hWnd)
 		if (g_nPropertyMode == OPTIONS_GLOBAL)
 			for (; i < MAX_SYSTEM_BIOS; i++)
 			{
-				int bios_driver = GetSystemBiosDriver(i);
+				int bios_driver = GetSystemBiosInfo(i);
 				if (bios_driver == -1)
 					break;
 
@@ -3972,7 +3982,7 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 
 		if (hCtrl)
 		{
-			const char *option = InitializeBIOSCtrl(hCtrl, GetSystemBiosDriver(n), pBiosName[n]);
+			const char *option = InitializeBIOSCtrl(hCtrl, GetSystemBiosInfo(n), pBiosName[n]);
 			if (option)
 			{
 				free(pBiosName[n]);
