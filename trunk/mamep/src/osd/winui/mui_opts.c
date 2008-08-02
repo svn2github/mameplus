@@ -54,13 +54,19 @@
 #include "directories.h" //mamep: for g_directoryInfo[] in function generate_default_dirs()
 #include "translate.h"
 
-//#ifdef MESS
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
+#ifdef MESS
 #include "optionsms.h"
-//#endif // MESS
+#endif // MESS
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
 #endif
+
+#define OPTION_CHEAT_FILE			"cheat_file"
 
 /***************************************************************************
     Internal function prototypes
@@ -93,9 +99,9 @@ static void remove_all_source_options(void);
 static void set_core_rom_directory(const WCHAR *dir);
 static void set_core_sample_directory(const WCHAR *dir);
 static void set_core_image_directory(const WCHAR *dir);
-//#ifdef MESS
+#ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir);
-//#endif
+#endif
 static void set_core_translation_directory(const WCHAR *dir);
 
 static void  build_default_bios(void);
@@ -233,7 +239,7 @@ static void  generate_default_dirs(void);
 #define MUIOPTION_HIDE_MOUSE					"hide_mouse"
 #define MUIOPTION_FULL_SCREEN					"full_screen"
 
-#ifdef MESS
+#if 0 //def MESS
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_system"
 //#define MUIOPTION_HISTORY_FILE					"sysinfo_file"
@@ -294,7 +300,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_SHOW_TOOLBAR,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_STATUS_BAR,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_FOLDERS,				"",         0,                 NULL },
-#ifdef MESS
+#if 0 //def MESS
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_TABS,					"cpanel, pcb, history, story", 0, NULL },
@@ -443,9 +449,9 @@ static const options_entry perGameOptions[] =
 	{ "_play_time",              "0",        0,                 NULL },
 	{ "_rom_audit",              "-1",       0,                 NULL },
 	{ "_samples_audit",          "-1",       0,                 NULL },
-//#ifdef MESS
+#ifdef MESS
 	{ "_extra_software",         "",         0,                 MESS_MARK_CONSOLE_ONLY },
-//#endif
+#endif
 	{ NULL }
 };
 
@@ -597,9 +603,9 @@ core_options *CreateGameOptions(int driver_index)
 	if (is_global)
 		options_set_option_default_value(opts, OPTION_INIPATH, "ini");
 
-//#ifdef MESS
+#ifdef MESS
 	MessSetupGameOptions(opts, driver_index);
-//#endif // MESS
+#endif // MESS
 
 	return opts;
 }
@@ -626,9 +632,9 @@ BOOL OptionsInit()
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	settings = options_create(memory_error);
 	options_add_entries(settings, regSettings);
-//#ifdef MESS
+#ifdef MESS
 	MessSetupSettings(settings);
-//#endif
+#endif
 
 	// set up per game options
 	{
@@ -699,9 +705,9 @@ BOOL OptionsInit()
 	set_core_rom_directory(GetRomDirs());
 	set_core_image_directory(GetRomDirs());
 	set_core_sample_directory(GetSampleDirs());
-//#ifdef MESS
+#ifdef MESS
 	set_core_hash_directory(GetHashDirs());
-//#endif
+#endif
 
 	generate_default_dirs();
 
@@ -2648,12 +2654,12 @@ static void set_core_sample_directory(const WCHAR *dir)
 	options_set_wstring(mamecore, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_CMDLINE);
 }
 
-//#ifdef MESS
+#ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir)
 {
 	options_set_wstring(mamecore, SEARCHPATH_HASH, dir, OPTION_PRIORITY_CMDLINE);
 }
-//#endif
+#endif
 
 static void set_core_translation_directory(const WCHAR *dir)
 {
@@ -3240,9 +3246,9 @@ BOOL IsGlobalOption(const char *option_name)
 	static const char *global_options[] =
 	{
 		OPTION_ROMPATH,
-//#ifdef MESS
+#ifdef MESS
 		OPTION_HASHPATH,
-//#endif // MESS
+#endif // MESS
 		OPTION_SAMPLEPATH,
 		OPTION_ARTPATH,
 		OPTION_CTRLRPATH,

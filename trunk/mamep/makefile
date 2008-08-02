@@ -601,7 +601,7 @@ endif
 
 # then the various core pieces
 include $(SRC)/$(TARGET)/$(SUBTARGET).mak
-ifndef NEOCPSMAME
+ifdef MAMEMESS
 include $(SRC)/mess/mess.mak
 endif
 include $(SRC)/lib/lib.mak

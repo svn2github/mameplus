@@ -20,9 +20,9 @@
 #include "inputseq.h" /* for input_seq definition */
 #include <video.h> /* for MAX_SCREENS Definition*/
 
-//#ifdef MESS
+#ifdef MAMEMESS
 #include "optionsms.h"
-//#endif
+#endif
 
 #define MAX_SYSTEM_BIOS		16
 #define MAX_SYSTEM_BIOS_ENTRY	16

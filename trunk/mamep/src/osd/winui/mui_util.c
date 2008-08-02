@@ -45,6 +45,10 @@
 #include "patch.h"
 #endif /* USE_IPS */
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 
 /***************************************************************************
 	function prototypes
@@ -706,7 +710,10 @@ BOOL DriverIsHarddisk(int driver_index)
 
 BOOL DriverIsConsole(int driver_index)
 {
+#ifdef MESS
 	return drivers[driver_index]->sysconfig_ctor != NULL;
+#endif // MESS
+	return FALSE;
 }
 
 BOOL DriverIsBios(int driver_index)

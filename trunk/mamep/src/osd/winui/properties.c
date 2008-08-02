@@ -147,11 +147,15 @@ b) Exit the dialog.
 #include "mui_util.h"
 #include "datafile.h"
 
-//#ifdef MESS
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
+#ifdef MESS
 #if defined(WIN32) && !defined(SDLMAME_WIN32)
 #include "osd/windows/configms.h"
 #endif
-//#endif
+#endif
 
 
 typedef HANDLE HTHEME;
@@ -169,12 +173,12 @@ static FARPROC fnIsThemed;
 #define snprintf _snprintf
 #endif
 
-//#ifdef MESS
+#ifdef MESS
 // done like this until I figure out a better idea
 #include "messopts.h"
 #include "resourcems.h"
 //#include "propertiesms.h"
-//#endif
+#endif
 
 // missing win32 api defines
 #ifndef TBCD_TICS
@@ -1107,7 +1111,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 	else
 	{
 			// audit result is no
-#ifdef MESS
+#if 0//def MESS
 		return _UIW(TEXT("BIOS missing"));
 #else
 		return _UIW(TEXT("ROMs missing"));
@@ -1938,7 +1942,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 	default:
-#ifdef MESS
+#if 0//def MESS
 		if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
 			break;
 #endif // MESS
@@ -3438,7 +3442,7 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_JOYID7,				DM_INT,		WINOPTION_JOYID7);
 	datamap_add(properties_datamap, IDC_JOYID8,				DM_INT,		WINOPTION_JOYID8);
 #endif /* JOYSTICK_ID */
-#ifdef MESS
+#if 0//def MESS
 #if defined(WIN32) && !defined(SDLMAME_WIN32)
 	datamap_add(properties_datamap, IDC_USE_NEW_UI,				DM_BOOL,	WINOPTION_NEWUI);
 #endif
@@ -3520,7 +3524,7 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
 
-#ifdef MESS
+#if 0//def MESS
 	// MESS specific stuff
 	MessBuildDataMap(properties_datamap);
 #endif // MESS

@@ -386,7 +386,7 @@ void assign_drivers(core_options *options)
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "decrypted",	decrypteddrivers },
-#ifndef NEOCPSMAME
+#ifdef MAMEMESS
 		{ "console",	consoledrivers },
 #endif
 #endif /* !TINY_NAME */
