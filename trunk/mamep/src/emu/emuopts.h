@@ -47,6 +47,7 @@
 #define OPTION_CTRLRPATH			"ctrlrpath"
 #define OPTION_INIPATH				"inipath"
 #define OPTION_FONTPATH				"fontpath"
+#define OPTION_CHEATPATH			"cheatpath"
 #define OPTION_TRANSLATION_DIRECTORY		"translation_directory"
 #define OPTION_LOCALIZED_DIRECTORY		"localized_directory"
 #ifdef USE_IPS
@@ -67,7 +68,6 @@
 #endif /* USE_HISCORE */
 
 /* core filename options */
-#define OPTION_CHEAT_FILE			"cheat_file"
 #define OPTION_HISTORY_FILE			"history_file"
 #ifdef STORY_DATAFILE
 #define OPTION_STORY_FILE			"story_file"

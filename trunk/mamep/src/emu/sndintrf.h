@@ -194,7 +194,7 @@ union _sndinfo
 	const char *s;										/* generic strings */
 
 	void	(*set_info)(void *token, UINT32 state, sndinfo *info);
-	void *	(*start)(int index, int clock, const void *config);/* SNDINFO_PTR_START */
+	void *	(*start)(const char *tag, int index, int clock, const void *config);/* SNDINFO_PTR_START */
 	void	(*stop)(void *token);						/* SNDINFO_PTR_STOP */
 	void	(*reset)(void *token);						/* SNDINFO_PTR_RESET */
 };
@@ -285,7 +285,7 @@ const char *sndtype_shortname(int sndtype);
 
 /* Initialization/Tear down */
 void sndintrf_init(running_machine *machine);
-int sndintrf_init_sound(int sndnum, sound_type sndtype, int clock, const void *config);
+int sndintrf_init_sound(int sndnum, const char *tag, sound_type sndtype, int clock, const void *config);
 void sndintrf_exit_sound(int sndnum);
 void sndintrf_register_token(void *token);
 

@@ -49,6 +49,7 @@ const options_entry mame_core_options[] =
 	{ "ctrlrpath;ctrlr_directory",   "ctrlr",     0,                 "path to controller definitions" },
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
+	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
 	{ "translation_directory",       "lang",      0,                 "directory for translation table data" },
 	{ "localized_directory",         "lang",      0,                 "directory for localized data files" },
 #ifdef USE_IPS
@@ -73,7 +74,6 @@ const options_entry mame_core_options[] =
 
 	/* filename options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE FILENAME OPTIONS" },
-	{ "cheat_file",                  "cheat.dat", 0,                 "cheat filename" },
 	{ "history_file",               "history.dat",0,                 "history database name" },
 #ifdef STORY_DATAFILE
 	{ "story_file",                 "story.dat",  0,                 "story database name" },

@@ -129,6 +129,7 @@ struct _ui_menu
 	ui_menu_event		event;				/* the UI event that occurred */
 	ui_menu *			parent;				/* pointer to parent menu */
 	void *				state;				/* menu-specific state */
+	ui_menu_destroy_state_func destroy_state; /* destroy state callback */
 	int					resetpos;			/* reset position */
 	void *				resetref;			/* reset reference */
 	int					selected;			/* which item is selected */
@@ -478,7 +479,11 @@ void ui_menu_free(ui_menu *menu)
 
 	/* free the state */
 	if (menu->state != NULL)
+	{
+		if (menu->destroy_state != NULL)
+			(*menu->destroy_state)(menu, menu->state);
 		free(menu->state);
+	}
 
 	/* free the menu */
 	free(menu);
@@ -634,11 +639,16 @@ void ui_menu_set_custom_render(ui_menu *menu, ui_menu_custom_func custom, float 
     memory to represent the menu's state
 -------------------------------------------------*/
 
-void *ui_menu_alloc_state(ui_menu *menu, size_t size)
+void *ui_menu_alloc_state(ui_menu *menu, size_t size, ui_menu_destroy_state_func destroy_state)
 {
 	if (menu->state != NULL)
+	{
+		if (menu->destroy_state != NULL)
+			(*menu->destroy_state)(menu, menu->state);
 		free(menu->state);
+	}
 	menu->state = malloc_or_die(size);
+	menu->destroy_state = destroy_state;
 	memset(menu->state, 0, size);
 
 	return menu->state;
@@ -1228,7 +1238,7 @@ static void ui_menu_handle_keys(ui_menu *menu, UINT32 flags)
 	if (menu->event.iptkey == IPT_INVALID)
 		for (code = __ipt_ui_start; code <= __ipt_ui_end; code++)
 		{
-			if ((code == IPT_UI_LEFT && ignoreleft) || (code == IPT_UI_RIGHT && ignoreright) || (code == IPT_UI_PAUSE && ignorepause))
+			if (code == IPT_UI_CONFIGURE || (code == IPT_UI_LEFT && ignoreleft) || (code == IPT_UI_RIGHT && ignoreright) || (code == IPT_UI_PAUSE && ignorepause))
 				continue;
 			if (exclusive_input_pressed(menu, code, 0))
 				break;
@@ -1710,7 +1720,7 @@ static void menu_input_common(running_machine *machine, ui_menu *menu, void *par
 
 	/* if no state, allocate now */
 	if (state == NULL)
-		state = ui_menu_alloc_state(menu, sizeof(*menustate));
+		state = ui_menu_alloc_state(menu, sizeof(*menustate), NULL);
 	menustate = state;
 
 	/* if the menu isn't built, populate now */
@@ -1942,7 +1952,7 @@ static void menu_settings_common(running_machine *machine, ui_menu *menu, void *
 
 	/* if no state, allocate now */
 	if (state == NULL)
-		state = ui_menu_alloc_state(menu, sizeof(*menustate));
+		state = ui_menu_alloc_state(menu, sizeof(*menustate), NULL);
 	menustate = state;
 
 	/* if the menu isn't built, populate now */
@@ -2369,7 +2379,7 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
 
 	/* if no state, allocate some */
 	if (state == NULL)
-		state = ui_menu_alloc_state(menu, sizeof(*prevtime));
+		state = ui_menu_alloc_state(menu, sizeof(*prevtime), NULL);
 	prevtime = state;
 
 	/* if the time has rolled over another second, regenerate */
@@ -2529,7 +2539,7 @@ static void menu_memory_card(running_machine *machine, ui_menu *menu, void *para
 
 	/* if no state, allocate some */
 	if (state == NULL)
-		state = ui_menu_alloc_state(menu, sizeof(*cardnum));
+		state = ui_menu_alloc_state(menu, sizeof(*cardnum), NULL);
 	cardnum = state;
 
 	/* if the menu isn't built, populate now */
@@ -3141,7 +3151,7 @@ static void menu_select_game(running_machine *machine, ui_menu *menu, void *para
 	/* if no state, allocate some */
 	if (state == NULL)
 	{
-		state = ui_menu_alloc_state(menu, sizeof(*menustate) + sizeof(menustate->driverlist) * driver_list_get_count(drivers));
+		state = ui_menu_alloc_state(menu, sizeof(*menustate) + sizeof(menustate->driverlist) * driver_list_get_count(drivers), NULL);
 		if (parameter != NULL)
 			strcpy(((select_game_state *)state)->search, parameter);
 	}

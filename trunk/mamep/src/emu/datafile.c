@@ -1576,47 +1576,11 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 			//sprintf(name,"%6x ",length);
 			sprintf(name," %s %08x ",ROM_GETNAME(rom),length);
 			strcat(buffer, name);
-			switch (ROMREGION_GETTYPE(region))
-			{
-			case REGION_CPU1: strcat(buffer, "cpu1"); break;
-			case REGION_CPU2: strcat(buffer, "cpu2"); break;
-			case REGION_CPU3: strcat(buffer, "cpu3"); break;
-			case REGION_CPU4: strcat(buffer, "cpu4"); break;
-			case REGION_CPU5: strcat(buffer, "cpu5"); break;
-			case REGION_CPU6: strcat(buffer, "cpu6"); break;
-			case REGION_CPU7: strcat(buffer, "cpu7"); break;
-			case REGION_CPU8: strcat(buffer, "cpu8"); break;
-			case REGION_GFX1: strcat(buffer, "gfx1"); break;
-			case REGION_GFX2: strcat(buffer, "gfx2"); break;
-			case REGION_GFX3: strcat(buffer, "gfx3"); break;
-			case REGION_GFX4: strcat(buffer, "gfx4"); break;
-			case REGION_GFX5: strcat(buffer, "gfx5"); break;
-			case REGION_GFX6: strcat(buffer, "gfx6"); break;
-			case REGION_GFX7: strcat(buffer, "gfx7"); break;
-			case REGION_GFX8: strcat(buffer, "gfx8"); break;
-			case REGION_PROMS: strcat(buffer, "prom"); break;
-			case REGION_SOUND1: strcat(buffer, "snd1"); break;
-			case REGION_SOUND2: strcat(buffer, "snd2"); break;
-			case REGION_SOUND3: strcat(buffer, "snd3"); break;
-			case REGION_SOUND4: strcat(buffer, "snd4"); break;
-			case REGION_SOUND5: strcat(buffer, "snd5"); break;
-			case REGION_SOUND6: strcat(buffer, "snd6"); break;
-			case REGION_SOUND7: strcat(buffer, "snd7"); break;
-			case REGION_SOUND8: strcat(buffer, "snd8"); break;
-			case REGION_USER1: strcat(buffer, "usr1"); break;
-			case REGION_USER2: strcat(buffer, "usr2"); break;
-			case REGION_USER3: strcat(buffer, "usr3"); break;
-			case REGION_USER4: strcat(buffer, "usr4"); break;
-			case REGION_USER5: strcat(buffer, "usr5"); break;
-			case REGION_USER6: strcat(buffer, "usr6"); break;
-			case REGION_USER7: strcat(buffer, "usr7"); break;
-			case REGION_USER8: strcat(buffer, "usr8"); break;
-			}
+			strcat(buffer, ROMREGION_GETTAG(region));
 
-		//sprintf(name," %7x\n",ROM_GETOFFSET(rom));
-		sprintf(name," %08x\n",ROM_GETOFFSET(rom));
-		strcat(buffer, name);
-
+			//sprintf(name," %7x\n",ROM_GETOFFSET(rom));
+			sprintf(name," %08x\n",ROM_GETOFFSET(rom));
+			strcat(buffer, name);
 		}
 
 	clone_of = driver_get_clone(drv);

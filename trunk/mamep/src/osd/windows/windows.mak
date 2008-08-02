@@ -36,6 +36,12 @@
 # uncomment next line to enable a Unicode build
 # UNICODE = 1
 
+# set this to the minimum Direct3D version to support (8 or 9)
+DIRECT3D = 8
+
+# set this to the minimum DirectInput version to support (7 or 8)
+DIRECTINPUT = 7
+
 
 
 ###########################################################################
@@ -227,8 +233,16 @@ ifdef WIN95_MULTIMON
 CFLAGS += -DWIN95_MULTIMON
 endif
 
-# add the windows libaries
-LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldinput -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
+# add the windows libraries
+LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
+
+ifneq ($(USE_JOY_MOUSE_MOVE),)
+LIBS += -ldinput
+CFLAGS += -DDIRECTINPUT_VERSION=0x0700
+else
+LIBS += -ldinput8
+CFLAGS += -DDIRECTINPUT_VERSION=0x0800
+endif
 
 ifdef PTR64
 ifdef MSVC_BUILD
@@ -246,12 +260,6 @@ DEFS+= -DDIRECTSOUND_VERSION=0x0300
 DEFS+= -DDIRECTDRAW_VERSION=0x0300
 DEFS+= -DCLIB_DECL=__cdecl
 DEFS+= -DDECL_SPEC=
-
-ifneq ($(USE_JOY_MOUSE_MOVE),)
-DEFS+= -DDIRECTINPUT_VERSION=0x0700
-else
-DEFS+= -DDIRECTINPUT_VERSION=0x0500
-endif
 
 ifneq ($(USE_JOYSTICK_ID),)
 DEFS += -DJOYSTICK_ID
@@ -287,7 +295,6 @@ endif
 #-------------------------------------------------
 
 OSDOBJS = \
-	$(WINOBJ)/d3d8intf.o \
 	$(WINOBJ)/d3d9intf.o \
 	$(WINOBJ)/drawd3d.o \
 	$(WINOBJ)/drawdd.o \
@@ -299,6 +306,12 @@ OSDOBJS = \
 	$(WINOBJ)/video.o \
 	$(WINOBJ)/window.o \
 	$(WINOBJ)/winmain.o
+
+ifeq ($(DIRECT3D),8)
+OSDOBJS += $(WINOBJ)/d3d8intf.o
+else
+CFLAGS += -DDIRECT3D_VERSION=0x0900
+endif
 
 # extra dependencies
 $(WINOBJ)/drawdd.o : 	$(SRC)/emu/rendersw.c
