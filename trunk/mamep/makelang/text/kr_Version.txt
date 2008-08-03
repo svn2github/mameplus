@@ -1,20 +1,20 @@
-#
+# 8085
 Console
 콘솔
 
-#
-Neogeo decrypted
-해독된 네오지오
-
-#
+# 7970
 Plus!
 플러스!
 
-#
+# Title
 Version
 버전
 
-#
-home-brew
-홈브류
+# 8011
+Decrypted
+
+
+# 8069
+Homebrew
+
 

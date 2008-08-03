@@ -1,28 +1,28 @@
-# 20
-CPS1
-CPS1
-
-# 30
-CPS2
-CPS2
-
 # Title
 IPS
 IPS
 
-# 14
+# 64
 Misc
 Különféle
 
-# 35
+# 139
 Neo-Geo
 Neo-Geo
-
-# 93
-PGM
-PGM
 
 # 7
 Translation
 Fordítás
+
+# 286
+Bootleg And Clone
+
+
+# 105
+CPS All System
+
+
+# 301
+Haze Megadrive
+
 

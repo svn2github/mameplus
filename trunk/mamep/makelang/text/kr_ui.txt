@@ -1,2756 +1,2892 @@
-#
-\nDo you wish to continue?
-\n계속 하시겠습니까?
-
-#
+# osd/winui/dialogs.c: 949
  PCB Info: %s [%s]
  PCB 정보: %s [%s]
 
-#
+# osd/winui/dialogs.c: 828
  again.\r\n
 다시\r\n
 
-#
+# osd/winui/dialogs.c: 828
  requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
 Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft DirectX 버전 3 이상이 필요합니다.\r\n\r\n설치 및 실행을 위해선 Microsoft의 DirectX 웹페이지를 참고하세요.http://www.microsoft.com/directx\r\ndownload DirectX
 
-#
+# osd/winui/dialogs.c: 125
  will now reset the following\n
 다음 ..리셋 할 것입니다\n
 
-#
+# osd/winui/properties.c: 1064
 %d colors 
 %d 컬러
 
-#
+# osd/winui/winui.c: 266, 3753
 %d games
 %d 게임
 
-#
+# osd/winui/properties.c: 971
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d 색상)
 
-#
+# osd/winui/properties.c: 966
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d 색상)
 
-#
+# osd/winui/treeview.c: 1295
 %dx%d (H)
 %dx%d (H)
 
-#
+# osd/winui/treeview.c: 1289
 %dx%d (V)
 %dx%d (V)
 
-#
+# osd/winui/properties.c: 1041
 %s (%d player)
 %s (%d 플레이어)
 
-#
+# osd/winui/properties.c: 1052
 %s (%d player, %d button)
 %s (%d 플레이어, %d 버튼)
 
-#
+# osd/winui/properties.c: 1050
 %s (%d player, %d buttons)
 %s (%d 플레이어, %d 버튼)
 
-#
+# osd/winui/properties.c: 1038
 %s (%d players)
 %s (%d 플레이어)
 
-#
+# osd/winui/properties.c: 1047
 %s (%d players, %d button)
 %s (%d 플레이어, %d 버튼)
 
-#
+# osd/winui/properties.c: 1044
 %s (%d players, %d buttons)
 %s (%d 플레이어, %d 버튼)
 
-#
+# osd/winui/mameui.rc: 190
 &About
 MAME32 정보(&A)
 
-#
+# osd/winui/mameui.rc: 44
 &About MAMEUI
 MAMEUI 정보(&A)
 
-#
+# osd/winui/mameui.rc: 65, 202
 &Add to Custom Folder...
 사용자 지정 폴더에 추가(&A)
 
-#
+# osd/winui/mameui.rc: 1070
 &All games to use default options
 모든 게임에 기본설정 적용(&A)
 
-#
+# osd/winui/mameui.rc: 247
 &Audit
 검사(&A)
 
-#
+# osd/winui/mameui.rc: 71
 &Audit all games
 전체롬 검사(&A)
 
-#
+# osd/winui/mameui.rc: 155
 &Background Image...
 배경 이미지...(&B)
 
-#
+# osd/winui/mameui.rc: 1101
 &Broadcast selected game to all windows
 선택된 게임을 모든 창에 알림(&B)
 
-#
+# osd/winui/mameui.rc: 89, 263, 277
 &Cabinet
 캐비넷(&C)
 
-#
+# osd/winui/mameui.rc: 415, 1053, 1079, 1145, 1189
 &Cancel
 취소(&C)
 
-#
+# osd/winui/mameui.rc: 1249 osd/winui/mui_audit.c: 492
 &Close
 닫기(&C)
 
-#
+# osd/winui/mameui.rc: 179
 &Contents\tF1
 내용(&C)\tF1
 
-#
+# osd/winui/mui_audit.c: 363
 &Continue
 계속(&C)
 
-#
+# osd/winui/mameui.rc: 204, 239
 &Custom Filters...
 사용자 정의 게임필터(&C)...
 
-#
+# osd/winui/mameui.rc: 139
 &Custom Filters...\tCtrl+F
 사용자 정의 게임필터(&C)...Ctrl+F
 
-#
+# osd/winui/mameui.rc: 1067
 &Default game options
 기본 게임 설정(&D)
 
-#
+# osd/winui/mameui.rc: 1049
 &Description filter
 필터 설명(&D)
 
-#
+# osd/winui/mameui.rc: 104
 &Details
 자세히(&D)
 
-#
+# osd/winui/mameui.rc: 147
 &Directories...
 디렉토리 설정(&D)...
 
-#
+# osd/winui/mameui.rc: 40
 &Exit
 종료(&E)
 
-#
+# osd/winui/mameui.rc: 156
 &Export Game List...
 게임 목록 내보내기(&E)...
 
-#
+# osd/winui/mameui.rc: 38, 50
 &File
 파일(&F)
 
-#
+# osd/winui/mameui.rc: 88, 262, 276
 &Flyer
 포스터(&F)
 
-#
+# osd/winui/mameui.rc: 1073
 &Folder 'filters'
 폴더 필터(&F)
 
-#
+# osd/winui/mameui.rc: 83
 &Fullscreen\tF11
 전체화면(&F)\tF11
 
-#
+# osd/winui/mameui.rc: 105
 &Grouped
 그룹화(&G)
 
-#
+# osd/winui/mameui.rc: 42, 177
 &Help
 도움말(&H)
 
-#
+# osd/winui/mameui.rc: 95, 269, 282
 &History
 역사(&H)
 
-#
+# osd/winui/mameui.rc: 1029
 &Horizontal
 가로(&H)
 
-#
+# osd/winui/mameui.rc: 154
 &Interface Options...
 인터페이스 옵션(&I)...
 
-#
+# osd/winui/mameui.rc: 158
 &Language
 언어(&L)
 
-#
+# osd/winui/mameui.rc: 103
 &List
 간단히(&L)
 
-#
+# osd/winui/mameui.rc: 183
 &Mame Release Notes
 Mame 릴리즈 일지(&M)
 
-#
+# osd/winui/mameui.rc: 90, 264, 278
 &Marquee
 간판(&M)
 
-#
+# osd/winui/mameui.rc: 126
 &Menu Style
 메뉴 스타일(&M)
 
-#
+# osd/winui/mameui.rc: 182
 &New Game Changes
 추가, 변경된 게임(&N)
 
-#
+# osd/winui/mameui.rc: 378, 1052, 1078, 1144, 1188
 &OK
 확인(&O)
 
-#
+# osd/winui/mameui.rc: 142
 &Options
 옵션(&O)
 
-#
+# osd/winui/mameui.rc: 150
 &Palette Setting...
 팔레트 설정(&P)...
 
-#
+# osd/winui/mameui.rc: 414 osd/winui/mui_audit.c: 358
 &Pause
 일시정지(&P)
 
-#
+# osd/winui/mameui.rc: 80
 &Picture Area\tAlt+P
 화면 영역(&P)\tAlt+P
 
-#
+# osd/winui/mameui.rc: 52, 198 osd/winui/winui.c: 3914
 &Play
 실행(&P)
 
-#
+# osd/winui/winui.c: 265, 3959, 7246, 7293
 &Play %s
 실행(&P) %s
 
-#
+# osd/winui/mameui.rc: 249
 &Properties
 등록정보(&P)
 
-#
+# osd/winui/mameui.rc: 1035
 &Raster Graphics
 래스터 그래픽(&R)
 
-#
+# osd/winui/mameui.rc: 138
 &Refresh\tF5
 새로고침(&R)\tF5
 
-#
+# osd/winui/mameui.rc: 238
 &Rename
 이름 바꾸기(&R)
 
-#
+# osd/winui/mameui.rc: 153
 &Reset to Default...
 설정 초기화(&R)
 
-#
+# osd/winui/mameui.rc: 1091
 &Search for new games on start
 시작할때 새 게임 검색(&S)
 
-#
+# osd/winui/mameui.rc: 63, 206
 &Select Random Game
 무작위 게임 선택(&S)
 
-#
+# osd/winui/mameui.rc: 241
 &Show Folders
 폴더 표시(&S)
 
-#
+# osd/winui/mameui.rc: 87, 261, 275
 &Snapshot
 스냅샷(&S)
 
-#
+# osd/winui/mameui.rc: 78
 &Status bar\tAlt+S
 상태 표시줄(&S)\tAlt+S
 
-#
+# osd/winui/mameui.rc: 91, 265, 279
 &Title
 타이틀(&T)
 
-#
+# osd/winui/mameui.rc: 77
 &Toolbar\tAlt+T
 도구 모음(&T)\tAlt+T
 
-#
+# osd/winui/mameui.rc: 180
 &Troubleshooting
 문제 해결(&T)
 
-#
+# osd/winui/mameui.rc: 1032
 &Unavailable
 미보유게임(&U)
 
-#
+# osd/winui/mameui.rc: 1064
 &User Interface (Fonts, Colors, Sizes)
 사용자 인터페이스 (글꼴, 색상, 크기) (&U)
 
-#
+# osd/winui/mameui.rc: 1021
 &Vector Graphics
 벡터 그래픽(&V)
 
-#
+# osd/winui/mameui.rc: 1043
 &Vertical
 세로(&V)
 
-#
+# osd/winui/mameui.rc: 75
 &View
 보기(&V)
 
-#
+# osd/winui/mameui.rc: 1041
 &Working
 실행 가능(&W)
 
-#
+# osd/winui/winui.c: 6675
 '%s' is not a valid savestate file for game '%s'.
 '%s' 는 게임 '%s'의 올바른 상태저장 파일이 아닙니다
 
-#
+# osd/winui/mameui.rc: 1045
 (*) = inherited from parent folder
 (*) = 부모 폴더로부터 상속됨
 
-#
+# osd/winui/mameui.rc: 472
 <- Remove
 <- 제거
 
-#
+# osd/winui/treeview.c: 579, 599, 1160
 <unknown>
 <미확인>
 
-#
+# osd/winui/mui_util.c: 288
 A sharing violation occurred.
 공유 위반이 발생했습니다.
 
-#
+# osd/winui/mameui.rc: 215
 A&udit
 검사(&U)
 
-#
+# osd/winui/properties.c: 1016 osd/winui/treeview.c: 1427
 AD Stick
 AD 스틱
 
-#
+# osd/winui/mameui.rc: 496
 ADStick device
 AD스틱 장치
 
-#
+# osd/winui/winui.c: 723
 About
 MAME32 정보
 
-#
-About MAME Plus!
-MAME Plus! 정보
-
-#
+# osd/winui/mameui.rc: 471
 Add ->
 추가 ->
 
-#
+# osd/winui/mameui.rc: 1151
 Add Game To Custom Folder
 사용자 폴더에 게임 추가
 
-#
+# osd/winui/mameui.rc: 1632
 Add selected item to custom folder
 사용자 폴더에 선택 항목 추가
 
-#
+# osd/winui/mameui.rc: 389
 Additional MAMEUI code by
 추가 MAMEUI 코드 제작 :
 
-#
+# osd/winui/mameui.rc: 748
 Advanced
 고급
 
-#
+# osd/winui/dialogs.c: 243
 All
 전체
 
-#
+# osd/winui/layout.c: 53
 All Arcades
 전체 아케이드
 
-#
+# osd/winui/winui.c: 822, 829, 836, 843, 850, 857, 864, 872, 879
 All files (*.*)
 모든 파일 (*.*)
 
-#
+# osd/winui/properties.c: 445
 All screens
 모든 스크린
 
-#
+# osd/winui/mameui.rc: 1094
 Allow game selection by a &joystick (requires restart)
 조이스틱으로 게임 선택 허용 (재시작 필요)
 
-#
+# osd/winui/mameui.rc: 1097
 Allow game selection by custom &key sequences
 사용자 키 설정값으로 게임선택 허용
 
-#
+# osd/winui/mameui.rc: 1562
 Allow restoring options to 'sane' values.
 옵션값 복구 허용
 
-#
+# osd/winui/mameui.rc: 1523, 1632
 Allows filtering out games from a folder
 폴더에서 게임을 필터링하여 목록에 표시되지 않게합니다.
 
-#
+# osd/winui/properties.c: 3863
 Anti-clockwise
 반시계 방향
 
-#
+# osd/winui/mameui.rc: 107
 Arrange &Icons
 아이콘 정렬(&I)
 
-#
+# osd/winui/mameui.rc: 1523, 1652
 Arranges icons in a grid
 아이콘을 격자에 맞춤
 
-#
+# osd/winui/layout.c: 126
 Artwork
 아트워크
 
-#
+# osd/winui/mameui.rc: 921
 Artwork options
 아트워크 옵션
 
-#
+# osd/winui/mameui.rc: 561
 Aspect ratio:
 화면비율:
 
-#
+# osd/winui/mameui.rc: 736
 Audio latency
 오디오 레이턴시
 
-#
+# osd/winui/mameui.rc: 636
 Audit
 검사
 
-#
+# osd/winui/mameui.rc: 1562
 Audit ROM and samples sets
 롬과 샘플세트를 검사
 
-#
+# osd/winui/mui_audit.c: 491
 Audit complete.\n
 검사 완료.\n
 
-#
+# osd/winui/mameui.rc: 1581
 Audit items in this folder
 현재 폴더의 항목 확인
 
-#
+# osd/winui/mameui.rc: 1632
 Audit the selected item
 선택 항목 확인
 
-#
+# osd/winui/properties.c: 459, 488, 541, 3238, 3244
 Auto
 자동
 
-#
+# osd/winui/properties.c: 3866
 Auto anti-clockwise
 자동 반시계방향
 
-#
+# osd/winui/properties.c: 3865
 Auto clockwise
 자동 시계방향
 
-#
+# osd/winui/mameui.rc: 910
 Auto pause when playback is finished
 재생이 끝나면 자동으로 일시정지
 
-#
+# osd/winui/mameui.rc: 670
 Auto refresh speed
 자동 리프레시 속도
 
-#
+# osd/winui/mameui.rc: 901
 Auto restore and save (only if available)
 자동 복구/저장 (가능한 경우에만)
 
-#
+# osd/winui/mameui.rc: 562, 583, 684
 Automatic
 자동
 
-#
+# osd/winui/layout.c: 54
 Available Arcades
 보유 아케이드
 
-#
+# osd/winui/mameui.rc: 466
 Available fields:
 사용가능한 필드:
 
-#
+# osd/winui/layout.c: 69, 95 osd/winui/mameui.rc: 938, 1195
 BIOS
 바이오스
 
-#
+# osd/winui/properties.c: 1135
 BIOS missing
 바이오스 없음
 
-#
+# osd/winui/mameui.rc: 922
 Backdrops
 배경
 
-#
+# osd/winui/layout.c: 138
 Background Images
 배경 이미지
 
-#
+# osd/winui/treeview.c: 1081
 Bad Dump
 잘못된 덤프
 
-#
+# osd/winui/mameui.rc: 130
 Basic
 기본값
 
-#
+# osd/winui/mameui.rc: 972
 Beam width
 빔 너비
 
-#
+# osd/winui/mui_audit.c: 540
 Best available
 최적롬 사용가능
 
-#
+# osd/winui/mameui.rc: 924
 Bezels
 베젤
 
-#
+# osd/winui/mameui.rc: 760
 Bilinear filtering
 바이리니어 필터링
 
-#
+# osd/winui/mameui.rc: 1124
 Bookkeeping
 북마크
 
-#
+# osd/winui/mameui.rc: 696
 Brightness Correction
 밝기 수정
 
-#
+# osd/winui/mameui.rc: 456
 Browse...
 찾기...
 
-#
+# osd/winui/paletteedit.c: 118
 Button (10)
 버튼 (10)
 
-#
+# osd/winui/paletteedit.c: 116
 Button (8)
 버튼 (8)
 
-#
+# osd/winui/paletteedit.c: 117
 Button (9)
 버튼 (9)
 
-#
+# osd/winui/paletteedit.c: 109
 Button (A or 1)
 버튼 (A 또는 1)
 
-#
+# osd/winui/paletteedit.c: 110
 Button (B or 2)
 버튼 (B 또는 2)
 
-#
+# osd/winui/paletteedit.c: 111
 Button (C or 3)
 버튼 (C 또는 3)
 
-#
+# osd/winui/paletteedit.c: 112
 Button (D or 4)
 버튼 (D 또는 4)
 
-#
+# osd/winui/paletteedit.c: 113
 Button (K or 5)
 버튼 (K 또는 5)
 
-#
+# osd/winui/paletteedit.c: 114
 Button (P or 6)
 버튼 (P 또는 6)
 
-#
+# osd/winui/paletteedit.c: 115
 Button (S or 7)
 버튼 (S 또는 7)
 
-#
+# osd/winui/treeview.c: 1441
 Button 1
 버튼 1
 
-#
+# osd/winui/treeview.c: 1450
 Buttons 10
 버튼 10
 
-#
+# osd/winui/treeview.c: 1442
 Buttons 2
 버튼 2
 
-#
+# osd/winui/treeview.c: 1443
 Buttons 3
 버튼 3
 
-#
+# osd/winui/treeview.c: 1444
 Buttons 4
 버튼 4
 
-#
+# osd/winui/treeview.c: 1445
 Buttons 5
 버튼 5
 
-#
+# osd/winui/treeview.c: 1446
 Buttons 6
 버튼 6
 
-#
+# osd/winui/treeview.c: 1447
 Buttons 7
 버튼 7
 
-#
+# osd/winui/treeview.c: 1448
 Buttons 8
 버튼 8
 
-#
+# osd/winui/treeview.c: 1449
 Buttons 9
 버튼 9
 
-#
+# osd/winui/mameui.rc: 1024
 C&lones
 클론(&l)
 
-#
+# osd/winui/layout.c: 71
 CPU
 CPU
 
-#
+# osd/winui/dialogs.c: 233 osd/winui/mui_opts.c: 482
 Cabinet
 캐비넷
 
-#
+# osd/winui/layout.c: 129
 Cabinets
 캐비넷
 
-#
+# osd/winui/mameui.rc: 455, 481, 1161
 Cancel
 취소
 
-#
+# osd/winui/columnedit.c: 51
 Cannot Move Selected Item
 선택된 항목을 옮길수 없음
 
-#
+# osd/winui/mameui.rc: 1063
 Categories
 분류
 
-#
+# osd/winui/columnedit.c: 258
 Changing this item is not permitted
 이 항목을 바꿀 수 없음
 
-#
+# osd/winui/mui_audit.c: 280, 290
 Checking Game %s - %s
 게임 검사 %s - %s
 
-#
+# osd/winui/mameui.rc: 644, 646
 Checking...
 검사중...
 
-#
+# osd/winui/mameui.rc: 387
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 및 MAMEUI 팀
 
-#
+# osd/winui/properties.c: 3862
 Clockwise
 시계방향
 
-#
+# osd/winui/winui.c: 931
 Clone Of
 부모롬 이름
 
-#
+# osd/winui/mameui.rc: 630
 Clone of:
 부모롬 이름 :
 
-#
+# osd/winui/layout.c: 78
 Clones
 클론
 
-#
+# osd/winui/properties.c: 462, 491
 Cocktail
 칵테일
 
-#
+# osd/winui/mameui.rc: 905
 Coin lockout
 코인 차단
 
-#
+# osd/winui/properties.c: 1103
 Colors are completely wrong
 색상이 완전히 잘못 출력됩니다
 
-#
+# osd/winui/properties.c: 1108
 Colors aren't 100% accurate
 색상이 100% 정확하지 않습니다
 
-#
+# osd/winui/mameui.rc: 623
 Colors:
 색상:
 
-#
+# osd/winui/layout.c: 139
 Comment Files
 코멘트 파일
 
-#
+# osd/winui/layout.c: 121
 Config
 설정
 
-#
+# osd/winui/mameui.rc: 555
 Configure for:
 설정 화면 선택:
 
-#
+# osd/winui/mameui.rc: 952 osd/winui/mui_opts.c: 441
 Console
 콘솔
 
-#
+# osd/winui/layout.c: 55
 Consoles
 콘솔
 
-#
+# osd/winui/mameui.rc: 1508
 Contains commands for displaying help
 도움말을 보여주기 위한 명령을 포함합니다.
 
-#
+# osd/winui/mameui.rc: 1523
 Contains commands for sorting by various columns
 다양한 방법으로 열을 정렬하기 위한 명령을 포함합니다.
 
-#
+# osd/winui/mameui.rc: 1501
 Contains commands for user interface options
 사용자 인터페이스 조절을 위한 명령을 포함합니다.
 
-#
+# osd/winui/mameui.rc: 1501
 Contains commands for working with the selected items
 선택된 항목으로 할수있는 명령을 포함합니다.
 
-#
+# osd/winui/mameui.rc: 700
 Contrast Correction
 대비 수정
 
-#
+# osd/winui/mameui.rc: 92, 266, 280
 Control &Panel
 조종장치(&P)
 
-#
+# osd/winui/dialogs.c: 239 osd/winui/mui_opts.c: 485
 Control Panel
 조종장치
 
-#
+# osd/winui/layout.c: 132
 Control Panels
 조종장치
 
-#
+# osd/winui/layout.c: 88
 Control Type
 조종장치 종류
 
-#
+# osd/winui/mameui.rc: 620
 Control Type:
 조종장치 종류:
 
-#
+# osd/winui/layout.c: 135
 Controller Files
 콘트롤러 파일
 
-#
+# osd/winui/mameui.rc: 518
 Controller ID layout
 콘트롤러 ID 레이아웃
 
-#
+# osd/winui/mameui.rc: 486
 Controller Mapping
 콘트롤러 설정
 
-#
+# osd/winui/mameui.rc: 838
 Controllers
 콘트롤러
 
-#
+# osd/winui/mameui.rc: 418, 428
 Correct:
 정상:
 
-#
+# osd/winui/winui.c: 6551
 Could not open '%s' as a valid input file.
 리플레이 파일 '%s' 를 열 수 없음
 
-#
+# osd/winui/winui.c: 6617, 6689
 Could not open '%s' as a valid savestate file.
 상태저장 파일 '%s'를 열 수 없음
 
-#
+# osd/winui/mameui.rc: 928
 Crop artwork
 아트워크 잘라내기
 
-#
+# osd/winui/paletteedit.c: 119
 Cursor
 커서
 
-#
+# osd/winui/winui.c: 4734, 4762
 Custom
 사용자 설정
 
-#
+# osd/winui/mameui.rc: 1090
 Custom Options
 사용자 설정
 
-#
+# osd/winui/dialogs.c: 133
 Custom folder filters\n
 사용자 폴더 필터\n
 
-#
+# osd/winui/mameui.rc: 140, 230
 Customi&ze Fields...
 사용자 지정 필드(&Z)...
 
-#
+# osd/winui/mameui.rc: 463
 Customize Fields
 사용자 지정 필드
 
-#
+# osd/winui/mameui.rc: 1562
 Customize interface options.
 인터페이스 설정을 지정
 
-#
+# osd/winui/mameui.rc: 1536, 1632
 Customize which columns are used in the game list
 게임목록에서 사용될 열을 지정
 
-#
+# osd/winui/mameui.rc: 949
 Decrypted
 암호화
 
-#
+# osd/winui/properties.c: 3861
 Default
 기본값
 
-#
+# osd/winui/properties.c: 685
 Default Game
 기본 게임
 
-#
+# osd/winui/mameui.rc: 148
 Default Game &Options...
 기본 게임 설정(&O)...
 
-#
+# osd/winui/properties.c: 793
 Default Settings
 기본 설정
 
-#
+# osd/winui/mameui.rc: 871
 Default input layout
 기본 입력 장치
 
-#
+# osd/winui/mameui.rc: 458
 Delete
 삭제
 
-#
+# osd/winui/winui.c: 921
 Description
 설명
 
-#
+# osd/winui/mameui.rc: 434, 647 osd/winui/mui_opts.c: 470 osd/winui/winui.c: 721
 Details
 자세히
 
-#
+# osd/winui/properties.c: 1018 osd/winui/treeview.c: 1429
 Dial
 다이얼
 
-#
+# osd/winui/mameui.rc: 502
 Dial device
 다이얼 장치
 
-#
+# osd/winui/properties.c: 423
 Direct3D
 Direct3D
 
-#
+# osd/winui/mameui.rc: 443 
 Directories
 디렉토리
 
-#
+# osd/winui/mameui.rc: 449
 Directories:
 디렉토리:
 
-#
+# osd/winui/directories.c: 598
 Directory does not exist, continue anyway?
 디렉토리가 존재하지 않습니다. 계속할까요?
 
-#
+# osd/winui/directories.c: 735
 Directory name:
 디렉토리 명:
 
-#
+# osd/winui/mameui.rc: 128
 Disabled
 사용안함
 
-#
+# osd/winui/mameui.rc: 655
 Display
 디스플레이
 
-#
+# osd/winui/mameui.rc: 1581
 Display folder properties
 폴더 속성 표시
 
-#
+# osd/winui/mameui.rc: 1562
 Display help contents
 도움말을 출력합니다
 
-#
+# osd/winui/mameui.rc: 1523, 1542
 Display items by using large icons.
 큰 아이콘으로 보여줍니다
 
-#
+# osd/winui/mameui.rc: 1523, 1542
 Display items by using small icons.
 작은 아이콘으로 보여줍니다.
 
-#
+# osd/winui/mameui.rc: 1620
 Display properties for all games in this bios
 현재 바이오스를 사용하는 게임의 속성 표시
 
-#
+# osd/winui/mameui.rc: 1620
 Display properties for all games in this driver
 현재 드라이버를 사용한 게임의 속성 표시
 
-#
+# osd/winui/mameui.rc: 1110
 Display splash screen on start
 시작시 스플래시 화면 보임
 
-#
+# osd/winui/mameui.rc: 1632
 Display the properties of the selected item
 선택 항목 속성 표시
 
-#
+# osd/winui/mameui.rc: 1523, 1542
 Displays detailed information about each item in the window.
 각 항목들의 세부 정보를 보여줍니다.
 
-#
+# osd/winui/mameui.rc: 1523
 Displays items grouped by parent game
 부모 게임으로 묶은 항목 표시
 
-#
+# osd/winui/mameui.rc: 1523, 1542
 Displays items in a list.
 간단한 목록으로 보여줍니다.
 
-#
+# osd/winui/mameui.rc: 1542
 Displays program and copyright information
 프로그램과 저작권 정보를 보여줍니다.
 
-#
+# osd/winui/treeview.c: 1425
 Double Joy 16-Way
 16방향 2 조이스틱
 
-#
+# osd/winui/treeview.c: 1422
 Double Joy 2-Way
 2방향 2 조이스틱
 
-#
+# osd/winui/treeview.c: 1426
 Double Joy 2-Way (V)
 2방향 2 조이스틱 (V)
 
-#
+# osd/winui/treeview.c: 1423
 Double Joy 4-Way
 4방향 2 조이스틱
 
-#
+# osd/winui/treeview.c: 1424
 Double Joy 8-Way
 8방향 2 조이스틱
 
-#
+# osd/winui/properties.c: 1014
 Double Joystick 16-Way
 16방향 2 조이스틱
 
-#
+# osd/winui/properties.c: 1011
 Double Joystick 2-Way
 2방향 2 조이스틱
 
-#
+# osd/winui/properties.c: 1015
 Double Joystick 2-Way Vertical
 수직 2방향 2 조이스틱
 
-#
+# osd/winui/properties.c: 1012
 Double Joystick 4-Way
 4방향 2 조이스틱
 
-#
+# osd/winui/properties.c: 1013
 Double Joystick 8-Way
 8방향 2 조이스틱
 
-#
+# osd/winui/mameui.rc: 970
 Draw antialiased vectors
 안티앨리어싱된 벡터 사용
 
-#
+# osd/winui/properties.c: 3829
 Draw every frame
 모든 프레임 표시
 
-#
+# osd/winui/layout.c: 67 osd/winui/winui.c: 932, 7303
 Driver
 드라이버
 
-#
-Driver options
-드라이버 옵션
-
-#
+# osd/winui/mameui.rc: 628
 Driver:
 드라이버:
 
-#
+# osd/winui/mameui.rc: 861
 Dual lightgun
 듀얼 라이트건
 
-#
+# osd/winui/layout.c: 74
 Dumping Status
 덤프 상태
 
-#
+# osd/winui/mameui.rc: 73
 E&xit
 종료(&X)
 
-#
+# osd/winui/mameui.rc: 895
 Enable game cheats
 게임 치트 사용
 
-#
-Enable game debugger
-게임 디버거 사용
-
-#
+# osd/winui/mameui.rc: 845
 Enable joystick input
 조이스틱 사용
 
-#
+# osd/winui/mameui.rc: 857
 Enable lightgun input
 라이트건 사용
 
-#
+# osd/winui/mameui.rc: 848
 Enable mouse input
 마우스 사용
 
-#
+# osd/winui/mameui.rc: 903
 Enable multi-threading
 멀티스래딩 사용
 
-#
+# osd/winui/mameui.rc: 852
 Enable multiple keyboards
 다중 키보드 사용
 
-#
+# osd/winui/mameui.rc: 850
 Enable multiple mice
 다중 마우스 사용
 
-#
+# osd/winui/mameui.rc: 719
 Enable sound and sound CPUs
 사운드와 사운드 CPU 를 사용
 
-#
+# osd/winui/mameui.rc: 854
 Enable steadykey support
 고정키 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the PCB tab
 PCB 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the cabinet tab
 캐비넷 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the control panel tab
 콘트롤 패널 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the flyer tab
 포스터 이미지 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the history tab
 역사 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the marquee tab
 간판 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the snapshot tab
 스냅샷 탭 사용
 
-#
+# osd/winui/mameui.rc: 1612
 Enable the story tab
 줄거리 탭 사용
 
-#
+# osd/winui/mameui.rc: 1602
 Enable the title tab
 타이틀 탭 사용
 
-#
+# osd/winui/mameui.rc: 666
 Enforce aspect ratio
 강제 화면비율유지
 
-#
+# osd/winui/mui_audit.c: 103 osd/winui/properties.c: 704, 827, 1692
 Error
 오류
 
-#
+# osd/winui/treeview.c: 2712
 Error finding custom file name to save
 저장할 파일을 찾지 못함
 
-#
-Error log (for developers)
-오류 기록 (개발자용)
-
-#
+# osd/winui/winui.c: 7700
 Error searching for custom folder
 사용자 지정 폴더의 검색오류
 
-#
+# osd/winui/treeview.c: 2640
 Error while renaming custom file %s to %s
 사용자 파일 이름을 %s 에서 %s로 변경 실패
 
-#
+# osd/winui/treeview.c: 2785
 Error while saving custom file %s
 사용자 파일 %s 저장 실패
 
-#
+# osd/winui/mameui.rc: 1542
 Exit the application
 응용프로그램 종료
 
-#
+# osd/winui/layout.c: 141
 External Folder List
 외부 폴더 목록
 
-#
+# osd/winui/layout.c: 86
 FPS
 FPS
 
-#
+# osd/winui/mui_audit.c: 548
 Failed
 실패
 
-#
+# osd/winui/mameui.rc: 411 osd/winui/mui_audit.c: 297
 File Audit
 파일 검사
 
-#
+# osd/winui/dialogs.c: 475
 Filters for %s Folder
 %s 폴더의 필터
 
-#
+# osd/winui/properties.c: 446
 First screen
 첫번째 스크린
 
-#
+# osd/winui/mameui.rc: 976
 Flicker
 깜빡임
 
-#
+# osd/winui/mameui.rc: 681
 Flip screen left-right
 좌우 화면반전
 
-#
+# osd/winui/mameui.rc: 679
 Flip screen upside-down
 상하 화면반전
 
-#
+# osd/winui/dialogs.c: 231 osd/winui/mui_opts.c: 481
 Flyer
 포스터
 
-#
+# osd/winui/layout.c: 128
 Flyers
 포스터
 
-#
+# osd/winui/mameui.rc: 79
 Fold&er List\tAlt+D
 탐색 창(&E)\tAlt+D
 
-#
+# osd/winui/paletteedit.c: 105
 Font (blank)
 글꼴 (빈칸)
 
-#
+# osd/winui/paletteedit.c: 106
 Font (normal)
 글꼴 (기본)
 
-#
+# osd/winui/paletteedit.c: 107
 Font (special)
 글꼴 (전용)
 
-#
+# osd/winui/layout.c: 140
 Font Files
 폰트 파일
 
-#
+# osd/winui/properties.c: 449
 Fourth screen
 네번째 스크린
 
-#
+# osd/winui/mameui.rc: 683
 Frame skipping
 프레임스킵
 
-#
+# osd/winui/mameui.rc: 768
 Full screen brightness
 전체 화면 밝기
 
-#
+# osd/winui/mameui.rc: 772
 Full screen contrast
 전체 화면 대비
 
-#
+# osd/winui/mameui.rc: 764
 Full screen gamma
 전체 화면 감마
 
-#
+# osd/winui/mameui.rc: 1017
 Game Filters
 게임 필터
 
-#
+# osd/winui/mameui.rc: 145
 Game List &Clone Color...
 게임목록 클론롬 색상(&C)...
 
-#
+# osd/winui/mameui.rc: 144
 Game List &Font...
 게임목록 글꼴, 색상(&F)...
 
-#
+# osd/winui/winui.c: 894
 Game List Files (*.lst)
 게임 목록 파일 (*.lst)
 
-#
+# osd/winui/mameui.rc: 1020
 Game filters
 게임 필터
 
-#
+# osd/winui/mameui.rc: 1047
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 선택한 항목의 게임을 필터링하여 목록에 표시하지 않습니다.
 
-#
+# osd/winui/properties.c: 1118
 Game lacks sound
 사운드를 지원하지 못함
 
-#
+# osd/winui/properties.c: 1098
 Game protection isn't fully emulated
 게임 암호화가가 완전히 에뮬레이트되지 않음
 
-#
+# osd/winui/winui.c: 3554
 Game search %d%% complete
 게임 찾기 %d%% 완료
 
-#
+# osd/winui/dialogs.c: 253
 Gamename
 게임이름
 
-#
+# osd/winui/dialogs.c: 255
 Gamename + Increment
 게임이름 + 증가
 
-#
+# osd/winui/dialogs.c: 257
 Gamename/Gamename
 게임이름/게임이름
 
-#
+# osd/winui/dialogs.c: 259
 Gamename/Gamename + Increment
 게임이름/게임이름 + 증가
 
-#
+# osd/winui/dialogs.c: 261
 Gamename/Increment
 게임이름/증가
 
-#
+# osd/winui/mameui.rc: 672
 Gameplay speed
 게임실행 속도
 
-#
+# osd/winui/mameui.rc: 692
 Gamma Correction
 감마 수정
 
-#
+# osd/winui/mameui.rc: 597
 General
 일반
 
-#
-Global BIOS driver options\nCustom options used by all games in the %s
-전체 BIOS 드라이버 옵션\n%s 내의 모든 게임에 사용할 사용자 옵션
-
-#
+# osd/winui/properties.c: 1169
 Global driver options\nCustom options used by all games in the %s
 전체 드라이버 설정\n%s에 포함된 모든 게임에 사용될 사용자 설정
 
-#
+# osd/winui/dialogs.c: 129
 Global game options\n
 전체 게임 옵션\n
 
-#
+# osd/winui/properties.c: 1160
 Global game options\nDefault options used by all games
 전체 게임 설정\n모든 게임에 기본으로 사용될 설정
 
-#
+# osd/winui/properties.c: 1163
 Global vector options\nCustom options used by all games in the Vector
 전체 벡터 설정\n모든 벡터게임에 사용될 사용자 설정
 
-#
+# osd/winui/mameui.rc: 403
 Go to Microsoft's DirectX Web Page
 마이크로 소프트 DirectX 페이지 가기
 
-#
+# osd/winui/mameui.rc: 131
 Gray
 회색
 
-#
+# osd/winui/mui_opts.c: 331, 471 osd/winui/winui.c: 722
 Grouped
 그룹화
 
-#
+# osd/winui/layout.c: 136
 Hard Drive Difference
 하드 드라이브 게임실행 임시파일
 
-#
+# osd/winui/mameui.rc: 762
 Hardware stretching
 하드웨어 늘리기
 
-#
+# osd/winui/winui.c: 724
 Help
 도움말
 
-#
+# osd/winui/mameui.rc: 1103
 Hide &mouse cursor (requires restart)
 마우스 커서 숨기기 (재시작 필요)
 
-#
+# osd/winui/layout.c: 146
 High Scores
 고득점
 
-#
+# osd/winui/mui_opts.c: 488, 491
 History
 역사
 
-#
+# osd/winui/mameui.rc: 947
 Homebrew
 홈브류
 
-#
+# osd/winui/layout.c: 62 osd/winui/treeview.c: 1180 osd/winui/winui.c: 5710
 Horizontal
 가로화면
 
-#
+# osd/winui/mameui.rc: 1562
 How cheats work
 치트 동작법
 
-#
+# osd/winui/mui_opts.c: 339
 INTERFACE OPTIONS
 인터페이스 옵션
 
-#
+# osd/winui/layout.c: 143
 IPS Files
 IPS 파일
 
-#
+# osd/winui/layout.c: 137
 Icons
 아이콘
 
-#
+# osd/winui/mameui.rc: 795
 Image Enhancement
 이미지 개선
 
-#
-Image Files (*.png,*.bmp)
-이미지 파일 (*.png,*.bmp)
-
-#
+# osd/winui/layout.c: 73
 Imperfect
 불완전
 
-#
+# osd/winui/treeview.c: 1033
 Imperfect Colors
 불완전한 색상
 
-#
+# osd/winui/treeview.c: 1034
 Imperfect Graphics
 불완전한 그래픽
 
-#
+# osd/winui/treeview.c: 1036
 Imperfect Sound
 불완전한 사운드
 
-#
+# osd/winui/mameui.rc: 420, 429
 Incorrect:
 불량:
 
-#
+# osd/winui/dialogs.c: 131
 Individual game options\n
 개별 게임 옵션\n
 
-#
+# osd/winui/mameui.rc: 1105
 Inheritable Filters
 상속가능한 필터
 
-#
+# osd/winui/layout.c: 120
 Ini Files
 Ini 파일
 
-#
+# osd/winui/layout.c: 123
 Input Files (*.inp)
 입력 파일 (*.inp)
 
-#
+# osd/winui/mameui.rc: 457
 Insert
 추가
 
-#
+# osd/winui/mameui.rc: 1087
 Interface Options
 인터페이스 옵션
 
-#
+# osd/winui/mameui.rc: 392
 John Hardy IV and Michael Soderstrom
 John Hardy IV 와 Michael Soderstrom
 
-#
+# osd/winui/treeview.c: 1420
 Joy 16-Way
 16방향 조이스틱
 
-#
+# osd/winui/treeview.c: 1417
 Joy 2-Way
 2방향 조이스틱
 
-#
+# osd/winui/treeview.c: 1421
 Joy 2-Way (V)
 2방향 조이스틱 (V)
 
-#
+# osd/winui/treeview.c: 1418
 Joy 4-Way
 4방향 조이스틱
 
-#
+# osd/winui/treeview.c: 1419
 Joy 8-Way
 8방향 조이스틱
 
-#
+# osd/winui/properties.c: 475
 Joystick
 조이스틱
 
-#
+# osd/winui/properties.c: 1009
 Joystick 16-Way
 16방향 조이스틱
 
-#
+# osd/winui/properties.c: 1006
 Joystick 2-Way
 2방향 조이스틱
 
-#
+# osd/winui/properties.c: 1010
 Joystick 2-Way Vertical
 수직 2방향 조이스틱
 
-#
+# osd/winui/properties.c: 1007
 Joystick 4-Way
 4방향 조이스틱
 
-#
+# osd/winui/properties.c: 1008
 Joystick 8-Way
 8방향 조이스틱
 
-#
+# osd/winui/mameui.rc: 863
 Joystick deadzone
 조이스틱 데드존
 
-#
+# osd/winui/mameui.rc: 867
 Joystick saturation
 조이스틱 감도
 
-#
+# osd/winui/properties.c: 473
 Keyboard
 키보드
 
-#
+# osd/winui/mameui.rc: 101
 L&arge Icons
 큰 아이콘(&A)
 
-#
+# osd/winui/mui_opts.c: 467 osd/winui/winui.c: 718
 Large Icons
 큰 아이콘
 
-#
+# osd/winui/layout.c: 83 osd/winui/properties.c: 476, 1020 osd/winui/treeview.c: 1431
 Lightgun
 라이트건
 
-#
+# osd/winui/mameui.rc: 508
 Lightgun device
 라이트건 장치
 
-#
+# osd/winui/mameui.rc: 123
 Line &Up Icons
 아이콘 줄맞춤(&U)
 
-#
+# osd/winui/mui_opts.c: 469 osd/winui/winui.c: 720
 List
 간단히
 
-#
+# osd/winui/mameui.rc: 61
 Loa&d Savestate...
 상태저장 파일 불러오기(&D)...
 
-#
+# osd/winui/mameui.rc: 1536
 Localize GUI and MAME core.
 GUI 와 MAME 코어를 지역화함.
 
-#
+# osd/winui/layout.c: 152
 Localized Files
 언어 파일
 
-#
+# osd/winui/mameui.rc: 935
 M68000 CPU Core
 M68000 CPU 코어
 
-#
-MAME input files (*.inp,*.zip)
-MAME 입력 파일 (*.inp,*.zip)
-
-#
+# osd/winui/mameui.rc: 1562
 MAME release notes
 MAME 발표 일지
 
-#
+# osd/winui/winui.c: 829
 MAME savestate files (*.sta)
 MAMEW 상태저장 파일 (*.sta)
 
-#
+# osd/winui/mui_opts.c: 334 osd/winui/translate.c: 103
 MS Sans Serif
 굴림
 
-#
+# osd/winui/mameui.rc: 604
 Manufactured:
 제작사:
 
-#
+# osd/winui/layout.c: 65 osd/winui/winui.c: 929
 Manufacturer
 제작사
 
-#
+# osd/winui/dialogs.c: 235 osd/winui/mui_opts.c: 483
 Marquee
 간판
 
-#
+# osd/winui/layout.c: 130
 Marquees
 간판
 
-#
+# osd/winui/layout.c: 127
 Memory Card
 메모리 카드
 
-#
+# osd/winui/mameui.rc: 888
 Miscellaneous
 기타
 
-#
+# osd/winui/treeview.c: 1035
 Missing Sound
 사운드 없음
 
-#
+# osd/winui/properties.c: 474
 Mouse
 마우스
 
-#
+# osd/winui/mameui.rc: 514
 Mouse device
 마우스 장치
 
-#
+# osd/winui/mameui.rc: 479
 Move Down
 아래로
 
-#
+# osd/winui/columnedit.c: 51
 Move Item
 항목 이동
 
-#
+# osd/winui/mameui.rc: 478
 Move Up
 위로
 
-#
+# osd/winui/layout.c: 134
 NVRAM
 NVRAM
 
-#
+# osd/winui/winui.c: 925
 Name
 이름
 
-#
+# osd/winui/mameui.rc: 1562
 New game changes
 새로 추가된 게임과 변경된 게임들의 정보
 
-#
+# osd/winui/mui_audit.c: 124 osd/winui/winui.c: 5756
 No
 아니오
 
-#
+# osd/winui/treeview.c: 1037
 No Cocktail
 칵테일 없음
 
-#
+# osd/winui/treeview.c: 1083
 No Dump
 덤프되지 않음
 
-#
+# osd/winui/dialogs.c: 993
 No PCB Info available for this game.
 현재 게임에 대한 PCB 정보가 없습니다.
 
-#
+# osd/winui/winui.c: 3941
 No Selection
 선택되지 않음
 
-#
+# osd/winui/mameui.rc: 1107
 No offset for clones missing parent in view
 부족한 부모롬에 대한 오프셋 표시안함
 
-#
+# osd/winui/mameui.rc: 1026
 Non-Wor&king
 실행 불가능(&K)
 
-#
+# osd/winui/dialogs.c: 245 osd/winui/properties.c: 420, 472, 3119, 3864, 3945
 None
 없음
 
-#
+# osd/winui/mui_audit.c: 401, 405
 None required
 필요 없음
 
-#
+# osd/winui/layout.c: 76
 Not Working
 실행 불가능
 
-#
+# osd/winui/mui_audit.c: 544
 Not found
 파일 없음
 
-#
+# osd/winui/properties.c: 1087
 Not working
 실행 불가능
 
-#
-Number of screens to create
-출력 화면 갯수
-
-#
+# osd/winui/mameui.rc: 454, 480, 1160
 OK
 확인
 
-#
+# osd/winui/mameui.rc: 133
 Office 2003
 오피스 2003
 
-#
+# osd/winui/mameui.rc: 134
 Office 2007
 오피스 2007
 
-#
+# osd/winui/mameui.rc: 132
 Office XP
 오피스 XP
 
-#
+# osd/winui/mameui.rc: 859
 Offscreen shots reload
 화면 밖에서 재장전
 
-#
+# osd/winui/mameui.rc: 1038
 Ori&ginals
 원본(&G)
 
-#
+# osd/winui/layout.c: 60
 Orientation
 화면형태
 
-#
+# osd/winui/layout.c: 77
 Originals
 원본
 
-#
+# osd/winui/mameui.rc: 926
 Overlays
 오버레이
 
-#
+# osd/winui/mameui.rc: 55
 P&layback Input...
 리플레이 재생(&l)...
 
-#
+# osd/winui/mameui.rc: 94, 268, 281
 PC&B
 PCB(&B)
 
-#
+# osd/winui/mameui.rc: 1246
 PCB Info
 PCB 정보
 
-#
+# osd/winui/layout.c: 149
 PCB Info Files
 PCB 정보 파일
 
-#
+# osd/winui/layout.c: 133
 PCBs
 PCB
 
-#
+# osd/winui/properties.c: 1017 osd/winui/treeview.c: 1428
 Paddle
 핸들
 
-#
+# osd/winui/mameui.rc: 493
 Paddle device
 핸들 장치
 
-#
+# osd/winui/mameui.rc: 1167
 Palette
 팔레트
 
-#
+# osd/winui/mui_audit.c: 536
 Passed
 통과
 
-#
+# osd/winui/mameui.rc: 688
 Pause Brightness
 정지화면 밝기조절
 
-#
+# osd/winui/properties.c: 1021 osd/winui/treeview.c: 1432
 Pedal
 페달
 
-#
+# osd/winui/mameui.rc: 499
 Pedal device
 페달 장치
 
-#
-Per-screen video options
-화면별 비디오 옵션
-
-#
+# osd/winui/mameui.rc: 558
 Physical monitor:
 물리적 모니터:
 
-#
+# osd/winui/properties.c: 461, 490
 Pixel Aspect
 픽셀비율
 
-#
+# osd/winui/winui.c: 933
 Play Time
 플레이 시간
 
-#
+# osd/winui/mameui.rc: 1581
 Play a game starting with the given savestate
 주어진 상태저장 파일로 부터 게임 실행
 
-#
+# osd/winui/mameui.rc: 54, 200
 Play and &Record Input...
 게임 실행후, 입력을 기록(&R)...
 
-#
+# osd/winui/mameui.rc: 58
 Play and Record &MNG Video...
 게임 실행후, MNG 비디오 기록(&M)...
 
-#
+# osd/winui/mameui.rc: 57
 Play and Record &WAV Sound...
 게임 실행후, WAV 사운드 기록(&W)...
 
-#
+# osd/winui/mameui.rc: 59
 Play and Record &uncompressed AVI Output...
 무압축 AVI 출력 재생 및 기록(&U)...
 
-#
+# osd/winui/mameui.rc: 1542
 Play currently selected game
 선택된 게임을 실행
 
-#
+# osd/winui/mameui.rc: 1562
 Playback a recorded game
 입력을 저장한 리플레이 파일을 재생
 
-#
+# osd/winui/winui.c: 928
 Played
 실행
 
-#
+# osd/winui/treeview.c: 1433
 Player 1
 플레이어 1
 
-#
+# osd/winui/treeview.c: 1434
 Players 2
 플레이어 2
 
-#
+# osd/winui/treeview.c: 1435
 Players 3
 플레이어 3
 
-#
+# osd/winui/treeview.c: 1436
 Players 4
 플레이어 4
 
-#
+# osd/winui/treeview.c: 1437
 Players 5
 플레이어 5
 
-#
+# osd/winui/treeview.c: 1438
 Players 6
 플레이어 6
 
-#
+# osd/winui/treeview.c: 1439
 Players 7
 플레이어 7
 
-#
+# osd/winui/treeview.c: 1440
 Players 8
 플레이어 8
 
-#
+# osd/winui/mameui.rc: 511
 Positional device
 위치표시 장치
 
-#
+# osd/winui/mameui.rc: 69, 219
 Pr&operties
 등록정보(&O)
 
-#
+# osd/winui/winui.c: 3971, 7260, 7303
 Propert&ies for %s
 %s 등록정보(&I)
 
-#
+# osd/winui/mameui.rc: 67, 217 osd/winui/winui.c: 3921
 Propert&ies for Driver
 드라이버 등록정보
 
-#
+# osd/winui/winui.c: 3983, 7274
 Properties &for %s BIOS
 %s 바이오스 속성(&F)
 
-#
+# osd/winui/mameui.rc: 68, 218 osd/winui/winui.c: 3928, 3989, 7280, 7316
 Properties &for BIOS
 바이오스 속성(&F)
 
-#
+# osd/winui/properties.c: 703, 826
 Propery Sheet Error %d %X
 등록정보 시트 오류 %d %X
 
-#
+# osd/winui/mameui.rc: 907
 Quit game with confirmation
 종료시 확인
 
-#
+# osd/winui/mameui.rc: 66, 203
 R&emove From This Folder
 이 폴더에서 제거(&E)
 
-#
+# osd/winui/mameui.rc: 1173
 RGB setting:
 RGB 설정:
 
-#
+# osd/winui/mameui.rc: 643
 ROM check:
 롬 검사:
 
-#
+# osd/winui/layout.c: 118 osd/winui/mameui.rc: 419 osd/winui/winui.c: 923
 ROMs
 롬
 
-#
+# osd/winui/properties.c: 1137
 ROMs missing
 롬파일 없음
 
-#
+# osd/winui/mameui.rc: 1632
 Randomly select a game.
 무작위로 게임을 선택함.
 
-#
+# osd/winui/layout.c: 79 osd/winui/winui.c: 5747
 Raster
 래스터
 
-#
+# osd/winui/winui.c: 3686
 Ready
 준비됨
 
-#
+# osd/winui/mameui.rc: 1562
 Record a game for later playback
 자신의 플레이 장면을 다시 보기위해 리플레이 파일 기록
 
-#
+# osd/winui/mameui.rc: 1562
 Record the audio output of a game
 게임 오디오 기록
 
-#
+# osd/winui/mameui.rc: 1562
 Record the complete output of a game
 게임 출력 전체 기록
 
-#
+# osd/winui/mameui.rc: 1562
 Record the video output of a game
 게임 비디오 기록
 
-#
+# osd/winui/mameui.rc: 1523, 1652
 Refresh game list
 게임 목록을 갱신
 
-#
+# osd/winui/mameui.rc: 1632
 Remove selected item from this folder
 현재 폴더에서 선택 항목 삭제
 
-#
+# osd/winui/mameui.rc: 1632
 Rename this folder
 현재 폴더 이름 변경
 
-#
+# osd/winui/mameui.rc: 208
 Rese&t Playcount
 실행 횟수 초기화(&T)
 
-#
+# osd/winui/mameui.rc: 536, 590, 704, 741, 799, 831, 881, 956, 980, 1238
 Reset
 초기화
 
-#
+# osd/winui/mameui.rc: 1060
 Reset Options
 초기화 옵션
 
-#
+# osd/winui/mameui.rc: 209
 Reset Pla&y Time
 실행 시간 초기화(&Y)
 
-#
+# osd/winui/mameui.rc: 1127
 Reset all Play Times
 모든 실행 시간 초기화
 
-#
+# osd/winui/mameui.rc: 1125
 Reset all Playcounts
 모든 실행 횟수 초기화
 
-#
+# osd/winui/mameui.rc: 1581
 Reset number of plays for selected item
 선택 항목의 실행 수 초기화
 
-#
+# osd/winui/mameui.rc: 1581
 Reset time played for selected item
 현재 항목의 실행 시간 초기화
 
-#
+# osd/winui/dialogs.c: 137
 Resetting the User Interface options\n
 사용자 인터페이스 초기화 옵션\n
 
-#
+# osd/winui/layout.c: 85
 Resolution
 해상도
 
-#
+# osd/winui/mameui.rc: 569
 Resolution:
 해상도:
 
-#
+# osd/winui/mameui.rc: 537, 591, 705, 742, 800, 832, 882, 957, 981, 1239
 Restore Default Settings
 기본 설정으로 복원
 
-#
+# osd/winui/dialogs.c: 143
 Restore Settings
 설정 되돌림
 
-#
+# osd/winui/mameui.rc: 676
 Rotation
 회전
 
-#
+# osd/winui/mameui.rc: 662
 Run in a window
 창 모드로 실행
 
-#
+# osd/winui/mameui.rc: 85, 259
 S&how Pictures
 이미지 표시(&H)
 
-#
+# osd/winui/mameui.rc: 102
 S&mall Icons
 작은 아이콘(&M)
 
-#
+# osd/winui/mameui.rc: 1130
 S&tretch screenshot larger than natural size
 스크린샷을 원본보다 크게 늘리기(&T)
 
-#
+# osd/winui/mameui.rc: 645
 Sample check:
 샘플 검사:
 
-#
+# osd/winui/mameui.rc: 728
 Sample rate
 샘플 레이트
 
-#
+# osd/winui/layout.c: 92, 119 osd/winui/mameui.rc: 425 osd/winui/winui.c: 924
 Samples
 샘플
 
-#
+# osd/winui/layout.c: 87, 94
 Save State
 상태 저장
 
-#
+# osd/winui/mameui.rc: 626
 Save State:
 상태 저장:
 
-#
+# osd/winui/mameui.rc: 1557
 Save game list in specified lst file
 게임 목록 을 lst 파일로 저장
 
-#
+# osd/winui/mameui.rc: 788
 Scale screen
 화면 크기 조절
 
-#
+# osd/winui/mameui.rc: 543 osd/winui/winui.c: 922
 Screen
 화면
 
-#
+# osd/winui/winui.c: 3513
 Screen flip support is missing
 화면 뒤집기 지원기능이 없음
 
-#
+# osd/winui/properties.c: 1128
 Screen flipping is not supported
 화면 뒤집기가 지원되지 않음
 
-#
+# osd/winui/mameui.rc: 550
 Screen setting
 화면 설정
 
-#
+# osd/winui/mameui.rc: 617
 Screen:
 화면:
 
-#
+# osd/winui/mameui.rc: 1129
 Screenshot Area
 스크린샷 영역
 
-#
+# osd/winui/mameui.rc: 1137
 Screenshot Bordersize
 스크린샷 테두리
 
-#
+# osd/winui/mameui.rc: 1133
 Screenshot Cycletime in Seconds
 스크린샷 전환간견(초)
 
-#
+# osd/winui/mameui.rc: 81
 Screenshot Ta&b\tAlt+B
 스크린샷 탭(&B)\tAlt+B
 
-#
+# osd/winui/properties.c: 447
 Second screen
 두번째 스크린
 
-#
+# osd/winui/mameui.rc: 1099
 Select &random background image on start
 시작시 무작위로 배경 이미지 선택(&R)
 
-#
+# osd/winui/mameui.rc: 1593
 Select Cabinet tab
 캐비넷 탭 선택
 
-#
+# osd/winui/mameui.rc: 1593
 Select Control panel tab
 콘트롤 패널 탭 선택
 
-#
+# osd/winui/mameui.rc: 1632
 Select Flyer tab
 포스터 탭 선택
 
-#
+# osd/winui/mameui.rc: 1593
 Select History tab
 역사 탭 선택
 
-#
+# osd/winui/columnedit.c: 258
 Select Item
 항목 선택
 
-#
+# osd/winui/mameui.rc: 1593
 Select Marquee tab
 간판 탭 선택
 
-#
+# osd/winui/mameui.rc: 1593
 Select PCB tab
 PCB 탭 선택
 
-#
+# osd/winui/mameui.rc: 1632
 Select Snapshot tab
 스냅샷 탭 선택
 
-#
+# osd/winui/mameui.rc: 1600
 Select Story tab
 줄거리 탭 선택
 
-#
+# osd/winui/mameui.rc: 1593
 Select Title tab
 타이틀 탭 선택
 
-#
+# osd/winui/winui.c: 888
 Select a Background Image
 배경 이미지 선택
 
-#
+# osd/winui/winui.c: 824
 Select a file to record
 기록할 파일 선택
 
-#
-Select a folder to save game list
-게임 목록 저장 폴더 선택
-
-#
+# osd/winui/winui.c: 845
 Select a mng file to record
 기록할 mng 파일 선택
 
-#
+# osd/winui/winui.c: 823
 Select a recorded file
 기록된 파일 선택
 
-#
+# osd/winui/winui.c: 830
 Select a savestate file
 상태저장 파일 선택
 
-#
+# osd/winui/winui.c: 838
 Select a sound file to record
 기록할 사운드 파일 선택
 
-#
+# osd/winui/mameui.rc: 1523
 Select menu style
 메뉴 스타일 선택
 
-#
+# osd/winui/mameui.rc: 1076
 Select the options to be restored to the default settings.
 기본 설정을 복원할 옵션을 선택하십시오.
 
-#
+# osd/winui/mameui.rc: 1120
 Set Game List Not Working Color
 실행 불가 게임 목록 색상 설정
 
-#
+# osd/winui/mameui.rc: 1141
 Set Screenshot Border Color
 스크린샷 테두리 색상 설정
 
-#
+# osd/winui/mameui.rc: 1542
 Set default game options
 기본 게임 옵션 설정
 
-#
+# osd/winui/mameui.rc: 1542
 Set directory configuration
 롬이 있는 디렉토리를 지정
 
-#
+# osd/winui/mameui.rc: 1542
 Set game list and folder list font
 게임 목록과 탐색 창의 글꼴을 지정
 
-#
+# osd/winui/mameui.rc: 1555
 Set in-game UI color palette
 게임중의 UI 컬러 팔레트를 지정
 
-#
+# osd/winui/mameui.rc: 1602
 Set the background image
 배경 이미지 설정
 
-#
+# osd/winui/mameui.rc: 1542
 Set the clone font color
 클론롬 폰트 색 선택
 
-#
+# osd/winui/mameui.rc: 1142
 Show History on Tab
 게임 역사를 탭에 표시
 
-#
+# osd/winui/mameui.rc: 257
 Show Tab &Control
 탭, 콘트롤 표시(&C)
 
-#
+# osd/winui/mameui.rc: 446
 Show directories for:
 디렉토리 표시:
 
-#
+# osd/winui/mameui.rc: 1587
 Show game PCB information
 게임 PCB 정보 보이기
 
-#
+# osd/winui/mameui.rc: 1542
 Show items grouped by parent game
 부모롬으로 정렬된 항목 보이기
 
-#
+# osd/winui/mameui.rc: 1632
 Show or hide folder
 폴더 보이기/숨기기
 
-#
+# osd/winui/mameui.rc: 1508
 Show or hide tabs in the picture area
 이미지 영역에 탭 보이기/숨기기
 
-#
+# osd/winui/mameui.rc: 1508, 1632
 Show or hide the folder list
 탐색 창을 보이거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1562
 Show or hide the picture area
 사진 영역을 표시하거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1508
 Show or hide the screen shot
 스크린샷 보이기/숨기기
 
-#
+# osd/winui/mameui.rc: 1508, 1632
 Show or hide the status bar
 상태줄을 보이거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1632
 Show or hide the tabs in the picture area
 이미지 영역에 탭 보이기/숨기기
 
-#
+# osd/winui/mameui.rc: 1508, 1632
 Show or hide the toolbar
 도구상자를 보이거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1170
 Show palette for:
 팔레트를 보여줌:
 
-#
+# osd/winui/mameui.rc: 473
 Show these fields in this order:
 다음 순서로 필드표시:
 
-#
+# osd/winui/properties.c: 3831
 Skip 1 of 10 frames
 프레임 스킵 1/10
 
-#
+# osd/winui/properties.c: 3849
 Skip 10 of 10 frames
 프레임 스킵 10/10
 
-#
+# osd/winui/properties.c: 3833
 Skip 2 of 10 frames
 프레임 스킵 2/10
 
-#
+# osd/winui/properties.c: 3835
 Skip 3 of 10 frames
 프레임 스킵 3/10
 
-#
+# osd/winui/properties.c: 3837
 Skip 4 of 10 frames
 프레임 스킵 4/10
 
-#
+# osd/winui/properties.c: 3839
 Skip 5 of 10 frames
 프레임 스킵 5/10
 
-#
+# osd/winui/properties.c: 3841
 Skip 6 of 10 frames
 프레임 스킵 6/10
 
-#
+# osd/winui/properties.c: 3843
 Skip 7 of 10 frames
 프레임 스킵 7/10
 
-#
+# osd/winui/properties.c: 3845
 Skip 8 of 10 frames
 프레임 스킵 8/10
 
-#
+# osd/winui/properties.c: 3847
 Skip 9 of 10 frames
 프레임 스킵 9/10
 
-#
+# osd/winui/mameui.rc: 899
 Skip game info
 게임 정보화면 건너뛰기
 
-#
+# osd/winui/mameui.rc: 897
 Sleep when possible
 가능할시 슬립모드 사용
 
-#
+# osd/winui/mui_opts.c: 468 osd/winui/winui.c: 719
 Small Icons
 작은 아이콘
 
-#
+# osd/winui/dialogs.c: 229 osd/winui/mui_opts.c: 480
 Snapshot
 스냅샷
 
-#
-Snapshot Pattern
-스크린샷 패턴
-
-#
+# osd/winui/layout.c: 122
 Snapshots
 스냅샷
 
-#
+# osd/winui/mameui.rc: 227
 Sort &Ascending
 오름차순으로 정렬(&A)
 
-#
+# osd/winui/mameui.rc: 228
 Sort &Descending
 내림차순으로 정렬(&D)
 
-#
+# osd/winui/mameui.rc: 1652
 Sort by number of plays
 실행 횟수로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort column in ascending (A-Z) order
 열을 오름차순(A-Z)으로 정렬합니다.
 
-#
+# osd/winui/mameui.rc: 1652
 Sort column in descending (Z-A) order
 열을 내림차순(Z-A)으로 정렬합니다.
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by clone of
 클론롬으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by driver
 드라이버로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by game description
 게임 설명으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by manufacturer
 제작사로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by name
 이름으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by play time
 실행 시간으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by roms
 롬파일로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by samples
 샘플로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by screen
 화면으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by trackball
 트랙볼로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by type
 유형으로 정렬
 
-#
+# osd/winui/mameui.rc: 1652
 Sort items by year
 제작년도로 정렬
 
-#
+# osd/winui/layout.c: 72 osd/winui/mameui.rc: 711
 Sound
 사운드
 
-#
+# osd/winui/properties.c: 1123
 Sound emulation isn't 100% accurate
 사운드 에뮬레이션이 100% 정확하지 않습니다
 
-#
+# osd/winui/mameui.rc: 613
 Sound:
 사운드:
 
-#
+# osd/winui/winui.c: 836
 Sounds (*.wav)
 사운드 (*.wav)
 
-#
+# osd/winui/mameui.rc: 97, 271, 284
 St&ory
 줄거리(&O)
 
-#
+# osd/winui/properties.c: 460, 489
 Standard
 표준
 
-#
+# osd/winui/mameui.rc: 664
 Start out maximized
 창 크기 최대로 실행
 
-#
+# osd/winui/layout.c: 125
 State
 상태
 
-#
+# osd/winui/mameui.rc: 606
 Status:
 상태:
 
-#
+# osd/winui/layout.c: 90
 Stereo
 스테레오
 
-#
+# osd/winui/mui_opts.c: 489
 Story
 줄거리
 
-#
+# osd/winui/properties.c: 1210 osd/winui/treeview.c: 1380
 Supported
 지원됨
 
-#
+# osd/winui/mameui.rc: 782
 Switch resolutions to fit
 지정 해상도 설정 사용
 
-#
+# osd/winui/mameui.rc: 778
 Sync to monitor refresh
 모니터 주사율 동기화
 
-#
+# osd/winui/mui_util.c: 268
 The operating system is out of memory or resources.
 운영체제의 메모리나 자원이 부족합니다.
 
-#
+# osd/winui/mui_util.c: 272
 The specified file was not found.
 특정 파일을 찾지 못했습니다.
 
-#
+# osd/winui/mui_util.c: 284
 The specified path was not found.
 특정 경로를 찾지 못했습니다.
 
-#
+# osd/winui/mui_util.c: 276
 There is no application associated with the given filename extension.
 주어진 파일 확장자와 연결된 응용프로그램이 없습니다.
 
-#
+# osd/winui/mui_util.c: 280
 There was not enough memory to complete the operation.
 명령을 완료하기위한 메모리가 부족합니다.
 
-#
+# osd/winui/properties.c: 448
 Third screen
 세번째 스크린
 
-#
+# osd/winui/mameui.rc: 930
 Thread priority
 항목 우선순위
 
-#
+# osd/winui/mameui.rc: 668
 Throttle
 감속기능
 
-#
+# osd/winui/dialogs.c: 237 osd/winui/mui_opts.c: 484
 Title
 타이틀
 
-#
+# osd/winui/layout.c: 131
 Titles
 타이틀
 
-#
+# osd/winui/winui.c: 716
 Toggle Folder List
 탐색 창을 보이거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1614
 Toggle Fullscreen mode
 전체화면 모드 전환
 
-#
+# osd/winui/winui.c: 717
 Toggle Screen Shot
 스크린샷을 표시하거나 숨깁니다
 
-#
+# osd/winui/mameui.rc: 1508
 Toggle full screen mode
 전체화면 모드 전환
 
-#
+# osd/winui/mameui.rc: 421, 430
 Total:
 전체:
 
-#
+# osd/winui/layout.c: 82 osd/winui/properties.c: 1019 osd/winui/treeview.c: 1430 osd/winui/winui.c: 927
 Trackball
 트랙볼
 
-#
+# osd/winui/mameui.rc: 505
 Trackball device
 트랙볼 장치
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Catalan
 카탈로니아어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into English (US)
 영어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into French
 프랑스어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into German
 독일어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Hungarian
 헝가리어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Italian
 이탈리아어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Japanese
 일어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Korean
 한국어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Polish
 폴란드어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Portuguese (BRA)
 포르투칼어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Portuguese (PT)
 포르투칼어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Simplified Chinese
 중국어(간체)로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Spanish
 스페인어로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Traditional Chinese
 중국어(번체)로 번역
 
-#
+# osd/winui/mameui.rc: 1673
 Translate into Valencian
 발렌시아어로 번역
 
-#
+# osd/winui/layout.c: 151
 Translation Files
 번역 파일
 
-#
+# osd/winui/mameui.rc: 915
 Transparent in-game UI
 게임 내 UI 투명도
 
-#
+# osd/winui/mameui.rc: 780
 Triple buffering
 삼중 버퍼링
 
-#
+# osd/winui/mameui.rc: 1562
 Troubleshooting Documentation
 문제해결 문서
 
-#
+# osd/winui/winui.c: 926
 Type
 유형
 
-#
+# osd/winui/mui_audit.c: 103
 Unable to Load Riched32.dll
 Riched32.dll 을 불러올 수 없습니다
 
-#
+# osd/winui/treeview.c: 2651
 Unable to add game to non-custom folder
 사용자 지정이 아닌 폴더에는 게임을 추가하지 못합니다
 
-#
+# osd/winui/treeview.c: 2668
 Unable to remove game from non-custom folder
 사용자 지정이 아닌 폴더에서는 게임을 제거하지 못합니다
 
-#
+# osd/winui/layout.c: 57
 Unavailable
 미보유 게임
 
-#
+# osd/winui/treeview.c: 1031
 Unemulated Protection
 암호화 에뮬레이트 못함
 
-#
+# osd/winui/mui_audit.c: 531 osd/winui/properties.c: 1035, 1081 
 Unknown
 미확인
 
-#
+# osd/winui/mui_util.c: 292
 Unknown error.
 알려지지 않은 오류.
 
-#
+# osd/winui/properties.c: 1212 osd/winui/treeview.c: 1382
 Unsupported
 지원안됨
 
-#
+# osd/winui/winui.c: 725
 Use Local Language Game List
 게임 목록에 지역 언어를 사용
 
-#
+# osd/winui/mameui.rc: 1114
 Use TreeView in property pages
 속성 페이지에 TreeView 사용
 
-#
+# osd/winui/mameui.rc: 722
 Use samples
 샘플 사용
 
-#
+# osd/winui/mameui.rc: 1118
 Use various icon for Not Working game
 실행 불가 게임에 다양한 아이콘 사용
 
-#
+# osd/winui/mameui.rc: 725
 Use volume auto adjust
 자동 볼륨 조절 사용
 
-#
+# osd/winui/dialogs.c: 136
 User interface settings\n\n
 사용자 인터페이스 설정\n\n
 
-#
+# osd/winui/layout.c: 80 osd/winui/mameui.rc: 963 osd/winui/treeview.c: 320 osd/winui/winui.c: 5745
 Vector
 벡터
 
-#
+# osd/winui/treeview.c: 1259
 Vector (H)
 벡터 (H)
 
-#
+# osd/winui/properties.c: 958
 Vector (H) %f Hz (%d colors)
 벡터 (H) %f Hz (%d 색상)
 
-#
+# osd/winui/treeview.c: 1257
 Vector (V)
 벡터 (V)
 
-#
+# osd/winui/properties.c: 953
 Vector (V) %f Hz (%d colors)
 벡터 (V) %f Hz (%d 색상)
 
-#
+# osd/winui/properties.c: 434
 Version 8
 버전 8
 
-#
+# osd/winui/properties.c: 433
 Version 9
 버전 9
 
-#
+# osd/winui/layout.c: 63 osd/winui/treeview.c: 1177 osd/winui/winui.c: 5710
 Vertical
 세로화면
 
-#
+# osd/winui/properties.c: 1113
 Video emulation isn't 100% accurate
 비디오 에뮬레이션이 100% 정확하지 않습니다
 
-#
+# osd/winui/mameui.rc: 755
 Video output method
 비디오 출력 방법
 
-#
+# osd/winui/winui.c: 850
 Videos (*.avi)
 비디오 (*.avi)
 
-#
+# osd/winui/winui.c: 843
 Videos (*.mng)
 비디오 (*.mng)
 
-#
+# osd/winui/mameui.rc: 212
 View PC&B Info
 PCB 정보 보기(&B)
 
-#
+# osd/winui/mameui.rc: 576
 View:
 표시:
 
-#
+# osd/winui/mameui.rc: 792
 Visual Effects
 화면 효과
 
-#
+# osd/winui/mameui.rc: 732
 Volume attenuation
 볼륨 감소
 
-#
+# osd/winui/mameui.rc: 776
 Wait for vertical sync
 수직동기화를 기다림
 
-#
+# osd/winui/mameui.rc: 1562
 What's new in MAME
 MAME 새 소식
 
-#
+# osd/winui/paletteedit.c: 108
 Window background
 윈도우 배경화면
 
-#
+# osd/winui/layout.c: 75 osd/winui/properties.c: 1089
 Working
 실행 가능
 
-#
+# osd/winui/treeview.c: 1032
 Wrong Colors
 잘못된 색상
 
-#
+# osd/winui/layout.c: 66 osd/winui/winui.c: 930
 Year
 제작년도
 
-#
+# osd/winui/mui_audit.c: 120 osd/winui/winui.c: 5754
 Yes
 예
 
-#
+# osd/winui/dialogs.c: 142
+\nDo you wish to continue?
+\n계속 하시겠습니까?
+
+# osd/winui/mameui.rc: 118
 by &Clone Of
 부모(&C)
 
-#
+# osd/winui/mameui.rc: 109
 by &Description
 설명(&D)
 
-#
+# osd/winui/mameui.rc: 116
 by &Manufacturer
 제작사(&M)
 
-#
+# osd/winui/mameui.rc: 112
 by &Name
 게임 이름(&N)
 
-#
+# osd/winui/mameui.rc: 115
 by &Played
 실행(&P)
 
-#
+# osd/winui/mameui.rc: 110
 by &Screen
 화면(&S)
 
-#
+# osd/winui/mameui.rc: 113
 by &Type
 게임 유형(&T)
 
-#
+# osd/winui/mameui.rc: 117
 by &Year
 제작년도(&Y)
 
-#
+# osd/winui/mameui.rc: 119
 by Dr&iver
 드라이버(&I)
 
-#
+# osd/winui/mameui.rc: 120
 by P&lay Time
 실행시간(&L)
 
-#
+# osd/winui/mameui.rc: 121
 by R&OMs
 롬(&O)
 
-#
+# osd/winui/mameui.rc: 111
 by S&amples
 샘플(&A)
 
-#
+# osd/winui/mameui.rc: 114
 by T&rackball
 트랙볼(&R)
 
-#
+# osd/winui/dialogs.c: 138
 requires exiting 
 종료해야 합니다
 
-#
+# osd/winui/dialogs.c: 126
 to the default settings:\n\n
 기본 설정으로:\n\n
 
-#
+# osd/winui/winui.h: 24
 type a keyword
 검색어 입력
+
+# osd/winui/mameui.rc: 186
+&History File...
+
+
+# osd/winui/dialogs.c: 140
+.\n
+
+
+# osd/winui/mameui.rc: 375
+About MAMEUI
+
+
+# osd/winui/mameui.rc: 817
+Activate Integrated Debugger
+
+
+# osd/winui/layout.c: 124
+Cheats
+
+
+# osd/winui/mameui.rc: 1501
+Contains commands for manipulating the view
+
+
+# osd/winui/mameui.rc: 1508, 1632
+Contains commands to select tabs shown in the picture area
+
+
+# osd/winui/mameui.rc: 382
+Copyright (C) 1997-2008 The MAME Team
+
+
+# osd/winui/mameui.rc: 806
+Debug
+
+
+# osd/winui/mameui.rc: 824
+Debugscript
+
+
+# osd/winui/winui.c: 7293
+Game
+
+
+# osd/winui/properties.c: 1181
+Global BIOS options\nCustom options used by all games in the %s
+
+
+# osd/winui/winui.c: 887
+Image Files (*.png)
+
+
+# osd/winui/properties.c: 487
+Internal
+
+
+# osd/winui/mameui.rc: 874
+Joystickmap
+
+
+# osd/winui/winui.c: 822
+MAME input files (*.inp, *.zip)
+
+
+# osd/winui/mameui.rc: 384
+MAMEUI version by
+
+
+# osd/winui/mameui.rc: 187
+Mame&info File...
+
+
+# osd/winui/mameui.rc: 551
+Number of screens to create:
+
+
+# osd/winui/mameui.rc: 815
+Output diagnostic information
+
+
+# osd/winui/mameui.rc: 813
+Output log to Logfile
+
+
+# osd/winui/mameui.rc: 819
+Output log to Windows Debugger
+
+
+# osd/winui/dialogs.c: 241 osd/winui/mui_opts.c: 486
+PCB
+
+
+# osd/winui/mameui.rc: 829
+Reset Debugscript
+
+
+# osd/winui/mameui.rc: 879
+Reset Joystickmap
+
+
+# osd/winui/mameui.rc: 784
+Seconds to run
+
+
+# osd/winui/mameui.rc: 827
+Select Debugscript
+
+
+# osd/winui/mameui.rc: 877
+Select Joystickmap
+
+
+# osd/winui/winui.c: 852
+Select a avi file to record
+
+
+# osd/winui/winui.c: 865
+Select a debugger script
+
+
+# osd/winui/winui.c: 873
+Select a history
+
+
+# osd/winui/winui.c: 858
+Select a joystick map
+
+
+# osd/winui/winui.c: 896
+Select a list file to export
+
+
+# osd/winui/winui.c: 880
+Select a mameinfo
+
+
+# osd/winui/mameui.rc: 1624
+Set the History file to use
+
+
+# osd/winui/mameui.rc: 1624
+Set the Mameinfo file to use
+
+
+# osd/winui/mameui.rc: 1121
+Snapshot/movie naming
+
+
+# osd/winui/mameui.rc: 582
+Snapshot/movie resolution
+
+
+# osd/winui/mameui.rc: 579
+Snapshot/movie view
+
+
+# osd/winui/mameui.rc: 942
+Switch drivers
+
+
+# osd/winui/mameui.rc: 821
+Update Main window during paused emulation
+
+
+# osd/winui/winui.c: 872
+history (*.dat)
+
+
+# osd/winui/winui.c: 879
+mameinfo (*.dat)
+
+
+# osd/winui/winui.c: 857
+maps (*.map, *.txt)
+
+
+# osd/winui/winui.c: 864
+scripts (*.txt, *.dat)
+
 

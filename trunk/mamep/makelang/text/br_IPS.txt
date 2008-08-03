@@ -1,3 +1,11 @@
+# 286
+Bootleg And Clone
+Pirata e Clone
+
+# 105
+CPS All System
+Todos os Sistemas CPS
+
 # 301
 Haze Megadrive
 Haze Megadrive
@@ -17,12 +25,4 @@ Neo-Geo
 # 7
 Translation
 Tradução
-
-# 286
-Bootleg And Clone
-Pirata e Clone
-
-# 105
-CPS All System
-Todos os Sistemas CPS
 

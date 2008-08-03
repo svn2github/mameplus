@@ -1,28 +1,28 @@
-#
+# 286
 Bootleg And Clone
 Bootleg e Cloni
 
-#
+# 105
 CPS All System
 Tutti i Sistemi CPS
 
-#
+# 301
 Haze Megadrive
 Haze Megadrive
 
-#
+# Title
 IPS
 IPS
 
-#
+# 64
 Misc
 Varie
 
-#
+# 139
 Neo-Geo
 Neo-Geo
 
-#
+# 7
 Translation
 Traduzioni
 

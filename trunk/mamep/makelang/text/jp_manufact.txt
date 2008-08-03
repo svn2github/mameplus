@@ -798,6 +798,10 @@ Alberici
 Allied Leisure
 
 
+# Flower (Sega/Alpha)
+Alpha
+
+
 # Miss Bubble 2
 Alpha Co
 
@@ -874,6 +878,10 @@ Artic
 Aruze
 
 
+# Hi Pai Paradise
+Aruze?
+
+
 # Dingo (encrypted)
 Ashby Computers and Graphics LTD.
 
@@ -884,6 +892,10 @@ Associated Overseas MFR, Inc
 
 # Show Hand
 Astro Corp.
+
+
+# Galaxi (v2.0)
+B.R.L.
 
 
 # Inquizitor
@@ -1282,6 +1294,10 @@ Enerdyne Technologies Inc.
 Enerdyne Technologies, Inc.
 
 
+# Bust a Move 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)
+Enix/Namco
+
+
 # Swinging Singles
 Ent. Ent. Ltd
 
@@ -1602,7 +1618,7 @@ Kinky Kit and Game Co.
 Kitronix
 
 
-# Flower
+# Flower (Komax)
 Komax
 
 
@@ -1650,7 +1666,7 @@ Loewen Spielautomaten
 Logitec
 
 
-# Star Wars Trilogy (ver A)
+# Star Wars Trilogy (Revision A)
 LucasArts
 
 
@@ -2098,6 +2114,10 @@ Seo Jin
 Seoul Coin Corp.
 
 
+# Mayjinsen 3
+Seta?
+
+
 # Hex Pool (Shinkai)
 Shinkai
 
@@ -2456,6 +2476,10 @@ Williams
 
 # Yosaku To Donbei (set 1)
 Wing
+
+
+# Lucky 74 (small)
+Wing Co.,Ltd.
 
 
 # Domino Block

@@ -1,25 +1,25 @@
-# 14
+# 64
 Misc
 Verschiedenes
 
-# 35
+# 139
 Neo-Geo
 Neo-Geo
 
-# 20
-CPS1
+# 286
+Bootleg And Clone
 
 
-# 30
-CPS2
+# 105
+CPS All System
+
+
+# 301
+Haze Megadrive
 
 
 # Title
 IPS
-
-
-# 93
-PGM
 
 
 # 7

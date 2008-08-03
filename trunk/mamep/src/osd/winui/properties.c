@@ -3076,7 +3076,7 @@ static BOOL SnapViewPopulateControl(datamap *map, HWND dialog, HWND control, cor
 	(void)ComboBox_ResetContent(control);
 	for (i = 0; i < NUMSNAPVIEW; i++)
 	{
-		(void)ComboBox_InsertString(control, i, g_ComboBoxSnapView[i].m_pText);
+		(void)ComboBox_InsertString(control, i, _UIW(g_ComboBoxSnapView[i].m_pText));
 		(void)ComboBox_SetItemData(control, i, g_ComboBoxSnapView[i].m_pData);
 
 		if (!strcmp(snapview, g_ComboBoxSnapView[i].m_pData))

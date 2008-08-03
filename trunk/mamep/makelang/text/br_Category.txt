@@ -38,6 +38,10 @@ Direção / Primeira Pessoa
 Driving / Boat
 Direção / Barco
 
+# 381
+Driving / Plane
+Direção / Aeronave
+
 # 386
 Driving / Race
 Direção / Corrida
@@ -61,6 +65,10 @@ Direção / Corrida em Primeira Pessoa
 # 654
 Driving / Race Bike
 Direção / Corrida de Moto
+
+# 671
+Driving / Race Track
+Direção / Corrida em Circuitos
 
 # 710
 Fighter / 2.5D
@@ -169,6 +177,10 @@ Multi-jogos
 # 2402
 Multiplay *Mature*
 Multi-jogos para Adultos
+
+# 2414
+Not Classified
+Sem Classificação
 
 # 2493
 Pinball
@@ -302,6 +314,10 @@ Quiz / Japonês
 Quiz / Japanese *Mature*
 Quiz / Japonês para Adultos
 
+# 3919
+Quiz / Korean
+Quiz / Coreano
+
 # 3925
 Quiz / Music English
 Quiz / Música em Inglês
@@ -310,9 +326,21 @@ Quiz / Música em Inglês
 Quiz / Music Japanese
 Quiz / Música em Japonês
 
+# 3933
+Quiz / Spanish
+Quiz / Espanhol
+
 # 3937
 Rhythm
 Ritmo
+
+# 3950
+Rhythm / Dance
+Ritmo / Dança
+
+# 3996
+Rhythm / Instruments
+Ritmo / Instrumentos
 
 # 4033
 Shooter / 1st Person
@@ -550,6 +578,10 @@ Esportes / Atletismo
 Sports / VolleyBall
 Esportes / Voleibol
 
+# 6765
+Sports / Wrestling
+Esportes / Luta Livre
+
 # 6817
 Tabletop
 Tabuleiro
@@ -589,36 +621,4 @@ Tabuleiro / Renju
 # 7169
 Tabletop / Shougi
 Tabuleiro / Xadrez Japonês
-
-# 381
-Driving / Plane
-Direção / Aeronave
-
-# 671
-Driving / Race Track
-Direção / Corrida em Circuitos
-
-# 2414
-Not Classified
-Sem Classificação
-
-# 3919
-Quiz / Korean
-Quiz / Coreano
-
-# 3933
-Quiz / Spanish
-Quiz / Espanhol
-
-# 3950
-Rhythm / Dance
-Ritmo / Dança
-
-# 3996
-Rhythm / Instruments
-Ritmo / Instrumentos
-
-# 6765
-Sports / Wrestling
-Esportes / Luta Livre
 

@@ -1,28 +1,28 @@
-#
+# 286
 Bootleg And Clone
 해적판 및 클론
 
-#
+# 105
 CPS All System
 모든 CPS시스템
 
-#
+# 301
 Haze Megadrive
 헤이즈 메가드라이브
 
-#
+# Title
 IPS
 IPS
 
-#
+# 64
 Misc
 기타
 
-#
+# 139
 Neo-Geo
 네오지오
 
-#
+# 7
 Translation
 번역판
 

@@ -1,12 +1,20 @@
-#
-Neogeo decrypted
-Neogeo decrittato
-
-#
+# Title
 Version
 Versioni
 
-#
-home-brew
-fatto in casa
+# 8085
+Console
+
+
+# 8011
+Decrypted
+
+
+# 8069
+Homebrew
+
+
+# 7970
+Plus!
+
 

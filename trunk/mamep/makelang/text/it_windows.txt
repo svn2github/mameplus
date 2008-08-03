@@ -1,804 +1,1056 @@
-#
+# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
 (disabled by compiling option)
 (disattivato dall'opzione di compilazione)
 
-#
+# osd/windows/video.c: 258
 (primary)
 (primario)
 
-#
+# osd/windows/input.c: 1192
 Assign joystick %s to player %d\n
 Assegnato joystick %s al giocatore %d\n
 
-#
+# osd/windows/winmain.c: 153
 DIRECT3D-SPECIFIC OPTIONS
 OPZIONI SPECIFICHE DEL DIRECT3D
 
-#
+# osd/windows/winmain.c: 149
 DIRECTDRAW-SPECIFIC OPTIONS
 OPZIONI SPECIFICHE DEL DIRECTDRAW
 
-#
+# osd/windows/drawd3d.c: 1172
 Device %s currently in an unsupported mode\n
 La periferica %s è in una modalità non supportata\n
 
-#
+# osd/windows/drawd3d.c: 1142
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: Configurazione adattatore #%d = %s\n
 
-#
+# osd/windows/drawd3d.c: 766
 Direct3D: Device created at %dx%d\n
 Direct3D: Periferica creata a %dx%d\n
 
-#
+# osd/windows/drawd3d.c: 625, 2362
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: Errore %08X durante la chiamata di periferica begin_scene\n
 
-#
+# osd/windows/drawd3d.c: 1640, 2411
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: Errore %08X durante la chiamata di periferica draw_primitive\n
 
-#
+# osd/windows/drawd3d.c: 654, 2415
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: Errore %08X durante la chiamata di periferica end_scene\n
 
-#
+# osd/windows/drawd3d.c: 2355
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: Errore %08X durante la chiamata di periferica get_render_target\n
 
-#
+# osd/windows/drawd3d.c: 660
 Direct3D: Error %08X during device present call\n
 Direct3D: Errore %08X durante la chiamata di periferica presente\n
 
-#
+# osd/windows/drawd3d.c: 362, 369, 376, 383
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: Errore %08X durante la chiamata di periferica set_render_state\n
 
-#
+# osd/windows/drawd3d.c: 2357, 2419
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: Errore %08X durante la chiamata di periferica set_render_target\n
 
-#
+# osd/windows/drawd3d.c: 1612, 2409
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: Errore %08X durante la chiamata di periferica set_stream_source\n
 
-#
+# osd/windows/drawd3d.c: 294, 2368
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: Errore %08X durante la chiamata di periferica set_texture\n
 
-#
+# osd/windows/drawd3d.c: 306, 308, 320, 322, 334
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: Errore %08X durante la chiamata di periferica set_texture_stage_state\n
 
-#
+# osd/windows/drawd3d.c: 2343
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: Errore %08X durante la chiamata di periferica stretct_rect\n
 
-#
+# osd/windows/drawd3d.c: 938, 940, 942, 944, 948, 962, 976, 990, 1016, 1040, 1054, 1067, 1074
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: Errore %08X durante la chiamata get_caps_dword\n
 
-#
+# osd/windows/drawd3d.c: 2322
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: Errore %08X durante la chiamata texture get_surface_level\n
 
-#
+# osd/windows/drawd3d.c: 2298
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: Errore %08X durante la chiamata texture unlock_rect call\n
 
-#
+# osd/windows/drawd3d.c: 2372
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: Errore %08X durante la chiamata vertice buffer bloccato\n
 
-#
+# osd/windows/drawd3d.c: 1607, 2404
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: Errore %08X durante la chiamata vertice buffer sbloccato\n
 
-#
+# osd/windows/drawd3d.c: 1003
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: Errore - La periferica non supporta dest. alpha blending con fonte alpha invertita\n
 
-#
+# osd/windows/drawd3d.c: 998
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: Errore - La periferica non supporta dest. alpha blending con uno\n
 
-#
+# osd/windows/drawd3d.c: 993
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: Errore - La periferica non supporta dest. alpha blending con zero\n
 
-#
+# osd/windows/drawd3d.c: 951
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: Errore - La periferica non supporta le presentazioni immediate\n
 
-#
+# osd/windows/drawd3d.c: 956
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: Errore - La periferica non supporta le presentazione per-aggiornamento\n
 
-#
+# osd/windows/drawd3d.c: 984
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: Errore - La periferica non supporta fonte alpha blending con colore di destinazione\n
 
-#
+# osd/windows/drawd3d.c: 979
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: Errore - La periferica non supporta fonte alpha blending con fonte alpha\n
 
-#
+# osd/windows/drawd3d.c: 1010
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: Errore - La periferica non supporta le texture alpha\n
 
-#
+# osd/windows/d3d8intf.c: 100
 Direct3D: Error attempting to initialize Direct3D8\n
 Direct3D: Errore nel tentativo di inizializzare le Direct3D8\n
 
-#
+# osd/windows/d3d9intf.c: 98
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Errore nel tentativo di inizializzare le Direct3D9\n
 
-#
+# osd/windows/drawd3d.c: 1330
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: Modalità selezionata = %4dx%4d@%3dHz\n
 
-#
+# osd/windows/drawd3d.c: 1274
 Direct3D: Selecting video mode...\n
 Direct3D: Selezione modalità video...\n
 
-#
+# osd/windows/d3d8intf.c: 82
 Direct3D: Unable to access d3d8.dll\n
 Direct3D: Impossibile accedere a d3d8.dll\n
 
-#
+# osd/windows/d3d9intf.c: 80
 Direct3D: Unable to access d3d9.dll\n
 Direct3D: Impossibile accedere a d3d9.dll\n
 
-#
+# osd/windows/d3d8intf.c: 90
 Direct3D: Unable to find Direct3DCreate8\n
 Direct3D: Impossibile trovare Direct3DCreate8\n
 
-#
+# osd/windows/d3d9intf.c: 88
 Direct3D: Unable to find Direct3DCreate9\n
 Direct3D: Impossibile trovare Direct3DCreate9\n
 
-#
+# osd/windows/d3d8intf.c: 113
 Direct3D: Using Direct3D 8\n
 Direct3D: Uso delle Direct3D 8\n
 
-#
+# osd/windows/d3d9intf.c: 111
 Direct3D: Using Direct3D 9\n
 Direct3D: Uso delle Direct3D 9\n
 
-#
+# osd/windows/drawd3d.c: 1076
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: Uso di StretchRect per il prescaling\n
 
-#
+# osd/windows/drawd3d.c: 1070
 Direct3D: Using dynamic textures\n
 Direct3D: Uso di delle textures dinamiche\n
 
-#
+# osd/windows/drawd3d.c: 1024
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: Attenzione - La periferica non supporta il filtro texture bilineare per ingrandimento\n
 
-#
+# osd/windows/drawd3d.c: 1034
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: Attenzione - La periferica non supporta il filtro texture bilineare per zoom -\n
 
-#
+# osd/windows/drawd3d.c: 970
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: Attenzione - La periferica non supporta la rasterizzazione hardware\n
 
-#
+# osd/windows/drawd3d.c: 1019
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: Attenzione - La periferica non supporta il filtro texture point-sample per ingrandimento\n
 
-#
+# osd/windows/drawd3d.c: 1029
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: Attenzione - La periferica non supporta il filtro texture point-sample per zoom -\n
 
-#
+# osd/windows/drawd3d.c: 965
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: Attenzione - La periferica non supporta la coda rendering dopo ribaltamento di pagina\n
 
-#
+# osd/windows/drawd3d.c: 1043
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: Attenzione - La periferica non supporta il texture clamping\n
 
-#
+# osd/windows/drawd3d.c: 1057
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: Attenzione - La periferica non supporta il texture modulation\n
 
-#
+# osd/windows/drawd3d.c: 1048
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: Attenzione - La periferica non supporta il texture wrapping\n
 
-#
+# osd/windows/drawd3d.c: 783
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: Attenzione - La periferica non supporta la correzione gamma a Tutto Schermo.\n
 
-#
+# osd/windows/drawd3d.c: 708
 Direct3D: YUV format = %s\n
 Direct3D: formato YUV = %s\n
 
-#
+# osd/windows/drawd3d.c: 1711
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: sistemazione prescale da %dx%d a %dx%d\n
 
-#
+# osd/windows/drawd3d.c: 1112
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: impossibile ricreare le risorse per la periferica; errore permanente\n
 
-#
+# osd/windows/drawd3d.c: 1099
 Direct3D: resetting device\n
 Direct3D: periferica resettata\n
 
-#
+# osd/windows/drawdd.c: 793
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s superficie creata: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-#
+# osd/windows/drawdd.c: 1130
 DirectDraw: Configuring device %s\n
 DirectDraw: Configurazione periferica %s\n
 
-#
+# osd/windows/drawdd.c: 620
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: Errore %08X nel tentativo di impostare la correzione gamma.\n
 
-#
+# osd/windows/drawdd.c: 499
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: Errore %08X nel tentativo di impostare la chiamata modalità video %dx%d@%d\n
 
-#
+# osd/windows/drawdd.c: 1090
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: Errore %08X blitting su schermo\n
 
-#
+# osd/windows/drawdd.c: 1057, 1066, 1075, 1084
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: Errore %08X pulizia dello schermo\n
 
-#
+# osd/windows/drawdd.c: 778
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: Errore %08X creazione superficie %s\n
 
-#
+# osd/windows/drawdd.c: 819
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: Errore %08X creazione clipper\n
 
-#
+# osd/windows/drawdd.c: 464, 1119
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: Errore %08X durante la chiamata DirectDrawCreateEx\n
 
-#
+# osd/windows/drawdd.c: 1216
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: Errore %08X durante la chiamata DirectDrawEnumerateEx\n
 
-#
+# osd/windows/drawdd.c: 1338
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: Errore %08X durante la chiamata EnumDisplayModes\n
 
-#
+# osd/windows/drawdd.c: 720
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: Errore %08X durante la chiamata IDirectDraw7_GetCaps\n
 
-#
+# osd/windows/drawdd.c: 489
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: Errore %08X durante la chiamata IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)\n
 
-#
+# osd/windows/drawdd.c: 483
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: Errore %08X durante la chiamata IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)\n
 
-#
+# osd/windows/drawdd.c: 786
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: Errore %08X rilevazione descrizione superficie %s\n
 
-#
+# osd/windows/drawdd.c: 548
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: Errore %08X rilevazione superficie posteriore allegata\n
 
-#
+# osd/windows/drawdd.c: 1138
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: Errore %08X rilevazione attuale modalità visualizzazione\n
 
-#
+# osd/windows/drawdd.c: 357
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: Errore %08X bloccando la superficie blit\n
 
-#
+# osd/windows/drawdd.c: 827
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: Errore %08X impostando il clipper hwnd\n
 
-#
+# osd/windows/drawdd.c: 835
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: Errore %08X impostando il clipper sulla superficie primaria\n
 
-#
+# osd/windows/drawdd.c: 430
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: Errore %08X sbloccando la superficie blit\n
 
-#
+# osd/windows/drawdd.c: 436, 1096
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: Errore %08X in attesa del VBLANK\n
 
-#
+# osd/windows/drawdd.c: 472
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: Errore - La periferica non ha i requisiti minimi per il rendering DirectDraw\n
 
-#
+# osd/windows/drawdd.c: 351
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: Superfici perse; eliminazione e riprova del frame successivo\n
 
-#
+# osd/windows/drawdd.c: 1339
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: Modalità selezionata = %4dx%4d@%3dHz\n
 
-#
+# osd/windows/drawdd.c: 931
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: Nuova dimensione blit = %dx%d\n
 
-#
+# osd/windows/drawdd.c: 1336
 DirectDraw: Selecting video mode...\n
 DirectDraw: Selezione modalità video...\n
 
-#
+# osd/windows/drawdd.c: 197
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: Impossibile accedere a ddraw.dll\n
 
-#
+# osd/windows/drawdd.c: 205
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: Impossibile trovare DirectDrawCreateEx\n
 
-#
+# osd/windows/drawdd.c: 215
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: Impossibile trovare DirectDrawEnumerateExA\n
 
-#
+# osd/windows/drawdd.c: 386, 422, 1172
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: Modalità target sconosciuta: R=%08X G=%08X B=%08X\n
 
-#
+# osd/windows/drawdd.c: 228
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: Uso delle DirectDraw 7\n
 
-#
+# osd/windows/drawdd.c: 727
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: Attenzione - La periferica non supporta l'allargamento hardware\n
 
-#
+# osd/windows/drawdd.c: 476
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: Attenzione - La periferica non può gestire il rendering DirectDraw\n
 
-#
+# osd/windows/drawdd.c: 603
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: Attenzione - La periferica non supporta la correzione gamma a Tutto Schermo.\n
 
-#
+# osd/windows/input.c: 1176
 DirectInput: Unable to enumerate joysticks (result=%08X)\n
 DirectInput: Impossibile elencare i joysticks (result=%08X)\n
 
-#
+# osd/windows/input.c: 1161
 DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: Impossibile elencare le tastiere (result=%08X)\n
 
-#
+# osd/windows/input.c: 1170
 DirectInput: Unable to enumerate mice (result=%08X)\n
 DirectInput: Impossibile elencare i mouse (result=%08X)\n
 
-#
+# osd/windows/input.c: 1150
 DirectInput: Using DirectInput %d\n
 DirectInput: Uso delle DirectInput %d\n
 
-#
+# osd/windows/sound.c: 356
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Buffer primario: %d Hz, %d bits, %d canali\n
 
-#
+# osd/windows/sound.c: 370
 Error creating DirectSound stream buffer: %08x\n
 Errore nella creazione del buffer del flusso DirectSound: %08x\n
 
-#
+# osd/windows/sound.c: 245
 Error creating DirectSound: %08x\n
 Errore creazione DirectSound: %08x\n
 
-#
+# osd/windows/sound.c: 337
 Error creating primary DirectSound buffer: %08x\n
 Errore nella creazione del buffer primario DirectSound: %08x\n
 
-#
+# osd/windows/window.c: 626
 Error creating render target for window %d
 Errore nella creazione del render per finestra %d
 
-#
+# osd/windows/drawd3d.c: 817
 Error creating vertex buffer (%08X)
 Errore nella creazione del buffer vertice (%08X)
 
-#
+# osd/windows/sound.c: 254
 Error getting DirectSound capabilities: %08x\n
 Errore acquisendo le capacità DirectSound: %08x\n
 
-#
+# osd/windows/drawd3d.c: 1139
 Error getting identifier for adapter #%d\n
 Errore nella rilevazione dell'identificatore per l'adattatore #%d\n
 
-#
+# osd/windows/drawdd.c: 1127
 Error getting identifier for device\n
 Errore nella rilevazione dell'identificatore per la periferica\n
 
-#
+# osd/windows/drawd3d.c: 1148
 Error getting mode for adapter #%d\n
 Errore nella rilevazione della modalità dell'adattatore #%d\n
 
-#
+# osd/windows/sound.c: 353
 Error getting primary DirectSound buffer format: %08x\n
 Errore nella rilevazione del formato del buffer primario DirectSound: %08x\n
 
-#
+# osd/windows/sound.c: 378
 Error locking DirectSound stream buffer: %08x\n
 Errore nel bloccaggio del buffer del flusso DirectSound: %08x\n
 
-#
+# osd/windows/sound.c: 291
 Error playing: %08x\n
 Errore eseguendo: %08x\n
 
-#
+# osd/windows/sound.c: 262
 Error setting DirectSound cooperative level: %08x\n
 Errore impostando livello cooperativo DirectSound: %08x\n
 
-#
+# osd/windows/sound.c: 345
 Error setting primary DirectSound buffer format: %08x\n
 Errore nell'impostare il formato del buffer primario DirectSound: %08x\n
 
-#
+# osd/windows/drawd3d.c: 825
 Error setting vertex shader (%08X)
 Errore nell'impostare il vertex shader (%08X)
 
-#
+# osd/windows/drawd3d.c: 694
 Error: A8R8G8B8 format textures not supported\n
 Errore: il formato textures A8R8G8B8 non è supportato\n
 
-#
+# osd/windows/drawd3d.c: 684
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 Errore: La periferica non ha i requisiti minimi per il rendering Direct3D\n
 
-#
+# osd/windows/drawd3d.c: 726
 Error: unable to configure a screen texture format\n
 Errore: impossibile configurare il formato delle textures dello schermo\n
 
-#
+# osd/windows/winmain.c: 185
 FULL SCREEN OPTIONS
 OPZIONI TUTTO SCHERMO
 
-#
+# osd/windows/window.c: 231
 Failed to create pause event
 Impossibile creare evento pausa
 
-#
+# osd/windows/window.c: 845
 Failed to create window class
 Impossibile creare window class
 
-#
+# osd/windows/window.c: 245
 Failed to create window thread
 Impossibile creare window thread
 
-#
+# osd/windows/window.c: 239
 Failed to create window thread ready event
 Impossibile creare window thread evento pronto
 
-#
+# osd/windows/winmain.c: 197
 INPUT DEVICE OPTIONS
 OPZIONI PERIFERICA INPUT\t
 
-#
+# osd/windows/video.c: 524
 Illegal aspect ratio value for %s = %s\n
 Valore dei rapporti aspetto errato per %s = %s\n
 
-#
+# osd/windows/video.c: 547
 Illegal resolution value for %s = %s\n
 Valore della risoluzione errato per %s = %s\n
 
-#
+# osd/windows/video.c: 442
 Invalid video value %s; reverting to gdi\n
 Valore video errato %s; ritorno al gdi\n
 
-#
+# osd/windows/window.c: 641
 MAME: %s [%s] - Screen %d
 MAME: %s [%s] - Schermo %d
 
-#
+# osd/windows/winmain.c: 763
 Out of memory
 Memoria esaurita
 
-#
+# osd/windows/winmain.c: 158
 PER-WINDOW VIDEO OPTIONS
 OPZIONI VIDEO PER-FINESTRA
 
-#
+# osd/windows/drawd3d.c: 1200
 Proposed video mode not supported on device %s\n
 Modalità video indicata non supportata dalla periferica %s\n
 
-#
+# osd/windows/input.c: 1735
 RawInput: APIs detected\n
 RawInput: APIs rilevato\n
 
-#
+# osd/windows/sound.c: 111
 Sound buffer: overflows=%d underflows=%d\n
 Buffer sonoro: overflows=%d underflows=%d\n 
 
-#
+# osd/windows/sound.c: 109
 Sound: buffer overflows=%d underflows=%d\n
 Audio: buffer overflows=%d underflows=%d\n
 
-#
+# osd/windows/winmain.c: 759
 Symbol table full
 Tabella simboli piena
 
-#
+# osd/windows/drawd3d.c: 1848
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Texture troppo grande! (voluta: %dx%d, il max è %dx%d)\n
 
-#
+# osd/windows/input.c: 796
 Toggle Fullscreen
 Vai a Tutto Schermo
 
-#
+# osd/windows/ledutil.c: 566, 572
 Unable to close the keyboard device. (error %d)\n
 Impossibile chiudere la periferica tastiera. (errore %d)\n
 
-#
+# osd/windows/window.c: 661
 Unable to complete window creation
 Impossibile completare la creazione della finestra
 
-#
+# osd/windows/drawd3d.c: 762
 Unable to create the Direct3D device (%08X)\n
 Impossibile creare la perifierica Direct3D (%08X)\n
 
-#
+# osd/windows/drawd3d.c: 467, 528
 Unable to initialize Direct3D.\n
 Impossibile inizializzare Direct3D.\n
 
-#
+# osd/windows/drawdd.c: 271
 Unable to initialize DirectDraw.\n
 Impossibile inizializzare DirectDraw.\n
 
-#
+# osd/windows/video.c: 493
 Unable to load PNG file '%s'\n
 Impossibile caricare il file PNG '%s'\n
 
-#
+# osd/windows/ledutil.c: 530, 538
 Unable to open the keyboard device. (error %d)\n
 Impossibile aprire la periferica tastiera. (errore %d)\n
 
-#
+# osd/windows/drawd3d.c: 2285
 Unknown texture blendmode=%d format=%d\n
 Modalità texture blend sconosciuta=%d formato=%d\n
 
-#
+# osd/windows/video.c: 403
 Using %s scale effect\n
 Usando %s effetto scal.\n
 
-#
+# osd/windows/video.c: 258
 Video: Monitor %p = \"%s\" %s\n
 Video: Monitor %p = \"%s\" %s\n
 
-#
+# osd/windows/winmain.c: 127
 WINDOWS DEBUGGING OPTIONS
 OPZIONI DEBUGGING WINDOWS
 
-#
+# osd/windows/winmain.c: 132
 WINDOWS PERFORMANCE OPTIONS
 WINDOWS OPZIONI PRESTAZIONI
 
-#
+# osd/windows/winmain.c: 193
 WINDOWS SOUND OPTIONS
 WINDOWS OPZIONI AUDIO
 
-#
+# osd/windows/winmain.c: 137
 WINDOWS VIDEO OPTIONS
 WINDOWS OPZIONI VIDEO
 
-#
+# osd/windows/video.c: 438
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Attenzione: -nessun video può essere ben impostato senza -seconds_to_run\n
 
-#
+# osd/windows/drawd3d.c: 688
 Warning: Device may not perform well for Direct3D rendering\n
 Attenzione: La periferica potrebbe non gestire bene il rendering Direct3D\n
 
-#
+# osd/windows/winmain.c: 160
 aspect ratio for all screens; 'auto' here will try to make a best guess
 rapporti aspetto per tutti gli schermi; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 165
 aspect ratio of the first screen; 'auto' here will try to make a best guess
 rapporti aspetto per il primo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 180
 aspect ratio of the fourth screen; 'auto' here will try to make a best guess
 rapporti aspetto per il quarto schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 170
 aspect ratio of the second screen; 'auto' here will try to make a best guess
 rapporti aspetto per il secondo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 175
 aspect ratio of the third screen; 'auto' here will try to make a best guess
 rapporti aspetto per il terzo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 188
 brightness value in full screen mode
 valore delle luminosità in modalità Tutto Schermo
 
-#
+# osd/windows/winmain.c: 142
 constrain to the proper aspect ratio
 obbliga l'utilizzo dei rapporti aspetto corretti
 
-#
+# osd/windows/winmain.c: 189
 contrast value in full screen mode
 valore del contrasto in modalità Tutto Schermo
 
-#
+# osd/windows/winmain.c: 141
 default to maximized windows; otherwise, windows will be minimized
 predefinito per le finestre ingrandite; oppure le finestre saranno ridotte a icona
 
-#
+# osd/windows/winmain.c: 155
 enable bilinear filtering on screen output
 attiva il filtro bilineare sull'uscita schermo
 
-#
+# osd/windows/winmain.c: 198
 enable dual lightgun input
 attiva input doppia pistola
 
-#
+# osd/windows/winmain.c: 150
 enable hardware stretching
 attiva l'allargamento hardware
 
-#
+# osd/windows/winmain.c: 134
 enable multithreading; this enables rendering and blitting on a separate thread
 attiva il multithreading; questo attiverà il rendering e il blitting su due processi separati
 
-#
+# osd/windows/winmain.c: 187
 enable resolution switching
 attiva scambio di risoluzione
 
-#
+# osd/windows/winmain.c: 186
 enable triple buffering
 attiva triplo buffering
 
-#
+# osd/windows/winmain.c: 146
 enable using the start of VBLANK for throttling instead of the game time
 attiva usando l'inizio di VBLANK per accelerare al posto del tempo di gioco
 
-#
+# osd/windows/winmain.c: 145
 enable waiting for the start of VBLANK before flipping screens; reduces tearing effects
 attiva l'attesa per l'inizio di VBLANK prima del flipping degli schermi; riduce gli effetti 'strappo'
 
-#
+# osd/windows/winmain.c: 140
 enable window mode; otherwise, full screen mode is assumed
 attiva la modalità finestra; oppure, sarà attivata le modalità a Tutto Schermo
 
-#
+# osd/windows/winmain.c: 159
 explicit name of all screens; 'auto' here will try to make a best guess
 esplicita nome di tutti gli schermi; 'auto' cercherà il più adatto
 
-#
+# osd/windows/winmain.c: 164
 explicit name of the first screen; 'auto' here will try to make a best guess
 inserisce il nome del primo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 179
 explicit name of the fourth screen; 'auto' here will try to make a best guess
 inserisce il nome del quarto schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 169
 explicit name of the second screen; 'auto' here will try to make a best guess
 inserisce il nome del secondo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 174
 explicit name of the third screen; 'auto' here will try to make a best guess
 inserisce il nome del terzo schermo; 'auto' cercherà la soluzione ottimale
 
-#
+# osd/windows/winmain.c: 190
 gamma value in full screen mode
 valore della gamma in modalità a Tutto Schermo
 
-#
+# osd/windows/winmain.c: 144
 name of a PNG file to use for visual effects, or 'none'
 nome del file PNG usato per gli effetti visivi, o 'nessuno'
 
-#
+# osd/windows/winmain.c: 139
 number of screens to create; usually, you want just one
 numero degli schermi da creare; normalmente è solo uno
 
-#
+# osd/windows/winmain.c: 128
 output error.log data to the system debugger
 uscita dati error.log come debugger di sistema
 
-#
+# osd/windows/winmain.c: 161
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita per tutti gli schermi; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-#
+# osd/windows/winmain.c: 166
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del primo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-#
+# osd/windows/winmain.c: 181
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del quarto schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-#
+# osd/windows/winmain.c: 171
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del secondo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-#
+# osd/windows/winmain.c: 176
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
 risoluzione preferita del terzo schermo; il formato è <width>x<height>[@<refreshrate>] o 'auto'
 
-#
+# osd/windows/winmain.c: 162
 preferred view for all screens
 visuale preferita per tutti gli schermi
 
-#
+# osd/windows/winmain.c: 167
 preferred view for the first screen
 visuale preferita per il primo schermo
 
-#
+# osd/windows/winmain.c: 182
 preferred view for the fourth screen
 visuale preferita per il quarto schermo
 
-#
+# osd/windows/winmain.c: 172
 preferred view for the second screen
 visuale preferita per il secondo schermo
 
-#
+# osd/windows/winmain.c: 177
 preferred view for the third screen
 visuale preferita per il terzo schermo
 
-#
+# osd/windows/winmain.c: 143
 scale screen rendering by this amount in software
 scalare rendering dello schermo di questo numero in software
 
-#
+# osd/windows/winmain.c: 194
 set audio latency (increase to reduce glitches)
 imposta latenza audio (aumenta per ridurre salti)
 
-#
+# osd/windows/winmain.c: 201
 set joystick ID (Player1)
 imposta ID joystick (Giocatore1)
 
-#
+# osd/windows/winmain.c: 202
 set joystick ID (Player2)
 imposta ID joystick (Giocatore 2)
 
-#
+# osd/windows/winmain.c: 203
 set joystick ID (Player3)
 imposta ID joystick (Giocatore3)
 
-#
+# osd/windows/winmain.c: 204
 set joystick ID (Player4)
 imposta ID joystick (Giocatore 4)
 
-#
+# osd/windows/winmain.c: 205
 set joystick ID (Player5)
 imposta ID joystick (Giocatore5) 
 
-#
+# osd/windows/winmain.c: 206
 set joystick ID (Player6)
 imposta ID joystick (Giocatore6)
 
-#
+# osd/windows/winmain.c: 207
 set joystick ID (Player7)
 imposta ID joystick (Giocatore7)
 
-#
+# osd/windows/winmain.c: 208
 set joystick ID (Player8)
 imposta ID joystick (Giocatore8)
 
-#
+# osd/windows/winmain.c: 154
 specify the preferred Direct3D version (8 or 9)
 specificare la versione Direct3D preferita (8 o 9)
 
-#
+# osd/windows/winmain.c: 133
 thread priority for the main game thread; range from -15 to 1
 priorità del processo per il gioco principale; varia da -15 a 1
 
-#
+# osd/windows/winmain.c: 138
 video output method: none, gdi, ddraw, or d3d
 metodo di uscita video: nessuno, gdi, ddraw, o d3d
+
+# mess/osd/windows/dialog.c: 1331
+ Analog
+
+
+# mess/osd/windows/dialog.c: 1336
+ Dec
+
+
+# mess/osd/windows/dialog.c: 1341
+ Inc
+
+
+# mess/osd/windows/mess.rc: 57
+&Analog Controls...
+
+
+# mess/osd/windows/mess.rc: 94
+&Configuration...
+
+
+# mess/osd/windows/menu.c: 1257
+&Configure...
+
+
+# mess/osd/windows/mess.rc: 95
+&DIP Switches...
+
+
+# mess/osd/windows/mess.rc: 97
+&Debugger...
+
+
+# mess/osd/windows/mess.rc: 38 
+&Exit
+
+
+# mess/osd/windows/menu.c: 1464 mess/osd/windows/mess.rc: 30 
+&File
+
+
+# mess/osd/windows/menu.c: 2108 mess/osd/windows/mess.rc: 70
+&Frameskip
+
+
+# mess/osd/windows/mess.rc: 86
+&Full Screen\tAlt+Enter
+
+
+# mess/osd/windows/mess.rc: 85
+&Hide Menubar\tScrLk
+
+
+# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 46
+&Input
+
+
+# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 55
+&Joysticks
+
+
+# mess/osd/windows/mess.rc: 48
+&Keyboard
+
+
+# mess/osd/windows/mess.rc: 32
+&Load State...
+
+
+# mess/osd/windows/mess.rc: 56
+&Miscellaneous Inputs...
+
+
+# mess/osd/windows/mess.rc: 88 
+&Options
+
+
+# mess/osd/windows/mess.rc: 90 
+&Pause
+
+
+# mess/osd/windows/mess.rc: 33
+&Save State
+
+
+# mess/osd/windows/menu.c: 1443, 1443, 2108 mess/osd/windows/mess.rc: 59, 61
+&Video
+
+
+# mess/osd/windows/menu.c: 2118
+About %s (%s)...
+
+
+# mess/osd/windows/menu.c: 878
+All files (*.*)|*.*|
+
+
+# mess/osd/windows/dialog.c: 137
+Apply
+
+
+# mess/osd/windows/mess.rc: 72 
+Auto
+
+
+# mess/osd/windows/dialog.c: 138 
+Cancel
+
+
+# mess/osd/windows/menu.c: 869
+Common image types
+
+
+# mess/osd/windows/menu.c: 882
+Compressed Images (*.zip)|*.zip|
+
+
+# mess/osd/windows/mess.rc: 53
+Customize Emulated Keyboard...
+
+
+# osd/windows/drawd3d.c: 770
+Direct3D: Max texture size = %dx%d\n
+
+
+# mess/osd/windows/mess.rc: 50
+Emulated
+
+
+# mess/osd/windows/menu.c: 250
+Emulated Keyboard
+
+
+# mess/osd/windows/menu.c: 960
+Error when %s the image: %s
+
+
+# mess/osd/windows/mess.rc: 92
+Ha&rd Reset
+
+
+# mess/osd/windows/menu.c: 273
+Input
+
+
+# mess/osd/windows/menu.c: 1275
+Joystick %i
+
+
+# mess/osd/windows/menu.c: 239
+Joysticks/Controllers
+
+
+# mess/osd/windows/mess.rc: 74
+Maximum &Speed
+
+
+# mess/osd/windows/menu.c: 261
+Miscellaneous Input
+
+
+# mess/osd/windows/mess.rc: 51
+Natural
+
+
+# mess/osd/windows/dialog.c: 136 
+OK
+
+
+# mess/osd/windows/mess.rc: 149
+Pause
+
+
+# mess/osd/windows/mess.rc: 147
+Play
+
+
+# mess/osd/windows/mess.rc: 64
+Rotate 0 degrees
+
+
+# mess/osd/windows/mess.rc: 66
+Rotate 180 degrees
+
+
+# mess/osd/windows/mess.rc: 67
+Rotate 270 degrees
+
+
+# mess/osd/windows/mess.rc: 65
+Rotate 90 degrees
+
+
+# mess/osd/windows/mess.rc: 34
+S&ave State As...
+
+
+# mess/osd/windows/mess.rc: 36
+Save Sc&reenshot
+
+
+# mess/osd/windows/mess.rc: 83
+Show &FPS
+
+
+# mess/osd/windows/mess.rc: 96
+Show P&rofiler
+
+
+# mess/osd/windows/mess.rc: 91
+Soft &Reset
+
+
+# mess/osd/windows/menu.c: 534
+State Files (*.sta)|*.sta|All Files (*.*)|*.*
+
+
+# mess/osd/windows/mess.rc: 148
+Stop
+
+
+# mess/osd/windows/mess.rc: 142
+Tape Control
+
+
+# osd/windows/input.c: 805
+Toggle Menubar
+
+
+# mess/osd/windows/mess.rc: 81
+Unlimited
+
+
+# mess/osd/windows/configms.c: 30
+WINDOWS MESS SPECIFIC OPTIONS
+
+
+# mess/osd/windows/menu.c: 961
+creating
+
+
+# osd/windows/winmain.c: 129
+force the program to terminate if no updates within specified number of seconds
+
+
+# mess/osd/windows/menu.c: 961
+loading
+
+
+# mess/osd/windows/configms.c: 32
+specifies whether to use a natural keyboard or not
+
 
