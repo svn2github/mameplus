@@ -2494,9 +2494,8 @@ static MACHINE_RESET( cps3 )
 	if(rom[0x1fed4/4] == 0x575a442d)
 	{
 		if (!reg_dip) reg_dip = rom[0x1fed8/4] & 0x0000000f;
-		rom[0x1fed8/4] &= 0xffffff00;
+		rom[0x1fed8/4] &= 0xfffffff0;
 		rom[0x1fed8/4] |= reg_dip;
-		if (input_port_read(machine,"REG")) rom[0x1fed8/4] |= 0x60;
 	}
 	else
 	{
@@ -2670,7 +2669,7 @@ static NVRAM_HANDLER( cps3 )
 	UINT32 *rom = (UINT32*)memory_region(machine, "user1");
 
 	if ((rom[0x1fec0/4] == 0x4341502d && (rom[0x1fecc/4] & 0x01000000) == 0x01000000)
-		|| (rom[0x1fed0/4] == 0x4341502d && (rom[0x1fed8/4] & 0x0000000f) == 0x00000008))
+		|| (rom[0x1fed0/4] == 0x4341502d && (rom[0x1fed8/4] & 0x000000f0) == 0x00000060))
 	{
 		if (read_or_write)
 		{
@@ -2690,28 +2689,28 @@ static NVRAM_HANDLER( cps3 )
 	}
 	else
 	{
-	if (read_or_write)
-	{
-		//printf("read_write\n");
-		mame_fwrite(file, cps3_eeprom, 0x400);
-		for (i=0;i<48;i++)
-			nvram_handler_intelflash( machine, i, file, read_or_write );
-	}
-	else if (file)
-	{
-		//printf("file\n");
-		mame_fread(file, cps3_eeprom, 0x400);
-		for (i=0;i<48;i++)
-			nvram_handler_intelflash( machine, i, file, read_or_write );
+		if (read_or_write)
+		{
+			//printf("read_write\n");
+			mame_fwrite(file, cps3_eeprom, 0x400);
+			for (i=0;i<48;i++)
+				nvram_handler_intelflash( machine, i, file, read_or_write );
+		}
+		else if (file)
+		{
+			//printf("file\n");
+			mame_fread(file, cps3_eeprom, 0x400);
+			for (i=0;i<48;i++)
+				nvram_handler_intelflash( machine, i, file, read_or_write );
 
-		copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-	}
-	else
-	{
-		//printf("nothing?\n");
-		precopy_to_flash(machine);  // attempt to copy data from user regions into flash roms (incase this is a NOCD set)
-		copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-	}
+			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
+		}
+		else
+		{
+			//printf("nothing?\n");
+			precopy_to_flash(machine);  // attempt to copy data from user regions into flash roms (incase this is a NOCD set)
+			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
+		}
 	}
 }
 
@@ -3195,7 +3194,8 @@ static DRIVER_INIT( redeartn )
 	// ASIA NCD 8
 
 	UINT32 *rom = (UINT32*)memory_region ( machine, "user1" );
-	rom[0x1fed8/4]|=0x0000000f; // enforce the region to 8 - ASIA NO CD
+	rom[0x1fed8/4]&=0xffffff00;
+	rom[0x1fed8/4]|=0x000000ef; // enforce the region to 8 - ASIA NO CD
 
 	DRIVER_INIT_CALL(cps3crpt);
 	DRIVER_INIT_CALL(cps3_speedups);

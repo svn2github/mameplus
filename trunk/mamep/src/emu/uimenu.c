@@ -1499,7 +1499,8 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	/* add video options menu */
 	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? menu_video_targets : menu_video_options);
 #ifdef USE_SCALE_EFFECTS
-	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
+	//fixme: 126u3
+//	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
 #endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */

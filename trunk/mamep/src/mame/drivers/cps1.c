@@ -244,6 +244,12 @@ WRITE16_HANDLER( cps1_soundlatch2_w )
 		soundlatch2_w(machine,0,data & 0xff);
 }
 
+static WRITE16_HANDLER( cps1hack_soundlatch_w )
+{
+	if (ACCESSING_BITS_8_15)
+		soundlatch_w(machine,0,data >> 8);
+}
+
 WRITE16_HANDLER( cps1_coinctrl_w )
 {
 	if (ACCESSING_BITS_8_15)
@@ -618,20 +624,6 @@ static ADDRESS_MAP_START( wofh_map, ADDRESS_SPACE_PROGRAM, 16 )
 	AM_RANGE(0xf1c004, 0xf1c005) AM_WRITE(cpsq_coinctrl2_w)     /* Coin control2 (later games) */
 	AM_RANGE(0xf1c006, 0xf1c007) AM_READWRITE(cps1_eeprom_port_r, cps1_eeprom_port_w)
 	AM_RANGE(0xf1e000, 0xf1ffff) AM_READWRITE(qsound_sharedram2_r, qsound_sharedram2_w)  /* Q RAM */
-	AM_RANGE(0xff0000, 0xffffff) AM_RAM
-ADDRESS_MAP_END
-
-
-static ADDRESS_MAP_START( cawingb_map, ADDRESS_SPACE_PROGRAM, 16 )
-	AM_RANGE(0x000000, 0x3fffff) AM_ROM
-	AM_RANGE(0x800030, 0x800037) AM_WRITE(cps1_coinctrl_w)
-	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
-	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom */
-	AM_RANGE(0x882005, 0x882006) AM_WRITE(cps1_soundlatch_w) 	/* Sound command */
-	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)	/* Sound timer fade */
-	AM_RANGE(0x882000, 0x882001) AM_READ(cps1_in1_r)            /* Player input ports */
-	AM_RANGE(0x882008, 0x88200f) AM_READ(cps1_dsw_r)          /* System input ports / Dip Switches */
-	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
 ADDRESS_MAP_END
 
@@ -4134,13 +4126,6 @@ static MACHINE_DRIVER_START( wofh )
 	MDRV_CPU_PROGRAM_MAP(wofh_map,0)
 MACHINE_DRIVER_END
 
-static MACHINE_DRIVER_START( cawingb )
-	MDRV_IMPORT_FROM(cps1_10MHz)
-
-	MDRV_CPU_MODIFY("main")
-	MDRV_CPU_PROGRAM_MAP(cawingb_map,0)
-MACHINE_DRIVER_END
-
 #endif
 
 
@@ -7339,19 +7324,19 @@ ROM_START( sf2mdt )
 	ROM_LOAD16_BYTE( "4.ic176",   0x100000, 0x20000, CRC(1073b7b6) SHA1(81ca1eab65ceac69520584bb23a684ccb9d92f89) )
 	ROM_LOAD16_BYTE( "2.ic175",   0x100001, 0x20000, CRC(924c6ce2) SHA1(676a912652bd75da5087f0c7eae047b7681a993c) )
 
-	ROM_REGION( 0x600000, "gfx1", 0 )
-	ROMX_LOAD( "7.ic90",    0x000000, 0x80000, CRC(896eaf48) SHA1(5a13ae8b554e05eed3d5749aaf5845d499bce45b), ROM_SKIP(3) )
-	ROMX_LOAD( "13.ic89",   0x000001, 0x80000, CRC(305dd72a) SHA1(c373b517c23f3b019abb06e21f6b9ab6e1e47909), ROM_SKIP(3) )
-	ROMX_LOAD( "10.ic88",   0x000002, 0x80000, CRC(ef3f5be8) SHA1(d4e1de7d7caf6977e48544d6701618ae70c717f9), ROM_SKIP(3) )
-	ROMX_LOAD( "16.ic87",   0x000003, 0x80000, CRC(e57f6db9) SHA1(b37f95737804002ec0e237472eaacf0bc1e868e8), ROM_SKIP(3) )
-	ROMX_LOAD( "6.ic91",    0x200000, 0x80000, CRC(054cd5c4) SHA1(07f275e118c141a84ca15a2e9edc81694af37cf2), ROM_SKIP(3) )
-	ROMX_LOAD( "12.ic92",   0x200001, 0x80000, CRC(87e069e8) SHA1(cddd3be84f8379134590bfbbb080518f28120e49), ROM_SKIP(3) )
-	ROMX_LOAD( "9.ic93",    0x200002, 0x80000, CRC(818ca33d) SHA1(dfb707e17c83216f8a62e905f8c7cd6d406b417b), ROM_SKIP(3) )
-	ROMX_LOAD( "15.ic94",   0x200003, 0x80000, CRC(5dfb44d1) SHA1(08e44b8efc84f9cfc829aabf704155ddc700de76), ROM_SKIP(3) )
-	ROMX_LOAD( "8.ic86",    0x400000, 0x80000, CRC(34bbb3fa) SHA1(7794e89258f12b17d38c3d302dc15c502a8c8eb6), ROM_SKIP(3) )
-	ROMX_LOAD( "14.ic85",   0x400001, 0x80000, CRC(7d9f1a67) SHA1(6deb7fff867c42b13a32bb11eda798cfdb4cbaa8), ROM_SKIP(3) )
-	ROMX_LOAD( "11.ic84",   0x400002, 0x80000, CRC(cea6d1d6) SHA1(9c953db42f0d877e43c0c239f69a00df39a18295), ROM_SKIP(3) )
-	ROMX_LOAD( "17.ic83",   0x400003, 0x80000, CRC(91a9a05d) SHA1(5266ceddd2df925e79b4200843dec2f7aa9297b3), ROM_SKIP(3) )
+	ROM_REGION( 0x600000, "gfx1", 0 ) /* rearranged in init */
+	ROMX_LOAD( "7.ic90",    0x000000, 0x80000, CRC(896eaf48) SHA1(5a13ae8b554e05eed3d5749aaf5845d499bce45b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "10.ic88",   0x000002, 0x80000, CRC(ef3f5be8) SHA1(d4e1de7d7caf6977e48544d6701618ae70c717f9) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "13.ic89",   0x000004, 0x80000, CRC(305dd72a) SHA1(c373b517c23f3b019abb06e21f6b9ab6e1e47909) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "16.ic87",   0x000006, 0x80000, CRC(e57f6db9) SHA1(b37f95737804002ec0e237472eaacf0bc1e868e8) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "6.ic91",    0x200000, 0x80000, CRC(054cd5c4) SHA1(07f275e118c141a84ca15a2e9edc81694af37cf2) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "9.ic93",    0x200002, 0x80000, CRC(818ca33d) SHA1(dfb707e17c83216f8a62e905f8c7cd6d406b417b) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "12.ic92",   0x200004, 0x80000, CRC(87e069e8) SHA1(cddd3be84f8379134590bfbbb080518f28120e49) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "15.ic94",   0x200006, 0x80000, CRC(5dfb44d1) SHA1(08e44b8efc84f9cfc829aabf704155ddc700de76) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "8.ic86",    0x400000, 0x80000, CRC(34bbb3fa) SHA1(7794e89258f12b17d38c3d302dc15c502a8c8eb6) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "11.ic84",   0x400002, 0x80000, CRC(cea6d1d6) SHA1(9c953db42f0d877e43c0c239f69a00df39a18295) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "14.ic85",   0x400004, 0x80000, CRC(7d9f1a67) SHA1(6deb7fff867c42b13a32bb11eda798cfdb4cbaa8) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "17.ic83",   0x400006, 0x80000, CRC(91a9a05d) SHA1(5266ceddd2df925e79b4200843dec2f7aa9297b3) , ROM_GROUPWORD | ROM_SKIP(6) )
 
 	ROM_REGION( 0x8000, "gfx2", 0 )
 	ROM_COPY( "gfx1", 0x000000, 0x000000, 0x8000 )	/* stars */
@@ -8247,7 +8232,7 @@ ROM_START( slammast )
 	ROM_REGION( 0x8000, "user1", 0 )
 	ROM_COPY( "audio", 0x00000, 0x00000, 0x8000 )
 
-	ROM_REGION( 0x400000, "oki", 0 ) /* QSound samples */
+	ROM_REGION( 0x400000, "qsound", 0 ) /* QSound samples */
 	ROM_LOAD( "mb_q1.bin",      0x000000, 0x80000, CRC(0630c3ce) SHA1(520fc74c5c3638f611fa2f1b5efb08b91747e29b) )
 	ROM_LOAD( "mb_q2.bin",      0x080000, 0x80000, CRC(354f9c21) SHA1(1dc6b39791fd0f760697f409a6b62361a7bf62e9) )
 	ROM_LOAD( "mb_q3.bin",      0x100000, 0x80000, CRC(7838487c) SHA1(056b7da05cfca46873edacd674ca25c70855c6db) )
@@ -8293,7 +8278,7 @@ ROM_START( slammasu )
 	ROM_REGION( 0x8000, "user1", 0 )
 	ROM_COPY( "audio", 0x00000, 0x00000, 0x8000 )
 
-	ROM_REGION( 0x400000, "oki", 0 ) /* QSound samples */
+	ROM_REGION( 0x400000, "qsound", 0 ) /* QSound samples */
 	ROM_LOAD( "mb_q1.bin",      0x000000, 0x80000, CRC(0630c3ce) SHA1(520fc74c5c3638f611fa2f1b5efb08b91747e29b) )
 	ROM_LOAD( "mb_q2.bin",      0x080000, 0x80000, CRC(354f9c21) SHA1(1dc6b39791fd0f760697f409a6b62361a7bf62e9) )
 	ROM_LOAD( "mb_q3.bin",      0x100000, 0x80000, CRC(7838487c) SHA1(056b7da05cfca46873edacd674ca25c70855c6db) )
@@ -8431,7 +8416,7 @@ ROM_START( mbombrdj )
 	ROM_LOAD( "mb_q.bin",       0x00000, 0x08000, CRC(d6fa76d1) SHA1(3bfcb703e0e458ef1bb843230f8537167f1d4c3c) )
 	ROM_CONTINUE(               0x10000, 0x18000 )
 
-	ROM_REGION( 0x400000, "oki", 0 ) /* QSound samples */
+	ROM_REGION( 0x400000, "qsound", 0 ) /* QSound samples */
 	ROM_LOAD( "mb_q1.bin",      0x000000, 0x80000, CRC(0630c3ce) SHA1(520fc74c5c3638f611fa2f1b5efb08b91747e29b) )
 	ROM_LOAD( "mb_q2.bin",      0x080000, 0x80000, CRC(354f9c21) SHA1(1dc6b39791fd0f760697f409a6b62361a7bf62e9) )
 	ROM_LOAD( "mb_q3.bin",      0x100000, 0x80000, CRC(7838487c) SHA1(056b7da05cfca46873edacd674ca25c70855c6db) )
@@ -9574,10 +9559,10 @@ static DRIVER_INIT( sf2m1 )
 
 	mem16[0x06E2/2] = 0xFFFE; // Black scr
 //	mem16[0x15A4/2] = 0xFFC0; // Alignment
-//	mem16[0x6322/2] = 0x0181; // SFX
+	mem16[0x6322/2] = 0x0181; // SFX
 
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800012, 0x800013, 0, 0, cps1_hack_in2_r); /* Extra input ports */
-	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800005, 0x800006, 0, 0, cps1_soundlatch_w); /* Sound command */
+//	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800006, 0x800007, 0, 0, cps1hack_soundlatch_w); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 
@@ -10076,9 +10061,17 @@ static DRIVER_INIT( wofh )
 	DRIVER_INIT_CALL(cps1);
 }
 
+static DRIVER_INIT( cawingb )
+{
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882000, 0x882001, 0, 0, cps1_in1_r); /* Player input ports */
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882008, 0x88200f, 0, 0, cps1_dsw_r); /* System input ports / Dip Switches */
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882006, 0x882007, 0, 0, cps1hack_soundlatch_w); /* Sound command */
+	DRIVER_INIT_CALL(cps1);
+}
+
 static DRIVER_INIT( daimakb )
 {
-	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800005, 0x800006, 0, 0, cps1_soundlatch_w); /* Sound command */
+	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800006, 0x800007, 0, 0, cps1_soundlatch_w); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
 }
 #endif
@@ -10090,6 +10083,20 @@ static READ16_HANDLER( sf2mdt_r )
 
 static DRIVER_INIT( sf2mdt )
 {
+	int i;
+	UINT32 gfx_size = memory_region_length( machine, "gfx1" );
+	UINT8 *rom = memory_region( machine, "gfx1" );
+	UINT8 tmp;
+
+	for( i = 0; i < gfx_size; i += 8 )
+	{
+		tmp = rom[i+1];
+		rom[i+1] = rom[i+4];
+		rom[i+4] = tmp;
+		tmp = rom[i+3];
+		rom[i+3] = rom[i+6];
+		rom[i+6] = tmp;
+	}
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01a, 0x70c01b, 0, 0, sf2mdt_r);
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01c, 0x70c01d, 0, 0, sf2mdt_r);
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x70c01e, 0x70c01f, 0, 0, sf2mdt_r);
@@ -10236,19 +10243,19 @@ GAME( 1994, pnickj,   0,        cps1_12MHz, pnickj,   cps1,     ROT0,   "Compile
 GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", 0 )
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
 
-GAME( 1990, cawingb,  cawing,   cawingb,    cawing,   cps1,     ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING )
+GAME( 1990, cawingb,  cawing,   cps1_10MHz, cawing,   cawingb,  ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING )
 GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )					// Wed.26.10.1988 in the ROMS
 GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING )
 GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2,      sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING )
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
-GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 1, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 2, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 3, Chinese bootleg)", GAME_UNEMULATED_PROTECTION )
-GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 1, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 2, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg","Sangokushi II: San Jian Sheng (Chinese bootleg)", 0 )
-GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 1, Chinese bootleg)", GAME_IMPERFECT_SOUND )
-GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 2, Chinese bootleg)", GAME_IMPERFECT_SOUND )
+GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 1, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
+GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (set 2, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 1)" , 0)
 GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 2)", 0 )
 GAME( 1997, dinohb,   dino,     qsound,     dinoh,    dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 3)", 0 )
