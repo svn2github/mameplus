@@ -66,8 +66,6 @@
 #define snprintf _snprintf
 #endif
 
-#define OPTION_CHEAT_FILE			"cheat_file"
-
 /***************************************************************************
     Internal function prototypes
  ***************************************************************************/
@@ -1572,14 +1570,14 @@ void SetFolderDir(const WCHAR* path)
 	options_set_wstring(settings, MUIOPTION_FOLDER_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 
-const WCHAR* GetCheatFileName(void)
+const WCHAR* GetCheatDir(void)
 {
-	return options_get_wstring(global, OPTION_CHEAT_FILE);
+	return options_get_wstring(global, OPTION_CHEATPATH);
 }
 
-void SetCheatFileName(const WCHAR* path)
+void SetCheatDir(const WCHAR* path)
 {
-	options_set_wstring(global, OPTION_CHEAT_FILE, path, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(global, OPTION_CHEATPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 
 const WCHAR* GetHistoryFileName(void)
@@ -3254,6 +3252,7 @@ BOOL IsGlobalOption(const char *option_name)
 		OPTION_CTRLRPATH,
 		OPTION_INIPATH,
 		OPTION_FONTPATH,
+		OPTION_CHEATPATH,
 		OPTION_TRANSLATION_DIRECTORY,
 		OPTION_LOCALIZED_DIRECTORY,
 #ifdef USE_IPS
@@ -3270,7 +3269,6 @@ BOOL IsGlobalOption(const char *option_name)
 #ifdef USE_HISCORE
 		OPTION_HISCORE_DIRECTORY,
 #endif /* USE_HISCORE */
-		OPTION_CHEAT_FILE,
 		OPTION_HISTORY_FILE,
 #ifdef STORY_DATAFILE
 		OPTION_STORY_FILE,

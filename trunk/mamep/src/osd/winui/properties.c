@@ -106,6 +106,7 @@ b) Exit the dialog.
 
 ***************************************************************************/
 
+// standard windows headers
 #define WIN32_LEAN_AND_MEAN
 #define UNICODE
 
@@ -114,10 +115,14 @@ b) Exit the dialog.
 #include <commctrl.h>
 #include <commdlg.h>
 #include <ddraw.h>
+
+// standard C headers
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+#include <tchar.h>
 
+// MAME/MAMEUI headers
 #include <driver.h>
 #include <info.h>
 #ifdef USE_SCALE_EFFECTS
@@ -329,12 +334,13 @@ static int  g_nFolder          = 0;
 static int  g_nPropertyMode    = 0;
 static BOOL g_bUseDefaults     = FALSE;
 static BOOL g_bReset           = FALSE;
+static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
+static BOOL  g_bAutoSnapSize = FALSE;
+static HICON g_hIcon = NULL;
 
 static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
-static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FALSE};
-static HICON g_hIcon = NULL;
 
 #ifdef TREE_SHEET
 #define SHEET_TREE_WIDTH 180
@@ -354,8 +360,8 @@ static  BOOL bPageTreeSelChangedActive = FALSE;
 /* Property sheets */
 
 #define HIGHLIGHT_COLOR RGB(0,196,0)
-HBRUSH highlight_brush = NULL;
-HBRUSH background_brush = NULL;
+static HBRUSH highlight_brush = NULL;
+static HBRUSH background_brush = NULL;
 #define VECTOR_COLOR RGB( 190, 0, 0) //DARK RED
 #define FOLDER_COLOR RGB( 0, 128, 0 ) // DARK GREEN
 #define PARENT_COLOR RGB( 190, 128, 192 ) // PURPLE
@@ -473,6 +479,20 @@ static struct ComboBoxDevices
 
 #define NUMDEVICES ARRAY_LENGTH(g_ComboBoxDevice)
 
+static struct ComboBoxSnapView
+{
+	const WCHAR*	m_pText;
+	const char*		m_pData;
+} g_ComboBoxSnapView[] = 
+{
+	{ TEXT("Internal"),	        "internal"    },
+	{ TEXT("Auto"),		        "auto"        },
+	{ TEXT("Standard"),         "standard"    }, 
+	{ TEXT("Pixel Aspect"),     "pixel"       }, 
+	{ TEXT("Cocktail"),         "cocktail"    },
+};
+#define NUMSNAPVIEW (sizeof(g_ComboBoxSnapView) / sizeof(g_ComboBoxSnapView[0]))
+
 #ifdef DRIVER_SWITCH
 static const struct
 {
@@ -490,6 +510,7 @@ static const struct
 	{0}
 };
 #endif /* DRIVER_SWITCH */
+
 
 /***************************************************************
  * Public functions
@@ -1838,6 +1859,15 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 
+	case IDC_SNAPSIZE:
+		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
+		if( g_bAutoSnapSize != nCurSelection )
+		{
+			changed = TRUE;
+			g_bAutoSnapSize = nCurSelection;
+		}
+		break;
+
 	case IDC_ASPECTRATION:
 	case IDC_ASPECTRATIOD:
 		if (wNotifyCode == EN_CHANGE)
@@ -2342,6 +2372,39 @@ static void PropToOptions(HWND hWnd, core_options *o)
 			options_set_string(o, aspect_option, buffer2, OPTION_PRIORITY_CMDLINE);
 		}
 	}
+	/* aspect ratio */
+	hCtrl  = GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH);
+	hCtrl2 = GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT);
+	hCtrl3 = GetDlgItem(hWnd, IDC_SNAPSIZE);
+	if (hCtrl && hCtrl2 && hCtrl3)
+	{
+		if (Button_GetCheck(hCtrl3))
+		{
+			options_set_string(o, OPTION_SNAPSIZE, "auto", OPTION_PRIORITY_CMDLINE);
+		}
+		else
+		{
+			int width = 0;
+			int height = 0;
+			TCHAR buffer[200];
+			char buffer2[200];
+
+			Edit_GetText(hCtrl,buffer,sizeof(buffer));
+			_stscanf(buffer,TEXT("%d"),&width);
+
+			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
+			_stscanf(buffer,TEXT("%d"),&height);
+
+			if (width == 0 || height == 0)
+			{
+				width = 640;
+				height = 480;
+			}
+
+			snprintf(buffer2,sizeof(buffer2),"%dx%d",width,height);
+			options_set_string(o, OPTION_SNAPSIZE, buffer2, OPTION_PRIORITY_CMDLINE);
+		}
+	}
 }
 
 /* Update options from the dialog */
@@ -2369,6 +2432,8 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	WCHAR buf[100];
 	int  n = 0;
 	int  d = 0;
+	int  width = 0;
+	int  height = 0;
 
 	{
 		int n;
@@ -2451,6 +2516,12 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	/* Setup Select screen*/
 	UpdateSelectScreenUI(hWnd );
 
+	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
+	if (hCtrl)
+	{
+		Button_SetCheck(hCtrl, g_bAutoSnapSize )	;
+	}
+
 	hCtrl = GetDlgItem(hWnd, IDC_ASPECT);
 	if (hCtrl)
 	{
@@ -2505,6 +2576,48 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		if (effect == NULL) {
 			effect = "none";
 			options_set_string(o, WINOPTION_EFFECT, effect, OPTION_PRIORITY_CMDLINE);
+		}
+	}
+	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
+	if (hCtrl)
+	{
+		if( strcmp(options_get_string(o, OPTION_SNAPSIZE), "auto") == 0)
+		{
+			Button_SetCheck(hCtrl, TRUE);
+			g_bAutoSnapSize = TRUE;
+		}
+		else
+		{
+			Button_SetCheck(hCtrl, FALSE);
+			g_bAutoSnapSize = FALSE;
+		}
+	}
+	/* snapshot size */
+	hCtrl  = GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH);
+	hCtrl2 = GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT);
+	if (hCtrl && hCtrl2)
+	{
+		n = 0;
+		d = 0;
+		if (options_get_string(o, OPTION_SNAPSIZE))
+		{
+			if (sscanf(options_get_string(o, OPTION_SNAPSIZE), "%dx%d", &width, &height) == 2 && width != 0 && height != 0)
+			{
+				_stprintf(buf, TEXT("%d"), width);
+				Edit_SetText(hCtrl, buf);
+				_stprintf(buf, TEXT("%d"), height);
+				Edit_SetText(hCtrl2, buf);
+			}
+			else
+			{
+				Edit_SetText(hCtrl,  TEXT("640"));
+				Edit_SetText(hCtrl2, TEXT("480"));
+			}
+		}
+		else
+		{
+			Edit_SetText(hCtrl,  TEXT("640"));
+			Edit_SetText(hCtrl2, TEXT("480"));
 		}
 	}
 }
@@ -2565,6 +2678,12 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOTEXT),        !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
+
+	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
+	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT), !g_bAutoSnapSize);
+	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH), !g_bAutoSnapSize);
+	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEX), !g_bAutoSnapSize);
+
 
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
@@ -2922,8 +3041,6 @@ static void ViewSetOptionName(datamap *map, HWND dialog, HWND control, char *buf
 		strcpy(buffer, WINOPTION_VIEW);
 }
 
-
-
 static BOOL ViewPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	int i;
@@ -2942,6 +3059,28 @@ static BOOL ViewPopulateControl(datamap *map, HWND dialog, HWND control, core_op
 		(void)ComboBox_SetItemData(control, i, g_ComboBoxView[i].m_pData);
 
 		if (!strcmp(view, g_ComboBoxView[i].m_pData))
+			selected_index = i;
+	}
+	(void)ComboBox_SetCurSel(control, selected_index);
+	return FALSE;
+}
+
+static BOOL SnapViewPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
+{
+	int i;
+	int selected_index = 0;
+	const char *snapview;
+
+	// determine the snapview option value
+	snapview = options_get_string(opts, OPTION_SNAPVIEW);
+
+	(void)ComboBox_ResetContent(control);
+	for (i = 0; i < NUMSNAPVIEW; i++)
+	{
+		(void)ComboBox_InsertString(control, i, g_ComboBoxSnapView[i].m_pText);
+		(void)ComboBox_SetItemData(control, i, g_ComboBoxSnapView[i].m_pData);
+
+		if (!strcmp(snapview, g_ComboBoxSnapView[i].m_pData))
 			selected_index = i;
 	}
 	(void)ComboBox_SetCurSel(control, selected_index);
@@ -3270,8 +3409,9 @@ static void BuildDataMap(void)
 
 	// core state options
 	datamap_add(properties_datamap, IDC_ENABLE_AUTOSAVE,		DM_BOOL,	OPTION_AUTOSAVE);
-	//snapsize missing (width x height)
-	//snapview missing
+	datamap_add(properties_datamap, IDC_SNAPVIEW,				DM_STRING,	OPTION_SNAPVIEW);
+	datamap_add(properties_datamap, IDC_SNAPSIZEWIDTH,			DM_STRING,	NULL);
+	datamap_add(properties_datamap, IDC_SNAPSIZEHEIGHT,			DM_STRING,	NULL);
 
 	// core performance options
 	datamap_add(properties_datamap, IDC_AUTOFRAMESKIP,			DM_BOOL,	OPTION_AUTOFRAMESKIP);
@@ -3475,6 +3615,7 @@ static void BuildDataMap(void)
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_READ_CONTROL,		ResolutionReadControl);
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_POPULATE_CONTROL,	DefaultInputPopulateControl);
+	datamap_set_callback(properties_datamap, IDC_SNAPVIEW,		DCT_POPULATE_CONTROL,	SnapViewPopulateControl);
 	{
 		int n;
 

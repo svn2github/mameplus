@@ -338,6 +338,7 @@
 #define IDC_NOOFFSET_CLONES             1200
 #define IDC_BIOS                        1201
 #define IDC_HISTORY_TAB                 1202
+#define IDC_SNAPVIEW                    1202
 #define IDC_SCREENSHOT_BORDERSIZE       1204
 #define IDC_SCREENSHOT_BORDERCOLOR      1205
 #define IDC_CYCLETIMESECTXT             1206
@@ -382,11 +383,15 @@
 #define IDC_SELECT_JOYSTICKMAP          1246
 #define IDC_RESET_JOYSTICKMAP           1247
 #define IDC_JOYSTICKMAP                 1248
+#define IDC_SNAPSIZE                    1249
+#define IDC_SNAPSIZEWIDTH               1250
+#define IDC_SNAPSIZEHEIGHT              1251
+#define IDC_SNAPSIZETEXT                1252
+#define IDC_SNAPSIZEX                   1253
 
-
-#define IDC_PRESCALETEXT                1251
-#define IDC_DISPLAY_SPLASH_SCREEN       1252
-#define IDC_SHOW_TREE_SHEET             1253 // USE_TREE_SHEET
+#define IDC_PRESCALETEXT                1261
+#define IDC_DISPLAY_SPLASH_SCREEN       1262
+#define IDC_SHOW_TREE_SHEET             1263 // USE_TREE_SHEET
 
 #define IDC_AUTO_PAUSE_PLAYBACK         1301 // USE_AUTO_PAUSE_PLAYBACK
 #define IDC_CONFIRM_QUIT                1302 // confirm_quit
@@ -566,7 +571,7 @@
 #define ID_FOLDER_SOURCEPROPERTIES      40096
 #define ID_FOLDER_VECTORPROPERTIES      0     // N/A
 #define ID_ARRANGE_ICONS                0     // N/A
-#define ID_OPTIONS_CHEAT                40099
+#define ID_OPTIONS_CHEAT                0     // N/A
 #define ID_OPTIONS_MAMEINFO             40101
 #define ID_OPTIONS_HISTORY              40102
 #define ID_BIOS_PROPERTIES		40104
@@ -621,7 +626,7 @@
 #define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        189
 #define _APS_NEXT_COMMAND_VALUE         40103
-#define _APS_NEXT_CONTROL_VALUE         1249
+#define _APS_NEXT_CONTROL_VALUE         1254
 #define _APS_NEXT_SYMED_VALUE           93
 #endif
 #endif

@@ -121,6 +121,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Config"),                GetCfgDir,           SetCfgDir,           FALSE, DIRDLG_CFG },
 	{ TEXT("Snapshots"),             GetImgDir,           SetImgDir,           TRUE,  DIRDLG_IMG },
 	{ TEXT("Input Files (*.inp)"),   GetInpDir,           SetInpDir,           FALSE, DIRDLG_INP },
+	{ TEXT("Cheats"),			 GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
 	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
 	{ TEXT("Artwork"),               GetArtDir,           SetArtDir,           FALSE, 0 },
 	{ TEXT("Memory Card"),           GetMemcardDir,       SetMemcardDir,       FALSE, 0 },

@@ -869,13 +869,6 @@ static struct
 	},
 #if 0
 	{
-		TEXT("cheats (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
-		TEXT("Select a cheats"),
-		NULL,
-		GetLastDir,
-		TEXT("dat")
-	},
-	{
 		TEXT("history (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
 		TEXT("Select a history"),
 		NULL,
@@ -5480,17 +5473,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 #endif /* UI_COLOR_PALETTE */
 
 #if 0
-	case ID_OPTIONS_CHEAT:
-		{
-			WCHAR filename[MAX_PATH];
-			_tcscpy(filename, GetCheatFileName());
-			if (CommonFileDialog(FALSE, filename, FILETYPE_CHEAT_FILE))
-			{
-				SetCheatFileName(filename);
-				SaveDefaultOptions();
-			}
-			return TRUE;
-		}
 	case ID_OPTIONS_HISTORY:
 		{
 			WCHAR filename[MAX_PATH];

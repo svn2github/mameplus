@@ -308,8 +308,8 @@ void SetFolderDir(const WCHAR *path);
 const WCHAR* GetFontDir(void);
 void  SetFontDir(const WCHAR* paths);
 
-const WCHAR *GetCheatFileName(void);
-void SetCheatFileName(const WCHAR *path);
+const WCHAR *GetCheatDir(void);
+void SetCheatDir(const WCHAR *path);
 
 const WCHAR *GetHistoryFileName(void);
 void SetHistoryFileName(const WCHAR *path);

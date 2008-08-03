@@ -183,7 +183,6 @@ BEGIN
         MENUITEM "&Mame Release Notes",         ID_HELP_WHATS_NEW
         MENUITEM SEPARATOR
 #if 0
-        MENUITEM "Ch&eat File...",              ID_OPTIONS_CHEAT
         MENUITEM "&History File...",            ID_OPTIONS_HISTORY
         MENUITEM "Mame&info File...",           ID_OPTIONS_MAMEINFO
         MENUITEM SEPARATOR
@@ -578,6 +577,25 @@ BEGIN
     RTEXT           "View:",IDC_STATIC,26,184,69,12,SS_CENTERIMAGE | NOT WS_GROUP
     COMBOBOX        IDC_VIEW,104,184,130,100,CBS_DROPDOWNLIST | WS_VSCROLL | 
                     WS_TABSTOP,0,HIDC_VIEW
+
+#if 0
+    GROUPBOX        "Snapshot view",IDC_STATIC,7,148,103,28
+    COMBOBOX        IDC_SNAPVIEW,13,158,90,60,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP,0,HIDC_SNAPVIEW
+
+    GROUPBOX        "",IDC_STATIC,7,178,208,28
+    CONTROL         "Autoselect snapshot size",IDC_SNAPSIZE,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,178,95,10,0,
+                    HIDC_SNAPSIZE
+    LTEXT           "Snapshotsize",IDC_SNAPSIZETEXT,11,189,44,11,
+                    SS_CENTERIMAGE | NOT WS_GROUP
+    EDITTEXT        IDC_SNAPSIZEWIDTH,122,187,32,12,ES_RIGHT | 
+                    ES_AUTOHSCROLL | ES_NUMBER,0,HIDC_SNAPSIZEWIDTH
+    EDITTEXT        IDC_SNAPSIZEHEIGHT,172,187,32,12,ES_RIGHT | 
+                    ES_AUTOHSCROLL | ES_NUMBER,0,HIDC_SNAPSIZEHEIGHT
+    LTEXT           "x",IDC_SNAPSIZEX,162,189,8,8
+#endif
+
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
                     0,0,HIDC_USE_DEFAULT
@@ -805,13 +823,13 @@ BEGIN
                     WS_TABSTOP,10,45,239,10,0,HIDC_LOG
     CONTROL         "Output diagnostic information",IDC_VERBOSE,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,59,239,10,0,HIDC_VERBOSE
+    CONTROL         "Activate Integrated Debugger",IDC_DEBUG,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,73,239,10,0,HIDC_DEBUG
+    CONTROL         "Output log to Windows Debugger",IDC_OSLOG,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,239,10,0,HIDC_OSLOG
     CONTROL         "Update Main window during paused emulation",
                     IDC_UPDATEINPAUSE,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,
-                    10,73,239,10,0,HIDC_UPDATEINPAUSE
-    CONTROL         "Activate Integrated Debugger",IDC_DEBUG,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,87,239,10,0,HIDC_DEBUG
-    CONTROL         "Output log to Windows Debugger",IDC_OSLOG,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,101,239,10,0,HIDC_OSLOG
+                    10,101,239,10,0,HIDC_UPDATEINPAUSE
     GROUPBOX        "Debugscript",IDC_STATIC,4,115,251,58
     EDITTEXT        IDC_DEBUGSCRIPT,10,128,239,14,ES_AUTOHSCROLL | 
                     WS_DISABLED
@@ -1405,7 +1423,7 @@ BEGIN
         VERTGUIDE, 104
         VERTGUIDE, 114
         VERTGUIDE, 204
-        BOTTOMMARGIN, 183
+        BOTTOMMARGIN, 236
     END
 
     IDD_PROP_VECTOR, DIALOG
