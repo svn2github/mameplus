@@ -1560,7 +1560,7 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0130/4:
 			if( (mem_mask) & 0x0000ffff )	// KEYINPUT
 			{
-				return input_port_read(machine, "IO");
+				return input_port_read(machine, "IN0");
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
@@ -2465,13 +2465,13 @@ static ADDRESS_MAP_START( gbadvance_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x05000000, 0x050003ff) AM_RAM AM_BASE(&pram)	// Palette RAM
 	AM_RANGE(0x06000000, 0x06017fff) AM_RAM AM_BASE(&vram)	// VRAM
 	AM_RANGE(0x07000000, 0x070003ff) AM_RAM AM_BASE(&oam)	// OAM
-	AM_RANGE(0x08000000, 0x09ffffff) AM_ROM AM_REGION("user2", 0)	// cartridge ROM (mirror 0)
-	AM_RANGE(0x0a000000, 0x0bffffff) AM_ROM AM_REGION("user2", 0)	// cartridge ROM (mirror 1)
-	AM_RANGE(0x0c000000, 0x0cffffff) AM_ROM AM_REGION("user2", 0)	// final mirror
+	AM_RANGE(0x08000000, 0x09ffffff) AM_ROM AM_REGION("cartridge", 0)	// cartridge ROM (mirror 0)
+	AM_RANGE(0x0a000000, 0x0bffffff) AM_ROM AM_REGION("cartridge", 0)	// cartridge ROM (mirror 1)
+	AM_RANGE(0x0c000000, 0x0cffffff) AM_ROM AM_REGION("cartridge", 0)	// final mirror
 ADDRESS_MAP_END
 
 INPUT_PORTS_START( gbadv )
-	PORT_START
+	PORT_START_TAG("IN0")
 	PORT_BIT( 0xfc00, IP_ACTIVE_HIGH, IPT_BUTTON6) PORT_UNUSED
 	PORT_BIT( 0x0200, IP_ACTIVE_LOW, IPT_BUTTON5 ) PORT_NAME("P1 R") PORT_PLAYER(1)	// R
 	PORT_BIT( 0x0100, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_NAME("P1 L") PORT_PLAYER(1)	// L
@@ -2688,7 +2688,7 @@ static struct CustomSound_interface gameboy_sound_interface =
 { gameboy_sh_start, 0, 0 };
 
 static MACHINE_DRIVER_START( gbadv )
-	MDRV_CPU_ADD("GBADV", ARM7, 16777216)
+	MDRV_CPU_ADD("main", ARM7, 16777216)
 	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
 
 	MDRV_MACHINE_START(gba)
@@ -2704,26 +2704,26 @@ static MACHINE_DRIVER_START( gbadv )
 	MDRV_VIDEO_UPDATE(generic_bitmapped)
 
 	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	MDRV_SOUND_ADD("custom", CUSTOM, 0)		// legacy GB sound
+	MDRV_SOUND_ADD("gblegacy", CUSTOM, 0)		// legacy GB sound
 	MDRV_SOUND_CONFIG(gameboy_sound_interface)
 	MDRV_SOUND_ROUTE(0, "left", 0.50)
 	MDRV_SOUND_ROUTE(1, "right", 0.50)
-	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound A left
+	MDRV_SOUND_ADD("direct A left", DAC, 0)			// GBA direct sound A left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound A right
+	MDRV_SOUND_ADD("direct A right", DAC, 0)		// GBA direct sound A right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
-	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound B left
+	MDRV_SOUND_ADD("direct B left", DAC, 0)			// GBA direct sound B left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("dac", DAC, 0)			// GBA direct sound B right
+	MDRV_SOUND_ADD("direct B right", DAC, 0)		// GBA direct sound B right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
 MACHINE_DRIVER_END
 
 ROM_START( gba )
-	ROM_REGION( 0x8000, "user1", ROMREGION_ERASE00 )
-	ROM_LOAD( "gba.bin", 0x000000, 0x004000, CRC(15e1f676) SHA1(aa98a2ad32b86106340665d1222d7d973a1361c7) )
+	ROM_REGION( 0x8000, "bios", ROMREGION_ERASE00 )
+	ROM_LOAD( "gba.bin", 0x000000, 0x004000, CRC(81977335) )
 
 	/* cartridge region - 32 MBytes (128 Mbit) */
-	ROM_REGION( 0x2000000, "user2", ROMREGION_ERASEFF )
+	ROM_REGION( 0x2000000, "cartridge", ROMREGION_ERASEFF )
 ROM_END
 
 static READ32_HANDLER( sram_r )
@@ -3044,7 +3044,7 @@ static WRITE32_HANDLER( eeprom_w )
 
 static DEVICE_IMAGE_LOAD( gba_cart )
 {
-	UINT8 *ROM = memory_region(image->machine, "user2");
+	UINT8 *ROM = memory_region(image->machine, "cartridge");
 	int i;
 
 	nvsize = 0;
@@ -3157,11 +3157,11 @@ static OPBASE_HANDLER( gba_setopbase )
 {
 	if (address > 0x4000)
 	{
-		memory_set_bankptr(1, memory_region(machine, "user1")+0x4000);
+		memory_set_bankptr(1, memory_region(machine, "bios")+0x4000);
 	}
 	else
 	{
-		memory_set_bankptr(1, memory_region(machine, "user1"));
+		memory_set_bankptr(1, memory_region(machine, "bios"));
 	}
 
 	return address;
