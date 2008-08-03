@@ -386,7 +386,7 @@
 #define IDC_SNAPSIZE                    1249
 #define IDC_SNAPSIZEWIDTH               1250
 #define IDC_SNAPSIZEHEIGHT              1251
-#define IDC_SNAPSIZETEXT                1252
+#define IDC_SNAPSIZETEXT                0    // N/A
 #define IDC_SNAPSIZEX                   1253
 
 #define IDC_PRESCALETEXT                1261

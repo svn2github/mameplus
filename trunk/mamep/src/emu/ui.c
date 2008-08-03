@@ -1496,7 +1496,7 @@ static astring *disclaimer_string(running_machine *machine, astring *string)
 {
 	astring_cpyc(string, _("Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n"));
 	astring_catprintf(string, _("IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n"), machine->gamedrv->description);
-	astring_catc(string, "Otherwise, type OK or move the joystick left then right to continue");
+	astring_catc(string, _("Otherwise, type OK or move the joystick left then right to continue"));
 	return string;
 }
 

@@ -1554,8 +1554,8 @@ static void menu_input_groups_populate(running_machine *machine, ui_menu *menu, 
 	for (player = 0; player < MAX_PLAYERS; player++)
 	{
 		char buffer[40];
-		sprintf(buffer, "Player %d Controls", player + 1);
-		ui_menu_item_append(menu, _(buffer), NULL, 0, (void *)(FPTR)(IPG_PLAYER1 + player + 1));
+		sprintf(buffer, _("Player %d Controls"), player + 1);
+		ui_menu_item_append(menu, buffer, NULL, 0, (void *)(FPTR)(IPG_PLAYER1 + player + 1));
 	}
 	ui_menu_item_append(menu, _("Other Controls"), NULL, 0, (void *)(FPTR)(IPG_OTHER + 1));
 }
@@ -1858,9 +1858,9 @@ static void menu_input_populate_and_sort(ui_menu *menu, input_item_data *itemlis
 
 	/* create a mini lookup table for name format based on type */
 	nameformat[INPUT_TYPE_DIGITAL] = "%s";
-	nameformat[INPUT_TYPE_ANALOG] = "%s Analog";
-	nameformat[INPUT_TYPE_ANALOG_INC] = "%s Analog Inc";
-	nameformat[INPUT_TYPE_ANALOG_DEC] = "%s Analog Dec";
+	nameformat[INPUT_TYPE_ANALOG] = _("%s Analog");
+	nameformat[INPUT_TYPE_ANALOG_INC] = _("%s Analog Inc");
+	nameformat[INPUT_TYPE_ANALOG_DEC] = _("%s Analog Dec");
 
 	/* first count the number of items */
 	for (item = itemlist; item != NULL; item = item->next)
@@ -1899,7 +1899,7 @@ static void menu_input_populate_and_sort(ui_menu *menu, input_item_data *itemlis
 		}
 
 		/* add the item */
-		ui_menu_item_append(menu, _(astring_c(text)), astring_c(subtext), flags, item);
+		ui_menu_item_append(menu, _(astring_c(text)), _(astring_c(subtext)), flags, item);
 	}
 
 	/* free our temporary strings */
@@ -2318,7 +2318,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 						{
 							default:
 							case ANALOG_ITEM_KEYSPEED:
-								astring_printf(text, _("%s Digital Speed"), input_field_name(field));
+								astring_printf(text, _("%s Digital Speed"), _(input_field_name(field)));
 								astring_printf(subtext, "%d", settings.delta);
 								data->min = 0;
 								data->max = 255;
@@ -2326,7 +2326,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_CENTERSPEED:
-								astring_printf(text, _("%s Autocenter Speed"), input_field_name(field));
+								astring_printf(text, _("%s Autocenter Speed"), _(input_field_name(field)));
 								astring_printf(subtext, "%d", settings.centerdelta);
 								data->min = 0;
 								data->max = 255;
@@ -2334,7 +2334,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_REVERSE:
-								astring_printf(text, _("%s Reverse"), input_field_name(field));
+								astring_printf(text, _("%s Reverse"), _(input_field_name(field)));
 								astring_cpyc(subtext, settings.reverse ? _("On") : _("Off"));
 								data->min = 0;
 								data->max = 1;
@@ -2342,7 +2342,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
 								break;
 
 							case ANALOG_ITEM_SENSITIVITY:
-								astring_printf(text, _("%s Sensitivity"), input_field_name(field));
+								astring_printf(text, _("%s Sensitivity"), _(input_field_name(field)));
 								astring_printf(subtext, "%d", settings.sensitivity);
 								data->min = 1;
 								data->max = 255;
@@ -2778,9 +2778,9 @@ static void menu_video_options_populate(running_machine *machine, ui_menu *menu,
 	switch (render_target_get_orientation(target))
 	{
 		case ROT0:		subtext = _("None");					break;
-		case ROT90:		subtext = "CW 90" UTF8_DEGREES; 	break;
-		case ROT180:	subtext = "180" UTF8_DEGREES; 		break;
-		case ROT270:	subtext = "CCW 90" UTF8_DEGREES; 	break;
+		case ROT90:		subtext = _("CW 90" UTF8_DEGREES); 	break;
+		case ROT180:	subtext = _("180" UTF8_DEGREES); 		break;
+		case ROT270:	subtext = _("CCW 90" UTF8_DEGREES); 	break;
 	}
 	ui_menu_item_append(menu, _("Rotate"), subtext, MENU_FLAG_LEFT_ARROW | MENU_FLAG_RIGHT_ARROW, (void *)VIDEO_ITEM_ROTATE);
 

@@ -1858,21 +1858,21 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 
-	case IDC_SNAPSIZE:
-		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
-		if( g_bAutoSnapSize != nCurSelection )
-		{
-			changed = TRUE;
-			g_bAutoSnapSize = nCurSelection;
-		}
-		break;
-
 	case IDC_ASPECTRATION:
 	case IDC_ASPECTRATIOD:
 		if (wNotifyCode == EN_CHANGE)
 		{
 			//TODO: check value is changed
 			changed = TRUE;
+		}
+		break;
+
+	case IDC_SNAPSIZE:
+		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
+		if( g_bAutoSnapSize != nCurSelection )
+		{
+			changed = TRUE;
+			g_bAutoSnapSize = nCurSelection;
 		}
 		break;
 
@@ -2385,7 +2385,7 @@ static void PropToOptions(HWND hWnd, core_options *o)
 		{
 			int width = 0;
 			int height = 0;
-			WCHAR buffer[200];
+			TCHAR buffer[200];
 			char buffer2[200];
 
 			Edit_GetText(hCtrl,buffer,sizeof(buffer));
@@ -2461,6 +2461,12 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		}
 	}
 
+	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
+	if (hCtrl)
+	{
+		Button_SetCheck(hCtrl, g_bAutoSnapSize );
+	}
+
 #ifdef DRIVER_SWITCH
 	{
 		char *temp = mame_strdup(options_get_string(o, OPTION_DRIVER_CONFIG));
@@ -2514,12 +2520,6 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	datamap_update_control(properties_datamap, hWnd, pCurrentOpts, IDC_REFRESH);
 	/* Setup Select screen*/
 	UpdateSelectScreenUI(hWnd );
-
-	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
-	if (hCtrl)
-	{
-		Button_SetCheck(hCtrl, g_bAutoSnapSize )	;
-	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_ASPECT);
 	if (hCtrl)
@@ -2678,7 +2678,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
+//	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEX), !g_bAutoSnapSize);
