@@ -2465,9 +2465,9 @@ static ADDRESS_MAP_START( gbadvance_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x05000000, 0x050003ff) AM_RAM AM_BASE(&pram)	// Palette RAM
 	AM_RANGE(0x06000000, 0x06017fff) AM_RAM AM_BASE(&vram)	// VRAM
 	AM_RANGE(0x07000000, 0x070003ff) AM_RAM AM_BASE(&oam)	// OAM
-	AM_RANGE(0x08000000, 0x09ffffff) AM_ROM AM_REGION(REGION_USER2, 0)	// cartridge ROM (mirror 0)
-	AM_RANGE(0x0a000000, 0x0bffffff) AM_ROM AM_REGION(REGION_USER2, 0)	// cartridge ROM (mirror 1)
-	AM_RANGE(0x0c000000, 0x0cffffff) AM_ROM AM_REGION(REGION_USER2, 0)	// final mirror
+	AM_RANGE(0x08000000, 0x09ffffff) AM_ROM AM_REGION("user2", 0)	// cartridge ROM (mirror 0)
+	AM_RANGE(0x0a000000, 0x0bffffff) AM_ROM AM_REGION("user2", 0)	// cartridge ROM (mirror 1)
+	AM_RANGE(0x0c000000, 0x0cffffff) AM_ROM AM_REGION("user2", 0)	// final mirror
 ADDRESS_MAP_END
 
 INPUT_PORTS_START( gbadv )
@@ -2719,11 +2719,11 @@ static MACHINE_DRIVER_START( gbadv )
 MACHINE_DRIVER_END
 
 ROM_START( gba )
-	ROM_REGION( 0x8000, REGION_USER1, ROMREGION_ERASE00 )
+	ROM_REGION( 0x8000, "user1", ROMREGION_ERASE00 )
 	ROM_LOAD( "gba.bin", 0x000000, 0x004000, CRC(15e1f676) SHA1(aa98a2ad32b86106340665d1222d7d973a1361c7) )
 
 	/* cartridge region - 32 MBytes (128 Mbit) */
-	ROM_REGION( 0x2000000, REGION_USER2, ROMREGION_ERASEFF )
+	ROM_REGION( 0x2000000, "user2", ROMREGION_ERASEFF )
 ROM_END
 
 static READ32_HANDLER( sram_r )
@@ -3044,7 +3044,7 @@ static WRITE32_HANDLER( eeprom_w )
 
 static DEVICE_IMAGE_LOAD( gba_cart )
 {
-	UINT8 *ROM = memory_region(image->machine, REGION_USER2);
+	UINT8 *ROM = memory_region(image->machine, "user2");
 	int i;
 
 	nvsize = 0;
@@ -3157,11 +3157,11 @@ static OPBASE_HANDLER( gba_setopbase )
 {
 	if (address > 0x4000)
 	{
-		memory_set_bankptr(1, memory_region(machine, REGION_USER1)+0x4000);
+		memory_set_bankptr(1, memory_region(machine, "user1")+0x4000);
 	}
 	else
 	{
-		memory_set_bankptr(1, memory_region(machine, REGION_USER1));
+		memory_set_bankptr(1, memory_region(machine, "user1"));
 	}
 
 	return address;
