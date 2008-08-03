@@ -120,7 +120,6 @@ b) Exit the dialog.
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
-#include <tchar.h>
 
 // MAME/MAMEUI headers
 #include <driver.h>
@@ -2386,14 +2385,14 @@ static void PropToOptions(HWND hWnd, core_options *o)
 		{
 			int width = 0;
 			int height = 0;
-			TCHAR buffer[200];
+			WCHAR buffer[200];
 			char buffer2[200];
 
 			Edit_GetText(hCtrl,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&width);
+			swscanf(buffer,TEXT("%d"),&width);
 
 			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&height);
+			swscanf(buffer,TEXT("%d"),&height);
 
 			if (width == 0 || height == 0)
 			{
@@ -2603,9 +2602,9 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		{
 			if (sscanf(options_get_string(o, OPTION_SNAPSIZE), "%dx%d", &width, &height) == 2 && width != 0 && height != 0)
 			{
-				_stprintf(buf, TEXT("%d"), width);
+				swprintf(buf, TEXT("%d"), width);
 				Edit_SetText(hCtrl, buf);
-				_stprintf(buf, TEXT("%d"), height);
+				swprintf(buf, TEXT("%d"), height);
 				Edit_SetText(hCtrl2, buf);
 			}
 			else
