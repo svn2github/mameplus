@@ -337,7 +337,7 @@ static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE,
 static BOOL  g_bAutoSnapSize = FALSE;
 static HICON g_hIcon = NULL;
 
-static TCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
+static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
 
@@ -387,7 +387,7 @@ BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num)
 
 	if (opt_type == OPTIONS_SOURCE)
 	{
-		const TCHAR *folder = GetFolderByID(folder_id)->m_lpTitle;
+		const WCHAR *folder = GetFolderByID(folder_id)->m_lpTitle;
 		return FolderHasVector(folder);
 	}
 
@@ -413,7 +413,7 @@ extern const DWORD dwHelpIDs[];
 
 static struct ComboBoxVideo
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const char*	m_pData;
 } g_ComboBoxVideo[] = 
 {
@@ -426,7 +426,7 @@ static struct ComboBoxVideo
 
 static struct ComboBoxD3DVersion
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const int	m_pData;
 } g_ComboBoxD3DVersion[] = 
 {
@@ -438,7 +438,7 @@ static struct ComboBoxD3DVersion
 
 static struct ComboBoxSelectScreen
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const int	m_pData;
 } g_ComboBoxSelectScreen[] = 
 {
@@ -452,7 +452,7 @@ static struct ComboBoxSelectScreen
 
 static struct ComboBoxView
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const char*	m_pData;
 } g_ComboBoxView[] = 
 {
@@ -465,7 +465,7 @@ static struct ComboBoxView
 
 static struct ComboBoxDevices
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const char*	m_pData;
 } g_ComboBoxDevice[] = 
 {
@@ -480,7 +480,7 @@ static struct ComboBoxDevices
 
 static struct ComboBoxSnapView
 {
-	const TCHAR*	m_pText;
+	const WCHAR*	m_pText;
 	const char*		m_pData;
 } g_ComboBoxSnapView[] = 
 {
@@ -698,9 +698,9 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
 	{
-		TCHAR temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
-		_stprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
+		swprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
@@ -717,7 +717,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 {
 	PROPSHEETHEADER pshead;
 	PROPSHEETPAGE   *pspage;
-	TCHAR*          w_description = NULL;
+	WCHAR*          w_description = NULL;
 	OPTIONS_TYPE    default_type = opt_type;
 
 	if (highlight_brush == NULL)
@@ -821,9 +821,9 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	/* Create the Property sheet and display it */
 	if (PropertySheet(&pshead) == -1)
 	{
-		TCHAR temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
-		_stprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
+		swprintf(temp, _UIW(TEXT("Propery Sheet Error %d %X")), (int)dwError, (int)dwError);
 		MessageBox(0, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
@@ -841,7 +841,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 static LPCWSTR GameInfoCPU(UINT nIndex)
 {
 	int chipnum;
-	static TCHAR buf[1024];
+	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	ZeroMemory(buf, sizeof(buf));
@@ -854,12 +854,12 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 		{
 			if (config->cpu[chipnum].clock >= 1000000)
 			{
-				_stprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
+				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
 					    _Unicode(cputype_name(config->cpu[chipnum].type)),
 					    config->cpu[chipnum].clock / 1000000,
 					    config->cpu[chipnum].clock % 1000000);
 			} else {
-				_stprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
+				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
 					    _Unicode(cputype_name(config->cpu[chipnum].type)),
 					    config->cpu[chipnum].clock / 1000,
 					    config->cpu[chipnum].clock % 1000);
@@ -875,10 +875,10 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 }
 
 /* Build Sound system info string */
-static LPCTSTR GameInfoSound(UINT nIndex)
+static LPCWSTR GameInfoSound(UINT nIndex)
 {
 	int chipnum;
-	static TCHAR buf[1024];
+	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	buf[0] = '\0';
@@ -907,7 +907,7 @@ static LPCTSTR GameInfoSound(UINT nIndex)
 
 			if (count > 1)
 			{
-				_stprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
+				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 			}
 
 			wcscpy(&buf[wcslen(buf)], _Unicode(sndtype_name(sound_type)));
@@ -916,11 +916,11 @@ static LPCTSTR GameInfoSound(UINT nIndex)
 			{
 				if (clock >= 1000000)
 				{
-					_stprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
+					swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
 						clock / 1000000,
 						clock % 1000000);
 				} else {
-				_stprintf(&buf[wcslen(buf)], TEXT(" %d.%03d kHz"),
+				swprintf(&buf[wcslen(buf)], TEXT(" %d.%03d kHz"),
 						clock / 1000,
 						clock % 1000);
 				}
@@ -937,7 +937,7 @@ static LPCTSTR GameInfoSound(UINT nIndex)
 /* Build Display info string */
 static LPCWSTR GameInfoScreen(UINT nIndex)
 {
-	static TCHAR buf[1024];
+	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 	const device_config *screen;
 	const screen_config *scrconfig;
@@ -950,12 +950,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 		{
 			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 			{
-				_stprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
+				swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
 					scrconfig->refresh, config->total_colors);
 			}
 			else
 			{
-				_stprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
+				swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
 					scrconfig->refresh, config->total_colors);
 			}
 		}
@@ -963,12 +963,12 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 		{
 			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 			{
-				_stprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
+				swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
 						scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
 						scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
 						ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
 			} else {
-				_stprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
+				swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
 						scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
 						scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
 						ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
@@ -985,14 +985,14 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 /* Build input information string */
 static LPCWSTR GameInfoInput(int nIndex)
 {
-	static TCHAR buf[1024];
-	static TCHAR control[1024];
+	static WCHAR buf[1024];
+	static WCHAR control[1024];
 	int nplayer = DriverNumPlayers(nIndex);
 	int nbutton = DriverNumButtons(nIndex);
 #if 0 // no space
 	int ncoin = 0;
-	const TCHAR *service = 0;
-	const TCHAR *tilt = 0;
+	const WCHAR *service = 0;
+	const WCHAR *tilt = 0;
 #endif // no space
 	int i;
 
@@ -1001,7 +1001,7 @@ static LPCWSTR GameInfoInput(int nIndex)
 	{
 		if (DriverUsesController(nIndex, i))
 		{
-			static const TCHAR *name[CONTROLLER_MAX] =
+			static const WCHAR *name[CONTROLLER_MAX] =
 			{
 				TEXT("Joystick 2-Way"),
 				TEXT("Joystick 4-Way"),
@@ -1035,33 +1035,33 @@ static LPCWSTR GameInfoInput(int nIndex)
 		wcscpy(buf, _UIW(TEXT("Unknown")));
 	else
 	if ((nbutton<1) && (nplayer>1))
-		_stprintf(buf, _UIW(TEXT("%s (%d players)")), control, nplayer);
+		swprintf(buf, _UIW(TEXT("%s (%d players)")), control, nplayer);
 	else
 	if (nbutton<1)
-		_stprintf(buf, _UIW(TEXT("%s (%d player)")), control, nplayer);
+		swprintf(buf, _UIW(TEXT("%s (%d player)")), control, nplayer);
 	else
 	if ((nplayer>1) && (nbutton>1))
-		_stprintf(buf, _UIW(TEXT("%s (%d players, %d buttons)")), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d players, %d buttons)")), control, nplayer, nbutton);
 	else
 	if (nplayer>1)
-		_stprintf(buf, _UIW(TEXT("%s (%d players, %d button)")), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d players, %d button)")), control, nplayer, nbutton);
 	else
 	if (nbutton>1)
-		_stprintf(buf, _UIW(TEXT("%s (%d player, %d buttons)")), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d player, %d buttons)")), control, nplayer, nbutton);
 	else
-		_stprintf(buf, _UIW(TEXT("%s (%d player, %d button)")), control, nplayer, nbutton);
+		swprintf(buf, _UIW(TEXT("%s (%d player, %d button)")), control, nplayer, nbutton);
 
 	return buf;
 }
 #else /* MISC_FOLDER */
 /* Build color information string */
-static LPCTSTR GameInfoColors(int nIndex)
+static LPCWSTR GameInfoColors(int nIndex)
 {
-	static TCHAR buf[1024];
+	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	ZeroMemory(buf, sizeof(buf));
-	_stprintf(buf, _UIW(TEXT("%d colors ")), config->total_colors);
+	swprintf(buf, _UIW(TEXT("%d colors ")), config->total_colors);
 	machine_config_free(config);
 
 	return buf;
@@ -1071,7 +1071,7 @@ static LPCTSTR GameInfoColors(int nIndex)
 /* Build game status string */
 LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 {
-	static TCHAR buffer[1024];
+	static WCHAR buffer[1024];
 	int audit_result = GetRomAuditResults(driver_index);
 
 	buffer[0] = '\0';
@@ -1144,7 +1144,7 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 /* Build game manufacturer string */
 static LPCWSTR GameInfoManufactured(int nIndex)
 {
-	static TCHAR buffer[1024];
+	static WCHAR buffer[1024];
 
 	snwprintf(buffer, ARRAY_LENGTH(buffer), TEXT("%s %s"), driversw[nIndex]->year, UseLangList()? _MANUFACTW(driversw[nIndex]->manufacturer) : driversw[nIndex]->manufacturer);
 	return buffer;
@@ -1153,8 +1153,8 @@ static LPCWSTR GameInfoManufactured(int nIndex)
 /* Build Game title string */
 LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 {
-	static TCHAR info[1024];
-	static TCHAR desc[1024];
+	static WCHAR info[1024];
+	static WCHAR desc[1024];
 
 	if (OPTIONS_GLOBAL == opt_type)
 		return _UIW(TEXT("Global game options\nDefault options used by all games"));
@@ -1166,11 +1166,11 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	{
 		LPTREEFOLDER folder = GetFolderByID(g_nFolder);
 
-		_stprintf(info, _UIW(TEXT("Global driver options\nCustom options used by all games in the %s")), folder->m_lpTitle);
+		swprintf(info, _UIW(TEXT("Global driver options\nCustom options used by all games in the %s")), folder->m_lpTitle);
 		return info;
 	}
 
-	_stprintf(desc, TEXT("%s [%s]"),
+	swprintf(desc, TEXT("%s [%s]"),
 	        UseLangList() ? _LSTW(driversw[nIndex]->description) :
         	                driversw[nIndex]->modify_the,
 		driversw[nIndex]->name);
@@ -1178,7 +1178,7 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	if (!DriverIsBios(nIndex))
 		return desc;
 
-	_stprintf(info, _UIW(TEXT("Global BIOS options\nCustom options used by all games in the %s")), desc);
+	swprintf(info, _UIW(TEXT("Global BIOS options\nCustom options used by all games in the %s")), desc);
 	return info;
 }
 
@@ -1186,7 +1186,7 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 /* Build game clone infromation string */
 static LPCWSTR GameInfoCloneOf(int nIndex)
 {
-	static TCHAR buf[1024];
+	static WCHAR buf[1024];
 	int nParentIndex= -1;
 
 	buf[0] = '\0';
@@ -1194,7 +1194,7 @@ static LPCWSTR GameInfoCloneOf(int nIndex)
 	if (DriverIsClone(nIndex))
 	{
 		if ((nParentIndex = GetParentIndex(drivers[nIndex])) >= 0)
-			_stprintf(buf, TEXT("%s [%s]"),
+			swprintf(buf, TEXT("%s [%s]"),
 					ConvertAmpersandString(UseLangList()?
 						_LSTW(driversw[nParentIndex]->description):
 						driversw[nParentIndex]->modify_the),
@@ -1228,7 +1228,7 @@ static void UpdateSheetCaption(HWND hWnd)
 	int         i, iWidth;
 	BYTE        bR, bG, bB, bSR, bSG, bSB, bER, bEG, bEB;
 	DWORD       dwLColor, dwRColor;
-	TCHAR       szText[256];
+	WCHAR       szText[256];
 
 	// Gradation color
 	dwLColor = GetSysColor(COLOR_ACTIVECAPTION);
@@ -1458,11 +1458,11 @@ static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 
 static void AdjustChildWindows(HWND hWnd)
 {
-	TCHAR szClass[128];
+	WCHAR szClass[128];
 	DWORD dwStyle;
 
 	GetClassName(hWnd, szClass, ARRAY_LENGTH(szClass));
-	if (!_tcscmp(szClass, TEXT("Button")))
+	if (!wcscmp(szClass, TEXT("Button")))
 	{
 		dwStyle = GetWindowLong(hWnd, GWL_STYLE);
 		if (((dwStyle & BS_GROUPBOX) == BS_GROUPBOX) && (dwStyle & WS_TABSTOP))
@@ -1686,9 +1686,9 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 	if (hSheetTreeCtrl == NULL)
 	{
-		TCHAR temp[100];
+		WCHAR temp[100];
 		DWORD dwError = GetLastError();
-		_stprintf(temp, _UIW(TEXT("PropertySheet TreeCtrl Creation Error %d %X")), (int)dwError, (int)dwError);
+		swprintf(temp, _UIW(TEXT("PropertySheet TreeCtrl Creation Error %d %X")), (int)dwError, (int)dwError);
 		MessageBox(hWnd, temp, _UIW(TEXT("Error")), IDOK);
 	}
 
@@ -1698,7 +1698,7 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 
 	for (nPage = 0; nPage < nPageCount; ++nPage)
 	{
-		TCHAR          szText[256];
+		WCHAR          szText[256];
 		TCITEM         ti;
 		TVINSERTSTRUCT tvis;
 		LPTVITEM       lpTvItem;
@@ -1858,21 +1858,21 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		}
 		break;
 
-	case IDC_SNAPSIZE:
-		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
-		if( g_bAutoSnapSize != nCurSelection )
-		{
-			changed = TRUE;
-			g_bAutoSnapSize = nCurSelection;
-		}
-		break;
-
 	case IDC_ASPECTRATION:
 	case IDC_ASPECTRATIOD:
 		if (wNotifyCode == EN_CHANGE)
 		{
 			//TODO: check value is changed
 			changed = TRUE;
+		}
+		break;
+
+	case IDC_SNAPSIZE:
+		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
+		if( g_bAutoSnapSize != nCurSelection )
+		{
+			changed = TRUE;
+			g_bAutoSnapSize = nCurSelection;
 		}
 		break;
 
@@ -1979,7 +1979,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 		// use default behavior; try to get the result out of the datamap if
 		// appropriate
 		GetClassName(hWndCtrl, szClass, ARRAY_LENGTH(szClass));
-		if (!_tcscmp(szClass, WC_COMBOBOX))
+		if (!wcscmp(szClass, WC_COMBOBOX))
 		{
 			// combo box
 			if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
@@ -1987,7 +1987,7 @@ static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPAR
 					changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
 			}
 		}
-		else if (!_tcscmp(szClass, WC_BUTTON) && (GetWindowLong(hWndCtrl, GWL_STYLE) & BS_CHECKBOX))
+		else if (!wcscmp(szClass, WC_BUTTON) && (GetWindowLong(hWndCtrl, GWL_STYLE) & BS_CHECKBOX))
 		{
 			// check box
 			changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
@@ -2356,10 +2356,10 @@ static void PropToOptions(HWND hWnd, core_options *o)
 			char buffer2[200];
 
 			Edit_GetText(hCtrl,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&n);
+			swscanf(buffer,TEXT("%d"),&n);
 
 			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&d);
+			swscanf(buffer,TEXT("%d"),&d);
 
 			if (n == 0 || d == 0)
 			{
@@ -2389,10 +2389,10 @@ static void PropToOptions(HWND hWnd, core_options *o)
 			char buffer2[200];
 
 			Edit_GetText(hCtrl,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&width);
+			swscanf(buffer,TEXT("%d"),&width);
 
 			Edit_GetText(hCtrl2,buffer,sizeof(buffer));
-			_stscanf(buffer,TEXT("%d"),&height);
+			swscanf(buffer,TEXT("%d"),&height);
 
 			if (width == 0 || height == 0)
 			{
@@ -2428,7 +2428,7 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 {
 	HWND hCtrl;
 	HWND hCtrl2;
-	TCHAR buf[100];
+	WCHAR buf[100];
 	int  n = 0;
 	int  d = 0;
 	int  width = 0;
@@ -2552,9 +2552,9 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		{
 			if (sscanf(options_get_string(o, aspect_option), "%d:%d", &n, &d) == 2 && n != 0 && d != 0)
 			{
-				_stprintf(buf, TEXT("%d"), n);
+				swprintf(buf, TEXT("%d"), n);
 				Edit_SetText(hCtrl, buf);
-				_stprintf(buf, TEXT("%d"), d);
+				swprintf(buf, TEXT("%d"), d);
 				Edit_SetText(hCtrl2, buf);
 			}
 			else
@@ -2602,9 +2602,9 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		{
 			if (sscanf(options_get_string(o, OPTION_SNAPSIZE), "%dx%d", &width, &height) == 2 && width != 0 && height != 0)
 			{
-				_stprintf(buf, TEXT("%d"), width);
+				swprintf(buf, TEXT("%d"), width);
 				Edit_SetText(hCtrl, buf);
-				_stprintf(buf, TEXT("%d"), height);
+				swprintf(buf, TEXT("%d"), height);
 				Edit_SetText(hCtrl2, buf);
 			}
 			else
@@ -2678,7 +2678,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATION),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 	EnableWindow(GetDlgItem(hWnd, IDC_ASPECTRATIOD),           !g_bAutoAspect[GetSelectedScreen(hWnd)]);
 
-	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
+//	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZETEXT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEHEIGHT), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEWIDTH), !g_bAutoSnapSize);
 	EnableWindow(GetDlgItem(hWnd, IDC_SNAPSIZEX), !g_bAutoSnapSize);
@@ -3076,7 +3076,7 @@ static BOOL SnapViewPopulateControl(datamap *map, HWND dialog, HWND control, cor
 	(void)ComboBox_ResetContent(control);
 	for (i = 0; i < NUMSNAPVIEW; i++)
 	{
-		(void)ComboBox_InsertString(control, i, g_ComboBoxSnapView[i].m_pText);
+		(void)ComboBox_InsertString(control, i, _UIW(g_ComboBoxSnapView[i].m_pText));
 		(void)ComboBox_SetItemData(control, i, g_ComboBoxSnapView[i].m_pData);
 
 		if (!strcmp(snapview, g_ComboBoxSnapView[i].m_pData))
@@ -3091,27 +3091,27 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 {
 	WIN32_FIND_DATA FindFileData;
 	HANDLE hFind;
-	TCHAR *ext;
-	TCHAR root[256];
-	TCHAR path[256];
+	WCHAR *ext;
+	WCHAR root[256];
+	WCHAR path[256];
 	int selected = 0;
 	int index = 0;
-	LPCTSTR t_ctrlr_option = 0;
-	LPTSTR buf = 0;
+	LPCWSTR w_ctrlr_option = 0;
+	LPWSTR buf = 0;
 	const char *ctrlr_option;
 
 	// determine the ctrlr option
 	ctrlr_option = options_get_string(opts, OPTION_CTRLR);
 	if( ctrlr_option != NULL )
 	{
-		buf = tstring_from_utf8(ctrlr_option);
+		buf = wstring_from_utf8(ctrlr_option);
 		if( !buf )
 			return FALSE;
-		t_ctrlr_option = buf;
+		w_ctrlr_option = buf;
 	}
 	else
 	{
-		t_ctrlr_option = TEXT("");
+		w_ctrlr_option = TEXT("");
 	}
 
 	// reset the controllers dropdown
@@ -3120,29 +3120,29 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	(void)ComboBox_SetItemData(control, index, "");
 	index++;
 
-	_stprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
+	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
 	
-	hFind = FindFirstFile(path, &FindFileData);
+	hFind = FindFirstFileW(path, &FindFileData);
 
 	if (hFind != INVALID_HANDLE_VALUE)
 	{
 		do 
 		{
 			// copy the filename
-			_tcscpy (root,FindFileData.cFileName);
+			wcscpy (root,FindFileData.cFileName);
 
 			// find the extension
-			ext = _tcsrchr (root,'.');
+			ext = wcsrchr (root,'.');
 			if (ext)
 			{
 				// check if it's a cfg file
-				if (_tcscmp (ext, TEXT(".cfg")) == 0)
+				if (wcscmp (ext, TEXT(".cfg")) == 0)
 				{
 					// and strip off the extension
 					*ext = 0;
 
 					// set the option?
-					if (!_tcscmp(root, t_ctrlr_option))
+					if (!wcscmp(root, w_ctrlr_option))
 						selected = index;
 
 					// add it as an option
@@ -3152,7 +3152,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 				}
 			}
 		}
-		while (FindNextFile (hFind, &FindFileData) != 0);
+		while (FindNextFileW (hFind, &FindFileData) != 0);
 		
 		FindClose (hFind);
 	}
@@ -3189,7 +3189,7 @@ static BOOL ResolutionReadControl(datamap *map, HWND dialog, HWND control, core_
 	if (refresh_control && sizes_control)
 	{
 		(void)ComboBox_GetText(sizes_control, buffer, ARRAY_LENGTH(buffer) - 1);
-		if (_stscanf(buffer, TEXT("%d x %d"), &width, &height) == 2)
+		if (swscanf(buffer, TEXT("%d x %d"), &width, &height) == 2)
 		{
 			refresh_index = ComboBox_GetCurSel(refresh_control);
 			refresh_value = ComboBox_GetItemData(refresh_control, refresh_index);
@@ -3218,7 +3218,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 	int refresh_selection = 0;
 	char screen_option[32];
 	const char *screen;
-	TCHAR buf[16];
+	WCHAR buf[16];
 	int i;
 	DEVMODEA devmode;
 
@@ -3258,7 +3258,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 			if ((devmode.dmBitsPerPel == 32 ) // Only 32 bit depth supported by core
 				&&(devmode.dmDisplayFrequency == refresh || refresh == 0))
 			{
-				_sntprintf(buf, ARRAY_LENGTH(buf), TEXT("%li x %li"),
+				snwprintf(buf, ARRAY_LENGTH(buf), TEXT("%li x %li"),
 					devmode.dmPelsWidth, devmode.dmPelsHeight);
 
 				if (ComboBox_FindString(sizes_control, 0, buf) == CB_ERR)
@@ -3275,7 +3275,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 			{
 				// I have some devmode "vga" which specifes 1 Hz, which is probably bogus, so we filter it out
 
-				_sntprintf(buf, ARRAY_LENGTH(buf), TEXT("%li Hz"), devmode.dmDisplayFrequency);
+				snwprintf(buf, ARRAY_LENGTH(buf), TEXT("%li Hz"), devmode.dmDisplayFrequency);
 
 				if (ComboBox_FindString(refresh_control, 0, buf) == CB_ERR)
 				{
@@ -3807,9 +3807,9 @@ static void InitializeSoundUI(HWND hwnd)
 
 		for (i = i; i < ARRAY_LENGTH(rates); i++)
 		{
-			TCHAR buf[8];
+			WCHAR buf[8];
 
-			_stprintf(buf, TEXT("%d"), rates[i]);
+			swprintf(buf, TEXT("%d"), rates[i]);
 			(void)ComboBox_AddString(hCtrl, buf);
 			(void)ComboBox_SetItemData(hCtrl, i, rates[i]);
 		}
@@ -3938,14 +3938,14 @@ static void InitializeEffectUI(HWND hwnd)
 	{
 		WIN32_FIND_DATAW FindFileData;
 		HANDLE hFind;
-		TCHAR ext[MAX_PATH];
-		TCHAR root[MAX_PATH];
-		TCHAR path[MAX_PATH];
+		WCHAR ext[MAX_PATH];
+		WCHAR root[MAX_PATH];
+		WCHAR path[MAX_PATH];
 
 		(void)ComboBox_AddString(hCtrl, _UIW(TEXT("None")));
 		(void)ComboBox_SetItemData(hCtrl, i++, "none");
 
-		_stprintf(path, TEXT("%s\\*.*"), GetArtDir());
+		swprintf(path, TEXT("%s\\*.*"), GetArtDir());
 
 		hFind = FindFirstFileW(path, &FindFileData);
 
@@ -4185,9 +4185,9 @@ static void InitializeJoyidUI(HWND hWnd)
 		{
 			for (j = 0; j < DIJoystick_GetNumPhysicalJoysticks(); j++)
 			{
-				TCHAR buf[256];
+				WCHAR buf[256];
 
-				_stprintf(buf, _UIW(TEXT("ID:%d")), j + 1);
+				swprintf(buf, _UIW(TEXT("ID:%d")), j + 1);
 				(void)ComboBox_AddString(hCtrl, buf);
 				(void)ComboBox_SetItemData(hCtrl, j, j);
 			}
@@ -4272,13 +4272,13 @@ static BOOL ResetEffect(HWND hWnd)
 
 static BOOL SelectJoystickMap(HWND hWnd)
 {
-	TCHAR filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 	BOOL changed = FALSE;
 
 	*filename = 0;
 	if (CommonFileDialog(FALSE, filename, FILETYPE_JOYMAP_FILES))
 	{
-		if (_tcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
+		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
 		{
 			HWND control = GetDlgItem(hWnd, IDC_JOYSTICKMAP);
 			options_set_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP, filename, OPTION_PRIORITY_CMDLINE);
@@ -4292,9 +4292,9 @@ static BOOL SelectJoystickMap(HWND hWnd)
 static BOOL ResetJoystickMap(HWND hWnd)
 {
 	BOOL changed = FALSE;
-	const TCHAR *new_value = TEXT("auto");
+	const WCHAR *new_value = TEXT("auto");
 
-	if (_tcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
+	if (wcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
 	{
 		HWND control = GetDlgItem(hWnd, IDC_JOYSTICKMAP);
 		options_set_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP, new_value, OPTION_PRIORITY_CMDLINE);
@@ -4306,13 +4306,13 @@ static BOOL ResetJoystickMap(HWND hWnd)
 
 static BOOL SelectDebugscript(HWND hWnd)
 {
-	TCHAR filename[MAX_PATH];
+	WCHAR filename[MAX_PATH];
 	BOOL changed = FALSE;
 
 	*filename = 0;
 	if (CommonFileDialog(FALSE, filename, FILETYPE_DEBUGSCRIPT_FILES))
 	{
-		if (_tcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
+		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
 		{
 			HWND control = GetDlgItem(hWnd, IDC_DEBUGSCRIPT);
 			options_set_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT, filename, OPTION_PRIORITY_CMDLINE);
@@ -4326,9 +4326,9 @@ static BOOL SelectDebugscript(HWND hWnd)
 static BOOL ResetDebugscript(HWND hWnd)
 {
 	BOOL changed = FALSE;
-	const TCHAR *new_value = TEXT("");
+	const WCHAR *new_value = TEXT("");
 
-	if (_tcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
+	if (wcscmp(new_value, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
 	{
 		HWND control = GetDlgItem(hWnd, IDC_DEBUGSCRIPT);
 		options_set_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT, new_value, OPTION_PRIORITY_CMDLINE);
