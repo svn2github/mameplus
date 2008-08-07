@@ -40,6 +40,7 @@ from 2.bin to 9.bin program eproms
 #include "sound/2151intf.h"
 #include "sound/okim6295.h"
 
+
 static int sample_buffer1, sample_buffer2;
 static int sample_select1, sample_select2;
 

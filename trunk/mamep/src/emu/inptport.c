@@ -4377,7 +4377,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	int nplayer = 0;
 
 	static INPUT_PORTS_START( custom1p )
-		PORT_START_TAG("CUSTOM1P")
+		PORT_START("CUSTOM1P")
 		PORT_BIT( 1 << 0, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(1) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(1)
@@ -4388,7 +4388,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom2p )
-		PORT_START_TAG("CUSTOM2P")
+		PORT_START("CUSTOM2P")
 		PORT_BIT( 1 << 1, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(2) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(2)
@@ -4399,7 +4399,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom3p )
-		PORT_START_TAG("CUSTOM3P")
+		PORT_START("CUSTOM3P")
 		PORT_BIT( 1 << 2, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(3) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(3)
@@ -4410,7 +4410,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom4p )
-		PORT_START_TAG("CUSTOM4P")
+		PORT_START("CUSTOM4P")
 		PORT_BIT( 1 << 3, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(4) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(4)
@@ -4421,7 +4421,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom5p )
-		PORT_START_TAG("CUSTOM5P")
+		PORT_START("CUSTOM5P")
 		PORT_BIT( 1 << 4, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(5) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(5)
@@ -4432,7 +4432,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom6p )
-		PORT_START_TAG("CUSTOM6P")
+		PORT_START("CUSTOM6P")
 		PORT_BIT( 1 << 5, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(6) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(6)
@@ -4443,7 +4443,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom7p )
-		PORT_START_TAG("CUSTOM7P")
+		PORT_START("CUSTOM7P")
 		PORT_BIT( 1 << 6, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(7) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(7)
@@ -4454,7 +4454,7 @@ const input_port_config *input_port_config_custom(const input_port_token *tokens
 	INPUT_PORTS_END
 
 	static INPUT_PORTS_START( custom8p )
-		PORT_START_TAG("CUSTOM8P")
+		PORT_START("CUSTOM8P")
 		PORT_BIT( 1 << 7, IP_ACTIVE_HIGH, IPT_TOGGLE_AUTOFIRE ) PORT_PLAYER(8) PORT_TOGGLE
 #ifdef USE_CUSTOM_BUTTON
 		PORT_BIT( 0, IP_ACTIVE_LOW, IPT_CUSTOM1 ) PORT_PLAYER(8)

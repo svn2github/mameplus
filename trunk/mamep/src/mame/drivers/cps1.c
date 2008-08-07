@@ -3609,7 +3609,7 @@ static INPUT_PORTS_START( knightsh )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( wofsj )
-	PORT_START_TAG("IN0")
+	PORT_START("IN0")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(3)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(3)
@@ -3627,19 +3627,19 @@ static INPUT_PORTS_START( wofsj )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START_TAG("DSWA")      /* (not used, EEPROM) */
+	PORT_START("DSWA")      /* (not used, EEPROM) */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START_TAG("DSWB")      /* (not used, EEPROM) */
+	PORT_START("DSWB")      /* (not used, EEPROM) */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START_TAG("DSWC")
+	PORT_START("DSWC")
 	PORT_DIPNAME( 0x08, 0x08, "Freeze" )
 	PORT_DIPSETTING(    0x08, DEF_STR( Off ) )
 	PORT_DIPSETTING(    0x00, DEF_STR( On ) )
 	PORT_BIT( 0xf7, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START_TAG("IN1")
+	PORT_START("IN1")
 	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_JOYSTICK_RIGHT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_JOYSTICK_LEFT ) PORT_8WAY PORT_PLAYER(1)
 	PORT_BIT( 0x0004, IP_ACTIVE_LOW, IPT_JOYSTICK_DOWN ) PORT_8WAY PORT_PLAYER(1)
@@ -3657,7 +3657,7 @@ static INPUT_PORTS_START( wofsj )
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 
-	PORT_START_TAG("IN2")      /* Player 3 */
+	PORT_START("IN2")      /* Player 3 */
 	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
@@ -9565,7 +9565,7 @@ static DRIVER_INIT( sf2m3 )
 	mem8[0x630] = 0x16;
 	mem8[0x638] = 0x20;
 
-	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800010, 0x800011, 0, 0, cps1_in1_r); /* Player input ports */
+//	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800010, 0x800011, 0, 0, cps1_in1_r); /* Player input ports */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800028, 0x80002f, 0, 0, cps1_hack_dsw_r); /* System input ports / Dip Switches */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800186, 0x800187, 0, 0, cps1_hack_in2_r); /* Extra input ports */
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800190, 0x800191, 0, 0, cps1_soundlatch_w); /* Sound command */
@@ -10050,7 +10050,7 @@ static DRIVER_INIT( wofh )
 
 static DRIVER_INIT( cawingb )
 {
-	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882000, 0x882001, 0, 0, cps1_in1_r); /* Player input ports */
+//	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882000, 0x882001, 0, 0, cps1_in1_r); /* Player input ports */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882008, 0x88200f, 0, 0, cps1_dsw_r); /* System input ports / Dip Switches */
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882006, 0x882007, 0, 0, cps1hack_soundlatch_w); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
