@@ -29,13 +29,11 @@ const options_entry mame_core_options[] =
 	/* unadorned options - only a single one supported at the moment */
 	{ "<UNADORNED0>",                NULL,        0,                 NULL },
 
-#ifdef DRIVER_SWITCH
-	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
-	{ "driver_config",               "mame,plus,console", 0,                 "switch drivers"},
-#endif /* DRIVER_SWITCH */
-
 	/* config options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
+#ifdef DRIVER_SWITCH
+	{ "driver_config",               "mame,plus,console", 0,         "switch drivers"},
+#endif /* DRIVER_SWITCH */
 	{ "readconfig;rc",               "1",         OPTION_BOOLEAN,    "enable loading of configuration files" },
 
 	/* seach path options */
@@ -54,8 +52,6 @@ const options_entry mame_core_options[] =
 	{ "localized_directory",         "lang",      0,                 "directory for localized data files" },
 #ifdef USE_IPS
 	{ "ips_directory",               "ips",       0,                 "directory for ips files" },
-#else /* USE_IPS */
-	{ "ips_directory",               "ips",       OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_IPS */
 
 	/* output directory options */
@@ -74,22 +70,16 @@ const options_entry mame_core_options[] =
 
 	/* filename options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE FILENAME OPTIONS" },
+	{ "mameinfo_file",              "mameinfo.dat",0,                "mameinfo database name" },
 	{ "history_file",               "history.dat",0,                 "history database name" },
 #ifdef STORY_DATAFILE
 	{ "story_file",                 "story.dat",  0,                 "story database name" },
-#else /* STORY_DATAFILE */
-	{ "story_file",                 "story.dat",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* STORY_DATAFILE */
-	{ "mameinfo_file",              "mameinfo.dat",0,                "mameinfo database name" },
 #ifdef CMD_LIST
 	{ "command_file",               "command.dat",0,                 "command list database name" },
-#else /* CMD_LIST */
-	{ "command_file",               "command.dat",OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* CMD_LIST */
 #ifdef USE_HISCORE
 	{ "hiscore_file",               "hiscore.dat",0,                 "high score database name" },
-#else /* STORY_DATAFILE */
-	{ "hiscore_file",               "hiscore.dat",OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_HISCORE */
 
 	/* state/playback options */
@@ -156,8 +146,6 @@ const options_entry mame_core_options[] =
 	{ "volume;vol",                  "0",         0,                 "sound volume in decibels (-32 min, 0 max)" },
 #ifdef USE_VOLUME_AUTO_ADJUST
 	{ "volume_adjust",               "0",         OPTION_BOOLEAN,    "enable/disable volume auto adjust" },
-#else /* USE_VOLUME_AUTO_ADJUST */
-	{ "volume_adjust",               "0",         OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_VOLUME_AUTO_ADJUST */
 
 	/* input options */
@@ -199,34 +187,25 @@ const options_entry mame_core_options[] =
 	{ "bios",                        NULL,        0,                 "select the system BIOS to use" },
 	{ "cheat;c",                     "0",         OPTION_BOOLEAN,    "enable cheat subsystem" },
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
+	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
 #ifdef USE_IPS
 	{ "ips",                         NULL,        0,                 "ips datfile name"},
-#else /* USE_IPS */
-	{ "ips",                         NULL,        OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* USE_IPS */
-	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause_playback",         "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
-#else /* AUTO_PAUSE_PLAYBACK */
-	{ "auto_pause_playback",         "0",         OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	/* ks hcmame s switch m68k core */
 	{ "m68k_core",                   "c",         0,                 "change m68k core (c|drc)" },
-#else /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-	{ "m68k_core",                   "c",         OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
 	{ "use_trans_ui",                "1",         OPTION_BOOLEAN,    "use transparent background for UI text" },
 	{ "ui_transparency",             "224",       0,                 "transparency of UI background [0 - 255]" },
-#else /* TRANS_UI */
-	{ "use_trans_ui",                "1",         OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "ui_transparency",             "224",       OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* TRANS_UI */
 
-	// palette options
-	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
 #ifdef UI_COLOR_DISPLAY
+	/* palette options */
+	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
 	{ "font_blank",                  "0,0,0",       0,               "font blank color" },
 	{ "font_normal",                 "255,255,255", 0,               "font normal color" },
 	{ "font_special",                "247,203,0",   0,               "font special color" },
@@ -242,25 +221,9 @@ const options_entry mame_core_options[] =
 	{ "button_navy",                 "255,160,0",   0,               "button color (navy)" },
 	{ "button_lime",                 "190,190,190", 0,               "button color (lime)" },
 	{ "cursor",                      "60,120,240",  0,               "cursor color" },
-#else /* UI_COLOR_DISPLAY */
-	{ "font_blank",                  "0,0,0",       OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "font_normal",                 "255,255,255", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "font_special",                "247,203,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "system_background",           "16,16,48",    OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_red",                  "255,64,64",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_yellow",               "255,238,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_green",                "0,255,64",    OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_blue",                 "0,170,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_purple",               "170,0,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_pink",                 "255,0,170",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_aqua",                 "0,255,204",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_silver",               "255,0,255",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_navy",                 "255,160,0",   OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "button_lime",                 "190,190,190", OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "cursor",                      "60,120,240",  OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* UI_COLOR_DISPLAY */
 
-	// language options
+	/* language options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE LANGUAGE OPTIONS" },
 	{ "language;lang",               "auto",      0,                 "select translation language" },
 	{ "use_lang_list",               "1",         OPTION_BOOLEAN,    "enable/disable local language game list" },

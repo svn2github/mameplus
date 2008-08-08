@@ -2364,7 +2364,7 @@ Snapshot
 
 # osd/winui/mameui.rc: 1121
 Snapshot/movie naming
-擷圖或錄影命名方式
+擷圖或錄影的命名方式
 
 # osd/winui/mameui.rc: 582
 Snapshot/movie resolution

@@ -5652,7 +5652,7 @@ or
 
 # emu/emuopts.c: 104
 override of the default snapshot/movie naming; %g == gamename, %i == index
-強制替代預設的 擷圖/錄影 命名方式; %g == 遊戲名稱, %i == 索引編號
+指定擷圖/錄影命名方式; %g == 遊戲名稱, %i == 索引編號
 
 # emu/info.c: 90 emu/inptport.c: 1743
 paddle
@@ -5864,11 +5864,11 @@ specifies whether to use a natural keyboard or not
 
 # emu/emuopts.c: 105
 specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size 
-指定 擷圖/錄影 解析度 (<寬>x<高>)，或設為 auto 使用最小的解析度
+指定擷圖/錄影解析度 (<寬>x<高>); 設為 auto 使用最小解析度
 
 # emu/emuopts.c: 106
 specify snapshot/movie view or 'internal' to use internal pixel-aspect views
-指定 擷圖/錄影 檢視方式，或設為 internal 使用內定像素長寬檢視方式
+指定擷圖/錄影檢視方式; 設為 internal 使用內定像素長寬檢視
 
 # emu/uitext.c: 37 
 stereo

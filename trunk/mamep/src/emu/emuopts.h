@@ -32,10 +32,10 @@
 #define OPTION_GAMENAME				OPTION_UNADORNED(0)
 
 /* core configuration options */
-#define OPTION_READCONFIG			"readconfig"
-
-/* core configuration options */
+#ifdef DRIVER_SWITCH
 #define OPTION_DRIVER_CONFIG			"driver_config"
+#endif /* DRIVER_SWITCH */
+#define OPTION_READCONFIG			"readconfig"
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
@@ -68,11 +68,11 @@
 #endif /* USE_HISCORE */
 
 /* core filename options */
+#define OPTION_MAMEINFO_FILE			"mameinfo_file"
 #define OPTION_HISTORY_FILE			"history_file"
 #ifdef STORY_DATAFILE
 #define OPTION_STORY_FILE			"story_file"
 #endif /* STORY_DATAFILE */
-#define OPTION_MAMEINFO_FILE			"mameinfo_file"
 #ifdef CMD_LIST
 #define OPTION_COMMAND_FILE			"command_file"
 #endif /* CMD_LIST */
@@ -172,10 +172,10 @@
 #define OPTION_BIOS					"bios"
 #define OPTION_CHEAT				"cheat"
 #define OPTION_SKIP_GAMEINFO		"skip_gameinfo"
+#define OPTION_CONFIRM_QUIT			"confirm_quit"
 #ifdef USE_IPS
 #define OPTION_IPS				"ips"
 #endif /* USE_IPS */
-#define OPTION_CONFIRM_QUIT			"confirm_quit"
 #ifdef AUTO_PAUSE_PLAYBACK
 #define OPTION_AUTO_PAUSE_PLAYBACK		"auto_pause_playback"
 #endif /* AUTO_PAUSE_PLAYBACK */
@@ -187,6 +187,7 @@
 #define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */
 
+/* core palette options */
 #ifdef UI_COLOR_DISPLAY
 #define OPTION_FONT_BLANK			"font_blank"
 #define OPTION_FONT_NORMAL			"font_normal"
@@ -205,6 +206,7 @@
 #define OPTION_CURSOR				"cursor"
 #endif /* UI_COLOR_DISPLAY */
 
+/* core language options */
 #define OPTION_LANGUAGE				"language"
 #define OPTION_USE_LANG_LIST			"use_lang_list"
 
