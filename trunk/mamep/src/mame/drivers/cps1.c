@@ -182,6 +182,11 @@ static READ16_HANDLER( cps1_hack_dsw_r )
 	return (in << 8) | in;
 }
 
+READ16_HANDLER( cps1_in1_r )
+{
+	return input_port_read(machine, "IN1");
+}
+
 static int dial[2];
 
 static READ16_HANDLER( forgottn_dial_0_r )
@@ -9565,7 +9570,7 @@ static DRIVER_INIT( sf2m3 )
 	mem8[0x630] = 0x16;
 	mem8[0x638] = 0x20;
 
-//	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800010, 0x800011, 0, 0, cps1_in1_r); /* Player input ports */
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800010, 0x800011, 0, 0, cps1_in1_r); /* Player input ports */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800028, 0x80002f, 0, 0, cps1_hack_dsw_r); /* System input ports / Dip Switches */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800186, 0x800187, 0, 0, cps1_hack_in2_r); /* Extra input ports */
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x800190, 0x800191, 0, 0, cps1_soundlatch_w); /* Sound command */
@@ -10050,7 +10055,7 @@ static DRIVER_INIT( wofh )
 
 static DRIVER_INIT( cawingb )
 {
-//	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882000, 0x882001, 0, 0, cps1_in1_r); /* Player input ports */
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882000, 0x882001, 0, 0, cps1_in1_r); /* Player input ports */
 	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882008, 0x88200f, 0, 0, cps1_dsw_r); /* System input ports / Dip Switches */
 	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x882006, 0x882007, 0, 0, cps1hack_soundlatch_w); /* Sound command */
 	DRIVER_INIT_CALL(cps1);
