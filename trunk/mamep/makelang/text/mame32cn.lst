@@ -1992,7 +1992,7 @@ skywolf	飞狼 (第1套)	飞狼 (第1套)	bootleg
 skywolf2	飞狼 (第2套)	飞狼 (第2套)	bootleg
 defender	防卫者 (红标签)	防卫者 (红标签)	Williams
 defendg	防卫者 (绿标签)	防卫者 (绿标签)	Williams
-defendw	防卫者 (白标签)	防卫者 (白标签)	Williams
+defendb	防卫者 (蓝标签)	防卫者 (蓝标签)	Williams
 defndjeu	防卫者 (盗版)	防卫者 (盗版)	Jeutel
 tornado1	防卫者 (盗版 第1套)	防卫者 (盗版 第1套)	Jeutel
 tornado2	防卫者 (盗版 第2套)	防卫者 (盗版 第2套)	Jeutel
@@ -3386,7 +3386,8 @@ vstriker	VR 射手 (Rev A)	VR 射手 (Rev A)	Sega
 vstrikro	VR 射手	VR 射手	Sega
 fvipers	格斗之蛇	格斗之蛇	Sega
 gunblade	纽约风暴	纽约风暴	Sega
-indy500	印第安纳波利斯 500 英里大奖赛	印第安纳波利斯 500 英里大奖赛	Sega
+indy500	印地五百双人版	印地五百双人版	Sega
+indy500d	印地五百豪华版	印地五百豪华版	Sega
 skytargt	铁翼雄风	铁翼雄风	Sega
 schamp	索尼克格斗	索尼克格斗	Sega
 lastbrnx	东京番外地 (出口版, Rev A)	东京番外地 (出口版, Rev A)	Sega
@@ -4497,6 +4498,7 @@ ccastlef	水晶城堡 (版本 3, 法国版)	水晶城堡 (版本 3, 法国版)	Atari
 ccastle3	水晶城堡 (版本 3)	水晶城堡 (版本 3)	Atari
 ccastle2	水晶城堡 (版本 2)	水晶城堡 (版本 2)	Atari
 ccastle1	水晶城堡 (版本 1)	水晶城堡 (版本 1)	Atari
+ccastlej	水晶城堡 (手柄版)	水晶城堡 (手柄版)	Atari
 cloak	斗篷与匕首 (rev 5)	斗篷与匕首 (rev 5)	Atari
 cloaksp	斗篷与匕首 (西班牙版)	斗篷与匕首 (西班牙版)	Atari
 cloakfr	斗篷与匕首 (法国版)	斗篷与匕首 (法国版)	Atari
@@ -5470,6 +5472,7 @@ timelimt	刻不容缓	刻不容缓	Chuo Co. Ltd
 progress	大战车	大战车	Chuo Co. Ltd
 rtriv	问答 罗马百科	问答 罗马百科	Romar
 konek	双面扬声	双面扬声	Terminal
+sosterm	S.O.S.	S.O.S.	Terminal
 bagman	推销员	推销员	Valadon Automation
 bagnard	推销员 (第1套)	推销员 (第1套)	Valadon Automation
 bagnarda	推销员 (第2套)	推销员 (第2套)	Valadon Automation
@@ -5724,7 +5727,7 @@ svolly91	能量排球 (日版)	能量排球 (日版)	Video System Co.
 pspikesb	能量排球 (盗版)	能量排球 (盗版)	bootleg
 spikes91	能量排球 1991 (意大利 盗版)	能量排球 1991 (意大利 盗版)	bootleg
 pspikesc	能量排球 (中文版)	能量排球 (中文版)	bootleg
-karatblz	斗神光辉 (世界版?)	斗神光辉 (世界版?)	Video System Co.
+karatblz	斗神光辉 (世界版)	斗神光辉 (世界版)	Video System Co.
 karatblu	斗神光辉 (美版)	斗神光辉 (美版)	Video System Co.
 karatblj	斗神光辉 (日版)	斗神光辉 (日版)	Video System Co.
 turbofrc	超级空军	超级空军	Video System Co.
@@ -6028,7 +6031,7 @@ srmvs	超真实麻雀 8	超真实麻雀 8	Seta
 twrshaft	冒险小子	冒险小子	Aruze
 hipai	超真实麻将	超真实麻将	Aruze?
 doncdoon	Donchan no Hanabi de Doon	Donchan no Hanabi de Doon	Aruze?
-kurufev	Kurukuru Fever	Kurukuru Fever	Aruze?
+kurufev	狂热震撼	狂热震撼	Aruze?
 mayjin3	五月将棋 3	五月将棋 3	Seta?
 powerins	豪血寺一族 (日版)	豪血寺一族 (日版)	Atlus
 powerina	豪血寺一族 (美版, 盗版 第1套)	豪血寺一族 (美版, 盗版 第1套)	Atlus
@@ -6361,14 +6364,15 @@ spinner	大蜘蛛 Spinner	大蜘蛛 Spinner	bootleg
 goldstar	黄金星座	黄金星座	IGS
 goldstbl	黄金星座 (蓝色版本)	黄金星座 (蓝色版本)	IGS
 moonlght	月亮之光	月亮之光	unknown
-cpoker	冠军扑克	冠军扑克	IGS
+cpoker	扑克冠军 (v220I)	扑克冠军 (v220I)	IGS
+cpokert	扑克冠军 (v200G)	扑克冠军 (v200G)	Tuning
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
 iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
 cabaret	酒舞宴	酒舞宴	IGS
-pokerigs	扑克? (IGS)	扑克? (IGS)	IGS
+jingbell	铃儿响叮铛 (意大利, V133I)	铃儿响叮铛 (意大利, V133I)	IGS
 lhb	龙虎榜 (第1套)	龙虎榜 (第1套)	IGS
 lhba	龙虎榜 (第2套)	龙虎榜 (第2套)	IGS
 dbc	大阪城	大阪城	IGS
@@ -6692,6 +6696,7 @@ polyplay	普利小游戏合辑	普利小游戏合辑	VEB Polytechnik Karl-Marx-Stadt
 amspdwy	环绕赛车 - 美国竞技场 (第1套)	环绕赛车 - 美国竞技场 (第1套)	Enerdyne Technologies, Inc.
 amspdwya	环绕赛车 - 美国竞技场 (第2套)	环绕赛车 - 美国竞技场 (第2套)	Enerdyne Technologies, Inc.
 othldrby	赛马黑白棋 (日版)	赛马黑白棋 (日版)	Sunwise
+quizpun2	情趣问答 2	情趣问答 2	Space Computer
 mosaic	马赛克魔术方块	马赛克魔术方块	Space
 mosaica	马赛克魔术方块 (富贵商会)	马赛克魔术方块 (富贵商会)	Space (Fuuki license)
 gfire2	金牌太阳棋 2	金牌太阳棋 2	Topis Corp
@@ -6920,8 +6925,9 @@ pitboss2	赌场大亨 II	赌场大亨 II	Merit
 spitboss	超级赌场大亨	超级赌场大亨	Merit
 pitbosss	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
 pitbossm	赌场大亨 Megastar	赌场大亨 Megastar	Merit
-megat3	非常接触 III (9255-20-06 RON)	非常接触 III (9255-20-06 RON)	Merit
-megat3a	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
+megat3	非常接触 III (9255-20-01 RON)	非常接触 III (9255-20-01 RON)	Merit
+megat3a	非常接触 III (9255-20-06 RON)	非常接触 III (9255-20-06 RON)	Merit
+megat3b	非常接触 III (9255-20-01 ROF)	非常接触 III (9255-20-01 ROF)	Merit
 megat3te	非常接触 III 联赛版 (9255-30-01 ROE)	非常接触 III 联赛版 (9255-30-01 ROE)	Merit
 megat4	非常接触 IV (9255-40-01 ROE)	非常接触 IV (9255-40-01 ROE)	Merit
 megat4a	非常接触 IV (9255-40-01 ROD)	非常接触 IV (9255-40-01 ROD)	Merit
@@ -7031,7 +7037,7 @@ magic10	魔法扑克 (ver. 16.55)	魔法扑克 (ver. 16.55)	A.W.P. Games
 magic10a	魔法扑克 (ver. 16.45)	魔法扑克 (ver. 16.45)	A.W.P. Games
 magic102	魔法扑克 2 (ver 1.1)	魔法扑克 2 (ver 1.1)	ABM Games
 suprpool	超级撞球 (9743 Rev.01)	超级撞球 (9743 Rev.01)	ABM Games
-galaxi	小蜜蜂 (v2.0)	小蜜蜂 (v2.0)	B.R.L.
+galaxi	蜜蜂扑克 (v2.0)	蜜蜂扑克 (v2.0)	B.R.L.
 dwarfd	侏儒兽穴	侏儒兽穴	Electro-Sport
 trvquest	琐事问答	琐事问答	Sunn / Techstar
 wheelfir	火焰车轮	火焰车轮	TCH
