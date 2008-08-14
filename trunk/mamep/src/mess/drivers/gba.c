@@ -2684,7 +2684,7 @@ static MACHINE_START( gba )
 }
 
 // 8-bit GB audio
-static struct CustomSound_interface gameboy_sound_interface =
+static custom_sound_interface gameboy_sound_interface =
 { gameboy_sh_start, 0, 0 };
 
 static MACHINE_DRIVER_START( gbadv )
