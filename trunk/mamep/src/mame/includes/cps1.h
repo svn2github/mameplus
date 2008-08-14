@@ -1,6 +1,8 @@
 #ifndef _CPS1_H_
 #define _CPS1_H_
 
+#include "sound/2151intf.h"
+
 /*----------- defined in drivers/cps1.c -----------*/
 
 ADDRESS_MAP_EXTERN(qsound_sub_map, 8);
@@ -14,7 +16,7 @@ WRITE16_HANDLER( cps1_eeprom_port_w );
 INTERRUPT_GEN( cps1_qsound_interrupt );
 
 extern const struct QSound_interface qsound_interface;
-extern const struct YM2151interface ym2151_interface;
+extern const ym2151_interface ym2151_config;
 
 READ16_HANDLER( cps1_dsw_r );
 READ16_HANDLER( cps1_in1_r );
