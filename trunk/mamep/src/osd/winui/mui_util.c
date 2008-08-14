@@ -606,7 +606,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				{
 					const char * const * samplenames = NULL;
 
-					samplenames = ((struct Samplesinterface *)config->sound[i].config)->samplenames;
+					samplenames = ((samples_interface *)config->sound[i].config)->samplenames;
 
 					if (samplenames != NULL && samplenames[0] != NULL)
 						gameinfo->usesSamples = TRUE;
