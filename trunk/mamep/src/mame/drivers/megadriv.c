@@ -895,7 +895,7 @@ static void megadriv_vdp_ctrl_port_w(running_machine *machine, int data)
 	}
 }
 
-static WRITE16_HANDLER( megadriv_vdp_w )
+WRITE16_HANDLER( megadriv_vdp_w )
 {
 	switch (offset<<1)
 	{
@@ -1288,7 +1288,7 @@ static UINT16 megadriv_read_hv_counters(void)
 
 }
 
-static READ16_HANDLER( megadriv_vdp_r )
+READ16_HANDLER( megadriv_vdp_r )
 {
 	UINT16 retvalue = 0;
 

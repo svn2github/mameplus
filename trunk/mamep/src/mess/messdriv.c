@@ -77,6 +77,9 @@ const game_driver *const consoledrivers[] =
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
 	DRIVER( gensvp )	/* 1993 Sega Genesis (USA w/SVP chip)					*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
+	DRIVER( picoe )		/* 1994 Sega Pico (Europe)							*/
+	DRIVER( picou )		/* 1994 Sega Pico (USA)								*/
+	DRIVER( picoj )		/* 1993 Sega Pico (Japan)							*/
 #ifndef NEOCPSMAME	//fixme: compile bug?
 	/* NEC */
 	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/

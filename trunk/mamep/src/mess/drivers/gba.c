@@ -991,11 +991,11 @@ static void audio_tick(running_machine *machine, int ref)
 
 			if (gba.SOUNDCNT_H & 0x100)
 			{
-				DAC_signed_data_w(0, fifo_a[fifo_a_ptr]^0x80);
+				dac_signed_data_w(0, fifo_a[fifo_a_ptr]^0x80);
 			}
 			if (gba.SOUNDCNT_H & 0x200)
 			{
-				DAC_signed_data_w(1, fifo_a[fifo_a_ptr]^0x80);
+				dac_signed_data_w(1, fifo_a[fifo_a_ptr]^0x80);
 			}
 			fifo_a_ptr++;
 		}
@@ -1027,11 +1027,11 @@ static void audio_tick(running_machine *machine, int ref)
 
 			if (gba.SOUNDCNT_H & 0x1000)
 			{
-				DAC_signed_data_w(2, fifo_b[fifo_b_ptr]^0x80);
+				dac_signed_data_w(2, fifo_b[fifo_b_ptr]^0x80);
 			}
 			if (gba.SOUNDCNT_H & 0x2000)
 			{
-				DAC_signed_data_w(3, fifo_b[fifo_b_ptr]^0x80);
+				dac_signed_data_w(3, fifo_b[fifo_b_ptr]^0x80);
 			}
 			fifo_b_ptr++;
 		}
@@ -2059,8 +2059,8 @@ static WRITE32_HANDLER( gba_io_w )
 				{
 					fifo_a_ptr = 17;
 					fifo_a_in = 17;
-					DAC_signed_data_w(0, 0x80);
-					DAC_signed_data_w(1, 0x80);
+					dac_signed_data_w(0, 0x80);
+					dac_signed_data_w(1, 0x80);
 				}
 
 				// DAC B reset?
@@ -2068,8 +2068,8 @@ static WRITE32_HANDLER( gba_io_w )
 				{
 					fifo_b_ptr = 17;
 					fifo_b_in = 17;
-					DAC_signed_data_w(2, 0x80);
-					DAC_signed_data_w(3, 0x80);
+					dac_signed_data_w(2, 0x80);
+					dac_signed_data_w(3, 0x80);
 				}
 			}
 			break;
@@ -2081,10 +2081,10 @@ static WRITE32_HANDLER( gba_io_w )
 				{
 					fifo_a_ptr = fifo_a_in = 17;
 					fifo_b_ptr = fifo_b_in = 17;
-					DAC_signed_data_w(0, 0x80);
-					DAC_signed_data_w(1, 0x80);
-					DAC_signed_data_w(2, 0x80);
-					DAC_signed_data_w(3, 0x80);
+					dac_signed_data_w(0, 0x80);
+					dac_signed_data_w(1, 0x80);
+					dac_signed_data_w(2, 0x80);
+					dac_signed_data_w(3, 0x80);
 				}
 				gba.SOUNDCNT_X = data;
 			}
@@ -2631,10 +2631,10 @@ static MACHINE_RESET( gba )
 	fifo_a_in = fifo_b_in = 17;
 
 	// and clear the DACs
-	DAC_signed_data_w(0, 0x80);
-	DAC_signed_data_w(1, 0x80);
-	DAC_signed_data_w(2, 0x80);
-	DAC_signed_data_w(3, 0x80);
+	dac_signed_data_w(0, 0x80);
+	dac_signed_data_w(1, 0x80);
+	dac_signed_data_w(2, 0x80);
+	dac_signed_data_w(3, 0x80);
 }
 
 static MACHINE_START( gba )
