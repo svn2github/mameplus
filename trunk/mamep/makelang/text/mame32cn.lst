@@ -977,19 +977,21 @@ multigmb	Multi 游戏 (第2套)	Multi 游戏 (第2套)	unknown
 multigm3	Multi 游戏 III	Multi 游戏 III	Seo Jin
 cham24	变色龙 24	变色龙 24	bootleg
 nss	Nintendo Super System BIOS	Nintendo Super System BIOS	Nintendo
-nss_ssoc	超级足球 (任天堂 Super System)	超级足球 (任天堂 Super System)	Human Inc.
-nss_actr	雷莎出击 (任天堂 Super System)	雷莎出击 (任天堂 Super System)	Enix
-nss_con3	魂斗罗 3 - 异形战争 (任天堂 Super System)	魂斗罗 3 - 异形战争 (任天堂 Super System)	Konami
-nss_adam	阿达一族 (任天堂 Super System)	阿达一族 (任天堂 Super System)	Ocean
-nss_aten	大卫克拉尼网球 (任天堂 Super System)	大卫克拉尼网球 (任天堂 Super System)	Absolute Entertainment Inc.
-nss_rob3	铁甲威龙 3 (任天堂 Super System)	铁甲威龙 3 (任天堂 Super System)	Ocean
-nss_ncaa	美国大学篮球联赛 (任天堂 Super System)	美国大学篮球联赛 (任天堂 Super System)	Sculptured Software Inc.
-nss_skin	高尔夫争奖赛 (任天堂 Super System)	高尔夫争奖赛 (任天堂 Super System)	Irem
-nss_lwep	致命武器 (任天堂 Super System)	致命武器 (任天堂 Super System)	Ocean
-nss_smw	超级玛莉世界 (任天堂 Super System)	超级玛莉世界 (任天堂 Super System)	Nintendo
-nss_fzer	零式赛车 (任天堂 Super System)	零式赛车 (任天堂 Super System)	Nintendo
-nss_sten	超级网球 (任天堂 Super System)	超级网球 (任天堂 Super System)	Nintendo
+nss_ssoc	超级足球 (超级任天堂系统)	超级足球 (超级任天堂系统)	Human Inc.
+nss_actr	雷莎出击 (超级任天堂系统)	雷莎出击 (超级任天堂系统)	Enix
+nss_con3	魂斗罗 3 - 异形战争 (超级任天堂系统)	魂斗罗 3 - 异形战争 (超级任天堂系统)	Konami
+nss_adam	阿达一族 (超级任天堂系统)	阿达一族 (超级任天堂系统)	Ocean
+nss_aten	大卫克拉尼网球 (超级任天堂系统)	大卫克拉尼网球 (超级任天堂系统)	Absolute Entertainment Inc.
+nss_rob3	铁甲威龙 3 (超级任天堂系统)	铁甲威龙 3 (超级任天堂系统)	Ocean
+nss_ncaa	美国大学篮球联赛 (超级任天堂系统)	美国大学篮球联赛 (超级任天堂系统)	Sculptured Software Inc.
+nss_skin	高尔夫争奖赛 (超级任天堂系统)	高尔夫争奖赛 (超级任天堂系统)	Irem
+nss_lwep	致命武器 (超级任天堂系统)	致命武器 (超级任天堂系统)	Ocean
+nss_smw	超级玛莉世界 (超级任天堂系统)	超级玛莉世界 (超级任天堂系统)	Nintendo
+nss_fzer	零式赛车 (超级任天堂系统)	零式赛车 (超级任天堂系统)	Nintendo
+nss_sten	超级网球 (超级任天堂系统)	超级网球 (超级任天堂系统)	Nintendo
 kinstb	杀手学堂 (SNES 盗版)	杀手学堂 (SNES 盗版)	bootleg
+ffight2b	快打旋风 2 (SNES 盗版)	快打旋风 2 (SNES 盗版)	bootleg
+sblast2b	索尼克竞速 2 (SNES 盗版)	索尼克竞速 2 (SNES 盗版)	bootleg
 seawolf	海狼	海狼	Midway
 gunfight	枪战	枪战	Midway
 tornbase	旋风棒球 / 棒球场	旋风棒球 / 棒球场	Midway / Taito
@@ -1347,7 +1349,7 @@ krull	异域奇兵	异域奇兵	Gottlieb
 kngtmare	神州骑士 (工程版)	神州骑士 (工程版)	Gottlieb
 sqbert	立体跳方块 2 (工程版)	立体跳方块 2 (工程版)	Mylstar
 mach3	马赫战机 3	马赫战机 3	Mylstar
-cobram3	眼镜蛇司令	眼镜蛇司令	Data East
+cobram3	眼镜蛇司令 (M.A.C.H. 3 hardware)	眼镜蛇司令 (M.A.C.H. 3 hardware)	Data East
 usvsthem	第三类战机	第三类战机	Mylstar
 3stooges	三个傀儡	三个傀儡	Mylstar
 qbertqub	立体跳方块俱乐部	立体跳方块俱乐部	Mylstar
@@ -1993,6 +1995,7 @@ skywolf2	飞狼 (第2套)	飞狼 (第2套)	bootleg
 defender	防卫者 (红标签)	防卫者 (红标签)	Williams
 defendg	防卫者 (绿标签)	防卫者 (绿标签)	Williams
 defendb	防卫者 (蓝标签)	防卫者 (蓝标签)	Williams
+defendw	防卫者 (白标签)	防卫者 (白标签)	Williams
 defndjeu	防卫者 (盗版)	防卫者 (盗版)	Jeutel
 tornado1	防卫者 (盗版 第1套)	防卫者 (盗版 第1套)	Jeutel
 tornado2	防卫者 (盗版 第2套)	防卫者 (盗版 第2套)	Jeutel
@@ -2121,6 +2124,7 @@ lostwrld	失落的世界 (日版)	失落的世界 (日版)	Capcom
 ghouls	大魔界村 (世界版)	大魔界村 (世界版)	Capcom
 ghoulsu	大魔界村 (美版)	大魔界村 (美版)	Capcom
 daimakai	大魔界村 (日版)	大魔界村 (日版)	Capcom
+daimakr2	大魔界村 (日版 hack?)	大魔界村 (日版 hack?)	Capcom
 strider	出击飞龙 (美版 第1套)	出击飞龙 (美版 第1套)	Capcom
 stridrua	出击飞龙 (美版 第2套)	出击飞龙 (美版 第2套)	Capcom
 striderj	出击飞龙 (日版 第1套)	出击飞龙 (日版 第1套)	Capcom
@@ -3101,7 +3105,7 @@ cottonu	棉花小魔女 (第2套, 美版, FD1094 317-0180)	棉花小魔女 (第2套, 美版, FD109
 cottonj	棉花小魔女 (第1套, 日版, FD1094 317-0179a)	棉花小魔女 (第1套, 日版, FD1094 317-0179a)	Sega / Success
 ddux	怪鸭冒险记 (第2套, FD1094 317-0096)	怪鸭冒险记 (第2套, FD1094 317-0096)	Sega
 ddux1	怪鸭冒险记 (第1套, 8751 317-0095)	怪鸭冒险记 (第1套, 8751 317-0095)	Sega
-dunkshot	大扣篮 (FD1089 317-0022)	大扣篮 (FD1089 317-0022)	Sega
+dunkshot	大扣篮 (FD1089A 317-0022)	大扣篮 (FD1089A 317-0022)	Sega
 eswat	霹雳双警 (第3套, 世界版, FD1094 317-0130)	霹雳双警 (第3套, 世界版, FD1094 317-0130)	Sega
 eswatu	霹雳双警 (第2套, 美版, FD1094 317-0129)	霹雳双警 (第2套, 美版, FD1094 317-0129)	Sega
 eswatj	霹雳双警 (第1套, 日版, FD1094 317-0128)	霹雳双警 (第1套, 日版, FD1094 317-0128)	Sega
@@ -6373,19 +6377,20 @@ iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
 cabaret	酒舞宴	酒舞宴	IGS
 jingbell	铃儿响叮铛 (意大利, V133I)	铃儿响叮铛 (意大利, V133I)	IGS
-lhb	龙虎榜 (第1套)	龙虎榜 (第1套)	IGS
-lhba	龙虎榜 (第2套)	龙虎榜 (第2套)	IGS
-dbc	大阪城	大阪城	IGS
-chindrag	中国龙 (日版, V021J)	中国龙 (日版, V021J)	IGS / ALTA
-chugokur	中国龙 (日版, V020J)	中国龙 (日版, V020J)	IGS / ALTA
-chmplst2	龙虎榜 II	龙虎榜 II	IGS
+lhb	龙虎榜 (V035C)	龙虎榜 (V035C)	IGS
+lhba	龙虎榜 (V033C)	龙虎榜 (V033C)	IGS
+dbc	大阪城 (V027H)	大阪城 (V027H)	IGS
+chindrag	中国龙 (日版, V021J)	中国龙 (日版, V021J)	IGS / Alta
+chugokur	中国龙 (日版, V020J)	中国龙 (日版, V020J)	IGS / Alta
+chmplst2	龙虎榜 II (V185H)	龙虎榜 II (V185H)	IGS
 xymg	幸运满贯 (V651C)	幸运满贯 (V651C)	IGS
 grtwall	幸运满贯 (V638C)	幸运满贯 (V638C)	IGS
-vbowl	虚拟保龄球 (世界版, V101XCM)	虚拟保龄球 (世界版, V101XCM)	Alta / IGS
-vbowlj	虚拟保龄球 (日版, V100JCM)	虚拟保龄球 (日版, V100JCM)	Alta / IGS
+vbowl	虚拟保龄球 (世界版, V101XCM)	虚拟保龄球 (世界版, V101XCM)	IGS
+vbowlj	虚拟保龄球 (日版, V100JCM)	虚拟保龄球 (日版, V100JCM)	IGS / Alta
 drgnwrld	中国龙 (世界版, V0400)	中国龙 (世界版, V0400)	IGS
 drgwrld3	世界龙 (世界版, V0300)	世界龙 (世界版, V0300)	IGS
-chindrac	中国龙 (中国版, V0303)	中国龙 (中国版, V0303)	IGS
+chindrac	中国龙 (中国版, V010C)	中国龙 (中国版, V010C)	IGS
+chindrah	中国龙? (香港版, V011H)	中国龙? (香港版, V011H)	IGS
 lordgun	枪火贵族	枪火贵族	IGS
 hfh	形意拳 - 黄飞鸿	形意拳 - 黄飞鸿	IGS
 tarzan	泰山	泰山	IGS
@@ -6490,7 +6495,8 @@ oigas	打砖块战斗台 Oigas (盗版)	打砖块战斗台 Oigas (盗版)	bootleg
 pbillrd	完美撞球	完美撞球	Nihon System
 pbillrds	完美撞球 (MC-8123, 317-0030)	完美撞球 (MC-8123, 317-0030)	Nihon System
 freekick	打砖块足球	打砖块足球	Nihon System (Sega license)
-freekckb	打砖块足球 (盗版)	打砖块足球 (盗版)	bootleg
+freekckb	打砖块足球 (盗版 第1套)	打砖块足球 (盗版 第1套)	bootleg
+freekcb2	打砖块足球 (盗版 第2套)	打砖块足球 (盗版 第2套)	bootleg
 countrun	赛车精灵 Counter Run	赛车精灵 Counter Run	Nihon System (Sega license)
 countrnb	赛车精灵 Counter Run (盗版 第1套)	赛车精灵 Counter Run (盗版 第1套)	bootleg
 countrb2	赛车精灵 Counter Run (盗版 第2套)	赛车精灵 Counter Run (盗版 第2套)	bootleg
@@ -7185,8 +7191,8 @@ paranoia	偏执狂	偏执狂	Naxat Soft
 vcombat	虚拟战斗	虚拟战斗	VR8 Inc.
 shadfgtr	暗影战士	暗影战士	Sega?
 blackt96	黑色接触 '96	黑色接触 '96	D.G.R.M.
-lucky74s	幸运 74 (小)	幸运 74 (小)	Wing Co.,Ltd.
-lucky74b	幸运 74 (大)	幸运 74 (大)	Wing Co.,Ltd.
+lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
+lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
 laperla	快乐啦啦队 (Ver 2.0)	快乐啦啦队 (Ver 2.0)	Nazionale Elettronica
 laperlag	快乐黄金啦啦队 (Ver 2.0)	快乐黄金啦啦队 (Ver 2.0)	Nazionale Elettronica
 capunc	双倍打击 (Ver 1.2)	双倍打击 (Ver 1.2)	Nazionale Elettronica
@@ -7345,6 +7351,9 @@ megadrij	世嘉五代 (日版, NTSC)	世嘉五代 (日版, NTSC)	Sega
 genesis	世嘉五代 (美版, NTSC)	世嘉五代 (美版, NTSC)	Sega
 gensvp	世嘉五代 (美版, NTSC, w/SVP)	世嘉五代 (美版, NTSC, w/SVP)	Sega
 megadriv	世嘉五代 (欧版, PAL)	世嘉五代 (欧版, PAL)	Sega
+picoe	Pico (Europe, PAL)	Pico (Europe, PAL)	Sega
+picou	Pico (USA, NTSC)	Pico (USA, NTSC)	Sega
+picoj	Pico (Japan, NTSC)	Pico (Japan, NTSC)	Sega
 pce	PC Engine	PC Engine	Nippon Electronic Company
 tg16	TurboGrafx 16	TurboGrafx 16	Nippon Electronic Company
 sgx	SuperGrafx	SuperGrafx	Nippon Electronic Company
