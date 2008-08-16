@@ -21,7 +21,6 @@ merged Street Fighter Zero for MESS
 #endif
 
 #define GAME(YEAR,NAME,PARENT,MACHINE,INPUT,INIT,MONITOR,COMPANY,FULLNAME,FLAGS)
-//mamep:
 MACHINE_DRIVER_EXTERN(cps1_10MHz);
 extern void driver_init_cps1(running_machine *machine);
 

@@ -171,7 +171,7 @@ const WCHAR *GetSelectedSoftware(int driver_index, const machine_config *config,
 
 	o = load_options(OPTIONS_GAME, driver_index);
 	software = options_get_wstring(o, opt_name);
-	return software ? software : wcsdup(L"");
+	return software ? software : TEXT("");
 }
 
 void SetExtraSoftwarePaths(int driver_index, const WCHAR *extra_paths)
@@ -193,7 +193,7 @@ const WCHAR *GetExtraSoftwarePaths(int driver_index)
 
 	snprintf(opt_name, ARRAY_LENGTH(opt_name), "%s_extra_software", drivers[driver_index]->name);
 	paths = options_get_wstring(MameUISettings(), opt_name);
-	return paths ? paths : wcsdup(L"");
+	return paths ? paths : TEXT("");
 }
 
 void SetCurrentSoftwareTab(const char *shortname)

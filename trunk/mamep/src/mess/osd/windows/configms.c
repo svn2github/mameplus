@@ -28,7 +28,7 @@
 const options_entry mess_win_options[] =
 {
 //	{ NULL,							NULL,   OPTION_HEADER,		"WINDOWS MESS SPECIFIC OPTIONS" },
-//	{ "newui;nu",       "0",    OPTION_BOOLEAN,		"use the new MESS UI" },
+//	{ "newui;nu",                   "0",    OPTION_BOOLEAN,		"use the new MESS UI" },
 	{ NULL }
 };
 

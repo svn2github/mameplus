@@ -188,7 +188,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 {
 	unsigned char *tmpROMnew, *tmpROM;
 	unsigned char *secondhalf;
-	unsigned char *rawROM, fliptemp;
+	unsigned char *rawROM,fliptemp;
 	int relocate;
 	int length;
 	int ptr, x;
@@ -1467,14 +1467,14 @@ INPUT_PORTS_START( pico )
 	PORT_BIT( 0x0080, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(1) PORT_NAME("PEN BUTTON")
 
 	PORT_START("PAGE")
-        PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("Increment Page")
-        PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME("Decrement Page")
+	PORT_BIT( 0x0001, IP_ACTIVE_LOW, IPT_BUTTON3 ) PORT_PLAYER(1) PORT_NAME("Increment Page")
+	PORT_BIT( 0x0002, IP_ACTIVE_LOW, IPT_BUTTON4 ) PORT_PLAYER(1) PORT_NAME("Decrement Page")
 
 	PORT_START("PENX")
-        PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(30) PORT_MINMAX(0, 255) PORT_CATEGORY(5) PORT_PLAYER(1) PORT_NAME("PEN X")
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_X ) PORT_CROSSHAIR(X, 1.0, 0.0, 0) PORT_SENSITIVITY(70) PORT_KEYDELTA(30) PORT_MINMAX(0, 255) PORT_CATEGORY(5) PORT_PLAYER(1) PORT_NAME("PEN X")
 
 	PORT_START("PENY")
-        PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(30) PORT_MINMAX(0,255 ) PORT_CATEGORY(5) PORT_PLAYER(1) PORT_NAME("PEN Y")
+	PORT_BIT( 0xff, 0x80, IPT_LIGHTGUN_Y ) PORT_CROSSHAIR(Y, 1.0, 0.0, 0) PORT_SENSITIVITY(50) PORT_KEYDELTA(30) PORT_MINMAX(0,255 ) PORT_CATEGORY(5) PORT_PLAYER(1) PORT_NAME("PEN Y")
 
 	PORT_START("REGION")	/* Buttons on Genesis Console */
 	/* Region setting for Console */
@@ -1554,7 +1554,7 @@ DRIVER_INIT( picoj )
 
 ***************************************************************************/
 
-/*    YEAR  NAME      PARENT    COMPAT  MACHINE    INPUT     INIT  		CONFIG   COMPANY   FULLNAME */
+/*    YEAR  NAME      PARENT    COMPAT  MACHINE    	  INPUT     INIT  		CONFIG   COMPANY   FULLNAME */
 CONS( 1989, genesis,  0,		0,      ms_megadriv,  megadri6, genusa,		genesis, "Sega",   "Genesis (USA, NTSC)", 0)
 CONS( 1993, gensvp,   genesis,	0,      ms_megdsvp,   megdsvp,  megadsvp,	genesis, "Sega",   "Genesis (USA, NTSC, w/SVP)", 0)
 CONS( 1990, megadriv, genesis,	0,      ms_megadriv,  megadri6, geneur,		genesis, "Sega",   "Mega Drive (Europe, PAL)", 0)
