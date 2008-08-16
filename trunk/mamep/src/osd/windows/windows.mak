@@ -236,7 +236,7 @@ endif
 # add the windows libraries
 LIBS += -luser32 -lgdi32 -lddraw -ldsound -ldxguid -lwinmm -ladvapi32 -lcomctl32 -lshlwapi
 
-ifneq ($(USE_JOY_MOUSE_MOVE),)
+ifeq ($(DIRECTINPUT),7)
 LIBS += -ldinput
 CFLAGS += -DDIRECTINPUT_VERSION=0x0700
 else

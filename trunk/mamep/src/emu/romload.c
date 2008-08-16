@@ -1153,7 +1153,10 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	if (patchname && *patchname)
 	{
 		if (!open_ips_entry(patchname, &romdata, romp))
-			return display_rom_load_results(&romdata);
+		{
+			display_rom_load_results(&romdata);
+			return;
+		}
 	}
 #endif /* USE_IPS */
 
@@ -1203,7 +1206,10 @@ void rom_init(running_machine *machine, const rom_entry *romp)
 	if (patchname && *patchname)
 	{
 		if (!close_ips_entry(&romdata))
-			return display_rom_load_results(&romdata);
+		{
+			display_rom_load_results(&romdata);
+			return;
+		}
 	}
 #endif /* USE_IPS */
 
