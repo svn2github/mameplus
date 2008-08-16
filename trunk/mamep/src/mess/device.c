@@ -29,11 +29,36 @@
     TYPE DEFINITIONS
 ***************************************************************************/
 
+typedef struct _legacy_mess_device legacy_mess_device;
+struct _legacy_mess_device
+{
+	mess_device_class devclass;
+	const device_config *devconfig;
+
+	/* the basics */
+	const char *tag;
+	iodevice_t type;
+	int position;
+	int index_in_device;
+
+	/* open dispositions */
+	unsigned int readable : 1;
+	unsigned int writeable : 1;
+	unsigned int creatable : 1;
+
+	/* miscellaneous flags */
+	unsigned int reset_on_load : 1;
+	unsigned int load_at_init : 1;
+	unsigned int multiple : 1;
+};
+
+
+
 /* this is placed in the inline_config of the MAME device structure */
 typedef struct _mess_device_config mess_device_config;
 struct _mess_device_config
 {
-	struct IODevice io_device;
+	legacy_mess_device io_device;
 	char string_buffer[1024];
 };
 
@@ -80,6 +105,14 @@ static const mess_device_type_info device_info_array[] =
 	{ IO_MEMCARD,	"memcard",		"memc" }, /* 12 */
 	{ IO_CDROM,     "cdrom",        "cdrm" }, /* 13 */
 };
+
+
+
+/***************************************************************************
+    FUNCTION PROTOTYPES
+***************************************************************************/
+
+static const legacy_mess_device *mess_device_from_core_device(const device_config *device);
 
 
 
@@ -194,12 +227,12 @@ static DEVICE_STOP(mess_device)
 static DEVICE_GET_NAME(mess_device)
 {
 	const char *name;
-	const struct IODevice *iodev = mess_device_from_core_device(device);
+	const legacy_mess_device *iodev = mess_device_from_core_device(device);
 	int id = iodev->index_in_device;
 
 	/* use the cool new device string technique */
 	name = mess_device_get_info_string(&iodev->devclass, MESS_DEVINFO_STR_DESCRIPTION + id);
-	if (name)
+	if (name != NULL)
 	{
 		snprintf(buffer, buffer_length, "%s", name);
 		return buffer;
@@ -471,10 +504,18 @@ machine_config *machine_config_alloc_with_mess_devices(const game_driver *gamedr
  *
  *************************************/
 
-const struct IODevice *mess_device_from_core_device(const device_config *device)
+static const legacy_mess_device *mess_device_from_core_device(const device_config *device)
 {
 	const mess_device_config *mess_device = (device != NULL) ? (const mess_device_config *) device->inline_config : NULL;
 	return (mess_device != NULL) ? &mess_device->io_device : NULL;
+}
+
+
+
+const mess_device_class *mess_devclass_from_core_device(const device_config *device)
+{
+	const legacy_mess_device *iodev = mess_device_from_core_device(device);
+	return (iodev != NULL) ? &iodev->devclass : NULL;
 }
 
 
@@ -486,7 +527,7 @@ int device_count_tag_from_machine(const running_machine *machine, const char *ta
 
 	for (device = device_list_first(machine->config->devicelist, MESS_DEVICE); device != NULL; device = device_list_next(device, MESS_DEVICE))
 	{
-		const struct IODevice *iodev = mess_device_from_core_device(device);
+		const legacy_mess_device *iodev = mess_device_from_core_device(device);
 		if (!strcmp(tag, iodev->tag))
 		{
 			count++;
@@ -498,19 +539,17 @@ int device_count_tag_from_machine(const running_machine *machine, const char *ta
 
 
 /* this function is deprecated */
-const struct IODevice *device_find_from_machine(const running_machine *machine, iodevice_t type)
+int device_find_from_machine(const running_machine *machine, iodevice_t type)
 {
 	const device_config *device;
 
 	for (device = device_list_first(machine->config->devicelist, MESS_DEVICE); device != NULL; device = device_list_next(device, MESS_DEVICE))
 	{
-		const struct IODevice *iodev = mess_device_from_core_device(device);
+		const legacy_mess_device *iodev = mess_device_from_core_device(device);
 		if (iodev->type == type)
-		{
-			return iodev;
+			return TRUE;
 		}
-	}
-	return NULL;
+	return FALSE;
 }
 
 
@@ -523,7 +562,7 @@ int device_count(running_machine *machine, iodevice_t type)
 
 	for (device = device_list_first(machine->config->devicelist, MESS_DEVICE); device != NULL; device = device_list_next(device, MESS_DEVICE))
 	{
-		const struct IODevice *iodev = mess_device_from_core_device(device);
+		const legacy_mess_device *iodev = mess_device_from_core_device(device);
 		if (iodev->type == type)
 		{
 			count++;
@@ -575,16 +614,9 @@ void *image_lookuptag(const device_config *device, const char *tag)
 
 int image_index_in_device(const device_config *image)
 {
-	const struct IODevice *iodev = mess_device_from_core_device(image);
+	const legacy_mess_device *iodev = mess_device_from_core_device(image);
 	assert(iodev != NULL);
 	return iodev->index_in_device;
-}
-
-
-
-const device_config *image_from_device(const struct IODevice *device)
-{
-	return device->devconfig;
 }
 
 
@@ -593,7 +625,7 @@ const device_config *image_from_devtag_and_index(running_machine *machine, const
 {
 	const device_config *image = NULL;
 	const device_config *dev;
-	const struct IODevice *iodev;
+	const legacy_mess_device *iodev;
 
 	for (dev = device_list_first(machine->config->devicelist, MESS_DEVICE); dev != NULL; dev = device_list_next(dev, MESS_DEVICE))
 	{
@@ -613,7 +645,7 @@ const device_config *image_from_devtag_and_index(running_machine *machine, const
 
 iodevice_t image_devtype(const device_config *image)
 {
-	const struct IODevice *iodev = mess_device_from_core_device(image);
+	const legacy_mess_device *iodev = mess_device_from_core_device(image);
 	assert(iodev != NULL);
 	return iodev->type;
 }
@@ -624,7 +656,7 @@ const device_config *image_from_devtype_and_index(iodevice_t type, int id)
 {
 	const device_config *image = NULL;
 	const device_config *dev;
-	const struct IODevice *iodev;
+	const legacy_mess_device *iodev;
 
 	for (dev = device_list_first(Machine->config->devicelist, MESS_DEVICE); dev != NULL; dev = device_list_next(dev, MESS_DEVICE))
 	{
