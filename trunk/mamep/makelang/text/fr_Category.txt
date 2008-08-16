@@ -22,6 +22,11 @@ Casino *Adulte*
 Category
 Catégorie
 
+
+# 269
+Climbing
+Escalade
+
 # 286
 Driving
 Conduite
@@ -617,8 +622,4 @@ Jeu de plateau / Renju
 # 7169
 Tabletop / Shougi
 Jeu de plateau / Shougi
-
-# 269
-Climbing
-
 
