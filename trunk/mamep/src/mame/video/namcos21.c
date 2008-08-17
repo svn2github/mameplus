@@ -198,6 +198,7 @@ VIDEO_UPDATE( namcos21 )
 
 	CopyVisiblePolyFrameBuffer( bitmap, cliprect,0,0x7fbf );
 
+
 	if( namcos2_gametype != NAMCOS21_WINRUN91 )
 	{ /* draw high priority 2d sprites */
 		for( pri=pivot; pri<8; pri++ )
@@ -436,25 +437,11 @@ rendertri(
 	}
 } /* rendertri */
 
-static double view_determinant(const vertex *p1, const vertex *p2, const vertex *p3)
-{
-	double x1 = p2->x - p1->x;
-	double y1 = p2->y - p1->y;
-///	double z1 = p2->z - p1->z;
-	double x2 = p3->x - p1->x;
-	double y2 = p3->y - p1->y;
-///	double z2 = p3->z - p1->z;
-
-///	return p1->x*(y1*z2-y2*z1) + p1->y*(z1*x2-z2*x1) + p1->z*(x1*y2-x2*y1);
-	return -(x1*y2-x2*y1);
-}
-
 void
 namcos21_DrawQuad( int sx[4], int sy[4], int zcode[4], int color )
 {
 	vertex a,b,c,d;
 	int depthcueenable = 1;
-	int code = color>>8;
 	/*
         0x0000..0x1fff  sprite palettes (0x20 sets of 0x100 colors)
         0x2000..0x3fff  polygon palette bank0 (0x10 sets of 0x200 colors or 0x20 sets of 0x100 colors)
@@ -463,7 +450,7 @@ namcos21_DrawQuad( int sx[4], int sy[4], int zcode[4], int color )
     */
 	if( namcos2_gametype == NAMCOS21_WINRUN91 )
 	{
-		color = 0x2000|(color&0xff);
+		color = 0x4000|(color&0xff);
 	}
 	else if ( namcos2_gametype == NAMCOS21_DRIVERS_EYES )
 	{
@@ -471,6 +458,7 @@ namcos21_DrawQuad( int sx[4], int sy[4], int zcode[4], int color )
 	}
 	else
 	{ /* map color code to hardware pen */
+		int code = color>>8;
 		if( code&0x80 )
 		{
 			color = color&0xff;
@@ -504,9 +492,6 @@ namcos21_DrawQuad( int sx[4], int sy[4], int zcode[4], int color )
 	d.y = sy[3];
 	d.z = zcode[3];
 
-	if(view_determinant(&a, &b, &c) >= 0 && view_determinant(&c, &d, &a) >= 0 )
-	{
 	rendertri( &a, &b, &c, color, depthcueenable );
 	rendertri( &c, &d, &a, color, depthcueenable );
-	}
 } /* namcos21_DrawQuad */

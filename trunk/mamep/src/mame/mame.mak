@@ -1738,6 +1738,8 @@ $(DRIVERS)/nbmj8688.o:	$(LAYOUT)/nbmj8688.lh
 
 $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
+$(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
+
 $(DRIVERS)/peplus.o:	$(LAYOUT)/peplus.lh \
 						$(LAYOUT)/pe_schip.lh \
 						$(LAYOUT)/pe_poker.lh \
