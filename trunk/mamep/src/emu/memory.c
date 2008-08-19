@@ -169,12 +169,6 @@ typedef enum _read_or_write read_or_write;
 #define LEVEL1_INDEX(a)			((a) >> LEVEL2_BITS)
 #define LEVEL2_INDEX(e,a)		((1 << LEVEL1_BITS) + (((e) - SUBTABLE_BASE) << LEVEL2_BITS) + ((a) & ((1 << LEVEL2_BITS) - 1)))
 
-/* macros for the profiler */
-#define MEMREADSTART()			do { profiler_mark(PROFILER_MEMREAD); } while (0)
-#define MEMREADEND(ret)			do { profiler_mark(PROFILER_END); return ret; } while (0)
-#define MEMWRITESTART()			do { profiler_mark(PROFILER_MEMWRITE); } while (0)
-#define MEMWRITEEND(ret)		do { (ret); profiler_mark(PROFILER_END); return; } while (0)
-
 /* helper macros */
 #define HANDLER_IS_RAM(h)		((FPTR)(h) == STATIC_RAM)
 #define HANDLER_IS_ROM(h)		((FPTR)(h) == STATIC_ROM)
@@ -1502,19 +1496,6 @@ int memory_get_log_unmap(int spacenum)
     X-bit case
 -------------------------------------------------*/
 
-void *_memory_install_handler(running_machine *machine, int cpunum, int spacenum, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, FPTR rhandler, FPTR whandler, const char *rhandler_name, const char *whandler_name)
-{
-	addrspace_data *space = &cpudata[cpunum].space[spacenum];
-	if (rhandler >= STATIC_COUNT || whandler >= STATIC_COUNT)
-		fatalerror("fatal: can only use static banks with memory_install_handler()");
-	if (rhandler != 0)
-		space_map_range(space, ROW_READ, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, (genf *)(FPTR)rhandler, machine, rhandler_name);
-	if (whandler != 0)
-		space_map_range(space, ROW_WRITE, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, (genf *)(FPTR)whandler, machine, whandler_name);
-	mem_dump();
-	return memory_find_base(cpunum, spacenum, ADDR2BYTE(space, addrstart));
-}
-
 UINT8 *_memory_install_handler8(running_machine *machine, int cpunum, int spacenum, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_machine_func rhandler, write8_machine_func whandler, const char *rhandler_name, const char *whandler_name)
 {
 	addrspace_data *space = &cpudata[cpunum].space[spacenum];
@@ -1565,19 +1546,6 @@ UINT64 *_memory_install_handler64(running_machine *machine, int cpunum, int spac
     install dynamic device read and write handlers
     for X-bit case
 -------------------------------------------------*/
-
-void *_memory_install_device_handler(const device_config *device, int cpunum, int spacenum, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, FPTR rhandler, FPTR whandler, const char *rhandler_name, const char *whandler_name)
-{
-	addrspace_data *space = &cpudata[cpunum].space[spacenum];
-	if (rhandler >= STATIC_COUNT || whandler >= STATIC_COUNT)
-		fatalerror("fatal: can only use static banks with memory_install_device_handler()");
-	if (rhandler != 0)
-		space_map_range(space, ROW_READ, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, (genf *)(FPTR)rhandler, (void *)device, rhandler_name);
-	if (whandler != 0)
-		space_map_range(space, ROW_WRITE, space->dbits, 0, addrstart, addrend, addrmask, addrmirror, (genf *)(FPTR)whandler, (void *)device, whandler_name);
-	mem_dump();
-	return memory_find_base(cpunum, spacenum, ADDR2BYTE(space, addrstart));
-}
 
 UINT8 *_memory_install_device_handler8(const device_config *device, int cpunum, int spacenum, offs_t addrstart, offs_t addrend, offs_t addrmask, offs_t addrmirror, read8_device_func rhandler, write8_device_func whandler, const char *rhandler_name, const char *whandler_name)
 {

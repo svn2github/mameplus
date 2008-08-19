@@ -131,6 +131,9 @@ void upd78c05_get_info(UINT32 state, cpuinfo *info);
 void upd78c06_get_info(UINT32 state, cpuinfo *info);
 void jaguargpu_get_info(UINT32 state, cpuinfo *info);
 void jaguardsp_get_info(UINT32 state, cpuinfo *info);
+void cquestsnd_get_info(UINT32 state, cpuinfo *info);
+void cquestrot_get_info(UINT32 state, cpuinfo *info);
+void cquestlin_get_info(UINT32 state, cpuinfo *info);
 void r3000be_get_info(UINT32 state, cpuinfo *info);
 void r3000le_get_info(UINT32 state, cpuinfo *info);
 void r3041be_get_info(UINT32 state, cpuinfo *info);
@@ -149,6 +152,7 @@ void rm7000be_get_info(UINT32 state, cpuinfo *info);
 void rm7000le_get_info(UINT32 state, cpuinfo *info);
 void arm_get_info(UINT32 state, cpuinfo *info);
 void arm7_get_info(UINT32 state, cpuinfo *info);
+void sh1_get_info(UINT32 state, cpuinfo *info);
 void sh2_get_info(UINT32 state, cpuinfo *info);
 void sh4_get_info(UINT32 state, cpuinfo *info);
 void dsp32c_get_info(UINT32 state, cpuinfo *info);
@@ -622,6 +626,11 @@ static const struct
 	{ CPU_JAGUARGPU, jaguargpu_get_info },
 	{ CPU_JAGUARDSP, jaguardsp_get_info },
 #endif
+#if (HAS_CUBEQCPU)
+	{ CPU_CQUESTSND, cquestsnd_get_info },
+	{ CPU_CQUESTROT, cquestrot_get_info },
+	{ CPU_CQUESTLIN, cquestlin_get_info },
+#endif
 #if (HAS_R3000)
 	{ CPU_R3000BE, r3000be_get_info },
 	{ CPU_R3000LE, r3000le_get_info },
@@ -659,6 +668,9 @@ static const struct
 #endif
 #if (HAS_ARM7)
 	{ CPU_ARM7, arm7_get_info },
+#endif
+#if (HAS_SH1)
+	{ CPU_SH1, sh1_get_info },
 #endif
 #if (HAS_SH2)
 	{ CPU_SH2, sh2_get_info },
