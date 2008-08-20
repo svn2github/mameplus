@@ -770,28 +770,28 @@ finfrl2j	英国快打 2 (日版)	英国快打 2 (日版)	Namco
 cosmicg	宇宙游击队	宇宙游击队	Universal
 cosmica	宇宙异形	宇宙异形	Universal
 cosmica2	宇宙异形 (旧版)	宇宙异形 (旧版)	Universal
+nomnlnd	战国自卫队	战国自卫队	Universal
+nomnlndg	战国自卫队 (Gottlieb)	战国自卫队 (Gottlieb)	Universal (Gottlieb license)
+magspot	摩斑射击	摩斑射击	Universal
+magspot2	摩斑射击 2	摩斑射击 2	Universal
 panic	太空惊魂记 (版本 E)	太空惊魂记 (版本 E)	Universal
 panic2	太空惊魂记 (第2套)	太空惊魂记 (第2套)	Universal
 panic3	太空惊魂记 (第3套)	太空惊魂记 (第3套)	Universal
 panich	太空惊魂记 (难度加强版)	太空惊魂记 (难度加强版)	Universal
 panicger	太空惊魂记 (德国版)	太空惊魂记 (德国版)	Universal (ADP Automaten license)
+devzone	魔鬼地带	魔鬼地带	Universal
+devzone2	魔鬼地带 (早期版)	魔鬼地带 (早期版)	Universal
+cheekyms	打老鼠	打老鼠	Universal
 zerohour	火箭任务 - 倒数计时	火箭任务 - 倒数计时	Universal
 redclash	赤色冲击 (第1套)	赤色冲击 (第1套)	Tehkan
 redclsha	赤色冲击 (第2套)	赤色冲击 (第2套)	Tehkan
 redclask	赤色冲击 (韩国语)	赤色冲击 (韩国语)	Kaneko
-magspot	摩斑射击	摩斑射击	Universal
-magspot2	摩斑射击 2	摩斑射击 2	Universal
-devzone	魔鬼地带	魔鬼地带	Universal
-devzone2	魔鬼地带 (早期版)	魔鬼地带 (早期版)	Universal
-nomnlnd	战国自卫队	战国自卫队	Universal
-nomnlndg	战国自卫队 (Gottlieb)	战国自卫队 (Gottlieb)	Universal (Gottlieb license)
-cheekyms	打老鼠	打老鼠	Universal
+cavenger	宇宙复仇者	宇宙复仇者	Universal
 ladybug	小瓢虫	小瓢虫	Universal
 ladybugb	小瓢虫 (盗版 第1套)	小瓢虫 (盗版 第1套)	bootleg
 ladybgb2	小瓢虫 (盗版 第2套)	小瓢虫 (盗版 第2套)	bootleg
 snapjack	外星小精灵	外星小精灵	Universal
 sraider	太空雷达	太空雷达	Universal
-cavenger	宇宙复仇者	宇宙复仇者	Universal
 dorodon	迷宫精灵 (第1套)	迷宫精灵 (第1套)	Falcon
 dorodon2	迷宫精灵 (第2套)	迷宫精灵 (第2套)	Falcon
 mrdo	嘟先生!	嘟先生!	Universal
@@ -1197,12 +1197,14 @@ shrike	星际复仇 (工程版)	星际复仇 (工程版)	Bally/Sente
 gridlee	立体跳跳球	立体跳跳球	Videa
 andromed	仙女座 (日版?)	仙女座 (日版?)	Irem
 ipminvad	宇宙侵略者 - I P M	宇宙侵略者 - I P M	Irem
+ipminva1	I P M Invader (Incomplete Dump)	I P M Invader (Incomplete Dump)	Irem
 skychut	天空导弹	天空导弹	Irem
 spacbeam	太空光束	太空光束	Irem
 greenber	绿兵团 (Irem)	绿兵团 (Irem)	Irem
 headoni	赛车精灵 Head On (Irem, M-15 硬件)	赛车精灵 Head On (Irem, M-15 硬件)	Irem
 redalert	红色警戒	红色警戒	Irem + GDI
 demoneye	外星大射击	外星大射击	Irem
+ww3	WW III	WW III	Irem
 olibochu	阿部小精灵	阿部小精灵	Irem + GDI
 mpatrol	月球巡警	月球巡警	Irem
 mpatrolw	月球巡警 (Williams)	月球巡警 (Williams)	Irem (Williams license)
@@ -1897,6 +1899,7 @@ snowbroa	雪人兄弟 - 尼克和汤姆 (第2套)	雪人兄弟 - 尼克和汤姆 (第2套)	Toaplan
 snowbrob	雪人兄弟 - 尼克和汤姆 (第3套)	雪人兄弟 - 尼克和汤姆 (第3套)	Toaplan
 snowbroc	雪人兄弟 - 尼克和汤姆 (第4套)	雪人兄弟 - 尼克和汤姆 (第4套)	Toaplan
 snowbroj	雪人兄弟 - 尼克和汤姆 (日版)	雪人兄弟 - 尼克和汤姆 (日版)	Toaplan
+snowbrod	雪人兄弟 - 尼克和汤姆 (Dooyong 许可)	雪人兄弟 - 尼克和汤姆 (Dooyong 许可)	Toaplan (Dooyong license)
 wintbob	雪人兄弟 - 尼克和汤姆 (盗版)	雪人兄弟 - 尼克和汤姆 (盗版)	[Toaplan] (Sakowa Project Korea bootleg)
 honeydol	蜜蜂玩偶	蜜蜂玩偶	Barko Corp.
 twinadv	哥俩好大冒险 (世界版)	哥俩好大冒险 (世界版)	Barko Corp.
@@ -5222,6 +5225,7 @@ sia2650	超级宇宙入侵者	超级宇宙入侵者	Zaccaria/Zelco
 tinv2650	宇宙入侵者	宇宙入侵者	Zaccaria/Zelco
 dodgem	赛车精灵 Dodgem	赛车精灵 Dodgem	Zaccaria
 galaxia	小蜜蜂	小蜜蜂	Zaccaria
+astrowar	Astro Wars	Astro Wars	Zaccaria
 laserbat	激光战役	激光战役	Zaccaria
 lazarian	激光战役 Lazar ian	激光战役 Lazar ian	Bally Midway (Zaccaria License)
 catnmous	猫和老鼠 (第1套)	猫和老鼠 (第1套)	Zaccaria
@@ -5885,6 +5889,7 @@ sandscrb	沙漠之蝎 (Revised Hardware)	沙漠之蝎 (Revised Hardware)	Face
 explbrkr	爆裂战机 Explosive	爆裂战机 Explosive	Kaneko
 bakubrkr	爆裂战机	爆裂战机	Kaneko
 shogwarr	幕府快打	幕府快打	Kaneko
+shogware	幕府快打 (欧洲版)	幕府快打 (欧洲版)	Kaneko
 fjbuster	幕府快打 - 富士山 BUSTER (日版)	幕府快打 - 富士山 BUSTER (日版)	Kaneko
 brapboys	嘻哈男孩 (世界版)	嘻哈男孩 (世界版)	Kaneko
 brapboyj	嘻哈男孩 (日版)	嘻哈男孩 (日版)	Kaneko
@@ -6250,6 +6255,7 @@ twinactn	孪生劫	孪生劫	Afega
 stagger1	红鹰 (日版)	红鹰 (日版)	Afega
 redhawk	红鹰 (美版)	红鹰 (美版)	Afega
 redhawke	红鹰 (Excellent Co., Ltd)	红鹰 (Excellent Co., Ltd)	Afega (Excellent Co. license)
+redhawki	红鹰 (意大利版)	红鹰 (意大利版)	Afega
 redhawkb	红鹰 (盗版)	红鹰 (盗版)	bootleg
 grdnstrm	圣战 - 守护风暴 (韩国版)	圣战 - 守护风暴 (韩国版)	Afega
 bubl2000	泡泡野人版 2000	泡泡野人版 2000	Tuning
@@ -6964,6 +6970,7 @@ ttchamp	桌上网球冠军 (第1套)	桌上网球冠军 (第1套)	Gamart?
 ttchampa	桌上网球冠军 (第2套)	桌上网球冠军 (第2套)	Gamart?
 dreamwld	梦想世界	梦想世界	SemiCom
 cybertnk	电子坦克 (v1.04)	电子坦克 (v1.04)	Coreland
+cubeqst	Cube Quest	Cube Quest	Simutrek
 pkscram	对战足球	对战足球	Cosmo Electronics Corporation
 jollycrd	快乐纸牌 (奥地利)	快乐纸牌 (奥地利)	TAB-Austria
 jolycdae	快乐纸牌 (奥地利, 加密)	快乐纸牌 (奥地利, 加密)	TAB-Austria
@@ -7043,6 +7050,8 @@ magic10	魔法扑克 (ver. 16.55)	魔法扑克 (ver. 16.55)	A.W.P. Games
 magic10a	魔法扑克 (ver. 16.45)	魔法扑克 (ver. 16.45)	A.W.P. Games
 magic102	魔法扑克 2 (ver 1.1)	魔法扑克 2 (ver 1.1)	ABM Games
 suprpool	超级撞球 (9743 Rev.01)	超级撞球 (9743 Rev.01)	ABM Games
+hotslot	Hot Slot (ver 05.01)	Hot Slot (ver 05.01)	ABM Electronics
+mcolors	Magic Colors (ver 1.7a)	Magic Colors (ver 1.7a)	unknown
 galaxi	蜜蜂扑克 (v2.0)	蜜蜂扑克 (v2.0)	B.R.L.
 dwarfd	侏儒兽穴	侏儒兽穴	Electro-Sport
 trvquest	琐事问答	琐事问答	Sunn / Techstar
