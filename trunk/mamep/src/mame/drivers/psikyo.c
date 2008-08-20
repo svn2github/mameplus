@@ -1752,8 +1752,8 @@ ROM_START( samuraia )
 	ROM_LOAD( "u34.bin",  0x000000, 0x100000, CRC(e6a75bd8) SHA1(1aa84ea54584b6c8b2846194b48bf6d2afa67fee) )
 	ROM_LOAD( "u35.bin",  0x100000, 0x100000, CRC(c4ca0164) SHA1(c75422de2e0127cdc23d8c223b674a5bd85b00fb) )
 
-//  ROM_REGION( 0x100000, "ymf", 0 )  /* Samples */
-	ROM_REGION( 0x100000, "ymf", 0 )	/* Samples */
+//  ROM_REGION( 0x100000, "ym", 0 )  /* Samples */
+	ROM_REGION( 0x100000, "ym", 0 )	/* Samples */
 	ROM_LOAD( "u68.bin",  0x000000, 0x100000, CRC(9a7f6c34) SHA1(c549b209bce1d2c6eeb512db198ad20c3f5fb0ea) )
 
 	ROM_REGION( 0x040000, "user1", 0 )	/* Sprites LUT */
@@ -1778,8 +1778,8 @@ ROM_START( sngkace )
 	ROM_LOAD( "u34.bin",  0x000000, 0x100000, CRC(e6a75bd8) SHA1(1aa84ea54584b6c8b2846194b48bf6d2afa67fee) )
 	ROM_LOAD( "u35.bin",  0x100000, 0x100000, CRC(c4ca0164) SHA1(c75422de2e0127cdc23d8c223b674a5bd85b00fb) )
 
-//  ROM_REGION( 0x100000, "ymf", 0 )  /* Samples */
-	ROM_REGION( 0x100000, "ymf", 0 )	/* Samples */
+//  ROM_REGION( 0x100000, "ym", 0 )  /* Samples */
+	ROM_REGION( 0x100000, "ym", 0 )	/* Samples */
 	ROM_LOAD( "u68.bin",  0x000000, 0x100000, CRC(9a7f6c34) SHA1(c549b209bce1d2c6eeb512db198ad20c3f5fb0ea) )
 
 	ROM_REGION( 0x040000, "user1", 0 )	/* Sprites LUT */
@@ -1790,8 +1790,8 @@ ROM_END
 static DRIVER_INIT( sngkace )
 {
 	{
-		UINT8 *RAM	=	memory_region(machine, "ymf");
-		int len				=	memory_region_length(machine, "ymf");
+		UINT8 *RAM	=	memory_region(machine, "ym");
+		int len				=	memory_region_length(machine, "ym");
 		int i;
 
 		/* Bit 6&7 of the samples are swapped. Naughty, naughty... */
