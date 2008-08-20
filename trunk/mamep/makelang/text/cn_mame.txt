@@ -634,6 +634,10 @@ BANK%.2d
 BCD
 十进制
 
+# emu/uimenu.c: 2789 
+Backdrops
+背景图
+
 # mame/drivers/metro.c: 2433 mame/drivers/nbmj8891.c: 2160 mame/drivers/pacman.c: 2895
 Beginner
 初学者
@@ -641,6 +645,10 @@ Beginner
 # mame/drivers/ampoker2.c: 844, 936 mame/drivers/bmcbowl.c: 372 mame/drivers/calomega.c: 1091, 1194, 1297, 1401, 1467, 1533 mame/drivers/cardline.c: 130 mame/drivers/cherrym.c: 167 mame/drivers/igs_180.c: 599 mame/drivers/limenko.c: 419 mame/drivers/lucky74.c: 571 mame/drivers/lvcards.c: 212, 296 mame/drivers/magic10.c: 216 mame/drivers/magicfly.c: 583 mame/drivers/nmg5.c: 681 mame/drivers/pmpoker.c: 569, 631, 734, 803 mame/drivers/sderby.c: 173 mame/drivers/witch.c: 548 mame/drivers/wldarrow.c: 239
 Bet
 押注
+
+# emu/uimenu.c: 2797 
+Bezels
+外框图
 
 # emu/inpttype.h: 406
 Bill 1
@@ -906,6 +914,10 @@ Create New Card
 Create...
 创建...
 
+# emu/uimenu.c: 2801
+Cropped
+裁切
+
 # emu/sound/custom.c: 83 mame/drivers/tickee.c: 317 
 Custom
 自定义
@@ -1118,6 +1130,10 @@ Elements Per Line
 Enable/Disable a Cheat
 启用/禁用作弊码
 
+# emu/sound/sn76477.c: 643 emu/uimenu.c: 2789, 2793, 2797 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 849 mame/drivers/seattle.c: 2392
+Enabled
+启用
+
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Endianness
 字节顺序
@@ -1257,6 +1273,10 @@ Freeze
 # emu/inptport.c: 443 emu/uilang.c: 20 
 French
 法文
+
+# emu/uimenu.c: 2801 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 200 mame/drivers/metro.c: 2569, 2916 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
+Full
+完整
 
 # emu/datafile.c: 1519
 GAME: 
@@ -1993,6 +2013,10 @@ Overall: Working
 # emu/ui.c: 2529
 Overclock CPU %d %3.0f%%
 超频 CPU %d %3.0f%%
+
+# emu/uimenu.c: 2793 
+Overlays
+前景图
 
 # mame/drivers/deadang.c: 157, 224 mame/drivers/tail2nos.c: 181
 Overseas
@@ -3722,6 +3746,10 @@ Return to Prior Menu
 Ron
 胡
 
+# emu/uimenu.c: 2785
+Rotate
+旋转
+
 # emu/uitext.c: 81
 Rotate Clockwise
 顺时针旋转
@@ -4370,6 +4398,10 @@ Very Slow
 Video Options
 视频选项
 
+# emu/uimenu.c: 2801
+View
+查看
+
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 View Last Results
 查看最近的结果
@@ -4962,20 +4994,12 @@ Average recorded speed: %d%%\n
 BIOS
 
 
-# emu/uimenu.c: 2789 
-Backdrops
-
-
 # emu/ui.c: 2739
 Beam Width
 
 
 # mame/layout/pe_bjack.lay: 177 mame/layout/pe_keno.lay: 129 mame/layout/pe_poker.lay: 129 mame/layout/pe_slots.lay: 118 mame/layout/peplus.lay: 117
 Bezel Lamps
-
-
-# emu/uimenu.c: 2797 
-Bezels
 
 
 # emu/uimenu.c: 2783
@@ -5114,10 +5138,6 @@ Copyright the MESS team\nhttp://mess.org
 Created %s
 
 
-# emu/uimenu.c: 2801
-Cropped
-
-
 # mame/layout/elecyoyo.lay: 7
 Cropped Corners
 
@@ -5170,10 +5190,6 @@ Dual Under-Over (Gapless)
 ERROR: %s/%s: IPS data is empty\n
 
 
-# emu/sound/sn76477.c: 643 emu/uimenu.c: 2789, 2793, 2797 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 849 mame/drivers/seattle.c: 2392
-Enabled
-
-
 # emu/inptport.c: 3961, 3987, 4013
 End of file
 
@@ -5200,10 +5216,6 @@ Failed to open file for playback
 
 # emu/inptport.c: 4259
 Failed to open file for recording
-
-
-# emu/uimenu.c: 2801 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 200 mame/drivers/metro.c: 2569, 2916 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
-Full
 
 
 # mame/drivers/alpha68k.c: 1110, 1613, 1618 mame/drivers/artmagic.c: 654 mame/drivers/bbusters.c: 454, 535 mame/drivers/cps1.c: 802, 874, 1072, 1156, 1208, 1310, 1488, 1574, 1651, 1815, 1906, 1984, 2058, 2125, 2205, 2306, 2389, 2500, 2611, 2694, 2777, 3062, 3150, 3238, 3323, 3467 mame/drivers/epos.c: 177 mame/drivers/f1gp.c: 325, 430 mame/drivers/fcrash.c: 544, 628 mame/drivers/hanaroku.c: 200 mame/drivers/lordgun.c: 332 mame/drivers/m107.c: 365 mame/drivers/m92.c: 850 mame/drivers/mastboy.c: 745 mame/drivers/nbmj8891.c: 2159 mame/drivers/prehisle.c: 153 mame/drivers/segas16b.c: 3127 mame/drivers/seta.c: 4008 mame/drivers/sgladiat.c: 283 mame/drivers/snk.c: 3037, 3100, 3183, 3246, 3468, 3529, 3698, 3760, 3837, 3902, 4007, 4131, 4272 mame/drivers/snk68.c: 259, 349, 435, 533 mame/drivers/tail2nos.c: 170 mame/drivers/toaplan2.c: 2205 mame/drivers/turbo.c: 851
@@ -5410,10 +5422,6 @@ Out of space
 Out of sync
 
 
-# emu/uimenu.c: 2793 
-Overlays
-
-
 # mess/mslegacy.c: 58
 Parallel Port
 
@@ -5472,10 +5480,6 @@ Right Half
 
 # mame/layout/rocknms.lay: 29
 Rockn Megasession Custom
-
-
-# emu/uimenu.c: 2785
-Rotate
 
 
 # emu/clifront.c: 870
@@ -5592,10 +5596,6 @@ Vert Position
 
 # emu/ui.c: 2663
 Vert Stretch
-
-
-# emu/uimenu.c: 2801
-View
 
 
 # lib/util/options.c: 502

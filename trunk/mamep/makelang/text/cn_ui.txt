@@ -1,3 +1,15 @@
+# osd/winui/dialogs.c: 949
+ PCB Info: %s [%s]
+ PCB 信息: %s [%s]
+
+# osd/winui/dialogs.c: 828
+ again.\r\n
+。\r\n
+
+# osd/winui/dialogs.c: 125
+ will now reset the following\n
+ 即将重设下列项目\n
+
 # osd/winui/properties.c: 1064
 %d colors 
 %d 色 
@@ -49,6 +61,10 @@
 # osd/winui/mameui.rc: 190
 &About
 关于(&A)
+
+# osd/winui/mameui.rc: 44
+&About MAMEUI
+&关于 MAMEUI
 
 # osd/winui/mameui.rc: 65, 202
 &Add to Custom Folder...
@@ -153,6 +169,14 @@
 # osd/winui/mameui.rc: 95, 269, 282
 &History
 历史(&H)
+
+# osd/winui/mameui.rc: 186
+&History File...
+&历史文件...
+
+# osd/winui/mameui.rc: 1029
+&Horizontal
+水平(&H)
 
 # osd/winui/mameui.rc: 154
 &Interface Options...
@@ -274,6 +298,10 @@ MAME 版本说明(&M)
 &Vector Graphics
 矢量画面(&V)
 
+# osd/winui/mameui.rc: 1043
+&Vertical
+垂直(&V)
+
 # osd/winui/mameui.rc: 75
 &View
 查看(&V)
@@ -317,6 +345,14 @@ AD 游戏杆设备
 # osd/winui/winui.c: 723
 About
 关于
+
+# osd/winui/mameui.rc: 375
+About MAMEUI
+关于 MAMEUI
+
+# osd/winui/mameui.rc: 817
+Activate Integrated Debugger
+激活整合的调试器
 
 # osd/winui/mameui.rc: 471
 Add ->
@@ -758,6 +794,14 @@ Customize interface options.
 Customize which columns are used in the game list
 自定义游戏列表使用的栏目
 
+# osd/winui/mameui.rc: 806
+Debug
+调试
+
+# osd/winui/mameui.rc: 824
+Debugscript
+调试脚本
+
 # osd/winui/mameui.rc: 949
 Decrypted
 解密
@@ -957,6 +1001,10 @@ Enable sound and sound CPUs
 # osd/winui/mameui.rc: 854
 Enable steadykey support
 启用多键同时输入支持
+
+# osd/winui/mameui.rc: 1602
+Enable the PCB tab
+启用PCB信息
 
 # osd/winui/mameui.rc: 666
 Enforce aspect ratio
@@ -1250,6 +1298,10 @@ Insert
 Interface Options
 界面选项
 
+# osd/winui/properties.c: 487
+Internal
+内定
+
 # osd/winui/treeview.c: 1420
 Joy 16-Way
 16方向游戏杆
@@ -1301,6 +1353,10 @@ Joystick deadzone
 # osd/winui/mameui.rc: 867
 Joystick saturation
 游戏杆饱和度
+
+# osd/winui/mameui.rc: 874
+Joystickmap
+游戏杆映射档
 
 # osd/winui/properties.c: 473
 Keyboard
@@ -1466,6 +1522,10 @@ Not found
 Not working
 不可运行
 
+# osd/winui/mameui.rc: 551
+Number of screens to create:
+模拟屏幕总数
+
 # osd/winui/mameui.rc: 454, 480, 1160
 OK
 确定
@@ -1485,6 +1545,18 @@ Orientation
 # osd/winui/layout.c: 77
 Originals
 原作游戏
+
+# osd/winui/mameui.rc: 815
+Output diagnostic information
+输出诊断信息
+
+# osd/winui/mameui.rc: 813
+Output log to Logfile
+记录输出至文件
+
+# osd/winui/mameui.rc: 819
+Output log to Windows Debugger
+记录输出至Windows调试器
 
 # osd/winui/mameui.rc: 926
 Overlays
@@ -1686,6 +1758,14 @@ Rese&t Playcount
 Reset
 重设
 
+# osd/winui/mameui.rc: 829
+Reset Debugscript
+重设调试器脚本
+
+# osd/winui/mameui.rc: 879
+Reset Joystickmap
+重设游戏杆映射档
+
 # osd/winui/mameui.rc: 1060
 Reset Options
 重设选项
@@ -1806,13 +1886,25 @@ Screenshot Ta&b\tAlt+B
 Second screen
 第二个屏幕
 
+# osd/winui/mameui.rc: 784
+Seconds to run
+运行秒数
+
 # osd/winui/mameui.rc: 1099
 Select &random background image on start
 启动时随机选定背景图片(&R)
 
+# osd/winui/mameui.rc: 827
+Select Debugscript
+选定调试器脚本
+
 # osd/winui/columnedit.c: 258
 Select Item
 选定项目
+
+# osd/winui/mameui.rc: 877
+Select Joystickmap
+选定游戏杆映射档
 
 # osd/winui/winui.c: 888
 Select a Background Image
@@ -1837,6 +1929,10 @@ Select a savestate file
 # osd/winui/winui.c: 838
 Select a sound file to record
 选定一个要录制的声音文件
+
+# osd/winui/mameui.rc: 1076
+Select the options to be restored to the default settings.
+请选定要恢复为默认设置的选项。
 
 # osd/winui/mameui.rc: 1120
 Set Game List Not Working Color
@@ -1958,6 +2054,18 @@ Small Icons
 Snapshot
 快照
 
+# osd/winui/mameui.rc: 1121
+Snapshot/movie naming
+屏幕快照/录像命名方式
+
+# osd/winui/mameui.rc: 582
+Snapshot/movie resolution
+屏幕快照/录像分辨率
+
+# osd/winui/mameui.rc: 579
+Snapshot/movie view
+屏幕快照/录像查看方式
+
 # osd/winui/layout.c: 122
 Snapshots
 快照
@@ -2050,6 +2158,10 @@ Story
 Supported
 已支持
 
+# osd/winui/mameui.rc: 942
+Switch drivers
+切换驱动
+
 # osd/winui/mameui.rc: 782
 Switch resolutions to fit
 切换到最适的分辨率
@@ -2102,9 +2214,17 @@ Titles
 Toggle Folder List
 切换文件夹列表
 
+# osd/winui/mameui.rc: 1614
+Toggle Fullscreen mode
+切换全屏幕模式
+
 # osd/winui/winui.c: 717
 Toggle Screen Shot
 切换屏幕快照
+
+# osd/winui/mameui.rc: 1508
+Toggle full screen mode
+切换全屏幕模式
 
 # osd/winui/mameui.rc: 421, 430
 Total:
@@ -2230,6 +2350,10 @@ Unknown error.
 Unsupported
 未支持
 
+# osd/winui/mameui.rc: 821
+Update Main window during paused emulation
+暂停模拟时持续更新主画面
+
 # osd/winui/winui.c: 725
 Use Local Language Game List
 使用中文游戏列表
@@ -2330,6 +2454,10 @@ Year
 Yes
 是
 
+# osd/winui/mameui.rc: 118
+by &Clone Of
+按原作游戏(&C)
+
 # osd/winui/mameui.rc: 109
 by &Description
 按游戏标题(&D)
@@ -2342,6 +2470,14 @@ by &Manufacturer
 by &Name
 按名称(&N)
 
+# osd/winui/mameui.rc: 115
+by &Played
+按游戏次数(&P)
+
+# osd/winui/mameui.rc: 110
+by &Screen
+按屏幕(&S)
+
 # osd/winui/mameui.rc: 113
 by &Type
 按类型(&T)
@@ -2350,52 +2486,36 @@ by &Type
 by &Year
 按游戏年代(&Y)
 
+# osd/winui/mameui.rc: 119
+by Dr&iver
+按驱动(&I)
+
+# osd/winui/mameui.rc: 120
+by P&lay Time
+按游戏时间(&L)
+
+# osd/winui/mameui.rc: 121
+by R&OMs
+按ROM(&O)
+
+# osd/winui/mameui.rc: 111
+by S&amples
+按采样(&A)
+
+# osd/winui/mameui.rc: 114
+by T&rackball
+按轨迹球(&R)
+
 # osd/winui/winui.h: 24
 type a keyword
 键入关键字
-
-# osd/winui/dialogs.c: 949
- PCB Info: %s [%s]
-
-
-# osd/winui/dialogs.c: 828
- again.\r\n
-
 
 # osd/winui/dialogs.c: 828
  requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
 
 
-# osd/winui/dialogs.c: 125
- will now reset the following\n
-
-
-# osd/winui/mameui.rc: 44
-&About MAMEUI
-
-
-# osd/winui/mameui.rc: 186
-&History File...
-
-
-# osd/winui/mameui.rc: 1029
-&Horizontal
-
-
-# osd/winui/mameui.rc: 1043
-&Vertical
-
-
 # osd/winui/dialogs.c: 140
 .\n
-
-
-# osd/winui/mameui.rc: 375
-About MAMEUI
-
-
-# osd/winui/mameui.rc: 817
-Activate Integrated Debugger
 
 
 # osd/winui/mameui.rc: 1632
@@ -2446,14 +2566,6 @@ Copyright (C) 1997-2008 The MAME Team
 Custom folder filters\n
 
 
-# osd/winui/mameui.rc: 806
-Debug
-
-
-# osd/winui/mameui.rc: 824
-Debugscript
-
-
 # osd/winui/properties.c: 793
 Default Settings
 
@@ -2476,10 +2588,6 @@ Display the properties of the selected item
 
 # osd/winui/mameui.rc: 1523
 Displays items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1602
-Enable the PCB tab
 
 
 # osd/winui/mameui.rc: 1602
@@ -2538,16 +2646,8 @@ Image Files (*.png)
 Individual game options\n
 
 
-# osd/winui/properties.c: 487
-Internal
-
-
 # osd/winui/mameui.rc: 392
 John Hardy IV and Michael Soderstrom
-
-
-# osd/winui/mameui.rc: 874
-Joystickmap
 
 
 # osd/winui/winui.c: 822
@@ -2562,10 +2662,6 @@ MAMEUI version by
 Mame&info File...
 
 
-# osd/winui/mameui.rc: 551
-Number of screens to create:
-
-
 # osd/winui/mameui.rc: 133
 Office 2003
 
@@ -2576,18 +2672,6 @@ Office 2007
 
 # osd/winui/mameui.rc: 132
 Office XP
-
-
-# osd/winui/mameui.rc: 815
-Output diagnostic information
-
-
-# osd/winui/mameui.rc: 813
-Output log to Logfile
-
-
-# osd/winui/mameui.rc: 819
-Output log to Windows Debugger
 
 
 # osd/winui/mameui.rc: 94, 268, 281
@@ -2622,14 +2706,6 @@ Remove selected item from this folder
 Rename this folder
 
 
-# osd/winui/mameui.rc: 829
-Reset Debugscript
-
-
-# osd/winui/mameui.rc: 879
-Reset Joystickmap
-
-
 # osd/winui/mameui.rc: 1581
 Reset number of plays for selected item
 
@@ -2642,10 +2718,6 @@ Reset time played for selected item
 Resetting the User Interface options\n
 
 
-# osd/winui/mameui.rc: 784
-Seconds to run
-
-
 # osd/winui/mameui.rc: 1593
 Select Cabinet tab
 
@@ -2654,20 +2726,12 @@ Select Cabinet tab
 Select Control panel tab
 
 
-# osd/winui/mameui.rc: 827
-Select Debugscript
-
-
 # osd/winui/mameui.rc: 1632
 Select Flyer tab
 
 
 # osd/winui/mameui.rc: 1593
 Select History tab
-
-
-# osd/winui/mameui.rc: 877
-Select Joystickmap
 
 
 # osd/winui/mameui.rc: 1593
@@ -2718,10 +2782,6 @@ Select a mameinfo
 Select menu style
 
 
-# osd/winui/mameui.rc: 1076
-Select the options to be restored to the default settings.
-
-
 # osd/winui/mameui.rc: 1624
 Set the History file to use
 
@@ -2758,18 +2818,6 @@ Show or hide the screen shot
 Show or hide the tabs in the picture area
 
 
-# osd/winui/mameui.rc: 1121
-Snapshot/movie naming
-
-
-# osd/winui/mameui.rc: 582
-Snapshot/movie resolution
-
-
-# osd/winui/mameui.rc: 579
-Snapshot/movie view
-
-
 # osd/winui/mameui.rc: 1652
 Sort items by clone of
 
@@ -2798,22 +2846,6 @@ Sort items by screen
 Sort items by trackball
 
 
-# osd/winui/mameui.rc: 942
-Switch drivers
-
-
-# osd/winui/mameui.rc: 1614
-Toggle Fullscreen mode
-
-
-# osd/winui/mameui.rc: 1508
-Toggle full screen mode
-
-
-# osd/winui/mameui.rc: 821
-Update Main window during paused emulation
-
-
 # osd/winui/dialogs.c: 136
 User interface settings\n\n
 
@@ -2832,38 +2864,6 @@ Videos (*.avi)
 
 # osd/winui/dialogs.c: 142
 \nDo you wish to continue?
-
-
-# osd/winui/mameui.rc: 118
-by &Clone Of
-
-
-# osd/winui/mameui.rc: 115
-by &Played
-
-
-# osd/winui/mameui.rc: 110
-by &Screen
-
-
-# osd/winui/mameui.rc: 119
-by Dr&iver
-
-
-# osd/winui/mameui.rc: 120
-by P&lay Time
-
-
-# osd/winui/mameui.rc: 121
-by R&OMs
-
-
-# osd/winui/mameui.rc: 111
-by S&amples
-
-
-# osd/winui/mameui.rc: 114
-by T&rackball
 
 
 # osd/winui/winui.c: 872
