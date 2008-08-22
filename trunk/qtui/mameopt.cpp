@@ -16,6 +16,9 @@ enum
 	MAMEOPT_TYPE_INT,
 	MAMEOPT_TYPE_FLOAT,
 	MAMEOPT_TYPE_STRING,
+	MAMEOPT_TYPE_FILE,
+	MAMEOPT_TYPE_DIR,
+	MAMEOPT_TYPE_DIRS,
 	MAMEOPT_TYPE_UNKNOWN
 	//MAMEOPT_TYPE_COLOR,
 	//MAMEOPT_TYPE_CSV,
@@ -73,8 +76,9 @@ void ResetWidget::setSpacing(int spacing)
 	layout()->setSpacing(m_spacing);
 }
 
-void ResetWidget::setWidget(QWidget *widget)
+void ResetWidget::setWidget(QWidget *widget, QWidget *widget2)
 {
+	//delete the ctrls
 	if (m_textLabel) {
 		delete m_textLabel;
 		m_textLabel = 0;
@@ -84,12 +88,25 @@ void ResetWidget::setWidget(QWidget *widget)
 		m_iconLabel = 0;
 	}
 	delete layout();
+
 	QLayout *layout = new QHBoxLayout(this);
-	subWidget = widget;
 	layout->setMargin(0);
 	layout->setSpacing(0);
+
 	layout->addWidget(widget);
+	subWidget = widget;
+	
+	if (widget2)
+	{
+		layout->addWidget(widget2);
+		subWidget2 = widget2;
+		
+		m_slider = static_cast<QSlider*>(subWidget);
+		m_sliderLabel = static_cast<QLabel*>(subWidget2);
+		connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
+	}
 	layout->addWidget(m_button);
+
 	setFocusProxy(widget);
 }
 
@@ -97,6 +114,7 @@ void ResetWidget::setResetEnabled(bool enabled)
 {
 	m_button->setEnabled(enabled);
 }
+
 
 /*
 void ResetWidget::setValueText(const QString &text)
@@ -120,6 +138,12 @@ void ResetWidget::slotClicked()
 	//emit resetProperty(m_property);
 	
 //	emit commitData(w);
+}
+
+void ResetWidget::updateSliderLabel(int value)
+{
+	QLabel *ctrl2 = static_cast<QLabel*>(subWidget2);
+	ctrl2->setText(QString().sprintf("%.2f", value/100.0));
 }
 
 OptionDelegate::OptionDelegate(QObject *parent)
@@ -154,34 +178,89 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 			switch (optType)
 			{
 			case MAMEOPT_TYPE_BOOL:
-				{
-					bool value = index.model()->data(index, Qt::EditRole).toBool();
-					QStyleOptionButton ctrl;
-					ctrl.state = QStyle::State_Enabled | (value ? QStyle::State_On : QStyle::State_Off);
-					ctrl.direction = QApplication::layoutDirection();
-					ctrl.rect = option.rect;
-					ctrl.fontMetrics = QApplication::fontMetrics();
+			{
+				bool value = index.model()->data(index, Qt::EditRole).toBool();
+				QStyleOptionButton ctrl;
+				ctrl.state = QStyle::State_Enabled | (value ? QStyle::State_On : QStyle::State_Off);
+				ctrl.direction = QApplication::layoutDirection();
+				ctrl.rect = option.rect;
+				ctrl.fontMetrics = QApplication::fontMetrics();
 
-					if (index.column() == 1)
-						option.state &= ~QStyle::State_Selected;
+				if (index.column() == 1)
+					option.state &= ~QStyle::State_Selected;
 
-					// fixme: selection background is unwanted
-					if (option.state & QStyle::State_Selected)
-						painter->fillRect(option.rect, option.palette.highlight());
-					else
-						painter->fillRect(option.rect, brush);
+				// fixme: selection background is unwanted
+				if (option.state & QStyle::State_Selected)
+					painter->fillRect(option.rect, option.palette.highlight());
+				else
+					painter->fillRect(option.rect, brush);
 
-					QApplication::style()->drawControl(QStyle::CE_CheckBox, &ctrl, painter);
-					return;
-				}
+				QApplication::style()->drawControl(QStyle::CE_CheckBox, &ctrl, painter);
+				return;
+			}
+/*
+			case MAMEOPT_TYPE_INT:
+			{
+				int value = index.model()->data(index, Qt::EditRole).toInt();
+				QStyleOptionProgressBar ctrl;
+
+				ctrl.state = QStyle::State_Enabled;
+				ctrl.direction = QApplication::layoutDirection();
+				QRect rc = option.rect;
+				if (rc.width() > 80)
+					rc.setWidth(80);
+				rc.setHeight(rc.height() * 0.75);
+				ctrl.rect = rc;
+				ctrl.fontMetrics = QApplication::fontMetrics();
+				ctrl.minimum = optUtils->getField(index, USERROLE_MIN).toInt();
+				ctrl.maximum = optUtils->getField(index, USERROLE_MAX).toInt();
+				ctrl.textAlignment = Qt::AlignCenter;
+				ctrl.textVisible = true;
+				
+				ctrl.progress = value < 0 ? 0 : value;
+				ctrl.text = QString().sprintf("%i", value);
+
+				// Draw the progress bar onto the view.
+				QApplication::style()->drawControl(QStyle::CE_ProgressBar, &ctrl, painter);
+				return;
+			}
+*/
+			case MAMEOPT_TYPE_FLOAT:
+			{
+				float value = index.model()->data(index, Qt::EditRole).toDouble();
+				QStyleOptionProgressBar ctrl;
+
+				ctrl.state = QStyle::State_Enabled;
+				ctrl.direction = QApplication::layoutDirection();
+
+				QRect rc = option.rect;
+				rc.setWidth(rc.width() - 10 - 2 * 2);
+				rc.setY(rc.y() + (int)(rc.height() * 0.1));
+				rc.setHeight((int)(rc.height() * 0.8));
+
+				ctrl.rect = rc;
+				ctrl.fontMetrics = QApplication::fontMetrics();
+				ctrl.minimum = (int)(100 * optUtils->getField(index, USERROLE_MIN).toDouble());
+				ctrl.maximum = (int)(100 * optUtils->getField(index, USERROLE_MAX).toDouble());
+				ctrl.textVisible = true;
+				
+				ctrl.progress = value < 0 ? 0 : (int)(100 * value);
+				ctrl.text = QString().sprintf("%.2f", value);
+
+				// Draw the progress bar
+				QApplication::style()->drawControl(QStyle::CE_ProgressBar, &ctrl, painter);
+				return;
+			}
 			}
 		}
 	}
 	else
 	{
-		option.palette.setColor(QPalette::Text, option.palette.color(QPalette::BrightText));
+//		option.palette.setColor(QPalette::Text, option.palette.color(QPalette::BrightText));
+		option.palette.setColor(QPalette::Text, QColor(0, 21, 110, 255));
 		option.font.setBold(true);
-		brush = option.palette.dark();
+//		brush = option.palette.dark();
+		brush = QBrush(QColor(221, 231, 238, 255));
 	}
 	
 //	if (index.column() == 1)
@@ -209,67 +288,84 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 	switch (optType)
 	{
 	case MAMEOPT_TYPE_BOOL:
+	{
+		QCheckBox *ctrl = new QCheckBox(parent);
+		
+		resetWidget->setWidget(ctrl);
+		return resetWidget;
+	}
+
+//	case MAMEOPT_TYPE_:
+//	{
+//	}
+
+	case MAMEOPT_TYPE_INT:
+	{
+		int min, max;
+		min = optUtils->getField(index, USERROLE_MIN).toInt();
+		max = optUtils->getField(index, USERROLE_MAX).toInt();
+
+		QSpinBox *ctrl = new QSpinBox(parent);
+		if (min != 0 && max != 0)
 		{
-			QCheckBox *ctrl = new QCheckBox(parent);
+			ctrl->setMinimum(min);
+			ctrl->setMaximum(max);
+		}
+
+		resetWidget->setWidget(ctrl);
+		return resetWidget;
+	}
+
+	case MAMEOPT_TYPE_FLOAT:
+	{
+		float min, max;
+		min = optUtils->getField(index, USERROLE_MIN).toDouble();
+		max = optUtils->getField(index, USERROLE_MAX).toDouble();
+
+		QSlider *ctrl = new QSlider(Qt::Horizontal, parent);
+		ctrl->setStyleSheet("background-color: white;");//fixme: hack
+		ctrl->setMinimum((int)(min * 100));
+		ctrl->setMaximum((int)(max * 100));
+
+		QLabel *ctrl2 = new QLabel(parent);
+		ctrl2->setStyleSheet("background-color: white; padding:0 2px;");//fixme: hack
+
+		QFont font;
+		font.setPointSize(9);
+		ctrl2->setFont(font);
+
+		resetWidget->setWidget(ctrl, ctrl2);
+		return resetWidget;
+	}
+
+	case MAMEOPT_TYPE_STRING:
+	{
+		QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+		if (guivalues.size() > 0)
+		{
+			QComboBox *ctrl = new QComboBox(resetWidget);
+			//	ctrl->installEventFilter(const_cast<OptionDelegate*>(this));
+			foreach (QVariant guivalue, guivalues)
+				ctrl->addItem(guivalue.toString());
 			
 			resetWidget->setWidget(ctrl);
 			return resetWidget;
 		}
-
-	case MAMEOPT_TYPE_INT:
-		{
-			int min, max;
-			min = optUtils->getField(index, USERROLE_MIN).toInt();
-			max = optUtils->getField(index, USERROLE_MAX).toInt();
-
-			QSpinBox *ctrl = new QSpinBox(parent);
-			ctrl->setMinimum(min);
-			ctrl->setMaximum(max);
-
-			resetWidget->setWidget(ctrl);
-			return resetWidget;
-		}
-	case MAMEOPT_TYPE_FLOAT:
-		{
-			float min, max;
-			min = optUtils->getField(index, USERROLE_MIN).toDouble();
-			max = optUtils->getField(index, USERROLE_MAX).toDouble();
-
-			QDoubleSpinBox *ctrl = new QDoubleSpinBox(parent);
-			ctrl->setMinimum(min);
-			ctrl->setMaximum(max);
-			ctrl->setSingleStep(0.01);
-
-			resetWidget->setWidget(ctrl);
-			return resetWidget;
-		}
-	case MAMEOPT_TYPE_STRING:
-		{
-			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-			if (guivalues.size() > 0)
-			{
-				QComboBox *ctrl = new QComboBox(resetWidget);
-				//	ctrl->installEventFilter(const_cast<OptionDelegate*>(this));
-				foreach (QVariant guivalue, guivalues)
-					ctrl->addItem(guivalue.toString());
-				
-				resetWidget->setWidget(ctrl);
-				return resetWidget;
-			}
-			//fall to default
-		}
+		//fall to default
+	}
 	default:
-		{
-			QLineEdit *ctrl = new QLineEdit(resetWidget);
-			resetWidget->setWidget(ctrl);
-			return resetWidget;
-		}
+	{
+		QLineEdit *ctrl = new QLineEdit(resetWidget);
+		resetWidget->setWidget(ctrl);
+		return resetWidget;
+	}
 	}
 }
 
 void OptionDelegate::setEditorData(QWidget *editor,
 								   const QModelIndex &index) const
 {
+///*
 	if (index.column() == 0)
 		return;
 
@@ -299,8 +395,10 @@ void OptionDelegate::setEditorData(QWidget *editor,
 	case MAMEOPT_TYPE_FLOAT:
 		{
 			float value = index.model()->data(index, Qt::EditRole).toDouble();
-			QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
-			ctrl->setValue(value);
+			QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
+			int intVal = ((int)((value + 0.001) * 100));	//hack: precision fix
+			ctrl->setValue(intVal);
+			resetWidget->updateSliderLabel(intVal);
 			break;
 		}
 	case MAMEOPT_TYPE_STRING:
@@ -324,6 +422,7 @@ void OptionDelegate::setEditorData(QWidget *editor,
 //			QItemDelegate::setEditorData(editor, index);
 		}
 	}
+//*/
 }
 
 // override setModelData()
@@ -388,10 +487,11 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			}
 		case MAMEOPT_TYPE_FLOAT:
 			{
-				QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
-				ctrl->interpretText();
+//				QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
+				QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
+//				ctrl->interpretText();
 				// ensure .00 display
-				dispValue = optUtils->getLongValue(optName, QString::number(ctrl->value()));
+				dispValue = optUtils->getLongValue(optName, QString::number(ctrl->value()/100.0));
 				break;
 			}
 		case MAMEOPT_TYPE_STRING:
@@ -520,7 +620,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		break;
 	}
 
-	optUtils->save(optLevel, iniFileName);
+	optUtils->saveIniFile(optLevel, iniFileName);
 }
 
 void OptionDelegate::updateEditorGeometry(QWidget *editor,
@@ -589,6 +689,12 @@ public:
 				QString type = attributes.value("type");
 				if (type == "string")
 					pMameOpt->type = MAMEOPT_TYPE_STRING;
+				else if (type == "file")
+					pMameOpt->type = MAMEOPT_TYPE_FILE;
+				else if (type == "dir")
+					pMameOpt->type = MAMEOPT_TYPE_DIR;
+				else if (type == "dirs")
+					pMameOpt->type = MAMEOPT_TYPE_DIRS;
 				else if (type == "int")
 					pMameOpt->type = MAMEOPT_TYPE_INT;
 				else if (type == "float")
@@ -676,17 +782,19 @@ void OptionUtils::initOption()
 
 		if (optLevel == OPTLEVEL_GLOBAL)
 			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), tr("Directory"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), tr("Video"), lstCatView));
+		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), tr("Core Video"), lstCatView));
+		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-osd.png"), tr("OSD Video"), lstCatView));
+		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display-blue.png"), tr("Screen"), lstCatView));
 		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/audio-x-generic.png"), tr("Audio"), lstCatView));
 		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/input-gaming.png"), tr("Control"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), tr("Vector"), lstCatView));
+		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-vector.png"), tr("Vector"), lstCatView));
 		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), tr("Misc"), lstCatView));
 
 //		lstCatView->setViewMode(QListView::IconMode);
 		lstCatView->setIconSize(QSize(24, 24));
 //		lstCatView->setFlow(QListView::TopToBottom);
 //		lstCatView->setMovement(QListView::Static);
-		lstCatView->setMaximumWidth(100);
+		lstCatView->setMaximumWidth(130);
 		lstCatView->setSpacing(4);
 
 		connect(optInfos[optLevel]->optView->header(), SIGNAL(sectionResized(int, int, int)), 
@@ -1072,41 +1180,43 @@ void OptionUtils::loadDefault(QString text)
 #endif
 	// underscore separated category list, prefixed by a sorting number
 	const QStringList optCatList = (QStringList()
-			<< "00_Global Misc_00_" + QString(QT_TR_NOOP("core configuration"))
-			<< "00_Global Misc_01_" + QString(QT_TR_NOOP("core palette"))
-			<< "00_Global Misc_02_" + QString(QT_TR_NOOP("core language"))
-			
-			<< "01_Directory_00_" + QString(QT_TR_NOOP("core search path"))
-			<< "01_Directory_01_" + QString(QT_TR_NOOP("core output directory"))
-			<< "01_Directory_02_" + QString(QT_TR_NOOP("core filename"))
-			
-			<< "02_Video_02_" + QString(QT_TR_NOOP("core rotation"))
-			<< "02_Video_03_" + QString(QT_TR_NOOP("core screen"))
-			<< "02_Video_04_" + QString(QT_TR_NOOP("full screen"))
-			<< "02_Video_05_" + QString(QT_TR_NOOP("Windows video"))
-			<< "02_Video_06_" + QString(QT_TR_NOOP("DirectDraw-specific"))
-			<< "02_Video_07_" + QString(QT_TR_NOOP("Direct3D-specific"))
-			<< "02_Video_08_" + QString(QT_TR_NOOP("core performance"))
-			<< "02_Video_09_" + QString(QT_TR_NOOP("Windows performance"))
-			<< "02_Video_10_" + QString(QT_TR_NOOP("per-window video"))
-			
-			<< "03_Audio_00_" + QString(QT_TR_NOOP("core sound"))
-			<< "03_Audio_01_" + QString(QT_TR_NOOP("Windows sound"))
-			
-			<< "04_Control_00_" + QString(QT_TR_NOOP("core input"))
-			<< "04_Control_01_" + QString(QT_TR_NOOP("core input automatic enable"))
-			<< "04_Control_02_" + QString(QT_TR_NOOP("input device"))
-			
-			<< "05_Vector_00_" + QString(QT_TR_NOOP("core vector"))
-			
-			<< "06_Misc_00_" + QString(QT_TR_NOOP("core misc"))
-			<< "06_Misc_01_" + QString(QT_TR_NOOP("core artwork"))
-			<< "06_Misc_02_" + QString(QT_TR_NOOP("core state/playback"))
-			<< "06_Misc_03_" + QString(QT_TR_NOOP("MESS specific"))
-			<< "06_Misc_04_" + QString(QT_TR_NOOP("Windows MESS specific"))
-			<< "06_Misc_05_" + QString(QT_TR_NOOP("core debugging"))
-			<< "06_Misc_06_" + QString(QT_TR_NOOP("Windows debugging"))
-			);
+		<< "00_Global Misc_00_" + QString(QT_TR_NOOP("core configuration"))
+		<< "00_Global Misc_01_" + QString(QT_TR_NOOP("core palette"))
+		<< "00_Global Misc_02_" + QString(QT_TR_NOOP("core language"))
+		
+		<< "01_Directory_00_" + QString(QT_TR_NOOP("core search path"))
+		<< "01_Directory_01_" + QString(QT_TR_NOOP("core output directory"))
+		<< "01_Directory_02_" + QString(QT_TR_NOOP("core filename"))
+		
+		<< "02_Core Video_02_" + QString(QT_TR_NOOP("core rotation"))
+		<< "02_Core Video_03_" + QString(QT_TR_NOOP("core screen"))
+		<< "02_Core Video_04_" + QString(QT_TR_NOOP("full screen"))
+		<< "02_Core Video_08_" + QString(QT_TR_NOOP("core performance"))
+
+		<< "03_OSD Video_05_" + QString(QT_TR_NOOP("Windows video"))
+		<< "03_OSD Video_06_" + QString(QT_TR_NOOP("DirectDraw-specific"))
+		<< "03_OSD Video_07_" + QString(QT_TR_NOOP("Direct3D-specific"))
+		<< "03_OSD Video_09_" + QString(QT_TR_NOOP("Windows performance"))
+
+		<< "04_Screen_10_" + QString(QT_TR_NOOP("per-window video"))
+		
+		<< "05_Audio_00_" + QString(QT_TR_NOOP("core sound"))
+		<< "05_Audio_01_" + QString(QT_TR_NOOP("Windows sound"))
+		
+		<< "06_Control_00_" + QString(QT_TR_NOOP("core input"))
+		<< "06_Control_01_" + QString(QT_TR_NOOP("core input automatic enable"))
+		<< "06_Control_02_" + QString(QT_TR_NOOP("input device"))
+		
+		<< "07_Vector_00_" + QString(QT_TR_NOOP("core vector"))
+		
+		<< "08_Misc_00_" + QString(QT_TR_NOOP("core misc"))
+		<< "08_Misc_01_" + QString(QT_TR_NOOP("core artwork"))
+		<< "08_Misc_02_" + QString(QT_TR_NOOP("core state/playback"))
+		<< "08_Misc_03_" + QString(QT_TR_NOOP("MESS specific"))
+		<< "08_Misc_04_" + QString(QT_TR_NOOP("Windows MESS specific"))
+		<< "08_Misc_05_" + QString(QT_TR_NOOP("core debugging"))
+		<< "08_Misc_06_" + QString(QT_TR_NOOP("Windows debugging"))
+		);
 
 	QString line, line0;
 	QTextStream in(&text);
@@ -1258,9 +1368,9 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 	}
 }
 
-void OptionUtils::save(int optLevel, const QString &iniFileName)
+void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 {
-	//save MAME Options
+	//saveIniFile MAME Options
 	QFile outFile(iniFileName);
 	QString line;
 	QStringList headers;
@@ -1274,6 +1384,8 @@ void OptionUtils::save(int optLevel, const QString &iniFileName)
 		in.setCodec("UTF-8");
 		outBuf.setCodec("UTF-8");
 		out.setCodec("UTF-8");
+		//mame.ini always uses a BOM, doesnt work otherwise
+		out.setGenerateByteOrderMark(true);
 		bool isHeader = false, isChanged = false;
 		QString optName;
 
@@ -1413,54 +1525,51 @@ void OptionUtils::save(int optLevel, const QString &iniFileName)
 QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 {
 	QFile inFile(iniFileName);
-	QTemporaryFile outFile;
 
 	QString line, line0;
+	QHash<QString, QString> settings;
 
-	if (inFile.open(QFile::ReadOnly | QFile::Text) &&
-		outFile.open())
+	if (inFile.open(QFile::ReadOnly | QFile::Text))
 	{
-		outFile.setTextModeEnabled(true);
 		QTextStream in(&inFile);
-		QTextStream out(&outFile);
 		in.setCodec("UTF-8");
-		out.setCodec("UTF-8");
+
+		QString key, value;
 
 		do
 		{
 			line0 = line = in.readLine().trimmed();
+			//parse only !# lines
 			if (!line.startsWith("#") && line.size() > 0)
 			{
+				//locate the first space
 				int sep = line.indexOf(QRegExp("\\s"));
 
+				//valid entry
 				if (sep != -1)
 				{
-					QString key = line.left(sep);
-					QString value = line.right(line.size() - sep).trimmed();
-					//replace escape
-					value.replace("\\", "\\\\");
-					//wrap with "
-					if (!value.startsWith("\""))
-						value = "\"" + value + "\"";
+					key = line.left(sep);
+					value = line.right(line.size() - sep).trimmed();
 
-					out << key << "=" << value << endl;
+					//remove quoted value if needed	
+					if (value.startsWith('"') && value.endsWith('"'))
+					{
+						value.remove(0, 1);
+						value.chop(1);
+					}
 				}
+				// empty entry
 				else
-					// empty entry
-					out << line << "=" << endl;
+				{
+					key = line;
+					value = "";
+				}
 			}
+			settings[key] = value;
 		}
 		while (!line.isNull());
 	}
-	
-	QHash<QString, QString> settings;
 
-	QSettings inisettings(outFile.fileName(), QSettings::IniFormat);
-	QStringList keys = inisettings.allKeys();
-	foreach (QString key, keys)
-		settings[key] = inisettings.value(key).toString();
-
-//	win->poplog(outFile.fileName());
 	return settings;
 }
 
@@ -1487,7 +1596,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 			optCat = currItem->text();
 		//assign default option category if none selected
 		else
-			optCat = tr("Video");
+			optCat = tr("Core Video");
 	}
 
 	/* update mameopts */
@@ -1499,7 +1608,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
 		updateModelData(optCat, OPTLEVEL_GLOBAL);
-		dlgOptions->setWindowTitle(STR_OPTS_ + QString("Global"));
+		dlgOptions->setWindowTitle(STR_OPTS_ + tr("Global"));
 		return;
 	}
 
@@ -1672,11 +1781,16 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 
 //	QString tooltip = "[" + optName + "] " + pMameOpt->description;
 
-	// fill key
+	/* fill key */
 	QStandardItem *itemKey = new QStandardItem(utils->capitalizeStr(tr(qPrintable(getLongName(optName).toLower()))));
 	itemKey->setData(optName, Qt::UserRole + USERROLE_KEY);
+
+	//hack: a blank icon for padding
+	static const QIcon icon(":/res/blank.png");
+	itemKey->setIcon(icon);
 //	itemKey->setData(tooltip, Qt::ToolTipRole);
-	// fill value
+
+	/* fill value */
 	QStandardItem *itemVal = new QStandardItem(getLongValue(optName, pMameOpt->currvalue));
 //	itemVal->setData(tooltip, Qt::ToolTipRole);
 

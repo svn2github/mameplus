@@ -11,7 +11,7 @@ QString list_mode;
 
 void MainWindow::log(QString message, char logOrigin)
 {
-/*
+///*
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
 	QString msg = timeString + ": " + message;
@@ -38,7 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 	// View action group
     QActionGroup *viewActions = new QActionGroup(this);
-    viewActions->setExclusive(true);
+//	viewActions->setExclusive(true);
     viewActions->addAction(actionDetails);
     viewActions->addAction(actionGrouped);
     viewActions->addAction(actionLargeIcons);
@@ -63,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent)
 	sizePolicy.setVerticalStretch(0);
 	sizePolicy.setHeightForWidth(lineEditSearch->sizePolicy().hasHeightForWidth());
 	lineEditSearch->setSizePolicy(sizePolicy);
+	lineEditSearch->setMinimumWidth(240);
 	toolBarSearch->addWidget(lineEditSearch);
 
 	labelProgress = new QLabel(centralwidget);
@@ -88,20 +89,29 @@ MainWindow::MainWindow(QWidget *parent)
 	//override font for CJK OS
 	QFont font;
 	font.setPointSize(9);
+	
 	setFont(font);
 	statusbar->setFont(font);
+	
 	menubar->setFont(font);
     menuFile->setFont(font);
     menuView->setFont(font);
     menuOptions->setFont(font);
     menuHelp->setFont(font);
-	
+
 	dlgOptions->tabOptions->setFont(font);
+
 	dlgOptions->lvGlobalOpt->setFont(font);
 	dlgOptions->lvSourceOpt->setFont(font);
 	dlgOptions->lvBiosOpt->setFont(font);
 	dlgOptions->lvCloneofOpt->setFont(font);
 	dlgOptions->lvCurrOpt->setFont(font);
+	
+	dlgOptions->treeGlobalOpt->setFont(font);
+	dlgOptions->treeSourceOpt->setFont(font);
+	dlgOptions->treeBiosOpt->setFont(font);
+	dlgOptions->treeCloneofOpt->setFont(font);
+	dlgOptions->treeCurrOpt->setFont(font);
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -254,18 +264,14 @@ MainWindow::~MainWindow()
 #endif
 }
 
+void MainWindow::on_actionPlay_activated()
+{
+	gamelist->runMame();
+}
+
 void MainWindow::on_actionRefresh_activated()
 {
 	gamelist->auditor.audit();
-}
-
-void MainWindow::on_actionExitStop_activated()
-{
-#ifdef QMC2_DEBUG
-	log(LOG_QMC2, "DEBUG: MainWindow::on_actionExitStop_activated()");
-#endif
-
-	close();
 }
 
 void MainWindow::on_actionDefaultOptions_activated()
@@ -281,9 +287,57 @@ void MainWindow::on_actionDefaultOptions_activated()
 	dlgOptions->exec();
 }
 
+void MainWindow::on_actionExitStop_activated()
+{
+	close();
+}
+
 void MainWindow::on_actionAbout_activated()
 {
 	dlgAbout->exec();
+}
+
+void MainWindow::toggleGameListColumn(int logicalIndex)
+{
+	if (win->tvGameList->header()->isSectionHidden(logicalIndex))
+		win->tvGameList->header()->setSectionHidden (logicalIndex, false);
+	else
+		win->tvGameList->header()->setSectionHidden (logicalIndex, true);
+}
+
+void MainWindow::on_actionColDescription_activated()
+{
+	toggleGameListColumn(0);
+}
+
+void MainWindow::on_actionColName_activated()
+{
+	toggleGameListColumn(1);
+}
+
+void MainWindow::on_actionColROMs_activated()
+{
+	toggleGameListColumn(2);
+}
+
+void MainWindow::on_actionColManufacturer_activated()
+{
+	toggleGameListColumn(3);
+}
+
+void MainWindow::on_actionColDriver_activated()
+{
+	toggleGameListColumn(4);
+}
+
+void MainWindow::on_actionColYear_activated()
+{
+	toggleGameListColumn(5);
+}
+
+void MainWindow::on_actionColCloneOf_activated()
+{
+	toggleGameListColumn(6);
 }
 
 void MainWindow::initSettings()

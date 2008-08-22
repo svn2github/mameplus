@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0"?>
+<!-- mame ver 126 -->
 <optiontemplate version="1">
 	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
 	<option name="cabinet_directory" default="cabinets" type="dir" guivisible="1" />
@@ -107,7 +108,7 @@
 	</option>
 	
 	<option name="antialias" guiname="Draw antialiased vectors" type="bool" />
-	<option name="beam" guiname="Beam width" type="float" />
+	<option name="beam" guiname="Beam width" type="float" min="0.01" max="1.0" />
 	<option name="flicker" type="float" min="0" max="1.0" />
 	
 	<option name="sound" guiname="Enable sound and sound CPUs" type="bool" />
@@ -121,6 +122,7 @@
 	<option name="volume" guiname="Volume attenuation" type="int" min="-32" max="0" />
 	<option name="volume_adjust" guiname="Use volume auto adjust" type="bool" />
 	
+	<option name="coin_lockout" type="bool" />
 	<option name="ctrlr" guiname="Default input layout" type="string" />
 	<option name="mouse" guiname="Enable mouse input" type="bool" />
 	<option name="joystick" guiname="Enable joystick input" type="bool" />
@@ -177,6 +179,7 @@
 	<option name="log" type="bool" />
 	<option name="verbose" type="bool" />
 	<option name="update_in_pause" type="bool" />
+	<option name="debug" type="bool" />
 
 	<option name="bios" type="string" globalvisible="0" srcvisible="0" />
 	<option name="cheat" guiname="Enable game cheats" type="bool" />
@@ -211,9 +214,9 @@
 	<option name="use_lang_list" type="bool" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 
 	<option name="oslog" type="bool" />
-	<option name="watchdog" type="bool" />
+	<option name="watchdog" type="string" />
 	
-	<option name="priority" guiname="Thread priority" type="bool" min="-15" max="1" />
+	<option name="priority" guiname="Thread priority" type="int" min="-15" max="1" />
 	<option name="multithreading" guiname="Enable multi-threading" type="bool" />
 	
 	<option name="video" guiname="Video output method" type="string">
@@ -233,7 +236,10 @@
 	
 	<option name="hwstretch" guiname="Hardware stretching" type="bool" />
 	
-	<option name="d3dversion" guiname="D3D version" type="int" min="8" max="9" />
+	<option name="d3dversion" guiname="D3D version" type="string">
+		<value guivalue="Version 8">8</value>
+		<value guivalue="Version 9">9</value>
+	</option>
 	<option name="filter" guiname="Bilinear filtering" type="bool" />
 	
 	<option name="screen" type="string">

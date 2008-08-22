@@ -18,10 +18,10 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>260</x>
-     <y>47</y>
-     <width>104</width>
-     <height>337</height>
+     <x>262</x>
+     <y>45</y>
+     <width>100</width>
+     <height>339</height>
     </rect>
    </property>
    <layout class="QGridLayout" >
@@ -43,13 +43,21 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
     <property name="title" >
      <string>File</string>
     </property>
+    <addaction name="actionPlay" />
+    <addaction name="actionPlayInp" />
+    <addaction name="separator" />
+    <addaction name="actionAudit" />
+    <addaction name="separator" />
+    <addaction name="actionConfigIPS" />
+    <addaction name="actionDefaultOptions" />
+    <addaction name="separator" />
     <addaction name="actionExitStop" />
    </widget>
    <widget class="QMenu" name="menuView" >
@@ -96,8 +104,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>21</y>
-     <width>162</width>
+     <y>19</y>
+     <width>164</width>
      <height>26</height>
     </rect>
    </property>
@@ -131,9 +139,9 @@
   <widget class="QToolBar" name="toolBarSearch" >
    <property name="geometry" >
     <rect>
-     <x>162</x>
-     <y>21</y>
-     <width>462</width>
+     <x>164</x>
+     <y>19</y>
+     <width>460</width>
      <height>26</height>
     </rect>
    </property>
@@ -154,9 +162,9 @@
    <property name="geometry" >
     <rect>
      <x>368</x>
-     <y>47</y>
+     <y>45</y>
      <width>256</width>
-     <height>337</height>
+     <height>339</height>
     </rect>
    </property>
    <property name="features" >
@@ -172,9 +180,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
+      <y>20</y>
       <width>256</width>
-      <height>315</height>
+      <height>319</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -191,9 +199,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>47</y>
+     <y>45</y>
      <width>256</width>
-     <height>337</height>
+     <height>339</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -215,9 +223,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>22</y>
+      <y>20</y>
       <width>256</width>
-      <height>315</height>
+      <height>319</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -248,7 +256,7 @@
      <normaloff>:/res/32x32/applications-system.png</normaloff>:/res/32x32/applications-system.png</iconset>
    </property>
    <property name="text" >
-    <string>Default Options</string>
+    <string>Properties</string>
    </property>
   </action>
   <action name="actionRefresh" >
@@ -346,6 +354,113 @@
    </property>
    <property name="text" >
     <string>Vertical Tabs</string>
+   </property>
+  </action>
+  <action name="actionPlay" >
+   <property name="text" >
+    <string>Play</string>
+   </property>
+  </action>
+  <action name="actionPlayInp" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Play and Record Input...</string>
+   </property>
+  </action>
+  <action name="actionConfigIPS" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Configure IPS...</string>
+   </property>
+  </action>
+  <action name="actionAudit" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Audit</string>
+   </property>
+  </action>
+  <action name="actionColDescription" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Description</string>
+   </property>
+  </action>
+  <action name="actionColName" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Name</string>
+   </property>
+  </action>
+  <action name="actionColROMs" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>ROMs</string>
+   </property>
+  </action>
+  <action name="actionColManufacturer" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Manufacturer</string>
+   </property>
+  </action>
+  <action name="actionColDriver" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Driver</string>
+   </property>
+  </action>
+  <action name="actionColYear" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Year</string>
+   </property>
+  </action>
+  <action name="actionColCloneOf" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Clone of</string>
+   </property>
+  </action>
+  <action name="actionColSortAscending" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Sort Ascending</string>
+   </property>
+  </action>
+  <action name="actionColSortDescending" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Sort Descending</string>
    </property>
   </action>
  </widget>

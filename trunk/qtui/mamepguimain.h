@@ -75,15 +75,25 @@ public:
 	QTextBrowser *tbMameinfo;
 	QTextBrowser *tbStory;
 	QTextBrowser *tbCommand;
-
+	
 //	QTextBrowser *textBrowserFrontendLog;
 
 public slots:
     // game menu
-    void on_actionRefresh_activated();
-	void on_actionExitStop_activated();
+	void on_actionPlay_activated();
+	void on_actionRefresh_activated();
 	void on_actionDefaultOptions_activated();
+	void on_actionExitStop_activated();
 	void on_actionAbout_activated();
+	
+	void on_actionColDescription_activated();
+	void on_actionColName_activated();
+	void on_actionColROMs_activated();
+	void on_actionColManufacturer_activated();
+	void on_actionColDriver_activated();
+	void on_actionColYear_activated();
+	void on_actionColCloneOf_activated();
+
     void log(QString, char logOrigin = 1);
 	void poplog(QString);
 	void logStatus(QString);
@@ -98,6 +108,7 @@ protected:
     void closeEvent(QCloseEvent *event);
 
 private:
+	void toggleGameListColumn(int);
 	void initHistory(QString);
 	Screenshot * initSnap(QString);
 };

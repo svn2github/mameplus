@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/" >
         <file>lang/mamepgui_zh_CN.qm</file>
+	<file>lang/mamepgui_zh_TW.qm</file>
 	<file>lang/mamepgui_ja_JP.qm</file>
         <file>res/32x32/applications-system.png</file>
         <file>res/32x32/audio-x-generic.png</file>
@@ -9,7 +10,12 @@
         <file>res/32x32/input-gaming.png</file>
         <file>res/32x32/system-search.png</file>
         <file>res/32x32/video-display.png</file>
+	<file>res/32x32/video-display-blue.png</file>
+	<file>res/32x32/video-osd.png</file>
+	<file>res/32x32/video-vector.png</file>
         <file>res/32x32/view-refresh.png</file>
+	<file>res/16x16/list-add.png</file>
+	<file>res/16x16/list-remove.png</file>
         <file>res/mame32-show-snap.png</file>
         <file>res/mame32-show-tree.png</file>
         <file>res/mame32-view-detail.png</file>
@@ -23,6 +29,7 @@
         <file>res/optiontemplate.xml</file>
         <file>res/reset_property.png</file>
         <file>res/win_roms.ico</file>
+	<file>res/blank.png</file>
         <file>res/mamepgui.ini</file>
     </qresource>
 </RCC>

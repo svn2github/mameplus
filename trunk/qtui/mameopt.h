@@ -8,10 +8,11 @@ class ResetWidget : public QWidget
 	Q_OBJECT
 public:
 	QWidget *subWidget;
+	QWidget *subWidget2;
 
 	ResetWidget(/*QtProperty *property,*/ QWidget *parent = 0);
 
-	void setWidget(QWidget *widget);
+	void setWidget(QWidget *, QWidget * = NULL);
 	void setResetEnabled(bool enabled);
 /*	void setValueText(const QString &text);
 	void setValueIcon(const QIcon &icon);*/
@@ -22,10 +23,16 @@ signals:
 private slots:
 	void slotClicked();
 
+public slots:
+	void updateSliderLabel(int);
+
+
 private:
 //	QtProperty *m_property;
 	QLabel *m_textLabel;
 	QLabel *m_iconLabel;
+	QSlider *m_slider;
+	QLabel *m_sliderLabel;
 	QToolButton *m_button;
 	int m_spacing;
 };
@@ -90,7 +97,7 @@ public slots:
 	void loadDefault(QString);
 	void loadTemplate();
 	void loadIni(int, const QString &);
-	void save(int , const QString &);
+	void saveIniFile(int , const QString &);
 	QHash<QString, QString> readIniFile(const QString &);
 	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
 	void updateHeaderSize(int, int, int);

@@ -1,94 +1,91 @@
-﻿[qt 4.4]
-QAbstractItemView Add autoScrollMargin property.    * [162547] Make the current index stay in the viewport when sorting.
-QTreeView 192104] scrollTo(PositionAtCenter) can scroll beyond the item if item is at 0
-
-[todo]
+﻿[todo]
 
 PUBLIC BETA
-
-原版刷新时左边是灰色不可选
-但是我按了几下工具按钮时
-左边居然可选
-而且还可以双击执行游戏
-但是游戏刚开始显示黑屏就自动退出
-
+/ bug: crash on empty list context menu
 
 //Options
+1 bug: float option without min/max
+1 bug: reset button in Global doesnt take? if px aspect set in source/ ini
+
+1 path chooser dialog +0.1
+1 bios support: select bios opt
+* bug: update options from right to left
+* -driver_config, mamebin changes should cause gamelist->init()
 * unify method of getting def values
-* path chooser dialog +0.1
 * multi ini path
-  bug: update options from right to left
-* vector.ini, source/<sourcefile>.ini if that doesn't exist, try <sourcefile>.ini
-1 -driver_config
-* bios support: select bios opt
-1 ips doesnt inherit
+* ips doesnt inherit
 * unify method to get inherited default value
 * option help
+* disable filters for 3D hardware
+* vector.ini
 
 //GameList
-check compat across new=>old mame
-in-place zooming for icons
-snap拉伸
-snap 打开的时候不显示，必须要换个游戏才出现
-1 game counter in statusbar
-  bug: few rows select model
-  bug: crash after refresh immediately click folder
-1 replace progressbar with xx%
-* display different colors for different status
+1 bug: crash on new=>old mame
+* bug: snap 打开的时候不显示，必须要换个游戏才出现
+* bug: restore item icon
+* bug: 使用bkground背景图时，横幅标题栏全黑
+* bug: crash after refresh immediately click folder
+
+1 optimize sorting
+* context menus: snapshot, folder, for listview mode
+1 different icon, text colors for working/dumping status
+1 adjust snap with a/r, with or without stretching
+* lst translation +0.1
+* in-place zooming for icons
+* iconized snap tab
+* gamename0000 snap
+* game counter in statusbar
+* replace progressbar with xx%
 * add/remove items from game list model
-optimize: reduce restore sele //win->log("restore callback: " + gameName);
+* optimize: reduce restore sele //win->log("restore callback: " + gameName);
+* ROM capa column
+* other filters
+* optimize: skip or delay invisible widget loading
+* unify multiple snapshot routines
+
+//Audit
+* bug: 原版刷新时左边是灰色不可选 但是我按了几下工具按钮时 左边居然可选 而且还可以双击执行游戏
+* non compressed roms
+* return update thread immediately if some folders doesnt even exist
 
 //Misc
-* onclick to select ss tab
-1 bios icons in folder list
-* context menus
-
-----------------------------------------
-
-display region/hack info of console rom
-1 console game info from GameFAQs?
-1 lst translation +0.1
-1 ips +0.2
-1 command.dat parsing with image +0.2
-* disable filters for 3D hardware
-optimize: skip or delay invisible widget loading
-* adjust snap with a/r, with or without stretching
-* iconized snap tab
-1 return update thread immediately if some folders doesnt even exist
-* other filters
-* gamename0000 snap
+1 SDL integration for monitor/joystick
+1 onclick to select ss tab
+* ips +0.2
 * general info page
-* UI style: compact, full, MAMEUI classic
-* non compressed roms
+* bios icons in folder list
 * fullscreen switch
 * move datafile.c statistics to GUI
 
-1 wildcard console gamename
+//Console
+* console game info from GameFAQs?
+* wildcard console gamename
   snapshot
   use mess hsi(goodxxx)
   use xmdb directly? (name based)
   add manufacturer from offline dat (name based, one time, submit to MESS)
   snap/snes/parent game name (without tags)
+  display region/hack info of console rom
+
+//Extra
+* command.dat parsing with image +0.1
+* UI style: compact, full, MAMEUI classic
 * export roms to folders
 * delete roms,cfg,nvram...
-* export fixdat, selected fixdat only
-* ROM capa column
-* gamelist editor
-* selectable l&f +0.2
-* unify multiple snapshot
 * delete snapshot
-* hide to systray when lauching mame
-* search history
 * avi/mng playback
+* gamelist editor
+* selectable l&f
+* hide to systray when lauching mame
 * controller setting
-* SDL integration for monitor/joystick
+* export fixdat, selected fixdat only
+* autoupdater
+
+----------------------------------------
 
 [sanity check]
 * check new/delete operator
 * ensure ->load() functions only called once, no multiple connect()
-
-[ads]
-auditing roms several times faster than old mame32
 
 [qt compile config]
 configure -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde

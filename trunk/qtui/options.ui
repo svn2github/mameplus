@@ -21,10 +21,10 @@
      <widget class="QWidget" name="tab_5" >
       <property name="geometry" >
        <rect>
-        <x>26</x>
-        <y>59</y>
-        <width>856</width>
-        <height>565</height>
+        <x>8</x>
+        <y>28</y>
+        <width>526</width>
+        <height>372</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -34,10 +34,10 @@
      <widget class="QWidget" name="tab_2" >
       <property name="geometry" >
        <rect>
-        <x>48</x>
-        <y>88</y>
-        <width>856</width>
-        <height>565</height>
+        <x>0</x>
+        <y>0</y>
+        <width>526</width>
+        <height>372</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -48,9 +48,6 @@
         <widget class="QTreeView" name="treeGlobalOpt" >
          <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
          </property>
          <property name="rootIsDecorated" >
           <bool>false</bool>
@@ -65,10 +62,10 @@
      <widget class="QWidget" name="tab_4" >
       <property name="geometry" >
        <rect>
-        <x>70</x>
-        <y>117</y>
-        <width>856</width>
-        <height>565</height>
+        <x>0</x>
+        <y>0</y>
+        <width>526</width>
+        <height>372</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -79,9 +76,6 @@
         <widget class="QTreeView" name="treeSourceOpt" >
          <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
          </property>
          <property name="rootIsDecorated" >
           <bool>false</bool>
@@ -96,10 +90,10 @@
      <widget class="QWidget" name="bios" >
       <property name="geometry" >
        <rect>
-        <x>92</x>
-        <y>146</y>
-        <width>856</width>
-        <height>565</height>
+        <x>0</x>
+        <y>0</y>
+        <width>526</width>
+        <height>372</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -110,9 +104,6 @@
         <widget class="QTreeView" name="treeBiosOpt" >
          <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
          </property>
          <property name="rootIsDecorated" >
           <bool>false</bool>
@@ -127,10 +118,10 @@
      <widget class="QWidget" name="tab_3" >
       <property name="geometry" >
        <rect>
-        <x>114</x>
-        <y>175</y>
-        <width>856</width>
-        <height>565</height>
+        <x>0</x>
+        <y>0</y>
+        <width>526</width>
+        <height>372</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -144,9 +135,6 @@
         <widget class="QTreeView" name="treeCloneofOpt" >
          <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
          </property>
          <property name="rootIsDecorated" >
           <bool>false</bool>
@@ -175,9 +163,6 @@
         <widget class="QTreeView" name="treeCurrOpt" >
          <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
-         </property>
-         <property name="alternatingRowColors" >
-          <bool>true</bool>
          </property>
          <property name="rootIsDecorated" >
           <bool>false</bool>

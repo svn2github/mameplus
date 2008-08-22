@@ -142,6 +142,8 @@ public:
 	QTime loadTimer;
 	int numTotalGames;
 	QString mameVersion;
+	QMenu *menu;
+	QMenu *headerMenu;
 
 	QStringList folderList;
 
@@ -157,6 +159,10 @@ public:
 
 public slots:
 	void init(bool);
+	void showContextMenu(const QPoint &);
+	void updateContextMenu();
+	void showHeaderContextMenu(const QPoint &);
+	void updateHeaderContextMenu();
 	void loadDefaultIni();
 	void initFolders();
 
