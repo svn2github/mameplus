@@ -51,7 +51,6 @@
 #include "winutf8.h"
 #include "strconv.h"
 #include "clifront.h"
-#include "directories.h" //mamep: for g_directoryInfo[] in function generate_default_dirs()
 #include "translate.h"
 
 #ifdef MAMEMESS
@@ -104,9 +103,6 @@ static void set_core_translation_directory(const WCHAR *dir);
 
 static void  build_default_bios(void);
 
-extern DWORD create_path_recursive(const TCHAR *path);
-
-static void  generate_default_dirs(void);
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -310,11 +306,11 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_HISTORY_TAB,				"0",        0,                 NULL },
 #endif
 
-	{ MUIOPTION_SORT_COLUMN,				"0",        0,                 NULL },
-	{ MUIOPTION_SORT_REVERSED,				"0",        OPTION_BOOLEAN,    NULL },
 #ifdef IMAGE_MENU
 	{ MUIOPTION_IMAGEMENU_STYLE,			"0",        0,                 NULL },
 #endif /* IMAGE_MENU */
+	{ MUIOPTION_SORT_COLUMN,				"0",        0,                 NULL },
+	{ MUIOPTION_SORT_REVERSED,				"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_WINDOW_X,					"0",        0,                 NULL },
 	{ MUIOPTION_WINDOW_Y,					"0",        0,                 NULL },
 	{ MUIOPTION_WINDOW_WIDTH,				"640",      0,                 NULL },
@@ -323,10 +319,7 @@ static const options_entry regSettings[] =
 
 	{ MUIOPTION_TEXT_COLOR,					"-1",       0,                 NULL },
 	{ MUIOPTION_CLONE_COLOR,				"-1",       0,                 NULL },
-	{ MUIOPTION_BROKEN_COLOR,				"202",      0,                 NULL },
 	{ MUIOPTION_CUSTOM_COLOR,				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, NULL },
-	{ MUIOPTION_USE_BROKEN_ICON,			"1",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_FOLDER_FLAG,				NULL,       0,                 NULL },
 	/* ListMode needs to be before ColumnWidths settings */
 	{ MUIOPTION_LIST_MODE,					"Grouped",        0,                 NULL },
 	{ MUIOPTION_SPLITTERS,					MUIDEFAULT_SPLITTERS, 0,       NULL },
@@ -344,19 +337,22 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_BROADCAST_GAME_NAME,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_MOUSE,					"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_INHERIT_FILTER,				"0",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_OFFSET_CLONES,				"0",        OPTION_BOOLEAN,    NULL },
-#ifdef USE_SHOW_SPLASH_SCREEN
-	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,		"1",        OPTION_BOOLEAN,    NULL },
-#endif /* USE_SHOW_SPLASH_SCREEN */
-#ifdef TREE_SHEET
-	{ MUIOPTION_SHOW_TREE_SHEET,			"1",        OPTION_BOOLEAN,    NULL },
-#endif /* TREE_SHEET */
+	{ MUIOPTION_OFFSET_CLONES,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_STRETCH_SCREENSHOT_LARGER,	"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_CYCLE_SCREENSHOT,			"0",        0,                 NULL },
  	{ MUIOPTION_SCREENSHOT_BORDER_SIZE,		"11",       0,                 NULL },
  	{ MUIOPTION_SCREENSHOT_BORDER_COLOR,	"-1",       0,                 NULL },
 	{ MUIOPTION_EXEC_COMMAND,				"",         0,                 NULL },
 	{ MUIOPTION_EXEC_WAIT,					"0",        0,                 NULL },
+#ifdef USE_SHOW_SPLASH_SCREEN
+	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,		"1",        OPTION_BOOLEAN,    NULL },
+#endif /* USE_SHOW_SPLASH_SCREEN */
+#ifdef TREE_SHEET
+	{ MUIOPTION_SHOW_TREE_SHEET,			"1",        OPTION_BOOLEAN,    NULL },
+#endif /* TREE_SHEET */
+	{ MUIOPTION_BROKEN_COLOR,				"202",      0,                 NULL },
+	{ MUIOPTION_USE_BROKEN_ICON,			"1",        OPTION_BOOLEAN,    NULL },
+	{ MUIOPTION_FOLDER_FLAG,				NULL,       0,                 NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "SEARCH PATH OPTIONS" },
 	{ MUIOPTION_FLYER_DIRECTORY,			"flyers",   0,                 NULL },
@@ -630,7 +626,7 @@ BOOL OptionsInit()
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	settings = options_create(memory_error);
 	options_add_entries(settings, regSettings);
-#ifdef MESS
+#if 0 //def MESS
 	MessSetupSettings(settings);
 #endif
 
@@ -707,9 +703,8 @@ BOOL OptionsInit()
 	set_core_hash_directory(GetHashDirs());
 #endif
 
-	generate_default_dirs();
-
 	return TRUE;
+
 }
 
 void OptionsExit(void)
@@ -2741,23 +2736,6 @@ void set_core_bios(const char *bios)
 /***************************************************************************
     Internal functions
  ***************************************************************************/
-
-static void generate_default_dirs(void)
-{
-	int i;
-
-	for (i = 0; g_directoryInfo[i].pfnGetTheseDirs; i++)
-	{
-		WCHAR *paths = wcsdup(g_directoryInfo[i].pfnGetTheseDirs());
-		{
-			WCHAR *p;
-
-			for (p = wcstok(paths, TEXT(";")); p; p =wcstok(NULL, TEXT(";")))
-				create_path_recursive(p);
-		}
-		free(paths);
-	};
-}
 
 static void  CusColorEncodeString(const COLORREF *value, char* str)
 {

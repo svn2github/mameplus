@@ -26,11 +26,19 @@
     CONSTANTS
 ***************************************************************************/
 
+/* conditional compilation to enable chosing of image formats - this is not
+ * yet fully implemented */
 #define ENABLE_FORMATS			0
 
+/* time (in seconds) to display errors */
+#define ERROR_MESSAGE_TIME		5
+
+/* itemrefs for key menu items */
 #define ITEMREF_NEW_IMAGE_NAME	((void *) 0x0001)
 #define ITEMREF_CREATE			((void *) 0x0002)
 #define ITEMREF_FORMAT			((void *) 0x0003)
+#define ITEMREF_NO				((void *) 0x0004)
+#define ITEMREF_YES				((void *) 0x0005)
 
 
 
@@ -91,7 +99,16 @@ struct _file_create_menu_state
 {
 	file_manager_menu_state *manager_menustate;
 	const image_device_format *current_format;
+	int confirm_save_as_yes;
 	char filename_buffer[1024];
+};
+
+
+/* state of the confirm save as menu */
+typedef struct _confirm_save_as_menu_state confirm_save_as_menu_state;
+struct _confirm_save_as_menu_state
+{
+	int *yes;
 };
 
 
@@ -189,6 +206,54 @@ static void extra_text_render(running_machine *machine, ui_menu *menu, void *sta
 
 
 /***************************************************************************
+    CONFIRM SAVE AS MENU
+***************************************************************************/
+
+/*-------------------------------------------------
+    menu_confirm_save_as_populate - populates the
+	confirm save as menu
+-------------------------------------------------*/
+
+static void menu_confirm_save_as_populate(running_machine *machine, ui_menu *menu, void *state)
+{
+	ui_menu_item_append(menu, "File Already Exists - Overide?", NULL, MENU_FLAG_DISABLE, NULL);
+	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, MENU_FLAG_DISABLE, NULL);
+	ui_menu_item_append(menu, "No", NULL, 0, ITEMREF_NO);
+	ui_menu_item_append(menu, "Yes", NULL, 0, ITEMREF_YES);
+}
+
+
+
+/*-------------------------------------------------
+    menu_confirm_save_as - confirm save as menu
+-------------------------------------------------*/
+
+static void menu_confirm_save_as(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	confirm_save_as_menu_state *menustate = (confirm_save_as_menu_state *) state;
+
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+		menu_confirm_save_as_populate(machine, menu, state);
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+
+	/* process the event */
+	if ((event != NULL) && (event->iptkey == IPT_UI_SELECT))
+	{
+		if (event->itemref == ITEMREF_YES)
+			*menustate->yes = TRUE;
+
+		/* no matter what, pop out */
+		ui_menu_stack_pop(machine);
+	}
+}
+
+
+
+/***************************************************************************
     FILE CREATE MENU
 ***************************************************************************/
 
@@ -237,17 +302,13 @@ static void file_create_render_extra(running_machine *machine, ui_menu *menu, vo
 	creator menu
 -------------------------------------------------*/
 
-static void menu_file_create_populate(running_machine *machine, ui_menu *menu, void *state)
+static void menu_file_create_populate(running_machine *machine, ui_menu *menu, void *state, void *selection)
 {
 	astring *buffer = astring_alloc();
 	file_create_menu_state *menustate = (file_create_menu_state *) state;
 	const device_config *device = menustate->manager_menustate->selected_device;
 	const image_device_format *format;
 	const char *new_image_name;
-	void *selection;
-
-	/* identify the selection */
-	selection = ui_menu_get_selection(menu);
 
 	/* append the "New Image Name" item */
 	if (selection == ITEMREF_NEW_IMAGE_NAME)
@@ -283,21 +344,109 @@ static void menu_file_create_populate(running_machine *machine, ui_menu *menu, v
 
 
 /*-------------------------------------------------
+    create_new_image - creates a new disk image
+-------------------------------------------------*/
+
+static int create_new_image(const device_config *device, const char *directory, const char *filename, int *yes)
+{
+	astring *path;
+	osd_directory_entry *entry;
+	osd_dir_entry_type file_type;
+	int do_create, err;
+	int result = FALSE;
+	ui_menu *child_menu;
+	confirm_save_as_menu_state *child_menustate;
+
+	/* assemble the full path */
+	path = zippath_combine(astring_alloc(), directory, filename);
+
+	/* does a file or a directory exist at the path */
+	entry = osd_stat(astring_c(path));
+	file_type = (entry != NULL) ? entry->type : ENTTYPE_NONE;
+	if (entry != NULL)
+		free(entry);
+
+	/* special case */
+	if ((file_type == ENTTYPE_FILE) && *yes)
+		file_type = ENTTYPE_NONE;
+
+	switch(file_type)
+	{
+		case ENTTYPE_NONE:
+			/* no file/dir here - always create */
+			do_create = TRUE;
+			break;
+
+		case ENTTYPE_FILE:
+			/* a file exists here - ask for permission from the user */
+			child_menu = ui_menu_alloc(device->machine, menu_confirm_save_as, NULL);
+			child_menustate = ui_menu_alloc_state(child_menu, sizeof(*child_menustate), NULL);
+			child_menustate->yes = yes;
+			ui_menu_stack_push(child_menu);
+			do_create = FALSE;
+			break;
+
+		case ENTTYPE_DIR:
+			/* a directory exists here - we can't save over it */
+			ui_popup_time(ERROR_MESSAGE_TIME, "Cannot save over directory");
+			do_create = FALSE;
+			break;
+
+		default:
+			fatalerror("Unexpected");
+			do_create = FALSE;
+			break;
+	}
+
+	/* create the image, if appropriate */
+	if (do_create)
+	{
+		err = image_create(device, astring_c(path), 0, NULL);
+		if (err != 0)
+			popmessage("Error: %s", image_error(device));
+		else
+			result = TRUE;
+	}
+
+	/* free the path */
+	astring_free(path);
+
+	return result;
+}
+
+
+
+/*-------------------------------------------------
     menu_file_create - file creator menu
 -------------------------------------------------*/
 
 static void menu_file_create(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
-	astring *new_path;
+	void *selection;
 	const ui_menu_event *event;
+	ui_menu_event fake_event;
 	file_create_menu_state *menustate = (file_create_menu_state *) state;
+
+	/* identify the selection */
+	selection = ui_menu_get_selection(menu);
 
 	/* rebuild the menu */
 	ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_POSITION);
-	menu_file_create_populate(machine, menu, state);
+	menu_file_create_populate(machine, menu, state, selection);
 
+	if (menustate->confirm_save_as_yes)
+	{
+		/* we just returned from a "confirm save as" dialog and the user said "yes" - fake an event */
+		memset(&fake_event, 0, sizeof(fake_event));
+		fake_event.iptkey = IPT_UI_SELECT;
+		fake_event.itemref = ITEMREF_CREATE;
+		event = &fake_event;
+	}
+	else
+	{
 	/* process the menu */
 	event = ui_menu_process(menu, 0);
+	}
 
 	/* process the event */
 	if (event != NULL)
@@ -306,19 +455,18 @@ static void menu_file_create(running_machine *machine, ui_menu *menu, void *para
 		switch(event->iptkey)
 		{
 			case IPT_UI_SELECT:
-				if (event->itemref == ITEMREF_CREATE)
+				if ((event->itemref == ITEMREF_CREATE) || (event->itemref == ITEMREF_NEW_IMAGE_NAME))
 				{
-					/* create the image */
-					new_path = zippath_combine(
-						astring_alloc(),
-						astring_c(menustate->manager_menustate->current_directory), 
-						menustate->filename_buffer);
-					image_create(
+					if (create_new_image(
 						menustate->manager_menustate->selected_device,
-						astring_c(new_path),
-						0,
-						NULL);
-					astring_free(new_path);
+						astring_c(menustate->manager_menustate->current_directory), 
+						menustate->filename_buffer,
+						&menustate->confirm_save_as_yes))
+					{
+						/* success - pop out twice to device view */
+						ui_menu_stack_pop(machine);
+						ui_menu_stack_pop(machine);
+					}
 				}
 				break;
 
@@ -805,12 +953,12 @@ void menu_file_manager(running_machine *machine, ui_menu *menu, void *parameter,
 	}
 	menustate = (file_manager_menu_state *) state;
 
-	/* update the selected device */
-	menustate->selected_device = (const device_config *) ui_menu_get_selection(menu);
-
 	/* if the menu isn't built, populate now */
 	if (!ui_menu_populated(menu))
 		menu_file_manager_populate(machine, menu, state);
+
+	/* update the selected device */
+	menustate->selected_device = (const device_config *) ui_menu_get_selection(menu);
 
 	/* process the menu */
 	event = ui_menu_process(menu, 0);
@@ -827,7 +975,7 @@ void menu_file_manager(running_machine *machine, ui_menu *menu, void *parameter,
 			astring_cpyc(menustate->current_file, image_exists(menustate->selected_device) ? image_basename(menustate->selected_device) : "");
 
 			/* reset the existing menu */
-			ui_menu_reset(menu, 0);
+			ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_POSITION);
 
 			/* push the menu */
 			child_menu = ui_menu_alloc(machine, menu_file_selector, NULL);

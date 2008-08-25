@@ -2484,6 +2484,7 @@ static input_port_config *port_config_detokenize(input_port_config *listhead, co
 	input_field_config *curfield = NULL;
 	input_port_config *curport = NULL;
 	input_port_value maskbits = 0;
+	UINT16 category;	/* (MESS-specific) category */
 
 	/* loop over tokens until we hit the end */
 	while (entrytype != INPUT_TOKEN_END)
@@ -3035,7 +3036,7 @@ static input_port_config *port_config_detokenize(input_port_config *listhead, co
 				curfield->name = input_port_string_from_token(*ipt++);
 				break;
 
-			/* configuration setting */
+			/* category setting */
 			case INPUT_TOKEN_CATEGORY_SETTING:
 				TOKEN_UNGET_UINT32(ipt);
 				if (curfield == NULL)
@@ -3045,8 +3046,9 @@ static input_port_config *port_config_detokenize(input_port_config *listhead, co
 					TOKEN_SKIP_STRING(ipt);
 					break;
 				}
-				TOKEN_GET_UINT64_UNPACK2(ipt, entrytype, 8, defval, 32);
+				TOKEN_GET_UINT64_UNPACK3(ipt, entrytype, 8, defval, 32, category, 16);
 				cursetting = setting_config_alloc(curfield, defval & curfield->mask, input_port_string_from_token(*ipt++));
+				cursetting->category = category;
 				break;
 
 			/* analog adjuster definition */
