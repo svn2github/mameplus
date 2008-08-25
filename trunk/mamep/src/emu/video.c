@@ -2234,7 +2234,7 @@ void video_screen_save_snapshot(running_machine *machine, const device_config *s
 	/* add two text entries describing the image */
 	sprintf(text, APPNAME " %s", build_version);
 	png_add_text(&pnginfo, "Software", text);
-	sprintf(text, "%s %s", machine->gamedrv->manufacturer, machine->gamedrv->description);
+	sprintf(text, "%s %s", _MANUFACT(machine->gamedrv->manufacturer), _LST(machine->gamedrv->description));
 	png_add_text(&pnginfo, "System", text);
 
 	/* now do the actual work */
@@ -2512,7 +2512,7 @@ static void video_mng_record_frame(running_machine *machine)
 
 				sprintf(text, APPNAME " %s", build_version);
 				png_add_text(&pnginfo, "Software", text);
-				sprintf(text, "%s %s", machine->gamedrv->manufacturer, machine->gamedrv->description);
+				sprintf(text, "%s %s", _MANUFACT(machine->gamedrv->manufacturer), _LST(machine->gamedrv->description));
 				png_add_text(&pnginfo, "System", text);
 			}
 
