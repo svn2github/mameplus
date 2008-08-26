@@ -81,8 +81,6 @@ const game_driver * const plusdrivers[] =
 	/* Konami "Nemesis hardware" games */
 	DRIVER( spclone )	/* GX587 (c) 1986 based */
 #endif /* SPCLONE */
-	/* Kaneko 16 Bit Game  */
-	DRIVER( shogware )	/* 1992 (c) Shogun Warriors (Europe Rev.xx)(Kaneko 1992) */
 #endif /* NEOCPSMAME */
 
 #endif	/* DRIVER_RECURSIVE */
