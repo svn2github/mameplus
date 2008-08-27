@@ -394,7 +394,6 @@ static void print_game_rom(FILE *out, const game_driver *game)
 				const rom_entry *chunk;
 				char bios_name[100];
 				int length;
-				int checksum_found = 0;
 
 				/* BIOS ROMs only apply to bioses */
 				if ((is_bios && rom_type != 0) || (!is_bios && rom_type == 0))
@@ -452,19 +451,15 @@ static void print_game_rom(FILE *out, const game_driver *game)
 					fprintf(out, " size=\"%d\"", length);
 
 				/* dump checksum information only if there is a known dump */
-				//if (!hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
+				if (!hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
 				{
 					char checksum[HASH_BUF_SIZE];
 					int hashtype;
 
 					/* iterate over hash function types and print out their values */
 					for (hashtype = 0; hashtype < HASH_NUM_FUNCTIONS; hashtype++)
-						if (hash_data_has_checksum(ROM_GETHASHDATA(rom), 1 << hashtype))
 						if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), 1 << hashtype, checksum))
-						{
-							checksum_found = 1;
 							fprintf(out, " %s=\"%s\"", hash_function_name(1 << hashtype), checksum);
-						}
 				}
 
 				/* append a region name */
@@ -472,12 +467,7 @@ static void print_game_rom(FILE *out, const game_driver *game)
 
 				/* add nodump/baddump flags */
 				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_NO_DUMP))
-				{
-					if (checksum_found)
-						fprintf(out, " status=\"baddump\"");
-					else
 					fprintf(out, " status=\"nodump\"");
-				}
 				if (hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP))
 					fprintf(out, " status=\"baddump\"");
 
