@@ -18,10 +18,6 @@
 #include "devices/cartslot.h"
 #include "sound/nes_apu.h"
 
-//mamep: fixme: MESS PORT_CATEGORY doesnt work
-//http://bugzilla.mess.org/show_bug.cgi?id=1614
-#undef PORT_CATEGORY
-#define PORT_CATEGORY(_category)
 
 static READ8_HANDLER( psg_4015_r )
 {
