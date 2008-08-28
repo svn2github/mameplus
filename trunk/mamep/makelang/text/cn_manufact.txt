@@ -258,6 +258,10 @@ ABM
 ABM & Gecas
 
 
+# Hot Slot (ver. 05.01)
+ABM Electronics
+
+
 # Magic's 10 2 (ver 1.1)
 ABM Games
 
@@ -352,10 +356,6 @@ Alpha
 
 # Miss Bubble 2
 Alpha Co
-
-
-# Virtua Bowling (World, V101XCM)
-Alta
 
 
 # Naughty Mouse (set 1)
@@ -702,7 +702,7 @@ Danbi & F2 System
 Data Amusement
 
 
-# Cobra Command
+# Cobra Command (M.A.C.H. 3 hardware)
 Data East
 
 
@@ -2002,6 +2002,10 @@ Sigma Inc.
 Signatron USA
 
 
+# Cube Quest
+Simutrek
+
+
 # Sky Kid (Sipem)
 Sipem license
 
@@ -2036,6 +2040,10 @@ South West Research
 
 # Mosaic
 Space
+
+
+# Quiz Punch 2
+Space Computer
 
 
 # Evil Stone
@@ -2378,7 +2386,7 @@ Video Games GMBH
 Video Games GmbH
 
 
-# Sonic Wings Limited (JAPAN)
+# Video System PSX
 Video System
 
 
@@ -2446,7 +2454,7 @@ Windom
 Wing
 
 
-# Lucky 74 (small)
+# Lucky 74 (bootleg, set 1)
 Wing Co.,Ltd.
 
 

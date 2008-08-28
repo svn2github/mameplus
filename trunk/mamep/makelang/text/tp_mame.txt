@@ -1094,10 +1094,6 @@ Decrypting %d%%
 Default
 
 
-# mess/drivers/atari.c: 424 mess/inputx.c: 323 
-Delete
-
-
 # emu/inpttype.h: 633
 Delete Cheat
 
@@ -1712,10 +1708,6 @@ Input: Changing default joystick map
 
 # emu/input.c: 600
 Input: Default joystick map
-
-
-# mame/drivers/funworld.c: 1045, 1408 mess/drivers/atari.c: 423 mess/inputx.c: 322 
-Insert
 
 
 # emu/inptport.c: 432

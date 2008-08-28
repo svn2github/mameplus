@@ -18,7 +18,7 @@
 &Configuration...
 환경설정(&C)...
 
-# mess/osd/windows/menu.c: 1257
+# mess/osd/windows/menu.c: 1252
 &Configure...
 환경설정(&C)...
 
@@ -34,11 +34,11 @@
 &Exit
 종료(&E)
 
-# mess/osd/windows/menu.c: 1464 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
 &File
 파일(&F)
 
-# mess/osd/windows/menu.c: 2108 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
 &Frameskip
 프래임생략(&F)
 
@@ -50,11 +50,11 @@
 &Hide Menubar\tScrLk
 메뉴바 숨김(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
 &Input
 입력(&I)
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
 &Joysticks
 조이스틱(&J)
 
@@ -82,7 +82,7 @@
 &Save State
 상태 저장(&S)
 
-# mess/osd/windows/menu.c: 1443, 1443, 2108 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
 &Video
 비디오(&V)
 
@@ -90,15 +90,15 @@
 (disabled by compiling option)
 (컴파일 옵션에서 제외됨)
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 (primary)
 (주요)
 
-# mess/osd/windows/menu.c: 2118
+# mess/osd/windows/menu.c: 2113
 About %s (%s)...
 %s (%s)정보...
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 875
 All files (*.*)|*.*|
 모든 파일 (*.*)|*.*|
 
@@ -118,11 +118,11 @@ Auto
 Cancel
 취소
 
-# mess/osd/windows/menu.c: 869
+# mess/osd/windows/menu.c: 866
 Common image types
 일반 이미지 타입
 
-# mess/osd/windows/menu.c: 882
+# mess/osd/windows/menu.c: 879
 Compressed Images (*.zip)|*.zip|
 압축 이미지 (*.zip)|*.zip|
 
@@ -150,19 +150,19 @@ Direct3D: 아답터 #%d 설정 = %s\n
 Direct3D: Device created at %dx%d\n
 Direct3D: 장치 생성됨 %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2362
+# osd/windows/drawd3d.c: 625, 2380
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: device begin_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1640, 2411
+# osd/windows/drawd3d.c: 1640, 2429
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: device draw_primitive call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 654, 2415
+# osd/windows/drawd3d.c: 654, 2433
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: device end_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2355
+# osd/windows/drawd3d.c: 2373
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: device get_render_target call 진행중 %08X 오류\n
 
@@ -174,15 +174,15 @@ Direct3D: device present call 진행중 %08X 오류\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: device set_render_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2357, 2419
+# osd/windows/drawd3d.c: 2375, 2437
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: device set_render_target call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1612, 2409
+# osd/windows/drawd3d.c: 1612, 2427
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: device set_stream_source call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 294, 2368
+# osd/windows/drawd3d.c: 294, 2386
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: device set_texture call 진행중 %08X 오류\n
 
@@ -190,7 +190,7 @@ Direct3D: device set_texture call 진행중 %08X 오류\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: device set_texture_stage_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2343
+# osd/windows/drawd3d.c: 2361
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: device stretct_rect call 진행중 %08X 오류\n
 
@@ -198,19 +198,19 @@ Direct3D: device stretct_rect call 진행중 %08X 오류\n
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: device get_caps_dword call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2322
+# osd/windows/drawd3d.c: 2340
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: texture get_surface_level call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2298
+# osd/windows/drawd3d.c: 2316
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: texture unlock_rect call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2372
+# osd/windows/drawd3d.c: 2390
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: vertex buffer lock call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1607, 2404
+# osd/windows/drawd3d.c: 1607, 2422
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: vertex buffer unlock call 진행중 %08X 오류\n
 
@@ -338,7 +338,7 @@ Direct3D: 경고 - 장치가 full screen gamma correction을 지원하지 않습니다\n
 Direct3D: YUV format = %s\n
 Direct3D: YUV 형식 = %s\n
 
-# osd/windows/drawd3d.c: 1711
+# osd/windows/drawd3d.c: 1712
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 크기 조절 %dx%d -> %dx%d\n
 
@@ -578,7 +578,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 vertex shader 설정 오류 (%08X)
 
-# mess/osd/windows/menu.c: 960
+# mess/osd/windows/menu.c: 955
 Error when %s the image: %s
 이미지 %s 중 오류: %s
 
@@ -622,11 +622,11 @@ Ha&rd Reset
 INPUT DEVICE OPTIONS
 입력 장치 옵션
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 523
 Illegal aspect ratio value for %s = %s\n
 잘못된 화면비 값 %s = %s\n
 
-# osd/windows/video.c: 547
+# osd/windows/video.c: 546
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
@@ -634,11 +634,11 @@ Illegal resolution value for %s = %s\n
 Input
 입력
 
-# osd/windows/video.c: 442
+# osd/windows/video.c: 441
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
-# mess/osd/windows/menu.c: 1275
+# mess/osd/windows/menu.c: 1270
 Joystick %i
 조이스틱 %i
 
@@ -750,7 +750,7 @@ Symbol table full
 Tape Control
 테이프 콘트롤
 
-# osd/windows/drawd3d.c: 1848
+# osd/windows/drawd3d.c: 1866
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 덱스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
 
@@ -782,7 +782,7 @@ Direct3D를 초기화할 수 없습니다\n
 Unable to initialize DirectDraw.\n
 DirectDraw 초기화할 수 없습니다\n
 
-# osd/windows/video.c: 493
+# osd/windows/video.c: 492
 Unable to load PNG file '%s'\n
 '%s' PNG 파일을 불러올 수 없습니다\n
 
@@ -790,7 +790,7 @@ Unable to load PNG file '%s'\n
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
-# osd/windows/drawd3d.c: 2285
+# osd/windows/drawd3d.c: 2303
 Unknown texture blendmode=%d format=%d\n
 알 수 없는 texture blendmode=%d format=%d\n
 
@@ -798,21 +798,17 @@ Unknown texture blendmode=%d format=%d\n
 Unlimited
 무제한
 
-# osd/windows/video.c: 403
+# osd/windows/video.c: 402
 Using %s scale effect\n
 %s 크기조절 효과 사용\n
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 Video: Monitor %p = \"%s\" %s\n
 비디오: 모니터 %p = \"%s\" %s\n
 
 # osd/windows/winmain.c: 127
 WINDOWS DEBUGGING OPTIONS
 윈도우즈 디버깅 옵션
-
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
-WINDOWS MESS 전용 옵션
 
 # osd/windows/winmain.c: 132
 WINDOWS PERFORMANCE OPTIONS
@@ -826,7 +822,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 윈도우 비디오 옵션
 
-# osd/windows/video.c: 438
+# osd/windows/video.c: 437
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
@@ -866,7 +862,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 전체 화면 모드에서 대비값
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 creating
 치트
 
@@ -938,7 +934,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 전체 화면 감마 값
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 loading
 불러오는 중
 
@@ -1033,10 +1029,6 @@ set joystick ID (Player7)
 # osd/windows/winmain.c: 208
 set joystick ID (Player8)
 조이스틱 ID 설정 (플레이어8)
-
-# mess/osd/windows/configms.c: 32
-specifies whether to use a natural keyboard or not
-인체공학 키보드 사용 여부 지정
 
 # osd/windows/winmain.c: 154
 specify the preferred Direct3D version (8 or 9)

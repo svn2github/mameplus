@@ -54,10 +54,6 @@ Alpha Co
 Alpha Denshi Co.
 알파전자
 
-# Virtua Bowling (World, V101XCM)
-Alta
-알타
-
 # Naughty Mouse (set 1)
 Amenip
 아메닙
@@ -234,7 +230,7 @@ Daiki
 Danbi & F2 System
 단비 & F2시스템
 
-# Cobra Command
+# Cobra Command (M.A.C.H. 3 hardware)
 Data East
 데이터 이스트
 
@@ -706,7 +702,7 @@ V-시스템
 Viccom
 빅컴
 
-# Sonic Wings Limited (JAPAN)
+# Video System PSX
 Video System
 비디오 시스템
 
@@ -856,6 +852,10 @@ ABM
 
 # Blomby Car
 ABM & Gecas
+
+
+# Hot Slot (ver. 05.01)
+ABM Electronics
 
 
 # Magic's 10 2 (ver 1.1)
@@ -2250,6 +2250,10 @@ Sigma Inc.
 Signatron USA
 
 
+# Cube Quest
+Simutrek
+
+
 # Sky Kid (Sipem)
 Sipem license
 
@@ -2284,6 +2288,10 @@ South West Research
 
 # Mosaic
 Space
+
+
+# Quiz Punch 2
+Space Computer
 
 
 # Evil Stone
@@ -2506,7 +2514,7 @@ Vision Electronics
 Volt Elec co-ltd
 
 
-# Lucky 74 (small)
+# Lucky 74 (bootleg, set 1)
 Wing Co.,Ltd.
 
 

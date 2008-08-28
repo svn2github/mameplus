@@ -114,10 +114,6 @@ Alpha Co
 Alpha Denshi Co.
 Alpha Denshi Co.
 
-# Virtua Bowling (World, V101XCM)
-Alta
-Alta
-
 # Naughty Mouse (set 1)
 Amenip
 Amenip
@@ -454,7 +450,7 @@ Danbi & F2 System
 Data Amusement
 Data Amusement
 
-# Cobra Command
+# Cobra Command (M.A.C.H. 3 hardware)
 Data East
 Data East
 
@@ -2198,7 +2194,7 @@ Video Games GMBH
 Video Games GmbH
 Video Games GmbH
 
-# Sonic Wings Limited (JAPAN)
+# Video System PSX
 Video System
 Video System
 
@@ -2402,6 +2398,10 @@ desconhecido
 A.A.
 
 
+# Hot Slot (ver. 05.01)
+ABM Electronics
+
+
 # Beauty Block
 AMT
 
@@ -2530,6 +2530,10 @@ Seta?
 Setakikaku, Ltd.
 
 
+# Cube Quest
+Simutrek
+
+
 # Sky Kid (Sipem)
 Sipem license
 
@@ -2540,6 +2544,10 @@ Solar Games
 
 # Top Blade V
 SonoKong
+
+
+# Quiz Punch 2
+Space Computer
 
 
 # Jolly Card Professional 2.0
@@ -2554,7 +2562,7 @@ VR8 Inc.
 Videojet/Timlex/Cougar
 
 
-# Lucky 74 (small)
+# Lucky 74 (bootleg, set 1)
 Wing Co.,Ltd.
 
 

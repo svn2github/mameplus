@@ -18,7 +18,7 @@
 &Configuration...
 &Configuração...
 
-# mess/osd/windows/menu.c: 1257
+# mess/osd/windows/menu.c: 1252
 &Configure...
 @Configurar...
 
@@ -34,11 +34,11 @@
 &Exit
 &Sair
 
-# mess/osd/windows/menu.c: 1464 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
 &File
 &Arquivo
 
-# mess/osd/windows/menu.c: 2108 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
 &Frameskip
 &Pulo de Quadro
 
@@ -46,11 +46,11 @@
 &Full Screen\tAlt+Enter
 &Tela Cheia\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
 &Input
 &Entrada
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
 &Joysticks
 &Joysticks
 
@@ -78,7 +78,7 @@
 &Save State
 &Salvar Posição
 
-# mess/osd/windows/menu.c: 1443, 1443, 2108 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
 &Video
 &Vídeo
 
@@ -86,15 +86,15 @@
 (disabled by compiling option)
 (desabilitado por opção de compilação)
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 (primary)
 (primário)
 
-# mess/osd/windows/menu.c: 2118
+# mess/osd/windows/menu.c: 2113
 About %s (%s)...
 Sobre %s (%s)...
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 875
 All files (*.*)|*.*|
 Todos os arquivos (*.*)|*.*|
 
@@ -114,11 +114,11 @@ Automático
 Cancel
 Cancelar
 
-# mess/osd/windows/menu.c: 869
+# mess/osd/windows/menu.c: 866
 Common image types
 Tipos de imagens comuns
 
-# mess/osd/windows/menu.c: 882
+# mess/osd/windows/menu.c: 879
 Compressed Images (*.zip)|*.zip|
 Imagens compactadas (*.zip)|*.zip|
 
@@ -146,19 +146,19 @@ Direct3D: Configurando adaptador #%d = %s\n
 Direct3D: Device created at %dx%d\n
 Direct3D: Dispositivo criado em %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2362
+# osd/windows/drawd3d.c: 625, 2380
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: Erro %08X durante chamada de dispositivo begin_scene\n
 
-# osd/windows/drawd3d.c: 1640, 2411
+# osd/windows/drawd3d.c: 1640, 2429
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: Erro %08X durante chamada de dispositivo draw_primitive\n
 
-# osd/windows/drawd3d.c: 654, 2415
+# osd/windows/drawd3d.c: 654, 2433
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: Erro %08X durante chamada de dispositivo end_scene\n
 
-# osd/windows/drawd3d.c: 2355
+# osd/windows/drawd3d.c: 2373
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: Erro %08X durante chamada de dispositivo get_render_target\n
 
@@ -170,15 +170,15 @@ Direct3D: Erro %08X durante chamada de dispositivos presentes\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_render_state\n
 
-# osd/windows/drawd3d.c: 2357, 2419
+# osd/windows/drawd3d.c: 2375, 2437
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_render_target\n
 
-# osd/windows/drawd3d.c: 1612, 2409
+# osd/windows/drawd3d.c: 1612, 2427
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_stream_source\n
 
-# osd/windows/drawd3d.c: 294, 2368
+# osd/windows/drawd3d.c: 294, 2386
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_texture\n
 
@@ -186,7 +186,7 @@ Direct3D: Erro %08X durante chamada de dispositivo set_texture\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_texture_stage_state\n
 
-# osd/windows/drawd3d.c: 2343
+# osd/windows/drawd3d.c: 2361
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: Erro %08X durante chamada de dispositivo stretct_rect\n
 
@@ -194,19 +194,19 @@ Direct3D: Erro %08X durante chamada de dispositivo stretct_rect\n
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: Erro %08X durante chamada get_caps_dword\n
 
-# osd/windows/drawd3d.c: 2322
+# osd/windows/drawd3d.c: 2340
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: Erro %08X durante chamada de textura get_surface_level\n
 
-# osd/windows/drawd3d.c: 2298
+# osd/windows/drawd3d.c: 2316
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: Erro %08X durante chamada de textura unlock_rect\n
 
-# osd/windows/drawd3d.c: 2372
+# osd/windows/drawd3d.c: 2390
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: Erro %08X durante chamada de trava do buffer de vértice\n
 
-# osd/windows/drawd3d.c: 1607, 2404
+# osd/windows/drawd3d.c: 1607, 2422
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: Erro %08X durante chamada de destravamento do buffer de vértice\n
 
@@ -334,7 +334,7 @@ Direct3D: Aviso - Dispositivo não suporta correção gama em tela cheia.\n
 Direct3D: YUV format = %s\n
 Direct3D: formato YUV = %s\n
 
-# osd/windows/drawd3d.c: 1711
+# osd/windows/drawd3d.c: 1712
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: ajustando pré-escala de %dx%d a %dx%d\n
 
@@ -570,7 +570,7 @@ Erro configurando formato de buffer DirectSound primário: %08x\n
 Error setting vertex shader (%08X)
 Erro configurando sombreador de vértice (%08X)
 
-# mess/osd/windows/menu.c: 960
+# mess/osd/windows/menu.c: 955
 Error when %s the image: %s
 Erro quando %s a imagem: %s
 
@@ -614,11 +614,11 @@ R&eset Total
 INPUT DEVICE OPTIONS
 OPÇÕES DE DISPOSITIVO DE ENTRADA
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 523
 Illegal aspect ratio value for %s = %s\n
 Valor de relação de aspecto ilegal para %s = %s\n
 
-# osd/windows/video.c: 547
+# osd/windows/video.c: 546
 Illegal resolution value for %s = %s\n
 Valor de resolução ilegal para %s = %s\n
 
@@ -626,11 +626,11 @@ Valor de resolução ilegal para %s = %s\n
 Input
 Entrada
 
-# osd/windows/video.c: 442
+# osd/windows/video.c: 441
 Invalid video value %s; reverting to gdi\n
 Valor de vídeo inválido %s; revertendo para gdi\n
 
-# mess/osd/windows/menu.c: 1275
+# mess/osd/windows/menu.c: 1270
 Joystick %i
 Joystick %i
 
@@ -738,7 +738,7 @@ Tabela de símbolos total
 Tape Control
 Controle de Fita
 
-# osd/windows/drawd3d.c: 1848
+# osd/windows/drawd3d.c: 1866
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Textura muito grande! (requerido: %dx%d, máximo é %dx%d)\n
 
@@ -770,7 +770,7 @@ Não foi possível inicializar Direct3D.\n
 Unable to initialize DirectDraw.\n
 Não foi possível inicializar DirectDraw.\n
 
-# osd/windows/video.c: 493
+# osd/windows/video.c: 492
 Unable to load PNG file '%s'\n
 Não foi possível carregar arquivo PNG '%s'\n
 
@@ -778,7 +778,7 @@ Não foi possível carregar arquivo PNG '%s'\n
 Unable to open the keyboard device. (error %d)\n
 Não foi possível inicializar dispositivo de teclado. (erro %d)\n
 
-# osd/windows/drawd3d.c: 2285
+# osd/windows/drawd3d.c: 2303
 Unknown texture blendmode=%d format=%d\n
 Blendmode de textura desconhecido=%d formato=%d\n
 
@@ -786,21 +786,17 @@ Blendmode de textura desconhecido=%d formato=%d\n
 Unlimited
 Ilimitado
 
-# osd/windows/video.c: 403
+# osd/windows/video.c: 402
 Using %s scale effect\n
 Usando efeito %s de escala\n
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 Video: Monitor %p = \"%s\" %s\n
 Vídeo: Monitor %p = \"%s\" %s\n
 
 # osd/windows/winmain.c: 127
 WINDOWS DEBUGGING OPTIONS
 OPÇÕES DE DEPURAÇÃO DO WINDOWS
-
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
-OPÇÕES ESPECÍFICAS DO MESS PARA WINDOWS
 
 # osd/windows/winmain.c: 132
 WINDOWS PERFORMANCE OPTIONS
@@ -814,7 +810,7 @@ OPÇÕES DE SOM DO WINDOWS
 WINDOWS VIDEO OPTIONS
 OPÇÕES DE VÍDEO DO WINDOWS
 
-# osd/windows/video.c: 438
+# osd/windows/video.c: 437
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Aviso: -nenhum vídeo faz sentido sem -segundos_para_funcionar\n
 
@@ -854,7 +850,7 @@ limitar à relação de aspecto correta
 contrast value in full screen mode
 valor de contraste em modo tela cheia
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 creating
 criando
 
@@ -922,7 +918,7 @@ nome explícito da terceira tela; 'auto' tentará descobir uma melhor alternativa
 gamma value in full screen mode
 valor gama em modo tela cheia
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 loading
 carregando
 
@@ -1017,10 +1013,6 @@ configuração do ID do joystick  (Jogador 7)
 # osd/windows/winmain.c: 208
 set joystick ID (Player8)
 configuração do ID do joystick  (Jogador 8)
-
-# mess/osd/windows/configms.c: 32
-specifies whether to use a natural keyboard or not
-especifica se usa ou não um teclado natural
 
 # osd/windows/winmain.c: 154
 specify the preferred Direct3D version (8 or 9)

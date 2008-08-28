@@ -2,7 +2,7 @@
 (disabled by compiling option)
 (desabilirado por opção de compilação)
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 (primary)
 (primário)
 
@@ -26,19 +26,19 @@ Direct3D: Configurando adaptador #%d = %s\n
 Direct3D: Device created at %dx%d\n
 Direct3D: Dispositivo criado em %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2362
+# osd/windows/drawd3d.c: 625, 2380
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: Erro %08X durante chamada de dispositivo begin_scene\n
 
-# osd/windows/drawd3d.c: 1640, 2411
+# osd/windows/drawd3d.c: 1640, 2429
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: Erro %08X durante chamada de dispositivo draw_primitive\n
 
-# osd/windows/drawd3d.c: 654, 2415
+# osd/windows/drawd3d.c: 654, 2433
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: Erro %08X durante chamada de dispositivo end_scene\n
 
-# osd/windows/drawd3d.c: 2355
+# osd/windows/drawd3d.c: 2373
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: Erro %08X durante chamada de dispositivo get_render_target\n
 
@@ -50,15 +50,15 @@ Direct3D: Erro %08X durante chamada de dispositivos presentes\n
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_render_state\n
 
-# osd/windows/drawd3d.c: 2357, 2419
+# osd/windows/drawd3d.c: 2375, 2437
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_render_target\n
 
-# osd/windows/drawd3d.c: 1612, 2409
+# osd/windows/drawd3d.c: 1612, 2427
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_stream_source\n
 
-# osd/windows/drawd3d.c: 294, 2368
+# osd/windows/drawd3d.c: 294, 2386
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_texture\n
 
@@ -66,7 +66,7 @@ Direct3D: Erro %08X durante chamada de dispositivo set_texture\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: Erro %08X durante chamada de dispositivo set_texture_stage_state\n
 
-# osd/windows/drawd3d.c: 2343
+# osd/windows/drawd3d.c: 2361
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: Erro %08X durante chamada de dispositivo stretct_rect\n
 
@@ -74,19 +74,19 @@ Direct3D: Erro %08X durante chamada de dispositivo stretct_rect\n
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: Erro %08X durante chamada get_caps_dword\n
 
-# osd/windows/drawd3d.c: 2322
+# osd/windows/drawd3d.c: 2340
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: Erro %08X durante chamada de textura get_surface_level\n
 
-# osd/windows/drawd3d.c: 2298
+# osd/windows/drawd3d.c: 2316
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: Erro %08X durante chamada de textura unlock_rect\n
 
-# osd/windows/drawd3d.c: 2372
+# osd/windows/drawd3d.c: 2390
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: Erro %08X durante chamada de trava do vertex buffer\n
 
-# osd/windows/drawd3d.c: 1607, 2404
+# osd/windows/drawd3d.c: 1607, 2422
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: Erro %08X durante chamada de destrava do vertex buffer\n
 
@@ -214,7 +214,7 @@ Direct3D: Aviso - Dispositivo não suporta correção gama em tela cheia.\n
 Direct3D: YUV format = %s\n
 Direct3D: formato YUV = %s\n
 
-# osd/windows/drawd3d.c: 1711
+# osd/windows/drawd3d.c: 1712
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: ajustando pre-escala de %dx%d a %dx%d\n
 
@@ -450,15 +450,15 @@ FULL SCREEN OPTIONS
 INPUT DEVICE OPTIONS
 INPUT DEVICE OPTIONS
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 523
 Illegal aspect ratio value for %s = %s\n
 Valor de aspecto de tela ilegal para %s = %s\n
 
-# osd/windows/video.c: 547
+# osd/windows/video.c: 546
 Illegal resolution value for %s = %s\n
 Valor de resolução ilegal para %s = %s\n
 
-# osd/windows/video.c: 442
+# osd/windows/video.c: 441
 Invalid video value %s; reverting to gdi\n
 Valor de vídeo inválido %s; revertendo para gdi\n
 
@@ -482,7 +482,7 @@ Buffer de som: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 Som: buffer overflows=%d underflows=%d\n
 
-# osd/windows/drawd3d.c: 1848
+# osd/windows/drawd3d.c: 1866
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 Textura muito grande! (requerido: %dx%d, máximo é %dx%d)\n
 
@@ -506,7 +506,7 @@ Não foi possível inicializar Direct3D.\n
 Unable to initialize DirectDraw.\n
 Não foi possível inicializar DirectDraw.\n
 
-# osd/windows/video.c: 493
+# osd/windows/video.c: 492
 Unable to load PNG file '%s'\n
 Não foi possível carregar arquivo PNG '%s'\n
 
@@ -514,15 +514,15 @@ Não foi possível carregar arquivo PNG '%s'\n
 Unable to open the keyboard device. (error %d)\n
 Impossível inicializar dispositivo de teclado. (erro %d)\n
 
-# osd/windows/drawd3d.c: 2285
+# osd/windows/drawd3d.c: 2303
 Unknown texture blendmode=%d format=%d\n
 Blendmode de textura desconhecido=%d formato=%d\n
 
-# osd/windows/video.c: 403
+# osd/windows/video.c: 402
 Using %s scale effect\n
 Usando efeito %s de escala\n
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 Video: Monitor %p = \"%s\" %s\n
 Vídeo: Monitor %p = \"%s\" %s\n
 
@@ -538,7 +538,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 WINDOWS VIDEO OPTIONS
 
-# osd/windows/video.c: 438
+# osd/windows/video.c: 437
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 Aviso: -video none não faz sentido sem -seconds_to_run\n
 
@@ -762,7 +762,7 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1257
+# mess/osd/windows/menu.c: 1252
 &Configure...
 
 
@@ -778,11 +778,11 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Exit
 
 
-# mess/osd/windows/menu.c: 1464 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 2108 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
 &Frameskip
 
 
@@ -794,11 +794,11 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Hide Menubar\tScrLk
 
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
 &Input
 
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
 &Joysticks
 
 
@@ -826,15 +826,15 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Save State
 
 
-# mess/osd/windows/menu.c: 1443, 1443, 2108 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
 &Video
 
 
-# mess/osd/windows/menu.c: 2118
+# mess/osd/windows/menu.c: 2113
 About %s (%s)...
 
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 875
 All files (*.*)|*.*|
 
 
@@ -854,11 +854,11 @@ Auto
 Cancel
 
 
-# mess/osd/windows/menu.c: 869
+# mess/osd/windows/menu.c: 866
 Common image types
 
 
-# mess/osd/windows/menu.c: 882
+# mess/osd/windows/menu.c: 879
 Compressed Images (*.zip)|*.zip|
 
 
@@ -894,7 +894,7 @@ Emulated Keyboard
 Error creating render target for window %d
 
 
-# mess/osd/windows/menu.c: 960
+# mess/osd/windows/menu.c: 955
 Error when %s the image: %s
 
 
@@ -922,7 +922,7 @@ Ha&rd Reset
 Input
 
 
-# mess/osd/windows/menu.c: 1275
+# mess/osd/windows/menu.c: 1270
 Joystick %i
 
 
@@ -1030,11 +1030,7 @@ Unlimited
 WINDOWS DEBUGGING OPTIONS
 
 
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
-
-
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 creating
 
 
@@ -1046,11 +1042,7 @@ explicit name of all screens; 'auto' here will try to make a best guess
 force the program to terminate if no updates within specified number of seconds
 
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 loading
-
-
-# mess/osd/windows/configms.c: 32
-specifies whether to use a natural keyboard or not
 
 

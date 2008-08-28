@@ -18,7 +18,7 @@
 &Configuration...
 配置...(&C)
 
-# mess/osd/windows/menu.c: 1257
+# mess/osd/windows/menu.c: 1252
 &Configure...
 配置...(&C)
 
@@ -30,11 +30,11 @@
 &Exit
 退出(&E)
 
-# mess/osd/windows/menu.c: 1464 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2108 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
 &Frameskip
 跳帧(&F)
 
@@ -42,11 +42,11 @@
 &Full Screen\tAlt+Enter
 全屏幕(&F)\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
 &Input
 输入(&I)
 
-# mess/osd/windows/menu.c: 1230 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
 &Joysticks
 游戏杆(&J)
 
@@ -74,15 +74,15 @@
 &Save State
 保存游戏进度(&S)
 
-# mess/osd/windows/menu.c: 1443, 1443, 2108 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
 &Video
 视频(&V)
 
-# mess/osd/windows/menu.c: 2118
+# mess/osd/windows/menu.c: 2113
 About %s (%s)...
 关于 %s (%s)...
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 875
 All files (*.*)|*.*|
 所有文件 (*.*)|*.*|
 
@@ -98,11 +98,11 @@ Auto
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 869
+# mess/osd/windows/menu.c: 866
 Common image types
 通用镜像类型
 
-# mess/osd/windows/menu.c: 882
+# mess/osd/windows/menu.c: 879
 Compressed Images (*.zip)|*.zip|
 压缩镜像 (*.zip)|*.zip|
 
@@ -130,7 +130,7 @@ Ha&rd Reset
 Input
 输入
 
-# mess/osd/windows/menu.c: 1275
+# mess/osd/windows/menu.c: 1270
 Joystick %i
 游戏杆 %i
 
@@ -214,7 +214,7 @@ Unable to open the keyboard device. (error %d)\n
 Unlimited
 不限
 
-# osd/windows/video.c: 403
+# osd/windows/video.c: 402
 Using %s scale effect\n
 正在使用缩放效果 %s\n
 
@@ -270,7 +270,7 @@ set joystick ID (Player8)
 (disabled by compiling option)
 
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 (primary)
 
 
@@ -302,19 +302,19 @@ Direct3D: Configuring adapter #%d = %s\n
 Direct3D: Device created at %dx%d\n
 
 
-# osd/windows/drawd3d.c: 625, 2362
+# osd/windows/drawd3d.c: 625, 2380
 Direct3D: Error %08X during device begin_scene call\n
 
 
-# osd/windows/drawd3d.c: 1640, 2411
+# osd/windows/drawd3d.c: 1640, 2429
 Direct3D: Error %08X during device draw_primitive call\n
 
 
-# osd/windows/drawd3d.c: 654, 2415
+# osd/windows/drawd3d.c: 654, 2433
 Direct3D: Error %08X during device end_scene call\n
 
 
-# osd/windows/drawd3d.c: 2355
+# osd/windows/drawd3d.c: 2373
 Direct3D: Error %08X during device get_render_target call\n
 
 
@@ -326,15 +326,15 @@ Direct3D: Error %08X during device present call\n
 Direct3D: Error %08X during device set_render_state call\n
 
 
-# osd/windows/drawd3d.c: 2357, 2419
+# osd/windows/drawd3d.c: 2375, 2437
 Direct3D: Error %08X during device set_render_target call\n
 
 
-# osd/windows/drawd3d.c: 1612, 2409
+# osd/windows/drawd3d.c: 1612, 2427
 Direct3D: Error %08X during device set_stream_source call\n
 
 
-# osd/windows/drawd3d.c: 294, 2368
+# osd/windows/drawd3d.c: 294, 2386
 Direct3D: Error %08X during device set_texture call\n
 
 
@@ -342,7 +342,7 @@ Direct3D: Error %08X during device set_texture call\n
 Direct3D: Error %08X during device set_texture_stage_state call\n
 
 
-# osd/windows/drawd3d.c: 2343
+# osd/windows/drawd3d.c: 2361
 Direct3D: Error %08X during device stretct_rect call\n
 
 
@@ -350,19 +350,19 @@ Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: Error %08X during get_caps_dword call\n
 
 
-# osd/windows/drawd3d.c: 2322
+# osd/windows/drawd3d.c: 2340
 Direct3D: Error %08X during texture get_surface_level call\n
 
 
-# osd/windows/drawd3d.c: 2298
+# osd/windows/drawd3d.c: 2316
 Direct3D: Error %08X during texture unlock_rect call\n
 
 
-# osd/windows/drawd3d.c: 2372
+# osd/windows/drawd3d.c: 2390
 Direct3D: Error %08X during vertex buffer lock call\n
 
 
-# osd/windows/drawd3d.c: 1607, 2404
+# osd/windows/drawd3d.c: 1607, 2422
 Direct3D: Error %08X during vertex buffer unlock call\n
 
 
@@ -494,7 +494,7 @@ Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: YUV format = %s\n
 
 
-# osd/windows/drawd3d.c: 1711
+# osd/windows/drawd3d.c: 1712
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 
 
@@ -718,7 +718,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 960
+# mess/osd/windows/menu.c: 955
 Error when %s the image: %s
 
 
@@ -758,15 +758,15 @@ Failed to create window thread ready event
 INPUT DEVICE OPTIONS
 
 
-# osd/windows/video.c: 524
+# osd/windows/video.c: 523
 Illegal aspect ratio value for %s = %s\n
 
 
-# osd/windows/video.c: 547
+# osd/windows/video.c: 546
 Illegal resolution value for %s = %s\n
 
 
-# osd/windows/video.c: 442
+# osd/windows/video.c: 441
 Invalid video value %s; reverting to gdi\n
 
 
@@ -814,7 +814,7 @@ Symbol table full
 Tape Control
 
 
-# osd/windows/drawd3d.c: 1848
+# osd/windows/drawd3d.c: 1866
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 
 
@@ -838,24 +838,20 @@ Unable to initialize Direct3D.\n
 Unable to initialize DirectDraw.\n
 
 
-# osd/windows/video.c: 493
+# osd/windows/video.c: 492
 Unable to load PNG file '%s'\n
 
 
-# osd/windows/drawd3d.c: 2285
+# osd/windows/drawd3d.c: 2303
 Unknown texture blendmode=%d format=%d\n
 
 
-# osd/windows/video.c: 258
+# osd/windows/video.c: 257
 Video: Monitor %p = \"%s\" %s\n
 
 
 # osd/windows/winmain.c: 127
 WINDOWS DEBUGGING OPTIONS
-
-
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
 
 
 # osd/windows/winmain.c: 132
@@ -870,7 +866,7 @@ WINDOWS SOUND OPTIONS
 WINDOWS VIDEO OPTIONS
 
 
-# osd/windows/video.c: 438
+# osd/windows/video.c: 437
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 
 
@@ -910,7 +906,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 creating
 
 
@@ -978,7 +974,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 961
+# mess/osd/windows/menu.c: 956
 loading
 
 
@@ -1036,10 +1032,6 @@ preferred view for the third screen
 
 # osd/windows/winmain.c: 143
 scale screen rendering by this amount in software
-
-
-# mess/osd/windows/configms.c: 32
-specifies whether to use a natural keyboard or not
 
 
 # osd/windows/winmain.c: 154
