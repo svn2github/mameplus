@@ -271,12 +271,31 @@ mame_file *nvram_fopen(running_machine *machine, UINT32 openflags)
 
 void nvram_load(running_machine *machine)
 {
+	mame_file *nvram_file = NULL;
+	device_config *device;
+
 	if (machine->config->nvram_handler != NULL)
 	{
-		mame_file *nvram_file = nvram_fopen(machine, OPEN_FLAG_READ);
+		nvram_file = nvram_fopen(machine, OPEN_FLAG_READ);
 		(*machine->config->nvram_handler)(machine, nvram_file, 0);
-		if (nvram_file != NULL)
-			mame_fclose(nvram_file);
+	}
+
+	for (device = (device_config *)machine->config->devicelist; device != NULL; device = device->next)
+	{
+		if (device->nvram != NULL)
+		{
+			if (nvram_file == NULL)
+			{
+				nvram_file = nvram_fopen(machine, OPEN_FLAG_READ);
+			}
+
+			(*device->nvram)(device, nvram_file, 0);
+		}
+	}
+
+	if (nvram_file != NULL)
+	{
+		mame_fclose(nvram_file);
 	}
 }
 
@@ -287,17 +306,34 @@ void nvram_load(running_machine *machine)
 
 void nvram_save(running_machine *machine)
 {
+	mame_file *nvram_file = NULL;
+	device_config *device;
+
 	// mamep: dont save nvram during playback
 	if (machine->config->nvram_handler != NULL && !has_playback_file(machine))
 	{
-		mame_file *nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+		(*machine->config->nvram_handler)(machine, nvram_file, 1);
+	}
+
+	for (device = (device_config *)machine->config->devicelist; device != NULL; device = device->next)
+	{
+		if (device->nvram != NULL)
+		{
+			if (nvram_file == NULL)
+	{
+				nvram_file = nvram_fopen(machine, OPEN_FLAG_WRITE | OPEN_FLAG_CREATE | OPEN_FLAG_CREATE_PATHS);
+			}
+
+			(*device->nvram)(device, nvram_file, 1);
+		}
+	}
+
 		if (nvram_file != NULL)
 		{
-			(*machine->config->nvram_handler)(machine, nvram_file, 1);
 			mame_fclose(nvram_file);
 		}
 	}
-}
 
 
 /*-------------------------------------------------

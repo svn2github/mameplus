@@ -125,7 +125,7 @@
 		else									\
 			pair.w.l++;							\
 		EAH = RDMEM(pair.d);							\
-		RDMEM(PCW-1);								\
+		/* RDMEM(PCW-1); */								\
 		EAW += Y;								\
 	}
 
@@ -135,7 +135,7 @@
 #define EA_IND										\
 	EA_ABS;										\
 	tmp = RDMEM(EAD);								\
-	EAD++;										\
+	EAL++;										\
 	EAH = RDMEM(EAD);								\
 	EAL = tmp
 
@@ -146,7 +146,7 @@
 	EA_ABS;										\
 	EAW += X;									\
 	tmp = RDMEM(EAD);								\
-	EAD++;										\
+	EAL++;										\
 	EAH = RDMEM(EAD);								\
 	EAL = tmp
 
@@ -317,27 +317,34 @@
  *  BRA  branch relative
  ***************************************************************/
 #define BRA(cond)									\
-	tmp = RDOPARG();								\
 	if (cond)									\
 	{										\
-		EAW = PCW + (signed char)tmp;						\
+		tmp = RDOPARG();							\
+		EAW = PCW + (signed char)tmp;					\
 		PCD = EAD;								\
 		CHANGE_PC;								\
+	}										\
+	else										\
+	{										\
+		PCW += 1;								\
 	}
 
 /***************************************************************
  *  BRA  branch relative
  ***************************************************************/
-#define BRA_WORD(cond)									\
-	EAL = RDOPARG();								\
-	EAH = RDOPARG();								\
+#define BRA_WORD(cond)								\
 	if (cond)									\
 	{										\
-		EAW = PCW + (short)(EAW-1); 						\
+		EAL = RDOPARG();							\
+		EAH = RDOPARG();							\
+		EAW = PCW + (short)(EAW-1); 					\
 		PCD = EAD;								\
 		CHANGE_PC;								\
+	}										\
+	else										\
+	{										\
+		PCW += 2;							\
 	}
-
 /* 65ce02 ******************************************************
  *  BRK Break
  *  increment PC, push PC hi, PC lo, flags (with B bit set),
@@ -557,7 +564,7 @@
 	PUSH(PCL);									\
 	EAH = RDOPARG();								\
 	PCL = RDMEM(EAD);								\
-	PCH = RDMEM(EAD);								\
+	PCH = RDMEM(EAD+1);								\
 	CHANGE_PC
 
 /* 65ce02 ******************************************************
@@ -571,7 +578,7 @@
 	PUSH(PCL);									\
 	EAH = RDOPARG();								\
 	PCL = RDMEM(EAD);								\
-	PCH = RDMEM(EAD);								\
+	PCH = RDMEM(EAD+1);								\
 	CHANGE_PC
 
 /* 65ce02 ******************************************************
@@ -947,7 +954,7 @@
  * TSY  Transfer stack pointer to index y
  ***************************************************************/
 #define TSY										\
-	Y = SPL;									\
+	Y = SPH;									\
 	SET_NZ(Y)
 
 /* 65ce02 ******************************************************
