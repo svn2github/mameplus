@@ -2642,7 +2642,7 @@ static void menu_cheat_populate(running_machine *machine, ui_menu *menu)
 	ui_menu_item_append(menu, MENU_SEPARATOR_ITEM, NULL, 0, NULL);
 
 	/* add a reset all option */
-	ui_menu_item_append(menu, "Reset All", NULL, 0, (void *)1);
+	ui_menu_item_append(menu, _("Reset All"), NULL, 0, (void *)1);
 }
 
 
@@ -3308,7 +3308,7 @@ static void menu_autofire_populate(running_machine *machine, ui_menu *menu)
 	/* add autofire delay items */
 	for (i = 0; i < players; i++)
 	{
-		astring_printf(text, "P%d %s", i + 1, _("Autofire Delay"));
+		astring_printf(text, _("P%d %s"), i + 1, _("Autofire Delay"));
 		astring_printf(subtext, "%d", get_autofiredelay(i));
 
 		/* append a menu item */
