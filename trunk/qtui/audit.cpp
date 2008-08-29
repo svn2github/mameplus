@@ -9,7 +9,12 @@ void RomAuditor::audit()
 		win->layMainView->removeWidget(win->lvGameList);
 		win->tvGameList->hide();
 		win->layMainView->removeWidget(win->tvGameList);
+		// these are reenabled in gamelist->init()
 		win->treeFolders->setEnabled(false);
+//		win->actionLargeIcons->setEnabled(false);
+		win->actionDetails->setEnabled(false);
+		win->actionGrouped->setEnabled(false);
+
 
 		extern TreeModel *gameListModel;
 		if (gameListModel)
@@ -48,8 +53,8 @@ void RomAuditor::run()
 {
 	QStringList dirpaths = mameOpts["rompath"]->currvalue.split(";");
 
-	GameInfo *gameinfo, *gameinfo2;
-	RomInfo *rominfo;
+	GameInfo *gameInfo, *gameInfo2;
+	RomInfo *romInfo;
 
 	if(!isConsoleFolder)
 	{
@@ -83,7 +88,7 @@ void RomAuditor::run()
 
 					QuaZipFileInfo info;
 					QuaZipFile zipFile(&zip);
-					gameinfo = mamegame->gamenameGameInfoMap[gamename];
+					gameInfo = mamegame->gamenameGameInfoMap[gamename];
 
 					//iterate all files in the zip
 					for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
@@ -93,18 +98,18 @@ void RomAuditor::run()
 
 						quint32 crc = info.crc;
 						// file crc recognized
-						if (!gameinfo)
+						if (!gameInfo)
 							win->log(QString("err: %1").arg(gamename));
-						if (gameinfo->crcRomInfoMap.contains(crc))
-							gameinfo->crcRomInfoMap[crc]->available = true; 
+						if (gameInfo->crcRomInfoMap.contains(crc))
+							gameInfo->crcRomInfoMap[crc]->available = true; 
 						//check rom for clones
 						else
 						{
-							foreach (QString clonename, gameinfo->clones)
+							foreach (QString clonename, gameInfo->clones)
 							{
-								gameinfo2 = mamegame->gamenameGameInfoMap[clonename];
-								if (gameinfo2->crcRomInfoMap.contains(crc))
-									gameinfo2->crcRomInfoMap[crc]->available = true; 
+								gameInfo2 = mamegame->gamenameGameInfoMap[clonename];
+								if (gameInfo2->crcRomInfoMap.contains(crc))
+									gameInfo2->crcRomInfoMap[crc]->available = true; 
 							}
 						}
 					}
@@ -114,49 +119,66 @@ void RomAuditor::run()
 
 		win->log(QString("audit 1.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 
-		//see if any rom of a game is not available
+		/* see if any rom of a game is not available */
+		//iterate games
 		foreach (QString gamename, mamegame->gamenameGameInfoMap.keys())
 		{
-			gameinfo = mamegame->gamenameGameInfoMap[gamename];
+			gameInfo = mamegame->gamenameGameInfoMap[gamename];
 			//fixme: skip auditing for consoles
-			if (gameinfo->isExtRom)
+			if (gameInfo->isExtRom)
 				continue;
 
-			gameinfo->available = 1;
+			gameInfo->available = 1;
+			bool passed = false;	//at least one rom has passed
 
-			foreach (quint32 crc, gameinfo->crcRomInfoMap.keys())
+			//iterate roms
+			foreach (quint32 crc, gameInfo->crcRomInfoMap.keys())
 			{
-				rominfo = gameinfo->crcRomInfoMap[crc];
-				if (!rominfo->available)
+				romInfo = gameInfo->crcRomInfoMap[crc];
+				if (!romInfo->available)
 				{
-					if (rominfo->status == "nodump")
-						continue;
+					if (romInfo->status == "nodump")
+						continue;	//passed but ignored
 
 					//check parent
-					if (!gameinfo->romof.isEmpty())
+					if (!gameInfo->romof.isEmpty())
 					{
-						gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo->romof];
-						if (gameinfo2->crcRomInfoMap.contains(crc) && gameinfo2->crcRomInfoMap[crc]->available)
-							continue;
-						else
-							emit logUpdated(LOG_QMC2, gameinfo->romof + "/" + rominfo->name + " not found");
+						gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo->romof];
+						if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
+						{
+							passed = true;
+//							win->log(gameInfo->romof + "/" + romInfo->name + " passed");
+							continue;	//clone passed
+						}
 
 						//check bios
-						if (!gameinfo2->romof.isEmpty())
+						if (!gameInfo2->romof.isEmpty())
 						{
-							gameinfo2 = mamegame->gamenameGameInfoMap[gameinfo2->romof];
-							if (gameinfo2->crcRomInfoMap.contains(crc) && gameinfo2->crcRomInfoMap[crc]->available)
-								continue;
-							else
-								emit logUpdated(LOG_QMC2, gameinfo2->romof + "/" + rominfo->name + " not found");
+							gameInfo2 = mamegame->gamenameGameInfoMap[gameInfo2->romof];
+							if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
+							{
+								passed = true;
+//								win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
+								continue;	//clone passed
+							}
 						}
 					}
-					//failed audit
-					emit logUpdated(LOG_QMC2, gamename + "/" + rominfo->name + " failed");
 
-					gameinfo->available = 0;
+					//failed audit
+//					emit logUpdated(LOG_QMC2, gamename + "/" + romInfo->name + " failed");
+					gameInfo->available = 0;
 					break;
 				}
+				//parent passed
+				else
+					passed = true;
+			}
+			//here
+
+			// special case for all roms are "nodump"
+			if (!passed)
+			{
+				gameInfo->available = 0;
 			}
 		}
 	}
@@ -291,7 +313,7 @@ void MergedRomAuditor::audit()
 	else
 	{
 		// must load it in the main thread, or the SLOTs cant get connected
-		gamelist->init(true);
+		gamelist->init(true, GAMELIST_INIT_AUDIT);
 	}
 }
 

@@ -26,7 +26,8 @@ class Screenshot : public QDockWidget
 
 public:
     Screenshot(QString, QWidget *parent = 0);
-	void setPixmap(const QByteArray &);
+	void setPixmap(const QByteArray &, bool = false);
+	void setAspect(bool);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -46,6 +47,7 @@ private:
     QPixmap originalPixmap;
 	QGridLayout *mainLayout;
 	QWidget *dockWidgetContents;
+	bool forceAspect;
 };
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -79,13 +81,21 @@ public:
 //	QTextBrowser *textBrowserFrontendLog;
 
 public slots:
-    // game menu
-	void on_actionPlay_activated();
-	void on_actionRefresh_activated();
-	void on_actionDefaultOptions_activated();
 	void on_actionExitStop_activated();
+	void on_actionRefresh_activated();
+	void on_actionEnglish_activated();
+	void on_actionChinese_PRC_activated();
+	void on_actionChinese_Taiwan_activated();
+	void on_actionJapanese_activated();
+	void on_actionEnforceAspect_activated();
 	void on_actionAbout_activated();
-	
+
+	void on_actionPlay_activated();
+	void on_actionProperties_activated();
+	void on_actionSrcProperties_activated();
+	void on_actionDefaultOptions_activated();
+	void on_actionDirectories_activated();
+
 	void on_actionColDescription_activated();
 	void on_actionColName_activated();
 	void on_actionColROMs_activated();
@@ -111,6 +121,8 @@ private:
 	void toggleGameListColumn(int);
 	void initHistory(QString);
 	Screenshot * initSnap(QString);
+	void showOptionsDialog(int, int = -1);
+	void showRestartDialog();
 };
 
 #define LOG_QMC2	1
@@ -122,6 +134,7 @@ private:
 extern MainWindow *win;
 extern Options *dlgOptions;
 extern About *dlgAbout;
+extern Dirs *dlgDirs;
 
 extern QList<QListWidget *> optCtrls;
 
@@ -130,6 +143,8 @@ extern QSettings guiSettings, defSettings;
 extern QByteArray option_column_state;
 extern QString mame_binary;
 extern QString list_mode;
+extern QString language;
+extern bool enforce_aspect;
 
 extern QByteArray option_geometry;
 

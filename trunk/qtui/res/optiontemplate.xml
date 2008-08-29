@@ -2,15 +2,15 @@
 <!-- mame ver 126 -->
 <optiontemplate version="1">
 	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
-	<option name="cabinet_directory" default="cabinets" type="dir" guivisible="1" />
-	<option name="cpanel_directory" default="cpanel" guiname="Control Panel Directory" type="dir" guivisible="1" />
-	<option name="flyer_directory" default="flyers" type="dir" guivisible="1" />
-	<option name="icons_directory" default="icons" type="dir" guivisible="1" />
-	<option name="marquee_directory" default="marquees" type="dir" guivisible="1" />
-	<option name="pcb_directory" default="pcb" guiname="PCB Directory" type="dir" guivisible="1" />
-	<option name="title_directory" default="titles" type="dir" guivisible="1" />
+	<option name="cabinet_directory" default="cabinets" type="dirs" guivisible="1" />
+	<option name="cpanel_directory" default="cpanel" guiname="Control Panel Directory" type="dirs" guivisible="1" />
+	<option name="flyer_directory" default="flyers" type="dirs" guivisible="1" />
+	<option name="icons_directory" default="icons" type="dirs" guivisible="1" />
+	<option name="marquee_directory" default="marquees" type="dirs" guivisible="1" />
+	<option name="pcb_directory" default="pcb" guiname="PCB Directory" type="dirs" guivisible="1" />
+	<option name="title_directory" default="titles" type="dirs" guivisible="1" />
 	
-	<option name="mame_binary" default="mamep.exe" type="file" guivisible="1" />
+	<option name="mame_binary" default="mamep.exe" type="exefile" guivisible="1" />
 
 	<option name="driver_config" type="string" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0">
 		<!--value guivalue="MAME">mame</value>
@@ -21,13 +21,13 @@
 	</option>
 	<option name="readconfig" type="bool" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	
-	<option name="rompath" guiname="ROM Directory" type="dir" />
+	<option name="rompath" guiname="ROM Directory" type="dirs" />
 	<option name="hashpath" type="dir" />
-	<option name="samplepath" type="dir" />
+	<option name="samplepath" type="dirs" />
 	<option name="artpath" type="dir" />
 	<option name="ctrlrpath" type="dir" />
-	<option name="inipath" type="dir" />
-	<option name="fontpath" type="dir" />
+	<option name="inipath" type="dirs" />
+	<option name="fontpath" type="dirs" />
 	<option name="translation_directory" type="dir" />
 	<option name="localized_directory" type="dir" />
 	<option name="ips_directory" type="dir" />
@@ -37,17 +37,17 @@
 	<option name="memcard_directory" type="dir" />
 	<option name="input_directory" type="dir" />
 	<option name="state_directory" type="dir" />
-	<option name="snapshot_directory" type="dir" />
+	<option name="snapshot_directory" type="dirs" />
 	<option name="diff_directory" type="dir" />
 	<option name="comment_directory" type="dir" />
 	<option name="hiscore_directory" type="dir" />
 	
-	<option name="cheat_file" type="file" />
-	<option name="history_file" type="file" />
-	<option name="story_file" type="file" />
-	<option name="mameinfo_file" type="file" />
-	<option name="command_file" type="file" />
-	<option name="hiscore_file" type="file" />
+	<option name="cheat_file" type="datfile" />
+	<option name="history_file" type="datfile" />
+	<option name="story_file" type="datfile" />
+	<option name="mameinfo_file" type="datfile" />
+	<option name="command_file" type="datfile" />
+	<option name="hiscore_file" type="datfile" />
 	
 	<option name="state" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="autosave" guiname="Auto restore and save" type="bool" />
@@ -176,10 +176,12 @@
 		<value>joystick</value>
 	</option>
 
+	<!--CORE DEBUGGING OPTIONS-->
 	<option name="log" type="bool" />
 	<option name="verbose" type="bool" />
 	<option name="update_in_pause" type="bool" />
 	<option name="debug" type="bool" />
+	<option name="debugscript" type="file" />
 
 	<option name="bios" type="string" globalvisible="0" srcvisible="0" />
 	<option name="cheat" guiname="Enable game cheats" type="bool" />
@@ -335,7 +337,7 @@
 	<option name="joyid6" type="int" min="0" max="7" />
 	<option name="joyid7" type="int" min="0" max="7" />
 	<option name="joyid8" type="int" min="0" max="7" />
-	
+	<!--MESS SPECIFIC OPTIONS-->
 	<option name="ramsize" type="bool" />
 	<option name="writeconfig" type="bool" />
 	<option name="skip_warnings" type="bool" />

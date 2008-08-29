@@ -2,6 +2,7 @@
 
 Options *dlgOptions = NULL;
 About *dlgAbout = NULL;
+Dirs *dlgDirs = NULL;
 
 QByteArray option_geometry;
 QList<QListWidget *> optCtrls;
@@ -36,6 +37,79 @@ void Options::closeEvent(QCloseEvent *event)
 	event->accept();
 }
 
+Dirs::Dirs(QWidget *parent)
+  : QDialog(parent)
+{
+	setupUi(this);
+
+	connect(btnBrowse, SIGNAL(clicked()), this, SLOT(setDirectory()));
+	connect(btnDelete, SIGNAL(clicked()), this, SLOT(removeDirectory()));
+	connect(btnInsert, SIGNAL(clicked()), this, SLOT(appendDirectory()));
+}
+
+void Dirs::init(QString initPath)
+{
+	lstwDirs->clear();
+	lstwDirs->addItems(initPath.split(";"));
+	lstwDirs->setCurrentItem(lstwDirs->item(0));
+}
+
+QString Dirs::getDirs()
+{
+	QString paths = "";
+	
+	for (int i = 0; i < lstwDirs->count(); i ++)
+	{
+		QString path = lstwDirs->item(i)->text();
+		if (!path.isEmpty())
+		{
+			paths.append(path);
+			paths.append(";");
+		}
+	}
+
+	if (paths.endsWith(';'))
+		paths.chop(1);
+
+	return paths;
+}
+
+void Dirs::setDirectory(bool isAppend)
+{
+	//take current dir
+	QString initPath = lstwDirs->currentItem()->text();
+	QFileInfo fi(initPath);
+	if (!fi.exists())
+	{
+		//take mame_binary dir
+		fi.setFile(mame_binary);
+		initPath = fi.absolutePath();
+	}
+
+	QFileDialog::Options options = QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly;
+	QString directory = QFileDialog::getExistingDirectory(lstwDirs,
+								tr("Directory name:"),
+								initPath,
+								options);
+
+	if (!directory.isEmpty())
+	{
+		if (isAppend)
+			lstwDirs->addItem(directory);
+		else
+			lstwDirs->currentItem()->setText(directory);
+	}
+}
+
+void Dirs::appendDirectory()
+{
+	setDirectory(true);
+}
+
+void Dirs::removeDirectory()
+{
+	delete lstwDirs->takeItem(lstwDirs->currentRow());
+}
 
 About::About(QWidget *parent)
   : QDialog(parent)

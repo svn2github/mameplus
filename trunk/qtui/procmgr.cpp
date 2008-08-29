@@ -8,7 +8,7 @@ ProcessManager::ProcessManager(QWidget *parent)
   : QObject(parent)
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::ProcessManager(QWidget *parent = 0x" + QString::number((ulong)parent, 16) + ")");
+//  win->log("DEBUG: ProcessManager::ProcessManager(QWidget *parent = 0x" + QString::number((ulong)parent, 16) + ")");
 #endif
 
   procCount = 0;
@@ -17,7 +17,7 @@ ProcessManager::ProcessManager(QWidget *parent)
 ProcessManager::~ProcessManager()
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::~ProcessManager()");
+//  win->log("DEBUG: ProcessManager::~ProcessManager()");
 #endif
 
 }
@@ -30,7 +30,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
   for (argCount = 0; argCount < arguments.count(); argCount++)
     logMsg += QString(argCount > 0 ? " " + arguments[argCount] : arguments[argCount]);
   logMsg += "\", bool autoConnect = " + QString(autoConnect ? "TRUE" : "FALSE") + ")";
-  win->log(logMsg);
+//  win->log(logMsg);
 #endif
 
   QProcess *proc = new QProcess(this);
@@ -39,7 +39,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
     int i;
     for (i = 0; i < arguments.count(); i++)
       lastCommand += " " + arguments[i];
-    win->log(tr("starting emulator #%1, command = %2").arg(procCount).arg(lastCommand));
+//    win->log(tr("starting emulator #%1, command = %2").arg(procCount).arg(lastCommand));
     connect(proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(error(QProcess::ProcessError)));
     connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
     connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
@@ -65,17 +65,17 @@ QProcess *ProcessManager::process(ushort index)
 void ProcessManager::terminate(QProcess *proc)
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::terminate(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
+//  win->log("DEBUG: ProcessManager::terminate(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
 #endif
 
-  win->log(tr("terminating emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
+//  win->log(tr("terminating emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
   proc->terminate();
 }
 
 void ProcessManager::terminate(ushort index)
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::terminate(ushort index = " + QString::number(index) + ")");
+//  win->log("DEBUG: ProcessManager::terminate(ushort index = " + QString::number(index) + ")");
 #endif
 
   terminate(process(index));
@@ -84,17 +84,17 @@ void ProcessManager::terminate(ushort index)
 void ProcessManager::kill(QProcess *proc)
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::kill(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
+//  win->log("DEBUG: ProcessManager::kill(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
 #endif
 
-  win->log(tr("killing emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
+//  win->log(tr("killing emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
   proc->kill();
 }
 
 void ProcessManager::kill(ushort index)
 {
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::kill(ushort index = " + QString::number(index) + ")");
+//  win->log("DEBUG: ProcessManager::kill(ushort index = " + QString::number(index) + ")");
 #endif
 
   kill(process(index));
@@ -105,7 +105,7 @@ void ProcessManager::readyReadStandardOutput()
   QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::readyReadStandardOutput(): proc = 0x" + QString::number((qulonglong)proc, 16));
+//  win->log("DEBUG: ProcessManager::readyReadStandardOutput(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
   QString s = proc->readAllStandardOutput();
@@ -123,7 +123,7 @@ void ProcessManager::readyReadStandardError()
   QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::readyReadStandardError(): proc = 0x" + QString::number((qulonglong)proc, 16));
+//  win->log("DEBUG: ProcessManager::readyReadStandardError(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
   QString s = proc->readAllStandardError();
@@ -141,10 +141,10 @@ void ProcessManager::finished(int exitCode, QProcess::ExitStatus exitStatus)
   QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::finished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = "+ QString::number(exitStatus) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
+//  win->log("DEBUG: ProcessManager::finished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = "+ QString::number(exitStatus) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
-  win->log(tr("emulator #%1 finished, exit code = %2, exit status = %3, remaining emulators = %4").arg(procMap[proc]).arg(exitCode).arg(QString(exitStatus == QProcess::NormalExit ? tr("normal") : tr("crashed"))).arg(procMap.count() - 1));
+//  win->log(tr("emulator #%1 finished, exit code = %2, exit status = %3, remaining emulators = %4").arg(procMap[proc]).arg(exitCode).arg(QString(exitStatus == QProcess::NormalExit ? tr("normal") : tr("crashed"))).arg(procMap.count() - 1));
   procMap.remove(proc);
 }
 
@@ -153,10 +153,10 @@ void ProcessManager::started()
   QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::started(): proc = 0x" + QString::number((qulonglong)proc, 16));
+//  win->log("DEBUG: ProcessManager::started(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
-  win->log(tr("emulator #%1 started, PID = %2, running emulators = %3").arg(procMap[proc]).arg((quint64)proc->pid()).arg(procMap.count()));
+//  win->log(tr("emulator #%1 started, PID = %2, running emulators = %3").arg(procMap[proc]).arg((quint64)proc->pid()).arg(procMap.count()));
 }
 
 void ProcessManager::error(QProcess::ProcessError processError)
@@ -164,7 +164,7 @@ void ProcessManager::error(QProcess::ProcessError processError)
   QProcess *proc = (QProcess *)sender();
 
 #ifdef QMC2_DEBUG
-  win->log("DEBUG: ProcessManager::error(QProcess::ProcessError processError = " + QString::number(processError) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
+//  win->log("DEBUG: ProcessManager::error(QProcess::ProcessError processError = " + QString::number(processError) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 }
 

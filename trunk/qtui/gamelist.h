@@ -5,6 +5,13 @@
 #include "audit.h"
 #include "utils.h"
 
+enum
+{
+	GAMELIST_INIT_FULL = 0,
+	GAMELIST_INIT_AUDIT,
+	GAMELIST_INIT_DIR
+};
+
 class LoadIconThread : public QThread
 {
 	Q_OBJECT
@@ -158,13 +165,12 @@ public:
 	~Gamelist();
 
 public slots:
-	void init(bool);
+	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
 	void showContextMenu(const QPoint &);
 	void updateContextMenu();
 	void showHeaderContextMenu(const QPoint &);
 	void updateHeaderContextMenu();
 	void loadDefaultIni();
-	void initFolders();
 
 	void runMame(bool = false);
 
@@ -189,13 +195,15 @@ public slots:
 
 	void filterTimer();
 	void filterRegExpChanged();
-	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = 0);
+	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = NULL);
 
 private:
-	bool inited;
 	QString currentTempROM;
 
-	void restoreSelection();
+	void initFolders();
+	void initMenus();
+	void restoreFolderSelection();
+	void restoreGameSelection();
 };
 
 class RomInfo : public QObject

@@ -8,6 +8,7 @@ QSettings guiSettings("mamepgui.ini", QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
 QString mame_binary;
 QString list_mode;
+QString language;
 
 void MainWindow::log(QString message, char logOrigin)
 {
@@ -36,12 +37,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	setupUi(this);
 
-	// View action group
+	//setExclusive(true) for some actions
     QActionGroup *viewActions = new QActionGroup(this);
-//	viewActions->setExclusive(true);
     viewActions->addAction(actionDetails);
     viewActions->addAction(actionGrouped);
     viewActions->addAction(actionLargeIcons);
+
+	QActionGroup *langActions = new QActionGroup(this);
+	langActions->addAction(actionEnglish);
+	langActions->addAction(actionChinese_PRC);
+	langActions->addAction(actionChinese_Taiwan);
+	langActions->addAction(actionJapanese);
 
 	// init controls
     tvGameList = new QTreeView(centralwidget);
@@ -85,6 +91,7 @@ MainWindow::MainWindow(QWidget *parent)
 	optUtils = new OptionUtils(this);
 	dlgOptions = new Options(this);
 	dlgAbout = new About(this);
+	dlgDirs = new Dirs(this);
 
 	//override font for CJK OS
 	QFont font;
@@ -99,6 +106,8 @@ MainWindow::MainWindow(QWidget *parent)
     menuOptions->setFont(font);
     menuHelp->setFont(font);
 
+	treeFolders->setFont(font);
+
 	dlgOptions->tabOptions->setFont(font);
 
 	dlgOptions->lvGlobalOpt->setFont(font);
@@ -106,12 +115,14 @@ MainWindow::MainWindow(QWidget *parent)
 	dlgOptions->lvBiosOpt->setFont(font);
 	dlgOptions->lvCloneofOpt->setFont(font);
 	dlgOptions->lvCurrOpt->setFont(font);
-	
+
 	dlgOptions->treeGlobalOpt->setFont(font);
 	dlgOptions->treeSourceOpt->setFont(font);
 	dlgOptions->treeBiosOpt->setFont(font);
 	dlgOptions->treeCloneofOpt->setFont(font);
 	dlgOptions->treeCurrOpt->setFont(font);
+
+	dlgDirs->setFont(font);
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -217,7 +228,7 @@ void MainWindow::init()
 	qApp->processEvents();
 
 	// must gamelist->init(true) before loadLayout()
-	gamelist->init(true);
+	gamelist->init(true, GAMELIST_INIT_FULL);
 
 	// setup background
 	QImage bkground(utils->getPath(guiSettings.value("background_directory", "bkground").toString()) + "bkground.png");
@@ -274,7 +285,27 @@ void MainWindow::on_actionRefresh_activated()
 	gamelist->auditor.audit();
 }
 
+void MainWindow::on_actionProperties_activated()
+{
+	showOptionsDialog(OPTLEVEL_CURR, 0);
+}
+
+void MainWindow::on_actionSrcProperties_activated()
+{
+	showOptionsDialog(OPTLEVEL_SRC, 0);
+}
+
 void MainWindow::on_actionDefaultOptions_activated()
+{
+	showOptionsDialog(OPTLEVEL_GLOBAL, 1);
+}
+
+void MainWindow::on_actionDirectories_activated()
+{
+	showOptionsDialog(OPTLEVEL_GLOBAL, 0);
+}
+
+void MainWindow::showOptionsDialog(int optLevel, int lstRow)
 {
 	//prevent crash when list is empty
 	if (currentGame.isEmpty())
@@ -284,7 +315,13 @@ void MainWindow::on_actionDefaultOptions_activated()
 	for (int i = OPTLEVEL_GLOBAL; i < OPTLEVEL_LAST; i++)
 		optUtils->updateModel(0, i);
 
+	dlgOptions->tabOptions->setCurrentIndex(optLevel);
+
+	if (lstRow > -1)
+		optCtrls[optLevel]->setCurrentRow(lstRow);
+
 	dlgOptions->exec();
+	saveSettings();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -340,6 +377,47 @@ void MainWindow::on_actionColCloneOf_activated()
 	toggleGameListColumn(6);
 }
 
+void MainWindow::on_actionEnglish_activated()
+{
+	language = "en_US";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionChinese_PRC_activated()
+{
+	language = "zh_CN";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionChinese_Taiwan_activated()
+{
+	language = "zh_TW";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionJapanese_activated()
+{
+	language = "ja_JP";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionEnforceAspect_activated()
+{
+	bool isForce = actionEnforceAspect->isChecked();
+
+	win->ssSnap->setAspect(isForce);
+	win->ssTitle->setAspect(isForce);
+}
+
+void MainWindow::showRestartDialog()
+{
+	if (QMessageBox::Yes == QMessageBox::question(this, 
+								tr("Restart"), 
+								tr("Changing this option requires a restart to take effect.\nDo you wish to continue?"), 
+								QMessageBox::Yes | QMessageBox::No))
+		close();
+}
+
 void MainWindow::initSettings()
 {
     guiSettings.setFallbacksEnabled(false);
@@ -361,11 +439,13 @@ void MainWindow::initSettings()
 		<< "default_game"
 		<< "folder_current"
 		<< "vertical_tabs"
+		<< "enforce_aspect"
 		<< "list_mode"
 		<< "option_column_state"
 		<< "window_geometry"
 		<< "window_state"
-		<< "column_state");
+		<< "column_state"
+		<< "language");
 
 	QStringList keys = guiSettings.allKeys();
 	foreach(QString key, keys)
@@ -399,11 +479,26 @@ void MainWindow::loadLayout()
 
 	list_mode = guiSettings.value("list_mode").toString();
 	if (list_mode == win->actionDetails->objectName().remove("action"))
-		win->actionDetails->setChecked(true);
+		actionDetails->setChecked(true);
 	else if (list_mode == win->actionLargeIcons->objectName().remove("action"))
-		win->actionLargeIcons->setChecked(true);
+		actionLargeIcons->setChecked(true);
 	else
-		win->actionGrouped->setChecked(true);
+		actionGrouped->setChecked(true);
+
+	//fixme: use built-in locale name string?
+	if (language == "zh_CN")
+		actionChinese_PRC->setChecked(true);
+	else if (language == "zh_TW")
+		actionChinese_Taiwan->setChecked(true);
+	else if (language == "ja_JP")
+		actionJapanese->setChecked(true);
+	else
+		actionEnglish->setChecked(true);
+
+	if (guiSettings.value("enforce_aspect").isValid())
+		actionEnforceAspect->setChecked(guiSettings.value("enforce_aspect").toInt() == 1);
+	else
+		actionEnforceAspect->setChecked(defSettings.value("enforce_aspect").toInt() == 1);
 }
 
 void MainWindow::loadSettings()
@@ -418,6 +513,7 @@ void MainWindow::loadSettings()
 
 void MainWindow::saveSettings()
 {
+	//some guiSettings uses mameOpts mapping for dialog view
 	guiSettings.setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
 	guiSettings.setValue("cabinet_directory", mameOpts["cabinet_directory"]->globalvalue);
 	guiSettings.setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
@@ -428,6 +524,7 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 
 	guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
+	guiSettings.setValue("language", language);
 
 	//save console dirs
 	foreach (QString optName, mameOpts.keys())
@@ -451,6 +548,7 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("sort_column", tvGameList->header()->sortIndicatorSection());
 	guiSettings.setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
 	guiSettings.setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
+	guiSettings.setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
 	guiSettings.setValue("default_game", currentGame);
 	guiSettings.setValue("folder_current", currentFolder);//fixme: rename
 	guiSettings.setValue("list_mode", list_mode);
@@ -476,7 +574,8 @@ void MainWindow::setDockOptions()
 
 
 Screenshot::Screenshot(QString title, QWidget *parent)
-: QDockWidget(parent)
+: QDockWidget(parent),
+forceAspect(false)
 {
 	setObjectName("dockWidget_" + title);
 	setFeatures(QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable|QDockWidget::NoDockWidgetFeatures);
@@ -524,18 +623,55 @@ void Screenshot::mousePressEvent(QMouseEvent * event)
 		win->log(objectName());
 }
 
-void Screenshot::setPixmap(const QByteArray &pmdata)
+void Screenshot::setPixmap(const QByteArray &pmdata, bool forceAspect)
 {
 	QPixmap pm;
 	pm.loadFromData(pmdata);
     originalPixmap = pm;
-    updateScreenshotLabel();
+
+	this->forceAspect = forceAspect;
+	updateScreenshotLabel();
+}
+
+void Screenshot::setAspect(bool forceAspect)
+{
+	this->forceAspect = forceAspect;
+	updateScreenshotLabel();
 }
 
 void Screenshot::updateScreenshotLabel()
 {
     QSize scaledSize, origSize;
-	scaledSize = origSize = originalPixmap.size();
+	scaledSize = originalPixmap.size();
+
+	if (forceAspect)
+	{
+		float aspect = 0.75f;
+		if (scaledSize.width() < scaledSize.height())
+		{
+			//vert
+				if (scaledSize.height() < scaledSize.width() / aspect)
+					// need expand height
+					scaledSize.setHeight(scaledSize.width() / aspect);
+				else
+					// need expand width
+					scaledSize.setWidth(scaledSize.height() * aspect);
+		}
+		else
+		{
+			//horz
+			if (scaledSize.height() < scaledSize.width() * aspect)
+				// need expand height
+				scaledSize.setHeight(scaledSize.width() * aspect);
+			else
+				// need expand width
+				scaledSize.setWidth(scaledSize.height() / aspect);
+		}
+	}
+//	win->log(QString("sz: %1, %2").arg(scaledSize()));
+
+	origSize = scaledSize;
+
 	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
 
 	// do not enlarge
@@ -546,7 +682,7 @@ void Screenshot::updateScreenshotLabel()
 	}
 
     screenshotLabel->setPixmap(originalPixmap.scaled(scaledSize,
-                                                     Qt::KeepAspectRatio,
+                                                     Qt::IgnoreAspectRatio,
                                                      Qt::SmoothTransformation));
 }
 
@@ -556,10 +692,10 @@ int main(int argc, char *argv[])
 
 	QTranslator appTranslator;
 
-	QString local = guiSettings.value("locale").toString();
-	if (local.isEmpty())
-		local = QLocale::system().name();
-	appTranslator.load(":/lang/mamepgui_" + local);
+	language = guiSettings.value("language").toString();
+	if (language.isEmpty())
+		language = QLocale::system().name();
+	appTranslator.load(":/lang/mamepgui_" + language);
 
 	qmc2App.installTranslator(&appTranslator);
 

@@ -12,7 +12,7 @@ public:
 
 	ResetWidget(/*QtProperty *property,*/ QWidget *parent = 0);
 
-	void setWidget(QWidget *, QWidget * = NULL);
+	void setWidget(QWidget *, QWidget * = NULL, int = 0, int = 0);
 	void setResetEnabled(bool enabled);
 /*	void setValueText(const QString &text);
 	void setValueIcon(const QIcon &icon);*/
@@ -29,12 +29,15 @@ public slots:
 
 private:
 //	QtProperty *m_property;
-	QLabel *m_textLabel;
-	QLabel *m_iconLabel;
-	QSlider *m_slider;
-	QLabel *m_sliderLabel;
-	QToolButton *m_button;
-	int m_spacing;
+	QLabel *_textLabel;
+	QLabel *_iconLabel;
+	QSlider *_slider;
+	QLabel *_sliderLabel;
+	QToolButton *_btnFileDlg;
+	QToolButton *_btnReset;
+	int ctrlSpacing;
+	int optType;
+	int sliderOffset;
 };
 
 
@@ -58,9 +61,18 @@ public:
 
 public slots:
 	void sync();
+	void setDirectories();
+	void setDirectoriesAccepted();
+	void setDirectory();
+	void setFile(QString = "", ResetWidget* = NULL);
+	void setDatFile();
+	void setExeFile();
+	void setCfgFile();
 
 private:
+	ResetWidget *rWidget;
 	bool isReset;
+	QString pathBuf;
 };
 
 class MameOption : public QObject

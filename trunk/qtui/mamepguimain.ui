@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>624</width>
-    <height>403</height>
+    <height>400</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,10 +18,10 @@
   <widget class="QWidget" name="centralwidget" >
    <property name="geometry" >
     <rect>
-     <x>262</x>
-     <y>45</y>
-     <width>100</width>
-     <height>339</height>
+     <x>260</x>
+     <y>49</y>
+     <width>104</width>
+     <height>330</height>
     </rect>
    </property>
    <layout class="QGridLayout" >
@@ -43,7 +43,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>19</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -53,10 +53,11 @@
     <addaction name="actionPlay" />
     <addaction name="actionPlayInp" />
     <addaction name="separator" />
-    <addaction name="actionAudit" />
-    <addaction name="separator" />
     <addaction name="actionConfigIPS" />
-    <addaction name="actionDefaultOptions" />
+    <addaction name="actionSrcProperties" />
+    <addaction name="actionProperties" />
+    <addaction name="separator" />
+    <addaction name="actionAudit" />
     <addaction name="separator" />
     <addaction name="actionExitStop" />
    </widget>
@@ -66,6 +67,7 @@
     </property>
     <addaction name="actionPicture_Area" />
     <addaction name="actionVerticalTabs" />
+    <addaction name="actionEnforceAspect" />
     <addaction name="separator" />
     <addaction name="actionLargeIcons" />
     <addaction name="actionDetails" />
@@ -77,7 +79,19 @@
     <property name="title" >
      <string>Options</string>
     </property>
+    <widget class="QMenu" name="menuLanguage" >
+     <property name="title" >
+      <string>Language</string>
+     </property>
+     <addaction name="actionEnglish" />
+     <addaction name="actionChinese_PRC" />
+     <addaction name="actionChinese_Taiwan" />
+     <addaction name="actionJapanese" />
+    </widget>
+    <addaction name="actionDirectories" />
     <addaction name="actionDefaultOptions" />
+    <addaction name="separator" />
+    <addaction name="menuLanguage" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
@@ -94,9 +108,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>384</y>
+     <y>379</y>
      <width>624</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>
@@ -104,8 +118,8 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>19</y>
-     <width>164</width>
+     <y>23</y>
+     <width>162</width>
      <height>26</height>
     </rect>
    </property>
@@ -139,9 +153,9 @@
   <widget class="QToolBar" name="toolBarSearch" >
    <property name="geometry" >
     <rect>
-     <x>164</x>
-     <y>19</y>
-     <width>460</width>
+     <x>162</x>
+     <y>23</y>
+     <width>462</width>
      <height>26</height>
     </rect>
    </property>
@@ -162,9 +176,9 @@
    <property name="geometry" >
     <rect>
      <x>368</x>
-     <y>45</y>
+     <y>49</y>
      <width>256</width>
-     <height>339</height>
+     <height>330</height>
     </rect>
    </property>
    <property name="features" >
@@ -180,9 +194,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>20</y>
+      <y>22</y>
       <width>256</width>
-      <height>319</height>
+      <height>308</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -199,9 +213,9 @@
    <property name="geometry" >
     <rect>
      <x>0</x>
-     <y>45</y>
+     <y>49</y>
      <width>256</width>
-     <height>339</height>
+     <height>330</height>
     </rect>
    </property>
    <property name="sizePolicy" >
@@ -223,9 +237,9 @@
     <property name="geometry" >
      <rect>
       <x>0</x>
-      <y>20</y>
+      <y>22</y>
       <width>256</width>
-      <height>319</height>
+      <height>308</height>
      </rect>
     </property>
     <layout class="QGridLayout" >
@@ -256,7 +270,7 @@
      <normaloff>:/res/32x32/applications-system.png</normaloff>:/res/32x32/applications-system.png</iconset>
    </property>
    <property name="text" >
-    <string>Properties</string>
+    <string>Default Game Options</string>
    </property>
   </action>
   <action name="actionRefresh" >
@@ -461,6 +475,71 @@
    </property>
    <property name="text" >
     <string>Sort Descending</string>
+   </property>
+  </action>
+  <action name="actionDirectories" >
+   <property name="icon" >
+    <iconset resource="mamepguimain.qrc" >
+     <normaloff>:/res/32x32/folder.png</normaloff>:/res/32x32/folder.png</iconset>
+   </property>
+   <property name="text" >
+    <string>Directories...</string>
+   </property>
+  </action>
+  <action name="actionProperties" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Properties</string>
+   </property>
+  </action>
+  <action name="actionSrcProperties" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
+   <property name="text" >
+    <string>Properties for </string>
+   </property>
+  </action>
+  <action name="actionEnglish" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>English (United States)</string>
+   </property>
+  </action>
+  <action name="actionChinese_PRC" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Chinese (PRC)</string>
+   </property>
+  </action>
+  <action name="actionChinese_Taiwan" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Chinese (Taiwan)</string>
+   </property>
+  </action>
+  <action name="actionJapanese" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Japanese</string>
+   </property>
+  </action>
+  <action name="actionEnforceAspect" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Enforce Aspect Ratio</string>
    </property>
   </action>
  </widget>

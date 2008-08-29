@@ -17,6 +17,9 @@ enum
 	MAMEOPT_TYPE_FLOAT,
 	MAMEOPT_TYPE_STRING,
 	MAMEOPT_TYPE_FILE,
+	MAMEOPT_TYPE_DATFILE,
+	MAMEOPT_TYPE_CFGFILE,
+	MAMEOPT_TYPE_EXEFILE,
 	MAMEOPT_TYPE_DIR,
 	MAMEOPT_TYPE_DIRS,
 	MAMEOPT_TYPE_UNKNOWN
@@ -47,45 +50,52 @@ OptInfo::OptInfo(QListWidget *catv, QTreeView *optv, QObject *parent)
 ResetWidget::ResetWidget(/*QtProperty *property, */ QWidget *parent) :
 QWidget(parent),
 //m_property(property),
-m_textLabel(new QLabel(this)),
-m_iconLabel(new QLabel(this)),
-m_button(new QToolButton(this)),
-m_spacing(-1)
+_textLabel(new QLabel(this)),
+_iconLabel(new QLabel(this)),
+_btnReset(new QToolButton(this)),
+ctrlSpacing(-1),
+optType(0),
+sliderOffset(0)
 {
-	m_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
-	m_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-	m_button->setToolButtonStyle(Qt::ToolButtonIconOnly);
-	m_button->setIcon(QIcon(":/res/reset_property.png"));
-	m_button->setIconSize(QSize(8,8));
-	m_button->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
-	connect(m_button, SIGNAL(clicked()), &optdelegate, SLOT(sync()));
+	_textLabel->setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed));
+	_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+	_btnReset->setToolButtonStyle(Qt::ToolButtonIconOnly);
+	_btnReset->setIcon(QIcon(":/res/reset_property.png"));
+	_btnReset->setIconSize(QSize(8,8));
+	_btnReset->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
+	_btnReset->setToolTip("Reset to default"); 
+	connect(_btnReset, SIGNAL(clicked()), &optdelegate, SLOT(sync()));
 
 	QLayout *layout = new QHBoxLayout(this);
 	layout->setMargin(0);
-	layout->setSpacing(m_spacing);
-	layout->addWidget(m_iconLabel);
-	layout->addWidget(m_textLabel);
-	layout->addWidget(m_button);
-	setFocusProxy(m_textLabel);
+	layout->setSpacing(ctrlSpacing);
+	layout->addWidget(_iconLabel);
+	layout->addWidget(_textLabel);
+	layout->addWidget(_btnReset);
+	setFocusProxy(_textLabel);
 	setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
 }
 
 void ResetWidget::setSpacing(int spacing)
 {
-	m_spacing = spacing;
-	layout()->setSpacing(m_spacing);
+	ctrlSpacing = spacing;
+	layout()->setSpacing(ctrlSpacing);
 }
 
-void ResetWidget::setWidget(QWidget *widget, QWidget *widget2)
+//insert some widgets before reset button
+void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int sliderOffset)
 {
+	this->optType = optType;
+	this->sliderOffset = sliderOffset;
+
 	//delete the ctrls
-	if (m_textLabel) {
-		delete m_textLabel;
-		m_textLabel = 0;
+	if (_textLabel) {
+		delete _textLabel;
+		_textLabel = 0;
 	}
-	if (m_iconLabel) {
-		delete m_iconLabel;
-		m_iconLabel = 0;
+	if (_iconLabel) {
+		delete _iconLabel;
+		_iconLabel = 0;
 	}
 	delete layout();
 
@@ -100,19 +110,46 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2)
 	{
 		layout->addWidget(widget2);
 		subWidget2 = widget2;
+
+		switch (optType)
+		{
+		case MAMEOPT_TYPE_INT:
+		case MAMEOPT_TYPE_FLOAT:
+			_slider = static_cast<QSlider*>(subWidget);
+			_sliderLabel = static_cast<QLabel*>(subWidget2);
+			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
+			break;
 		
-		m_slider = static_cast<QSlider*>(subWidget);
-		m_sliderLabel = static_cast<QLabel*>(subWidget2);
-		connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
+		case MAMEOPT_TYPE_FILE:
+		case MAMEOPT_TYPE_DATFILE:
+		case MAMEOPT_TYPE_CFGFILE:
+		case MAMEOPT_TYPE_EXEFILE:
+		case MAMEOPT_TYPE_DIR:
+		case MAMEOPT_TYPE_DIRS:
+			_btnFileDlg = static_cast<QToolButton*>(subWidget2);
+			if (optType == MAMEOPT_TYPE_DIRS)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDirectories()));
+			else if (optType == MAMEOPT_TYPE_DIR)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDirectory()));
+			else if (optType == MAMEOPT_TYPE_FILE)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setFile()));
+			else if (optType == MAMEOPT_TYPE_DATFILE)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDatFile()));
+			else if (optType == MAMEOPT_TYPE_CFGFILE)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setCfgFile()));
+			else if (optType == MAMEOPT_TYPE_EXEFILE)
+				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setExeFile()));
+			break;
+		}
 	}
-	layout->addWidget(m_button);
+	layout->addWidget(_btnReset);
 
 	setFocusProxy(widget);
 }
 
 void ResetWidget::setResetEnabled(bool enabled)
 {
-	m_button->setEnabled(enabled);
+	_btnReset->setEnabled(enabled);
 }
 
 
@@ -143,13 +180,23 @@ void ResetWidget::slotClicked()
 void ResetWidget::updateSliderLabel(int value)
 {
 	QLabel *ctrl2 = static_cast<QLabel*>(subWidget2);
-	ctrl2->setText(QString().sprintf("%.2f", value/100.0));
+
+	double multiplier = 1.0;
+	QString format = "%.0f";
+	if (optType == MAMEOPT_TYPE_FLOAT)
+	{
+		multiplier = 100.0;
+		format = "%.2f";
+	}
+	
+	ctrl2->setText(QString().sprintf(qPrintable(format), (value - sliderOffset) / multiplier));
 }
 
 OptionDelegate::OptionDelegate(QObject *parent)
 : QItemDelegate(parent)
 {
 	isReset = false;
+	pathBuf = "";
 }
 
 QSize OptionDelegate::sizeHint ( const QStyleOptionViewItem & option, 
@@ -198,54 +245,50 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 				QApplication::style()->drawControl(QStyle::CE_CheckBox, &ctrl, painter);
 				return;
 			}
-/*
+
 			case MAMEOPT_TYPE_INT:
-			{
-				int value = index.model()->data(index, Qt::EditRole).toInt();
-				QStyleOptionProgressBar ctrl;
-
-				ctrl.state = QStyle::State_Enabled;
-				ctrl.direction = QApplication::layoutDirection();
-				QRect rc = option.rect;
-				if (rc.width() > 80)
-					rc.setWidth(80);
-				rc.setHeight(rc.height() * 0.75);
-				ctrl.rect = rc;
-				ctrl.fontMetrics = QApplication::fontMetrics();
-				ctrl.minimum = optUtils->getField(index, USERROLE_MIN).toInt();
-				ctrl.maximum = optUtils->getField(index, USERROLE_MAX).toInt();
-				ctrl.textAlignment = Qt::AlignCenter;
-				ctrl.textVisible = true;
-				
-				ctrl.progress = value < 0 ? 0 : value;
-				ctrl.text = QString().sprintf("%i", value);
-
-				// Draw the progress bar onto the view.
-				QApplication::style()->drawControl(QStyle::CE_ProgressBar, &ctrl, painter);
-				return;
-			}
-*/
 			case MAMEOPT_TYPE_FLOAT:
 			{
-				float value = index.model()->data(index, Qt::EditRole).toDouble();
+				double min, max, value;
+				min = optUtils->getField(index, USERROLE_MIN).toDouble();
+				max = optUtils->getField(index, USERROLE_MAX).toDouble();
+				value = index.model()->data(index, Qt::EditRole).toDouble();
+
 				QStyleOptionProgressBar ctrl;
 
 				ctrl.state = QStyle::State_Enabled;
 				ctrl.direction = QApplication::layoutDirection();
 
 				QRect rc = option.rect;
-				rc.setWidth(rc.width() - 10 - 2 * 2);
+				rc.setWidth(rc.width() - 10 - 2 * 2);	// 2px padding
 				rc.setY(rc.y() + (int)(rc.height() * 0.1));
-				rc.setHeight((int)(rc.height() * 0.8));
+				rc.setHeight((int)(rc.height() * 0.8));	//don't occupy full height
+
+				int multiplier = 1;
+				int offset = 0;
+				QString format = "%.0f";
+				
+				if (optType == MAMEOPT_TYPE_FLOAT)
+				{
+					multiplier = 100;
+					format = "%.2f";
+				}
+				else if (min < 0)
+				{
+					offset = (int)(0 - min);
+					max += offset;
+					value += offset;
+					min = 0;
+				}
 
 				ctrl.rect = rc;
 				ctrl.fontMetrics = QApplication::fontMetrics();
-				ctrl.minimum = (int)(100 * optUtils->getField(index, USERROLE_MIN).toDouble());
-				ctrl.maximum = (int)(100 * optUtils->getField(index, USERROLE_MAX).toDouble());
+				ctrl.minimum = (int)(multiplier * min);
+				ctrl.maximum = (int)(multiplier * max);
 				ctrl.textVisible = true;
 				
-				ctrl.progress = value < 0 ? 0 : (int)(100 * value);
-				ctrl.text = QString().sprintf("%.2f", value);
+				ctrl.progress = (int)(multiplier * value);
+				ctrl.text = QString().sprintf(qPrintable(format), value - offset);
 
 				// Draw the progress bar
 				QApplication::style()->drawControl(QStyle::CE_ProgressBar, &ctrl, painter);
@@ -295,18 +338,14 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 		return resetWidget;
 	}
 
-//	case MAMEOPT_TYPE_:
-//	{
-//	}
-
 	case MAMEOPT_TYPE_INT:
-	{
+/*	{
 		int min, max;
 		min = optUtils->getField(index, USERROLE_MIN).toInt();
 		max = optUtils->getField(index, USERROLE_MAX).toInt();
 
 		QSpinBox *ctrl = new QSpinBox(parent);
-		if (min != 0 && max != 0)
+		if (!(min == 0 && max == 0))
 		{
 			ctrl->setMinimum(min);
 			ctrl->setMaximum(max);
@@ -315,26 +354,55 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 		resetWidget->setWidget(ctrl);
 		return resetWidget;
 	}
-
+*/	
 	case MAMEOPT_TYPE_FLOAT:
 	{
-		float min, max;
+		double min, max;
 		min = optUtils->getField(index, USERROLE_MIN).toDouble();
 		max = optUtils->getField(index, USERROLE_MAX).toDouble();
 
+		int multiplier = 1;
+		int offset = 0;
+		if (optType == MAMEOPT_TYPE_FLOAT)
+			multiplier = 100;
+		else if (min < 0)
+		{
+			offset = (int)(0 - min);
+			max += offset;
+			min = 0;
+		}
+
 		QSlider *ctrl = new QSlider(Qt::Horizontal, parent);
 		ctrl->setStyleSheet("background-color: white;");//fixme: hack
-		ctrl->setMinimum((int)(min * 100));
-		ctrl->setMaximum((int)(max * 100));
+		ctrl->setMinimum((int)(min * multiplier));
+		ctrl->setMaximum((int)(max * multiplier));
 
 		QLabel *ctrl2 = new QLabel(parent);
-		ctrl2->setStyleSheet("background-color: white; padding:0 2px;");//fixme: hack
+		ctrl2->setMinimumWidth(30);
+		ctrl2->setAlignment(Qt::AlignHCenter);
+		ctrl2->setStyleSheet("background-color: white;");//fixme: hack
 
 		QFont font;
 		font.setPointSize(9);
 		ctrl2->setFont(font);
 
-		resetWidget->setWidget(ctrl, ctrl2);
+		resetWidget->setWidget(ctrl, ctrl2, optType, offset);
+		return resetWidget;
+	}
+
+	case MAMEOPT_TYPE_FILE:
+	case MAMEOPT_TYPE_DATFILE:
+	case MAMEOPT_TYPE_CFGFILE:
+	case MAMEOPT_TYPE_EXEFILE:
+	case MAMEOPT_TYPE_DIR:
+	case MAMEOPT_TYPE_DIRS:
+	{
+		QLineEdit *ctrl = new QLineEdit(resetWidget);
+
+		QToolButton *ctrl2 = new QToolButton(resetWidget);
+		ctrl2->setText("...");
+
+		resetWidget->setWidget(ctrl, ctrl2, optType);
 		return resetWidget;
 	}
 
@@ -379,48 +447,68 @@ void OptionDelegate::setEditorData(QWidget *editor,
 	switch (optType)
 	{
 	case MAMEOPT_TYPE_BOOL:
-		{
-			bool value = index.model()->data(index, Qt::EditRole).toBool();
-			QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
-			ctrl->setCheckState(value ? Qt::Checked : Qt::Unchecked);
-			break;
-		}
+	{
+		bool value = index.model()->data(index, Qt::EditRole).toBool();
+		QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
+		ctrl->setCheckState(value ? Qt::Checked : Qt::Unchecked);
+		break;
+	}
+	
 	case MAMEOPT_TYPE_INT:
-		{
-			int value = index.model()->data(index, Qt::EditRole).toInt();
-			QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
-			ctrl->setValue(value);
-			break;
-		}
+/*	{
+		int value = index.model()->data(index, Qt::EditRole).toInt();
+		QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
+		ctrl->setValue(value);
+		break;
+	}
+*/
 	case MAMEOPT_TYPE_FLOAT:
+	{
+		double min, value;
+		min = optUtils->getField(index, USERROLE_MIN).toDouble();
+		value = index.model()->data(index, Qt::EditRole).toDouble();
+
+		int multiplier = 1;
+		int offset = 0;
+		if (optType == MAMEOPT_TYPE_FLOAT)
+			multiplier = 100;
+		else if (min < 0)
 		{
-			float value = index.model()->data(index, Qt::EditRole).toDouble();
-			QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
-			int intVal = ((int)((value + 0.001) * 100));	//hack: precision fix
-			ctrl->setValue(intVal);
-			resetWidget->updateSliderLabel(intVal);
+			offset = (int)(0 - min);
+			value += offset;
+		}
+
+		QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
+		ctrl->setPageStep(2);
+		int intVal = ((int)((value + 0.001) * multiplier));	//hack: precision fix
+		ctrl->setValue(intVal);
+//		win->log(QString("val: %1").arg(intVal));
+		resetWidget->updateSliderLabel(intVal);
+		break;
+	}
+	
+	case MAMEOPT_TYPE_STRING:
+	{
+		QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
+
+		QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+		if (guivalues.size() > 0)
+		{
+			QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
+			ctrl->setCurrentIndex(guivalues.indexOf(guivalue));
 			break;
 		}
-	case MAMEOPT_TYPE_STRING:
-		{
-			QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
+	}
 
-			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-			if (guivalues.size() > 0)
-			{
-				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
-				ctrl->setCurrentIndex(guivalues.indexOf(guivalue));
-				break;
-			}
-		}
+	//file, dir, dirs case also here
 	default:
-		{
-			QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
-			
-			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
-			ctrl->setText(guivalue);
+	{
+		QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
+		
+		QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+		ctrl->setText(guivalue);
 //			QItemDelegate::setEditorData(editor, index);
-		}
+	}
 	}
 //*/
 }
@@ -473,43 +561,62 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		switch (optType)
 		{
 		case MAMEOPT_TYPE_BOOL:
-			{
-				QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
-				dispValue = (ctrl->checkState() == Qt::Checked) ? true : false;
-				break;
-			}
+		{
+			QCheckBox *ctrl = static_cast<QCheckBox*>(resetWidget->subWidget);
+			dispValue = (ctrl->checkState() == Qt::Checked) ? true : false;
+			break;
+		}
 		case MAMEOPT_TYPE_INT:
-			{
-				QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
-				ctrl->interpretText();
-				dispValue = ctrl->value();
-				break;
-			}
+/*		{
+			QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
+			ctrl->interpretText();
+			dispValue = ctrl->value();
+			break;
+		}
+*/
 		case MAMEOPT_TYPE_FLOAT:
+		{
+			double min, value;
+			min = optUtils->getField(index, USERROLE_MIN).toDouble();
+			value = index.model()->data(index, Qt::EditRole).toDouble();
+			
+			double multiplier = 1.0;
+			int offset = 0;
+			if (optType == MAMEOPT_TYPE_FLOAT)
+				multiplier = 100.0;
+			else if (min < 0)
 			{
-//				QDoubleSpinBox *ctrl = static_cast<QDoubleSpinBox*>(resetWidget->subWidget);
-				QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
-//				ctrl->interpretText();
-				// ensure .00 display
-				dispValue = optUtils->getLongValue(optName, QString::number(ctrl->value()/100.0));
+				offset = (int)(0 - min);
+				value += offset;
+			}
+			
+			QSlider *ctrl = static_cast<QSlider*>(resetWidget->subWidget);
+			// ensure .00 display for MAMEOPT_TYPE_FLOAT
+
+			dispValue = optUtils->getLongValue(optName, QString::number((ctrl->value() - offset) / multiplier));
+			break;
+		}
+		case MAMEOPT_TYPE_STRING:
+		{
+			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+			if (guivalues.size() > 0)
+			{
+				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
+				dispValue = ctrl->currentText();
 				break;
 			}
-		case MAMEOPT_TYPE_STRING:
-			{
-				QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-				if (guivalues.size() > 0)
-				{
-					QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
-					dispValue = ctrl->currentText();
-					break;
-				}
-			}
+		}
 		default:
-			{
-				QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+		{
+			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+
+			// set file dialog result
+			if (!pathBuf.isEmpty())
+				dispValue = pathBuf;
+			else
 				dispValue = ctrl->text();
-	//			QItemDelegate::setModelData(editor, model, index);
-			}
+//			QItemDelegate::setModelData(editor, model, index);
+		}
 		}
 	}
 
@@ -542,7 +649,11 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	case OPTLEVEL_SRC:
 		if (iniFileName.isNull())
-			iniFileName = "ini/source/" + gameInfo->sourcefile.remove(".c") + ".ini";
+		{
+			iniFileName = gameInfo->sourcefile;
+			iniFileName.replace(".c", ".ini");
+			iniFileName = iniFileName.prepend("ini/source/");
+		}
 		
 		// prevent overwrite prevVal from prev case
 		if (optLevel == OPTLEVEL_SRC)
@@ -621,6 +732,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	}
 
 	optUtils->saveIniFile(optLevel, iniFileName);
+	
 }
 
 void OptionDelegate::updateEditorGeometry(QWidget *editor,
@@ -631,14 +743,127 @@ void OptionDelegate::updateEditorGeometry(QWidget *editor,
 
 void OptionDelegate::sync()
 {
-    ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
-    if (w == 0)
-        return;
+	ResetWidget *w = qobject_cast<ResetWidget*>(sender()->parent());
+	if (w == NULL)
+		return;
 	isReset = true;
 	emit commitData(w);
-    emit closeEditor(w, QAbstractItemDelegate::EditNextItem);
+	emit closeEditor(w, QAbstractItemDelegate::EditNextItem);
 	isReset = false;
 }
+
+void OptionDelegate::setDirectories()
+{
+	rWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	if (rWidget == NULL)
+		return;
+
+	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
+
+	connect(dlgDirs, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
+
+	//take existing dir
+	dlgDirs->init(ctrl->text());
+	dlgDirs->exec();
+}
+
+void OptionDelegate::setDirectoriesAccepted()
+{
+	pathBuf = dlgDirs->getDirs();
+	emit commitData(rWidget);
+	pathBuf.clear();
+}
+
+//todo: merge with setFile
+void OptionDelegate::setDirectory()
+{
+	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	if (resetWidget == NULL)
+		return;
+	
+	QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+
+	//take existing dir
+	QString initPath = ctrl->text();
+	QFileInfo fi(initPath);
+	if (!fi.exists())
+	{
+		//take mame_binary dir
+		fi.setFile(mame_binary);
+		initPath = fi.absolutePath();
+	}
+
+	QFileDialog::Options options = QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly;
+	QString directory = QFileDialog::getExistingDirectory(resetWidget,
+								tr("Directory name:"),
+								initPath,
+								options);
+	if (!directory.isEmpty())
+	{
+		pathBuf = directory;
+		emit commitData(resetWidget);
+		pathBuf.clear();
+	}
+}
+
+void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
+{
+win->log(filter);
+
+	if (resetWidget == NULL)
+		resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
+
+	if (resetWidget == NULL)
+		return;
+
+	QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+
+	//take existing dir
+	QString initPath = ctrl->text();
+	QFileInfo fi(initPath);
+	if (!fi.exists())
+	{
+		//take mame_binary dir
+		fi.setFile(mame_binary);
+	}
+	initPath = fi.absolutePath();
+
+	if (!filter.isEmpty())
+		filter.append(";;");
+	filter.append(tr("All Files (*)"));
+win->log(filter);
+
+	QString fileName = QFileDialog::getOpenFileName
+		(resetWidget, tr("File name:"), initPath, filter);
+
+	if (!fileName.isEmpty())
+	{
+		pathBuf = fileName;
+		emit commitData(resetWidget);
+		pathBuf.clear();
+	}
+}
+
+void OptionDelegate::setDatFile()
+{
+	win->log("dat!");
+
+	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	setFile(tr("Dat files (*.dat)"), resetWidget);
+}
+
+void OptionDelegate::setExeFile()
+{
+	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	setFile(tr("Executable files (*.exe)"), resetWidget);
+}
+
+void OptionDelegate::setCfgFile()
+{
+	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	setFile(tr("Config files (*.cfg)"), resetWidget);
+}
+
 
 // parse listxml and init default mame opts
 class OptionXMLHandler : public QXmlDefaultHandler
@@ -691,6 +916,12 @@ public:
 					pMameOpt->type = MAMEOPT_TYPE_STRING;
 				else if (type == "file")
 					pMameOpt->type = MAMEOPT_TYPE_FILE;
+				else if (type == "datfile")
+					pMameOpt->type = MAMEOPT_TYPE_DATFILE;
+				else if (type == "exefile")
+					pMameOpt->type = MAMEOPT_TYPE_EXEFILE;
+				else if (type == "cfgfile")
+					pMameOpt->type = MAMEOPT_TYPE_CFGFILE;
 				else if (type == "dir")
 					pMameOpt->type = MAMEOPT_TYPE_DIR;
 				else if (type == "dirs")
@@ -790,12 +1021,12 @@ void OptionUtils::initOption()
 		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-vector.png"), tr("Vector"), lstCatView));
 		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), tr("Misc"), lstCatView));
 
-//		lstCatView->setViewMode(QListView::IconMode);
+		const QSize itemSz(1, 32);
+		for (int i = 0; i < lstCatView->count(); i ++)
+			lstCatView->item(i)->setSizeHint(itemSz);
+
 		lstCatView->setIconSize(QSize(24, 24));
-//		lstCatView->setFlow(QListView::TopToBottom);
-//		lstCatView->setMovement(QListView::Static);
 		lstCatView->setMaximumWidth(130);
-		lstCatView->setSpacing(4);
 
 		connect(optInfos[optLevel]->optView->header(), SIGNAL(sectionResized(int, int, int)), 
 			this, SLOT(updateHeaderSize(int, int, int)));
@@ -1042,7 +1273,8 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("use samples")
 		<< QT_TR_NOOP("volume attenuation")
 		<< QT_TR_NOOP("use volume auto adjust")
-			
+
+		<< QT_TR_NOOP("coin lockout")
 		<< QT_TR_NOOP("default input layout")
 		<< QT_TR_NOOP("enable mouse input")
 		<< QT_TR_NOOP("enable joystick input")
@@ -1311,6 +1543,13 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
+
+		//ignore all guiSettings, they are not handled by mame's .ini
+		if (guiSettings.contains(optName))
+		{
+			pMameOpt->globalvalue = pMameOpt->currvalue = guiSettings.value(optName).toString();
+			continue;
+		}
 		
 		//take ini override when available
 		if (inisettings.contains(optName))
@@ -1497,15 +1736,15 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 				bufs.removeAt(i); 
 		}
 
-		// make an empty line between sections
-		foreach (QString buf, bufs)
+		for (int i = 0; i < bufs.count(); i ++)
 		{
 			static bool isEntry = false;
 
-			if (buf.startsWith("#"))
+			// make an empty line between sections
+			if (bufs[i].startsWith("#"))
 			{
-				if (isEntry)
-					// add it when prev line is an entry and curr line is a header
+				// add it when prev line is an entry and curr line is a header
+				if (isEntry && i > 3)	//skip first entry
 					out << endl;
 
 				isEntry = false;
@@ -1513,7 +1752,9 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 			else
 				isEntry = true;
 
-			out << buf << endl;
+			// don't output readconfig
+			if (!bufs[i].contains("readconfig"))
+				out << bufs[i] << endl;
 		}
 	}
 
@@ -1604,7 +1845,8 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	QString iniString;
 	QString STR_OPTS_ = tr("Options") + " - ";
 
-	//global has been loaded before, so loadIni() is not needed
+	//global has been loaded before, so loadIni() is not needed?
+	optUtils->loadIni(OPTLEVEL_GLOBAL, "mame.ini");
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
 		updateModelData(optCat, OPTLEVEL_GLOBAL);
@@ -1613,12 +1855,14 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	}
 
 	//source
-	iniString = gameInfo->sourcefile.remove(".c");
-	loadIni(OPTLEVEL_SRC, "ini/source/" + iniString + ".ini");
+	iniString = gameInfo->sourcefile;
+	iniString.replace(".c", ".ini");
+	iniString.prepend("ini/source/");
+	loadIni(OPTLEVEL_SRC, iniString);
 	if (optLevel == OPTLEVEL_SRC)
 	{
 		updateModelData(optCat, OPTLEVEL_SRC);
-		dlgOptions->setWindowTitle(STR_OPTS_ + iniString + ".c");
+		dlgOptions->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
 		return;
 	}
 
@@ -1681,6 +1925,7 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 
 	//fixme: setup columns, not needed every time?
 	optModel = optInfos[optLevel]->optModel = new QStandardItemModel(win);
+	
 	optModel->setObjectName(QString("optModel%1").arg(optLevel));
 	optModel->setColumnCount(2);
 	optModel->setHeaderData(0, Qt::Horizontal, tr("Option"));
@@ -1740,6 +1985,7 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 				{
 					QString optName = consoleName + "_extra_software";
 					MameOption *pMameOpt = mameOpts[optName];
+					pMameOpt->type = MAMEOPT_TYPE_DIR;
 
 					if (!pMameOpt->guivisible)
 						continue;

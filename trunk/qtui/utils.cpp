@@ -81,7 +81,7 @@ QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName
 	return snapdata;
 }
 
-QString Utils::getHistory(const QString &gameName, const QString &fileName)
+QString Utils::getHistory(const QString &fileName, const QString &gameName)
 {
 	QFile datFile(fileName);
 	QString buf = "";
@@ -128,7 +128,7 @@ QString Utils::getHistory(const QString &gameName, const QString &fileName)
 	{
 		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
 		if (!gameInfo->cloneof.isEmpty())
-			buf = getHistory(gameInfo->cloneof, fileName);
+			buf = getHistory(fileName, gameInfo->cloneof);
 	}
 	
 	return buf.trimmed();
@@ -190,7 +190,7 @@ bool Utils::isAuditFolder(QString consoleName)
 	QStringList paths = currentFolder.split("/");
 	if (paths.size() == 2)
 	{
-		if (paths[1] == "Consoles")
+		if (paths[1] == tr("Consoles"))
 			return true;
 
 		else if(paths[1] == consoleName)
@@ -208,7 +208,7 @@ bool Utils::isConsoleFolder()
 	QStringList paths = currentFolder.split("/");
 	if (paths.size() == 2)
 	{
-		if (paths[1] == "Consoles")
+		if (paths[1] == tr("Consoles"))
 			return true;
 
 		else if (mamegame->gamenameGameInfoMap.contains(paths[1]))
