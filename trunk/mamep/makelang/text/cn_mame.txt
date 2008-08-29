@@ -138,17 +138,45 @@
 %s Analog
 %s 模拟控制
 
+# emu/uimenu.c: 1893
+%s Analog Dec
+%s 模拟控制 减少
+
+# emu/uimenu.c: 1892
+%s Analog Inc
+%s 模拟控制 增加
+
 # emu/uimenu.c: 2359
 %s Autocenter Speed
 %s 自动居中速度
+
+# emu/ui.c: 2299
+%s Brightness
+%s 亮度
 
 # emu/romload.c: 1053
 %s CHD NEEDS REDUMP\n
 %s CHD 需要 重新转储\n
 
+# emu/ui.c: 2302
+%s Contrast
+%s 对比度
+
 # emu/uimenu.c: 2351
 %s Digital Speed
 %s 数字式速度
+
+# emu/ui.c: 2305
+%s Gamma
+%s 灰度
+
+# emu/ui.c: 2313, 2339
+%s Horiz Position
+%s 水平位置
+
+# emu/ui.c: 2310, 2336
+%s Horiz Stretch
+%s 水平拉伸
 
 # emu/romload.c: 393
 %s NO GOOD DUMP KNOWN\n
@@ -166,6 +194,10 @@
 %s ROM NEEDS REDUMP\n
 %s ROM 需要重新转储\n
 
+# emu/ui.c: 2293
+%s Refresh Rate
+%s 刷新率
+
 # emu/uimenu.c: 2367
 %s Reverse
 %s 反转
@@ -173,6 +205,18 @@
 # emu/uimenu.c: 2375
 %s Sensitivity
 %s 敏感度
+
+# emu/ui.c: 2319, 2345
+%s Vert Position
+%s 垂直位置
+
+# emu/ui.c: 2316, 2342
+%s Vert Stretch
+%s 垂直拉伸
+
+# emu/ui.c: 2252
+%s Volume
+%s 音量
 
 # emu/romload.c: 400, 1047
 %s WRONG CHECKSUMS:\n
@@ -1694,6 +1738,10 @@ Mapped Memory
 Mask
 掩码
 
+# emu/ui.c: 2239
+Master Volume
+主音量
+
 # mame/drivers/bwing.c: 341 mame/drivers/holeland.c: 143 mame/drivers/megaplay.c: 297 mame/drivers/travrusa.c: 121
 Max
 最大
@@ -1977,6 +2025,10 @@ Overall: Unemulated Protection
 # emu/uimenu.c: 3773
 Overall: Working
 总体: 可以运行
+
+# emu/ui.c: 2273
+Overclock CPU %s
+超频 CPU %s
 
 # emu/uimenu.c: 3113 
 Overlays
@@ -3506,6 +3558,14 @@ Paddle V 7
 Paddle V 8
 操纵杆 V 8
 
+# emu/inptport.c: 427 emu/inpttype.h: 586 mess/inputx.c: 349 
+Pause
+暂停
+
+# mess/mslegacy.c: 37
+Pause/Stop
+暂停/停止
+
 # mame/drivers/turbo.c: 1035 
 Pedal
 踏板
@@ -3897,6 +3957,10 @@ Size
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Skip Bytes
 跳过字节
+
+# emu/uimenu.c: 1527
+Slider Controls
+参数调整
 
 # mame/drivers/4enraya.c: 109 mame/drivers/aleck64.c: 361 mame/drivers/alpha68k.c: 1441 mame/drivers/angelkds.c: 458 mame/drivers/bestleag.c: 274 mame/drivers/bigstrkb.c: 140 mame/drivers/brkthru.c: 185, 188 mame/drivers/btime.c: 673, 957 mame/drivers/cclimber.c: 803 mame/drivers/cninja.c: 604, 644 mame/drivers/cps1.c: 1264, 1477 mame/drivers/ddenlovr.c: 3432 mame/drivers/deniam.c: 234 mame/drivers/epos.c: 161, 164, 170 mame/drivers/flower.c: 160 mame/drivers/fuukifg3.c: 433 mame/drivers/galdrvr.c: 883, 1480 mame/drivers/gameplan.c: 341, 792 mame/drivers/m62.c: 543, 570, 597, 625, 654, 688, 717, 776, 806 mame/drivers/m63.c: 565 mame/drivers/marvins.c: 451 mame/drivers/mcr.c: 1145 mame/drivers/megaplay.c: 294 mame/drivers/metro.c: 3270 mame/drivers/nmg5.c: 433, 493, 586, 593, 628, 633 mame/drivers/nmk16.c: 2809 mame/drivers/phoenix.c: 180 mame/drivers/portrait.c: 200 mame/drivers/quizdna.c: 151, 239, 341 mame/drivers/rohga.c: 439, 507 mame/drivers/safarir.c: 240 mame/drivers/segas16a.c: 1543 mame/drivers/segas16b.c: 2785 mame/drivers/sf.c: 332, 510, 648 mame/drivers/sidepckt.c: 229 mame/drivers/solomon.c: 154 mame/drivers/sstrangr.c: 247 mame/drivers/suprridr.c: 261 mame/drivers/system1.c: 1443 mame/drivers/system16.c: 1614 mame/drivers/taito_z.c: 2531 mame/drivers/tecmo16.c: 209 mame/drivers/thepit.c: 269, 324, 365 mame/drivers/trackfld.c: 537 mame/drivers/vigilant.c: 182 mame/drivers/vsnes.c: 937, 1515 mame/drivers/wallc.c: 178 mame/drivers/xain.c: 377 mame/drivers/zac2650.c: 59
 Slow
@@ -4744,7 +4808,7 @@ path to samplesets
 
 # emu/video.c: 1701
 paused
-中止
+已暂停
 
 # emu/info.c: 90 emu/inptport.c: 1758
 pedal
@@ -4872,50 +4936,6 @@ year, manufacturer and full name
 
 # mame/layout/tceptor2.lay: 3
 %dD Glasses Side-by-Side
-
-
-# emu/uimenu.c: 1893
-%s Analog Dec
-
-
-# emu/uimenu.c: 1892
-%s Analog Inc
-
-
-# emu/ui.c: 2299
-%s Brightness
-
-
-# emu/ui.c: 2302
-%s Contrast
-
-
-# emu/ui.c: 2305
-%s Gamma
-
-
-# emu/ui.c: 2313, 2339
-%s Horiz Position
-
-
-# emu/ui.c: 2310, 2336
-%s Horiz Stretch
-
-
-# emu/ui.c: 2293
-%s Refresh Rate
-
-
-# emu/ui.c: 2319, 2345
-%s Vert Position
-
-
-# emu/ui.c: 2316, 2342
-%s Vert Stretch
-
-
-# emu/ui.c: 2252
-%s Volume
 
 
 # emu/inptport.c: 1566
@@ -5358,10 +5378,6 @@ MESS SPECIFIC OPTIONS
 Main Screen Standard (%d:%d)
 
 
-# emu/ui.c: 2239
-Master Volume
-
-
 # mess/mslegacy.c: 22
 Mode: FULL Emulation
 
@@ -5402,20 +5418,8 @@ Out of space
 Out of sync
 
 
-# emu/ui.c: 2273
-Overclock CPU %s
-
-
 # mess/mslegacy.c: 58
 Parallel Port
-
-
-# emu/inptport.c: 427 emu/inpttype.h: 586 mess/inputx.c: 349 
-Pause
-
-
-# mess/mslegacy.c: 37
-Pause/Stop
 
 
 # emu/inptport.c: 4138
@@ -5504,10 +5508,6 @@ Set Chip Lamps
 
 # mame/layout/buckrog.lay: 9 mame/layout/crusnexo.lay: 91 mame/layout/dlair.lay: 9 mame/layout/sspeedr.lay: 70 mame/layout/subroc3d.lay: 9 mame/layout/turbo.lay: 60
 Simple LEDs
-
-
-# emu/uimenu.c: 1527
-Slider Controls
 
 
 # mame/drivers/bmcbowl.c: 377 mame/drivers/calomega.c: 1092, 1195, 1298, 1402, 1468, 1534 mame/drivers/dwarfd.c: 453 mame/drivers/igs009.c: 387 mame/drivers/magicfly.c: 561 mame/drivers/pmpoker.c: 581 mame/drivers/witch.c: 545
