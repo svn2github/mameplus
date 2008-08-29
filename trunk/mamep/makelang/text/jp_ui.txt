@@ -256,7 +256,7 @@ MAMEUIについて(&A)
 
 # osd/winui/mameui.rc: 87, 261, 275
 &Snapshot
-スクリーンショット(&S)
+スナップショット(&S)
 
 # osd/winui/mameui.rc: 78
 &Status bar\tAlt+S
@@ -460,7 +460,7 @@ Automatic
 
 # osd/winui/layout.c: 54
 Available Arcades
-所有しているアーケード
+所有のアーケード
 
 # osd/winui/mameui.rc: 466
 Available fields:
@@ -660,7 +660,7 @@ Cocktail
 
 # osd/winui/mameui.rc: 904
 Coin lockout
-起動中のコイン投入を抑制する
+コイン投入数を制限する
 
 # osd/winui/properties.c: 1103
 Colors are completely wrong
@@ -1044,7 +1044,7 @@ Enable the marquee tab
 
 # osd/winui/mameui.rc: 1601
 Enable the snapshot tab
-スクリーンショットタブを有効
+スナップショットタブを有効
 
 # osd/winui/mameui.rc: 1611
 Enable the story tab
@@ -1784,7 +1784,7 @@ Record the complete output of a game
 
 # osd/winui/mameui.rc: 1561
 Record the video output of a game
-ゲームの映像出力を記録します
+ゲームのビデオ出力を記録します
 
 # osd/winui/mameui.rc: 1522, 1651
 Refresh game list
@@ -1864,7 +1864,7 @@ S&mall Icons
 
 # osd/winui/mameui.rc: 1129
 S&tretch screenshot larger than natural size
-スクリーンショットを拡大する(&T)
+スナップショットを拡大する(&T)
 
 # osd/winui/mameui.rc: 644
 Sample check:
@@ -1916,11 +1916,11 @@ Screen:
 
 # osd/winui/mameui.rc: 1128
 Screenshot Area
-スクリーンショット領域
+スナップショット領域
 
 # osd/winui/mameui.rc: 1136
 Screenshot Bordersize
-スクリーンショットの縁の幅
+スナップショットの縁の幅
 
 # osd/winui/mameui.rc: 1132
 Screenshot Cycletime in Seconds
@@ -1928,7 +1928,7 @@ Screenshot Cycletime in Seconds
 
 # osd/winui/mameui.rc: 81
 Screenshot Ta&b\tAlt+B
-スクリーンショットタブ(&B)\tAlt+B
+スナップショットタブ(&B)\tAlt+B
 
 # osd/winui/properties.c: 447
 Second screen
@@ -1968,7 +1968,7 @@ PCBタブの選択
 
 # osd/winui/mameui.rc: 1631
 Select Snapshot tab
-スクリーンショットタブの選択
+スナップショットタブの選択
 
 # osd/winui/mameui.rc: 1599
 Select Story tab
@@ -2016,7 +2016,7 @@ Set Game List Not Working Color
 
 # osd/winui/mameui.rc: 1140
 Set Screenshot Border Color
-スクリーンショットの縁の色を変更
+スナップショットの縁の色を変更
 
 # osd/winui/mameui.rc: 1541
 Set default game options
@@ -2076,7 +2076,7 @@ Show or hide the picture area
 
 # osd/winui/mameui.rc: 1507
 Show or hide the screen shot
-スクリーンショットの表\示/非表\示を切り替えます
+スナップショットの表\示/非表\示を切り替えます
 
 # osd/winui/mameui.rc: 1507, 1631
 Show or hide the status bar
@@ -2152,11 +2152,11 @@ Small Icons
 
 # osd/winui/dialogs.c: 229 osd/winui/mui_opts.c: 476
 Snapshot
-スクリーンショット
+スナップショット
 
 # osd/winui/layout.c: 122
 Snapshots
-スクリーンショット
+スナップショット
 
 # osd/winui/mameui.rc: 227
 Sort &Ascending
@@ -2332,7 +2332,7 @@ Toggle Fullscreen mode
 
 # osd/winui/winui.c: 717
 Toggle Screen Shot
-スクリーンショット
+スナップショット
 
 # osd/winui/mameui.rc: 1507
 Toggle full screen mode
@@ -2512,11 +2512,11 @@ Vertical
 
 # osd/winui/properties.c: 1113
 Video emulation isn't 100% accurate
-画像の再現が不完全
+ビデオの再現が不完全
 
 # osd/winui/mameui.rc: 754
 Video output method
-画面描画方式
+ビデオ描画方式
 
 # osd/winui/winui.c: 843
 Videos (*.mng)
@@ -2864,7 +2864,7 @@ Version 9
 
 # osd/winui/winui.c: 850
 Videos (*.avi)
-
+ビデオ (*.avi)
 
 # osd/winui/winui.c: 872
 history (*.dat)
