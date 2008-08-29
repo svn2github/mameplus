@@ -1202,7 +1202,7 @@ greenber	グリーンベレー (Irem)	ぐりーんべれーあいれむ	Irem
 headoni	ヘッドオン (Irem M-15 Hardware)	へっどおん_1	Irem
 redalert	WW-III / Red Alert	わーるどうぉー3	Irem + GDI
 demoneye	デモンアイ-X	でもんあいえっくす	Irem
-ww3	WW III	わーるどうぉーすりー	Irem
+ww3	WW-III	わーるどうぉーすりー	Irem
 olibochu	パンチングキッド / Oli-Boo-Chu	ぱんちんぐきっど	Irem + GDI
 mpatrol	ムーンパトロール	むーんぱとろーる	Irem
 mpatrolw	ムーンパトロール (Williams)	むーんぱとろーる	Irem (Williams license)
@@ -2525,6 +2525,7 @@ primrag2	プライマルレイジII (ver 0.36a)	ぷらいまるれいじ_2	Atari
 nbajamex	NBAジャム エクストリーム	えぬびーえーじゃむえくすとりーむ	Acclaim
 jdredd	ジャッジ・ドレッド アーケード (rev C Dec 17 1997)	じゃっじどれっどあーけーど	Acclaim
 jdreddb	ジャッジ・ドレッド アーケード (rev B Nov 26 1997)	じゃっじどれっどあーけーど	Acclaim
+aerofgts	ソニックウィングス リミテッド / Aero Fighters Special (台湾版)	そにっくうぃんぐす_4りみてっど	Video System
 sncwgltd	ソニックウィングス リミテッド (日本版)	そにっくうぃんぐす_4りみてっど	Video System
 sfchamp	スーパーフットボールチャンプ (ver 2.5O)	すーぱーふっとぼーるちゃんぷ	Taito
 sfchampj	スーパーフットボールチャンプ (ver 2.4J)	すーぱーふっとぼーるちゃんぷ	Taito
@@ -3361,7 +3362,7 @@ daytonas	デイトナUSA (With Saturn Adverts)	でいとなゆーえすえー_1	Sega
 daytonat	デイトナUSA (日本版 Turbo hack)	でいとなゆーえすえー_1	Sega
 daytonam	デイトナUSA (日本版 To The MAXX)	でいとなゆーえすえー_1	Sega
 desert	デザートタンク	でざーとたんく	Sega/Martin Marietta
-vcop	バーチャコップ	ばーちゃこっぷ_1	Sega
+vcop	バーチャコップ (rev B)	ばーちゃこっぷ_1	Sega
 manxtt	マンクスTT スーパーバイク (rev C)	まんくすてぃーてぃーすーぱーばいく	Sega
 motoraid	モーターレイド	もーたーれいど	Sega
 srallyc	セガラリー・チャンピオンシップ	せがらりー_1ちゃんぴおんしっぷ	Sega
@@ -3370,38 +3371,39 @@ vf2b	バーチャファイター2 (rev B)	ばーちゃふぁいたー_2	Sega
 vf2a	バーチャファイター2 (rev A)	ばーちゃふぁいたー_2	Sega
 vf2o	バーチャファイター2	ばーちゃふぁいたー_2	Sega
 vcop2	バーチャコップ2	ばーちゃこっぷ_2	Sega
-doaa	デッドオアアライブ (Model 2A) (rev A)	でっどおああらいぶ_1_1	Sega
+doaa	デッドオアアライブ (Model 2A rev A)	でっどおああらいぶ_1_1	Sega
 zeroguna	ゼロガンナー (Model 2A)	ぜろがんなー	Psikyo
 dynamcop	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (海外版 Model 2A)	だいなまいとでか_2	Sega
 dyndeka2	ダイナマイト刑事2 -カリブの海賊編 (日本版 Model 2A)	だいなまいとでか_2	Sega
 pltkidsa	パイロットキッズ (Model 2A)	ぱいろっときっず	Psikyo
 vstriker	バーチャストライカー (rev A)	ばーちゃすとらいかー_1	Sega
 vstrikro	バーチャストライカー	ばーちゃすとらいかー_1	Sega
-fvipers	ファイティングバイパーズ	ふぁいてぃんぐばいぱーず_1	Sega
-gunblade	ガンブレードNY -Special Air Assault Force	がんぶれーどにゅーよーく	Sega
-indy500	インディ500ツイン	いんでぃ500_1	Sega
-indy500d	インディ500デラックス	いんでぃ500_2	Sega
+fvipers	ファイティングバイパーズ (rev D)	ふぁいてぃんぐばいぱーず_1	Sega
+gunblade	ガンブレードNY -Special Air Assault Force (rev A)	がんぶれーどにゅーよーく	Sega
+indy500	インディ500ツイン (rev A)	いんでぃ500_1	Sega
+indy500d	インディ500デラックス (rev A)	いんでぃ500_2	Sega
 skytargt	スカイターゲット	すかいたーげっと	Sega
 schamp	ソニック・ザ・ファイターズ	そにっくざふぁいたーず	Sega
 lastbrnx	ラストブロンクス -東京番外地 (海外版 rev A)	らすとぶろんくす	Sega
 lastbrnj	ラストブロンクス -東京番外地 (日本版 rev A)	らすとぶろんくす	Sega
 doa	デッドオアアライブ (Model 2B)	でっどおああらいぶ_1_1	Sega
 sgt24h	スーパーGT 24h	すーぱーじーてぃー24h	Jaleco
-von	電脳戦機バーチャロン (日本版 rev B)	でんのうせんきばーちゃろん_1	Sega
-vonusa	電脳戦機バーチャロン / Cyber Troopers Virtual-On (USA版 rev B)	でんのうせんきばーちゃろん_1	Sega
+von	電脳戦機バーチャロン (USA版 rev B)	でんのうせんきばーちゃろん_1	Sega
+vonj	電脳戦機バーチャロン (日本版 rev B)	でんのうせんきばーちゃろん_1	Sega
 dynabb	ダイナマイトベースボール97	だいなまいとべーすぼーる97	Sega
 zerogun	ゼロガンナー (Model 2B)	ぜろがんなー	Psikyo
 zerogunj	ゼロガンナー (日本版 Model 2B)	ぜろがんなー	Psikyo
 dynmcopb	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (海外版 Model 2B)	だいなまいとでか_2	Sega
 dyndek2b	ダイナマイト刑事2 -カリブの海賊編 (日本版 Model 2B)	だいなまいとでか_2	Sega
-pltkids	パイロットキッズ (Model 2B) (rev A)	ぱいろっときっず	Psikyo
-waverunr	ウェーブランナー (rev A)	うぇーぶらんなー	Sega
+pltkids	パイロットキッズ (Model 2B rev A)	ぱいろっときっず	Psikyo
 rchase2	レールチェイス2 (rev A)	れーるちぇいす_2	Sega
 skisuprg	セガスキー スーパーG	せがすきーすーぱーじー	Sega
 stcc	セガ ツーリングカーチャンピオンシップ (rev A)	せがつーりんぐかーちゃんぴおんしっぷ	Sega
+waverunr	ウェーブランナー (rev A)	うぇーぶらんなー	Sega
 hotd	ザ・ハウス・オブ・ザ・デッド	ざはうすおぶざでっど	Sega
 overrev	オーバーレブ (rev A)	おーばーれぶ	Jaleco
-topskatr	トップスケーター -Sega Skateboarding (rev A)	とっぷすけーたー	Sega
+topskatr	トップスケーター -Sega Skateboarding (海外版 rev A)	とっぷすけーたー	Sega
+topskatu	トップスケーター -Sega Skateboarding (USA版)	とっぷすけーたー	Sega
 bel	ビハインド・エネミーラインズ	びはいんどえねみーらいんず	Sega/EPL Productions
 dynmcopc	ダイナマイト刑事2 -カリブの海賊編 / Dynamite Cop (USA版 Model 2C)	だいなまいとでか_2	Sega
 vf3	バーチャファイター3 (rev C)	ばーちゃふぁいたー_3_1	Sega
@@ -4769,35 +4771,36 @@ mnchmobl	ジョイフルロード / Munch Mobile (USA版)	じょいふるろーど	SNK (Centuri l
 marvins	マービンズメイズ	まーびんずめいず	SNK
 madcrash	マッドクラッシャー	まっどくらっしゃー	SNK
 vangrd2	ヴァンガードII	ばんがーど_2	SNK
-jcross	ジャンピングクロス	じゃんぴんぐくろす	SNK
 mainsnk	メインイベント	めいんいべんと	SNK
 canvas	キャンバスクロッキー	きゃんばすくろっきー	SNK
+jcross	ジャンピングクロス	じゃんぴんぐくろす	SNK
 sgladiat	グラディエイター	ぐらでぃえいたー	SNK
 hal21	ハル21	はる21	SNK
 hal21j	ハル21 (日本版)	はる21	SNK
 aso	ASO <Armored Scrum Object>	えーえすおー_1	SNK
 alphamis	ASO <Armored Scrum Object> / Alpha Mission	えーえすおー_1	SNK
 arian	ASO <Armored Scrum Object> / Arian Mission	えーえすおー_1	SNK
-tnk3	T.A.N.K / TNK III (USA版)	てぃーえーえぬけー	SNK
-tnk3j	T.A.N.K (日本版)	てぃーえーえぬけー	SNK
+tnk3	T.A.N.K. / TNK III (USA版)	てぃーえーえぬけー	SNK
+tnk3j	T.A.N.K. (日本版)	てぃーえーえぬけー	SNK
 athena	アテナ	あてな	SNK
 fitegolf	ファイティングゴルフ (海外版?)	ふぁいてぃんぐごるふ	SNK
 fitegol2	ファイティングゴルフ (USA版)	ふぁいてぃんぐごるふ	SNK
 countryc	ファイティングゴルフ / Country Club	ふぁいてぃんぐごるふ	SNK
-ikari	怒 / Ikari Warriors (USA版)	いかり_1	SNK
+ikari	怒 / Ikari Warriors (USA　JAMMA版)	いかり_1	SNK
+ikaria	怒 / Ikari Warriors (USA版)	いかり_1	SNK
 ikarijp	怒 (日本版)	いかり_1	SNK
-ikarijpb	怒 (日本版) (海賊版)	いかり_1	bootleg
+ikarijpb	怒 (ｊoystick ハック) (海賊版)	いかり_1	bootleg
 victroad	怒号層圏 / Victory Road	どごうそうけん	SNK
 dogosoke	怒号層圏	どごうそうけん	SNK
-dogosokj	怒号層圏 (joystick hack) (海賊版)	どごうそうけん	bootleg
+dogosokb	怒号層圏 (joystick ハック) (海賊版)	どごうそうけん	bootleg
 gwar	ゲバラ / Guerrilla War (USA版)	げばら	SNK
 gwarj	ゲバラ (日本版)	げばら	SNK
 gwara	ゲバラ / Guerrilla War (ver 1)	げばら	SNK
 gwarb	ゲバラ / Guerrilla War (海賊版)	げばら	bootleg
-bermudat	バミューダトライアングル (日本版)	ばみゅーだとらいあんぐる	SNK
-bermudao	バミューダトライアングル (日本版 old ver)	ばみゅーだとらいあんぐる	SNK
-bermudaa	バミューダトライアングル (USA版 older ver)	ばみゅーだとらいあんぐる	SNK
-worldwar	ワールドウォーズ (海外版)	わーるどうぉーず	SNK
+bermudat	バミューダトライアングル (海外版?)	ばみゅーだとらいあんぐる	SNK
+bermudaj	バミューダトライアングル (日本版)	ばみゅーだとらいあんぐる	SNK
+bermudaa	ワールドウォーズ (USA版)	わーるどうぉーず	SNK
+worldwar	ワールドウォーズ (海外版?)	わーるどうぉーず	SNK
 psychos	サイコ・ソルジャー (USA版)	さいこそるじゃー	SNK
 psychosj	サイコ・ソルジャー (日本版)	さいこそるじゃー	SNK
 chopper	航空騎兵物語 -The Legend of Air Cavalry / Chopper I (USA版 set 1)	こうくうきへいものがたり	SNK
@@ -4807,7 +4810,7 @@ legofair	航空騎兵物語 -The Legend of Air Cavalry (日本版)	こうくうきへいものがた
 fsoccer	ファイティングサッカー (ver 4)	ふぁいてぃんぐさっかー	SNK
 fsoccerj	ファイティングサッカー (日本版)	ふぁいてぃんぐさっかー	SNK
 fsoccerb	ファイティングサッカー (joystick hack) (海賊版)	ふぁいてぃんぐさっかー	bootleg
-tdfever	タッチダウンフィーバー	たっちだうんふぃーばー_1	SNK
+tdfever	タッチダウンフィーバー (USA版)	たっちだうんふぃーばー_1	SNK
 tdfeverj	タッチダウンフィーバー (日本版)	たっちだうんふぃーばー_1	SNK
 tdfever2	タッチダウンフィーバーII	たっちだうんふぃーばー_2	SNK
 ikari3	怒III -The Rescue (rotary joystick)	いかり_3	SNK
@@ -6356,7 +6359,7 @@ cabaret	キャバレー	きゃばれー	IGS
 jingbell	ジングルベル (イタリア版 ver 133I)	じんぐるべる	IGS
 lhb	龍虎榜 (V035C)	ろんふーばん_1	IGS
 lhba	龍虎榜 (V033C)	ろんふーばん_1	IGS
-dbc	達坂城 (V027H)	だーばんちぇん	IGS
+dbc	大阪城 (V027H)	だーばんちぇん	IGS
 chindrag	中國龍 (日本版 V021J)	ちゅうごくりゅう_1	IGS / Alta
 chugokur	中國龍 (日本版 V020J)	ちゅうごくりゅう_1	IGS / Alta
 chmplst2	龍虎榜II (V185H)	ろんふーばん_2	IGS
@@ -7011,6 +7014,7 @@ supnudg2	スーパーナッジャーII (ver 5.21)	すーぱーなっじゃー2	Coinmaster
 egghunt	エッグハント	えっぐはんと	Invi Image
 magic10	マジックス10 (ver 16.55)	まじっくす_2_1てん	A.W.P. Games
 magic10a	マジックス10 (ver 16.45)	まじっくす_2_1てん	A.W.P. Games
+magic10b	マジックス10 (ver 16.15)	まじっくす_2_1てん	A.W.P. Games
 magic102	マジックス10 2 (ver 1.1)	まじっくす_2_2てんつー	ABM Games
 suprpool	スーパープール (9743 rev 01)	すーぱーぷーる	ABM Games
 hotslot	ホットスロット (ver 05.01)	ほっとすろっと	ABM Electronics
