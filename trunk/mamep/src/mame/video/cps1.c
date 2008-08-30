@@ -1503,12 +1503,6 @@ static MACHINE_RESET( cps )
 		UINT16 *rom = (UINT16 *)memory_region(machine, "main");
 		rom[0xe5332/2] = 0x6014;
 	}
-	if (strcmp(gamename, "sf2m2" )==0)
-	{
-		/* Patch out protection check */
-		UINT16 *rom = (UINT16 *)memory_region(machine, "main");
-		rom[0xc0670/2] = 0x4e71;
-	}
 	if ((strcmp(gamename, "dinoh" )==0) ||
 		(strcmp(gamename, "dinoha" )==0))
 	{
@@ -1618,7 +1612,7 @@ READ16_HANDLER( cps1_cps_b_r )
 		}
 	}
 
-	popmessage("CPS-B read port %02x contact MAMEDEV", offset*2);
+//	popmessage("CPS-B read port %02x contact MAMEDEV", offset*2);
 
 	return 0xffff;
 }
@@ -1669,7 +1663,7 @@ WRITE16_HANDLER( cps1_cps_b_w )
 		}
 	}
 
-
+/*
 	if (offset != cps1_game_config->cpsb_addr/2 &&	// only varth writes here
 			offset != cps1_game_config->mult_factor1/2 &&
 			offset != cps1_game_config->mult_factor2/2 &&
@@ -1685,6 +1679,7 @@ WRITE16_HANDLER( cps1_cps_b_w )
 			offset != cps1_game_config->out2_addr/2 &&
 			!cps1_game_config->bootleg_kludge)
 		popmessage("CPS-B write %04x to port %02x contact MAMEDEV", data, offset*2);
+*/
 }
 
 
@@ -1881,17 +1876,17 @@ void cps1_get_video_base(void )
 		enablemask = cps1_game_config->layer_enable_mask[0];
 	if (cps1_game_config->layer_enable_mask[1] == cps1_game_config->layer_enable_mask[2])
 		enablemask = cps1_game_config->layer_enable_mask[1];
-	if (enablemask)
+/*	if (enablemask)
 	{
 		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
 			popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
 	}
-
+*/
 	enablemask = cps1_game_config->layer_enable_mask[0] | cps1_game_config->layer_enable_mask[1]
 			| cps1_game_config->layer_enable_mask[2]
 			| cps1_game_config->layer_enable_mask[3] | cps1_game_config->layer_enable_mask[4];
-	if (((layercontrol & ~enablemask) & 0x003e) != 0)
-		popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
+//	if (((layercontrol & ~enablemask) & 0x003e) != 0)
+//		popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
 }
 
 }
