@@ -2143,7 +2143,7 @@ Translation Files
 Files Traduzione
 
 # osd/winui/mameui.rc: 914
-Transparent in-game UI
+Transparency in-game UI
 UI trasparente in-gioco
 
 # osd/winui/mameui.rc: 779

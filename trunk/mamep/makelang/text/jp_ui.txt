@@ -2415,7 +2415,7 @@ Translation Files
 翻訳用ファイル
 
 # osd/winui/mameui.rc: 914
-Transparent in-game UI
+Transparency in-game UI
 ゲーム中のUIを透過する
 
 # osd/winui/mameui.rc: 779
@@ -2517,6 +2517,10 @@ Video emulation isn't 100% accurate
 # osd/winui/mameui.rc: 754
 Video output method
 ビデオ描画方式
+
+# osd/winui/winui.c: 850
+Videos (*.avi)
+ビデオ (*.avi)
 
 # osd/winui/winui.c: 843
 Videos (*.mng)
@@ -2861,10 +2865,6 @@ Version 8
 # osd/winui/properties.c: 433
 Version 9
 
-
-# osd/winui/winui.c: 850
-Videos (*.avi)
-ビデオ (*.avi)
 
 # osd/winui/winui.c: 872
 history (*.dat)

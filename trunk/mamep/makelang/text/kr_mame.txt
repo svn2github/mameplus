@@ -5847,7 +5847,7 @@ trackball
 트랙볼
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 UI 배경 투명도 [0 - 255]
 
 # emu/mame.c: 321
@@ -5861,10 +5861,6 @@ MAME 디렉토리에 압축을 해제해 주십시요
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
 벡터 표시에 안티얼라이징 사용
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-UI 텍스트에 투명 배경 사용
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored
@@ -6072,6 +6068,10 @@ View
 
 # emu/video.c: 1697
 frame:%ld 
+
+
+# emu/emuopts.c: 50
+path to cheat files
 
 
 # mess/messopts.c: 39

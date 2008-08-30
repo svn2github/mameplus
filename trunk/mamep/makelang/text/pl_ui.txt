@@ -2743,7 +2743,7 @@ Translation Files
 
 
 # osd/winui/mameui.rc: 914
-Transparent in-game UI
+Transparency in-game UI
 
 
 # osd/winui/properties.c: 1212 osd/winui/treeview.c: 1382

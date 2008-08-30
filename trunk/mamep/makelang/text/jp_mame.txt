@@ -5847,7 +5847,7 @@ trackball
 トラックボール
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 UIの背景の透明度 [0 - 255]
 
 # emu/mame.c: 321
@@ -5861,10 +5861,6 @@ MAMEと同じフォルダにチートデータを置いてください
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
 ベクタの描画にアンチエイリアスを使用
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-UIテキストの背景を半透明にする
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored
@@ -6064,6 +6060,10 @@ optional filename to write an AVI movie of the current session
 
 # emu/emuopts.c: 94
 override of the default snapshot/movie naming; %g == gamename, %i == index
+
+
+# emu/emuopts.c: 50
+path to cheat files
 
 
 # mess/messopts.c: 39

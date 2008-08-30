@@ -2095,7 +2095,7 @@ Translation Files
 Lefordított fájlok
 
 # osd/winui/mameui.rc: 914
-Transparent in-game UI
+Transparency in-game UI
 Átlatszó játék menü
 
 # osd/winui/mameui.rc: 779

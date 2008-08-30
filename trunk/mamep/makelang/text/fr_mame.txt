@@ -4879,7 +4879,7 @@ there are no old values
 Il n'y a pas d'anciennes valeurs
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 transparence de l'arrière plan UI [0 - 255]
 
 # emu/mame.c: 321
@@ -4893,10 +4893,6 @@ décompressez le et placer le dans le répertoire MAME
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
 utiliser l'antialising pour dessiner les vecteurs
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-utiliser la transparence de l'arrière plan pour les textes UI
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored
@@ -6048,6 +6044,10 @@ optional filename to write an AVI movie of the current session
 
 # emu/emuopts.c: 94
 override of the default snapshot/movie naming; %g == gamename, %i == index
+
+
+# emu/emuopts.c: 50
+path to cheat files
 
 
 # emu/clifront.c: 913

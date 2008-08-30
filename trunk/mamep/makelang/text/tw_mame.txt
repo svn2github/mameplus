@@ -4792,11 +4792,11 @@ UI Zoom Out
 
 # mess/mslegacy.c: 24
 UI:   Disabled
-設定選單:   已停用
+選單:   已停用
 
 # mess/mslegacy.c: 23
 UI:   Enabled
-設定選單:   已啟用
+選單:   已啟用
 
 # emu/datafile.c: 2233
 UNEMULATED PROTEC. : %3d  %3d\n
@@ -4952,7 +4952,7 @@ Video Options
 
 # emu/uimenu.c: 3121
 View
-檢視
+檢視方式
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 View Last Results
@@ -5662,6 +5662,10 @@ ROM 集合和 CHD 檔案的路徑
 path to artwork files
 Artwork 檔案的路徑
 
+# emu/emuopts.c: 50
+path to cheat files
+作弊碼檔案的路徑
+
 # emu/emuopts.c: 47
 path to controller definitions
 控制器定義檔的路徑
@@ -5895,8 +5899,8 @@ trackball
 軌跡球
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
-設定選單的半透明值 [0 - 255]
+transparency in-game UI [0 - 255]
+遊戲中選單的透明度 [0 - 255]
 
 # emu/mame.c: 321
 unable to open log file
@@ -5909,10 +5913,6 @@ unzip it and place it in the MAME directory
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
 使用反鋸齒描繪向量圖形
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-使用半透明的設定選單
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored

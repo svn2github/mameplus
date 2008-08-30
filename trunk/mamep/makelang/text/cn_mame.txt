@@ -4895,7 +4895,7 @@ trackball
 轨迹球
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 菜单背景透明度 [0 - 255]
 
 # emu/mame.c: 321
@@ -4905,10 +4905,6 @@ unable to open log file
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 unzip it and place it in the MAME directory
 请解压缩到 MAME 目录
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-菜单文字使用透明背景
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored
@@ -5944,6 +5940,10 @@ optional filename to write an AVI movie of the current session
 
 # emu/emuopts.c: 94
 override of the default snapshot/movie naming; %g == gamename, %i == index
+
+
+# emu/emuopts.c: 50
+path to cheat files
 
 
 # emu/clifront.c: 81

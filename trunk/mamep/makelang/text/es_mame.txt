@@ -5679,7 +5679,7 @@ trackball
 trackball
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 transparencia de fondo de pantalla de interfaz [0 - 255]
 
 # emu/mame.c: 321
@@ -5693,10 +5693,6 @@ deszipearlo y situarlo en el directorio de MAME
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
 utilizar antialiasing cuando se dibujen vectores
-
-# emu/emuopts.c: 202
-use transparent background for UI text
-usar transparencia de fondo de pantalla para interfaz de texto
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored
@@ -6064,6 +6060,10 @@ optional filename to write an AVI movie of the current session
 
 # emu/emuopts.c: 94
 override of the default snapshot/movie naming; %g == gamename, %i == index
+
+
+# emu/emuopts.c: 50
+path to cheat files
 
 
 # mess/messopts.c: 39

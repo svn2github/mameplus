@@ -664,7 +664,7 @@ Changing this item is not permitted
 
 # osd/winui/layout.c: 124
 Cheats
-作弊資料庫 (cheat)
+作弊碼檔案 (cheat)
 
 # osd/winui/mui_audit.c: 280, 290
 Checking Game %s - %s
@@ -2228,7 +2228,7 @@ Set game list and folder list font
 
 # osd/winui/mameui.rc: 1554
 Set in-game UI color palette
-設定遊戲中設定選單的色盤
+設定遊戲中選單的色盤
 
 # osd/winui/mameui.rc: 1623
 Set the History file to use
@@ -2639,8 +2639,8 @@ Translation Files
 翻譯檔案
 
 # osd/winui/mameui.rc: 914
-Transparent in-game UI
-半透明的遊戲中設定選單
+Transparency in-game UI
+遊戲中選單的透明度
 
 # osd/winui/mameui.rc: 779
 Triple buffering

@@ -5838,6 +5838,10 @@ path to ROMsets and hard disk images
 path to artwork files
 
 
+# emu/emuopts.c: 50
+path to cheat files
+
+
 # emu/emuopts.c: 47
 path to controller definitions
 
@@ -6051,7 +6055,7 @@ trackball
 
 
 # emu/emuopts.c: 203
-transparency of UI background [0 - 255]
+transparency in-game UI [0 - 255]
 
 
 # emu/mame.c: 321
@@ -6060,10 +6064,6 @@ unable to open log file
 
 # emu/emuopts.c: 137
 use antialiasing when drawing vectors
-
-
-# emu/emuopts.c: 202
-use transparent background for UI text
 
 
 # emu/emuopts.c: 212
