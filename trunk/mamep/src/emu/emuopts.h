@@ -183,7 +183,6 @@
 #define OPTION_M68K_CORE			"m68k_core"
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-#define OPTION_USE_TRANS_UI			"use_trans_ui"
 #define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */
 

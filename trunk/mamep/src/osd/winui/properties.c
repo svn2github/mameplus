@@ -2697,14 +2697,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),      (ddraw || d3d) && multimon);
 */
 
-#ifdef TRANS_UI
-	hCtrl = GetDlgItem(hWnd, IDC_TRANSUI);
-	useart = Button_GetCheck(hCtrl);
-
-	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCY),           useart);
-	EnableWindow(GetDlgItem(hWnd, IDC_TRANSPARENCYDISP),       useart);
-#endif /* TRANS_UI */
-
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();
 
@@ -3512,7 +3504,6 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_AUTO_PAUSE_PLAYBACK,		DM_BOOL,	OPTION_AUTO_PAUSE_PLAYBACK);
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-	datamap_add(properties_datamap, IDC_TRANSUI,				DM_BOOL,	OPTION_USE_TRANS_UI);
 	datamap_add(properties_datamap, IDC_TRANSPARENCY,			DM_INT,  	OPTION_UI_TRANSPARENCY);
 	datamap_add(properties_datamap, IDC_TRANSPARENCYDISP,			DM_INT,  	OPTION_UI_TRANSPARENCY);
 #endif /* TRANS_UI */

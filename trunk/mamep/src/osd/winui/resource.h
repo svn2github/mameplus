@@ -431,7 +431,6 @@
 #define IDC_PALETTE_TEXTG               1349 // UI_COLOR_PALETTE
 #define IDC_PALETTE_TEXTB               1350 // UI_COLOR_PALETTE
 
-#define IDC_TRANSUI                     1360 // TRANS_UI
 #define IDC_TRANSPARENCY                1361 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
 #define IDC_PROP_INPUT                  1363

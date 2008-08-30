@@ -910,12 +910,10 @@ BEGIN
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,136,135,10
 #endif /* AUTO_PAUSE_PLAYBACK */
 #ifdef TRANS_UI
-    GROUPBOX        "",IDC_STATIC,4,149,140,30,WS_DISABLED
-    CONTROL         "Transparent in-game UI",IDC_TRANSUI,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,149,120,10
+    GROUPBOX        "Transparency in-game UI",IDC_STATIC,4,149,140,30
     CONTROL         "IntensitySlider",IDC_TRANSPARENCY,"msctls_trackbar32",
-                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,163,105,12
-    CTEXT           "255",IDC_TRANSPARENCYDISP,120,163,20,12,SS_CENTERIMAGE | NOT WS_GROUP
+                    TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,162,105,12
+    CTEXT           "255",IDC_TRANSPARENCYDISP,120,162,20,12,SS_CENTERIMAGE | NOT WS_GROUP
 #endif /* TRANS_UI */
     GROUPBOX        "Artwork options",IDC_STATIC,147,45,108,69
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 

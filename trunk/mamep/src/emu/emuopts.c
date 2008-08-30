@@ -199,8 +199,7 @@ const options_entry mame_core_options[] =
 	{ "m68k_core",                   "c",         0,                 "change m68k core (c|drc)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	{ "use_trans_ui",                "1",         OPTION_BOOLEAN,    "use transparent background for UI text" },
-	{ "ui_transparency",             "224",       0,                 "transparency of UI background [0 - 255]" },
+	{ "ui_transparency",             "204",       0,                 "transparency in-game UI [0 - 255]" },
 #endif /* TRANS_UI */
 
 #ifdef UI_COLOR_DISPLAY

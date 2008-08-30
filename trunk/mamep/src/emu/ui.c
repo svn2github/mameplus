@@ -355,14 +355,11 @@ static void setup_palette(void)
 	ui_transparency = 255;
 
 #ifdef TRANS_UI
-	if (options_get_bool(mame_options(), OPTION_USE_TRANS_UI))
+	ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
+	if (ui_transparency < 0 || ui_transparency > 255)
 	{
-		ui_transparency = options_get_int(mame_options(), OPTION_UI_TRANSPARENCY);
-		if (ui_transparency < 0 || ui_transparency > 255)
-		{
-			mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
-			ui_transparency = 224;
-		}
+		mame_printf_error(_("Illegal value for %s = %s\n"), OPTION_UI_TRANSPARENCY, options_get_string(mame_options(), OPTION_UI_TRANSPARENCY));
+		ui_transparency = 224;
 	}
 #endif /* TRANS_UI */
 
@@ -397,7 +394,8 @@ static void setup_palette(void)
 #ifdef TRANS_UI
 		if (col == UI_FILLCOLOR)
 			rate = ui_transparency;
-		else if (col == CURSOR_COLOR)
+		else
+		if (col == CURSOR_COLOR)
 		{
 			rate = ui_transparency / 2;
 			if (rate < 128)
@@ -2850,8 +2848,7 @@ static void build_bgtexture(running_machine *machine)
 	int i;
 
 #ifdef TRANS_UI
-	if (options_get_bool(mame_options(), OPTION_USE_TRANS_UI))
-		a = ui_transparency;
+	a = ui_transparency;
 #endif /* TRANS_UI */
 
 	bgbitmap = bitmap_alloc(1, 1024, BITMAP_FORMAT_RGB32);
