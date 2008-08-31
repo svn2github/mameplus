@@ -32,10 +32,10 @@
 #define OPTION_GAMENAME				OPTION_UNADORNED(0)
 
 /* core configuration options */
+#define OPTION_READCONFIG			"readconfig"
 #ifdef DRIVER_SWITCH
 #define OPTION_DRIVER_CONFIG			"driver_config"
 #endif /* DRIVER_SWITCH */
-#define OPTION_READCONFIG			"readconfig"
 
 /* core search path options */
 #define OPTION_ROMPATH				"rompath"
@@ -177,7 +177,7 @@
 #define OPTION_IPS				"ips"
 #endif /* USE_IPS */
 #ifdef AUTO_PAUSE_PLAYBACK
-#define OPTION_AUTO_PAUSE_PLAYBACK		"auto_pause_playback"
+#define OPTION_AUTO_PAUSE_PLAYBACK		"auto_pause"
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 #define OPTION_M68K_CORE			"m68k_core"

@@ -759,7 +759,7 @@ try_again:
 		}
 
 		//  fatal error if we just can't do it
-		mame_printf_verbose(_WINDOWS("Unable to create the Direct3D device (%08X)\n"), (UINT32)result);
+		mame_printf_error(_WINDOWS("Unable to create the Direct3D device (%08X)\n"), (UINT32)result);
 		return 1;
 	}
 	d3d->create_error_count = 0;

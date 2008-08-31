@@ -4142,10 +4142,6 @@ static void InitializeM68kCoreUI(HWND hwnd)
 		(void)ComboBox_SetItemData(hCtrl, i++, "c");
 		(void)ComboBox_AddStringA(hCtrl, "DRC");
 		(void)ComboBox_SetItemData(hCtrl, i++, "drc");
-#if (HAS_M68000ASM)
-		(void)ComboBox_AddStringA(hCtrl, "ASM");
-		(void)ComboBox_SetItemData(hCtrl, i++, "asm");
-#endif
 
 		name = options_get_string(pCurrentOpts, OPTION_M68K_CORE);
 		if (sscanf(name, "%d", &n) == 1)

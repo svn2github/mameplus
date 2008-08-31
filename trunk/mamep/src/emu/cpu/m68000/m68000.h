@@ -79,7 +79,6 @@ struct _m68k_encryption_interface
 //ks hcmame s switch m68k core
 void m68000c_get_info(UINT32 state, cpuinfo *info);
 void m68000drc_get_info(UINT32 state, cpuinfo *info);
-void m68000asm_get_info(UINT32 state, cpuinfo *info);
 extern void m68000_memory_interface_set(int Entry,void * memory_routine);
 
 /****************************************************************************
@@ -101,7 +100,6 @@ extern void m68000_memory_interface_set(int Entry,void * memory_routine);
 //ks hcmame s switch m68k core
 void m68008c_get_info(UINT32 state, cpuinfo *info);
 void m68008drc_get_info(UINT32 state, cpuinfo *info);
-void m68008asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -123,7 +121,6 @@ void m68008asm_get_info(UINT32 state, cpuinfo *info);
 //ks hcmame s switch m68k core
 void m68010c_get_info(UINT32 state, cpuinfo *info);
 void m68010drc_get_info(UINT32 state, cpuinfo *info);
-void m68010asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -145,7 +142,6 @@ void m68010asm_get_info(UINT32 state, cpuinfo *info);
 //ks hcmame s switch m68k core
 void m68ec020c_get_info(UINT32 state, cpuinfo *info);
 void m68ec020drc_get_info(UINT32 state, cpuinfo *info);
-void m68ec020asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************
@@ -167,7 +163,6 @@ void m68ec020asm_get_info(UINT32 state, cpuinfo *info);
 //ks hcmame s switch m68k core
 void m68020c_get_info(UINT32 state, cpuinfo *info);
 void m68020drc_get_info(UINT32 state, cpuinfo *info);
-void m68020asm_get_info(UINT32 state, cpuinfo *info);
 #endif
 
 /****************************************************************************

@@ -196,7 +196,6 @@ const options_entry mame_win_options[] =
 	// input options
 	{ NULL,                       NULL,       OPTION_HEADER,     "INPUT DEVICE OPTIONS" },
 	{ "dual_lightgun;dual",       "0",        OPTION_BOOLEAN,    "enable dual lightgun input" },
-
 #ifdef JOYSTICK_ID
 	{ "joyid1(0-7)",              "0",        0,                 "set joystick ID (Player1)" },
 	{ "joyid2(0-7)",              "1",        0,                 "set joystick ID (Player2)" },
@@ -206,17 +205,7 @@ const options_entry mame_win_options[] =
 	{ "joyid6(0-7)",              "5",        0,                 "set joystick ID (Player6)" },
 	{ "joyid7(0-7)",              "6",        0,                 "set joystick ID (Player7)" },
 	{ "joyid8(0-7)",              "7",        0,                 "set joystick ID (Player8)" },
-#else /* JOYSTICK_ID */
-	{ "joyid1",                   "0",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid2",                   "1",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid3",                   "2",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid4",                   "3",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid5",                   "4",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid6",                   "5",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid7",                   "6",        OPTION_DEPRECATED, "(disabled by compiling option)" },
-	{ "joyid8",                   "7",        OPTION_DEPRECATED, "(disabled by compiling option)" },
 #endif /* JOYSTICK_ID */
-
 
 	{ NULL }
 };

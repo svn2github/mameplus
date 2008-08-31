@@ -567,7 +567,6 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 	const char *name;
 	const char *value;
 	options_data *basedata;
-	int unadorned_index = 0;
 	int total = 1;
 
 	/* loop over all items */
@@ -585,13 +584,6 @@ int options_output_diff_command_line(core_options *opts, core_options *baseopts,
 			/* get name and data of this value */
 			name = astring_c(data->links[0].name);
 			value = astring_c(data->data);
-
-			/* skip UNADORNED options */
-			if (strcmp(name, OPTION_UNADORNED(unadorned_index)) == 0)
-			{
-				unadorned_index++;
-				continue;
-			}
 
 			/* look up counterpart in baseopts, if baseopts is specified */
 			basedata = (baseopts != NULL) ? find_entry_data(baseopts, name, FALSE) : NULL;
@@ -663,7 +655,6 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 	const char *name;
 	const char *value;
 	options_data *basedata;
-	int unadorned_index = 0;
 
 	/* loop over all items */
 	for (data = opts->datalist; data != NULL; data = data->next)
@@ -678,13 +669,6 @@ void options_output_diff_ini_file(core_options *opts, core_options *baseopts, co
 			/* get name and data of this value */
 			name = astring_c(data->links[0].name);
 			value = astring_c(data->data);
-
-			/* skip UNADORNED options */
-			if (strcmp(name, OPTION_UNADORNED(unadorned_index)) == 0)
-			{
-				unadorned_index++;
-				continue;
-			}
 
 			/* look up counterpart in baseopts, if baseopts is specified */
 			basedata = (baseopts != NULL) ? find_entry_data(baseopts, name, FALSE) : NULL;
@@ -729,7 +713,6 @@ void options_output_ini_file(core_options *opts, core_file *inifile)
 void options_output_ini_stdfile(core_options *opts, FILE *inifile)
 {
 	options_data *data;
-	int unadorned_index = 0;
 
 	/* loop over all items */
 	for (data = opts->datalist; data != NULL; data = data->next)
@@ -741,13 +724,6 @@ void options_output_ini_stdfile(core_options *opts, FILE *inifile)
 		/* otherwise, output entries for all non-deprecated and non-command items */
 		else if ((data->flags & (OPTION_DEPRECATED | OPTION_INTERNAL | OPTION_COMMAND)) == 0)
 		{
-			/* skip UNADORNED options */
-			if (strcmp(astring_c(data->links[0].name), OPTION_UNADORNED(unadorned_index)) == 0)
-			{
-				unadorned_index++;
-				continue;
-			}
-
 			if (astring_chr(data->data, 0, ' ') != -1)
 				fprintf(inifile, "%-25s \"%s\"\n", astring_c(data->links[0].name), astring_c(data->data));
 			else

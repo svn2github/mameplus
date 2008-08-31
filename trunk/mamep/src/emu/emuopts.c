@@ -31,10 +31,10 @@ const options_entry mame_core_options[] =
 
 	/* config options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
-#ifdef DRIVER_SWITCH
-	{ "driver_config",               "mame,plus,console", 0,         "switch drivers"},
-#endif /* DRIVER_SWITCH */
 	{ "readconfig;rc",               "1",         OPTION_BOOLEAN,    "enable loading of configuration files" },
+#ifdef DRIVER_SWITCH
+	{ "driver_config",                "mame,plus,console", 0,         "switch drivers"},
+#endif /* DRIVER_SWITCH */
 
 	/* seach path options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE SEARCH PATH OPTIONS" },
@@ -192,7 +192,7 @@ const options_entry mame_core_options[] =
 	{ "ips",                         NULL,        0,                 "ips datfile name"},
 #endif /* USE_IPS */
 #ifdef AUTO_PAUSE_PLAYBACK
-	{ "auto_pause_playback",         "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
+	{ "auto_pause",                  "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 	/* ks hcmame s switch m68k core */

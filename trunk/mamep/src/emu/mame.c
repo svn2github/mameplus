@@ -1530,7 +1530,7 @@ static void destroy_machine(running_machine *machine)
 
 static void m68kcore_init(running_machine *machine)
 {
-	static const char *names[] = { "C", "DRC", "ASM" };
+	static const char *names[] = { "C", "DRC" };
 	cpu_config *cpu_ptr = (cpu_config *)machine->config->cpu;
 	int cpunum;
 	cpu_type type;
@@ -1543,10 +1543,6 @@ static void m68kcore_init(running_machine *machine)
 			m68k_core = 0;
 		else if (mame_stricmp(stemp, "drc") == 0)
 			m68k_core = 1;
-#if (HAS_M68000ASM)
-		else if (mame_stricmp(stemp, "asm") == 0)
-			m68k_core = 2;
-#endif
 		else
 		{
 			m68k_core = options_get_int(mame_options(), OPTION_M68K_CORE);
@@ -1568,11 +1564,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68000ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
@@ -1593,11 +1584,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68000ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
@@ -1618,11 +1604,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68010ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
@@ -1643,11 +1624,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68020ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
@@ -1668,11 +1644,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68020ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core
@@ -1693,11 +1664,6 @@ static void m68kcore_init(running_machine *machine)
 			switch (m68k_core)
 			{
 			case 2:
-#if (HAS_M68040ASM)
-				// enable ASM core
-				cpu_ptr[cpunum].type += 2;
-				break;
-#endif
 			case 1:
 #if (HAS_M68000DRC)
 				// enable DRC core

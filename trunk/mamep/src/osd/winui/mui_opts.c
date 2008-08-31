@@ -236,13 +236,13 @@ static void  build_default_bios(void);
 #if 0 //def MESS
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_system"
-//#define MUIOPTION_HISTORY_FILE					"sysinfo_file"
-//#define MUIOPTION_MAMEINFO_FILE					"messinfo_file"
+#define MUIOPTION_HISTORY_FILE					"sysinfo_file"
+#define MUIOPTION_MAMEINFO_FILE					"messinfo_file"
 // Option values
 #define MUIDEFAULT_SELECTION					"nes"
 #define MUIDEFAULT_SPLITTERS					"152,310,468"
-//#define MUIHISTORY_FILE							"sysinfo.dat"
-//#define MUIMAMEINFO_FILE						"messinfo.dat"
+#define MUIHISTORY_FILE							"sysinfo.dat"
+#define MUIMAMEINFO_FILE						"messinfo.dat"
 #else
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_game"
@@ -297,7 +297,7 @@ static const options_entry regSettings[] =
 #if 0 //def MESS
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"0",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"0",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_HIDE_TABS,					"cpanel, pcb, history, story", 0, NULL },
+	{ MUIOPTION_HIDE_TABS,					"flyer, cabinet, marquee, title, cpanel, pcb", 0, NULL },
 	{ MUIOPTION_HISTORY_TAB,				"1",        0,                 NULL },
 #else
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"1",        OPTION_BOOLEAN,    NULL },
@@ -1513,18 +1513,6 @@ void SetPcbDir(const WCHAR *path)
 	options_set_wstring(settings, MUIOPTION_PCB_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 
-#ifdef USE_VIEW_PCBINFO
-const WCHAR * GetPcbInfoDir(void)
-{
-	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
-}
-
-void SetPcbInfoDir(const WCHAR *path)
-{
-	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* USE_VIEW_PCBINFO */
-
 const WCHAR * GetDiffDir(void)
 {
 	return options_get_wstring(global, OPTION_DIFF_DIRECTORY);
@@ -1595,6 +1583,18 @@ void SetMAMEInfoFileName(const WCHAR* path)
 {
 	options_set_wstring(settings, OPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
 }
+
+#ifdef USE_VIEW_PCBINFO
+const WCHAR * GetPcbInfoDir(void)
+{
+	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
+}
+
+void SetPcbInfoDir(const WCHAR *path)
+{
+	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_VIEW_PCBINFO */
 
 const char* GetSnapName(void)
 {
@@ -3258,6 +3258,7 @@ BOOL IsGlobalOption(const char *option_name)
 #ifdef USE_HISCORE
 		OPTION_HISCORE_FILE,
 #endif /* USE_HISCORE */
+#ifdef UI_COLOR_PALETTE
 		OPTION_FONT_BLANK,
 		OPTION_FONT_NORMAL,
 		OPTION_FONT_SPECIAL,
@@ -3273,6 +3274,7 @@ BOOL IsGlobalOption(const char *option_name)
 		OPTION_BUTTON_NAVY,
 		OPTION_BUTTON_LIME,
 		OPTION_CURSOR,
+#endif /* UI_COLOR_PALETTE */
 		OPTION_LANGUAGE,
 		OPTION_USE_LANG_LIST
 	};
