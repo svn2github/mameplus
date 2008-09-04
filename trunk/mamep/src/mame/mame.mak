@@ -264,6 +264,7 @@ SOUNDS += NAMCO_CUS30
 SOUNDS += NAMCO_52XX
 SOUNDS += NAMCO_63701X
 SOUNDS += NAMCONA
+SOUNDS += SNKWAVE
 SOUNDS += C140
 SOUNDS += C352
 SOUNDS += TMS36XX
@@ -588,7 +589,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/commando.o $(VIDEO)/commando.o \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
+	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o\
 	$(DRIVERS)/egghunt.o \
 	$(DRIVERS)/fcrash.o \
 	$(DRIVERS)/gng.o $(VIDEO)/gng.o \
@@ -1071,7 +1072,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/playch10.o $(MACHINE)/playch10.o $(VIDEO)/playch10.o \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
-	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
+	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o\
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(VIDEO)/ppu2c0x.o \
 
@@ -1271,11 +1272,9 @@ $(MAMEOBJ)/sigma.a: \
 $(MAMEOBJ)/snk.a: \
 	$(DRIVERS)/bbusters.o $(VIDEO)/bbusters.o \
 	$(DRIVERS)/dmndrby.o \
-	$(DRIVERS)/hal21.o \
 	$(DRIVERS)/hng64.o $(VIDEO)/hng64.o \
 	$(DRIVERS)/lasso.o $(VIDEO)/lasso.o \
 	$(DRIVERS)/mainsnk.o $(VIDEO)/mainsnk.o \
-	$(DRIVERS)/marvins.o $(VIDEO)/marvins.o \
 	$(DRIVERS)/munchmo.o $(VIDEO)/munchmo.o \
 	$(DRIVERS)/prehisle.o $(VIDEO)/prehisle.o \
 	$(DRIVERS)/rockola.o $(AUDIO)/rockola.o $(VIDEO)/rockola.o \
@@ -1663,6 +1662,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/usgames.o $(VIDEO)/usgames.o \
 	$(DRIVERS)/vamphalf.o \
 	$(DRIVERS)/vcombat.o \
+	$(DRIVERS)/videopkr.o \
 	$(DRIVERS)/vroulet.o \
 	$(DRIVERS)/wldarrow.o \
 	$(DRIVERS)/xyonix.o $(VIDEO)/xyonix.o \
@@ -1759,7 +1759,7 @@ $(DRIVERS)/pmpoker.o:	$(LAYOUT)/pmpoker.lh \
 						$(LAYOUT)/goldnpkr.lh \
 						$(LAYOUT)/pottnpkr.lh
 
-$(DRIVERS)/qix.o:		$(LAYOUT)/elecyoyo.lh
+$(DRIVERS)/qix.o:	$(LAYOUT)/elecyoyo.lh
 
 $(DRIVERS)/sbrkout.o:	$(LAYOUT)/sbrkout.lh
 

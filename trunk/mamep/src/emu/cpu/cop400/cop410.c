@@ -23,6 +23,7 @@
 #include "driver.h"
 #include "cpuintrf.h"
 #include "debugger.h"
+#include "deprecat.h"
 #include "cop400.h"
 
 /* The opcode table now is a combination of cycle counts and function pointers */
@@ -491,8 +492,8 @@ void cop410_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_PTR_INSTRUCTION_COUNTER:			info->icount = &cop410_ICount;			break;
 		case CPUINFO_PTR_VALIDITY_CHECK:				info->validity_check = cop410_validity_check;	break;
 
-/*      case CPUINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM:
-            info->internal_map8 = address_map_cop410_internal_rom;                              break;*/
+		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_PROGRAM:
+            info->internal_map8 = address_map_cop410_internal_rom;                              break;
 		case CPUINFO_PTR_INTERNAL_MEMORY_MAP + ADDRESS_SPACE_DATA:
  			info->internal_map8 = address_map_cop410_internal_ram;								break;
 
