@@ -46,7 +46,6 @@ enum
 #endif /* STORY_DATAFILE */
 	UI_mameinfomissing,
 	UI_drivinfomissing,
-	UI_statisticsmissing,
 #ifdef CMD_LIST
 	UI_commandmissing,
 #endif /* CMD_LIST */
@@ -69,7 +68,6 @@ enum
 #endif /* STORY_DATAFILE */
 	UI_mameinfo,
 	UI_drivinfo,
-	UI_statistics,
 #ifdef CMD_LIST
 	UI_command,
 #endif /* CMD_LIST */

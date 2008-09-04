@@ -3932,8 +3932,7 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 			 || (dattype == UI_story && (load_driver_story(machine->gamedrv, bufptr, bufsize) == 0))
 #endif /* STORY_DATAFILE */
 			 || (dattype == UI_mameinfo && (load_driver_mameinfo(machine->gamedrv, bufptr, bufsize) == 0))
-			 || (dattype == UI_drivinfo && (load_driver_drivinfo(machine->gamedrv, bufptr, bufsize) == 0))
-			 /*|| (dattype == UI_statistics && (load_driver_statistics(bufptr, bufsize) == 0))*/)
+			 || (dattype == UI_drivinfo && (load_driver_drivinfo(machine->gamedrv, bufptr, bufsize) == 0)))
 			{
 				last_drv = machine->gamedrv;
 				last_selected = selected;
@@ -3965,9 +3964,6 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 		{
 		//case UI_mameinfo:
 		//case UI_drivinfo:
-		case UI_statistics:
-			ui_draw_message_window_fixed_width(bufptr);
-			break;
 		default:
 			ui_draw_message_window(bufptr);
 		}
@@ -3993,9 +3989,6 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 			break;
 		case UI_drivinfo:
 			strcat(msg, ui_getstring(UI_drivinfomissing));
-			break;
-		case UI_statistics:
-			strcat(msg, ui_getstring(UI_statisticsmissing));
 			break;
 		}
 

@@ -50,7 +50,6 @@ static const char *const mame_default_text[] =
 #endif /* STORY_DATAFILE */
 	"Mameinfo not available",
 	"Driverinfo not available",
-	"Statistics not available",
 #ifdef CMD_LIST
 	"Command List not available",
 #endif /* CMD_LIST */
@@ -73,7 +72,6 @@ static const char *const mame_default_text[] =
 #endif /* STORY_DATAFILE */
 	CAPSTARTGAMENOUN " Mameinfo",
 	CAPSTARTGAMENOUN " Driverinfo",
-	APPNAME " Statistics",
 #ifdef CMD_LIST
 	"Show Command List",
 #endif /* CMD_LIST */
