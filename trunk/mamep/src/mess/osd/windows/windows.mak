@@ -24,8 +24,7 @@ MESSLIBOSD += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
-	$(MESS_WINOBJ)/opcntrl.o	\
-	$(MESS_WINOBJ)/tapedlg.o
+	$(MESS_WINOBJ)/opcntrl.o
 
 ifeq ($(NO_DLL),)
     $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc

@@ -26,7 +26,6 @@ enum
 
 	UI_imageinfo,
 	UI_filemanager,
-	UI_tapecontrol,
 
 	UI_notapeimageloaded,
 	UI_recording,
