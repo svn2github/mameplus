@@ -377,9 +377,9 @@ orangeci	VIP 俱乐部 一发开放 [BET] (日版 880221)	VIP 俱乐部 一发开放 [BET] (日版
 vipclub	VIP 俱乐部 一发开放 [BET] (日版 880310)	VIP 俱乐部 一发开放 [BET] (日版 880310)	Daiichi Denshi
 korinai	麻雀爱玩无罪 (日版 880425)	麻雀爱玩无罪 (日版 880425)	Nichibutsu
 korinaim	麻雀爱玩无罪 [BET] (日版 880920)	麻雀爱玩无罪 [BET] (日版 880920)	Nichibutsu
-kaguya	妖姬麻雀 [BET] (日版 880521)	妖姬麻雀 [BET] (日版 880521)	MIKI SYOUJI
-kaguya2	妖姬麻雀 2 [BET] (日版 890829)	妖姬麻雀 2 [BET] (日版 890829)	MIKI SYOUJI
-kaguya2f	妖姬麻雀 2 Fukkokuban [BET] (日版 010808)	妖姬麻雀 2 Fukkokuban [BET] (日版 010808)	MIKI SYOUJI
+kaguya	麻雀妖姬 [BET] (日版 880521)	麻雀妖姬 [BET] (日版 880521)	MIKI SYOUJI
+kaguya2	麻雀妖姬 2 [BET] (日版 890829)	麻雀妖姬 2 [BET] (日版 890829)	MIKI SYOUJI
+kaguya2f	麻雀妖姬 2 Fukkokuban [BET] (日版 010808)	麻雀妖姬 2 Fukkokuban [BET] (日版 010808)	MIKI SYOUJI
 otonano	大人麻雀 (日版 880628)	大人麻雀 (日版 880628)	Apple
 kanatuen	金津园之女 [BET] (日版 880905)	金津园之女 [BET] (日版 880905)	Panac
 kyuhito	究极之女 [BET] (日版 880824)	究极之女 [BET] (日版 880824)	ROLLER TRON
@@ -3249,11 +3249,11 @@ hotrodj	极速马力 (日版, 4 Players, 软盘装置)	极速马力 (日版, 4 Players, 软盘装置
 sspirits	轰炸传说 (世界版, 软盘装置)	轰炸传说 (世界版, 软盘装置)	Sega
 sspiritj	轰炸传说 (日版, 软盘 DS3-5000-02-REV-A 装置)	轰炸传说 (日版, 软盘 DS3-5000-02-REV-A 装置)	Sega
 sspirtfc	轰炸传说 (世界版, 软盘装置, FD1094 317-0058-02c)	轰炸传说 (世界版, 软盘装置, FD1094 317-0058-02c)	Sega
-gground	大地枪声 (世界版, 3 Players, 软盘装置, FD1094 317-0058-03c?)	大地枪声 (世界版, 3 Players, 软盘装置, FD1094 317-0058-03c?)	Sega
+gground	大地枪声 (世界版, 3 Players, 软盘装置, FD1094 317-0058-03d Rev A)	大地枪声 (世界版, 3 Players, 软盘装置, FD1094 317-0058-03d Rev A)	Sega
 ggroundj	大地枪声 (日版, 2 Players, 软盘装置, FD1094 317-0058-03b)	大地枪声 (日版, 2 Players, 软盘装置, FD1094 317-0058-03b)	Sega
 crkdown	紧急任务 (世界版, 软盘装置, FD1094 317-0058-04c)	紧急任务 (世界版, 软盘装置, FD1094 317-0058-04c)	Sega
 crkdownu	紧急任务 (美版, 软盘装置, FD1094 317-0058-04d)	紧急任务 (美版, 软盘装置, FD1094 317-0058-04d)	Sega
-crkdownj	紧急任务 (日版, 软盘装置, FD1094 317-0058-04b)	紧急任务 (日版, 软盘装置, FD1094 317-0058-04b)	Sega
+crkdownj	紧急任务 (日版, 软盘装置, FD1094 317-0058-04b Rev A)	紧急任务 (日版, 软盘装置, FD1094 317-0058-04b Rev A)	Sega
 sgmast	超级高尔夫大师赛 (世界版?, 软盘装置, FD1094 317-0058-05d?)	超级高尔夫大师赛 (世界版?, 软盘装置, FD1094 317-0058-05d?)	Sega
 sgmastc	超级高尔夫大师赛 (世界版, 软盘装置, FD1094 317-0058-05c)	超级高尔夫大师赛 (世界版, 软盘装置, FD1094 317-0058-05c)	Sega
 sgmastj	超级高尔夫大师赛 (日版, 软盘装置, FD1094 317-0058-05b)	超级高尔夫大师赛 (日版, 软盘装置, FD1094 317-0058-05b)	Sega
@@ -3584,6 +3584,8 @@ cvs2gd	Capcom 对 SNK 2	Capcom 对 SNK 2	Capcom
 hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
 naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
 awbios	Atomiswave Bios	Atomiswave Bios	Sammy
+fotns	新北斗神拳	新北斗神拳	Sammy
+demofist	破坏拳	破坏拳	Sammy
 hikaru	Hikaru Bios	Hikaru Bios	Sega
 airtrix	天空战士	天空战士	Sega
 pharrier	星球风暴	星球风暴	Sega
@@ -4814,6 +4816,7 @@ fitegol2	战斗高尔夫 (美版)	战斗高尔夫 (美版)	SNK
 countryc	战斗高尔夫 Country Club	战斗高尔夫 Country Club	SNK
 ikari	怒 (美版 JAMMA)	怒 (美版 JAMMA)	SNK
 ikaria	怒 (美版)	怒 (美版)	SNK
+ikarinc	怒 (美版 No Continues)	怒 (美版 No Continues)	SNK
 ikarijp	怒 (日版)	怒 (日版)	SNK
 ikarijpb	怒 (操纵杆 hack 盗版)	怒 (操纵杆 hack 盗版)	bootleg
 victroad	怒号层圈 胜利之路	怒号层圈 胜利之路	SNK
@@ -4822,7 +4825,7 @@ dogosokb	怒号层圈 (操纵杆 盗版)	怒号层圈 (操纵杆 盗版)	bootleg
 gwar	古巴战士 (美版)	古巴战士 (美版)	SNK
 gwarj	古巴战士 (日版)	古巴战士 (日版)	SNK
 gwara	古巴战士 (版本 1)	古巴战士 (版本 1)	SNK
-gwarb	古巴战士 (盗版)	古巴战士 (盗版)	bootleg
+gwarb	古巴战士 (操纵杆 hack 盗版)	古巴战士 (操纵杆 hack 盗版)	bootleg
 bermudat	百慕大魔鬼三角 (世界版?)	百慕大魔鬼三角 (世界版?)	SNK
 bermudaj	百慕大魔鬼三角 (日版)	百慕大魔鬼三角 (日版)	SNK
 bermudaa	百慕大魔鬼三角 (世界大战) (美版)	百慕大魔鬼三角 (世界大战) (美版)	SNK
@@ -5170,6 +5173,7 @@ ddragonb	双截龙 (盗版 HD6309)	双截龙 (盗版 HD6309)	bootleg
 ddragnba	双截龙 (盗版 M6803)	双截龙 (盗版 M6803)	bootleg
 ddgn6809	双截龙 (盗版 3xM6809, 第1套)	双截龙 (盗版 3xM6809, 第1套)	bootleg
 dd6809a	双截龙 (盗版 3xM6809, 第2套)	双截龙 (盗版 3xM6809, 第2套)	bootleg
+ddragob2	双截龙 (盗版)	双截龙 (盗版)	bootleg
 spdodgeb	热血高校躲避球 (美版)	热血高校躲避球 (美版)	Technos
 nkdodge	热血高校躲避球 (日版)	热血高校躲避球 (日版)	Technos
 nkdodgeb	热血高校躲避球 (日版, 盗版)	热血高校躲避球 (日版, 盗版)	Technos
@@ -5543,10 +5547,10 @@ raiden2c	雷电 II (第4套, 日版)	雷电 II (第4套, 日版)	Seibu Kaihatsu
 raiden2d	雷电 II (第5套)	雷电 II (第5套)	Seibu Kaihatsu
 raiden2e	雷电 II (第6套, 容易的版本)	雷电 II (第6套, 容易的版本)	Seibu Kaihatsu
 raiden2f	雷电 II (第7套)	雷电 II (第7套)	Seibu Kaihatsu
-raidndx	雷电DX (第1套)	雷电DX (第1套)	Seibu Kaihatsu
-raidndxa	雷电 DX (第2套)	雷电 DX (第2套)	Seibu Kaihatsu
+raidndx	雷电 DX (第1套)	雷电 DX (第1套)	Seibu Kaihatsu
 raidndxj	雷电 DX (日版)	雷电 DX (日版)	Seibu Kaihatsu
-raidndxm	雷电 DX (Metrotainment license)	雷电 DX (Metrotainment license)	Seibu Kaihatsu
+raidndxm	雷电 DX (Metrotainment 许可)	雷电 DX (Metrotainment 许可)	Seibu Kaihatsu
+raidndxt	雷电 DX (Tuning 许可)	雷电 DX (Tuning 许可)	Seibu Kaihatsu
 zeroteam	零组特攻队 (第1套)	零组特攻队 (第1套)	Seibu Kaihatsu
 zeroteaa	零组特攻队 (第2套)	零组特攻队 (第2套)	Seibu Kaihatsu
 zeroteab	零组特攻队 (第3套)	零组特攻队 (第3套)	Seibu Kaihatsu
@@ -6835,6 +6839,7 @@ skyarmy	天空军队	天空军队	Shoei
 lethalj	致命法理	致命法理	The Game Room
 eggventr	鸡蛋趣味射击 (Release 10)	鸡蛋趣味射击 (Release 10)	The Game Room
 eggvent7	鸡蛋趣味射击 (Release 7)	鸡蛋趣味射击 (Release 7)	The Game Room
+eggventa	鸡蛋趣味射击 (A.L. Release)	鸡蛋趣味射击 (A.L. Release)	The Game Room (Allied Leisure license)
 eggvntdx	鸡蛋趣味射击豪华版	鸡蛋趣味射击豪华版	The Game Room
 ripribit	青蛙食物 (版本 2.8.4)	青蛙食物 (版本 2.8.4)	LAI Games
 cfarm	鸡畜场 (版本 2.0)	鸡畜场 (版本 2.0)	LAI Games
@@ -7058,6 +7063,7 @@ suprpool	超级撞球 (9743 rev.01)	超级撞球 (9743 rev.01)	ABM Games
 hotslot	火热吃角子老虎 (ver. 05.01)	火热吃角子老虎 (ver. 05.01)	ABM Electronics
 mcolors	魔法颜色 (ver. 1.7a)	魔法颜色 (ver. 1.7a)	unknown
 galaxi	蜜蜂扑克 (v2.0)	蜜蜂扑克 (v2.0)	B.R.L.
+magjoker	魔法鬼牌 (v1.25.10.2000)	魔法鬼牌 (v1.25.10.2000)	B.R.L.
 dwarfd	侏儒兽穴	侏儒兽穴	Electro-Sport
 trvquest	琐事问答	琐事问答	Sunn / Techstar
 wheelfir	火焰车轮	火焰车轮	TCH
@@ -7149,6 +7155,7 @@ rockduck	摇摆鸭子 (工程版?)	摇摆鸭子 (工程版?)	Datel SAS
 tetriunk	俄罗斯方块 (未知制造商)	俄罗斯方块 (未知制造商)	Unknown
 smstrv	问答 百科 (sms)	问答 百科 (sms)	SMS MFG CORP
 skylncr	太空骑兵 (伯顿国际贸易)	太空骑兵 (伯顿国际贸易)	Bordun International
+madzoo	疯狂动物园	疯狂动物园 International
 livequiz	实况问答秀	实况问答秀	Andamiro
 cowrace	乳牛大赛	乳牛大赛	<unknown>
 mjsiyoub	麻雀校园	麻雀校园	Visco
@@ -7207,6 +7214,10 @@ shadfgtr	暗影战士	暗影战士	Sega?
 blackt96	黑色接触 '96	黑色接触 '96	D.G.R.M.
 lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
 lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
+videopkr	视频扑克	视频扑克	InterFlip
+blckjack	二十一点	二十一点	InterFlip
+videodad	视频骰子	视频骰子	InterFlip
+videocba	视频水果机	视频水果机	InterFlip
 laperla	快乐啦啦队 (Ver 2.0)	快乐啦啦队 (Ver 2.0)	Nazionale Elettronica
 laperlag	快乐黄金啦啦队 (Ver 2.0)	快乐黄金啦啦队 (Ver 2.0)	Nazionale Elettronica
 capunc	双倍打击 (Ver 1.2)	双倍打击 (Ver 1.2)	Nazionale Elettronica
