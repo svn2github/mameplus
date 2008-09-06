@@ -24,7 +24,7 @@
 #include "dialog.h"
 #include "opcntrl.h"
 #include "deprecat.h"
-#include "uitext.h"
+#include "mslegacy.h"
 #include "strconv.h"
 #include "utils.h"
 #include "artworkx.h"
@@ -33,6 +33,7 @@
 #include "devices/cassette.h"
 #include "windows/window.h"
 #include "uimess.h"
+#include "mslegacy.h"
 #include "winutf8.h"
 
 #ifdef UNDER_CE
@@ -912,7 +913,6 @@ static void change_device(HWND wnd, const device_config *device, int is_save)
 	}
 
 	// use image directory, if it is there
-	get_devicedirectory(info.type);
 	initial_dir = image_working_directory(device);
 
 	// add custom dialog elements, if appropriate

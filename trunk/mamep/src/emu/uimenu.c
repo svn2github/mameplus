@@ -15,7 +15,6 @@
 #include "cheat.h"
 #include "uiinput.h"
 #include "uimenu.h"
-#include "uitext.h"
 #include "audit.h"
 #include "deprecat.h"
 #include "eminline.h"
@@ -3851,10 +3850,10 @@ static void menu_select_game_custom_render(running_machine *machine, ui_menu *me
 
 
 
+//fixme: Move the internal display code of history/mameinfo/story to MAMEUI
 #if 0
 static UINT32 menu_documents(running_machine *machine, UINT32 state)
 {
-//fixme: #ifdef STORY_DATAFILE #ifdef CMD_LIST
 #define NUM_DOCUMENTS	6
 
 	ui_menu_item item_list[NUM_DOCUMENTS + 2];
@@ -3866,7 +3865,7 @@ static UINT32 menu_documents(running_machine *machine, UINT32 state)
 
 	/* build up the menu */
 	for (menu_items = 0; menu_items < NUM_DOCUMENTS; menu_items++)
-		item_list[menu_items].text = ui_getstring(UI_history + menu_items);
+		item_list[menu_items].text = HISTORYNAME + menu_items;
 
 	/* add an item for the return */
 	item_list[menu_items++].text = _("Return to Prior Menu");
@@ -3939,11 +3938,11 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 				last_dattype = dattype;
 
 				strcat(bufptr, "\n\t");
-				strcat(bufptr, ui_getstring(UI_lefthilight));
+				strcat(bufptr, "\x1a");
 				strcat(bufptr, " ");
 				strcat(bufptr, _("Return to Prior Menu"));
 				strcat(bufptr, " ");
-				strcat(bufptr, ui_getstring(UI_righthilight));
+				strcat(bufptr, "\x1b");
 				strcat(bufptr, "\n");
 			}
 			else
@@ -3977,27 +3976,27 @@ static UINT32 menu_document_contents(running_machine *machine, UINT32 state)
 		switch (dattype)
 		{
 		case UI_history:
-			strcat(msg, ui_getstring(UI_historymissing));
+			strcat(msg, "History not available");
 			break;
 #ifdef STORY_DATAFILE
 		case UI_story:
-			strcat(msg, ui_getstring(UI_storymissing));
+			strcat(msg, "Story not available");
 			break;
 #endif /* STORY_DATAFILE */
 		case UI_mameinfo:
-			strcat(msg, ui_getstring(UI_mameinfomissing));
+			strcat(msg, "Mameinfo not available");
 			break;
 		case UI_drivinfo:
-			strcat(msg, ui_getstring(UI_drivinfomissing));
+			strcat(msg, "Driverinfo not available");
 			break;
 		}
 
 		strcat(msg, "\n\n\t");
-		strcat(msg, ui_getstring(UI_lefthilight));
+		strcat(msg, "\x1a");
 		strcat(msg, " ");
 		strcat(msg, _("Return to Prior Menu"));
 		strcat(msg, " ");
-		strcat(msg, ui_getstring(UI_righthilight));
+		strcat(msg, "\x1b");
 
 		ui_draw_message_window(msg);
 	}

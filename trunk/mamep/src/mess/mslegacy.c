@@ -8,14 +8,22 @@
 *********************************************************************/
 
 #include "driver.h"
-#include "uitext.h"
 #include "mslegacy.h"
 
 
-const char *const mess_default_text[] =
+static const char *const mess_default_text[] =
 {
-	"The emulated system is a computer: ",
-	"The keyboard emulation may not be 100% accurate.",
+	"OK",
+	"Off",
+	"On",
+	"Dip Switches",
+	"Driver Configuration",
+	"Analog Controls",
+	"Digital Speed",
+	"Autocenter Speed",
+	"Reverse",
+	"Sensitivity",
+
 	"Keyboard Emulation Status",
 	"-------------------------",
 	"Mode: PARTIAL Emulation",
@@ -23,9 +31,6 @@ const char *const mess_default_text[] =
 	"UI:   Enabled",
 	"UI:   Disabled",
 	"**Use ScrLock to toggle**",
-
-	"Image Information",
-	"File Manager",
 
 	"No Tape Image loaded",
 	"recording",
@@ -58,18 +63,62 @@ const char *const mess_default_text[] =
 	"Snapshot",
 	"Quickload",
 	"Memory Card",
-	"CD-ROM",
+	"CD-ROM"
+};
+
+
+
+static const char *const *const default_text[] =
+{
+	mess_default_text,
 	NULL
 };
+
+
+
+static const char **trans_text;
+
+
+
+int uistring_init (void)
+{
+	int i, j, str;
+	int string_count;
+
+	/* count the total amount of strings */
+	string_count = 0;
+	for (i = 0; default_text[i]; i++)
+	{
+		for (j = 0; default_text[i][j]; j++)
+			string_count++;
+	}
+
+	/* allocate the translated text array, and set defaults */
+	trans_text = auto_malloc(sizeof(const char *) * string_count);
+
+	/* copy in references to all of the strings */
+	str = 0;
+	for (i = 0; default_text[i]; i++)
+	{
+		for (j = 0; default_text[i][j]; j++)
+			trans_text[str++] = _(default_text[i][j]);
+	}
+
+	/* indicate success */
+	return 0;
+}
 
 
 
 /***************************************************************************
     UI TEXT
 ***************************************************************************/
-/*
+
 const char * ui_getstring (int string_num)
 {
+	if (trans_text)
+		return trans_text[string_num];
+	else 
 	return mess_default_text[string_num];
 }
-*/
+

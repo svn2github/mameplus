@@ -14,18 +14,25 @@
 
 enum
 {
-	UI_comp1 = UI_last_mame_entry,
-	UI_comp2,
-	UI_keyb1,
+	UI_OK,
+	UI_off,
+	UI_on,
+	UI_dipswitches,
+	UI_configuration,
+	UI_analogcontrols,
+	UI_keyjoyspeed,
+	UI_centerspeed,
+	UI_reverse,
+	UI_sensitivity,
+
+	UI_last_mame_entry,
+	UI_keyb1 = UI_last_mame_entry,
 	UI_keyb2,
 	UI_keyb3,
 	UI_keyb4,
 	UI_keyb5,
 	UI_keyb6,
 	UI_keyb7,
-
-	UI_imageinfo,
-	UI_filemanager,
 
 	UI_notapeimageloaded,
 	UI_recording,
@@ -63,7 +70,11 @@ enum
 
 
 
+int uistring_init (void);
+
+
+
 /* uitext */
-extern const char * ui_getstring (int string_num);
+const char * ui_getstring (int string_num);
 
 #endif /* MSLEGACY_H */

@@ -11,7 +11,7 @@
 #include "driver.h"
 #include "device.h"
 #include "deprecat.h"
-#include "uitext.h"
+#include "mslegacy.h"
 #include "pool.h"
 #include "tagpool.h"
 

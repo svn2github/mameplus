@@ -90,7 +90,6 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
 	$(EMUOBJ)/datafile.o \
-	$(EMUOBJ)/uitext.o \
 	$(EMUOBJ)/uilang.o
 
 ifdef USE_IPS

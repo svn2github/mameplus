@@ -10,7 +10,7 @@
 #include "image.h"
 #include "ui.h"
 #include "uimenu.h"
-#include "uitext.h"
+#include "mslegacy.h"
 #include "devices/cassette.h"
 
 

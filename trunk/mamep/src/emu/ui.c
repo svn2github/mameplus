@@ -27,7 +27,7 @@
 #include "uimenu.h"
 #include "uigfx.h"
 #include "deprecat.h"
-#include "uitext.h"
+#include "mslegacy.h"
 
 #ifdef MAMEMESS
 #define MESS
@@ -855,7 +855,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 	float maxwidth = 0;
 	const char *s_temp;
 	const char *up_arrow = NULL;
-	const char *down_arrow = ui_getstring(UI_downarrow);
+	const char *down_arrow = _("(more)");
 
 	//mamep: control scrolling text
 	int curline = 0;
@@ -900,7 +900,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 
 	//mamep: check if we are scrolling
 	if (draw_text_scroll_offset)
-		up_arrow = ui_getstring (UI_uparrow);
+		up_arrow = _("(more)");
 	if (draw_text_scroll_offset == multiline_text_box_target_lines - multiline_text_box_visible_lines)
 		down_arrow = NULL;
 
