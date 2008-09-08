@@ -275,10 +275,10 @@ static void menu_settings_common(running_machine *machine, ui_menu *menu, void *
 static void menu_settings_populate(running_machine *machine, ui_menu *menu, settings_menu_state *menustate, UINT32 type);
 static void menu_analog(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_analog_populate(running_machine *machine, ui_menu *menu);
-#ifndef MESS
+//#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime);
-#endif
+//#endif
 static void menu_game_info(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 #ifdef CMD_LIST
 static void menu_command(running_machine *machine, ui_menu *menu, void *parameter, void *state);
@@ -1009,19 +1009,6 @@ static void ui_menu_draw(ui_menu *menu, int customonly)
 	menu->visitems = visible_lines - (top_line != 0) - (top_line + visible_lines != menu->numitems);
 }
 
-#if 0
-int ui_menu_draw_fixed_width(const ui_menu_item *items, int numitems, int selected, const menu_extra *extra)
-{
-	int mode_save = ui_draw_text_set_fixed_width_mode(TRUE);
-	int retval;
-
-	retval = ui_menu_draw(items, numitems, selected, extra);
-	ui_draw_text_set_fixed_width_mode(mode_save);
-
-	return retval;
-}
-#endif
-
 
 /*-------------------------------------------------
     ui_menu_draw_text_box - draw a multiline
@@ -1485,7 +1472,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 	/* add input menu items */
 	ui_menu_item_append(menu, _("Input (general)"), NULL, 0, menu_input_groups);
-	ui_menu_item_append(menu, _("Input (this " GAMENOUN ")"), NULL, 0, menu_input_specific);
+	ui_menu_item_append(menu, _("Input (this " CAPSTARTGAMENOUN ")"), NULL, 0, menu_input_specific);
 	ui_menu_item_append(menu, _("Autofire Setting"), NULL, 0, menu_autofire);
 #ifdef USE_CUSTOM_BUTTON
 	ui_menu_item_append(menu, _("Custom Buttons"), NULL, 0, menu_custom_button);
@@ -1500,26 +1487,17 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	if (has_analog)
 		ui_menu_item_append(menu, _("Analog Controls"), NULL, 0, menu_analog);
 
-#ifndef MESS
+//#ifndef MESS
   	/* add bookkeeping menu */
 	ui_menu_item_append(menu, _("Bookkeeping Info"), NULL, 0, menu_bookkeeping);
-#endif
+//#endif
 
 	/* add game info menu */
 	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, menu_game_info);
 
-#ifdef MESS
-  	/* add image info menu */
-//	ui_menu_item_append(menu, _("Image Information"), NULL, 0, ui_menu_image_info);
-
-  	/* add image info menu */
-//	ui_menu_item_append(menu, _("File Manager"), NULL, 0, menu_file_manager);
-
-#if HAS_WAVE
-  	/* add tape control menu */
-	if (device_find_from_machine(machine, IO_CASSETTE))
-		ui_menu_item_append(menu, _("Tape Control"), NULL, 0, menu_tape_control);
-#endif /* HAS_WAVE */
+#if 0 //def MESS
+	/* add MESS-specific menus */
+	ui_mess_main_menu_populate(machine, menu);
 #endif /* MESS */
 
 	/* add sliders menu */
@@ -1527,6 +1505,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 	/* add video options menu */
 	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? menu_video_targets : menu_video_options);
+
 #ifdef USE_SCALE_EFFECTS
 	//fixme: 126u3
 //	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
@@ -2401,7 +2380,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
     information menu
 -------------------------------------------------*/
 
-#ifndef MESS
+//#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
 	attotime *prevtime;
@@ -2424,7 +2403,7 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
 	/* process the menu */
 	ui_menu_process(menu, 0);
 }
-#endif
+//#endif
 
 
 /*-------------------------------------------------
@@ -2432,7 +2411,7 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
     information menu
 -------------------------------------------------*/
 
-#ifndef MESS
+//#ifndef MESS
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime)
 {
 	astring *tempstring = astring_alloc();
@@ -2470,7 +2449,7 @@ static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, a
 	ui_menu_item_append(menu, astring_c(tempstring), NULL, MENU_FLAG_MULTILINE, NULL);
 	astring_free(tempstring);
 }
-#endif
+//#endif
 
 
 /*-------------------------------------------------

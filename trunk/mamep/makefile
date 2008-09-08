@@ -245,7 +245,7 @@ DEFS += -DWIN32 -DWINNT
 
 EMULATORCLI = $(FULLNAME)$(EXE)
 EMULATORDLL = $(FULLNAME)lib.dll
-EMULATORGUI = $(FULLNAME)gui$(EXE)
+EMULATORGUI = $(FULLNAME)ui$(EXE)
 EMULATORALL = $(EMULATORDLL) $(EMULATORCLI) $(EMULATORGUI)
 else
 # add an EXE suffix to get the final emulator name
@@ -495,7 +495,7 @@ ifneq ($(MAP),)
     ifeq ($(NO_DLL),)
         MAPCLIFLAGS = -Wl,-Map,$(FULLNAME).map
         MAPDLLFLAGS = -Wl,-Map,$(FULLNAME)lib.map
-        MAPGUIFLAGS = -Wl,-Map,$(FULLNAME)gui.map
+        MAPGUIFLAGS = -Wl,-Map,$(FULLNAME)ui.map
     else
         MAPFLAGS = -Wl,-Map,$(FULLNAME).map
     endif

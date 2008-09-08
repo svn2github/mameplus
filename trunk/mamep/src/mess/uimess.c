@@ -13,10 +13,6 @@
 #include "uiinput.h"
 #include "input.h"
 
-#if defined(WIN32) && !defined(SDLMAME_WIN32)
-#include "osd/windows/configms.h"
-#endif
-
 
 /***************************************************************************
     LOCAL VARIABLES
@@ -392,4 +388,72 @@ int ui_mess_get_use_natural_keyboard(running_machine *machine)
 void ui_mess_set_use_natural_keyboard(running_machine *machine, int use_natural_keyboard)
 {
 	machine->ui_mess_data->use_natural_keyboard = use_natural_keyboard;
+}
+
+
+
+/*-------------------------------------------------
+    ui_mess_menu_keyboard_mode - menu that 	
+-------------------------------------------------*/
+
+void ui_mess_menu_keyboard_mode(running_machine *machine, ui_menu *menu, void *parameter, void *state)
+{
+	const ui_menu_event *event;
+	int natural = ui_mess_get_use_natural_keyboard(machine);
+	
+	/* if the menu isn't built, populate now */
+	if (!ui_menu_populated(menu))
+	{
+		ui_menu_item_append(menu, _("Keyboard Mode:"), natural ? _("Natural") : _("Emulated"), natural ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW, NULL);
+	}
+
+	/* process the menu */
+	event = ui_menu_process(menu, 0);
+
+	if (event != NULL)
+	{
+		if (event->iptkey == IPT_UI_LEFT || event->iptkey == IPT_UI_RIGHT) {
+			ui_mess_set_use_natural_keyboard(machine, natural ^ TRUE);
+			ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
+		}
+	}		
+}
+
+
+
+/*-------------------------------------------------
+    ui_mess_menu_keyboard_mode - populate MESS-specific menus 	
+-------------------------------------------------*/
+
+void ui_mess_main_menu_populate(running_machine *machine, ui_menu *menu)
+{
+	const input_field_config *field;
+	const input_port_config *port;
+	int has_keyboard = FALSE;
+
+	/* scan the input port array to see what options we need to enable */
+	for (port = machine->portconfig; port != NULL; port = port->next)
+	{
+		for (field = port->fieldlist; field != NULL; field = field->next)
+		{
+			if (field->type == IPT_KEYBOARD)
+				has_keyboard = TRUE;			
+		}
+	}
+
+  	/* add image info menu */
+	ui_menu_item_append(menu, _("Image Information"), NULL, 0, ui_menu_image_info);
+
+  	/* add image info menu */
+	ui_menu_item_append(menu, _("File Manager"), NULL, 0, menu_file_manager);
+
+#if HAS_WAVE
+  	/* add tape control menu */
+	if (device_find_from_machine(machine, IO_CASSETTE))
+		ui_menu_item_append(menu, _("Tape Control"), NULL, 0, menu_tape_control);
+#endif /* HAS_WAVE */
+
+  	/* add keyboard mode menu */
+  	if (has_keyboard && inputx_can_post(machine))
+		ui_menu_item_append(menu, _("Keyboard Mode"), NULL, 0, ui_mess_menu_keyboard_mode);
 }

@@ -14,7 +14,7 @@
  (%d bytes)
  (%d bytes)
 
-# emu/uimenu.c: 2468
+# emu/uimenu.c: 2444
  (locked)
  (travado)
 
@@ -50,11 +50,11 @@
 %s : %s selected
 %s : %s selecionado
 
-# emu/uimenu.c: 1893
+# emu/uimenu.c: 1869
 %s Analog
 %s Analógico
 
-# emu/uimenu.c: 2361
+# emu/uimenu.c: 2337
 %s Autocenter Speed
 %s Velocidade Autocenter
 
@@ -62,7 +62,7 @@
 %s CHD NEEDS REDUMP\n
 %s CHD PRECISA DE REDUMP\n
 
-# emu/uimenu.c: 2353
+# emu/uimenu.c: 2329
 %s Digital Speed
 %s Velocidade Digital
 
@@ -82,11 +82,11 @@
 %s ROM NEEDS REDUMP\n
 %s ROM PRECISA REDUMP\n
 
-# emu/uimenu.c: 2369
+# emu/uimenu.c: 2345
 %s Reverse
 %s Reverso
 
-# emu/uimenu.c: 2377
+# emu/uimenu.c: 2353
 %s Sensitivity
 %s Sensibilidade
 
@@ -126,7 +126,7 @@
 (BAD) 
 (RUIM)
 
-# emu/ui.c: 858, 903
+# emu/ui.c: 860, 905
 (more)
 (mais)
 
@@ -494,7 +494,7 @@ Permitir Continuar
 Alternate
 Alternativo
 
-# emu/uimenu.c: 1501 mess/mslegacy.c: 21 
+# emu/uimenu.c: 1488 mess/mslegacy.c: 21 
 Analog Controls
 Controles Analógicos
 
@@ -526,11 +526,11 @@ Auto-Salvar Trapaças
 Autofire (in some games)
 Tiro Automático (em alguns jogos)
 
-# emu/uimenu.c: 3313
+# emu/uimenu.c: 3289
 Autofire Delay
 Atraso do Tiro Automático
 
-# emu/uimenu.c: 1489
+# emu/uimenu.c: 1476
 Autofire Setting
 Configuração do Tiro Automático
 
@@ -554,7 +554,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2357
+# emu/ui.c: 2359
 Beam Width
 Largura do Feixe deLuz
 
@@ -590,7 +590,7 @@ Vida Bônus
 Bookkeeping
 Contagem
 
-# emu/uimenu.c: 1505 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
+# emu/uimenu.c: 1492 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
 Bookkeeping Info
 Informação de Contagem
 
@@ -722,7 +722,7 @@ Tipo de Gabinete
 Cancel
 Cancelar
 
-# emu/uimenu.c: 2748
+# emu/uimenu.c: 2724
 Card Number:
 Número do Cartão:
 
@@ -762,7 +762,7 @@ Cocktail
 Coin
 Ficha
 
-# emu/uimenu.c: 2458
+# emu/uimenu.c: 2434
 Coin %c: 
 Ficha %c: 
 
@@ -850,7 +850,7 @@ Comparação
 Config Menu
 Menu de Configuração
 
-# emu/uimenu.c: 3619
+# emu/uimenu.c: 3595
 Configure General Inputs
 Configurar Entradas Gerais
 
@@ -902,7 +902,7 @@ Erro ao ler cabeçalho do arquivo salvo do MAME
 Country
 País
 
-# emu/uimenu.c: 2754
+# emu/uimenu.c: 2730
 Create New Card
 Criar Novo Cartão
 
@@ -914,7 +914,7 @@ Criar...
 Custom
 Personalizado
 
-# emu/uimenu.c: 1491
+# emu/uimenu.c: 1478
 Custom Buttons
 Botões Personalizados
 
@@ -1038,7 +1038,7 @@ Dificuldade 1
 Difficulty 2
 Dificuldade 2
 
-# emu/uimenu.c: 1495 mess/mslegacy.c: 19 
+# emu/uimenu.c: 1482 mess/mslegacy.c: 19 
 Dip Switches
 Dip Switches
 
@@ -1050,7 +1050,7 @@ Diretórios
 Disable All Coins
 Desabilitar Todas Fichas
 
-# emu/uimenu.c: 3111, 3115, 3119 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
+# emu/uimenu.c: 3087, 3091, 3095 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
 Disabled
 Desabilitado
 
@@ -1078,11 +1078,11 @@ Trava de Porta
 Double Up
 Double Up
 
-# emu/uimenu.c: 1497 mess/mslegacy.c: 20 
+# emu/uimenu.c: 1484 mess/mslegacy.c: 20 
 Driver Configuration
 Configuração de Driver
 
-# emu/uimenu.c: 3993
+# emu/uimenu.c: 3969
 Driverinfo not available
 Informação de Driver não disponível
 
@@ -1146,7 +1146,7 @@ Fácil
 Edit Cheat
 Editar Trapaça
 
-# emu/uimenu.c: 2753
+# emu/uimenu.c: 2729
 Eject Current Card
 Ejetar Cartão Atual
 
@@ -1182,11 +1182,11 @@ Igual
 Error
 Erro
 
-# emu/uimenu.c: 2705
+# emu/uimenu.c: 2681
 Error creating memory card\n(Card may already exist)
 Erro criando cartão de memória\n(Cartão pode existir)
 
-# emu/uimenu.c: 2691
+# emu/uimenu.c: 2667
 Error loading memory card
 Error carregando cartão de memória
 
@@ -1262,7 +1262,7 @@ Erro fatal: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 Erro fatal: %s\nCausado pela afirmação: %s:%d: %s
 
-# emu/uimenu.c: 1516
+# mess/uimess.c: 448
 File Manager
 Gerenciador de Arquivo
 
@@ -1322,7 +1322,7 @@ JOGO:
 Game
 Jogos
 
-# emu/uimenu.c: 1509
+# emu/uimenu.c: 1496
 Game Information
 Informação do Jogo
 
@@ -1346,7 +1346,7 @@ Alemão
 Germany
 Alemanha
 
-# emu/uimenu.c: 3790
+# emu/uimenu.c: 3766
 Gfx: %s, Sound: %s
 Gráficos: %s, Som: %s
 
@@ -1406,7 +1406,7 @@ Altíssimo
 Hispanic
 Hispânico
 
-# emu/uimenu.c: 3982
+# emu/uimenu.c: 3958
 History not available
 Histórico não disponível
 
@@ -1422,7 +1422,7 @@ Horizontal
 Horizontally
 Horizontalmente
 
-# emu/ui.c: 1464
+# emu/ui.c: 1466
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 SE VOC?NÃO EST?LICENCIADO PARA JOGAR \"%s\" NESTE EMULADOR, TECLE ESC.\n\n
 
@@ -1466,15 +1466,15 @@ Valor inteiro ilegal para %s; revertendo para %d\n
 Illegal value for %s = %s\n
 Valor ilegal para %s = %s\n
 
-# emu/uimenu.c: 1535
+# emu/uimenu.c: 1511
 Image Enhancement
 Melhoramento de Imagem
 
-# emu/uimenu.c: 1513
+# mess/uimess.c: 445
 Image Information
 Informação da Imagem
 
-# emu/uimenu.c: 3779, 3786 
+# emu/uimenu.c: 3755, 3762 
 Imperfect
 Imperfeito
 
@@ -1498,12 +1498,12 @@ Inicializar Memória
 Initializing...
 Inicializando...
 
-# emu/uimenu.c: 1487
+# emu/uimenu.c: 1474
 Input (general)
 Entradas (Geral)
 
-# emu/uimenu.c: 1488
-Input (this game)
+# emu/uimenu.c: 1475
+Input (this Game)
 Entradas (este jogo)
 
 # mess/mslegacy.c: 50
@@ -1734,7 +1734,7 @@ Vidas
 Load Old Format Code
 Carregar Antigo Formato de Código
 
-# emu/uimenu.c: 2751
+# emu/uimenu.c: 2727
 Load Selected Card
 Carregar Cartão Selecionado
 
@@ -1742,11 +1742,11 @@ Carregar Cartão Selecionado
 Load State
 Carregar State
 
-# emu/ui.c: 2113
+# emu/ui.c: 2115
 Load cancelled
 Carregamento cancelado
 
-# emu/ui.c: 2144
+# emu/ui.c: 2146
 Load from position %c
 Carregar da posição %c
 
@@ -1790,7 +1790,7 @@ Aspecto de Pixel da Tela Principal (%d:%d)
 Main Screen Standard (%d:%d)
 Padrão da Tela Principal (%d:%d)
 
-# emu/uimenu.c: 3990
+# emu/uimenu.c: 3966
 Mameinfo not available
 Mameinfo não disponível
 
@@ -1822,19 +1822,19 @@ Limite Máximo
 Medium
 Médio
 
-# emu/uimenu.c: 1544 mess/mslegacy.c: 65 
+# emu/uimenu.c: 1520 mess/mslegacy.c: 65 
 Memory Card
 Cartão de Memória
 
-# emu/uimenu.c: 2703
+# emu/uimenu.c: 2679
 Memory card created
 Cartão de Memória criado
 
-# emu/uimenu.c: 2697
+# emu/uimenu.c: 2673
 Memory card ejected
 Cartão de Memória ejetado
 
-# emu/uimenu.c: 2687
+# emu/uimenu.c: 2663
 Memory card loaded
 Cartão de Memória carregado
 
@@ -1938,7 +1938,7 @@ Mouse Y 7
 Mouse Y 8
 Mouse Y 8
 
-# emu/uimenu.c: 2462
+# emu/uimenu.c: 2438
 NA
 NA
 
@@ -2018,11 +2018,11 @@ Driver não carregado
 No Tape Image loaded
 Imagem de Fita não carregada
 
-# emu/uimenu.c: 3593
+# emu/uimenu.c: 3569
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 Jogos não encontrados. Favor checar o caminho da ROM especificado no arquivo mame.ini.\n\nSe esta ?sua primeira vez usando o MAME, favor consulte o arquivo config.txt no diretório "docs" para informações de configuração do MAME.
 
-# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3102, 3171 
+# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3078, 3147 
 None
 Nenhum
 
@@ -2034,7 +2034,7 @@ Normal
 Not Equal
 Não Igual
 
-# emu/uimenu.c: 3781, 3788 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
+# emu/uimenu.c: 3757, 3764 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
 OK
 OK
 
@@ -2042,11 +2042,11 @@ OK
 OPTIONAL %s NOT FOUND\n
 OPCIONAL %s NÃO ENCONTRADO\n
 
-# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2370, 3302 mess/mslegacy.c: 17
+# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2346, 3278 mess/mslegacy.c: 17
 Off
 Desligado
 
-# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2370, 3303 mess/mslegacy.c: 18
+# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2346, 3279 mess/mslegacy.c: 18
 On
 Ligado
 
@@ -2054,7 +2054,7 @@ Ligado
 On Screen Display
 Mensagem de Tela
 
-# emu/ui.c: 1496
+# emu/ui.c: 1498
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 Um ou mais ROMs/CHDs para esse jogo estão incorretos. O jogo pode não rodar corretamente.\n
 
@@ -2070,11 +2070,11 @@ Opções
 Orientation
 Orientação
 
-# emu/uimenu.c: 1592
+# emu/uimenu.c: 1568
 Other Controls
 Outros Controles
 
-# emu/ui.c: 1465
+# emu/ui.c: 1467
 Otherwise, type OK or move the joystick left then right to continue
 Senão, digite OK ou mova o joystick para esquerda e direita para continuar
 
@@ -2082,15 +2082,15 @@ Senão, digite OK ou mova o joystick para esquerda e direita para continuar
 Out of memory
 Falha de memória
 
-# emu/uimenu.c: 3771
+# emu/uimenu.c: 3747
 Overall: NOT WORKING
 Visão Geral: NÃO FUNCIONA
 
-# emu/uimenu.c: 3773
+# emu/uimenu.c: 3749
 Overall: Unemulated Protection
 Visão Geral: Proteção Não-Emulada
 
-# emu/uimenu.c: 3775
+# emu/uimenu.c: 3751
 Overall: Working
 Visão Geral: Funcionando
 
@@ -3586,7 +3586,7 @@ Duração de Jogada
 Player %d
 Jogador %d
 
-# emu/uimenu.c: 1589
+# emu/uimenu.c: 1565
 Player %d Controls
 Controles Jogador %d 
 
@@ -3662,7 +3662,7 @@ Posicional V 8
 Prefill
 Preencher
 
-# emu/ui.c: 562
+# emu/ui.c: 564
 Press Select Key/Button
 Pressione a Tecla/Botão Selecionar
 
@@ -3690,15 +3690,15 @@ Carregamento Rápido
 Quit Fileselector
 Sair do Seletor de Arquivo
 
-# emu/ui.c: 2158
+# emu/ui.c: 2160
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 Sair do jogo ?\n\nPressione tecla/botão Selecionar para sair,\ntecla/botão Cancelar para continuar.
 
-# emu/ui.c: 2021
+# emu/ui.c: 2023
 REC START
 INICIAR GRAVAÇÃO
 
-# emu/ui.c: 2026
+# emu/ui.c: 2028
 REC STOP
 PARAR GRAVAÇÃO
 
@@ -3758,7 +3758,7 @@ Restaurar Valor Anterior
 Return to Game
 Retornar ao Jogo
 
-# emu/uimenu.c: 230, 3874, 3946, 4000
+# emu/uimenu.c: 230, 3850, 3922, 3976
 Return to Prior Menu
 Retornar ao Menu Anterior
 
@@ -3802,19 +3802,19 @@ Salvar Captura de Tela
 Save State
 Salvar Posição
 
-# emu/ui.c: 2111
+# emu/ui.c: 2113
 Save cancelled
 Salvamento cancelado
 
-# emu/ui.c: 2139
+# emu/ui.c: 2141
 Save to position %c
 Salvar na posição %c
 
-# emu/ui.c: 2769 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
+# emu/ui.c: 2771 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
 Screen
 Tela
 
-# emu/uimenu.c: 2998
+# emu/uimenu.c: 2974
 Screen #%d
 Tela #%d
 
@@ -3826,7 +3826,7 @@ Tela %d Aspecto de Pixel (%d:%d)
 Screen %d Standard (%d:%d)
 Tela %d Padrão (%d:%d)
 
-# emu/datafile.c: 1544 emu/ui.c: 1522
+# emu/datafile.c: 1544 emu/ui.c: 1524
 Screen flipping in cocktail mode is not supported.\n
 Giro de tela no modo cocktail não suportado.\n
 
@@ -3854,7 +3854,7 @@ Segundo Bônus
 Select
 Selecionar
 
-# emu/uimenu.c: 1551
+# emu/uimenu.c: 1527
 Select New Game
 Selecionar Novo Jogo
 
@@ -3862,11 +3862,11 @@ Selecionar Novo Jogo
 Select Search
 Selecionar Busca
 
-# emu/ui.c: 2104
+# emu/ui.c: 2106
 Select position to load from
 Selecione a posição de onde carregar
 
-# emu/ui.c: 2102
+# emu/ui.c: 2104
 Select position to save to
 Selecione a posição para salvar
 
@@ -3922,7 +3922,7 @@ Mostrar Lista de Trapaças
 Show Command
 Mostrar Comando
 
-# emu/uimenu.c: 1547
+# emu/uimenu.c: 1523
 Show Command List
 Mostrar Lista de Comandos
 
@@ -4018,7 +4018,7 @@ Estéreo
 Stop
 Parar
 
-# emu/uimenu.c: 3986
+# emu/uimenu.c: 3962
 Story not available
 Estória não disponível
 
@@ -4034,7 +4034,7 @@ Subtrair
 Swap
 Trocar
 
-# emu/datafile.c: 1523 emu/ui.c: 1533
+# emu/datafile.c: 1523 emu/ui.c: 1535
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ESSE JOGO NÃO FUNCIONA. Voc?não ir?conseguir rodar esse jogo corretamente. Deixe pra l?\n
 
@@ -4046,7 +4046,7 @@ Taiwan
 Take
 Pegar
 
-# emu/uimenu.c: 1521 
+# mess/uimess.c: 453
 Tape Control
 Controle de Fita
 
@@ -4074,35 +4074,35 @@ Texto
 Text Label
 Etiqueta de Texto
 
-# emu/datafile.c: 1532 emu/ui.c: 1514
+# emu/datafile.c: 1532 emu/ui.c: 1516
 The colors are completely wrong.\n
 As cores estão completamente erradas.\n
 
-# emu/datafile.c: 1535 emu/ui.c: 1512
+# emu/datafile.c: 1535 emu/ui.c: 1514
 The colors aren't 100% accurate.\n
 As cores não estão 100% corretas.\n
 
-# emu/datafile.c: 1526 emu/ui.c: 1535
+# emu/datafile.c: 1526 emu/ui.c: 1537
 The game has protection which isn't fully emulated.\n
 O jogo tem proteções que não estão completemente emuladas.\n
 
-# emu/datafile.c: 1538 emu/ui.c: 1520
+# emu/datafile.c: 1538 emu/ui.c: 1522
 The game lacks sound.\n
 O jogo não tem som.\n
 
-# emu/uimenu.c: 3567
+# emu/uimenu.c: 3543
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 O jogo selecionado não possui todas as ROMs ou Imagens de CHD necessárias. Favor selecionar um outro jogo.\n\nPressione qualquer tecla para continuar.
 
-# emu/datafile.c: 1541 emu/ui.c: 1518
+# emu/datafile.c: 1541 emu/ui.c: 1520
 The sound emulation isn't 100% accurate.\n
 A emulação do som não est?100% correta.\n
 
-# emu/datafile.c: 1529 emu/ui.c: 1516
+# emu/datafile.c: 1529 emu/ui.c: 1518
 The video emulation isn't 100% accurate.\n
 A emulação do vídeo não est?100% correta.\n
 
-# emu/ui.c: 1504
+# emu/ui.c: 1506
 There are known problems with this game\n\n
 H?problemas conhecidos com este jogo\n\n
 
@@ -4114,7 +4114,7 @@ Esta ?a lista de ROMs requisitadas pelo driver \\ "%s\".n Nome            Tamanh
 Throttle
 Desaceleração
 
-# emu/uimenu.c: 2452
+# emu/uimenu.c: 2428
 Tickets dispensed: %d\n\n
 Tickets dispensados: %d\n\n
 
@@ -4134,7 +4134,7 @@ Temporizador
 Title
 Título
 
-# emu/uimenu.c: 3304
+# emu/uimenu.c: 3280
 Toggle
 Ativar
 
@@ -4234,11 +4234,11 @@ Triplo Lado-a-Lado (Sem Abertura)
 Type
 Tipo
 
-# emu/uimenu.c: 3728
+# emu/uimenu.c: 3704
 Type name or select: %s_
 Digite o nome ou selecione: %s_
 
-# emu/uimenu.c: 3730
+# emu/uimenu.c: 3706
 Type name or select: (random)
 Digite o nome ou selecione: (aleatório)
 
@@ -4354,7 +4354,7 @@ Valor flutuante inesperado %s na espera\n
 Unexpected integer option %s queried\n
 Valor inteiro inesperado %s na espera\n
 
-# emu/uimenu.c: 3784 mess/machine/nes.c: 612, 617
+# emu/uimenu.c: 3760 mess/machine/nes.c: 612, 617
 Unimplemented
 Não implementado
 
@@ -4374,7 +4374,7 @@ Desmontar
 Unused
 Sem Uso
 
-# emu/ui.c: 674
+# emu/ui.c: 676
 Updating Artwork...
 Atualizando Artwork...
 
@@ -4386,15 +4386,15 @@ Upright
 Upright 1
 Upright 1
 
-# emu/uimenu.c: 2446
+# emu/uimenu.c: 2422
 Uptime: %d:%02d:%02d\n\n
 Tempo ligado: %d:%02d:%02d\n\n
 
-# emu/uimenu.c: 2448
+# emu/uimenu.c: 2424
 Uptime: %d:%02d\n\n
 Tempo ligado: %d:%02d\n\n
 
-# emu/ui.c: 1463
+# emu/ui.c: 1465
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 O uso de emuladores em conjunto de ROMs que voc?não possui ?proibido por leis de copyright.\n\n
 
@@ -4406,7 +4406,7 @@ Uso:  MAME nome do jogo [opções]\n\n        MAME -showusage    para uma breve li
 Usage: %s [%s] [options]\n\nOptions:\n
 Uso: %s [%s] [opções]\n\nOpções:\n
 
-# emu/uimenu.c: 1585
+# emu/uimenu.c: 1561
 User Interface
 Interface de Usuário
 
@@ -4422,7 +4422,7 @@ Somente Saída de Display VFD
 VFD Only (%d:%d)
 Somente VFD (%d:%d)
 
-# emu/ui.c: 2355
+# emu/ui.c: 2357
 Vector Flicker
 Cintilação Vetorial
 
@@ -4458,7 +4458,7 @@ Muito Baixo
 Very Slow
 Muito Lento
 
-# emu/uimenu.c: 1532
+# emu/uimenu.c: 1507
 Video Options
 Opções de Vídeo
 
@@ -4590,11 +4590,11 @@ Zoom Automático
 \n\nCLONES:\n
 \n\nCLONES:\n
 
-# emu/ui.c: 1552
+# emu/ui.c: 1554
 \n\nThere are working clones of this game. They are:\n\n
 \n\nH?clones funcionando deste jogo. São eles:\n\n
 
-# emu/ui.c: 1561
+# emu/ui.c: 1563
 \n\nType OK or move the joystick left then right to continue
 \n\nDigite OK ou mova o joystick para esquerda e direita para continuar
 
@@ -5290,47 +5290,47 @@ ano, fabricante e nome completo
  NO GOOD DUMP KNOWN
 
 
-# emu/uimenu.c: 1895
+# emu/uimenu.c: 1871
 %s Analog Dec
 
 
-# emu/uimenu.c: 1894
+# emu/uimenu.c: 1870
 %s Analog Inc
 
 
-# emu/ui.c: 2297
+# emu/ui.c: 2299
 %s Brightness
 
 
-# emu/ui.c: 2300
+# emu/ui.c: 2302
 %s Contrast
 
 
-# emu/ui.c: 2303
+# emu/ui.c: 2305
 %s Gamma
 
 
-# emu/ui.c: 2311, 2337
+# emu/ui.c: 2313, 2339
 %s Horiz Position
 
 
-# emu/ui.c: 2308, 2334
+# emu/ui.c: 2310, 2336
 %s Horiz Stretch
 
 
-# emu/ui.c: 2291
+# emu/ui.c: 2293
 %s Refresh Rate
 
 
-# emu/ui.c: 2317, 2343
+# emu/ui.c: 2319, 2345
 %s Vert Position
 
 
-# emu/ui.c: 2314, 2340
+# emu/ui.c: 2316, 2342
 %s Vert Stretch
 
 
-# emu/ui.c: 2250
+# emu/ui.c: 2252
 %s Volume
 
 
@@ -5346,23 +5346,23 @@ Autocenter Speed
 Average recorded speed: %d%%\n
 
 
-# emu/uimenu.c: 3111 
+# emu/uimenu.c: 3087 
 Backdrops
 
 
-# emu/uimenu.c: 3119 
+# emu/uimenu.c: 3095 
 Bezels
 
 
-# emu/uimenu.c: 3105
+# emu/uimenu.c: 3081
 CCW 90
 
 
-# emu/uimenu.c: 3103
+# emu/uimenu.c: 3079
 CW 90
 
 
-# emu/uimenu.c: 1499 
+# emu/uimenu.c: 1486 
 Categories
 
 
@@ -5398,7 +5398,7 @@ Copyright the MESS team\nhttp://mess.org
 Created %s
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 Cropped
 
 
@@ -5406,11 +5406,11 @@ Cropped
 Cropped Corners
 
 
-# emu/ui.c: 2373
+# emu/ui.c: 2375
 Crosshair Offset %s
 
 
-# emu/ui.c: 2370
+# emu/ui.c: 2372
 Crosshair Scale %s
 
 
@@ -5422,11 +5422,11 @@ Debug Lamps
 Digital Speed
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Emulated
 
 
-# emu/sound/sn76477.c: 643 emu/uimenu.c: 3111, 3115, 3119 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
+# emu/sound/sn76477.c: 643 emu/uimenu.c: 3087, 3091, 3095 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
 Enabled
 
 
@@ -5438,7 +5438,7 @@ End of file
 Enter BIOS
 
 
-# emu/uimenu.c: 3123 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
+# emu/uimenu.c: 3099 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
 Full
 
 
@@ -5486,11 +5486,11 @@ Joy
 Kbd
 
 
-# emu/uimenu.c: 1525
+# mess/uimess.c: 458
 Keyboard Mode
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Keyboard Mode:
 
 
@@ -5498,11 +5498,11 @@ Keyboard Mode:
 LCD with square pixels
 
 
-# emu/ui.c: 2788
+# emu/ui.c: 2790
 Laserdisc
 
 
-# emu/ui.c: 2786
+# emu/ui.c: 2788
 Laserdisc '%s'
 
 
@@ -5514,11 +5514,11 @@ Locked
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and the MAME Team\n\n
 
 
-# emu/ui.c: 2237
+# emu/ui.c: 2239
 Master Volume
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Natural
 
 
@@ -5526,7 +5526,7 @@ Natural
 Nicola Salmoria and the MAME Team
 
 
-# emu/ui.c: 1759
+# emu/ui.c: 1761
 None\n
 
 
@@ -5538,11 +5538,11 @@ Out of space
 Out of sync
 
 
-# emu/ui.c: 2271
+# emu/ui.c: 2273
 Overclock CPU %s
 
 
-# emu/uimenu.c: 3115 
+# emu/uimenu.c: 3091 
 Overlays
 
 
@@ -5614,7 +5614,7 @@ Pause
 Playback Ended\nReason: %s
 
 
-# emu/ui.c: 557
+# emu/ui.c: 559
 Please load an image
 
 
@@ -5630,7 +5630,7 @@ Recorded using %s\n
 Recording Ended\nReason: %s
 
 
-# emu/uimenu.c: 2647 mame/drivers/lvcards.c: 365
+# emu/uimenu.c: 2623 mame/drivers/lvcards.c: 365
 Reset All
 
 
@@ -5638,7 +5638,7 @@ Reset All
 Reverse
 
 
-# emu/uimenu.c: 3107
+# emu/uimenu.c: 3083
 Rotate
 
 
@@ -5654,7 +5654,7 @@ Screen %d Stretched (%dx%d)
 Screen %d Widescreen (%d:%d)
 
 
-# emu/ui.c: 2767
+# emu/ui.c: 2769
 Screen '%s'
 
 
@@ -5666,11 +5666,11 @@ Sensitivity
 Set Chip Lamps
 
 
-# emu/uimenu.c: 1529
+# emu/uimenu.c: 1504
 Slider Controls
 
 
-# emu/ui.c: 1509
+# emu/ui.c: 1511
 The emulated system is a computer:\n\nThe keyboard emulation may not be 100% accurate.\n
 
 
@@ -5686,19 +5686,19 @@ UI Paste Text
 Unable to locate input port '%s'
 
 
-# emu/ui.c: 1772
+# emu/ui.c: 1774
 Vector\n
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 View
 
 
-# emu/ui.c: 1734
+# emu/ui.c: 1736
 \nSound:\n
 
 
-# emu/ui.c: 1757
+# emu/ui.c: 1759
 \nVideo:\n
 
 

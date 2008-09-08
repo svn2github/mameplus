@@ -14,7 +14,7 @@
  (%d bytes)
  (%d バイト)
 
-# emu/uimenu.c: 2468
+# emu/uimenu.c: 2444
  (locked)
  (固定)
 
@@ -54,23 +54,23 @@
 %s : %s selected
 %s : %sが選択されました
 
-# emu/uimenu.c: 1893
+# emu/uimenu.c: 1869
 %s Analog
 %s アナログ
 
-# emu/uimenu.c: 1895
+# emu/uimenu.c: 1871
 %s Analog Dec
 %s アナログ 減少
 
-# emu/uimenu.c: 1894
+# emu/uimenu.c: 1870
 %s Analog Inc
 %s アナログ 増加
 
-# emu/uimenu.c: 2361
+# emu/uimenu.c: 2337
 %s Autocenter Speed
 %s 自動センタリング速度
 
-# emu/ui.c: 2297
+# emu/ui.c: 2299
 %s Brightness
 %s 明るさ
 
@@ -78,23 +78,23 @@
 %s CHD NEEDS REDUMP\n
 %s CHDは再ダンプが必要です\n
 
-# emu/ui.c: 2300
+# emu/ui.c: 2302
 %s Contrast
 %s コントラスト
 
-# emu/uimenu.c: 2353
+# emu/uimenu.c: 2329
 %s Digital Speed
 %s デジタル速度
 
-# emu/ui.c: 2303
+# emu/ui.c: 2305
 %s Gamma
 %s ガンマ
 
-# emu/ui.c: 2311, 2337
+# emu/ui.c: 2313, 2339
 %s Horiz Position
 %s 水平位置
 
-# emu/ui.c: 2308, 2334
+# emu/ui.c: 2310, 2336
 %s Horiz Stretch
 %s 水平拡大
 
@@ -114,27 +114,27 @@
 %s ROM NEEDS REDUMP\n
 %s 再ダンプが必要です\n
 
-# emu/ui.c: 2291
+# emu/ui.c: 2293
 %s Refresh Rate
 %s リフレッシュレート
 
-# emu/uimenu.c: 2369
+# emu/uimenu.c: 2345
 %s Reverse
 %s 反転
 
-# emu/uimenu.c: 2377
+# emu/uimenu.c: 2353
 %s Sensitivity
 %s 感度
 
-# emu/ui.c: 2317, 2343
+# emu/ui.c: 2319, 2345
 %s Vert Position
 %s 垂直位置
 
-# emu/ui.c: 2314, 2340
+# emu/ui.c: 2316, 2342
 %s Vert Stretch
 %s 垂直拡大
 
-# emu/ui.c: 2250
+# emu/ui.c: 2252
 %s Volume
 %s 音量
 
@@ -174,7 +174,7 @@
 (BAD) 
 (異常) 
 
-# emu/ui.c: 858, 903
+# emu/ui.c: 860, 905
 (more)
 (続く)
 
@@ -542,7 +542,7 @@ Allow Continue
 Alternate
 別版
 
-# emu/uimenu.c: 1501 mess/mslegacy.c: 21 
+# emu/uimenu.c: 1488 mess/mslegacy.c: 21 
 Analog Controls
 アナログコントロール
 
@@ -574,11 +574,11 @@ Auto Save Cheats
 Autofire (in some games)
 連射 (対応ゲームのみ)
 
-# emu/uimenu.c: 3313
+# emu/uimenu.c: 3289
 Autofire Delay
 連射間隔
 
-# emu/uimenu.c: 1489
+# emu/uimenu.c: 1476
 Autofire Setting
 連射設定
 
@@ -606,7 +606,7 @@ BCD
 BIOS
 BIOS
 
-# emu/ui.c: 2357
+# emu/ui.c: 2359
 Beam Width
 ビーム幅
 
@@ -642,7 +642,7 @@ Bonus Life
 Bookkeeping
 インカム
 
-# emu/uimenu.c: 1505 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
+# emu/uimenu.c: 1492 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
 Bookkeeping Info
 インカム情報
 
@@ -774,7 +774,7 @@ Cabinet Type
 Cancel
 キャンセル
 
-# emu/uimenu.c: 2748
+# emu/uimenu.c: 2724
 Card Number:
 カード番号:
 
@@ -786,7 +786,7 @@ Cartridge
 Cassette
 カセット
 
-# emu/uimenu.c: 1499 
+# emu/uimenu.c: 1486 
 Categories
 カテゴリ
 
@@ -818,7 +818,7 @@ Cocktail
 Coin
 コイン
 
-# emu/uimenu.c: 2458
+# emu/uimenu.c: 2434
 Coin %c: 
 コイン %c: 
 
@@ -906,7 +906,7 @@ Comparison
 Config Menu
 設定メニュー
 
-# emu/uimenu.c: 3619
+# emu/uimenu.c: 3595
 Configure General Inputs
 一般入力設定
 
@@ -958,7 +958,7 @@ MAME保存ファイルのヘッダが読み込めません
 Country
 地域
 
-# emu/uimenu.c: 2754
+# emu/uimenu.c: 2730
 Create New Card
 新しいカードを作成
 
@@ -974,7 +974,7 @@ Created %s
 Custom
 カスタム
 
-# emu/uimenu.c: 1491
+# emu/uimenu.c: 1478
 Custom Buttons
 カスタムボタン
 
@@ -1098,7 +1098,7 @@ Difficulty 1
 Difficulty 2
 難易度 2
 
-# emu/uimenu.c: 1495 mess/mslegacy.c: 19 
+# emu/uimenu.c: 1482 mess/mslegacy.c: 19 
 Dip Switches
 ディップスイッチ
 
@@ -1110,7 +1110,7 @@ Directories
 Disable All Coins
 すべてのコインを無効
 
-# emu/uimenu.c: 3111, 3115, 3119 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
+# emu/uimenu.c: 3087, 3091, 3095 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
 Disabled
 無効
 
@@ -1138,11 +1138,11 @@ Door Interlock
 Double Up
 ダブルアップ
 
-# emu/uimenu.c: 1497 mess/mslegacy.c: 20 
+# emu/uimenu.c: 1484 mess/mslegacy.c: 20 
 Driver Configuration
 ドライバ設定
 
-# emu/uimenu.c: 3993
+# emu/uimenu.c: 3969
 Driverinfo not available
 ドライバ情報が見つかりません
 
@@ -1206,7 +1206,7 @@ Easy
 Edit Cheat
 チート編集
 
-# emu/uimenu.c: 2753
+# emu/uimenu.c: 2729
 Eject Current Card
 現在のカードを取り出し
 
@@ -1250,11 +1250,11 @@ Equal
 Error
 エラー
 
-# emu/uimenu.c: 2705
+# emu/uimenu.c: 2681
 Error creating memory card\n(Card may already exist)
 メモリーカード作成エラー\n(カードを既に作成済みかも知れません)
 
-# emu/uimenu.c: 2691
+# emu/uimenu.c: 2667
 Error loading memory card
 メモリーカード読み込みエラー
 
@@ -1330,7 +1330,7 @@ Fatal error: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 致命的なエラー: %s\nアサートの結果: %s:%d: %s
 
-# emu/uimenu.c: 1516
+# mess/uimess.c: 448
 File Manager
 ファイルマネージャ
 
@@ -1390,7 +1390,7 @@ GAME:
 Game
 ゲーム名
 
-# emu/uimenu.c: 1509
+# emu/uimenu.c: 1496
 Game Information
 ゲーム情報
 
@@ -1418,7 +1418,7 @@ German
 Germany
 ドイツ
 
-# emu/uimenu.c: 3790
+# emu/uimenu.c: 3766
 Gfx: %s, Sound: %s
 グラフィック: %s サウンド: %s
 
@@ -1478,7 +1478,7 @@ Highest
 Hispanic
 ラテン
 
-# emu/uimenu.c: 3982
+# emu/uimenu.c: 3958
 History not available
 ヒストリーが見つかりません
 
@@ -1494,7 +1494,7 @@ Horizontal
 Horizontally
 水平
 
-# emu/ui.c: 1464
+# emu/ui.c: 1466
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 「%s」を合法的に遊ぶ権利がなければESCを押してください。\n\n
 
@@ -1542,15 +1542,15 @@ Illegal integer value for %s; reverting to %d\n
 Illegal value for %s = %s\n
 不正な値 %s = %s\n
 
-# emu/uimenu.c: 1535
+# emu/uimenu.c: 1511
 Image Enhancement
 画像イメージの向上
 
-# emu/uimenu.c: 1513
+# mess/uimess.c: 445
 Image Information
 イメージ情報
 
-# emu/uimenu.c: 3779, 3786 
+# emu/uimenu.c: 3755, 3762 
 Imperfect
 不完全
 
@@ -1574,12 +1574,12 @@ Initialize Memory
 Initializing...
 初期化中...
 
-# emu/uimenu.c: 1487
+# emu/uimenu.c: 1474
 Input (general)
 入力設定 (標準)
 
-# emu/uimenu.c: 1488
-Input (this game)
+# emu/uimenu.c: 1475
+Input (this Game)
 入力設定 (このゲーム)
 
 # mess/mslegacy.c: 50
@@ -1834,7 +1834,7 @@ Lives
 Load Old Format Code
 旧形式コードの読込み
 
-# emu/uimenu.c: 2751
+# emu/uimenu.c: 2727
 Load Selected Card
 選択したカードの読み込み
 
@@ -1842,11 +1842,11 @@ Load Selected Card
 Load State
 プレイ状態の復帰
 
-# emu/ui.c: 2113
+# emu/ui.c: 2115
 Load cancelled
 読み込みを中止しました
 
-# emu/ui.c: 2144
+# emu/ui.c: 2146
 Load from position %c
 %c から読み込みました
 
@@ -1890,7 +1890,7 @@ Main Screen Pixel Aspect (%d:%d)
 Main Screen Standard (%d:%d)
 メイン画面 標準 (%d:%d)
 
-# emu/uimenu.c: 3990
+# emu/uimenu.c: 3966
 Mameinfo not available
 MAME情報が見つかりません
 
@@ -1906,7 +1906,7 @@ Mapped Memory
 Mask
 マスク
 
-# emu/ui.c: 2237
+# emu/ui.c: 2239
 Master Volume
 全体の音量
 
@@ -1926,19 +1926,19 @@ Maximum Boundary
 Medium
 普通
 
-# emu/uimenu.c: 1544 mess/mslegacy.c: 65 
+# emu/uimenu.c: 1520 mess/mslegacy.c: 65 
 Memory Card
 メモリカード
 
-# emu/uimenu.c: 2703
+# emu/uimenu.c: 2679
 Memory card created
 メモリーカードを作成しました
 
-# emu/uimenu.c: 2697
+# emu/uimenu.c: 2673
 Memory card ejected
 メモリーカードを取り出しました
 
-# emu/uimenu.c: 2687
+# emu/uimenu.c: 2663
 Memory card loaded
 メモリーカードを読み込みました
 
@@ -2042,7 +2042,7 @@ Mouse Y 7
 Mouse Y 8
 マウス Y 8
 
-# emu/uimenu.c: 2462
+# emu/uimenu.c: 2438
 NA
 なし
 
@@ -2122,15 +2122,15 @@ No Driver Loaded
 No Tape Image loaded
 テープイメージがロードされていません
 
-# emu/uimenu.c: 3593
+# emu/uimenu.c: 3569
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 ゲームが見つかりません。mame.iniで指定したROMのパスを確認してください。\n\n初めてMAMEを使用する場合は、MAMEの設定情報についてdocsディレクトリにあるconfig.txtを見て下さい。
 
-# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3102, 3171 
+# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3078, 3147 
 None
 なし
 
-# emu/ui.c: 1759
+# emu/ui.c: 1761
 None\n
 なし\n
 
@@ -2142,7 +2142,7 @@ Normal
 Not Equal
 異なる
 
-# emu/uimenu.c: 3781, 3788 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
+# emu/uimenu.c: 3757, 3764 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
 OK
 OK
 
@@ -2150,11 +2150,11 @@ OK
 OPTIONAL %s NOT FOUND\n
 オプションの%s 見つかりません\n
 
-# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2370, 3302 mess/mslegacy.c: 17
+# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2346, 3278 mess/mslegacy.c: 17
 Off
 OFF
 
-# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2370, 3303 mess/mslegacy.c: 18
+# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2346, 3279 mess/mslegacy.c: 18
 On
 ON
 
@@ -2162,7 +2162,7 @@ ON
 On Screen Display
 オンスクリーンディスプレイ
 
-# emu/ui.c: 1496
+# emu/ui.c: 1498
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 このゲーム用のROMまたはCHDが正しくありません。このゲームは正しく実行できないかも知れません。\n
 
@@ -2178,11 +2178,11 @@ Options
 Orientation
 画面の向き
 
-# emu/uimenu.c: 1592
+# emu/uimenu.c: 1568
 Other Controls
 その他のコントロール
 
-# emu/ui.c: 1465
+# emu/ui.c: 1467
 Otherwise, type OK or move the joystick left then right to continue
 そうでなければ、続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
@@ -2198,19 +2198,19 @@ Out of space
 Out of sync
 同期ズレ
 
-# emu/uimenu.c: 3771
+# emu/uimenu.c: 3747
 Overall: NOT WORKING
 総合評価: 動作不可
 
-# emu/uimenu.c: 3773
+# emu/uimenu.c: 3749
 Overall: Unemulated Protection
 総合評価: プロテクト未対応
 
-# emu/uimenu.c: 3775
+# emu/uimenu.c: 3751
 Overall: Working
 総合評価: 動作可
 
-# emu/ui.c: 2271
+# emu/ui.c: 2273
 Overclock CPU %s
 CPUのオーバークロック %s
 
@@ -3774,7 +3774,7 @@ Playback Ended\nReason: %s
 Player %d
 プレイヤー %d
 
-# emu/uimenu.c: 1589
+# emu/uimenu.c: 1565
 Player %d Controls
 プレイヤー%d コントロール
 
@@ -3782,7 +3782,7 @@ Player %d Controls
 Players
 プレイヤー
 
-# emu/ui.c: 557
+# emu/ui.c: 559
 Please load an image
 イメージを読込んで下さい
 
@@ -3854,7 +3854,7 @@ Positional V 8
 Prefill
 事前に埋める
 
-# emu/ui.c: 562
+# emu/ui.c: 564
 Press Select Key/Button
 決定キー/ボタンを押してください
 
@@ -3882,15 +3882,15 @@ Quickload
 Quit Fileselector
 ファイル選択中止
 
-# emu/ui.c: 2158
+# emu/ui.c: 2160
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 このゲームを終了しますか？\n\n終了する場合は決定キー/ボタンを、\n続ける場合はキャンセルキー/ボタンを押して下さい。
 
-# emu/ui.c: 2021
+# emu/ui.c: 2023
 REC START
 録画開始
 
-# emu/ui.c: 2026
+# emu/ui.c: 2028
 REC STOP
 録画停止
 
@@ -3962,7 +3962,7 @@ Restore Previous Value
 Return to Game
 ゲームに戻る
 
-# emu/uimenu.c: 230, 3874, 3946, 4000
+# emu/uimenu.c: 230, 3850, 3922, 3976
 Return to Prior Menu
 一つ前のメニューに戻る
 
@@ -3978,7 +3978,7 @@ Right Half
 Rockn Megasession Custom
 ロックンメガセッション カスタム
 
-# emu/uimenu.c: 3107
+# emu/uimenu.c: 3083
 Rotate
 回転
 
@@ -4010,19 +4010,19 @@ Save Snapshot
 Save State
 プレイ状態の保存
 
-# emu/ui.c: 2111
+# emu/ui.c: 2113
 Save cancelled
 保存を中止しました
 
-# emu/ui.c: 2139
+# emu/ui.c: 2141
 Save to position %c
 %c に保存しました
 
-# emu/ui.c: 2769 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
+# emu/ui.c: 2771 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
 Screen
 画面
 
-# emu/uimenu.c: 2998
+# emu/uimenu.c: 2974
 Screen #%d
 画面 #%d
 
@@ -4034,11 +4034,11 @@ Screen %d Pixel Aspect (%d:%d)
 Screen %d Standard (%d:%d)
 画面%d 標準 (%d:%d)
 
-# emu/ui.c: 2767
+# emu/ui.c: 2769
 Screen '%s'
 画面 '%s'
 
-# emu/datafile.c: 1544 emu/ui.c: 1522
+# emu/datafile.c: 1544 emu/ui.c: 1524
 Screen flipping in cocktail mode is not supported.\n
 カクテルモードの画面反転に対応していません。\n
 
@@ -4066,7 +4066,7 @@ Second Bonus
 Select
 選択
 
-# emu/uimenu.c: 1551
+# emu/uimenu.c: 1527
 Select New Game
 新しいゲームを選択
 
@@ -4074,11 +4074,11 @@ Select New Game
 Select Search
 検索領域を選択
 
-# emu/ui.c: 2104
+# emu/ui.c: 2106
 Select position to load from
 読み込むファイル(0-9,A-Z)を押してください
 
-# emu/ui.c: 2102
+# emu/ui.c: 2104
 Select position to save to
 保存するファイル(0-9,A-Z)を押してください
 
@@ -4134,7 +4134,7 @@ Show Cheat List
 Show Command
 コマンドの表\示
 
-# emu/uimenu.c: 1547
+# emu/uimenu.c: 1523
 Show Command List
 コマンドリストを表\示
 
@@ -4178,7 +4178,7 @@ Size
 Skip Bytes
 読み飛ばすバイト数
 
-# emu/uimenu.c: 1529
+# emu/uimenu.c: 1504
 Slider Controls
 パラメータ設定
 
@@ -4234,7 +4234,7 @@ Stereo
 Stop
 停止
 
-# emu/uimenu.c: 3986
+# emu/uimenu.c: 3962
 Story not available
 ストーリーが見つかりません
 
@@ -4250,7 +4250,7 @@ Subtract
 Swap
 交換
 
-# emu/datafile.c: 1523 emu/ui.c: 1533
+# emu/datafile.c: 1523 emu/ui.c: 1535
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 ※このゲームは全く動作しません。現状では正常に動作させる事は不可能\です。\n
 
@@ -4262,7 +4262,7 @@ Taiwan
 Take
 取得
 
-# emu/uimenu.c: 1521 
+# mess/uimess.c: 453
 Tape Control
 テープ制御
 
@@ -4290,35 +4290,35 @@ Text
 Text Label
 テキストラベル
 
-# emu/datafile.c: 1532 emu/ui.c: 1514
+# emu/datafile.c: 1532 emu/ui.c: 1516
 The colors are completely wrong.\n
 色が再現されません。\n
 
-# emu/datafile.c: 1535 emu/ui.c: 1512
+# emu/datafile.c: 1535 emu/ui.c: 1514
 The colors aren't 100% accurate.\n
 色の再現が不完全です。\n
 
-# emu/datafile.c: 1526 emu/ui.c: 1535
+# emu/datafile.c: 1526 emu/ui.c: 1537
 The game has protection which isn't fully emulated.\n
 このゲームはプロテクトのためエミュレーションが不完全です。\n
 
-# emu/datafile.c: 1538 emu/ui.c: 1520
+# emu/datafile.c: 1538 emu/ui.c: 1522
 The game lacks sound.\n
 サウンドが再生されません。\n
 
-# emu/uimenu.c: 3567
+# emu/uimenu.c: 3543
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 選択されたゲームに必要なROMまたはCHDイメージが不足しています。別のゲームを選択して下さい。\n\n何かキーを押すと続行します。
 
-# emu/datafile.c: 1541 emu/ui.c: 1518
+# emu/datafile.c: 1541 emu/ui.c: 1520
 The sound emulation isn't 100% accurate.\n
 サウンドエミュレーションが不完全です。\n
 
-# emu/datafile.c: 1529 emu/ui.c: 1516
+# emu/datafile.c: 1529 emu/ui.c: 1518
 The video emulation isn't 100% accurate.\n
 ビデオエミュレーションが不完全です。\n
 
-# emu/ui.c: 1504
+# emu/ui.c: 1506
 There are known problems with this game\n\n
 このゲームには以下の問題があります\n\n
 
@@ -4330,7 +4330,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 Throttle
 スピード制限 有効/無効
 
-# emu/uimenu.c: 2452
+# emu/uimenu.c: 2428
 Tickets dispensed: %d\n\n
 チケット発券数: %d\n\n
 
@@ -4350,7 +4350,7 @@ Timer
 Title
 タイトル画面
 
-# emu/uimenu.c: 3304
+# emu/uimenu.c: 3280
 Toggle
 切り替え
 
@@ -4454,11 +4454,11 @@ Triple Side-by-Side (Gapless)
 Type
 種別
 
-# emu/uimenu.c: 3728
+# emu/uimenu.c: 3704
 Type name or select: %s_
 名前を入力または選択: %s_
 
-# emu/uimenu.c: 3730
+# emu/uimenu.c: 3706
 Type name or select: (random)
 名前を入力または選択: (ランダム)
 
@@ -4574,7 +4574,7 @@ Unexpected float option %s queried\n
 Unexpected integer option %s queried\n
 整数値オプション%sが不正です\n
 
-# emu/uimenu.c: 3784 mess/machine/nes.c: 612, 617
+# emu/uimenu.c: 3760 mess/machine/nes.c: 612, 617
 Unimplemented
 未対応
 
@@ -4594,7 +4594,7 @@ Unmount
 Unused
 未使用
 
-# emu/ui.c: 674
+# emu/ui.c: 676
 Updating Artwork...
 アートワークを更新中...
 
@@ -4606,15 +4606,15 @@ Upright
 Upright 1
 アップライト1
 
-# emu/uimenu.c: 2446
+# emu/uimenu.c: 2422
 Uptime: %d:%02d:%02d\n\n
 起動時間: %d:%02d:%02d\n\n
 
-# emu/uimenu.c: 2448
+# emu/uimenu.c: 2424
 Uptime: %d:%02d\n\n
 起動時間: %d:%02d\n\n
 
-# emu/ui.c: 1463
+# emu/ui.c: 1465
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 所有していないROMをエミュレータで使用することは、著作権法によって禁じられています。\n\n
 
@@ -4626,7 +4626,7 @@ Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list o
 Usage: %s [%s] [options]\n\nOptions:\n
 使用法: %s [%s] [オプション]\n\nオプション:\n
 
-# emu/uimenu.c: 1585
+# emu/uimenu.c: 1561
 User Interface
 ユーザインターフェイス
 
@@ -4642,11 +4642,11 @@ VFDの出力のみ表\示
 VFD Only (%d:%d)
 VFDのみ (%d:%d)
 
-# emu/ui.c: 2355
+# emu/ui.c: 2357
 Vector Flicker
 ベクタフリッカー
 
-# emu/ui.c: 1772
+# emu/ui.c: 1774
 Vector\n
 ベクタ\n
 
@@ -4682,7 +4682,7 @@ Very Low
 Very Slow
 とても遅い
 
-# emu/uimenu.c: 1532
+# emu/uimenu.c: 1507
 Video Options
 ビデオオプション
 
@@ -4802,7 +4802,7 @@ Zoom Auto
 \nSOURCE: %s\n
 \nソ\ースファイル: %s\n
 
-# emu/ui.c: 1734
+# emu/ui.c: 1736
 \nSound:\n
 \n音源:\n
 
@@ -4810,7 +4810,7 @@ Zoom Auto
 \nStory:\n
 \nストーリー:\n
 
-# emu/ui.c: 1757
+# emu/ui.c: 1759
 \nVideo:\n
 \nビデオ:\n
 
@@ -4822,11 +4822,11 @@ Zoom Auto
 \n\nCLONES:\n
 \n\nクローン:\n
 
-# emu/ui.c: 1552
+# emu/ui.c: 1554
 \n\nThere are working clones of this game. They are:\n\n
 \n\nこのゲームには以下の動作可能\なクローンが存在します:\n\n
 
-# emu/ui.c: 1561
+# emu/ui.c: 1563
 \n\nType OK or move the joystick left then right to continue
 \n\n続けるためにOKとタイプするか、ジョイスティックを左、右と入力して下さい
 
@@ -5550,19 +5550,19 @@ year, manufacturer and full name
 Autocenter Speed
 
 
-# emu/uimenu.c: 3111 
+# emu/uimenu.c: 3087 
 Backdrops
 
 
-# emu/uimenu.c: 3119 
+# emu/uimenu.c: 3095 
 Bezels
 
 
-# emu/uimenu.c: 3105
+# emu/uimenu.c: 3081
 CCW 90
 
 
-# emu/uimenu.c: 3103
+# emu/uimenu.c: 3079
 CW 90
 
 
@@ -5594,7 +5594,7 @@ Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
 Copyright the MESS team\nhttp://mess.org
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 Cropped
 
 
@@ -5602,11 +5602,11 @@ Cropped
 Cropped Corners
 
 
-# emu/ui.c: 2373
+# emu/ui.c: 2375
 Crosshair Offset %s
 
 
-# emu/ui.c: 2370
+# emu/ui.c: 2372
 Crosshair Scale %s
 
 
@@ -5618,15 +5618,15 @@ Debug Lamps
 Digital Speed
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Emulated
 
 
-# emu/sound/sn76477.c: 643 emu/uimenu.c: 3111, 3115, 3119 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
+# emu/sound/sn76477.c: 643 emu/uimenu.c: 3087, 3091, 3095 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
 Enabled
 
 
-# emu/uimenu.c: 3123 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
+# emu/uimenu.c: 3099 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
 Full
 
 
@@ -5642,11 +5642,11 @@ Joy
 Kbd
 
 
-# emu/uimenu.c: 1525
+# mess/uimess.c: 458
 Keyboard Mode
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Keyboard Mode:
 
 
@@ -5654,11 +5654,11 @@ Keyboard Mode:
 LCD with square pixels
 
 
-# emu/ui.c: 2788
+# emu/ui.c: 2790
 Laserdisc
 
 
-# emu/ui.c: 2786
+# emu/ui.c: 2788
 Laserdisc '%s'
 
 
@@ -5670,7 +5670,7 @@ Locked
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and the MAME Team\n\n
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Natural
 
 
@@ -5678,11 +5678,11 @@ Natural
 Nicola Salmoria and the MAME Team
 
 
-# emu/uimenu.c: 3115 
+# emu/uimenu.c: 3091 
 Overlays
 
 
-# emu/uimenu.c: 2647 mame/drivers/lvcards.c: 365
+# emu/uimenu.c: 2623 mame/drivers/lvcards.c: 365
 Reset All
 
 
@@ -5710,7 +5710,7 @@ Sensitivity
 Set Chip Lamps
 
 
-# emu/ui.c: 1509
+# emu/ui.c: 1511
 The emulated system is a computer:\n\nThe keyboard emulation may not be 100% accurate.\n
 
 
@@ -5722,7 +5722,7 @@ UI Paste Text
 Unable to locate input port '%s'
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 View
 
 

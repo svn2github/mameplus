@@ -54,7 +54,7 @@ struct _image_slot_data
 
 	/* variables that are only non-zero when an image is mounted */
 	core_file *file;
-	char *name;
+	astring *name;
 	char *dir;
 	char *hash;
 	char *basename_noext;
@@ -72,7 +72,7 @@ struct _image_slot_data
 	char *extrainfo;
 
 	/* working directory; persists across mounts */
-	char *working_directory;
+	astring *working_directory;
 
 	/* pointer */
 	void *ptr;
@@ -220,8 +220,10 @@ void image_init(running_machine *machine)
 	{
 		slot = &machine->images_data->slots[indx];
 
-		/* create a memory pool */
+		/* create a memory pool, and allocated strings */
 		slot->mempool = pool_alloc(memory_error);
+		slot->name = astring_alloc();
+		slot->working_directory = astring_alloc();
 
 		/* setup the device */
 		slot->dev = dev;
@@ -288,16 +290,15 @@ static void image_exit(running_machine *machine)
 			/* unload this image */
 			image_unload_internal(slot);
 
-			/* free the working directory */
-			if (slot->working_directory != NULL)
-			{
-				free(slot->working_directory);
-				slot->working_directory = NULL;
-			}
-
 			/* free the memory pool */
 			pool_free(slot->mempool);
 			slot->mempool = NULL;
+
+			/* free the allocated strings */
+			astring_free(slot->name);
+			astring_free(slot->working_directory);
+			slot->name = NULL;
+			slot->working_directory = NULL;
 		}
 
 		machine->images_data = NULL;
@@ -518,6 +519,7 @@ image_device_info image_device_getinfo(const machine_config *config, const devic
 	info.writeable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) ? 1 : 0;
 	info.creatable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_CREATABLE) ? 1 : 0;
 	info.must_be_loaded = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_MUST_BE_LOADED) ? 1 : 0;
+	//mamep: dummy image
 	if (info.must_be_loaded && has_dummy_image(device->machine) == -1)
 		set_dummy_image(1);
 	else if (has_dummy_image(device->machine) == -1)
@@ -672,71 +674,11 @@ const image_device_format *image_device_get_named_creatable_format(const device_
 	an image
 -------------------------------------------------*/
 
-static image_error_t set_image_filename(image_slot_data *image, const char *filename, const char *zippath)
+static image_error_t set_image_filename(image_slot_data *image, const char *filename)
 {
-	image_error_t err = IMAGE_ERROR_SUCCESS;
-	astring *alloc_filename = NULL;
-	char *full_filename = NULL;
-	char *new_name;
-	char *new_dir;
-	char *new_working_directory;
-	int pos;
-
-	/* get the full path */
-	if (osd_get_full_path(&full_filename, filename) == FILERR_NONE)
-		filename = full_filename;
-
-	/* create the directory string */
-	new_dir = filename ? image_strdup(image->dev, filename) : NULL;
-	for (pos = strlen(new_dir); (pos > 0); pos--)
-	{
-		if (strchr(":\\/", new_dir[pos - 1]))
-		{
-			new_dir[pos] = '\0';
-			break;
-		}
-	}
-
-	/* do we have to concatenate the names? */
-	if (zippath)
-	{
-		alloc_filename = astring_assemble_3(astring_alloc(), filename, PATH_SEPARATOR, zippath);
-		filename = astring_c(alloc_filename);
-	}
-
-	/* copy the string */
-	new_name = image_strdup(image->dev, filename);
-	if (!new_name)
-	{
-		err = IMAGE_ERROR_OUTOFMEMORY;
-		goto done;
-	}
-
-	/* copy the working directory */
-	new_working_directory = mame_strdup(new_dir);
-	if (!new_working_directory)
-	{
-		err = IMAGE_ERROR_OUTOFMEMORY;
-		goto done;
-	}
-
-	/* set the new name and dir */
-	if (image->name != NULL)
-		image_freeptr(image->dev, image->name);
-	if (image->dir != NULL)
-		image_freeptr(image->dev, image->dir);
-	if (image->working_directory != NULL)
-		free(image->working_directory);
-	image->name = new_name;
-	image->dir = new_dir;
-	image->working_directory = new_working_directory;
-
-done:
-	if (alloc_filename != NULL)
-		astring_free(alloc_filename);
-	if (full_filename != NULL)
-		free(full_filename);
-	return err;
+	astring_cpyc(image->name, filename);
+	zippath_parent(image->working_directory, filename);
+	return IMAGE_ERROR_SUCCESS;
 }
 
 
@@ -754,111 +696,6 @@ static int is_loaded(image_slot_data *image)
 
 
 /*-------------------------------------------------
-    load_zip_path - loads a ZIP file with a
-	specific path
--------------------------------------------------*/
-
-static image_error_t load_zip_path(image_slot_data *image, const char *path)
-{
-	image_error_t err = IMAGE_ERROR_FILENOTFOUND;
-	zip_file *zip = NULL;
-	zip_error ziperr;
-	const zip_file_header *header;
-	const char *zip_extension = ".zip";
-	char *path_copy;
-	const char *zip_entry;
-	void *ptr;
-	int pos;
-
-	/* create our own copy of the path */
-	path_copy = mame_strdup(path);
-	if (!path_copy)
-	{
-		err = IMAGE_ERROR_OUTOFMEMORY;
-		goto done;
-	}
-
-	/* loop through the path and try opening zip files */
-	ziperr = ZIPERR_FILE_ERROR;
-	zip_entry = NULL;
-	pos = strlen(path_copy);
-	while(pos > strlen(zip_extension))
-	{
-		/* is this a potential zip path? */
-		if ((path_copy[pos] == '\0') || !strncmp(&path_copy[pos], PATH_SEPARATOR, strlen(PATH_SEPARATOR)))
-		{
-			/* parse out the zip path */
-			if (path_copy[pos] == '\0')
-			{
-				/* no zip path */
-				zip_entry = NULL;
-			}
-			else
-			{
-				/* we are at a zip path */
-				path_copy[pos] = '\0';
-				zip_entry = &path_copy[pos + strlen(PATH_SEPARATOR)];
-			}
-
-			/* try to open the zip file */
-			ziperr = zip_file_open(path_copy, &zip);
-			if (ziperr != ZIPERR_FILE_ERROR)
-				break;
-
-			/* restore the path if we changed */
-			if (zip_entry)
-				path_copy[pos] = PATH_SEPARATOR[0];
-		}
-		pos--;
-	}
-
-	/* did we succeed in opening up a zip file? */
-	if (ziperr == ZIPERR_NONE)
-	{
-		/* iterate through the zip file */
-		header = zippath_find_sub_path(zip, zip_entry, NULL);
-
-		/* were we successful? */
-		if (header != NULL)
-		{
-			/* if no zip path was specified, we have to change the name */
-			if (!zip_entry)
-			{
-				/* use the first entry; tough part is we have to change the name */
-				err = set_image_filename(image, image->name, header->filename);
-				if (err)
-					goto done;
-			}
-
-			/* allocate space for this zip file */
-			ptr = image_malloc(image->dev, header->uncompressed_length);
-			if (!ptr)
-			{
-				err = IMAGE_ERROR_OUTOFMEMORY;
-				goto done;
-			}
-
-			ziperr = zip_file_decompress(zip, ptr, header->uncompressed_length);
-			if (ziperr == ZIPERR_NONE)
-			{
-				/* success! */
-				err = IMAGE_ERROR_SUCCESS;
-				core_fopen_ram(ptr, header->uncompressed_length, OPEN_FLAG_READ, &image->file);
-			}
-		}
-	}
-
-done:
-	if (path_copy)
-		free(path_copy);
-	if (zip)
-		zip_file_close(zip);
-	return err;
-}
-
-
-
-/*-------------------------------------------------
     load_image_by_path - loads an image with a
 	specific path
 -------------------------------------------------*/
@@ -867,14 +704,10 @@ static image_error_t load_image_by_path(image_slot_data *image, UINT32 open_flag
 {
 	file_error filerr = FILERR_NOT_FOUND;
 	image_error_t err = IMAGE_ERROR_FILENOTFOUND;
-	astring *full_path = NULL;
-	const char *file_extension;
+	astring *revised_path = astring_alloc();
 
-	/* quick check to see if the file is a ZIP file */
-	file_extension = strrchr(path, '.');
-	if (!file_extension || mame_stricmp(file_extension, ".zip"))
-	{
-		filerr = core_fopen(path, open_flags, &image->file);
+	/* attempt to read the file */
+	filerr = zippath_fopen(path, open_flags, &image->file, revised_path);
 
 		/* did the open succeed? */
 		switch(filerr)
@@ -910,21 +743,12 @@ static image_error_t load_image_by_path(image_slot_data *image, UINT32 open_flag
 				err = IMAGE_ERROR_INTERNAL;
 				break;
 		}
-	}
 
-	/* special case for ZIP files */
-	if ((err == IMAGE_ERROR_FILENOTFOUND) && (open_flags == OPEN_FLAG_READ))
-		err = load_zip_path(image, path);
+	/* if successful, set the file name */
+	if (filerr == FILERR_NONE)
+		set_image_filename(image, astring_c(revised_path));
 
-	/* check to make sure that our reported error is reflective of the actual status */
-	if (err)
-		assert(!is_loaded(image));
-	else
-		assert(is_loaded(image));
-
-	/* free up memory, and exit */
-	if (full_path != NULL)
-		astring_free(full_path);
+	astring_free(revised_path);
 	return err;
 }
 
@@ -1000,11 +824,12 @@ static int image_load_internal(const device_config *image, const char *path,
 	image_unload(image);
 
 	/* record the filename */
-	slot->err = set_image_filename(slot, path, NULL);
+	slot->err = set_image_filename(slot, path);
 	if (slot->err)
 		goto done;
 
 	/* do we need to reset the CPU? */
+	//mamep: dummy image
 	if ((has_dummy_image(machine) || attotime_compare(timer_get_time(), attotime_zero) > 0) && slot->info.reset_on_load)
 		mame_schedule_hard_reset(machine);
 
@@ -1117,10 +942,11 @@ static void image_clear(image_slot_data *image)
 		image->file = NULL;
 	}
 
+	astring_cpyc(image->name, "");
+
 	pool_clear(image->mempool);
 	image->writeable = 0;
 	image->created = 0;
-	image->name = NULL;
 	image->dir = NULL;
 	image->hash = NULL;
 	image->longname = NULL;
@@ -1399,7 +1225,8 @@ int image_slotexists(const device_config *image)
 const char *image_filename(const device_config *image)
 {
 	image_slot_data *slot = find_image_slot(image);
-	return slot->name;
+	const char *name = astring_c(slot->name);
+	return (name[0] != '\0') ? name : NULL;
 }
 
 
@@ -1692,9 +1519,8 @@ static int try_change_working_directory(image_slot_data *image, const char *subd
 	const osd_directory_entry *entry;
 	int success = FALSE;
 	int done = FALSE;
-	char *new_working_directory;
 
-	directory = osd_opendir(image->working_directory);
+	directory = osd_opendir(astring_c(image->working_directory));
 	if (directory != NULL)
 	{
 		while(!done && (entry = osd_readdir(directory)) != NULL)
@@ -1711,25 +1537,8 @@ static int try_change_working_directory(image_slot_data *image, const char *subd
 
 	/* did we successfully identify the directory? */
 	if (success)
-	{
-		new_working_directory = malloc_or_die(strlen(image->working_directory)
-			+ strlen(PATH_SEPARATOR) + strlen(subdir) + strlen(PATH_SEPARATOR) + 1);
-		strcpy(new_working_directory, image->working_directory);
+		zippath_combine(image->working_directory, astring_c(image->working_directory), subdir);
 
-		/* remove final path separator, if present */
-		if ((strlen(new_working_directory) >= strlen(PATH_SEPARATOR))
-			&& !strcmp(new_working_directory + strlen(new_working_directory) - strlen(PATH_SEPARATOR), PATH_SEPARATOR))
-		{
-			new_working_directory[strlen(new_working_directory) - strlen(PATH_SEPARATOR)] = '\0';
-		}
-
-		strcat(new_working_directory, PATH_SEPARATOR);
-		strcat(new_working_directory, subdir);
-		strcat(new_working_directory, PATH_SEPARATOR);
-
-		free(image->working_directory);
-		image->working_directory = new_working_directory;
-	}
 	return success;
 }
 
@@ -1747,7 +1556,7 @@ static void setup_working_directory(image_slot_data *image)
 
 	/* first set up the working directory to be the MESS directory */
 	osd_get_emulator_directory(mess_directory, ARRAY_LENGTH(mess_directory));
-	image->working_directory = mame_strdup(mess_directory);
+	astring_cpyc(image->working_directory, mess_directory);
 
 	/* now try browsing down to "software" */
 	if (try_change_working_directory(image, "software"))
@@ -1774,10 +1583,10 @@ const char *image_working_directory(const device_config *image)
 	image_slot_data *slot = find_image_slot(image);
 
 	/* check to see if we've never initialized the working directory */
-	if (slot->working_directory == NULL)
+	if (astring_len(slot->working_directory) == 0)
 		setup_working_directory(slot);
 
-	return slot->working_directory;
+	return astring_c(slot->working_directory);
 }
 
 
@@ -1790,11 +1599,7 @@ const char *image_working_directory(const device_config *image)
 void image_set_working_directory(const device_config *image, const char *working_directory)
 {
 	image_slot_data *slot = find_image_slot(image);
-
-	char *new_working_directory = (working_directory != NULL) ? mame_strdup(working_directory) : NULL;
-	if (slot->working_directory != NULL)
-		free(slot->working_directory);
-	slot->working_directory = new_working_directory;
+	astring_cpyc(slot->working_directory, (working_directory != NULL) ? working_directory : "");
 }
 
 

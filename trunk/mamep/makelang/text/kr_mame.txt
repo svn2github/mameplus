@@ -50,11 +50,11 @@
 %s : %s selected
 %s : %s 선택됨
 
-# emu/uimenu.c: 1893
+# emu/uimenu.c: 1869
 %s Analog
 %s 아날로그
 
-# emu/uimenu.c: 2361
+# emu/uimenu.c: 2337
 %s Autocenter Speed
 %s 자동 중간속도
 
@@ -62,7 +62,7 @@
 %s CHD NEEDS REDUMP\n
 %s CHD 재덤프 필요\n
 
-# emu/uimenu.c: 2353
+# emu/uimenu.c: 2329
 %s Digital Speed
 %s 디지털 속도
 
@@ -82,11 +82,11 @@
 %s ROM NEEDS REDUMP\n
 %s 롬의 재덤프 필요\n
 
-# emu/uimenu.c: 2369
+# emu/uimenu.c: 2345
 %s Reverse
 %s 반전
 
-# emu/uimenu.c: 2377
+# emu/uimenu.c: 2353
 %s Sensitivity
 %s 감도
 
@@ -130,7 +130,7 @@
 (Unknown Default)
 (확인불가 기본)
 
-# emu/ui.c: 858, 903
+# emu/ui.c: 860, 905
 (more)
 (더보기)
 
@@ -498,7 +498,7 @@ Allow Continue
 Alternate
 교체
 
-# emu/uimenu.c: 1501 mess/mslegacy.c: 21 
+# emu/uimenu.c: 1488 mess/mslegacy.c: 21 
 Analog Controls
 아날로그 콘트롤
 
@@ -530,11 +530,11 @@ Auto Save Cheats
 Autofire (in some games)
 연사 (일부 게임)
 
-# emu/uimenu.c: 3313
+# emu/uimenu.c: 3289
 Autofire Delay
 연사 지연
 
-# emu/uimenu.c: 1489
+# emu/uimenu.c: 1476
 Autofire Setting
 연사 설정
 
@@ -562,7 +562,7 @@ BCD
 BIOS
 바이오스
 
-# emu/ui.c: 2357
+# emu/ui.c: 2359
 Beam Width
 빔 너비
 
@@ -598,7 +598,7 @@ Bonus Life
 Bookkeeping
 책갈피
 
-# emu/uimenu.c: 1505 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
+# emu/uimenu.c: 1492 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
 Bookkeeping Info
 동전 부기 정보
 
@@ -726,7 +726,7 @@ Cabinet Type
 Cancel
 취소
 
-# emu/uimenu.c: 2748
+# emu/uimenu.c: 2724
 Card Number:
 카드 번호:
 
@@ -738,7 +738,7 @@ Cartridge
 Cassette
 카세트
 
-# emu/uimenu.c: 1499 
+# emu/uimenu.c: 1486 
 Categories
 카테고리
 
@@ -862,7 +862,7 @@ Comparison
 Config Menu
 설정 메뉴
 
-# emu/uimenu.c: 3619
+# emu/uimenu.c: 3595
 Configure General Inputs
 일반 입력 설정
 
@@ -918,7 +918,7 @@ MAME 저장 파일 헤더를 읽을 수 업습니다
 Country
 국가
 
-# emu/uimenu.c: 2754
+# emu/uimenu.c: 2730
 Create New Card
 새로운 카드 생성
 
@@ -938,7 +938,7 @@ Cropped Corners
 Custom
 사용자 정의
 
-# emu/uimenu.c: 1491
+# emu/uimenu.c: 1478
 Custom Buttons
 사용자 정의 버튼
 
@@ -1066,7 +1066,7 @@ Difficulty 1
 Difficulty 2
 난이도 2
 
-# emu/uimenu.c: 1495 mess/mslegacy.c: 19 
+# emu/uimenu.c: 1482 mess/mslegacy.c: 19 
 Dip Switches
 딥스위치
 
@@ -1078,7 +1078,7 @@ Directories
 Disable All Coins
 모든 코인 비활성화
 
-# emu/uimenu.c: 3111, 3115, 3119 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
+# emu/uimenu.c: 3087, 3091, 3095 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
 Disabled
 비활성화
 
@@ -1106,11 +1106,11 @@ Door Interlock
 Double Up
 두배로
 
-# emu/uimenu.c: 1497 mess/mslegacy.c: 20 
+# emu/uimenu.c: 1484 mess/mslegacy.c: 20 
 Driver Configuration
 드라이버 설정
 
-# emu/uimenu.c: 3993
+# emu/uimenu.c: 3969
 Driverinfo not available
 표시할 드라이버 정보가 없습니다
 
@@ -1174,7 +1174,7 @@ Easy
 Edit Cheat
 치트 수정
 
-# emu/uimenu.c: 2753
+# emu/uimenu.c: 2729
 Eject Current Card
 현재 카드 꺼내기
 
@@ -1218,11 +1218,11 @@ Equal
 Error
 오류
 
-# emu/uimenu.c: 2705
+# emu/uimenu.c: 2681
 Error creating memory card\n(Card may already exist)
 메모리 카드 생성 오류\n(카드가 이미 존재합니다)
 
-# emu/uimenu.c: 2691
+# emu/uimenu.c: 2667
 Error loading memory card
 메모리카드 읽기 오류
 
@@ -1298,7 +1298,7 @@ Fatal error: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 심각한 오류: %s\n발생 원인: %s:%d: %s
 
-# emu/uimenu.c: 1516
+# mess/uimess.c: 448
 File Manager
 파일 매니저
 
@@ -1358,7 +1358,7 @@ GAME:
 Game
 게임
 
-# emu/uimenu.c: 1509
+# emu/uimenu.c: 1496
 Game Information
 게임 정보
 
@@ -1386,7 +1386,7 @@ German
 Germany
 독일
 
-# emu/uimenu.c: 3790
+# emu/uimenu.c: 3766
 Gfx: %s, Sound: %s
 Gfx: %s, 사운드: %s
 
@@ -1446,7 +1446,7 @@ Highest
 Hispanic
 히스패닉
 
-# emu/uimenu.c: 3982
+# emu/uimenu.c: 3958
 History not available
 표시할 역사 내용이 없습니다
 
@@ -1462,7 +1462,7 @@ Horizontal
 Horizontally
 수평
 
-# emu/ui.c: 1464
+# emu/ui.c: 1466
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 만약, 이 에뮬레이터에서 \"%s\" 를 불법으로 플레이한다면, ESC 를 누르십시오.\n\n
 
@@ -1510,15 +1510,15 @@ Illegal integer value for %s; reverting to %d\n
 Illegal value for %s = %s\n
 잘못된 값 %s = %s\n
 
-# emu/uimenu.c: 1535
+# emu/uimenu.c: 1511
 Image Enhancement
 이미지 개선
 
-# emu/uimenu.c: 1513
+# mess/uimess.c: 445
 Image Information
 이미지 정보
 
-# emu/uimenu.c: 3779, 3786 
+# emu/uimenu.c: 3755, 3762 
 Imperfect
 불완전함
 
@@ -1542,12 +1542,12 @@ Initialize Memory
 Initializing...
 초기화중...
 
-# emu/uimenu.c: 1487
+# emu/uimenu.c: 1474
 Input (general)
 입력 (일반)
 
-# emu/uimenu.c: 1488
-Input (this game)
+# emu/uimenu.c: 1475
+Input (this Game)
 입력 (이 게임)
 
 # mess/mslegacy.c: 50
@@ -1806,7 +1806,7 @@ Lives
 Load Old Format Code
 이전 포맷 코드 불러오기
 
-# emu/uimenu.c: 2751
+# emu/uimenu.c: 2727
 Load Selected Card
 선택된 카드 읽기
 
@@ -1814,11 +1814,11 @@ Load Selected Card
 Load State
 상태 읽기
 
-# emu/ui.c: 2113
+# emu/ui.c: 2115
 Load cancelled
 읽기 취소
 
-# emu/ui.c: 2144
+# emu/ui.c: 2146
 Load from position %c
 위치 %c 에서 읽음
 
@@ -1866,7 +1866,7 @@ Main Screen Pixel Aspect (%d:%d)
 Main Screen Standard (%d:%d)
 메인화면 일반비율 (%d:%d)
 
-# emu/uimenu.c: 3990
+# emu/uimenu.c: 3966
 Mameinfo not available
 표시할 마메정보 내용이 없습니다
 
@@ -1898,19 +1898,19 @@ Maximum Boundary
 Medium
 중간
 
-# emu/uimenu.c: 1544 mess/mslegacy.c: 65 
+# emu/uimenu.c: 1520 mess/mslegacy.c: 65 
 Memory Card
 메모리카드
 
-# emu/uimenu.c: 2703
+# emu/uimenu.c: 2679
 Memory card created
 메모리카드 생성됨
 
-# emu/uimenu.c: 2697
+# emu/uimenu.c: 2673
 Memory card ejected
 메모리카드 꺼냄
 
-# emu/uimenu.c: 2687
+# emu/uimenu.c: 2663
 Memory card loaded
 메모리카드 불러옴
 
@@ -2014,7 +2014,7 @@ Mouse Y 7
 Mouse Y 8
 마우스 Y 8
 
-# emu/uimenu.c: 2462
+# emu/uimenu.c: 2438
 NA
 이용불가
 
@@ -2094,15 +2094,15 @@ No Driver Loaded
 No Tape Image loaded
 테이프 이미지 불러오지 않았음
 
-# emu/uimenu.c: 3593
+# emu/uimenu.c: 3569
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 게임을 찾을 수 없습니다. mame.ini에 지정된 롬 경로를 확인하십시오.\n\n만약 MAME를 처음 실행 하는 것이라면 doc폴더의 config.txt 파일을 참고해 MAME를 설정하시기 바랍니다.
 
-# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3102, 3171 
+# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3078, 3147 
 None
 없음
 
-# emu/ui.c: 1759
+# emu/ui.c: 1761
 None\n
 없음\n
 
@@ -2114,7 +2114,7 @@ Normal
 Not Equal
 같지 않음
 
-# emu/uimenu.c: 3781, 3788 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
+# emu/uimenu.c: 3757, 3764 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
 OK
 확인
 
@@ -2122,11 +2122,11 @@ OK
 OPTIONAL %s NOT FOUND\n
 부가파일 %s 찾지 못함\n
 
-# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2370, 3302 mess/mslegacy.c: 17
+# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2346, 3278 mess/mslegacy.c: 17
 Off
 끄기
 
-# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2370, 3303 mess/mslegacy.c: 18
+# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2346, 3279 mess/mslegacy.c: 18
 On
 켜기
 
@@ -2134,7 +2134,7 @@ On
 On Screen Display
 OSD 표시화면
 
-# emu/ui.c: 1496
+# emu/ui.c: 1498
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 하나 이상의 롬/CHD가 맞지 않습니다. 게임실행이 정확하지 않을 수 있습니다.\n
 
@@ -2150,11 +2150,11 @@ Options
 Orientation
 화면방향
 
-# emu/uimenu.c: 1592
+# emu/uimenu.c: 1568
 Other Controls
 기타 추가 조작
 
-# emu/ui.c: 1465
+# emu/ui.c: 1467
 Otherwise, type OK or move the joystick left then right to continue
 아니라면, OK를 입력하거 조이스틱을 좌우로 움직여 진행하십시오.
 
@@ -2170,15 +2170,15 @@ Out of space
 Out of sync
 싱크 어긋남
 
-# emu/uimenu.c: 3771
+# emu/uimenu.c: 3747
 Overall: NOT WORKING
 종합: 실행 불가
 
-# emu/uimenu.c: 3773
+# emu/uimenu.c: 3749
 Overall: Unemulated Protection
 종합: 암호화 에뮬 못함
 
-# emu/uimenu.c: 3775
+# emu/uimenu.c: 3751
 Overall: Working
 종합: 실행 가능
 
@@ -3738,7 +3738,7 @@ Playback Ended\nReason: %s
 Player %d
 플레이어 %d
 
-# emu/uimenu.c: 1589
+# emu/uimenu.c: 1565
 Player %d Controls
 플레이어 %d 조작
 
@@ -3746,7 +3746,7 @@ Player %d Controls
 Players
 플레이어
 
-# emu/ui.c: 557
+# emu/ui.c: 559
 Please load an image
 이미지를 불러오십시오
 
@@ -3818,7 +3818,7 @@ Positional V 8
 Prefill
 미리기록
 
-# emu/ui.c: 562
+# emu/ui.c: 564
 Press Select Key/Button
 선택 키/버튼을 누르세요
 
@@ -3846,15 +3846,15 @@ Quickload
 Quit Fileselector
 빠른 파일 선택
 
-# emu/ui.c: 2158
+# emu/ui.c: 2160
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 게임을 그만두시겠습니까?\n\n그만두시려면 엔터키를 누르시고,\n계속하시려면 ESC 키를 누르세요.
 
-# emu/ui.c: 2021
+# emu/ui.c: 2023
 REC START
 기록 시작
 
-# emu/ui.c: 2026
+# emu/ui.c: 2028
 REC STOP
 기록 중지
 
@@ -3926,7 +3926,7 @@ Restore Previous Value
 Return to Game
 게임으로 돌아감
 
-# emu/uimenu.c: 230, 3874, 3946, 4000
+# emu/uimenu.c: 230, 3850, 3922, 3976
 Return to Prior Menu
 이전 메뉴로 돌아감
 
@@ -3970,19 +3970,19 @@ Save Snapshot
 Save State
 상태 저장
 
-# emu/ui.c: 2111
+# emu/ui.c: 2113
 Save cancelled
 저장 취소
 
-# emu/ui.c: 2139
+# emu/ui.c: 2141
 Save to position %c
 위치 %c 에 저장됨
 
-# emu/ui.c: 2769 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
+# emu/ui.c: 2771 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
 Screen
 화면
 
-# emu/uimenu.c: 2998
+# emu/uimenu.c: 2974
 Screen #%d
 스크린 #%d
 
@@ -4002,11 +4002,11 @@ Screen %d Standard (%d:%d)
 Screen %d Stretched (%dx%d)
 스크린 %d 늘림 (%dx%d)
 
-# emu/ui.c: 2767
+# emu/ui.c: 2769
 Screen '%s'
 스크린 '%s'
 
-# emu/datafile.c: 1544 emu/ui.c: 1522
+# emu/datafile.c: 1544 emu/ui.c: 1524
 Screen flipping in cocktail mode is not supported.\n
 칵테일모드에서의 화면 뒤집힘이 지원되지 않습니다.\n
 
@@ -4034,7 +4034,7 @@ Second Bonus
 Select
 선택
 
-# emu/uimenu.c: 1551
+# emu/uimenu.c: 1527
 Select New Game
 새 게임 선택
 
@@ -4042,11 +4042,11 @@ Select New Game
 Select Search
 검색 선택
 
-# emu/ui.c: 2104
+# emu/ui.c: 2106
 Select position to load from
 불러올 위치(0-9,A-Z) 선택
 
-# emu/ui.c: 2102
+# emu/ui.c: 2104
 Select position to save to
 저장할 위치(0-9,A-Z) 선택
 
@@ -4106,7 +4106,7 @@ Show Cheat List
 Show Command
 공략 표시
 
-# emu/uimenu.c: 1547
+# emu/uimenu.c: 1523
 Show Command List
 공략 목록 표시
 
@@ -4202,7 +4202,7 @@ Stereo
 Stop
 정지
 
-# emu/uimenu.c: 3986
+# emu/uimenu.c: 3962
 Story not available
 표시할 줄거리가 없습니다
 
@@ -4218,7 +4218,7 @@ Subtract
 Swap
 교환
 
-# emu/datafile.c: 1523 emu/ui.c: 1533
+# emu/datafile.c: 1523 emu/ui.c: 1535
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 이 게임은 실행이 불가능합니다. 정상적으로 동작이 불가능하니 참고하시기 바랍니다.\n
 
@@ -4230,7 +4230,7 @@ Taiwan
 Take
 갖기
 
-# emu/uimenu.c: 1521 
+# mess/uimess.c: 453
 Tape Control
 테이프 콘트롤
 
@@ -4258,35 +4258,35 @@ Text
 Text Label
 텍스트 라벨
 
-# emu/datafile.c: 1532 emu/ui.c: 1514
+# emu/datafile.c: 1532 emu/ui.c: 1516
 The colors are completely wrong.\n
 컬러가 완전히 다릅니다.\n
 
-# emu/datafile.c: 1535 emu/ui.c: 1512
+# emu/datafile.c: 1535 emu/ui.c: 1514
 The colors aren't 100% accurate.\n
 컬러가 100% 정확치 않습니다.\n
 
-# emu/datafile.c: 1526 emu/ui.c: 1535
+# emu/datafile.c: 1526 emu/ui.c: 1537
 The game has protection which isn't fully emulated.\n
 게임의 암호화된 부분을 완벽히 에뮬레이트 하지 못합니다.\n
 
-# emu/datafile.c: 1538 emu/ui.c: 1520
+# emu/datafile.c: 1538 emu/ui.c: 1522
 The game lacks sound.\n
 사운드가 나지 않습니다.\n
 
-# emu/uimenu.c: 3567
+# emu/uimenu.c: 3543
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 선택된 게임은 하나 이상의 ROM파일 또는 CHD 파일이 더 필요합니다. 다른 게임을 선택해 주십시오\n\n아무키나 누르면 계속
 
-# emu/datafile.c: 1541 emu/ui.c: 1518
+# emu/datafile.c: 1541 emu/ui.c: 1520
 The sound emulation isn't 100% accurate.\n
 사운드 에뮬레이션이 100% 정확하지 않습니다.\n
 
-# emu/datafile.c: 1529 emu/ui.c: 1516
+# emu/datafile.c: 1529 emu/ui.c: 1518
 The video emulation isn't 100% accurate.\n
 화면 에뮬레이션이 100% 정확하지 않습니다.\n
 
-# emu/ui.c: 1504
+# emu/ui.c: 1506
 There are known problems with this game\n\n
 이 게임은 다음과 같은 문제점이 있습니다\n\n
 
@@ -4298,7 +4298,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 Throttle
 감속기능
 
-# emu/uimenu.c: 2452
+# emu/uimenu.c: 2428
 Tickets dispensed: %d\n\n
 티켓 분배: %d\n\n
 
@@ -4318,7 +4318,7 @@ Timer
 Title
 타이틀
 
-# emu/uimenu.c: 3304
+# emu/uimenu.c: 3280
 Toggle
 켜기/끄기
 
@@ -4422,11 +4422,11 @@ Triple Side-by-Side (Gapless)
 Type
 유형
 
-# emu/uimenu.c: 3728
+# emu/uimenu.c: 3704
 Type name or select: %s_
 이름을 입력하거나 선택 : %s_
 
-# emu/uimenu.c: 3730
+# emu/uimenu.c: 3706
 Type name or select: (random)
 이름을 입력하거나 선택 : (무작위)
 
@@ -4550,7 +4550,7 @@ Unexpected float option %s queried\n
 Unexpected integer option %s queried\n
 예상치 못한 integer 옵션 %s 요청\n
 
-# emu/uimenu.c: 3784 mess/machine/nes.c: 612, 617
+# emu/uimenu.c: 3760 mess/machine/nes.c: 612, 617
 Unimplemented
 적용안됨
 
@@ -4570,7 +4570,7 @@ Unmount
 Unused
 사용되지않음
 
-# emu/ui.c: 674
+# emu/ui.c: 676
 Updating Artwork...
 아트워크 업데이트...
 
@@ -4582,15 +4582,15 @@ Upright
 Upright 1
 오른쪽위 1
 
-# emu/uimenu.c: 2446
+# emu/uimenu.c: 2422
 Uptime: %d:%02d:%02d\n\n
 시간종료: %d:%02d:%02d\n\n
 
-# emu/uimenu.c: 2448
+# emu/uimenu.c: 2424
 Uptime: %d:%02d\n\n
 시간종료: %d:%02d\n\n
 
-# emu/ui.c: 1463
+# emu/ui.c: 1465
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 에뮬레이터로 소유하지 않은 롬을 사용하는것은 저작권법에 의해 금지되어 있습니다.\n\n
 
@@ -4602,7 +4602,7 @@ Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list o
 Usage: %s [%s] [options]\n\nOptions:\n
 사용법: %s [%s] [옵션]\n\n옵션:\n
 
-# emu/uimenu.c: 1585
+# emu/uimenu.c: 1561
 User Interface
 사용자 인터페이스
 
@@ -4618,11 +4618,11 @@ VFD 화면 출력 만
 VFD Only (%d:%d)
 VFD 만 (%d:%d)
 
-# emu/ui.c: 2355
+# emu/ui.c: 2357
 Vector Flicker
 벡터 깜빡임
 
-# emu/ui.c: 1772
+# emu/ui.c: 1774
 Vector\n
 벡터\n
 
@@ -4658,7 +4658,7 @@ Very Low
 Very Slow
 매우 느림
 
-# emu/uimenu.c: 1532
+# emu/uimenu.c: 1507
 Video Options
 비디오 옵션
 
@@ -4778,7 +4778,7 @@ Zoom Auto
 \nSOURCE: %s\n
 \n소스: %s\n
 
-# emu/ui.c: 1734
+# emu/ui.c: 1736
 \nSound:\n
 \n사운드:\n
 
@@ -4786,7 +4786,7 @@ Zoom Auto
 \nStory:\n
 \n줄거리:\n
 
-# emu/ui.c: 1757
+# emu/ui.c: 1759
 \nVideo:\n
 \n비디오:\n
 
@@ -4798,11 +4798,11 @@ Zoom Auto
 \n\nCLONES:\n
 \n\n클론:\n
 
-# emu/ui.c: 1552
+# emu/ui.c: 1554
 \n\nThere are working clones of this game. They are:\n\n
 \n\n이 게임의 실행 가능한 클론롬은:\n\n
 
-# emu/ui.c: 1561
+# emu/ui.c: 1563
 \n\nType OK or move the joystick left then right to continue
 \n\nOK를 입력하거나 조이스틱을 좌우로 움직여 진행하십시오
 
@@ -5542,51 +5542,51 @@ writes configuration to (driver).ini on exit
 year, manufacturer and full name
 제작년도, 제작사와 전체 이름
 
-# emu/uimenu.c: 2468
+# emu/uimenu.c: 2444
  (locked)
 
 
-# emu/uimenu.c: 1895
+# emu/uimenu.c: 1871
 %s Analog Dec
 
 
-# emu/uimenu.c: 1894
+# emu/uimenu.c: 1870
 %s Analog Inc
 
 
-# emu/ui.c: 2297
+# emu/ui.c: 2299
 %s Brightness
 
 
-# emu/ui.c: 2300
+# emu/ui.c: 2302
 %s Contrast
 
 
-# emu/ui.c: 2303
+# emu/ui.c: 2305
 %s Gamma
 
 
-# emu/ui.c: 2311, 2337
+# emu/ui.c: 2313, 2339
 %s Horiz Position
 
 
-# emu/ui.c: 2308, 2334
+# emu/ui.c: 2310, 2336
 %s Horiz Stretch
 
 
-# emu/ui.c: 2291
+# emu/ui.c: 2293
 %s Refresh Rate
 
 
-# emu/ui.c: 2317, 2343
+# emu/ui.c: 2319, 2345
 %s Vert Position
 
 
-# emu/ui.c: 2314, 2340
+# emu/ui.c: 2316, 2342
 %s Vert Stretch
 
 
-# emu/ui.c: 2250
+# emu/ui.c: 2252
 %s Volume
 
 
@@ -5594,15 +5594,15 @@ year, manufacturer and full name
 Autocenter Speed
 
 
-# emu/uimenu.c: 3111 
+# emu/uimenu.c: 3087 
 Backdrops
 
 
-# emu/uimenu.c: 3119 
+# emu/uimenu.c: 3095 
 Bezels
 
 
-# emu/uimenu.c: 3105
+# emu/uimenu.c: 3081
 CCW 90
 
 
@@ -5610,7 +5610,7 @@ CCW 90
 CD-ROM
 
 
-# emu/uimenu.c: 3103
+# emu/uimenu.c: 3079
 CW 90
 
 
@@ -5618,7 +5618,7 @@ CW 90
 Christopher Kirmse and the MAMEUI team
 
 
-# emu/uimenu.c: 2458
+# emu/uimenu.c: 2434
 Coin %c: 
 
 
@@ -5634,15 +5634,15 @@ Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
 Copyright the MESS team\nhttp://mess.org
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 Cropped
 
 
-# emu/ui.c: 2373
+# emu/ui.c: 2375
 Crosshair Offset %s
 
 
-# emu/ui.c: 2370
+# emu/ui.c: 2372
 Crosshair Scale %s
 
 
@@ -5650,15 +5650,15 @@ Crosshair Scale %s
 Digital Speed
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Emulated
 
 
-# emu/sound/sn76477.c: 643 emu/uimenu.c: 3111, 3115, 3119 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
+# emu/sound/sn76477.c: 643 emu/uimenu.c: 3087, 3091, 3095 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
 Enabled
 
 
-# emu/uimenu.c: 3123 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
+# emu/uimenu.c: 3099 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
 Full
 
 
@@ -5674,19 +5674,19 @@ Joy
 Kbd
 
 
-# emu/uimenu.c: 1525
+# mess/uimess.c: 458
 Keyboard Mode
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Keyboard Mode:
 
 
-# emu/ui.c: 2788
+# emu/ui.c: 2790
 Laserdisc
 
 
-# emu/ui.c: 2786
+# emu/ui.c: 2788
 Laserdisc '%s'
 
 
@@ -5694,11 +5694,11 @@ Laserdisc '%s'
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and the MAME Team\n\n
 
 
-# emu/ui.c: 2237
+# emu/ui.c: 2239
 Master Volume
 
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Natural
 
 
@@ -5706,11 +5706,11 @@ Natural
 Nicola Salmoria and the MAME Team
 
 
-# emu/ui.c: 2271
+# emu/ui.c: 2273
 Overclock CPU %s
 
 
-# emu/uimenu.c: 3115 
+# emu/uimenu.c: 3091 
 Overlays
 
 
@@ -5718,7 +5718,7 @@ Overlays
 Pause
 
 
-# emu/uimenu.c: 2647 mame/drivers/lvcards.c: 365
+# emu/uimenu.c: 2623 mame/drivers/lvcards.c: 365
 Reset All
 
 
@@ -5726,7 +5726,7 @@ Reset All
 Reverse
 
 
-# emu/uimenu.c: 3107
+# emu/uimenu.c: 3083
 Rotate
 
 
@@ -5738,15 +5738,15 @@ Screen %d Widescreen (%d:%d)
 Sensitivity
 
 
-# emu/uimenu.c: 1529
+# emu/uimenu.c: 1504
 Slider Controls
 
 
-# emu/ui.c: 1509
+# emu/ui.c: 1511
 The emulated system is a computer:\n\nThe keyboard emulation may not be 100% accurate.\n
 
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 View
 
 

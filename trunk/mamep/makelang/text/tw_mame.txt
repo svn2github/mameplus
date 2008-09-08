@@ -14,7 +14,7 @@
  (%d bytes)
  (%d 位元組)
 
-# emu/uimenu.c: 2468
+# emu/uimenu.c: 2444
  (locked)
  (鎖住)
 
@@ -42,23 +42,23 @@
 %s : %s selected
 %s : %s 已選取
 
-# emu/uimenu.c: 1893
+# emu/uimenu.c: 1869
 %s Analog
 %s 類比控制
 
-# emu/uimenu.c: 1895
+# emu/uimenu.c: 1871
 %s Analog Dec
 %s 類比控制 減少
 
-# emu/uimenu.c: 1894
+# emu/uimenu.c: 1870
 %s Analog Inc
 %s 類比控制 增加
 
-# emu/uimenu.c: 2361
+# emu/uimenu.c: 2337
 %s Autocenter Speed
 %s 自動置中速度
 
-# emu/ui.c: 2297
+# emu/ui.c: 2299
 %s Brightness
 %s 亮度值
 
@@ -66,23 +66,23 @@
 %s CHD NEEDS REDUMP\n
 %s CHD 需要重新 DUMP\n
 
-# emu/ui.c: 2300
+# emu/ui.c: 2302
 %s Contrast
 %s 對比值
 
-# emu/uimenu.c: 2353
+# emu/uimenu.c: 2329
 %s Digital Speed
 %s 數位速度
 
-# emu/ui.c: 2303
+# emu/ui.c: 2305
 %s Gamma
 %s Gamma 值
 
-# emu/ui.c: 2311, 2337
+# emu/ui.c: 2313, 2339
 %s Horiz Position
 %s 水平位置
 
-# emu/ui.c: 2308, 2334
+# emu/ui.c: 2310, 2336
 %s Horiz Stretch
 %s 水平延展
 
@@ -102,27 +102,27 @@
 %s ROM NEEDS REDUMP\n
 %s ROM 需要重新 DUMP\n
 
-# emu/ui.c: 2291
+# emu/ui.c: 2293
 %s Refresh Rate
 %s 更新頻率
 
-# emu/uimenu.c: 2369
+# emu/uimenu.c: 2345
 %s Reverse
 %s 反轉
 
-# emu/uimenu.c: 2377
+# emu/uimenu.c: 2353
 %s Sensitivity
 %s 感應度
 
-# emu/ui.c: 2317, 2343
+# emu/ui.c: 2319, 2345
 %s Vert Position
 %s 垂直位置
 
-# emu/ui.c: 2314, 2340
+# emu/ui.c: 2316, 2342
 %s Vert Stretch
 %s 垂直延展
 
-# emu/ui.c: 2250
+# emu/ui.c: 2252
 %s Volume
 %s 音量
 
@@ -166,7 +166,7 @@
 (Unknown Default)
 (未知的預設)
 
-# emu/ui.c: 858, 903
+# emu/ui.c: 860, 905
 (more)
 (續)
 
@@ -514,7 +514,7 @@ Allow Continue
 Alternate
 替代
 
-# emu/uimenu.c: 1501 mess/mslegacy.c: 21 
+# emu/uimenu.c: 1488 mess/mslegacy.c: 21 
 Analog Controls
 類比控制
 
@@ -550,11 +550,11 @@ Autocenter Speed
 Autofire (in some games)
 連射功\能 (部分遊戲)
 
-# emu/uimenu.c: 3313
+# emu/uimenu.c: 3289
 Autofire Delay
 連射延遲
 
-# emu/uimenu.c: 1489
+# emu/uimenu.c: 1476
 Autofire Setting
 連射設定
 
@@ -582,11 +582,11 @@ BCD
 BIOS
 BIOS
 
-# emu/uimenu.c: 3111 
+# emu/uimenu.c: 3087 
 Backdrops
 背景圖
 
-# emu/ui.c: 2357
+# emu/ui.c: 2359
 Beam Width
 光束寬度
 
@@ -598,7 +598,7 @@ Beginner
 Bet
 押注
 
-# emu/uimenu.c: 3119 
+# emu/uimenu.c: 3095 
 Bezels
 外框圖
 
@@ -618,7 +618,7 @@ Bit
 Bonus Life
 獎勵分數
 
-# emu/uimenu.c: 1505 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
+# emu/uimenu.c: 1492 mame/drivers/cardline.c: 136 mame/drivers/polyplay.c: 191
 Bookkeeping Info
 收入資訊
 
@@ -746,7 +746,7 @@ Cabinet Type
 Cancel
 取消
 
-# emu/uimenu.c: 2748
+# emu/uimenu.c: 2724
 Card Number:
 記憶卡編號:
 
@@ -758,7 +758,7 @@ Cartridge
 Cassette
 卡式磁帶
 
-# emu/uimenu.c: 1499 
+# emu/uimenu.c: 1486 
 Categories
 類別
 
@@ -790,7 +790,7 @@ Cocktail
 Coin
 投幣器
 
-# emu/uimenu.c: 2458
+# emu/uimenu.c: 2434
 Coin %c: 
 投幣器 %c: 
 
@@ -882,7 +882,7 @@ Comparison
 Config Menu
 設定選單
 
-# emu/uimenu.c: 3619
+# emu/uimenu.c: 3595
 Configure General Inputs
 設定一般輸入
 
@@ -946,7 +946,7 @@ Could not read MAME save file header
 Country
 國別
 
-# emu/uimenu.c: 2754
+# emu/uimenu.c: 2730
 Create New Card
 建立新的記憶卡
 
@@ -958,15 +958,15 @@ Create...
 Created %s
 已建立 %s
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 Cropped
 裁切
 
-# emu/ui.c: 2373
+# emu/ui.c: 2375
 Crosshair Offset %s
 十字游標位移 %s
 
-# emu/ui.c: 2370
+# emu/ui.c: 2372
 Crosshair Scale %s
 十字游標尺度 %s
 
@@ -974,7 +974,7 @@ Crosshair Scale %s
 Custom
 自訂
 
-# emu/uimenu.c: 1491
+# emu/uimenu.c: 1478
 Custom Buttons
 自訂按鈕
 
@@ -1102,7 +1102,7 @@ Difficulty 2
 Digital Speed
 數位速度
 
-# emu/uimenu.c: 1495 mess/mslegacy.c: 19 
+# emu/uimenu.c: 1482 mess/mslegacy.c: 19 
 Dip Switches
 機台設定開關
 
@@ -1110,7 +1110,7 @@ Dip Switches
 Disable All Coins
 停用所有投幣口
 
-# emu/uimenu.c: 3111, 3115, 3119 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
+# emu/uimenu.c: 3087, 3091, 3095 mame/drivers/blockade.c: 295 mame/drivers/hyperspt.c: 201, 302 mame/drivers/junofrst.c: 293 mame/drivers/lvcards.c: 331, 409 mame/drivers/metro.c: 2455 mame/drivers/midvunit.c: 859 mame/drivers/nemesis.c: 835, 1433, 1526, 1543, 1731, 1828, 1916 mame/drivers/pacman.c: 1273, 1335 mame/drivers/rallyx.c: 608 mame/drivers/rocnrope.c: 128 mame/drivers/seattle.c: 2393 mame/drivers/trackfld.c: 375, 470 mame/drivers/tutankhm.c: 217 mame/drivers/twin16.c: 330 
 Disabled
 停用
 
@@ -1134,11 +1134,11 @@ Door Interlock
 Double Up
 比倍
 
-# emu/uimenu.c: 1497 mess/mslegacy.c: 20 
+# emu/uimenu.c: 1484 mess/mslegacy.c: 20 
 Driver Configuration
 驅動設定
 
-# emu/uimenu.c: 3993
+# emu/uimenu.c: 3969
 Driverinfo not available
 沒有可供查看的驅動資訊
 
@@ -1202,7 +1202,7 @@ Easy
 Edit Cheat
 編輯作弊碼
 
-# emu/uimenu.c: 2753
+# emu/uimenu.c: 2729
 Eject Current Card
 退出目前的記憶卡
 
@@ -1214,7 +1214,7 @@ Element Size
 Elements Per Line
 每行元素
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Emulated
 模擬
 
@@ -1222,7 +1222,7 @@ Emulated
 Enable/Disable a Cheat
 啟用/停用 作弊碼
 
-# emu/sound/sn76477.c: 643 emu/uimenu.c: 3111, 3115, 3119 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
+# emu/sound/sn76477.c: 643 emu/uimenu.c: 3087, 3091, 3095 mame/drivers/lvcards.c: 332, 410 mame/drivers/midvunit.c: 860 mame/drivers/seattle.c: 2392
 Enabled
 啟用
 
@@ -1254,11 +1254,11 @@ Equal
 Error
 錯誤
 
-# emu/uimenu.c: 2705
+# emu/uimenu.c: 2681
 Error creating memory card\n(Card may already exist)
 建立記憶卡時發生錯誤\n(記憶卡可能已經存在)
 
-# emu/uimenu.c: 2691
+# emu/uimenu.c: 2667
 Error loading memory card
 載入記憶卡時發生錯誤
 
@@ -1334,7 +1334,7 @@ Fatal error: %s (%s:%d)
 Fatal error: %s\nCaused by assert: %s:%d: %s
 嚴重錯誤: %s\n判斷原因: %s:%d: %s
 
-# emu/uimenu.c: 1516
+# mess/uimess.c: 448
 File Manager
 檔案管理員
 
@@ -1386,7 +1386,7 @@ Freeze
 French
 法文
 
-# emu/uimenu.c: 3123 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
+# emu/uimenu.c: 3099 mame/drivers/cultures.c: 208 mame/drivers/funybubl.c: 192 mame/drivers/metro.c: 2565, 2912 mame/drivers/skykid.c: 357 mame/drivers/warriorb.c: 347
 Full
 全部
 
@@ -1398,7 +1398,7 @@ GAME:
 Game
 遊戲
 
-# emu/uimenu.c: 1509
+# emu/uimenu.c: 1496
 Game Information
 遊戲資訊
 
@@ -1426,7 +1426,7 @@ German
 Germany
 德國版
 
-# emu/uimenu.c: 3790
+# emu/uimenu.c: 3766
 Gfx: %s, Sound: %s
 圖形資料: %s, 聲音: %s
 
@@ -1482,7 +1482,7 @@ Highest
 Hispanic
 西班牙版
 
-# emu/uimenu.c: 3982
+# emu/uimenu.c: 3958
 History not available
 沒有可供查看的歷史
 
@@ -1498,7 +1498,7 @@ Horizontal
 Horizontally
 水平
 
-# emu/ui.c: 1464
+# emu/ui.c: 1466
 IF YOU ARE NOT LEGALLY ENTITLED TO PLAY \"%s\" ON THIS EMULATOR, PRESS ESC.\n\n
 如果您沒有在本模擬器上執行 \"%s\" 的合法權力，請按 ESC 鍵。\n\n
 
@@ -1546,15 +1546,15 @@ Illegal integer value for %s; reverting to %d\n
 Illegal value for %s = %s\n
 非法的值於 %s = %s\n
 
-# emu/uimenu.c: 1535
+# emu/uimenu.c: 1511
 Image Enhancement
 影像增強
 
-# emu/uimenu.c: 1513
+# mess/uimess.c: 445
 Image Information
 映像檔資訊
 
-# emu/uimenu.c: 3779, 3786 
+# emu/uimenu.c: 3755, 3762 
 Imperfect
 不完美
 
@@ -1578,12 +1578,12 @@ Initialize Memory
 Initializing...
 正在初始化...
 
-# emu/uimenu.c: 1487
+# emu/uimenu.c: 1474
 Input (general)
 輸入設定(一般)
 
-# emu/uimenu.c: 1488
-Input (this game)
+# emu/uimenu.c: 1475
+Input (this Game)
 輸入設定(本遊戲)
 
 # mess/mslegacy.c: 50
@@ -1706,11 +1706,11 @@ Keyboard
 Keyboard Emulation Status
 鍵盤模擬狀態
 
-# emu/uimenu.c: 1525
+# mess/uimess.c: 458
 Keyboard Mode
 鍵盤模式
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Keyboard Mode:
 鍵盤模式:
 
@@ -1742,11 +1742,11 @@ Label Type
 Language
 語系
 
-# emu/ui.c: 2788
+# emu/ui.c: 2790
 Laserdisc
 鐳射光碟
 
-# emu/ui.c: 2786
+# emu/ui.c: 2788
 Laserdisc '%s'
 鐳射光碟 '%s'
 
@@ -1846,7 +1846,7 @@ Lives
 Load Old Format Code
 載入舊格式編碼
 
-# emu/uimenu.c: 2751
+# emu/uimenu.c: 2727
 Load Selected Card
 載入選定的記憶卡
 
@@ -1854,11 +1854,11 @@ Load Selected Card
 Load State
 載入狀態
 
-# emu/ui.c: 2113
+# emu/ui.c: 2115
 Load cancelled
 已取消載入
 
-# emu/ui.c: 2144
+# emu/ui.c: 2146
 Load from position %c
 載入位置 %c
 
@@ -1910,7 +1910,7 @@ Main Screen Pixel Aspect (%d:%d)
 Main Screen Standard (%d:%d)
 主畫面 標準 (%d:%d)
 
-# emu/uimenu.c: 3990
+# emu/uimenu.c: 3966
 Mameinfo not available
 沒有可供查看的 MAME 資訊
 
@@ -1926,7 +1926,7 @@ Mapped Memory
 Mask
 遮罩
 
-# emu/ui.c: 2237
+# emu/ui.c: 2239
 Master Volume
 主音量
 
@@ -1946,19 +1946,19 @@ Maximum Boundary
 Medium
 適中
 
-# emu/uimenu.c: 1544 mess/mslegacy.c: 65 
+# emu/uimenu.c: 1520 mess/mslegacy.c: 65 
 Memory Card
 記憶卡
 
-# emu/uimenu.c: 2703
+# emu/uimenu.c: 2679
 Memory card created
 記憶卡建立完成
 
-# emu/uimenu.c: 2697
+# emu/uimenu.c: 2673
 Memory card ejected
 記憶卡退出完成
 
-# emu/uimenu.c: 2687
+# emu/uimenu.c: 2663
 Memory card loaded
 記憶卡載入完成
 
@@ -2062,7 +2062,7 @@ Mouse Y 7
 Mouse Y 8
 滑鼠 Y 8
 
-# emu/uimenu.c: 2462
+# emu/uimenu.c: 2438
 NA
 NA
 
@@ -2118,7 +2118,7 @@ Name:     Description:\n
 Name:    Clone of:\n
 名稱:    原作:\n
 
-# mess/uimess.c: 405
+# mess/uimess.c: 407
 Natural
 自然
 
@@ -2150,15 +2150,15 @@ No Driver Loaded
 No Tape Image loaded
 未載入磁帶映像檔
 
-# emu/uimenu.c: 3593
+# emu/uimenu.c: 3569
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
 找不到遊戲。請檢查 mame.ini 檔案的 rompath 設定。\n\n如果這是您第一次使用 MAME 的話，請查閱\ docs 目錄的 config.txt 檔案以取得設定 MAME 的資訊。
 
-# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3102, 3171 
+# emu/inptport.c: 483 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3078, 3147 
 None
 無
 
-# emu/ui.c: 1759
+# emu/ui.c: 1761
 None\n
 無\n
 
@@ -2170,7 +2170,7 @@ Normal
 Not Equal
 不相等
 
-# emu/uimenu.c: 3781, 3788 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
+# emu/uimenu.c: 3757, 3764 mame/drivers/tetrisp2.c: 824 mess/mslegacy.c: 16 
 OK
 OK
 
@@ -2178,11 +2178,11 @@ OK
 OPTIONAL %s NOT FOUND\n
 非必要的 %s 找不到\n
 
-# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2370, 3302 mess/mslegacy.c: 17
+# emu/cheat.c: 389 emu/inptport.c: 376 emu/uimenu.c: 2346, 3278 mess/mslegacy.c: 17
 Off
 關
 
-# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2370, 3303 mess/mslegacy.c: 18
+# emu/cheat.c: 389 emu/inptport.c: 377 emu/uimenu.c: 2346, 3279 mess/mslegacy.c: 18
 On
 開
 
@@ -2190,7 +2190,7 @@ On
 On Screen Display
 參數調整
 
-# emu/ui.c: 1496
+# emu/ui.c: 1498
 One or more ROMs/CHDs for this game are incorrect. The game may not run correctly.\n
 這個遊戲有一個或更多 ROM/CHD 是不正確的。這個遊戲可能無法正確執行。\n
 
@@ -2206,11 +2206,11 @@ Options
 Orientation
 方向
 
-# emu/uimenu.c: 1592
+# emu/uimenu.c: 1568
 Other Controls
 其它控制
 
-# emu/ui.c: 1465
+# emu/ui.c: 1467
 Otherwise, type OK or move the joystick left then right to continue
 否則，請鍵入 OK 或移動搖桿的左右方向繼續
 
@@ -2226,23 +2226,23 @@ Out of space
 Out of sync
 不同步
 
-# emu/uimenu.c: 3771
+# emu/uimenu.c: 3747
 Overall: NOT WORKING
 整體: 不可執行
 
-# emu/uimenu.c: 3773
+# emu/uimenu.c: 3749
 Overall: Unemulated Protection
 整體: 未模擬保護
 
-# emu/uimenu.c: 3775
+# emu/uimenu.c: 3751
 Overall: Working
 整體: 可以執行
 
-# emu/ui.c: 2271
+# emu/ui.c: 2273
 Overclock CPU %s
 超頻 CPU %s
 
-# emu/uimenu.c: 3115 
+# emu/uimenu.c: 3091 
 Overlays
 覆疊圖
 
@@ -3806,7 +3806,7 @@ Playback Ended\nReason: %s
 Player %d
 玩家 %d
 
-# emu/uimenu.c: 1589
+# emu/uimenu.c: 1565
 Player %d Controls
 玩家 %d 控制
 
@@ -3814,7 +3814,7 @@ Player %d Controls
 Players
 玩家數
 
-# emu/ui.c: 557
+# emu/ui.c: 559
 Please load an image
 請載入一個映像檔
 
@@ -3886,7 +3886,7 @@ Positional V 8
 Prefill
 預填充
 
-# emu/ui.c: 562
+# emu/ui.c: 564
 Press Select Key/Button
 請按確定鍵
 
@@ -3914,15 +3914,15 @@ Quickload
 Quit Fileselector
 離開檔案選取器
 
-# emu/ui.c: 2158
+# emu/ui.c: 2160
 Quit the game?\n\nPress Select key/button to quit,\nCancel key/button to continue.
 離開遊戲?\n\n按一下確定鍵離開遊戲，\n按一下取消鍵繼續執行。
 
-# emu/ui.c: 2021
+# emu/ui.c: 2023
 REC START
 錄製開始
 
-# emu/ui.c: 2026
+# emu/ui.c: 2028
 REC STOP
 錄製停止
 
@@ -3978,7 +3978,7 @@ Reload Database
 Reset
 重設
 
-# emu/uimenu.c: 2647 mame/drivers/lvcards.c: 365
+# emu/uimenu.c: 2623 mame/drivers/lvcards.c: 365
 Reset All
 全部重設
 
@@ -3998,7 +3998,7 @@ Restore Previous Value
 Return to Game
 回到遊戲
 
-# emu/uimenu.c: 230, 3874, 3946, 4000
+# emu/uimenu.c: 230, 3850, 3922, 3976
 Return to Prior Menu
 回上一層選單
 
@@ -4010,7 +4010,7 @@ Reverse
 Rewind
 倒帶
 
-# emu/uimenu.c: 3107
+# emu/uimenu.c: 3083
 Rotate
 旋轉
 
@@ -4042,19 +4042,19 @@ Save Snapshot
 Save State
 儲存狀態
 
-# emu/ui.c: 2111
+# emu/ui.c: 2113
 Save cancelled
 已取消儲存
 
-# emu/ui.c: 2139
+# emu/ui.c: 2141
 Save to position %c
 儲存位置 %c
 
-# emu/ui.c: 2769 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
+# emu/ui.c: 2771 mame/drivers/findout.c: 278, 338 mame/drivers/turbo.c: 975 
 Screen
 畫面
 
-# emu/uimenu.c: 2998
+# emu/uimenu.c: 2974
 Screen #%d
 畫面 #%d
 
@@ -4078,11 +4078,11 @@ Screen %d Stretched (%dx%d)
 Screen %d Widescreen (%d:%d)
 畫面 %d 寬螢幕 (%d:%d)
 
-# emu/ui.c: 2767
+# emu/ui.c: 2769
 Screen '%s'
 畫面 '%s'
 
-# emu/datafile.c: 1544 emu/ui.c: 1522
+# emu/datafile.c: 1544 emu/ui.c: 1524
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
@@ -4110,7 +4110,7 @@ Second Bonus
 Select
 選擇
 
-# emu/uimenu.c: 1551
+# emu/uimenu.c: 1527
 Select New Game
 選擇新的遊戲
 
@@ -4118,11 +4118,11 @@ Select New Game
 Select Search
 搜尋選擇
 
-# emu/ui.c: 2104
+# emu/ui.c: 2106
 Select position to load from
 選擇要載入的位置
 
-# emu/ui.c: 2102
+# emu/ui.c: 2104
 Select position to save to
 選擇要儲存的位置
 
@@ -4182,7 +4182,7 @@ Show Cheat List
 Show Command
 顯示招式表
 
-# emu/uimenu.c: 1547
+# emu/uimenu.c: 1523
 Show Command List
 顯示招式表
 
@@ -4226,7 +4226,7 @@ Size
 Skip Bytes
 略過位元組
 
-# emu/uimenu.c: 1529
+# emu/uimenu.c: 1504
 Slider Controls
 參數調整
 
@@ -4282,7 +4282,7 @@ Stereo
 Stop
 停止
 
-# emu/uimenu.c: 3986
+# emu/uimenu.c: 3962
 Story not available
 沒有可供查看的故事
 
@@ -4298,7 +4298,7 @@ Subtract
 Swap
 交換
 
-# emu/datafile.c: 1523 emu/ui.c: 1533
+# emu/datafile.c: 1523 emu/ui.c: 1535
 THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
 這個遊戲無法執行。您無法正確執行它，不用白忙。\n
 
@@ -4310,7 +4310,7 @@ Taiwan
 Take
 得分
 
-# emu/uimenu.c: 1521 
+# mess/uimess.c: 453
 Tape Control
 磁帶控制
 
@@ -4338,39 +4338,39 @@ Text
 Text Label
 文字標籤
 
-# emu/datafile.c: 1532 emu/ui.c: 1514
+# emu/datafile.c: 1532 emu/ui.c: 1516
 The colors are completely wrong.\n
 色彩是完全錯誤的。\n
 
-# emu/datafile.c: 1535 emu/ui.c: 1512
+# emu/datafile.c: 1535 emu/ui.c: 1514
 The colors aren't 100% accurate.\n
 色彩尚未達到 100% 精確。\n
 
-# emu/ui.c: 1509
+# emu/ui.c: 1511
 The emulated system is a computer:\n\nThe keyboard emulation may not be 100% accurate.\n
 模擬的系統是一台電腦:\n\n鍵盤模擬可能未達到 100% 精確。\n
 
-# emu/datafile.c: 1526 emu/ui.c: 1535
+# emu/datafile.c: 1526 emu/ui.c: 1537
 The game has protection which isn't fully emulated.\n
 這個遊戲具有保護尚未完全模擬。\n
 
-# emu/datafile.c: 1538 emu/ui.c: 1520
+# emu/datafile.c: 1538 emu/ui.c: 1522
 The game lacks sound.\n
 這個遊戲缺少聲音。\n
 
-# emu/uimenu.c: 3567
+# emu/uimenu.c: 3543
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
 選定的遊戲缺少一個至多個必要的 ROM 或 CHD 映像檔，請選擇別的遊戲。\n\n請按任意鍵繼續。
 
-# emu/datafile.c: 1541 emu/ui.c: 1518
+# emu/datafile.c: 1541 emu/ui.c: 1520
 The sound emulation isn't 100% accurate.\n
 聲音模擬尚未達到 100% 精確。\n
 
-# emu/datafile.c: 1529 emu/ui.c: 1516
+# emu/datafile.c: 1529 emu/ui.c: 1518
 The video emulation isn't 100% accurate.\n
 視訊模擬尚未達到 100% 精確。\n
 
-# emu/ui.c: 1504
+# emu/ui.c: 1506
 There are known problems with this game\n\n
 這個遊戲具有下列已知的問題\n\n
 
@@ -4382,7 +4382,7 @@ This is the list of the ROMs required for driver \"%s\".\nName            Size C
 Throttle
 限制速度
 
-# emu/uimenu.c: 2452
+# emu/uimenu.c: 2428
 Tickets dispensed: %d\n\n
 彩票分配數: %d\n\n
 
@@ -4402,7 +4402,7 @@ Timer
 Title
 標題
 
-# emu/uimenu.c: 3304
+# emu/uimenu.c: 3280
 Toggle
 切換
 
@@ -4502,11 +4502,11 @@ Triple Side-by-Side (Gapless)
 Type
 類型
 
-# emu/uimenu.c: 3728
+# emu/uimenu.c: 3704
 Type name or select: %s_
 輸入名稱或選擇: %s_
 
-# emu/uimenu.c: 3730
+# emu/uimenu.c: 3706
 Type name or select: (random)
 輸入名稱或選擇: (任意)
 
@@ -4630,7 +4630,7 @@ Unexpected float option %s queried\n
 Unexpected integer option %s queried\n
 疑似非預期的整數選項 %s\n
 
-# emu/uimenu.c: 3784 mess/machine/nes.c: 612, 617
+# emu/uimenu.c: 3760 mess/machine/nes.c: 612, 617
 Unimplemented
 無法執行
 
@@ -4650,7 +4650,7 @@ Unmount
 Unused
 未使用
 
-# emu/ui.c: 674
+# emu/ui.c: 676
 Updating Artwork...
 正在更新 Artwork...
 
@@ -4662,15 +4662,15 @@ Upright
 Upright 1
 直立型 1
 
-# emu/uimenu.c: 2446
+# emu/uimenu.c: 2422
 Uptime: %d:%02d:%02d\n\n
 執行時間: %d:%02d:%02d\n\n
 
-# emu/uimenu.c: 2448
+# emu/uimenu.c: 2424
 Uptime: %d:%02d\n\n
 執行時間: %d:%02d\n\n
 
-# emu/ui.c: 1463
+# emu/ui.c: 1465
 Usage of emulators in conjunction with ROMs you don't own is forbidden by copyright law.\n\n
 著作權法禁止使用模擬器執行非法持有的 ROM 檔案。\n\n
 
@@ -4682,7 +4682,7 @@ Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list o
 Usage: %s [%s] [options]\n\nOptions:\n
 用法: %s [%s] [選項]\n\n選項:\n
 
-# emu/uimenu.c: 1585
+# emu/uimenu.c: 1561
 User Interface
 使用者介面
 
@@ -4690,11 +4690,11 @@ User Interface
 User Select
 使用者選擇
 
-# emu/ui.c: 2355
+# emu/ui.c: 2357
 Vector Flicker
 向量閃爍度
 
-# emu/ui.c: 1772
+# emu/ui.c: 1774
 Vector\n
 向量\n
 
@@ -4730,11 +4730,11 @@ Very Low
 Very Slow
 最慢
 
-# emu/uimenu.c: 1532
+# emu/uimenu.c: 1507
 Video Options
 視訊選項
 
-# emu/uimenu.c: 3123
+# emu/uimenu.c: 3099
 View
 檢視方式
 
@@ -4854,7 +4854,7 @@ Zoom Auto
 \nSOURCE: %s\n
 \n原始碼: %s\n
 
-# emu/ui.c: 1734
+# emu/ui.c: 1736
 \nSound:\n
 \n聲音:\n
 
@@ -4862,7 +4862,7 @@ Zoom Auto
 \nStory:\n
 \n故事:\n
 
-# emu/ui.c: 1757
+# emu/ui.c: 1759
 \nVideo:\n
 \n視訊:\n
 
@@ -4874,11 +4874,11 @@ Zoom Auto
 \n\nCLONES:\n
 \n\n仿製版:\n
 
-# emu/ui.c: 1552
+# emu/ui.c: 1554
 \n\nThere are working clones of this game. They are:\n\n
 \n\n本遊戲尚有可執行的仿製版。版本為:\n\n
 
-# emu/ui.c: 1561
+# emu/ui.c: 1563
 \n\nType OK or move the joystick left then right to continue
 \n\n請鍵入 OK 或移動搖桿的左右方向繼續
 
@@ -5674,11 +5674,11 @@ Bookkeeping
 Button Lamps
 
 
-# emu/uimenu.c: 3105
+# emu/uimenu.c: 3081
 CCW 90
 
 
-# emu/uimenu.c: 3103
+# emu/uimenu.c: 3079
 CW 90
 
 

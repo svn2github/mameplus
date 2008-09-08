@@ -22,6 +22,7 @@
 UINT32 mess_ram_size;
 UINT8 *mess_ram;
 UINT8 mess_ram_default_value = 0xCD;
+//mamep: use dummy image
 int _has_dummy_image = -1;
 
 const char mess_disclaimer[] =
@@ -123,7 +124,7 @@ void mess_predevice_init(running_machine *machine)
 //mamep: prevent MESS window from quitting
 int has_dummy_image(running_machine *machine)
 {
-// mamep: Arcade games don't have dummy image
+//mamep: Arcade games don't have dummy image
 	if (!machine || !machine->gamedrv->sysconfig_ctor)
  		return 0;
 	return _has_dummy_image;
@@ -131,7 +132,7 @@ int has_dummy_image(running_machine *machine)
 
 void set_dummy_image(int di)
 {
-// mamep: Arcade games don't have dummy image
+//mamep: Arcade games don't have dummy image
 	_has_dummy_image = di;
 }
 
