@@ -2,14 +2,6 @@
 Bootleg And Clone
 Bootleg e Cloni
 
-# 105
-CPS All System
-Tutti i Sistemi CPS
-
-# 301
-Haze Megadrive
-Haze Megadrive
-
 # Title
 IPS
 IPS
@@ -25,4 +17,8 @@ Neo-Geo
 # 7
 Translation
 Traduzioni
+
+# 105
+CPS 1/2/3
+
 

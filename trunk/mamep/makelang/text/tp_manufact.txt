@@ -1054,6 +1054,10 @@ InfoCube
 Inter Games
 
 
+# Video Poker
+InterFlip
+
+
 # Pandora's Palace
 Interlogic
 

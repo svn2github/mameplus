@@ -20,7 +20,7 @@ bootleg?
 
 # Puckman (Falcom?)
 hack
-Hack
+«Dªk­×§ï
 
 # NGEM2K (beta 2006-01-18)
 homebrew
@@ -1076,6 +1076,10 @@ InfoCube
 
 # Jolly Card (austrian, Funworld, bootleg)
 Inter Games
+
+
+# Video Poker
+InterFlip
 
 
 # Pandora's Palace

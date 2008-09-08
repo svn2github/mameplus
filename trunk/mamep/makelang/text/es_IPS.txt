@@ -2,14 +2,6 @@
 Bootleg And Clone
 Bootleg y Clones
 
-# 105
-CPS All System
-Todos los Sistemas Capcom Power System
-
-# 301
-Haze Megadrive
-Haze Megadrive
-
 # Title
 IPS
 IPS
@@ -25,4 +17,8 @@ Neo-Geo
 # 7
 Translation
 Traducción
+
+# 105
+CPS 1/2/3
+
 

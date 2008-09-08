@@ -2474,6 +2474,10 @@ G.G.I
 Hudson Soft
 
 
+# Video Poker
+InterFlip
+
+
 # Squash (Itisa)
 Itisa
 

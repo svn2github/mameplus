@@ -15,11 +15,7 @@ Bootleg And Clone
 
 
 # 105
-CPS All System
-
-
-# 301
-Haze Megadrive
+CPS 1/2/3
 
 
 # 139
