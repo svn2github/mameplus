@@ -89,8 +89,12 @@ EMUOBJS = \
 	$(EMUOBJ)/debug/debugvw.o \
 	$(EMUOBJ)/debug/express.o \
 	$(EMUOBJ)/debug/textbuf.o \
-	$(EMUOBJ)/datafile.o \
 	$(EMUOBJ)/uilang.o
+
+ifdef USE_CMD_LIST
+EMUOBJS += \
+	$(EMUOBJ)/cmddata.o
+endif
 
 ifdef USE_IPS
 EMUOBJS += \

@@ -15,7 +15,9 @@
 #include "machine/laserdsc.h"
 #include "profiler.h"
 #include "cheat.h"
-#include "datafile.h"
+#ifdef CMD_LIST
+#include "cmddata.h"
+#endif /* CMD_LIST */
 #ifdef USE_SHOW_TIME
 #include <time.h>
 #endif /* USE_SHOW_TIME */
@@ -437,7 +439,9 @@ int ui_init(running_machine *machine)
 	ui_menu_init(machine);
 	ui_gfx_init(machine);
 
+#ifdef CMD_LIST
 	datafile_init(mame_options());
+#endif /* CMD_LIST */
 
 	/* reset globals */
 	single_step = FALSE;
@@ -457,7 +461,9 @@ int ui_init(running_machine *machine)
 
 static void ui_exit(running_machine *machine)
 {
+#ifdef CMD_LIST
 	datafile_exit();
+#endif /* CMD_LIST */
 
 	/* free the font */
 	if (ui_font != NULL)

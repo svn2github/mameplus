@@ -68,11 +68,6 @@
 #endif /* USE_HISCORE */
 
 /* core filename options */
-#define OPTION_MAMEINFO_FILE			"mameinfo_file"
-#define OPTION_HISTORY_FILE			"history_file"
-#ifdef STORY_DATAFILE
-#define OPTION_STORY_FILE			"story_file"
-#endif /* STORY_DATAFILE */
 #ifdef CMD_LIST
 #define OPTION_COMMAND_FILE			"command_file"
 #endif /* CMD_LIST */

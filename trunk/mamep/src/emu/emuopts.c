@@ -70,11 +70,6 @@ const options_entry mame_core_options[] =
 
 	/* filename options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE FILENAME OPTIONS" },
-	{ "mameinfo_file",              "mameinfo.dat",0,                "mameinfo database name" },
-	{ "history_file",               "history.dat",0,                 "history database name" },
-#ifdef STORY_DATAFILE
-	{ "story_file",                 "story.dat",  0,                 "story database name" },
-#endif /* STORY_DATAFILE */
 #ifdef CMD_LIST
 	{ "command_file",               "command.dat",0,                 "command list database name" },
 #endif /* CMD_LIST */

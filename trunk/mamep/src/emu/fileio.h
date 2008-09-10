@@ -29,7 +29,6 @@
 
 /* search paths */
 #define SEARCHPATH_RAW			NULL
-#define SEARCHPATH_DATAFILE		NULL
 #define SEARCHPATH_LANGUAGE		NULL
 #define SEARCHPATH_DEBUGLOG		NULL
 
