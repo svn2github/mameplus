@@ -88,6 +88,10 @@ TCHAR* win_tstring_strdup(LPCTSTR str);
 void FreeIfAllocated(char **s);
 void FreeIfAllocatedW(WCHAR **s);
 
+HANDLE win_create_file_utf8(const char* filename, DWORD desiredmode, DWORD sharemode, 
+					   		LPSECURITY_ATTRIBUTES securityattributes, DWORD creationdisposition,
+					   		DWORD flagsandattributes, HANDLE templatehandle);
+
 HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfiledata);
 
 #ifdef TREE_SHEET

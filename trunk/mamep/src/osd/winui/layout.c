@@ -204,12 +204,10 @@ EXTFOLDER_TEMPLATE extFavorite =
 	"cust2"
 };
 
-/*
 const TCHAR g_szPlayGameString[] = TEXT("&Play %s");
 const char g_szGameCountString[] = "%d games";
 const char g_szHistoryFileName[] = "history.dat";
 const char g_szMameInfoFileName[] = "mameinfo.dat";
-*/
 
 static BOOL FilterAvailable(int driver_index)
 {

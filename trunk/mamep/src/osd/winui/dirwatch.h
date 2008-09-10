@@ -11,12 +11,13 @@
 
  ***************************************************************************/
 
-#ifndef FILE_H
-#define FILE_H
+#ifndef DIRWATCHER_H
+#define DIRWATCHER_H
 
-// from windows fileio.c
-extern void set_pathlist(int file_type,const char *new_rawpath);
+typedef struct DirWatcher *PDIRWATCHER;
 
-#define OSD_FILETYPE_ICON 1001
+PDIRWATCHER DirWatcher_Init(HWND hwndTarget, UINT nMessage);
+BOOL DirWatcher_Watch(PDIRWATCHER pWatcher, WORD nIndex, LPCSTR pszPathList, BOOL bWatchSubtrees);
+void DirWatcher_Free(PDIRWATCHER pWatcher);
 
 #endif

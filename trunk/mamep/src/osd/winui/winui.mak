@@ -52,11 +52,13 @@ WINUIOBJS += \
 	$(WINUIOBJ)/help.o \
 	$(WINUIOBJ)/history.o \
 	$(WINUIOBJ)/dialogs.o \
-	$(WINUIOBJ)/winui.o \
 	$(WINUIOBJ)/mui_opts.o \
 	$(WINUIOBJ)/layout.o \
-	$(WINUIOBJ)/translate.o \
+	$(WINUIOBJ)/datafile.o \
+	$(WINUIOBJ)/dirwatch.o \
+	$(WINUIOBJ)/winui.o \
 	$(WINUIOBJ)/helpids.o \
+	$(WINUIOBJ)/translate.o \
 
 ifdef MAMEMESS
     WINUIOBJS += $(MESS_WINUIOBJ)/optionsms.o
@@ -125,6 +127,20 @@ else
     $(WINUIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mamevers.rc
     GUIRESFILE =  $(WINUIOBJ)/mameui.res
 endif
+
+
+#-------------------------------------------------
+# rules for creating helpids.c 
+#-------------------------------------------------
+
+$(WINUISRC)/helpids.c : $(WINUIOBJ)/mkhelp$(EXE) $(WINUISRC)/resource.h $(WINUISRC)/resource.hm $(WINUISRC)/mameui.rc
+	$(WINUIOBJ)/mkhelp$(EXE) $(WINUISRC)/mameui.rc >$@
+
+# rule to build the generator
+$(WINUIOBJ)/mkhelp$(EXE): $(WINUIOBJ)/mkhelp.o $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+
 
 #####################################################################
 # Linker

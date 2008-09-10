@@ -11,12 +11,19 @@
 
  ***************************************************************************/
 
-#ifndef FILE_H
-#define FILE_H
+#pragma once
 
-// from windows fileio.c
-extern void set_pathlist(int file_type,const char *new_rawpath);
+#ifndef __DATAFILE_H__
+#define __DATAFILE_H__
 
-#define OSD_FILETYPE_ICON 1001
+extern void winui_datafile_init(core_options *options);
+extern void winui_datafile_exit(void);
 
-#endif
+extern int load_driver_history(const game_driver *drv, char *buffer, int bufsize);
+#ifdef STORY_DATAFILE
+extern int load_driver_story(const game_driver *drv, char *buffer, int bufsize);
+#endif /* STORY_DATAFILE */
+extern int load_driver_mameinfo(const game_driver *drv, char *buffer, int bufsize);
+extern int load_driver_drivinfo(const game_driver *drv, char *buffer, int bufsize);
+
+#endif	/* __DATAFILE_H__ */

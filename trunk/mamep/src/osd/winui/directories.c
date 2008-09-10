@@ -759,4 +759,3 @@ static BOOL BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult)
 
 /**************************************************************************/
 
-

@@ -84,6 +84,7 @@
 #include "bitmask.h"
 #include "treeview.h"
 #include "splitters.h"
+#include "dirwatch.h"
 #include "help.h"
 #include "history.h"
 #include "dialogs.h"
@@ -258,15 +259,9 @@ typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
  externally defined global variables
  ***************************************************************************/
 extern const ICONDATA g_iconData[];
-
+extern const TCHAR g_szPlayGameString[];
+extern const char g_szGameCountString[];
 struct _driverw **driversw;
-
-#if 0
-extern const char g_szPlayGameString[] = "&Play %s";
-extern const char g_szGameCountString[] = "%d games";
-extern const char *history_filename;
-extern const char *mameinfo_filename;
-#endif
 
 typedef struct _play_options play_options;
 struct _play_options
@@ -362,6 +357,7 @@ static void             AddDriverIcon(int nItem,int default_icon_index);
 // Context Menu handlers
 static void             UpdateMenu(HMENU hMenu);
 static void             InitTreeContextMenu(HMENU hTreeMenu);
+//static void             InitBodyContextMenu(HMENU hBodyContextMenu);
 static void             ToggleShowFolder(int folder);
 static BOOL             HandleTreeContextMenu( HWND hWnd, WPARAM wParam, LPARAM lParam);
 static BOOL             HandleScreenShotContextMenu( HWND hWnd, WPARAM wParam, LPARAM lParam);
@@ -584,6 +580,11 @@ static BOOL bShowStatusBar = 1;
 static BOOL bShowTabCtrl   = 1;
 static BOOL bProgressShown = FALSE;
 static BOOL bListReady     = FALSE;
+
+#define	WM_MAME32_FILECHANGED	(WM_USER + 0)
+#define	WM_MAME32_AUDITGAME		(WM_USER + 1)
+
+static PDIRWATCHER s_pWatcher;
 
 /* use a joystick subsystem in the gui? */
 static const struct OSDJoystick* g_pJoyGUI = NULL;
@@ -867,7 +868,6 @@ static struct
 		GetLastDir,
 		TEXT("txt")
 	},
-#if 0
 	{
 		TEXT("history (*.dat)\0*.dat;\0All files (*.*)\0*.*\0"),
 		TEXT("Select a history"),
@@ -882,7 +882,6 @@ static struct
 		GetLastDir,
 		TEXT("dat")
 	},
-#endif
 	{
 		TEXT("Image Files (*.png)\0*.png\0"),
 		TEXT("Select a Background Image"),
@@ -2223,6 +2222,13 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	WNDCLASS wndclass;
 	RECT     rect;
 	int      i, nSplitterCount;
+	extern FOLDERDATA g_folderData[];
+	extern FILTER_ITEM g_filterList[];
+//	extern const char *history_filename;
+//	extern const char *mameinfo_filename;
+#ifdef STORY_DATAFILE
+//	extern const char *story_filename;
+#endif /* STORY_DATAFILE */
 	LONG     common_control_version = GetCommonControlVersion();
 	core_options *options;
 	LONG_PTR l;
@@ -2339,7 +2345,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	OptionsInit();
 	dprintf("options loaded");
 
-	datafile_init(get_core_options());
+	winui_datafile_init(get_core_options());
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 	// Display splash screen window
@@ -2361,6 +2367,13 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	{
 		dprintf("error creating main dialog, aborting");
 		return FALSE;
+	}
+
+	s_pWatcher = DirWatcher_Init(hMain, WM_MAME32_FILECHANGED);
+	if (s_pWatcher)
+	{
+		DirWatcher_Watch(s_pWatcher, 0, GetRomDirs(), TRUE);
+		DirWatcher_Watch(s_pWatcher, 1, GetSampleDirs(), TRUE);
 	}
 
 	SetMainTitle();
@@ -2436,11 +2449,11 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	hTreeView = GetDlgItem(hMain, IDC_TREE);
 	hwndList  = GetDlgItem(hMain, IDC_LIST);
 
-	//history_filename = mame_strdup(GetHistoryFile());
+//	history_filename = mame_strdup(GetHistoryFileName());
+//	mameinfo_filename = mame_strdup(GetMAMEInfoFileName());
 #ifdef STORY_DATAFILE
-	//story_filename = mame_strdup(GetStoryFile());
+//	story_filename = mame_strdup(GetStoryFileName());
 #endif /* STORY_DATAFILE */
-	//mameinfo_filename = mame_strdup(GetMAMEInfoFile());
 
 	if (!InitSplitters())
 		return FALSE;
@@ -2672,11 +2685,12 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	return TRUE;
 }
 
+
 static void Win32UI_exit()
 {
 	DragAcceptFiles(hMain, FALSE);
 
-	datafile_exit();
+	winui_datafile_exit();
 
 	if (g_bDoBroadcast == TRUE)
 	{
@@ -3064,6 +3078,7 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 		    LPMEASUREITEMSTRUCT lpmis = (LPMEASUREITEMSTRUCT) lParam;
 
 		    // tell the list view that each row (item) should be just taller than our font
+
     		    //DefWindowProc(hWnd, message, wParam, lParam);
 		    //dprintf("default row height calculation gives %u\n",lpmis->itemHeight);
 
@@ -3085,6 +3100,88 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 		else
 			return FALSE;
 	}
+
+	case WM_MAME32_FILECHANGED:
+		{
+			char szFileName[32];
+			char *s;
+			int nGameIndex;
+			int (*pfnGetAuditResults)(int driver_index) = NULL;
+			void (*pfnSetAuditResults)(int driver_index, int audit_results) = NULL;
+
+			switch(HIWORD(wParam))
+			{
+				case 0:
+					pfnGetAuditResults = GetRomAuditResults;
+					pfnSetAuditResults = SetRomAuditResults;
+					break;
+
+				case 1:
+					pfnGetAuditResults = GetSampleAuditResults;
+					pfnSetAuditResults = SetSampleAuditResults;
+					break;
+			}
+
+			if (pfnGetAuditResults && pfnSetAuditResults)
+			{
+				int nParentIndex = -1;
+
+				snprintf(szFileName, sizeof(szFileName), "%s", (LPCSTR) lParam);
+				s = strchr(szFileName, '.');
+				if (s)
+					*s = '\0';
+				s = strchr(szFileName, '\\');
+				if (s)
+					*s = '\0';
+
+				for (nGameIndex = 0; drivers[nGameIndex]; nGameIndex++)
+				{
+					for (nParentIndex = nGameIndex; nGameIndex == -1; nParentIndex = GetParentIndex(drivers[nParentIndex]))
+					{
+						if (!mame_stricmp(drivers[nParentIndex]->name, szFileName))
+						{
+							if (pfnGetAuditResults(nGameIndex) != UNKNOWN)
+							{
+								pfnSetAuditResults(nGameIndex, UNKNOWN);
+								PostMessage(hMain, WM_MAME32_AUDITGAME, wParam, nGameIndex);
+							}
+							break;
+						}
+					}
+				}
+			}
+		}
+		break;
+
+	case WM_MAME32_AUDITGAME:
+		{
+			LV_FINDINFO lvfi;
+			int nGameIndex;
+
+			nGameIndex = lParam;
+
+			switch(HIWORD(wParam))
+			{
+				case 0:
+					MameUIVerifyRomSet(nGameIndex, FALSE);
+					break;
+				case 1:
+					MameUIVerifySampleSet(nGameIndex, FALSE);
+					break;
+			}
+
+			memset(&lvfi, 0, sizeof(lvfi));
+			lvfi.flags	= LVFI_PARAM;
+			lvfi.lParam = nGameIndex;
+
+			i = ListView_FindItem(hwndList, -1, &lvfi);
+			if (i != -1)
+			{
+				ListView_RedrawItems(hwndList, i, i);
+			}
+		}
+		break;
+
 	default:
 
 		break;
@@ -3757,7 +3854,9 @@ static void UpdateStatusBar()
 	if (games_shown == 0)
 		DisableSelection();
 	else
+	{
 		SetStatusBarText(1, GameInfoStatus(i, FALSE));
+	}
 }
 
 static BOOL NeedScreenShotImage(void)
@@ -5407,6 +5506,14 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			bUpdateRoms    = ((nResult & DIRDLG_ROMS)	 == DIRDLG_ROMS)	? TRUE : FALSE;
 			bUpdateSamples = ((nResult & DIRDLG_SAMPLES) == DIRDLG_SAMPLES) ? TRUE : FALSE;
 
+			if (s_pWatcher)
+			{
+				if (bUpdateRoms)
+					DirWatcher_Watch(s_pWatcher, 0, GetRomDirs(), TRUE);
+				if (bUpdateSamples)
+					DirWatcher_Watch(s_pWatcher, 1, GetSampleDirs(), TRUE);
+			}
+
 			/* update game list */
 			if (bUpdateRoms == TRUE || bUpdateSamples == TRUE)
 				UpdateGameList(bUpdateRoms, bUpdateSamples);
@@ -5472,7 +5579,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 		return TRUE;
 #endif /* UI_COLOR_PALETTE */
 
-#if 0
 	case ID_OPTIONS_HISTORY:
 		{
 			WCHAR filename[MAX_PATH];
@@ -5493,7 +5599,6 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			}
 			return TRUE;
 		}
-#endif
 
 	case ID_HELP_ABOUT:
 		DialogBox(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_ABOUT),
@@ -7072,6 +7177,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 	hMenuLoad = LoadMenu(hInst, MAKEINTRESOURCE(IDR_CONTEXT_MENU));
 	hMenu = GetSubMenu(hMenuLoad, 0);
+//	InitBodyContextMenu(hMenu);
 	TranslateMenu(hMenu, ID_FILE_PLAY);
 
 	UpdateMenu(hMenu);
@@ -7394,6 +7500,7 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 	MENUITEMINFO mii;
 	HMENU hMenu;
 	int i;
+	extern FOLDERDATA g_folderData[];
 
 	ZeroMemory(&mii,sizeof(mii));
 	mii.cbSize = sizeof(mii);
@@ -7435,6 +7542,38 @@ void InitTreeContextMenu(HMENU hTreeMenu)
 	}
 
 }
+
+/*
+void InitBodyContextMenu(HMENU hBodyContextMenu)
+{
+	LPTREEFOLDER lpFolder;
+	TCHAR tmp[30];
+	MENUITEMINFO mii;
+	ZeroMemory(&mii,sizeof(mii));
+	mii.cbSize = sizeof(mii);
+
+	if (GetMenuItemInfo(hBodyContextMenu,ID_FOLDER_SOURCEPROPERTIES,FALSE,&mii) == FALSE)
+	{
+		dprintf("can't find show folders context menu");
+		return;
+	}
+	lpFolder = GetFolderByName(FOLDER_SOURCE, GetDriverFilename(Picker_GetSelectedItem(hwndList)) );
+	_sntprintf(tmp,ARRAY_LENGTH(tmp),TEXT("Properties for %s"),lpFolder->m_lptTitle );
+	mii.fMask = MIIM_TYPE | MIIM_ID;
+	mii.fType = MFT_STRING;
+	mii.dwTypeData = tmp;
+	mii.cch = _tcslen(mii.dwTypeData);
+	mii.wID = ID_FOLDER_SOURCEPROPERTIES;
+
+
+	// menu in resources has one default item
+	// so overwrite this one
+	SetMenuItemInfo(hBodyContextMenu,ID_FOLDER_SOURCEPROPERTIES,FALSE,&mii);
+	if( ! DriverIsVector(Picker_GetSelectedItem(hwndList) ) )
+		EnableMenuItem(hBodyContextMenu, ID_FOLDER_VECTORPROPERTIES, MF_GRAYED);
+}
+*/
+
 
 void ToggleShowFolder(int folder)
 {

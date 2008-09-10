@@ -246,13 +246,18 @@ static void  build_default_bios(void);
 #else
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_game"
+/*
 #define MUIOPTION_HISTORY_FILE					"history_file"
 #define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
+*/
 // Options values
 #define MUIDEFAULT_SELECTION					"puckman"
 #define MUIDEFAULT_SPLITTERS					"152,362"
-//#define MUIHISTORY_FILE							"history.dat"
-//#define MUIMAMEINFO_FILE						"mameinfo.dat"
+#define MUIHISTORY_FILE							"history.dat"
+#define MUIMAMEINFO_FILE						"mameinfo.dat"
+#ifdef STORY_DATAFILE
+#define MUISTORY_FILE   						"story.dat"
+#endif /* STORY_DATAFILE */
 #endif
 
 
@@ -369,9 +374,12 @@ static const options_entry regSettings[] =
 #endif /* USE_VIEW_PCBINFO */
 
 
-//	{ NULL,									NULL,       OPTION_HEADER,     "FILENAME OPTIONS" },
-//	{ MUIOPTION_HISTORY_FILE,				MUIHISTORY_FILE, 0,              NULL },
-//	{ MUIOPTION_MAMEINFO_FILE,				MUIMAMEINFO_FILE, 0,             NULL },
+	{ NULL,									NULL,       OPTION_HEADER,     "FILENAME OPTIONS" },
+	{ MUIOPTION_HISTORY_FILE,				MUIHISTORY_FILE, 0,              NULL },
+	{ MUIOPTION_MAMEINFO_FILE,				MUIMAMEINFO_FILE, 0,             NULL },
+#ifdef STORY_DATAFILE
+	{ MUIOPTION_STORY_FILE, 				MUISTORY_FILE, 0,                NULL },
+#endif /* STORY_DATAFILE */
 
 	{ NULL,									NULL,       OPTION_HEADER,     "NAVIGATION KEY CODES" },
 	{ MUIOPTION_UI_KEY_UP,					"KEYCODE_UP", 0,               NULL },
@@ -1305,6 +1313,18 @@ BOOL GetSortReverse(void)
 	return options_get_bool(settings, MUIOPTION_SORT_REVERSED);
 }
 
+/*
+const char* GetLanguage(void)
+{
+	return options_get_string(settings, MUIOPTION_LANGUAGE);
+}
+
+void SetLanguage(const char* lang)
+{
+	options_set_string(settings, MUIOPTION_LANGUAGE, lang, OPTION_PRIORITY_CMDLINE);
+}
+*/
+
 const WCHAR* GetRomDirs(void)
 {
 	return options_get_wstring(global, OPTION_ROMPATH);
@@ -1565,23 +1585,23 @@ void SetCheatDir(const WCHAR* path)
 
 const WCHAR* GetHistoryFileName(void)
 {
-	return options_get_wstring(settings, OPTION_HISTORY_FILE);
+	return options_get_wstring(settings, MUIOPTION_HISTORY_FILE);
 }
 
 void SetHistoryFileName(const WCHAR* path)
 {
-	options_set_wstring(settings, OPTION_HISTORY_FILE, path, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(settings, MUIOPTION_HISTORY_FILE, path, OPTION_PRIORITY_CMDLINE);
 }
 
 
 const WCHAR* GetMAMEInfoFileName(void)
 {
-	return options_get_wstring(settings, OPTION_MAMEINFO_FILE);
+	return options_get_wstring(settings, MUIOPTION_MAMEINFO_FILE);
 }
 
 void SetMAMEInfoFileName(const WCHAR* path)
 {
-	options_set_wstring(settings, OPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(settings, MUIOPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
 }
 
 #ifdef USE_VIEW_PCBINFO
@@ -1589,12 +1609,21 @@ const WCHAR * GetPcbInfoDir(void)
 {
 	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
 }
-
 void SetPcbInfoDir(const WCHAR *path)
 {
 	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* USE_VIEW_PCBINFO */
+#ifdef STORY_DATAFILE
+const WCHAR* GetStoryFileName(void)
+{
+	return options_get_wstring(settings, MUIOPTION_STORY_FILE);
+}
+void SetStoryFileName(const WCHAR* path)
+{
+	options_set_wstring(settings, MUIOPTION_STORY_FILE, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* STORY_DATAFILE */
 
 const char* GetSnapName(void)
 {
@@ -2177,38 +2206,6 @@ const WCHAR* GetTranslationDir(void)
 	return options_get_wstring(global, OPTION_TRANSLATION_DIRECTORY);
 }
 
-void SetHistoryFile(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_HISTORY_FILE, path, OPTION_PRIORITY_CMDLINE);
-}
-
-const WCHAR* GetHistoryFile(void)
-{
-	return options_get_wstring(global, OPTION_HISTORY_FILE);
-}
-
-#ifdef STORY_DATAFILE
-void SetStoryFile(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_STORY_FILE, path, OPTION_PRIORITY_CMDLINE);
-}
-
-const WCHAR* GetStoryFile(void)
-{
-	return options_get_wstring(global, OPTION_STORY_FILE);
-}
-#endif /* STORY_DATAFILE */
-
-void SetMAMEInfoFile(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
-}
-
-const WCHAR* GetMAMEInfoFile(void)
-{
-	return options_get_wstring(global, OPTION_MAMEINFO_FILE);
-}
-
 int GetSystemBiosInfo(int bios_index)
 {
 	assert (0 <= bios_index && bios_index < MAX_SYSTEM_BIOS);
@@ -2707,23 +2704,6 @@ void set_core_mngwrite(const WCHAR *filename)
 void set_core_aviwrite(const WCHAR *filename)
 {
 	options_set_wstring(mamecore, OPTION_AVIWRITE, filename, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_history_filename(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_HISTORY_FILE, filename, OPTION_PRIORITY_CMDLINE);
-}
-
-#ifdef STORY_DATAFILE
-void set_core_story_filename(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_STORY_FILE, filename, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* STORY_DATAFILE */
-
-void set_core_mameinfo_filename(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_MAMEINFO_FILE, filename, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_bios(const char *bios)
@@ -3247,11 +3227,6 @@ BOOL IsGlobalOption(const char *option_name)
 #ifdef USE_HISCORE
 		OPTION_HISCORE_DIRECTORY,
 #endif /* USE_HISCORE */
-		OPTION_HISTORY_FILE,
-#ifdef STORY_DATAFILE
-		OPTION_STORY_FILE,
-#endif /* STORY_DATAFILE */
-		OPTION_MAMEINFO_FILE,
 #ifdef CMD_LIST
 		OPTION_COMMAND_FILE,
 #endif /* CMD_LIST */

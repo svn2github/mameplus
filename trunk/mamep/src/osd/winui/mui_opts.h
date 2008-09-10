@@ -28,6 +28,13 @@
 #define MAX_SYSTEM_BIOS_ENTRY	16
 #define BIOS_DEFAULT		"default"
 
+// DATAFILE
+#define MUIOPTION_HISTORY_FILE					"history_file"
+#define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
+#ifdef STORY_DATAFILE
+#define MUIOPTION_STORY_FILE					"story_file"
+#endif /* STORY_DATAFILE */
+
 // Various levels of ini's we can edit.
 typedef enum {
 	OPTIONS_GLOBAL = 0,
@@ -234,6 +241,11 @@ int  GetSortColumn(void);
 void SetSortReverse(BOOL reverse);
 BOOL GetSortReverse(void);
 
+/*
+const char* GetLanguage(void);
+void SetLanguage(const char* lang);
+*/
+
 const WCHAR *GetRomDirs(void);
 void SetRomDirs(const WCHAR *paths);
 
@@ -282,11 +294,6 @@ void SetControlPanelDir(const WCHAR *path);
 const WCHAR * GetPcbDir(void);
 void SetPcbDir(const WCHAR *path);
 
-#ifdef USE_VIEW_PCBINFO
-const WCHAR *GetPcbInfoDir(void);
-void SetPcbInfoDir(const WCHAR *path);
-#endif /* USE_VIEW_PCBINFO */
-
 const WCHAR *GetDiffDir(void);
 void SetDiffDir(const WCHAR *path);
 
@@ -316,6 +323,16 @@ void SetHistoryFileName(const WCHAR *path);
 
 const WCHAR *GetMAMEInfoFileName(void);
 void SetMAMEInfoFileName(const WCHAR *path);
+
+#ifdef USE_VIEW_PCBINFO
+const WCHAR *GetPcbInfoDir(void);
+void SetPcbInfoDir(const WCHAR *path);
+#endif /* USE_VIEW_PCBINFO */
+
+#ifdef STORY_DATAFILE
+const WCHAR *GetStoryFileName(void);
+void SetStoryFileName(const WCHAR *path);
+#endif /* STORY_DATAFILE */
 
 const char* GetSnapName(void);
 void SetSnapName(const char* pattern);
@@ -463,12 +480,6 @@ void set_core_mngwrite(const WCHAR *filename);
 void set_core_aviwrite(const WCHAR *filename);
 void set_core_localized_directory(const WCHAR *dir);
 
-void set_core_history_filename(const WCHAR *filename);
-#ifdef STORY_DATAFILE
-void set_core_story_filename(const WCHAR *filename);
-#endif /* STORY_DATAFILE */
-void set_core_mameinfo_filename(const WCHAR *filename);
-
 void set_core_bios(const char *bios); 
 
 int GetLangcode(void);
@@ -482,17 +493,6 @@ void SetTranslationDir(const WCHAR *path);
 
 const WCHAR *GetHiDir(void);
 void SetHiDir(const WCHAR *path);
-
-const WCHAR *GetHistoryFile(void);
-void SetHistoryFile(const WCHAR *);
-
-#ifdef STORY_DATAFILE
-const WCHAR *GetStoryFile(void);
-void SetStoryFile(const WCHAR *);
-
-#endif /* STORY_DATAFILE */
-const WCHAR *GetMAMEInfoFile(void);
-void SetMAMEInfoFile(const WCHAR *);
 
 #ifdef USE_HISCORE
 const WCHAR *GetHiscoreFile(void);

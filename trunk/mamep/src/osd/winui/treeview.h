@@ -174,7 +174,8 @@ typedef enum
 
 typedef struct
 {
-    LPWSTR      m_lpTitle;        // String contains the folder name
+    LPWSTR m_lpTitle;             // String contains the folder name
+//  LPTSTR m_lptTitle;            // String contains the folder name as TCHAR*
     UINT        m_nCategoryID;    // category for translation
     UINT        m_nFolderId;      // Index / Folder ID number
     int         m_nParent;        // Parent folder index in treeFolders[]

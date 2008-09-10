@@ -25,6 +25,7 @@
 #include "mameui.h"
 #include "translate.h"
 #include "tabview.h"
+#include "driver.h"
 #include "mui_util.h"
 #include "strconv.h"
 
@@ -330,4 +331,5 @@ BOOL SetupTabView(HWND hwndTabView, const struct TabViewOptions *pOptions)
 		pTabViewInfo->pCallbacks->pfnOnSelectionChanged();
 	return TRUE;
 }
+
 

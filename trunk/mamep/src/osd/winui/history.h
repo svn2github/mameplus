@@ -21,3 +21,4 @@ LPCWSTR GetGameStory(int driver_index);
 #endif /* STORY_DATAFILE */
 
 #endif
+

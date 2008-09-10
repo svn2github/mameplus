@@ -921,13 +921,13 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 
 			stemp = utf8_from_wstring(buf);
-			filerr = mame_fopen_options(get_core_options(), SEARCHPATH_DATAFILE, stemp, OPEN_FLAG_READ, &mfile);
+			filerr = mame_fopen_options(get_core_options(), NULL, stemp, OPEN_FLAG_READ, &mfile);
 			free(stemp);
 			if (filerr != FILERR_NONE)
 			{
 				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
-				filerr = mame_fopen_options(get_core_options(), SEARCHPATH_DATAFILE, stemp, OPEN_FLAG_READ, &mfile);
+				filerr = mame_fopen_options(get_core_options(), NULL, stemp, OPEN_FLAG_READ, &mfile);
 				free(stemp);
 			}
 

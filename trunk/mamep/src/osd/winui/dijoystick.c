@@ -662,5 +662,3 @@ static void ExitJoystick(joystick_type *joystick)
 	}
 }
 
-
-

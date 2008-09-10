@@ -426,5 +426,3 @@ static void CalculateDisplayModes(void)
 }
 
 
-
-
