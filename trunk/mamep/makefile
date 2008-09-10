@@ -322,10 +322,6 @@ ifneq ($(USE_SCALE_EFFECTS),)
 DEFS += -DUSE_SCALE_EFFECTS
 endif
 
-ifneq ($(USE_STORY_DATAFILE),)
-    DEFS += -DSTORY_DATAFILE
-endif
-
 ifneq ($(USE_TRANS_UI),)
     DEFS += -DTRANS_UI
 endif
