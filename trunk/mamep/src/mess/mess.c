@@ -38,7 +38,7 @@ const char mess_disclaimer[] =
 
 
 
-static void ram_init(const game_driver *gamedrv)
+static void ram_init(running_machine *machine, const game_driver *gamedrv)
 {
 	int i;
 	char buffer[1024];
@@ -53,7 +53,7 @@ static void ram_init(const game_driver *gamedrv)
 		specified_ram = ram_parse_string(ramsize_string);
 		if (specified_ram == 0)
 		{
-			fatalerror_exitcode(MAMERR_DEVICE, "Cannot recognize the RAM option %s\n", ramsize_string);
+			fatalerror_exitcode(machine, MAMERR_DEVICE, "Cannot recognize the RAM option %s\n", ramsize_string);
 		}
 
 		/* is this option actually valid? */
@@ -66,7 +66,7 @@ static void ram_init(const game_driver *gamedrv)
 			if (opt_count == 0)
 			{
 				/* this driver doesn't support RAM configurations */
-				fatalerror_exitcode(MAMERR_DEVICE, "Driver '%s' does not support RAM configurations\n", gamedrv->name);
+				fatalerror_exitcode(machine, MAMERR_DEVICE, "Driver '%s' does not support RAM configurations\n", gamedrv->name);
 			}
 			else
 			{
@@ -76,7 +76,7 @@ static void ram_init(const game_driver *gamedrv)
 				for (i = 0; i < opt_count; i++)
 					s += sprintf(s, "%s%s",  i ? " or " : "", ram_string(buffer2, ram_option(gamedrv, i)));
 				s += sprintf(s, ")\n");
-				fatalerror_exitcode(MAMERR_DEVICE, "%s", buffer);
+				fatalerror_exitcode(machine, MAMERR_DEVICE, "%s", buffer);
 			}
 		}
 		mess_ram_size = specified_ram;
@@ -118,7 +118,7 @@ void mess_predevice_init(running_machine *machine)
 	mess_devices_setup((machine_config *) machine->config, machine->gamedrv);
 
 	/* initialize RAM code */
-	ram_init(machine->gamedrv);
+	ram_init(machine, machine->gamedrv);
 }
 
 //mamep: prevent MESS window from quitting
@@ -169,7 +169,7 @@ void mess_postdevice_init(running_machine *machine)
 			/* did the image load fail? */
 			if (result)
 			{
-				fatalerror_exitcode(MAMERR_DEVICE, "Device %s load (%s) failed: %s\n",
+				fatalerror_exitcode(machine, MAMERR_DEVICE, "Device %s load (%s) failed: %s\n",
 					info.name,
 					osd_basename((char *) image_name),
 					image_error(image));

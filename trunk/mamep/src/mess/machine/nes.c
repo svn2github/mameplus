@@ -566,6 +566,8 @@ DEVICE_START(nes_disk)
 
 	nes_fds.sides = 0;
 	nes_fds.data = NULL;
+
+	return DEVICE_START_OK;
 }
 
 

@@ -119,7 +119,7 @@ static int process_cartridge(const device_config *image, const device_config *fi
 	const rom_entry *romrgn, *roment;
 	int position = 0, result;
 
-	romrgn = rom_first_region(image->machine->gamedrv);
+	romrgn = rom_first_region(image->machine->gamedrv, NULL);
 	while(romrgn)
 	{
 		roment = romrgn + 1;
@@ -147,6 +147,8 @@ static int process_cartridge(const device_config *image, const device_config *fi
 static DEVICE_START( cartslot_specified )
 {
 	process_cartridge(device, NULL);
+
+	return DEVICE_START_OK;
 }
 
 static DEVICE_IMAGE_LOAD( cartslot_specified )
@@ -169,7 +171,7 @@ void cartslot_device_getinfo(const mess_device_class *devclass, UINT32 state, un
 	UINT32 flags;
 
 	/* try to find ROM_CART_LOADs in the ROM declaration */
-	romrgn = rom_first_region(devclass->gamedrv);
+	romrgn = rom_first_region(devclass->gamedrv, NULL);
 	while(romrgn != NULL)
 	{
 		roment = romrgn + 1;

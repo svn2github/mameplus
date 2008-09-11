@@ -2499,7 +2499,7 @@ static void menu_command(running_machine *machine, ui_menu *menu, void *paramete
 	}
 
 	/* process the menu */
-	event = ui_menu_process(menu, 0);
+	event = ui_menu_process(machine, menu, 0);
 	if (event != NULL && event->iptkey == IPT_UI_SELECT)
 		ui_menu_stack_push(ui_menu_alloc(machine, menu_command_content, event->itemref));
 }
@@ -3123,7 +3123,7 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 		menu_scale_effect_populate(machine, menu);
 
 	/* process the menu */
-	event = ui_menu_process(menu, 0);
+	event = ui_menu_process(machine, menu, 0);
 
 	if (event->iptkey == IPT_UI_SELECT && 
 		event != NULL && 
@@ -3182,7 +3182,7 @@ static void menu_autofire(running_machine *machine, ui_menu *menu, void *paramet
 		menu_autofire_populate(machine, menu);
 
 	/* process the menu */
-	event = ui_menu_process(menu, 0);
+	event = ui_menu_process(machine, menu, 0);
 	
 	/* handle events */
 	if (event != NULL && event->itemref != NULL)
@@ -3324,7 +3324,7 @@ static void menu_custom_button(running_machine *machine, ui_menu *menu, void *pa
 		menu_custom_button_populate(machine, menu);
 
 	/* process the menu */
-	event = ui_menu_process(menu, 0);
+	event = ui_menu_process(machine, menu, 0);
 
 	/* handle events */
 	if (event != NULL && event->itemref != NULL)

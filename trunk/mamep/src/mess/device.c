@@ -193,6 +193,8 @@ static DEVICE_START(mess_device)
 	inner_start = (device_start_func) mess_device_get_info_fct(&mess_device->io_device.devclass, MESS_DEVINFO_PTR_START);
 	if (inner_start != NULL)
 		(*inner_start)(device);
+
+	return DEVICE_START_OK;
 }
 
 

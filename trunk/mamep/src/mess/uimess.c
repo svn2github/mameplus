@@ -313,7 +313,7 @@ void ui_mess_menu_image_info(running_machine *machine, ui_menu *menu, void *para
 	}
 
 	/* process the menu */
-	ui_menu_process(menu, 0);
+	ui_menu_process(machine, menu, 0);
 }
 
 
@@ -409,7 +409,7 @@ void ui_mess_menu_keyboard_mode(running_machine *machine, ui_menu *menu, void *p
 	}
 
 	/* process the menu */
-	event = ui_menu_process(menu, 0);
+	event = ui_menu_process(machine, menu, 0);
 
 	if (event != NULL)
 	{
