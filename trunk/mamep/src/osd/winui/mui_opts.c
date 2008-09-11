@@ -99,7 +99,6 @@ static void set_core_image_directory(const WCHAR *dir);
 #ifdef MESS
 static void set_core_hash_directory(const WCHAR *dir);
 #endif
-static void set_core_translation_directory(const WCHAR *dir);
 
 static void  build_default_bios(void);
 
@@ -2175,35 +2174,25 @@ const WCHAR* GetHiDir(void)
 #endif /* USE_HISCORE */
 
 #ifdef USE_IPS
-void SetPatchDir(const WCHAR* path)
+void SetIPSDir(const WCHAR* path)
 {
-	options_set_wstring(global, OPTION_IPS_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(global, OPTION_IPSPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 
-const WCHAR* GetPatchDir(void)
+const WCHAR* GetIPSDir(void)
 {
-	return options_get_wstring(global, OPTION_IPS_DIRECTORY);
+	return options_get_wstring(global, OPTION_IPSPATH);
 }
 #endif /* USE_IPS */
 
-void SetLocalizedDir(const WCHAR* path)
+void SetLanguageDir(const WCHAR* path)
 {
-	options_set_wstring(global, OPTION_LOCALIZED_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(global, OPTION_LANGPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 
-const WCHAR* GetLocalizedDir(void)
+const WCHAR* GetLanguageDir(void)
 {
-	return options_get_wstring(global, OPTION_LOCALIZED_DIRECTORY);
-}
-
-void SetTranslationDir(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_TRANSLATION_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
-}
-
-const WCHAR* GetTranslationDir(void)
-{
-	return options_get_wstring(global, OPTION_TRANSLATION_DIRECTORY);
+	return options_get_wstring(global, OPTION_LANGPATH);
 }
 
 int GetSystemBiosInfo(int bios_index)
@@ -2651,9 +2640,9 @@ static void set_core_hash_directory(const WCHAR *dir)
 }
 #endif
 
-static void set_core_translation_directory(const WCHAR *dir)
+void set_core_language_directory(const WCHAR *dir)
 {
-	options_set_wstring(mamecore, SEARCHPATH_TRANSLATION, dir, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(mamecore, SEARCHPATH_LANGDATA, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_input_directory(const WCHAR *dir)
@@ -2669,11 +2658,6 @@ void set_core_state_directory(const WCHAR *dir)
 void set_core_snapshot_directory(const WCHAR *dir)
 {
 	options_set_wstring(mamecore, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_localized_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, OPTION_LOCALIZED_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
 
 void set_core_state(const WCHAR *name)
@@ -3010,7 +2994,7 @@ static void LoadOptionsAndSettings(void)
 	LoadSettingsFile(settings, buffer);
 
 	options_set_string(mamecore, OPTION_LANGUAGE, options_get_string(global, OPTION_LANGUAGE), OPTION_PRIORITY_CMDLINE);
-	set_core_translation_directory(GetTranslationDir());
+	set_core_language_directory(GetLanguageDir());
 
 	setup_language(mamecore);
 	SetLangcode(GetLangcode());
@@ -3211,10 +3195,9 @@ BOOL IsGlobalOption(const char *option_name)
 		OPTION_INIPATH,
 		OPTION_FONTPATH,
 		OPTION_CHEATPATH,
-		OPTION_TRANSLATION_DIRECTORY,
-		OPTION_LOCALIZED_DIRECTORY,
+		OPTION_LANGPATH,
 #ifdef USE_IPS
-		OPTION_IPS_DIRECTORY,
+		OPTION_IPSPATH,
 #endif /* USE_IPS */
 		OPTION_CFG_DIRECTORY,
 		OPTION_NVRAM_DIRECTORY,

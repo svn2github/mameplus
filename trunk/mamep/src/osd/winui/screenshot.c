@@ -245,7 +245,7 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		break;
 #ifdef USE_IPS
 	case TAB_IPS :
-		basedir = GetPatchDir();
+		basedir = GetIPSDir();
 		zip_name = TEXT("ips");
 		break;
 #endif /* USE_IPS */

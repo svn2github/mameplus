@@ -82,6 +82,7 @@ struct _screen_state
 
 	/* screen specific VBLANK callbacks */
 	vblank_state_changed_func vblank_callback[MAX_VBLANK_CALLBACKS]; /* the array of callbacks */
+	void *					vblank_callback_param[MAX_VBLANK_CALLBACKS]; /* array of parameters */
 
 #ifdef USE_SCALE_EFFECTS
 	int						scale_bank_offset;
@@ -1171,10 +1172,10 @@ UINT64 video_screen_get_frame_number(const device_config *screen)
     VBLANK callback for a specific screen
 -------------------------------------------------*/
 
-void video_screen_register_vblank_callback(const device_config *screen, vblank_state_changed_func vblank_callback)
+void video_screen_register_vblank_callback(const device_config *screen, vblank_state_changed_func vblank_callback, void *param)
 {
-	int i, found;
 	screen_state *state = get_safe_token(screen);
+	int i, found;
 
 	/* validate arguments */
 	assert(vblank_callback != NULL);
@@ -1195,7 +1196,10 @@ void video_screen_register_vblank_callback(const device_config *screen, vblank_s
 
 	/* if not found, register and increment count */
 	if (!found)
+	{
 		state->vblank_callback[i] = vblank_callback;
+		state->vblank_callback_param[i] = param;
+	}
 }
 
 
@@ -1295,6 +1299,8 @@ static DEVICE_START( video_screen )
 	state_save_register_item(unique_tag, 0, state->vblank_end_time.attoseconds);
 	state_save_register_item(unique_tag, 0, state->frame_number);
 	state_save_register_postload(device->machine, video_screen_postload, (void *)device);
+
+	return DEVICE_START_OK;
 }
 
 
@@ -1397,7 +1403,7 @@ static TIMER_CALLBACK( vblank_begin_callback )
 
 	/* call the screen specific callbacks */
 	for (i = 0; state->vblank_callback[i] != NULL; i++)
-		(*state->vblank_callback[i])(screen, TRUE);
+		(*state->vblank_callback[i])(screen, state->vblank_callback_param[i], TRUE);
 
 	/* if this is the primary screen and we need to update now */
 	if (screen == machine->primary_screen && !(machine->config->video_attributes & VIDEO_UPDATE_AFTER_VBLANK))
@@ -1427,7 +1433,7 @@ static TIMER_CALLBACK( vblank_end_callback )
 
 	/* call the screen specific callbacks */
 	for (i = 0; state->vblank_callback[i] != NULL; i++)
-		(*state->vblank_callback[i])(screen, FALSE);
+		(*state->vblank_callback[i])(screen, state->vblank_callback_param[i], FALSE);
 
 	/* if this is the primary screen and we need to update now */
 	if (screen == machine->primary_screen && (machine->config->video_attributes & VIDEO_UPDATE_AFTER_VBLANK))

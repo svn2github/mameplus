@@ -835,7 +835,7 @@ int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name)
 		WIN32_FIND_DATAW ffd;
 		HANDLE hFile;
 
-		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), game_name, patch_name);
+		swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetIPSDir(), game_name, patch_name);
 		hFile = FindFirstFileW(szFilename, &ffd);
 		if (hFile != INVALID_HANDLE_VALUE)
 		{
@@ -858,7 +858,7 @@ int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_
 	HANDLE hFile;
 	WCHAR szFilename[MAX_PATH];
 
-	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetPatchDir(), game_name);
+	swprintf(szFilename, TEXT("%s\\%s\\*.dat"), GetIPSDir(), game_name);
 	hFile = FindFirstFileW(szFilename, &ffd);
 	if (hFile != INVALID_HANDLE_VALUE)
 	{
@@ -962,7 +962,7 @@ LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name)
 	LPWSTR desc = NULL;
 	WCHAR szFilename[MAX_PATH];
 
-	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetPatchDir(), game_name, patch_name);
+	swprintf(szFilename, TEXT("%s\\%s\\%s.dat"), GetIPSDir(), game_name, patch_name);
 
 	if ((fp = wfopen(szFilename, TEXT("r"))) != NULL)
 	{

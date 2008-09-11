@@ -140,7 +140,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Font Files"),            GetFontDir,          SetFontDir,          TRUE,  0 },
 	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
 #ifdef USE_IPS
-	{ TEXT("IPS Files"),             GetPatchDir,         SetPatchDir,         FALSE, 0 },
+	{ TEXT("IPS Files"),             GetIPSDir,           SetIPSDir,           FALSE, 0 },
 #endif /* USE_IPS */
 #ifdef USE_HISCORE
 	{ TEXT("High Scores"),           GetHiDir,            SetHiDir,            FALSE, DIRDLG_HI },
@@ -148,8 +148,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 #ifdef USE_VIEW_PCBINFO
 	{ TEXT("PCB Info Files"),        GetPcbInfoDir,       SetPcbInfoDir,       FALSE, 0 },
 #endif /* USE_VIEW_PCBINFO */
-	{ TEXT("Translation Files"),     GetTranslationDir,   SetTranslationDir,   FALSE, 0 },
-	{ TEXT("Localized Files"),       GetLocalizedDir,     SetLocalizedDir,     FALSE, 0 },
+	{ TEXT("Language Files"),        GetLanguageDir,      SetLanguageDir,      FALSE, 0 },
 	{ NULL }
 };
 

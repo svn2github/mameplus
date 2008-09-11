@@ -20,6 +20,7 @@
 #define MESS
 #endif /* MAMEMESS */
 
+
 /***************************************************************************
     BUILT-IN (CORE) OPTIONS
 ***************************************************************************/
@@ -48,10 +49,9 @@ const options_entry mame_core_options[] =
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
-	{ "translation_directory",       "lang",      0,                 "directory for translation table data" },
-	{ "localized_directory",         "lang",      0,                 "directory for localized data files" },
+	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datfiles" },
 #ifdef USE_IPS
-	{ "ips_directory",               "ips",       0,                 "directory for ips files" },
+	{ "ipspath;ips_directory",       "ips",       0,                 "path to ips files" },
 #endif /* USE_IPS */
 
 	/* output directory options */

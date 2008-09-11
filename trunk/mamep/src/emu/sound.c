@@ -14,7 +14,6 @@
 #include "streams.h"
 #include "config.h"
 #include "profiler.h"
-#include "deprecat.h"
 #include "sound/wavwrite.h"
 
 
@@ -129,8 +128,8 @@ static void sound_pause(running_machine *machine, int pause);
 static void sound_load(running_machine *machine, int config_type, xml_data_node *parentnode);
 static void sound_save(running_machine *machine, int config_type, xml_data_node *parentnode);
 static TIMER_CALLBACK( sound_update );
-static void start_sound_chips(void);
-static void route_sound(void);
+static void start_sound_chips(running_machine *machine);
+static void route_sound(running_machine *machine);
 static void mixer_update(void *param, stream_sample_t **inputs, stream_sample_t **buffer, int length);
 static STATE_POSTLOAD( mixer_postload );
 
@@ -163,9 +162,9 @@ INLINE speaker_info *get_safe_token(const device_config *device)
     find_speaker_by_tag - find a tagged speaker
 -------------------------------------------------*/
 
-INLINE speaker_info *find_speaker_by_tag(const char *tag)
+INLINE speaker_info *find_speaker_by_tag(running_machine *machine, const char *tag)
 {
-	const device_config *speaker = device_list_find_by_tag(Machine->config->devicelist, SPEAKER_OUTPUT, tag);
+	const device_config *speaker = device_list_find_by_tag(machine->config->devicelist, SPEAKER_OUTPUT, tag);
 	return (speaker == NULL) ? NULL : speaker->token;
 }
 
@@ -223,11 +222,11 @@ void sound_init(running_machine *machine)
 
 	/* now start up the sound chips and tag their streams */
 	VPRINTF(("start_sound_chips\n"));
-	start_sound_chips();
+	start_sound_chips(machine);
 
 	/* finally, do all the routing */
 	VPRINTF(("route_sound\n"));
-	route_sound();
+	route_sound(machine);
 
 	/* open the output WAV file if specified */
 	filename = options_get_string(mame_options(), OPTION_WAVWRITE);
@@ -280,7 +279,7 @@ static void sound_exit(running_machine *machine)
     and initialize them
 -------------------------------------------------*/
 
-static void start_sound_chips(void)
+static void start_sound_chips(running_machine *machine)
 {
 	int sndnum;
 
@@ -290,7 +289,7 @@ static void start_sound_chips(void)
 	/* start up all the sound chips */
 	for (sndnum = 0; sndnum < MAX_SOUND; sndnum++)
 	{
-		const sound_config *msound = &Machine->config->sound[sndnum];
+		const sound_config *msound = &machine->config->sound[sndnum];
 		sound_info *info;
 		int num_regs;
 		int index;
@@ -310,7 +309,7 @@ static void start_sound_chips(void)
 		/* start the chip, tagging all its streams */
 		VPRINTF(("sndnum = %d -- sound_type = %d\n", sndnum, msound->type));
 		num_regs = state_save_get_reg_count();
-		streams_set_tag(Machine, info);
+		streams_set_tag(machine, info);
 		if (sndintrf_init_sound(sndnum, msound->tag, msound->type, msound->clock, msound->config) != 0)
 			fatalerror("Sound chip #%d (%s) failed to initialize!", sndnum, sndnum_name(sndnum));
 
@@ -319,7 +318,7 @@ static void start_sound_chips(void)
 		if (num_regs == 0)
 		{
 			logerror("Sound chip #%d (%s) did not register any state to save!\n", sndnum, sndnum_name(sndnum));
-			if (Machine->gamedrv->flags & GAME_SUPPORTS_SAVE)
+			if (machine->gamedrv->flags & GAME_SUPPORTS_SAVE)
 				fatalerror("Sound chip #%d (%s) did not register any state to save!", sndnum, sndnum_name(sndnum));
 		}
 
@@ -327,7 +326,7 @@ static void start_sound_chips(void)
 		VPRINTF(("Counting outputs\n"));
 		for (index = 0; ; index++)
 		{
-			sound_stream *stream = stream_find_by_tag(info, index);
+			sound_stream *stream = stream_find_by_tag(machine, info, index);
 			if (!stream)
 				break;
 			info->outputs += stream_get_outputs(stream);
@@ -345,7 +344,7 @@ static void start_sound_chips(void)
 			info->outputs = 0;
 			for (index = 0; ; index++)
 			{
-				sound_stream *stream = stream_find_by_tag(info, index);
+				sound_stream *stream = stream_find_by_tag(machine, info, index);
 				int outputs, outputnum;
 
 				if (!stream)
@@ -370,7 +369,7 @@ static void start_sound_chips(void)
     inputs
 -------------------------------------------------*/
 
-static void route_sound(void)
+static void route_sound(running_machine *machine)
 {
 	int sndnum, routenum, outputnum;
 	const device_config *curspeak;
@@ -388,7 +387,7 @@ static void route_sound(void)
 			sound_info *sound;
 
 			/* find the target */
-			speaker = find_speaker_by_tag(mroute->target);
+			speaker = find_speaker_by_tag(machine, mroute->target);
 			sound = find_sound_by_tag(mroute->target);
 
 			/* if neither found, it's fatal */
@@ -407,14 +406,14 @@ static void route_sound(void)
 	}
 
 	/* now allocate the mixers and input data */
-	streams_set_tag(Machine, NULL);
-	for (curspeak = speaker_output_first(Machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
+	streams_set_tag(machine, NULL);
+	for (curspeak = speaker_output_first(machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
 	{
 		speaker_info *info = curspeak->token;
 		if (info->inputs != 0)
 		{
-			info->mixer_stream = stream_create(info->inputs, 1, Machine->sample_rate, info, mixer_update);
-			state_save_register_postload(Machine, mixer_postload, info->mixer_stream);
+			info->mixer_stream = stream_create(info->inputs, 1, machine->sample_rate, info, mixer_update);
+			state_save_register_postload(machine, mixer_postload, info->mixer_stream);
 			info->input = auto_malloc(info->inputs * sizeof(*info->input));
 			info->inputs = 0;
 		}
@@ -435,7 +434,7 @@ static void route_sound(void)
 			sound_info *sound;
 
 			/* find the target */
-			speaker = find_speaker_by_tag(mroute->target);
+			speaker = find_speaker_by_tag(machine, mroute->target);
 			sound = find_sound_by_tag(mroute->target);
 
 			/* if it's a speaker, set the input */
@@ -453,7 +452,7 @@ static void route_sound(void)
                         namebuf[0] = '\0';
 
                         /* speaker name, if more than one speaker */
-						if (speaker_output_count(Machine->config) > 1)
+						if (speaker_output_count(machine->config) > 1)
 							sprintf(namebuf, _("%sSpeaker '%s': "), namebuf, speaker->tag);
 
                         /* device name */
@@ -616,8 +615,8 @@ static void sound_load(running_machine *machine, int config_type, xml_data_node 
 		{
 			float defvol = xml_get_attribute_float(channelnode, "defvol", -1000.0);
 			float newvol = xml_get_attribute_float(channelnode, "newvol", -1000.0);
-			if (fabs(defvol - sound_get_default_gain(mixernum)) < 1e-6 && newvol != -1000.0)
-				sound_set_user_gain(mixernum, newvol);
+			if (fabs(defvol - sound_get_default_gain(machine, mixernum)) < 1e-6 && newvol != -1000.0)
+				sound_set_user_gain(machine, mixernum, newvol);
 		}
 	}
 
@@ -651,8 +650,8 @@ static void sound_save(running_machine *machine, int config_type, xml_data_node 
 	if (parentnode != NULL)
 		for (mixernum = 0; mixernum < MAX_MIXER_CHANNELS; mixernum++)
 		{
-			float defvol = sound_get_default_gain(mixernum);
-			float newvol = sound_get_user_gain(mixernum);
+			float defvol = sound_get_default_gain(machine, mixernum);
+			float newvol = sound_get_user_gain(machine, mixernum);
 
 			if (defvol != newvol)
 			{
@@ -972,6 +971,8 @@ static DEVICE_START( speaker_output )
 	/* copy in all the relevant info */
 	info->speaker = device->inline_config;
 	info->tag = device->tag;
+
+	return DEVICE_START_OK;
 }
 
 
@@ -1074,13 +1075,13 @@ void sndti_set_output_gain(sound_type type, int index, int output, float gain)
     a particular input
 -------------------------------------------------*/
 
-INLINE speaker_info *index_to_input(int index, int *input)
+INLINE speaker_info *index_to_input(running_machine *machine, int index, int *input)
 {
 	const device_config *curspeak;
 	int count = 0;
 
 	/* scan through the speakers until we find the indexed input */
-	for (curspeak = speaker_output_first(Machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
+	for (curspeak = speaker_output_first(machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
 	{
 		speaker_info *info = curspeak->token;
 		if (index < count + info->inputs)
@@ -1101,13 +1102,13 @@ INLINE speaker_info *index_to_input(int index, int *input)
     of user-controllable gain parameters
 -------------------------------------------------*/
 
-int sound_get_user_gain_count(void)
+int sound_get_user_gain_count(running_machine *machine)
 {
 	const device_config *curspeak;
 	int count = 0;
 
 	/* count up the number of speaker inputs */
-	for (curspeak = speaker_output_first(Machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
+	for (curspeak = speaker_output_first(machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
 	{
 		speaker_info *info = curspeak->token;
 		count += info->inputs;
@@ -1121,10 +1122,10 @@ int sound_get_user_gain_count(void)
     value
 -------------------------------------------------*/
 
-void sound_set_user_gain(int index, float gain)
+void sound_set_user_gain(running_machine *machine, int index, float gain)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(index, &inputnum);
+	speaker_info *spk = index_to_input(machine, index, &inputnum);
 
 	if (spk != NULL)
 	{
@@ -1139,10 +1140,10 @@ void sound_set_user_gain(int index, float gain)
     value
 -------------------------------------------------*/
 
-float sound_get_user_gain(int index)
+float sound_get_user_gain(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(index, &inputnum);
+	speaker_info *spk = index_to_input(machine, index, &inputnum);
 	return (spk != NULL) ? spk->input[inputnum].gain : 0;
 }
 
@@ -1152,10 +1153,10 @@ float sound_get_user_gain(int index)
     gain of the nth user value
 -------------------------------------------------*/
 
-float sound_get_default_gain(int index)
+float sound_get_default_gain(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(index, &inputnum);
+	speaker_info *spk = index_to_input(machine, index, &inputnum);
 	return (spk != NULL) ? spk->input[inputnum].default_gain : 0;
 }
 
@@ -1165,10 +1166,10 @@ float sound_get_default_gain(int index)
     of the nth user value
 -------------------------------------------------*/
 
-const char *sound_get_user_gain_name(int index)
+const char *sound_get_user_gain_name(running_machine *machine, int index)
 {
 	int inputnum;
-	speaker_info *spk = index_to_input(index, &inputnum);
+	speaker_info *spk = index_to_input(machine, index, &inputnum);
 	return (spk != NULL) ? spk->input[inputnum].name : NULL;
 }
 

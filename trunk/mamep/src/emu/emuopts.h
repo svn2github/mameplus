@@ -48,10 +48,9 @@
 #define OPTION_INIPATH				"inipath"
 #define OPTION_FONTPATH				"fontpath"
 #define OPTION_CHEATPATH			"cheatpath"
-#define OPTION_TRANSLATION_DIRECTORY		"translation_directory"
-#define OPTION_LOCALIZED_DIRECTORY		"localized_directory"
+#define OPTION_LANGPATH				"langpath"
 #ifdef USE_IPS
-#define OPTION_IPS_DIRECTORY			"ips_directory"
+#define OPTION_IPSPATH  			"ips_directory"
 #endif /* USE_IPS */
 
 /* core directory options */

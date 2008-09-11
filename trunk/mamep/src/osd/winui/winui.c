@@ -893,7 +893,7 @@ static struct
 		TEXT("Game List Files (*.lst)\0*.lst\0"),
 		NULL,
 		TEXT("Select a list file to export"),
-		GetTranslationDir,
+		GetLanguageDir,
 		TEXT("lst")
 	},
 };

@@ -478,18 +478,15 @@ void set_core_record(const WCHAR *name);
 void set_core_wavwrite(const WCHAR *filename);
 void set_core_mngwrite(const WCHAR *filename);
 void set_core_aviwrite(const WCHAR *filename);
-void set_core_localized_directory(const WCHAR *dir);
+void set_core_language_directory(const WCHAR *dir);
 
 void set_core_bios(const char *bios); 
 
 int GetLangcode(void);
 void SetLangcode(int langcode);
 
-const WCHAR *GetLocalizedDir(void);
-void SetLocalizedDir(const WCHAR *path);
-
-const WCHAR *GetTranslationDir(void);
-void SetTranslationDir(const WCHAR *path);
+const WCHAR *GetLanguageDir(void);
+void SetLanguageDir(const WCHAR *path);
 
 const WCHAR *GetHiDir(void);
 void SetHiDir(const WCHAR *path);
@@ -529,8 +526,8 @@ void SetImageMenuStyle(int style);
 #endif /* IMAGE_MENU */
 
 #ifdef USE_IPS
-const WCHAR *GetPatchDir(void);
-void SetPatchDir(const WCHAR *path);
+const WCHAR *GetIPSDir(void);
+void SetIPSDir(const WCHAR *path);
 #endif /* USE_IPS */
 
 #ifdef USE_SHOW_SPLASH_SCREEN

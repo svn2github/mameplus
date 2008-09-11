@@ -298,7 +298,7 @@ int mame_strwildcmp(const char *sp1, const char *sp2);
 
 /* Used by assert(), so definition here instead of mame.h */
 DECL_NORETURN void CLIB_DECL fatalerror(const char *text, ...) ATTR_PRINTF(1,2) ATTR_NORETURN;
-DECL_NORETURN void CLIB_DECL fatalerror_exitcode(int exitcode, const char *text, ...) ATTR_PRINTF(2,3) ATTR_NORETURN;
+DECL_NORETURN void CLIB_DECL fatalerror_exitcode(running_machine *machine, int exitcode, const char *text, ...) ATTR_PRINTF(3,4) ATTR_NORETURN;
 
 
 

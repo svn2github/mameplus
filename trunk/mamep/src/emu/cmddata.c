@@ -947,7 +947,7 @@ static int find_command (const game_driver *drv)
 		if (where != FILE_ROOT)
 		{
 			sprintf(filename, "%s\\%s\\",
-		        	options_get_string(datafile_options, OPTION_LOCALIZED_DIRECTORY),
+		        	options_get_string(datafile_options, OPTION_LANGPATH),
 				ui_lang_info[lang_get_langcode()].name);
 		}
 

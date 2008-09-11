@@ -997,7 +997,7 @@ static void win32_init(running_machine *machine)
 			break;
 
 		// add the device
-		devinfo->device = input_device_add(DEVICE_CLASS_LIGHTGUN, devinfo->name, devinfo);
+		devinfo->device = input_device_add(machine, DEVICE_CLASS_LIGHTGUN, devinfo->name, devinfo);
 
 		// populate the axes
 		for (axisnum = 0; axisnum < 2; axisnum++)
@@ -1402,7 +1402,7 @@ static BOOL CALLBACK dinput_keyboard_enum(LPCDIDEVICEINSTANCE instance, LPVOID r
 		goto exit;
 
 	// add the device
-	devinfo->device = input_device_add(DEVICE_CLASS_KEYBOARD, devinfo->name, devinfo);
+	devinfo->device = input_device_add(Machine, DEVICE_CLASS_KEYBOARD, devinfo->name, devinfo);
 	devinfo->poll = dinput_keyboard_poll;
 
 	// populate it
@@ -1474,11 +1474,11 @@ static BOOL CALLBACK dinput_mouse_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 	}
 
 	// add the device
-	devinfo->device = input_device_add(DEVICE_CLASS_MOUSE, devinfo->name, devinfo);
+	devinfo->device = input_device_add(Machine, DEVICE_CLASS_MOUSE, devinfo->name, devinfo);
 	devinfo->poll = dinput_mouse_poll;
 	if (guninfo != NULL)
 	{
-		guninfo->device = input_device_add(DEVICE_CLASS_LIGHTGUN, guninfo->name, guninfo);
+		guninfo->device = input_device_add(Machine, DEVICE_CLASS_LIGHTGUN, guninfo->name, guninfo);
 		guninfo->poll = win32_lightgun_poll;
 	}
 
@@ -1589,7 +1589,7 @@ static void assign_joystick_to_player(device_info *devinfo)
 	int axisnum, axiscount, povnum, butnum;
 
 	// add the device
-	devinfo->device = input_device_add(DEVICE_CLASS_JOYSTICK, devinfo->name, devinfo);
+	devinfo->device = input_device_add(Machine, DEVICE_CLASS_JOYSTICK, devinfo->name, devinfo);
 	devinfo->poll = dinput_joystick_poll;
 
 	// populate the axes
@@ -2020,7 +2020,7 @@ static void rawinput_keyboard_enum(PRAWINPUTDEVICELIST device)
 		return;
 
 	// add the device
-	devinfo->device = input_device_add(DEVICE_CLASS_KEYBOARD, devinfo->name, devinfo);
+	devinfo->device = input_device_add(Machine, DEVICE_CLASS_KEYBOARD, devinfo->name, devinfo);
 
 	// populate it
 	for (keynum = 0; keynum < MAX_KEYS; keynum++)
@@ -2093,10 +2093,10 @@ static void rawinput_mouse_enum(PRAWINPUTDEVICELIST device)
 	}
 
 	// add the device
-	devinfo->device = input_device_add(DEVICE_CLASS_MOUSE, devinfo->name, devinfo);
+	devinfo->device = input_device_add(Machine, DEVICE_CLASS_MOUSE, devinfo->name, devinfo);
 	if (guninfo != NULL)
 	{
-		guninfo->device = input_device_add(DEVICE_CLASS_LIGHTGUN, guninfo->name, guninfo);
+		guninfo->device = input_device_add(Machine, DEVICE_CLASS_LIGHTGUN, guninfo->name, guninfo);
 		guninfo->poll = (guninfo == lightgun_list) ? win32_lightgun_poll : NULL;
 		guninfo->mouse.partner = &devinfo->mouse;
 	}

@@ -732,10 +732,13 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
+			machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
 			const rom_entry *region, *rom;
+			const rom_source *source;
 
-			/* iterate over regions, and then ROMs within the region */
-			for (region = rom_first_region(drivers[drvindex]); region; region = rom_next_region(region))
+			/* iterate over sources, regions, and then ROMs within the region */
+			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
+				for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
 				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				{
 					char hashbuf[HASH_BUF_SIZE];
@@ -746,6 +749,7 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 				}
 
 			count++;
+			machine_config_free(config);
 		}
 
 	/* return an error if none found */
@@ -1273,10 +1277,13 @@ static void match_roms(const char *hash, int length, int *found)
 	/* iterate over drivers */
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 	{
+		machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
 		const rom_entry *region, *rom;
+		const rom_source *source;
 
-		/* iterate over regions and files within the region */
-		for (region = rom_first_region(drivers[drvindex]); region; region = rom_next_region(region))
+		/* iterate over sources, regions and files within the region */
+		for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
+			for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
 			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 				if (hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0))
 				{
@@ -1288,5 +1295,7 @@ static void match_roms(const char *hash, int length, int *found)
 					mame_printf_info("= %s%-20s  %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
 					(*found)++;
 				}
+
+		machine_config_free(config);
 	}
 }
