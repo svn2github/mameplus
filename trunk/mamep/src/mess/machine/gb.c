@@ -1405,7 +1405,6 @@ DEVICE_START(gb_cart)
 	CartType = 0;
 	ROMMask = 0;
 	RAMMask = 0;
-
 	return DEVICE_START_OK;
 }
 

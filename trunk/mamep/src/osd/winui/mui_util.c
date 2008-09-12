@@ -563,6 +563,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
 			const game_driver *gamedrv = drivers[ndriver];
+			const rom_source *source;
 			int nParentIndex = GetParentRomSetIndex(gamedrv);
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
@@ -577,12 +578,15 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
 			gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
-			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
-				if (ROMREGION_ISDISKDATA(region))
-				{
-					gameinfo->isHarddisk = TRUE;
-					break;
-				}
+			for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
+			{
+				for (region = rom_first_region(gamedrv, source); region != NULL; region = rom_next_region(region))
+					if (ROMREGION_ISDISKDATA(region))
+					{
+						gameinfo->isHarddisk = TRUE;
+						break;
+					}
+			}
 
 			num_speakers = numberOfSpeakers(config);
 
@@ -590,14 +594,18 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->isVector = isDriverVector(config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
 			gameinfo->hasOptionalBIOS = FALSE;
-			for (region = rom_first_region(gamedrv); region; region = rom_next_region(region))
-				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+			for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
+			{
+				for (region = rom_first_region(gamedrv, source); region; region = rom_next_region(region))
 				{
-					gameinfo->usesRoms = TRUE; 
-					gameinfo->hasOptionalBIOS = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
-					break; 
+					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+					{
+						gameinfo->usesRoms = TRUE; 
+						gameinfo->hasOptionalBIOS = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
+						break; 
+					}
 				}
-
+			}
 			gameinfo->usesSamples = FALSE;
 			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
 			{

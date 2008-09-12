@@ -1281,7 +1281,6 @@ DEVICE_START(wswan_cart)
 	rtc.minute = 0;
 	rtc.second = 0;
 	rtc.setting = 0xFF;
-
 	return DEVICE_START_OK;
 }
 
