@@ -4,11 +4,15 @@
 
 // global variables
 MainWindow *win;
-QSettings guiSettings("mamepgui.ini", QSettings::IniFormat);
+QSettings guiSettings(CFG_PREFIX + "mamepgui.ini", QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
 QString mame_binary;
 QString list_mode;
 QString language;
+QString background_file = NULL;
+QActionGroup bgActions(0);
+bool local_game_list;
+bool isDarkBg = false;
 
 void MainWindow::log(QString message, char logOrigin)
 {
@@ -32,6 +36,76 @@ void MainWindow::logStatus(QString message)
 	labelProgress->setText(message);
 }
 
+void MainWindow::logStatus(GameInfo *gameInfo)
+{
+	//if everything is ok, only show 1 icon
+	//show all 6 icons otherwise
+	static const QString prefix = ":/res/16x16/";
+	static const QString suffix = ".png";
+	QString statusBuffer = "";
+
+	QString statusText = utils->getStatusString (gameInfo->status);
+	QString statusName = QT_TR_NOOP("status");
+	labelStatus->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	statusText = utils->getStatusString (gameInfo->emulation);
+	statusName = QT_TR_NOOP("emulation");
+	labelEmulation->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	statusText = utils->getStatusString (gameInfo->color);
+	statusName = QT_TR_NOOP("color");
+	labelColor->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	statusText = utils->getStatusString (gameInfo->sound);
+	statusName = QT_TR_NOOP("sound");
+	labelSound->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	statusText = utils->getStatusString (gameInfo->graphic);
+	statusName = QT_TR_NOOP("graphic");
+	labelGraphic->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	statusText = utils->getStatusString (gameInfo->savestate, true);
+	statusName = QT_TR_NOOP("savestate");
+	labelSavestate->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+	statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+
+	//show 2 more icons if applicable, hide otherwise
+	labelCocktail->hide();
+	wStatus->layout()->removeWidget(labelCocktail);
+	if (gameInfo->cocktail != 64)
+	{
+		wStatus->layout()->addWidget(labelCocktail);
+		labelCocktail->show();
+		statusText = utils->getStatusString (gameInfo->cocktail);
+		statusName = QT_TR_NOOP("cocktail");
+		labelCocktail->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+		statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+	}
+
+	labelProtection->hide();
+	wStatus->layout()->removeWidget(labelProtection);
+	if (gameInfo->protection != 64)
+	{
+		wStatus->layout()->addWidget(labelProtection);
+		labelProtection->show();
+		statusText = utils->getStatusString (gameInfo->protection);
+		statusName = QT_TR_NOOP("protection");
+		labelProtection->setPixmap(QPixmap(prefix + statusName + "_" + statusText + suffix));
+		statusBuffer +=  tr(qPrintable(statusName)) + ": " + Utils::tr(qPrintable(statusText)) + "\n";
+	}
+
+	statusBuffer.chop(1);
+	win->wStatus->setToolTip(statusBuffer);
+
+	
+//	setText(QString("E: %1").arg(status));
+}
+
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
@@ -48,6 +122,10 @@ MainWindow::MainWindow(QWidget *parent)
 	langActions->addAction(actionChinese_PRC);
 	langActions->addAction(actionChinese_Taiwan);
 	langActions->addAction(actionJapanese);
+
+	QActionGroup *bgStretchActions = new QActionGroup(this);
+	bgStretchActions->addAction(actionBgStretch);
+	bgStretchActions->addAction(actionBgTile);
 
 	// init controls
     tvGameList = new QTreeView(centralwidget);
@@ -72,9 +150,35 @@ MainWindow::MainWindow(QWidget *parent)
 	lineEditSearch->setMinimumWidth(240);
 	toolBarSearch->addWidget(lineEditSearch);
 
-	labelProgress = new QLabel(centralwidget);
+	labelProgress = new QLabel(statusbar);
 	statusbar->addWidget(labelProgress);
-	labelGameCount = new QLabel(centralwidget);
+	
+	wStatus = new QWidget(statusbar);
+	wStatus->setMaximumHeight(18);
+	QHBoxLayout *layout = new QHBoxLayout(wStatus);
+	layout->setMargin(0);
+	layout->setSpacing(1);
+	wStatus->setLayout(layout);
+	statusbar->addPermanentWidget(wStatus);
+
+	labelStatus = new QLabel(statusbar);
+	layout->addWidget(labelStatus);
+	labelEmulation = new QLabel(statusbar);
+	layout->addWidget(labelEmulation);
+	labelColor = new QLabel(statusbar);
+	layout->addWidget(labelColor);
+	labelSound = new QLabel(statusbar);
+	layout->addWidget(labelSound);
+	labelGraphic = new QLabel(statusbar);
+	layout->addWidget(labelGraphic);
+	labelSavestate = new QLabel(statusbar);
+	layout->addWidget(labelSavestate);
+	labelCocktail = new QLabel(statusbar);
+	layout->addWidget(labelCocktail);
+	labelProtection = new QLabel(statusbar);
+	layout->addWidget(labelProtection);
+
+	labelGameCount = new QLabel(statusbar);
 	statusbar->addPermanentWidget(labelGameCount);
 
 	progressBarGamelist = new QProgressBar(centralwidget);
@@ -105,8 +209,11 @@ MainWindow::MainWindow(QWidget *parent)
     menuView->setFont(font);
     menuOptions->setFont(font);
     menuHelp->setFont(font);
+	menuCustomizeFields->setFont(font);
 
 	treeFolders->setFont(font);
+	lvGameList->setFont(font);
+	tvGameList->setFont(font);
 
 	dlgOptions->tabOptions->setFont(font);
 
@@ -143,7 +250,10 @@ void MainWindow::initHistory(QString title)
 
 	QTextBrowser * tb;
 	if (title == "History")
+	{
 		tb = tbHistory = new QTextBrowser(dockWidgetContents);
+		tbHistory->setOpenExternalLinks(true);
+	}
 	else if (title == "MAMEInfo")
 		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
 	else// if (title == "Story")
@@ -151,8 +261,6 @@ void MainWindow::initHistory(QString title)
 	
 	tb->setObjectName("textBrowser_" + title);
 	
-	utils->tranaparentBg(tb);
-
 	gridLayout->addWidget(tb);
 
 	dockWidget->setWidget(dockWidgetContents);
@@ -205,16 +313,53 @@ void MainWindow::init()
 	loadSettings();
 
 	// validate mame_binary
-	mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
+	mame_binary = guiSettings.value("mame_binary", "mame" EXEC_EXT).toString();
 	QFile mamebin(mame_binary);
 	if (!mamebin.exists())
 	{
-		//fixme: hack
-		mame_binary = "mame.exe";
-		QFile mamebin2(mame_binary);
+		QDir dir(QCoreApplication::applicationDirPath());
+		
+		QStringList nameFilter;
+		nameFilter << "*mame*";
 
+		// iterate all exec files in the path
+		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Executable);
+		for (int i = 0; i < files.count(); i++)
+		{
+			QFileInfo fi(QCoreApplication::applicationFilePath());
+			QFileInfo fi2(files[i]);
+			if(fi.fileName() != fi2.fileName())
+			{
+				mame_binary = files[i];
+				break;
+			}
+		}
+	
+		QFile mamebin2(mame_binary);
 		if (!mamebin2.exists())
-			win->poplog(QString("Could not find %1").arg(mame_binary));
+		{
+			QString filter = "";
+#ifdef Q_WS_WIN
+			filter.append(tr("Executable files (*" EXEC_EXT ")"));
+			filter.append(";;");
+#endif
+			filter.append(tr("All Files (*)"));
+		
+			mame_binary = QFileDialog::getOpenFileName(this,
+										tr("MAME executable:"),
+										QCoreApplication::applicationDirPath(),
+										filter
+										);
+
+			if (mame_binary.isEmpty())
+			{
+				win->poplog(QString("Could not find MAME"));
+				mame_binary = "";
+				//quit the program
+				close();
+				return;
+			}
+		}
 	}
 
 	// must optUtils->initOption() after win, before show()
@@ -222,6 +367,13 @@ void MainWindow::init()
 
 	//show UI
 	win->log("win->show()");
+
+	//apply css
+	QFile cssFile(":/res/mamepgui.qss");
+	cssFile.open(QFile::ReadOnly);
+	QString styleSheet = QLatin1String(cssFile.readAll());
+	qApp->setStyleSheet(styleSheet);
+
 	show();
 	loadLayout();
 	setDockOptions();
@@ -230,19 +382,36 @@ void MainWindow::init()
 	// must gamelist->init(true) before loadLayout()
 	gamelist->init(true, GAMELIST_INIT_FULL);
 
-	// setup background
-	QImage bkground(utils->getPath(guiSettings.value("background_directory", "bkground").toString()) + "bkground.png");
-	if (!bkground.isNull())
+	// init background menu
+	QString _dirpath = utils->getPath(guiSettings.value("background_directory", "bkground").toString());
+	QDir dir(_dirpath);
+	
+	if (background_file.isEmpty())
+		background_file = guiSettings.value("background_file").toString();
+	
+	if (dir.exists() && bgActions.actions().count() < 1)
 	{
-		QPalette palette;
-		palette.setBrush(this->backgroundRole(), QBrush(bkground));
-		this->setPalette(palette);
-
-		// setup background alpha
-		utils->tranaparentBg(tvGameList);
-		utils->tranaparentBg(lvGameList);
-		utils->tranaparentBg(treeFolders);
+		QString dirpath = utils->getPath(_dirpath);
+		
+		QStringList nameFilter;
+		nameFilter << "*.png";
+		nameFilter << "*.jpg";
+	
+		// iterate all files in the path
+		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+		foreach (QString fileName, files)
+		{
+			QAction* act = win->menuBackground->addAction(fileName);
+			act->setCheckable(true);
+			if (background_file == fileName)
+				act->setChecked(true);
+			bgActions.addAction(act);
+			connect(act, SIGNAL(triggered()), this, SLOT(setBgPixmap()));
+		}		
 	}
+	
+	if (!background_file.isEmpty())
+		setBgPixmap(background_file);
 
 	// connect misc signal and slots
 	// Actions
@@ -270,9 +439,6 @@ void MainWindow::init()
 
 MainWindow::~MainWindow()
 {
-#ifdef QMC2_DEBUG
-	log(LOG_QMC2, "DEBUG: MainWindow::~MainWindow()");
-#endif
 }
 
 void MainWindow::on_actionPlay_activated()
@@ -327,6 +493,21 @@ void MainWindow::showOptionsDialog(int optLevel, int lstRow)
 void MainWindow::on_actionExitStop_activated()
 {
 	close();
+}
+
+void MainWindow::on_actionReadme_activated()
+{
+	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=158710&view=collapsed"));
+}
+
+void MainWindow::on_actionFAQ_activated()
+{
+	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=164054&view=collapsed"));
+}
+
+void MainWindow::on_actionBoard_activated()
+{
+	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/postlist.php?Cat=&Board=mameplus&view=collapsed"));
 }
 
 void MainWindow::on_actionAbout_activated()
@@ -401,6 +582,11 @@ void MainWindow::on_actionJapanese_activated()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionLocalGameList_activated()
+{
+	local_game_list = actionLocalGameList->isChecked();
+}
+
 void MainWindow::on_actionEnforceAspect_activated()
 {
 	bool isForce = actionEnforceAspect->isChecked();
@@ -432,6 +618,8 @@ void MainWindow::initSettings()
 		<< "pcb_directory"
 		<< "icons_directory"
 		<< "background_directory"
+		<< "background_file"
+		<< "background_stretch"
 		<< "mame_binary"
 		<< "option_geometry"
 		<< "sort_column"
@@ -440,6 +628,7 @@ void MainWindow::initSettings()
 		<< "folder_current"
 		<< "vertical_tabs"
 		<< "enforce_aspect"
+		<< "local_game_list"
 		<< "list_mode"
 		<< "option_column_state"
 		<< "window_geometry"
@@ -472,10 +661,7 @@ void MainWindow::loadLayout()
 	
 	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
-	if (guiSettings.value("vertical_tabs").isValid())
-		actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs").toInt() == 1);
-	else
-		actionVerticalTabs->setChecked(defSettings.value("vertical_tabs").toInt() == 1);
+	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs", "1").toInt() == 1);
 
 	list_mode = guiSettings.value("list_mode").toString();
 	if (list_mode == win->actionDetails->objectName().remove("action"))
@@ -495,10 +681,16 @@ void MainWindow::loadLayout()
 	else
 		actionEnglish->setChecked(true);
 
-	if (guiSettings.value("enforce_aspect").isValid())
-		actionEnforceAspect->setChecked(guiSettings.value("enforce_aspect").toInt() == 1);
+	actionEnforceAspect->setChecked(guiSettings.value("enforce_aspect", "1").toInt() == 1);
+
+	local_game_list = guiSettings.value("local_game_list", "1").toInt() == 1;
+	actionLocalGameList->setChecked(local_game_list);
+
+	if (guiSettings.value("background_stretch", "1").toInt() == 0)
+		actionBgTile->setChecked(true);
 	else
-		actionEnforceAspect->setChecked(defSettings.value("enforce_aspect").toInt() == 1);
+		actionBgStretch->setChecked(true);
+	
 }
 
 void MainWindow::loadSettings()
@@ -522,9 +714,13 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("pcb_directory", mameOpts["pcb_directory"]->globalvalue);
 	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
-
-	guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
+	guiSettings.setValue("background_file", background_file);
 	guiSettings.setValue("language", language);
+
+	if (mameOpts["mame_binary"]->globalvalue != mameOpts["mame_binary"]->defvalue)
+		guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
+	else
+		guiSettings.setValue("mame_binary", mame_binary);
 
 	//save console dirs
 	foreach (QString optName, mameOpts.keys())
@@ -549,6 +745,8 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
 	guiSettings.setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
 	guiSettings.setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
+	guiSettings.setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
+	guiSettings.setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
 	guiSettings.setValue("default_game", currentGame);
 	guiSettings.setValue("folder_current", currentFolder);//fixme: rename
 	guiSettings.setValue("list_mode", list_mode);
@@ -557,8 +755,11 @@ void MainWindow::saveSettings()
 void MainWindow::closeEvent(QCloseEvent *event)
 {
 	hide();
-	saveSettings();
-	mamegame->s11n();
+	if (!mame_binary.isEmpty())
+	{
+		saveSettings();
+		mamegame->s11n();
+	}
 	event->accept();
 }
 
@@ -570,6 +771,76 @@ void MainWindow::setDockOptions()
     else
 	    opts &= ~VerticalTabs;
 	QMainWindow::setDockOptions(opts);
+}
+
+void MainWindow::setTransparentBg(QWidget * w)
+{
+	QColor color, bgColor;
+	QPalette palette;
+
+	if (isDarkBg)
+	{
+		bgColor = QColor(0, 0, 0, 140);
+		color = QColor(Qt::white);
+	}
+	else
+	{
+		bgColor = QColor(255, 255, 255, 140);
+		color = QColor(Qt::black);
+	}
+	//color: palette(dark); 
+
+	palette.setColor(QPalette::Active, QPalette::Text, color);
+	palette.setColor(QPalette::Inactive, QPalette::Text, color);
+	palette.setColor(QPalette::Disabled, QPalette::Text, color);
+	palette.setColor(QPalette::Active, QPalette::Base, bgColor);
+	palette.setColor(QPalette::Inactive, QPalette::Base, bgColor);
+	palette.setColor(QPalette::Disabled, QPalette::Base, bgColor);
+
+	w->setPalette(palette);
+}
+
+void MainWindow::setBgPixmap(QString fileName)
+{
+	if (fileName.isEmpty())
+		fileName = ((QAction *)sender())->text();
+
+	background_file = fileName;
+
+	QString _dirpath = utils->getPath(guiSettings.value("background_directory", "bkground").toString());
+	QDir dir(_dirpath);
+	QString dirpath = utils->getPath(_dirpath);
+
+	QImage bkgroundImg(_dirpath + fileName);
+
+	// setup mainwindow background
+	if (!bkgroundImg.isNull())
+	{
+		if (actionBgStretch->isChecked())
+			bkgroundImg = bkgroundImg.scaled(win->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+
+		QPalette palette;
+		palette.setBrush(win->backgroundRole(), QBrush(bkgroundImg));
+		win->setPalette(palette);
+
+		//get the color tone of bg image, set the bg color based on it
+		bkgroundImg = bkgroundImg.scaled(1, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+		int grayVal = qGray(bkgroundImg.pixel(0, 0));
+		win->log(QString("grayVal: %1").arg(grayVal));
+		if (grayVal < 128)
+			isDarkBg = true;
+		else
+			isDarkBg = false;
+
+		// setup background alpha
+		setTransparentBg(win->treeFolders);
+		setTransparentBg(win->tvGameList);
+		setTransparentBg(win->lvGameList);
+		setTransparentBg(win->tbHistory);
+		setTransparentBg(win->tbMameinfo);
+		setTransparentBg(win->tbStory);
+//		setTransparentBg(win->tbCommand);
+	}
 }
 
 
@@ -652,20 +923,20 @@ void Screenshot::updateScreenshotLabel()
 			//vert
 				if (scaledSize.height() < scaledSize.width() / aspect)
 					// need expand height
-					scaledSize.setHeight(scaledSize.width() / aspect);
+					scaledSize.setHeight((int)(scaledSize.width() / aspect));
 				else
 					// need expand width
-					scaledSize.setWidth(scaledSize.height() * aspect);
+					scaledSize.setWidth((int)(scaledSize.height() * aspect));
 		}
 		else
 		{
 			//horz
 			if (scaledSize.height() < scaledSize.width() * aspect)
 				// need expand height
-				scaledSize.setHeight(scaledSize.width() * aspect);
+				scaledSize.setHeight((int)(scaledSize.width() * aspect));
 			else
 				// need expand width
-				scaledSize.setWidth(scaledSize.height() / aspect);
+				scaledSize.setWidth((int)(scaledSize.height() / aspect));
 		}
 	}
 //	win->log(QString("sz: %1, %2").arg(scaledSize()));
@@ -688,7 +959,7 @@ void Screenshot::updateScreenshotLabel()
 
 int main(int argc, char *argv[])
 {
-	QApplication qmc2App(argc, argv);
+	QApplication myApp(argc, argv);
 
 	QTranslator appTranslator;
 
@@ -697,12 +968,12 @@ int main(int argc, char *argv[])
 		language = QLocale::system().name();
 	appTranslator.load(":/lang/mamepgui_" + language);
 
-	qmc2App.installTranslator(&appTranslator);
+	myApp.installTranslator(&appTranslator);
 
 	procMan = new ProcessManager(0);	
 	utils = new Utils(0);
 	win = new MainWindow(0);
 
-	return qmc2App.exec();
+	return myApp.exec();
 }
 

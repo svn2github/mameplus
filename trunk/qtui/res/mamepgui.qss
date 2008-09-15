@@ -1,0 +1,26 @@
+QStatusBar::item,
+QDockWidget::title {
+	background-color: palette(window);
+}
+
+QToolBar{
+/*	background-image:url(res/images_nav_tab_bk.png);*/
+}
+
+QStatusBar::item {
+	border-width: 1px;
+	border-style: solid;
+ 	border-color: palette(dark);
+}
+
+QDockWidget::title {
+	border-width: 1px;
+	border-style: solid;
+ 	border-color: palette(dark);
+	padding: 1px 2px;
+	margin: 2px 0;
+}
+
+QListView::item:selected{
+/*	background-image:url(res/images_nav_tab_sel.png);*/
+}

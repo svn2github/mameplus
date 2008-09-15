@@ -20,11 +20,12 @@ public:
 
 	QString capitalizeStr(const QString & str);
 	QString getPath(QString);
-	void tranaparentBg(QWidget *);
 	QString getMameVersion();
 
 	bool isAuditFolder(QString);
 	bool isConsoleFolder();
+	quint8 getStatus(QString);
+	QString getStatusString(quint8, bool = false);
 
 signals:
 	void icoUpdated(QString);

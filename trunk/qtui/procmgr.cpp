@@ -1,13 +1,13 @@
 #include "mamepguimain.h"
 
-#undef QMC2_DEBUG
+#undef _DEBUG_
 
 ProcessManager *procMan = NULL;
 
 ProcessManager::ProcessManager(QWidget *parent)
   : QObject(parent)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::ProcessManager(QWidget *parent = 0x" + QString::number((ulong)parent, 16) + ")");
 #endif
 
@@ -16,7 +16,7 @@ ProcessManager::ProcessManager(QWidget *parent)
 
 ProcessManager::~ProcessManager()
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::~ProcessManager()");
 #endif
 
@@ -24,7 +24,7 @@ ProcessManager::~ProcessManager()
 
 int ProcessManager::start(QString &command, QStringList &arguments, bool autoConnect)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
   QString logMsg = "DEBUG: ProcessManager::start(QString &command = \"" + command + "\", QStringList &arguments = \"";
   int argCount;
   for (argCount = 0; argCount < arguments.count(); argCount++)
@@ -64,7 +64,7 @@ QProcess *ProcessManager::process(ushort index)
 
 void ProcessManager::terminate(QProcess *proc)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::terminate(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
 #endif
 
@@ -74,7 +74,7 @@ void ProcessManager::terminate(QProcess *proc)
 
 void ProcessManager::terminate(ushort index)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::terminate(ushort index = " + QString::number(index) + ")");
 #endif
 
@@ -83,7 +83,7 @@ void ProcessManager::terminate(ushort index)
 
 void ProcessManager::kill(QProcess *proc)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::kill(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
 #endif
 
@@ -93,7 +93,7 @@ void ProcessManager::kill(QProcess *proc)
 
 void ProcessManager::kill(ushort index)
 {
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::kill(ushort index = " + QString::number(index) + ")");
 #endif
 
@@ -104,7 +104,7 @@ void ProcessManager::readyReadStandardOutput()
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::readyReadStandardOutput(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
@@ -122,7 +122,7 @@ void ProcessManager::readyReadStandardError()
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::readyReadStandardError(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
@@ -140,7 +140,7 @@ void ProcessManager::finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::finished(int exitCode = " + QString::number(exitCode) + ", QProcess::ExitStatus exitStatus = "+ QString::number(exitStatus) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
@@ -152,7 +152,7 @@ void ProcessManager::started()
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::started(): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 
@@ -163,7 +163,7 @@ void ProcessManager::error(QProcess::ProcessError processError)
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
 //  win->log("DEBUG: ProcessManager::error(QProcess::ProcessError processError = " + QString::number(processError) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 }
@@ -172,7 +172,7 @@ void ProcessManager::stateChanged(QProcess::ProcessState processState)
 {
   QProcess *proc = (QProcess *)sender();
 
-#ifdef QMC2_DEBUG
+#ifdef _DEBUG_
   win->log("DEBUG: ProcessManager::stateChanged(QProcess::ProcessState processState = " + QString::number(processState) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
 #endif
 }

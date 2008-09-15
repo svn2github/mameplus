@@ -74,6 +74,40 @@ enum
 	COL_LAST
 };
 
+/* to support mameplus .mmo translation */
+enum {
+	UI_LANG_EN_US = 0,
+	UI_LANG_ZH_CN,
+	UI_LANG_ZH_TW,
+	UI_LANG_FR_FR,
+	UI_LANG_DE_DE,
+	UI_LANG_IT_IT,
+	UI_LANG_JA_JP,
+	UI_LANG_KO_KR,
+	UI_LANG_ES_ES,
+	UI_LANG_CA_ES,
+	UI_LANG_VA_ES,
+	UI_LANG_PL_PL,
+	UI_LANG_PT_PT,
+	UI_LANG_PT_BR,
+	UI_LANG_HU_HU,
+	UI_LANG_MAX
+};
+
+enum {
+	UI_MSG_MAME = 0,
+	UI_MSG_LIST,
+	UI_MSG_READINGS,
+	UI_MSG_MANUFACTURE,
+	UI_MSG_OSD0,
+	UI_MSG_OSD1,
+	UI_MSG_OSD2,
+	UI_MSG_OSD3,
+	UI_MSG_OSD4,
+	UI_MSG_OSD5,
+	UI_MSG_MAX = 31
+};
+
 class ListXMLHandler : public QXmlDefaultHandler
 {
 public:
@@ -115,9 +149,6 @@ public:
 			gameinfo->isExtRom = false;
 			gameinfo->cloneof = attributes.value("cloneof");
 			gameinfo->romof = attributes.value("romof");
-			//fixme: is it possible?
-			if (attributes.value("name").isEmpty())
-				win->poplog("Error: empty 1");
 
 			mamegame->gamenameGameInfoMap[attributes.value("name")] = gameinfo;
 		}
@@ -140,6 +171,18 @@ public:
 
 			gameinfo->nameBiosInfoMap[attributes.value("name")] = biosinfo;
 		}
+		else if (qName == "driver")
+		{
+			gameinfo->status = utils->getStatus(attributes.value("status"));
+			gameinfo->emulation = utils->getStatus(attributes.value("emulation"));
+			gameinfo->color = utils->getStatus(attributes.value("color"));
+			gameinfo->sound = utils->getStatus(attributes.value("sound"));
+			gameinfo->graphic = utils->getStatus(attributes.value("graphic"));
+			gameinfo->cocktail = utils->getStatus(attributes.value("cocktail"));
+			gameinfo->protection = utils->getStatus(attributes.value("protection"));
+			gameinfo->savestate = utils->getStatus(attributes.value("savestate"));
+			gameinfo->palettesize = attributes.value("palettesize").toUInt();
+		}
 		else if (qName == "device")
 		{
 			DeviceInfo *deviceinfo = new DeviceInfo(gameinfo);
@@ -159,7 +202,7 @@ public:
 		return true;
 	}
 
-	bool ListXMLHandler::endElement(const QString & /* namespaceURI */,
+	bool endElement(const QString & /* namespaceURI */,
 		const QString & /* localName */,
 		const QString &qName)
 	{
@@ -172,7 +215,7 @@ public:
 		return true;
 	}
 
-	bool ListXMLHandler::characters(const QString &str)
+	bool characters(const QString &str)
 	{
 		currentText += str;
 		return true;
@@ -489,7 +532,7 @@ TreeModel::TreeModel(QObject *parent, bool isGroup)
 {
 	QList<QVariant> rootData;
 
-	const QStringList columnList = (QStringList() 
+	static const QStringList columnList = (QStringList() 
 		<< QT_TR_NOOP("Description") 
 		<< QT_TR_NOOP("Name") 
 		<< QT_TR_NOOP("ROMs") 
@@ -569,7 +612,11 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 	switch (role)
 	{
 	case Qt::ForegroundRole:
-		return qVariantFromValue(QColor(Qt::black));
+		if (gameInfo->emulation == 0 && !gameInfo->isExtRom)
+			return qVariantFromValue(QColor(isDarkBg ? QColor(255, 96, 96) : Qt::darkRed));
+		else
+			//fixme: use palette color
+			return qVariantFromValue(QColor(isDarkBg ? Qt::white : Qt::black));
 
 	case Qt::DecorationRole:
 		if (col == COL_DESC)
@@ -578,7 +625,6 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 			if (gameInfo->icondata.isNull())
 			{
 				gamelist->iconThread.iconQueue.setSize(win->tvGameList->viewport()->height() / 17 + 2);
-	//			gamelist->iconThread.iconQueue.setSize(64);
 				gamelist->iconThread.iconQueue.enqueue(gameName);
 				gamelist->iconThread.load();
 				icondata = utils->deficondata;
@@ -588,6 +634,16 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 			
 			QPixmap pm;
 			pm.loadFromData(icondata, "ico");
+			pm = pm.scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+			if(!gameInfo->available)
+			{
+				QPainter p;
+				p.begin(&pm);
+				p.drawPixmap(8, 8, QPixmap(":/res/status-na.png"));
+				p.end();
+			}
+			
 			return QIcon(pm);
 		}
 		break;
@@ -605,7 +661,16 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		break;
 		
 	case Qt::DisplayRole:
-		if (col == COL_NAME && gameInfo->isExtRom)
+		if (col == COL_DESC && !gameInfo->lcDesc.isEmpty() && local_game_list)
+			return gameInfo->lcDesc;
+
+		else if (col == COL_MFTR && !gameInfo->lcMftr.isEmpty() && local_game_list)
+			return gameInfo->lcMftr;
+
+		else if (col == COL_YEAR && gameInfo->year.isEmpty())
+			return "?";
+
+		else if (col == COL_NAME && gameInfo->isExtRom)
 			return gameInfo->romof;
 	
 		//convert 'ROMs' column
@@ -771,10 +836,12 @@ DeviceInfo::DeviceInfo(QObject *parent)
 	//	win->log("# DeviceInfo()");
 }
 
-GameInfo::GameInfo(QObject *parent)
-: QObject(parent)
+GameInfo::GameInfo(QObject *parent) :
+QObject(parent),
+cocktail(64),
+protection(64),
+available(0)
 {
-	available = 0;
 	//	win->log("# GameInfo()");
 }
 
@@ -827,8 +894,8 @@ void MameGame::s11n()
 {
 	win->log("start s11n()");
 
-	QDir().mkpath("cache");
-	QFile file("cache/gamelist.cache");
+	QDir().mkpath(CFG_PREFIX + "cache");
+	QFile file(CFG_PREFIX + "cache/gamelist.cache");
 	file.open(QIODevice::WriteOnly);
 	QDataStream out(&file);
 
@@ -839,7 +906,7 @@ void MameGame::s11n()
 	out << mamegame->mameDefaultIni;	//default.ini
 	out << mamegame->gamenameGameInfoMap.count();
 
-	win->log(QString("xxx1 %1").arg(mamegame->gamenameGameInfoMap.count()));
+	win->log(QString("s11n %1 games").arg(mamegame->gamenameGameInfoMap.count()));
 
 	//fixme: should place in thread and use mamegame directly
 	gamelist->switchProgress(gamelist->numTotalGames, tr("Saving listxml"));
@@ -860,6 +927,16 @@ void MameGame::s11n()
 		out << gameinfo->cloneof;
 		out << gameinfo->romof;
 		out << gameinfo->available;
+
+		out << gameinfo->status;
+		out << gameinfo->emulation;
+		out << gameinfo->color;
+		out << gameinfo->sound;
+		out << gameinfo->graphic;
+		out << gameinfo->cocktail;
+		out << gameinfo->protection;
+		out << gameinfo->savestate;
+		out << gameinfo->palettesize;
 
 		out << gameinfo->clones.count();
 		foreach (QString clonename, gameinfo->clones)
@@ -900,7 +977,7 @@ void MameGame::s11n()
 
 int MameGame::des11n()
 {
-	QFile file("cache/gamelist.cache");
+	QFile file(CFG_PREFIX + "cache/gamelist.cache");
 	file.open(QIODevice::ReadOnly);
 	QDataStream in(&file);
 
@@ -909,7 +986,7 @@ int MameGame::des11n()
 	in >> mamepSig;
 	if (mamepSig != MAMEPLUS_SIG)
 	{
-		win->log("sig err");
+		win->log(tr("Cache signature error."));
 		return QDataStream::ReadCorruptData;
 	}
 
@@ -918,7 +995,7 @@ int MameGame::des11n()
 	in >> version;
 	if (version != S11N_VER)
 	{
-		win->log("ver err");
+		win->log(tr("Cache version has been updated. A full refresh is required."));
 		return QDataStream::ReadCorruptData;
 	}
 
@@ -958,6 +1035,17 @@ int MameGame::des11n()
 		in >> gameinfo->cloneof;
 		in >> gameinfo->romof;
 		in >> gameinfo->available;
+
+		in >> gameinfo->status;
+		in >> gameinfo->emulation;
+		in >> gameinfo->color;
+		in >> gameinfo->sound;
+		in >> gameinfo->graphic;
+		in >> gameinfo->cocktail;
+		in >> gameinfo->protection;
+		in >> gameinfo->savestate;
+		in >> gameinfo->palettesize;
+
 		mamegame->gamenameGameInfoMap[gamename] = gameinfo;
 
 		int count;
@@ -1093,6 +1181,14 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		QPixmap pm;
 		pm.loadFromData(icondata, "ico");
 
+		if(!gameInfo->available)
+		{
+			QPainter p;
+			p.begin(&pm);
+			p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
+			p.end();
+		}
+
 		QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, pm);
 
 		// calc text rect
@@ -1102,7 +1198,13 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 		//draw text bg
 		if (option.state & QStyle::State_Selected)
+		{
+/*			painter->fillRect(rc, QBrush(
+				QPixmap("res/images_nav_tab_sel.png").scaled(QSize(33, 33))
+				));
+*/
 			painter->fillRect(rc, option.palette.highlight());
+		}
 
 		//draw text
 		p = rc.topLeft();
@@ -1190,7 +1292,7 @@ QString Gamelist::getViewString(const QModelIndex &index, int column) const
 
 void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & previous)
 {
-	win->log("updateSelection()");
+//	win->log("updateSelection()");
 
 	if (current.isValid())
 	{
@@ -1198,11 +1300,12 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		if (gameName.isEmpty())
 			return;
 
+		QString gameDesc = getViewString(current, COL_DESC);
+
 		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
 		if (gameName.trimmed() == "")
 			win->log("ERRc");
 
-		QString gameDesc = gameInfo->description;
 		if (!gameInfo->nameDeviceInfoMap.isEmpty())
 		{
 			QString gameName2 = getViewString(current, COL_NAME + COL_LAST);
@@ -1213,10 +1316,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 				gameInfo = mamegame->gamenameGameInfoMap[gameName2];
 				if (gameInfo && gameInfo->isExtRom)
-				{
 					gameName = gameName2;
-					gameDesc = gameInfo->description;
-				}
 			}
 		}
 
@@ -1224,7 +1324,8 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		
 		//update statusbar
 		win->logStatus(gameDesc);
-		win->log(QString("%1").arg(currentGame));
+
+		win->logStatus(gameInfo);
 /*
 		if (!gameInfo->nameDeviceInfoMap.isEmpty())
 		{
@@ -1321,13 +1422,13 @@ void Gamelist::setupSnap(int snapType)
 		break;
 
 	case DOCK_HISTORY:
-		win->tbHistory->setText(selectThread.historyText);
+		win->tbHistory->setHtml(selectThread.historyText);
 		break;
 	case DOCK_MAMEINFO:
-		win->tbMameinfo->setText(selectThread.mameinfoText);
+		win->tbMameinfo->setHtml(selectThread.mameinfoText);
 		break;
 	case DOCK_STORY:
-		win->tbStory->setText(selectThread.storyText);
+		win->tbStory->setHtml(selectThread.storyText);
 	}
 }
 
@@ -1360,7 +1461,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->lvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
 		win->lvGameList->hide();
 		win->layMainView->removeWidget(win->lvGameList);
-		
+
 		win->tvGameList->disconnect(SIGNAL(activated(const QModelIndex &)));
 		win->tvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
 		win->tvGameList->header()->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
@@ -1400,17 +1501,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->lvGameList->setModel(gameListPModel);
 		else
 		{
-//			win->poplog("335.2");
 			win->tvGameList->setModel(gameListPModel);
-//			win->poplog("335.3");
 			win->tvGameList->setItemDelegate(&gamelistDelegate);
 		}
-		
-//		win->poplog("336");
 
 		if (initMethod == GAMELIST_INIT_FULL)
 		{
-//			win->poplog("444");
 			/* init everything else here after we have mamegame */
 			// init folders
 			gamelist->initFolders();
@@ -1422,7 +1518,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 			optUtils->loadTemplate();
 			// load mame.ini overrides
 			optUtils->loadIni(OPTLEVEL_GLOBAL, "mame.ini");
-			
+
 			// add GUI MESS extra software paths
 			foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
 			{
@@ -1435,6 +1531,17 @@ void Gamelist::init(bool toggleState, int initMethod)
 					//save a list of console system for later use
 					consoleGamesL << gameName;
 				}
+				/*
+				if (gameInfo->isBios)
+				{
+					MameOption *pMameOpt = mameOpts["bios"];
+					foreach (QString name, gameInfo->nameBiosInfoMap.keys())
+					{
+						BiosInfo *bi = gameInfo->nameBiosInfoMap[name];
+						win->log(bi->description);
+					}
+				}
+				*/
 			}
 			consoleGamesL.sort();
 
@@ -1451,11 +1558,19 @@ void Gamelist::init(bool toggleState, int initMethod)
 			}
 
 			// misc win init
-			win->setWindowTitle(win->windowTitle() + " - " + mamegame->mameVersion);
+			QFileInfo fi(mame_binary);
+
+			win->setWindowTitle(QString("%1 - %2 %3")
+				.arg(win->windowTitle())
+				.arg(fi.baseName().toUpper())
+				.arg(mamegame->mameVersion));
 			win->actionProperties->setEnabled(true);
 			win->actionSrcProperties->setEnabled(true);
 			win->actionDefaultOptions->setEnabled(true);
 		}
+
+		loadMMO(UI_MSG_LIST);
+		loadMMO(UI_MSG_MANUFACTURE);
 
 		connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
 		connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
@@ -1469,22 +1584,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 		connect(win->lvGameList->selectionModel(),
 				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
-
-		// restore game list column state
-		if (initMethod != GAMELIST_INIT_DIR)
-		{
-			restoreFolderSelection();
-		
-			QByteArray column_state;
-
-			// restore view column state, needed on first init and after auditing, but not for folder switching
-			if (guiSettings.value("column_state").isValid())
-				column_state = guiSettings.value("column_state").toByteArray();
-			else
-				column_state = defSettings.value("column_state").toByteArray();
-
-			win->tvGameList->header()->restoreState(column_state);
-		}
 
 		//fixme: how about lv?
 		win->tvGameList->setSortingEnabled(true);
@@ -1503,6 +1602,21 @@ void Gamelist::init(bool toggleState, int initMethod)
 		else
 			win->tvGameList->show();
 
+		// restore game list column state
+		if (initMethod != GAMELIST_INIT_DIR)
+		{
+			QByteArray column_state;
+
+			// restore view column state, needed on first init and after auditing, but not for folder switching
+			if (guiSettings.value("column_state").isValid())
+				column_state = guiSettings.value("column_state").toByteArray();
+			else
+				column_state = defSettings.value("column_state").toByteArray();
+
+			win->tvGameList->header()->restoreState(column_state);
+			restoreFolderSelection();
+		}
+		
 		// everything is done
 		win->treeFolders->setEnabled(true);
 		win->actionDetails->setEnabled(true);
@@ -1536,6 +1650,130 @@ void Gamelist::init(bool toggleState, int initMethod)
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
+}
+
+void Gamelist::loadMMO(int msgCat)
+{
+	static const QStringList msgFileName = (QStringList() 
+		<< "mame"
+		<< "lst"
+		<< "readings"
+		<< "manufact");
+
+	QString dirpath;
+	//only mameplus contains this option for now
+	if (mameOpts.contains("translation_directory"))
+		dirpath = utils->getPath(mameOpts["translation_directory"]->globalvalue);
+	else
+		dirpath = "lang/";
+	QFile file( dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
+	if (!file.exists())
+	{
+		win->log("not exist: " + dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
+		return;
+	}
+
+	struct mmo_header
+	{
+		int dummy;
+		int version;
+		int num_msg;
+	};
+	
+	struct mmo_data
+	{
+		const unsigned char *uid;
+		const unsigned char *ustr;
+		const void *wid;
+		const void *wstr;
+	};
+	
+	struct mmo {
+		enum {
+			MMO_NOT_LOADED,
+			MMO_NOT_FOUND,
+			MMO_READY
+		} status;
+	
+		struct mmo_header header;
+		struct mmo_data *mmo_index;
+		char *mmo_str;
+	};
+	
+	struct mmo _mmo;
+	struct mmo *pMmo = &_mmo;
+	QHash<QString, QString> mmohash;
+	int size = sizeof pMmo->header;
+
+	if (!file.open(QIODevice::ReadOnly))
+		goto mmo_readerr;
+
+	if (file.read((char*)&pMmo->header, size) != size)
+		goto mmo_readerr;
+
+	if (pMmo->header.dummy)
+		goto mmo_readerr;
+
+	if (pMmo->header.version != 3)
+		goto mmo_readerr;
+
+	pMmo->mmo_index = (mmo_data*)malloc(pMmo->header.num_msg * sizeof(pMmo->mmo_index[0]));
+	if (!pMmo->mmo_index)
+		goto mmo_readerr;
+
+	size = pMmo->header.num_msg * sizeof(pMmo->mmo_index[0]);
+	if (file.read((char*)pMmo->mmo_index, size) != size)
+		goto mmo_readerr;
+
+	int str_size;
+	size = sizeof(str_size);
+	if (file.read((char*)&str_size, size) != size)
+		goto mmo_readerr;
+
+	pMmo->mmo_str = (char*)malloc(str_size);
+	if (!pMmo->mmo_str)
+		goto mmo_readerr;
+
+	if (file.read((char*)pMmo->mmo_str, str_size) != str_size)
+		goto mmo_readerr;
+
+	for (int i = 0; i < pMmo->header.num_msg; i++)
+	{
+		QString name((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].uid));
+		QString localName = QString::fromUtf8((char*)((unsigned char*)pMmo->mmo_str + (unsigned long)pMmo->mmo_index[i].ustr));
+		mmohash[name] = localName;
+	}
+
+	foreach (QString gameName, mamegame->gamenameGameInfoMap.keys())
+	{
+		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+		switch(msgCat)
+		{
+			case UI_MSG_LIST:
+				if (mmohash.contains(gameInfo->description))
+					gameInfo->lcDesc = mmohash[gameInfo->description];				
+				break;
+			case UI_MSG_MANUFACTURE:
+				if (mmohash.contains(gameInfo->manufacturer))
+					gameInfo->lcMftr = mmohash[gameInfo->manufacturer];
+				break;
+		}
+	}
+
+mmo_readerr:
+	if (pMmo->mmo_str)
+	{
+		free(pMmo->mmo_str);
+		pMmo->mmo_str = NULL;
+	}
+
+	if (pMmo->mmo_index)
+	{
+		free(pMmo->mmo_index);
+		pMmo->mmo_index = NULL;
+	}
+
+	file.close();
 }
 
 void Gamelist::initMenus()
@@ -1582,11 +1820,15 @@ void Gamelist::initMenus()
 		sortingActions->addAction(win->actionColSortAscending);
 		sortingActions->addAction(win->actionColSortDescending);
 	}
-	
+
+//fixme: for some reason, it doesnt work on linux?
+#ifdef Q_WS_WIN
 	win->tvGameList->header()->setContextMenuPolicy (Qt::CustomContextMenu);
 	connect(win->tvGameList->header(), SIGNAL(customContextMenuRequested(const QPoint &)), 
 			this, SLOT(showHeaderContextMenu(const QPoint &)));
 	connect(headerMenu, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
+	connect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
+#endif
 }
 
 void Gamelist::showContextMenu(const QPoint &p)
@@ -1693,8 +1935,10 @@ void Gamelist::loadDefaultIni()
 {
 	mamegame->mameDefaultIni = "";
 	QStringList args;
-	//patch inipath
-	args << "-showconfig" << "-inipath" << ".;ini" << "-noreadconfig";
+	args << "-showconfig" << "-noreadconfig";
+	//patch inipath for mameplus
+	if (mameOpts.contains("language"))
+		args << "-inipath" << ".;ini";
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
@@ -1808,7 +2052,9 @@ void Gamelist::parse()
 		{
 			gameInfo0 = mamegame0->gamenameGameInfoMap[gameName];
 
-			if (gameInfo0->isExtRom)
+			if (gameInfo0->isExtRom && 
+				//the console is supported by current mame version
+				mamegame->gamenameGameInfoMap.contains(gameInfo0->romof))
 			{
 				gameInfo = new GameInfo(mamegame);
 				gameInfo->description = gameInfo0->description;
@@ -1906,6 +2152,8 @@ void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_UNAVAILABLE);
 		else if (folderName == folderList[FOLDER_CONSOLE])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE);
+		else if (folderName == folderList[FOLDER_BIOS])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS);
 		else
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAME);
 	}
@@ -1923,7 +2171,7 @@ void Gamelist::filterRegExpChanged2(QTreeWidgetItem *current, QTreeWidgetItem *p
 		else if (folderName == folderList[FOLDER_SOURCE])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_SOURCE);
 		else if (folderName == folderList[FOLDER_BIOS])
-			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS);
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS + MAX_FOLDERS);	//hack for bios subfolders
 		//fixme
 		else
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLGAME);
@@ -1981,12 +2229,19 @@ void Gamelist::initFolders()
 		gameInfo = mamegame->gamenameGameInfoMap[gameName];
 		if (!gameInfo->nameDeviceInfoMap.isEmpty())
 			consoleList << gameName;
+
 		if (gameInfo->isBios)
 			biosList << gameName;
+
 		if (!mftrList.contains(gameInfo->manufacturer))
 			mftrList << gameInfo->manufacturer;
-		if (!yearList.contains(gameInfo->year))
-			yearList << gameInfo->year;
+
+		QString year = gameInfo->year;
+		if (year.isEmpty())
+			year = "?";
+		if (!yearList.contains(year))
+			yearList << year;
+
 		if (!srcList.contains(gameInfo->sourcefile))
 			srcList << gameInfo->sourcefile;
 	}
@@ -2024,7 +2279,18 @@ void Gamelist::initFolders()
 
 		else if (i == FOLDER_BIOS)
 			foreach (QString name, biosList)
-				items[i]->addChild(new QTreeWidgetItem(items[i], QStringList(name)));
+			{
+				GameInfo *gameInfo = mamegame->gamenameGameInfoMap[name];
+/*				QPixmap pm;
+				pm.loadFromData(gameInfo->icondata, "ico");
+				QIcon icon(pm);
+*/
+				QTreeWidgetItem *item = new QTreeWidgetItem(items[i], QStringList(name));
+				item->setToolTip(0, gameInfo->description);
+//				item->setIcon(0, icon);
+
+				items[i]->addChild(item);
+			}
 	}
 
 	connect(win->treeFolders, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
@@ -2140,7 +2406,7 @@ GameListSortFilterProxyModel::GameListSortFilterProxyModel(QObject *parent)
 bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
 	bool result = true;
-	bool isExtRom, isConsole, isSFZCH;
+	bool isExtRom, isBIOS, isConsole, isSFZCH;
 	QModelIndex indexGameDesc, indexGameName, index2;
 	const QAbstractItemModel *srcModel = sourceModel();
 
@@ -2156,10 +2422,11 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	isSFZCH = gameName == "sfzch";
 	isConsole = isSFZCH || gameInfo && !gameInfo->nameDeviceInfoMap.isEmpty();
+	isBIOS = gameInfo->isBios;
 	isExtRom = srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_CONSOLE).toBool();
 
 	// filter out BIOS and Console systems
-	if (gameInfo->isBios || isConsole && !isExtRom && !isSFZCH)
+	if (isConsole && !isExtRom && !isSFZCH)
 		return false;
 
 	if (!searchText.isEmpty())
@@ -2187,45 +2454,56 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	{
 	// apply folder filter
 	case Qt::UserRole + FOLDER_ALLARC:
-		result = result && !isExtRom && !isConsole;
+		result = result && !isExtRom && !isConsole && !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_AVAILABLE:
-		result = result && gameInfo->available
-						&& !isExtRom && !isConsole;
+		result = result && gameInfo->available == 1
+						&& !isExtRom && !isConsole && !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_UNAVAILABLE:
 		index2 = srcModel->index(sourceRow, COL_ROM, sourceParent);
 		result = result && srcModel->data(index2).toString() != "Yes"
-						&& !isExtRom && !isConsole;
+						&& !isExtRom && !isConsole && !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_CONSOLE:
-		result = result && isExtRom;
+		result = result && isExtRom && !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_CONSOLE + MAX_FOLDERS:	//hack for console subfolders
-		result = result && srcModel->data(indexGameName).toString() == filterText;
+		result = result && srcModel->data(indexGameName).toString() == filterText
+						&& !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_MANUFACTURER:
-		result = result && gameInfo->manufacturer == filterText;
+		result = result && gameInfo->manufacturer == filterText && !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_YEAR:
-		result = result && gameInfo->year == filterText;
+	{
+		QString year = gameInfo->year;
+		if (year.isEmpty())
+			year = "?";
+		result = result && year == filterText && !isBIOS;
 		break;
-
+	}
 	case Qt::UserRole + FOLDER_SOURCE:
 		result = result && gameInfo->sourcefile == filterText;
 		break;
 
 	case Qt::UserRole + FOLDER_BIOS:
-		result = result && srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_BIOS).toString() == filterText;
+		result = result && isBIOS;
+		break;
+
+	case Qt::UserRole + FOLDER_BIOS + MAX_FOLDERS:	//hack for bios subfolders
+		result = result && srcModel->data(indexGameDesc, Qt::UserRole + FOLDER_BIOS).toString() == filterText
+						&& !isBIOS;
 		break;
 
 	case Qt::UserRole + FOLDER_ALLGAME:
+		result = result && !isBIOS;
 		break;
 
 	default:

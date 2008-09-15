@@ -4,11 +4,14 @@ OptionUtils *optUtils;
 //global collection of all MameOption4
 QHash<QString, MameOption*> mameOpts;
 QByteArray option_column_state;
+QString mamePath = "";
 
 QList<OptInfo *> optInfos;
 //option category map, option category as key, names as value list
 QMap<QString, QStringList> optCatMap;
 OptionDelegate optdelegate(win);
+const QString INI_EXT = ".ini";
+const QString CFG_PREFIX = ".mamepgui/";
 
 enum
 {
@@ -285,6 +288,7 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 				ctrl.fontMetrics = QApplication::fontMetrics();
 				ctrl.minimum = (int)(multiplier * min);
 				ctrl.maximum = (int)(multiplier * max);
+				ctrl.textAlignment = Qt::AlignRight;
 				ctrl.textVisible = true;
 				
 				ctrl.progress = (int)(multiplier * value);
@@ -632,7 +636,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	switch (optLevel)
 	{
 	case OPTLEVEL_GLOBAL:
-		iniFileName = "mame.ini";
+		iniFileName = mamePath + "mame.ini";
 		
 		prevVal = pMameOpt->globalvalue;
 		
@@ -651,8 +655,8 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		if (iniFileName.isNull())
 		{
 			iniFileName = gameInfo->sourcefile;
-			iniFileName.replace(".c", ".ini");
-			iniFileName = iniFileName.prepend("ini/source/");
+			iniFileName.replace(".c", INI_EXT);
+			iniFileName = mamePath + "ini/source/" + iniFileName;
 		}
 		
 		// prevent overwrite prevVal from prev case
@@ -673,7 +677,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	case OPTLEVEL_BIOS:
 		if (iniFileName.isNull())
-			iniFileName = "ini/" + gameInfo->biosof() + ".ini";
+			iniFileName = mamePath + "ini/" + gameInfo->biosof() + INI_EXT;
 		
 		if (optLevel == OPTLEVEL_BIOS)
 			prevVal = pMameOpt->biosvalue;
@@ -691,7 +695,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	case OPTLEVEL_CLONEOF:
 		if (iniFileName.isNull())
-			iniFileName = "ini/" + gameInfo->cloneof + ".ini";
+			iniFileName = mamePath + "ini/" + gameInfo->cloneof + INI_EXT;
 		
 		if (optLevel == OPTLEVEL_CLONEOF)
 			prevVal = pMameOpt->cloneofvalue;
@@ -712,9 +716,9 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			// special case for consoles
 			if (gameInfo->isExtRom)
-				iniFileName = "ini/" + gameInfo->romof + ".ini";
+				iniFileName = mamePath + "ini/" + gameInfo->romof + INI_EXT;
 			else
-				iniFileName = "ini/" + currentGame + ".ini";
+				iniFileName = mamePath + "ini/" + currentGame + INI_EXT;
 		}
 
 		if (optLevel == OPTLEVEL_CURR)
@@ -855,7 +859,7 @@ void OptionDelegate::setDatFile()
 void OptionDelegate::setExeFile()
 {
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
-	setFile(tr("Executable files (*.exe)"), resetWidget);
+	setFile(tr("Executable files (*" EXEC_EXT ")"), resetWidget);
 }
 
 void OptionDelegate::setCfgFile()
@@ -871,6 +875,7 @@ class OptionXMLHandler : public QXmlDefaultHandler
 private:
 	MameOption *pMameOpt;
 	QString currentText;
+	QString OSType;
 	bool metRootTag;
 
 public:
@@ -949,8 +954,17 @@ public:
 		}
 		else if (qName == "value")
 		{
-			if (pMameOpt != NULL)
+			OSType = attributes.value("os");
+			if (pMameOpt != NULL && (OSType.isEmpty() ||
+#ifdef Q_WS_WIN
+				OSType == "win"
+#else
+				OSType == "sdl"
+#endif
+			))
+			{
 				pMameOpt->guivalues << attributes.value("guivalue");
+			}
 		}
 
 		currentText.clear();
@@ -966,7 +980,16 @@ public:
 			if (qName == "description")
 				pMameOpt->description = currentText;
 			else if (qName == "value")
+			{
+				if (OSType.isEmpty() ||
+#ifdef Q_WS_WIN
+					OSType == "win"
+#else
+					OSType == "sdl"
+#endif
+				)
 				pMameOpt->values << currentText;
+			}
 		}
 		return true;
 	}
@@ -991,8 +1014,6 @@ MameOption::MameOption(QObject *parent)
 OptionUtils::OptionUtils(QObject *parent)
 : QObject(parent)
 {
-	// fixme create ini/source
-	QDir().mkpath("ini/source");
 }
 
 void OptionUtils::initOption()
@@ -1429,6 +1450,7 @@ void OptionUtils::loadDefault(QString text)
 		<< "03_OSD Video_06_" + QString(QT_TR_NOOP("DirectDraw-specific"))
 		<< "03_OSD Video_07_" + QString(QT_TR_NOOP("Direct3D-specific"))
 		<< "03_OSD Video_09_" + QString(QT_TR_NOOP("Windows performance"))
+		<< "03_OSD Video_10_" + QString(QT_TR_NOOP("OpenGL-specific"))
 
 		<< "04_Screen_10_" + QString(QT_TR_NOOP("per-window video"))
 		
@@ -1438,16 +1460,19 @@ void OptionUtils::loadDefault(QString text)
 		<< "06_Control_00_" + QString(QT_TR_NOOP("core input"))
 		<< "06_Control_01_" + QString(QT_TR_NOOP("core input automatic enable"))
 		<< "06_Control_02_" + QString(QT_TR_NOOP("input device"))
+		<< "06_Control_03_" + QString(QT_TR_NOOP("SDL keyboard mapping"))
+		<< "06_Control_04_" + QString(QT_TR_NOOP("SDL joystick mapping"))
 		
 		<< "07_Vector_00_" + QString(QT_TR_NOOP("core vector"))
 		
 		<< "08_Misc_00_" + QString(QT_TR_NOOP("core misc"))
 		<< "08_Misc_01_" + QString(QT_TR_NOOP("core artwork"))
 		<< "08_Misc_02_" + QString(QT_TR_NOOP("core state/playback"))
-		<< "08_Misc_03_" + QString(QT_TR_NOOP("MESS specific"))
-		<< "08_Misc_04_" + QString(QT_TR_NOOP("Windows MESS specific"))
-		<< "08_Misc_05_" + QString(QT_TR_NOOP("core debugging"))
-		<< "08_Misc_06_" + QString(QT_TR_NOOP("Windows debugging"))
+		<< "08_Misc_03_" + QString(QT_TR_NOOP("SDL lowlevel driver"))
+		<< "08_Misc_04_" + QString(QT_TR_NOOP("MESS specific"))
+		<< "08_Misc_05_" + QString(QT_TR_NOOP("Windows MESS specific"))
+		<< "08_Misc_06_" + QString(QT_TR_NOOP("core debugging"))
+		<< "08_Misc_07_" + QString(QT_TR_NOOP("Windows debugging"))
 		);
 
 	QString line, line0;
@@ -1459,16 +1484,6 @@ void OptionUtils::loadDefault(QString text)
 	do
 	{
 		line0 = line = in.readLine().trimmed();
-
-		//hack: psx plugins will not be supported
-		QString c0("pu_");
-		QString c1("g");
-		if (line.startsWith(c1 + c0))
-		{
-		//	crash the GUI
-			delete mamegame;
-			break;
-		}
 
 		//init option headers
 		if (line.startsWith("#"))
@@ -1519,6 +1534,13 @@ void OptionUtils::loadDefault(QString text)
 		}
 	}
 	while (!line.isNull());
+
+	QStringList inipaths = mameOpts["inipath"]->defvalue.split(";");
+	mamePath = utils->getPath(inipaths[0]);
+	// create ini/source
+	QDir().mkpath(mamePath + "ini/source");
+	win->log("mamePath: " + mamePath);
+	
 }
 
 //open option template file
@@ -1846,7 +1868,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	QString STR_OPTS_ = tr("Options") + " - ";
 
 	//global has been loaded before, so loadIni() is not needed?
-	optUtils->loadIni(OPTLEVEL_GLOBAL, "mame.ini");
+	optUtils->loadIni(OPTLEVEL_GLOBAL, mamePath + "mame.ini");
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
 		updateModelData(optCat, OPTLEVEL_GLOBAL);
@@ -1856,9 +1878,8 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 
 	//source
 	iniString = gameInfo->sourcefile;
-	iniString.replace(".c", ".ini");
-	iniString.prepend("ini/source/");
-	loadIni(OPTLEVEL_SRC, iniString);
+	iniString.replace(".c", INI_EXT);
+	loadIni(OPTLEVEL_SRC, mamePath + "ini/source/" + iniString);
 	if (optLevel == OPTLEVEL_SRC)
 	{
 		updateModelData(optCat, OPTLEVEL_SRC);
@@ -1873,7 +1894,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	else
 		dlgOptions->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(true);
 
-	loadIni(OPTLEVEL_BIOS, "ini/" + iniString + ".ini");
+	loadIni(OPTLEVEL_BIOS, mamePath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_BIOS)
 	{
 		updateModelData(optCat, OPTLEVEL_BIOS);
@@ -1888,7 +1909,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	else
 		dlgOptions->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(true);
 
-	optUtils->loadIni(OPTLEVEL_CLONEOF, "ini/" + iniString + ".ini");
+	optUtils->loadIni(OPTLEVEL_CLONEOF, mamePath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_CLONEOF)
 	{
 		updateModelData(optCat, OPTLEVEL_CLONEOF);
@@ -1903,7 +1924,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	else
 		iniString = currentGame;
 
-	optUtils->loadIni(OPTLEVEL_CURR, "ini/" + iniString + ".ini");
+	optUtils->loadIni(OPTLEVEL_CURR, mamePath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_CURR)
 	{
 		updateModelData(optCat, OPTLEVEL_CURR);
@@ -2028,7 +2049,12 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 //	QString tooltip = "[" + optName + "] " + pMameOpt->description;
 
 	/* fill key */
-	QStandardItem *itemKey = new QStandardItem(utils->capitalizeStr(tr(qPrintable(getLongName(optName).toLower()))));
+	QString key = utils->capitalizeStr(tr(qPrintable(getLongName(optName).toLower())));
+	//fix incorrectly lower cased
+	if (language == "en_US" && !mameOpts[optName]->guiname.isEmpty())
+		key = utils->capitalizeStr(mameOpts[optName]->guiname);
+
+	QStandardItem *itemKey = new QStandardItem(key);
 	itemKey->setData(optName, Qt::UserRole + USERROLE_KEY);
 
 	//hack: a blank icon for padding

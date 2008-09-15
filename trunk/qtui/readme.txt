@@ -1,4 +1,20 @@
-﻿--- MAME Plus GUI 0.98b 更新 ---
+﻿[setup environment]
+get Qt 4.4.0 or later from http://trolltech.com/downloads/opensource
+extract Qt source package and "configure" "make" "make install"
+precompiled deb/ubuntu package available at http://packages.debian.org/experimental/libqt4-dev or the following source: "deb http://ftp.debian.org/debian/ experimental"
+
+[compile mamepgui]
+sudo lrelease mamepgui.pro
+sudo qmake
+sudo make
+
+[config]
+default mamepgui config file is "~/.mamepgui directory"
+default sdlmame config file path is sdlmame's default inipath, i.e. "/etc/sdlmame". however, there is a bug in ubuntu sdlmame package, you should set the inipath to "/etc/sdlmame;/etc/sdlmame/ini/" to make individual game settings work properly.
+
+
+
+--- MAME Plus GUI 0.98b 更新 ---
 * 更新了关于对话框的图片
 * 游戏列表缓存移出ini，加速程序退出
 * mame更新时保留上次的校验结果

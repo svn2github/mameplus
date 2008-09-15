@@ -1,96 +1,81 @@
 ﻿//Done
-This is the second stand alone release of the new GUI for official MAME and MAMEPlus, with many improvements based on user feedback. Enjoy!
+/linux build
 
-/ use progress bar and slider control for int/float options
-/ added file/folder chooser dialog (snap)
-/ added some context menu
-/ fixed auditing for "nodump" roms
-/ added language selection
-/ game counter in statusbar
-/ added option to enforce aspect ratio of snapshot/title
-
-/ bug: on startup, must change game to show snapshot
-/ bug: crash on empty list context menu
-/ bug: float option without min/max
-/ bug: reset button in Global doesnt take? if px aspect set in source/ ini
-/ bug: update options from right to left
-/ bug: saving gui.ini 
-/ bug: 原版刷新时左边是灰色不可选 但是我按了几下工具按钮时 左边居然可选 而且还可以双击执行游戏
-/ translation tree
-/ improved folder switching
-
-
--添加路径设置对话框
--添加一些菜单
--支持界面语言切换
--优化整数/浮点型选项的表现形式
--修复状态栏的游戏数量
--添加强制调整快照/标题图片的比例
--加速游戏数在1万行以上的目录切换
--修复校验"nodump"游戏的bug
+//Linux
+bug: column sorting
+sdl opengl options
+remove .exe filter
 
 //Options
-* check mame.ini name, mamepp?
-* replace editor bg. with sys pal, dir editor bg.
-2 bios support: select bios opt, ctrlr opt
+2 history, ... paths
+2 bios support: select bios opt, ctrlr opt, effect opt
 1 add GUI Options
-* add description on top of panel
+* general info page
 * SDL integration for monitor/joystick
 * driver config editor
 * -driver_config, mamebin changes should cause gamelist->init()
-* unify method of getting def values
-* multi ini path
 * ips doesnt inherit
-* unify method to get inherited default value
 * option help
-* disable filters for 3D hardware
+* color settings editor
 * vector.ini
+* unify method to get inherited default value
 
 //GameList
+2 export lst gamelist
+1 7z binary path, doesnt stall when 7z is not available
+2 missing parent doesn't show, filter search clone games
+* large icon view
+2 rewrite icon loading for individual icon loading. console folder icon
+* coin/time counter column
+* s11n of detailed console extrom is not needed
+* sort by reading
+* customizable GUI text font / color
+1 play inp/rec/mng/wav...
+* display 2 lines of game desc local/english
 * disable ctrls on xml loading
-* snap with or without stretching, horz/vert xml loading
-* all games ->
-* filter search clone games
 ? context menus: for listview mode
-* bug: crash on no .exe
 * restore item icon
-? bug: crash on inherit console that doesnot exist. new=>old mame
-* bug: 使用bkground背景图时，横幅标题栏全黑
-* bug: crash after refresh immediately click folder
-
-1 auto audit when available = 0?
-1 only non-zero console folders
-1 random bg
-1 customizable text color
-1 bios icons in folder list
-1 optimize sorting
-1 different icon, text colors for working/dumping status
-1 onclick to select ss tab
-* status bar alpha
-* search doesnt work when parent is missing
 * FBA FBAS和PPK上右键选MAWS那项就可以进这个网了
-* category ini support
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的
 * context menus: snapshot, folder
-* mmo reading, lst translation +0.1
 * add verify IPS on RunMAME, remove it if N/A
 * in-place zooming for icons
-* gamename0000 snap
 * replace progressbar with xx%
 * add/remove items from game list model
-* optimize: reduce restore sele //win->log("restore callback: " + gameName);
 * ROM capa column
-* other filters
-* optimize: skip or delay invisible widget loading
 * unify multiple snapshot routines
 
+//Folder
+1 favorite
+1 other filters
+* category ini support
+* arc icos from old caname
+* bios icons in folder list
+* only non-empty console/bios folders
+
+//Snap
+2 gamename0000 snap
+2 external default.png
+2 command.dat parsing with image +0.1 (you can use command.dat with official MAME!)
+2 onclick to select ss tab
+* optimize: skip or delay invisible widget loading
+* snap with or without stretching, horz/vert xml loading
+* avi/mng playback
+* mameinfo of driver
+* M1 integration?
+
 //Audit
+2 we can't assume nodump is not passed
+2 check chd exist, check chd auditing (use mame core?)
+2 right click auditing, write a process handler, only catch output channel
+* auto audit when available = 0?
 * non compressed roms
 * return update thread immediately if some folders doesnt even exist
 
 //Misc
-1 ips +0.2
-* general info page
+2 generic proc output
+1 ips +0.1
+* ips v4
 * fullscreen switch
 * move datafile.c statistics to GUI
 
@@ -106,31 +91,43 @@ This is the second stand alone release of the new GUI for official MAME and MAME
   display region/hack info of console rom
 
 //Extra
-1 Linux distro
-* load .dat path from .ini
-1 command.dat parsing with image +0.1
-* UI style: compact, full, MAMEUI classic
 * export roms to folders
 * delete roms,cfg,nvram...
 * delete snapshot
-* avi/mng playback
 * gamelist editor
 * selectable l&f
 * hide to systray when lauching mame
 * controller setting
 * export fixdat, selected fixdat only
+* mess devices
 * autoupdater
 
 ----------------------------------------
 
 [sanity check]
 * check new/delete operator
+* disconn / conn pairs
 * ensure ->load() functions only called once, no multiple connect()
 
 [qt compile config]
-configure -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde
+configure -release -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit
 
-[test]
+ubuntu 8.04
+sudo apt-get install libx11-dev
+sudo apt-get install libxext-dev
+
+deb http://ftp.debian.org/debian/ experimental main contrib non-free
+
+sudo mount.vboxsf qtui /media/qtui
+sudo mount.vboxsf mame /media/mame
+
+sudo cp -f /media/qtui/mamepguix /usr/games
+sudo chmod +x /usr/games/mamepguix
+
+export PATH=$PATH:~/qt/bin
+
+[mamep core test]
 ips does not inherit
 DRC core
 // mamep: dont save settings during playback
@@ -139,9 +136,6 @@ load nvram from playback dir
 neogeo playback rtc
 
 [mamep core bug]
-cfg volume_multiplier always presents
-scaler menu crash
-sort input ports
 mamep snaps
 hazemd icons
 

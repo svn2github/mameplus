@@ -165,7 +165,6 @@ void RomAuditor::run()
 					}
 
 					//failed audit
-//					emit logUpdated(LOG_QMC2, gamename + "/" + romInfo->name + " failed");
 					gameInfo->available = 0;
 					break;
 				}

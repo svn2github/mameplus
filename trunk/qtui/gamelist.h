@@ -121,7 +121,7 @@ public:
 	TreeItem *rootItem;
 
 private:
-	TreeItem * TreeModel::buildItem(TreeItem *, QString, bool);
+	TreeItem * buildItem(TreeItem *, QString, bool);
 };
 
 class GamelistDelegate : public QItemDelegate
@@ -204,6 +204,7 @@ private:
 	void initMenus();
 	void restoreFolderSelection();
 	void restoreGameSelection();
+	void loadMMO(int);
 };
 
 class RomInfo : public QObject
@@ -239,13 +240,16 @@ public:
 class GameInfo : public QObject
 {
 public:
-	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDescription, reading;
+	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDesc, lcMftr, reading;
+	quint8 status, emulation, color, sound, graphic, cocktail, protection, savestate;
+	quint32 palettesize;
+
 	bool isBios;
 	bool isExtRom;
 	QHash<quint32, RomInfo *> crcRomInfoMap;
 	QHash<QString, BiosInfo *> nameBiosInfoMap;
 	QHash<QString, DeviceInfo *> nameDeviceInfoMap;
-	int available;
+	qint8 available;
 	QByteArray icondata;
 	TreeItem *pModItem;
 	QSet<QString> clones;

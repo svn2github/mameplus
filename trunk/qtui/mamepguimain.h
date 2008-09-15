@@ -1,5 +1,5 @@
-#ifndef _QMC2_MAIN_H_
-#define _QMC2_MAIN_H_
+#ifndef _MAMEPGUIMAIN_H_
+#define _MAMEPGUIMAIN_H_
 
 #include "quazip.h"
 #include "quazipfile.h"
@@ -8,8 +8,12 @@
 #include <QtGui>
 #include <QtXml>
 
+//static qt works with windows version
+#ifdef Q_WS_WIN
 Q_IMPORT_PLUGIN(qico)
+Q_IMPORT_PLUGIN(qjpeg)
 //Q_IMPORT_PLUGIN(qmng)
+#endif
 
 #include "ui_mamepguimain.h"
 
@@ -62,7 +66,10 @@ public:
 	QListView *lvGameList;
 	
 	QLineEdit *lineEditSearch;
-	QLabel *labelProgress, *labelGameCount;
+	QLabel *labelProgress, *labelGameCount, 
+	*labelStatus, *labelEmulation, *labelColor, *labelSound, 
+	*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
+	QWidget *wStatus;
 	QProgressBar *progressBarGamelist;
 	
 	Screenshot *ssSnap;
@@ -87,7 +94,11 @@ public slots:
 	void on_actionChinese_PRC_activated();
 	void on_actionChinese_Taiwan_activated();
 	void on_actionJapanese_activated();
+	void on_actionLocalGameList_activated();
 	void on_actionEnforceAspect_activated();
+	void on_actionReadme_activated();
+	void on_actionFAQ_activated();
+	void on_actionBoard_activated();
 	void on_actionAbout_activated();
 
 	void on_actionPlay_activated();
@@ -107,12 +118,14 @@ public slots:
     void log(QString, char logOrigin = 1);
 	void poplog(QString);
 	void logStatus(QString);
+	void logStatus(GameInfo *);
 	void init();
 	void initSettings();
 	void loadLayout();
 	void loadSettings();
 	void saveSettings();
 	void setDockOptions();
+	void setBgPixmap(QString = NULL);
 	
 protected:
     void closeEvent(QCloseEvent *event);
@@ -123,12 +136,19 @@ private:
 	Screenshot * initSnap(QString);
 	void showOptionsDialog(int, int = -1);
 	void showRestartDialog();
+	void setTransparentBg(QWidget *);
 };
 
-#define LOG_QMC2	1
 #define LOG_MAME	2
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 7
+#define S11N_VER 8
+
+#ifdef Q_WS_WIN
+#define EXEC_EXT ".exe"
+#else
+#define EXEC_EXT ""
+#endif
+
 
 // external global variables
 extern MainWindow *win;
@@ -138,13 +158,17 @@ extern Dirs *dlgDirs;
 
 extern QList<QListWidget *> optCtrls;
 
+extern const QString CFG_PREFIX;
 extern QHash<QString, MameOption*> mameOpts;
 extern QSettings guiSettings, defSettings;
 extern QByteArray option_column_state;
 extern QString mame_binary;
 extern QString list_mode;
 extern QString language;
+extern QString background_file;
 extern bool enforce_aspect;
+extern bool local_game_list;
+extern bool isDarkBg;
 
 extern QByteArray option_geometry;
 

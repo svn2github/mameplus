@@ -10,20 +10,12 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>MAME Plus! GUI</string>
+   <string>MAMEPGUI</string>
   </property>
   <property name="dockNestingEnabled" >
    <bool>true</bool>
   </property>
   <widget class="QWidget" name="centralwidget" >
-   <property name="geometry" >
-    <rect>
-     <x>260</x>
-     <y>49</y>
-     <width>104</width>
-     <height>330</height>
-    </rect>
-   </property>
    <layout class="QGridLayout" >
     <property name="margin" >
      <number>0</number>
@@ -43,7 +35,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>23</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -65,6 +57,21 @@
     <property name="title" >
      <string>View</string>
     </property>
+    <widget class="QMenu" name="menuCustomizeFields" >
+     <property name="title" >
+      <string>Customize Fields</string>
+     </property>
+     <addaction name="actionColDescription" />
+     <addaction name="actionColName" />
+     <addaction name="actionColROMs" />
+     <addaction name="actionColManufacturer" />
+     <addaction name="actionColDriver" />
+     <addaction name="actionColYear" />
+     <addaction name="actionColCloneOf" />
+     <addaction name="separator" />
+     <addaction name="actionColSortAscending" />
+     <addaction name="actionColSortDescending" />
+    </widget>
     <addaction name="actionPicture_Area" />
     <addaction name="actionVerticalTabs" />
     <addaction name="actionEnforceAspect" />
@@ -72,6 +79,8 @@
     <addaction name="actionLargeIcons" />
     <addaction name="actionDetails" />
     <addaction name="actionGrouped" />
+    <addaction name="menuCustomizeFields" />
+    <addaction name="actionLocalGameList" />
     <addaction name="separator" />
     <addaction name="actionRefresh" />
    </widget>
@@ -88,15 +97,27 @@
      <addaction name="actionChinese_Taiwan" />
      <addaction name="actionJapanese" />
     </widget>
+    <widget class="QMenu" name="menuBackground" >
+     <property name="title" >
+      <string>Background Images</string>
+     </property>
+     <addaction name="actionBgStretch" />
+     <addaction name="actionBgTile" />
+     <addaction name="separator" />
+    </widget>
     <addaction name="actionDirectories" />
     <addaction name="actionDefaultOptions" />
     <addaction name="separator" />
+    <addaction name="menuBackground" />
     <addaction name="menuLanguage" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
      <string>Help</string>
     </property>
+    <addaction name="actionReadme" />
+    <addaction name="actionFAQ" />
+    <addaction name="actionBoard" />
     <addaction name="actionAbout" />
    </widget>
    <addaction name="menuFile" />
@@ -104,25 +125,8 @@
    <addaction name="menuOptions" />
    <addaction name="menuHelp" />
   </widget>
-  <widget class="QStatusBar" name="statusbar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>379</y>
-     <width>624</width>
-     <height>21</height>
-    </rect>
-   </property>
-  </widget>
+  <widget class="QStatusBar" name="statusbar" />
   <widget class="QToolBar" name="toolBar" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>23</y>
-     <width>162</width>
-     <height>26</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Toolbar</string>
    </property>
@@ -151,14 +155,6 @@
    <addaction name="actionAbout" />
   </widget>
   <widget class="QToolBar" name="toolBarSearch" >
-   <property name="geometry" >
-    <rect>
-     <x>162</x>
-     <y>23</y>
-     <width>462</width>
-     <height>26</height>
-    </rect>
-   </property>
    <property name="windowTitle" >
     <string>Search</string>
    </property>
@@ -173,14 +169,6 @@
    </attribute>
   </widget>
   <widget class="QDockWidget" name="dockWidget_2" >
-   <property name="geometry" >
-    <rect>
-     <x>368</x>
-     <y>49</y>
-     <width>256</width>
-     <height>330</height>
-    </rect>
-   </property>
    <property name="features" >
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -191,14 +179,6 @@
     <number>2</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_8" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>256</width>
-      <height>308</height>
-     </rect>
-    </property>
     <layout class="QGridLayout" >
      <property name="margin" >
       <number>0</number>
@@ -210,14 +190,6 @@
    </widget>
   </widget>
   <widget class="QDockWidget" name="dockWidget_7" >
-   <property name="geometry" >
-    <rect>
-     <x>0</x>
-     <y>49</y>
-     <width>256</width>
-     <height>330</height>
-    </rect>
-   </property>
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Ignored" >
      <horstretch>0</horstretch>
@@ -234,14 +206,6 @@
     <number>1</number>
    </attribute>
    <widget class="QWidget" name="dockWidgetContents_14" >
-    <property name="geometry" >
-     <rect>
-      <x>0</x>
-      <y>22</y>
-      <width>256</width>
-      <height>308</height>
-     </rect>
-    </property>
     <layout class="QGridLayout" >
      <property name="margin" >
       <number>0</number>
@@ -540,6 +504,45 @@
    </property>
    <property name="text" >
     <string>Enforce Aspect Ratio</string>
+   </property>
+  </action>
+  <action name="actionLocalGameList" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Local Language Game List</string>
+   </property>
+  </action>
+  <action name="actionFAQ" >
+   <property name="text" >
+    <string>FAQ</string>
+   </property>
+  </action>
+  <action name="actionBoard" >
+   <property name="text" >
+    <string>Discussion Board</string>
+   </property>
+  </action>
+  <action name="actionReadme" >
+   <property name="text" >
+    <string>Readme</string>
+   </property>
+  </action>
+  <action name="actionBgStretch" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Stretch</string>
+   </property>
+  </action>
+  <action name="actionBgTile" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Tile</string>
    </property>
   </action>
  </widget>

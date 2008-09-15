@@ -9,7 +9,7 @@ Utils::Utils(QObject *parent)
 	icoFile.open(QIODevice::ReadOnly);
 	deficondata = icoFile.readAll();
 
-	QFile snapFile(":/res/mamegui/about.png");
+	QFile snapFile(":/res/mamegui/mame.png");
 	snapFile.open(QIODevice::ReadOnly);
 	defsnapdata = snapFile.readAll();
 	
@@ -20,8 +20,7 @@ QString Utils::capitalizeStr(const QString & str)
 {
 	QStringList strlist = str.split("_");
 	// capitalize first char
-	for (int i=0; i < strlist.size(); i++)
-		strlist[i][0] = strlist[i][0].toUpper();
+	strlist[0][0] = strlist[0][0].toUpper();
 
 	return strlist.join(" ");
 }
@@ -91,7 +90,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName)
 		QTextStream in(&datFile);
 		in.setCodec("UTF-8");
 
-		bool recData = false;
+		bool isFound, recData = false;
 		QString line;
 
 		do
@@ -103,21 +102,40 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName)
 				{
 					if (line.startsWith("$info="))
 					{
-						if (line.startsWith("$info=" + gameName))
-							recData = true;
-						else
+						isFound = false;
+						line.remove(0, 6);	//remove $info=
+						QStringList games = line.split(',');
+
+						foreach (QString game, games)
 						{
-							if (recData)
+							//found the entry, start recording
+							if (game == gameName)
+							{
+								recData = true;
+								isFound = true;
 								break;
-							
-							recData = false;
+							}
 						}
+
+						// reach another entry, stop recording
+						if (!isFound && recData)
+						{
+							recData = false;
+							//finished
+							break;
+						}
+					}
+					else if (recData && line.startsWith("$<a href="))
+					{
+						line.remove(0, 1);	//remove $info=
+						buf += line;
+						buf += "<br><br>";
 					}
 				}
 				else if (recData)
 				{
 					buf += line;
-					buf += "\n";
+					buf += "<br>";
 				}
 			}
 		}
@@ -132,23 +150,6 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName)
 	}
 	
 	return buf.trimmed();
-}
-
-void Utils::tranaparentBg(QWidget * w)
-{
-	QPalette palette;
-	QBrush brush(QColor(255, 255, 255, 140));
-	brush.setStyle(Qt::SolidPattern);
-	palette.setBrush(QPalette::Active, QPalette::Base, brush);
-	palette.setBrush(QPalette::Inactive, QPalette::Base, brush);
-	palette.setBrush(QPalette::Disabled, QPalette::Base, brush);
-/*	QBrush brushText(QColor(255, 255, 255, 255));
-	brushText.setStyle(Qt::SolidPattern);
-	palette.setBrush(QPalette::Active, QPalette::Text, brushText);
-	palette.setBrush(QPalette::Inactive, QPalette::Text, brushText);
-	palette.setBrush(QPalette::Disabled, QPalette::Text, brushText);
-*/
-	w->setPalette(palette);
 }
 
 QString Utils::getMameVersion()
@@ -221,6 +222,45 @@ bool Utils::isConsoleFolder()
 
 	return false;
 }
+
+quint8 Utils::getStatus(QString status)
+{
+	if(status == "good")
+		return 1;
+	else if(status == "imperfect")
+		return 2;
+	else if(status == "preliminary")
+		return 0;
+	else if(status == "supported")
+		return 1;
+	else if(status == "unsupported")
+		return 0;
+	else
+		return 64;	//error
+}
+
+QString Utils::getStatusString(quint8 status, bool isSaveState)
+{
+	if(!isSaveState)
+	{
+		if(status == 1)
+			return QT_TR_NOOP("good");
+		else if(status == 2)
+			return QT_TR_NOOP("imperfect");
+		else if(status == 0)
+			return QT_TR_NOOP("preliminary");
+	}
+	else
+	{
+		if(status == 1)
+			return QT_TR_NOOP("supported");
+		else if(status == 0)
+			return QT_TR_NOOP("unsupported");
+	}
+
+	return "unknown";	//error
+}
+
 
 
 MyQueue::MyQueue(QObject *parent)
