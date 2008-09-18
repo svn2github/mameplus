@@ -1409,7 +1409,7 @@ int parse_ini_file(core_options *options, const char *name)
 		return FALSE;
 
 	/* parse the file and close it */
-	mame_printf_verbose("Parsing %s.ini\n", name);
+	mame_printf_verbose(_("Parsing %s.ini\n"), name);
 	options_parse_ini_file(options, mame_core_file(file), OPTION_PRIORITY_INI);
 	mame_fclose(file);
 	setup_language(options);

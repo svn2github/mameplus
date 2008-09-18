@@ -2456,6 +2456,7 @@ V-V                           TP-027
 	DRIVER( 3wonders )	/* 20/05/1991 (c) 1991 (World) */
 	DRIVER( 3wonderu )	/* 20/05/1991 (c) 1991 (US)    */
 	DRIVER( wonder3 )	/* 20/05/1991 (c) 1991 (Japan) */
+	DRIVER( 3wonderh )	/* hack? */
 	DRIVER( kod )		/* 11/07/1991 (c) 1991 (World) */
 	DRIVER( kodu )		/* 10/09/1991 (c) 1991 (US)    */
 	DRIVER( kodj )		/* 05/08/1991 (c) 1991 (Japan) */
@@ -2698,7 +2699,8 @@ V-V                           TP-027
 	DRIVER( vhunt2r1 )	/* 13/09/1997 (c) 1997 (Japan) */
 	DRIVER( vhunt2 )	/* 29/09/1997 (c) 1997 (Japan) */
 	DRIVER( vsav2 )		/* 13/09/1997 (c) 1997 (Japan) */
-	DRIVER( mvsc )		/* 12/01/1998 (c) 1998 (Euro) */
+	DRIVER( mvsc )		/* 23/01/1998 (c) 1998 (Euro) */
+	DRIVER( mvscr1 )	/* 12/01/1998 (c) 1998 (Euro) */
 	DRIVER( mvscu )		/* 23/01/1998 (c) 1998 (US) */
 	DRIVER( mvscj )		/* 23/01/1998 (c) 1998 (Japan) */
 	DRIVER( mvscjr1 )	/* 12/01/1998 (c) 1998 (Japan) */
@@ -5163,6 +5165,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( agentx1 )	/* 136023           (c) 1983 */
 	DRIVER( cloud9 )	/* (proto)          (c) 1983 */
 	DRIVER( firebeas )	/* (proto)          (c) 1983 */
+	DRIVER( firefox )	/* 136026           (c) 1984 */
+	DRIVER( firefoxa )	/* 136026           (c) 1984 */
 	DRIVER( jedi )		/* 136030           (c) 1984 */
 
 	/* Atari System 1 games */
@@ -6617,6 +6621,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( s1945jn )	/* (c) 1995 */
 	DRIVER( s1945k )	/* (c) 1995 */
 	DRIVER( tengai )	/* (c) 1996 */
+	DRIVER( tengaij )	/* (c) 1996 */
 	DRIVER( s1945ii )	/* (c) 1997 */
 	DRIVER( soldivid )	/* (c) 1997 */
 	DRIVER( sbomberb )	/* (c) 1998 */
@@ -7070,6 +7075,7 @@ Other Sun games
 	DRIVER( powerbal )	/* (c) 1994 */
 	DRIVER( powerbls )	/* (c) 1994 */
 	DRIVER( magicstk )	/* (c) 1995 */
+	DRIVER( hotminda )	/* (c) 1995 */
 	DRIVER( bigtwin )	/* (c) 1995 */
 	DRIVER( wbeachvl )	/* (c) 1995 */
 	DRIVER( wbeachv2 )	/* (c) 1995 */
@@ -7661,6 +7667,9 @@ Other Sun games
 	DRIVER( skattva )	/* (c) 1995 */
 	DRIVER( fashiong )	/* (c) 1997 */
 
+	/* Other games on adp hardware */
+	DRIVER( funlddlx )	/* (c) 1999 */
+
 	/* JPM Give us a Break hardware */
 	DRIVER( guab )		/* (c) 1986 */
 	DRIVER( guab3 )		/* (c) 1986 */
@@ -8016,6 +8025,7 @@ Other Sun games
 	DRIVER( pool10 )	/* (c) 1996 C.M.C. */
 	DRIVER( pool10b )	/* (c) 1996 C.M.C. */
 	DRIVER( pool10c )	/* (c) 1996 C.M.C. */
+	DRIVER( pool10d )	/* (c) 1997 C.M.C. */
 	DRIVER( tortufam )	/* (c) 1997 C.M.C. */
 	DRIVER( potgame )	/* (c) 1996 C.M.C. */
 	DRIVER( royalcrd )	/* (c) 1991 TAB-Austria */
@@ -8083,7 +8093,7 @@ Other Sun games
 	DRIVER( suprpool )	/* (c) 1997 ABM Games */
 	DRIVER( hotslot )	/* (c) 1996 ABM Electronics */
 	DRIVER( mcolors )	/* 1999 unknown */
-	DRIVER( sgsafari )	/* 1996 New Impeuropex Corp. */
+	DRIVER( sgsafari )	/* (c) 1996 New Impeuropex Corp. */
 	DRIVER( galaxi )	/* (c) 2000 BRL S.R.L. Bologna */
 	DRIVER( magjoker )	/* (c) 2000 BRL S.R.L. Bologna */
 	DRIVER( dwarfd )	/* (c) 198? Electro-Sports */
