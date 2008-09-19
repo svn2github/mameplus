@@ -633,17 +633,6 @@ static int open_rom_file(running_machine *machine, rom_load_data *romdata, const
 			else
 				filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &romdata->file);
 			astring_free(fname);
-		}
-
-	/* if the region is load by name, load the ROM from there */
-	if (romdata->file == NULL && regiontag != NULL)
-			{
-		astring *fname = astring_assemble_3(astring_alloc(), regiontag, PATH_SEPARATOR, ROM_GETNAME(romp));
-		if (has_crc)
-				filerr = mame_fopen_crc(SEARCHPATH_ROM, astring_c(fname), crc, OPEN_FLAG_READ, &romdata->file);
-			else
-				filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &romdata->file);
-			astring_free(fname);
 
 #ifdef USE_IPS
 			romdata->patch = assign_ips_patch(romp);
@@ -651,6 +640,17 @@ static int open_rom_file(running_machine *machine, rom_load_data *romdata, const
 				LOG(("ROM %s: has ips\n", ROM_GETNAME(romp)));
 #endif /* USE_IPS */
 		}
+
+	/* if the region is load by name, load the ROM from there */
+	if (romdata->file == NULL && regiontag != NULL)
+	{
+		astring *fname = astring_assemble_3(astring_alloc(), regiontag, PATH_SEPARATOR, ROM_GETNAME(romp));
+		if (has_crc)
+			filerr = mame_fopen_crc(SEARCHPATH_ROM, astring_c(fname), crc, OPEN_FLAG_READ, &romdata->file);
+		else
+			filerr = mame_fopen(SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &romdata->file);
+		astring_free(fname);
+	}
 
 	/* return the result */
 	return (filerr == FILERR_NONE);
