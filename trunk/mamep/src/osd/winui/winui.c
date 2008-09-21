@@ -2345,7 +2345,8 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	OptionsInit();
 	dprintf("options loaded");
 
-	winui_datafile_init(get_core_options());
+	//mamep: in datafile.c
+	winui_datafile_init(MameUIGlobal());
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 	// Display splash screen window
@@ -2690,6 +2691,7 @@ static void Win32UI_exit()
 {
 	DragAcceptFiles(hMain, FALSE);
 
+	//mamep: in datafile.c
 	winui_datafile_exit();
 
 	if (g_bDoBroadcast == TRUE)

@@ -52,10 +52,10 @@ LPCWSTR GetGameHistory(int driver_index)
 	historyBuf[0] = '\0';
 
 	set_core_language_directory(GetLanguageDir());
-	SetHistoryFileName(GetHistoryFileName());
-	SetMAMEInfoFileName(GetMAMEInfoFileName());
+	GetHistoryFileName();
+	GetMAMEInfoFileName();
 #ifdef STORY_DATAFILE
-	SetStoryFileName(GetStoryFileName());
+	GetStoryFileName();
 #endif /* STORY_DATAFILE */
 
 	*dataBuf = 0;
@@ -103,7 +103,7 @@ LPCWSTR GetGameStory(int driver_index)
 	historyBuf[0] = '\0';
 
 	set_core_language_directory(GetLanguageDir());
-	SetStoryFileName(GetStoryFileName());
+	GetStoryFileName();
 
 	*dataBuf = 0;
 	if (load_driver_story(drivers[driver_index], dataBuf, ARRAY_LENGTH(dataBuf)) == 0)
