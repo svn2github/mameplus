@@ -9,11 +9,9 @@
 #include <QtXml>
 
 //static qt works with windows version
-#ifdef Q_WS_WIN
 Q_IMPORT_PLUGIN(qico)
 Q_IMPORT_PLUGIN(qjpeg)
 //Q_IMPORT_PLUGIN(qmng)
-#endif
 
 #include "ui_mamepguimain.h"
 
@@ -23,6 +21,23 @@ Q_IMPORT_PLUGIN(qjpeg)
 #include "dialogs.h"
 #include "procmgr.h"
 #include "utils.h"
+
+enum
+{
+	DOCK_SNAP,
+	DOCK_FLYER,
+	DOCK_CABINET,
+	DOCK_MARQUEE,
+	DOCK_TITLE,
+	DOCK_CPANEL,
+	DOCK_PCB,
+	
+	DOCK_HISTORY,
+	DOCK_MAMEINFO,
+	DOCK_STORY,
+	DOCK_LAST
+};
+
 
 class Screenshot : public QDockWidget
 {
@@ -35,23 +50,20 @@ public:
 
 protected:
     void resizeEvent(QResizeEvent *);
-	void mousePressEvent(QMouseEvent *);
 
-/*
+
 private slots:
-    void newScreenshot();
-    void saveScreenshot();
-    void shootScreen();
-    void updateCheckBox();
-*/
+	void rotateImage();
+
 private:
     void updateScreenshotLabel();
 
-	QLabel *screenshotLabel;
+	QPushButton *screenshotLabel;
     QPixmap originalPixmap;
 	QGridLayout *mainLayout;
 	QWidget *dockWidgetContents;
 	bool forceAspect;
+
 };
 
 class MainWindow : public QMainWindow, public Ui::MainWindow
@@ -94,6 +106,7 @@ public slots:
 	void on_actionChinese_PRC_activated();
 	void on_actionChinese_Taiwan_activated();
 	void on_actionJapanese_activated();
+	void on_actionBrazilian_activated();
 	void on_actionLocalGameList_activated();
 	void on_actionEnforceAspect_activated();
 	void on_actionReadme_activated();
@@ -125,10 +138,13 @@ public slots:
 	void loadSettings();
 	void saveSettings();
 	void setDockOptions();
+	void setGuiStyle(QString = NULL);
+	void setBgTile();
 	void setBgPixmap(QString = NULL);
 	
 protected:
-    void closeEvent(QCloseEvent *event);
+	void resizeEvent(QResizeEvent *);
+    void closeEvent(QCloseEvent *);
 
 private:
 	void toggleGameListColumn(int);
@@ -165,7 +181,6 @@ extern QByteArray option_column_state;
 extern QString mame_binary;
 extern QString list_mode;
 extern QString language;
-extern QString background_file;
 extern bool enforce_aspect;
 extern bool local_game_list;
 extern bool isDarkBg;

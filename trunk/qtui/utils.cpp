@@ -27,6 +27,7 @@ QString Utils::capitalizeStr(const QString & str)
 
 QString Utils::getPath(QString dirpath)
 {
+	dirpath.replace("$HOME", QDir::homePath());
 	QDir dir(dirpath);
 	return dir.path() + "/";	//clean it up
 }
@@ -127,7 +128,8 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName)
 					}
 					else if (recData && line.startsWith("$<a href="))
 					{
-						line.remove(0, 1);	//remove $info=
+						line.remove(0, 1);	//remove $
+						line.replace("<a href=", "<a style=\"color:#006d9f\" href=");
 						buf += line;
 						buf += "<br><br>";
 					}

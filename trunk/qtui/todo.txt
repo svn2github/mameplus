@@ -1,13 +1,19 @@
 ﻿//Done
 /linux build
+/parse $HOME variable for SDLMAME
+/ onclick to select ss tab
+/ GUI theme
+/ history, ... paths
+/useless language settings ini
 
 //Linux
 bug: column sorting
+bug: overflow after audit?
+autocheck etc/sdl privillege
 sdl opengl options
-remove .exe filter
 
 //Options
-2 history, ... paths
+官方mame支持ips
 2 bios support: select bios opt, ctrlr opt, effect opt
 1 add GUI Options
 * general info page
@@ -21,7 +27,7 @@ remove .exe filter
 * unify method to get inherited default value
 
 //GameList
-2 export lst gamelist
+* export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
 2 missing parent doesn't show, filter search clone games
 * large icon view
@@ -54,10 +60,9 @@ remove .exe filter
 * only non-empty console/bios folders
 
 //Snap
-2 gamename0000 snap
-2 external default.png
+1 gamename0000 snap
+* external default.png
 2 command.dat parsing with image +0.1 (you can use command.dat with official MAME!)
-2 onclick to select ss tab
 * optimize: skip or delay invisible widget loading
 * snap with or without stretching, horz/vert xml loading
 * avi/mng playback
@@ -110,22 +115,28 @@ remove .exe filter
 * ensure ->load() functions only called once, no multiple connect()
 
 [qt compile config]
-configure -release -static -no-exceptions -no-rtti -no-stl -no-style-plastique -no-style-cleanlooks -no-style-motif -no-style-cde
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit
-
 ubuntu 8.04
 sudo apt-get install libx11-dev
 sudo apt-get install libxext-dev
+
+windows:
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-rtti -no-openssl -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
+linux:
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -nomake examples -nomake demos -nomake tools
 
 deb http://ftp.debian.org/debian/ experimental main contrib non-free
 
 sudo mount.vboxsf qtui /media/qtui
 sudo mount.vboxsf mame /media/mame
+sudo mount.vboxsf linux /media/linux
 
-sudo cp -f /media/qtui/mamepguix /usr/games
-sudo chmod +x /usr/games/mamepguix
+sudo cp -f /media/qtui/mamepgui /usr/games
+sudo chmod +x /usr/games/mamepgui
 
-export PATH=$PATH:~/qt/bin
+export PATH=/usr/local/Trolltech/Qt-4.5.0-snapshot-20080918/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.4.1/bin:$PATH
+
+libqt4-dev
 
 [mamep core test]
 ips does not inherit
@@ -143,3 +154,5 @@ verify spclone dips
 gba no sound
 
 add makelang text, src repo link on main page
+
+ftp://ftp.trolltech.com/qt/snapshots/qt-all-opensource-src-4.5.0-snapshot-20080918.tar.gz

@@ -11,7 +11,10 @@
 	<option name="title_directory" default="titles" type="dirs" guivisible="1" />
 	
 	<option name="mame_binary" default="mamep.exe" guiname="MAME binary" type="exefile" guivisible="1" />
-
+	<option name="history_file" default="history.dat" type="datfile" guivisible="1" />
+	<option name="story_file" default="story.dat" type="datfile" guivisible="1" />
+	<option name="mameinfo_file" default="mameinfo.dat" type="datfile" guivisible="1" />
+	
 	<option name="driver_config" type="string" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0">
 		<!--value guivalue="MAME">mame</value>
 		<value guivalue="MAME Plus!">plus</value>
@@ -43,9 +46,6 @@
 	<option name="hiscore_directory" type="dir" />
 	
 	<option name="cheat_file" type="datfile" />
-	<option name="history_file" type="datfile" />
-	<option name="story_file" type="datfile" />
-	<option name="mameinfo_file" type="datfile" />
 	<option name="command_file" type="datfile" />
 	<option name="hiscore_file" type="datfile" />
 	

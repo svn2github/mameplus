@@ -48,22 +48,6 @@ enum
 
 enum
 {
-	DOCK_SNAP,
-	DOCK_FLYER,
-	DOCK_CABINET,
-	DOCK_MARQUEE,
-	DOCK_TITLE,
-	DOCK_CPANEL,
-	DOCK_PCB,
-	
-	DOCK_HISTORY,
-	DOCK_MAMEINFO,
-	DOCK_STORY,
-	DOCK_LAST
-};
-
-enum
-{
 	COL_DESC = 0,
 	COL_NAME,
 	COL_ROM,
@@ -1016,7 +1000,6 @@ int MameGame::des11n()
 
 	// default mame.ini text
 	in >> mamegame->mameDefaultIni;
-	win->log(QString("mamegame->mameDefaultIni.count %1").arg(mamegame->mameDefaultIni.count()));
 	
 	int gamecount;
 	in >> gamecount;
@@ -1626,14 +1609,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 		// attach menus
 		initMenus();
 
-		//override font for CJK OS
-		//fixme: move to main?
-		QFont font;
-		font.setPointSize(9);
-		menu->setFont(font);
-		headerMenu->setFont(font);
-		win->tvGameList->header()->setFont(font);
-
 		win->log(QString("inited.gamecount %1").arg(mamegame->gamenameGameInfoMap.count()));
 	}
 	else
@@ -1786,9 +1761,9 @@ void Gamelist::initMenus()
 		menu->addAction(win->actionPlay);
 		menu->addAction(win->actionPlayInp);
 		menu->addSeparator();
-		menu->addAction(win->actionAudit);
-		menu->addSeparator();
-		menu->addAction(win->actionConfigIPS);
+//		menu->addAction(win->actionAudit);
+//		menu->addSeparator();
+//		menu->addAction(win->actionConfigIPS);
 		menu->addAction(win->actionSrcProperties);
 		menu->addAction(win->actionProperties);
 	}
@@ -1936,9 +1911,6 @@ void Gamelist::loadDefaultIni()
 	mamegame->mameDefaultIni = "";
 	QStringList args;
 	args << "-showconfig" << "-noreadconfig";
-	//patch inipath for mameplus
-	if (mameOpts.contains("language"))
-		args << "-inipath" << ".;ini";
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));

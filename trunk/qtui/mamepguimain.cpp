@@ -10,9 +10,13 @@ QString mame_binary;
 QString list_mode;
 QString language;
 QString background_file = NULL;
+QString gui_style = NULL;
 QActionGroup bgActions(0);
+QActionGroup styleActions(0);
 bool local_game_list;
 bool isDarkBg = false;
+
+QStringList dockCtrlNames;
 
 void MainWindow::log(QString message, char logOrigin)
 {
@@ -109,6 +113,19 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
+	dockCtrlNames = (QStringList() 
+	   << QT_TR_NOOP("Snapshot")
+	   << QT_TR_NOOP("Flyer")
+	   << QT_TR_NOOP("Cabinet")
+	   << QT_TR_NOOP("Marquee")
+	   << QT_TR_NOOP("Title")
+	   << QT_TR_NOOP("Control Panel")
+	   << QT_TR_NOOP("PCB")
+	
+	   << QT_TR_NOOP("History")
+	   << QT_TR_NOOP("MAMEInfo")
+	   << QT_TR_NOOP("Story"));
+
 	setupUi(this);
 
 	//setExclusive(true) for some actions
@@ -122,6 +139,7 @@ MainWindow::MainWindow(QWidget *parent)
 	langActions->addAction(actionChinese_PRC);
 	langActions->addAction(actionChinese_Taiwan);
 	langActions->addAction(actionJapanese);
+	langActions->addAction(actionBrazilian);
 
 	QActionGroup *bgStretchActions = new QActionGroup(this);
 	bgStretchActions->addAction(actionBgStretch);
@@ -197,40 +215,6 @@ MainWindow::MainWindow(QWidget *parent)
 	dlgAbout = new About(this);
 	dlgDirs = new Dirs(this);
 
-	//override font for CJK OS
-	QFont font;
-	font.setPointSize(9);
-	
-	setFont(font);
-	statusbar->setFont(font);
-	
-	menubar->setFont(font);
-    menuFile->setFont(font);
-    menuView->setFont(font);
-    menuOptions->setFont(font);
-    menuHelp->setFont(font);
-	menuCustomizeFields->setFont(font);
-
-	treeFolders->setFont(font);
-	lvGameList->setFont(font);
-	tvGameList->setFont(font);
-
-	dlgOptions->tabOptions->setFont(font);
-
-	dlgOptions->lvGlobalOpt->setFont(font);
-	dlgOptions->lvSourceOpt->setFont(font);
-	dlgOptions->lvBiosOpt->setFont(font);
-	dlgOptions->lvCloneofOpt->setFont(font);
-	dlgOptions->lvCurrOpt->setFont(font);
-
-	dlgOptions->treeGlobalOpt->setFont(font);
-	dlgOptions->treeSourceOpt->setFont(font);
-	dlgOptions->treeBiosOpt->setFont(font);
-	dlgOptions->treeCloneofOpt->setFont(font);
-	dlgOptions->treeCurrOpt->setFont(font);
-
-	dlgDirs->setFont(font);
-
 	QTimer::singleShot(0, this, SLOT(init()));
 }
 
@@ -295,18 +279,17 @@ void MainWindow::init()
 {
 	win->log("win->init()");
 	//fixme: should be in constructor
-	ssSnap = initSnap(QT_TR_NOOP("Snapshot"));
-	ssFlyer = initSnap(QT_TR_NOOP("Flyer"));
-	ssCabinet = initSnap(QT_TR_NOOP("Cabinet"));
-	ssMarquee = initSnap(QT_TR_NOOP("Marquee"));
-	ssTitle = initSnap(QT_TR_NOOP("Title"));
-	ssCPanel = initSnap(QT_TR_NOOP("Control Panel"));
-	ssPCB = initSnap(QT_TR_NOOP("PCB"));
+	ssSnap = initSnap(dockCtrlNames[DOCK_SNAP]);
+	ssFlyer = initSnap(dockCtrlNames[DOCK_FLYER]);
+	ssCabinet = initSnap(dockCtrlNames[DOCK_CABINET]);
+	ssMarquee = initSnap(dockCtrlNames[DOCK_MARQUEE]);
+	ssTitle = initSnap(dockCtrlNames[DOCK_TITLE]);
+	ssCPanel = initSnap(dockCtrlNames[DOCK_CPANEL]);
+	ssPCB = initSnap(dockCtrlNames[DOCK_PCB]);
 
-	initHistory(QT_TR_NOOP("History"));
-	initHistory(QT_TR_NOOP("MAMEInfo"));
-	initHistory(QT_TR_NOOP("Story"));
-
+	initHistory(dockCtrlNames[DOCK_HISTORY]);
+	initHistory(dockCtrlNames[DOCK_MAMEINFO]);
+	initHistory(dockCtrlNames[DOCK_STORY]);
 //	initHistory(textBrowserFrontendLog, "GUI Log");
 
 	initSettings();
@@ -382,6 +365,24 @@ void MainWindow::init()
 	// must gamelist->init(true) before loadLayout()
 	gamelist->init(true, GAMELIST_INIT_FULL);
 
+	// must init app style before background
+	if (gui_style.isEmpty())
+		gui_style = guiSettings.value("gui_style").toString();
+
+	QStringList styles = QStyleFactory::keys();
+	foreach (QString style, styles)
+	{
+		QAction* act = win->menuGUIStyle->addAction(style);
+		act->setCheckable(true);
+		if (gui_style == style)
+			act->setChecked(true);
+		styleActions.addAction(act);
+		connect(act, SIGNAL(triggered()), this, SLOT(setGuiStyle()));
+	}
+
+	if (!gui_style.isEmpty())
+		setGuiStyle(gui_style);
+
 	// init background menu
 	QString _dirpath = utils->getPath(guiSettings.value("background_directory", "bkground").toString());
 	QDir dir(_dirpath);
@@ -407,11 +408,14 @@ void MainWindow::init()
 				act->setChecked(true);
 			bgActions.addAction(act);
 			connect(act, SIGNAL(triggered()), this, SLOT(setBgPixmap()));
-		}		
+		}
 	}
-	
+
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
+
+	connect(actionBgStretch, SIGNAL(triggered()), this, SLOT(setBgTile()));
+	connect(actionBgTile, SIGNAL(triggered()), this, SLOT(setBgTile()));
 
 	// connect misc signal and slots
 	// Actions
@@ -582,6 +586,12 @@ void MainWindow::on_actionJapanese_activated()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionBrazilian_activated()
+{
+	language = "pt_BR";
+	showRestartDialog();
+}
+
 void MainWindow::on_actionLocalGameList_activated()
 {
 	local_game_list = actionLocalGameList->isChecked();
@@ -619,8 +629,12 @@ void MainWindow::initSettings()
 		<< "icons_directory"
 		<< "background_directory"
 		<< "background_file"
+		<< "gui_style"
 		<< "background_stretch"
 		<< "mame_binary"
+		<< "history_file"
+		<< "story_file"
+		<< "mameinfo_file"
 		<< "option_geometry"
 		<< "sort_column"
 		<< "sort_reverse"
@@ -678,6 +692,8 @@ void MainWindow::loadLayout()
 		actionChinese_Taiwan->setChecked(true);
 	else if (language == "ja_JP")
 		actionJapanese->setChecked(true);
+	else if (language == "pt_BR")
+		actionBrazilian->setChecked(true);
 	else
 		actionEnglish->setChecked(true);
 
@@ -715,8 +731,12 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 	guiSettings.setValue("background_file", background_file);
+	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
 
+	guiSettings.setValue("history_file", mameOpts["history_file"]->globalvalue);
+	guiSettings.setValue("story_file", mameOpts["story_file"]->globalvalue);
+	guiSettings.setValue("mameinfo_file", mameOpts["mameinfo_file"]->globalvalue);
 	if (mameOpts["mame_binary"]->globalvalue != mameOpts["mame_binary"]->defvalue)
 		guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
 	else
@@ -800,6 +820,30 @@ void MainWindow::setTransparentBg(QWidget * w)
 	w->setPalette(palette);
 }
 
+void MainWindow::resizeEvent(QResizeEvent * /* event */)
+{
+//	setBgPixmap(background_file);
+}
+
+void MainWindow::setGuiStyle(QString style)
+{
+	if (style.isEmpty())
+		style = ((QAction *)sender())->text();
+
+	gui_style = style;
+
+	QApplication::setStyle(QStyleFactory::create(gui_style));
+
+	//have to chain setBgPixmap() otherwise bgcolor isn't set properly
+	if (!background_file.isEmpty())
+		setBgPixmap(background_file);
+}
+
+void MainWindow::setBgTile()
+{
+	setBgPixmap(background_file);
+}
+
 void MainWindow::setBgPixmap(QString fileName)
 {
 	if (fileName.isEmpty())
@@ -843,7 +887,6 @@ void MainWindow::setBgPixmap(QString fileName)
 	}
 }
 
-
 Screenshot::Screenshot(QString title, QWidget *parent)
 : QDockWidget(parent),
 forceAspect(false)
@@ -856,26 +899,20 @@ forceAspect(false)
 	mainLayout->setObjectName("mainLayout_" + title);
 	mainLayout->setContentsMargins(0, 0, 0, 0);
 
-	screenshotLabel = new QLabel(dockWidgetContents);
+	screenshotLabel = new QPushButton(dockWidgetContents);
 	screenshotLabel->setObjectName("label_" + title);
 	screenshotLabel->setCursor(QCursor(Qt::PointingHandCursor));
-    screenshotLabel->setAlignment(Qt::AlignCenter);
+	screenshotLabel->setFlat(true);
 
-//    screenshotLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 	//so that we can shrink image
 	screenshotLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
 	
-//    screenshotLabel->setMinimumSize(320, 240);
-
 	mainLayout->addWidget(screenshotLabel);
 
 	setWidget(dockWidgetContents);
 	setWindowTitle(MainWindow::tr(qPrintable(title)));
 
-//	dockWidgetContents->setLayout(mainLayout);
-
-
-//	resize(300, 200);
+	connect(screenshotLabel, SIGNAL(clicked()), this, SLOT(rotateImage()));
 }
 
 void Screenshot::resizeEvent(QResizeEvent * /* event */)
@@ -883,15 +920,7 @@ void Screenshot::resizeEvent(QResizeEvent * /* event */)
     QSize scaledSize = originalPixmap.size();
 	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
 
-	if (!screenshotLabel->pixmap() || scaledSize != screenshotLabel->pixmap()->size())
-		updateScreenshotLabel();
-}
-
-//fixme: listen on label
-void Screenshot::mousePressEvent(QMouseEvent * event)
-{
-//	if (event->button() == Qt::LeftButton)
-		win->log(objectName());
+	updateScreenshotLabel();
 }
 
 void Screenshot::setPixmap(const QByteArray &pmdata, bool forceAspect)
@@ -910,6 +939,39 @@ void Screenshot::setAspect(bool forceAspect)
 	updateScreenshotLabel();
 }
 
+void Screenshot::rotateImage()
+{
+	QString objName =((QWidget* )sender())->objectName();
+	objName.remove(0, 6);	//remove "label_"
+
+	//there's no API in Qt to access docked widget tabbar
+	QList<QTabBar *> tabs = win->findChildren<QTabBar *>();
+	foreach (QTabBar *tab, tabs)
+	{
+		bool isDock = false;
+		for (int i = 0; i < dockCtrlNames.count(); i++)
+		{
+			if (MainWindow::tr(qPrintable(dockCtrlNames[i])) == tab->tabText(0))
+			{
+				isDock = true;
+				break;
+			}
+		}
+		
+		if (isDock && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
+		{
+			int i = tab->currentIndex();
+			if (++i > tab->count() - 1)
+				i = 0;
+			tab->setCurrentIndex(i);
+			win->log(QString("tab: %1, %2")
+				.arg(tab->currentIndex())
+				.arg(tab->tabText(tab->currentIndex()))
+				);
+		}
+	}
+}
+
 void Screenshot::updateScreenshotLabel()
 {
     QSize scaledSize, origSize;
@@ -921,12 +983,12 @@ void Screenshot::updateScreenshotLabel()
 		if (scaledSize.width() < scaledSize.height())
 		{
 			//vert
-				if (scaledSize.height() < scaledSize.width() / aspect)
-					// need expand height
-					scaledSize.setHeight((int)(scaledSize.width() / aspect));
-				else
-					// need expand width
-					scaledSize.setWidth((int)(scaledSize.height() * aspect));
+			if (scaledSize.height() < scaledSize.width() / aspect)
+				// need expand height
+				scaledSize.setHeight((int)(scaledSize.width() / aspect));
+			else
+				// need expand width
+				scaledSize.setWidth((int)(scaledSize.height() * aspect));
 		}
 		else
 		{
@@ -952,7 +1014,8 @@ void Screenshot::updateScreenshotLabel()
 		scaledSize = origSize;
 	}
 
-    screenshotLabel->setPixmap(originalPixmap.scaled(scaledSize,
+	screenshotLabel->setIconSize(scaledSize);
+	screenshotLabel->setIcon(originalPixmap.scaled(scaledSize,
                                                      Qt::IgnoreAspectRatio,
                                                      Qt::SmoothTransformation));
 }
@@ -970,6 +1033,13 @@ int main(int argc, char *argv[])
 
 	myApp.installTranslator(&appTranslator);
 
+	if (language.startsWith("zh_") || language.startsWith("ja_"))
+	{
+		QFont font;
+		font.setPointSize(9);
+		myApp.setFont(font);
+	}
+	
 	procMan = new ProcessManager(0);	
 	utils = new Utils(0);
 	win = new MainWindow(0);

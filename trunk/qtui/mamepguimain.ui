@@ -35,7 +35,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -80,7 +80,6 @@
     <addaction name="actionDetails" />
     <addaction name="actionGrouped" />
     <addaction name="menuCustomizeFields" />
-    <addaction name="actionLocalGameList" />
     <addaction name="separator" />
     <addaction name="actionRefresh" />
    </widget>
@@ -92,10 +91,13 @@
      <property name="title" >
       <string>Language</string>
      </property>
+     <addaction name="actionLocalGameList" />
+     <addaction name="separator" />
      <addaction name="actionEnglish" />
      <addaction name="actionChinese_PRC" />
      <addaction name="actionChinese_Taiwan" />
      <addaction name="actionJapanese" />
+     <addaction name="actionBrazilian" />
     </widget>
     <widget class="QMenu" name="menuBackground" >
      <property name="title" >
@@ -105,9 +107,15 @@
      <addaction name="actionBgTile" />
      <addaction name="separator" />
     </widget>
+    <widget class="QMenu" name="menuGUIStyle" >
+     <property name="title" >
+      <string>GUI Style</string>
+     </property>
+    </widget>
     <addaction name="actionDirectories" />
     <addaction name="actionDefaultOptions" />
     <addaction name="separator" />
+    <addaction name="menuGUIStyle" />
     <addaction name="menuBackground" />
     <addaction name="menuLanguage" />
    </widget>
@@ -496,6 +504,14 @@
    </property>
    <property name="text" >
     <string>Japanese</string>
+   </property>
+  </action>
+  <action name="actionBrazilian" >
+   <property name="checkable" >
+    <bool>true</bool>
+   </property>
+   <property name="text" >
+    <string>Brazilian</string>
    </property>
   </action>
   <action name="actionEnforceAspect" >

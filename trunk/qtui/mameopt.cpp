@@ -11,7 +11,11 @@ QList<OptInfo *> optInfos;
 QMap<QString, QStringList> optCatMap;
 OptionDelegate optdelegate(win);
 const QString INI_EXT = ".ini";
-const QString CFG_PREFIX = ".mamepgui/";
+const QString CFG_PREFIX = 
+#ifndef Q_WS_WIN
+	QDir::homePath() + "/" + 
+#endif
+	".mamepgui/";
 
 enum
 {
@@ -64,7 +68,8 @@ sliderOffset(0)
 	_iconLabel->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 	_btnReset->setToolButtonStyle(Qt::ToolButtonIconOnly);
 	_btnReset->setIcon(QIcon(":/res/reset_property.png"));
-	_btnReset->setIconSize(QSize(8,8));
+	_btnReset->setMaximumWidth(24);
+	_btnReset->setMinimumWidth(24);
 	_btnReset->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
 	_btnReset->setToolTip("Reset to default"); 
 	connect(_btnReset, SIGNAL(clicked()), &optdelegate, SLOT(sync()));
@@ -191,7 +196,10 @@ void ResetWidget::updateSliderLabel(int value)
 		multiplier = 100.0;
 		format = "%.2f";
 	}
-	
+
+	ctrl2->setMaximumWidth(36);
+	ctrl2->setMinimumWidth(36);
+	ctrl2->setAlignment(Qt::AlignRight);
 	ctrl2->setText(QString().sprintf(qPrintable(format), (value - sliderOffset) / multiplier));
 }
 
@@ -263,7 +271,9 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 				ctrl.direction = QApplication::layoutDirection();
 
 				QRect rc = option.rect;
-				rc.setWidth(rc.width() - 10 - 2 * 2);	// 2px padding
+
+				int sliderWidth = rc.width() - 36 - 24; /*reset button+label*/
+				rc.setWidth(sliderWidth);
 				rc.setY(rc.y() + (int)(rc.height() * 0.1));
 				rc.setHeight((int)(rc.height() * 0.8));	//don't occupy full height
 
@@ -289,13 +299,21 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 				ctrl.minimum = (int)(multiplier * min);
 				ctrl.maximum = (int)(multiplier * max);
 				ctrl.textAlignment = Qt::AlignRight;
-				ctrl.textVisible = true;
+				ctrl.textVisible = false;
 				
 				ctrl.progress = (int)(multiplier * value);
 				ctrl.text = QString().sprintf(qPrintable(format), value - offset);
 
 				// Draw the progress bar
 				QApplication::style()->drawControl(QStyle::CE_ProgressBar, &ctrl, painter);
+
+				rc = option.rect;
+				rc.setWidth(rc.width() - 24);
+				rc.setY(rc.y() + (int)(rc.height() * 0.1));
+				rc.setHeight((int)(rc.height() * 0.8));	//don't occupy full height
+				QApplication::style()->drawItemText(painter, rc, Qt::AlignRight | Qt::AlignVCenter, option.palette, true,
+					ctrl.text, QPalette::Text);
+
 				return;
 			}
 			}
@@ -343,22 +361,6 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 	}
 
 	case MAMEOPT_TYPE_INT:
-/*	{
-		int min, max;
-		min = optUtils->getField(index, USERROLE_MIN).toInt();
-		max = optUtils->getField(index, USERROLE_MAX).toInt();
-
-		QSpinBox *ctrl = new QSpinBox(parent);
-		if (!(min == 0 && max == 0))
-		{
-			ctrl->setMinimum(min);
-			ctrl->setMaximum(max);
-		}
-
-		resetWidget->setWidget(ctrl);
-		return resetWidget;
-	}
-*/	
 	case MAMEOPT_TYPE_FLOAT:
 	{
 		double min, max;
@@ -382,13 +384,8 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 		ctrl->setMaximum((int)(max * multiplier));
 
 		QLabel *ctrl2 = new QLabel(parent);
-		ctrl2->setMinimumWidth(30);
 		ctrl2->setAlignment(Qt::AlignHCenter);
 		ctrl2->setStyleSheet("background-color: white;");//fixme: hack
-
-		QFont font;
-		font.setPointSize(9);
-		ctrl2->setFont(font);
 
 		resetWidget->setWidget(ctrl, ctrl2, optType, offset);
 		return resetWidget;
@@ -459,13 +456,6 @@ void OptionDelegate::setEditorData(QWidget *editor,
 	}
 	
 	case MAMEOPT_TYPE_INT:
-/*	{
-		int value = index.model()->data(index, Qt::EditRole).toInt();
-		QSpinBox *ctrl = static_cast<QSpinBox*>(resetWidget->subWidget);
-		ctrl->setValue(value);
-		break;
-	}
-*/
 	case MAMEOPT_TYPE_FLOAT:
 	{
 		double min, value;
@@ -1535,12 +1525,24 @@ void OptionUtils::loadDefault(QString text)
 	}
 	while (!line.isNull());
 
+	/* special case for inipath */
 	QStringList inipaths = mameOpts["inipath"]->defvalue.split(";");
 	mamePath = utils->getPath(inipaths[0]);
+
 	// create ini/source
 	QDir().mkpath(mamePath + "ini/source");
 	win->log("mamePath: " + mamePath);
-	
+
+	//patch inipath for non official mame
+	QString inipath = mameOpts["inipath"]->defvalue;
+	if (inipath != ".;ini")
+	{
+		win->log("non official mame");
+		inipath.append(";");
+		inipath.append(mamePath + "ini");
+		inipath.remove("./");
+		mameOpts["inipath"]->defvalue = inipath;
+	}
 }
 
 //open option template file
@@ -1742,9 +1744,17 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 		}
 		while (!line.isNull());
 
-		/* postprocess */		
-		// read in reverse order to eat empty headers
+		/* postprocess */
 		QStringList bufs = mameIni.split(QRegExp("[\\r\\n]+"));
+
+		// remove language setting, it's set at runtime
+		for (int i = 0; i < bufs.count(); i ++)
+		{
+			if (bufs[i].startsWith("language"))
+				bufs.removeAt(i);
+		}
+
+		// read in reverse order to eat empty headers		
 		for (int i = bufs.count() - 1; i >= 0; i --)
 		{
 			static int c = 0;
