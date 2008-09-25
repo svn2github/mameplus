@@ -102,9 +102,9 @@ static void InitializePaletteUI(HWND hwnd)
 {
 	static const WCHAR *palette_names[MAX_COLORTABLE] =
 	{
-		TEXT("Font (blank)"),
-		TEXT("Font (normal)"),
-		TEXT("Font (special)"),
+//		TEXT("Font (blank)"),
+//		TEXT("Font (normal)"),
+//		TEXT("Font (special)"),
 		TEXT("Window background"),
 		TEXT("Button (A or 1)"),
 		TEXT("Button (B or 2)"),

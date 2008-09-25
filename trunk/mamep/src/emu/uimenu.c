@@ -26,12 +26,9 @@
 #endif /* USE_SCALE_EFFECTS */
 
 #ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-#ifdef MESS
 #include "uimess.h"
 #include "inputx.h"
-#endif /* MESS */
+#endif /* MAMEMESS */
 
 #include <ctype.h>
 
@@ -276,10 +273,10 @@ static void menu_settings_common(running_machine *machine, ui_menu *menu, void *
 static void menu_settings_populate(running_machine *machine, ui_menu *menu, settings_menu_state *menustate, UINT32 type);
 static void menu_analog(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_analog_populate(running_machine *machine, ui_menu *menu);
-//#ifndef MESS
+#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime);
-//#endif
+#endif
 static void menu_game_info(running_machine *machine, ui_menu *menu, void *parameter, void *state);
 #ifdef CMD_LIST
 static void menu_command(running_machine *machine, ui_menu *menu, void *parameter, void *state);
@@ -1489,15 +1486,15 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	if (has_analog)
 		ui_menu_item_append(menu, _("Analog Controls"), NULL, 0, menu_analog);
 
-//#ifndef MESS
+#ifndef MESS
   	/* add bookkeeping menu */
 	ui_menu_item_append(menu, _("Bookkeeping Info"), NULL, 0, menu_bookkeeping);
-//#endif
+#endif
 
 	/* add game info menu */
 	ui_menu_item_append(menu, _(CAPSTARTGAMENOUN " Information"), NULL, 0, menu_game_info);
 
-#if 0 //def MESS
+#ifdef MESS
 	/* add MESS-specific menus */
 	ui_mess_main_menu_populate(machine, menu);
 #endif /* MESS */
@@ -1675,9 +1672,9 @@ static void menu_input_specific_populate(running_machine *machine, ui_menu *menu
 
 			/* add if we match the group and we have a valid name */
 			if (name != NULL && input_condition_true(machine, &field->condition) &&
-#ifdef MESS
+#ifdef MAMEMESS
 				(field->category == 0 || input_category_active(machine, field->category)) &&
-#endif /* MESS */
+#endif /* MAMEMESS */
 				((field->type == IPT_OTHER && field->name != NULL) || input_type_group(machine, field->type, field->player) != IPG_INVALID))
 			{
 				input_seq_type seqtype;
@@ -2382,7 +2379,7 @@ static void menu_analog_populate(running_machine *machine, ui_menu *menu)
     information menu
 -------------------------------------------------*/
 
-//#ifndef MESS
+#ifndef MESS
 static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *parameter, void *state)
 {
 	attotime *prevtime;
@@ -2405,7 +2402,7 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
 	/* process the menu */
 	ui_menu_process(machine, menu, 0);
 }
-//#endif
+#endif
 
 
 /*-------------------------------------------------
@@ -2413,7 +2410,7 @@ static void menu_bookkeeping(running_machine *machine, ui_menu *menu, void *para
     information menu
 -------------------------------------------------*/
 
-//#ifndef MESS
+#ifndef MESS
 static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, attotime *curtime)
 {
 	astring *tempstring = astring_alloc();
@@ -2451,7 +2448,7 @@ static void menu_bookkeeping_populate(running_machine *machine, ui_menu *menu, a
 	ui_menu_item_append(menu, astring_c(tempstring), NULL, MENU_FLAG_MULTILINE, NULL);
 	astring_free(tempstring);
 }
-//#endif
+#endif
 
 
 /*-------------------------------------------------

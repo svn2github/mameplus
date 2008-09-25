@@ -21,26 +21,23 @@
 #ifdef USE_SHOW_TIME
 #include <time.h>
 #endif /* USE_SHOW_TIME */
-
 #include "render.h"
 #include "rendfont.h"
 #include "ui.h"
 #include "uiinput.h"
 #include "uimenu.h"
 #include "uigfx.h"
-#include "deprecat.h"
-#include "mslegacy.h"
 
 #ifdef MAMEMESS
 #define MESS
-#else /* MAMEMESS */
-#define has_dummy_image(a) 0
+#include "mslegacy.h"
+#include "messopts.h"
 #endif /* MAMEMESS */
+
 #ifdef MESS
 #include "mess.h"
 #include "uimess.h"
 #include "inputx.h"
-#include "messopts.h"
 #endif /* MESS */
 
 #include <ctype.h>
@@ -334,9 +331,9 @@ static void setup_palette(void)
 		UINT8 defval[3];
 	} palette_decode_table[] =
 	{
-		{ OPTION_FONT_BLANK,         FONT_COLOR_BLANK,         { 0,0,0 } },
-		{ OPTION_FONT_NORMAL,        FONT_COLOR_NORMAL,        { 255,255,255 } },
-		{ OPTION_FONT_SPECIAL,       FONT_COLOR_SPECIAL,       { 247,203,0 } },
+//		{ OPTION_FONT_BLANK,         FONT_COLOR_BLANK,         { 0,0,0 } },
+//		{ OPTION_FONT_NORMAL,        FONT_COLOR_NORMAL,        { 255,255,255 } },
+//		{ OPTION_FONT_SPECIAL,       FONT_COLOR_SPECIAL,       { 247,203,0 } },
 		{ OPTION_SYSTEM_BACKGROUND,  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
 		{ OPTION_BUTTON_RED,         BUTTON_COLOR_RED,         { 255,64,64 } },
 		{ OPTION_BUTTON_YELLOW,      BUTTON_COLOR_YELLOW,      { 255,238,0 } },
@@ -554,23 +551,29 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 				break;
 
 			case 2:
-				if ((show_gameinfo || has_dummy_image(machine) > 0) && astring_len(game_info_astring(machine, messagebox_text)) > 0)
-				{
-					/* append MAME version and ask for select key */
-					astring_catprintf(messagebox_text, "\n\t%s %s", APPNAME, build_version);
-					
-					// mamep: prepare a screen for console with dummy image
-					if(has_dummy_image(machine) > 0)
+				if ((show_gameinfo 
+#ifdef MAMEMESS
+				|| has_dummy_image(machine) > 0
+#endif /* MAMEMESS */
+				) && astring_len(game_info_astring(machine, messagebox_text)) > 0)
 					{
-						astring_catprintf(messagebox_text, "\n\t%s", _("Please load an image"));
-						ui_set_handler(handler_messagebox_anykey, 0);
+						/* append MAME version and ask for select key */
+						astring_catprintf(messagebox_text, "\n\t%s %s", APPNAME, build_version);
+
+#ifdef MAMEMESS
+						// mamep: prepare a screen for console with dummy image
+						if(has_dummy_image(machine) > 0)
+						{
+							astring_catprintf(messagebox_text, "\n\t%s", _("Please load an image"));
+							ui_set_handler(handler_messagebox_anykey, 0);
+						}
+						else
+#endif /* MAMEMESS */
+						{
+							astring_catprintf(messagebox_text, "\n\t%s", _("Press Select Key/Button"));
+							ui_set_handler(handler_messagebox_anykey, 0);
+						}
 					}
-					else
-					{
-						astring_catprintf(messagebox_text, "\n\t%s", _("Press Select Key/Button"));
-						ui_set_handler(handler_messagebox_anykey, 0);
-					}
-				}
 				break;
 #ifdef MESS
 			case 3:
@@ -1869,11 +1872,15 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 	}
 
 	/* if select key is pressed, just exit */
-	if (res == 1 && has_dummy_image(machine) <= 0)
-	{
-		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
-		state = UI_HANDLER_CANCEL;
-	}
+	if (res == 1 
+#ifdef MAMEMESS
+	&& has_dummy_image(machine) <= 0
+#endif /* MAMEMESS */
+	)
+		{
+			if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
+			state = UI_HANDLER_CANCEL;
+		}
 
 	return state;
 }

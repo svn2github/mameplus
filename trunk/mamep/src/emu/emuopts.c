@@ -34,7 +34,7 @@ const options_entry mame_core_options[] =
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE CONFIGURATION OPTIONS" },
 	{ "readconfig;rc",               "1",         OPTION_BOOLEAN,    "enable loading of configuration files" },
 #ifdef DRIVER_SWITCH
-	{ "driver_config",                "mame,plus,console", 0,         "switch drivers"},
+	{ "driver_config",               "mame,plus,console", 0,         "switch drivers"},
 #endif /* DRIVER_SWITCH */
 
 	/* seach path options */
@@ -49,7 +49,7 @@ const options_entry mame_core_options[] =
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
-	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datfiles" },
+	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datafiles" },
 #ifdef USE_IPS
 	{ "ipspath;ips_directory",       "ips",       0,                 "path to ips files" },
 #endif /* USE_IPS */
@@ -184,7 +184,7 @@ const options_entry mame_core_options[] =
 	{ "skip_gameinfo",               "0",         OPTION_BOOLEAN,    "skip displaying the information screen at startup" },
 	{ "confirm_quit",                "1",         OPTION_BOOLEAN,    "quit game with confirmation" },
 #ifdef USE_IPS
-	{ "ips",                         NULL,        0,                 "ips datfile name"},
+	{ "ips",                         NULL,        0,                 "ips datafile name"},
 #endif /* USE_IPS */
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause",                  "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
@@ -194,15 +194,15 @@ const options_entry mame_core_options[] =
 	{ "m68k_core",                   "c",         0,                 "change m68k core (c|drc)" },
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
-	{ "ui_transparency",             "204",       0,                 "transparency in-game UI [0 - 255]" },
+	{ "ui_transparency",             "224",       0,                 "transparency in-game UI [0-255]" },
 #endif /* TRANS_UI */
 
 #ifdef UI_COLOR_DISPLAY
 	/* palette options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
-	{ "font_blank",                  "0,0,0",       0,               "font blank color" },
-	{ "font_normal",                 "255,255,255", 0,               "font normal color" },
-	{ "font_special",                "247,203,0",   0,               "font special color" },
+//	{ "font_blank",                  "0,0,0",       0,               "font blank color" },
+//	{ "font_normal",                 "255,255,255", 0,               "font normal color" },
+//	{ "font_special",                "247,203,0",   0,               "font special color" },
 	{ "system_background",           "16,16,48",    0,               "window background color" },
 	{ "button_red",                  "255,64,64",   0,               "button color (red)" },
 	{ "button_yellow",               "255,238,0",   0,               "button color (yellow)" },

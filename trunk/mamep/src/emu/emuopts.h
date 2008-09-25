@@ -182,9 +182,9 @@
 
 /* core palette options */
 #ifdef UI_COLOR_DISPLAY
-#define OPTION_FONT_BLANK			"font_blank"
-#define OPTION_FONT_NORMAL			"font_normal"
-#define OPTION_FONT_SPECIAL			"font_special"
+//#define OPTION_FONT_BLANK			"font_blank"
+//#define OPTION_FONT_NORMAL			"font_normal"
+//#define OPTION_FONT_SPECIAL			"font_special"
 #define OPTION_SYSTEM_BACKGROUND		"system_background"
 #define OPTION_BUTTON_RED			"button_red"
 #define OPTION_BUTTON_YELLOW			"button_yellow"

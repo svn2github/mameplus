@@ -25,7 +25,6 @@
 #define CLIOPTION_VALIDATE				"validate"
 #define CLIOPTION_HELP					"help"
 #define CLIOPTION_LISTXML				"listxml"
-#define CLIOPTION_LISTGAMES				"listgames"
 #define CLIOPTION_LISTFULL				"listfull"
 #define CLIOPTION_LISTSOURCE			"listsource"
 #define CLIOPTION_LISTCLONES			"listclones"
@@ -47,7 +46,6 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options);
 
 /* informational functions */
 int cli_info_listxml(core_options *options, const char *gamename);
-int cli_info_listgames(core_options *options, const char *gamename);
 int cli_info_listfull(core_options *options, const char *gamename);
 int cli_info_listsource(core_options *options, const char *gamename);
 int cli_info_listclones(core_options *options, const char *gamename);
@@ -58,6 +56,6 @@ int cli_info_listsamples(core_options *options, const char *gamename);
 #ifdef DRIVER_SWITCH
 void assign_drivers(core_options *options);
 #endif /* DRIVER_SWITCH */
-
 void setup_language(core_options *options); 
+
 #endif	/* __CLIFRONT_H__ */

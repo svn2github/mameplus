@@ -223,6 +223,8 @@ const char mame_disclaimer[] =
 
 extern int mame_validitychecks(const game_driver *driver);
 
+static int parse_ini_file(core_options *options, const char *name);
+
 static running_machine *create_machine(const game_driver *driver);
 static void prepare_machine(running_machine *machine);
 static void destroy_machine(running_machine *machine);
@@ -337,7 +339,8 @@ int mame_execute(core_options *options)
 			/* call end_resource_tracking followed by begin_resource_tracking */
 			/* to clear out resources allocated between resets */
 			begin_resource_tracking();
-#ifdef MESS
+
+#ifdef MAMEMESS
 			//mamep: prevent MESS crash #1
 			if (has_dummy_image(machine))
 			{
@@ -345,7 +348,7 @@ int mame_execute(core_options *options)
 				mame->hard_reset_pending = TRUE;
 			}
 			else
-#endif /* MESS */
+#endif /* MAMEMESS */
 			{
 				/* perform a soft reset -- this takes us to the running phase */
 				soft_reset(machine, NULL, 0);
@@ -1391,7 +1394,7 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
     parse_ini_file - parse a single INI file
 -------------------------------------------------*/
 
-int parse_ini_file(core_options *options, const char *name)
+static int parse_ini_file(core_options *options, const char *name)
 {
 	file_error filerr;
 	mame_file *file;
@@ -1518,6 +1521,7 @@ static void destroy_machine(running_machine *machine)
 	if (machine->basename != NULL)
 		free((void *)machine->basename);
 	free(machine);
+	Machine = NULL;
 }
 
 
@@ -1777,11 +1781,11 @@ static void init_machine(running_machine *machine)
 	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) != 0)
 		debugger_init(machine);
 
-#ifdef MESS
+#ifdef MAMEMESS
 	//mamep: prevent MESS crash #2
 	if(has_dummy_image(machine))
 		return;
-#endif /* MESS */
+#endif /* MAMEMESS */
 
 	/* call the driver's _START callbacks */
 	if (machine->config->machine_start != NULL)
