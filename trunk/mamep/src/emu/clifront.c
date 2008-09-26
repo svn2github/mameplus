@@ -693,7 +693,9 @@ int cli_info_listroms(core_options *options, const char *gamename)
 	for (drvindex = 0; drivers[drvindex]; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
+			machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
 			const rom_entry *region, *rom, *chunk;
+			const rom_source *source;
 
 			/* print the header */
 			if (count > 0)
@@ -701,9 +703,10 @@ int cli_info_listroms(core_options *options, const char *gamename)
 			mame_printf_info(_("This is the list of the ROMs required for driver \"%s\".\n"
 					"Name            Size Checksum\n"), drivers[drvindex]->name);
 
-			/* iterate over regions and then ROMs within the region */
-			for (region = drivers[drvindex]->rom; region; region = rom_next_region(region))
-				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+			/* iterate over sources, regions and then ROMs within the region */
+			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
+				for (region = rom_first_region(drivers[drvindex], source); region != NULL; region = rom_next_region(region))
+					for (rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom))
 				{
 					const char *name = ROM_GETNAME(rom);
 					const char* hash = ROM_GETHASHDATA(rom);
@@ -744,6 +747,7 @@ int cli_info_listroms(core_options *options, const char *gamename)
 				}
 
 			count++;
+			machine_config_free(config);
 		}
 
 	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
