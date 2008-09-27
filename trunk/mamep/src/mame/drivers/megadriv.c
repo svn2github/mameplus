@@ -53,14 +53,11 @@ Known Non-Issues (confirmed on Real Genesis)
 #include "cpu/m68000/m68000.h"
 #include "megadriv.h"
 
-#define MEGADRIV_VDP_VRAM(address) megadrive_vdp_vram[(address)&0x7fff]
-
 #ifdef MAMEMESS
 #define MESS
 #endif /* MAMEMESS */
-#ifdef MESS
-extern void setup_megadriv_custom_mappers(running_machine *);
-#endif
+
+#define MEGADRIV_VDP_VRAM(address) megadrive_vdp_vram[(address)&0x7fff]
 
 /* the same on all systems? */
 #define MASTER_CLOCK_NTSC		53693100
@@ -4821,9 +4818,6 @@ MACHINE_RESET( megadriv )
 
 	memset(megadrive_ram,0x00,0x10000);
 
-#ifdef MESS
-	setup_megadriv_custom_mappers(machine);
-#endif
 
 	irq4counter = -1;
 	megadrive_total_scanlines = 262;

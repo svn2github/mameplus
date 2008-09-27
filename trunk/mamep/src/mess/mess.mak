@@ -48,6 +48,7 @@ $(MESSOBJ)/shared.a: \
 
 $(MESSOBJ)/sega.a:						\
 	$(MESS_DRIVERS)/genesis.o	\
+	$(MESS_MACHINE)/genesis.o	\
 	$(MESS_VIDEO)/smsvdp.o	\
 	$(MESS_MACHINE)/sms.o		\
 	$(MESS_DRIVERS)/sms.o		\
