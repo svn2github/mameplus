@@ -323,12 +323,12 @@ error:
 
 
 
-BOOL DirWatcher_Watch(PDIRWATCHER pWatcher, WORD nIndex, LPCSTR pszPathList, BOOL bWatchSubtrees)
+BOOL DirWatcher_Watch(PDIRWATCHER pWatcher, WORD nIndex, LPCWSTR pszPathList, BOOL bWatchSubtrees)
 {
 	EnterCriticalSection(&pWatcher->crit);
 
 	pWatcher->nIndex = nIndex;
-	pWatcher->pszPathList = pszPathList;
+	pWatcher->pszPathList = (void *)pszPathList;
 	pWatcher->bWatchSubtree = bWatchSubtrees;
 	SetEvent(pWatcher->hRequestEvent);
 
