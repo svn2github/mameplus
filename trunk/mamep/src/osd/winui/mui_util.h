@@ -21,8 +21,6 @@ extern void __cdecl dwprintf(const WCHAR* fmt, ...);
 
 extern UINT GetDepth(HWND hWnd);
 
-extern BOOL OnNT(void);
-
 /* Open a text file */
 extern void DisplayTextFile(HWND hWnd, const char *cName);
 
@@ -36,23 +34,24 @@ extern char * ConvertToWindowsNewlines(const char *source);
 
 extern const WCHAR * GetDriverFilename(int nIndex);
 
-
 BOOL DriverIsClone(int driver_index);
 BOOL DriverIsBroken(int driver_index);
 BOOL DriverIsHarddisk(int driver_index);
 BOOL DriverHasOptionalBIOS(int driver_index);
-BOOL DriverIsConsole(int driver_index);
 BOOL DriverIsStereo(int driver_index);
+BOOL DriverIsMultiMon(int driver_index);
 BOOL DriverIsVector(int driver_index);
 BOOL DriverIsBios(int driver_index);
-int DriverBiosIndex(int driver_index);
-//int DriverSystemBiosIndex(int driver_index);
 BOOL DriverUsesRoms(int driver_index);
 BOOL DriverUsesSamples(int driver_index);
+BOOL DriverUsesTrackball(int driver_index);
+BOOL DriverUsesLightGun(int driver_index);
+BOOL DriverUsesMouse(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverIsVertical(int driver_index);
+BOOL DriverIsConsole(int driver_index);
+int DriverBiosIndex(int driver_index);
 BOOL DriverHasM68K(int driver_index);
-int DriverParentIndex(int driver_index);
 
 enum
 {
@@ -68,30 +67,30 @@ int DriverNumPlayers(int driver_index);
 int DriverNumButtons(int driver_index);
 BOOL DriverUsesController(int driver_index, int type);
 
-#define DriverUsesTrackball(driver_index)	DriverUsesController(driver_index, CONTROLLER_TRACKBALL)
-#define DriverUsesLightGun(driver_index)	DriverUsesController(driver_index, CONTROLLER_LIGHTGUN)
-
 #ifdef USE_IPS
 int GetPatchCount(const WCHAR *game_name, const WCHAR *patch_name);
 int GetPatchFilename(WCHAR *patch_name, const WCHAR *game_name, const int patch_index);
 LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name);
 #endif /* USE_IPS */
 
-BOOL isDriverVector(const machine_config *config);
+int isDriverVector(const machine_config *config);
 int numberOfSpeakers(const machine_config *config);
 
 void FlushFileCaches(void);
-void SetCorePathList(int file_type,const char *s);
-
-TCHAR* win_tstring_strdup(LPCTSTR str);
 
 void FreeIfAllocated(char **s);
 void FreeIfAllocatedW(WCHAR **s);
 
+BOOL StringIsSuffixedBy(const char *s, const char *suffix);
+
+BOOL SafeIsAppThemed(void);
+
+HICON win_extract_icon_utf8(HINSTANCE inst, const char* exefilename, UINT iconindex);
+TCHAR* win_tstring_strdup(LPCTSTR str);
 HANDLE win_create_file_utf8(const char* filename, DWORD desiredmode, DWORD sharemode, 
 					   		LPSECURITY_ATTRIBUTES securityattributes, DWORD creationdisposition,
 					   		DWORD flagsandattributes, HANDLE templatehandle);
-
+DWORD win_get_current_directory_utf8(DWORD bufferlength, char* buffer);
 HANDLE win_find_first_file_utf8(const char* filename, LPWIN32_FIND_DATAW findfiledata);
 
 #ifdef TREE_SHEET

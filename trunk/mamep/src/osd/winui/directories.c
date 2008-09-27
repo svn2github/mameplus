@@ -32,7 +32,7 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"	// include this first
+#include "winui.h"
 #include "directories.h"
 #include "resource.h"
 #include "strconv.h"
@@ -281,6 +281,7 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	LPCTSTR		s;
 	TCHAR       *token;
 	TCHAR       buf[MAX_PATH * MAX_DIRS];
+	//TCHAR*      t_s = NULL;
 
 	/* count how many dirinfos there are */
 	nDirInfoCount = 0;
@@ -294,7 +295,12 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 
 	for (i = nDirInfoCount - 1; i >= 0; i--)
 	{
+		//t_s = tstring_from_utf8(g_directoryInfo[i].lpName);
+		//if( !t_s )
+		//	return FALSE;
 		(void)ComboBox_InsertString(GetDlgItem(hDlg, IDC_DIR_COMBO), 0, _UIW(g_directoryInfo[i].lpName));
+		//free(t_s);
+		//t_s = NULL;
 	}
 
 	(void)ComboBox_SetCurSel(GetDlgItem(hDlg, IDC_DIR_COMBO), 0);
@@ -311,6 +317,9 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 	for (i = 0; i < nDirInfoCount; i++)
 	{
 		s = g_directoryInfo[i].pfnGetTheseDirs();
+		//t_s = tstring_from_utf8(s);
+		//if( !t_s )
+		//	return FALSE;
 		if (g_directoryInfo[i].bMulti)
 		{
 			/* Copy the string to our own buffer so that we can mutilate it */
@@ -334,12 +343,16 @@ static BOOL Directories_OnInitDialog(HWND hDlg, HWND hwndFocus, LPARAM lParam)
 		{
 			DirInfo_SetDir(g_pDirInfo, i, -1, s);
 		}
+		//free(t_s);
+		//t_s = NULL;
 	}
 
 	UpdateDirectoryList(hDlg);
 	return TRUE;
 
 error:
+	//if( t_s )
+	//	free(t_s);
 	Directories_OnDestroy(hDlg);
 	EndDialog(hDlg, -1);
 	return FALSE;
@@ -379,6 +392,7 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 	int nResult = 0;
 	int nPaths;
 	TCHAR buf[MAX_PATH * MAX_DIRS];
+	//char* utf8_buf;
 
 	if (DirInfo_Modified(g_pDirInfo, nDir))
 	{
@@ -391,7 +405,9 @@ static int RetrieveDirList(int nDir, int nFlagResult, void (*SetTheseDirs)(const
 			if (i < nPaths - 1)
 				_tcscat(buf, TEXT(";"));
 		}
+		//utf8_buf = utf8_from_tstring(buf);
 		SetTheseDirs(buf);
+		//free(utf8_buf);
 
 		nResult |= nFlagResult;
     }
@@ -403,6 +419,7 @@ static void Directories_OnOk(HWND hDlg)
 	int i;
 	int nResult = 0;
 	TCHAR *s;
+	//char* utf8_s;
 
 	for (i = 0; g_directoryInfo[i].lpName; i++)
 	{
@@ -413,7 +430,9 @@ static void Directories_OnOk(HWND hDlg)
 		else
 		{
 			s = FixSlash(DirInfo_Dir(g_pDirInfo, i));
+			//utf8_s = utf8_from_tstring(s);
 			g_directoryInfo[i].pfnSetTheseDirs(s);
+			//free(utf8_s);
 		}
 	}
 	EndDialog(hDlg, nResult);
@@ -718,7 +737,7 @@ static int CALLBACK BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPAR
 	return 0;
 }
 
-static BOOL BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult) 
+BOOL BrowseForDirectory(HWND hwnd, LPCTSTR pStartDir, TCHAR* pResult) 
 {
 	BOOL		bResult = FALSE;
 	IMalloc*	piMalloc = 0;

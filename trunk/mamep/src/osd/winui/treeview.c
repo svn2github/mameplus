@@ -43,7 +43,6 @@
 #include <io.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"	// include this first
 #include "driver.h"
 #include "hash.h"
 #include "mui_util.h"
@@ -268,6 +267,11 @@ LPTREEFOLDER GetCurrentFolder(void)
 	return lpCurrentFolder;
 }
 
+UINT GetCurrentFolderID(void)
+{
+	return nCurrentFolder;
+}
+
 LPTREEFOLDER GetFolder(UINT nFolder)
 {
 	return (nFolder < numFolders) ? treeFolders[nFolder] : NULL;
@@ -286,57 +290,6 @@ LPTREEFOLDER GetFolderByID(UINT nID)
 	}
 
 	return (LPTREEFOLDER)0;
-}
-
-int GetBiosDriverByFolder(LPTREEFOLDER lpFolder)
-{
-	int n;
-
-	if (lpFolder->m_nParent != g_bios_folder)
-		return -1;
-
-	n = FindBit(lpFolder->m_lpGameBits, 0, TRUE);
-	if (n == -1)
-		return -1;
-
-	return DriverBiosIndex(n);
-}
-
-BOOL IsSourceFolder(LPTREEFOLDER lpFolder)
-{
-	return lpFolder->m_nParent == g_source_folder;
-}
-
-BOOL IsBiosFolder(LPTREEFOLDER lpFolder)
-{
-	return GetBiosDriverByFolder(lpFolder) != -1;
-}
-
-BOOL IsVectorFolder(LPTREEFOLDER lpFolder)
-{
-	if (lpFolder->m_nParent != -1)
-		return FALSE;
-
-	return wcscmp(GetFolderOrigName(lpFolder), TEXT("Vector")) == 0;
-}
-
-LPTREEFOLDER GetSourceFolder(int driver_index)
-{
-	const TCHAR *source_name = GetDriverFilename(driver_index);
-	UINT i;
-
-	for (i = 0; i < numFolders; i++)
-	{
-		LPTREEFOLDER lpFolder = treeFolders[i];
-
-		if (lpFolder->m_nParent != g_source_folder)
-			continue;
-
-		if (wcscmp(GetFolderOrigName(lpFolder), source_name) == 0)
-			return lpFolder;
-	}
-
-	return NULL;
 }
 
 void AddGame(LPTREEFOLDER lpFolder, UINT nGame)
@@ -444,7 +397,6 @@ BOOL GameFiltered(int nGame, DWORD dwMask)
 		    MyStrStrI(UseLangList()? _MANUFACTW(driversw[nGame]->manufacturer) : driversw[nGame]->manufacturer, filter_text) == NULL)
 			return TRUE;
 	}
-
 	// Are there filters set on this folder?
 	if ((dwMask & F_MASK) == 0)
 		return FALSE;
@@ -512,7 +464,6 @@ void CreateSourceFolders(int parent_index)
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
 	for (jj = 0; jj < nGames; jj++)
 	{
 		const TCHAR *s = GetDriverFilename(jj);
@@ -600,17 +551,16 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 	}
 
 	 ptmp = tmp;
-
 	/*if first char is a space, skip it*/
 	if (*s == ' ')
 	{
 		(*pParsedChars)++;
 		++s;
 	}
-
 	while (*s)
 	{
 		/* combinations where to end string */
+		
 		if ( 
 		    ((*s == ' ') && (s[1] == '(' || s[1] == '/' || s[1] == '+')) ||
 		    (*s == ']') ||
@@ -623,7 +573,6 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 				(*pParsedChars)++;
 			break;
 		}
-
 		if (s[0] == ' ' && s[1] == '?')
 		{
 			(*pParsedChars) += 2;
@@ -637,7 +586,6 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 			*ptmp++ = *s;
 	    }
 		(*pParsedChars)++;
-
 		/*for "distributed by" and "supported by" handling*/
 		if (((s[1] == ',') && (s[2] == ' ') && ( (s[3] == 's') || (s[3] == 'd'))))
 		{
@@ -648,7 +596,6 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 	        ++s;
 	}
 	*ptmp = '\0';
-
 	t = tmp;
 	if (tmp[0] == '(' || tmp[wcslen(tmp)-1] == ')' || tmp[0] == ',')
 	{
@@ -662,37 +609,51 @@ static const TCHAR *ParseManufacturer(const TCHAR *s, int *pParsedChars )
 				ptmp++;
 
 				if (_tcsnicmp(ptmp, TEXT(" supported by"), 13) == 0)
+				{
 					ptmp += 13;
+				}
 				else if (_tcsnicmp(ptmp, TEXT(" distributed by"), 15) == 0)
+				{
 					ptmp += 15;
+				}
 				else
+				{
 					return NULL;
+				}
 			}
 			else
 			{
 				ptmp = tmp;
 				if (ptmp == NULL)
+				{
 					return NULL;
+				}
 			}
 		}
 		if (tmp[0] == '(' || tmp[0] == ',')
+		{
 			ptmp++;
-
+		}
 		if (_tcsnicmp(ptmp, TEXT("licensed from "), 14) == 0)
+		{
 			ptmp += 14;
-
+		}
 		// for the licenced from case
 		if (_tcsnicmp(ptmp, TEXT("licenced from "), 14) == 0)
+		{
 			ptmp += 14;
+		}
 
 		while ((*ptmp != ')' ) && (*ptmp != '/' ) && *ptmp != '\0')
 		{
 			if (*ptmp == ' ' && _tcsnicmp(ptmp, TEXT(" license"), 8) == 0)
+			{
 				break;
-
+			}
 			if (*ptmp == ' ' && _tcsnicmp(ptmp, TEXT(" licence"), 8) == 0)
+			{
 				break;
-
+			}
 			*t++ = *ptmp++;
 		}
 		
@@ -715,19 +676,15 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 	int l = 0;
 	memset(strTemp, '\0', 256 );
 	memset(strTemp2, '\0', 256 );
-
 	//start analyzing from the back, as these are usually suffixes
 	for (i = wcslen(s)-1; i >= 0; i--)
 	{
 		
 		l = wcslen(strTemp);
-
 		for (k=l; k>=0; k--)
 			strTemp[k+1] = strTemp[k];
-
 		strTemp[0] = s[i];
 		strTemp[++l] = '\0';
-
 		switch (l)
 		{
 			case 2:
@@ -899,10 +856,8 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 				break;
 		}
 	}
-
 	if (wcslen(strTemp2) == 0)
 		return s;
-
 	return strTemp2;
 }
 
@@ -1075,7 +1030,6 @@ void CreateDumpingFolders(int parent_index)
 	const rom_entry *region, *rom;
 //	const char *name;
 	const game_driver *gamedrv;
-	const rom_source *source;
 	machine_config *config;
 
 	// create our two subfolders
@@ -1090,12 +1044,14 @@ void CreateDumpingFolders(int parent_index)
 
 	for (jj = 0; jj < nGames; jj++)
 	{
+		const rom_source *source;
 		gamedrv = drivers[jj];
 
 		if (!gamedrv->rom) 
 			continue;
 		bBadDump = FALSE;
 		bNoDump = FALSE;
+		/* Allocate machine config */
 		config = machine_config_alloc(gamedrv->machine_config);
 		for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
 		{
@@ -1114,6 +1070,7 @@ void CreateDumpingFolders(int parent_index)
 				}
 		}
 		}
+		/* Free the structure */
 		machine_config_free(config);
 		config = NULL;
 		if (bBadDump)
@@ -1685,7 +1642,7 @@ void ResetTreeViewFolders(void)
 	}
 }
 
-void SelectTreeViewFolder(LPTREEFOLDER lpFolder)
+void SelectTreeViewFolder(int folder_id)
 {
 	HWND hTreeView = GetTreeView();
 	HTREEITEM hti;
@@ -1703,7 +1660,7 @@ void SelectTreeViewFolder(LPTREEFOLDER lpFolder)
 		tvi.mask = TVIF_PARAM;
 		TreeView_GetItem(hTreeView,&tvi);
 
-		if ((LPTREEFOLDER)tvi.lParam == lpFolder)
+		if (((LPTREEFOLDER)tvi.lParam)->m_nFolderId == folder_id)
 		{
 			TreeView_SelectItem(hTreeView,tvi.hItem);
 			SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
@@ -1733,20 +1690,6 @@ void SelectTreeViewFolder(LPTREEFOLDER lpFolder)
 	TreeView_SelectItem(hTreeView,tvi.hItem);
 	SetCurrentFolder((LPTREEFOLDER)tvi.lParam);
 
-}
-
-static void SelectTreeViewFolderPath(const char *path)
-{
-	int i;
-
-	for (i = 0; i < numFolders; i++)
-		if (strcmp(treeFolders[i]->m_lpPath, path) == 0)
-		{
-			SelectTreeViewFolder(treeFolders[i]);
-			return;
-		}
-
-	SelectTreeViewFolder(0);
 }
 
 /* 
@@ -1952,7 +1895,7 @@ BOOL InitFolders(void)
 
 	ResetTreeViewFolders();
 
-	SelectTreeViewFolderPath(GetSavedFolderPath());
+	SelectTreeViewFolder(GetSavedFolderID());
 
 	return TRUE;
 }
@@ -2467,7 +2410,9 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 		{
 			p = strchr(readbuf, ']');
 			if (p == NULL)
+			{
 				continue;
+			}
 
 			*p = '\0';
 			name = &readbuf[1];
@@ -2493,10 +2438,12 @@ BOOL TryAddExtraFolderAndChildren(int parent_index)
 				}
 
 				/* it it [ROOT_FOLDER]? */
+
 				if (!strcmp(name, "ROOT_FOLDER"))
 				{
 					current_id = lpFolder->m_nFolderId;
 					lpTemp = lpFolder;
+
 				}
 				else
 				{
@@ -2591,7 +2538,6 @@ static BOOL TryRenameCustomFolderIni(LPTREEFOLDER lpFolder,const TCHAR *old_name
 			TEXT("%s\\%s"), ini_dirw, new_name);
 		MoveFile(filename, new_filename);
 	}
-
 	return TRUE;
 }
 
@@ -2789,7 +2735,6 @@ BOOL TrySaveExtraFolder(LPTREEFOLDER lpFolder)
 	if (error)
 	{
 		TCHAR buf[500];
-
 		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Error while saving custom file %s")), fname);
 		MessageBox(GetMainWindow(), buf, TEXT_MAMEUINAME, MB_OK | MB_ICONERROR);
 	}

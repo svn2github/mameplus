@@ -120,52 +120,38 @@ b) Exit the dialog.
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
+//#include <tchar.h>
 
 // MAME/MAMEUI headers
-#include <driver.h>
-#include <info.h>
+#include "driver.h"
+#include "info.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
 #include "audit.h"
 #include "mui_audit.h"
-#include "bitmask.h"
 #include "mui_opts.h"
-#include "file.h"
 #include "resource.h"
 #include "dijoystick.h"     /* For DIJoystick avalibility. */
 #include "mui_util.h"
 #include "directdraw.h"
 #include "properties.h"
-#include "treeview.h"
 #include "winui.h"
-#include "translate.h"
-
-#include "screenshot.h"
-#include "mameui.h"
 #include "datamap.h"
 #include "help.h"
 #include "winmain.h"
 #include "strconv.h"
 #include "winutf8.h"
-#include "mui_util.h"
+#include "bitmask.h"
+#include "treeview.h"
+#include "translate.h"
 #include "datafile.h"
 
 #ifdef MAMEMESS
 #define MESS
 #endif /* MAMEMESS */
 
-#ifdef MESS
-#if defined(WIN32) && !defined(SDLMAME_WIN32)
-#include "osd/windows/configms.h"
-#endif
-#endif
-
-
 typedef HANDLE HTHEME;
-
-static HMODULE hThemes;
-static FARPROC fnIsThemed;
 
 #ifdef UNICODE
 #define TTM_SETTITLE            TTM_SETTITLEW
@@ -251,6 +237,7 @@ static void save_options_ex(OPTIONS_TYPE opt_type, core_options *opts, int game_
 static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam);
 
 static void SetStereoEnabled(HWND hWnd, int nIndex);
+static void SetYM3812Enabled(HWND hWnd, int nIndex);
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled);
 static void InitializeOptions(HWND hDlg);
 static void InitializeMisc(HWND hDlg);
@@ -266,6 +253,7 @@ static void InitializeD3DVersionUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
 static void InitializeEffectUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
+//mamep: BIOS page
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
@@ -299,11 +287,12 @@ static BOOL ResetDebugscript(HWND hWnd);
 static void BuildDataMap(void);
 static void ResetDataMap(HWND hWnd);
 
+#if 1 //mamep
 static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, core_options *ref);
+#endif
 
 static void UpdateBackgroundBrush(HWND hwndTab);
-HBRUSH hBkBrush;
-BOOL bThemeActive;
+static HBRUSH hBkBrush;
 
 /**************************************************************
  * Local private variables
@@ -323,13 +312,13 @@ static core_options *pCurrentOpts = NULL;
 static core_options *pOptsGlobal;
 static core_options *pOptsVector;
 static core_options *pOptsSource;
+//mamep: BIOS page
 static char *pBiosName[MAX_SYSTEM_BIOS];
 static datamap *properties_datamap;
 
 static int  g_nGame            = 0;
 static int  g_nFolder          = 0;
-//mamep: g_nFolderGame is no longer used
-//static int  g_nFolderGame      = 0;
+static int  g_nFolderGame      = 0;
 static int  g_nPropertyMode    = 0;
 static BOOL g_bUseDefaults     = FALSE;
 static BOOL g_bReset           = FALSE;
@@ -337,9 +326,9 @@ static BOOL g_bAutoAspect[MAX_SCREENS + 1] = {FALSE, FALSE, FALSE, FALSE, FALSE,
 static BOOL  g_bAutoSnapSize = FALSE;
 static HICON g_hIcon = NULL;
 
+// mamep: enumerate all monitors on start up
 static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
-
 
 #ifdef TREE_SHEET
 #define SHEET_TREE_WIDTH 180
@@ -367,41 +356,20 @@ static HBRUSH background_brush = NULL;
 #define GAME_COLOR RGB( 0, 128, 192 ) // DARK BLUE
 
 
-BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num)
+BOOL PropSheetFilter_Vector(const machine_config *drv, const game_driver *gamedrv)
 {
-	if (opt_type == OPTIONS_GLOBAL)
-	{
-#if 1
-		int i;
-
-		for (i = 0; drivers[i]; i++)
-			if (DriverIsVector(i))
-				return 1;
-#endif
-
-		return 0;
-	}
-
-	if (opt_type == OPTIONS_VECTOR)
-		return 1;
-
-	if (opt_type == OPTIONS_SOURCE)
-	{
-		const WCHAR *folder = GetFolderByID(folder_id)->m_lpTitle;
-		return FolderHasVector(folder);
-	}
-
-	return DriverIsVector(game_num);
+	return isDriverVector(drv);
 }
 
-BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num)
+//mamep: BIOS page
+BOOL PropSheetFilter_BIOS(const machine_config *drv, const game_driver *gamedrv)
 {
 #if 0
-	// if driver switch config is in BIOS page
-	return opt_type == OPTIONS_GLOBAL;
+	//only if driver switch config is in BIOS page
+	return g_nPropertyMode == OPTIONS_GLOBAL;
 #else /* DRIVER_SWITCH */
 
-	if (opt_type == OPTIONS_GLOBAL)
+	if (g_nPropertyMode == OPTIONS_GLOBAL)
 		return (GetSystemBiosInfo(0) != 0);
 
 	return 0;
@@ -443,10 +411,10 @@ static struct ComboBoxSelectScreen
 } g_ComboBoxSelectScreen[] = 
 {
 	{ TEXT("All screens"),      0    },
-	{ TEXT("First screen"),         1    },
-	{ TEXT("Second screen"),        2    },
-	{ TEXT("Third screen"),         3    },
-	{ TEXT("Fourth screen"),        4    },
+	{ TEXT("First screen"),     1    },
+	{ TEXT("Second screen"),    2    },
+	{ TEXT("Third screen"),     3    },
+	{ TEXT("Fourth screen"),    4    },
 };
 #define NUMSELECTSCREEN ARRAY_LENGTH(g_ComboBoxSelectScreen)
 
@@ -462,6 +430,8 @@ static struct ComboBoxView
 	{ TEXT("Cocktail"),         "cocktail"    },
 };
 #define NUMVIEW ARRAY_LENGTH(g_ComboBoxView)
+
+
 
 static struct ComboBoxDevices
 {
@@ -515,41 +485,31 @@ static const struct
  * Public functions
  ***************************************************************/
 
+// mamep: enumerate all monitors on start up
 void PropertiesInit(void)
 {
-	hThemes = LoadLibraryA("uxtheme.dll");
+	DISPLAY_DEVICEA dd;
+	int iMonitors;
+	int i;
 
-	if (hThemes)
+	iMonitors = DirectDraw_GetNumDisplays(); // this gets the count of monitors attached
+	if (iMonitors > MAX_SCREENS)
+		iMonitors = MAX_SCREENS;
+
+	ZeroMemory(&dd, sizeof(dd));
+	dd.cb = sizeof(dd);
+
+	g_sMonitorDeviceString[0] = _UIW(TEXT("Auto"));
+	g_sMonitorDeviceName[0] = NULL;
+
+	for (i = 0; i < iMonitors; i++)
 	{
-		fnIsThemed = GetProcAddress(hThemes,"IsAppThemed");
+		g_sMonitorDeviceString[i + 1] = wstring_from_utf8(DirectDraw_GetDisplayName(i));
+		g_sMonitorDeviceName[i + 1] = mame_strdup(DirectDraw_GetDisplayDriver(i));
 	}
-	bThemeActive = FALSE;
 
-	// mamep: enumerate all monitors on start up
-	{
-		DISPLAY_DEVICEA dd;
-		int iMonitors;
-		int i;
-
-		iMonitors = DirectDraw_GetNumDisplays(); // this gets the count of monitors attached
-		if (iMonitors > MAX_SCREENS)
-			iMonitors = MAX_SCREENS;
-
-		ZeroMemory(&dd, sizeof(dd));
-		dd.cb = sizeof(dd);
-
-		g_sMonitorDeviceString[0] = _UIW(TEXT("Auto"));
-		g_sMonitorDeviceName[0] = NULL;
-
-		for (i = 0; i < iMonitors; i++)
-		{
-			g_sMonitorDeviceString[i + 1] = wstring_from_utf8(DirectDraw_GetDisplayName(i));
-			g_sMonitorDeviceName[i + 1] = mame_strdup(DirectDraw_GetDisplayDriver(i));
-		}
-
-		g_sMonitorDeviceString[i + 1] = NULL;
-		g_sMonitorDeviceName[i + 1] = NULL;
-	}
+	g_sMonitorDeviceString[i + 1] = NULL;
+	g_sMonitorDeviceName[i + 1] = NULL;
 }
 
 // Called by MESS, to avoid MESS specific hacks in properties.c
@@ -609,9 +569,16 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 
 	for (; g_propSheets[i].pfnDlgProc; i++)
 	{
-		if (!bOnlyDefault || g_propSheets[i].bOnDefaultPage)
+		if ((gamedrv != NULL) || g_propSheets[i].bOnDefaultPage)
 		{
-			if (!g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(g_nPropertyMode, g_nFolder, g_nGame))
+			machine_config *config = NULL;
+
+			/* Allocate machine config */
+			if (gamedrv != NULL)
+			{
+				config = machine_config_alloc(gamedrv->machine_config);
+			}
+			if (!gamedrv || !g_propSheets[i].pfnFilterProc || g_propSheets[i].pfnFilterProc(config, gamedrv))
 			{
 				pspages[maxPropSheets].dwSize      = sizeof(PROPSHEETPAGE);
 				pspages[maxPropSheets].dwFlags     = 0;
@@ -621,6 +588,11 @@ static PROPSHEETPAGE *CreatePropSheetPages(HINSTANCE hInst, BOOL bOnlyDefault,
 				pspages[maxPropSheets].lParam      = 0;
 				pspages[maxPropSheets].pfnDlgProc  = g_propSheets[i].pfnDlgProc;
 				maxPropSheets++;
+			}
+			if (config != NULL)
+			{
+				/* Free the structure */
+				machine_config_free(config);
 			}
 		}
 	}
@@ -644,6 +616,8 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	/* Get default options to populate property sheets */
 	pCurrentOpts = load_options(OPTIONS_GLOBAL, g_nGame); //GetDefaultOptions(-1, FALSE);
 	pDefaultOpts = load_options(OPTIONS_GLOBAL, g_nGame);
+
+	//mamep: BIOS page
 	{
 		int n;
 
@@ -661,6 +635,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 			}
 		}
 	}
+
 	g_bUseDefaults = FALSE;
 	/* Stash the result for comparing later */
 	pOrigOpts = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
@@ -680,6 +655,7 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	pshead.hwndParent   = hWnd;
 	pshead.dwSize       = sizeof(PROPSHEETHEADER);
 	pshead.dwFlags      = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
+	//mamep: translate dialog
 	pshead.pfnCallback  = PropSheetCallbackProc;
 	pshead.hInstance    = hInst;
 	pshead.pszCaption   = _UIW(TEXT("Default Game"));
@@ -738,6 +714,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	}
 	pDefaultOpts = load_options(default_type, game_num);
 
+	//mamep: for coloring of changed elements
 	pOptsGlobal = load_options(OPTIONS_GLOBAL, game_num);
 	pOptsVector = load_options(OPTIONS_VECTOR, game_num);
 	pOptsSource = load_options(OPTIONS_SOURCE, game_num);
@@ -773,7 +750,8 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	}
 	else
 	{
-		pspage = CreatePropSheetPages(hInst, FALSE, NULL, &pshead.nPages, FALSE);
+		//mamep: disable show BIOS(Vector) page in 'Properties for Driver'(non-Vector)
+		pspage = CreatePropSheetPages(hInst, FALSE, drivers[game_num], &pshead.nPages, FALSE);
 	}
 	if (!pspage)
 		return;
@@ -804,6 +782,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	pshead.hwndParent = hWnd;
 	pshead.dwSize     = sizeof(PROPSHEETHEADER);
 	pshead.dwFlags    = PSH_PROPSHEETPAGE | PSH_USEICONID | PSH_PROPTITLE | PSH_USECALLBACK;
+	//mamep: translate dialog
 	pshead.pfnCallback= PropSheetCallbackProc;
 	pshead.hInstance  = hInst;
 	pshead.nStartPage = start_page;
@@ -881,7 +860,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
-	buf[0] = '\0';
+	buf[0] = 0;
 
 		/* iterate over sound chips */
 	for (chipnum = 0; chipnum < ARRAY_LENGTH(config->sound); chipnum++)
@@ -910,7 +889,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 			}
 
-			wcscpy(&buf[wcslen(buf)], _Unicode(sndtype_name(sound_type)));
+			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_name(sound_type)));
 
 			if (clock)
 			{
@@ -934,29 +913,28 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	return buf;
 }
 
+//mamep: display more info
 /* Build Display info string */
 static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
-	const device_config *screen;
-	const screen_config *scrconfig;
-	screen = video_screen_first(config);
+	const device_config *screen = video_screen_first(config);
+	const screen_config *scrconfig = screen->inline_config;
+
 	if (screen != NULL)
 	{
-		scrconfig = screen->inline_config;
-
 		if (isDriverVector(config))
 		{
 			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 			{
 				swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-					scrconfig->refresh, config->total_colors);
+						scrconfig->refresh, config->total_colors);
 			}
 			else
 			{
 				swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-					scrconfig->refresh, config->total_colors);
+						scrconfig->refresh, config->total_colors);
 			}
 		}
 		else
@@ -1053,9 +1031,17 @@ static LPCWSTR GameInfoInput(int nIndex)
 
 	return buf;
 }
+
+static LPCWSTR GameInfoSaveState(int driver_index)
+{
+	if (drivers[driver_index]->flags & GAME_SUPPORTS_SAVE)
+		return _UIW(TEXT("Supported"));
+
+	return _UIW(TEXT("Unsupported"));
+}
 #else /* MISC_FOLDER */
 /* Build color information string */
-static LPCWSTR GameInfoColors(int nIndex)
+static LPCWSTR GameInfoColors(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
@@ -1073,76 +1059,179 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 {
 	static WCHAR buffer[1024];
 	int audit_result = GetRomAuditResults(driver_index);
-
-	buffer[0] = '\0';
-
-	if (bRomStatus && IsAuditResultKnown(audit_result) == FALSE)
-	{
-		wcscpy(buffer, _UIW(TEXT("Unknown")));
-	}
-
-	else if (!bRomStatus || IsAuditResultYes(audit_result))
-	{
-		if (DriverIsBroken(driver_index))
-			wcscpy(buffer, _UIW(TEXT("Not working")));
+	memset(buffer,0,sizeof(char)*1024);
+	if ( bRomStatus )
+ 	{
+		if (IsAuditResultKnown(audit_result) == FALSE)
+ 		{
+			wcscpy(buffer, _UIW(TEXT("Unknown")));
+		}
+		else if (IsAuditResultYes(audit_result))
+		{
+			if (DriverIsBroken(driver_index))
+ 			{
+				wcscpy(buffer, _UIW(TEXT("Not working")));
+				
+				if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
+				}
+				if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Colors are completely wrong")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_NO_SOUND)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game lacks sound")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+				}
+ 			}
+			else
+			{
+				wcscpy(buffer, _UIW(TEXT("Working")));
+				
+				if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
+				}
+				if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Colors are completely wrong")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_NO_SOUND)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game lacks sound")));
+				}
+				if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
+				}
+				if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+				}
+			}
+		}
 		else
-			wcscpy(buffer, _UIW(TEXT("Working")));
-
-		//the Flags are checked in the order of "noticability"
-		//1) visible deficiencies
-		//2) audible deficiencies
-		//3) other deficiencies
-		if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
 		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
-		}
-		if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Colors are completely wrong")));
-		}
-		if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
-		}
-		if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
-		}
-		if (drivers[driver_index]->flags & GAME_NO_SOUND)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Game lacks sound")));
-		}
-		if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
-		}
-		if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
-		{
-			wcscat(buffer, TEXT("\r\n"));
-			wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+			// audit result is no
+#if 0 //def MESS
+			wcscpy(buffer, _UIW(TEXT("BIOS missing")));
+#else
+			wcscpy(buffer, _UIW(TEXT("ROMs missing")));
+#endif
 		}
 	}
 	else
 	{
-			// audit result is no
-#if 0//def MESS
-		return _UIW(TEXT("BIOS missing"));
-#else
-		return _UIW(TEXT("ROMs missing"));
-#endif
+		//Just show the emulation flags
+		if (DriverIsBroken(driver_index))
+		{
+			wcscpy(buffer, _UIW(TEXT("Not working")));
+		}
+		else
+		{
+			wcscpy(buffer, _UIW(TEXT("Working")));
+		}	
+		if (drivers[driver_index]->flags & GAME_UNEMULATED_PROTECTION)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Game protection isn't fully emulated")));
+		}
+		if (drivers[driver_index]->flags & GAME_WRONG_COLORS)
+		{
+		if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Colors are completely wrong")));
+		}
+		if (drivers[driver_index]->flags & GAME_IMPERFECT_COLORS)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Colors aren't 100% accurate")));
+		}
+		if (drivers[driver_index]->flags & GAME_IMPERFECT_GRAPHICS)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Video emulation isn't 100% accurate")));
+		}
+		if (drivers[driver_index]->flags & GAME_NO_SOUND)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Game lacks sound")));
+		}
+		if (drivers[driver_index]->flags & GAME_IMPERFECT_SOUND)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Sound emulation isn't 100% accurate")));
+		}
+		if (drivers[driver_index]->flags & GAME_NO_COCKTAIL)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+		}
 	}
-
 	return buffer;
 }
 
 /* Build game manufacturer string */
-static LPCWSTR GameInfoManufactured(int nIndex)
+static LPCWSTR GameInfoManufactured(UINT nIndex)
 {
 	static WCHAR buffer[1024];
 
@@ -1150,6 +1239,7 @@ static LPCWSTR GameInfoManufactured(int nIndex)
 	return buffer;
 }
 
+//mamep: display more info
 /* Build Game title string */
 LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 {
@@ -1182,9 +1272,8 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	return info;
 }
 
-
 /* Build game clone infromation string */
-static LPCWSTR GameInfoCloneOf(int nIndex)
+static LPCWSTR GameInfoCloneOf(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	int nParentIndex= -1;
@@ -1193,28 +1282,556 @@ static LPCWSTR GameInfoCloneOf(int nIndex)
 
 	if (DriverIsClone(nIndex))
 	{
-		if ((nParentIndex = GetParentIndex(drivers[nIndex])) >= 0)
-			swprintf(buf, TEXT("%s [%s]"),
-					ConvertAmpersandString(UseLangList()?
-						_LSTW(driversw[nParentIndex]->description):
-						driversw[nParentIndex]->modify_the),
-					driversw[nParentIndex]->name);
+		nParentIndex = GetParentIndex(drivers[nIndex]);
+		swprintf(buf, TEXT("%s [%s]"),
+			ConvertAmpersandString(UseLangList()?
+				_LSTW(driversw[nParentIndex]->description):
+				driversw[nParentIndex]->modify_the),
+			driversw[nParentIndex]->name);
 	}
 
 	return buf;
 }
 
-static LPCWSTR GameInfoSaveState(int driver_index)
-{
-	if (drivers[driver_index]->flags & GAME_SUPPORTS_SAVE)
-		return _UIW(TEXT("Supported"));
-
-	return _UIW(TEXT("Unsupported"));
-}
-
-static LPCWSTR GameInfoSource(int nIndex)
+static LPCWSTR GameInfoSource(UINT nIndex)
 {
 	return GetDriverFilename(nIndex);
+}
+
+//mamep: translate dialog
+static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam)
+{
+	switch (Msg)
+	{
+	case PSCB_INITIALIZED:
+		TranslateDialog(hDlg, lParam, FALSE);
+		break;
+	}
+	return 0;
+}
+
+/* Handle the information property page */
+INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+	HWND hWnd;
+	switch (Msg)
+	{
+	case WM_INITDIALOG:
+		if (g_hIcon)
+			SendDlgItemMessage(hDlg, IDC_GAME_ICON, STM_SETICON, (WPARAM) g_hIcon, 0);
+
+		TranslateDialog(hDlg, lParam, TRUE);
+
+#ifdef TREE_SHEET
+		if (GetShowTreeSheet())
+			ModifyPropertySheetForTreeSheet(hDlg);
+#endif /* TREE_SHEET */
+
+#if defined(USE_SINGLELINE_TABCONTROL)
+		{
+			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+			DWORD tabStyle = (GetWindowLong(hWnd,GWL_STYLE) & ~TCS_MULTILINE);
+			SetWindowLong(hWnd,GWL_STYLE,tabStyle | TCS_SINGLELINE);
+		}
+#endif
+
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE),         GameInfoTitle(g_nPropertyMode, g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_MANUFACTURED),  GameInfoManufactured(g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_STATUS),        GameInfoStatus(g_nGame, FALSE));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CPU),           GameInfoCPU(g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOUND),         GameInfoSound(g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SCREEN),        GameInfoScreen(g_nGame));
+#ifdef MISC_FOLDER
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SAVESTATE),     GameInfoSaveState(g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_INPUT),         GameInfoInput(g_nGame));
+#else /* MISC_FOLDER */
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_COLORS),        GameInfoColors(g_nGame));
+#endif /* !MISC_FOLDER */
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CLONEOF),       GameInfoCloneOf(g_nGame));
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOURCE),        GameInfoSource(g_nGame));
+
+		if (DriverIsClone(g_nGame))
+		{
+			ShowWindow(GetDlgItem(hDlg, IDC_PROP_CLONEOF_TEXT), SW_SHOW);
+		}
+		else
+		{
+			ShowWindow(GetDlgItem(hDlg, IDC_PROP_CLONEOF_TEXT), SW_HIDE);
+		}
+		hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+		UpdateBackgroundBrush(hWnd);
+		ShowWindow(hDlg, SW_SHOW);
+		return 1;
+
+	}
+	return 0;
+}
+
+/* Handle all options property pages */
+INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
+{
+//	RECT rc;
+//	int nParentIndex = -1;
+	switch (Msg)
+	{
+	case WM_INITDIALOG:
+		TranslateDialog(hDlg, lParam, TRUE);
+
+#ifdef TREE_SHEET
+		if (GetShowTreeSheet())
+			ModifyPropertySheetForTreeSheet(hDlg);
+#endif /* TREE_SHEET */
+
+		/* Fill in the Game info at the top of the sheet */
+		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(g_nPropertyMode, g_nGame));
+		InitializeOptions(hDlg);
+		InitializeMisc(hDlg);
+
+		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+
+		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+		g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
+
+		if (g_nGame == GLOBAL_OPTIONS)
+			ShowWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), SW_HIDE);
+		else
+			EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+
+#ifdef DRIVER_SWITCH
+		// if driver switch config is in MISC page
+		{
+			int i;
+			for (i=0; drivers_table[i].name; i++)
+				ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
+				ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
+		}
+#endif /* DRIVER_SWITCH */
+
+		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
+		ShowWindow(hDlg, SW_SHOW);
+  
+		return 1;
+
+	case WM_HSCROLL:
+		/* slider changed */
+		HANDLE_WM_HSCROLL(hDlg, wParam, lParam, OptOnHScroll);
+		//g_bUseDefaults = FALSE;
+		//g_bReset = TRUE;
+		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), TRUE);
+		PropSheet_Changed(GetParent(hDlg), hDlg);
+
+		// make sure everything's copied over, to determine what's changed
+		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
+
+		// redraw it, it might be a new color now
+		InvalidateRect((HWND)lParam,NULL,TRUE);
+
+		break;
+
+	case WM_COMMAND:
+		{
+			/* Below, 'changed' is used to signify the 'Apply'
+			 * button should be enabled.
+			 */
+			WORD wID         = GET_WM_COMMAND_ID(wParam, lParam);
+			HWND hWndCtrl    = GET_WM_COMMAND_HWND(wParam, lParam);
+			WORD wNotifyCode = GET_WM_COMMAND_CMD(wParam, lParam);
+			BOOL changed     = FALSE;
+			int nCurSelection = 0;
+			TCHAR szClass[256];
+
+			switch (wID)
+			{
+			case IDC_REFRESH:
+				if (wNotifyCode == LBN_SELCHANGE)
+				{
+					RefreshSelectionChange(hDlg, hWndCtrl);
+					changed = TRUE;
+				}
+				break;
+
+			case IDC_ASPECT:
+				nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_ASPECT));
+				if( g_bAutoAspect[GetSelectedScreen(hDlg)] != nCurSelection )
+				{
+					changed = TRUE;
+					g_bAutoAspect[GetSelectedScreen(hDlg)] = nCurSelection;
+				}
+				break;
+
+			case IDC_SNAPSIZE:
+				nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
+				if( g_bAutoSnapSize != nCurSelection )
+				{
+					changed = TRUE;
+					g_bAutoSnapSize = nCurSelection;
+				}
+				break;
+
+#if 0 //mamep: use standard combobox
+			case IDC_SELECT_EFFECT:
+				changed = SelectEffect(hDlg);
+				break;
+
+			case IDC_RESET_EFFECT:
+				changed = ResetEffect(hDlg);
+				break;
+#endif
+
+			case IDC_SELECT_JOYSTICKMAP:
+				changed = SelectJoystickMap(hDlg);
+				break;
+
+			case IDC_RESET_JOYSTICKMAP:
+				changed = ResetJoystickMap(hDlg);
+				break;
+
+			case IDC_SELECT_DEBUGSCRIPT:
+				changed = SelectDebugscript(hDlg);
+				break;
+
+			case IDC_RESET_DEBUGSCRIPT:
+				changed = ResetDebugscript(hDlg);
+				break;
+
+			case IDC_PROP_RESET:
+				if (wNotifyCode != BN_CLICKED)
+					break;
+
+				options_copy(pCurrentOpts, pOrigOpts);
+				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+				g_bReset = FALSE;
+				PropSheet_UnChanged(GetParent(hDlg), hDlg);
+				EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+				break;
+
+			case IDC_USE_DEFAULT:
+				// Copy the pDefaultOpts into pCurrentOpts
+				options_copy(pCurrentOpts, pDefaultOpts);
+				// repopulate the controls with the new data
+				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+				
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+				// This evaluates properly
+				g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
+				// Enable/Dispable the Reset to Defaults button
+				EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+				// Tell the dialog to enable/disable the apply button.
+				if (g_nGame != GLOBAL_OPTIONS)
+				{
+					if (g_bReset)
+					{
+						PropSheet_Changed(GetParent(hDlg), hDlg);
+					}
+					else
+					{
+						PropSheet_UnChanged(GetParent(hDlg), hDlg);
+					}
+				}
+				break;
+
+				// MSH 20070813 - Update all related controls
+			case IDC_SCREENSELECT:
+			case IDC_SCREEN:
+				// NPW 3-Apr-2007:  Ugh I'm only perpetuating the vile hacks in this code
+				if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
+				{
+					changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SIZES);
+					//MSH 20070814 - Hate to do this, but its either this, or update each individual
+					// control on the SCREEN tab.
+					UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+					changed = TRUE;
+					/*
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SCREENSELECT);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SCREEN);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_REFRESH);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SIZES);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_VIEW);
+					datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SWITCHRES);
+
+					if (strcmp(options_get_string(pCurrentOpts, "screen0"), options_get_string(pOrigOpts, "screen0")) ||
+						strcmp(options_get_string(pCurrentOpts, "screen1"), options_get_string(pOrigOpts, "screen1")) ||
+						strcmp(options_get_string(pCurrentOpts, "screen2"), options_get_string(pOrigOpts, "screen2")) ||
+						strcmp(options_get_string(pCurrentOpts, "screen3"), options_get_string(pOrigOpts, "screen3")))
+					{
+						changed = TRUE;
+					}
+					*/
+				}
+				break;
+			default:
+#if 0 //def MESS
+				if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
+					break;
+#endif // MESS
+
+				// use default behavior; try to get the result out of the datamap if
+				// appropriate
+				GetClassName(hWndCtrl, szClass, ARRAY_LENGTH(szClass));
+				if (!wcscmp(szClass, WC_COMBOBOX))
+				{
+					// combo box
+					if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
+					{
+							changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
+					}
+				}
+				else if (!wcscmp(szClass, WC_BUTTON) && (GetWindowLong(hWndCtrl, GWL_STYLE) & BS_CHECKBOX))
+				{
+					// check box
+					changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
+				}
+				break;
+			}
+
+			if (changed == TRUE)
+			{
+				// make sure everything's copied over, to determine what's changed
+				UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
+				// enable the apply button
+				PropSheet_Changed(GetParent(hDlg), hDlg);
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+				g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
+				EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+			}
+
+			// If we are closing, pCurrentOpts may be null
+			if (NULL != pCurrentOpts)
+			{
+				// make sure everything's copied over, to determine what's changed
+				UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
+				SetPropEnabledControls(hDlg);
+				// redraw it, it might be a new color now
+				if (GetDlgItem(hDlg,wID))
+					InvalidateRect(GetDlgItem(hDlg,wID),NULL,FALSE);
+			}
+		}
+		break;
+
+	case WM_NOTIFY:
+		{
+			// Set to true if we are exiting the properites dialog
+			BOOL bClosing = ((LPPSHNOTIFY) lParam)->lParam; 
+
+			switch (((NMHDR *) lParam)->code)
+			{
+				//We'll need to use a CheckState Table 
+				//Because this one gets called for all kinds of other things too, and not only if a check is set
+			case PSN_SETACTIVE:
+				/* Initialize the controls. */
+				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+				g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
+
+				// Sync RESET TO DEFAULTS buttons.
+				EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+				break;
+
+			case PSN_APPLY:
+				// Handle more than one PSN_APPLY, since this proc handles more tha one
+				// property sheet and can be called multiple times when it's time to exit,
+				// and we may have already freed the core_options.
+				if (bClosing)
+				{
+					if (NULL == pCurrentOpts)
+						return TRUE;
+				}
+
+				// Read the datamap
+				UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
+
+				// Copy current options to orignal options.
+				options_copy(pOrigOpts, pCurrentOpts);
+				
+				// Repopulate the controls?  WTF?  We just read them, they should be fine.
+				UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
+
+				// Determine button states.
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+				g_bReset = FALSE;
+
+				orig_uses_defaults = g_bUseDefaults;
+
+				// Sync RESET and RESET TO DEFAULTS buttons.
+				EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
+				EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
+
+				// Save or remove the current options
+				save_options(g_nPropertyMode, (g_bUseDefaults) ? NULL : pCurrentOpts, g_nGame);
+
+				//mamep: BIOS page
+				if (g_nPropertyMode == OPTIONS_GLOBAL)
+				{
+					int n;
+
+					for (n = 0; pBiosName[n]; n++)
+					{
+						int nIndex = GetSystemBiosInfo(n);
+						core_options *opts = load_options(OPTIONS_GAME, nIndex);
+
+						options_set_string(opts, OPTION_BIOS, pBiosName[n], OPTION_PRIORITY_CMDLINE);
+						save_options(OPTIONS_GAME, opts, nIndex);
+						options_free(opts);
+					}
+				}
+
+				// Disable apply button
+				PropSheet_UnChanged(GetParent(hDlg), hDlg);
+				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_NOERROR);
+
+				// If we a closing, free the core_options
+				if (bClosing)
+				{
+					if (pCurrentOpts) options_free(pCurrentOpts);
+					if (pOrigOpts)    options_free(pOrigOpts);
+					if (pDefaultOpts) options_free(pDefaultOpts);
+					pCurrentOpts = pOrigOpts = pDefaultOpts = NULL;
+
+					//mamep: for coloring of changed elements
+					if (pOptsGlobal) options_free(pOptsGlobal);
+					if (pOptsVector) options_free(pOptsVector);
+					if (pOptsSource) options_free(pOptsSource);
+					pOptsGlobal = pOptsVector = pOptsSource = NULL;
+					//mamep: BIOS page
+					{
+						int n;
+
+						for (n = 0; pBiosName[n]; n++)
+						{
+							free(pBiosName[n]);
+							pBiosName[n] = NULL;
+						}
+					}
+				}
+				return TRUE;
+
+			case PSN_KILLACTIVE:
+				/* Save Changes to the options here. */
+				UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
+				// Determine button states.
+				g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
+
+				ResetDataMap(hDlg);
+				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
+				return 1;  
+
+			case PSN_RESET:
+				// Reset to the original values. Disregard changes
+				options_copy(pCurrentOpts, pOrigOpts);
+				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
+				break;
+
+			case PSN_HELP:
+				// User wants help for this property page
+				break;
+			}
+		}
+		break;
+#if 1 //mamep
+	/* FIXME - Not sure what to do here. */
+	case WM_CTLCOLORSTATIC :
+	case WM_CTLCOLOREDIT :
+	{
+		RECT rc;
+
+		//Set the Coloring of the elements
+		if (GetWindowLong((HWND)lParam, GWL_ID) < 0)
+			return 0;
+
+		if (g_nPropertyMode == OPTIONS_GLOBAL)
+		{
+			//Normal Black case
+			SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+		}
+		else if (IsControlOptionValue(hDlg, (HWND)lParam, pCurrentOpts, pOptsGlobal))
+		{
+			//Normal Black case
+			SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+		}
+		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsVector) && DriverIsVector(g_nGame))
+		{
+			SetTextColor((HDC)wParam,VECTOR_COLOR);
+		}
+		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsSource))
+		{
+			SetTextColor((HDC)wParam,FOLDER_COLOR);
+		}
+		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pDefaultOpts))
+		{
+			SetTextColor((HDC)wParam,PARENT_COLOR);
+		}
+		else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOrigOpts))
+		{
+			SetTextColor((HDC)wParam,GAME_COLOR);
+		}
+		else
+		{
+			switch (g_nPropertyMode)
+			{
+				case OPTIONS_GAME:
+					SetTextColor((HDC)wParam,GAME_COLOR);
+					break;
+				case OPTIONS_SOURCE:
+					SetTextColor((HDC)wParam,FOLDER_COLOR);
+					break;
+				case OPTIONS_VECTOR:
+					SetTextColor((HDC)wParam,VECTOR_COLOR);
+					break;
+				default:
+					case OPTIONS_GLOBAL:
+					SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
+					break;
+			}
+		}
+		if (Msg == WM_CTLCOLORSTATIC)
+		{
+			if (SafeIsAppThemed())
+			{
+				HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
+				// Set the background mode to transparent
+				SetBkMode((HDC)wParam, TRANSPARENT);
+
+				// Get the controls window dimensions
+				GetWindowRect((HWND)lParam, &rc);
+
+				// Map the coordinates to coordinates with the upper left corner of dialog control as base
+				MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
+
+				// Adjust the position of the brush for this control (else we see the top left of the brush as background)
+				SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
+
+				// Return the brush
+				return (INT_PTR)(hBkBrush);
+			}
+			else
+			{
+				SetBkColor((HDC)wParam, GetSysColor(COLOR_3DFACE));
+			}
+		}
+		else
+			SetBkColor((HDC)wParam, RGB(255,255,255));
+		UnrealizeObject(background_brush);
+		return (DWORD)background_brush;
+			break;
+	}
+#endif // 0 Not sure what to do here
+
+	case WM_HELP:
+		/* User clicked the ? from the upper right on a control */
+		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
+		break;
+
+	case WM_CONTEXTMENU: 
+		HelpFunction((HWND)wParam, MAMEUICONTEXTHELP, HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
+		break; 
+
+	}
+	EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
+
+	return 0;
 }
 
 #ifdef TREE_SHEET
@@ -1759,559 +2376,6 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 }
 #endif /* TREE_SHEET */
 
-static int CALLBACK PropSheetCallbackProc(HWND hDlg, UINT Msg, LPARAM lParam)
-{
-	switch (Msg)
-	{
-	case PSCB_INITIALIZED:
-		TranslateDialog(hDlg, lParam, FALSE);
-		break;
-	}
-	return 0;
-}
-
-/* Handle the information property page */
-INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	HWND hWnd;
-	switch (Msg)
-	{
-	case WM_INITDIALOG:
-		if (g_hIcon)
-			SendDlgItemMessage(hDlg, IDC_GAME_ICON, STM_SETICON, (WPARAM) g_hIcon, 0);
-
-		TranslateDialog(hDlg, lParam, TRUE);
-
-#ifdef TREE_SHEET
-		if (GetShowTreeSheet())
-			ModifyPropertySheetForTreeSheet(hDlg);
-#endif /* TREE_SHEET */
-
-#if defined(USE_SINGLELINE_TABCONTROL)
-		{
-			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-			DWORD tabStyle = (GetWindowLong(hWnd,GWL_STYLE) & ~TCS_MULTILINE);
-			SetWindowLong(hWnd,GWL_STYLE,tabStyle | TCS_SINGLELINE);
-		}
-#endif
-
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE),         GameInfoTitle(g_nPropertyMode, g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_MANUFACTURED),  GameInfoManufactured(g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_STATUS),        GameInfoStatus(g_nGame, FALSE));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CPU),           GameInfoCPU(g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOUND),         GameInfoSound(g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SCREEN),        GameInfoScreen(g_nGame));
-#ifdef MISC_FOLDER
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_INPUT),         GameInfoInput(g_nGame));
-#else /* MISC_FOLDER */
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_COLORS),        GameInfoColors(g_nGame));
-#endif /* !MISC_FOLDER */
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_CLONEOF),       GameInfoCloneOf(g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SOURCE),        GameInfoSource(g_nGame));
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_SAVESTATE),     GameInfoSaveState(g_nGame));
-
-		if (DriverIsClone(g_nGame))
-		{
-			ShowWindow(GetDlgItem(hDlg, IDC_PROP_CLONEOF_TEXT), SW_SHOW);
-		}
-		else
-		{
-			ShowWindow(GetDlgItem(hDlg, IDC_PROP_CLONEOF_TEXT), SW_HIDE);
-		}
-		hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-		UpdateBackgroundBrush(hWnd);
-		ShowWindow(hDlg, SW_SHOW);
-		return 1;
-
-	}
-	return 0;
-}
-
-static INT_PTR HandleGameOptionsMessage(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	/* Below, 'changed' is used to signify the 'Apply'
-	 * button should be enabled.
-	 */
-	WORD wID         = GET_WM_COMMAND_ID(wParam, lParam);
-	HWND hWndCtrl    = GET_WM_COMMAND_HWND(wParam, lParam);
-	WORD wNotifyCode = GET_WM_COMMAND_CMD(wParam, lParam);
-	BOOL changed     = FALSE;
-	int nCurSelection = 0;
-	TCHAR szClass[256];
-
-	switch (wID)
-	{
-	case IDC_REFRESH:
-		if (wNotifyCode == LBN_SELCHANGE)
-		{
-			RefreshSelectionChange(hDlg, hWndCtrl);
-			changed = TRUE;
-		}
-		break;
-
-	case IDC_ASPECT:
-		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_ASPECT));
-		if( g_bAutoAspect[GetSelectedScreen(hDlg)] != nCurSelection )
-		{
-			changed = TRUE;
-			g_bAutoAspect[GetSelectedScreen(hDlg)] = nCurSelection;
-		}
-		break;
-
-	case IDC_ASPECTRATION:
-	case IDC_ASPECTRATIOD:
-		if (wNotifyCode == EN_CHANGE)
-		{
-			//TODO: check value is changed
-			changed = TRUE;
-		}
-		break;
-
-	case IDC_SNAPSIZE:
-		nCurSelection = Button_GetCheck( GetDlgItem(hDlg, IDC_SNAPSIZE));
-		if( g_bAutoSnapSize != nCurSelection )
-		{
-			changed = TRUE;
-			g_bAutoSnapSize = nCurSelection;
-		}
-		break;
-
-#if 0 //mamep: use standard combobox
-	case IDC_SELECT_EFFECT:
-		changed = SelectEffect(hDlg);
-		break;
-
-	case IDC_RESET_EFFECT:
-		changed = ResetEffect(hDlg);
-		break;
-#endif
-
-	case IDC_SELECT_JOYSTICKMAP:
-		changed = SelectJoystickMap(hDlg);
-		break;
-
-	case IDC_RESET_JOYSTICKMAP:
-		changed = ResetJoystickMap(hDlg);
-		break;
-
-	case IDC_SELECT_DEBUGSCRIPT:
-		changed = SelectDebugscript(hDlg);
-		break;
-
-	case IDC_RESET_DEBUGSCRIPT:
-		changed = ResetDebugscript(hDlg);
-		break;
-
-	case IDC_PROP_RESET:
-		if (wNotifyCode != BN_CLICKED)
-			break;
-
-		options_copy(pCurrentOpts, pOrigOpts);
-		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		g_bReset = FALSE;
-		PropSheet_UnChanged(GetParent(hDlg), hDlg);
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-		break;
-
-	case IDC_USE_DEFAULT:
-		// Copy the pDefaultOpts into pCurrentOpts
-		options_copy(pCurrentOpts, pDefaultOpts);
-		// repopulate the controls with the new data
-		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		// This evaluates properly
-		g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
-		// Enable/Dispable the Reset to Defaults button
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-		// Tell the dialog to enable/disable the apply button.
-		if (g_nGame != GLOBAL_OPTIONS)
-		{
-			if (g_bReset)
-			{
-				PropSheet_Changed(GetParent(hDlg), hDlg);
-			}
-			else
-			{
-				PropSheet_UnChanged(GetParent(hDlg), hDlg);
-			}
-		}
-		break;
-
-		// MSH 20070813 - Update all related controls
-	case IDC_SCREENSELECT:
-	case IDC_SCREEN:
-		// NPW 3-Apr-2007:  Ugh I'm only perpetuating the vile hacks in this code
-		if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
-		{
-			changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SIZES);
-			//MSH 20070814 - Hate to do this, but its either this, or update each individual
-			// control on the SCREEN tab.
-			UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-			changed = TRUE;
-			/*
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SCREENSELECT);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SCREEN);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_REFRESH);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SIZES);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_VIEW);
-			datamap_populate_control(properties_datamap, hDlg, pCurrentOpts, IDC_SWITCHRES);
-
-			if (strcmp(options_get_string(pCurrentOpts, "screen0"), options_get_string(pOrigOpts, "screen0")) ||
-				strcmp(options_get_string(pCurrentOpts, "screen1"), options_get_string(pOrigOpts, "screen1")) ||
-				strcmp(options_get_string(pCurrentOpts, "screen2"), options_get_string(pOrigOpts, "screen2")) ||
-				strcmp(options_get_string(pCurrentOpts, "screen3"), options_get_string(pOrigOpts, "screen3")))
-			{
-				changed = TRUE;
-			}
-			*/
-		}
-		break;
-	default:
-#if 0//def MESS
-		if (MessPropertiesCommand(hDlg, wNotifyCode, wID, &changed))
-			break;
-#endif // MESS
-
-		// use default behavior; try to get the result out of the datamap if
-		// appropriate
-		GetClassName(hWndCtrl, szClass, ARRAY_LENGTH(szClass));
-		if (!wcscmp(szClass, WC_COMBOBOX))
-		{
-			// combo box
-			if ((wNotifyCode == CBN_SELCHANGE) || (wNotifyCode == CBN_SELENDOK))
-			{
-					changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
-			}
-		}
-		else if (!wcscmp(szClass, WC_BUTTON) && (GetWindowLong(hWndCtrl, GWL_STYLE) & BS_CHECKBOX))
-		{
-			// check box
-			changed = datamap_read_control(properties_datamap, hDlg, pCurrentOpts, wID);
-		}
-		break;
-	}
-
-	if (changed == TRUE)
-	{
-		// make sure everything's copied over, to determine what's changed
-		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
-		// enable the apply button
-		PropSheet_Changed(GetParent(hDlg), hDlg);
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-	}
-
-	// If we are closing, pCurrentOpts may be null
-	if (NULL != pCurrentOpts)
-	{
-		// make sure everything's copied over, to determine what's changed
-		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
-		SetPropEnabledControls(hDlg);
-		// redraw it, it might be a new color now
-		if (GetDlgItem(hDlg,wID))
-			InvalidateRect(GetDlgItem(hDlg,wID),NULL,FALSE);
-	}
-
-	EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
-
-	return 0;
-}
-
-static INT_PTR HandleGameOptionsNotify(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	// Set to true if we are exiting the properites dialog
-	BOOL bClosing = ((LPPSHNOTIFY) lParam)->lParam; 
-
-	switch (((NMHDR *) lParam)->code)
-	{
-		//We'll need to use a CheckState Table 
-		//Because this one gets called for all kinds of other things too, and not only if a check is set
-	case PSN_SETACTIVE:
-		/* Initialize the controls. */
-		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
-
-		// Sync RESET TO DEFAULTS buttons.
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-		break;
-
-	case PSN_APPLY:
-		// Handle more than one PSN_APPLY, since this proc handles more tha one
-		// property sheet and can be called multiple times when it's time to exit,
-		// and we may have already freed the core_options.
-		if (bClosing)
-		{
-			if (NULL == pCurrentOpts)
-				return TRUE;
-		}
-
-		// Read the datamap
-		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
-
-		// Copy current options to orignal options.
-		options_copy(pOrigOpts, pCurrentOpts);
-
-		// Repopulate the controls?  WTF?  We just read them, they should be fine.
-		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-
-		// Determine button states.
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		g_bReset = FALSE;
-
-		orig_uses_defaults = g_bUseDefaults;
-
-		// Sync RESET and RESET TO DEFAULTS buttons.
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
-
-		// Save or remove the current options
-		save_options(g_nPropertyMode, (g_bUseDefaults) ? NULL : pCurrentOpts, g_nGame);
-
-		if (g_nPropertyMode == OPTIONS_GLOBAL)
-		{
-			int n;
-
-			for (n = 0; pBiosName[n]; n++)
-			{
-				int nIndex = GetSystemBiosInfo(n);
-				core_options *opts = load_options(OPTIONS_GAME, nIndex);
-
-				options_set_string(opts, OPTION_BIOS, pBiosName[n], OPTION_PRIORITY_CMDLINE);
-				save_options(OPTIONS_GAME, opts, nIndex);
-				options_free(opts);
-			}
-		}
-
-		// Disable apply button
-		PropSheet_UnChanged(GetParent(hDlg), hDlg);
-		SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_NOERROR);
-
-		// If we a closing, free the core_options
-		if (bClosing)
-		{
-			if (pCurrentOpts) options_free(pCurrentOpts);
-			if (pOrigOpts)    options_free(pOrigOpts);
-			if (pDefaultOpts) options_free(pDefaultOpts);
-			pCurrentOpts = pOrigOpts = pDefaultOpts = NULL;
-
-			if (pOptsGlobal) options_free(pOptsGlobal);
-			if (pOptsVector) options_free(pOptsVector);
-			if (pOptsSource) options_free(pOptsSource);
-			pOptsGlobal = pOptsVector = pOptsSource = NULL;
-
-			{
-				int n;
-
-				for (n = 0; pBiosName[n]; n++)
-				{
-					free(pBiosName[n]);
-					pBiosName[n] = NULL;
-				}
-			}
-		}
-		return TRUE;
-
-	case PSN_KILLACTIVE:
-		/* Save Changes to the options here. */
-		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
-		// Determine button states.
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-
-		ResetDataMap(hDlg);
-		SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
-		return 1;  
-
-	case PSN_RESET:
-		// Reset to the original values. Disregard changes
-		options_copy(pCurrentOpts, pOrigOpts);
-		SetWindowLongPtr(hDlg, DWLP_MSGRESULT, FALSE);
-		break;
-
-	case PSN_HELP:
-		// User wants help for this property page
-		break;
-	}
-
-	EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
-
-	return 0;
-}
-
-static INT_PTR HandleGameOptionsCtlColor(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	RECT rc;
-
-	//Set the Coloring of the elements
-	if (GetWindowLong((HWND)lParam, GWL_ID) < 0)
-		return 0;
-
-	if (g_nPropertyMode == OPTIONS_GLOBAL)
-	{
-		//Normal Black case
-		SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-	}
-	else if (IsControlOptionValue(hDlg, (HWND)lParam, pCurrentOpts, pOptsGlobal))
-	{
-		//Normal Black case
-		SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-	}
-	else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsVector) && DriverIsVector(g_nGame))
-	{
-		SetTextColor((HDC)wParam,VECTOR_COLOR);
-	}
-	else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOptsSource))
-	{
-		SetTextColor((HDC)wParam,FOLDER_COLOR);
-	}
-	else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pDefaultOpts))
-	{
-		SetTextColor((HDC)wParam,PARENT_COLOR);
-	}
-	else if (IsControlOptionValue(hDlg,(HWND)lParam, pCurrentOpts, pOrigOpts))
-	{
-		SetTextColor((HDC)wParam,GAME_COLOR);
-	}
-	else
-	{
-		switch (g_nPropertyMode)
-		{
-			case OPTIONS_GAME:
-				SetTextColor((HDC)wParam,GAME_COLOR);
-				break;
-			case OPTIONS_SOURCE:
-				SetTextColor((HDC)wParam,FOLDER_COLOR);
-				break;
-			case OPTIONS_VECTOR:
-				SetTextColor((HDC)wParam,VECTOR_COLOR);
-				break;
-			default:
-				SetTextColor((HDC)wParam,COLOR_WINDOWTEXT);
-				break;
-		}
-	}
-	if (Msg == WM_CTLCOLORSTATIC)
-	{
-		//if (SafeIsAppThemed())
-		if (hThemes && fnIsThemed && fnIsThemed())
-		{
-			HWND hWnd = PropSheet_GetTabControl(GetParent(hDlg));
-			// Set the background mode to transparent
-			SetBkMode((HDC)wParam, TRANSPARENT);
-
-			// Get the controls window dimensions
-			GetWindowRect((HWND)lParam, &rc);
-
-			// Map the coordinates to coordinates with the upper left corner of dialog control as base
-			MapWindowPoints(NULL, hWnd, (LPPOINT)(&rc), 2);
-
-			// Adjust the position of the brush for this control (else we see the top left of the brush as background)
-			SetBrushOrgEx((HDC)wParam, -rc.left, -rc.top, NULL);
-
-			// Return the brush
-			return (INT_PTR)(hBkBrush);
-		}
-		else
-		{
-			SetBkColor((HDC)wParam, GetSysColor(COLOR_3DFACE));
-		}
-	}
-	else
-		SetBkColor((HDC)wParam, RGB(255,255,255));
-	UnrealizeObject(background_brush);
-	return (DWORD)background_brush;
-}
-
-/* Handle all options property pages */
-INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-//	RECT rc;
-//	int nParentIndex = -1;
-	switch (Msg)
-	{
-	case WM_INITDIALOG:
-		TranslateDialog(hDlg, lParam, TRUE);
-
-#ifdef TREE_SHEET
-		if (GetShowTreeSheet())
-			ModifyPropertySheetForTreeSheet(hDlg);
-#endif /* TREE_SHEET */
-
-		/* Fill in the Game info at the top of the sheet */
-		Static_SetText(GetDlgItem(hDlg, IDC_PROP_TITLE), GameInfoTitle(g_nPropertyMode, g_nGame));
-		InitializeOptions(hDlg);
-		InitializeMisc(hDlg);
-
-		UpdateProperties(hDlg, properties_datamap, pCurrentOpts);
-
-		g_bUseDefaults = options_equal(pCurrentOpts, pDefaultOpts);
-		g_bReset = options_equal(pCurrentOpts, pOrigOpts) ? FALSE : TRUE;
-
-		if (g_nGame == GLOBAL_OPTIONS)
-			ShowWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), SW_HIDE);
-		else
-			EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), (g_bUseDefaults) ? FALSE : TRUE);
-
-#ifdef DRIVER_SWITCH
-		// if driver switch config is in MISC page
-		{
-			int i;
-			for (i=0; drivers_table[i].name; i++)
-				ShowWindow(GetDlgItem(hDlg, drivers_table[i].ctrl), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
-				ShowWindow(GetDlgItem(hDlg, IDC_DRV_TEXT), (g_nGame == GLOBAL_OPTIONS) ? SW_SHOW : SW_HIDE);
-		}
-#endif /* DRIVER_SWITCH */
-
-		EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
-		ShowWindow(hDlg, SW_SHOW);
-  
-		return 1;
-
-	case WM_HSCROLL:
-		/* slider changed */
-		HANDLE_WM_HSCROLL(hDlg, wParam, lParam, OptOnHScroll);
-		//g_bUseDefaults = FALSE;
-		//g_bReset = TRUE;
-		EnableWindow(GetDlgItem(hDlg, IDC_USE_DEFAULT), TRUE);
-		PropSheet_Changed(GetParent(hDlg), hDlg);
-
-		// make sure everything's copied over, to determine what's changed
-		UpdateOptions(hDlg, properties_datamap, pCurrentOpts);
-
-		// redraw it, it might be a new color now
-		InvalidateRect((HWND)lParam,NULL,TRUE);
-
-		break;
-
-	case WM_COMMAND:
-		return HandleGameOptionsMessage(hDlg, Msg, wParam, lParam);
-
-	case WM_NOTIFY:
-		return HandleGameOptionsNotify(hDlg, Msg, wParam, lParam);
-
-	case WM_CTLCOLORSTATIC :
-	case WM_CTLCOLOREDIT :
-		return HandleGameOptionsCtlColor(hDlg, Msg, wParam, lParam);
-
-	case WM_HELP:
-		/* User clicked the ? from the upper right on a control */
-		HelpFunction(((LPHELPINFO)lParam)->hItemHandle, MAMEUICONTEXTHELP, HH_TP_HELP_WM_HELP, GetHelpIDs());
-		break;
-
-	case WM_CONTEXTMENU: 
-		HelpFunction((HWND)wParam, MAMEUICONTEXTHELP, HH_TP_HELP_CONTEXTMENU, GetHelpIDs());
-		break; 
-
-	}
-	EnableWindow(GetDlgItem(hDlg, IDC_PROP_RESET), g_bReset);
-
-	return 0;
-}
 
 static void AspectSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
 {
@@ -2434,6 +2498,47 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 	int  width = 0;
 	int  height = 0;
 
+	/* video */
+
+#if 0 //mamep
+	/* Setup refresh list based on depth. */
+	datamap_update_control(properties_datamap, hWnd, pCurrentOpts, IDC_REFRESH);
+	/* Setup Select screen*/
+	UpdateSelectScreenUI(hWnd );
+
+	hCtrl = GetDlgItem(hWnd, IDC_ASPECT);
+	if (hCtrl)
+	{
+		Button_SetCheck(hCtrl, g_bAutoAspect[GetSelectedScreen(hWnd)] )	;
+	}
+#endif
+
+	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
+	if (hCtrl)
+	{
+		Button_SetCheck(hCtrl, g_bAutoSnapSize );
+	}
+
+	/* Bios select list */
+	hCtrl = GetDlgItem(hWnd, IDC_BIOS);
+	if (hCtrl)
+	{
+		const char* cBuffer;
+		int i = 0;
+		int iCount = ComboBox_GetCount( hCtrl );
+		for( i=0; i< iCount; i++ )
+		{
+			cBuffer = (const char*)ComboBox_GetItemData( hCtrl, i );
+			if (strcmp(cBuffer, options_get_string(pCurrentOpts, OPTION_BIOS) ) == 0)
+			{
+				(void)ComboBox_SetCurSel(hCtrl, i);
+				break;
+			}
+
+		}
+	}
+
+	//mamep: BIOS page
 	{
 		int n;
 
@@ -2459,12 +2564,6 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 				}
 			}
 		}
-	}
-
-	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
-	if (hCtrl)
-	{
-		Button_SetCheck(hCtrl, g_bAutoSnapSize );
 	}
 
 #ifdef DRIVER_SWITCH
@@ -2569,6 +2668,7 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 			Edit_SetText(hCtrl2, TEXT("3"));
 		}
 	}
+#if 0 //mamep: use standard combobox
 	hCtrl = GetDlgItem(hWnd, IDC_EFFECT);
 	if (hCtrl) {
 		const char* effect = options_get_string(o, WINOPTION_EFFECT);
@@ -2576,7 +2676,9 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 			effect = "none";
 			options_set_string(o, WINOPTION_EFFECT, effect, OPTION_PRIORITY_CMDLINE);
 		}
+		win_set_window_text_utf8(hCtrl, effect);
 	}
+#endif
 	hCtrl = GetDlgItem(hWnd, IDC_SNAPSIZE);
 	if (hCtrl)
 	{
@@ -2648,7 +2750,6 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	//mamep: control -maximize option
 	EnableWindow(GetDlgItem(hWnd, IDC_MAXIMIZE),               in_window);
-
 	EnableWindow(GetDlgItem(hWnd, IDC_WAITVSYNC),              !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_TRIPLE_BUFFER),          !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_PRESCALE),               !gdi);
@@ -2661,8 +2762,8 @@ static void SetPropEnabledControls(HWND hWnd)
 	//mamep: disable -syncrefresh option if gdi
 	EnableWindow(GetDlgItem(hWnd, IDC_SYNCREFRESH),            !gdi);
 	//mamep: always enable refresh rate
-//	EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && !gdi);
-//	EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && !gdi);
+	//EnableWindow(GetDlgItem(hWnd, IDC_REFRESH),                !in_window && !gdi);
+	//EnableWindow(GetDlgItem(hWnd, IDC_REFRESHTEXT),            !in_window && !gdi);
 	//mamep: disable -full_screen_gamma option if gdi
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMA),                !in_window && !gdi);
 	EnableWindow(GetDlgItem(hWnd, IDC_FSGAMMATEXT),            !in_window && !gdi);
@@ -2687,15 +2788,14 @@ static void SetPropEnabledControls(HWND hWnd)
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_FILTER),             d3d);
 	EnableWindow(GetDlgItem(hWnd, IDC_D3D_VERSION),            d3d);
 
-//mamep: gdi is ok
-/*
+#if 0 //mamep: gdi is ok
 	//Switchres and D3D or ddraw enable the per screen parameters
 
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENS),            (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_NUMSCREENSDISP),        (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECT),          (ddraw || d3d) && multimon);
 	EnableWindow(GetDlgItem(hWnd, IDC_SCREENSELECTTEXT),      (ddraw || d3d) && multimon);
-*/
+#endif
 
 	/* Joystick options */
 	joystick_attached = DIJoystick.Available();
@@ -2758,13 +2858,9 @@ static void SetPropEnabledControls(HWND hWnd)
 
 	/* Trackball / Mouse options */
 	if (nIndex <= -1 || DriverUsesTrackball(nIndex) || DriverUsesLightGun(nIndex))
-	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),TRUE);
-	}
 	else
-	{
 		Button_Enable(GetDlgItem(hWnd,IDC_USE_MOUSE),FALSE);
-	}
 
 	if (nIndex <= -1 || DriverUsesLightGun(nIndex))
 	{
@@ -2833,6 +2929,7 @@ static void SetPropEnabledControls(HWND hWnd)
 #endif /* USE_VOLUME_AUTO_ADJUST */
 		SetSamplesEnabled(hWnd, nIndex, sound);
 		SetStereoEnabled(hWnd, nIndex);
+		SetYM3812Enabled(hWnd, nIndex);
 	}
 
 	if (Button_GetCheck(GetDlgItem(hWnd, IDC_AUTOFRAMESKIP)))
@@ -2877,7 +2974,7 @@ static void SetPropEnabledControls(HWND hWnd)
 	ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORETEXT), SW_HIDE);
 #endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
-	// driver
+	//mamep: BIOS page
 	{
 		int i = 0;
 
@@ -2960,7 +3057,7 @@ static BOOL RotatePopulateControl(datamap *map, HWND dialog, HWND control, core_
 }
 
 
-
+//mamep: added ScreenSetOptionName
 static void ScreenSetOptionName(datamap *map, HWND dialog, HWND control, char *buffer, size_t buffer_size)
 {
 	int nSelectedScreen = GetSelectedScreen(dialog);
@@ -2970,6 +3067,7 @@ static void ScreenSetOptionName(datamap *map, HWND dialog, HWND control, char *b
 	else
 		strcpy(buffer, WINOPTION_SCREEN);
 }
+
 
 static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
@@ -2990,6 +3088,7 @@ static BOOL ScreenReadControl(datamap *map, HWND dialog, HWND control, core_opti
 
 
 
+// mamep: enumerate all monitors on start up
 static BOOL ScreenPopulateControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	int i = 0;
@@ -3091,6 +3190,7 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	LPCWSTR w_ctrlr_option = 0;
 	LPWSTR buf = 0;
 	const char *ctrlr_option;
+	//TCHAR* t_ctrldir;
 
 	// determine the ctrlr option
 	ctrlr_option = options_get_string(opts, OPTION_CTRLR);
@@ -3112,7 +3212,17 @@ static BOOL DefaultInputPopulateControl(datamap *map, HWND dialog, HWND control,
 	(void)ComboBox_SetItemData(control, index, "");
 	index++;
 
+	//t_ctrldir = tstring_from_utf8(GetCtrlrDir());
+	//if( !t_ctrldir )
+	//{
+	//	if( buf )
+	//		free(buf);
+	//	return FALSE;
+	//}
+
 	swprintf (path, TEXT("%s\\*.*"), GetCtrlrDir());
+
+	//free(t_ctrldir);
 	
 	hFind = FindFirstFileW(path, &FindFileData);
 
@@ -3288,6 +3398,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 	return FALSE;
 }
 
+//mamep: set up callbacks for BIOS page & driver options
 static BOOL DefaultBiosReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
 	int n;
@@ -3367,7 +3478,6 @@ static BOOL DriverConfigReadControl(datamap *map, HWND dialog, HWND control, cor
 	return TRUE;
 }
 #endif /* DRIVER_SWITCH */
-
 
 
 
@@ -3483,7 +3593,7 @@ static void BuildDataMap(void)
 
 	// windows debugging options
 	datamap_add(properties_datamap, IDC_OSLOG,					DM_BOOL,	WINOPTION_OSLOG);
-	//watchdog missing
+	// watchdog missing
 
 	// core debugging options
 	datamap_add(properties_datamap, IDC_LOG,					DM_BOOL,	OPTION_LOG);
@@ -3572,13 +3682,8 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_JOYID7,				DM_INT,		WINOPTION_JOYID7);
 	datamap_add(properties_datamap, IDC_JOYID8,				DM_INT,		WINOPTION_JOYID8);
 #endif /* JOYSTICK_ID */
-#if 0//def MESS
-#if defined(WIN32) && !defined(SDLMAME_WIN32)
-	datamap_add(properties_datamap, IDC_USE_NEW_UI,				DM_BOOL,	WINOPTION_NEWUI);
-#endif
-#endif
 
-	// driver options
+	//mamep: BIOS page & driver options
 	{
 		int n;
 
@@ -3606,6 +3711,8 @@ static void BuildDataMap(void)
 	datamap_set_callback(properties_datamap, IDC_SIZES,			DCT_POPULATE_CONTROL,	ResolutionPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_POPULATE_CONTROL,	DefaultInputPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SNAPVIEW,		DCT_POPULATE_CONTROL,	SnapViewPopulateControl);
+
+	//mamep: set up callbacks for BIOS page & driver options
 	{
 		int n;
 
@@ -3655,12 +3762,13 @@ static void BuildDataMap(void)
 	datamap_set_trackbar_range(properties_datamap, IDC_TRANSPARENCY, 0, 255, 1);
 #endif /* TRANS_UI */
 
-#if 0//def MESS
+#if 0 //def MESS
 	// MESS specific stuff
 	MessBuildDataMap(properties_datamap);
 #endif // MESS
 }
 
+#if 1 //mamep
 static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, core_options *ref)
 {
 	const char *option_name;
@@ -3684,41 +3792,104 @@ static BOOL IsControlOptionValue(HWND hDlg, HWND hwnd_ctrl, core_options *opts, 
 
 	return strcmp(opts_value, ref_value) == 0;
 }
+#endif
 
 static void SetStereoEnabled(HWND hWnd, int nIndex)
 {
 	BOOL enabled = FALSE;
 	HWND hCtrl;
+	int num_speakers = 0;
 
 	if ( nIndex > -1)
-		enabled = DriverIsStereo(nIndex);
+	{
+		machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+		num_speakers = numberOfSpeakers(config);
+		machine_config_free(config);
+	}
 
 	hCtrl = GetDlgItem(hWnd, IDC_STEREO);
 	if (hCtrl)
 	{
-		if (nIndex <= -1)
+		if (nIndex <= -1 || num_speakers == 2)
 			enabled = TRUE;
 
 		EnableWindow(hCtrl, enabled);
 	}
 }
-	
+
+static void SetYM3812Enabled(HWND hWnd, int nIndex)
+{
+	int i;
+	BOOL enabled;
+	HWND hCtrl;
+	machine_config *config = NULL;
+
+	if (nIndex > -1)
+	{
+		config = machine_config_alloc(drivers[nIndex]->machine_config);
+	}
+
+	hCtrl = GetDlgItem(hWnd, IDC_USE_FM_YM3812);
+	if (hCtrl)
+	{
+		enabled = FALSE;
+		for (i = 0; i < MAX_SOUND; i++)
+		{
+			if (nIndex <= -1
+#if HAS_YM3812
+			||  config->sound[i].type == SOUND_YM3812
+#endif
+#if HAS_YM3526
+			||  config->sound[i].type == SOUND_YM3526
+#endif
+#if HAS_YM2413
+			||  config->sound[i].type == SOUND_YM2413
+#endif
+			)
+				enabled = TRUE;
+		}
+    
+		EnableWindow(hCtrl, enabled);
+	}
+	if (nIndex > -1)
+	{
+		machine_config_free(config);
+	}
+}
+
 static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 {
+	machine_config *config = NULL;
+#if (HAS_SAMPLES == 1) || (HAS_VLM5030 == 1)
+	int i;
 	BOOL enabled = FALSE;
 	HWND hCtrl;
 
-	if ( nIndex > -1)
-		enabled = DriverUsesSamples(nIndex);
-
 	hCtrl = GetDlgItem(hWnd, IDC_SAMPLES);
+
+	if ( nIndex > -1 ) {
+		config = machine_config_alloc(drivers[nIndex]->machine_config);
+	}
+	
 	if (hCtrl)
 	{
-		if (nIndex <= -1)
-			enabled = TRUE;
-
+		for (i = 0; i < MAX_SOUND; i++)
+		{
+			if (nIndex <= -1
+			||  config->sound[i].type == SOUND_SAMPLES
+#if HAS_VLM5030
+			||  config->sound[i].type == SOUND_VLM5030
+#endif
+			)
+				enabled = TRUE;
+		}
 		enabled = enabled && bSoundEnabled;
 		EnableWindow(hCtrl, enabled);
+	}
+#endif
+	if (config != NULL)
+	{
+		machine_config_free(config);
 	}
 }
 
@@ -3731,6 +3902,7 @@ static void InitializeOptions(HWND hDlg)
 	InitializeSelectScreenUI(hDlg);
 	InitializeEffectUI(hDlg);
 	InitializeBIOSUI(hDlg);
+	//mamep: BIOS page
 	InitializeDefaultBIOSUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 	InitializeD3DVersionUI(hDlg);
@@ -4049,6 +4221,85 @@ static void InitializeControllerMappingUI(HWND hwnd)
 	}
 }
 
+
+static void InitializeBIOSUI(HWND hwnd)
+{
+	HWND hCtrl = GetDlgItem(hwnd,IDC_BIOS);
+	int i = 0;
+	TCHAR* t_s;
+	if (hCtrl)
+	{
+		const game_driver *gamedrv = drivers[g_nGame];
+		const rom_entry *rom;
+
+		if (g_nGame == GLOBAL_OPTIONS)
+		{
+			(void)ComboBox_InsertString(hCtrl, i, TEXT("None"));
+			(void)ComboBox_SetItemData( hCtrl, i++, "");
+			return;
+		}
+		if (g_nGame == FOLDER_OPTIONS) //Folder Options
+		{
+			gamedrv = drivers[g_nFolderGame];
+			if (DriverHasOptionalBIOS(g_nFolderGame) == FALSE)
+			{
+				(void)ComboBox_InsertString(hCtrl, i, TEXT("None"));
+				(void)ComboBox_SetItemData( hCtrl, i++, "");
+				return;
+			}
+			(void)ComboBox_InsertString(hCtrl, i, _UIW(TEXT("Default")));
+			(void)ComboBox_SetItemData( hCtrl, i++, "");
+
+			if (gamedrv->rom != NULL)
+			{
+				for (rom = gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
+				{
+					if (ROMENTRY_ISSYSTEM_BIOS(rom))
+					{
+						const char *name = ROM_GETHASHDATA(rom);
+						const char *biosname = ROM_GETNAME(rom);
+						t_s = tstring_from_utf8(name);
+						if( !t_s )
+							return;
+						(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
+						(void)ComboBox_SetItemData( hCtrl, i++, biosname);
+						free(t_s);
+					}
+				}
+			}
+			return;
+		}
+
+		if (DriverHasOptionalBIOS(g_nGame) == FALSE)
+		{
+			(void)ComboBox_InsertString(hCtrl, i, TEXT("None"));
+			(void)ComboBox_SetItemData( hCtrl, i++, "");
+			return;
+		}
+		(void)ComboBox_InsertString(hCtrl, i, _UIW(TEXT("Default")));
+		(void)ComboBox_SetItemData( hCtrl, i++, "");
+
+		if (gamedrv->rom != NULL)
+		{
+			for (rom = gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
+			{
+				if (ROMENTRY_ISSYSTEM_BIOS(rom))
+				{
+					const char *name = ROM_GETHASHDATA(rom);
+					const char *biosname = ROM_GETNAME(rom);
+					t_s = tstring_from_utf8(name);
+					if( !t_s )
+						return;
+					(void)ComboBox_InsertString(hCtrl, i, win_tstring_strdup(t_s));
+					(void)ComboBox_SetItemData( hCtrl, i++, biosname);
+					free(t_s);
+				}
+			}
+		}
+	}
+}
+
+//mamep: BIOS page
 static const char *InitializeBIOSCtrl(HWND hCtrl, int bios_driver, const char *option)
 {
 	if (hCtrl && bios_driver != -1)
@@ -4079,32 +4330,14 @@ static const char *InitializeBIOSCtrl(HWND hCtrl, int bios_driver, const char *o
 			}
 		}
 
-		set_core_bios(option);
-		idx = determine_bios_rom(get_core_options(), drivers[bios_driver]->rom) - 1;
-		set_core_bios(NULL);
+		SetDefaultBIOS(option);
+		idx = determine_bios_rom(MameUIGlobal(), drivers[bios_driver]->rom) - 1;
+		SetDefaultBIOS(NULL);
 
 		return (char *)ComboBox_GetItemData(hCtrl, idx);
 	}
 
 	return NULL;
-}
-
-static void InitializeBIOSUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_BIOS);
-
-	if (hCtrl)
-	{
-		int nIndex = g_nGame;
-
-		if (g_nPropertyMode == OPTIONS_GAME)
-			if (DriverHasOptionalBIOS(nIndex))
-			{
-				const char *option = InitializeBIOSCtrl(hCtrl, nIndex, options_get_string(pCurrentOpts, OPTION_BIOS));
-				if (option)
-					options_set_string(pCurrentOpts, OPTION_BIOS, option, OPTION_PRIORITY_CMDLINE);
-			}
-	}
 }
 
 static void InitializeDefaultBIOSUI(HWND hwnd)
@@ -4126,6 +4359,61 @@ static void InitializeDefaultBIOSUI(HWND hwnd)
 		}
 	}
 }
+
+
+#if 0 //mamep: use standard combobox
+static BOOL SelectEffect(HWND hWnd)
+{
+	char filename[MAX_PATH];
+	BOOL changed = FALSE;
+
+	*filename = 0;
+	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_EFFECT_FILES))
+	{
+		//strip Path and extension
+		char buff[MAX_PATH];
+		int i, j = 0, k = 0, l = 0;
+		for(i=0; i<strlen(filename); i++ )
+		{
+			if( filename[i] == '\\' )
+				j = i;
+			if( filename[i] == '.' )
+				k = i;
+		}
+		for(i=j+1;i<k;i++)
+		{
+			buff[l++] = filename[i];
+		}
+		buff[l] = '\0';
+
+		if (strcmp(buff, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
+		{
+			HWND control = GetDlgItem(hWnd, IDC_EFFECT);
+			options_set_string(pCurrentOpts, WINOPTION_EFFECT, buff, OPTION_PRIORITY_CMDLINE);
+			win_set_window_text_utf8(control, buff);
+			// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
+			changed = TRUE;
+		}
+	}
+	return changed;
+}
+
+static BOOL ResetEffect(HWND hWnd)
+{
+	BOOL changed = FALSE;
+	const char *new_value = "none";
+
+	if (strcmp(new_value, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
+	{
+		HWND control = GetDlgItem(hWnd, IDC_EFFECT);
+		options_set_string(pCurrentOpts, WINOPTION_EFFECT, new_value, OPTION_PRIORITY_CMDLINE);
+		win_set_window_text_utf8(control, new_value);
+		// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
+		changed = TRUE;
+	}
+	return changed;
+}
+#endif //mamep: use standard combobox
 
 #if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
 static void InitializeM68kCoreUI(HWND hwnd)
@@ -4203,59 +4491,6 @@ static void InitializeJoyidUI(HWND hWnd)
 }
 #endif /* USE_SCALE_EFFECTS */
 
-#if 0 //mamep: use standard combobox
-static BOOL SelectEffect(HWND hWnd)
-{
-	char filename[MAX_PATH];
-	BOOL changed = FALSE;
-
-	*filename = 0;
-	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_EFFECT_FILES))
-	{
-		//strip Path and extension
-		char buff[MAX_PATH];
-		int i, j = 0, k = 0, l = 0;
-		for(i=0; i<strlen(filename); i++ )
-		{
-			if( filename[i] == '\\' )
-				j = i;
-			if( filename[i] == '.' )
-				k = i;
-		}
-		for(i=j+1;i<k;i++)
-		{
-			buff[l++] = filename[i];
-		}
-		buff[l] = '\0';
-
-		if (strcmp(buff, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
-		{
-			HWND control = GetDlgItem(hWnd, IDC_EFFECT);
-			options_set_string(pCurrentOpts, WINOPTION_EFFECT, buff, OPTION_PRIORITY_CMDLINE);
-			win_set_window_text_utf8(control, buff);
-			// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
-			changed = TRUE;
-		}
-	}
-	return changed;
-}
-
-static BOOL ResetEffect(HWND hWnd)
-{
-	BOOL changed = FALSE;
-	const char *new_value = "none";
-
-	if (strcmp(new_value, options_get_string(pCurrentOpts, WINOPTION_EFFECT)))
-	{
-		HWND control = GetDlgItem(hWnd, IDC_EFFECT);
-		options_set_string(pCurrentOpts, WINOPTION_EFFECT, new_value, OPTION_PRIORITY_CMDLINE);
-		win_set_window_text_utf8(control, new_value);
-		// datamap_populate_control(properties_datamap, hWnd, pCurrentOpts, IDC_EFFECT);
-		changed = TRUE;
-	}
-	return changed;
-}
-#endif //mamep: use standard combobox
 
 static BOOL SelectJoystickMap(HWND hWnd)
 {
@@ -4263,7 +4498,7 @@ static BOOL SelectJoystickMap(HWND hWnd)
 	BOOL changed = FALSE;
 
 	*filename = 0;
-	if (CommonFileDialog(FALSE, filename, FILETYPE_JOYMAP_FILES))
+	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_JOYMAP_FILES))
 	{
 		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_JOYSTICK_MAP)))
 		{
@@ -4297,7 +4532,7 @@ static BOOL SelectDebugscript(HWND hWnd)
 	BOOL changed = FALSE;
 
 	*filename = 0;
-	if (CommonFileDialog(FALSE, filename, FILETYPE_DEBUGSCRIPT_FILES))
+	if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_DEBUGSCRIPT_FILES))
 	{
 		if (wcscmp(filename, options_get_wstring(pCurrentOpts, OPTION_DEBUGSCRIPT)))
 		{
@@ -4327,13 +4562,6 @@ static BOOL ResetDebugscript(HWND hWnd)
 
 void UpdateBackgroundBrush(HWND hwndTab)
 {
-	// Check if the application is themed
-	if (hThemes)
-	{
-		if(fnIsThemed)
-			bThemeActive = fnIsThemed();
-	}
-
     // Destroy old brush
     if (hBkBrush)
         DeleteBrush(hBkBrush);
@@ -4341,7 +4569,7 @@ void UpdateBackgroundBrush(HWND hwndTab)
 	hBkBrush = NULL;
 
 	// Only do this if the theme is active
-	if (bThemeActive)
+	if (SafeIsAppThemed())
 	{
 		RECT rc;
 		HDC hDC, hDCMem;

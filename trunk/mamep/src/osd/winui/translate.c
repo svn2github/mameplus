@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "mameui.h"
+#include "winui.h"
 #include "resource.h"
 #include "bitmask.h"
 #include "TreeView.h"
@@ -110,7 +110,7 @@ int InitTranslator(int langcode)
 
 	ansi_codepage = ui_lang_info[langcode].codepage;
 
-	lang_set_langcode(get_core_options(), langcode);
+	lang_set_langcode(MameUIGlobal(), langcode);
 
 	if (hTranslateFont != NULL)
 		DeleteObject(hTranslateFont);
@@ -681,14 +681,7 @@ int ComboBox_GetLBTextLenW(HWND hwndCtl, int index)
 #undef _wfopen
 FILE *wfopen(const WCHAR *fname, const WCHAR *mode)
 {
-	if (OnNT())
-		return _wfopen(fname, mode);
-	else
-	{
-		const char *_fname = _String(fname);
-		const char *_mode = _String(mode);
-		return fopen(_fname, _mode);
-	}
+	return _wfopen(fname, mode);
 }
 
 

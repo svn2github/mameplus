@@ -32,7 +32,6 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"
 #include "picker.h"
 #include "winui.h"
 #include "mui_util.h" // For dprintf
@@ -90,7 +89,7 @@ struct PickerInfo
 	int *pnColumnsShown;
 	int *pnColumnsOrder;
 	UINT_PTR nTimer;
-	LPCTSTR *ppszColumnNames;
+	const LPCTSTR *ppszColumnNames;
 };
 
 
@@ -221,6 +220,8 @@ static BOOL ListViewNeedToolTipText(HWND hWnd, LPTOOLTIPTEXT lpttt)
 	return TRUE;
 }
 
+
+
 static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 {
 	RECT rcClient;
@@ -241,13 +242,11 @@ static BOOL ListViewNotify(HWND hWnd, LPNMHDR lpNmHdr)
 		ScreenToClient(hWnd, &pt);
 		rcClient.left = pt.x;
 		InvalidateRect(hWnd, &rcClient, FALSE);
-
 		break;
 
 	case TTN_NEEDTEXT:
 		return ListViewNeedToolTipText(hWnd, (LPTOOLTIPTEXT)lpNmHdr);
 	}
-
 	return FALSE;
 }
 
@@ -438,7 +437,7 @@ static void Picker_InternalResetColumnDisplay(HWND hWnd, BOOL bFirstTime)
 		if (shown[order[i]])
 		{
 			lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_SUBITEM | LVCF_TEXT;
-			lvc.pszText = _UIW(pPickerInfo->ppszColumnNames[order[i]]);
+			lvc.pszText = (LPTSTR) _UIW(pPickerInfo->ppszColumnNames[order[i]]);
 			lvc.iSubItem = nColumn;
 			lvc.cx = widths[order[i]];
 			lvc.fmt = LVCFMT_LEFT;
@@ -1443,6 +1442,7 @@ void Picker_HandleDrawItem(HWND hWnd, LPDRAWITEMSTRUCT lpDrawItemStruct)
 	if (bDrawAsChild)
 	{
 		RECT rect;
+		
 		ListView_GetItemRect(hWnd, nItem, &rect, LVIR_ICON);
 
 		/* indent width of icon + the space between the icon and text

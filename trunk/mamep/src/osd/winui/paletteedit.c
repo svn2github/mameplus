@@ -22,7 +22,7 @@
 #include <windowsx.h>
 #include <commctrl.h>
 
-#include "mameui.h"
+#include "winui.h"
 #include "driver.h"
 #include "bitmask.h"
 #include "mui_opts.h"

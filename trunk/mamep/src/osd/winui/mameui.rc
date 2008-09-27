@@ -184,6 +184,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&History File...",            ID_OPTIONS_HISTORY
         MENUITEM "Mame&info File...",           ID_OPTIONS_MAMEINFO
+#ifdef STORY_DATAFILE
+        MENUITEM "&Story File...",              ID_OPTIONS_STORY
+#endif /* STORY_DATAFILE */
         MENUITEM SEPARATOR
         MENUITEM "&About",                      ID_HELP_ABOUT
     END
@@ -616,12 +619,12 @@ BEGIN
 #ifdef MISC_FOLDER
     LTEXT           "Control Type:",IDC_STATIC,12,197,55,9
     LTEXT           "Static",IDC_PROP_INPUT,68,197,192,9
+    LTEXT           "Save State:",IDC_STATIC,12,207,55,9
+    LTEXT           "Static",IDC_PROP_SAVESTATE,68,207,180,9
 #else /* MISC_FOLDER */
     LTEXT           "Colors:",IDC_STATIC,12,197,55,9
     LTEXT           "Static",IDC_PROP_COLORS,68,197,192,9
 #endif /* !MISC_FOLDER */
-    LTEXT           "Save State:",IDC_STATIC,12,207,55,9
-    LTEXT           "Static",IDC_PROP_SAVESTATE,68,207,180,9
     LTEXT           "Driver:",IDC_STATIC,12,217,55,9
     LTEXT           "Static",IDC_PROP_SOURCE,68,217,180,9
     LTEXT           "Clone of:",IDC_PROP_CLONEOF_TEXT,12,227,55,9
@@ -913,6 +916,9 @@ BEGIN
                     TBS_BOTH | TBS_NOTICKS | WS_TABSTOP,10,162,105,12
     CTEXT           "255",IDC_TRANSPARENCYDISP,120,162,20,12,SS_CENTERIMAGE | NOT WS_GROUP
 #endif /* TRANS_UI */
+    GROUPBOX        "BIOS",IDC_BIOSTEXT,4,181,140,39
+    COMBOBOX        IDC_BIOS,10,195,128,150,CBS_DROPDOWNLIST | WS_VSCROLL | 
+                    WS_TABSTOP,0,HIDC_BIOS
     GROUPBOX        "Artwork options",IDC_STATIC,147,45,108,69
     CONTROL         "Backdrops",IDC_BACKDROPS,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,58,100,10,0,HIDC_BACKDROPS
@@ -930,9 +936,6 @@ BEGIN
     GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,147,149,108,30
     COMBOBOX        IDC_M68K_CORE,153,160,96,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
 //mamep: ks hcmame s switch m68k core
-    GROUPBOX        "BIOS",IDC_BIOSTEXT,4,181,140,39
-    COMBOBOX        IDC_BIOS,10,195,128,150,CBS_DROPDOWNLIST | WS_VSCROLL | 
-                    WS_TABSTOP,0,HIDC_BIOS
 #ifdef DRIVER_SWITCH
     GROUPBOX        "Switch drivers",IDC_DRV_TEXT,4,181,251,39
     CONTROL         "MAME",IDC_DRV_MAME,"Button",BS_AUTOCHECKBOX | 
@@ -1637,6 +1640,9 @@ BEGIN
     ID_OPTIONS_CHEAT        "Set the Cheat file to use"
     ID_OPTIONS_MAMEINFO     "Set the Mameinfo file to use"
     ID_OPTIONS_HISTORY      "Set the History file to use"
+#ifdef STORY_DATAFILE
+    ID_OPTIONS_STORY        "Set the Story file to use"
+#endif /* STORY_DATAFILE */
 END
 
 STRINGTABLE 

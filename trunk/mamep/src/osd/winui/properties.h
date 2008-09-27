@@ -38,23 +38,24 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus);
 typedef struct
 {
 	BOOL bOnDefaultPage;
-	BOOL (*pfnFilterProc)(OPTIONS_TYPE opt_type, int folder_id, int game_num);
+	BOOL (*pfnFilterProc)(const machine_config *drv, const game_driver *gamedrv);
 	DWORD dwDlgID;
 	DLGPROC pfnDlgProc;
 } PROPERTYSHEETINFO;
 
-/* in layout.c */
 extern const PROPERTYSHEETINFO g_propSheets[];
 
-
-BOOL PropSheetFilter_Vector(OPTIONS_TYPE opt_type, int folder_id, int game_num);
-BOOL PropSheetFilter_BIOS(OPTIONS_TYPE opt_type, int folder_id, int game_num);
+BOOL PropSheetFilter_Vector(const machine_config *drv, const game_driver *gamedrv);
+// mamep: BIOS page
+BOOL PropSheetFilter_BIOS(const machine_config *drv, const game_driver *gamedrv);
 
 INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 
-void PropertiesInit(void);
 int PropertiesCurrentGame(HWND hDlg);
+
+// mamep: enumerate all monitors on start up
+void PropertiesInit(void);
 
 #ifdef TREE_SHEET
 void ModifyPropertySheetForTreeSheet(HWND);

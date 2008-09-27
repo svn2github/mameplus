@@ -30,7 +30,6 @@ extern BOOL LoadScreenShot(int nGame, LPCWSTR lpIPSName, int nType);
 extern BOOL LoadScreenShot(int nGame, int nType);
 #endif /* USE_IPS */
 #endif /* MESS */
-
 extern HANDLE GetScreenShotHandle(void);
 extern int GetScreenShotWidth(void);
 extern int GetScreenShotHeight(void);

@@ -52,7 +52,9 @@ FOLDERDATA g_folderData[] =
 {
 	{TEXT("All Arcades"),     "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,				0,             0,            NULL,                       DriverIsConsole,              FALSE },
 	{TEXT("Available Arcades"),"available",        FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                     FilterAvailable,              TRUE },
+#ifdef MAMEMESS
 	{TEXT("Consoles"),  	  "console",           FOLDER_CONSOLE,      IDI_FOLDER,               0,             0,            NULL,                       DriverIsConsole, 			   TRUE },
+#endif /* MAMEMESS */
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	{TEXT("Unavailable"),     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,   F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
 #endif
@@ -113,7 +115,7 @@ FILTER_ITEM g_filterList[] =
 	{ 0 }
 };
 
-const DIRECTORYINFO g_directoryInfo[] =
+DIRECTORYINFO g_directoryInfo[] =
 {
 	{ TEXT("ROMs"),                  GetRomDirs,          SetRomDirs,          TRUE,  DIRDLG_ROMS },
 	{ TEXT("Samples"),               GetSampleDirs,       SetSampleDirs,       TRUE,  DIRDLG_SAMPLES },
@@ -121,7 +123,7 @@ const DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Config"),                GetCfgDir,           SetCfgDir,           FALSE, DIRDLG_CFG },
 	{ TEXT("Snapshots"),             GetImgDir,           SetImgDir,           TRUE,  DIRDLG_IMG },
 	{ TEXT("Input Files (*.inp)"),   GetInpDir,           SetInpDir,           FALSE, DIRDLG_INP },
-	{ TEXT("Cheats"),			 GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
+	{ TEXT("Cheats"),		 GetCheatDir,         SetCheatDir,         FALSE, DIRDLG_CHEAT },
 	{ TEXT("State"),                 GetStateDir,         SetStateDir,         FALSE, 0 },
 	{ TEXT("Artwork"),               GetArtDir,           SetArtDir,           FALSE, 0 },
 	{ TEXT("Memory Card"),           GetMemcardDir,       SetMemcardDir,       FALSE, 0 },
@@ -182,6 +184,7 @@ const PROPERTYSHEETINFO g_propSheets[] =
 	{ TRUE,		NULL,					IDD_PROP_MISC,			GameOptionsProc },
 	{ TRUE,		NULL,					IDD_PROP_DEBUG,			GameOptionsProc },
 	{ TRUE,		PropSheetFilter_Vector,	IDD_PROP_VECTOR,		GameOptionsProc },
+	//mamep: BIOS page
 	{ TRUE,		PropSheetFilter_BIOS,	IDD_PROP_BIOS,		GameOptionsProc },
 	{ FALSE }
 };

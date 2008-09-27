@@ -23,6 +23,12 @@
 #define _UNICODE
 #define UNICODE
 
+#ifdef _MSC_VER
+#ifndef NONAMELESSUNION
+#define NONAMELESSUNION 
+#endif
+#endif
+
 // standard windows headers
 #include <windows.h>
 #include <windowsx.h>
@@ -36,18 +42,23 @@
 #include <tchar.h>
 
 // MAMEUI headers
-#include "mameui.h"
 #include "bitmask.h"
 #include "treeview.h"
 #include "mui_util.h"
 #include "resource.h"
 #include "mui_opts.h"
 #include "help.h"
+#include "winui.h"
 #include "properties.h"  // For GetHelpIDs
 
 // MAME headers
 #include "strconv.h"
+#include "winutf8.h"
 #include "translate.h"
+
+#ifdef _MSC_VER
+#define snprintf _snprintf
+#endif
 
 #define FILTERTEXT_LEN 256
 
@@ -836,10 +847,7 @@ INT_PTR CALLBACK DirectXDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 		TranslateDialog(hDlg, lParam, FALSE);
 
 		hEdit = GetDlgItem(hDlg, IDC_DIRECTX_HELP);
-		if (OnNT())
 		Edit_SetSel(hEdit, Edit_GetTextLength(hEdit), Edit_GetTextLength(hEdit));
-		else
-			Edit_SetSelA(hEdit, Edit_GetTextLengthA(hEdit), Edit_GetTextLengthA(hEdit));
 		Edit_ReplaceSel(hEdit, _UIW(directx_help));
 		return 1;
 
@@ -921,13 +929,13 @@ INT_PTR CALLBACK PCBInfoDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lP
 			swprintf(buf, TEXT("%s\\%s.txt"), szDir, szGame);
 
 			stemp = utf8_from_wstring(buf);
-			filerr = mame_fopen_options(get_core_options(), NULL, stemp, OPEN_FLAG_READ, &mfile);
+			filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
 			free(stemp);
 			if (filerr != FILERR_NONE)
 			{
 				swprintf(buf, TEXT("%s\\pcbinfo\\%s.txt"), szDir, szGame);
 				stemp = utf8_from_wstring(buf);
-				filerr = mame_fopen_options(get_core_options(), NULL, stemp, OPEN_FLAG_READ, &mfile);
+				filerr = mame_fopen_options(MameUISettings(), NULL, stemp, OPEN_FLAG_READ, &mfile);
 				free(stemp);
 			}
 

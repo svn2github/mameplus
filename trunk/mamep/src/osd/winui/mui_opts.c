@@ -41,7 +41,6 @@
 // MAME/MAMEUI headers
 #include "bitmask.h"
 #include "winui.h"
-#include "mameui.h"
 #include "mui_util.h"
 #include "treeview.h"
 #include "splitters.h"
@@ -88,17 +87,13 @@ static void  FontDecodeString(const char* str, LOGFONTW *f);
 static void TabFlagsEncodeString(int data, char *str);
 static void TabFlagsDecodeString(const char *str, int *data);
 
+//static DWORD DecodeFolderFlags(const char *buf);
+//static const char * EncodeFolderFlags(DWORD value);
+
 static void ResetToDefaults(core_options *opts, int priority);
 
 static void ui_parse_ini_file(core_options *opts, const char *name);
 static void remove_all_source_options(void);
-
-static void set_core_rom_directory(const WCHAR *dir);
-static void set_core_sample_directory(const WCHAR *dir);
-static void set_core_image_directory(const WCHAR *dir);
-#ifdef MESS
-static void set_core_hash_directory(const WCHAR *dir);
-#endif
 
 static void  build_default_bios(void);
 
@@ -132,12 +127,10 @@ static void  build_default_bios(void);
 #endif /* TREE_SHEET */
 #define MUIOPTION_BROADCAST_GAME_NAME			"broadcast_game_name"
 #define MUIOPTION_RANDOM_BACKGROUND				"random_background"
-//#define MUIOPTION_DEFAULT_FOLDER_ID				"default_folder_path"
-#define MUIOPTION_DEFAULT_FOLDER_PATH				"folder_current"
+#define MUIOPTION_DEFAULT_FOLDER_ID				"default_folder_id"
 #define MUIOPTION_SHOW_IMAGE_SECTION			"show_image_section"
 #define MUIOPTION_SHOW_FOLDER_SECTION			"show_folder_section"
-//#define MUIOPTION_HIDE_FOLDERS					"hide_folders"
-#define MUIOPTION_HIDE_FOLDERS					"folder_hide"
+#define MUIOPTION_HIDE_FOLDERS					"hide_folders"
 #define MUIOPTION_SHOW_STATUS_BAR				"show_status_bar"
 #define MUIOPTION_SHOW_TABS						"show_tabs"
 #define MUIOPTION_SHOW_TOOLBAR					"show_tool_bar"
@@ -163,6 +156,9 @@ static void  build_default_bios(void);
 #define MUIOPTION_SPLITTERS						"splitters"
 #define MUIOPTION_SORT_COLUMN					"sort_column"
 #define MUIOPTION_SORT_REVERSED					"sort_reversed"
+#if 0 //mamep
+#define MUIOPTION_LANGUAGE						"language"
+#endif
 #ifdef IMAGE_MENU
 #define MUIOPTION_IMAGEMENU_STYLE				"imagemenu_style"
 #endif /* IMAGE_MENU */
@@ -245,10 +241,8 @@ static void  build_default_bios(void);
 #else
 // Options names
 #define MUIOPTION_DEFAULT_GAME					"default_game"
-/*
-#define MUIOPTION_HISTORY_FILE					"history_file"
-#define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
-*/
+//#define MUIOPTION_HISTORY_FILE					"history_file"
+//#define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
 // Options values
 #define MUIDEFAULT_SELECTION					"puckman"
 #define MUIDEFAULT_SPLITTERS					"152,362"
@@ -283,7 +277,7 @@ static core_options *settings;
 
 static core_options *global = NULL;			// Global 'default' options
 
-static core_options *mamecore = NULL;			// running mame core setting
+static core_options *mamecore = NULL;			//mamep: running mame core setting
 
 // UI options in mameui.ini
 static const options_entry regSettings[] =
@@ -291,10 +285,11 @@ static const options_entry regSettings[] =
 	// UI options
 	{ NULL,									NULL,       OPTION_HEADER,     "DISPLAY STATE OPTIONS" },
 	{ MUIOPTION_DEFAULT_GAME,				MUIDEFAULT_SELECTION, 0,       NULL },
-	{ MUIOPTION_DEFAULT_FOLDER_PATH,		"/",        0,                 NULL },
+//	{ MUIOPTION_DEFAULT_GAME,				"puckman",  0,                 NULL },
+	{ MUIOPTION_DEFAULT_FOLDER_ID,			"0",        0,                 NULL },
 	{ MUIOPTION_SHOW_IMAGE_SECTION,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_FULL_SCREEN,				"0",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_CURRENT_TAB,				"snapshot",        0,                 NULL },
+	{ MUIOPTION_CURRENT_TAB,				"0",        0,                 NULL },
 	{ MUIOPTION_SHOW_TOOLBAR,				"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_STATUS_BAR,			"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_HIDE_FOLDERS,				"",         0,                 NULL },
@@ -306,7 +301,7 @@ static const options_entry regSettings[] =
 #else
 	{ MUIOPTION_SHOW_FOLDER_SECTION,		"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_SHOW_TABS,					"1",        OPTION_BOOLEAN,    NULL },
-	{ MUIOPTION_HIDE_TABS,					"cpanel, pcb, history, story", 0, NULL },
+	{ MUIOPTION_HIDE_TABS,					"marquee, title, cpanel, pcb, history", 0, NULL },
 	{ MUIOPTION_HISTORY_TAB,				"0",        0,                 NULL },
 #endif
 
@@ -325,7 +320,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_CLONE_COLOR,				"-1",       0,                 NULL },
 	{ MUIOPTION_CUSTOM_COLOR,				"0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0", 0, NULL },
 	/* ListMode needs to be before ColumnWidths settings */
-	{ MUIOPTION_LIST_MODE,					"Grouped",        0,                 NULL },
+	{ MUIOPTION_LIST_MODE,					"5",        0,                 NULL },
 	{ MUIOPTION_SPLITTERS,					MUIDEFAULT_SPLITTERS, 0,       NULL },
 	{ MUIOPTION_LIST_FONT,					"-8,0,0,0,400,0,0,0,0,0,0,0,0", 0, NULL },
 	{ MUIOPTION_LIST_FONTFACE,		         	"MS Sans Serif", 0, NULL },
@@ -334,6 +329,9 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_COLUMN_SHOWN,				"1,1,0,1,1,1,1,1,1,1,1,1,1", 0,  NULL },
 
 	{ NULL,									NULL,       OPTION_HEADER,     "INTERFACE OPTIONS" },
+#if 0 //mamep
+	{ MUIOPTION_LANGUAGE,					"english",  0,                 NULL },
+#endif
 	{ MUIOPTION_CHECK_GAME,					"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_JOYSTICK_IN_INTERFACE,		"1",        OPTION_BOOLEAN,    NULL },
 	{ MUIOPTION_KEYBOARD_IN_INTERFACE,		"0",        OPTION_BOOLEAN,    NULL },
@@ -349,7 +347,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_EXEC_COMMAND,				"",         0,                 NULL },
 	{ MUIOPTION_EXEC_WAIT,					"0",        0,                 NULL },
 #ifdef USE_SHOW_SPLASH_SCREEN
-	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,		"1",        OPTION_BOOLEAN,    NULL },
+	{ MUIOPTION_DISPLAY_SPLASH_SCREEN,		"0",        OPTION_BOOLEAN,    NULL },
 #endif /* USE_SHOW_SPLASH_SCREEN */
 #ifdef TREE_SHEET
 	{ MUIOPTION_SHOW_TREE_SHEET,			"1",        OPTION_BOOLEAN,    NULL },
@@ -412,7 +410,7 @@ static const options_entry regSettings[] =
 	{ MUIOPTION_UI_KEY_VIEW_TAB_FLYER,		"KEYCODE_LALT KEYCODE_2",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_TAB_HISTORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
 #ifdef STORY_DATAFILE
-	{ MUIOPTION_UI_KEY_VIEW_TAB_STORY,	"KEYCODE_LALT KEYCODE_8",     0, NULL },
+	{ MUIOPTION_UI_KEY_VIEW_TAB_STORY,	"KEYCODE_LALT KEYCODE_9",     0, NULL },
 #endif /* STORY_DATAFILE */
 	{ MUIOPTION_UI_KEY_VIEW_TAB_MARQUEE,	"KEYCODE_LALT KEYCODE_4",     0, NULL },
 	{ MUIOPTION_UI_KEY_VIEW_TAB_SCREENSHOT,	"KEYCODE_LALT KEYCODE_1",     0, NULL },
@@ -465,16 +463,6 @@ static const options_entry filterOptions[] =
 
 
 
-static const char *view_modes[VIEW_MAX] = 
-{
-	"Large Icons",
-	"Small Icons",
-	"List",
-	"Details",
-	"Grouped"
-};
-
-
 // Screen shot Page tab control text
 // these must match the order of the options flags in options.h
 // (TAB_...)
@@ -487,15 +475,13 @@ static const WCHAR* image_tabs_long_name[MAX_TAB_TYPES] =
 	L"Title",
 	L"Control Panel",
 	L"PCB",
-#ifdef STORY_DATAFILE
 	L"History",
-	L"Story"
-#else /* STORY_DATAFILE */
-	L"History"
+#ifdef STORY_DATAFILE
+	L"Story",
 #endif /* STORY_DATAFILE */
 };
 
-static const char* image_tabs_short_name[MAX_TAB_TYPES] =
+static const char * image_tabs_short_name[MAX_TAB_TYPES] =
 {
 	"snapshot",
 	"flyer",
@@ -504,11 +490,9 @@ static const char* image_tabs_short_name[MAX_TAB_TYPES] =
 	"title",
 	"cpanel",
 	"pcb",
-#ifdef STORY_DATAFILE
-	"history",
-	"story"
-#else /* STORY_DATAFILE */
 	"history"
+#ifdef STORY_DATAFILE
+	,"story"
 #endif /* STORY_DATAFILE */
 };
 
@@ -524,7 +508,6 @@ int num_folder_filters;
 
 // default bios setting
 static int default_bios[MAX_SYSTEM_BIOS];
-
 
 /***************************************************************************
     External functions
@@ -613,11 +596,6 @@ core_options *CreateGameOptions(int driver_index)
 
 
 
-static void debug_printf(const char *s)
-{
-	dwprintf(L"%s", _UTF8Unicode(s));
-}
-
 BOOL OptionsInit()
 {
 	// create a memory pool for our data
@@ -625,10 +603,8 @@ BOOL OptionsInit()
 	if (!options_memory_pool)
 		return FALSE;
 
+	//mamep: initialize running mame core setting
 	mamecore = mame_options_init(mame_win_options);
-	options_set_output_callback(mamecore, OPTMSG_INFO, debug_printf);
-	options_set_output_callback(mamecore, OPTMSG_WARNING, debug_printf);
-	options_set_output_callback(mamecore, OPTMSG_ERROR, debug_printf);
 
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	settings = options_create(memory_error);
@@ -650,14 +626,18 @@ BOOL OptionsInit()
 			game_option_count++;
 
 		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
+#ifdef MAMEMESS
 			(game_option_count * driver_list_get_count(drivers) + 1) * (sizeof(*driver_per_game_options) + 1));
-
+#else /* MAMEMESS */
+			(game_option_count * driver_list_get_count(drivers) + 1) * sizeof(*driver_per_game_options));
+#endif /* MAMEMESS */
 		n = 0;
 
 		for (i = 0; i < driver_list_get_count(drivers); i++)
 		{
 			for (j = 0; j < game_option_count; j++)
 			{
+#ifdef MAMEMESS
 				if (j == 0)
 				{
 					ent = &driver_per_game_options[n++];
@@ -673,6 +653,10 @@ BOOL OptionsInit()
 				}
 
 				ent = &driver_per_game_options[n++];
+#else /* MAMEMESS */
+				ent = &driver_per_game_options[i * game_option_count + j];
+#endif /* MAMEMESS */
+
 				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", drivers[i]->name, perGameOptions[j].name);
 
 				memset(ent, 0, sizeof(*ent));
@@ -682,14 +666,18 @@ BOOL OptionsInit()
 				ent->description = perGameOptions[j].description;
 			}
 		}
+#ifdef MAMEMESS
 		ent = &driver_per_game_options[n++];
+#else /* MAMEMESS */
+		ent = &driver_per_game_options[driver_list_get_count(drivers) * game_option_count];
+#endif /* MAMEMESS */
 		memset(ent, 0, sizeof(*ent));
 		options_add_entries(settings, driver_per_game_options);
 	}
 
 	// set up global options
 	global = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
-	lang_set_langcode(mamecore, UI_LANG_EN_US);
+	lang_set_langcode(MameUIGlobal(), UI_LANG_EN_US);
 	build_default_bios();
 
 #if 0
@@ -700,15 +688,6 @@ BOOL OptionsInit()
 #endif
 	// now load the options and settings
 	LoadOptionsAndSettings();
-
-	// have our mame core (file code) know about our rom path
-	// this leaks a little, but the win32 file core writes to this string
-	set_core_rom_directory(GetRomDirs());
-	set_core_image_directory(GetRomDirs());
-	set_core_sample_directory(GetSampleDirs());
-#ifdef MESS
-	set_core_hash_directory(GetHashDirs());
-#endif
 
 	return TRUE;
 
@@ -724,7 +703,7 @@ void OptionsExit(void)
 	options_free(settings);
 	settings = NULL;
 
-	// free running mame core setting
+	//mamep: free running mame core setting
 	options_free(mamecore);
 	mamecore = NULL;
 
@@ -857,22 +836,12 @@ static input_seq *options_get_input_seq(core_options *opts, const char *name)
 
 void SetViewMode(int val)
 {
-	options_set_string(settings, MUIOPTION_LIST_MODE, view_modes[val], OPTION_PRIORITY_CMDLINE);
+	options_set_int(settings, MUIOPTION_LIST_MODE, val, OPTION_PRIORITY_CMDLINE);
 }
 
 int GetViewMode(void)
 {
-	const char *stemp = options_get_string(settings, MUIOPTION_LIST_MODE);
-	int i;
-
-	if (!stemp || !*stemp)
-		return 0;
-
-	for (i = 0; i < VIEW_MAX; i++)
-		if (strcmp(stemp, view_modes[i]) == 0)
-			return i;
-
-	return VIEW_GROUPED;
+	return options_get_int(settings, MUIOPTION_LIST_MODE);
 }
 
 void SetGameCheck(BOOL game_check)
@@ -985,14 +954,14 @@ BOOL GetRandomBackground(void)
 	return options_get_bool(settings, MUIOPTION_RANDOM_BACKGROUND);
 }
 
-void SetSavedFolderPath(const char *path)
+void SetSavedFolderID(UINT val)
 {
-	options_set_string(settings, MUIOPTION_DEFAULT_FOLDER_PATH, path, OPTION_PRIORITY_CMDLINE);
+	options_set_int(settings, MUIOPTION_DEFAULT_FOLDER_ID, (int) val, OPTION_PRIORITY_CMDLINE);
 }
 
-const char *GetSavedFolderPath(void)
+UINT GetSavedFolderID(void)
 {
-	return options_get_string(settings, MUIOPTION_DEFAULT_FOLDER_PATH);
+	return (UINT) options_get_int(settings, MUIOPTION_DEFAULT_FOLDER_ID);
 }
 
 void SetShowScreenShot(BOOL val)
@@ -1013,6 +982,86 @@ void SetShowFolderList(BOOL val)
 BOOL GetShowFolderList(void)
 {
 	return options_get_bool(settings, MUIOPTION_SHOW_FOLDER_SECTION);
+}
+
+static void GetsShowFolderFlags(LPBITS bits)
+{
+	char s[2000];
+	extern FOLDERDATA g_folderData[];
+	char *token;
+
+	snprintf(s, ARRAY_LENGTH(s), "%s", options_get_string(settings, MUIOPTION_HIDE_FOLDERS));
+
+	SetAllBits(bits, TRUE);
+
+	token = strtok(s,", \t");
+	while (token != NULL)
+	{
+		int j;
+
+		for (j=0;g_folderData[j].m_lpTitle != NULL;j++)
+		{
+			if (strcmp(g_folderData[j].short_name,token) == 0)
+			{
+				ClearBit(bits, g_folderData[j].m_nFolderId);
+				break;
+			}
+		}
+		token = strtok(NULL,", \t");
+	}
+}
+
+BOOL GetShowFolder(int folder)
+{
+	BOOL result;
+	LPBITS show_folder_flags = NewBits(MAX_FOLDERS);
+	GetsShowFolderFlags(show_folder_flags);
+	result = TestBit(show_folder_flags, folder);
+	DeleteBits(show_folder_flags);
+	return result;
+}
+
+void SetShowFolder(int folder,BOOL show)
+{
+	LPBITS show_folder_flags = NewBits(MAX_FOLDERS);
+	int i;
+	int num_saved = 0;
+	char str[10000];
+	extern FOLDERDATA g_folderData[];
+
+	GetsShowFolderFlags(show_folder_flags);
+
+	if (show)
+		SetBit(show_folder_flags, folder);
+	else
+		ClearBit(show_folder_flags, folder);
+
+	strcpy(str, "");
+
+	// we save the ones that are NOT displayed, so we can add new ones
+	// and upgraders will see them
+	for (i=0;i<MAX_FOLDERS;i++)
+	{
+		if (TestBit(show_folder_flags, i) == FALSE)
+		{
+			int j;
+
+			if (num_saved != 0)
+				strcat(str,", ");
+
+			for (j=0;g_folderData[j].m_lpTitle != NULL;j++)
+			{
+				if (g_folderData[j].m_nFolderId == i)
+				{
+					strcat(str,g_folderData[j].short_name);
+					num_saved++;
+					break;
+				}
+			}
+		}
+	}
+	options_set_string(settings, MUIOPTION_HIDE_FOLDERS, str, OPTION_PRIORITY_CMDLINE);
+	DeleteBits(show_folder_flags);
 }
 
 void SetShowStatusBar(BOOL val)
@@ -1312,7 +1361,7 @@ BOOL GetSortReverse(void)
 	return options_get_bool(settings, MUIOPTION_SORT_REVERSED);
 }
 
-/*
+#if 0 //mamep
 const char* GetLanguage(void)
 {
 	return options_get_string(settings, MUIOPTION_LANGUAGE);
@@ -1322,7 +1371,7 @@ void SetLanguage(const char* lang)
 {
 	options_set_string(settings, MUIOPTION_LANGUAGE, lang, OPTION_PRIORITY_CMDLINE);
 }
-*/
+#endif
 
 const WCHAR* GetRomDirs(void)
 {
@@ -1332,11 +1381,6 @@ const WCHAR* GetRomDirs(void)
 void SetRomDirs(const WCHAR* paths)
 {
 	options_set_wstring(global, OPTION_ROMPATH, paths, OPTION_PRIORITY_CMDLINE);
-
-	// have our mame core (file code) know about it
-	// this leaks a little, but the win32 file core writes to this string
-	set_core_rom_directory(paths);
-	set_core_image_directory(paths);
 }
 
 const WCHAR* GetSampleDirs(void)
@@ -1347,10 +1391,6 @@ const WCHAR* GetSampleDirs(void)
 void SetSampleDirs(const WCHAR* paths)
 {
 	options_set_wstring(global, OPTION_SAMPLEPATH, paths, OPTION_PRIORITY_CMDLINE);
-
-	// have our mame core (file code) know about it
-	// this leaks a little, but the win32 file core writes to this string
-	set_core_sample_directory(paths);
 }
 
 const WCHAR * GetIniDir(void)
@@ -1603,16 +1643,6 @@ void SetMAMEInfoFileName(const WCHAR* path)
 	options_set_wstring(settings, MUIOPTION_MAMEINFO_FILE, path, OPTION_PRIORITY_CMDLINE);
 }
 
-#ifdef USE_VIEW_PCBINFO
-const WCHAR * GetPcbInfoDir(void)
-{
-	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
-}
-void SetPcbInfoDir(const WCHAR *path)
-{
-	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
-}
-#endif /* USE_VIEW_PCBINFO */
 #ifdef STORY_DATAFILE
 const WCHAR* GetStoryFileName(void)
 {
@@ -1623,7 +1653,16 @@ void SetStoryFileName(const WCHAR* path)
 	options_set_wstring(settings, MUIOPTION_STORY_FILE, path, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* STORY_DATAFILE */
-
+#ifdef USE_VIEW_PCBINFO
+const WCHAR * GetPcbInfoDir(void)
+{
+	return options_get_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY);
+}
+void SetPcbInfoDir(const WCHAR *path)
+{
+	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_VIEW_PCBINFO */
 const char* GetSnapName(void)
 {
 	return options_get_string(global, OPTION_SNAPNAME);
@@ -2136,7 +2175,7 @@ int GetLangcode(void)
 void SetLangcode(int langcode)
 {
 	/* apply to emulator core for datafile.c */
-	lang_set_langcode(mamecore, langcode);
+	lang_set_langcode(MameUIGlobal(), langcode);
 	langcode = GetLangcode();
 
 	options_set_string(global, OPTION_LANGUAGE, ui_lang_info[langcode].name, OPTION_PRIORITY_CMDLINE);
@@ -2161,38 +2200,43 @@ void SetUseLangList(BOOL is_use)
 	lang_message_enable(UI_MSG_MANUFACTURE, is_use);
 }
 
-#ifdef USE_HISCORE
-void SetHiDir(const WCHAR* path)
+const WCHAR* GetLanguageDir(void)
 {
-	options_set_wstring(global, OPTION_HISCORE_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+	return options_get_wstring(global, OPTION_LANGPATH);
 }
-
-const WCHAR* GetHiDir(void)
-{
-	return options_get_wstring(global, OPTION_HISCORE_DIRECTORY);
-}
-#endif /* USE_HISCORE */
-
-#ifdef USE_IPS
-void SetIPSDir(const WCHAR* path)
-{
-	options_set_wstring(global, OPTION_IPSPATH, path, OPTION_PRIORITY_CMDLINE);
-}
-
-const WCHAR* GetIPSDir(void)
-{
-	return options_get_wstring(global, OPTION_IPSPATH);
-}
-#endif /* USE_IPS */
 
 void SetLanguageDir(const WCHAR* path)
 {
 	options_set_wstring(global, OPTION_LANGPATH, path, OPTION_PRIORITY_CMDLINE);
 }
 
-const WCHAR* GetLanguageDir(void)
+#ifdef USE_HISCORE
+const WCHAR* GetHiDir(void)
 {
-	return options_get_wstring(global, OPTION_LANGPATH);
+	return options_get_wstring(global, OPTION_HISCORE_DIRECTORY);
+}
+
+void SetHiDir(const WCHAR* path)
+{
+	options_set_wstring(global, OPTION_HISCORE_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_HISCORE */
+
+#ifdef USE_IPS
+const WCHAR* GetIPSDir(void)
+{
+	return options_get_wstring(global, OPTION_IPSPATH);
+}
+
+void SetIPSDir(const WCHAR* path)
+{
+	options_set_wstring(global, OPTION_IPSPATH, path, OPTION_PRIORITY_CMDLINE);
+}
+#endif /* USE_IPS */
+
+void SetDefaultBIOS(const char *bios)
+{
+	options_set_string(global, OPTION_BIOS, bios, OPTION_PRIORITY_CMDLINE);
 }
 
 int GetSystemBiosInfo(int bios_index)
@@ -2244,123 +2288,6 @@ void SetUIPaletteString(int n, const char *s)
 	options_set_string(global, ui_palette_tbl[n].name, s, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* UI_COLOR_PALETTE */
-
-static void options_get_folder_hide(core_options *opts, LPBITS *flags, const char *name)
-{
-	const char *stemp = options_get_string(opts, name);
-
-	if (*flags)
-		DeleteBits(*flags);
-
-	*flags = NULL;
-
-	if (stemp == NULL)
-		return;
-
-	while (*stemp)
-	{
-		char buf[256];
-		char *p;
-		int i;
-
-		if (*stemp == ',')
-			break;
-
-		p = buf;
-		while (*stemp != '\0' && *stemp != ',')
-			*p++ = *stemp++;
-		*p = '\0';
-
-		for (i = 0; g_folderData[i].m_lpTitle != NULL; i++)
-		{
-			if (strcmp(g_folderData[i].short_name, buf) == 0)
-			{
-				if (*flags == NULL)
-				{
-					*flags = NewBits(MAX_FOLDERS);
-					SetAllBits(*flags, FALSE);
-				}
-
-				SetBit(*flags, g_folderData[i].m_nFolderId);
-				break;
-			}
-		}
-
-		if (*stemp++ != ',')
-			return;
-
-		while (*stemp == ' ')
-			stemp++;
-	}
-}
-
-static void options_set_folder_hide(core_options *opts, const char *name, LPBITS flags, int priority)
-{
-	char buf[1024];
-	char *p;
-	int i;
-
-	p = buf;
-	for (i = 0; i < MAX_FOLDERS; i++)
-		if (TestBit(flags, i))
-		{
-			int j;
-
-			for (j = 0; g_folderData[j].m_lpTitle != NULL; j++)
-			{
-				if (g_folderData[j].m_nFolderId == i && g_folderData[j].short_name)
-				{
-					if (p != buf)
-						*p++ = ',';
-
-					strcpy(p, g_folderData[j].short_name);
-					p += strlen(p);
-					break;
-				}
-			}
-		}
-	*p = '\0';
-
-	options_set_string(opts, name, buf, priority);
-}
-
-static LPBITS settings_folder_hide;
-
-BOOL GetShowFolder(int folder)
-{
-	options_get_folder_hide(settings, &settings_folder_hide, MUIOPTION_HIDE_FOLDERS);
-
-	if (settings_folder_hide == NULL)
-		return TRUE;
-
-	return !TestBit(settings_folder_hide, folder);
-}
-
-void SetShowFolder(int folder, BOOL show)
-{
-	BOOL current = GetShowFolder(folder);
-
-	if (show == current)
-		return;
-
-	if (!show)
-	{
-		if (settings_folder_hide == NULL)
-		{
-			settings_folder_hide = NewBits(MAX_FOLDERS);
-			SetAllBits(settings_folder_hide, FALSE);
-		}
-
-		SetBit(settings_folder_hide, folder);
-	}
-	else
-	{
-		if (settings_folder_hide)
-			ClearBit(settings_folder_hide, folder);
-	}
-
-	options_set_folder_hide(settings, MUIOPTION_HIDE_FOLDERS, settings_folder_hide, OPTION_PRIORITY_CMDLINE);
-}
 
 BOOL FolderHasVector(const WCHAR *name)
 {
@@ -2578,124 +2505,51 @@ BOOL GetUseBrokenIcon(void)
 }
 
 #ifdef IMAGE_MENU
-void SetImageMenuStyle(int style)
-{
-	options_set_int(settings, MUIOPTION_IMAGEMENU_STYLE, style, OPTION_PRIORITY_CMDLINE);
-}
-
 int GetImageMenuStyle(void)
 {
 	return options_get_int(settings, MUIOPTION_IMAGEMENU_STYLE);
 }
+
+void SetImageMenuStyle(int style)
+{
+	options_set_int(settings, MUIOPTION_IMAGEMENU_STYLE, style, OPTION_PRIORITY_CMDLINE);
+}
 #endif /* IMAGE_MENU */
 
 #ifdef USE_SHOW_SPLASH_SCREEN
-void SetDisplaySplashScreen (BOOL val)
-{
-	options_set_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN, val, OPTION_PRIORITY_CMDLINE);
-}
-
 BOOL GetDisplaySplashScreen (void)
 {
 	return options_get_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN);
 }
+
+void SetDisplaySplashScreen (BOOL val)
+{
+	options_set_bool(settings, MUIOPTION_DISPLAY_SPLASH_SCREEN, val, OPTION_PRIORITY_CMDLINE);
+}
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 #ifdef TREE_SHEET
-void SetShowTreeSheet(BOOL val)
-{
-	options_set_bool(settings, MUIOPTION_SHOW_TREE_SHEET, val, OPTION_PRIORITY_CMDLINE);
-}
-
 BOOL GetShowTreeSheet(void)
 {
 	return options_get_bool(settings, MUIOPTION_SHOW_TREE_SHEET);
 }
+
+void SetShowTreeSheet(BOOL val)
+{
+	options_set_bool(settings, MUIOPTION_SHOW_TREE_SHEET, val, OPTION_PRIORITY_CMDLINE);
+}
 #endif /* TREE_SHEET */
+
 
 core_options *get_core_options(void)
 {
 	return mamecore;
 }
 
-static void set_core_rom_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, SEARCHPATH_ROM, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-static void set_core_image_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, SEARCHPATH_IMAGE, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-static void set_core_sample_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, SEARCHPATH_SAMPLE, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-#ifdef MESS
-static void set_core_hash_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, SEARCHPATH_HASH, dir, OPTION_PRIORITY_CMDLINE);
-}
-#endif
-
-void set_core_language_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, SEARCHPATH_LANGDATA, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_input_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, OPTION_INPUT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_state_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, OPTION_STATE_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
-}
-
 void set_core_snapshot_directory(const WCHAR *dir)
 {
 	options_set_wstring(mamecore, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
 }
-
-void set_core_state(const WCHAR *name)
-{
-	options_set_wstring(mamecore, OPTION_STATE, name, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_playback(const WCHAR *name)
-{
-	options_set_wstring(mamecore, OPTION_PLAYBACK, name, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_record(const WCHAR *name)
-{
-	options_set_wstring(mamecore, OPTION_RECORD, name, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_wavwrite(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_WAVWRITE, filename, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_mngwrite(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_MNGWRITE, filename, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_aviwrite(const WCHAR *filename)
-{
-	options_set_wstring(mamecore, OPTION_AVIWRITE, filename, OPTION_PRIORITY_CMDLINE);
-}
-
-void set_core_bios(const char *bios)
-{
-	options_set_string(mamecore, OPTION_BIOS, bios, OPTION_PRIORITY_CMDLINE);
-}
-
-
 
 /***************************************************************************
     Internal functions
@@ -2852,6 +2706,10 @@ static void FontDecodeString(const char* str, LOGFONTW *f)
 /* Encode the given LOGFONT structure into a comma-delimited string */
 static void FontEncodeString(const LOGFONTW *f, char *str)
 {
+	//char* utf8_FaceName = utf8_from_tstring(f->lfFaceName);
+	//if( !utf8_FaceName )
+	//	return;
+
 	sprintf(str, "%li,%li,%li,%li,%li,%i,%i,%i,%i,%i,%i,%i,%i",
 			f->lfHeight,
 			f->lfWidth,
@@ -2866,6 +2724,9 @@ static void FontEncodeString(const LOGFONTW *f, char *str)
 			f->lfClipPrecision,
 			f->lfQuality,
 			f->lfPitchAndFamily);
+	//		utf8_FaceName);
+        //
+	//free(utf8_FaceName);
 }
 
 static void TabFlagsEncodeString(int data, char *str)
@@ -2993,13 +2854,14 @@ static void LoadOptionsAndSettings(void)
 	GetSettingsFileName(buffer, ARRAY_LENGTH(buffer));
 	LoadSettingsFile(settings, buffer);
 
-	options_set_string(mamecore, OPTION_LANGUAGE, options_get_string(global, OPTION_LANGUAGE), OPTION_PRIORITY_CMDLINE);
-	set_core_language_directory(GetLanguageDir());
+	options_set_string(MameUIGlobal(), OPTION_LANGUAGE, options_get_string(global, OPTION_LANGUAGE), OPTION_PRIORITY_CMDLINE);
+	GetLanguageDir();
 
-	setup_language(mamecore);
+	setup_language(MameUIGlobal());
 	SetLangcode(GetLangcode());
 	SetUseLangList(UseLangList());
 }
+
 
 DWORD LoadFolderFlags(const char *path)
 {
@@ -3070,7 +2932,7 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 // Adds our folder flags to a temporarty core_options, for saving.
 static core_options * AddFolderFlags(core_options *settings)
 {
-#if 1 // mamep: folder flags are already registered into variable settings by function SaveFolderFlags()
+#if 1 //mamep: folder flags are already registered into variable settings by function SaveFolderFlags()
 	return NULL;
 #else
 	core_options *opts;
@@ -3098,7 +2960,7 @@ static core_options * AddFolderFlags(core_options *settings)
 	options_add_entries(opts, entries);
 
 	memcpy(entries, filterOptions, sizeof(filterOptions));
-/*
+
 	numFolders = GetNumFolders();
 
 	for (i = 0; i < numFolders; i++)
@@ -3136,7 +2998,6 @@ static core_options * AddFolderFlags(core_options *settings)
 			num_entries++;
 		}
 	}
-*/
 	if (num_entries == 0) {
 		options_free(opts);
 		opts = NULL;
@@ -3163,8 +3024,6 @@ void SaveOptions(void)
 			options_free(opts);
 		}
 	}
-	//mamep: save for language
-	SaveDefaultOptions();
 }
 
 
@@ -3345,8 +3204,10 @@ core_options * load_options(OPTIONS_TYPE opt_type, int game_num)
 			return opts;
 		}
 
-		// mamep: DO NOT INHERIT IPS CONFIGURATION
+#ifdef MAMEMESS
+		//mamep: DO NOT INHERIT IPS CONFIGURATION
 		options_set_string(opts, OPTION_IPS, NULL, OPTION_PRIORITY_CMDLINE);
+#endif /* MAMEMESS */
 
 		ui_parse_ini_file(opts, driver->name);
 
@@ -3487,6 +3348,14 @@ static void remove_all_source_options(void) {
 
 }
 
+// Reset the given core_options to their default settings.
+static void ResetToDefaults(core_options *opts, int priority)
+{
+	// iterate through the options setting each one back to the default value.
+	options_revert(opts, priority);
+}
+
+
 static void build_default_bios(void)
 {
 	const game_driver *last_skip = NULL;
@@ -3553,15 +3422,6 @@ static void build_default_bios(void)
 	}
 }
 
-// Reset the given core_options to their default settings.
-static void ResetToDefaults(core_options *opts, int priority)
-{
-	// iterate through the options setting each one back to the default value.
-	options_revert(opts, priority);
-}
-
-
-
 #include "strconv.h"
 
 WCHAR *options_get_wstring(core_options *opts, const char *name)
@@ -3601,15 +3461,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_op
 	ResetToDefaults(options_ref, OPTION_PRIORITY_MAXIMUM);
 	copy_options_ex(opts, options_base);
 
-	if (OnNT())
 		GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
-	else
-	{
-		char pModuleA[_MAX_PATH];
-
-		GetModuleFileNameA(GetModuleHandle(NULL), pModuleA, _MAX_PATH);
-		wcscpy(pModule, _Unicode(pModuleA));
-	}
 
 	if (override_callback)
 		override_callback(opts, param);

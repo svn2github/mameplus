@@ -53,7 +53,7 @@ struct PickerOptions
 	BOOL bOldControl;
 	BOOL bXPControl;
 	int nColumnCount;
-	LPCTSTR *ppszColumnNames;
+	const LPCTSTR *ppszColumnNames;
 };
 
 enum

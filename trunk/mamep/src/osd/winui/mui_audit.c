@@ -34,17 +34,20 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"
+#include "winui.h"
 #include "winutf8.h"
 #include "strconv.h"
 #include "audit.h"
 #include "resource.h"
-
 #include "mui_opts.h"
 #include "mui_util.h"
 #include "properties.h"
 #include "translate.h"
 
+
+#ifdef _MSC_VER
+#define vsnprintf _vsnprintf
+#endif
 
 /***************************************************************************
     function prototypes
@@ -103,7 +106,6 @@ void AuditDialog(HWND hParent)
 	    MessageBox(GetMainWindow(), _UIW(TEXT("Unable to Load Riched32.dll")),TEXT("Error"),
 				   MB_OK | MB_ICONERROR);
 	}
-	
 }
 
 void InitGameAudit(int gameIndex)
@@ -157,7 +159,6 @@ BOOL IsAuditResultNo(int audit_result)
 static void MameUIOutput(void *param, const char *format, va_list argptr)
 {
 	char buffer[512];
-
 	vsnprintf(buffer, ARRAY_LENGTH(buffer), format, argptr);
 	DetailsPrintf(TEXT("%s"), _UTF8Unicode(ConvertToWindowsNewlines(buffer)));
 }
@@ -192,7 +193,7 @@ static BOOL RomsetNotExist(int game)
 
 		// open the file if we can
 		fname = astring_assemble_2(astring_alloc(), drv->name, ".zip");
-		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
+		filerr = mame_fopen_options(MameUIGlobal(), SEARCHPATH_ROM, astring_c(fname), OPEN_FLAG_READ, &file);
 		astring_free(fname);
 		if (filerr == FILERR_NONE)
 		{
@@ -228,7 +229,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 
 	// mamep: apply selecting BIOS
 	game_options = load_options(OPTIONS_GAME, game);
-	set_core_bios(options_get_string(game_options, OPTION_BIOS));
+	SetDefaultBIOS(options_get_string(game_options, OPTION_BIOS));
 	options_free(game_options);
 
 	// mamep: if rom file doesn't exist, don't verify it
@@ -240,7 +241,7 @@ int MameUIVerifyRomSet(int game, BOOL isComplete)
 	}
 
 	// perform the audit
-	audit_records = audit_images(get_core_options(), drivers[game], AUDIT_VALIDATE_FAST, &audit);
+	audit_records = audit_images(MameUIGlobal(), drivers[game], AUDIT_VALIDATE_FAST, &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);
@@ -257,7 +258,7 @@ int MameUIVerifySampleSet(int game, BOOL isComplete)
 	int res;
 
 	// perform the audit
-	audit_records = audit_samples(get_core_options(), drivers[game], &audit);
+	audit_records = audit_samples(MameUIGlobal(), drivers[game], &audit);
 	res = ProcessAuditResults(game, audit, audit_records, isComplete);
 	if (audit_records > 0)
 		free(audit);
@@ -276,8 +277,7 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 		{
 			if (rom_index != -1)
 			{
-				WCHAR *descw = driversw[rom_index]->description;
-				swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
+				WCHAR *descw = driversw[rom_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")), 
 					driversw[rom_index]->name, UseLangList() ? _LSTW(descw) : descw);
 				SetWindowText(hDlg, buffer);
 				ProcessNextRom();
@@ -286,8 +286,7 @@ static DWORD WINAPI AuditThreadProc(LPVOID hDlg)
 			{
 				if (sample_index != -1)
 				{
-					WCHAR *descw = driversw[sample_index]->description;
-					swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
+					WCHAR *descw = driversw[sample_index]->description; swprintf(buffer, _UIW(TEXT("Checking Game %s - %s")),
 						driversw[sample_index]->name, UseLangList() ? _LSTW(descw) : descw);
 					SetWindowText(hDlg, buffer);
 					ProcessNextSample();
@@ -499,6 +498,7 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	HWND	hEdit;
 	va_list marker;
 	WCHAR	buffer[2000];
+	//TCHAR*  t_s;
 	int textLength;
 
 	//RS 20030613 Different Ids for Property Page and Dialog
@@ -519,9 +519,15 @@ static void CLIB_DECL DetailsPrintf(const WCHAR *fmt, ...)
 	
 	va_end(marker);
 
+	//t_s = tstring_from_utf8(ConvertToWindowsNewlines(buffer));
+	//if( !t_s || _tcscmp(TEXT(""), t_s) == 0)
+	//	return;
+
 	textLength = Edit_GetTextLength(hEdit);
 	Edit_SetSel(hEdit, textLength, textLength);
 	SendMessage( hEdit, EM_REPLACESEL, FALSE, (LPARAM)buffer);
+
+	//free(t_s);
 }
 
 static const WCHAR *StatusString(int iStatus)

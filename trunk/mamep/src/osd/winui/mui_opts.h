@@ -20,7 +20,7 @@
 #include "inputseq.h" /* for input_seq definition */
 #include <video.h> /* for MAX_SCREENS Definition*/
 
-#ifdef MAMEMESS
+#ifdef MESS
 #include "optionsms.h"
 #endif
 
@@ -28,7 +28,7 @@
 #define MAX_SYSTEM_BIOS_ENTRY	16
 #define BIOS_DEFAULT		"default"
 
-// DATAFILE
+//mamep: DATAFILE
 #define MUIOPTION_HISTORY_FILE					"history_file"
 #define MUIOPTION_MAMEINFO_FILE					"mameinfo_file"
 #ifdef STORY_DATAFILE
@@ -71,13 +71,64 @@ enum
 	UNKNOWN	= -1
 };
 
+/* Default input */
+/*
+enum 
+{
+	INPUT_LAYOUT_STD,
+	INPUT_LAYOUT_HR,
+	INPUT_LAYOUT_HRSE
+};
+
+// clean stretch types
+enum
+{
+	// these must match array of strings clean_stretch_long_name in options.c
+	CLEAN_STRETCH_NONE = 0,
+	CLEAN_STRETCH_AUTO = 1,
+
+	MAX_CLEAN_STRETCH = 5,
+};
+*/
+
 #define FOLDER_OPTIONS	-2
 #define GLOBAL_OPTIONS	-1
+
+/*
+// d3d effect types
+enum
+{
+	// these must match array of strings d3d_effects_long_name in options.c
+	D3D_EFFECT_NONE = 0,
+	D3D_EFFECT_AUTO = 1,
+
+	MAX_D3D_EFFECTS = 17,
+};
+
+// d3d prescale types
+enum
+{
+	D3D_PRESCALE_NONE = 0,
+	D3D_PRESCALE_AUTO = 1,
+	MAX_D3D_PRESCALE = 10,
+};
+*/
 
 typedef struct
 {
 	int x, y, width, height;
 } AREA;
+
+/*
+typedef struct 
+{
+	char* screen;
+	char* aspect;
+	char* resolution;
+	char* view;
+} ScreenParams;
+*/
+
 
 
 // List of artwork types to display in the screen shot area
@@ -100,11 +151,9 @@ enum
 	MAX_TAB_TYPES,
 	BACKGROUND,
 	TAB_ALL,
-#ifdef USE_IPS
-	TAB_NONE,
-	TAB_IPS
-#else /* USE_IPS */
 	TAB_NONE
+#ifdef USE_IPS
+	,TAB_IPS
 #endif /* USE_IPS */
 };
 // Because we have added the Options after MAX_TAB_TYPES, we have to subtract 3 here
@@ -125,6 +174,11 @@ core_options *CreateGameOptions(int driver_index);
 
 core_options * MameUISettings(void);
 core_options * MameUIGlobal(void);
+
+//void LoadFolderFlags(void);
+//const char* GetFolderNameByID(UINT nID);
+DWORD LoadFolderFlags(const char *path);
+void SaveFolderFlags(const char *path, DWORD flags);
 
 void SaveOptions(void);
 
@@ -174,14 +228,17 @@ BOOL GetBroadcast(void);
 void SetRandomBackground(BOOL random_bg);
 BOOL GetRandomBackground(void);
 
-void SetSavedFolderPath(const char *path);
-const char *GetSavedFolderPath(void);
+void SetSavedFolderID(UINT val);
+UINT GetSavedFolderID(void);
 
 void SetShowScreenShot(BOOL val);
 BOOL GetShowScreenShot(void);
 
 void SetShowFolderList(BOOL val);
 BOOL GetShowFolderList(void);
+
+BOOL GetShowFolder(int folder);
+void SetShowFolder(int folder,BOOL show);
 
 void SetShowStatusBar(BOOL val);
 BOOL GetShowStatusBar(void);
@@ -222,6 +279,8 @@ COLORREF GetCustomColor(int iIndex);
 void SetListFont(const LOGFONTW *font);
 void GetListFont(LOGFONTW *font);
 
+//DWORD GetFolderFlags(int folder_index);
+
 void SetListFontColor(COLORREF uColor);
 COLORREF GetListFontColor(void);
 
@@ -241,10 +300,8 @@ int  GetSortColumn(void);
 void SetSortReverse(BOOL reverse);
 BOOL GetSortReverse(void);
 
-/*
-const char* GetLanguage(void);
-void SetLanguage(const char* lang);
-*/
+//const char* GetLanguage(void);
+//void SetLanguage(const char* lang);
 
 const WCHAR *GetRomDirs(void);
 void SetRomDirs(const WCHAR *paths);
@@ -323,16 +380,6 @@ void SetHistoryFileName(const WCHAR *path);
 
 const WCHAR *GetMAMEInfoFileName(void);
 void SetMAMEInfoFileName(const WCHAR *path);
-
-#ifdef USE_VIEW_PCBINFO
-const WCHAR *GetPcbInfoDir(void);
-void SetPcbInfoDir(const WCHAR *path);
-#endif /* USE_VIEW_PCBINFO */
-
-#ifdef STORY_DATAFILE
-const WCHAR *GetStoryFileName(void);
-void SetStoryFileName(const WCHAR *path);
-#endif /* STORY_DATAFILE */
 
 const char* GetSnapName(void);
 void SetSnapName(const char* pattern);
@@ -465,25 +512,23 @@ void ColumnDecodeStringWithCount(const char* str, int *value, int count);
 WCHAR *options_get_wstring(core_options *opts, const char *name);
 void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority);
 WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param);
-#endif
+#endif /* UNICODE */
 
-core_options *get_core_options(void);
+#ifdef STORY_DATAFILE
+const WCHAR *GetStoryFileName(void);
+void SetStoryFileName(const WCHAR *path);
+#endif /* STORY_DATAFILE */
 
-void set_core_snapshot_directory(const WCHAR *dir);
-void set_core_input_directory(const WCHAR *dir);
-void set_core_state_directory(const WCHAR *dir);
-void set_core_state(const WCHAR *name);
-void set_core_playback(const WCHAR *name);
-void set_core_record(const WCHAR *name);
-void set_core_wavwrite(const WCHAR *filename);
-void set_core_mngwrite(const WCHAR *filename);
-void set_core_aviwrite(const WCHAR *filename);
-void set_core_language_directory(const WCHAR *dir);
-
-void set_core_bios(const char *bios); 
+#ifdef USE_VIEW_PCBINFO
+const WCHAR *GetPcbInfoDir(void);
+void SetPcbInfoDir(const WCHAR *path);
+#endif /* USE_VIEW_PCBINFO */
 
 int GetLangcode(void);
 void SetLangcode(int langcode);
+
+BOOL UseLangList(void);
+void SetUseLangList(BOOL is_use);
 
 const WCHAR *GetLanguageDir(void);
 void SetLanguageDir(const WCHAR *path);
@@ -496,6 +541,12 @@ const WCHAR *GetHiscoreFile(void);
 void SetHiscoreFile(const WCHAR *);
 #endif /* USE_HISCORE */
 
+#ifdef USE_IPS
+const WCHAR *GetIPSDir(void);
+void SetIPSDir(const WCHAR *path);
+#endif /* USE_IPS */
+
+void SetDefaultBIOS(const char *bios); 
 int GetSystemBiosInfo(int bios_index);
 
 #ifdef UI_COLOR_PALETTE
@@ -503,16 +554,7 @@ const char *GetUIPaletteString(int n);
 void SetUIPaletteString(int n, const char *s);
 #endif /* UI_COLOR_PALETTE */
 
-BOOL UseLangList(void);
-void SetUseLangList(BOOL is_use);
-
-BOOL GetShowFolder(int folder);
-void SetShowFolder(int folder,BOOL show);
-
 BOOL FolderHasVector(const WCHAR *name);
-
-void SaveFolderFlags(const char *path, DWORD flags);
-DWORD LoadFolderFlags(const char *path);
 
 void SetListBrokenColor(COLORREF uColor);
 COLORREF GetListBrokenColor(void);
@@ -525,22 +567,18 @@ int GetImageMenuStyle(void);
 void SetImageMenuStyle(int style);
 #endif /* IMAGE_MENU */
 
-#ifdef USE_IPS
-const WCHAR *GetIPSDir(void);
-void SetIPSDir(const WCHAR *path);
-#endif /* USE_IPS */
-
 #ifdef USE_SHOW_SPLASH_SCREEN
-void SetDisplaySplashScreen(BOOL val);
 BOOL GetDisplaySplashScreen(void);
+void SetDisplaySplashScreen(BOOL val);
 #endif /* USE_SHOW_SPLASH_SCREEN */
 
 #ifdef TREE_SHEET
-void SetShowTreeSheet(BOOL val);
 BOOL GetShowTreeSheet(void);
+void SetShowTreeSheet(BOOL val);
 #endif /* TREE_SHEET */
 
-//mamep: fixme
-core_options *options_get_mess_option(int driver_index);
+core_options *get_core_options(void);
+void set_core_snapshot_directory(const WCHAR *dir);
 
 #endif
+

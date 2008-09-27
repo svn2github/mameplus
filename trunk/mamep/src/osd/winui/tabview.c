@@ -22,7 +22,7 @@
 #include <wingdi.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"
+#include "winui.h"
 #include "translate.h"
 #include "tabview.h"
 #include "driver.h"
@@ -276,6 +276,7 @@ void TabView_Reset(HWND hwndTabView)
 	struct TabViewInfo *pTabViewInfo;
 	TC_ITEM tci;
 	int i;
+	//TCHAR* t_text;
 
 	pTabViewInfo = GetTabViewInfo(hwndTabView);
 
@@ -289,8 +290,12 @@ void TabView_Reset(HWND hwndTabView)
 	{
 		if (!pTabViewInfo->pCallbacks->pfnGetShowTab || pTabViewInfo->pCallbacks->pfnGetShowTab(i))
 		{
+			//t_text = tstring_from_utf8(pTabViewInfo->pCallbacks->pfnGetTabLongName(i));
+			//if( !t_text )
+			//	return;
 			tci.pszText = _UIW(pTabViewInfo->pCallbacks->pfnGetTabLongName(i));
 			TabCtrl_InsertItem(hwndTabView, i, &tci);
+			//free(t_text);
 		}
 	}
 	TabView_UpdateSelection(hwndTabView);

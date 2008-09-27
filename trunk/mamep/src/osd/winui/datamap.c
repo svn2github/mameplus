@@ -836,3 +836,4 @@ const char *datamap_get_contorl_option_name(datamap *map, HWND dialog, HWND cont
 
 	return NULL;
 }
+

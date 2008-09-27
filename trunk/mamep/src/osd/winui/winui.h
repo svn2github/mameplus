@@ -21,7 +21,25 @@
 #include "pool.h"
 #include "screenshot.h"
 
-#define SEARCH_PROMPT "type a keyword"
+#if !defined(MAMEUINAME)
+#define MAMEUINAME "MAMEUI"
+#endif
+
+#ifndef MESS
+#ifdef PTR64
+#define TEXT_MAMEUINAME	TEXT("MAMEUI")
+#else
+#define TEXT_MAMEUINAME	TEXT("MAMEUI")
+#endif
+#if !defined(MAMENAME)
+#define MAMENAME	"MAME"
+#endif
+#else
+#define MAMEUINAME	"MESSUI"
+#define MAMENAME	"MESS"
+#endif
+
+#define SEARCH_PROMPT ""
 
 enum
 {
@@ -33,20 +51,24 @@ enum
 
 enum
 {
-	FILETYPE_INPUT_FILES = 0,
-	FILETYPE_SAVESTATE_FILES,
-	FILETYPE_WAVE_FILES,
-	FILETYPE_MNG_FILES,
-	FILETYPE_AVI_FILES,
-	FILETYPE_JOYMAP_FILES,
-	FILETYPE_DEBUGSCRIPT_FILES,
-#if 1
-	FILETYPE_HISTORY_FILE,
-	FILETYPE_MAMEINFO_FILE,
+	FILETYPE_INPUT_FILES = 1,
+	FILETYPE_SAVESTATE_FILES = 2,
+	FILETYPE_WAVE_FILES = 3,
+	FILETYPE_AVI_FILES = 4,
+	FILETYPE_MNG_FILES = 5,
+	//mamep: export gamelist
+	FILETYPE_GAMELIST_FILES = 6,
+#if 0 //mamep: use standard combobox
+	FILETYPE_EFFECT_FILES = 6,
 #endif
-	FILETYPE_IMAGE_FILES,
-	FILETYPE_GAMELIST_FILES,
-	FILETYPE_MAX
+	FILETYPE_JOYMAP_FILES = 7,
+	FILETYPE_DEBUGSCRIPT_FILES = 8,
+	FILETYPE_CHEAT_FILE = 9,
+	FILETYPE_HISTORY_FILE = 10,
+	FILETYPE_MAMEINFO_FILE = 11
+#ifdef STORY_DATAFILE
+	,FILETYPE_STORY_FILE = 12
+#endif /* STORY_DATAFILE */
 };
 
 
@@ -69,16 +91,18 @@ struct _driverw
 /* in winui.c */
 extern struct _driverw **driversw;
 
-BOOL CommonFileDialog(BOOL open_for_write, WCHAR *filename, int filetype);
+extern TCHAR last_directory[MAX_PATH];
 
+typedef BOOL (WINAPI *common_file_dialog_procW)(LPOPENFILENAMEW lpofn);
+typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
+BOOL CommonFileDialog(common_file_dialog_procW cfd,WCHAR *filename, int filetype);
 
 HWND GetMainWindow(void);
 HWND GetTreeView(void);
-#ifdef HIMAGELIST
 HIMAGELIST GetLargeImageList(void);
 HIMAGELIST GetSmallImageList(void);
-#endif
-int GetNumGames(void);
+int GetNumOptionFolders(void);
+void SetNumOptionFolders(int count);
 void GetRealColumnOrder(int order[]);
 HICON LoadIconFromFile(const char *iconname);
 void UpdateScreenShot(void);
@@ -86,12 +110,17 @@ void ResizePickerControls(HWND hWnd);
 void MamePlayGame(void);
 int FindIconIndex(int nIconResource);
 int FindIconIndexByName(const char *icon_name);
-LPWSTR GetSearchText(void);
+int GetSelectedPick(void);
+object_pool *GetMameUIMemoryPool(void);
+int GetNumGames(void);
 #ifdef USE_VIEW_PCBINFO
 void PaintBackgroundImage(HWND hWnd, HRGN hRgn, int x, int y);
 #endif /* USE_VIEW_PCBINFO */
 
 void UpdateListView(void);
+
+// Move The in "The Title (notes)" to "Title, The (notes)"
+char * ModifyThe(const char *str);
 
 // Convert Ampersand so it can display in a static control
 LPWSTR ConvertAmpersandString(LPCWSTR s);
@@ -122,5 +151,43 @@ int MameUIMain(HINSTANCE	hInstance,
 
 BOOL MouseHasBeenMoved(void);
 
+LPWSTR GetSearchText(void);
+
+//mamep
+#define UI_MSG_UI	UI_MSG_OSD1
+#define UI_MSG_EXTRA	UI_MSG_OSD2
+
+#undef _
+#undef _LST
+#undef _READINGS
+#undef _MANUFACT
+#undef _WINDOWS
+#undef _UI
+
+#define _W(str)		w_lang_message(UI_MSG_MAME, str)
+#define _LSTW(str)	w_lang_message(UI_MSG_LIST, str)
+#define _READINGSW(str)	w_lang_message(UI_MSG_READINGS, str)
+#define _MANUFACTW(str)	w_lang_message(UI_MSG_MANUFACTURE, str)
+#define _WINDOWSW(str)	w_lang_message(UI_MSG_OSD0, str)
+#define _UIW(str)	w_lang_message(UI_MSG_UI, str)
 
 #endif
+
+
+#ifdef _MSC_VER
+	#define wcscmpi _wcsicmp
+	#define snprintf _snprintf
+	#define snwprintf _snwprintf
+
+	// for VC2005
+	#if _MSC_VER >= 1400
+		#undef strdup
+		#undef stricmp
+		#define wcsdup _wcsdup
+		#define wcsicmp _wcsicmp
+		#define strdup _strdup
+		#define stricmp _stricmp
+		#define strlwr _strlwr
+		#define itoa _itoa
+	#endif // for VC2005
+#endif // _MSC_VER

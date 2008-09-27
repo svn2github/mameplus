@@ -121,7 +121,7 @@
 #define IDB_TOOLBAR_PT                  205
 #define IDB_TOOLBAR_BR                  206
 #define IDB_TOOLBAR_HU                  207
-#define IDB_SPLASH                      210
+#define IDB_SPLASH                      210 // USE_SHOW_SPLASH_SCREEN
 #define IDI_INFO                        701
 #define IDI_LARGE                       702
 #define IDI_SMALL                       703
@@ -189,7 +189,7 @@
 #define IDC_SAMPLES_INCORRECT           1049
 #define IDC_SAMPLES_TOTAL               1050
 #define IDC_AUDIT_DETAILS               1051
-#define IDC_USE_FM_YM3812               0    // N/A
+#define IDC_USE_FM_YM3812               1052
 #define IDC_DIR_COMBO                   1053
 #define IDC_DIR_LIST                    1054
 #define IDC_DIR_BROWSE                  1055
@@ -390,7 +390,7 @@
 #define IDC_SNAPSIZEX                   1253
 
 #define IDC_PRESCALETEXT                1261
-#define IDC_DISPLAY_SPLASH_SCREEN       1262
+#define IDC_DISPLAY_SPLASH_SCREEN       1262 // USE_SHOW_SPLASH_SCREEN
 #define IDC_SHOW_TREE_SHEET             1263 // USE_TREE_SHEET
 
 #define IDC_AUTO_PAUSE_PLAYBACK         1301 // USE_AUTO_PAUSE_PLAYBACK
@@ -398,8 +398,8 @@
 #define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
 #define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
 #define IDC_VOLUME_ADJUST               1305 // USE_VOLUME_AUTO_ADJUST
-#define IDC_BROKEN_ICON                 1306
-#define IDC_EDIT_BROKEN_COLOR           1307
+#define IDC_BROKEN_ICON                 1306 // use not working icon
+#define IDC_EDIT_BROKEN_COLOR           1307 // set not working color
 
 #define IDC_JOYID1                      1311 // JOYSTICK_ID
 #define IDC_JOYID2                      1312 // JOYSTICK_ID
@@ -419,7 +419,7 @@
 #define IDC_JOYID7TEXT                  1326 // JOYSTICK_ID
 #define IDC_JOYID8TEXT                  1327 // JOYSTICK_ID
 
-#define IDC_USE_LIST                    1341
+#define IDC_USE_LIST                    1341 // local language gamelist
 #define IDC_SCALEEFFECT                 1342 // USE_SCALE_EFFECTS
 
 #define IDC_PALETTE_COMBO               1353 // UI_COLOR_PALETTE
@@ -433,8 +433,8 @@
 
 #define IDC_TRANSPARENCY                1361 // TRANS_UI
 #define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
-#define IDC_PROP_INPUT                  1363
-#define IDC_PROP_SAVESTATE              1364
+#define IDC_PROP_INPUT                  1363 // USE_MISC_FOLDER
+#define IDC_PROP_SAVESTATE              1364 // USE_MISC_FOLDER
 
 #define IDC_BIOS1                       1365
 #define IDC_BIOS2                       1366
@@ -508,7 +508,7 @@
 #define ID_HELP_WHATS_NEW               40029
 #define ID_HELP_CHEATS                  40030
 #define ID_OPTIONS_PALETTE              40031 // UI_COLOR_PALETTE
-#define ID_OPTIONS_MMO2LST              40032 // MMO2LST
+#define ID_OPTIONS_MMO2LST              40032 // export gamelist
 
 #define ID_VIEW_LINEUPICONS             40040
 #define ID_UPDATE_GAMELIST              40042
@@ -573,7 +573,8 @@
 #define ID_OPTIONS_CHEAT                0     // N/A
 #define ID_OPTIONS_MAMEINFO             40101
 #define ID_OPTIONS_HISTORY              40102
-#define ID_BIOS_PROPERTIES		40104
+#define ID_OPTIONS_STORY                40111 // STORY_DATAFILE
+#define ID_BIOS_PROPERTIES		40112 // BIOSSet properties
 
 #define ID_VIEW_BYGAME                  40151 // sort items
 #define ID_VIEW_ORIENTATION             40152 // sort items

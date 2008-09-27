@@ -31,7 +31,6 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "mameui.h"	// include this first
 #include "unzip.h"
 #include "sound/samples.h"
 #include "winutf8.h"
@@ -44,10 +43,6 @@
 #include "mui_opts.h"
 #include "patch.h"
 #endif /* USE_IPS */
-
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
 
 
 /***************************************************************************
@@ -68,9 +63,13 @@ static struct DriversInfo
 	BOOL isHarddisk;
 	BOOL hasOptionalBIOS;
 	BOOL isStereo;
+	BOOL isMultiMon;
 	BOOL isVector;
 	BOOL usesRoms;
 	BOOL usesSamples;
+	BOOL usesTrackball;
+	BOOL usesLightGun;
+	BOOL usesMouse;
 	BOOL supportsSaveState;
 	BOOL isVertical;
 	BOOL hasM68K;
@@ -80,18 +79,6 @@ static struct DriversInfo
 	int parentIndex;
 	int biosIndex;
 } *drivers_info = NULL;
-
-
-/***************************************************************************
-	Internal variables
- ***************************************************************************/
-#ifndef PATH_SEPARATOR
-#ifdef _MSC_VER
-#define PATH_SEPARATOR '\\'
-#else
-#define PATH_SEPARATOR '/'
-#endif
-#endif
 
 
 /***************************************************************************
@@ -173,21 +160,6 @@ UINT GetDepth(HWND hWnd)
 	ReleaseDC(hWnd, hDC);
 
 	return nBPP;
-}
-
-BOOL OnNT(void)
-{
-	OSVERSIONINFO version_info;
-	static int result = -1;
-
-	if (result == -1)
-	{
-		version_info.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
-		GetVersionEx(&version_info);
-		result = (version_info.dwPlatformId == VER_PLATFORM_WIN32_NT);
-	}
-
-	return result;
 }
 
 /*
@@ -308,7 +280,6 @@ LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
 
 		pFirst++;
 	}
-
 	return NULL;
 }
 
@@ -352,6 +323,22 @@ const WCHAR * GetDriverFilename(int nIndex)
 	}
 
 	return filename;
+}
+
+BOOL isDriverVector(const machine_config *config)
+{
+	const device_config *screen = video_screen_first(config);
+
+	if (screen != NULL) {
+		const screen_config *scrconfig = screen->inline_config;
+
+		/* parse "vector.ini" for vector games */
+		if (SCREEN_TYPE_VECTOR == scrconfig->type)
+		{
+			return TRUE;
+		}
+	}
+	return FALSE;
 }
 
 struct control_cache_t
@@ -517,22 +504,6 @@ static void UpdateController(void)
 	free(cache);
 }
 
-BOOL isDriverVector(const machine_config *config)
-{
-	const device_config *screen = video_screen_first(config);
-
-	if (screen != NULL) {
-		const screen_config *scrconfig = screen->inline_config;
-
-		/* parse "vector.ini" for vector games */
-		if (SCREEN_TYPE_VECTOR == scrconfig->type)
-		{
-			return TRUE;
-		}
-	}
-	return FALSE;
-}
-
 int numberOfSpeakers(const machine_config *config)
 {
 	int speakers = speaker_output_count(config);
@@ -563,34 +534,48 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
 			const game_driver *gamedrv = drivers[ndriver];
-			const rom_source *source;
-			int nParentIndex = GetParentRomSetIndex(gamedrv);
 			struct DriversInfo *gameinfo = &drivers_info[ndriver];
 			const rom_entry *region, *rom;
 			machine_config *config;
+			const input_port_config *input_ports;
+			const rom_source *source;
 			int num_speakers;
 
 			/* Allocate machine config */
 			config = machine_config_alloc(gamedrv->machine_config);
 
-			gameinfo->isClone = (nParentIndex != -1);
+			gameinfo->isClone = (GetParentRomSetIndex(gamedrv) != -1);
 			gameinfo->isBroken = ((gamedrv->flags & GAME_NOT_WORKING) != 0);
 			gameinfo->supportsSaveState = ((gamedrv->flags & GAME_SUPPORTS_SAVE) != 0);
 			gameinfo->isHarddisk = FALSE;
 			gameinfo->isVertical = (gamedrv->flags & ORIENTATION_SWAP_XY) ? TRUE : FALSE;
 			for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
 			{
-				for (region = rom_first_region(gamedrv, source); region != NULL; region = rom_next_region(region))
+				for (region = rom_first_region(gamedrv, source); region; region = rom_next_region(region))
+				{
 					if (ROMREGION_ISDISKDATA(region))
-					{
 						gameinfo->isHarddisk = TRUE;
+				}
+			}
+			gameinfo->hasOptionalBIOS = FALSE;
+			if (gamedrv->rom != NULL)
+			{
+				for (rom = gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
+				{
+					if (ROMENTRY_ISSYSTEM_BIOS(rom))
+					{
+						gameinfo->hasOptionalBIOS = TRUE;
 						break;
 					}
+				}
 			}
 
 			num_speakers = numberOfSpeakers(config);
 
 			gameinfo->isStereo = (num_speakers > 1);
+			//gameinfo->isMultiMon = ((drv.video_attributes & VIDEO_DUAL_MONITOR) != 0);
+			// Was removed from Core
+			gameinfo->isMultiMon = 0;
 			gameinfo->isVector = isDriverVector(config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
 			gameinfo->hasOptionalBIOS = FALSE;
@@ -601,25 +586,35 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
 						gameinfo->usesRoms = TRUE; 
-						gameinfo->hasOptionalBIOS = (determine_bios_rom(get_core_options(), gamedrv->rom) != 0);
+						gameinfo->hasOptionalBIOS = (determine_bios_rom(MameUIGlobal(), gamedrv->rom) != 0);
 						break; 
 					}
 				}
 			}
 			gameinfo->usesSamples = FALSE;
-			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
+			
+			if (HAS_SAMPLES || HAS_VLM5030)
 			{
-#if HAS_SAMPLES
-				if (config->sound[i].type == SOUND_SAMPLES)
+			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
 				{
 					const char * const * samplenames = NULL;
 
+#if (HAS_SAMPLES || HAS_VLM5030)
+					for( i = 0; config->sound[i].type && i < MAX_SOUND; i++ )
+					{
+#if (HAS_SAMPLES)
+						if( config->sound[i].type == SOUND_SAMPLES )
 					samplenames = ((samples_interface *)config->sound[i].config)->samplenames;
-
-					if (samplenames != NULL && samplenames[0] != NULL)
-						gameinfo->usesSamples = TRUE;
+#endif
 				}
 #endif
+					if (samplenames != 0 && samplenames[0] != 0)
+					{
+						gameinfo->usesSamples = TRUE;
+						break;
+					}
+				}
+
 			}
 
 			gameinfo->numPlayers = 0;
@@ -651,21 +646,20 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				)
 					gameinfo->hasM68K = TRUE;
 			}
-			/* Free the structure */
-			machine_config_free(config);
 
 			gameinfo->parentIndex = -1;
 			if (gameinfo->isClone)
 			{
 				for (i = 0; i < GetNumGames(); i++)
 				{
-					if (nParentIndex == i)
+					if (GetParentRomSetIndex(gamedrv) == i)
 					{
 						gameinfo->parentIndex = i;
 						break;
 					}
 				}
 			}
+
 			gameinfo->biosIndex = -1;
 			if (DriverIsBios(ndriver))
 				gameinfo->biosIndex = ndriver;
@@ -694,8 +688,39 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					}
 				}
 			}
-		}
 
+			/* Free the structure */
+			machine_config_free(config);
+
+			gameinfo->usesTrackball = FALSE;
+			gameinfo->usesLightGun = FALSE;
+			if (gamedrv->ipt != NULL)
+			{
+				const input_port_config *port;
+				input_ports = input_port_config_alloc(gamedrv->ipt,NULL,0);
+				
+				for (port = input_ports; port != NULL; port = port->next)
+				{
+					const input_field_config *field;
+					for (field = port->fieldlist; field != NULL; field = field->next)
+ 					{
+						UINT32 type;
+						type = field->type;
+						if (type == IPT_END)
+							break;
+						if (type == IPT_DIAL || type == IPT_PADDLE || 
+							type == IPT_TRACKBALL_X || type == IPT_TRACKBALL_Y ||
+							type == IPT_AD_STICK_X || type == IPT_AD_STICK_Y)
+							gameinfo->usesTrackball = TRUE;
+						if (type == IPT_LIGHTGUN_X || type == IPT_LIGHTGUN_Y)
+							gameinfo->usesLightGun = TRUE;
+						if (type == IPT_MOUSE_X || type == IPT_MOUSE_Y)
+							gameinfo->usesMouse = TRUE;
+					}
+				}
+				input_port_config_free(input_ports);
+			}
+		}
 		UpdateController();
 	}
 	return &drivers_info[driver_index];
@@ -716,14 +741,6 @@ BOOL DriverIsHarddisk(int driver_index)
 	return GetDriversInfo(driver_index)->isHarddisk;
 }
 
-BOOL DriverIsConsole(int driver_index)
-{
-#ifdef MESS
-	return drivers[driver_index]->sysconfig_ctor != NULL;
-#endif // MESS
-	return FALSE;
-}
-
 BOOL DriverIsBios(int driver_index)
 {
 	BOOL bBios = FALSE;
@@ -738,30 +755,13 @@ BOOL DriverHasOptionalBIOS(int driver_index)
 	return GetDriversInfo(driver_index)->hasOptionalBIOS;
 }
 
-int DriverBiosIndex(int driver_index)
-{
-	return GetDriversInfo(driver_index)->biosIndex;
-}
-
-/*
-int DriverSystemBiosIndex(int driver_index)
-{
-	int i;
-
-	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
-	{
-		int bios_driver = GetSystemBiosInfo(i);
-		if (bios_driver != -1 && bios_driver == DriverBiosIndex(driver_index))
-			return i;
-	}
-
-	return -1;
-}
-*/
-
 BOOL DriverIsStereo(int driver_index)
 {
 	return GetDriversInfo(driver_index)->isStereo;
+}
+BOOL DriverIsMultiMon(int driver_index)
+{
+	return GetDriversInfo(driver_index)->isMultiMon;
 }
 
 BOOL DriverIsVector(int driver_index)
@@ -779,6 +779,49 @@ BOOL DriverUsesSamples(int driver_index)
 	return GetDriversInfo(driver_index)->usesSamples;
 }
 
+BOOL DriverUsesTrackball(int driver_index)
+{
+	return GetDriversInfo(driver_index)->usesTrackball;
+}
+
+BOOL DriverUsesLightGun(int driver_index)
+{
+	return GetDriversInfo(driver_index)->usesLightGun;
+}
+
+BOOL DriverUsesMouse(int driver_index)
+{
+	return GetDriversInfo(driver_index)->usesMouse;
+}
+
+BOOL DriverSupportsSaveState(int driver_index)
+{
+	return GetDriversInfo(driver_index)->supportsSaveState;
+}
+
+BOOL DriverIsVertical(int driver_index) {
+	return GetDriversInfo(driver_index)->isVertical; 
+}
+
+BOOL DriverIsConsole(int driver_index)
+{
+#ifdef MAMEMESS
+	return drivers[driver_index]->sysconfig_ctor != NULL;
+#else /* MAMEMESS */
+	return FALSE;
+#endif /* MAMEMESS */
+}
+
+int DriverBiosIndex(int driver_index)
+{
+	return GetDriversInfo(driver_index)->biosIndex;
+}
+
+BOOL DriverHasM68K(int driver_index)
+{
+	return GetDriversInfo(driver_index)->hasM68K;
+}
+
 int DriverNumPlayers(int driver_index)
 {
 	return GetDriversInfo(driver_index)->numPlayers;
@@ -794,25 +837,6 @@ BOOL DriverUsesController(int driver_index, int type)
 	return GetDriversInfo(driver_index)->usesController[type];
 }
 
-BOOL DriverSupportsSaveState(int driver_index)
-{
-	return GetDriversInfo(driver_index)->supportsSaveState;
-}
-
-BOOL DriverIsVertical(int driver_index) {
-	return GetDriversInfo(driver_index)->isVertical; 
-}
-
-BOOL DriverHasM68K(int driver_index)
-{
-	return GetDriversInfo(driver_index)->hasM68K;
-}
-
-int DriverParentIndex(int driver_index)
-{
-	return GetDriversInfo(driver_index)->parentIndex;
-}
-
 void FlushFileCaches(void)
 {
 	zip_file_cache_clear();
@@ -823,6 +847,33 @@ void FreeIfAllocated(char **s)
 	if (*s)
 		free(*s);
 	*s = NULL;
+}
+
+BOOL StringIsSuffixedBy(const char *s, const char *suffix)
+{
+	return (strlen(s) > strlen(suffix)) && (strcmp(s + strlen(s) - strlen(suffix), suffix) == 0);
+}
+
+/***************************************************************************
+	Win32 wrappers
+ ***************************************************************************/
+
+BOOL SafeIsAppThemed(void)
+{
+	BOOL bResult = FALSE;
+	HMODULE hThemes;
+	BOOL (WINAPI *pfnIsAppThemed)(void);
+	
+	hThemes = LoadLibrary(TEXT("uxtheme.dll"));
+	if (hThemes != NULL)
+	{
+		pfnIsAppThemed = (BOOL (WINAPI *)(void)) GetProcAddress(hThemes, "IsAppThemed");
+		if (pfnIsAppThemed != NULL)
+			bResult = pfnIsAppThemed();
+		FreeLibrary(hThemes);
+	}
+	return bResult;
+
 }
 
 void FreeIfAllocatedW(WCHAR **s)
@@ -989,6 +1040,27 @@ LPWSTR GetPatchDesc(const WCHAR *game_name, const WCHAR *patch_name)
 #endif /* USE_IPS */
 
 
+
+//============================================================
+//  win_extract_icon_utf8
+//============================================================
+
+HICON win_extract_icon_utf8(HINSTANCE inst, const char* exefilename, UINT iconindex)
+{
+	HICON icon = 0;
+	TCHAR* t_exefilename = tstring_from_utf8(exefilename);
+	if( !t_exefilename )
+		return icon;
+	
+	icon = ExtractIcon(inst, t_exefilename, iconindex);
+	
+	free(t_exefilename);
+	
+	return icon;
+}
+
+
+
 //============================================================
 //  win_tstring_strdup
 //============================================================
@@ -1121,14 +1193,3 @@ void CenterWindow(HWND hWnd)
 	SetWindowPos(hWnd, HWND_TOP, xLeft, yTop, -1, -1, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
 }
 #endif /* TREE_SHEET */
-
-/***************************************************************************
-	Internal functions
- ***************************************************************************/
-
-
-
-
-
-
-

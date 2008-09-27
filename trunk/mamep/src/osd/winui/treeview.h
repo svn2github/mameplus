@@ -107,7 +107,9 @@ enum
 	FOLDER_NONE = 0,
 	FOLDER_ALLGAMES,
 	FOLDER_AVAILABLE,
+#ifdef MAMEMESS
 	FOLDER_CONSOLE,
+#endif /* MAMEMESS */
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	FOLDER_UNAVAILABLE,
 #endif
@@ -200,16 +202,12 @@ void FreeFolders(void);
 void ResetFilters(void);
 void InitTree(LPFOLDERDATA lpFolderData, LPFILTER_ITEM lpFilterList);
 void SetCurrentFolder(LPTREEFOLDER lpFolder);
+UINT GetCurrentFolderID(void);
+
 LPTREEFOLDER GetCurrentFolder(void);
 LPTREEFOLDER GetFolder(UINT nFolder);
 LPTREEFOLDER GetFolderByID(UINT nID);
 LPTREEFOLDER GetFolderByName(int nParentId, const WCHAR *pszFolderName);
-
-int  GetBiosDriverByFolder(LPTREEFOLDER lpFolder);
-BOOL IsSourceFolder(LPTREEFOLDER lpFolder);
-BOOL IsBiosFolder(LPTREEFOLDER lpFolder);
-BOOL IsVectorFolder(LPTREEFOLDER lpFolder);
-LPTREEFOLDER GetSourceFolder(int driver_index);
 
 void AddGame(LPTREEFOLDER lpFolder, UINT nGame);
 void RemoveGame(LPTREEFOLDER lpFolder, UINT nGame);
@@ -236,6 +234,6 @@ HIMAGELIST GetTreeViewIconList(void);
 int GetTreeViewIconIndex(int icon_id);
 
 void ResetTreeViewFolders(void);
-void SelectTreeViewFolder(LPTREEFOLDER lpFolder);
+void SelectTreeViewFolder(int folder_id);
 
 #endif /* TREEVIEW_H */
