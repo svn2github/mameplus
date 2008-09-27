@@ -70,6 +70,7 @@ $(MESSOBJ)/nintendo.a:					\
 	$(MESS_VIDEO)/nes.o		\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
+	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
 	$(MESS_DRIVERS)/gba.o \
 
