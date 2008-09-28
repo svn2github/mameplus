@@ -18,7 +18,7 @@
 &Configuration...
 配置...(&C)
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 配置...(&C)
 
@@ -30,11 +30,11 @@
 &Exit
 退出(&E)
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 跳帧(&F)
 
@@ -42,11 +42,11 @@
 &Full Screen\tAlt+Enter
 全屏幕(&F)\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 输入(&I)
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 游戏杆(&J)
 
@@ -74,15 +74,15 @@
 &Save State
 保存游戏进度(&S)
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 视频(&V)
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 关于 %s (%s)...
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 所有文件 (*.*)|*.*|
 
@@ -98,11 +98,11 @@ Auto
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 通用镜像类型
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 压缩镜像 (*.zip)|*.zip|
 
@@ -126,15 +126,15 @@ Error setting DirectSound cooperative level: %08x\n
 Ha&rd Reset
 硬重启(&R)
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 输入
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 游戏杆 %i
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 游戏杆/控制器
 
@@ -142,11 +142,11 @@ Joysticks/Controllers
 Maximum &Speed
 最大速度(&S)
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 其他输入
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 内存溢出
 
@@ -202,11 +202,11 @@ Stop
 Toggle Fullscreen
 切换全屏幕
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 无法关闭键盘设备。(错误 %d)\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 无法打开键盘设备 (错误 %d)\n
 
@@ -226,35 +226,35 @@ enable dual lightgun input
 set audio latency (increase to reduce glitches)
 设置音频等待时间(增加值以减少声音破损)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 设置游戏杆 ID (P1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 设置游戏杆 ID (P2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 设置游戏杆 ID (P3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 设置游戏杆 ID (P4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 设置游戏杆 ID (P5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 设置游戏杆 ID (P6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 设置游戏杆 ID (P7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 设置游戏杆 ID (P8)
 
@@ -264,10 +264,6 @@ set joystick ID (Player8)
 
 # mess/osd/windows/mess.rc: 85
 &Hide Menubar\tScrLk
-
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
 
 
 # osd/windows/video.c: 257
@@ -666,11 +662,11 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 
 
@@ -718,7 +714,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 
 
@@ -774,7 +770,7 @@ Invalid video value %s; reverting to gdi\n
 MAME: %s [%s] - Screen %d
 
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 
 
@@ -802,15 +798,15 @@ Show P&rofiler
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 
 
@@ -906,7 +902,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 
 
@@ -974,7 +970,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 
 

@@ -18,7 +18,7 @@
 &Configuration...
 設定(&C)...
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 設定(&C)...
 
@@ -34,11 +34,11 @@
 &Exit
 結束(&E)
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 檔案(&F)
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 略過畫格(&F)
 
@@ -50,11 +50,11 @@
 &Hide Menubar\tScrLk
 隱藏設定選單\tScrLk
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 輸入(&I)
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 搖桿(&J)
 
@@ -82,23 +82,19 @@
 &Save State
 儲存狀態(&S)
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 視訊(&V)
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
-(由編譯選項停用)
 
 # osd/windows/video.c: 257
 (primary)
 (主顯示器)
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 關於 %s (%s)...
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 所有檔案 (*.*)|*.*|
 
@@ -118,11 +114,11 @@ Auto
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 公共映像檔類型
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 壓縮的映像檔 (*.zip)|*.zip|
 
@@ -514,11 +510,11 @@ DirectInput: 正在使用 DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 模擬
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 模擬鍵盤
 
@@ -582,7 +578,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 設定頂點 shader 時發生錯誤 (%08X)
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 %s 映像檔時發生錯誤: %s
 
@@ -634,7 +630,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 非法的解析度值於 %s = %s\n
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 輸入
 
@@ -642,11 +638,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 無效的視訊值 %s; 還原成 gdi\n
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 搖桿 %i
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 搖桿/控制器
 
@@ -658,11 +654,11 @@ MAME: %s [%s] - 畫面 %d
 Maximum &Speed
 最快速度
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 雜項輸入
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 自然
 
@@ -670,7 +666,7 @@ Natural
 OK
 確定
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 記憶體不足
 
@@ -738,7 +734,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 聲音: 緩衝 overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 儲存狀態檔 (*.sta)|*.sta|All Files (*.*)|*.*
 
@@ -746,11 +742,11 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 停止
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 所有符號表
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 磁帶控制
 
@@ -766,7 +762,7 @@ Toggle Fullscreen
 Toggle Menubar
 切換設定選單
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 無法關閉鍵盤裝置。(錯誤 %d)\n
 
@@ -790,7 +786,7 @@ Unable to initialize DirectDraw.\n
 Unable to load PNG file '%s'\n
 無法載入 PNG 檔案 '%s'\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 無法開啟鍵盤裝置。(錯誤 %d)\n
 
@@ -866,7 +862,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 全螢幕模式對比值
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 正在建立
 
@@ -938,7 +934,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 正在載入
 
@@ -1002,35 +998,35 @@ scale screen rendering by this amount in software
 set audio latency (increase to reduce glitches)
 設定音訊等待時間 (增加值可減少破損)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 設定搖桿 ID (玩家 1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 設定搖桿 ID (玩家 2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 設定搖桿 ID (玩家 3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 設定搖桿 ID (玩家 4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 設定搖桿 ID (玩家 5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 設定搖桿 ID (玩家 6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 設定搖桿 ID (玩家 7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 設定搖桿 ID (玩家 8)
 

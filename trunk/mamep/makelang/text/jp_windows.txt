@@ -18,7 +18,7 @@
 &Configuration...
 設定...(&C)
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 設定...(&C)
 
@@ -34,11 +34,11 @@ DIPスイッチ...(&D)
 &Exit
 終了(&E)
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 ファイル(&F)
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 フレームスキップ(&F)
 
@@ -50,11 +50,11 @@ DIPスイッチ...(&D)
 &Hide Menubar\tScrLk
 メニューバーを隠す(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 入力(&I)
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 ジョイスティック(&J)
 
@@ -82,23 +82,19 @@ DIPスイッチ...(&D)
 &Save State
 ステートを保存(&S)
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 ビデオ(&V)
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
-(コンパイル時に無効化)
 
 # osd/windows/video.c: 257
 (primary)
 (プライマリ)
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 %s (%s)について...
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 全てのファイル (*.*)|*.*|
 
@@ -118,11 +114,11 @@ Auto
 Cancel
 キャンセル
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 共通イメージタイプ
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 圧縮イメージ (*.zip)|*.zip|
 
@@ -510,11 +506,11 @@ DirectInput: DirectInput %dを使用します\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 エミュレート
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 キーボードエミュレート
 
@@ -578,7 +574,7 @@ DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
@@ -630,7 +626,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 入力
 
@@ -638,11 +634,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 ジョイスティック %i
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
@@ -654,11 +650,11 @@ MAME: %s「%s」- 画面%d
 Maximum &Speed
 最高速度(&S)
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 その他の入力
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 そのまま
 
@@ -666,7 +662,7 @@ Natural
 OK
 OK
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 メモリ不足
 
@@ -734,7 +730,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
@@ -742,11 +738,11 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 停止
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 シンボルテーブルが一杯
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 テープ制御
 
@@ -762,7 +758,7 @@ Toggle Fullscreen
 Toggle Menubar
 メニューバーの切り替え
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 キーボードディバイスがクローズ出来ません。(エラー %d)\n
 
@@ -786,7 +782,7 @@ DirectDrawを初期化出来ません\n
 Unable to load PNG file '%s'\n
 PNGファイル「%s」を読み込めません\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
@@ -862,7 +858,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 作成
 
@@ -934,7 +930,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 読み込み
 
@@ -998,35 +994,35 @@ scale screen rendering by this amount in software
 set audio latency (increase to reduce glitches)
 オーディオのレイテンシを指定
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 ジョイスティックIDを指定 (プレイヤー1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 ジョイスティックIDを指定 (プレイヤー2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 ジョイスティックIDを指定 (プレイヤー3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 ジョイスティックIDを指定 (プレイヤー4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 ジョイスティックIDを指定 (プレイヤー5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 ジョイスティックIDを指定 (プレイヤー6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 ジョイスティックIDを指定 (プレイヤー7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 ジョイスティックIDを指定 (プレイヤー8)
 

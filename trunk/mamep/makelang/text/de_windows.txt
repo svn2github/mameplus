@@ -18,23 +18,23 @@ Fehler beim Setzen des DirectSound Cooperative Level: %08x\n
 Sound buffer: overflows=%d underflows=%d\n
 Sound-Buffer: overflows=%d underflows=%d\n
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 Nicht möglich das Tastatur-Gerät zu schliessen. (Fehler %d)\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 Nicht möglich das Tastatur-Gerät zu öffnen. (Error %d)\n
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 Setze Joystick ID (Spieler1)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 Setze Joystick ID (Spieler3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 Setze Joystick ID (Spieler4)
 
@@ -58,7 +58,7 @@ Setze Joystick ID (Spieler4)
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 
 
@@ -74,11 +74,11 @@ Setze Joystick ID (Spieler4)
 &Exit
 
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 
 
@@ -90,11 +90,11 @@ Setze Joystick ID (Spieler4)
 &Hide Menubar\tScrLk
 
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 
 
@@ -122,23 +122,19 @@ Setze Joystick ID (Spieler4)
 &Save State
 
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
-
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
 
 
 # osd/windows/video.c: 257
 (primary)
 
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 
 
@@ -158,11 +154,11 @@ Auto
 Cancel
 
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 
 
@@ -554,11 +550,11 @@ DirectInput: Using DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 
 
@@ -606,7 +602,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 
 
@@ -658,7 +654,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 
 
@@ -666,11 +662,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 
 
@@ -682,11 +678,11 @@ MAME: %s [%s] - Screen %d
 Maximum &Speed
 
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 
 
@@ -694,7 +690,7 @@ Natural
 OK
 
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 
 
@@ -758,7 +754,7 @@ Soft &Reset
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
@@ -766,11 +762,11 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 
 
@@ -878,7 +874,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 
 
@@ -950,7 +946,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 
 
@@ -1014,23 +1010,23 @@ scale screen rendering by this amount in software
 set audio latency (increase to reduce glitches)
 
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 
 

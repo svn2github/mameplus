@@ -18,7 +18,7 @@
 &Configuration...
 &Configuración...
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 &Configurar...
 
@@ -34,11 +34,11 @@
 &Exit
 &Salir
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 &Archivo
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 &Salto de fotogramas
 
@@ -46,11 +46,11 @@
 &Full Screen\tAlt+Enter
 &Pantalla Completa\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 &Entrada
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 &Joysticks
 
@@ -78,23 +78,19 @@
 &Save State
 &Guardar Estado
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 &Video
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
-(desactivado por opción de compilación)
 
 # osd/windows/video.c: 257
 (primary)
 (primario)
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 Acerca de %s (%s)...
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 Todos los archivos (*.*)|*.*|
 
@@ -114,11 +110,11 @@ Auto
 Cancel
 Cancelar
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 Tipos comunes de imagen
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 Imagenes Comprimidas (*.zip)|*.zip|
 
@@ -506,11 +502,11 @@ DirectInput: Usando DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Bufer primario: %d Hz, %d bits, %d canales\n
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 Emulado
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 Teclado Emulado
 
@@ -574,7 +570,7 @@ Error configurando formato de memoria intermedia primaria de DirectSound: %08x\n
 Error setting vertex shader (%08X)
 Error configurando vertex shader (%08X)
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 Error cuando %s la imagen: %s
 
@@ -626,7 +622,7 @@ Valor ilegal del cociente de aspecto para %s = %s\n
 Illegal resolution value for %s = %s\n
 Valor incorrecto de resolución para %s = %s\n
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 Entrada
 
@@ -634,11 +630,11 @@ Entrada
 Invalid video value %s; reverting to gdi\n
 Valor invalido de video %s; revertir a gdi\n
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 Joystick %i
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 Joysticks/Controladores
 
@@ -650,11 +646,11 @@ MAME: %s [%s] - Pantalla %d
 Maximum &Speed
 Máxima &Velocidad
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 Entrada Variadas
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 Natural
 
@@ -662,7 +658,7 @@ Natural
 OK
 Aceptar
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 Fuera de memoria
 
@@ -730,7 +726,7 @@ Bubber de sonido: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 Sonido: almacenador intermediario overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Archivos de Estado (*.sta)|*.sta|Todos los archivos (*.*)|*.*
 
@@ -738,11 +734,11 @@ Archivos de Estado (*.sta)|*.sta|Todos los archivos (*.*)|*.*
 Stop
 Parar
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 Tabla completa de simbolo
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 Cinta de Control
 
@@ -758,7 +754,7 @@ Alternar Pantalla completa
 Toggle Menubar
 Cambiar barra de Menu
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 Deseleccionado para cerrar dispositivo del teclado. (error %d)\n
 
@@ -782,7 +778,7 @@ No es posible inicializar DirectDraw.\n
 Unable to load PNG file '%s'\n
 No es posible cargar archivo PNG '%s'\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 Deseleccionado para abrir dispositivo del teclado. (error %d)\n
 
@@ -858,7 +854,7 @@ obligar al cociente de aspecto apropiado
 contrast value in full screen mode
 valor de contraste en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 creando
 
@@ -926,7 +922,7 @@ nombre explicito de la tercera pantalla; 'automatico' aquí intentará hacer un me
 gamma value in full screen mode
 valor gamma en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 cargando
 
@@ -990,35 +986,35 @@ escalar la pantalla de representacion por esta cantidad en el software
 set audio latency (increase to reduce glitches)
 seleccionar latencia de audio (incrementa a reducir problemas)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 cambiar entrada de joystick (Jugador 1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 cambiar entrada de joystick (Jugador 2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 cambiar entrada de joystick (Jugador 3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 cambiar entrada de joystick (Jugador 4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 determinar joystick ID (Jugador 5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 determinar joystick ID (Jugador 6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 determinar joystick ID (Jugador 7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 determinar joystick ID (Jugador 8)
 

@@ -1,7 +1,3 @@
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
-(desabilirado por opção de compilação)
-
 # osd/windows/video.c: 257
 (primary)
 (primário)
@@ -490,7 +486,7 @@ Textura muito grande! (requerido: %dx%d, máximo é %dx%d)\n
 Toggle Fullscreen
 Alternar Tela Cheia
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 Impossível finalizar dispositivo de teclado. (erro %d)\n
 
@@ -510,7 +506,7 @@ Não foi possível inicializar DirectDraw.\n
 Unable to load PNG file '%s'\n
 Não foi possível carregar arquivo PNG '%s'\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 Impossível inicializar dispositivo de teclado. (erro %d)\n
 
@@ -698,35 +694,35 @@ escala de renderização da tela por esse valor em software
 set audio latency (increase to reduce glitches)
 seta latência de audio (aumente para deduzir problemas)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 seta ID do joistick (Jogador 1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 seta ID do joistick (Jogador 2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 seta ID do joistick (Jogador 3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 seta ID do joistick (Jogador 4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 seta ID do joistick (Jogador 5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 seta ID do joistick (Jogador 6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 seta ID do joistick (Jogador 7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 seta ID do joistick (Jogador 8)
 
@@ -762,7 +758,7 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 
 
@@ -778,11 +774,11 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Exit
 
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 
 
@@ -794,11 +790,11 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Hide Menubar\tScrLk
 
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 
 
@@ -826,15 +822,15 @@ método de saída de vídeo: none, gdi, ddraw, or d3d
 &Save State
 
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 
 
@@ -854,11 +850,11 @@ Auto
 Cancel
 
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 
 
@@ -882,11 +878,11 @@ DirectInput: Unable to enumerate keyboards (result=%08X)\n
 DirectInput: Unable to enumerate mice (result=%08X)\n
 
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 
 
@@ -894,7 +890,7 @@ Emulated Keyboard
 Error creating render target for window %d
 
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 
 
@@ -918,15 +914,15 @@ Failed to create window thread ready event
 Ha&rd Reset
 
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 
 
@@ -934,11 +930,11 @@ Joysticks/Controllers
 Maximum &Speed
 
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 
 
@@ -946,7 +942,7 @@ Natural
 OK
 
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 
 
@@ -998,7 +994,7 @@ Show P&rofiler
 Soft &Reset
 
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
@@ -1006,11 +1002,11 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 
 
@@ -1030,7 +1026,7 @@ Unlimited
 WINDOWS DEBUGGING OPTIONS
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 
 
@@ -1042,7 +1038,7 @@ explicit name of all screens; 'auto' here will try to make a best guess
 force the program to terminate if no updates within specified number of seconds
 
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 
 

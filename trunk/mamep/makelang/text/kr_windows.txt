@@ -18,7 +18,7 @@
 &Configuration...
 환경설정(&C)...
 
-# mess/osd/windows/menu.c: 1252
+# mess/osd/windows/menu.c: 1250
 &Configure...
 환경설정(&C)...
 
@@ -34,11 +34,11 @@
 &Exit
 종료(&E)
 
-# mess/osd/windows/menu.c: 1459 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
 &File
 파일(&F)
 
-# mess/osd/windows/menu.c: 2103 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
 &Frameskip
 프래임생략(&F)
 
@@ -50,11 +50,11 @@
 &Hide Menubar\tScrLk
 메뉴바 숨김(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
 &Input
 입력(&I)
 
-# mess/osd/windows/menu.c: 1225 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
 &Joysticks
 조이스틱(&J)
 
@@ -82,23 +82,19 @@
 &Save State
 상태 저장(&S)
 
-# mess/osd/windows/menu.c: 1438, 1438, 2103 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
 &Video
 비디오(&V)
-
-# osd/windows/winmain.c: 210, 211, 212, 213, 214, 215, 216, 217
-(disabled by compiling option)
-(컴파일 옵션에서 제외됨)
 
 # osd/windows/video.c: 257
 (primary)
 (주요)
 
-# mess/osd/windows/menu.c: 2113
+# mess/osd/windows/menu.c: 2098
 About %s (%s)...
 %s (%s)정보...
 
-# mess/osd/windows/menu.c: 875
+# mess/osd/windows/menu.c: 874
 All files (*.*)|*.*|
 모든 파일 (*.*)|*.*|
 
@@ -118,11 +114,11 @@ Auto
 Cancel
 취소
 
-# mess/osd/windows/menu.c: 866
+# mess/osd/windows/menu.c: 865
 Common image types
 일반 이미지 타입
 
-# mess/osd/windows/menu.c: 879
+# mess/osd/windows/menu.c: 878
 Compressed Images (*.zip)|*.zip|
 압축 이미지 (*.zip)|*.zip|
 
@@ -510,11 +506,11 @@ DirectInput: %d DirectInput 사용 \n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
-# mess/osd/windows/mess.rc: 50
+# mess/osd/windows/mess.rc: 50 
 Emulated
 에뮬됨
 
-# mess/osd/windows/menu.c: 250
+# mess/osd/windows/menu.c: 244
 Emulated Keyboard
 키보드 에뮬
 
@@ -578,7 +574,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 vertex shader 설정 오류 (%08X)
 
-# mess/osd/windows/menu.c: 955
+# mess/osd/windows/menu.c: 953
 Error when %s the image: %s
 이미지 %s 중 오류: %s
 
@@ -630,7 +626,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 잘못된 해상도 값 %s = %s\n
 
-# mess/osd/windows/menu.c: 273
+# mess/osd/windows/menu.c: 267
 Input
 입력
 
@@ -638,11 +634,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 잘못된 비디오 값 %s;GDI로 복구\n
 
-# mess/osd/windows/menu.c: 1270
+# mess/osd/windows/menu.c: 1268
 Joystick %i
 조이스틱 %i
 
-# mess/osd/windows/menu.c: 239
+# mess/osd/windows/menu.c: 233
 Joysticks/Controllers
 조이스틱/콘트롤러
 
@@ -654,11 +650,11 @@ MAME: %s [%s] - Screen %d
 Maximum &Speed
 최대 속도(&S)
 
-# mess/osd/windows/menu.c: 261
+# mess/osd/windows/menu.c: 255
 Miscellaneous Input
 기타 입력
 
-# mess/osd/windows/mess.rc: 51
+# mess/osd/windows/mess.rc: 51 
 Natural
 인체공학
 
@@ -666,7 +662,7 @@ Natural
 OK
 확인
 
-# osd/windows/winmain.c: 763
+# osd/windows/winmain.c: 752
 Out of memory
 메모리 부족
 
@@ -734,7 +730,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 사운드: 버퍼 오버플로우=%d 언더플로우=%d\n
 
-# mess/osd/windows/menu.c: 534
+# mess/osd/windows/menu.c: 533
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 상태 파일 (*.sta)|*.sta|모든 파일  (*.*)|*.*
 
@@ -742,11 +738,11 @@ State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Stop
 중지
 
-# osd/windows/winmain.c: 759
+# osd/windows/winmain.c: 748
 Symbol table full
 심볼 테이블 가득참
 
-# mess/osd/windows/mess.rc: 142
+# mess/osd/windows/mess.rc: 142 
 Tape Control
 테이프 콘트롤
 
@@ -762,7 +758,7 @@ Toggle Fullscreen
 Toggle Menubar
 메뉴바 토글
 
-# osd/windows/ledutil.c: 566, 572
+# osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
 키보드 장치 닫기 실패 (오류 %d)\n
 
@@ -786,7 +782,7 @@ DirectDraw 초기화할 수 없습니다\n
 Unable to load PNG file '%s'\n
 '%s' PNG 파일을 불러올 수 없습니다\n
 
-# osd/windows/ledutil.c: 530, 538
+# osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
@@ -862,7 +858,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 전체 화면 모드에서 대비값
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 creating
 치트
 
@@ -934,7 +930,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 전체 화면 감마 값
 
-# mess/osd/windows/menu.c: 956
+# mess/osd/windows/menu.c: 954
 loading
 불러오는 중
 
@@ -998,35 +994,35 @@ scale screen rendering by this amount in software
 set audio latency (increase to reduce glitches)
 오디오 레이턴시 설정 (증가시 잡음감소)
 
-# osd/windows/winmain.c: 201
+# osd/windows/winmain.c: 200
 set joystick ID (Player1)
 조이스틱 ID 설정 (플레이어1)
 
-# osd/windows/winmain.c: 202
+# osd/windows/winmain.c: 201
 set joystick ID (Player2)
 조이스틱 ID 설정 (플레이어2)
 
-# osd/windows/winmain.c: 203
+# osd/windows/winmain.c: 202
 set joystick ID (Player3)
 조이스틱 ID 설정 (플레이어3)
 
-# osd/windows/winmain.c: 204
+# osd/windows/winmain.c: 203
 set joystick ID (Player4)
 조이스틱 ID 설정 (플레이어4)
 
-# osd/windows/winmain.c: 205
+# osd/windows/winmain.c: 204
 set joystick ID (Player5)
 조이스틱 ID 설정 (플레이어5)
 
-# osd/windows/winmain.c: 206
+# osd/windows/winmain.c: 205
 set joystick ID (Player6)
 조이스틱 ID 설정 (플레이어6)
 
-# osd/windows/winmain.c: 207
+# osd/windows/winmain.c: 206
 set joystick ID (Player7)
 조이스틱 ID 설정 (플레이어7)
 
-# osd/windows/winmain.c: 208
+# osd/windows/winmain.c: 207
 set joystick ID (Player8)
 조이스틱 ID 설정 (플레이어8)
 

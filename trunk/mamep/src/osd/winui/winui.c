@@ -4887,7 +4887,7 @@ static int MMO2LST(void)
 	swprintf(filename, TEXT("gamelist_%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
 	_tcslwr(filename); 
 
-	if (!CommonFileDialog(GetOpenFileName, filename, FILETYPE_GAMELIST_FILES))
+	if (!CommonFileDialog(GetSaveFileName, filename, FILETYPE_GAMELIST_FILES))
 		return 1;
 
 	if (*filename)
@@ -5490,7 +5490,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			OpenFileName.lStructSize       = sizeof(OPENFILENAME);
 			OpenFileName.hwndOwner         = hMain;
 			OpenFileName.hInstance         = 0;
-			OpenFileName.lpstrFilter       = TEXT("Image Files (*.png, *.bmp)\0*.PNG;*.BMP\0");
+			OpenFileName.lpstrFilter       = TEXT("Image Files (*.png)\0*.PNG;\0");
 			OpenFileName.lpstrCustomFilter = NULL;
 			OpenFileName.nMaxCustFilter    = 0;
 			OpenFileName.nFilterIndex      = 1;
@@ -5499,7 +5499,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 			OpenFileName.lpstrFileTitle    = NULL;
 			OpenFileName.nMaxFileTitle     = 0;
 			OpenFileName.lpstrInitialDir   = GetBgDir();
-			OpenFileName.lpstrTitle        = TEXT("Select a Background Image");
+			OpenFileName.lpstrTitle        = _UIW(TEXT("Select a Background Image"));
 			OpenFileName.nFileOffset       = 0;
 			OpenFileName.nFileExtension    = 0;
 			OpenFileName.lpstrDefExt       = NULL;
