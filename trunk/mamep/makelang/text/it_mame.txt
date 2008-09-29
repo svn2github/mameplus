@@ -1915,7 +1915,7 @@ No Driver Loaded
 Nessun Driver Caricato
 
 # emu/uimenu.c: 3569
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME
 Nessun gioco trovato. Controllare il percorso delle ROM nel file mame.ini.\n\nSe ?la prima volta che si utilizza il MAME, controllare il file config.txt nella cartella docs per ottenere le informazioni su come configurare il MAME.
 
 # emu/inptport.c: 484 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3081, 3150 

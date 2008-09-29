@@ -26,7 +26,7 @@ Academysoft-Elory
 Acclaim
 액클레임
 
-# Imago
+# Imago (cocktail set)
 Acom
 에이콤
 
@@ -1206,6 +1206,10 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
+# Melty Blood Act Cadenza (GDL-0028C)
+Ecole
+
+
 # The Alphax Z (Japan)
 Ed
 
@@ -1898,6 +1902,10 @@ Nazionale Elettronica
 Neodev
 
 
+# Super Gran Safari (ver 3.11)
+New Impeuropex Corp.
+
+
 # Moon Cresta (Nichibutsu)
 Nichibutsu
 
@@ -2316,6 +2324,10 @@ Status
 
 # Hangman
 Status Games
+
+
+# Funny Land de Luxe
+Stella
 
 
 # Armored Car (set 1)

@@ -35,6 +35,7 @@
 #define CLIOPTION_VERIFYROMS			"verifyroms"
 #define CLIOPTION_VERIFYSAMPLES			"verifysamples"
 #define CLIOPTION_ROMIDENT				"romident"
+#define CLIOPTION_LISTGAMES				"listgames"
 
 
 
@@ -52,6 +53,7 @@ int cli_info_listclones(core_options *options, const char *gamename);
 int cli_info_listcrc(core_options *options, const char *gamename);
 int cli_info_listroms(core_options *options, const char *gamename);
 int cli_info_listsamples(core_options *options, const char *gamename);
+int cli_info_listgames(core_options *options, const char *gamename);
 
 #ifdef DRIVER_SWITCH
 void assign_drivers(core_options *options);

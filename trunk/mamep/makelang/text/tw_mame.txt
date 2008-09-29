@@ -2131,8 +2131,8 @@ No Tape Image loaded
 未載入磁帶映像檔
 
 # emu/uimenu.c: 3569
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
-找不到遊戲。請檢查 mame.ini 檔案的 rompath 設定。\n\n如果這是您第一次使用 MAME 的話，請查閱\ docs 目錄的 config.txt 檔案以取得設定 MAME 的資訊。
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME
+找不到遊戲。請檢查 mame.ini 檔案的 rompath 設定。\n\n如果這是您第一次使用 MAME 的話，請查閱\ docs 目錄的 config.txt 檔案以取得設定 MAME 的資訊
 
 # emu/inptport.c: 484 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3081, 3150 
 None

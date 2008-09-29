@@ -99,6 +99,7 @@ static const options_entry cli_options[] =
 	{ "verifyroms",               "0",        OPTION_COMMAND,    "report romsets that have problems" },
 	{ "verifysamples",            "0",        OPTION_COMMAND,    "report samplesets that have problems" },
 	{ "romident",                 "0",        OPTION_COMMAND,    "compare files with known MAME roms" },
+	{ "listgames",                "0",        OPTION_COMMAND,    "year, manufacturer and full name" },
 #ifdef MESS
 	{ "listdevices",              "0",        OPTION_COMMAND,    "list available devices" },
 #endif
@@ -279,6 +280,7 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTSOURCE,		cli_info_listsource },
 		{ CLIOPTION_LISTCLONES,		cli_info_listclones },
 		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
+		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 #ifdef MESS
 		{ CLIOPTION_LISTDEVICES,	info_listdevices },
 #endif
@@ -998,6 +1000,54 @@ static int info_romident(core_options *options, const char *gamename)
 		return MAMERR_IDENT_PARTIAL;
 	else
 		return MAMERR_IDENT_NONE;
+}
+
+
+/*-------------------------------------------------
+    cli_info_listgames - output the manufacturer
+    for make tp_manufact.txt
+-------------------------------------------------*/
+
+int cli_info_listgames(core_options *options, const char *gamename)
+{
+	int drvindex, count = 0;
+
+	/* a NULL gamename == '*' */
+	if (gamename == NULL)
+		gamename = "*";
+
+	for (drvindex = 0; drivers[drvindex]; drvindex++)
+		if ((drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		{
+			char name[200];
+
+			mame_printf_info("%-5s%-36s ",drivers[drvindex]->year, _MANUFACT(drivers[drvindex]->manufacturer));
+
+			if (lang_message_is_enabled(UI_MSG_LIST))
+			{
+				strcpy(name, _LST(drivers[drvindex]->description));
+				mame_printf_info("\"%s\"\n", name);
+				continue;
+			}
+
+			namecopy(name,drivers[drvindex]->description);
+			mame_printf_info("\"%s",name);
+
+			/* print the additional description only if we are listing clones */
+			{
+				char *pdest = strstr(drivers[drvindex]->description, " (");
+
+				if (pdest != NULL && pdest > drivers[drvindex]->description)
+					mame_printf_info("%s", pdest);
+			}
+
+			mame_printf_info("\"\n");
+
+			count++;
+		}
+
+	/* return an error if none found */
+	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
 }
 
 

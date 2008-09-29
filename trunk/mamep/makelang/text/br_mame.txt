@@ -1999,7 +1999,7 @@ No Tape Image loaded
 Imagem de Fita não carregada
 
 # emu/uimenu.c: 3569
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME
 Jogos não encontrados. Favor checar o caminho da ROM especificado no arquivo mame.ini.\n\nSe esta ?sua primeira vez usando o MAME, favor consulte o arquivo config.txt no diretório "docs" para informações de configuração do MAME.
 
 # emu/inptport.c: 484 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3081, 3150 

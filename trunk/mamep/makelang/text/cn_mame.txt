@@ -5031,7 +5031,7 @@ No Tape Image loaded
 
 
 # emu/uimenu.c: 3569
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME
 
 
 # emu/ui.c: 1770

@@ -2075,7 +2075,7 @@ No Tape Image loaded
 테이프 이미지 불러오지 않았음
 
 # emu/uimenu.c: 3569
-No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
+No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME
 게임을 찾을 수 없습니다. mame.ini에 지정된 롬 경로를 확인하십시오.\n\n만약 MAME를 처음 실행 하는 것이라면 doc폴더의 config.txt 파일을 참고해 MAME를 설정하시기 바랍니다.
 
 # emu/inptport.c: 484 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3081, 3150 

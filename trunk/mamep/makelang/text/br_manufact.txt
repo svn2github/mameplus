@@ -74,7 +74,7 @@ Academysoft-Elory
 Acclaim
 Acclaim
 
-# Imago
+# Imago (cocktail set)
 Acom
 Acom
 
@@ -2450,6 +2450,10 @@ Danbi
 Eastern Corp.
 
 
+# Melty Blood Act Cadenza (GDL-0028C)
+Ecole
+
+
 # Galaxy Gunners
 Electronics Devices Italy
 
@@ -2496,6 +2500,10 @@ Naxat Soft
 
 # La Perla Nera (Ver 2.0)
 Nazionale Elettronica
+
+
+# Super Gran Safari (ver 3.11)
+New Impeuropex Corp.
 
 
 # PC Engine
@@ -2556,6 +2564,10 @@ Space Computer
 
 # Jolly Card Professional 2.0
 Spale-Soft
+
+
+# Funny Land de Luxe
+Stella
 
 
 # Virtual Combat
