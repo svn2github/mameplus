@@ -6375,10 +6375,10 @@ static void SetRandomPickItem()
 	}
 }
 
-BOOL CommonFileDialog(common_file_dialog_procW cfd, WCHAR *filename, int filetype)
+BOOL CommonFileDialog(common_file_dialog_proc cfd, WCHAR *filename, int filetype)
 {
 	BOOL success;
-	OPENFILENAMEW of;
+	OPENFILENAME of;
 	//TCHAR* t_filename;
 	//TCHAR* t_statedir = 0;
 #if 0 //mamep: use standard combobox

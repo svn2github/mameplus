@@ -93,9 +93,8 @@ extern struct _driverw **driversw;
 
 extern TCHAR last_directory[MAX_PATH];
 
-typedef BOOL (WINAPI *common_file_dialog_procW)(LPOPENFILENAMEW lpofn);
-typedef BOOL (WINAPI *common_file_dialog_procA)(LPOPENFILENAMEA lpofn);
-BOOL CommonFileDialog(common_file_dialog_procW cfd,WCHAR *filename, int filetype);
+typedef BOOL (WINAPI *common_file_dialog_proc)(LPOPENFILENAME lpofn);
+BOOL CommonFileDialog(common_file_dialog_proc cfd,WCHAR *filename, int filetype);
 
 HWND GetMainWindow(void);
 HWND GetTreeView(void);

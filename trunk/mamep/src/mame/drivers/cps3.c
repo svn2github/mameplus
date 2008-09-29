@@ -2565,51 +2565,55 @@ static MACHINE_RESET( cps3 )
 {
 	current_table_address = -1;
 
-	UINT32 *rom = (UINT32*)memory_region(machine, "user1");
-	UINT32 reg_dip = input_port_read(machine,"REG");
 	if (cps3_use_fastboot)
 	{
 		fastboot_timer = timer_alloc(fastboot_timer_callback, NULL);
 	//  printf("reset\n");
 		timer_adjust_oneshot(fastboot_timer, attotime_zero, 0);
 	}
-	/* switch region */
-	if(rom[0x1fed4/4] == 0x575a442d)
+
 	{
-		if (!reg_dip) reg_dip = rom[0x1fed8/4] & 0x0000000f;
-		rom[0x1fed8/4] &= 0xfffffff0;
-		rom[0x1fed8/4] |= reg_dip;
-	}
-	else
-	{
-		if (!reg_dip) reg_dip = rom[0x1fec8/4] & 0x0000000f;
-		rom[0x1fec8/4] &= 0xfffffff0;
-		rom[0x1fec8/4] |= reg_dip;
-	}
-	/* switch version */
-	if(rom[0x1fed4/4] == 0x575a442d)
-	{
-		UINT32 ver_dip = input_port_read(machine,"VER");
-		if (!ver_dip) ver_dip = rom[0x1fed8/4] & 0x000000f0;
-		rom[0x1fed8/4] &= 0xffffff0f;
-		rom[0x1fed8/4] |= ver_dip;
-	}
-	else if (rom[0x1fec4/4] == 0x4a4a4b2d || rom[0x1fec4/4] == 0x4a4a4d2d)
-	{
-		UINT32 ver_dip = input_port_read(machine,"VER");
-		if (!ver_dip) ver_dip = rom[0x1fec8/4] & 0x000000f0;
-		rom[0x1fec8/4] &= 0xffffff0f;
-		rom[0x1fec8/4] |= ver_dip;
-	}
-	/* switch screen mode */
-	if (rom[0x1fec4/4] == 0x5346332d || rom[0x1fec4/4] == 0x3347412d)
-	{
-		UINT32 ws_dip = input_port_read(machine,"WS");
-		if (!ws_dip) ws_dip = 0x00000000;
-		cps3_eeprom[0x020/4] &= 0xf0ffffff;
-		cps3_eeprom[0x050/4] &= 0xf0ffffff;
-		cps3_eeprom[0x020/4] |= ws_dip;
-		cps3_eeprom[0x050/4] |= ws_dip;
+		UINT32 *rom = (UINT32*)memory_region(machine, "user1");
+		UINT32 reg_dip = input_port_read(machine,"REG");
+
+		/* switch region */
+		if(rom[0x1fed4/4] == 0x575a442d)
+		{
+			if (!reg_dip) reg_dip = rom[0x1fed8/4] & 0x0000000f;
+			rom[0x1fed8/4] &= 0xfffffff0;
+			rom[0x1fed8/4] |= reg_dip;
+		}
+		else
+		{
+			if (!reg_dip) reg_dip = rom[0x1fec8/4] & 0x0000000f;
+			rom[0x1fec8/4] &= 0xfffffff0;
+			rom[0x1fec8/4] |= reg_dip;
+		}
+		/* switch version */
+		if(rom[0x1fed4/4] == 0x575a442d)
+		{
+			UINT32 ver_dip = input_port_read(machine,"VER");
+			if (!ver_dip) ver_dip = rom[0x1fed8/4] & 0x000000f0;
+			rom[0x1fed8/4] &= 0xffffff0f;
+			rom[0x1fed8/4] |= ver_dip;
+		}
+		else if (rom[0x1fec4/4] == 0x4a4a4b2d || rom[0x1fec4/4] == 0x4a4a4d2d)
+		{
+			UINT32 ver_dip = input_port_read(machine,"VER");
+			if (!ver_dip) ver_dip = rom[0x1fec8/4] & 0x000000f0;
+			rom[0x1fec8/4] &= 0xffffff0f;
+			rom[0x1fec8/4] |= ver_dip;
+		}
+		/* switch screen mode */
+		if (rom[0x1fec4/4] == 0x5346332d || rom[0x1fec4/4] == 0x3347412d)
+		{
+			UINT32 ws_dip = input_port_read(machine,"WS");
+			if (!ws_dip) ws_dip = 0x00000000;
+			cps3_eeprom[0x020/4] &= 0xf0ffffff;
+			cps3_eeprom[0x050/4] &= 0xf0ffffff;
+			cps3_eeprom[0x020/4] |= ws_dip;
+			cps3_eeprom[0x050/4] |= ws_dip;
+		}
 	}
 }
 
@@ -2797,16 +2801,14 @@ static NVRAM_HANDLER( cps3 )
 			mame_fread(file, cps3_eeprom, 0x400);
 			for (i=0;i<48;i++)
 				nvram_handler_intelflash( machine, i, file, read_or_write );
- 			// copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-			copy_from_nvram(machine);
+
+			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
 		}
 		else
 		{
 			//printf("nothing?\n");
-  			// attempt to copy data from user regions into flash roms (incase this is a NOCD set)
-			precopy_to_flash(machine);
-			// copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
-			copy_from_nvram(machine);
+			precopy_to_flash(machine); // attempt to copy data from user regions into flash roms (incase this is a NOCD set)
+			copy_from_nvram(machine); // copy data from flashroms back into user regions + decrypt into regions we execute/draw from.
 		}
 	}
 	else
@@ -2827,6 +2829,8 @@ static NVRAM_HANDLER( cps3 )
 			copy_from_nvram(machine);
 		}
 	}
+
+
 }
 
 
