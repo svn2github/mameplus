@@ -49,11 +49,6 @@
 /* cancel return value for a UI handler */
 #define UI_HANDLER_CANCEL		((UINT32)~0)
 
-#define SHORTCUT_MENU_CHEAT	1
-#ifdef CMD_LIST
-#define SHORTCUT_MENU_COMMAND	2
-#endif /* CMD_LIST */
-
 /* justification options for ui_draw_text_full */
 enum
 {

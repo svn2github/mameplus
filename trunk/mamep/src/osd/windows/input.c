@@ -288,7 +288,7 @@ static void assign_joystick_to_player(device_info *devinfo);
 //============================================================
 
 // master keyboard translation table
-const int win_key_trans_table[][4] =
+static const int win_key_trans_table[][4] =
 {
 	// MAME key             dinput key          virtual key     ascii
 	{ ITEM_ID_ESC, 			DIK_ESCAPE,			VK_ESCAPE,	 	27 },
@@ -776,7 +776,7 @@ int wininput_vkey_for_mame_code(input_code code)
 //  osd_customize_mapping_list
 //============================================================
 
-void osd_customize_input_type_list(running_machine *machine, input_type_desc *typelist)
+void osd_customize_input_type_list(input_type_desc *typelist)
 {
 	input_type_desc *typedesc;
 
@@ -792,21 +792,21 @@ void osd_customize_input_type_list(running_machine *machine, input_type_desc *ty
 
 			// alt-enter for fullscreen
 			case IPT_OSD_1:
-				typedesc->token = _WINDOWS("TOGGLE_FULLSCREEN");
-				typedesc->name = "Toggle Fullscreen";
+				typedesc->token = "TOGGLE_FULLSCREEN";
+				typedesc->name = _WINDOWS("Toggle Fullscreen");
 				input_seq_set_2(&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_LALT, KEYCODE_ENTER);
 				break;
 
 #ifdef MESS
 			case IPT_OSD_2:
-				if (ui_mess_use_new_ui(machine))
+				if (ui_mess_use_new_ui(Machine))
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
 					typedesc->name = _WINDOWS("Toggle Menubar");
 					input_seq_set_1 (&typedesc->seq[SEQ_TYPE_STANDARD], KEYCODE_SCRLOCK);
 				}
 				break;
-/*
+/* //mamep: we want to keep default KEYCODE_F10 for Throttle
 			case IPT_UI_THROTTLE:
 				input_seq_set_0(&typedesc->seq[SEQ_TYPE_STANDARD]);
 				break;
@@ -2253,9 +2253,4 @@ static const TCHAR *default_pov_name(int which)
 	static TCHAR buffer[20];
 	_sntprintf(buffer, ARRAY_LENGTH(buffer), TEXT("POV%d"), which);
 	return buffer;
-}
-
-int wininput_count_key_trans_table(void)
-{
-	return ARRAY_LENGTH(win_key_trans_table);
 }

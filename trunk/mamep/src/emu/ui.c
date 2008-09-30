@@ -1929,14 +1929,6 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	if (ui_input_pressed(machine, IPT_UI_CONFIGURE))
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
-	if (options_get_bool(mame_options(), OPTION_CHEAT) && ui_input_pressed(machine, IPT_UI_CHEAT))
-		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_CHEAT);
-
-#ifdef CMD_LIST
-	if (ui_input_pressed(machine, IPT_UI_COMMAND))
-		return ui_set_handler(ui_menu_ui_handler, SHORTCUT_MENU_COMMAND);
-#endif /* CMD_LIST */
-
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
 //  if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0 && ui_input_pressed(machine, IPT_UI_ON_SCREEN_DISPLAY))
 //      return ui_set_handler(ui_slider_ui_handler, 0);
