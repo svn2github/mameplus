@@ -55,7 +55,7 @@ endif
 
 ifneq ($(NO_DLL),)
   ifneq ($(WINUI),)
-    SUFFIX = guinodll
+    SUFFIX = uinodll
   else
     SUFFIX = nodll
   endif
