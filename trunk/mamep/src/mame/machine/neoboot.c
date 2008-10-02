@@ -1004,6 +1004,15 @@ void kf2k3pl_install_protection(running_machine *machine)
     memory_install_readwrite16_handler(machine,  0, ADDRESS_SPACE_PROGRAM, 0x2fe000, 0x2fffff, 0, 0, kof2003_r, kof2003p_w );
 }
 
+void samsh5bl_vx_decrypt( running_machine *machine )
+{
+	int vx_size = memory_region_length( machine, "ym" );
+	UINT8 *rom = memory_region( machine, "ym" );
+	int i;
+
+	for( i = 0; i < vx_size; i++ )
+		rom[ i ] = BITSWAP8( rom[ i ], 0, 1, 5, 4, 3, 2, 6, 7 );
+}
 
 /***************************************************************************
  kof2k3up

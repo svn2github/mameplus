@@ -233,7 +233,7 @@ static const rgb_t text_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
 static const rgb_t text_bgcolor = MAKE_ARGB(0xe0,0x80,0x80,0x80);
 static const rgb_t sel_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
 #define sel_bgcolor ui_get_rgb_color(CURSOR_COLOR)
-static const rgb_t mouseover_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
+static const rgb_t mouseover_fgcolor = MAKE_ARGB(0xff,0x78,0xb4,0xf0);
 static const rgb_t mouseover_bgcolor = MAKE_ARGB(0x70,0x40,0x40,0x00);
 static const rgb_t mousedown_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0x80);
 static const rgb_t mousedown_bgcolor = MAKE_ARGB(0xB0,0x60,0x60,0x00);
@@ -406,7 +406,7 @@ void ui_menu_init(running_machine *machine)
 		*BITMAP_ADDR32(hilight_bitmap, 0, x) = MAKE_ARGB(alpha,0xff,0xff,0xff);
 	}
 	hilight_texture = render_texture_alloc(NULL, NULL);
-	render_texture_set_bitmap(hilight_texture, hilight_bitmap, NULL, 0, TEXFORMAT_ARGB32);
+	render_texture_set_bitmap(hilight_texture, hilight_bitmap, NULL, TEXFORMAT_ARGB32, NULL);
 
 	/* create a texture for arrow icons */
 	arrow_texture = render_texture_alloc(menu_render_triangle, NULL);
@@ -873,7 +873,7 @@ static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly
 			else if (itemnum == menu->hover)
 		{
 			fgcolor = mouseover_fgcolor;
-			bgcolor = ui_get_rgb_color(CURSOR_COLOR);
+				bgcolor = mouseover_bgcolor;
 		}
 
 		/* if we have some background hilighting to do, add a quad behind everything else */
