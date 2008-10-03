@@ -268,7 +268,6 @@ static void InitializeJoyidUI(HWND hWnd);
 #ifdef TREE_SHEET
 static  void MovePropertySheetChildWindows(HWND hWnd, int nDx, int nDy);
 static  HTREEITEM GetSheetPageTreeItem(int nPage);
-static  int GetSheetPageTreeCurSelText(LPWSTR lpszText, int iBufSize);
 #endif /* TREE_SHEET */
 static void UpdateOptions(HWND hDlg, datamap *properties_datamap, core_options *opts);
 static void UpdateProperties(HWND hDlg, datamap *properties_datamap, core_options *opts);
@@ -331,14 +330,9 @@ static WCHAR *g_sMonitorDeviceString[MAX_SCREENS + 2];
 static char *g_sMonitorDeviceName[MAX_SCREENS + 2];
 
 #ifdef TREE_SHEET
-#define SHEET_TREE_WIDTH 180
+#define SHEET_TREE_WIDTH 170
 static int g_nFirstInitPropertySheet = 0;
 static RECT rcTabCtrl;
-static RECT rcTabCaption;
-static RECT rcSheetSnap;
-static HBITMAP hSheetBitmap = NULL;
-static BOOL bUseScreenShot = FALSE;
-static int nCaptionHeight;
 static HWND hSheetTreeCtrl = NULL;
 static HINSTANCE hSheetInstance = 0;
 static WNDPROC pfnOldSheetProc = NULL;
@@ -1835,184 +1829,12 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 }
 
 #ifdef TREE_SHEET
-static void UpdateSheetCaption(HWND hWnd)
-{
-	PAINTSTRUCT ps;
-	HDC         hDC;
-	HRGN        hRgn;
-	HBRUSH      hBrush;
-	RECT        rect, rc;
-	int         i, iWidth;
-	BYTE        bR, bG, bB, bSR, bSG, bSB, bER, bEG, bEB;
-	DWORD       dwLColor, dwRColor;
-	WCHAR       szText[256];
-
-	// Gradation color
-	dwLColor = GetSysColor(COLOR_ACTIVECAPTION);
-	dwRColor = GetSysColor(COLOR_GRADIENTACTIVECAPTION);
-	bSR = GetRValue(dwLColor); bSG = GetGValue(dwLColor); bSB = GetBValue(dwLColor);
-	bER = GetRValue(dwRColor); bEG = GetGValue(dwRColor); bEB = GetBValue(dwRColor);
-
-	memcpy(&rect, &rcTabCaption, sizeof(RECT));
-
-	iWidth = rect.right - rect.left;
-	if (iWidth == 0)
-		return;
-
-	BeginPaint (hWnd, &ps);
-	hDC = ps.hdc;
-
-	hRgn = CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
-	SelectClipRgn(hDC, hRgn);
-
-	rc.left = rect.left;
-	rc.top = rect.top;
-	rc.right = rect.left + 1;
-	rc.bottom = rect.bottom;
-
-	for (i = 0; i < iWidth; i++)
-	{
-		bR = bSR + ((bER - bSR) * i) / iWidth;
-		bG = bSG + ((bEG - bSG) * i) / iWidth;
-		bB = bSB + ((bEB - bSB) * i) / iWidth;
-
-		hBrush = CreateSolidBrush(RGB(bR,bG,bB));
-
-		FillRect(hDC, &rc, hBrush);
-		DeleteObject(hBrush);
-
-		rc.left++;
-		rc.right++;
-	}
-
-	i = GetSheetPageTreeCurSelText(szText, ARRAY_LENGTH(szText));
-	if (i > 0)
-	{
-		HFONT hFontCaption, hOldFont;
-
-		hFontCaption = CreateFont(14, 0,				// height, width
-								0, 						// angle of escapement
-								0,						// base-line orientation angle
-								FW_BOLD,				// font weight
-								0, 0, 0, 				// italic, underline, strikeout
-								DEFAULT_CHARSET,		// character set identifier
-								OUT_DEFAULT_PRECIS,		// output precision
-								CLIP_DEFAULT_PRECIS,	// clipping precision
-								ANTIALIASED_QUALITY,	// output quality
-								FF_DONTCARE,			// pitch and family
-								(LPTSTR)TEXT("Tahoma"));		// typeface name
-
-		if (hFontCaption)
-		{
-			hOldFont = (HFONT)SelectObject(hDC, hFontCaption);
-
-			SetTextColor(hDC, GetSysColor(COLOR_CAPTIONTEXT));
-			SetBkMode(hDC, TRANSPARENT);
-
-			memcpy(&rc, &rect, sizeof(RECT));
-			rc.left += 5;
-
-			DrawText(hDC, (LPCTSTR)szText, wcslen((LPTSTR)szText), &rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
-
-			SelectObject(hDC, hOldFont);
-			DeleteObject(hFontCaption);
-		}
-	}
-
-	SelectClipRgn(hDC, NULL);
-	DeleteObject(hRgn);
-
-	memcpy(&rect, &rcSheetSnap, sizeof(RECT));
-	// Snapshot region
-	hRgn = CreateRectRgn(rect.left, rect.top, rect.right, rect.bottom);
-	SelectClipRgn(hDC, hRgn);
-
-	if (hSheetBitmap != NULL) 
-	{
-		HDC hMemDC;
-		HBITMAP hOldBitmap;
-		int iWidth, iHeight, iSnapWidth, iSnapHeight, iDrawWidth, iDrawHeight;
-
-		if (bUseScreenShot == TRUE)
-		{
-			iSnapWidth = GetScreenShotWidth();
-			iSnapHeight = GetScreenShotHeight();
-		}
-		else
-		{
-			BITMAP bmpInfo;
-
-			GetObject(hSheetBitmap, sizeof(BITMAP), &bmpInfo);
-			iSnapWidth = bmpInfo.bmWidth;
-			iSnapHeight = bmpInfo.bmHeight;
-		}
-
-		iWidth = rect.right - rect.left;
-		iHeight = rect.bottom - rect.top;
-
-		if (iWidth && iHeight)
-		{
-			int iXOffs, iYOffs;
-			double dXRatio, dYRatio;
-
-			dXRatio = (double)iWidth  / (double)iSnapWidth;
-			dYRatio = (double)iHeight / (double)iSnapHeight;
-
-			if (dXRatio > dYRatio)
-			{
-				iDrawWidth = (int)((iSnapWidth * dYRatio) + 0.5);
-				iDrawHeight = (int)((iSnapHeight * dYRatio) + 0.5);
-			}
-			else
-			{
-				iDrawWidth = (int)((iSnapWidth * dXRatio) + 0.5);
-				iDrawHeight = (int)((iSnapHeight * dXRatio) + 0.5);
-			}
-
-			iXOffs = (iWidth - iDrawWidth)  / 2;
-			iYOffs = (iHeight - iDrawHeight) / 2;
-
-			hMemDC = CreateCompatibleDC(hDC);
-
-			hOldBitmap = SelectObject(hMemDC, hSheetBitmap);
-	
-			SetStretchBltMode(hDC, STRETCH_HALFTONE);
-			StretchBlt(hDC,
-					rect.left+iXOffs, rect.top+iYOffs,
-					iDrawWidth, iDrawHeight,
-					hMemDC, 0, 0,
-					iSnapWidth, iSnapHeight, SRCCOPY);
-
-			SelectObject(hMemDC, hOldBitmap);
-			DeleteDC(hMemDC);
-		}
-	}
-	else
-	{
-		hBrush = CreateSolidBrush(RGB(220,220,220));
-		FillRect(hDC, &rect, hBrush);
-		DeleteObject(hBrush);
-	}
-
-	SelectClipRgn(hDC, NULL);
-	DeleteObject(hRgn);
-
-	EndPaint (hWnd, &ps);
-
-	return;
-}
-
 static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lParam)
 {
 	BOOL bHandled = FALSE;
 
 	switch (Msg)
 	{
-	case WM_PAINT:
-		UpdateSheetCaption(hWnd);
-		bHandled = TRUE;
-		break;
-
 	case WM_NOTIFY:
 		switch (((NMHDR *)lParam)->code)
 		{
@@ -2039,11 +1861,6 @@ static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 				bHandled = TRUE;
 			}
 			break;
-		case TVN_SELCHANGEDA:
-		case TVN_SELCHANGEDW:
-			InvalidateRect(hWnd, &rcTabCaption, FALSE);
-			bHandled = TRUE;
-			break;
 		}
 		break;
 
@@ -2053,14 +1870,6 @@ static LRESULT CALLBACK NewSheetWndProc(HWND hWnd, UINT Msg, WPARAM wParam, LPAR
 			DestroyWindow(hSheetTreeCtrl);
 			hSheetTreeCtrl = NULL;
 		}
-
-		if (hSheetBitmap != NULL)
-		{
-			if (bUseScreenShot == FALSE)
-				DeleteObject(hSheetBitmap);
-			hSheetBitmap = NULL;
-		}
-		bUseScreenShot = FALSE;
 
 		if (pfnOldSheetProc)
 			SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)pfnOldSheetProc);
@@ -2147,36 +1956,11 @@ static HTREEITEM GetSheetPageTreeItem(int nPage)
 	return NULL;
 }
 
-static int GetSheetPageTreeCurSelText(LPWSTR lpszText, int iBufSize)
-{
-	HTREEITEM hItem;
-	TVITEM item;
-
-	lpszText[0] = 0;
-
-	if (hSheetTreeCtrl == NULL)
-		return -1;
-
-	hItem = (HTREEITEM)(int)SendMessage(hSheetTreeCtrl, TVM_GETNEXTITEM, TVGN_CARET, 0);
-
-	if (hItem == NULL)
-		return -1;
-
-	item.hItem      = hItem;
-	item.mask  	    = TVIF_TEXT;
-	item.pszText    = lpszText;
-	item.cchTextMax = iBufSize;
-
-	SendMessage(hSheetTreeCtrl, TVM_GETITEM, 0, (LPARAM)&item);
-
-	return wcslen(lpszText);
-}
-
 void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 {
 	HWND      hWnd, hTabWnd;
 	DWORD     tabStyle;
-	int       i, nPage, nPageCount;
+	int       nPage, nPageCount;
 	RECT      rectSheet, rectTree;
 	HTREEITEM hItem;
 	LONG_PTR  prevProc;
@@ -2213,14 +1997,14 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 	ScreenToClient(hTabWnd, ((LPPOINT)&rcTabCtrl)+1);
 
 	GetWindowRect(hWnd, &rectSheet);
-	rectSheet.right += SHEET_TREE_WIDTH + 5;
+	rectSheet.right += SHEET_TREE_WIDTH;
 	SetWindowPos(hWnd, HWND_TOP,
 			-1, -1,
-			rectSheet.right - rectSheet.left, rectSheet.bottom - rectSheet.top,
+			rectSheet.right - rectSheet.left, rectSheet.bottom - rectSheet.top - 20,
 			SWP_NOZORDER | SWP_NOMOVE);
 	CenterWindow(hWnd);
 
-	MovePropertySheetChildWindows(hWnd, SHEET_TREE_WIDTH+5, 0);
+	MovePropertySheetChildWindows(hWnd, SHEET_TREE_WIDTH, - 20);
 
 	if (hSheetTreeCtrl != NULL)
 	{
@@ -2250,53 +2034,16 @@ void ModifyPropertySheetForTreeSheet(HWND hPageDlg)
 		free(wstr);
 	}
 
-	SendMessage(hTempTab, TCM_GETITEMRECT, 0, (LPARAM)&rcTabCaption);
-	nCaptionHeight = (rcTabCaption.bottom - rcTabCaption.top);
-
-	rcTabCaption.left   = rcTabCtrl.left + SHEET_TREE_WIDTH + 5;
-	rcTabCaption.top    = 4;
-	rcTabCaption.right  = rcTabCaption.left + (rcTabCtrl.right - rcTabCtrl.left);
-	rcTabCaption.bottom = rcTabCaption.top + nCaptionHeight;
-
 	DestroyWindow(hTempTab);
 
-	i = (int)((SHEET_TREE_WIDTH * 3) / 4 + 0.5);
-
-	rcSheetSnap.left   = rcTabCtrl.left + 4;
-	rcSheetSnap.top    = (rcTabCtrl.bottom - i);
-	rcSheetSnap.right  = rcTabCtrl.left + SHEET_TREE_WIDTH;
-	rcSheetSnap.bottom = rcTabCtrl.bottom;
-
-	if (g_nPropertyMode != OPTIONS_GAME)
-	{
-		hSheetBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
-		bUseScreenShot = FALSE;
-	}
-	else
-	{
-		if (!ScreenShotLoaded())
-			LoadScreenShot(g_nGame, NULL, TAB_SCREENSHOT);
-
-		if (ScreenShotLoaded())
-		{
-			hSheetBitmap = GetScreenShotHandle();
-			bUseScreenShot = TRUE;
-		}
-		else
-		{
-			hSheetBitmap = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_ABOUT));
-			bUseScreenShot = FALSE;
-		}
-	}
-
-	rectTree.left   = rcTabCtrl.left + 4;
-	rectTree.top    = rcTabCtrl.top  + 5;
+	rectTree.left   = rcTabCtrl.left + 7;
+	rectTree.top    = rcTabCtrl.top  + 7;
 	rectTree.right  = rcTabCtrl.left + SHEET_TREE_WIDTH;
-	rectTree.bottom = (rcTabCtrl.bottom - i) - 5;
+	rectTree.bottom = rcTabCtrl.bottom + 10;
 
 	hSheetTreeCtrl = CreateWindowEx(WS_EX_CLIENTEDGE | WS_EX_NOPARENTNOTIFY,
 							TEXT("SysTreeView32"), TEXT("PageTree"),
-							WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_SHOWSELALWAYS | TVS_TRACKSELECT | TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS,
+							WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_SHOWSELALWAYS | TVS_LINESATROOT | TVS_NONEVENHEIGHT | TVS_FULLROWSELECT,
 							rectTree.left, rectTree.top,
 							rectTree.right - rectTree.left, rectTree.bottom - rectTree.top,
 							hWnd, (HMENU)0x7EEE, hSheetInstance, NULL);
