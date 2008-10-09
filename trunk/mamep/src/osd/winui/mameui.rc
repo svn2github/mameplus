@@ -64,6 +64,7 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "&Add to Custom Folder...",    ID_CONTEXT_ADD_CUSTOM
         MENUITEM "R&emove From This Folder",    ID_CONTEXT_REMOVE_CUSTOM
+        MENUITEM SEPARATOR
         MENUITEM "Propert&ies for Driver",      ID_FOLDER_SOURCEPROPERTIES
         MENUITEM "Properties &for BIOS",        ID_BIOS_PROPERTIES
         MENUITEM "Pr&operties",                 ID_GAME_PROPERTIES
@@ -415,7 +416,7 @@ BEGIN
     PUSHBUTTON      "&Pause",IDPAUSE,89,223,50,14
     PUSHBUTTON      "&Cancel",IDCANCEL,148,223,50,14
     CONTROL         "Progress1",IDC_ROMS_PROGRESS,"msctls_progress32",
-                    PBS_SMOOTH | WS_BORDER,15,19,116,8
+                    WS_BORDER,15,19,116,8
     LTEXT           "Correct:",IDC_STATIC,51,32,32,8
     GROUPBOX        "ROMs",IDC_STATIC,7,7,132,65
     LTEXT           "Incorrect:",IDC_STATIC,51,45,33,8
@@ -425,7 +426,7 @@ BEGIN
     LTEXT           "0",IDC_ROMS_TOTAL,87,58,20,8
     GROUPBOX        "Samples",IDC_STATIC,148,7,132,65
     CONTROL         "Progress1",IDC_SAMPLES_PROGRESS,"msctls_progress32",
-                    PBS_SMOOTH | WS_BORDER,156,19,116,8
+                    WS_BORDER,156,19,116,8
     LTEXT           "Correct:",IDC_STATIC,192,32,33,8
     LTEXT           "Incorrect:",IDC_STATIC,192,45,33,8
     LTEXT           "Total:",IDC_STATIC,192,58,33,8
@@ -433,10 +434,9 @@ BEGIN
     LTEXT           "0",IDC_SAMPLES_INCORRECT,228,45,20,8
     LTEXT           "0",IDC_SAMPLES_TOTAL,228,58,20,8
     GROUPBOX        "Details",IDC_STATIC,7,75,273,144
-    // only RichEdit20W works on Win9x
-    CONTROL         "",IDC_AUDIT_DETAILS,"RichEdit20W",ES_MULTILINE | 
+    EDITTEXT        IDC_AUDIT_DETAILS,12,84,263,129,ES_MULTILINE | 
                     ES_AUTOVSCROLL | ES_READONLY | WS_VSCROLL | WS_HSCROLL | 
-                    NOT WS_TABSTOP,12,84,263,129
+                    NOT WS_TABSTOP
 END
 
 IDD_DIRECTORIES DIALOG  0, 0, 231, 105
@@ -467,7 +467,7 @@ BEGIN
     LTEXT           "Available fields:",IDC_STATIC,7,7,80,12,SS_CENTERIMAGE
     CONTROL         "List1",IDC_LISTAVAILABLECOLUMNS,"SysListView32",
                     LVS_LIST | LVS_SINGLESEL | LVS_NOCOLUMNHEADER | 
-                    LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,7,
+                    LVS_NOSORTHEADER | WS_BORDER | WS_HSCROLL | WS_TABSTOP,7,
                     19,90,106
     PUSHBUTTON      "Add ->",IDC_BUTTONADD,105,19,44,14,WS_DISABLED
     PUSHBUTTON      "<- Remove",IDC_BUTTONREMOVE,105,37,44,14,WS_DISABLED
@@ -475,7 +475,7 @@ BEGIN
                     12,SS_CENTERIMAGE
     CONTROL         "List1",IDC_LISTSHOWCOLUMNS,"SysListView32",LVS_LIST | 
                     LVS_SINGLESEL | LVS_NOCOLUMNHEADER | LVS_NOSORTHEADER | 
-                    WS_BORDER | WS_TABSTOP,156,19,90,106
+                    WS_BORDER | WS_HSCROLL | WS_TABSTOP,156,19,90,106
     PUSHBUTTON      "Move Up",IDC_BUTTONMOVEUP,157,129,44,14,WS_DISABLED
     PUSHBUTTON      "Move Down",IDC_BUTTONMOVEDOWN,203,129,44,14,WS_DISABLED
     DEFPUSHBUTTON   "OK",IDOK,257,19,44,14
@@ -1000,7 +1000,7 @@ BEGIN
     GROUPBOX        "",IDC_SPLITTER2,109,28,8,172,BS_NOTIFY | NOT WS_VISIBLE
     CONTROL         "",IDC_SSFRAME,"Static",SS_ETCHEDFRAME | SS_NOTIFY,121,
                     11,181,194
-    CONTROL         "",IDC_SSTAB,"SysTabControl32",0,121,0,181,18
+    CONTROL         "",IDC_SSTAB,"SysTabControl32",TCS_HOTTRACK,121,0,181,18
     CONTROL         "",IDC_SSPICTURE,"Static",SS_BITMAP | NOT WS_VISIBLE,141,
                     18,141,127
     EDITTEXT        IDC_HISTORY,129,150,167,49,ES_MULTILINE | ES_READONLY | 

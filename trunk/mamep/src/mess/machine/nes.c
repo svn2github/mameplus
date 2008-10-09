@@ -8,7 +8,6 @@
 #include "hash.h"
 
 
-
 /***************************************************************************
     CONSTANTS
 ***************************************************************************/
@@ -90,6 +89,10 @@ static void init_nes_core (running_machine *machine)
 	{
 		case 20:
 			nes.slow_banking = 0;
+			/* If we are loading a disk we have already filled nes_fds.data and we don't want to overwrite it, 
+			if we are loading a cart image identified as mapper 20 (probably wrong mapper...) we need to alloc 
+			memory for the bank 2 pointer */
+			if (nes_fds.data == NULL)
 			nes_fds.data = auto_malloc( 0x8000 );
 			memory_install_read8_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x4030, 0x403f, 0, 0, fds_r);
 			memory_install_read8_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x6000, 0xdfff, 0, 0, SMH_BANK2);
@@ -420,12 +423,14 @@ DEVICE_IMAGE_LOAD(nes_cart)
 	memset(magic, '\0', sizeof(magic));
 	image_fread(image, magic, 4);
 
-	if ((magic[0] != 'N') ||
-		(magic[1] != 'E') ||
-		(magic[2] != 'S'))
-		goto bad;
+	if ((magic[0] != 'N') || (magic[1] != 'E') || (magic[2] != 'S'))
+	{
+		logerror("BAD section hit during LOAD ROM.\n");
+		return INIT_FAIL;
+	}
 
 	mapinfo = image_extrainfo(image);
+
 	if (mapinfo)
 	{
 		if (4 == sscanf(mapinfo,"%d %d %d %d",&mapint1,&mapint2,&mapint3,&mapint4))
@@ -436,14 +441,17 @@ DEVICE_IMAGE_LOAD(nes_cart)
 			nes.chr_chunks = mapint4;
 			logerror("NES.CRC info: %d %d %d %d\n",mapint1,mapint2,mapint3,mapint4);
 			goodcrcinfo = 1;
-		} else
+		} 
+		else
 		{
 			logerror("NES: [%s], Invalid mapinfo found\n",mapinfo);
 		}
-	} else
+	} 
+	else
 	{
 		logerror("NES: No extrainfo found\n");
 	}
+
 	if (!goodcrcinfo)
 	{
 		// image_extrainfo() resets the file position back to start.
@@ -563,11 +571,6 @@ DEVICE_IMAGE_LOAD(nes_cart)
 		image_battery_load(image, battery_data, BATTERY_SIZE);
 
 	return INIT_PASS;
-
-bad:
-	logerror("BAD section hit during LOAD ROM.\n");
-	//mamep: ignore rom check to start window UI
-	return INIT_PASS;
 }
 
 
@@ -604,9 +607,7 @@ DEVICE_IMAGE_LOAD(nes_disk)
 
 	/* See if it has a  redundant header on it */
 	image_fread(image, magic, 4);
-	if ((magic[0] == 'F') &&
-		(magic[1] == 'D') &&
-		(magic[2] == 'S'))
+	if ((magic[0] == 'F') && (magic[1] == 'D') && (magic[2] == 'S'))
 	{
 		/* Skip past the redundant header */
 		image_fseek (image, 0x10, SEEK_SET);

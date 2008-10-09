@@ -654,7 +654,9 @@ void decrypt_kof2k4se_68k( running_machine *machine )
 			free(dst);
 }
 
-/* Lans2004 (bootleg of Shock Troopers 2) */
+
+/* Lansquenet 2004 (Shock Troopers - 2nd Squad bootleg) */
+
 
 void lans2004_vx_decrypt( running_machine *machine )
 {
@@ -1004,15 +1006,6 @@ void kf2k3pl_install_protection(running_machine *machine)
     memory_install_readwrite16_handler(machine,  0, ADDRESS_SPACE_PROGRAM, 0x2fe000, 0x2fffff, 0, 0, kof2003_r, kof2003p_w );
 }
 
-void samsh5bl_vx_decrypt( running_machine *machine )
-{
-	int vx_size = memory_region_length( machine, "ym" );
-	UINT8 *rom = memory_region( machine, "ym" );
-	int i;
-
-	for( i = 0; i < vx_size; i++ )
-		rom[ i ] = BITSWAP8( rom[ i ], 0, 1, 5, 4, 3, 2, 6, 7 );
-}
 
 /***************************************************************************
  kof2k3up
@@ -1046,9 +1039,11 @@ void kof2k3up_install_protection(running_machine *machine)
     memory_install_readwrite16_handler(machine,  0, ADDRESS_SPACE_PROGRAM, 0x2fe000, 0x2fffff, 0, 0, kof2003_r, kof2003_w );
 }
 
-/* samsho5bl */
 
-void samsh5bl_px_decrypt( running_machine *machine )
+/* Samurai Shodown V / Samurai Spirits Zero (bootleg) */
+
+
+void samsho5b_px_decrypt( running_machine *machine )
 {
 	int px_size = memory_region_length( machine, "main" );
 	UINT8 *rom = memory_region( machine, "main" );
@@ -1072,6 +1067,17 @@ void samsh5bl_px_decrypt( running_machine *machine )
 	memcpy( &rom[ 0x100000 ], &buf[ 0x000000 ], 0x700000 );
 
 	free( buf );
+}
+
+
+void samsho5b_vx_decrypt( running_machine *machine )
+{
+	int vx_size = memory_region_length( machine, "ym" );
+	UINT8 *rom = memory_region( machine, "ym" );
+	int i;
+
+	for( i = 0; i < vx_size; i++ )
+		rom[ i ] = BITSWAP8( rom[ i ], 0, 1, 5, 4, 3, 2, 6, 7 );
 }
 
 
@@ -1188,3 +1194,5 @@ void cthd2003_AES_protection(running_machine *machine)
 	// Fix for AES mode (stop loop that triggers Watchdog)
 	mem16[0xA2B7E/2] = 0x4E71;
 }
+
+

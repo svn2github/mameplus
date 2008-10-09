@@ -93,8 +93,7 @@ void AuditDialog(HWND hParent)
 	samples_incorrect = 0;
 
 	//RS use Riched32.dll
-	// mamep: Riched32.dll doesn't work on Win9X
-	hModule = LoadLibrary(TEXT("Riched20.dll"));
+	hModule = LoadLibrary(TEXT("Riched32.dll"));
 	if( hModule )
 	{
 		DialogBox(GetModuleHandle(NULL),MAKEINTRESOURCE(IDD_AUDIT),hParent,AuditWindowProc);

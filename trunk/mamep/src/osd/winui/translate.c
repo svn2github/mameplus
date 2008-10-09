@@ -1,9 +1,10 @@
 /***************************************************************************
 
-  M.A.M.E.32  -  Multiple Arcade Machine Emulator for Win32
-  Win32 Portions Copyright (C) 1997-2001 Michael Soderstrom and Chris Kirmse
+  M.A.M.E.UI  -  Multiple Arcade Machine Emulator with User Interface
+  Win32 Portions Copyright (C) 1997-2003 Michael Soderstrom and Chris Kirmse,
+  Copyright (C) 2003-2007 Chris Kirmse and the MAME32/MAMEUI team.
 
-  This file is part of MAME32, and may only be used, modified and
+  This file is part of MAMEUI, and may only be used, modified and
   distributed under the terms of the MAME license, in "readme.txt".
   By continuing to use, modify or distribute this file you indicate
   that you have read the license and understand and accept it fully.
@@ -326,22 +327,6 @@ static void TranslateTabControl(HWND hControl)
 }
 
 
-static void translate_richedit20(HWND hControl)
-{
-	LOGFONTW logfont;
-	CHARFORMAT2 cfm;
-
-	GetTranslatedFont(&logfont);
-
-	cfm.cbSize = sizeof (cfm);
-	cfm.dwMask = CFM_CHARSET | CFM_FACE;
-	cfm.bCharSet = logfont.lfCharSet;
-	wcscpy(cfm.szFaceName, logfont.lfFaceName);
-
-	SendMessage(hControl, EM_SETCHARFORMAT, SCF_DEFAULT, (LPARAM)&cfm);
-}
-
-
 static BOOL CALLBACK translate_dialog_items(HWND hControl, LPARAM lParam)
 {
 	char  buffer[1024];
@@ -353,9 +338,6 @@ static BOOL CALLBACK translate_dialog_items(HWND hControl, LPARAM lParam)
 		TranslateTabControl(hControl);
 	else if (!strcmp(buffer, "Edit") || !strcmp(buffer, "SysListView32") || !strcmp(buffer, "ComboBox"))
 		SetWindowFont(hControl, hTranslateFont, TRUE);
-	// only works RichEdit20W on Win9x
-	else if (!strcmp(buffer, "RichEdit20W"))
-		translate_richedit20(hControl);
 //	else if (!strcmp(buffer,"msctls_updown32"))
 //		ShowWindow(hControl, SW_HIDE);
 
