@@ -30,7 +30,7 @@ TARGET = mame
 endif
 
 ifdef NEOCPSMAME
-SUBTARGET = neocpsmame
+SUBTARGET = neocps
 endif
 
 ifndef SUBTARGET
@@ -234,7 +234,7 @@ endif
 ifeq ($(TARGET),$(SUBTARGET))
     NAME = $(TARGET)$(EXTRA_SUFFIX)
 else
-    NAME = $(TARGET)$(SUBTARGET)$(EXTRA_SUFFIX)
+    NAME = $(TARGET)$(EXTRA_SUFFIX)$(SUBTARGET)
 endif
 
 # fullname is prefix+name+suffix+debugsuffix

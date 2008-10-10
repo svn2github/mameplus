@@ -102,9 +102,12 @@ $(MAMEOBJ)/neogeo.a: \
 
 $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
+$(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
 #-------------------------------------------------
 # misc dependencies
 #-------------------------------------------------
 
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
+
+

@@ -595,9 +595,6 @@ static const input_type_desc core_types[] =
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_SNAPSHOT,         "Save Snapshot",          SEQ_DEF_3(KEYCODE_F12, SEQCODE_NOT, KEYCODE_LSHIFT) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_RECORD_MOVIE,     "Record Movie",           SEQ_DEF_2(KEYCODE_F12, KEYCODE_LSHIFT) )
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_TOGGLE_CHEAT,     "Toggle Cheat",           SEQ_DEF_1(KEYCODE_F6) )
-#ifdef USE_SHOW_TIME
-	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_TIME,             "Show Current Time",      SEQ_DEF_0 )
-#endif /* USE_SHOW_TIME */
 #ifdef USE_SHOW_INPUT_LOG
 	INPUT_PORT_DIGITAL_TYPE( 0, UI,      UI_SHOW_INPUT_LOG,   "Show Button Input",      SEQ_DEF_2(KEYCODE_F1, KEYCODE_LSHIFT) )
 #endif /* USE_SHOW_INPUT_LOG */

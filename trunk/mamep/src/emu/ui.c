@@ -18,9 +18,6 @@
 #ifdef CMD_LIST
 #include "cmddata.h"
 #endif /* CMD_LIST */
-#ifdef USE_SHOW_TIME
-#include <time.h>
-#endif /* USE_SHOW_TIME */
 #include "render.h"
 #include "rendfont.h"
 #include "ui.h"
@@ -138,15 +135,10 @@ static slider_state *slider_current;
 static int ui_transparency;
 #endif /* UI_COLOR_DISPLAY */
 
-#ifdef USE_SHOW_TIME
-static int show_time = 0;
-static int Show_Time_Position;
-static void display_time(void);
-#endif /* USE_SHOW_TIME */
-
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void);
 #endif /* USE_SHOW_INPUT_LOG */
+
 
 
 /***************************************************************************
@@ -492,10 +484,6 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 
 	auto_pause = FALSE;
 	scroll_reset = TRUE;
-#ifdef USE_SHOW_TIME
-	show_time = 0;
-	Show_Time_Position = 0;
-#endif /* USE_SHOW_TIME */
 
 	/* loop over states */
 	ui_set_handler(handler_ingame, 0);
@@ -1532,60 +1520,6 @@ static astring *warnings_string(running_machine *machine, astring *string)
 }
 
 
-#ifdef USE_SHOW_TIME
-
-#define DISPLAY_AMPM 0
-
-static void display_time(void)
-{
-	char buf[20];
-#if DISPLAY_AMPM
-	char am_pm[] = "am";
-#endif /* DISPLAY_AMPM */
-	float width;
-	time_t ltime;
-	struct tm *today;
-
-	time(&ltime);
-	today = localtime(&ltime);
-
-#if DISPLAY_AMPM
-	if( today->tm_hour > 12 )
-	{
-		strcpy( am_pm, "pm" );
-		today->tm_hour -= 12;
-	}
-	if( today->tm_hour == 0 ) /* Adjust if midnight hour. */
-		today->tm_hour = 12;
-#endif /* DISPLAY_AMPM */
-
-#if DISPLAY_AMPM
-	sprintf(buf, "%02d:%02d:%02d %s", today->tm_hour, today->tm_min, today->tm_sec, am_pm);
-#else
-	sprintf(buf, "%02d:%02d:%02d", today->tm_hour, today->tm_min, today->tm_sec);
-#endif /* DISPLAY_AMPM */
-	width = ui_get_string_width(buf) + UI_LINE_WIDTH * 2.0f;
-	switch(Show_Time_Position)
-	{
-		case 0:
-			ui_draw_text_bk(buf, 1.0f - width, 1.0f - ui_get_line_height(), UI_FILLCOLOR);
-			break;
-
-		case 1:
-			ui_draw_text_bk(buf, 1.0f - width, 0.0f, UI_FILLCOLOR);
-			break;
-
-		case 2:
-			ui_draw_text_bk(buf, 0.0f, 0.0f, UI_FILLCOLOR);
-			break;
-
-		case 3:
-			ui_draw_text_bk(buf, 0.0f, 1.0f - ui_get_line_height(), UI_FILLCOLOR);
-			break;
-	}
-}
-#endif /* USE_SHOW_TIME */
-
 #ifdef USE_SHOW_INPUT_LOG
 static void display_input_log(void)
 {
@@ -1651,7 +1585,6 @@ static void display_input_log(void)
 	}
 }
 #endif /* USE_SHOW_INPUT_LOG */
-
 
 
 /*-------------------------------------------------
@@ -1939,31 +1872,6 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 		else
 			mame_pause(machine, !mame_is_paused(machine));
 	}
-
-
-#ifdef USE_SHOW_TIME
-	if (ui_input_pressed(machine, IPT_UI_TIME))
-	{
-		if (show_time)
-		{
-			Show_Time_Position++;
-
-			if (Show_Time_Position > 3)
-			{
-				Show_Time_Position = 0;
-				show_time = 0;
-			}
-		}
-		else
-		{
-			Show_Time_Position = 0;
-			show_time = 1;
-		}
-	}
-
-	if (show_time)
-		display_time();
-#endif /* USE_SHOW_TIME */
 
 #ifdef USE_SHOW_INPUT_LOG
 	if (ui_input_pressed(machine, IPT_UI_SHOW_INPUT_LOG))
