@@ -2529,9 +2529,7 @@ V-V                           TP-027
 	DRIVER( megaman )	/* 06/10/1995 (c) 1995 (Asia)  */
 	DRIVER( rockmanj )	/* 22/09/1995 (c) 1995 (Japan) */
 
-#ifndef NEOCPSMAME
 	DRIVER( fcrash )	/* bootleg of Final Fight */
-#endif /* NEOCPSMAME */
 
 	/* Capcom CPS2 games */
 	/* list completed by CPS2Shock */

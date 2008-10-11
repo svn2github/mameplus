@@ -1,14 +1,14 @@
 ###########################################################################
 #
-#   mame.mak
+#   neocps.mak
 #
-#   MAME target makefile
+#   Small driver-specific example makefile
+#	Use make SUBTARGET=neocps to build
 #
 #   Copyright Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
 #
 ###########################################################################
-
 
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
@@ -25,6 +25,8 @@ OBJDIRS += \
 	$(LAYOUT) \
 	$(MACHINE) \
 	$(VIDEO) \
+
+DEFS += -DNEOCPSMAME
 
 
 
@@ -96,6 +98,8 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
 
+
+
 #-------------------------------------------------
 # layout dependencies
 #-------------------------------------------------
@@ -104,10 +108,10 @@ $(DRIVERS)/neogeo.o:	$(LAYOUT)/neogeo.lh
 
 $(DRIVERS)/cps3.o:	$(LAYOUT)/cps3.lh
 
+
+
 #-------------------------------------------------
 # misc dependencies
 #-------------------------------------------------
 
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
-
-

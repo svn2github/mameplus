@@ -166,7 +166,7 @@ else
 endif
 
 #####################################################################
-# Mame CORE with Windows UI options
+# CORE with MAMEUI options
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
 UI_RCDEFS += -DUI_COLOR_DISPLAY
@@ -208,12 +208,8 @@ ifneq ($(USE_DRIVER_SWITCH),)
 UI_RCDEFS += -DDRIVER_SWITCH
 endif
 
-ifneq ($(NEOCPSMAME),)
-UI_RCDEFS += -DNEOCPSMAME
-endif
-
 #####################################################################
-# Windows UI specific options
+# MAMEUI specific options
 
 ifneq ($(USE_MISC_FOLDER),)
 DEFS += -DMISC_FOLDER

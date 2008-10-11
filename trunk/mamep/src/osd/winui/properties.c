@@ -467,9 +467,7 @@ static const struct
 	{"plus",        IDC_DRV_PLUS},
 	{"homebrew",    IDC_DRV_HOMEBREW},
 	{"decrypted",   IDC_DRV_DECRYPTED},
-#ifndef NEOCPSMAME
 	{"console",     IDC_DRV_CONSOLE},
-#endif /* NEOCPSMAME */
 	{0}
 };
 #endif /* DRIVER_SWITCH */

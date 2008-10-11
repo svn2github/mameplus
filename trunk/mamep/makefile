@@ -29,10 +29,6 @@ ifndef TARGET
 TARGET = mame
 endif
 
-ifdef NEOCPSMAME
-SUBTARGET = neocps
-endif
-
 ifndef SUBTARGET
 SUBTARGET = $(TARGET)
 endif
@@ -378,10 +374,6 @@ endif
 
 ifneq ($(USE_DRIVER_SWITCH),)
     DEFS += -DDRIVER_SWITCH
-endif
-
-ifneq ($(NEOCPSMAME),)
-    DEFS += -DNEOCPSMAME
 endif
 
 ifneq ($(MAMEMESS),)

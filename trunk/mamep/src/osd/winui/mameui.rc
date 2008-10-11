@@ -946,10 +946,8 @@ BEGIN
                     WS_TABSTOP,82,192,70,10
     CONTROL         "Decrypted",IDC_DRV_DECRYPTED,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,153,192,100,10
-#ifndef NEOCPSMAME
     CONTROL         "Console",IDC_DRV_CONSOLE,"Button",BS_AUTOCHECKBOX | 
                     WS_TABSTOP,82,205,70,10
-#endif /* NEOCPSMAME */
 #endif /* DRIVER_SWITCH */
     PUSHBUTTON      "Reset",IDC_PROP_RESET,4,225,117,14,0,0,HIDC_PROP_RESET
     PUSHBUTTON      "Restore Default Settings",IDC_USE_DEFAULT,138,225,117,14,
