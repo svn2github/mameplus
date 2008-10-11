@@ -625,10 +625,11 @@ BOOL OptionsInit()
 		while(perGameOptions[game_option_count].name)
 			game_option_count++;
 
-		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 #ifdef MAMEMESS
+		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * (sizeof(*driver_per_game_options) + 1));
 #else /* MAMEMESS */
+		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * sizeof(*driver_per_game_options));
 #endif /* MAMEMESS */
 		n = 0;
