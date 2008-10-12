@@ -763,13 +763,14 @@ timecrsa	»¯½âÎ£»ú (Rev. TS2 Ver.A)	»¯½âÎ£»ú (Rev. TS2 Ver.A)	Namco
 victlapw	A ¼¶·½³ÌÊ½Èü³µ - Ê¤Àû½ğ×ã (Rev. ADV2, ÊÀ½ç°æ)	A ¼¶·½³ÌÊ½Èü³µ - Ê¤Àû½ğ×ã (Rev. ADV2, ÊÀ½ç°æ)	Namco
 alpinesa	¸ßÉ½³åÀË (Rev. AF2 Ver.A)	¸ßÉ½³åÀË (Rev. AF2 Ver.A)	Namco
 propcycl	¿ÕÖĞ×ÔĞĞ³µ (Rev PR2 Ver.A)	¿ÕÖĞ×ÔĞĞ³µ (Rev PR2 Ver.A)	Namco
-rapidrvr	Rapid River (RD3 Ver. C)	Rapid River (RD3 Ver. C)	Namco
+rapidrvr	¼¤Á÷»®Í§ (RD3 Ver. C)	¼¤Á÷»®Í§ (RD3 Ver. C)	Namco
 timecrs2	»¯½âÎ£»ú 2 (TSS3 Ver. B)	»¯½âÎ£»ú 2 (TSS3 Ver. B)	Namco
 timcrs2b	»¯½âÎ£»ú 2 (TSS2 Ver. B)	»¯½âÎ£»ú 2 (TSS2 Ver. B)	Namco
 500gp	500-GP ÖØĞÍ»ú³µÈü	500-GP ÖØĞÍ»ú³µÈü	Namco
 finfurl2	Ó¢¹ú¿ì´ò 2 (ÊÀ½ç°æ)	Ó¢¹ú¿ì´ò 2 (ÊÀ½ç°æ)	Namco
 finfrl2j	Ó¢¹ú¿ì´ò 2 (ÈÕ°æ)	Ó¢¹ú¿ì´ò 2 (ÈÕ°æ)	Namco
-20pacgal	»³¾É 2 ºÏ 1	»³¾É 2 ºÏ 1	Namco
+20pacgal	»³¾É 2 ºÏ 1 (V1.04)	»³¾É 2 ºÏ 1 (V1.04)	Namco
+20pacgaa	»³¾É 2 ºÏ 1 (V1.01)	»³¾É 2 ºÏ 1 (V1.01)	Namco
 cosmicg	ÓîÖæÓÎ»÷¶Ó	ÓîÖæÓÎ»÷¶Ó	Universal
 cosmica	ÓîÖæÒìĞÎ	ÓîÖæÒìĞÎ	Universal
 cosmica2	ÓîÖæÒìĞÎ (¾É°æ)	ÓîÖæÒìĞÎ (¾É°æ)	Universal
@@ -2301,6 +2302,7 @@ smbombr1	Ë¤õÓ°ÔÍõ II (ÈÕ°æ 940808)	Ë¤õÓ°ÔÍõ II (ÈÕ°æ 940808)	Capcom
 armwar	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (Å·ÖŞ°æ 941024)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (Å·ÖŞ°æ 941024)	Capcom
 armwarr1	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (Å·ÖŞ°æ 941011)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (Å·ÖŞ°æ 941011)	Capcom
 armwaru	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÃÀ°æ 941024)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÃÀ°æ 941024)	Capcom
+armwaru1	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÃÀ°æ 940920)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÃÀ°æ 940920)	Capcom
 pgear	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÈÕ°æ 941024)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÈÕ°æ 941024)	Capcom
 pgearr1	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÈÕ°æ 940916)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÈÕ°æ 940916)	Capcom
 armwara	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÑÇÖŞ°æ 940920)	»ú¼×Õ½Ê¿ / »ú¼××°±¸: ¹¥¹Ø°æ (ÑÇÖŞ°æ 940920)	Capcom
@@ -2408,7 +2410,8 @@ mshvsfa	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (ÑÇÖŞ°æ 970625)	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (ÑÇÖŞ°
 mshvsfa1	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (ÑÇÖŞ°æ 970620)	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (ÑÇÖŞ°æ 970620)	Capcom
 mshvsfb	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (°ÍÎ÷°æ 970827)	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (°ÍÎ÷°æ 970827)	Capcom
 mshvsfb1	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (°ÍÎ÷°æ 970625)	³¬¼¶Âş»­Ó¢ĞÛ ¶Ô ½ÖÍ·°ÔÍõ (°ÍÎ÷°æ 970625)	Capcom
-csclub	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 970722)	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 970722)	Capcom
+csclub	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 971017)	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 971017)	Capcom
+csclub1	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 970722)	Capcom ÔË¶¯¾ãÀÖ²¿ (Å·ÖŞ°æ 970722)	Capcom
 csclubj	Capcom ÔË¶¯¾ãÀÖ²¿ (ÈÕ°æ 970722)	Capcom ÔË¶¯¾ãÀÖ²¿ (ÈÕ°æ 970722)	Capcom
 cscluba	Capcom ÔË¶¯¾ãÀÖ²¿ (ÑÇÖŞ°æ 970722)	Capcom ÔË¶¯¾ãÀÖ²¿ (ÑÇÖŞ°æ 970722)	Capcom
 csclubh	Capcom ÔË¶¯¾ãÀÖ²¿ (Î÷°àÑÀ°æ 970722)	Capcom ÔË¶¯¾ãÀÖ²¿ (Î÷°àÑÀ°æ 970722)	Capcom
@@ -3328,7 +3331,8 @@ bakubaku	ÊÀ½çËÇÓıÏµÑ¡ÊÖÈ¨ (J 950407 V1.000)	ÊÀ½çËÇÓıÏµÑ¡ÊÖÈ¨ (J 950407 V1.000)	S
 colmns97	Ä§·¨±¦Ê¯ 97 (JET 961209 V1.000)	Ä§·¨±¦Ê¯ 97 (JET 961209 V1.000)	Sega
 cotton2	ÃŞ»¨Ğ¡Ä§Å® 2 (JUET 970902 V1.000)	ÃŞ»¨Ğ¡Ä§Å® 2 (JUET 970902 V1.000)	Success
 cottonbm	ÃŞ»¨Ğ¡Ä§Å® 3 (JUET 980709 V1.000)	ÃŞ»¨Ğ¡Ä§Å® 3 (JUET 980709 V1.000)	Success
-decathlt	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960424 V1.000)	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960424 V1.000)	Sega
+decathlt	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960709 V1.001)	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960709 V1.001)	Sega
+decathlo	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960424 V1.000)	Ê®ÏîÈ«ÄÜÔË¶¯»á (JUET 960424 V1.000)	Sega
 diehard	¿ì´òĞÌÊÂ (UET 960515 V1.000)	¿ì´òĞÌÊÂ (UET 960515 V1.000)	Sega
 dnmtdeka	¿ì´òĞÌÊÂ (J 960515 V1.000)	¿ì´òĞÌÊÂ (J 960515 V1.000)	Sega
 ejihon	ÕìÌ½ÊÂÎñËù (J 950613 V1.000)	ÕìÌ½ÊÂÎñËù (J 950613 V1.000)	Sega
@@ -3587,9 +3591,9 @@ dybbnao	»ğ±¬°ôÇò NAOMI (JPN)	»ğ±¬°ôÇò NAOMI (JPN)	Sega
 naomigd	Naomi GD-ROM Bios	Naomi GD-ROM Bios	Sega
 gundmgd	»ú¶¯Õ½Ê¿¸ß´ï: Áª°î VS ¼ªÎÌ (GDL-0001)	»ú¶¯Õ½Ê¿¸ß´ï: Áª°î VS ¼ªÎÌ (GDL-0001)	unknown
 sfz3ugd	ÉÙÄê½Ö°Ô 3 Upper (GDL-0002)	ÉÙÄê½Ö°Ô 3 Upper (GDL-0002)	Capcom
-cvsgd	Capcom ¶Ô SNK Millenium Fight 2000 Pro (GDL-0004)	Capcom ¶Ô SNK Millenium Fight 2000 Pro (GDL-0004)	Capcom
+cvsgd	Capcom ¶Ô SNK Ç§ìû¸ñ¶· PRO (GDL-0004)	Capcom ¶Ô SNK Ç§ìû¸ñ¶· PRO (GDL-0004)	Capcom
 gundmxgd	»ú¶¯Õ½Ê¿¸ß´ï: Áª°î VS ¼ªÎÌ DX  (GDL-0006)	»ú¶¯Õ½Ê¿¸ß´ï: Áª°î VS ¼ªÎÌ DX  (GDL-0006)	unknown
-cvs2gd	Capcom ¶Ô SNK 2 Millionaire Fighting 2001 (GDL-0007A)	Capcom ¶Ô SNK 2 Millionaire Fighting 2001 (GDL-0007A)	Capcom
+cvs2gd	Capcom ¶Ô SNK 2 Ç§ìû¸ñ¶· (GDL-0007A)	Capcom ¶Ô SNK 2 Ç§ìû¸ñ¶· (GDL-0007A)	Capcom
 ikaruga	°ßğ¯ (GDL-0010)	°ßğ¯ (GDL-0010)	Treasure
 ggxx	×ï¶ñ¹¤¾ß XX (GDL-0011)	×ï¶ñ¹¤¾ß XX (GDL-0011)	unknown
 chocomk	Musapey's Choco Marker (GDL-0014A)	Musapey's Choco Marker (GDL-0014A)	unknown
@@ -3602,7 +3606,7 @@ ss2005	³¬¼¶ÉÏº£ 2005 (GDL-0031A)	³¬¼¶ÉÏº£ 2005 (GDL-0031A)	unknown
 sprtjam	»ìºÏÔË¶¯ (GDS-0003)	»ìºÏÔË¶¯ (GDS-0003)	Sega
 slashout	ºÀÕ¶ (GDS-0004)	ºÀÕ¶ (GDS-0004)	Sega
 spkrbtl	Spikers Battle (GDS-0005)	Spikers Battle (GDS-0005)	Sega
-dygolf	Virtua Golf / Dynamic Golf (GDS-0009)	Virtua Golf / Dynamic Golf (GDS-0009)	Sega
+dygolf	Á¢Ìå¸ß¶û·ò (GDS-0009)	Á¢Ìå¸ß¶û·ò (GDS-0009)	Sega
 wsbbgd	ÊÀ½çÖ°Òµ°ôÇò (GDS-0010)	ÊÀ½çÖ°Òµ°ôÇò (GDS-0010)	Sega
 vathlete	ĞéÄâÌï¾¶ÔË¶¯»á (GDS-0019)	ĞéÄâÌï¾¶ÔË¶¯»á (GDS-0019)	Sega
 hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
@@ -4849,9 +4853,9 @@ fitegol2	Õ½¶·¸ß¶û·ò (ÃÀ°æ)	Õ½¶·¸ß¶û·ò (ÃÀ°æ)	SNK
 countryc	Õ½¶·¸ß¶û·ò Country Club	Õ½¶·¸ß¶û·ò Country Club	SNK
 ikari	Å­ (ÃÀ°æ JAMMA)	Å­ (ÃÀ°æ JAMMA)	SNK
 ikaria	Å­ (ÃÀ°æ)	Å­ (ÃÀ°æ)	SNK
-ikarinc	Å­ (ÃÀ°æ No Continues)	Å­ (ÃÀ°æ No Continues)	SNK
-ikarijp	Å­ (ÈÕ°æ)	Å­ (ÈÕ°æ)	SNK
-ikarijpb	Å­ (²Ù×İ¸Ë hack µÁ°æ)	Å­ (²Ù×İ¸Ë hack µÁ°æ)	bootleg
+ikarinc	Å­ (ÃÀ°æ ²»¿ÉĞø¹Ø)	Å­ (ÃÀ°æ ²»¿ÉĞø¹Ø)	SNK
+ikarijp	Å­ (ÈÕ°æ ²»¿ÉĞø¹Ø)	Å­ (ÈÕ°æ ²»¿ÉĞø¹Ø)	SNK
+ikarijpb	Å­ (²Ù×İ¸Ë µÁ°æ)	Å­ (²Ù×İ¸Ë µÁ°æ)	bootleg
 victroad	Å­ºÅ²ãÈ¦ Ê¤ÀûÖ®Â·	Å­ºÅ²ãÈ¦ Ê¤ÀûÖ®Â·	SNK
 dogosoke	Å­ºÅ²ãÈ¦	Å­ºÅ²ãÈ¦	SNK
 dogosokb	Å­ºÅ²ãÈ¦ (²Ù×İ¸Ë µÁ°æ)	Å­ºÅ²ãÈ¦ (²Ù×İ¸Ë µÁ°æ)	bootleg
@@ -4987,10 +4991,10 @@ doubledr	Ë«½ØÁú (Neo-Geo)	Ë«½ØÁú (Neo-Geo)	Technos
 pbobblen	ÅİÅİÁú (Neo-Geo) (µÚ1Ì×)	ÅİÅİÁú (Neo-Geo) (µÚ1Ì×)	Taito
 pbobblna	ÅİÅİÁú (Neo-Geo) (µÚ2Ì×)	ÅİÅİÁú (Neo-Geo) (µÚ2Ì×)	Taito
 kof95	È­»Ê '95 (µÚ1Ì×)	È­»Ê '95 (µÚ1Ì×)	SNK
-kof95a	È­»Ê '95 (µÚ2Ì×)	È­»Ê '95 (µÚ2Ì×)	SNK
+kof95h	È­»Ê '95 (µÚ2Ì×)	È­»Ê '95 (µÚ2Ì×)	SNK
 tws96	Tecmo ÊÀ½ç±­×ãÇò¡¯96	Tecmo ÊÀ½ç±­×ãÇò¡¯96	Tecmo
 samsho3	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ1Ì×)	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ1Ì×)	SNK
-samsho3a	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ2Ì×)	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ2Ì×)	SNK
+samsho3h	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ2Ì×)	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (µÚ2Ì×)	SNK
 fswords	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (º«¹ú°æ)	ÊÌ»ê III / ÊÌ»ê - Õ¶ºìÀÉÎŞË«½£ (º«¹ú°æ)	SNK
 stakwin	ÈüÂí´óºà / ÉÍ½ğÁÔÊÖ - GI ÍêÈ«ÖÆ°ÔÖ®µÀ	ÈüÂí´óºà / ÉÍ½ğÁÔÊÖ - GI ÍêÈ«ÖÆ°ÔÖ®µÀ	Saurus
 pulstar	ËÀÍöÖ®ĞÇ / »óĞÇÕ½»ú	ËÀÍöÖ®ĞÇ / »óĞÇÕ½»ú	Aicom
@@ -5115,7 +5119,8 @@ samsho5	ÊÌ»ê V / ÊÌ»ê Áã (µÚ1Ì×)	ÊÌ»ê V / ÊÌ»ê Áã (µÚ1Ì×)	Yuki Enterprise / SNK 
 samsho5h	ÊÌ»ê V / ÊÌ»ê Áã (µÚ2Ì×)	ÊÌ»ê V / ÊÌ»ê Áã (µÚ2Ì×)	Yuki Enterprise / SNK Playmore
 samsho5b	ÊÌ»ê V / ÊÌ»ê Áã (µÁ°æ)	ÊÌ»ê V / ÊÌ»ê Áã (µÁ°æ)	bootleg
 kf2k3pcb	È­»Ê 2003 (ÈÕ°æ, JAMMA PCB)	È­»Ê 2003 (ÈÕ°æ, JAMMA PCB)	SNK Playmore
-kof2003	È­»Ê 2003	È­»Ê 2003	SNK Playmore
+kof2003	È­»Ê 2003 (µÚ1Ì×)	È­»Ê 2003 (µÚ1Ì×)	SNK Playmore
+kof2003h	È­»Ê 2003 (µÚ2Ì×)	È­»Ê 2003 (µÚ2Ì×)	SNK Playmore
 kf2k3bl	È­»Ê 2003 (µÁ°æ µÚ1Ì×)	È­»Ê 2003 (µÁ°æ µÚ1Ì×)	bootleg
 kf2k3bla	È­»Ê 2003 (µÁ°æ µÚ2Ì×)	È­»Ê 2003 (µÁ°æ µÚ2Ì×)	bootleg
 kf2k3pl	È­»Ê 2004 EX Hero (µÁ°æ)	È­»Ê 2004 EX Hero (µÁ°æ)	bootleg
@@ -5397,6 +5402,7 @@ revx	´ó¸ïÃü X (Rev. 1.0 6/16/94)	´ó¸ïÃü X (Rev. 1.0 6/16/94)	Midway
 mk3	ÕæÈË¿ì´ò 3 (rev 2.1)	ÕæÈË¿ì´ò 3 (rev 2.1)	Midway
 mk3r20	ÕæÈË¿ì´ò 3 (rev 2.0)	ÕæÈË¿ì´ò 3 (rev 2.0)	Midway
 mk3r10	ÕæÈË¿ì´ò 3 (rev 1.0)	ÕæÈË¿ì´ò 3 (rev 1.0)	Midway
+mk3p40	ÕæÈË¿ì´ò 3 (rev 1 chip label p4.0)	ÕæÈË¿ì´ò 3 (rev 1 chip label p4.0)	Midway
 umk3	ÕæÈË¿ì´ò 3 Ultimate (rev 1.2)	ÕæÈË¿ì´ò 3 Ultimate (rev 1.2)	Midway
 umk3r11	ÕæÈË¿ì´ò 3 Ultimate (rev 1.1)	ÕæÈË¿ì´ò 3 Ultimate (rev 1.1)	Midway
 umk3r10	ÕæÈË¿ì´ò 3 Ultimate (rev 1.0)	ÕæÈË¿ì´ò 3 Ultimate (rev 1.0)	Midway
@@ -6984,15 +6990,18 @@ pitboss2	¶Ä³¡´óºà II	¶Ä³¡´óºà II	Merit
 spitboss	³¬¼¶¶Ä³¡´óºà	³¬¼¶¶Ä³¡´óºà	Merit
 pitbosss	¶Ä³¡´óºà - ³¬¼¶¾ŞĞÇ	¶Ä³¡´óºà - ³¬¼¶¾ŞĞÇ	Merit
 pitbossm	¶Ä³¡´óºà Megastar	¶Ä³¡´óºà Megastar	Merit
-megat3	·Ç³£½Ó´¥ III (9255-20-01 RON)	·Ç³£½Ó´¥ III (9255-20-01 RON)	Merit
-megat3a	·Ç³£½Ó´¥ III (9255-20-06 RON)	·Ç³£½Ó´¥ III (9255-20-06 RON)	Merit
-megat3b	·Ç³£½Ó´¥ III (9255-20-01 ROF)	·Ç³£½Ó´¥ III (9255-20-01 ROF)	Merit
-megat3te	·Ç³£½Ó´¥ III ÁªÈü°æ (9255-30-01 ROE)	·Ç³£½Ó´¥ III ÁªÈü°æ (9255-30-01 ROE)	Merit
-megat4	·Ç³£½Ó´¥ IV (9255-40-01 ROE)	·Ç³£½Ó´¥ IV (9255-40-01 ROE)	Merit
-megat4a	·Ç³£½Ó´¥ IV (9255-40-01 ROD)	·Ç³£½Ó´¥ IV (9255-40-01 ROD)	Merit
-megat4te	·Ç³£½Ó´¥ IV ÁªÈü°æ (9255-50-01 ROD)	·Ç³£½Ó´¥ IV ÁªÈü°æ (9255-50-01 ROD)	Merit
-megat5	·Ç³£½Ó´¥ 5 (9255-60-01 ROC)	·Ç³£½Ó´¥ 5 (9255-60-01 ROC)	Merit
-megat6	·Ç³£½Ó´¥ 6 (9255-80-01 ROA)	·Ç³£½Ó´¥ 6 (9255-80-01 ROA)	Merit
+megat3	·Ç³£½Ó´¥ III (9255-20-01 RON, ±ê×¼°æ)	·Ç³£½Ó´¥ III (9255-20-01 RON, ±ê×¼°æ)	Merit
+megat3a	·Ç³£½Ó´¥ III (9255-20-01 ROF, ±ê×¼°æ)	·Ç³£½Ó´¥ III (9255-20-01 ROF, ±ê×¼°æ)	Merit
+megat3ca	·Ç³£½Ó´¥ III (9255-20-06 RON, ¼ÓÀû¸£ÄáÑÇ°æ)	·Ç³£½Ó´¥ III (9255-20-06 RON, ¼ÓÀû¸£ÄáÑÇ°æ)	Merit
+megat3nj	·Ç³£½Ó´¥ III (9255-20-07 ROG, ĞÂÔóÎ÷Öİ°æ)	·Ç³£½Ó´¥ III (9255-20-07 ROG, ĞÂÔóÎ÷Öİ°æ)	Merit
+megat3te	·Ç³£½Ó´¥ III ÁªÈü°æ (9255-30-01 ROE, ±ê×¼°æ)	·Ç³£½Ó´¥ III ÁªÈü°æ (9255-30-01 ROE, ±ê×¼°æ)	Merit
+megat4	·Ç³£½Ó´¥ IV (9255-40-01 ROE, ±ê×¼°æ)	·Ç³£½Ó´¥ IV (9255-40-01 ROE, ±ê×¼°æ)	Merit
+megat4a	·Ç³£½Ó´¥ IV (9255-40-01 ROD, ±ê×¼°æ)	·Ç³£½Ó´¥h IV (9255-40-01 ROD, ±ê×¼°æ)	Merit
+megat4sn	³¬¼¶·Ç³£½Ó´¥ IV (9255-41-07 ROG, ĞÂÔóÎ÷Öİ°æ)	³¬¼¶·Ç³£½Ó´¥ IV (9255-41-07 ROG, ĞÂÔóÎ÷Öİ°æ)	Merit
+megat4te	·Ç³£½Ó´¥ IV ÁªÈü°æ (9255-50-01 ROD, ±ê×¼°æ)	·Ç³£½Ó´¥ IV ÁªÈü°æ (9255-50-01 ROD, ±ê×¼°æ)	Merit
+megat5	·Ç³£½Ó´¥ 5 (9255-60-01 ROC, ±ê×¼°æ)	·Ç³£½Ó´¥ 5 (9255-60-01 ROC, ±ê×¼°æ)	Merit
+megat5nj	·Ç³£½Ó´¥ 5 (9255-60-07 RON, ĞÂÔóÎ÷Öİ°æ)	·Ç³£½Ó´¥ 5 (9255-60-07 RON, ĞÂÔóÎ÷Öİ°æ)	Merit
+megat6	·Ç³£½Ó´¥ 6 (9255-80-01 ROA, ±ê×¼°æ)	·Ç³£½Ó´¥ 6 (9255-80-01 ROA, ±ê×¼°æ)	Merit
 suprgolf	³¬¼¶»Ê¹Ú¸ß¶û·ò	³¬¼¶»Ê¹Ú¸ß¶û·ò	Nasco/Face?
 hotblock	¶íÂŞË¹·½¿é½âÃÕ¶ÔÕ½	¶íÂŞË¹·½¿é½âÃÕ¶ÔÕ½	Nics? / Nix?
 pntnpuzl	»æ»­Óë½âÃÕ	»æ»­Óë½âÃÕ	Century?
@@ -7259,6 +7268,8 @@ videopkr	ÊÓÆµÆË¿Ë	ÊÓÆµÆË¿Ë	InterFlip
 blckjack	¶şÊ®Ò»µã	¶şÊ®Ò»µã	InterFlip
 videodad	ÊÓÆµ÷»×Ó	ÊÓÆµ÷»×Ó	InterFlip
 videocba	ÊÓÆµË®¹û»ú	ÊÓÆµË®¹û»ú	InterFlip
+babypkr	ÉÙÄêÆË¿Ë	ÉÙÄêÆË¿Ë	Recreativos Franco
+babydad	ÉÙÄê÷»×Ó	ÉÙÄê÷»×Ó	Recreativos Franco
 laperla	¿ìÀÖÀ²À²¶Ó (Ver 2.0)	¿ìÀÖÀ²À²¶Ó (Ver 2.0)	Nazionale Elettronica
 laperlag	¿ìÀÖ»Æ½ğÀ²À²¶Ó (Ver 2.0)	¿ìÀÖ»Æ½ğÀ²À²¶Ó (Ver 2.0)	Nazionale Elettronica
 capunc	Ë«±¶´ò»÷ (Ver 1.2)	Ë«±¶´ò»÷ (Ver 1.2)	Nazionale Elettronica
@@ -7310,7 +7321,6 @@ kf2k2plc	È­»Ê 2002 - ÖÕ¼«ÌôÕ½ Super (µÁ°æ / µÚ4Ì×)	È­»Ê 2002 - ÖÕ¼«ÌôÕ½ Super (µ
 kf2k4pls	È­»Ê 2004 ÌØ±ğ°æ Plus (µÁ°æ)	È­»Ê 2004 ÌØ±ğ°æ Plus (µÁ°æ)	bootleg
 matrimbl	ĞÂºÀÑªËÂÒ»×å - ¶·»é (µÁ°æ)	ĞÂºÀÑªËÂÒ»×å - ¶·»é (µÁ°æ)	bootleg
 mslug5b	ºÏ½ğµ¯Í· 5 (µÁ°æ)	ºÏ½ğµ¯Í· 5 (µÁ°æ)	bootleg
-kof2003h	È­»Ê 2003 (µÚ2Ì×)	È­»Ê 2003 (µÚ2Ì×)	SNK Playmore
 zintrkcd	¹î¼Æ / ÌôÕ½Ê·À´Ä· (CD to MVS ×ª»»)	¹î¼Æ / ÌôÕ½Ê·À´Ä· (CD to MVS ×ª»»)	hack
 fr2ch	Å¼ÏñÂéÈ¸ - ×îÖÕÂŞÂüÊ· 2 (CD to MVS ×ª»»)	Å¼ÏñÂéÈ¸ - ×îÖÕÂŞÂüÊ· 2 (CD to MVS ×ª»»)	hack
 spclone	É³ÂŞÂüÉß (°æ±¾ YY ¿ËÂ¡°æ)	É³ÂŞÂüÉß (°æ±¾ YY ¿ËÂ¡°æ)	Konami
@@ -7402,8 +7412,8 @@ snes	³¬¼¶ÈÎÌìÌÃ (NTSC)	³¬¼¶ÈÎÌìÌÃ (NTSC)	Nintendo
 snespal	³¬¼¶ÈÎÌìÌÃ (PAL)	³¬¼¶ÈÎÌìÌÃ (PAL)	Nintendo
 gba	Game Boy Advance	Game Boy Advance	Nintendo
 megaduck	MegaDuck/Cougar Boy	MegaDuck/Cougar Boy	Creatronic/Videojet/Timlex/Cougar
-gamegear	Game Gear (Europe/America)	Game Gear (Europe/America)	Sega
-gamegeaj	Game Gear (ÈÕ°æ)	Game Gear (ÈÕ°æ)	Sega
+gamegear	ÊÀ¼ÎÕÆ»ú (Å·°æ/America)	ÊÀ¼ÎÕÆ»ú (Å·°æ/America)	Sega
+gamegeaj	ÊÀ¼ÎÕÆ»ú (ÈÕ°æ)	ÊÀ¼ÎÕÆ»ú (ÈÕ°æ)	Sega
 sms	ÊÀ¼ÎËÄ´ú II	ÊÀ¼ÎËÄ´ú II	Sega
 sms1	ÊÀ¼ÎËÄ´ú I	ÊÀ¼ÎËÄ´ú I	Sega
 sms1pal	ÊÀ¼ÎËÄ´ú I (PAL)	ÊÀ¼ÎËÄ´ú I (PAL)	Sega
@@ -7416,12 +7426,12 @@ megadrij	ÊÀ¼ÎÎå´ú (ÈÕ°æ, NTSC)	ÊÀ¼ÎÎå´ú (ÈÕ°æ, NTSC)	Sega
 genesis	ÊÀ¼ÎÎå´ú (ÃÀ°æ, NTSC)	ÊÀ¼ÎÎå´ú (ÃÀ°æ, NTSC)	Sega
 gensvp	ÊÀ¼ÎÎå´ú (ÃÀ°æ, NTSC, w/SVP)	ÊÀ¼ÎÎå´ú (ÃÀ°æ, NTSC, w/SVP)	Sega
 megadriv	ÊÀ¼ÎÎå´ú (Å·°æ, PAL)	ÊÀ¼ÎÎå´ú (Å·°æ, PAL)	Sega
-pico	Pico (Europe, PAL)	Pico (Europe, PAL)	Sega
-picou	Pico (USA, NTSC)	Pico (USA, NTSC)	Sega
-picoj	Pico (Japan, NTSC)	Pico (Japan, NTSC)	Sega
+pico	Pico (Å·°æ, PAL)	Pico (Å·°æ, PAL)	Sega
+picou	Pico (ÃÀ°æ, NTSC)	Pico (ÃÀ°æ, NTSC)	Sega
+picoj	Pico (ÈÕ°æ, NTSC)	Pico (ÈÕ°æ, NTSC)	Sega
 pce	PC Engine	PC Engine	Nippon Electronic Company
 tg16	TurboGrafx 16	TurboGrafx 16	Nippon Electronic Company
 sgx	SuperGrafx	SuperGrafx	Nippon Electronic Company
 sfzch	CPS ¼ÒÓÃ°æ (ÉÙÄê½Ö°Ô)	CPS ¼ÒÓÃ°æ (ÉÙÄê½Ö°Ô)	Capcom
-wswan	WonderSwan	WonderSwan	Bandai
-wscolor	WonderSwan Color	WonderSwan Color	Bandai
+wswan	Íòá·ÕÆ»ú	Íòá·ÕÆ»ú	Bandai
+wscolor	Íòá·²ÊÉ«ÕÆ»ú	Íòá·²ÊÉ«ÕÆ»ú	Bandai
