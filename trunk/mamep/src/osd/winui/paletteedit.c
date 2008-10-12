@@ -103,10 +103,11 @@ static void InitializePaletteUI(HWND hwnd)
 {
 	static const WCHAR *palette_names[MAX_COLORTABLE] =
 	{
-//		TEXT("Font (blank)"),
-//		TEXT("Font (normal)"),
-//		TEXT("Font (special)"),
-		TEXT("Window background"),
+		TEXT("Menu background"),
+		TEXT("Cursor text (selected)"),
+		TEXT("Cursor background (selected)"),
+		TEXT("Cursor text (floating)"),
+		TEXT("Cursor background (floating)"),
 		TEXT("Button (A or 1)"),
 		TEXT("Button (B or 2)"),
 		TEXT("Button (C or 3)"),
@@ -117,7 +118,6 @@ static void InitializePaletteUI(HWND hwnd)
 		TEXT("Button (8)"),
 		TEXT("Button (9)"),
 		TEXT("Button (10)"),
-		TEXT("Cursor"),
 	};
 
 	int i;

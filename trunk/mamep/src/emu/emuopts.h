@@ -182,10 +182,11 @@
 
 /* core palette options */
 #ifdef UI_COLOR_DISPLAY
-//#define OPTION_FONT_BLANK			"font_blank"
-//#define OPTION_FONT_NORMAL			"font_normal"
-//#define OPTION_FONT_SPECIAL			"font_special"
 #define OPTION_SYSTEM_BACKGROUND		"system_background"
+#define OPTION_CURSOR_SELECTED_TEXT		"cursor_selected_text"
+#define OPTION_CURSOR_SELECTED_BG		"cursor_selected_bg"
+#define OPTION_CURSOR_HOVER_TEXT		"cursor_hover_text"
+#define OPTION_CURSOR_HOVER_BG			"cursor_hover_bg"
 #define OPTION_BUTTON_RED			"button_red"
 #define OPTION_BUTTON_YELLOW			"button_yellow"
 #define OPTION_BUTTON_GREEN			"button_green"
@@ -196,7 +197,6 @@
 #define OPTION_BUTTON_SILVER			"button_silver"
 #define OPTION_BUTTON_NAVY			"button_navy"
 #define OPTION_BUTTON_LIME			"button_lime"
-#define OPTION_CURSOR				"cursor"
 #endif /* UI_COLOR_DISPLAY */
 
 /* core language options */

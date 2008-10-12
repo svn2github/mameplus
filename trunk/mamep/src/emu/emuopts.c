@@ -200,10 +200,11 @@ const options_entry mame_core_options[] =
 #ifdef UI_COLOR_DISPLAY
 	/* palette options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
-//	{ "font_blank",                  "0,0,0",       0,               "font blank color" },
-//	{ "font_normal",                 "255,255,255", 0,               "font normal color" },
-//	{ "font_special",                "247,203,0",   0,               "font special color" },
-	{ "system_background",           "16,16,48",    0,               "window background color" },
+	{ "system_background",           "16,16,48",    0,               "menu background color" },
+	{ "cursor_selected_text",        "255,255,255", 0,               "cursor text color (selected)" },
+	{ "cursor_selected_bg",          "60,120,240",  0,               "cursor background color (selected)" },
+	{ "cursor_hover_text",           "120,180,240", 0,               "cursor text color (floating)" },
+	{ "cursor_hover_bg",             "32,32,0",     0,               "cursor background color (floating)" },
 	{ "button_red",                  "255,64,64",   0,               "button color (red)" },
 	{ "button_yellow",               "255,238,0",   0,               "button color (yellow)" },
 	{ "button_green",                "0,255,64",    0,               "button color (green)" },
@@ -214,7 +215,6 @@ const options_entry mame_core_options[] =
 	{ "button_silver",               "255,0,255",   0,               "button color (silver)" },
 	{ "button_navy",                 "255,160,0",   0,               "button color (navy)" },
 	{ "button_lime",                 "190,190,190", 0,               "button color (lime)" },
-	{ "cursor",                      "60,120,240",  0,               "cursor color" },
 #endif /* UI_COLOR_DISPLAY */
 
 	/* language options */

@@ -319,21 +319,21 @@ static void setup_palette(void)
 		UINT8 defval[3];
 	} palette_decode_table[] =
 	{
-//		{ OPTION_FONT_BLANK,         FONT_COLOR_BLANK,         { 0,0,0 } },
-//		{ OPTION_FONT_NORMAL,        FONT_COLOR_NORMAL,        { 255,255,255 } },
-//		{ OPTION_FONT_SPECIAL,       FONT_COLOR_SPECIAL,       { 247,203,0 } },
-		{ OPTION_SYSTEM_BACKGROUND,  SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
-		{ OPTION_BUTTON_RED,         BUTTON_COLOR_RED,         { 255,64,64 } },
-		{ OPTION_BUTTON_YELLOW,      BUTTON_COLOR_YELLOW,      { 255,238,0 } },
-		{ OPTION_BUTTON_GREEN,       BUTTON_COLOR_GREEN,       { 0,255,64 } },
-		{ OPTION_BUTTON_BLUE,        BUTTON_COLOR_BLUE,        { 0,170,255 } },
-		{ OPTION_BUTTON_PURPLE,      BUTTON_COLOR_PURPLE,      { 170,0,255 } },
-		{ OPTION_BUTTON_PINK,        BUTTON_COLOR_PINK,        { 255,0,170 } },
-		{ OPTION_BUTTON_AQUA,        BUTTON_COLOR_AQUA,        { 0,255,204 } },
-		{ OPTION_BUTTON_SILVER,      BUTTON_COLOR_SILVER,      { 255,0,255 } },
-		{ OPTION_BUTTON_NAVY,        BUTTON_COLOR_NAVY,        { 255,160,0 } },
-		{ OPTION_BUTTON_LIME,        BUTTON_COLOR_LIME,        { 190,190,190 } },
-		{ OPTION_CURSOR,             CURSOR_COLOR,             { 60,120,240 } },
+		{ OPTION_SYSTEM_BACKGROUND,     SYSTEM_COLOR_BACKGROUND,  { 16,16,48 } },
+		{ OPTION_CURSOR_SELECTED_TEXT,  CURSOR_SELECTED_TEXT,     { 255,255,255 } },
+		{ OPTION_CURSOR_SELECTED_BG,    CURSOR_SELECTED_BG,       { 60,120,240 } },
+		{ OPTION_CURSOR_HOVER_TEXT,     CURSOR_HOVER_TEXT,        { 120,180,240 } },
+		{ OPTION_CURSOR_HOVER_BG,       CURSOR_HOVER_BG,          { 32,32,0 } },
+		{ OPTION_BUTTON_RED,            BUTTON_COLOR_RED,         { 255,64,64 } },
+		{ OPTION_BUTTON_YELLOW,         BUTTON_COLOR_YELLOW,      { 255,238,0 } },
+		{ OPTION_BUTTON_GREEN,          BUTTON_COLOR_GREEN,       { 0,255,64 } },
+		{ OPTION_BUTTON_BLUE,           BUTTON_COLOR_BLUE,        { 0,170,255 } },
+		{ OPTION_BUTTON_PURPLE,         BUTTON_COLOR_PURPLE,      { 170,0,255 } },
+		{ OPTION_BUTTON_PINK,           BUTTON_COLOR_PINK,        { 255,0,170 } },
+		{ OPTION_BUTTON_AQUA,           BUTTON_COLOR_AQUA,        { 0,255,204 } },
+		{ OPTION_BUTTON_SILVER,         BUTTON_COLOR_SILVER,      { 255,0,255 } },
+		{ OPTION_BUTTON_NAVY,           BUTTON_COLOR_NAVY,        { 255,160,0 } },
+		{ OPTION_BUTTON_LIME,           BUTTON_COLOR_LIME,        { 190,190,190 } },
 		{ NULL }
 	};
 
@@ -382,7 +382,7 @@ static void setup_palette(void)
 		if (col == UI_FILLCOLOR)
 			rate = ui_transparency;
 		else
-		if (col == CURSOR_COLOR)
+		if (col == CURSOR_SELECTED_BG)
 		{
 			rate = ui_transparency / 2;
 			if (rate < 128)

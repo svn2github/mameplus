@@ -231,10 +231,10 @@ static const char *exittext = "Exit";
 
 static const rgb_t text_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
 static const rgb_t text_bgcolor = MAKE_ARGB(0xe0,0x80,0x80,0x80);
-static const rgb_t sel_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0xff);
-#define sel_bgcolor ui_get_rgb_color(CURSOR_COLOR)
-static const rgb_t mouseover_fgcolor = MAKE_ARGB(0xff,0x78,0xb4,0xf0);
-static const rgb_t mouseover_bgcolor = MAKE_ARGB(0x70,0x40,0x40,0x00);
+#define sel_fgcolor ui_get_rgb_color(CURSOR_SELECTED_TEXT)
+#define sel_bgcolor ui_get_rgb_color(CURSOR_SELECTED_BG)
+#define mouseover_fgcolor ui_get_rgb_color(CURSOR_HOVER_TEXT)
+#define mouseover_bgcolor ui_get_rgb_color(CURSOR_HOVER_BG)
 static const rgb_t mousedown_fgcolor = MAKE_ARGB(0xff,0xff,0xff,0x80);
 static const rgb_t mousedown_bgcolor = MAKE_ARGB(0xB0,0x60,0x60,0x00);
 
@@ -864,16 +864,19 @@ static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly
 		/* if we're selected, draw with a different background */
 		if (itemnum == menu->selected)
 		{
-			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_COLOR);
-			fgcolor = sel_fgcolor;
-			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
+			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_TEXT);
+			rgb_t bgcolor1 = ui_get_rgb_color(CURSOR_SELECTED_BG);
+			fgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
+			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor1), RGB_GREEN(bgcolor1), RGB_BLUE(bgcolor1));
 		}
 
 		/* else if the mouse is over this item, draw with a different background */
-			else if (itemnum == menu->hover)
+		else if (itemnum == menu->hover)
 		{
-			fgcolor = mouseover_fgcolor;
-				bgcolor = mouseover_bgcolor;
+			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_HOVER_TEXT);
+			rgb_t bgcolor1 = ui_get_rgb_color(CURSOR_HOVER_BG);
+			fgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
+			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor1), RGB_GREEN(bgcolor1), RGB_BLUE(bgcolor1));
 		}
 
 		/* if we have some background hilighting to do, add a quad behind everything else */
