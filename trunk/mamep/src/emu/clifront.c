@@ -374,21 +374,21 @@ void assign_drivers(core_options *options)
 	} drivers_table[] =
 	{
 		{ "mame",	mamedrivers },
-#ifndef TINY_NAME
+#ifndef TINY_BUILD
 		{ "plus",	plusdrivers },
 		{ "homebrew",	homebrewdrivers },
 		{ "decrypted",	decrypteddrivers },
 #ifdef MAMEMESS
 		{ "console",	consoledrivers },
 #endif /* MAMEMESS */
-#endif /* !TINY_NAME */
+#endif /* !TINY_BUILD */
 		{ NULL }
 	};
 
 	UINT32 enabled = 0;
 	int i, n;
 
-#ifndef TINY_NAME
+#ifndef TINY_BUILD
 	const char *drv_option = options_get_string(options, OPTION_DRIVER_CONFIG);
 	if (drv_option)
 	{
@@ -423,7 +423,7 @@ void assign_drivers(core_options *options)
  			free(temp);
 		}
 	}
-#endif /* !TINY_NAME */
+#endif /* !TINY_BUILD */
 
 	if (enabled == 0)
 		enabled = 1;	// default to mamedrivers
