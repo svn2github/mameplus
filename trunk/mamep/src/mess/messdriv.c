@@ -80,12 +80,12 @@ const game_driver *const consoledrivers[] =
 	DRIVER( pico )		/* 1994 Sega Pico (Europe)							*/
 	DRIVER( picou )		/* 1994 Sega Pico (USA)								*/
 	DRIVER( picoj )		/* 1993 Sega Pico (Japan)							*/
-#ifndef NEOCPSMAME	//fixme: compile bug?
+
 	/* NEC */
 	DRIVER( pce )		/* PC/Engine NEC 1987-1993							*/
 	DRIVER( tg16 )		/* Turbo Grafix-16  NEC 1989-1993					*/
 	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
-#endif 
+
 	/* CAPCOM */
 	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/
 

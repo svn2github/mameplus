@@ -1,9 +1,9 @@
 ###########################################################################
 #
-#   neocps.mak
+#   neocpspgm.mak
 #
 #   Small driver-specific example makefile
-#	Use make SUBTARGET=neocps to build
+#	Use make SUBTARGET=neocpspgm to build
 #
 #   Copyright Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
@@ -26,7 +26,7 @@ OBJDIRS += \
 	$(MACHINE) \
 	$(VIDEO) \
 
-DEFS += -DNEOCPSMAME
+DEFS += -DNEOCPSPGM
 
 
 
@@ -38,6 +38,7 @@ DEFS += -DNEOCPSMAME
 CPUS += Z80
 CPUS += M68000
 CPUS += SH2
+CPUS += ARM7
 CPUS += PIC16C57
 
 
@@ -56,6 +57,7 @@ SOUNDS += QSOUND
 SOUNDS += YM2610
 SOUNDS += YM2610B
 SOUNDS += CDDA
+SOUNDS += ICS2115
 
 
 
@@ -77,6 +79,7 @@ endif
 DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/neogeo.a \
+	$(MAMEOBJ)/igs.a \
 
 
 
@@ -97,6 +100,12 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
+
+$(MAMEOBJ)/igs.a: \
+	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
+	$(MACHINE)/pgmcrypt.o \
+	$(MACHINE)/pgmprot.o \
+	$(MACHINE)/pgmy2ks.o \
 
 
 

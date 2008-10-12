@@ -36,9 +36,9 @@ const game_driver * const homebrewdrivers[] =
 
 #else	/* DRIVER_RECURSIVE */
 
-#ifndef NEOCPSMAME
+#ifndef NEOCPSPGM
 	DRIVER( vantris )	/* (c) 1998 Norbert Kehrer */
-#endif /* NEOCPSMAME */
+#endif /* NEOCPSPGM */
 
 	/* neogeo homebrew */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */
