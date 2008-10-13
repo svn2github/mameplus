@@ -4763,10 +4763,9 @@ ROM_START( kof99p ) /* Prototype Version - Possibly Hacked */
 ROM_END
 
 ROM_START( kof99d )
-	ROM_REGION( 0x900000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "251-sma.kc",  0x0c0000, 0x040000, CRC(6c9d0647) SHA1(2a0ce62ca6c18007e8fbe1b60475c7874ab79389) )	/* stored in the custom chip */
-	ROM_LOAD16_WORD_SWAP( "251-p1.bin",  0x100000, 0x400000, CRC(006e4532) SHA1(47791ab4044ad55988b1d3412d95b65b91a163c8) )
-	ROM_LOAD16_WORD_SWAP( "251-pg2.bin", 0x500000, 0x400000, CRC(d9057f51) SHA1(8d365b4dd40351495df99d6c765df1434b0b0548) )
+	ROM_REGION( 0x500000, "main", 0 )
+	ROM_LOAD16_WORD_SWAP( "152-p1.bin", 0x000000, 0x100000, CRC(f2c7ddfa) SHA1(d592eecc53d442c55c2f26a6a721fdf2924d2a5b) )
+	ROM_LOAD16_WORD_SWAP( "152-p2.bin", 0x100000, 0x400000, CRC(274ef47a) SHA1(98654b68cc85c19d4a90b46f3110f551fa2e5357) )
 
 	ROM_Y_ZOOM
 
@@ -5062,10 +5061,9 @@ ROM_START( mslug3h ) /* Original Version - Encrypted GFX */ /* AES VERSION */
 ROM_END
 
 ROM_START( mslug3d )
-	ROM_REGION( 0x900000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "256-sma.bin", 0x0c0000, 0x040000, CRC(9cd55736) SHA1(d6efb2b313127c2911d47d9324626b3f1e7c6ccb) )	
-	ROM_LOAD16_WORD_SWAP( "256-p1.bin",  0x100000, 0x400000, CRC(b07edfd5) SHA1(dcbd9e500bfae98d754e55cdbbbbf9401013f8ee) )
-	ROM_LOAD16_WORD_SWAP( "256-p2.bin",  0x500000, 0x400000, CRC(6097c26b) SHA1(248ec29d21216f29dc6f5f3f0e1ad1601b3501b6) )
+	ROM_REGION( 0x500000, "main", 0 )
+	ROM_LOAD16_WORD_SWAP( "256-ph1.bin", 0x000000, 0x100000, CRC(9c42ca85) SHA1(7a8f77a89867b889295ae9b9dfd4ba28f02d234d) )
+	ROM_LOAD16_WORD_SWAP( "256-ph2.bin", 0x100000, 0x400000, CRC(1f3d8ce8) SHA1(08b05a8abfb86ec09a5e758d6273acf1489961f9) )
 
 	ROM_Y_ZOOM
 
@@ -5168,10 +5166,9 @@ ROM_START( kof2000n ) /* Original Version, Encrypted Sound + GFX Roms */
 ROM_END
 
 ROM_START( kof2000d )
-	ROM_REGION( 0x900000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "257-sma.bin", 0x0c0000, 0x040000, CRC(71c6e6bb) SHA1(1bd29ded4c6b29780db8e8b772c452189699ca89) )	
-	ROM_LOAD16_WORD_SWAP( "257-p1.bin",  0x100000, 0x400000, CRC(60947b4c) SHA1(5faa0a7ac7734d6c8e276589bd12dd574264647d) )
-	ROM_LOAD16_WORD_SWAP( "257-p2.bin",  0x500000, 0x400000, CRC(1b7ec415) SHA1(f19fa44e9ee5b5a6eb4a051349d6bc4acc3bbbdb) )
+	ROM_REGION( 0x500000, "main", 0 )
+	ROM_LOAD16_WORD_SWAP( "257-p1n.bin", 0x000000, 0x100000, CRC(5f809dbe) SHA1(2bc233dcff5622de86d01e3b74b840c7caf12982) )
+	ROM_LOAD16_WORD_SWAP( "257-p2n.bin", 0x100000, 0x400000, CRC(693c2c5e) SHA1(dc9121b7369ef46596343cac055a00aec81704d4) )
 
 	ROM_Y_ZOOM
 
@@ -5386,8 +5383,8 @@ ROM_END
 
 ROM_START( kof2001d )
 	ROM_REGION( 0x500000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "262-p1.bin", 0x000000, 0x100000, CRC(9381750d) SHA1(dcfecd69e563ff52fe07d23c5372d0f748b07819) )
-	ROM_LOAD16_WORD_SWAP( "262-p2.bin", 0x100000, 0x400000, CRC(8e0d8329) SHA1(10dcc1baf0aaf1fc84c4d856bca6bcff85aed2bc) )
+	ROM_LOAD16_WORD_SWAP( "262-pg1.bin", 0x000000, 0x100000, CRC(2af7e741) SHA1(e41282d73ed6d521da056f1a16573bb61bfa3826) )
+	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
 	ROM_Y_ZOOM
 
@@ -5421,10 +5418,10 @@ ROM_END
 
 ROM_START( kf2k1pls )
 	ROM_REGION( 0x500000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "262-p1p.bin", 0x000000, 0x100000, CRC(758529a7) SHA1(cefdc7049772dcb77d658ac8571a12eedabda3c9) )
+	ROM_LOAD16_WORD_SWAP( "2k1-p1p.bin", 0x000000, 0x100000, CRC(758529a7) SHA1(cefdc7049772dcb77d658ac8571a12eedabda3c9) )
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
-	NEO_SFIX_128K( "262-s1p.bin", CRC(088657e6) SHA1(7ab5eac3ff2a82e04fdc9dc8ee5d193db580e8d4) )
+	NEO_SFIX_128K( "2k1-s1p.bin", CRC(088657e6) SHA1(7ab5eac3ff2a82e04fdc9dc8ee5d193db580e8d4) )
 
 	/* Correct To Use Decrypted? */
 	NEO_BIOS_AUDIO_256K( "265-262_bootleg-m1.bin", CRC(4bcc537b) SHA1(9fcf1342bcd53d5eec12c46ee41a51bf543256c2) )
@@ -5451,10 +5448,10 @@ ROM_END
 
 ROM_START( kf2k1pa )
 	ROM_REGION( 0x500000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "262-p1pa.bin", 0x000000, 0x100000, CRC(f8a71b6f) SHA1(e4cc249b36b8cb72aa162adff4cdb302ce220812) )
+	ROM_LOAD16_WORD_SWAP( "2k1-p1a.bin", 0x000000, 0x100000, CRC(f8a71b6f) SHA1(e4cc249b36b8cb72aa162adff4cdb302ce220812) )
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
-	NEO_SFIX_128K( "262-s1pa.bin", CRC(50986eeb) SHA1(cdca34ba5afdd7b56cd5430b3df80da53de9b990) )
+	NEO_SFIX_128K( "2k1-s1a.bin", CRC(50986eeb) SHA1(cdca34ba5afdd7b56cd5430b3df80da53de9b990) )
 
 	/* Correct To Use Decrypted? */
 	NEO_BIOS_AUDIO_256K( "265-262_bootleg-m1.bin", CRC(4bcc537b) SHA1(9fcf1342bcd53d5eec12c46ee41a51bf543256c2) )
@@ -7937,10 +7934,10 @@ ROM_END
 /* news bootleg */
 ROM_START( kof97pla )
 	ROM_REGION( 0x500000, "main", 0 )
-	ROM_LOAD16_WORD_SWAP( "232-p1pa.bin", 0x000000, 0x100000, CRC(035911c5) SHA1(3321862384ec91174f1822cfdbc2bf1d1407e775) )
+	ROM_LOAD16_WORD_SWAP( "kf97-p1a.bin", 0x000000, 0x100000, CRC(035911c5) SHA1(3321862384ec91174f1822cfdbc2bf1d1407e775) )
 	ROM_LOAD16_WORD_SWAP( "232-p2.bin", 0x100000, 0x400000, CRC(158b23f6) SHA1(9744620a70513490aaf9c5eda33e5ec31222be19) )
 
-	NEO_SFIX_128K( "232-s1pa.bin", CRC(4ee2149a) SHA1(180a1a90021031eac1a643b769d9cdeda56518f5) )
+	NEO_SFIX_128K( "kf97-s1a.bin", CRC(4ee2149a) SHA1(180a1a90021031eac1a643b769d9cdeda56518f5) )
 
 	NEO_BIOS_AUDIO_128K( "232-m1.bin", CRC(45348747) SHA1(ed77cbae2b208d1177a9f5f6e8cd57070e90b65b) )
 
@@ -8438,13 +8435,6 @@ static DRIVER_INIT( kof99n )
 	DRIVER_INIT_CALL(neogeo);
 }
 
-static DRIVER_INIT( kof99d )
-{
-	kof99_decrypt_68k(machine);
-	driver_init_gfxdec42(machine);
-	kof99_install_protection(machine);
-}
-
 static DRIVER_INIT( garou )
 {
 	garou_decrypt_68k(machine);
@@ -8502,13 +8492,6 @@ static DRIVER_INIT( mslug3b6 )
 	DRIVER_INIT_CALL(neogeo);
 }
 
-static DRIVER_INIT( mslug3d )
-{
-	mslug3_decrypt_68k(machine);
-	driver_init_gfxdec42(machine);
-	mslug3_install_protection(machine);
-}
-
 static DRIVER_INIT( kof2000 )
 {
 	kof2000_decrypt_68k(machine);
@@ -8525,13 +8508,6 @@ static DRIVER_INIT( kof2000n )
 	neogeo_cmc50_m1_decrypt(machine);
 	kof2000_neogeo_gfx_decrypt(machine, 0x00);
 	DRIVER_INIT_CALL(neogeo);
-}
-
-static DRIVER_INIT( kof2000d )
-{
-	kof2000_decrypt_68k(machine);
-	driver_init_gfxdec50(machine);
-	kof2000_install_protection(machine);
 }
 
 static DRIVER_INIT( kof2001 )
@@ -9635,13 +9611,13 @@ GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "
 GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack",          "Zintrick / Oshidashi Zentrix (CD to MVS Conversion)", 0 )
 
 /* Decrypted */
-GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   kof99d,   ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (decrypted C)", 0 )
+GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", 0 )
 GAME( 1999, garoud,   garou,    neogeo,   neogeo,   garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
-GAME( 2000, mslug3d,  mslug3,   neogeo,   neogeo,   mslug3d,  ROT0, "SNK", "Metal Slug 3 (decrypted C)", 0 )
-GAME( 2000, kof2000d, kof2000,  neogeo,   neogeo,   kof2000d, ROT0, "SNK", "The King of Fighters 2000 (decrypted C)", 0 )
+GAME( 2000, mslug3d,  mslug3,   neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Metal Slug 3 (not encrypted P, decrypted C)", 0 )
+GAME( 2000, kof2000d, kof2000,  neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters 2000 (not encrypted P, decrypted C)", 0 )
 GAME( 2001, zupapad,  zupapa,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
 GAME( 2001, sengok3d, sengoku3, neogeo,   neogeo,   sengo3d,  ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
-GAME( 2001, kof2001d, kof2001,  neogeo,   neogeo,   gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (decrypted C)", 0 )
+GAME( 2001, kof2001d, kof2001,  neogeo,   neogeo,   gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2, decrypted C)", 0 )
 GAME( 2002, kof2002d, kof2002,  neogeo,   neogeo,   kof2002d, ROT0, "Eolith / Playmore", "The King of Fighters 2002 (decrypted C)", 0 )
 GAME( 2000, nitdd,    nitd,     neogeo,   neogeo,   nitdd,    ROT0, "Eleven / Gavaking", "Nightmare in the Dark (decrypted C)", 0 )
 GAME( 1999, s1945pd,  s1945p,   neogeo,   neogeo,   gfxdec42, ROT0, "Psikyo", "Strikers 1945 Plus (decrypted C)", 0 )
