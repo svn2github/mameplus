@@ -42,8 +42,11 @@ READ16_HANDLER( neogeo_unmapped_r );
 
 void kof99_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
 void kof2000_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
-void cmc50_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
 void cmc42_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
+void cmc50_neogeo_gfx_decrypt(running_machine *machine, int extra_xor);
+void neogeo_cmc50_m1_decrypt(running_machine *machine);
+void neo_pcm2_snk_1999(running_machine *machine, int value);
+void neo_pcm2_swap(running_machine *machine, int value);
 void neogeo_sfix_decrypt(running_machine *machine);
 void kof99_decrypt_68k(running_machine *machine);
 void garou_decrypt_68k(running_machine *machine);
@@ -66,10 +69,6 @@ void kof2003h_decrypt_68k(running_machine *machine);
 void kof2003biosdecode(running_machine *machine);
 void samsh5sp_decrypt_68k(running_machine *machine);
 
-void neo_pcm2_snk_1999(running_machine *machine, int value);
-void neo_pcm2_swap(running_machine *machine, int value);
-
-void neogeo_cmc50_m1_decrypt(running_machine *machine);
 
 /*----------- defined in machine/neoprot.c -----------*/
 
@@ -101,15 +100,9 @@ void patch_cthd2003(running_machine *machine);
 void decrypt_ct2k3sp(running_machine *machine);
 void decrypt_ct2k3sa(running_machine *machine);
 void patch_ct2k3sa(running_machine *machine);
-void decrypt_matrimbl(running_machine *machine);
 void decrypt_kof2k4se_68k(running_machine *machine);
 void lans2004_decrypt_68k(running_machine *machine);
 void lans2004_vx_decrypt(running_machine *machine);
-void kof96ep_px_decrypt(running_machine *machine);
-void kf2k1pa_sx_decrypt(running_machine *machine);
-void cthd2k3a_px_decrypt(running_machine *machine);
-void kf2k2mp_px_decrypt(running_machine *machine);
-void kof2002b_gfx_decrypt(running_machine *machine, UINT8 *src, int size);
 void install_ms5plus_protection(running_machine *machine);
 void svcboot_px_decrypt(running_machine *machine);
 void svcboot_cx_decrypt(running_machine *machine);
@@ -118,14 +111,21 @@ void svcplus_px_hack(running_machine *machine);
 void svcplusa_px_decrypt(running_machine *machine);
 void svcsplus_px_decrypt(running_machine *machine);
 void svcsplus_px_hack(running_machine *machine);
-void kof2003b_px_decrypt(running_machine *machine);
-void kof2003b_install_protection(running_machine *machine);
-void kof2k3pl_px_decrypt(running_machine *machine);
-void kof2k3up_px_decrypt(running_machine *machine);
-void kof2k3up_install_protection(running_machine *machine);
+void kf2k3bl_px_decrypt(running_machine *machine);
+void kf2k3bl_install_protection(running_machine *machine);
+void kf2k3pl_px_decrypt(running_machine *machine);
+void kf2k3upl_px_decrypt(running_machine *machine);
+void kf2k3upl_install_protection(running_machine *machine);
 void kf2k3pl_install_protection(running_machine *machine);
 void samsho5b_px_decrypt(running_machine *machine);
 void samsho5b_vx_decrypt(running_machine *machine);
+void matrimbl_decrypt(running_machine *machine);
+void decrypt_matrimbl(running_machine *machine);
+void kof96ep_px_decrypt(running_machine *machine);
+void kf2k1pa_sx_decrypt(running_machine *machine);
+void cthd2k3a_px_decrypt(running_machine *machine);
+void kf2k2mp_px_decrypt(running_machine *machine);
+void kof2002b_gfx_decrypt(running_machine *machine, UINT8 *src, int size);
 void cthd2003_AES_protection(running_machine *machine);
 void kof10thu_decrypt_68K(running_machine *machine);
 
