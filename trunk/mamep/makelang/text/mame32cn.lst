@@ -5103,6 +5103,7 @@ kf2k5uni	È­»Ê Ê®ÖÜÄê¼ÍÄî - ËùÓĞ¶ÓÎéµÄÕ½¶· 2005 Unique (µÁ°æ)	È­»Ê Ê®ÖÜÄê¼ÍÄî - Ë
 kf10thep	È­»Ê Ê®ÖÜÄê¼ÍÄî - ËùÓĞ¶ÓÎéµÄÕ½¶· Extra Plus (µÁ°æ)	È­»Ê Ê®ÖÜÄê¼ÍÄî - ËùÓĞ¶ÓÎéµÄÕ½¶· Extra Plus (µÁ°æ)	bootleg
 kof2k4se	È­»Ê ÌØ±ğ°æ 2004 (µÁ°æ)	È­»Ê ÌØ±ğ°æ 2004 (µÁ°æ)	bootleg
 matrim	ĞÂºÀÑªËÂÒ»×å - ¶·»é	ĞÂºÀÑªËÂÒ»×å - ¶·»é	Noise Factory / Atlus
+matrimbl	ĞÂºÀÑªËÂÒ»×å - ¶·»é (µÁ°æ)	ĞÂºÀÑªËÂÒ»×å - ¶·»é (µÁ°æ)	bootleg
 pnyaa	³èÎï·½¿é	³èÎï·½¿é	Aiky / Taito
 ms5pcb	ºÏ½ğµ¯Í· 5 (JAMMA PCB)	ºÏ½ğµ¯Í· 5 (JAMMA PCB)	SNK Playmore
 mslug5	ºÏ½ğµ¯Í· 5	ºÏ½ğµ¯Í· 5	SNK Playmore
@@ -7152,10 +7153,21 @@ carrera	±¬ÆÆ (°æ±¾ 6.7)	±¬ÆÆ (°æ±¾ 6.7)	BS Electronics
 pmpoker	»¨»¨¹«×ÓÖ½ÅÆ (µÂ¹ú°æ)	»¨»¨¹«×ÓÖ½ÅÆ (µÂ¹ú°æ)	PlayMan
 goldnpkr	»Æ½ğÆË¿Ë (´óÄĞº¢)	»Æ½ğÆË¿Ë (´óÄĞº¢)	Bonanza Enterprises, Ltd
 goldnpkb	»Æ½ğÆË¿Ë (Ğ¡ÄĞº¢)	»Æ½ğÆË¿Ë (Ğ¡ÄĞº¢)	Bonanza Enterprises, Ltd
-goldnpkc	»Æ½ğÆË¿Ë (Î´¼ÓÑº)	»Æ½ğÆË¿Ë (Î´¼ÓÑº)	Bootleg
-jokerpkr	µç¶¯ÆË¿Ë	µç¶¯ÆË¿Ë	Bootleg on Coinmaster hardware
-pottnpkr	½Ü¿ËµÄÖ½ÅÆ (µÁ°æ)	½Ü¿ËµÄÖ½ÅÆ (µÁ°æ)	Bootleg
-pottnpkb	½Ü¿ËµÄÖ½ÅÆ (µÁ°æ2)	½Ü¿ËµÄÖ½ÅÆ (µÁ°æ2)	Bootleg
+pottnpkr	½Ü¿ËµÄÖ½ÅÆ (µÚ1Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ1Ì×)	Bootleg
+potnpkra	½Ü¿ËµÄÖ½ÅÆ (µÚ2Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ2Ì×)	Bootleg on Coinmaster H/W
+potnpkrb	½Ü¿ËµÄÖ½ÅÆ (µÚ3Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ3Ì×)	Bootleg
+potnpkrc	½Ü¿ËµÄÖ½ÅÆ (µÚ4Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ4Ì×)	Bootleg
+potnpkrd	½Ü¿ËµÄÖ½ÅÆ (µÚ5Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ5Ì×)	Bootleg
+potnpkre	½Ü¿ËµÄÖ½ÅÆ (µÚ6Ì×)	½Ü¿ËµÄÖ½ÅÆ (µÚ6Ì×)	Bootleg
+goodluck	ºÃÔË	ºÃÔË	Unknown
+bsuerte	ºÃÔËÆø (Î÷°àÑÀ, µÚ1Ì×)	ºÃÔËÆø (Î÷°àÑÀ, µÚ1Ì×)	Unknown
+bsuertea	ºÃÔËÆø (Î÷°àÑÀ, µÚ2Ì×)	ºÃÔËÆø (Î÷°àÑÀ, µÚ2Ì×)	Unknown
+royale	Royale (ver.X)	Royale (ver.X)	Unknown
+witchcrd	Ä§·¨Ö½ÅÆ (Ó¢ÎÄ)	Ä§·¨Ö½ÅÆ (Ó¢ÎÄ)	Unknown
+witchcda	Ä§·¨Ö½ÅÆ (Î÷°àÑÀ, µÚ1Ì×)	Ä§·¨Ö½ÅÆ (Î÷°àÑÀ, µÚ1Ì×)	Unknown
+witchcdb	Ä§·¨Ö½ÅÆ (Î÷°àÑÀ, µÚ2Ì×)	Ä§·¨Ö½ÅÆ (Î÷°àÑÀ, µÚ2Ì×)	Unknown
+sloco93	³¬¼¶Æ´Í¼ 93 (Î÷°àÑÀ, µÚ1Ì×)	³¬¼¶Æ´Í¼ 93 (Î÷°àÑÀ, µÚ1Ì×)	Unknown
+sloco93a	³¬¼¶Æ´Í¼ 93 (Î÷°àÑÀ, µÚ2Ì×)	³¬¼¶Æ´Í¼ 93 (Î÷°àÑÀ, µÚ2Ì×)	Unknown
 comg076	Å·Ã×Ù¤ - ÓÎÏ· 7.6 (½Ö»ú ÆË¿Ë)	Å·Ã×Ù¤ - ÓÎÏ· 7.6 (½Ö»ú ÆË¿Ë)	Cal Omega Inc.
 comg079	Å·Ã×Ù¤ - ÓÎÏ· 7.9 (½Ö»ú ÆË¿Ë)	Å·Ã×Ù¤ - ÓÎÏ· 7.9 (½Ö»ú ÆË¿Ë)	Cal Omega Inc.
 comg080	Å·Ã×Ù¤ - ÓÎÏ· 8.0 (½Ö»ú ÆË¿Ë)	Å·Ã×Ù¤ - ÓÎÏ· 8.0 (½Ö»ú ÆË¿Ë)	Cal Omega Inc.
