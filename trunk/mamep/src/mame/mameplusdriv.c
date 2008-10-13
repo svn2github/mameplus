@@ -68,7 +68,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( kf2k2plb )	/* bootleg */
 	DRIVER( kf2k2plc )	/* bootleg */
 	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
-	DRIVER( matrimbl )	/* 0266 (c) 2002 bootleg */
 	DRIVER( mslug5b )	/* 0268 (c) 2003 bootleg */
 
 	/* CD to MVS Conversion */
