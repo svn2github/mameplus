@@ -1,25 +1,41 @@
-#####################################################################
-# make SUFFIX=32
-#####################################################################
+###########################################################################
+#
+#   winui.mak
+#
+#   winui (MameUI) makefile
+#
+#   Copyright (c) 1996-2007, Nicola Salmoria and the MAME Team.
+#   Visit http://mamedev.org for licensing and usage restrictions.
+#
+###########################################################################
+
+
+###########################################################################
+##################   END USER-CONFIGURABLE OPTIONS   ######################
+###########################################################################
+
 
 #-------------------------------------------------
 # object and source roots
 #-------------------------------------------------
 
-WINUISRC = $(SRC)/osd/winui
-WINUIOBJ = $(OBJ)/osd/winui
+# add ui specific src/objs
+UISRC = $(SRC)/osd/winui
+UIOBJ = $(OBJ)/osd/winui
 
-OBJDIRS += $(WINUIOBJ)
+OBJDIRS += $(UIOBJ)
 
 MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
-MESS_WINUISRC = $(SRC)/mess/osd/winui
-MESS_WINUIOBJ = $(OBJ)/mess/osd/winui
-OBJDIRS += $(MESS_WINUIOBJ)
-CFLAGS += -I$(WINUISRC) -I$(MESS_WINUISRC)
+MESS_UISRC = $(SRC)/mess/osd/winui
+MESS_UIOBJ = $(OBJ)/mess/osd/winui
+
+OBJDIRS += $(MESS_UIOBJ)
+
+CFLAGS += -I $(UISRC) -I $(MESS_UISRC)
 
 ifneq ($(USE_IMAGE_MENU),)
-    $(WINUIOBJ)/%.o: $(WINUISRC)/%.cpp
+    $(UIOBJ)/%.o: $(UISRC)/%.cpp
 	    @echo Compiling $<...
     ifneq ($(MSVC_BUILD),)
 	    $(CC) -mwindows -c $< -o $@
@@ -29,155 +45,177 @@ ifneq ($(USE_IMAGE_MENU),)
 endif
 
 #-------------------------------------------------
-# Windows UI object files
+# configure the resource compiler
 #-------------------------------------------------
 
-WINUIOBJS += \
-	$(WINUIOBJ)/mui_util.o \
-	$(WINUIOBJ)/directinput.o \
-	$(WINUIOBJ)/dijoystick.o \
-	$(WINUIOBJ)/directdraw.o \
-	$(WINUIOBJ)/directories.o \
-	$(WINUIOBJ)/mui_audit.o \
-	$(WINUIOBJ)/columnedit.o \
-	$(WINUIOBJ)/screenshot.o \
-	$(WINUIOBJ)/treeview.o \
-	$(WINUIOBJ)/splitters.o \
-	$(WINUIOBJ)/bitmask.o \
-	$(WINUIOBJ)/datamap.o \
-	$(WINUIOBJ)/dxdecode.o \
-	$(WINUIOBJ)/picker.o \
-	$(WINUIOBJ)/properties.o \
-	$(WINUIOBJ)/tabview.o \
-	$(WINUIOBJ)/help.o \
-	$(WINUIOBJ)/history.o \
-	$(WINUIOBJ)/dialogs.o \
-	$(WINUIOBJ)/mui_opts.o \
-	$(WINUIOBJ)/layout.o \
-	$(WINUIOBJ)/datafile.o \
-	$(WINUIOBJ)/dirwatch.o \
-	$(WINUIOBJ)/winui.o \
-	$(WINUIOBJ)/helpids.o \
-	$(WINUIOBJ)/translate.o \
+UI_RC = @windres --use-temp-file
 
-ifdef MAMEMESS
-    WINUIOBJS += $(MESS_WINUIOBJ)/optionsms.o
-endif
-ifneq ($(USE_UI_COLOR_PALETTE),)
-    WINUIOBJS += $(WINUIOBJ)/paletteedit.o
-endif
+UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 
-ifneq ($(USE_IMAGE_MENU),)
-    WINUIOBJS += $(WINUIOBJ)/imagemenu.o
-endif
-
-$(LIBOSD): $(WINUIOBJS)
-
-$(WINUIOBJ)/mameui.res: $(WINUISRC)/mameui.rc $(WINUIOBJ)/mamevers.rc
-
-$(WINUIOBJ)/winuiopt.o: $(WINUISRC)/optdef.h $(WINUISRC)/opthndlr.h $(WINUISRC)/opthndlr.c
+# include UISRC direcotry
+UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ) --include-dir $(MESS_UISRC)
 
 
-#####################################################################
-# compiler
 
-#
-# Preprocessor Definitions
-#
+#-------------------------------------------------
+# preprocessor definitions
+#-------------------------------------------------
 
 DEFS += \
 	-DWINVER=0x0500 \
 	-D_WIN32_IE=0x0500
 
 
-#####################################################################
-# Resources
 
-VERINFO32 = $(WINUIOBJ)/verinfo32$(EXE)
+#-------------------------------------------------
+# Windows-specific flags and libraries
+#-------------------------------------------------
 
-$(WINUIOBJ)/verinfo32.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
-	@echo Compiling $<...
-	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+LIBS += \
+	-lkernel32 \
+	-lshell32 \
+	-lshlwapi \
+	-lcomctl32 \
+	-lcomdlg32 \
+	-ladvapi32 \
+	-lddraw \
+	-ldinput \
+	-ldxguid
+ifeq ($(MSVC_BUILD),)
+	ifneq ($(USE_IMAGE_MENU),)
+		LIBS += \
+			-lmsimg32 \
+			-lstdc++
+	endif
+else
+		LIBS += -lhtmlhelp
+endif
 
-$(VERINFO32): $(WINUIOBJ)/verinfo32.o $(LIBOCORE)
-	@echo Linking $@...
-	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
-
-BUILD += $(VERINFO32)
 
 
-UI_RC = @windres --use-temp-file
+#-------------------------------------------------
+# OSD Windows library
+#-------------------------------------------------
 
-UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
+# add UI objs
+UIOBJS += \
+	$(UIOBJ)/mui_util.o \
+	$(UIOBJ)/directinput.o \
+	$(UIOBJ)/dijoystick.o \
+	$(UIOBJ)/directdraw.o \
+	$(UIOBJ)/directories.o \
+	$(UIOBJ)/mui_audit.o \
+	$(UIOBJ)/columnedit.o \
+	$(UIOBJ)/screenshot.o \
+	$(UIOBJ)/treeview.o \
+	$(UIOBJ)/splitters.o \
+	$(UIOBJ)/bitmask.o \
+	$(UIOBJ)/datamap.o \
+	$(UIOBJ)/dxdecode.o \
+	$(UIOBJ)/picker.o \
+	$(UIOBJ)/properties.o \
+	$(UIOBJ)/tabview.o \
+	$(UIOBJ)/help.o \
+	$(UIOBJ)/history.o \
+	$(UIOBJ)/dialogs.o \
+	$(UIOBJ)/mui_opts.o \
+	$(UIOBJ)/layout.o \
+	$(UIOBJ)/datafile.o \
+	$(UIOBJ)/dirwatch.o \
+	$(UIOBJ)/winui.o \
+	$(UIOBJ)/helpids.o \
+	$(UIOBJ)/translate.o \
 
-UI_RCFLAGS = -O coff --include-dir $(WINUISRC) --include-dir $(WINUIOBJ) --include-dir $(MESS_WINUISRC)
 
-$(WINUIOBJ)/%.res: $(WINUISRC)/%.rc
-	@echo Compiling mameui resources $<...
-	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+ifdef MAMEMESS
+    UIOBJS += $(MESS_UIOBJ)/optionsms.o
+endif
+ifneq ($(USE_UI_COLOR_PALETTE),)
+    UIOBJS += $(UIOBJ)/paletteedit.o
+endif
 
-$(WINUIOBJ)/mamevers.rc: $(VERINFO32) $(SRC)/version.c
-	@echo Emitting $@...
-	@$(VERINFO32) $(SRC)/version.c > $@
+ifneq ($(USE_IMAGE_MENU),)
+    UIOBJS += $(UIOBJ)/imagemenu.o
+endif
 
+# add our UI resources
 ifeq ($(NO_DLL),)
-    GUIRESFILE = $(WINUIOBJ)/mameui.res
+    GUIRESFILE = $(UIOBJ)/mameui.res
 else
     UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(WINUIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(WINUISRC)/mameui.rc $(WINUIOBJ)/mamevers.rc
-    GUIRESFILE =  $(WINUIOBJ)/mameui.res
+    $(UIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
+    GUIRESFILE =  $(UIOBJ)/mameui.res
 endif
+
+$(LIBOSD): $(UIOBJS)
+
 
 
 #-------------------------------------------------
 # rules for creating helpids.c 
 #-------------------------------------------------
 
-$(WINUISRC)/helpids.c : $(WINUIOBJ)/mkhelp$(EXE) $(WINUISRC)/resource.h $(WINUISRC)/resource.hm $(WINUISRC)/mameui.rc
-	$(WINUIOBJ)/mkhelp$(EXE) $(WINUISRC)/mameui.rc >$@
+$(UISRC)/helpids.c : $(UIOBJ)/mkhelp$(EXE) $(UISRC)/resource.h $(UISRC)/resource.hm $(UISRC)/mameui.rc
+	$(UIOBJ)/mkhelp$(EXE) $(UISRC)/mameui.rc >$@
 
 # rule to build the generator
-$(WINUIOBJ)/mkhelp$(EXE): $(WINUIOBJ)/mkhelp.o $(LIBOCORE)
+$(UIOBJ)/mkhelp$(EXE): $(UIOBJ)/mkhelp.o $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
 
 
-#####################################################################
-# Linker
 
-    LIBS += \
-		-lkernel32 \
-		-lshell32 \
-		-lshlwapi \
-		-lcomctl32 \
-		-lcomdlg32 \
-		-ladvapi32 \
-		-lddraw \
-		-ldinput \
-		-ldxguid
-ifeq ($(MSVC_BUILD),)
-    ifneq ($(USE_IMAGE_MENU),)
-    LIBS += \
-		-lmsimg32 \
-		-lstdc++
-    endif
-else
-    LIBS += -lhtmlhelp
-endif
+#-------------------------------------------------
+# rule for making the verinfo tool
+#-------------------------------------------------
 
-#####################################################################
-# CORE with MAMEUI options
+VERINFO = $(UIOBJ)/verinfo$(EXE)
 
-ifneq ($(USE_UI_COLOR_DISPLAY),)
-UI_RCDEFS += -DUI_COLOR_DISPLAY
-endif
+$(VERINFO): $(UIOBJ)/verinfo.o $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
+
+BUILD += $(VERINFO)
+
+
+
+#-------------------------------------------------
+# Specific rele to compile verinfo util.
+#-------------------------------------------------
+
+$(UIOBJ)/verinfo.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
+	@echo Compiling $<...
+	$(CC) $(CDEFS) -DWINUI=1 $(CFLAGS) -c $< -o $@
+
+
+
+#-------------------------------------------------
+# generic rule for the resource compiler for UI
+#-------------------------------------------------
+
+$(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
+	@echo Compiling mameui resources $<...
+	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
+
+
+
+#-------------------------------------------------
+# rules for resource file
+#-------------------------------------------------
+
+$(UIOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
+	@echo Emitting $@...
+	@$(VERINFO) $(SRC)/version.c > $@
+
+
+
+#-------------------------------------------------
+# CORE functions
+# only definitions for mameui.rc
+#-------------------------------------------------
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
 UI_RCDEFS += -DUI_COLOR_PALETTE
-endif
-
-ifneq ($(USE_IPS),)
-UI_RCDEFS += -DUSE_IPS
 endif
 
 ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
@@ -196,10 +234,6 @@ ifneq ($(USE_JOYSTICK_ID),)
 UI_RCDEFS += -DJOYSTICK_ID
 endif
 
-ifneq ($(USE_JOY_MOUSE_MOVE),)
-UI_RCDEFS += -DUSE_JOY_MOUSE_MOVE
-endif
-
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
 UI_RCDEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif
@@ -208,8 +242,11 @@ ifneq ($(USE_DRIVER_SWITCH),)
 UI_RCDEFS += -DDRIVER_SWITCH
 endif
 
-#####################################################################
-# MAMEUI specific options
+
+
+#-------------------------------------------------
+# MAMEUI-specific functions
+#-------------------------------------------------
 
 ifneq ($(USE_MISC_FOLDER),)
 DEFS += -DMISC_FOLDER
@@ -240,3 +277,10 @@ ifneq ($(USE_TREE_SHEET),)
 DEFS += -DTREE_SHEET
 UI_RCDEFS += -DTREE_SHEET
 endif
+
+ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
+DEFS += -DSHOW_UNAVAILABLE_FOLDER
+endif
+
+#####  End windui.mak ##############################################
+

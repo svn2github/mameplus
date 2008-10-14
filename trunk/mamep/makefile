@@ -278,13 +278,13 @@ endif
 
 ifdef MSVC_BUILD
     ifdef NO_FORCEINLINE
-        DEFS += -DINLINE="static __inline"
+    DEFS += -DINLINE="static __inline"
     else
-        DEFS += -DINLINE="static __forceinline"
+    DEFS += -DINLINE="static __forceinline"
     endif
 else
 # map the INLINE to something digestible by GCC
-    DEFS += -DINLINE="static __inline__"
+DEFS += -DINLINE="static __inline__"
 endif
 
 # define LSB_FIRST if we are a little-endian target
@@ -304,9 +304,9 @@ endif
 
 # define MAME_DEBUG if we are a debugging build
 ifdef DEBUG
-    DEFS += -DMAME_DEBUG
+DEFS += -DMAME_DEBUG
 else
-    DEFS += -DNDEBUG 
+DEFS += -DNDEBUG 
 endif
 
 # define MAME_PROFILER if we are a profiling build
@@ -319,65 +319,53 @@ DEFS += -DUSE_SCALE_EFFECTS
 endif
 
 ifneq ($(USE_TRANS_UI),)
-    DEFS += -DTRANS_UI
+DEFS += -DTRANS_UI
 endif
 
 ifneq ($(USE_INP_CAPTION),)
-    DEFS += -DINP_CAPTION
+DEFS += -DINP_CAPTION
 endif
 
 ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
-    DEFS += -DAUTO_PAUSE_PLAYBACK
+DEFS += -DAUTO_PAUSE_PLAYBACK
 endif
 
 ifneq ($(USE_UI_COLOR_DISPLAY),)
-    DEFS += -DUI_COLOR_DISPLAY
+DEFS += -DUI_COLOR_DISPLAY
     ifneq ($(USE_CMD_LIST),)
-        DEFS += -DCMD_LIST
+    DEFS += -DCMD_LIST
     endif
     ifneq ($(USE_CUSTOM_BUTTON),)
-        DEFS += -DUSE_CUSTOM_BUTTON
+    DEFS += -DUSE_CUSTOM_BUTTON
     endif
 endif
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
-    DEFS += -DUI_COLOR_PALETTE
-endif
-
-ifneq ($(USE_JOY_EXTRA_BUTTONS),)
-    DEFS += -DUSE_JOY_EXTRA_BUTTONS
+DEFS += -DUI_COLOR_PALETTE
 endif
 
 ifneq ($(USE_HISCORE),)
 DEFS += -DUSE_HISCORE
 endif
 
-ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
-    DEFS += -DSHOW_UNAVAILABLE_FOLDER
-endif
-
 ifneq ($(USE_IPS),)
-    DEFS += -DUSE_IPS
+DEFS += -DUSE_IPS
 endif
 
 ifneq ($(USE_VOLUME_AUTO_ADJUST),)
-    DEFS += -DUSE_VOLUME_AUTO_ADJUST
-endif
-
-ifneq ($(USE_SHOW_TIME),)
-    DEFS += -DUSE_SHOW_TIME
+DEFS += -DUSE_VOLUME_AUTO_ADJUST
 endif
 
 ifneq ($(USE_SHOW_INPUT_LOG),)
-    DEFS += -DUSE_SHOW_INPUT_LOG
+DEFS += -DUSE_SHOW_INPUT_LOG
 endif
 
 ifneq ($(USE_DRIVER_SWITCH),)
-    DEFS += -DDRIVER_SWITCH
+DEFS += -DDRIVER_SWITCH
 endif
 
 ifneq ($(MAMEMESS),)
-    DEFS += -DMAMEMESS
+DEFS += -DMAMEMESS
 endif
 
 

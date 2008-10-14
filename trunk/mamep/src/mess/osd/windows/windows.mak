@@ -61,7 +61,7 @@ $(OBJ)/ui/%.res: src/ui/%.rc
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir src/ui -o $@ -i $<
 
-$(MESS_WINUIOBJ)/%.res: $(MESS_WINUISRC)/%.rc
+$(MESS_UIOBJ)/%.res: $(MESS_UISRC)/%.rc
 	@echo Compiling mame32 resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 
