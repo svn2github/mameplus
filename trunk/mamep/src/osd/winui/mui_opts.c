@@ -277,8 +277,6 @@ static core_options *settings;
 
 static core_options *global = NULL;			// Global 'default' options
 
-static core_options *mamecore = NULL;			//mamep: running mame core setting
-
 // UI options in mameui.ini
 static const options_entry regSettings[] =
 {
@@ -448,7 +446,7 @@ static const options_entry perGameOptions[] =
 	{ "_play_time",              "0",        0,                 NULL },
 	{ "_rom_audit",              "-1",       0,                 NULL },
 	{ "_samples_audit",          "-1",       0,                 NULL },
-#ifdef MESS
+#if 1
 	{ "_extra_software",         "",         0,                 MESS_MARK_CONSOLE_ONLY },
 #endif
 	{ NULL }
@@ -603,9 +601,6 @@ BOOL OptionsInit()
 	if (!options_memory_pool)
 		return FALSE;
 
-	//mamep: initialize running mame core setting
-	mamecore = mame_options_init(mame_win_options);
-
 	// set up the MAME32 settings (these get placed in MAME32ui.ini
 	settings = options_create(memory_error);
 	options_add_entries(settings, regSettings);
@@ -625,20 +620,20 @@ BOOL OptionsInit()
 		while(perGameOptions[game_option_count].name)
 			game_option_count++;
 
-#ifdef MAMEMESS
+#if 1
 		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * (sizeof(*driver_per_game_options) + 1));
-#else /* MAMEMESS */
+#else
 		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * sizeof(*driver_per_game_options));
-#endif /* MAMEMESS */
+#endif
 		n = 0;
 
 		for (i = 0; i < driver_list_get_count(drivers); i++)
 		{
 			for (j = 0; j < game_option_count; j++)
 			{
-#ifdef MAMEMESS
+#if 1
 				if (j == 0)
 				{
 					ent = &driver_per_game_options[n++];
@@ -654,9 +649,9 @@ BOOL OptionsInit()
 				}
 
 				ent = &driver_per_game_options[n++];
-#else /* MAMEMESS */
+#else
 				ent = &driver_per_game_options[i * game_option_count + j];
-#endif /* MAMEMESS */
+#endif
 
 				snprintf(buffer, ARRAY_LENGTH(buffer), "%s%s", drivers[i]->name, perGameOptions[j].name);
 
@@ -667,11 +662,11 @@ BOOL OptionsInit()
 				ent->description = perGameOptions[j].description;
 			}
 		}
-#ifdef MAMEMESS
+#if 1
 		ent = &driver_per_game_options[n++];
-#else /* MAMEMESS */
+#else
 		ent = &driver_per_game_options[driver_list_get_count(drivers) * game_option_count];
-#endif /* MAMEMESS */
+#endif
 		memset(ent, 0, sizeof(*ent));
 		options_add_entries(settings, driver_per_game_options);
 	}
@@ -703,10 +698,6 @@ void OptionsExit(void)
 	// free settings
 	options_free(settings);
 	settings = NULL;
-
-	//mamep: free running mame core setting
-	options_free(mamecore);
-	mamecore = NULL;
 
 	// free the memory pool
 	pool_free(options_memory_pool);
@@ -1664,6 +1655,7 @@ void SetPcbInfoDir(const WCHAR *path)
 	options_set_wstring(settings, MUIOPTION_PCBINFO_DIRECTORY, path, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* USE_VIEW_PCBINFO */
+
 const char* GetSnapName(void)
 {
 	return options_get_string(global, OPTION_SNAPNAME);
@@ -2540,17 +2532,6 @@ void SetShowTreeSheet(BOOL val)
 	options_set_bool(settings, MUIOPTION_SHOW_TREE_SHEET, val, OPTION_PRIORITY_CMDLINE);
 }
 #endif /* TREE_SHEET */
-
-
-core_options *get_core_options(void)
-{
-	return mamecore;
-}
-
-void set_core_snapshot_directory(const WCHAR *dir)
-{
-	options_set_wstring(mamecore, OPTION_SNAPSHOT_DIRECTORY, dir, OPTION_PRIORITY_CMDLINE);
-}
 
 /***************************************************************************
     Internal functions
@@ -3492,3 +3473,6 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_op
 
 	return result;
 }
+
+
+

@@ -200,53 +200,128 @@ void FreeScreenShot(void)
 	current_image_type = -1;
 }
 
+static const zip_file_header *zip_file_seek_file(zip_file *zip, const char *filename)
+{
+	const zip_file_header *header;
+	char *new_filename;
+	int i;
+
+	// we need to change filename; allocate a copy
+	new_filename = malloc(strlen(filename) + 1);
+	if (!new_filename)
+		return NULL;
+	
+	// change all backslashes to forward slashes
+	for (i = 0; filename[i]; i++)
+		new_filename[i] = (filename[i] != '\\') ? filename[i] : '/';
+	new_filename[i] = '\0';
+
+	// find the entry
+	header = zip_file_first_file(zip);
+	while(header && mame_stricmp(header->filename, new_filename))
+	{
+		header = zip_file_next_file(zip);
+	}
+
+	free(new_filename);
+	return header;
+}
+
+static file_error OpenDIBFile(const char *dir_name, const char *zip_name, const char *filename,
+	core_file **file, void **buffer)
+{
+	file_error filerr;
+	zip_error ziperr;
+	zip_file *zip;
+	const zip_file_header *zip_header;
+	astring *fname;
+
+	// clear out result
+	*file = NULL;
+
+	// look for the raw file
+	fname = astring_assemble_3(astring_alloc(), dir_name, PATH_SEPARATOR, filename);
+	filerr = core_fopen(astring_c(fname), OPEN_FLAG_READ, file);
+	astring_free(fname);
+
+	// did the raw file not exist?
+	if (filerr != FILERR_NONE)
+	{
+		// look into zip file
+		fname = astring_assemble_4(astring_alloc(), dir_name, PATH_SEPARATOR, zip_name, ".zip");
+		ziperr = zip_file_open(astring_c(fname), &zip);
+		astring_free(fname);
+		if (ziperr == ZIPERR_NONE)
+		{
+			zip_header = zip_file_seek_file(zip, filename);
+			if (zip_header != NULL)
+			{
+				*buffer = malloc(zip_header->uncompressed_length);
+				ziperr = zip_file_decompress(zip, *buffer, zip_header->uncompressed_length);
+				if (ziperr == ZIPERR_NONE)
+				{
+					filerr = core_fopen_ram(*buffer, zip_header->uncompressed_length, OPEN_FLAG_READ, file);
+				}
+			}
+			zip_file_close(zip);
+		}
+	}
+	return filerr;
+}
+
 BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type)
 {
-	const WCHAR *zip_name = NULL;
-	const WCHAR *basedir = NULL;
-	char *utf8filename;
-	astring *fname;
-	mame_file *mfile;
 	file_error filerr;
-	BOOL success;
+	core_file *file = NULL;
+	BOOL success = FALSE;
+	const WCHAR *zip_name;
+	const WCHAR *dir_name;
+	astring *fname;
+	void *buffer = NULL;
+	char *utf8filename;
+	char *utf8zip_name;
+	char *utf8dir_name;
+	if (pPal != NULL ) {
+		DeletePalette(pPal);
+	}
 
 	switch (pic_type)
 	{
 	case TAB_SCREENSHOT :
-		basedir = GetImgDir();
+		dir_name = GetImgDir();
 		zip_name = TEXT("snap");
 		break;
 	case TAB_FLYER :
-		basedir = GetFlyerDir();
+		dir_name = GetFlyerDir();
 		zip_name = TEXT("flyers");
 		break;
 	case TAB_CABINET :
-		basedir = GetCabinetDir();
+		dir_name = GetCabinetDir();
 		zip_name = TEXT("cabinets");
 		break;
 	case TAB_MARQUEE :
-		basedir = GetMarqueeDir();
-		zip_name =TEXT( "marquees");
+		dir_name = GetMarqueeDir();
+		zip_name = TEXT( "marquees");
 		break;
 	case TAB_TITLE :
-		basedir = GetTitlesDir();
+		dir_name = GetTitlesDir();
 		zip_name = TEXT("titles");
 		break;
 	case TAB_CONTROL_PANEL :
-		basedir = GetControlPanelDir();
+		dir_name = GetControlPanelDir();
 		zip_name = TEXT("cpanel");
 		break;
         case TAB_PCB :
-		basedir = GetPcbDir();
+		dir_name = GetPcbDir();
 		zip_name = TEXT("pcb");
-			break;
+		break;
 	case BACKGROUND :
-		basedir = GetBgDir();
+		dir_name = GetBgDir();
 		zip_name = TEXT("bkground");
 		break;
 #ifdef USE_IPS
 	case TAB_IPS :
-		basedir = GetIPSDir();
+		dir_name = GetIPSDir();
 		zip_name = TEXT("ips");
 		break;
 #endif /* USE_IPS */
@@ -255,96 +330,53 @@ BOOL LoadDIB(const WCHAR *filename, HGLOBAL *phDIB, HPALETTE *pPal, int pic_type
 		return FALSE;
 	}
 
-	set_core_snapshot_directory(basedir);
-
 	utf8filename = utf8_from_wstring(filename);
+	utf8zip_name = utf8_from_wstring(zip_name);
+	utf8dir_name = utf8_from_wstring(dir_name);
 
-	// look for the raw file
+	//Add handling for the displaying of all the different supported snapshot patterntypes
+	//%g
 	fname = astring_assemble_2(astring_alloc(), utf8filename, ".png");
-	filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
+	filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
 	astring_free(fname);
-
-	if (filerr != FILERR_NONE)
-	{
-		enum
-		{
-			SNAPSHOT_FILE_DRIVERNAME = 0,
-			SNAPSHOT_FILE_NUMBER,
-			SNAPSHOT_FILE_FINAL,
-			SNAPSHOT_FILE_MAX
-		};
-		int i;
-		const WCHAR *filenames[SNAPSHOT_FILE_MAX];
-
-		filenames[SNAPSHOT_FILE_DRIVERNAME] = filename;
-		filenames[SNAPSHOT_FILE_NUMBER] = TEXT("0000");
-		filenames[SNAPSHOT_FILE_FINAL] = TEXT("final");
-
-		// and look into sub directory
-		for (i = 0; i < SNAPSHOT_FILE_MAX; i++)
-		{
-			const WCHAR *curfile = filenames[i];
-			char *utf8curfile = utf8_from_wstring(curfile);
-
-			//dwprintf(TEXT("try %s/%s"), filename, curfile);
-
-			fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8curfile, ".png");
-			filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
-			astring_free(fname);
-
-			free(utf8curfile);
-
-			if (filerr == FILERR_NONE)
-			{
-				// find maximum number
-				if (i == SNAPSHOT_FILE_NUMBER)
-				{
-					for (i = 1; i < 10000; i++)
-					{
-						char buf[MAX_PATH];
-						mame_file *mtmpfile;
-
-						sprintf(buf, "%s" PATH_SEPARATOR "%04d.png", utf8filename, i);
-						filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, buf, OPEN_FLAG_READ, &mtmpfile);
-
-						if (filerr != FILERR_NONE)
-							break;
-
-						mame_fclose(mfile);
-						mfile = mtmpfile;
-					}
-
-					dprintf("max: %04d", i - 1);
-					filerr = FILERR_NONE;
-				}
-
-				break;
-			}
-		}
+	if (filerr != FILERR_NONE) {
+		//%g/%i
+		fname = astring_assemble_3(astring_alloc(), utf8filename, PATH_SEPARATOR, "0000.png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
+		astring_free(fname);
+	}
+	if (filerr != FILERR_NONE) {
+		//%g%i
+		fname = astring_assemble_2(astring_alloc(), utf8filename, "0000.png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
+		astring_free(fname);
+	}
+	if (filerr != FILERR_NONE) {
+		//%g/%g
+		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
+		astring_free(fname);
+	}
+	if (filerr != FILERR_NONE) {
+		//%g/%g%i
+		fname = astring_assemble_4(astring_alloc(), utf8filename, PATH_SEPARATOR, utf8filename, ".png");
+		filerr = OpenDIBFile(utf8dir_name, utf8zip_name, astring_c(fname), &file, &buffer);
+		astring_free(fname);
 	}
 
-	if (filerr != FILERR_NONE)
-	{
-		char *utf8zip_name = utf8_from_wstring(zip_name);
+	if (filerr == FILERR_NONE) {
+		success = png_read_bitmap_gui(file, phDIB, pPal);
+		core_fclose(file);
+	}
 
-		//dwprintf(TEXT("try %s/%s"), zip_name, filename);
-
-		// and look for the zip
-		fname = astring_assemble_4(astring_alloc(), utf8zip_name, PATH_SEPARATOR, utf8filename, ".png");
-		filerr = mame_fopen_options(get_core_options(), SEARCHPATH_SCREENSHOT, astring_c(fname), OPEN_FLAG_READ, &mfile);
-		astring_free(fname);
-
-		free(utf8zip_name);
+	// free the buffer if we have to
+	if (buffer != NULL) {
+		free(buffer);
 	}
 
 	free(utf8filename);
-
-	if (filerr != FILERR_NONE)
-		return FALSE;
-
-	success = png_read_bitmap_gui(mame_core_file(mfile), phDIB, pPal);
-
-	mame_fclose(mfile);
+	free(utf8zip_name);
+	free(utf8dir_name);
 
 	return success;
 }

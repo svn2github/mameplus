@@ -577,8 +577,5 @@ BOOL GetShowTreeSheet(void);
 void SetShowTreeSheet(BOOL val);
 #endif /* TREE_SHEET */
 
-core_options *get_core_options(void);
-void set_core_snapshot_directory(const WCHAR *dir);
-
 #endif
 
