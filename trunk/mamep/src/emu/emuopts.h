@@ -180,13 +180,13 @@
 #define OPTION_UI_TRANSPARENCY			"ui_transparency"
 #endif /* TRANS_UI */
 
-/* core palette options */
 #ifdef UI_COLOR_DISPLAY
-#define OPTION_SYSTEM_BACKGROUND		"system_background"
-#define OPTION_CURSOR_SELECTED_TEXT		"cursor_selected_text"
-#define OPTION_CURSOR_SELECTED_BG		"cursor_selected_bg"
-#define OPTION_CURSOR_HOVER_TEXT		"cursor_hover_text"
-#define OPTION_CURSOR_HOVER_BG			"cursor_hover_bg"
+/* core palette options */
+#define OPTION_SYSTEM_BACKGROUND		"main_background"
+#define OPTION_CURSOR_SELECTED_TEXT		"cursor_sel_text"
+#define OPTION_CURSOR_SELECTED_BG		"cursor_sel_background"
+#define OPTION_CURSOR_HOVER_TEXT		"cursor_hov_text"
+#define OPTION_CURSOR_HOVER_BG			"cursor_hov_background"
 #define OPTION_BUTTON_RED			"button_red"
 #define OPTION_BUTTON_YELLOW			"button_yellow"
 #define OPTION_BUTTON_GREEN			"button_green"

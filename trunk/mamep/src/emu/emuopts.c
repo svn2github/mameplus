@@ -200,11 +200,11 @@ const options_entry mame_core_options[] =
 #ifdef UI_COLOR_DISPLAY
 	/* palette options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PALETTE OPTIONS" },
-	{ "system_background",           "16,16,48",    0,               "menu background color" },
-	{ "cursor_selected_text",        "255,255,255", 0,               "cursor text color (selected)" },
-	{ "cursor_selected_bg",          "60,120,240",  0,               "cursor background color (selected)" },
-	{ "cursor_hover_text",           "120,180,240", 0,               "cursor text color (floating)" },
-	{ "cursor_hover_bg",             "32,32,0",     0,               "cursor background color (floating)" },
+	{ "main_background",             "16,16,48",    0,               "main background color" },
+	{ "cursor_sel_text",             "255,255,255", 0,               "cursor text color (selected)" },
+	{ "cursor_sel_background",       "60,120,240",  0,               "cursor background color (selected)" },
+	{ "cursor_hov_text",             "120,180,240", 0,               "cursor text color (floating)" },
+	{ "cursor_hov_background",       "32,32,0",     0,               "cursor background color (floating)" },
 	{ "button_red",                  "255,64,64",   0,               "button color (red)" },
 	{ "button_yellow",               "255,238,0",   0,               "button color (yellow)" },
 	{ "button_green",                "0,255,64",    0,               "button color (green)" },

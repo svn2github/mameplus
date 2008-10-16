@@ -103,7 +103,7 @@ static void InitializePaletteUI(HWND hwnd)
 {
 	static const WCHAR *palette_names[MAX_COLORTABLE] =
 	{
-		TEXT("Menu background"),
+		TEXT("Main background"),
 		TEXT("Cursor text (selected)"),
 		TEXT("Cursor background (selected)"),
 		TEXT("Cursor text (floating)"),
