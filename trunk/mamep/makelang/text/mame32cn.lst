@@ -995,7 +995,7 @@ nss_fzer	零式赛车 (超级任天堂系统)	零式赛车 (超级任天堂系统)	Nintendo
 nss_sten	超级网球 (超级任天堂系统)	超级网球 (超级任天堂系统)	Nintendo
 kinstb	杀手学堂 (SNES 盗版)	杀手学堂 (SNES 盗版)	bootleg
 ffight2b	快打旋风 2 (SNES 盗版)	快打旋风 2 (SNES 盗版)	bootleg
-sblast2b	索尼克竞速 2 (SNES 盗版)	索尼克竞速 2 (SNES 盗版)	bootleg
+sblast2b	音速超人 2 - 加速版 (SNES 盗版)	音速超人 2 - 加速版 (SNES 盗版)	bootleg
 seawolf	海狼	海狼	Midway
 gunfight	枪战	枪战	Midway
 tornbase	旋风棒球 / 棒球场	旋风棒球 / 棒球场	Midway / Taito
@@ -1658,7 +1658,7 @@ viofighu	暴力格斗 (美版)	暴力格斗 (美版)	Taito America Corporation
 ashura	阿修罗风暴 (日版)	阿修罗风暴 (日版)	Taito Corporation
 ashurau	阿修罗风暴 (美版)	阿修罗风暴 (美版)	Taito America Corporation
 hitice	暴力冰上曲棍球 (美版)	暴力冰上曲棍球 (美版)	Williams
-sbm	超级拳王 (日版)	超级拳王 (日版)	Taito Corporation
+sbm	音速超人 (日版)	音速超人 (日版)	Taito Corporation
 selfeena	魔法公主	魔法公主	East Technology
 silentd	沉默之龙 (世界版)	沉默之龙 (世界版)	Taito Corporation Japan
 silentdu	沉默之龙 (美版)	沉默之龙 (美版)	Taito America Corporation
@@ -2443,6 +2443,7 @@ sfz3ar1	少年街霸 3 (亚洲版 980701)	少年街霸 3 (亚洲版 980701)	Capcom
 gigawing	雷鸟之翼 (美版 990222)	雷鸟之翼 (美版 990222)	Capcom, supported by Takumi
 gwingj	雷鸟之翼 (日版 990223)	雷鸟之翼 (日版 990223)	Capcom, supported by Takumi
 gwinga	雷鸟之翼 (亚洲版 990222)	雷鸟之翼 (亚洲版 990222)	Capcom, supported by Takumi
+gwingb	雷鸟之翼 (巴西版 990222)	雷鸟之翼 (巴西版 990222)	Capcom, supported by Takumi
 jyangoku	雀国志: 覇王の采牌 (日版 990527)	雀国志: 覇王の采牌 (日版 990527)	Capcom
 dimahoo	疾风魔法大作战 (欧洲版 000121)	疾风魔法大作战 (欧洲版 000121)	Eighting/Raizing, distributed by Capcom
 dimahoou	疾风魔法大作战 (美版 000121)	疾风魔法大作战 (美版 000121)	Eighting/Raizing, distributed by Capcom
@@ -3597,7 +3598,7 @@ cvs2gd	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)
 ikaruga	斑鸠 (GDL-0010)	斑鸠 (GDL-0010)	Treasure
 ggxx	罪恶工具 XX (GDL-0011)	罪恶工具 XX (GDL-0011)	unknown
 chocomk	Musapey's Choco Marker (GDL-0014A)	Musapey's Choco Marker (GDL-0014A)	unknown
-quizqgd	Quiz Keitai Q mode (GDL-0017)	Quiz Keitai Q mode (GDL-0017)	unknown
+quizqgd	问答手机 Q 模式 (GDL-0017)	问答手机 Q 模式 (GDL-0017)	unknown
 ggxxrl	罪恶工具 XX #Reload (GDL-0019A)	罪恶工具 XX #Reload (GDL-0019A)	unknown
 shikgam2	式神之城 II (GDL-0021)	式神之城 II (GDL-0021)	unknown
 meltybld	月姬格斗 (GDL-0028C)	月姬格斗 (GDL-0028C)	Ecole
@@ -7331,7 +7332,6 @@ kof2002b	拳皇 2002 - 终极挑战 (盗版)	拳皇 2002 - 终极挑战 (盗版)	bootleg
 kf2k2plb	拳皇 2002 - 终极挑战 Plus (盗版 / 第3套)	拳皇 2002 - 终极挑战 Plus (盗版 / 第3套)	bootleg
 kf2k2plc	拳皇 2002 - 终极挑战 Super (盗版 / 第4套)	拳皇 2002 - 终极挑战 Super (盗版 / 第4套)	bootleg
 kf2k4pls	拳皇 2004 特别版 Plus (盗版)	拳皇 2004 特别版 Plus (盗版)	bootleg
-matrimbl	新豪血寺一族 - 斗婚 (盗版)	新豪血寺一族 - 斗婚 (盗版)	bootleg
 mslug5b	合金弹头 5 (盗版)	合金弹头 5 (盗版)	bootleg
 zintrkcd	诡计 / 挑战史来姆 (CD to MVS 转换)	诡计 / 挑战史来姆 (CD to MVS 转换)	hack
 fr2ch	偶像麻雀 - 最终罗曼史 2 (CD to MVS 转换)	偶像麻雀 - 最终罗曼史 2 (CD to MVS 转换)	hack
@@ -7400,7 +7400,7 @@ mslug5d	合金弹头 5 (完全解密)	合金弹头 5 (完全解密)	SNK / Playmore
 samsho5d	侍魂 V / 侍魂 零 (C 解密)	侍魂 V / 侍魂 零 (C 解密)	Yuki Enterprise / SNK Playmore
 samsh5sd	侍魂 V Special / 侍魂 零 特别版 (C 解密)	侍魂 V Special / 侍魂 零 特别版 (C 解密)	Yuki Enterprise / SNK Playmore
 lans2k4d	突击骑兵 / 雇拥兵 2004 (盗版 / 完全解密)	突击骑兵 / 雇拥兵 2004 (盗版 / 完全解密)	bootleg
-svcd	SVC混沌: SNK 对 Capcom (MVS / C 解密)	SVC混沌: SNK 对 Capcom (MVS / C 解密)	SNK Playmore
+svcd	SVC混沌: SNK 对 Capcom (C 解密)	SVC混沌: SNK 对 Capcom (C 解密)	SNK Playmore
 jckeygpd	赌马 (C 解密)	赌马 (C 解密)	Sun Amusement / BrezzaSoft
 kf2k3pcd	拳皇 2003 (日版, JAMMA PCB / C&Bios 解密)	拳皇 2003 (日版, JAMMA PCB / C&Bios 解密)	SNK Playmore
 kogd	格斗之王 (盗版 / 完全解密)	格斗之王 (盗版 / 完全解密)	bootleg
