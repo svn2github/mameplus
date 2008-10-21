@@ -1348,6 +1348,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"dinoh",    CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"dinoha",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"dinohb",   CPS_B_21_QS2, mapper_CD63B, 0, 0, 0, 5 },	/* layer enable never used */
+	{"dinohc",   CPS_B_21_DEF, mapper_CD63B },	/* layer enable never used */
 	{"punishrh", CPS_B_21_DEF, mapper_PS63B },
 	{"wofh",     HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
 	{"wofha",    HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
@@ -1505,7 +1506,8 @@ static MACHINE_RESET( cps )
 		rom[0xe5332/2] = 0x6014;
 	}
 	if ((strcmp(gamename, "dinoh" )==0) ||
-		(strcmp(gamename, "dinoha" )==0))
+		(strcmp(gamename, "dinoha" )==0) ||
+		(strcmp(gamename, "dinohc" )==0))
 	{
 		/* Patch out Q-Sound test */
 		UINT16 *rom = (UINT16 *)memory_region(machine, "main");
