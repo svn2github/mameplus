@@ -1,24 +1,20 @@
-# 286
+#
 Bootleg And Clone
 해적판 및 클론
 
-# Title
+#
 IPS
 IPS
 
-# 64
+#
 Misc
 기타
 
-# 139
+#
 Neo-Geo
 네오지오
 
-# 7
+#
 Translation
 번역판
-
-# 105
-CPS 1/2/3
-
 
