@@ -1228,7 +1228,7 @@ atomboy	原子男孩 (校正版 B)	原子男孩 (校正版 B)	Irem (Memetron license)
 atomboya	原子男孩 (校正版 A)	原子男孩 (校正版 A)	Irem (Memetron license)
 fghtbskt	战斗篮球	战斗篮球	Paradise Co. Ltd.
 kungfum	成龙踢馆	成龙踢馆	Irem
-kungfud	成龙踢馆 (Data East)	成龙踢馆 (Data East)	Irem (Data East license)
+kungfud	成龙踢馆 (东方数据)	成龙踢馆 (东方数据)	Irem (Data East license)
 spartanx	成龙踢馆 Spartan X (日版)	成龙踢馆 Spartan X (日版)	Irem
 kungfub	成龙踢馆 (盗版 第1套)	成龙踢馆 (盗版 第1套)	bootleg
 kungfub2	成龙踢馆 (盗版 第2套)	成龙踢馆 (盗版 第2套)	bootleg
@@ -1338,6 +1338,7 @@ gunforc2	钢炮部队 2 (美版)	钢炮部队 2 (美版)	Irem
 geostorm	钢炮部队 2 (日版)	钢炮部队 2 (日版)	Irem
 firebarr	火爆战机 (日版)	火爆战机 (日版)	Irem
 dsoccr94	梦幻足球 '94	梦幻足球 '94	Irem (Data East Corporation license)
+kftgoal	射门	射门l	Jaleco
 wpksoc	世界足球PK大赛	世界足球PK大赛	Jaleco
 reactor	反应器	反应器	Gottlieb
 mplanets	疯狂星球	疯狂星球	Gottlieb
@@ -1597,16 +1598,16 @@ drtopplu	托比博士探险队 (美版)	托比博士探险队 (美版)	Taito America Corporation
 drtopplj	托比博士探险队 (日版)	托比博士探险队 (日版)	Taito Corporation
 kageki	火激 (美版)	火激 (美版)	Taito America Corporation (Romstar license)
 kagekij	火激 (日版)	火激 (日版)	Taito Corporation
-kagekia	火激 (世界版?, 修改版)	火激 (世界版?, 修改版)	Taito Corporation
+kagekih	火激 (hack)	火激 (hack)	Taito Corporation
 chukatai	中华大仙 (世界版)	中华大仙 (世界版)	Taito Corporation Japan
 chukatau	中华大仙 (美版)	中华大仙 (美版)	Taito America Corporation
 chukataj	中华大仙 (日版)	中华大仙 (日版)	Taito Corporation
 kabukiz	歌舞伎 Z (世界版)	歌舞伎 Z (世界版)	Taito Corporation Japan
 kabukizj	歌舞伎 Z (日版)	歌舞伎 Z (日版)	Taito Corporation
 tnzs	纽西兰童话 (世界版, 新版) (新版 PCB)	纽西兰童话 (世界版, 新版) (新版 PCB)	Taito Corporation Japan
-tnzsjn	纽西兰童话 (日版) (新版 PCB)	纽西兰童话 (日版) (新版 PCB)	Taito Corporation
-tnzsj	纽西兰童话 (日版) (旧版 PCB)	纽西兰童话 (日版) (旧版 PCB)	Taito Corporation
-tnzso	纽西兰童话 (世界版, 旧版) (旧版 PCB)	纽西兰童话 (世界版, 旧版) (旧版 PCB)	Taito Corporation Japan
+tnzsj	纽西兰童话 (日版, 新版) (新版 PCB)	纽西兰童话 (日版, 新版) (新版 PCB)	Taito Corporation
+tnzsjo	纽西兰童话 (日版, 旧版) (旧版 PCB)	纽西兰童话 (日版, 旧版) (旧版 PCB)	Taito Corporation
+tnzso	纽西兰童话 (世界版, 工程版?) (旧版 PCB)	纽西兰童话 (世界版, 工程版?) (旧版 PCB)	Taito Corporation Japan
 insectx	杀虫战记 (世界版)	杀虫战记 (世界版)	Taito Corporation Japan
 champbwl	冠军保龄球	冠军保龄球	Seta / Romstar Inc.
 raimais	光速飞跃车 (世界版)	光速飞跃车 (世界版)	Taito Corporation Japan
@@ -1889,9 +1890,11 @@ demonwl1	步步惊魂 (Taito 许可, 第2套)	步步惊魂 (Taito 许可, 第2套)	Toaplan
 demonwl2	步步惊魂 (第3套)	步步惊魂 (第3套)	Toaplan
 demonwl3	步步惊魂 (第4套)	步步惊魂 (第4套)	Toaplan
 demonwl4	步步惊魂 (第5套)	步步惊魂 (第5套)	Toaplan
-fireshrk	鲛! 鲛! 鲛! Fire Shark	鲛! 鲛! 鲛! Fire Shark	Toaplan
-samesame	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
-samesam2	鲛! 鲛! 鲛! (2P Ver.)	鲛! 鲛! 鲛! (2P Ver.)	Toaplan
+fireshrk	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
+fireshd	鲛! 鲛! 鲛! (韩国版, 第1套, 容易)	鲛! 鲛! 鲛! (韩国版, 第1套, 容易)	Toaplan (Dooyong license)
+fireshdh	鲛! 鲛! 鲛! (韩国版, 第2套, 困难)	鲛! 鲛! 鲛! (韩国版, 第2套, 困难)	Toaplan (Dooyong license)
+samesame	鲛! 鲛! 鲛! (2 player 互换版本.)	鲛! 鲛! 鲛! (2 player 互换版本.)	Toaplan
+samesam2	鲛! 鲛! 鲛!	鲛! 鲛! 鲛!	Toaplan
 outzone	异域战将 (第1套)	异域战将 (第1套)	Toaplan
 outzonea	异域战将 (第2套)	异域战将 (第2套)	Toaplan
 outzoneb	异域战将 (第3套, 工程版?)	异域战将 (第3套, 工程版?)	Toaplan
@@ -2773,6 +2776,7 @@ clbowl	卡普空保龄球 / 酷尔斯保龄球	卡普空保龄球 / 酷尔斯保龄球	Incredible Techno
 bowlrama	保龄球三合一	保龄球三合一	P&P Marketing
 wfortune	命运转轮	命运转轮	GameTek
 wfortuna	命运转轮 (替换版)	命运转轮 (替换版)	GameTek
+grmatch	争先拉力赛车 (美国游戏技术)	争先拉力赛车 (美国游戏技术)	Yankee Game Technology
 stratab	特达保龄球 (V3)	特达保龄球 (V3)	Strata/Incredible Technologies
 stratab1	特达保龄球 (V1)	特达保龄球 (V1)	Strata/Incredible Technologies
 sstrike	超级全倒保龄球	超级全倒保龄球	Strata/Incredible Technologies
@@ -3356,9 +3360,9 @@ prikura	花小路大作战 (J 960910 V1.000)	花小路大作战 (J 960910 V1.000)	Atlus
 puyosun	魔法水滴狂热版 (J 961115 V0.001)	魔法水滴狂热版 (J 961115 V0.001)	Compile
 rsgun	闪亮银枪 (JUET 980523 V1.000)	闪亮银枪 (JUET 980523 V1.000)	Treasure
 sandor	寻宝记 - 解谜与行动 (J 951114 V1.000)	寻宝记 - 解谜与行动 (J 951114 V1.000)	Sega
-sanjeon	对战天堂 (韩国版)	对战天堂 (韩国版)	Sega / Deniam
+sanjeon	对战天堂 (AJTUE 990412 V1.000)	对战天堂 (AJTUE 990412 V1.000)	Sega / Deniam
 thunt	寻宝记 - 解谜与行动 (JUET 970901 V2.00E)	寻宝记 - 解谜与行动 (JUET 970901 V2.00E)	Sega
-thuntk	寻宝记 - 解谜与行动 (韩国版)	寻宝记 - 解谜与行动 (韩国版)	Sega / Deniam
+thuntk	寻宝记 - 解谜与行动 (JUET 970125 V2.00K)	寻宝记 - 解谜与行动 (JUET 970125 V2.00K)	Sega / Deniam
 sasissu	对战天堂 (J 980216 V1.000)	对战天堂 (J 980216 V1.000)	Sega
 seabass	黑巴斯钓鱼 (JUET 971110 V0.001)	黑巴斯钓鱼 (JUET 971110 V0.001)	A wave inc. (Able license)
 shanhigw	上海万里长城 (JUE 950623 V1.005)	上海万里长城 (JUE 950623 V1.005)	Sunsoft / Activision
@@ -3368,7 +3372,7 @@ sokyugrt	苍穹红莲队 (JUET 960821 V1.000)	苍穹红莲队 (JUET 960821 V1.000)	Raizing
 sss	花式滑雪 (JUET 981110 V1.000)	花式滑雪 (JUET 981110 V1.000)	Capcom / Cave / Victor
 suikoenb	水浒演武 (JUETL 950314 V2.001)	水浒演武 (JUETL 950314 V2.001)	Data East
 twcup98	Tecmo 世界杯足球 98 (JUET 980410 V1.000)	Tecmo 世界杯足球 98 (JUET 980410 V1.000)	Tecmo
-stress	重力男孩	重力男孩	Sega
+stress	重力男孩 (J 981020 V1.000)	重力男孩 (J 981020 V1.000)	Sega
 vfkids	VR 战士 口袋版 (JUET 960319 V0.000)	VR 战士 口袋版 (JUET 960319 V0.000)	Sega
 vfremix	VR 战士 限定版 (JUETBKAL 950428 V1.000)	VR 战士 限定版 (JUETBKAL 950428 V1.000)	Sega
 vmahjong	VR 麻将 (J 961214 V1.000)	VR 麻将 (J 961214 V1.000)	Micronet
@@ -3380,7 +3384,7 @@ batmanfr	永远的蝙蝠侠 (JUE 960507 V1.000)	永远的蝙蝠侠 (JUE 960507 V1.000)	Accla
 critcrsh	生物打击 (EA 951204 V1.000)	生物打击 (EA 951204 V1.000)	Sega
 sfish2	业余钓鱼 2 (UET 951106 V1.10e)	业余钓鱼 2 (UET 951106 V1.10e)	Sega
 sfish2j	业余钓鱼 2 (J 951201 V1.100)	业余钓鱼 2 (J 951201 V1.100)	Sega
-magzun	梦游美国 - 能量	梦游美国 - 能量	Sega
+magzun	梦游美国 - 能量 (J 961031 V1.000)	梦游美国 - 能量 (J 961031 V1.000)	Sega
 nclubv3	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	南梦宫俱乐部 Ver.3 (J 970723 V1.000)	Sega
 daytona	梦游美国 (日版, 校正版 A)	梦游美国 (日版, 校正版 A)	Sega
 dayton93	梦游美国 豪华版 '93	梦游美国 豪华版 '93	Sega
@@ -3597,7 +3601,7 @@ gundmxgd	机动战士高达: 联邦 VS 吉翁 DX  (GDL-0006)	机动战士高达: 联邦 VS 吉翁 DX
 cvs2gd	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)	Capcom
 ikaruga	斑鸠 (GDL-0010)	斑鸠 (GDL-0010)	Treasure
 ggxx	罪恶工具 XX (GDL-0011)	罪恶工具 XX (GDL-0011)	unknown
-chocomk	Musapey's Choco Marker (GDL-0014A)	Musapey's Choco Marker (GDL-0014A)	unknown
+chocomk	恰克与马克 (GDL-0014A)	恰克与马克 (GDL-0014A)	unknown
 quizqgd	问答手机 Q 模式 (GDL-0017)	问答手机 Q 模式 (GDL-0017)	unknown
 ggxxrl	罪恶工具 XX #Reload (GDL-0019A)	罪恶工具 XX #Reload (GDL-0019A)	unknown
 shikgam2	式神之城 II (GDL-0021)	式神之城 II (GDL-0021)	unknown
@@ -3606,7 +3610,7 @@ senko	旋光之轮舞 (GDL-0030A)	旋光之轮舞 (GDL-0030A)	unknown
 ss2005	超级上海 2005 (GDL-0031A)	超级上海 2005 (GDL-0031A)	unknown
 sprtjam	混合运动 (GDS-0003)	混合运动 (GDS-0003)	Sega
 slashout	豪斩 (GDS-0004)	豪斩 (GDS-0004)	Sega
-spkrbtl	Spikers Battle (GDS-0005)	Spikers Battle (GDS-0005)	Sega
+spkrbtl	致命一击 (GDS-0005)	致命一击 (GDS-0005)	Sega
 dygolf	立体高尔夫 (GDS-0009)	立体高尔夫 (GDS-0009)	Sega
 wsbbgd	世界职业棒球 (GDS-0010)	世界职业棒球 (GDS-0010)	Sega
 vathlete	虚拟田径运动会 (GDS-0019)	虚拟田径运动会 (GDS-0019)	Sega
@@ -3625,8 +3629,8 @@ podrace	星际大战	星际大战	Sega
 hshavoc	高海浩劫	高海浩劫	Data East
 lnc	小精灵绅士	小精灵绅士	Data East Corporation
 zoar	隐形战机 Zoar	隐形战机 Zoar	Data East USA
-btime	汉堡时代 (Data East 第1套)	汉堡时代 (Data East 第1套)	Data East Corporation
-btime2	汉堡时代 (Data East 第2套)	汉堡时代 (Data East 第2套)	Data East Corporation
+btime	汉堡时代 (东方数据 第1套)	汉堡时代 (东方数据 第1套)	Data East Corporation
+btime2	汉堡时代 (东方数据 第2套)	汉堡时代 (东方数据 第2套)	Data East Corporation
 btimem	汉堡时代 (Midway)	汉堡时代 (Midway)	Data East (Bally Midway license)
 cookrace	汉堡时代 Cook Race	汉堡时代 Cook Race	bootleg
 wtennis	世界网球	世界网球	bootleg
@@ -5095,6 +5099,7 @@ mslug4	合金弹头 4	合金弹头 4	Mega
 ms4plus	合金弹头 4 增强型 Plus (盗版)	合金弹头 4 增强型 Plus (盗版)	bootleg
 rotd	龙吼 - 双截龙	龙吼 - 双截龙	Evoga / Playmore
 kof2002	拳皇 2002 - 终极挑战	拳皇 2002 - 终极挑战	Eolith / Playmore
+kof2002b	拳皇 2002 - 终极挑战 (盗版)	拳皇 2002 - 终极挑战 (盗版)	bootleg
 kf2k2pls	拳皇 2002 - 终极挑战 风云再起 (盗版 第1套)	拳皇 2002 - 终极挑战 风云再起 (盗版 第1套)	bootleg
 kf2k2pla	拳皇 2002 - 终极挑战 风云再起 Plus (盗版 第2套)	拳皇 2002 - 终极挑战 风云再起 Plus (盗版 第2套)	bootleg
 kf2k2mp	拳皇 2002 - 终极挑战 Magic Plus (盗版)	拳皇 2002 - 终极挑战 Magic Plus (盗版)	bootleg
@@ -5463,7 +5468,7 @@ nbanfl	美国职业篮球 1999	美国职业篮球 1999	Midway Games
 gauntdl	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	圣铠传说 - 暗黑之遗产 (版本 DL 2.52)	Midway Games
 gauntd24	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	圣铠传说 - 暗黑之遗产 (版本 DL 2.4)	Midway Games
 cartfury	狂热赛车	狂热赛车	Midway Games
-tm	触摸大师 (v3.00 Euro)	触摸大师 (v3.00 Euro)	Midway
+tm	触摸大师 (v3.00 欧洲版)	触摸大师 (v3.00 欧洲版)	Midway
 tm3k	触摸大师 3000 (v5.02 标准)	触摸大师 3000 (v5.02 标准)	Midway
 tm3ka	触摸大师 3000 (v5.01 标准)	触摸大师 3000 (v5.01 标准)	Midway
 tm4k	触摸大师 4000 (v6.02 标准)	触摸大师 4000 (v6.02 标准)	Midway
@@ -5653,7 +5658,8 @@ heatbrlu	狂热印地安 (美版)	狂热印地安 (美版)	Tad
 godzilla	酷斯拉	酷斯拉	Banpresto
 denjinmk	电神魔傀	电神魔傀	Banpresto
 sdgndmrb	机动战士 93 系列 SD 钢弹三国志 - 彩虹大陆战记	机动战士 93 系列 SD 钢弹三国志 - 彩虹大陆战记	Banpresto
-cupsoc	西武杯足球	西武杯足球	Seibu
+cupsoc	西武杯英式足球 (第1套)	西武杯英式足球 (第1套)	Seibu
+cupsoca	西武杯英式足球 (第2套)	西武杯英式足球 (第2套)	Seibu
 cupsocs	西武杯足球 (第1套)	西武杯足球 (第1套)	Seibu
 cupsocs2	西武杯足球 (第2套)	西武杯足球 (第2套)	Seibu
 cupsocsb	西武杯足球 (盗版)	西武杯足球 (盗版)	bootleg
@@ -6209,7 +6215,7 @@ hrdtimea	低潮 (第2套)	低潮 (第2套)	Playmark
 drtomy	汤米医生	汤米医生	Playmark
 sderby	超级德贝赛马	超级德贝赛马	Playmark
 pmroulet	轮盘 (Playmark Roulette)	轮盘 (Playmark Roulette)	Playmark
-spacewin	Scacco Matto / Space Win	Scacco Matto / Space Win	Playmark
+spacewin	西洋棋扑克	西洋棋扑克	Playmark
 sharkatt	鲨鱼攻击	鲨鱼攻击	Pacific Novelty
 thief	赛车精灵 - 窃贼	赛车精灵 - 窃贼	Pacific Novelty
 natodef	北约防线	北约防线	Pacific Novelty
@@ -6659,6 +6665,7 @@ crysking	王者水晶	王者水晶	Brezzasoft
 evosocc	进化足球 EVO	进化足球 EVO	Evoga
 topbladv	草叶飞机 V	草叶飞机 V	SonoKong / Expotato
 officeye	办公室 Yeo In Cheon Ha	办公室 Yeo In Cheon Ha	Danbi
+psattack	逆袭	逆袭	Uniana
 inquiztr	反馈	反馈	BFM
 escounts	每秒计算 (39-360-053)	每秒计算 (39-360-053)	BFM
 trebltop	三倍完成 (39-360-070)	三倍完成 (39-360-070)	BFM
@@ -6700,7 +6707,7 @@ quickjac	音速杰克	音速杰克	ADP
 skattv	史卡特电视台	史卡特电视台	ADP
 skattva	史卡特电视台 (版本 TS3)	史卡特电视台 (版本 TS3)	ADP
 fashiong	时尚赌徒	时尚赌徒	ADP
-funlddlx	Funny Land de Luxe	Funny Land de Luxe	Stella
+funlddlx	趣味岛的路克斯	趣味岛的路克斯	Stella
 guab	问答撞球 (6th edition)	问答撞球 (6th edition)	JPM
 guab3	问答撞球 (3rd edition)	问答撞球 (3rd edition)	JPM
 tenup	十上 (特辑 17)	十上 (特辑 17)	JPM
@@ -6734,7 +6741,7 @@ kingofb	拳王 (英语)	拳王 (英语)	Woodplace
 ringking	拳王 (美版 第1套)	拳王 (美版 第1套)	Data East USA
 ringkin2	拳王 (美版 第2套)	拳王 (美版 第2套)	Data East USA
 ringkin3	拳王 (美版 第3套)	拳王 (美版 第3套)	Data East USA
-ringkinw	拳王 (美版, Woodplace license)	拳王 (美版, Woodplace license)	Woodplace
+ringkinw	拳王 (美版, Woodplace 许可)	拳王 (美版, Woodplace 许可)	Woodplace
 ambush	阿米巴契战机	阿米巴契战机	Nippon Amuse Co-Ltd
 ambusht	阿米巴契战机 (Tecfri)	阿米巴契战机 (Tecfri)	Tecfri
 ambushv	阿米巴契战机 (Volt Elec co-ltd)	阿米巴契战机 (Volt Elec co-ltd)	Volt Elec co-ltd
@@ -6775,6 +6782,7 @@ aquarium	海底生物战 (日版)	海底生物战 (日版)	Excellent System
 policetr	战警双枪 (Rev 1.3)	战警双枪 (Rev 1.3)	P & P Marketing
 polict11	战警双枪 (Rev 1.1)	战警双枪 (Rev 1.1)	P & P Marketing
 polict10	战警双枪 (Rev 1.0)	战警双枪 (Rev 1.0)	P & P Marketing
+plctr13a	战警双枪 (Rev 1.3B 新版)	战警双枪 (Rev 1.3B 新版)	P & P Marketing
 plctr13b	战警双枪 (Rev 1.3B)	战警双枪 (Rev 1.3B)	P & P Marketing
 sshooter	神枪手 (Rev 1.7)	神枪手 (Rev 1.7)	P & P Marketing
 sshoot12	神枪手 (Rev 1.2)	神枪手 (Rev 1.2)	P & P Marketing
@@ -6884,6 +6892,7 @@ winka	闪耀 (第2套)	闪耀 (第2套)	Midcoin
 skyarmy	天空军队	天空军队	Shoei
 lethalj	致命法理	致命法理	The Game Room
 eggventr	鸡蛋趣味射击 (Release 10)	鸡蛋趣味射击 (Release 10)	The Game Room
+eggvent8	鸡蛋趣味射击 (Release 8)	鸡蛋趣味射击 (Release 8)	The Game Room
 eggvent7	鸡蛋趣味射击 (Release 7)	鸡蛋趣味射击 (Release 7)	The Game Room
 eggventa	鸡蛋趣味射击 (A.L. Release)	鸡蛋趣味射击 (A.L. Release)	The Game Room (Allied Leisure license)
 eggvntdx	鸡蛋趣味射击豪华版	鸡蛋趣味射击豪华版	The Game Room
@@ -7112,7 +7121,7 @@ magic102	魔法扑克 2 (ver 1.1)	魔法扑克 2 (ver 1.1)	ABM Games
 suprpool	超级撞球 (9743 rev.01)	超级撞球 (9743 rev.01)	ABM Games
 hotslot	火热吃角子老虎 (ver. 05.01)	火热吃角子老虎 (ver. 05.01)	ABM Electronics
 mcolors	魔法颜色 (ver. 1.7a)	魔法颜色 (ver. 1.7a)	unknown
-sgsafari	Super Gran Safari (ver 3.11)	Super Gran Safari (ver 3.11)	New Impeuropex Corp.
+sgsafari	超级狩猎 (ver 3.11)	超级狩猎 (ver 3.11)	New Impeuropex Corp.
 galaxi	蜜蜂扑克 (v2.0)	蜜蜂扑克 (v2.0)	B.R.L.
 magjoker	魔法鬼牌 (v1.25.10.2000)	魔法鬼牌 (v1.25.10.2000)	B.R.L.
 dwarfd	侏儒兽穴	侏儒兽穴	Electro-Sport
@@ -7149,7 +7158,7 @@ dynabomb	爆弹高手 (韩国版, Rev 1.5)	爆弹高手 (韩国版, Rev 1.5)	Limenko
 legendoh	英雄传说	英雄传说	Limenko
 sb2003	超级泡泡龙 2003 (世界版, Ver 1.0)	超级泡泡龙 2003 (世界版, Ver 1.0)	Limenko
 sb2003a	超级泡泡龙 2003 (亚洲版, Ver 1.0)	超级泡泡龙 2003 (亚洲版, Ver 1.0)	Limenko
-spotty	扑克牌 (Ver. 2.0.2)	扑克牌 (Ver. 2.0.2)	Prince Co.
+spotty	花式纸牌 (Ver. 2.0.2)	花式纸牌 (Ver. 2.0.2)	Prince Co.
 carrera	爆破 (版本 6.7)	爆破 (版本 6.7)	BS Electronics
 pmpoker	花花公子纸牌 (德国版)	花花公子纸牌 (德国版)	PlayMan
 goldnpkr	黄金扑克 (大男孩)	黄金扑克 (大男孩)	Bonanza Enterprises, Ltd
@@ -7160,10 +7169,10 @@ potnpkrb	杰克的纸牌 (第3套)	杰克的纸牌 (第3套)	Bootleg
 potnpkrc	杰克的纸牌 (第4套)	杰克的纸牌 (第4套)	Bootleg
 potnpkrd	杰克的纸牌 (第5套)	杰克的纸牌 (第5套)	Bootleg
 potnpkre	杰克的纸牌 (第6套)	杰克的纸牌 (第6套)	Bootleg
-goodluck	好运	好运	Unknown
-bsuerte	好运气 (西班牙, 第1套)	好运气 (西班牙, 第1套)	Unknown
-bsuertea	好运气 (西班牙, 第2套)	好运气 (西班牙, 第2套)	Unknown
-royale	Royale (ver.X)	Royale (ver.X)	Unknown
+goodluck	幸运纸牌	幸运纸牌	Unknown
+bsuerte	幸运来敲门 (西班牙, 第1套)	幸运来敲门 (西班牙, 第1套)	Unknown
+bsuertea	幸运来敲门 (西班牙, 第2套)	幸运来敲门 (西班牙, 第2套)	Unknown
+royale	皇家扑克 (ver.X)	皇家扑克 (ver.X)	Unknown
 witchcrd	魔法纸牌 (英文)	魔法纸牌 (英文)	Unknown
 witchcda	魔法纸牌 (西班牙, 第1套)	魔法纸牌 (西班牙, 第1套)	Unknown
 witchcdb	魔法纸牌 (西班牙, 第2套)	魔法纸牌 (西班牙, 第2套)	Unknown
@@ -7277,6 +7286,8 @@ shadfgtr	暗影战士	暗影战士	Sega?
 blackt96	黑色接触 '96	黑色接触 '96	D.G.R.M.
 lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
 lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
+magictg	魔法纸牌 (第1套)	魔法纸牌 (第1套)	Acclaim
+magictga	魔法纸牌 (第2套)	魔法纸牌 (第2套)	Acclaim
 videopkr	视频扑克	视频扑克	InterFlip
 blckjack	二十一点	二十一点	InterFlip
 videodad	视频骰子	视频骰子	InterFlip
@@ -7328,7 +7339,6 @@ kof97pla	拳皇 '97 重出江湖 Plus 2003 (盗版)	拳皇 '97 重出江湖 Plus 2003 (盗版)	b
 kf2k1pls	拳皇 2001 增强型 Plus (盗版 / 第1套)	拳皇 2001 增强型 Plus (盗版 / 第1套)	bootleg
 kf2k1pa	拳皇 2001 风云再起 Plus (盗版 / 第2套)	拳皇 2001 风云再起 Plus (盗版 / 第2套)	bootleg
 cthd2k3a	卧虎藏龙 2003 (盗版 / 第2套)	卧虎藏龙 2003 (盗版 / 第2套)	bootleg
-kof2002b	拳皇 2002 - 终极挑战 (盗版)	拳皇 2002 - 终极挑战 (盗版)	bootleg
 kf2k2plb	拳皇 2002 - 终极挑战 Plus (盗版 / 第3套)	拳皇 2002 - 终极挑战 Plus (盗版 / 第3套)	bootleg
 kf2k2plc	拳皇 2002 - 终极挑战 Super (盗版 / 第4套)	拳皇 2002 - 终极挑战 Super (盗版 / 第4套)	bootleg
 kf2k4pls	拳皇 2004 特别版 Plus (盗版)	拳皇 2004 特别版 Plus (盗版)	bootleg
@@ -7436,7 +7446,6 @@ sms2kr	Gam*Boy II (Korea)	Gam*Boy II (Korea)	Samsung
 smssdisp	Master System Store Display Unit	Master System Store Display Unit	Sega
 megadrij	世嘉五代 (日版, NTSC)	世嘉五代 (日版, NTSC)	Sega
 genesis	世嘉五代 (美版, NTSC)	世嘉五代 (美版, NTSC)	Sega
-gensvp	世嘉五代 (美版, NTSC, w/SVP)	世嘉五代 (美版, NTSC, w/SVP)	Sega
 megadriv	世嘉五代 (欧版, PAL)	世嘉五代 (欧版, PAL)	Sega
 pico	Pico (欧版, PAL)	Pico (欧版, PAL)	Sega
 picou	Pico (美版, NTSC)	Pico (美版, NTSC)	Sega
