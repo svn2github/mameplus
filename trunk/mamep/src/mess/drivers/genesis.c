@@ -336,11 +336,13 @@ static MACHINE_DRIVER_START( ms_megadriv )
 	MDRV_MACHINE_RESET( ms_megadriv )
 MACHINE_DRIVER_END
 
+/*
 static MACHINE_DRIVER_START( ms_megdsvp )
 	MDRV_IMPORT_FROM(megdsvp)
 
 	MDRV_MACHINE_RESET( ms_megadriv )
 MACHINE_DRIVER_END
+*/
 
 
 
@@ -358,10 +360,12 @@ ROM_START(genesis)
 	ROM_REGION( 0x10000, "sound", ROMREGION_ERASEFF)
 ROM_END
 
+/*
 ROM_START(gensvp)
 	ROM_REGION(0x1415000, "main", ROMREGION_ERASEFF)
 	ROM_REGION( 0x10000, "sound", ROMREGION_ERASEFF)
 ROM_END
+*/
 
 ROM_START(megadriv)
 	ROM_REGION(0x1415000, "main", ROMREGION_ERASEFF)
@@ -394,11 +398,13 @@ static DRIVER_INIT( genesis )
 	DRIVER_INIT_CALL(mess_md_common);
 }
 
+/*
 static DRIVER_INIT( gensvp )
 {
 	DRIVER_INIT_CALL(megadsvp);
 	DRIVER_INIT_CALL(mess_md_common);
 }
+*/
 
 static DRIVER_INIT( md_eur )
 {
@@ -674,7 +680,7 @@ SYSTEM_CONFIG_END
 
 /*    YEAR  NAME		PARENT		COMPAT  MACHINE    	  INPUT     INIT  		CONFIG		COMPANY   FULLNAME */
 CONS( 1989, genesis,	0,			0,      ms_megadriv,  md,		genesis,	genesis,	"Sega",   "Genesis (USA, NTSC)", 0)
-CONS( 1993, gensvp,		genesis,	0,      ms_megdsvp,   md_svp,	gensvp,		genesis,	"Sega",   "Genesis (USA, NTSC, w/SVP)", 0)
+//CONS( 1993, gensvp,		genesis,	0,      ms_megdsvp,   md_svp,	gensvp,		genesis,	"Sega",   "Genesis (USA, NTSC, w/SVP)", 0)
 CONS( 1990, megadriv,	genesis,	0,      ms_megadriv,  md,		md_eur,		genesis,	"Sega",   "Mega Drive (Europe, PAL)", 0)
 CONS( 1988, megadrij,	genesis,	0,      ms_megadriv,  md,		md_jpn,		genesis,	"Sega",   "Mega Drive (Japan, NTSC)", 0)
 CONS( 1994, pico,		0,			0,      pico,	      pico,		md_eur,		pico,		"Sega",   "Pico (Europe, PAL)", 0)

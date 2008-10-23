@@ -65,7 +65,6 @@ const game_driver * const plusdrivers[] =
 	DRIVER( kf2k1pls )	/* 0262 (c) 2001 bootleg */
 	DRIVER( kf2k1pa )	/* 0262 (c) 2001 bootleg */
 	DRIVER( cthd2k3a )	/* bootleg of kof2001*/
-	DRIVER( kof2002b )	/* 0265 (c) 2002 bootleg */
 	DRIVER( kf2k2plb )	/* bootleg */
 	DRIVER( kf2k2plc )	/* bootleg */
 	DRIVER( kf2k4pls )	/* bootleg of kof2002 */
