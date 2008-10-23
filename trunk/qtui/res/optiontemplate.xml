@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0"?>
 <!-- mame ver 126 -->
 <optiontemplate version="1">
+	<!-- GUI Only -->
 	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
 	<option name="cabinet_directory" default="cabinets" type="dirs" guivisible="1" />
 	<option name="cpanel_directory" default="cpanel" guiname="control panel directory" type="dirs" guivisible="1" />
@@ -9,8 +10,10 @@
 	<option name="marquee_directory" default="marquees" type="dirs" guivisible="1" />
 	<option name="pcb_directory" default="pcb" guiname="PCB directory" type="dirs" guivisible="1" />
 	<option name="title_directory" default="titles" type="dirs" guivisible="1" />
-	
-	<option name="mame_binary" default="mamep.exe" guiname="MAME binary" type="exefile" guivisible="1" />
+	<option name="history_file" default="history.dat" type="datfile" guivisible="1" />
+	<option name="story_file" default="story.dat" type="datfile" guivisible="1" />
+	<option name="mameinfo_file" default="mameinfo.dat" type="datfile" guivisible="1" />
+	<option name="mame_binary" guiname="MAME binary" type="exefile" guivisible="1" />
 	<option name="history_file" default="history.dat" type="datfile" guivisible="1" />
 	<option name="story_file" default="story.dat" type="datfile" guivisible="1" />
 	<option name="mameinfo_file" default="mameinfo.dat" type="datfile" guivisible="1" />
@@ -31,9 +34,9 @@
 	<option name="ctrlrpath" guiname="controller definitions directory" type="dir" />
 	<option name="inipath" guiname="ini files directory" type="dirs" />
 	<option name="fontpath" guiname="font files directory" type="dirs" />
-	<option name="translation_directory" type="dir" />
-	<option name="localized_directory" type="dir" />
-	<option name="ips_directory" type="dir" />
+	<option name="cheatpath" guiname="cheat files directory" type="dir" />
+	<option name="langpath" guiname="language files directory" type="dir" />
+	<option name="ipspath" guiname="IPS files directory" type="dir" />
 	
 	<option name="cfg_directory" type="dir" />
 	<option name="nvram_directory" type="dir" />
@@ -45,7 +48,6 @@
 	<option name="comment_directory" type="dir" />
 	<option name="hiscore_directory" type="dir" />
 	
-	<option name="cheat_file" type="datfile" />
 	<option name="command_file" type="datfile" />
 	<option name="hiscore_file" type="datfile" />
 	
@@ -56,6 +58,13 @@
 	<option name="mngwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="aviwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="wavwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="snapview" guiname="snapshot/movie view" type="string" >
+		<value>internal</value>
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="pixel aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
 
 	<option name="autoframeskip" guiname="auto frame skipping" type="bool" />
 	<option name="frameskip" guiname="frame skipping" type="int" min="0" max="10" />
@@ -183,12 +192,12 @@
 	<option name="debug" type="bool" />
 	<option name="debugscript" type="file" />
 
-	<option name="bios" type="string" globalvisible="0" srcvisible="0" />
+	<option name="bios" guiname="BIOS" type="string" globalvisible="0" srcvisible="0" />
 	<option name="cheat" guiname="enable game cheats" type="bool" />
 	<option name="skip_gameinfo" guiname="skip game info" type="bool" />
-	<option name="ips" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" />
+	<option name="ips" guiname="IPS" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" />
 	<option name="confirm_quit" guiname="quit game with confirmation" type="bool" />
-	<option name="auto_pause_playback" guiname="auto pause when playback is finished" type="bool" />
+	<option name="auto_pause" guiname="auto pause when playback is finished" type="bool" />
 	<option name="m68k_core" type="string">
 		<value>c</value>
 		<value>drc</value>
@@ -243,85 +252,100 @@
 	<option name="centerv" guiname="center vertically" type="bool" />
 	<option name="waitvsync" guiname="wait for vertical sync" type="bool" />
 	<option name="syncrefresh" guiname="sync to monitor refresh" type="bool" />
-	
+
+	<option name="scalemode" guiname="scale mode" type="string">
+		<value>none</value>
+		<value>async</value>
+		<value>hwblit</value>
+		<value>hwbest</value>
+		<value>yv12</value>
+		<value>yuy2</value>
+		<value>yv12x2</value>
+		<value>yuy2x2</value>
+	</option>
+
 	<option name="hwstretch" guiname="hardware stretching" type="bool" />
-	
+
 	<option name="d3dversion" guiname="D3D version" type="string">
 		<value guivalue="Version 8">8</value>
 		<value guivalue="Version 9">9</value>
 	</option>
 	<option name="filter" guiname="bilinear filtering" type="bool" />
 	
-	<option name="screen" type="string">
+	<!--OpenGL-SPECIFIC OPTIONS-->
+	<option name="gl_forcepow2texture" guiname="force power of 2 textures" type="bool" />
+	<option name="gl_notexturerect" guiname="don't use GL_ARB_texture_rectangle" type="bool" />
+	<option name="gl_vbo" guiname="enable OpenGL VBO" type="bool" />
+	<option name="gl_pbo" guiname="enable OpenGL PBO" type="bool" />
+	<option name="gl_glsl" guiname="enable OpenGL GLSL" type="bool" />
+	<option name="gl_glsl_filter" guiname="OpenGL GLSL filtering" type="bool" />
+	<option name="gl_glsl_vid_attr" guiname="enable OpenGL GLSL handling of brightness and contrast" type="bool" />
+	
+	<option name="screen" guiname="all screens: physical monitor" type="string" />
+	<option name="aspect" guiname="all screens: aspect ratio" type="stringeditable">
 		<value>auto</value>
-		<value>\\.\DISPLAY1</value>
-		<value>\\.\DISPLAY2</value>
-		<value>\\.\DISPLAY3</value>
-		<value>\\.\DISPLAY4</value>
+		<value>4:3</value>
+		<value>5:4</value>
+		<value>16:9</value>
 	</option>
-	<option name="aspect" type="string" />
-	<option name="resolution" type="string" />
-	<option name="view" type="string">
-		<value>auto</value>
-		<value>standard</value>
-		<value guivalue="pixel aspect">pixel</value>
-		<value>cocktail</value>
-	</option>
-	<option name="screen0" type="string">
-		<value>auto</value>
-		<value>\\.\DISPLAY1</value>
-		<value>\\.\DISPLAY2</value>
-		<value>\\.\DISPLAY3</value>
-		<value>\\.\DISPLAY4</value>
-	</option>
-	<option name="aspect0" type="string" />
-	<option name="resolution0" type="string" />
-	<option name="view0" type="string">
+	<option name="resolution" guiname="all screens: resolution" type="string" />
+	<option name="view" guiname="all screens: view" type="string">
 		<value>auto</value>
 		<value>standard</value>
 		<value guivalue="pixel aspect">pixel</value>
 		<value>cocktail</value>
 	</option>
-	<option name="screen1" type="string">
+	<option name="screen0" guiname="screen 1: physical monitor" type="string" />
+	<option name="aspect0" guiname="screen 1: aspect ratio" type="stringeditable">
 		<value>auto</value>
-		<value>\\.\DISPLAY1</value>
-		<value>\\.\DISPLAY2</value>
-		<value>\\.\DISPLAY3</value>
-		<value>\\.\DISPLAY4</value>
+		<value>4:3</value>
+		<value>5:4</value>
+		<value>16:9</value>
 	</option>
-	<option name="aspect1" type="string" />
-	<option name="resolution1" type="string" />
-	<option name="view1" type="string">
-		<value>auto</value>
-		<value>standard</value>
-		<value guivalue="pixel aspect">pixel</value>
-		<value>cocktail</value>
-	</option>
-	<option name="screen2" type="string">
-		<value>auto</value>
-		<value>\\.\DISPLAY1</value>
-		<value>\\.\DISPLAY2</value>
-		<value>\\.\DISPLAY3</value>
-		<value>\\.\DISPLAY4</value>
-	</option>
-	<option name="aspect2" type="string" />
-	<option name="resolution2" type="string" />
-	<option name="view2" type="string">
+	<option name="resolution0" guiname="screen 1: resolution" type="string" />
+	<option name="view0" guiname="screen 1: view" type="string">
 		<value>auto</value>
 		<value>standard</value>
 		<value guivalue="pixel aspect">pixel</value>
 		<value>cocktail</value>
 	</option>
-	<option name="screen3" type="string">
+	<option name="screen1" guiname="screen 2: physical monitor" type="string" />
+	<option name="aspect1" guiname="screen 2: aspect ratio" type="stringeditable">
 		<value>auto</value>
-		<value>\\.\DISPLAY1</value>
-		<value>\\.\DISPLAY2</value>
-		<value>\\.\DISPLAY3</value>
-		<value>\\.\DISPLAY4</value>
+		<value>4:3</value>
+		<value>5:4</value>
+		<value>16:9</value>
 	</option>
-	<option name="aspect3" type="string" />
-	<option name="resolution3" type="string" />
-	<option name="view3" type="string">
+	<option name="resolution1" guiname="screen 2: resolution" type="string" />
+	<option name="view1" guiname="screen 2: view" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="pixel aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen2" guiname="screen 3: physical monitor" type="string" />
+	<option name="aspect2" guiname="screen 3: aspect ratio" type="stringeditable">
+		<value>auto</value>
+		<value>4:3</value>
+		<value>5:4</value>
+		<value>16:9</value>
+	</option>
+	<option name="resolution2" guiname="screen 3: resolution" type="string" />
+	<option name="view2" guiname="screen 3: view" type="string">
+		<value>auto</value>
+		<value>standard</value>
+		<value guivalue="pixel aspect">pixel</value>
+		<value>cocktail</value>
+	</option>
+	<option name="screen3" guiname="screen 4: physical monitor" type="string" />
+	<option name="aspect3" guiname="screen 4: aspect ratio" type="stringeditable">
+		<value>auto</value>
+		<value>4:3</value>
+		<value>5:4</value>
+		<value>16:9</value>
+	</option>
+	<option name="resolution3" guiname="screen 4: resolution" type="string" />
+	<option name="view3" guiname="screen 4: view" type="string">
 		<value>auto</value>
 		<value>standard</value>
 		<value guivalue="pixel aspect">pixel</value>
@@ -365,4 +389,10 @@
 	<option name="remapjoys" guiname="enable joystick mapping" type="bool" />
 	<option name="remapjoyfile" guiname="joymap filename" type="datfile" />
 	<option name="sixaxis" guiname="use PS3 Sixaxis controllers" type="bool" />
+	
+	<!--SDL LOWLEVEL DRIVER OPTIONS-->
+	<option name="audiodriver" guiname="SDL audio driver" type="string" />
+	<option name="videodriver" guiname="SDL video driver" type="string" />
+	<option name="renderdriver" guiname="SDL render driver" type="string" />
+	<option name="gl_lib" guiname="alternative libGL.so" type="string" />
 </optiontemplate>

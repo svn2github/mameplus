@@ -1,6 +1,9 @@
-#include "mamepguimain.h"
+#include "SDL.h"
+#undef main
 
 #include <QtPlugin>
+
+#include "mamepguimain.h"
 
 // global variables
 MainWindow *win;
@@ -15,6 +18,7 @@ QActionGroup bgActions(0);
 QActionGroup styleActions(0);
 bool local_game_list;
 bool isDarkBg = false;
+bool sdlInited = false;
 
 QStringList dockCtrlNames;
 
@@ -113,6 +117,13 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
+#ifdef Q_OS_WIN
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		win->log("SDL_INIT_VIDEO failed."); 
+	else
+		sdlInited = true;
+#endif
+
 	dockCtrlNames = (QStringList() 
 	   << QT_TR_NOOP("Snapshot")
 	   << QT_TR_NOOP("Flyer")
@@ -159,14 +170,26 @@ MainWindow::MainWindow(QWidget *parent)
 	lvGameList->hide();
 
 	lineEditSearch = new QLineEdit(centralwidget);
-	lineEditSearch->setStatusTip("type a keyword");
 	QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
 	sizePolicy.setHorizontalStretch(0);
 	sizePolicy.setVerticalStretch(0);
 	sizePolicy.setHeightForWidth(lineEditSearch->sizePolicy().hasHeightForWidth());
 	lineEditSearch->setSizePolicy(sizePolicy);
 	lineEditSearch->setMinimumWidth(240);
+	lineEditSearch->setEnabled(false);
 	toolBarSearch->addWidget(lineEditSearch);
+
+	btnSearch = new QToolButton(centralwidget);
+	btnSearch->setIcon(QIcon(":/res/16x16/system-search.png"));
+	btnSearch->setFixedWidth(24);
+	btnSearch->setToolTip(tr("Search"));
+	toolBarSearch->addWidget(btnSearch);
+	
+	btnClearSearch = new QToolButton(centralwidget);
+	btnClearSearch->setIcon(QIcon(":/res/16x16/status_cross.png"));
+	btnClearSearch->setFixedWidth(24);
+	btnClearSearch->setToolTip(tr("Clear"));
+	toolBarSearch->addWidget(btnClearSearch);
 
 	labelProgress = new QLabel(statusbar);
 	statusbar->addWidget(labelProgress);
@@ -209,13 +232,20 @@ MainWindow::MainWindow(QWidget *parent)
 	menuView->insertAction(actionPicture_Area, actionFolderList);
 	toolBar->insertAction(actionPicture_Area, actionFolderList);
 
-	gamelist = new Gamelist(this);
+	gameList = new Gamelist(this);
 	optUtils = new OptionUtils(this);
 	dlgOptions = new Options(this);
 	dlgAbout = new About(this);
 	dlgDirs = new Dirs(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
+}
+
+MainWindow::~MainWindow()
+{
+#ifdef Q_OS_WIN
+	SDL_Quit();
+#endif
 }
 
 void MainWindow::initHistory(QString title)
@@ -292,78 +322,77 @@ void MainWindow::init()
 	initHistory(dockCtrlNames[DOCK_STORY]);
 //	initHistory(textBrowserFrontendLog, "GUI Log");
 
+	/* test ini readable/writable */
+	// mkdir for individual game settings
+	QDir().mkpath(CFG_PREFIX);
+
+	QString warnings = "";
+	QFile iniFile(CFG_PREFIX + "mamepgui.ini");
+	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
+		warnings.append(QFileInfo(iniFile).absoluteFilePath());
+	iniFile.close();
+
+	if (warnings.size() > 0)
+	{
+		win->poplog("Current user has no sufficient privilege to read/write:\n" + warnings + "\n\ncouldn't save GUI settings.");
+		//quit the program
+		close();
+		return;
+	}
+
 	initSettings();
 	loadSettings();
 
 	// validate mame_binary
-	mame_binary = guiSettings.value("mame_binary", "mame" EXEC_EXT).toString();
+	mame_binary = guiSettings.value("mame_binary").toString();
 	QFile mamebin(mame_binary);
-	if (!mamebin.exists())
+
+	// if no valid exec was found, popup a dialog
+	if (!mamebin.exists() || mame_binary.contains("mamepgui"))
 	{
-		QDir dir(QCoreApplication::applicationDirPath());
-		
-		QStringList nameFilter;
-		nameFilter << "*mame*";
-
-		// iterate all exec files in the path
-		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Executable);
-		for (int i = 0; i < files.count(); i++)
-		{
-			QFileInfo fi(QCoreApplication::applicationFilePath());
-			QFileInfo fi2(files[i]);
-			if(fi.fileName() != fi2.fileName())
-			{
-				mame_binary = files[i];
-				break;
-			}
-		}
-	
-		QFile mamebin2(mame_binary);
-		if (!mamebin2.exists())
-		{
-			QString filter = "";
+		QString filter = "";
 #ifdef Q_WS_WIN
-			filter.append(tr("Executable files (*" EXEC_EXT ")"));
-			filter.append(";;");
+		filter.append(tr("Executable files (*" EXEC_EXT ")"));
+		filter.append(";;");
 #endif
-			filter.append(tr("All Files (*)"));
-		
-			mame_binary = QFileDialog::getOpenFileName(this,
-										tr("MAME executable:"),
-										QCoreApplication::applicationDirPath(),
-										filter
-										);
+		filter.append(tr("All Files (*)"));
+	
+		mame_binary = QFileDialog::getOpenFileName(this,
+									tr("MAME executable:"),
+									QCoreApplication::applicationDirPath(),
+									filter);
 
-			if (mame_binary.isEmpty())
-			{
-				win->poplog(QString("Could not find MAME"));
-				mame_binary = "";
-				//quit the program
-				close();
-				return;
-			}
+		if (mame_binary.isEmpty() || mame_binary.contains("mamepgui"))
+		{
+			win->poplog(QString("Could not find MAME."));
+			mame_binary = "";
+			//quit the program
+			close();
+			return;
 		}
 	}
 
+	//save the new mame_binary value now, it will be accessed later in option module
+	guiSettings.setValue("mame_binary", mame_binary);
+
 	// must optUtils->initOption() after win, before show()
 	optUtils->initOption();
-
-	//show UI
-	win->log("win->show()");
 
 	//apply css
 	QFile cssFile(":/res/mamepgui.qss");
 	cssFile.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(cssFile.readAll());
 	qApp->setStyleSheet(styleSheet);
+	qApp->setWindowIcon(QIcon(":/res/mamep.ico"));
 
+	//show UI
 	show();
 	loadLayout();
 	setDockOptions();
 	qApp->processEvents();
 
-	// must gamelist->init(true) before loadLayout()
-	gamelist->init(true, GAMELIST_INIT_FULL);
+	// must gameList->init(true) before loadLayout()
+	gameList->init(true, GAMELIST_INIT_FULL);
 
 	// must init app style before background
 	if (gui_style.isEmpty())
@@ -420,17 +449,19 @@ void MainWindow::init()
 	// connect misc signal and slots
 	// Actions
 	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-	connect(actionLargeIcons, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
-	connect(actionDetails, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
-	connect(actionGrouped, SIGNAL(toggled(bool)), gamelist, SLOT(init(bool)));
+	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
+	connect(actionDetails, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
+	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
 	// Auditor
-	connect(&gamelist->auditor, SIGNAL(progressSwitched(int, QString)), gamelist, SLOT(switchProgress(int, QString)));
-	connect(&gamelist->auditor, SIGNAL(progressUpdated(int)), gamelist, SLOT(updateProgress(int)));
-	connect(&gamelist->auditor, SIGNAL(finished()), gamelist->mAuditor, SLOT(init()));
+	connect(&gameList->auditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
+	connect(&gameList->auditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
+	connect(&gameList->auditor, SIGNAL(finished()), gameList->mAuditor, SLOT(init()));
 
 	// Game List
-	connect(lineEditSearch, SIGNAL(textChanged(const QString &)), gamelist, SLOT(filterTimer()));	
+	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterRegExpChanged()));
+	connect(btnSearch, SIGNAL(clicked()), gameList, SLOT(filterRegExpChanged()));
+	connect(btnClearSearch, SIGNAL(clicked()), gameList, SLOT(filterRegExpCleared()));
 
 	// Options
 	for (int i = 1; i < optCtrls.count(); i++)
@@ -441,18 +472,14 @@ void MainWindow::init()
 	connect(dlgOptions->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
 }
 
-MainWindow::~MainWindow()
-{
-}
-
 void MainWindow::on_actionPlay_activated()
 {
-	gamelist->runMame();
+	gameList->runMame();
 }
 
 void MainWindow::on_actionRefresh_activated()
 {
-	gamelist->auditor.audit();
+	gameList->auditor.audit();
 }
 
 void MainWindow::on_actionProperties_activated()
@@ -491,7 +518,6 @@ void MainWindow::showOptionsDialog(int optLevel, int lstRow)
 		optCtrls[optLevel]->setCurrentRow(lstRow);
 
 	dlgOptions->exec();
-	saveSettings();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -778,7 +804,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	if (!mame_binary.isEmpty())
 	{
 		saveSettings();
-		mamegame->s11n();
+		mameGame->s11n();
 	}
 	event->accept();
 }
@@ -939,6 +965,7 @@ void Screenshot::setAspect(bool forceAspect)
 	updateScreenshotLabel();
 }
 
+//click screenshot area to rotate dockwidgets
 void Screenshot::rotateImage()
 {
 	QString objName =((QWidget* )sender())->objectName();
@@ -949,6 +976,8 @@ void Screenshot::rotateImage()
 	foreach (QTabBar *tab, tabs)
 	{
 		bool isDock = false;
+
+		// see if the dock widget contains any of screenshot/history widgets
 		for (int i = 0; i < dockCtrlNames.count(); i++)
 		{
 			if (MainWindow::tr(qPrintable(dockCtrlNames[i])) == tab->tabText(0))
@@ -957,19 +986,59 @@ void Screenshot::rotateImage()
 				break;
 			}
 		}
-		
+
+		// select the next
 		if (isDock && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
 		{
 			int i = tab->currentIndex();
 			if (++i > tab->count() - 1)
 				i = 0;
 			tab->setCurrentIndex(i);
-			win->log(QString("tab: %1, %2")
-				.arg(tab->currentIndex())
-				.arg(tab->tabText(tab->currentIndex()))
-				);
 		}
 	}
+}
+
+// fixme: merge ^
+bool MainWindow::isDockTabVisible(QString objName)
+{
+#if 0
+	//there's no API in Qt to access docked widget tabbar
+
+	bool result = false;
+	bool isSSTabbed = false;
+	
+	QList<QTabBar *> tabs = findChildren<QTabBar *>();
+	foreach (QTabBar *tab, tabs)
+	{
+		bool isSSDocked = false;
+
+		// see if the tabs in a dock area contain any of screenshot/history widgets
+		for (int i = 0; i < dockCtrlNames.count(); i++)
+		{
+			for (int t = 0; t < tab->count(); t ++)
+				if (tr(qPrintable(dockCtrlNames[i])) == tab->tabText(t))
+				{
+					isSSDocked = true;
+					isSSTabbed = true;
+					break;
+				}
+		}
+
+		if (isSSDocked && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
+		{
+			result = true;
+			break;
+		}
+	}
+
+	// if the dock area contains only one SS widget
+	if (!isSSTabbed)
+		result = true;
+	
+	return result;
+#else
+	return true;
+#endif
 }
 
 void Screenshot::updateScreenshotLabel()

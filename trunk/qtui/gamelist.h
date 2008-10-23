@@ -193,8 +193,8 @@ public slots:
 	void setupIcon(QString);
 	void setupSnap(int);
 
-	void filterTimer();
 	void filterRegExpChanged();
+	void filterRegExpCleared();
 	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = NULL);
 
 private:
@@ -244,11 +244,12 @@ public:
 	quint8 status, emulation, color, sound, graphic, cocktail, protection, savestate;
 	quint32 palettesize;
 
-	bool isBios;
-	bool isExtRom;
+	bool isBios, isExtRom,isCloneAvailable;
+
 	QHash<quint32, RomInfo *> crcRomInfoMap;
 	QHash<QString, BiosInfo *> nameBiosInfoMap;
 	QHash<QString, DeviceInfo *> nameDeviceInfoMap;
+	
 	qint8 available;
 	QByteArray icondata;
 	TreeItem *pModItem;
@@ -266,7 +267,7 @@ Q_OBJECT
 public:
 	QString mameVersion;
 	QString mameDefaultIni;
-	QHash<QString, GameInfo *> gamenameGameInfoMap;
+	QHash<QString, GameInfo *> nameInfoMap;
 
 	MameGame(QObject *parent = 0);
 	~MameGame();

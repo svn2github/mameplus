@@ -7,15 +7,15 @@
 	<file>res/32x32/applications-system.png</file>
 	<file>res/32x32/audio-x-generic.png</file>
 	<file>res/32x32/folder.png</file>
-	<file>res/32x32/help-browser.png</file>
 	<file>res/32x32/input-gaming.png</file>
-	<file>res/32x32/system-search.png</file>
 	<file>res/32x32/video-display.png</file>
 	<file>res/32x32/video-display-blue.png</file>
 	<file>res/32x32/video-osd.png</file>
 	<file>res/32x32/video-vector.png</file>
-	<file>res/32x32/view-refresh.png</file>
 
+	<file>res/16x16/view-refresh.png</file>
+	<file>res/16x16/help-browser.png</file>
+	<file>res/16x16/system-settings.png</file>
 	<file>res/16x16/cocktail_good.png</file>
 	<file>res/16x16/cocktail_preliminary.png</file>
 	<file>res/16x16/cocktail_imperfect.png</file>
@@ -39,6 +39,8 @@
 	<file>res/16x16/status_good.png</file>
 	<file>res/16x16/status_preliminary.png</file>
 	<file>res/16x16/status_imperfect.png</file>
+	<file>res/16x16/system-search.png</file>
+	<file>res/16x16/status_cross.png</file>
 
 	<file>res/mame32-show-snap.png</file>
 	<file>res/mame32-show-tree.png</file>

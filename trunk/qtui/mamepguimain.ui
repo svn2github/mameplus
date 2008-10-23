@@ -35,7 +35,7 @@
      <x>0</x>
      <y>0</y>
      <width>624</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile" >
@@ -138,6 +138,9 @@
    <property name="windowTitle" >
     <string>Toolbar</string>
    </property>
+   <property name="autoFillBackground" >
+    <bool>true</bool>
+   </property>
    <property name="iconSize" >
     <size>
      <width>16</width>
@@ -239,7 +242,7 @@
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/32x32/applications-system.png</normaloff>:/res/32x32/applications-system.png</iconset>
+     <normaloff>:/res/16x16/system-settings.png</normaloff>:/res/16x16/system-settings.png</iconset>
    </property>
    <property name="text" >
     <string>Default Game Options</string>
@@ -251,7 +254,7 @@
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/32x32/view-refresh.png</normaloff>:/res/32x32/view-refresh.png</iconset>
+     <normaloff>:/res/16x16/view-refresh.png</normaloff>:/res/16x16/view-refresh.png</iconset>
    </property>
    <property name="text" >
     <string>Refresh</string>
@@ -271,7 +274,7 @@
   <action name="actionAbout" >
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/32x32/help-browser.png</normaloff>:/res/32x32/help-browser.png</iconset>
+     <normaloff>:/res/16x16/help-browser.png</normaloff>:/res/16x16/help-browser.png</iconset>
    </property>
    <property name="text" >
     <string>About</string>
@@ -280,6 +283,9 @@
   <action name="actionDetails" >
    <property name="checkable" >
     <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
@@ -295,6 +301,9 @@
    </property>
    <property name="checked" >
     <bool>true</bool>
+   </property>
+   <property name="enabled" >
+    <bool>false</bool>
    </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
@@ -343,6 +352,9 @@
    </property>
   </action>
   <action name="actionPlay" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="text" >
     <string>Play</string>
    </property>
@@ -450,6 +462,9 @@
    </property>
   </action>
   <action name="actionDirectories" >
+   <property name="enabled" >
+    <bool>false</bool>
+   </property>
    <property name="icon" >
     <iconset resource="mamepguimain.qrc" >
      <normaloff>:/res/32x32/folder.png</normaloff>:/res/32x32/folder.png</iconset>

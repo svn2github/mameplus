@@ -83,8 +83,8 @@ public:
 	
 	int type;
 	bool guivisible, globalvisible, srcvisible, biosvisible, cloneofvisible, gamevisible;
-	QList<QString> values;
-	QList<QString> guivalues;
+	QStringList values;
+	QStringList guivalues;
 
 	MameOption(QObject *parent = 0);
 };
@@ -104,6 +104,7 @@ public:
 	QColor inheritColor(const QModelIndex &);
 	bool isChanged(const QModelIndex &);
 	bool isTitle(const QModelIndex &);
+	void updateSelectableItems(QString);
 
 public slots:
 	void loadDefault(QString);

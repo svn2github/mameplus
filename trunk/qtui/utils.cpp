@@ -69,7 +69,7 @@ QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName
 	// recursively load parent image
 	if (snapdata.isNull())
 	{
-		GameInfo *gameinfo = mamegame->gamenameGameInfoMap[gameName];
+		GameInfo *gameinfo = mameGame->nameInfoMap[gameName];
  		if (!gameinfo->cloneof.isEmpty())
 			snapdata = getScreenshot(dirpath0, gameinfo->cloneof);
 
@@ -146,7 +146,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName)
 
 	if (buf.trimmed().isEmpty())
 	{
-		GameInfo *gameInfo = mamegame->gamenameGameInfoMap[gameName];
+		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
 		if (!gameInfo->cloneof.isEmpty())
 			buf = getHistory(fileName, gameInfo->cloneof);
 	}
@@ -214,9 +214,9 @@ bool Utils::isConsoleFolder()
 		if (paths[1] == tr("Consoles"))
 			return true;
 
-		else if (mamegame->gamenameGameInfoMap.contains(paths[1]))
+		else if (mameGame->nameInfoMap.contains(paths[1]))
 		{
-			GameInfo *gameInfo = mamegame->gamenameGameInfoMap[paths[1]];
+			GameInfo *gameInfo = mameGame->nameInfoMap[paths[1]];
 			if (!gameInfo->nameDeviceInfoMap.isEmpty())
 				return true;
 		}

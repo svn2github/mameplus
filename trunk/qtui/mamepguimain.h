@@ -73,11 +73,13 @@ Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+	bool isDockTabVisible(QString);
 
 	QTreeView *tvGameList;
 	QListView *lvGameList;
 	
 	QLineEdit *lineEditSearch;
+	QToolButton *btnSearch, *btnClearSearch;
 	QLabel *labelProgress, *labelGameCount, 
 	*labelStatus, *labelEmulation, *labelColor, *labelSound, 
 	*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
@@ -184,12 +186,13 @@ extern QString language;
 extern bool enforce_aspect;
 extern bool local_game_list;
 extern bool isDarkBg;
+extern bool sdlInited;
 
 extern QByteArray option_geometry;
 
 extern QString currentGame, currentFolder;
-extern MameGame *mamegame;
-extern Gamelist *gamelist;
+extern MameGame *mameGame;
+extern Gamelist *gameList;
 extern QStringList consoleGamesL;
 
 extern ProcessManager *procMan;

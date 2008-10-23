@@ -1,50 +1,42 @@
 ﻿//Done
-/linux build
-/parse $HOME variable for SDLMAME
-/ onclick to select ss tab
-/ GUI theme
-/ history, ... paths
-/useless language settings ini
+/ implemented search buttons, progressive search doesn't work well
+/ fixed a bug that GUI settings are not saved sometimes
 
 //Linux
-bug: column sorting
-bug: overflow after audit?
-autocheck etc/sdl privillege
-sdl opengl options
+2 bug: column sorting
+mounted snap doesnt load
+check if symbol link is working
 
 //Options
-官方mame支持ips
-2 bios support: select bios opt, ctrlr opt, effect opt
+2 add a menu to auto mkdir
+* 官方mame支持ips
 1 add GUI Options
 * general info page
-* SDL integration for monitor/joystick
 * driver config editor
 * -driver_config, mamebin changes should cause gamelist->init()
 * ips doesnt inherit
 * option help
 * color settings editor
-* vector.ini
+* vector.ini, debug.ini
 * unify method to get inherited default value
 
 //GameList
+1 SDL joystick GUI
+2 speed up selection, 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 * export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
 2 missing parent doesn't show, filter search clone games
 * large icon view
-2 rewrite icon loading for individual icon loading. console folder icon
+2 rewrite icon loading for individual icon loading, restore item icon
 * coin/time counter column
-* s11n of detailed console extrom is not needed
 * sort by reading
 * customizable GUI text font / color
 1 play inp/rec/mng/wav...
 * display 2 lines of game desc local/english
-* disable ctrls on xml loading
 ? context menus: for listview mode
-* restore item icon
 * FBA FBAS和PPK上右键选MAWS那项就可以进这个网了
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的
 * context menus: snapshot, folder
-* add verify IPS on RunMAME, remove it if N/A
 * in-place zooming for icons
 * replace progressbar with xx%
 * add/remove items from game list model
@@ -56,35 +48,46 @@ sdl opengl options
 1 other filters
 * category ini support
 * arc icos from old caname
-* bios icons in folder list
+* bios icons
 * only non-empty console/bios folders
 
 //Snap
 1 gamename0000 snap
+1 command.dat parsing with image +0.1 (you can use command.dat with official MAME!)
 * external default.png
-2 command.dat parsing with image +0.1 (you can use command.dat with official MAME!)
-* optimize: skip or delay invisible widget loading
 * snap with or without stretching, horz/vert xml loading
 * avi/mng playback
 * mameinfo of driver
 * M1 integration?
 
 //Audit
+2 auto audit when available = 0?
 2 we can't assume nodump is not passed
 2 check chd exist, check chd auditing (use mame core?)
-2 right click auditing, write a process handler, only catch output channel
-* auto audit when available = 0?
+2 right click auditing
+* lost column state after auditing
+* crash when exit and auditing
 * non compressed roms
 * return update thread immediately if some folders doesnt even exist
 
+//Main Window
+> * Add an option to revert the geometry to default, I lost a couple of my snap/info
+2 hide to systray when lauching mame
+2 fullscreen mode, vista style
+
+//IPS
+1 ips +0.1
+* add verify IPS on RunMAME, remove it if N/A
+* ips v4
+
 //Misc
 2 generic proc output
-1 ips +0.1
-* ips v4
-* fullscreen switch
 * move datafile.c statistics to GUI
+* s11n of detailed console extrom is not needed
 
 //Console
+1 console status isnt correct
+* console folder icon
 * multi software dirs
 * console game info from GameFAQs?
 * wildcard console gamename
@@ -96,13 +99,11 @@ sdl opengl options
   display region/hack info of console rom
 
 //Extra
+* controller setting interface
 * export roms to folders
 * delete roms,cfg,nvram...
 * delete snapshot
 * gamelist editor
-* selectable l&f
-* hide to systray when lauching mame
-* controller setting
 * export fixdat, selected fixdat only
 * mess devices
 * autoupdater
@@ -122,7 +123,7 @@ sudo apt-get install libxext-dev
 windows:
 configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-rtti -no-openssl -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
 linux:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -nomake examples -nomake demos -nomake tools
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -gtkstyle -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -nomake examples -nomake demos -nomake tools
 
 deb http://ftp.debian.org/debian/ experimental main contrib non-free
 
@@ -134,9 +135,11 @@ sudo cp -f /media/qtui/mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
 
 export PATH=/usr/local/Trolltech/Qt-4.5.0-snapshot-20080918/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
 export PATH=/usr/local/Trolltech/Qt-4.4.1/bin:$PATH
 
 libqt4-dev
+libgtk2.0-dev
 
 [mamep core test]
 ips does not inherit
