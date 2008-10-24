@@ -2830,9 +2830,6 @@ static INPUT_PORTS_START( wofsj )
 	PORT_BIT( 0x2000, IP_ACTIVE_LOW, IPT_BUTTON2 ) PORT_PLAYER(2)
 	PORT_BIT( 0x4000, IP_ACTIVE_LOW, IPT_UNKNOWN )
 	PORT_BIT( 0x8000, IP_ACTIVE_LOW, IPT_UNKNOWN )
-
-	PORT_START("IN2")      /* Player 3 */
-	PORT_BIT( 0xff, IP_ACTIVE_LOW, IPT_UNKNOWN )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( wof3sj )
@@ -9820,6 +9817,7 @@ static DRIVER_INIT( wofsjb )
 	mem8[0x72B7] = 0x9F;
 	mem8[0x72B8] = 0x00;
 	mem8[0x72B9] = 0x0C;
+	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x80001a, 0x80001b, 0, 0, cps1_hack_in2_r); /* Extra input ports */
 	wof_decode(machine);
 	DRIVER_INIT_CALL(cps1);
 }
@@ -10217,9 +10215,9 @@ GAME( 1992, sf2rb2,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1992, sf2red,   sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Red Wave, bootleg)" , 0)		// 920313 - based on World version
 GAME( 1992, sf2v004,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II! - Champion Edition (V004, bootleg)", 0 )			// "102092" !!! - based on (heavily modified) World version
 GAME( 1992, sf2accp2, sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II' - Champion Edition (Accelerator Pt.II, bootleg)" , 0)  // 920313 - based on USA version
-GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1, bootleg)", 0 )
+GAME( 1992, sf2m1,    sf2ce,    cps1_12MHz, sf2,      sf2m1,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M1, bootleg)", GAME_IMPERFECT_GRAPHICS )
 GAME( 1992, sf2m2,    sf2ce,    cps1_12MHz, sf2m2,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M2, bootleg)", 0 )
-GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", 0 )
+GAME( 1992, sf2m3,    sf2ce,    cps1_12MHz, sf2,      sf2m3,    ROT0,   "bootleg","Street Fighter II' - Champion Edition (M3, bootleg)", GAME_NOT_WORKING )
 GAME( 1992, sf2m4,    sf2ce,    cps1_12MHz, sf2m4,    sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M4, bootleg)", 0 )
 GAME( 1992, sf2m5,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M5, bootleg)", 0 )
 GAME( 1992, sf2m6,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Xiang Long set 2, Chinese bootleg)", 0 )
@@ -10279,7 +10277,7 @@ GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
 GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 1, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 2, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
-GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 3, Chinese bootleg)", GAME_UNEMULATED_PROTECTION )
+GAME( 1995, wofsjb,   wof,      qsound,     wof,      wofsjb,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (set 3, Chinese bootleg)", 0 )
 GAME( 1997, wof3sj,   wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 1, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg","Sangokushi II: San Sheng Jian (set 2, Chinese bootleg)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1997, wof3js,   wof,      qsound,     wof3js,   wof3js,   ROT0,   "bootleg","Sangokushi II: San Jian Sheng (Chinese bootleg)", 0 )
