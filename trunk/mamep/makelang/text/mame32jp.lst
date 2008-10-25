@@ -1336,6 +1336,7 @@ gunforc2	ジオストーム / Gun Force II (USA版)	じおすとーむ	Irem
 geostorm	ジオストーム (日本版)	じおすとーむ	Irem
 firebarr	ファイアーバレル (日本版)	ふぁいあーばれる	Irem
 dsoccr94	ドリームサッカー'94	どりーむさっかー94	Irem (Data East Corporation license)
+kftgoal	ワールドPKサッカー / Kick for the Goal	わーるどぴーけーさっかー_1	Jaleco
 wpksoc	ワールドPKサッカー	わーるどぴーけーさっかー_1	Jaleco
 reactor	リアクター	りあくたー	Gottlieb
 mplanets	マッドプラネット	まっどぷらねっと	Gottlieb
@@ -1595,16 +1596,16 @@ drtopplu	Dr.トッペル探検隊 / Dr. Toppel's Adventure (USA版)	どくたーとっぺるたん
 drtopplj	Dr.トッペル探検隊 (日本版)	どくたーとっぺるたんけんたい	Taito Corporation
 kageki	火激 (USA版)	かげき	Taito America Corporation (Romstar license)
 kagekij	火激 (日本版)	かげき	Taito Corporation
-kagekia	火激 (海外版?) (ハック)	かげき	Taito Corporation
+kagekih	火激 (ハック)	かげき	Taito Corporation
 chukatai	中華大仙 (海外版)	ちゅうかたいせん	Taito Corporation Japan
 chukatau	中華大仙 (USA版)	ちゅうかたいせん	Taito America Corporation
 chukataj	中華大仙 (日本版)	ちゅうかたいせん	Taito Corporation
 kabukiz	歌舞伎Z (海外版)	かぶきぜっと	Taito Corporation Japan
 kabukizj	歌舞伎Z (日本版)	かぶきぜっと	Taito Corporation
 tnzs	ニュージーランドストーリー (海外版 newer) (newer PCB)	にゅーじーらんどすとーりー	Taito Corporation Japan
-tnzsjn	ニュージーランドストーリー (日本版) (newer PCB)	にゅーじーらんどすとーりー	Taito Corporation
-tnzsj	ニュージーランドストーリー (日本版) (older PCB)	にゅーじーらんどすとーりー	Taito Corporation
-tnzso	ニュージーランドストーリー (海外版 older) (older PCB)	にゅーじーらんどすとーりー	Taito Corporation Japan
+tnzsj	ニュージーランドストーリー (日本版 new ver) (newer PCB)	にゅーじーらんどすとーりー	Taito Corporation
+tnzsjo	ニュージーランドストーリー (日本版 old ver) (older PCB)	にゅーじーらんどすとーりー	Taito Corporation
+tnzso	ニュージーランドストーリー (海外版  prototype?) (older PCB)	にゅーじーらんどすとーりー	Taito Corporation Japan
 insectx	インセクターX (海外版)	いんせくたーえっくす	Taito Corporation Japan
 champbwl	チャンピオンシップボウリング	ちゃんぴおんしっぷぼうりんぐ	Seta / Romstar Inc.
 raimais	レイメイズ (海外版)	れいめいず	Taito Corporation Japan
@@ -1888,8 +1889,10 @@ demonwl2	ホラーストーリー (set 3)	ほらーすとーりー	Toaplan
 demonwl3	ホラーストーリー (set 4)	ほらーすとーりー	Toaplan
 demonwl4	ホラーストーリー (set 5)	ほらーすとーりー	Toaplan
 fireshrk	鮫！鮫！鮫！ / Fire Shark	さめさめさめ	Toaplan
-samesame	鮫！鮫！鮫！	さめさめさめ	Toaplan
-samesam2	鮫！鮫！鮫！ (2p ver)	さめさめさめ	Toaplan
+fireshd	鮫！鮫！鮫！ / Fire Shark (韓国版 set 1 easier)	さめさめさめ	Toaplan (Dooyong license)
+fireshdh	鮫！鮫！鮫！ / Fire Shark (韓国版 set 2 harder)	さめさめさめ	Toaplan (Dooyong license)
+samesame	鮫！鮫！鮫！ (2 player alternating ver)	さめさめさめ	Toaplan
+samesam2	鮫！鮫！鮫！	さめさめさめ	Toaplan
 outzone	アウトゾーン (set 1)	あうとぞーん	Toaplan
 outzonea	アウトゾーン (set 2)	あうとぞーん	Toaplan
 outzoneb	アウトゾーン (set 3 prototype?)	あうとぞーん	Toaplan
@@ -2759,6 +2762,7 @@ clbowl	カプコンボウリング / Coors Light Bowling	かぷこんぼうりんぐ	Incredible Te
 bowlrama	ボウル・オ・ラマ	ぼうるおらま	P&amp;P Marketing
 wfortune	ホイール・オブ・フォーチュン	ほいーるおぶふぉーちゅん	GameTek
 wfortuna	ホイール・オブ・フォーチュン (alt)	ほいーるおぶふぉーちゅん	GameTek
+grmatch	グラッジマッチ (Yankee game technology)	ぐらっじまっち	Yankee Game Technology
 stratab	ストレータボウリング (ver 3)	すとれーたぼうりんぐ	Strata/Incredible Technologies
 stratab1	ストレータボウリング (ver 1)	すとれーたぼうりんぐ	Strata/Incredible Technologies
 sstrike	スーパーストライクボウリング	すーぱーすとらいくぼうりんぐ	Strata/Incredible Technologies
@@ -2959,8 +2963,8 @@ chwrestl	チャンピオンプロレス	ちゃんぴおんぷろれす	Sega
 dokidoki	どきどきペンギンランド	どきどきぺんぎんらんど	Sega
 starjack	スタージャッカー (Sega)	すたーじゃっかー	Sega
 starjacs	スタージャッカー (Stern)	すたーじゃっかー	Stern
-regulus	レグルス (315-5033 new ver)	れぐるす	Sega
-reguluso	レグルス (315-5033 old ver)	れぐるす	Sega
+regulus	レグルス (315-5033 rev A)	れぐるす	Sega
+reguluso	レグルス (315-5033)	れぐるす	Sega
 regulusu	レグルス (not encrypted)	れぐるす	Sega
 upndown	アップンダウン (315-5030)	あっぷんだうん	Sega
 upndownu	アップンダウン (not encrypted)	あっぷんだうん	Sega
@@ -3341,9 +3345,9 @@ prikura	プリクラ大作戦 (日本版 960910 ver 1.000)	ぷりくらだいさくせん	Atlus
 puyosun	ぷよぷよSUN (日本版 961115 ver 0.001)	ぷよぷよ_3さん	Compile
 rsgun	レイディアントシルバーガン (日本 / USA / 欧州 / 台湾版 980523 ver 1.000)	れいでぃあんとしるばーがん	Treasure
 sandor	2度あることはサンドアール (日本版 951114 ver 1.000)	にどあることはさんどあーる	Sega
-sanjeon	対戦タントアール サシっす！！ / DaeJeon! SanJeon SuJeon (韓国版)	たいせんたんとあーるさしっす	Sega / Deniam
+sanjeon	対戦タントアール サシっす！！ / DaeJeon! SanJeon SuJeon (アジア / 日本 / 台湾 / USA / 欧州版 990412 ver 1.000)	たいせんたんとあーるさしっす	Sega / Deniam
 thunt	2度あることはサンドアール / Treasure Hunt (日本 / USA / 欧州 / 台湾版 970901 ver 2.00E)	にどあることはさんどあーる	Sega
-thuntk	2度あることはサンドアール / Puzzle & Action: BoMulEul Chajara (韓国版)	にどあることはさんどあーる	Sega / Deniam
+thuntk	2度あることはサンドアール / Puzzle & Action: BoMulEul Chajara (日本 / USA / 欧州 / 台湾版 970125 ver 2.00K)	にどあることはさんどあーる	Sega / Deniam
 sasissu	対戦タントアール サシっす！！ (日本版 980216 ver 1.000)	たいせんたんとあーるさしっす	Sega
 seabass	シーバス・フィッシング (日本 / USA / 欧州 / 台湾版 971110 ver 0.001)	しーばすふぃっしんぐ	A wave inc. (Able license)
 shanhigw	上海 万里の長城 (日本 / USA / 欧州版 950623 ver 1.005)	しゃんはい_4ばんりのちょうじょう	Sunsoft / Activision
@@ -3353,7 +3357,7 @@ sokyugrt	蒼穹紅蓮隊 (日本 / USA / 欧州 / 台湾版 960821 ver 1.000)	そうきゅうぐれ
 sss	スティープ・スロープ・スライダーズ (日本 / USA / 欧州 / 台湾版 981110 ver 1.000)	すてぃーぷすろーぷすらいだーず	Capcom / Cave / Victor
 suikoenb	水滸演武 (日本 / USA / 欧州 / 台湾 / ラテン版 950314 ver 2.001)	すいこえんぶ	Data East
 twcup98	テクモワールドカップ '98 (日本 / USA / 欧州 / 台湾版 980410 ver 1.000)	てくもわーるどかっぷ_498	Tecmo
-stress	ストレスバスターズ	すとれすばすたーず	Sega
+stress	ストレスバスターズ (日本版 981020 ver 1.000)	すとれすばすたーず	Sega
 vfkids	バーチャファイター キッズ (日本 / USA / 欧州 / 台湾版 960319 ver 0.000)	ばーちゃふぁいたー_4きっず	Sega
 vfremix	バーチャファイター リミックス (日本 / USA / 欧州 / 台湾 / ブラジル / 韓国 / アジア / ラテン版 950428 ver 1.000)	ばーちゃふぁいたー_1_2りみっくす	Sega
 vmahjong	バーチャル麻雀 (日本版 961214 ver 1.000)	ばーちゃるまーじゃん_1	Micronet
@@ -3365,7 +3369,7 @@ batmanfr	バットマン フォーエヴァー (日本 / USA / 欧州版 960507 ver 1.000)	ばっと
 critcrsh	タタコット / Critter Crusher (欧州 / アジア版 951204 ver 1.000)	たたこっと	Sega
 sfish2	スポーツフィッシング2 (USA / 欧州 / 台湾版 951106 ver 1.10e)	すぽーつふぃっしんぐ2	Sega
 sfish2j	スポーツフィッシング2 (日本版 951201 ver 1.100)	すぽーつふぃっしんぐ2	Sega
-magzun	マジカル頭脳パワー	まじかるずのうぱわー	Sega
+magzun	マジカル頭脳パワー (日本版 961031 ver 1.000)	まじかるずのうぱわー	Sega
 nclubv3	ネーム倶楽部 Version 3 (日本版 970723 V1.000)	ねーむくらぶ_3	Sega
 daytona	デイトナUSA (日本版 rev A) 	でいとなゆーえすえー_1	Sega
 dayton93	デイトナUSA デラックス '93	でいとなゆーえすえー_1	Sega
@@ -5067,6 +5071,7 @@ mslug4	メタルスラッグ4	めたるすらっぐ_4_1	Mega
 ms4plus	メタルスラッグ4 / Metal Slug 4 Plus (海賊版)	めたるすらっぐ_4_2	bootleg
 rotd	レイジ・オブ・ザ・ドラゴンズ	れいじおぶざどらごんず	Evoga / Playmore
 kof2002	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle	ざきんぐおぶふぁいたーず_09_1_2002	Eolith / Playmore
+kof2002b	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Plus (海賊版)	ざきんぐおぶふぁいたーず_09_1_2002	bootleg
 kf2k2pls	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Plus (海賊版 set 1)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
 kf2k2pla	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Plus (海賊版 set 2)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
 kf2k2mp	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Magic Plus (海賊版)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
@@ -5624,7 +5629,8 @@ heatbrlu	ヒーテッドバレル (USA版)	ひーてっどばれる	Tad
 godzilla	ゴジラ	ごじら	Banpresto
 denjinmk	電神魔傀	でんじんまかい_1	Banpresto
 sdgndmrb	SDガンダム三国志 レインボー大陸戦記	えすでぃーがんだむさんごくしれいんぼーたいりくせんき	Banpresto
-cupsoc	セイブカップサッカー	せいぶかっぷさっかー_1	Seibu
+cupsoc	セイブカップサッカー (set 1)	せいぶかっぷさっかー_1	Seibu
+cupsoca	セイブカップサッカー (set 2)	せいぶかっぷさっかー_1	Seibu
 cupsocs	セイブカップサッカー セレクション (set 1)	せいぶかっぷさっかー_2	Seibu
 cupsocs2	セイブカップサッカー セレクション (set 2)	せいぶかっぷさっかー_2	Seibu
 cupsocsb	セイブカップサッカー セレクション (海賊版)	せいぶかっぷさっかー_2	bootleg
@@ -5725,9 +5731,9 @@ f1superb	F-1スーパーバトル	えふわんすーぱーばとる	Jaleco
 bnstars1	VS雀士ブランニュースターズ	ばーさすじゃんしぶらんにゅーすたーず	Jaleco
 rabiolep	ラビオ・レプス (日本版)	らびおれぷす	V-System Co.
 rpunch	ラビオ・レプス / Rabbit Punch (USA版)	らびおれぷす	V-System Co. (Bally/Midway/Sente license)
-svolley	スーパーバレーボール (日本版)	すーぱーばれー_1	V-System Co.
-svolleyk	スーパーバレーボール (韓国版)	すーぱーばれー_1	V-System Co.
-svolleyu	スーパーバレーボール (USA版)	すーぱーばれー_1	V-System Co. (Data East license)
+svolley	スーパーバレーボール (日本版)	すーぱーばれー_1ぼーる	V-System Co.
+svolleyk	スーパーバレーボール (韓国版)	すーぱーばれー_1ぼーる	V-System Co.
+svolleyu	スーパーバレーボール (USA版)	すーぱーばれー_1ぼーる	V-System Co. (Data East license)
 tail2nos	スーパーフォーミュラ -地上最速のバトル / Tail to Nose -Great Championship	すーぱーふぉーみゅら	V-System Co.
 sformula	スーパーフォーミュラ -地上最速のバトル (日本版)	すーぱーふぉーみゅら	V-System Co.
 ojankoc	お雀子クラブ (日本版)	おじゃんこくらぶ	V-System Co.
@@ -5749,12 +5755,12 @@ hatris	ハットリス (日本版)	はっとりす	Video System Co.
 spinlbrk	スパイナルブレーカーズ (海外版)	すぱいなるぶれーかーず	V-System Co.
 spinlbru	スパイナルブレーカーズ (USA版)	すぱいなるぶれーかーず	V-System Co.
 spinlbrj	スパイナルブレーカーズ (日本版)	すぱいなるぶれーかーず	V-System Co.
-pspikes	スーパーバレー '91 / Power Spikes (海外版)	すーぱーばれー_2	Video System Co.
-pspikesk	スーパーバレー '91 / Power Spikes (韓国版)	すーぱーばれー_2	Video System Co.
-svolly91	スーパーバレー '91 (日本版)	すーぱーばれー_2	Video System Co.
-pspikesb	スーパーバレー '91 / Power Spikes (海賊版)	すーぱーばれー_2	bootleg
-spikes91	スーパーバレー '91 / 1991 Spikes (イタリア版) (海賊版)	すーぱーばれー_2	bootleg
-pspikesc	スーパーバレー '91 / Power Spikes (中国版)	すーぱーばれー_2	bootleg
+pspikes	スーパーバレー '91 / Power Spikes (海外版)	すーぱーばれー_291	Video System Co.
+pspikesk	スーパーバレー '91 / Power Spikes (韓国版)	すーぱーばれー_291	Video System Co.
+svolly91	スーパーバレー '91 (日本版)	すーぱーばれー_291	Video System Co.
+pspikesb	スーパーバレー '91 / Power Spikes (海賊版)	すーぱーばれー_291	bootleg
+spikes91	スーパーバレー '91 / 1991 Spikes (イタリア版) (海賊版)	すーぱーばれー_291	bootleg
+pspikesc	スーパーバレー '91 / Power Spikes (中国版)	すーぱーばれー_291	bootleg
 karatblz	闘神ブレイザーズ / Karate Blazers (海外版)	とうしんぶれいざーず	Video System Co.
 karatblu	闘神ブレイザーズ / Karate Blazers (USA版)	とうしんぶれいざーず	Video System Co.
 karatblj	闘神ブレイザーズ (日本版)	とうしんぶれいざーず	Video System Co.
@@ -6623,6 +6629,7 @@ crysking	ザ・クリスタルオブキングス	ざくりすたるおぶきんぐす	Brezzasoft
 evosocc	エボリューションサッカー	えぼりゅーしょんさっかー	Evoga
 topbladv	トップブレードV	とっぷぶれーど5	SonoKong / Expotato
 officeye	オフィスイェオ・イン・チェオンハ (ver 1.2)	おふぃすいぇおいんちぇおんは	Danbi
+psattack	ピーズアタック	ぴーずあたっく	Uniana
 inquiztr	インクイジター	いんくいじたー	BFM
 escounts	エブリセカンドカウンツ (39-360-053)	えぶりせかんどかうんつ	BFM
 trebltop	トレブルトップ (39-360-070)	とれぶるとっぷ	BFM
@@ -6738,6 +6745,7 @@ aquarium	アクアリウム (日本版)	あくありうむ	Excellent System
 policetr	ポリストレーナー -Property of Metro Police Academy (rev 1.3)	ぽりすとれーなー	P &amp; P Marketing
 polict11	ポリストレーナー -Property of Metro Police Academy (rev 1.1)	ぽりすとれーなー	P &amp; P Marketing
 polict10	ポリストレーナー -Property of Metro Police Academy (rev 1.0)	ぽりすとれーなー	P &amp; P Marketing
+plctr13a	ポリストレーナー -Property of Metro Police Academy (rev 1.3B newer)	ぽりすとれーなー	P &amp; P Marketing
 plctr13b	ポリストレーナー -Property of Metro Police Academy (rev 1.3B)	ぽりすとれーなー	P &amp; P Marketing
 sshooter	シャープシューター (rev 1.7)	しゃーぷしゅーたー	P &amp; P Marketing
 sshoot12	シャープシューター (rev 1.2)	しゃーぷしゅーたー	P &amp; P Marketing
@@ -6847,6 +6855,7 @@ winka	ウインク (set 2)	ういんく	Midcoin
 skyarmy	スカイアーミー	すかいあーみー	Shoei
 lethalj	リーサルジャスティス	りーさるじゃすてぃす	The Game Room
 eggventr	エッグベンチャー (release 10)	えっぐべんちゃー_1	The Game Room
+eggvent8	エッグベンチャー (release 8)	えっぐべんちゃー_1	The Game Room
 eggvent7	エッグベンチャー (release 7)	えっぐべんちゃー_1	The Game Room
 eggventa	エッグベンチャー (A.L. release)	えっぐべんちゃー_1	The Game Room (Allied Leisure license)
 eggvntdx	エッグベンチャーデラックス	えっぐべんちゃー_2でらっくす	The Game Room
@@ -7238,6 +7247,8 @@ shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	Sega?
 blackt96	ブラックタッチ'96	ぶらっくたっち_96	D.G.R.M.
 lucky74	ラッキー74 (海賊版 set 1)	らっきー74	Wing Co.,Ltd.
 lucky74a	ラッキー74 (海賊版 set 2)	らっきー74	Wing Co.,Ltd.
+magictg	マジック・ザ・ギャザリング・アルマゲドン (set 1)	まじっくざぎゃざりんぐあるまげどん	Acclaim
+magictga	マジック・ザ・ギャザリング・アルマゲドン (set 2)	まじっくざぎゃざりんぐあるまげどん	Acclaim
 videopkr	ビデオポーカー	びでおぽーかー	InterFlip
 blckjack	ブラックジャック	ぶらっくじゃっく	InterFlip
 videodad	ビデオダド	びでおだど	InterFlip
@@ -7289,7 +7300,6 @@ kof97pla	ザ・キング・オブ・ファイターズ '97 / The King of Fighters '97 Plus 2003
 kf2k1pls	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 / ハック set 1)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
 kf2k1pa	ザ・キング・オブ・ファイターズ 2001 / The King of Fighters 2001 Plus (海賊版 / ハック set 2)	ざきんぐおぶふぁいたーず_08_2_2001	bootleg
 cthd2k3a	ザ・キング・オブ・ファイターズ 2001 / Crouching Tiger Hidden Dragon 2003 (海賊版 set 2)	ざきんぐおぶふぁいたーず_08_3_2001	bootleg
-kof2002b	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Plus (海賊版)	ざきんぐおぶふぁいたーず_09_1_2002	bootleg
 kf2k2plb	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Plus (海賊版 / ハック set 3)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
 kf2k2plc	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters 2002 Super (海賊版 / ハック set 4)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
 kf2k4pls	ザ・キング・オブ・ファイターズ 2002 -Challenge to Ultimate Battle / The King of Fighters Special Edition 2004 Plus (海賊版)	ざきんぐおぶふぁいたーず_09_2_2002	bootleg
