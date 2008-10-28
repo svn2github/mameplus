@@ -22,5 +22,5 @@ QDockWidget::title {
 }
 
 QListView::item:selected{
-/*	background-image:url(res/images_nav_tab_sel.png);*/
+	background-image:url(res/images_nav_tab_sel.png);
 }

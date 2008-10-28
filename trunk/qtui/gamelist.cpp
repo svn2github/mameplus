@@ -202,7 +202,7 @@ public:
 	{
 		currentText += str;
 		return true;
-	}	
+	}
 
 private:
 	GameInfo *gameinfo;
@@ -230,7 +230,7 @@ void LoadIconThread::load()
 		cancel = false;
 		done = false;
 		
-		start(LowPriority);
+		start(LowestPriority);
 	}
 }
 
@@ -372,7 +372,7 @@ void UpdateSelectionThread::update()
 	QMutexLocker locker(&mutex);
 
 	if (!isRunning())
-		start(NormalPriority);
+		start(LowPriority);
 }
 
 void UpdateSelectionThread::run()
@@ -445,9 +445,63 @@ void UpdateSelectionThread::run()
 			path = "story.dat";
 			if (mameOpts.contains("story_file"))
 				path = mameOpts["story_file"]->globalvalue;
-
+		
 			storyText = utils->getHistory(path, gameName);
 			emit snapUpdated(DOCK_STORY);
+		}
+		if (win->tbCommand->isVisible() && win->isDockTabVisible("Command"))
+		{
+			path = "command.dat";
+			if (mameOpts.contains("command_file"))
+				path = mameOpts["command_file"]->globalvalue;
+
+			commandText = utils->getHistory(path, gameName);
+
+			// command.dat parsing
+			commandText.replace(QRegExp("<br>\\s+"), "<br>");
+			/* directions */
+			//generate dup dirs
+			commandText.replace("_2_1_4_1_2_3_6", "_2_1_4_4_1_2_3_6");
+			commandText.replace("_2_3_6_3_2_1_4", "_2_3_6_6_3_2_1_4");
+			commandText.replace("_4_1_2_3_6", "<img src=\":/res/16x16/dir-hcf.png\" />");
+			commandText.replace("_6_3_2_1_4", "<img src=\":/res/16x16/dir-hcb.png\" />");
+			commandText.replace("_2_3_6", "<img src=\":/res/16x16/dir-qdf.png\" />");
+			commandText.replace("_2_1_4", "<img src=\":/res/16x16/dir-qdb.png\" />");
+			commandText.replace(QRegExp("_(\\d)"), "<img src=\":/res/16x16/dir-\\1.png\" />");
+			// buttons
+			commandText.replace(QRegExp("_([A-DGKNPS\\+])"), "<img src=\":/res/16x16/btn-\\1.png\" />");
+			commandText.replace(QRegExp("_([a-f])"), "<img src=\":/res/16x16/btn-n\\1.png\" />");
+			//------
+			commandText.replace(QRegExp("<br>[\\x2500-]{8,}<br>"), "<hr>");
+			//special moves, starts with <br> || <hr>
+			commandText.replace(QRegExp(">\\x2605"), "><img src=\":/res/16x16/star_gold.png\" />");
+			commandText.replace(QRegExp(">\\x2606"), "><img src=\":/res/16x16/star_silver.png\" />");
+			commandText.replace(QRegExp(">\\x25B2"), "><img src=\":/res/16x16/tri-r.png\" />");
+			commandText.replace(QRegExp(">\\x25CB"), "><img src=\":/res/16x16/cir-y.png\" />");
+			commandText.replace(QRegExp(">\\x25CE"), "><img src=\":/res/16x16/cir-r.png\" />");			
+			commandText.replace(QRegExp(">\\x25CF"), "><img src=\":/res/16x16/cir-g.png\" />");
+			commandText.replace(QChar(0x2192), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />");
+//			commandText.replace(QChar(0x3000), "<img src=\":/res/16x16/blank.png\" />");
+
+/* colors
+Y: +45
+G: +120 0 -28
+B: -150 0 -20
+C: -32
+P: -90
+*/
+
+///*
+			if (language.startsWith("zh_") || language.startsWith("ja_"))
+			{
+				QFont font;
+				font.setFamily("MS Gothic");
+				font.setFixedPitch(true);
+				win->tbCommand->setFont(font);
+//				win->tbCommand->setLineWrapMode(QTextEdit::NoWrap);
+			}
+//*/
+			emit snapUpdated(DOCK_COMMAND);
 		}
 	}
 }
@@ -1181,10 +1235,11 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		//draw text bg
 		if (option.state & QStyle::State_Selected)
 		{
-/*			painter->fillRect(rc, QBrush(
+///*
+			painter->fillRect(rc, QBrush(
 				QPixmap("res/images_nav_tab_sel.png").scaled(QSize(33, 33))
 				));
-*/
+//*/
 			painter->fillRect(rc, option.palette.highlight());
 		}
 
@@ -1202,20 +1257,18 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 }
 
 
-Gamelist::Gamelist(QObject *parent)
-: QObject(parent)
+Gamelist::Gamelist(QObject *parent) : 
+QObject(parent),
+loadProc(NULL),
+numTotalGames(-1),
+menu(NULL),
+headerMenu(NULL)
 {
 	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
 //	connect(&iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), win, SLOT(logStatus(QString)));
-
 	connect(&selectThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 	
 	mAuditor = new MergedRomAuditor(parent);
-
-	numTotalGames = -1;
-	loadProc = NULL;
-	menu = NULL;
-	headerMenu = NULL;
 }
 
 Gamelist::~Gamelist()
@@ -1305,7 +1358,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		selectThread.myqueue.enqueue(currentGame);
 		selectThread.update();
 
-		//update selected rows
+		//update selected rows, fixme: performance bottleneck!
 		gameListModel->rowChanged(gameListPModel->mapToSource(current));
 		gameListModel->rowChanged(gameListPModel->mapToSource(previous));
 	}
@@ -1388,7 +1441,6 @@ void Gamelist::setupSnap(int snapType)
 	case DOCK_PCB:
 		win->ssPCB->setPixmap(selectThread.pmdataPCB);
 		break;
-
 	case DOCK_HISTORY:
 		win->tbHistory->setHtml(selectThread.historyText);
 		break;
@@ -1397,6 +1449,36 @@ void Gamelist::setupSnap(int snapType)
 		break;
 	case DOCK_STORY:
 		win->tbStory->setHtml(selectThread.storyText);
+		break;
+	case DOCK_COMMAND:
+#if 0
+//draw in memory
+		QPixmap pm(100, 100);
+		QPainter p(&pm);
+
+		QRect rc(0, 0, 100, 100);
+		QString text = selectThread.storyText;
+		text.replace("<br>", "\n");
+		rc = p.boundingRect(rc, Qt::AlignLeft, text);
+//		win->log(QString("rc: %1, %2, %3").arg(rc.width()).arg(rc.height()).arg(selectThread.storyText.count()));
+
+		QPixmap pm2(rc.width(), 300);
+		QPainter p2;
+		QFont font;
+		win->log(p2.font().family());
+		pm2.fill();
+
+		p2.begin(&pm2);
+		font.setFamily("MS Gothic");
+//		font.setPointSize(8);
+		p2.setFont(font);
+		p2.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
+		p2.drawText(rc, Qt::AlignLeft | Qt::TextWordWrap, text);
+		p2.end();
+		
+		win->ssPCB->setPixmap(pm2);
+#endif
+		win->tbCommand->setHtml(selectThread.commandText);
 	}
 }
 
@@ -1604,9 +1686,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 		args << "-listxml";
 		loadTimer.start();
-		loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
-
-		connect(loadProc, SIGNAL(started()), this, SLOT(loadListXmlStarted()));
+		loadProc = procMan->process(procMan->start(mame_binary, args));
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
@@ -1854,11 +1934,6 @@ void Gamelist::updateHeaderContextMenu()
 	win->actionColCloneOf->setChecked(header->isSectionHidden(6) ? false : true);
 }
 
-void Gamelist::loadListXmlStarted()
-{
-	win->log("DEBUG: Gamelist::loadListXmlStarted()");
-}
-
 void Gamelist::loadListXmlReadyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
@@ -1873,16 +1948,8 @@ void Gamelist::loadListXmlReadyReadStandardOutput()
 	win->logStatus(QString(tr("Loading listxml: %1 games")).arg(numTotalGames));
 }
 
-void Gamelist::loadListXmlFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void Gamelist::loadListXmlFinished(int, QProcess::ExitStatus)
 {
-	QProcess *proc = (QProcess *)sender();
-	QTime elapsedTime;
-	elapsedTime = elapsedTime.addMSecs(loadTimer.elapsed());
-
-	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
-
 	parse();
 //	win->poplog("PRE load ini ()");
 
@@ -1897,7 +1964,7 @@ void Gamelist::loadDefaultIni()
 	QStringList args;
 	args << "-showconfig" << "-noreadconfig";
 
-	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
+	loadProc = procMan->process(procMan->start(mame_binary, args));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
 }
@@ -1910,20 +1977,14 @@ void Gamelist::loadDefaultIniReadyReadStandardOutput()
 	mameGame->mameDefaultIni += buf;
 }
 
-void Gamelist::loadDefaultIniFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void Gamelist::loadDefaultIniFinished(int, QProcess::ExitStatus)
 {
-	QProcess *proc = (QProcess *)sender();
-
-	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
-
 	optUtils->loadDefault(mameGame->mameDefaultIni);
 	optUtils->loadTemplate();
 
 	//reload gameList. this is a chained call from loadListXmlFinished()
 	init(true, GAMELIST_INIT_FULL);
-	win->log("end of gameList->loadDefFin()");
+//	win->log("end of gameList->loadDefFin()");
 }
 
 // extract a rom from the merged file
@@ -1934,31 +1995,19 @@ void Gamelist::extractMerged(QString mergedFileName, QString fileName)
 	args << "e" << "-y" << mergedFileName << fileName <<"-o" + QDir::tempPath();
 	currentTempROM = QDir::tempPath() + "/" + fileName;
 
-	loadProc = procMan->process(procMan->start(command, args, FALSE));
+	loadProc = procMan->process(procMan->start(command, args));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractMergedFinished(int, QProcess::ExitStatus)));
 }
 
 // call the emulator after the rom has been extracted
-void Gamelist::extractMergedFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void Gamelist::extractMergedFinished(int, QProcess::ExitStatus)
 {
-	QProcess *proc = (QProcess *)sender();
-
-	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
-
 	runMame(true);
 }
 
 // delete the extracted rom
-void Gamelist::runMergedFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void Gamelist::runMergedFinished(int, QProcess::ExitStatus)
 {
-	QProcess *proc = (QProcess *)sender();
-
-	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
-
 	QFile file(currentTempROM);
 	file.remove();
 	currentTempROM.clear();
@@ -1966,8 +2015,6 @@ void Gamelist::runMergedFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
 void Gamelist::parse()
 {
-	win->log("DEBUG: Gamelist::prep parse()");
-
 	ListXMLHandler handler(0);
 	QXmlSimpleReader reader;
 	reader.setContentHandler(&handler);
@@ -2224,7 +2271,7 @@ void Gamelist::initFolders()
 	{
 		items.append(new QTreeWidgetItem(win->treeFolders, QStringList(folderList[i])));
 
-		win->treeFolders->insertTopLevelItems(0, items);
+		win->treeFolders->addTopLevelItems(items);
 		items[i]->setIcon(0, icoFolder);
 
 		if (i == FOLDER_CONSOLE)
@@ -2261,6 +2308,50 @@ void Gamelist::initFolders()
 
 	connect(win->treeFolders, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		this, SLOT(filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *)));
+
+#if 0
+	QString folderName = "Artwork";
+	QFile inFile(folderName + ".ini");
+
+	QString line;
+	QMultiMap<QString, QString> iniFolders;
+
+	if (inFile.open(QFile::ReadOnly | QFile::Text))
+	{
+		QTextStream in(&inFile);
+		in.setCodec("UTF-8");
+
+		QString key;
+		do
+		{
+			line = in.readLine().trimmed();
+			if (!line.isEmpty())
+			{
+				if (line.startsWith("[") && line.endsWith("]"))
+				{
+					key = line.mid(1, line.size() - 2);
+				}
+				else if (!key.isEmpty())
+					iniFolders.insert(key, line);
+			}
+		}
+		while (!line.isNull());
+	}
+
+///*
+	QTreeWidgetItem *rootFolderItem = new QTreeWidgetItem(win->treeFolders, QStringList(folderName));
+	win->treeFolders->addTopLevelItem(rootFolderItem);
+
+	foreach (QString key, iniFolders.uniqueKeys())
+	{
+		rootFolderItem->addChild(new QTreeWidgetItem(rootFolderItem, QStringList(key)));
+		foreach (QString value, iniFolders.values(key))
+		{
+//			win->log(QString("kv: %1, %2").arg(key).arg(value));
+		}
+	}
+//*/
+#endif
 }
 
 void Gamelist::restoreFolderSelection()
@@ -2341,9 +2432,11 @@ void Gamelist::runMame(bool runMerged)
 		{
 			// use temp rom name instead
 			args << currentTempROM;
-			loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
+			loadProc = procMan->process(procMan->start(mame_binary, args));
 			// delete the extracted rom
 			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
+			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
+			win->toggleTrayIcon(0, QProcess::NormalExit, true);
 			return;
 		}
 
@@ -2360,7 +2453,9 @@ void Gamelist::runMame(bool runMerged)
 	if (mameOpts.contains("language"))
 		args << "-language" << language;
 
-	procMan->process(procMan->start(mame_binary, args));
+	loadProc = procMan->process(procMan->start(mame_binary, args));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
+	win->toggleTrayIcon(0, QProcess::NormalExit, true);
 }
 
 

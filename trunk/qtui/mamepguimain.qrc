@@ -41,6 +41,45 @@
 	<file>res/16x16/status_imperfect.png</file>
 	<file>res/16x16/system-search.png</file>
 	<file>res/16x16/status_cross.png</file>
+	<file>res/16x16/blank.png</file>
+	<file>res/16x16/mamep.png</file>
+
+	<file>res/16x16/btn-+.png</file>
+	<file>res/16x16/btn-A.png</file>
+	<file>res/16x16/btn-B.png</file>
+	<file>res/16x16/btn-C.png</file>
+	<file>res/16x16/btn-D.png</file>
+	<file>res/16x16/btn-G.png</file>
+	<file>res/16x16/btn-K.png</file>
+	<file>res/16x16/btn-N.png</file>
+	<file>res/16x16/btn-na.png</file>
+	<file>res/16x16/btn-nb.png</file>
+	<file>res/16x16/btn-nc.png</file>
+	<file>res/16x16/btn-nd.png</file>
+	<file>res/16x16/btn-ne.png</file>
+	<file>res/16x16/btn-nf.png</file>
+	<file>res/16x16/btn-P.png</file>
+	<file>res/16x16/btn-S.png</file>
+	<file>res/16x16/dir-1.png</file>
+	<file>res/16x16/dir-2.png</file>
+	<file>res/16x16/dir-3.png</file>
+	<file>res/16x16/dir-4.png</file>
+	<file>res/16x16/dir-5.png</file>
+	<file>res/16x16/dir-6.png</file>
+	<file>res/16x16/dir-7.png</file>
+	<file>res/16x16/dir-8.png</file>
+	<file>res/16x16/dir-9.png</file>
+	<file>res/16x16/dir-hcb.png</file>
+	<file>res/16x16/dir-hcf.png</file>
+	<file>res/16x16/dir-qdb.png</file>
+	<file>res/16x16/dir-qdf.png</file>
+	<file>res/16x16/star_gold.png</file>
+	<file>res/16x16/star_silver.png</file>
+	<file>res/16x16/tri-r.png</file>
+	<file>res/16x16/cir-g.png</file>
+	<file>res/16x16/cir-r.png</file>
+	<file>res/16x16/cir-y.png</file>
+	<file>res/16x16/arrow-r.png</file>
 
 	<file>res/mame32-show-snap.png</file>
 	<file>res/mame32-show-tree.png</file>
@@ -56,7 +95,6 @@
 	<file>res/reset_property.png</file>
 	<file>res/win_roms.ico</file>
 	<file>res/status-na.png</file>
-	<file>res/blank.png</file>
 
 	<file>res/mamepgui.ini</file>
 	<file>res/mamepgui.qss</file>

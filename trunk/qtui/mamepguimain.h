@@ -19,7 +19,6 @@ Q_IMPORT_PLUGIN(qjpeg)
 #include "gamelist.h"
 #include "mameopt.h"
 #include "dialogs.h"
-#include "procmgr.h"
 #include "utils.h"
 
 enum
@@ -35,6 +34,7 @@ enum
 	DOCK_HISTORY,
 	DOCK_MAMEINFO,
 	DOCK_STORY,
+	DOCK_COMMAND,
 	DOCK_LAST
 };
 
@@ -45,6 +45,7 @@ class Screenshot : public QDockWidget
 
 public:
     Screenshot(QString, QWidget *parent = 0);
+	void setPixmap(QPixmap pm);
 	void setPixmap(const QByteArray &, bool = false);
 	void setAspect(bool);
 
@@ -85,6 +86,7 @@ public:
 	*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
 	QWidget *wStatus;
 	QProgressBar *progressBarGamelist;
+	QSystemTrayIcon *trayIcon;
 	
 	Screenshot *ssSnap;
 	Screenshot *ssFlyer;
@@ -129,6 +131,7 @@ public slots:
 	void on_actionColDriver_activated();
 	void on_actionColYear_activated();
 	void on_actionColCloneOf_activated();
+	void on_trayIconActivated(QSystemTrayIcon::ActivationReason);
 
     void log(QString, char logOrigin = 1);
 	void poplog(QString);
@@ -143,6 +146,7 @@ public slots:
 	void setGuiStyle(QString = NULL);
 	void setBgTile();
 	void setBgPixmap(QString = NULL);
+	void toggleTrayIcon(int, QProcess::ExitStatus, bool = false);
 	
 protected:
 	void resizeEvent(QResizeEvent *);

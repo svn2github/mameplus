@@ -1,11 +1,13 @@
 ﻿//Done
-/ implemented search buttons, progressive search doesn't work well
-/ fixed a bug that GUI settings are not saved sometimes
+/ fixed a bug that missing sets are kept in the game list after auditing
+/ more responsive GUI on game selection
+/ hide to systray when lauching mame
+
+2 unterminated thread
 
 //Linux
 2 bug: column sorting
 mounted snap doesnt load
-check if symbol link is working
 
 //Options
 2 add a menu to auto mkdir
@@ -21,13 +23,15 @@ check if symbol link is working
 * unify method to get inherited default value
 
 //GameList
-1 SDL joystick GUI
-2 speed up selection, 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
+option to disable delegator
+2 sorting doesnt recover position
+* SDL joystick GUI
+2 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 * export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
+1 rewrite icon loading for individual icon loading, restore item icon
 2 missing parent doesn't show, filter search clone games
 * large icon view
-2 rewrite icon loading for individual icon loading, restore item icon
 * coin/time counter column
 * sort by reading
 * customizable GUI text font / color
@@ -53,7 +57,6 @@ check if symbol link is working
 
 //Snap
 1 gamename0000 snap
-1 command.dat parsing with image +0.1 (you can use command.dat with official MAME!)
 * external default.png
 * snap with or without stretching, horz/vert xml loading
 * avi/mng playback
@@ -72,7 +75,6 @@ check if symbol link is working
 
 //Main Window
 > * Add an option to revert the geometry to default, I lost a couple of my snap/info
-2 hide to systray when lauching mame
 2 fullscreen mode, vista style
 
 //IPS
@@ -116,30 +118,25 @@ check if symbol link is working
 * ensure ->load() functions only called once, no multiple connect()
 
 [qt compile config]
-ubuntu 8.04
-sudo apt-get install libx11-dev
-sudo apt-get install libxext-dev
-
 windows:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-rtti -no-openssl -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
 linux:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -gtkstyle -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -nomake examples -nomake demos -nomake tools
-
-deb http://ftp.debian.org/debian/ experimental main contrib non-free
-
-sudo mount.vboxsf qtui /media/qtui
-sudo mount.vboxsf mame /media/mame
-sudo mount.vboxsf linux /media/linux
-
-sudo cp -f /media/qtui/mamepgui /usr/games
-sudo chmod +x /usr/games/mamepgui
-
-export PATH=/usr/local/Trolltech/Qt-4.5.0-snapshot-20080918/bin:$PATH
-export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
-export PATH=/usr/local/Trolltech/Qt-4.4.1/bin:$PATH
-
 libqt4-dev
 libgtk2.0-dev
+
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
+macosx:
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -nomake examples -nomake demos -nomake tools -universal -no-dwarf2
+
+cd /mnt/hgfs/qtui
+
+linux:
+export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
+mac:
+export PATH=/Developer/usr/bin:$PATH
+
+sudo cp -f mamepgui /usr/games
+sudo chmod +x /usr/games/mamepgui
 
 [mamep core test]
 ips does not inherit

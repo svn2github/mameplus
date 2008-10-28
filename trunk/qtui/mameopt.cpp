@@ -2094,7 +2094,7 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 	itemKey->setData(optName, Qt::UserRole + USERROLE_KEY);
 
 	//hack: a blank icon for padding
-	static const QIcon icon(":/res/blank.png");
+	static const QIcon icon(":/res/16x16/blank.png");
 	itemKey->setIcon(icon);
 //	itemKey->setData(tooltip, Qt::ToolTipRole);
 

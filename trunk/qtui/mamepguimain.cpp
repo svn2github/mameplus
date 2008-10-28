@@ -135,7 +135,8 @@ MainWindow::MainWindow(QWidget *parent)
 	
 	   << QT_TR_NOOP("History")
 	   << QT_TR_NOOP("MAMEInfo")
-	   << QT_TR_NOOP("Story"));
+	   << QT_TR_NOOP("Story")
+	   << QT_TR_NOOP("Command"));
 
 	setupUi(this);
 
@@ -270,8 +271,10 @@ void MainWindow::initHistory(QString title)
 	}
 	else if (title == "MAMEInfo")
 		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
-	else// if (title == "Story")
+	else if (title == "Story")
 		tb = tbStory = new QTextBrowser(dockWidgetContents);
+	else
+		tb = tbCommand = new QTextBrowser(dockWidgetContents);
 	
 	tb->setObjectName("textBrowser_" + title);
 	
@@ -320,6 +323,7 @@ void MainWindow::init()
 	initHistory(dockCtrlNames[DOCK_HISTORY]);
 	initHistory(dockCtrlNames[DOCK_MAMEINFO]);
 	initHistory(dockCtrlNames[DOCK_STORY]);
+	initHistory(dockCtrlNames[DOCK_COMMAND]);
 //	initHistory(textBrowserFrontendLog, "GUI Log");
 
 	/* test ini readable/writable */
@@ -379,11 +383,15 @@ void MainWindow::init()
 	optUtils->initOption();
 
 	//apply css
-	QFile cssFile(":/res/mamepgui.qss");
+	QFile cssFile("../res/mamepgui.qss");
 	cssFile.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(cssFile.readAll());
 	qApp->setStyleSheet(styleSheet);
-	qApp->setWindowIcon(QIcon(":/res/mamep.ico"));
+
+	QIcon mamepIcon(":/res/16x16/mamep.png");
+	qApp->setWindowIcon(mamepIcon);
+	trayIcon = new QSystemTrayIcon(this);
+	trayIcon->setIcon(mamepIcon);
 
 	//show UI
 	show();
@@ -470,6 +478,11 @@ void MainWindow::init()
 				optUtils, SLOT(updateModel(QListWidgetItem *)));
 	}
 	connect(dlgOptions->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
+
+	// Tray Icon
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
+			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
 }
 
 void MainWindow::on_actionPlay_activated()
@@ -629,6 +642,22 @@ void MainWindow::on_actionEnforceAspect_activated()
 
 	win->ssSnap->setAspect(isForce);
 	win->ssTitle->setAspect(isForce);
+}
+
+void MainWindow::on_trayIconActivated(QSystemTrayIcon::ActivationReason reason)
+{
+	switch (reason)
+	{
+	case QSystemTrayIcon::Trigger:
+	case QSystemTrayIcon::DoubleClick:
+		if (win->isVisible())
+			hide();
+		else
+			show();
+		break;
+	default:
+		;
+	}
 }
 
 void MainWindow::showRestartDialog()
@@ -909,8 +938,17 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentBg(win->tbHistory);
 		setTransparentBg(win->tbMameinfo);
 		setTransparentBg(win->tbStory);
-//		setTransparentBg(win->tbCommand);
+		setTransparentBg(win->tbCommand);
 	}
+}
+
+void MainWindow::toggleTrayIcon(int, QProcess::ExitStatus, bool isTrayIconVisible)
+{
+	win->trayIcon->setVisible(isTrayIconVisible);
+	if (isTrayIconVisible)
+		win->trayIcon->setToolTip(win->windowTitle());
+
+	win->setVisible(!isTrayIconVisible);
 }
 
 Screenshot::Screenshot(QString title, QWidget *parent)
@@ -949,11 +987,18 @@ void Screenshot::resizeEvent(QResizeEvent * /* event */)
 	updateScreenshotLabel();
 }
 
+void Screenshot::setPixmap(QPixmap pm)
+{
+	originalPixmap = pm;
+	forceAspect = false;
+	updateScreenshotLabel();
+}
+
 void Screenshot::setPixmap(const QByteArray &pmdata, bool forceAspect)
 {
 	QPixmap pm;
 	pm.loadFromData(pmdata);
-    originalPixmap = pm;
+	originalPixmap = pm;
 
 	this->forceAspect = forceAspect;
 	updateScreenshotLabel();

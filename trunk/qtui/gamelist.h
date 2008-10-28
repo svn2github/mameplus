@@ -45,6 +45,7 @@ public:
 	QString historyText;
 	QString mameinfoText;
 	QString storyText;
+	QString commandText;
 
 	QByteArray pmdataSnap;
 	QByteArray pmdataFlyer;
@@ -175,14 +176,13 @@ public slots:
 	void runMame(bool = false);
 
 	// external process management
-	void loadListXmlStarted();
 	void loadListXmlReadyReadStandardOutput();
 	void loadListXmlFinished(int, QProcess::ExitStatus);
 	void loadDefaultIniReadyReadStandardOutput();
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 	void extractMerged(QString, QString);
 	void extractMergedFinished(int, QProcess::ExitStatus);
-	void runMergedFinished(int exitCode, QProcess::ExitStatus exitStatus);
+	void runMergedFinished(int, QProcess::ExitStatus);
 
 	// internal methods
 	void parse();

@@ -44,7 +44,7 @@ void RomAuditor::audit()
 			GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
 			if (gameInfo->isExtRom && utils->isAuditFolder(gameInfo->romof))
 			{
-				win->log(QString("delete: %1").arg(gameName));
+//				win->log(QString("delete: %1").arg(gameName));
 				mameGame->nameInfoMap.remove(gameName);
 				delete gameInfo;
 			}
@@ -65,6 +65,8 @@ void RomAuditor::run()
 
 	if(!isConsoleFolder)
 	{
+		QSet<QString> auditedGames;
+	
 		foreach (QString dirpath, dirpaths)
 		{
 			QDir dir(dirpath);
@@ -74,20 +76,22 @@ void RomAuditor::run()
 			
 			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 
-			emit progressSwitched(romFiles.count(), "Auditing " + dirpath);
+			emit progressSwitched(romFiles.count(), tr("Auditing") + " " + dirpath + " ...");
 			win->log(QString("auditing %1, %2").arg(dirpath).arg(romFiles.count()));
 
 			//iterate romfiles
 			for (int i = 0; i < romFiles.count(); i++)
 			{
 				//update progressbar
-				if ( i % 100 == 0 )
+				if (i % 100 == 0)
 					emit progressUpdated(i);
 
-				QString gamename = romFiles[i].toLower().remove(".zip");
+				QString gameName = romFiles[i].toLower().remove(".zip");
 
-				if (mameGame->nameInfoMap.contains(gamename))
+				if (mameGame->nameInfoMap.contains(gameName))
 				{
+					auditedGames.insert(gameName);
+
 					QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
 
 					if(!zip.open(QuaZip::mdUnzip))
@@ -95,7 +99,7 @@ void RomAuditor::run()
 
 					QuaZipFileInfo info;
 					QuaZipFile zipFile(&zip);
-					gameInfo = mameGame->nameInfoMap[gamename];
+					gameInfo = mameGame->nameInfoMap[gameName];
 
 					//iterate all files in the zip
 					for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
@@ -106,15 +110,16 @@ void RomAuditor::run()
 						quint32 crc = info.crc;
 						// file crc recognized
 						if (!gameInfo)
-							win->log(QString("err: %1").arg(gamename));
+							win->log(QString("err: %1").arg(gameName));
 						if (gameInfo->crcRomInfoMap.contains(crc))
 							gameInfo->crcRomInfoMap[crc]->available = true; 
 						//check rom for clones
 						else
 						{
-							foreach (QString clonename, gameInfo->clones)
+							foreach (QString cloneName, gameInfo->clones)
 							{
-								gameInfo2 = mameGame->nameInfoMap[clonename];
+								auditedGames.insert(cloneName);
+								gameInfo2 = mameGame->nameInfoMap[cloneName];
 								if (gameInfo2->crcRomInfoMap.contains(crc))
 									gameInfo2->crcRomInfoMap[crc]->available = true; 
 							}
@@ -128,15 +133,23 @@ void RomAuditor::run()
 
 		/* see if any rom of a game is not available */
 		//iterate games
-		foreach (QString gamename, mameGame->nameInfoMap.keys())
+		foreach (QString gameName, mameGame->nameInfoMap.keys())
 		{
-			gameInfo = mameGame->nameInfoMap[gamename];
+			gameInfo = mameGame->nameInfoMap[gameName];
 			//fixme: skip auditing for consoles
 			if (gameInfo->isExtRom)
 				continue;
 
-			gameInfo->available = 1;
-			bool passed = false;	//at least one rom has passed
+			//if game rom file exists, default to passed, if not, skip and fail it
+			if (auditedGames.contains(gameName))
+				gameInfo->available = 1;
+			else
+			{
+				gameInfo->available = 0;
+				continue;
+			}
+			
+			bool aRomPassed = false;	//at least one rom has passed
 
 			//iterate roms
 			foreach (quint32 crc, gameInfo->crcRomInfoMap.keys())
@@ -153,7 +166,7 @@ void RomAuditor::run()
 						gameInfo2 = mameGame->nameInfoMap[gameInfo->romof];
 						if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
 						{
-							passed = true;
+							aRomPassed = true;
 //							win->log(gameInfo->romof + "/" + romInfo->name + " passed");
 							continue;	//clone passed
 						}
@@ -164,7 +177,7 @@ void RomAuditor::run()
 							gameInfo2 = mameGame->nameInfoMap[gameInfo2->romof];
 							if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
 							{
-								passed = true;
+								aRomPassed = true;
 //								win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
 								continue;	//clone passed
 							}
@@ -177,12 +190,11 @@ void RomAuditor::run()
 				}
 				//parent passed
 				else
-					passed = true;
+					aRomPassed = true;
 			}
-			//here
 
 			// special case for all roms are "nodump"
-			if (!passed)
+			if (!aRomPassed)
 			{
 				gameInfo->available = 0;
 			}
