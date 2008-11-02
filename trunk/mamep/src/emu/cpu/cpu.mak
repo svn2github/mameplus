@@ -59,13 +59,10 @@ else
 
 DRCOBJ += \
 	$(CPUOBJ)/drcbex86.o \
-	$(CPUOBJ)/x86log.o \
-	$(CPUOBJ)/x86drc.o
+	$(CPUOBJ)/x86log.o
 
 DRCDEPS += \
-	$(CPUSRC)/x86emit.h \
-	$(CPUSRC)/x86drc.c \
-	$(CPUSRC)/x86drc.h
+	$(CPUSRC)/x86emit.h
 
 DEFS += -DNATIVE_DRC=drcbe_x86_be_interface
 
@@ -668,14 +665,14 @@ CPUDEFS += -DHAS_I87C52=$(if $(filter I87C52,$(CPUS)),1,0)
 CPUDEFS += -DHAS_AT89C4051=$(if $(filter AT89C4051,$(CPUS)),1,0)
 
 ifneq ($(filter I8031 I8032 I8051 I8052 I8751 I8752 I80C31 I80C32 I80C51 I80C52 I87C51 I87C52 AT89C4051,$(CPUS)),)
-OBJDIRS += $(CPUOBJ)/i8051
-CPUOBJS += $(CPUOBJ)/i8051/i8051.o
-DBGOBJS += $(CPUOBJ)/i8051/8051dasm.o
+OBJDIRS += $(CPUOBJ)/mcs51
+CPUOBJS += $(CPUOBJ)/mcs51/mcs51.o
+DBGOBJS += $(CPUOBJ)/mcs51/mcs51dasm.o
 endif
 
-$(CPUOBJ)/i8051/i8051.o:	$(CPUSRC)/i8051/i8051.c \
-							$(CPUSRC)/i8051/i8051.h \
-							$(CPUSRC)/i8051/i8051ops.c
+$(CPUOBJ)/mcs51/mcs51.o:	$(CPUSRC)/mcs51/mcs51.c \
+							$(CPUSRC)/mcs51/mcs51.h \
+							$(CPUSRC)/mcs51/mcs51ops.c
 
 
 
@@ -1124,53 +1121,39 @@ OBJDIRS += $(CPUOBJ)/m68000
 CPUOBJS += $(CPUOBJ)/m68000/m68kcpu.o $(CPUOBJ)/m68000/m68kmame.o $(CPUOBJ)/m68000/m68kops.o
 DBGOBJS += $(CPUOBJ)/m68000/m68kdasm.o
 M68KMAKE = $(BUILDOUT)/m68kmake$(BUILD_EXE)
-ifneq ($(X86_M68K_DRC),)
-CPUDEFS += -DHAS_M68000DRC=1
-CPUOBJS += $(CPUOBJ)/m68000/d68kcpu.o $(CPUOBJ)/m68000/d68kmame.o $(CPUOBJ)/m68000/d68kops.o $(DRCOBJ)
-else
-CPUDEFS += -DHAS_M68000DRC=0
-endif
 endif
 
 # when we compile source files we need to include generated files from the OBJ directory
 $(CPUOBJ)/m68000/%.o: $(CPUSRC)/m68000/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -I$(CPUSRC) -c $< -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUOBJ)/m68000 -c $< -o $@
 
 # when we compile generated files we need to include stuff from the src directory
 $(CPUOBJ)/m68000/%.o: $(CPUOBJ)/m68000/%.c | $(OSPREBUILD)
 	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUSRC)/m68000 -I$(CPUSRC) -c $< -o $@
-
-# rule to link the generator
-$(CPUOBJ)/m68000/%$(EXE): $(CPUOBJ)/m68000/%.o $(OSDMAIN) $(LIBOCORE)
-	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $(CONSOLE_PROGRAM) $^ -o $@
+	$(CC) $(CDEFS) $(CFLAGS) -I$(CPUSRC)/m68000 -c $< -o $@
 
 # rule to generate the C files
-$(CPUOBJ)/m68000/m68kops.c: $(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUSRC)/m68000/m68k_in.c
+$(CPUOBJ)/m68000/m68kops.c: $(M68KMAKE) $(CPUSRC)/m68000/m68k_in.c
 	@echo Generating M68K source files...
-	$(CPUOBJ)/m68000/m68kmake$(EXE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/m68k_in.c
-
-$(CPUOBJ)/m68000/d68kops.c: $(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUSRC)/m68000/d68k_in.c
-	@echo Generating M68K DRC source files...
-	$(CPUOBJ)/m68000/d68kmake$(EXE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/d68k_in.c
+	$(M68KMAKE) $(CPUOBJ)/m68000 $(CPUSRC)/m68000/m68k_in.c
 
 # rule to build the generator
-$(CPUOBJ)/m68000/m68kmake$(EXE): $(CPUOBJ)/m68000/m68kmake.o
-$(CPUOBJ)/m68000/d68kmake$(EXE): $(CPUOBJ)/m68000/d68kmake.o
+ifneq ($(CROSS_BUILD),1)
+
+BUILD += $(M68KMAKE)
+
+$(M68KMAKE): $(CPUOBJ)/m68000/m68kmake.o $(LIBOCORE)
+	@echo Linking $@...
+	$(LD) $(LDFLAGS) $(OSDBGLDFLAGS) $^ $(LIBS) -o $@
+endif
 
 # rule to ensure we build the header before building the core CPU file
-$(CPUOBJ)/m68000/m68kcpu.o: 	$(CPUOBJ)/m68000/m68kops.c $(CPUSRC)/m68000/m68kfpu.c \
+$(CPUOBJ)/m68000/m68kcpu.o: 	$(CPUOBJ)/m68000/m68kops.c \
 								$(CPUSRC)/m68000/m68kcpu.h
 
 $(CPUOBJ)/m68000/m68kmame.o:	$(CPUSRC)/m68000/m68kmame.c \
 								$(CPUSRC)/m68000/m68kcpu.h
-
-$(CPUOBJ)/m68000/d68kcpu.o: 	$(CPUOBJ)/m68000/d68kops.c $(CPUSRC)/m68000/d68kfpu.c \
-								$(CPUSRC)/m68000/d68kcpu.h
-
-$(CPUOBJ)/m68000/d68kmame.o:	$(CPUSRC)/m68000/d68kmame.c \
-								$(CPUSRC)/m68000/d68kcpu.h
 
 
 

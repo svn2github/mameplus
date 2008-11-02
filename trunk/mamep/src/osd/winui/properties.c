@@ -256,9 +256,6 @@ static void InitializeBIOSUI(HWND hwnd);
 //mamep: BIOS page
 static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-static void InitializeM68kCoreUI(HWND hwnd);
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef USE_SCALE_EFFECTS
 static void InitializeScaleEffectUI(HWND hwnd);
 #endif /* USE_SCALE_EFFECTS */
@@ -2706,19 +2703,6 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),FALSE);
 	}
 
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	if (g_nPropertyMode == OPTIONS_GAME)
-	{
-		BOOL has_m68k = DriverHasM68K(nIndex);
-
-		ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORE), has_m68k ? SW_SHOW : SW_HIDE);
-		ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORETEXT), has_m68k ? SW_SHOW : SW_HIDE);
-	}
-#else /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-	ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORE), SW_HIDE);
-	ShowWindow(GetDlgItem(hWnd, IDC_M68K_CORETEXT), SW_HIDE);
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
-
 	//mamep: BIOS page
 	{
 		int i = 0;
@@ -3352,9 +3336,6 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_CHEAT,					DM_BOOL,	OPTION_CHEAT);
 	datamap_add(properties_datamap, IDC_SKIP_GAME_INFO,			DM_BOOL,	OPTION_SKIP_GAMEINFO);
 	datamap_add(properties_datamap, IDC_CONFIRM_QUIT,			DM_BOOL,	OPTION_CONFIRM_QUIT);
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	datamap_add(properties_datamap, IDC_M68K_CORE,				DM_STRING,	OPTION_M68K_CORE);
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef AUTO_PAUSE_PLAYBACK
 	datamap_add(properties_datamap, IDC_AUTO_PAUSE_PLAYBACK,		DM_BOOL,	OPTION_AUTO_PAUSE_PLAYBACK);
 #endif /* AUTO_PAUSE_PLAYBACK */
@@ -3652,9 +3633,6 @@ static void InitializeOptions(HWND hDlg)
 	InitializeControllerMappingUI(hDlg);
 	InitializeD3DVersionUI(hDlg);
 	InitializeVideoUI(hDlg);
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	InitializeM68kCoreUI(hDlg);
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef USE_SCALE_EFFECTS
 	InitializeScaleEffectUI(hDlg);
 #endif /* USE_SCALE_EFFECTS */
@@ -4159,32 +4137,6 @@ static BOOL ResetEffect(HWND hWnd)
 	return changed;
 }
 #endif //mamep: use standard combobox
-
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-static void InitializeM68kCoreUI(HWND hwnd)
-{
-	HWND hCtrl = GetDlgItem(hwnd, IDC_M68K_CORE);
-	int i = 0;
-
-	if (hCtrl)
-	{
-		int n;
-		const char *name;
-
-		(void)ComboBox_AddStringA(hCtrl, "C");
-		(void)ComboBox_SetItemData(hCtrl, i++, "c");
-		(void)ComboBox_AddStringA(hCtrl, "DRC");
-		(void)ComboBox_SetItemData(hCtrl, i++, "drc");
-
-		name = options_get_string(pCurrentOpts, OPTION_M68K_CORE);
-		if (sscanf(name, "%d", &n) == 1)
-		{
-			name = (char *)ComboBox_GetItemData(hCtrl, n);
-			options_set_string(pCurrentOpts, OPTION_M68K_CORE, name, OPTION_PRIORITY_CMDLINE);
-		}
-	}
-}
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 
 #ifdef JOYSTICK_ID
 /* Populate the Joystick ID drop down */

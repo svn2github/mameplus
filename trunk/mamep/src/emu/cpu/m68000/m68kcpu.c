@@ -508,12 +508,6 @@ static void default_instr_hook_callback(unsigned int pc)
 #if M68K_EMULATE_ADDRESS_ERROR
 	#include <setjmp.h>
 	jmp_buf m68ki_aerr_trap;
-
-/* for DRC support */
-void m68k_exception_address_error(void)
-{
-	m68ki_exception_address_error();
-}
 #endif /* M68K_EMULATE_ADDRESS_ERROR */
 
 
@@ -1035,24 +1029,6 @@ void m68k_state_register(const char *type, int index)
 	state_save_register_item(type, index, CPU_PREF_DATA);
 	state_save_register_presave(Machine, m68k_prepare_substate, NULL);
 	state_save_register_postload(Machine, m68k_post_load, NULL);
-}
-
-void m68kfpu_state_register(const char *type, int index)
-{
-	char name[20];
-	int reg;
-
-	for (reg = 0; reg < ARRAY_LENGTH(REG_FP); reg++)
-	{
-		sprintf(name, "%sfpu[%d].i", type, reg);
-		state_save_register_item(name, index, REG_FP[reg].i);
-		sprintf(name, "%sfpu[%d].f", type, reg);
-		state_save_register_item(name, index, REG_FP[reg].f);
-	}
-
-	state_save_register_item(type, index, REG_FPCR);
-	state_save_register_item(type, index, REG_FPSR);
-	state_save_register_item(type, index, REG_FPIAR);
 }
 
 #endif /* M68K_COMPILE_FOR_MAME */

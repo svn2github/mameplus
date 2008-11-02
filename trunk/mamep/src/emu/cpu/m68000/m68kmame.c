@@ -344,7 +344,6 @@ static void m68040_init(int index, int clock, const void *config, int (*irqcallb
 	m68k_set_cpu_type(M68K_CPU_TYPE_68040);
 	m68k_memory_intf = interface_d32;
 	m68k_state_register("m68040", index);
-	m68kfpu_state_register("m68040", index);
 	m68k_set_int_ack_callback(irqcallback);
 }
 
@@ -438,7 +437,7 @@ static void m68000_set_info(UINT32 state, cpuinfo *info)
  * Generic get_info
  **************************************************************************/
 
-void m68000c_get_info(UINT32 state, cpuinfo *info)
+void m68000_get_info(UINT32 state, cpuinfo *info)
 {
 	int sr;
 
@@ -616,7 +615,7 @@ static void m68008_set_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-void m68008c_get_info(UINT32 state, cpuinfo *info)
+void m68008_get_info(UINT32 state, cpuinfo *info)
 {
 	int sr;
 
@@ -767,7 +766,7 @@ static void m68010_set_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-void m68010c_get_info(UINT32 state, cpuinfo *info)
+void m68010_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -787,7 +786,7 @@ void m68010c_get_info(UINT32 state, cpuinfo *info)
 		case CPUINFO_STR_REGISTER + M68K_DFC:			sprintf(info->s, "DFC:%X",   m68k_get_reg(NULL, M68K_REG_DFC)); break;
 		case CPUINFO_STR_REGISTER + M68K_VBR:			sprintf(info->s, "VBR:%08X", m68k_get_reg(NULL, M68K_REG_VBR)); break;
 
-		default:										m68000c_get_info(state, info);			break;
+		default:										m68000_get_info(state, info);			break;
 	}
 }
 
@@ -848,7 +847,7 @@ static void m68020_set_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-void m68020c_get_info(UINT32 state, cpuinfo *info)
+void m68020_get_info(UINT32 state, cpuinfo *info)
 {
 	int sr;
 
@@ -1008,7 +1007,7 @@ static void m68ec020_set_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-void m68ec020c_get_info(UINT32 state, cpuinfo *info)
+void m68ec020_get_info(UINT32 state, cpuinfo *info)
 {
 	switch (state)
 	{
@@ -1024,7 +1023,7 @@ void m68ec020c_get_info(UINT32 state, cpuinfo *info)
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
 		case CPUINFO_STR_NAME:							strcpy(info->s, "68EC020");				break;
 
-		default:										m68020c_get_info(state, info);			break;
+		default:										m68020_get_info(state, info);			break;
 	}
 }
 
@@ -1086,7 +1085,7 @@ static void m68040_set_info(UINT32 state, cpuinfo *info)
 	}
 }
 
-void m68040c_get_info(UINT32 state, cpuinfo *info)
+void m68040_get_info(UINT32 state, cpuinfo *info)
 {
 	int sr;
 
@@ -1230,3 +1229,4 @@ void m68040c_get_info(UINT32 state, cpuinfo *info)
 }
 
 #endif /* HAS_M68040 */
+

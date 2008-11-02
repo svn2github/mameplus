@@ -452,9 +452,6 @@ offs_t cpunum_dasm(int cpunum, char *buffer, offs_t pc, const UINT8 *oprom, cons
 #define cpunum_set_reg(cpunum, reg, val)		cpunum_set_info_int(cpunum, CPUINFO_INT_REGISTER + (reg), (val))
 
 
-/* shot name for statistics and GUI */
-const char *cputype_shortname(cpu_type cputype);
-
 
 /***************************************************************************
     CPU TYPE ACCCESSORS

@@ -143,14 +143,14 @@ typedef struct
 /* Opcode handler table */
 static const opcode_handler_struct m68k_opcode_handler_table[] =
 {
-/*   function                      mask    match    000  010  020 */
+/*   function                      mask    match    000  010  020  040 */
 
 
 
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 M68KMAKE_TABLE_FOOTER
 
-	{0, 0, 0, {0, 0, 0}}
+	{0, 0, 0, {0, 0, 0, 0}}
 };
 
 
@@ -172,24 +172,11 @@ void m68ki_build_opcode_table(void)
 	}
 
 	ostruct = m68k_opcode_handler_table;
-	while(ostruct->mask != 0xf180)
+	while(ostruct->mask != 0xff00)
 	{
 		for(i = 0;i < 0x10000;i++)
 		{
 			if((i & ostruct->mask) == ostruct->match)
-			{
-				m68ki_instruction_jump_table[i] = ostruct->opcode_handler;
-				for(k=0;k<NUM_CPU_TYPES;k++)
-					m68ki_cycles[k][i] = ostruct->cycles[k];
-			}
-		}
-		ostruct++;
-	}
-	while (ostruct->mask != 0xff00)
-	{
-		for (i = ostruct->match + 0x0200; i < 0x10000; i++)
-		{
-			if ((i & ostruct->mask) == ostruct->match)
 			{
 				m68ki_instruction_jump_table[i] = ostruct->opcode_handler;
 				for(k=0;k<NUM_CPU_TYPES;k++)
@@ -7872,8 +7859,7 @@ M68KMAKE_OP(neg, 8, ., d)
 	uint res = 0 - MASK_OUT_ABOVE_8(*r_dst);
 
 	FLAG_N = NFLAG_8(res);
-	//FLAG_C = FLAG_X = CFLAG_8(res);
-	FLAG_C = FLAG_X = CFLAG_NEG_8(*r_dst, res);
+	FLAG_C = FLAG_X = CFLAG_8(res);
 	FLAG_V = *r_dst & res;
 	FLAG_Z = MASK_OUT_ABOVE_8(res);
 
@@ -7888,8 +7874,7 @@ M68KMAKE_OP(neg, 8, ., .)
 	uint res = 0 - src;
 
 	FLAG_N = NFLAG_8(res);
-	//FLAG_C = FLAG_X = CFLAG_8(res);
-	FLAG_C = FLAG_X = CFLAG_NEG_8(src, res);
+	FLAG_C = FLAG_X = CFLAG_8(res);
 	FLAG_V = src & res;
 	FLAG_Z = MASK_OUT_ABOVE_8(res);
 
@@ -7903,8 +7888,7 @@ M68KMAKE_OP(neg, 16, ., d)
 	uint res = 0 - MASK_OUT_ABOVE_16(*r_dst);
 
 	FLAG_N = NFLAG_16(res);
-	//FLAG_C = FLAG_X = CFLAG_16(res);
-	FLAG_C = FLAG_X = CFLAG_NEG_16(*r_dst, res);
+	FLAG_C = FLAG_X = CFLAG_16(res);
 	FLAG_V = (*r_dst & res)>>8;
 	FLAG_Z = MASK_OUT_ABOVE_16(res);
 
@@ -7919,8 +7903,7 @@ M68KMAKE_OP(neg, 16, ., .)
 	uint res = 0 - src;
 
 	FLAG_N = NFLAG_16(res);
-	//FLAG_C = FLAG_X = CFLAG_16(res);
-	FLAG_C = FLAG_X = CFLAG_NEG_16(src, res);
+	FLAG_C = FLAG_X = CFLAG_16(res);
 	FLAG_V = (src & res)>>8;
 	FLAG_Z = MASK_OUT_ABOVE_16(res);
 
@@ -7934,8 +7917,7 @@ M68KMAKE_OP(neg, 32, ., d)
 	uint res = 0 - *r_dst;
 
 	FLAG_N = NFLAG_32(res);
-	//FLAG_C = FLAG_X = CFLAG_SUB_32(*r_dst, 0, res);
-	FLAG_C = FLAG_X = CFLAG_NEG_32(*r_dst, res);
+	FLAG_C = FLAG_X = CFLAG_SUB_32(*r_dst, 0, res);
 	FLAG_V = (*r_dst & res)>>24;
 	FLAG_Z = MASK_OUT_ABOVE_32(res);
 
@@ -7950,8 +7932,7 @@ M68KMAKE_OP(neg, 32, ., .)
 	uint res = 0 - src;
 
 	FLAG_N = NFLAG_32(res);
-	//FLAG_C = FLAG_X = CFLAG_SUB_32(src, 0, res);
-	FLAG_C = FLAG_X = CFLAG_NEG_32(src, res);
+	FLAG_C = FLAG_X = CFLAG_SUB_32(src, 0, res);
 	FLAG_V = (src & res)>>24;
 	FLAG_Z = MASK_OUT_ABOVE_32(res);
 
@@ -7965,8 +7946,7 @@ M68KMAKE_OP(negx, 8, ., d)
 	uint res = 0 - MASK_OUT_ABOVE_8(*r_dst) - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_8(res);
-	//FLAG_X = FLAG_C = CFLAG_8(res);
-	FLAG_X = FLAG_C = CFLAG_NEG_8(*r_dst, res);
+	FLAG_X = FLAG_C = CFLAG_8(res);
 	FLAG_V = *r_dst & res;
 
 	res = MASK_OUT_ABOVE_8(res);
@@ -7983,8 +7963,7 @@ M68KMAKE_OP(negx, 8, ., .)
 	uint res = 0 - src - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_8(res);
-	//FLAG_X = FLAG_C = CFLAG_8(res);
-	FLAG_X = FLAG_C = CFLAG_NEG_8(src, res);
+	FLAG_X = FLAG_C = CFLAG_8(res);
 	FLAG_V = src & res;
 
 	res = MASK_OUT_ABOVE_8(res);
@@ -8000,8 +7979,7 @@ M68KMAKE_OP(negx, 16, ., d)
 	uint res = 0 - MASK_OUT_ABOVE_16(*r_dst) - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_16(res);
-	//FLAG_X = FLAG_C = CFLAG_16(res);
-	FLAG_X = FLAG_C = CFLAG_NEG_16(*r_dst, res);
+	FLAG_X = FLAG_C = CFLAG_16(res);
 	FLAG_V = (*r_dst & res)>>8;
 
 	res = MASK_OUT_ABOVE_16(res);
@@ -8018,8 +7996,7 @@ M68KMAKE_OP(negx, 16, ., .)
 	uint res = 0 - MASK_OUT_ABOVE_16(src) - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_16(res);
-	//FLAG_X = FLAG_C = CFLAG_16(res);
-	FLAG_X = FLAG_C = CFLAG_NEG_16(src, res);
+	FLAG_X = FLAG_C = CFLAG_16(res);
 	FLAG_V = (src & res)>>8;
 
 	res = MASK_OUT_ABOVE_16(res);
@@ -8035,8 +8012,7 @@ M68KMAKE_OP(negx, 32, ., d)
 	uint res = 0 - MASK_OUT_ABOVE_32(*r_dst) - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_32(res);
-	//FLAG_X = FLAG_C = CFLAG_SUB_32(*r_dst, 0, res);
-	FLAG_X = FLAG_C = CFLAG_NEG_32(*r_dst, res);
+	FLAG_X = FLAG_C = CFLAG_SUB_32(*r_dst, 0, res);
 	FLAG_V = (*r_dst & res)>>24;
 
 	res = MASK_OUT_ABOVE_32(res);
@@ -8053,8 +8029,7 @@ M68KMAKE_OP(negx, 32, ., .)
 	uint res = 0 - MASK_OUT_ABOVE_32(src) - XFLAG_AS_1();
 
 	FLAG_N = NFLAG_32(res);
-	//FLAG_X = FLAG_C = CFLAG_SUB_32(src, 0, res);
-	FLAG_X = FLAG_C = CFLAG_NEG_32(src, res);
+	FLAG_X = FLAG_C = CFLAG_SUB_32(src, 0, res);
 	FLAG_V = (src & res)>>24;
 
 	res = MASK_OUT_ABOVE_32(res);

@@ -117,23 +117,11 @@ enum _cpu_type
 	CPU_M6809E,
 	CPU_KONAMI,
 	CPU_M68000,
-	CPU_M68000DRC,		//ks hcmame switch m68k core
-	CPU_M68000ASM,		//ks hcmame switch m68k core
 	CPU_M68008,
-	CPU_M68008DRC,		//ks hcmame switch m68k core
-	CPU_M68008ASM,		//ks hcmame switch m68k core
 	CPU_M68010,
-	CPU_M68010DRC,		//ks hcmame switch m68k core
-	CPU_M68010ASM,		//ks hcmame switch m68k core
 	CPU_M68EC020,
-	CPU_M68EC020DRC,	//ks hcmame switch m68k core
-	CPU_M68EC020ASM,	//ks hcmame switch m68k core
 	CPU_M68020,
-	CPU_M68020DRC,		//ks hcmame switch m68k core
-	CPU_M68020ASM,		//ks hcmame switch m68k core
 	CPU_M68040,
-	CPU_M68040DRC,		//ks hcmame switch m68k core
-	CPU_M68040ASM,		//ks hcmame switch m68k core
 	CPU_T11,
 	CPU_S2650,
 	CPU_TMS34010,

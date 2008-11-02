@@ -123,9 +123,6 @@ endif
 # a native backend
 # FORCE_DRC_C_BACKEND = 1
 
-# uncomment next line to use DRC 68K engine
-X86_M68K_DRC = 1
-
 
 
 #-------------------------------------------------
@@ -298,8 +295,6 @@ DEFS += -DXML_STATIC -Drestrict=__restrict
 # define PTR64 if we are a 64-bit target
 ifdef PTR64
 DEFS += -DPTR64
-# disable DRC cores for 64-bit builds
-X86_M68K_DRC =
 endif
 
 # define MAME_DEBUG if we are a debugging build

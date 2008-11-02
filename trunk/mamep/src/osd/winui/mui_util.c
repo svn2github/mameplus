@@ -72,7 +72,6 @@ static struct DriversInfo
 	BOOL usesMouse;
 	BOOL supportsSaveState;
 	BOOL isVertical;
-	BOOL hasM68K;
 	int numPlayers;
 	int numButtons;
 	BOOL usesController[CONTROLLER_MAX];
@@ -621,32 +620,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->numButtons = 0;
 			memset(gameinfo->usesController, 0, sizeof gameinfo->usesController);
 
-			gameinfo->hasM68K = FALSE;
-			for (i = 0; i < MAX_CPU; i++)
-			{
-				if (0
-#if (HAS_M68000)
-					|| config->cpu[i].type == CPU_M68000
-#endif
-#if (HAS_M68008)
-					|| config->cpu[i].type == CPU_M68008
-#endif
-#if (HAS_M68010)
-					|| config->cpu[i].type == CPU_M68010
-#endif
-#if (HAS_M68EC020)
-					|| config->cpu[i].type == CPU_M68EC020
-#endif
-#if (HAS_M68020)
-					|| config->cpu[i].type == CPU_M68020
-#endif
-#if (HAS_M68040)
-					|| config->cpu[i].type == CPU_M68040
-#endif
-				)
-					gameinfo->hasM68K = TRUE;
-			}
-
 			gameinfo->parentIndex = -1;
 			if (gameinfo->isClone)
 			{
@@ -815,11 +788,6 @@ BOOL DriverIsConsole(int driver_index)
 int DriverBiosIndex(int driver_index)
 {
 	return GetDriversInfo(driver_index)->biosIndex;
-}
-
-BOOL DriverHasM68K(int driver_index)
-{
-	return GetDriversInfo(driver_index)->hasM68K;
 }
 
 int DriverNumPlayers(int driver_index)

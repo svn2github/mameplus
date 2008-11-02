@@ -19,9 +19,6 @@ extern const struct QSound_interface qsound_interface;
 extern const ym2151_interface ym2151_config;
 
 READ16_HANDLER( cps1_dsw_r );
-READ16_HANDLER( cps1_in1_r );
-READ16_HANDLER( cps1_in2_r );
-READ16_HANDLER( cps1_in3_r );
 WRITE8_HANDLER( cps1_snd_bankswitch_w );
 WRITE16_HANDLER( cps1_soundlatch_w );
 WRITE16_HANDLER( cps1_soundlatch2_w );

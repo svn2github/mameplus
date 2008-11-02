@@ -349,7 +349,6 @@ void m68k_set_context(void* dst);
 
 /* Register the CPU state information */
 void m68k_state_register(const char *type, int index);
-void m68kfpu_state_register(const char *type, int index);
 
 
 /* Peek at the internals of a CPU context.  This can either be a context
@@ -383,14 +382,6 @@ unsigned int m68k_disassemble_raw(char* str_buff, unsigned int pc, const unsigne
 #include "m68kmame.h"
 #endif /* M68K_COMPILE_FOR_MAME */
 
-
-/* ======================================================================== */
-/* ==================== EMULATE ADDRESS ERROR FOR DRC ===================== */
-/* ======================================================================== */
-
-#if M68K_EMULATE_ADDRESS_ERROR
-void m68k_exception_address_error(void);
-#endif /* M68K_EMULATE_ADDRESS_ERROR */
 
 /* ======================================================================== */
 /* ============================== END OF FILE ============================= */

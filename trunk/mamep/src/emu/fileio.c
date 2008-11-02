@@ -257,7 +257,6 @@ static file_error fopen_internal(core_options *opts, const char *searchpath, con
 		if ((openflags & (OPEN_FLAG_READ | OPEN_FLAG_WRITE)) == OPEN_FLAG_READ)
 		{
 			filerr = fopen_attempt_zipped((*file)->filename, crc, openflags, *file);
-
 			if (filerr == FILERR_NONE)
 				break;
 

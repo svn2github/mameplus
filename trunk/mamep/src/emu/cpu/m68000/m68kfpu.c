@@ -358,8 +358,8 @@ static void WRITE_EA_64(int ea, UINT64 data)
 		case 2:		// (An)
 		{
 			UINT32 ea = REG_A[reg];
-			m68ki_write_32(ea+0, (UINT32)(data >> 32));
-			m68ki_write_32(ea+4, (UINT32)(data));
+			m68ki_write_32(ea, (UINT32)(data >> 32));
+			m68ki_write_32(ea, (UINT32)(data));
 			break;
 		}
 		case 4:		// -(An)
@@ -712,7 +712,7 @@ static void fmovem(UINT16 w2)
 static void fbcc16(void)
 {
 	INT32 offset;
-	int condition = REG_IR & 0x1f;
+	int condition = REG_IR & 0x3f;
 
 	offset = (INT16)(OPER_I_16());
 
@@ -729,7 +729,7 @@ static void fbcc16(void)
 static void fbcc32(void)
 {
 	INT32 offset;
-	int condition = REG_IR & 0x1f;
+	int condition = REG_IR & 0x3f;
 
 	offset = OPER_I_32();
 

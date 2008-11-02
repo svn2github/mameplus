@@ -37,8 +37,8 @@ DEFS += -DNEOCPSPGM
 
 CPUS += Z80
 CPUS += M68000
-CPUS += SH2
 CPUS += ARM7
+CPUS += SH2
 CPUS += PIC16C57
 
 
@@ -49,16 +49,15 @@ CPUS += PIC16C57
 #-------------------------------------------------
 
 SOUNDS += CUSTOM
-SOUNDS += YM2203
 SOUNDS += YM2151
-SOUNDS += OKIM6295
-SOUNDS += MSM5205
-SOUNDS += QSOUND
+SOUNDS += YM2203
 SOUNDS += YM2610
 SOUNDS += YM2610B
+SOUNDS += MSM5205
+SOUNDS += OKIM6295
+SOUNDS += QSOUND
 SOUNDS += CDDA
 SOUNDS += ICS2115
-
 
 
 #-------------------------------------------------
@@ -78,8 +77,8 @@ endif
 
 DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
-	$(MAMEOBJ)/neogeo.a \
 	$(MAMEOBJ)/igs.a \
+	$(MAMEOBJ)/neogeo.a \
 
 
 
@@ -95,18 +94,17 @@ $(MAMEOBJ)/capcom.a: \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 
-$(MAMEOBJ)/neogeo.a: \
-	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
-	$(MACHINE)/neoboot.o \
-	$(MACHINE)/neocrypt.o \
-	$(MACHINE)/neoprot.o \
-
 $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot.o \
 	$(MACHINE)/pgmy2ks.o \
 
+$(MAMEOBJ)/neogeo.a: \
+	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
+	$(MACHINE)/neoboot.o \
+	$(MACHINE)/neocrypt.o \
+	$(MACHINE)/neoprot.o \
 
 
 #-------------------------------------------------

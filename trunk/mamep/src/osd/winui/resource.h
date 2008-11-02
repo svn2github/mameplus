@@ -395,11 +395,9 @@
 
 #define IDC_AUTO_PAUSE_PLAYBACK         1301 // USE_AUTO_PAUSE_PLAYBACK
 #define IDC_CONFIRM_QUIT                1302 // confirm_quit
-#define IDC_M68K_CORE                   1303 // ks hcmame s switch m68k core
-#define IDC_M68K_CORETEXT               1304 // ks hcmame s switch m68k core
-#define IDC_VOLUME_ADJUST               1305 // USE_VOLUME_AUTO_ADJUST
-#define IDC_BROKEN_ICON                 1306 // use not working icon
-#define IDC_EDIT_BROKEN_COLOR           1307 // set not working color
+#define IDC_VOLUME_ADJUST               1303 // USE_VOLUME_AUTO_ADJUST
+#define IDC_BROKEN_ICON                 1304 // use not working icon
+#define IDC_EDIT_BROKEN_COLOR           1305 // set not working color
 
 #define IDC_JOYID1                      1311 // JOYSTICK_ID
 #define IDC_JOYID2                      1312 // JOYSTICK_ID

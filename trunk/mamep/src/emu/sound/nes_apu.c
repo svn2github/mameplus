@@ -377,7 +377,7 @@ static int8 apu_dpcm(struct nesapu_info *info, dpcm_t *chan)
          bit_pos = 7 - (chan->bits_left & 7);
          if (7 == bit_pos)
          {
-            chan->cur_byte = chan->cpu_mem[chan->address];
+            chan->cur_byte = program_read_byte(chan->address);
             chan->address++;
             chan->length--;
          }
@@ -476,7 +476,8 @@ INLINE void apu_regwrite(struct nesapu_info *info,int address, uint8 value)
       ** dereferences and load up the other triregs
       */
 
-      info->APU.tri.write_latency = 3;
+	/* used to be 3, but now we run the clock faster, so base it on samples/sync */
+      info->APU.tri.write_latency = (info->samps_per_sync + 239) / 240;
 
       if (info->APU.tri.enabled)
       {
@@ -600,6 +601,7 @@ INLINE void apu_update(struct nesapu_info *info, stream_sample_t *buffer16, int 
 {
    int accum;
 
+	cpuintrf_push_context( info->APU.dpcm.cpu_num );
    while (samples--)
    {
       accum = apu_square(info, &info->APU.squ[0]);
@@ -616,6 +618,7 @@ INLINE void apu_update(struct nesapu_info *info, stream_sample_t *buffer16, int 
 
       *(buffer16++)=accum<<8;
    }
+	cpuintrf_pop_context();
 }
 
 /* READ VALUES FROM REGISTERS */
@@ -691,7 +694,7 @@ static void *nesapu_start(const char *tag, int sndindex, int clock, const void *
 	info->buffer_size+=info->samps_per_sync;
 
 	/* Initialize individual chips */
-	(info->APU.dpcm).cpu_mem=memory_region(Machine, intf->region);
+	(info->APU.dpcm).cpu_num= mame_find_cpu_index(Machine, intf->cpu_tag);
 
 	info->stream = stream_create(0, 1, rate, info, nes_psg_update_sound);
 

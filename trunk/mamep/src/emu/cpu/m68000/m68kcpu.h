@@ -689,10 +689,6 @@
 	#define CFLAG_SUB_32(S, D, R) (((S & R) | (~D & (S | R)))>>23)
 #endif /* M68K_INT_GT_32_BIT */
 
-#define CFLAG_NEG_8(D, R)	((D | R)<<1)
-#define CFLAG_NEG_16(D, R)	((D | R)>>7)
-#define CFLAG_NEG_32(D, R)	((D | R)>>23)
-
 #define VFLAG_ADD_8(S, D, R) ((S^R) & (D^R))
 #define VFLAG_ADD_16(S, D, R) (((S^R) & (D^R))>>8)
 #define VFLAG_ADD_32(S, D, R) (((S^R) & (D^R))>>24)
@@ -916,23 +912,6 @@ struct _m68ki_cpu_core
 	void (*set_fc_callback)(unsigned int new_fc);     /* Called when the CPU function code changes */
 	void (*instr_hook_callback)(unsigned int pc);     /* Called every instruction cycle prior to execution */
 
-	/* DRC stuff */
-	struct _drc_core *drc;
-	void *generate_exception_trap;
-	void *generate_exception_trapN;
-	void *generate_exception_trace;
-	void *generate_exception_privilege_violation;
-	void *generate_exception_1010;
-	void *generate_exception_1111;
-	void *generate_exception_illegal;
-	void *generate_exception_format_error;
-	void *generate_exception_address_error;
-	void *generate_exception_interrupt;
-
-	int *flag_dirty;
-#ifdef ENABLE_DEBUGGER
-	uint flags_dirty_mark;
-#endif
 };
 
 
@@ -1982,7 +1961,7 @@ INLINE void m68ki_exception_address_error(void)
 
 
 /* Service an interrupt request and start exception processing */
-INLINE void m68ki_exception_interrupt(uint int_level)
+void m68ki_exception_interrupt(uint int_level)
 {
 	uint vector;
 	uint sr;

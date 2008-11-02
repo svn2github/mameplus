@@ -51,7 +51,6 @@ BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverIsVertical(int driver_index);
 BOOL DriverIsConsole(int driver_index);
 int DriverBiosIndex(int driver_index);
-BOOL DriverHasM68K(int driver_index);
 
 enum
 {

@@ -932,10 +932,6 @@ BEGIN
     CONTROL         "Slider1",IDC_HIGH_PRIORITY,"msctls_trackbar32",TBS_BOTH | 
                     TBS_NOTICKS | WS_TABSTOP,153,130,78,12,0,HIDC_HIGH_PRIORITY
     CTEXT           "-15",IDC_HIGH_PRIORITYTXT,235,130,17,12,SS_CENTERIMAGE | NOT WS_GROUP
-//mamep: ks hcmame s switch m68k core
-    GROUPBOX        "M68000 CPU Core",IDC_M68K_CORETEXT,147,149,108,30
-    COMBOBOX        IDC_M68K_CORE,153,160,96,40,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
-//mamep: ks hcmame s switch m68k core
 #ifdef DRIVER_SWITCH
     GROUPBOX        "Switch drivers",IDC_DRV_TEXT,4,181,251,39
     CONTROL         "MAME",IDC_DRV_MAME,"Button",BS_AUTOCHECKBOX | 

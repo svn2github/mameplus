@@ -189,10 +189,6 @@ const options_entry mame_core_options[] =
 #ifdef AUTO_PAUSE_PLAYBACK
 	{ "auto_pause",                  "0",         OPTION_BOOLEAN,    "automatic pause when playback is finished" },
 #endif /* AUTO_PAUSE_PLAYBACK */
-#if (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040)
-	/* ks hcmame s switch m68k core */
-	{ "m68k_core",                   "c",         0,                 "change m68k core (c|drc)" },
-#endif /* (HAS_M68000 || HAS_M68008 || HAS_M68010 || HAS_M68EC020 || HAS_M68020 || HAS_M68040) */
 #ifdef TRANS_UI
 	{ "ui_transparency",             "224",       0,                 "transparency in-game UI [0-255]" },
 #endif /* TRANS_UI */
