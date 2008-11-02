@@ -2876,6 +2876,7 @@ void SaveFolderFlags(const char *path, DWORD flags)
 
 
 
+#ifdef MAMEMESS //mamep: not AddFolderFlags, but MAMEMESS
 // Copy options, if entry doesn't exist in the dest, create it.
 static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 {
@@ -2898,8 +2899,9 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 				if (NULL == existing || *existing == '\0')
 				{
 					entries[0].name = option_name;
+#ifdef MAMEMESS
 					entries[0].defvalue = options_get_option_default_value(pSourceOpts, option_name);
-
+#endif /* MAMEMESS */
 					// create entry
 					options_add_entries(pDestOpts, entries);
 				}
@@ -2910,6 +2912,7 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 		options_enumerator_free(enumerator);
 	}
 }
+#endif
 
 // Adds our folder flags to a temporarty core_options, for saving.
 static core_options * AddFolderFlags(core_options *settings)
@@ -3428,7 +3431,8 @@ void options_set_wstring(core_options *opts, const char *name, const WCHAR *valu
 	free(utf8_value);
 }
 
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param)
+#ifdef MAMEMESS
+WCHAR *OptionsGetCommandLine(int driver_index)
 {
 	core_options *options_ref = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
 	core_options *options_base = load_options(OPTIONS_GAME, driver_index);
@@ -3444,9 +3448,6 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_op
 	copy_options_ex(opts, options_base);
 
 		GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
-
-	if (override_callback)
-		override_callback(opts, param);
 
 	len = options_output_diff_command_line(opts, options_ref, NULL);
 	p = malloc(len + 1);
@@ -3473,6 +3474,7 @@ WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_op
 
 	return result;
 }
+#endif /* MAMEMESS */
 
 
 

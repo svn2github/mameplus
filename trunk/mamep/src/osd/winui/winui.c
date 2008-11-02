@@ -24,8 +24,6 @@
   Nov/Dec 1998 - Mike Haaland
 
 ***************************************************************************/
-#define MULTISESSION 0
-
 #ifdef _MSC_VER
 #undef NONAMELESSUNION
 #define NONAMELESSUNION
@@ -407,17 +405,6 @@ static LRESULT CALLBACK BackMainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPA
 static void  CreateBackgroundMain(HINSTANCE hInstance);
 static void  DestroyBackgroundMain(void);
 #endif /* USE_SHOW_SPLASH_SCREEN */
-
-// Game Window Communication Functions
-#if MULTISESSION
-#else
-void SendMessageToProcess(LPPROCESS_INFORMATION lpProcessInformation,
-                                             UINT Msg, WPARAM wParam, LPARAM lParam);
-void SendIconToProcess(LPPROCESS_INFORMATION lpProcessInformation, int nGameIndex);
-HWND GetGameWindow(LPPROCESS_INFORMATION lpProcessInformation);
-#endif
-
-static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam);
 
 /***************************************************************************
     External variables
@@ -986,7 +973,7 @@ static void CopyOptions(core_options *pDestOpts, core_options *pSourceOpts)
 		options_enumerator_free(enumerator);
 	}
 }
-#endif
+
 static BOOL WaitWithMessageLoop(HANDLE hEvent)
 {
 	DWORD dwRet;
@@ -1012,100 +999,98 @@ static BOOL WaitWithMessageLoop(HANDLE hEvent)
 	}
 	return FALSE;
 }
-
-static void override_options(core_options *opts, void *param)
-{
-	const play_options *playopts = param;
-
-	if (playopts->record != NULL)
-		options_set_wstring(opts, OPTION_RECORD, playopts->record, OPTION_PRIORITY_CMDLINE);
-	if (playopts->playback != NULL)
-		options_set_wstring(opts, OPTION_PLAYBACK, playopts->playback, OPTION_PRIORITY_CMDLINE);
-	if (playopts->state != NULL)
-		options_set_wstring(opts, OPTION_STATE, playopts->state, OPTION_PRIORITY_CMDLINE);
-	if (playopts->wavwrite != NULL)
-		options_set_wstring(opts, OPTION_WAVWRITE, playopts->wavwrite, OPTION_PRIORITY_CMDLINE);
-	if (playopts->mngwrite != NULL)
-		options_set_wstring(opts, OPTION_MNGWRITE, playopts->mngwrite, OPTION_PRIORITY_CMDLINE);
-	if (playopts->aviwrite != NULL)
-		options_set_wstring(opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
-}
+#endif
 
 static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 {
 	time_t start, end;
 	double elapsedtime;
 	DWORD dwExitCode = 0;
+	int i;
+	core_options *mame_opts;
 
-	PROCESS_INFORMATION pi;
-	WCHAR *pCmdLine;
-	HWND hGameWnd = NULL;
-	long lGameWndStyle = 0;
-	BOOL process_created = FALSE;
+	// set up MAME options
+	mame_opts = mame_options_init(mame_win_options);
 
-	pCmdLine = OptionsGetCommandLine(nGameIndex, override_options, (void *)playopts);
+	// Tell mame were to get the INIs
+	//mamep: we want parse MAME.ini in root directory with all INIs in inipath. not only parse inipath
+	//options_set_string(mame_opts, OPTION_INIPATH, GetIniDir(), OPTION_PRIORITY_CMDLINE);
 
-	ZeroMemory(&pi, sizeof(pi));
-
+	// set any specified play options
+	if (playopts != NULL)
 	{
-		STARTUPINFOW        si;
-
-		ZeroMemory(&si, sizeof(si));
-		si.cb = sizeof(si);
-
-		if (CreateProcessW(NULL,
-		                    pCmdLine,
-		                    NULL,		  /* Process handle not inheritable. */
-		                    NULL,		  /* Thread handle not inheritable. */
-		                    TRUE,		  /* Handle inheritance.  */
-		                    0,			  /* Creation flags. */
-		                    NULL,		  /* Use parent's environment block.  */
-		                    NULL,		  /* Use parent's starting directory.  */
-		                    &si,		  /* STARTUPINFO */
-		                    &pi))		  /* PROCESS_INFORMATION */
-			process_created  = TRUE;
+		if (playopts->record != NULL)
+			options_set_wstring(mame_opts, OPTION_RECORD, playopts->record, OPTION_PRIORITY_CMDLINE);
+		if (playopts->playback != NULL)
+			options_set_wstring(mame_opts, OPTION_PLAYBACK, playopts->playback, OPTION_PRIORITY_CMDLINE);
+		if (playopts->state != NULL)
+			options_set_wstring(mame_opts, OPTION_STATE, playopts->state, OPTION_PRIORITY_CMDLINE);
+		if (playopts->wavwrite != NULL)
+			options_set_wstring(mame_opts, OPTION_WAVWRITE, playopts->wavwrite, OPTION_PRIORITY_CMDLINE);
+		if (playopts->mngwrite != NULL)
+			options_set_wstring(mame_opts, OPTION_MNGWRITE, playopts->mngwrite, OPTION_PRIORITY_CMDLINE);
+		if (playopts->aviwrite != NULL)
+			options_set_wstring(mame_opts, OPTION_AVIWRITE, playopts->aviwrite, OPTION_PRIORITY_CMDLINE);
 	}
 
-	if (!process_created)
+	// Mame will parse all the needed .ini files.
+
+	// prepare MAME32 to run the game
+	ShowWindow(hMain, SW_HIDE);
+
+	for (i = 0; i < ARRAY_LENGTH(s_nPickers); i++)
+		Picker_ClearIdle(GetDlgItem(hMain, s_nPickers[i]));
+
+	// run the emulation
+	options_set_string(mame_opts, OPTION_GAMENAME, drivers[nGameIndex]->name, OPTION_PRIORITY_CMDLINE);
+	// Time the game run.
+	time(&start);
+#ifdef MAMEMESS
+	//mamep: when DriverIsConsole will use another old mode to prevent crash
+	if (DriverIsConsole(nGameIndex))
 	{
-		dprintf("CreateProcess failed.");
-		dwExitCode = GetLastError();
-	}
-	else
-	{
-		ShowWindow(hMain, SW_HIDE);
-		SendIconToProcess(&pi, nGameIndex);
-			hGameWnd = GetGameWindow(&pi);
-			if( hGameWnd )
-			{
-				lGameWndStyle = GetWindowLong(hGameWnd, GWL_STYLE);
-				lGameWndStyle = lGameWndStyle & (WS_BORDER ^ 0xffffffff);
-				SetWindowLong(hGameWnd, GWL_STYLE, lGameWndStyle);
-				SetWindowPos(hGameWnd,0,0,0,0,0,SWP_DRAWFRAME | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER);
-			}
-		time(&start);
+		PROCESS_INFORMATION pi;
+		WCHAR *pCmdLine;
+		BOOL process_created = FALSE;
 
-		// Wait until child process exits.
-		WaitWithMessageLoop(pi.hProcess);
+		pCmdLine = OptionsGetCommandLine(nGameIndex);
 
-		GetExitCodeProcess(pi.hProcess, &dwExitCode);
+		ZeroMemory(&pi, sizeof(pi));
 
-		time(&end);
-		elapsedtime = end - start;
-		if( dwExitCode == 0 )
 		{
-			// Check the exitcode before incrementing Playtime
-			IncrementPlayTime(nGameIndex, elapsedtime);
-			ListView_RedrawItems(hwndList, GetSelectedPick(), GetSelectedPick());
+			STARTUPINFOW        si;
+
+			ZeroMemory(&si, sizeof(si));
+			si.cb = sizeof(si);
+
+			if (CreateProcessW(NULL,
+			                    pCmdLine,
+			                    NULL,		  /* Process handle not inheritable. */
+			                    NULL,		  /* Thread handle not inheritable. */
+			                    TRUE,		  /* Handle inheritance.  */
+			                    0,			  /* Creation flags. */
+			                    NULL,		  /* Use parent's environment block.  */
+			                    NULL,		  /* Use parent's starting directory.  */
+			                    &si,		  /* STARTUPINFO */
+			                    &pi))		  /* PROCESS_INFORMATION */
+				process_created  = TRUE;
 		}
 
-		ShowWindow(hMain, SW_SHOW);
-		// Close process and thread handles.
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
+		free(pCmdLine);
 	}
-
-	free(pCmdLine);
+	else
+#endif /* MAMEMESS */
+	mame_execute(mame_opts);
+	// Calc the duration
+	time(&end);
+	elapsedtime = end - start;
+	// Increment our playtime.
+	IncrementPlayTime(nGameIndex, elapsedtime);
+	// the emulation is complete; continue
+	for (i = 0; i < ARRAY_LENGTH(s_nPickers); i++)
+		Picker_ResetIdle(GetDlgItem(hMain, s_nPickers[i]));
+	ShowWindow(hMain, SW_SHOW);
+	SetForegroundWindow(hMain);
 
 	return dwExitCode;
 }
@@ -5995,10 +5980,10 @@ static void AddDriverIcon(int nItem,int default_icon_index)
 	{
 		nParentIndex = GetParentIndex(drivers[nItem]);
 		if( nParentIndex >= 0)
-	{
+		{
 			hIcon = LoadIconFromFile((char *)drivers[nParentIndex]->name);
-		nParentIndex = GetParentIndex(drivers[nParentIndex]);
-		if (hIcon == NULL && nParentIndex >= 0)
+			nParentIndex = GetParentIndex(drivers[nParentIndex]);
+			if (hIcon == NULL && nParentIndex >= 0)
 				hIcon = LoadIconFromFile((char *)drivers[nParentIndex]->name);
 		}
 	}
@@ -6777,12 +6762,12 @@ static void MamePlayBackGame()
 
 				for (i = 0; drivers[i] != 0; i++) // find game and play it
 				{
-				if (strcmp(drivers[i]->name, ihdr.gamename) == 0)
+					if (strcmp(drivers[i]->name, ihdr.gamename) == 0)
 					{
 						nGame = i;
 						break;
 					}
-			}
+				}
 		}
 		mame_fclose(pPlayBack);
 
@@ -8369,93 +8354,6 @@ BOOL MouseHasBeenMoved(void)
 	
 	return (p.x != mouse_x || p.y != mouse_y);       
 }
-
-/*
-	The following two functions enable us to send Messages to the Game Window
-*/
-#if MULTISESSION
-#else
-
-void SendIconToProcess(LPPROCESS_INFORMATION pi, int nGameIndex)
-{
-	HICON hIcon;
-	int nParentIndex = -1;
-	hIcon = LoadIconFromFile(drivers[nGameIndex]->name);
-	if (hIcon == NULL)
-	{
-		//Check if clone, if so try parent icon first 
-		if (DriverIsClone(nGameIndex))
-		{
-			nParentIndex = GetParentIndex(drivers[nGameIndex]);
-			if( nParentIndex >= 0)
-				hIcon = LoadIconFromFile(drivers[nParentIndex]->name); 
-			if( hIcon == NULL) 
-			{
-				hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
-			}
-		}
-		else
-		{
-			hIcon = LoadIcon(hInst, MAKEINTRESOURCE(IDI_MAMEUI_ICON));
-		}
-	}
-	WaitForInputIdle( pi->hProcess, INFINITE );
-	SendMessageToProcess( pi, WM_SETICON, ICON_SMALL, (LPARAM)hIcon );
-	SendMessageToProcess( pi, WM_SETICON, ICON_BIG, (LPARAM)hIcon );
-}
-
-void SendMessageToProcess(LPPROCESS_INFORMATION lpProcessInformation, 
-                                      UINT Msg, WPARAM wParam, LPARAM lParam)
-{
-	FINDWINDOWHANDLE fwhs;
-	fwhs.ProcessInfo = lpProcessInformation;
-	fwhs.hwndFound  = NULL;
-
-	EnumWindows(EnumWindowCallBack, (LPARAM)&fwhs);
-
-	SendMessage(fwhs.hwndFound, Msg, wParam, lParam);
-	//Fix for loosing Focus, we reset the Focus on our own Main window
-	SendMessage(fwhs.hwndFound, WM_KILLFOCUS,(WPARAM) hMain, (LPARAM) NULL);
-}
-
-static BOOL CALLBACK EnumWindowCallBack(HWND hwnd, LPARAM lParam) 
-{ 
-	FINDWINDOWHANDLE * pfwhs = (FINDWINDOWHANDLE * )lParam; 
-	DWORD ProcessId; 
-	char buffer[MAX_PATH]; 
-
-	GetWindowThreadProcessId(hwnd, &ProcessId);
-
-	// cmk--I'm not sure I believe this note is necessary
-	// note: In order to make sure we have the MainFrame, verify that the title 
-	// has Zero-Length. Under Windows 98, sometimes the Client Window ( which doesn't 
-	// have a title ) is enumerated before the MainFrame 
-
-	GetWindowTextA(hwnd, buffer, ARRAY_LENGTH(buffer));
-	if (ProcessId  == pfwhs->ProcessInfo->dwProcessId &&
-		 strncmp(buffer,MAMENAME,strlen(MAMENAME)) == 0) 
-	{ 
-		pfwhs->hwndFound = hwnd; 
-		return FALSE; 
-	} 
-	else 
-	{ 
-		// Keep enumerating 
-		return TRUE; 
-	} 
-}
-
-HWND GetGameWindow(LPPROCESS_INFORMATION lpProcessInformation)
-{
-	FINDWINDOWHANDLE fwhs;
-	fwhs.ProcessInfo = lpProcessInformation;
-	fwhs.hwndFound  = NULL;
-
-	EnumWindows(EnumWindowCallBack, (LPARAM)&fwhs);
-	return fwhs.hwndFound;
-}
-
-#endif
 
 #ifdef USE_SHOW_SPLASH_SCREEN
 static LRESULT CALLBACK BackMainWndProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

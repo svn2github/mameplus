@@ -505,13 +505,13 @@ void ColumnEncodeStringWithCount(const int *value, char *str, int count);
 void ColumnDecodeStringWithCount(const char* str, int *value, int count);
 
 
-/*----------------------------------------*/
-// MAME Plus! specific code
+/***************************************************************************
+    MAME Plus! specific code
+ ***************************************************************************/
 
 #ifdef UNICODE
 WCHAR *options_get_wstring(core_options *opts, const char *name);
 void options_set_wstring(core_options *opts, const char *name, const WCHAR *value, int priority);
-WCHAR *OptionsGetCommandLine(int driver_index, void (*override_callback)(core_options *opts, void *param), void *param);
 #endif /* UNICODE */
 
 #ifdef STORY_DATAFILE
@@ -576,6 +576,10 @@ void SetDisplaySplashScreen(BOOL val);
 BOOL GetShowTreeSheet(void);
 void SetShowTreeSheet(BOOL val);
 #endif /* TREE_SHEET */
+
+#ifdef MAMEMESS
+WCHAR *OptionsGetCommandLine(int driver_index);
+#endif /* MAMEMESS */
 
 #endif
 
