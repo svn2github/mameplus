@@ -1338,7 +1338,7 @@ gunforc2	钢炮部队 2 (美版)	钢炮部队 2 (美版)	Irem
 geostorm	钢炮部队 2 (日版)	钢炮部队 2 (日版)	Irem
 firebarr	火爆战机 (日版)	火爆战机 (日版)	Irem
 dsoccr94	梦幻足球 '94	梦幻足球 '94	Irem (Data East Corporation license)
-kftgoal	射门	射门l	Jaleco
+kftgoal	射门	射门	Jaleco
 wpksoc	世界足球PK大赛	世界足球PK大赛	Jaleco
 reactor	反应器	反应器	Gottlieb
 mplanets	疯狂星球	疯狂星球	Gottlieb
@@ -1925,8 +1925,8 @@ moremorp	益智迷你游戏 加强版	益智迷你游戏 加强版	SemiCom / Exit
 snowbro3	雪人兄弟 3 不可思议的冒险	雪人兄弟 3 不可思议的冒险	Syrmex (bootleg/hack)
 finalttr	俄罗斯方块终结者 - 对战篇	俄罗斯方块终结者 - 对战篇	Jeil Computer System
 tekipaki	机器人方块	机器人方块	Toaplan
-ghox	打砖块飞行台 (第1套)	打砖块飞行台 (第1套)	Toaplan
-ghoxa	打砖块飞行台 (第2套)	打砖块飞行台 (第2套)	Toaplan
+ghox	打砖块飞行台 (Spinner with Up/Down Axis)	打砖块飞行台 (Spinner with Up/Down Axis)	Toaplan
+ghoxj	打砖块飞行台 (8-Way Joystick)	打砖块飞行台 (8-Way Joystick)	Toaplan
 dogyuun	雷射战机	雷射战机	Toaplan
 kbash	猫王	猫王	Toaplan
 kbash2	猫王 2 (盗版)	猫王 2 (盗版)	bootleg
@@ -3601,7 +3601,7 @@ gundmxgd	机动战士高达: 联邦 VS 吉翁 DX  (GDL-0006)	机动战士高达: 联邦 VS 吉翁 DX
 cvs2gd	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)	Capcom 对 SNK 2 千禧格斗 (GDL-0007A)	Capcom
 ikaruga	斑鸠 (GDL-0010)	斑鸠 (GDL-0010)	Treasure
 ggxx	罪恶工具 XX (GDL-0011)	罪恶工具 XX (GDL-0011)	unknown
-chocomk	恰克与马克 (GDL-0014A)	恰克与马克 (GDL-0014A)	unknown
+chocomk	立体对战方块 (GDL-0014A)	立体对战方块 (GDL-0014A)	unknown
 quizqgd	问答手机 Q 模式 (GDL-0017)	问答手机 Q 模式 (GDL-0017)	unknown
 ggxxrl	罪恶工具 XX #Reload (GDL-0019A)	罪恶工具 XX #Reload (GDL-0019A)	unknown
 shikgam2	式神之城 II (GDL-0021)	式神之城 II (GDL-0021)	unknown
@@ -6098,7 +6098,8 @@ hipai	新超真实麻雀	新超真实麻雀	Aruze?
 doncdoon	花火大会	花火大会	Aruze?
 kurufev	狂热震撼	狂热震撼	Aruze?
 mayjin3	五月将棋 3	五月将棋 3	Seta?
-powerins	豪血寺一族 (日版)	豪血寺一族 (日版)	Atlus
+powerins	豪血寺一族 (美版)	豪血寺一族 (美版)	Atlus
+powerinj	豪血寺一族 (日版)	豪血寺一族 (日版)	Atlus
 powerina	豪血寺一族 (美版, 盗版 第1套)	豪血寺一族 (美版, 盗版 第1套)	Atlus
 powerinb	豪血寺一族 (美版, 盗版 第2套)	豪血寺一族 (美版, 盗版 第2套)	Atlus
 ohmygod	天神方块 (日版)	天神方块 (日版)	Atlus
@@ -7170,8 +7171,8 @@ potnpkrc	杰克的纸牌 (第4套)	杰克的纸牌 (第4套)	Bootleg
 potnpkrd	杰克的纸牌 (第5套)	杰克的纸牌 (第5套)	Bootleg
 potnpkre	杰克的纸牌 (第6套)	杰克的纸牌 (第6套)	Bootleg
 goodluck	幸运纸牌	幸运纸牌	Unknown
-bsuerte	幸运来敲门 (西班牙, 第1套)	幸运来敲门 (西班牙, 第1套)	Unknown
-bsuertea	幸运来敲门 (西班牙, 第2套)	幸运来敲门 (西班牙, 第2套)	Unknown
+bsuerte	幸运积分 (西班牙, 第1套)	幸运积分 (西班牙, 第1套)	Unknown
+bsuertea	幸运积分 (西班牙, 第2套)	幸运积分 (西班牙, 第2套)	Unknown
 royale	皇家扑克 (ver.X)	皇家扑克 (ver.X)	Unknown
 witchcrd	魔法纸牌 (英文)	魔法纸牌 (英文)	Unknown
 witchcda	魔法纸牌 (西班牙, 第1套)	魔法纸牌 (西班牙, 第1套)	Unknown
@@ -7288,6 +7289,9 @@ lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
 lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
 magictg	魔法纸牌 (第1套)	魔法纸牌 (第1套)	Acclaim
 magictga	魔法纸牌 (第2套)	魔法纸牌 (第2套)	Acclaim
+re900	轮盘 RE-900	轮盘 RE-900	Entretenimientos GEMINIS
+bs94	幸运积分 '94	幸运积分 '94	Entretenimientos GEMINIS
+jokrwild	梭哈大师 (加密版)	梭哈大师 (加密版))	Sigma
 videopkr	视频扑克	视频扑克	InterFlip
 blckjack	二十一点	二十一点	InterFlip
 videodad	视频骰子	视频骰子	InterFlip
@@ -7446,6 +7450,7 @@ sms2kr	Gam*Boy II (Korea)	Gam*Boy II (Korea)	Samsung
 smssdisp	Master System Store Display Unit	Master System Store Display Unit	Sega
 megadrij	世嘉五代 (日版, NTSC)	世嘉五代 (日版, NTSC)	Sega
 genesis	世嘉五代 (美版, NTSC)	世嘉五代 (美版, NTSC)	Sega
+gensvp	Genesis (USA, NTSC, w/SVP)	Genesis (USA, NTSC, w/SVP)	Sega
 megadriv	世嘉五代 (欧版, PAL)	世嘉五代 (欧版, PAL)	Sega
 pico	Pico (欧版, PAL)	Pico (欧版, PAL)	Sega
 picou	Pico (美版, NTSC)	Pico (美版, NTSC)	Sega
