@@ -864,19 +864,19 @@ static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly
 		/* if we're selected, draw with a different background */
 		if (itemnum == menu->selected)
 		{
-			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_TEXT);
-			rgb_t bgcolor1 = ui_get_rgb_color(CURSOR_SELECTED_BG);
-			fgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
-			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor1), RGB_GREEN(bgcolor1), RGB_BLUE(bgcolor1));
+			rgb_t fgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_TEXT);
+			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_BG);
+			fgcolor = MAKE_ARGB(0xe0, RGB_RED(fgcolor0), RGB_GREEN(fgcolor0), RGB_BLUE(fgcolor0));
+			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
 		}
 
 		/* else if the mouse is over this item, draw with a different background */
 		else if (itemnum == menu->hover)
 		{
-			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_HOVER_TEXT);
-			rgb_t bgcolor1 = ui_get_rgb_color(CURSOR_HOVER_BG);
-			fgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
-			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor1), RGB_GREEN(bgcolor1), RGB_BLUE(bgcolor1));
+			rgb_t fgcolor0 = ui_get_rgb_color(CURSOR_HOVER_TEXT);
+			rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_HOVER_BG);
+			fgcolor = MAKE_ARGB(0xe0, RGB_RED(fgcolor0), RGB_GREEN(fgcolor0), RGB_BLUE(fgcolor0));
+			bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
 		}
 
 		/* if we have some background hilighting to do, add a quad behind everything else */

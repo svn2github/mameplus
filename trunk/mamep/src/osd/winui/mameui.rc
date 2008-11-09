@@ -1178,7 +1178,7 @@ STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Palette"
 FONT 8, "MS Shell Dlg"
 BEGIN
-    LTEXT           "Show palette for:",IDC_STATIC,7,7,157,8
+    LTEXT           "Configure for:",IDC_STATIC,7,7,157,8
     COMBOBOX        IDC_PALETTE_COMBO,7,19,157,100,CBS_DROPDOWNLIST | 
                     WS_VSCROLL | WS_TABSTOP
     LTEXT           "RGB setting:",IDC_STATIC,7,37,157,8
