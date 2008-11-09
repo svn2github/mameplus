@@ -18,7 +18,7 @@
 &Configuration...
 設定(&C)...
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 設定(&C)...
 
@@ -34,11 +34,11 @@
 &Exit
 結束(&E)
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 檔案(&F)
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 略過畫格(&F)
 
@@ -50,11 +50,11 @@
 &Hide Menubar\tScrLk
 隱藏設定選單\tScrLk
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 輸入(&I)
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 搖桿(&J)
 
@@ -82,7 +82,7 @@
 &Save State
 儲存狀態(&S)
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 視訊(&V)
 
@@ -90,11 +90,11 @@
 (primary)
 (主顯示器)
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 關於 %s (%s)...
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 所有檔案 (*.*)|*.*|
 
@@ -114,11 +114,11 @@ Auto
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 公共映像檔類型
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 壓縮的映像檔 (*.zip)|*.zip|
 
@@ -514,7 +514,7 @@ DirectSound: 主要緩衝: %d Hz, %d 位元, %d 聲道\n
 Emulated
 模擬
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 模擬鍵盤
 
@@ -578,7 +578,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 設定頂點 shader 時發生錯誤 (%08X)
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 %s 映像檔時發生錯誤: %s
 
@@ -624,25 +624,25 @@ INPUT DEVICE OPTIONS
 
 # osd/windows/video.c: 523
 Illegal aspect ratio value for %s = %s\n
-非法的長寬比例值於 %s = %s\n
+非法的長寬比例值 %s = %s\n
 
 # osd/windows/video.c: 546
 Illegal resolution value for %s = %s\n
-非法的解析度值於 %s = %s\n
+非法的解析度值 %s = %s\n
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 輸入
 
 # osd/windows/video.c: 441
 Invalid video value %s; reverting to gdi\n
-無效的視訊值 %s; 還原成 gdi\n
+無效的 %s 視訊值; 還原成 gdi\n
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 搖桿 %i
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 搖桿/控制器
 
@@ -654,7 +654,7 @@ MAME: %s [%s] - 畫面 %d
 Maximum &Speed
 最快速度
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 雜項輸入
 
@@ -734,7 +734,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 聲音: 緩衝 overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 儲存狀態檔 (*.sta)|*.sta|All Files (*.*)|*.*
 
@@ -862,7 +862,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 全螢幕模式對比值
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 正在建立
 
@@ -934,7 +934,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 全螢幕模式 Gamma 值
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 正在載入
 

@@ -18,7 +18,7 @@
 &Configuration...
 &Configuración...
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 &Configurar...
 
@@ -34,11 +34,11 @@
 &Exit
 &Salir
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 &Archivo
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 &Salto de fotogramas
 
@@ -46,11 +46,11 @@
 &Full Screen\tAlt+Enter
 &Pantalla Completa\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 &Entrada
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 &Joysticks
 
@@ -78,7 +78,7 @@
 &Save State
 &Guardar Estado
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 &Video
 
@@ -86,11 +86,11 @@
 (primary)
 (primario)
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 Acerca de %s (%s)...
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 Todos los archivos (*.*)|*.*|
 
@@ -110,11 +110,11 @@ Auto
 Cancel
 Cancelar
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 Tipos comunes de imagen
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 Imagenes Comprimidas (*.zip)|*.zip|
 
@@ -506,7 +506,7 @@ DirectSound: Bufer primario: %d Hz, %d bits, %d canales\n
 Emulated
 Emulado
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 Teclado Emulado
 
@@ -570,7 +570,7 @@ Error configurando formato de memoria intermedia primaria de DirectSound: %08x\n
 Error setting vertex shader (%08X)
 Error configurando vertex shader (%08X)
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 Error cuando %s la imagen: %s
 
@@ -622,7 +622,7 @@ Valor ilegal del cociente de aspecto para %s = %s\n
 Illegal resolution value for %s = %s\n
 Valor incorrecto de resolución para %s = %s\n
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 Entrada
 
@@ -630,11 +630,11 @@ Entrada
 Invalid video value %s; reverting to gdi\n
 Valor invalido de video %s; revertir a gdi\n
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 Joystick %i
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 Joysticks/Controladores
 
@@ -646,7 +646,7 @@ MAME: %s [%s] - Pantalla %d
 Maximum &Speed
 Máxima &Velocidad
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 Entrada Variadas
 
@@ -726,7 +726,7 @@ Bubber de sonido: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 Sonido: almacenador intermediario overflows=%d underflows=%d\n
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 Archivos de Estado (*.sta)|*.sta|Todos los archivos (*.*)|*.*
 
@@ -854,7 +854,7 @@ obligar al cociente de aspecto apropiado
 contrast value in full screen mode
 valor de contraste en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 creando
 
@@ -922,7 +922,7 @@ nombre explicito de la tercera pantalla; 'automatico' aquí intentará hacer un me
 gamma value in full screen mode
 valor gamma en modo a pantalla completa
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 cargando
 

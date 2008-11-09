@@ -470,7 +470,7 @@ Sesame Japan
 Seta
 セタ
 
-# Speed Attack!
+# Speed Attack! (Japan)
 Seta Kikaku Corp.
 セタ企画
 
@@ -950,10 +950,6 @@ Bonanza Enterprises, Ltd
 Bootleg
 
 
-# Joker-Poker
-Bootleg on Coinmaster hardware
-
-
 # Sky Lancer (Bordun International)
 Bordun International
 
@@ -1318,6 +1314,10 @@ Entertainment Enterprises
 Entertainment Sciences
 
 
+# Ruleta RE-900
+Entretenimientos GEMINIS
+
+
 # Boardwalk Casino
 Epos Corporation
 
@@ -1352,6 +1352,10 @@ Falcon
 
 # Metal Saver
 First Amusement
+
+
+# Forte Card
+Fortex LTD
 
 
 # Space Thunderbird
@@ -1954,7 +1958,7 @@ Petaco S.A.
 Philko
 
 
-# PlayMan Poker (Germany)
+# PlayMan Poker (german)
 PlayMan
 
 
@@ -2026,6 +2030,10 @@ Raster Elite
 Rastersoft
 
 
+# Baby Poker
+Recreativos Franco
+
+
 # Astro Fire
 Rene Pierre
 
@@ -2066,7 +2074,7 @@ SSI
 Saero Entertainment
 
 
-# Elan Doree - Legend of Dragon (JUET 980922 V1.006)
+# Touryuu Densetsu Elan-Doree / Elan Doree - Legend of Dragoon (JUET 980922 V1.006)
 Sai-Mate
 
 
@@ -2334,7 +2342,7 @@ Techstar
 Telko
 
 
-# Konek-Gorbunok
+# Snezhnaja Koroleva
 Terminal
 
 
@@ -2384,6 +2392,10 @@ Tuning
 
 # Super Duper Casino (California V3.2)
 U.S. Games
+
+
+# P's Attack
+Uniana
 
 
 # Mighty Monkey
@@ -2470,6 +2482,10 @@ Vision Electronics
 Volt Elec co-ltd
 
 
+# Jack Potten's Poker (set 2)
+W
+
+
 # Success Joe (World)
 WAVE
 
@@ -2524,6 +2540,10 @@ World Games Inc
 
 # Black Touch (Korea)
 Yang Gi Co Ltd.
+
+
+# Grudge Match (Yankee Game Technology)
+Yankee Game Technology
 
 
 # Spectrum 2000 (Euro)

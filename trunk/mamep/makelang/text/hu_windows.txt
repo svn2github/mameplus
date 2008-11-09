@@ -94,7 +94,7 @@ beállítás joystick ID (8 játékos)
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 
 
@@ -110,11 +110,11 @@ beállítás joystick ID (8 játékos)
 &Exit
 
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 
 
@@ -126,11 +126,11 @@ beállítás joystick ID (8 játékos)
 &Hide Menubar\tScrLk
 
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 
 
@@ -158,7 +158,7 @@ beállítás joystick ID (8 játékos)
 &Save State
 
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 
 
@@ -166,11 +166,11 @@ beállítás joystick ID (8 játékos)
 (primary)
 
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 
 
@@ -190,11 +190,11 @@ Auto
 Cancel
 
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 
 
@@ -590,7 +590,7 @@ DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 Emulated
 
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 
 
@@ -638,7 +638,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 
 
@@ -690,7 +690,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 
 
@@ -698,11 +698,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 
 
@@ -714,7 +714,7 @@ MAME: %s [%s] - Screen %d
 Maximum &Speed
 
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 
 
@@ -790,7 +790,7 @@ Soft &Reset
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
@@ -902,7 +902,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 
 
@@ -970,7 +970,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 
 

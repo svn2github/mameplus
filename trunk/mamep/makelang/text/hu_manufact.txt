@@ -314,10 +314,6 @@ Bonanza Enterprises, Ltd
 Bootleg
 
 
-# Joker-Poker
-Bootleg on Coinmaster hardware
-
-
 # Sky Lancer (Bordun International)
 Bordun International
 
@@ -774,6 +770,10 @@ Entertainment Enterprises
 Entertainment Sciences
 
 
+# Ruleta RE-900
+Entretenimientos GEMINIS
+
+
 # The King of Fighters 2001 (set 1)
 Eolith
 
@@ -840,6 +840,10 @@ Falcon
 
 # Metal Saver
 First Amusement
+
+
+# Forte Card
+Fortex LTD
 
 
 # Space Thunderbird
@@ -1638,7 +1642,7 @@ Petaco S.A.
 Philko
 
 
-# PlayMan Poker (Germany)
+# PlayMan Poker (german)
 PlayMan
 
 
@@ -1730,6 +1734,10 @@ Raster Elite
 Rastersoft
 
 
+# Baby Poker
+Recreativos Franco
+
+
 # Astro Fire
 Rene Pierre
 
@@ -1790,7 +1798,7 @@ SSI
 Saero Entertainment
 
 
-# Elan Doree - Legend of Dragon (JUET 980922 V1.006)
+# Touryuu Densetsu Elan-Doree / Elan Doree - Legend of Dragoon (JUET 980922 V1.006)
 Sai-Mate
 
 
@@ -1898,7 +1906,7 @@ Sesame Japan
 Seta
 
 
-# Speed Attack!
+# Speed Attack! (Japan)
 Seta Kikaku Corp.
 
 
@@ -2246,7 +2254,7 @@ Tekunon Kougyou
 Telko
 
 
-# Konek-Gorbunok
+# Snezhnaja Koroleva
 Terminal
 
 
@@ -2312,6 +2320,10 @@ U.S. Games
 
 # Mouser
 UPL
+
+
+# P's Attack
+Uniana
 
 
 # Fancy World - Earth of Crisis
@@ -2422,6 +2434,10 @@ Vision Electronics
 Volt Elec co-ltd
 
 
+# Jack Potten's Poker (set 2)
+W
+
+
 # Success Joe (World)
 WAVE
 
@@ -2496,6 +2512,10 @@ Yang Cheng
 
 # Black Touch (Korea)
 Yang Gi Co Ltd.
+
+
+# Grudge Match (Yankee Game Technology)
+Yankee Game Technology
 
 
 # Moeyo Gonta!! (Japan)

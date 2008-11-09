@@ -1502,7 +1502,7 @@ Petaco S.A.
 Philko
 Philko
 
-# PlayMan Poker (Germany)
+# PlayMan Poker (german)
 PlayMan
 PlayMan
 
@@ -1646,7 +1646,7 @@ SPHINX
 Saero Entertainment
 Saero Entertainment
 
-# Elan Doree - Legend of Dragon (JUET 980922 V1.006)
+# Touryuu Densetsu Elan-Doree / Elan Doree - Legend of Dragoon (JUET 980922 V1.006)
 Sai-Mate
 Sai-Mate
 
@@ -1738,7 +1738,7 @@ Sesame Japan
 Seta
 Seta
 
-# Speed Attack!
+# Speed Attack! (Japan)
 Seta Kikaku Corp.
 Seta Kikaku Corp.
 
@@ -2050,7 +2050,7 @@ Tekunon Kougyou
 Telko
 Telko
 
-# Konek-Gorbunok
+# Snezhnaja Koroleva
 Terminal
 Terminal
 
@@ -2422,10 +2422,6 @@ Astro Corp.
 B.R.L.
 
 
-# Joker-Poker
-Bootleg on Coinmaster hardware
-
-
 # Cal Omega - Game 7.6 (Arcade Poker)
 Cal Omega Inc.
 
@@ -2462,8 +2458,16 @@ Electronics Devices Italy
 Enix/Namco
 
 
+# Ruleta RE-900
+Entretenimientos GEMINIS
+
+
 # Jolly Card (Evona Electronic)
 Evona
+
+
+# Forte Card
+Fortex LTD
 
 
 # Big Deal (hungarian, set 1)
@@ -2512,6 +2516,10 @@ Nippon Electronic Company
 
 # M-79 Ambush
 Ramtek
+
+
+# Baby Poker
+Recreativos Franco
 
 
 # SSI Poker (v2.4)
@@ -2570,6 +2578,10 @@ Spale-Soft
 Stella
 
 
+# P's Attack
+Uniana
+
+
 # Virtual Combat
 VR8 Inc.
 
@@ -2578,12 +2590,20 @@ VR8 Inc.
 Videojet/Timlex/Cougar
 
 
+# Jack Potten's Poker (set 2)
+W
+
+
 # Lucky 74 (bootleg, set 1)
 Wing Co.,Ltd.
 
 
 # Black Touch (Korea)
 Yang Gi Co Ltd.
+
+
+# Grudge Match (Yankee Game Technology)
+Yankee Game Technology
 
 
 # Puzzlet (Japan)

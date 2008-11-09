@@ -818,7 +818,7 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Configuration...
 
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 
 
@@ -834,11 +834,11 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Exit
 
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 
 
@@ -850,11 +850,11 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Hide Menubar\tScrLk
 
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 
 
@@ -882,15 +882,15 @@ metodo di uscita video: nessuno, gdi, ddraw, o d3d
 &Save State
 
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 
 
@@ -906,11 +906,11 @@ Auto
 Cancel
 
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 
 
@@ -926,11 +926,11 @@ Direct3D: Max texture size = %dx%d\n
 Emulated
 
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 
 
@@ -938,15 +938,15 @@ Error when %s the image: %s
 Ha&rd Reset
 
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 
 
@@ -954,7 +954,7 @@ Joysticks/Controllers
 Maximum &Speed
 
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 
 
@@ -1010,7 +1010,7 @@ Show P&rofiler
 Soft &Reset
 
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
@@ -1030,7 +1030,7 @@ Toggle Menubar
 Unlimited
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 
 
@@ -1038,7 +1038,7 @@ creating
 force the program to terminate if no updates within specified number of seconds
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 
 

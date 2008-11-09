@@ -1,20 +1,20 @@
-#
+# 8085
 Console
 콘솔
 
-#
+# 8011
 Decrypted
 비암호화
 
-#
+# 8069
 Homebrew
 홈브류
 
-#
+# 7970
 Plus!
 플러스!
 
-#
+# Title
 Version
 버전
 

@@ -18,7 +18,7 @@
 &Configuration...
 &Configuração...
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 @Configurar...
 
@@ -34,11 +34,11 @@
 &Exit
 &Sair
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 &Arquivo
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 &Pulo de Quadro
 
@@ -46,11 +46,11 @@
 &Full Screen\tAlt+Enter
 &Tela Cheia\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 &Entrada
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 &Joysticks
 
@@ -78,7 +78,7 @@
 &Save State
 &Salvar Posição
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 &Vídeo
 
@@ -86,11 +86,11 @@
 (primary)
 (primário)
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 Sobre %s (%s)...
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 Todos os arquivos (*.*)|*.*|
 
@@ -110,11 +110,11 @@ Automático
 Cancel
 Cancelar
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 Tipos de imagens comuns
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 Imagens compactadas (*.zip)|*.zip|
 
@@ -502,7 +502,7 @@ DirectInput: Usando DirectInput %d\n
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Buffer primário: %d Hz, %d bits, %d canais\n
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 Teclado Emulado
 
@@ -566,7 +566,7 @@ Erro configurando formato de buffer DirectSound primário: %08x\n
 Error setting vertex shader (%08X)
 Erro configurando sombreador de vértice (%08X)
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 Erro quando %s a imagem: %s
 
@@ -618,7 +618,7 @@ Valor de relação de aspecto ilegal para %s = %s\n
 Illegal resolution value for %s = %s\n
 Valor de resolução ilegal para %s = %s\n
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 Entrada
 
@@ -626,11 +626,11 @@ Entrada
 Invalid video value %s; reverting to gdi\n
 Valor de vídeo inválido %s; revertendo para gdi\n
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 Joystick %i
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 Joysticks/Controles
 
@@ -642,7 +642,7 @@ NOME: %s [%s] - Tela %d
 Maximum &Speed
 &Velocidade Máxima
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 Outras entradas
 
@@ -846,7 +846,7 @@ limitar à relação de aspecto correta
 contrast value in full screen mode
 valor de contraste em modo tela cheia
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 criando
 
@@ -914,7 +914,7 @@ nome explícito da terceira tela; 'auto' tentará descobir uma melhor alternativa
 gamma value in full screen mode
 valor gama em modo tela cheia
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 carregando
 
@@ -1034,7 +1034,7 @@ Direct3D: Max texture size = %dx%d\n
 Emulated
 
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 

@@ -18,7 +18,7 @@
 &Configuration...
 設定...(&C)
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 設定...(&C)
 
@@ -34,11 +34,11 @@ DIPスイッチ...(&D)
 &Exit
 終了(&E)
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 ファイル(&F)
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 フレームスキップ(&F)
 
@@ -50,11 +50,11 @@ DIPスイッチ...(&D)
 &Hide Menubar\tScrLk
 メニューバーを隠す(&H)\tScrLk
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 入力(&I)
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 ジョイスティック(&J)
 
@@ -82,7 +82,7 @@ DIPスイッチ...(&D)
 &Save State
 ステートを保存(&S)
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 ビデオ(&V)
 
@@ -90,11 +90,11 @@ DIPスイッチ...(&D)
 (primary)
 (プライマリ)
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 %s (%s)について...
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 全てのファイル (*.*)|*.*|
 
@@ -114,11 +114,11 @@ Auto
 Cancel
 キャンセル
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 共通イメージタイプ
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 圧縮イメージ (*.zip)|*.zip|
 
@@ -510,7 +510,7 @@ DirectSound: サウンドバッファ: %d Hz, %d ビット, %d チャンネル\n
 Emulated
 エミュレート
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 キーボードエミュレート
 
@@ -574,7 +574,7 @@ DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
@@ -626,7 +626,7 @@ Illegal aspect ratio value for %s = %s\n
 Illegal resolution value for %s = %s\n
 %sの値%sは不正な解像度です\n
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 入力
 
@@ -634,11 +634,11 @@ Input
 Invalid video value %s; reverting to gdi\n
 ビデオの値%sは不正です。GDIに復元します\n
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 ジョイスティック %i
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 ジョイスティック/コントローラ
 
@@ -650,7 +650,7 @@ MAME: %s「%s」- 画面%d
 Maximum &Speed
 最高速度(&S)
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 その他の入力
 
@@ -730,7 +730,7 @@ Sound buffer: overflows=%d underflows=%d\n
 Sound: buffer overflows=%d underflows=%d\n
 サウンド: バッファ オーバフロー=%d アンダーフロー=%d\n
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
@@ -858,7 +858,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 フルスクリーン画面の値を制限します
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 作成
 
@@ -930,7 +930,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 フルスクリーンのガンマ補正値
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 読み込み
 

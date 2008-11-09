@@ -18,7 +18,7 @@
 &Configuration...
 配置...(&C)
 
-# mess/osd/windows/menu.c: 1250
+# mess/osd/windows/menu.c: 1332
 &Configure...
 配置...(&C)
 
@@ -30,11 +30,11 @@
 &Exit
 退出(&E)
 
-# mess/osd/windows/menu.c: 1457 mess/osd/windows/mess.rc: 30 
+# mess/osd/windows/menu.c: 1543 mess/osd/windows/mess.rc: 30 
 &File
 文件(&F)
 
-# mess/osd/windows/menu.c: 2088 mess/osd/windows/mess.rc: 70
+# mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
 跳帧(&F)
 
@@ -42,11 +42,11 @@
 &Full Screen\tAlt+Enter
 全屏幕(&F)\tAlt+Enter
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 46
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 46
 &Input
 输入(&I)
 
-# mess/osd/windows/menu.c: 1223 mess/osd/windows/mess.rc: 55
+# mess/osd/windows/menu.c: 1305 mess/osd/windows/mess.rc: 55
 &Joysticks
 游戏杆(&J)
 
@@ -74,15 +74,15 @@
 &Save State
 保存游戏进度(&S)
 
-# mess/osd/windows/menu.c: 1436, 1436, 2088 mess/osd/windows/mess.rc: 59, 61
+# mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
 视频(&V)
 
-# mess/osd/windows/menu.c: 2098
+# mess/osd/windows/menu.c: 2164
 About %s (%s)...
 关于 %s (%s)...
 
-# mess/osd/windows/menu.c: 874
+# mess/osd/windows/menu.c: 955
 All files (*.*)|*.*|
 所有文件 (*.*)|*.*|
 
@@ -98,11 +98,11 @@ Auto
 Cancel
 取消
 
-# mess/osd/windows/menu.c: 865
+# mess/osd/windows/menu.c: 946
 Common image types
 通用镜像类型
 
-# mess/osd/windows/menu.c: 878
+# mess/osd/windows/menu.c: 959
 Compressed Images (*.zip)|*.zip|
 压缩镜像 (*.zip)|*.zip|
 
@@ -126,15 +126,15 @@ Error setting DirectSound cooperative level: %08x\n
 Ha&rd Reset
 硬重启(&R)
 
-# mess/osd/windows/menu.c: 267
+# mess/osd/windows/menu.c: 348
 Input
 输入
 
-# mess/osd/windows/menu.c: 1268
+# mess/osd/windows/menu.c: 1349
 Joystick %i
 游戏杆 %i
 
-# mess/osd/windows/menu.c: 233
+# mess/osd/windows/menu.c: 314
 Joysticks/Controllers
 游戏杆/控制器
 
@@ -142,7 +142,7 @@ Joysticks/Controllers
 Maximum &Speed
 最大速度(&S)
 
-# mess/osd/windows/menu.c: 255
+# mess/osd/windows/menu.c: 336
 Miscellaneous Input
 其他输入
 
@@ -666,7 +666,7 @@ DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 Emulated
 
 
-# mess/osd/windows/menu.c: 244
+# mess/osd/windows/menu.c: 325
 Emulated Keyboard
 
 
@@ -714,7 +714,7 @@ Error setting primary DirectSound buffer format: %08x\n
 Error setting vertex shader (%08X)
 
 
-# mess/osd/windows/menu.c: 953
+# mess/osd/windows/menu.c: 1034
 Error when %s the image: %s
 
 
@@ -798,7 +798,7 @@ Show P&rofiler
 Sound: buffer overflows=%d underflows=%d\n
 
 
-# mess/osd/windows/menu.c: 533
+# mess/osd/windows/menu.c: 614
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 
 
@@ -902,7 +902,7 @@ constrain to the proper aspect ratio
 contrast value in full screen mode
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 creating
 
 
@@ -970,7 +970,7 @@ force the program to terminate if no updates within specified number of seconds
 gamma value in full screen mode
 
 
-# mess/osd/windows/menu.c: 954
+# mess/osd/windows/menu.c: 1035
 loading
 
 
