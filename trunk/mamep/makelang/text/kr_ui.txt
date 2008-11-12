@@ -1,6 +1,6 @@
 # osd/winui/dialogs.c: 957
  PCB Info: %s [%s]
- PCB 정보: %s [%s]
+기판 정보: %s [%s]
 
 # osd/winui/dialogs.c: 839
  again.\r\n
@@ -12,11 +12,11 @@ Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft Direc
 
 # osd/winui/dialogs.c: 136
  will now reset the following\n
-다음 ..리셋 할 것입니다\n
+이제 다음으로 재설정됩니다\n
 
 # osd/winui/properties.c: 1039
 %d colors 
-%d 컬러
+%d 색상
 
 # osd/winui/layout.c: 210 osd/winui/winui.c: 3738
 %d games
@@ -40,31 +40,31 @@ Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft Direc
 
 # osd/winui/properties.c: 1008
 %s (%d player)
-%s (%d 플레이어)
+%s (%d 사용자)
 
 # osd/winui/properties.c: 1019
 %s (%d player, %d button)
-%s (%d 플레이어, %d 버튼)
+%s (%d 사용자, %d 버튼)
 
 # osd/winui/properties.c: 1017
 %s (%d player, %d buttons)
-%s (%d 플레이어, %d 버튼)
+%s (%d 사용자, %d 버튼)
 
 # osd/winui/properties.c: 1005
 %s (%d players)
-%s (%d 플레이어)
+%s (%d 사용자)
 
 # osd/winui/properties.c: 1014
 %s (%d players, %d button)
-%s (%d 플레이어, %d 버튼)
+%s (%d 사용자, %d 버튼)
 
 # osd/winui/properties.c: 1011
 %s (%d players, %d buttons)
-%s (%d 플레이어, %d 버튼)
+%s (%d 사용자, %d 버튼)
 
 # osd/winui/mameui.rc: 192
 &About
-MAME32 정보(&A)
+MAME 정보(&A)
 
 # osd/winui/mameui.rc: 44
 &About MAMEUI
@@ -88,7 +88,7 @@ MAMEUI 정보(&A)
 
 # osd/winui/mameui.rc: 156
 &Background Image...
-배경 이미지...(&B)
+배경 이미지(&B)
 
 # osd/winui/mameui.rc: 1093
 &Broadcast selected game to all windows
@@ -176,7 +176,7 @@ MAMEUI 정보(&A)
 
 # osd/winui/mameui.rc: 186
 &History File...
-History 파일(&H)
+History 파일 (&H)
 
 # osd/winui/mameui.rc: 1021
 &Horizontal
@@ -196,7 +196,7 @@ History 파일(&H)
 
 # osd/winui/mameui.rc: 184
 &Mame Release Notes
-Mame 릴리즈 일지(&M)
+Mame 배포 일지(&M)
 
 # osd/winui/mameui.rc: 91, 266, 280
 &Marquee
@@ -278,6 +278,10 @@ Mame 릴리즈 일지(&M)
 &Status bar\tAlt+S
 상태 표시줄(&S)\tAlt+S
 
+# osd/winui/mameui.rc: 189
+&Story File...
+Story 파일 (&S)
+
 # osd/winui/mameui.rc: 92, 267, 281
 &Title
 타이틀(&T)
@@ -352,7 +356,7 @@ AD스틱 장치
 
 # osd/winui/winui.c: 820
 About
-MAME32 정보
+MAME 정보
 
 # osd/winui/mameui.rc: 377
 About MAMEUI
@@ -388,7 +392,7 @@ All
 
 # osd/winui/layout.c: 53
 All Arcades
-전체 아케이드
+전체 게임
 
 # osd/winui/winui.c: 6390, 6393, 6396, 6399, 6402, 6406, 6411, 6414, 6417, 6420, 6423, 6426, 6430
 All files (*.*)
@@ -396,7 +400,7 @@ All files (*.*)
 
 # osd/winui/properties.c: 404
 All screens
-모든 스크린
+모든 화면
 
 # osd/winui/mameui.rc: 1086
 Allow game selection by a &joystick (requires restart)
@@ -428,11 +432,11 @@ Arranges icons in a grid
 
 # osd/winui/layout.c: 128
 Artwork
-아트워크
+아트웍
 
 # osd/winui/mameui.rc: 922
 Artwork options
-아트워크 옵션
+아트웍 옵션
 
 # osd/winui/mameui.rc: 561
 Aspect ratio:
@@ -448,7 +452,7 @@ Audit
 
 # osd/winui/mameui.rc: 1573
 Audit ROM and samples sets
-롬과 샘플세트를 검사
+롬과 샘플셋을 검사
 
 # osd/winui/mui_audit.c: 489
 Audit complete.\n
@@ -480,7 +484,7 @@ Auto pause when playback is finished
 
 # osd/winui/mameui.rc: 670
 Auto refresh speed
-자동 리프레시 속도
+자동 재생 속도
 
 # osd/winui/mameui.rc: 901
 Auto restore and save (only if available)
@@ -492,7 +496,7 @@ Automatic
 
 # osd/winui/layout.c: 54
 Available Arcades
-보유 아케이드
+보유 게임
 
 # osd/winui/mameui.rc: 467
 Available fields:
@@ -540,7 +544,7 @@ Bilinear filtering
 
 # osd/winui/mameui.rc: 1116
 Bookkeeping
-북마크
+부기
 
 # osd/winui/mameui.rc: 696
 Brightness Correction
@@ -688,7 +692,7 @@ Clone Of
 
 # osd/winui/mameui.rc: 630
 Clone of:
-부모롬 이름 :
+부모롬 이름:
 
 # osd/winui/layout.c: 80
 Clones
@@ -700,7 +704,7 @@ Cocktail
 
 # osd/winui/mameui.rc: 905
 Coin lockout
-코인 차단
+코인 잠금
 
 # osd/winui/properties.c: 1074, 1121, 1186
 Colors are completely wrong
@@ -724,7 +728,7 @@ Config
 
 # osd/winui/mameui.rc: 556, 1181
 Configure for:
-설정 화면 선택:
+설정화면 선택:
 
 # osd/winui/mameui.rc: 945 osd/winui/mui_opts.c: 440
 Console
@@ -732,7 +736,7 @@ Console
 
 # osd/winui/layout.c: 56
 Consoles
-콘솔
+콘솔 게임
 
 # osd/winui/mameui.rc: 1519
 Contains commands for displaying help
@@ -784,19 +788,19 @@ Control Type:
 
 # osd/winui/layout.c: 137
 Controller Files
-콘트롤러 파일
+조종장치 파일
 
 # osd/winui/mameui.rc: 519
 Controller ID layout
-콘트롤러 ID 레이아웃
+조종장치 ID 레이아웃
 
 # osd/winui/mameui.rc: 487
 Controller Mapping
-콘트롤러 설정
+조종장치 설정
 
 # osd/winui/mameui.rc: 838
 Controllers
-콘트롤러
+조종장치
 
 # osd/winui/mameui.rc: 384
 Copyright (C) 1997-2008 The MAME Team
@@ -816,7 +820,23 @@ Could not open '%s' as a valid savestate file.
 
 # osd/winui/mameui.rc: 929
 Crop artwork
-아트워크 잘라내기
+아트웍 잘라내기
+
+# osd/winui/paletteedit.c: 110
+Cursor background (floating)
+커서 배경화면 (변동)
+
+# osd/winui/paletteedit.c: 108
+Cursor background (selected)
+커서 배경화면 (선택)
+
+# osd/winui/paletteedit.c: 109
+Cursor text (floating)
+커서 텍스트 (변동)
+
+# osd/winui/paletteedit.c: 107
+Cursor text (selected)
+커서 텍스트 (선택)
 
 # osd/winui/winui.c: 4741, 4769
 Custom
@@ -1060,7 +1080,7 @@ Enable mouse input
 
 # osd/winui/mameui.rc: 903
 Enable multi-threading
-멀티스래딩 사용
+다중 CPU 사용
 
 # osd/winui/mameui.rc: 852
 Enable multiple keyboards
@@ -1080,7 +1100,7 @@ Enable steadykey support
 
 # osd/winui/mameui.rc: 1613
 Enable the PCB tab
-PCB 탭 사용
+기판 탭 사용
 
 # osd/winui/mameui.rc: 1613
 Enable the cabinet tab
@@ -1108,7 +1128,7 @@ Enable the snapshot tab
 
 # osd/winui/mameui.rc: 1623
 Enable the story tab
-줄거리 탭 사용
+스토리 탭 사용
 
 # osd/winui/mameui.rc: 1613
 Enable the title tab
@@ -1244,7 +1264,7 @@ Game lacks sound
 
 # osd/winui/properties.c: 1068, 1115, 1180
 Game protection isn't fully emulated
-게임 암호화가가 완전히 에뮬레이트되지 않음
+게임 암호화되어 완전히 에뮬레이트되지 않음
 
 # osd/winui/winui.c: 3534
 Game search %d%% complete
@@ -1404,7 +1424,7 @@ Ini 파일
 
 # osd/winui/layout.c: 125
 Input Files (*.inp)
-입력 파일 (*.inp)
+INP 파일 (*.inp)
 
 # osd/winui/mameui.rc: 458
 Insert
@@ -1486,6 +1506,10 @@ Keyboard
 L&arge Icons
 큰 아이콘(&A)
 
+# osd/winui/layout.c: 153
+Language Files
+언어파일
+
 # osd/winui/winui.c: 815
 Large Icons
 큰 아이콘
@@ -1514,6 +1538,10 @@ Loa&d Savestate...
 Localize GUI and MAME core.
 GUI 와 MAME 코어를 지역화함.
 
+# osd/winui/winui.c: 6390
+MAME input files (*.inp,*.zip)
+INP파일 (*.inp,*.zip)
+
 # osd/winui/mameui.rc: 1573
 MAME release notes
 MAME 발표 일지
@@ -1530,9 +1558,13 @@ MAMEUI 버전은
 MS Sans Serif
 굴림
 
+# osd/winui/paletteedit.c: 106
+Main background
+주 배경화면
+
 # osd/winui/mameui.rc: 187
 Mame&info File...
-Mameinfo 파일...(&I)
+Mameinfo 파일 (&I)
 
 # osd/winui/mameui.rc: 604
 Manufactured:
@@ -1608,7 +1640,7 @@ No Dump
 
 # osd/winui/dialogs.c: 1001
 No PCB Info available for this game.
-현재 게임에 대한 PCB 정보가 없습니다.
+현재 게임에 대한 기판정보가 없습니다.
 
 # osd/winui/winui.c: 3928
 No Selection
@@ -1644,7 +1676,7 @@ Not working
 
 # osd/winui/mameui.rc: 552
 Number of screens to create:
-화면의 숫자를 생성:
+생성할 화면 수:
 
 # osd/winui/mameui.rc: 455, 481, 1171
 OK
@@ -1700,31 +1732,31 @@ P&layback Input...
 
 # osd/winui/mameui.rc: 95, 270, 283
 PC&B
-PCB(&B)
+기판(&B)
 
 # osd/winui/dialogs.c: 252 osd/winui/mui_opts.c: 475
 PCB
-PCB
+기판
 
 # osd/winui/mameui.rc: 1257
 PCB Info
-PCB 정보
+기판정보
 
 # osd/winui/layout.c: 151
 PCB Info Files
-PCB 정보 파일
+기판정보 파일
 
 # osd/winui/layout.c: 135
 PCBs
-PCB
+기판
 
 # osd/winui/properties.c: 984 osd/winui/treeview.c: 1393
 Paddle
-핸들
+패들
 
 # osd/winui/mameui.rc: 494
 Paddle device
-핸들 장치
+패들 장치
 
 # osd/winui/mameui.rc: 1178
 Palette
@@ -1756,7 +1788,7 @@ Pixel Aspect
 
 # osd/winui/winui.c: 934
 Play Time
-플레이 시간
+구동 시간
 
 # osd/winui/mameui.rc: 1592
 Play a game starting with the given savestate
@@ -1792,35 +1824,35 @@ Played
 
 # osd/winui/treeview.c: 1398
 Player 1
-플레이어 1
+사용자 1
 
 # osd/winui/treeview.c: 1399
 Players 2
-플레이어 2
+사용자 2
 
 # osd/winui/treeview.c: 1400
 Players 3
-플레이어 3
+사용자 3
 
 # osd/winui/treeview.c: 1401
 Players 4
-플레이어 4
+사용자 4
 
 # osd/winui/treeview.c: 1402
 Players 5
-플레이어 5
+사용자 5
 
 # osd/winui/treeview.c: 1403
 Players 6
-플레이어 6
+사용자 6
 
 # osd/winui/treeview.c: 1404
 Players 7
-플레이어 7
+사용자 7
 
 # osd/winui/treeview.c: 1405
 Players 8
-플레이어 8
+사용자 8
 
 # osd/winui/mameui.rc: 512
 Positional device
@@ -2104,7 +2136,7 @@ Select Marquee tab
 
 # osd/winui/mameui.rc: 1604
 Select PCB tab
-PCB 탭 선택
+기판 탭 선택
 
 # osd/winui/mameui.rc: 1644
 Select Snapshot tab
@@ -2112,7 +2144,7 @@ Select Snapshot tab
 
 # osd/winui/mameui.rc: 1611
 Select Story tab
-줄거리 탭 선택
+스토리 탭 선택
 
 # osd/winui/mameui.rc: 1604
 Select Title tab
@@ -2152,7 +2184,7 @@ Set game list and folder list font
 
 # osd/winui/mameui.rc: 1566
 Set in-game UI color palette
-게임중의 UI 컬러 팔레트를 지정
+게임중의 UI 색상 팔레트를 지정
 
 # osd/winui/mameui.rc: 1631
 Set the History file to use
@@ -2161,6 +2193,10 @@ History.dat 파일을 사용하기 위해 설정
 # osd/winui/mameui.rc: 1631
 Set the Mameinfo file to use
 Mameinfo.dat 파일을 사용하기위해 설정
+
+# osd/winui/mameui.rc: 1638
+Set the Story file to use
+Story.dat 파일을 사용하기위해 설정
 
 # osd/winui/mameui.rc: 1613
 Set the background image
@@ -2184,7 +2220,7 @@ Show directories for:
 
 # osd/winui/mameui.rc: 1598
 Show game PCB information
-게임 PCB 정보 보이기
+게임 기판정보 보이기
 
 # osd/winui/mameui.rc: 1553
 Show items grouped by parent game
@@ -2284,15 +2320,15 @@ Snapshot
 
 # osd/winui/mameui.rc: 1113
 Snapshot/movie naming
-스냅샷/무비 명명
+스냅샷/동영상 패턴
 
 # osd/winui/mameui.rc: 582
 Snapshot/movie resolution
-스냅샷/무비 해상도
+스냅샷/동영상 해상도
 
 # osd/winui/mameui.rc: 579
 Snapshot/movie view
-스냅샷/무비 보기
+스냅샷/동영상 보기
 
 # osd/winui/layout.c: 124
 Snapshots
@@ -2380,7 +2416,7 @@ Sound:
 
 # osd/winui/mameui.rc: 98, 273, 286
 St&ory
-줄거리(&O)
+스토리(&O)
 
 # osd/winui/properties.c: 419, 450
 Standard
@@ -2404,7 +2440,7 @@ Stereo
 
 # osd/winui/mui_opts.c: 478
 Story
-줄거리
+스토리
 
 # osd/winui/properties.c: 1027 osd/winui/treeview.c: 1345
 Supported
@@ -2550,6 +2586,10 @@ Translate into Traditional Chinese
 Translate into Valencian
 발렌시아어로 번역
 
+# osd/winui/mameui.rc: 914
+Transparency in-game UI
+게임내 UI 투명도
+
 # osd/winui/mameui.rc: 780
 Triple buffering
 삼중 버퍼링
@@ -2580,7 +2620,7 @@ Unavailable
 
 # osd/winui/treeview.c: 986
 Unemulated Protection
-암호화 에뮬레이트 못함
+암호화로 에뮬레이트 못함
 
 # osd/winui/mui_audit.c: 536 osd/winui/properties.c: 1002, 1056 
 Unknown
@@ -2616,7 +2656,7 @@ Use various icon for Not Working game
 
 # osd/winui/mameui.rc: 725
 Use volume auto adjust
-자동 볼륨 조절 사용
+자동 음량 조절 사용
 
 # osd/winui/dialogs.c: 147
 User interface settings\n\n
@@ -2664,7 +2704,7 @@ Video output method
 
 # osd/winui/mameui.rc: 214
 View PC&B Info
-PCB 정보 보기(&B)
+기판 정보 보기(&B)
 
 # osd/winui/mameui.rc: 576
 View:
@@ -2672,7 +2712,7 @@ View:
 
 # osd/winui/mameui.rc: 792
 Visual Effects
-화면 효과
+화면효과
 
 # osd/winui/mameui.rc: 732
 Volume attenuation
@@ -2688,7 +2728,7 @@ MAME 새 소식
 
 # osd/winui/layout.c: 77 osd/winui/properties.c: 1109, 1174
 Working
-실행 가능
+실행가능
 
 # osd/winui/treeview.c: 987
 Wrong Colors
@@ -2720,7 +2760,7 @@ by &Manufacturer
 
 # osd/winui/mameui.rc: 113
 by &Name
-게임 이름(&N)
+게임이름(&N)
 
 # osd/winui/mameui.rc: 116
 by &Played
@@ -2732,7 +2772,7 @@ by &Screen
 
 # osd/winui/mameui.rc: 114
 by &Type
-게임 유형(&T)
+게임유형(&T)
 
 # osd/winui/mameui.rc: 118
 by &Year
@@ -2758,91 +2798,51 @@ by S&amples
 by T&rackball
 트랙볼(&R)
 
+# osd/winui/winui.c: 6420
+cheats (*.dat)
+치트파일 (*.dat)
+
+# osd/winui/winui.c: 6411
+gamelists (*.lst)
+게임목록 (*.lst)
+
 # osd/winui/winui.c: 6423
 history (*.dat)
-HISTORY (*.dat)
+HISTORY 파일 (*.dat)
 
 # osd/winui/winui.c: 6426
 mameinfo (*.dat)
-MAMEINFO (*.dat)
+MAMEINFO 파일 (*.dat)
+
+# osd/winui/winui.c: 6414
+maps (*.map,*.txt)
+맵 (*.map,*.txt)
 
 # osd/winui/dialogs.c: 149
 requires exiting 
 종료해야 합니다
 
+# osd/winui/winui.c: 6417
+scripts (*.txt,*.dat)
+스크립트 (*.txt,*.dat)
+
+# osd/winui/winui.c: 6396
+sounds (*.wav)
+사운드 (*.wav)
+
+# osd/winui/winui.c: 6430
+stoty (*.dat)
+스토리파일 (*.dat)
+
 # osd/winui/dialogs.c: 137
 to the default settings:\n\n
 기본 설정으로:\n\n
 
-# osd/winui/mameui.rc: 189
-&Story File...
-
-
-# osd/winui/paletteedit.c: 110
-Cursor background (floating)
-
-
-# osd/winui/paletteedit.c: 108
-Cursor background (selected)
-
-
-# osd/winui/paletteedit.c: 109
-Cursor text (floating)
-
-
-# osd/winui/paletteedit.c: 107
-Cursor text (selected)
-
-
-# osd/winui/layout.c: 153
-Language Files
-
-
-# osd/winui/winui.c: 6390
-MAME input files (*.inp,*.zip)
-
-
-# osd/winui/paletteedit.c: 106
-Main background
-
-
-# osd/winui/mameui.rc: 1638
-Set the Story file to use
-
-
-# osd/winui/mameui.rc: 914
-Transparency in-game UI
-
-
-# osd/winui/winui.c: 6420
-cheats (*.dat)
-
-
-# osd/winui/winui.c: 6411
-gamelists (*.lst)
-
-
-# osd/winui/winui.c: 6414
-maps (*.map,*.txt)
-
-
-# osd/winui/winui.c: 6417
-scripts (*.txt,*.dat)
-
-
-# osd/winui/winui.c: 6396
-sounds (*.wav)
-
-
-# osd/winui/winui.c: 6430
-stoty (*.dat)
-
-
 # osd/winui/winui.c: 6402
 videos (*.avi)
-
+비디오 (*.avi)
 
 # osd/winui/winui.c: 6399
 videos (*.mng)
-
+비디오 (*.mng)
 

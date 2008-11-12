@@ -1,6 +1,6 @@
 # Title
 Artwork
-아트워크
+아트웍
 
 # 1688
 Backdrop
@@ -20,7 +20,7 @@ Inst. Card
 
 # 3511
 Lamps or LEDs
-램프 or LED
+램프 또는 LED
 
 # 3570
 Marquee

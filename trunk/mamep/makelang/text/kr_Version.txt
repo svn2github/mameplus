@@ -1,6 +1,6 @@
 # 8085
 Console
-콘솔
+콘솔게임
 
 # 8011
 Decrypted
