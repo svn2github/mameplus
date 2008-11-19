@@ -1510,7 +1510,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 
 #ifdef USE_SCALE_EFFECTS
 	//fixme: 126u3
-//	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
+	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
 #endif /* USE_SCALE_EFFECTS */
 
 	/* add cheat menu */
@@ -3125,15 +3125,15 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 	/* process the menu */
 	event = ui_menu_process(machine, menu, 0);
 
-	if (event->iptkey == IPT_UI_SELECT && 
-		event != NULL && 
-		event->itemref != NULL && 
-		(int)(FPTR)event->itemref >= SCALE_ITEM_NONE)
+	if (event != NULL && event->iptkey == IPT_UI_SELECT && 
+		(FPTR)event->itemref >= SCALE_ITEM_NONE)
 	{
-		video_exit_scale_effect(machine);
+		const device_config *screen = video_screen_first(machine->config);
+		video_exit_scale_effect(screen);
 		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
-		video_init_scale_effect(machine);
+		video_init_scale_effect(screen);
 		changed = TRUE;
+		mame_printf_verbose("scaler: %s\n", scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 	}
 
 	/* if something changed, rebuild the menu */

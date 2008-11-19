@@ -282,8 +282,8 @@ int video_get_view_for_target(running_machine *machine, render_target *target, c
 #ifdef USE_SCALE_EFFECTS
 /* ----- scale effect rendering ----- */
 
-void video_init_scale_effect(running_machine *machine);
-void video_exit_scale_effect(running_machine *machine);
+void video_init_scale_effect(const device_config *screen);
+void video_exit_scale_effect(const device_config *screen);
 #endif /* USE_SCALE_EFFECTS */
 
 #endif	/* __VIDEO_H__ */
