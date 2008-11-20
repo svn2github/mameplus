@@ -3162,6 +3162,7 @@ static void menu_scale_effect_populate(running_machine *machine, ui_menu *menu)
 		/* create a string for the item */
 		ui_menu_item_append(menu, desc, NULL, 0, (void *)(SCALE_ITEM_NONE + scaler));
 	}
+	menu->selected = scale_effect.effect;
 }
 #undef SCALE_ITEM_NONE
 #endif /* USE_SCALE_EFFECTS */
