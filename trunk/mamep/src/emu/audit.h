@@ -89,9 +89,6 @@ struct _audit_record
 };
 
 
-typedef void (CLIB_DECL *verify_printf_proc)(const char *fmt,...);
-
-
 
 /***************************************************************************
     FUNCTION PROTOTYPES

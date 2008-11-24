@@ -84,6 +84,7 @@ enum _sound_type
 	SOUND_TMS5220,
 	SOUND_VLM5030,
 	SOUND_OKIM6295,
+	SOUND_OKIM6258,
 	SOUND_MSM5205,
 	SOUND_MSM5232,
 	SOUND_UPD7759,
@@ -178,6 +179,32 @@ enum
 
 	SNDINFO_STR_CORE_SPECIFIC = 0x28000					/* R/W: core-specific values start here */
 };
+
+
+
+/***************************************************************************
+    MACROS
+***************************************************************************/
+
+#define SND_GET_INFO_NAME(name)		snd_get_info_##name
+#define SND_GET_INFO(name)			void SND_GET_INFO_NAME(name)(void *token, UINT32 state, sndinfo *info)
+#define SND_GET_INFO_CALL(name)		SND_GET_INFO_NAME(name)(token, state, info)
+
+#define SND_SET_INFO_NAME(name)		snd_set_info_##name
+#define SND_SET_INFO(name)			void SND_SET_INFO_NAME(name)(void *token, UINT32 state, sndinfo *info)
+#define SND_SET_INFO_CALL(name)		SND_SET_INFO_NAME(name)(token, state, info)
+
+#define SND_START_NAME(name)		snd_start_##name
+#define SND_START(name)				void *SND_START_NAME(name)(const char *tag, int sndindex, int clock, const void *config)
+#define SND_START_CALL(name)		SND_START_NAME(name)(tag, sndindex, clock, config)
+
+#define SND_STOP_NAME(name)			snd_stop_##name
+#define SND_STOP(name)				void SND_STOP_NAME(name)(void *token)
+#define SND_STOP_CALL(name)			SND_STOP_NAME(name)(token)
+
+#define SND_RESET_NAME(name)		snd_reset_##name
+#define SND_RESET(name)				void SND_RESET_NAME(name)(void *token)
+#define SND_RESET_CALL(name)		SND_RESET_NAME(name)(token)
 
 
 

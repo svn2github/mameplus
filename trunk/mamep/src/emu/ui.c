@@ -1616,7 +1616,7 @@ astring *game_info_astring(running_machine *machine, astring *string)
 		/* if more than one, prepend a #x in front of the CPU name */
 		if (count > 1)
 			astring_catprintf(string, "%d" UTF8_MULTIPLY, count);
-		astring_catc(string, cputype_name(type));
+		astring_catc(string, cputype_get_name(type));
 
 		/* display clock in kHz or MHz */
 		if (clock >= 1000000)
@@ -2138,12 +2138,12 @@ static slider_state *slider_init(running_machine *machine)
 	/* add CPU overclocking (cheat only) */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
-		numitems = cpu_gettotalcpu();
-		for (item = 0; item < numitems; item++)
+		for (item = 0; item < ARRAY_LENGTH(machine->cpu); item++)
+			if (machine->cpu[item] != NULL)
 		{
-			astring_printf(string, _("Overclock CPU %s"), machine->config->cpu[item].tag);
-			//mamep: 4x overclock
-			*tailptr = slider_alloc(astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
+				astring_printf(string,  _("Overclock CPU %s"), machine->cpu[item]->tag);
+				//mamep: 4x overclock
+				*tailptr = slider_alloc(astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
 			tailptr = &(*tailptr)->next;
 		}
 	}
@@ -2315,10 +2315,10 @@ static INT32 slider_overclock(running_machine *machine, void *arg, astring *stri
 {
 	int which = (FPTR)arg;
 	if (newval != SLIDER_NOCHANGE)
-		cpunum_set_clockscale(machine, which, (float)newval * 0.001f);
+		cpu_set_clockscale(machine->cpu[which], (float)newval * 0.001f);
 	if (string != NULL)
-		astring_printf(string, "%3.0f%%", floor(cpunum_get_clockscale(which) * 100.0f + 0.5f));
-	return floor(cpunum_get_clockscale(which) * 1000.0f + 0.5f);
+		astring_printf(string, "%3.0f%%", floor(cpu_get_clockscale(machine->cpu[which]) * 100.0f + 0.5f));
+	return floor(cpu_get_clockscale(machine->cpu[which]) * 1000.0f + 0.5f);
 }
 
 

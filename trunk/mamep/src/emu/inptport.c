@@ -324,7 +324,7 @@ static int next_caption_frame, caption_timer;
     PORT HANDLER TABLES
 ***************************************************************************/
 
-static const read8_machine_func port_handler8[] =
+static const read8_space_func port_handler8[] =
 {
 	input_port_0_r,			input_port_1_r,			input_port_2_r,			input_port_3_r,
 	input_port_4_r,			input_port_5_r,			input_port_6_r,			input_port_7_r,
@@ -337,7 +337,7 @@ static const read8_machine_func port_handler8[] =
 };
 
 
-static const read16_machine_func port_handler16[] =
+static const read16_space_func port_handler16[] =
 {
 	input_port_0_word_r,	input_port_1_word_r,	input_port_2_word_r,	input_port_3_word_r,
 	input_port_4_word_r,	input_port_5_word_r,	input_port_6_word_r,	input_port_7_word_r,
@@ -350,7 +350,7 @@ static const read16_machine_func port_handler16[] =
 };
 
 
-static const read32_machine_func port_handler32[] =
+static const read32_space_func port_handler32[] =
 {
 	input_port_0_dword_r,	input_port_1_dword_r,	input_port_2_dword_r,	input_port_3_dword_r,
 	input_port_4_dword_r,	input_port_5_dword_r,	input_port_6_dword_r,	input_port_7_dword_r,
@@ -1596,28 +1596,28 @@ const char *input_port_string_from_token(const input_port_token token)
     tag
 -------------------------------------------------*/
 
-read8_machine_func input_port_read_handler8(const input_port_config *portlist, const char *tag)
+read8_space_func input_port_read_handler8(const input_port_config *portlist, const char *tag)
 {
 	int portnum = get_port_index(portlist, tag);
 	return (portnum == -1) ? SMH_NOP : port_handler8[portnum];
 }
 
 
-read16_machine_func input_port_read_handler16(const input_port_config *portlist, const char *tag)
+read16_space_func input_port_read_handler16(const input_port_config *portlist, const char *tag)
 {
 	int portnum = get_port_index(portlist, tag);
 	return (portnum == -1) ? SMH_NOP : port_handler16[portnum];
 }
 
 
-read32_machine_func input_port_read_handler32(const input_port_config *portlist, const char *tag)
+read32_space_func input_port_read_handler32(const input_port_config *portlist, const char *tag)
 {
 	int portnum = get_port_index(portlist, tag);
 	return (portnum == -1) ? SMH_NOP : port_handler32[portnum];
 }
 
 
-read64_machine_func input_port_read_handler64(const input_port_config *portlist, const char *tag)
+read64_space_func input_port_read_handler64(const input_port_config *portlist, const char *tag)
 {
 	return SMH_NOP;
 }
