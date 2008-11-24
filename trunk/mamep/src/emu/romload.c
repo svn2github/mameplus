@@ -17,7 +17,7 @@
 #include "config.h"
 #include "ui.h"
 #ifdef USE_IPS
-#include "patch.h"
+#include "ips.h"
 #endif /* USE_IPS */
 
 

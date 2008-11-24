@@ -1509,7 +1509,7 @@ static void menu_main_populate(running_machine *machine, ui_menu *menu, void *st
 	ui_menu_item_append(menu, _("Video Options"), NULL, 0, (render_target_get_indexed(1) != NULL) ? menu_video_targets : menu_video_options);
 
 #ifdef USE_SCALE_EFFECTS
-	//fixme: 126u3
+	/* add image enhancement menu */
 	ui_menu_item_append(menu, _("Image Enhancement"), NULL, 0, menu_scale_effect);
 #endif /* USE_SCALE_EFFECTS */
 
@@ -3133,7 +3133,7 @@ static void menu_scale_effect(running_machine *machine, ui_menu *menu, void *par
 		scale_decode(scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 		video_init_scale_effect(screen);
 		changed = TRUE;
-		mame_printf_verbose("scaler: %s\n", scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
+		mame_printf_verbose(_("scale effect: %s\n"), scale_name((FPTR)event->itemref - SCALE_ITEM_NONE));
 	}
 
 	/* if something changed, rebuild the menu */

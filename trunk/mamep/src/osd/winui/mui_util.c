@@ -41,7 +41,7 @@
 
 #ifdef USE_IPS
 #include "mui_opts.h"
-#include "patch.h"
+#include "ips.h"
 #endif /* USE_IPS */
 
 

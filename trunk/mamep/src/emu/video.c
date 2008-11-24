@@ -1383,7 +1383,9 @@ static STATE_POSTLOAD( video_screen_postload )
 {
 	const device_config *screen = param;
 	realloc_screen_bitmaps(screen);
+#ifdef USE_SCALE_EFFECTS
 	video_init_scale_effect(screen);
+#endif /* USE_SCALE_EFFECTS */
 }
 
 
@@ -1690,7 +1692,6 @@ static int finish_screen_updates(running_machine *machine)
 					else
 #endif /* USE_SCALE_EFFECTS */
 					render_texture_set_bitmap(state->texture[state->curbitmap], bitmap, &fixedvis, state->texture_format, palette);
-
 					state->curtexture = state->curbitmap;
 					state->curbitmap = 1 - state->curbitmap;
 				}
@@ -2207,7 +2208,7 @@ static void update_refresh_speed(running_machine *machine)
 			/* if we changed, log that verbosely */
 			if (target_speed != global.speed)
 			{
-				mame_printf_verbose("Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n", target_speed, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 100 / target_speed));
+				mame_printf_verbose(_("Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n"), target_speed, minrefresh, ATTOSECONDS_TO_HZ(min_frame_period), ATTOSECONDS_TO_HZ(min_frame_period * 100 / target_speed));
 				global.speed = target_speed;
 			}
 		}

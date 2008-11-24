@@ -1,6 +1,17 @@
+/***************************************************************************
+
+    ips.c
+
+    International Patching System.
+
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
+***************************************************************************/
+
 #include "driver.h"
 #include "deprecat.h"
-#include "patch.h"
+#include "ips.h"
 #include "hash.h"
 
 

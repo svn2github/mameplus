@@ -59,7 +59,7 @@ static void copy_to_memory (int cpu, int addr, const UINT8 *source, int num_byte
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		cpunum_write_byte (cpu, addr+i, source[i]);
+		memory_write_byte (cpu, addr+i, source[i]);
 	}
 }
 
@@ -68,7 +68,7 @@ static void copy_from_memory (int cpu, int addr, UINT8 *dest, int num_bytes)
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		dest[i] = cpunum_read_byte (cpu, addr+i);
+		dest[i] = memory_read_byte (cpu, addr+i);
 	}
 }
 
@@ -158,12 +158,12 @@ static int safe_to_load (void)
 	memory_range *mem_range = state.mem_range;
 	while (mem_range)
 	{
-		if (cpunum_read_byte (mem_range->cpu, mem_range->addr) !=
+		if (memory_read_byte (mem_range->cpu, mem_range->addr) !=
 			mem_range->start_value)
 		{
 			return 0;
 		}
-		if (cpunum_read_byte (mem_range->cpu, mem_range->addr + mem_range->num_bytes - 1) !=
+		if (memory_read_byte (mem_range->cpu, mem_range->addr + mem_range->num_bytes - 1) !=
 			mem_range->end_value)
 		{
 			return 0;
@@ -298,13 +298,13 @@ void hiscore_init (running_machine *machine, const char *name)
 
 	while (mem_range)
 	{
-		cpunum_write_byte(
+		memory_write_byte(
 			mem_range->cpu,
 			mem_range->addr,
 			~mem_range->start_value
 		);
 
-		cpunum_write_byte(
+		memory_write_byte(
 			mem_range->cpu,
 			mem_range->addr + mem_range->num_bytes-1,
 			~mem_range->end_value

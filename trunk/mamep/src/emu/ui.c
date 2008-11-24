@@ -2141,9 +2141,9 @@ static slider_state *slider_init(running_machine *machine)
 		for (item = 0; item < ARRAY_LENGTH(machine->cpu); item++)
 			if (machine->cpu[item] != NULL)
 		{
-				astring_printf(string,  _("Overclock CPU %s"), machine->cpu[item]->tag);
-				//mamep: 4x overclock
-				*tailptr = slider_alloc(astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
+			astring_printf(string,  _("Overclock CPU %s"), machine->cpu[item]->tag);
+			//mamep: 4x overclock
+			*tailptr = slider_alloc(astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
 			tailptr = &(*tailptr)->next;
 		}
 	}

@@ -823,12 +823,12 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 			if (config->cpu[chipnum].clock >= 1000000)
 			{
 				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-					    _Unicode(cputype_name(config->cpu[chipnum].type)),
+					    _Unicode(cputype_get_name(config->cpu[chipnum].type)),
 					    config->cpu[chipnum].clock / 1000000,
 					    config->cpu[chipnum].clock % 1000000);
 			} else {
 				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-					    _Unicode(cputype_name(config->cpu[chipnum].type)),
+					    _Unicode(cputype_get_name(config->cpu[chipnum].type)),
 					    config->cpu[chipnum].clock / 1000,
 					    config->cpu[chipnum].clock % 1000);
 			}

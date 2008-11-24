@@ -882,7 +882,7 @@ void CreateCPUFolders(int parent_index)
 		LPTREEFOLDER lpTemp;
 
 		for (jj = 1; jj < i; jj++)
-			if (!strcmp(cputype_name(i), cputype_name(jj)))
+			if (!strcmp(cputype_get_name(i), cputype_get_name(jj)))
 				break;
 
 		if (i != jj)
@@ -890,9 +890,9 @@ void CreateCPUFolders(int parent_index)
 			map[i] = map[jj];
 			continue;
 		}
-		if( strlen( cputype_name(i) ) <=0 )
+		if( strlen( cputype_get_name(i) ) <=0 )
 			continue;
-		lpTemp = NewFolder(_Unicode(cputype_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
+		lpTemp = NewFolder(_Unicode(cputype_get_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_CPU);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}

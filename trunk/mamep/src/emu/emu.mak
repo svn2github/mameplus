@@ -97,7 +97,7 @@ endif
 
 ifdef USE_IPS
 EMUOBJS += \
-	$(EMUOBJ)/patch.o
+	$(EMUOBJ)/ips.o
 endif
 
 ifdef USE_HISCORE

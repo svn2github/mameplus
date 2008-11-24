@@ -8683,7 +8683,7 @@ static DRIVER_INIT( sengo3d )
 
 static READ16_HANDLER( popbounc_sfix_16_r )
 {
-	if (activecpu_get_pc()==0x6b10)
+	if (cpu_get_pc(space->machine->activecpu)==0x6b10)
 		return 0;
 	return save_ram[0x4fbc/2];
 }
@@ -8695,7 +8695,7 @@ static DRIVER_INIT( popbounc )
 
 	/* the game hangs after a while without this patch */
 	if (!machine->sample_rate)
-		memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
+		memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x104fbc, 0x104fbd, 0, 0, popbounc_sfix_16_r);
 }
 
 static DRIVER_INIT( rotd )
@@ -9142,7 +9142,7 @@ static DRIVER_INIT( kf2k3pcd ) // decrypted C & decrypted Bios
 	neogeo_fixed_layer_bank_type = 2;
 	DRIVER_INIT_CALL(neogeo);
 	install_pvc_protection(machine);
-	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0xc00000, 0xc7ffff, 0, 0, SMH_BANK6 ); /* 512k bios */
+	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xc00000, 0xc7ffff, 0, 0, SMH_BANK6 ); /* 512k bios */
 }
 
 static DRIVER_INIT( samsh5sp )
@@ -9239,7 +9239,7 @@ static DRIVER_INIT( lans2004 )
 static WRITE16_HANDLER( fr2ch_cx_hack_w )
 {
 	int i, n;
-	UINT8 *src = memory_region( machine, "sprites" );
+	UINT8 *src = memory_region( space->machine, "sprites" );
 	if (offset == 1) {
 		for (i = 0; i < 0x200000; i++) {
 			n = src[0x200000 + i];
@@ -9251,7 +9251,7 @@ static WRITE16_HANDLER( fr2ch_cx_hack_w )
 
 static void fr2ch_cx_hack( running_machine *machine )
 {
-	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
 }
 
 static void fr2ch_patches( running_machine *machine )
@@ -9326,11 +9326,11 @@ static WRITE16_HANDLER( brza_sram16_2_w )
 static DRIVER_INIT( jckeygpd )
 {
 	brza_sram = auto_malloc(0x2000);
-	memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x201FFF, 0, 0, brza_sram16_2_r);
-	memory_install_write16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x200000, 0x201FFF, 0, 0, brza_sram16_2_w);
-//  memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x320000, 0x320001, 0, 0, vliner_timer16_r );
-//  memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x280000, 0x280001, 0, 0, vliner_coins_r );
-//  memory_install_read16_handler(machine, 0, ADDRESS_SPACE_PROGRAM, 0x2c0000, 0x2c0001, 0, 0, vliner_2c0000_r );
+	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x201FFF, 0, 0, brza_sram16_2_r);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x201FFF, 0, 0, brza_sram16_2_w);
+//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x320000, 0x320001, 0, 0, vliner_timer16_r );
+//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x280000, 0x280001, 0, 0, vliner_coins_r );
+//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x2c0000, 0x2c0001, 0, 0, vliner_2c0000_r );
 
 	driver_init_gfxdec42(machine);
 }
