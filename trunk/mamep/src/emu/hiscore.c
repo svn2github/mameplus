@@ -11,8 +11,6 @@
 
 #include "driver.h"
 #include "hiscore.h"
-#include "cheat.h"
-#include "deprecat.h"
 
 #define MAX_CONFIG_LINE_SIZE 48
 
@@ -29,7 +27,7 @@ static emu_timer *timer;
 
 struct _memory_range
 {
-	UINT32 cpu, addr, num_bytes, start_value, end_value;
+	UINT32 cpunum, addr, num_bytes, start_value, end_value;
 	struct _memory_range *next;
 };
 typedef struct _memory_range memory_range;
@@ -54,21 +52,23 @@ static int is_highscore_enabled(running_machine *machine)
 
 /*****************************************************************************/
 
-static void copy_to_memory (int cpu, int addr, const UINT8 *source, int num_bytes)
+static void copy_to_memory (running_machine *machine, int cpunum, int addr, const UINT8 *source, int num_bytes)
 {
+	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		memory_write_byte (cpu, addr+i, source[i]);
+		memory_write_byte (space, addr+i, source[i]);
 	}
 }
 
-static void copy_from_memory (int cpu, int addr, UINT8 *dest, int num_bytes)
+static void copy_from_memory (running_machine *machine, int cpunum, int addr, UINT8 *dest, int num_bytes)
 {
+	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
-		dest[i] = memory_read_byte (cpu, addr+i);
+		dest[i] = memory_read_byte (space, addr+i);
 	}
 }
 
@@ -153,18 +153,18 @@ static int matching_game_name (const char *pBuf, const char *name)
 /*****************************************************************************/
 
 /* safe_to_load checks the start and end values of each memory range */
-static int safe_to_load (void)
+static int safe_to_load (running_machine *machine)
 {
 	memory_range *mem_range = state.mem_range;
+	int cpunum = mem_range->cpunum;
+	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	while (mem_range)
 	{
-		if (memory_read_byte (mem_range->cpu, mem_range->addr) !=
-			mem_range->start_value)
+		if (memory_read_byte (space, mem_range->addr) != mem_range->start_value)
 		{
 			return 0;
 		}
-		if (memory_read_byte (mem_range->cpu, mem_range->addr + mem_range->num_bytes - 1) !=
-			mem_range->end_value)
+		if (memory_read_byte (space, mem_range->addr + mem_range->num_bytes - 1) != mem_range->end_value)
 		{
 			return 0;
 		}
@@ -207,12 +207,11 @@ static void hiscore_load (running_machine *machine)
 				UINT8 *data = malloc (mem_range->num_bytes);
 				if (data)
 				{
-					/*  this buffer will almost certainly be small
-                        enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case
-                    */
+					/* this buffer will almost certainly be small
+					enough to be dynamically allocated, but let's
+					avoid memory trashing just in case */
 					mame_fread (f, data, mem_range->num_bytes);
-					copy_to_memory (mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+					copy_to_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
 					free (data);
 				}
 				mem_range = mem_range->next;
@@ -242,11 +241,10 @@ static void hiscore_save (running_machine *machine)
 				UINT8 *data = malloc (mem_range->num_bytes);
 				if (data)
 				{
-					/*  this buffer will almost certainly be small
-                        enough to be dynamically allocated, but let's
-                        avoid memory trashing just in case
-                    */
-					copy_from_memory (mem_range->cpu, mem_range->addr, data, mem_range->num_bytes);
+					/* this buffer will almost certainly be small
+					enough to be dynamically allocated, but let's
+					avoid memory trashing just in case */
+					copy_from_memory (machine, mem_range->cpunum, mem_range->addr, data, mem_range->num_bytes);
 					mame_fwrite(f, data, mem_range->num_bytes);
 					free (data);
 				}
@@ -265,7 +263,7 @@ static TIMER_CALLBACK (hiscore_periodic)
 	{
 		if (!state.hiscores_have_been_loaded)
 		{
-			if (safe_to_load())
+			if (safe_to_load(machine))
 			{
 				hiscore_load(machine);
 				timer_enable(timer, FALSE);
@@ -288,31 +286,28 @@ void hiscore_close (running_machine *machine)
 /* public API */
 
 /* call hiscore_open once after loading a game */
-void hiscore_init (running_machine *machine, const char *name)
+void hiscore_init (running_machine *machine)
 {
-	memory_range *mem_range = state.mem_range;
+	//memory_range *mem_range = state.mem_range;
+	//int cpunum = mem_range->cpunum;
+	//const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	file_error filerr;
 	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE);
 	mame_file *f;
+	const char *name = machine->basename;
 	state.hiscores_have_been_loaded = 0;
 
-	while (mem_range)
-	{
-		memory_write_byte(
-			mem_range->cpu,
-			mem_range->addr,
-			~mem_range->start_value
-		);
-
-		memory_write_byte(
-			mem_range->cpu,
-			mem_range->addr + mem_range->num_bytes-1,
-			~mem_range->end_value
-		);
-		mem_range = mem_range->next;
-	}
+	//while (mem_range)
+	//{
+	//	memory_write_byte(space, mem_range->addr, ~mem_range->start_value);
+	//	memory_write_byte(space, mem_range->addr + mem_range->num_bytes-1, ~mem_range->end_value);
+	//	mem_range = mem_range->next;
+	//}
 
 	state.mem_range = NULL;
+
+	LOG(("hiscore_open: '%s'\n", name));
+
 	filerr = mame_fopen(SEARCHPATH_HISCORE_DB, db_filename, OPEN_FLAG_READ, &f);
 	if (filerr == FILERR_NONE)
 	{
@@ -336,7 +331,7 @@ void hiscore_init (running_machine *machine, const char *name)
 				memory_range *mem_range = malloc(sizeof(memory_range));
 				if (mem_range)
 				{
-					mem_range->cpu = hexstr2num (&pBuf);
+					mem_range->cpunum = hexstr2num (&pBuf);
 					mem_range->addr = hexstr2num (&pBuf);
 					mem_range->num_bytes = hexstr2num (&pBuf);
 					mem_range->start_value = hexstr2num (&pBuf);
