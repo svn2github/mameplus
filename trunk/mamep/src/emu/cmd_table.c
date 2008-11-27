@@ -1,3 +1,14 @@
+/*********************************************************************
+
+    cmd_table.c
+
+    Defined Game Commnad Font Color Array.
+
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
+*********************************************************************/
+
 	// Defined Game Commnad Font Color Array
 	static pen_t color_table[COLOR_BUTTONS] =
 	{

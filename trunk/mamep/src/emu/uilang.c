@@ -1,3 +1,14 @@
+/*********************************************************************
+
+    uilang.c
+
+    Translation language functions for the user interface.
+
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
+*********************************************************************/
+
 #include "fileio.h"
 #include <stdio.h>
 #include <stdlib.h>

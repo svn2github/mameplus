@@ -32,28 +32,28 @@ DRVLIBS += \
 #-------------------------------------------------
 
 $(MESSOBJ)/shared.a: \
+	$(MESS_DEVICES)/cartslot.o	\
+	$(MESS_DEVICES)/flopdrv.o	\
+	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_FORMATS)/ioprocs.o	\
 	$(MESS_FORMATS)/flopimg.o	\
 	$(MESS_FORMATS)/cassimg.o	\
 	$(MESS_DEVICES)/mflopimg.o	\
 	$(MESS_DEVICES)/cassette.o	\
-	$(MESS_DEVICES)/cartslot.o	\
-	$(MESS_DEVICES)/flopdrv.o	\
-	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_FORMATS)/wavfile.o	\
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers
 #-------------------------------------------------
 
-$(MESSOBJ)/sega.a:						\
+$(MESSOBJ)/sega.a:			\
 	$(MESS_DRIVERS)/genesis.o	\
 	$(MESS_MACHINE)/genesis.o	\
-	$(MESS_VIDEO)/smsvdp.o	\
+	$(MESS_VIDEO)/smsvdp.o		\
 	$(MESS_MACHINE)/sms.o		\
 	$(MESS_DRIVERS)/sms.o		\
 
-$(MESSOBJ)/atari.a:						\
+$(MESSOBJ)/atari.a:			\
 	$(MESS_MACHINE)/atarifdc.o	\
 	$(MESS_DRIVERS)/atari.o		\
 	$(MESS_MACHINE)/a7800.o		\
@@ -62,7 +62,7 @@ $(MESSOBJ)/atari.a:						\
 	$(MESS_DRIVERS)/a2600.o		\
 	$(MESS_FORMATS)/a26_cas.o	\
 
-$(MESSOBJ)/nintendo.a:					\
+$(MESSOBJ)/nintendo.a:			\
 	$(MESS_AUDIO)/gb.o		\
 	$(MESS_VIDEO)/gb.o		\
 	$(MESS_MACHINE)/gb.o		\
@@ -73,7 +73,7 @@ $(MESSOBJ)/nintendo.a:					\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
-	$(MESS_DRIVERS)/gba.o \
+#128u4	$(MESS_DRIVERS)/gba.o	 	\
 
 $(MESSOBJ)/nec.a:	   \
 	$(MESS_MACHINE)/pce.o	 \

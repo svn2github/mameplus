@@ -68,6 +68,7 @@ static const char *const mess_default_text[] =
 
 
 
+//mamep
 static const char *const *const default_text[] =
 {
 	mess_default_text,
@@ -75,9 +76,7 @@ static const char *const *const default_text[] =
 };
 
 
-
 static const char **trans_text;
-
 
 
 int uistring_init (void)

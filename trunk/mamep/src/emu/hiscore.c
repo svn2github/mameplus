@@ -308,7 +308,7 @@ void hiscore_init (running_machine *machine)
 
 	LOG(("hiscore_open: '%s'\n", name));
 
-	filerr = mame_fopen(SEARCHPATH_HISCORE_DB, db_filename, OPEN_FLAG_READ, &f);
+	filerr = mame_fopen(NULL, db_filename, OPEN_FLAG_READ, &f);
 	if (filerr == FILERR_NONE)
 	{
 		char buffer[MAX_CONFIG_LINE_SIZE];

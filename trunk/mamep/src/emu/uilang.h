@@ -1,3 +1,14 @@
+/*********************************************************************
+
+    uilang.h
+
+    Translation language functions for the user interface.
+
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
+*********************************************************************/
+
 #ifndef UI_LANG_H
 #define UI_LANG_H
 

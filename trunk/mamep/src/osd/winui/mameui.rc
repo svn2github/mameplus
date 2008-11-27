@@ -158,10 +158,10 @@ BEGIN
         MENUITEM SEPARATOR
         POPUP "&Language"
         BEGIN
-            MENUITEM "English (United States)",     ID_LANGUAGE_ENGLISH_US
             MENUITEM "Catalan",                     ID_LANGUAGE_CATALAN
             MENUITEM "Chinese (PRC)",               ID_LANGUAGE_SMPL_CHINESE
             MENUITEM "Chinese (Taiwan)",            ID_LANGUAGE_TRAD_CHINESE
+            MENUITEM "English (United States)",     ID_LANGUAGE_ENGLISH_US
             MENUITEM "French",                      ID_LANGUAGE_FRENCH
             MENUITEM "German",                      ID_LANGUAGE_GERMAN
             MENUITEM "Hungarian",                   ID_LANGUAGE_HUNGARIAN

@@ -1653,7 +1653,8 @@ static void init_machine(running_machine *machine)
 	/* initialize miscellaneous systems */
 	saveload_init(machine);
 #ifdef USE_HISCORE
-	hiscore_init(machine, machine->gamedrv->name);
+	/* initialize the hiscore system */
+	hiscore_init(machine);
 #endif /* USE_HISCORE */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 		cheat_init(machine);

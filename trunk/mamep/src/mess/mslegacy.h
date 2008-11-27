@@ -70,8 +70,8 @@ enum
 
 
 
+//mamep
 int uistring_init (void);
-
 
 
 /* uitext */

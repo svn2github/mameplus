@@ -409,103 +409,103 @@ void TranslateTreeFolders(HWND hWnd)
         Unicode Handlers
  */
 
-#define TEMP_STRING_POOL_ENTRIES 32
+#define TMP_STRING_POOL_ENTRIES 32
 
 LPWSTR _Unicode(const char *s)
 {
-	static LPWSTR temp_string_pool[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_alloc_len[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_index;
+	static LPWSTR tmp_string_pool[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_index;
 	size_t len;
 
-	temp_string_pool_index %= TEMP_STRING_POOL_ENTRIES;
+	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
 	len = MultiByteToWideChar(ansi_codepage, 0, s, -1, NULL, 0);
 	if (!len)
 		return NULL;
 
-	if (len >= temp_string_pool_alloc_len[temp_string_pool_index])
+	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (temp_string_pool[temp_string_pool_index])
-			free(temp_string_pool[temp_string_pool_index]);
+		if (tmp_string_pool[tmp_string_pool_index])
+			free(tmp_string_pool[tmp_string_pool_index]);
 
-		temp_string_pool[temp_string_pool_index] = malloc((len + 1) * sizeof(*temp_string_pool[temp_string_pool_index]));
-		if (!temp_string_pool[temp_string_pool_index])
+		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		if (!tmp_string_pool[tmp_string_pool_index])
 		{
-			temp_string_pool_alloc_len[temp_string_pool_index] = 0;
+			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		temp_string_pool_alloc_len[temp_string_pool_index] = len + 1;
+		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!MultiByteToWideChar(ansi_codepage, 0, s, -1, temp_string_pool[temp_string_pool_index], temp_string_pool_alloc_len[temp_string_pool_index]))
+	if (!MultiByteToWideChar(ansi_codepage, 0, s, -1, tmp_string_pool[tmp_string_pool_index], tmp_string_pool_alloc_len[tmp_string_pool_index]))
 		return NULL;
 
-	return temp_string_pool[temp_string_pool_index++];
+	return tmp_string_pool[tmp_string_pool_index++];
 }
 
 LPWSTR _UTF8Unicode(const char *s)
 {
-	static LPWSTR temp_string_pool[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_alloc_len[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_index;
+	static LPWSTR tmp_string_pool[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_index;
 	size_t len;
 
-	temp_string_pool_index %= TEMP_STRING_POOL_ENTRIES;
+	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
 	len = MultiByteToWideChar(CP_UTF8, 0, s, -1, NULL, 0);
 	if (!len)
 		return NULL;
 
-	if (len >= temp_string_pool_alloc_len[temp_string_pool_index])
+	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (temp_string_pool[temp_string_pool_index])
-			free(temp_string_pool[temp_string_pool_index]);
+		if (tmp_string_pool[tmp_string_pool_index])
+			free(tmp_string_pool[tmp_string_pool_index]);
 
-		temp_string_pool[temp_string_pool_index] = malloc((len + 1) * sizeof(*temp_string_pool[temp_string_pool_index]));
-		if (!temp_string_pool[temp_string_pool_index])
+		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		if (!tmp_string_pool[tmp_string_pool_index])
 		{
-			temp_string_pool_alloc_len[temp_string_pool_index] = 0;
+			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		temp_string_pool_alloc_len[temp_string_pool_index] = len + 1;
+		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!MultiByteToWideChar(CP_UTF8, 0, s, -1, temp_string_pool[temp_string_pool_index], temp_string_pool_alloc_len[temp_string_pool_index]))
+	if (!MultiByteToWideChar(CP_UTF8, 0, s, -1, tmp_string_pool[tmp_string_pool_index], tmp_string_pool_alloc_len[tmp_string_pool_index]))
 		return NULL;
 
-	return temp_string_pool[temp_string_pool_index++];
+	return tmp_string_pool[tmp_string_pool_index++];
 }
 
 char *_String(const WCHAR *ws)
 {
-	static char *temp_string_pool[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_alloc_len[TEMP_STRING_POOL_ENTRIES];
-	static int temp_string_pool_index;
+	static char *tmp_string_pool[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_alloc_len[TMP_STRING_POOL_ENTRIES];
+	static int tmp_string_pool_index;
 	size_t len;
 
-	temp_string_pool_index %= TEMP_STRING_POOL_ENTRIES;
+	tmp_string_pool_index %= TMP_STRING_POOL_ENTRIES;
 
 	len = WideCharToMultiByte(ansi_codepage, 0, ws, -1, 0, 0, NULL, NULL);
 
 	if (!len)
 		return NULL;
 
-	if (len >= temp_string_pool_alloc_len[temp_string_pool_index])
+	if (len >= tmp_string_pool_alloc_len[tmp_string_pool_index])
 	{
-		if (temp_string_pool[temp_string_pool_index])
-			free(temp_string_pool[temp_string_pool_index]);
+		if (tmp_string_pool[tmp_string_pool_index])
+			free(tmp_string_pool[tmp_string_pool_index]);
 
-		temp_string_pool[temp_string_pool_index] = malloc((len + 1) * sizeof(*temp_string_pool[temp_string_pool_index]));
-		if (!temp_string_pool[temp_string_pool_index])
+		tmp_string_pool[tmp_string_pool_index] = malloc((len + 1) * sizeof(*tmp_string_pool[tmp_string_pool_index]));
+		if (!tmp_string_pool[tmp_string_pool_index])
 		{
-			temp_string_pool_alloc_len[temp_string_pool_index] = 0;
+			tmp_string_pool_alloc_len[tmp_string_pool_index] = 0;
 			return NULL;
 		}
-		temp_string_pool_alloc_len[temp_string_pool_index] = len + 1;
+		tmp_string_pool_alloc_len[tmp_string_pool_index] = len + 1;
 	}
-	if (!WideCharToMultiByte(ansi_codepage, 0, ws, -1, temp_string_pool[temp_string_pool_index], len, NULL, NULL))
+	if (!WideCharToMultiByte(ansi_codepage, 0, ws, -1, tmp_string_pool[tmp_string_pool_index], len, NULL, NULL))
 		return NULL;
 
-	return temp_string_pool[temp_string_pool_index++];
+	return tmp_string_pool[tmp_string_pool_index++];
 }
 
 HFONT TranslateCreateFont(const LOGFONTW *lpLf)

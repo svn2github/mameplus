@@ -1,3 +1,14 @@
+/*********************************************************************
+
+    cmd_plus.c
+
+    Defined Game Commnad Font Convert.
+
+    Copyright Nicola Salmoria and the MAME Team.
+    Visit http://mamedev.org for licensing and usage restrictions.
+
+*********************************************************************/
+
 	// Define Game Command Font Converting Conditions
 	#define COMMAND_DEFAULT_TEXT	'_'
 	// Define Expanded Game Command ShortCut
