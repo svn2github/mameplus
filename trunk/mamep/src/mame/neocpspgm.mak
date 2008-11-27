@@ -36,7 +36,7 @@ DEFS += -DNEOCPSPGM
 #-------------------------------------------------
 
 CPUS += Z80
-CPUS += M68000
+CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
 CPUS += PIC16C57
