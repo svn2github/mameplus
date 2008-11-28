@@ -1,9 +1,9 @@
+#include <QtPlugin>
+#include "mamepguimain.h"
+#ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-
-#include <QtPlugin>
-
-#include "mamepguimain.h"
+#endif
 
 // global variables
 MainWindow *win;
@@ -117,13 +117,6 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 MainWindow::MainWindow(QWidget *parent)
 : QMainWindow(parent)
 {
-#ifdef Q_OS_WIN
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		win->log("SDL_INIT_VIDEO failed."); 
-	else
-		sdlInited = true;
-#endif
-
 	dockCtrlNames = (QStringList() 
 	   << QT_TR_NOOP("Snapshot")
 	   << QT_TR_NOOP("Flyer")
@@ -238,6 +231,9 @@ MainWindow::MainWindow(QWidget *parent)
 	dlgOptions = new Options(this);
 	dlgAbout = new About(this);
 	dlgDirs = new Dirs(this);
+	dlgM1 = new M1UI(this);
+
+	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dlgM1);
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -310,6 +306,41 @@ Screenshot * MainWindow::initSnap(QString title)
 
 void MainWindow::init()
 {
+	//init SDL
+#ifdef Q_OS_WIN
+		if (SDL_Init(SDL_INIT_VIDEO) < 0)
+			win->log("SDL_INIT_VIDEO failed.");
+		else
+			sdlInited = true;
+#endif
+
+	//init M1
+	m1 = new M1(this);
+	if (m1->max_games == 0)
+		m1 = NULL;
+
+	const QStringList m1Headers = (QStringList()
+		<< "#" << tr("Name") << tr("Len"));
+	dlgM1->twSongList->setHeaderLabels(m1Headers);
+	dlgM1->twSongList->header()->moveSection(2, 1);
+
+	const QStringList m1Langs = (QStringList()
+		<< "en" << tr("jp"));
+	dlgM1->cmbLang->addItems(m1Langs);
+	QString m1_language = guiSettings.value("m1_language").toString();
+	dlgM1->cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
+	connect(dlgM1->cmbLang, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(setM1Lang(const QString &)));
+
+	if (m1_language == "jp")
+	{
+		QFont font;
+		font.setFamily("MS Gothic");
+		font.setFixedPitch(true);
+		dlgM1->twSongList->setFont(font);
+		dlgM1->lblTrackName->setFont(font);
+	}
+
+	// init mainwindow
 	win->log("win->init()");
 	//fixme: should be in constructor
 	ssSnap = initSnap(dockCtrlNames[DOCK_SNAP]);
@@ -483,6 +514,50 @@ void MainWindow::init()
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
+	// M1
+	if (m1 != NULL)
+	{
+		connect(dlgM1->btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
+		connect(dlgM1->twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
+		connect(dlgM1->btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
+	}
+}
+
+void MainWindow::setVersion()
+{
+	//set version info
+	QString m1Ver = (m1 != NULL) ? m1->getVersion() : "N/A";
+	QString strVersion = QString(
+		"<html>"
+		"<head>"
+		"<style type=\"text/css\">"
+		"a {color: #006d9f;text-decoration: underline;}"
+		"</style>"
+		"</head>"
+		"<body>"
+		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team"
+		"<hr>"
+		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
+		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
+		"<a href=\"http://www.libsdl.org\">SDL</a> %4  - Simple DirectMedia Layer<br>"
+		"<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %5 multi-platform arcade music emulator &copy; R. Belmont"
+		"</body>"
+		"</html>")
+		.arg("1.2 beta 1")
+		.arg(mameGame->mameVersion)
+		.arg(QT_VERSION_STR)
+		.arg(QString("%1.%2.%3").arg(SDL_MAJOR_VERSION).arg(SDL_MINOR_VERSION).arg(SDL_PATCHLEVEL))
+		.arg(m1Ver);
+
+	dlgAbout->tbVersion->setHtml(strVersion);
+	dlgM1->setWindowTitle("M1 - " + m1Ver);
+
+	QFileInfo fi(mame_binary);
+
+	win->setWindowTitle(QString("%1 - %2 %3")
+		.arg(win->windowTitle())
+		.arg(fi.baseName().toUpper())
+		.arg(mameGame->mameVersion));
 }
 
 void MainWindow::on_actionPlay_activated()
@@ -684,6 +759,8 @@ void MainWindow::initSettings()
 		<< "icons_directory"
 		<< "background_directory"
 		<< "background_file"
+		<< "m1_directory"
+		<< "m1_language"
 		<< "gui_style"
 		<< "background_stretch"
 		<< "mame_binary"
@@ -786,6 +863,8 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 	guiSettings.setValue("background_file", background_file);
+	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
+	guiSettings.setValue("m1_language", dlgM1->cmbLang->currentText());
 	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
 
@@ -875,6 +954,23 @@ void MainWindow::setTransparentBg(QWidget * w)
 	w->setPalette(palette);
 }
 
+void MainWindow::setTransparentStyle(QWidget * w)
+{
+	QString style;
+	if (isDarkBg)
+		style =
+			"color: rgba(255, 255, 255, 196);"
+			"background-color: rgba(0, 0, 0, 128);"
+			;
+	else
+		style =
+			"color: rgba(0, 0, 0, 196);"
+			"background-color: rgba(255, 255, 255, 128);"
+			;
+	
+	w->setStyleSheet(style);
+}
+
 void MainWindow::resizeEvent(QResizeEvent * /* event */)
 {
 //	setBgPixmap(background_file);
@@ -892,6 +988,11 @@ void MainWindow::setGuiStyle(QString style)
 	//have to chain setBgPixmap() otherwise bgcolor isn't set properly
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
+}
+
+void MainWindow::setM1Lang(const QString & lang)
+{
+	m1->updateList();
 }
 
 void MainWindow::setBgTile()
@@ -939,6 +1040,9 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentBg(win->tbMameinfo);
 		setTransparentBg(win->tbStory);
 		setTransparentBg(win->tbCommand);
+		setTransparentBg(dlgM1->twSongList);
+		setTransparentStyle(dlgM1->groupBox);
+		setTransparentStyle(dlgM1->lcdNumber);
 	}
 }
 
@@ -1160,4 +1264,5 @@ int main(int argc, char *argv[])
 
 	return myApp.exec();
 }
+
 

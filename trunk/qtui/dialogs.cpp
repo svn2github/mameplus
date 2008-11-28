@@ -3,12 +3,13 @@
 Options *dlgOptions = NULL;
 About *dlgAbout = NULL;
 Dirs *dlgDirs = NULL;
+M1UI *dlgM1 = NULL;
 
 QByteArray option_geometry;
 QList<QListWidget *> optCtrls;
 
 Options::Options(QWidget *parent)
-  : QDialog(parent)
+:QDialog(parent)
 {
 	setupUi(this);
 
@@ -38,7 +39,7 @@ void Options::closeEvent(QCloseEvent *event)
 }
 
 Dirs::Dirs(QWidget *parent)
-  : QDialog(parent)
+:QDialog(parent)
 {
 	setupUi(this);
 
@@ -112,10 +113,15 @@ void Dirs::removeDirectory()
 }
 
 About::About(QWidget *parent)
-  : QDialog(parent)
+:QDialog(parent)
 {
 	setupUi(this);
 }
 
+M1UI::M1UI(QWidget *parent)
+:QDockWidget(parent)
+{
+	setupUi(this);
+}
 
 

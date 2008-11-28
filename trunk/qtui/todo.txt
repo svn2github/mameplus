@@ -1,89 +1,115 @@
 ﻿//Done
-/ fixed a bug that missing sets are kept in the game list after auditing
-/ more responsive GUI on game selection
-/ hide to systray when lauching mame
+/ w/ M1 music player integration
+整合M1音乐播放器
 
-2 unterminated thread
+M1 lets you enjoy music from over 1400 arcade games, from the classics through the 3D era.
+M1可以直接播放上千个街机游戏的音乐，涵盖从CPS, NeoGeo, ZN 到魂斗罗，Mappy等早期基板。
+
+all credit goes to R. Belmont, Tafoid(m1.xml), Fujix(lists) and other maintainers of M1.
+M1的所有功能归于R. Belmont, Tafoid(曲目定义), Fujix(曲目列表)及其他M1维护人员的努力
+
+Main site: http://rbelmont.mameworld.info/?page_id=223
+Bridge M1 and updated list files: http://www.e2j.net
+
+M1主页: http://rbelmont.mameworld.info/?page_id=223
+Bridge M1 及曲目列表更新: http://www.e2j.net
+
+(Optional) set M1 path with Options - Directories - GUI Directory - M1 directory
+如果你已经在使用M1，可以在 选项-目录-GUI目录-M1目录 中设置M1所在目录
+
+you may use the toggle on/off the M1 Player window as a normal dialog, or simply dock it in the main window the same way as a normal Snapshot component.
+M1播放器窗口可以当作普通对话框来打开/关闭，也可以像其他图片组件一样停靠在主窗口中
+
+if you don't need M1 feature, simply remove all m1 files in "bin/m1"
+如果不需要播放器功能，直接删除"bin/m1"下的文件即可
+
+no Linux version this time, as there is no m1.so available yet.
+由于官方未发布m1.so，所以暂时无Linux版
+
+//4.5 bug
+2 unterminated thread 4.5 bug?
+2 sorting doesnt recover position?
 
 //Linux
 2 bug: column sorting
 mounted snap doesnt load
 
 //Options
-2 add a menu to auto mkdir
-* 官方mame支持ips
-1 add GUI Options
-* general info page
-* driver config editor
+1 add a menu to auto mkdir
+1 add GUI Options +0.1
+* customizable GUI text font / color editor +0.05
+* driver config editor	+0.05
 * -driver_config, mamebin changes should cause gamelist->init()
 * ips doesnt inherit
 * option help
-* color settings editor
 * vector.ini, debug.ini
 * unify method to get inherited default value
+* general info page
 
 //GameList
-option to disable delegator
-2 sorting doesnt recover position
-* SDL joystick GUI
+2 crash on refresh GBA
 2 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
+* widget loaded prompt
+* SDL joystick GUI
 * export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
 1 rewrite icon loading for individual icon loading, restore item icon
-2 missing parent doesn't show, filter search clone games
+1 play inp/rec/mng/wav...
 * large icon view
 * coin/time counter column
 * sort by reading
-* customizable GUI text font / color
-1 play inp/rec/mng/wav...
 * display 2 lines of game desc local/english
 ? context menus: for listview mode
-* FBA FBAS和PPK上右键选MAWS那项就可以进这个网了
-* 读取分类列表，说明属于“格斗、赛车、解谜”之类的
 * context menus: snapshot, folder
 * in-place zooming for icons
-* replace progressbar with xx%
 * add/remove items from game list model
 * ROM capa column
 * unify multiple snapshot routines
 
 //Folder
+1 implement filter flags
 1 favorite
-1 other filters
-* category ini support
+* custom ini read/write +0.03
+* dnd support +0.01
+* other filters +0.03
 * arc icos from old caname
+* 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
 * bios icons
-* only non-empty console/bios folders
+* only non-empty console/bios folders +0.02
 
 //Snap
+* split snap/history code
 1 gamename0000 snap
 * external default.png
 * snap with or without stretching, horz/vert xml loading
 * avi/mng playback
 * mameinfo of driver
-* M1 integration?
+
+//M1
+* check hardware capa
 
 //Audit
-2 auto audit when available = 0?
-2 we can't assume nodump is not passed
-2 check chd exist, check chd auditing (use mame core?)
-2 right click auditing
-* lost column state after auditing
+2 crash on 128u2->u3? missing sets
+2 auto audit when available = 0? +0.01
+2 we can't assume nodump is not passed +0.03
+2 check chd exist, check chd auditing (use mame core?) +0.03
+2 right click auditing +0.02
+* lost column state after auditing +0.01
 * crash when exit and auditing
 * non compressed roms
 * return update thread immediately if some folders doesnt even exist
 
 //Main Window
-> * Add an option to revert the geometry to default, I lost a couple of my snap/info
-2 fullscreen mode, vista style
+1 Add an option to revert the geometry to default, I lost a couple of my snap/info
+1 fullscreen mode, vista style
 
 //IPS
 1 ips +0.1
+* 官方mame支持ips +0.1
 * add verify IPS on RunMAME, remove it if N/A
-* ips v4
+* ips v4 +0.1
 
 //Misc
-2 generic proc output
 * move datafile.c statistics to GUI
 * s11n of detailed console extrom is not needed
 

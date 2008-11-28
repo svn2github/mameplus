@@ -1,0 +1,198 @@
+<ui version="4.0" >
+ <class>M1UI</class>
+ <widget class="QDockWidget" name="M1UI" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>374</width>
+    <height>275</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>M1</string>
+  </property>
+  <widget class="QWidget" name="dockWidgetContents" >
+   <layout class="QGridLayout" name="gridLayout_2" >
+    <property name="margin" >
+     <number>0</number>
+    </property>
+    <item row="0" column="0" colspan="10" >
+     <widget class="QGroupBox" name="groupBox" >
+      <layout class="QGridLayout" name="gridLayout" >
+       <item row="2" column="20" >
+        <spacer name="horizontalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+       <item row="0" column="17" colspan="5" >
+        <widget class="QLabel" name="lblTrackName" >
+         <property name="font" >
+          <font>
+           <pointsize>10</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+         <property name="indent" >
+          <number>8</number>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="16" >
+        <widget class="QPushButton" name="btnRecord" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="maximumSize" >
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip" >
+          <string>Record</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="mamepguimain.qrc" >
+           <normaloff>:/res/16x16/media-record.png</normaloff>:/res/16x16/media-record.png</iconset>
+         </property>
+         <property name="flat" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="16" colspan="6" >
+        <widget class="QLabel" name="lblTrackInfo" >
+         <property name="text" >
+          <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
+&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"> &lt;/p>
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;"> &lt;/p>&lt;/body>&lt;/html></string>
+         </property>
+         <property name="wordWrap" >
+          <bool>true</bool>
+         </property>
+         <property name="indent" >
+          <number>6</number>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="16" >
+        <widget class="QLCDNumber" name="lcdNumber" >
+         <property name="maximumSize" >
+          <size>
+           <width>32</width>
+           <height>24</height>
+          </size>
+         </property>
+         <property name="lineWidth" >
+          <number>0</number>
+         </property>
+         <property name="numDigits" >
+          <number>4</number>
+         </property>
+         <property name="segmentStyle" >
+          <enum>QLCDNumber::Flat</enum>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="18" >
+        <widget class="QPushButton" name="btnPlay" >
+         <property name="maximumSize" >
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip" >
+          <string>Play</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="mamepguimain.qrc" >
+           <normaloff>:/res/16x16/media-playback-start.png</normaloff>:/res/16x16/media-playback-start.png</iconset>
+         </property>
+         <property name="flat" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="19" >
+        <widget class="QPushButton" name="btnStop" >
+         <property name="maximumSize" >
+          <size>
+           <width>20</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="toolTip" >
+          <string>Stop</string>
+         </property>
+         <property name="icon" >
+          <iconset resource="mamepguimain.qrc" >
+           <normaloff>:/res/16x16/media-playback-stop.png</normaloff>:/res/16x16/media-playback-stop.png</iconset>
+         </property>
+         <property name="flat" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="21" >
+        <widget class="QComboBox" name="cmbLang" >
+         <property name="maximumSize" >
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item row="5" column="0" colspan="10" >
+     <widget class="QTreeWidget" name="twSongList" >
+      <property name="rootIsDecorated" >
+       <bool>false</bool>
+      </property>
+      <property name="columnCount" >
+       <number>3</number>
+      </property>
+      <column>
+       <property name="text" >
+        <string>1</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>2</string>
+       </property>
+      </column>
+      <column>
+       <property name="text" >
+        <string>3</string>
+       </property>
+      </column>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources>
+  <include location="mamepguimain.qrc" />
+ </resources>
+ <connections/>
+</ui>

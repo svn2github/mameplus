@@ -1,7 +1,8 @@
+#include "mamepguimain.h"
+#ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-
-#include "mamepguimain.h"
+#endif
 
 OptionUtils *optUtils;
 //global collection of all MameOption4
@@ -1225,6 +1226,7 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("marquee directory")
 		<< QT_TR_NOOP("pcb directory")
 		<< QT_TR_NOOP("title directory")
+		<< QT_TR_NOOP("m1 directory")
 		<< QT_TR_NOOP("history file")
 		<< QT_TR_NOOP("story file")
 		<< QT_TR_NOOP("mameinfo file")

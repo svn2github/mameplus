@@ -139,6 +139,19 @@ public:
 		const QModelIndex &index ) const;
 };
 
+/*
+class XTreeView : public QTreeView
+{
+Q_OBJECT
+
+public:
+    XTreeView(QWidget *parent = 0);
+ 
+protected:
+	void paintEvent(QPaintEvent *);
+};
+//*/
+
 class Gamelist : public QObject
 {
 	Q_OBJECT

@@ -16,7 +16,7 @@ public:
 	Utils(QObject *parent = 0);
 
 	QByteArray getScreenshot(const QString &, const QString &);
-	QString getHistory(const QString &, const QString &);
+	QString getHistory(const QString &, const QString &, int = 0);
 
 	QString capitalizeStr(const QString & str);
 	QString getPath(QString);
@@ -63,34 +63,32 @@ private:
 
 class ProcessManager : public QObject
 {
-  Q_OBJECT
+Q_OBJECT
 
-  public:
-    QMap<QProcess *, ushort> procMap;
-    ushort procCount;
-    QString lastCommand;
+public:
+	QMap<QProcess *, ushort> procMap;
+	ushort procCount;
+	QString lastCommand;
 
-    ProcessManager(QWidget *parent = 0);
-    ~ProcessManager();
+	ProcessManager(QWidget *parent = 0);
 
-    int start(QString &, QStringList &, bool autoConnect = TRUE);
-    QProcess *process(ushort);
-    QString readStandardOutput(QProcess *);
-    QString readStandardOutput(ushort);
-    QString readStandardError(QProcess *);
-    QString readStandardError(ushort);
-    void terminate(QProcess *);
-    void terminate(ushort);
-    void kill(QProcess *);
-    void kill(ushort);
+	int start(QString &, QStringList &, bool autoConnect = TRUE);
+	QProcess *process(ushort);
+	QString readStandardOutput(QProcess *);
+	QString readStandardOutput(ushort);
+	QString readStandardError(QProcess *);
+	QString readStandardError(ushort);
+	void terminate(QProcess *);
+	void terminate(ushort);
+	void kill(QProcess *);
+	void kill(ushort);
 
-  public slots:
-    void started();
-    void finished(int, QProcess::ExitStatus);
-    void readyReadStandardOutput();
-    void readyReadStandardError();
-    void error(QProcess::ProcessError);
-    void stateChanged(QProcess::ProcessState);
+public slots:
+	void started();
+	void finished(int, QProcess::ExitStatus);
+	void readyReadStandardOutput();
+	void readyReadStandardError();
+	void error(QProcess::ProcessError);
 };
 #endif
 

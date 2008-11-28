@@ -20,6 +20,7 @@ Q_IMPORT_PLUGIN(qjpeg)
 #include "mameopt.h"
 #include "dialogs.h"
 #include "utils.h"
+#include "m1.h"
 
 enum
 {
@@ -37,7 +38,6 @@ enum
 	DOCK_COMMAND,
 	DOCK_LAST
 };
-
 
 class Screenshot : public QDockWidget
 {
@@ -74,7 +74,9 @@ Q_OBJECT
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
 	bool isDockTabVisible(QString);
+	void setVersion();
 
 	QTreeView *tvGameList;
 	QListView *lvGameList;
@@ -82,26 +84,14 @@ public:
 	QLineEdit *lineEditSearch;
 	QToolButton *btnSearch, *btnClearSearch;
 	QLabel *labelProgress, *labelGameCount, 
-	*labelStatus, *labelEmulation, *labelColor, *labelSound, 
-	*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
+		*labelStatus, *labelEmulation, *labelColor, *labelSound, 
+		*labelGraphic, *labelCocktail, *labelProtection, *labelSavestate;
 	QWidget *wStatus;
 	QProgressBar *progressBarGamelist;
 	QSystemTrayIcon *trayIcon;
 	
-	Screenshot *ssSnap;
-	Screenshot *ssFlyer;
-	Screenshot *ssCabinet;
-	Screenshot *ssMarquee;
-	Screenshot *ssTitle;
-	Screenshot *ssCPanel;
-	Screenshot *ssPCB;
-
-	QTextBrowser *tbHistory;
-	QTextBrowser *tbMameinfo;
-	QTextBrowser *tbStory;
-	QTextBrowser *tbCommand;
-	
-//	QTextBrowser *textBrowserFrontendLog;
+	Screenshot *ssSnap, *ssFlyer, *ssCabinet, *ssMarquee, *ssTitle, *ssCPanel, *ssPCB;
+	QTextBrowser *tbHistory, *tbMameinfo, *tbStory, *tbCommand;
 
 public slots:
 	void on_actionExitStop_activated();
@@ -144,6 +134,7 @@ public slots:
 	void saveSettings();
 	void setDockOptions();
 	void setGuiStyle(QString = NULL);
+	void setM1Lang(const QString &);
 	void setBgTile();
 	void setBgPixmap(QString = NULL);
 	void toggleTrayIcon(int, QProcess::ExitStatus, bool = false);
@@ -159,6 +150,7 @@ private:
 	void showOptionsDialog(int, int = -1);
 	void showRestartDialog();
 	void setTransparentBg(QWidget *);
+	void setTransparentStyle(QWidget * w);
 };
 
 #define LOG_MAME	2
@@ -177,6 +169,7 @@ extern MainWindow *win;
 extern Options *dlgOptions;
 extern About *dlgAbout;
 extern Dirs *dlgDirs;
+extern M1UI *dlgM1;
 
 extern QList<QListWidget *> optCtrls;
 
@@ -204,5 +197,7 @@ extern ProcessManager *procMan;
 extern OptionUtils *optUtils;
 
 extern Utils *utils;
+
+extern M1 *m1;
 
 #endif

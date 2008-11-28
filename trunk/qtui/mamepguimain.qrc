@@ -81,6 +81,13 @@
 	<file>res/16x16/cir-y.png</file>
 	<file>res/16x16/arrow-r.png</file>
 
+	<file>res/16x16/media-playback-pause.png</file>
+	<file>res/16x16/media-playback-start.png</file>
+	<file>res/16x16/media-playback-stop.png</file>
+	<file>res/16x16/media-record.png</file>
+	<file>res/16x16/media-skip-backward.png</file>
+	<file>res/16x16/media-skip-forward.png</file>
+
 	<file>res/mame32-show-snap.png</file>
 	<file>res/mame32-show-tree.png</file>
 	<file>res/mame32-view-detail.png</file>
@@ -91,6 +98,8 @@
 	<file>res/mame32-view-the.png</file>
 	<file>res/mamegui/mame.png</file>
 	<file>res/mamegui/mamep_brush.png</file>
+	<file>res/mamegui/selected_bar_light.png</file>
+	<file>res/mamegui/selected_bar_dark.png</file>
 	<file>res/optiontemplate.xml</file>
 	<file>res/reset_property.png</file>
 	<file>res/win_roms.ico</file>

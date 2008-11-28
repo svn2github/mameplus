@@ -427,7 +427,7 @@ void UpdateSelectionThread::run()
 			if (mameOpts.contains("history_file"))
 				path = mameOpts["history_file"]->globalvalue;
 
-			historyText = utils->getHistory(path, gameName);
+			historyText = utils->getHistory(path, gameName, 1);
 
 			emit snapUpdated(DOCK_HISTORY);
 		}
@@ -483,15 +483,15 @@ void UpdateSelectionThread::run()
 			commandText.replace(QChar(0x2192), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />");
 //			commandText.replace(QChar(0x3000), "<img src=\":/res/16x16/blank.png\" />");
 
-/* colors
-Y: +45
-G: +120 0 -28
-B: -150 0 -20
-C: -32
-P: -90
-*/
+			/* colors
+			Y: +45
+			G: +120 0 -28
+			B: -150 0 -20
+			C: -32
+			P: -90
+			*/
 
-///*
+			///*
 			if (language.startsWith("zh_") || language.startsWith("ja_"))
 			{
 				QFont font;
@@ -653,7 +653,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 			return qVariantFromValue(QColor(isDarkBg ? QColor(255, 96, 96) : Qt::darkRed));
 		else
 			//fixme: use palette color
-			return qVariantFromValue(QColor(isDarkBg ? Qt::white : Qt::black));
+			return qVariantFromValue(QColor((isDarkBg) ? Qt::white : Qt::black));
 
 	case Qt::DecorationRole:
 		if (col == COL_DESC)
@@ -932,7 +932,7 @@ void MameGame::s11n()
 	win->log("start s11n()");
 
 	QDir().mkpath(CFG_PREFIX + "cache");
-	QFile file(CFG_PREFIX + "cache/gameList.cache");
+	QFile file(CFG_PREFIX + "cache/gamelist.cache");
 	file.open(QIODevice::WriteOnly);
 	QDataStream out(&file);
 
@@ -1014,7 +1014,7 @@ void MameGame::s11n()
 
 int MameGame::des11n()
 {
-	QFile file(CFG_PREFIX + "cache/gameList.cache");
+	QFile file(CFG_PREFIX + "cache/gamelist.cache");
 	file.open(QIODevice::ReadOnly);
 	QDataStream in(&file);
 
@@ -1175,7 +1175,9 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 {
 	QString gameName = gameList->getViewString(index, COL_NAME);
 	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
-//fixme: combine @ console gamename
+
+	//fixme: combine @ console gamename
+	// override gameName and gameInfo for console roms
 	if (!gameInfo->nameDeviceInfoMap.isEmpty())
 	{
 		QString gameName2 = gameList->getViewString(index, COL_NAME + COL_LAST);
@@ -1186,76 +1188,100 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 				gameName = gameName2;
 		}
 	}
-	
-	QString gameDesc = gameList->getViewString(index, COL_DESC);
-	
-	if (currentGame == gameName && index.column() == COL_DESC)
+
+	if (currentGame == gameName)
 	{
-		//draw big icon
+		static QPixmap pmSelBarLite(":/res/mamegui/selected_bar_light.png");
+		static QPixmap pmSelBarDark(":/res/mamegui/selected_bar_dark.png");
 		QRect rc = option.rect;
-		QPoint p = rc.topLeft();
-		p.setX(p.x() + 2);
-		rc = QRect(p, rc.bottomRight());
+		QPoint pt;
+		QString text;
 
-		if (gameName.trimmed()=="")
-			win->log("ERRb");
-
-		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
-
-		QByteArray icondata;
-		if (gameInfo->icondata.isNull())
+		if (index.column() == COL_DESC)
 		{
-			icondata = utils->deficondata;
-//			win->log("paint def ico: " + gameName);
+			QString gameDesc = gameList->getViewString(index, COL_DESC);
+
+			//draw big icon
+			pt = rc.topLeft();
+			pt.setX(pt.x() + 2);
+			rc = QRect(pt, rc.bottomRight());
+
+			QByteArray icondata;
+			QPixmap pm;
+			if (gameInfo->icondata.isNull())
+				icondata = utils->deficondata;
+			else
+				icondata = gameInfo->icondata;
+			pm.loadFromData(icondata, "ico");
+
+			// paint the unavailable icon on top of original icon
+			if(!gameInfo->available)
+			{
+				QPainter p;
+				p.begin(&pm);
+				p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
+				p.end();
+			}
+			QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, pm);
+
+			// calc text rect
+			pt = rc.topLeft();
+			pt.setX(pt.x() + 34);	//32px + 2px left padding
+			rc = QRect(pt, rc.bottomRight());
+
+			text = gameDesc;
 		}
 		else
-		{
-			icondata = gameInfo->icondata;
-//			win->log("paint game ico: " + gameName);
-		}
-		
-		QPixmap pm;
-		pm.loadFromData(icondata, "ico");
+			text = gameList->getViewString(index, index.column());
 
-		if(!gameInfo->available)
-		{
-			QPainter p;
-			p.begin(&pm);
-			p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
-			p.end();
-		}
+		// set bold font for selected items
+		QFont boldFont(option.font);
+		boldFont.setBold(true);
+		painter->setFont(boldFont);
 
-		QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, pm);
+		//elide the text within bounding rect
+//		QFontMetrics fm(boldFont);
+//		text = option.fontMetrics.elidedText(text, option.textElideMode, rc.width() - 5);	//3px + 2px right padding
 
-		// calc text rect
-		p = rc.topLeft();
-		p.setX(p.x() + 34);
-		rc = QRect(p, rc.bottomRight());
-
-		//draw text bg
 		if (option.state & QStyle::State_Selected)
 		{
-///*
-			painter->fillRect(rc, QBrush(
-				QPixmap("res/images_nav_tab_sel.png").scaled(QSize(33, 33))
-				));
-//*/
-			painter->fillRect(rc, option.palette.highlight());
-		}
+			//draw text bg
+			painter->drawPixmap(rc, isDarkBg ? pmSelBarDark : pmSelBarLite);
+//			painter->fillRect(rc, option.palette.highlight());
 
-		//draw text
-		p = rc.topLeft();
-		p.setX(p.x() + 2);
-		rc = QRect(p, rc.bottomRight());
-		QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, option.palette, true, 
-											gameDesc, QPalette::HighlightedText);
-		return;
+			//draw text
+			pt = rc.topLeft();
+			pt.setX(pt.x() + 3);
+			rc = QRect(pt, rc.bottomRight());
+			QStyleOptionViewItem myoption = option;
+			//override foreground, black doesnt look nice
+			painter->setPen(Qt::white);
+			painter->drawText(rc, text, QTextOption(Qt::AlignLeft | Qt::AlignVCenter));
+//			QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, myoption.palette, true, text);
+			return;
+		}
 	}
 
 	QItemDelegate::paint(painter, option, index);
 	return;
 }
 
+/*
+XTreeView::XTreeView(QWidget *parent)
+: QTreeView(parent)
+{
+}
+
+void XTreeView::paintEvent(QPaintEvent *event)
+{
+//	QTreeView::paintEvent(event);
+	QPainter p(this);
+
+	p.begin(this);
+	p.drawPixmap(0, 32, QPixmap(":/res/32x32/input-gaming.png"));
+	p.end();
+}
+//*/
 
 Gamelist::Gamelist(QObject *parent) : 
 QObject(parent),
@@ -1274,7 +1300,7 @@ headerMenu(NULL)
 Gamelist::~Gamelist()
 {
 //	win->log("DEBUG: Gamelist::~Gamelist()");
-	if ( loadProc )
+	if (loadProc)
 		loadProc->terminate();
 }
 
@@ -1358,6 +1384,10 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		selectThread.myqueue.enqueue(currentGame);
 		selectThread.update();
 
+		//fixme: move to thread!
+		if (m1 != NULL)
+			m1->updateList();
+
 		//update selected rows, fixme: performance bottleneck!
 		gameListModel->rowChanged(gameListPModel->mapToSource(current));
 		gameListModel->rowChanged(gameListPModel->mapToSource(previous));
@@ -1416,6 +1446,7 @@ void Gamelist::setupIcon(QString gameName)
 //	win->log(QString("setupico %1 %2").arg(gameName).arg(gameInfo->icondata.isNull()));
 }
 
+// we must update GUI in main thread
 void Gamelist::setupSnap(int snapType)
 {
 	switch (snapType)
@@ -1479,6 +1510,9 @@ void Gamelist::setupSnap(int snapType)
 		win->ssPCB->setPixmap(pm2);
 #endif
 		win->tbCommand->setHtml(selectThread.commandText);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -1604,13 +1638,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 					pMameOpt->globalvalue = guiSettings.value(optName).toString();
 			}
 
-			// misc win init
-			QFileInfo fi(mame_binary);
-
-			win->setWindowTitle(QString("%1 - %2 %3")
-				.arg(win->windowTitle())
-				.arg(fi.baseName().toUpper())
-				.arg(mameGame->mameVersion));
+			// we're ready to set version info
+			win->setVersion();
 		}
 
 		loadMMO(UI_MSG_LIST);
@@ -1686,7 +1715,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 		args << "-listxml";
 		loadTimer.start();
-		loadProc = procMan->process(procMan->start(mame_binary, args));
+		loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
+
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
@@ -1702,8 +1732,8 @@ void Gamelist::loadMMO(int msgCat)
 
 	QString dirpath;
 	//only mameplus contains this option for now
-	if (mameOpts.contains("translation_directory"))
-		dirpath = utils->getPath(mameOpts["translation_directory"]->globalvalue);
+	if (mameOpts.contains("langpath"))
+		dirpath = utils->getPath(mameOpts["langpath"]->globalvalue);
 	else
 		dirpath = "lang/";
 	QFile file( dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
@@ -1950,6 +1980,9 @@ void Gamelist::loadListXmlReadyReadStandardOutput()
 
 void Gamelist::loadListXmlFinished(int, QProcess::ExitStatus)
 {
+	QProcess *proc = (QProcess *)sender();
+	procMan->procMap.remove(proc);
+
 	parse();
 //	win->poplog("PRE load ini ()");
 
@@ -1964,7 +1997,7 @@ void Gamelist::loadDefaultIni()
 	QStringList args;
 	args << "-showconfig" << "-noreadconfig";
 
-	loadProc = procMan->process(procMan->start(mame_binary, args));
+	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
 }
@@ -1979,6 +2012,9 @@ void Gamelist::loadDefaultIniReadyReadStandardOutput()
 
 void Gamelist::loadDefaultIniFinished(int, QProcess::ExitStatus)
 {
+	QProcess *proc = (QProcess *)sender();
+	procMan->procMap.remove(proc);
+
 	optUtils->loadDefault(mameGame->mameDefaultIni);
 	optUtils->loadTemplate();
 
@@ -1995,19 +2031,25 @@ void Gamelist::extractMerged(QString mergedFileName, QString fileName)
 	args << "e" << "-y" << mergedFileName << fileName <<"-o" + QDir::tempPath();
 	currentTempROM = QDir::tempPath() + "/" + fileName;
 
-	loadProc = procMan->process(procMan->start(command, args));
+	loadProc = procMan->process(procMan->start(command, args, FALSE));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractMergedFinished(int, QProcess::ExitStatus)));
 }
 
 // call the emulator after the rom has been extracted
 void Gamelist::extractMergedFinished(int, QProcess::ExitStatus)
 {
+	QProcess *proc = (QProcess *)sender();
+	procMan->procMap.remove(proc);
+
 	runMame(true);
 }
 
 // delete the extracted rom
 void Gamelist::runMergedFinished(int, QProcess::ExitStatus)
 {
+	QProcess *proc = (QProcess *)sender();
+	procMan->procMap.remove(proc);
+
 	QFile file(currentTempROM);
 	file.remove();
 	currentTempROM.clear();
@@ -2432,7 +2474,7 @@ void Gamelist::runMame(bool runMerged)
 		{
 			// use temp rom name instead
 			args << currentTempROM;
-			loadProc = procMan->process(procMan->start(mame_binary, args));
+			loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 			// delete the extracted rom
 			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
 			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));

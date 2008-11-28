@@ -4,6 +4,7 @@
 #include "ui_options.h"
 #include "ui_directories.h"
 #include "ui_about.h"
+#include "ui_m1.h"
 
 class Options: public QDialog, public Ui::Options
 {
@@ -42,6 +43,14 @@ Q_OBJECT
 
 public:
 	About(QWidget *parent = 0);
+};
+
+class M1UI: public QDockWidget, public Ui::M1UI
+{
+Q_OBJECT
+
+public:
+	M1UI(QWidget *parent = 0);
 };
 
 #endif

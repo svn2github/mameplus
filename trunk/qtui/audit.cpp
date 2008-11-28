@@ -341,13 +341,10 @@ void MergedRomAuditor::auditorReadyReadStandardOutput()
 	outBuf += proc->readAllStandardOutput();
 }
 
-void MergedRomAuditor::auditorFinished(int exitCode, QProcess::ExitStatus exitStatus)
+void MergedRomAuditor::auditorFinished(int, QProcess::ExitStatus)
 {
 	QProcess *proc = (QProcess *)sender();
-
 	procMan->procMap.remove(proc);
-	procMan->procCount--;
-	loadProc = NULL;
 
 	GameInfo *gameInfo = mameGame->nameInfoMap[consoleName];
 	QString sourcefile = gameInfo->sourcefile;
