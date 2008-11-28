@@ -134,7 +134,6 @@ public slots:
 	void saveSettings();
 	void setDockOptions();
 	void setGuiStyle(QString = NULL);
-	void setM1Lang(const QString &);
 	void setBgTile();
 	void setBgPixmap(QString = NULL);
 	void toggleTrayIcon(int, QProcess::ExitStatus, bool = false);
@@ -169,7 +168,7 @@ extern MainWindow *win;
 extern Options *dlgOptions;
 extern About *dlgAbout;
 extern Dirs *dlgDirs;
-extern M1UI *dlgM1;
+extern M1UI *m1UI;
 
 extern QList<QListWidget *> optCtrls;
 
@@ -193,11 +192,8 @@ extern Gamelist *gameList;
 extern QStringList consoleGamesL;
 
 extern ProcessManager *procMan;
-
 extern OptionUtils *optUtils;
-
 extern Utils *utils;
-
 extern M1 *m1;
 
 #endif

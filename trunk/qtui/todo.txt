@@ -1,31 +1,4 @@
 ﻿//Done
-/ w/ M1 music player integration
-整合M1音乐播放器
-
-M1 lets you enjoy music from over 1400 arcade games, from the classics through the 3D era.
-M1可以直接播放上千个街机游戏的音乐，涵盖从CPS, NeoGeo, ZN 到魂斗罗，Mappy等早期基板。
-
-all credit goes to R. Belmont, Tafoid(m1.xml), Fujix(lists) and other maintainers of M1.
-M1的所有功能归于R. Belmont, Tafoid(曲目定义), Fujix(曲目列表)及其他M1维护人员的努力
-
-Main site: http://rbelmont.mameworld.info/?page_id=223
-Bridge M1 and updated list files: http://www.e2j.net
-
-M1主页: http://rbelmont.mameworld.info/?page_id=223
-Bridge M1 及曲目列表更新: http://www.e2j.net
-
-(Optional) set M1 path with Options - Directories - GUI Directory - M1 directory
-如果你已经在使用M1，可以在 选项-目录-GUI目录-M1目录 中设置M1所在目录
-
-you may use the toggle on/off the M1 Player window as a normal dialog, or simply dock it in the main window the same way as a normal Snapshot component.
-M1播放器窗口可以当作普通对话框来打开/关闭，也可以像其他图片组件一样停靠在主窗口中
-
-if you don't need M1 feature, simply remove all m1 files in "bin/m1"
-如果不需要播放器功能，直接删除"bin/m1"下的文件即可
-
-no Linux version this time, as there is no m1.so available yet.
-由于官方未发布m1.so，所以暂时无Linux版
-
 //4.5 bug
 2 unterminated thread 4.5 bug?
 2 sorting doesnt recover position?
@@ -33,6 +6,7 @@ no Linux version this time, as there is no m1.so available yet.
 //Linux
 2 bug: column sorting
 mounted snap doesnt load
+当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Options
 1 add a menu to auto mkdir

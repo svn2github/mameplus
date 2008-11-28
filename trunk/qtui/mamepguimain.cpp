@@ -231,9 +231,7 @@ MainWindow::MainWindow(QWidget *parent)
 	dlgOptions = new Options(this);
 	dlgAbout = new About(this);
 	dlgDirs = new Dirs(this);
-	dlgM1 = new M1UI(this);
-
-	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dlgM1);
+	m1UI = new M1UI(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -319,26 +317,7 @@ void MainWindow::init()
 	if (m1->max_games == 0)
 		m1 = NULL;
 
-	const QStringList m1Headers = (QStringList()
-		<< "#" << tr("Name") << tr("Len"));
-	dlgM1->twSongList->setHeaderLabels(m1Headers);
-	dlgM1->twSongList->header()->moveSection(2, 1);
-
-	const QStringList m1Langs = (QStringList()
-		<< "en" << tr("jp"));
-	dlgM1->cmbLang->addItems(m1Langs);
-	QString m1_language = guiSettings.value("m1_language").toString();
-	dlgM1->cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
-	connect(dlgM1->cmbLang, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(setM1Lang(const QString &)));
-
-	if (m1_language == "jp")
-	{
-		QFont font;
-		font.setFamily("MS Gothic");
-		font.setFixedPitch(true);
-		dlgM1->twSongList->setFont(font);
-		dlgM1->lblTrackName->setFont(font);
-	}
+	m1UI->init();
 
 	// init mainwindow
 	win->log("win->init()");
@@ -513,14 +492,6 @@ void MainWindow::init()
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
-
-	// M1
-	if (m1 != NULL)
-	{
-		connect(dlgM1->btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
-		connect(dlgM1->twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
-		connect(dlgM1->btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
-	}
 }
 
 void MainWindow::setVersion()
@@ -550,7 +521,7 @@ void MainWindow::setVersion()
 		.arg(m1Ver);
 
 	dlgAbout->tbVersion->setHtml(strVersion);
-	dlgM1->setWindowTitle("M1 - " + m1Ver);
+	m1UI->setWindowTitle("M1 - " + m1Ver);
 
 	QFileInfo fi(mame_binary);
 
@@ -864,7 +835,7 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 	guiSettings.setValue("background_file", background_file);
 	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
-	guiSettings.setValue("m1_language", dlgM1->cmbLang->currentText());
+	guiSettings.setValue("m1_language", m1UI->cmbLang->currentText());
 	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
 
@@ -990,11 +961,6 @@ void MainWindow::setGuiStyle(QString style)
 		setBgPixmap(background_file);
 }
 
-void MainWindow::setM1Lang(const QString & lang)
-{
-	m1->updateList();
-}
-
 void MainWindow::setBgTile()
 {
 	setBgPixmap(background_file);
@@ -1040,9 +1006,9 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentBg(win->tbMameinfo);
 		setTransparentBg(win->tbStory);
 		setTransparentBg(win->tbCommand);
-		setTransparentBg(dlgM1->twSongList);
-		setTransparentStyle(dlgM1->groupBox);
-		setTransparentStyle(dlgM1->lcdNumber);
+		setTransparentBg(m1UI->twSongList);
+		setTransparentStyle(m1UI->groupBox);
+		setTransparentStyle(m1UI->lcdNumber);
 	}
 }
 

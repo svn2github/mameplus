@@ -3,7 +3,6 @@
 Options *dlgOptions = NULL;
 About *dlgAbout = NULL;
 Dirs *dlgDirs = NULL;
-M1UI *dlgM1 = NULL;
 
 QByteArray option_geometry;
 QList<QListWidget *> optCtrls;
@@ -117,11 +116,4 @@ About::About(QWidget *parent)
 {
 	setupUi(this);
 }
-
-M1UI::M1UI(QWidget *parent)
-:QDockWidget(parent)
-{
-	setupUi(this);
-}
-
 

@@ -2,6 +2,46 @@
 #include "m1ui.h"
 
 M1 *m1 = NULL;
+M1UI *m1UI = NULL;
+
+M1UI::M1UI(QWidget *parent)
+:QDockWidget(parent)
+{
+	setupUi(this);
+}
+
+void M1UI::init()
+{
+	if (m1 != NULL)
+	{
+		const QStringList m1Headers = (QStringList()
+			<< "#" << tr("Name") << tr("Len"));
+		twSongList->setHeaderLabels(m1Headers);
+		twSongList->header()->moveSection(2, 1);
+		
+		const QStringList m1Langs = (QStringList()
+			<< "en" << tr("jp"));
+		cmbLang->addItems(m1Langs);
+		QString m1_language = guiSettings.value("m1_language").toString();
+		cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
+		
+		if (m1_language == "jp")
+		{
+			QFont font;
+			font.setFamily("MS Gothic");
+			font.setFixedPitch(true);
+			twSongList->setFont(font);
+			lblTrackName->setFont(font);
+		}
+	
+		connect(btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
+		connect(twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
+		connect(btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
+		connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), m1, SLOT(updateList(const QString &)));
+
+		win->addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), this);
+	}
+}
 
 M1::M1(QObject *parent) : 
 QObject(parent),
@@ -15,6 +55,7 @@ max_games(0)
 	QLibrary m1Lib(0);
 	m1Lib.setFileName(m1_dir + "m1");
 
+	//resolve symbols from m1 lib
 	if (m1Lib.load())
 	{
 		m1snd_init = (fp_m1snd_init)m1Lib.resolve("m1snd_init");
@@ -69,20 +110,20 @@ int M1::getMaxGames()
 	return max_games;
 }
 
-void M1::updateList()
+void M1::updateList(const QString &)
 {
 	QString gameName = currentGame;
 
 	QString fileName = QString("%1lists/%2/%3%4")
 		.arg(m1_dir)
-		.arg(dlgM1->cmbLang->currentText())
+		.arg(m1UI->cmbLang->currentText())
 		.arg(gameName)
 		.arg(".lst");
 	QFile datFile(fileName);
 
 	QString buf = "";
 
-	dlgM1->twSongList->clear();
+	m1UI->twSongList->clear();
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -118,7 +159,7 @@ void M1::updateList()
 						list.append(rxTime.cap(1).trimmed());
 					}
 
-					items.append(new QTreeWidgetItem(dlgM1->twSongList, list));
+					items.append(new QTreeWidgetItem(m1UI->twSongList, list));
 				}
 			}
 			else
@@ -127,16 +168,16 @@ void M1::updateList()
 				list.append("");
 				list.append(line.trimmed());
 
-				QTreeWidgetItem *item = new QTreeWidgetItem(dlgM1->twSongList, list);
+				QTreeWidgetItem *item = new QTreeWidgetItem(m1UI->twSongList, list);
 				item->setDisabled(true);
 				items.append(item);
 			}
 		}
 		while (!line.isNull());
 
-		dlgM1->twSongList->header()->setResizeMode(2,QHeaderView::ResizeToContents);
-		dlgM1->twSongList->header()->setResizeMode(0,QHeaderView::ResizeToContents);
-		dlgM1->twSongList->header()->setResizeMode(1,QHeaderView::Stretch);
+		m1UI->twSongList->header()->setResizeMode(2,QHeaderView::ResizeToContents);
+		m1UI->twSongList->header()->setResizeMode(0,QHeaderView::ResizeToContents);
+		m1UI->twSongList->header()->setResizeMode(1,QHeaderView::Stretch);
 	}
 }
 
@@ -149,7 +190,7 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 		{
 			GameInfo *gameInfo = mameGame->nameInfoMap[currentGame];
 			
-			dlgM1->lblTrackInfo->setText(
+			m1UI->lblTrackInfo->setText(
 				QString(
 				"<b>Manufacturer: </b>%1 %2<br>"
 				"<b>Hardware: </b>%3"
@@ -218,25 +259,25 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 	return 0;
 }
 
-M1Player::M1Player(QObject *parent)
+M1Thread::M1Thread(QObject *parent)
 : QThread(parent),
 gameNum(-1),
 cmdNum(0)
 {
 }
 
-M1Player::~M1Player()
+M1Thread::~M1Thread()
 {
 	done = true;
 	wait();
 }
 
-void M1Player::pause(){}
-void M1Player::prev(){}
-void M1Player::next(){}
-void M1Player::record(){}
+void M1Thread::pause(){}
+void M1Thread::prev(){}
+void M1Thread::next(){}
+void M1Thread::record(){}
 
-void M1Player::stop()
+void M1Thread::stop()
 {
 	//stop current thread
 	if (isRunning())
@@ -246,10 +287,10 @@ void M1Player::stop()
 	}
 }
 
-void M1Player::play(QTreeWidgetItem*, int)
+void M1Thread::play(QTreeWidgetItem*, int)
 {
 
-	QList<QTreeWidgetItem *> selectedItems = dlgM1->twSongList->selectedItems();
+	QList<QTreeWidgetItem *> selectedItems = m1UI->twSongList->selectedItems();
 	if (selectedItems.isEmpty())
 		return;
 
@@ -271,12 +312,12 @@ void M1Player::play(QTreeWidgetItem*, int)
 		return;
 
 	if (isHex)
-		dlgM1->lcdNumber->setHexMode();
+		m1UI->lcdNumber->setHexMode();
 	else
-		dlgM1->lcdNumber->setDecMode();
+		m1UI->lcdNumber->setDecMode();
 
-	dlgM1->lcdNumber->display(cmdStr);
-	dlgM1->lblTrackName->setText(selectedItems[0]->text(1));
+	m1UI->lcdNumber->display(cmdStr);
+	m1UI->lblTrackName->setText(selectedItems[0]->text(1));
 
 	QMutexLocker locker(&mutex);
 
@@ -296,7 +337,7 @@ void M1Player::play(QTreeWidgetItem*, int)
 	start(NormalPriority);
 }
 
-void M1Player::run()
+void M1Thread::run()
 {
 	/*
 	int maxtracks = m1snd_get_info_int(M1_IINF_TRACKS, curgame);

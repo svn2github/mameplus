@@ -2,14 +2,24 @@
 #define _M1_H_
 
 #include <QtGui>
+#include "ui_m1.h"
 
-class M1Player : public QThread
+class M1UI: public QDockWidget, public Ui::M1UI
+{
+Q_OBJECT
+
+public:
+	M1UI(QWidget *parent = 0);
+	void init();
+};
+
+class M1Thread : public QThread
 {
 	Q_OBJECT
 
 public:
-	M1Player(QObject *parent = 0);
-	~M1Player();
+	M1Thread(QObject *parent = 0);
+	~M1Thread();
 
 public slots:
 	void stop();
@@ -43,12 +53,11 @@ public:
 
 	int max_games;
 	QString m1_dir;
-	M1Player m1Thread;
+	M1Thread m1Thread;
 
 	static int m1ui_message(void *, int, char *, int);
 	QString getVersion();
 	int getMaxGames();
-	void updateList();
 
 	typedef void (*fp_m1snd_init)(void *, int (*m1ui_message)(void *,int, char *, int));
 	fp_m1snd_init m1snd_init;
@@ -66,6 +75,9 @@ public:
 	fp_m1snd_set_info_int m1snd_set_info_int;
 	typedef void (*fp_m1snd_set_info_str)(int, char*, int, int, int);
 	fp_m1snd_set_info_str m1snd_set_info_str;
+
+public slots:
+	void updateList(const QString & = NULL);
 };
 
 #endif
