@@ -8057,7 +8057,7 @@ ROM_START( neonopon )
 	ROM_LOAD16_BYTE( "nnp-c2.rom", 0x000001, 0x100000, CRC(0e2cbc25) SHA1(3c45eedb2efc6a3a7ec65487f980e117485abc9f) ) /* Plane 2,3 */
 ROM_END
 
-ROM_START( npong10 )
+ROM_START( neoponga )
 	ROM_REGION( 0x100000, "main", 0 )
 	ROM_LOAD16_WORD_SWAP( "np10_p1.rom", 0x000000, 0x020000, CRC(31b724d7) SHA1(e374613609aeda64b547d8ce38d2078b6ed55ad5) )
 
@@ -9408,7 +9408,6 @@ GAME( 1996, aof3,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Art 
 GAME( 1996, aof3k,    aof3,     neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Art of Fighting 3 - The Path of the Warrior (Korean release)", 0 ) // no Japanese title / mode
 GAME( 1996, kof96,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 1)", 0 )
 GAME( 1996, kof96h,   kof96,    neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The King of Fighters '96 (set 2)", 0 )
-GAME( 1996, kof96ep,  kof96,   neogeo,   neogeo,   kof96ep,  ROT0, "bootleg", "The King of Fighters '96 (bootleg / hack)", 0 )
 GAME( 1996, ssideki4, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "The Ultimate 11 - The SNK Football Championship / Tokuten Ou - Honoo no Libero", 0 )
 GAME( 1996, kizuna,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Kizuna Encounter - Super Tag Battle / Fu'un Super Tag Battle", 0 )
 GAME( 1996, samsho4,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Samurai Shodown IV - Amakusa's Revenge / Samurai Spirits - Amakusa Kourin", 0 )
@@ -9451,24 +9450,18 @@ GAME( 2001, sengoku3, neogeo,   neogeo,   neogeo,   sengoku3, ROT0, "SNK", "Seng
 GAME( 2001, kof2001,  neogeo,   neogeo,   neogeo,   kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 1)" , 0 ) /* Encrypted GFX */
 GAME( 2001, kof2001h, kof2001,  neogeo,   neogeo,   kof2001,  ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2)" , 0 ) /* Encrypted GFX */
 GAME( 2003, cthd2003, kof2001,  neogeo,   neogeo,   cthd2003, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
-GAME( 2003, cthd2k3a, kof2001,  neogeo,   neogeo,   cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAME( 2003, ct2k3sp,  kof2001,  neogeo,   neogeo,   ct2k3sp,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 Super Plus (The King of Fighters 2001 bootleg)", 0 ) /* Protected Hack / Bootleg of kof2001 */
 GAME( 2003, ct2k3sa,  kof2001,  neogeo,   neogeo,   ct2k3sa,  ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 Super Plus alternate (The King of Fighters 2001 bootleg)", 0 ) /* Hack / Bootleg of kof2001 */
 GAME( 2002, kof2002,  neogeo,   neogeo,   neogeo,   kof2002,  ROT0, "Eolith / Playmore", "The King of Fighters 2002" , 0 ) /* Encrypted GFX */
 GAME( 2002, kof2002b, kof2002,  neogeo,   neogeo,   kof2002b, ROT0, "bootleg", "The King of Fighters 2002 (bootleg)", 0 )
 GAME( 2002, kf2k2pls, kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (bootleg set 1)" , 0 ) /* Encrypted GFX */
 GAME( 2002, kf2k2pla, kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (bootleg set 2)" , 0 ) /* Encrypted GFX */
-GAME( 2002, kf2k1pls, kof2001,  neogeo,   neogeo,   kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg / hack)", 0 )
-GAME( 2002, kf2k1pa,  kof2001,  neogeo,   neogeo,   kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg / hack)", 0 )
-GAME( 2002, kf2k2plb, kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg / hack)" , 0) /* Encrypted GFX */
-GAME( 2002, kf2k2plc, kof2002,  neogeo,   neogeo,   kf2k2plc, ROT0, "bootleg", "The King of Fighters 2002 Super (set 4, bootleg / hack)", 0 ) /* Encrypted GFX */
 GAME( 2002, kf2k2mp,  kof2002,  neogeo,   neogeo,   kf2k2mp,  ROT0, "bootleg", "The King of Fighters 2002 Magic Plus (bootleg)" , 0 ) /* Encrypted GFX */
 GAME( 2002, kf2k2mp2, kof2002,  neogeo,   neogeo,   kf2k2mp2, ROT0, "bootleg", "The King of Fighters 2002 Magic Plus II (bootleg)" , 0 ) /* Encrypted GFX */
 GAME( 2002, kof10th,  kof2002,  neogeo,   neogeo,   kof10th,  ROT0, "bootleg", "The King of Fighters 10th Anniversary (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAME( 2005, kf10thep, kof2002,  neogeo,   neogeo,   kf10thep, ROT0, "bootleg", "The King of Fighters 10th Anniversary Extra Plus (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAME( 2004, kf2k5uni, kof2002,  neogeo,   neogeo,   kf2k5uni, ROT0, "bootleg", "The King of Fighters 10th Anniversary 2005 Unique (The King of Fighters 2002 bootleg)", 0 ) // fake SNK copyright
 GAME( 2004, kof2k4se, kof2002,  neogeo,   neogeo,   kof2k4se, ROT0, "bootleg", "The King of Fighters Special Edition 2004 (The King of Fighters 2002 bootleg)", 0 ) /* Hack / Bootleg of kof2002 */
-GAME( 2004, kf2k4pls, kof2002,  neogeo,   neogeo,   kf2k4pls, ROT0, "bootleg", "The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)", 0 ) /* Hack / Bootleg of kof2002 */
 GAME( 2003, mslug5,   neogeo,   neogeo,   neogeo,   mslug5,   ROT0, "SNK Playmore", "Metal Slug 5", 0 )
 GAME( 2003, mslug5h,  mslug5,   neogeo,   neogeo,   mslug5,   ROT0, "SNK Playmore", "Metal Slug 5 (AES Cart)", 0 ) /* Also found in later MVS carts */
 GAME( 2003, ms5pcb,   0,        neogeo,   ms5pcb,   ms5pcb,   ROT0, "SNK Playmore", "Metal Slug 5 (JAMMA PCB)", 0 )
@@ -9642,24 +9635,25 @@ GAME( 2001, vlinero,  vliner,   neogeo,   vliner,   vliner,   ROT0, "Dyna / Bree
 /* Kyle Hodgetts */
 GAME( 2000, diggerma, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Kyle Hodgetts", "Digger Man (prototype)", 0 )
 
-/* homebrew */
-GAME( 1989, beast,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Neo Demo)", GAME_NO_SOUND )
-GAME( 1990, columnsn, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Sega / hack", "Columns (Neo-Geo)", GAME_NO_SOUND )
-GAME( 200?, poknight, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night", GAME_NO_SOUND )
-GAME( 2002, neonopon, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo No Panepon (beta)", 0 )
-GAME( 2002, neopong,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (v1.1)", 0 )
-GAME( 2002, npong10,  neopong,  neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (v1.0)", 0 )
-GAME( 200?, syscheck, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo System Check (ver 1.0b)", 0 )
-GAME( 2006, frogfest, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Rastersoft", "Frog Feast", 0 )
-GAME( 2005, ltorb1,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (20050717)" , 0 )
-GAME( 2002, neodemo,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Neo-Demo", 0 )
-GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack",   "Idol Mahjong - final romance 2 (CD to MVS Conversion)", 0 )
-GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "homebrew",   "Codename - Blut Engel (2006-01-19)", 0 )
-GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "homebrew",   "NGEM2K (beta 2006-01-18)", 0 )
-GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo", 0 )
-GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack",          "Zintrick / Oshidashi Zentrix (CD to MVS Conversion)", 0 )
+/* Neo Geo bootleg */
+GAME( 1996, kof96ep,  kof96,    neogeo,   neogeo,   kof96ep,  ROT0, "bootleg", "The King of Fighters '96 (bootleg / hack)", 0 )
+GAME( 2003, kof97pla, kof97,    neogeo,   neogeo,   kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg / hack)", 0 )
+GAME( 2002, kf2k1pls, kof2001,  neogeo,   neogeo,   kf2k1pls, ROT0, "bootleg", "The King of Fighters 2001 Plus (set 1, bootleg / hack)", 0 )
+GAME( 2002, kf2k1pa,  kof2001,  neogeo,   neogeo,   kf2k1pa,  ROT0, "bootleg", "The King of Fighters 2001 Plus (set 2, bootleg / hack)", 0 )
+GAME( 2003, cthd2k3a, kof2001,  neogeo,   neogeo,   cthd2k3a, ROT0, "bootleg", "Crouching Tiger Hidden Dragon 2003 (The King of Fighters 2001 bootleg, set 2)", 0 ) /* Protected Hack / Bootleg of kof2001 */
+GAME( 2002, kf2k2plb, kof2002,  neogeo,   neogeo,   kf2k2pls, ROT0, "bootleg", "The King of Fighters 2002 Plus (set 3, bootleg / hack)" , 0) /* Encrypted GFX */
+GAME( 2002, kf2k2plc, kof2002,  neogeo,   neogeo,   kf2k2plc, ROT0, "bootleg", "The King of Fighters 2002 Super (set 4, bootleg / hack)", 0 ) /* Encrypted GFX */
+GAME( 2004, kf2k4pls, kof2002,  neogeo,   neogeo,   kf2k4pls, ROT0, "bootleg", "The King of Fighters Special Edition 2004 Plus (The King of Fighters 2002 bootleg)", 0 ) /* Hack / Bootleg of kof2002 */
+GAME( 2003, mslug5b,  mslug5,   neogeo,   neogeo,   mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", 0 )
 
-/* Decrypted */
+/* Neo Geo prototype */
+GAME( 2000, bangbedp, bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
+
+/* CD to MVS Conversion */
+GAME( 1996, zintrkcd, zintrckb, neogeo,   neogeo,   neogeo,   ROT0, "hack", "Zintrick / Oshidashi Zentrix (CD to MVS Conversion, Hack)", 0 )
+GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Idol Mahjong - final romance 2 (CD to MVS Conversion, Hack)", 0 )
+
+/* Neo Geo decrypted */
 GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", 0 )
 GAME( 1999, garoud,   garou,    neogeo,   neogeo,   garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
 GAME( 2000, mslug3d,  mslug3,   neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Metal Slug 3 (not encrypted P, decrypted C)", 0 )
@@ -9688,9 +9682,19 @@ GAME( 2001, jckeygpd, jockeygp, neogeo,   jockeygp, jckeygpd, ROT0, "Sun Amuseme
 GAME( 2003, kf2k3pcd, kf2k3pcb, neogeo,   neogeo,   kf2k3pcd, ROT0, "SNK Playmore", "The King of Fighters 2003 (Japan, JAMMA PCB / decrypted C&Bios)" , 0 ) /* Encrypted Code & Sound */
 GAME( 2005, kogd,     kof97,    neogeo,   kog,      neogeo,   ROT0, "bootleg", "King of Gladiator (The King of Fighters '97 bootleg / fully decrypted)", 0 )
 GAME( 2003, pnyaad,   pnyaa,    neogeo,   neogeo,   pnyaad,   ROT0, "Aiky / Taito", "Pochi and Nyaa (decrypted C)" , 0 ) /* Encrypted Sound */
-GAME( 2000, bangbedp, bangbead, neogeo,   neogeo,   neogeo,   ROT0, "Visco", "Bang Bead (prototype)", 0 )
 
-/* new Bootleg */
-GAME( 2003, kof97pla, kof97,    neogeo,   neogeo,   kof97pla, ROT0, "bootleg", "The King of Fighters '97 Plus 2003 (bootleg / hack)", 0 )
-GAME( 2003, mslug5b,  mslug5,   neogeo,   neogeo,   mslug5b,  ROT0, "bootleg", "Metal Slug 5 (bootleg)", 0 )
+/* Neo Geo homebrew */
+GAME( 1989, beast,    neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Psygnosis", "Shadow of the Beast (Neo Demo, Homebrew)", GAME_NO_SOUND )
+GAME( 1990, columnsn, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Sega / hack", "Columns (Neo-Geo, Homebrew)", GAME_NO_SOUND )
+GAME( 200?, poknight, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "JMK", "Poker Night (Homebrew)", GAME_NO_SOUND )
+GAME( 2002, neonopon, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo No Panepon (Beta, Homebrew)", 0 )
+GAME( 2002, neopong,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (Ver 1.1, Homebrew)", 0 )
+GAME( 2002, neoponga,  neopong,  neogeo,   neogeo,   neogeo,   ROT0, "Neodev", "Neo Pong (Ver 1.0, Homebrew)", 0 )
+GAME( 200?, syscheck, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo System Check (Ver 1.0b, Homebrew)", 0 )
+GAME( 2006, frogfest, neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Rastersoft", "Frog Feast (Homebrew)", 0 )
+GAME( 2005, ltorb1,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Jonas Indiana and the Lost Temple of RA (Homebrew 050717)" , 0 )
+GAME( 2002, neodemo,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Neo-Demo (Homebrew)", 0 )
+GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "Codename - Blut Engel (Homebrew 060119)", 0 )
+GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "NGEM2K (Homebrew 060118, Beta)", 0 )
+GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", 0 )
 
