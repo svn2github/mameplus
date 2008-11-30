@@ -405,11 +405,6 @@ int ui_init(running_machine *machine)
 	/* make sure we clean up after ourselves */
 	add_exit_callback(machine, ui_exit);
 
-#ifdef MAMEMESS
-	/* load the localization file */
-	uistring_init();
-#endif /* MAMEMESS */
-
 #ifdef UI_COLOR_DISPLAY
 	setup_palette();
 #endif /* UI_COLOR_DISPLAY */

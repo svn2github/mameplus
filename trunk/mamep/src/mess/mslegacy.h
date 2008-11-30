@@ -70,10 +70,6 @@ enum
 
 
 
-//mamep
-int uistring_init (void);
-
-
 /* uitext */
 const char * ui_getstring (int string_num);
 

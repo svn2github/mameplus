@@ -11,7 +11,6 @@
 #include <assert.h>
 
 #include "driver.h"
-#include "deprecat.h"
 #include "devices/flopdrv.h"
 #include "utils.h"
 #include "image.h"

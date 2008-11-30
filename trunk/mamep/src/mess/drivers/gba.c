@@ -33,7 +33,7 @@ static UINT8 gba_eeprom[0x2000];
 static UINT32 gba_flash64k[0x10000/4];
 static UINT16 mosaic_offset[16][4096];
 
-INLINE void verboselog( int n_level, const char *s_fmt, ... )
+INLINE void verboselog(running_machine *machine, int n_level, const char *s_fmt, ...)
 {
 	if( VERBOSE_LEVEL >= n_level )
 	{
@@ -42,9 +42,7 @@ INLINE void verboselog( int n_level, const char *s_fmt, ... )
 		va_start( v, s_fmt );
 		vsprintf( buf, s_fmt, v );
 		va_end( v );
-		cpuintrf_push_context(0);
-		logerror( "%08x: %s", activecpu_get_pc(), buf );
-		cpuintrf_pop_context();
+		logerror( "%08x: %s", cpu_get_pc(machine->cpu[0]), buf );
 	}
 }
 
@@ -479,7 +477,7 @@ void draw_mode5_scanline(UINT16 *scanline, int y)
 	}
 }
 
-static void draw_oam(UINT16 *scanline, int y, int priority)
+static void draw_oam(running_machine *machine, UINT16 *scanline, int y, int priority)
 {
 	INT16 oamindex;
 	UINT8 tilex, tiley;
@@ -569,7 +567,7 @@ static void draw_oam(UINT16 *scanline, int y, int priority)
 					default:
 						width = 0;
 						height = 0;
-						verboselog( 0, "OAM error: Trying to draw OBJ with OBJ_SHAPE = 3!\n" );
+						verboselog(machine, 0, "OAM error: Trying to draw OBJ with OBJ_SHAPE = 3!\n" );
 						break;
 				}
 
@@ -676,7 +674,7 @@ static void draw_oam(UINT16 *scanline, int y, int priority)
 	}
 }
 
-void gba_draw_scanline(int y)
+void gba_draw_scanline(running_machine *machine, int y)
 {
 	UINT16 *ppram = (UINT16 *)pram, *scanline;
 	int prio;
@@ -714,7 +712,7 @@ void gba_draw_scanline(int y)
 				draw_bg_scanline(&xferscan[1024], y, DISPCNT_BG2_EN, gba.BG2CNT, gba.BG2HOFS, gba.BG2VOFS, prio);
 				draw_bg_scanline(&xferscan[1024], y, DISPCNT_BG1_EN, gba.BG1CNT, gba.BG1HOFS, gba.BG1VOFS, prio);
 				draw_bg_scanline(&xferscan[1024], y, DISPCNT_BG0_EN, gba.BG0CNT, gba.BG0HOFS, gba.BG0VOFS, prio);
-				draw_oam(&xferscan[1024], y, prio);
+				draw_oam(machine, &xferscan[1024], y, prio);
 			}
 			break;
 
@@ -724,7 +722,7 @@ void gba_draw_scanline(int y)
 				draw_roz_scanline(&xferscan[1024], y, DISPCNT_BG2_EN, gba.BG2CNT, gba.BG2X, gba.BG2Y, gba.BG2PA, gba.BG2PB, gba.BG2PC, gba.BG2PD, prio);
 				draw_bg_scanline(&xferscan[1024], y, DISPCNT_BG1_EN, gba.BG1CNT, gba.BG1HOFS, gba.BG1VOFS, prio);
 				draw_bg_scanline(&xferscan[1024], y, DISPCNT_BG0_EN, gba.BG0CNT, gba.BG0HOFS, gba.BG0VOFS, prio);
-				draw_oam(&xferscan[1024], y, prio);
+				draw_oam(machine, &xferscan[1024], y, prio);
 			}
 			break;
 
@@ -733,32 +731,32 @@ void gba_draw_scanline(int y)
 			{
 				draw_roz_scanline(&xferscan[1024], y, DISPCNT_BG3_EN, gba.BG3CNT, gba.BG3X, gba.BG3Y, gba.BG3PA, gba.BG3PB, gba.BG3PC, gba.BG3PD, prio);
 				draw_roz_scanline(&xferscan[1024], y, DISPCNT_BG2_EN, gba.BG2CNT, gba.BG2X, gba.BG2Y, gba.BG2PA, gba.BG2PB, gba.BG2PC, gba.BG2PD, prio);
-				draw_oam(&xferscan[1024], y, prio);
+				draw_oam(machine, &xferscan[1024], y, prio);
 			}
 			break;
 
 		case 3:
 			draw_mode3_scanline(&xferscan[1024], y);
-			draw_oam(&xferscan[1024], y, 3);
-			draw_oam(&xferscan[1024], y, 2);
-			draw_oam(&xferscan[1024], y, 1);
-			draw_oam(&xferscan[1024], y, 0);
+			draw_oam(machine, &xferscan[1024], y, 3);
+			draw_oam(machine, &xferscan[1024], y, 2);
+			draw_oam(machine, &xferscan[1024], y, 1);
+			draw_oam(machine, &xferscan[1024], y, 0);
 			break;
 
 		case 4:
 			draw_mode4_scanline(&xferscan[1024], y);
-			draw_oam(&xferscan[1024], y, 3);
-			draw_oam(&xferscan[1024], y, 2);
-			draw_oam(&xferscan[1024], y, 1);
-			draw_oam(&xferscan[1024], y, 0);
+			draw_oam(machine, &xferscan[1024], y, 3);
+			draw_oam(machine, &xferscan[1024], y, 2);
+			draw_oam(machine, &xferscan[1024], y, 1);
+			draw_oam(machine, &xferscan[1024], y, 0);
 			break;
 
 		case 5:
 			draw_mode5_scanline(&xferscan[1024], y);
-			draw_oam(&xferscan[1024], y, 3);
-			draw_oam(&xferscan[1024], y, 2);
-			draw_oam(&xferscan[1024], y, 1);
-			draw_oam(&xferscan[1024], y, 0);
+			draw_oam(machine, &xferscan[1024], y, 3);
+			draw_oam(machine, &xferscan[1024], y, 2);
+			draw_oam(machine, &xferscan[1024], y, 1);
+			draw_oam(machine, &xferscan[1024], y, 0);
 			break;
 	}
 
@@ -784,7 +782,7 @@ static void gba_request_irq(running_machine *machine, UINT32 int_type)
 		if (gba.IME & 1)
 		{
 //			printf("IRQ %04x\n", int_type);
-			cpunum_set_input_line(machine, 0, ARM7_IRQ_LINE, PULSE_LINE);
+			cpu_set_input_line(machine->cpu[0], ARM7_IRQ_LINE, PULSE_LINE);
 		}
 	}
 }
@@ -838,8 +836,7 @@ static void dma_exec(running_machine *machine, FPTR ch)
 	int ctrl;
 	int srcadd, dstadd;
 	UINT32 src, dst;
-
-	cpuintrf_push_context(0);
+	const address_space *space = cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM);
 
 	src = dma_src[ch];
 	dst = dma_dst[ch];
@@ -891,7 +888,7 @@ static void dma_exec(running_machine *machine, FPTR ch)
 			dst &= 0xfffffffc;
 
 			// 32-bit
-			program_write_dword(dst, program_read_dword(src));
+			memory_write_dword(space, dst, memory_read_dword(space, src));
 			switch (dstadd)
 			{
 				case 0:	// increment
@@ -928,7 +925,7 @@ static void dma_exec(running_machine *machine, FPTR ch)
 			dst &= 0xfffffffe;
 
 		 	// 16-bit
-			program_write_word(dst, program_read_word(src));
+			memory_write_word(space, dst, memory_read_word(space, src));
 			switch (dstadd)
 			{
 				case 0:	// increment
@@ -966,8 +963,6 @@ static void dma_exec(running_machine *machine, FPTR ch)
 //	printf("settng DMA timer %d for %d cycs (tmr %x)\n", ch, cnt, (UINT32)dma_timer[ch]);
 //	timer_adjust_oneshot(dma_timer[ch], ATTOTIME_IN_CYCLES(0, cnt), ch);
 	dma_complete(machine, NULL, ch);
-
-	cpuintrf_pop_context();
 }
 
 static int fifo_a_ptr, fifo_b_ptr, fifo_a_in, fifo_b_in;
@@ -1187,17 +1182,19 @@ TIMER_CALLBACK(handle_irq)
 static READ32_HANDLER( gba_io_r )
 {
 	UINT32 retval = 0;
+	running_machine *machine = space->machine;
+
 	switch( offset )
 	{
 		case 0x0000/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: DISPCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.DISPCNT );
+				verboselog(machine, 2, "GBA IO Register Read: DISPCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.DISPCNT );
 				retval |= gba.DISPCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: Green Swap (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.GRNSWAP );
+				verboselog(machine, 2, "GBA IO Register Read: Green Swap (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.GRNSWAP );
 				retval |= gba.GRNSWAP << 16;
 			}
 			break;
@@ -1207,287 +1204,287 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0008/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG0CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BG0CNT );
+				verboselog(machine, 2, "GBA IO Register Read: BG0CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BG0CNT );
 				retval |= gba.BG0CNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG1CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.BG1CNT );
+				verboselog(machine, 2, "GBA IO Register Read: BG1CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.BG1CNT );
 				retval |= gba.BG1CNT << 16;
 			}
 			break;
 		case 0x000c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BG2CNT );
+				verboselog(machine, 2, "GBA IO Register Read: BG2CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BG2CNT );
 				retval |= gba.BG2CNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.BG3CNT );
+				verboselog(machine, 2, "GBA IO Register Read: BG3CNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.BG3CNT );
 				retval |= gba.BG3CNT << 16;
 			}
 			break;
 		case 0x0010/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG0HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG0HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG0VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG0VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0014/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG1HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG1HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG1VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG1VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0018/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x001c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3HOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3VOFS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0020/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2PA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2PA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2PB (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2PB (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0024/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2PC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2PC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2PD (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2PD (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0028/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2X_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2X_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2X_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2X_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x002c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2Y_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2Y_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG2Y_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG2Y_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0030/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3PA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3PA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3PB (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3PB (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0034/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3PC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3PC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3PD (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3PD (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0038/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3X_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3X_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3X_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3X_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x003c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3Y_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3Y_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BG3Y_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BG3Y_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0040/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: WIN0H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: WIN0H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: WIN1H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: WIN1H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0044/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: WIN0V (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: WIN0V (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: WIN1V (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: WIN1V (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0048/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: WININ (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.WININ );
+				verboselog(machine, 2, "GBA IO Register Read: WININ (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.WININ );
 				retval |= gba.WININ;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: WINOUT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.WINOUT );
+				verboselog(machine, 2, "GBA IO Register Read: WINOUT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.WINOUT );
 				retval |= gba.WINOUT << 16;
 			}
 			break;
 		case 0x004c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: MOSAIC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: MOSAIC (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0050/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BLDCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BLDCNT );
+				verboselog(machine, 2, "GBA IO Register Read: BLDCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.BLDCNT );
 				retval |= gba.BLDCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: BLDALPHA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BLDALPHA (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0054/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: BLDY (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: BLDY (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0058/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x005c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), 0 );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0060/4:
-			retval = gb_sound_r(machine, 0) | gb_sound_r(machine, 1)<<16 | gb_sound_r(machine, 2)<<24;
+			retval = gb_sound_r(space, 0) | gb_sound_r(space, 1)<<16 | gb_sound_r(space, 2)<<24;
 			break;
 		case 0x0064/4:
-			retval = gb_sound_r(machine, 3) | gb_sound_r(machine, 4)<<8;
+			retval = gb_sound_r(space, 3) | gb_sound_r(space, 4)<<8;
 			break;
 		case 0x0068/4:
-			retval = gb_sound_r(machine, 6) | gb_sound_r(machine, 7)<<8;
+			retval = gb_sound_r(space, 6) | gb_sound_r(space, 7)<<8;
 			break;
 		case 0x006c/4:
-			retval = gb_sound_r(machine, 8) | gb_sound_r(machine, 9)<<8;
+			retval = gb_sound_r(space, 8) | gb_sound_r(space, 9)<<8;
 			break;
 		case 0x0070/4:
-			retval = gb_sound_r(machine, 0xa) | gb_sound_r(machine, 0xb)<<16 | gb_sound_r(machine, 0xc)<<24;
+			retval = gb_sound_r(space, 0xa) | gb_sound_r(space, 0xb)<<16 | gb_sound_r(space, 0xc)<<24;
 			break;
 		case 0x0074/4:
-			retval = gb_sound_r(machine, 0xd) | gb_sound_r(machine, 0xe)<<8;
+			retval = gb_sound_r(space, 0xd) | gb_sound_r(space, 0xe)<<8;
 			break;
 		case 0x0078/4:
-			retval = gb_sound_r(machine, 0x10) | gb_sound_r(machine, 0x11)<<8;
+			retval = gb_sound_r(space, 0x10) | gb_sound_r(space, 0x11)<<8;
 			break;
 		case 0x007c/4:
-			retval = gb_sound_r(machine, 0x12) | gb_sound_r(machine, 0x13)<<8;
+			retval = gb_sound_r(space, 0x12) | gb_sound_r(space, 0x13)<<8;
 			break;
 		case 0x0080/4:
-			retval = gb_sound_r(machine, 0x14) | gb_sound_r(machine, 0x15)<<8;
+			retval = gb_sound_r(space, 0x14) | gb_sound_r(space, 0x15)<<8;
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: SOUNDCNT_H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SOUNDCNT_H );
+				verboselog(machine, 2, "GBA IO Register Read: SOUNDCNT_H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SOUNDCNT_H );
 				retval |= gba.SOUNDCNT_H << 16;
 			}
 			break;
 		case 0x0084/4:
-			retval = gb_sound_r(machine, 0x16);
+			retval = gb_sound_r(space, 0x16);
 			break;
 		case 0x0088/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: SOUNDBIAS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SOUNDBIAS );
+				verboselog(machine, 2, "GBA IO Register Read: SOUNDBIAS (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SOUNDBIAS );
 				retval |= gba.SOUNDBIAS;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0090/4:
-			retval = gb_wave_r(machine, 0) | gb_wave_r(machine, 1)<<8 | gb_wave_r(machine, 2)<<16 | gb_wave_r(machine, 3)<<24;
+			retval = gb_wave_r(space, 0) | gb_wave_r(space, 1)<<8 | gb_wave_r(space, 2)<<16 | gb_wave_r(space, 3)<<24;
 			break;
 		case 0x0094/4:
-			retval = gb_wave_r(machine, 4) | gb_wave_r(machine, 5)<<8 | gb_wave_r(machine, 6)<<16 | gb_wave_r(machine, 7)<<24;
+			retval = gb_wave_r(space, 4) | gb_wave_r(space, 5)<<8 | gb_wave_r(space, 6)<<16 | gb_wave_r(space, 7)<<24;
 			break;
 		case 0x0098/4:
-			retval = gb_wave_r(machine, 8) | gb_wave_r(machine, 9)<<8 | gb_wave_r(machine, 10)<<16 | gb_wave_r(machine, 11)<<24;
+			retval = gb_wave_r(space, 8) | gb_wave_r(space, 9)<<8 | gb_wave_r(space, 10)<<16 | gb_wave_r(space, 11)<<24;
 			break;
 		case 0x009c/4:
-			retval = gb_wave_r(machine, 12) | gb_wave_r(machine, 13)<<8 | gb_wave_r(machine, 14)<<16 | gb_wave_r(machine, 15)<<24;
+			retval = gb_wave_r(space, 12) | gb_wave_r(space, 13)<<8 | gb_wave_r(space, 14)<<16 | gb_wave_r(space, 15)<<24;
 			break;
 		case 0x00a0/4:
 		case 0x00a4/4:
@@ -1524,36 +1521,36 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0120/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: SIOMULTI0 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOMULTI0 );
+				verboselog(machine, 2, "GBA IO Register Read: SIOMULTI0 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOMULTI0 );
 				retval |= gba.SIOMULTI0;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: SIOMULTI1 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIOMULTI1 );
+				verboselog(machine, 2, "GBA IO Register Read: SIOMULTI1 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIOMULTI1 );
 				retval |= gba.SIOMULTI1 << 16;
 			}
 			break;
 		case 0x0124/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: SIOMULTI2 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOMULTI2 );
+				verboselog(machine, 2, "GBA IO Register Read: SIOMULTI2 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOMULTI2 );
 				retval |= gba.SIOMULTI2;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: SIOMULTI3 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIOMULTI3 );
+				verboselog(machine, 2, "GBA IO Register Read: SIOMULTI3 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIOMULTI3 );
 				retval |= gba.SIOMULTI3 << 16;
 			}
 			break;
 		case 0x0128/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: SIOCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOCNT );
+				verboselog(machine, 2, "GBA IO Register Read: SIOCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.SIOCNT );
 				retval |= gba.SIOCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: SIODATA8 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIODATA8 );
+				verboselog(machine, 2, "GBA IO Register Read: SIODATA8 (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SIODATA8 );
 				retval |= gba.SIODATA8 << 16;
 			}
 			break;
@@ -1564,75 +1561,75 @@ static READ32_HANDLER( gba_io_r )
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: KEYCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.KEYCNT );
+				verboselog(machine, 2, "GBA IO Register Read: KEYCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.KEYCNT );
 				retval |= gba.KEYCNT << 16;
 			}
 			break;
 		case 0x0134/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: RCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.RCNT );
+				verboselog(machine, 2, "GBA IO Register Read: RCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.RCNT );
 				retval |= gba.RCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: IR (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: IR (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0140/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: JOYCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOYCNT );
+				verboselog(machine, 2, "GBA IO Register Read: JOYCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOYCNT );
 				retval |= gba.JOYCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0150/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: JOY_RECV_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOY_RECV & 0x0000ffff );
+				verboselog(machine, 2, "GBA IO Register Read: JOY_RECV_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOY_RECV & 0x0000ffff );
 				retval |= gba.JOY_RECV & 0x0000ffff;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: JOY_RECV_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, ( gba.JOY_RECV & 0xffff0000 ) >> 16 );
+				verboselog(machine, 2, "GBA IO Register Read: JOY_RECV_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, ( gba.JOY_RECV & 0xffff0000 ) >> 16 );
 				retval |= gba.JOY_RECV & 0xffff0000;
 			}
 			break;
 		case 0x0154/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: JOY_TRANS_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOY_TRANS & 0x0000ffff );
+				verboselog(machine, 2, "GBA IO Register Read: JOY_TRANS_LSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOY_TRANS & 0x0000ffff );
 				retval |= gba.JOY_TRANS & 0x0000ffff;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: JOY_TRANS_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, ( gba.JOY_TRANS & 0xffff0000 ) >> 16 );
+				verboselog(machine, 2, "GBA IO Register Read: JOY_TRANS_MSW (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, ( gba.JOY_TRANS & 0xffff0000 ) >> 16 );
 				retval |= gba.JOY_TRANS & 0xffff0000;
 			}
 			break;
 		case 0x0158/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: JOYSTAT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOYSTAT );
+				verboselog(machine, 2, "GBA IO Register Read: JOYSTAT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.JOYSTAT );
 				retval |= gba.JOYSTAT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0200/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: IE (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.IE );
+				verboselog(machine, 2, "GBA IO Register Read: IE (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.IE );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: IF (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.IF );
+				verboselog(machine, 2, "GBA IO Register Read: IF (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.IF );
 			}
 
 			retval = gba.IE | (gba.IF<<16);
@@ -1640,30 +1637,30 @@ static READ32_HANDLER( gba_io_r )
 		case 0x0204/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: WAITCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.WAITCNT );
+				verboselog(machine, 2, "GBA IO Register Read: WAITCNT (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.WAITCNT );
 				retval |= gba.WAITCNT;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0208/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Read: IME (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.IME );
+				verboselog(machine, 2, "GBA IO Register Read: IME (%08x) = %04x\n", 0x04000000 + ( offset << 2 ), gba.IME );
 				retval |= gba.IME;
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
+				verboselog(machine, 2, "GBA IO Register Read: UNKNOWN (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, 0 );
 			}
 			break;
 		case 0x0300/4:
 			retval = gba.HALTCNT << 8;
 			break;
 		default:
-//			verboselog( 0, "Unknown GBA I/O register Read: %08x (%08x)\n", 0x04000000 + ( offset << 2 ), ~mem_mask );
+//			verboselog(machine, 0, "Unknown GBA I/O register Read: %08x (%08x)\n", 0x04000000 + ( offset << 2 ), ~mem_mask );
 			break;
 	}
 	return retval;
@@ -1671,97 +1668,99 @@ static READ32_HANDLER( gba_io_r )
 
 static WRITE32_HANDLER( gba_io_w )
 {
+	running_machine *machine = space->machine;
+
 	switch( offset )
 	{
 		case 0x0000/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: DISPCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: DISPCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.DISPCNT = ( gba.DISPCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			break;
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: Green Swap (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: Green Swap (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 				gba.GRNSWAP = ( gba.GRNSWAP & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0004/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: DISPSTAT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: DISPSTAT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.DISPSTAT = ( gba.DISPSTAT & ~mem_mask ) | ( data & mem_mask ) ;
 			}
 			break;
 		case 0x0008/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG0CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG0CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG0CNT = ( gba.BG0CNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG1CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG1CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG1CNT = ( gba.BG1CNT & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x000c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG2CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2CNT = ( gba.BG2CNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3CNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3CNT = ( gba.BG3CNT & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0010/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG0HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG0HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG0HOFS = ( gba.BG0HOFS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG0VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG0VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG0VOFS = ( gba.BG0VOFS & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0014/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG1HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG1HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG1HOFS = ( gba.BG1HOFS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG1VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG1VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG1VOFS = ( gba.BG1VOFS & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0018/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG2HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2HOFS = ( gba.BG2HOFS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG2VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG2VOFS = ( gba.BG2VOFS & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x001c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3HOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG3HOFS = ( gba.BG3HOFS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3VOFS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3VOFS = ( gba.BG3VOFS & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
@@ -1816,237 +1815,237 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0030/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3PA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3PA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG3PA = ( gba.BG3PA & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3PB (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3PB (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3PB = ( gba.BG3PB & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0034/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3PC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3PC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG3PC = ( gba.BG3PC & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3PD (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3PD (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3PD = ( gba.BG3PD & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0038/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3X_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3X_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG3X = ( gba.BG3X & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3X_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3X_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3X = ( gba.BG3X & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x003c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3Y_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3Y_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG3Y = ( gba.BG3Y & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BG3Y_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG3Y_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG3Y = ( gba.BG3Y & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0040/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: WIN0H (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WIN0H (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.WIN0H = ( gba.WIN0H & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: WIN1H (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WIN1H (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.WIN1H = ( gba.WIN1H & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0044/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: WIN0V (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WIN0V (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.WIN0V = ( gba.WIN0V & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: WIN1V (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WIN1V (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.WIN1V = ( gba.WIN1V & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0048/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: WININ (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WININ (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.WININ = ( gba.WININ & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: WINOUT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WINOUT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.WINOUT = ( gba.WINOUT & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x004c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: MOSAIC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: MOSAIC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.MOSAIC = ( gba.MOSAIC & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0050/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BLDCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BLDCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BLDCNT = ( gba.BLDCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: BLDALPHA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BLDALPHA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BLDALPHA = ( gba.BLDALPHA & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0054/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: BLDY (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BLDY (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BLDY = ( gba.BLDY & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0058/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x005c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0060/4:
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(machine, 0, data);
+				gb_sound_w(space, 0, data);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(machine, 1, data>>16);	// SOUND1CNT_H
+				gb_sound_w(space, 1, data>>16);	// SOUND1CNT_H
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(machine, 2, data>>24);
+				gb_sound_w(space, 2, data>>24);
 			}
 			break;
 		case 0x0064/4:
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(machine, 3, data);
+				gb_sound_w(space, 3, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 4, data>>8);	// SOUND1CNT_H
+				gb_sound_w(space, 4, data>>8);	// SOUND1CNT_H
 			}
 			break;
 		case 0x0068/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 6, data);
+				gb_sound_w(space, 6, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 7, data>>8);
+				gb_sound_w(space, 7, data>>8);
 			}
 			break;
 		case 0x006c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 8, data);
+				gb_sound_w(space, 8, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 9, data>>8);
+				gb_sound_w(space, 9, data>>8);
 			}
 			break;
 		case 0x0070/4:	//SND3CNTL and H
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(machine, 0xa, data);
+				gb_sound_w(space, 0xa, data);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(machine, 0xb, data>>16);	// SOUND1CNT_H
+				gb_sound_w(space, 0xb, data>>16);	// SOUND1CNT_H
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(machine, 0xc, data>>24);
+				gb_sound_w(space, 0xc, data>>24);
 			}
 			break;
 		case 0x0074/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 0xd, data);
+				gb_sound_w(space, 0xd, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 0xe, data>>8);
+				gb_sound_w(space, 0xe, data>>8);
 			}
 			break;
 		case 0x0078/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 0x10, data);
+				gb_sound_w(space, 0x10, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 0x11, data>>8);
+				gb_sound_w(space, 0x11, data>>8);
 			}
 			break;
 		case 0x007c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 0x12, data);
+				gb_sound_w(space, 0x12, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 0x13, data>>8);
+				gb_sound_w(space, 0x13, data>>8);
 			}
 			break;
 		case 0x0080/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 0x14, data);
+				gb_sound_w(space, 0x14, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(machine, 0x15, data>>8);
+				gb_sound_w(space, 0x15, data>>8);
 			}
 
 			if ((mem_mask) & 0xffff0000)
@@ -2076,7 +2075,7 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0084/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(machine, 0x16, data);
+				gb_sound_w(space, 0x16, data);
 				if ((data & 0x80) && !(gba.SOUNDCNT_X & 0x80))
 				{
 					fifo_a_ptr = fifo_a_in = 17;
@@ -2092,84 +2091,84 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0088/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: SOUNDBIAS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SOUNDBIAS (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.SOUNDBIAS = ( gba.SOUNDBIAS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0090/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(machine, 0, data);
+				gb_wave_w(space, 0, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(machine, 1, data>>8);
+				gb_wave_w(space, 1, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(machine, 2, data>>16);
+				gb_wave_w(space, 2, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(machine, 3, data>>24);
+				gb_wave_w(space, 3, data>>24);
 			}
 			break;
 		case 0x0094/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(machine, 4, data);
+				gb_wave_w(space, 4, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(machine, 5, data>>8);
+				gb_wave_w(space, 5, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(machine, 6, data>>16);
+				gb_wave_w(space, 6, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(machine, 7, data>>24);
+				gb_wave_w(space, 7, data>>24);
 			}
 			break;
 		case 0x0098/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(machine, 8, data);
+				gb_wave_w(space, 8, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(machine, 9, data>>8);
+				gb_wave_w(space, 9, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(machine, 0xa, data>>16);
+				gb_wave_w(space, 0xa, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(machine, 0xb, data>>24);
+				gb_wave_w(space, 0xb, data>>24);
 			}
 			break;
 		case 0x009c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(machine, 0xc, data);
+				gb_wave_w(space, 0xc, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(machine, 0xd, data>>8);
+				gb_wave_w(space, 0xd, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(machine, 0xe, data>>16);
+				gb_wave_w(space, 0xe, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(machine, 0xf, data>>24);
+				gb_wave_w(space, 0xf, data>>24);
 			}
 			break;
 		case 0x00a0/4:
@@ -2287,36 +2286,36 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0120/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: SIOMULTI0 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIOMULTI0 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.SIOMULTI0 = ( gba.SIOMULTI0 & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: SIOMULTI1 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIOMULTI1 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.SIOMULTI1 = ( gba.SIOMULTI1 & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0124/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: SIOMULTI2 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIOMULTI2 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.SIOMULTI2 = ( gba.SIOMULTI2 & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: SIOMULTI3 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIOMULTI3 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.SIOMULTI3 = ( gba.SIOMULTI3 & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0128/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: SIOCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIOCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.SIOCNT = ( gba.SIOCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: SIODATA8 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: SIODATA8 (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.SIODATA8 = ( gba.SIODATA8 & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
@@ -2324,77 +2323,77 @@ static WRITE32_HANDLER( gba_io_w )
 			if( (mem_mask) & 0xffff0000 )
 			{
 //				printf("KEYCNT = %04x\n", data>>16);
-				verboselog( 2, "GBA IO Register Write: KEYCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: KEYCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.KEYCNT = ( gba.KEYCNT & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0134/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: RCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: RCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.RCNT = ( gba.RCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: IR (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: IR (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.IR = ( gba.IR & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0140/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: JOYCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOYCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.JOYCNT = ( gba.JOYCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0150/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: JOY_RECV_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOY_RECV_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.JOY_RECV = ( gba.JOY_RECV & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: JOY_RECV_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOY_RECV_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.JOY_RECV = ( gba.JOY_RECV & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0154/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: JOY_TRANS_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOY_TRANS_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.JOY_TRANS = ( gba.JOY_TRANS & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: JOY_TRANS_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOY_TRANS_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
                 gba.JOY_TRANS = ( gba.JOY_TRANS & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0158/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: JOYSTAT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: JOYSTAT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.JOYSTAT = ( gba.JOYSTAT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0200/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: IE (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: IE (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.IE = ( gba.IE & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: IF (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ) + 2, ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: IF (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ) + 2, ( data & mem_mask ) >> 16, ~mem_mask );
 				gba.IF &= ~( ( data & mem_mask ) >> 16 );
 
 				// if we still have interrupts, yank the IRQ line again
@@ -2407,18 +2406,18 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0204/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 2, "GBA IO Register Write: WAITCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: WAITCNT (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.WAITCNT = ( gba.WAITCNT & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0208/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				verboselog( 3, "GBA IO Register Write: IME (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
+				verboselog(machine, 3, "GBA IO Register Write: IME (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & mem_mask, ~mem_mask );
 				gba.IME = ( gba.IME & ~mem_mask ) | ( data & mem_mask );
 				if (gba.IF)
 				{
@@ -2427,7 +2426,7 @@ static WRITE32_HANDLER( gba_io_w )
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 3, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
+				verboselog(machine, 3, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & mem_mask ) >> 16, ~mem_mask );
 			}
 			break;
 		case 0x0300/4:
@@ -2435,7 +2434,7 @@ static WRITE32_HANDLER( gba_io_w )
 			{
 				if( (mem_mask) & 0x000000ff )
 				{
-					verboselog( 2, "GBA IO Register Write: POSTFLG (%08x) = %02x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x000000ff, ~mem_mask );
+					verboselog(machine, 2, "GBA IO Register Write: POSTFLG (%08x) = %02x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x000000ff, ~mem_mask );
 					gba.POSTFLG = data & 0x000000ff;
 				}
 				else
@@ -2443,16 +2442,16 @@ static WRITE32_HANDLER( gba_io_w )
 					gba.HALTCNT = data & 0x000000ff;
 
 					// either way, wait for an IRQ
-					cpu_spinuntil_int();
+					cpu_spinuntil_int(machine->cpu[0]);
 				}
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				verboselog( 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: UNKNOWN (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 			}
 			break;
 		default:
-//			verboselog( 0, "Unknown GBA I/O register write: %08x = %08x (%08x)\n", 0x04000000 + ( offset << 2 ), data, ~mem_mask );
+//			verboselog(machine, 0, "Unknown GBA I/O register write: %08x = %08x (%08x)\n", 0x04000000 + ( offset << 2 ), data, ~mem_mask );
 			break;
 	}
 }
@@ -2492,10 +2491,7 @@ TIMER_CALLBACK( perform_hbl )
 {
 	int ch, ctrl;
 
-	// make the ARM7 current
-	cpuintrf_push_context(0);
-
-	gba_draw_scanline(video_screen_get_vpos(machine->primary_screen));
+	gba_draw_scanline(machine, video_screen_get_vpos(machine->primary_screen));
 
 	// we are now in hblank
 	gba.DISPSTAT |= DISPSTAT_HBL;
@@ -2516,16 +2512,11 @@ TIMER_CALLBACK( perform_hbl )
 	}
 
 	timer_adjust_oneshot(hbl_timer, attotime_never, 0);
-
-	cpuintrf_pop_context();
 }
 
 TIMER_CALLBACK( perform_scan )
 {
 	int scanline;
-
-	// make the ARM7 current
-	cpuintrf_push_context(0);
 
 	// no longer in HBL
 	gba.DISPSTAT &= ~DISPSTAT_HBL;
@@ -2592,7 +2583,7 @@ TIMER_CALLBACK( perform_scan )
 							 ( vram[lineindex + byteindex] >>  0 ) & 0x000000ff );
 				}
 				sprintf( charbuf, "%s\n", charbuf );
-				verboselog( 0, "%s", charbuf );
+				verboselog(machine, 0, "%s", charbuf );
 			}
 		}
 	}
@@ -2600,8 +2591,6 @@ TIMER_CALLBACK( perform_scan )
 
 	timer_adjust_oneshot(hbl_timer, video_screen_get_time_until_pos(machine->primary_screen, scanline, 240), 0);
 	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(machine->primary_screen, ( scanline + 1 ) % 228, 0), 0);
-
-	cpuintrf_pop_context();
 }
 
 static MACHINE_RESET( gba )
@@ -2631,10 +2620,10 @@ static MACHINE_RESET( gba )
 	fifo_a_in = fifo_b_in = 17;
 
 	// and clear the DACs
-	dac_signed_data_w(0, 0x80);
-	dac_signed_data_w(1, 0x80);
-	dac_signed_data_w(2, 0x80);
-	dac_signed_data_w(3, 0x80);
+        dac_signed_data_w(0, 0x80);
+        dac_signed_data_w(1, 0x80);
+        dac_signed_data_w(2, 0x80);
+        dac_signed_data_w(3, 0x80);
 }
 
 static MACHINE_START( gba )
@@ -2708,13 +2697,13 @@ static MACHINE_DRIVER_START( gbadv )
 	MDRV_SOUND_CONFIG(gameboy_sound_interface)
 	MDRV_SOUND_ROUTE(0, "left", 0.50)
 	MDRV_SOUND_ROUTE(1, "right", 0.50)
-	MDRV_SOUND_ADD("direct A left", DAC, 0)			// GBA direct sound A left
+	MDRV_SOUND_ADD("direct_a_left", DAC, 0)			// GBA direct sound A left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("direct A right", DAC, 0)		// GBA direct sound A right
+	MDRV_SOUND_ADD("direct_a_right", DAC, 0)		// GBA direct sound A right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
-	MDRV_SOUND_ADD("direct B left", DAC, 0)			// GBA direct sound B left
+	MDRV_SOUND_ADD("direct_b_left", DAC, 0)			// GBA direct sound B left
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("direct B right", DAC, 0)		// GBA direct sound B right
+	MDRV_SOUND_ADD("direct_b_right", DAC, 0)		// GBA direct sound B right
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
 MACHINE_DRIVER_END
 
@@ -2865,17 +2854,17 @@ static WRITE32_HANDLER( flash64k_w )
         case FLASH_IDENT:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( machine, offset, data, ~mem_mask );
+            flash64k_w( space, offset, data, ~mem_mask );
             break;
         case FLASH_ERASE_4K:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( machine, offset, data, ~mem_mask );
+            flash64k_w( space, offset, data, ~mem_mask );
             break;
         case FLASH_ERASE_ALL:
             // Hack; any sensibly-written game should follow up with the relevant read, which will reset the state to FLASH_IDLEBYTE0.
             flash64k_state = FLASH_IDLEBYTE0;
-            flash64k_w( machine, offset, data, ~mem_mask );
+            flash64k_w( space, offset, data, ~mem_mask );
             break;
         case FLASH_WRITE:
             COMBINE_DATA(&gba_flash64k[offset]);
@@ -3023,7 +3012,7 @@ static WRITE32_HANDLER( eeprom_w )
 
 			if (eeprom_bits == 0)
 			{
-				printf("%08x: EEPROM: %02x to %x\n", activecpu_get_pc(), eep_data, eeprom_addr );
+				printf("%08x: EEPROM: %02x to %x\n", cpu_get_pc(space->	machine->cpu[0]), eep_data, eeprom_addr );
 				gba_eeprom[eeprom_addr] = eep_data;
 				eeprom_addr++;
 				eep_data = 0;
@@ -3061,13 +3050,13 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 
 			if (image_length(image) <= (16*1024*1024))
 			{
-				memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xd000000, 0xdffffff, 0, 0, eeprom_w);
+				memory_install_read32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_r);
+				memory_install_write32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xd000000, 0xdffffff, 0, 0, eeprom_w);
 			}
 			else
 			{
-				memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
-				memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
+				memory_install_read32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_r);
+				memory_install_write32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xdffff00, 0xdffffff, 0, 0, eeprom_w);
 			}
 			break;
 		}
@@ -3076,8 +3065,8 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 			nvptr = (UINT8 *)&gba_sram;
 			nvsize = 0x10000;
 
-			memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_r);
-			memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe00ffff, 0, 0, sram_w);
+			memory_install_read32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_r);
+			memory_install_write32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe00ffff, 0, 0, sram_w);
 			break;
 		}
 		else if (!memcmp(&ROM[i], "FLASH1M_", 8))
@@ -3090,8 +3079,8 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 			nvptr = (UINT8 *)&gba_flash64k;
 			nvsize = 0x10000;
 
-			memory_install_read32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_r);
-			memory_install_write32_handler(image->machine, 0, ADDRESS_SPACE_PROGRAM, 0xe000000, 0xe007fff, 0, 0, flash64k_w);
+			memory_install_read32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe007fff, 0, 0, flash64k_r);
+			memory_install_write32_handler(cpu_get_address_space(image->machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xe000000, 0xe007fff, 0, 0, flash64k_w);
 			break;
 		}
 		else if (!memcmp(&ROM[i], "SIIRTC_V", 8))
@@ -3152,16 +3141,15 @@ SYSTEM_CONFIG_END
 
 /* this emulates the GBA's hardware protection: the BIOS returns only zeros when the PC is not in it,
    and some games verify that as a protection check (notably Metroid Fusion) */
-
-static OPBASE_HANDLER( gba_setopbase )
+static DIRECT_UPDATE_HANDLER( gba_direct )
 {
 	if (address > 0x4000)
 	{
-		memory_set_bankptr(1, memory_region(machine, "bios")+0x4000);
+		memory_set_bankptr(space->machine, 1, memory_region(space->machine, "bios")+0x4000);
 	}
 	else
 	{
-		memory_set_bankptr(1, memory_region(machine, "bios"));
+		memory_set_bankptr(space->machine, 1, memory_region(space->machine, "bios"));
 	}
 
 	return address;
@@ -3169,7 +3157,7 @@ static OPBASE_HANDLER( gba_setopbase )
 
 static DRIVER_INIT(gbadv)
 {
-	memory_set_opbase_handler(0, gba_setopbase);
+	memory_set_direct_update_handler( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), gba_direct );
 
 	state_save_register_global_array(gba_sram);
 	state_save_register_global_array(gba_eeprom);
@@ -3185,65 +3173,65 @@ static DRIVER_INIT(gbadv)
 	state_save_register_global_array(timer_regs);
 	state_save_register_global_array(timer_reload);
 	      
-	state_save_register_item("DISPCNT", 0, gba.DISPCNT);
-	state_save_register_item("GRNSWAP", 0, gba.GRNSWAP);
-	state_save_register_item("DISPSTAT", 0, gba.DISPSTAT);
-	state_save_register_item("BG0CNT", 0, gba.BG0CNT);
-	state_save_register_item("BG1CNT", 0, gba.BG1CNT);
-	state_save_register_item("BG2CNT", 0, gba.BG2CNT);
-	state_save_register_item("BG3CNT", 0, gba.BG3CNT);
-	state_save_register_item("BG0HOFS", 0, gba.BG0HOFS);
-	state_save_register_item("BG0VOFS", 0, gba.BG0VOFS);
-	state_save_register_item("BG1HOFS", 0, gba.BG1HOFS);
-	state_save_register_item("BG1VOFS", 0, gba.BG1VOFS);
-	state_save_register_item("BG2HOFS", 0, gba.BG2HOFS);
-	state_save_register_item("BG2VOFS", 0, gba.BG2VOFS);
-	state_save_register_item("BG3HOFS", 0, gba.BG3HOFS);
-	state_save_register_item("BG3VOFS", 0, gba.BG3VOFS);
-	state_save_register_item("BG2PA", 0, gba.BG2PA);
-	state_save_register_item("BG2PB", 0, gba.BG2PB);
-	state_save_register_item("BG2PC", 0, gba.BG2PC);
-	state_save_register_item("BG2PD", 0, gba.BG2PD);
-	state_save_register_item("BG3PA", 0, gba.BG3PA);
-	state_save_register_item("BG3PB", 0, gba.BG3PB);
-	state_save_register_item("BG3PC", 0, gba.BG3PC);
-	state_save_register_item("BG3PD", 0, gba.BG3PD);
-	state_save_register_item("BG2X", 0, gba.BG2X);
-	state_save_register_item("BG2Y", 0, gba.BG2Y);
-	state_save_register_item("BG3X", 0, gba.BG3X);
-	state_save_register_item("BG3Y", 0, gba.BG3Y);
-	state_save_register_item("WIN0H", 0, gba.WIN0H);
-	state_save_register_item("WIN1H", 0, gba.WIN1H);
-	state_save_register_item("WIN0V", 0, gba.WIN0V);
-	state_save_register_item("WIN1V", 0, gba.WIN1V);
-	state_save_register_item("WININ", 0, gba.WININ);
-	state_save_register_item("WINOUT", 0, gba.WINOUT);
-	state_save_register_item("MOSAIC", 0, gba.MOSAIC);
-	state_save_register_item("BLDCNT", 0, gba.BLDCNT);
-	state_save_register_item("BLDALPHA", 0, gba.BLDALPHA);
-	state_save_register_item("BLDY", 0, gba.BLDY);
-	state_save_register_item("SOUNDCNT_X", 0, gba.SOUNDCNT_X);
-	state_save_register_item("SOUNDCNT_H", 0, gba.SOUNDCNT_H);
-	state_save_register_item("SOUNDBIAS", 0, gba.SOUNDBIAS);
-	state_save_register_item("SIOMULTI0", 0, gba.SIOMULTI0);
-	state_save_register_item("SIOMULTI1", 0, gba.SIOMULTI1);
-	state_save_register_item("SIOMULTI2", 0, gba.SIOMULTI2);
-	state_save_register_item("SIOMULTI3", 0, gba.SIOMULTI3);
-	state_save_register_item("SIOCNT", 0, gba.SIOCNT);
-	state_save_register_item("SIODATA8", 0, gba.SIODATA8);
-	state_save_register_item("KEYCNT", 0, gba.KEYCNT);
-	state_save_register_item("RCNT", 0, gba.RCNT);
-	state_save_register_item("JOYCNT", 0, gba.JOYCNT);
-	state_save_register_item("JOY_RECV", 0, gba.JOY_RECV);
-	state_save_register_item("JOY_TRANS", 0, gba.JOY_TRANS);
-	state_save_register_item("JOYSTAT", 0, gba.JOYSTAT);
-	state_save_register_item("IR", 0, gba.IR);
-	state_save_register_item("IE", 0, gba.IE);
-	state_save_register_item("IF", 0, gba.IF);
-	state_save_register_item("IME", 0, gba.IME);
-	state_save_register_item("WAITCNT", 0, gba.WAITCNT);
-	state_save_register_item("POSTFLG", 0, gba.POSTFLG);
-	state_save_register_item("HALTCNT", 0, gba.HALTCNT);
+	state_save_register_item("DISPCNT", NULL, 0, gba.DISPCNT);
+	state_save_register_item("GRNSWAP", NULL, 0, gba.GRNSWAP);
+	state_save_register_item("DISPSTAT", NULL, 0, gba.DISPSTAT);
+	state_save_register_item("BG0CNT", NULL, 0, gba.BG0CNT);
+	state_save_register_item("BG1CNT", NULL, 0, gba.BG1CNT);
+	state_save_register_item("BG2CNT", NULL, 0, gba.BG2CNT);
+	state_save_register_item("BG3CNT", NULL, 0, gba.BG3CNT);
+	state_save_register_item("BG0HOFS", NULL, 0, gba.BG0HOFS);
+	state_save_register_item("BG0VOFS", NULL, 0, gba.BG0VOFS);
+	state_save_register_item("BG1HOFS", NULL, 0, gba.BG1HOFS);
+	state_save_register_item("BG1VOFS", NULL, 0, gba.BG1VOFS);
+	state_save_register_item("BG2HOFS", NULL, 0, gba.BG2HOFS);
+	state_save_register_item("BG2VOFS", NULL, 0, gba.BG2VOFS);
+	state_save_register_item("BG3HOFS", NULL, 0, gba.BG3HOFS);
+	state_save_register_item("BG3VOFS", NULL, 0, gba.BG3VOFS);
+	state_save_register_item("BG2PA", NULL, 0, gba.BG2PA);
+	state_save_register_item("BG2PB", NULL, 0, gba.BG2PB);
+	state_save_register_item("BG2PC", NULL, 0, gba.BG2PC);
+	state_save_register_item("BG2PD", NULL, 0, gba.BG2PD);
+	state_save_register_item("BG3PA", NULL, 0, gba.BG3PA);
+	state_save_register_item("BG3PB", NULL, 0, gba.BG3PB);
+	state_save_register_item("BG3PC", NULL, 0, gba.BG3PC);
+	state_save_register_item("BG3PD", NULL, 0, gba.BG3PD);
+	state_save_register_item("BG2X", NULL, 0, gba.BG2X);
+	state_save_register_item("BG2Y", NULL, 0, gba.BG2Y);
+	state_save_register_item("BG3X", NULL, 0, gba.BG3X);
+	state_save_register_item("BG3Y", NULL, 0, gba.BG3Y);
+	state_save_register_item("WIN0H", NULL, 0, gba.WIN0H);
+	state_save_register_item("WIN1H", NULL, 0, gba.WIN1H);
+	state_save_register_item("WIN0V", NULL, 0, gba.WIN0V);
+	state_save_register_item("WIN1V", NULL, 0, gba.WIN1V);
+	state_save_register_item("WININ", NULL, 0, gba.WININ);
+	state_save_register_item("WINOUT", NULL, 0, gba.WINOUT);
+	state_save_register_item("MOSAIC", NULL, 0, gba.MOSAIC);
+	state_save_register_item("BLDCNT", NULL, 0, gba.BLDCNT);
+	state_save_register_item("BLDALPHA", NULL, 0, gba.BLDALPHA);
+	state_save_register_item("BLDY", NULL, 0, gba.BLDY);
+	state_save_register_item("SOUNDCNT_X", NULL, 0, gba.SOUNDCNT_X);
+	state_save_register_item("SOUNDCNT_H", NULL, 0, gba.SOUNDCNT_H);
+	state_save_register_item("SOUNDBIAS", NULL, 0, gba.SOUNDBIAS);
+	state_save_register_item("SIOMULTI0", NULL, 0, gba.SIOMULTI0);
+	state_save_register_item("SIOMULTI1", NULL, 0, gba.SIOMULTI1);
+	state_save_register_item("SIOMULTI2", NULL, 0, gba.SIOMULTI2);
+	state_save_register_item("SIOMULTI3", NULL, 0, gba.SIOMULTI3);
+	state_save_register_item("SIOCNT", NULL, 0, gba.SIOCNT);
+	state_save_register_item("SIODATA8", NULL, 0, gba.SIODATA8);
+	state_save_register_item("KEYCNT", NULL, 0, gba.KEYCNT);
+	state_save_register_item("RCNT", NULL, 0, gba.RCNT);
+	state_save_register_item("JOYCNT", NULL, 0, gba.JOYCNT);
+	state_save_register_item("JOY_RECV", NULL, 0, gba.JOY_RECV);
+	state_save_register_item("JOY_TRANS", NULL, 0, gba.JOY_TRANS);
+	state_save_register_item("JOYSTAT", NULL, 0, gba.JOYSTAT);
+	state_save_register_item("IR", NULL, 0, gba.IR);
+	state_save_register_item("IE", NULL, 0, gba.IE);
+	state_save_register_item("IF", NULL, 0, gba.IF);
+	state_save_register_item("IME", NULL, 0, gba.IME);
+	state_save_register_item("WAITCNT", NULL, 0, gba.WAITCNT);
+	state_save_register_item("POSTFLG", NULL, 0, gba.POSTFLG);
+	state_save_register_item("HALTCNT", NULL, 0, gba.HALTCNT);
 
 	state_save_register_global(fifo_a_ptr);
 	state_save_register_global(fifo_b_ptr);
@@ -3254,4 +3242,4 @@ static DRIVER_INIT(gbadv)
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT INIT CONFIG COMPANY      FULLNAME */
-CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE )
+CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE)

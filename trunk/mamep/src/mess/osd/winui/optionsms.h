@@ -20,7 +20,6 @@ enum
 
 void MessSetupSettings(core_options *settings);
 void MessSetupGameOptions(core_options *opts, int driver_index);
-void MessSetupGameVariables(core_options *settings, int driver_index);
 
 void SetMessColumnWidths(int widths[]);
 void GetMessColumnWidths(int widths[]);
