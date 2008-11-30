@@ -14,24 +14,21 @@
 
 #define PCE_HEADER_SIZE		512
 
-#if 0
 #define TG_16_JOY_SIG		0x00
 #define PCE_JOY_SIG			0x40
 #define NO_CD_SIG			0x80
 #define CD_SIG				0x00
 /* these might be used to indicate something, but they always seem to return 1 */
 #define CONST_SIG			0x30
-#endif
 
 /* the largest possible cartridge image (street fighter 2 - 2.5MB) */
 #define PCE_ROM_MAXSIZE		0x280000
 
-#if 0
 struct pce_struct
 {
 	UINT8 io_port_options; /*driver-specific options for the PCE*/
 };
-#endif
+
 
 /*----------- defined in machine/pce.c -----------*/
 
@@ -47,7 +44,8 @@ WRITE8_HANDLER( pce_cd_bram_w );
 WRITE8_HANDLER( pce_cd_intf_w );
 READ8_HANDLER( pce_cd_intf_r );
 
-extern DRIVER_INIT( pce );
+extern struct pce_struct pce;
+DRIVER_INIT( pce );
 DRIVER_INIT( tg16 );
 DRIVER_INIT( sgx );
 MACHINE_RESET( pce_ms );

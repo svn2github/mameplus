@@ -23,7 +23,7 @@
     - I'm sure there's lots more ...
 
 ***************************************************************************/
-#define MESS 1
+
 #include "driver.h"
 #include "deprecat.h"
 #include "includes/snes.h"
