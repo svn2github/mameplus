@@ -74,6 +74,6 @@ static const char *const mess_default_text[] =
 
 const char * ui_getstring (int string_num)
 {
-	return mess_default_text[string_num];
+	return _(mess_default_text[string_num]);
 }
 
