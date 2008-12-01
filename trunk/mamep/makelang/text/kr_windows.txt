@@ -40,7 +40,7 @@
 
 # mess/osd/windows/menu.c: 2154 mess/osd/windows/mess.rc: 70
 &Frameskip
-프래임생략(&F)
+프레임생략(&F)
 
 # mess/osd/windows/mess.rc: 86
 &Full Screen\tAlt+Enter
@@ -64,7 +64,7 @@
 
 # mess/osd/windows/mess.rc: 32
 &Load State...
-상태 저장 불러오기(&L)...
+상태저장(세이브) 불러오기(&L)...
 
 # mess/osd/windows/mess.rc: 56
 &Miscellaneous Inputs...
@@ -80,7 +80,7 @@
 
 # mess/osd/windows/mess.rc: 33
 &Save State
-상태 저장(&S)
+상태저장(세이브) 하기(&S)
 
 # mess/osd/windows/menu.c: 1522, 1522, 2154 mess/osd/windows/mess.rc: 59, 61
 &Video
@@ -134,111 +134,111 @@ DIRECT3D-전용 옵션
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW-전용 옵션
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1171
 Device %s currently in an unsupported mode\n
 장치 %s는 현재 지원되지 않습니다\n
 
-# osd/windows/drawd3d.c: 1142
+# osd/windows/drawd3d.c: 1141
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: 아답터 #%d 설정 = %s\n
 
-# osd/windows/drawd3d.c: 766
+# osd/windows/drawd3d.c: 765
 Direct3D: Device created at %dx%d\n
 Direct3D: 장치 생성됨 %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2380
+# osd/windows/drawd3d.c: 624, 2379
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: device begin_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1640, 2429
+# osd/windows/drawd3d.c: 1639, 2428
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: device draw_primitive call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 654, 2433
+# osd/windows/drawd3d.c: 653, 2432
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: device end_scene call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2373
+# osd/windows/drawd3d.c: 2372
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: device get_render_target call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 660
+# osd/windows/drawd3d.c: 659
 Direct3D: Error %08X during device present call\n
 Direct3D: device present call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 362, 369, 376, 383
+# osd/windows/drawd3d.c: 361, 368, 375, 382
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: device set_render_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2375, 2437
+# osd/windows/drawd3d.c: 2374, 2436
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: device set_render_target call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1612, 2427
+# osd/windows/drawd3d.c: 1611, 2426
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: device set_stream_source call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 294, 2386
+# osd/windows/drawd3d.c: 293, 2385
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: device set_texture call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 306, 308, 320, 322, 334
+# osd/windows/drawd3d.c: 305, 307, 319, 321, 333
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: device set_texture_stage_state call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2361
+# osd/windows/drawd3d.c: 2360
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: device stretct_rect call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 938, 940, 942, 944, 948, 962, 976, 990, 1016, 1040, 1054, 1067, 1074
+# osd/windows/drawd3d.c: 937, 939, 941, 943, 947, 961, 975, 989, 1015, 1039, 1053, 1066, 1073
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: device get_caps_dword call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2340
+# osd/windows/drawd3d.c: 2339
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: texture get_surface_level call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2316
+# osd/windows/drawd3d.c: 2315
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: texture unlock_rect call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 2390
+# osd/windows/drawd3d.c: 2389
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: vertex buffer lock call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1607, 2422
+# osd/windows/drawd3d.c: 1606, 2421
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: vertex buffer unlock call 진행중 %08X 오류\n
 
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1002
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: 오류 - 장치가 inverted source alpha에 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 997
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: 오류 - 장치가 1에서 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 993
+# osd/windows/drawd3d.c: 992
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: 오류 - 장치가 0에서 dest alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 951
+# osd/windows/drawd3d.c: 950
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 오류 - 장치가 immediate presentations을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 956
+# osd/windows/drawd3d.c: 955
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 오류 - 장치가 per-refresh presentations을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 983
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: 오류 - 장치가 destination color에 source alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 979
+# osd/windows/drawd3d.c: 978
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: 오류 - 장치가 source alpha에 source alpha blending을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1010
+# osd/windows/drawd3d.c: 1009
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: 오류 - 장치가 texture alpha를 지원하지 않습니다\n
 
@@ -250,15 +250,15 @@ Direct3D: Direct3D8 초기화에 오류가 발생했습니다\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9 초기화에 오류가 발생했습니다\n
 
-# osd/windows/drawd3d.c: 770
+# osd/windows/drawd3d.c: 769
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 최대 텍스쳐 사이즈 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1330
+# osd/windows/drawd3d.c: 1329
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 모드 선택 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1274
+# osd/windows/drawd3d.c: 1273
 Direct3D: Selecting video mode...\n
 Direct3D: 비디오 모드 선택...\n
 
@@ -286,207 +286,207 @@ Direct3D: Direct3D 8 사용\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9 사용\n
 
-# osd/windows/drawd3d.c: 1076
+# osd/windows/drawd3d.c: 1075
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: prescaling에 StretchRect 사용\n
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1069
 Direct3D: Using dynamic textures\n
 Direct3D: dynamic textures 사용\n
 
-# osd/windows/drawd3d.c: 1024
+# osd/windows/drawd3d.c: 1023
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 경고 - 장치가 확대에 바이라이너 텍스처 필터링을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1033
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 경고 - 장치가 축소에 바이라이너 텍스처 필터링을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 970
+# osd/windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 경고 - 장치가 hardware rasterization을  지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1019
+# osd/windows/drawd3d.c: 1018
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 경고 - 장치가 확대에 point-sample texture filtering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1028
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 경고 - 장치가 축소에 point-sample texture filtering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 965
+# osd/windows/drawd3d.c: 964
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 경고 - 장치가 page flip 이후 queued rendering을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1043
+# osd/windows/drawd3d.c: 1042
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 경고 - 장치가 texture clamping을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1057
+# osd/windows/drawd3d.c: 1056
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 경고 - 장치가 texture modulation을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 1048
+# osd/windows/drawd3d.c: 1047
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 경고 - 장치가 texture wrapping을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 783
+# osd/windows/drawd3d.c: 782
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 경고 - 장치가 full screen gamma correction을 지원하지 않습니다\n
 
-# osd/windows/drawd3d.c: 708
+# osd/windows/drawd3d.c: 707
 Direct3D: YUV format = %s\n
 Direct3D: YUV 형식 = %s\n
 
-# osd/windows/drawd3d.c: 1712
+# osd/windows/drawd3d.c: 1711
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 크기 조절 %dx%d -> %dx%d\n
 
-# osd/windows/drawd3d.c: 1112
+# osd/windows/drawd3d.c: 1111
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 장치에서 리소스 재 생성에 실패했습니다; failing permanently\n
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1098
 Direct3D: resetting device\n
 Direct3D: 장치 초기화\n
 
-# osd/windows/drawdd.c: 793
+# osd/windows/drawdd.c: 792
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 표면 생성: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1130
+# osd/windows/drawdd.c: 1129
 DirectDraw: Configuring device %s\n
 DirectDraw: 장치 설정 %s\n
 
-# osd/windows/drawdd.c: 620
+# osd/windows/drawdd.c: 619
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: gamma correction 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 499
+# osd/windows/drawdd.c: 498
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 비디오 모드 %dx%d@%d 변경중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1090
+# osd/windows/drawdd.c: 1089
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blitting to the screen %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1057, 1066, 1075, 1084
+# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 화면 지우기 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 778
+# osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %s 표면 생성중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 819
+# osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: clipper 생성중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 464, 1119
+# osd/windows/drawdd.c: 463, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1216
+# osd/windows/drawdd.c: 1215
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawCreateEx 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1338
+# osd/windows/drawdd.c: 1337
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 720
+# osd/windows/drawdd.c: 719
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 489
+# osd/windows/drawdd.c: 488
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 483
+# osd/windows/drawdd.c: 482
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 786
+# osd/windows/drawdd.c: 785
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: getting %s surface desciption 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 548
+# osd/windows/drawdd.c: 547
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: getting attached back surface 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 1138
+# osd/windows/drawdd.c: 1137
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: getting current display mode 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 357
+# osd/windows/drawdd.c: 356
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: locking blit surface 진행중 %08X 오류\n\n
 
-# osd/windows/drawdd.c: 827
+# osd/windows/drawdd.c: 826
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 오류 %08X 설정 clipper hwnd\n
 
-# osd/windows/drawdd.c: 835
+# osd/windows/drawdd.c: 834
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 오류 %08X 설정 clipper on primary surface\n
 
-# osd/windows/drawdd.c: 430
+# osd/windows/drawdd.c: 429
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 오류 %08X unlocking blit surface\n
 
-# osd/windows/drawdd.c: 436, 1096
+# osd/windows/drawdd.c: 435, 1095
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 오류 %08X waiting for VBLANK\n
 
-# osd/windows/drawdd.c: 472
+# osd/windows/drawdd.c: 471
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 오류 - 장치가 DirectDraw 렌더링을 위한 최소사양에 맞지 않습니다\n
 
-# osd/windows/drawdd.c: 351
+# osd/windows/drawdd.c: 350
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 포면 오류; 삭제하고 다음 프레임 재시도\n
 
-# osd/windows/drawdd.c: 1339
+# osd/windows/drawdd.c: 1338
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 모드 선택됨 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 931
+# osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 새 blit 크기 = %dx%d\n
 
-# osd/windows/drawdd.c: 1336
+# osd/windows/drawdd.c: 1335
 DirectDraw: Selecting video mode...\n
 DirectDraw: 비디오 모드 선택...\n
 
-# osd/windows/drawdd.c: 197
+# osd/windows/drawdd.c: 196
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dll 접근 불가\n
 
-# osd/windows/drawdd.c: 205
+# osd/windows/drawdd.c: 204
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateEx 찾을 수 없음\n
 
-# osd/windows/drawdd.c: 215
+# osd/windows/drawdd.c: 214
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExA 찾을 수 없음\n
 
-# osd/windows/drawdd.c: 386, 422, 1172
+# osd/windows/drawdd.c: 385, 421, 1171
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 알 수 없는 target mode: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 227
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7 사용\n
 
-# osd/windows/drawdd.c: 727
+# osd/windows/drawdd.c: 726
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 경고 - 장치가 하드웨어 늘리기를 지원하지 않습니다\n
 
-# osd/windows/drawdd.c: 476
+# osd/windows/drawdd.c: 475
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 경고 - 장치가 DirectDraw 랜더링을 수행하지 못할 수 있습니다\n
 
-# osd/windows/drawdd.c: 603
+# osd/windows/drawdd.c: 602
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 경고 - 장치가 전체화면 감마 수정을 지원하지 않습니다\n
 
@@ -534,7 +534,7 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating render target for window %d
 %d 윈도우에 렌더 타겟 생성 오류
 
-# osd/windows/drawd3d.c: 817
+# osd/windows/drawd3d.c: 816
 Error creating vertex buffer (%08X)
 vertex 버퍼 생성 중 오류 (%08X)
 
@@ -542,15 +542,15 @@ vertex 버퍼 생성 중 오류 (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSound 가능기능 가져오기 실패: %08x\n
 
-# osd/windows/drawd3d.c: 1139
+# osd/windows/drawd3d.c: 1138
 Error getting identifier for adapter #%d\n
 아답터 #%d identifier 획득 오류\n
 
-# osd/windows/drawdd.c: 1127
+# osd/windows/drawdd.c: 1126
 Error getting identifier for device\n
 장치 identifier 획득 오류\n
 
-# osd/windows/drawd3d.c: 1148
+# osd/windows/drawd3d.c: 1147
 Error getting mode for adapter #%d\n
 아답터 #%d 모드 획득 오류\n
 
@@ -574,7 +574,7 @@ DirectSound 보조레벨 설정 실패: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 주 DirectSound 버퍼 포맷 설정 오류: %08x\n
 
-# osd/windows/drawd3d.c: 825
+# osd/windows/drawd3d.c: 824
 Error setting vertex shader (%08X)
 vertex shader 설정 오류 (%08X)
 
@@ -582,15 +582,15 @@ vertex shader 설정 오류 (%08X)
 Error when %s the image: %s
 이미지 %s 중 오류: %s
 
-# osd/windows/drawd3d.c: 694
+# osd/windows/drawd3d.c: 693
 Error: A8R8G8B8 format textures not supported\n
 오류: A8R8G8B8 포맷 텍스쳐가 지원되지 않습니다\n
 
-# osd/windows/drawd3d.c: 684
+# osd/windows/drawd3d.c: 683
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 오류: 장치가 Direct3D 렌더링을 위한 최소 요구사항을 만족하지 못합니다\n
 
-# osd/windows/drawd3d.c: 726
+# osd/windows/drawd3d.c: 725
 Error: unable to configure a screen texture format\n
 오류: 화면 텍스터 포맷을 설정 할 수 없습니다\n
 
@@ -598,7 +598,7 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 전체 화면 옵션
 
-# osd/windows/window.c: 231
+# osd/windows/window.c: 230
 Failed to create pause event
 pause event 생성 실패
 
@@ -606,11 +606,11 @@ pause event 생성 실패
 Failed to create window class
 window class 생성 실패
 
-# osd/windows/window.c: 245
+# osd/windows/window.c: 244
 Failed to create window thread
 window thread 생성 실패
 
-# osd/windows/window.c: 239
+# osd/windows/window.c: 238
 Failed to create window thread ready event
 window thread ready event 생성 실패
 
@@ -666,7 +666,7 @@ Natural
 OK
 확인
 
-# osd/windows/winmain.c: 752
+# osd/windows/winmain.c: 756
 Out of memory
 메모리 부족
 
@@ -674,15 +674,15 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 윈도우별 비디오 옵션
 
-# mess/osd/windows/mess.rc: 149
+# mess/osd/windows/mess.rc: 150
 Pause
 일시정지
 
-# mess/osd/windows/mess.rc: 147
+# mess/osd/windows/mess.rc: 148
 Play
 실행
 
-# osd/windows/drawd3d.c: 1200
+# osd/windows/drawd3d.c: 1199
 Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
@@ -708,7 +708,7 @@ Rotate 90 degrees
 
 # mess/osd/windows/mess.rc: 34
 S&ave State As...
-상태 저장(&A)...
+다른이름으로 상태저장(세이브) 하기(&A)...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
@@ -738,19 +738,19 @@ Sound: buffer overflows=%d underflows=%d\n
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 상태 파일 (*.sta)|*.sta|모든 파일  (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 148
+# mess/osd/windows/mess.rc: 149
 Stop
 중지
 
-# osd/windows/winmain.c: 748
+# osd/windows/winmain.c: 752
 Symbol table full
 심볼 테이블 가득참
 
-# mess/osd/windows/mess.rc: 142 
+# mess/osd/windows/mess.rc: 143 
 Tape Control
 테이프 콘트롤
 
-# osd/windows/drawd3d.c: 1866
+# osd/windows/drawd3d.c: 1865
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 덱스처가 너무 큽니다! (기대값: %dx%d, 최대는 %dx%d)\n
 
@@ -770,15 +770,15 @@ Unable to close the keyboard device. (error %d)\n
 Unable to complete window creation
 창 생성 완료 불가
 
-# osd/windows/drawd3d.c: 762
+# osd/windows/drawd3d.c: 761
 Unable to create the Direct3D device (%08X)\n
 Direct3D 장치 (%08X) 생성할 수 없습니다\n
 
-# osd/windows/drawd3d.c: 467, 528
+# osd/windows/drawd3d.c: 466, 527
 Unable to initialize Direct3D.\n
 Direct3D를 초기화할 수 없습니다\n
 
-# osd/windows/drawdd.c: 271
+# osd/windows/drawdd.c: 270
 Unable to initialize DirectDraw.\n
 DirectDraw를 초기화할 수 없습니다\n
 
@@ -790,7 +790,7 @@ Unable to load PNG file '%s'\n
 Unable to open the keyboard device. (error %d)\n
 키보드 장치 열기 실패 (오류 %d)\n
 
-# osd/windows/drawd3d.c: 2303
+# osd/windows/drawd3d.c: 2302
 Unknown texture blendmode=%d format=%d\n
 알 수 없는 texture blendmode=%d format=%d\n
 
@@ -826,7 +826,7 @@ WINDOWS VIDEO OPTIONS
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 경고: -video none 는 -seconds_to_run 없이는 사용 불가\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 687
 Warning: Device may not perform well for Direct3D rendering\n
 경고: 장치가 Direct3D 렌더링을 잘 지원하지 못합니다\n
 
@@ -952,23 +952,23 @@ error.log 데이터를 시스템 디버거에 출력
 
 # osd/windows/winmain.c: 161
 preferred resolution for all screens; format is <width>x<height>[@<refreshrate>] or 'auto'
-모든 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
+모든 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
 
 # osd/windows/winmain.c: 166
 preferred resolution of the first screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-첫 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
+첫 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
 
 # osd/windows/winmain.c: 181
 preferred resolution of the fourth screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-네 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
+네 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
 
 # osd/windows/winmain.c: 171
 preferred resolution of the second screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-두 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
+두 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
 
 # osd/windows/winmain.c: 176
 preferred resolution of the third screen; format is <width>x<height>[@<refreshrate>] or 'auto'
-세 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<리프레시 레이트>] 또는 'auto'
+세 번째 화면에서 선호하는 해상도; 형식: <폭>x<높이>[@<재생률>] 또는 'auto'
 
 # osd/windows/winmain.c: 162
 preferred view for all screens

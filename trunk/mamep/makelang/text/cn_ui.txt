@@ -1,11 +1,3 @@
-# osd/winui/dialogs.c: 957
- PCB Info: %s [%s]
- PCB 信息: %s [%s]
-
-# osd/winui/dialogs.c: 839
- again.\r\n
-。\r\n
-
 # osd/winui/dialogs.c: 136
  will now reset the following\n
  即将重设下列项目\n
@@ -92,7 +84,7 @@
 
 # osd/winui/mameui.rc: 90, 265, 279
 &Cabinet
-游戏机台(&C)
+机台(&C)
 
 # osd/winui/mameui.rc: 417, 1045, 1071, 1137, 1200
 &Cancel
@@ -274,6 +266,10 @@ MAME 版本说明(&M)
 &Status bar\tAlt+S
 状态栏(&S)\tAlt+S
 
+# osd/winui/mameui.rc: 189
+&Story File...
+故事文件(&S)...
+
 # osd/winui/mameui.rc: 92, 267, 281
 &Title
 游戏标题(&T)
@@ -318,6 +314,10 @@ MAME 版本说明(&M)
 (*) = inherited from parent folder
 (*) = 从上层文件夹继承
 
+# osd/winui/dialogs.c: 151
+.\n
+。\n
+
 # osd/winui/mameui.rc: 473
 <- Remove
 <- 移除
@@ -361,6 +361,14 @@ Add ->
 # osd/winui/mameui.rc: 1162
 Add Game To Custom Folder
 添加游戏到自定义文件夹
+
+# osd/winui/mameui.rc: 1644
+Add selected item to custom folder
+加入所选项目到自定资料夹
+
+# osd/winui/mameui.rc: 391
+Additional MAMEUI code by
+额外的 MAMEUI 代码作者
 
 # osd/winui/mameui.rc: 748
 Advanced
@@ -438,6 +446,14 @@ Audit ROM and samples sets
 Audit complete.\n
 校验完成。\n
 
+# osd/winui/mameui.rc: 1592
+Audit items in this folder
+校验在这个文件夹里的项目
+
+# osd/winui/mameui.rc: 1644
+Audit the selected item
+校验所选项目
+
 # osd/winui/properties.c: 418, 449, 491, 3069, 3075
 Auto
 自动
@@ -473,6 +489,10 @@ Available Arcades
 # osd/winui/mameui.rc: 467
 Available fields:
 可用栏目:
+
+# osd/winui/layout.c: 71, 97 osd/winui/mameui.rc: 919, 1206
+BIOS
+BIOS
 
 # osd/winui/properties.c: 1159
 BIOS missing
@@ -604,7 +624,11 @@ Buttons 9
 
 # osd/winui/mameui.rc: 1016
 C&lones
-克隆游戏(&L)
+克隆(&L)
+
+# osd/winui/layout.c: 73
+CPU
+CPU
 
 # osd/winui/dialogs.c: 244 osd/winui/mui_opts.c: 471
 Cabinet
@@ -630,6 +654,10 @@ Categories
 Changing this item is not permitted
 不允许更改此项
 
+# osd/winui/layout.c: 126
+Cheats
+作弊码文件 (cheat)
+
 # osd/winui/mui_audit.c: 279, 288
 Checking Game %s - %s
 正在检查游戏 %s - %s
@@ -638,25 +666,29 @@ Checking Game %s - %s
 Checking...
 正在检查...
 
+# osd/winui/mameui.rc: 389
+Christopher Kirmse and the MAMEUI team
+Christopher Kirmse 和 MAMEUI 开发团队
+
 # osd/winui/properties.c: 3748
 Clockwise
 顺时针
 
 # osd/winui/winui.c: 932
 Clone Of
-原作游戏
+原作
 
 # osd/winui/mameui.rc: 630
 Clone of:
-原作游戏:
+原作:
 
 # osd/winui/layout.c: 80
 Clones
-克隆游戏
+克隆
 
 # osd/winui/properties.c: 421, 452
 Cocktail
-平躺型机台
+台面型
 
 # osd/winui/mameui.rc: 905
 Coin lockout
@@ -668,7 +700,7 @@ Colors are completely wrong
 
 # osd/winui/properties.c: 1080, 1127, 1192
 Colors aren't 100% accurate
-颜色不是100%精确
+颜色不是 100% 精确
 
 # osd/winui/mameui.rc: 625
 Colors:
@@ -698,6 +730,10 @@ Consoles
 Contains commands for displaying help
 包含显示帮助的命令
 
+# osd/winui/mameui.rc: 1512
+Contains commands for manipulating the view
+包含处理查看的命令
+
 # osd/winui/mameui.rc: 1534
 Contains commands for sorting by various columns
 包含按各栏目排序的命令
@@ -709,6 +745,10 @@ Contains commands for user interface options
 # osd/winui/mameui.rc: 1512
 Contains commands for working with the selected items
 包含运行所选项目的命令
+
+# osd/winui/mameui.rc: 1519, 1644
+Contains commands to select tabs shown in the picture area
+包含显示选定图片区域选项卡的命令
 
 # osd/winui/mameui.rc: 700
 Contrast Correction
@@ -750,6 +790,10 @@ Controller Mapping
 Controllers
 控制器
 
+# osd/winui/mameui.rc: 384
+Copyright (C) 1997-2008 The MAME Team
+著作权 (C) 1997-2008 MAME 开发团队
+
 # osd/winui/mameui.rc: 420, 430
 Correct:
 正确:
@@ -766,6 +810,22 @@ Could not open '%s' as a valid savestate file.
 Crop artwork
 裁切装饰图
 
+# osd/winui/paletteedit.c: 110
+Cursor background (floating)
+光标背景 (浮动)
+
+# osd/winui/paletteedit.c: 108
+Cursor background (selected)
+光标背景 (选定)
+
+# osd/winui/paletteedit.c: 109
+Cursor text (floating)
+光标文字 (浮动)
+
+# osd/winui/paletteedit.c: 107
+Cursor text (selected)
+光标文字 (选定)
+
 # osd/winui/winui.c: 4741, 4769
 Custom
 自定义
@@ -773,6 +833,10 @@ Custom
 # osd/winui/mameui.rc: 1082
 Custom Options
 自定义选项
+
+# osd/winui/dialogs.c: 144
+Custom folder filters\n
+自定义文件夹过滤器\n
 
 # osd/winui/mameui.rc: 141, 232
 Customi&ze Fields...
@@ -813,6 +877,10 @@ Default Game
 # osd/winui/mameui.rc: 149
 Default Game &Options...
 默认游戏选项(&O)...
+
+# osd/winui/properties.c: 760
+Default Settings
+默认设置
 
 # osd/winui/mameui.rc: 871
 Default input layout
@@ -866,6 +934,10 @@ Disabled
 Display
 显示
 
+# osd/winui/mameui.rc: 1592
+Display folder properties
+显示文件夹属性
+
 # osd/winui/mameui.rc: 1573
 Display help contents
 显示帮助內容
@@ -878,13 +950,29 @@ Display items by using large icons.
 Display items by using small icons.
 以小图标显示项目
 
+# osd/winui/mameui.rc: 1631
+Display properties for all games in this bios
+显示这个 BIOS 的所有游戏属性
+
+# osd/winui/mameui.rc: 1631
+Display properties for all games in this driver
+显示这个驱动的所有游戏属性
+
 # osd/winui/mameui.rc: 1102
 Display splash screen on start
 显示启动画面
 
+# osd/winui/mameui.rc: 1644
+Display the properties of the selected item
+显示所选项目的属性
+
 # osd/winui/mameui.rc: 1534, 1553
 Displays detailed information about each item in the window.
 在窗口中显示每一项目的详细信息
+
+# osd/winui/mameui.rc: 1534
+Displays items grouped by parent game
+依照原作游戏显示项目分组
 
 # osd/winui/mameui.rc: 1534, 1553
 Displays items in a list.
@@ -944,7 +1032,7 @@ Draw every frame
 
 # osd/winui/layout.c: 69 osd/winui/winui.c: 933, 7493
 Driver
-游戏驱动
+驱动
 
 # osd/winui/mameui.rc: 628
 Driver:
@@ -964,7 +1052,7 @@ E&xit
 
 # osd/winui/mameui.rc: 895
 Enable game cheats
-启用游戏作弊码
+启用作弊引擎
 
 # osd/winui/mameui.rc: 845
 Enable joystick input
@@ -1000,7 +1088,39 @@ Enable steadykey support
 
 # osd/winui/mameui.rc: 1613
 Enable the PCB tab
-启用PCB信息
+启用电路板选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the cabinet tab
+启用机台选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the control panel tab
+启用控制面板选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the flyer tab
+启用广告图选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the history tab
+启用历史选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the marquee tab
+启用框头贴画选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the snapshot tab
+启用屏幕快照选项卡
+
+# osd/winui/mameui.rc: 1623
+Enable the story tab
+启用故事选项卡
+
+# osd/winui/mameui.rc: 1613
+Enable the title tab
+启用游戏标题选项卡
 
 # osd/winui/mameui.rc: 666
 Enforce aspect ratio
@@ -1036,7 +1156,7 @@ External Folder List
 
 # osd/winui/layout.c: 88
 FPS
-游戏帧速
+帧速
 
 # osd/winui/mui_audit.c: 553
 Failed
@@ -1078,6 +1198,10 @@ Flyers
 Fold&er List\tAlt+D
 文件夹列表(&D)\tAlt+D
 
+# osd/winui/layout.c: 142
+Font Files
+字体文件
+
 # osd/winui/properties.c: 408
 Fourth screen
 第四个屏幕
@@ -1097,6 +1221,10 @@ Full screen contrast
 # osd/winui/mameui.rc: 764
 Full screen gamma
 全屏幕灰度
+
+# osd/winui/winui.c: 7483
+Game
+游戏
 
 # osd/winui/mameui.rc: 1009
 Game Filters
@@ -1152,7 +1280,7 @@ Gamename/Increment
 
 # osd/winui/mameui.rc: 672
 Gameplay speed
-游戏速度
+游戏运行速度
 
 # osd/winui/mameui.rc: 692
 Gamma Correction
@@ -1162,9 +1290,17 @@ Gamma Correction
 General
 普通
 
+# osd/winui/properties.c: 1260
+Global BIOS options\nCustom options used by all games in the %s
+全局 BIOS 选项\n所有 %s 游戏使用的自定义选项
+
 # osd/winui/properties.c: 1248
 Global driver options\nCustom options used by all games in the %s
 全局驱动选项\n所有 %s 游戏使用的自定义选项
+
+# osd/winui/dialogs.c: 140
+Global game options\n
+全局游戏选项\n
 
 # osd/winui/properties.c: 1239
 Global game options\nDefault options used by all games
@@ -1238,6 +1374,10 @@ Icons
 Image Enhancement
 图像增强
 
+# osd/winui/winui.c: 5478
+Image Files (*.png)
+图片文件 (*.png)
+
 # osd/winui/layout.c: 75
 Imperfect
 不精确
@@ -1257,6 +1397,10 @@ Imperfect Sound
 # osd/winui/mameui.rc: 422, 431
 Incorrect:
 错误:
+
+# osd/winui/dialogs.c: 142
+Individual game options\n
+个别的游戏选像\n
 
 # osd/winui/mameui.rc: 1097
 Inheritable Filters
@@ -1281,6 +1425,10 @@ Interface Options
 # osd/winui/properties.c: 448
 Internal
 内定
+
+# osd/winui/mameui.rc: 394
+John Hardy IV and Michael Soderstrom
+John Hardy IV 和 Michael Soderstrom
 
 # osd/winui/treeview.c: 1385
 Joy 16-Way
@@ -1346,6 +1494,10 @@ Keyboard
 L&arge Icons
 大图标(&A)
 
+# osd/winui/layout.c: 153
+Language Files
+语言文件
+
 # osd/winui/winui.c: 815
 Large Icons
 大图标
@@ -1374,6 +1526,10 @@ Loa&d Savestate...
 Localize GUI and MAME core.
 本地化图形用户界面和 MAME 核心。
 
+# osd/winui/winui.c: 6390
+MAME input files (*.inp,*.zip)
+MAME 输入指令文件 (*.inp,*.zip)
+
 # osd/winui/mameui.rc: 1573
 MAME release notes
 MAME 版本说明
@@ -1382,9 +1538,29 @@ MAME 版本说明
 MAME savestate files (*.sta)
 MAME 游戏进度文件 (*.sta)
 
+# osd/winui/dialogs.c: 957
+MAMEUI PCB Info: %s [%s]
+MAMEUI 电路板信息: %s [%s]
+
+# osd/winui/dialogs.c: 839
+MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
+MAMEUI 需要 Microsoft Windows 9x/NT/2000 操作系统\r\n延伸套件 DirectX 版本 3 或更新的版本。\r\n\r\n拜访 Microsoft 的 DirectX 网页 http://www.microsoft.com/directx\r\n下载 DirectX 安装，然后再重新启动 MAMEUI。\r\n
+
+# osd/winui/mameui.rc: 386
+MAMEUI version by
+MAMEUI 版本作者
+
 # osd/winui/mui_opts.c: 324 osd/winui/translate.c: 104
 MS Sans Serif
 宋体
+
+# osd/winui/paletteedit.c: 106
+Main background
+主背景
+
+# osd/winui/mameui.rc: 187
+Mame&info File...
+Mameinfo 文件(&I)...
 
 # osd/winui/mameui.rc: 604
 Manufactured:
@@ -1452,7 +1628,7 @@ No
 
 # osd/winui/treeview.c: 992
 No Cocktail
-不支持平躺型机台
+不支持台面型机台
 
 # osd/winui/treeview.c: 1039
 No Dump
@@ -1460,7 +1636,7 @@ No Dump
 
 # osd/winui/dialogs.c: 1001
 No PCB Info available for this game.
-这个游戏没有可用的 PCB 信息
+这个游戏没有可用的电路板信息
 
 # osd/winui/winui.c: 3928
 No Selection
@@ -1502,21 +1678,33 @@ Number of screens to create:
 OK
 确定
 
+# osd/winui/mameui.rc: 134
+Office 2003
+Office 2003
+
+# osd/winui/mameui.rc: 135
+Office 2007
+Office 2007
+
+# osd/winui/mameui.rc: 133
+Office XP
+Office XP
+
 # osd/winui/mameui.rc: 859
 Offscreen shots reload
-画面外装弹
+射击画面外区域即重新填补
 
 # osd/winui/mameui.rc: 1030
 Ori&ginals
-原作游戏(&G)
+原作(&G)
 
 # osd/winui/layout.c: 62
 Orientation
-显示方向
+方向
 
 # osd/winui/layout.c: 79
 Originals
-原作游戏
+原作
 
 # osd/winui/mameui.rc: 815
 Output diagnostic information
@@ -1528,7 +1716,7 @@ Output log to Logfile
 
 # osd/winui/mameui.rc: 819
 Output log to Windows Debugger
-记录输出至Windows调试器
+记录输出至 Windows 调试器
 
 # osd/winui/mameui.rc: 927
 Overlays
@@ -1538,13 +1726,25 @@ Overlays
 P&layback Input...
 回放输入指令(&L)...
 
+# osd/winui/mameui.rc: 95, 270, 283
+PC&B
+电路板(&B)
+
+# osd/winui/dialogs.c: 252 osd/winui/mui_opts.c: 475
+PCB
+电路
+
 # osd/winui/mameui.rc: 1257
 PCB Info
-PCB 信息
+电路板信息
 
 # osd/winui/layout.c: 151
 PCB Info Files
-PCB 信息文件
+电路板信息文件
+
+# osd/winui/layout.c: 135
+PCBs
+电路板
 
 # osd/winui/properties.c: 984 osd/winui/treeview.c: 1393
 Paddle
@@ -1564,7 +1764,7 @@ Passed
 
 # osd/winui/mameui.rc: 688
 Pause Brightness
-暂停画面亮度
+暂停时亮度
 
 # osd/winui/properties.c: 988 osd/winui/treeview.c: 1397
 Pedal
@@ -1604,7 +1804,7 @@ Play and Record &WAV Sound...
 
 # osd/winui/mameui.rc: 59
 Play and Record &uncompressed AVI Output...
-运行并录制未压缩的AVI视频(&U)...
+运行并录制未压缩的 AVI 视频(&U)...
 
 # osd/winui/mameui.rc: 1553
 Play currently selected game
@@ -1696,7 +1896,7 @@ ROM 检查:
 
 # osd/winui/layout.c: 120 osd/winui/mameui.rc: 421 osd/winui/winui.c: 924
 ROMs
-ROMs
+ROM
 
 # osd/winui/properties.c: 1161
 ROMs missing
@@ -1718,9 +1918,29 @@ Ready
 Record a game for later playback
 录制游戏供以后播放
 
+# osd/winui/mameui.rc: 1573
+Record the audio output of a game
+录制一个游戏的音频输出
+
+# osd/winui/mameui.rc: 1573
+Record the complete output of a game
+录制一个游戏的完整输出
+
+# osd/winui/mameui.rc: 1573
+Record the video output of a game
+录制一个游戏的视频输出
+
 # osd/winui/mameui.rc: 1534, 1664
 Refresh game list
 刷新游戏列表
+
+# osd/winui/mameui.rc: 1644
+Remove selected item from this folder
+从这个文件夹移除所选项目(&E)
+
+# osd/winui/mameui.rc: 1644
+Rename this folder
+重命名这个文件夹
 
 # osd/winui/mameui.rc: 210
 Rese&t Playcount
@@ -1753,6 +1973,18 @@ Reset all Play Times
 # osd/winui/mameui.rc: 1117
 Reset all Playcounts
 重设所有游戏次数
+
+# osd/winui/mameui.rc: 1592
+Reset number of plays for selected item
+重置所选项目的游戏次数
+
+# osd/winui/mameui.rc: 1592
+Reset time played for selected item
+重置所选项目的游戏时间
+
+# osd/winui/dialogs.c: 148
+Resetting the User Interface options\n
+重设用户界面选项设定值\n
 
 # osd/winui/layout.c: 87
 Resolution
@@ -1788,7 +2020,7 @@ S&mall Icons
 
 # osd/winui/mameui.rc: 1122
 S&tretch screenshot larger than natural size
-拉伸显示屏幕快照(&T)
+拉伸图片至合适的大小(&T)
 
 # osd/winui/mameui.rc: 645
 Sample check:
@@ -1804,11 +2036,11 @@ Samples
 
 # osd/winui/layout.c: 89, 96
 Save State
-支持存盘
+保存进度
 
 # osd/winui/mameui.rc: 622
 Save State:
-支持存盘:
+保存进度:
 
 # osd/winui/mameui.rc: 1568
 Save game list in specified lst file
@@ -1840,19 +2072,19 @@ Screen:
 
 # osd/winui/mameui.rc: 1121
 Screenshot Area
-屏幕快照区
+图片区域
 
 # osd/winui/mameui.rc: 1129
 Screenshot Bordersize
-屏幕快照边框大小
+图片边框大小
 
 # osd/winui/mameui.rc: 1125
 Screenshot Cycletime in Seconds
-屏幕快照循环秒数
+图片循环秒数
 
 # osd/winui/mameui.rc: 82
 Screenshot Ta&b\tAlt+B
-屏幕快照选项卡(&B)\tAlt+B
+图片区域选项卡(&B)\tAlt+B
 
 # osd/winui/properties.c: 406
 Second screen
@@ -1866,9 +2098,25 @@ Seconds to run
 Select &random background image on start
 启动时随机选定背景图片(&R)
 
+# osd/winui/mameui.rc: 1604
+Select Cabinet tab
+选定机台选项卡
+
+# osd/winui/mameui.rc: 1604
+Select Control panel tab
+选定控制面板选项卡
+
 # osd/winui/mameui.rc: 827
 Select Debugscript
 选定调试器脚本
+
+# osd/winui/mameui.rc: 1644
+Select Flyer tab
+选定广告图选项卡
+
+# osd/winui/mameui.rc: 1604
+Select History tab
+选定历史选项卡
 
 # osd/winui/columnedit.c: 258
 Select Item
@@ -1878,9 +2126,33 @@ Select Item
 Select Joystickmap
 选定游戏杆映射档
 
+# osd/winui/mameui.rc: 1604
+Select Marquee tab
+选定框头贴画选项卡
+
+# osd/winui/mameui.rc: 1604
+Select PCB tab
+选定电路板选项卡
+
+# osd/winui/mameui.rc: 1644
+Select Snapshot tab
+选定屏幕快照选项卡
+
+# osd/winui/mameui.rc: 1611
+Select Story tab
+选定故事选项卡
+
+# osd/winui/mameui.rc: 1604
+Select Title tab
+选定游戏标题选项卡
+
 # osd/winui/winui.c: 5487
 Select a Background Image
 选定一个背景图片
+
+# osd/winui/mameui.rc: 1534
+Select menu style
+选定菜单样式
 
 # osd/winui/mameui.rc: 1068
 Select the options to be restored to the default settings.
@@ -1892,7 +2164,7 @@ Set Game List Not Working Color
 
 # osd/winui/mameui.rc: 1133
 Set Screenshot Border Color
-设置屏幕快照边框颜色
+设置图片边框颜色
 
 # osd/winui/mameui.rc: 1553
 Set default game options
@@ -1910,9 +2182,29 @@ Set game list and folder list font
 Set in-game UI color palette
 设置游戏中菜单界面的色盘
 
+# osd/winui/mameui.rc: 1631
+Set the History file to use
+设定要使用的历史文件
+
+# osd/winui/mameui.rc: 1631
+Set the Mameinfo file to use
+设定要使用的 Mameinfo 文件
+
+# osd/winui/mameui.rc: 1638
+Set the Story file to use
+设定要使用的故事文件
+
+# osd/winui/mameui.rc: 1613
+Set the background image
+设定背景图片
+
+# osd/winui/mameui.rc: 1553
+Set the clone font color
+设定克隆游戏列表字体颜色
+
 # osd/winui/mameui.rc: 1134
 Show History on Tab
-在选项卡上显示游戏历史
+显示历史在选项卡
 
 # osd/winui/mameui.rc: 259
 Show Tab &Control
@@ -1924,7 +2216,19 @@ Show directories for:
 
 # osd/winui/mameui.rc: 1598
 Show game PCB information
-显示 PCB 信息
+显示电路板信息
+
+# osd/winui/mameui.rc: 1553
+Show items grouped by parent game
+依照原作游戏显示项目分组
+
+# osd/winui/mameui.rc: 1644
+Show or hide folder
+显示或隐藏文件夹
+
+# osd/winui/mameui.rc: 1519
+Show or hide tabs in the picture area
+显示或隐藏图片区域选项卡
 
 # osd/winui/mameui.rc: 1519, 1644
 Show or hide the folder list
@@ -1934,9 +2238,17 @@ Show or hide the folder list
 Show or hide the picture area
 显示或隐藏图片区域
 
+# osd/winui/mameui.rc: 1519
+Show or hide the screen shot
+显示或隐藏图片区域
+
 # osd/winui/mameui.rc: 1519, 1644
 Show or hide the status bar
 显示或隐藏状态栏
+
+# osd/winui/mameui.rc: 1644
+Show or hide the tabs in the picture area
+显示或隐藏图片区域选项卡
 
 # osd/winui/mameui.rc: 1519, 1644
 Show or hide the toolbar
@@ -2039,16 +2351,44 @@ Sort column in descending (Z-A) order
 按降序(Z-A)排序栏目
 
 # osd/winui/mameui.rc: 1664
+Sort items by clone of
+按原作游戏排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by driver
+按游戏驱动排序项目
+
+# osd/winui/mameui.rc: 1664
 Sort items by game description
 按描述排序项目
 
 # osd/winui/mameui.rc: 1664
 Sort items by manufacturer
-按制造商排序项目
+按制造厂商排序项目
 
 # osd/winui/mameui.rc: 1664
 Sort items by name
 按游戏名排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by play time
+按游戏时间排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by roms
+按 ROM 排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by samples
+按采样文件排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by screen
+按屏幕排序项目
+
+# osd/winui/mameui.rc: 1664
+Sort items by trackball
+按轨迹球排序项目
 
 # osd/winui/mameui.rc: 1664
 Sort items by type
@@ -2064,7 +2404,7 @@ Sound
 
 # osd/winui/properties.c: 1098, 1145, 1210
 Sound emulation isn't 100% accurate
-声音模拟不是100%精确
+声音模拟不是 100% 精确
 
 # osd/winui/mameui.rc: 613
 Sound:
@@ -2164,7 +2504,7 @@ Toggle Fullscreen mode
 
 # osd/winui/winui.c: 814
 Toggle Screen Shot
-切换屏幕快照
+切换图片区域
 
 # osd/winui/mameui.rc: 1519
 Toggle full screen mode
@@ -2314,6 +2654,10 @@ Use various icon for Not Working game
 Use volume auto adjust
 使用音量自动调整
 
+# osd/winui/dialogs.c: 147
+User interface settings\n\n
+用户界面设定值\n\n
+
 # osd/winui/layout.c: 82 osd/winui/mameui.rc: 955 osd/winui/winui.c: 5810
 Vector
 矢量画面
@@ -2334,13 +2678,21 @@ Vector (V)
 Vector (V) %f Hz (%d colors)
 矢量 (垂直) %f Hz (%d 色)
 
+# osd/winui/properties.c: 393
+Version 8
+版本 8
+
+# osd/winui/properties.c: 392
+Version 9
+版本 9
+
 # osd/winui/layout.c: 65 osd/winui/treeview.c: 1142 osd/winui/winui.c: 5775
 Vertical
 垂直
 
 # osd/winui/properties.c: 1086, 1133, 1198
 Video emulation isn't 100% accurate
-视频模拟不是100%精确
+视频模拟不是 100% 精确
 
 # osd/winui/mameui.rc: 755
 Video output method
@@ -2380,11 +2732,15 @@ Wrong Colors
 
 # osd/winui/layout.c: 68 osd/winui/winui.c: 931
 Year
-发行年代
+年代
 
 # osd/winui/mui_audit.c: 121 osd/winui/winui.c: 5820
 Yes
 是
+
+# osd/winui/dialogs.c: 153
+\nDo you wish to continue?
+\n您要继续吗?
 
 # osd/winui/mameui.rc: 119
 by &Clone Of
@@ -2396,7 +2752,7 @@ by &Description
 
 # osd/winui/mameui.rc: 117
 by &Manufacturer
-按制造商(&M)
+按制造厂商(&M)
 
 # osd/winui/mameui.rc: 113
 by &Name
@@ -2428,7 +2784,7 @@ by P&lay Time
 
 # osd/winui/mameui.rc: 122
 by R&OMs
-按ROM(&O)
+按 ROM(&O)
 
 # osd/winui/mameui.rc: 112
 by S&amples
@@ -2438,411 +2794,51 @@ by S&amples
 by T&rackball
 按轨迹球(&R)
 
-# osd/winui/dialogs.c: 839
- requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
-
-
-# osd/winui/mameui.rc: 189
-&Story File...
-
-
-# osd/winui/dialogs.c: 151
-.\n
-
-
-# osd/winui/mameui.rc: 1644
-Add selected item to custom folder
-
-
-# osd/winui/mameui.rc: 391
-Additional MAMEUI code by
-
-
-# osd/winui/mameui.rc: 1592
-Audit items in this folder
-
-
-# osd/winui/mameui.rc: 1644
-Audit the selected item
-
-
-# osd/winui/layout.c: 71, 97 osd/winui/mameui.rc: 919, 1206
-BIOS
-
-
-# osd/winui/layout.c: 73
-CPU
-
-
-# osd/winui/layout.c: 126
-Cheats
-
-
-# osd/winui/mameui.rc: 389
-Christopher Kirmse and the MAMEUI team
-
-
-# osd/winui/mameui.rc: 1512
-Contains commands for manipulating the view
-
-
-# osd/winui/mameui.rc: 1519, 1644
-Contains commands to select tabs shown in the picture area
-
-
-# osd/winui/mameui.rc: 384
-Copyright (C) 1997-2008 The MAME Team
-
-
-# osd/winui/paletteedit.c: 110
-Cursor background (floating)
-
-
-# osd/winui/paletteedit.c: 108
-Cursor background (selected)
-
-
-# osd/winui/paletteedit.c: 109
-Cursor text (floating)
-
-
-# osd/winui/paletteedit.c: 107
-Cursor text (selected)
-
-
-# osd/winui/dialogs.c: 144
-Custom folder filters\n
-
-
-# osd/winui/properties.c: 760
-Default Settings
-
-
-# osd/winui/mameui.rc: 1592
-Display folder properties
-
-
-# osd/winui/mameui.rc: 1631
-Display properties for all games in this bios
-
-
-# osd/winui/mameui.rc: 1631
-Display properties for all games in this driver
-
-
-# osd/winui/mameui.rc: 1644
-Display the properties of the selected item
-
-
-# osd/winui/mameui.rc: 1534
-Displays items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1613
-Enable the cabinet tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the control panel tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the flyer tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the history tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the marquee tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the snapshot tab
-
-
-# osd/winui/mameui.rc: 1623
-Enable the story tab
-
-
-# osd/winui/mameui.rc: 1613
-Enable the title tab
-
-
-# osd/winui/layout.c: 142
-Font Files
-
-
-# osd/winui/winui.c: 7483
-Game
-
-
-# osd/winui/properties.c: 1260
-Global BIOS options\nCustom options used by all games in the %s
-
-
-# osd/winui/dialogs.c: 140
-Global game options\n
-
-
-# osd/winui/winui.c: 5478
-Image Files (*.png)
-
-
-# osd/winui/dialogs.c: 142
-Individual game options\n
-
-
-# osd/winui/mameui.rc: 394
-John Hardy IV and Michael Soderstrom
-
-
-# osd/winui/layout.c: 153
-Language Files
-
-
-# osd/winui/winui.c: 6390
-MAME input files (*.inp,*.zip)
-
-
-# osd/winui/mameui.rc: 386
-MAMEUI version by
-
-
-# osd/winui/paletteedit.c: 106
-Main background
-
-
-# osd/winui/mameui.rc: 187
-Mame&info File...
-
-
-# osd/winui/mameui.rc: 134
-Office 2003
-
-
-# osd/winui/mameui.rc: 135
-Office 2007
-
-
-# osd/winui/mameui.rc: 133
-Office XP
-
-
-# osd/winui/mameui.rc: 95, 270, 283
-PC&B
-
-
-# osd/winui/dialogs.c: 252 osd/winui/mui_opts.c: 475
-PCB
-
-
-# osd/winui/layout.c: 135
-PCBs
-
-
-# osd/winui/mameui.rc: 1573
-Record the audio output of a game
-
-
-# osd/winui/mameui.rc: 1573
-Record the complete output of a game
-
-
-# osd/winui/mameui.rc: 1573
-Record the video output of a game
-
-
-# osd/winui/mameui.rc: 1644
-Remove selected item from this folder
-
-
-# osd/winui/mameui.rc: 1644
-Rename this folder
-
-
-# osd/winui/mameui.rc: 1592
-Reset number of plays for selected item
-
-
-# osd/winui/mameui.rc: 1592
-Reset time played for selected item
-
-
-# osd/winui/dialogs.c: 148
-Resetting the User Interface options\n
-
-
-# osd/winui/mameui.rc: 1604
-Select Cabinet tab
-
-
-# osd/winui/mameui.rc: 1604
-Select Control panel tab
-
-
-# osd/winui/mameui.rc: 1644
-Select Flyer tab
-
-
-# osd/winui/mameui.rc: 1604
-Select History tab
-
-
-# osd/winui/mameui.rc: 1604
-Select Marquee tab
-
-
-# osd/winui/mameui.rc: 1604
-Select PCB tab
-
-
-# osd/winui/mameui.rc: 1644
-Select Snapshot tab
-
-
-# osd/winui/mameui.rc: 1611
-Select Story tab
-
-
-# osd/winui/mameui.rc: 1604
-Select Title tab
-
-
-# osd/winui/mameui.rc: 1534
-Select menu style
-
-
-# osd/winui/mameui.rc: 1631
-Set the History file to use
-
-
-# osd/winui/mameui.rc: 1631
-Set the Mameinfo file to use
-
-
-# osd/winui/mameui.rc: 1638
-Set the Story file to use
-
-
-# osd/winui/mameui.rc: 1613
-Set the background image
-
-
-# osd/winui/mameui.rc: 1553
-Set the clone font color
-
-
-# osd/winui/mameui.rc: 1553
-Show items grouped by parent game
-
-
-# osd/winui/mameui.rc: 1644
-Show or hide folder
-
-
-# osd/winui/mameui.rc: 1519
-Show or hide tabs in the picture area
-
-
-# osd/winui/mameui.rc: 1519
-Show or hide the screen shot
-
-
-# osd/winui/mameui.rc: 1644
-Show or hide the tabs in the picture area
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by clone of
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by driver
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by play time
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by roms
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by samples
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by screen
-
-
-# osd/winui/mameui.rc: 1664
-Sort items by trackball
-
-
-# osd/winui/dialogs.c: 147
-User interface settings\n\n
-
-
-# osd/winui/properties.c: 393
-Version 8
-
-
-# osd/winui/properties.c: 392
-Version 9
-
-
-# osd/winui/dialogs.c: 153
-\nDo you wish to continue?
-
-
 # osd/winui/winui.c: 6420
 cheats (*.dat)
-
+作弊码文件 (*.dat)
 
 # osd/winui/winui.c: 6411
 gamelists (*.lst)
-
+游戏列表 (*.lst)
 
 # osd/winui/winui.c: 6423
 history (*.dat)
-
+history (*.dat)
 
 # osd/winui/winui.c: 6426
 mameinfo (*.dat)
-
+mameinfo (*.dat)
 
 # osd/winui/winui.c: 6414
 maps (*.map,*.txt)
-
+映射档 (*.map,*.txt)
 
 # osd/winui/dialogs.c: 149
 requires exiting 
-
+需要结束 
 
 # osd/winui/winui.c: 6417
 scripts (*.txt,*.dat)
-
+脚本文件 (*.txt,*.dat)
 
 # osd/winui/winui.c: 6396
 sounds (*.wav)
-
+音频文件 (*.wav)
 
 # osd/winui/winui.c: 6430
 stoty (*.dat)
-
+stoty (*.dat)
 
 # osd/winui/dialogs.c: 137
 to the default settings:\n\n
-
+回到默认设置:\n\n
 
 # osd/winui/winui.c: 6402
 videos (*.avi)
-
+视频文件 (*.avi)
 
 # osd/winui/winui.c: 6399
 videos (*.mng)
-
+视频文件 (*.mng)
 

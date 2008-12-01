@@ -20,7 +20,7 @@ Casino *Mature*
 
 # Title
 Category
-游戏分类
+分类
 
 # 269
 Climbing
@@ -37,6 +37,10 @@ Driving / 1st Person
 # 374
 Driving / Boat
 驾驶 / 船
+
+# 381
+Driving / Plane
+驾驶 / 飞机
 
 # 386
 Driving / Race
@@ -173,6 +177,10 @@ Multiplay
 # 2402
 Multiplay *Mature*
 多人 *成人*
+
+# 2414
+Not Classified
+未分类
 
 # 2493
 Pinball
@@ -325,6 +333,14 @@ Quiz / 西班牙文
 # 3937
 Rhythm
 跳舞机
+
+# 3950
+Rhythm / Dance
+跳舞机 / 跳舞
+
+# 3996
+Rhythm / Instruments
+跳舞机 / 乐器
 
 # 4033
 Shooter / 1st Person
@@ -562,6 +578,10 @@ Sports / Track & Field
 Sports / VolleyBall
 运动 / 排球
 
+# 6765
+Sports / Wrestling
+运动 / 摔角
+
 # 6817
 Tabletop
 桌面
@@ -601,24 +621,4 @@ Tabletop / Renju
 # 7169
 Tabletop / Shougi
 桌面 / 将棋
-
-# 381
-Driving / Plane
-
-
-# 2414
-Not Classified
-
-
-# 3950
-Rhythm / Dance
-
-
-# 3996
-Rhythm / Instruments
-
-
-# 6765
-Sports / Wrestling
-
 

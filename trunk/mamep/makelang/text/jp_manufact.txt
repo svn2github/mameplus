@@ -218,6 +218,10 @@ Hara Industries
 Home Data
 ホームデータ
 
+# NGEM2K (Homebrew 060118, Beta)
+Homebrew
+自家製
+
 # Play Girls
 Hot-B.
 ホットビィ
@@ -706,10 +710,6 @@ bootleg?
 hack
 ハック
 
-# NGEM2K (beta 2006-01-18)
-homebrew
-自家製
-
 # Chewing Gum
 unknown
 不明
@@ -938,7 +938,7 @@ Barko Corp.
 Bee-Oh
 
 
-# Neo 2500 Demo
+# Neo 2500 Demo (Homebrew)
 Blastar
 
 
@@ -1006,7 +1006,7 @@ Century II
 Century?
 
 
-# Neo-Demo
+# Neo-Demo (Homebrew)
 Chaos
 
 
@@ -1570,7 +1570,7 @@ Itisa
 JMA
 
 
-# Poker Night
+# Poker Night (Homebrew)
 JMK
 
 
@@ -1790,10 +1790,6 @@ Mondial Games
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1822,7 +1818,7 @@ Naxat Soft
 Nazionale Elettronica
 
 
-# Neo Pong (v1.1)
+# Neo Pong (Ver 1.1, Homebrew)
 Neodev
 
 
@@ -1990,7 +1986,7 @@ Proma
 Promat
 
 
-# Shadow of the Beast (Neo Demo)
+# Shadow of the Beast (Neo Demo, Homebrew)
 Psygnosis
 
 
@@ -2026,7 +2022,7 @@ Ramtek
 Raster Elite
 
 
-# Frog Feast
+# Frog Feast (Homebrew)
 Rastersoft
 
 

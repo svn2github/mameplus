@@ -1,18 +1,18 @@
-# Title
-Version
-支持版本
-
 # 8085
 Console
-
+家用机
 
 # 8011
 Decrypted
-
+解密
 
 # 8069
 Homebrew
+自制
 
+# Title
+Version
+版本
 
 # 7970
 Plus!

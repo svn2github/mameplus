@@ -132,7 +132,7 @@ Atari Games
 
 # Atlus PSX
 Atlus
-아트러스
+아틀러스
 
 # Ultraman (Japan)
 Bandai
@@ -302,6 +302,10 @@ Genie
 Global Corporation
 글로벌 코퍼래이션
 
+# NGEM2K (Homebrew 060118, Beta)
+Homebrew
+홈브류
+
 # Quiz (Revision 2)
 Italian bootleg
 이탈리아 해적판
@@ -402,7 +406,7 @@ Nippon Amuse Co-Ltd
 Ocean
 오션
 
-# Shadow of the Beast (Neo Demo)
+# Shadow of the Beast (Neo Demo, Homebrew)
 Psygnosis
 시그노시스
 
@@ -514,9 +518,45 @@ Sigma
 Sigma Enterprises Inc.
 시그마 엔터프라이즈 (주)
 
+# Jolly Card (croatian, set 2)
+Soft Design
+소프트 디자인
+
+# Euro Jolly X5
+Solar Games
+솔라 게임즈
+
+# Top Blade V
+SonoKong
+손오공
+
+# Mosaic
+Space
+스페이스
+
+# Quiz Punch 2
+Space Computer
+스페이스 컴퓨터
+
+# Mahjong Dunhuang
+Spirit
+스피닛
+
 # Rad Racer (PlayChoice-10)
 Square
 스퀘어
+
+# Funny Land de Luxe
+Stella
+스텔라
+
+# Armored Car (set 1)
+Stern
+스턴
+
+# Cliff Hanger
+Stern Electronics
+스턴 일렉트로닉스
 
 # RyuKyu (Japan, FD1094 317-5023)
 Success
@@ -562,13 +602,37 @@ Sunwise
 Sure
 슈어
 
+# Idol-Mahjong Housoukyoku (Japan)
+System Service
+시스템 서비스
+
+# Pairs (System Ten) (Japan 890826)
+System Ten
+시스템 텐
+
+# DaiDaiKakumei (Japan)
+SystemBit
+시스템빗
+
 # Pebble Beach - The Great Shot (JUE 950913 V0.990)
 T&E Soft
 T&E 소프트
 
+# Cabal (US set 1, Trackball version)
+Tad
+태드
+
+# Cabal (World, Joystick version)
+Tad Corporation
+태드 코퍼레이션
+
 # Rock Climber
 Taito
 타이토
+
+# Kick and Run (US)
+Taito America Corp
+타이토 아메리카
 
 # Tiger Heli (US)
 Taito America Corp.
@@ -597,6 +661,10 @@ Taito do Brasil
 # Galaxy Wars (Taito?)
 Taito?
 타이토?
+
+# Dynamic Ski
+Taiyo
+타이요
 
 # Battle Arena Toshinden 2 (USA 951124)
 Takara
@@ -630,6 +698,14 @@ Tecmo
 Tecno Soft
 테크노소프트
 
+# Mr. TNT
+Telko
+텔코
+
+# Snezhnaja Koroleva
+Terminal
+터미널
+
 # Galaxian Test ROM
 Test ROM
 테스트 롬
@@ -658,9 +734,17 @@ Toaplan
 Toei
 토에이
 
+# Golden Fire II
+Topis Corp
+토피스
+
 # Radiant Silvergun (JUET 980523 V1.000)
 Treasure
 트레져
+
+# MTV Rock-N-Roll Trivia (Part 2)
+Triumph Software Inc.
+트라이엄프 소프트웨어
 
 # El Grande - 5 Card Draw (New)
 Tuni Electro Service
@@ -674,6 +758,10 @@ Tuning
 U.S. Games
 U.S. 게임즈
 
+# P's Attack
+Uniana
+유니아나
+
 # Fancy World - Earth of Crisis
 Unico
 유니코
@@ -685,6 +773,10 @@ Universal
 # Mighty Monkey
 Universal Video Games
 유니버셜 비디오 게임즈
+
+# Capitol
+Universal Video Spiel
+유니버셜 비디오 스필
 
 # Taiwan Chess Legend
 Uniwang
@@ -698,9 +790,29 @@ Unknown
 V-System Co.
 V-시스템
 
+# Barrier
+Vectorbeam
+벡토빔
+
+# Space Force (set 1)
+Venture Line
+벤처라인
+
 # Fight Fever (set 1)
 Viccom
 빅컴
+
+# Gridlee
+Videa
+비디아
+
+# Space Attack
+Video Games GMBH
+비디오 게임즈 GMBH
+
+# Super Tank
+Video Games GmbH
+비디오 게임즈 GmbH
 
 # Video System PSX
 Video System
@@ -709,6 +821,14 @@ Video System
 # Power Spikes II
 Video System Co.
 비디오 시스템
+
+# MegaDuck/Cougar Boy
+Videojet/Timlex/Cougar
+비디오젯/팀렉스/쿠거
+
+# Griffon (bootleg of Phoenix)
+Videotron
+비디오트론
 
 # Galmedes (Japan)
 Visco
@@ -801,6 +921,10 @@ Yang Cheng
 # Black Touch (Korea)
 Yang Gi Co Ltd.
 양기
+
+# Grudge Match (Yankee Game Technology)
+Yankee Game Technology
+양키 게임 테크놀로지
 
 # Moeyo Gonta!! (Japan)
 Yanyaka
@@ -897,10 +1021,6 @@ dgPIX 엔터테인먼트
 # Puckman (Falcom?)
 hack
 핵킹
-
-# NGEM2K (beta 2006-01-18)
-homebrew
-홈브류
 
 # Chewing Gum
 unknown
@@ -1050,7 +1170,7 @@ Barko Corp.
 Bee-Oh
 
 
-# Neo 2500 Demo
+# Neo 2500 Demo (Homebrew)
 Blastar
 
 
@@ -1090,7 +1210,7 @@ Century II
 Century?
 
 
-# Neo-Demo
+# Neo-Demo (Homebrew)
 Chaos
 
 
@@ -1702,7 +1822,7 @@ Itisa
 JMA
 
 
-# Poker Night
+# Poker Night (Homebrew)
 JMK
 
 
@@ -1934,10 +2054,6 @@ Mondial Games
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1974,7 +2090,7 @@ Nazca
 Nazionale Elettronica
 
 
-# Neo Pong (v1.1)
+# Neo Pong (Ver 1.1, Homebrew)
 Neodev
 
 
@@ -2206,7 +2322,7 @@ Ramtek
 Raster Elite
 
 
-# Frog Feast
+# Frog Feast (Homebrew)
 Rastersoft
 
 
@@ -2362,28 +2478,8 @@ Soft
 Soft Art Co.
 
 
-# Jolly Card (croatian, set 2)
-Soft Design
-
-
-# Euro Jolly X5
-Solar Games
-
-
-# Top Blade V
-SonoKong
-
-
 # Dambusters (UK)
 South West Research
-
-
-# Mosaic
-Space
-
-
-# Quiz Punch 2
-Space Computer
 
 
 # Evil Stone
@@ -2394,28 +2490,12 @@ Spacy Industrial, Ltd.
 Spale-Soft
 
 
-# Mahjong Dunhuang
-Spirit
-
-
 # Rack + Roll
 Status
 
 
 # Hangman
 Status Games
-
-
-# Funny Land de Luxe
-Stella
-
-
-# Armored Car (set 1)
-Stern
-
-
-# Cliff Hanger
-Stern Electronics
 
 
 # Swarm (bootleg?)
@@ -2428,18 +2508,6 @@ Subsino
 
 # Snow Brothers 3 - Magical Adventure
 Syrmex
-
-
-# Idol-Mahjong Housoukyoku (Japan)
-System Service
-
-
-# Pairs (System Ten) (Japan 890826)
-System Ten
-
-
-# DaiDaiKakumei (Japan)
-SystemBit
 
 
 # The Hand
@@ -2474,22 +2542,6 @@ TV Game Gruenberg
 TV-Tuning
 
 
-# Cabal (US set 1, Trackball version)
-Tad
-
-
-# Cabal (World, Joystick version)
-Tad Corporation
-
-
-# Kick and Run (US)
-Taito America Corp
-
-
-# Dynamic Ski
-Taiyo
-
-
 # Shisensho - Joshiryo-Hen (Japan)
 Tamtex
 
@@ -2510,24 +2562,8 @@ Tehkan
 Tekunon Kougyou
 
 
-# Mr. TNT
-Telko
-
-
-# Snezhnaja Koroleva
-Terminal
-
-
 # Leprechaun
 Tong Electronic
-
-
-# Golden Fire II
-Topis Corp
-
-
-# MTV Rock-N-Roll Trivia (Part 2)
-Triumph Software Inc.
 
 
 # Ultraman Club - Tatakae! Ultraman Kyoudai!!
@@ -2536,14 +2572,6 @@ Tsuburaya Prod.
 
 # Mouser
 UPL
-
-
-# P's Attack
-Uniana
-
-
-# Capitol
-Universal Video Spiel
 
 
 # Poly-Play
@@ -2562,10 +2590,6 @@ VR8 Inc.
 Valadon Automation
 
 
-# Barrier
-Vectorbeam
-
-
 # Card Line
 Veltmeijer
 
@@ -2574,39 +2598,11 @@ Veltmeijer
 Veltmeijer Automaten
 
 
-# Space Force (set 1)
-Venture Line
-
-
 # Joker Card (Ver.A267BC, encrypted)
 Vesely Svet
 
 
-# Gridlee
-Videa
-
-
-# Space Attack
-Video Games GMBH
-
-
-# Super Tank
-Video Games GmbH
-
-
-# MegaDuck/Cougar Boy
-Videojet/Timlex/Cougar
-
-
-# Griffon (bootleg of Phoenix)
-Videotron
-
-
 # Jack Potten's Poker (set 2)
 W
-
-
-# Grudge Match (Yankee Game Technology)
-Yankee Game Technology
 
 

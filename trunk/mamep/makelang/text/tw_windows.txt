@@ -134,111 +134,111 @@ DIRECT3D 特定選項
 DIRECTDRAW-SPECIFIC OPTIONS
 DIRECTDRAW 特定選項
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1171
 Device %s currently in an unsupported mode\n
 裝置 %s 目前處於未支援的模式\n
 
-# osd/windows/drawd3d.c: 1142
+# osd/windows/drawd3d.c: 1141
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: 正在設定介面卡 #%d = %s\n
 
-# osd/windows/drawd3d.c: 766
+# osd/windows/drawd3d.c: 765
 Direct3D: Device created at %dx%d\n
 Direct3D: 裝置建立在 %dx%d\n
 
-# osd/windows/drawd3d.c: 625, 2380
+# osd/windows/drawd3d.c: 624, 2379
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: 裝置 begin_scene 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 1640, 2429
+# osd/windows/drawd3d.c: 1639, 2428
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: 裝置 draw_primitive 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 654, 2433
+# osd/windows/drawd3d.c: 653, 2432
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: 裝置 end_scene 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2373
+# osd/windows/drawd3d.c: 2372
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: 裝置 get_render_target 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 660
+# osd/windows/drawd3d.c: 659
 Direct3D: Error %08X during device present call\n
 Direct3D: 裝置提交呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 362, 369, 376, 383
+# osd/windows/drawd3d.c: 361, 368, 375, 382
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: 裝置 set_render_state 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2375, 2437
+# osd/windows/drawd3d.c: 2374, 2436
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: 裝置 set_render_target 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 1612, 2427
+# osd/windows/drawd3d.c: 1611, 2426
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: 裝置 set_stream_source 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 294, 2386
+# osd/windows/drawd3d.c: 293, 2385
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: 裝置 set_texture 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 306, 308, 320, 322, 334
+# osd/windows/drawd3d.c: 305, 307, 319, 321, 333
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: 裝置 set_texture_stage_state 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2361
+# osd/windows/drawd3d.c: 2360
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: 裝置 stretct_rect 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 938, 940, 942, 944, 948, 962, 976, 990, 1016, 1040, 1054, 1067, 1074
+# osd/windows/drawd3d.c: 937, 939, 941, 943, 947, 961, 975, 989, 1015, 1039, 1053, 1066, 1073
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2340
+# osd/windows/drawd3d.c: 2339
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: 材質 get_surface_level 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2316
+# osd/windows/drawd3d.c: 2315
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: 材質 unlock_rect 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 2390
+# osd/windows/drawd3d.c: 2389
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂點緩衝 lock 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 1607, 2422
+# osd/windows/drawd3d.c: 1606, 2421
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂點緩衝解鎖呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1002
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配 inverted source alpha\n
 
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 997
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配係數 1\n
 
-# osd/windows/drawd3d.c: 993
+# osd/windows/drawd3d.c: 992
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: 錯誤 - 裝置不支援 alpha blending 搭配係數 0\n
 
-# osd/windows/drawd3d.c: 951
+# osd/windows/drawd3d.c: 950
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: 錯誤 - 裝置不支援立即演示\n
 
-# osd/windows/drawd3d.c: 956
+# osd/windows/drawd3d.c: 955
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: 錯誤 - 裝置不支援每個更新頻率演示\n
 
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 983
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: 錯誤 - 裝置不支援 source alpha blending 搭配目標色彩\n
 
-# osd/windows/drawd3d.c: 979
+# osd/windows/drawd3d.c: 978
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: 錯誤 - 裝置不支援 source alpha blending 搭配 source alpha\n
 
-# osd/windows/drawd3d.c: 1010
+# osd/windows/drawd3d.c: 1009
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: 錯誤 - 裝置不支援材質 alpha\n
 
@@ -250,15 +250,15 @@ Direct3D: 試圖初始化 Direct3D8 時發生錯誤\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: 試圖初始化 Direct3D9 時發生錯誤\n
 
-# osd/windows/drawd3d.c: 770
+# osd/windows/drawd3d.c: 769
 Direct3D: Max texture size = %dx%d\n
 Direct3D: 最大材質大小 = %dx%d\n
 
-# osd/windows/drawd3d.c: 1330
+# osd/windows/drawd3d.c: 1329
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 模式選擇 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1274
+# osd/windows/drawd3d.c: 1273
 Direct3D: Selecting video mode...\n
 Direct3D: 正在選擇視訊模式...\n
 
@@ -286,207 +286,207 @@ Direct3D: 正在使用 Direct3D 8\n
 Direct3D: Using Direct3D 9\n
 Direct3D: 正在使用 Direct3D 9\n
 
-# osd/windows/drawd3d.c: 1076
+# osd/windows/drawd3d.c: 1075
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: 正在使用 StretchRect 於預縮放\n
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1069
 Direct3D: Using dynamic textures\n
 Direct3D: 正在使用動態材質\n
 
-# osd/windows/drawd3d.c: 1024
+# osd/windows/drawd3d.c: 1023
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告 - 裝置不支援放大雙線材質過濾\n
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1033
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告 - 裝置不支援縮小雙線材質過濾\n
 
-# osd/windows/drawd3d.c: 970
+# osd/windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告 - 裝置不支援硬體繪圖\n
 
-# osd/windows/drawd3d.c: 1019
+# osd/windows/drawd3d.c: 1018
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告 - 裝置不支援放大抽樣材質過濾\n
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1028
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告 - 裝置不支援縮小抽樣材質過濾\n
 
-# osd/windows/drawd3d.c: 965
+# osd/windows/drawd3d.c: 964
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告 - 裝置不支援在佇列描繪後頁面翻轉\n
 
-# osd/windows/drawd3d.c: 1043
+# osd/windows/drawd3d.c: 1042
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告 - 裝置不支援材質嵌位\n
 
-# osd/windows/drawd3d.c: 1057
+# osd/windows/drawd3d.c: 1056
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告 - 裝置不支援材質調節\n
 
-# osd/windows/drawd3d.c: 1048
+# osd/windows/drawd3d.c: 1047
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告 - 裝置不支援材質包裝\n
 
-# osd/windows/drawd3d.c: 783
+# osd/windows/drawd3d.c: 782
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
-# osd/windows/drawd3d.c: 708
+# osd/windows/drawd3d.c: 707
 Direct3D: YUV format = %s\n
 Direct3D: YUV 格式 = %s\n
 
-# osd/windows/drawd3d.c: 1712
+# osd/windows/drawd3d.c: 1711
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: 調整預縮放由 %dx%d 到 %dx%d\n
 
-# osd/windows/drawd3d.c: 1112
+# osd/windows/drawd3d.c: 1111
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: 無法重新建立裝置資源; 永久失敗\n
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1098
 Direct3D: resetting device\n
 Direct3D: 正在重設裝置\n
 
-# osd/windows/drawdd.c: 793
+# osd/windows/drawdd.c: 792
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %s 已建立介面: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1130
+# osd/windows/drawdd.c: 1129
 DirectDraw: Configuring device %s\n
 Direct3D: 正在設定裝置 %s\n
 
-# osd/windows/drawdd.c: 620
+# osd/windows/drawdd.c: 619
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: 試圖設定 gamma 值修正時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 499
+# osd/windows/drawdd.c: 498
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 試圖設定視訊模式 %dx%d@%d 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1090
+# osd/windows/drawdd.c: 1089
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: blit 到畫面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1057, 1066, 1075, 1084
+# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 清除畫面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 778
+# osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: 建立 %s 介面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 819
+# osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: 建立 clipper 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 464, 1119
+# osd/windows/drawdd.c: 463, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1216
+# osd/windows/drawdd.c: 1215
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: DirectDrawEnumerateEx 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1338
+# osd/windows/drawdd.c: 1337
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 720
+# osd/windows/drawdd.c: 719
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 489
+# osd/windows/drawdd.c: 488
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 483
+# osd/windows/drawdd.c: 482
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) 呼叫時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 786
+# osd/windows/drawdd.c: 785
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: 取得 %s 介面描述時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 548
+# osd/windows/drawdd.c: 547
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 取得附加區塊介面時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 1138
+# osd/windows/drawdd.c: 1137
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 取得目前顯示模式時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 357
+# osd/windows/drawdd.c: 356
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: 鎖定 blit 介面時發生錯 %08X\n
 
-# osd/windows/drawdd.c: 827
+# osd/windows/drawdd.c: 826
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: 設定 clipper hwnd 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 835
+# osd/windows/drawdd.c: 834
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: 設定主要介面的 clipper 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 430
+# osd/windows/drawdd.c: 429
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: 解鎖 blit 介面時發生錯 %08X\n
 
-# osd/windows/drawdd.c: 436, 1096
+# osd/windows/drawdd.c: 435, 1095
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: 等待 VBLANK 時發生錯誤 %08X\n
 
-# osd/windows/drawdd.c: 472
+# osd/windows/drawdd.c: 471
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: 警告 - 裝置不符合 DirectDraw 描繪的最低要求\n
 
-# osd/windows/drawdd.c: 351
+# osd/windows/drawdd.c: 350
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: 遺失介面; 正在刪除並重試下一個畫格\n
 
-# osd/windows/drawdd.c: 1339
+# osd/windows/drawdd.c: 1338
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 模式選擇 = %4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 931
+# osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新的 blit 大小 = %dx%d\n
 
-# osd/windows/drawdd.c: 1336
+# osd/windows/drawdd.c: 1335
 DirectDraw: Selecting video mode...\n
 DirectDraw: 正在選擇視訊模式...\n
 
-# osd/windows/drawdd.c: 197
+# osd/windows/drawdd.c: 196
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: 無法存取 ddraw.dll\n
 
-# osd/windows/drawdd.c: 205
+# osd/windows/drawdd.c: 204
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: 無法找到 DirectDrawCreateEx\n
 
-# osd/windows/drawdd.c: 215
+# osd/windows/drawdd.c: 214
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: 無法找到 DirectDrawEnumerateExA\n
 
-# osd/windows/drawdd.c: 386, 422, 1172
+# osd/windows/drawdd.c: 385, 421, 1171
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 未知的目標模式: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 227
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: 正在使用 DirectDraw 7\n
 
-# osd/windows/drawdd.c: 727
+# osd/windows/drawdd.c: 726
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告 - 裝置不支援硬體延展\n
 
-# osd/windows/drawdd.c: 476
+# osd/windows/drawdd.c: 475
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告 - 裝置可能無法正常配合 DirectDraw 描繪\n
 
-# osd/windows/drawdd.c: 603
+# osd/windows/drawdd.c: 602
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告 - 裝置不支援全螢幕 gamma 值修正。\n
 
@@ -534,7 +534,7 @@ Error creating primary DirectSound buffer: %08x\n
 Error creating render target for window %d
 建立描繪目標於視窗 %d 時發生錯誤
 
-# osd/windows/drawd3d.c: 817
+# osd/windows/drawd3d.c: 816
 Error creating vertex buffer (%08X)
 建立頂點緩衝時發生錯誤 (%08X)
 
@@ -542,15 +542,15 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 取得 DirectSound 功\能時發生錯誤: %08x\n
 
-# osd/windows/drawd3d.c: 1139
+# osd/windows/drawd3d.c: 1138
 Error getting identifier for adapter #%d\n
 為介面卡取得識別資訊時發生錯誤 #%d\n
 
-# osd/windows/drawdd.c: 1127
+# osd/windows/drawdd.c: 1126
 Error getting identifier for device\n
 為裝置取得識別資訊時發生錯誤 \n
 
-# osd/windows/drawd3d.c: 1148
+# osd/windows/drawd3d.c: 1147
 Error getting mode for adapter #%d\n
 為介面卡取得模式時發生錯誤 #%d\n
 
@@ -574,7 +574,7 @@ Error setting DirectSound cooperative level: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 設定主要 DirectSound 緩衝格式時發生錯誤: %08x\n
 
-# osd/windows/drawd3d.c: 825
+# osd/windows/drawd3d.c: 824
 Error setting vertex shader (%08X)
 設定頂點 shader 時發生錯誤 (%08X)
 
@@ -582,15 +582,15 @@ Error setting vertex shader (%08X)
 Error when %s the image: %s
 %s 映像檔時發生錯誤: %s
 
-# osd/windows/drawd3d.c: 694
+# osd/windows/drawd3d.c: 693
 Error: A8R8G8B8 format textures not supported\n
 錯誤: 未支援 A8R8G8B8 格式的材質\n
 
-# osd/windows/drawd3d.c: 684
+# osd/windows/drawd3d.c: 683
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 錯誤: 裝置未達到 Direct3D 描繪的最低要求\n
 
-# osd/windows/drawd3d.c: 726
+# osd/windows/drawd3d.c: 725
 Error: unable to configure a screen texture format\n
 錯誤: 無法設定畫面材質格式\n
 
@@ -598,7 +598,7 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 全螢幕選項
 
-# osd/windows/window.c: 231
+# osd/windows/window.c: 230
 Failed to create pause event
 無法建立暫停事件
 
@@ -606,11 +606,11 @@ Failed to create pause event
 Failed to create window class
 無法建立視窗類別
 
-# osd/windows/window.c: 245
+# osd/windows/window.c: 244
 Failed to create window thread
 無法建立視窗執行緒
 
-# osd/windows/window.c: 239
+# osd/windows/window.c: 238
 Failed to create window thread ready event
 無法建立視窗執行緒預備事件
 
@@ -666,7 +666,7 @@ Natural
 OK
 確定
 
-# osd/windows/winmain.c: 752
+# osd/windows/winmain.c: 756
 Out of memory
 記憶體不足
 
@@ -674,15 +674,15 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 各個畫面的視訊選項
 
-# mess/osd/windows/mess.rc: 149
+# mess/osd/windows/mess.rc: 150
 Pause
 暫停
 
-# mess/osd/windows/mess.rc: 147
+# mess/osd/windows/mess.rc: 148
 Play
 執行
 
-# osd/windows/drawd3d.c: 1200
+# osd/windows/drawd3d.c: 1199
 Proposed video mode not supported on device %s\n
 建議的視訊模式無法支援裝置 %s\n
 
@@ -738,19 +738,19 @@ Sound: buffer overflows=%d underflows=%d\n
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 儲存狀態檔 (*.sta)|*.sta|All Files (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 148
+# mess/osd/windows/mess.rc: 149
 Stop
 停止
 
-# osd/windows/winmain.c: 748
+# osd/windows/winmain.c: 752
 Symbol table full
 所有符號表
 
-# mess/osd/windows/mess.rc: 142 
+# mess/osd/windows/mess.rc: 143 
 Tape Control
 磁帶控制
 
-# osd/windows/drawd3d.c: 1866
+# osd/windows/drawd3d.c: 1865
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 材質太大! (要求: %dx%d, 最大 %dx%d)\n
 
@@ -770,15 +770,15 @@ Unable to close the keyboard device. (error %d)\n
 Unable to complete window creation
 無法完成視窗創建
 
-# osd/windows/drawd3d.c: 762
+# osd/windows/drawd3d.c: 761
 Unable to create the Direct3D device (%08X)\n
 無法建立 Direct3D 裝置 (%08X)\n
 
-# osd/windows/drawd3d.c: 467, 528
+# osd/windows/drawd3d.c: 466, 527
 Unable to initialize Direct3D.\n
 無法初始化 Direct3D\n
 
-# osd/windows/drawdd.c: 271
+# osd/windows/drawdd.c: 270
 Unable to initialize DirectDraw.\n
 無法初始化 DirectDraw\n
 
@@ -790,7 +790,7 @@ Unable to load PNG file '%s'\n
 Unable to open the keyboard device. (error %d)\n
 無法開啟鍵盤裝置。(錯誤 %d)\n
 
-# osd/windows/drawd3d.c: 2303
+# osd/windows/drawd3d.c: 2302
 Unknown texture blendmode=%d format=%d\n
 未知的材質混和模式=%d 格式=%d\n
 
@@ -826,7 +826,7 @@ WINDOWS 視訊選項
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video 參數為 none 時無法判斷 -seconds_to_run 選項\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 687
 Warning: Device may not perform well for Direct3D rendering\n
 警告: 裝置可能無法正常配合 Direct3D 描繪\n
 

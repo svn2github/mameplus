@@ -1,6 +1,10 @@
+# 286
+Bootleg And Clone
+µÁ°æºÍ¿ËÂ¡
+
 # Title
 IPS
-ÓÎÏ·²¹¶¡
+IPS
 
 # 64
 Misc
@@ -9,10 +13,6 @@ Misc
 # 7
 Translation
 ·­Òë
-
-# 286
-Bootleg And Clone
-
 
 # 105
 CPS 1/2/3

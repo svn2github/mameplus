@@ -1,32 +1,32 @@
 # Title
 Artwork
-装饰图片
+装饰图
 
 # 1688
 Backdrop
-
+背景图
 
 # 1733
 Bezel
-
+外框图
 
 # 2762
 CP Graphics
-
+控制面板图
 
 # 2776
 Inst. Card
-
+指令卡
 
 # 3511
 Lamps or LEDs
-
+灯号或 LED
 
 # 3570
 Marquee
-
+框头贴画
 
 # 3786
 Overlay
-
+前景图
 

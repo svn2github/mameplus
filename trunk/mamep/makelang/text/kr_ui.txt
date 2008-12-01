@@ -1,15 +1,3 @@
-# osd/winui/dialogs.c: 957
- PCB Info: %s [%s]
-기판 정보: %s [%s]
-
-# osd/winui/dialogs.c: 839
- again.\r\n
-다시\r\n
-
-# osd/winui/dialogs.c: 839
- requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
-Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft DirectX 버전 3 이상이 필요합니다.\r\n\r\n설치 및 실행을 위해선 Microsoft의 DirectX 웹페이지를 참고하세요.http://www.microsoft.com/directx\r\ndownload DirectX
-
 # osd/winui/dialogs.c: 136
  will now reset the following\n
 이제 다음으로 재설정됩니다\n
@@ -320,7 +308,7 @@ Story 파일 (&S)
 
 # osd/winui/winui.c: 6834
 '%s' is not a valid savestate file for game '%s'.
-'%s' 는 게임 '%s'의 올바른 상태저장 파일이 아닙니다
+'%s' 는 게임 '%s'의 올바른 상태저장(세이브) 파일이 아닙니다
 
 # osd/winui/mameui.rc: 1037
 (*) = inherited from parent folder
@@ -816,7 +804,7 @@ Could not open '%s' as a valid input file.
 
 # osd/winui/winui.c: 6846
 Could not open '%s' as a valid savestate file.
-상태저장 파일 '%s'를 열 수 없음
+상태저장(세이브)파일 '%s'를 열 수 없음
 
 # osd/winui/mameui.rc: 929
 Crop artwork
@@ -1532,7 +1520,7 @@ List
 
 # osd/winui/mameui.rc: 61
 Loa&d Savestate...
-상태저장 파일 불러오기(&D)...
+상태저장(세이브) 파일 불러오기(&D)...
 
 # osd/winui/mameui.rc: 1547
 Localize GUI and MAME core.
@@ -1548,7 +1536,15 @@ MAME 발표 일지
 
 # osd/winui/winui.c: 6393
 MAME savestate files (*.sta)
-MAMEW 상태저장 파일 (*.sta)
+MAME 상태저장(세이브) 파일 (*.sta)
+
+# osd/winui/dialogs.c: 957
+MAMEUI PCB Info: %s [%s]
+MAMEUI 기판 정보: %s [%s]
+
+# osd/winui/dialogs.c: 839
+MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
+Microsoft Windows 9x, NT and 2000 용으로 제작된 OS확장 기능인\r\nMicrosoft DirectX 버전 3 이상이 필요합니다.\r\n\r\n설치 및 실행을 위해선 Microsoft의 DirectX 웹페이지를 참고하세요.http://www.microsoft.com/directx\r\ndownload DirectX다시\r\n
 
 # osd/winui/mameui.rc: 386
 MAMEUI version by
@@ -1728,7 +1724,7 @@ Overlays
 
 # osd/winui/mameui.rc: 55
 P&layback Input...
-리플레이 재생(&l)...
+INP 리플레이 재생(&l)...
 
 # osd/winui/mameui.rc: 95, 270, 283
 PC&B
@@ -1792,11 +1788,11 @@ Play Time
 
 # osd/winui/mameui.rc: 1592
 Play a game starting with the given savestate
-주어진 상태저장 파일로 부터 게임 실행
+주어진 상태저장(세이브)파일로 부터 게임 실행
 
 # osd/winui/mameui.rc: 54, 202
 Play and &Record Input...
-게임 실행후, 입력을 기록(&R)...
+게임 실행후, INP 리플레이 기록(&R)...
 
 # osd/winui/mameui.rc: 58
 Play and Record &MNG Video...
@@ -1808,7 +1804,7 @@ Play and Record &WAV Sound...
 
 # osd/winui/mameui.rc: 59
 Play and Record &uncompressed AVI Output...
-무압축 AVI 출력 재생 및 기록(&U)...
+게임 실행후, AVI 무압축 비디오 기록(&U)...
 
 # osd/winui/mameui.rc: 1553
 Play currently selected game
@@ -2208,7 +2204,7 @@ Set the clone font color
 
 # osd/winui/mameui.rc: 1134
 Show History on Tab
-게임 역사를 탭에 표시
+게임역사파일(history.dat)을 탭에 표시
 
 # osd/winui/mameui.rc: 259
 Show Tab &Control

@@ -1542,18 +1542,6 @@ Nazwy gry
 by &Type
 Typu gry
 
-# osd/winui/dialogs.c: 957
- PCB Info: %s [%s]
-
-
-# osd/winui/dialogs.c: 839
- again.\r\n
-
-
-# osd/winui/dialogs.c: 839
- requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
-
-
 # osd/winui/dialogs.c: 136
  will now reset the following\n
 
@@ -2204,6 +2192,14 @@ MAME input files (*.inp,*.zip)
 
 # osd/winui/winui.c: 6393
 MAME savestate files (*.sta)
+
+
+# osd/winui/dialogs.c: 957
+MAMEUI PCB Info: %s [%s]
+
+
+# osd/winui/dialogs.c: 839
+MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
 
 
 # osd/winui/mameui.rc: 386

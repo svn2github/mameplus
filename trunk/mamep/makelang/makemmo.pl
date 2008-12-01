@@ -2,7 +2,7 @@
 #	usage: makemo.pl [lang] [codepage]
 #
 #	eg: makemo.pl tw
-#	 - Read text files that start with "tw_" and "mame32tw.lst"
+#	 - Read text files that start with "tw_" and "mame_tw.lst"
 #	   from directory "text".
 #	 - generate .po files to po
 #	 - make .mo files to tmp/.
@@ -19,16 +19,16 @@
 #		TEMPLATE: tp_windows.txt
 #		MACRO: _WINDOWS("...")
 #	ui.mmo
-#	  -- OSD texts (for GUI, included mame32.rc)
+#	  -- OSD texts (for GUI, included mameui.rc)
 #		TEMPLATE: tp_ui.txt
 #		MACRO: _UI("...")
 
 # Game list
 #	lst.mmo
-#	  -- Extract from mame32*.lst (no changes)
+#	  -- Extract from mame_*.lst (no changes)
 #		MACRO: _LST("...")
 #	readings.mmo
-#	  -- Extract from mame32*.lst (no changes)
+#	  -- Extract from mame_*.lst (no changes)
 #		MACRO: _READINGS("...")
 #	manufact.mmo
 #	  -- the game manufactures
@@ -103,7 +103,7 @@ sub MakeListFiles
 	print "$entries entries found\n";
 
 
-	my $filename = "mame32$lang.lst";
+	my $filename = "mame_$lang.lst";
 
 	unless (-f "$textdir/$filename")
 	{

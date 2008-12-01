@@ -254,7 +254,7 @@ Barko Corp.
 Bee-Oh
 Bee-Oh
 
-# Neo 2500 Demo
+# Neo 2500 Demo (Homebrew)
 Blastar
 Blastar
 
@@ -334,7 +334,7 @@ Century II
 Century?
 Century?
 
-# Neo-Demo
+# Neo-Demo (Homebrew)
 Chaos
 Chaos
 
@@ -898,6 +898,10 @@ Hollow Corp
 Home Data
 Home Data
 
+# NGEM2K (Homebrew 060118, Beta)
+Homebrew
+Homebrew
+
 # Schmeiser Robo (Japan)
 Hot B
 Hot B
@@ -1002,7 +1006,7 @@ Italian bootleg
 JMA
 JMA
 
-# Poker Night
+# Poker Night (Homebrew)
 JMK
 JMK
 
@@ -1290,10 +1294,6 @@ Monolith Corp.
 Mylstar
 Mylstar
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-N.Kehrer
-
 # Pirates
 NIX
 NIX
@@ -1330,7 +1330,7 @@ Nasco Japan
 Nazca
 Nazca
 
-# Neo Pong (v1.1)
+# Neo Pong (Ver 1.1, Homebrew)
 Neodev
 Neodev
 
@@ -1538,7 +1538,7 @@ Promat
 Psikyo
 Psikyo
 
-# Shadow of the Beast (Neo Demo)
+# Shadow of the Beast (Neo Demo, Homebrew)
 Psygnosis
 Psygnosis
 
@@ -1586,7 +1586,7 @@ Rare LTD.
 Raster Elite
 Raster Elite
 
-# Frog Feast
+# Frog Feast (Homebrew)
 Rastersoft
 Rastersoft
 
@@ -2381,10 +2381,6 @@ dgPIX Entertainment Inc.
 # Puckman (Falcom?)
 hack
 hack
-
-# NGEM2K (beta 2006-01-18)
-homebrew
-homebrew
 
 # Chewing Gum
 unknown

@@ -14,6 +14,10 @@ AV Giappone
 Capcom, supported by Takumi
 Capcom, supportato da Takumi
 
+# NGEM2K (Homebrew 060118, Beta)
+Homebrew
+Fatto in casa
+
 # Mighty! Pang (Euro 001010)
 Mitchell, distributed by Capcom
 Mitchell, distribuito da Capcom
@@ -53,10 +57,6 @@ bootleg?
 # Puckman (Falcom?)
 hack
 modificato
-
-# NGEM2K (beta 2006-01-18)
-homebrew
-Fatto in casa
 
 # Chewing Gum
 unknown
@@ -338,7 +338,7 @@ Barko Corp.
 Bee-Oh
 
 
-# Neo 2500 Demo
+# Neo 2500 Demo (Homebrew)
 Blastar
 
 
@@ -418,7 +418,7 @@ Century II
 Century?
 
 
-# Neo-Demo
+# Neo-Demo (Homebrew)
 Chaos
 
 
@@ -1150,7 +1150,7 @@ Itisa
 JMA
 
 
-# Poker Night
+# Poker Night (Homebrew)
 JMK
 
 
@@ -1442,10 +1442,6 @@ Monolith Corp.
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1490,7 +1486,7 @@ Nazca
 Nazionale Elettronica
 
 
-# Neo Pong (v1.1)
+# Neo Pong (Ver 1.1, Homebrew)
 Neodev
 
 
@@ -1698,7 +1694,7 @@ Promat
 Psikyo
 
 
-# Shadow of the Beast (Neo Demo)
+# Shadow of the Beast (Neo Demo, Homebrew)
 Psygnosis
 
 
@@ -1746,7 +1742,7 @@ Rare LTD.
 Raster Elite
 
 
-# Frog Feast
+# Frog Feast (Homebrew)
 Rastersoft
 
 

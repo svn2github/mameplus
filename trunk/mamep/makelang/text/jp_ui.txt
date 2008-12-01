@@ -1,7 +1,3 @@
-# osd/winui/dialogs.c: 957
- PCB Info: %s [%s]
- PCB情報: %s [%s]
-
 # osd/winui/properties.c: 1039
 %d colors 
 %d 色 
@@ -334,6 +330,10 @@ ADスティックデバイス
 About
 このソ\フトウェアについて
 
+# osd/winui/mameui.rc: 377
+About MAMEUI
+MAMEUIについて
+
 # osd/winui/mameui.rc: 472
 Add ->
 追加 ->
@@ -460,7 +460,7 @@ Automatic
 
 # osd/winui/layout.c: 54
 Available Arcades
-所有のアーケード
+所有しているアーケード
 
 # osd/winui/mameui.rc: 467
 Available fields:
@@ -629,6 +629,10 @@ Categories
 # osd/winui/columnedit.c: 258
 Changing this item is not permitted
 このアイテムの変更は許可されていません
+
+# osd/winui/layout.c: 126
+Cheats
+チート
 
 # osd/winui/mui_audit.c: 279, 288
 Checking Game %s - %s
@@ -864,7 +868,7 @@ Disabled
 
 # osd/winui/mameui.rc: 655
 Display
-画面
+表\示
 
 # osd/winui/mameui.rc: 1592
 Display folder properties
@@ -1150,6 +1154,10 @@ Full screen contrast
 Full screen gamma
 フルスクリーンのガンマ値
 
+# osd/winui/winui.c: 7483
+Game
+ゲーム
+
 # osd/winui/mameui.rc: 1009
 Game Filters
 ゲームフィルタ
@@ -1194,9 +1202,17 @@ Gamma Correction
 General
 全般
 
+# osd/winui/properties.c: 1260
+Global BIOS options\nCustom options used by all games in the %s
+グローバルBIOSオプションです。\n%sの全ゲームのカスタム設定として使用されます。
+
 # osd/winui/properties.c: 1248
 Global driver options\nCustom options used by all games in the %s
 グローバルドライバオプションです。\n%sの全ゲームのカスタム設定として使用されます。
+
+# osd/winui/dialogs.c: 140
+Global game options\n
+グローバルゲームオプションです\n
 
 # osd/winui/properties.c: 1239
 Global game options\nDefault options used by all games
@@ -1269,6 +1285,10 @@ Icons
 # osd/winui/mameui.rc: 795
 Image Enhancement
 イメージを向上
+
+# osd/winui/winui.c: 5478
+Image Files (*.png)
+画像ファイル (*.png)
 
 # osd/winui/layout.c: 75
 Imperfect
@@ -1362,6 +1382,10 @@ Joystick deadzone
 Joystick saturation
 ジョイスティック外側しきい値
 
+# osd/winui/mameui.rc: 874
+Joystickmap
+ジョイスティックマップ
+
 # osd/winui/properties.c: 434
 Keyboard
 キーボード
@@ -1398,6 +1422,10 @@ Loa&d Savestate...
 Localize GUI and MAME core.
 GUIとMAMEコアの言語を切り替えます
 
+# osd/winui/winui.c: 6390
+MAME input files (*.inp,*.zip)
+MAME再生ファイル (*.inp,*.zip)
+
 # osd/winui/mameui.rc: 1573
 MAME release notes
 MAMEリリースノートを表\示します
@@ -1405,6 +1433,10 @@ MAMEリリースノートを表\示します
 # osd/winui/winui.c: 6393
 MAME savestate files (*.sta)
 MAMEステートファイル (*.sta)
+
+# osd/winui/dialogs.c: 957
+MAMEUI PCB Info: %s [%s]
+MAMEUI PCB情報: %s [%s]
 
 # osd/winui/mui_opts.c: 324 osd/winui/translate.c: 104
 MS Sans Serif
@@ -1517,6 +1549,10 @@ Not found
 # osd/winui/properties.c: 1062, 1170
 Not working
 動作不可
+
+# osd/winui/mameui.rc: 552
+Number of screens to create:
+生成する画面表\示の数:
 
 # osd/winui/mameui.rc: 455, 481, 1171
 OK
@@ -1840,7 +1876,7 @@ S&mall Icons
 
 # osd/winui/mameui.rc: 1122
 S&tretch screenshot larger than natural size
-スナップショットを拡大する(&T)
+スクリーンショットを拡大する(&T)
 
 # osd/winui/mameui.rc: 645
 Sample check:
@@ -1892,11 +1928,11 @@ Screen:
 
 # osd/winui/mameui.rc: 1121
 Screenshot Area
-スナップショット領域
+スクリーンショット領域
 
 # osd/winui/mameui.rc: 1129
 Screenshot Bordersize
-スナップショットの縁の幅
+スクリーンショットの縁の幅
 
 # osd/winui/mameui.rc: 1125
 Screenshot Cycletime in Seconds
@@ -1904,7 +1940,7 @@ Screenshot Cycletime in Seconds
 
 # osd/winui/mameui.rc: 82
 Screenshot Ta&b\tAlt+B
-スナップショットタブ(&B)\tAlt+B
+スクリーンショットタブ(&B)\tAlt+B
 
 # osd/winui/properties.c: 406
 Second screen
@@ -1972,7 +2008,7 @@ Set Game List Not Working Color
 
 # osd/winui/mameui.rc: 1133
 Set Screenshot Border Color
-スナップショットの縁の色を変更
+スクリーンショットの縁の色を変更
 
 # osd/winui/mameui.rc: 1553
 Set default game options
@@ -2032,7 +2068,7 @@ Show or hide the picture area
 
 # osd/winui/mameui.rc: 1519
 Show or hide the screen shot
-スナップショットの表\示/非表\示を切り替えます
+スクリーンショットの表\示/非表\示を切り替えます
 
 # osd/winui/mameui.rc: 1519, 1644
 Show or hide the status bar
@@ -2222,6 +2258,10 @@ Story
 Supported
 対応
 
+# osd/winui/mameui.rc: 936
+Switch drivers
+使用するドライバの変更
+
 # osd/winui/mameui.rc: 782
 Switch resolutions to fit
 画面解像度を変更
@@ -2280,7 +2320,7 @@ Toggle Fullscreen mode
 
 # osd/winui/winui.c: 814
 Toggle Screen Shot
-スナップショット
+スクリーンショット
 
 # osd/winui/mameui.rc: 1519
 Toggle full screen mode
@@ -2450,6 +2490,14 @@ Vector (V)
 Vector (V) %f Hz (%d colors)
 ベクタ (縦) %f Hz (%d 色)
 
+# osd/winui/properties.c: 393
+Version 8
+バージョン 8
+
+# osd/winui/properties.c: 392
+Version 9
+バージョン 9
+
 # osd/winui/layout.c: 65 osd/winui/treeview.c: 1142 osd/winui/winui.c: 5775
 Vertical
 縦型
@@ -2558,14 +2606,6 @@ by S&amples
 by T&rackball
 トラックボール(&r)
 
-# osd/winui/dialogs.c: 839
- again.\r\n
-
-
-# osd/winui/dialogs.c: 839
- requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run 
-
-
 # osd/winui/dialogs.c: 136
  will now reset the following\n
 
@@ -2582,20 +2622,12 @@ by T&rackball
 .\n
 
 
-# osd/winui/mameui.rc: 377
-About MAMEUI
-
-
 # osd/winui/mameui.rc: 817
 Activate Integrated Debugger
 
 
 # osd/winui/mameui.rc: 391
 Additional MAMEUI code by
-
-
-# osd/winui/layout.c: 126
-Cheats
 
 
 # osd/winui/mameui.rc: 389
@@ -2642,10 +2674,6 @@ Default Settings
 Font Files
 
 
-# osd/winui/winui.c: 7483
-Game
-
-
 # osd/winui/dialogs.c: 264
 Gamename
 
@@ -2666,18 +2694,6 @@ Gamename/Gamename + Increment
 Gamename/Increment
 
 
-# osd/winui/properties.c: 1260
-Global BIOS options\nCustom options used by all games in the %s
-
-
-# osd/winui/dialogs.c: 140
-Global game options\n
-
-
-# osd/winui/winui.c: 5478
-Image Files (*.png)
-
-
 # osd/winui/dialogs.c: 142
 Individual game options\n
 
@@ -2690,16 +2706,12 @@ Internal
 John Hardy IV and Michael Soderstrom
 
 
-# osd/winui/mameui.rc: 874
-Joystickmap
-
-
 # osd/winui/layout.c: 153
 Language Files
 
 
-# osd/winui/winui.c: 6390
-MAME input files (*.inp,*.zip)
+# osd/winui/dialogs.c: 839
+MAMEUI requires DirectX version 3 or later, which is a set of operating\r\nsystem extensions by Microsoft for Windows 9x, NT and 2000.\r\n\r\nVisit Microsoft's DirectX web page at http://www.microsoft.com/directx\r\ndownload DirectX, install it, and then run MAMEUI again.\r\n
 
 
 # osd/winui/mameui.rc: 386
@@ -2712,10 +2724,6 @@ Main background
 
 # osd/winui/mameui.rc: 187
 Mame&info File...
-
-
-# osd/winui/mameui.rc: 552
-Number of screens to create:
 
 
 # osd/winui/mameui.rc: 815
@@ -2782,20 +2790,8 @@ Snapshot/movie resolution
 Snapshot/movie view
 
 
-# osd/winui/mameui.rc: 936
-Switch drivers
-
-
 # osd/winui/mameui.rc: 821
 Update Main window during paused emulation
-
-
-# osd/winui/properties.c: 393
-Version 8
-
-
-# osd/winui/properties.c: 392
-Version 9
 
 
 # osd/winui/winui.c: 6420

@@ -134,111 +134,111 @@ Direct3D固有オプション
 DIRECTDRAW-SPECIFIC OPTIONS
 DirectDraw固有オプション
 
-# osd/windows/drawd3d.c: 1172
+# osd/windows/drawd3d.c: 1171
 Device %s currently in an unsupported mode\n
 デバイス「%s」は現在サポートされていないモードです\n
 
-# osd/windows/drawd3d.c: 1142
+# osd/windows/drawd3d.c: 1141
 Direct3D: Configuring adapter #%d = %s\n
 Direct3D: アダプタ#%dを%sに設定しています\n
 
-# osd/windows/drawd3d.c: 766
+# osd/windows/drawd3d.c: 765
 Direct3D: Device created at %dx%d\n
 Direct3D: デバイスを%dx%dで作成しました\n
 
-# osd/windows/drawd3d.c: 625, 2380
+# osd/windows/drawd3d.c: 624, 2379
 Direct3D: Error %08X during device begin_scene call\n
 Direct3D: デバイスのbegin_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1640, 2429
+# osd/windows/drawd3d.c: 1639, 2428
 Direct3D: Error %08X during device draw_primitive call\n
 Direct3D: デバイスのdraw_primitive呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 654, 2433
+# osd/windows/drawd3d.c: 653, 2432
 Direct3D: Error %08X during device end_scene call\n
 Direct3D: デバイスのend_scene呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2373
+# osd/windows/drawd3d.c: 2372
 Direct3D: Error %08X during device get_render_target call\n
 Direct3D: デバイスのget_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 660
+# osd/windows/drawd3d.c: 659
 Direct3D: Error %08X during device present call\n
 Direct3D: デバイスのpresent呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 362, 369, 376, 383
+# osd/windows/drawd3d.c: 361, 368, 375, 382
 Direct3D: Error %08X during device set_render_state call\n
 Direct3D: デバイスのset_render_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2375, 2437
+# osd/windows/drawd3d.c: 2374, 2436
 Direct3D: Error %08X during device set_render_target call\n
 Direct3D: デバイスのset_render_target呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1612, 2427
+# osd/windows/drawd3d.c: 1611, 2426
 Direct3D: Error %08X during device set_stream_source call\n
 Direct3D: デバイスのset_stream_source呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 294, 2386
+# osd/windows/drawd3d.c: 293, 2385
 Direct3D: Error %08X during device set_texture call\n
 Direct3D: デバイスのset_texture呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 306, 308, 320, 322, 334
+# osd/windows/drawd3d.c: 305, 307, 319, 321, 333
 Direct3D: Error %08X during device set_texture_stage_state call\n
 Direct3D: デバイスのset_texture_stage_state呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2361
+# osd/windows/drawd3d.c: 2360
 Direct3D: Error %08X during device stretct_rect call\n
 Direct3D: デバイスのstretct_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 938, 940, 942, 944, 948, 962, 976, 990, 1016, 1040, 1054, 1067, 1074
+# osd/windows/drawd3d.c: 937, 939, 941, 943, 947, 961, 975, 989, 1015, 1039, 1053, 1066, 1073
 Direct3D: Error %08X during get_caps_dword call\n
 Direct3D: get_caps_dword呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2340
+# osd/windows/drawd3d.c: 2339
 Direct3D: Error %08X during texture get_surface_level call\n
 Direct3D: テクスチャのget_surface_level呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2316
+# osd/windows/drawd3d.c: 2315
 Direct3D: Error %08X during texture unlock_rect call\n
 Direct3D: テクスチャのunlock_rect呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 2390
+# osd/windows/drawd3d.c: 2389
 Direct3D: Error %08X during vertex buffer lock call\n
 Direct3D: 頂点バッファのlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1607, 2422
+# osd/windows/drawd3d.c: 1606, 2421
 Direct3D: Error %08X during vertex buffer unlock call\n
 Direct3D: 頂点バッファのunlock呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawd3d.c: 1003
+# osd/windows/drawd3d.c: 1002
 Direct3D: Error - Device does not support dest alpha blending with inverted source alpha\n
 Direct3D: エラー: デバイスは反転したソ\ースアルファとのアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 998
+# osd/windows/drawd3d.c: 997
 Direct3D: Error - Device does not support dest alpha blending with one\n
 Direct3D: エラー: デバイスはアルファブレンド係数1をサポートしていません\n
 
-# osd/windows/drawd3d.c: 993
+# osd/windows/drawd3d.c: 992
 Direct3D: Error - Device does not support dest alpha blending with zero\n
 Direct3D: エラー: デバイスはアルファブレンド係数0をサポートしていません\n
 
-# osd/windows/drawd3d.c: 951
+# osd/windows/drawd3d.c: 950
 Direct3D: Error - Device does not support immediate presentations\n
 Direct3D: エラー: デバイスは垂直同期を待たないプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 956
+# osd/windows/drawd3d.c: 955
 Direct3D: Error - Device does not support per-refresh presentations\n
 Direct3D: エラー: デバイスは垂直同期を待つプレゼンテーション処理をサポートしていません\n
 
-# osd/windows/drawd3d.c: 984
+# osd/windows/drawd3d.c: 983
 Direct3D: Error - Device does not support source alpha blending with destination color\n
 Direct3D: エラー: デバイスは色指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 979
+# osd/windows/drawd3d.c: 978
 Direct3D: Error - Device does not support source alpha blending with source alpha\n
 Direct3D: エラー: デバイスはソ\ースアルファで指定されたアルファブレンドをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1010
+# osd/windows/drawd3d.c: 1009
 Direct3D: Error - Device does not support texture alpha\n
 Direct3D: エラー: デバイスはテクスチャのアルファをサポートしていません\n
 
@@ -250,11 +250,11 @@ Direct3D: Direct3D8の初期化中にエラーが発生しました\n
 Direct3D: Error attempting to initialize Direct3D9\n
 Direct3D: Direct3D9の初期化中にエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1330
+# osd/windows/drawd3d.c: 1329
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
 Direct3D: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawd3d.c: 1274
+# osd/windows/drawd3d.c: 1273
 Direct3D: Selecting video mode...\n
 Direct3D: 描画モードを選択中です...\n
 
@@ -282,207 +282,207 @@ Direct3D: Direct3D 8を使用しています\n
 Direct3D: Using Direct3D 9\n
 Direct3D: Direct3D 9を使用しています\n
 
-# osd/windows/drawd3d.c: 1076
+# osd/windows/drawd3d.c: 1075
 Direct3D: Using StretchRect for prescaling\n
 Direct3D: プリスケールにStretchRectを使用しています\n
 
-# osd/windows/drawd3d.c: 1070
+# osd/windows/drawd3d.c: 1069
 Direct3D: Using dynamic textures\n
 Direct3D: ダイナミックテクスチャを使用しています\n
 
-# osd/windows/drawd3d.c: 1024
+# osd/windows/drawd3d.c: 1023
 Direct3D: Warning - Device does not support bilinear texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1034
+# osd/windows/drawd3d.c: 1033
 Direct3D: Warning - Device does not support bilinear texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にバイリニアフィルタをサポートしていません\n
 
-# osd/windows/drawd3d.c: 970
+# osd/windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support hardware rasterization\n
 Direct3D: 警告: デバイスはハードウェアによるラスタライズをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1019
+# osd/windows/drawd3d.c: 1018
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
 Direct3D: 警告: デバイスはテクスチャの拡大にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1029
+# osd/windows/drawd3d.c: 1028
 Direct3D: Warning - Device does not support point-sample texture filtering for minification\n
 Direct3D: 警告: デバイスはテクスチャの縮小にポイントサンプルフィルタリングをサポートしていません\n
 
-# osd/windows/drawd3d.c: 965
+# osd/windows/drawd3d.c: 964
 Direct3D: Warning - Device does not support queued rendering after a page flip\n
 Direct3D: 警告: デバイスはページフリップ後の描画コマンドキューをサポートしていません\n
 
-# osd/windows/drawd3d.c: 1043
+# osd/windows/drawd3d.c: 1042
 Direct3D: Warning - Device does not support texture clamping\n
 Direct3D: 警告: デバイスはテクスチャのアドレス固定をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1057
+# osd/windows/drawd3d.c: 1056
 Direct3D: Warning - Device does not support texture modulation\n
 Direct3D: 警告: デバイスはテクスチャの乗算をサポートしていません\n
 
-# osd/windows/drawd3d.c: 1048
+# osd/windows/drawd3d.c: 1047
 Direct3D: Warning - Device does not support texture wrapping\n
 Direct3D: 警告: デバイスはテクスチャのテクスチャの貼\り付けをサポートしていません\n
 
-# osd/windows/drawd3d.c: 783
+# osd/windows/drawd3d.c: 782
 Direct3D: Warning - device does not support full screen gamma correction.\n
 Direct3D: 警告: デバイスはフルスクリーンでのガンマ補正をサポートしていません\n
 
-# osd/windows/drawd3d.c: 708
+# osd/windows/drawd3d.c: 707
 Direct3D: YUV format = %s\n
 Direct3D: YUV 形式 = %s\n
 
-# osd/windows/drawd3d.c: 1712
+# osd/windows/drawd3d.c: 1711
 Direct3D: adjusting prescale from %dx%d to %dx%d\n
 Direct3D: %dx%dから%dx%dにプリスケールを調整しました\n
 
-# osd/windows/drawd3d.c: 1112
+# osd/windows/drawd3d.c: 1111
 Direct3D: failed to recreate resources for device; failing permanently\n
 Direct3D: デバイスのリソ\ース再生成が失敗しました。
 
-# osd/windows/drawd3d.c: 1099
+# osd/windows/drawd3d.c: 1098
 Direct3D: resetting device\n
 Direct3D: デバイスをリセットしています\n
 
-# osd/windows/drawdd.c: 793
+# osd/windows/drawdd.c: 792
 DirectDraw: %s surface created: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 DirectDraw: %sバッファを作成しました: %dx%dx%d (R=%08X G=%08X B=%08X)\n
 
-# osd/windows/drawdd.c: 1130
+# osd/windows/drawdd.c: 1129
 DirectDraw: Configuring device %s\n
 DirectDraw: デバイス%sを設定中\n
 
-# osd/windows/drawdd.c: 620
+# osd/windows/drawdd.c: 619
 DirectDraw: Error %08X attempting to set gamma correction.\n
 DirectDraw: ガンマ補正の設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 499
+# osd/windows/drawdd.c: 498
 DirectDraw: Error %08X attempting to set video mode %dx%d@%d call\n
 DirectDraw: 描画モードを%dx%d@%dに設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1090
+# osd/windows/drawdd.c: 1089
 DirectDraw: Error %08X blitting to the screen\n
 DirectDraw: 画面への描画でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1057, 1066, 1075, 1084
+# osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
 DirectDraw: 画面の消去でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 778
+# osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
 DirectDraw: %sバッファの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 819
+# osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
 DirectDraw: クリッパーの作成でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 464, 1119
+# osd/windows/drawdd.c: 463, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
 DirectDraw: DirectDrawCreateEx呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1216
+# osd/windows/drawdd.c: 1215
 DirectDraw: Error %08X during DirectDrawEnumerateEx call\n
 DirectDraw: 呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1338
+# osd/windows/drawdd.c: 1337
 DirectDraw: Error %08X during EnumDisplayModes call\n
 DirectDraw: EnumDisplayModes呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 720
+# osd/windows/drawdd.c: 719
 DirectDraw: Error %08X during IDirectDraw7_GetCaps call\n
 DirectDraw: IDirectDraw7_GetCaps呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 489
+# osd/windows/drawdd.c: 488
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(DEVICEWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 483
+# osd/windows/drawdd.c: 482
 DirectDraw: Error %08X during IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW) call\n
 DirectDraw: IDirectDraw7_SetCooperativeLevel(FOCUSWINDOW)呼び出しでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 786
+# osd/windows/drawdd.c: 785
 DirectDraw: Error %08X getting %s surface desciption\n
 DirectDraw: %sバッファの詳細を取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 548
+# osd/windows/drawdd.c: 547
 DirectDraw: Error %08X getting attached back surface\n
 DirectDraw: 割り当てられた裏画面バッファの取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 1138
+# osd/windows/drawdd.c: 1137
 DirectDraw: Error %08X getting current display mode\n
 DirectDraw: 現在の画面モード取得でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 357
+# osd/windows/drawdd.c: 356
 DirectDraw: Error %08X locking blit surface\n
 DirectDraw: blitバッファのロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 827
+# osd/windows/drawdd.c: 826
 DirectDraw: Error %08X setting clipper hwnd\n
 DirectDraw: ウィンドウのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 835
+# osd/windows/drawdd.c: 834
 DirectDraw: Error %08X setting clipper on primary surface\n
 DirectDraw: primaryバッファのクリッパー設定でエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 430
+# osd/windows/drawdd.c: 429
 DirectDraw: Error %08X unlocking blit surface\n
 DirectDraw: blitバッファのアンロックでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 436, 1096
+# osd/windows/drawdd.c: 435, 1095
 DirectDraw: Error %08X waiting for VBLANK\n
 DirectDraw: VBLANK待ちでエラー%08Xが発生しました\n
 
-# osd/windows/drawdd.c: 472
+# osd/windows/drawdd.c: 471
 DirectDraw: Error - Device does not meet minimum requirements for DirectDraw rendering\n
 DirectDraw: エラー: デバイスはDirectDraw描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawdd.c: 351
+# osd/windows/drawdd.c: 350
 DirectDraw: Lost surfaces; deleting and retrying next frame\n
 DirectDraw: バッファの消失。次のフレームに削除してやり直します\n
 
-# osd/windows/drawdd.c: 1339
+# osd/windows/drawdd.c: 1338
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
 DirectDraw: 選択されたモードは%4dx%4d@%3dHz\n
 
-# osd/windows/drawdd.c: 931
+# osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
 DirectDraw: 新しいバッファサイズは%dx%d\n
 
-# osd/windows/drawdd.c: 1336
+# osd/windows/drawdd.c: 1335
 DirectDraw: Selecting video mode...\n
 DirectDraw: 描画モードを選択中です...\n
 
-# osd/windows/drawdd.c: 197
+# osd/windows/drawdd.c: 196
 DirectDraw: Unable to access ddraw.dll\n
 DirectDraw: ddraw.dllにアクセス出来ません\n
 
-# osd/windows/drawdd.c: 205
+# osd/windows/drawdd.c: 204
 DirectDraw: Unable to find DirectDrawCreateEx\n
 DirectDraw: DirectDrawCreateExを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 215
+# osd/windows/drawdd.c: 214
 DirectDraw: Unable to find DirectDrawEnumerateExA\n
 DirectDraw: DirectDrawEnumerateExAを見つける事が出来ません\n
 
-# osd/windows/drawdd.c: 386, 422, 1172
+# osd/windows/drawdd.c: 385, 421, 1171
 DirectDraw: Unknown target mode: R=%08X G=%08X B=%08X\n
 DirectDraw: 不明な画面モード: R=%08X G=%08X B=%08X\n
 
-# osd/windows/drawdd.c: 228
+# osd/windows/drawdd.c: 227
 DirectDraw: Using DirectDraw 7\n
 DirectDraw: DirectDraw 7を使用します\n
 
-# osd/windows/drawdd.c: 727
+# osd/windows/drawdd.c: 726
 DirectDraw: Warning - Device does not support hardware stretching\n
 DirectDraw: 警告: デバイスはハードウェア拡大表\示をサポートしていません\n
 
-# osd/windows/drawdd.c: 476
+# osd/windows/drawdd.c: 475
 DirectDraw: Warning - Device may not perform well for DirectDraw rendering\n
 DirectDraw: 警告: デバイスはDirectDraw描画にあまり適していないかも知れません\n
 
-# osd/windows/drawdd.c: 603
+# osd/windows/drawdd.c: 602
 DirectDraw: Warning - device does not support full screen gamma correction.\n
 DirectDraw: 警告: デバイスはフルスクリーンのガンマ補正をサポートしていません。\n
 
@@ -530,7 +530,7 @@ DirectSoundのプライマリバッファを生成出来ません: %08x\n
 Error creating render target for window %d
 ウインドウ%dの描画対象の生成でエラーが発生しました
 
-# osd/windows/drawd3d.c: 817
+# osd/windows/drawd3d.c: 816
 Error creating vertex buffer (%08X)
 頂点バッファの作成でエラーが発生しました(%08X)
 
@@ -538,15 +538,15 @@ Error creating vertex buffer (%08X)
 Error getting DirectSound capabilities: %08x\n
 DirectSoundの情報が取得出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 1139
+# osd/windows/drawd3d.c: 1138
 Error getting identifier for adapter #%d\n
 アダプタ#%dの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawdd.c: 1127
+# osd/windows/drawdd.c: 1126
 Error getting identifier for device\n
 デバイスの識別情報の取得でエラーが発生しました\n
 
-# osd/windows/drawd3d.c: 1148
+# osd/windows/drawd3d.c: 1147
 Error getting mode for adapter #%d\n
 アダプタ#%dのモードの取得でエラーが発生しました\n
 
@@ -570,7 +570,7 @@ DirectSoundの初期化に失敗しました: %08x\n
 Error setting primary DirectSound buffer format: %08x\n
 DirectSoundのプライマリバッファの形式が設定出来ません: %08x\n
 
-# osd/windows/drawd3d.c: 825
+# osd/windows/drawd3d.c: 824
 Error setting vertex shader (%08X)
 頂点シェーダの設定でエラーが発生しました(%08X)\n
 
@@ -578,15 +578,15 @@ Error setting vertex shader (%08X)
 Error when %s the image: %s
 イメージの%sでエラー: %s
 
-# osd/windows/drawd3d.c: 694
+# osd/windows/drawd3d.c: 693
 Error: A8R8G8B8 format textures not supported\n
 エラー: A8R8G8B8形式のテクスチャがサポートされていません\n
 
-# osd/windows/drawd3d.c: 684
+# osd/windows/drawd3d.c: 683
 Error: Device does not meet minimum requirements for Direct3D rendering\n
 エラー: デバイスはDirect3D描画に必要最小限の要件をサポートしていません\n
 
-# osd/windows/drawd3d.c: 726
+# osd/windows/drawd3d.c: 725
 Error: unable to configure a screen texture format\n
 エラー: 画面テクスチャ形式の設定が出来ません\n
 
@@ -594,7 +594,7 @@ Error: unable to configure a screen texture format\n
 FULL SCREEN OPTIONS
 フルスクリーンオプション
 
-# osd/windows/window.c: 231
+# osd/windows/window.c: 230
 Failed to create pause event
 ポーズイベントの生成が失敗しました
 
@@ -602,11 +602,11 @@ Failed to create pause event
 Failed to create window class
 ウインドウクラスの生成が失敗しました
 
-# osd/windows/window.c: 245
+# osd/windows/window.c: 244
 Failed to create window thread
 ウインドウスレッドの生成が失敗しました
 
-# osd/windows/window.c: 239
+# osd/windows/window.c: 238
 Failed to create window thread ready event
 ウインドウスレッド準備完了イベントの生成が失敗しました
 
@@ -662,7 +662,7 @@ Natural
 OK
 OK
 
-# osd/windows/winmain.c: 752
+# osd/windows/winmain.c: 756
 Out of memory
 メモリ不足
 
@@ -670,15 +670,15 @@ Out of memory
 PER-WINDOW VIDEO OPTIONS
 ウィンドウ毎の画面オプション
 
-# mess/osd/windows/mess.rc: 149
+# mess/osd/windows/mess.rc: 150
 Pause
 中断
 
-# mess/osd/windows/mess.rc: 147
+# mess/osd/windows/mess.rc: 148
 Play
 プレイ
 
-# osd/windows/drawd3d.c: 1200
+# osd/windows/drawd3d.c: 1199
 Proposed video mode not supported on device %s\n
 指定された画面モードはデバイス%sではサポートされていません\n
 
@@ -734,19 +734,19 @@ Sound: buffer overflows=%d underflows=%d\n
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
 ステートファイル (*.sta)|*.sta|全てのファイル (*.*)|*.*
 
-# mess/osd/windows/mess.rc: 148
+# mess/osd/windows/mess.rc: 149
 Stop
 停止
 
-# osd/windows/winmain.c: 748
+# osd/windows/winmain.c: 752
 Symbol table full
 シンボルテーブルが一杯
 
-# mess/osd/windows/mess.rc: 142 
+# mess/osd/windows/mess.rc: 143 
 Tape Control
 テープ制御
 
-# osd/windows/drawd3d.c: 1866
+# osd/windows/drawd3d.c: 1865
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
 テクスチャが大きすぎます!(要求: %dx%d、最大: %dx%d)\n
 
@@ -766,15 +766,15 @@ Unable to close the keyboard device. (error %d)\n
 Unable to complete window creation
 ウインドウの生成が完了出来ません
 
-# osd/windows/drawd3d.c: 762
+# osd/windows/drawd3d.c: 761
 Unable to create the Direct3D device (%08X)\n
 Direct3Dデバイスを作成出来ません(%08X)\n
 
-# osd/windows/drawd3d.c: 467, 528
+# osd/windows/drawd3d.c: 466, 527
 Unable to initialize Direct3D.\n
 Direct3Dを初期化出来ません。\n
 
-# osd/windows/drawdd.c: 271
+# osd/windows/drawdd.c: 270
 Unable to initialize DirectDraw.\n
 DirectDrawを初期化出来ません\n
 
@@ -786,7 +786,7 @@ PNGファイル「%s」を読み込めません\n
 Unable to open the keyboard device. (error %d)\n
 キーボードディバイスがオープン出来ません。(エラー %d)\n
 
-# osd/windows/drawd3d.c: 2303
+# osd/windows/drawd3d.c: 2302
 Unknown texture blendmode=%d format=%d\n
 不明なテクスチャブレンドモード=%d 形式=%d\n
 
@@ -822,7 +822,7 @@ Windows版ビデオオプション
 Warning: -video none doesn't make much sense without -seconds_to_run\n
 警告: -video none は -seconds_to_run オプション無しでは無意味です\n
 
-# osd/windows/drawd3d.c: 688
+# osd/windows/drawd3d.c: 687
 Warning: Device may not perform well for Direct3D rendering\n
 警告: デバイスのDirect3D描画パフォーマンスはあまり良くありません\n
 
@@ -1038,7 +1038,7 @@ thread priority for the main game thread; range from -15 to 1
 video output method: none, gdi, ddraw, or d3d
 ビデオ描画方法: none、gdi、ddrawまたはd3d
 
-# osd/windows/drawd3d.c: 770
+# osd/windows/drawd3d.c: 769
 Direct3D: Max texture size = %dx%d\n
 
 

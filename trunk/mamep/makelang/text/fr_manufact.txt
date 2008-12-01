@@ -2,8 +2,8 @@
 <unknown>
 <inconnu>
 
-# NGEM2K (beta 2006-01-18)
-homebrew
+# NGEM2K (Homebrew 060118, Beta)
+Homebrew
 fait maison
 
 # Chewing Gum
@@ -294,7 +294,7 @@ Barko Corp.
 Bee-Oh
 
 
-# Neo 2500 Demo
+# Neo 2500 Demo (Homebrew)
 Blastar
 
 
@@ -378,7 +378,7 @@ Century II
 Century?
 
 
-# Neo-Demo
+# Neo-Demo (Homebrew)
 Chaos
 
 
@@ -1110,7 +1110,7 @@ Itisa
 JMA
 
 
-# Poker Night
+# Poker Night (Homebrew)
 JMK
 
 
@@ -1406,10 +1406,6 @@ Monolith Corp.
 Mylstar
 
 
-# Vantris (Vanguard hardware)
-N.Kehrer
-
-
 # Pirates
 NIX
 
@@ -1454,7 +1450,7 @@ Nazca
 Nazionale Elettronica
 
 
-# Neo Pong (v1.1)
+# Neo Pong (Ver 1.1, Homebrew)
 Neodev
 
 
@@ -1670,7 +1666,7 @@ Promat
 Psikyo
 
 
-# Shadow of the Beast (Neo Demo)
+# Shadow of the Beast (Neo Demo, Homebrew)
 Psygnosis
 
 
@@ -1722,7 +1718,7 @@ Rare LTD.
 Raster Elite
 
 
-# Frog Feast
+# Frog Feast (Homebrew)
 Rastersoft
 
 

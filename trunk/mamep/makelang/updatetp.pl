@@ -14,7 +14,7 @@
 #	  -- OSD texts (for CUI)
 #		MACRO: _WINDOWS("...")
 #	tp_ui.txt
-#	  -- OSD texts (for GUI, included mame32.rc)
+#	  -- OSD texts (for GUI, included mameui.rc)
 #		MACRO: _UI("...")
 #	tp_manufact.txt
 #	  -- the game manufactures
@@ -304,18 +304,18 @@ sub ParseSrcFiles
 				}
 			}
 
-			# ignore TEXT_MAMENAME and TEXT_MAME32NAME defines
-			next if /^#\s*define\s+TEXT_(MAMENAME|MAME32NAME)\s+/;
+			# ignore TEXT_MAMENAME and TEXT_MAMEUINAME defines
+			next if /^#\s*define\s+TEXT_(MAMENAME|MAMEUINAME)\s+/;
 
-			# ignore MAMENAME and MAME32NAME defines
-			next if /^#\s*define\s+(MAMENAME|MAME32NAME)\s+/;
+			# ignore MAMENAME and MAMEUINAME defines
+			next if /^#\s*define\s+(MAMENAME|MAMEUINAME)\s+/;
 
-			# convert TEXT_MAMENAME and TEXT_MAME32NAME
-			s/TEXT_(MAMENAME|MAME32NAME)/$1/g;
+			# convert TEXT_MAMENAME and TEXT_MAMEUINAME
+			s/TEXT_(MAMENAME|MAMEUINAME)/$1/g;
 
-			# convert MAMENAME and MAME32NAME
+			# convert MAMENAME and MAMEUINAME
 			s/MAMENAME/"MAME"/g;
-			s/MAME32NAME/"MAME32"/g;
+			s/MAMEUINAME/"MAMEUI"/g;
 
 			# convert APPNAME/APPLONGNAME
 			s/APPNAME/"MAME"/g;
@@ -369,12 +369,12 @@ sub ParseSrcFiles
 							s/[\r\n]//g;
 							s/^\s*//;
 
-							# convert TEXT_MAMENAME and TEXT_MAME32NAME
-							s/TEXT_(MAMENAME|MAME32NAME)/$1/g;
+							# convert TEXT_MAMENAME and TEXT_MAMEUINAME
+							s/TEXT_(MAMENAME|MAMEUINAME)/$1/g;
 
-							# convert MAMENAME and MAME32NAME
+							# convert MAMENAME and MAMEUINAME
 							s/MAMENAME/"MAME"/g;
-							s/MAME32NAME/"MAME32"/g;
+							s/MAMEUINAME/"MAMEUI"/g;
 
 							# convert APPNAME/APPLONGNAME
 							s/APPNAME/"MAME"/g;
@@ -427,7 +427,7 @@ sub ParseSrcFiles
 				}
 
 				# translater credit
-				elsif ($file eq 'osd/winui/mame32.rc' && $result =~ /^\s+$/)
+				elsif ($file eq 'osd/winui/mameui.rc' && $result =~ /^\s+$/)
 				{
 					$found{$result} .= ", $lines";
 				}

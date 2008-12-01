@@ -4869,7 +4869,7 @@ static int MMO2LST(void)
 {
 	WCHAR filename[MAX_PATH];
 
-	swprintf(filename, TEXT("gamelist_%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
+	swprintf(filename, TEXT("mame_%s"), _Unicode(ui_lang_info[GetLangcode()].shortname));
 	_tcslwr(filename); 
 
 	if (!CommonFileDialog(GetSaveFileName, filename, FILETYPE_GAMELIST_FILES))
