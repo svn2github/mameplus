@@ -222,7 +222,8 @@ const char mame_disclaimer[] =
 
 extern int mame_validitychecks(const game_driver *driver);
 
-static int parse_ini_file(core_options *options, const char *name);
+//mamep: moved to global
+//static int parse_ini_file(core_options *options, const char *name);
 
 static running_machine *create_machine(const game_driver *driver);
 static void prepare_machine(running_machine *machine);
@@ -1393,7 +1394,7 @@ void mame_parse_ini_files(core_options *options, const game_driver *driver)
     parse_ini_file - parse a single INI file
 -------------------------------------------------*/
 
-static int parse_ini_file(core_options *options, const char *name)
+int parse_ini_file(core_options *options, const char *name)
 {
 	file_error filerr;
 	mame_file *file;

@@ -150,6 +150,10 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 	if (result != -1)
 		goto error;
 
+	//mamep: required for using -listxml with -driver_config
+	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
+	parse_ini_file(options, CONFIGNAME);
+
 #ifdef DRIVER_SWITCH
 	assign_drivers(options);
 #endif /* DRIVER_SWITCH */
@@ -164,6 +168,10 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 		result = MAMERR_INVALID_CONFIG;
 		goto error;
 	}
+
+	//mamep: required for using -listxml with -driver_config
+	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
+	parse_ini_file(options, CONFIGNAME);
 
 	/* find out what game we might be referring to */
 	gamename_option = options_get_string(options, OPTION_GAMENAME);
