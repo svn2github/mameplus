@@ -113,30 +113,30 @@ static const char *str_name[] =
 static const char *str_desc[] =
 {
 	"None",
-	"Scale2x v2.2 by AdvMAME",
-	"Scale2x3 v2.2 by AdvMAME",
-	"Scale2x4 v2.2 by AdvMAME",
-	"Scale3x v2.2 by AdvMAME",
-	"SuperScale by ElSemi",
-	"SuperScale 75% SL by ElSemi",
-	"2xSaI v0.59 by Kreed",
-	"Super 2xSaI v0.59 by Kreed",
-	"Super Eagle v0.59 by Kreed",
-	"Eagle 0.41a by Dirk Stevens",
-	"2xPM v0.2 by Pablo Medina",
+	"Scale2x",           // by AdvMAME v2.2
+	"Scale2x3",          // by AdvMAME v2.2
+	"Scale2x4",          // by AdvMAME v2.2
+	"Scale3x",           // by AdvMAME v2.2
+	"SuperScale",        // by ElSemi
+	"SuperScale 75% SL", // by ElSemi
+	"2xSaI",             // by Kreed v0.59
+	"Super 2xSaI",       // by Kreed v0.59
+	"Super Eagle",       // by Kreed v0.59
+	"Eagle",             // by Dirk Stevens v0.41a
+	"2xPM",              // by Pablo Medina v0.2
 	"HQ2x (force ASM)",
-	"HQ2x by Maxim Stepin",
-	"HQ2x3 by AdvMAME",
-	"HQ2x4 by AdvMAME",
-	"LQ2x by AdvMAME",
-	"LQ2x3 by AdvMAME",
-	"LQ2x4 by AdvMAME",
+	"HQ2x",              // by Maxim Stepin
+	"HQ2x3",             // by AdvMAME
+	"HQ2x4",             // by AdvMAME
+	"LQ2x",              // by AdvMAME
+	"LQ2x3",             // by AdvMAME
+	"LQ2x4",             // by AdvMAME
 	"HQ3x (force ASM)",
-	"HQ3x by Maxim Stepin",
-	"LQ3x by AdvMAME",
+	"HQ3x",              // by Maxim Stepin
+	"LQ3x",              // by AdvMAME
 #ifdef USE_4X_SCALE
-	"HQ4x by Maxim Stepin",
-	"LQ4x by AdvMAME",
+	"HQ4x",              // by Maxim Stepin
+	"LQ4x",              // by AdvMAME
 #endif /* USE_4X_SCALE */
 	NULL
 };
