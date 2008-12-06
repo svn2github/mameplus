@@ -933,11 +933,11 @@ void CreateSoundFolders(int parent_index)
 		map[i] = NULL;
 		// empty fields get filled in with SOUND_DUMMY, so check for this and
 		// don't add it
-		if (strcmp(sndtype_name(SOUND_DUMMY),sndtype_name(i)) == 0)
+		if (strcmp(sndtype_get_name(SOUND_DUMMY),sndtype_get_name(i)) == 0)
 			continue;
 
-		//dprintf("%i %s\n",i,sndtype_name(i));
-		lpTemp = NewFolder(_Unicode(sndtype_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
+		//dprintf("%i %s\n",i,sndtype_get_name(i));
+		lpTemp = NewFolder(_Unicode(sndtype_get_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
 		AddFolder(lpTemp);
 		map[i] = treeFolders[nFolder++];
 	}

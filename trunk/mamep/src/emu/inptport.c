@@ -1343,7 +1343,7 @@ input_port_value input_port_read_direct(const input_port_config *port)
 			/* interpolate if appropriate and if time has passed since the last update */
 			if (analog->interpolate && !(analog->field->flags & ANALOG_FLAG_RESET) && portdata->last_delta_nsec != 0)
 			{
-				attoseconds_t nsec_since_last = attotime_to_attoseconds(attotime_sub(timer_get_time(), portdata->last_frame_time)) / ATTOSECONDS_PER_NANOSECOND;
+				attoseconds_t nsec_since_last = attotime_to_attoseconds(attotime_sub(timer_get_time(port->machine), portdata->last_frame_time)) / ATTOSECONDS_PER_NANOSECOND;
 				value = analog->previous + ((INT64)(analog->accum - analog->previous) * nsec_since_last / portdata->last_delta_nsec);
 			}
 
@@ -2079,7 +2079,7 @@ static void frame_update(running_machine *machine)
 	input_port_private *portdata = machine->input_port_data;
 	const input_field_config *mouse_field = NULL;
 	int ui_visible = ui_is_menu_active();
-	attotime curtime = timer_get_time();
+	attotime curtime = timer_get_time(machine);
 	const input_port_config *port;
 	render_target *mouse_target;
 	INT32 mouse_target_x;
@@ -4147,6 +4147,9 @@ static time_t playback_init(running_machine *machine)
 	}
 #endif /* INP_CAPTION */
 
+	/* enable compression */
+	mame_fcompress(portdata->playback_file, TRUE);
+
 	return basetime;
 }
 
@@ -4224,7 +4227,8 @@ static void playback_port(const input_port_config *port)
 	{
 		analog_field_state *analog;
 
-		/* read the digital value */
+		/* read the default value and the digital state */
+		port->state->defvalue = playback_read_uint32(port->machine);
 		port->state->digital = playback_read_uint32(port->machine);
 
 		/* loop over analog ports and save their data */
@@ -4348,6 +4352,9 @@ static void record_init(running_machine *machine)
 
 	/* write it */
 	mame_fwrite(portdata->record_file, header, sizeof(header));
+
+	/* enable compression */
+	mame_fcompress(portdata->record_file, TRUE);
 }
 
 
@@ -4408,7 +4415,8 @@ static void record_port(const input_port_config *port)
 	{
 		analog_field_state *analog;
 
-		/* store the digital value */
+		/* store the default value and digital state */
+		record_write_uint32(port->machine, port->state->defvalue);
 		record_write_uint32(port->machine, port->state->digital);
 
 		/* loop over analog ports and save their data */
@@ -4641,7 +4649,7 @@ void set_autofiredelay(int player, int delay)
 }
 
 #ifdef USE_SHOW_INPUT_LOG
-INLINE void copy_command_buffer(char log)
+INLINE void copy_command_buffer(running_machine *machine, char log)
 {
 	char buf[UTF8_CHAR_MAX + 1];
 	unicode_char uchar;
@@ -4669,7 +4677,7 @@ INLINE void copy_command_buffer(char log)
 		return;
 
 	command_buffer[len].code = uchar;
-	command_buffer[len].time = attotime_to_double(timer_get_time());
+	command_buffer[len].time = attotime_to_double(timer_get_time(machine));
 	command_buffer[++len].code = '\0';
 }
 
@@ -4744,7 +4752,7 @@ static void make_input_log(running_machine *machine)
 			if (now_dir != 0)
 			{
 				char colorbutton = '0';
-				copy_command_buffer(colorbutton + now_dir);
+				copy_command_buffer(machine, colorbutton + now_dir);
 				old_dir = now_dir;
 			}
 		}
@@ -4820,16 +4828,16 @@ static void make_input_log(running_machine *machine)
 				for (i = 0; i < normal_buttons; i++, n <<= 1)
 				{
 					if ((now_btn & n) != 0 && (old_btn & n) == 0)
-						copy_command_buffer(colorbutton + i);
+						copy_command_buffer(machine, colorbutton + i);
 				}
 
 				/* if this is start button */
 				if (now_btn & 1 << normal_buttons)
-					copy_command_buffer('S');
+					copy_command_buffer(machine, 'S');
 
 				/* if this is select button (MESS only) */
 				if (now_btn & 1 << (normal_buttons + 1))
-					copy_command_buffer('s');
+					copy_command_buffer(machine, 's');
 
 				old_btn = now_btn;
 				now_btn = 0;

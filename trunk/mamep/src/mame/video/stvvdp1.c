@@ -194,7 +194,7 @@ READ32_HANDLER( stv_vdp1_regs_r )
 
 //  x ^= 0x00020000;
 
-	logerror ("cpu #%d (PC=%08X) VDP1: Read from Registers, Offset %04x\n",cpunum_get_active(), cpu_get_pc(space->cpu), offset);
+	logerror ("cpu %s (PC=%08X) VDP1: Read from Registers, Offset %04x\n", space->cpu->tag, cpu_get_pc(space->cpu), offset);
 //  if (offset == 0x04) return x;
 
 	return stv_vdp1_regs[offset];
@@ -350,7 +350,7 @@ WRITE32_HANDLER ( stv_vdp1_vram_w )
 
 //  if (((offset * 4) > 0xdf) && ((offset * 4) < 0x140))
 //  {
-//      logerror("cpu #%d (PC=%08X): VRAM dword write to %08X = %08X & %08X\n", cpunum_get_active(), cpu_get_pc(space->cpu), offset*4, data, mem_mask);
+//      logerror("cpu %s (PC=%08X): VRAM dword write to %08X = %08X & %08X\n", space->cpu->tag, cpu_get_pc(space->cpu), offset*4, data, mem_mask);
 //  }
 
 	data = stv_vdp1_vram[offset];
@@ -2127,14 +2127,14 @@ int stv_vdp1_start ( running_machine *machine )
 	stv_vdp1_user_cliprect.min_y = stv_vdp1_user_cliprect.max_y = 0;
 
 	// save state
-	state_save_register_global_pointer(stv_vdp1_regs, 0x040000/4);
-	state_save_register_global_pointer(stv_vdp1_vram, 0x100000/4);
-	state_save_register_global(stv_vdp1_fbcr_accessed);
-	state_save_register_global(stv_vdp1_current_display_framebuffer);
-	state_save_register_global(stv_vdp1_current_draw_framebuffer);
-	state_save_register_global(stv_vdp1_clear_framebuffer_on_next_frame);
-	state_save_register_global(stvvdp1_local_x);
-	state_save_register_global(stvvdp1_local_y);
+	state_save_register_global_pointer(machine, stv_vdp1_regs, 0x040000/4);
+	state_save_register_global_pointer(machine, stv_vdp1_vram, 0x100000/4);
+	state_save_register_global(machine, stv_vdp1_fbcr_accessed);
+	state_save_register_global(machine, stv_vdp1_current_display_framebuffer);
+	state_save_register_global(machine, stv_vdp1_current_draw_framebuffer);
+	state_save_register_global(machine, stv_vdp1_clear_framebuffer_on_next_frame);
+	state_save_register_global(machine, stvvdp1_local_x);
+	state_save_register_global(machine, stvvdp1_local_y);
 	state_save_register_postload(machine, stv_vdp1_state_save_postload, NULL);
 	return 0;
 }

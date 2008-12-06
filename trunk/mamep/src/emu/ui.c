@@ -136,7 +136,7 @@ static int ui_transparency;
 #endif /* UI_COLOR_DISPLAY */
 
 #ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(void);
+static void display_input_log(running_machine *machine);
 #endif /* USE_SHOW_INPUT_LOG */
 
 
@@ -499,6 +499,8 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 				if (show_warnings && astring_len(warnings_string(machine, messagebox_text)) > 0)
 				{
 					ui_set_handler(handler_messagebox_ok, 0);
+					if (machine->gamedrv->flags & (GAME_WRONG_COLORS | GAME_IMPERFECT_COLORS | GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND | GAME_NO_SOUND))
+						messagebox_backcolor = UI_YELLOWCOLOR;
 					if (machine->gamedrv->flags & (GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION))
 						messagebox_backcolor = UI_REDCOLOR;
 				}
@@ -1516,9 +1518,9 @@ static astring *warnings_string(running_machine *machine, astring *string)
 
 
 #ifdef USE_SHOW_INPUT_LOG
-static void display_input_log(void)
+static void display_input_log(running_machine *machine)
 {
-	double time_now = attotime_to_double(timer_get_time());
+	double time_now = attotime_to_double(timer_get_time(machine));
 	double time_display = attotime_to_double(ATTOTIME_IN_MSEC(1000));
 	double time_fadeout = attotime_to_double(ATTOTIME_IN_MSEC(1000));
 	float curx;
@@ -1624,7 +1626,7 @@ astring *game_info_astring(running_machine *machine, astring *string)
 	for (sndnum = 0; sndnum < MAX_SOUND && machine->config->sound[sndnum].type != SOUND_DUMMY; sndnum += count)
 	{
 		sound_type type = machine->config->sound[sndnum].type;
-		int clock = sndnum_clock(sndnum);
+		int clock = machine->config->sound[sndnum].clock;
 
 		/* append the Sound: string */
 		if (sndnum == 0)
@@ -1633,13 +1635,13 @@ astring *game_info_astring(running_machine *machine, astring *string)
 		/* count how many identical sound chips we have */
 		for (count = 1; sndnum + count < MAX_SOUND; count++)
 			if (machine->config->sound[sndnum + count].type != type ||
-		        sndnum_clock(sndnum + count) != clock)
+		        machine->config->sound[sndnum + count].clock != clock)
 		    	break;
 
-		/* if more than one, prepend a #x in front of the CPU name */
+		/* if more than one, prepend a #x in front of the SND name */
 		if (count > 1)
 			astring_catprintf(string, "%d" UTF8_MULTIPLY, count);
-		astring_catc(string, sndnum_name(sndnum));
+		astring_catc(string, sndtype_get_name(type));
 
 		/* display clock in kHz or MHz */
 		if (clock >= 1000000)
@@ -1816,8 +1818,8 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 		return ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* if the on-screen display isn't up and the user has toggled it, turn it on */
-//  if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0 && ui_input_pressed(machine, IPT_UI_ON_SCREEN_DISPLAY))
-//      return ui_set_handler(ui_slider_ui_handler, 0);
+	if ((machine->debug_flags & DEBUG_FLAG_ENABLED) == 0 && ui_input_pressed(machine, IPT_UI_ON_SCREEN_DISPLAY))
+		return ui_set_handler(ui_slider_ui_handler, 1);
 
 	/* handle a reset request */
 	if (ui_input_pressed(machine, IPT_UI_RESET_MACHINE))
@@ -1877,7 +1879,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 	/* show popup message if input exist any log */
 	if (show_input_log)
-		display_input_log();
+		display_input_log(machine);
 #endif /* USE_SHOW_INPUT_LOG */
 
 	/* toggle movie recording */

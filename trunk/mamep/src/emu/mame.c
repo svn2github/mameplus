@@ -622,7 +622,7 @@ void mame_schedule_soft_reset(running_machine *machine)
 	mame_pause(machine, FALSE);
 
 	/* if we're executing, abort out immediately */
-	if (cpunum_get_active() >= 0)
+	if (machine->activecpu != NULL)
 		cpu_eat_cycles(machine->activecpu, 1000000000);
 }
 
@@ -639,7 +639,7 @@ void mame_schedule_new_driver(running_machine *machine, const game_driver *drive
 	mame->new_driver_pending = driver;
 
 	/* if we're executing, abort out immediately */
-	if (cpunum_get_active() >= 0)
+	if (machine->activecpu != NULL)
 		cpu_eat_cycles(machine->activecpu, 1000000000);
 }
 
@@ -684,7 +684,7 @@ void mame_schedule_save(running_machine *machine, const char *filename)
 
 	/* note the start time and set a timer for the next timeslice to actually schedule it */
 	mame->saveload_schedule_callback = handle_save;
-	mame->saveload_schedule_time = timer_get_time();
+	mame->saveload_schedule_time = timer_get_time(machine);
 
 	/* we can't be paused since we need to clear out anonymous timers */
 	mame_pause(machine, FALSE);
@@ -705,7 +705,7 @@ void mame_schedule_load(running_machine *machine, const char *filename)
 
 	/* note the start time and set a timer for the next timeslice to actually schedule it */
 	mame->saveload_schedule_callback = handle_load;
-	mame->saveload_schedule_time = timer_get_time();
+	mame->saveload_schedule_time = timer_get_time(machine);
 
 	/* we can't be paused since we need to clear out anonymous timers */
 	mame_pause(machine, FALSE);
@@ -795,22 +795,22 @@ int mame_is_paused(running_machine *machine)
 UINT8 *memory_region_alloc(running_machine *machine, const char *name, UINT32 length, UINT32 flags)
 {
 	mame_private *mame = machine->mame_data;
-	region_info *info;
+	region_info **infoptr, *info;
 
-    /* make sure we don't have a region of the same name */
-    for (info = mame->regions; info != NULL; info = info->next)
-    	if (astring_cmpc(info->name, name) == 0)
+    /* make sure we don't have a region of the same name; also find the end of the list */
+    for (infoptr = &mame->regions; *infoptr != NULL; infoptr = &(*infoptr)->next)
+    	if (astring_cmpc((*infoptr)->name, name) == 0)
     		fatalerror("memory_region_alloc called with duplicate region name \"%s\"\n", name);
 
 	/* allocate the region */
 	info = malloc_or_die(sizeof(*info) + length);
-	info->next = mame->regions;
+	info->next = NULL;
 	info->name = astring_dupc(name);
 	info->length = length;
 	info->flags = flags;
 
 	/* hook us into the list */
-	mame->regions = info;
+	*infoptr = info;
 	return info->base;
 }
 
@@ -829,14 +829,14 @@ void memory_region_free(running_machine *machine, const char *name)
 	for (infoptr = &mame->regions; *infoptr != NULL; infoptr = &(*infoptr)->next)
 		if (astring_cmpc((*infoptr)->name, name) == 0)
 		{
-			region_info *deleteme = *infoptr;
+			region_info *info = *infoptr;
 
 			/* remove us from the list */
-			*infoptr = deleteme->next;
+			*infoptr = info->next;
 
 			/* free the region */
-			astring_free(deleteme->name);
-			free(deleteme);
+			astring_free(info->name);
+			free(info);
 			break;
 		}
 }
@@ -1289,23 +1289,6 @@ static void logfile_callback(running_machine *machine, const char *buffer)
 
 
 /*-------------------------------------------------
-    mame_find_cpu_index - return the index of the
-    given CPU, or -1 if not found
--------------------------------------------------*/
-
-int mame_find_cpu_index(running_machine *machine, const char *tag)
-{
-	int cpunum;
-
-	for (cpunum = 0; cpunum < MAX_CPU; cpunum++)
-		if (machine->config->cpu[cpunum].tag && strcmp(machine->config->cpu[cpunum].tag, tag) == 0)
-			return cpunum;
-
-	return -1;
-}
-
-
-/*-------------------------------------------------
     mame_rand - standardized random numbers
 -------------------------------------------------*/
 
@@ -1557,7 +1540,7 @@ static void init_machine(running_machine *machine)
 	input_init(machine);
 	output_init(machine);
 	state_init(machine);
-	state_save_allow_registration(TRUE);
+	state_save_allow_registration(machine, TRUE);
 	drawgfx_init(machine);
 	palette_init(machine);
 	render_init(machine);
@@ -1567,13 +1550,13 @@ static void init_machine(running_machine *machine)
 #endif /* MESS */
 	generic_machine_init(machine);
 	generic_video_init(machine);
-	generic_sound_init();
+	generic_sound_init(machine);
 	mame->rand_seed = 0x9d14abd7;
 
 	/* initialize the timers and allocate a soft_reset timer */
 	/* this must be done before cpu_init so that CPU's can allocate timers */
 	timer_init(machine);
-	mame->soft_reset_timer = timer_alloc(soft_reset, NULL);
+	mame->soft_reset_timer = timer_alloc(machine, soft_reset, NULL);
 
 	/* init the osd layer */
 	osd_init(machine);
@@ -1644,12 +1627,14 @@ static void init_machine(running_machine *machine)
 		(*machine->config->video_start)(machine);
 
 	/* free memory regions allocated with REGIONFLAG_DISPOSE (typically gfx roms) */
-	for (rgntag = memory_region_next(machine, NULL); rgntag != NULL; rgntag = nextrgntag)
-	{
-		nextrgntag = memory_region_next(machine, rgntag);
-		if (memory_region_flags(machine, rgntag) & ROMREGION_DISPOSE)
-			memory_region_free(machine, rgntag);
-	}
+	/* but not if the debugger is enabled (so we can look at the data) */
+	if (!options_get_bool(mame_options(), OPTION_DEBUG))
+		for (rgntag = memory_region_next(machine, NULL); rgntag != NULL; rgntag = nextrgntag)
+		{
+			nextrgntag = memory_region_next(machine, rgntag);
+			if (memory_region_flags(machine, rgntag) & ROMREGION_DISPOSE)
+				memory_region_free(machine, rgntag);
+		}
 
 	/* initialize miscellaneous systems */
 	saveload_init(machine);
@@ -1683,7 +1668,7 @@ static TIMER_CALLBACK( soft_reset )
 	begin_resource_tracking();
 
 	/* allow save state registrations during the reset */
-	state_save_allow_registration(TRUE);
+	state_save_allow_registration(machine, TRUE);
 
 	/* call all registered reset callbacks */
 	for (cb = machine->mame_data->reset_callback_list; cb; cb = cb->next)
@@ -1698,14 +1683,14 @@ static TIMER_CALLBACK( soft_reset )
 		(*machine->config->video_reset)(machine);
 
 	/* disallow save state registrations starting here */
-	state_save_allow_registration(FALSE);
+	state_save_allow_registration(machine, FALSE);
 
 	/* now we're running */
 	mame->current_phase = MAME_PHASE_RUNNING;
 
 	/* set the global time to the current time */
 	/* this allows 0-time queued callbacks to run before any CPUs execute */
-	timer_set_global_time(machine, timer_get_time());
+	timer_set_global_time(machine, timer_get_time(machine));
 }
 
 
@@ -1765,10 +1750,10 @@ static void handle_save(running_machine *machine)
 	}
 
 	/* if there are anonymous timers, we can't save just yet */
-	if (timer_count_anonymous() > 0)
+	if (timer_count_anonymous(machine) > 0)
 	{
 		/* if more than a second has passed, we're probably screwed */
-		if (attotime_sub(timer_get_time(), mame->saveload_schedule_time).seconds > 0)
+		if (attotime_sub(timer_get_time(machine), mame->saveload_schedule_time).seconds > 0)
 		{
 			popmessage(_("Unable to save due to pending anonymous timers. See error.log for details."));
 			goto cancel;
@@ -1783,7 +1768,7 @@ static void handle_save(running_machine *machine)
 		int cpunum;
 
 		/* write the save state */
-		if (state_save_save_begin(file) != 0)
+		if (state_save_save_begin(machine, file) != 0)
 		{
 			popmessage(_("Error: Unable to save state due to illegal registrations. See error.log for details."));
 			mame_fclose(file);
@@ -1850,10 +1835,10 @@ static void handle_load(running_machine *machine)
 
 	/* if there are anonymous timers, we can't load just yet because the timers might */
 	/* overwrite data we have loaded */
-	if (timer_count_anonymous() > 0)
+	if (timer_count_anonymous(machine) > 0)
 	{
 		/* if more than a second has passed, we're probably screwed */
-		if (attotime_sub(timer_get_time(), mame->saveload_schedule_time).seconds > 0)
+		if (attotime_sub(timer_get_time(machine), mame->saveload_schedule_time).seconds > 0)
 		{
 			popmessage(_("Unable to load due to pending anonymous timers. See error.log for details."));
 			goto cancel;
@@ -1866,7 +1851,7 @@ static void handle_load(running_machine *machine)
 	if (filerr == FILERR_NONE)
 	{
 		/* start loading */
-		if (state_save_load_begin(file) == 0)
+		if (state_save_load_begin(machine, file) == 0)
 		{
 			int cpunum;
 
@@ -1890,7 +1875,7 @@ static void handle_load(running_machine *machine)
 				}
 
 			/* finish and close */
-			state_save_load_finish();
+			state_save_load_finish(machine);
 			popmessage(_("State successfully loaded."));
 		}
 		else
@@ -1965,5 +1950,5 @@ void mame_get_base_datetime(running_machine *machine, mame_system_time *systime)
 void mame_get_current_datetime(running_machine *machine, mame_system_time *systime)
 {
 	mame_private *mame = machine->mame_data;
-	fill_systime(systime, mame->base_time + timer_get_time().seconds);
+	fill_systime(systime, mame->base_time + timer_get_time(machine).seconds);
 }

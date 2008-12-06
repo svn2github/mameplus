@@ -878,7 +878,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 			}
 
-			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_name(sound_type)));
+			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_get_name(sound_type)));
 
 			if (clock)
 			{
