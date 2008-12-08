@@ -3049,6 +3049,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 	int refresh_selection = 0;
 	char screen_option[32];
 	const char *screen;
+	//LPTSTR t_screen;
 	WCHAR buf[16];
 	int i;
 	DEVMODEA devmode;
@@ -3079,6 +3080,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 		// determine which screen we're using
 		ScreenSetOptionName(map, dialog, NULL, screen_option, ARRAY_LENGTH(screen_option));
 		screen = options_get_string(opts, screen_option);
+		//t_screen = tstring_from_utf8(screen);
 		if (!screen || !*screen || mame_stricmp(screen, "auto") == 0)
 			screen = NULL;
 
@@ -3120,6 +3122,7 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 				}
 			}
 		}
+		//free(t_screen);
 
 		(void)ComboBox_SetCurSel(sizes_control, sizes_selection);
 		(void)ComboBox_SetCurSel(refresh_control, refresh_selection);

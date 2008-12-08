@@ -25,7 +25,7 @@
 #endif
 
 #define MAX_SYSTEM_BIOS		16
-#define MAX_SYSTEM_BIOS_ENTRY	16
+#define MAX_SYSTEM_BIOS_ENTRY	32
 #define BIOS_DEFAULT		"default"
 
 //mamep: DATAFILE

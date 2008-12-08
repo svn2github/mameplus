@@ -830,7 +830,7 @@ static int image_load_internal(const device_config *image, const char *path,
 
 	/* do we need to reset the CPU? */
 	//mamep: dummy image
-	if ((has_dummy_image(machine) || attotime_compare(timer_get_time(), attotime_zero) > 0) && slot->info.reset_on_load)
+	if ((has_dummy_image(machine) || attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
 		mame_schedule_hard_reset(machine);
 
 	/* determine open plan */
