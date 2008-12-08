@@ -32,11 +32,11 @@
 
 # emu/clifront.c: 888
 %d romsets found, %d were OK.\n
-找到 %d  个 ROM 组合，正确 %d。\n
+找到 %d  个 ROM 组，正确 %d。\n
 
 # emu/clifront.c: 969
 %d samplesets found, %d were OK.\n
-找到 %d 个采样组合，正确 %d。\n
+找到 %d 个采样文件组，正确 %d。\n
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 %s : %s selected
@@ -732,7 +732,7 @@ CORE STATE/PLAYBACK OPTIONS
 
 # emu/emuopts.c: 131
 CORE VECTOR OPTIONS
-核心向量选项
+核心矢量选项
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 CPU
@@ -788,7 +788,7 @@ China
 
 # build/verinfo.c: 267 
 Christopher Kirmse and the MAMEUI team
-Christopher Kirmse 和 MAMEUI 开发团队
+Christopher Kirmse 和 MAMEUI 开发组
 
 # mame/drivers/st0016.c: 382
 Classic
@@ -936,15 +936,15 @@ Controls
 
 # build/verinfo.c: 289
 Copyright Nicola Salmoria and the MAME team
-著作权 (C) Nicola Salmoria 和 MAME 开发团队
+著作权 (C) Nicola Salmoria 和 MAME 开发组
 
 # emu/mame.h: 82
 Copyright Nicola Salmoria\nand the MAME team\nhttp://mamedev.org
-著作权 (C) Nicola Salmoria\n和 MAME 开发团队\nhttp://mamedev.org
+著作权 (C) Nicola Salmoria\n和 MAME 开发组\nhttp://mamedev.org
 
 # emu/mame.h: 93
 Copyright the MESS team\nhttp://mess.org
-著作权 (C) MESS 开发团队\nhttp://mess.org
+著作权 (C) MESS 开发组\nhttp://mess.org
 
 # emu/config.c: 138, 142
 Could not load controller file %s.cfg
@@ -1556,11 +1556,11 @@ Initializing...
 
 # emu/uimenu.c: 1476
 Input (general)
-输入设置 (一般)
+输入设置(一般)
 
 # emu/uimenu.c: 1477
 Input (this Game)
-输入设置 (这个游戏)
+输入设置(这个游戏)
 
 # mess/mslegacy.c: 50
 Input Devices
@@ -1860,7 +1860,7 @@ Low
 
 # emu/clifront.c: 352
 M.A.M.E. v%s - Multiple Arcade Machine Emulator\nCopyright Nicola Salmoria and the MAME Team\n\n
-M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作权 (C) Nicola Salmoria 和 MAME 开发团队\n\n
+M.A.M.E. v%s - Multiple Arcade Machine Emulator\n著作权 (C) Nicola Salmoria 和 MAME 开发组\n\n
 
 # emu/mame.c: 208
 MAME is an emulator: it reproduces, more or less faithfully, the behaviour of\nseveral arcade machines. But hardware is useless without software, so an image\nof the ROMs which run on that hardware is required. Such ROMs, like any other\ncommercial software, are copyrighted material and it is therefore illegal to\nuse them if you don't own the original arcade machine. Needless to say, ROMs\nare not distributed together with MAME. Distribution of MAME together with ROM\nimages is a violation of copyright law and should be promptly reported to the\nauthors so that appropriate legal action can be taken.\n
@@ -2096,7 +2096,7 @@ Next Game
 
 # build/verinfo.c: 278
 Nicola Salmoria and the MAME Team
-Nicola Salmoria 和 MAME 开发团队
+Nicola Salmoria 和 MAME 开发组
 
 # mame/drivers/holeland.c: 101
 Nihongo
@@ -2112,11 +2112,11 @@ No Driver Loaded
 
 # mess/mslegacy.c: 35
 No Tape Image loaded
-未载入磁带映像
+未载入磁带镜像
 
 # emu/uimenu.c: 3576
 No games found. Please check the rompath specified in the mame.ini file.\n\nIf this is your first time using MAME, please see the config.txt file in the docs directory for information on configuring MAME.
-找不到游戏。请检查 mame.ini 文件的 rompath 设定。\n\n如果这是您第一次使用 MAME 的话，请查阅\\ docs 目录的 config.txt 文件以取得设定 MAME 的信息。
+找不到游戏。请检查 mame.ini 文件的 rompath 设置。\n\n如果这是您第一次使用 MAME 的话，请查阅 docs 目录的 config.txt 文件以取得设置 MAME 的信息。
 
 # emu/inptport.c: 484 emu/inputseq.c: 437 emu/sound/custom.c: 84 emu/uimenu.c: 3084, 3153 
 None
@@ -3908,7 +3908,7 @@ Rapid Fire
 
 # emu/video.c: 1454 
 Raster
-点阵
+位图
 
 # mess/mslegacy.c: 42
 Record
@@ -3980,7 +3980,7 @@ Rotation
 
 # emu/sound/samples.c: 606 
 Samples
-采样
+采样文件
 
 # emu/clifront.c: 803
 Samples not supported in this build\n
@@ -4144,7 +4144,7 @@ Show Gfx
 
 # emu/inpttype.h: 617
 Show Profiler
-显示分析工具
+显示性能分析
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Show Search Labels
@@ -4296,7 +4296,7 @@ The game lacks sound.\n
 
 # emu/uimenu.c: 3550
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
-选定的游戏缺少一个至多个必要的 ROM 或 CHD 映像，请选择别的游戏。\n\n请按任意键继续。
+选定的游戏缺少一个至多个必要的 ROM 或 CHD 镜像，请选择别的游戏。\n\n请按任意键继续。
 
 # emu/ui.c: 1470 
 The sound emulation isn't 100% accurate.\n
@@ -4592,7 +4592,7 @@ Usage of emulators in conjunction with ROMs you don't own is forbidden by copyri
 
 # emu/clifront.c: 355
 Usage:  MAME gamename [options]\n\n        MAME -showusage    for a brief list of options\n        MAME -showconfig   for a list of configuration options\n        MAME -createconfig to create a mame.ini\n\nFor usage instructions, please consult the file windows.txt\n
-用法:  MAME 游戏名称 [选项]\n\n        MAME -showusage    列出选项的简短描述\n        MAME -showconfig   列出设置选项的列表\n        MAME -createconfig 创建 mame.ini 文件\n\n关于使用方式指令集，请参阅\\ windows.txt 文件\n
+用法:  MAME 游戏名称 [选项]\n\n        MAME -showusage    列出选项的简短描述\n        MAME -showconfig   列出设置选项的列表\n        MAME -createconfig 创建 mame.ini 文件\n\n关于使用方式指令集，请参阅 windows.txt 文件\n
 
 # emu/clifront.c: 244
 Usage: %s [%s] [options]\n\nOptions:\n
@@ -4940,7 +4940,7 @@ directory to save debugger comments
 
 # emu/emuopts.c: 65
 directory to save hard drive image difference files
-保存硬盘映像差异文件的目录
+保存硬盘镜像差异文件的目录
 
 # emu/emuopts.c: 68
 directory to save hiscores
@@ -5232,7 +5232,7 @@ paddle
 
 # emu/emuopts.c: 42
 path to ROMsets and hard disk images
-ROM 组合和硬盘镜像路径
+ROM 组和 CHD 镜像路径
 
 # emu/emuopts.c: 47
 path to artwork files
@@ -5244,7 +5244,7 @@ path to cheat files
 
 # emu/emuopts.c: 48
 path to controller definitions
-控制器定义路径
+控制器定义文件路径
 
 # emu/emuopts.c: 50
 path to font files
@@ -5252,7 +5252,7 @@ path to font files
 
 # emu/emuopts.c: 44
 path to hash files
-HASH 信息文件路径
+HASH 文件路径
 
 # emu/emuopts.c: 49
 path to ini files
@@ -5268,7 +5268,7 @@ path to localized languages and datafiles
 
 # emu/emuopts.c: 46
 path to samplesets
-采样组合路径
+采样文件路径
 
 # emu/video.c: 1783
 paused
@@ -5312,23 +5312,23 @@ recording
 
 # emu/clifront.c: 99
 report romsets that have problems
-报告有问题的 ROM 组合
+报告有问题的 ROM 组
 
 # emu/clifront.c: 100
 report samplesets that have problems
-报告有问题的采样组合
+报告有问题的采样文件组
 
 # emu/clifront.c: 846
 romset %s 
-ROM 组合 %s 
+ROM 组 %s 
 
 # emu/clifront.c: 879
 romset \"%s\" not found!\n
-ROM 组合 \"%s\" 未找到!\n
+ROM 组 \"%s\" 未找到!\n
 
 # emu/clifront.c: 881
 romset \"%s\" not supported!\n
-ROM 组合 \"%s\" 不支持!\n
+ROM 组 \"%s\" 不支持!\n
 
 # emu/emuopts.c: 106
 rotate screen clockwise 90 degrees
@@ -5348,15 +5348,15 @@ s%d
 
 # emu/clifront.c: 932
 sampleset %s 
-采样组合 %s 
+采样文件组 %s 
 
 # emu/clifront.c: 925
 sampleset \"%s\" not found!\n
-采样组合 \"%s\" 未找到!\n
+采样文件组 \"%s\" 未找到!\n
 
 # emu/clifront.c: 962
 sampleset \"%s\" not supported!\n
-采样组合 \"%s\" 不支持!\n
+采样文件组 \"%s\" 不支持!\n
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 saved all memory regions
@@ -5372,7 +5372,7 @@ scale effect: %s\n
 
 # emu/video.c: 2876
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-影像增强 \"%s\" 无法支持 15 位和 32 位的色深。已禁用影像增强。
+scale_effect \"%s\" 无法支持 15 位和 32 位的色深。已禁用图像增强。
 
 # emu/emuopts.c: 178
 script for debugger
@@ -5492,7 +5492,7 @@ unzip it and place it in the MAME directory
 
 # emu/emuopts.c: 132
 use antialiasing when drawing vectors
-使用抗锯齿描绘矢量图形
+使用抗锯齿描绘矢量
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 values restored

@@ -256,11 +256,11 @@ Direct3D: 最大材質大小 = %dx%d\n
 
 # osd/windows/drawd3d.c: 1329
 Direct3D: Mode selected = %4dx%4d@%3dHz\n
-Direct3D: 模式選擇 = %4dx%4d@%3dHz\n
+Direct3D: 模式選定 = %4dx%4d@%3dHz\n
 
 # osd/windows/drawd3d.c: 1273
 Direct3D: Selecting video mode...\n
-Direct3D: 正在選擇視訊模式...\n
+Direct3D: 正在選取視訊模式...\n
 
 # osd/windows/d3d8intf.c: 82
 Direct3D: Unable to access d3d8.dll\n
@@ -304,7 +304,7 @@ Direct3D: 警告 - 裝置不支援縮小雙線材質過濾\n
 
 # osd/windows/drawd3d.c: 969
 Direct3D: Warning - Device does not support hardware rasterization\n
-Direct3D: 警告 - 裝置不支援硬體繪圖\n
+Direct3D: 警告 - 裝置不支援硬體點陣化\n
 
 # osd/windows/drawd3d.c: 1018
 Direct3D: Warning - Device does not support point-sample texture filtering for magnification\n
@@ -448,7 +448,7 @@ DirectDraw: 遺失介面; 正在刪除並重試下一個畫格\n
 
 # osd/windows/drawdd.c: 1338
 DirectDraw: Mode selected = %4dx%4d@%3dHz\n
-DirectDraw: 模式選擇 = %4dx%4d@%3dHz\n
+DirectDraw: 模式選定 = %4dx%4d@%3dHz\n
 
 # osd/windows/drawdd.c: 930
 DirectDraw: New blit size = %dx%d\n
@@ -456,7 +456,7 @@ DirectDraw: 新的 blit 大小 = %dx%d\n
 
 # osd/windows/drawdd.c: 1335
 DirectDraw: Selecting video mode...\n
-DirectDraw: 正在選擇視訊模式...\n
+DirectDraw: 正在選取視訊模式...\n
 
 # osd/windows/drawdd.c: 196
 DirectDraw: Unable to access ddraw.dll\n
@@ -720,7 +720,7 @@ Show &FPS
 
 # mess/osd/windows/mess.rc: 96
 Show P&rofiler
-顯示數據(&R)
+顯示性能分析(&R)
 
 # mess/osd/windows/mess.rc: 91
 Soft &Reset
@@ -800,7 +800,7 @@ Unlimited
 
 # osd/windows/video.c: 402
 Using %s scale effect\n
-正在使用 %s 縮放效果\n
+正在使用 %s 影像增強\n
 
 # osd/windows/video.c: 257
 Video: Monitor %p = \"%s\" %s\n
@@ -1032,7 +1032,7 @@ set joystick ID (Player8)
 
 # osd/windows/winmain.c: 154
 specify the preferred Direct3D version (8 or 9)
-指定喜好的 Direct3D 版本 (8 或 9)
+指定 Direct3D 版本 (8 或 9)
 
 # osd/windows/winmain.c: 133
 thread priority for the main game thread; range from -15 to 1

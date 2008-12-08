@@ -5396,7 +5396,7 @@ scale effect: %s\n
 
 # emu/video.c: 2876
 scale_effect \"%s\" does not support both depth 15 and 32. scale effect is disabled.
-影像增強 \"%s\" 無法支援 15 位元和 32 位元的色深。已停用影像增強。
+scale_effect \"%s\" 無法支援 15 位元和 32 位元的色深。已停用影像增強。
 
 # emu/emuopts.c: 178
 script for debugger

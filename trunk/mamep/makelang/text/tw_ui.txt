@@ -2424,7 +2424,7 @@ Start out maximized
 
 # osd/winui/layout.c: 127
 State
-ª¬ºAÀÉ
+Àx¦sª¬ºAÀÉ
 
 # osd/winui/mameui.rc: 606
 Status:
