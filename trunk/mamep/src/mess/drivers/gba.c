@@ -2399,7 +2399,7 @@ static WRITE32_HANDLER( gba_io_w )
 				// if we still have interrupts, yank the IRQ line again
 				if (gba.IF)
 				{
-					timer_adjust_oneshot(irq_timer, ATTOTIME_IN_CYCLES(0, 120), 0);
+					timer_adjust_oneshot(irq_timer, cpu_clocks_to_attotime(machine->cpu[0], 120), 0);
 				}
 			}
 			break;
@@ -2634,32 +2634,32 @@ static MACHINE_START( gba )
 	add_exit_callback(machine, gba_machine_stop);
 
 	/* create a timer to fire scanline functions */
-	scan_timer = timer_alloc(perform_scan, 0);
-	hbl_timer = timer_alloc(perform_hbl, 0);
+	scan_timer = timer_alloc(machine, perform_scan, 0);
+	hbl_timer = timer_alloc(machine, perform_hbl, 0);
 	timer_adjust_oneshot(scan_timer, video_screen_get_time_until_pos(machine->primary_screen, 1, 0), 0);
 
 	/* and one for each DMA channel */
-	dma_timer[0] = timer_alloc(dma_complete, 0);
-	dma_timer[1] = timer_alloc(dma_complete, 0);
-	dma_timer[2] = timer_alloc(dma_complete, 0);
-	dma_timer[3] = timer_alloc(dma_complete, 0);
+	dma_timer[0] = timer_alloc(machine, dma_complete, 0);
+	dma_timer[1] = timer_alloc(machine, dma_complete, 0);
+	dma_timer[2] = timer_alloc(machine, dma_complete, 0);
+	dma_timer[3] = timer_alloc(machine, dma_complete, 0);
 	timer_adjust_oneshot(dma_timer[0], attotime_never, 0);
 	timer_adjust_oneshot(dma_timer[1], attotime_never, 1);
 	timer_adjust_oneshot(dma_timer[2], attotime_never, 2);
 	timer_adjust_oneshot(dma_timer[3], attotime_never, 3);
 
 	/* also one for each timer (heh) */
-	tmr_timer[0] = timer_alloc(timer_expire, 0);
-	tmr_timer[1] = timer_alloc(timer_expire, 0);
-	tmr_timer[2] = timer_alloc(timer_expire, 0);
-	tmr_timer[3] = timer_alloc(timer_expire, 0);
+	tmr_timer[0] = timer_alloc(machine, timer_expire, 0);
+	tmr_timer[1] = timer_alloc(machine, timer_expire, 0);
+	tmr_timer[2] = timer_alloc(machine, timer_expire, 0);
+	tmr_timer[3] = timer_alloc(machine, timer_expire, 0);
 	timer_adjust_oneshot(tmr_timer[0], attotime_never, 0);
 	timer_adjust_oneshot(tmr_timer[1], attotime_never, 1);
 	timer_adjust_oneshot(tmr_timer[2], attotime_never, 2);
 	timer_adjust_oneshot(tmr_timer[3], attotime_never, 3);
 
 	/* and an IRQ handling timer */
-	irq_timer = timer_alloc(handle_irq, 0);
+	irq_timer = timer_alloc(machine, handle_irq, 0);
 	timer_adjust_oneshot(irq_timer, attotime_never, 0);
 
 	/* generate a table to make mosaic fast */
@@ -3159,86 +3159,86 @@ static DRIVER_INIT(gbadv)
 {
 	memory_set_direct_update_handler( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), gba_direct );
 
-	state_save_register_global_array(gba_sram);
-	state_save_register_global_array(gba_eeprom);
-	state_save_register_global_array(gba_flash64k);
+	state_save_register_global_array(machine, gba_sram);
+	state_save_register_global_array(machine, gba_eeprom);
+	state_save_register_global_array(machine, gba_flash64k);
 	      
-	state_save_register_global_array(dma_regs);
-	state_save_register_global_array(dma_src);
-	state_save_register_global_array(dma_dst);
-	state_save_register_global_array(dma_cnt);
-	state_save_register_global_array(dma_srcadd);
-	state_save_register_global_array(dma_dstadd);
+	state_save_register_global_array(machine, dma_regs);
+	state_save_register_global_array(machine, dma_src);
+	state_save_register_global_array(machine, dma_dst);
+	state_save_register_global_array(machine, dma_cnt);
+	state_save_register_global_array(machine, dma_srcadd);
+	state_save_register_global_array(machine, dma_dstadd);
 	      
-	state_save_register_global_array(timer_regs);
-	state_save_register_global_array(timer_reload);
+	state_save_register_global_array(machine, timer_regs);
+	state_save_register_global_array(machine, timer_reload);
 	      
-	state_save_register_item("DISPCNT", NULL, 0, gba.DISPCNT);
-	state_save_register_item("GRNSWAP", NULL, 0, gba.GRNSWAP);
-	state_save_register_item("DISPSTAT", NULL, 0, gba.DISPSTAT);
-	state_save_register_item("BG0CNT", NULL, 0, gba.BG0CNT);
-	state_save_register_item("BG1CNT", NULL, 0, gba.BG1CNT);
-	state_save_register_item("BG2CNT", NULL, 0, gba.BG2CNT);
-	state_save_register_item("BG3CNT", NULL, 0, gba.BG3CNT);
-	state_save_register_item("BG0HOFS", NULL, 0, gba.BG0HOFS);
-	state_save_register_item("BG0VOFS", NULL, 0, gba.BG0VOFS);
-	state_save_register_item("BG1HOFS", NULL, 0, gba.BG1HOFS);
-	state_save_register_item("BG1VOFS", NULL, 0, gba.BG1VOFS);
-	state_save_register_item("BG2HOFS", NULL, 0, gba.BG2HOFS);
-	state_save_register_item("BG2VOFS", NULL, 0, gba.BG2VOFS);
-	state_save_register_item("BG3HOFS", NULL, 0, gba.BG3HOFS);
-	state_save_register_item("BG3VOFS", NULL, 0, gba.BG3VOFS);
-	state_save_register_item("BG2PA", NULL, 0, gba.BG2PA);
-	state_save_register_item("BG2PB", NULL, 0, gba.BG2PB);
-	state_save_register_item("BG2PC", NULL, 0, gba.BG2PC);
-	state_save_register_item("BG2PD", NULL, 0, gba.BG2PD);
-	state_save_register_item("BG3PA", NULL, 0, gba.BG3PA);
-	state_save_register_item("BG3PB", NULL, 0, gba.BG3PB);
-	state_save_register_item("BG3PC", NULL, 0, gba.BG3PC);
-	state_save_register_item("BG3PD", NULL, 0, gba.BG3PD);
-	state_save_register_item("BG2X", NULL, 0, gba.BG2X);
-	state_save_register_item("BG2Y", NULL, 0, gba.BG2Y);
-	state_save_register_item("BG3X", NULL, 0, gba.BG3X);
-	state_save_register_item("BG3Y", NULL, 0, gba.BG3Y);
-	state_save_register_item("WIN0H", NULL, 0, gba.WIN0H);
-	state_save_register_item("WIN1H", NULL, 0, gba.WIN1H);
-	state_save_register_item("WIN0V", NULL, 0, gba.WIN0V);
-	state_save_register_item("WIN1V", NULL, 0, gba.WIN1V);
-	state_save_register_item("WININ", NULL, 0, gba.WININ);
-	state_save_register_item("WINOUT", NULL, 0, gba.WINOUT);
-	state_save_register_item("MOSAIC", NULL, 0, gba.MOSAIC);
-	state_save_register_item("BLDCNT", NULL, 0, gba.BLDCNT);
-	state_save_register_item("BLDALPHA", NULL, 0, gba.BLDALPHA);
-	state_save_register_item("BLDY", NULL, 0, gba.BLDY);
-	state_save_register_item("SOUNDCNT_X", NULL, 0, gba.SOUNDCNT_X);
-	state_save_register_item("SOUNDCNT_H", NULL, 0, gba.SOUNDCNT_H);
-	state_save_register_item("SOUNDBIAS", NULL, 0, gba.SOUNDBIAS);
-	state_save_register_item("SIOMULTI0", NULL, 0, gba.SIOMULTI0);
-	state_save_register_item("SIOMULTI1", NULL, 0, gba.SIOMULTI1);
-	state_save_register_item("SIOMULTI2", NULL, 0, gba.SIOMULTI2);
-	state_save_register_item("SIOMULTI3", NULL, 0, gba.SIOMULTI3);
-	state_save_register_item("SIOCNT", NULL, 0, gba.SIOCNT);
-	state_save_register_item("SIODATA8", NULL, 0, gba.SIODATA8);
-	state_save_register_item("KEYCNT", NULL, 0, gba.KEYCNT);
-	state_save_register_item("RCNT", NULL, 0, gba.RCNT);
-	state_save_register_item("JOYCNT", NULL, 0, gba.JOYCNT);
-	state_save_register_item("JOY_RECV", NULL, 0, gba.JOY_RECV);
-	state_save_register_item("JOY_TRANS", NULL, 0, gba.JOY_TRANS);
-	state_save_register_item("JOYSTAT", NULL, 0, gba.JOYSTAT);
-	state_save_register_item("IR", NULL, 0, gba.IR);
-	state_save_register_item("IE", NULL, 0, gba.IE);
-	state_save_register_item("IF", NULL, 0, gba.IF);
-	state_save_register_item("IME", NULL, 0, gba.IME);
-	state_save_register_item("WAITCNT", NULL, 0, gba.WAITCNT);
-	state_save_register_item("POSTFLG", NULL, 0, gba.POSTFLG);
-	state_save_register_item("HALTCNT", NULL, 0, gba.HALTCNT);
+	state_save_register_item(machine, "DISPCNT", NULL, 0, gba.DISPCNT);
+	state_save_register_item(machine, "GRNSWAP", NULL, 0, gba.GRNSWAP);
+	state_save_register_item(machine, "DISPSTAT", NULL, 0, gba.DISPSTAT);
+	state_save_register_item(machine, "BG0CNT", NULL, 0, gba.BG0CNT);
+	state_save_register_item(machine, "BG1CNT", NULL, 0, gba.BG1CNT);
+	state_save_register_item(machine, "BG2CNT", NULL, 0, gba.BG2CNT);
+	state_save_register_item(machine, "BG3CNT", NULL, 0, gba.BG3CNT);
+	state_save_register_item(machine, "BG0HOFS", NULL, 0, gba.BG0HOFS);
+	state_save_register_item(machine, "BG0VOFS", NULL, 0, gba.BG0VOFS);
+	state_save_register_item(machine, "BG1HOFS", NULL, 0, gba.BG1HOFS);
+	state_save_register_item(machine, "BG1VOFS", NULL, 0, gba.BG1VOFS);
+	state_save_register_item(machine, "BG2HOFS", NULL, 0, gba.BG2HOFS);
+	state_save_register_item(machine, "BG2VOFS", NULL, 0, gba.BG2VOFS);
+	state_save_register_item(machine, "BG3HOFS", NULL, 0, gba.BG3HOFS);
+	state_save_register_item(machine, "BG3VOFS", NULL, 0, gba.BG3VOFS);
+	state_save_register_item(machine, "BG2PA", NULL, 0, gba.BG2PA);
+	state_save_register_item(machine, "BG2PB", NULL, 0, gba.BG2PB);
+	state_save_register_item(machine, "BG2PC", NULL, 0, gba.BG2PC);
+	state_save_register_item(machine, "BG2PD", NULL, 0, gba.BG2PD);
+	state_save_register_item(machine, "BG3PA", NULL, 0, gba.BG3PA);
+	state_save_register_item(machine, "BG3PB", NULL, 0, gba.BG3PB);
+	state_save_register_item(machine, "BG3PC", NULL, 0, gba.BG3PC);
+	state_save_register_item(machine, "BG3PD", NULL, 0, gba.BG3PD);
+	state_save_register_item(machine, "BG2X", NULL, 0, gba.BG2X);
+	state_save_register_item(machine, "BG2Y", NULL, 0, gba.BG2Y);
+	state_save_register_item(machine, "BG3X", NULL, 0, gba.BG3X);
+	state_save_register_item(machine, "BG3Y", NULL, 0, gba.BG3Y);
+	state_save_register_item(machine, "WIN0H", NULL, 0, gba.WIN0H);
+	state_save_register_item(machine, "WIN1H", NULL, 0, gba.WIN1H);
+	state_save_register_item(machine, "WIN0V", NULL, 0, gba.WIN0V);
+	state_save_register_item(machine, "WIN1V", NULL, 0, gba.WIN1V);
+	state_save_register_item(machine, "WININ", NULL, 0, gba.WININ);
+	state_save_register_item(machine, "WINOUT", NULL, 0, gba.WINOUT);
+	state_save_register_item(machine, "MOSAIC", NULL, 0, gba.MOSAIC);
+	state_save_register_item(machine, "BLDCNT", NULL, 0, gba.BLDCNT);
+	state_save_register_item(machine, "BLDALPHA", NULL, 0, gba.BLDALPHA);
+	state_save_register_item(machine, "BLDY", NULL, 0, gba.BLDY);
+	state_save_register_item(machine, "SOUNDCNT_X", NULL, 0, gba.SOUNDCNT_X);
+	state_save_register_item(machine, "SOUNDCNT_H", NULL, 0, gba.SOUNDCNT_H);
+	state_save_register_item(machine, "SOUNDBIAS", NULL, 0, gba.SOUNDBIAS);
+	state_save_register_item(machine, "SIOMULTI0", NULL, 0, gba.SIOMULTI0);
+	state_save_register_item(machine, "SIOMULTI1", NULL, 0, gba.SIOMULTI1);
+	state_save_register_item(machine, "SIOMULTI2", NULL, 0, gba.SIOMULTI2);
+	state_save_register_item(machine, "SIOMULTI3", NULL, 0, gba.SIOMULTI3);
+	state_save_register_item(machine, "SIOCNT", NULL, 0, gba.SIOCNT);
+	state_save_register_item(machine, "SIODATA8", NULL, 0, gba.SIODATA8);
+	state_save_register_item(machine, "KEYCNT", NULL, 0, gba.KEYCNT);
+	state_save_register_item(machine, "RCNT", NULL, 0, gba.RCNT);
+	state_save_register_item(machine, "JOYCNT", NULL, 0, gba.JOYCNT);
+	state_save_register_item(machine, "JOY_RECV", NULL, 0, gba.JOY_RECV);
+	state_save_register_item(machine, "JOY_TRANS", NULL, 0, gba.JOY_TRANS);
+	state_save_register_item(machine, "JOYSTAT", NULL, 0, gba.JOYSTAT);
+	state_save_register_item(machine, "IR", NULL, 0, gba.IR);
+	state_save_register_item(machine, "IE", NULL, 0, gba.IE);
+	state_save_register_item(machine, "IF", NULL, 0, gba.IF);
+	state_save_register_item(machine, "IME", NULL, 0, gba.IME);
+	state_save_register_item(machine, "WAITCNT", NULL, 0, gba.WAITCNT);
+	state_save_register_item(machine, "POSTFLG", NULL, 0, gba.POSTFLG);
+	state_save_register_item(machine, "HALTCNT", NULL, 0, gba.HALTCNT);
 
-	state_save_register_global(fifo_a_ptr);
-	state_save_register_global(fifo_b_ptr);
-	state_save_register_global(fifo_a_in);
-	state_save_register_global(fifo_b_in);
-	state_save_register_global_array(fifo_a);
-	state_save_register_global_array(fifo_b);
+	state_save_register_global(machine, fifo_a_ptr);
+	state_save_register_global(machine, fifo_b_ptr);
+	state_save_register_global(machine, fifo_a_in);
+	state_save_register_global(machine, fifo_b_in);
+	state_save_register_global_array(machine, fifo_a);
+	state_save_register_global_array(machine, fifo_b);
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT INIT CONFIG COMPANY      FULLNAME */
