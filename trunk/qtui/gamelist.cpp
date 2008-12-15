@@ -372,7 +372,7 @@ void UpdateSelectionThread::update()
 	QMutexLocker locker(&mutex);
 
 	if (!isRunning())
-		start(LowPriority);
+		start(IdlePriority);
 }
 
 void UpdateSelectionThread::run()
@@ -382,37 +382,37 @@ void UpdateSelectionThread::run()
 		QString gameName = myqueue.dequeue();
 
 		//fixme: do not update tabbed docks
-		if (win->ssSnap->isVisible() && win->isDockTabVisible("Snapshot"))
+		if (!abort && win->ssSnap->isVisible() && win->isDockTabVisible("Snapshot"))
 		{
 			pmdataSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_SNAP);
 		}
-		if (win->ssFlyer->isVisible() && win->isDockTabVisible("Flyer"))
+		if (!abort && win->ssFlyer->isVisible() && win->isDockTabVisible("Flyer"))
 		{
 			pmdataFlyer = utils->getScreenshot(mameOpts["flyer_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_FLYER);
 		}
-		if (win->ssCabinet->isVisible() && win->isDockTabVisible("Cabinet"))
+		if (!abort && win->ssCabinet->isVisible() && win->isDockTabVisible("Cabinet"))
 		{
 			pmdataCabinet = utils->getScreenshot(mameOpts["cabinet_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_CABINET);
 		}
-		if (win->ssMarquee->isVisible() && win->isDockTabVisible("Marquee"))			
+		if (!abort && win->ssMarquee->isVisible() && win->isDockTabVisible("Marquee"))			
 		{
 			pmdataMarquee = utils->getScreenshot(mameOpts["marquee_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_MARQUEE);
 		}
-		if (win->ssTitle->isVisible() && win->isDockTabVisible("Title"))
+		if (!abort && win->ssTitle->isVisible() && win->isDockTabVisible("Title"))
 		{
 			pmdataTitle = utils->getScreenshot(mameOpts["title_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_TITLE);
 		}
-		if (win->ssCPanel->isVisible() && win->isDockTabVisible("Control Panel"))
+		if (!abort && win->ssCPanel->isVisible() && win->isDockTabVisible("Control Panel"))
 		{
 			pmdataCPanel = utils->getScreenshot(mameOpts["cpanel_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_CPANEL);
 		}
-		if (win->ssPCB->isVisible() && win->isDockTabVisible("PCB"))
+		if (!abort && win->ssPCB->isVisible() && win->isDockTabVisible("PCB"))
 		{
 			pmdataPCB = utils->getScreenshot(mameOpts["pcb_directory"]->globalvalue, gameName);
 			emit snapUpdated(DOCK_PCB);
@@ -421,7 +421,7 @@ void UpdateSelectionThread::run()
 //		win->lblPCB->setMovie( &movie );
 
 		QString path;
-		if (win->tbHistory->isVisible() && win->isDockTabVisible("History"))
+		if (!abort && win->tbHistory->isVisible() && win->isDockTabVisible("History"))
 		{
 			path = "history.dat";
 			if (mameOpts.contains("history_file"))
@@ -431,7 +431,7 @@ void UpdateSelectionThread::run()
 
 			emit snapUpdated(DOCK_HISTORY);
 		}
-		if (win->tbMameinfo->isVisible() && win->isDockTabVisible("MAMEInfo"))
+		if (!abort && win->tbMameinfo->isVisible() && win->isDockTabVisible("MAMEInfo"))
 		{
 			path = "mameinfo.dat";
 			if (mameOpts.contains("mameinfo_file"))
@@ -440,7 +440,7 @@ void UpdateSelectionThread::run()
 			mameinfoText = utils->getHistory(path, gameName);
 			emit snapUpdated(DOCK_MAMEINFO);
 		}
-		if (win->tbStory->isVisible() && win->isDockTabVisible("Story"))
+		if (!abort && win->tbStory->isVisible() && win->isDockTabVisible("Story"))
 		{
 			path = "story.dat";
 			if (mameOpts.contains("story_file"))
@@ -449,7 +449,7 @@ void UpdateSelectionThread::run()
 			storyText = utils->getHistory(path, gameName);
 			emit snapUpdated(DOCK_STORY);
 		}
-		if (win->tbCommand->isVisible() && win->isDockTabVisible("Command"))
+		if (!abort && win->tbCommand->isVisible() && win->isDockTabVisible("Command"))
 		{
 			path = "command.dat";
 			if (mameOpts.contains("command_file"))
@@ -1127,7 +1127,7 @@ int MameGame::des11n()
 		}
 	}
 
-	win->log(QString("des11n2.gamecount %1").arg(gamecount));
+	win->log(QString("des11n game count %1").arg(gamecount));
 
 	// verify MAME Version
 	if (mameGame->mameVersion != mameVersion0)
@@ -1240,8 +1240,8 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 		painter->setFont(boldFont);
 
 		//elide the text within bounding rect
-//		QFontMetrics fm(boldFont);
-//		text = option.fontMetrics.elidedText(text, option.textElideMode, rc.width() - 5);	//3px + 2px right padding
+		QFontMetrics fm(boldFont);
+		text = fm.elidedText(text, option.textElideMode, rc.width() - 5);	//3px + 2px right padding
 
 		if (option.state & QStyle::State_Selected)
 		{
@@ -1256,8 +1256,8 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 			QStyleOptionViewItem myoption = option;
 			//override foreground, black doesnt look nice
 			painter->setPen(Qt::white);
-			painter->drawText(rc, text, QTextOption(Qt::AlignLeft | Qt::AlignVCenter));
-//			QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, myoption.palette, true, text);
+//			painter->drawText(rc, text, QTextOption(Qt::AlignLeft | Qt::AlignVCenter));
+			QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, myoption.palette, true, text);
 			return;
 		}
 	}
@@ -1292,7 +1292,7 @@ headerMenu(NULL)
 {
 	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
 //	connect(&iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), win, SLOT(logStatus(QString)));
-	connect(&selectThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
+	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 	
 	mAuditor = new MergedRomAuditor(parent);
 }
@@ -1346,6 +1346,12 @@ QString Gamelist::getViewString(const QModelIndex &index, int column) const
 		return index.model()->data(j, Qt::DisplayRole).toString();
 }
 
+void Gamelist::updateSelection()
+{
+	selectionThread.myqueue.enqueue(currentGame);
+	selectionThread.update();
+}
+
 void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & previous)
 {
 	if (current.isValid())
@@ -1381,11 +1387,11 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		win->logStatus(gameDesc);
 		win->logStatus(gameInfo);
 
-		selectThread.myqueue.enqueue(currentGame);
-		selectThread.update();
+		selectionThread.myqueue.enqueue(currentGame);
+		selectionThread.update();
 
 		//fixme: move to thread!
-		if (m1 != NULL)
+		if (m1 != NULL && m1->available)
 			m1->updateList();
 
 		//update selected rows, fixme: performance bottleneck!
@@ -1452,34 +1458,34 @@ void Gamelist::setupSnap(int snapType)
 	switch (snapType)
 	{
 	case DOCK_SNAP:
-		win->ssSnap->setPixmap(selectThread.pmdataSnap, win->actionEnforceAspect->isChecked());
+		win->ssSnap->setPixmap(selectionThread.pmdataSnap, win->actionEnforceAspect->isChecked());
 		break;
 	case DOCK_FLYER:
-		win->ssFlyer->setPixmap(selectThread.pmdataFlyer);
+		win->ssFlyer->setPixmap(selectionThread.pmdataFlyer);
 		break;
 	case DOCK_CABINET:
-		win->ssCabinet->setPixmap(selectThread.pmdataCabinet);
+		win->ssCabinet->setPixmap(selectionThread.pmdataCabinet);
 		break;
 	case DOCK_MARQUEE:
-		win->ssMarquee->setPixmap(selectThread.pmdataMarquee);
+		win->ssMarquee->setPixmap(selectionThread.pmdataMarquee);
 		break;
 	case DOCK_TITLE:
-		win->ssTitle->setPixmap(selectThread.pmdataTitle, win->actionEnforceAspect->isChecked());
+		win->ssTitle->setPixmap(selectionThread.pmdataTitle, win->actionEnforceAspect->isChecked());
 		break;
 	case DOCK_CPANEL:
-		win->ssCPanel->setPixmap(selectThread.pmdataCPanel);
+		win->ssCPanel->setPixmap(selectionThread.pmdataCPanel);
 		break;
 	case DOCK_PCB:
-		win->ssPCB->setPixmap(selectThread.pmdataPCB);
+		win->ssPCB->setPixmap(selectionThread.pmdataPCB);
 		break;
 	case DOCK_HISTORY:
-		win->tbHistory->setHtml(selectThread.historyText);
+		win->tbHistory->setHtml(selectionThread.historyText);
 		break;
 	case DOCK_MAMEINFO:
-		win->tbMameinfo->setHtml(selectThread.mameinfoText);
+		win->tbMameinfo->setHtml(selectionThread.mameinfoText);
 		break;
 	case DOCK_STORY:
-		win->tbStory->setHtml(selectThread.storyText);
+		win->tbStory->setHtml(selectionThread.storyText);
 		break;
 	case DOCK_COMMAND:
 #if 0
@@ -1488,10 +1494,10 @@ void Gamelist::setupSnap(int snapType)
 		QPainter p(&pm);
 
 		QRect rc(0, 0, 100, 100);
-		QString text = selectThread.storyText;
+		QString text = selectionThread.storyText;
 		text.replace("<br>", "\n");
 		rc = p.boundingRect(rc, Qt::AlignLeft, text);
-//		win->log(QString("rc: %1, %2, %3").arg(rc.width()).arg(rc.height()).arg(selectThread.storyText.count()));
+//		win->log(QString("rc: %1, %2, %3").arg(rc.width()).arg(rc.height()).arg(selectionThread.storyText.count()));
 
 		QPixmap pm2(rc.width(), 300);
 		QPainter p2;
@@ -1509,7 +1515,7 @@ void Gamelist::setupSnap(int snapType)
 		
 		win->ssPCB->setPixmap(pm2);
 #endif
-		win->tbCommand->setHtml(selectThread.commandText);
+		win->tbCommand->setHtml(selectionThread.commandText);
 		break;
 	default:
 		break;
@@ -1705,7 +1711,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		// attach menus
 		initMenus();
 
-		win->log(QString("inited.gamecount %1").arg(mameGame->nameInfoMap.count()));
+		win->log(QString("init'd game count %1").arg(mameGame->nameInfoMap.count()));
 	}
 	else
 	{
@@ -1854,11 +1860,11 @@ void Gamelist::initMenus()
 		menu = new QMenu(win->tvGameList);
 	
 		menu->addAction(win->actionPlay);
-		menu->addAction(win->actionPlayInp);
+//		menu->addAction(win->actionPlayInp);
+		menu->addAction(win->actionConfigIPS);
 		menu->addSeparator();
 //		menu->addAction(win->actionAudit);
 //		menu->addSeparator();
-//		menu->addAction(win->actionConfigIPS);
 		menu->addAction(win->actionSrcProperties);
 		menu->addAction(win->actionProperties);
 	}
@@ -1913,6 +1919,8 @@ void Gamelist::updateContextMenu()
 		win->actionPlay->setEnabled(false);
 		return;
 	}
+
+	win->actionConfigIPS->setEnabled(ipsUI->checkAvailable(currentGame));
 
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
@@ -2421,7 +2429,7 @@ void Gamelist::restoreFolderSelection()
 
 		if (subItem->text(0) == parentFolder)
 		{
-			win->log(QString("tree lv1.gamecount %1").arg(mameGame->nameInfoMap.count()));
+//			win->log(QString("tree lv1.gamecount %1").arg(mameGame->nameInfoMap.count()));
 			if (subFolder.isEmpty())
 			{
 				win->treeFolders->setCurrentItem(subItem);
@@ -2548,18 +2556,8 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 		{
 			foreach (QString gameName2, gameInfo->clones)
 			{
-				GameInfo *gameInfo2 = mameGame->nameInfoMap[gameName2];
-				QString gameDesc2;
-
-				if (local_game_list && !gameInfo2->lcDesc.isEmpty())
-					gameDesc2 = gameInfo2->lcDesc;
-				else
-					gameDesc2 = gameInfo2->description;
-
-				bool result2 = gameDesc2.contains(regExpSearch) || 
-					gameName2.contains(regExpSearch);
-
-				if (result2)
+				if (gameName2.contains(regExpSearch) ||
+					utils->getDesc(gameName2).contains(regExpSearch))
 				{
 					result = true;
 					break;

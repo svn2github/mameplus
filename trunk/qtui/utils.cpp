@@ -18,7 +18,47 @@ Utils::Utils(QObject *parent)
 	spaceRegex = QRegExp("\\s+");
 }
 
-QString Utils::capitalizeStr(const QString & str)
+QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
+{
+	QSize scaledSize = orig;
+
+	if (forceAspect)
+	{
+		if (scaledSize.width() < scaledSize.height())
+		{
+			//vert
+			if (scaledSize.height() < scaledSize.width() / FORCE_ASPECT)
+				// need expand height
+				scaledSize.setHeight((int)(scaledSize.width() / FORCE_ASPECT));
+			else
+				// need expand width
+				scaledSize.setWidth((int)(scaledSize.height() * FORCE_ASPECT));
+		}
+		else
+		{
+			 //horz
+			if (scaledSize.height() < scaledSize.width() * FORCE_ASPECT)
+				// need expand height
+				scaledSize.setHeight((int)(scaledSize.width() * FORCE_ASPECT));
+			else
+				// need expand width
+				scaledSize.setWidth((int)(scaledSize.height() / FORCE_ASPECT));
+		}
+	}
+
+	QSize origSize = scaledSize;
+
+	scaledSize.scale(bounding, Qt::KeepAspectRatio);
+
+	// do not enlarge
+	if (scaledSize.width() > origSize.width() || 
+		scaledSize.height() > origSize.height())
+		scaledSize = origSize;
+
+	return scaledSize;
+}
+
+QString Utils::capitalizeStr(const QString &str)
 {
 	QStringList strlist = str.split("_");
 	// capitalize first char
@@ -27,11 +67,41 @@ QString Utils::capitalizeStr(const QString & str)
 	return strlist.join(" ");
 }
 
+void Utils::lowerTrimmed(QStringList &list)
+{
+	for (int i = 0; i < list.size(); i++)
+		list[i] = list[i].toLower().trimmed();
+}
+
+QStringList Utils::split2Str(const QString &str, const QString &separator)
+{
+	int pos;
+	pos = str.indexOf(separator);
+
+	if (pos > -1)
+	{
+		return (QStringList()
+			<< str.left(pos)
+			<< str.right(str.size() - pos - 1));
+	}
+
+	return QStringList();
+}
+
 QString Utils::getPath(QString dirpath)
 {
 	dirpath.replace("$HOME", QDir::homePath());
 	QDir dir(dirpath);
 	return dir.path() + "/";	//clean it up
+}
+
+QString Utils::getDesc(const QString &gameName)
+{
+	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+	if (local_game_list && !gameInfo->lcDesc.isEmpty())
+		return gameInfo->lcDesc;
+	else
+		return gameInfo->description;
 }
 
 QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName)

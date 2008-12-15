@@ -96,7 +96,6 @@ class OptionUtils : public QObject
 public:
 	OptionUtils(QObject *parent = 0);
 	void initOption();
-	int getType(const QModelIndex &);
 	QVariant getField(const QModelIndex &, int);
 	const QString getLongName(QString);
 	const QString getLongValue(const QString &, const QString &);
@@ -105,17 +104,17 @@ public:
 	bool isChanged(const QModelIndex &);
 	bool isTitle(const QModelIndex &);
 	void updateSelectableItems(QString);
+	void saveIniFile(int , const QString &);
 
 public slots:
 	void loadDefault(QString);
 	void loadTemplate();
 	void loadIni(int, const QString &);
-	void saveIniFile(int , const QString &);
-	QHash<QString, QString> readIniFile(const QString &);
 	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
 	void updateHeaderSize(int, int, int);
 
 private:
+	QHash<QString, QString> readIniFile(const QString &);
 	void addModelItemTitle(QStandardItemModel*, QString);
 	void addModelItem(QStandardItemModel*, QString);
 	void updateModelData(QString, int);

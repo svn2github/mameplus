@@ -8,44 +8,61 @@ M1UI::M1UI(QWidget *parent)
 :QDockWidget(parent)
 {
 	setupUi(this);
+
+	const QStringList m1Headers = (QStringList()
+		<< "#" << tr("Name") << tr("Len"));
+	twSongList->setHeaderLabels(m1Headers);
+	twSongList->header()->moveSection(2, 1);
+
+	const QStringList m1Langs = (QStringList()
+		<< "en" << tr("jp"));
+	cmbLang->addItems(m1Langs);
+	QString m1_language = guiSettings.value("m1_language").toString();
+	cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
+
+	if (m1_language == "jp")
+	{
+		QFont font;
+		font.setFamily("MS Gothic");
+		font.setFixedPitch(true);
+		twSongList->setFont(font);
+		lblTrackName->setFont(font);
+	}
+
+	setEnabled(false);
 }
 
 void M1UI::init()
 {
-	if (m1 != NULL)
-	{
-		const QStringList m1Headers = (QStringList()
-			<< "#" << tr("Name") << tr("Len"));
-		twSongList->setHeaderLabels(m1Headers);
-		twSongList->header()->moveSection(2, 1);
-		
-		const QStringList m1Langs = (QStringList()
-			<< "en" << tr("jp"));
-		cmbLang->addItems(m1Langs);
-		QString m1_language = guiSettings.value("m1_language").toString();
-		cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
-		
-		if (m1_language == "jp")
-		{
-			QFont font;
-			font.setFamily("MS Gothic");
-			font.setFixedPitch(true);
-			twSongList->setFont(font);
-			lblTrackName->setFont(font);
-		}
-	
-		connect(btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
-		connect(twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
-		connect(btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
-		connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), m1, SLOT(updateList(const QString &)));
+	connect(btnPlay, SIGNAL(pressed()), &m1->m1Thread, SLOT(play()));
+	connect(twSongList, SIGNAL(itemActivated(QTreeWidgetItem*, int)), &m1->m1Thread, SLOT(play(QTreeWidgetItem*, int)));
+	connect(btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
+	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), m1, SLOT(updateList(const QString &)));
 
-		win->addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), this);
-	}
+//	win->addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), this);
 }
 
 M1::M1(QObject *parent) : 
 QObject(parent),
-max_games(0)
+max_games(0),
+isHex(false),
+available(false)
+{
+}
+
+M1::~M1()
+{
+	m1snd_shutdown();
+}
+
+void M1::init()
+{
+	connect(&m1Watcher, SIGNAL(finished()), this, SLOT(postInit()));
+	QFuture<void> future = QtConcurrent::run(this, &M1::loadLib);
+	m1Watcher.setFuture(future);
+}
+
+void M1::loadLib()
 {
 	//set current dir to m1, so that m1.xml and list could be loaded
 	m1_dir = utils->getPath(guiSettings.value("m1_directory", "bin/m1").toString());
@@ -95,19 +112,20 @@ max_games(0)
 	QDir::setCurrent(currentDir);
 }
 
-M1::~M1()
+void M1::postInit()
 {
-	m1snd_shutdown();
-}
+	if (max_games > 0)
+	{
+		available = true;
 
-QString M1::getVersion()
-{
-	return version;
-}
-
-int M1::getMaxGames()
-{
-	return max_games;
+		m1UI->setEnabled(true);
+		m1UI->init();
+		updateList();
+		win->setVersion();
+		win->log("m1 loaded");
+	}
+	else
+		win->removeDockWidget(m1UI);
 }
 
 void M1::updateList(const QString &)
@@ -135,7 +153,7 @@ void M1::updateList(const QString &)
 
 		QList<QTreeWidgetItem *> items;
 		//valid track line
-		QRegExp rxTrack("[#$]([\\da-fA-F]+)\\s+(.*)");
+		QRegExp rxTrack("([#$][\\da-fA-F]+)\\s+(.*)");
 		QRegExp rxTime("<time=\"([\\d.:]*)\">");
 		int pos;
 
@@ -294,34 +312,31 @@ void M1Thread::play(QTreeWidgetItem*, int)
 	if (selectedItems.isEmpty())
 		return;
 
-	bool ok, isHex;
+	bool ok;
 	QString cmdStr = selectedItems[0]->text(0).trimmed();
-	QRegExp rxHex("[a-fA-F]");
-	if (cmdStr.contains(rxHex))
-	{
-		cmdNum = cmdStr.toInt(&ok, 16);
-		isHex = true;
-	}
-	else
-	{
-		cmdNum = cmdStr.toInt(&ok);
-		isHex = false;
-	}
 
 	if (!ok)
 		return;
 
-	if (isHex)
+	if (cmdStr.startsWith("$"))
+	{
+		cmdStr = cmdStr.remove(0, 1);
+		cmdNum = cmdStr.toInt(&ok, 16);
 		m1UI->lcdNumber->setHexMode();
+	}
 	else
+	{
+		cmdStr = cmdStr.remove(0, 1);
+		cmdNum = cmdStr.toInt(&ok);
 		m1UI->lcdNumber->setDecMode();
+	}
 
 	m1UI->lcdNumber->display(cmdStr);
 	m1UI->lblTrackName->setText(selectedItems[0]->text(1));
 
 	QMutexLocker locker(&mutex);
 
-	for (int curgame = 0; curgame < m1->getMaxGames(); curgame++)
+	for (int curgame = 0; curgame < m1->max_games; curgame++)
 	{
 		if (currentGame == m1->m1snd_get_info_str(M1_SINF_ROMNAME, curgame))
 		{

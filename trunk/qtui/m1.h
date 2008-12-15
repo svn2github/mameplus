@@ -45,19 +45,22 @@ class M1 : public QObject
 Q_OBJECT
 
 private:
-	QString version;
+	QString m1_dir;
+	QFutureWatcher<void> m1Watcher;
 
 public:
 	M1(QObject *parent = 0);
 	~M1();
 
 	int max_games;
-	QString m1_dir;
+	bool isHex;
 	M1Thread m1Thread;
+	bool available;
+	QString version;
 
+	void init();
+	void loadLib();
 	static int m1ui_message(void *, int, char *, int);
-	QString getVersion();
-	int getMaxGames();
 
 	typedef void (*fp_m1snd_init)(void *, int (*m1ui_message)(void *,int, char *, int));
 	fp_m1snd_init m1snd_init;
@@ -77,6 +80,7 @@ public:
 	fp_m1snd_set_info_str m1snd_set_info_str;
 
 public slots:
+	void postInit();
 	void updateList(const QString & = NULL);
 };
 

@@ -2,25 +2,46 @@
 //4.5 bug
 2 unterminated thread 4.5 bug?
 2 sorting doesnt recover position?
+/ crash on local game list
+
+/ greatly improved GUI responsiveness
+/ added ips dialog
+/ moved M1 initialization to background thread
+/ fixed parsing hex song # of M1 list
+/ fixed core input automatic enable options
 
 //Linux
 2 bug: column sorting
 mounted snap doesnt load
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
+//Dev
+command.dat is slow and buggy
+2 support mamep 127
+2 ips dir must restart
+2 icon for local switching
+2 ips, m1 module availability detection for official
+2 new version detection
+export artwork dat
+就是，检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
+export complete fixdat, current availabe only fixdat, selected, mame, mamep, mamep extra dat.
+
 //Options
+2 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
+2 command.dat path in lang
 1 add a menu to auto mkdir
 1 add GUI Options +0.1
 * customizable GUI text font / color editor +0.05
 * driver config editor	+0.05
 * -driver_config, mamebin changes should cause gamelist->init()
-* ips doesnt inherit
 * option help
 * vector.ini, debug.ini
 * unify method to get inherited default value
 * general info page
 
 //GameList
+2 provide a builtin fallback for zip folders
+2 rewrite icon loading
 2 crash on refresh GBA
 2 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 * widget loaded prompt
@@ -75,7 +96,7 @@ mounted snap doesnt load
 
 //Main Window
 1 Add an option to revert the geometry to default, I lost a couple of my snap/info
-1 fullscreen mode, vista style
+2 F11 fullscreen mode, vista style
 
 //IPS
 1 ips +0.1
@@ -137,6 +158,9 @@ export PATH=/Developer/usr/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
+
+[mamepgui test]
+1 dock snap
 
 [mamep core test]
 ips does not inherit

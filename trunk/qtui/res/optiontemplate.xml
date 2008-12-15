@@ -146,43 +146,59 @@
 	<option name="joystick_saturation" type="float" min="0" max="1.0" />
 
 	<option name="paddle_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="adstick_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="pedal_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="dial_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="trackball_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="lightgun_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="positional_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 	<option name="mouse_device" type="string">
+		<value>none</value>
 		<value>keyboard</value>
 		<value>mouse</value>
+		<value>lightgun</value>
 		<value>joystick</value>
 	</option>
 
@@ -196,7 +212,7 @@
 	<option name="bios" guiname="BIOS" type="string" globalvisible="0" srcvisible="0" />
 	<option name="cheat" guiname="enable game cheats" type="bool" />
 	<option name="skip_gameinfo" guiname="skip game info" type="bool" />
-	<option name="ips" guiname="IPS" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" />
+	<option name="ips" guiname="IPS" type="string" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="confirm_quit" guiname="quit game with confirmation" type="bool" />
 	<option name="auto_pause" guiname="auto pause when playback is finished" type="bool" />
 	<option name="m68k_core" type="string">

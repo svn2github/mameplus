@@ -171,7 +171,7 @@ public:
 	// interactive threads used by the game list
 	RomAuditor auditor;
 	LoadIconThread iconThread;
-	UpdateSelectionThread selectThread;
+	UpdateSelectionThread selectionThread;
 
 	MergedRomAuditor *mAuditor;
 
@@ -202,6 +202,7 @@ public slots:
 	void updateProgress(int progress);
 	void switchProgress(int max, QString title);
 	QString getViewString(const QModelIndex &index, int column) const;
+	void updateSelection();
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
 	void setupIcon(QString);
 	void setupSnap(int);

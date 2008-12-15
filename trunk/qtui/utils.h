@@ -15,10 +15,14 @@ public:
 	
 	Utils(QObject *parent = 0);
 
+	QString getDesc(const QString &);
 	QByteArray getScreenshot(const QString &, const QString &);
 	QString getHistory(const QString &, const QString &, int = 0);
 
-	QString capitalizeStr(const QString & str);
+	QSize getScaledSize(QSize, QSize, bool);
+	QString capitalizeStr(const QString &);
+	void lowerTrimmed(QStringList &);
+	QStringList split2Str(const QString &, const QString &);
 	QString getPath(QString);
 	QString getMameVersion();
 

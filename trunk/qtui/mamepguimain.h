@@ -20,6 +20,7 @@ Q_IMPORT_PLUGIN(qjpeg)
 #include "mameopt.h"
 #include "dialogs.h"
 #include "utils.h"
+#include "ips.h"
 #include "m1.h"
 
 enum
@@ -109,6 +110,7 @@ public slots:
 	void on_actionAbout_activated();
 
 	void on_actionPlay_activated();
+	void on_actionConfigIPS_activated();
 	void on_actionProperties_activated();
 	void on_actionSrcProperties_activated();
 	void on_actionDefaultOptions_activated();
@@ -150,6 +152,7 @@ private:
 	void showRestartDialog();
 	void setTransparentBg(QWidget *);
 	void setTransparentStyle(QWidget * w);
+	QList<QTabBar *> getSSTabBars();
 };
 
 #define LOG_MAME	2
@@ -162,38 +165,47 @@ private:
 #define EXEC_EXT ""
 #endif
 
+// global vars
+const float FORCE_ASPECT = 0.75f;
+const QString INI_EXT = ".ini";
+const QString CFG_PREFIX = 
+#ifndef Q_WS_WIN
+	QDir::homePath() + "/" + 
+#endif
+	".mamepgui/";
 
-// external global variables
-extern MainWindow *win;
-extern Options *dlgOptions;
-extern About *dlgAbout;
-extern Dirs *dlgDirs;
-extern M1UI *m1UI;
-
+// external global vars
 extern QList<QListWidget *> optCtrls;
-
-extern const QString CFG_PREFIX;
-extern QHash<QString, MameOption*> mameOpts;
-extern QSettings guiSettings, defSettings;
-extern QByteArray option_column_state;
-extern QString mame_binary;
-extern QString list_mode;
-extern QString language;
-extern bool enforce_aspect;
-extern bool local_game_list;
-extern bool isDarkBg;
-extern bool sdlInited;
-
-extern QByteArray option_geometry;
-
-extern QString currentGame, currentFolder;
-extern MameGame *mameGame;
-extern Gamelist *gameList;
 extern QStringList consoleGamesL;
 
+//misc class instance
+//UI
+extern MainWindow *win;
+extern Options *optionsUI;
+extern Dirs *dirsUI;
+extern About *aboutUI;
+extern IPS *ipsUI;
+extern M1UI *m1UI;
+//utils
+extern MameGame *mameGame;
+extern Gamelist *gameList;
+extern QHash<QString, MameOption*> mameOpts;
 extern ProcessManager *procMan;
 extern OptionUtils *optUtils;
 extern Utils *utils;
 extern M1 *m1;
+
+//current settings
+extern QString currentGame, currentFolder;
+extern QSettings guiSettings, defSettings;
+extern QByteArray option_column_state;
+extern QByteArray option_geometry;
+extern QString mame_binary;
+extern QString mameIniPath;
+extern QString list_mode;
+extern QString language;
+extern bool local_game_list;
+extern bool isDarkBg;
+extern bool sdlInited;
 
 #endif

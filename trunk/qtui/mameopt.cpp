@@ -14,12 +14,6 @@ QList<OptInfo *> optInfos;
 //option category map, option category as key, names as value list
 QMap<QString, QStringList> optCatMap;
 OptionDelegate optdelegate(win);
-const QString INI_EXT = ".ini";
-const QString CFG_PREFIX = 
-#ifndef Q_WS_WIN
-	QDir::homePath() + "/" + 
-#endif
-	".mamepgui/";
 
 enum
 {
@@ -640,7 +634,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		if (pMameOpt->guivisible && optName.contains("_extra_software"))
 			mameOpts[optName]->globalvalue = pMameOpt->globalvalue;
 
-		overrideModel = dlgOptions->treeGlobalOpt->model();
+		overrideModel = optionsUI->treeGlobalOpt->model();
 		overrideIndex = overrideModel->index(index.row(), 1);
 		overrideModel->setData(overrideIndex, dispValue);
 		// fall to next case
@@ -661,7 +655,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = dlgOptions->treeSourceOpt->model();
+			overrideModel = optionsUI->treeSourceOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 			// fall to next case
@@ -680,7 +674,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = dlgOptions->treeBiosOpt->model();
+			overrideModel = optionsUI->treeBiosOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 		}
@@ -698,7 +692,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = dlgOptions->treeCloneofOpt->model();
+			overrideModel = optionsUI->treeCloneofOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 		}
@@ -722,7 +716,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
 		
-			overrideModel = dlgOptions->treeCurrOpt->model();
+			overrideModel = optionsUI->treeCurrOpt->model();
 			overrideIndex = overrideModel->index(index.row(), 1);
 			overrideModel->setData(overrideIndex, dispValue);
 		}
@@ -766,16 +760,16 @@ void OptionDelegate::setDirectories()
 
 	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
 
-	connect(dlgDirs, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
+	connect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
 
 	//take existing dir
-	dlgDirs->init(ctrl->text());
-	dlgDirs->exec();
+	dirsUI->init(ctrl->text());
+	dirsUI->exec();
 }
 
 void OptionDelegate::setDirectoriesAccepted()
 {
-	pathBuf = dlgDirs->getDirs();
+	pathBuf = dirsUI->getDirs();
 	emit commitData(rWidget);
 	pathBuf.clear();
 }
@@ -1024,12 +1018,12 @@ void OptionUtils::initOption()
 {
 	//assign unique ctlrs for each level of options
 	optInfos = (QList<OptInfo *>() 
-			<< new OptInfo(0, 0, dlgOptions)
-			<< new OptInfo(dlgOptions->lvGlobalOpt, dlgOptions->treeGlobalOpt, dlgOptions)
-			<< new OptInfo(dlgOptions->lvSourceOpt, dlgOptions->treeSourceOpt, dlgOptions)
-			<< new OptInfo(dlgOptions->lvBiosOpt, dlgOptions->treeBiosOpt, dlgOptions)
-			<< new OptInfo(dlgOptions->lvCloneofOpt, dlgOptions->treeCloneofOpt, dlgOptions)
-			<< new OptInfo(dlgOptions->lvCurrOpt, dlgOptions->treeCurrOpt, dlgOptions));
+			<< new OptInfo(0, 0, optionsUI)
+			<< new OptInfo(optionsUI->lvGlobalOpt, optionsUI->treeGlobalOpt, optionsUI)
+			<< new OptInfo(optionsUI->lvSourceOpt, optionsUI->treeSourceOpt, optionsUI)
+			<< new OptInfo(optionsUI->lvBiosOpt, optionsUI->treeBiosOpt, optionsUI)
+			<< new OptInfo(optionsUI->lvCloneofOpt, optionsUI->treeCloneofOpt, optionsUI)
+			<< new OptInfo(optionsUI->lvCurrOpt, optionsUI->treeCurrOpt, optionsUI));
 
 	//init category list ctlrs for each level of options
 	for (int optLevel = OPTLEVEL_GLOBAL; optLevel < OPTLEVEL_LAST; optLevel++)
@@ -1146,14 +1140,14 @@ const QString OptionUtils::getShortValue(const QString &optname, const QString &
 QColor OptionUtils::inheritColor(const QModelIndex &index)
 {
 	QModelIndex i = index.sibling(index.row(), 1);
-	QString optName = optUtils->getField(index, USERROLE_KEY).toString();
+	QString optName = getField(index, USERROLE_KEY).toString();
 	QString dispVal = index.model()->data(i).toString();
 
 	QString compVal;
 	MameOption *pMameOpt = mameOpts[optName];
 
 	// return a different color if value is not default
-	if (dispVal == optUtils->getLongValue(optName, pMameOpt->defvalue))
+	if (dispVal == getLongValue(optName, pMameOpt->defvalue))
 		return Qt::transparent;
 	else
 		return QColor(255, 255, 0, 64);
@@ -1163,7 +1157,7 @@ bool OptionUtils::isChanged(const QModelIndex &index)
 {
 	QModelIndex i = index.sibling(index.row(), 1);
 	int optLevel = index.model()->objectName().remove("optModel").toInt();
-	QString optName = optUtils->getField(index, USERROLE_KEY).toString();
+	QString optName = getField(index, USERROLE_KEY).toString();
 	QString dispVal = index.model()->data(i).toString();
 	
 	QString compVal;
@@ -1197,7 +1191,7 @@ bool OptionUtils::isChanged(const QModelIndex &index)
 		}
 	}
 
-	compVal = optUtils->getLongValue(optName, compVal);
+	compVal = getLongValue(optName, compVal);
 
 	if (dispVal != compVal)
 		return true;
@@ -1213,8 +1207,6 @@ bool OptionUtils::isTitle(const QModelIndex &index)
 
 void OptionUtils::loadDefault(QString text)
 {
-	win->log("loadDefault()");	
-
 //the following is for Qt translation
 #if 0
 	QStringList optList = (QStringList()
@@ -1571,7 +1563,7 @@ void OptionUtils::loadDefault(QString text)
 	QString inipath = mameOpts["inipath"]->defvalue;
 	if (inipath != ".;ini")
 	{
-		win->log("unofficial mame inipath");
+//		win->log("unofficial mame inipath");
 		inipath.append(";");
 		inipath.append(mameIniPath + "ini");
 		inipath.remove("./");
@@ -1596,8 +1588,9 @@ void OptionUtils::loadTemplate()
 void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 {
 	//get opti values from ini
-	QHash<QString, QString> inisettings = optUtils->readIniFile(iniFileName);
-	
+	QHash<QString, QString> iniSettings = readIniFile(iniFileName);
+
+	//iterate every option
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
@@ -1608,14 +1601,28 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 			pMameOpt->globalvalue = pMameOpt->currvalue = guiSettings.value(optName).toString();
 			continue;
 		}
-		
-		//take ini override when available
-		if (inisettings.contains(optName))
-		{
-			// apply to current value
-			pMameOpt->currvalue = inisettings[optName];
 
-			// apply to level value
+		//ips settings doesnt inherit
+		if (optName == "ips")
+		{
+			//reset all to default
+			pMameOpt->currvalue = pMameOpt->cloneofvalue= pMameOpt->biosvalue = pMameOpt->srcvalue = pMameOpt->globalvalue = pMameOpt->defvalue;
+
+			if (iniSettings.contains(optName))
+			{
+				pMameOpt->currvalue = iniSettings[optName];
+			}
+
+			continue;
+		}
+
+		//take ini override when available in loaded value
+		if (iniSettings.contains(optName))
+		{
+			// assign ini value to current value
+			pMameOpt->currvalue = iniSettings[optName];
+
+			// assign ini value to level value
 			switch (optLevel)
 			{
 			case OPTLEVEL_GLOBAL:
@@ -1633,10 +1640,9 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 			case OPTLEVEL_CLONEOF:
 				pMameOpt->cloneofvalue = pMameOpt->currvalue;
 				break;
-
 			}
 		}
-		//inherit from higher level value, apply to current and level value
+		//inherit from higher level value, assign it to current and level value
 		else
 		{
 			switch (optLevel)
@@ -1738,11 +1744,14 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 				case OPTLEVEL_CURR:
 				default:
 					currVal = pMameOpt->currvalue;
-					defVal = pMameOpt->cloneofvalue;
+					if (optName == "ips")
+						defVal = pMameOpt->defvalue;
+					else
+						defVal = pMameOpt->cloneofvalue;
 				}
 
-				if (optUtils->getLongValue(optName, currVal) == 
-					optUtils->getLongValue(optName, defVal))
+				if (getLongValue(optName, currVal) == 
+					getLongValue(optName, defVal))
 					isChanged = false;
 				else
 					isChanged = true;
@@ -1752,7 +1761,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 
 			if (!isHeader && !line.isEmpty())
 			{
-				// write out header and clear header buffer
+				// write header and clear header buffer
 				if (!headers.isEmpty())
 				{
 					foreach (QString header, headers)
@@ -1800,6 +1809,15 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 
 			if (c < 0)
 				bufs.removeAt(i); 
+		}
+
+		// remove trailing blank lines
+		for (int i = bufs.count() - 1; i >= 0; i --)
+		{
+			if (bufs[i].isEmpty())
+				bufs.removeAt(i);
+			else
+				break;
 		}
 
 		for (int i = 0; i < bufs.count(); i ++)
@@ -1889,7 +1907,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	/* figure out which option category are we in list ctlr */
 	//get optLevel by selected tab
 	if (optLevel == -1)
-		optLevel = dlgOptions->tabOptions->currentIndex();
+		optLevel = optionsUI->tabOptions->currentIndex();
 
 	QString optCat;
 	//fixme: hack index: index 0 is GUI, must skip optLevel 0, otherwise optCtrls[0] will crash
@@ -1916,7 +1934,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
 		updateModelData(optCat, OPTLEVEL_GLOBAL);
-		dlgOptions->setWindowTitle(STR_OPTS_ + tr("Global"));
+		optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
 		return;
 	}
 
@@ -1927,37 +1945,37 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	if (optLevel == OPTLEVEL_SRC)
 	{
 		updateModelData(optCat, OPTLEVEL_SRC);
-		dlgOptions->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
+		optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
 		return;
 	}
 
 	//bios
 	iniString = gameInfo->biosof();
 	if (iniString.isEmpty())
-		dlgOptions->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(false);
+		optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(false);
 	else
-		dlgOptions->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(true);
+		optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(true);
 
 	loadIni(OPTLEVEL_BIOS, mameIniPath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_BIOS)
 	{
 		updateModelData(optCat, OPTLEVEL_BIOS);
-		dlgOptions->setWindowTitle(STR_OPTS_ + iniString);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
 		return;
 	}
 
 	//cloneof
 	iniString = gameInfo->cloneof;
 	if (iniString.isEmpty())
-		dlgOptions->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(false);
+		optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(false);
 	else
-		dlgOptions->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(true);
+		optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(true);
 
-	optUtils->loadIni(OPTLEVEL_CLONEOF, mameIniPath + "ini/" + iniString + INI_EXT);
+	loadIni(OPTLEVEL_CLONEOF, mameIniPath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_CLONEOF)
 	{
 		updateModelData(optCat, OPTLEVEL_CLONEOF);
-		dlgOptions->setWindowTitle(STR_OPTS_ + iniString);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
 		return;
 	}
 
@@ -1967,12 +1985,12 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 		iniString = gameInfo->romof;
 	else
 		iniString = currentGame;
-
-	optUtils->loadIni(OPTLEVEL_CURR, mameIniPath + "ini/" + iniString + INI_EXT);
+	
+	loadIni(OPTLEVEL_CURR, mameIniPath + "ini/" + iniString + INI_EXT);
 	if (optLevel == OPTLEVEL_CURR)
 	{
 		updateModelData(optCat, OPTLEVEL_CURR);
-		dlgOptions->setWindowTitle(STR_OPTS_ + iniString);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
 		return;
 	}
 }
@@ -2263,7 +2281,7 @@ void OptionUtils::updateHeaderSize(int logicalIndex, int oldSize, int newSize)
 	if (logicalIndex > 0)
 		return;
 
-	int optLevel = dlgOptions->tabOptions->currentIndex();
+	int optLevel = optionsUI->tabOptions->currentIndex();
 	option_column_state = optInfos[optLevel]->optView->header()->saveState();
 	
 	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));

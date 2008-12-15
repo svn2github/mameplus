@@ -220,7 +220,7 @@ MainWindow::MainWindow(QWidget *parent)
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
 
-	QAction *actionFolderList = dockWidget_7->toggleViewAction();
+	QAction *actionFolderList = dwLeft->toggleViewAction();
 	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
 	
 	menuView->insertAction(actionPicture_Area, actionFolderList);
@@ -228,9 +228,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 	gameList = new Gamelist(this);
 	optUtils = new OptionUtils(this);
-	dlgOptions = new Options(this);
-	dlgAbout = new About(this);
-	dlgDirs = new Dirs(this);
+	dirsUI = new Dirs(this);
+	optionsUI = new Options(this);
+	aboutUI = new About(this);
+	ipsUI = new IPS(this);
 	m1UI = new M1UI(this);
 
 	QTimer::singleShot(0, this, SLOT(init()));
@@ -312,13 +313,8 @@ void MainWindow::init()
 			sdlInited = true;
 #endif
 
-	//init M1
-	m1 = new M1(this);
-	if (m1->max_games == 0)
-		m1 = NULL;
-
-	m1UI->init();
-
+	ipsUI->init();
+	
 	// init mainwindow
 	win->log("win->init()");
 	//fixme: should be in constructor
@@ -393,7 +389,7 @@ void MainWindow::init()
 	optUtils->initOption();
 
 	//apply css
-	QFile cssFile("../res/mamepgui.qss");
+	QFile cssFile(":/res/mamepgui.qss");
 	cssFile.open(QFile::ReadOnly);
 	QString styleSheet = QLatin1String(cssFile.readAll());
 	qApp->setStyleSheet(styleSheet);
@@ -404,13 +400,14 @@ void MainWindow::init()
 	trayIcon->setIcon(mamepIcon);
 
 	//show UI
-	show();
+//	show();
 	loadLayout();
 	setDockOptions();
 	qApp->processEvents();
 
 	// must gameList->init(true) before loadLayout()
 	gameList->init(true, GAMELIST_INIT_FULL);
+	show();
 
 	// must init app style before background
 	if (gui_style.isEmpty())
@@ -461,10 +458,20 @@ void MainWindow::init()
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
 
+	//init M1 in a background thread, put it in last stage
+	m1 = new M1(this);
+	m1->init();
+
+	// connect misc signal and slots
+
+	// Docked snapshots
+	QList<QTabBar *> tabBars = getSSTabBars();
+	foreach (QTabBar *tabBar, tabBars)
+		connect(tabBar, SIGNAL(currentChanged(int)), gameList, SLOT(updateSelection()));
+
 	connect(actionBgStretch, SIGNAL(triggered()), this, SLOT(setBgTile()));
 	connect(actionBgTile, SIGNAL(triggered()), this, SLOT(setBgTile()));
 
-	// connect misc signal and slots
 	// Actions
 	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
 	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
@@ -487,7 +494,7 @@ void MainWindow::init()
 		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
 				optUtils, SLOT(updateModel(QListWidgetItem *)));
 	}
-	connect(dlgOptions->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
+	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
 
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
@@ -497,7 +504,16 @@ void MainWindow::init()
 void MainWindow::setVersion()
 {
 	//set version info
-	QString m1Ver = (m1 != NULL) ? m1->getVersion() : "N/A";
+
+	QString m1Ver = "";
+	QString m1VerString = "";
+	if (m1 != NULL && m1->available)
+	{
+		m1Ver = m1->version;
+		m1VerString = QString("<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %1 multi-platform arcade music emulator &copy; R. Belmont")
+						.arg(m1Ver);
+	}
+	
 	QString strVersion = QString(
 		"<html>"
 		"<head>"
@@ -511,16 +527,16 @@ void MainWindow::setVersion()
 		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
 		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
 		"<a href=\"http://www.libsdl.org\">SDL</a> %4  - Simple DirectMedia Layer<br>"
-		"<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %5 multi-platform arcade music emulator &copy; R. Belmont"
+		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.2 beta 1")
+		.arg("1.3 beta 4")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
 		.arg(QString("%1.%2.%3").arg(SDL_MAJOR_VERSION).arg(SDL_MINOR_VERSION).arg(SDL_PATCHLEVEL))
-		.arg(m1Ver);
+		.arg(m1VerString);
 
-	dlgAbout->tbVersion->setHtml(strVersion);
+	aboutUI->tbVersion->setHtml(strVersion);
 	m1UI->setWindowTitle("M1 - " + m1Ver);
 
 	QFileInfo fi(mame_binary);
@@ -534,6 +550,12 @@ void MainWindow::setVersion()
 void MainWindow::on_actionPlay_activated()
 {
 	gameList->runMame();
+}
+
+void MainWindow::on_actionConfigIPS_activated()
+{
+	ipsUI->updateList();
+	ipsUI->exec();
 }
 
 void MainWindow::on_actionRefresh_activated()
@@ -569,14 +591,14 @@ void MainWindow::showOptionsDialog(int optLevel, int lstRow)
 
 	//init ctlrs, 
 	for (int i = OPTLEVEL_GLOBAL; i < OPTLEVEL_LAST; i++)
-		optUtils->updateModel(0, i);
+		optUtils->updateModel(NULL, i);
 
-	dlgOptions->tabOptions->setCurrentIndex(optLevel);
+	optionsUI->tabOptions->setCurrentIndex(optLevel);
 
 	if (lstRow > -1)
 		optCtrls[optLevel]->setCurrentRow(lstRow);
 
-	dlgOptions->exec();
+	optionsUI->exec();
 }
 
 void MainWindow::on_actionExitStop_activated()
@@ -601,7 +623,7 @@ void MainWindow::on_actionBoard_activated()
 
 void MainWindow::on_actionAbout_activated()
 {
-	dlgAbout->exec();
+	aboutUI->exec();
 }
 
 void MainWindow::toggleGameListColumn(int logicalIndex)
@@ -992,7 +1014,7 @@ void MainWindow::setBgPixmap(QString fileName)
 		//get the color tone of bg image, set the bg color based on it
 		bkgroundImg = bkgroundImg.scaled(1, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 		int grayVal = qGray(bkgroundImg.pixel(0, 0));
-		win->log(QString("grayVal: %1").arg(grayVal));
+//		win->log(QString("grayVal: %1").arg(grayVal));
 		if (grayVal < 128)
 			isDarkBg = true;
 		else
@@ -1019,6 +1041,73 @@ void MainWindow::toggleTrayIcon(int, QProcess::ExitStatus, bool isTrayIconVisibl
 		win->trayIcon->setToolTip(win->windowTitle());
 
 	win->setVisible(!isTrayIconVisible);
+}
+
+QList<QTabBar *> MainWindow::getSSTabBars()
+{
+	//there's no API in Qt to access docked widget tabbar, we have to do it on our own
+	QList<QTabBar *> tabBars = findChildren<QTabBar *>();
+	QList<QTabBar *> tabBars2;
+
+	//iterate all tab ctrls
+	foreach (QTabBar *tabBar, tabBars)
+	{
+		bool isSSDocked = false;
+
+		//iterate known screenshot/history dock names
+		for (int i = 0; i < dockCtrlNames.count(); i++)
+		{
+			//iterate tabs in a tab bar
+			for (int t = 0; t < tabBar->count(); t ++)
+			{
+				//if the tab contains any known screenshot/history dock names
+				if (tr(qPrintable(dockCtrlNames[i])) == tabBar->tabText(t))
+				{
+					isSSDocked = true;
+					break;
+				}
+			}
+			if (isSSDocked)
+				break;
+		}
+
+		if (isSSDocked)
+			tabBars2.append(tabBar);
+	}
+
+	return tabBars2;
+}
+
+bool MainWindow::isDockTabVisible(QString objName)
+{
+	bool isSSTabbed = false;
+	QList<QTabBar *> tabBars = getSSTabBars();
+	objName = tr(qPrintable(objName));
+
+	//iterate all tab ctrls
+	foreach (QTabBar *tabBar, tabBars)
+	{
+		//tab bar's current index matches $objName
+		if (objName == tabBar->tabText(tabBar->currentIndex()))
+			return true;
+
+		//iterate tabs in a tab bar
+		for (int t = 0; t < tabBar->count(); t ++)
+		{
+			//if $objName is tabified in any of the tab ctrls
+			if (objName == tabBar->tabText(t))
+			{
+				isSSTabbed = true;
+				break;
+			}
+		}
+	}
+
+	// if the dock area contains only one SS widget
+	if (!isSSTabbed)
+		return true;
+
+	return false;
 }
 
 Screenshot::Screenshot(QString title, QWidget *parent)
@@ -1083,7 +1172,7 @@ void Screenshot::setAspect(bool forceAspect)
 //click screenshot area to rotate dockwidgets
 void Screenshot::rotateImage()
 {
-	QString objName =((QWidget* )sender())->objectName();
+	QString objName = ((QWidget* )sender())->objectName();
 	objName.remove(0, 6);	//remove "label_"
 
 	//there's no API in Qt to access docked widget tabbar
@@ -1092,7 +1181,7 @@ void Screenshot::rotateImage()
 	{
 		bool isDock = false;
 
-		// see if the dock widget contains any of screenshot/history widgets
+		// if the dock widget contains any of screenshot/history widgets
 		for (int i = 0; i < dockCtrlNames.count(); i++)
 		{
 			if (MainWindow::tr(qPrintable(dockCtrlNames[i])) == tab->tabText(0))
@@ -1102,106 +1191,25 @@ void Screenshot::rotateImage()
 			}
 		}
 
-		// select the next
+		// select the next tab
 		if (isDock && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
 		{
 			int i = tab->currentIndex();
 			if (++i > tab->count() - 1)
 				i = 0;
 			tab->setCurrentIndex(i);
-		}
-	}
-}
-
-// fixme: merge ^
-bool MainWindow::isDockTabVisible(QString objName)
-{
-#if 0
-	//there's no API in Qt to access docked widget tabbar
-
-	bool result = false;
-	bool isSSTabbed = false;
-	
-	QList<QTabBar *> tabs = findChildren<QTabBar *>();
-	foreach (QTabBar *tab, tabs)
-	{
-		bool isSSDocked = false;
-
-		// see if the tabs in a dock area contain any of screenshot/history widgets
-		for (int i = 0; i < dockCtrlNames.count(); i++)
-		{
-			for (int t = 0; t < tab->count(); t ++)
-				if (tr(qPrintable(dockCtrlNames[i])) == tab->tabText(t))
-				{
-					isSSDocked = true;
-					isSSTabbed = true;
-					break;
-				}
-		}
-
-		if (isSSDocked && MainWindow::tr(qPrintable(objName)) == tab->tabText(tab->currentIndex()))
-		{
-			result = true;
 			break;
 		}
 	}
-
-	// if the dock area contains only one SS widget
-	if (!isSSTabbed)
-		result = true;
-	
-	return result;
-#else
-	return true;
-#endif
 }
 
 void Screenshot::updateScreenshotLabel()
 {
-    QSize scaledSize, origSize;
-	scaledSize = originalPixmap.size();
-
-	if (forceAspect)
-	{
-		float aspect = 0.75f;
-		if (scaledSize.width() < scaledSize.height())
-		{
-			//vert
-			if (scaledSize.height() < scaledSize.width() / aspect)
-				// need expand height
-				scaledSize.setHeight((int)(scaledSize.width() / aspect));
-			else
-				// need expand width
-				scaledSize.setWidth((int)(scaledSize.height() * aspect));
-		}
-		else
-		{
-			//horz
-			if (scaledSize.height() < scaledSize.width() * aspect)
-				// need expand height
-				scaledSize.setHeight((int)(scaledSize.width() * aspect));
-			else
-				// need expand width
-				scaledSize.setWidth((int)(scaledSize.height() / aspect));
-		}
-	}
-//	win->log(QString("sz: %1, %2").arg(scaledSize()));
-
-	origSize = scaledSize;
-
-	scaledSize.scale(screenshotLabel->size(), Qt::KeepAspectRatio);
-
-	// do not enlarge
-	if (scaledSize.width() > origSize.width() || 
-		scaledSize.height() > origSize.height())
-	{
-		scaledSize = origSize;
-	}
+    QSize scaledSize = utils->getScaledSize(originalPixmap.size(), screenshotLabel->size(), forceAspect);
 
 	screenshotLabel->setIconSize(scaledSize);
 	screenshotLabel->setIcon(originalPixmap.scaled(scaledSize,
-                                                     Qt::IgnoreAspectRatio,
-                                                     Qt::SmoothTransformation));
+			Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
 }
 
 int main(int argc, char *argv[])

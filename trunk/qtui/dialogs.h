@@ -36,6 +36,7 @@ public slots:
 	void removeDirectory();
 };
 
+
 class About: public QDialog, public Ui::About
 {
 Q_OBJECT

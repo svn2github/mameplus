@@ -1,8 +1,8 @@
 #include "mamepguimain.h"
 
-Options *dlgOptions = NULL;
-About *dlgAbout = NULL;
-Dirs *dlgDirs = NULL;
+Options *optionsUI = NULL;
+Dirs *dirsUI = NULL;
+About *aboutUI = NULL;
 
 QByteArray option_geometry;
 QList<QListWidget *> optCtrls;
