@@ -528,6 +528,7 @@ tactcan2	ƒ^ƒNƒeƒBƒVƒƒƒ“ (set 2)	‚½‚­‚Ä‚¡‚µ‚á‚ñ	[Konami] (Sega license)
 locomotn	ƒKƒbƒ^ƒ“ƒSƒbƒgƒ“ / Loco-Motion	‚ª‚Á‚½‚ñ‚²‚Á‚Æ‚ñ	Konami (Centuri license)
 gutangtn	ƒKƒbƒ^ƒ“ƒSƒbƒgƒ“	‚ª‚Á‚½‚ñ‚²‚Á‚Æ‚ñ	Konami (Sega license)
 cottong	ƒKƒbƒ^ƒ“ƒSƒbƒgƒ“ / Cotocoto Cottong	‚ª‚Á‚½‚ñ‚²‚Á‚Æ‚ñ	bootleg
+locoboot	ƒKƒbƒ^ƒ“ƒSƒbƒgƒ“ (ŠC‘¯”Å)	‚ª‚Á‚½‚ñ‚²‚Á‚Æ‚ñ	bootleg
 commsega	ƒRƒ}ƒ“ƒh (Sega)	‚±‚Ü‚ñ‚Ç	Sega
 bosco	ƒ{ƒXƒRƒjƒAƒ“ (new ver)	‚Ú‚·‚±‚É‚ ‚ñ	Namco
 boscoo	ƒ{ƒXƒRƒjƒAƒ“ (old ver)	‚Ú‚·‚±‚É‚ ‚ñ	Namco
@@ -634,11 +635,11 @@ faceoff	ƒtƒFƒCƒXƒIƒt (“ú–{”Å)	‚Ó‚¥‚¢‚·‚¨‚Ó	Namco
 rompers	ƒƒ“ƒp[ƒY (“ú–{”Å)	‚ë‚ñ‚Ï[‚¸	Namco
 romperso	ƒƒ“ƒp[ƒY (“ú–{”Å old ver)	‚ë‚ñ‚Ï[‚¸	Namco
 blastoff	ƒuƒ‰ƒXƒgEƒIƒt (“ú–{”Å)	‚Ô‚ç‚·‚Æ‚¨‚Ó	Namco
-ws89	ƒvƒ–ì‹…ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'89 -ŠJ–‹”Å (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş_289	Namco
+ws89	ƒvƒ–ì‹…ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'89 -ŠJ–‹”ÅII (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş_289	Namco
 dangseed	ƒfƒ“ƒWƒƒƒ‰ƒXƒV[ƒh (“ú–{”Å)	‚Å‚ñ‚¶‚á‚ç‚·‚µ[‚Ç	Namco
 ws90	ƒvƒ–ì‹…ƒ[ƒ‹ƒhƒXƒ^ƒWƒAƒ€'90 -Œƒ“¬”Å (“ú–{”Å)	‚Õ‚ë‚â‚«‚ã‚¤‚í[‚é‚Ç‚·‚½‚¶‚ ‚Ş_390	Namco
 pistoldm	ƒsƒXƒgƒ‹‘å–¼‚Ì–`Œ¯ (“ú–{”Å)	‚Ò‚·‚Æ‚é‚¾‚¢‚İ‚å‚¤‚Ì‚Ú‚¤‚¯‚ñ	Namco
-boxyboy	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX / Boxy Boy (USA”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
+boxyboy	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX / Boxy Boy. (USA”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
 soukobdx	‘qŒÉ”Ôƒfƒ‰ƒbƒNƒX (“ú–{”Å)	‚»‚¤‚±‚Î‚ñ‚Å‚ç‚Á‚­‚·	Namco
 puzlclub	ƒpƒYƒ‹ƒNƒ‰ƒu (“ú–{”Å prototype)	‚Ï‚¸‚é‚­‚ç‚Ô	Namco
 tankfrce	ƒ^ƒ“ƒNƒtƒH[ƒX (USA”Å 2 players)	‚½‚ñ‚­‚Ó‚§[‚·	Namco
@@ -742,6 +743,7 @@ aircombj	ƒGƒA[ƒRƒ“ƒoƒbƒg (“ú–{”Å)	‚¦‚ [‚±‚ñ‚Î‚Á‚Æ_1	Namco
 aircombu	ƒGƒA[ƒRƒ“ƒoƒbƒg (USA”Å)	‚¦‚ [‚±‚ñ‚Î‚Á‚Æ_1	Namco
 cybsled	ƒTƒCƒo[ƒXƒŒƒbƒh (USA”Å)	‚³‚¢‚Î[‚·‚ê‚Á‚Ç	Namco
 cybsledj	ƒTƒCƒo[ƒXƒŒƒbƒh (“ú–{”Å)	‚³‚¢‚Î[‚·‚ê‚Á‚Ç	Namco
+gal3	ƒMƒƒƒ‰ƒNƒVƒAƒ“3 -ƒVƒAƒ^[6 ƒvƒƒWƒFƒNƒgƒhƒ‰ƒO[ƒ“	‚¬‚á‚ç‚­‚µ‚ ‚ñ_3	Namco
 ridgerac	ƒŠƒbƒWƒŒ[ƒT[ (ŠCŠO”Å rev RR3)	‚è‚Á‚¶‚ê[‚³[_1	Namco
 ridgerab	ƒŠƒbƒWƒŒ[ƒT[ (ŠCŠO”Å rev RR2)	‚è‚Á‚¶‚ê[‚³[_1	Namco
 ridgeraj	ƒŠƒbƒWƒŒ[ƒT[ (“ú–{”Å rev RR1)	‚è‚Á‚¶‚ê[‚³[_1	Namco
@@ -2110,7 +2112,8 @@ topsecrt	ƒgƒbƒvEƒV[ƒNƒŒƒbƒg (“ú–{”Å)	‚Æ‚Á‚Õ‚µ[‚­‚ê‚Á‚Æ_C	Capcom
 1943	1943 -ƒ~ƒbƒhƒEƒFƒCŠCí / 1943 -The Battle of Midway (USA”Å)	‚¢‚¿‚«‚ã‚¤‚æ‚ñ_2_1‚³‚ñ	Capcom
 1943j	1943 -ƒ~ƒbƒhƒEƒFƒCŠCí (“ú–{”Å)	‚¢‚¿‚«‚ã‚¤‚æ‚ñ_2_1‚³‚ñ	Capcom
 blktiger	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“ / Black Tiger	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	Capcom
-bktigerb	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“ / Black Tiger (ŠC‘¯”Å)	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	bootleg
+bktigrb1	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“ / Black Tiger (ŠC‘¯”Å set 1)	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	bootleg
+bktigrb2	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“ / Black Tiger (ŠC‘¯”Å set 2)	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	bootleg
 blkdrgon	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	Capcom
 blkdrgnb	ƒuƒ‰ƒbƒNƒhƒ‰ƒSƒ“ (ŠC‘¯”Å)	‚Ô‚ç‚Á‚­‚Ç‚ç‚²‚ñ	bootleg
 sf	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ (ŠCŠO”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_1	Capcom
@@ -2208,7 +2211,7 @@ sf2ceuc	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (USA”Å 920803)	‚·‚Æ‚è
 sf2cej	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (“ú–{”Å 920513)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	Capcom
 sf2rb	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å rainbow set 1)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2rb2	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å rainbow set 2)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
-sf2rb3	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å Rainbow set 3)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
+sf2rb3	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å rainbow set 3)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2red	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å red wave)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2v004	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å V004)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2accp2	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å accelerator Pt.II)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
@@ -2259,7 +2262,7 @@ pang3	ƒpƒ“I3 -‰ö“‚½‚¿‚Ì‰Ø—í‚ÈŒßŒã (‰¢B”Å 950511)	‚Ï‚ñ3	Mitchell
 pang3j	ƒpƒ“I3 -‰ö“‚½‚¿‚Ì‰Ø—í‚ÈŒßŒã (“ú–{”Å 950511)	‚Ï‚ñ3	Mitchell
 megaman	ƒƒbƒNƒ}ƒ“ ƒUEƒpƒ[ƒoƒgƒ‹ / Mega Man -The Power Battle (ƒAƒWƒA”Å 951006 CPS1)	‚ë‚Á‚­‚Ü‚ñ_1_1	Capcom
 rockmanj	ƒƒbƒNƒ}ƒ“ ƒUEƒpƒ[ƒoƒgƒ‹ (“ú–{”Å 950922 CPS1)	‚ë‚Á‚­‚Ü‚ñ_1_1	Capcom
-fcrash	ƒtƒ@ƒCƒiƒ‹ƒtƒ@ƒCƒg / Final Crash (ŠC‘¯”Å of Final Fight)	‚Ó‚Ÿ‚¢‚È‚é‚Ó‚Ÿ‚¢‚Æ_1	[Capcom] (Playmark bootleg)
+fcrash	ƒtƒ@ƒCƒiƒ‹ƒtƒ@ƒCƒg / Final Crash (ŠC‘¯”Å)	‚Ó‚Ÿ‚¢‚È‚é‚Ó‚Ÿ‚¢‚Æ_1	[Capcom] (Playmark bootleg)
 ssf2	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (ŠCŠO”Å 930911)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	Capcom
 ssf2u	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (USA”Å 930911)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	Capcom
 ssf2a	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (ƒAƒWƒA”Å 931005)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	Capcom
@@ -2474,7 +2477,7 @@ avspd	ƒGƒCƒŠƒAƒ“ VS. ƒvƒŒƒfƒ^[ (‰¢B”Å 940520 Phoenix Edition)	‚¦‚¢‚è‚ ‚ñ‚Î[‚³
 dstlku1d	ƒ”ƒ@ƒ“ƒpƒCƒA -ƒUEƒiƒCƒgƒEƒHƒŠƒA[ƒY / Dark Stalkers -The Night Warriors (USA”Å 940705 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _1	bootleg
 ringdstd	ƒX[ƒp[ƒ}ƒbƒXƒ‹ƒ{ƒ}[ -ƒCƒ“ƒ^[ƒiƒVƒ‡ƒiƒ‹EƒuƒƒEƒAƒEƒg / Ring of Destruction -Slam Masters II (‰¢B”Å 940902 Phoenix Edition)	‚·[‚Ï[‚Ü‚Á‚·‚é‚Ú‚Ü[	bootleg
 xmcotad	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (‰¢B”Å 950105 Phoenix Edition)	‚¦‚Á‚­‚·‚ß‚ñ_2	bootleg
-nwarrud	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _2‚Í‚ñ‚½[	bootleg
+nwarrud	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _2‚Í‚ñ‚½[	bootleg
 sfad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO / Street Fighter Alpha -Warriors' Dreams (‰¢B”Å 950727 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_1	bootleg
 mshud	ƒ}[ƒ”ƒ‹EƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 951024 Phoenix Edition)	‚Ü[‚Ô‚é‚·[‚Ï[‚Ğ[‚ë[‚¸_1	bootleg
 19xxd	19XX -The War Against Destiny (USA”Å 951207 Phoenix Edition)	‚È‚¢‚ñ‚Ä‚¡[‚ñ‚¾‚Ô‚é‚¦‚Á‚­‚·	bootleg
@@ -2482,7 +2485,7 @@ sfz2ad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 (ƒAƒWƒA”Å 960227 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚
 spf2xjd	ƒX[ƒp[ƒpƒYƒ‹ƒtƒ@ƒCƒ^[II X (“ú–{”Å 960531 Phoenix Edition)	‚·[‚Ï[‚Ï‚¸‚é‚Ó‚Ÿ‚¢‚½[2‚¦‚Á‚­‚·	bootleg
 ddsomud	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (USA”Å 960619 Phoenix Edition)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	bootleg
 megamn2d	ƒƒbƒNƒ}ƒ“2 ƒUEƒpƒ[ƒtƒ@ƒCƒ^[ƒY / Mega Man 2 -The Power Fighters (USA”Å 960708 Phoenix Edition)	‚ë‚Á‚­‚Ü‚ñ_2	bootleg
-sfz2aad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 Alpha (ƒAƒWƒA”Å 960826 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_2‚ ‚é‚Ó‚Ÿ	bootleg
+sfz2ald	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 Alpha (ƒAƒWƒA”Å 960826 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_2‚ ‚é‚Ó‚Ÿ	bootleg
 xmvsfu1d	X-MEN VS. ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ (USA”Å 961004 Phoenix Edition)	‚¦‚Á‚­‚·‚ß‚ñ_3‚Î[‚³‚·‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[	bootleg
 batcird	ƒoƒgƒ‹ƒT[ƒLƒbƒg (‰¢B”Å 970319 Phoenix Edition)	‚Î‚Æ‚é‚³[‚«‚Á‚Æ	bootleg
 vsavd	ƒ”ƒ@ƒ“ƒpƒCƒAƒZƒCƒ”ƒ@[ -ƒUEƒ[ƒhƒIƒuƒ”ƒ@ƒ“ƒpƒCƒA (‰¢B”Å 970519 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _3‚¹‚¢‚Î[_1	bootleg
@@ -3273,7 +3276,7 @@ pdrift	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å rev A)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
 pdrifta	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
 pdrifte	ƒpƒ[ƒhƒŠƒtƒg (ŠCŠO”Å earlier)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
 pdriftj	ƒpƒ[ƒhƒŠƒtƒg (“ú–{”Å)	‚Ï‚í[‚Ç‚è‚Ó‚Æ	Sega
-rchase	ƒŒ[ƒ‹ƒ`ƒFƒCƒX (“ú–{”Å)	‚ê[‚é‚¿‚¥‚¢‚·	Sega
+rchase	ƒŒ[ƒ‹ƒ`ƒFƒCƒX (“ú–{”Å)	‚ê[‚é‚¿‚¥‚¢‚·_1	Sega
 hotrod	ƒzƒbƒgƒƒbƒh (ŠCŠO”Å 3 players turbo set 1 floppy based)	‚Ù‚Á‚Æ‚ë‚Á‚Ç	Sega
 hotroda	ƒzƒbƒgƒƒbƒh (ŠCŠO”Å 3 players turbo set 2 floppy based)	‚Ù‚Á‚Æ‚ë‚Á‚Ç	Sega
 hotrodj	ƒzƒbƒgƒƒbƒh (“ú–{”Å 4 players floppy based)	‚Ù‚Á‚Æ‚ë‚Á‚Ç	Sega
@@ -3293,7 +3296,7 @@ bnzabros	ƒ{ƒiƒ“ƒUƒuƒ‰ƒU[ƒY (USA”Å floppy DS3-5000-07d? based)	‚Ú‚È‚ñ‚´‚Ô‚ç‚´[‚
 bnzabrsj	ƒ{ƒiƒ“ƒUƒuƒ‰ƒU[ƒY (“ú–{”Å floppy DS3-5000-07b based)	‚Ú‚È‚ñ‚´‚Ô‚ç‚´[‚¸	Sega
 qsww	ƒNƒCƒYh‘è‚ğ‚í‚·‚ê‚Ü‚µ‚½I (“ú–{”Å floppy based FD1094 317-0058-08b)	‚­‚¢‚¸‚µ‚ã‚­‚¾‚¢‚ğ‚í‚·‚ê‚Ü‚µ‚½	Sega
 dcclubfd	ƒ_ƒCƒiƒ~ƒbƒNƒJƒ“ƒgƒŠ[ƒNƒ‰ƒu (USA”Å floppy based FD1094 317-0058-09d)	‚¾‚¢‚È‚İ‚Á‚­‚©‚ñ‚Æ‚è[‚­‚ç‚Ô	Sega
-dcclub	ƒ_ƒCƒiƒ~ƒbƒNƒJƒ“ƒgƒŠ[ƒNƒ‰ƒu(ŠCŠO”Å rom based)	‚¾‚¢‚È‚İ‚Á‚­‚©‚ñ‚Æ‚è[‚­‚ç‚Ô	Sega
+dcclub	ƒ_ƒCƒiƒ~ƒbƒNƒJƒ“ƒgƒŠ[ƒNƒ‰ƒu (ŠCŠO”Å rom based)	‚¾‚¢‚È‚İ‚Á‚­‚©‚ñ‚Æ‚è[‚­‚ç‚Ô	Sega
 dcclubj	ƒ_ƒCƒiƒ~ƒbƒNƒJƒ“ƒgƒŠ[ƒNƒ‰ƒu (“ú–{”Å rom based)	‚¾‚¢‚È‚İ‚Á‚­‚©‚ñ‚Æ‚è[‚­‚ç‚Ô	Sega
 mahmajn	Š‚³‚ñ‚Ì‚Ü[‚Ü[‚¶‚á‚ñ (“ú–{”Å rom based)	‚Æ‚±‚ë‚³‚ñ‚Ì‚Ü[‚Ü[‚¶‚á‚ñ_1	Sega
 qgh	ƒNƒCƒYƒS[ƒXƒgƒnƒ“ƒ^[ -ƒUEƒNƒCƒYƒAƒhƒxƒ“ƒ`ƒƒ[ (“ú–{”Å rom based)	‚­‚¢‚¸‚²[‚·‚Æ‚Í‚ñ‚½[	Sega
@@ -3436,7 +3439,7 @@ doa	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu (Model 2B rev B)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_1_1	Sega
 sgt24h	ƒX[ƒp[GT 24h	‚·[‚Ï[‚¶[‚Ä‚¡[24h	Jaleco
 von	“d”]í‹@ƒo[ƒ`ƒƒƒƒ“ (USA”Å rev B)	‚Å‚ñ‚Ì‚¤‚¹‚ñ‚«‚Î[‚¿‚á‚ë‚ñ_1	Sega
 vonj	“d”]í‹@ƒo[ƒ`ƒƒƒƒ“ (“ú–{”Å rev B)	‚Å‚ñ‚Ì‚¤‚¹‚ñ‚«‚Î[‚¿‚á‚ë‚ñ_1	Sega
-dynabb	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹97 (rev A)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é97	Sega
+dynabb	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹97 (rev A)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é_1_97	Sega
 zerogun	ƒ[ƒƒKƒ“ƒi[ (Model 2B)	‚º‚ë‚ª‚ñ‚È[	Psikyo
 zerogunj	ƒ[ƒƒKƒ“ƒi[ (“ú–{”Å Model 2B)	‚º‚ë‚ª‚ñ‚È[	Psikyo
 dynmcopb	ƒ_ƒCƒiƒ}ƒCƒgŒY–2 -ƒJƒŠƒu‚ÌŠC‘¯•Ò / Dynamite Cop (ŠCŠO”Å Model 2B)	‚¾‚¢‚È‚Ü‚¢‚Æ‚Å‚©_2	Sega
@@ -3605,7 +3608,7 @@ vtennis	ƒpƒ[ƒXƒ}ƒbƒVƒ… (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ï‚í[‚·‚
 zombrvn	ƒ]ƒ“ƒrƒŠƒxƒ“ƒW (“ú–{ / USA / ‰¢B / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¼‚ñ‚Ñ‚è‚×‚ñ‚¶	Sega
 doa2	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_2_1	Tecmo
 doa2m	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu2 ƒ~ƒŒƒjƒAƒ€ (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_2_2‚İ‚ê‚É‚ ‚Ş	Tecmo
-dybbnao	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹ ƒiƒIƒ~ -SEGA Professional Baseball (“ú–{”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é_1_‚È‚¨‚İ	Sega
+dybbnao	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹ ƒiƒIƒ~ -SEGA Professional Baseball (“ú–{”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é_2_‚È‚¨‚İ	Sega
 gundmgd	‹@“®ímƒKƒ“ƒ_ƒ€ ˜A–MVS.ƒWƒIƒ“ (GDL-0001)	‚«‚Ç‚¤‚¹‚ñ‚µ‚ª‚ñ‚¾‚Ş_4‚ê‚ñ‚Û‚¤‚Î[‚³‚·‚¶‚¨‚ñ	unknown
 sfz3ugd	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO3 ƒAƒbƒp[ (GDL-0002)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_7‚º‚ë_3‚ ‚Á‚Ï[	Capcom
 cvsgd	ƒJƒvƒRƒ“ VS. SNK ƒ~ƒŒƒjƒAƒ€ƒtƒ@ƒCƒg2000 ƒvƒ (GDL-0004)	‚©‚Õ‚±‚ñ‚Î[‚³‚·‚¦‚·‚¦‚Ê‚¯‚¢_1‚İ‚ê‚É‚ ‚Ş‚Ó‚Ÿ‚¢‚Æ_2000_‚Õ‚ë	Capcom
@@ -3640,6 +3643,8 @@ zoar	ƒ~ƒbƒVƒ‡ƒ“X / Zoar	‚İ‚Á‚µ‚å‚ñ‚¦‚Á‚­‚·	Data East USA
 btime	ƒnƒ“ƒo[ƒK[ / Burger Time (Data East set 1)	‚Í‚ñ‚Î[‚ª[	Data East Corporation
 btime2	ƒnƒ“ƒo[ƒK[ / Burger Time (Data East set 2)	‚Í‚ñ‚Î[‚ª[	Data East Corporation
 btimem	ƒnƒ“ƒo[ƒK[ / Burger Time (Midway)	‚Í‚ñ‚Î[‚ª[	Data East (Bally Midway license)
+tisland	ƒgƒŒƒWƒƒ[ƒAƒCƒ‰ƒ“ƒh	‚Æ‚ê‚¶‚á[‚ ‚¢‚ç‚ñ‚Ç	Data East Corporation
+protennb	ƒeƒjƒX (ŠC‘¯”Å)	‚Ä‚É‚·	bootleg
 cookrace	ƒnƒ“ƒo[ƒK[ / Cook Race	‚Í‚ñ‚Î[‚ª[	bootleg
 wtennis	ƒvƒƒeƒjƒX / World Tennis	‚Õ‚ë‚Ä‚É‚·	bootleg
 brubber	ƒo[ƒjƒ“ƒ‰ƒo[	‚Î[‚É‚ñ‚ç‚Î[	Data East
@@ -3703,6 +3708,7 @@ tomahawk	ƒgƒ}ƒz[ƒN777 (rev 5)	‚Æ‚Ü‚Ù[‚­777	Data East
 tomahaw1	ƒgƒ}ƒz[ƒN777 (rev 1)	‚Æ‚Ü‚Ù[‚­777	Data East
 progolf	ƒvƒƒSƒ‹ƒt (set 1)	‚Õ‚ë‚²‚é‚Ó	Data East Corporation
 progolfa	ƒvƒƒSƒ‹ƒt (set 2)	‚Õ‚ë‚²‚é‚Ó	Data East Corporation
+deshoros	ƒfƒBƒXƒeƒBƒj[ƒzƒƒXƒR[ƒv	‚Å‚¡‚·‚Ä‚¡‚É[‚Ù‚ë‚·‚±[‚Õ	Data East Corporation
 prosoccr	ƒvƒƒTƒbƒJ[	‚Õ‚ë‚³‚Á‚©[	Data East Corporation
 prosport	ƒvƒƒXƒ|[ƒc	‚Õ‚ë‚·‚Û[‚Â	Data East Corporation
 boomrang	ƒWƒFƒlƒVƒX (set 1)	‚¶‚¥‚Ë‚µ‚·	Data East Corporation
@@ -3983,7 +3989,8 @@ drgnbowl	ƒhƒ‰ƒSƒ“ƒ{ƒEƒ‹	‚Ç‚ç‚²‚ñ‚Ú[‚é_1‚Ç‚ç‚²‚ñ‚Ú‚¤‚é	Nics
 wc90	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 (set 1)	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	Tecmo
 wc90a	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 (set 2)	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	Tecmo
 wc90t	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 (trackball)	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	Tecmo
-wc90b	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 / Euro League	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	bootleg
+wc90b1	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 / Euro League	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	bootleg
+wc90b2	ƒeƒNƒ‚ƒ[ƒ‹ƒhƒJƒbƒv '90 / Worldcup '90	‚Ä‚­‚à‚í[‚é‚Ç‚©‚Á‚Õ_290	bootleg
 spbactn	ƒX[ƒp[ƒsƒ“ƒ{[ƒ‹ƒAƒNƒVƒ‡ƒ“ (USA”Å)	‚·[‚Ï[‚Ò‚ñ‚Ú[‚é‚ ‚­‚µ‚å‚ñ	Tecmo
 spbactnj	ƒX[ƒp[ƒsƒ“ƒ{[ƒ‹ƒAƒNƒVƒ‡ƒ“ (“ú–{”Å)	‚·[‚Ï[‚Ò‚ñ‚Ú[‚é‚ ‚­‚µ‚å‚ñ	Tecmo
 fstarfrc	ƒtƒ@ƒCƒiƒ‹EƒXƒ^[ƒtƒH[ƒX (USA”Å)	‚Ó‚Ÿ‚¢‚È‚é‚·‚½[‚Ó‚§[‚·	Tecmo
@@ -5587,7 +5594,7 @@ raidenk	—‹“d (ŠØ‘”Å)	‚ç‚¢‚Å‚ñ_1	Seibu Kaihatsu (IBL Corporation license)
 raident	—‹“d (‘ä˜p”Å)	‚ç‚¢‚Å‚ñ_1	Seibu Kaihatsu (Liang HWA Electronics license)
 sdgndmps	‹@“®ímSDƒKƒ“ƒ_ƒ€ ƒTƒCƒRƒTƒ‰ƒ}ƒ“ƒ_[‚Ì‹ºˆĞ	‚«‚Ç‚¤‚¹‚ñ‚µ‚¦‚·‚Å‚¡[‚ª‚ñ‚¾‚Ş‚³‚¢‚±‚³‚ç‚Ü‚ñ‚¾[‚Ì‚«‚å‚¤‚¢	Banpresto / Bandai
 dcon	D-CON	‚Å‚¡[‚±‚ñ	Success
-sengokmj	íš –ƒ (“ú–{”Å)	‚¹‚ñ‚²‚­‚Ü[‚¶‚á‚ñ	Sigma
+sengokmj	íš –ƒ [BET] (“ú–{”Å)	‚¹‚ñ‚²‚­‚Ü[‚¶‚á‚ñ	Sigma
 totmejan	‚Æ‚Á‚Ä‚àE -ö“üƒAƒCƒhƒ‹ƒvƒƒ_ƒNƒVƒ‡ƒ“I	‚Æ‚Á‚Ä‚à‚¢[‚¶‚á‚ñ	Seibu (distributed by Tecmo)
 goodejan	ƒOƒb‚ÆE -Ÿ‚¿”²‚«–ƒÜ‹à‰¤II (set 1)	‚®‚Á‚Æ‚¢[‚¶‚á‚ñ	Seibu (distributed by Tecmo)
 goodejaa	ƒOƒb‚ÆE -Ÿ‚¿”²‚«–ƒÜ‹à‰¤II (set 2)	‚®‚Á‚Æ‚¢[‚¶‚á‚ñ	Seibu (distributed by Tecmo)
@@ -5916,8 +5923,9 @@ snowboar	ƒXƒm[ƒ{[ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (set 1)	‚·‚Ì[‚Ú[‚Ç‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	G
 snowbalt	ƒXƒm[ƒ{[ƒhƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (ver 2.1)	‚·‚Ì[‚Ú[‚Ç‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Gaelco
 bang	GUNƒKƒoƒ`ƒ‡ / Bang	‚ª‚ñ‚ª‚Î‚¿‚å	Gaelco
 bangj	GUNƒKƒoƒ`ƒ‡ (“ú–{”Å)	‚ª‚ñ‚ª‚Î‚¿‚å	Gaelco
-speedup	ƒXƒs[ƒhƒAƒbƒv	‚·‚Ò[‚Ç‚ ‚Á‚Õ	Gaelco
-surfplnt	ƒT[ƒtƒvƒ‰ƒlƒbƒg	‚³[‚Ó‚Õ‚ç‚Ë‚Á‚Æ	Gaelco
+speedup	ƒXƒs[ƒhƒAƒbƒv (ver 1.20)	‚·‚Ò[‚Ç‚ ‚Á‚Õ	Gaelco
+surfplnt	ƒT[ƒtƒvƒ‰ƒlƒbƒg (ver 4.1)	‚³[‚Ó‚Õ‚ç‚Ë‚Á‚Æ	Gaelco
+surfpl40	ƒT[ƒtƒvƒ‰ƒlƒbƒg (ver 4.0)	‚³[‚Ó‚Õ‚ç‚Ë‚Á‚Æ	Gaelco
 radikalb	ƒ‰ƒWƒJƒ‹ƒoƒCƒJ[ƒY	‚ç‚¶‚©‚é‚Î‚¢‚©[‚¸	Gaelco
 djboy	DJƒ{[ƒC (set 1)	‚Å‚¡[‚¶‚¥‚¢‚Ú[‚¢	Kaneko (American Sammy license)
 djboyj	DJƒ{[ƒC (“ú–{”Å)	‚Å‚¡[‚¶‚¥‚¢‚Ú[‚¢	Kaneko (Sega license)
@@ -6020,6 +6028,7 @@ umanclub	ƒEƒ‹ƒgƒ‰ƒ}ƒ“‹äŠy•” -í‚¦IƒEƒ‹ƒgƒ‰ƒ}ƒ“ŒZ’íII	‚¤‚é‚Æ‚ç‚Ü‚ñ‚­‚ç‚Ô	Tsubu
 zingzip	ƒWƒ“EƒWƒ“EƒWƒbƒv -ƒUEƒVƒ…[ƒeƒBƒ“ƒO	‚¶‚ñ‚¶‚ñ‚¶‚Á‚Õ	Allumer + Tecmo
 atehate	ƒAƒeƒi‚ÌƒnƒeƒiH	‚ ‚Ä‚È‚Ì‚Í‚Ä‚È	Athena
 jjsquawk	J.J.ƒXƒR[ƒJ[ƒY	‚¶‚¥‚¢‚¶‚¥‚¢‚·‚±[‚©[‚¸	Athena / Able
+jjsquawb	J.J.ƒXƒR[ƒJ[ƒY (ŠC‘¯”Å)	‚¶‚¥‚¢‚¶‚¥‚¢‚·‚±[‚©[‚¸	bootleg
 kamenrid	‰¼–Êƒ‰ƒCƒ_[‹äŠy•” ƒoƒgƒ‹ƒŒ[ƒT[	‚©‚ß‚ñ‚ç‚¢‚¾[‚­‚ç‚Ô‚Î‚Æ‚é‚ê[‚³[	Toei / Banpresto
 madshark	ƒ}ƒbƒhƒVƒƒ[ƒN	‚Ü‚Á‚Ç‚µ‚á[‚­	Allumer
 msgundam	‹@“®ímƒKƒ“ƒ_ƒ€	‚«‚Ç‚¤‚¹‚ñ‚µ‚ª‚ñ‚¾‚Ş_1	Banpresto
@@ -6438,7 +6447,9 @@ spiders2	ƒXƒpƒCƒ_[ (set 2)	‚·‚Ï‚¢‚¾[	Sigma Enterprises Inc.
 spinner	ƒXƒpƒCƒ_[ / Spinner	‚·‚Ï‚¢‚¾[	bootleg
 goldstar	ƒS[ƒ‹ƒfƒ“ƒXƒ^[	‚²[‚é‚Å‚ñ‚·‚½[	IGS
 goldstbl	ƒS[ƒ‹ƒfƒ“ƒXƒ^[ (blue ver)	‚²[‚é‚Å‚ñ‚·‚½[	IGS
-moonlght	ƒS[ƒ‹ƒfƒ“ƒXƒ^[ / Moon Light	‚²[‚é‚Å‚ñ‚·‚½[	unknown
+moonlght	ƒS[ƒ‹ƒfƒ“ƒXƒ^[ / Moon Light (ŠC‘¯”Å)	‚²[‚é‚Å‚ñ‚·‚½[	bootleg
+chry10	ƒS[ƒ‹ƒfƒ“ƒXƒ^[  / Cherry 10 (ŠC‘¯”Å)	‚²[‚é‚Å‚ñ‚·‚½[	bootleg
+chryigld	ƒS[ƒ‹ƒfƒ“ƒXƒ^[ / Cherry I Gold (ŠC‘¯”Å)	‚²[‚é‚Å‚ñ‚·‚½[	bootleg
 cpoker	ƒ`ƒƒƒ“ƒsƒIƒ“ƒ|[ƒJ[ (ver 220I)	‚¿‚á‚ñ‚Ò‚¨‚ñ‚Û[‚©[	IGS
 cpokert	ƒ`ƒƒƒ“ƒsƒIƒ“ƒ|[ƒJ[ (ver 200G)	‚¿‚á‚ñ‚Ò‚¨‚ñ‚Û[‚©[	Tuning
 csk227it	ƒ`ƒƒƒ“ƒsƒIƒ“ƒXƒLƒ‹ (with Ability)	‚¿‚á‚ñ‚Ò‚¨‚ñ‚·‚«‚é	IGS
@@ -7038,7 +7049,6 @@ cybertnk	ƒTƒCƒo[ƒ^ƒ“ƒN (ver 1.04)	‚³‚¢‚Î[‚½‚ñ‚­	Coreland
 cubeqst	ƒLƒ…[ƒuƒNƒGƒXƒg	‚«‚ã[‚Ô‚­‚¦‚·‚Æ	Simutrek
 pkscram	PK‚·‚­‚ç‚ñ‚Ô‚é	‚Ò[‚¯[‚·‚­‚ç‚ñ‚Ô‚é	Cosmo Electronics Corporation
 jollycrd	ƒWƒ‡ƒŠ[ƒJ[ƒh (ƒI[ƒXƒgƒŠƒA”Å)	‚¶‚å‚è[‚©[‚Ç_1	TAB-Austria
-jolycdae	ƒWƒ‡ƒŠ[ƒJ[ƒh (ƒI[ƒXƒgƒŠƒA”Å encrypted)	‚¶‚å‚è[‚©[‚Ç_1	TAB-Austria
 jolyc3x3	ƒWƒ‡ƒŠ[ƒJ[ƒh (3x3 deal)	‚¶‚å‚è[‚©[‚Ç_1	TAB-Austria
 jolyc980	ƒWƒ‡ƒŠ[ƒJ[ƒhƒvƒƒtƒFƒbƒVƒ‡ƒiƒ‹2.0	‚¶‚å‚è[‚©[‚Ç_2_‚Õ‚ë‚Ó‚¥‚Á‚µ‚å‚È‚é2.0	Spale-Soft
 jolycdev	ƒWƒ‡ƒŠ[ƒJ[ƒh (Evona Electronic)	‚¶‚å‚è[‚©[‚Ç_1	TAB/Evona
@@ -7064,9 +7074,9 @@ royalcdb	ƒƒCƒ„ƒ‹ƒJ[ƒh (ƒI[ƒXƒgƒŠƒA”Å set 2)	‚ë‚¢‚â‚é‚©[‚Ç	TAB-Austria
 royalcdc	ƒƒCƒ„ƒ‹ƒJ[ƒh (ƒXƒƒoƒLƒA”Å encrypted)	‚ë‚¢‚â‚é‚©[‚Ç	Evona Electronic
 lluck3x3	ƒ‰ƒbƒL[ƒŒƒfƒB (3x3 deal)	‚ç‚Á‚«[‚ê‚Å‚¡	TAB-Austria
 lluck4x1	ƒ‰ƒbƒL[ƒŒƒfƒB (4x1 aces)	‚ç‚Á‚«[‚ê‚Å‚¡	TAB-Austria
-magiccrd	ƒ}ƒWƒbƒNƒJ[ƒhII (ƒuƒ‹ƒKƒŠƒA”Å)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
-magiccda	ƒ}ƒWƒbƒNƒJ[ƒhII (green TAB or Impera board)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
-magiccdb	ƒ}ƒWƒbƒNƒJ[ƒhII (blue TAB board encrypted)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
+magicrd2	ƒ}ƒWƒbƒNƒJ[ƒhII (ƒuƒ‹ƒKƒŠƒA”Å)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
+magicd2a	ƒ}ƒWƒbƒNƒJ[ƒhII (green TAB or Impera board)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
+magicd2b	ƒ}ƒWƒbƒNƒJ[ƒhII (blue TAB board encrypted)	‚Ü‚¶‚Á‚­‚©[‚Ç_2	Impera
 vegasslw	ƒƒCƒ„ƒ‹ƒxƒKƒXƒWƒ‡[ƒJ[ƒJ[ƒh (slow deal)	‚ë‚¢‚â‚é‚×‚ª‚·‚¶‚å[‚©[‚©[‚Ç	Funworld
 vegasfst	ƒƒCƒ„ƒ‹ƒxƒKƒXƒWƒ‡[ƒJ[ƒJ[ƒh (fast deal)	‚ë‚¢‚â‚é‚×‚ª‚·‚¶‚å[‚©[‚©[‚Ç	Soft Design
 vegasfte	ƒƒCƒ„ƒ‹ƒxƒKƒXƒWƒ‡[ƒJ[ƒJ[ƒh (fast deal english gfx)	‚ë‚¢‚â‚é‚×‚ª‚·‚¶‚å[‚©[‚©[‚Ç	Soft Design
@@ -7168,14 +7178,39 @@ potnpkrc	ƒWƒƒƒbƒNƒ|ƒbƒeƒ“ƒYƒ|[ƒJ[ (set 4)	‚¶‚á‚Á‚­‚Û‚Á‚Ä‚ñ‚¸‚Û[‚©[	Bootleg
 potnpkrd	ƒWƒƒƒbƒNƒ|ƒbƒeƒ“ƒYƒ|[ƒJ[ (set 5)	‚¶‚á‚Á‚­‚Û‚Á‚Ä‚ñ‚¸‚Û[‚©[	Bootleg
 potnpkre	ƒWƒƒƒbƒNƒ|ƒbƒeƒ“ƒYƒ|[ƒJ[ (set 6)	‚¶‚á‚Á‚­‚Û‚Á‚Ä‚ñ‚¸‚Û[‚©[	Bootleg
 goodluck	ƒOƒbƒhƒ‰ƒbƒN	‚®‚Á‚Ç‚ç‚Á‚­	Unknown
-bsuerte	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 1)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
-bsuertea	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 2)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
-royale	ƒƒCƒ„ƒ‹ (ver X)	‚ë‚¢‚â‚é	Unknown
-witchcrd	ƒEƒBƒbƒ`ƒJ[ƒh (UK”Å)	‚¤‚¡‚Á‚¿‚©[‚Ç	Unknown
+royale	ƒƒCƒ„ƒ‹ (set 1)	‚ë‚¢‚â‚é	Unknown
+royalea	ƒƒCƒ„ƒ‹ (set 2)	‚ë‚¢‚â‚é	Unknown
+witchcrd	ƒEƒBƒbƒ`ƒJ[ƒh (Video Klein)	‚¤‚¡‚Á‚¿‚©[‚Ç	Video Klein
 witchcda	ƒEƒBƒbƒ`ƒJ[ƒh (ƒXƒyƒCƒ“”Å set 1)	‚¤‚¡‚Á‚¿‚©[‚Ç	Unknown
 witchcdb	ƒEƒBƒbƒ`ƒJ[ƒh (ƒXƒyƒCƒ“”Å set 2)	‚¤‚¡‚Á‚¿‚©[‚Ç	Unknown
+witchcdc	ƒEƒBƒbƒ`ƒJ[ƒh (‰pŒê”Å no witch game)	‚¤‚¡‚Á‚¿‚©[‚Ç	Unknown
 sloco93	ƒX[ƒp[ƒƒR93 (ƒXƒyƒCƒ“”Å set 1)	‚·[‚Ï[‚ë‚±93	Unknown
 sloco93a	ƒX[ƒp[ƒƒR93 (ƒXƒyƒCƒ“”Å set 2)	‚·[‚Ï[‚ë‚±93	Unknown
+maverik	ƒ}[ƒ”ƒFƒŠƒbƒN	‚Ü[‚×‚è‚Á‚­	Unknown
+brasil89	ƒuƒ‰ƒWƒ‹89	‚Ô‚ç‚¶‚é_89	Unknown
+poker91	ƒ|[ƒJ[91	‚Û[‚©[_91	Unknown
+bsuerte	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 1)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertea	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 2)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteb	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 3)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertec	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 4)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerted	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 5)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertee	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 6)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertef	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 7)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteg	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 8)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteh	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 9)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertei	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 10)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertej	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 11)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertek	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 12)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertel	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 13)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertem	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 14)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerten	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 15)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteo	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 16)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertep	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 17)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteq	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 18)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerter	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å bet 19)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertes	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 20)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuertet	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å set 21)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
+bsuerteu	ƒuƒGƒiƒXƒGƒ‹ƒe (ƒXƒyƒCƒ“”Å, set 22)	‚Ô‚¦‚È‚·‚¦‚é‚Ä	Unknown
 comg076	ƒLƒƒƒ‹ƒIƒƒK ƒQ[ƒ€7.6 (arcade poker)	‚«‚á‚é‚¨‚ß‚ª‚°[‚Ş07.6	Cal Omega Inc.
 comg079	ƒLƒƒƒ‹ƒIƒƒK ƒQ[ƒ€7.9 (arcade poker)	‚«‚á‚é‚¨‚ß‚ª‚°[‚Ş07.9	Cal Omega Inc.
 comg080	ƒLƒƒƒ‹ƒIƒƒK ƒQ[ƒ€8.0 (arcade black jack)	‚«‚á‚é‚¨‚ß‚ª‚°[‚Ş08.0	Cal Omega Inc.
@@ -7311,6 +7346,12 @@ cmagica	ƒJƒ‹ƒ^ƒ}ƒMƒJ (ver 1.8)	‚©‚é‚½‚Ü‚¬‚©	Unknown
 millsun	ƒ~ƒŒƒjƒAƒ€ƒTƒ“	‚İ‚ê‚É‚ ‚Ş‚³‚ñ	Unknown
 sspac2k1	ƒX[ƒp[ƒXƒy[ƒX2001	‚·[‚Ï[‚·‚Ø[‚·2001	Unknown
 elvis	ƒGƒ‹ƒrƒX?	‚¦‚é‚Ñ‚·	Unknown
+newmcard	ƒjƒ…[ƒ}ƒWƒbƒNƒJ[ƒh	‚É‚ã[‚Ü‚¶‚Á‚­‚©[‚Ç	New High Video?
+brasil	ƒuƒ‰ƒWƒ‹ (ver 3)	‚Ô‚ç‚¶‚é_3	New High Video?
+fashion	ƒuƒ‰ƒWƒ‹ / Fashion (ver 2.14)	‚Ô‚ç‚¶‚é_2.14	New High Video?
+ilpag	ƒCƒ‹ ƒpƒŠƒAƒbƒ`ƒ‡ 	‚¢‚é‚Ï‚è‚ ‚Á‚¿‚å	unknown
+mil4000	ƒ~ƒŒƒjƒAƒ€ƒk[ƒ”ƒH4000 (ver 2.0)	‚İ‚ê‚É‚ ‚Ş‚Ê[‚Ú_4000	Sure Milano
+mil4000a	ƒ~ƒŒƒjƒAƒ€ƒk[ƒ”ƒH4000 (ver 1.8)	‚İ‚ê‚É‚ ‚Ş‚Ê[‚Ú_4000	Sure Milano
 ejollyx5	ƒ†[ƒƒWƒ‡ƒŠ[X5	‚ä[‚ë‚¶‚å‚è[‚¦‚Á‚­‚·5	Solar Games
 grandprx	ƒOƒ‰ƒ“ƒvƒŠ	‚®‚ç‚ñ‚Õ‚è	4fun
 showhand	ƒVƒ‡[ƒnƒ“ƒh	‚µ‚å[‚Í‚ñ‚Ç	Astro Corp.
@@ -7330,7 +7371,7 @@ sf2m8	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å M8)	‚·‚Æ‚è[‚Æ‚Ó
 sf2m13	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II'ƒ^[ƒ{ -ƒnƒCƒp[ƒtƒ@ƒCƒeƒBƒ“ƒO (ŠC‘¯”Å M13)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_3‚¾‚Á‚µ‚ã‚½[‚Ú	bootleg
 sf2tlona	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (“j—´ set 1) (’†‘ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2tlonb	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (“j—´ set 2) (’†‘ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
-sf2th	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å TurboƒnƒbƒN)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
+sf2th	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II' -ƒ`ƒƒƒ“ƒsƒIƒ“ƒGƒfƒBƒVƒ‡ƒ“ (ŠC‘¯”Å turboƒnƒbƒN)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_2‚¾‚Á‚µ‚ã	bootleg
 sf2b	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒ[ƒ‹ƒhƒEƒH[ƒŠƒA[ (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2_1	bootleg
 knightsh	ƒiƒCƒc ƒIƒu ƒU ƒ‰ƒEƒ“ƒh -‰~‘ì‚Ì‹Rm (ƒnƒbƒN)	‚È‚¢‚Â‚¨‚Ô‚´‚ç‚¤‚ñ‚Ç	hack
 kodh	ƒUEƒLƒ“ƒOƒIƒuƒhƒ‰ƒSƒ“ƒY (ƒnƒbƒN)	‚´‚«‚ñ‚®‚¨‚Ô‚Ç‚ç‚²‚ñ‚¸	hack
@@ -7351,33 +7392,32 @@ zintrkcd	‰Ÿ‚µo‚µƒWƒ“ƒgƒŠƒbƒN (CD to MVS Conversion)	‚¨‚µ‚¾‚µ‚¶‚ñ‚Æ‚è‚Á‚­	hack
 fr2ch	ƒAƒCƒhƒ‹–ƒƒtƒ@ƒCƒiƒ‹ƒƒ}ƒ“ƒX2 (CD to MVS Conversion)	‚ ‚¢‚Ç‚é‚Ü[‚¶‚á‚ñ‚Ó‚Ÿ‚¢‚È‚é‚ë‚Ü‚ñ‚·_2	hack
 spclone	¹—…™ÖÖ (Ü•iƒNƒ[ƒ“”Å ver YY)	‚³‚ç‚Ü‚ñ‚¾_1	Konami
 sfzch	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO (CPS Changer)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_1	Capcom
-ddtodd	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒ^ƒ[ƒIƒuƒhƒD[ƒ€ (‰¢B”Å 940412 Phoenix Edition)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_1‚½‚í[‚¨‚Ô‚Ç‚£[‚Ş	hack
-avspd	ƒGƒCƒŠƒAƒ“ VS. ƒvƒŒƒfƒ^[ (‰¢B”Å 940520 Phoenix Edition)	‚¦‚¢‚è‚ ‚ñ‚Î[‚³‚·‚Õ‚ê‚Å‚½[	hack
-ringdstd	ƒX[ƒp[ƒ}ƒbƒXƒ‹ƒ{ƒ}[ -ƒCƒ“ƒ^[ƒiƒVƒ‡ƒiƒ‹EƒuƒƒEƒAƒEƒg / Ring of Destruction -Slam Masters II (‰¢B”Å 940902 Phoenix Edition)	‚·[‚Ï[‚Ü‚Á‚·‚é‚Ú‚Ü[	hack
-xmcotad	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (‰¢B”Å 950105 Phoenix Edition)	‚¦‚Á‚­‚·‚ß‚ñ_2	hack
-nwarrud	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _2‚Í‚ñ‚½[	hack
-sfad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO / Street Fighter Alpha -Warriors' Dreams (‰¢B”Å 950727 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_1	hack
-19xxd	19XX -The War Against Destiny (USA”Å 951207 Phoenix Edition)	‚È‚¢‚ñ‚Ä‚¡[‚ñ‚¾‚Ô‚é‚¦‚Á‚­‚·	hack
-ddsomud	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (USA”Å 960619 Phoenix Edition)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	hack
-spf2xjd	ƒX[ƒp[ƒpƒYƒ‹ƒtƒ@ƒCƒ^[II X (“ú–{”Å 960531 Phoenix Edition)	‚·[‚Ï[‚Ï‚¸‚é‚Ó‚Ÿ‚¢‚½[2‚¦‚Á‚­‚·	hack
-megamn2d	ƒƒbƒNƒ}ƒ“2 ƒUEƒpƒ[ƒtƒ@ƒCƒ^[ƒY / Mega Man 2 -The Power Fighters (USA”Å 960708 Phoenix Edition)	‚ë‚Á‚­‚Ü‚ñ_2	hack
-sfz2aad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 Alpha (ƒAƒWƒA”Å 960826 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_2‚ ‚é‚Ó‚Ÿ	hack
-xmvsfu1d	X-MEN VS. ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ (USA”Å 961004 Phoenix Edition)	‚¦‚Á‚­‚·‚ß‚ñ_3‚Î[‚³‚·‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[	hack
-batcird	ƒoƒgƒ‹ƒT[ƒLƒbƒg (‰¢B”Å 970319 Phoenix Edition)	‚Î‚Æ‚é‚³[‚«‚Á‚Æ	hack
-vsavd	ƒ”ƒ@ƒ“ƒpƒCƒAƒZƒCƒ”ƒ@[ -ƒUEƒ[ƒhƒIƒuƒ”ƒ@ƒ“ƒpƒCƒA (‰¢B”Å 970519 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _3‚¹‚¢‚Î[_1	hack
-mvscud	ƒ}[ƒ”ƒ‹ VS. ƒJƒvƒRƒ“ -ƒNƒ‰ƒbƒVƒ…ƒIƒuƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 9810123 Phoenix Edition)	‚Ü[‚Ô‚é‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	hack
-sfa3ud	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO3 / Street Fighter Alpha 3 (USA”Å 980904 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_3	hack
-gwingjd	ƒMƒKƒEƒBƒ“ƒO (“ú–{”Å 990223 Phoenix Edition)	‚¬‚ª‚¤‚¡‚ñ‚®_1	hack
-1944d	1944 -ƒUEƒ‹[ƒvƒ}ƒXƒ^[ (USA”Å 000620 Phoenix Edition)	‚¢‚¿‚«‚ã‚¤‚æ‚ñ_4‚æ‚ñ	hack
-hsf2d	ƒnƒCƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -The Anniversary Edition (ƒAƒWƒA”Å 040202 Phoenix Edition)	‚Í‚¢‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2	hack
-dstlku1d	ƒ”ƒ@ƒ“ƒpƒCƒA -ƒUEƒiƒCƒgƒEƒHƒŠƒA[ƒY / Dark Stalkers -The Night Warriors (USA”Å 940705 Phoenix Edition)	‚Î‚ñ‚Ï‚¢‚ _1	hack
-progerjd	ƒvƒƒMƒA‚Ì—’ (“ú–{”Å 010117 Phoenix Edition)	‚Õ‚ë‚¬‚ ‚Ì‚ ‚ç‚µ	hack
-ssf2ud	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (USA”Å 930911 Phoenix Edition)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	hack
-mshud	ƒ}[ƒ”ƒ‹EƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 951024 Phoenix Edition)	‚Ü[‚Ô‚é‚·[‚Ï[‚Ğ[‚ë[‚¸_1	hack
-sfz2ad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 (ƒAƒWƒA”Å 960227 Phoenix Edition)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_1	hack
-sgemfd	ƒ|ƒPƒbƒgƒtƒ@ƒCƒ^[ / Super Gem Fighter -Mini Mix (USA”Å 970904 Phoenix Edition)	‚Û‚¯‚Á‚Æ‚Ó‚Ÿ‚¢‚½[	hack
-ssf2tbd	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒg[ƒiƒƒ“ƒgƒoƒgƒ‹ (ŠCŠO”Å 931119 Phoenix Edition)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_2‚´‚Æ[‚È‚ß‚ñ‚Æ‚Î‚Æ‚é	hack
-ssf2xjd	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II X -ƒOƒ‰ƒ“ƒhƒ}ƒXƒ^[ƒ`ƒƒƒŒƒ“ƒW (“ú–{”Å 940223 Phoenix Edition)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_3‚¦‚Á‚­‚·‚®‚ç‚ñ‚Ç‚Ü‚·‚½[‚¿‚á‚ê‚ñ‚¶	hack
+ddtodd	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒ^ƒ[ƒIƒuƒhƒD[ƒ€ (‰¢B”Å 940412 Phoenix Edition) (ŠC‘¯”Å)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_1‚½‚í[‚¨‚Ô‚Ç‚£[‚Ş	hack
+avspd	ƒGƒCƒŠƒAƒ“ VS. ƒvƒŒƒfƒ^[ (‰¢B”Å 940520 Phoenix Edition) (ŠC‘¯”Å)	‚¦‚¢‚è‚ ‚ñ‚Î[‚³‚·‚Õ‚ê‚Å‚½[	hack
+ringdstd	ƒX[ƒp[ƒ}ƒbƒXƒ‹ƒ{ƒ}[ -ƒCƒ“ƒ^[ƒiƒVƒ‡ƒiƒ‹EƒuƒƒEƒAƒEƒg / Ring of Destruction -Slam Masters II (‰¢B”Å 940902 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚Ü‚Á‚·‚é‚Ú‚Ü[	hack
+xmcotad	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (‰¢B”Å 950105 Phoenix Edition) (ŠC‘¯”Å)	‚¦‚Á‚­‚·‚ß‚ñ_2	hack
+sfad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO / Street Fighter Alpha -Warriors' Dreams (‰¢B”Å 950727 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_1	hack
+19xxd	19XX -The War Against Destiny (USA”Å 951207 Phoenix Edition) (ŠC‘¯”Å)	‚È‚¢‚ñ‚Ä‚¡[‚ñ‚¾‚Ô‚é‚¦‚Á‚­‚·	hack
+ddsomud	ƒ_ƒ“ƒWƒ‡ƒ“ƒY&ƒhƒ‰ƒSƒ“ƒY -ƒVƒƒƒh[ƒI[ƒo[ƒ~ƒXƒ^ƒ‰ (USA”Å 960619 Phoenix Edition) (ŠC‘¯”Å)	‚¾‚ñ‚¶‚å‚ñ‚¸‚ ‚ñ‚Ç‚Ç‚ç‚²‚ñ‚¸_2‚µ‚á‚Ç[‚¨[‚Î[‚İ‚·‚½‚ç	hack
+spf2xjd	ƒX[ƒp[ƒpƒYƒ‹ƒtƒ@ƒCƒ^[II X (“ú–{”Å 960531 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚Ï‚¸‚é‚Ó‚Ÿ‚¢‚½[2‚¦‚Á‚­‚·	hack
+megamn2d	ƒƒbƒNƒ}ƒ“2 ƒUEƒpƒ[ƒtƒ@ƒCƒ^[ƒY / Mega Man 2 -The Power Fighters (USA”Å 960708 Phoenix Edition) (ŠC‘¯”Å)	‚ë‚Á‚­‚Ü‚ñ_2	hack
+sfz2aad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 Alpha (ƒAƒWƒA”Å 960826 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_2‚ ‚é‚Ó‚Ÿ	hack
+xmvsfu1d	X-MEN VS. ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ (USA”Å 961004 Phoenix Edition) (ŠC‘¯”Å)	‚¦‚Á‚­‚·‚ß‚ñ_3‚Î[‚³‚·‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[	hack
+batcird	ƒoƒgƒ‹ƒT[ƒLƒbƒg (‰¢B”Å 970319 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚Æ‚é‚³[‚«‚Á‚Æ	hack
+vsavd	ƒ”ƒ@ƒ“ƒpƒCƒAƒZƒCƒ”ƒ@[ -ƒUEƒ[ƒhƒIƒuƒ”ƒ@ƒ“ƒpƒCƒA (‰¢B”Å 970519 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _3‚¹‚¢‚Î[_1	hack
+mvscud	ƒ}[ƒ”ƒ‹ VS. ƒJƒvƒRƒ“ -ƒNƒ‰ƒbƒVƒ…ƒIƒuƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 9810123 Phoenix Edition) (ŠC‘¯”Å)	‚Ü[‚Ô‚é‚Î[‚³‚·‚©‚Õ‚±‚ñ_1	hack
+sfa3ud	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO3 / Street Fighter Alpha 3 (USA”Å 980904 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_3	hack
+gwingjd	ƒMƒKƒEƒBƒ“ƒO (“ú–{”Å 990223 Phoenix Edition) (ŠC‘¯”Å)	‚¬‚ª‚¤‚¡‚ñ‚®_1	hack
+1944d	1944 -ƒUEƒ‹[ƒvƒ}ƒXƒ^[ (USA”Å 000620 Phoenix Edition) (ŠC‘¯”Å)	‚¢‚¿‚«‚ã‚¤‚æ‚ñ_4‚æ‚ñ	hack
+hsf2d	ƒnƒCƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -The Anniversary Edition (ƒAƒWƒA”Å 040202 Phoenix Edition) (ŠC‘¯”Å)	‚Í‚¢‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_2	hack
+dstlku1d	ƒ”ƒ@ƒ“ƒpƒCƒA -ƒUEƒiƒCƒgƒEƒHƒŠƒA[ƒY / Dark Stalkers -The Night Warriors (USA”Å 940705 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _1	hack
+progerjd	ƒvƒƒMƒA‚Ì—’ (“ú–{”Å 010117 Phoenix Edition) (ŠC‘¯”Å)	‚Õ‚ë‚¬‚ ‚Ì‚ ‚ç‚µ	hack
+ssf2ud	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (USA”Å 930911 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	hack
+mshud	ƒ}[ƒ”ƒ‹EƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 951024 Phoenix Edition) (ŠC‘¯”Å)	‚Ü[‚Ô‚é‚·[‚Ï[‚Ğ[‚ë[‚¸_1	hack
+sfz2ad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO2 (ƒAƒWƒA”Å 960227 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6‚º‚ë_2_1	hack
+sgemfd	ƒ|ƒPƒbƒgƒtƒ@ƒCƒ^[ / Super Gem Fighter -Mini Mix (USA”Å 970904 Phoenix Edition) (ŠC‘¯”Å)	‚Û‚¯‚Á‚Æ‚Ó‚Ÿ‚¢‚½[	hack
+ssf2tbd	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒg[ƒiƒƒ“ƒgƒoƒgƒ‹ (ŠCŠO”Å 931119 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_2‚´‚Æ[‚È‚ß‚ñ‚Æ‚Î‚Æ‚é	hack
+ssf2xjd	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II X -ƒOƒ‰ƒ“ƒhƒ}ƒXƒ^[ƒ`ƒƒƒŒƒ“ƒW (“ú–{”Å 940223 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_3‚¦‚Á‚­‚·‚®‚ç‚ñ‚Ç‚Ü‚·‚½[‚¿‚á‚ê‚ñ‚¶	hack
 vantris	ƒ”ƒ@ƒ“ƒgƒŠƒX (Vanguard hardware)	‚Î‚ñ‚Æ‚è‚·	N.Kehrer
 frogfest	ƒtƒƒbƒOƒtƒB[ƒXƒg	‚Ó‚ë‚Á‚®‚Ó‚¡[‚·‚Æ	Rastersoft
 columnsn	ƒRƒ‰ƒ€ƒX (Neo-Geo)	‚±‚ç‚Ş‚·	Sega / hack
@@ -7387,7 +7427,6 @@ neo2500	ƒlƒI2500 ƒfƒ‚	‚Ë‚¨_2500_‚Å‚à	Blastar
 syscheck	ƒlƒIƒVƒXƒeƒ€ƒ`ƒFƒbƒN (ver 1.0b)	‚Ë‚¨‚¿‚¥‚Á‚­‚µ‚·‚Ä‚Ş	Blastar
 neonopon	ƒlƒI‚Ìƒpƒlƒ|ƒ“ (beta)	‚Ë‚¨‚Ì‚Ï‚Ë‚Û‚ñ	Blastar
 neopong	ƒlƒIEƒ|ƒ“ (ver 1.1)	‚Ë‚¨‚Û‚ñ	Neodev
-npong10	ƒlƒIEƒ|ƒ“ (ver 1.0)	‚Ë‚¨‚Û‚ñ	Neodev
 neoponga	ƒlƒIEƒ|ƒ“ (ver 1.0 homebrew)	‚Ë‚¨‚Û‚ñ	Neodev
 ngem2k	ƒGƒkƒW[ƒC[ƒGƒ€2K (ƒx[ƒ^”Å 2006-01-18)	‚¦‚Ê‚¶[‚¢[‚¦‚Ş	homebrew
 cnbe	ƒR[ƒhƒl[ƒ€ -Blut Engel (2006-01-19)	‚±[‚Ç‚Ë[‚Ş	homebrew
