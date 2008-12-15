@@ -342,7 +342,7 @@ const char *sndtype_shortname(int sndtype);
 
 /* Initialization/Tear down */
 void sndintrf_init(running_machine *machine);
-int sndintrf_init_sound(int sndnum, const char *tag, sound_type sndtype, int clock, const void *config);
+int sndintrf_init_sound(running_machine *machine, int sndnum, const char *tag, sound_type sndtype, int clock, const void *config);
 void sndintrf_exit_sound(int sndnum);
 void sndintrf_register_token(void *token);
 

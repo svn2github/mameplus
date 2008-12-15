@@ -4148,7 +4148,7 @@ static time_t playback_init(running_machine *machine)
 #endif /* INP_CAPTION */
 
 	/* enable compression */
-	mame_fcompress(portdata->playback_file, TRUE);
+	mame_fcompress(portdata->playback_file, FCOMPRESS_MEDIUM);
 
 	return basetime;
 }
@@ -4354,7 +4354,7 @@ static void record_init(running_machine *machine)
 	mame_fwrite(portdata->record_file, header, sizeof(header));
 
 	/* enable compression */
-	mame_fcompress(portdata->record_file, TRUE);
+	mame_fcompress(portdata->record_file, FCOMPRESS_MEDIUM);
 }
 
 

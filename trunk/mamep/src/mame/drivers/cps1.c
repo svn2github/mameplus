@@ -451,7 +451,7 @@ static NVRAM_HANDLER( qsound )
 		eeprom_save(file);
 	else
 	{
-		eeprom_init(&qsound_eeprom_interface);
+		eeprom_init(machine, &qsound_eeprom_interface);
 
 		if (file)
 			eeprom_load(file);
@@ -464,7 +464,7 @@ static NVRAM_HANDLER( pang3 )
 		eeprom_save(file);
 	else
 	{
-		eeprom_init(&pang3_eeprom_interface);
+		eeprom_init(machine, &pang3_eeprom_interface);
 
 		if (file)
 			eeprom_load(file);

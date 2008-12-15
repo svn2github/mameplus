@@ -5532,7 +5532,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_OPTIONS_HISTORY:
 		{
 			WCHAR filename[MAX_PATH];
-			_tcscpy(filename, GetHistoryFileName());
+			wcscpy(filename, GetHistoryFileName());
 			if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_HISTORY_FILE))
 			{
 				SetHistoryFileName(filename);
@@ -5542,7 +5542,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_OPTIONS_MAMEINFO:
 		{
 			WCHAR filename[MAX_PATH];
-			_tcscpy(filename, GetMAMEInfoFileName());
+			wcscpy(filename, GetMAMEInfoFileName());
 			if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_MAMEINFO_FILE))
 			{
 				SetMAMEInfoFileName(filename);
@@ -5553,7 +5553,7 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_OPTIONS_STORY:
 		{
 			WCHAR filename[MAX_PATH];
-			_tcscpy(filename, GetStoryFileName());
+			wcscpy(filename, GetStoryFileName());
 			if (CommonFileDialog(GetOpenFileName, filename, FILETYPE_STORY_FILE))
 			{
 				SetStoryFileName(filename);
@@ -6850,7 +6850,7 @@ static void MameLoadState()
 		// call the MAME core function to check the save state file
 		stemp = utf8_from_wstring(selected_filename);
 		//mamep: mamecore use utf8 string instead of TCHAR string
-		rc = state_save_check_file(pSaveState, stemp, TRUE, MameMessageBoxUTF8);
+		rc = state_save_check_file(NULL, pSaveState, stemp, MameMessageBoxUTF8);
 		free(stemp);
 		mame_fclose(pSaveState);
 		if (rc)
