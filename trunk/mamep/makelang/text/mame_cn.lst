@@ -353,6 +353,8 @@ skyrobo	萝卜天空	萝卜天空	Nichibutsu
 bigfghtr	战魔机大对决	战魔机大对决	Nichibutsu
 hyhoo	早押对战问答 (日版)	早押对战问答 (日版)	Nichibutsu
 hyhoo2	早押对战问答 2 (日版)	早押对战问答 2 (日版)	Nichibutsu
+jangou	雀豪	雀豪	Nichibutsu
+jngolady	雀豪 女士版	雀豪 女士版	Nichibutsu
 pastelg	麻雀推倒胡 (日版 851224)	麻雀推倒胡 (日版 851224)	Nichibutsu
 crystalg	水晶女孩 (日版 860512)	水晶女孩 (日版 860512)	Nichibutsu
 crystal2	水晶女孩 2 (日版 860620)	水晶女孩 2 (日版 860620)	Nichibutsu
@@ -1133,10 +1135,10 @@ kickman	小丑接气球 (直立型)	小丑接气球 (直立型)	Midway
 kickc	小丑接气球 (cocktail)	小丑接气球 (cocktail)	Midway
 shollow	射击谷 (第1套)	射击谷 (第1套)	Bally Midway
 shollow2	射击谷 (第2套)	射击谷 (第2套)	Bally Midway
-tron	Tron (8/9)	Tron (8/9)	Bally Midway
-tron2	Tron (6/25)	Tron (6/25)	Bally Midway
-tron3	Tron (6/17)	Tron (6/17)	Bally Midway
-tron4	Tron (6/15)	Tron (6/15)	Bally Midway
+tron	电子世界争霸战 (8/9)	电子世界争霸战 (8/9)	Bally Midway
+tron2	电子世界争霸战 (6/25)	电子世界争霸战 (6/25)	Bally Midway
+tron3	电子世界争霸战 (6/17)	电子世界争霸战 (6/17)	Bally Midway
+tron4	电子世界争霸战 (6/15)	电子世界争霸战 (6/15)	Bally Midway
 kroozr	飞碟大战	飞碟大战	Bally Midway
 domino	骨牌人	骨牌人	Bally Midway
 wacko	太空魔宝	太空魔宝	Bally Midway
@@ -2386,6 +2388,7 @@ qndream	问答 虹色町的奇迹 (日版 960826)	问答 虹色町的奇迹 (日版 960826)	Capcom
 megaman2	洛克人 2 - 力量对决 (美版 960708)	洛克人 2 - 力量对决 (美版 960708)	Capcom
 megamn2a	洛克人 2 - 力量对决 (亚洲版 960708)	洛克人 2 - 力量对决 (亚洲版 960708)	Capcom
 rckman2j	洛克人 2 - 力量对决 (日版 960708)	洛克人 2 - 力量对决 (日版 960708)	Capcom
+gigamn2	洛克人 2 - 力量对决 (盗版)	洛克人 2 - 力量对决 (盗版)	bootleg
 sfz2al	少年街霸 2 Alpha (亚洲版 960826)	少年街霸 2 Alpha (亚洲版 960826)	Capcom
 sfz2alj	少年街霸 2 Alpha (日版 960805)	少年街霸 2 Alpha (日版 960805)	Capcom
 sfz2alh	少年街霸 2 Alpha (西班牙版 960813)	少年街霸 2 Alpha (西班牙版 960813)	Capcom
@@ -2500,10 +2503,10 @@ hsf2d	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202 凤凰版) (盗版)	终极街头霸王
 ssf2tbd	超级街头霸王 II - 战斗联赛 (世界版 931119 凤凰版) (盗版)	超级街头霸王 II - 战斗联赛 (世界版 931119 凤凰版) (盗版)	bootleg
 ssf2xjd	超级街头霸王 II X 向最强挑战 (日版 940223 凤凰版) (盗版)	超级街头霸王 II X 向最强挑战 (日版 940223 凤凰版) (盗版)	bootleg
 sgemfd	超级口袋战士 (美版 970904 凤凰版) (盗版)	超级口袋战士 (美版 970904 凤凰版) (盗版)	bootleg
-sfiii	街头霸王 III - 新世纪 (日版, 970204)	街头霸王 III - 新世纪 (日版, 970204)	Capcom
-sfiiiu	街头霸王 III - 新世纪 (美版, 970204)	街头霸王 III - 新世纪 (美版, 970204)	Capcom
-sfiii2	街头霸王 III - 二度冲击 巨型攻击 (日版, 970930)	街头霸王 III - 二度冲击 巨型攻击 (日版, 970930)	Capcom
-sfiii2u	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	Capcom
+sfiii	街头霸王 III - 新世纪 (美版, 970204)	街头霸王 III - 新世纪 (美版, 970204)	Capcom
+sfiiij	街头霸王 III - 新世纪 (日版, 970204)	街头霸王 III - 新世纪 (日版, 970204)	Capcom
+sfiii2	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	Capcom
+sfiii2j	街头霸王 III - 二度冲击 巨型攻击 (日版, 970930)	街头霸王 III - 二度冲击 巨型攻击 (日版, 970930)	Capcom
 sfiii3	街头霸王 III - 三度冲击 未来战斗 (美版, 990512)	街头霸王 III - 三度冲击 未来战斗 (美版, 990512)	Capcom
 sfiii3a	街头霸王 III - 三度冲击 未来战斗 (美版, 990608)	街头霸王 III - 三度冲击 未来战斗 (美版, 990608)	Capcom
 jojo	乔乔的奇妙冒险 (日版, 981202)	乔乔的奇妙冒险 (日版, 981202)	Capcom
@@ -5415,7 +5418,8 @@ hiimpact	狂野橄榄球 (rev LA4 02/04/91)	狂野橄榄球 (rev LA4 02/04/91)	Williams
 hiimpac3	狂野橄榄球 (rev LA3 12/27/90)	狂野橄榄球 (rev LA3 12/27/90)	Williams
 hiimpacp	狂野橄榄球 (工程版, rev 8.6 12/09/90)	狂野橄榄球 (工程版, rev 8.6 12/09/90)	Williams
 shimpact	超级狂野橄榄球 (rev LA1 09/30/91)	超级狂野橄榄球 (rev LA1 09/30/91)	Midway
-shimpacp	超级狂野橄榄球 (工程版, rev 5.0 09/15/91)	超级狂野橄榄球 (工程版, rev 5.0 09/15/91)	Midway
+shimpap6	超级狂野橄榄球 (工程版, rev 6.0 09/23/91)	超级狂野橄榄球 (工程版, rev 6.0 09/23/91)	Midway
+shimpap5	超级狂野橄榄球 (工程版, rev 5.0 09/15/91)	超级狂野橄榄球 (工程版, rev 5.0 09/15/91)	Midway
 shimpap4	超级狂野橄榄球 (工程版, rev 4.0 09/10/91)	超级狂野橄榄球 (工程版, rev 4.0 09/10/91)	Midway
 strkforc	射击部队 (rev 1 02/25/91)	射击部队 (rev 1 02/25/91)	Midway
 mk	真人快打 (rev 5.0 T-Unit 03/19/93)	真人快打 (rev 5.0 T-Unit 03/19/93)	Midway
@@ -5488,7 +5492,8 @@ calspeed	加州飙车 (版本 2.1a, 4/17/98)	加州飙车 (版本 2.1a, 4/17/98)	Atari Games
 calspeda	加州飙车 (版本 1.0r7a 3/4/98)	加州飙车 (版本 1.0r7a 3/4/98)	Atari Games
 vaportrx	极速穿越 TRX	极速穿越 TRX	Atari Games
 vaportrp	极速穿越 TRX (工程版)	极速穿越 TRX (工程版)	Atari Games
-carnevil	恶魔石记	恶魔石记	Midway Games
+carnevil	恶魔石记 (v1.0.3)	恶魔石记 (v1.0.3)	Midway Games
+carnevi1	恶魔石记 (v1.0.1)	恶魔石记 (v1.0.1)	Midway Games
 biofreak	格斗殿堂 (工程版)	格斗殿堂 (工程版)	Midway Games
 blitz	美国职业橄榄球闪电战’97 (boot ROM 1.2)	美国职业橄榄球闪电战’97 (boot ROM 1.2)	Midway Games
 blitz11	美国职业橄榄球闪电战’97 (boot ROM 1.1)	美国职业橄榄球闪电战’97 (boot ROM 1.1)	Midway Games
@@ -6481,10 +6486,15 @@ goldstbl	黄金星座 (蓝色版本)	黄金星座 (蓝色版本)	IGS
 moonlght	月亮之光 (盗版 黄金星座)	月亮之光 (盗版 黄金星座)	bootleg
 chry10	樱桃 10 (盗版 黄金星座)	樱桃 10 (盗版 黄金星座)	bootleg
 chryigld	樱桃和黄金 (盗版 黄金星座)	樱桃和黄金 (盗版 黄金星座)	bootleg
+ncb3	(新?) 樱桃和黄金 III	(新?) 樱桃和黄金 III	Dyna
+cb3	樱桃和黄金 III	樱桃和黄金 III	Dyna
+cmv801	樱桃水果盘 (Corsica, v8.01)	樱桃水果盘 (Corsica, v8.01)	Corsica
+cmaster	樱桃水果盘 91?	樱桃水果盘 91?	Dyna
 cpoker	扑克冠军 (v220I)	扑克冠军 (v220I)	IGS
 cpokert	扑克冠军 (v200G)	扑克冠军 (v200G)	Tuning
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
+jackie	成龙之龙 (v110U)	成龙之龙 (v110U)	IGS
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
 iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
@@ -6916,6 +6926,7 @@ dblpoind	夜上海 (东京电子, 盗版?)	夜上海 (东京电子, 盗版?)	Dong Bang Electron
 hangman	绞刑文字狱	绞刑文字狱	Status Games
 trivquiz	问答 百科解谜	问答 百科解谜	Status Games
 statriv2	问答 百科 2	问答 百科 2	Status Games
+statrv2v	问答 百科 2 (垂直型)	问答 百科 2 (垂直型)	Status Games
 statriv4	问答 百科 4	问答 百科 4	Status Games
 sextriv	问答 两性百科	问答 两性百科	Status Games
 quaquiz2	问答 艾尔莎问答 II	问答 艾尔莎问答 II	Status Games
@@ -7135,7 +7146,6 @@ poker41	扑克 4-1	扑克 4-1	Game-A-Tron
 pulltabs	卡片游戏	卡片游戏	Game-A-Tron
 vroulet	拉斯维加斯轮盘	拉斯维加斯轮盘	World Game
 rcasino	皇家赌场	皇家赌场	Dyna Electronics
-cmv801	樱桃水果盘 (v8.01)	樱桃水果盘 (v8.01)	Corsica
 cm2v841	樱桃水果盘 2 (第1套)	樱桃水果盘 2 (第1套)	Dyna Electronics
 cm2841a	樱桃水果盘 2 (第2套)	樱桃水果盘 2 (第2套)	Dyna Electronics
 ampoker2	美式扑克 II	美式扑克 II	Novomatic
@@ -7197,8 +7207,8 @@ trvmadns	疯狂事务	疯狂事务	Thunderhead Inc.
 rcorsair	红色海盗	红色海盗	Nakasawa
 pzlestar	魔幻星座? (Sang Ho 软件)	魔幻星座? (Sang Ho 软件)	Sang Ho Soft
 sexyboom	性感宣传	性感宣传	Sang Ho Soft
-sfkick	超级自由踢	超级自由踢	HEC
-spinkick	旋转踢	旋转踢	HEC
+sfkick	超级自由踢	超级自由踢	Haesung/HJ Corp
+spinkick	旋转踢	旋转踢	Haesung/Seojin
 7mezzo	七依之间	七依之间	Unknown
 magicfly	魔法飞行	魔法飞行	P&A Games
 dynabomb	爆弹高手 (韩国版, Rev 1.5)	爆弹高手 (韩国版, Rev 1.5)	Limenko
@@ -7363,6 +7373,11 @@ magictga	魔法纸牌 (第2套)	魔法纸牌 (第2套)	Acclaim
 re900	轮盘 RE-900	轮盘 RE-900	Entretenimientos GEMINIS
 bs94	幸运积分 '94	幸运积分 '94	Entretenimientos GEMINIS
 jokrwild	梭哈大师 (加密版)	梭哈大师 (加密版)	Sigma
+pesadelo	Pesadelo (巴西版 盗版 科乐美 神州骑士 MSX)	Pesadelo (巴西版 盗版 科乐美 神州骑士 MSX)	bootleg
+spool99	超真实弹珠台 99 (版本 0.36)	超真实弹珠台 99 (版本 0.36)	Electronic Projects
+spool99a	超真实弹珠台 99 (版本 0.31)	超真实弹珠台 99 (版本 0.31)	Electronic Projects
+4roses	四玫瑰 (加密版, 第1套)	四玫瑰 (加密版, 第1套)	Unknown
+4rosesa	四玫瑰 (加密版, 第2套)	四玫瑰 (加密版, 第2套)	Unknown
 videopkr	视频扑克	视频扑克	InterFlip
 blckjack	二十一点	二十一点	InterFlip
 videodad	视频骰子	视频骰子	InterFlip
@@ -7373,8 +7388,9 @@ laperla	快乐啦啦队 (Ver 2.0)	快乐啦啦队 (Ver 2.0)	Nazionale Elettronica
 laperlag	快乐黄金啦啦队 (Ver 2.0)	快乐黄金啦啦队 (Ver 2.0)	Nazionale Elettronica
 capunc	双倍打击 (Ver 1.2)	双倍打击 (Ver 1.2)	Nazionale Elettronica
 capcor	双倍打击 (Ver 1.3)	双倍打击 (Ver 1.3)	Nazionale Elettronica
-euro2k2	梦回欧罗巴 2002 (Ver 2.0, set 1)	梦回欧罗巴 2002 (Ver 2.0, set 1)	Nazionale Elettronica
-euro2k2a	梦回欧罗巴 2002 (Ver 2.0, set 2)	梦回欧罗巴 2002 (Ver 2.0, set 2)	Nazionale Elettronica
+euro2k2	梦回欧罗巴 2002 (Ver 2.0, 第1套)	梦回欧罗巴 2002 (Ver 2.0, 第1套)	Nazionale Elettronica
+euro2k2a	梦回欧罗巴 2002 (Ver 2.0, 第2套)	梦回欧罗巴 2002 (Ver 2.0, 第2套)	Nazionale Elettronica
+euro2k2s	梦回欧罗巴 2002 Space (Ver 3.0)	梦回欧罗巴 2002 Space (Ver 3.0)	Nazionale Elettronica
 mnumber	神秘韵律	神秘韵律	M.M. - B.R.L.
 ntcash	圣经	圣经	Unknown
 wizard	巫士 (Ver 1.0)	巫士 (Ver 1.0)	A.A.
@@ -7394,6 +7410,8 @@ mil4000a	千禧版 Nuovo 4000 (版本 1.8)	千禧版 Nuovo 4000 (版本 1.8)	Sure Milano
 ejollyx5	澳洲扑克 X5	澳洲扑克 X5	Solar Games
 grandprx	国际长途大赛车	国际长途大赛车	4fun
 showhand	手秀扑克	手秀扑克	Astro Corp.
+cb2001	樱桃和黄金 2001	樱桃和黄金 2001	Dyna
+queen	皇后?	皇后?	STG?
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
