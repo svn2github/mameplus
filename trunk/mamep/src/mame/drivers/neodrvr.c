@@ -9274,11 +9274,6 @@ static WRITE16_HANDLER( fr2ch_cx_hack_w )
 	}
 }
 
-static void fr2ch_cx_hack( running_machine *machine )
-{
-	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
-}
-
 static void fr2ch_patches( running_machine *machine )
 {
 	UINT16 *src = (UINT16*)memory_region( machine, "main" );
@@ -9306,7 +9301,7 @@ static void fr2ch_patches( running_machine *machine )
 
 	// Patch out neogeo intro (Moving S causes garbage)
 	src[0x00112 >> 1] = 0x0180;
-	src[0x00114 >> 1] = 0x0180;
+	src[0x00114 >> 1] = 0x0100;
 
 	// optional
 	// Hack in the proper identification (see setup menu [F2])
@@ -9332,8 +9327,8 @@ static void fr2ch_patches( running_machine *machine )
 static DRIVER_INIT( fr2ch )
 {
 	fr2ch_patches(machine);
-	fr2ch_cx_hack(machine);
 	DRIVER_INIT_CALL(neogeo);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
 }
 
 static UINT16 *brza_sram;
