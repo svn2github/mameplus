@@ -1313,7 +1313,7 @@ void rom_init(running_machine *machine)
 		if (!open_ips_entry(patchname, &romdata, machine->gamedrv->rom))
 		{
 			display_rom_load_results(machine, &romdata);
-			return;
+//			return;
 		}
 	}
 #endif /* USE_IPS */

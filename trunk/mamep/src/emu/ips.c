@@ -105,7 +105,7 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 			_("ERROR: %s/%s: open fail\n"), ips_dir, ips_name);
-		romdata->errors++;
+		romdata->warnings++;
 
 		return 0;
 	}
@@ -191,7 +191,7 @@ load_ips_file_unexpected_eof:
 load_ips_file_fail:
 	mame_fclose(file);
 
-	romdata->errors++;
+	romdata->warnings++;
 
 	return 0;
 }
@@ -246,7 +246,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 			_("ERROR: %s: IPS file is not found\n"), patch_name);
-		romdata->errors++;
+		romdata->warnings++;
 
 		return 0;
 	}
@@ -343,7 +343,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 parse_ips_patch_fail:
 	mame_fclose(fpDat);
 
-	romdata->errors++;
+	romdata->warnings++;
 
 	return 0;
 }
@@ -383,7 +383,7 @@ int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_ent
 	{
 		sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 			_("ERROR: %s: IPS file is not found\n"), patch_name);
-		romdata->errors++;
+		romdata->warnings++;
 	}
 
 	return result;
@@ -404,7 +404,7 @@ int close_ips_entry(rom_load_data *romdata)
 		{
 			sprintf(&romdata->errorbuf[strlen(romdata->errorbuf)],
 				_("ERROR: %s: ips is not applied correctly to ROM entry \"%s\"\n"), p->ips_name, p->rom_name);
-			romdata->errors++;
+			romdata->warnings++;
 
 			result = 0;
 		}
