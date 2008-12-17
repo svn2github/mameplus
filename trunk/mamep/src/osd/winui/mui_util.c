@@ -31,8 +31,8 @@
 #include <tchar.h>
 
 // MAME/MAMEUI headers
-#include "deprecat.h"
 #include "unzip.h"
+#include "devintrf.h"
 #include "sound/samples.h"
 #include "winutf8.h"
 #include "strconv.h"
