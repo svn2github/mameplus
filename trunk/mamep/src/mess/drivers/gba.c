@@ -782,7 +782,8 @@ static void gba_request_irq(running_machine *machine, UINT32 int_type)
 		if (gba.IME & 1)
 		{
 //			printf("IRQ %04x\n", int_type);
-			cpu_set_input_line(machine->cpu[0], ARM7_IRQ_LINE, PULSE_LINE);
+			cpu_set_input_line(machine->cpu[0], ARM7_IRQ_LINE, ASSERT_LINE);
+			cpu_set_input_line(machine->cpu[0], ARM7_IRQ_LINE, CLEAR_LINE);
 		}
 	}
 }
