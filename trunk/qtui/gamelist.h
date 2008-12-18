@@ -12,30 +12,6 @@ enum
 	GAMELIST_INIT_DIR
 };
 
-class LoadIconThread : public QThread
-{
-	Q_OBJECT
-
-public:
-	MyQueue iconQueue;
-
-//	LoadIconThread(QObject *parent = 0);
-	~LoadIconThread();
-
-	void load();
-
-signals:
-	void icoUpdated(QString);
-
-protected:
-	void run();
-
-private:
-	bool done;
-	bool cancel;
-	QMutex mutex;
-};
-
 class UpdateSelectionThread : public QThread
 {
 	Q_OBJECT
@@ -170,7 +146,6 @@ public:
 
 	// interactive threads used by the game list
 	RomAuditor auditor;
-	LoadIconThread iconThread;
 	UpdateSelectionThread selectionThread;
 
 	MergedRomAuditor *mAuditor;
@@ -178,15 +153,26 @@ public:
 	Gamelist(QObject *parent = 0);
 	~Gamelist();
 
+	void loadIcon();
+	void restoreGameSelection();
+
 public slots:
 	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
+
 	void showContextMenu(const QPoint &);
 	void updateContextMenu();
 	void showHeaderContextMenu(const QPoint &);
 	void updateHeaderContextMenu();
-	void loadDefaultIni();
 
+	void loadDefaultIni();
 	void runMame(bool = false);
+	QString getViewString(const QModelIndex &index, int column) const;
+	void updateProgress(int progress);
+	void switchProgress(int max, QString title);
+	void updateSelection();
+	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
+	void setupSnap(int);
+
 
 	// external process management
 	void loadListXmlReadyReadStandardOutput();
@@ -197,28 +183,25 @@ public slots:
 	void extractMergedFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
-	// internal methods
-	void parse();
-	void updateProgress(int progress);
-	void switchProgress(int max, QString title);
-	QString getViewString(const QModelIndex &index, int column) const;
-	void updateSelection();
-	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
-	void setupIcon(QString);
-	void setupSnap(int);
-
 	void filterRegExpChanged();
 	void filterRegExpCleared();
 	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = NULL);
 
 private:
 	QString currentTempROM;
+	QFutureWatcher<void> loadIconWatcher;
+	int loadIconStatus;
+	QAbstractItemDelegate *defaultGameListDelegate;
 
 	void initFolders();
 	void initMenus();
-	void restoreFolderSelection();
-	void restoreGameSelection();
 	void loadMMO(int);
+	void loadIconWorkder();
+	void parse();
+	void restoreFolderSelection();
+
+private slots:
+	void postLoadIcon();
 };
 
 class RomInfo : public QObject

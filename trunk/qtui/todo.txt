@@ -1,73 +1,62 @@
 ﻿//Done
 //4.5 bug
-2 unterminated thread 4.5 bug?
-2 sorting doesnt recover position?
+/ unterminated thread 4.5 bug?
 / crash on local game list
-
-/ greatly improved GUI responsiveness
-/ added ips dialog
-/ moved M1 initialization to background thread
-/ fixed parsing hex song # of M1 list
-/ fixed core input automatic enable options
+2 sorting doesnt recover position?
 
 //Linux
-2 bug: column sorting
+D column sorting
 mounted snap doesnt load
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Dev
-command.dat is slow and buggy
-2 support mamep 127
-2 ips dir must restart
-2 icon for local switching
-2 ips, m1 module availability detection for official
-2 new version detection
-export artwork dat
-就是，检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
-export complete fixdat, current availabe only fixdat, selected, mame, mamep, mamep extra dat.
+* ips lang fallback, v1 dat fallback with datfile name
+* mamep core lang, for non cjk languages
+* separate game list language
+* reconsider command.dat it's slow and buggy
+* ips dir must restart
+* icon for local switching
+* new version detection
+* 就是，检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
 
 //Options
-2 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
-2 command.dat path in lang
-1 add a menu to auto mkdir
-1 add GUI Options +0.1
+* support mamep 127 paths
+* 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
+* command.dat path in lang
+* add a menu to auto mkdir
+2 add GUI Options +0.1
+* keycode ctrlr config editor
+1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
 * customizable GUI text font / color editor +0.05
-* driver config editor	+0.05
-* -driver_config, mamebin changes should cause gamelist->init()
 * option help
 * vector.ini, debug.ini
 * unify method to get inherited default value
 * general info page
 
 //GameList
-2 provide a builtin fallback for zip folders
-2 rewrite icon loading
-2 crash on refresh GBA
-2 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
+2 rewrite icon loading, large icon view
+D crash on refresh GBA
+* 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
+1 provide a builtin fallback for zip folders
 * widget loaded prompt
 * SDL joystick GUI
 * export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
-1 rewrite icon loading for individual icon loading, restore item icon
 1 play inp/rec/mng/wav...
-* large icon view
 * coin/time counter column
 * sort by reading
 * display 2 lines of game desc local/english
 ? context menus: for listview mode
-* context menus: snapshot, folder
 * in-place zooming for icons
 * add/remove items from game list model
 * ROM capa column
 * unify multiple snapshot routines
 
 //Folder
-1 implement filter flags
-1 favorite
-* custom ini read/write +0.03
+2 rewrite filter by thread
+2 custom ini read/write +0.03
 * dnd support +0.01
 * other filters +0.03
-* arc icos from old caname
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
 * bios icons
 * only non-empty console/bios folders +0.02
@@ -75,7 +64,8 @@ export complete fixdat, current availabe only fixdat, selected, mame, mamep, mam
 //Snap
 * split snap/history code
 1 gamename0000 snap
-* external default.png
+* external default.png.0
+
 * snap with or without stretching, horz/vert xml loading
 * avi/mng playback
 * mameinfo of driver
@@ -84,8 +74,8 @@ export complete fixdat, current availabe only fixdat, selected, mame, mamep, mam
 * check hardware capa
 
 //Audit
-2 crash on 128u2->u3? missing sets
-2 auto audit when available = 0? +0.01
+D crash on 128u2->u3? missing sets
+* auto audit when available = 0? +0.01
 2 we can't assume nodump is not passed +0.03
 2 check chd exist, check chd auditing (use mame core?) +0.03
 2 right click auditing +0.02
@@ -99,10 +89,8 @@ export complete fixdat, current availabe only fixdat, selected, mame, mamep, mam
 2 F11 fullscreen mode, vista style
 
 //IPS
-1 ips +0.1
 * 官方mame支持ips +0.1
 * add verify IPS on RunMAME, remove it if N/A
-* ips v4 +0.1
 
 //Misc
 * move datafile.c statistics to GUI
@@ -110,6 +98,7 @@ export complete fixdat, current availabe only fixdat, selected, mame, mamep, mam
 
 //Console
 1 console status isnt correct
+* buggy sorting console list
 * console folder icon
 * multi software dirs
 * console game info from GameFAQs?
@@ -123,11 +112,11 @@ export complete fixdat, current availabe only fixdat, selected, mame, mamep, mam
 
 //Extra
 * controller setting interface
+* export complete fixdat, current availabe only fixdat, selected, mame, mamep, mamep extra dat, snapshot dat
 * export roms to folders
 * delete roms,cfg,nvram...
 * delete snapshot
 * gamelist editor
-* export fixdat, selected fixdat only
 * mess devices
 * autoupdater
 

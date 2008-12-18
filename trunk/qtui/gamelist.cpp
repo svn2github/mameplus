@@ -211,150 +211,6 @@ private:
 	bool metMameTag;
 };
 
-LoadIconThread::~LoadIconThread()
-{
-	done = true;
-	wait();
-}
-
-void LoadIconThread::load()
-{
-	QMutexLocker locker(&mutex);
-
-	if (isRunning())
-	{
-		cancel = true;
-	}
-	else
-	{
-		cancel = false;
-		done = false;
-		
-		start(LowestPriority);
-	}
-}
-
-void LoadIconThread::run()
-{
-	GameInfo *gameInfo, *gameInfo2;
-
-//	win->log(QString("ico count: %1").arg(mameGame->gamenameGameInfoMap.count()));
-
-	while(!done)
-	{
-		// iteratre split dirpath
-		QStringList dirpaths = mameOpts["icons_directory"]->globalvalue.split(";");
-		foreach (QString _dirpath, dirpaths)
-		{
-			QDir dir(_dirpath);
-			QString dirpath = utils->getPath(_dirpath);
-		
-			QStringList nameFilter;
-			nameFilter << "*.ico";
-			
-			// iterate all files in the path
-			QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-			for (int i = 0; i < files.count(); i++)
-			{
-				QString gameName = files[i].toLower().remove(".ico");
-
-				if (mameGame->nameInfoMap.contains(gameName))
-				{
-					gameInfo = mameGame->nameInfoMap[gameName];
-
-					if (iconQueue.contains(gameName) && gameInfo->icondata.isNull())
-					{
-						QFile icoFile(dirpath + gameName + ".ico");
-						if (icoFile.open(QIODevice::ReadOnly))
-						{
-							gameInfo->icondata = icoFile.readAll();
-							emit icoUpdated(gameName);
-//							win->log(QString("icoUpdated f: %1").arg(gameName));
-						}
-					}
-				}
-
-				if (cancel)
-					break;
-			}
-
-			if (cancel)
-				break;
-
-			// iterate all files in the zip
-			QuaZip zip(dirpath + "icons.zip");
-
-			if(!zip.open(QuaZip::mdUnzip))
-				continue;
-			
-			QuaZipFileInfo info;
-			QuaZipFile zipFile(&zip);
-			for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile())
-			{
-				if(!zip.getCurrentFileInfo(&info))
-					continue;
-
-				QString gameName = info.name.toLower().remove(".ico");
-
-				if (mameGame->nameInfoMap.contains(gameName))
-				{
-					gameInfo = mameGame->nameInfoMap[gameName];
-					// fixme: read cloneof first
-					if (iconQueue.contains(gameName) &&
-						gameInfo->icondata.isNull())
-					{
-						QuaZipFile icoFile(&zip);
-						if (icoFile.open(QIODevice::ReadOnly))
-						{
-							gameInfo->icondata = icoFile.readAll();
-							emit icoUpdated(gameName);
-//							win->log(QString("icoUpdated z: %1").arg(gameName));
-						}
-					}
-				}
-				if (cancel)
-					break;
-			}
-			if (cancel)
-				break;
-		}
-
-		if (!cancel)
-		{
-	///*
-			// get clone icons from parent
-			mutex.lock();
-			for (int i = 0; i < iconQueue.count(); i++)
-			{
-				QString gameName = iconQueue.value(i);
-	
-				if (mameGame->nameInfoMap.contains(gameName))
-				{
-					gameInfo = mameGame->nameInfoMap[gameName];
-					if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
-					{
-						gameInfo2 = mameGame->nameInfoMap[gameInfo->cloneof];
-						if (!gameInfo2->icondata.isNull())
-						{
-							gameInfo->icondata = gameInfo2->icondata;
-							emit icoUpdated(gameName);
-	//						win->log(QString("icoUpdated c: %1").arg(gameName));
-						}
-					}
-				}
-	//			else
-	//				win->log(QString("errico: %1 %2").arg(gameName).arg(mameGame->gamenameGameInfoMap.count()));
-			}
-			mutex.unlock();
-	//*/
-
-			done = true;
-		}
-
-		cancel = false;
-	}
-}
-
 UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
 : QThread(parent)
 {
@@ -660,12 +516,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		{
 			QByteArray icondata;
 			if (gameInfo->icondata.isNull())
-			{
-				gameList->iconThread.iconQueue.setSize(win->tvGameList->viewport()->height() / 17 + 2);
-				gameList->iconThread.iconQueue.enqueue(gameName);
-				gameList->iconThread.load();
 				icondata = utils->deficondata;
-			}
 			else
 				icondata = gameInfo->icondata;
 			
@@ -1164,6 +1015,7 @@ QSize GamelistDelegate::sizeHint (const QStyleOptionViewItem & option,
 		}
 	}
 
+	//fixme: should not use hardcoded values?
 	if (currentGame == gameName)
 		return QSize(1,33);
 	else
@@ -1288,10 +1140,9 @@ QObject(parent),
 loadProc(NULL),
 numTotalGames(-1),
 menu(NULL),
-headerMenu(NULL)
+headerMenu(NULL),
+loadIconStatus(0)
 {
-	connect(&iconThread, SIGNAL(icoUpdated(QString)), this, SLOT(setupIcon(QString)));
-//	connect(&iconThread.iconQueue, SIGNAL(logStatusUpdated(QString)), win, SLOT(logStatus(QString)));
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 	
 	mAuditor = new MergedRomAuditor(parent);
@@ -1414,7 +1265,8 @@ void Gamelist::restoreGameSelection()
 	if (mameGame->nameInfoMap.contains(gameName))
 	{
 		GameInfo *gameinfo = mameGame->nameInfoMap[gameName];
-		i = gameListModel->index(0, gameinfo->pModItem);
+		//fixme: should consider other columns
+		i = gameListModel->index(COL_DESC, gameinfo->pModItem);
 		win->log("restore callback: " + gameName);
 	}
 
@@ -1428,9 +1280,9 @@ void Gamelist::restoreGameSelection()
 
 	win->tvGameList->setCurrentIndex(pi);
 	win->lvGameList->setCurrentIndex(pi);
-	//fixme: PositionAtCenter doesnt work well (auto scroll right)
-	win->tvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
-	win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtTop);
+
+	win->tvGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
+	win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
 
 	win->labelGameCount->setText(tr("%1 games").arg(visibleGames.count()));
 /*
@@ -1438,18 +1290,6 @@ void Gamelist::restoreGameSelection()
 	foreach (QString g, visibleGames)
 		win->log("vis: " + g);
 */
-}
-
-void Gamelist::setupIcon(QString gameName)
-{
-	if (!gameListModel || !gameListPModel)
-		return;
-
-	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
-
-	gameListModel->setData(gameListModel->index(0, gameInfo->pModItem), 
-		gameInfo->icondata, Qt::DecorationRole);
-//	win->log(QString("setupico %1 %2").arg(gameName).arg(gameInfo->icondata.isNull()));
 }
 
 // we must update GUI in main thread
@@ -1587,12 +1427,18 @@ void Gamelist::init(bool toggleState, int initMethod)
 		gameListPModel->setSourceModel(gameListModel);
 		gameListPModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 
-		if (list_mode == win->actionLargeIcons->text())
+		if (list_mode == win->actionLargeIcons->objectName().remove("action"))
+			{
+			win->log("set model large");
 			win->lvGameList->setModel(gameListPModel);
+			}
 		else
 		{
 			win->tvGameList->setModel(gameListPModel);
-			win->tvGameList->setItemDelegate(&gamelistDelegate);
+			{
+				defaultGameListDelegate = win->tvGameList->itemDelegate();
+				win->tvGameList->setItemDelegate(&gamelistDelegate);
+			}
 		}
 
 		if (initMethod == GAMELIST_INIT_FULL)
@@ -1698,6 +1544,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		
 		// everything is done
 		win->treeFolders->setEnabled(true);
+//		win->actionLargeIcons->setEnabled(true);
 		win->actionDetails->setEnabled(true);
 		win->actionGrouped->setEnabled(true);
 		win->actionRefresh->setEnabled(true);
@@ -1726,6 +1573,129 @@ void Gamelist::init(bool toggleState, int initMethod)
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadListXmlReadyReadStandardOutput()));
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadListXmlFinished(int, QProcess::ExitStatus)));
 	}
+}
+
+void Gamelist::loadIcon()
+{
+	// load icons
+	connect(&loadIconWatcher, SIGNAL(finished()), this, SLOT(postLoadIcon()));
+	QFuture<void> future = QtConcurrent::run(this, &Gamelist::loadIconWorkder);
+	loadIconWatcher.setFuture(future);
+}
+	
+void Gamelist::loadIconWorkder()
+{
+	bool done = false;
+	bool cancel = false;
+
+	GameInfo *gameInfo, *gameInfo2;
+
+//	win->log(QString("ico count: %1").arg(mameGame->gamenameGameInfoMap.count()));
+
+	while(!done)
+	{
+		// iterate split dirpath
+		QStringList dirpaths = mameOpts["icons_directory"]->globalvalue.split(";");
+		foreach (QString _dirpath, dirpaths)
+		{
+			QDir dir(_dirpath);
+			QString dirpath = utils->getPath(_dirpath);
+		
+			QStringList nameFilter;
+			nameFilter << "*" + ICO_EXT;
+			
+			// iterate all files in the path
+			QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+			for (int i = 0; i < files.count(); i++)
+			{
+				QString gameName = files[i].toLower().remove(ICO_EXT);
+				if (mameGame->nameInfoMap.contains(gameName))
+				{
+					gameInfo = mameGame->nameInfoMap[gameName];
+					if (gameInfo->icondata.isNull())
+					{
+						QFile icoFile(dirpath + gameName + ICO_EXT);
+						if (icoFile.open(QIODevice::ReadOnly))
+						{
+							gameInfo->icondata = icoFile.readAll();
+							loadIconStatus++;
+						}
+					}
+				}
+
+				if (cancel)
+					break;
+			}
+
+			if (cancel)
+				break;
+
+			// iterate all files in the zip
+			QuaZip zip(dirpath + "icons.zip");
+
+			if(!zip.open(QuaZip::mdUnzip))
+				continue;
+
+			QuaZipFileInfo info;
+			QuaZipFile zipFile(&zip);
+			for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile())
+			{
+				if(!zip.getCurrentFileInfo(&info))
+					continue;
+
+				QString gameName = info.name.toLower().remove(ICO_EXT);
+				if (mameGame->nameInfoMap.contains(gameName))
+				{
+					gameInfo = mameGame->nameInfoMap[gameName];
+					if (gameInfo->icondata.isNull())
+					{
+						QuaZipFile icoFile(&zip);
+						if (icoFile.open(QIODevice::ReadOnly))
+						{
+							gameInfo->icondata = icoFile.readAll();
+							loadIconStatus++;
+						}
+					}
+				}
+				if (cancel)
+					break;
+			}
+			if (cancel)
+				break;
+		}
+
+		if (!cancel)
+		{
+			// get clone icons from parent
+			foreach (QString gameName, mameGame->nameInfoMap.keys())
+			{
+				gameInfo = mameGame->nameInfoMap[gameName];
+				if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
+				{
+					gameInfo2 = mameGame->nameInfoMap[gameInfo->cloneof];
+					if (!gameInfo2->icondata.isNull())
+					{
+						gameInfo->icondata = gameInfo2->icondata;
+//						emit icoUpdated(gameName);
+					}
+				}
+			}
+
+			done = true;
+		}
+
+		cancel = false;
+	}
+}
+
+void Gamelist::postLoadIcon()
+{
+	win->tvGameList->update(win->tvGameList->rect());
+//	restoreGameSelection();
+
+	win->log(QString("loaded %1 icons").arg(loadIconStatus));
+	if (loadIconStatus == 0 && defaultGameListDelegate != NULL)
+		win->tvGameList->setItemDelegate(defaultGameListDelegate);
 }
 
 void Gamelist::loadMMO(int msgCat)
@@ -2360,11 +2330,11 @@ void Gamelist::initFolders()
 		this, SLOT(filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *)));
 
 #if 0
-	QString folderName = "Artwork";
-	QFile inFile(folderName + ".ini");
+	QString folderName = "Version";
+	QFile inFile(folderName + INI_EXT);
 
 	QString line;
-	QMultiMap<QString, QString> iniFolders;
+	QMultiMap<QString, QString> extFolderMap;
 
 	if (inFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -2372,35 +2342,32 @@ void Gamelist::initFolders()
 		in.setCodec("UTF-8");
 
 		QString key;
+		//fill in extFolderMap
 		do
 		{
 			line = in.readLine().trimmed();
 			if (!line.isEmpty())
 			{
 				if (line.startsWith("[") && line.endsWith("]"))
-				{
 					key = line.mid(1, line.size() - 2);
-				}
 				else if (!key.isEmpty())
-					iniFolders.insert(key, line);
+					extFolderMap.insert(key, line);
 			}
 		}
 		while (!line.isNull());
 	}
 
-///*
+	//build GUI tree
 	QTreeWidgetItem *rootFolderItem = new QTreeWidgetItem(win->treeFolders, QStringList(folderName));
-	win->treeFolders->addTopLevelItem(rootFolderItem);
 
-	foreach (QString key, iniFolders.uniqueKeys())
+	foreach (QString key, extFolderMap.uniqueKeys())
 	{
-		rootFolderItem->addChild(new QTreeWidgetItem(rootFolderItem, QStringList(key)));
-		foreach (QString value, iniFolders.values(key))
+		QTreeWidgetItem *folderItem = new QTreeWidgetItem(rootFolderItem, QStringList(key));
+		foreach (QString value, extFolderMap.values(key))
 		{
 //			win->log(QString("kv: %1, %2").arg(key).arg(value));
 		}
 	}
-//*/
 #endif
 }
 

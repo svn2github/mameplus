@@ -141,15 +141,15 @@ QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName
 	// recursively load parent image
 	if (snapdata.isNull())
 	{
-		GameInfo *gameinfo = mameGame->nameInfoMap[gameName];
- 		if (!gameinfo->cloneof.isEmpty())
-			snapdata = getScreenshot(dirpath0, gameinfo->cloneof);
+		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+ 		if (!gameInfo->cloneof.isEmpty())
+			snapdata = getScreenshot(dirpath0, gameInfo->cloneof);
 
 		// fallback to default image, first getScreenshot() can't reach here
 		if (snapdata.isNull())
 			snapdata = defsnapdata;
 	}
-	
+
 	return snapdata;
 }
 
@@ -337,7 +337,24 @@ QString Utils::getStatusString(quint8 status, bool isSaveState)
 	return "unknown";	//error
 }
 
+QMap<QString, QStringList> Utils::getExtFolders()
+{
+	QMap<QString, QStringList> extFolderMap;
 
+	//fixme: merge with ips init etc.
+
+	//iterate all files in ips path
+//	QDir dir("folders");
+//	QStringList datFiles = dir.entryList((QStringList() << "*.ini"), QDir::Files | QDir::Readable);
+
+	return extFolderMap;
+}
+
+QStringList Utils::getExtFolderGames(QString folder, QString subFolder)
+{
+	QStringList l;
+	return l;
+}
 
 MyQueue::MyQueue(QObject *parent)
 : QObject(parent)

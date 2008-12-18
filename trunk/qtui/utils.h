@@ -30,6 +30,8 @@ public:
 	bool isConsoleFolder();
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
+	QMap<QString, QStringList> getExtFolders();
+	QStringList getExtFolderGames(QString, QString);
 
 signals:
 	void icoUpdated(QString);

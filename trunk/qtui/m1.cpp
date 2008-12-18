@@ -122,6 +122,10 @@ void M1::postInit()
 		m1UI->init();
 		updateList();
 		win->setVersion();
+
+		QAction *actionM1UI = m1UI->toggleViewAction();
+		win->menuView->insertAction(win->actionVerticalTabs, actionM1UI);
+		
 		win->log("m1 loaded");
 	}
 	else
@@ -307,16 +311,12 @@ void M1Thread::stop()
 
 void M1Thread::play(QTreeWidgetItem*, int)
 {
-
 	QList<QTreeWidgetItem *> selectedItems = m1UI->twSongList->selectedItems();
 	if (selectedItems.isEmpty())
 		return;
 
 	bool ok;
 	QString cmdStr = selectedItems[0]->text(0).trimmed();
-
-	if (!ok)
-		return;
 
 	if (cmdStr.startsWith("$"))
 	{
@@ -330,6 +330,9 @@ void M1Thread::play(QTreeWidgetItem*, int)
 		cmdNum = cmdStr.toInt(&ok);
 		m1UI->lcdNumber->setDecMode();
 	}
+
+	if (!ok)
+		return;
 
 	m1UI->lcdNumber->display(cmdStr);
 	m1UI->lblTrackName->setText(selectedItems[0]->text(1));

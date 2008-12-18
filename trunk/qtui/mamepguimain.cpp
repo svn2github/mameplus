@@ -24,14 +24,12 @@ QStringList dockCtrlNames;
 
 void MainWindow::log(QString message, char logOrigin)
 {
-///*
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
 	QString msg = timeString + ": " + message;
 
 	textBrowserFrontendLog->append(msg);
 	textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
-//*/
 }
 
 void MainWindow::poplog(QString message)
@@ -220,11 +218,10 @@ MainWindow::MainWindow(QWidget *parent)
 	progressBarGamelist->setMaximumHeight(16);
 	progressBarGamelist->hide();
 
-	QAction *actionFolderList = dwLeft->toggleViewAction();
+	QAction *actionFolderList = dwFolderList->toggleViewAction();
 	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
-	
-	menuView->insertAction(actionPicture_Area, actionFolderList);
-	toolBar->insertAction(actionPicture_Area, actionFolderList);
+	menuView->insertAction(actionVerticalTabs, actionFolderList);
+	toolBar->insertAction(actionLargeIcons, actionFolderList);
 
 	gameList = new Gamelist(this);
 	optUtils = new OptionUtils(this);
@@ -284,9 +281,11 @@ void MainWindow::initHistory(QString title)
 		tabifyDockWidget(dockWidget0, dockWidget);
 	else
 		dockWidget0 = dockWidget;
+
+	menuDocuments->addAction(dockWidget->toggleViewAction());
 }
 
-Screenshot * MainWindow::initSnap(QString title)
+Screenshot* MainWindow::initSnap(QString title)
 {
 	static Screenshot *dockWidget0 = NULL;
 	
@@ -299,6 +298,8 @@ Screenshot * MainWindow::initSnap(QString title)
 		tabifyDockWidget(dockWidget0, dockWidget);
 	else
 		dockWidget0 = dockWidget;
+
+	menuPictures->addAction(dockWidget->toggleViewAction());
 
 	return dockWidget;
 }
@@ -458,10 +459,6 @@ void MainWindow::init()
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
 
-	//init M1 in a background thread, put it in last stage
-	m1 = new M1(this);
-	m1->init();
-
 	// connect misc signal and slots
 
 	// Docked snapshots
@@ -499,6 +496,14 @@ void MainWindow::init()
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
+
+	//init M1 in a background thread
+	m1 = new M1(this);
+	m1->init();
+
+	// load icon in a background thread
+	gameList->loadIcon();
+	gameList->restoreGameSelection();
 }
 
 void MainWindow::setVersion()
@@ -530,7 +535,7 @@ void MainWindow::setVersion()
 		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 4")
+		.arg("1.3 beta 5")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
 		.arg(QString("%1.%2.%3").arg(SDL_MAJOR_VERSION).arg(SDL_MINOR_VERSION).arg(SDL_PATCHLEVEL))

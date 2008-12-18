@@ -72,14 +72,27 @@
      <addaction name="actionColSortAscending" />
      <addaction name="actionColSortDescending" />
     </widget>
-    <addaction name="actionPicture_Area" />
+    <widget class="QMenu" name="menuPictures" >
+     <property name="title" >
+      <string>Game Pictures</string>
+     </property>
+     <addaction name="actionEnforceAspect" />
+     <addaction name="separator" />
+    </widget>
+    <widget class="QMenu" name="menuDocuments" >
+     <property name="title" >
+      <string>Game Documents</string>
+     </property>
+    </widget>
+    <addaction name="menuPictures" />
+    <addaction name="menuDocuments" />
     <addaction name="actionVerticalTabs" />
-    <addaction name="actionEnforceAspect" />
     <addaction name="separator" />
     <addaction name="actionLargeIcons" />
     <addaction name="actionDetails" />
     <addaction name="actionGrouped" />
     <addaction name="menuCustomizeFields" />
+    <addaction name="actionLocalGameList" />
     <addaction name="separator" />
     <addaction name="actionRefresh" />
    </widget>
@@ -91,8 +104,6 @@
      <property name="title" >
       <string>Language</string>
      </property>
-     <addaction name="actionLocalGameList" />
-     <addaction name="separator" />
      <addaction name="actionEnglish" />
      <addaction name="actionChinese_PRC" />
      <addaction name="actionChinese_Taiwan" />
@@ -156,12 +167,11 @@
    <attribute name="toolBarBreak" >
     <bool>false</bool>
    </attribute>
-   <addaction name="actionPicture_Area" />
-   <addaction name="separator" />
    <addaction name="actionLargeIcons" />
    <addaction name="actionDetails" />
    <addaction name="actionGrouped" />
    <addaction name="separator" />
+   <addaction name="actionDirectories" />
    <addaction name="actionDefaultOptions" />
    <addaction name="actionAbout" />
   </widget>
@@ -179,7 +189,7 @@
     <bool>false</bool>
    </attribute>
   </widget>
-  <widget class="QDockWidget" name="dwRight" >
+  <widget class="QDockWidget" name="dwGUILog" >
    <property name="features" >
     <set>QDockWidget::DockWidgetClosable|QDockWidget::DockWidgetMovable</set>
    </property>
@@ -200,7 +210,7 @@
     </layout>
    </widget>
   </widget>
-  <widget class="QDockWidget" name="dwLeft" >
+  <widget class="QDockWidget" name="dwFolderList" >
    <property name="sizePolicy" >
     <sizepolicy vsizetype="Preferred" hsizetype="Ignored" >
      <horstretch>0</horstretch>
@@ -326,21 +336,6 @@
    </property>
    <property name="text" >
     <string>Large Icons</string>
-   </property>
-  </action>
-  <action name="actionPicture_Area" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/mame32-show-snap.png</normaloff>:/res/mame32-show-snap.png</iconset>
-   </property>
-   <property name="text" >
-    <string>Picture Area</string>
-   </property>
-   <property name="shortcut" >
-    <string>Alt+P</string>
    </property>
   </action>
   <action name="actionVerticalTabs" >

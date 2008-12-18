@@ -167,6 +167,7 @@ private:
 
 // global vars
 const float FORCE_ASPECT = 0.75f;
+const QString ICO_EXT = ".ico";
 const QString INI_EXT = ".ini";
 const QString CFG_PREFIX = 
 #ifndef Q_WS_WIN
