@@ -1954,6 +1954,8 @@ int symtable_add(symbol_table *table, const char *name, const symbol_entry *entr
 	int strindex;
 	int all_digits, i;
 
+	assert_always(entry->table == table, "Mismatched symbol tables");
+
 	/* we cannot add numeric symbols */
 	all_digits = TRUE;
 	for (i = 0; name[i]; i++)
@@ -2019,6 +2021,7 @@ int	symtable_add_register(symbol_table *table, const char *name, void *symref, s
 	symbol.type = SMT_REGISTER;
 	symbol.info.reg.getter = getter;
 	symbol.info.reg.setter = setter;
+	symbol.table = table;
 	return symtable_add(table, name, &symbol);
 }
 
@@ -2037,6 +2040,7 @@ int symtable_add_function(symbol_table *table, const char *name, void *symref, U
 	symbol.info.func.minparams = minparams;
 	symbol.info.func.maxparams = maxparams;
 	symbol.info.func.execute = execute;
+	symbol.table = table;
 	return symtable_add(table, name, &symbol);
 }
 
@@ -2053,6 +2057,7 @@ int symtable_add_value(symbol_table *table, const char *name, UINT64 value)
 	symbol.ref = NULL;
 	symbol.type = SMT_VALUE;
 	symbol.info.gen.value = value;
+	symbol.table = table;
 	return symtable_add(table, name, &symbol);
 }
 

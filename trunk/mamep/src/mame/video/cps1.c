@@ -2289,7 +2289,7 @@ static void cps1_render_sprites(running_machine *machine, bitmap_t *bitmap, cons
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)					\
 {																	\
-	if (flip_screen_get())											\
+	if (flip_screen_get(machine))											\
 		pdrawgfx(bitmap,machine->gfx[2],							\
 				CODE,												\
 				COLOR,												\
@@ -2525,7 +2525,7 @@ static void cps2_render_sprites(running_machine *machine, bitmap_t *bitmap,const
 {
 #define DRAWSPRITE(CODE,COLOR,FLIPX,FLIPY,SX,SY)									\
 {																					\
-	if (flip_screen_get())															\
+	if (flip_screen_get(machine))															\
 		pdrawgfx(bitmap,machine->gfx[2],											\
 				CODE,																\
 				COLOR,																\
@@ -2692,7 +2692,7 @@ static void cps1_render_stars(const device_config *screen, bitmap_t *bitmap,cons
 				int sy = (offs % 256);
 				sx = (sx - stars2x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - stars2y) & 0xff;
-				if (flip_screen_get())
+				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
@@ -2718,7 +2718,7 @@ static void cps1_render_stars(const device_config *screen, bitmap_t *bitmap,cons
 				int sy = (offs % 256);
 				sx = (sx - stars1x + (col & 0x1f)) & 0x1ff;
 				sy = (sy - stars1y) & 0xff;
-				if (flip_screen_get())
+				if (flip_screen_get(screen->machine))
 				{
 					sx = 511 - sx;
 					sy = 255 - sy;
@@ -2778,7 +2778,7 @@ VIDEO_UPDATE( cps1 )
 	int videocontrol = cps1_cps_a_regs[CPS1_VIDEOCONTROL];
 
 
-	flip_screen_set(videocontrol & 0x8000);
+	flip_screen_set(screen->machine, videocontrol & 0x8000);
 
 	layercontrol = cps1_cps_b_regs[cps1_game_config->layer_control/2];
 

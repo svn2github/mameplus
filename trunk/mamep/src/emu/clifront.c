@@ -531,7 +531,6 @@ int cli_info_listxml(core_options *options, const char *gamename)
 {
 	/* since print_mame_xml expands the machine driver, we need to set things up */
 	init_resource_tracking();
-	cpuintrf_init(NULL);
 	sndintrf_init(NULL);
 
 	print_mame_xml(stdout, drivers, gamename);
@@ -778,7 +777,6 @@ int cli_info_listsamples(core_options *options, const char *gamename)
 
 	/* since we expand the machine driver, we need to set things up */
 	init_resource_tracking();
-	cpuintrf_init(NULL);
 	sndintrf_init(NULL);
 
 	/* iterate over drivers */

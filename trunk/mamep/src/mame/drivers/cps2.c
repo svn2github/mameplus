@@ -584,6 +584,7 @@ Stephh's inputs notes (based on some tests on the "parent" set) :
 ***************************************************************************/
 
 #include "driver.h"
+#include "cpu/z80/z80.h"
 #include "deprecat.h"
 #include "machine/eeprom.h"
 #include "cpu/m68000/m68000.h"
@@ -8147,7 +8148,6 @@ ROM_START( sfz2ald )
 	ROM_LOAD16_WORD_SWAP( "sza.11m",   0x000000, 0x200000, CRC(aa47a601) SHA1(a4d1ee89c84a3b9db06469bb66e85293b5aa9ac9) )
 	ROM_LOAD16_WORD_SWAP( "sza.12m",   0x200000, 0x200000, CRC(2237bc53) SHA1(96d5693047e4cf1ed10a8ee1905cea267a278e92) )
 ROM_END
-
 
 ROM_START( sfa3ud )
 	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */

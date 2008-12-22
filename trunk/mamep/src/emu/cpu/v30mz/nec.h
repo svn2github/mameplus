@@ -1,6 +1,6 @@
 /* ASG 971222 -- rewrote this interface */
-#ifndef __NEC_H_
-#define __NEC_H_
+#ifndef __NECINTRF_H__
+#define __NECINTRF_H__
 
 #include "cpuintrf.h"
 
@@ -13,8 +13,7 @@ enum
 };
 
 /* Public functions */
-extern CPU_GET_INFO( v20 );
-extern CPU_GET_INFO( v30 );
-extern CPU_GET_INFO( v33 );
+extern CPU_GET_INFO( v30mz );
+#define CPU_V30MZ CPU_GET_INFO_NAME( v30mz )
 
-#endif
+#endif /* __NECINTRF_H__ */

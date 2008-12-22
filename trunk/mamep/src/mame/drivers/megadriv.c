@@ -66,6 +66,7 @@ On SegaC2 the VDP never turns on the IRQ6 enable register
 
 
 #include "driver.h"
+#include "cpu/z80/z80.h"
 #include "deprecat.h"
 #include "sound/sn76496.h"
 #include "sound/2612intf.h"
@@ -640,13 +641,13 @@ static void update_megadrive_vdp_code_and_address(void)
                             ((megadrive_vdp_command_part2 & 0x0003) << 14);
 }
 
-static UINT16 (*vdp_get_word_from_68k_mem)(UINT32 source);
+static UINT16 (*vdp_get_word_from_68k_mem)(running_machine *machine, UINT32 source);
 
-static UINT16 vdp_get_word_from_68k_mem_default(UINT32 source)
+static UINT16 vdp_get_word_from_68k_mem_default(running_machine *machine, UINT32 source)
 {
 	if (( source >= 0x000000 ) && ( source <= 0x3fffff ))
 	{
-		UINT16 *rom = (UINT16*)memory_region(Machine, "main");
+		UINT16 *rom = (UINT16*)memory_region(machine, "main");
 		return rom[(source&0x3fffff)>>1];
 	}
 	else if (( source >= 0xe00000 ) && ( source <= 0xffffff ))
@@ -658,7 +659,7 @@ static UINT16 vdp_get_word_from_68k_mem_default(UINT32 source)
 	else
 	{
 		printf("DMA Read unmapped %06x\n",source);
-		return mame_rand(Machine);
+		return mame_rand(machine);
 	}
 
 }
@@ -716,18 +717,18 @@ static void megadrive_do_insta_vram_copy(UINT32 source, UINT16 length)
 }
 
 /* Instant, but we pause the 68k a bit */
-static void megadrive_do_insta_68k_to_vram_dma(UINT32 source,int length)
+static void megadrive_do_insta_68k_to_vram_dma(running_machine *machine, UINT32 source,int length)
 {
 	int count;
 
 	if (length==0x00) length = 0xffff;
 
 	/* This is a hack until real DMA timings are implemented */
-	cpu_spinuntil_time(Machine->cpu[0], ATTOTIME_IN_NSEC(length*1000/3500));
+	cpu_spinuntil_time(machine->cpu[0], ATTOTIME_IN_NSEC(length*1000/3500));
 
 	for (count = 0;count<(length>>1);count++)
 	{
-		vdp_vram_write(vdp_get_word_from_68k_mem(source));
+		vdp_vram_write(vdp_get_word_from_68k_mem(machine, source));
 		source+=2;
 		if (source>0xffffff) source = 0xe00000;
 	}
@@ -753,7 +754,7 @@ static void megadrive_do_insta_68k_to_cram_dma(running_machine *machine,UINT32 s
 	{
 		//if (megadrive_vdp_address>=0x80) return; // abandon
 
-		write_cram_value(machine, (megadrive_vdp_address&0x7e)>>1, vdp_get_word_from_68k_mem(source));
+		write_cram_value(machine, (megadrive_vdp_address&0x7e)>>1, vdp_get_word_from_68k_mem(machine, source));
 		source+=2;
 
 		if (source>0xffffff) source = 0xfe0000;
@@ -771,7 +772,7 @@ static void megadrive_do_insta_68k_to_cram_dma(running_machine *machine,UINT32 s
 
 }
 
-static void megadrive_do_insta_68k_to_vsram_dma(UINT32 source,UINT16 length)
+static void megadrive_do_insta_68k_to_vsram_dma(running_machine *machine,UINT32 source,UINT16 length)
 {
 	int count;
 
@@ -781,7 +782,7 @@ static void megadrive_do_insta_68k_to_vsram_dma(UINT32 source,UINT16 length)
 	{
 		if (megadrive_vdp_address>=0x80) return; // abandon
 
-		megadrive_vdp_vsram[(megadrive_vdp_address&0x7e)>>1] = vdp_get_word_from_68k_mem(source);
+		megadrive_vdp_vsram[(megadrive_vdp_address&0x7e)>>1] = vdp_get_word_from_68k_mem(machine, source);
 		source+=2;
 
 		if (source>0xffffff) source = 0xfe0000;
@@ -827,7 +828,7 @@ static void handle_dma_bits(running_machine *machine)
 
 			/* The 68k is frozen during this transfer, it should be safe to throw a few cycles away and do 'instant' DMA because the 68k can't detect it being in progress (can the z80?) */
 			//mame_printf_debug("68k->VRAM DMA transfer source %06x length %04x dest %04x enabled %01x\n", source, length, megadrive_vdp_address,MEGADRIVE_REG01_DMA_ENABLE);
-			if (MEGADRIVE_REG01_DMA_ENABLE) megadrive_do_insta_68k_to_vram_dma(source,length);
+			if (MEGADRIVE_REG01_DMA_ENABLE) megadrive_do_insta_68k_to_vram_dma(machine,source,length);
 
 		}
 		else if (MEGADRIVE_REG17_DMATYPE==0x2)
@@ -888,7 +889,7 @@ static void handle_dma_bits(running_machine *machine)
 
 			/* The 68k is frozen during this transfer, it should be safe to throw a few cycles away and do 'instant' DMA because the 68k can't detect it being in progress (can the z80?) */
 			//mame_printf_debug("68k->VSRAM DMA transfer source %06x length %04x dest %04x enabled %01x\n", source, length, megadrive_vdp_address,MEGADRIVE_REG01_DMA_ENABLE);
-			if (MEGADRIVE_REG01_DMA_ENABLE) megadrive_do_insta_68k_to_vsram_dma(source,length);
+			if (MEGADRIVE_REG01_DMA_ENABLE) megadrive_do_insta_68k_to_vsram_dma(machine,source,length);
 		}
 		else if (MEGADRIVE_REG17_DMATYPE==0x2)
 		{
@@ -1926,9 +1927,8 @@ static UINT8 megadrive_io_read_data_port_3button(running_machine *machine, int p
 }
 
 /* used by megatech bios, the test mode accesses the joypad/stick inputs like this */
-UINT8 megatech_bios_port_cc_dc_r(int offset, int ctrl)
+UINT8 megatech_bios_port_cc_dc_r(running_machine *machine, int offset, int ctrl)
 {
-	running_machine *machine = Machine;
 	UINT8 retdata;
 
 	if (ctrl==0x55)
@@ -3891,11 +3891,11 @@ ADDRESS_MAP_END
 
 
 /* DMA read function for SVP */
-static UINT16 vdp_get_word_from_68k_mem_svp(UINT32 source)
+static UINT16 vdp_get_word_from_68k_mem_svp(running_machine *machine, UINT32 source)
 {
 	if ((source & 0xe00000) == 0x000000)
 	{
-		UINT16 *rom = (UINT16*)memory_region(Machine, "main");
+		UINT16 *rom = (UINT16*)memory_region(machine, "main");
 		source -= 2; // DMA latency
 		return rom[source >> 1];
 	}
@@ -3913,7 +3913,7 @@ static UINT16 vdp_get_word_from_68k_mem_svp(UINT32 source)
 	else
 	{
 		mame_printf_debug("DMA Read unmapped %06x\n",source);
-		return mame_rand(Machine);
+		return mame_rand(machine);
 	}
 }
 
@@ -6379,7 +6379,7 @@ MACHINE_DRIVER_START( genesis_32x )
 	//
 	// boosting the interleave here actually makes Kolibri run incorrectly however, that
 	// one works best just boosting the interleave on communications?!
-	MDRV_INTERLEAVE(30000)
+	MDRV_QUANTUM_TIME(HZ(1800000))
 MACHINE_DRIVER_END
 
 
@@ -6496,7 +6496,7 @@ static void megadriv_init_common(running_machine *machine)
 
 	vdp_get_word_from_68k_mem = vdp_get_word_from_68k_mem_default;
 
-	cpu_set_info_fct(machine->cpu[0], CPUINFO_PTR_M68K_TAS_CALLBACK, (void *)megadriv_tas_callback);
+	device_set_info_fct(machine->cpu[0], CPUINFO_FCT_M68K_TAS_CALLBACK, (void *)megadriv_tas_callback);
 
 	if ((machine->gamedrv->ipt==ipt_megadri6) || (machine->gamedrv->ipt==ipt_ssf2ghw))
 	{
@@ -6710,8 +6710,8 @@ DRIVER_INIT( _32x )
 	_32x_240mode = 0;
 
 // checking if these help brutal, they don't.
-	cpu_set_info_int(machine->cpu[2], CPUINFO_INT_SH2_DRC_OPTIONS, SH2DRC_COMPATIBLE_OPTIONS);
-	cpu_set_info_int(machine->cpu[3], CPUINFO_INT_SH2_DRC_OPTIONS, SH2DRC_COMPATIBLE_OPTIONS);
+	device_set_info_int(machine->cpu[2], CPUINFO_INT_SH2_DRC_OPTIONS, SH2DRC_COMPATIBLE_OPTIONS);
+	device_set_info_int(machine->cpu[3], CPUINFO_INT_SH2_DRC_OPTIONS, SH2DRC_COMPATIBLE_OPTIONS);
 
 	DRIVER_INIT_CALL(megadriv);
 }

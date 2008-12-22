@@ -862,9 +862,9 @@ static const TCHAR *TrimManufacturer(const TCHAR *s)
 }
 
 
-
 void CreateCPUFolders(int parent_index)
 {
+/*
 	int i,jj;
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
@@ -911,6 +911,7 @@ void CreateCPUFolders(int parent_index)
 		}
 		machine_config_free(config);
 	}
+*/
 }
 
 void CreateSoundFolders(int parent_index)

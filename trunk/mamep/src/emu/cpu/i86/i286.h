@@ -4,7 +4,7 @@
 #ifndef __I286INTF_H__
 #define __I286INTF_H__
 
-#include "i86intf.h"
+#include "i86.h"
 
 enum
 {
@@ -44,5 +44,6 @@ enum
 
 /* Public functions */
 CPU_GET_INFO( i80286 );
+#define CPU_I80286 CPU_GET_INFO_NAME( i80286 )
 
 #endif /* __I286INTF_H__ */
