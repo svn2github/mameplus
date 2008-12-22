@@ -808,33 +808,28 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 /* Build CPU info string */
 static LPCWSTR GameInfoCPU(UINT nIndex)
 {
-	int chipnum;
+	const device_config *device;
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
 
 	ZeroMemory(buf, sizeof(buf));
 
-	cpuintrf_init(NULL);
-
-	for (chipnum = 0; chipnum < ARRAY_LENGTH(config->cpu); chipnum++)
+	for (device = cpu_first(config); device != NULL; device = cpu_next(device))
 	{
-		if (config->cpu[chipnum].type != CPU_DUMMY)
+		if (device->clock >= 1000000)
 		{
-			if (config->cpu[chipnum].clock >= 1000000)
-			{
-				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-					    _Unicode(cputype_get_name(config->cpu[chipnum].type)),
-					    config->cpu[chipnum].clock / 1000000,
-					    config->cpu[chipnum].clock % 1000000);
-			} else {
-				swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-					    _Unicode(cputype_get_name(config->cpu[chipnum].type)),
-					    config->cpu[chipnum].clock / 1000,
-					    config->cpu[chipnum].clock % 1000);
-			}
-
-			wcscat(buf, TEXT("\n"));
+			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
+				    _Unicode(device_get_name(device)),
+				    device->clock / 1000000,
+				    device->clock % 1000000);
+		} else {
+			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
+				    _Unicode(device_get_name(device)),
+				    device->clock / 1000,
+				    device->clock % 1000);
 		}
+
+		wcscat(buf, TEXT("\n"));
 	}
 	/* Free the structure */
 	machine_config_free(config);
