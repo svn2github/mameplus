@@ -1309,7 +1309,7 @@ void rom_init(running_machine *machine)
 #ifdef USE_IPS
 	if (patchname && *patchname)
 	{
-		if (!open_ips_entry(patchname, &romdata, machine->gamedrv->rom))
+		if (!open_ips_entry(machine, patchname, &romdata, machine->gamedrv->rom))
 		{
 			display_rom_load_results(machine, &romdata);
 //			return;

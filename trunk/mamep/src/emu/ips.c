@@ -10,7 +10,6 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
 #include "ips.h"
 #include "hash.h"
 
@@ -228,7 +227,7 @@ static int check_crc(char *crc, const char *rom_hash)
 	return 1;
 }
 
-static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
 {
 	UINT8 buffer[1024];
 	mame_file *fpDat;
@@ -238,7 +237,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 
 	logerror("IPS: load ips \"%s\"\n", patch_name);
 
-	fname = astring_assemble_4(astring_alloc(), Machine->gamedrv->name, "/", patch_name, INDEX_EXT);
+	fname = astring_assemble_4(astring_alloc(), machine->gamedrv->name, "/", patch_name, INDEX_EXT);
 	filerr = mame_fopen(SEARCHPATH_IPS, astring_c(fname), OPEN_FLAG_READ, &fpDat);
 	astring_free(fname);
 
@@ -309,7 +308,7 @@ static int parse_ips_patch(ips_entry **ips_p, const char *patch_name, rom_load_d
 			}
 			else
 			{
-				ips_dir = Machine->gamedrv->name;
+				ips_dir = machine->gamedrv->name;
 			}
 
 			entry = malloc(sizeof (*entry));
@@ -349,7 +348,7 @@ parse_ips_patch_fail:
 }
 
 
-int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
+int open_ips_entry(running_machine *machine, const char *patch_name, rom_load_data *romdata, const rom_entry *romp)
 {
 	int result = 0;
 	char *s = mame_strdup(patch_name);
@@ -369,7 +368,7 @@ int open_ips_entry(const char *patch_name, rom_load_data *romdata, const rom_ent
 				break;
 			}
 
-		result = parse_ips_patch(list, p, romdata, romp);
+		result = parse_ips_patch(machine, list, p, romdata, romp);
 		if (!result)
 			return result;
 
