@@ -25,7 +25,8 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
+#include "cpu/spc700/spc700.h"
+#include "cpu/g65816/g65816.h"
 #include "includes/snes.h"
 #include "machine/snescart.h"
 
@@ -181,7 +182,9 @@ INPUT_PORTS_END
 ***************************************************************************/
 
 static const custom_sound_interface snes_sound_interface =
-{ snes_sh_start, 0, 0 };
+{
+	snes_sh_start, 0, 0
+};
 
 
 
@@ -198,9 +201,8 @@ static MACHINE_DRIVER_START( snes )
 
 	MDRV_CPU_ADD("sound", SPC700, 1024000)	/* 1.024 MHz */
 	MDRV_CPU_PROGRAM_MAP(spc_map, 0)
-	MDRV_CPU_VBLANK_INT_HACK(NULL, 0)
 
-	MDRV_INTERLEAVE(800)
+	MDRV_QUANTUM_TIME(HZ(48000))
 
 	MDRV_MACHINE_START( snes_mess )
 	MDRV_MACHINE_RESET( snes )

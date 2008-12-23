@@ -61,6 +61,7 @@ DC00      - Selection buttons #2, 9-16 (R)
  ******************************************************************************/
 
 #include "driver.h"
+#include "cpu/z80/z80.h"
 #include "sound/sn76496.h"
 #include "sound/2413intf.h"
 #include "includes/sms.h"
@@ -307,7 +308,7 @@ static MACHINE_DRIVER_START(sms1ntsc)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(sms_io, 0)
 
-	MDRV_INTERLEAVE(1)
+	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
 	MDRV_MACHINE_RESET(sms)
@@ -352,7 +353,7 @@ static MACHINE_DRIVER_START(sms1pal)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(sms_io, 0)
 
-	MDRV_INTERLEAVE(1)
+	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
 	MDRV_MACHINE_RESET(sms)
@@ -399,7 +400,7 @@ static MACHINE_DRIVER_START(gamegear)
 	MDRV_CPU_PROGRAM_MAP(sms_mem, 0)
 	MDRV_CPU_IO_MAP(gg_io, 0)
 
-	MDRV_INTERLEAVE(1)
+	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
 	MDRV_MACHINE_RESET(sms)

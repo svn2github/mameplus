@@ -63,9 +63,9 @@ static void nes_machine_stop(running_machine *machine);
     FUNCTIONS
 ***************************************************************************/
 
-static const device_config *cartslot_image(void)
+static const device_config *cartslot_image(running_machine *machine)
 {
-	return image_from_devtype_and_index(IO_CARTSLOT, 0);
+	return image_from_devtype_and_index(machine, IO_CARTSLOT, 0);
 }
 
 static void init_nes_core (running_machine *machine)
@@ -161,7 +161,7 @@ static void init_nes_core (running_machine *machine)
 	memcpy (battery_ram, battery_data, BATTERY_SIZE);
 }
 
-int nes_ppu_vidaccess( int num, int address, int data )
+int nes_ppu_vidaccess( running_machine *machine, int num, int address, int data )
 {
 	/* TODO: this is a bit of a hack, needed to get Argus, ASO, etc to work */
 	/* but, B-Wings, submath (j) seem to use this location differently... */
@@ -180,7 +180,7 @@ MACHINE_RESET( nes )
 	nes.mid_ram_enable = 1;
 
 	/* Reset the mapper variables. Will also mark the char-gen ram as dirty */
-	mapper_reset (nes.mapper);
+	mapper_reset (machine, nes.mapper);
 
 	/* Reset the serial input ports */
 	in_0.shift = 0;
@@ -197,7 +197,7 @@ static void nes_machine_stop(running_machine *machine)
 {
 	/* Write out the battery file if necessary */
 	if (nes.battery)
-		image_battery_save(cartslot_image(), battery_ram, BATTERY_SIZE);
+		image_battery_save(cartslot_image(machine), battery_ram, BATTERY_SIZE);
 }
 
 

@@ -11,7 +11,6 @@
 # MESS core defines
 #-------------------------------------------------
 
-#COREDEFS += -DMESS
 
 # add some additional include libraries for the mess files
 CFLAGS += \
@@ -69,6 +68,7 @@ OBJDIRS += \
 #-------------------------------------------------
 # MESS core objects
 #-------------------------------------------------
+
 
 EMUOBJS += \
 	$(MESSOBJ)/mess.o		\

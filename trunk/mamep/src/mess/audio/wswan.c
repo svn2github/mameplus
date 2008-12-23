@@ -9,7 +9,6 @@
 **************************************************************************************/
 
 #include "driver.h"
-#include "deprecat.h"
 #include "includes/wswan.h"
 #include "streams.h"
 
@@ -141,11 +140,11 @@ WRITE8_HANDLER( wswan_sound_port_w ) {
 	}
 }
 
-static void wswan_sh_update(void *param,stream_sample_t **inputs, stream_sample_t **buffer,int length)
+static STREAM_UPDATE( wswan_sh_update )
 {
 	stream_sample_t sample, left, right;
 
-	while( length-- > 0 )
+	while( samples-- > 0 )
 	{
 		left = right = 0;
 
@@ -189,7 +188,7 @@ static void wswan_sh_update(void *param,stream_sample_t **inputs, stream_sample_
 				if ( snd.sweep_count >= snd.sweep_time ) {
 					snd.sweep_count = 0;
 					snd.audio3.freq += snd.sweep_step;
-					snd.audio3.period = Machine->sample_rate / ( 3072000  / ( ( 2048 - snd.audio3.freq ) << 5 ) );
+					snd.audio3.period = device->machine->sample_rate / ( 3072000  / ( ( 2048 - snd.audio3.freq ) << 5 ) );
 				}
 			}
 			left += snd.audio3.vol_left * sample;
@@ -214,12 +213,12 @@ static void wswan_sh_update(void *param,stream_sample_t **inputs, stream_sample_
 		left <<= 5;
 		right <<= 5;
 
-		*(buffer[0]++) = left;
-		*(buffer[1]++) = right;
+		*(outputs[0]++) = left;
+		*(outputs[1]++) = right;
 	}
 }
 
-void *wswan_sh_start(const device_config *device, int clock, const custom_sound_interface *config)
+CUSTOM_START( wswan_sh_start )
 {
 	channel = stream_create(device, 0, 2, device->machine->sample_rate, 0, wswan_sh_update);
 

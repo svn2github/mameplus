@@ -190,7 +190,7 @@ const char *device_brieftypename(iodevice_t type);
 iodevice_t device_typeid(const char *name);
 
 /* device allocation */
-void mess_devices_setup(machine_config *config, const game_driver *gamedrv);
+void mess_devices_setup(running_machine *machine, machine_config *config, const game_driver *gamedrv);
 
 /* device lookup */
 int device_count_tag_from_machine(const running_machine *machine, const char *tag);
@@ -209,7 +209,7 @@ const device_config *image_from_devtag_and_index(running_machine *machine, const
 
 /* deprecated device access functions that assume one device of any given type */
 iodevice_t image_devtype(const device_config *device);
-const device_config *image_from_devtype_and_index(iodevice_t type, int id);
+const device_config *image_from_devtype_and_index(running_machine *machine, iodevice_t type, int id);
 
 /* diagnostics */
 int device_valididtychecks(void);

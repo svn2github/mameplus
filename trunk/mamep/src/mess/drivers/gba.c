@@ -93,7 +93,7 @@ static void gba_machine_stop(running_machine *machine)
 	// only do this if the cart loader detected some form of backup
 	if (nvsize > 0)
 	{
-		image_battery_save(image_from_devtype_and_index(IO_CARTSLOT, 0), nvptr, nvsize);
+		image_battery_save(image_from_devtype_and_index(machine,IO_CARTSLOT, 0), nvptr, nvsize);
 	}
 }
 

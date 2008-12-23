@@ -548,7 +548,9 @@ static INPUT_PORTS_START( gameboy )
 INPUT_PORTS_END
 
 static const custom_sound_interface gameboy_sound_interface =
-{ gameboy_sh_start, 0, 0 };
+{
+	gameboy_sh_start, 0, 0
+};
 
 
 static MACHINE_DRIVER_START( gameboy )
@@ -561,7 +563,7 @@ static MACHINE_DRIVER_START( gameboy )
 	MDRV_SCREEN_ADD("main", LCD)
 	MDRV_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
 	MDRV_SCREEN_VBLANK_TIME(0)
-	MDRV_INTERLEAVE(1)
+	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START( gb )
 	MDRV_MACHINE_RESET( gb )
@@ -679,7 +681,7 @@ static MACHINE_DRIVER_START( megaduck )
 	MDRV_SCREEN_ADD("main", LCD)
 	MDRV_SCREEN_REFRESH_RATE(DMG_FRAMES_PER_SECOND)
 	MDRV_SCREEN_VBLANK_TIME(0)
-	MDRV_INTERLEAVE(1)
+	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_RESET( megaduck )
 
