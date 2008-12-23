@@ -8904,7 +8904,7 @@ static DRIVER_INIT( pnyaad ) // decrypted C
 	neo_pcm2_snk_1999(machine, 4);
 	neogeo_fixed_layer_bank_type = 1;
 	neogeo_sfix_decrypt(machine);
-	driver_init_gfxdec42(machine);
+	DRIVER_INIT_CALL(neogeo);
 }
 
 static DRIVER_INIT( mslug5 )
@@ -9331,28 +9331,25 @@ static DRIVER_INIT( fr2ch )
 	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x2fffff, 0, 0, fr2ch_cx_hack_w);
 }
 
-static UINT16 *brza_sram;
-
-static READ16_HANDLER( brza_sram16_2_r )
-{
-	return brza_sram[offset];
-}
-
-static WRITE16_HANDLER( brza_sram16_2_w )
-{
-	COMBINE_DATA(&brza_sram[offset]);
-}
-
 static DRIVER_INIT( jckeygpd )
 {
-	brza_sram = auto_malloc(0x2000);
-	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x201FFF, 0, 0, brza_sram16_2_r);
-	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x201FFF, 0, 0, brza_sram16_2_w);
-//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x320000, 0x320001, 0, 0, vliner_timer16_r );
-//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x280000, 0x280001, 0, 0, vliner_coins_r );
-//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x2c0000, 0x2c0001, 0, 0, vliner_2c0000_r );
+	UINT16* extra_ram;
 
-	driver_init_gfxdec42(machine);
+	neogeo_fixed_layer_bank_type = 1;
+	neogeo_cmc50_m1_decrypt(machine);
+	neogeo_sfix_decrypt(machine);
+
+	/* install some extra RAM */
+	extra_ram = auto_malloc(0x2000);
+	state_save_register_global_pointer(machine, extra_ram, 0x2000 / 2);
+
+	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x200000, 0x201fff, 0, 0, SMH_BANK8, SMH_BANK8);
+	memory_set_bankptr(machine, NEOGEO_BANK_EXTRA_RAM, extra_ram);
+
+//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x280000, 0x280001, 0, 0, input_port_read_handler16(machine->portconfig, "IN5") );
+//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x2c0000, 0x2c0001, 0, 0, input_port_read_handler16(machine->portconfig, "IN6") );
+
+	DRIVER_INIT_CALL(neogeo);
 }
 
 
