@@ -353,9 +353,11 @@ skyrobo	萝卜天空	萝卜天空	Nichibutsu
 bigfghtr	战魔机大对决	战魔机大对决	Nichibutsu
 hyhoo	早押对战问答 (日版)	早押对战问答 (日版)	Nichibutsu
 hyhoo2	早押对战问答 2 (日版)	早押对战问答 2 (日版)	Nichibutsu
-jangou	雀豪	雀豪	Nichibutsu
-jngolady	雀豪 女士版	雀豪 女士版	Nichibutsu
+jangou	雀豪 [BET] (日版)	雀豪 [BET] (日版)	Nichibutsu
+jngolady	雀豪 女士版 (日版)	雀豪 女士版 (日版)	Nichibutsu
+cntrygrl	乡村女孩 (日版)	乡村女孩 (日版)	Royal Denshi
 pastelg	麻雀推倒胡 (日版 851224)	麻雀推倒胡 (日版 851224)	Nichibutsu
+3ds	百家乐	百家乐	Nihon Bussan
 crystalg	水晶女孩 (日版 860512)	水晶女孩 (日版 860512)	Nichibutsu
 crystal2	水晶女孩 2 (日版 860620)	水晶女孩 2 (日版 860620)	Nichibutsu
 nightlov	夜恋 (日版 860705)	夜恋 (日版 860705)	Central Denshi
@@ -1563,6 +1565,7 @@ cadashj	卡达叙传说 (日版)	卡达叙传说 (日版)	Taito Corporation
 cadashu	卡达叙传说 (美版)	卡达叙传说 (美版)	Taito America Corporation
 cadashi	卡达叙传说 (意大利)	卡达叙传说 (意大利)	Taito Corporation Japan
 cadashf	卡达叙传说 (法国)	卡达叙传说 (法国)	Taito Corporation Japan
+parentj	Parent Jack	Parent Jack	Taito
 galmedes	高米达斯星战 (日版)	高米达斯星战 (日版)	Visco
 earthjkr	U.N. 国防战机: 地球战役	U.N. 国防战机: 地球战役	Visco
 eto	古今东西干支物语 (日版)	古今东西干支物语 (日版)	Visco
@@ -4944,8 +4947,8 @@ mechatt	机枪双雄 (世界版)	机枪双雄 (世界版)	SNK
 mechattu	机枪双雄 (美版)	机枪双雄 (美版)	SNK
 bbusters	野兽梦宴 - SNK 三枪 (世界版)	野兽梦宴 - SNK 三枪 (世界版)	SNK
 bbusteru	野兽梦宴 - SNK 三枪 (美版, 版本 2)	野兽梦宴 - SNK 三枪 (美版, 版本 2)	SNK
-dmndrby	钻石德贝 (第1套)	钻石德贝 (第1套)	Electrocoin
-dmndrbya	钻石德贝 (第2套)	钻石德贝 (第2套)	Electrocoin
+dmndrby	钻石德贝 (新版)	钻石德贝 (新版)	Electrocoin
+dmndrbya	钻石德贝 (旧版)	钻石德贝 (旧版)	Electrocoin
 neogeo	Neo-Geo	Neo-Geo	SNK
 nam1975	越战 - 1975	越战 - 1975	SNK
 bstars	棒球之星	棒球之星	SNK
@@ -5132,7 +5135,7 @@ kof2000n	拳皇 2000 (程序未加密)	拳皇 2000 (程序未加密)	SNK
 bangbead	碰碰球	碰碰球	Visco
 nitd	黑暗守墓者 / 暗黑恶梦	黑暗守墓者 / 暗黑恶梦	Eleven / Gavaking
 nitdbl	黑暗守墓者 / 暗黑恶梦 (盗版)	黑暗守墓者 / 暗黑恶梦 (盗版)	bootleg
-sengoku3	战国传承 3 / 战国传承 2001	战国传承 3 / 战国传承 2001	SNK
+sengoku3	战国传承 3 / 战国传承 2001	战国传承 3 / 战国传承 2001	Noise Factory / SNK
 kof2001	拳皇 2001 (第1套)	拳皇 2001 (第1套)	Eolith / SNK
 kof2001h	拳皇 2001 (第2套)	拳皇 2001 (第2套)	Eolith / SNK
 cthd2003	卧虎藏龙 2003 (盗版)	卧虎藏龙 2003 (盗版)	bootleg
@@ -5293,6 +5296,7 @@ blckoutj	立体空间方块 (日版)	立体空间方块 (日版)	Technos + California Dreams
 agress	阿古雷司 - 导弹大战略	阿古雷司 - 导弹大战略	Palco
 agressb	阿古雷司 - 导弹大战略 (英文 盗版)	阿古雷司 - 导弹大战略 (英文 盗版)	Palco
 ddragon3	双截龙 3 - 罗塞塔之石 (美版)	双截龙 3 - 罗塞塔之石 (美版)	Technos
+ddrago3p	双截龙 3 - 罗塞塔之石 (工程版)	双截龙 3 - 罗塞塔之石 (工程版)	Technos
 ddrago3j	双截龙 3 - 罗塞塔之石 (日版)	双截龙 3 - 罗塞塔之石 (日版)	Technos
 ddrago3b	双截龙 3 - 罗塞塔之石 (盗版)	双截龙 3 - 罗塞塔之石 (盗版)	bootleg
 wwfwfest	WWF 狂热摔跤 (美版 第1套)	WWF 狂热摔跤 (美版 第1套)	Technos Japan
@@ -6486,10 +6490,12 @@ goldstbl	黄金星座 (蓝色版本)	黄金星座 (蓝色版本)	IGS
 moonlght	月亮之光 (盗版 黄金星座)	月亮之光 (盗版 黄金星座)	bootleg
 chry10	樱桃 10 (盗版 黄金星座)	樱桃 10 (盗版 黄金星座)	bootleg
 chryigld	樱桃和黄金 (盗版 黄金星座)	樱桃和黄金 (盗版 黄金星座)	bootleg
-ncb3	(新?) 樱桃和黄金 III	(新?) 樱桃和黄金 III	Dyna
+ncb3	樱桃和黄金 III (版本 1.40)	樱桃和黄金 III (版本 1.40)	Dyna
 cb3	樱桃和黄金 III	樱桃和黄金 III	Dyna
 cmv801	樱桃水果盘 (Corsica, v8.01)	樱桃水果盘 (Corsica, v8.01)	Corsica
 cmaster	樱桃水果盘 91?	樱桃水果盘 91?	Dyna
+cmasterb	樱桃水果盘 I (v1.01)	樱桃水果盘 I (v1.01)	Dyna
+lucky8	新幸运 8 线	新幸运 8 线	Wing Co.Ltd
 cpoker	扑克冠军 (v220I)	扑克冠军 (v220I)	IGS
 cpokert	扑克冠军 (v200G)	扑克冠军 (v200G)	Tuning
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
@@ -6500,6 +6506,7 @@ iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
 cabaret	酒舞宴	酒舞宴	IGS
 jingbell	铃儿响叮铛 (意大利, V133I)	铃儿响叮铛 (意大利, V133I)	IGS
+gp98	国际长途大赛车 '98	国际长途大赛车 '98	unknown
 lhb	龙虎榜 (V035C)	龙虎榜 (V035C)	IGS
 lhba	龙虎榜 (V033C)	龙虎榜 (V033C)	IGS
 dbc	大阪城 (V027H)	大阪城 (V027H)	IGS
@@ -6592,6 +6599,7 @@ mermaid	女子游泳	女子游泳	[Sanritsu] Rock-Ola
 yachtmn	帆船运动员	帆船运动员	[Sanritsu] Esco
 rougien	太空梭	太空梭	Sanritsu
 drmicro	米克罗博士	米克罗博士	Sanritsu
+jantotsu	四人打麻雀	四人打麻雀	Sanritsu
 appoooh	摔跤擂台	摔跤擂台	[Sanritsu] Sega
 robowres	摔跤机器人	摔跤机器人	Sega
 robowrb	摔跤机器人 (盗版)	摔跤机器人 (盗版)	bootleg
@@ -7105,6 +7113,7 @@ jolycdev	快乐纸牌 (Evona 电子)	快乐纸牌 (Evona 电子)	TAB/Evona
 jolyccra	快乐纸牌 (克罗地亚, 第1套)	快乐纸牌 (克罗地亚, 第1套)	TAB-Austria
 jolyccrb	快乐纸牌 (克罗地亚, 第2套)	快乐纸牌 (克罗地亚, 第2套)	Soft Design
 jolycdit	快乐纸牌 (意大利, blue TAB board, 加密)	快乐纸牌 (意大利, blue TAB board, 加密)	bootleg
+jolycdib	快乐纸牌 (意大利, 加密 盗版)	快乐纸牌 (意大利, 加密 盗版)	bootleg
 sjcd2kx3	超级纸牌 2000 - 3x	超级纸牌 2000 - 3x	M.P.
 jolycdab	快乐纸牌 (奥地利, 欢乐世界, 盗版)	快乐纸牌 (奥地利, 欢乐世界, 盗版)	Inter Games
 bigdeal	大交易 (匈牙利, 第1套)	大交易 (匈牙利, 第1套)	Funworld
@@ -7157,7 +7166,6 @@ ampkr95	美式扑克 95	美式扑克 95	Bootleg
 videomat	扑克输赢 (polish 盗版)	扑克输赢 (polish 盗版)	Bootleg
 sigmapkr	思格玛扑克	思格玛扑克	Sigma Inc.
 sigma2k	思格玛扑克 2000	思格玛扑克 2000	Sigma Inc.
-lucky8	幸运 8 线	幸运 8 线	Falcon
 sidewndr	旁敲侧击	旁敲侧击	ACE
 spellbnd	目眩神迷	目眩神迷	ACE
 starspnr	星饵传说 (Dutch/Nederlands)	星饵传说 (Dutch/Nederlands)	ACE
@@ -7307,8 +7315,10 @@ draco	天龙星座	天龙星座	Cidelsa
 rockduck	摇摆鸭子 (工程版?)	摇摆鸭子 (工程版?)	Datel SAS
 tetriunk	俄罗斯方块 (未知制造商)	俄罗斯方块 (未知制造商)	Unknown
 smstrv	问答 百科 (sms)	问答 百科 (sms)	SMS MFG CORP
-skylncr	太空骑兵 (伯顿国际贸易)	太空骑兵 (伯顿国际贸易)	Bordun International
-madzoo	疯狂动物园	疯狂动物园	Bordun International
+skylncr	天空雷射枪 (Bordun, ver.U450C)	天空雷射枪 (Bordun, ver.U450C)	Bordun International
+butrfly	蝴蝶视频游戏 (ver.U350C)	蝴蝶视频游戏 (ver.U350C)	Bordun International
+madzoo	疯狂动物园 (ver.U450C)	疯狂动物园 (ver.U450C)	Bordun International
+leader	首脑	首脑	Bootleg
 livequiz	实况问答秀	实况问答秀	Andamiro
 cowrace	乳牛大赛	乳牛大赛	<unknown>
 mjsiyoub	麻雀校园	麻雀校园	Visco
@@ -7373,7 +7383,7 @@ magictga	魔法纸牌 (第2套)	魔法纸牌 (第2套)	Acclaim
 re900	轮盘 RE-900	轮盘 RE-900	Entretenimientos GEMINIS
 bs94	幸运积分 '94	幸运积分 '94	Entretenimientos GEMINIS
 jokrwild	梭哈大师 (加密版)	梭哈大师 (加密版)	Sigma
-pesadelo	Pesadelo (巴西版 盗版 科乐美 神州骑士 MSX)	Pesadelo (巴西版 盗版 科乐美 神州骑士 MSX)	bootleg
+pesadelo	魔域传说 (巴西版 盗版 科乐美 神州骑士 MSX)	魔域传说 (巴西版 盗版 科乐美 神州骑士 MSX)	bootleg
 spool99	超真实弹珠台 99 (版本 0.36)	超真实弹珠台 99 (版本 0.36)	Electronic Projects
 spool99a	超真实弹珠台 99 (版本 0.31)	超真实弹珠台 99 (版本 0.31)	Electronic Projects
 4roses	四玫瑰 (加密版, 第1套)	四玫瑰 (加密版, 第1套)	Unknown
@@ -7412,6 +7422,8 @@ grandprx	国际长途大赛车	国际长途大赛车	4fun
 showhand	手秀扑克	手秀扑克	Astro Corp.
 cb2001	樱桃和黄金 2001	樱桃和黄金 2001	Dyna
 queen	皇后?	皇后?	STG?
+caswin	水果牌	水果牌	Aristocrat
+janshi	Janshi	Janshi	Eagle
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
