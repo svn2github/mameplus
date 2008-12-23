@@ -177,12 +177,12 @@ int ui_mess_handler_ingame(running_machine *machine)
 	}
 
 	/* determine if we should disable the rest of the UI */
-	ui_disabled = ui_mess_use_new_ui()
+	ui_disabled = ui_mess_use_new_ui(machine)
 		|| ((machine->gamedrv->flags & GAME_COMPUTER) && !machine->ui_mess_data->active);
 
 
 	/* is ScrLk UI toggling applicable here? */
-	if (!ui_mess_use_new_ui() && (machine->gamedrv->flags & GAME_COMPUTER))
+	if (!ui_mess_use_new_ui(machine) && (machine->gamedrv->flags & GAME_COMPUTER))
 	{
 		/* are we toggling the UI with ScrLk? */
 		if (ui_input_pressed(machine, IPT_UI_TOGGLE_UI))
@@ -323,11 +323,11 @@ void ui_mess_menu_image_info(running_machine *machine, ui_menu *menu, void *para
 	is in use
 -------------------------------------------------*/
 
-int ui_mess_use_new_ui(void)
+int ui_mess_use_new_ui(running_machine *machine)
 {
 #if (defined(WIN32) || !defined(__GNUC__)) && !defined(SDLMAME_WIN32)
 	//mamep: force new ui if dummy image is used, always disable newui otherwise
-	if (has_dummy_image(NULL))
+	if (has_dummy_image(machine))
 		return TRUE;
 #endif
 	return FALSE;

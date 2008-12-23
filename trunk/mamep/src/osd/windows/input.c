@@ -776,7 +776,7 @@ int wininput_vkey_for_mame_code(input_code code)
 //  osd_customize_mapping_list
 //============================================================
 
-void osd_customize_input_type_list(input_type_desc *typelist)
+void osd_customize_input_type_list(running_machine *machine, input_type_desc *typelist)
 {
 	input_type_desc *typedesc;
 
@@ -799,7 +799,7 @@ void osd_customize_input_type_list(input_type_desc *typelist)
 
 #ifdef MESS
 			case IPT_OSD_2:
-				if (ui_mess_use_new_ui())
+				if (ui_mess_use_new_ui(machine))
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
 					typedesc->name = _WINDOWS("Toggle Menubar");

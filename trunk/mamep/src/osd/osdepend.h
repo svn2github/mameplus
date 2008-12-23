@@ -146,7 +146,7 @@ void osd_set_mastervolume(int attenuation);
   This function is called on startup, before reading the configuration from disk.
   Scan the list, and change the keys/joysticks you want.
 */
-void osd_customize_input_type_list(input_type_desc *typelist);
+void osd_customize_input_type_list(running_machine *machine, input_type_desc *typelist);
 
 
 

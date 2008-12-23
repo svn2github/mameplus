@@ -2261,7 +2261,7 @@ int win_create_menu(running_machine *machine, HMENU *menus)
 	HMENU menu_bar = NULL;
 	HMODULE module;
 
-	if (ui_mess_use_new_ui())
+	if (ui_mess_use_new_ui(machine))
 	{
 		module = win_resource_module();
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));
