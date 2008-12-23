@@ -72,7 +72,7 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
-#128u7	$(MESS_DRIVERS)/gba.o	 	\
+	$(MESS_DRIVERS)/gba.o	 	\
 
 $(MESSOBJ)/nec.a:	   \
 	$(MESS_MACHINE)/pce.o	 \
