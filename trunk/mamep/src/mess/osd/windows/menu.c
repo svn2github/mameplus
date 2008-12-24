@@ -23,7 +23,6 @@
 #include "windows/input.h"
 #include "dialog.h"
 #include "opcntrl.h"
-#include "deprecat.h"
 #include "mslegacy.h"
 #include "strconv.h"
 #include "utils.h"
@@ -2304,8 +2303,11 @@ LRESULT CALLBACK win_mess_window_proc(HWND wnd, UINT message, WPARAM wparam, LPA
 			break;
 
 		case WM_PASTE:
-			// FIXME 0.128u7
-			ui_mess_paste(NULL /*Machine*/);
+			{
+				LONG_PTR ptr = GetWindowLongPtr(wnd, GWLP_USERDATA);
+				win_window_info *window = (win_window_info *)ptr;
+				ui_mess_paste(window->machine);
+			}
 			break;
 
 		case WM_COMMAND:
