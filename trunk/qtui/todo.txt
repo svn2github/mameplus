@@ -1,8 +1,16 @@
-﻿//Done
+﻿//Web
+render xml feed
+multi lang basic UI
+read/write cookie
+theme
+
+//Done
 //4.5 bug
-/ unterminated thread 4.5 bug?
 / crash on local game list
-2 sorting doesnt recover position?
+
+/ checked disconn/conn SIGNALS
+/ IPS Language and Enforce relationship option
+/ crash on refresh console
 
 //Linux
 D column sorting
@@ -17,7 +25,7 @@ mounted snap doesnt load
 * ips dir must restart
 * icon for local switching
 * new version detection
-* 就是，检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
+* 检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
 
 //Options
 * support mamep 127 paths
@@ -35,7 +43,6 @@ mounted snap doesnt load
 
 //GameList
 2 rewrite icon loading, large icon view
-D crash on refresh GBA
 * 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 1 provide a builtin fallback for zip folders
 * widget loaded prompt
@@ -124,7 +131,6 @@ D crash on 128u2->u3? missing sets
 
 [sanity check]
 * check new/delete operator
-* disconn / conn pairs
 * ensure ->load() functions only called once, no multiple connect()
 
 [qt compile config]
@@ -142,6 +148,7 @@ cd /mnt/hgfs/qtui
 
 linux:
 export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.5.0-beta1/bin:$PATH
 mac:
 export PATH=/Developer/usr/bin:$PATH
 
@@ -164,8 +171,5 @@ mamep snaps
 hazemd icons
 
 verify spclone dips
-gba no sound
 
 add makelang text, src repo link on main page
-
-ftp://ftp.trolltech.com/qt/snapshots/qt-all-opensource-src-4.5.0-snapshot-20080918.tar.gz

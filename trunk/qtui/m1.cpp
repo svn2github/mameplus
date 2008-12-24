@@ -14,13 +14,17 @@ M1UI::M1UI(QWidget *parent)
 	twSongList->setHeaderLabels(m1Headers);
 	twSongList->header()->moveSection(2, 1);
 
-	const QStringList m1Langs = (QStringList()
-		<< "en" << tr("jp"));
-	cmbLang->addItems(m1Langs);
-	QString m1_language = guiSettings.value("m1_language").toString();
-	cmbLang->setCurrentIndex((m1_language != "en") ? 1 : 0);
+	const QStringList langs = (QStringList()
+		<< "en" << "jp");
+	cmbLang->addItems(langs);
 
-	if (m1_language == "jp")
+	QString m1Language = guiSettings.value("m1_language").toString();
+	int sel = langs.indexOf(m1Language);
+	if (sel < 0)
+		sel = 0;
+	cmbLang->setCurrentIndex(sel);
+
+	if (m1Language == "jp")
 	{
 		QFont font;
 		font.setFamily("MS Gothic");

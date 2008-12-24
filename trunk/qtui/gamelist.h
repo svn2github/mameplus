@@ -133,6 +133,7 @@ class Gamelist : public QObject
 	Q_OBJECT
 
 public:
+	bool hasInitd;
 	QProcess *loadProc;
 	QString mameOutputBuf;
 	QStringList xmlLines;
@@ -154,7 +155,6 @@ public:
 	~Gamelist();
 
 	void loadIcon();
-	void restoreGameSelection();
 
 public slots:
 	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
@@ -163,6 +163,7 @@ public slots:
 	void updateContextMenu();
 	void showHeaderContextMenu(const QPoint &);
 	void updateHeaderContextMenu();
+	void restoreGameSelection();
 
 	void loadDefaultIni();
 	void runMame(bool = false);

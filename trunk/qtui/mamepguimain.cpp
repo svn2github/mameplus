@@ -3,7 +3,7 @@
 #ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-#endif
+#endif /* Q_OS_WIN */
 
 // global variables
 MainWindow *win;
@@ -228,8 +228,10 @@ MainWindow::MainWindow(QWidget *parent)
 	dirsUI = new Dirs(this);
 	optionsUI = new Options(this);
 	aboutUI = new About(this);
+#ifdef Q_OS_WIN
 	ipsUI = new IPS(this);
 	m1UI = new M1UI(this);
+#endif /* Q_OS_WIN */
 
 	QTimer::singleShot(0, this, SLOT(init()));
 }
@@ -312,10 +314,10 @@ void MainWindow::init()
 			win->log("SDL_INIT_VIDEO failed.");
 		else
 			sdlInited = true;
-#endif
 
 	ipsUI->init();
-	
+#endif
+
 	// init mainwindow
 	win->log("win->init()");
 	//fixme: should be in constructor
@@ -400,15 +402,7 @@ void MainWindow::init()
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(mamepIcon);
 
-	//show UI
-//	show();
-	loadLayout();
-	setDockOptions();
-	qApp->processEvents();
 
-	// must gameList->init(true) before loadLayout()
-	gameList->init(true, GAMELIST_INIT_FULL);
-	show();
 
 	// must init app style before background
 	if (gui_style.isEmpty())
@@ -459,6 +453,14 @@ void MainWindow::init()
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
 
+	//show UI
+	loadLayout();
+	setDockOptions();
+
+	// must gameList->init(true) before loadLayout()
+	gameList->init(true, GAMELIST_INIT_FULL);
+	show();
+
 	// connect misc signal and slots
 
 	// Docked snapshots
@@ -497,12 +499,12 @@ void MainWindow::init()
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
 
+#ifdef Q_OS_WIN
 	//init M1 in a background thread
 	m1 = new M1(this);
 	m1->init();
+#endif /* Q_OS_WIN */
 
-	// load icon in a background thread
-	gameList->loadIcon();
 	gameList->restoreGameSelection();
 }
 
@@ -512,13 +514,22 @@ void MainWindow::setVersion()
 
 	QString m1Ver = "";
 	QString m1VerString = "";
+	QString sdlVerString = "";
+
+#ifdef Q_OS_WIN
 	if (m1 != NULL && m1->available)
 	{
 		m1Ver = m1->version;
 		m1VerString = QString("<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %1 multi-platform arcade music emulator &copy; R. Belmont")
 						.arg(m1Ver);
 	}
-	
+
+	sdlVerString = QString("<a href=\"http://www.libsdl.org\">SDL</a> %1.%2.%3 - Simple DirectMedia Layer<br>")
+					.arg(SDL_MAJOR_VERSION)
+					.arg(SDL_MINOR_VERSION)
+					.arg(SDL_PATCHLEVEL);
+#endif /* Q_OS_WIN */
+
 	QString strVersion = QString(
 		"<html>"
 		"<head>"
@@ -531,18 +542,20 @@ void MainWindow::setVersion()
 		"<hr>"
 		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
 		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
-		"<a href=\"http://www.libsdl.org\">SDL</a> %4  - Simple DirectMedia Layer<br>"
+		"%4"
 		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 5")
+		.arg("1.3 beta 6")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
-		.arg(QString("%1.%2.%3").arg(SDL_MAJOR_VERSION).arg(SDL_MINOR_VERSION).arg(SDL_PATCHLEVEL))
+		.arg(sdlVerString)
 		.arg(m1VerString);
 
 	aboutUI->tbVersion->setHtml(strVersion);
+#ifdef Q_OS_WIN
 	m1UI->setWindowTitle("M1 - " + m1Ver);
+#endif /* Q_OS_WIN */
 
 	QFileInfo fi(mame_binary);
 
@@ -559,8 +572,10 @@ void MainWindow::on_actionPlay_activated()
 
 void MainWindow::on_actionConfigIPS_activated()
 {
+#ifdef Q_OS_WIN
 	ipsUI->updateList();
 	ipsUI->exec();
+#endif /* Q_OS_WIN */
 }
 
 void MainWindow::on_actionRefresh_activated()
@@ -759,6 +774,8 @@ void MainWindow::initSettings()
 		<< "background_file"
 		<< "m1_directory"
 		<< "m1_language"
+		<< "ips_language"
+		<< "ips_relationship"
 		<< "gui_style"
 		<< "background_stretch"
 		<< "mame_binary"
@@ -862,7 +879,11 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
 	guiSettings.setValue("background_file", background_file);
 	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
+#ifdef Q_OS_WIN
 	guiSettings.setValue("m1_language", m1UI->cmbLang->currentText());
+	guiSettings.setValue("ips_language", ipsUI->cmbLang->currentText());
+	guiSettings.setValue("ips_relationship", ipsUI->chkDepend->isChecked() ? 1 : 0);
+#endif /* Q_OS_WIN */
 	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
 
@@ -1033,9 +1054,11 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentBg(win->tbMameinfo);
 		setTransparentBg(win->tbStory);
 		setTransparentBg(win->tbCommand);
+#ifdef Q_OS_WIN
 		setTransparentBg(m1UI->twSongList);
 		setTransparentStyle(m1UI->groupBox);
 		setTransparentStyle(m1UI->lcdNumber);
+#endif /* Q_OS_WIN */
 	}
 }
 

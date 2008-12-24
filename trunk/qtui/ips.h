@@ -12,11 +12,11 @@ public:
 	IPS(QWidget *parent = 0);
 	void init();
 	bool checkAvailable(const QString & = NULL);
-	void updateList();
 	void parseRelations();
 
 public slots:
-	void parse(QTreeWidgetItem *, QTreeWidgetItem *, const QString & = NULL);
+	void parse(QTreeWidgetItem *, QTreeWidgetItem *, const QString & = NULL, const QString & = NULL);
+	void updateList();
 	void save();
 	void clear();
 	void applyRelations(QTreeWidgetItem * = NULL, int = 0);

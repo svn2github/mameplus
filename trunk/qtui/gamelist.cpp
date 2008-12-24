@@ -1137,6 +1137,7 @@ void XTreeView::paintEvent(QPaintEvent *event)
 
 Gamelist::Gamelist(QObject *parent) : 
 QObject(parent),
+hasInitd(false),
 loadProc(NULL),
 numTotalGames(-1),
 menu(NULL),
@@ -1199,8 +1200,11 @@ QString Gamelist::getViewString(const QModelIndex &index, int column) const
 
 void Gamelist::updateSelection()
 {
-	selectionThread.myqueue.enqueue(currentGame);
-	selectionThread.update();
+	if (hasInitd && mameGame->nameInfoMap.contains(currentGame))
+	{
+		selectionThread.myqueue.enqueue(currentGame);
+		selectionThread.update();
+	}
 }
 
 void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & previous)
@@ -1241,9 +1245,11 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		selectionThread.myqueue.enqueue(currentGame);
 		selectionThread.update();
 
+#ifdef Q_OS_WIN
 		//fixme: move to thread!
 		if (m1 != NULL && m1->available)
 			m1->updateList();
+#endif /* Q_OS_WIN */
 
 		//update selected rows, fixme: performance bottleneck!
 		gameListModel->rowChanged(gameListPModel->mapToSource(current));
@@ -1259,7 +1265,7 @@ void Gamelist::restoreGameSelection()
 		return;
 
 	QString gameName = currentGame;
-	QModelIndex i;
+	QModelIndex i, pi;
 
 	// select current game
 	if (mameGame->nameInfoMap.contains(gameName))
@@ -1267,16 +1273,20 @@ void Gamelist::restoreGameSelection()
 		GameInfo *gameinfo = mameGame->nameInfoMap[gameName];
 		//fixme: should consider other columns
 		i = gameListModel->index(COL_DESC, gameinfo->pModItem);
-		win->log("restore callback: " + gameName);
+		win->log("restore callback valid: " + gameName);
 	}
 
-	QModelIndex pi = gameListPModel->mapFromSource(i);
+	if (i.isValid())
+		pi = gameListPModel->mapFromSource(i);
 
 	if (!pi.isValid())
 	{
 		// select first row otherwise
 		pi = gameListPModel->index(0, 0, QModelIndex());
 	}
+
+	if (!pi.isValid())
+		return;
 
 	win->tvGameList->setCurrentIndex(pi);
 	win->lvGameList->setCurrentIndex(pi);
@@ -1285,11 +1295,7 @@ void Gamelist::restoreGameSelection()
 	win->lvGameList->scrollTo(pi, QAbstractItemView::PositionAtCenter);
 
 	win->labelGameCount->setText(tr("%1 games").arg(visibleGames.count()));
-/*
-	win->log("--- cleared ---");
-	foreach (QString g, visibleGames)
-		win->log("vis: " + g);
-*/
+	win->log("restore callback: " + currentGame);
 }
 
 // we must update GUI in main thread
@@ -1364,6 +1370,7 @@ void Gamelist::setupSnap(int snapType)
 
 void Gamelist::init(bool toggleState, int initMethod)
 {
+	//filter button's toggled(false) SIGNAL
 	if (!toggleState)
 		return;
 
@@ -1377,15 +1384,16 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	int des11n_status = QDataStream::Ok;
 
-	// only des11n on app start
 	//fixme: illogical call before mameGame init
+	// des11n on app start
 	if (!mameGame)
 		des11n_status = mameGame->des11n();
 
-//	win->poplog(QString("des11n status: %1").arg(des11n_status));
-
 	if (des11n_status == QDataStream::Ok)
 	{
+		//disable sorting before insertion for better performance
+		win->tvGameList->setSortingEnabled(false);
+
 		// disable ctrl updating before deleting its model
 		win->lvGameList->disconnect(SIGNAL(activated(const QModelIndex &)));
 		win->lvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
@@ -1398,9 +1406,11 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->tvGameList->hide();
 		win->layMainView->removeWidget(win->tvGameList);
 
+		//delete the model
 		if (gameListModel)
 			delete gameListModel;
 
+		//init the model
 		// Grouped
 		if (list_mode == win->actionGrouped->objectName().remove("action"))
 		{
@@ -1420,6 +1430,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->layMainView->addWidget(win->tvGameList);		
 		}
 
+		//delete/init proxy model
 		if (gameListPModel)
 			delete gameListPModel;
 		gameListPModel = new GameListSortFilterProxyModel(win);
@@ -1445,7 +1456,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		{
 			/* init everything else here after we have mameGame */
 			// init folders
-			gameList->initFolders();
+			initFolders();
 
 			//fixme: something here should be moved to opt
 			// init options from default mame.ini
@@ -1497,12 +1508,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 		loadMMO(UI_MSG_LIST);
 		loadMMO(UI_MSG_MANUFACTURE);
 
+		//disconn'd
 		connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
 		connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
 
 		// connect gameListModel/gameListPModel signals after the view init completed
 		// connect gameListModel/gameListPModel signals after mameOpts init
-		connect(gameListPModel, SIGNAL(layoutChanged()), this, SLOT(restoreGameSelection()));
 		connect(win->tvGameList->selectionModel(),
 				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
@@ -1510,13 +1521,10 @@ void Gamelist::init(bool toggleState, int initMethod)
 				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
 				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
 
-		//fixme: how about lv?
-		win->tvGameList->setSortingEnabled(true);
-		win->tvGameList->setFocus();
-
 		//refresh current list
 		filterRegExpChanged2(win->treeFolders->currentItem());
 
+		//show the list
 		// Grouped
 		if (list_mode == win->actionGrouped->text())
 			win->tvGameList->show();
@@ -1541,8 +1549,16 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->tvGameList->header()->restoreState(column_state);
 			restoreFolderSelection();
 		}
-		
-		// everything is done
+
+		//sorting 
+		//fixme: how about lv?
+		win->tvGameList->setSortingEnabled(true);
+		win->tvGameList->setFocus();
+
+		// attach menus
+		initMenus();
+
+		// everything is done, enable ctrls now
 		win->treeFolders->setEnabled(true);
 //		win->actionLargeIcons->setEnabled(true);
 		win->actionDetails->setEnabled(true);
@@ -1555,8 +1571,13 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->actionPlay->setEnabled(true);
 		win->lineEditSearch->setEnabled(true);
 
-		// attach menus
-		initMenus();
+		// load icon in a background thread
+		loadIcon();
+
+		hasInitd = true;
+
+		restoreGameSelection();
+		updateSelection();
 
 		win->log(QString("init'd game count %1").arg(mameGame->nameInfoMap.count()));
 	}
@@ -1578,6 +1599,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 void Gamelist::loadIcon()
 {
 	// load icons
+	loadIconWatcher.disconnect(SIGNAL(finished()));
 	connect(&loadIconWatcher, SIGNAL(finished()), this, SLOT(postLoadIcon()));
 	QFuture<void> future = QtConcurrent::run(this, &Gamelist::loadIconWorkder);
 	loadIconWatcher.setFuture(future);
@@ -1691,7 +1713,6 @@ void Gamelist::loadIconWorkder()
 void Gamelist::postLoadIcon()
 {
 	win->tvGameList->update(win->tvGameList->rect());
-//	restoreGameSelection();
 
 	win->log(QString("loaded %1 icons").arg(loadIconStatus));
 	if (loadIconStatus == 0 && defaultGameListDelegate != NULL)
@@ -1831,7 +1852,9 @@ void Gamelist::initMenus()
 	
 		menu->addAction(win->actionPlay);
 //		menu->addAction(win->actionPlayInp);
+#ifdef Q_OS_WIN
 		menu->addAction(win->actionConfigIPS);
+#endif /* Q_OS_WIN */
 		menu->addSeparator();
 //		menu->addAction(win->actionAudit);
 //		menu->addSeparator();
@@ -1850,6 +1873,9 @@ void Gamelist::initMenus()
 	{
 		headerMenu = new QMenu(win->tvGameList);
 	
+		headerMenu->addAction(win->actionColSortAscending);
+		headerMenu->addAction(win->actionColSortDescending);
+		headerMenu->addSeparator();
 		headerMenu->addAction(win->actionColDescription);
 		headerMenu->addAction(win->actionColName);
 		headerMenu->addAction(win->actionColROMs);
@@ -1857,9 +1883,6 @@ void Gamelist::initMenus()
 		headerMenu->addAction(win->actionColDriver);
 		headerMenu->addAction(win->actionColYear);
 		headerMenu->addAction(win->actionColCloneOf);
-		headerMenu->addSeparator();
-		headerMenu->addAction(win->actionColSortAscending);
-		headerMenu->addAction(win->actionColSortDescending);
 	
 		// add sorting action to an exclusive group
 		QActionGroup *sortingActions = new QActionGroup(headerMenu);
@@ -1867,14 +1890,14 @@ void Gamelist::initMenus()
 		sortingActions->addAction(win->actionColSortDescending);
 	}
 
-//fixme: for some reason, it doesnt work on linux?
-#ifdef Q_WS_WIN
 	win->tvGameList->header()->setContextMenuPolicy (Qt::CustomContextMenu);
 	connect(win->tvGameList->header(), SIGNAL(customContextMenuRequested(const QPoint &)), 
 			this, SLOT(showHeaderContextMenu(const QPoint &)));
+	connect(win->tvGameList->header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), 
+			this, SLOT(restoreGameSelection()));
+
 	connect(headerMenu, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 	connect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
-#endif
 }
 
 void Gamelist::showContextMenu(const QPoint &p)
@@ -1890,7 +1913,9 @@ void Gamelist::updateContextMenu()
 		return;
 	}
 
+#ifdef Q_OS_WIN
 	win->actionConfigIPS->setEnabled(ipsUI->checkAvailable(currentGame));
+#endif /* Q_OS_WIN */
 
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
@@ -1962,11 +1987,9 @@ void Gamelist::loadListXmlFinished(int, QProcess::ExitStatus)
 	procMan->procMap.remove(proc);
 
 	parse();
-//	win->poplog("PRE load ini ()");
 
 	//chain
 	loadDefaultIni();
-//	win->poplog("end of gameList->loadFin()");
 }
 
 void Gamelist::loadDefaultIni()
@@ -2326,6 +2349,7 @@ void Gamelist::initFolders()
 			}
 	}
 
+	win->treeFolders->disconnect(SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)));
 	connect(win->treeFolders, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)),
 		this, SLOT(filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *)));
 

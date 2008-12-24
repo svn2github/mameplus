@@ -124,6 +124,7 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 		case MAMEOPT_TYPE_FLOAT:
 			_slider = static_cast<QSlider*>(subWidget);
 			_sliderLabel = static_cast<QLabel*>(subWidget2);
+			_slider->disconnect(SIGNAL(valueChanged(int)));
 			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
 			break;
 		
@@ -134,6 +135,7 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 		case MAMEOPT_TYPE_DIR:
 		case MAMEOPT_TYPE_DIRS:
 			_btnFileDlg = static_cast<QToolButton*>(subWidget2);
+			_btnFileDlg->disconnect(SIGNAL(clicked()));
 			if (optType == MAMEOPT_TYPE_DIRS)
 				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDirectories()));
 			else if (optType == MAMEOPT_TYPE_DIR)
@@ -760,6 +762,7 @@ void OptionDelegate::setDirectories()
 
 	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
 
+	dirsUI->disconnect(SIGNAL(accepted()));
 	connect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
 
 	//take existing dir
@@ -1047,8 +1050,9 @@ void OptionUtils::initOption()
 		lstCatView->setIconSize(QSize(24, 24));
 		lstCatView->setMaximumWidth(130);
 
-		connect(optInfos[optLevel]->optView->header(), SIGNAL(sectionResized(int, int, int)), 
-			this, SLOT(updateHeaderSize(int, int, int)));
+		QHeaderView *header = optInfos[optLevel]->optView->header();
+		header->disconnect(SIGNAL(sectionResized(int, int, int)));
+		connect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
 	}
 }
 

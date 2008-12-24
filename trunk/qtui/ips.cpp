@@ -2,6 +2,9 @@
 
 IPS *ipsUI = NULL;
 
+const QStringList ipsLangs = (QStringList()
+	<< "zh_CN" << "zh_TW" << "en_US" );
+
 IPS::IPS(QWidget *parent) : 
 QDialog(parent),
 ipspath(NULL)
@@ -15,9 +18,19 @@ void IPS::init()
 		<< tr("Description") << tr("Name"));
 	twList->setHeaderLabels(headers);
 
-	const QStringList langs = (QStringList()
-		<< "zh_CN" << "en_US");
-	cmbLang->addItems(langs);
+	cmbLang->addItems(ipsLangs);
+
+	QString ipsLanguage = guiSettings.value("ips_language").toString();
+	int sel = ipsLangs.indexOf(ipsLanguage);
+	if (sel < 0)
+	{
+		sel = ipsLangs.indexOf(language);
+		if (sel < 0)
+			sel = 0;
+	}
+	cmbLang->setCurrentIndex(sel);
+
+	chkDepend->setChecked(guiSettings.value("ips_relationship", "1").toInt() == 1);
 
 	connect(twList, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), 
 			this, SLOT(parse(QTreeWidgetItem *, QTreeWidgetItem *)));
@@ -25,11 +38,12 @@ void IPS::init()
 	connect(btnClear, SIGNAL(clicked(bool)), this, SLOT(clear()));
 	//for relations management
 	connect(twList, SIGNAL(itemChanged(QTreeWidgetItem *, int)), this, SLOT(applyRelations(QTreeWidgetItem *, int)));
+	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), this, SLOT(updateList()));
 }
 
 void IPS::applyRelations(QTreeWidgetItem *item, int col)
 {
-	if (col == 1 || stopListenRelations)
+	if (col == 1 || stopListenRelations || !chkDepend->isChecked())
 		return;
 
 	QString datName = item->text(1).toLower().trimmed();
@@ -75,7 +89,7 @@ void IPS::validateConf(const QString &datName)
 
 void IPS::validateDep(const QString &datName)
 {
-	//depend case A: if parent (datName) is unchecked, uncheck all dependant children
+	//depend case A: if parent ($datName) is unchecked, uncheck all its dependant children
 	if (itemStateTable[datName] == 0)
 	{
 		//depTable might contain more than 1 entries for a single parent
@@ -93,23 +107,24 @@ void IPS::validateDep(const QString &datName)
 
 				bool isUncheck = true;
 
-				// if any other parent is checked, ignore the unchecking
+				// if any other parent (that is not $datName) is checked, ignore the unchecking
 				QHashIterator<QString, QStringList> it(depTable);
 				while (it.hasNext())
 				{
 					it.next();
 					QString parent = it.key();
 
-					//only other parents
+					//if any other parent (that is not $datName)
 					if (parent == datName)
 						continue;
-					//only when another parent is checked
+					//is checked
 					if (itemStateTable[parent] == 0)
 						continue;
 
 					QStringList children = it.value();
 					if (children.contains(depChild))
 					{
+						//ignore the unchecking
 						isUncheck = false;
 						break;
 					}
@@ -242,7 +257,7 @@ bool IPS::checkAvailable(const QString &gameName)
 	return true;
 }
 
-void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QString &_datName)
+void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QString &_datName, const QString & fallbackLang)
 {
 	QString datName = _datName;
 	
@@ -257,7 +272,11 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 	boldFont.setBold(true);
 	static const QBrush brushCat = QBrush(QColor(0, 21, 110, 255));
 
-	const QString lang = "[" + cmbLang->currentText() + "]";
+	QString lang;
+	if (fallbackLang.isEmpty())
+		lang = "[" + cmbLang->currentText() + "]";
+	else
+		lang = fallbackLang;
 
 	QFile datFile(ipspath + currentGame + "/" + datName);
 	QFileInfo fi(datFile);
@@ -276,6 +295,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 		bool startCat = false;
 		//met long desc
 		bool startDesc = false;
+		bool success = false;
 
 		do
 		{
@@ -286,7 +306,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 			{
 				startDesc = false;
 			}
-	
+			
 			if (current == NULL && startCat)
 			{
 				QStringList cats = line.split("/");
@@ -302,7 +322,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 				{
 					QString cat = line.left(sep);
 					shortDesc = line.right(line.size() - sep - 1);
-	
+
 					QList<QTreeWidgetItem *> foundItems = twList->findItems(cat, Qt::MatchFixedString, 0);
 					if (foundItems.isEmpty())
 					{
@@ -328,6 +348,8 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 
 				if (!datName.isEmpty())
 					itemStateTable.insert(datName.toLower(), 0);
+
+				success = true;
 			
 				startCat = false;
 			}
@@ -346,6 +368,15 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 		}
 		while (!line.isNull());
 
+		//use fallback language to parse again
+		QString fallbackTag = "[" + ipsLangs[0] + "]";
+		if (current == NULL && lang != fallbackTag && !success)
+		{
+			win->log(QString("lang fallback: %1").arg(_datName));
+			parse(current, previous, _datName, fallbackTag);
+		}
+
+		//update desc and snap
 		if (current != NULL)
 		{
 			tbDesc->setHtml(desc);
@@ -374,6 +405,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 void IPS::updateList()
 {
 	twList->clear();
+
 	for (int i = 0; i < datFiles.count(); i++)
 		parse(NULL, NULL, datFiles[i]);
 	twList->expandAll();
