@@ -808,29 +808,35 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 /* Build CPU info string */
 static LPCWSTR GameInfoCPU(UINT nIndex)
 {
-	const device_config *device;
-	static WCHAR buf[1024];
+	static WCHAR buf[1024] = TEXT("");
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+	const device_config *cpu;
 
 	ZeroMemory(buf, sizeof(buf));
 
-	for (device = cpu_first(config); device != NULL; device = cpu_next(device))
+	cpu = device_list_class_first(config->devicelist, DEVICE_CLASS_CPU_CHIP);
+	while (cpu != NULL)
 	{
-		if (device->clock >= 1000000)
+		if (cpu->clock >= 1000000)
 		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%06d MHz"),
-				    _Unicode(device_get_name(device)),
-				    device->clock / 1000000,
-				    device->clock % 1000000);
-		} else {
+				 _Unicode(cpu_get_name(cpu)),
+				cpu->clock / 1000000,
+				cpu->clock % 1000000);
+		}
+		else
+		{
 			swprintf(&buf[wcslen(buf)], TEXT("%s %d.%03d kHz"),
-				    _Unicode(device_get_name(device)),
-				    device->clock / 1000,
-				    device->clock % 1000);
+				_Unicode(cpu_get_name(cpu)),
+				cpu->clock / 1000,
+				cpu->clock % 1000);
 		}
 
 		wcscat(buf, TEXT("\n"));
+
+		cpu = device_list_class_next(cpu, DEVICE_CLASS_CPU_CHIP);
 	}
+
 	/* Free the structure */
 	machine_config_free(config);
 

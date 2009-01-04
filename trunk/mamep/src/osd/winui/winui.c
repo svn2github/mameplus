@@ -2255,7 +2255,7 @@ static BOOL Win32UI_init(HINSTANCE hInstance, LPSTR lpCmdLine, int nCmdShow)
 	InitCommonControls();
 
 	// Are we using an Old comctl32.dll?
-	dprintf("common controlversion %i %i",common_control_version >> 16,
+	dprintf("common controlversion %ld %ld",common_control_version >> 16,
 	        common_control_version & 0xffff);
 			 
 	oldControl = (common_control_version < PACKVERSION(4,71));
