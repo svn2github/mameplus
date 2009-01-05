@@ -298,10 +298,6 @@ struct _rom_load_data
 ***************************************************************************/
 
 
-/* get bios number */
-//mamep: fixme: remove it when new GUI is done
-int determine_bios_rom(rom_load_data *romdata, core_options *options);
-
 /* ----- ROM processing ----- */
 
 /* load the ROMs and open the disk  images associated with the given machine */

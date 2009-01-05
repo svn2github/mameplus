@@ -253,8 +253,6 @@ static void InitializeD3DVersionUI(HWND hwnd);
 static void InitializeVideoUI(HWND hwnd);
 static void InitializeEffectUI(HWND hWnd);
 static void InitializeBIOSUI(HWND hwnd);
-//mamep: BIOS page
-static void InitializeDefaultBIOSUI(HWND hwnd);
 static void InitializeControllerMappingUI(HWND hwnd);
 #ifdef USE_SCALE_EFFECTS
 static void InitializeScaleEffectUI(HWND hwnd);
@@ -308,8 +306,6 @@ static core_options *pCurrentOpts = NULL;
 static core_options *pOptsGlobal;
 static core_options *pOptsVector;
 static core_options *pOptsSource;
-//mamep: BIOS page
-static char *pBiosName[MAX_SYSTEM_BIOS];
 static datamap *properties_datamap;
 
 static int  g_nGame            = 0;
@@ -350,21 +346,6 @@ static HBRUSH background_brush = NULL;
 BOOL PropSheetFilter_Vector(const machine_config *drv, const game_driver *gamedrv)
 {
 	return isDriverVector(drv);
-}
-
-//mamep: BIOS page
-BOOL PropSheetFilter_BIOS(const machine_config *drv, const game_driver *gamedrv)
-{
-#if 0
-	//only if driver switch config is in BIOS page
-	return g_nPropertyMode == OPTIONS_GLOBAL;
-#else /* DRIVER_SWITCH */
-
-	if (g_nPropertyMode == OPTIONS_GLOBAL)
-		return (GetSystemBiosInfo(0) != 0);
-
-	return 0;
-#endif /* DRIVER_SWITCH */
 }
 
 /* Help IDs - moved to auto-generated helpids.c */
@@ -605,26 +586,6 @@ void InitDefaultPropertyPage(HINSTANCE hInst, HWND hWnd)
 	/* Get default options to populate property sheets */
 	pCurrentOpts = load_options(OPTIONS_GLOBAL, g_nGame); //GetDefaultOptions(-1, FALSE);
 	pDefaultOpts = load_options(OPTIONS_GLOBAL, g_nGame);
-
-	//mamep: BIOS page
-	{
-		int n;
-
-		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-		{
-			int nIndex = GetSystemBiosInfo(n);
-
-			pBiosName[n] = NULL;
-
-			if (nIndex != -1)
-			{
-				core_options *opts = load_options(OPTIONS_GAME, nIndex);
-				pBiosName[n] = mame_strdup(options_get_string(opts, OPTION_BIOS));
-				options_free(opts);
-			}
-		}
-	}
-
 	g_bUseDefaults = FALSE;
 	/* Stash the result for comparing later */
 	pOrigOpts = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
@@ -739,7 +700,7 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	}
 	else
 	{
-		//mamep: disable show BIOS(Vector) page in 'Properties for Driver'(non-Vector)
+		//mamep: don't show Vector tab for raster properties
 		pspage = CreatePropSheetPages(hInst, FALSE, drivers[game_num], &pshead.nPages, FALSE);
 	}
 	if (!pspage)
@@ -1652,22 +1613,6 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 				// Save or remove the current options
 				save_options(g_nPropertyMode, (g_bUseDefaults) ? NULL : pCurrentOpts, g_nGame);
 
-				//mamep: BIOS page
-				if (g_nPropertyMode == OPTIONS_GLOBAL)
-				{
-					int n;
-
-					for (n = 0; pBiosName[n]; n++)
-					{
-						int nIndex = GetSystemBiosInfo(n);
-						core_options *opts = load_options(OPTIONS_GAME, nIndex);
-
-						options_set_string(opts, OPTION_BIOS, pBiosName[n], OPTION_PRIORITY_CMDLINE);
-						save_options(OPTIONS_GAME, opts, nIndex);
-						options_free(opts);
-					}
-				}
-
 				// Disable apply button
 				PropSheet_UnChanged(GetParent(hDlg), hDlg);
 				SetWindowLongPtr(hDlg, DWLP_MSGRESULT, PSNRET_NOERROR);
@@ -1685,16 +1630,6 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 					if (pOptsVector) options_free(pOptsVector);
 					if (pOptsSource) options_free(pOptsSource);
 					pOptsGlobal = pOptsVector = pOptsSource = NULL;
-					//mamep: BIOS page
-					{
-						int n;
-
-						for (n = 0; pBiosName[n]; n++)
-						{
-							free(pBiosName[n]);
-							pBiosName[n] = NULL;
-						}
-					}
 				}
 				return TRUE;
 
@@ -2281,34 +2216,6 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 		}
 	}
 
-	//mamep: BIOS page
-	{
-		int n;
-
-		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-		{
-			HWND hCtrl;
-			int i;
-
-			if (!pBiosName[n] || !*pBiosName[n])
-				continue;
-
-			hCtrl = GetDlgItem(hWnd, IDC_BIOS1 + n);
-			if (!hCtrl)
-				continue;
-
-			for (i = 0; i < ComboBox_GetCount(hCtrl); i++)
-			{
-				const char *value = (char *)ComboBox_GetItemData(hCtrl, i);
-				if (mame_stricmp(value, pBiosName[n]) == 0)
-				{
-					(void)ComboBox_SetCurSel(hCtrl, i);
-					break;
-				}
-			}
-		}
-	}
-
 #ifdef DRIVER_SWITCH
 	{
 		char *temp = mame_strdup(options_get_string(o, OPTION_DRIVER_CONFIG));
@@ -2680,7 +2587,6 @@ static void SetPropEnabledControls(HWND hWnd)
 	else
 		EnableWindow(GetDlgItem(hWnd, IDC_FRAMESKIP), TRUE);
 
-
 	// misc
 	if (g_nPropertyMode == OPTIONS_GAME)
 	{
@@ -2704,29 +2610,6 @@ static void SetPropEnabledControls(HWND hWnd)
 		Button_Enable(GetDlgItem(hWnd,IDC_ENABLE_AUTOSAVE),FALSE);
 	}
 
-	//mamep: BIOS page
-	{
-		int i = 0;
-
-		if (g_nPropertyMode == OPTIONS_GLOBAL)
-			for (; i < MAX_SYSTEM_BIOS; i++)
-			{
-				int bios_driver = GetSystemBiosInfo(i);
-				if (bios_driver == -1)
-					break;
-
-				Static_SetText(GetDlgItem(hWnd, IDC_BIOSTEXT1 + i), driversw[bios_driver]->description);
-
-				ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT1 + i), SW_SHOW);
-				ShowWindow(GetDlgItem(hWnd,IDC_BIOS1 + i), SW_SHOW);
-			}
-
-		for (; i < MAX_SYSTEM_BIOS; i++)
-		{
-			ShowWindow(GetDlgItem(hWnd,IDC_BIOSTEXT1 + i), SW_HIDE);
-			ShowWindow(GetDlgItem(hWnd,IDC_BIOS1 + i), SW_HIDE);
-		}
-	}
 }
 
 //============================================================
@@ -3131,40 +3014,6 @@ static BOOL ResolutionPopulateControl(datamap *map, HWND dialog, HWND control_, 
 	return FALSE;
 }
 
-//mamep: set up callbacks for BIOS page & driver options
-static BOOL DefaultBiosReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
-{
-	int n;
-
-	for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-	{
-		HWND hCtrl;
-		const char *value;
-		int nCurSelection;
-
-		if (!pBiosName[n])
-			continue;
-
-		hCtrl = GetDlgItem(dialog, IDC_BIOS1 + n);
-		if (hCtrl != control)
-			continue;
-
-		nCurSelection = ComboBox_GetCurSel(hCtrl);
-		if (nCurSelection == CB_ERR)
-			return FALSE;
-
-		value = (char *)ComboBox_GetItemData(hCtrl, nCurSelection);
-		if (!mame_stricmp(pBiosName[n], value))
-			return FALSE;
-
-		free(pBiosName[n]);
-		pBiosName[n] = mame_strdup(value);
-		return TRUE;
-	}
-
-	return FALSE;
-}
-
 #ifdef DRIVER_SWITCH
 static BOOL DriverConfigReadControl(datamap *map, HWND dialog, HWND control, core_options *opts, const char *option_name)
 {
@@ -3413,13 +3262,6 @@ static void BuildDataMap(void)
 	datamap_add(properties_datamap, IDC_JOYID8,				DM_INT,		WINOPTION_JOYID8);
 #endif /* JOYSTICK_ID */
 
-	//mamep: BIOS page & driver options
-	{
-		int n;
-
-		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-			datamap_add(properties_datamap, IDC_BIOS1 + n,	DM_STRING,	NULL);
-	}
 #ifdef DRIVER_SWITCH
 	{
 		int i;
@@ -3442,13 +3284,6 @@ static void BuildDataMap(void)
 	datamap_set_callback(properties_datamap, IDC_DEFAULT_INPUT,	DCT_POPULATE_CONTROL,	DefaultInputPopulateControl);
 	datamap_set_callback(properties_datamap, IDC_SNAPVIEW,		DCT_POPULATE_CONTROL,	SnapViewPopulateControl);
 
-	//mamep: set up callbacks for BIOS page & driver options
-	{
-		int n;
-
-		for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-			datamap_set_callback(properties_datamap, IDC_BIOS1 + n,	DCT_READ_CONTROL,	DefaultBiosReadControl);
-	}
 #ifdef DRIVER_SWITCH
 	{
 		int i;
@@ -3632,8 +3467,6 @@ static void InitializeOptions(HWND hDlg)
 	InitializeSelectScreenUI(hDlg);
 	InitializeEffectUI(hDlg);
 	InitializeBIOSUI(hDlg);
-	//mamep: BIOS page
-	InitializeDefaultBIOSUI(hDlg);
 	InitializeControllerMappingUI(hDlg);
 	InitializeD3DVersionUI(hDlg);
 	InitializeVideoUI(hDlg);
@@ -4025,69 +3858,6 @@ static void InitializeBIOSUI(HWND hwnd)
 		}
 	}
 }
-
-//mamep: BIOS page
-static const char *InitializeBIOSCtrl(HWND hCtrl, int bios_driver, const char *option)
-{
-	if (hCtrl && bios_driver != -1)
-	{
-		const char *name;
-		int idx;
-
-		for (idx = 0; idx < MAX_SYSTEM_BIOS_ENTRY; idx++)
-		{
-			const rom_entry *rom;
-
-			for (rom = drivers[bios_driver]->rom; !ROMENTRY_ISEND(rom); rom++)
-			{
-				if (ROMENTRY_ISSYSTEM_BIOS(rom) && (ROM_GETBIOSFLAGS(rom) - 1 == idx))
-				{
-					const char *description;
-
-					name = ROM_GETNAME(rom);
-					description = ROM_GETHASHDATA(rom);
-
-					if (idx == 0)
-						name = BIOS_DEFAULT;
-
-					(void)ComboBox_InsertStringA(hCtrl, idx, description);
-					(void)ComboBox_SetItemData(  hCtrl, idx, name);
-					break;
-				}
-			}
-		}
-
-		SetDefaultBIOS(option);
-//FIXME: 0.129
-//		idx = determine_bios_rom(MameUIGlobal(), drivers[bios_driver]->rom) - 1;
-		SetDefaultBIOS(NULL);
-
-		return (char *)ComboBox_GetItemData(hCtrl, idx);
-	}
-
-	return NULL;
-}
-
-static void InitializeDefaultBIOSUI(HWND hwnd)
-{
-	int n;
-
-	for (n = 0; pBiosName[n]; n++)
-	{
-		HWND hCtrl = GetDlgItem(hwnd, IDC_BIOS1 + n);
-
-		if (hCtrl)
-		{
-			const char *option = InitializeBIOSCtrl(hCtrl, GetSystemBiosInfo(n), pBiosName[n]);
-			if (option)
-			{
-				free(pBiosName[n]);
-				pBiosName[n] = mame_strdup(option);
-			}
-		}
-	}
-}
-
 
 #if 0 //mamep: use standard combobox
 static BOOL SelectEffect(HWND hWnd)

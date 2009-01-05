@@ -103,8 +103,7 @@
 #define IDD_PROP_SCREEN                 187
 #define IDD_PROP_DEBUG                  188
 
-#define IDD_PALETTE                     190 // UI_COLOR_PALETTE
-#define IDD_PROP_BIOS                   191
+#define IDD_PALETTE                     191 // UI_COLOR_PALETTE
 #define IDD_PCBINFO                     192 // USE_VIEW_PCBINFO
 #define IDB_TOOLBAR_US                  193
 #define IDB_TOOLBAR_CN                  194
@@ -338,6 +337,7 @@
 #define IDC_NOOFFSET_CLONES             1200
 #define IDC_BIOS                        1201
 #define IDC_HISTORY_TAB                 1202
+#define IDC_BIOS2                       0    // N/A
 #define IDC_SNAPVIEW                    1202
 #define IDC_SCREENSHOT_BORDERSIZE       1204
 #define IDC_SCREENSHOT_BORDERCOLOR      1205
@@ -433,40 +433,7 @@
 #define IDC_TRANSPARENCYDISP            1362 // TRANS_UI
 #define IDC_PROP_INPUT                  1363 // USE_MISC_FOLDER
 #define IDC_PROP_SAVESTATE              1364 // USE_MISC_FOLDER
-
-#define IDC_BIOS1                       1365
-#define IDC_BIOS2                       1366
-#define IDC_BIOS3                       1367
-#define IDC_BIOS4                       1368
-#define IDC_BIOS5                       1369
-#define IDC_BIOS6                       1370
-#define IDC_BIOS7                       1371
-#define IDC_BIOS8                       1372
-#define IDC_BIOS9                       1373
-#define IDC_BIOS10                      1374
-#define IDC_BIOS11                      1375
-#define IDC_BIOS12                      1376
-#define IDC_BIOS13                      1377
-#define IDC_BIOS14                      1378
-#define IDC_BIOS15                      1379
-#define IDC_BIOS16                      1380
-#define IDC_BIOSTEXT                    1381
-#define IDC_BIOSTEXT1                   1382
-#define IDC_BIOSTEXT2                   1383
-#define IDC_BIOSTEXT3                   1384
-#define IDC_BIOSTEXT4                   1385
-#define IDC_BIOSTEXT5                   1386
-#define IDC_BIOSTEXT6                   1387
-#define IDC_BIOSTEXT7                   1388
-#define IDC_BIOSTEXT8                   1389
-#define IDC_BIOSTEXT9                   1390
-#define IDC_BIOSTEXT10                  1391
-#define IDC_BIOSTEXT11                  1392
-#define IDC_BIOSTEXT12                  1393
-#define IDC_BIOSTEXT13                  1394
-#define IDC_BIOSTEXT14                  1395
-#define IDC_BIOSTEXT15                  1396
-#define IDC_BIOSTEXT16                  1397
+#define IDC_BIOSTEXT                    1365
 
 #define IDC_DRV_TEXT                    1400 // DRIVER_SWITCH
 #define IDC_DRV_MAME                    1401 // DRIVER_SWITCH

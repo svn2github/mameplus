@@ -46,8 +46,6 @@ typedef struct
 extern const PROPERTYSHEETINFO g_propSheets[];
 
 BOOL PropSheetFilter_Vector(const machine_config *drv, const game_driver *gamedrv);
-// mamep: BIOS page
-BOOL PropSheetFilter_BIOS(const machine_config *drv, const game_driver *gamedrv);
 
 INT_PTR CALLBACK GamePropertiesDialogProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);
 INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam);

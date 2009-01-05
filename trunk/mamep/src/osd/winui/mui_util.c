@@ -579,7 +579,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->isMultiMon = 0;
 			gameinfo->isVector = isDriverVector(config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
-//			gameinfo->hasOptionalBIOS = FALSE;
 			for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
 			{
 				for (region = rom_first_region(gamedrv, source); region; region = rom_next_region(region))
@@ -587,8 +586,6 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 					{
 						gameinfo->usesRoms = TRUE; 
-//FIXME: 0.129
-//						gameinfo->hasOptionalBIOS = (determine_bios_rom(MameUIGlobal(), gamedrv->rom) != 0);
 						break; 
 					}
 				}

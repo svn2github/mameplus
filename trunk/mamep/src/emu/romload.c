@@ -339,9 +339,9 @@ static void CLIB_DECL ATTR_PRINTF(1,2) debugload(const char *string, ...)
     from SystemBios structure and OPTION_BIOS
 -------------------------------------------------*/
 
-int determine_bios_rom(rom_load_data *romdata, core_options *options)
+static void determine_bios_rom(rom_load_data *romdata)
 {
-	const char *specbios = options_get_string(options, OPTION_BIOS);
+	const char *specbios = options_get_string(mame_options(), OPTION_BIOS);
 	const char *defaultname = NULL;
 	const rom_entry *rom;
 	int default_no = 1;
@@ -372,22 +372,20 @@ int determine_bios_rom(rom_load_data *romdata, core_options *options)
 		}
 
 	/* if none found, use the default */
-// mamep: fixme: temp. solution, will be removed when new GUI is released
-#if 1
-	if (bios_count == 0)
-		romdata->system_bios = 0;
-#else
 	if (romdata->system_bios == 0 && bios_count > 0)
 	{
-		if (specbios[0] != 0)
-			fatalerror("%s: no such bios\n", specbios);
+		/* if we got neither an empty string nor 'default' then warn the user */
+		if (specbios[0] != 0 && strcmp(specbios, "default") != 0 && romdata != NULL)
+		{
+			astring_catprintf(romdata->errorstring, "%s: invalid bios\n", specbios);
+			romdata->warnings++;
+		}
+
 		/* set to default */
 		romdata->system_bios = default_no;
 	}
-#endif
 
 	LOG(("Using System BIOS: %d\n", romdata->system_bios));
-	return romdata->system_bios;
 }
 
 
@@ -1369,7 +1367,7 @@ void rom_init(running_machine *machine)
 	romdata.errorstring = astring_alloc();
 
 	/* figure out which BIOS we are using */
-	determine_bios_rom(&romdata, mame_options());
+	determine_bios_rom(&romdata);
 
 	/* count the total number of ROMs */
 	count_roms(&romdata);
