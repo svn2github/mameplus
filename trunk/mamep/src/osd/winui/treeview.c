@@ -889,13 +889,13 @@ static void CreateDeviceFolders(int parent_index, device_class class, UINT icon_
 			device = device_list_class_next(device, class))
 		{
 			// get the name
-			const char *dev_name = device_get_name(device);
+			const TCHAR *dev_name = _Unicode(device_get_name(device));
 
 			// do we have a folder for this device?
 			folder = NULL;
 			for (j = 0; j < device_folder_count; j++)
 			{
-				if (!strcmp(dev_name, device_folders[j]->m_lpTitle))
+				if (!wcscmp(dev_name, device_folders[j]->m_lpTitle))
 				{
 					folder = device_folders[j];
 					break;
@@ -907,17 +907,7 @@ static void CreateDeviceFolders(int parent_index, device_class class, UINT icon_
 			{
 				LPTREEFOLDER lpTemp;
 
-				lpTemp = NewFolder(device_get_name(device), next_folder_id, parent_index, icon_id,
- 								   GetFolderFlags(numFolders));
-				ExtraFolderData[next_folder_id] = malloc(sizeof(EXFOLDERDATA) );
-				memset(ExtraFolderData[next_folder_id], 0, sizeof(EXFOLDERDATA));
-
-				ExtraFolderData[next_folder_id]->m_nFolderId = next_folder_id;
-				ExtraFolderData[next_folder_id]->m_nIconId = icon_id;
-				ExtraFolderData[next_folder_id]->m_nParent = treeFolders[parent_index]->m_nFolderId;
-				ExtraFolderData[next_folder_id]->m_nSubIconId = -1;
-				strcpy( ExtraFolderData[next_folder_id]->m_szTitle, device_get_name(device) );
-				ExtraFolderData[next_folder_id++]->m_dwFlags = 0;
+				lpTemp = NewFolder(_Unicode(device_get_name(device)), 0, FALSE, next_folder_id++, parent_index, icon_id);
 				AddFolder(lpTemp);
 				folder = treeFolders[nFolder++];
 
