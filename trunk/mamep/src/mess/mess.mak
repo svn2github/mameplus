@@ -25,6 +25,7 @@ DRVLIBS += \
 	$(MESSOBJ)/shared.a \
 
 
+
 #-------------------------------------------------
 # the following files are general components and
 # shared across a number of drivers
@@ -40,6 +41,8 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_DEVICES)/mflopimg.o	\
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_FORMATS)/wavfile.o	\
+
+
 
 #-------------------------------------------------
 # manufacturer-specific groupings for drivers

@@ -2678,37 +2678,6 @@ static MACHINE_START( gba )
 static custom_sound_interface gameboy_sound_interface =
 { gameboy_sh_start, 0, 0 };
 
-static MACHINE_DRIVER_START( gbadv )
-	MDRV_CPU_ADD("main", ARM7, 16777216)
-	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
-
-	MDRV_MACHINE_START(gba)
-	MDRV_MACHINE_RESET(gba)
-
-	MDRV_SCREEN_ADD("main", RASTER)	// htot hst vwid vtot vst vis
-	MDRV_SCREEN_RAW_PARAMS(16777216/4, 308, 0,  240, 228, 0,  160)
-	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_PALETTE_LENGTH(32768)
-	MDRV_PALETTE_INIT( gba )
-
-	MDRV_VIDEO_START(generic_bitmapped)
-	MDRV_VIDEO_UPDATE(generic_bitmapped)
-
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	MDRV_SOUND_ADD("gblegacy", CUSTOM, 0)		// legacy GB sound
-	MDRV_SOUND_CONFIG(gameboy_sound_interface)
-	MDRV_SOUND_ROUTE(0, "left", 0.50)
-	MDRV_SOUND_ROUTE(1, "right", 0.50)
-	MDRV_SOUND_ADD("direct_a_left", DAC, 0)			// GBA direct sound A left
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("direct_a_right", DAC, 0)		// GBA direct sound A right
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
-	MDRV_SOUND_ADD("direct_b_left", DAC, 0)			// GBA direct sound B left
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
-	MDRV_SOUND_ADD("direct_b_right", DAC, 0)		// GBA direct sound B right
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
-MACHINE_DRIVER_END
-
 ROM_START( gba )
 	ROM_REGION( 0x8000, "bios", ROMREGION_ERASE00 )
 	ROM_LOAD( "gba.bin", 0x000000, 0x004000, CRC(81977335) )
@@ -3118,28 +3087,41 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 	return INIT_PASS;
 }
 
-static void gba_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
-{
-	/* cartslot */
-	switch(state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:	 	   			info->i = 1; break;
-		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 0; break;
+static MACHINE_DRIVER_START( gbadv )
+	MDRV_CPU_ADD("main", ARM7, 16777216)
+	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD: 						info->load = device_load_gba_cart; break;
+	MDRV_MACHINE_START(gba)
+	MDRV_MACHINE_RESET(gba)
 
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "gba,bin"); break;
+	MDRV_SCREEN_ADD("main", RASTER)	// htot hst vwid vtot vst vis
+	MDRV_SCREEN_RAW_PARAMS(16777216/4, 308, 0,  240, 228, 0,  160)
+	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
+	MDRV_PALETTE_LENGTH(32768)
+	MDRV_PALETTE_INIT( gba )
 
-		default:   							cartslot_device_getinfo(devclass, state, info); break;
-	}
-}
+	MDRV_VIDEO_START(generic_bitmapped)
+	MDRV_VIDEO_UPDATE(generic_bitmapped)
 
-SYSTEM_CONFIG_START(gbadv)
-	CONFIG_DEVICE(gba_cartslot_getinfo)
-SYSTEM_CONFIG_END
+	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SOUND_ADD("gblegacy", CUSTOM, 0)		// legacy GB sound
+	MDRV_SOUND_CONFIG(gameboy_sound_interface)
+	MDRV_SOUND_ROUTE(0, "left", 0.50)
+	MDRV_SOUND_ROUTE(1, "right", 0.50)
+	MDRV_SOUND_ADD("direct_a_left", DAC, 0)			// GBA direct sound A left
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
+	MDRV_SOUND_ADD("direct_a_right", DAC, 0)		// GBA direct sound A right
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
+	MDRV_SOUND_ADD("direct_b_left", DAC, 0)			// GBA direct sound B left
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
+	MDRV_SOUND_ADD("direct_b_right", DAC, 0)		// GBA direct sound B right
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
+
+	MDRV_CARTSLOT_ADD("cart")
+	MDRV_CARTSLOT_EXTENSION_LIST("gba")
+	MDRV_CARTSLOT_MANDATORY
+	MDRV_CARTSLOT_LOAD(gba_cart)
+MACHINE_DRIVER_END
 
 /* this emulates the GBA's hardware protection: the BIOS returns only zeros when the PC is not in it,
    and some games verify that as a protection check (notably Metroid Fusion) */
@@ -3244,4 +3226,4 @@ static DRIVER_INIT(gbadv)
 }
 
 /*    YEAR  NAME PARENT COMPAT MACHINE INPUT INIT CONFIG COMPANY      FULLNAME */
-CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, gbadv,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE)
+CONS( 2001, gba, 0,     0,     gbadv,    gbadv,  gbadv, 0,   "Nintendo", "Game Boy Advance", GAME_NOT_WORKING|GAME_SUPPORTS_SAVE)

@@ -767,22 +767,9 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	return INIT_PASS;
 }
 
-
-void snes_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
-{
-	/* cartslot */
-	switch(state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:							info->i = 1; break;
-		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 1; break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD:							info->load = DEVICE_IMAGE_LOAD_NAME(snes_cart); break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "smc,sfc,fig,swc"); break;
-
-		default:										cartslot_device_getinfo(devclass, state, info); break;
-	}
-}
+MACHINE_DRIVER_START( snes_cartslot )
+	MDRV_CARTSLOT_ADD("cart")
+	MDRV_CARTSLOT_EXTENSION_LIST("smc,sfc,fig,swc")
+	MDRV_CARTSLOT_MANDATORY
+	MDRV_CARTSLOT_LOAD(snes_cart)
+MACHINE_DRIVER_END

@@ -1229,50 +1229,25 @@ static DEVICE_IMAGE_UNLOAD( genesis_cart )
 	/* Write out the battery file if necessary */
 	if (has_sram && (genesis_sram != NULL) && (genesis_sram_end - genesis_sram_start > 0))
 	{
-		image_battery_save(image_from_devtype_and_index(image->machine, IO_CARTSLOT, 0), genesis_sram, genesis_sram_end - genesis_sram_start);
+		image_battery_save(image, genesis_sram, genesis_sram_end - genesis_sram_start);
 	}
 }
 
 
 /******* Cart getinfo *******/
 
-void genesis_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
-{
-	/* cartslot */
-	switch(state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:						info->i = 1; break;
-		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 1; break;
+MACHINE_DRIVER_START( genesis_cartslot )
+	MDRV_CARTSLOT_ADD("cart")
+	MDRV_CARTSLOT_EXTENSION_LIST("smd,bin,md,gen")
+	MDRV_CARTSLOT_MANDATORY
+	MDRV_CARTSLOT_LOAD(genesis_cart)
+	MDRV_CARTSLOT_UNLOAD(genesis_cart)
+MACHINE_DRIVER_END
 
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD:							info->load = DEVICE_IMAGE_LOAD_NAME(genesis_cart); break;
-		case MESS_DEVINFO_PTR_UNLOAD:						info->unload = DEVICE_IMAGE_UNLOAD_NAME(genesis_cart); break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "smd,bin,md,gen"); break;
-
-		default:											cartslot_device_getinfo(devclass, state, info); break;
-	}
-}
-
-
-void pico_cartslot_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
-{
-	/* cartslot */
-	switch(state)
-	{
-		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:						info->i = 1; break;
-		case MESS_DEVINFO_INT_MUST_BE_LOADED:				info->i = 1; break;
-
-		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_LOAD:							info->load = DEVICE_IMAGE_LOAD_NAME(genesis_cart); break;
-		case MESS_DEVINFO_PTR_UNLOAD:						info->unload = DEVICE_IMAGE_UNLOAD_NAME(genesis_cart); break;
-
-		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:				strcpy(info->s = device_temp_str(), "bin"); break;
-
-		default:											cartslot_device_getinfo(devclass, state, info); break;
-	}
-}
+MACHINE_DRIVER_START( pico_cartslot )
+	MDRV_CARTSLOT_ADD("cart")
+	MDRV_CARTSLOT_EXTENSION_LIST("bin")
+	MDRV_CARTSLOT_MANDATORY
+	MDRV_CARTSLOT_LOAD(genesis_cart)
+	MDRV_CARTSLOT_UNLOAD(genesis_cart)
+MACHINE_DRIVER_END

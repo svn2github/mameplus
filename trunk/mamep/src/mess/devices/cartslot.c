@@ -1,34 +1,42 @@
+/**********************************************************************
+
+    cartslot.c
+
+	Cartridge device
+
+**********************************************************************/
+
 #include <ctype.h>
 #include "driver.h"
 #include "cartslot.h"
 
 
-static int is_cart_roment(const rom_entry *roment)
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
+
+typedef struct _cartslot_t cartslot_t;
+struct _cartslot_t
 {
-	return ROMENTRY_GETTYPE(roment) == ROMENTRYTYPE_CARTRIDGE;
+	char dummy;
+};
+
+
+/***************************************************************************
+    INLINE FUNCTIONS
+***************************************************************************/
+
+INLINE const cartslot_config *get_config(const device_config *device)
+{
+	assert(device != NULL);
+	assert(device->type == CARTSLOT);
+	return (const cartslot_config *) device->inline_config;
 }
 
 
-
-static int parse_rom_name(const rom_entry *roment, int *position, const char **extensions)
-{
-	const char *data = roment->_hashdata;
-
-	if (data[0] != '#')
-		return -1;
-	if (!isdigit(data[1]))
-		return -1;
-	if (data[2] != '\0')
-		return -1;
-
-	if (position)
-		*position = data[1] - '0';
-	if (extensions)
-		*extensions = &data[3];
-	return 0;
-}
-
-
+/***************************************************************************
+    IMPLEMENTATION
+***************************************************************************/
 
 static int load_cartridge(running_machine *machine, const rom_entry *romrgn, const rom_entry *roment, const device_config *image)
 {
@@ -115,7 +123,7 @@ static int process_cartridge(const device_config *image, const device_config *fi
 {
 	const rom_source *source;
 	const rom_entry *romrgn, *roment;
-	int position = 0, result;
+	int result;
 
 	for (source = rom_first_source(image->machine->gamedrv, image->machine->config); source != NULL; source = rom_next_source(image->machine->gamedrv, image->machine->config, source))
 	{
@@ -124,10 +132,9 @@ static int process_cartridge(const device_config *image, const device_config *fi
 		roment = romrgn + 1;
 		while(!ROMENTRY_ISREGIONEND(roment))
 		{
-			if (is_cart_roment(roment))
+				if (ROMENTRY_GETTYPE(roment) == ROMENTRYTYPE_CARTRIDGE)
 			{
-				parse_rom_name(roment, &position, NULL);
-				if (position == image_index_in_device(image))
+					if (strcmp(roment->_hashdata,image->tag)==0)
 				{
 					result = load_cartridge(image->machine, romrgn, roment, file);
 					if (!result)
@@ -145,6 +152,12 @@ static int process_cartridge(const device_config *image, const device_config *fi
 
 static DEVICE_START( cartslot_specified )
 {
+	/* validate arguments */
+	assert(device != NULL);
+	assert(device->tag != NULL);
+	assert(strlen(device->tag) < 20);
+	assert(device->inline_config != NULL);
+	
 	process_cartridge(device, NULL);
 	return DEVICE_START_OK;
 }
@@ -161,67 +174,66 @@ static DEVICE_IMAGE_UNLOAD( cartslot_specified )
 
 
 
-void cartslot_device_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
-{
-	const game_driver *gamedrv = devclass->gamedrv;
-	machine_config *config = machine_config_alloc(gamedrv->machine_config);
-	const rom_source *source;
-	const rom_entry *romrgn, *roment;
-	int position, count = 0, must_be_loaded = 0;
-	const char *file_extensions = "bin";
-	UINT32 flags;
 
-	/* try to find ROM_CART_LOADs in the ROM declaration */
-	for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
+DEVICE_GET_INFO(cartslot)
 	{
-		for (romrgn = rom_first_region(gamedrv, source); romrgn != NULL; romrgn = rom_next_region(romrgn))
-	{
-		roment = romrgn + 1;
-		while(!ROMENTRY_ISREGIONEND(roment))
-		{
-			if (is_cart_roment(roment) && !parse_rom_name(roment, &position, &file_extensions))
-			{
-				flags = ROM_GETFLAGS(roment);
-
-				/* reject any unsupported flags */
-				if (flags & (ROM_GROUPMASK | ROM_SKIPMASK | ROM_REVERSEMASK
-					| ROM_BITWIDTHMASK | ROM_BITSHIFTMASK
-					| ROM_INHERITFLAGSMASK))
-				{
-					fatalerror("Unsupported ROM cart flags 0x%08X", flags);
-				}
-
-				count = MAX(position + 1, count);
-				must_be_loaded = (flags & ROM_OPTIONAL) ? 0 : 1;
-			}
-			roment++;
-		}
-		}
-	}
-
-	switch(state)
+	switch( state )
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
-		case MESS_DEVINFO_INT_COUNT:						info->i = count; break;
-		case MESS_DEVINFO_INT_TYPE:						info->i = IO_CARTSLOT; break;
-		case MESS_DEVINFO_INT_READABLE:					info->i = 1; break;
-		case MESS_DEVINFO_INT_WRITEABLE:					info->i = 0; break;
-		case MESS_DEVINFO_INT_CREATABLE:					info->i = 0; break;
-		case MESS_DEVINFO_INT_RESET_ON_LOAD:				info->i = 1; break;
-		case MESS_DEVINFO_INT_LOAD_AT_INIT:				info->i = 1; break;
-		case MESS_DEVINFO_INT_MUST_BE_LOADED:			info->i = must_be_loaded; break;
+		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(cartslot_t); break;
+		case DEVINFO_INT_INLINE_CONFIG_BYTES:		info->i = sizeof(cartslot_config); break;
+		case DEVINFO_INT_CLASS:						info->i = DEVICE_CLASS_PERIPHERAL; break;
+		case DEVINFO_INT_IMAGE_TYPE:				info->i = IO_CARTSLOT; break;
+		case DEVINFO_INT_IMAGE_READABLE:			info->i = 1; break;
+		case DEVINFO_INT_IMAGE_WRITEABLE:			info->i = 0; break;
+		case DEVINFO_INT_IMAGE_CREATABLE:			info->i = 0; break;
+		case DEVINFO_INT_IMAGE_RESET_ON_LOAD:		info->i = 1; break;
+		case DEVINFO_INT_IMAGE_MUST_BE_LOADED:		if ( device && device->inline_config) {
+														info->i = get_config(device)->must_be_loaded; 
+													} else {
+														info->i = 0; 
+				}
+													break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_START:						info->start = (count > 0) ? DEVICE_START_NAME(cartslot_specified) : NULL; break;
-		case MESS_DEVINFO_PTR_LOAD:						info->load = (count > 0) ? DEVICE_IMAGE_LOAD_NAME(cartslot_specified) : NULL; break;
-		case MESS_DEVINFO_PTR_UNLOAD:					info->unload = (count > 0) ? DEVICE_IMAGE_UNLOAD_NAME(cartslot_specified) : NULL; break;
+		case DEVINFO_FCT_START:						if ( device && device->inline_config && get_config(device)->device_start) {
+														info->start = get_config(device)->device_start; 
+													} else {
+														info->start = DEVICE_START_NAME(cartslot_specified); 
+			}
+													break;
+		case DEVINFO_FCT_IMAGE_LOAD:				if ( device && device->inline_config && get_config(device)->device_load) {
+														info->f = (genf *) get_config(device)->device_load; 
+													} else {
+														info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(cartslot_specified); 
+		}
+													break;
+		case DEVINFO_FCT_IMAGE_UNLOAD:				if ( device && device->inline_config && get_config(device)->device_unload) {
+														info->f = (genf *) get_config(device)->device_unload; 
+													} else {
+														info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(cartslot_specified); 
+		}
+													break;
+		case DEVINFO_FCT_IMAGE_PARTIAL_HASH:		if ( device && device->inline_config && get_config(device)->device_partialhash) {
+														info->f = (genf *) get_config(device)->device_partialhash; 
+													} else {
+														info->f = NULL; 
+	}
+													break;			
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
-		case MESS_DEVINFO_STR_DEV_FILE:					strcpy(info->s = device_temp_str(), __FILE__); break;
-		case MESS_DEVINFO_STR_FILE_EXTENSIONS:
-			info->s = device_temp_str();
-			strcpy(info->s, file_extensions);
+		case DEVINFO_STR_NAME:						strcpy(info->s, "Cartslot"); break;
+		case DEVINFO_STR_FAMILY:					strcpy(info->s, "Cartslot"); break;
+		case DEVINFO_STR_SOURCE_FILE:				strcpy(info->s, __FILE__); break;
+		case DEVINFO_STR_IMAGE_FILE_EXTENSIONS:
+			if ( device && device->inline_config && get_config(device)->extensions )
+	{
+				strcpy(info->s, get_config(device)->extensions);
+			}
+			else
+			{
+				strcpy(info->s, "bin");
+			}
 			break;
 	}
-	machine_config_free(config);
 }
