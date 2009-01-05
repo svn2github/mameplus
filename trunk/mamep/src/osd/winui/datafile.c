@@ -1040,7 +1040,7 @@ int load_driver_story (const game_driver *drv, char *buffer, int bufsize)
 
 int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 {
-	const rom_entry *region, *rom, *chunk;
+	const rom_entry *region, *rom /*,*chunk*/ ;
 	const game_driver *clone_of;
 	const rom_source *source;
 	machine_config *config;
@@ -1106,18 +1106,18 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
 			{
 				char name[100];
-				int length;
+				//int length;
 
-				length = 0;
-				for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
-					length += ROM_GETLENGTH(chunk);
+				//length = 0;
+				//for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
+				//	length += ROM_GETLENGTH(chunk);
 
 				//sprintf(name," %-12s ",ROM_GETNAME(rom));
 				//strcat(buffer, name);
 				//sprintf(name,"%6x ",length);
-				sprintf(name," %s %08x ",ROM_GETNAME(rom),length);
-				strcat(buffer, name);
-				strcat(buffer, ROMREGION_GETTAG(region));
+				//sprintf(name," %s %08x ",ROM_GETNAME(rom),length);
+				//strcat(buffer, name);
+				//strcat(buffer, ROMREGION_GETTAG(region));
 
 				//sprintf(name," %7x\n",ROM_GETOFFSET(rom));
 				sprintf(name," %08x\n",ROM_GETOFFSET(rom));

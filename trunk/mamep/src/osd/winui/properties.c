@@ -4058,7 +4058,8 @@ static const char *InitializeBIOSCtrl(HWND hCtrl, int bios_driver, const char *o
 		}
 
 		SetDefaultBIOS(option);
-		idx = determine_bios_rom(MameUIGlobal(), drivers[bios_driver]->rom) - 1;
+//FIXME: 0.129
+//		idx = determine_bios_rom(MameUIGlobal(), drivers[bios_driver]->rom) - 1;
 		SetDefaultBIOS(NULL);
 
 		return (char *)ComboBox_GetItemData(hCtrl, idx);
