@@ -93,6 +93,7 @@ static const options_entry cli_options[] =
 	{ "listfull;ll",              "0",        OPTION_COMMAND,    "short name, full name" },
 	{ "listsource;ls",            "0",        OPTION_COMMAND,    "driver sourcefile" },
 	{ "listclones;lc",            "0",        OPTION_COMMAND,    "show clones" },
+	{ "listbrothers;lb",          "0",        OPTION_COMMAND,    "show \"brothers\", or other drivers from same sourcefile" },
 	{ "listcrc",                  "0",        OPTION_COMMAND,    "CRC-32s" },
 	{ "listroms",                 "0",        OPTION_COMMAND,    "list required roms for a driver" },
 	{ "listsamples",              "0",        OPTION_COMMAND,    "list optional samples for a driver" },
@@ -287,6 +288,7 @@ static int execute_commands(core_options *options, const char *exename, const ga
 		{ CLIOPTION_LISTFULL,		cli_info_listfull },
 		{ CLIOPTION_LISTSOURCE,		cli_info_listsource },
 		{ CLIOPTION_LISTCLONES,		cli_info_listclones },
+		{ CLIOPTION_LISTBROTHERS,	cli_info_listbrothers },
 		{ CLIOPTION_LISTCRC,		cli_info_listcrc },
 		{ CLIOPTION_LISTGAMES,		cli_info_listgames },
 #ifdef MESS
@@ -551,7 +553,7 @@ int cli_info_listfull(core_options *options, const char *gamename)
 	int drvindex, count = 0;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if ((drivers[drvindex]->flags & GAME_NO_STANDALONE) == 0 && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			char name[200];
@@ -604,7 +606,7 @@ int cli_info_listsource(core_options *options, const char *gamename)
 	int drvindex, count = 0;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			/* output the remaining information */
@@ -628,7 +630,7 @@ int cli_info_listclones(core_options *options, const char *gamename)
 	int drvindex, count = 0;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 	{
 		const game_driver *clone_of = driver_get_clone(drivers[drvindex]);
 
@@ -652,6 +654,54 @@ int cli_info_listclones(core_options *options, const char *gamename)
 
 
 /*-------------------------------------------------
+    cli_info_listbrothers - output the name and
+    source filename of one or more games
+-------------------------------------------------*/
+
+int cli_info_listbrothers(core_options *options, const char *gamename)
+{
+	UINT8 *didit = malloc_or_die(driver_list_get_count(drivers));
+	astring *filename = astring_alloc();
+	int drvindex, count = 0;
+
+	memset(didit, 0, driver_list_get_count(drivers));
+
+	/* iterate over drivers */
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
+		if (!didit[drvindex] && mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
+		{
+			int matchindex;
+
+			didit[drvindex] = TRUE;
+			if (count > 0)
+				mame_printf_info("\n");
+			mame_printf_info("%s ... other drivers in %s:\n", drivers[drvindex]->name, astring_c(core_filename_extract_base(filename, drivers[drvindex]->source_file, FALSE)));
+
+			/* now iterate again over drivers, finding those with the same source file */
+			for (matchindex = 0; drivers[matchindex]; matchindex++)
+				if (matchindex != drvindex && strcmp(drivers[drvindex]->source_file, drivers[matchindex]->source_file) == 0)
+				{
+					const char *matchstring = (mame_strwildcmp(gamename, drivers[matchindex]->name) == 0) ? "-> " : "   ";
+					const game_driver *clone_of = driver_get_clone(drivers[matchindex]);
+
+					if (clone_of != NULL && (clone_of->flags & GAME_IS_BIOS_ROOT) == 0)
+						mame_printf_info("%s%-8s [%s]\n", matchstring, drivers[matchindex]->name, clone_of->name);
+					else
+						mame_printf_info("%s%s\n", matchstring, drivers[matchindex]->name);
+					didit[matchindex] = TRUE;
+				}
+
+			count++;
+		}
+
+	/* return an error if none found */
+	astring_free(filename);
+	free(didit);
+	return (count > 0) ? MAMERR_NONE : MAMERR_NO_SUCH_GAME;
+}
+
+
+/*-------------------------------------------------
     cli_info_listcrc - output the CRC and name of
     all ROMs referenced by MAME
 -------------------------------------------------*/
@@ -661,7 +711,7 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 	int drvindex, count = 0;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
@@ -671,14 +721,14 @@ int cli_info_listcrc(core_options *options, const char *gamename)
 			/* iterate over sources, regions, and then ROMs within the region */
 			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
 				for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
-				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-				{
-					char hashbuf[HASH_BUF_SIZE];
+					for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+					{
+						char hashbuf[HASH_BUF_SIZE];
 
-					/* if we have a CRC, display it */
-					if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
-						mame_printf_info("%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
-				}
+						/* if we have a CRC, display it */
+						if (hash_data_extract_printable_checksum(ROM_GETHASHDATA(rom), HASH_CRC, hashbuf))
+							mame_printf_info("%s %-12s %s\n", hashbuf, ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
+					}
 
 			count++;
 			machine_config_free(config);
@@ -699,11 +749,11 @@ int cli_info_listroms(core_options *options, const char *gamename)
 	int drvindex, count = 0;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
-			const rom_entry *region, *rom, *chunk;
+			const rom_entry *region, *rom;
 			const rom_source *source;
 
 			/* print the header */
@@ -716,44 +766,40 @@ int cli_info_listroms(core_options *options, const char *gamename)
 			for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
 				for (region = rom_first_region(drivers[drvindex], source); region != NULL; region = rom_next_region(region))
 					for (rom = rom_first_file(region); rom != NULL; rom = rom_next_file(rom))
-				{
-					const char *name = ROM_GETNAME(rom);
-					const char* hash = ROM_GETHASHDATA(rom);
-					char hashbuf[HASH_BUF_SIZE];
-					int length = -1;
-
-					/* accumulate the total length of all chunks */
-					if (ROMREGION_ISROMDATA(region))
 					{
-						length = 0;
-						for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
-							length += ROM_GETLENGTH(chunk);
+						const char *name = ROM_GETNAME(rom);
+						const char *hash = ROM_GETHASHDATA(rom);
+						char hashbuf[HASH_BUF_SIZE];
+						int length = -1;
+
+						/* accumulate the total length of all chunks */
+						if (ROMREGION_ISROMDATA(region))
+							length = rom_file_size(rom);
+
+						/* start with the name */
+						mame_printf_info("%-12s ", name);
+
+						/* output the length next */
+						if (length >= 0)
+							mame_printf_info("%7d", length);
+						else
+							mame_printf_info("       ");
+
+						/* output the hash data */
+						if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
+						{
+							if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
+								mame_printf_info(_(" BAD"));
+
+							hash_data_print(hash, 0, hashbuf);
+							mame_printf_info(" %s", hashbuf);
+						}
+						else
+							mame_printf_info(_(" NO GOOD DUMP KNOWN"));
+
+						/* end with a CR */
+						mame_printf_info("\n");
 					}
-
-					/* start with the name */
-					mame_printf_info("%-12s ", name);
-
-					/* output the length next */
-					if (length >= 0)
-						mame_printf_info("%7d", length);
-					else
-						mame_printf_info("       ");
-
-					/* output the hash data */
-					if (!hash_data_has_info(hash, HASH_INFO_NO_DUMP))
-					{
-						if (hash_data_has_info(hash, HASH_INFO_BAD_DUMP))
-							mame_printf_info(_(" BAD"));
-
-						hash_data_print(hash, 0, hashbuf);
-						mame_printf_info(" %s", hashbuf);
-					}
-					else
-						mame_printf_info(_(" NO GOOD DUMP KNOWN"));
-
-					/* end with a CR */
-					mame_printf_info("\n");
-				}
 
 			count++;
 			machine_config_free(config);
@@ -780,7 +826,7 @@ int cli_info_listsamples(core_options *options, const char *gamename)
 	sndintrf_init(NULL);
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
@@ -826,7 +872,7 @@ static int info_verifyroms(core_options *options, const char *gamename)
 	int drvindex;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			audit_record *audit;
@@ -910,7 +956,7 @@ static int info_verifysamples(core_options *options, const char *gamename)
 	int drvindex;
 
 	/* now iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			audit_record *audit;
@@ -1258,7 +1304,7 @@ static void match_roms(const char *hash, int length, int *found)
 	int drvindex;
 
 	/* iterate over drivers */
-	for (drvindex = 0; drivers[drvindex]; drvindex++)
+	for (drvindex = 0; drivers[drvindex] != NULL; drvindex++)
 	{
 		machine_config *config = machine_config_alloc(drivers[drvindex]->machine_config);
 		const rom_entry *region, *rom;

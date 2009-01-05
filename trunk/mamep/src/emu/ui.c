@@ -1667,7 +1667,10 @@ astring *game_info_astring(running_machine *machine, astring *string)
 			const screen_config *scrconfig = screen->inline_config;
 
 			if (scrcount > 1)
+			{
 				astring_catc(string, slider_get_screen_desc(screen));
+				astring_catc(string, ": ");
+			}
 
 			if (scrconfig->type == SCREEN_TYPE_VECTOR)
 				astring_catc(string, _("Vector\n"));
@@ -1796,7 +1799,11 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 
 	/* draw the profiler if visible */
 	if (show_profiler)
-		ui_draw_text_full(profiler_get_text(machine), 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
+	{
+		astring *profilertext = profiler_get_text(machine, astring_alloc());
+		ui_draw_text_full(astring_c(profilertext), 0.0f, 0.0f, 1.0f, JUSTIFY_LEFT, WRAP_WORD, DRAW_OPAQUE, ARGB_WHITE, ui_bgcolor, NULL, NULL);
+		astring_free(profilertext);
+	}
 
 	/* if we're single-stepping, pause now */
 	if (single_step)

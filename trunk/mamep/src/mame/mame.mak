@@ -66,22 +66,7 @@ CPUS += V33
 CPUS += V35
 CPUS += V60
 CPUS += V70
-CPUS += I8035
-CPUS += I8041
-CPUS += I8048
-CPUS += I8648
-CPUS += I8748
-CPUS += MB8884
-CPUS += I8039
-CPUS += I8049
-CPUS += I8749
-CPUS += N7751
-CPUS += M58715
-CPUS += I8041
-CPUS += I8741
-CPUS += I8042
-CPUS += I8242
-CPUS += I8742
+CPUS += MCS48
 CPUS += I8031
 CPUS += I8032
 CPUS += I8051
@@ -143,6 +128,7 @@ CPUS += ARM
 CPUS += ARM7
 CPUS += JAGUAR
 CPUS += CUBEQCPU
+CPUS += ESRIP
 CPUS += R3000
 CPUS += R3041
 CPUS += R4600
@@ -176,21 +162,14 @@ CPUS += GMS30C2116
 CPUS += GMS30C2132
 CPUS += GMS30C2216
 CPUS += GMS30C2232
+CPUS += I860
 CPUS += I960
 CPUS += H83002
 CPUS += H83334
 CPUS += V810
 CPUS += M37702
 CPUS += M37710
-CPUS += PPC403GA
-CPUS += PPC403GCX
-CPUS += PPC601
-CPUS += PPC602
-CPUS += PPC603
-CPUS += PPC603E
-CPUS += PPC603R
-CPUS += PPC604
-CPUS += MPC8240
+CPUS += POWERPC
 CPUS += SE3208
 CPUS += MC68HC11
 CPUS += ADSP21062
@@ -361,6 +340,7 @@ DRVLIBS += \
 	$(MAMEOBJ)/atlus.a \
 	$(MAMEOBJ)/barcrest.a \
 	$(MAMEOBJ)/bfm.a \
+	$(MAMEOBJ)/bmc.a \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/cinemat.a \
 	$(MAMEOBJ)/comad.a \
@@ -592,6 +572,10 @@ $(MAMEOBJ)/bfm.a: \
 	$(DRIVERS)/bfm_sc2.o $(VIDEO)/bfm_adr2.o \
 	$(MACHINE)/bfm_bd1.o \
 
+$(MAMEOBJ)/bmc.a: \
+	$(DRIVERS)/bmcbowl.o \
+	$(DRIVERS)/koftball.o \
+
 $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/1942.o $(VIDEO)/1942.o \
 	$(DRIVERS)/1943.o $(VIDEO)/1943.o \
@@ -601,7 +585,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/commando.o $(VIDEO)/commando.o \
 	$(DRIVERS)/cps1.o $(VIDEO)/cps1.o \
 	$(DRIVERS)/cps2.o \
-	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o\
+	$(DRIVERS)/cps3.o $(AUDIO)/cps3.o \
 	$(DRIVERS)/egghunt.o \
 	$(DRIVERS)/fcrash.o \
 	$(DRIVERS)/gng.o $(VIDEO)/gng.o \
@@ -701,7 +685,6 @@ $(MAMEOBJ)/dooyong.a: \
 	$(DRIVERS)/gundealr.o $(VIDEO)/gundealr.o \
 
 $(MAMEOBJ)/dynax.a: \
-	$(DRIVERS)/cherrym2.o \
 	$(DRIVERS)/ddenlovr.o \
 	$(DRIVERS)/dynax.o $(VIDEO)/dynax.o \
 	$(DRIVERS)/hnayayoi.o $(VIDEO)/hnayayoi.o \
@@ -786,7 +769,7 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/goldstar.o $(VIDEO)/goldstar.o \
 	$(DRIVERS)/igs009.o \
 	$(DRIVERS)/igs_blit.o \
-	$(DRIVERS)/igs_180.o \
+	$(DRIVERS)/igs017.o \
 	$(DRIVERS)/igs_m027.o \
 	$(DRIVERS)/igs_m68.o \
 	$(DRIVERS)/iqblock.o $(VIDEO)/iqblock.o \
@@ -956,6 +939,7 @@ $(MAMEOBJ)/meadows.a: \
 	$(DRIVERS)/meadows.o $(AUDIO)/meadows.o $(VIDEO)/meadows.o \
 
 $(MAMEOBJ)/merit.a: \
+	$(DRIVERS)/mpoker.o \
 	$(DRIVERS)/merit.o \
 	$(DRIVERS)/meritm.o \
 
@@ -1071,6 +1055,7 @@ $(MAMEOBJ)/nichibut.a: \
 	$(DRIVERS)/nbmj8891.o $(VIDEO)/nbmj8891.o \
 	$(DRIVERS)/nbmj8991.o $(VIDEO)/nbmj8991.o \
 	$(DRIVERS)/nbmj9195.o $(VIDEO)/nbmj9195.o \
+	$(DRIVERS)/nightgal.o \
 	$(DRIVERS)/niyanpai.o $(MACHINE)/m68kfmly.o $(VIDEO)/niyanpai.o \
 	$(DRIVERS)/pastelg.o $(VIDEO)/pastelg.o \
 	$(DRIVERS)/seicross.o $(VIDEO)/seicross.o \
@@ -1090,7 +1075,7 @@ $(MAMEOBJ)/nintendo.a: \
 	$(DRIVERS)/playch10.o $(MACHINE)/playch10.o $(VIDEO)/playch10.o \
 	$(DRIVERS)/popeye.o $(VIDEO)/popeye.o \
 	$(DRIVERS)/punchout.o $(VIDEO)/punchout.o \
-	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o\
+	$(DRIVERS)/spacefb.o $(AUDIO)/spacefb.o  $(VIDEO)/spacefb.o \
 	$(DRIVERS)/vsnes.o $(MACHINE)/vsnes.o $(VIDEO)/vsnes.o \
 	$(VIDEO)/ppu2c0x.o \
 
@@ -1183,6 +1168,7 @@ $(MAMEOBJ)/sanritsu.a: \
 $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/aladbl.o \
 	$(DRIVERS)/angelkds.o $(VIDEO)/angelkds.o \
+	$(DRIVERS)/bingoc.o \
 	$(DRIVERS)/blockade.o $(AUDIO)/blockade.o $(VIDEO)/blockade.o \
 	$(DRIVERS)/calorie.o \
 	$(DRIVERS)/coolridr.o \
@@ -1335,6 +1321,7 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/bking.o $(VIDEO)/bking.o \
 	$(DRIVERS)/bublbobl.o $(MACHINE)/bublbobl.o $(VIDEO)/bublbobl.o \
 	$(DRIVERS)/buggychl.o $(MACHINE)/buggychl.o $(VIDEO)/buggychl.o \
+	$(DRIVERS)/cchance.o \
 	$(DRIVERS)/chaknpop.o $(MACHINE)/chaknpop.o $(VIDEO)/chaknpop.o \
 	$(DRIVERS)/champbwl.o \
 	$(DRIVERS)/changela.o $(VIDEO)/changela.o \
@@ -1387,7 +1374,9 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/taito_z.o $(VIDEO)/taito_z.o \
 	$(DRIVERS)/taitoair.o $(VIDEO)/taitoair.o \
 	$(DRIVERS)/taitojc.o $(VIDEO)/taitojc.o \
+	$(DRIVERS)/taitopjc.o $\
 	$(DRIVERS)/taitosj.o $(MACHINE)/taitosj.o $(VIDEO)/taitosj.o \
+	$(DRIVERS)/taitotz.o \
 	$(DRIVERS)/taitowlf.o \
 	$(DRIVERS)/tnzs.o $(MACHINE)/tnzs.o $(VIDEO)/tnzs.o \
 	$(DRIVERS)/topspeed.o $(VIDEO)/topspeed.o \
@@ -1554,9 +1543,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/aztarac.o $(AUDIO)/aztarac.o $(VIDEO)/aztarac.o \
 	$(DRIVERS)/beaminv.o \
 	$(DRIVERS)/blackt96.o \
-	$(DRIVERS)/bmcbowl.o \
 	$(DRIVERS)/brasil.o \
-	$(DRIVERS)/koftball.o \
 	$(DRIVERS)/calomega.o $(VIDEO)/calomega.o \
 	$(DRIVERS)/carrera.o \
 	$(DRIVERS)/caswin.o \
@@ -1583,11 +1570,13 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/ertictac.o \
 	$(DRIVERS)/esd16.o $(VIDEO)/esd16.o \
 	$(DRIVERS)/esh.o \
+	$(DRIVERS)/esripsys.o $(VIDEO)/esripsys.o \
 	$(DRIVERS)/ettrivia.o \
 	$(DRIVERS)/filetto.o \
 	$(DRIVERS)/flower.o $(AUDIO)/flower.o $(VIDEO)/flower.o \
 	$(DRIVERS)/fortecar.o \
 	$(DRIVERS)/freekick.o $(VIDEO)/freekick.o \
+	$(DRIVERS)/fruit.o \
 	$(DRIVERS)/funworld.o $(VIDEO)/funworld.o \
 	$(DRIVERS)/galaxi.o \
 	$(DRIVERS)/gamecstl.o \
@@ -1622,7 +1611,9 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/limenko.o \
 	$(DRIVERS)/ltcasino.o \
 	$(DRIVERS)/lucky74.o $(VIDEO)/lucky74.o \
+	$(DRIVERS)/luckgrln.o \
 	$(DRIVERS)/magic10.o \
+	$(DRIVERS)/magicard.o \
 	$(DRIVERS)/magicfly.o \
 	$(DRIVERS)/magictg.o \
 	$(DRIVERS)/malzak.o $(VIDEO)/malzak.o \
@@ -1633,7 +1624,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/miniboy7.o \
 	$(DRIVERS)/mirage.o \
 	$(DRIVERS)/mirax.o \
-	$(DRIVERS)/mjsiyoub.o \
 	$(DRIVERS)/mole.o $(VIDEO)/mole.o \
 	$(DRIVERS)/mosaic.o $(VIDEO)/mosaic.o \
 	$(DRIVERS)/mrjong.o $(VIDEO)/mrjong.o \
@@ -1661,6 +1651,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/skyarmy.o \
 	$(DRIVERS)/skylncr.o \
 	$(DRIVERS)/sliver.o \
+	$(DRIVERS)/slotcarn.o \
 	$(DRIVERS)/smstrv.o \
 	$(DRIVERS)/snookr10.o $(VIDEO)/snookr10.o \
 	$(DRIVERS)/spool99.o \
@@ -1685,7 +1676,6 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/trvquest.o \
 	$(DRIVERS)/ttchamp.o \
 	$(DRIVERS)/tugboat.o \
-	$(DRIVERS)/turbosub.o \
 	$(DRIVERS)/usgames.o $(VIDEO)/usgames.o \
 	$(DRIVERS)/vamphalf.o \
 	$(DRIVERS)/vcombat.o \
@@ -1793,7 +1783,9 @@ $(DRIVERS)/peplus.o:	$(LAYOUT)/peplus.lh \
 						$(LAYOUT)/pe_keno.lh \
 						$(LAYOUT)/pe_slots.lh
 
-$(DRIVERS)/qix.o:	$(LAYOUT)/elecyoyo.lh
+$(DRIVERS)/polepos.o:	$(LAYOUT)/polepos.lh
+
+$(DRIVERS)/qix.o:		$(LAYOUT)/elecyoyo.lh
 
 $(DRIVERS)/re900.o:	$(LAYOUT)/re900.lh
 

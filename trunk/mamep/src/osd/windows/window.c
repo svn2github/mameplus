@@ -740,7 +740,7 @@ void winwindow_video_window_update(win_window_info *window)
 #endif /* USE_SCALE_EFFECTS */
 
 	// if we're visible and running and not in the middle of a resize, draw
-	if (window->hwnd != NULL && window->target != NULL)
+	if (window->hwnd != NULL && window->target != NULL && window->drawdata != NULL)
 	{
 		int got_lock = TRUE;
 

@@ -23,7 +23,7 @@ typedef enum
 typedef struct _sid6581_interface sid6581_interface;
 struct _sid6581_interface
 {
-	int (*ad_read)(running_machine *machine, int channel);
+	int (*ad_read)(const device_config *device, int channel);
 } ;
 
 
@@ -31,5 +31,8 @@ READ8_HANDLER  ( sid6581_0_port_r );
 READ8_HANDLER  ( sid6581_1_port_r );
 WRITE8_HANDLER ( sid6581_0_port_w );
 WRITE8_HANDLER ( sid6581_1_port_w );
+
+SND_GET_INFO( sid6581 );
+SND_GET_INFO( sid8580 );
 
 #endif /* __SID6581_H__ */
