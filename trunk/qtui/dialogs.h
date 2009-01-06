@@ -1,6 +1,8 @@
 #ifndef _DIALOGS_H_
 #define _DIALOGS_H_
 
+#include <QtGui>
+
 #include "ui_options.h"
 #include "ui_directories.h"
 #include "ui_about.h"
@@ -45,4 +47,10 @@ public:
 	About(QWidget *parent = 0);
 };
 
+extern Options *optionsUI;
+extern Dirs *dirsUI;
+extern About *aboutUI;
+
+extern QList<QListWidget *> optCtrls;
+extern QByteArray option_geometry;
 #endif

@@ -1,25 +1,30 @@
 #include <QtPlugin>
+
 #include "mamepguimain.h"
+
+#include "mameopt.h"
+#include "utils.h"
+#include "dialogs.h"
+#include "ips.h"
+#include "m1.h"
+
 #ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
 #endif /* Q_OS_WIN */
 
-// global variables
+/* global */
 MainWindow *win;
 QSettings guiSettings(CFG_PREFIX + "mamepgui.ini", QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
 QString mame_binary;
 QString list_mode;
 QString language;
-QString background_file = NULL;
-QString gui_style = NULL;
-QActionGroup bgActions(0);
-QActionGroup styleActions(0);
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
 
+/* internal */
 QStringList dockCtrlNames;
 
 void MainWindow::log(QString message, char logOrigin)
@@ -112,8 +117,8 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 //	setText(QString("E: %1").arg(status));
 }
 
-MainWindow::MainWindow(QWidget *parent)
-: QMainWindow(parent)
+MainWindow::MainWindow(QWidget *parent) : 
+QMainWindow(parent)
 {
 	dockCtrlNames = (QStringList() 
 	   << QT_TR_NOOP("Snapshot")
@@ -391,31 +396,24 @@ void MainWindow::init()
 	// must optUtils->initOption() after win, before show()
 	optUtils->initOption();
 
-	//apply css
-	QFile cssFile(":/res/mamepgui.qss");
-	cssFile.open(QFile::ReadOnly);
-	QString styleSheet = QLatin1String(cssFile.readAll());
-	qApp->setStyleSheet(styleSheet);
-
 	QIcon mamepIcon(":/res/16x16/mamep.png");
 	qApp->setWindowIcon(mamepIcon);
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(mamepIcon);
-
-
 
 	// must init app style before background
 	if (gui_style.isEmpty())
 		gui_style = guiSettings.value("gui_style").toString();
 
 	QStringList styles = QStyleFactory::keys();
+	QActionGroup *styleActions = new QActionGroup(this);
 	foreach (QString style, styles)
 	{
 		QAction* act = win->menuGUIStyle->addAction(style);
 		act->setCheckable(true);
 		if (gui_style == style)
 			act->setChecked(true);
-		styleActions.addAction(act);
+		styleActions->addAction(act);
 		connect(act, SIGNAL(triggered()), this, SLOT(setGuiStyle()));
 	}
 
@@ -428,8 +426,9 @@ void MainWindow::init()
 	
 	if (background_file.isEmpty())
 		background_file = guiSettings.value("background_file").toString();
-	
-	if (dir.exists() && bgActions.actions().count() < 1)
+
+	QActionGroup *bgActions = new QActionGroup(this);
+	if (dir.exists())
 	{
 		QString dirpath = utils->getPath(_dirpath);
 		
@@ -445,19 +444,19 @@ void MainWindow::init()
 			act->setCheckable(true);
 			if (background_file == fileName)
 				act->setChecked(true);
-			bgActions.addAction(act);
+			bgActions->addAction(act);
 			connect(act, SIGNAL(triggered()), this, SLOT(setBgPixmap()));
 		}
 	}
-
-	if (!background_file.isEmpty())
-		setBgPixmap(background_file);
 
 	//show UI
 	loadLayout();
 	setDockOptions();
 
-	// must gameList->init(true) before loadLayout()
+	//after loadLayout(), so we can check background stretch option
+	if (!background_file.isEmpty())
+		setBgPixmap(background_file);
+
 	gameList->init(true, GAMELIST_INIT_FULL);
 	show();
 
@@ -506,6 +505,7 @@ void MainWindow::init()
 #endif /* Q_OS_WIN */
 
 	gameList->restoreGameSelection();
+	gameList->updateSelection();
 }
 
 void MainWindow::setVersion()
@@ -546,7 +546,7 @@ void MainWindow::setVersion()
 		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 6")
+		.arg("1.3 beta 9")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -763,14 +763,15 @@ void MainWindow::initSettings()
 
 	//remove invalid settings
 	static const QStringList validSettings = (QStringList() 
-		<< "flyer_directory"
 		<< "cabinet_directory"
-		<< "marquee_directory"
-		<< "title_directory"
 		<< "cpanel_directory"
+		<< "flyer_directory"
+		<< "marquee_directory"
 		<< "pcb_directory"
+		<< "title_directory"
 		<< "icons_directory"
 		<< "background_directory"
+		<< "folder_directory"
 		<< "background_file"
 		<< "m1_directory"
 		<< "m1_language"
@@ -869,20 +870,22 @@ void MainWindow::loadSettings()
 void MainWindow::saveSettings()
 {
 	//some guiSettings uses mameOpts mapping for dialog view
-	guiSettings.setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
 	guiSettings.setValue("cabinet_directory", mameOpts["cabinet_directory"]->globalvalue);
-	guiSettings.setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
-	guiSettings.setValue("title_directory", mameOpts["title_directory"]->globalvalue);
 	guiSettings.setValue("cpanel_directory", mameOpts["cpanel_directory"]->globalvalue);
+	guiSettings.setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
+	guiSettings.setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
 	guiSettings.setValue("pcb_directory", mameOpts["pcb_directory"]->globalvalue);
+	guiSettings.setValue("title_directory", mameOpts["title_directory"]->globalvalue);
 	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
 	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
+	guiSettings.setValue("folder_directory", mameOpts["folder_directory"]->globalvalue);
+
 	guiSettings.setValue("background_file", background_file);
 	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
 #ifdef Q_OS_WIN
 	guiSettings.setValue("m1_language", m1UI->cmbLang->currentText());
 	guiSettings.setValue("ips_language", ipsUI->cmbLang->currentText());
-	guiSettings.setValue("ips_relationship", ipsUI->chkDepend->isChecked() ? 1 : 0);
+	guiSettings.setValue("ips_relationship", ipsUI->chkRelation->isChecked() ? 1 : 0);
 #endif /* Q_OS_WIN */
 	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
@@ -953,15 +956,14 @@ void MainWindow::setTransparentBg(QWidget * w)
 
 	if (isDarkBg)
 	{
-		bgColor = QColor(0, 0, 0, 140);
+		bgColor = QColor(0, 0, 0, 128);
 		color = QColor(Qt::white);
 	}
 	else
 	{
-		bgColor = QColor(255, 255, 255, 140);
+		bgColor = QColor(255, 255, 255, 128);
 		color = QColor(Qt::black);
 	}
-	//color: palette(dark); 
 
 	palette.setColor(QPalette::Active, QPalette::Text, color);
 	palette.setColor(QPalette::Inactive, QPalette::Text, color);
@@ -1031,29 +1033,45 @@ void MainWindow::setBgPixmap(QString fileName)
 	if (!bkgroundImg.isNull())
 	{
 		if (actionBgStretch->isChecked())
-			bkgroundImg = bkgroundImg.scaled(win->size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
+			bkgroundImg = bkgroundImg.scaled(size(), Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 
-		QPalette palette;
-		palette.setBrush(win->backgroundRole(), QBrush(bkgroundImg));
-		win->setPalette(palette);
+		//fixme: must init before stylesheet applied
+		QPalette palette = win->palette();
+		palette.setBrush(backgroundRole(), QBrush(bkgroundImg));
+//		win->setPalette(palette);
 
-		//get the color tone of bg image, set the bg color based on it
+		//get the color tone of bg image
 		bkgroundImg = bkgroundImg.scaled(1, 1, Qt::KeepAspectRatioByExpanding, Qt::SmoothTransformation);
 		int grayVal = qGray(bkgroundImg.pixel(0, 0));
-//		win->log(QString("grayVal: %1").arg(grayVal));
 		if (grayVal < 128)
 			isDarkBg = true;
 		else
 			isDarkBg = false;
 
+		QString TEXT_COLOR = QString("color:") + (isDarkBg ? "white" : "black") + "; ";
+		QString TEXT_BGCOLOR = isDarkBg ? "background-color: rgba(0, 0, 0, 128)" : "background-color: rgba(255, 255, 255, 128)";
+		static const QString STATIC_STYLE = 
+			" QToolBar{background-color:palette(window);}"
+			" QStatusBar::item, QDockWidget::title {border-width:1px; border-style:solid; border-color:palette(dark);}"
+			" QStatusBar QLabel {padding:0 1px;}"
+			" QDockWidget::title {padding:1px 2px; margin:2px 0;}"
+			;
+
+		qApp->setStyleSheet( STATIC_STYLE
+			+ " QDockWidget, QStatusBar QLabel {" + TEXT_COLOR + "}"
+			+ " QStatusBar::item, QDockWidget::title {" + TEXT_BGCOLOR + "}"
+			);
+	
+		setPalette(palette);
+
 		// setup background alpha
-		setTransparentBg(win->treeFolders);
-		setTransparentBg(win->tvGameList);
-		setTransparentBg(win->lvGameList);
-		setTransparentBg(win->tbHistory);
-		setTransparentBg(win->tbMameinfo);
-		setTransparentBg(win->tbStory);
-		setTransparentBg(win->tbCommand);
+		setTransparentBg(treeFolders);
+		setTransparentBg(tvGameList);
+		setTransparentBg(lvGameList);
+		setTransparentBg(tbHistory);
+		setTransparentBg(tbMameinfo);
+		setTransparentBg(tbStory);
+		setTransparentBg(tbCommand);
 #ifdef Q_OS_WIN
 		setTransparentBg(m1UI->twSongList);
 		setTransparentStyle(m1UI->groupBox);

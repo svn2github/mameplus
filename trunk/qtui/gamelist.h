@@ -61,7 +61,6 @@ public:
 	QVariant data(int column) const;
 	int row() const;
 	TreeItem *parent();
-	bool setData(int column, const QVariant &value);
 
 private:
 	QList<TreeItem*> childItems;
@@ -77,27 +76,20 @@ public:
 	TreeModel(QObject *parent = 0, bool isGroup = true);
 	~TreeModel();
 
-	QVariant data(const QModelIndex &index, int role) const;
-	Qt::ItemFlags flags(const QModelIndex &index) const;
-	QVariant headerData(int section, Qt::Orientation orientation,
-		int role = Qt::DisplayRole) const;
-	QModelIndex index(int row, int column,
-		const QModelIndex &parent = QModelIndex()) const;
+	QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	QModelIndex index(int column, TreeItem *childItem) const;
 	QModelIndex parent(const QModelIndex &index) const;
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
-	void rowChanged(const QModelIndex &index);
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
-	bool setData(const QModelIndex &index, const QVariant &value,
-		int role = Qt::EditRole);
-	bool setHeaderData(int section, Qt::Orientation orientation,
-		const QVariant &value, int role = Qt::EditRole);
+	QVariant data(const QModelIndex &index, int role) const;
 
-	TreeItem *getItem(const QModelIndex &index) const;
-	
-	TreeItem *rootItem;
+	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
+	void updateRow(const QModelIndex &index);
 
 private:
+	TreeItem *rootItem;
+
+	TreeItem *getItem(const QModelIndex &index) const;
 	TreeItem * buildItem(TreeItem *, QString, bool);
 };
 
@@ -184,17 +176,19 @@ public slots:
 	void extractMergedFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
-	void filterRegExpChanged();
 	void filterRegExpCleared();
-	void filterRegExpChanged2(QTreeWidgetItem *, QTreeWidgetItem *previous = NULL);
+	void filterRegExpChanged();
+	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);
 
 private:
 	QString currentTempROM;
 	QFutureWatcher<void> loadIconWatcher;
 	int loadIconStatus;
 	QAbstractItemDelegate *defaultGameListDelegate;
+	QStringList extFolders;
 
 	void initFolders();
+	void initExtFolders(const QString&, const QString&);
 	void initMenus();
 	void loadMMO(int);
 	void loadIconWorkder();
@@ -280,6 +274,7 @@ Q_OBJECT
 
 public:
 	QString searchText, filterText;
+	QStringList filterList;
 
 	GameListSortFilterProxyModel(QObject *parent = 0);
 
@@ -287,5 +282,10 @@ protected:
 	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
 //	bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
 };
+
+extern MameGame *mameGame;
+extern Gamelist *gameList;
+extern QString currentGame, currentFolder;
+extern QStringList consoleGamesL;
 
 #endif

@@ -2,6 +2,7 @@
 #define _M1_H_
 
 #include <QtGui>
+
 #include "ui_m1.h"
 
 class M1UI: public QDockWidget, public Ui::M1UI
@@ -84,4 +85,6 @@ public slots:
 	void updateList(const QString & = NULL);
 };
 
+extern M1UI *m1UI;
+extern M1 *m1;
 #endif

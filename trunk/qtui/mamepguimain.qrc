@@ -106,6 +106,5 @@
 	<file>res/status-na.png</file>
 
 	<file>res/mamepgui.ini</file>
-	<file>res/mamepgui.qss</file>
     </qresource>
 </RCC>

@@ -1,7 +1,12 @@
-#include "mamepguimain.h"
+#include "ips.h"
 
+#include "mamepguimain.h"
+#include "mameopt.h"
+
+/* global */
 IPS *ipsUI = NULL;
 
+/* internal */
 const QStringList ipsLangs = (QStringList()
 	<< "zh_CN" << "zh_TW" << "en_US" );
 
@@ -30,7 +35,7 @@ void IPS::init()
 	}
 	cmbLang->setCurrentIndex(sel);
 
-	chkDepend->setChecked(guiSettings.value("ips_relationship", "1").toInt() == 1);
+	chkRelation->setChecked(guiSettings.value("ips_relationship", "1").toInt() == 1);
 
 	connect(twList, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), 
 			this, SLOT(parse(QTreeWidgetItem *, QTreeWidgetItem *)));
@@ -43,11 +48,14 @@ void IPS::init()
 
 void IPS::applyRelations(QTreeWidgetItem *item, int col)
 {
-	if (col == 1 || stopListenRelations || !chkDepend->isChecked())
+	if (col == 1 || stopListenRelations)
 		return;
 
 	QString datName = item->text(1).toLower().trimmed();
 	itemStateTable[datName] = (item->checkState(0) == Qt::Checked) ? 1 : 0;
+
+	if (!chkRelation->isChecked())
+		return;
 
 	validateConf(datName);
 	validateDep(datName);
@@ -306,7 +314,8 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 			{
 				startDesc = false;
 			}
-			
+
+			//build ips tree
 			if (current == NULL && startCat)
 			{
 				QStringList cats = line.split("/");
@@ -405,15 +414,17 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 void IPS::updateList()
 {
 	twList->clear();
+	itemStateTable.clear();
 
+	//build ips tree
 	for (int i = 0; i < datFiles.count(); i++)
 		parse(NULL, NULL, datFiles[i]);
+
 	twList->expandAll();
 
 	//update mameOpts
 	optUtils->updateModel(NULL, OPTLEVEL_CURR);
 
-	itemStateTable.clear();
 	//check the selected ips	
 	if (mameOpts.contains("ips"))
 	{

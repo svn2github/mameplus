@@ -1,11 +1,14 @@
+#include "dialogs.h"
+
 #include "mamepguimain.h"
 
+/* global */
 Options *optionsUI = NULL;
 Dirs *dirsUI = NULL;
 About *aboutUI = NULL;
 
-QByteArray option_geometry;
 QList<QListWidget *> optCtrls;
+QByteArray option_geometry;
 
 Options::Options(QWidget *parent)
 :QDialog(parent)
@@ -19,6 +22,9 @@ Options::Options(QWidget *parent)
 					<< lvBiosOpt
 					<< lvCloneofOpt
 					<< lvCurrOpt;
+
+	buttonBoxDlg->disconnect(SIGNAL(accepted()));
+	connect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
 }
 
 Options::~Options()

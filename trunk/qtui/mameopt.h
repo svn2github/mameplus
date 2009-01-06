@@ -3,6 +3,17 @@
 
 #include <QtGui>
 
+enum
+{
+	OPTLEVEL_DEF = 0,
+	OPTLEVEL_GLOBAL,
+	OPTLEVEL_SRC,
+	OPTLEVEL_BIOS,
+	OPTLEVEL_CLONEOF,
+	OPTLEVEL_CURR,
+	OPTLEVEL_LAST
+};
+
 class ResetWidget : public QWidget
 {
 	Q_OBJECT
@@ -89,6 +100,16 @@ public:
 	MameOption(QObject *parent = 0);
 };
 
+class OptInfo : public QObject
+{
+public:
+	QListWidget *lstCatView;
+	QTreeView *optView;
+	QStandardItemModel *optModel;
+
+	OptInfo(QListWidget *, QTreeView *, QObject *parent = 0);
+};
+
 class OptionUtils : public QObject
 {
 	Q_OBJECT
@@ -114,31 +135,19 @@ public slots:
 	void updateHeaderSize(int, int, int);
 
 private:
+	//option category map, option category as key, names as value list
+	QMap<QString, QStringList> optCatMap;
+	QList<OptInfo *> optInfos;
+
 	QHash<QString, QString> readIniFile(const QString &);
 	void addModelItemTitle(QStandardItemModel*, QString);
 	void addModelItem(QStandardItemModel*, QString);
 	void updateModelData(QString, int);
 };
 
-enum
-{
-	OPTLEVEL_DEF = 0,
-	OPTLEVEL_GLOBAL,
-	OPTLEVEL_SRC,
-	OPTLEVEL_BIOS,
-	OPTLEVEL_CLONEOF,
-	OPTLEVEL_CURR,
-	OPTLEVEL_LAST
-};
-
-class OptInfo : public QObject
-{
-public:
-	QListWidget *lstCatView;
-	QTreeView *optView;
-	QStandardItemModel *optModel;
-
-	OptInfo(QListWidget *, QTreeView *, QObject *parent = 0);
-};
+extern OptionUtils *optUtils;
+extern QHash<QString, MameOption*> mameOpts;
+extern QByteArray option_column_state;
+extern QString mameIniPath;
 
 #endif

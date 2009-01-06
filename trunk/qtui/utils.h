@@ -10,7 +10,6 @@ public:
 	QByteArray deficondata;
 	QByteArray defsnapdata;
 
-	QRegExp spaceRegex;
 	QProcess *loadProc;
 	
 	Utils(QObject *parent = 0);
@@ -24,14 +23,13 @@ public:
 	void lowerTrimmed(QStringList &);
 	QStringList split2Str(const QString &, const QString &);
 	QString getPath(QString);
+	QString getSinglePath(QString, QString);
 	QString getMameVersion();
 
 	bool isAuditFolder(QString);
 	bool isConsoleFolder();
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
-	QMap<QString, QStringList> getExtFolders();
-	QStringList getExtFolderGames(QString, QString);
 
 signals:
 	void icoUpdated(QString);
@@ -96,5 +94,7 @@ public slots:
 	void readyReadStandardError();
 	void error(QProcess::ProcessError);
 };
-#endif
 
+extern Utils *utils;
+extern ProcessManager *procMan;
+#endif

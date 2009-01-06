@@ -1,6 +1,10 @@
-#include "mamepguimain.h"
 #include "m1ui.h"
+#include "m1.h"
 
+#include "mamepguimain.h"
+#include "mameopt.h"
+
+/* global */
 M1 *m1 = NULL;
 M1UI *m1UI = NULL;
 

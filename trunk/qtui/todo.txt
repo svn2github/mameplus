@@ -5,12 +5,11 @@ read/write cookie
 theme
 
 //Done
-//4.5 bug
-/ crash on local game list
-
-/ checked disconn/conn SIGNALS
-/ IPS Language and Enforce relationship option
-/ crash on refresh console
+-reworked headers
+-supported external .ini folders
+-auto-collapse folder trees
+-made status bar and components title bar transparent
+-ips v4 bug: ips dialog 1st init, all settings cleared
 
 //Linux
 D column sorting
@@ -18,7 +17,20 @@ mounted snap doesnt load
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Dev
-* ips lang fallback, v1 dat fallback with datfile name
+2 mac layout
+2 root folder ext ini
+2 option to disable delegate
+2 play inp/rec/mng/wav..., save state
+2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
+2 restore geometry
+1 check default bios since .129
+2 ips dialog size
+* Ctrl-F w/ functionality to filter like MameUI including its text filter.
+2 Support for warning.ico, if present in \icons or \icons\icons.zip use that for the non-working games.
+2 Support for nonworking.png, if present in the \snap or \snap.zip use that for non-working games snap display.
+* remove TreeItem
+* .entryList(
+* ips v1 dat fallback with datfile name
 * mamep core lang, for non cjk languages
 * separate game list language
 * reconsider command.dat it's slow and buggy
@@ -28,10 +40,12 @@ mounted snap doesnt load
 * 检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
 
 //Options
+1 mame option available after m1 init
 * support mamep 127 paths
 * 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
 * command.dat path in lang
 * add a menu to auto mkdir
+* unify get GUI opts default
 2 add GUI Options +0.1
 * keycode ctrlr config editor
 1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
@@ -42,14 +56,14 @@ mounted snap doesnt load
 * general info page
 
 //GameList
-2 rewrite icon loading, large icon view
+* trans background for status bar / title bar
+2 large icon view
 * 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 1 provide a builtin fallback for zip folders
 * widget loaded prompt
 * SDL joystick GUI
 * export lst gamelist
 1 7z binary path, doesnt stall when 7z is not available
-1 play inp/rec/mng/wav...
 * coin/time counter column
 * sort by reading
 * display 2 lines of game desc local/english
@@ -60,8 +74,8 @@ mounted snap doesnt load
 * unify multiple snapshot routines
 
 //Folder
-2 rewrite filter by thread
-2 custom ini read/write +0.03
+1 rewrite filter by thread
+2 custom ini write +0.03
 * dnd support +0.01
 * other filters +0.03
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
@@ -93,10 +107,11 @@ D crash on 128u2->u3? missing sets
 
 //Main Window
 1 Add an option to revert the geometry to default, I lost a couple of my snap/info
-2 F11 fullscreen mode, vista style
+1 F11 fullscreen mode, vista style
 
 //IPS
 * 官方mame支持ips +0.1
+* multi directory
 * add verify IPS on RunMAME, remove it if N/A
 
 //Misc
@@ -142,15 +157,12 @@ libgtk2.0-dev
 
 configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
 macosx:
-configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -nomake examples -nomake demos -nomake tools -universal -no-dwarf2
+configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-dwarf2 -nomake examples -nomake demos -nomake tools
 
 cd /mnt/hgfs/qtui
 
-linux:
-export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
+linux/mac:
 export PATH=/usr/local/Trolltech/Qt-4.5.0-beta1/bin:$PATH
-mac:
-export PATH=/Developer/usr/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui

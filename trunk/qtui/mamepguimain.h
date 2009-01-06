@@ -1,27 +1,23 @@
 #ifndef _MAMEPGUIMAIN_H_
 #define _MAMEPGUIMAIN_H_
 
+//common
 #include "quazip.h"
 #include "quazipfile.h"
 
-#include <QApplication>
 #include <QtGui>
+#include <QApplication>
 #include <QtXml>
+
+////
+#include "ui_mamepguimain.h"
+
+#include "gamelist.h"
 
 //static qt works with windows version
 Q_IMPORT_PLUGIN(qico)
 Q_IMPORT_PLUGIN(qjpeg)
 //Q_IMPORT_PLUGIN(qmng)
-
-#include "ui_mamepguimain.h"
-
-#include "audit.h"
-#include "gamelist.h"
-#include "mameopt.h"
-#include "dialogs.h"
-#include "utils.h"
-#include "ips.h"
-#include "m1.h"
 
 enum
 {
@@ -145,6 +141,9 @@ protected:
     void closeEvent(QCloseEvent *);
 
 private:
+	QString background_file;
+	QString gui_style;
+	
 	void toggleGameListColumn(int);
 	void initHistory(QString);
 	Screenshot * initSnap(QString);
@@ -155,7 +154,6 @@ private:
 	QList<QTabBar *> getSSTabBars();
 };
 
-#define LOG_MAME	2
 #define MAMEPLUS_SIG 0x704c7553
 #define S11N_VER 8
 
@@ -175,34 +173,9 @@ const QString CFG_PREFIX =
 #endif
 	".mamepgui/";
 
-// external global vars
-extern QList<QListWidget *> optCtrls;
-extern QStringList consoleGamesL;
-
-//misc class instance
-//UI
 extern MainWindow *win;
-extern Options *optionsUI;
-extern Dirs *dirsUI;
-extern About *aboutUI;
-extern IPS *ipsUI;
-extern M1UI *m1UI;
-//utils
-extern MameGame *mameGame;
-extern Gamelist *gameList;
-extern QHash<QString, MameOption*> mameOpts;
-extern ProcessManager *procMan;
-extern OptionUtils *optUtils;
-extern Utils *utils;
-extern M1 *m1;
-
-//current settings
-extern QString currentGame, currentFolder;
 extern QSettings guiSettings, defSettings;
-extern QByteArray option_column_state;
-extern QByteArray option_geometry;
 extern QString mame_binary;
-extern QString mameIniPath;
 extern QString list_mode;
 extern QString language;
 extern bool local_game_list;

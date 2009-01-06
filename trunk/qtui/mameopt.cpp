@@ -1,18 +1,21 @@
+#include "mameopt.h"
+
 #include "mamepguimain.h"
+#include "dialogs.h"
+
 #ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
 #endif
 
+/* global */
 OptionUtils *optUtils;
-//global collection of all MameOption4
+//collection of all MameOptions
 QHash<QString, MameOption*> mameOpts;
 QByteArray option_column_state;
 QString mameIniPath = "";
 
-QList<OptInfo *> optInfos;
-//option category map, option category as key, names as value list
-QMap<QString, QStringList> optCatMap;
+/* internal */
 OptionDelegate optdelegate(win);
 
 enum
@@ -1214,14 +1217,16 @@ void OptionUtils::loadDefault(QString text)
 //the following is for Qt translation
 #if 0
 	QStringList optList = (QStringList()
-		<< QT_TR_NOOP("background directory")
 		<< QT_TR_NOOP("cabinet directory")
 		<< QT_TR_NOOP("control panel directory")
 		<< QT_TR_NOOP("flyer directory")
-		<< QT_TR_NOOP("icons directory")
 		<< QT_TR_NOOP("marquee directory")
 		<< QT_TR_NOOP("pcb directory")
 		<< QT_TR_NOOP("title directory")
+		<< QT_TR_NOOP("icons directory")
+		<< QT_TR_NOOP("background directory")
+		<< QT_TR_NOOP("external folder list")
+
 		<< QT_TR_NOOP("m1 directory")
 		<< QT_TR_NOOP("history file")
 		<< QT_TR_NOOP("story file")

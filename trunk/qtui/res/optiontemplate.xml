@@ -2,14 +2,16 @@
 <!-- mame ver 126 -->
 <optiontemplate version="1">
 	<!-- GUI Only -->
-	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
 	<option name="cabinet_directory" default="cabinets" type="dirs" guivisible="1" />
 	<option name="cpanel_directory" default="cpanel" guiname="control panel directory" type="dirs" guivisible="1" />
 	<option name="flyer_directory" default="flyers" type="dirs" guivisible="1" />
-	<option name="icons_directory" default="icons" type="dirs" guivisible="1" />
 	<option name="marquee_directory" default="marquees" type="dirs" guivisible="1" />
 	<option name="pcb_directory" default="pcb" guiname="PCB directory" type="dirs" guivisible="1" />
 	<option name="title_directory" default="titles" type="dirs" guivisible="1" />
+	<option name="icons_directory" default="icons" type="dirs" guivisible="1" />
+	<option name="background_directory" default="bkground" type="dir" guivisible="1" />
+	<option name="folder_directory" default="folders" guiname="external folder list" type="dirs" guivisible="1" />
+
 	<option name="m1_directory" default="bin/m1" type="dir" guivisible="1" />
 	<option name="history_file" default="history.dat" type="datfile" guivisible="1" />
 	<option name="story_file" default="story.dat" type="datfile" guivisible="1" />

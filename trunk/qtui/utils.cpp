@@ -1,6 +1,11 @@
+#include "utils.h"
+
 #include "mamepguimain.h"
 
 #undef _DEBUG_
+#define LOG_MAME	2
+
+/* global */
 Utils *utils;
 ProcessManager *procMan = NULL;
 
@@ -14,8 +19,6 @@ Utils::Utils(QObject *parent)
 	QFile snapFile(":/res/mamegui/mame.png");
 	snapFile.open(QIODevice::ReadOnly);
 	defsnapdata = snapFile.readAll();
-	
-	spaceRegex = QRegExp("\\s+");
 }
 
 QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
@@ -95,6 +98,23 @@ QString Utils::getPath(QString dirpath)
 	return dir.path() + "/";	//clean it up
 }
 
+QString Utils::getSinglePath(QString dirPaths0, QString fileName)
+{
+	QStringList dirPaths = dirPaths0.split(";");
+
+	foreach (QString _dirPath, dirPaths)
+	{
+		QString dirPath = getPath(_dirPath);
+		QFile file(dirPath + fileName);
+
+		//start parsing folder .ini
+		if (file.open(QFile::ReadOnly | QFile::Text))
+			return dirPath + fileName;
+	}
+
+	return QString();
+}
+
 QString Utils::getDesc(const QString &gameName)
 {
 	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
@@ -158,7 +178,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 	QFile datFile(fileName);
 	QString buf = "";
 	if (linkType > 0)
-		buf = "<a style=\"color:#006d9f\" href=\"http://www.mameworld.net/maws/romset/" + gameName + "\">View information at MAWS</a><br>";
+		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://www.mameworld.net/maws/romset/" + gameName + "\">View information at MAWS</a><br>";
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -203,7 +223,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 					else if (recData && line.startsWith("$<a href="))
 					{
 						line.remove(0, 1);	//remove $
-						line.replace("<a href=", "<a style=\"color:#006d9f\" href=");
+						line.replace("<a href=", QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=");
 						buf += line;
 						buf += "<br>";
 					}
@@ -335,25 +355,6 @@ QString Utils::getStatusString(quint8 status, bool isSaveState)
 	}
 
 	return "unknown";	//error
-}
-
-QMap<QString, QStringList> Utils::getExtFolders()
-{
-	QMap<QString, QStringList> extFolderMap;
-
-	//fixme: merge with ips init etc.
-
-	//iterate all files in ips path
-//	QDir dir("folders");
-//	QStringList datFiles = dir.entryList((QStringList() << "*.ini"), QDir::Files | QDir::Readable);
-
-	return extFolderMap;
-}
-
-QStringList Utils::getExtFolderGames(QString folder, QString subFolder)
-{
-	QStringList l;
-	return l;
 }
 
 MyQueue::MyQueue(QObject *parent)

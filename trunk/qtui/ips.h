@@ -2,6 +2,7 @@
 #define _IPS_H_
 
 #include <QtGui>
+
 #include "ui_ips.h"
 
 class IPS: public QDialog, public Ui::IPS
@@ -43,4 +44,5 @@ private:
 	void iterateItems(QTreeWidgetItem *, int);
 };
 
+extern IPS *ipsUI;
 #endif

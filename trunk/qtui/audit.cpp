@@ -1,4 +1,7 @@
+#include "audit.h"
+
 #include "mamepguimain.h"
+#include "mameopt.h"
 
 void RomAuditor::audit()
 {
