@@ -12,6 +12,23 @@ enum
 	GAMELIST_INIT_DIR
 };
 
+enum
+{
+	DOCK_SNAP,
+	DOCK_FLYER,
+	DOCK_CABINET,
+	DOCK_MARQUEE,
+	DOCK_TITLE,
+	DOCK_CPANEL,
+	DOCK_PCB,
+	
+	DOCK_HISTORY,
+	DOCK_MAMEINFO,
+	DOCK_STORY,
+	DOCK_COMMAND,
+	DOCK_LAST
+};
+
 class UpdateSelectionThread : public QThread
 {
 	Q_OBJECT
@@ -23,13 +40,7 @@ public:
 	QString storyText;
 	QString commandText;
 
-	QByteArray pmdataSnap;
-	QByteArray pmdataFlyer;
-	QByteArray pmdataCabinet;
-	QByteArray pmdataMarquee;
-	QByteArray pmdataTitle;
-	QByteArray pmdataCPanel;
-	QByteArray pmdataPCB;
+	QByteArray pmSnapData[DOCK_LAST];
 
 	UpdateSelectionThread(QObject *parent = 0);
 	~UpdateSelectionThread();
@@ -45,6 +56,8 @@ protected:
 private:
 	QMutex mutex;
 	bool abort;
+
+	QByteArray getScreenshot(const QString &, const QString &, int);
 };
 
 class TreeItem
@@ -134,6 +147,7 @@ public:
 	QString mameVersion;
 	QMenu *menu;
 	QMenu *headerMenu;
+	QString listMode;
 
 	QStringList folderList;
 
@@ -165,7 +179,7 @@ public slots:
 	void updateSelection();
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
 	void setupSnap(int);
-
+	void toggleDelegate(bool);
 
 	// external process management
 	void loadListXmlReadyReadStandardOutput();

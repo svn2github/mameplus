@@ -5,11 +5,7 @@ read/write cookie
 theme
 
 //Done
--reworked headers
--supported external .ini folders
--auto-collapse folder trees
--made status bar and components title bar transparent
--ips v4 bug: ips dialog 1st init, all settings cleared
+
 
 //Linux
 D column sorting
@@ -17,17 +13,22 @@ mounted snap doesnt load
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Dev
-2 mac layout
-2 root folder ext ini
-2 option to disable delegate
+4 verify rev 3991
+
+-added "View - Highlight Selected Row"
+cn:添加"视图-高亮显示选定行"
+* console search broken?
+* bios filter really slow
+* debug font default inconsistant
+2 ips dialog size
 2 play inp/rec/mng/wav..., save state
 2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
-2 restore geometry
+1 option not loaded before m1 init
+1 restore geometry
 1 check default bios since .129
-2 ips dialog size
 * Ctrl-F w/ functionality to filter like MameUI including its text filter.
-2 Support for warning.ico, if present in \icons or \icons\icons.zip use that for the non-working games.
-2 Support for nonworking.png, if present in the \snap or \snap.zip use that for non-working games snap display.
+1 Support for warning.ico, if present in \icons or \icons\icons.zip use that for the non-working games.
+1 Support for nonworking.png, if present in the \snap or \snap.zip use that for non-working games snap display.
 * remove TreeItem
 * .entryList(
 * ips v1 dat fallback with datfile name
@@ -38,6 +39,7 @@ mounted snap doesnt load
 * icon for local switching
 * new version detection
 * 检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
+* check new/delete operator
 
 //Options
 1 mame option available after m1 init
@@ -56,9 +58,8 @@ mounted snap doesnt load
 * general info page
 
 //GameList
+* inherit parent history.dat
 * trans background for status bar / title bar
-2 large icon view
-* 如果快速的上下翻动游戏列表（按上下键），偶尔会出现跳出窗口提示内存错误的提示
 1 provide a builtin fallback for zip folders
 * widget loaded prompt
 * SDL joystick GUI
@@ -71,11 +72,10 @@ mounted snap doesnt load
 * in-place zooming for icons
 * add/remove items from game list model
 * ROM capa column
-* unify multiple snapshot routines
 
 //Folder
 1 rewrite filter by thread
-2 custom ini write +0.03
+1 custom ini write +0.03
 * dnd support +0.01
 * other filters +0.03
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
@@ -87,7 +87,7 @@ mounted snap doesnt load
 1 gamename0000 snap
 * external default.png.0
 
-* snap with or without stretching, horz/vert xml loading
+* horz/vert .lay loading
 * avi/mng playback
 * mameinfo of driver
 
@@ -144,17 +144,12 @@ D crash on 128u2->u3? missing sets
 
 ----------------------------------------
 
-[sanity check]
-* check new/delete operator
-* ensure ->load() functions only called once, no multiple connect()
-
 [qt compile config]
 windows:
 configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-rtti -qt-style-windowsvista -qt-style-plastique -qt-style-cleanlooks -no-style-motif -no-style-cde
 linux:
 libqt4-dev
 libgtk2.0-dev
-
 configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-opengl -sm -xinerama -xcursor -xfixes -xrandr -xrender -fontconfig -gtkstyle -nomake examples -nomake demos -nomake tools
 macosx:
 configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -no-svg -no-webkit -no-scripttools -no-3dnow -no-sse -no-sse2 -no-openssl -no-dwarf2 -nomake examples -nomake demos -nomake tools
@@ -168,11 +163,16 @@ sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
 
 [mamepgui test]
+in an empty folder
 1 dock snap
+w/ or w/o m1
+check sorting
+mame, mamep in same folder
+options saving
+path w/ space and Unicode
 
 [mamep core test]
-ips does not inherit
-DRC core
+ips should not inherit
 // mamep: dont save settings during playback
 // dont save nvram during playback
 load nvram from playback dir
@@ -181,7 +181,5 @@ neogeo playback rtc
 [mamep core bug]
 mamep snaps
 hazemd icons
-
 verify spclone dips
-
 add makelang text, src repo link on main page

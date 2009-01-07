@@ -7,15 +7,11 @@ class Utils : public QObject
 {
 Q_OBJECT
 public:
-	QByteArray deficondata;
-	QByteArray defsnapdata;
-
 	QProcess *loadProc;
 	
 	Utils(QObject *parent = 0);
 
 	QString getDesc(const QString &);
-	QByteArray getScreenshot(const QString &, const QString &);
 	QString getHistory(const QString &, const QString &, int = 0);
 
 	QSize getScaledSize(QSize, QSize, bool);
@@ -97,4 +93,6 @@ public slots:
 
 extern Utils *utils;
 extern ProcessManager *procMan;
+extern QRegExp spaceRegex;
+
 #endif

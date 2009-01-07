@@ -23,7 +23,7 @@ Options::Options(QWidget *parent)
 					<< lvCloneofOpt
 					<< lvCurrOpt;
 
-	buttonBoxDlg->disconnect(SIGNAL(accepted()));
+	disconnect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
 	connect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
 }
 

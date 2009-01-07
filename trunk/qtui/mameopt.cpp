@@ -127,7 +127,8 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 		case MAMEOPT_TYPE_FLOAT:
 			_slider = static_cast<QSlider*>(subWidget);
 			_sliderLabel = static_cast<QLabel*>(subWidget2);
-			_slider->disconnect(SIGNAL(valueChanged(int)));
+
+			disconnect(_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
 			connect(_slider, SIGNAL(valueChanged(int)), this, SLOT(updateSliderLabel(int)));
 			break;
 		
@@ -765,7 +766,7 @@ void OptionDelegate::setDirectories()
 
 	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
 
-	dirsUI->disconnect(SIGNAL(accepted()));
+	disconnect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
 	connect(dirsUI, SIGNAL(accepted()), this, SLOT(setDirectoriesAccepted()));
 
 	//take existing dir
@@ -1054,7 +1055,7 @@ void OptionUtils::initOption()
 		lstCatView->setMaximumWidth(130);
 
 		QHeaderView *header = optInfos[optLevel]->optView->header();
-		header->disconnect(SIGNAL(sectionResized(int, int, int)));
+		disconnect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
 		connect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
 	}
 }
@@ -1522,7 +1523,7 @@ void OptionUtils::loadDefault(QString text)
 				//add option name to category map
 				optCatMap[optHeader] << line;
 
-				QStringList list = line0.split(QRegExp("\\s+"));
+				QStringList list = utils->split2Str(line0, " ");
 				MameOption *pMameOpt = new MameOption(0);	//fixme parent
 				//option has a value from ini
 				if (list.count() == 2)
@@ -1723,7 +1724,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 			// process option entry
 			else
 			{
-				int sep = line.indexOf(QRegExp("\\s+"));
+				int sep = line.indexOf(spaceRegex);
 				optName = line.left(sep);
 
 				MameOption *pMameOpt = mameOpts[optName];
@@ -1787,7 +1788,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 					outBuf << optName;
 					outBuf.setFieldWidth(0);
 					//quote value if needed
-					if (currVal.indexOf(QRegExp("\\s")) > 0)
+					if (currVal.indexOf(spaceRegex) > 0 && !(currVal.startsWith('"') && currVal.endsWith('"')))
 						outBuf << "\"" << currVal << "\"" << endl;
 					else
 						outBuf << currVal << endl;
@@ -1877,7 +1878,7 @@ QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 			if (!line.startsWith("#") && line.size() > 0)
 			{
 				//locate the first space
-				int sep = line.indexOf(QRegExp("\\s"));
+				int sep = line.indexOf(spaceRegex);
 
 				//valid entry
 				if (sep != -1)

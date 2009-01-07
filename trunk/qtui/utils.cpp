@@ -8,17 +8,11 @@
 /* global */
 Utils *utils;
 ProcessManager *procMan = NULL;
+QRegExp spaceRegex = QRegExp("\\s+");
 
 Utils::Utils(QObject *parent)
 : QObject(parent)
 {
-	QFile icoFile(":/res/win_roms.ico");
-	icoFile.open(QIODevice::ReadOnly);
-	deficondata = icoFile.readAll();
-
-	QFile snapFile(":/res/mamegui/mame.png");
-	snapFile.open(QIODevice::ReadOnly);
-	defsnapdata = snapFile.readAll();
 }
 
 QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
@@ -54,8 +48,9 @@ QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 	scaledSize.scale(bounding, Qt::KeepAspectRatio);
 
 	// do not enlarge
-	if (scaledSize.width() > origSize.width() || 
-		scaledSize.height() > origSize.height())
+	if (!win->actionStretchSshot->isChecked() && (
+		scaledSize.width() > origSize.width() || 
+		scaledSize.height() > origSize.height()))
 		scaledSize = origSize;
 
 	return scaledSize;
@@ -84,8 +79,9 @@ QStringList Utils::split2Str(const QString &str, const QString &separator)
 	if (pos > -1)
 	{
 		return (QStringList()
-			<< str.left(pos)
-			<< str.right(str.size() - pos - 1));
+			<< str.left(pos).trimmed()
+			<< str.right(str.size() - pos - 1).trimmed()
+			);
 	}
 
 	return QStringList();
@@ -122,55 +118,6 @@ QString Utils::getDesc(const QString &gameName)
 		return gameInfo->lcDesc;
 	else
 		return gameInfo->description;
-}
-
-QByteArray Utils::getScreenshot(const QString &dirpath0, const QString &gameName)
-{
-	QStringList dirpaths = dirpath0.split(";");
-	QByteArray snapdata = QByteArray();
-
-	foreach (QString _dirpath, dirpaths)
-	{
-		QDir dir(_dirpath);
-		QString dirpath = getPath(_dirpath);
-
-		// try to load directly	
-		QFile snapFile(dirpath + gameName + ".png");
-		if (snapFile.open(QIODevice::ReadOnly))
-			snapdata = snapFile.readAll();
-
-		// try to add .zip to nearest folder name
-		if (snapdata.isNull())
-		{
-			QuaZip zip(dirpath + dir.dirName() + ".zip");
-			if (zip.open(QuaZip::mdUnzip))
-			{
-				QuaZipFile zipfile(&zip);
-				if (zip.setCurrentFile(gameName + ".png"))
-				{
-					if (zipfile.open(QIODevice::ReadOnly))
-						snapdata = zipfile.readAll();
-				}
-			}
-		}
-
-		if (!snapdata.isNull())
-			break;
-	}
-
-	// recursively load parent image
-	if (snapdata.isNull())
-	{
-		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
- 		if (!gameInfo->cloneof.isEmpty())
-			snapdata = getScreenshot(dirpath0, gameInfo->cloneof);
-
-		// fallback to default image, first getScreenshot() can't reach here
-		if (snapdata.isNull())
-			snapdata = defsnapdata;
-	}
-
-	return snapdata;
 }
 
 QString Utils::getHistory(const QString &fileName, const QString &gameName, int linkType)

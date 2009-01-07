@@ -13,19 +13,24 @@
 #undef main
 #endif /* Q_OS_WIN */
 
+//static qt works with windows version
+Q_IMPORT_PLUGIN(qico)
+Q_IMPORT_PLUGIN(qjpeg)
+//Q_IMPORT_PLUGIN(qmng)
+
 /* global */
 MainWindow *win;
 QSettings guiSettings(CFG_PREFIX + "mamepgui.ini", QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
 QString mame_binary;
-QString list_mode;
 QString language;
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
+QStringList validGuiSettings;
 
 /* internal */
-QStringList dockCtrlNames;
+QDockWidget *dwHistory = NULL;
 
 void MainWindow::log(QString message, char logOrigin)
 {
@@ -33,8 +38,8 @@ void MainWindow::log(QString message, char logOrigin)
 
 	QString msg = timeString + ": " + message;
 
-	textBrowserFrontendLog->append(msg);
-	textBrowserFrontendLog->horizontalScrollBar()->setValue(0);
+	tbGUILog->append(msg);
+	tbGUILog->horizontalScrollBar()->setValue(0);
 }
 
 void MainWindow::poplog(QString message)
@@ -163,7 +168,10 @@ QMainWindow(parent)
 	lvGameList->setMovement(QListView::Static);
 	lvGameList->setResizeMode(QListView::Adjust);
 	lvGameList->setViewMode(QListView::IconMode);
+//	lvGameList->setGridSize(QSize(96, 64));
 	lvGameList->setUniformItemSizes(true);
+	lvGameList->setWordWrap(true);
+//	lvGameList->setTextElideMode(Qt::TextDontClip | Qt::TextWordWrap);
 	lvGameList->hide();
 
 	lineEditSearch = new QLineEdit(centralwidget);
@@ -248,10 +256,9 @@ MainWindow::~MainWindow()
 #endif
 }
 
-void MainWindow::initHistory(QString title)
+void MainWindow::initHistory(int snapType)
 {
-	static QDockWidget *dockWidget0 = NULL;
-	
+	QString title = dockCtrlNames[snapType];
 	QDockWidget *dockWidget = new QDockWidget(this);
 
 	dockWidget->setObjectName("dockWidget_" + title);
@@ -263,20 +270,20 @@ void MainWindow::initHistory(QString title)
 	gridLayout->setContentsMargins(0, 0, 0, 0);
 
 	QTextBrowser * tb;
-	if (title == "History")
+	if (snapType == DOCK_HISTORY)
 	{
 		tb = tbHistory = new QTextBrowser(dockWidgetContents);
 		tbHistory->setOpenExternalLinks(true);
 	}
-	else if (title == "MAMEInfo")
+	else if (snapType == DOCK_MAMEINFO)
 		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
-	else if (title == "Story")
+	else if (snapType == DOCK_STORY)
 		tb = tbStory = new QTextBrowser(dockWidgetContents);
 	else
 		tb = tbCommand = new QTextBrowser(dockWidgetContents);
 	
 	tb->setObjectName("textBrowser_" + title);
-	
+
 	gridLayout->addWidget(tb);
 
 	dockWidget->setWidget(dockWidgetContents);
@@ -284,19 +291,20 @@ void MainWindow::initHistory(QString title)
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
 
 	// create tabbed history widgets
-	if (dockWidget0)
-		tabifyDockWidget(dockWidget0, dockWidget);
+	if (dwHistory)
+		tabifyDockWidget(dwHistory, dockWidget);
 	else
-		dockWidget0 = dockWidget;
+		dwHistory = dockWidget;
 
 	menuDocuments->addAction(dockWidget->toggleViewAction());
+	dockCtrls[snapType] = dockWidget;
 }
 
-Screenshot* MainWindow::initSnap(QString title)
+void MainWindow::initSnap(int snapType)
 {
 	static Screenshot *dockWidget0 = NULL;
 	
-	Screenshot *dockWidget = new Screenshot(title, this);
+	Screenshot *dockWidget = new Screenshot(dockCtrlNames[snapType], this);
 
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), dockWidget);
 
@@ -307,12 +315,17 @@ Screenshot* MainWindow::initSnap(QString title)
 		dockWidget0 = dockWidget;
 
 	menuPictures->addAction(dockWidget->toggleViewAction());
-
-	return dockWidget;
+	dockCtrls[snapType] = dockWidget;
 }
 
 void MainWindow::init()
 {
+	for (int i = DOCK_SNAP; i <= DOCK_PCB; i ++)
+		initSnap(i);
+
+	for (int i = DOCK_HISTORY; i <= DOCK_COMMAND; i ++)
+		initHistory(i);
+
 	//init SDL
 #ifdef Q_OS_WIN
 		if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -321,24 +334,30 @@ void MainWindow::init()
 			sdlInited = true;
 
 	ipsUI->init();
-#endif
 
-	// init mainwindow
-	win->log("win->init()");
-	//fixme: should be in constructor
-	ssSnap = initSnap(dockCtrlNames[DOCK_SNAP]);
-	ssFlyer = initSnap(dockCtrlNames[DOCK_FLYER]);
-	ssCabinet = initSnap(dockCtrlNames[DOCK_CABINET]);
-	ssMarquee = initSnap(dockCtrlNames[DOCK_MARQUEE]);
-	ssTitle = initSnap(dockCtrlNames[DOCK_TITLE]);
-	ssCPanel = initSnap(dockCtrlNames[DOCK_CPANEL]);
-	ssPCB = initSnap(dockCtrlNames[DOCK_PCB]);
+	//rearrange docks
+	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::LeftDockWidgetArea), m1UI);
+	tabifyDockWidget(dwFolderList, m1UI);
+#endif /* Q_OS_WIN */
 
-	initHistory(dockCtrlNames[DOCK_HISTORY]);
-	initHistory(dockCtrlNames[DOCK_MAMEINFO]);
-	initHistory(dockCtrlNames[DOCK_STORY]);
-	initHistory(dockCtrlNames[DOCK_COMMAND]);
-//	initHistory(textBrowserFrontendLog, "GUI Log");
+	//rearrange docks
+	tabifyDockWidget(dwHistory, dwGUILog);
+
+	//hide non popular docks by default
+	dwGUILog->hide();
+
+	for (int i = DOCK_SNAP; i < DOCK_LAST; i ++)
+	{
+		if (i != DOCK_SNAP
+		 && i != DOCK_TITLE
+		 && i != DOCK_HISTORY
+		 && i != DOCK_MAMEINFO)
+			dockCtrls[i]->hide();
+	}
+
+	dwFolderList->raise();
+	dockCtrls[DOCK_SNAP]->raise();
+	dockCtrls[DOCK_HISTORY]->raise();
 
 	/* test ini readable/writable */
 	// mkdir for individual game settings
@@ -380,7 +399,7 @@ void MainWindow::init()
 									QCoreApplication::applicationDirPath(),
 									filter);
 
-		if (mame_binary.isEmpty() || mame_binary.contains("mamepgui"))
+		if (mame_binary.isEmpty() || mame_binary.endsWith("mamepgui" EXEC_EXT))
 		{
 			win->poplog(QString("Could not find MAME."));
 			mame_binary = "";
@@ -476,6 +495,12 @@ void MainWindow::init()
 	connect(actionDetails, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
+	connect(actionRowDelegate, SIGNAL(toggled(bool)), gameList, SLOT(toggleDelegate(bool)));
+	//fixme:
+	actionRowDelegate->setEnabled(false);
+	connect(actionStretchSshot, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
+	connect(actionEnforceAspect, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
+
 	// Auditor
 	connect(&gameList->auditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
 	connect(&gameList->auditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
@@ -538,7 +563,8 @@ void MainWindow::setVersion()
 		"</style>"
 		"</head>"
 		"<body>"
-		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team"
+		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
+		"A Qt implementation of the famous <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
 		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
 		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
@@ -724,14 +750,6 @@ void MainWindow::on_actionLocalGameList_activated()
 	local_game_list = actionLocalGameList->isChecked();
 }
 
-void MainWindow::on_actionEnforceAspect_activated()
-{
-	bool isForce = actionEnforceAspect->isChecked();
-
-	win->ssSnap->setAspect(isForce);
-	win->ssTitle->setAspect(isForce);
-}
-
 void MainWindow::on_trayIconActivated(QSystemTrayIcon::ActivationReason reason)
 {
 	switch (reason)
@@ -762,13 +780,20 @@ void MainWindow::initSettings()
     guiSettings.setFallbacksEnabled(false);
 
 	//remove invalid settings
-	static const QStringList validSettings = (QStringList() 
-		<< "cabinet_directory"
-		<< "cpanel_directory"
+	validGuiSettings = (QStringList() 
+		<< "snapshot_directory"	//fixme: core
 		<< "flyer_directory"
+		<< "cabinet_directory"
 		<< "marquee_directory"
-		<< "pcb_directory"
 		<< "title_directory"
+		<< "cpanel_directory"
+		<< "pcb_directory"
+		
+		<< "history_file"
+		<< "mameinfo_file"
+		<< "story_file"
+		<< "command_file"	//fixme: core
+
 		<< "icons_directory"
 		<< "background_directory"
 		<< "folder_directory"
@@ -780,16 +805,15 @@ void MainWindow::initSettings()
 		<< "gui_style"
 		<< "background_stretch"
 		<< "mame_binary"
-		<< "history_file"
-		<< "story_file"
-		<< "mameinfo_file"
 		<< "option_geometry"
 		<< "sort_column"
 		<< "sort_reverse"
 		<< "default_game"
 		<< "folder_current"
 		<< "vertical_tabs"
+		<< "stretch_screenshot_larger"
 		<< "enforce_aspect"
+		<< "game_list_delegate"
 		<< "local_game_list"
 		<< "list_mode"
 		<< "option_column_state"
@@ -801,7 +825,7 @@ void MainWindow::initSettings()
 	QStringList keys = guiSettings.allKeys();
 	foreach(QString key, keys)
 	{
-		if (key.contains("_extra_software") || validSettings.contains(key))
+		if (key.contains("_extra_software") || validGuiSettings.contains(key))
 			continue;
 
 		guiSettings.remove(key);
@@ -813,22 +837,19 @@ void MainWindow::loadLayout()
 {
 	if (guiSettings.value("window_geometry").isValid())
 		restoreGeometry(guiSettings.value("window_geometry").toByteArray());
-	else
-		restoreGeometry(defSettings.value("window_geometry").toByteArray());
 
 	if (guiSettings.value("window_state").isValid())
 		restoreState(guiSettings.value("window_state").toByteArray());
-	else
-		restoreState(defSettings.value("window_state").toByteArray());
 	
 	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
 	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs", "1").toInt() == 1);
+	actionRowDelegate->setChecked(guiSettings.value("game_list_delegate", "1").toInt() == 1);
 
-	list_mode = guiSettings.value("list_mode").toString();
-	if (list_mode == win->actionDetails->objectName().remove("action"))
+	gameList->listMode = guiSettings.value("list_mode").toString();
+	if (gameList->listMode == win->actionDetails->objectName().remove("action"))
 		actionDetails->setChecked(true);
-	else if (list_mode == win->actionLargeIcons->objectName().remove("action"))
+	else if (gameList->listMode == win->actionLargeIcons->objectName().remove("action"))
 		actionLargeIcons->setChecked(true);
 	else
 		actionGrouped->setChecked(true);
@@ -845,6 +866,7 @@ void MainWindow::loadLayout()
 	else
 		actionEnglish->setChecked(true);
 
+	actionStretchSshot->setChecked(guiSettings.value("stretch_screenshot_larger", "0").toInt() == 1);
 	actionEnforceAspect->setChecked(guiSettings.value("enforce_aspect", "1").toInt() == 1);
 
 	local_game_list = guiSettings.value("local_game_list", "1").toInt() == 1;
@@ -920,12 +942,14 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("sort_column", tvGameList->header()->sortIndicatorSection());
 	guiSettings.setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
 	guiSettings.setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
+	guiSettings.setValue("stretch_screenshot_larger", actionStretchSshot->isChecked() ? 1 : 0);
 	guiSettings.setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
+	guiSettings.setValue("game_list_delegate", actionRowDelegate->isChecked() ? 1 : 0);
 	guiSettings.setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
 	guiSettings.setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
 	guiSettings.setValue("default_game", currentGame);
 	guiSettings.setValue("folder_current", currentFolder);//fixme: rename
-	guiSettings.setValue("list_mode", list_mode);
+	guiSettings.setValue("list_mode", gameList->listMode);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -1199,19 +1223,13 @@ void Screenshot::setPixmap(QPixmap pm)
 	updateScreenshotLabel();
 }
 
-void Screenshot::setPixmap(const QByteArray &pmdata, bool forceAspect)
+void Screenshot::setPixmap(const QByteArray &pmdata, bool _forceAspect)
 {
 	QPixmap pm;
 	pm.loadFromData(pmdata);
 	originalPixmap = pm;
 
-	this->forceAspect = forceAspect;
-	updateScreenshotLabel();
-}
-
-void Screenshot::setAspect(bool forceAspect)
-{
-	this->forceAspect = forceAspect;
+	forceAspect = _forceAspect;
 	updateScreenshotLabel();
 }
 
@@ -1228,9 +1246,9 @@ void Screenshot::rotateImage()
 		bool isDock = false;
 
 		// if the dock widget contains any of screenshot/history widgets
-		for (int i = 0; i < dockCtrlNames.count(); i++)
+		for (int i = 0; i < win->dockCtrlNames.count(); i++)
 		{
-			if (MainWindow::tr(qPrintable(dockCtrlNames[i])) == tab->tabText(0))
+			if (MainWindow::tr(qPrintable(win->dockCtrlNames[i])) == tab->tabText(0))
 			{
 				isDock = true;
 				break;

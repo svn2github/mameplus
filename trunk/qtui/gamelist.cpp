@@ -18,6 +18,9 @@ GameListSortFilterProxyModel *gameListPModel;
 /* internal */
 GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
+static const QString ROOT_FOLDER = "ROOT_FOLDER";
+QByteArray defIconData;
+QByteArray defSnapData;
 
 enum
 {
@@ -224,6 +227,14 @@ UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
 : QThread(parent)
 {
 	abort = false;
+
+	QFile icoFile(":/res/win_roms.ico");
+	icoFile.open(QIODevice::ReadOnly);
+	defIconData = icoFile.readAll();
+
+	QFile snapFile(":/res/mamegui/mame.png");
+	snapFile.open(QIODevice::ReadOnly);
+	defSnapData = snapFile.readAll();
 }
 
 UpdateSelectionThread::~UpdateSelectionThread()
@@ -246,41 +257,13 @@ void UpdateSelectionThread::run()
 	{
 		QString gameName = myqueue.dequeue();
 
-		//fixme: do not update tabbed docks
-		if (!abort && win->ssSnap->isVisible() && win->isDockTabVisible("Snapshot"))
+		for (int snapType = DOCK_SNAP; snapType <= DOCK_PCB; snapType ++)
 		{
-			pmdataSnap = utils->getScreenshot(mameOpts["snapshot_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_SNAP);
+			if (!abort && win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType]))
+		{
+				pmSnapData[snapType] = getScreenshot(mameOpts[validGuiSettings[snapType]]->globalvalue, gameName, snapType);
+				emit snapUpdated(snapType);
 		}
-		if (!abort && win->ssFlyer->isVisible() && win->isDockTabVisible("Flyer"))
-		{
-			pmdataFlyer = utils->getScreenshot(mameOpts["flyer_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_FLYER);
-		}
-		if (!abort && win->ssCabinet->isVisible() && win->isDockTabVisible("Cabinet"))
-		{
-			pmdataCabinet = utils->getScreenshot(mameOpts["cabinet_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_CABINET);
-		}
-		if (!abort && win->ssMarquee->isVisible() && win->isDockTabVisible("Marquee"))			
-		{
-			pmdataMarquee = utils->getScreenshot(mameOpts["marquee_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_MARQUEE);
-		}
-		if (!abort && win->ssTitle->isVisible() && win->isDockTabVisible("Title"))
-		{
-			pmdataTitle = utils->getScreenshot(mameOpts["title_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_TITLE);
-		}
-		if (!abort && win->ssCPanel->isVisible() && win->isDockTabVisible("Control Panel"))
-		{
-			pmdataCPanel = utils->getScreenshot(mameOpts["cpanel_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_CPANEL);
-		}
-		if (!abort && win->ssPCB->isVisible() && win->isDockTabVisible("PCB"))
-		{
-			pmdataPCB = utils->getScreenshot(mameOpts["pcb_directory"]->globalvalue, gameName);
-			emit snapUpdated(DOCK_PCB);
 		}
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
@@ -370,6 +353,56 @@ void UpdateSelectionThread::run()
 		}
 	}
 }
+
+QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const QString &gameName, int)
+{
+	QStringList dirpaths = dirpath0.split(";");
+	QByteArray snapdata = QByteArray();
+
+	foreach (QString _dirpath, dirpaths)
+	{
+		QDir dir(_dirpath);
+		QString dirpath = utils->getPath(_dirpath);
+
+		// try to load directly	
+		QFile snapFile(dirpath + gameName + ".png");
+		if (snapFile.open(QIODevice::ReadOnly))
+			snapdata = snapFile.readAll();
+
+		// try to add .zip to nearest folder name
+		if (snapdata.isNull())
+		{
+			QuaZip zip(dirpath + dir.dirName() + ".zip");
+			if (zip.open(QuaZip::mdUnzip))
+			{
+				QuaZipFile zipfile(&zip);
+				if (zip.setCurrentFile(gameName + ".png"))
+				{
+					if (zipfile.open(QIODevice::ReadOnly))
+						snapdata = zipfile.readAll();
+				}
+			}
+		}
+
+		if (!snapdata.isNull())
+			break;
+	}
+
+	// recursively load parent image
+	if (snapdata.isNull())
+	{
+		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+ 		if (!gameInfo->cloneof.isEmpty())
+			snapdata = getScreenshot(dirpath0, gameInfo->cloneof, 0);
+
+		// fallback to default image, first getScreenshot() can't reach here
+		if (snapdata.isNull())
+			snapdata = defSnapData;
+	}
+
+	return snapdata;
+}
+
 
 TreeItem::TreeItem(const QList<QVariant> &data, TreeItem *parent)
 {
@@ -538,19 +571,27 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		{
 			QByteArray icondata;
 			if (gameInfo->icondata.isNull())
-				icondata = utils->deficondata;
+				icondata = defIconData;
 			else
 				icondata = gameInfo->icondata;
+
+			bool isLargeIcon = gameList->listMode == win->actionLargeIcons->objectName().remove("action");
 			
 			QPixmap pm;
 			pm.loadFromData(icondata, "ico");
-			pm = pm.scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+			//scale down the icon
+			if (!isLargeIcon)
+				pm = pm.scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation);
 
 			if(!gameInfo->available)
 			{
 				QPainter p;
 				p.begin(&pm);
-				p.drawPixmap(8, 8, QPixmap(":/res/status-na.png"));
+				if(isLargeIcon)
+					p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
+				else
+					p.drawPixmap(8, 8, QPixmap(":/res/status-na.png"));
 				p.end();
 			}
 			
@@ -960,7 +1001,7 @@ QSize GamelistDelegate::sizeHint (const QStyleOptionViewItem & option,
 {
 	QString gameName = gameList->getViewString(index, COL_NAME);
 	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
-//fixme: combine @ console gamename
+	//fixme: combine @ console gamename
 	if (!gameInfo->nameDeviceInfoMap.isEmpty())
 	{
 		QString gameName2 = gameList->getViewString(index, COL_NAME + COL_LAST);
@@ -1019,7 +1060,7 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 			QByteArray icondata;
 			QPixmap pm;
 			if (gameInfo->icondata.isNull())
-				icondata = utils->deficondata;
+				icondata = defIconData;
 			else
 				icondata = gameInfo->icondata;
 			pm.loadFromData(icondata, "ico");
@@ -1276,31 +1317,19 @@ void Gamelist::restoreGameSelection()
 	}
 }
 
-// we must update GUI in main thread
+// must update GUI in main thread
 void Gamelist::setupSnap(int snapType)
 {
 	switch (snapType)
 	{
 	case DOCK_SNAP:
-		win->ssSnap->setPixmap(selectionThread.pmdataSnap, win->actionEnforceAspect->isChecked());
-		break;
-	case DOCK_FLYER:
-		win->ssFlyer->setPixmap(selectionThread.pmdataFlyer);
-		break;
-	case DOCK_CABINET:
-		win->ssCabinet->setPixmap(selectionThread.pmdataCabinet);
-		break;
-	case DOCK_MARQUEE:
-		win->ssMarquee->setPixmap(selectionThread.pmdataMarquee);
-		break;
 	case DOCK_TITLE:
-		win->ssTitle->setPixmap(selectionThread.pmdataTitle, win->actionEnforceAspect->isChecked());
-		break;
+	case DOCK_FLYER:
+	case DOCK_CABINET:
+	case DOCK_MARQUEE:
 	case DOCK_CPANEL:
-		win->ssCPanel->setPixmap(selectionThread.pmdataCPanel);
-		break;
 	case DOCK_PCB:
-		win->ssPCB->setPixmap(selectionThread.pmdataPCB);
+		((Screenshot*)win->dockCtrls[snapType])->setPixmap(selectionThread.pmSnapData[snapType], win->actionEnforceAspect->isChecked());
 		break;
 	case DOCK_HISTORY:
 		win->tbHistory->setHtml(selectionThread.historyText);
@@ -1312,6 +1341,8 @@ void Gamelist::setupSnap(int snapType)
 		win->tbStory->setHtml(selectionThread.storyText);
 		break;
 	case DOCK_COMMAND:
+		win->tbCommand->setHtml(selectionThread.commandText);
+		break;
 #if 0
 //draw in memory
 		QPixmap pm(100, 100);
@@ -1339,8 +1370,6 @@ void Gamelist::setupSnap(int snapType)
 		
 		win->ssPCB->setPixmap(pm2);
 #endif
-		win->tbCommand->setHtml(selectionThread.commandText);
-		break;
 	default:
 		break;
 	}
@@ -1352,13 +1381,22 @@ void Gamelist::init(bool toggleState, int initMethod)
 	if (!toggleState)
 		return;
 
+	bool isGroup = true, isLView = false;
+
 	// get current game list mode
 	if (win->actionDetails->isChecked())
-		list_mode = win->actionDetails->objectName().remove("action");
+	{
+		listMode = win->actionDetails->objectName().remove("action");
+		isGroup = false;
+	}
 	else if (win->actionLargeIcons->isChecked())
-		list_mode = win->actionLargeIcons->objectName().remove("action");
+	{
+		listMode = win->actionLargeIcons->objectName().remove("action");
+		isLView = true;
+		isGroup = false;
+	}
 	else
-		list_mode = win->actionGrouped->objectName().remove("action");
+		listMode = win->actionGrouped->objectName().remove("action");
 
 	int des11n_status = QDataStream::Ok;
 
@@ -1373,14 +1411,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 		win->tvGameList->setSortingEnabled(false);
 
 		// disable ctrl updating before deleting its model
-		win->lvGameList->disconnect(SIGNAL(activated(const QModelIndex &)));
-		win->lvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
+		disconnect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+		disconnect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+
 		win->lvGameList->hide();
 		win->layMainView->removeWidget(win->lvGameList);
 
-		win->tvGameList->disconnect(SIGNAL(activated(const QModelIndex &)));
-		win->tvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
-		win->tvGameList->header()->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
 		win->tvGameList->hide();
 		win->layMainView->removeWidget(win->tvGameList);
 
@@ -1389,24 +1425,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 			delete gameListModel;
 
 		//init the model
-		// Grouped
-		if (list_mode == win->actionGrouped->objectName().remove("action"))
-		{
-			gameListModel = new TreeModel(win, true);
-			win->layMainView->addWidget(win->tvGameList);		
-		}
-		// Large Icons
-		else if (list_mode == win->actionLargeIcons->objectName().remove("action"))
-		{
-			gameListModel = new TreeModel(win, false);
-			win->layMainView->addWidget(win->lvGameList);		
-		}
-		// Details
-		else
-		{
-			gameListModel = new TreeModel(win, false);
-			win->layMainView->addWidget(win->tvGameList);		
-		}
+		gameListModel = new TreeModel(win, isGroup);
 
 		//delete/init proxy model
 		if (gameListPModel)
@@ -1416,18 +1435,22 @@ void Gamelist::init(bool toggleState, int initMethod)
 		gameListPModel->setSourceModel(gameListModel);
 		gameListPModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 
-		if (list_mode == win->actionLargeIcons->objectName().remove("action"))
-			{
-			win->log("set model large");
+		if (isLView)
+		{
+			win->layMainView->addWidget(win->lvGameList);
+			win->lvGameList->show();
 			win->lvGameList->setModel(gameListPModel);
-			}
+		}
 		else
 		{
+			win->layMainView->addWidget(win->tvGameList);
+			win->tvGameList->show();
 			win->tvGameList->setModel(gameListPModel);
-			{
+			if (defaultGameListDelegate == NULL)
 				defaultGameListDelegate = win->tvGameList->itemDelegate();
+
+			if (win->actionRowDelegate->isChecked())
 				win->tvGameList->setItemDelegate(&gamelistDelegate);
-			}
 		}
 
 		if (initMethod == GAMELIST_INIT_FULL)
@@ -1486,32 +1509,24 @@ void Gamelist::init(bool toggleState, int initMethod)
 		loadMMO(UI_MSG_LIST);
 		loadMMO(UI_MSG_MANUFACTURE);
 
-		//disconn'd
-		connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
-		connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
-
 		// connect gameListModel/gameListPModel signals after the view init completed
 		// connect gameListModel/gameListPModel signals after mameOpts init
-		connect(win->tvGameList->selectionModel(),
-				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
-		connect(win->lvGameList->selectionModel(),
-				SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)),
-				this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+		if (isLView)
+		{
+			connect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
 
+			disconnect(win->lvGameList->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+			connect(win->lvGameList->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+		}
+		else
+		{
+			connect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+
+			disconnect(win->tvGameList->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+			connect(win->tvGameList->selectionModel(), SIGNAL(currentChanged(const QModelIndex &, const QModelIndex &)), this, SLOT(updateSelection(const QModelIndex &, const QModelIndex &)));
+		}
 		//refresh current list
 		filterFolderChanged(win->treeFolders->currentItem());
-
-		//show the list
-		// Grouped
-		if (list_mode == win->actionGrouped->text())
-			win->tvGameList->show();
-		// Large Icons
-		else if (list_mode == win->actionLargeIcons->text())
-			win->lvGameList->show();
-		// Details
-		else
-			win->tvGameList->show();
 
 		// restore game list column state
 		if (initMethod != GAMELIST_INIT_DIR)
@@ -1529,16 +1544,19 @@ void Gamelist::init(bool toggleState, int initMethod)
 		}
 
 		//sorting 
-		//fixme: how about lv?
 		win->tvGameList->setSortingEnabled(true);
-		win->tvGameList->setFocus();
+
+		if (isLView)
+			win->lvGameList->setFocus();
+		else
+			win->tvGameList->setFocus();
 
 		// attach menus
 		initMenus();
 
 		// everything is done, enable ctrls now
 		win->treeFolders->setEnabled(true);
-//		win->actionLargeIcons->setEnabled(true);
+		win->actionLargeIcons->setEnabled(true);
 		win->actionDetails->setEnabled(true);
 		win->actionGrouped->setEnabled(true);
 		win->actionRefresh->setEnabled(true);
@@ -1577,7 +1595,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 void Gamelist::loadIcon()
 {
 	// load icons
-	loadIconWatcher.disconnect(SIGNAL(finished()));
+	disconnect(&loadIconWatcher, SIGNAL(finished()), this, SLOT(postLoadIcon()));
 	connect(&loadIconWatcher, SIGNAL(finished()), this, SLOT(postLoadIcon()));
 	QFuture<void> future = QtConcurrent::run(this, &Gamelist::loadIconWorkder);
 	loadIconWatcher.setFuture(future);
@@ -1657,6 +1675,11 @@ void Gamelist::loadIconWorkder()
 						}
 					}
 				}
+				/*
+				else if (gameName == "warning")
+				{
+				}
+				//*/
 				if (cancel)
 					break;
 			}
@@ -1680,21 +1703,16 @@ void Gamelist::loadIconWorkder()
 					}
 				}
 			}
-
 			done = true;
 		}
-
 		cancel = false;
 	}
 }
 
 void Gamelist::postLoadIcon()
 {
+	win->lvGameList->update(win->lvGameList->rect());
 	win->tvGameList->update(win->tvGameList->rect());
-
-	win->log(QString("loaded %1 icons").arg(loadIconStatus));
-	if (loadIconStatus == 0 && defaultGameListDelegate != NULL)
-		win->tvGameList->setItemDelegate(defaultGameListDelegate);
 }
 
 void Gamelist::loadMMO(int msgCat)
@@ -1823,10 +1841,14 @@ mmo_readerr:
 
 void Gamelist::initMenus()
 {
+	bool isLView = false;
+	if (win->actionLargeIcons->isChecked())
+		isLView = true;
+
 	// init context menu, we don't need to init it twice
 	if (menu == NULL)
 	{
-		menu = new QMenu(win->tvGameList);
+		menu = new QMenu(win);
 	
 		menu->addAction(win->actionPlay);
 //		menu->addAction(win->actionPlayInp);
@@ -1839,16 +1861,25 @@ void Gamelist::initMenus()
 		menu->addAction(win->actionSrcProperties);
 		menu->addAction(win->actionProperties);
 	}
-	
-	win->tvGameList->setContextMenuPolicy(Qt::CustomContextMenu);
-	win->tvGameList->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
-	connect(win->tvGameList, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
-	menu->disconnect(SIGNAL(aboutToShow()));
+
+	QWidget *w;
+
+	if (isLView)
+		w = win->lvGameList;
+	else
+		w = win->tvGameList;
+
+	w->setContextMenuPolicy(Qt::CustomContextMenu);
+	disconnect(w, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
+	connect(w, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showContextMenu(const QPoint &)));
+
+	disconnect(menu, SIGNAL(aboutToShow()), this, SLOT(updateContextMenu()));
 	connect(menu, SIGNAL(aboutToShow()), this, SLOT(updateContextMenu()));
-	win->menuFile->disconnect(SIGNAL(aboutToShow()));
+
+	disconnect(win->menuFile, SIGNAL(aboutToShow()), this, SLOT(updateContextMenu()));
 	connect(win->menuFile, SIGNAL(aboutToShow()), this, SLOT(updateContextMenu()));
-	
-	//init gameList header context menu
+
+	//init tvGameList header context menu
 	if (headerMenu == NULL)
 	{
 		headerMenu = new QMenu(win->tvGameList);
@@ -1870,18 +1901,20 @@ void Gamelist::initMenus()
 		sortingActions->addAction(win->actionColSortDescending);
 	}
 
-	win->tvGameList->header()->setContextMenuPolicy (Qt::CustomContextMenu);
+	QHeaderView *header = win->tvGameList->header();
 
-	win->tvGameList->header()->disconnect(SIGNAL(customContextMenuRequested(const QPoint &)));
-	connect(win->tvGameList->header(), SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showHeaderContextMenu(const QPoint &)));
+	header->setContextMenuPolicy (Qt::CustomContextMenu);
 
-	win->tvGameList->header()->disconnect(SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)));
-	connect(win->tvGameList->header(), SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(restoreGameSelection()));
+	disconnect(header, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showHeaderContextMenu(const QPoint &)));
+	connect(header, SIGNAL(customContextMenuRequested(const QPoint &)), this, SLOT(showHeaderContextMenu(const QPoint &)));
 
-	headerMenu->disconnect(SIGNAL(aboutToShow()));
+	disconnect(header, SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(restoreGameSelection()));
+	connect(header, SIGNAL(sortIndicatorChanged(int, Qt::SortOrder)), this, SLOT(restoreGameSelection()));
+
+	disconnect(headerMenu, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 	connect(headerMenu, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 
-	win->menuCustomizeFields->disconnect(SIGNAL(aboutToShow()));
+	disconnect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 	connect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 }
 
@@ -1950,6 +1983,14 @@ void Gamelist::updateHeaderContextMenu()
 	win->actionColDriver->setChecked(header->isSectionHidden(4) ? false : true);
 	win->actionColYear->setChecked(header->isSectionHidden(5) ? false : true);
 	win->actionColCloneOf->setChecked(header->isSectionHidden(6) ? false : true);
+}
+
+void Gamelist::toggleDelegate(bool isHilite)
+{
+	if (isHilite)
+		win->tvGameList->setItemDelegate(&gamelistDelegate);
+	else if (defaultGameListDelegate != NULL)
+		win->tvGameList->setItemDelegate(defaultGameListDelegate);
 }
 
 void Gamelist::loadListXmlReadyReadStandardOutput()
@@ -2126,7 +2167,6 @@ void Gamelist::filterRegExpChanged()
 		return;
 
 	visibleGames.clear();
-	static QRegExp spaceRegex = QRegExp("\\s+");
 	text.replace(spaceRegex, "*");
 
 	//fixme: doesnt use filterregexp
@@ -2206,6 +2246,11 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE);
 		else if (folderName == folderList[FOLDER_BIOS])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS);
+		else if (extFolders.contains(folderName))
+		{
+			initExtFolders(folderName, ROOT_FOLDER);
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_EXT);
+		}
 		else
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLARC);
 	}
@@ -2374,7 +2419,7 @@ void Gamelist::initFolders()
 	foreach (QString extFolder, extFolders)
 		initExtFolders(extFolder, NULL);
 
-	win->treeFolders->disconnect(SIGNAL(itemSelectionChanged()));
+	disconnect(win->treeFolders, SIGNAL(itemSelectionChanged()), this, SLOT(filterFolderChanged()));
 	connect(win->treeFolders, SIGNAL(itemSelectionChanged()), this, SLOT(filterFolderChanged()));
 }
 
@@ -2400,9 +2445,14 @@ void Gamelist::initExtFolders(const QString &folderName, const QString &subFolde
 			if (!line.isEmpty())
 			{
 				if (line.startsWith("[") && line.endsWith("]") && 
-					line != "[FOLDER_SETTINGS]" &&
-					line != "[ROOT_FOLDER]")
-					key = line.mid(1, line.size() - 2);
+					line != "[FOLDER_SETTINGS]")
+				{
+				 
+					if (line == "[" + ROOT_FOLDER + "]")
+						key = ROOT_FOLDER;
+					else
+						key = line.mid(1, line.size() - 2);
+				}
 				else if (!key.isEmpty())
 					extFolderMap.insert(key, line);
 			}
@@ -2422,6 +2472,9 @@ void Gamelist::initExtFolders(const QString &folderName, const QString &subFolde
 			
 				foreach (QString key, keys)
 				{
+					if (key == ROOT_FOLDER)
+						continue;
+
 					QTreeWidgetItem *folderItem = new QTreeWidgetItem(rootFolderItem, QStringList(key));
 				}
 			}

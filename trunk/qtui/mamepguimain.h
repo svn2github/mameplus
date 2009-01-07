@@ -9,32 +9,8 @@
 #include <QApplication>
 #include <QtXml>
 
-////
 #include "ui_mamepguimain.h"
-
 #include "gamelist.h"
-
-//static qt works with windows version
-Q_IMPORT_PLUGIN(qico)
-Q_IMPORT_PLUGIN(qjpeg)
-//Q_IMPORT_PLUGIN(qmng)
-
-enum
-{
-	DOCK_SNAP,
-	DOCK_FLYER,
-	DOCK_CABINET,
-	DOCK_MARQUEE,
-	DOCK_TITLE,
-	DOCK_CPANEL,
-	DOCK_PCB,
-	
-	DOCK_HISTORY,
-	DOCK_MAMEINFO,
-	DOCK_STORY,
-	DOCK_COMMAND,
-	DOCK_LAST
-};
 
 class Screenshot : public QDockWidget
 {
@@ -43,8 +19,7 @@ class Screenshot : public QDockWidget
 public:
     Screenshot(QString, QWidget *parent = 0);
 	void setPixmap(QPixmap pm);
-	void setPixmap(const QByteArray &, bool = false);
-	void setAspect(bool);
+	void setPixmap(const QByteArray &, bool);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -87,7 +62,8 @@ public:
 	QProgressBar *progressBarGamelist;
 	QSystemTrayIcon *trayIcon;
 	
-	Screenshot *ssSnap, *ssFlyer, *ssCabinet, *ssMarquee, *ssTitle, *ssCPanel, *ssPCB;
+	QStringList dockCtrlNames;
+	QDockWidget* dockCtrls[DOCK_LAST];
 	QTextBrowser *tbHistory, *tbMameinfo, *tbStory, *tbCommand;
 
 public slots:
@@ -99,7 +75,6 @@ public slots:
 	void on_actionJapanese_activated();
 	void on_actionBrazilian_activated();
 	void on_actionLocalGameList_activated();
-	void on_actionEnforceAspect_activated();
 	void on_actionReadme_activated();
 	void on_actionFAQ_activated();
 	void on_actionBoard_activated();
@@ -145,8 +120,8 @@ private:
 	QString gui_style;
 	
 	void toggleGameListColumn(int);
-	void initHistory(QString);
-	Screenshot * initSnap(QString);
+	void initHistory(int);
+	void initSnap(int);
 	void showOptionsDialog(int, int = -1);
 	void showRestartDialog();
 	void setTransparentBg(QWidget *);
@@ -176,10 +151,11 @@ const QString CFG_PREFIX =
 extern MainWindow *win;
 extern QSettings guiSettings, defSettings;
 extern QString mame_binary;
-extern QString list_mode;
 extern QString language;
 extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
+extern QStringList validGuiSettings;
+
 
 #endif
