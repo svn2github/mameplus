@@ -444,8 +444,8 @@ static void menu_file_create(running_machine *machine, ui_menu *menu, void *para
 	}
 	else
 	{
-	/* process the menu */
-	event = ui_menu_process(machine, menu, 0);
+		/* process the menu */
+		event = ui_menu_process(machine, menu, 0);
 	}
 
 	/* process the event */
@@ -459,7 +459,7 @@ static void menu_file_create(running_machine *machine, ui_menu *menu, void *para
 				{
 					if (create_new_image(
 						menustate->manager_menustate->selected_device,
-						astring_c(menustate->manager_menustate->current_directory), 
+						astring_c(menustate->manager_menustate->current_directory),
 						menustate->filename_buffer,
 						&menustate->confirm_save_as_yes))
 					{

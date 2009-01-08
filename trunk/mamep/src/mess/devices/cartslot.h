@@ -30,12 +30,12 @@
 typedef struct _cartslot_config cartslot_config;
 struct _cartslot_config
 {
-	const char *extensions;
-	int must_be_loaded;
-	device_start_func	     	  device_start;
-	device_image_load_func	 	  device_load;
-	device_image_unload_func 	  device_unload;	
-	device_image_partialhash_func device_partialhash;
+	const char *					extensions;
+	int								must_be_loaded;
+	device_start_func				device_start;
+	device_image_load_func			device_load;
+	device_image_unload_func		device_unload;	
+	device_image_partialhash_func	device_partialhash;
 };
 
 
@@ -51,13 +51,13 @@ DEVICE_GET_INFO(cartslot);
 ***************************************************************************/
 
 #define MDRV_CARTSLOT_ADD(_tag) 										\
-	MDRV_DEVICE_ADD(_tag, CARTSLOT, 0)			\
+	MDRV_DEVICE_ADD(_tag, CARTSLOT, 0)									\
 
-#define MDRV_CARTSLOT_REMOVE(_tag)			\
+#define MDRV_CARTSLOT_REMOVE(_tag)										\
 	MDRV_DEVICE_REMOVE(_tag, CARTSLOT)
 
 #define MDRV_CARTSLOT_MODIFY(_tag)										\
-	MDRV_DEVICE_MODIFY(_tag, CARTSLOT)		\
+	MDRV_DEVICE_MODIFY(_tag, CARTSLOT)									\
 
 #define MDRV_CARTSLOT_EXTENSION_LIST(_extensions)						\
 	MDRV_DEVICE_CONFIG_DATAPTR(cartslot_config, extensions, _extensions)

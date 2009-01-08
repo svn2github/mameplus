@@ -94,7 +94,7 @@ void cheat_mess_exit(void)
 
 int cheat_mess_matches_crc_table(UINT32 crc)
 {
-	int	i;
+	int i;
 
 	for(i = 0; i < device_crc_list_length; i++)
 		if(device_crc_list[i] == crc)

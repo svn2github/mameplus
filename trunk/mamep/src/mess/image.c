@@ -497,12 +497,6 @@ image_device_info image_device_getinfo(const machine_config *config, const devic
 	info.writeable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_WRITEABLE) ? 1 : 0;
 	info.creatable = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_CREATABLE) ? 1 : 0;
 	info.must_be_loaded = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_MUST_BE_LOADED) ? 1 : 0;
-	//mamep: dummy image
-	if (info.must_be_loaded && has_dummy_image(device->machine) == -1)
-		set_dummy_image(1);
-	else
-	if (has_dummy_image(device->machine) == -1)
-		set_dummy_image(0);
 	info.reset_on_load = device_get_info_int_offline(device, DEVINFO_INT_IMAGE_RESET_ON_LOAD) ? 1 : 0;
 	info.has_partial_hash = device_get_info_fct_offline(device, DEVINFO_FCT_IMAGE_PARTIAL_HASH) ? 1 : 0;
 
@@ -688,40 +682,40 @@ static image_error_t load_image_by_path(image_slot_data *image, UINT32 open_flag
 	/* attempt to read the file */
 	filerr = zippath_fopen(path, open_flags, &image->file, revised_path);
 
-		/* did the open succeed? */
-		switch(filerr)
-		{
-			case FILERR_NONE:
-				/* success! */
-				image->writeable = (open_flags & OPEN_FLAG_WRITE) ? 1 : 0;
-				image->created = (open_flags & OPEN_FLAG_CREATE) ? 1 : 0;
-				err = IMAGE_ERROR_SUCCESS;
-				break;
+	/* did the open succeed? */
+	switch(filerr)
+	{
+		case FILERR_NONE:
+			/* success! */
+			image->writeable = (open_flags & OPEN_FLAG_WRITE) ? 1 : 0;
+			image->created = (open_flags & OPEN_FLAG_CREATE) ? 1 : 0;
+			err = IMAGE_ERROR_SUCCESS;
+			break;
 
-			case FILERR_NOT_FOUND:
-			case FILERR_ACCESS_DENIED:
-				/* file not found (or otherwise cannot open); continue */
-				err = IMAGE_ERROR_FILENOTFOUND;
-				break;
+		case FILERR_NOT_FOUND:
+		case FILERR_ACCESS_DENIED:
+			/* file not found (or otherwise cannot open); continue */
+			err = IMAGE_ERROR_FILENOTFOUND;
+			break;
 
-			case FILERR_OUT_OF_MEMORY:
-				/* out of memory */
-				err = IMAGE_ERROR_OUTOFMEMORY;
-				break;
+		case FILERR_OUT_OF_MEMORY:
+			/* out of memory */
+			err = IMAGE_ERROR_OUTOFMEMORY;
+			break;
 
-			case FILERR_ALREADY_OPEN:
-				/* this shouldn't happen */
-				err = IMAGE_ERROR_ALREADYOPEN;
-				break;
+		case FILERR_ALREADY_OPEN:
+			/* this shouldn't happen */
+			err = IMAGE_ERROR_ALREADYOPEN;
+			break;
 
-			case FILERR_FAILURE:
-			case FILERR_TOO_MANY_FILES:
-			case FILERR_INVALID_DATA:
-			default:
-				/* other errors */
-				err = IMAGE_ERROR_INTERNAL;
-				break;
-		}
+		case FILERR_FAILURE:
+		case FILERR_TOO_MANY_FILES:
+		case FILERR_INVALID_DATA:
+		default:
+			/* other errors */
+			err = IMAGE_ERROR_INTERNAL;
+			break;
+	}
 
 	/* if successful, set the file name */
 	if (filerr == FILERR_NONE)
@@ -808,8 +802,7 @@ static int image_load_internal(const device_config *image, const char *path,
 		goto done;
 
 	/* do we need to reset the CPU? */
-	//mamep: dummy image
-	if ((has_dummy_image(machine) || attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
+	if ((attotime_compare(timer_get_time(machine), attotime_zero) > 0) && slot->info.reset_on_load)
 		mame_schedule_hard_reset(machine);
 
 	/* determine open plan */

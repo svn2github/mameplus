@@ -53,7 +53,7 @@ static UINT8 *ROM;
 /* TODO: Convert the definitions into a syntax accepting input_port_read */
 
 static UINT8 riot_input_port_0_r(const device_config *device, UINT8 olddata)
-{
+{	
 	return input_port_0_r(cpu_get_address_space(device->machine->cpu[0],ADDRESS_SPACE_PROGRAM), 0);
 }
 

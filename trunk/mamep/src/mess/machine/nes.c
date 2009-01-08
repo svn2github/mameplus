@@ -96,7 +96,7 @@ static void init_nes_core (running_machine *machine)
 			if we are loading a cart image identified as mapper 20 (probably wrong mapper...) we need to alloc 
 			memory for the bank 2 pointer */
 			if (nes_fds.data == NULL)
-			nes_fds.data = auto_malloc( 0x8000 );
+				nes_fds.data = auto_malloc( 0x8000 );
 			memory_install_read8_handler(space, 0x4030, 0x403f, 0, 0, fds_r);
 			memory_install_read8_handler(space, 0x6000, 0xdfff, 0, 0, SMH_BANK2);
 			memory_install_read8_handler(space, 0xe000, 0xffff, 0, 0, SMH_BANK1);
@@ -298,7 +298,7 @@ static void nes_machine_stop(running_machine *machine)
 	if (LOG_JOY)
 		logerror ("joy 1 read, val: %02x, pc: %04x, bits read: %d, chan0: %08x\n", ret, cpu_get_pc( space->cpu ), in_1.shift, in_1.i0);
 
-	in_1.shift ++;
+	in_1.shift++;
 	return ret;
 }
 
@@ -412,10 +412,10 @@ WRITE8_HANDLER ( nes_IN1_w )
 
 
 
-DEVICE_IMAGE_LOAD(nes_cart)
+DEVICE_IMAGE_LOAD( nes_cart )
 {
 	const char *mapinfo;
-	int mapint1=0,mapint2=0,mapint3=0,mapint4=0,goodcrcinfo = 0;
+	int mapint1 = 0, mapint2 = 0, mapint3 = 0, mapint4 = 0, goodcrcinfo = 0;
 	char magic[4];
 	char skank[8];
 	int local_options = 0;
@@ -507,7 +507,7 @@ DEVICE_IMAGE_LOAD(nes_cart)
 	memory_region_free (image->machine, "gfx1");
 
 	/* Allocate them again with the proper size */
-	memory_region_alloc(image->machine, "main", 0x10000 + (nes.prg_chunks+1) * 0x4000,0);
+	memory_region_alloc(image->machine, "main", 0x10000 + (nes.prg_chunks + 1) * 0x4000,0);
 	if (nes.chr_chunks)
 		memory_region_alloc(image->machine, "gfx1", nes.chr_chunks * 0x2000,0);
 
@@ -555,7 +555,7 @@ DEVICE_IMAGE_LOAD(nes_cart)
 
 	logerror("**\n");
 	logerror("Mapper: %d\n", nes.mapper);
-	logerror("PRG chunks: %02x, size: %06x\n", nes.prg_chunks, 0x4000*nes.prg_chunks);
+	logerror("PRG chunks: %02x, size: %06x\n", nes.prg_chunks, 0x4000 * nes.prg_chunks);
 
 	/* Read in any chr chunks */
 	if (nes.chr_chunks > 0)
@@ -565,7 +565,7 @@ DEVICE_IMAGE_LOAD(nes_cart)
 			logerror("Warning: VROM has been found in VRAM-based mapper. Either the mapper is set wrong or the ROM image is incorrect.\n");
 	}
 
-	logerror("CHR chunks: %02x, size: %06x\n", nes.chr_chunks, 0x4000*nes.chr_chunks);
+	logerror("CHR chunks: %02x, size: %06x\n", nes.chr_chunks, 0x4000 * nes.chr_chunks);
 	logerror("**\n");
 
 	/* Attempt to load a battery file for this ROM. If successful, we */
@@ -626,7 +626,7 @@ DEVICE_IMAGE_LOAD(nes_disk)
 		nes_fds.data = image_realloc(image, nes_fds.data, nes_fds.sides * 65500);
 		if (!nes_fds.data)
 			return INIT_FAIL;
-		image_fread (image, nes_fds.data + ((nes_fds.sides-1) * 65500), 65500);
+		image_fread (image, nes_fds.data + ((nes_fds.sides - 1) * 65500), 65500);
 	}
 
 	logerror("Number of sides: %d\n", nes_fds.sides);

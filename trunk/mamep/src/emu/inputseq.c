@@ -11,7 +11,6 @@
 
 #include "inputseq.h"
 #include "restrack.h"
-#include "uilang.h"
 #include <ctype.h>
 
 

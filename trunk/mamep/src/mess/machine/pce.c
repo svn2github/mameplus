@@ -89,8 +89,8 @@ static UINT8 *cartridge_ram;
 #define JOY_CLOCK   0x01
 #define JOY_RESET   0x02
 
-static int joystick_port_select;        /* internal index of joystick ports */
-static int joystick_data_select;        /* which nibble of joystick data we want */
+//static int joystick_port_select;        /* internal index of joystick ports */
+//static int joystick_data_select;        /* which nibble of joystick data we want */
 
 /* prototypes */
 static void pce_cd_init( running_machine *machine );
@@ -248,8 +248,9 @@ MACHINE_RESET( pce_ms )
 	pce_cd_init( machine );
 }
 
+#if 0
 /* todo: how many input ports does the PCE have? */
-WRITE8_HANDLER ( pce_ms_joystick_w )
+WRITE8_HANDLER ( pce_joystick_w )
 {
 	h6280io_set_buffer((device_config*) space->cpu, data);
     /* bump counter on a low-to-high transition of bit 1 */
@@ -268,7 +269,7 @@ WRITE8_HANDLER ( pce_ms_joystick_w )
     }
 }
 
-READ8_HANDLER ( pce_ms_joystick_r )
+READ8_HANDLER ( pce_joystick_r )
 {
 	UINT8 ret;
 	int data = input_port_read(space->machine, "JOY");
@@ -279,6 +280,7 @@ READ8_HANDLER ( pce_ms_joystick_r )
 #endif
 	return (ret);
 }
+#endif
 
 NVRAM_HANDLER( pce )
 {
@@ -946,12 +948,12 @@ static void pce_cd_init( running_machine *machine )
 		pce_cd.cd = mess_cd_get_cdrom_file(device);
 		if ( pce_cd.cd )
 		{
-		pce_cd.toc = cdrom_get_toc( pce_cd.cd );
-		cdda_set_cdrom( 0, pce_cd.cd );
-		pce_cd.last_frame = cdrom_get_track_start( pce_cd.cd, cdrom_get_last_track( pce_cd.cd ) - 1 );
-		pce_cd.last_frame += pce_cd.toc->tracks[ cdrom_get_last_track( pce_cd.cd ) - 1 ].frames;
-		pce_cd.end_frame = pce_cd.last_frame;
-	}
+			pce_cd.toc = cdrom_get_toc( pce_cd.cd );
+			cdda_set_cdrom( 0, pce_cd.cd );
+			pce_cd.last_frame = cdrom_get_track_start( pce_cd.cd, cdrom_get_last_track( pce_cd.cd ) - 1 );
+			pce_cd.last_frame += pce_cd.toc->tracks[ cdrom_get_last_track( pce_cd.cd ) - 1 ].frames;
+			pce_cd.end_frame = pce_cd.last_frame;
+		}
 	}
 
 	pce_cd.data_timer = timer_alloc(machine,  pce_cd_data_timer_callback , NULL);
@@ -1090,7 +1092,7 @@ static UINT8 pce_cd_get_cd_data_byte(running_machine *machine)
 static TIMER_CALLBACK( pce_cd_adpcm_dma_timer_callback ) 
 {
 	if ( pce_cd.scsi_REQ && ! pce_cd.scsi_ACK && ! pce_cd.scsi_CD && pce_cd.scsi_IO ) 
-	{
+	{	
 		pce_cd.adpcm_ram[pce_cd.adpcm_write_ptr] = pce_cd_get_cd_data_byte(machine);
 		pce_cd.adpcm_write_ptr = ( pce_cd.adpcm_write_ptr + 1 ) & 0xFFFF;
 	}

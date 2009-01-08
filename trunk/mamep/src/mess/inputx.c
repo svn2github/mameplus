@@ -1480,20 +1480,20 @@ int input_category_active(running_machine *machine, int category)
 	for (port = machine->portconfig; port != NULL; port = port->next)
 	{
 		for (field = port->fieldlist; field != NULL; field = field->next)
-	{
+		{
 			/* is this field a category? */
 			if (field->type == IPT_CATEGORY)
 			{
 				/* get the settings value */
 				input_field_get_user_settings(field, &settings);
 
-		for (setting = field->settinglist; setting != NULL; setting = setting->next)
-		{
+				for (setting = field->settinglist; setting != NULL; setting = setting->next)
+				{
 					/* is this the category we want?  if so, is this settings value correct? */
 					if ((setting->category == category) && (settings.value == setting->value))
-				return TRUE;
-		}
-	}
+						return TRUE;
+				}
+			}
 		}
 	}
 	return FALSE;

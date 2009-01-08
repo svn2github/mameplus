@@ -9,7 +9,6 @@
 #include <commdlg.h>
 #include <wingdi.h>
 #include <winuser.h>
-#include <tchar.h>
 
 #include "driver.h"
 #include "mui_util.h"
@@ -32,7 +31,7 @@
 
 static const options_entry mess_wingui_settings[] =
 {
-	{ NULL,                          NULL,                         OPTION_HEADER,     "MESS SPECIFIC OPTIONS"},
+	{ NULL,									NULL,									OPTION_HEADER,	"MESS SPECIFIC OPTIONS"},
 	{ WINGUIOPTION_SOFTWARE_COLUMN_WIDTHS,	"186, 230, 88, 84, 84, 68, 248, 248",	0,				NULL },
 	{ WINGUIOPTION_SOFTWARE_COLUMN_ORDER,	"0,   1,    2,  3,  4,  5,   6,   7",	0,				NULL },
 	{ WINGUIOPTION_SOFTWARE_COLUMN_SHOWN,	"1,   1,    1,  1,  1,  0,   0,   0",	0,				NULL },

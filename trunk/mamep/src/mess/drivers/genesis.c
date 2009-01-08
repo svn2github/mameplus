@@ -53,7 +53,7 @@ MESS adaptation by R. Belmont
 #include "../../mame/drivers/megadriv.h"
 
 /* cart device, custom mappers & sram init */
-//mamep: found correct file
+//mamep: locate correct header
 #include "../includes/genesis.h"
 
 
@@ -341,7 +341,7 @@ static MACHINE_DRIVER_START( ms_megdsvp )
 	MDRV_IMPORT_FROM(megdsvp)
 
 	MDRV_MACHINE_RESET( ms_megadriv )
-	
+
 	MDRV_IMPORT_FROM( genesis_cartslot )
 MACHINE_DRIVER_END
 

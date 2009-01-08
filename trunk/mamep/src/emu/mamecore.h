@@ -21,9 +21,7 @@
 #include "bitmap.h"
 #include "coreutil.h"
 #include "corestr.h"
-#if defined(MAME_DEBUG) || defined(ENABLE_DEBUGGER)
 #include "uilang.h"
-#endif
 
 
 /***************************************************************************
@@ -64,7 +62,6 @@ typedef UINT32 FPTR;
    circular dependencies in the code */
 typedef struct _running_machine running_machine;
 typedef struct _game_driver game_driver;
-typedef struct _msgame_driver msgame_driver;
 typedef struct _machine_config machine_config;
 typedef struct _gfx_element gfx_element;
 typedef struct _mame_file mame_file;
@@ -298,9 +295,6 @@ enum
 /***************************************************************************
     FUNCTION PROTOTYPES
 ***************************************************************************/
-
-/* additional string compare helper */
-int mame_strwildcmp(const char *sp1, const char *sp2);
 
 /* Used by assert(), so definition here instead of mame.h */
 DECL_NORETURN void CLIB_DECL fatalerror(const char *text, ...) ATTR_PRINTF(1,2) ATTR_NORETURN;

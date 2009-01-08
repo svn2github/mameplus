@@ -341,7 +341,7 @@ INTERRUPT_GEN( a7800_interrupt )
 	int frame_scanline;
 	UINT8 *ROM = memory_region(device->machine, "main");
 	const address_space* space = cpu_get_address_space(device->machine->cpu[0],ADDRESS_SPACE_PROGRAM);
-
+	
 	maria_scanline++;
 
 	/* why + 1? */

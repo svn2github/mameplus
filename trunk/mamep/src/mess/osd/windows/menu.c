@@ -61,8 +61,6 @@ extern void win_timer_enable(int enabled);
 
 #define MAX_JOYSTICKS				(8)
 
-#define WM_USER_SET_FULLSCREEN			(WM_USER + 3)
-
 enum
 {
 	DEVOPTION_OPEN,
@@ -1249,10 +1247,11 @@ static void append_menu_uistring(HMENU menu, UINT flags, UINT_PTR id, int uistri
 
 
 //============================================================
-//	remove_menu_items_from_pos_until_separator
+//	remove_menu_items
 //============================================================
 
-static void remove_menu_items_from_pos_until_id(HMENU menu, UINT pos, UINT id)
+//mamep: remove from pos to id 
+static void remove_menu_items(HMENU menu, UINT pos, UINT id)
 {
 	MENUITEMINFO mii;
 
@@ -1540,7 +1539,7 @@ static void prepare_menus(HWND wnd)
 
 	// set up device menu; first remove all existing menu items
 	file_menu = find_sub_menu(menu_bar, "&File\0", FALSE);
-	remove_menu_items_from_pos_until_id(file_menu, 0, ID_FILE_LOADSTATE);
+	remove_menu_items(file_menu, 0, ID_FILE_LOADSTATE);
 
 	// then set up the actual devices
 	for (img = image_device_first(window->machine->config); img != NULL; img = image_device_next(img))
@@ -1712,9 +1711,9 @@ static void device_command(HWND wnd, const device_config *img, int devoption)
 				}
 			}
 #endif /* HAS_WAVE */
-				break;
-		}
+			break;
 	}
+}
 
 
 
@@ -2036,25 +2035,25 @@ static int invoke_command(HWND wnd, UINT command)
 				}
 				else if ((field != NULL) && (field->type == IPT_CATEGORY) && (setting == NULL))
 				{
-						// customize the input type
+					// customize the input type
 					input_field_get_user_settings(field, &settings);
-						category = 0;
-						section = NULL;
+					category = 0;
+					section = NULL;
 
-						for (setting = field->settinglist; setting != NULL; setting = setting->next)
-						{
+					for (setting = field->settinglist; setting != NULL; setting = setting->next)
+					{
 						if (settings.value == setting->value)
-							{
+						{
 							category = setting->category;
 							section = setting->name;
-							}
 						}
+					}
 					customize_categorizedinput(window->machine, wnd, section, category);
 				}
 				else
 				{
-						// should never happen
-						handled = 0;
+					// should never happen
+					handled = 0;
 				}
 			}
 			else
@@ -2260,7 +2259,7 @@ int win_create_menu(running_machine *machine, HMENU *menus)
 	HMENU menu_bar = NULL;
 	HMODULE module;
 
-	if (ui_mess_use_new_ui(machine))
+	if (ui_mess_use_new_ui())
 	{
 		module = win_resource_module();
 		menu_bar = LoadMenu(module, MAKEINTRESOURCE(IDR_RUNTIME_MENU));

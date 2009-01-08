@@ -355,7 +355,7 @@ static void determine_bios_rom(rom_load_data *romdata)
 			defaultname = ROM_GETNAME(rom);
 
 	/* look for a BIOS with a matching name */
-	for (rom = romdata->machine->gamedrv->rom;!ROMENTRY_ISEND(rom);rom++)
+	for (rom = romdata->machine->gamedrv->rom; !ROMENTRY_ISEND(rom); rom++)
 		if (ROMENTRY_ISSYSTEM_BIOS(rom))
 		{
 			const char *biosname = ROM_GETNAME(rom);
@@ -363,7 +363,7 @@ static void determine_bios_rom(rom_load_data *romdata)
 			char bios_number[20];
 
 			/* Allow '-bios n' to still be used */
-			sprintf(bios_number, "%d", bios_flags-1);
+			sprintf(bios_number, "%d", bios_flags - 1);
 			if (strcmp(bios_number, specbios) == 0 || strcmp(biosname, specbios) == 0)
 				romdata->system_bios = bios_flags;
 			if (defaultname != NULL && strcmp(biosname, defaultname) == 0)
@@ -1324,11 +1324,11 @@ static void process_region_list(rom_load_data *romdata)
 			else if (romdata->regionlength <= 0x400000)
 				memset(romdata->regionbase, 0, romdata->regionlength);
 
-	#ifdef MAME_DEBUG
+#ifdef MAME_DEBUG
 			/* if we're debugging, fill region with random data to catch errors */
 			else
 				fill_random(romdata->machine, romdata->regionbase, romdata->regionlength);
-	#endif
+#endif
 
 			/* now process the entries in the region */
 			if (ROMREGION_ISROMDATA(region))

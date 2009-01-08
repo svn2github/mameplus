@@ -563,7 +563,7 @@ int device_find_from_machine(const running_machine *machine, iodevice_t type)
 		const legacy_mess_device *iodev = mess_device_from_core_device(device);
 		if (iodev->type == type)
 			return TRUE;
-		}
+	}
 	return FALSE;
 }
 

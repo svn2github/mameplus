@@ -484,7 +484,7 @@ static const zip_file_header *zippath_find_sub_path(zip_file *zipfile, const cha
 		last_char = '/';
                 while(((c1 = next_path_char(header->filename, &i)) == (c2 = next_path_char(subpath, &j))) &&
                         ( c1 != '\0' && c2 != '\0' ))
-			last_char = c2;
+                        last_char = c2;
 
 
 		if (c2 == '\0')
@@ -546,14 +546,14 @@ static file_error zippath_resolve(const char *path, osd_dir_entry_type *entry_ty
 		/* did we find anything? */
 		if (current_entry != NULL)
 		{
-		/* get the entry type and free the stat entry */
-		current_entry_type = current_entry->type;
-		free(current_entry);
-		current_entry = NULL;
+			/* get the entry type and free the stat entry */
+			current_entry_type = current_entry->type;
+			free(current_entry);
+			current_entry = NULL;
 		}
 		else
 		{
-		/* if we have not found the file or directory, go up */
+			/* if we have not found the file or directory, go up */
 			current_entry_type = ENTTYPE_NONE;
 			went_up = TRUE;
 			parent = zippath_parent(astring_alloc(), astring_c(apath));

@@ -124,11 +124,11 @@ static void snes_load_sram(running_machine *machine)
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = malloc_or_die( snes_cart.sram_max );
+	battery_ram = malloc_or_die(snes_cart.sram_max);
 	ptr = battery_ram;
 	image_battery_load(device_list_find_by_tag(machine->config->devicelist, CARTSLOT, "cart"), battery_ram, snes_cart.sram_max);
 
-	if( snes_cart.mode == SNES_MODE_20 )
+	if (snes_cart.mode == SNES_MODE_20)
 	{
 		/* There could be some larger image needing banks 0x70 to 0x7f at address 0x8000 for ROM 
 		 * mirroring. These should be treated separately or data would be overwritten by SRAM */
@@ -143,10 +143,10 @@ static void snes_load_sram(running_machine *machine)
 	}
 	else if (snes_cart.mode == SNES_MODE_21)
 	{
-		for( ii = 0; ii < 16; ii++ )
+		for (ii = 0; ii < 16; ii++)
 		{
 			/* loading */
-			memmove( &snes_ram[0x306000 + (ii * 0x010000)], ptr, 0x1fff );
+			memmove(&snes_ram[0x306000 + (ii * 0x010000)], ptr, 0x1fff);
 			/* mirroring */
 			memcpy(&snes_ram[0xb06000 + (ii * 0x010000)], &snes_ram[0x306000 + (ii * 0x010000)], 0x1fff);
 			ptr += 0x1fff;
@@ -161,7 +161,7 @@ static void snes_load_sram(running_machine *machine)
 		}
 	}
 
-	free( battery_ram );
+	free(battery_ram);
 }
 
 /* Saves the battery backed RAM from the appropriate memory area */
@@ -170,10 +170,10 @@ static void snes_save_sram(running_machine *machine)
 	UINT8 ii;
 	UINT8 *battery_ram, *ptr;
 
-	battery_ram = malloc_or_die( snes_cart.sram_max );
+	battery_ram = malloc_or_die(snes_cart.sram_max);
 	ptr = battery_ram;
 
-	if( snes_cart.mode == SNES_MODE_20 )
+	if (snes_cart.mode == SNES_MODE_20)
 	{
 		for (ii = 0; ii < 16; ii++)
 		{
@@ -183,9 +183,9 @@ static void snes_save_sram(running_machine *machine)
 	}
 	else if (snes_cart.mode == SNES_MODE_21)
 	{
-		for( ii = 0; ii < 16; ii++ )
+		for (ii = 0; ii < 16; ii++)
 		{
-			memmove( ptr, &snes_ram[0x306000 + (ii * 0x010000)], 0x2000 );
+			memmove(ptr, &snes_ram[0x306000 + (ii * 0x010000)], 0x2000);
 			ptr += 0x2000;
 		}
 	}
@@ -200,7 +200,7 @@ static void snes_save_sram(running_machine *machine)
 
 	image_battery_save(device_list_find_by_tag(machine->config->devicelist, CARTSLOT, "cart"), battery_ram, snes_cart.sram_max);
 
-	free( battery_ram );
+	free(battery_ram);
 }
 
 static void snes_machine_stop(running_machine *machine)
@@ -344,48 +344,48 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 	UINT8 *temp_buffer = auto_malloc(0x410000);
 	UINT8 valid_mode20, valid_mode21, valid_mode25;
 
-	memory_region_alloc(machine, "main", 0x1000000,0);
+	memory_region_alloc(machine, "main", 0x1000000, 0);
 
-	snes_ram = memory_region( machine, "main" );
+	snes_ram = memory_region(machine, "main");
 	memset( snes_ram, 0, 0x1000000 );
 
 	/* Check for a header (512 bytes) */
 	offset = 512;
-	image_fread( image, header, 512 );
-	if( (header[8] == 0xaa) && (header[9] == 0xbb) && (header[10] == 0x04) )
+	image_fread(image, header, 512);
+	if ((header[8] == 0xaa) && (header[9] == 0xbb) && (header[10] == 0x04))
 	{
 		/* Found an SWC identifier */
-		logerror( "Found header(SWC) - Skipped\n" );
+		logerror("Found header(SWC) - Skipped\n");
 	}
-	else if( (header[0] | (header[1] << 8)) == (((image_length(image) - 512) / 1024) / 8) )
+	else if ((header[0] | (header[1] << 8)) == (((image_length(image) - 512) / 1024) / 8))
 	{
 		/* Some headers have the rom size at the start, if this matches with the
          * actual rom size, we probably have a header */
-		logerror( "Found header(size) - Skipped\n" );
+		logerror("Found header(size) - Skipped\n");
 	}
-	else if( (image_length(image) % 0x8000) == 512 )
+	else if ((image_length(image) % 0x8000) == 512)
 	{
 		/* As a last check we'll see if there's exactly 512 bytes extra to this
          * image. */
-		logerror( "Found header(extra) - Skipped\n" );
+		logerror("Found header(extra) - Skipped\n");
 	}
 	else
 	{
 		/* No header found so go back to the start of the file */
-		logerror( "No header found.\n" );
+		logerror("No header found.\n");
 		offset = 0;
-		image_fseek( image, offset, SEEK_SET );
+		image_fseek(image, offset, SEEK_SET);
 	}
 
 	/* We need to take a sample to test what mode we need to be in (the 
 	sample has to be quite large to cope with large carts in ExHiRom) */
-	image_fread( image, temp_buffer, 0x40ffff );
-	image_fseek( image, offset, SEEK_SET );	/* Rewind */
+	image_fread(image, temp_buffer, 0x40ffff);
+	image_fseek(image, offset, SEEK_SET);	/* Rewind */
 
 	/* Now to determine if this is a lo-ROM, a hi-ROM or an extended lo/hi-ROM */
-	valid_mode20 = snes_validate_infoblock( temp_buffer, 0x007fc0 );
-	valid_mode21 = snes_validate_infoblock( temp_buffer, 0x00ffc0 );
-	valid_mode25 = snes_validate_infoblock( temp_buffer, 0x40ffc0 );
+	valid_mode20 = snes_validate_infoblock(temp_buffer, 0x007fc0);
+	valid_mode21 = snes_validate_infoblock(temp_buffer, 0x00ffc0);
+	valid_mode25 = snes_validate_infoblock(temp_buffer, 0x40ffc0);
 
 	/* Images larger than 32mbits are likely ExHiRom */
 	if (valid_mode25)
@@ -469,7 +469,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 		 * (for data in banks 0x40 to 0x7f) or to banks 0x80 to 0xbf (for data in banks 0xc0 to 0xff).
 		 * Notice that banks 0x7e and 0x7f are overwritten by WRAM, but they could contain data at 
 		 * address > 0x8000 because the mirrors at 0x3e and 0x3f are not overwritten. 
-			*/
+		 */
 			/* Reading the first 64 blocks */
 			while (read_blocks < 64 && read_blocks < total_blocks)
 			{
@@ -551,7 +551,7 @@ static DEVICE_IMAGE_LOAD( snes_cart )
 		case SNES_MODE_20:
 		/* LoROM carts load data in banks 0x00 to 0x7f at address 0x8000 (actually up to 0x7d, because 0x7e and 
 		 * 0x7f are overwritten by WRAM). Each block is also mirrored in banks 0x80 to 0xff (up to 0xff for real) 
-			*/
+		 */
 			while (read_blocks < 128 && read_blocks < total_blocks)
 			{
 				/* Loading data */

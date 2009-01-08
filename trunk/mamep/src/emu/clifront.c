@@ -1313,17 +1313,17 @@ static void match_roms(const char *hash, int length, int *found)
 		/* iterate over sources, regions and files within the region */
 		for (source = rom_first_source(drivers[drvindex], config); source != NULL; source = rom_next_source(drivers[drvindex], config, source))
 			for (region = rom_first_region(drivers[drvindex], source); region; region = rom_next_region(region))
-			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-				if (hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0))
-				{
-					int baddump = hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP);
+				for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
+					if (hash_data_is_equal(hash, ROM_GETHASHDATA(rom), 0))
+					{
+						int baddump = hash_data_has_info(ROM_GETHASHDATA(rom), HASH_INFO_BAD_DUMP);
 
-					/* output information about the match */
-					if (*found != 0)
-						mame_printf_info("                    ");
-					mame_printf_info("= %s%-20s  %s\n", baddump ? _("(BAD) ") : "", ROM_GETNAME(rom), _LST(drivers[drvindex]->description));
-					(*found)++;
-				}
+						/* output information about the match */
+						if (*found != 0)
+							mame_printf_info("                    ");
+						mame_printf_info("= %s%-20s  %s\n", baddump ? "(BAD) " : "", ROM_GETNAME(rom), drivers[drvindex]->description);
+						(*found)++;
+					}
 
 		machine_config_free(config);
 	}

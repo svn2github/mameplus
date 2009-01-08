@@ -27,14 +27,13 @@
 
 #ifdef MAMEMESS
 #define MESS
-#include "mslegacy.h"
-#include "messopts.h"
 #endif /* MAMEMESS */
 
 #ifdef MESS
 #include "mess.h"
 #include "uimess.h"
 #include "inputx.h"
+#include "messopts.h"
 #endif /* MESS */
 
 #include <ctype.h>
@@ -507,29 +506,8 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 				break;
 
 			case 2:
-				if ((show_gameinfo 
-#ifdef MAMEMESS
-				|| has_dummy_image(machine) > 0
-#endif /* MAMEMESS */
-				) && astring_len(game_info_astring(machine, messagebox_text)) > 0)
-					{
-						/* append MAME version and ask for select key */
-						astring_catprintf(messagebox_text, "\n\t%s %s", APPNAME, build_version);
-
-#ifdef MAMEMESS
-						// mamep: prepare a screen for console with dummy image
-						if(has_dummy_image(machine) > 0)
-						{
-							astring_catprintf(messagebox_text, "\n\t%s", _("Please load an image"));
-							ui_set_handler(handler_messagebox_anykey, 0);
-						}
-						else
-#endif /* MAMEMESS */
-						{
-							astring_catprintf(messagebox_text, "\n\t%s", _("Press Select Key/Button"));
-							ui_set_handler(handler_messagebox_anykey, 0);
-						}
-					}
+				if (show_gameinfo && astring_len(game_info_astring(machine, messagebox_text)) > 0)
+					ui_set_handler(handler_messagebox_anykey, 0);
 				break;
 #ifdef MESS
 			case 3:
@@ -974,7 +952,7 @@ void ui_draw_text_full(const char *origs, float x, float y, float origwrapwidth,
 					s = (const char *)utf8_previous_char(s);
 					scharcount = uchar_from_utf8(&schar, s, ends - s);
 					if (scharcount == -1)
-					break;
+						break;
 
 					curwidth -= ui_get_char_width(schar);
 				}
@@ -1608,7 +1586,7 @@ astring *game_info_astring(running_machine *machine, astring *string)
 		for (scandevice = device->typenext; scandevice != NULL; scandevice = scandevice->typenext)
 		{
 			if (cpu_get_type(device) != cpu_get_type(scandevice) || device->clock != scandevice->clock)
-		    	break;
+				break;
 			count++;
 		}
 
@@ -1751,12 +1729,11 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 
 static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 {
-	int res;
+	int res = ui_window_scroll_keys(machine);
 
 	/* draw a standard message window */
 	ui_draw_text_box(astring_c(messagebox_text), JUSTIFY_LEFT, 0.5f, 0.5f, messagebox_backcolor);
 
-	res = ui_window_scroll_keys(machine);
 	/* if the user cancels, exit out completely */
 	if (res == 2)
 	{
@@ -1765,15 +1742,11 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 	}
 
 	/* if select key is pressed, just exit */
-	if (res == 1 
-#ifdef MAMEMESS
-	&& has_dummy_image(machine) <= 0
-#endif /* MAMEMESS */
-	)
-		{
-			if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
+	if (res == 1)
+	{
+		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
 			state = UI_HANDLER_CANCEL;
-		}
+	}
 
 	return state;
 }

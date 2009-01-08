@@ -128,21 +128,21 @@ static int process_cartridge(const device_config *image, const device_config *fi
 	for (source = rom_first_source(image->machine->gamedrv, image->machine->config); source != NULL; source = rom_next_source(image->machine->gamedrv, image->machine->config, source))
 	{
 		for (romrgn = rom_first_region(image->machine->gamedrv, source); romrgn != NULL; romrgn = rom_next_region(romrgn))
-	{
-		roment = romrgn + 1;
-		while(!ROMENTRY_ISREGIONEND(roment))
 		{
-				if (ROMENTRY_GETTYPE(roment) == ROMENTRYTYPE_CARTRIDGE)
+			roment = romrgn + 1;
+			while(!ROMENTRY_ISREGIONEND(roment))
 			{
+				if (ROMENTRY_GETTYPE(roment) == ROMENTRYTYPE_CARTRIDGE)
+				{					
 					if (strcmp(roment->_hashdata,image->tag)==0)
-				{
-					result = load_cartridge(image->machine, romrgn, roment, file);
-					if (!result)
-						return result;
+					{						
+						result = load_cartridge(image->machine, romrgn, roment, file);
+						if (!result)
+							return result;
+					}
 				}
+				roment++;
 			}
-			roment++;
-		}
 		}
 	}
 	return INIT_PASS;
@@ -157,13 +157,13 @@ static DEVICE_START( cartslot_specified )
 	assert(device->tag != NULL);
 	assert(strlen(device->tag) < 20);
 	assert(device->inline_config != NULL);
-	
+
 	process_cartridge(device, NULL);
 	return DEVICE_START_OK;
 }
 
 static DEVICE_IMAGE_LOAD( cartslot_specified )
-{
+{	
 	return process_cartridge(image, image);
 }
 
@@ -176,7 +176,7 @@ static DEVICE_IMAGE_UNLOAD( cartslot_specified )
 
 
 DEVICE_GET_INFO(cartslot)
-	{
+{	
 	switch( state )
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
@@ -192,7 +192,7 @@ DEVICE_GET_INFO(cartslot)
 														info->i = get_config(device)->must_be_loaded; 
 													} else {
 														info->i = 0; 
-				}
+													}
 													break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
@@ -200,25 +200,25 @@ DEVICE_GET_INFO(cartslot)
 														info->start = get_config(device)->device_start; 
 													} else {
 														info->start = DEVICE_START_NAME(cartslot_specified); 
-			}
+													}
 													break;
 		case DEVINFO_FCT_IMAGE_LOAD:				if ( device && device->inline_config && get_config(device)->device_load) {
 														info->f = (genf *) get_config(device)->device_load; 
 													} else {
 														info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(cartslot_specified); 
-		}
+													}
 													break;
 		case DEVINFO_FCT_IMAGE_UNLOAD:				if ( device && device->inline_config && get_config(device)->device_unload) {
 														info->f = (genf *) get_config(device)->device_unload; 
 													} else {
 														info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(cartslot_specified); 
-		}
+													}
 													break;
 		case DEVINFO_FCT_IMAGE_PARTIAL_HASH:		if ( device && device->inline_config && get_config(device)->device_partialhash) {
 														info->f = (genf *) get_config(device)->device_partialhash; 
 													} else {
 														info->f = NULL; 
-	}
+													}
 													break;			
 
 		/* --- the following bits of info are returned as NULL-terminated strings --- */
@@ -227,7 +227,7 @@ DEVICE_GET_INFO(cartslot)
 		case DEVINFO_STR_SOURCE_FILE:				strcpy(info->s, __FILE__); break;
 		case DEVINFO_STR_IMAGE_FILE_EXTENSIONS:
 			if ( device && device->inline_config && get_config(device)->extensions )
-	{
+			{
 				strcpy(info->s, get_config(device)->extensions);
 			}
 			else

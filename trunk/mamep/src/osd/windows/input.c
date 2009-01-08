@@ -398,7 +398,7 @@ static const int win_key_trans_table[][4] =
 	{ ITEM_ID_RWIN, 		DIK_RWIN,			VK_RWIN, 		0 },
 	{ ITEM_ID_MENU, 		DIK_APPS,			VK_APPS, 		0 },
 	{ ITEM_ID_PAUSE, 		DIK_PAUSE,			VK_PAUSE,		0 },
-	{ ITEM_ID_CANCEL,		0,				VK_CANCEL,		0 },
+	{ ITEM_ID_CANCEL,		0,					VK_CANCEL,		0 },
 	{ ITEM_ID_KANA,			DIK_KANA,			0x15,	 		0 },
 	{ ITEM_ID_CONVERT,		DIK_CONVERT,		0x1c,			0 },
 	{ ITEM_ID_NONCONVERT,	DIK_NOCONVERT,		0x1d,			0 },
@@ -776,7 +776,7 @@ int wininput_vkey_for_mame_code(input_code code)
 //  osd_customize_mapping_list
 //============================================================
 
-void osd_customize_input_type_list(running_machine *machine, input_type_desc *typelist)
+void osd_customize_input_type_list(input_type_desc *typelist)
 {
 	input_type_desc *typedesc;
 
@@ -799,7 +799,7 @@ void osd_customize_input_type_list(running_machine *machine, input_type_desc *ty
 
 #ifdef MESS
 			case IPT_OSD_2:
-				if (ui_mess_use_new_ui(machine))
+				if (ui_mess_use_new_ui())
 				{
 					typedesc->token = "TOGGLE_MENUBAR";
 					typedesc->name = _WINDOWS("Toggle Menubar");
