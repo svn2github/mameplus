@@ -147,10 +147,6 @@ b) Exit the dialog.
 #include "translate.h"
 #include "datafile.h"
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 typedef HANDLE HTHEME;
 
 #ifdef UNICODE
@@ -167,7 +163,7 @@ typedef HANDLE HTHEME;
 // done like this until I figure out a better idea
 #include "messopts.h"
 #include "resourcems.h"
-//#include "propertiesms.h"
+#include "propertiesms.h"
 #endif
 
 // missing win32 api defines

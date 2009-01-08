@@ -1045,41 +1045,6 @@ static DWORD RunMAME(int nGameIndex, const play_options *playopts)
 	options_set_string(mame_opts, OPTION_GAMENAME, drivers[nGameIndex]->name, OPTION_PRIORITY_CMDLINE);
 	// Time the game run.
 	time(&start);
-#ifdef MAMEMESS
-	//mamep: when DriverIsConsole will use another old mode to prevent crash
-	if (DriverIsConsole(nGameIndex))
-	{
-		PROCESS_INFORMATION pi;
-		WCHAR *pCmdLine;
-		BOOL process_created = FALSE;
-
-		pCmdLine = OptionsGetCommandLine(nGameIndex);
-
-		ZeroMemory(&pi, sizeof(pi));
-
-		{
-			STARTUPINFOW        si;
-
-			ZeroMemory(&si, sizeof(si));
-			si.cb = sizeof(si);
-
-			if (CreateProcessW(NULL,
-			                    pCmdLine,
-			                    NULL,		  /* Process handle not inheritable. */
-			                    NULL,		  /* Thread handle not inheritable. */
-			                    TRUE,		  /* Handle inheritance.  */
-			                    0,			  /* Creation flags. */
-			                    NULL,		  /* Use parent's environment block.  */
-			                    NULL,		  /* Use parent's starting directory.  */
-			                    &si,		  /* STARTUPINFO */
-			                    &pi))		  /* PROCESS_INFORMATION */
-				process_created  = TRUE;
-		}
-
-		free(pCmdLine);
-	}
-	else
-#endif /* MAMEMESS */
 	mame_execute(mame_opts);
 	// Calc the duration
 	time(&end);

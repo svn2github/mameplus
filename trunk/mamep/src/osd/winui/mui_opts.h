@@ -577,9 +577,5 @@ BOOL GetShowTreeSheet(void);
 void SetShowTreeSheet(BOOL val);
 #endif /* TREE_SHEET */
 
-#ifdef MAMEMESS
-WCHAR *OptionsGetCommandLine(int driver_index);
-#endif /* MAMEMESS */
-
 #endif
 

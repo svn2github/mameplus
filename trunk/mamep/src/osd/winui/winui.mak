@@ -130,6 +130,7 @@ UIOBJS += \
 ifdef MAMEMESS
     UIOBJS += $(MESS_UIOBJ)/optionsms.o
 endif
+
 ifneq ($(USE_UI_COLOR_PALETTE),)
     UIOBJS += $(UIOBJ)/paletteedit.o
 endif

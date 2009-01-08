@@ -1040,16 +1040,13 @@ int load_driver_story (const game_driver *drv, char *buffer, int bufsize)
 
 int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 {
-	const rom_entry *region, *rom /*,*chunk*/ ;
 	const game_driver *clone_of;
-	const rom_source *source;
-	machine_config *config;
 	int result = 1;
 	int i;
 
 	*buffer = 0;
 
-	strcat(buffer, "MAMEInfo:\n");
+	strcat(buffer, _("Mameinfo:\n"));
 
 	/* List the game info 'flags' */
 	if (drv->flags &
@@ -1096,38 +1093,6 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	                         DATAFILE_TAG_MAME, FILE_ROOT, mame_idx,
 	                         "mameinfo/", options_get_string(MameUISettings(), MUIOPTION_MAMEINFO_FILE));
 
-	strcat(buffer, _("\nROM REGION:\n"));
-	/* Allocate machine config */
-	config = machine_config_alloc(drv->machine_config);
-	for (source = rom_first_source(drv, config); source != NULL; source = rom_next_source(drv, config, source))
-	{
-		for (region = rom_first_region(drv, source); region; region = rom_next_region(region))
-		{
-			for (rom = rom_first_file(region); rom; rom = rom_next_file(rom))
-			{
-				char name[100];
-				//int length;
-
-				//length = 0;
-				//for (chunk = rom_first_chunk(rom); chunk; chunk = rom_next_chunk(chunk))
-				//	length += ROM_GETLENGTH(chunk);
-
-				//sprintf(name," %-12s ",ROM_GETNAME(rom));
-				//strcat(buffer, name);
-				//sprintf(name,"%6x ",length);
-				//sprintf(name," %s %08x ",ROM_GETNAME(rom),length);
-				//strcat(buffer, name);
-				//strcat(buffer, ROMREGION_GETTAG(region));
-
-				//sprintf(name," %7x\n",ROM_GETOFFSET(rom));
-				sprintf(name," %08x\n",ROM_GETOFFSET(rom));
-				strcat(buffer, name);
-			}
-		}
-	}
-	/* Free the structure */
-	machine_config_free(config);
-
 	clone_of = driver_get_clone(drv);
 	if (clone_of && !(clone_of->flags & GAME_IS_BIOS_ROOT))
 	{
@@ -1169,7 +1134,7 @@ int load_driver_drivinfo (const game_driver *drv, char *buffer, int bufsize)
 	*buffer = 0;
 
 	/* Print source code file */
-	sprintf (buffer, _("\nSOURCE: %s\n"), drv->source_file+17);
+	sprintf (buffer, _("\nDRIVER: %s\n"), drv->source_file+17);
 
 	/* Try to open mameinfo datafile - driver section */
 	if (ParseOpen (options_get_string(MameUISettings(), MUIOPTION_MAMEINFO_FILE)))

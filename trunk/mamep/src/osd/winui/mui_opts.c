@@ -45,7 +45,6 @@
 #include "treeview.h"
 #include "splitters.h"
 #include "mui_opts.h"
-#include "picker.h"
 #include "winmain.h"
 #include "winutf8.h"
 #include "strconv.h"
@@ -94,8 +93,6 @@ static void ResetToDefaults(core_options *opts, int priority);
 
 static void ui_parse_ini_file(core_options *opts, const char *name);
 static void remove_all_source_options(void);
-
-static void  build_default_bios(void);
 
 
 #ifdef _MSC_VER
@@ -612,7 +609,7 @@ BOOL OptionsInit()
 	{
 		char buffer[128];
 		int i, j;
-		int n;
+		int n = 0;
 		int game_option_count = 0;
 		options_entry *driver_per_game_options;
 		options_entry *ent;
@@ -627,7 +624,6 @@ BOOL OptionsInit()
 		driver_per_game_options = (options_entry *) pool_malloc(options_memory_pool,
 			(game_option_count * driver_list_get_count(drivers) + 1) * sizeof(*driver_per_game_options));
 #endif
-		n = 0;
 
 		for (i = 0; i < driver_list_get_count(drivers); i++)
 		{
@@ -674,8 +670,6 @@ BOOL OptionsInit()
 	// set up global options
 	global = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
 	lang_set_langcode(MameUIGlobal(), UI_LANG_EN_US);
-	build_default_bios();
-
 #if 0
 	// set up folders
 	size_folder_filters = 1;
@@ -2876,7 +2870,7 @@ void SaveFolderFlags(const char *path, DWORD flags)
 
 
 
-#ifdef MAMEMESS //mamep: not AddFolderFlags, but MAMEMESS
+#if 0 //mamep
 // Copy options, if entry doesn't exist in the dest, create it.
 static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 {
@@ -2899,9 +2893,6 @@ static void copy_options_ex(core_options *pDestOpts, core_options *pSourceOpts)
 				if (NULL == existing || *existing == '\0')
 				{
 					entries[0].name = option_name;
-#ifdef MAMEMESS
-					entries[0].defvalue = options_get_option_default_value(pSourceOpts, option_name);
-#endif /* MAMEMESS */
 					// create entry
 					options_add_entries(pDestOpts, entries);
 				}
@@ -3189,10 +3180,10 @@ core_options * load_options(OPTIONS_TYPE opt_type, int game_num)
 			return opts;
 		}
 
-#ifdef MAMEMESS
+#ifdef USE_IPS
 		//mamep: DO NOT INHERIT IPS CONFIGURATION
 		options_set_string(opts, OPTION_IPS, NULL, OPTION_PRIORITY_CMDLINE);
-#endif /* MAMEMESS */
+#endif /* USE_IPS */
 
 		ui_parse_ini_file(opts, driver->name);
 
@@ -3341,72 +3332,6 @@ static void ResetToDefaults(core_options *opts, int priority)
 }
 
 
-static void build_default_bios(void)
-{
-	const game_driver *last_skip = NULL;
-	int num_drivers = GetNumGames();
-	int i;
-
-	for (i = 0; i < MAX_SYSTEM_BIOS; i++)
-		default_bios[i] = -1;
-
-	for (i = 0; i < num_drivers; i++)
-	{
-		if (DriverHasOptionalBIOS(i))
-		{
-			int driver_index = i;
-			int n;
-
-			while (!DriverIsBios(driver_index))
-			{
-				int parent_index = GetParentIndex(drivers[driver_index]);
-
-				if (parent_index < 0)
-					break;
-
-				driver_index = parent_index;
-			}
-
-			if (last_skip == drivers[driver_index])
-				continue;
-
-			for (n = 0; n < MAX_SYSTEM_BIOS; n++)
-			{
-				if (default_bios[n] == -1)
-				{
-					const rom_entry *rom;
-					int count = 1;
-
-					for (rom = drivers[driver_index]->rom; !ROMENTRY_ISEND(rom); rom++)
-						if (ROMENTRY_ISSYSTEM_BIOS(rom))
-							if (count < ROM_GETBIOSFLAGS(rom))
-								count = ROM_GETBIOSFLAGS(rom);
-
-					if (count == 1)
-					{
-						dprintf("BIOS skip: %s [%s]", drivers[driver_index]->description, drivers[driver_index]->name);
-						last_skip = drivers[driver_index];
-						break;
-					}
-					if (n >= MAX_SYSTEM_BIOS)
-					{
-						dprintf("BIOS skip: %d in %s [%s]", count, drivers[driver_index]->description, drivers[driver_index]->name);
-						last_skip = drivers[driver_index];
-						break;
-					}
-					else
-						dprintf("BIOS %d: %d in %s [%s]", n, count, drivers[driver_index]->description, drivers[driver_index]->name);
-
-					default_bios[n] = driver_index;
-					break;
-				}
-				else if (default_bios[n] == driver_index)
-					break;
-			}
-		}
-	}
-}
-
 #include "strconv.h"
 
 WCHAR *options_get_wstring(core_options *opts, const char *name)
@@ -3430,51 +3355,6 @@ void options_set_wstring(core_options *opts, const char *name, const WCHAR *valu
 
 	free(utf8_value);
 }
-
-#ifdef MAMEMESS
-WCHAR *OptionsGetCommandLine(int driver_index)
-{
-	core_options *options_ref = CreateGameOptions(OPTIONS_TYPE_GLOBAL);
-	core_options *options_base = load_options(OPTIONS_GAME, driver_index);
-	core_options *opts = load_options(OPTIONS_GLOBAL, GLOBAL_OPTIONS);
-	WCHAR pModule[_MAX_PATH];
-	WCHAR *result;
-	WCHAR *wo;
-	char *p;
-	int pModuleLen;
-	int len;
-
-	ResetToDefaults(options_ref, OPTION_PRIORITY_MAXIMUM);
-	copy_options_ex(opts, options_base);
-
-		GetModuleFileNameW(GetModuleHandle(NULL), pModule, _MAX_PATH);
-
-	len = options_output_diff_command_line(opts, options_ref, NULL);
-	p = malloc(len + 1);
-	options_output_diff_command_line(opts, options_ref, p);
-	wo = wstring_from_utf8(p);
-	free(p);
-
-	len = wcslen(wo);
-
-	pModuleLen = wcslen(pModule) + 10 + strlen(drivers[driver_index]->name);
-	result = malloc((pModuleLen + len + 1) * sizeof (*result));
-	wsprintf(result, L"\"%s\" %s -norc ", pModule, driversw[driver_index]->name);
-
-	if (len != 0)
-		wcscat(result, wo);
-	else
-		result[pModuleLen - 1] = '\0';
-
-	free(wo);
-
-	options_free(opts);
-	options_free(options_base);
-	options_free(options_ref);
-
-	return result;
-}
-#endif /* MAMEMESS */
 
 
 
