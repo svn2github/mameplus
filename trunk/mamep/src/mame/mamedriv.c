@@ -8497,7 +8497,6 @@ Other Sun games
 	/* Astro Corp. */
 	DRIVER( showhand )	/* (c) 1999? Astro Corp. */
 	DRIVER( showhanc )	/* (c) 1999? Astro Corp. */
-#endif /* NEOCPSPGM */
 
 	/* Dyna */
 	DRIVER( cb2001 )	/* (c) Dyna */
@@ -8527,5 +8526,6 @@ Other Sun games
 	DRIVER( lucky8 )	/* (c) 1989 Wing Co. Ltd */
 	DRIVER( lucky8a )	/* (c) 1989 Wing Co. Ltd */
 	DRIVER( luckgrln )	/* (c) 1991 Wing Co. Ltd */
+#endif /* NEOCPSPGM */
 
 #endif	/* DRIVER_RECURSIVE */

@@ -10,6 +10,7 @@
 #
 ###########################################################################
 
+
 MAMESRC = $(SRC)/mame
 MAMEOBJ = $(OBJ)/mame
 
@@ -36,6 +37,7 @@ DEFS += -DNEOCPSPGM
 #-------------------------------------------------
 
 CPUS += Z80
+CPUS += MCS48
 CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
@@ -105,7 +107,6 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
-
 
 #-------------------------------------------------
 # layout dependencies
