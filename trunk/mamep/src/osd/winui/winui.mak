@@ -25,14 +25,7 @@ UIOBJ = $(OBJ)/osd/winui
 
 OBJDIRS += $(UIOBJ)
 
-MESS_WINSRC = $(SRC)/mess/osd/windows
-MESS_WINOBJ = $(OBJ)/mess/osd/windows
-MESS_UISRC = $(SRC)/mess/osd/winui
-MESS_UIOBJ = $(OBJ)/mess/osd/winui
-
-OBJDIRS += $(MESS_UIOBJ)
-
-CFLAGS += -I $(UISRC) -I $(MESS_UISRC)
+CFLAGS += -I $(UISRC)
 
 ifneq ($(USE_IMAGE_MENU),)
     $(UIOBJ)/%.o: $(UISRC)/%.cpp
@@ -53,7 +46,7 @@ UI_RC = @windres --use-temp-file
 UI_RCDEFS = -DNDEBUG -D_WIN32_IE=0x0400
 
 # include UISRC direcotry
-UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ) --include-dir $(MESS_UISRC)
+UI_RCFLAGS = -O coff --include-dir $(UISRC) --include-dir $(UIOBJ)
 
 
 
@@ -127,10 +120,6 @@ UIOBJS += \
 	$(UIOBJ)/translate.o \
 
 
-ifdef MAMEMESS
-    UIOBJS += $(MESS_UIOBJ)/optionsms.o
-endif
-
 ifneq ($(USE_UI_COLOR_PALETTE),)
     UIOBJS += $(UIOBJ)/paletteedit.o
 endif
@@ -143,8 +132,7 @@ endif
 ifeq ($(NO_DLL),)
     GUIRESFILE = $(UIOBJ)/mameui.res
 else
-    UI_RCFLAGS += --include-dir $(MESS_WINSRC)
-    $(UIOBJ)/mameui.res: $(MESS_WINSRC)/mess.rc $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
+    UI_RCFLAGS += $(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
     GUIRESFILE =  $(UIOBJ)/mameui.res
 endif
 

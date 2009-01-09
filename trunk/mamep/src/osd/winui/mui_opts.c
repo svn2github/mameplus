@@ -53,11 +53,8 @@
 
 #ifdef MAMEMESS
 #define MESS
+#include "../mess/osd/windows/configms.h"
 #endif /* MAMEMESS */
-
-#ifdef MESS
-#include "optionsms.h"
-#endif // MESS
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -564,6 +561,20 @@ void AddOptions(core_options *opts, const options_entry *entrylist, BOOL is_glob
 }
 
 
+
+#ifdef MAMEMESS //mamep: moved from ../mess/osd/winui/optionsms.c
+static void MessSetupGameOptions(core_options *opts, int driver_index)
+{
+	BOOL is_global = (driver_index == OPTIONS_TYPE_GLOBAL);
+	AddOptions(opts, mess_core_options, is_global);
+	AddOptions(opts, mess_win_options, is_global);
+
+	if (driver_index >= 0)
+	{
+		mess_add_device_options(opts, drivers[driver_index]);
+	}
+}
+#endif // MAMEMESS
 
 core_options *CreateGameOptions(int driver_index)
 {
