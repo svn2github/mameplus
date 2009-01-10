@@ -651,7 +651,7 @@ BOOL OptionsInit()
 
 				if (perGameOptions[j].description)
 				{
-					if (strcmp(perGameOptions[j].description, MESS_MARK_CONSOLE_ONLY) == 0 && !DriverIsConsole(i))
+					if (strcmp(perGameOptions[j].description, MESS_MARK_CONSOLE_ONLY) == 0)
 						continue;
 				}
 

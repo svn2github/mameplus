@@ -776,15 +776,6 @@ BOOL DriverIsVertical(int driver_index) {
 	return GetDriversInfo(driver_index)->isVertical; 
 }
 
-BOOL DriverIsConsole(int driver_index)
-{
-#ifdef MAMEMESS
-	return drivers[driver_index]->sysconfig_ctor != NULL;
-#else /* MAMEMESS */
-	return FALSE;
-#endif /* MAMEMESS */
-}
-
 int DriverBiosIndex(int driver_index)
 {
 	return GetDriversInfo(driver_index)->biosIndex;

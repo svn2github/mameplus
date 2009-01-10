@@ -49,7 +49,6 @@ BOOL DriverUsesLightGun(int driver_index);
 BOOL DriverUsesMouse(int driver_index);
 BOOL DriverSupportsSaveState(int driver_index);
 BOOL DriverIsVertical(int driver_index);
-BOOL DriverIsConsole(int driver_index);
 int DriverBiosIndex(int driver_index);
 
 enum

@@ -76,12 +76,12 @@ LIBS += \
 	-ldxguid
 ifeq ($(MSVC_BUILD),)
 	ifneq ($(USE_IMAGE_MENU),)
-		LIBS += \
-			-lmsimg32 \
-			-lstdc++
+	LIBS += \
+		-lmsimg32 \
+		-lstdc++
 	endif
 else
-		LIBS += -lhtmlhelp
+	LIBS += -lhtmlhelp
 endif
 
 
@@ -121,20 +121,19 @@ UIOBJS += \
 
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
-    UIOBJS += $(UIOBJ)/paletteedit.o
+UIOBJS += $(UIOBJ)/paletteedit.o
 endif
 
 ifneq ($(USE_IMAGE_MENU),)
-    UIOBJS += $(UIOBJ)/imagemenu.o
+UIOBJS += $(UIOBJ)/imagemenu.o
 endif
 
 # add our UI resources
-ifeq ($(NO_DLL),)
-    GUIRESFILE = $(UIOBJ)/mameui.res
-else
-    UI_RCFLAGS += $(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
-    GUIRESFILE =  $(UIOBJ)/mameui.res
+ifneq ($(NO_DLL),)
+UI_RCFLAGS +=
+$(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 endif
+GUIRESFILE = $(UIOBJ)/mameui.res
 
 $(LIBOSD): $(UIOBJS)
 
@@ -182,7 +181,7 @@ $(UIOBJ)/verinfo.o: $(SRC)/build/verinfo.c | $(OSPREBUILD)
 # generic rule for the resource compiler for UI
 #-------------------------------------------------
 
-$(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
+$(GUIRESFILE): $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
 	@echo Compiling mameui resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 
@@ -200,7 +199,7 @@ $(UIOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 
 #-------------------------------------------------
 # CORE functions
-# only definitions for mameui.rc
+# only definitions UI_RCDEFS for mameui.rc
 #-------------------------------------------------
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
