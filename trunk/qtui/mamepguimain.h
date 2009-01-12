@@ -130,7 +130,7 @@ private:
 };
 
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 8
+#define S11N_VER 10
 
 #ifdef Q_WS_WIN
 #define EXEC_EXT ".exe"
@@ -155,6 +155,7 @@ extern QString language;
 extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
+extern bool isMamePlus;
 extern QStringList validGuiSettings;
 
 

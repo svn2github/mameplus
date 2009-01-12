@@ -42,13 +42,13 @@ void RomAuditor::audit()
 
 		//must clear mameGame in the main thread
 		// fixme: currently only console games are cleared
-		foreach (QString gameName, mameGame->nameInfoMap.keys())
+		foreach (QString gameName, mameGame->games.keys())
 		{
-			GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+			GameInfo *gameInfo = mameGame->games[gameName];
 			if (gameInfo->isExtRom && utils->isAuditFolder(gameInfo->romof))
 			{
 //				win->log(QString("delete: %1").arg(gameName));
-				mameGame->nameInfoMap.remove(gameName);
+				mameGame->games.remove(gameName);
 				delete gameInfo;
 			}
 		}
@@ -91,7 +91,7 @@ void RomAuditor::run()
 
 				QString gameName = romFiles[i].toLower().remove(".zip");
 
-				if (mameGame->nameInfoMap.contains(gameName))
+				if (mameGame->games.contains(gameName))
 				{
 					auditedGames.insert(gameName);
 
@@ -102,7 +102,7 @@ void RomAuditor::run()
 
 					QuaZipFileInfo info;
 					QuaZipFile zipFile(&zip);
-					gameInfo = mameGame->nameInfoMap[gameName];
+					gameInfo = mameGame->games[gameName];
 
 					//iterate all files in the zip
 					for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
@@ -114,17 +114,17 @@ void RomAuditor::run()
 						// file crc recognized
 						if (!gameInfo)
 							win->log(QString("err: %1").arg(gameName));
-						if (gameInfo->crcRomInfoMap.contains(crc))
-							gameInfo->crcRomInfoMap[crc]->available = true; 
+						if (gameInfo->roms.contains(crc))
+							gameInfo->roms[crc]->available = true; 
 						//check rom for clones
 						else
 						{
 							foreach (QString cloneName, gameInfo->clones)
 							{
 								auditedGames.insert(cloneName);
-								gameInfo2 = mameGame->nameInfoMap[cloneName];
-								if (gameInfo2->crcRomInfoMap.contains(crc))
-									gameInfo2->crcRomInfoMap[crc]->available = true; 
+								gameInfo2 = mameGame->games[cloneName];
+								if (gameInfo2->roms.contains(crc))
+									gameInfo2->roms[crc]->available = true; 
 							}
 						}
 					}
@@ -132,13 +132,13 @@ void RomAuditor::run()
 			}
 		}
 
-		win->log(QString("audit 1.gamecount %1").arg(mameGame->nameInfoMap.count()));
+		win->log(QString("audit 1.gamecount %1").arg(mameGame->games.count()));
 
 		/* see if any rom of a game is not available */
 		//iterate games
-		foreach (QString gameName, mameGame->nameInfoMap.keys())
+		foreach (QString gameName, mameGame->games.keys())
 		{
-			gameInfo = mameGame->nameInfoMap[gameName];
+			gameInfo = mameGame->games[gameName];
 			//fixme: skip auditing for consoles
 			if (gameInfo->isExtRom)
 				continue;
@@ -155,9 +155,9 @@ void RomAuditor::run()
 			bool aRomPassed = false;	//at least one rom has passed
 
 			//iterate roms
-			foreach (quint32 crc, gameInfo->crcRomInfoMap.keys())
+			foreach (quint32 crc, gameInfo->roms.keys())
 			{
-				romInfo = gameInfo->crcRomInfoMap[crc];
+				romInfo = gameInfo->roms[crc];
 				if (!romInfo->available)
 				{
 					if (romInfo->status == "nodump")
@@ -166,8 +166,8 @@ void RomAuditor::run()
 					//check parent
 					if (!gameInfo->romof.isEmpty())
 					{
-						gameInfo2 = mameGame->nameInfoMap[gameInfo->romof];
-						if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
+						gameInfo2 = mameGame->games[gameInfo->romof];
+						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
 						{
 							aRomPassed = true;
 //							win->log(gameInfo->romof + "/" + romInfo->name + " passed");
@@ -177,8 +177,8 @@ void RomAuditor::run()
 						//check bios
 						if (!gameInfo2->romof.isEmpty())
 						{
-							gameInfo2 = mameGame->nameInfoMap[gameInfo2->romof];
-							if (gameInfo2->crcRomInfoMap.contains(crc) && gameInfo2->crcRomInfoMap[crc]->available)
+							gameInfo2 = mameGame->games[gameInfo2->romof];
+							if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
 							{
 								aRomPassed = true;
 //								win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
@@ -207,10 +207,10 @@ void RomAuditor::run()
 
 
 	//audit each console system
-	foreach (QString gameName, mameGame->nameInfoMap.keys())
+	foreach (QString gameName, mameGame->games.keys())
 	{
-		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
-		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+		GameInfo *gameInfo = mameGame->games[gameName];
+		if (!gameInfo->devices.isEmpty())
 		{
 			if (!utils->isAuditFolder(gameName))
 				continue;
@@ -234,13 +234,14 @@ void RomAuditor::auditConsole(QString consoleName)
 		return;
 	QString dirpath = utils->getPath(_dirpath);
 
-	gameInfo = mameGame->nameInfoMap[consoleName];
-	DeviceInfo *deviceinfo = gameInfo->nameDeviceInfoMap["cartridge"];
+	gameInfo = mameGame->games[consoleName];
+
 	QString sourcefile = gameInfo->sourcefile;
 
 	QStringList nameFilter;
-	foreach (QString ext, deviceinfo->extension)
-		nameFilter << "*." + ext;
+	foreach (DeviceInfo *deviceInfo, gameInfo->devices)
+		foreach (QString ext, deviceInfo->extensionNames)
+			nameFilter << "*." + ext;
 	nameFilter << "*.zip";
 
 	// iterate all files in the path
@@ -251,12 +252,11 @@ void RomAuditor::auditConsole(QString consoleName)
 		QFileInfo fi(files[i]);
 		gameInfo = new GameInfo(mameGame);
 		gameInfo->description = fi.completeBaseName();
-		gameInfo->isBios = false;
 		gameInfo->isExtRom = true;
 		gameInfo->romof = consoleName;
 		gameInfo->sourcefile = sourcefile;
 		gameInfo->available = 1;
-		mameGame->nameInfoMap[dirpath + gameName] = gameInfo;
+		mameGame->games[dirpath + gameName] = gameInfo;
 	}
 
 //	win->poplog(QString("%1, %2").arg(consoleName).arg(_dirpath));
@@ -278,10 +278,10 @@ void MergedRomAuditor::init()
 	//init loader, put sw path of all console systems to a list, for non-param pop operation needed by process mgt
 	consoleInfoList.clear();
 	GameInfo *gameInfo;
-	foreach (QString gameName, mameGame->nameInfoMap.keys())
+	foreach (QString gameName, mameGame->games.keys())
 	{
-		gameInfo = mameGame->nameInfoMap[gameName];
-		if (!gameInfo->nameDeviceInfoMap.isEmpty())
+		gameInfo = mameGame->games[gameName];
+		if (!gameInfo->devices.isEmpty())
 		{
 			if (!utils->isAuditFolder(gameName))
 				continue;
@@ -349,11 +349,11 @@ void MergedRomAuditor::auditorFinished(int, QProcess::ExitStatus)
 	QProcess *proc = (QProcess *)sender();
 	procMan->procMap.remove(proc);
 
-	GameInfo *gameInfo = mameGame->nameInfoMap[consoleName];
+	GameInfo *gameInfo = mameGame->games[consoleName];
 	QString sourcefile = gameInfo->sourcefile;
 
 // filter rom ext in the merged file
-//	foreach (QString ext, deviceinfo->extension)
+//	foreach (QString ext, deviceinfo->extensionNames)
 //		nameFilter << "*." + ext;
 
 	QStringList bufs = outBuf.split(QRegExp("[\\r\\n]+"));
@@ -369,12 +369,11 @@ void MergedRomAuditor::auditorFinished(int, QProcess::ExitStatus)
 
 			gameInfo = new GameInfo(mameGame);
 			gameInfo->description = fi.completeBaseName();
-			gameInfo->isBios = false;
 			gameInfo->isExtRom = true;
 			gameInfo->romof = consoleName;
 			gameInfo->sourcefile = sourcefile;
 			gameInfo->available = 1;
-			mameGame->nameInfoMap[consolePath + mergedName + "/" + gameName] = gameInfo;
+			mameGame->games[consolePath + mergedName + "/" + gameName] = gameInfo;
 		}
 	}
 

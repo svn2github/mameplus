@@ -145,7 +145,7 @@ public:
 	QTime loadTimer;
 	int numTotalGames;
 	QString mameVersion;
-	QMenu *menu;
+	QMenu *menuContext;
 	QMenu *headerMenu;
 	QString listMode;
 
@@ -190,8 +190,8 @@ public slots:
 	void extractMergedFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
-	void filterRegExpCleared();
-	void filterRegExpChanged();
+	void filterSearchCleared();
+	void filterSearchChanged();
 	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);
 
 private:
@@ -204,6 +204,7 @@ private:
 	void initFolders();
 	void initExtFolders(const QString&, const QString&);
 	void initMenus();
+	void updateDeviceMenu(QMenu *);
 	void loadMMO(int);
 	void loadIconWorkder();
 	void parse();
@@ -213,32 +214,107 @@ private slots:
 	void postLoadIcon();
 };
 
-class RomInfo : public QObject
-{
-public:
-	QString name, bios, status;
-	quint64 size;
-	bool available;
-
-	RomInfo(QObject *parent = 0);
-	~RomInfo();
-};
-
-class BiosInfo : public QObject
+class BiosSet : public QObject
 {
 public:
 	QString description;
-	bool isdefault;
+	bool isDefault;
 
-	BiosInfo(QObject *parent = 0);
+	BiosSet(QObject *parent = 0);
+};
+
+class RomInfo : public QObject
+{
+public:
+	QString name;
+	QString bios;
+	quint64 size;
+	//quint32 crc is the key
+	//md5
+	//sha1
+	QString merge;
+	QString region;
+	//offset
+	QString status;
+	//dispose
+
+	/* internal */
+	bool available;
+
+	RomInfo(QObject *parent = 0);
+};
+
+class DiskInfo : public QObject
+{
+public:
+	QString name;
+	//md5
+	//QString sha1 is the key
+	QString merge;
+	QString region;
+	quint8 index;
+	QString status;
+	//dispose
+
+	/* internal */
+	bool available;
+
+	DiskInfo(QObject *parent = 0);
+};
+
+class ChipInfo : public QObject
+{
+public:
+	QString name;
+	QString tag;
+	QString type;
+	quint32 clock;
+
+	ChipInfo(QObject *parent = 0);
+};
+
+class DisplayInfo : public QObject
+{
+public:
+	QString type;
+	QString rotate;
+	bool flipx;
+	quint16 width;
+	quint16 height;
+	QString refresh;
+//	int pixclock;
+	quint16 htotal;
+	quint16 hbend;
+	quint16 hbstart;
+	quint16 vtotal;
+	quint16 vbend;
+	quint16 vbstart;
+
+	DisplayInfo(QObject *parent = 0);
+};
+
+class ControlInfo : public QObject
+{
+public:
+	QString type;
+	quint16 minimum;
+	quint16 maximum;
+	quint16 sensitivity;
+	quint16 keydelta;
+	bool reverse;
+
+	ControlInfo(QObject *parent = 0);
 };
 
 class DeviceInfo : public QObject
 {
 public:
 	QString type;
-	QStringList extension;
+	QString tag;
 	bool mandatory;
+
+//	QString instanceName is the key
+	QStringList extensionNames;
 
 	DeviceInfo(QObject *parent = 0);
 };
@@ -246,16 +322,74 @@ public:
 class GameInfo : public QObject
 {
 public:
-	QString description, year, manufacturer, sourcefile, cloneof, romof, lcDesc, lcMftr, reading;
-	quint8 status, emulation, color, sound, graphic, cocktail, protection, savestate;
+	/* game */
+	QString sourcefile;
+	bool isBios;
+//	bool runnable;
+	QString cloneof;
+	QString romof;
+	QString sampleof;
+	QString description;
+	QString year;
+	QString manufacturer;
+
+	/* biosset */
+	QHash<QString /*name*/, BiosSet *> biosSets;
+
+	/* rom */
+	QHash<quint32 /*crc*/, RomInfo *> roms;
+
+	/* disk */
+	QHash<QString /*sha1*/, DiskInfo *> disks;
+
+	/* sample */
+	QStringList samples;
+
+	/* chip */
+	QList<ChipInfo *> chips;
+
+	/* display */
+	QList<DisplayInfo *> displays;
+
+	/* sound */
+	quint8 channels;
+
+	/* input */
+	bool service;
+	bool tilt;
+	quint8 players;
+	quint8 buttons;
+	quint8 coins;
+	QList<ControlInfo *> controls;
+
+	//dipswitch 
+
+	/* driver, impossible for a game to have multiple drivers */
+	quint8 status;
+	quint8 emulation;
+	quint8 color;
+	quint8 sound;
+	quint8 graphic;
+	quint8 cocktail;
+	quint8 protection;
+	quint8 savestate;
 	quint32 palettesize;
 
-	bool isBios, isExtRom,isCloneAvailable;
+	/* device */
+	QMap<QString /* instanceName */, DeviceInfo *> devices;
 
-	QHash<quint32, RomInfo *> crcRomInfoMap;
-	QHash<QString, BiosInfo *> nameBiosInfoMap;
-	QHash<QString, DeviceInfo *> nameDeviceInfoMap;
-	
+	/*ramoption */
+	QList<quint32> ramOptions;
+	quint32 defaultRamOption;
+
+	/* internal */
+	QString lcDesc;
+	QString lcMftr;
+	QString reading;
+
+	bool isExtRom;
+	bool isCloneAvailable;
+
 	qint8 available;
 	QByteArray icondata;
 	TreeItem *pModItem;
@@ -263,7 +397,10 @@ public:
 
 	GameInfo(QObject *parent = 0);
 	~GameInfo();
+
 	QString biosof();
+	DeviceInfo *getDevice(QString type, int = 0);
+	QString getDeviceInstanceName(QString type, int = 0);
 };
 
 class MameGame : public QObject
@@ -273,13 +410,14 @@ Q_OBJECT
 public:
 	QString mameVersion;
 	QString mameDefaultIni;
-	QHash<QString, GameInfo *> nameInfoMap;
+	QHash<QString, GameInfo *> games;
 
 	MameGame(QObject *parent = 0);
 	~MameGame();
 
 	void s11n();
 	int des11n();
+	void completeData();
 };
 
 class GameListSortFilterProxyModel : public QSortFilterProxyModel

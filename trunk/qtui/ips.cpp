@@ -398,7 +398,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 			QPixmap pm = QPixmap(ipspath + currentGame + "/" + datName + ".png");
 			if (pm.isNull())
 			{
-				GameInfo *gameinfo = mameGame->nameInfoMap[currentGame];
+				GameInfo *gameinfo = mameGame->games[currentGame];
 				if (!gameinfo->cloneof.isEmpty())
 					pm = QPixmap(ipspath + gameinfo->cloneof + "/" + datName + ".png");
 			}

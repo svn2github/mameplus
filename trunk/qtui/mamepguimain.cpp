@@ -27,6 +27,7 @@ QString language;
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
+bool isMamePlus = false;
 QStringList validGuiSettings;
 
 /* internal */
@@ -59,6 +60,9 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 	static const QString prefix = ":/res/16x16/";
 	static const QString suffix = ".png";
 	QString statusBuffer = "";
+
+	if (gameInfo->isExtRom)
+		gameInfo = mameGame->games[gameInfo->romof];
 
 	QString statusText = utils->getStatusString (gameInfo->status);
 	QString statusName = QT_TR_NOOP("status");
@@ -385,7 +389,7 @@ void MainWindow::init()
 	QFile mamebin(mame_binary);
 
 	// if no valid exec was found, popup a dialog
-	if (!mamebin.exists() || mame_binary.contains("mamepgui"))
+	if (!mamebin.exists() || mame_binary.endsWith("mamepgui" EXEC_EXT))
 	{
 		QString filter = "";
 #ifdef Q_WS_WIN
@@ -507,9 +511,9 @@ void MainWindow::init()
 	connect(&gameList->auditor, SIGNAL(finished()), gameList->mAuditor, SLOT(init()));
 
 	// Game List
-	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterRegExpChanged()));
-	connect(btnSearch, SIGNAL(clicked()), gameList, SLOT(filterRegExpChanged()));
-	connect(btnClearSearch, SIGNAL(clicked()), gameList, SLOT(filterRegExpCleared()));
+	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterSearchChanged()));
+	connect(btnSearch, SIGNAL(clicked()), gameList, SLOT(filterSearchChanged()));
+	connect(btnClearSearch, SIGNAL(clicked()), gameList, SLOT(filterSearchCleared()));
 
 	// Options
 	for (int i = 1; i < optCtrls.count(); i++)
@@ -572,7 +576,7 @@ void MainWindow::setVersion()
 		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 9")
+		.arg("1.3 beta 10")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -1302,5 +1306,4 @@ int main(int argc, char *argv[])
 
 	return myApp.exec();
 }
-
 

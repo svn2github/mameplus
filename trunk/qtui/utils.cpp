@@ -113,7 +113,7 @@ QString Utils::getSinglePath(QString dirPaths0, QString fileName)
 
 QString Utils::getDesc(const QString &gameName)
 {
-	GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+	GameInfo *gameInfo = mameGame->games[gameName];
 	if (local_game_list && !gameInfo->lcDesc.isEmpty())
 		return gameInfo->lcDesc;
 	else
@@ -190,7 +190,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 
 	if (buf.trimmed().isEmpty())
 	{
-		GameInfo *gameInfo = mameGame->nameInfoMap[gameName];
+		GameInfo *gameInfo = mameGame->games[gameName];
 		if (!gameInfo->cloneof.isEmpty())
 			buf = getHistory(fileName, gameInfo->cloneof);
 	}
@@ -238,10 +238,7 @@ bool Utils::isAuditFolder(QString consoleName)
 			return true;
 
 		else if(paths[1] == consoleName)
-		{
-			win->log("current audit: " + consoleName);
 			return true;
-		}
 	}
 
 	return false;		
@@ -255,10 +252,10 @@ bool Utils::isConsoleFolder()
 		if (paths[1] == tr("Consoles"))
 			return true;
 
-		else if (mameGame->nameInfoMap.contains(paths[1]))
+		else if (mameGame->games.contains(paths[1]))
 		{
-			GameInfo *gameInfo = mameGame->nameInfoMap[paths[1]];
-			if (!gameInfo->nameDeviceInfoMap.isEmpty())
+			GameInfo *gameInfo = mameGame->games[paths[1]];
+			if (!gameInfo->devices.isEmpty())
 				return true;
 		}
 	}

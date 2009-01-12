@@ -218,7 +218,7 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 	{
 		case M1_MSG_HARDWAREDESC:
 		{
-			GameInfo *gameInfo = mameGame->nameInfoMap[currentGame];
+			GameInfo *gameInfo = mameGame->games[currentGame];
 			
 			m1UI->lblTrackInfo->setText(
 				QString(

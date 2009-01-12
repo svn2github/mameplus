@@ -625,7 +625,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	QAbstractItemModel *overrideModel;
 	QModelIndex overrideIndex;
 	QString iniFileName;
-	GameInfo *gameInfo = mameGame->nameInfoMap[currentGame];
+	GameInfo *gameInfo = mameGame->games[currentGame];
 	
 	switch (optLevel)
 	{
@@ -1935,7 +1935,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	}
 
 	/* update mameopts */
-	GameInfo *gameInfo = mameGame->nameInfoMap[currentGame];
+	GameInfo *gameInfo = mameGame->games[currentGame];
 	QString iniString;
 	QString STR_OPTS_ = tr("Options") + " - ";
 
@@ -2142,7 +2142,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 	// init BIOS values
 	if (optName == "bios")
 	{
-		GameInfo *gameInfo = mameGame->nameInfoMap[currentGame];
+		GameInfo *gameInfo = mameGame->games[currentGame];
 		QString biosof = gameInfo->biosof();
 		pMameOpt->values.clear();
 		pMameOpt->guivalues.clear();
@@ -2150,14 +2150,14 @@ void OptionUtils::updateSelectableItems(QString optName)
 		if ((gameInfo->isBios || !biosof.isEmpty()))
 		{
 			if (!gameInfo->isBios)
-				gameInfo = mameGame->nameInfoMap[biosof];
+				gameInfo = mameGame->games[biosof];
 
-			foreach (QString name, gameInfo->nameBiosInfoMap.keys())
+			foreach (QString name, gameInfo->biosSets.keys())
 			{
-				BiosInfo *bi = gameInfo->nameBiosInfoMap[name];
+				BiosSet *biosSet = gameInfo->biosSets[name];
 
 				pMameOpt->values.append(name);
-				pMameOpt->guivalues.append(bi->description);
+				pMameOpt->guivalues.append(biosSet->description);
 			}
 		}
 	}

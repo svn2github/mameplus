@@ -5,121 +5,118 @@ read/write cookie
 theme
 
 //Done
+/ console status isnt correct
+/ console search broken
+/ remove all / console for non mamep
 
-
-//Linux
+//Linux/Mac
 D column sorting
 mounted snap doesnt load
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 
 //Dev
+submit joyid
 4 verify rev 3991
 
--added "View - Highlight Selected Row"
-cn:添加"视图-高亮显示选定行"
-* console search broken?
-* bios filter really slow
-* debug font default inconsistant
-2 ips dialog size
+2 1st audit doesnt show n/a parent
+2 disable search button
+2 mess logo on the right
+2 m1初始化完成之后mame.ini选项才能起作用，这个地方需要修正
+2 gba F5 crash
+2 treeview bug,能调到比默认宽,不能调窄
 2 play inp/rec/mng/wav..., save state
-2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
-1 option not loaded before m1 init
-1 restore geometry
-1 check default bios since .129
-* Ctrl-F w/ functionality to filter like MameUI including its text filter.
-1 Support for warning.ico, if present in \icons or \icons\icons.zip use that for the non-working games.
-1 Support for nonworking.png, if present in the \snap or \snap.zip use that for non-working games snap display.
-* remove TreeItem
-* .entryList(
-* ips v1 dat fallback with datfile name
-* mamep core lang, for non cjk languages
-* separate game list language
-* reconsider command.dat it's slow and buggy
-* ips dir must restart
-* icon for local switching
-* new version detection
-* 检查当前DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
-* check new/delete operator
-
-//Options
-1 mame option available after m1 init
-* support mamep 127 paths
-* 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
-* command.dat path in lang
-* add a menu to auto mkdir
-* unify get GUI opts default
 2 add GUI Options +0.1
-* keycode ctrlr config editor
-1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
-* customizable GUI text font / color editor +0.05
-* option help
-* vector.ini, debug.ini
-* unify method to get inherited default value
-* general info page
-
-//GameList
-* inherit parent history.dat
-* trans background for status bar / title bar
-1 provide a builtin fallback for zip folders
-* widget loaded prompt
-* SDL joystick GUI
-* export lst gamelist
-1 7z binary path, doesnt stall when 7z is not available
-* coin/time counter column
-* sort by reading
-* display 2 lines of game desc local/english
-? context menus: for listview mode
-* in-place zooming for icons
-* add/remove items from game list model
-* ROM capa column
-
-//Folder
-1 rewrite filter by thread
-1 custom ini write +0.03
-* dnd support +0.01
-* other filters +0.03
-* 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
-* bios icons
-* only non-empty console/bios folders +0.02
-
-//Snap
-* split snap/history code
-1 gamename0000 snap
-* external default.png.0
-
-* horz/vert .lay loading
-* avi/mng playback
-* mameinfo of driver
-
-//M1
-* check hardware capa
-
-//Audit
-D crash on 128u2->u3? missing sets
-* auto audit when available = 0? +0.01
+2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
+2 added "View - Highlight Selected Row"
+  cn:添加"视图-高亮显示选定行"
+2 provide a builtin fallback for zip folders
+2 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
+2 mamep core lang, for non cjk languages
+2 gamename0000 snap
+2 auto audit when available = 0? +0.01
 2 we can't assume nodump is not passed +0.03
 2 check chd exist, check chd auditing (use mame core?) +0.03
 2 right click auditing +0.02
-* lost column state after auditing +0.01
-* crash when exit and auditing
-* non compressed roms
-* return update thread immediately if some folders doesnt even exist
+1 custom ini write
+1 only non-empty console/bios folders
+1 SDL joystick GUI
+1 7z binary path, doesnt stall when 7z is not available
+1 default command.dat path in lang
+1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
+1 ips dialog size
+1 option not loaded before m1 init
+
+* screenshot.cpp
+* bios filter really slow
+1 icons\warning.ico for the non-working games.
+1 snap\nonworking.png for non-working games snap display
+* remove TreeItem
+* separate game list language
+* reconsider command.dat it's slow and buggy
+* icon for local switching
+* new version detection
+* 检查当前IPS DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
+* check new/delete operator
+* move datafile.c statistics to GUI
+* s11n of detailed console extrom is not needed
 
 //Main Window
 1 Add an option to revert the geometry to default, I lost a couple of my snap/info
 1 F11 fullscreen mode, vista style
 
-//IPS
+//Options
+1 check default bios since .129
+* debug font default inconsistant
+1 mame option available after m1 init
+* support mamep 127 paths
+* add a menu to auto mkdir
+* unify get GUI opts default
+* keycode ctrlr config editor
+* customizable GUI text font / color editor +0.05
+* option helper from -su
+* vector.ini, debug.ini
+* unify method to get inherited default value
+* general info page
+
+//GameList
+* manuals support planned? (http://www.mamext.net/)
+* Ctrl-F w/ functionality to filter like MameUI including its text filter.
+* inherit parent history.dat
+* export lst gamelist
+* coin/time counter column
+* sort by reading
+* display 2 lines of game desc local/english
+* in-place zooming for icons
+* add/remove items from game list model
+* ROM capa column
+
+//Audit
+* lost column state after auditing
+* crash when exit and auditing
+* non compressed roms
+* return update thread immediately if some folders doesnt even exist
+
+//Folder
+1 rewrite filter by thread
+* other filters
+* 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
+* bios icons
+* dnd support
+
+//Snap
+* external default.png.0
+* horz/vert .lay loading
+* avi/mng playback
+* mameinfo of driver
+
+//M1/IPS
+* check m1 hardware capa
+* ips dir must restart
+* ips v1 dat fallback with datfile name
 * 官方mame支持ips +0.1
 * multi directory
-* add verify IPS on RunMAME, remove it if N/A
-
-//Misc
-* move datafile.c statistics to GUI
-* s11n of detailed console extrom is not needed
 
 //Console
-1 console status isnt correct
 * buggy sorting console list
 * console folder icon
 * multi software dirs
