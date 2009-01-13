@@ -88,6 +88,11 @@
 	<file>res/16x16/media-skip-backward.png</file>
 	<file>res/16x16/media-skip-forward.png</file>
 
+	<file>res/16x16/media-floppy.png</file>
+	<file>res/16x16/drive-harddisk.png</file>
+	<file>res/16x16/printer.png</file>
+	<file>res/16x16/media-optical.png</file>
+
 	<file>res/mame32-show-snap.png</file>
 	<file>res/mame32-show-tree.png</file>
 	<file>res/mame32-view-detail.png</file>

@@ -72,6 +72,7 @@ public:
 
 public slots:
 	void sync();
+	void setChangesAccepted();
 	void setDirectories();
 	void setDirectoriesAccepted();
 	void setDirectory();

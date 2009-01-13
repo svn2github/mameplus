@@ -1903,17 +1903,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		initMenus();
 
 		// everything is done, enable ctrls now
-		win->treeFolders->setEnabled(true);
-		win->actionLargeIcons->setEnabled(true);
-		win->actionDetails->setEnabled(true);
-		win->actionGrouped->setEnabled(true);
-		win->actionRefresh->setEnabled(true);
-		win->actionDirectories->setEnabled(true);
-		win->actionProperties->setEnabled(true);
-		win->actionSrcProperties->setEnabled(true);
-		win->actionDefaultOptions->setEnabled(true);
-		win->actionPlay->setEnabled(true);
-		win->lineEditSearch->setEnabled(true);
+		win->setEnableCtrls(true);
 
 		// load icon in a background thread
 		loadIcon();
@@ -2211,13 +2201,13 @@ void Gamelist::initMenus()
 		menuContext = new QMenu(win);
 	
 		menuContext->addAction(win->actionPlay);
-//		menuContext->addAction(win->actionPlayInp);
+		menuContext->addAction(win->actionRecord);
+		menuContext->addSeparator();
 #ifdef Q_OS_WIN
 		menuContext->addAction(win->actionConfigIPS);
 #endif /* Q_OS_WIN */
-		menuContext->addSeparator();
 //		menuContext->addAction(win->actionAudit);
-//		menuContext->addSeparator();
+		menuContext->addSeparator();
 		menuContext->addAction(win->actionSrcProperties);
 		menuContext->addAction(win->actionProperties);
 	}
@@ -2389,7 +2379,7 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 			menuType->setTitle(utils->capitalizeStr(deviceInfo->type));
 			actionType = menuType->menuAction();
 			actionType->setObjectName(actionTypeString);
-			menuDevice->insertAction(win->actionConfigIPS, actionType);
+			menuDevice->insertAction(win->actionSrcProperties, actionType);
 		}
 
 		//insert submenu items
@@ -2408,7 +2398,33 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 					break;
 				}
 			}
-		
+
+//MESS device.c
+/*		
+			{ IO_CARTSLOT,	"cartridge",	"cart" }
+			{ IO_FLOPPY,	"floppydisk",	"flop" }
+			{ IO_HARDDISK,	"harddisk", 	"hard" }
+			{ IO_CYLINDER,	"cylinder", 	"cyln" }
+			{ IO_CASSETTE,	"cassette", 	"cass" }
+			{ IO_PUNCHCARD, "punchcard",	"pcrd" }
+			{ IO_PUNCHTAPE, "punchtape",	"ptap" }
+			{ IO_PRINTER,	"printer",		"prin" }
+			{ IO_SERIAL,	"serial",		"serl" }
+			{ IO_PARALLEL,	"parallel", 	"parl" }
+			{ IO_SNAPSHOT,	"snapshot", 	"dump" }
+			{ IO_QUICKLOAD, "quickload",	"quik" }
+			{ IO_MEMCARD,	"memcard",		"memc" }
+			{ IO_CDROM, 	"cdrom",		"cdrm" }
+*/
+		if (deviceInfo->type ==  "floppydisk")
+			actionDevice->setIcon(QIcon(":/res/16x16/media-floppy.png"));
+		else if (deviceInfo->type ==  "harddisk")
+			actionDevice->setIcon(QIcon(":/res/16x16/drive-harddisk.png"));
+		else if (deviceInfo->type ==  "printer")
+			actionDevice->setIcon(QIcon(":/res/16x16/printer.png"));
+		else if (deviceInfo->type ==  "cdrom")
+			actionDevice->setIcon(QIcon(":/res/16x16/media-optical.png"));
+
 		actionDevice->setText(QString("%1%2: %3")
 			.arg(utils->capitalizeStr(instanceName))
 			.arg(deviceInfo->mandatory ? " *" : "")
@@ -2418,8 +2434,13 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 		if (submenuTypes.contains(deviceInfo->type))
 			menuType->addAction(actionDevice);
 		else
-			menuDevice->insertAction(win->actionConfigIPS, actionDevice);
+			menuDevice->insertAction(win->actionSrcProperties, actionDevice);
 	}
+
+	QAction *actionSeparator = new QAction(0);
+	actionSeparator->setObjectName("actionDevice_separator");
+	actionSeparator->setSeparator(true);
+	menuDevice->insertAction(win->actionSrcProperties, actionSeparator);
 }
 
 void Gamelist::showHeaderContextMenu(const QPoint &p)

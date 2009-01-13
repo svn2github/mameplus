@@ -49,6 +49,7 @@ public:
 
 	bool isDockTabVisible(QString);
 	void setVersion();
+	void setEnableCtrls(bool);
 
 	QTreeView *tvGameList;
 	QListView *lvGameList;
@@ -81,6 +82,12 @@ public slots:
 	void on_actionAbout_activated();
 
 	void on_actionPlay_activated();
+	void on_actionSavestate_activated();
+	void on_actionPlayback_activated();
+	void on_actionRecord_activated();
+	void on_actionMNG_activated();
+	void on_actionAVI_activated();
+	void on_actionWave_activated();
 	void on_actionConfigIPS_activated();
 	void on_actionProperties_activated();
 	void on_actionSrcProperties_activated();
@@ -140,8 +147,14 @@ private:
 
 // global vars
 const float FORCE_ASPECT = 0.75f;
+const QString ZIP_EXT = ".zip";
 const QString ICO_EXT = ".ico";
 const QString INI_EXT = ".ini";
+const QString STA_EXT = ".sta";
+const QString INP_EXT = ".inp";
+const QString MNG_EXT = ".mng";
+const QString AVI_EXT = ".avi";
+const QString WAV_EXT = ".wav";
 const QString CFG_PREFIX = 
 #ifndef Q_WS_WIN
 	QDir::homePath() + "/" + 

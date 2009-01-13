@@ -5,9 +5,10 @@ read/write cookie
 theme
 
 //Done
-/ console status isnt correct
-/ console search broken
-/ remove all / console for non mamep
+*added MESS device menus (WIP)
+-设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
+-added play with inp/rec/sta/mng/wav
+-clear global bios setting
 
 //Linux/Mac
 D column sorting
@@ -18,26 +19,23 @@ mounted snap doesnt load
 submit joyid
 4 verify rev 3991
 
-2 1st audit doesnt show n/a parent
-2 disable search button
-2 mess logo on the right
-2 m1初始化完成之后mame.ini选项才能起作用，这个地方需要修正
-2 gba F5 crash
-2 treeview bug,能调到比默认宽,不能调窄
-2 play inp/rec/mng/wav..., save state
 2 add GUI Options +0.1
+2 1st audit doesnt show n/a parent
+2 mess logo on the right
+2 For the first game that he launches to every section, the MAME uses the M1 directory as currentdirectory
+2 treeview bug,能调到比默认宽,不能调窄
 2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
 2 added "View - Highlight Selected Row"
   cn:添加"视图-高亮显示选定行"
 2 provide a builtin fallback for zip folders
-2 设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
 2 mamep core lang, for non cjk languages
 2 gamename0000 snap
 2 auto audit when available = 0? +0.01
 2 we can't assume nodump is not passed +0.03
 2 check chd exist, check chd auditing (use mame core?) +0.03
 2 right click auditing +0.02
-1 custom ini write
+2 custom ini write
+1 multiple software dirs1 multiple software dirs
 1 only non-empty console/bios folders
 1 SDL joystick GUI
 1 7z binary path, doesnt stall when 7z is not available
@@ -91,6 +89,7 @@ submit joyid
 * ROM capa column
 
 //Audit
+1 gba F5 crash
 * lost column state after auditing
 * crash when exit and auditing
 * non compressed roms

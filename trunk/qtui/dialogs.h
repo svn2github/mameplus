@@ -3,9 +3,40 @@
 
 #include <QtGui>
 
+#include "ui_playoptions.h"
 #include "ui_options.h"
 #include "ui_directories.h"
 #include "ui_about.h"
+
+class PlayOptions: public QDialog, public Ui::PlayOptions
+{
+Q_OBJECT
+
+public:
+	PlayOptions(QWidget *parent = 0);
+	void initSavestate();
+	void initPlayback();
+	void initRecord();
+	void initMNG();
+	void initAVI();
+	void initWave();
+	QStringList getOptions();
+
+public slots:
+	void setSavestateFile();
+	void setPlaybackFile();
+	void setRecordFile();
+	void setMNGFile();
+	void setAVIFile();
+	void setWaveFile();
+
+private:
+	QString gameName;
+	
+	void init(QLineEdit *, QString, QString);
+	void setFile(QLineEdit *, QString);
+	void clear();
+};
 
 class Options: public QDialog, public Ui::Options
 {
@@ -47,6 +78,7 @@ public:
 	About(QWidget *parent = 0);
 };
 
+extern PlayOptions *playOptionsUI;
 extern Options *optionsUI;
 extern Dirs *dirsUI;
 extern About *aboutUI;

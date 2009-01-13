@@ -14,17 +14,7 @@ void RomAuditor::audit()
 		win->layMainView->removeWidget(win->tvGameList);
 
 		// these are reenabled in gameList->init()
-		win->treeFolders->setEnabled(false);
-		win->actionDetails->setEnabled(false);
-//		win->actionLargeIcons->setEnabled(false);
-		win->actionGrouped->setEnabled(false);
-		win->actionRefresh->setEnabled(false);
-		win->actionDirectories->setEnabled(false);
-		win->actionProperties->setEnabled(false);
-		win->actionSrcProperties->setEnabled(false);
-		win->actionDefaultOptions->setEnabled(false);
-		win->actionPlay->setEnabled(false);
-		win->lineEditSearch->setEnabled(false);
+		win->setEnableCtrls(false);
 
 		extern TreeModel *gameListModel;
 		if (gameListModel)

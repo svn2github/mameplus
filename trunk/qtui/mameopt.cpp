@@ -758,6 +758,11 @@ void OptionDelegate::sync()
 	isReset = false;
 }
 
+void OptionDelegate::setChangesAccepted()
+{
+	emit commitData(rWidget);
+}
+
 void OptionDelegate::setDirectories()
 {
 	rWidget = qobject_cast<ResetWidget*>(sender()->parent());
@@ -815,7 +820,7 @@ void OptionDelegate::setDirectory()
 
 void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 {
-win->log(filter);
+	win->log(filter);
 
 	if (resetWidget == NULL)
 		resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
@@ -838,7 +843,7 @@ win->log(filter);
 	if (!filter.isEmpty())
 		filter.append(";;");
 	filter.append(tr("All Files (*)"));
-win->log(filter);
+	win->log(filter);
 
 	QString fileName = QFileDialog::getOpenFileName
 		(resetWidget, tr("File name:"), initPath, filter);
@@ -1057,6 +1062,9 @@ void OptionUtils::initOption()
 		QHeaderView *header = optInfos[optLevel]->optView->header();
 		disconnect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
 		connect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
+
+		disconnect(optionsUI, SIGNAL(accepted()), this, SLOT(setChangesAccepted()));
+		connect(optionsUI, SIGNAL(accepted()), this, SLOT(setChangesAccepted()));
 	}
 }
 
@@ -1734,11 +1742,17 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 				case OPTLEVEL_GLOBAL:
 					currVal = pMameOpt->globalvalue;
 					defVal = pMameOpt->defvalue;
+					//ignore global bios setting
+					if (optName == "bios")
+						currVal = pMameOpt->defvalue;
 					break;
 				
 				case OPTLEVEL_SRC:
 					currVal = pMameOpt->srcvalue;
 					defVal = pMameOpt->globalvalue;
+					//ignore src bios setting
+					if (optName == "bios")
+						currVal = pMameOpt->defvalue;
 					break;
 				
 				case OPTLEVEL_BIOS:

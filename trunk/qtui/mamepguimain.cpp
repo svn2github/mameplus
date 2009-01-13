@@ -185,7 +185,6 @@ QMainWindow(parent)
 	sizePolicy.setHeightForWidth(lineEditSearch->sizePolicy().hasHeightForWidth());
 	lineEditSearch->setSizePolicy(sizePolicy);
 	lineEditSearch->setMinimumWidth(240);
-	lineEditSearch->setEnabled(false);
 	toolBarSearch->addWidget(lineEditSearch);
 
 	btnSearch = new QToolButton(centralwidget);
@@ -243,6 +242,7 @@ QMainWindow(parent)
 	gameList = new Gamelist(this);
 	optUtils = new OptionUtils(this);
 	dirsUI = new Dirs(this);
+	playOptionsUI = new PlayOptions(this);
 	optionsUI = new Options(this);
 	aboutUI = new About(this);
 #ifdef Q_OS_WIN
@@ -324,6 +324,8 @@ void MainWindow::initSnap(int snapType)
 
 void MainWindow::init()
 {
+	setEnableCtrls(false);
+
 	for (int i = DOCK_SNAP; i <= DOCK_PCB; i ++)
 		initSnap(i);
 
@@ -595,9 +597,61 @@ void MainWindow::setVersion()
 		.arg(mameGame->mameVersion));
 }
 
+void MainWindow::setEnableCtrls(bool isEnabled)
+{
+	win->treeFolders->setEnabled(isEnabled);
+	win->actionLargeIcons->setEnabled(isEnabled);
+	win->actionDetails->setEnabled(isEnabled);
+	win->actionGrouped->setEnabled(isEnabled);
+	win->actionRefresh->setEnabled(isEnabled);
+	win->actionDirectories->setEnabled(isEnabled);
+	win->actionProperties->setEnabled(isEnabled);
+	win->actionSrcProperties->setEnabled(isEnabled);
+	win->actionDefaultOptions->setEnabled(isEnabled);
+	win->actionPlay->setEnabled(isEnabled);
+	win->lineEditSearch->setEnabled(isEnabled);
+	win->btnSearch->setEnabled(isEnabled);
+	win->btnClearSearch->setEnabled(isEnabled);
+}
+
 void MainWindow::on_actionPlay_activated()
 {
 	gameList->runMame();
+}
+
+void MainWindow::on_actionSavestate_activated()
+{
+	playOptionsUI->initSavestate();
+	playOptionsUI->exec();
+}
+void MainWindow::on_actionPlayback_activated()
+{
+	playOptionsUI->initPlayback();
+	playOptionsUI->exec();
+}
+
+void MainWindow::on_actionRecord_activated()
+{
+	playOptionsUI->initRecord();
+	playOptionsUI->exec();
+}
+
+void MainWindow::on_actionMNG_activated()
+{
+	playOptionsUI->initMNG();
+	playOptionsUI->exec();
+}
+
+void MainWindow::on_actionAVI_activated()
+{
+	playOptionsUI->initAVI();
+	playOptionsUI->exec();
+}
+
+void MainWindow::on_actionWave_activated()
+{
+	playOptionsUI->initWave();
+	playOptionsUI->exec();
 }
 
 void MainWindow::on_actionConfigIPS_activated()
