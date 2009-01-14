@@ -49,7 +49,11 @@ public:
 
 	bool isDockTabVisible(QString);
 	void setVersion();
-	void setEnableCtrls(bool);
+	void enableCtrls(bool);
+
+	RomAuditor romAuditor;
+	MergedRomAuditor *mergedAuditor;
+	MameExeRomAuditor *mameAuditor;
 
 	QTreeView *tvGameList;
 	QListView *lvGameList;
@@ -89,6 +93,7 @@ public slots:
 	void on_actionAVI_activated();
 	void on_actionWave_activated();
 	void on_actionConfigIPS_activated();
+	void on_actionAudit_activated();
 	void on_actionProperties_activated();
 	void on_actionSrcProperties_activated();
 	void on_actionDefaultOptions_activated();
@@ -139,27 +144,17 @@ private:
 #define MAMEPLUS_SIG 0x704c7553
 #define S11N_VER 10
 
-#ifdef Q_WS_WIN
-#define EXEC_EXT ".exe"
-#else
-#define EXEC_EXT ""
-#endif
-
 // global vars
-const float FORCE_ASPECT = 0.75f;
-const QString ZIP_EXT = ".zip";
-const QString ICO_EXT = ".ico";
-const QString INI_EXT = ".ini";
-const QString STA_EXT = ".sta";
-const QString INP_EXT = ".inp";
-const QString MNG_EXT = ".mng";
-const QString AVI_EXT = ".avi";
-const QString WAV_EXT = ".wav";
-const QString CFG_PREFIX = 
-#ifndef Q_WS_WIN
-	QDir::homePath() + "/" + 
-#endif
-	".mamepgui/";
+extern const QString EXEC_EXT;
+extern const QString ZIP_EXT;
+extern const QString ICO_EXT;
+extern const QString INI_EXT;
+extern const QString STA_EXT;
+extern const QString INP_EXT;
+extern const QString MNG_EXT;
+extern const QString AVI_EXT;
+extern const QString WAV_EXT;
+extern const QString CFG_PREFIX;
 
 extern MainWindow *win;
 extern QSettings guiSettings, defSettings;
@@ -168,8 +163,8 @@ extern QString language;
 extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
-extern bool isMamePlus;
+extern bool isMAMEPlus;
+extern bool isMESS;
 extern QStringList validGuiSettings;
-
 
 #endif

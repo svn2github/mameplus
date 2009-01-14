@@ -630,7 +630,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	switch (optLevel)
 	{
 	case OPTLEVEL_GLOBAL:
-		iniFileName = mameIniPath + "mame.ini";
+		iniFileName = mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT;
 		
 		prevVal = pMameOpt->globalvalue;
 		
@@ -858,8 +858,6 @@ void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 
 void OptionDelegate::setDatFile()
 {
-	win->log("dat!");
-
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
 	setFile(tr("Dat files (*.dat)"), resetWidget);
 }
@@ -867,7 +865,7 @@ void OptionDelegate::setDatFile()
 void OptionDelegate::setExeFile()
 {
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
-	setFile(tr("Executable files (*" EXEC_EXT ")"), resetWidget);
+	setFile(tr(qPrintable("Executable files (*" + EXEC_EXT + ")")), resetWidget);
 }
 
 void OptionDelegate::setCfgFile()
@@ -1557,7 +1555,7 @@ void OptionUtils::loadDefault(QString text)
 
 	/* test ini readable/writable */
 	QString warnings = "";
-	QFile iniFile(mameIniPath + "mame.ini");
+	QFile iniFile(mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT);
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append(QFileInfo(iniFile).absoluteFilePath());
 	iniFile.close();
@@ -1567,7 +1565,7 @@ void OptionUtils::loadDefault(QString text)
 	// mkdir for individual game settings
 	QDir().mkpath(mameIniPath + "ini/source");
 
-	iniFile.setFileName(mameIniPath + "ini/puckman.ini");
+	iniFile.setFileName(mameIniPath + "ini/puckman" + INI_EXT);
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append("\n" + QFileInfo(mameIniPath + "ini").absoluteFilePath());
 	iniFile.close();
@@ -1954,7 +1952,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 	QString STR_OPTS_ = tr("Options") + " - ";
 
 	//global
-	loadIni(OPTLEVEL_GLOBAL, mameIniPath + "mame.ini");
+	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT);
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
 		updateModelData(optCat, OPTLEVEL_GLOBAL);

@@ -148,19 +148,17 @@ public:
 	QMenu *menuContext;
 	QMenu *headerMenu;
 	QString listMode;
-
 	QStringList folderList;
 
 	// interactive threads used by the game list
-	RomAuditor auditor;
 	UpdateSelectionThread selectionThread;
-
-	MergedRomAuditor *mAuditor;
+	bool autoAudit;
 
 	Gamelist(QObject *parent = 0);
 	~Gamelist();
 
 	void loadIcon();
+	void disableCtrls();
 
 public slots:
 	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots

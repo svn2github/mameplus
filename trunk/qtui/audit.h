@@ -9,7 +9,7 @@ class RomAuditor : public QThread
 
 public:
 	~RomAuditor();
-	void audit();
+	void audit(bool = false);
 
 signals:
 	void progressSwitched(int max, QString title = "");
@@ -45,5 +45,23 @@ private:
 	QString outBuf, consoleName, consolePath, mergedName;
 	QList<QStringList> consoleInfoList;
 };
+
+class MameExeRomAuditor : public QObject
+{
+	Q_OBJECT
+public:
+	QProcess *loadProc;
+
+	MameExeRomAuditor(QObject *parent = 0);
+	void audit();
+
+public slots:
+	void auditorReadyReadStandardOutput();
+	void auditorFinished(int, QProcess::ExitStatus);
+
+private:
+	QString outBuf;
+};
+
 
 #endif

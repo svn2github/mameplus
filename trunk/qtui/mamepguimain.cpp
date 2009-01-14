@@ -19,15 +19,38 @@ Q_IMPORT_PLUGIN(qjpeg)
 //Q_IMPORT_PLUGIN(qmng)
 
 /* global */
+const QString CFG_PREFIX = 
+#ifndef Q_WS_WIN
+	QDir::homePath() + "/" + 
+#endif
+	".mamepgui/";
+
+const QString EXEC_EXT = 
+#ifdef Q_WS_WIN
+	".exe";
+#else
+	"";
+#endif
+
+const QString ZIP_EXT = ".zip";
+const QString ICO_EXT = ".ico";
+const QString INI_EXT = ".ini";
+const QString STA_EXT = ".sta";
+const QString INP_EXT = ".inp";
+const QString MNG_EXT = ".mng";
+const QString AVI_EXT = ".avi";
+const QString WAV_EXT = ".wav";
+
 MainWindow *win;
-QSettings guiSettings(CFG_PREFIX + "mamepgui.ini", QSettings::IniFormat);
-QSettings defSettings(":/res/mamepgui.ini", QSettings::IniFormat);
+QSettings guiSettings(CFG_PREFIX + "mamepgui" + INI_EXT, QSettings::IniFormat);
+QSettings defSettings(":/res/mamepgui" + INI_EXT, QSettings::IniFormat);
 QString mame_binary;
 QString language;
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
-bool isMamePlus = false;
+bool isMAMEPlus = false;
+bool isMESS = false;
 QStringList validGuiSettings;
 
 /* internal */
@@ -239,6 +262,9 @@ QMainWindow(parent)
 	menuView->insertAction(actionVerticalTabs, actionFolderList);
 	toolBar->insertAction(actionLargeIcons, actionFolderList);
 
+	mergedAuditor = new MergedRomAuditor(this);
+	mameAuditor = new MameExeRomAuditor(this);
+
 	gameList = new Gamelist(this);
 	optUtils = new OptionUtils(this);
 	dirsUI = new Dirs(this);
@@ -324,7 +350,7 @@ void MainWindow::initSnap(int snapType)
 
 void MainWindow::init()
 {
-	setEnableCtrls(false);
+	enableCtrls(false);
 
 	for (int i = DOCK_SNAP; i <= DOCK_PCB; i ++)
 		initSnap(i);
@@ -370,7 +396,7 @@ void MainWindow::init()
 	QDir().mkpath(CFG_PREFIX);
 
 	QString warnings = "";
-	QFile iniFile(CFG_PREFIX + "mamepgui.ini");
+	QFile iniFile(CFG_PREFIX + "mamepgui" + INI_EXT);
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append(QFileInfo(iniFile).absoluteFilePath());
 	iniFile.close();
@@ -391,11 +417,11 @@ void MainWindow::init()
 	QFile mamebin(mame_binary);
 
 	// if no valid exec was found, popup a dialog
-	if (!mamebin.exists() || mame_binary.endsWith("mamepgui" EXEC_EXT))
+	if (!mamebin.exists() || mame_binary.endsWith("mamepgui" + EXEC_EXT))
 	{
 		QString filter = "";
 #ifdef Q_WS_WIN
-		filter.append(tr("Executable files (*" EXEC_EXT ")"));
+		filter.append(tr(qPrintable("Executable files (*" + EXEC_EXT + ")")));
 		filter.append(";;");
 #endif
 		filter.append(tr("All Files (*)"));
@@ -405,7 +431,7 @@ void MainWindow::init()
 									QCoreApplication::applicationDirPath(),
 									filter);
 
-		if (mame_binary.isEmpty() || mame_binary.endsWith("mamepgui" EXEC_EXT))
+		if (mame_binary.isEmpty() || mame_binary.endsWith("mamepgui" + EXEC_EXT))
 		{
 			win->poplog(QString("Could not find MAME."));
 			mame_binary = "";
@@ -417,6 +443,8 @@ void MainWindow::init()
 
 	//save the new mame_binary value now, it will be accessed later in option module
 	guiSettings.setValue("mame_binary", mame_binary);
+	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
+		isMESS = true;
 
 	// must optUtils->initOption() after win, before show()
 	optUtils->initOption();
@@ -508,9 +536,9 @@ void MainWindow::init()
 	connect(actionEnforceAspect, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 
 	// Auditor
-	connect(&gameList->auditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
-	connect(&gameList->auditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
-	connect(&gameList->auditor, SIGNAL(finished()), gameList->mAuditor, SLOT(init()));
+	connect(&romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
+	connect(&romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
+	connect(&romAuditor, SIGNAL(finished()), mergedAuditor, SLOT(init()));
 
 	// Game List
 	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterSearchChanged()));
@@ -597,7 +625,7 @@ void MainWindow::setVersion()
 		.arg(mameGame->mameVersion));
 }
 
-void MainWindow::setEnableCtrls(bool isEnabled)
+void MainWindow::enableCtrls(bool isEnabled)
 {
 	win->treeFolders->setEnabled(isEnabled);
 	win->actionLargeIcons->setEnabled(isEnabled);
@@ -664,17 +692,22 @@ void MainWindow::on_actionConfigIPS_activated()
 
 void MainWindow::on_actionRefresh_activated()
 {
-	gameList->auditor.audit();
+	romAuditor.audit();
 }
 
-void MainWindow::on_actionProperties_activated()
+void MainWindow::on_actionAudit_activated()
 {
-	showOptionsDialog(OPTLEVEL_CURR, 0);
+	mameAuditor->audit();
 }
 
 void MainWindow::on_actionSrcProperties_activated()
 {
 	showOptionsDialog(OPTLEVEL_SRC, 0);
+}
+
+void MainWindow::on_actionProperties_activated()
+{
+	showOptionsDialog(OPTLEVEL_CURR, 0);
 }
 
 void MainWindow::on_actionDefaultOptions_activated()

@@ -130,10 +130,10 @@ public:
 		const QString &qName,
 		const QXmlAttributes &attributes)
 	{
-		if (!metMameTag && qName != "mame" && qName != "mess")
+		if (!metMameTag && qName != (isMESS ? "mess" : "mame"))
 			return false;
 
-		if (qName == "mame" || qName == "mess")
+		if (qName == (isMESS ? "mess" : "mame"))
 		{
 			metMameTag = true;
 			mameGame->mameVersion = attributes.value("build");
@@ -457,7 +457,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 		// try to add .zip to nearest folder name
 		if (snapdata.isNull())
 		{
-			QuaZip zip(dirpath + dir.dirName() + ".zip");
+			QuaZip zip(dirpath + dir.dirName() + ZIP_EXT);
 			if (zip.open(QuaZip::mdUnzip))
 			{
 				QuaZipFile zipfile(&zip);
@@ -1484,11 +1484,10 @@ loadProc(NULL),
 numTotalGames(-1),
 menuContext(NULL),
 headerMenu(NULL),
+autoAudit(false),
 loadIconStatus(0)
 {
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
-	
-	mAuditor = new MergedRomAuditor(parent);
 }
 
 Gamelist::~Gamelist()
@@ -1712,6 +1711,38 @@ void Gamelist::setupSnap(int snapType)
 	}
 }
 
+void Gamelist::disableCtrls()
+{
+	//disable sorting before insertion for better performance
+	win->tvGameList->setSortingEnabled(false);
+
+	// disable ctrl updating before deleting its model	
+	disconnect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+	disconnect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
+
+	win->lvGameList->hide();
+	win->layMainView->removeWidget(win->lvGameList);
+	win->tvGameList->hide();
+	win->layMainView->removeWidget(win->tvGameList);
+	
+	// these are reenabled in gameList->init()
+	win->enableCtrls(false);
+	
+	//delete model
+	if (gameListModel)
+	{
+		delete gameListModel;
+		gameListModel = NULL;
+	}
+
+	//delete proxy model
+	if (gameListPModel)
+	{
+		delete gameListPModel;
+		gameListPModel = NULL;
+	}
+}
+
 void Gamelist::init(bool toggleState, int initMethod)
 {
 	//filter button's toggled(false) SIGNAL
@@ -1744,29 +1775,10 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	if (des11n_status == QDataStream::Ok)
 	{
-		//disable sorting before insertion for better performance
-		win->tvGameList->setSortingEnabled(false);
-
-		// disable ctrl updating before deleting its model
-		disconnect(win->tvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
-		disconnect(win->lvGameList, SIGNAL(activated(const QModelIndex &)), this, SLOT(runMame()));
-
-		win->lvGameList->hide();
-		win->layMainView->removeWidget(win->lvGameList);
-
-		win->tvGameList->hide();
-		win->layMainView->removeWidget(win->tvGameList);
-
-		//delete the model
-		if (gameListModel)
-			delete gameListModel;
+		disableCtrls();
 
 		//init the model
 		gameListModel = new TreeModel(win, isGroup);
-
-		//delete/init proxy model
-		if (gameListPModel)
-			delete gameListPModel;
 		gameListPModel = new GameListSortFilterProxyModel(win);
 
 		gameListPModel->setSourceModel(gameListModel);
@@ -1802,12 +1814,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 			//only mameplus contains this option for now
 			if (mameOpts.contains("langpath"))
-				isMamePlus = true;
-		
+				isMAMEPlus = true;
+
 			// assign option type, defvalue, min, max, etc. from template
 			optUtils->loadTemplate();
 			// load mame.ini overrides
-			optUtils->loadIni(OPTLEVEL_GLOBAL, "mame.ini");
+			optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" : "mame") + INI_EXT);
 
 			foreach (QString gameName, mameGame->games.keys())
 			{
@@ -1848,6 +1860,12 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->setVersion();
 		}
 
+		if (autoAudit)
+		{
+			win->romAuditor.audit(true);
+			return;
+		}
+
 		loadMMO(UI_MSG_LIST);
 		loadMMO(UI_MSG_MANUFACTURE);
 
@@ -1877,15 +1895,10 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 			// restore view column state, needed on first init and after auditing, but not for folder switching
 			if (guiSettings.value("column_state").isValid())
-			{
 				column_state = guiSettings.value("column_state").toByteArray();
-				win->log("restored c");
-			}
 			else
-			{
 				column_state = defSettings.value("column_state").toByteArray();
-				win->log("restored d");
-			}
+			
 			win->tvGameList->header()->restoreState(column_state);
 			qApp->processEvents();
 			restoreFolderSelection();
@@ -1903,7 +1916,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		initMenus();
 
 		// everything is done, enable ctrls now
-		win->setEnableCtrls(true);
+		win->enableCtrls(true);
 
 		// load icon in a background thread
 		loadIcon();
@@ -1987,7 +2000,7 @@ void Gamelist::loadIconWorkder()
 				break;
 
 			// iterate all files in the zip
-			QuaZip zip(dirpath + "icons.zip");
+			QuaZip zip(dirpath + "icons" + ZIP_EXT);
 
 			if(!zip.open(QuaZip::mdUnzip))
 				continue;
@@ -2074,7 +2087,7 @@ void Gamelist::loadMMO(int msgCat)
 		<< "manufact");
 
 	QString dirpath;
-	if (isMamePlus)
+	if (isMAMEPlus)
 		dirpath = utils->getPath(mameOpts["langpath"]->globalvalue);
 	else
 		dirpath = "lang/";
@@ -2206,7 +2219,8 @@ void Gamelist::initMenus()
 #ifdef Q_OS_WIN
 		menuContext->addAction(win->actionConfigIPS);
 #endif /* Q_OS_WIN */
-//		menuContext->addAction(win->actionAudit);
+		menuContext->addSeparator();
+		menuContext->addAction(win->actionAudit);
 		menuContext->addSeparator();
 		menuContext->addAction(win->actionSrcProperties);
 		menuContext->addAction(win->actionProperties);
@@ -2304,7 +2318,7 @@ void Gamelist::updateContextMenu()
 	updateDeviceMenu(menuContext);
 }
 
-void Gamelist::updateDeviceMenu(QMenu *menuDevice)
+void Gamelist::updateDeviceMenu(QMenu *menuRoot)
 {
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
@@ -2312,12 +2326,12 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 	bool isExtRom = false;
 
 	//remove existing device menus
-	QList<QAction *>actions = menuDevice->actions();
-	foreach (QAction *action, actions)
+	QList<QAction *>menuRootActions = menuRoot->actions();
+	foreach (QAction *action, menuRootActions)
 	{
 		if (action->objectName().startsWith("actionDevice_"))
 		{
-			menuDevice->removeAction(action);
+			menuRoot->removeAction(action);
 			delete action;
 		}
 	}
@@ -2333,18 +2347,18 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 	if (gameInfoConsoleSys->devices.isEmpty())
 		return;
 
-	// if we need a submenu
-	QStringList submenuTypes;
-	QStringList types;
+	//test if we need a submenu
+	QStringList subDeviceTypes;
+	QStringList deviceTypes;
 	foreach (DeviceInfo *deviceInfo, gameInfoConsoleSys->devices)
 	{
-		if (types.contains(deviceInfo->type))
+		if (deviceTypes.contains(deviceInfo->type))
 		{
-			if (!submenuTypes.contains(deviceInfo->type))
-				submenuTypes.append(deviceInfo->type);
+			if (!subDeviceTypes.contains(deviceInfo->type))
+				subDeviceTypes.append(deviceInfo->type);
 		}
 		else
-			types.append(deviceInfo->type);
+			deviceTypes.append(deviceInfo->type);
 	}
 
 	//append device menus
@@ -2357,37 +2371,38 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 		QString instanceName = it.key();
 		QString actionTypeString = QString("actionDevice_type_%1").arg(deviceInfo->type);
 
-		QList<QAction *>fileActions = menuDevice->actions();
-		QAction *actionType = NULL;
-		QMenu *menuType = NULL;
+		QAction *actionDeviceType = NULL;
+		QMenu *menuDeviceType = NULL;
 
 		//use existing submenu
-		foreach (QAction *fileAction, fileActions)
+		menuRootActions = menuRoot->actions();
+		foreach (QAction *action, menuRootActions)
 		{
-			if (fileAction->objectName() == actionTypeString)
+			if (action->objectName() == actionTypeString)
 			{
-				actionType = fileAction;
-				menuType = actionType->menu();
+				actionDeviceType = action;
+				menuDeviceType = actionDeviceType->menu();
 				break;
 			}
 		}
 
 		//create new submenu
-		if (actionType == NULL && submenuTypes.contains(deviceInfo->type))
+		if (actionDeviceType == NULL && subDeviceTypes.contains(deviceInfo->type))
 		{
-			menuType = new QMenu(menuDevice);
-			menuType->setTitle(utils->capitalizeStr(deviceInfo->type));
-			actionType = menuType->menuAction();
-			actionType->setObjectName(actionTypeString);
-			menuDevice->insertAction(win->actionSrcProperties, actionType);
+			menuDeviceType = new QMenu(menuRoot);
+			menuDeviceType->setTitle(utils->capitalizeStr(deviceInfo->type));
+			actionDeviceType = menuDeviceType->menuAction();
+			actionDeviceType->setObjectName(actionTypeString);
+			menuRoot->insertAction(win->actionSrcProperties, actionDeviceType);
 		}
 
 		//insert submenu items
-		QAction *actionDevice = new QAction(actionType);
+		QAction *actionDevice = new QAction(actionDeviceType);
 		actionDevice->setObjectName(QString("actionDevice_%1").arg(instanceName));
 
 		QString loadedDevice = "[Empty slot]";
 		if (!loadedDeviceFound)
+		{
 			foreach (QString extension, deviceInfo->extensionNames)
 			{
 				//fixme: .zip doesnt work
@@ -2398,6 +2413,7 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 					break;
 				}
 			}
+		}
 
 //MESS device.c
 /*		
@@ -2416,14 +2432,20 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 			{ IO_MEMCARD,	"memcard",		"memc" }
 			{ IO_CDROM, 	"cdrom",		"cdrm" }
 */
+		QAction *actionDeviceIcon;
+		if (subDeviceTypes.contains(deviceInfo->type))
+			actionDeviceIcon = actionDeviceType;
+		else
+			actionDeviceIcon = actionDevice;
+
 		if (deviceInfo->type ==  "floppydisk")
-			actionDevice->setIcon(QIcon(":/res/16x16/media-floppy.png"));
+			actionDeviceIcon->setIcon(QIcon(":/res/16x16/media-floppy.png"));
 		else if (deviceInfo->type ==  "harddisk")
-			actionDevice->setIcon(QIcon(":/res/16x16/drive-harddisk.png"));
+			actionDeviceIcon->setIcon(QIcon(":/res/16x16/drive-harddisk.png"));
 		else if (deviceInfo->type ==  "printer")
-			actionDevice->setIcon(QIcon(":/res/16x16/printer.png"));
+			actionDeviceIcon->setIcon(QIcon(":/res/16x16/printer.png"));
 		else if (deviceInfo->type ==  "cdrom")
-			actionDevice->setIcon(QIcon(":/res/16x16/media-optical.png"));
+			actionDeviceIcon->setIcon(QIcon(":/res/16x16/media-optical.png"));
 
 		actionDevice->setText(QString("%1%2: %3")
 			.arg(utils->capitalizeStr(instanceName))
@@ -2431,16 +2453,16 @@ void Gamelist::updateDeviceMenu(QMenu *menuDevice)
 			.arg(loadedDevice)
 			);
 
-		if (submenuTypes.contains(deviceInfo->type))
-			menuType->addAction(actionDevice);
+		if (subDeviceTypes.contains(deviceInfo->type))
+			menuDeviceType->addAction(actionDevice);
 		else
-			menuDevice->insertAction(win->actionSrcProperties, actionDevice);
+			menuRoot->insertAction(win->actionSrcProperties, actionDevice);
 	}
 
 	QAction *actionSeparator = new QAction(0);
 	actionSeparator->setObjectName("actionDevice_separator");
 	actionSeparator->setSeparator(true);
-	menuDevice->insertAction(win->actionSrcProperties, actionSeparator);
+	menuRoot->insertAction(win->actionSrcProperties, actionSeparator);
 }
 
 void Gamelist::showHeaderContextMenu(const QPoint &p)
@@ -2506,8 +2528,10 @@ void Gamelist::loadListXmlFinished(int, QProcess::ExitStatus)
 	QProcess *proc = (QProcess *)sender();
 	procMan->procMap.remove(proc);
 
-	parse();
+	autoAudit = true;
 
+	parse();
+	
 	//chain
 	loadDefaultIni();
 }
@@ -2854,7 +2878,7 @@ void Gamelist::initFolders()
 
 		if (i == FOLDER_ALLGAME)
 		{
-//			if (!isMamePlus)
+//			if (!isMAMEPlus)
 				items[i]->setHidden(true);
 		}
 		else if (i == FOLDER_CONSOLE)
@@ -3102,8 +3126,12 @@ void Gamelist::runMame(bool runMerged)
 
 	args << currentGame;
 
-	if (mameOpts.contains("language"))
+	if (isMAMEPlus)
+	{
+		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
+		args << "-langpath" << langpath;
 		args << "-language" << language;
+	}
 
 	loadProc = procMan->process(procMan->start(mame_binary, args));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));

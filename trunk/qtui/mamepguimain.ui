@@ -42,14 +42,19 @@
     <property name="title" >
      <string>File</string>
     </property>
+    <widget class="QMenu" name="menuPlayWith" >
+     <property name="title" >
+      <string>Play with Options</string>
+     </property>
+     <addaction name="actionSavestate" />
+     <addaction name="actionPlayback" />
+     <addaction name="actionRecord" />
+     <addaction name="actionMNG" />
+     <addaction name="actionAVI" />
+     <addaction name="actionWave" />
+    </widget>
     <addaction name="actionPlay" />
-    <addaction name="separator" />
-    <addaction name="actionSavestate" />
-    <addaction name="actionPlayback" />
-    <addaction name="actionRecord" />
-    <addaction name="actionMNG" />
-    <addaction name="actionAVI" />
-    <addaction name="actionWave" />
+    <addaction name="menuPlayWith" />
     <addaction name="separator" />
     <addaction name="actionConfigIPS" />
     <addaction name="separator" />
@@ -357,9 +362,6 @@
    </property>
   </action>
   <action name="actionAudit" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
    <property name="text" >
     <string>Audit</string>
    </property>
@@ -461,10 +463,6 @@
    </property>
   </action>
   <action name="actionSrcProperties" >
-   <property name="icon" >
-    <iconset resource="mamepguimain.qrc" >
-     <normaloff>:/res/16x16/system-settings.png</normaloff>:/res/16x16/system-settings.png</iconset>
-   </property>
    <property name="text" >
     <string>Properties for </string>
    </property>

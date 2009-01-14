@@ -3,32 +3,11 @@
 #include "mamepguimain.h"
 #include "mameopt.h"
 
-void RomAuditor::audit()
+void RomAuditor::audit(bool autoAudit)
 {
 	if (!isRunning())
 	{
-		// disable ctrl updating before deleting its model	
-		win->lvGameList->hide();
-		win->layMainView->removeWidget(win->lvGameList);
-		win->tvGameList->hide();
-		win->layMainView->removeWidget(win->tvGameList);
-
-		// these are reenabled in gameList->init()
-		win->setEnableCtrls(false);
-
-		extern TreeModel *gameListModel;
-		if (gameListModel)
-		{
-			delete gameListModel;
-			gameListModel = NULL;
-		}
-
-		extern GameListSortFilterProxyModel *gameListPModel;
-		if (gameListPModel)
-		{
-			delete gameListPModel;
-			gameListPModel = NULL;
-		}
+		gameList->disableCtrls();
 
 		//must clear mameGame in the main thread
 		// fixme: currently only console games are cleared
@@ -37,13 +16,17 @@ void RomAuditor::audit()
 			GameInfo *gameInfo = mameGame->games[gameName];
 			if (gameInfo->isExtRom && utils->isAuditFolder(gameInfo->romof))
 			{
-//				win->log(QString("delete: %1").arg(gameName));
 				mameGame->games.remove(gameName);
 				delete gameInfo;
 			}
 		}
-		
+
 		isConsoleFolder = utils->isConsoleFolder();
+		if (autoAudit)
+		{
+			gameList->autoAudit = false;
+			isConsoleFolder = false;
+		}
 
 		start(LowPriority);
 	}
@@ -56,73 +39,128 @@ void RomAuditor::run()
 	GameInfo *gameInfo, *gameInfo2;
 	RomInfo *romInfo;
 
+	//audit MAME
 	if(!isConsoleFolder)
 	{
 		QSet<QString> auditedGames;
-	
+
+		//clear current state
+		foreach (QString gameName, mameGame->games.keys())
+		{
+			gameInfo = mameGame->games[gameName];
+
+			foreach (RomInfo *romInfo, gameInfo->roms)
+				if (romInfo->status == "nodump")
+					romInfo->available = true;
+				else
+					romInfo->available = false;
+
+			foreach (DiskInfo *diskInfo, gameInfo->disks)
+			{
+				if (diskInfo->status == "nodump")
+					diskInfo->available = true;
+				else
+					diskInfo->available = false;
+			}
+		}
+
+		//iterate rompaths
 		foreach (QString dirpath, dirpaths)
 		{
 			QDir dir(dirpath);
-
-			QStringList nameFilter;
-			nameFilter << "*.zip";
-			
+			QStringList nameFilter = QStringList() << "*" + ZIP_EXT;
 			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable);
 
 			emit progressSwitched(romFiles.count(), tr("Auditing") + " " + dirpath + " ...");
-			win->log(QString("auditing %1, %2").arg(dirpath).arg(romFiles.count()));
 
-			//iterate romfiles
+			//iterate gameName/*.chd files
+			foreach (QString romDir, romDirs)
+			{
+				QDir dir2(utils->getPath(dirpath) + romDir);
+				QString gameName = dir2.dirName();
+
+				if (!mameGame->games.contains(gameName))
+					continue;
+
+				gameInfo = mameGame->games[gameName];
+
+				QStringList nameFilter2 = QStringList() << "*.chd";
+				QStringList chdFiles = dir2.entryList(nameFilter2, QDir::Files | QDir::Readable);
+
+				foreach (QString chdFile, chdFiles)
+				{
+					QFileInfo fileInfo = QFileInfo(chdFile);
+
+					foreach (QString sha1, gameInfo->disks.keys())
+					{
+						DiskInfo *diskInfo = gameInfo->disks[sha1];
+
+						if (diskInfo->name == fileInfo.baseName())
+						{
+							diskInfo->available = true;
+
+							//also fill clones
+							foreach (QString cloneName, gameInfo->clones)
+							{
+								gameInfo2 = mameGame->games[cloneName];
+								if (gameInfo2->disks.contains(sha1))
+									gameInfo2->disks[sha1]->available = true;
+							}
+						}
+					}
+				}
+			}
+				
+			//iterate rom files
 			for (int i = 0; i < romFiles.count(); i++)
 			{
-				//update progressbar
+				//update progressbar per 100 files
 				if (i % 100 == 0)
 					emit progressUpdated(i);
 
-				QString gameName = romFiles[i].toLower().remove(".zip");
+				QString gameName = romFiles[i].toLower().remove(ZIP_EXT);
 
-				if (mameGame->games.contains(gameName))
+				if (!mameGame->games.contains(gameName))
+					continue;
+				gameInfo = mameGame->games[gameName];
+
+				auditedGames.insert(gameName);
+
+				//open zip file
+				QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
+				if(!zip.open(QuaZip::mdUnzip))
+					continue;
+
+				QuaZipFileInfo zipFileInfo;
+				QuaZipFile zipFile(&zip);
+
+				//iterate all files in the zip
+				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
 				{
-					auditedGames.insert(gameName);
-
-					QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
-
-					if(!zip.open(QuaZip::mdUnzip))
+					if(!zip.getCurrentFileInfo(&zipFileInfo))
 						continue;
 
-					QuaZipFileInfo info;
-					QuaZipFile zipFile(&zip);
-					gameInfo = mameGame->games[gameName];
+					//check rom, crc recognized
+					if (gameInfo->roms.contains(zipFileInfo.crc))
+						gameInfo->roms[zipFileInfo.crc]->available = true;
 
-					//iterate all files in the zip
-					for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+					//also check rom for clones
+					else
 					{
-						if(!zip.getCurrentFileInfo(&info))
-							continue;
-
-						quint32 crc = info.crc;
-						// file crc recognized
-						if (!gameInfo)
-							win->log(QString("err: %1").arg(gameName));
-						if (gameInfo->roms.contains(crc))
-							gameInfo->roms[crc]->available = true; 
-						//check rom for clones
-						else
+						foreach (QString cloneName, gameInfo->clones)
 						{
-							foreach (QString cloneName, gameInfo->clones)
-							{
-								auditedGames.insert(cloneName);
-								gameInfo2 = mameGame->games[cloneName];
-								if (gameInfo2->roms.contains(crc))
-									gameInfo2->roms[crc]->available = true; 
-							}
+							auditedGames.insert(cloneName);
+							gameInfo2 = mameGame->games[cloneName];
+							if (gameInfo2->roms.contains(zipFileInfo.crc))
+								gameInfo2->roms[zipFileInfo.crc]->available = true;
 						}
 					}
 				}
 			}
 		}
 
-		win->log(QString("audit 1.gamecount %1").arg(mameGame->games.count()));
+//		win->log(QString("audit 1.gamecount %1").arg(mameGame->games.count()));
 
 		/* see if any rom of a game is not available */
 		//iterate games
@@ -138,65 +176,84 @@ void RomAuditor::run()
 				gameInfo->available = 1;
 			else
 			{
-				gameInfo->available = 0;
-				continue;
+				bool allNoDump = true;
+				//fail unless all roms are nodump
+				foreach (RomInfo *romInfo, gameInfo->roms)
+				{
+					if (romInfo->status != "nodump")
+					{
+						allNoDump = false;
+						break;
+					}
+				}
+
+				gameInfo->available = (allNoDump) ? 1 : 0;
 			}
-			
-			bool aRomPassed = false;	//at least one rom has passed
+			//shortcircuit
+			if (gameInfo->available == 0)
+				continue;
+
+			//iterate disks
+			foreach (DiskInfo *diskInfo, gameInfo->disks)
+			{
+				if (!diskInfo->available)
+				{
+					//win->log("NA :" + gameName + "/" + diskInfo->name);
+					gameInfo->available = 0;
+					break;
+				}
+			}
+			//shortcircuit
+			if (gameInfo->available == 0)
+				continue;
 
 			//iterate roms
 			foreach (quint32 crc, gameInfo->roms.keys())
 			{
 				romInfo = gameInfo->roms[crc];
-				if (!romInfo->available)
+				if (romInfo->available)
 				{
-					if (romInfo->status == "nodump")
-						continue;	//passed but ignored
+					//game rom passed
+					continue;
+				}
 
+				if (romInfo->status == "nodump")
+					//passed but ignored
+					continue;
+
+				if (!gameInfo->romof.isEmpty())
+				{
 					//check parent
-					if (!gameInfo->romof.isEmpty())
+					gameInfo2 = mameGame->games[gameInfo->romof];
+					if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
 					{
-						gameInfo2 = mameGame->games[gameInfo->romof];
-						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
-						{
-							aRomPassed = true;
-//							win->log(gameInfo->romof + "/" + romInfo->name + " passed");
-							continue;	//clone passed
-						}
-
-						//check bios
-						if (!gameInfo2->romof.isEmpty())
-						{
-							gameInfo2 = mameGame->games[gameInfo2->romof];
-							if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
-							{
-								aRomPassed = true;
-//								win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
-								continue;	//clone passed
-							}
-						}
+						//parent rom passed
+						//win->log(gameInfo->romof + "/" + romInfo->name + " passed");
+						continue;
 					}
 
-					//failed audit
-					gameInfo->available = 0;
-					break;
+					//check bios
+					if (!gameInfo2->romof.isEmpty())
+					{
+						gameInfo2 = mameGame->games[gameInfo2->romof];
+						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
+						{
+							//bios rom passed
+							//win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
+							continue;
+						}
+					}
 				}
-				//parent passed
-				else
-					aRomPassed = true;
-			}
 
-			// special case for all roms are "nodump"
-			if (!aRomPassed)
-			{
+				//failed audit
 				gameInfo->available = 0;
+				break;
 			}
 		}
 	}
-	win->log("audit Arcade finished");
+//	win->log("finished auditing MAME games.");
 
-
-	//audit each console system
+	//audit each MESS system
 	foreach (QString gameName, mameGame->games.keys())
 	{
 		GameInfo *gameInfo = mameGame->games[gameName];
@@ -208,7 +265,7 @@ void RomAuditor::run()
 			auditConsole(gameName);
 		}
 	}
-	win->log("audit Console finished");
+//	win->log("finished auditing MESS systems.");
 
 	emit progressSwitched(-1);
 }
@@ -232,7 +289,7 @@ void RomAuditor::auditConsole(QString consoleName)
 	foreach (DeviceInfo *deviceInfo, gameInfo->devices)
 		foreach (QString ext, deviceInfo->extensionNames)
 			nameFilter << "*." + ext;
-	nameFilter << "*.zip";
+	nameFilter << "*" + ZIP_EXT + "";
 
 	// iterate all files in the path
 	QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
@@ -315,7 +372,7 @@ void MergedRomAuditor::audit()
 
 		win->logStatus(consolePath + mergedName);
 
-		outBuf = "";
+		outBuf.clear();
 
 		loadProc = procMan->process(procMan->start(command, args, FALSE));
 		connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(auditorReadyReadStandardOutput()));
@@ -331,7 +388,7 @@ void MergedRomAuditor::audit()
 void MergedRomAuditor::auditorReadyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-	outBuf += proc->readAllStandardOutput();
+	outBuf.append(proc->readAllStandardOutput());
 }
 
 void MergedRomAuditor::auditorFinished(int, QProcess::ExitStatus)
@@ -368,5 +425,43 @@ void MergedRomAuditor::auditorFinished(int, QProcess::ExitStatus)
 	}
 
 	audit();
+}
+
+
+MameExeRomAuditor::MameExeRomAuditor(QObject *parent) : 
+QObject(parent)
+{
+}
+
+void MameExeRomAuditor::auditorReadyReadStandardOutput()
+{
+	QProcess *proc = (QProcess *)sender();
+	outBuf.append(QString::fromLocal8Bit(proc->readAllStandardOutput().data()));
+}
+
+void MameExeRomAuditor::auditorFinished(int, QProcess::ExitStatus)
+{
+	QMessageBox msgBox;
+	msgBox.setText(outBuf);
+	msgBox.exec();
+}
+
+void MameExeRomAuditor::audit()
+{
+	QStringList args;
+	args << "-verifyroms" << currentGame;
+	if (isMAMEPlus)
+	{
+		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
+		args << "-langpath" << langpath;
+		args << "-language" << language;
+	}
+
+	outBuf.clear();
+
+	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
+
+	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(auditorReadyReadStandardOutput()));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(auditorFinished(int, QProcess::ExitStatus)));
 }
 

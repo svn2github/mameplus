@@ -9,6 +9,11 @@ theme
 -设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
 -added play with inp/rec/sta/mng/wav
 -clear global bios setting
+-preliminary chd auditing
+-fixed nodump auditing
+-single game auditing
+-auto audit when necessary
+-preliminary MESS support
 
 //Linux/Mac
 D column sorting
@@ -19,6 +24,7 @@ mounted snap doesnt load
 submit joyid
 4 verify rev 3991
 
+2 unavail folder, parent avail, clone unavail
 2 add GUI Options +0.1
 2 1st audit doesnt show n/a parent
 2 mess logo on the right
@@ -30,10 +36,6 @@ submit joyid
 2 provide a builtin fallback for zip folders
 2 mamep core lang, for non cjk languages
 2 gamename0000 snap
-2 auto audit when available = 0? +0.01
-2 we can't assume nodump is not passed +0.03
-2 check chd exist, check chd auditing (use mame core?) +0.03
-2 right click auditing +0.02
 2 custom ini write
 1 multiple software dirs1 multiple software dirs
 1 only non-empty console/bios folders
@@ -89,11 +91,11 @@ submit joyid
 * ROM capa column
 
 //Audit
+* clrmame style dialog
 1 gba F5 crash
-* lost column state after auditing
+1 audit all
 * crash when exit and auditing
 * non compressed roms
-* return update thread immediately if some folders doesnt even exist
 
 //Folder
 1 rewrite filter by thread
@@ -135,7 +137,6 @@ submit joyid
 * delete roms,cfg,nvram...
 * delete snapshot
 * gamelist editor
-* mess devices
 * autoupdater
 
 ----------------------------------------

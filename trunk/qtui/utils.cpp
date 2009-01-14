@@ -17,6 +17,7 @@ Utils::Utils(QObject *parent)
 
 QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 {
+	const float FORCE_ASPECT = 0.75f;
 	QSize scaledSize = orig;
 
 	if (forceAspect)

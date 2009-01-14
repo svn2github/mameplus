@@ -261,7 +261,7 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 				QDir dir(_dirpath);
 				QString dirpath = utils->getPath(_dirpath);
 
-				QString path = dirpath + currentGame + ".zip";
+				QString path = dirpath + currentGame + ZIP_EXT;
 				QFile file(path);
 				if (file.exists())
 				{
