@@ -150,6 +150,10 @@ Alpha Co
 Alpha Denshi Co.
 
 
+# Skill Cherry '98
+Amcoe
+
+
 # Naughty Mouse (set 1)
 Amenip
 
@@ -202,6 +206,10 @@ Arcadia Systems
 Arika
 
 
+# 86 Lions
+Aristocrat
+
+
 # War of the Bugs or Monsterous Manouvers in a Mushroom Maze
 Armenia
 
@@ -230,7 +238,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# Show Hand
+# Show Hand (Italy)
 Astro Corp.
 
 
@@ -314,7 +322,7 @@ Bonanza Enterprises, Ltd
 Bootleg
 
 
-# Sky Lancer (Bordun International)
+# Sky Lancer (Bordun, ver.U450C)
 Bordun International
 
 
@@ -438,7 +446,7 @@ Comsoft
 Coreland
 
 
-# Cherry Master (v8.01)
+# Cherry Master (Corsica, ver.8.01)
 Corsica
 
 
@@ -494,6 +502,10 @@ D3 Publisher
 DGRM
 
 
+# Shadow Fighters
+DUTECH Inc.
+
+
 # Pipeline
 Daehyun Electronics
 
@@ -510,7 +522,7 @@ Daiki
 Danbi
 
 
-# Vamp 1/2 (Korea version)
+# Vamf x1/2 (Europe)
 Danbi & F2 System
 
 
@@ -586,6 +598,10 @@ Dooyong
 Dorneer
 
 
+# X Se Dae Quiz
+Dream Island
+
+
 # The Masters of Kin
 Du Tech
 
@@ -654,6 +670,10 @@ EVG
 EZ Graphics
 
 
+# Janshi
+Eagle
+
+
 # Dangerous Dungeons
 East Coast Coin Company
 
@@ -698,7 +718,7 @@ Electro Design
 Electro-Sport
 
 
-# Diamond Derby (set 1)
+# Diamond Derby (Newer)
 Electrocoin
 
 
@@ -718,7 +738,7 @@ Electronic Devices Italy
 Electronic Devices S.R.L.
 
 
-# Jackpot Pool (Italy, bootleg)
+# Jackpot Cards / Jackpot Pool (Italy)
 Electronic Projects
 
 
@@ -766,7 +786,7 @@ Enter-Tech
 Entertainment Enterprises
 
 
-# Turbo Sub
+# Turbo Sub (prototype rev. TSCA)
 Entertainment Sciences
 
 
@@ -971,7 +991,7 @@ HAR
 
 
 # Super Free Kick
-HEC
+HJ Corp
 
 
 # Laser Base (set 1)
@@ -988,6 +1008,10 @@ Hara Industries
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Tour 4000
+High Video
 
 
 # Meteor
@@ -1058,7 +1082,7 @@ IGT - International Gaming Technology
 Icarus
 
 
-# Magic Card II (bulgarian)
+# Magic Card (set 1)
 Impera
 
 
@@ -1310,6 +1334,10 @@ MakeSoft
 Marble
 
 
+# Buster
+Marian Electronics Ltd.
+
+
 # Desert Tank
 Martin Marietta
 
@@ -1334,7 +1362,7 @@ Media Trading Corp
 Mega
 
 
-# Pit Boss
+# Merit Poker
 Merit
 
 
@@ -1370,7 +1398,7 @@ Midcoin
 Midway
 
 
-# CarnEvil
+# CarnEvil (v1.0.3)
 Midway Games
 
 
@@ -1462,6 +1490,10 @@ Nazionale Elettronica
 Neodev
 
 
+# New Magic Card
+New High Video?
+
+
 # Super Gran Safari (ver 3.11)
 New Impeuropex Corp.
 
@@ -1488,6 +1520,10 @@ Nics?
 
 # Monster Zero
 Nihon
+
+
+# Three Ds - Three Dealers Casino House
+Nihon Bussan
 
 
 # Pocket Gal Deluxe (Japan v3.00)
@@ -1750,6 +1786,10 @@ Rock-ola
 Romar
 
 
+# Country Girl (Japan)
+Royal Denshi
+
+
 # Attack Ufo
 Ryoto Electric Co.
 
@@ -1762,7 +1802,7 @@ SA
 SEGA
 
 
-# Trivia (sms)
+# Trivia Hangup (Question Set 1)
 SMS MFG CORP
 
 
@@ -1788,6 +1828,10 @@ SPHINX
 
 # SSI Poker (v2.4)
 SSI
+
+
+# Queen?
+STG?
 
 
 # Fishing Maniac 3
@@ -1850,10 +1894,6 @@ Seatongrove Ltd
 Sega
 
 
-# Shadow Fighters
-Sega?
-
-
 # Tottemo E Jong
 Seibu
 
@@ -1888,6 +1928,10 @@ Sente
 
 # Multi Game III
 Seo Jin
+
+
+# Hec's Spinkick
+Seojin
 
 
 # Quiz Olympic (set 1)
@@ -2026,7 +2070,7 @@ Square
 Status
 
 
-# Hangman
+# Status Black Jack (V1.0c)
 Status Games
 
 
@@ -2094,6 +2138,10 @@ Sunwise
 Sure
 
 
+# Millennium Nuovo 4000 (Version 2.0)
+Sure Milano
+
+
 # Snow Brothers 3 - Magical Adventure
 Syrmex
 
@@ -2106,7 +2154,7 @@ System Service
 System Ten
 
 
-# DaiDaiKakumei (Japan)
+# Dai-Dai-Kakumei (Japan)
 SystemBit
 
 
@@ -2120,6 +2168,10 @@ T.I.C.
 
 # Mahjong Gal no Kokuhaku (Japan)
 T.R.TEC
+
+
+# Lady Liner
+TAB Austria
 
 
 # Jolly Card (austrian)
@@ -2286,6 +2338,10 @@ Toei
 Tong Electronic
 
 
+# Magical Tonic?
+Tonic
+
+
 # Golden Fire II
 Topis Corp
 
@@ -2398,6 +2454,10 @@ Video Games GMBH
 Video Games GmbH
 
 
+# Witch Card (Video Klein)
+Video Klein
+
+
 # Video System PSX
 Video System
 
@@ -2466,12 +2526,16 @@ Williams
 Windom
 
 
-# Yosaku To Donbei (set 1)
+# Lucky Girl? (Wing)
 Wing
 
 
 # Lucky 74 (bootleg, set 1)
 Wing Co.,Ltd.
+
+
+# Slot Carnival
+Wing Co.Ltd
 
 
 # Magical Cat Adventure
@@ -2604,5 +2668,9 @@ bootleg?
 
 # X-Files
 dgPIX Entertainment Inc.
+
+
+# Kkoj Noli (Kill the Bees)
+south korean hack
 
 

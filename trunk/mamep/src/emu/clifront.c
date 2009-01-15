@@ -675,7 +675,7 @@ int cli_info_listbrothers(core_options *options, const char *gamename)
 			didit[drvindex] = TRUE;
 			if (count > 0)
 				mame_printf_info("\n");
-			mame_printf_info("%s ... other drivers in %s:\n", drivers[drvindex]->name, astring_c(core_filename_extract_base(filename, drivers[drvindex]->source_file, FALSE)));
+			mame_printf_info(_("%s ... other drivers in %s:\n"), drivers[drvindex]->name, astring_c(core_filename_extract_base(filename, drivers[drvindex]->source_file, FALSE)));
 
 			/* now iterate again over drivers, finding those with the same source file */
 			for (matchindex = 0; drivers[matchindex]; matchindex++)

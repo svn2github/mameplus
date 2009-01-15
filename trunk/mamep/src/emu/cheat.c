@@ -375,7 +375,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 	else if (cheat->parameter == NULL && cheat->script[SCRIPT_STATE_RUN] == NULL && cheat->script[SCRIPT_STATE_OFF] == NULL)
 	{
 		if (state != NULL)
-			*state = "Set";
+			*state = _("Set");
 		if (flags != NULL)
 			*flags = 0;
 	}
@@ -384,7 +384,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 	else if (cheat->parameter == NULL)
 	{
 		if (state != NULL)
-			*state = (cheat->state == SCRIPT_STATE_RUN) ? "On" : "Off";
+			*state = (cheat->state == SCRIPT_STATE_RUN) ? _("On") : _("Off");
 		if (flags != NULL)
 			*flags = cheat->state ? MENU_FLAG_LEFT_ARROW : MENU_FLAG_RIGHT_ARROW;
 	}
@@ -395,7 +395,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 		if (cheat->state == SCRIPT_STATE_OFF)
 		{
 			if (state != NULL)
-				*state = "Off";
+				*state = _("Off");
 			if (flags != NULL)
 				*flags = MENU_FLAG_RIGHT_ARROW;
 		}
@@ -433,7 +433,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 				if (item->value == cheat->parameter->value)
 					break;
 			if (state != NULL)
-				*state = (item != NULL) ? astring_c(item->text) : "??Invalid??";
+				*state = (item != NULL) ? astring_c(item->text) : _("??Invalid??");
 			if (flags != NULL)
 			{
 				*flags = MENU_FLAG_LEFT_ARROW;
@@ -463,7 +463,7 @@ int cheat_activate(running_machine *machine, void *entry)
 	{
 		cheat_execute_script(cheatinfo, cheat, SCRIPT_STATE_ON);
 		changed = TRUE;
-		popmessage("Activated %s", astring_c(cheat->description));
+		popmessage(_("Activated %s"), astring_c(cheat->description));
 	}
 
 	return changed;

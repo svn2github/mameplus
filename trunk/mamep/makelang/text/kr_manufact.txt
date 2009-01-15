@@ -226,7 +226,7 @@ Daiichi Denshi
 Daiki
 다이키
 
-# Vamp 1/2 (Korea version)
+# Vamf x1/2 (Europe)
 Danbi & F2 System
 단비 & F2시스템
 
@@ -366,7 +366,7 @@ Microprose
 Midway
 미드웨이
 
-# CarnEvil
+# CarnEvil (v1.0.3)
 Midway Games
 미드웨이 게임즈
 
@@ -610,7 +610,7 @@ System Service
 System Ten
 시스템 텐
 
-# DaiDaiKakumei (Japan)
+# Dai-Dai-Kakumei (Japan)
 SystemBit
 시스템빗
 
@@ -878,7 +878,7 @@ Williams
 Windom
 윈돔
 
-# Yosaku To Donbei (set 1)
+# Lucky Girl? (Wing)
 Wing
 윙
 
@@ -1106,6 +1106,14 @@ Allumer
 Alpha
 
 
+# Skill Cherry '98
+Amcoe
+
+
+# 86 Lions
+Aristocrat
+
+
 # Hi Pai Paradise
 Aruze?
 
@@ -1118,7 +1126,7 @@ Ashby Computers and Graphics LTD.
 Associated Overseas MFR, Inc
 
 
-# Show Hand
+# Show Hand (Italy)
 Astro Corp.
 
 
@@ -1174,7 +1182,7 @@ Bee-Oh
 Blastar
 
 
-# Sky Lancer (Bordun International)
+# Sky Lancer (Bordun, ver.U450C)
 Bordun International
 
 
@@ -1254,7 +1262,7 @@ Comsoft
 Coreland
 
 
-# Cherry Master (v8.01)
+# Cherry Master (Corsica, ver.8.01)
 Corsica
 
 
@@ -1290,6 +1298,10 @@ D3 Publisher
 DGRM
 
 
+# Shadow Fighters
+DUTECH Inc.
+
+
 # Office Yeo In Cheon Ha (version 1.2)
 Danbi
 
@@ -1316,6 +1328,10 @@ Dolbeck Systems
 
 # Scorpion (Moon Cresta hardware)
 Dorneer
+
+
+# X Se Dae Quiz
+Dream Island
 
 
 # Buccaneers (set 1)
@@ -1378,6 +1394,10 @@ EVG
 EZ Graphics
 
 
+# Janshi
+Eagle
+
+
 # Dangerous Dungeons
 East Coast Coin Company
 
@@ -1422,7 +1442,7 @@ Electro Design
 Electro-Sport
 
 
-# Diamond Derby (set 1)
+# Diamond Derby (Newer)
 Electrocoin
 
 
@@ -1438,7 +1458,7 @@ Electronic Devices Italy
 Electronic Devices S.R.L.
 
 
-# Jackpot Pool (Italy, bootleg)
+# Jackpot Cards / Jackpot Pool (Italy)
 Electronic Projects
 
 
@@ -1486,7 +1506,7 @@ Enter-Tech
 Entertainment Enterprises
 
 
-# Turbo Sub
+# Turbo Sub (prototype rev. TSCA)
 Entertainment Sciences
 
 
@@ -1679,7 +1699,7 @@ HAR
 
 
 # Super Free Kick
-HEC
+HJ Corp
 
 
 # Laser Base (set 1)
@@ -1696,6 +1716,10 @@ Hara Industries
 
 # Fantasy '95
 Hi-max Technology Inc.
+
+
+# Tour 4000
+High Video
 
 
 # Meteor
@@ -1766,7 +1790,7 @@ IGT - International Gaming Technology
 Icarus
 
 
-# Magic Card II (bulgarian)
+# Magic Card (set 1)
 Impera
 
 
@@ -1966,6 +1990,10 @@ MakeSoft
 Marble
 
 
+# Buster
+Marian Electronics Ltd.
+
+
 # Desert Tank
 Martin Marietta
 
@@ -1990,7 +2018,7 @@ Media Trading Corp
 Mega
 
 
-# Pit Boss
+# Merit Poker
 Merit
 
 
@@ -2094,6 +2122,10 @@ Nazionale Elettronica
 Neodev
 
 
+# New Magic Card
+New High Video?
+
+
 # Super Gran Safari (ver 3.11)
 New Impeuropex Corp.
 
@@ -2116,6 +2148,10 @@ Nics
 
 # Hot Blocks - Tetrix II
 Nics?
+
+
+# Three Ds - Three Dealers Casino House
+Nihon Bussan
 
 
 # PC Engine
@@ -2334,11 +2370,15 @@ Recreativos Franco
 Rene Pierre
 
 
+# Country Girl (Japan)
+Royal Denshi
+
+
 # Go 2000
 SA
 
 
-# Trivia (sms)
+# Trivia Hangup (Question Set 1)
 SMS MFG CORP
 
 
@@ -2348,6 +2388,10 @@ SNK
 
 # SSI Poker (v2.4)
 SSI
+
+
+# Queen?
+STG?
 
 
 # Fishing Maniac 3
@@ -2386,10 +2430,6 @@ Sculptured Software Inc.
 Seatongrove Ltd
 
 
-# Shadow Fighters
-Sega?
-
-
 # Hex Pool (Senko)
 Senko
 
@@ -2404,6 +2444,10 @@ Sente
 
 # Multi Game III
 Seo Jin
+
+
+# Hec's Spinkick
+Seojin
 
 
 # Vastar (set 1)
@@ -2494,7 +2538,7 @@ Spale-Soft
 Status
 
 
-# Hangman
+# Status Black Jack (V1.0c)
 Status Games
 
 
@@ -2504,6 +2548,10 @@ Subelectro
 
 # Crazy Fight
 Subsino
+
+
+# Millennium Nuovo 4000 (Version 2.0)
+Sure Milano
 
 
 # Snow Brothers 3 - Magical Adventure
@@ -2516,6 +2564,10 @@ T.I.C.
 
 # Mahjong Gal no Kokuhaku (Japan)
 T.R.TEC
+
+
+# Lady Liner
+TAB Austria
 
 
 # Jolly Card (austrian)
@@ -2566,6 +2618,10 @@ Tekunon Kougyou
 Tong Electronic
 
 
+# Magical Tonic?
+Tonic
+
+
 # Ultraman Club - Tatakae! Ultraman Kyoudai!!
 Tsuburaya Prod.
 
@@ -2602,7 +2658,19 @@ Veltmeijer Automaten
 Vesely Svet
 
 
+# Witch Card (Video Klein)
+Video Klein
+
+
 # Jack Potten's Poker (set 2)
 W
+
+
+# Slot Carnival
+Wing Co.Ltd
+
+
+# Kkoj Noli (Kill the Bees)
+south korean hack
 
 
