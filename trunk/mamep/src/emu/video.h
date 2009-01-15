@@ -286,4 +286,11 @@ void video_init_scale_effect(const device_config *screen);
 void video_exit_scale_effect(const device_config *screen);
 #endif /* USE_SCALE_EFFECTS */
 
+
+/* ----- debugging helpers ----- */
+
+/* assert if any pixels in the given bitmap contain an invalid palette index */
+void video_assert_out_of_range_pixels(running_machine *machine, bitmap_t *bitmap);
+
+
 #endif	/* __VIDEO_H__ */

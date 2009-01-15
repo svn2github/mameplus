@@ -1126,7 +1126,6 @@ static READ16_HANDLER( generic_cop_r )
 		default:
 			seibu_cop_log("%06x: COPX unhandled read returning %04x from offset %04x\n", cpu_get_pc(space->cpu), retvalue, offset*2);
 			return retvalue;
-			break;
 
 		/* BCD protection reads */
 		case (0x190/2): { return ((prot_bcd[0] & 0x0000ffff) >> 0 ) + 0x3030; }
@@ -1293,7 +1292,6 @@ READ16_HANDLER( heatbrl_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 	    /*********************************************************************
         400-5ff -  Protection reads
@@ -1320,7 +1318,6 @@ READ16_HANDLER( heatbrl_mcu_r )
 		case (0x344/2):	return input_port_read(space->machine, "PLAYERS12");
 		case (0x348/2): return input_port_read(space->machine, "PLAYERS34");
 		case (0x34c/2): return input_port_read(space->machine, "SYSTEM");
-
 	}
 }
 
@@ -1413,7 +1410,6 @@ READ16_HANDLER( cupsoc_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		//case (0x07e/2):
 		//case (0x1b0/2):
@@ -1566,7 +1562,6 @@ READ16_HANDLER( godzilla_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		/* Non-protection reads */
 		case (0x308/2):	return seibu_main_word_r(space,2,0xffff);
@@ -1616,7 +1611,6 @@ READ16_HANDLER( denjinmk_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		/* Non-protection reads */
 
@@ -1676,13 +1670,13 @@ READ16_HANDLER( sdgndmrb_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		/*hit protection*/
 		case (0x180/2): { return xy_check; }
 
 		case (0x1b0/2):
 			return 2;
+			// FIXME: this code is never reached
 			/*check if the DMA has been finished*/
 			if(dma_status == 1)
 			{
@@ -1883,7 +1877,6 @@ READ16_HANDLER( legionna_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		/*********************************************************************
         400-5ff -  Protection reads
@@ -1985,7 +1978,6 @@ READ16_HANDLER( raiden2_mcu_r )
 	{
 		default:
 			return generic_cop_r(space, offset, mem_mask);
-			break;
 
 		case (0x340/2): return input_port_read(space->machine, "DSWA") | (input_port_read(space->machine, "DSWB") << 8);
 		case (0x344/2): return input_port_read(space->machine, "P1") | (input_port_read(space->machine, "P2") << 8);
