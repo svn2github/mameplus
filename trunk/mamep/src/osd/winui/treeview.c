@@ -934,6 +934,7 @@ void CreateCPUFolders(int parent_index)
 
 void CreateSoundFolders(int parent_index)
 {
+/*
 	int i,jj;
 	int nGames = GetNumGames();
 	int nFolder = numFolders;
@@ -981,7 +982,7 @@ void CreateSoundFolders(int parent_index)
 		}
 		machine_config_free(config);
 	}
-
+*/
 }
 
 // mamep: updated mameui's horrible version

@@ -146,6 +146,10 @@ b) Exit the dialog.
 #include "treeview.h"
 #include "translate.h"
 #include "datafile.h"
+#include "sound/2413intf.h"
+#include "sound/3812intf.h"
+#include "sound/samples.h"
+#include "sound/vlm5030.h"
 
 typedef HANDLE HTHEME;
 
@@ -814,9 +818,9 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	{
 		if (config->sound[chipnum].type != SOUND_DUMMY)
 		{
-			int clock,sound_type,count;
+			int clock, count;
 
-			sound_type = config->sound[chipnum].type;
+			sound_type sound_type = config->sound[chipnum].type;
 			clock = config->sound[chipnum].clock;
 
 			count = 1;
