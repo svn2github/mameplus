@@ -209,7 +209,7 @@ const char g_szMameInfoFileName[] = "mameinfo.dat";
 static BOOL FilterAvailable(int driver_index)
 {
 	//mamep: filter Consoles
-	if (drivers[driver_index]->flags & GAME_COMPUTER || drivers[driver_index]->flags & GAME_CONSOLE)
+	if (DriverIsConsole(driver_index))
 		return FALSE;
 	return IsAuditResultYes(GetRomAuditResults(driver_index));
 }

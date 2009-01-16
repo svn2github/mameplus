@@ -776,6 +776,11 @@ BOOL DriverIsVertical(int driver_index) {
 	return GetDriversInfo(driver_index)->isVertical; 
 }
 
+BOOL DriverIsConsole(int driver_index)
+{
+	return drivers[driver_index]->flags & GAME_COMPUTER || drivers[driver_index]->flags & GAME_CONSOLE;
+}
+
 int DriverBiosIndex(int driver_index)
 {
 	return GetDriversInfo(driver_index)->biosIndex;
