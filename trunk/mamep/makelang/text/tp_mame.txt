@@ -510,14 +510,6 @@ Arcade
 Asia
 
 
-# emu/state.c: 309, 340
-Attempt to register callback function after state registration is closed!
-
-
-# emu/state.c: 240
-Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n
-
-
 # emu/restrack.c: 70
 Attempted to malloc zero bytes (%s:%d)
 
@@ -1136,14 +1128,6 @@ Dual Under-Over
 
 # emu/layout/dualhuov.lay: 36
 Dual Under-Over (Gapless)
-
-
-# emu/state.c: 314, 345
-Duplicate save state function (%p, %p)
-
-
-# emu/state.c: 262
-Duplicate save state registration entry (%s)
 
 
 # emu/machine/at28c16.c: 243 emu/machine/timekpr.c: 485 emu/machine/x2212.c: 182 mame/drivers/cave.c: 1620, 1630, 1955 mame/drivers/taito_f3.c: 62, 62, 227 mame/drivers/tmnt.c: 485, 504, 796, 1919, 2036, 2069, 2104, 2138, 2185 mame/drivers/vendetta.c: 151, 399, 478 mame/drivers/xexex.c: 210, 419 mame/drivers/xmen.c: 81, 288, 344, 399

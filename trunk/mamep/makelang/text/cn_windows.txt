@@ -808,7 +808,11 @@ Video: Monitor %p = \"%s\" %s\n
 
 # osd/windows/winmain.c: 127
 WINDOWS DEBUGGING OPTIONS
-WINDOWS 调试选项
+WINDOWS 调试器选项
+
+# mess/osd/windows/configms.c: 30
+WINDOWS MESS SPECIFIC OPTIONS
+WINDOWS MESS 特定选项
 
 # osd/windows/winmain.c: 134
 WINDOWS PERFORMANCE OPTIONS
@@ -1030,6 +1034,14 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 设置游戏杆标识码 (P8)
 
+# osd/windows/winmain.c: 131
+specifies the font size to use for debugging; defaults to 9 pt
+指定调试器的字体大小; 默认是 9 pt
+
+# osd/windows/winmain.c: 130
+specifies the font to use for debugging; defaults to Lucida Console
+指定调试器的字体; 默认是 Lucida Console
+
 # osd/windows/winmain.c: 156
 specify the preferred Direct3D version (8 or 9)
 指定 Direct3D 版本 (8 或 9)
@@ -1038,23 +1050,11 @@ specify the preferred Direct3D version (8 or 9)
 thread priority for the main game thread; range from -15 to 1
 主要游戏的线程优先级; 范围是 -15 至 1
 
+# mess/osd/windows/configms.c: 31
+use the new MESS UI
+使用新的 MESS 菜单
+
 # osd/windows/winmain.c: 140
 video output method: none, gdi, ddraw, or d3d
 视频输出方式: none, gdi, ddraw 或 d3d
-
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
-
-
-# osd/windows/winmain.c: 131
-specifies the font size to use for debugging; defaults to 9 pt
-
-
-# osd/windows/winmain.c: 130
-specifies the font to use for debugging; defaults to Lucida Console
-
-
-# mess/osd/windows/configms.c: 31
-use the new MESS UI
-
 

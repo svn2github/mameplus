@@ -38,6 +38,10 @@
 %d samplesets found, %d were OK.\n
 找到 %d 个采样文件组，正确 %d。\n
 
+# emu/clifront.c: 678
+%s ... other drivers in %s:\n
+%s ... 其它驱动在 %s:\n
+
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 %s : %s selected
 %s : %s 选定
@@ -142,13 +146,21 @@
 %s enabled
 %s 启用
 
+# emu/state.c: 504
+%s'File is not a valid savestate file for game '%s'.
+%s'文件不是游戏 '%s' 的有效保存进度文件。
+
 # emu/state.c: 515
 %sIncompatible save file (signature %08x, expected %08x)
-%s不兼容的游戏进度文件 (签名 %08x，应为 %08x)
+%s不兼容的进度文件 (签名 %08x，应为 %08x)
 
 # emu/state.c: 488
 %sThis is not a MAME save file
-%s 这不是 MAME 的游戏进度文件
+%s这不是 MAME 的进度文件
+
+# emu/state.c: 496
+%sWrong version in save file (version %d, expected %d)
+%s错误版本的进度文件 (版本 %d, 需要 %d)
 
 # emu/clifront.c: 1324
 (BAD) 
@@ -370,6 +382,10 @@
 9 Coins/1 Credit
 9币1局
 
+# emu/cheat.c: 436
+??Invalid??
+??无效的??
+
 # emu/inpttype.h: 518
 AD Stick X
 AD 游戏杆 X
@@ -469,6 +485,10 @@ AD 游戏杆 Z 8
 # mame/layout/mpu4.lay: 414
 AWP Simulated Video (No Artwork)
 AWP 模拟视频 (无装饰图)
+
+# emu/cheat.c: 466
+Activated %s
+启动 %s
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Activation Key
@@ -940,7 +960,7 @@ Could not load controller file %s.cfg
 
 # emu/state.c: 543
 Could not read MAME save file header
-不能读取 MAME 游戏进度文件头
+不能读取 MAME 进度文件头
 
 # mame/drivers/aerofgt.c: 562, 954, 1043 mame/drivers/bwing.c: 289 mame/drivers/cischeat.c: 1219 mame/drivers/crshrace.c: 360 mame/drivers/ddenlovr.c: 5443 mame/drivers/f1gp.c: 364, 383 mame/drivers/kaneko16.c: 1006 mame/drivers/midtunit.c: 351, 454, 557 mame/drivers/midwunit.c: 390, 569 mame/drivers/midxunit.c: 115 mame/drivers/midyunit.c: 370, 835 mame/drivers/psikyo.c: 575, 654, 833, 955, 1031, 1086, 1165 mame/drivers/seta.c: 3657, 3978, 4299, 4468 mame/drivers/speglsht.c: 276 mame/drivers/ssv.c: 2480 mame/drivers/stv.c: 2131 mame/drivers/suprslam.c: 268 mame/drivers/tail2nos.c: 180 mame/drivers/taotaido.c: 247
 Country
@@ -1230,9 +1250,41 @@ Error loading memory card
 Error: 
 错误: 
 
+# emu/mame.c: 1763
+Error: Failed to create save state file.
+错误: 无法建立保存进度文件。
+
+# emu/mame.c: 1844
+Error: Failed to open save state file.
+错误: 无法开启保存进度。
+
+# emu/mame.c: 1825
+Error: Unable to load state due to a read error (file is likely corrupt).
+错误: 由于读取错误，无法载入进度 (文件可能损毁)。
+
+# emu/mame.c: 1821
+Error: Unable to load state due to an invalid header. Make sure the save state is correct for this game.
+错误: 由于文件头无效，无法保存进度。请确认此保存进度是否符合这个游戏。
+
+# emu/mame.c: 1817
+Error: Unable to load state due to illegal registrations. See error.log for details.
+错误: 由于非法暂存器操作，无法载入进度。详见 error.log。
+
+# emu/mame.c: 1741
+Error: Unable to save state due to a write error. Verify there is enough disk space.
+错误: 由于写入错误。无法保存进度。请检查有无足够的磁盘空间。
+
 # emu/mame.c: 1737
 Error: Unable to save state due to illegal registrations. See error.log for details.
-由于非法暂存器操作，无法保存游戏进度。详见 error.log。
+错误: 由于非法暂存器操作，无法保存进度。详见 error.log。
+
+# emu/mame.c: 1836
+Error: Unknwon error during state load.
+错误: 进度载入时发生未知的错误。
+
+# emu/mame.c: 1752
+Error: Unknwon error during state save.
+错误: 进度储存时发生未知的错误。
 
 # emu/inptport.c: 4896
 Error: illegal caption file
@@ -1606,6 +1658,10 @@ Invalid %s value (must be between %i and %i); keeping value of %s\n
 Invalid bitmap format!
 无效的点阵格式!
 
+# emu/state.h: 67
+Invalid data type supplied for state saving.
+进度所储存的是无效的数据类型。
+
 # emu/input.c: 598
 Invalid joystick map: %s\n
 无效的游戏杆映射: %s\n
@@ -1804,7 +1860,7 @@ Load Selected Card
 
 # emu/inpttype.h: 624
 Load State
-载入游戏进度
+载入进度
 
 # emu/ui.c: 1965
 Load cancelled
@@ -3960,7 +4016,7 @@ Save Snapshot
 
 # emu/inpttype.h: 623 
 Save State
-保存游戏进度
+保存进度
 
 # emu/ui.c: 1963
 Save cancelled
@@ -4168,15 +4224,19 @@ State
 
 # emu/mame.c: 1832
 State successfully loaded.
-已载入游戏进度。
+已顺利载入进度。
+
+# emu/mame.c: 1830
+State successfully loaded.\nWarning: Save states are not officially supported for this game.
+已顺利载入进度。\n警告: 这个游戏的保存进度功能尚未被正式支持。
 
 # emu/mame.c: 1748
 State successfully saved.
-已保存游戏进度。
+已顺利保存进度。
 
 # emu/mame.c: 1746
 State successfully saved.\nWarning: Save states are not officially supported for this game.
-已成功保存游戏进度。\n警告: 这个游戏的保存功能尚未被正式支持。
+已顺利保存进度。\n警告: 这个游戏的保存进度功能尚未被正式支持。
 
 # emu/inptport.c: 477 
 Stereo
@@ -4488,11 +4548,11 @@ USA
 
 # emu/clifront.c: 320
 Unable to create file mame.ini\n
-无法创建 mame.ini 档案\n
+无法创建 mame.ini 文件\n
 
 # emu/mame.c: 1798
 Unable to load due to pending anonymous timers. See error.log for details.
-由于匿名计时器尚未停止，无法载入游戏进度。详见 error.log。
+由于匿名计时器尚未停止，无法载入进度。详见 error.log。
 
 # emu/inptport.c: 1378
 Unable to locate input port '%s'
@@ -4500,7 +4560,7 @@ Unable to locate input port '%s'
 
 # emu/mame.c: 1717
 Unable to save due to pending anonymous timers. See error.log for details.
-由于匿名计时器尚未停止，无法保存游戏进度。详见 error.log。
+由于匿名计时器尚未停止，无法保存进度。详见 error.log。
 
 # lib/util/options.c: 798
 Unexpected boolean option %s queried\n
@@ -4940,7 +5000,39 @@ display running parameters
 
 # emu/clifront.c: 94
 driver sourcefile
-驱动源代码文件
+驱动来源文件
+
+# emu/emuopts.c: 166
+enable (none|keyboard|mouse|lightgun|joystick) if a dial control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于方向盘控制
+
+# emu/emuopts.c: 168
+enable (none|keyboard|mouse|lightgun|joystick) if a lightgun control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于光枪控制
+
+# emu/emuopts.c: 170
+enable (none|keyboard|mouse|lightgun|joystick) if a mouse control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于鼠标控制
+
+# emu/emuopts.c: 163
+enable (none|keyboard|mouse|lightgun|joystick) if a paddle control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于操纵杆控制
+
+# emu/emuopts.c: 165
+enable (none|keyboard|mouse|lightgun|joystick) if a pedal control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于踏板控制
+
+# emu/emuopts.c: 169
+enable (none|keyboard|mouse|lightgun|joystick) if a positional control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于定位器控制
+
+# emu/emuopts.c: 167
+enable (none|keyboard|mouse|lightgun|joystick) if a trackball control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于轨迹球控制
+
+# emu/emuopts.c: 164
+enable (none|keyboard|mouse|lightgun|joystick) if an analog joystick control is present
+启用 (none|keyboard|mouse|lightgun|joystick) 于类比游戏杆
 
 # emu/emuopts.c: 95
 enable automatic frameskip selection
@@ -5342,6 +5434,10 @@ set vector flicker effect
 short name, full name
 简短名称、完整名称
 
+# emu/clifront.c: 96
+show \"brothers\", or other drivers from same sourcefile
+显示 \"关联\"，或来自相同来源文件的其它驱动
+
 # emu/clifront.c: 95
 show clones
 显示克隆
@@ -5416,7 +5512,7 @@ transparency in-game UI [0-255]
 
 # emu/mame.c: 338
 unable to open log file
-不能打开日志文件
+无法打开日志文件
 
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 unzip it and place it in the MAME directory
@@ -5450,26 +5546,6 @@ year, manufacturer and full name
 %dD Glasses Side-by-Side
 
 
-# emu/clifront.c: 678
-%s ... other drivers in %s:\n
-
-
-# emu/state.c: 504
-%s'File is not a valid savestate file for game '%s'.
-
-
-# emu/state.c: 496
-%sWrong version in save file (version %d, expected %d)
-
-
-# emu/cheat.c: 436
-??Invalid??
-
-
-# emu/cheat.c: 466
-Activated %s
-
-
 # mame/layout/bfm_sc2.lay: 856
 Adder %d Output Only (%d:%d)
 
@@ -5484,14 +5560,6 @@ Adder,VFD and Lamp Matrix
 
 # mame/layout/gldncrwn.lay: 110 mame/layout/paradice.lay: 98 mame/layout/pokio.lay: 107 mame/layout/pyramid.lay: 86 mame/layout/quintoon.lay: 98 mame/layout/slots.lay: 110 mame/layout/sltblgpo.lay: 86 mame/layout/sltblgtk.lay: 110
 Adder,VFD and Lamps
-
-
-# emu/state.c: 309, 340
-Attempt to register callback function after state registration is closed!
-
-
-# emu/state.c: 240
-Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n
 
 
 # mame/drivers/ssv.c: 1892 
@@ -5562,50 +5630,6 @@ Dual Under-Over
 Dual Under-Over (Gapless)
 
 
-# emu/state.c: 314, 345
-Duplicate save state function (%p, %p)
-
-
-# emu/state.c: 262
-Duplicate save state registration entry (%s)
-
-
-# emu/mame.c: 1763
-Error: Failed to create save state file.
-
-
-# emu/mame.c: 1844
-Error: Failed to open save state file.
-
-
-# emu/mame.c: 1825
-Error: Unable to load state due to a read error (file is likely corrupt).
-
-
-# emu/mame.c: 1821
-Error: Unable to load state due to an invalid header. Make sure the save state is correct for this game.
-
-
-# emu/mame.c: 1817
-Error: Unable to load state due to illegal registrations. See error.log for details.
-
-
-# emu/mame.c: 1741
-Error: Unable to save state due to a write error. Verify there is enough disk space.
-
-
-# emu/mame.c: 1836
-Error: Unknwon error during state load.
-
-
-# emu/mame.c: 1752
-Error: Unknwon error during state save.
-
-
-# emu/state.h: 67
-Invalid data type supplied for state saving.
-
-
 # mess/layout/gb.lay: 3
 LCD with square pixels
 
@@ -5654,10 +5678,6 @@ Shifter
 Simple LEDs
 
 
-# emu/mame.c: 1830
-State successfully loaded.\nWarning: Save states are not officially supported for this game.
-
-
 # mame/layout/nbmj8688.lay: 39
 Triple
 
@@ -5680,41 +5700,5 @@ VFD Only (%d:%d)
 
 # mame/layout/gridiron.lay: 10
 With LEDs
-
-
-# emu/emuopts.c: 166
-enable (none|keyboard|mouse|lightgun|joystick) if a dial control is present
-
-
-# emu/emuopts.c: 168
-enable (none|keyboard|mouse|lightgun|joystick) if a lightgun control is present
-
-
-# emu/emuopts.c: 170
-enable (none|keyboard|mouse|lightgun|joystick) if a mouse control is present
-
-
-# emu/emuopts.c: 163
-enable (none|keyboard|mouse|lightgun|joystick) if a paddle control is present
-
-
-# emu/emuopts.c: 165
-enable (none|keyboard|mouse|lightgun|joystick) if a pedal control is present
-
-
-# emu/emuopts.c: 169
-enable (none|keyboard|mouse|lightgun|joystick) if a positional control is present
-
-
-# emu/emuopts.c: 167
-enable (none|keyboard|mouse|lightgun|joystick) if a trackball control is present
-
-
-# emu/emuopts.c: 164
-enable (none|keyboard|mouse|lightgun|joystick) if an analog joystick control is present
-
-
-# emu/clifront.c: 96
-show \"brothers\", or other drivers from same sourcefile
 
 

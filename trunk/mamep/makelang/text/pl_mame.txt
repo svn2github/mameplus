@@ -2910,14 +2910,6 @@ Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 Alternate
 
 
-# emu/state.c: 309, 340
-Attempt to register callback function after state registration is closed!
-
-
-# emu/state.c: 240
-Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n
-
-
 # emu/restrack.c: 70
 Attempted to malloc zero bytes (%s:%d)
 
@@ -3260,14 +3252,6 @@ Dual Under-Over
 
 # emu/layout/dualhuov.lay: 36
 Dual Under-Over (Gapless)
-
-
-# emu/state.c: 314, 345
-Duplicate save state function (%p, %p)
-
-
-# emu/state.c: 262
-Duplicate save state registration entry (%s)
 
 
 # emu/ips.c: 315

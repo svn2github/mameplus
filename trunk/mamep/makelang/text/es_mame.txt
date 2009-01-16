@@ -5250,14 +5250,6 @@ Activated %s
 Adjusting target speed to %d%% (hw=%.2fHz, game=%.2fHz, adjusted=%.2fHz)\n
 
 
-# emu/state.c: 309, 340
-Attempt to register callback function after state registration is closed!
-
-
-# emu/state.c: 240
-Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n
-
-
 # mess/mslegacy.c: 23 
 Autocenter Speed
 
@@ -5344,14 +5336,6 @@ Debug Lamps
 
 # mess/mslegacy.c: 22 
 Digital Speed
-
-
-# emu/state.c: 314, 345
-Duplicate save state function (%p, %p)
-
-
-# emu/state.c: 262
-Duplicate save state registration entry (%s)
 
 
 # mess/uimess.c: 407
