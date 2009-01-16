@@ -50,7 +50,7 @@ static BOOL FilterAvailable(int driver_index);
 
 FOLDERDATA g_folderData[] =
 {
-	{TEXT("All Games"),       "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,		      0,             0,            NULL,                       NULL,              TRUE },
+	{TEXT("All Games"),       "allgames",          FOLDER_ALLGAMES,     IDI_FOLDER,		      0,             0,            NULL,                       DriverIsConsole,              FALSE },
 	{TEXT("Available"),       "available",         FOLDER_AVAILABLE,    IDI_FOLDER_AVAILABLE,     F_AVAILABLE,   F_UNAVAILABLE,NULL,                     FilterAvailable,              TRUE },
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	{TEXT("Unavailable"),     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,   F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
@@ -208,8 +208,8 @@ const char g_szMameInfoFileName[] = "mameinfo.dat";
 
 static BOOL FilterAvailable(int driver_index)
 {
-	//mamep: pong does not use roms
-	if (!DriverUsesRoms(driver_index))
-		return TRUE;
+	//mamep: filter Consoles
+	if (drivers[driver_index]->flags & GAME_COMPUTER || drivers[driver_index]->flags & GAME_CONSOLE)
+		return FALSE;
 	return IsAuditResultYes(GetRomAuditResults(driver_index));
 }

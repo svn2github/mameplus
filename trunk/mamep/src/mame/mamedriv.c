@@ -8548,7 +8548,6 @@ Other Sun games
 	DRIVER( lucky8 )	/* (c) 1989 Wing Co. Ltd */
 	DRIVER( lucky8a )	/* (c) 1989 Wing Co. Ltd */
 	DRIVER( luckgrln )	/* (c) 1991 Wing Co. Ltd */
-#endif /* NEOCPSPGM */
 
 	DRIVER( schery98 )	/* (c) 1998 Amcoe */
 	DRIVER( schery97 )	/* (c) 1998 Amcoe */
@@ -8561,4 +8560,5 @@ Other Sun games
 	DRIVER( buster )	/* (c) 1987 Marian Electronics Ltd. */
 	DRIVER( spielbud )	/* (c) 1985 ADP */
 
+#endif /* NEOCPSPGM */
 #endif	/* DRIVER_RECURSIVE */

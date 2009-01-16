@@ -97,7 +97,7 @@ const game_driver driver_##NAME = 	\
 	rom_##NAME,								\
 	construct_sysconfig_##CONFIG,			\
 	#COMPAT,								\
-	ROT0|(FLAGS),							\
+	ROT0|GAME_CONSOLE|(FLAGS),				\
 	NULL									\
 };
 

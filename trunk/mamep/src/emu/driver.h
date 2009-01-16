@@ -141,6 +141,7 @@ typedef UINT32 (*video_update_func)(const device_config *screen, bitmap_t *bitma
 #ifdef MAMEMESS
 #define GAME_COMPUTER               	0x8000  /* Driver is a computer (needs full keyboard) */
 #define GAME_COMPUTER_MODIFIED      	0x4000	/* Official? Hack */
+#define GAME_CONSOLE               	   0x10000  /* Driver is a console */
 #endif
 
 
