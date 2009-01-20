@@ -91,8 +91,7 @@ QStringList Utils::split2Str(const QString &str, const QString &separator)
 QString Utils::getPath(QString dirpath)
 {
 	dirpath.replace("$HOME", QDir::homePath());
-	QDir dir(dirpath);
-	return dir.path() + "/";	//clean it up
+	return QDir::cleanPath(dirpath) + "/";	//clean it up
 }
 
 QString Utils::getSinglePath(QString dirPaths0, QString fileName)

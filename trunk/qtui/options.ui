@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ui version="4.0">
+<ui version="4.0" >
  <class>Options</class>
- <widget class="QDialog" name="Options">
-  <property name="geometry">
+ <widget class="QDialog" name="Options" >
+  <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
@@ -10,117 +9,132 @@
     <height>450</height>
    </rect>
   </property>
-  <property name="windowTitle">
+  <property name="windowTitle" >
    <string>Options</string>
   </property>
-  <property name="sizeGripEnabled">
+  <property name="sizeGripEnabled" >
    <bool>true</bool>
   </property>
-  <layout class="QGridLayout">
-   <item row="0" column="0">
-    <widget class="QTabWidget" name="tabOptions">
-     <property name="currentIndex">
+  <layout class="QGridLayout" >
+   <item row="0" column="0" >
+    <widget class="QTabWidget" name="tabOptions" >
+     <property name="currentIndex" >
       <number>5</number>
      </property>
-     <widget class="QWidget" name="tab_5">
-      <attribute name="title">
+     <widget class="QWidget" name="tab_5" >
+      <attribute name="title" >
        <string>GUI</string>
       </attribute>
+      <layout class="QGridLayout" >
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeGuiOpt" >
+         <property name="editTriggers" >
+          <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+         </property>
+         <property name="rootIsDecorated" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvGuiOpt" />
+       </item>
+      </layout>
      </widget>
-     <widget class="QWidget" name="tab_2">
-      <attribute name="title">
+     <widget class="QWidget" name="tab_2" >
+      <attribute name="title" >
        <string>Global</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="1">
-        <widget class="QTreeView" name="treeGlobalOpt">
-         <property name="editTriggers">
+      <layout class="QGridLayout" >
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeGlobalOpt" >
+         <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
          </property>
-         <property name="rootIsDecorated">
+         <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QListWidget" name="lvGlobalOpt"/>
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvGlobalOpt" />
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_4">
-      <attribute name="title">
+     <widget class="QWidget" name="tab_4" >
+      <attribute name="title" >
        <string>Source</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="1">
-        <widget class="QTreeView" name="treeSourceOpt">
-         <property name="editTriggers">
+      <layout class="QGridLayout" >
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeSourceOpt" >
+         <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
          </property>
-         <property name="rootIsDecorated">
+         <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QListWidget" name="lvSourceOpt"/>
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvSourceOpt" />
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="bios">
-      <attribute name="title">
+     <widget class="QWidget" name="bios" >
+      <attribute name="title" >
        <string>BIOS</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="1">
-        <widget class="QTreeView" name="treeBiosOpt">
-         <property name="editTriggers">
+      <layout class="QGridLayout" >
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeBiosOpt" >
+         <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
          </property>
-         <property name="rootIsDecorated">
+         <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QListWidget" name="lvBiosOpt"/>
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvBiosOpt" />
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab_3">
-      <attribute name="title">
+     <widget class="QWidget" name="tab_3" >
+      <attribute name="title" >
        <string>Clone Of</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0">
-        <widget class="QListWidget" name="lvCloneofOpt"/>
+      <layout class="QGridLayout" >
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvCloneofOpt" />
        </item>
-       <item row="0" column="1">
-        <widget class="QTreeView" name="treeCloneofOpt">
-         <property name="editTriggers">
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeCloneofOpt" >
+         <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
          </property>
-         <property name="rootIsDecorated">
+         <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
-      <attribute name="title">
+     <widget class="QWidget" name="tab" >
+      <attribute name="title" >
        <string>Game</string>
       </attribute>
-      <layout class="QGridLayout">
-       <item row="0" column="0">
-        <widget class="QListWidget" name="lvCurrOpt"/>
+      <layout class="QGridLayout" >
+       <item row="0" column="0" >
+        <widget class="QListWidget" name="lvCurrOpt" />
        </item>
-       <item row="0" column="1">
-        <widget class="QTreeView" name="treeCurrOpt">
-         <property name="editTriggers">
+       <item row="0" column="1" >
+        <widget class="QTreeView" name="treeCurrOpt" >
+         <property name="editTriggers" >
           <set>QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
          </property>
-         <property name="rootIsDecorated">
+         <property name="rootIsDecorated" >
           <bool>false</bool>
          </property>
         </widget>
@@ -129,14 +143,14 @@
      </widget>
     </widget>
    </item>
-   <item row="1" column="0">
-    <layout class="QHBoxLayout">
+   <item row="1" column="0" >
+    <layout class="QHBoxLayout" >
      <item>
       <spacer>
-       <property name="orientation">
+       <property name="orientation" >
         <enum>Qt::Horizontal</enum>
        </property>
-       <property name="sizeHint" stdset="0">
+       <property name="sizeHint" stdset="0" >
         <size>
          <width>40</width>
          <height>20</height>
@@ -145,8 +159,8 @@
       </spacer>
      </item>
      <item>
-      <widget class="QDialogButtonBox" name="buttonBoxDlg">
-       <property name="standardButtons">
+      <widget class="QDialogButtonBox" name="buttonBoxDlg" >
+       <property name="standardButtons" >
         <set>QDialogButtonBox::Ok</set>
        </property>
       </widget>

@@ -134,7 +134,6 @@ private:
 	void toggleGameListColumn(int);
 	void initHistory(int);
 	void initSnap(int);
-	void showOptionsDialog(int, int = -1);
 	void showRestartDialog();
 	void setTransparentBg(QWidget *);
 	void setTransparentStyle(QWidget * w);
@@ -164,6 +163,7 @@ extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
 extern bool isMAMEPlus;
+extern bool isSDLMAME;
 extern bool isMESS;
 extern QStringList validGuiSettings;
 

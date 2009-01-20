@@ -50,6 +50,7 @@ bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
 bool isMAMEPlus = false;
+bool isSDLMAME = false;
 bool isMESS = false;
 QStringList validGuiSettings;
 
@@ -367,6 +368,9 @@ void MainWindow::init()
 
 	ipsUI->init();
 
+	// must call optUtils->init() after win, before show()
+	optUtils->init();
+
 	//rearrange docks
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::LeftDockWidgetArea), m1UI);
 	tabifyDockWidget(dwFolderList, m1UI);
@@ -414,10 +418,10 @@ void MainWindow::init()
 
 	// validate mame_binary
 	mame_binary = guiSettings.value("mame_binary").toString();
-	QFile mamebin(mame_binary);
+	QFileInfo mamebin(mame_binary);
 
 	// if no valid exec was found, popup a dialog
-	if (!mamebin.exists() || mame_binary.endsWith("mamepgui" + EXEC_EXT))
+	if (!mamebin.exists() || mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath())
 	{
 		QString filter = "";
 #ifdef Q_WS_WIN
@@ -431,7 +435,8 @@ void MainWindow::init()
 									QCoreApplication::applicationDirPath(),
 									filter);
 
-		if (mame_binary.isEmpty() || mame_binary.endsWith("mamepgui" + EXEC_EXT))
+		mamebin.setFile(mame_binary);
+		if (mame_binary.isEmpty() || mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath())
 		{
 			win->poplog(QString("Could not find MAME."));
 			mame_binary = "";
@@ -445,9 +450,6 @@ void MainWindow::init()
 	guiSettings.setValue("mame_binary", mame_binary);
 	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
 		isMESS = true;
-
-	// must optUtils->initOption() after win, before show()
-	optUtils->initOption();
 
 	QIcon mamepIcon(":/res/16x16/mamep.png");
 	qApp->setWindowIcon(mamepIcon);
@@ -545,14 +547,6 @@ void MainWindow::init()
 	connect(btnSearch, SIGNAL(clicked()), gameList, SLOT(filterSearchChanged()));
 	connect(btnClearSearch, SIGNAL(clicked()), gameList, SLOT(filterSearchCleared()));
 
-	// Options
-	for (int i = 1; i < optCtrls.count(); i++)
-	{
-		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), 
-				optUtils, SLOT(updateModel(QListWidgetItem *)));
-	}
-	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), optUtils, SLOT(updateModel()));
-
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
@@ -597,7 +591,7 @@ void MainWindow::setVersion()
 		"</style>"
 		"</head>"
 		"<body>"
-		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
+		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
 		"A Qt implementation of the famous <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
 		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
@@ -606,7 +600,7 @@ void MainWindow::setVersion()
 		"%5"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 10")
+		.arg("1.3 beta 11")
 		.arg(mameGame->mameVersion)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -702,39 +696,25 @@ void MainWindow::on_actionAudit_activated()
 
 void MainWindow::on_actionSrcProperties_activated()
 {
-	showOptionsDialog(OPTLEVEL_SRC, 0);
+	optionsUI->init(OPTLEVEL_SRC, 0);
+	optionsUI->exec();
 }
 
 void MainWindow::on_actionProperties_activated()
 {
-	showOptionsDialog(OPTLEVEL_CURR, 0);
+	optionsUI->init(OPTLEVEL_CURR, 0);
+	optionsUI->exec();	
 }
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-	showOptionsDialog(OPTLEVEL_GLOBAL, 1);
+	optionsUI->init(OPTLEVEL_GLOBAL, 0);
+	optionsUI->exec();
 }
 
 void MainWindow::on_actionDirectories_activated()
 {
-	showOptionsDialog(OPTLEVEL_GLOBAL, 0);
-}
-
-void MainWindow::showOptionsDialog(int optLevel, int lstRow)
-{
-	//prevent crash when list is empty
-	if (currentGame.isEmpty())
-		return;
-
-	//init ctlrs, 
-	for (int i = OPTLEVEL_GLOBAL; i < OPTLEVEL_LAST; i++)
-		optUtils->updateModel(NULL, i);
-
-	optionsUI->tabOptions->setCurrentIndex(optLevel);
-
-	if (lstRow > -1)
-		optCtrls[optLevel]->setCurrentRow(lstRow);
-
+	optionsUI->init(OPTLEVEL_GUI, 0);
 	optionsUI->exec();
 }
 
@@ -750,12 +730,18 @@ void MainWindow::on_actionReadme_activated()
 
 void MainWindow::on_actionFAQ_activated()
 {
-	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=164054&view=collapsed"));
+	if (language.startsWith("zh_"))
+		QDesktopServices::openUrl(QUrl("http://bbs.wisestudio.org/viewthread.php?tid=504"));
+	else
+		QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/showflat.php?Cat=&Number=164054&view=collapsed"));
 }
 
 void MainWindow::on_actionBoard_activated()
 {
-	QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/postlist.php?Cat=&Board=mameplus&view=collapsed"));
+	if (language.startsWith("zh_"))
+		QDesktopServices::openUrl(QUrl("http://bbs.wisestudio.org/forum-16-1.html"));
+	else
+		QDesktopServices::openUrl(QUrl("http://www.mameworld.info/ubbthreads/postlist.php?Cat=&Board=mameplus&view=collapsed"));
 }
 
 void MainWindow::on_actionAbout_activated()
@@ -916,7 +902,7 @@ void MainWindow::initSettings()
 	QStringList keys = guiSettings.allKeys();
 	foreach(QString key, keys)
 	{
-		if (key.contains("_extra_software") || validGuiSettings.contains(key))
+		if (key.endsWith("_extra_software") || validGuiSettings.contains(key))
 			continue;
 
 		guiSettings.remove(key);
@@ -972,7 +958,7 @@ void MainWindow::loadLayout()
 
 void MainWindow::loadSettings()
 {
-	currentGame = guiSettings.value("default_game", "pacman").toString();
+	currentGame = guiSettings.value("default_game").toString();
 
 	if (defSettings.value("option_column_state").isValid())
 		option_column_state = defSettings.value("option_column_state").toByteArray();
@@ -1011,16 +997,58 @@ void MainWindow::saveSettings()
 	else
 		guiSettings.setValue("mame_binary", mame_binary);
 
+
+	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(Gamelist::tr("Consoles"), Qt::MatchFixedString);
+	QTreeWidgetItem *messItem = NULL;
+	if (!messItems.isEmpty())
+		messItem = messItems.first();
+
 	//save console dirs
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
 
-		if (pMameOpt->guivisible && optName.contains("_extra_software"))
+		if (pMameOpt->guivisible && optName.endsWith("_extra_software"))
 		{
+			QString sysName = optName;
+			sysName.remove("_extra_software");
+				
 			QString v = mameOpts[optName]->globalvalue;
 			if (!v.trimmed().isEmpty())
+			{
 				guiSettings.setValue(optName, mameOpts[optName]->globalvalue);
+
+				for (int i = 0; messItem != NULL && i < messItem->childCount(); i++)
+				{
+					if (messItem->child(i)->isHidden() && sysName == messItem->child(i)->text(0))
+					{
+						messItem->child(i)->setHidden(false);
+						break;
+					}
+				}
+			}
+			else
+			{
+				guiSettings.remove(optName);
+
+				for (int i = 0; messItem != NULL && i < messItem->childCount(); i++)
+				{
+					if (!messItem->child(i)->isHidden() && sysName == messItem->child(i)->text(0))
+					{
+						messItem->child(i)->setHidden(true);
+						int iNext = i + 1;
+					
+						if (iNext >= messItem->childCount())
+							iNext = i - 1;
+						if (iNext < 0)
+							;
+						else
+							win->treeFolders->setCurrentItem(messItem->child(iNext));
+
+						break;
+					}
+				}
+			}
 		}
 	}
 

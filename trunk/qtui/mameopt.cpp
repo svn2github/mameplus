@@ -9,14 +9,18 @@
 #endif
 
 /* global */
+Options *optionsUI = NULL;
 OptionUtils *optUtils;
+QList<QListWidget *> optCtrls;
+
 //collection of all MameOptions
 QHash<QString, MameOption*> mameOpts;
 QByteArray option_column_state;
+QByteArray option_geometry;
 QString mameIniPath = "";
 
 /* internal */
-OptionDelegate optdelegate(win);
+OptionDelegate optDelegate(win);
 
 enum
 {
@@ -48,6 +52,49 @@ enum
 	USERROLE_GUIVALLIST
 };
 
+Options::Options(QWidget *parent)
+:QDialog(parent)
+{
+	setupUi(this);
+
+	if (optCtrls.isEmpty())
+		optCtrls << lvGuiOpt
+				 << lvGlobalOpt
+				 << lvSourceOpt
+				 << lvBiosOpt
+				 << lvCloneofOpt
+				 << lvCurrOpt;
+
+	disconnect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
+	connect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
+}
+
+void Options::init(int optLevel, int lstRow)
+{
+	//init ctlrs
+	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
+		optUtils->preUpdateModel(NULL, i);
+
+	//select option tab
+	tabOptions->setCurrentIndex(optLevel);
+
+	//select row in list on the left
+	if (lstRow > -1)
+		optCtrls[optLevel]->setCurrentRow(lstRow);
+}
+
+void Options::showEvent(QShowEvent *e)
+{
+	restoreGeometry(option_geometry);
+	e->accept();
+}
+
+void Options::closeEvent(QCloseEvent *event)
+{
+	option_geometry = saveGeometry();
+	event->accept();
+}
+
 OptInfo::OptInfo(QListWidget *catv, QTreeView *optv, QObject *parent)
 : QObject(parent)
 {
@@ -74,7 +121,7 @@ sliderOffset(0)
 	_btnReset->setMinimumWidth(24);
 	_btnReset->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::MinimumExpanding));
 	_btnReset->setToolTip("Reset to default"); 
-	connect(_btnReset, SIGNAL(clicked()), &optdelegate, SLOT(sync()));
+	connect(_btnReset, SIGNAL(clicked()), &optDelegate, SLOT(sync()));
 
 	QLayout *layout = new QHBoxLayout(this);
 	layout->setMargin(0);
@@ -141,17 +188,17 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 			_btnFileDlg = static_cast<QToolButton*>(subWidget2);
 			_btnFileDlg->disconnect(SIGNAL(clicked()));
 			if (optType == MAMEOPT_TYPE_DIRS)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDirectories()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectories()));
 			else if (optType == MAMEOPT_TYPE_DIR)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDirectory()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectory()));
 			else if (optType == MAMEOPT_TYPE_FILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setFile()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setFile()));
 			else if (optType == MAMEOPT_TYPE_DATFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setDatFile()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDatFile()));
 			else if (optType == MAMEOPT_TYPE_CFGFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setCfgFile()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setCfgFile()));
 			else if (optType == MAMEOPT_TYPE_EXEFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optdelegate, SLOT(setExeFile()));
+				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setExeFile()));
 			break;
 		}
 	}
@@ -523,7 +570,6 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	if (index.column() == 0)
 		return;
 
-	QVariant dispValue;
 	ResetWidget *resetWidget = static_cast<ResetWidget*>(editor);
 	int optType = optUtils->getField(index, USERROLE_TYPE).toInt();
 	int optLevel = index.model()->objectName().remove("optModel").toInt();
@@ -531,11 +577,14 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	MameOption *pMameOpt = mameOpts[optName];
 
 	/* update control's display value */
+	QVariant dispValue;
+
 	//reset to default value
 	if (isReset)
 	{
 		switch (optLevel)
 		{
+		case OPTLEVEL_GUI:
 		case OPTLEVEL_GLOBAL:
 			dispValue = pMameOpt->defvalue;
 			break;
@@ -596,8 +645,8 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		case MAMEOPT_TYPE_STRING:
 		case MAMEOPT_TYPE_STRING_EDITABLE:
 		{
-			QList<QVariant> guivalues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
-			if (guivalues.size() > 0)
+			QList<QVariant> guiValues = optUtils->getField(index, USERROLE_GUIVALLIST).toList();
+			if (guiValues.size() > 0)
 			{
 				QComboBox *ctrl = static_cast<QComboBox*>(resetWidget->subWidget);
 				dispValue = ctrl->currentText();
@@ -622,28 +671,33 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	// process inherited value overrides
 	QString prevVal;
-	QAbstractItemModel *overrideModel;
-	QModelIndex overrideIndex;
+	QAbstractItemModel *itemModel;
 	QString iniFileName;
 	GameInfo *gameInfo = mameGame->games[currentGame];
 	
 	switch (optLevel)
 	{
+	case OPTLEVEL_GUI:
 	case OPTLEVEL_GLOBAL:
 		iniFileName = mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT;
-		
+
+		//save old value
 		prevVal = pMameOpt->globalvalue;
-		
+
+		//assign new value
 		pMameOpt->globalvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-		// special case for console dirs
-		if (pMameOpt->guivisible && optName.contains("_extra_software"))
+		//special case for console dirs
+		if (pMameOpt->guivisible && optName.endsWith("_extra_software"))
 			mameOpts[optName]->globalvalue = pMameOpt->globalvalue;
 
-		overrideModel = optionsUI->treeGlobalOpt->model();
-		overrideIndex = overrideModel->index(index.row(), 1);
-		overrideModel->setData(overrideIndex, dispValue);
-		// fall to next case
+		if (optLevel == OPTLEVEL_GUI)
+			itemModel = optionsUI->treeGuiOpt->model();
+		else
+			itemModel = optionsUI->treeGlobalOpt->model();
+		
+		itemModel->setData(itemModel->index(index.row(), 1), dispValue);
+		//fall to next case
 
 	case OPTLEVEL_SRC:
 		if (iniFileName.isNull())
@@ -661,9 +715,8 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->srcvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = optionsUI->treeSourceOpt->model();
-			overrideIndex = overrideModel->index(index.row(), 1);
-			overrideModel->setData(overrideIndex, dispValue);
+			itemModel = optionsUI->treeSourceOpt->model();
+			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 			// fall to next case
 		}
 		else
@@ -680,9 +733,9 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->biosvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = optionsUI->treeBiosOpt->model();
-			overrideIndex = overrideModel->index(index.row(), 1);
-			overrideModel->setData(overrideIndex, dispValue);
+			itemModel = optionsUI->treeBiosOpt->model();
+			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
+			// fall to next case
 		}
 		else
 			break;
@@ -698,9 +751,9 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->cloneofvalue = optUtils->getShortValue(optName, dispValue.toString());
 
-			overrideModel = optionsUI->treeCloneofOpt->model();
-			overrideIndex = overrideModel->index(index.row(), 1);
-			overrideModel->setData(overrideIndex, dispValue);
+			itemModel = optionsUI->treeCloneofOpt->model();
+			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
+			// fall to next case
 		}
 		else
 			break;
@@ -722,9 +775,8 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		{
 			pMameOpt->currvalue = optUtils->getShortValue(optName, dispValue.toString());
 		
-			overrideModel = optionsUI->treeCurrOpt->model();
-			overrideIndex = overrideModel->index(index.row(), 1);
-			overrideModel->setData(overrideIndex, dispValue);
+			itemModel = optionsUI->treeCurrOpt->model();
+			itemModel->setData(itemModel->index(index.row(), 1), dispValue);
 		}
 		break;
 	}
@@ -738,7 +790,9 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	}
 
 	optUtils->saveIniFile(optLevel, iniFileName);
-	win->saveSettings();
+
+	if (optLevel == OPTLEVEL_GUI)
+		win->saveSettings();
 }
 
 void OptionDelegate::updateEditorGeometry(QWidget *editor,
@@ -963,16 +1017,9 @@ public:
 		else if (qName == "value")
 		{
 			OSType = attributes.value("os");
-			if (pMameOpt != NULL && (OSType.isEmpty() ||
-#ifdef Q_WS_WIN
-				OSType == "win"
-#else
-				OSType == "sdl"
-#endif
-			))
-			{
+			if (pMameOpt != NULL && (OSType.isEmpty() || 
+				OSType == (isSDLMAME ? "sdl" : "win")))
 				pMameOpt->guivalues << attributes.value("guivalue");
-			}
 		}
 
 		currentText.clear();
@@ -989,14 +1036,8 @@ public:
 				pMameOpt->description = currentText;
 			else if (qName == "value")
 			{
-				if (OSType.isEmpty() ||
-#ifdef Q_WS_WIN
-					OSType == "win"
-#else
-					OSType == "sdl"
-#endif
-				)
-				pMameOpt->values << currentText;
+				if (OSType.isEmpty() || OSType == (isSDLMAME ? "sdl" : "win"))
+					pMameOpt->values << currentText;
 			}
 		}
 		return true;
@@ -1015,7 +1056,6 @@ MameOption::MameOption(QObject *parent)
 {
 	guivisible = false;
 	globalvisible = srcvisible = biosvisible = cloneofvisible = gamevisible = true;
-	//	win->log("# MameOption()");
 }
 
 
@@ -1024,11 +1064,11 @@ OptionUtils::OptionUtils(QObject *parent)
 {
 }
 
-void OptionUtils::initOption()
+void OptionUtils::init()
 {
 	//assign unique ctlrs for each level of options
-	optInfos = (QList<OptInfo *>() 
-			<< new OptInfo(0, 0, optionsUI)
+	optInfos = (QList <OptInfo *>() 
+			<< new OptInfo(optionsUI->lvGuiOpt, optionsUI->treeGuiOpt, optionsUI)
 			<< new OptInfo(optionsUI->lvGlobalOpt, optionsUI->treeGlobalOpt, optionsUI)
 			<< new OptInfo(optionsUI->lvSourceOpt, optionsUI->treeSourceOpt, optionsUI)
 			<< new OptInfo(optionsUI->lvBiosOpt, optionsUI->treeBiosOpt, optionsUI)
@@ -1036,34 +1076,41 @@ void OptionUtils::initOption()
 			<< new OptInfo(optionsUI->lvCurrOpt, optionsUI->treeCurrOpt, optionsUI));
 
 	//init category list ctlrs for each level of options
-	for (int optLevel = OPTLEVEL_GLOBAL; optLevel < OPTLEVEL_LAST; optLevel++)
+	for (int optLevel = OPTLEVEL_GUI; optLevel < OPTLEVEL_LAST; optLevel++)
 	{
 		QListWidget *lstCatView = optInfos[optLevel]->lstCatView;
 
-		if (optLevel == OPTLEVEL_GLOBAL)
-			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), tr("Directory"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), tr("Core Video"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-osd.png"), tr("OSD Video"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display-blue.png"), tr("Screen"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/audio-x-generic.png"), tr("Audio"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/input-gaming.png"), tr("Control"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-vector.png"), tr("Vector"), lstCatView));
-		lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), tr("Misc"), lstCatView));
-
-		const QSize itemSz(1, 32);
+		if (optLevel == OPTLEVEL_GUI)
+		{
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), tr("GUI Paths"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), tr("MAME Paths"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/folder.png"), tr("MESS Paths"), lstCatView));
+		}
+		else
+		{
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display.png"), tr("Core Video"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-osd.png"), tr("OSD Video"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-display-blue.png"), tr("Screen"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/audio-x-generic.png"), tr("Audio"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/input-gaming.png"), tr("Control"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/video-vector.png"), tr("Vector"), lstCatView));
+			lstCatView->addItem(new QListWidgetItem(QIcon(":/res/32x32/applications-system.png"), tr("Misc"), lstCatView));
+		}
+		const QSize szItem(1, 32);
 		for (int i = 0; i < lstCatView->count(); i ++)
-			lstCatView->item(i)->setSizeHint(itemSz);
+			lstCatView->item(i)->setSizeHint(szItem);
 
 		lstCatView->setIconSize(QSize(24, 24));
 		lstCatView->setMaximumWidth(130);
 
-		QHeaderView *header = optInfos[optLevel]->optView->header();
-		disconnect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
-		connect(header, SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
-
-		disconnect(optionsUI, SIGNAL(accepted()), this, SLOT(setChangesAccepted()));
-		connect(optionsUI, SIGNAL(accepted()), this, SLOT(setChangesAccepted()));
+		connect(optInfos[optLevel]->optView->header(), SIGNAL(sectionResized(int, int, int)), this, SLOT(updateHeaderSize(int, int, int)));
 	}
+
+	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
+		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
+
+	connect(optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
+	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
 }
 
 QVariant OptionUtils::getField(const QModelIndex &index, int field)
@@ -1178,6 +1225,7 @@ bool OptionUtils::isChanged(const QModelIndex &index)
 	MameOption *pMameOpt = mameOpts[optName];
 	switch (optLevel)
 	{
+	case OPTLEVEL_GUI:
 	case OPTLEVEL_GLOBAL:
 		{
 			compVal = pMameOpt->defvalue;
@@ -1270,8 +1318,10 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("hiscore file")
 
 		<< QT_TR_NOOP("auto restore and save")
+		<< QT_TR_NOOP("snapshot/movie pattern")
+		<< QT_TR_NOOP("snapshot/movie resolution")
 		<< QT_TR_NOOP("snapshot/movie view")
-		
+	
 		<< QT_TR_NOOP("auto frame skipping")
 		<< QT_TR_NOOP("frame skipping")
 		<< QT_TR_NOOP("seconds to run")
@@ -1324,19 +1374,12 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("joystick saturation")
 		
 		<< QT_TR_NOOP("paddle device")
-		
 		<< QT_TR_NOOP("adstick device")
-		
 		<< QT_TR_NOOP("pedal device")
-		
 		<< QT_TR_NOOP("dial device")
-		
 		<< QT_TR_NOOP("trackball device")
-		
 		<< QT_TR_NOOP("lightgun device")
-		
 		<< QT_TR_NOOP("positional device")
-		
 		<< QT_TR_NOOP("mouse device")
 		
 		<< QT_TR_NOOP("log")
@@ -1378,6 +1421,8 @@ void OptionUtils::loadDefault(QString text)
 			
 		<< QT_TR_NOOP("thread priority")
 		<< QT_TR_NOOP("enable multi-threading")
+
+		<< QT_TR_NOOP("show sdl video performance")
 			
 		<< QT_TR_NOOP("video output method")
 		
@@ -1386,15 +1431,27 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("start out maximized")
 		<< QT_TR_NOOP("enforce aspect ratio")
 		<< QT_TR_NOOP("scale screen")
+		<< QT_TR_NOOP("non-integer stretching")
 		<< QT_TR_NOOP("visual effects")
+		<< QT_TR_NOOP("center horizontally")
+		<< QT_TR_NOOP("center vertically")
 		<< QT_TR_NOOP("wait for vertical sync")
 		<< QT_TR_NOOP("sync to monitor refresh")
+		<< QT_TR_NOOP("scale mode")
 			
 		<< QT_TR_NOOP("hardware stretching")
 			
 		<< QT_TR_NOOP("d3d version")
 		<< QT_TR_NOOP("bilinear filtering")
-			
+
+		<< QT_TR_NOOP("force power of 2 textures")
+		<< QT_TR_NOOP("no gl arb texture rectangle")
+		<< QT_TR_NOOP("enable opengl vbo")
+		<< QT_TR_NOOP("enable opengl pbo")
+		<< QT_TR_NOOP("enable opengl glsl")
+		<< QT_TR_NOOP("opengl glsl filtering")
+		<< QT_TR_NOOP("opengl glsl video attributes")
+
 		<< QT_TR_NOOP("all screens: physical monitor")
 		<< QT_TR_NOOP("all screens: aspect ratio")
 		<< QT_TR_NOOP("all screens: resolution")
@@ -1443,6 +1500,19 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("skip warnings")
 		<< QT_TR_NOOP("newui")
 		<< QT_TR_NOOP("natural")
+
+		<< QT_TR_NOOP("enable keymap")
+		<< QT_TR_NOOP("keymap filename")
+
+		<< QT_TR_NOOP("enable joystick mapping")
+		<< QT_TR_NOOP("joymap filename")
+		<< QT_TR_NOOP("ps3 sixaxis controllers")
+	
+		<< QT_TR_NOOP("sdl audio driver")
+		<< QT_TR_NOOP("sdl video driver")
+		<< QT_TR_NOOP("sdl render driver")
+
+		<< QT_TR_NOOP("alternative libGL.so")
 	);
 #endif
 	// underscore separated category list, prefixed by a sorting number
@@ -1450,43 +1520,43 @@ void OptionUtils::loadDefault(QString text)
 		<< "00_Global Misc_00_" + QString(QT_TR_NOOP("core configuration"))
 		<< "00_Global Misc_01_" + QString(QT_TR_NOOP("core palette"))
 		<< "00_Global Misc_02_" + QString(QT_TR_NOOP("core language"))
-		
-		<< "01_Directory_00_" + QString(QT_TR_NOOP("core search path"))
-		<< "01_Directory_01_" + QString(QT_TR_NOOP("core output directory"))
-		<< "01_Directory_02_" + QString(QT_TR_NOOP("core filename"))
-		
-		<< "02_Core Video_02_" + QString(QT_TR_NOOP("core rotation"))
-		<< "02_Core Video_03_" + QString(QT_TR_NOOP("core screen"))
-		<< "02_Core Video_04_" + QString(QT_TR_NOOP("full screen"))
-		<< "02_Core Video_08_" + QString(QT_TR_NOOP("core performance"))
 
-		<< "03_OSD Video_05_" + QString(QT_TR_NOOP("Windows video"))
-		<< "03_OSD Video_06_" + QString(QT_TR_NOOP("DirectDraw-specific"))
-		<< "03_OSD Video_07_" + QString(QT_TR_NOOP("Direct3D-specific"))
-		<< "03_OSD Video_09_" + QString(QT_TR_NOOP("Windows performance"))
-		<< "03_OSD Video_10_" + QString(QT_TR_NOOP("OpenGL-specific"))
+		<< "02_MAME Paths_00_" + QString(QT_TR_NOOP("core search path"))
+		<< "02_MAME Paths_01_" + QString(QT_TR_NOOP("core output directory"))
+		<< "02_MAME Paths_02_" + QString(QT_TR_NOOP("core filename"))
 
-		<< "04_Screen_10_" + QString(QT_TR_NOOP("per-window video"))
+		<< "04_Core Video_02_" + QString(QT_TR_NOOP("core rotation"))
+		<< "04_Core Video_03_" + QString(QT_TR_NOOP("core screen"))
+		<< "04_Core Video_04_" + QString(QT_TR_NOOP("full screen"))
+		<< "04_Core Video_08_" + QString(QT_TR_NOOP("core performance"))
+
+		<< "05_OSD Video_05_" + QString(QT_TR_NOOP("Windows video"))
+		<< "05_OSD Video_06_" + QString(QT_TR_NOOP("DirectDraw-specific"))
+		<< "05_OSD Video_07_" + QString(QT_TR_NOOP("Direct3D-specific"))
+		<< "05_OSD Video_09_" + QString(QT_TR_NOOP("Windows performance"))
+		<< "05_OSD Video_10_" + QString(QT_TR_NOOP("OpenGL-specific"))
+
+		<< "06_Screen_10_" + QString(QT_TR_NOOP("per-window video"))
 		
-		<< "05_Audio_00_" + QString(QT_TR_NOOP("core sound"))
-		<< "05_Audio_01_" + QString(QT_TR_NOOP("Windows sound"))
+		<< "07_Audio_00_" + QString(QT_TR_NOOP("core sound"))
+		<< "07_Audio_01_" + QString(QT_TR_NOOP("Windows sound"))
 		
-		<< "06_Control_00_" + QString(QT_TR_NOOP("core input"))
-		<< "06_Control_01_" + QString(QT_TR_NOOP("core input automatic enable"))
-		<< "06_Control_02_" + QString(QT_TR_NOOP("input device"))
-		<< "06_Control_03_" + QString(QT_TR_NOOP("SDL keyboard mapping"))
-		<< "06_Control_04_" + QString(QT_TR_NOOP("SDL joystick mapping"))
+		<< "08_Control_00_" + QString(QT_TR_NOOP("core input"))
+		<< "08_Control_01_" + QString(QT_TR_NOOP("core input automatic enable"))
+		<< "08_Control_02_" + QString(QT_TR_NOOP("input device"))
+		<< "08_Control_03_" + QString(QT_TR_NOOP("SDL keyboard mapping"))
+		<< "08_Control_04_" + QString(QT_TR_NOOP("SDL joystick mapping"))
 		
-		<< "07_Vector_00_" + QString(QT_TR_NOOP("core vector"))
+		<< "09_Vector_00_" + QString(QT_TR_NOOP("core vector"))
 		
-		<< "08_Misc_00_" + QString(QT_TR_NOOP("core misc"))
-		<< "08_Misc_01_" + QString(QT_TR_NOOP("core artwork"))
-		<< "08_Misc_02_" + QString(QT_TR_NOOP("core state/playback"))
-		<< "08_Misc_03_" + QString(QT_TR_NOOP("SDL lowlevel driver"))
-		<< "08_Misc_04_" + QString(QT_TR_NOOP("MESS specific"))
-		<< "08_Misc_05_" + QString(QT_TR_NOOP("Windows MESS specific"))
-		<< "08_Misc_06_" + QString(QT_TR_NOOP("core debugging"))
-		<< "08_Misc_07_" + QString(QT_TR_NOOP("Windows debugging"))
+		<< "10_Misc_00_" + QString(QT_TR_NOOP("core misc"))
+		<< "10_Misc_01_" + QString(QT_TR_NOOP("core artwork"))
+		<< "10_Misc_02_" + QString(QT_TR_NOOP("core state/playback"))
+		<< "10_Misc_03_" + QString(QT_TR_NOOP("SDL lowlevel driver"))
+		<< "10_Misc_04_" + QString(QT_TR_NOOP("MESS specific"))
+		<< "10_Misc_05_" + QString(QT_TR_NOOP("Windows MESS specific"))
+		<< "10_Misc_06_" + QString(QT_TR_NOOP("core debugging"))
+		<< "10_Misc_07_" + QString(QT_TR_NOOP("Windows debugging"))
 		);
 
 	QString line, line0;
@@ -1495,6 +1565,7 @@ void OptionUtils::loadDefault(QString text)
 	QString optHeader = "ERROR_MAGIC";
 	optCatMap.clear();
 
+	//fixme parsing should merge with parseIniFile
 	do
 	{
 		line0 = line = in.readLine().trimmed();
@@ -1508,7 +1579,7 @@ void OptionUtils::loadDefault(QString text)
 				line.remove("OPTIONS");
 				line = line.trimmed();
 
-				// assign the header from known category list
+				// assign the header to a known category
 				int c = optCatList.indexOf (QRegExp(".*" + line + ".*", Qt::CaseInsensitive));
 				if (c > 0)
 					optHeader = optCatList[c];
@@ -1532,11 +1603,19 @@ void OptionUtils::loadDefault(QString text)
 				QStringList list = utils->split2Str(line0, " ");
 				MameOption *pMameOpt = new MameOption(0);	//fixme parent
 				//option has a value from ini
-				if (list.count() == 2)
+				if (!list.isEmpty())
 				{
-					pMameOpt->defvalue = list[1];
+					QString value = list.last();
+					//remove quoted value if needed	
+					if (value.startsWith('"') && value.endsWith('"'))
+					{
+						value.remove(0, 1);
+						value.chop(1);
+					}
+				
+					pMameOpt->defvalue = value;
 					//assign value to global mameOpts's default
-					mameOpts[list[0]] = pMameOpt;
+					mameOpts[list.first()] = pMameOpt;
 				}
 				//option has empty value
 				else
@@ -1585,9 +1664,52 @@ void OptionUtils::loadDefault(QString text)
 		inipath.remove("./");
 		mameOpts["inipath"]->defvalue = inipath;
 	}
+
+	//mameOpts constructed, test MAME derivative now
+	if (mameOpts.contains("driver_config") || mameOpts.contains("langpath"))
+		isMAMEPlus = true;
+	
+	if (mameOpts.contains("sdlvideofps") || mameOpts.contains("videodriver"))
+		isSDLMAME = true;
+
+	loadTemplate();
+
+	QStringList consoleGamesL;
+	// append GUI MESS extra software paths to mameOpts
+	foreach (QString gameName, mameGame->games.keys())
+	{
+		GameInfo *gameInfo = mameGame->games[gameName];
+		
+		if (!gameInfo->devices.isEmpty())
+		{
+			MameOption *pMameOpt = new MameOption(0);	//fixme parent
+			pMameOpt->guivisible = true;
+			mameOpts[gameName + "_extra_software"] = pMameOpt;
+		}
+	}
+
+	//append GUI and MESS settings to optCatMap
+	QStringList optNames = mameOpts.keys();
+	qSort(optNames);
+	foreach (QString optName, optNames)
+	{
+		MameOption *pMameOpt = mameOpts[optName];
+
+		if (!pMameOpt->guivisible)
+			continue;
+
+		if (optName.endsWith("_extra_software"))
+		{
+			pMameOpt->type = MAMEOPT_TYPE_DIR;
+			pMameOpt->defvalue = "";
+			optCatMap["03_MESS Paths_00_" + QString(QT_TR_NOOP("MESS software directory"))] << optName;
+		}
+		else
+			optCatMap["01_GUI Paths_00_" + QString(QT_TR_NOOP("GUI paths"))] << optName;
+	}
 }
 
-//open option template file
+// assign option type, defvalue, min, max, etc. from template
 void OptionUtils::loadTemplate()
 {
 	QFile file(":/res/optiontemplate.xml");
@@ -1603,8 +1725,12 @@ void OptionUtils::loadTemplate()
 // update mameOpts from ini, must be called in a proper order
 void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 {
+	//ignore all GUI settings, they are not handled by mame's .ini
+	if (optLevel == OPTLEVEL_GUI)
+		return;
+
 	//get opti values from ini
-	QHash<QString, QString> iniSettings = readIniFile(iniFileName);
+	QHash<QString, QString> iniSettings = parseIniFile(iniFileName);
 
 	//iterate every option
 	foreach (QString optName, mameOpts.keys())
@@ -1641,6 +1767,7 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 			// assign ini value to level value
 			switch (optLevel)
 			{
+			case OPTLEVEL_GUI:
 			case OPTLEVEL_GLOBAL:
 				pMameOpt->globalvalue = pMameOpt->currvalue;
 				break;
@@ -1663,6 +1790,7 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 		{
 			switch (optLevel)
 			{
+			case OPTLEVEL_GUI:
 			case OPTLEVEL_GLOBAL:
 				pMameOpt->currvalue = pMameOpt->globalvalue = pMameOpt->defvalue;
 				break;
@@ -1737,6 +1865,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 
 				switch (optLevel)
 				{
+				case OPTLEVEL_GUI:
 				case OPTLEVEL_GLOBAL:
 					currVal = pMameOpt->globalvalue;
 					defVal = pMameOpt->defvalue;
@@ -1764,16 +1893,15 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 					break;
 				
 				case OPTLEVEL_CURR:
-				default:
 					currVal = pMameOpt->currvalue;
+					//do not inherit ips value
 					if (optName == "ips")
 						defVal = pMameOpt->defvalue;
 					else
 						defVal = pMameOpt->cloneofvalue;
 				}
 
-				if (getLongValue(optName, currVal) == 
-					getLongValue(optName, defVal))
+				if (getLongValue(optName, currVal) == getLongValue(optName, defVal))
 					isChanged = false;
 				else
 					isChanged = true;
@@ -1788,11 +1916,12 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 				{
 					foreach (QString header, headers)
 						outBuf << header << endl;
+					
 					headers.clear();
 				}
 
-				// write option entry
-				if (isChanged || optLevel == OPTLEVEL_GLOBAL)
+				// write changed option entry to .ini or the complete mame.ini
+				if (isChanged || optLevel == OPTLEVEL_GLOBAL || optLevel == OPTLEVEL_GUI)
 				{
 //					win->log(QString("curr: %1, def: %2").arg(currVal).arg(defVal));
 					outBuf.setFieldWidth(26);
@@ -1869,7 +1998,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 		outFile.remove();
 }
 
-QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
+QHash<QString, QString> OptionUtils::parseIniFile(const QString &iniFileName)
 {
 	QFile inFile(iniFileName);
 
@@ -1921,10 +2050,10 @@ QHash<QString, QString> OptionUtils::readIniFile(const QString &iniFileName)
 }
 
 // determine what to update in the option dialog
-void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
+void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 {
 	//fixme: test how many times it's called. 
-	//win->log(QString("updateModel: %1 %2").arg(currItem == 0).arg(optLevel));
+	//win->log(QString("preUpdateModel: %1 %2").arg(currItem == 0).arg(optLevel));
 
 	/* figure out which option category are we in list ctlr */
 	//get optLevel by selected tab
@@ -1932,8 +2061,7 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 		optLevel = optionsUI->tabOptions->currentIndex();
 
 	QString optCat;
-	//fixme: hack index: index 0 is GUI, must skip optLevel 0, otherwise optCtrls[0] will crash
-	if (optLevel > 0)
+	if (optLevel > -1)
 	{
 		//assign current option category if not assigned
 		if (!currItem)
@@ -1942,83 +2070,96 @@ void OptionUtils::updateModel(QListWidgetItem *currItem, int optLevel)
 		if (currItem)
 			optCat = currItem->text();
 		//assign default option category if none selected
+		//fixme: hack
 		else
-			optCat = tr("Core Video");
+		{
+			if (optLevel == OPTLEVEL_GUI)
+				optCat = tr("GUI Paths");
+			else
+				optCat = tr("Core Video");
+		}
 	}
 
 	/* update mameopts */
 	GameInfo *gameInfo = mameGame->games[currentGame];
-	QString iniString;
+	QString iniFileName;
 	QString STR_OPTS_ = tr("Options") + " - ";
 
-	//global
 	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT);
+	//GUI
+	if (optLevel == OPTLEVEL_GUI)
+	{
+		updateModel(optCat, optLevel);
+		optionsUI->setWindowTitle(STR_OPTS_ + tr("GUI"));
+		return;
+	}
+
+	//global
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
-		updateModelData(optCat, OPTLEVEL_GLOBAL);
+		updateModel(optCat, optLevel);
 		optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
 		return;
 	}
 
 	//source
-	iniString = gameInfo->sourcefile;
-	iniString.replace(".c", INI_EXT);
-	loadIni(OPTLEVEL_SRC, mameIniPath + "ini/source/" + iniString);
+	iniFileName = gameInfo->sourcefile;
+	iniFileName.replace(".c", INI_EXT);
+	loadIni(OPTLEVEL_SRC, mameIniPath + "ini/source/" + iniFileName);
+
 	if (optLevel == OPTLEVEL_SRC)
 	{
-		updateModelData(optCat, OPTLEVEL_SRC);
+		updateModel(optCat, optLevel);
 		optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
 		return;
 	}
 
 	//bios
-	iniString = gameInfo->biosof();
-	if (iniString.isEmpty())
-		optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(false);
-	else
-		optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(true);
+	iniFileName = gameInfo->biosof();
+	loadIni(OPTLEVEL_BIOS, mameIniPath + "ini/" + iniFileName + INI_EXT);
 
-	loadIni(OPTLEVEL_BIOS, mameIniPath + "ini/" + iniString + INI_EXT);
+	optionsUI->tabOptions->widget(OPTLEVEL_BIOS)->setEnabled(iniFileName.isEmpty() ? false : true);
+//	optionsUI->tabOptions->removeTab(OPTLEVEL_BIOS);
+
 	if (optLevel == OPTLEVEL_BIOS)
 	{
-		updateModelData(optCat, OPTLEVEL_BIOS);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
+		updateModel(optCat, optLevel);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		return;
 	}
 
 	//cloneof
-	iniString = gameInfo->cloneof;
-	if (iniString.isEmpty())
-		optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(false);
-	else
-		optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(true);
+	iniFileName = gameInfo->cloneof;
+	loadIni(OPTLEVEL_CLONEOF, mameIniPath + "ini/" + iniFileName + INI_EXT);
 
-	loadIni(OPTLEVEL_CLONEOF, mameIniPath + "ini/" + iniString + INI_EXT);
+	optionsUI->tabOptions->widget(OPTLEVEL_CLONEOF)->setEnabled(iniFileName.isEmpty() ? false : true);
+//	optionsUI->tabOptions->removeTab(OPTLEVEL_CLONEOF);
+	
 	if (optLevel == OPTLEVEL_CLONEOF)
 	{
-		updateModelData(optCat, OPTLEVEL_CLONEOF);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
+		updateModel(optCat, optLevel);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		return;
 	}
 
 	//current game
 	//special case for consoles
 	if (gameInfo->isExtRom)
-		iniString = gameInfo->romof;
+		iniFileName = gameInfo->romof;
 	else
-		iniString = currentGame;
-	
-	loadIni(OPTLEVEL_CURR, mameIniPath + "ini/" + iniString + INI_EXT);
+		iniFileName = currentGame;
+	loadIni(OPTLEVEL_CURR, mameIniPath + "ini/" + iniFileName + INI_EXT);
+
 	if (optLevel == OPTLEVEL_CURR)
 	{
-		updateModelData(optCat, OPTLEVEL_CURR);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniString);
+		updateModel(optCat, optLevel);
+		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
 		return;
 	}
 }
 
 //update values in the option dialog
-void OptionUtils::updateModelData(QString optCat, int optLevel)
+void OptionUtils::updateModel(QString optCat, int optLevel)
 {
 	QStandardItemModel *optModel0, *optModel;
 	QTreeView *optView = optInfos[optLevel]->optView;
@@ -2066,47 +2207,13 @@ void OptionUtils::updateModelData(QString optCat, int optLevel)
 				//add option items		
 				addModelItem(optModel, optName);
 			}
-
-			//fixme: move to GUI directory
-			if (!guiHasAdded && optLevel == OPTLEVEL_GLOBAL && optCat == tr("Directory"))
-			{
-				//add GUI options
-				addModelItemTitle(optModel, QT_TR_NOOP("GUI DIRECTORY"));
-			
-				foreach (QString optName, mameOpts.keys())
-				{
-					MameOption *pMameOpt = mameOpts[optName];
-
-					if (!pMameOpt->guivisible || optName.contains("_extra_software"))
-						continue;
-
-					addModelItem(optModel, optName);
-				}
-
-				addModelItemTitle(optModel, QT_TR_NOOP("MESS SOFTWARE DIRECTORY"));
-
-				//add console dir options
-				foreach (QString consoleName, consoleGamesL)
-				{
-					QString optName = consoleName + "_extra_software";
-					MameOption *pMameOpt = mameOpts[optName];
-					pMameOpt->type = MAMEOPT_TYPE_DIR;
-
-					if (!pMameOpt->guivisible)
-						continue;
-
-					addModelItem(optModel, optName);
-				}
-
-				guiHasAdded = true;
-			}
 		}
 	}
 
 	if (optModel0)
 		delete optModel0;
 
-	optView->setItemDelegate(&optdelegate);
+	optView->setItemDelegate(&optDelegate);
 
 	optView->resizeColumnToContents(1);
 }
@@ -2128,6 +2235,7 @@ void OptionUtils::addModelItem(QStandardItemModel *optModel, QString optName)
 
 	/* fill key */
 	QString key = utils->capitalizeStr(tr(qPrintable(getLongName(optName).toLower())));
+
 	//fix incorrectly lower cased
 	if (language == "en_US" && !mameOpts[optName]->guiname.isEmpty())
 		key = utils->capitalizeStr(mameOpts[optName]->guiname);
@@ -2306,6 +2414,6 @@ void OptionUtils::updateHeaderSize(int logicalIndex, int oldSize, int newSize)
 	int optLevel = optionsUI->tabOptions->currentIndex();
 	option_column_state = optInfos[optLevel]->optView->header()->saveState();
 	
-	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));
+//	win->log(QString("header%3: %1 to %2").arg(optInfos[optLevel]->optView->header()->sectionSize(0)).arg(newSize).arg(logicalIndex));
 }
 

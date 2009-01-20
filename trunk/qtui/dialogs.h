@@ -4,7 +4,6 @@
 #include <QtGui>
 
 #include "ui_playoptions.h"
-#include "ui_options.h"
 #include "ui_directories.h"
 #include "ui_about.h"
 
@@ -36,21 +35,9 @@ private:
 	void init(QLineEdit *, QString, QString);
 	void setFile(QLineEdit *, QString);
 	void clear();
-};
 
-class Options: public QDialog, public Ui::Options
-{
-Q_OBJECT
-
-public:
-	Options(QWidget *parent = 0);
-	~Options();
-
-public slots:
-
-protected:
-	void showEvent(QShowEvent *);
-	void closeEvent(QCloseEvent *);
+private slots:
+	void runMame();
 };
 
 class Dirs: public QDialog, public Ui::Dirs
@@ -79,10 +66,6 @@ public:
 };
 
 extern PlayOptions *playOptionsUI;
-extern Options *optionsUI;
 extern Dirs *dirsUI;
 extern About *aboutUI;
-
-extern QList<QListWidget *> optCtrls;
-extern QByteArray option_geometry;
 #endif

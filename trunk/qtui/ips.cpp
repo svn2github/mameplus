@@ -423,7 +423,7 @@ void IPS::updateList()
 	twList->expandAll();
 
 	//update mameOpts
-	optUtils->updateModel(NULL, OPTLEVEL_CURR);
+	optUtils->preUpdateModel(NULL, OPTLEVEL_CURR);
 
 	//check the selected ips	
 	if (mameOpts.contains("ips"))

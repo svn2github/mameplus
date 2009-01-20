@@ -141,20 +141,17 @@ void RomAuditor::run()
 					if(!zip.getCurrentFileInfo(&zipFileInfo))
 						continue;
 
-					//check rom, crc recognized
+					//fill rom available status if crc recognized
 					if (gameInfo->roms.contains(zipFileInfo.crc))
 						gameInfo->roms[zipFileInfo.crc]->available = true;
 
-					//also check rom for clones
-					else
+					//check if rom belongs to a clone
+					foreach (QString cloneName, gameInfo->clones)
 					{
-						foreach (QString cloneName, gameInfo->clones)
-						{
-							auditedGames.insert(cloneName);
-							gameInfo2 = mameGame->games[cloneName];
-							if (gameInfo2->roms.contains(zipFileInfo.crc))
-								gameInfo2->roms[zipFileInfo.crc]->available = true;
-						}
+						auditedGames.insert(cloneName);
+						gameInfo2 = mameGame->games[cloneName];
+						if (gameInfo2->roms.contains(zipFileInfo.crc))
+							gameInfo2->roms[zipFileInfo.crc]->available = true;
 					}
 				}
 			}
@@ -171,13 +168,27 @@ void RomAuditor::run()
 			if (gameInfo->isExtRom)
 				continue;
 
+			//reset isCloneAvailable, will call completeData() later
+			gameInfo->isCloneAvailable = false;
+
 			//if game rom file exists, default to passed, if not, skip and fail it
 			if (auditedGames.contains(gameName))
 				gameInfo->available = 1;
 			else
 			{
+				//fail unless: 1. all roms are nodump; 2. all roms are available in parent
 				bool allNoDump = true;
-				//fail unless all roms are nodump
+				bool allinParent = true;
+
+				foreach (RomInfo *romInfo, gameInfo->roms)
+				{
+					if (!romInfo->available)
+					{
+						allinParent = false;
+						break;
+					}
+				}
+
 				foreach (RomInfo *romInfo, gameInfo->roms)
 				{
 					if (romInfo->status != "nodump")
@@ -187,7 +198,7 @@ void RomAuditor::run()
 					}
 				}
 
-				gameInfo->available = (allNoDump) ? 1 : 0;
+				gameInfo->available = (allNoDump || allinParent) ? 1 : 0;
 			}
 			//shortcircuit
 			if (gameInfo->available == 0)
@@ -211,37 +222,28 @@ void RomAuditor::run()
 			foreach (quint32 crc, gameInfo->roms.keys())
 			{
 				romInfo = gameInfo->roms[crc];
-				if (romInfo->available)
-				{
-					//game rom passed
-					continue;
-				}
 
-				if (romInfo->status == "nodump")
-					//passed but ignored
+				//game rom passed
+				if (romInfo->available)
 					continue;
 
 				if (!gameInfo->romof.isEmpty())
 				{
 					//check parent
 					gameInfo2 = mameGame->games[gameInfo->romof];
+
+					//parent rom passed
 					if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
-					{
-						//parent rom passed
-						//win->log(gameInfo->romof + "/" + romInfo->name + " passed");
 						continue;
-					}
 
 					//check bios
 					if (!gameInfo2->romof.isEmpty())
 					{
 						gameInfo2 = mameGame->games[gameInfo2->romof];
+
+						//bios rom passed
 						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
-						{
-							//bios rom passed
-							//win->log(gameInfo2->romof + "/" + romInfo->name + " passed");
 							continue;
-						}
 					}
 				}
 
@@ -252,6 +254,8 @@ void RomAuditor::run()
 		}
 	}
 //	win->log("finished auditing MAME games.");
+
+	mameGame->completeData();
 
 	//audit each MESS system
 	foreach (QString gameName, mameGame->games.keys())

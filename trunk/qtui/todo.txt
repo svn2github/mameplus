@@ -6,30 +6,31 @@ theme
 
 //Done
 *added MESS device menus (WIP)
--设置改动后，必须移动到下一行或者按Enter才能生效，直接关了就丢失
--added play with inp/rec/sta/mng/wav
--clear global bios setting
--preliminary chd auditing
--fixed nodump auditing
--single game auditing
--auto audit when necessary
--preliminary MESS support
 
 //Linux/Mac
 D column sorting
+2 On OSX, would it be possible to make the front end start the selected game when you press return?
 mounted snap doesnt load
+check font size
+icon最大可以大到512x512 Apple也强烈建议开发者要准备这么大的尺寸（除了原有的16x16、32x32、128x128之外 
+Windows在XP以前仅支持16x16、32x32、48x48，直到Vista才开始加大到64x64和256x256。
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
+能不能价格功能，让写入配置文件的时候输入root密码拥有写入权限  
 
 //Dev
 submit joyid
 4 verify rev 3991
 
-2 unavail folder, parent avail, clone unavail
-2 add GUI Options +0.1
-2 1st audit doesnt show n/a parent
+1 reduce auto audit calls
+2 prevent running consoles while mandatory device is not mounted
+
+1 filter also display parent (cross line?)
+2 chd clones
+2 several hundred games are no more seen as complete because zip files don't include bios files.
+1 unavail folder, parent avail, clone unavail
 2 mess logo on the right
-2 For the first game that he launches to every section, the MAME uses the M1 directory as currentdirectory
-2 treeview bug,能调到比默认宽,不能调窄
+2 MAME uses the M1 directory as currentdirectory, mame option available after m1 init
+1 treeview bug,能调到比默认宽,不能调窄
 2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
 2 added "View - Highlight Selected Row"
   cn:添加"视图-高亮显示选定行"
@@ -46,6 +47,11 @@ submit joyid
 1 ips dialog size
 1 option not loaded before m1 init
 
+* folder selected game hash cache [8]
+* play with dlg, empty file name handling
+* test oldest mame version support, warning
+* 残档目录
+* translator credit
 * screenshot.cpp
 * bios filter really slow
 1 icons\warning.ico for the non-working games.
@@ -66,8 +72,6 @@ submit joyid
 
 //Options
 1 check default bios since .129
-* debug font default inconsistant
-1 mame option available after m1 init
 * support mamep 127 paths
 * add a menu to auto mkdir
 * unify get GUI opts default
@@ -91,6 +95,7 @@ submit joyid
 * ROM capa column
 
 //Audit
+* audit samples
 * clrmame style dialog
 1 gba F5 crash
 1 audit all
@@ -117,8 +122,9 @@ submit joyid
 * 官方mame支持ips +0.1
 * multi directory
 
-//Console
-* buggy sorting console list
+//MESS
+1 buggy sorting console list
+* if we are in an empty MESS system folder, assign currentGame to the system
 * console folder icon
 * multi software dirs
 * console game info from GameFAQs?
@@ -165,7 +171,8 @@ in an empty folder
 w/ or w/o m1
 check sorting
 mame, mamep in same folder
-options saving
+gui/core options saving
+bios, ctrlr, effect, screen
 path w/ space and Unicode
 
 [mamep core test]
@@ -176,6 +183,7 @@ load nvram from playback dir
 neogeo playback rtc
 
 [mamep core bug]
+remove nvram hack
 mamep snaps
 hazemd icons
 verify spclone dips

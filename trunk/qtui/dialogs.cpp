@@ -5,15 +5,11 @@
 
 /* global */
 PlayOptions *playOptionsUI = NULL;
-Options *optionsUI = NULL;
 Dirs *dirsUI = NULL;
 About *aboutUI = NULL;
 
-QList<QListWidget *> optCtrls;
-QByteArray option_geometry;
-
-PlayOptions::PlayOptions(QWidget *parent)
-:QDialog(parent)
+PlayOptions::PlayOptions(QWidget *parent) : 
+QDialog(parent)
 {
 	setupUi(this);
 
@@ -23,12 +19,14 @@ PlayOptions::PlayOptions(QWidget *parent)
 	connect(btnBrowseMNG, SIGNAL(clicked()), this, SLOT(setMNGFile()));
 	connect(btnBrowseAVI, SIGNAL(clicked()), this, SLOT(setAVIFile()));
 	connect(btnBrowseWave, SIGNAL(clicked()), this, SLOT(setWaveFile()));
+	connect(this, SIGNAL(accepted()), this, SLOT(runMame()));
 }
 
 void PlayOptions::init(QLineEdit *lineEdit, QString optName, QString extension)
 {
-	QString dir, fileName, filePath;
+	QString dirPath, fileName, filePath;
 	QFileInfo fileInfo;
+	bool isGenerated = false;
 
 	//clear play options dialog
 	if (gameName != currentGame)
@@ -41,38 +39,58 @@ void PlayOptions::init(QLineEdit *lineEdit, QString optName, QString extension)
 	if (mameOpts.contains(optName))
 	{
 		QStringList dirPaths = mameOpts[optName]->globalvalue.split(";");
-		dir = utils->getPath(dirPaths.first());
+		dirPath = utils->getPath(dirPaths.first());
 	}
 
-	//generate a filename
-	for (int i = 0; i < 999; i++)
+	//get an existing filename for input
+	if (lineEdit == lineEditSavestate || lineEdit == lineEditPlayback)
 	{
-		fileName.clear();
-		fileName.append(gameName);
-		fileName.append(QString("_%1").arg(i, 3, 10, QLatin1Char('0')));
-		fileName.append(extension);
+		if (lineEdit == lineEditSavestate)
+			dirPath.append(gameName + "/");
 
-		filePath = dir + fileName;
+		QDir dir(dirPath);
+		QStringList nameFilter = QStringList() << "*" + extension;
+		QStringList entryFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+		if (!entryFiles.isEmpty())
+			filePath = dirPath + entryFiles.first();
+	}
+	
+	//generate a filename for output or input
+	if (filePath.isEmpty())
+	{
+		for (int i = 0; i < 999; i++)
+		{
+			fileName.clear();
+			fileName.append(gameName);
+			fileName.append(QString("_%1").arg(i, 3, 10, QLatin1Char('0')));
+			fileName.append(extension);
 
-		fileInfo.setFile(filePath);
-		if (!fileInfo.exists())
-			break;
+			filePath = dirPath + fileName;
+			isGenerated = true;
+
+			fileInfo.setFile(filePath);
+			if (!fileInfo.exists())
+				break;
+		}
 	}
 
 	lineEdit->setText(filePath);
-	lineEdit->setSelection(dir.size(), fileName.size() - extension.size());
+	if (isGenerated)
+		lineEdit->setSelection(dirPath.size(), fileName.size() - extension.size());
 	lineEdit->setFocus();
 }
 
 void PlayOptions::initSavestate()
 {
 	init(lineEditSavestate, "state_directory", STA_EXT);
+	setSavestateFile();
 }
 
 void PlayOptions::initPlayback()
 {
 	lineEditRecord->clear();
 	init(lineEditPlayback, "input_directory", INP_EXT);
+	setPlaybackFile();
 }
 
 void PlayOptions::initRecord()
@@ -93,12 +111,83 @@ void PlayOptions::initAVI()
 
 void PlayOptions::initWave()
 {
-	init(lineEditWave, "snapshot_directory", WAV_EXT);
+	init(lineEditWave, "input_directory", WAV_EXT);
 }
 
-QStringList PlayOptions::getOptions()
+void PlayOptions::runMame()
 {
-	return QStringList();
+	QString arg1, arg2;
+	QStringList args;
+	QFileInfo fileInfo;
+	
+	arg2 = lineEditSavestate->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		arg1 = "-state";
+		args << arg1 << arg2;
+	}
+
+	arg2 = lineEditPlayback->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		fileInfo.setFile(arg2);
+		if (fileInfo.exists())
+		{
+			args << "-input_directory" << fileInfo.absolutePath();
+			arg1 = "-playback";
+			args << arg1 << fileInfo.fileName();
+			args << "-nvram_directory" << QDir::tempPath();
+		}
+	}
+
+	arg2 = lineEditRecord->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		//if -state exist, rename and copy the .sta to inp
+		fileInfo.setFile(arg2);
+
+		QString staFileName = lineEditSavestate->text().trimmed();
+		if (!staFileName.isEmpty())
+		{
+			QFile staFile(staFileName);
+			QString newStaFileName = utils->getPath(fileInfo.absolutePath()) + fileInfo.baseName() + STA_EXT;
+			QFile newFile(newStaFileName);
+
+			newFile.remove();
+			staFile.copy(newStaFileName);
+		}
+
+		args << "-input_directory" << fileInfo.absolutePath();
+		arg1 = "-record";
+		args << arg1 << fileInfo.fileName();
+	}
+
+	arg2 = lineEditMNG->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		fileInfo.setFile(arg2);
+		args << "-snapshot_directory" << fileInfo.absolutePath();
+		arg1 = "-mngwrite";
+		args << arg1 << fileInfo.fileName();
+	}
+
+	arg2 = lineEditAVI->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		fileInfo.setFile(arg2);
+		args << "-snapshot_directory" << fileInfo.absolutePath();
+		arg1 = "-aviwrite";
+		args << arg1 << fileInfo.fileName();
+	}
+
+	arg2 = lineEditWave->text().trimmed();
+	if (!arg2.isEmpty())
+	{
+		arg1 = "-wavwrite";
+		args << arg1 << arg2;
+	}
+
+	gameList->runMame(false, args);
 }
 
 void PlayOptions::clear()
@@ -128,7 +217,11 @@ void PlayOptions::setFile(QLineEdit *lineEdit, QString filter)
 		dir.setPath(fi.absolutePath());
 	}
 
-	QString fileName = QFileDialog::getSaveFileName(this, tr("File name:"), dir.path(), filter);
+	QString fileName;
+	if (lineEdit == lineEditSavestate || lineEdit == lineEditPlayback)
+		fileName = QFileDialog::getOpenFileName(this, tr("File name:"), dir.path(), filter);
+	else
+		fileName = QFileDialog::getSaveFileName(this, tr("File name:"), dir.path(), filter);
 
 	if (!fileName.isEmpty())
 		lineEdit->setText(fileName);
@@ -136,18 +229,25 @@ void PlayOptions::setFile(QLineEdit *lineEdit, QString filter)
 
 void PlayOptions::setSavestateFile()
 {
-	if (lineEditSavestate->text().isEmpty())
-		initSavestate();
-
+	//fixme: filefield could be empty
 	setFile(lineEditSavestate, tr("Savestate files") + "(*" + STA_EXT + ")");
 }
 
 void PlayOptions::setPlaybackFile()
 {
-	if (lineEditPlayback->text().isEmpty())
-		initPlayback();
-
+	//fixme: filefield could be empty
 	setFile(lineEditPlayback, tr("Input files") + "(*" + INP_EXT + " *" + ZIP_EXT + ")");
+
+	//test if .sta exists, auto fill it
+	QString pbFileName = lineEditPlayback->text().trimmed();
+	if (!pbFileName.isEmpty())
+	{
+		QFileInfo pbFileInfo, staFileInfo;
+		pbFileInfo.setFile(pbFileName);
+		staFileInfo.setFile(utils->getPath(pbFileInfo.absolutePath()) + pbFileInfo.baseName() + STA_EXT);
+		if (staFileInfo.exists())
+			lineEditSavestate->setText(staFileInfo.absoluteFilePath());
+	}
 }
 
 void PlayOptions::setRecordFile()
@@ -180,39 +280,6 @@ void PlayOptions::setWaveFile()
 		initWave();
 
 	setFile(lineEditWave, tr("Sounds") + "(*" + WAV_EXT + ")");
-}
-
-Options::Options(QWidget *parent)
-:QDialog(parent)
-{
-	setupUi(this);
-
-	if (optCtrls.isEmpty())
-		optCtrls << 0	//place holder for GUI
-					<< lvGlobalOpt
-					<< lvSourceOpt
-					<< lvBiosOpt
-					<< lvCloneofOpt
-					<< lvCurrOpt;
-
-	disconnect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
-	connect(buttonBoxDlg, SIGNAL(accepted()), this, SLOT(accept()));
-}
-
-Options::~Options()
-{
-}
-
-void Options::showEvent(QShowEvent *e)
-{
-	restoreGeometry(option_geometry);
-	e->accept();
-}
-
-void Options::closeEvent(QCloseEvent *event)
-{
-	option_geometry = saveGeometry();
-	event->accept();
 }
 
 Dirs::Dirs(QWidget *parent)

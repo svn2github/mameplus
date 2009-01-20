@@ -9,7 +9,6 @@
 MameGame *mameGame = NULL, *mameGame0 = NULL;
 Gamelist *gameList = NULL;
 QString currentGame, currentFolder;
-QStringList consoleGamesL;
 
 //fixme: used in audit
 TreeModel *gameListModel;
@@ -817,8 +816,9 @@ ControlInfo::ControlInfo(QObject *parent)
 {
 }
 
-DeviceInfo::DeviceInfo(QObject *parent)
-: QObject(parent)
+DeviceInfo::DeviceInfo(QObject *parent) : 
+QObject(parent),
+mounted(false)
 {
 	//	win->log("# DeviceInfo()");
 }
@@ -1313,6 +1313,7 @@ int MameGame::des11n()
 void MameGame::completeData()
 {
 	GameInfo *gameInfo, *gameInfo2;
+	
 	foreach (QString gameName, mameGame->games.keys())
 	{
 		gameInfo = mameGame->games[gameName];
@@ -1329,6 +1330,9 @@ void MameGame::completeData()
 		{
 			gameInfo2 = mameGame->games[gameInfo->cloneof];
 			gameInfo2->clones.insert(gameName);
+			
+			if (!gameInfo2->isCloneAvailable && gameInfo->available == 1)
+				gameInfo2->isCloneAvailable = true;
 		}
 	}
 }
@@ -1487,6 +1491,38 @@ headerMenu(NULL),
 autoAudit(false),
 loadIconStatus(0)
 {
+	folderList
+		<< tr("All Games")
+		<< tr("All Arcades")
+		<< tr("Available Arcades")
+		<< tr("Unavailable Arcades")
+		<< tr("Consoles")
+		<< tr("Manufacturer")
+		<< tr("Year")
+		<< tr("Driver")
+		<< tr("BIOS")
+		/*
+		<< QT_TR_NOOP("CPU")
+		<< QT_TR_NOOP("Sound")
+		<< QT_TR_NOOP("Orientation")
+		<< QT_TR_NOOP("Emulation Status")
+		<< QT_TR_NOOP("Dumping Status")
+		<< QT_TR_NOOP("Working")
+		<< QT_TR_NOOP("Not working")
+		<< QT_TR_NOOP("Orignals")
+		<< QT_TR_NOOP("Clones")
+		<< QT_TR_NOOP("Raster")
+		<< QT_TR_NOOP("Vector")
+		<< QT_TR_NOOP("Resolution")
+		<< QT_TR_NOOP("FPS")
+		<< QT_TR_NOOP("Save State")
+		<< QT_TR_NOOP("Control Type")
+		<< QT_TR_NOOP("Stereo")
+		<< QT_TR_NOOP("CHD")
+		<< QT_TR_NOOP("Samples")
+		<< QT_TR_NOOP("Artwork")*/
+		;
+
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 }
 
@@ -1591,7 +1627,9 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		gameListModel->updateRow(gameListPModel->mapToSource(previous));
 	}
 	else
-		currentGame = "";
+		currentGame = mameGame->games.keys().first();
+
+	win->log("currentGame: " + currentGame);
 }
 
 void Gamelist::restoreGameSelection()
@@ -1745,7 +1783,7 @@ void Gamelist::disableCtrls()
 
 void Gamelist::init(bool toggleState, int initMethod)
 {
-	//filter button's toggled(false) SIGNAL
+	//filter toggled(false) SIGNAL from button
 	if (!toggleState)
 		return;
 
@@ -1812,37 +1850,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 			// init options from default mame.ini
 			optUtils->loadDefault(mameGame->mameDefaultIni);
 
-			//only mameplus contains this option for now
-			if (mameOpts.contains("langpath"))
-				isMAMEPlus = true;
-
-			// assign option type, defvalue, min, max, etc. from template
-			optUtils->loadTemplate();
 			// load mame.ini overrides
 			optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" : "mame") + INI_EXT);
-
-			foreach (QString gameName, mameGame->games.keys())
-			{
-				GameInfo *gameInfo = mameGame->games[gameName];
-				// add GUI MESS extra software paths
-				if (!gameInfo->devices.isEmpty())
-				{
-					MameOption *pMameOpt = new MameOption(0);	//fixme parent
-					pMameOpt->guivisible = true;
-					mameOpts[gameName + "_extra_software"] = pMameOpt;
-					//save a list of console system for later use
-					consoleGamesL << gameName;
-				}
-
-				// isCloneAvailable: see if parent should be shown in a treeview even its available != 1
-				if (!gameInfo->cloneof.isEmpty())
-				{
-					GameInfo *gameInfo2 = mameGame->games[gameInfo->cloneof];
-					if (gameInfo->available == 1)
-						gameInfo2->isCloneAvailable = true;
-				}
-			}
-			consoleGamesL.sort();
 
 			// load GUI path overrides
 			foreach (QString optName, mameOpts.keys())
@@ -2289,14 +2298,6 @@ void Gamelist::showContextMenu(const QPoint &p)
 
 void Gamelist::updateContextMenu()
 {
-	if (currentGame.isEmpty())
-	{
-		win->actionPlay->setEnabled(false);
-		return;
-	}
-
-	win->log(currentGame);
-
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
 
@@ -2314,8 +2315,8 @@ void Gamelist::updateContextMenu()
 
 	win->actionSrcProperties->setText(tr("Properties for %1").arg(gameInfo->sourcefile));
 
-	updateDeviceMenu(win->menuFile);
-	updateDeviceMenu(menuContext);
+//	updateDeviceMenu(win->menuFile);
+//	updateDeviceMenu(menuContext);
 }
 
 void Gamelist::updateDeviceMenu(QMenu *menuRoot)
@@ -2415,8 +2416,8 @@ void Gamelist::updateDeviceMenu(QMenu *menuRoot)
 			}
 		}
 
-//MESS device.c
-/*		
+		//MESS device.c
+		/*		
 			{ IO_CARTSLOT,	"cartridge",	"cart" }
 			{ IO_FLOPPY,	"floppydisk",	"flop" }
 			{ IO_HARDDISK,	"harddisk", 	"hard" }
@@ -2431,7 +2432,7 @@ void Gamelist::updateDeviceMenu(QMenu *menuRoot)
 			{ IO_QUICKLOAD, "quickload",	"quik" }
 			{ IO_MEMCARD,	"memcard",		"memc" }
 			{ IO_CDROM, 	"cdrom",		"cdrm" }
-*/
+		*/
 		QAction *actionDeviceIcon;
 		if (subDeviceTypes.contains(deviceInfo->type))
 			actionDeviceIcon = actionDeviceType;
@@ -2560,8 +2561,7 @@ void Gamelist::loadDefaultIniFinished(int, QProcess::ExitStatus)
 	QProcess *proc = (QProcess *)sender();
 	procMan->procMap.remove(proc);
 
-	optUtils->loadDefault(mameGame->mameDefaultIni);
-	optUtils->loadTemplate();
+//	optUtils->loadDefault(mameGame->mameDefaultIni);
 
 	//reload gameList. this is a chained call from loadListXmlFinished()
 	init(true, GAMELIST_INIT_FULL);
@@ -2595,8 +2595,8 @@ void Gamelist::runMergedFinished(int, QProcess::ExitStatus)
 	QProcess *proc = (QProcess *)sender();
 	procMan->procMap.remove(proc);
 
-	QFile file(currentTempROM);
-	file.remove();
+	QFile tmpMergedFile(currentTempROM);
+	tmpMergedFile.remove();
 	currentTempROM.clear();
 }
 
@@ -2773,7 +2773,11 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 		filterText = current->text(0);
 
 		if (folderName == folderList[FOLDER_CONSOLE])
+		{
+			//if we are in an empty MESS system folder, assign currentGame to the system
+//			currentGame = filterText;
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE + MAX_FOLDERS);	//hack for console subfolders
+		}
 		else if (folderName == folderList[FOLDER_MANUFACTURER])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_MANUFACTURER);
 		else if (folderName == folderList[FOLDER_YEAR])
@@ -2800,43 +2804,12 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 	//fixme: must have this, otherwise the list cannot be expanded properly
 	qApp->processEvents();
 	win->tvGameList->expandAll();
+
 	restoreGameSelection();
 }
 
 void Gamelist::initFolders()
 {
-	folderList
-		<< tr("All Games")
-		<< tr("All Arcades")
-		<< tr("Available Arcades")
-		<< tr("Unavailable Arcades")
-		<< tr("Consoles")
-		<< tr("Manufacturer")
-		<< tr("Year")
-		<< tr("Driver")
-		<< tr("BIOS")
-		/*
-		<< QT_TR_NOOP("CPU")
-		<< QT_TR_NOOP("Sound")
-		<< QT_TR_NOOP("Orientation")
-		<< QT_TR_NOOP("Emulation Status")
-		<< QT_TR_NOOP("Dumping Status")
-		<< QT_TR_NOOP("Working")
-		<< QT_TR_NOOP("Not working")
-		<< QT_TR_NOOP("Orignals")
-		<< QT_TR_NOOP("Clones")
-		<< QT_TR_NOOP("Raster")
-		<< QT_TR_NOOP("Vector")
-		<< QT_TR_NOOP("Resolution")
-		<< QT_TR_NOOP("FPS")
-		<< QT_TR_NOOP("Save State")
-		<< QT_TR_NOOP("Control Type")
-		<< QT_TR_NOOP("Stereo")
-		<< QT_TR_NOOP("CHD")
-		<< QT_TR_NOOP("Samples")
-		<< QT_TR_NOOP("Artwork")*/
-		;
-
 	QStringList consoleList, mftrList, yearList, srcList, biosList;
 	GameInfo *gameInfo;
 	foreach (QString gameName, mameGame->games.keys())
@@ -2869,6 +2842,8 @@ void Gamelist::initFolders()
 
 	static QIcon icoFolder(":/res/32x32/folder.png");
 	QList<QTreeWidgetItem *> items;
+	
+	win->treeFolders->clear();
 	for (int i = 0; i < folderList.size(); i++)
 	{
 		items.append(new QTreeWidgetItem(win->treeFolders, QStringList(folderList[i])));
@@ -3027,12 +3002,12 @@ void Gamelist::initExtFolders(const QString &folderName, const QString &subFolde
 	}
 }
 
-void Gamelist::restoreFolderSelection()
+void Gamelist::restoreFolderSelection(bool isForce)
 {
 	//if currentFolder has been set, it's a folder switching call
-	if(!currentFolder.isEmpty())
+	if(!currentFolder.isEmpty() && !isForce)
 		return;
-
+	
 	currentFolder = guiSettings.value("folder_current", "/" + folderList[0]).toString();
 	int sep = currentFolder.indexOf("/");
 	QString parentFolder = currentFolder.left(sep);
@@ -3077,19 +3052,23 @@ void Gamelist::restoreFolderSelection()
 	win->treeFolders->setCurrentItem(rootItem->child(FOLDER_ALLARC));
 }
 
-void Gamelist::runMame(bool runMerged)
+void Gamelist::runMame(bool runMerged, QStringList playArgs)
 {
 	//block multi mame session for now
 	//if (procMan->procCount > 0)
 	//	return;
 
-	if (currentGame.isEmpty())
-		return;
-
 	QStringList args;
+	args << playArgs;
 
 	GameInfo *gameInfo = mameGame->games[currentGame];
 
+/*
+	foreach(DeviceInfo* deviceInfo, gameInfo->devices)
+	{
+//		deviceInfo->mandatory
+	}
+*/
 	// run console roms, add necessary params
 	if (gameInfo->isExtRom)
 	{
@@ -3134,8 +3113,15 @@ void Gamelist::runMame(bool runMerged)
 	}
 
 	loadProc = procMan->process(procMan->start(mame_binary, args));
+	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMameFinished(int, QProcess::ExitStatus)));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
 	win->toggleTrayIcon(0, QProcess::NormalExit, true);
+}
+
+void Gamelist::runMameFinished(int, QProcess::ExitStatus)
+{
+	QFile tmpNvFile(utils->getPath(QDir::tempPath()) + currentGame + ".nv");
+	tmpNvFile.remove();
 }
 
 

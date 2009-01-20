@@ -3,9 +3,11 @@
 
 #include <QtGui>
 
+#include "ui_options.h"
+
 enum
 {
-	OPTLEVEL_DEF = 0,
+	OPTLEVEL_GUI = 0,
 	OPTLEVEL_GLOBAL,
 	OPTLEVEL_SRC,
 	OPTLEVEL_BIOS,
@@ -14,9 +16,23 @@ enum
 	OPTLEVEL_LAST
 };
 
+class Options : public QDialog, public Ui::Options
+{
+Q_OBJECT
+
+public:
+	Options(QWidget *parent = 0);
+	void init(int, int = -1);
+
+protected:
+	void showEvent(QShowEvent *);
+	void closeEvent(QCloseEvent *);
+};
+
 class ResetWidget : public QWidget
 {
 	Q_OBJECT
+ 
 public:
 	QWidget *subWidget;
 	QWidget *subWidget2;
@@ -117,7 +133,7 @@ class OptionUtils : public QObject
 
 public:
 	OptionUtils(QObject *parent = 0);
-	void initOption();
+	void init();
 	QVariant getField(const QModelIndex &, int);
 	const QString getLongName(QString);
 	const QString getLongValue(const QString &, const QString &);
@@ -126,13 +142,12 @@ public:
 	bool isChanged(const QModelIndex &);
 	bool isTitle(const QModelIndex &);
 	void updateSelectableItems(QString);
+	void loadDefault(QString);
 	void saveIniFile(int , const QString &);
 
 public slots:
-	void loadDefault(QString);
-	void loadTemplate();
 	void loadIni(int, const QString &);
-	void updateModel(QListWidgetItem *currItem = 0, int optType = -1);
+	void preUpdateModel(QListWidgetItem *currItem = 0, int optType = -1);
 	void updateHeaderSize(int, int, int);
 
 private:
@@ -140,15 +155,20 @@ private:
 	QMap<QString, QStringList> optCatMap;
 	QList<OptInfo *> optInfos;
 
-	QHash<QString, QString> readIniFile(const QString &);
+	void loadTemplate();
+	QHash<QString, QString> parseIniFile(const QString &);
 	void addModelItemTitle(QStandardItemModel*, QString);
 	void addModelItem(QStandardItemModel*, QString);
-	void updateModelData(QString, int);
+	void updateModel(QString, int);
 };
 
+extern Options *optionsUI;
 extern OptionUtils *optUtils;
+extern QList<QListWidget *> optCtrls;
+
 extern QHash<QString, MameOption*> mameOpts;
 extern QByteArray option_column_state;
+extern QByteArray option_geometry;
 extern QString mameIniPath;
 
 #endif

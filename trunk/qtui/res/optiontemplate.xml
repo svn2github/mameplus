@@ -58,6 +58,8 @@
 	<option name="mngwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="aviwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="wavwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
+	<option name="snapname" guiname="snapshot/movie pattern" type="string" />
+	<option name="snapsize" guiname="snapshot/movie resolution" type="string" />
 	<option name="snapview" guiname="snapshot/movie view" type="string" >
 		<value>internal</value>
 		<value>auto</value>
@@ -278,8 +280,6 @@
 	<option name="scalemode" guiname="scale mode" type="string">
 		<value>none</value>
 		<value>async</value>
-		<value>hwblit</value>
-		<value>hwbest</value>
 		<value>yv12</value>
 		<value>yuy2</value>
 		<value>yv12x2</value>
@@ -296,12 +296,12 @@
 	
 	<!--OpenGL-SPECIFIC OPTIONS-->
 	<option name="gl_forcepow2texture" guiname="force power of 2 textures" type="bool" />
-	<option name="gl_notexturerect" guiname="don't use GL_ARB_texture_rectangle" type="bool" />
+	<option name="gl_notexturerect" guiname="no GL ARB texture rectangle" type="bool" />
 	<option name="gl_vbo" guiname="enable OpenGL VBO" type="bool" />
 	<option name="gl_pbo" guiname="enable OpenGL PBO" type="bool" />
 	<option name="gl_glsl" guiname="enable OpenGL GLSL" type="bool" />
 	<option name="gl_glsl_filter" guiname="OpenGL GLSL filtering" type="bool" />
-	<option name="gl_glsl_vid_attr" guiname="enable OpenGL GLSL handling of brightness and contrast" type="bool" />
+	<option name="gl_glsl_vid_attr" guiname="OpenGL GLSL video attributes" type="bool" />
 	
 	<option name="screen" guiname="all screens: physical monitor" type="string" />
 	<option name="aspect" guiname="all screens: aspect ratio" type="stringeditable">
@@ -411,7 +411,7 @@
 	<!--SDL JOYSTICK MAPPING-->
 	<option name="remapjoys" guiname="enable joystick mapping" type="bool" />
 	<option name="remapjoyfile" guiname="joymap filename" type="datfile" />
-	<option name="sixaxis" guiname="use PS3 Sixaxis controllers" type="bool" />
+	<option name="sixaxis" guiname="PS3 Sixaxis controllers" type="bool" />
 	
 	<!--SDL LOWLEVEL DRIVER OPTIONS-->
 	<option name="audiodriver" guiname="SDL audio driver" type="string" />

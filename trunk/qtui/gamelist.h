@@ -159,6 +159,8 @@ public:
 
 	void loadIcon();
 	void disableCtrls();
+	void initFolders();
+	void restoreFolderSelection(bool = false);
 
 public slots:
 	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
@@ -170,7 +172,7 @@ public slots:
 	void restoreGameSelection();
 
 	void loadDefaultIni();
-	void runMame(bool = false);
+	void runMame(bool = false, QStringList = QStringList());
 	QString getViewString(const QModelIndex &index, int column) const;
 	void updateProgress(int progress);
 	void switchProgress(int max, QString title);
@@ -186,6 +188,7 @@ public slots:
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 	void extractMerged(QString, QString);
 	void extractMergedFinished(int, QProcess::ExitStatus);
+	void runMameFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
 	void filterSearchCleared();
@@ -199,14 +202,12 @@ private:
 	QAbstractItemDelegate *defaultGameListDelegate;
 	QStringList extFolders;
 
-	void initFolders();
 	void initExtFolders(const QString&, const QString&);
 	void initMenus();
 	void updateDeviceMenu(QMenu *);
 	void loadMMO(int);
 	void loadIconWorkder();
 	void parse();
-	void restoreFolderSelection();
 
 private slots:
 	void postLoadIcon();
@@ -310,6 +311,7 @@ public:
 	QString type;
 	QString tag;
 	bool mandatory;
+	bool mounted;
 
 //	QString instanceName is the key
 	QStringList extensionNames;
@@ -436,6 +438,5 @@ protected:
 extern MameGame *mameGame;
 extern Gamelist *gameList;
 extern QString currentGame, currentFolder;
-extern QStringList consoleGamesL;
 
 #endif
