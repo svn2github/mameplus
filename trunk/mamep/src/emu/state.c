@@ -237,7 +237,7 @@ void state_save_register_memory(running_machine *machine, const char *module, co
 	{
 		logerror("Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n",module, tag, name);
 		if (machine->gamedrv->flags & GAME_SUPPORTS_SAVE)
-			fatalerror("Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n", module, tag, name);
+			fatalerror(_("Attempt to register save state entry after state registration is closed! module %s tag %s name %s\n"), module, tag, name);
 		global->illegal_regs++;
 		return;
 	}
@@ -259,7 +259,7 @@ void state_save_register_memory(running_machine *machine, const char *module, co
 
 		/* error if we are equal */
 		if (cmpval == 0)
-			fatalerror("Duplicate save state registration entry (%s)", astring_c(totalname));
+			fatalerror(_("Duplicate save state registration entry (%s)"), astring_c(totalname));
 	}
 
 	/* didn't find one; allocate a new one */
@@ -306,12 +306,12 @@ void state_save_register_presave(running_machine *machine, state_presave_func fu
 
 	/* check for invalid timing */
 	if (!global->reg_allowed)
-		fatalerror("Attempt to register callback function after state registration is closed!");
+		fatalerror(_("Attempt to register callback function after state registration is closed!"));
 
 	/* scan for duplicates and push through to the end */
 	for (cbptr = &global->prefunclist; *cbptr != NULL; cbptr = &(*cbptr)->next)
 		if ((*cbptr)->func.presave == func && (*cbptr)->param == param)
-			fatalerror("Duplicate save state function (%p, %p)", param, func);
+			fatalerror(_("Duplicate save state function (%p, %p)"), param, func);
 
 	/* allocate a new entry */
 	*cbptr = malloc_or_die(sizeof(state_callback));
@@ -337,12 +337,12 @@ void state_save_register_postload(running_machine *machine, state_postload_func 
 
 	/* check for invalid timing */
 	if (!global->reg_allowed)
-		fatalerror("Attempt to register callback function after state registration is closed!");
+		fatalerror(_("Attempt to register callback function after state registration is closed!"));
 
 	/* scan for duplicates and push through to the end */
 	for (cbptr = &global->postfunclist; *cbptr != NULL; cbptr = &(*cbptr)->next)
 		if ((*cbptr)->func.postload == func && (*cbptr)->param == param)
-			fatalerror("Duplicate save state function (%p, %p)", param, func);
+			fatalerror(_("Duplicate save state function (%p, %p)"), param, func);
 
 	/* allocate a new entry */
 	*cbptr = malloc_or_die(sizeof(state_callback));

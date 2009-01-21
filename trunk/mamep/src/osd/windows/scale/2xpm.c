@@ -4,15 +4,13 @@
 // Check for updated versions at: http://2xpm.freeservers.com
 //---------------------------------------------------------------------------------------------------------------------------
 
-#include "2xpm.h"
-
 #define LQ_ALPHA_BLEND 0
 #define SHOW_CHANGES 0
 
-unsigned short int pg_red_mask;
-unsigned short int pg_green_mask;
-unsigned short int pg_blue_mask;
-unsigned short int pg_lbmask;
+static unsigned short int pg_red_mask;
+static unsigned short int pg_green_mask;
+static unsigned short int pg_blue_mask;
+static unsigned short int pg_lbmask;
 
 #define RED_MASK565   0xF800
 #define GREEN_MASK565 0x07E0
@@ -74,7 +72,7 @@ dst = ( \
 
 //---------------------------------------------------------------------------------------------------------------------------
 
-static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
+void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
 {
 	unsigned long x, y;
 	unsigned char *src, *dest;			
@@ -89,7 +87,19 @@ static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsig
 	unsigned long src_pitch;
 	unsigned char pprev;	
 	unsigned char dont_reblit;
-	
+
+/*
+	pg_red_mask = RED_MASK565;
+	pg_green_mask = GREEN_MASK565;
+	pg_blue_mask = BLUE_MASK565;
+	pg_lbmask = PG_LBMASK565;
+*/
+
+	pg_red_mask = RED_MASK555;
+	pg_green_mask = GREEN_MASK555;
+	pg_blue_mask = BLUE_MASK555;
+	pg_lbmask = PG_LBMASK555;
+
 	src = (unsigned char *)SrcPtr;	
 	dest = (unsigned char *)DstPtr;
 	src_pitch = SrcPitch;
@@ -99,8 +109,9 @@ static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsig
 	
 	src_width = SrcW;
 	src_height = SrcH;
+
 	complete_line_src = next_line_src - SrcW;
-	complete_line_dst = DstPitch - SrcW * 2;
+	complete_line_dst = DstPitch - (SrcW << 1);
 	
 	start_addr2 = (unsigned short int *)(src - 2);
 	start_addr1 = start_addr2;
@@ -304,28 +315,6 @@ static void _2xpm_1516(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsig
 		start_addr3 = start_addr2 + next_line_src;
 		dst_pixel += complete_line_dst;				
 	}
-}
-
-//---------------------------------------------------------------------------------------------------------------------------
-
-void _2xpm_15(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
-{
-	pg_red_mask = RED_MASK555;
-	pg_green_mask = GREEN_MASK555;
-	pg_blue_mask = BLUE_MASK555;
-	pg_lbmask = PG_LBMASK555;
-
-	_2xpm_1516(SrcPtr, DstPtr, SrcPitch, DstPitch, SrcW, SrcH, depth);
-}
-
-void _2xpm_16(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
-{
-	pg_red_mask = RED_MASK565;
-	pg_green_mask = GREEN_MASK565;
-	pg_blue_mask = BLUE_MASK565;
-	pg_lbmask = PG_LBMASK565;
-
-	_2xpm_1516(SrcPtr, DstPtr, SrcPitch, DstPitch, SrcW, SrcH, depth);
 }
 
 //---------------------------------------------------------------------------------------------------------------------------

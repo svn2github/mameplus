@@ -18,7 +18,11 @@
 ;along with this program; if not, write to the Free Software
 ;Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-GLOBAL _hq2x_16
+; This code contains minor modifications by Steve Snake:
+;   added Source Pitch
+;   modified to handle both 555 and 565 formats
+
+GLOBAL _hq2x_16_555
 
 EXTERN _LUT16to32
 EXTERN _RGBtoYUV
@@ -47,7 +51,7 @@ const5       dd  0x00050005,0x00000005
 const6       dd  0x00060006,0x00000006
 const14      dd  0x000E000E,0x0000000E
 threshold    dd  0x00300706,0x00000000
-zerolowbits  dd  0xF7DEF7DE
+zerolowbits	dd	0x7bde7bde
 
 SECTION .text
 
@@ -134,7 +138,7 @@ SECTION .text
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -151,7 +155,7 @@ SECTION .text
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
 %%fin1
     mov edx,%2
     cmp edx,ecx
@@ -194,10 +198,10 @@ SECTION .text
     psrlw      mm1, 5
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -217,10 +221,10 @@ SECTION .text
     psrlw      mm1, 5
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -241,10 +245,10 @@ SECTION .text
     psrlw      mm1, 5
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -264,10 +268,10 @@ SECTION .text
     psrlw      mm1, 6
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -470,7 +474,7 @@ Yres         equ 20
 pitch        equ 24
 xpitch        equ 28
 
-_hq2x_16:
+_hq2x_16_555:
     push ebp
     mov ebp,esp
     pushad
@@ -1732,7 +1736,7 @@ _hq2x_16:
     and     ecx,[zerolowbits]
     add     ecx,edx
     shr     ecx,1
-    add     ecx,0x0821
+    add     ecx,0x0421
     and     ecx,[zerolowbits]
     add     edx,ecx
     shr     edx,1
@@ -1749,7 +1753,7 @@ _hq2x_16:
     and     ecx,[zerolowbits]
     add     ecx,edx
     shr     ecx,1
-    add     ecx,0x0821
+    add     ecx,0x0421
     and     ecx,[zerolowbits]
     add     edx,ecx
     shr     edx,1
@@ -1763,7 +1767,7 @@ _hq2x_16:
     and     ecx,[zerolowbits]
     add     ecx,edx
     shr     ecx,1
-    add     ecx,0x0821
+    add     ecx,0x0421
     and     ecx,[zerolowbits]
     add     edx,ecx
     shr     edx,1
@@ -1781,7 +1785,7 @@ _hq2x_16:
     and     ecx,[zerolowbits]
     add     ecx,edx
     shr     ecx,1
-    add     ecx,0x0821
+    add     ecx,0x0421
     and     ecx,[zerolowbits]
     add     edx,ecx
     shr     edx,1
@@ -1867,6 +1871,7 @@ _hq2x_16:
     jmp     .flags
 .nexty
     add     edi,ebx
+;mamep: rev2940 BUT, no buffer is needed
     add     edi,ebx
     mov     ebx,[ebp+Xres]
     shl     ebx,2

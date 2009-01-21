@@ -18,7 +18,11 @@
 ;along with this program; if not, write to the Free Software
 ;Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-GLOBAL _hq3x_16
+; This code contains minor modifications by Steve Snake:
+;   added Source Pitch
+;   modified to handle both 555 and 565 formats
+
+GLOBAL _hq3x_16_555
 
 EXTERN _LUT16to32
 EXTERN _RGBtoYUV
@@ -41,10 +45,12 @@ w9        resd 1
 
 SECTION .data
 
+	align	16
+
 reg_blank    dd  0,0
 const7       dd  0x00070007,0x00000007
 threshold    dd  0x00300706,0x00000000
-zerolowbits  dd  0xF7DEF7DE
+zerolowbits  dd  0x7bde7bde
 
 SECTION .text
 
@@ -131,7 +137,7 @@ SECTION .text
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -148,7 +154,7 @@ SECTION .text
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
 %%fin1
     mov edx,%2
     cmp edx,ecx
@@ -173,10 +179,10 @@ SECTION .text
     psrlw      mm1, 5
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -197,10 +203,10 @@ SECTION .text
     psrlw      mm1, 6
     packuswb   mm1, [reg_blank]
     movd       edx, mm1
-    shl        dl,  2
     shr        edx, 1
+    shl        dl,  3
     shl        dx,  3
-    shr        edx, 5
+    shr        edx, 6
     mov        %1,  dx
 %endmacro
 
@@ -404,7 +410,7 @@ Yres         equ 20
 pitch        equ 24
 xpitch        equ 28
 
-_hq3x_16:
+_hq3x_16_555:
     push ebp
     mov ebp,esp
     pushad
@@ -2306,7 +2312,7 @@ _hq3x_16:
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -2327,7 +2333,7 @@ _hq3x_16:
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -2347,7 +2353,7 @@ _hq3x_16:
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -2367,7 +2373,7 @@ _hq3x_16:
     and ecx,[zerolowbits]
     add ecx,edx
     shr ecx,1
-    add ecx,0x0821
+    add ecx,0x0421
     and ecx,[zerolowbits]
     add edx,ecx
     shr edx,1
@@ -2456,6 +2462,7 @@ _hq3x_16:
 .nexty
     add     edi,ebx
     add     edi,ebx
+;mamep: rev2940 BUT, no buffer is needed
     add     edi,[ebp+pitch]
     mov	    ebx,[ebp+Xres]
     shl     ebx,1

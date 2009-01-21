@@ -330,7 +330,7 @@ ifndef PTR64
   endif
 OSDOBJS += $(WINOBJ)/scale/scale2x.o
 endif
-OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
+OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o $(WINOBJ)/scale/2xpmlq.o
 
 ifdef PTR64
 USE_MMX_INTERP_SCALE =
