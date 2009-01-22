@@ -356,6 +356,7 @@ hyhoo2	早押し対戦クイズ ハイホー2 (日本版)	はやおしたいせんくいずはいほー_2	Nich
 jangou	雀豪 [BET] (日本版)	じゃんごう	Nichibutsu
 jngolady	雀豪レディ (日本版)	じゃんごうれでぃ	Nichibutsu
 cntrygrl	カントリーガール (日本版)	かんとりーがーる	Royal Denshi
+luckygrl	ラッキーガール? (Wing)	らっきーがーる	Wing
 nightgal	ナイトギャル (日本版 840920 AG 1-00)	ないとぎゃる	Nichibutsu
 ngtbunny	ナイトバニー (日本版 840601 MRN 2-10)	ないとばにー	Nichibutsu
 royalngt	ロイヤルナイト (日本版 840220 RN 2-00)	ろいやるないと	Royal Denshi
@@ -1273,11 +1274,11 @@ kikcubic	迷宮島 (日本版)	めいきゅうじま	Irem
 kikcubib	迷宮島 / Kickle Cubele	めいきゅうじま	bootleg
 buccanrs	バッカニアーズ (set 1)	ばっかにあーず	Duintronic
 buccanra	バッカニアーズ (set 2)	ばっかにあーず	Duintronic
-rtype	R-タイプ (海外版)	あーるたいぷ_1	Irem
-rtypej	R-タイプ (日本版)	あーるたいぷ_1	Irem
-rtypejp	R-タイプ (日本版 prototype)	あーるたいぷ_1	Irem
-rtypeu	R-タイプ (USA版)	あーるたいぷ_1	Irem (Nintendo of America license)
-rtypeb	R-タイプ (海外版) (海賊版)	あーるたいぷ_1	bootleg
+rtype	アール・タイプ (海外版)	あーるたいぷ_1	Irem
+rtypej	アール・タイプ (日本版)	あーるたいぷ_1	Irem
+rtypejp	アール・タイプ (日本版 prototype)	あーるたいぷ_1	Irem
+rtypeu	アール・タイプ (USA版)	あーるたいぷ_1	Irem (Nintendo of America license)
+rtypeb	アール・タイプ (海外版) (海賊版)	あーるたいぷ_1	bootleg
 bchopper	Mr.HELIの大冒険 / Battle Chopper	みすたーへりのだいぼうけん	Irem
 mrheli	Mr.HELIの大冒険	みすたーへりのだいぼうけん	Irem
 nspirit	最後の忍道 / Ninja Spirit	さいごのにんどう	Irem
@@ -1290,8 +1291,8 @@ lohtb2	レジェンドオブヒーロー トンマ (海賊版 set 2)	れじぇんどおぶひーろーとんま
 xmultipl	Xマルチプライ (日本版)	えっくすまるちぷらい	Irem
 dbreed	ドラゴンブリード (M81 PCB ver)	どらごんぶりーど	Irem
 dbreed72	ドラゴンブリード (M72 PCB ver)	どらごんぶりーど	Irem
-rtype2	R-タイプII	あーるたいぷ_2	Irem
-rtype2j	R-タイプII (日本版)	あーるたいぷ_2	Irem
+rtype2	アール・タイプII	あーるたいぷ_2	Irem
+rtype2j	アール・タイプII (日本版)	あーるたいぷ_2	Irem
 majtitle	メジャータイトル (海外版)	めじゃーたいとる_1	Irem
 majtitlj	メジャータイトル (日本版)	めじゃーたいとる_1	Irem
 hharry	大工の源さん -べらんめ町騒動記 / Hammerin' Harry (海外版)	だいくのげんさん	Irem
@@ -1342,8 +1343,8 @@ skingam2	メジャータイトル2 -トーナメントリーダー / The Irem Skins Game (USA版 se
 hook	フック (海外版)	ふっく	Irem
 hooku	フック (USA版)	ふっく	Irem America
 hookj	フック (日本版)	ふっく	Irem
-rtypeleo	R-タイプLEO (海外版)	あーるたいぷ_3れお	Irem
-rtypelej	R-タイプLEO (日本版)	あーるたいぷ_3れお	Irem
+rtypeleo	アールタイプ・レオ (海外版)	あーるたいぷ_3れお	Irem
+rtypelej	アールタイプ・レオ (日本版)	あーるたいぷ_3れお	Irem
 inthunt	海底大戦争 -In The Hunt / In The Hunt (海外版)	かいていだいせんそう	Irem
 inthuntu	海底大戦争 -In The Hunt / In The Hunt (USA版)	かいていだいせんそう	Irem America
 kaiteids	海底大戦争 -In The Hunt (日本版)	かいていだいせんそう	Irem
@@ -1679,6 +1680,7 @@ viofighu	バイオレンスファイト (USA版)	ばいおれんすふぁいと	Taito America Corpora
 ashura	阿修羅ブラスター (日本版)	あしゅらぶらすたー	Taito Corporation
 ashurau	阿修羅ブラスター (USA版)	あしゅらぶらすたー	Taito America Corporation
 hitice	ヒット・ジ・アイス -The Video Hockey League (USA版)	ひっとじあいす	Williams
+hiticej	ヒット・ジ・アイス -The Video Hockey League (日本版)	ひっとじあいす	Midway/Taito Corporation
 sbm	ソニックブラストマン (日本版)	そにっくぶらすとまん_1	Taito Corporation
 selfeena	セルフィーナ	せるふぃーな	East Technology
 silentd	サイレントドラゴン (海外版)	さいれんとどらごん	Taito Corporation Japan
@@ -2926,8 +2928,8 @@ aafb	オールアメリカンフットボール (rev E)	おーるあめりかんふっとぼーる	Leland Co
 aafbd2p	オールアメリカンフットボール (rev D 2 players)	おーるあめりかんふっとぼーる	Leland Corp.
 aafbc	オールアメリカンフットボール (rev C)	おーるあめりかんふっとぼーる	Leland Corp.
 aafbb	オールアメリカンフットボール (rev B)	おーるあめりかんふっとぼーる	Leland Corp.
-offroad	アイアンマン イーヴァン・スチュワーツ スーパーオフロード	あいあんまんいーばんすてゅわーつすーぱーおふろーど	Leland Corp.
-offroadt	アイアンマン イーヴァン・スチュワーツ スーパーオフロード トラックパック	あいあんまんいーばんすてゅわーつすーぱーおふろーどとらっくぱっく	Leland Corp.
+offroad	アイアンマン イーヴァン・スチュワーツ スーパーオフロード	あいあんまんいーばんすちゅわーつすーぱーおふろーど	Leland Corp.
+offroadt	アイアンマン イーヴァン・スチュワーツ スーパーオフロード トラックパック	あいあんまんいーばんすちゅわーつすーぱーおふろーどとらっくぱっく	Leland Corp.
 pigout	ピッグアウト -Dine Like a Swine! (set 1)	ぴっぐあうと	Leland Corp.
 pigouta	ピッグアウト -Dine Like a Swine! (set 2)	ぴっぐあうと	Leland Corp.
 ataxx	アタックス (set 1)	あたっくす	Leland Corp.
@@ -4348,6 +4350,7 @@ dragoonj	ドラグーンマイト (ver JAA)	どらぐーんまいと	Konami
 tbyahhoo	ツインビーヤッホー！ -ふしぎの国で大あばれ！！ (ver JAA)	ついんびー_2やっほー	Konami
 tkmmpzdm	ときめきメモリアル・対戦ぱずるだま (ver JAB)	ときめきめもりあるたいせんぱずるだま	Konami
 salmndr2	沙羅曼蛇2 (ver JAA)	さらまんだ_2	Konami
+salmnd2a	沙羅曼蛇2 (ver AAB)	さらまんだ_2	Konami
 sexyparo	セクシーパロディウス (ver JAA)	せくしーぱろでぃうす	Konami
 daiskiss	だい好キッス (ver JAA)	だいすきっす	Konami
 tokkae	対戦とっかえだま (ver JAA)	たいせんとっかえだま	Konami
@@ -4570,7 +4573,7 @@ millpac	センチピード / Millpac	せんちぴーど	Valadon Automation
 magworm	センチピード / Magic Worm (海賊版)	せんちぴーど	bootleg
 mazeinv	メイズインベーダーズ (prototype)	めいずいんべーだーず	Atari
 milliped	ミリピード	みりぴーど	Atari
-millipdd	ミリピード / Millipede Dux (ハック)	みりぴーど	Atari
+millipdd	ミリピード / Millipede Dux (ハック)	みりぴーど	hack
 qwak	クワック (prototype)	くわっく	Atari
 runaway	ランナウェイ (prototype)	らんなうぇい	Atari
 bullsdrt	ブルズアイダーツ	ぶるずあいだーつ	Shinkai Inc. (Magic Eletronics Inc. licence)
@@ -5755,8 +5758,8 @@ makaiden	魔魁伝説 (日本版)	まかいでんせつ	Jaleco
 p47	P-47 -ザ・フリーダムファイター / P-47 -The Phantom Fighter (海外版)	ぴー47_1	Jaleco
 p47j	P-47 -ザ・フリーダムファイター (日本版)	ぴー47_1	Jaleco
 kickoff	キックオフ -Jaleco Cup (日本版)	きっくおふ	Jaleco
-tshingen	武田信玄 (日本版 日本語)	たけだしんげん	Jaleco
-tshingna	武田信玄 / Shingen Samurai-Fighter (日本版 英語)	たけだしんげん	Jaleco
+tshingen	武田信玄 (日本版 英語)	たけだしんげん	Jaleco
+tshingna	武田信玄 / Shingen Samurai-Fighter (日本版 日本語)	たけだしんげん	Jaleco
 kazan	伊賀忍術伝 -五神の書 / Ninja Kazan (海外版)	いがにんじゅつでん	Jaleco
 iganinju	伊賀忍術伝 -五神の書 (日本版)	いがにんじゅつでん	Jaleco
 astyanax	ザ・ロード・オブ・キング / The Astyanax	ざろーどおぶきんぐ	Jaleco
@@ -5885,8 +5888,8 @@ daraku	堕落天使 -The Fallen Angels	だらくてんし	Psikyo
 gunbird2	ガンバード2	がんばーど_2	Psikyo
 s1945iii	ストライカーズ1999 (日本版)	すとらいかーず_21999	Psikyo
 dragnblz	ドラゴンブレイズ	どらごんぶれいず	Psikyo
-tgm2	テトリス ジ・アブソリュート ザ・グランドマスター2	てとりすじあぶそりゅーとざぐらんどますたー_2_1	Arika
-tgm2p	テトリス ジ・アブソリュート ザ・グランドマスター2 Plus	てとりすじあぶそりゅーとざぐらんどますたー_2_2	Arika
+tgm2	テトリス ジ・アブソリュート ザ・グランドマスター2	てとりす_4じあぶそりゅーとざぐらんどますたー_2_1	Arika
+tgm2p	テトリス ジ・アブソリュート ザ・グランドマスター2 Plus	てとりす_4じあぶそりゅーとざぐらんどますたー_2_2	Arika
 gnbarich	ガンバリッチ	がんばりっち	Psikyo
 mjgtaste	G-taste麻雀	じぃていすとまあじゃん	Psikyo
 hotgmck	対戦ホットギミック (日本版)	たいせんほっとぎみっく_1	Psikyo
@@ -6387,7 +6390,7 @@ royalmah	ロイヤルマージャン (Falcon) (海賊版 ver 1.01)	ろいやるまーじゃん	bootle
 janyoup2	雀友パート2 (ver 7.03 July 1 1983)	じゃんゆうぱーと2	Cosmo Denshi
 janoh	雀王 (set 1)	じゃんおう	Toaplan
 janoha	雀王 (set 2)	じゃんおう	Toaplan
-mjsiyoub	麻雀士様	まーじゃんしよう	Visco
+mjsiyoub	麻雀士様 (日本版)	まーじゃんしよう	Visco
 mjsenka	麻雀専科 (日本版)	まーじゃんせんか	Visco
 mjyarou	麻雀野郎 [BET] (日本版)	まーじゃんやろう	Visco / Video System
 suzume	わたしはすずめちゃん (日本版)	わたしはすずめちゃん	Dyna Electronics
@@ -6470,7 +6473,7 @@ dai2kaku	大大革命 (日本版)	だいだいかくめい	SystemBit
 mjchuuka	麻雀中華兒女 (中国版)	まーじゃんちゅうかねじょ	Dynax
 mjreach1	麻雀 立直一発 (日本版)	まーじゃんりーちいっぱつ	Nihon System
 cafebrk	麻雀カフェブレイク	まーじゃんかふぇぶれいく	Nakanihon / Dynax
-jongtei	雀帝 (日本版 ver NM532-01)	じゃんてい	Dynax
+jongtei	麻雀 雀帝 (日本版 ver NM532-01)	まーじゃんじゃんてい	Dynax
 pkgnsh	パチンコ銀玉勝負 (日本版)	ぱちんこぎんだましょうぶ_1	Nakanihon / Dynax
 pkgnshdx	パチンコ銀玉勝負DX (日本版)	ぱちんこぎんだましょうぶ_2でらっくす	Nakanihon / Dynax
 hjingi	華仁義	はなじんぎ	Dynax
@@ -6490,7 +6493,7 @@ spinner	スパイダー / Spinner	すぱいだー	bootleg
 goldstar	ゴールデンスター	ごーるでんすたー	IGS
 goldstbl	ゴールデンスター (blue ver)	ごーるでんすたー	IGS
 moonlght	ゴールデンスター / Moon Light (海賊版)	ごーるでんすたー	bootleg
-chry10	ゴールデンスター / Cherry 10 (海賊版)	ごーるでんすたー	bootleg
+chry10	ゴールデンスター / Cherry 10 (海賊版 with PIC16F84)	ごーるでんすたー	bootleg
 chrygld	チェリーゴールドI	ちぇりーごーるど_1	bootleg
 cpoker	チャンピオンポーカー (ver 220I)	ちゃんぴおんぽーかー	IGS
 cpokert	チャンピオンポーカー (ver 200G)	ちゃんぴおんぽーかー	Tuning
@@ -6526,9 +6529,10 @@ iqblockf	IQブロック / Shu Zi Le Yuan (V113FR)	あいきゅーぶろっく	IGS
 tjsb	麻将 天将神兵	まーじゃんちゃんじゃんしぇんびん	IGS
 lhzb2	麻将 龍虎争霸2 (set 1)	まーじゃんろんふーぜんば_2	IGS
 lhzb2a	麻将 龍虎争霸2 (set 2)	まーじゃんろんふーぜんば_2	IGS
-mgcs	麻将 満貫財神	まーじゃんまんがんちゃいしぇん	IGS
+mgcs	麻将 満貫財神 (V103CS)	まーじゃんまんがんちゃいしぇん	IGS
 slqz2	麻将 双龍搶珠2	まーじゃんしゃんろんちゃんず_2	IGS
 sdmg2	麻将 超級大満貫2	まーじゃんすーぱーだいまんがん_2	IGS
+igs_ncs	ニューチャンピオンスキル (ver 100n)	にゅーちゃんぴおんすきる	IGS
 bigd2	ビッグD2	びっぐでぃーつー	IGS
 sdwx	聖誕無限	しぇんだんむーしゃん	IGS
 sddz	超級斗地主	すーぱーどうでぃーず	IGS
@@ -6924,7 +6928,7 @@ dblpoint	ダブルポイント -夜上海	だぶるぽいんと	Min Corp.
 dblpoind	ダブルポイント -夜上海 (Dong Bang Electron) (海賊版?)	だぶるぽいんと	Dong Bang Electron
 statusbj	ステータスブラックジャック (ver 1.0c)	すてーたすぶらっくじゃっく	Status Games
 hangman	ハングマン -The Video Game	はんぐまん	Status Games
-trivquiz	トリブ クイズ	とりぶ_1	Status Games
+trivquiz	トリブ クイズ	とりぶ_1くいず	Status Games
 statriv2	トリブ ツー	とりぶ_2	Status Games
 statrv2v	トリブ ツー (Vertical)	とりぶ_2	Status Games
 statriv4	トリブ フォー	とりぶ_4	Status Games
@@ -7041,11 +7045,11 @@ mpoker	メリットポーカー	めりっとぽーかー	Merit
 pitboss	ピットボス (set 1)	ぴっとぼす_1	Merit
 pitbossa	ピットボス (Set 2)	ぴっとぼす_1	Merit
 casino5	カジノ5	かじのふぁいぶ	Merit
-trvwzh	トリビア? ウィズ (horizontal - question set 1)	とりびあうぃず	Merit
-trvwzha	トリビア? ウィズ (horizontal - question set 2)	とりびあうぃず	Merit
+trvwzh	トリビア? ウィズ (horizontal) (question set 1)	とりびあうぃず	Merit
+trvwzha	トリビア? ウィズ (horizontal) (question set 2)	とりびあうぃず	Merit
 trvwzhb	トリビア? ウィズ (horizontal) (question set 3)	とりびあうぃず	Merit
-trvwzv	トリビア? ウィズ (vertical - question set 1)	とりびあうぃず	Merit
-trvwzva	トリビア? ウィズ (vertical - question set 2)	とりびあうぃず	Merit
+trvwzv	トリビア? ウィズ (vertical) (question set 1)	とりびあうぃず	Merit
+trvwzva	トリビア? ウィズ (vertical) (question set 2)	とりびあうぃず	Merit
 trvwz2	トリビア? ウィズ (edition 2) (question set 1)	とりびあうぃず	Merit
 trvwz2a	トリビア? ウィズ (edition 2) (question set 2)	とりびあうぃず	Merit
 trvwz3h	トリビア? ウィズ (edition 3 - horizontal) (set 1)	とりびあうぃず	Merit
@@ -7168,15 +7172,17 @@ sigma2k	シグマポーカー2000	しぐまぽーかー_2_2000	Sigma Inc.
 sidewndr	サイドワインダー	さいどわいんだー	ACE
 spellbnd	スペルバウンド	すぺるばうんど	ACE
 starspnr	スタースピナー (オランダ版)	すたーすぴなー	ACE
+acefruit	アンノウンエースフルーツゲーム	あんのうんえーすふるーつげーむ	ACE
 attckufo	アタックUFO	あたっくゆーえふおー	Ryoto Electric Co.
 fortecar	フォルテカード	ふぉるてかーど	Fortex LTD
-jackpool	ジャックポットプール (イタリア版) (海賊版)	じゃっくぽっとぷーる	Electronic Projects
+jackpool	ジャックポットカーズ / ジャックポットプール (イタリア版)	じゃっくぽっどかーずじゃっくぽっとぷーる	Electronic Projects
 murogem	ムローゲモナコ (set 1)	むろーげもなこ	unknown
 murogema	ムローゲモナコ (set 2)	むろーげもなこ	unknown
 lasvegas	ネバダ ラスベガス	ねばだらすべがす	hack
 quizmstr	クイズマスター (ドイツ版)	くいずますたー	Loewen Spielautomaten
 trailblz	トレイルブレイザー	とれいるぶれいざー	Coinmaster
 supnudg2	スーパーナッジャーII (ver 5.21)	すーぱーなっじゃー2	Coinmaster
+pokeroul	ポーカールーレット (ver 8.22)	ぽーかーるーれっと	Coinmaster
 fruit	アンノウンフルーツゲーム	あんのうんふるーつげーむ	unknown
 egghunt	エッグハント	えっぐはんと	Invi Image
 magic10	マジックス10 (ver 16.55)	まじっくす_2_1てん	A.W.P. Games
@@ -7208,7 +7214,7 @@ sharkpya	シャークパーティ (alt)	しゃーくぱーてぃ	Subsino
 smoto20	スーパーライダー (イタリア版 ver 2.0)	すーぱーらいだー	Subsino
 smoto16	スーパーモト (イタリア版 ver 1.6)	すーぱーもと	Subsino
 saklove	櫻花恋 2.0 (中国版 1.02)	さくららぶ	Subsino
-bishjan	美笑雀	びしょうじゃん	Subsino
+bishjan	美笑雀 (日本版 203)	びしょうじゃん	Subsino
 lastfght	ラストファイティング	らすとふぁいてぃんぐ	Subsino
 sliver	スリバー	すりばー	Hollow Corp
 intrscti	インターセクティ	いんたーせくてぃ	Unknown
@@ -7315,8 +7321,10 @@ destryer	デストロイヤー (Cidelsa set 1)	ですとろいやー	Cidelsa
 destryea	デストロイヤー (Cidelsa set 2)	ですとろいやー	Cidelsa
 draco	ドラコ	どらこ	Cidelsa
 rockduck	ロックダック (prototype?)	ろっくだっく	Datel SAS
-tetriunk	テトリス (Unknown Manufacturer)	てとりす_1_4unknown	Unknown
-smstrv	トリビア (SMS)	とりびあ_1_えすえむえす	SMS MFG CORP
+tetriskr	テトリス (海賊版 of Mirrorsoft PC-XT Tetris ver)	てとりす_1_4	bootleg
+trvhang	トリビアハングアップ (question set 1)	とりびあはんぐあっぷ	SMS MFG CORP
+trvhanga	トリビアハングアップ (question set 2)	とりびあはんぐあっぷ	SMS MFG CORP
+sureshot	シュアショット	しゅあしょっと	SMS MFG CORP
 skylncr	スカイランサー (Bordun ver U450C)	すかいらんさー	Bordun International
 butrfly	バタフライビデオゲーム (ver U350C)	ばたふらいびでおげーむ	Bordun International
 madzoo	マッドズー (ver U450C)	まっどずー	Bordun International
@@ -7346,7 +7354,7 @@ eshb	エシュズオルンミラ (set 3)	えしゅずおるんみら	Funai/Gakken
 comebaby	カモンベイビー	かもんべいびー	ExPotato
 peset038	プレイヤーズエッジプラス セットチップ (Set038)	ぷれいやーずえっじぷらすせっとちっぷ	IGT - International Gaming Technology
 pepp0065	プレイヤーズエッジプラス ジョーカーズワイルドポーカー (PP0065)	ぷれいやーずえっじぷらすじょーかーずわいるどぽーかー	IGT - International Gaming Technology
-pepp0158	プレイヤーズエッジプラス 4 オブアカインドボーナスポーカー (PP0158)	ぷれいやーずえっじぷらす4おぶあかいんどぼーなすぽーかー	IGT - International Gaming Technology
+pepp0158	プレイヤーズエッジプラス 4 オブアカインドボーナスポーカー (PP0158)	ぷれいやーずえっじぷらすふぉーおぶあかいんどぼーなすぽーかー	IGT - International Gaming Technology
 pepp0188	プレイヤーズエッジプラス スタンダードドローポーカー (PP0188)	ぷれいやーずえっじぷらすすたんだーどどろーぽーかー	IGT - International Gaming Technology
 pepp0250	プレイヤーズエッジプラス ダブルダウンスタッドポーカー (PP0250)	ぷれいやーずえっじぷらすだぶるだうんすたっどぽーかー	IGT - International Gaming Technology
 pepp0447	プレイヤーズエッジプラス スタンダードドローポーカー (PP0447)	ぷれいやーずえっじぷらすすたんだーどどろーぽーかー	IGT - International Gaming Technology
@@ -7365,6 +7373,7 @@ pexp0019	プレイヤーズエッジプラス デュースワイルドポーカー (XP000019)	ぷれいやー
 pexp0112	プレイヤーズエッジプラス ホワイトホットエースズポーカー (XP000112)	ぷれいやーずえっじぷらすほわいとほっとえーすずぽーかー	IGT - International Gaming Technology
 pexs0006	プレイヤーズエッジプラス トリプルトリプルダイアモンドスロッツ (XS000006)	ぷれいやーずえっじぷらすとりぷるとりぷるだいあもんどすろっつ	IGT - International Gaming Technology
 pexmp006	プレイヤーズエッジプラス マルチポーカー (XMP00006)	ぷれいやーずえっじぷらすまるちぽーかー	IGT - International Gaming Technology
+pexmp017	プレイヤーズエッジプラス 5-in-1 ウィングボード (XMP00017)	ぷれいやーずえっじぷらすふぁいぶいんわんうぃんぐぼーど	IGT - International Gaming Technology
 mirage	ミラージュ 妖獣麻雀伝 (日本版)	みらーじゅようじゅうまーじゃんでん	Mitchell
 dominob	ドミノブロック	どみのぶろっく	Wonwoo Systems
 jongkyo	雀狂	じゃんきょう	Kiwako
@@ -7375,7 +7384,7 @@ drw80pkr	ドロー80ポーカー	どろーえいてぃーぽーかー	IGT - International Gaming Te
 blazlaz	ガンヘッド / Blazing Lazers	がんへっど	Hudson Soft
 paranoia	パラノイア	ぱらのいあ	Naxat Soft
 vcombat	バーチャルコンバット	ばーちゃるこんばっと	VR8 Inc.
-shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	Sega?
+shadfgtr	シャドーファイターズ	しゃどーふぁいたーず	DUTECH Inc.
 blackt96	ブラックタッチ'96	ぶらっくたっち_96	D.G.R.M.
 magictg	マジック・ザ・ギャザリング ハルマゲドン (set 1)	まじっくざぎゃざりんぐはるまげどん	Acclaim
 magictga	マジック・ザ・ギャザリング ハルマゲドン (set 2)	まじっくざぎゃざりんぐはるまげどん	Acclaim
@@ -7413,24 +7422,34 @@ elvis	エルビス?	えるびす	Unknown
 newmcard	ニューマジックカード	にゅーまじっくかーど	New High Video?
 brasil	ブラジル (ver 3)	ぶらじる_3	New High Video?
 fashion	ブラジル / Fashion (ver 2.14)	ぶらじる_2.14	New High Video?
+tour4000	ツアー4000	つあー_4000	High Video
+cfever40	カジノフィーバー_4.0	かじのふぃーばー_4.0	High Video
+cfever50	カジノフィーバー_5.0	かじのふぃーばー_5.0	High Video
+tour4010	ツアー4010	つあー_4010	High Video
+cfever51	カジノフィーバー_5.1	かじのふぃーばー_5.1	High Video
+cfever61	カジノフィーバー_6.1	かじのふぃーばー_6.1	High Video
+cfever1k	カジノフィーバー_1000	かじのふぃーばー_1000	High Video
+girotutt	ギロトゥット	ぎろとぅっと	High Video
 ilpag	イル パリアッチョ	いるぱりあっちょ	unknown
 mil4000	ミレニアムヌオヴォ4000 (ver 2.0)	みれにあむぬおぼぉ_4000	Sure Milano
 mil4000a	ミレニアムヌオヴォ4000 (ver 1.8)	みれにあむぬおぼぉ_4000	Sure Milano
 ejollyx5	ユーロジョリーX5	ゆーろじょりーえっくす5	Solar Games
 grandprx	グランプリ	ぐらんぷり	4fun
-showhand	ショーハンド	しょーはんど	Astro Corp.
-showhanc	ショーハンド / Wang Pai Dui Jue	しょーはんど	Astro Corp.
+showhand	ショーハンド (イタリア版)	しょーはんど	Astro Corp.
+showhanc	ショーハンド / 王牌対決	しょーはんど	Astro Corp.
 cb2001	チェリーボーナス2001	ちぇりーぼーなす2001	Dyna
 ncb3	チェリーボーナスIII (ver 1.40 set 1)	ちぇりーぼーなす_3	Dyna
 cb3a	チェリーボーナスIII (ver 1.40 set 2)	ちぇりーぼーなす_3	Dyna
 cb3	チェリーボーナスIII (ver 1.40 encrypted)	ちぇりーぼーなす_3	Dyna
 cmv801	チェリーマスター (ver 8.01)	ちぇりーますたー_1	Corsica
-cmv4	チェリーマスター (ver 4)	ちぇりーますたー	Dyna
-cmaster	チェリーマスターI (ver 1.01)	ちぇりーますたー_1	Dyna
-cm2v841	チェリーマスターII? (ver 8.41 set 1)	ちぇりーますたー_2	Dyna
-cm2841a	チェリーマスターII? (ver 8.41 set 2)	ちぇりーますたー_2	Dyna
+cmv4	チェリーマスター (ver 4 set 1)	ちぇりーますたー	Dyna
+cmv4a	チェリーマスター (ver 4 set 2)	ちぇりーますたー	Dyna
+cmaster	チェリーマスターI (ver 1.01 set 1)	ちぇりーますたー_1	Dyna
+cmasterb	チェリーマスターI (ver 1.01 set 2)	ちぇりーますたー_1	Dyna
+cmasterc	チェリーマスターI (ver 1.01 set 3)	ちぇりーますたー_1	Dyna
 cmast91	チェリーマスター'91 (ver 1.30)	ちぇりーますたー_91	Dyna
 queen	クイーン?	くいーん	STG?
+86lions	86 ライオンズ	えいてぃしっくすらいおんず	Aristocrat
 caswin	カジノウィナー	かじのうぃなー	Aristocrat
 janshi	ジャンシ	じゃんし	Eagle
 slotcarn	スロットカーニバル	すろっとかーにばる	Wing Co.Ltd
@@ -7439,6 +7458,15 @@ lucky74a	ラッキー74 (海賊版 set 2)	らっきー74	Wing Co.,Ltd.
 lucky8	ニューラッキー8ラインズ (set 1)	にゅーらっきーえいとらいんず	Wing Co.Ltd / GEI
 lucky8a	ニューラッキー8ラインズ (set 2)	にゅーらっきーえいとらいんず	Wing Co.Ltd / GEI
 luckgrln	ラッキーガール (newer Z180 based hardware)	らっきーがーる	Wing
+schery98	スキルチェリー'98	すきるちぇりー_98	Amcoe
+schery97	スキルチェリー'97	すきるちぇりー_97	Amcoe
+sfbonus	スキルフルーツボーナス	すきるふるーつぼーなす	Amcoe
+ladylinr	レディライナー	れでぃらいなー	TAB Austria
+kkojnoli	コンノリ (Kill the Bees)	こんのり	south korean hack
+mtonic	マジカルトニック?	まじかるとにっく	Tonic
+3super8	3 Super 8 (イタリア版)	すりーすーぱーえいと	unknown
+buster	バスター	ばすたー	Marian Electronics Ltd.
+spielbud	スピールブーデ (ドイツ版)	すぴーるぶーで	ADP
 knightsb	ナイツ オブ ザ ラウンド -円卓の騎士 (海賊版)	ないつおぶざらうんど	bootleg
 wofb	天地を喰らうII -赤壁の戦い / 三國誌II (海賊版)	てんちをくらう_2	bootleg
 wofsj	天地を喰らうII -赤壁の戦い / 聖劍三國 (中国海賊版 set 1)	てんちをくらう_2	bootleg
