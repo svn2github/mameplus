@@ -86,6 +86,6 @@ const game_driver * const plusdrivers[] =
 #ifndef NEOCPSPGM
 	/* Konami "Nemesis hardware" games */
 	DRIVER( spclone )	/* GX587 (c) 1986 based */
-#endif /* NEOCPSPGM */
+#endif /* !NEOCPSPGM */
 
 #endif	/* DRIVER_RECURSIVE */

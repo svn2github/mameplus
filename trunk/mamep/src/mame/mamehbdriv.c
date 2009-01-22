@@ -39,7 +39,7 @@ const game_driver * const homebrewdrivers[] =
 #ifndef NEOCPSPGM
 	/* Homebrew */
 	DRIVER( vantris )	/* http://web.utanet.at/nkehrer */
-#endif /* NEOCPSPGM */
+#endif /* !NEOCPSPGM */
 
 	/* Neo Geo homebrew */
 	DRIVER( frogfest )	/* 0202 (c) 2005 Rastersoft */

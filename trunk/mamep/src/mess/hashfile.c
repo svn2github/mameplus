@@ -71,6 +71,10 @@ static void expat_free(void *ptr);
     CORE IMPLEMENTATION
 ***************************************************************************/
 
+/*-------------------------------------------------
+    parse_error
+-------------------------------------------------*/
+
 static void ATTR_PRINTF(2,3) parse_error(struct hash_parse_state *state, const char *fmt, ...)
 {
 	char buf[256];
@@ -79,13 +83,17 @@ static void ATTR_PRINTF(2,3) parse_error(struct hash_parse_state *state, const c
 	if (state->error_proc)
 	{
 		va_start(va, fmt);
-		vsnprintf(buf, sizeof(buf) / sizeof(buf[0]), fmt, va);
+		vsnprintf(buf, ARRAY_LENGTH(buf), fmt, va);
 		va_end(va);
-		state->error_proc(buf);
+		(*state->error_proc)(buf);
 	}
 }
 
 
+
+/*-------------------------------------------------
+    unknown_tag
+-------------------------------------------------*/
 
 static void unknown_tag(struct hash_parse_state *state, const char *tagname)
 {
@@ -97,6 +105,10 @@ static void unknown_tag(struct hash_parse_state *state, const char *tagname)
 
 
 
+/*-------------------------------------------------
+    unknown_attribute
+-------------------------------------------------*/
+
 static void unknown_attribute(struct hash_parse_state *state, const char *attrname)
 {
 	parse_error(state, "[%lu:%lu]: Unknown attribute: %s\n",
@@ -106,6 +118,10 @@ static void unknown_attribute(struct hash_parse_state *state, const char *attrna
 }
 
 
+
+/*-------------------------------------------------
+    unknown_attribute_value
+-------------------------------------------------*/
 
 static void unknown_attribute_value(struct hash_parse_state *state,
 	const char *attrname, const char *attrvalue)
@@ -118,6 +134,10 @@ static void unknown_attribute_value(struct hash_parse_state *state,
 
 
 
+/*-------------------------------------------------
+    start_handler
+-------------------------------------------------*/
+
 static void start_handler(void *data, const char *tagname, const char **attributes)
 {
 	struct hash_parse_state *state = (struct hash_parse_state *) data;
@@ -129,7 +149,8 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 	iodevice_t device;
 	int i;
 
-	switch(state->pos++) {
+	switch(state->pos++)
+	{
 	case POS_ROOT:
 		if (!strcmp(tagname, "hashfile"))
 		{
@@ -248,12 +269,17 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 
 
 
+/*-------------------------------------------------
+    end_handler
+-------------------------------------------------*/
+
 static void end_handler(void *data, const char *name)
 {
 	struct hash_parse_state *state = (struct hash_parse_state *) data;
 	state->text_dest = NULL;
 
-	switch(--state->pos) {
+	switch(--state->pos)
+	{
 	case POS_ROOT:
 	case POS_HASH:
 		break;
@@ -262,7 +288,7 @@ static void end_handler(void *data, const char *name)
 		if (state->hi)
 		{
 			if (state->use_proc)
-				state->use_proc(state->hashfile, state->param, state->hi);
+					(*state->use_proc)(state->hashfile, state->param, state->hi);
 			state->hi = NULL;
 		}
 		break;
@@ -270,6 +296,10 @@ static void end_handler(void *data, const char *name)
 }
 
 
+
+/*-------------------------------------------------
+    data_handler
+-------------------------------------------------*/
 
 static void data_handler(void *data, const XML_Char *s, int len)
 {
@@ -293,6 +323,10 @@ static void data_handler(void *data, const XML_Char *s, int len)
 }
 
 
+
+/*-------------------------------------------------
+    hashfile_parse
+-------------------------------------------------*/
 
 static void hashfile_parse(hash_file *hashfile,
 	int (*selector_proc)(hash_file *hashfile, void *param, const char *name, const char *hash),
@@ -347,7 +381,9 @@ done:
 
 
 
-/* ----------------------------------------------------------------------- */
+/*-------------------------------------------------
+    preload_use_proc
+-------------------------------------------------*/
 
 static void preload_use_proc(hash_file *hashfile, void *param, hash_info *hi)
 {
@@ -363,6 +399,10 @@ static void preload_use_proc(hash_file *hashfile, void *param, hash_info *hi)
 }
 
 
+
+/*-------------------------------------------------
+    hashfile_open_options
+-------------------------------------------------*/
 
 hash_file *hashfile_open_options(core_options *opts, const char *sysname, int is_preload,
 	void (*error_proc)(const char *message))
@@ -408,6 +448,10 @@ error:
 
 
 
+/*-------------------------------------------------
+    hashfile_open
+-------------------------------------------------*/
+
 hash_file *hashfile_open(const char *sysname, int is_preload,
 	void (*error_proc)(const char *message))
 {
@@ -415,6 +459,10 @@ hash_file *hashfile_open(const char *sysname, int is_preload,
 }
 
 
+
+/*-------------------------------------------------
+    hashfile_close
+-------------------------------------------------*/
 
 void hashfile_close(hash_file *hashfile)
 {
@@ -425,13 +473,15 @@ void hashfile_close(hash_file *hashfile)
 
 
 
+/*-------------------------------------------------
+    singular_selector_proc
+-------------------------------------------------*/
+
 struct hashlookup_params
 {
 	const char *hash;
 	hash_info *hi;
 };
-
-
 
 static int singular_selector_proc(hash_file *hashfile, void *param, const char *name, const char *hash)
 {
@@ -442,6 +492,10 @@ static int singular_selector_proc(hash_file *hashfile, void *param, const char *
 
 
 
+/*-------------------------------------------------
+    singular_use_proc
+-------------------------------------------------*/
+
 static void singular_use_proc(hash_file *hashfile, void *param, hash_info *hi)
 {
 	struct hashlookup_params *hlparams = (struct hashlookup_params *) param;
@@ -449,6 +503,10 @@ static void singular_use_proc(hash_file *hashfile, void *param, hash_info *hi)
 }
 
 
+
+/*-------------------------------------------------
+    hashfile_lookup
+-------------------------------------------------*/
 
 const hash_info *hashfile_lookup(hash_file *hashfile, const char *hash)
 {
@@ -471,6 +529,10 @@ const hash_info *hashfile_lookup(hash_file *hashfile, const char *hash)
 
 
 
+/*-------------------------------------------------
+    hashfile_functions_used
+-------------------------------------------------*/
+
 unsigned int hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
 {
 	assert(devtype >= 0);
@@ -479,6 +541,10 @@ unsigned int hashfile_functions_used(hash_file *hashfile, iodevice_t devtype)
 }
 
 
+
+/*-------------------------------------------------
+    hashfile_verify
+-------------------------------------------------*/
 
 int hashfile_verify(const char *sysname, void (*my_error_proc)(const char *message))
 {

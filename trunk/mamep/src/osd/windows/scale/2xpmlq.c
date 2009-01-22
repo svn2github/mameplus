@@ -33,7 +33,7 @@ unsigned short int pg_lbmask;
 
 //---------------------------------------------------------------------------------------------------------------------------
 
-static unsigned short int PBASE[32];
+//static unsigned short int PBASE[32];
 
 void _2xpmlq_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth)
 {

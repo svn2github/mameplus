@@ -2436,7 +2436,7 @@ V-V                           TP-027
 	/*  6/1991 Quiz Sangokushi - see below among "Mitchell" games */
 	/* 10/1991 Block Block - see below among "Mitchell" games */
 	/*  6/1995 Street Fighter - the Movie - see below among "Incredible Technologies" games */
-#endif /* NEOCPSPGM */
+#endif /* !NEOCPSPGM */
 
 
 	/* Capcom CPS1 games */
@@ -3945,6 +3945,7 @@ Sep.1994 Quiz Ghost Hunter
 	DRIVER( waverunr )	/* 1996 */
 	DRIVER( hotd )		/* 1997 */
 	DRIVER( overrev )	/* 1997 */
+	DRIVER( segawski )	/* 1997 */
 	DRIVER( topskatr )	/* 1997 */
 	DRIVER( topskatu )	/* 1997 */
 	DRIVER( bel )		/* 1998 */
@@ -5667,7 +5668,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Electrocoin on early SNK hardware - gambling game remove once it works */
 	DRIVER( dmndrby )	/* G4001 'DD' (c) 1986 */
 	DRIVER( dmndrbya )	/* G4001 'DD' (c) 1986 */
-#endif /* NEOCPSPGM */
+#endif /* !NEOCPSPGM */
 
 	/* Neo Geo games */
 	/* the four digits number is the game ID stored at address 0x0108 of the program ROM */
@@ -6510,6 +6511,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( rdft2a2 )	/* (c) 1997 Seibu Kaihatsu (Dream Island license) */
 	DRIVER( rdft2j )	/* (c) 1997 Seibu Kaihatsu */
 	DRIVER( rdft2t )	/* (c) 1997 Seibu Kaihatsu */
+	DRIVER( rdft2u )	/* (c) 1997 Seibu Kaihatsu (Fabtek license) */
 	DRIVER( rdft2us )	/* (c) 1997 Seibu Kaihatsu (Fabtek license) */
 	DRIVER( rdft22kc )	/* (c) 2000 Seibu Kaihatsu */
 
@@ -6589,6 +6591,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( teplus2j )	/* (c) 1997 Jaleco */
 	DRIVER( nndmseal )	/* (c) 1997 I'Max/Jaleco */
 	DRIVER( stepstag )	/* (c) 1999 Jaleco */
+	DRIVER( step3 )		/* (c) 1999 Jaleco */
 	DRIVER( rockn )		/* (c) 1999 Jaleco */
 	DRIVER( rockna )	/* (c) 1999 Jaleco */
 	DRIVER( rockn2 )	/* (c) 1999 Jaleco */
@@ -7279,6 +7282,7 @@ Other Sun games
 	DRIVER( madball )	/* (c) 1998 Yun Sung */
 	DRIVER( madballn )	/* (c) 1998 Yun Sung */
 	DRIVER( cannball )	/* (c) 1995 Yun Sung / Soft Visio */
+	DRIVER( cannbalv )	/* (c) 1995 Yun Sung / T&K */
 	DRIVER( magix )		/* (c) 1995 Yun Sung */
 	DRIVER( rocktris )	/* (c) 1994? Yun Sung */
 	DRIVER( magicbub )	/* (c) Yun Sung */
@@ -7465,6 +7469,8 @@ Other Sun games
  	DRIVER( cpokert )	/* (c) 1993? Tuning */
 	DRIVER( csk227it )	/* (c) 198? IGS */
 	DRIVER( csk234it )	/* (c) 198? IGS */
+	DRIVER( igs_ncs )	/* (c) 198? IGS */
+	DRIVER( igs_ncs2 )	/* (c) 2000 IGS */
 	DRIVER( jackie )	/* (c) 199? IGS */
 	DRIVER( stellecu )	/* (c) 1998 */
 	DRIVER( iqblock )	/* (c) 1993 */
@@ -7503,8 +7509,6 @@ Other Sun games
 	DRIVER( slqz2 )		/* (c) 1998 */
 	DRIVER( sdmg2 )		/* (c) 1997 */
 
-	DRIVER( igs_ncs )	/* (c) 2000 */
-
 	DRIVER( bigd2 )		/* (c) 2000 */
 	DRIVER( sdwx )		/* (c) 2002 */
 	DRIVER( sddz )		/* (c) 200? */
@@ -7513,7 +7517,7 @@ Other Sun games
 	DRIVER( klxyj )		/* (c) 200? */
 	DRIVER( mgfx )		/* (c) 200? */
 	DRIVER( ddz )		/* (c) 200? */
-#endif /* NEOCPSPGM */
+#endif /* !NEOCPSPGM */
 
 	/* IGS PGM System Games */
 	DRIVER( pgm )
@@ -8064,13 +8068,14 @@ Other Sun games
 	DRIVER( fredmemc )	/* (c) 1994 Coastal Amusements */
 	DRIVER( fredmesp )	/* (c) 1994 Coastal Amusements */
 	DRIVER( cecmatch )	/* (c) 1993 Coastal Amusements */
-	DRIVER( f15se )		/* (c) 1991 Microprose */
-	DRIVER( f15se21 )	/* (c) 1991 Microprose */
-	DRIVER( botss )		/* (c) 1992 Microprose */
-	DRIVER( stankatk )	/* (c) 1992 Microprose */
+	DRIVER( f15se )		/* (c) 1991 Microprose Games Inc. */
+	DRIVER( f15se21 )	/* (c) 1991 Microprose Games Inc. */
+	DRIVER( botss )		/* (c) 1992 Microprose Games Inc. */
+	DRIVER( stankatk )	/* (c) 1992 Microprose Games Inc. */
 	DRIVER( dynadice )	/* ? */
 	DRIVER( ssingles )	/* Yachiyo? */
 	DRIVER( tcl )		/* (c) 1995 Uniwang */
+	DRIVER( sothello )	/* (c) 1986 Success / Fujiwara */
 
 	/* Multi Amenity Cassette System */
 	DRIVER( macsbios )
@@ -8448,7 +8453,7 @@ Other Sun games
 	DRIVER( blazlaz )	/* (c) 1989 Hudson Soft */
 	DRIVER( paranoia )	/* (c) 1990 Naxat Soft */
 	DRIVER( vcombat )	/* (c) 1993 VR8 Inc. */
-	DRIVER( shadfgtr )	/* (c) 1989 DUTECH Inc. */
+	DRIVER( shadfgtr )	/* (c) 1993 DUTECH Inc. */
 	DRIVER( blackt96 )	/* (c) 1996 D.G.R.M. of Korea */
 	DRIVER( magictg )	/* (c) 199? Acclaim */
 	DRIVER( magictga )	/* (c) 199? Acclaim */
@@ -8560,5 +8565,8 @@ Other Sun games
 	DRIVER( buster )	/* (c) 1987 Marian Electronics Ltd. */
 	DRIVER( spielbud )	/* (c) 1985 ADP */
 
-#endif /* NEOCPSPGM */
+	/* Hi-Soft */
+	DRIVER( himesiki )	/* (c) 1989 Hi-Soft */
+
+#endif /* !NEOCPSPGM */
 #endif	/* DRIVER_RECURSIVE */

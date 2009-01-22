@@ -21,33 +21,38 @@
 #include "machine/6532riot.h"
 #include "includes/a7800.h"
 
-static ADDRESS_MAP_START(a7800_mem, ADDRESS_SPACE_PROGRAM, 8)
-	AM_RANGE(0x0000, 0x001F) AM_READWRITE(a7800_TIA_r, a7800_TIA_w)
-	AM_RANGE(0x0020, 0x003F) AM_READWRITE(a7800_MARIA_r, a7800_MARIA_w)
-	AM_RANGE(0x0040, 0x00FF) AM_READWRITE(SMH_BANK5, a7800_RAM0_w)		/* RAM0 */
-	AM_RANGE(0x0100, 0x011F) AM_READWRITE(a7800_TIA_r, a7800_TIA_w)
-	AM_RANGE(0x0120, 0x013F) AM_READWRITE(a7800_MARIA_r, a7800_MARIA_w)
-	AM_RANGE(0x0140, 0x01FF) AM_READWRITE(SMH_BANK6, SMH_BANK6)		/* RAM1 */
-	AM_RANGE(0x0200, 0x021F) AM_READWRITE(a7800_TIA_r, a7800_TIA_w)
-	AM_RANGE(0x0220, 0x023F) AM_READWRITE(a7800_MARIA_r, a7800_MARIA_w)
-	AM_RANGE(0x0280, 0x029F) AM_DEVREADWRITE(RIOT6532, "riot", riot6532_r, riot6532_w)
-	AM_RANGE(0x0300, 0x031F) AM_READWRITE(a7800_TIA_r, a7800_TIA_w)
-	AM_RANGE(0x0320, 0x033F) AM_READWRITE(a7800_MARIA_r, a7800_MARIA_w)
-	AM_RANGE(0x0480, 0x04FF) AM_RAM										/* RIOT RAM */
-	AM_RANGE(0x1800, 0x27FF) AM_RAM
-	AM_RANGE(0x2800, 0x2FFF) AM_READWRITE(SMH_BANK7, SMH_BANK7)		/* MAINRAM */
-	AM_RANGE(0x3000, 0x37FF) AM_READWRITE(SMH_BANK7, SMH_BANK7)		/* MAINRAM */
-	AM_RANGE(0x3800, 0x3FFF) AM_READWRITE(SMH_BANK7, SMH_BANK7)		/* MAINRAM */
 
-	AM_RANGE(0x4000, 0x7FFF) AM_READ(SMH_BANK1)						/* f18 hornet */
-	AM_RANGE(0x8000, 0x9FFF) AM_READ(SMH_BANK2)						/* sc */
-	AM_RANGE(0xA000, 0xBFFF) AM_READ(SMH_BANK3)						/* sc + ac */
-	AM_RANGE(0xC000, 0xDFFF) AM_READ(SMH_BANK4)						/* ac */
-	AM_RANGE(0xE000, 0xFFFF) AM_READ(SMH_ROM)
-	AM_RANGE(0x4000, 0xFFFF) AM_WRITE(a7800_cart_w)
+#define A7800_NTSC_Y1	XTAL_14_31818MHz
+#define CLK_PAL 1773447
+
+
+/***************************************************************************
+    ADDRESS MAPS
+***************************************************************************/
+
+static ADDRESS_MAP_START( a7800_mem, ADDRESS_SPACE_PROGRAM, 8 )
+	AM_RANGE(0x0000, 0x001f) AM_MIRROR(0x300) AM_READWRITE(a7800_TIA_r, a7800_TIA_w)
+	AM_RANGE(0x0020, 0x003f) AM_MIRROR(0x300) AM_READWRITE(a7800_MARIA_r, a7800_MARIA_w)
+	AM_RANGE(0x0040, 0x00ff) AM_READWRITE(SMH_BANK5, a7800_RAM0_w)	/* RAM (6116 block 0) */
+	AM_RANGE(0x0140, 0x01ff) AM_RAMBANK(6)	/* RAM (6116 block 1) */
+	AM_RANGE(0x0280, 0x02ff) AM_DEVREADWRITE(RIOT6532, "riot", riot6532_r, riot6532_w)
+	AM_RANGE(0x0480, 0x04ff) AM_MIRROR(0x100) AM_RAM	/* RIOT RAM */
+	AM_RANGE(0x1800, 0x27ff) AM_RAM
+	AM_RANGE(0x2800, 0x2fff) AM_RAMBANK(7)	/* MAINRAM */
+	AM_RANGE(0x3000, 0x37ff) AM_RAMBANK(7)	/* MAINRAM */
+	AM_RANGE(0x3800, 0x3fff) AM_RAMBANK(7)	/* MAINRAM */
+	AM_RANGE(0x4000, 0x7fff) AM_ROMBANK(1)						/* f18 hornet */
+	AM_RANGE(0x8000, 0x9fff) AM_ROMBANK(2)						/* sc */
+	AM_RANGE(0xa000, 0xbfff) AM_ROMBANK(3)						/* sc + ac */
+	AM_RANGE(0xc000, 0xdfff) AM_ROMBANK(4)						/* ac */
+	AM_RANGE(0xe000, 0xffff) AM_ROM
+	AM_RANGE(0x4000, 0xffff) AM_WRITE(a7800_cart_w)
 ADDRESS_MAP_END
 
 
+/***************************************************************************
+    INPUT PORTS
+***************************************************************************/
 
 static INPUT_PORTS_START( a7800 )
 	PORT_START("joysticks")            /* IN0 */
@@ -85,6 +90,11 @@ static INPUT_PORTS_START( a7800 )
 	PORT_DIPSETTING(0x80, "A" )
 	PORT_DIPSETTING(0x00, "B" )
 INPUT_PORTS_END
+
+
+/***************************************************************************
+    PALETTE
+***************************************************************************/
 
 #define NTSC_GREY    \
 	MAKE_RGB(0x00,0x00,0x00), MAKE_RGB(0x25,0x25,0x25), MAKE_RGB(0x34,0x34,0x34), MAKE_RGB(0x4e,0x4e,0x4e),	\
@@ -222,26 +232,6 @@ static const rgb_t a7800p_palette[256*3] =
 	NTSC_YELLOW_GREEN
 };
 
-static const unsigned short a7800_colortable[] =
-{
-    0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x0a,0x0b,0x0c,0x0d,0x0e,0x0f,
-    0x10,0x11,0x12,0x13,0x14,0x15,0x16,0x17,0x18,0x19,0x1a,0x1b,0x1c,0x1d,0x1e,0x1f,
-    0x20,0x21,0x22,0x23,0x24,0x25,0x26,0x27,0x28,0x29,0x2a,0x2b,0x2c,0x2d,0x2e,0x2f,
-    0x30,0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x3a,0x3b,0x3c,0x3d,0x3e,0x3f,
-    0x40,0x41,0x42,0x43,0x44,0x45,0x46,0x47,0x48,0x49,0x4a,0x4b,0x4c,0x4d,0x4e,0x4f,
-    0x50,0x51,0x52,0x53,0x54,0x55,0x56,0x57,0x58,0x59,0x5a,0x5b,0x5c,0x5d,0x5e,0x5f,
-    0x60,0x61,0x62,0x63,0x64,0x65,0x66,0x67,0x68,0x69,0x6a,0x6b,0x6c,0x6d,0x6e,0x6f,
-    0x70,0x71,0x72,0x73,0x74,0x75,0x76,0x77,0x78,0x79,0x7a,0x7b,0x7c,0x7d,0x7e,0x7f,
-    0x80,0x81,0x82,0x83,0x84,0x85,0x86,0x87,0x88,0x89,0x8a,0x8b,0x8c,0x8d,0x8e,0x8f,
-    0x90,0x91,0x92,0x93,0x94,0x95,0x96,0x97,0x98,0x99,0x9a,0x9b,0x9c,0x9d,0x9e,0x9f,
-    0xa0,0xa1,0xa2,0xa3,0xa4,0xa5,0xa6,0xa7,0xa8,0xa9,0xaa,0xab,0xac,0xad,0xae,0xaf,
-    0xb0,0xb1,0xb2,0xb3,0xb4,0xb5,0xb6,0xb7,0xb8,0xb9,0xba,0xbb,0xbc,0xbd,0xbe,0xbf,
-    0xc0,0xc1,0xc2,0xc3,0xc4,0xc5,0xc6,0xc7,0xc8,0xc9,0xca,0xcb,0xcc,0xcd,0xce,0xcf,
-    0xd0,0xd1,0xd2,0xd3,0xd4,0xd5,0xd6,0xd7,0xd8,0xd9,0xda,0xdb,0xdc,0xdd,0xde,0xdf,
-    0xe0,0xe1,0xe2,0xe3,0xe4,0xe5,0xe6,0xe7,0xe8,0xe9,0xea,0xeb,0xec,0xed,0xee,0xef,
-    0xf0,0xf1,0xf2,0xf3,0xf4,0xf5,0xf6,0xf7,0xf8,0xf9,0xfa,0xfb,0xfc,0xfd,0xfe,0xff
-};
-
 
 /* Initialise the palette */
 static PALETTE_INIT(a7800)
@@ -256,19 +246,17 @@ static PALETTE_INIT(a7800p)
 }
 
 
-#define CLK_PAL 1773447
-#define CLK_NTSC 1789772
+/***************************************************************************
+    MACHINE DRIVERS
+***************************************************************************/
 
-static MACHINE_DRIVER_START( a7800 )
+static MACHINE_DRIVER_START( a7800_ntsc )
 	/* basic machine hardware */
-	MDRV_CPU_ADD("main", M6502, CLK_NTSC)	/* 1.79 MHz (note: The clock switches to 1.19 MHz
-                                                 * when the TIA or RIOT are accessed) */
+	MDRV_CPU_ADD("main", M6502, A7800_NTSC_Y1/8)	/* 1.79 MHz (switches to 1.19 MHz on TIA or RIOT access) */
 	MDRV_CPU_PROGRAM_MAP(a7800_mem, 0)
 	MDRV_CPU_VBLANK_INT_HACK(a7800_interrupt, 262)
 
-	MDRV_QUANTUM_TIME(HZ(60))
-
-	MDRV_MACHINE_RESET( a7800 )
+	MDRV_MACHINE_RESET(a7800)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("main", RASTER)
@@ -287,9 +275,12 @@ static MACHINE_DRIVER_START( a7800 )
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 	MDRV_SOUND_ADD("tia", TIA, 31400)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
-	MDRV_SOUND_ADD("pokey", POKEY, CLK_NTSC)
+	MDRV_SOUND_ADD("pokey", POKEY, A7800_NTSC_Y1/8)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
-	
+
+	/* devices */
+	MDRV_RIOT6532_ADD("riot", A7800_NTSC_Y1/12, r6532_interface)
+
 	MDRV_CARTSLOT_ADD("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("a78")
 	MDRV_CARTSLOT_NOT_MANDATORY
@@ -299,25 +290,11 @@ static MACHINE_DRIVER_START( a7800 )
 MACHINE_DRIVER_END
 
 
-
-static MACHINE_DRIVER_START( a7800_ntsc )
-	MDRV_IMPORT_FROM( a7800 )
-
-	/* devices */
-	MDRV_RIOT6532_ADD("riot", 3579545/3, r6532_interface_ntsc)
-MACHINE_DRIVER_END
-
-
-
 static MACHINE_DRIVER_START( a7800_pal )
-	MDRV_IMPORT_FROM( a7800 )
-
-	/* devices */
-	MDRV_RIOT6532_ADD("riot", 3546894/3, r6532_interface_pal)
+	MDRV_IMPORT_FROM( a7800_ntsc )
 
 	/* basic machine hardware */
-	MDRV_CPU_REPLACE("main", M6502, CLK_PAL)	/* 1.79 MHz (note: The clock switches to 1.19 MHz
-                                                 * when the TIA or RIOT are accessed) */
+	MDRV_CPU_REPLACE("main", M6502, CLK_PAL)
 	MDRV_CPU_VBLANK_INT_HACK(a7800_interrupt, 312)
 
 	MDRV_SCREEN_MODIFY( "main" )
@@ -329,38 +306,35 @@ static MACHINE_DRIVER_START( a7800_pal )
 	/* sound hardware */
 	MDRV_SOUND_REPLACE("pokey", POKEY, CLK_PAL)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+
+	/* devices */
+	MDRV_RIOT6532_REMOVE("riot")
+	MDRV_RIOT6532_ADD("riot", 3546894/3, r6532_interface)
 MACHINE_DRIVER_END
 
 
-
 /***************************************************************************
-
-  Game driver(s)
-
+    ROM DEFINITIONS
 ***************************************************************************/
 
-ROM_START (a7800)
-    ROM_REGION(0x30000,"main",0)
-	ROM_FILL( 0x0000, 0x30000, 0xFF )
+ROM_START( a7800 )
+    ROM_REGION(0x30000, "main", 0)
+	ROM_FILL(0x0000, 0x30000, 0xff)
     ROM_SYSTEM_BIOS( 0, "a7800", "Atari 7800" )
-    ROMX_LOAD ("7800.rom", 0xf000, 0x1000, CRC(5d13730c) SHA1(d9d134bb6b36907c615a594cc7688f7bfcef5b43), ROM_BIOS(1))
-/*      ROM_LOAD ("7800a.rom", 0xc000, 0x4000, CRC(649913e5)) */
-    ROM_SYSTEM_BIOS( 1, "a7800pr", "Atari 7800 Prototype" )
-    ROMX_LOAD ("c300558-001a.bin", 0xc000, 0x4000, CRC(a0e10edf) SHA1(14584b1eafe9721804782d4b1ac3a4a7313e455f), ROM_BIOS(2))
-
+    ROMX_LOAD("7800.u7", 0xf000, 0x1000, CRC(5d13730c) SHA1(d9d134bb6b36907c615a594cc7688f7bfcef5b43), ROM_BIOS(1))
+    ROM_SYSTEM_BIOS( 1, "a7800pr", "Atari 7800 (prototype with Asteroids)" )
+    ROMX_LOAD("c300558-001a.u7", 0xc000, 0x4000, CRC(a0e10edf) SHA1(14584b1eafe9721804782d4b1ac3a4a7313e455f), ROM_BIOS(2))
 ROM_END
 
-ROM_START (a7800p)
-    ROM_REGION(0x30000,"main",0)
-	ROM_FILL( 0x0000, 0x30000, 0xFF )
-    //ROM_LOAD ("7800pal.rom", 0xF000, 0x1000, CRC(d5b61170 ))
-    ROM_LOAD ("7800pal.rom", 0xc000, 0x4000, CRC(d5b61170) SHA1(5a140136a16d1d83e4ff32a19409ca376a8df874))
+ROM_START( a7800p )
+    ROM_REGION(0x30000, "main", 0)
+	ROM_FILL(0x0000, 0x30000, 0xff)
+    ROM_LOAD("7800pal.rom", 0xc000, 0x4000, CRC(d5b61170) SHA1(5a140136a16d1d83e4ff32a19409ca376a8df874))
 ROM_END
+
 
 /***************************************************************************
-
-  Game driver(s)
-
+    GAME DRIVERS
 ***************************************************************************/
 
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE     INPUT     INIT          CONFIG      COMPANY   FULLNAME */

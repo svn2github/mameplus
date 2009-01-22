@@ -758,16 +758,16 @@ $(MAMEOBJ)/greyhnd.a: \
 	$(DRIVERS)/getrivia.o \
 
 $(MAMEOBJ)/igs.a: \
-	$(DRIVERS)/csk.o $(VIDEO)/csk.o \
 	$(DRIVERS)/ddz.o \
 	$(DRIVERS)/dunhuang.o \
 	$(DRIVERS)/goldstar.o $(VIDEO)/goldstar.o \
+	$(DRIVERS)/jackie.o \
+	$(DRIVERS)/igspoker.o \
 	$(DRIVERS)/igs009.o \
 	$(DRIVERS)/igs_blit.o \
 	$(DRIVERS)/igs017.o \
 	$(DRIVERS)/igs_m027.o \
 	$(DRIVERS)/igs_m68.o \
-	$(DRIVERS)/igs_ncs.o \
 	$(DRIVERS)/iqblock.o $(VIDEO)/iqblock.o \
 	$(DRIVERS)/lordgun.o $(VIDEO)/lordgun.o \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
@@ -1230,14 +1230,15 @@ $(MAMEOBJ)/seibu.a: \
 	$(DRIVERS)/dcon.o $(VIDEO)/dcon.o \
 	$(DRIVERS)/deadang.o $(VIDEO)/deadang.o \
 	$(DRIVERS)/dynduke.o $(VIDEO)/dynduke.o \
-	$(DRIVERS)/goodejan.o $(VIDEO)/goodejan.o \
 	$(DRIVERS)/kncljoe.o $(VIDEO)/kncljoe.o \
 	$(DRIVERS)/mustache.o $(VIDEO)/mustache.o \
 	$(DRIVERS)/panicr.o \
 	$(DRIVERS)/raiden.o $(VIDEO)/raiden.o \
 	$(DRIVERS)/raiden2.o $(MACHINE)/r2crypt.o \
 	$(DRIVERS)/seibuspi.o $(MACHINE)/seibuspi.o $(VIDEO)/seibuspi.o \
-	$(DRIVERS)/sengokmj.o $(VIDEO)/sengokmj.o \
+	$(VIDEO)/sei_crtc.o \
+	$(DRIVERS)/sengokmj.o \
+	$(DRIVERS)/goodejan.o \
 	$(DRIVERS)/stfight.o $(MACHINE)/stfight.o $(VIDEO)/stfight.o \
 	$(DRIVERS)/wiz.o $(VIDEO)/wiz.o \
 	$(MACHINE)/spisprit.o \
@@ -1586,6 +1587,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/gunpey.o \
 	$(DRIVERS)/hexa.o $(VIDEO)/hexa.o \
 	$(DRIVERS)/highvdeo.o \
+	$(DRIVERS)/himesiki.o $(VIDEO)/himesiki.o \
 	$(DRIVERS)/homedata.o $(VIDEO)/homedata.o \
 	$(DRIVERS)/hotblock.o \
 	$(DRIVERS)/ilpag.o \
@@ -1652,6 +1654,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/slotcarn.o \
 	$(DRIVERS)/sms.o \
 	$(DRIVERS)/snookr10.o $(VIDEO)/snookr10.o \
+	$(DRIVERS)/sothello.o \
 	$(DRIVERS)/spool99.o \
 	$(DRIVERS)/sprcros2.o $(VIDEO)/sprcros2.o \
 	$(DRIVERS)/ssfindo.o \
@@ -1746,6 +1749,8 @@ $(DRIVERS)/gatron.o:	$(LAYOUT)/poker41.lh \
 $(DRIVERS)/goldnpkr.o:	$(LAYOUT)/goldnpkr.lh \
 						$(LAYOUT)/pmpoker.lh \
 
+$(DRIVERS)/igspoker.o:	$(LAYOUT)/igspoker.lh
+
 $(DRIVERS)/lazercmd.o:	$(LAYOUT)/lazercmd.lh
 
 $(DRIVERS)/lucky74.o:	$(LAYOUT)/lucky74.lh
@@ -1804,6 +1809,8 @@ $(DRIVERS)/tceptor.o:	$(LAYOUT)/tceptor2.lh
 $(DRIVERS)/tehkanwc.o:	$(LAYOUT)/gridiron.lh
 
 $(DRIVERS)/tetrisp2.o:	$(LAYOUT)/rocknms.lh
+
+$(DRIVERS)/stepstag.o:	$(LAYOUT)/stepstag.lh
 
 $(DRIVERS)/thayers.o:	$(LAYOUT)/dlair.lh
 

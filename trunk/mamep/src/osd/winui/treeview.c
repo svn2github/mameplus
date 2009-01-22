@@ -934,55 +934,7 @@ void CreateCPUFolders(int parent_index)
 
 void CreateSoundFolders(int parent_index)
 {
-/*
-	int i,jj;
-	int nGames = GetNumGames();
-	int nFolder = numFolders;
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-	LPTREEFOLDER map[SOUND_COUNT];
-
-	sndintrf_init(NULL);
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (i = 1 ; i < SOUND_COUNT ; i++)
-	{
-		LPTREEFOLDER lpTemp;
-		// Init to NULL here in case it doesn't get assigned below.		
-		map[i] = NULL;
-		// empty fields get filled in with SOUND_DUMMY, so check for this and
-		// don't add it
-		if (strcmp(sndtype_get_name(SOUND_DUMMY),sndtype_get_name(i)) == 0)
-			continue;
-
-		//dprintf("%i %s\n",i,sndtype_get_name(i));
-		lpTemp = NewFolder(_Unicode(sndtype_get_name(i)), 0, FALSE, next_folder_id++, parent_index, IDI_SND);
-		AddFolder(lpTemp);
-		map[i] = treeFolders[nFolder++];
-	}
-	for (jj = 0; jj < nGames; jj++)
-	{
-		int n;
-		machine_config *config;
-
-		config = machine_config_alloc(drivers[jj]->machine_config);
-		// Additional range and null checking.
-		for (n = 0; n < MAX_SOUND ; n++) {
-			if (config->sound[n].type > SOUND_DUMMY &&
-				config->sound[n].type != SOUND_FILTER_VOLUME &&
-				config->sound[n].type != SOUND_FILTER_RC &&
-				config->sound[n].type != SOUND_FILTER_LOWPASS)
-			{
-				if (map[config->sound[n].type] != NULL) {
-					// sound type #'s are one-based, though that doesn't affect us here
-					AddGame(map[config->sound[n].type],jj);
-				}
-			}
-		}
-		machine_config_free(config);
-	}
-*/
+	CreateDeviceFolders(parent_index, DEVICE_CLASS_SOUND_CHIP, IDI_SND);
 }
 
 // mamep: updated mameui's horrible version

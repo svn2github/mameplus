@@ -125,9 +125,6 @@ b) Exit the dialog.
 // MAME/MAMEUI headers
 #include "driver.h"
 #include "info.h"
-#ifdef USE_SCALE_EFFECTS
-#include "osdscale.h"
-#endif /* USE_SCALE_EFFECTS */
 #include "audit.h"
 #include "mui_audit.h"
 #include "mui_opts.h"
@@ -142,22 +139,19 @@ b) Exit the dialog.
 #include "winmain.h"
 #include "strconv.h"
 #include "winutf8.h"
-#include "bitmask.h"
-#include "treeview.h"
-#include "translate.h"
-#include "datafile.h"
 #include "sound/2413intf.h"
 #include "sound/3812intf.h"
 #include "sound/samples.h"
 #include "sound/vlm5030.h"
+#ifdef USE_SCALE_EFFECTS
+#include "osdscale.h"
+#endif /* USE_SCALE_EFFECTS */
+#include "bitmask.h"
+#include "treeview.h"
+#include "translate.h"
+#include "datafile.h"
 
 typedef HANDLE HTHEME;
-
-#ifdef UNICODE
-#define TTM_SETTITLE            TTM_SETTITLEW
-#else
-#define TTM_SETTITLE            TTM_SETTITLEA
-#endif
 
 #ifdef _MSC_VER
 #define snprintf _snprintf
@@ -818,9 +812,10 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 	{
 		if (config->sound[chipnum].type != SOUND_DUMMY)
 		{
-			int clock, count;
+			int clock,count;
+			sound_type sound_type_;
 
-			sound_type sound_type = config->sound[chipnum].type;
+			sound_type_ = config->sound[chipnum].type;
 			clock = config->sound[chipnum].clock;
 
 			count = 1;
@@ -828,7 +823,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 
 			/* Matching chips at the same clock are aggregated */
 			while (chipnum < ARRAY_LENGTH(config->sound)
-				&& config->sound[chipnum].type == sound_type
+				&& config->sound[chipnum].type == sound_type_
 				&& config->sound[chipnum].clock == clock)
 			{
 				count++;
@@ -840,7 +835,7 @@ static LPCWSTR GameInfoSound(UINT nIndex)
 				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
 			}
 
-			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_get_name(sound_type)));
+			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_get_name(sound_type_)));
 
 			if (clock)
 			{
