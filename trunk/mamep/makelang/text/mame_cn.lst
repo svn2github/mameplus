@@ -966,7 +966,7 @@ rbibb	VS.雅达利R.B.I棒球 (第1套)	VS.雅达利R.B.I棒球 (第1套)	Namco
 rbibba	VS.雅达利R.B.I棒球 (第2套)	VS.雅达利R.B.I棒球 (第2套)	Namco
 suprmrio	VS.超级玛莉	VS.超级玛莉	Nintendo
 suprmria	VS.超级玛莉 (alt)	VS.超级玛莉 (alt)	Nintendo
-skatekds	VS.超级玛莉 (Graphic hack of Super Mario Bros.)	VS.超级玛莉 (Graphic hack of Super Mario Bros.)	hack
+skatekds	VS.超级玛莉 (修改版)	VS.超级玛莉 (修改版)	hack
 vsskykid	VS.天堂鸟 2	VS.天堂鸟 2	Namco
 tkoboxng	VS.T.K.O.拳击	VS.T.K.O.拳击	Namco LTD.
 smgolf	VS.男子高尔夫 (男士版, 第1套)	VS.男子高尔夫 (男士版, 第1套)	Nintendo
@@ -2606,7 +2606,7 @@ nbajamex	美国职业篮球联赛	美国职业篮球联赛	Acclaim
 jdredd	特警判官 (Rev C Dec. 17 1997)	特警判官 (Rev C Dec. 17 1997)	Acclaim
 jdreddb	特警判官 (Rev B Nov. 26 1997)	特警判官 (Rev B Nov. 26 1997)	Acclaim
 vspsx	Video System PSX	Video System PSX	Video System
-aerofgts	四国战机 96 特别版 (台湾版)	四国战机 96 特别版 (台湾版)	Video System
+aerofgts	四国战机 96 特别版 (TAIWAN)	四国战机 96 特别版 (TAIWAN)	Video System
 sncwgltd	四国战机 96 限定版 (日版)	四国战机 96 限定版 (日版)	Video System
 taitofx1	Taito FX1	Taito FX1	Sony/Taito
 sfchamp	超级足球 (Ver 2.5O)	超级足球 (Ver 2.5O)	Taito
@@ -3492,6 +3492,7 @@ stcc	世嘉冠军房车赛 (校正版 A)	世嘉冠军房车赛 (校正版 A)	Sega
 waverunr	御风者 (日版, 校正版 A)	御风者 (日版, 校正版 A)	Sega
 hotd	死亡之屋	死亡之屋	Sega
 overrev	终极回转 (校正版 A)	终极回转 (校正版 A)	Jaleco
+segawski	世嘉滑板 (日版, 校正版 A)	世嘉滑板 (日版, 校正版 A)	Sega
 topskatr	顶尖滑板 (出口版, 校正版 A)	顶尖滑板 (出口版, 校正版 A)	Sega
 topskatu	顶尖滑板 (美版)	顶尖滑板 (美版)	Sega
 bel	敌后战线	敌后战线	Sega/EPL Productions
@@ -3756,8 +3757,8 @@ spfghmk2	太空斗士竞分 II (第1套)	太空斗士竞分 II (第1套)	Data East
 spfgmk22	太空斗士竞分 II (第2套)	太空斗士竞分 II (第2套)	Data East
 tomahawk	战斧级潜舰 777 (rev 5)	战斧级潜舰 777 (rev 5)	Data East
 tomahaw1	战斧级潜舰 777 (rev 1)	战斧级潜舰 777 (rev 1)	Data East
-progolf	高尔夫 (第1套)	高尔夫 (第1套)	Data East Corporation
-progolfa	高尔夫 (第2套)	高尔夫 (第2套)	Data East Corporation
+progolf	职业高尔夫球 (第1套)	职业高尔夫球 (第1套)	Data East Corporation
+progolfa	职业高尔夫球 (第2套)	职业高尔夫球 (第2套)	Data East Corporation
 deshoros	命运问卜	命运问卜	Data East Corporation
 prosoccr	职业足球	职业足球	Data East Corporation
 prosport	职业运动员	职业运动员	Data East Corporation
@@ -3808,7 +3809,7 @@ pcktgal2	美女花式桌球 2 (英文版)	美女花式桌球 2 (英文版)	Data East Corporation
 pcktgl2j	美女花式桌球 2 (日文版)	美女花式桌球 2 (日文版)	Data East Corporation
 pokechmp	美女花式桌球	美女花式桌球	DGRM
 spool3	超级美女花式桌球 III (英文版)	超级美女花式桌球 III (英文版)	Data East Corporation
-spool3i	美女花式桌球 (I-Vics)	美女花式桌球 (I-Vics)	Data East Corporation (I-Vics license)
+spool3i	超级美女花式桌球 III (I-Vics)	超级美女花式桌球 III (I-Vics)	Data East Corporation (I-Vics license)
 battlera	突击血狼 (世界版)	突击血狼 (世界版)	Data East Corporation
 bldwolf	突击血狼 (美版)	突击血狼 (美版)	Data East USA
 bldwolfj	突击血狼 (日版)	突击血狼 (日版)	Data East Corporation
@@ -4445,7 +4446,7 @@ hellngt	地狱之夜 (ver EAA)	地狱之夜 (ver EAA)	Konami
 carpolo	汽车足球	汽车足球	Exidy
 sidetrac	转换轨道	转换轨道	Exidy
 targ	赛车杀阵	赛车杀阵	Exidy
-targc	赛车杀阵 (台面型?)	赛车杀阵 (台面型?)	Exidy
+targc	赛车杀阵 (直立型?)	赛车杀阵 (直立型?)	Exidy
 spectar	吃豆赛车 (校正版 3)	吃豆赛车 (校正版 3)	Exidy
 spectar1	吃豆赛车 (校正版 1?)	吃豆赛车 (校正版 1?)	Exidy
 rallys	吃豆赛车 (盗版?)	吃豆赛车 (盗版?)	Novar
@@ -4780,7 +4781,7 @@ blstroid	爆破彗星 2 (rev 4)	爆破彗星 2 (rev 4)	Atari Games
 blstroi3	爆破彗星 2 (rev 3)	爆破彗星 2 (rev 3)	Atari Games
 blstroi2	爆破彗星 2 (rev 2)	爆破彗星 2 (rev 2)	Atari Games
 blstroig	爆破彗星 2 (德国版, rev 2)	爆破彗星 2 (德国版, rev 2)	Atari Games
-blsthead	爆破彗星 2 (台面型)	爆破彗星 2 (台面型)	Atari Games
+blsthead	爆破彗星 2 (直立型)	爆破彗星 2 (直立型)	Atari Games
 vindictr	坦克大作战 (rev 5)	坦克大作战 (rev 5)	Atari Games
 vindicte	坦克大作战 (欧洲版, rev 5)	坦克大作战 (欧洲版, rev 5)	Atari Games
 vindictg	坦克大作战 (德国版, rev 1)	坦克大作战 (德国版, rev 1)	Atari Games
@@ -5702,8 +5703,9 @@ rdft2a	雷电战机 2 (亚洲版, Metrotainment license, SPI)	雷电战机 2 (亚洲版, Metro
 rdft2a2	雷电战机 2 (亚洲版, Dream Island license, SPI)	雷电战机 2 (亚洲版, Dream Island license, SPI)	Seibu Kaihatsu (Dream Island license)
 rdft2j	雷电战机 2 (日版, SPI)	雷电战机 2 (日版, SPI)	Seibu Kaihatsu
 rdft2t	雷电战机 2 (台湾版, SPI)	雷电战机 2 (台湾版, SPI)	Seibu Kaihatsu
-rdft2us	雷电战机 2.1 (美版, 单机版)	雷电战机 2.1 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
-rdft22kc	雷电战机 2 2000 (中国版)	雷电战机 2 2000 (中国版)	Seibu Kaihatsu
+rdft2u	雷电战机 2 (美版, SPI)	雷电战机 2 (美版, SPI)	Seibu Kaihatsu (Fabtek license)
+rdft2us	雷电战机 2 (美版, 单机版)	雷电战机 2 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
+rdft22kc	雷电战机 2 (中国版)	雷电战机 2 (中国版)	Seibu Kaihatsu
 rfjet	雷电喷气战机	雷电喷气战机	Seibu Kaihatsu (Tuning license)
 rfjetu	雷电喷气战机 (美版)	雷电喷气战机 (美版)	Seibu Kaihatsu (Fabtek license)
 rfjeta	雷电喷气战机 (亚洲版)	雷电喷气战机 (亚洲版)	Seibu Kaihatsu (Dream Island license)
@@ -5776,6 +5778,7 @@ tetrisp2	俄罗斯方块加强版 2 (世界版)	俄罗斯方块加强版 2 (世界版)	Jaleco / The Te
 teplus2j	俄罗斯方块加强版 2 (日版)	俄罗斯方块加强版 2 (日版)	Jaleco / The Tetris Company
 nndmseal	开运鉴定委员会	开运鉴定委员会	I'Max/Jaleco
 stepstag	步进舞台	步进舞台	Jaleco
+step3	步进舞台 3 上级	步进舞台 3 上级	Jaleco
 rockn	摇滚乐队 1 (日版, 盗版)	摇滚乐队 1 (日版, 盗版)	Jaleco
 rockna	摇滚节奏踢踏踩 (日版, 替换版)	摇滚节奏踢踏踩 (日版, 替换版)	Jaleco
 rockn2	摇滚乐队 2 (日版)	摇滚乐队 2 (日版)	Jaleco
@@ -6364,7 +6367,8 @@ torus	试管方块	试管方块	Yun Sung
 paprazzi	美女杀手	美女杀手	Yun Sung
 madball	疯狂弹球 V2.0	疯狂弹球 V2.0	Yun Sung
 madballn	疯狂弹球 V2.0 (裸露版)	疯狂弹球 V2.0 (裸露版)	Yun Sung
-cannball	加农球气泡 (Yun Sung)	加农球气泡 (Yun Sung)	Yun Sung / Soft Vision
+cannball	佳能球气泡 (Yun Sung) (直立型)	佳能球气泡 (Yun Sung) (直立型)	Yun Sung / Soft Vision
+cannbalv	佳能球气泡 (Yun Sung) (垂直型)	佳能球气泡 (Yun Sung) (垂直型l)	Yun Sung / T&K
 magix	马吉斯俄罗斯方块	马吉斯俄罗斯方块	Yun Sung
 rocktris	摇摆俄罗斯方块	摇摆俄罗斯方块	Yun Sung
 magicbub	魔法泡泡	魔法泡泡	Yun Sung
@@ -6530,6 +6534,8 @@ cpoker	扑克冠军 (v220I)	扑克冠军 (v220I)	IGS
 cpokert	扑克冠军 (v200G)	扑克冠军 (v200G)	Tuning
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
+igs_ncs	新技能冠军 (v100n)	新技能冠军 (v100n)	IGS
+igs_ncs2	新扑克牌游戏 - 冠军技能 (v100n 2000)	新扑克牌游戏 - 冠军技能 (v100n 2000)	IGS
 jackie	成龙之龙 (v110U)	成龙之龙 (v110U)	IGS
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
 iqblock	数字方块	数字方块	IGS
@@ -6544,7 +6550,7 @@ chindrag	中国龙 (日版, V021J)	中国龙 (日版, V021J)	IGS / Alta
 chugokur	中国龙 (日版, V020J)	中国龙 (日版, V020J)	IGS / Alta
 chmplst2	龙虎榜 II (V185H)	龙虎榜 II (V185H)	IGS
 xymg	幸运满贯 (V651C)	幸运满贯 (V651C)	IGS
-grtwall	幸运满贯 (V638C)	幸运满贯 (V638C)	IGS
+grtwall	万里长城 (V638C)	万里长城 (V638C)	IGS
 vbowl	虚拟保龄球 (世界版, V101XCM)	虚拟保龄球 (世界版, V101XCM)	IGS
 vbowlj	虚拟保龄球 (日版, V100JCM)	虚拟保龄球 (日版, V100JCM)	IGS / Alta
 drgnwrld	中国龙 (世界版, V0400)	中国龙 (世界版, V0400)	IGS
@@ -6563,7 +6569,6 @@ lhzb2a	麻雀 - 龙虎争霸 2 (第2套)	麻雀 - 龙虎争霸 2 (第2套)	IGS
 mgcs	麻雀 - 满贯财神 (V103CS)	麻雀 - 满贯财神 (V103CS)	IGS
 slqz2	麻雀 - 双龙抢珠 2	麻雀 - 双龙抢珠 2	IGS
 sdmg2	麻雀 - 超级大满贯 2	麻雀 - 超级大满贯 2	IGS
-igs_ncs	新技能冠军 (v100n)	新技能冠军 (v100n)	IGS
 bigd2	中国锄大D	中国锄大D	IGS
 sdwx	圣诞五线	圣诞五线	IGS
 sddz	超级斗地主	超级斗地主	IGS
@@ -7058,13 +7063,14 @@ fredmemj	摩登原始人 (日版, 高分版本, 3/20/95)	摩登原始人 (日版, 高分版本, 3/20/9
 fredmemc	摩登原始人 (中文版, 3/17/95)	摩登原始人 (中文版, 3/17/95)	Coastal Amusements
 fredmesp	摩登原始人 (西班牙, 3/17/95)	摩登原始人 (西班牙, 3/17/95)	Coastal Amusements
 cecmatch	印度飞盘比赛游戏	印度飞盘比赛游戏	Coastal Amusements
-f15se	F-15 飞鹰 (rev. 2.2 02/25/91)	F-15 飞鹰 (rev. 2.2 02/25/91)	Microprose
-f15se21	F-15 飞鹰 (rev. 2.1 02/04/91)	F-15 飞鹰 (rev. 2.1 02/04/91)	Microprose
-botss	决战太阳系 (rev. 1.1)	决战太阳系 (rev. 1.1)	Microprose
-stankatk	超级坦克大战 (工程版 rev. 4/21/92 )	超级坦克大战 (工程版 rev. 4/21/92 )	Microprose
+f15se	F-15 飞鹰 (rev. 2.2 02/25/91)	F-15 飞鹰 (rev. 2.2 02/25/91)	Microprose Games Inc.
+f15se21	F-15 飞鹰 (rev. 2.1 02/04/91)	F-15 飞鹰 (rev. 2.1 02/04/91)	Microprose Games Inc.
+botss	决战太阳系 (rev. 1.1)	决战太阳系 (rev. 1.1)	Microprose Games Inc.
+stankatk	超级坦克大战 (工程版 rev. 4/21/92 )	超级坦克大战 (工程版 rev. 4/21/92 )	Microprose Games Inc.
 dynadice	动态扑克	动态扑克	<unknown>
 ssingles	震撼安打	震撼安打	Ent. Ent. Ltd
 tcl	棋王争霸	棋王争霸	Uniwang
+sothello	超级五子棋	超级五子棋	Success/Fujiwara
 macsbios	Multi Amenity Cassette System BIOS	Multi Amenity Cassette System BIOS	I'Max
 mac2bios	Multi Amenity Cassette System 2 BIOS	Multi Amenity Cassette System 2 BIOS	I'Max
 kisekaem	换妆麻雀	换妆麻雀	I'Max
@@ -7084,15 +7090,15 @@ mpoker	优异纸牌	优异纸牌	Merit
 pitboss	赌场大亨 (第1套)	赌场大亨 (第1套)	Merit
 pitbossa	赌场大亨 (第2套)	赌场大亨 (第2套)	Merit
 casino5	娱乐场 5	娱乐场 5	Merit
-trvwzh	问答 百科高手 (台面型) (问答 第1套)	问答 百科高手 (台面型) (问答 第1套)	Merit
-trvwzha	问答 百科高手 (台面型) (问答 第2套)	问答 百科高手 (台面型) (问答 第2套)	Merit
-trvwzhb	问答 百科高手 (台面型) (问答 第3套)	问答 百科高手 (台面型) (问答 第3套)	Merit
+trvwzh	问答 百科高手 (直立型) (问答 第1套)	问答 百科高手 (直立型) (问答 第1套)	Merit
+trvwzha	问答 百科高手 (直立型) (问答 第2套)	问答 百科高手 (直立型) (问答 第2套)	Merit
+trvwzhb	问答 百科高手 (直立型) (问答 第3套)	问答 百科高手 (直立型) (问答 第3套)	Merit
 trvwzv	问答 百科高手 (直立型) (问答 第1套)	问答 百科高手 (直立型) (问答 第1套)	Merit
 trvwzva	问答 百科高手 (直立型) (问答 第2套)	问答 百科高手 (直立型) (问答 第2套)	Merit
 trvwz2	问答 百科高手 (版本 2) (问答 第1套)	问答 百科高手 (版本 2) (问答 第1套)	Merit
 trvwz2a	问答 百科高手 (版本 2) (问答 第2套)	问答 百科高手 (版本 2) (问答 第2套)	Merit
-trvwz3h	问答 百科高手 (版本 3 - 台面型) (第1套)	问答 百科高手 (版本 3 - 台面型) (第1套)	Merit
-trvwz3ha	问答 百科高手 (版本 3 - 台面型) (第2套)	问答 百科高手 (版本 3 - 台面型) (第2套)	Merit
+trvwz3h	问答 百科高手 (版本 3 - 直立型) (第1套)	问答 百科高手 (版本 3 - 直立型) (第1套)	Merit
+trvwz3ha	问答 百科高手 (版本 3 - 直立型) (第2套)	问答 百科高手 (版本 3 - 直立型) (第2套)	Merit
 trvwz3v	问答 百科高手 (版本 3 - 垂直型)	问答 百科高手 (版本 3 - 垂直型)	Merit
 trvwz4	问答 百科高手 (版本 4) (问答 第1套)	问答 百科高手 (版本 4) (问答 第1套)	Merit
 trvwz4a	问答 百科高手 (版本 4) (问答 第2套)	问答 百科高手 (版本 4) (问答 第2套)	Merit
@@ -7211,7 +7217,7 @@ sigma2k	思格玛扑克 2000	思格玛扑克 2000	Sigma Inc.
 sidewndr	旁敲侧击	旁敲侧击	ACE
 spellbnd	目眩神迷	目眩神迷	ACE
 starspnr	星饵传说 (Dutch/Nederlands)	星饵传说 (Dutch/Nederlands)	ACE
-acefruit	Unknown ACE Fruits Game	Unknown ACE Fruits Game	ACE
+acefruit	未知的牌类水果游戏	未知的牌类水果游戏	ACE
 attckufo	袭击 UFO	袭击 UFO	Ryoto Electric Co.
 fortecar	闪亮纸牌	闪亮纸牌	Fortex LTD
 jackpool	奖金扑克 / 累计奖金 (意大利)	奖金扑克 / 累计奖金 (意大利)	Electronic Projects
@@ -7361,9 +7367,9 @@ destryea	破坏者 (Cidelsa) (第2套)	破坏者 (Cidelsa) (第2套)	Cidelsa
 draco	天龙星座	天龙星座	Cidelsa
 rockduck	摇摆鸭子 (工程版?)	摇摆鸭子 (工程版?)	Datel SAS
 tetriskr	俄罗斯方块  (盗版 Mirrorsoft PC-XT 俄罗斯方块 版本)	俄罗斯方块  (盗版 Mirrorsoft PC-XT 俄罗斯方块 版本)	bootleg
-trvhang	益智问答 (问题系列 第1套)	益智问答 (问题系列 第1套)	SMS MFG CORP
-trvhanga	益智问答 (问题系列 第2套)	益智问答 (问题系列 第2套)	SMS MFG CORP
-sureshot	Sure Shot	Sure Shot	SMS MFG CORP
+trvhang	俄罗斯问答 (问题系列 第1套)	俄罗斯问答 (问题系列 第1套)	SMS MFG CORP
+trvhanga	俄罗斯问答 (问题系列 第2套)	俄罗斯问答 (问题系列 第2套)	SMS MFG CORP
+sureshot	确信射击	确信射击	SMS MFG CORP
 skylncr	天空雷射枪 (Bordun, ver.U450C)	天空雷射枪 (Bordun, ver.U450C)	Bordun International
 butrfly	蝴蝶视频游戏 (ver.U350C)	蝴蝶视频游戏 (ver.U350C)	Bordun International
 madzoo	疯狂动物园 (ver.U450C)	疯狂动物园 (ver.U450C)	Bordun International
@@ -7412,7 +7418,7 @@ pexp0019	游戏者的利刃 Plus (XP000019) Deuces Wild Poker	游戏者的利刃 Plus (XP000
 pexp0112	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	IGT - International Gaming Technology
 pexs0006	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	IGT - International Gaming Technology
 pexmp006	游戏者的利刃 Plus (XMP00006) Multi-Poker	游戏者的利刃 Plus (XMP00006) Multi-Poker	IGT - International Gaming Technology
-pexmp017	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	游戏者的利刃 (XMP00017) 5-in-1 Wingboard	IGT - International Gaming Technology
+pexmp017	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	IGT - International Gaming Technology
 mirage	妖兽麻雀传 (日版)	妖兽麻雀传 (日版)	Mitchell
 dominob	骨牌块	骨牌块	Wonwoo Systems
 jongkyo	麻雀放课后	麻雀放课后	Kiwako
@@ -7461,17 +7467,17 @@ elvis	恶魔?	恶魔?	Unknown
 newmcard	新魔法纸牌	新魔法纸牌	New High Video?
 brasil	巴西 (版本 3)	巴西 (版本 3)	New High Video?
 fashion	时尚 (版本 2.14)	时尚 (版本 2.14)	New High Video?
-tour4000	旅行 4000	旅行 4000	High Video
+tour4000	漫游 4000	漫游 4000	High Video
 cfever40	英伦赌场热 4.0	英伦赌场热 4.0	High Video
 cfever50	英伦赌场热 5.0	英伦赌场热 5.0	High Video
-tour4010	旅行 4010	旅行 4010	High Video
+tour4010	漫游 4010	漫游 4010	High Video
 cfever51	英伦赌场热 5.1	英伦赌场热 5.1	High Video
 cfever61	英伦赌场热 6.1	英伦赌场热 6.1	High Video
 cfever1k	英伦赌场热 1k	英伦赌场热 1k	High Video
-girotutt	GiroTutto	GiroTutto	High Video
+girotutt	赌桌球	赌桌球	High Video
 ilpag	Il 包裹	Il 包裹	unknown
-mil4000	千禧版 Nuovo 4000 (版本 2.0)	千禧版 Nuovo 4000 (版本 2.0)	Sure Milano
-mil4000a	千禧版 Nuovo 4000 (版本 1.8)	千禧版 Nuovo 4000 (版本 1.8)	Sure Milano
+mil4000	千年诺沃 4000 (版本 2.0)	千年诺沃 4000 (版本 2.0)	Sure Milano
+mil4000a	千年诺沃 4000 (版本 1.8)	千年诺沃 4000 (版本 1.8)	Sure Milano
 ejollyx5	澳洲扑克 X5	澳洲扑克 X5	Solar Games
 grandprx	国际长途大赛车	国际长途大赛车	4fun
 showhand	手秀扑克 (意大利)	手秀扑克 (意大利)	Astro Corp.
@@ -7500,12 +7506,13 @@ luckgrln	幸运女孩 (基于新 Z180 硬件)	幸运女孩 (基于新 Z180 硬件)	Wing
 schery98	技能樱桃 '98	技能樱桃 '98	Amcoe
 schery97	技能樱桃 '97	技能樱桃 '97	Amcoe
 sfbonus	技能水果	技能水果	Amcoe
-ladylinr	Lady Liner	Lady Liner	TAB Austria
-kkojnoli	Kkoj Noli (Kill the Bees)	Kkoj Noli (Kill the Bees)	south korean hack
-mtonic	Magical Tonic?	Magical Tonic?	Tonic
-3super8	3 Super 8 (Italy)	3 Super 8 (Italy)	unknown
-buster	Buster	Buster	Marian Electronics Ltd.
-spielbud	Spiel Bude (German)	Spiel Bude (German)	ADP
+ladylinr	女士线	女士线	TAB Austria
+kkojnoli	韩国水果机 (蜜蜂杀手)	韩国水果机 (蜜蜂杀手)	south korean hack
+mtonic	魔力使者?	魔力使者?	Tonic
+3super8	3 超级 8 (意大利)	3 超级 8 (意大利)	unknown
+buster	小鬼	小鬼	Marian Electronics Ltd.
+spielbud	巴德演说 (德语版)	巴德演说 (德语版)	ADP
+himesiki	舞-Hime (日版)	舞-Hime (日版)	Hi-Soft
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
