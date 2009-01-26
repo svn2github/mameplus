@@ -655,7 +655,9 @@ static const struct game_keys2 keys_table2[] =
 {
 	// name         key1       key2
 	{ "jojo",     { 0x02203ee3, 0x01301972 },0 },
+	{ "jojoa",    { 0x02203ee3, 0x01301972 },0 },
 	{ "jojon",    { 0x02203ee3, 0x01301972 },0 },
+	{ "jojoan",   { 0x02203ee3, 0x01301972 },0 },
 	{ "jojoalt",  { 0x02203ee3, 0x01301972 },0 },
 	{ "jojoaltn", { 0x02203ee3, 0x01301972 },0 },
 	{ "jojoba",   { 0x23323ee3, 0x03021972 },0 },
@@ -719,6 +721,21 @@ static void cps3_decrypt_bios(running_machine *machine)
 #endif
 }
 
+static int cps3_use_fastboot;
+
+static emu_timer* fastboot_timer;
+
+static TIMER_CALLBACK( fastboot_timer_callback )
+{
+	UINT32 *rom =  (UINT32*)decrypted_gamerom;//memory_region ( machine, "user4" );
+	if (cps3_altEncryption) rom = (UINT32*)memory_region(machine, "user4");
+
+	//  printf("fastboot callback %08x %08x", rom[0], rom[1]);
+	cpu_set_reg(machine->cpu[0],SH2_PC, rom[0]);
+	cpu_set_reg(machine->cpu[0],SH2_R15, rom[1]);
+	cpu_set_reg(machine->cpu[0],SH2_VBR, 0x6000000);
+}
+
 static DRIVER_INIT( cps3 )
 {
 	const char *gamename = machine->gamedrv->name;
@@ -764,10 +781,15 @@ static DRIVER_INIT( cps3 )
 
 	cps3_eeprom = auto_malloc(0x400);
 
-
+	cps3_use_fastboot = 0;
 
 }
+DRIVER_INIT( nocd )
+{
+	DRIVER_INIT_CALL( cps3 );
 
+	cps3_use_fastboot = 1;
+}
 /* GFX decodes */
 
 
@@ -2479,6 +2501,12 @@ static MACHINE_RESET( cps3 )
 			cps3_eeprom[0x050/4] |= ws_dip;
 		}
 	}
+
+	if (cps3_use_fastboot)
+	{
+		 fastboot_timer = timer_alloc(machine, fastboot_timer_callback, NULL);
+		 timer_adjust_oneshot(fastboot_timer, attotime_zero, 0);
+	}
 }
 
 #define MASTER_CLOCK	42954500
@@ -3250,4 +3278,4 @@ GAME( 1999, jojoban, jojoba,   cps3, jojo, cps3, ROT0,   "Capcom", "JoJo's Bizar
 GAME( 1999, jojobane,jojoba,   cps3, jojo, cps3, ROT0,   "Capcom", "JoJo's Bizarre Adventure: Heritage for the Future / JoJo no Kimyouna Bouken: Miraie no Isan (Euro, 990913, NO CD)", GAME_IMPERFECT_GRAPHICS )
 
 // We don't have any actual warzard / red earth no cd bios sets, but keep this here anyway
-GAME( 1996, redeartn,redearth, cps3, redeartn, cps3, ROT0,   "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
+GAME( 1996, redeartn,redearth, cps3, redeartn, nocd, ROT0,   "Capcom", "Red Earth (961121, NO CD)", GAME_IMPERFECT_GRAPHICS )
