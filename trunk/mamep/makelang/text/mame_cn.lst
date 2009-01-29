@@ -359,9 +359,9 @@ cntrygrl	乡村女孩 (日版)	乡村女孩 (日版)	Royal Denshi
 luckygrl	幸运女孩? (Wing)	幸运女孩? (Wing)	Wing
 nightgal	晚间少女 (日版 840920 AG 1-00)	晚间少女 (日版 840920 AG 1-00)	Nichibutsu
 ngtbunny	晚间儿童(日版 840601 MRN 2-10)	晚间儿童(日版 840601 MRN 2-10)	Nichibutsu
-royalngt	皇室夜晚 (日班 840220 RN 2-00)	皇室夜晚 (日班 840220 RN 2-00)	Royal Denshi
-sexygal	性感少女	性感少女	Nichibutsu
-sweetgal	可爱少女	可爱少女	Nichibutsu
+royalngt	皇室夜晚 (日版 840220 RN 2-00)	皇室夜晚 (日版 840220 RN 2-00)	Royal Denshi
+sexygal	性感少女 (日版 850501 SXG 1-00)	性感少女 (日版 850501 SXG 1-00)	Nichibutsu
+sweetgal	可爱少女 (日版 850510 SWG 1-02)	可爱少女 (日版 850510 SWG 1-02)	Nichibutsu
 ngalsumr	晚间少女夏季版	晚间少女夏季版	Nichibutsu
 pastelg	麻雀推倒胡 (日版 851224)	麻雀推倒胡 (日版 851224)	Nichibutsu
 3ds	百家乐	百家乐	Nihon Bussan
@@ -1981,11 +1981,15 @@ bgareghk	空战之路 (奥地利版 / 香港版) (Sat Feb 3 1996)	空战之路 (奥地利版 / 香港
 bgaregnv	空战之路 - 新版本 (奥地利版 / 香港版) (Sat Mar 2 1996)	空战之路 - 新版本 (奥地利版 / 香港版) (Sat Mar 2 1996)	Raizing / Eighting
 bgaregt2	空战之路 - Type 2 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Mar 2 1996)	空战之路 - Type 2 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Mar 2 1996)	Raizing / Eighting
 bgaregcn	空战之路 - Type 2 (丹麦版 / 中国版) (Tue Apr 2 1996)	空战之路 - Type 2 (丹麦版 / 中国版) (Tue Apr 2 1996)	Raizing / Eighting
-batrider	蝙蝠骑警 - 装甲军团 - B 版本 (日版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 - B 版本 (日版) (Fri Feb 13 1998)	Raizing / Eighting
-batridra	蝙蝠骑警 - 装甲军团 (日版) (Mon Dec 22 1997)	蝙蝠骑警 - 装甲军团 (日版) (Mon Dec 22 1997)	Raizing / Eighting
-batridrk	蝙蝠骑警 - 装甲军团 (韩国版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 (韩国版) (Fri Feb 13 1998)	Raizing / Eighting
-bbakraid	战斗翔鹰 (日版) (Wed Apr 7 1999)	战斗翔鹰 (日版) (Wed Apr 7 1999)	Eighting
-bbakradu	战斗翔鹰 - 无限版本 (日版) (Tue Jun 8 1999)	战斗翔鹰 - 无限版本 (日版) (Tue Jun 8 1999)	Eighting
+batrid	蝙蝠骑警 - 装甲军团 (欧洲版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 (欧洲版) (Fri Feb 13 1998)	Raizing / Eighting
+batridu	蝙蝠骑警 - 装甲军团 (美版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 (美版) (Fri Feb 13 1998)	Raizing / Eighting
+batridc	蝙蝠骑警 - 装甲军团 (中国版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 (中国版) (Fri Feb 13 1998)	Raizing / Eighting
+batridj	蝙蝠骑警 - 装甲军团 - B 版本 (日版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 - B 版本 (日版) (Fri Feb 13 1998)	Raizing / Eighting
+batridk	蝙蝠骑警 - 装甲军团 (韩国版) (Fri Feb 13 1998)	蝙蝠骑警 - 装甲军团 (韩国版) (Fri Feb 13 1998)	Raizing / Eighting
+batridja	蝙蝠骑警 - 装甲军团 (日版) (Mon Dec 22 1997)	蝙蝠骑警 - 装甲军团 (日版) (Mon Dec 22 1997)	Raizing / Eighting
+bkraidu	战斗翔鹰 - 无限版本 (美版) (Tue Jun 8 1999)	战斗翔鹰 - 无限版本 (美版) (Tue Jun 8 1999)	Eighting
+bkraiduj	战斗翔鹰 - 无限版本 (日版) (Tue Jun 8 1999)	战斗翔鹰 - 无限版本 (日版) (Tue Jun 8 1999)	Eighting
+bkraidj	战斗翔鹰 (日版) (Wed Apr 7 1999)	战斗翔鹰 (日版) (Wed Apr 7 1999)	Eighting
 pwrinst2	豪血寺一族 2 (美版, Ver. 94/04/08)	豪血寺一族 2 (美版, Ver. 94/04/08)	Atlus/Cave
 pwrins2j	豪血寺一族 2 (日版, Ver. 94/04/08)	豪血寺一族 2 (日版, Ver. 94/04/08)	Atlus/Cave
 plegends	豪血寺外传 - 最强传说 (美版, Ver. 95/06/20)	豪血寺外传 - 最强传说 (美版, Ver. 95/06/20)	Atlus/Cave
@@ -3091,7 +3095,8 @@ wbdeluxe	神奇男孩豪华版	神奇男孩豪华版	Sega (Escape license)
 wboysys2	神奇男孩 (系统 2)	神奇男孩 (系统 2)	Sega (Escape license)
 gardia	巡弋飞艇 (317-0006)	巡弋飞艇 (317-0006)	Sega / Coreland
 gardiab	巡弋飞艇 (317-0007?, 盗版)	巡弋飞艇 (317-0007?, 盗版)	bootleg
-noboranb	怪叔叔救美 (日版)	怪叔叔救美 (日版)	bootleg
+nob	怪叔叔救美 (日版)	怪叔叔救美 (日版)	Data East Corporation
+nobb	怪叔叔救美 (日版,盗版)	怪叔叔救美 (日版,盗版)	bootleg
 blockgal	打砖块美女版 (MC-8123B, 317-0029)	打砖块美女版 (MC-8123B, 317-0029)	Sega / Vic Tokai
 blckgalb	打砖块美女版 (盗版)	打砖块美女版 (盗版)	bootleg
 tokisens	时间战士	时间战士	Sega
@@ -5453,6 +5458,7 @@ shimpap4	超级狂野橄榄球 (工程版, rev 4.0 09/10/91)	超级狂野橄榄球 (工程版, rev 4
 strkforc	射击部队 (rev 1 02/25/91)	射击部队 (rev 1 02/25/91)	Midway
 mk	真人快打 (rev 5.0 T-Unit 03/19/93)	真人快打 (rev 5.0 T-Unit 03/19/93)	Midway
 mkr4	真人快打 (rev 4.0 T-Unit 02/11/93)	真人快打 (rev 4.0 T-Unit 02/11/93)	Midway
+mkprot8	真人快打 (工程版, rev 8.0 07/21/92)	真人快打 (工程版, rev 8.0 07/21/92)	Midway
 mkprot9	真人快打 (工程版, rev 9.0 07/28/92)	真人快打 (工程版, rev 9.0 07/28/92)	Midway
 mkla1	真人快打 (rev 1.0 08/09/92)	真人快打 (rev 1.0 08/09/92)	Midway
 mkla2	真人快打 (rev 2.0 08/18/92)	真人快打 (rev 2.0 08/18/92)	Midway
@@ -6133,6 +6139,8 @@ deerhunc	猎鹿 USA V2	猎鹿 USA V2	Sammy USA Corporation
 turkhunt	猎鹿 USA V1.0	猎鹿 USA V1.0	Sammy USA Corporation
 wschamp	飞行射击冠军 V2.0	飞行射击冠军 V2.0	Sammy USA Corporation
 wschampa	飞行射击冠军 V1.01	飞行射击冠军 V1.01	Sammy USA Corporation
+funcube2	立方射击 2 (v1.1)	立方射击 2 (v1.1)	Namco
+funcube4	立方射击 4 (v1.0)	立方射击 4 (v1.0)	Namco
 trophyh	胜利打猎 - 熊 & 鹿 V1.0	胜利打猎 - 熊 & 鹿 V1.0	Sammy USA Corporation
 srmp4	超真实麻雀 P4 (日版)	超真实麻雀 P4 (日版)	Seta
 srmp4o	超真实麻雀 P4 (日版, 旧版)	超真实麻雀 P4 (日版, 旧版)	Seta
@@ -6368,7 +6376,7 @@ paprazzi	美女杀手	美女杀手	Yun Sung
 madball	疯狂弹球 V2.0	疯狂弹球 V2.0	Yun Sung
 madballn	疯狂弹球 V2.0 (裸露版)	疯狂弹球 V2.0 (裸露版)	Yun Sung
 cannball	佳能球气泡 (Yun Sung) (直立型)	佳能球气泡 (Yun Sung) (直立型)	Yun Sung / Soft Vision
-cannbalv	佳能球气泡 (Yun Sung) (垂直型)	佳能球气泡 (Yun Sung) (垂直型l)	Yun Sung / T&K
+cannbalv	佳能球气泡 (Yun Sung) (垂直型)	佳能球气泡 (Yun Sung) (垂直型)	Yun Sung / T&K
 magix	马吉斯俄罗斯方块	马吉斯俄罗斯方块	Yun Sung
 rocktris	摇摆俄罗斯方块	摇摆俄罗斯方块	Yun Sung
 magicbub	魔法泡泡	魔法泡泡	Yun Sung
@@ -6425,6 +6433,7 @@ royalmah	皇家麻雀 (Falcon 盗版, v1.01)	皇家麻雀 (Falcon 盗版, v1.01)	bootleg
 janyoup2	皇家麻雀 Part II (ver 7.03, July 1 1983)	皇家麻雀 Part II (ver 7.03, July 1 1983)	Cosmo Denshi
 janoh	喔 - 一月 (第1套)	喔 - 一月 (第1套)	Toaplan
 janoha	喔 - 一月 (第2套)	喔 - 一月 (第2套)	Toaplan
+jansou	坚守	坚守	Dyna
 mjsiyoub	麻雀校园 (日版)	麻雀校园 (日版)	Visco
 mjsenka	麻雀 樱花(日版)	麻雀 樱花(日版)	Visco
 mjyarou	麻将 雅柔 [BET] (日版	麻将 雅柔 [BET] (日版	Visco / Video System
@@ -6530,17 +6539,18 @@ goldstbl	黄金星座 (蓝色版本)	黄金星座 (蓝色版本)	IGS
 moonlght	月亮之光 (盗版 黄金星座)	月亮之光 (盗版 黄金星座)	bootleg
 chry10	樱桃 10 (盗版 PIC16F84)	樱桃 10 (盗版 PIC16F84)	bootleg
 chrygld	樱桃和黄金 I	樱桃和黄金 I	bootleg
+cabaret	酒舞宴	酒舞宴	AMT Co. Ltd.
 cpoker	扑克冠军 (v220I)	扑克冠军 (v220I)	IGS
 cpokert	扑克冠军 (v200G)	扑克冠军 (v200G)	Tuning
 csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Ability)	IGS
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
 igs_ncs	新技能冠军 (v100n)	新技能冠军 (v100n)	IGS
 igs_ncs2	新扑克牌游戏 - 冠军技能 (v100n 2000)	新扑克牌游戏 - 冠军技能 (v100n 2000)	IGS
+spk116it	超级扑克游戏 (v116IT)	超级扑克游戏 (v116IT)	IGS
 jackie	成龙之龙 (v110U)	成龙之龙 (v110U)	IGS
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
 iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
-cabaret	酒舞宴	酒舞宴	IGS
 jingbell	铃儿响叮铛 (意大利, V133I)	铃儿响叮铛 (意大利, V133I)	IGS
 gp98	国际长途大赛车 '98	国际长途大赛车 '98	unknown
 lhb	龙虎榜 (V035C)	龙虎榜 (V035C)	IGS
@@ -7089,7 +7099,7 @@ koftball	足球王	足球王	BMC
 mpoker	优异纸牌	优异纸牌	Merit
 pitboss	赌场大亨 (第1套)	赌场大亨 (第1套)	Merit
 pitbossa	赌场大亨 (第2套)	赌场大亨 (第2套)	Merit
-casino5	娱乐场 5	娱乐场 5	Merit
+casino5	第五赌场	第五赌场	Merit
 trvwzh	问答 百科高手 (直立型) (问答 第1套)	问答 百科高手 (直立型) (问答 第1套)	Merit
 trvwzha	问答 百科高手 (直立型) (问答 第2套)	问答 百科高手 (直立型) (问答 第2套)	Merit
 trvwzhb	问答 百科高手 (直立型) (问答 第3套)	问答 百科高手 (直立型) (问答 第3套)	Merit
@@ -7106,7 +7116,7 @@ tictac	井字游戏	井字游戏	Merit
 phrcraze	疯狂哈里斯 (第1套)	疯狂哈里斯 (第1套)	Merit
 phrcraza	疯狂哈里斯 (第2套)	疯狂哈里斯 (第2套)	Merit
 phrcrazs	疯狂飞雷 (Sex Kit)	疯狂飞雷 (Sex Kit)	Merit
-bigappg	大苹果游戏 ?	大苹果游戏 ?	Merit
+bigappg	大苹果游戏	大苹果游戏	Merit
 dodge	全员躲藏	全员躲藏	Merit
 couple	出双入对 (第1套)	出双入对 (第1套)	Merit
 couplep	出双入对 (第2套)	出双入对 (第2套)	Merit
@@ -7146,7 +7156,8 @@ laserbas	雷射基地 (第1套)	雷射基地 (第1套)	Amstar/HOEI
 laserbsa	雷射基地 (第2套)	雷射基地 (第2套)	Amstar/HOEI
 futflash	未来之光	未来之光	HOEI
 turbosub	涡轮潜艇 (工程版. TSCA)	涡轮潜艇 (工程版. TSCA)	Entertainment Sciences
-turbosba	涡轮潜艇 (工程版. TSC6)	涡轮潜艇 (工程版. TSC6)	Entertainment Sciences
+turbosb7	涡轮潜艇 (工程版. TSC7)	涡轮潜艇 (工程版. TSC7)	Entertainment Sciences
+turbosb6	涡轮潜艇 (工程版. TSC6)	涡轮潜艇 (工程版. TSC6)	Entertainment Sciences
 pipeline	水管大作战	水管大作战	Daehyun Electronics
 ttchamp	桌上网球冠军 (第1套)	桌上网球冠军 (第1套)	Gamart?
 ttchampa	桌上网球冠军 (第2套)	桌上网球冠军 (第2套)	Gamart?
@@ -7178,6 +7189,8 @@ pool10c	撞球 10 (意大利, 第3套)	撞球 10 (意大利, 第3套)	C.M.C.
 pool10d	撞球 10 (意大利, 第4套)	撞球 10 (意大利, 第4套)	C.M.C.
 tortufam	海龟家族 (意大利)	海龟家族 (意大利)	C.M.C.
 potgame	锅戏 (意大利)	锅戏 (意大利)	C.M.C.
+bottle10	瓶拾 (意大利, 第1套)	瓶拾 (意大利, 第1套)	C.M.C.
+bottl10b	瓶拾 (意大利, 第2套)	瓶拾 (意大利, 第2套)	C.M.C.
 royalcrd	皇家纸牌 (奥地利, 第1套)	皇家纸牌 (奥地利, 第1套)	TAB-Austria
 royalcdb	皇家纸牌 (奥地利, 第2套)	皇家纸牌 (奥地利, 第2套)	TAB-Austria
 royalcdc	皇家纸牌 (斯洛伐克, 加密)	皇家纸牌 (斯洛伐克, 加密)	Evona Electronic
@@ -7422,7 +7435,6 @@ pexmp017	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	游戏者的利刃 Plus (XMP000
 mirage	妖兽麻雀传 (日版)	妖兽麻雀传 (日版)	Mitchell
 dominob	骨牌块	骨牌块	Wonwoo Systems
 jongkyo	麻雀放课后	麻雀放课后	Kiwako
-gtipoker	GTI 扑克	GTI 扑克	GTI Inc
 gamecstl	游戏羽冠	游戏羽冠	Cristaltec
 gamecst2	游戏羽冠 (版本 2.613)	游戏羽冠 (版本 2.613)	Cristaltec
 drw80pkr	扑克牌 -  八十分	扑克牌 -  八十分	IGT - International Gaming Technology
@@ -7441,6 +7453,7 @@ spool99	超真实弹珠台 99 (版本 0.36)	超真实弹珠台 99 (版本 0.36)	Electronic Proje
 spool99a	超真实弹珠台 99 (版本 0.31)	超真实弹珠台 99 (版本 0.31)	Electronic Projects
 4roses	四玫瑰 (加密版, 第1套)	四玫瑰 (加密版, 第1套)	Unknown
 4rosesa	四玫瑰 (加密版, 第2套)	四玫瑰 (加密版, 第2套)	Unknown
+big10	大拾	大拾	unknown
 videopkr	视频扑克	视频扑克	InterFlip
 blckjack	二十一点	二十一点	InterFlip
 videodad	视频骰子	视频骰子	InterFlip
@@ -7496,6 +7509,8 @@ cmast91	樱桃水果盘 '91 (ver.1.30)	樱桃水果盘 '91 (ver.1.30)	Dyna
 queen	皇后?	皇后?	STG?
 86lions	86 狮子	86 狮子	Aristocrat
 caswin	水果牌	水果牌	Aristocrat
+reelrock	真摇滚 (A - 13/07/98)	真摇滚 (A - 13/07/98)	Aristocrat
+indiandr	印地安之梦 (B - 15/12/98)	印地安之梦 (B - 15/12/98)	Aristocrat
 janshi	雀神	雀神	Eagle
 slotcarn	狂欢节	狂欢节	Wing Co.Ltd
 lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
@@ -7505,6 +7520,12 @@ lucky8a	新幸运 8 线 (第2套)	新幸运 8 线 (第2套)	Wing Co.Ltd / GEI
 luckgrln	幸运女孩 (基于新 Z180 硬件)	幸运女孩 (基于新 Z180 硬件)	Wing
 schery98	技能樱桃 '98	技能樱桃 '98	Amcoe
 schery97	技能樱桃 '97	技能樱桃 '97	Amcoe
+nfb96	新水果积分 '96	新水果积分 '96	Amcoe
+nfb96se	新水果积分 '96 特别版 (盗版, 第1套)	新水果积分 '96 特别版 (盗版, 第1套)	bootleg
+nfb96sea	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)	bootleg
+nfb96seb	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)	bootleg
+carb2002	马车积分 2002 (盗版)	马车积分 2002 (盗版)	bootleg
+carb2003	马车积分 2003 (盗版)	马车积分 2003 (盗版)	bootleg
 sfbonus	技能水果	技能水果	Amcoe
 ladylinr	女士线	女士线	TAB Austria
 kkojnoli	韩国水果机 (蜜蜂杀手)	韩国水果机 (蜜蜂杀手)	south korean hack
@@ -7512,7 +7533,10 @@ mtonic	魔力使者?	魔力使者?	Tonic
 3super8	3 超级 8 (意大利)	3 超级 8 (意大利)	unknown
 buster	小鬼	小鬼	Marian Electronics Ltd.
 spielbud	巴德演说 (德语版)	巴德演说 (德语版)	ADP
-himesiki	舞-Hime (日版)	舞-Hime (日版)	Hi-Soft
+himesiki	姬四季舞 (日版)	姬四季舞 (日版)	Hi-Soft
+gtipoker	GTI 扑克	GTI 扑克	GTI Inc
+norautp	扑克积分	扑克积分	Noraut Ltd.
+norautpn	扑克积分 (盗版)	扑克积分 (盗版)	bootleg?
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
@@ -7536,6 +7560,9 @@ kodh	龙王战士 (hack)	龙王战士 (hack)	hack
 dinoh	恐龙新世纪 (hack 第1套)	恐龙新世纪 (hack 第1套)	hack
 dinoha	恐龙新世纪 (hack 第2套)	恐龙新世纪 (hack 第2套)	hack
 dinohb	恐龙新世纪 (hack 第3套)	恐龙新世纪 (hack 第3套)	hack
+mmatrixd	火星 矩阵: 超固体射击 (美版 000412 凤凰版) (盗版)	火星 矩阵: 超固体射击 (美版 000412 凤凰版) (盗版)	bootleg
+dimahoud	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	bootleg
+armwar1d	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	bootleg
 kof96ep	拳皇 '96 (盗版)	拳皇 '96 (盗版)	bootleg
 kof97pla	拳皇 '97 重出江湖 Plus 2003 (盗版)	拳皇 '97 重出江湖 Plus 2003 (盗版)	bootleg
 kf2k1pls	拳皇 2001 增强型 Plus (盗版 / 第1套)	拳皇 2001 增强型 Plus (盗版 / 第1套)	bootleg
