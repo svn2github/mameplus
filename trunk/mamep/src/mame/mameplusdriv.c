@@ -65,6 +65,11 @@ const game_driver * const plusdrivers[] =
 	DRIVER( dinoha )	/* hack */
 	DRIVER( dinohb )	/* hack */
 
+	/* Capcom CPS2 Phoenix Edition */
+	DRIVER( mmatrixd )		/* bootleg */
+	DRIVER( dimahoud )		/* bootleg */
+	DRIVER( armwar1d )		/* bootleg */
+
 	/* Neo Geo bootleg */
 	DRIVER( kof96ep )	/* 0214 bootleg */
 	DRIVER( kof97pla )	/* 0232 (c) 2003 bootleg */
