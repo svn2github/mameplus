@@ -744,7 +744,7 @@ static DRIVER_INIT( redearth ){ cps3_key1 = 0x9e300ab1; cps3_key2 = 0xa175b82c; 
 
 DRIVER_INIT( nocd )
 {
-	DRIVER_INIT_CALL( cps3 );
+	DRIVER_INIT_CALL( redearth );
 
 	cps3_use_fastboot = 1;
 }
