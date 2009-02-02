@@ -740,14 +740,14 @@ static DRIVER_INIT( sfiii )   { cps3_key1 = 0xb5fe053e; cps3_key2 = 0xfc03925a; 
 static DRIVER_INIT( sfiii2 )  { cps3_key1 = 0x00000000; cps3_key2 = 0x00000000; cps3_altEncryption = 1; DRIVER_INIT_CALL(cps3); }
 static DRIVER_INIT( sfiii3 )  { cps3_key1 = 0xa55432b4; cps3_key2 = 0x0c129981; cps3_altEncryption = 0; DRIVER_INIT_CALL(cps3); }
 static DRIVER_INIT( redearth ){ cps3_key1 = 0x9e300ab1; cps3_key2 = 0xa175b82c; cps3_altEncryption = 0; DRIVER_INIT_CALL(cps3); }
-
-
-DRIVER_INIT( nocd )
+static DRIVER_INIT( nocd )
 {
 	DRIVER_INIT_CALL( redearth );
 
 	cps3_use_fastboot = 1;
 }
+
+
 /* GFX decodes */
 
 

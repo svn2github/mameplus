@@ -33,6 +33,7 @@ DRVLIBS += \
 
 $(MESSOBJ)/shared.a: \
 	$(MESS_DEVICES)/cartslot.o	\
+	$(MESS_DEVICES)/multcart.o	\
 	$(MESS_DEVICES)/flopdrv.o	\
 	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_FORMATS)/ioprocs.o	\
