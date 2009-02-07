@@ -26,22 +26,25 @@ private:
 	QMutex mutex;
 };
 
-class MergedRomAuditor : public QObject
+class MergedRomAuditor : public QThread
 {
 	Q_OBJECT
-public:
-	QProcess *loadProc;
 
-	MergedRomAuditor(QObject *parent = 0);
+public:
+	~MergedRomAuditor();
 
 public slots:
-	void init();
-	void auditorReadyReadStandardOutput();
-	void auditorFinished(int, QProcess::ExitStatus);
-
-private:
 	void audit();
 
+signals:
+	void progressSwitched(int max, QString title = "");
+	void progressUpdated(int progress);
+	void logUpdated(char, QString);
+
+protected:
+	void run();
+
+private:
 	QString outBuf, consoleName, consolePath, mergedName;
 	QList<QStringList> consoleInfoList;
 };

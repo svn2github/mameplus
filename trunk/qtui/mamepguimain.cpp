@@ -1,5 +1,7 @@
 #include <QtPlugin>
 
+#include "7zVersion.h"
+
 #include "mamepguimain.h"
 
 #include "mameopt.h"
@@ -25,33 +27,22 @@ const QString CFG_PREFIX =
 #endif
 	".mamepgui/";
 
-const QString EXEC_EXT = 
-#ifdef Q_WS_WIN
-	".exe";
-#else
-	"";
-#endif
-
-const QString ZIP_EXT = ".zip";
-const QString ICO_EXT = ".ico";
-const QString INI_EXT = ".ini";
-const QString STA_EXT = ".sta";
-const QString INP_EXT = ".inp";
-const QString MNG_EXT = ".mng";
-const QString AVI_EXT = ".avi";
-const QString WAV_EXT = ".wav";
-
 MainWindow *win;
-QSettings guiSettings(CFG_PREFIX + "mamepgui" + INI_EXT, QSettings::IniFormat);
-QSettings defSettings(":/res/mamepgui" + INI_EXT, QSettings::IniFormat);
+QSettings guiSettings(CFG_PREFIX + "mamepgui" INI_EXT, QSettings::IniFormat);
+QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
 QString mame_binary;
 QString language;
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
-bool isMAMEPlus = false;
-bool isSDLMAME = false;
+
+bool isSDLPort = false;
 bool isMESS = false;
+bool hasIPS = false;
+bool hasDevices = false;
+bool hasLanguage = false;
+bool hasDriverCfg = false;
+
 QStringList validGuiSettings;
 
 /* internal */
@@ -263,7 +254,6 @@ QMainWindow(parent)
 	menuView->insertAction(actionVerticalTabs, actionFolderList);
 	toolBar->insertAction(actionLargeIcons, actionFolderList);
 
-	mergedAuditor = new MergedRomAuditor(this);
 	mameAuditor = new MameExeRomAuditor(this);
 
 	gameList = new Gamelist(this);
@@ -272,8 +262,8 @@ QMainWindow(parent)
 	playOptionsUI = new PlayOptions(this);
 	optionsUI = new Options(this);
 	aboutUI = new About(this);
-#ifdef Q_OS_WIN
 	ipsUI = new IPS(this);
+#ifdef Q_OS_WIN
 	m1UI = new M1UI(this);
 #endif /* Q_OS_WIN */
 
@@ -359,12 +349,13 @@ void MainWindow::init()
 	for (int i = DOCK_HISTORY; i <= DOCK_COMMAND; i ++)
 		initHistory(i);
 
-	//init SDL
 #ifdef Q_OS_WIN
-		if (SDL_Init(SDL_INIT_VIDEO) < 0)
-			win->log("SDL_INIT_VIDEO failed.");
-		else
-			sdlInited = true;
+	//init SDL
+	if (SDL_Init(SDL_INIT_VIDEO) < 0)
+		win->log("SDL_INIT_VIDEO failed.");
+	else
+		sdlInited = true;
+#endif /* Q_OS_WIN */
 
 	ipsUI->init();
 
@@ -372,11 +363,10 @@ void MainWindow::init()
 	optUtils->init();
 
 	//rearrange docks
+#ifdef Q_OS_WIN
 	addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::LeftDockWidgetArea), m1UI);
 	tabifyDockWidget(dwFolderList, m1UI);
 #endif /* Q_OS_WIN */
-
-	//rearrange docks
 	tabifyDockWidget(dwHistory, dwGUILog);
 
 	//hide non popular docks by default
@@ -400,7 +390,7 @@ void MainWindow::init()
 	QDir().mkpath(CFG_PREFIX);
 
 	QString warnings = "";
-	QFile iniFile(CFG_PREFIX + "mamepgui" + INI_EXT);
+	QFile iniFile(CFG_PREFIX + "mamepgui" INI_EXT);
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append(QFileInfo(iniFile).absoluteFilePath());
 	iniFile.close();
@@ -425,7 +415,7 @@ void MainWindow::init()
 	{
 		QString filter = "";
 #ifdef Q_WS_WIN
-		filter.append(tr(qPrintable("Executable files (*" + EXEC_EXT + ")")));
+		filter.append(tr("Executable files") + " (*" EXEC_EXT ")");
 		filter.append(";;");
 #endif
 		filter.append(tr("All Files (*)"));
@@ -488,7 +478,7 @@ void MainWindow::init()
 		QString dirpath = utils->getPath(_dirpath);
 		
 		QStringList nameFilter;
-		nameFilter << "*.png";
+		nameFilter << "*" PNG_EXT;
 		nameFilter << "*.jpg";
 	
 		// iterate all files in the path
@@ -532,15 +522,17 @@ void MainWindow::init()
 	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
 	connect(actionRowDelegate, SIGNAL(toggled(bool)), gameList, SLOT(toggleDelegate(bool)));
-	//fixme:
-	actionRowDelegate->setEnabled(false);
 	connect(actionStretchSshot, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 	connect(actionEnforceAspect, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 
 	// Auditor
 	connect(&romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
 	connect(&romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
-	connect(&romAuditor, SIGNAL(finished()), mergedAuditor, SLOT(init()));
+	connect(&romAuditor, SIGNAL(finished()), &mergedAuditor, SLOT(audit()));
+
+	connect(&mergedAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
+	connect(&mergedAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
+	connect(&mergedAuditor, SIGNAL(finished()), gameList, SLOT(init()));
 
 	// Game List
 	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterSearchChanged()));
@@ -565,9 +557,15 @@ void MainWindow::setVersion()
 {
 	//set version info
 
+	QString mameString;
 	QString m1Ver = "";
 	QString m1VerString = "";
 	QString sdlVerString = "";
+
+	if (!isMESS)
+		mameString = QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(mameGame->mameVersion);
+	else
+		mameString = QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; The MESS Team<br>").arg(mameGame->mameVersion);
 
 #ifdef Q_OS_WIN
 	if (m1 != NULL && m1->available)
@@ -591,20 +589,23 @@ void MainWindow::setVersion()
 		"</style>"
 		"</head>"
 		"<body>"
-		"<strong>MAME Plus! GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
+		"<strong>M+GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
 		"A Qt implementation of the famous <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
-		"<a href=\"http://mamedev.org\">M.A.M.E.</a> %2 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>"
+		"%2"
 		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
 		"%4"
 		"%5"
+		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 11")
-		.arg(mameGame->mameVersion)
+		.arg("1.3 beta 13")
+		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
-		.arg(m1VerString);
+		.arg(m1VerString)
+		.arg("<a href=\"http://www.7-zip.org\">LZMA SDK</a> " MY_VERSION_COPYRIGHT_DATE)
+		;
 
 	aboutUI->tbVersion->setHtml(strVersion);
 #ifdef Q_OS_WIN
@@ -678,10 +679,8 @@ void MainWindow::on_actionWave_activated()
 
 void MainWindow::on_actionConfigIPS_activated()
 {
-#ifdef Q_OS_WIN
 	ipsUI->updateList();
 	ipsUI->exec();
-#endif /* Q_OS_WIN */
 }
 
 void MainWindow::on_actionRefresh_activated()
@@ -696,24 +695,36 @@ void MainWindow::on_actionAudit_activated()
 
 void MainWindow::on_actionSrcProperties_activated()
 {
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	optionsUI->init(OPTLEVEL_SRC, 0);
 	optionsUI->exec();
 }
 
 void MainWindow::on_actionProperties_activated()
 {
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	optionsUI->init(OPTLEVEL_CURR, 0);
 	optionsUI->exec();	
 }
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	optionsUI->init(OPTLEVEL_GLOBAL, 0);
 	optionsUI->exec();
 }
 
 void MainWindow::on_actionDirectories_activated()
 {
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	optionsUI->init(OPTLEVEL_GUI, 0);
 	optionsUI->exec();
 }
@@ -813,6 +824,12 @@ void MainWindow::on_actionChinese_Taiwan_activated()
 void MainWindow::on_actionJapanese_activated()
 {
 	language = "ja_JP";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionHungarian_activated()
+{
+	language = "hu_HU";
 	showRestartDialog();
 }
 
@@ -938,6 +955,8 @@ void MainWindow::loadLayout()
 		actionChinese_Taiwan->setChecked(true);
 	else if (language == "ja_JP")
 		actionJapanese->setChecked(true);
+	else if (language == "hu_HU")
+		actionHungarian->setChecked(true);
 	else if (language == "pt_BR")
 		actionBrazilian->setChecked(true);
 	else
@@ -983,9 +1002,9 @@ void MainWindow::saveSettings()
 	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
 #ifdef Q_OS_WIN
 	guiSettings.setValue("m1_language", m1UI->cmbLang->currentText());
+#endif /* Q_OS_WIN */
 	guiSettings.setValue("ips_language", ipsUI->cmbLang->currentText());
 	guiSettings.setValue("ips_relationship", ipsUI->chkRelation->isChecked() ? 1 : 0);
-#endif /* Q_OS_WIN */
 	guiSettings.setValue("gui_style", gui_style);
 	guiSettings.setValue("language", language);
 
@@ -998,18 +1017,20 @@ void MainWindow::saveSettings()
 		guiSettings.setValue("mame_binary", mame_binary);
 
 
-	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(Gamelist::tr("Consoles"), Qt::MatchFixedString);
+	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(gameList->folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
 	QTreeWidgetItem *messItem = NULL;
 	if (!messItems.isEmpty())
 		messItem = messItems.first();
 
 	//save console dirs
+	int iNext = 0;	
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
 
 		if (pMameOpt->guivisible && optName.endsWith("_extra_software"))
 		{
+		win->log(optName);
 			QString sysName = optName;
 			sysName.remove("_extra_software");
 				
@@ -1018,39 +1039,44 @@ void MainWindow::saveSettings()
 			{
 				guiSettings.setValue(optName, mameOpts[optName]->globalvalue);
 
-				for (int i = 0; messItem != NULL && i < messItem->childCount(); i++)
-				{
-					if (messItem->child(i)->isHidden() && sysName == messItem->child(i)->text(0))
+				if (messItem != NULL)
+					for (int i = 0; i < messItem->childCount(); i++)
 					{
-						messItem->child(i)->setHidden(false);
-						break;
+						if (sysName == messItem->child(i)->text(0))
+						{
+							messItem->child(i)->setHidden(false);
+							break;
+						}
 					}
-				}
 			}
 			else
 			{
 				guiSettings.remove(optName);
 
-				for (int i = 0; messItem != NULL && i < messItem->childCount(); i++)
+				if (messItem != NULL)
 				{
-					if (!messItem->child(i)->isHidden() && sysName == messItem->child(i)->text(0))
+					for (int i = 0; i < messItem->childCount(); i++)
 					{
-						messItem->child(i)->setHidden(true);
-						int iNext = i + 1;
-					
-						if (iNext >= messItem->childCount())
-							iNext = i - 1;
-						if (iNext < 0)
-							;
-						else
-							win->treeFolders->setCurrentItem(messItem->child(iNext));
+						if (sysName == messItem->child(i)->text(0))
+						{
+							messItem->child(i)->setHidden(true);
+/*							iNext = i + 1;
 
-						break;
+							if (iNext >= messItem->childCount())
+								iNext = i - 1;
+
+							if (iNext < 0)
+								iNext = 0;
+*/
+							break;
+						}
 					}
+					
 				}
 			}
 		}
 	}
+//	win->treeFolders->setCurrentItem(messItem->child(iNext));
 
 	//save layout
 	guiSettings.setValue("window_geometry", saveGeometry());

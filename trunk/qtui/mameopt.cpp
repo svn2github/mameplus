@@ -6,7 +6,7 @@
 #ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-#endif
+#endif /* Q_OS_WIN */
 
 /* global */
 Options *optionsUI = NULL;
@@ -679,7 +679,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	{
 	case OPTLEVEL_GUI:
 	case OPTLEVEL_GLOBAL:
-		iniFileName = mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT;
+		iniFileName = mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT);
 
 		//save old value
 		prevVal = pMameOpt->globalvalue;
@@ -896,7 +896,7 @@ void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 
 	if (!filter.isEmpty())
 		filter.append(";;");
-	filter.append(tr("All Files (*)"));
+	filter.append(tr("All Files") + " (*)");
 	win->log(filter);
 
 	QString fileName = QFileDialog::getOpenFileName
@@ -913,19 +913,19 @@ void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 void OptionDelegate::setDatFile()
 {
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
-	setFile(tr("Dat files (*.dat)"), resetWidget);
+	setFile(tr("Dat files") + " (*.dat)", resetWidget);
 }
 
 void OptionDelegate::setExeFile()
 {
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
-	setFile(tr(qPrintable("Executable files (*" + EXEC_EXT + ")")), resetWidget);
+	setFile(tr("Executable files") + " (*" EXEC_EXT ")", resetWidget);
 }
 
 void OptionDelegate::setCfgFile()
 {
 	ResetWidget *resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
-	setFile(tr("Config files (*.cfg)"), resetWidget);
+	setFile(tr("Config files") + " (*.cfg)", resetWidget);
 }
 
 
@@ -1018,7 +1018,7 @@ public:
 		{
 			OSType = attributes.value("os");
 			if (pMameOpt != NULL && (OSType.isEmpty() || 
-				OSType == (isSDLMAME ? "sdl" : "win")))
+				OSType == (isSDLPort ? "sdl" : "win")))
 				pMameOpt->guivalues << attributes.value("guivalue");
 		}
 
@@ -1036,7 +1036,7 @@ public:
 				pMameOpt->description = currentText;
 			else if (qName == "value")
 			{
-				if (OSType.isEmpty() || OSType == (isSDLMAME ? "sdl" : "win"))
+				if (OSType.isEmpty() || OSType == (isSDLPort ? "sdl" : "win"))
 					pMameOpt->values << currentText;
 			}
 		}
@@ -1634,7 +1634,7 @@ void OptionUtils::loadDefault(QString text)
 
 	/* test ini readable/writable */
 	QString warnings = "";
-	QFile iniFile(mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT);
+	QFile iniFile(mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append(QFileInfo(iniFile).absoluteFilePath());
 	iniFile.close();
@@ -1644,7 +1644,7 @@ void OptionUtils::loadDefault(QString text)
 	// mkdir for individual game settings
 	QDir().mkpath(mameIniPath + "ini/source");
 
-	iniFile.setFileName(mameIniPath + "ini/puckman" + INI_EXT);
+	iniFile.setFileName(mameIniPath + "ini/puckman" INI_EXT);
 	if (!iniFile.open(QIODevice::ReadWrite | QFile::Text))
 		warnings.append("\n" + QFileInfo(mameIniPath + "ini").absoluteFilePath());
 	iniFile.close();
@@ -1666,11 +1666,14 @@ void OptionUtils::loadDefault(QString text)
 	}
 
 	//mameOpts constructed, test MAME derivative now
-	if (mameOpts.contains("driver_config") || mameOpts.contains("langpath"))
-		isMAMEPlus = true;
+	if (mameOpts.contains("driver_config"))
+		hasDriverCfg = true;
+	
+	if (mameOpts.contains("ips"))
+		hasIPS = true;
 	
 	if (mameOpts.contains("sdlvideofps") || mameOpts.contains("videodriver"))
-		isSDLMAME = true;
+		isSDLPort = true;
 
 	loadTemplate();
 
@@ -1680,11 +1683,12 @@ void OptionUtils::loadDefault(QString text)
 	{
 		GameInfo *gameInfo = mameGame->games[gameName];
 		
-		if (!gameInfo->devices.isEmpty())
+		if (!gameInfo->devices.isEmpty() && !gameInfo->isExtRom)
 		{
 			MameOption *pMameOpt = new MameOption(0);	//fixme parent
 			pMameOpt->guivisible = true;
 			mameOpts[gameName + "_extra_software"] = pMameOpt;
+			hasDevices = true;
 		}
 	}
 
@@ -2085,7 +2089,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 	QString iniFileName;
 	QString STR_OPTS_ = tr("Options") + " - ";
 
-	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" : "mame") + INI_EXT);
+	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
 	//GUI
 	if (optLevel == OPTLEVEL_GUI)
 	{
@@ -2318,14 +2322,14 @@ void OptionUtils::updateSelectableItems(QString optName)
 		QDir dir(mameOpts["artpath"]->currvalue);
 
 		QStringList nameFilter;
-		nameFilter << "*.png";
+		nameFilter << "*" PNG_EXT;
 		
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
 		for (int i = 0; i < files.count(); i++)
 		{
 			QFileInfo fi(files[i]);
 			QString ctrlr = fi.fileName();
-			ctrlr.remove(".png");
+			ctrlr.remove(PNG_EXT);
 			pMameOpt->values.append(ctrlr);
 			pMameOpt->guivalues.append(ctrlr);
 		}
@@ -2396,7 +2400,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 			}
 		}
 	}
-#endif
+#endif /* Q_OS_WIN */
 
 	// prepare GUI value desc
 	for (int i = 0; i < pMameOpt->guivalues.size(); i++)

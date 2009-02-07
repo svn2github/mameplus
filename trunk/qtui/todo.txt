@@ -5,12 +5,10 @@ read/write cookie
 theme
 
 //Done
-*added MESS device menus (WIP)
 
 //Linux/Mac
 D column sorting
 2 On OSX, would it be possible to make the front end start the selected game when you press return?
-mounted snap doesnt load
 check font size
 icon最大可以大到512x512 Apple也强烈建议开发者要准备这么大的尺寸（除了原有的16x16、32x32、128x128之外 
 Windows在XP以前仅支持16x16、32x32、48x48，直到Vista才开始加大到64x64和256x256。
@@ -18,35 +16,43 @@ Windows在XP以前仅支持16x16、32x32、48x48，直到Vista才开始加大到
 能不能价格功能，让写入配置文件的时候输入root密码拥有写入权限  
 
 //Dev
-submit joyid
+group hu_hu
+2 try to load a default bkgr
+2 m1能用，但是有m1在bin目录首次启动新龟启动不了
+>LIN下的GUI能不能想办法支持汉化列表
+
+2 crash: I try to delete Cabinet THEN browese. It closes program
+2 global softwarepath
+1 submit joyid
 4 verify rev 3991
 
-1 reduce auto audit calls
-2 prevent running consoles while mandatory device is not mounted
+1 MESS skip warning
+2 multi sw paths
+1 MESS cfg saving
+1 ramoptions
 
+2 disable play with
+1 reduce auto audit calls
+1 playwith state name prompt
 1 filter also display parent (cross line?)
 2 chd clones
 2 several hundred games are no more seen as complete because zip files don't include bios files.
 1 unavail folder, parent avail, clone unavail
-2 mess logo on the right
 2 MAME uses the M1 directory as currentdirectory, mame option available after m1 init
 1 treeview bug,能调到比默认宽,不能调窄
 2 I keep all files on a separate drive from the mame executable and the UI doesn't display sna
-2 added "View - Highlight Selected Row"
-  cn:添加"视图-高亮显示选定行"
 2 provide a builtin fallback for zip folders
 2 mamep core lang, for non cjk languages
 2 gamename0000 snap
 2 custom ini write
 1 multiple software dirs1 multiple software dirs
-1 only non-empty console/bios folders
 1 SDL joystick GUI
-1 7z binary path, doesnt stall when 7z is not available
 1 default command.dat path in lang
 1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
 1 ips dialog size
 1 option not loaded before m1 init
 
+* use size()
 * folder selected game hash cache [8]
 * play with dlg, empty file name handling
 * test oldest mame version support, warning
@@ -64,7 +70,6 @@ submit joyid
 * 检查当前IPS DAT里文件，是否与当前的ROM名字对否，CRC对否。。。。- -一个个试真的太累了
 * check new/delete operator
 * move datafile.c statistics to GUI
-* s11n of detailed console extrom is not needed
 
 //Main Window
 1 Add an option to revert the geometry to default, I lost a couple of my snap/info

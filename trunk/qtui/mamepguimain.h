@@ -52,7 +52,7 @@ public:
 	void enableCtrls(bool);
 
 	RomAuditor romAuditor;
-	MergedRomAuditor *mergedAuditor;
+	MergedRomAuditor mergedAuditor;
 	MameExeRomAuditor *mameAuditor;
 
 	QTreeView *tvGameList;
@@ -78,6 +78,7 @@ public slots:
 	void on_actionChinese_PRC_activated();
 	void on_actionChinese_Taiwan_activated();
 	void on_actionJapanese_activated();
+	void on_actionHungarian_activated();
 	void on_actionBrazilian_activated();
 	void on_actionLocalGameList_activated();
 	void on_actionReadme_activated();
@@ -141,18 +142,25 @@ private:
 };
 
 #define MAMEPLUS_SIG 0x704c7553
-#define S11N_VER 10
+#define S11N_VER 11
 
 // global vars
-extern const QString EXEC_EXT;
-extern const QString ZIP_EXT;
-extern const QString ICO_EXT;
-extern const QString INI_EXT;
-extern const QString STA_EXT;
-extern const QString INP_EXT;
-extern const QString MNG_EXT;
-extern const QString AVI_EXT;
-extern const QString WAV_EXT;
+#define ZIP_EXT ".zip"
+#define ICO_EXT ".ico"
+#define INI_EXT ".ini"
+#define STA_EXT ".sta"
+#define INP_EXT ".inp"
+#define PNG_EXT ".png"
+#define MNG_EXT ".mng"
+#define AVI_EXT ".avi"
+#define WAV_EXT ".wav"
+#define SZIP_EXT ".7z"
+#ifdef Q_WS_WIN
+#define EXEC_EXT ".exe"
+#else
+#define EXEC_EXT ""
+#endif
+
 extern const QString CFG_PREFIX;
 
 extern MainWindow *win;
@@ -162,9 +170,14 @@ extern QString language;
 extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
-extern bool isMAMEPlus;
-extern bool isSDLMAME;
+
+extern bool isSDLPort;
 extern bool isMESS;
+extern bool hasIPS;
+extern bool hasDevices;
+extern bool hasLanguage;
+extern bool hasDriverCfg;
+
 extern QStringList validGuiSettings;
 
 #endif

@@ -22,8 +22,6 @@ public:
 	QString getSinglePath(QString, QString);
 	QString getMameVersion();
 
-	bool isAuditFolder(QString);
-	bool isConsoleFolder();
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
 

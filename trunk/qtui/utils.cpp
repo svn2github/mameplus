@@ -122,10 +122,15 @@ QString Utils::getDesc(const QString &gameName)
 
 QString Utils::getHistory(const QString &fileName, const QString &gameName, int linkType)
 {
+	QString systemName = gameName;
+	GameInfo *gameInfo = mameGame->games[systemName];
+	if (gameInfo->isExtRom)
+		systemName = gameInfo->romof;
+
 	QFile datFile(fileName);
 	QString buf = "";
 	if (linkType > 0)
-		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://www.mameworld.net/maws/romset/" + gameName + "\">View information at MAWS</a><br>";
+		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://www.mameworld.net/maws/romset/" + systemName + "\">View information at MAWS</a><br>";
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -151,7 +156,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 						foreach (QString game, games)
 						{
 							//found the entry, start recording
-							if (game == gameName)
+							if (game == systemName)
 							{
 								recData = true;
 								isFound = true;
@@ -190,7 +195,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 
 	if (buf.trimmed().isEmpty())
 	{
-		GameInfo *gameInfo = mameGame->games[gameName];
+		gameInfo = mameGame->games[systemName];
 		if (!gameInfo->cloneof.isEmpty())
 			buf = getHistory(fileName, gameInfo->cloneof);
 	}
@@ -227,40 +232,6 @@ void Utils::getMameVersionFinished(int, QProcess::ExitStatus)
 	mameVersion.replace(QRegExp(".*(\\d+\\.[^ ]+\\s+\\([\\w\\s]+\\)).*"), "\\1");
 //	0.124u4a (Apr 24 2008)
 	win->log(QString("mamever: %1").arg(mameVersion));
-}
-
-bool Utils::isAuditFolder(QString consoleName)
-{
-	QStringList paths = currentFolder.split("/");
-	if (paths.size() == 2)
-	{
-		if (paths[1] == tr("Consoles"))
-			return true;
-
-		else if(paths[1] == consoleName)
-			return true;
-	}
-
-	return false;		
-}
-
-bool Utils::isConsoleFolder()
-{
-	QStringList paths = currentFolder.split("/");
-	if (paths.size() == 2)
-	{
-		if (paths[1] == tr("Consoles"))
-			return true;
-
-		else if (mameGame->games.contains(paths[1]))
-		{
-			GameInfo *gameInfo = mameGame->games[paths[1]];
-			if (!gameInfo->devices.isEmpty())
-				return true;
-		}
-	}
-
-	return false;
 }
 
 quint8 Utils::getStatus(QString status)
@@ -381,7 +352,6 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 		for (int i = 0; i < arguments.count(); i++)
 			lastCommand += " " + arguments[i];
 
-//		win->log(tr("starting emulator #%1, command = %2").arg(procCount).arg(lastCommand));
 		connect(proc, SIGNAL(error(QProcess::ProcessError)), this, SLOT(error(QProcess::ProcessError)));
 		connect(proc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(finished(int, QProcess::ExitStatus)));
 		connect(proc, SIGNAL(readyReadStandardOutput()), this, SLOT(readyReadStandardOutput()));
@@ -405,49 +375,27 @@ QProcess *ProcessManager::process(ushort index)
 
 void ProcessManager::terminate(QProcess *proc)
 {
-#ifdef _DEBUG_
-//	win->log("DEBUG: ProcessManager::terminate(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
-#endif
-
-//	win->log(tr("terminating emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
 	proc->terminate();
 }
 
 void ProcessManager::terminate(ushort index)
 {
-#ifdef _DEBUG_
-//  win->log("DEBUG: ProcessManager::terminate(ushort index = " + QString::number(index) + ")");
-#endif
-
 	terminate(process(index));
 }
 
 void ProcessManager::kill(QProcess *proc)
 {
-#ifdef _DEBUG_
-//	win->log("DEBUG: ProcessManager::kill(QProcess *proc = 0x" + QString::number((qulonglong)proc, 16) + ")");
-#endif
-
-//	win->log(tr("killing emulator #%1, PID = %2").arg(procMap[proc]).arg((quint64)proc->pid()));
 	proc->kill();
 }
 
 void ProcessManager::kill(ushort index)
 {
-#ifdef _DEBUG_
-//	win->log("DEBUG: ProcessManager::kill(ushort index = " + QString::number(index) + ")");
-#endif
-
 	kill(process(index));
 }
 
 void ProcessManager::readyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-
-#ifdef _DEBUG_
-//  win->log("DEBUG: ProcessManager::readyReadStandardOutput(): proc = 0x" + QString::number((qulonglong)proc, 16));
-#endif
 
 	QString s = proc->readAllStandardOutput();
 	QStringList sl = s.split("\n");
@@ -456,17 +404,13 @@ void ProcessManager::readyReadStandardOutput()
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
-			win->log(tr("stdout[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
+			win->log(QString("stdout[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
 	}
 }
 
 void ProcessManager::readyReadStandardError()
 {
 	QProcess *proc = (QProcess *)sender();
-
-#ifdef _DEBUG_
-//  win->log("DEBUG: ProcessManager::readyReadStandardError(): proc = 0x" + QString::number((qulonglong)proc, 16));
-#endif
 
 	QString s = proc->readAllStandardError();
 	QStringList sl = s.split("\n");
@@ -475,7 +419,7 @@ void ProcessManager::readyReadStandardError()
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
-			win->log(tr("stderr[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
+			win->log(QString("stderr[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
 	}
 }
 
@@ -483,7 +427,7 @@ void ProcessManager::finished(int exitCode, QProcess::ExitStatus exitStatus)
 {
 	QProcess *proc = (QProcess *)sender();
 
-	win->log(tr("proc #%1 finished, exit: %2, remaining: %3").arg(procMap[proc]).arg(exitCode).arg(procMap.count() - 1));
+	win->log(QString("proc #%1 finished, exit: %2, remaining: %3").arg(procMap[proc]).arg(exitCode).arg(procMap.count() - 1));
 	procMap.remove(proc);
 }
 
@@ -491,15 +435,10 @@ void ProcessManager::started()
 {
 	QProcess *proc = (QProcess *)sender();
 
-	win->log(tr("proc #%1 started, active: %3").arg(procMap[proc]).arg(procMap.count()));
+	win->log(QString("proc #%1 started, active: %3").arg(procMap[proc]).arg(procMap.count()));
 }
 
 void ProcessManager::error(QProcess::ProcessError processError)
 {
-//  QProcess *proc = (QProcess *)sender();
-
-#ifdef _DEBUG_
-//  win->log("DEBUG: ProcessManager::error(QProcess::ProcessError processError = " + QString::number(processError) + "): proc = 0x" + QString::number((qulonglong)proc, 16));
-#endif
 }
 

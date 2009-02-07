@@ -230,13 +230,13 @@ void PlayOptions::setFile(QLineEdit *lineEdit, QString filter)
 void PlayOptions::setSavestateFile()
 {
 	//fixme: filefield could be empty
-	setFile(lineEditSavestate, tr("Savestate files") + "(*" + STA_EXT + ")");
+	setFile(lineEditSavestate, tr("Savestate files") + " (*" STA_EXT ")");
 }
 
 void PlayOptions::setPlaybackFile()
 {
 	//fixme: filefield could be empty
-	setFile(lineEditPlayback, tr("Input files") + "(*" + INP_EXT + " *" + ZIP_EXT + ")");
+	setFile(lineEditPlayback, tr("Input files") + " (*" INP_EXT " *" ZIP_EXT ")");
 
 	//test if .sta exists, auto fill it
 	QString pbFileName = lineEditPlayback->text().trimmed();
@@ -255,7 +255,7 @@ void PlayOptions::setRecordFile()
 	if (lineEditRecord->text().isEmpty())
 		initRecord();
 
-	setFile(lineEditRecord, tr("Input files") + "(*" + INP_EXT + ")");
+	setFile(lineEditRecord, tr("Input files") + " (*" INP_EXT ")");
 }
 
 void PlayOptions::setMNGFile()
@@ -263,7 +263,7 @@ void PlayOptions::setMNGFile()
 	if (lineEditMNG->text().isEmpty())
 		initMNG();
 
-	setFile(lineEditMNG, tr("Videos") + "(*" + MNG_EXT + ")");
+	setFile(lineEditMNG, tr("Videos") + " (*" MNG_EXT ")");
 }
 
 void PlayOptions::setAVIFile()
@@ -271,7 +271,7 @@ void PlayOptions::setAVIFile()
 	if (lineEditAVI->text().isEmpty())
 		initAVI();
 
-	setFile(lineEditAVI, tr("Videos") + "(*" + AVI_EXT + ")");
+	setFile(lineEditAVI, tr("Videos") + " (*" AVI_EXT ")");
 }
 
 void PlayOptions::setWaveFile()
@@ -279,7 +279,7 @@ void PlayOptions::setWaveFile()
 	if (lineEditWave->text().isEmpty())
 		initWave();
 
-	setFile(lineEditWave, tr("Sounds") + "(*" + WAV_EXT + ")");
+	setFile(lineEditWave, tr("Sounds") + " (*" WAV_EXT ")");
 }
 
 Dirs::Dirs(QWidget *parent)

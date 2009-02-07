@@ -1,3 +1,11 @@
+#include "7zCrc.h"
+#include "7zFile.h"
+#include "7zVersion.h"
+
+#include "7zAlloc.h"
+#include "7zExtract.h"
+#include "7zIn.h"
+
 #include "gamelist.h"
 
 #include "mamepguimain.h"
@@ -19,42 +27,8 @@ GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 static const QString ROOT_FOLDER = "ROOT_FOLDER";
 QByteArray defIconData;
-QByteArray defSnapData;
-
-enum
-{
-	FOLDER_ALLGAME = 0,
-	FOLDER_ALLARC,
-	FOLDER_AVAILABLE,
-	FOLDER_UNAVAILABLE,
-	FOLDER_CONSOLE,
-	FOLDER_MANUFACTURER,
-	FOLDER_YEAR,
-	FOLDER_SOURCE,
-	FOLDER_BIOS,
-	FOLDER_EXT,
-	/*
-	FOLDER_CPU,
-	FOLDER_SND,
-	FOLDER_ORIENTATION,
-	FOLDER_DEFICIENCY,
-	FOLDER_DUMPING,
-	FOLDER_WORKING,
-	FOLDER_NONWORKING,
-	FOLDER_ORIGINAL,
-	FOLDER_CLONES,
-	FOLDER_RASTER,
-	FOLDER_VECTOR,
-	FOLDER_RESOLUTION,
-	FOLDER_FPS,
-	FOLDER_SAVESTATE,
-	FOLDER_CONTROL,
-	FOLDER_STEREO,
-	FOLDER_HARDDISK,
-	FOLDER_SAMPLES,
-	FOLDER_ARTWORK,*/
-	MAX_FOLDERS
-};
+QByteArray defMameSnapData;
+QByteArray defMessSnapData;
 
 enum
 {
@@ -316,9 +290,13 @@ UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
 	icoFile.open(QIODevice::ReadOnly);
 	defIconData = icoFile.readAll();
 
-	QFile snapFile(":/res/mamegui/mame.png");
-	snapFile.open(QIODevice::ReadOnly);
-	defSnapData = snapFile.readAll();
+	QFile mameSnapFile(":/res/mamegui/mame.png");
+	mameSnapFile.open(QIODevice::ReadOnly);
+	defMameSnapData = mameSnapFile.readAll();
+
+	QFile messSnapFile(":/res/mamegui/mess.png");
+	messSnapFile.open(QIODevice::ReadOnly);
+	defMessSnapData = messSnapFile.readAll();
 }
 
 UpdateSelectionThread::~UpdateSelectionThread()
@@ -449,7 +427,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 		QString dirpath = utils->getPath(_dirpath);
 
 		// try to load directly	
-		QFile snapFile(dirpath + gameName + ".png");
+		QFile snapFile(dirpath + gameName + PNG_EXT);
 		if (snapFile.open(QIODevice::ReadOnly))
 			snapdata = snapFile.readAll();
 
@@ -460,7 +438,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 			if (zip.open(QuaZip::mdUnzip))
 			{
 				QuaZipFile zipfile(&zip);
-				if (zip.setCurrentFile(gameName + ".png"))
+				if (zip.setCurrentFile(gameName + PNG_EXT))
 				{
 					if (zipfile.open(QIODevice::ReadOnly))
 						snapdata = zipfile.readAll();
@@ -481,7 +459,8 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 
 		// fallback to default image, first getScreenshot() can't reach here
 		if (snapdata.isNull())
-			snapdata = defSnapData;
+			snapdata = (isMESS || gameInfo->isExtRom || !gameInfo->devices.isEmpty()) ? 
+				defMessSnapData : defMameSnapData;
 	}
 
 	return snapdata;
@@ -818,7 +797,7 @@ ControlInfo::ControlInfo(QObject *parent)
 
 DeviceInfo::DeviceInfo(QObject *parent) : 
 QObject(parent),
-mounted(false)
+isConst(false)
 {
 	//	win->log("# DeviceInfo()");
 }
@@ -945,25 +924,24 @@ void MameGame::s11n()
 		/* internal */
 		out << gameInfo->isExtRom;
 		out << gameInfo->available;
+		out << gameInfo->extraInfo;
 
-		/* shared w/ mess ext roms */
+		/* game */
 		out << gameInfo->romof;
 		out << gameInfo->description;
-
-		//not mess ext roms
+		out << gameInfo->year;
+		out << gameInfo->manufacturer;
 		if (!gameInfo->isExtRom)
 		{
-			/* game */
+			out << gameInfo->cloneof;
 			out << gameInfo->sourcefile;
 			out << gameInfo->isBios;
-			out << gameInfo->cloneof;
-	//		out << gameInfo->romof;
 			out << gameInfo->sampleof;
-	//		out << gameInfo->description;
-			out << gameInfo->year;
-			out << gameInfo->manufacturer;
+		}
 
-			/* biosset */
+		/* biosset */
+		if (!gameInfo->isExtRom)
+		{
 			out << gameInfo->biosSets.count();
 			foreach (QString name, gameInfo->biosSets.keys())
 			{
@@ -972,21 +950,27 @@ void MameGame::s11n()
 				out << biosSet->description;
 				out << biosSet->isDefault;
 			}
+		}
 
-			/* rom */
-			out << gameInfo->roms.count();
-			foreach (quint32 crc, gameInfo->roms.keys())
+		/* rom */
+		out << gameInfo->roms.count();
+		foreach (quint32 crc, gameInfo->roms.keys())
+		{
+			RomInfo *romInfo = gameInfo->roms[crc];
+			out << crc;
+			out << romInfo->name;
+			out << romInfo->size;
+			out << romInfo->status;
+			if (!gameInfo->isExtRom)
 			{
-				RomInfo *romInfo = gameInfo->roms[crc];
-				out << crc;
-				out << romInfo->name;
 				out << romInfo->bios;
-				out << romInfo->size;
 				out << romInfo->merge;
 				out << romInfo->region;
-				out << romInfo->status;
 			}
+		}
 
+		if (!gameInfo->isExtRom)
+		{
 			/* disk */
 			out << gameInfo->disks.count();
 			foreach (QString sha1, gameInfo->disks.keys())
@@ -1062,23 +1046,53 @@ void MameGame::s11n()
 			out << gameInfo->protection;
 			out << gameInfo->savestate;
 			out << gameInfo->palettesize;
-		
-			/* device */
-			out << gameInfo->devices.count();
+		}
+
+		/* device */
+		bool needSaveDevices = gameInfo->isExtRom ? false : true;
+		foreach (DeviceInfo *deviceInfo, gameInfo->devices)
+		{
+			if (!deviceInfo->mountedPath.isEmpty() && !deviceInfo->isConst)
+			{
+				needSaveDevices = true;
+				break;
+			}	
+		}
+
+		//hack the devices.size() so that we dont save extroms and only const dev in mountedPath
+		int deviceSize = 0;
+		if (needSaveDevices)
+			deviceSize = gameInfo->devices.size();
+
+		out << deviceSize;
+
+		if (needSaveDevices)
+		{
 			QMapIterator<QString, DeviceInfo *> it(gameInfo->devices);
 			while (it.hasNext())
 			{
 				it.next();
-
-				DeviceInfo *deviceInfo = it.value();
 				out << it.key();
-				out << deviceInfo->type;
-				out << deviceInfo->tag;
-				out << deviceInfo->mandatory;
-				out << deviceInfo->extensionNames;
+				DeviceInfo *deviceInfo = it.value();
+
+				if (!gameInfo->isExtRom)
+				{
+					out << deviceInfo->type;
+					out << deviceInfo->tag;
+					out << deviceInfo->mandatory;
+					out << deviceInfo->extensionNames;
+				}
+
+				QString mountedPath = deviceInfo->mountedPath;
+				if (deviceInfo->isConst)
+					mountedPath.clear();
+				out << mountedPath;
 			}
-		
-			/*ramoption */
+		}
+
+		/*ramoption */
+		if (!gameInfo->isExtRom)
+		{
 			out << gameInfo->ramOptions;
 			out << gameInfo->defaultRamOption;
 		}
@@ -1137,33 +1151,32 @@ int MameGame::des11n()
 	{
 		GameInfo *gameInfo = new GameInfo(mameGame);
 		QString gameName;
+		int count;
 
 		in >> gameName;
 
 		/* internal */
 		in >> gameInfo->isExtRom;
 		in >> gameInfo->available;
+		in >> gameInfo->extraInfo;
 
-		/* shared w/ mess ext roms */
+		/* game */
 		in >> gameInfo->romof;
 		in >> gameInfo->description;
-
-		//not mess ext roms
+		in >> gameInfo->year;
+		in >> gameInfo->manufacturer;
 		if (!gameInfo->isExtRom)
 		{
-			/* game */
+			in >> gameInfo->cloneof;
 			in >> gameInfo->sourcefile;
 			in >> gameInfo->isBios;
-			in >> gameInfo->cloneof;
-	//		in >> gameInfo->romof;
 			in >> gameInfo->sampleof;
-	//		in >> gameInfo->description;
-			in >> gameInfo->year;
-			in >> gameInfo->manufacturer;
+		}
 
-			/* biosset */
+		/* biosset */
+		if (!gameInfo->isExtRom)
+		{
 			QString name;
-			int count;
 			in >> count;
 			for (int j = 0; j < count; j++)
 			{
@@ -1173,23 +1186,29 @@ int MameGame::des11n()
 				in >> biosSet->isDefault;
 				gameInfo->biosSets[name] = biosSet;
 			}
-
-			/* rom */
-			in >> count;
-			for (int j = 0; j < count; j++)
+		}
+		
+		/* rom */
+		in >> count;
+		for (int j = 0; j < count; j++)
+		{
+			quint32 crc;
+			RomInfo *romInfo = new RomInfo(gameInfo);
+			in >> crc;
+			in >> romInfo->name;
+			in >> romInfo->size;
+			in >> romInfo->status;
+			if (!gameInfo->isExtRom)
 			{
-				quint32 crc;
-				RomInfo *romInfo = new RomInfo(gameInfo);
-				in >> crc;
-				in >> romInfo->name;
 				in >> romInfo->bios;
-				in >> romInfo->size;
 				in >> romInfo->merge;
 				in >> romInfo->region;
-				in >> romInfo->status;
-				gameInfo->roms[crc] = romInfo;
 			}
+			gameInfo->roms[crc] = romInfo;
+		}
 
+		if (!gameInfo->isExtRom)
+		{
 			/* disk */
 			in >> count;
 			for (int j = 0; j < count; j++)
@@ -1273,22 +1292,29 @@ int MameGame::des11n()
 			in >> gameInfo->protection;
 			in >> gameInfo->savestate;
 			in >> gameInfo->palettesize;
+		}
 
-			/* device */
-			in >> count;
-			for (int j = 0; j < count; j++)
+		/* device */
+		in >> count;
+		for (int j = 0; j < count; j++)
+		{
+			DeviceInfo *deviceInfo = new DeviceInfo(gameInfo);
+			QString instanceName;
+			in >> instanceName;
+			if (!gameInfo->isExtRom)
 			{
-				DeviceInfo *deviceInfo = new DeviceInfo(gameInfo);
-				QString instanceName;
-				in >> instanceName;
 				in >> deviceInfo->type;
 				in >> deviceInfo->tag;
 				in >> deviceInfo->mandatory;
 				in >> deviceInfo->extensionNames;
-				gameInfo->devices.insert(instanceName, deviceInfo);
 			}
+			in >> deviceInfo->mountedPath;
+			gameInfo->devices.insert(instanceName, deviceInfo);
+		}
 
-			/*ramoption */
+		/*ramoption */
+		if (!gameInfo->isExtRom)
+		{
 			in >> gameInfo->ramOptions;
 			in >> gameInfo->defaultRamOption;
 		}
@@ -1313,7 +1339,7 @@ int MameGame::des11n()
 void MameGame::completeData()
 {
 	GameInfo *gameInfo, *gameInfo2;
-	
+
 	foreach (QString gameName, mameGame->games.keys())
 	{
 		gameInfo = mameGame->games[gameName];
@@ -1335,6 +1361,7 @@ void MameGame::completeData()
 				gameInfo2->isCloneAvailable = true;
 		}
 	}
+
 }
 
 
@@ -1489,40 +1516,9 @@ numTotalGames(-1),
 menuContext(NULL),
 headerMenu(NULL),
 autoAudit(false),
-loadIconStatus(0)
+loadIconStatus(0),
+defaultGameListDelegate(NULL)
 {
-	folderList
-		<< tr("All Games")
-		<< tr("All Arcades")
-		<< tr("Available Arcades")
-		<< tr("Unavailable Arcades")
-		<< tr("Consoles")
-		<< tr("Manufacturer")
-		<< tr("Year")
-		<< tr("Driver")
-		<< tr("BIOS")
-		/*
-		<< QT_TR_NOOP("CPU")
-		<< QT_TR_NOOP("Sound")
-		<< QT_TR_NOOP("Orientation")
-		<< QT_TR_NOOP("Emulation Status")
-		<< QT_TR_NOOP("Dumping Status")
-		<< QT_TR_NOOP("Working")
-		<< QT_TR_NOOP("Not working")
-		<< QT_TR_NOOP("Orignals")
-		<< QT_TR_NOOP("Clones")
-		<< QT_TR_NOOP("Raster")
-		<< QT_TR_NOOP("Vector")
-		<< QT_TR_NOOP("Resolution")
-		<< QT_TR_NOOP("FPS")
-		<< QT_TR_NOOP("Save State")
-		<< QT_TR_NOOP("Control Type")
-		<< QT_TR_NOOP("Stereo")
-		<< QT_TR_NOOP("CHD")
-		<< QT_TR_NOOP("Samples")
-		<< QT_TR_NOOP("Artwork")*/
-		;
-
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
 }
 
@@ -1629,7 +1625,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 	else
 		currentGame = mameGame->games.keys().first();
 
-	win->log("currentGame: " + currentGame);
+//	win->log("currentGame: " + currentGame);
 }
 
 void Gamelist::restoreGameSelection()
@@ -1637,17 +1633,17 @@ void Gamelist::restoreGameSelection()
 	if (!gameListModel || !gameListPModel)
 		return;
 
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	QString gameName = currentGame;
 	QModelIndex i, pi;
 
 	// select current game
-	if (mameGame->games.contains(gameName))
-	{
-		GameInfo *gameinfo = mameGame->games[gameName];
-		//fixme: should consider other columns
-		i = gameListModel->index(COL_DESC, gameinfo->pModItem);
-		win->log("restore callback: " + gameName);
-	}
+	GameInfo *gameinfo = mameGame->games[gameName];
+	//fixme: should consider other columns
+	i = gameListModel->index(COL_DESC, gameinfo->pModItem);
+	win->log("restore callback: " + gameName);
 
 	if (i.isValid())
 		pi = gameListPModel->mapFromSource(i);
@@ -1787,6 +1783,38 @@ void Gamelist::init(bool toggleState, int initMethod)
 	if (!toggleState)
 		return;
 
+	folderList
+		<< tr("All Games")
+		<< (isMESS ? tr("All Systems") : tr("All Arcades"))
+		<< (isMESS ? tr("Available Systems") : tr("Available Arcades"))
+		<< (isMESS ? tr("Unavailable Systems") : tr("Unavailable Arcades"))
+		<< (isMESS ? tr("Softwares") : tr("Consoles"))
+		<< tr("Manufacturer")
+		<< tr("Year")
+		<< tr("Driver")
+		<< tr("BIOS")
+		/*
+		<< QT_TR_NOOP("CPU")
+		<< QT_TR_NOOP("Sound")
+		<< QT_TR_NOOP("Orientation")
+		<< QT_TR_NOOP("Emulation Status")
+		<< QT_TR_NOOP("Dumping Status")
+		<< QT_TR_NOOP("Working")
+		<< QT_TR_NOOP("Not working")
+		<< QT_TR_NOOP("Orignals")
+		<< QT_TR_NOOP("Clones")
+		<< QT_TR_NOOP("Raster")
+		<< QT_TR_NOOP("Vector")
+		<< QT_TR_NOOP("Resolution")
+		<< QT_TR_NOOP("FPS")
+		<< QT_TR_NOOP("Save State")
+		<< QT_TR_NOOP("Control Type")
+		<< QT_TR_NOOP("Stereo")
+		<< QT_TR_NOOP("CHD")
+		<< QT_TR_NOOP("Samples")
+		<< QT_TR_NOOP("Artwork")*/
+		;
+
 	bool isGroup = true, isLView = false;
 
 	// get current game list mode
@@ -1851,7 +1879,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 			optUtils->loadDefault(mameGame->mameDefaultIni);
 
 			// load mame.ini overrides
-			optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" : "mame") + INI_EXT);
+			optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
 
 			// load GUI path overrides
 			foreach (QString optName, mameOpts.keys())
@@ -1869,11 +1897,11 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->setVersion();
 		}
 
-		if (autoAudit)
-		{
-			win->romAuditor.audit(true);
-			return;
-		}
+//		if (autoAudit)
+//		{
+//			win->romAuditor.audit(true);
+//			return;
+//		}
 
 		loadMMO(UI_MSG_LIST);
 		loadMMO(UI_MSG_MANUFACTURE);
@@ -1920,6 +1948,9 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->lvGameList->setFocus();
 		else
 			win->tvGameList->setFocus();
+
+		//fixme: hack to update snapshot_directory for non-Windows
+		optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL);
 
 		// attach menus
 		initMenus();
@@ -1980,7 +2011,7 @@ void Gamelist::loadIconWorkder()
 			QString dirpath = utils->getPath(_dirpath);
 		
 			QStringList nameFilter;
-			nameFilter << "*" + ICO_EXT;
+			nameFilter << "*" ICO_EXT;
 			
 			// iterate all files in the path
 			QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
@@ -2009,7 +2040,7 @@ void Gamelist::loadIconWorkder()
 				break;
 
 			// iterate all files in the zip
-			QuaZip zip(dirpath + "icons" + ZIP_EXT);
+			QuaZip zip(dirpath + "icons" ZIP_EXT);
 
 			if(!zip.open(QuaZip::mdUnzip))
 				continue;
@@ -2096,7 +2127,7 @@ void Gamelist::loadMMO(int msgCat)
 		<< "manufact");
 
 	QString dirpath;
-	if (isMAMEPlus)
+	if (hasLanguage)
 		dirpath = utils->getPath(mameOpts["langpath"]->globalvalue);
 	else
 		dirpath = "lang/";
@@ -2225,10 +2256,6 @@ void Gamelist::initMenus()
 		menuContext->addAction(win->actionPlay);
 		menuContext->addAction(win->actionRecord);
 		menuContext->addSeparator();
-#ifdef Q_OS_WIN
-		menuContext->addAction(win->actionConfigIPS);
-#endif /* Q_OS_WIN */
-		menuContext->addSeparator();
 		menuContext->addAction(win->actionAudit);
 		menuContext->addSeparator();
 		menuContext->addAction(win->actionSrcProperties);
@@ -2298,12 +2325,11 @@ void Gamelist::showContextMenu(const QPoint &p)
 
 void Gamelist::updateContextMenu()
 {
+	if (!mameGame->games.contains(currentGame))
+		return;
+
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
-
-#ifdef Q_OS_WIN
-	win->actionConfigIPS->setEnabled(ipsUI->checkAvailable(gameName));
-#endif /* Q_OS_WIN */
 
 	QPixmap pm;
 	pm.loadFromData(gameInfo->icondata, "ico");
@@ -2315,71 +2341,112 @@ void Gamelist::updateContextMenu()
 
 	win->actionSrcProperties->setText(tr("Properties for %1").arg(gameInfo->sourcefile));
 
-//	updateDeviceMenu(win->menuFile);
-//	updateDeviceMenu(menuContext);
+	updateDynamicMenu(win->menuFile);
+	updateDynamicMenu(menuContext);
 }
 
-void Gamelist::updateDeviceMenu(QMenu *menuRoot)
+void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 {
-	QString gameName = currentGame;
+	const QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
-	GameInfo *gameInfoConsoleSys = NULL;
-	bool isExtRom = false;
+
+	//update IPS menu
+	rootMenu->removeAction(win->actionConfigIPS);
+	if (hasIPS && ipsUI->checkAvailable(gameName))
+		rootMenu->insertAction(win->actionSrcProperties, win->actionConfigIPS);
 
 	//remove existing device menus
-	QList<QAction *>menuRootActions = menuRoot->actions();
-	foreach (QAction *action, menuRootActions)
+	QList<QAction *>rootMenuActions = rootMenu->actions();
+	foreach (QAction *action, rootMenuActions)
 	{
 		if (action->objectName().startsWith("actionDevice_"))
 		{
-			menuRoot->removeAction(action);
+			rootMenu->removeAction(action);
 			delete action;
 		}
 	}
 
+	//construct devices for ext roms
 	if (gameInfo->isExtRom)
 	{
-		isExtRom = true;
-		gameInfoConsoleSys = mameGame->games[gameInfo->romof];
-	}
-	else
-		gameInfoConsoleSys = gameInfo;
+		//only one const device possible
+		bool constDeviceFound = false;
 
-	if (gameInfoConsoleSys->devices.isEmpty())
+		const QMap<QString, DeviceInfo *> systemDevices = mameGame->games[gameInfo->romof]->devices;
+		QMapIterator<QString, DeviceInfo *> it(systemDevices);
+		while (it.hasNext())
+		{
+			it.next();
+			DeviceInfo *systemDeviceInfo = it.value();
+			QString instanceName = it.key();
+
+			DeviceInfo *deviceInfo;
+
+			if (!gameInfo->devices.isEmpty() && gameInfo->devices.contains(instanceName))
+				deviceInfo = gameInfo->devices[instanceName];
+			else
+				deviceInfo = new DeviceInfo(gameInfo);
+			deviceInfo->type = systemDeviceInfo->type;
+			deviceInfo->tag = systemDeviceInfo->tag;
+			deviceInfo->mandatory = systemDeviceInfo->mandatory;
+			deviceInfo->extensionNames = systemDeviceInfo->extensionNames;
+			gameInfo->devices.insert(instanceName, deviceInfo);
+
+			//set const device that is loaded by GUI
+			if (!constDeviceFound)
+			{
+				foreach (QString extension, deviceInfo->extensionNames)
+				{
+					if (gameName.endsWith("." + extension, Qt::CaseInsensitive))
+					{
+						deviceInfo->mountedPath = gameName;
+						deviceInfo->isConst = true;
+						constDeviceFound = true;
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	//dont append device menu when there's no device
+	if (gameInfo->devices.isEmpty())
 		return;
 
-	//test if we need a submenu
-	QStringList subDeviceTypes;
-	QStringList deviceTypes;
-	foreach (DeviceInfo *deviceInfo, gameInfoConsoleSys->devices)
+	//dont append device menu when there's only 1 const device
+	if (gameInfo->isExtRom && gameInfo->devices.size() == 1)
+		return;
+
+	//test if the device need a submenu
+	QStringList deviceTypes, deviceTypesSubmenu;
+	foreach (DeviceInfo *deviceInfo, gameInfo->devices)
 	{
 		if (deviceTypes.contains(deviceInfo->type))
 		{
-			if (!subDeviceTypes.contains(deviceInfo->type))
-				subDeviceTypes.append(deviceInfo->type);
+			if (!deviceTypesSubmenu.contains(deviceInfo->type))
+				deviceTypesSubmenu.append(deviceInfo->type);
 		}
 		else
 			deviceTypes.append(deviceInfo->type);
 	}
 
 	//append device menus
-	QMapIterator<QString, DeviceInfo *> it(gameInfoConsoleSys->devices);
-	bool loadedDeviceFound = false;
+	QMapIterator<QString, DeviceInfo *> it(gameInfo->devices);
 	while (it.hasNext())
 	{
 		it.next();
 		DeviceInfo *deviceInfo = it.value();
 		QString instanceName = it.key();
-		QString actionTypeString = QString("actionDevice_type_%1").arg(deviceInfo->type);
+		QString strDeviceType = QString("actionDevice_type_%1").arg(deviceInfo->type);
 
-		QAction *actionDeviceType = NULL;
 		QMenu *menuDeviceType = NULL;
+		QAction *actionDeviceType = NULL;
 
-		//use existing submenu
-		menuRootActions = menuRoot->actions();
-		foreach (QAction *action, menuRootActions)
+		//find existing menu to place submenus
+		rootMenuActions = rootMenu->actions();
+		foreach (QAction *action, rootMenuActions)
 		{
-			if (action->objectName() == actionTypeString)
+			if (action->objectName() == strDeviceType)
 			{
 				actionDeviceType = action;
 				menuDeviceType = actionDeviceType->menu();
@@ -2387,54 +2454,71 @@ void Gamelist::updateDeviceMenu(QMenu *menuRoot)
 			}
 		}
 
-		//create new submenu
-		if (actionDeviceType == NULL && subDeviceTypes.contains(deviceInfo->type))
+		//otherwise, create new submenu
+		if (actionDeviceType == NULL && deviceTypesSubmenu.contains(deviceInfo->type))
 		{
-			menuDeviceType = new QMenu(menuRoot);
+			menuDeviceType = new QMenu(rootMenu);
 			menuDeviceType->setTitle(utils->capitalizeStr(deviceInfo->type));
+			
 			actionDeviceType = menuDeviceType->menuAction();
-			actionDeviceType->setObjectName(actionTypeString);
-			menuRoot->insertAction(win->actionSrcProperties, actionDeviceType);
+			actionDeviceType->setObjectName(strDeviceType);
+			rootMenu->insertAction(win->actionSrcProperties, actionDeviceType);
 		}
 
 		//insert submenu items
-		QAction *actionDevice = new QAction(actionDeviceType);
-		actionDevice->setObjectName(QString("actionDevice_%1").arg(instanceName));
+		//fixme parent
+		QMenu *menuDevice = new QMenu(menuDeviceType);
 
-		QString loadedDevice = "[Empty slot]";
-		if (!loadedDeviceFound)
+		//generate device string
+		QString strDevice = "[Empty slot]";
+		if (!deviceInfo->mountedPath.isEmpty())
 		{
-			foreach (QString extension, deviceInfo->extensionNames)
+			if (deviceInfo->isConst)
+				strDevice = gameInfo->description;
+			else
 			{
-				//fixme: .zip doesnt work
-				if (gameName.endsWith("." + extension))
-				{
-					loadedDevice = gameInfo->description;
-					loadedDeviceFound = true;
-					break;
-				}
+				QFileInfo fi(deviceInfo->mountedPath);
+				strDevice = fi.completeBaseName();
 			}
 		}
 
-		//MESS device.c
-		/*		
-			{ IO_CARTSLOT,	"cartridge",	"cart" }
-			{ IO_FLOPPY,	"floppydisk",	"flop" }
-			{ IO_HARDDISK,	"harddisk", 	"hard" }
-			{ IO_CYLINDER,	"cylinder", 	"cyln" }
-			{ IO_CASSETTE,	"cassette", 	"cass" }
-			{ IO_PUNCHCARD, "punchcard",	"pcrd" }
-			{ IO_PUNCHTAPE, "punchtape",	"ptap" }
-			{ IO_PRINTER,	"printer",		"prin" }
-			{ IO_SERIAL,	"serial",		"serl" }
-			{ IO_PARALLEL,	"parallel", 	"parl" }
-			{ IO_SNAPSHOT,	"snapshot", 	"dump" }
-			{ IO_QUICKLOAD, "quickload",	"quik" }
-			{ IO_MEMCARD,	"memcard",		"memc" }
-			{ IO_CDROM, 	"cdrom",		"cdrm" }
-		*/
+		menuDevice->setTitle(QString("%1%2: %3")
+			.arg(utils->capitalizeStr(instanceName))
+			.arg(deviceInfo->mandatory ? " *" : "")
+			.arg(strDevice)
+			);
+
+		
+		QAction *actionDevice = menuDevice->menuAction();
+		actionDevice->setObjectName(QString("actionDevice_%1").arg(instanceName));
+
+		if (deviceTypesSubmenu.contains(deviceInfo->type))
+			menuDeviceType->addAction(actionDevice);
+		else
+			rootMenu->insertAction(win->actionSrcProperties, actionDevice);
+
+		QAction *actionMount = new QAction("Mount...", actionDevice);
+		QAction *actionUnmount = new QAction("Unmount...", actionDevice);
+		menuDevice->addAction(actionMount);
+		menuDevice->addAction(actionUnmount);
+		if (deviceInfo->isConst)
+		{
+			actionMount->setEnabled(false);
+			actionUnmount->setEnabled(false);
+		}
+		else
+		{
+			if (deviceInfo->mountedPath.isEmpty())
+				actionUnmount->setEnabled(false);
+
+			connect(actionMount, SIGNAL(triggered()), this, SLOT(mountDevice()));
+			connect(actionUnmount, SIGNAL(triggered()), this, SLOT(unmountDevice()));
+		}
+
+#if 1
+		//see MESS device.c for all device types
 		QAction *actionDeviceIcon;
-		if (subDeviceTypes.contains(deviceInfo->type))
+		if (deviceTypesSubmenu.contains(deviceInfo->type))
 			actionDeviceIcon = actionDeviceType;
 		else
 			actionDeviceIcon = actionDevice;
@@ -2447,23 +2531,71 @@ void Gamelist::updateDeviceMenu(QMenu *menuRoot)
 			actionDeviceIcon->setIcon(QIcon(":/res/16x16/printer.png"));
 		else if (deviceInfo->type ==  "cdrom")
 			actionDeviceIcon->setIcon(QIcon(":/res/16x16/media-optical.png"));
-
-		actionDevice->setText(QString("%1%2: %3")
-			.arg(utils->capitalizeStr(instanceName))
-			.arg(deviceInfo->mandatory ? " *" : "")
-			.arg(loadedDevice)
-			);
-
-		if (subDeviceTypes.contains(deviceInfo->type))
-			menuDeviceType->addAction(actionDevice);
-		else
-			menuRoot->insertAction(win->actionSrcProperties, actionDevice);
+#endif
 	}
 
+	//fixme: parent
 	QAction *actionSeparator = new QAction(0);
 	actionSeparator->setObjectName("actionDevice_separator");
 	actionSeparator->setSeparator(true);
-	menuRoot->insertAction(win->actionSrcProperties, actionSeparator);
+	rootMenu->insertAction(win->actionSrcProperties, actionSeparator);
+}
+
+void Gamelist::mountDevice()
+{
+	QString gameName = currentGame;
+	GameInfo *gameInfo = mameGame->games[gameName];
+	QString instanceName = ((QAction*)sender())->parent()->objectName().remove("actionDevice_");
+	DeviceInfo *deviceInfo = NULL;
+
+	//find the currentDevice
+	foreach (QString key, gameInfo->devices.keys())
+	{
+		if (key == instanceName)
+		{
+			deviceInfo = gameInfo->devices[instanceName];
+			break;
+		}
+	}
+
+	QStringList nameFilter;
+	foreach (QString ext, deviceInfo->extensionNames)
+		nameFilter << "*." + ext;
+	nameFilter << "*" ZIP_EXT;
+
+	QString filter;
+	filter.append(tr("Common image types") + " (" +  nameFilter.join(" ") + ")");
+	filter.append(";;");
+	filter.append(tr("All Files") + " (*)");
+
+	if (gameInfo->isExtRom)
+		gameName = gameInfo->romof;
+
+	QString _dirpath = mameOpts[gameName + "_extra_software"]->globalvalue;
+	QString fileName = QFileDialog::getOpenFileName(0, tr("File name:"), _dirpath, filter);
+	
+	if (deviceInfo == NULL || fileName.isEmpty())
+		return;
+
+	deviceInfo->mountedPath = fileName;
+}
+
+void Gamelist::unmountDevice()
+{
+	QString gameName = currentGame;
+	GameInfo *gameInfo = mameGame->games[gameName];
+	QString instanceName = ((QAction*)sender())->parent()->objectName().remove("actionDevice_");
+
+	foreach (QString key, gameInfo->devices.keys())
+	{
+		if (key == instanceName)
+		{
+			DeviceInfo *deviceInfo = gameInfo->devices[instanceName];
+			deviceInfo->mountedPath.clear();
+			break;
+		}
+	}
+
 }
 
 void Gamelist::showHeaderContextMenu(const QPoint &p)
@@ -2571,20 +2703,106 @@ void Gamelist::loadDefaultIniFinished(int, QProcess::ExitStatus)
 // extract a rom from the merged file
 void Gamelist::extractMerged(QString mergedFileName, QString fileName)
 {
-	QString command = "bin/7z";
-	QStringList args;
-	args << "e" << "-y" << mergedFileName << fileName <<"-o" + QDir::tempPath();
 	currentTempROM = QDir::tempPath() + "/" + fileName;
 
-	loadProc = procMan->process(procMan->start(command, args, FALSE));
-	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(extractMergedFinished(int, QProcess::ExitStatus)));
-}
+//fixme: wrap to a class
+//fixme: break the loop when file extracted
 
-// call the emulator after the rom has been extracted
-void Gamelist::extractMergedFinished(int, QProcess::ExitStatus)
-{
-	QProcess *proc = (QProcess *)sender();
-	procMan->procMap.remove(proc);
+
+	CFileInStream archiveStream;
+	CLookToRead lookStream;
+	CSzArEx db;
+	SRes res;
+	ISzAlloc allocImp;
+	ISzAlloc allocTempImp;
+
+	if (InFile_Open(&archiveStream.file,  qPrintable(mergedFileName)))
+	{
+		win->log("can not open: " + mergedFileName);
+		return;
+	}
+
+	FileInStream_CreateVTable(&archiveStream);
+	LookToRead_CreateVTable(&lookStream, False);
+
+	lookStream.realStream = &archiveStream.s;
+	LookToRead_Init(&lookStream);
+
+	allocImp.Alloc = SzAlloc;
+	allocImp.Free = SzFree;
+
+	allocTempImp.Alloc = SzAllocTemp;
+	allocTempImp.Free = SzFreeTemp;
+
+	CrcGenerateTable();
+
+	SzArEx_Init(&db);
+	res = SzArEx_Open(&db, &lookStream.s, &allocImp, &allocTempImp);
+	if (res == SZ_OK)
+	{
+		UInt32 i;
+		
+		/*
+		if you need cache, use these 3 variables.
+		if you use external function, you can make these variable as static.
+		*/
+		UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
+		Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+		size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
+		
+		for (i = 0; i < db.db.NumFiles; i++)
+		{
+			size_t offset;
+			size_t outSizeProcessed;
+			CSzFileItem *f = db.db.Files + i;
+
+			if (f->IsDir)
+				continue;
+
+			if (f->Name != fileName)
+				continue;
+
+			res = SzAr_Extract(&db, &lookStream.s, i,
+				&blockIndex, &outBuffer, &outBufferSize,
+				&offset, &outSizeProcessed,
+				&allocImp, &allocTempImp);
+		  
+			if (res != SZ_OK)
+				break;
+
+			CSzFile outFile;
+			size_t processedSize;
+			  
+			if (OutFile_Open(&outFile, qPrintable(QDir::tempPath() + "/" + fileName)))
+			{
+				//PrintError("can not open output file");
+				res = SZ_ERROR_FAIL;
+				break;
+			}
+
+			processedSize = outSizeProcessed;
+			if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 ||
+				processedSize != outSizeProcessed)
+			{
+				// PrintError("can not write output file");
+				res = SZ_ERROR_FAIL;
+				break;
+			}
+			
+			if (File_Close(&outFile))
+			{
+				//PrintError("can not close output file");
+				res = SZ_ERROR_FAIL;
+				break;
+			}
+
+			//success
+			break;
+		}
+		IAlloc_Free(&allocImp, outBuffer);
+	}
+	SzArEx_Free(&db, &allocImp);
+	File_Close(&archiveStream.file);
 
 	runMame(true);
 }
@@ -2731,10 +2949,10 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 
 	// update Refresh menuContext text
 	QString folder;
-	if (utils->isConsoleFolder())
+	if (isConsoleFolder())
 		folder = currentFolder;
 	else
-		folder = tr("All Arcades");
+		folder = folderList[FOLDER_ALLARC];
 	win->actionRefresh->setText(tr("Refresh").append(": ").append(folder));
 
 	gameListPModel->filterList.clear();
@@ -2907,7 +3125,7 @@ void Gamelist::initFolders()
 	{
 		QDir dir(_dirPath);
 
-		QStringList folderFiles = dir.entryList((QStringList() << "*" + INI_EXT), QDir::Files | QDir::Readable);
+		QStringList folderFiles = dir.entryList((QStringList() << "*" INI_EXT), QDir::Files | QDir::Readable);
 		
 		foreach (QString folderFile, folderFiles)
 		{
@@ -3052,7 +3270,41 @@ void Gamelist::restoreFolderSelection(bool isForce)
 	win->treeFolders->setCurrentItem(rootItem->child(FOLDER_ALLARC));
 }
 
-void Gamelist::runMame(bool runMerged, QStringList playArgs)
+bool Gamelist::isAuditFolder(QString consoleName)
+{
+	QStringList paths = currentFolder.split("/");
+	if (paths.size() == 2)
+	{
+		if (paths[1] == gameList->folderList[FOLDER_CONSOLE])
+			return true;
+
+		else if(paths[1] == consoleName)
+			return true;
+	}
+
+	return false;		
+}
+
+bool Gamelist::isConsoleFolder()
+{
+	QStringList paths = currentFolder.split("/");
+	if (paths.size() == 2)
+	{
+		if (paths[1] == gameList->folderList[FOLDER_CONSOLE])
+			return true;
+
+		else if (mameGame->games.contains(paths[1]))
+		{
+			GameInfo *gameInfo = mameGame->games[paths[1]];
+			if (!gameInfo->devices.isEmpty())
+				return true;
+		}
+	}
+
+	return false;
+}
+
+void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 {
 	//block multi mame session for now
 	//if (procMan->procCount > 0)
@@ -3061,59 +3313,81 @@ void Gamelist::runMame(bool runMerged, QStringList playArgs)
 	QStringList args;
 	args << playArgs;
 
-	GameInfo *gameInfo = mameGame->games[currentGame];
-
-/*
-	foreach(DeviceInfo* deviceInfo, gameInfo->devices)
-	{
-//		deviceInfo->mandatory
-	}
-*/
-	// run console roms, add necessary params
-	if (gameInfo->isExtRom)
-	{
-		// console system
-		args << gameInfo->romof;
-		// console device
-		QString instanceName = mameGame->games[gameInfo->romof]->getDeviceInstanceName("cartridge");
-		if (instanceName.isEmpty())
-			return;
-
-		args << "-" + instanceName;
-
-		QStringList paths = currentGame.split(".7z/");
-		// run extracted rom
-		if (runMerged)
-		{
-			// use temp rom name instead
-			args << currentTempROM;
-			loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
-			// delete the extracted rom
-			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
-			connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
-			win->toggleTrayIcon(0, QProcess::NormalExit, true);
-			return;
-		}
-
-		// extract merged rom
-		if (currentGame.contains(".7z/"))
-		{
-			extractMerged(paths[0] + ".7z", paths[1]);
-			return;
-		}
-	}
-
-	args << currentGame;
-
-	if (isMAMEPlus)
+	if (hasLanguage)
 	{
 		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
 		args << "-langpath" << langpath;
 		args << "-language" << language;
 	}
 
-	loadProc = procMan->process(procMan->start(mame_binary, args));
+	//force update ext rom fields
+	updateDynamicMenu(win->menuFile);
+
+	const QString gameName = currentGame;
+	GameInfo *gameInfo = mameGame->games[gameName];
+
+	if (gameInfo->devices.isEmpty())
+	{
+		//MAME game
+		args << gameName;
+	}
+	else
+	// run MESS roms, add necessary params
+	{
+		// extract merged rom
+		if (!hasTempRom && gameName.contains(SZIP_EXT "/"))
+		{
+			QStringList paths = gameName.split(SZIP_EXT "/");
+			extractMerged(paths[0] + SZIP_EXT, paths[1]);
+			return;
+		}
+
+		// MESS system
+		QString systemName = gameName;
+		if (gameInfo->isExtRom)
+			systemName = gameInfo->romof;
+		args << systemName;
+
+		// MESS device
+		bool tempRomLoaded = false;
+		QString warnings = "";
+		foreach (QString instanceName, gameInfo->devices.keys())
+		{
+			DeviceInfo *deviceInfo = gameInfo->devices[instanceName];
+
+			if (!deviceInfo->mountedPath.isEmpty())
+			{
+				args << "-" + instanceName;
+				if (hasTempRom && !tempRomLoaded)
+				{
+					args << currentTempROM;
+					tempRomLoaded = true;
+				}
+				else
+					args << deviceInfo->mountedPath;
+			}
+			else
+			{
+				if (deviceInfo->mandatory)
+					warnings.append(instanceName + "\n");
+			}
+		}
+
+		if (warnings.size() > 0)
+		{
+			win->poplog(tr("%1 requires that these device(s)\nmust be mounted:\n\n")
+				.arg(systemName) + warnings + "\ncouldn't start MESS.");
+			return;
+		}
+	}
+
+//	win->poplog(args.join(" "));
+
+	loadProc = procMan->process(procMan->start(mame_binary, args, !hasTempRom));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMameFinished(int, QProcess::ExitStatus)));
+	// delete the extracted rom
+	if (hasTempRom)
+		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
 	win->toggleTrayIcon(0, QProcess::NormalExit, true);
 }
@@ -3183,17 +3457,23 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	{
 	// apply folder filter
 	case Qt::UserRole + FOLDER_ALLARC:
-		result = result && !isBIOS && !isExtRom && !isConsole;
+		result = result && !isBIOS && !isExtRom;
+		if (!isMESS)
+			result = result && !isConsole;
 		break;
 
 	case Qt::UserRole + FOLDER_AVAILABLE:
-		result = result && !isBIOS && !isExtRom && !isConsole
+		result = result && !isBIOS && !isExtRom
 			&& (gameInfo->available == 1 || gameInfo->isCloneAvailable);
+		if (!isMESS)
+			result = result && !isConsole;		
 		break;
 
 	case Qt::UserRole + FOLDER_UNAVAILABLE:
-		result = result && !isBIOS && !isExtRom && !isConsole
+		result = result && !isBIOS && !isExtRom
 			&& (gameInfo->available != 1);
+		if (!isMESS)
+			result = result && !isConsole;
 		break;
 
 	case Qt::UserRole + FOLDER_CONSOLE:

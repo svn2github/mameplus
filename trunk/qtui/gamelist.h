@@ -29,6 +29,41 @@ enum
 	DOCK_LAST
 };
 
+enum
+{
+	FOLDER_ALLGAME = 0,
+	FOLDER_ALLARC,
+	FOLDER_AVAILABLE,
+	FOLDER_UNAVAILABLE,
+	FOLDER_CONSOLE,
+	FOLDER_MANUFACTURER,
+	FOLDER_YEAR,
+	FOLDER_SOURCE,
+	FOLDER_BIOS,
+	FOLDER_EXT,
+	/*
+	FOLDER_CPU,
+	FOLDER_SND,
+	FOLDER_ORIENTATION,
+	FOLDER_DEFICIENCY,
+	FOLDER_DUMPING,
+	FOLDER_WORKING,
+	FOLDER_NONWORKING,
+	FOLDER_ORIGINAL,
+	FOLDER_CLONES,
+	FOLDER_RASTER,
+	FOLDER_VECTOR,
+	FOLDER_RESOLUTION,
+	FOLDER_FPS,
+	FOLDER_SAVESTATE,
+	FOLDER_CONTROL,
+	FOLDER_STEREO,
+	FOLDER_HARDDISK,
+	FOLDER_SAMPLES,
+	FOLDER_ARTWORK,*/
+	MAX_FOLDERS
+};
+
 class UpdateSelectionThread : public QThread
 {
 	Q_OBJECT
@@ -161,12 +196,16 @@ public:
 	void disableCtrls();
 	void initFolders();
 	void restoreFolderSelection(bool = false);
+	bool isAuditFolder(QString);
+	bool isConsoleFolder();
 
 public slots:
-	void init(bool, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
+	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
 
 	void showContextMenu(const QPoint &);
 	void updateContextMenu();
+	void mountDevice();
+	void unmountDevice();
 	void showHeaderContextMenu(const QPoint &);
 	void updateHeaderContextMenu();
 	void restoreGameSelection();
@@ -187,7 +226,6 @@ public slots:
 	void loadDefaultIniReadyReadStandardOutput();
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 	void extractMerged(QString, QString);
-	void extractMergedFinished(int, QProcess::ExitStatus);
 	void runMameFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
@@ -204,7 +242,7 @@ private:
 
 	void initExtFolders(const QString&, const QString&);
 	void initMenus();
-	void updateDeviceMenu(QMenu *);
+	void updateDynamicMenu(QMenu *);
 	void loadMMO(int);
 	void loadIconWorkder();
 	void parse();
@@ -311,7 +349,8 @@ public:
 	QString type;
 	QString tag;
 	bool mandatory;
-	bool mounted;
+	bool isConst;
+	QString mountedPath;
 
 //	QString instanceName is the key
 	QStringList extensionNames;
@@ -381,6 +420,9 @@ public:
 	/*ramoption */
 	QList<quint32> ramOptions;
 	quint32 defaultRamOption;
+
+	/* extension */
+	QByteArray extraInfo;
 
 	/* internal */
 	QString lcDesc;
