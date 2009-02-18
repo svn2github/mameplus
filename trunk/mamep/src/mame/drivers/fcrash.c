@@ -397,9 +397,8 @@ static ADDRESS_MAP_START( kodb_sub_map, ADDRESS_SPACE_PROGRAM, 8 )
 	AM_RANGE(0x0000, 0x7fff) AM_ROM
 	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK(1)
 	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe000) AM_WRITE(ym2151_register_port_0_w)
-	AM_RANGE(0xe001, 0xe001) AM_READWRITE(ym2151_status_port_0_r, ym2151_data_port_0_w)
-	AM_RANGE(0xe400, 0xe400) AM_READWRITE(okim6295_status_0_r, okim6295_data_0_w)
+	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE(SOUND, "ym", ym2151_r, ym2151_w)
+	AM_RANGE(0xe004, 0xe400) AM_DEVREADWRITE(SOUND, "oki", okim6295_r, okim6295_w)
 	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
 	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)	/* Sound command */
 ADDRESS_MAP_END
