@@ -8494,59 +8494,11 @@ ROM_START( sgemfd )
 	ROM_LOAD16_WORD_SWAP( "pcf.12m",   0x400000, 0x400000, CRC(4ce235fe) SHA1(795b94557e954cc0e45fd3778b609064d57a34a2) )
 ROM_END
 
-ROM_START( mmatrixd )
-	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "mmxud.03", 0x000000, 0x80000, CRC(36711E60) SHA1(A192E786798F69320761017437EE4D2D47DC80C5) )
-	ROM_LOAD16_WORD_SWAP( "mmxud.04", 0x080000, 0x80000, CRC(4687226F) SHA1(B831582F578EB1E40BCE1D1CBF231E4C27F510CD) )
-	ROM_LOAD16_WORD_SWAP( "mmxud.05", 0x100000, 0x80000, CRC(52124398) SHA1(0A18B9D2A7E3335DDF7FF9AC5C5F8298951F8C67) )
-
-	ROM_REGION( 0x2000000, "gfx", 0 )
-	ROMX_LOAD( "mmx.13m",   0x0000000, 0x400000, CRC(04748718) SHA1(d2e84d9dcc779c08469d815ccd709f30705954b8) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.15m",   0x0000002, 0x400000, CRC(38074f44) SHA1(2002c4862c156b314bc4f3372b713c48e0667ec3) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.17m",   0x0000004, 0x400000, CRC(e4635e35) SHA1(48ef7a82df83b981ddd6138c241ca129ab770e8e) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.19m",   0x0000006, 0x400000, CRC(4400a3f2) SHA1(d0aa805ccbb153896e5983da1c398d1df4f40371) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.14m",   0x1000000, 0x400000, CRC(d52bf491) SHA1(2398895cfdcf86fc485472e33df2cc446539e977) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.16m",   0x1000002, 0x400000, CRC(23f70780) SHA1(691ee8964815b0ce54704e7feb59ca79b634f26d) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.18m",   0x1000004, 0x400000, CRC(2562c9d5) SHA1(e7defc3d33db632c4035ae069f2f2332c58afaf5) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "mmx.20m",   0x1000006, 0x400000, CRC(583a9687) SHA1(1d0b08b1e88509245db3c2090f0201938fd750b4) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( QSOUND_SIZE, "audio", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "mmx.01",   0x00000, 0x08000, CRC(c57e8171) SHA1(dedb92af1910d38727f816e6f507d25148f31b74) )
-	ROM_CONTINUE(         0x10000, 0x18000 )
-
-	ROM_REGION( 0x800000, "qsound", 0 ) /* QSound samples */
-	ROM_LOAD16_WORD_SWAP( "mmx.11m",   0x000000, 0x400000, CRC(4180b39f) SHA1(cabb1c358eae1bb6cfed07f5b92e4acd38650667) )
-	ROM_LOAD16_WORD_SWAP( "mmx.12m",   0x400000, 0x400000, CRC(95e22a59) SHA1(b3431d170c0a1a0d826ad0af21300b9180e3f114) )
-ROM_END
-
-ROM_START( dimahoud )
-	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "gmdud.03", 0x000000, 0x80000, CRC(12888435) SHA1(38204359C505AE861341936CD0FD2517411B8995) )
-	ROM_LOAD16_WORD_SWAP( "gmd.04",  0x080000, 0x80000, CRC(37485567) SHA1(643c41fce6057bcaef0e0bedc62914c33d97eeaf) )
-	ROM_LOAD16_WORD_SWAP( "gmd.05",  0x100000, 0x80000, CRC(da269ffb) SHA1(e99b04192030b6006cf67b563f40cea29c1b2e78) )
-	ROM_LOAD16_WORD_SWAP( "gmdd.06",  0x180000, 0x80000, CRC(D825EFDA) SHA1(7299F3629D5136F567F5CF373754EA13B2190533) )
-
-	ROM_REGION( 0x1000000, "gfx", 0 )
-	ROMX_LOAD( "gmd.13m",   0x000000, 0x400000, CRC(80dd19f0) SHA1(0fd8b1e8d73cc83e6c34f0d94487938da2344f76) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "gmd.15m",   0x000002, 0x400000, CRC(dfd93a78) SHA1(c343d5ddcc25bd0739491e7439d7c0d0a8881a04) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "gmd.17m",   0x000004, 0x400000, CRC(16356520) SHA1(058713bef30c1b1d8b7dd0ceaaa57a3ab9751a70) , ROM_GROUPWORD | ROM_SKIP(6) )
-	ROMX_LOAD( "gmd.19m",   0x000006, 0x400000, CRC(dfc33031) SHA1(a1ceaeddc2a79d5b79f1b107cac2ef6a5e621e77) , ROM_GROUPWORD | ROM_SKIP(6) )
-
-	ROM_REGION( QSOUND_SIZE, "audio", 0 ) /* 64k for the audio CPU (+banks) */
-	ROM_LOAD( "gmd.01",   0x00000, 0x08000, CRC(3f9bc985) SHA1(1616bbee82877b1052a07531066f5009a80706be) )
-	ROM_CONTINUE(         0x10000, 0x18000 )
-	ROM_LOAD( "gmd.02",   0x28000, 0x20000, CRC(3fd39dde) SHA1(6a6e3ef9baa430ee83ab2312aa0221bae4d73dbd) )
-
-	ROM_REGION( 0x800000, "qsound", 0 ) /* QSound samples */
-	ROM_LOAD16_WORD_SWAP( "gmd.11m",   0x000000, 0x400000, CRC(06a65542) SHA1(a1b3df70c90055a3cd59d0149fd18a74eff5bcc9) )
-	ROM_LOAD16_WORD_SWAP( "gmd.12m",   0x400000, 0x400000, CRC(50bc7a31) SHA1(7283569fc646c39f4c693f14e0ce7ff2ee49111a) )
-ROM_END
-
 ROM_START( armwar1d )
 	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */
-	ROM_LOAD16_WORD_SWAP( "pwged.03b", 0x000000, 0x80000, CRC(496BD483) SHA1(C3A116EA019843ABA666A0D7E7BD2975622306E3) )
-	ROM_LOAD16_WORD_SWAP( "pwged.04b", 0x080000, 0x80000, CRC(9BD6A38F) SHA1(DA90162B7BFF223DF59AC362A5F61C580A86D967) )
-	ROM_LOAD16_WORD_SWAP( "pwged.05a", 0x100000, 0x80000, CRC(4C11D30F) SHA1(463BA1845B1239C839E9419CBC6762D52B7918DB) )
+	ROM_LOAD16_WORD_SWAP( "pwged.03b", 0x000000, 0x80000, CRC(496bd483) SHA1(c3a116ea019843aba666a0d7e7bd2975622306e3) )
+	ROM_LOAD16_WORD_SWAP( "pwged.04b", 0x080000, 0x80000, CRC(9bd6a38f) SHA1(da90162b7bff223df59ac362a5f61c580a86d967) )
+	ROM_LOAD16_WORD_SWAP( "pwged.05a", 0x100000, 0x80000, CRC(4c11d30f) SHA1(463ba1845b1239c839e9419cbc6762d52b7918db) )
 	ROM_LOAD16_WORD_SWAP( "pwg.06",   0x180000, 0x80000, CRC(87a60ce8) SHA1(e2085c7c8c6792d055dbbb023c7f4e4aa38ae924) )
 	ROM_LOAD16_WORD_SWAP( "pwg.07",   0x200000, 0x80000, CRC(f7b148df) SHA1(f369669713cf647222094c570a2eacd48a8637cf) )
 	ROM_LOAD16_WORD_SWAP( "pwg.08",   0x280000, 0x80000, CRC(cc62823e) SHA1(edaf9bebdfc65ae5414090abd6844176eec39a00) )
@@ -8574,8 +8526,59 @@ ROM_START( armwar1d )
 ROM_END
 
 
+ROM_START( dimahoud )
+	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "gmdud.03", 0x000000, 0x80000, CRC(12888435) SHA1(38204359c505ae861341936cd0fd2517411b8995) )
+	ROM_LOAD16_WORD_SWAP( "gmd.04",   0x080000, 0x80000, CRC(37485567) SHA1(643c41fce6057bcaef0e0bedc62914c33d97eeaf) )
+	ROM_LOAD16_WORD_SWAP( "gmd.05",   0x100000, 0x80000, CRC(da269ffb) SHA1(e99b04192030b6006cf67b563f40cea29c1b2e78) )
+	ROM_LOAD16_WORD_SWAP( "gmdud.06", 0x180000, 0x80000, CRC(d825efda) SHA1(7299f3629d5136f567f5cf373754ea13b2190533) )
+
+	ROM_REGION( 0x1000000, "gfx", 0 )
+	ROMX_LOAD( "gmd.13m",   0x000000, 0x400000, CRC(80dd19f0) SHA1(0fd8b1e8d73cc83e6c34f0d94487938da2344f76) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "gmd.15m",   0x000002, 0x400000, CRC(dfd93a78) SHA1(c343d5ddcc25bd0739491e7439d7c0d0a8881a04) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "gmd.17m",   0x000004, 0x400000, CRC(16356520) SHA1(058713bef30c1b1d8b7dd0ceaaa57a3ab9751a70) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "gmd.19m",   0x000006, 0x400000, CRC(dfc33031) SHA1(a1ceaeddc2a79d5b79f1b107cac2ef6a5e621e77) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( QSOUND_SIZE, "audio", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "gmd.01",   0x00000, 0x08000, CRC(3f9bc985) SHA1(1616bbee82877b1052a07531066f5009a80706be) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+	ROM_LOAD( "gmd.02",   0x28000, 0x20000, CRC(3fd39dde) SHA1(6a6e3ef9baa430ee83ab2312aa0221bae4d73dbd) )
+
+	ROM_REGION( 0x800000, "qsound", 0 ) /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "gmd.11m",   0x000000, 0x400000, CRC(06a65542) SHA1(a1b3df70c90055a3cd59d0149fd18a74eff5bcc9) )
+	ROM_LOAD16_WORD_SWAP( "gmd.12m",   0x400000, 0x400000, CRC(50bc7a31) SHA1(7283569fc646c39f4c693f14e0ce7ff2ee49111a) )
+ROM_END
+
+ROM_START( mmatrixd )
+	ROM_REGION( CODE_SIZE, "main", 0 )      /* 68000 code */
+	ROM_LOAD16_WORD_SWAP( "mmxjd.03", 0x000000, 0x80000, CRC(36711e60) SHA1(a192e786798f69320761017437ee4d2d47dc80c5) )
+	ROM_LOAD16_WORD_SWAP( "mmxjd.04", 0x080000, 0x80000, CRC(4687226f) SHA1(b831582f578eb1e40bce1d1cbf231e4c27f510cd) )
+	ROM_LOAD16_WORD_SWAP( "mmxjd.05", 0x100000, 0x80000, CRC(52124398) SHA1(0a18b9d2a7e3335ddf7ff9ac5c5f8298951f8c67) )
+
+	ROM_REGION( 0x2000000, "gfx", 0 )
+	ROMX_LOAD( "mmx.13m",   0x0000000, 0x400000, CRC(04748718) SHA1(d2e84d9dcc779c08469d815ccd709f30705954b8) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.15m",   0x0000002, 0x400000, CRC(38074f44) SHA1(2002c4862c156b314bc4f3372b713c48e0667ec3) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.17m",   0x0000004, 0x400000, CRC(e4635e35) SHA1(48ef7a82df83b981ddd6138c241ca129ab770e8e) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.19m",   0x0000006, 0x400000, CRC(4400a3f2) SHA1(d0aa805ccbb153896e5983da1c398d1df4f40371) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.14m",   0x1000000, 0x400000, CRC(d52bf491) SHA1(2398895cfdcf86fc485472e33df2cc446539e977) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.16m",   0x1000002, 0x400000, CRC(23f70780) SHA1(691ee8964815b0ce54704e7feb59ca79b634f26d) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.18m",   0x1000004, 0x400000, CRC(2562c9d5) SHA1(e7defc3d33db632c4035ae069f2f2332c58afaf5) , ROM_GROUPWORD | ROM_SKIP(6) )
+	ROMX_LOAD( "mmx.20m",   0x1000006, 0x400000, CRC(583a9687) SHA1(1d0b08b1e88509245db3c2090f0201938fd750b4) , ROM_GROUPWORD | ROM_SKIP(6) )
+
+	ROM_REGION( QSOUND_SIZE, "audio", 0 ) /* 64k for the audio CPU (+banks) */
+	ROM_LOAD( "mmx.01",   0x00000, 0x08000, CRC(c57e8171) SHA1(dedb92af1910d38727f816e6f507d25148f31b74) )
+	ROM_CONTINUE(         0x10000, 0x18000 )
+
+	ROM_REGION( 0x800000, "qsound", 0 ) /* QSound samples */
+	ROM_LOAD16_WORD_SWAP( "mmx.11m",   0x000000, 0x400000, CRC(4180b39f) SHA1(cabb1c358eae1bb6cfed07f5b92e4acd38650667) )
+	ROM_LOAD16_WORD_SWAP( "mmx.12m",   0x400000, 0x400000, CRC(95e22a59) SHA1(b3431d170c0a1a0d826ad0af21300b9180e3f114) )
+ROM_END
+
+
+
 GAME( 1993, ssf2ud,   ssf2,    dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Super Street Fighter II: The New Challengers (USA 930911 Phoenix Edition) (bootleg)", 0 )
 GAME( 1993, ddtodd,   ddtod,   dead_cps2, cps2_4p4b, cps2,   ROT0,   "bootleg", "Dungeons & Dragons: Tower of Doom (Euro 940412 Phoenix Edition) (bootleg)", 0 )
+GAME( 1994, armwar1d, armwar,  dead_cps2, cps2_3p3b, cps2,   ROT0,   "bootleg", "Armored Warriors (Euro 941011 Phoenix Edition) (bootleg)", 0 )
 GAME( 1994, avspd,    avsp,    dead_cps2, cps2_3p3b, cps2,   ROT0,   "bootleg", "Alien vs. Predator (Euro 940520 Phoenix Edition) (bootleg)", 0 )
 GAME( 1994, dstlku1d, dstlk,   dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Darkstalkers: The Night Warriors (USA 940705 Phoenix Edition) (bootleg)", 0 )
 GAME( 1994, ringdstd, ringdest,dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Ring of Destruction: Slammasters II (Euro 940902 Phoenix Edition) (bootleg)", 0 )
@@ -8596,11 +8599,10 @@ GAME( 1998, mvscud,   mvsc,    dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", 
 GAME( 1998, sfa3ud,   sfa3,    dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Street Fighter Alpha 3 (USA 980904 Phoenix Edition) (bootleg)", 0 )
 GAME( 1999, gwingjd,  gigawing,dead_cps2, cps2_2p2b, cps2,   ROT0,   "bootleg", "Giga Wing (Japan 990223 Phoenix Edition) (bootleg)", 0 )
 GAME( 2000, 1944d,    1944,    dead_cps2, cps2_2p2b, cps2,   ROT0,   "bootleg", "1944: The Loop Master (USA 000620 Phoenix Edition) (bootleg)", 0 )
-GAME( 2001, progerjd, progear, dead_cps2, cps2_2p3b, cps2,   ROT0,   "bootleg", "Progear no Arashi (Japan 010117 Phoenix Edition) (bootleg)", 0 )
+GAME( 2001, progerjd, progear, dead_cps2, cps2_2p3b, cps2,   ROT0,   "bootleg", "Progear no Arashi (Japan 010117 Phoenix Edition) (bootleg)", 0 ) // doesn't display phoenix edition screen, hacked bootleg?
 GAME( 2004, hsf2d,    hsf2,    dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Hyper Street Fighter II: The Anniversary Edition (Asia 040202 Phoenix Edition) (bootleg)", 0 )
 GAME( 1993, ssf2tbd,  ssf2,    dead_cps2, cps2_2p6b, ssf2tb, ROT0,   "bootleg", "Super Street Fighter II: The Tournament Battle (World 931119 Phoenix Edition) (bootleg)", 0 )
 GAME( 1994, ssf2xjd,  ssf2,    dead_cps2, cps2_2p6b, cps2,   ROT0,   "bootleg", "Super Street Fighter II X: Grand Master Challenge (Japan 940223 Phoenix Edition) (bootleg)", 0 )
 GAME( 1997, sgemfd,   sgemf,   dead_cps2, cps2_2p3b, cps2,   ROT0,   "bootleg", "Super Gem Fighter Mini Mix (USA 970904 Phoenix Edition) (bootleg)", 0 )
-GAME( 2000, mmatrixd, mmatrix, dead_cps2, cps2_2p1b, cps2,   ROT0,   "bootleg", "Mars Matrix: Hyper Solid Shooting (USA 000412 Phoenix Edition) (bootleg)", 0 )
+GAME( 2000, mmatrixd, mmatrix, dead_cps2, cps2_2p1b, cps2,   ROT0,   "bootleg", "Mars Matrix: Hyper Solid Shooting (Japan 000412 Phoenix Edition) (bootleg)", 0 )
 GAME( 2000, dimahoud, dimahoo, dead_cps2, cps2_2p3b, cps2,   ROT270, "bootleg", "Dimahoo (USA 000121 Phoenix Edition) (bootleg)", 0 )
-GAME( 1994, armwar1d, armwar,  dead_cps2, cps2_3p3b, cps2,   ROT0,   "bootleg", "Armored Warriors (Euro 941011 Phoenix Edition) (bootleg)", 0 )

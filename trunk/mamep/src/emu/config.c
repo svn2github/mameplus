@@ -12,10 +12,11 @@
 #include "driver.h"
 #include "config.h"
 #include "xmlfile.h"
-
 #ifdef MAMEMESS
 #define MESS
 #endif /* MAMEMESS */
+
+
 #define DEBUG_CONFIG		0
 
 
