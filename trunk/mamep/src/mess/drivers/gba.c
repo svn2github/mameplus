@@ -14,9 +14,9 @@
 ***************************************************************************/
 
 #include "driver.h"
-#include "cpu/arm7/arm7.h"
 #include "state.h"
 #include "video/generic.h"
+#include "cpu/arm7/arm7.h"
 #include "cpu/arm7/arm7core.h"
 #include "devices/cartslot.h"
 #include "includes/gba.h"
@@ -25,7 +25,6 @@
 
 #define VERBOSE_LEVEL	(2)
 #define DISABLE_ROZ	(0)
-
 
 static emu_timer *dma_timer[4], *tmr_timer[4], *irq_timer;
 
@@ -88,13 +87,14 @@ typedef struct
 static GBARegsT gba;
 static UINT8 *nvptr;
 static UINT32 nvsize = 0;
+static const device_config *nvimage;
 
 static void gba_machine_stop(running_machine *machine)
 {
 	// only do this if the cart loader detected some form of backup
 	if (nvsize > 0)
 	{
-		image_battery_save(device_list_find_by_tag(machine->config->devicelist, CARTSLOT, "cart"), nvptr, nvsize);
+		image_battery_save(nvimage, nvptr, nvsize);
 	}
 }
 
@@ -2257,7 +2257,7 @@ static WRITE32_HANDLER( gba_io_w )
 
 				COMBINE_DATA(&timer_regs[offset]);
 
-//				printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, activecpu_get_pc());
+				printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, cpu_get_pc(space->cpu));
 
 				if (ACCESSING_BITS_0_15)
 				{
@@ -2275,7 +2275,7 @@ static WRITE32_HANDLER( gba_io_w )
 
 					final = clocksel / rate;
 
-//					printf("Enabling timer %d @ %f Hz\n", offset, final);
+					printf("Enabling timer %d @ %f Hz\n", offset, final);
 
 					// enable the timer
 					if( !(data & 0x40000) ) // if we're not in Count-Up mode
@@ -3065,6 +3065,12 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 	if (nvsize > 0)
 	{
 		image_battery_load(image, nvptr, nvsize);
+		nvimage = image;
+	}
+	else
+	{
+		nvimage = NULL;
+		nvsize = 0;
 	}
 
 	// mirror the ROM
@@ -3118,8 +3124,7 @@ static MACHINE_DRIVER_START( gbadv )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
 
 	MDRV_CARTSLOT_ADD("cart")
-	MDRV_CARTSLOT_EXTENSION_LIST("gba")
-	MDRV_CARTSLOT_MANDATORY
+	MDRV_CARTSLOT_EXTENSION_LIST("gba,bin")
 	MDRV_CARTSLOT_LOAD(gba_cart)
 MACHINE_DRIVER_END
 

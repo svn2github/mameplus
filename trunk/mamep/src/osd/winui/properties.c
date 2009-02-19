@@ -801,56 +801,57 @@ static LPCWSTR GameInfoCPU(UINT nIndex)
 /* Build Sound system info string */
 static LPCWSTR GameInfoSound(UINT nIndex)
 {
-	int chipnum;
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
+	const device_config *sound;
 
 	buf[0] = 0;
 
-		/* iterate over sound chips */
-	for (chipnum = 0; chipnum < ARRAY_LENGTH(config->sound); chipnum++)
+	/* iterate over sound chips */
+	sound = device_list_class_first(config->devicelist, DEVICE_CLASS_SOUND_CHIP);
+	while(sound != NULL)
 	{
-		if (config->sound[chipnum].type != SOUND_DUMMY)
+		int clock,count;
+		device_type sound_type_;
+
+		sound_type_ = sound_get_type(sound);
+		clock = sound->clock;
+
+		count = 1;
+		sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP);
+
+		/* Matching chips at the same clock are aggregated */
+		while (sound != NULL
+			&& sound_get_type(sound) == sound_type_
+			&& sound->clock == clock)
 		{
-			int clock,count;
-			sound_type sound_type_;
+			count++;
+			sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP);
+		}
 
-			sound_type_ = config->sound[chipnum].type;
-			clock = config->sound[chipnum].clock;
+		if (count > 1)
+		{
+			swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
+		}
 
-			count = 1;
-			chipnum++;
+		swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(devtype_get_name(sound_type_)));
 
-			/* Matching chips at the same clock are aggregated */
-			while (chipnum < ARRAY_LENGTH(config->sound)
-				&& config->sound[chipnum].type == sound_type_
-				&& config->sound[chipnum].clock == clock)
+		if (clock)
+		{
+			if (clock >= 1000000)
 			{
-				count++;
-				chipnum++;
+				swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
+					clock / 1000000,
+					clock % 1000000);
 			}
-
-			if (count > 1)
+			else
 			{
-				swprintf(&buf[wcslen(buf)], TEXT("%dx"), count);
-			}
-
-			swprintf(&buf[wcslen(buf)],TEXT("%s"),_Unicode(sndtype_get_name(sound_type_)));
-
-			if (clock)
-			{
-				if (clock >= 1000000)
-				{
-					swprintf(&buf[wcslen(buf)], TEXT(" %d.%06d MHz"),
-						clock / 1000000,
-						clock % 1000000);
-				} else {
 				swprintf(&buf[wcslen(buf)], TEXT(" %d.%03d kHz"),
 						clock / 1000,
 						clock % 1000);
-				}
 			}
 		}
+
 		wcscat(buf, TEXT("\n"));
 	}
 	/* Free the structure */
@@ -3379,10 +3380,10 @@ static void SetStereoEnabled(HWND hWnd, int nIndex)
 
 static void SetYM3812Enabled(HWND hWnd, int nIndex)
 {
-	int i;
 	BOOL enabled;
 	HWND hCtrl;
 	machine_config *config = NULL;
+	const device_config *sound;
 
 	if (nIndex > -1)
 	{
@@ -3393,17 +3394,16 @@ static void SetYM3812Enabled(HWND hWnd, int nIndex)
 	if (hCtrl)
 	{
 		enabled = FALSE;
-		for (i = 0; i < MAX_SOUND; i++)
+
+		for (sound = device_list_class_first(config->devicelist, DEVICE_CLASS_SOUND_CHIP); sound != NULL;
+			sound = device_list_class_next(sound, DEVICE_CLASS_SOUND_CHIP))
 		{
 			if (nIndex <= -1
 #if HAS_YM3812
-			||  config->sound[i].type == SOUND_YM3812
-#endif
-#if HAS_YM3526
-			||  config->sound[i].type == SOUND_YM3526
+				||  sound->type == SOUND_YM3812
 #endif
 #if HAS_YM2413
-			||  config->sound[i].type == SOUND_YM2413
+				||  sound->type == SOUND_YM2413
 #endif
 			)
 				enabled = TRUE;
@@ -3421,7 +3421,6 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 {
 	machine_config *config = NULL;
 #if (HAS_SAMPLES == 1) || (HAS_VLM5030 == 1)
-	int i;
 	BOOL enabled = FALSE;
 	HWND hCtrl;
 
@@ -3433,16 +3432,19 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	
 	if (hCtrl)
 	{
-		for (i = 0; i < MAX_SOUND; i++)
+		const device_config *sound;
+		for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
 		{
-			if (nIndex <= -1
-			||  config->sound[i].type == SOUND_SAMPLES
+			if (sound_get_type(sound) == SOUND_SAMPLES
 #if HAS_VLM5030
-			||  config->sound[i].type == SOUND_VLM5030
+				||  sound_get_type(sound) == SOUND_VLM5030
 #endif
-			)
+				)
+			{
 				enabled = TRUE;
+			}
 		}
+
 		enabled = enabled && bSoundEnabled;
 		EnableWindow(hCtrl, enabled);
 	}

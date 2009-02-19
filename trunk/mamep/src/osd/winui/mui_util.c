@@ -508,21 +508,6 @@ static void UpdateController(void)
 int numberOfSpeakers(const machine_config *config)
 {
 	int speakers = speaker_output_count(config);
-	int has_sound = FALSE;
-	int sndnum;
-
-	/* see if we have any sound chips to report */
-	for (sndnum = 0; sndnum < ARRAY_LENGTH(config->sound); sndnum++)
-		if (config->sound[sndnum].type != SOUND_DUMMY)
-		{
-			has_sound = TRUE;
-			break;
-		}
-
-	/* if we don't have sound, set speaker count to 0 */
-	if (!has_sound)
-		speakers = 0;
-
 	return speakers;
 }
 
@@ -530,7 +515,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 {
 	if (drivers_info == NULL)
 	{
-		int ndriver, i;
+		int ndriver;
 		drivers_info = malloc(sizeof(struct DriversInfo) * GetNumGames());
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
@@ -594,26 +579,25 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			
 			if (HAS_SAMPLES || HAS_VLM5030)
 			{
-			for (i = 0; config->sound[i].type && i < MAX_SOUND; i++)
-				{
-					const char * const * samplenames = NULL;
+				const device_config *sound;
+				const char * const * samplenames = NULL;
 
-#if (HAS_SAMPLES || HAS_VLM5030)
-					for( i = 0; config->sound[i].type && i < MAX_SOUND; i++ )
+				for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
+				{
+
 					{
 #if (HAS_SAMPLES)
-						if( config->sound[i].type == SOUND_SAMPLES )
-					samplenames = ((samples_interface *)config->sound[i].config)->samplenames;
+						if( sound_get_type(sound) == SOUND_SAMPLES )
+							samplenames = ((const samples_interface *)sound->static_config)->samplenames;
 #endif
-				}
-#endif
-					if (samplenames != 0 && samplenames[0] != 0)
-					{
-						gameinfo->usesSamples = TRUE;
-						break;
 					}
 				}
 
+				if (samplenames != 0 && samplenames[0] != 0)
+				{
+					gameinfo->usesSamples = TRUE;
+					break;
+				}			
 			}
 
 			gameinfo->numPlayers = 0;
@@ -623,6 +607,8 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			gameinfo->parentIndex = -1;
 			if (gameinfo->isClone)
 			{
+				int i;
+
 				for (i = 0; i < GetNumGames(); i++)
 				{
 					if (GetParentRomSetIndex(gamedrv) == i)
