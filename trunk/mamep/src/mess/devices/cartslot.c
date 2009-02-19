@@ -287,7 +287,7 @@ static DEVICE_IMAGE_UNLOAD( cartslot )
 
 	/* if this cartridge has a custom DEVICE_IMAGE_UNLOAD, use it */
 	if (config->device_unload != NULL)
-{
+	{
 		(*config->device_unload)(image);
 		return;
 	}
@@ -392,9 +392,9 @@ static DEVICE_SET_INFO( cartslot )
     DEVICE_GET_INFO( cartslot )
 -------------------------------------------------*/
 
-DEVICE_GET_INFO(cartslot)
+DEVICE_GET_INFO( cartslot )
 {	
-	switch( state )
+	switch(state)
 	{
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 		case DEVINFO_INT_TOKEN_BYTES:				info->i = sizeof(cartslot_t); break;
@@ -413,10 +413,10 @@ DEVICE_GET_INFO(cartslot)
 													break;
 
 		/* --- the following bits of info are returned as pointers to functions --- */
-		case DEVINFO_FCT_SET_INFO:					info->set_info = DEVICE_SET_INFO_NAME(cartslot);		break;
-		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME(cartslot);				break;
-		case DEVINFO_FCT_IMAGE_LOAD:				info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(cartslot);	break; 
-		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(cartslot);	break; 
+		case DEVINFO_FCT_SET_INFO:					info->set_info = DEVICE_SET_INFO_NAME(cartslot);			break;
+		case DEVINFO_FCT_START:						info->start = DEVICE_START_NAME(cartslot);					break;
+		case DEVINFO_FCT_IMAGE_LOAD:				info->f = (genf *) DEVICE_IMAGE_LOAD_NAME(cartslot);		break; 
+		case DEVINFO_FCT_IMAGE_UNLOAD:				info->f = (genf *) DEVICE_IMAGE_UNLOAD_NAME(cartslot);		break; 
 		case DEVINFO_FCT_GET_IMAGE_DEVICES:			info->f = (genf *) DEVICE_GET_IMAGE_DEVICES_NAME(cartslot);	break;
 		case DEVINFO_FCT_IMAGE_PARTIAL_HASH:		if ( device && device->inline_config && get_config(device)->device_partialhash) {
 														info->f = (genf *) get_config(device)->device_partialhash; 

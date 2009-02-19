@@ -29,7 +29,7 @@
 const game_driver *const consoledrivers[] =
 {
 #include "messdriv.c"
-	0	/* end of array */
+  0             /* end of array */
 };
 
 #else /* DRIVER_RECURSIVE */
@@ -75,7 +75,7 @@ const game_driver *const consoledrivers[] =
 
 	DRIVER( megadrij )	/* 1988 Sega Mega Drive (Japan)						*/
 	DRIVER( genesis )	/* 1989 Sega Genesis (USA)							*/
-	DRIVER( gensvp )	/* 1993 Sega Genesis (USA w/SVP chip)					*/
+	DRIVER( gensvp )	/* 1993 Sega Genesis (USA w/SVP chip)				*/
 	DRIVER( megadriv )	/* 1990 Sega Mega Drive (Europe)					*/
 	DRIVER( pico )		/* 1994 Sega Pico (Europe)							*/
 	DRIVER( picou )		/* 1994 Sega Pico (USA)								*/

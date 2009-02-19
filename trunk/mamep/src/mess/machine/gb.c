@@ -201,14 +201,14 @@ static void gb_init(running_machine *machine) {
 	{
 		if ( MBCType != MBC_MEGADUCK )
 		{
-		gb_rom16_4000( machine, ROMMap[ROMBank] );
-		memory_set_bankptr (machine, 2, RAMMap[RAMBank] ? RAMMap[RAMBank] : gb_dummy_ram_bank);
+			gb_rom16_4000( machine, ROMMap[ROMBank] );
+			memory_set_bankptr (machine, 2, RAMMap[RAMBank] ? RAMMap[RAMBank] : gb_dummy_ram_bank);
 		}
 		else
 		{
-		memory_set_bankptr( machine, 1, ROMMap[ROMBank] );
-		memory_set_bankptr( machine, 10, ROMMap[0] );
-	}
+			memory_set_bankptr( machine, 1, ROMMap[ROMBank] );
+			memory_set_bankptr( machine, 10, ROMMap[0] );
+		}
 	}
 
 	/* Set handlers based on the Memory Bank Controller in the cart */
@@ -273,7 +273,7 @@ static void gb_init(running_machine *machine) {
 			break;
 	}
 
-	gb_sound_w( space, 0x16, 0x00 );       /* Initialize sound hardware */
+	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x16, 0x00 );       /* Initialize sound hardware */
 
 	/* Allocate the serial timer, and disable it */
 	gb_serial_timer = timer_alloc(machine,  gb_serial_timer_proc , NULL);
@@ -317,9 +317,9 @@ MACHINE_RESET( sgb )
 	memset( sgb_tile_data, 0, 0x2000 );
 
 	/* Initialize the Sound Registers */
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x16,0xF0);	/* F0 for SGB */
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x15,0xF3);
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x14,0x77);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x16,0xF0);	/* F0 for SGB */
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x15,0xF3);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x14,0x77);
 
 	sgb_window_mask = 0;
 	memset( sgb_pal_map, 0, sizeof(sgb_pal_map) );
@@ -332,9 +332,9 @@ MACHINE_RESET( sgb )
 
 	if (gb_cart)	// make sure cart is in
 	{
-	if( strncmp( (const char*)(gb_cart + 0x134), "DONKEYKONGLAND 2", 16 ) == 0 ||
-		strncmp( (const char*)(gb_cart + 0x134), "DONKEYKONGLAND 3", 16 ) == 0 )
-		sgb_hack = 1;
+		if( strncmp( (const char*)(gb_cart + 0x134), "DONKEYKONGLAND 2", 16 ) == 0 ||
+			strncmp( (const char*)(gb_cart + 0x134), "DONKEYKONGLAND 3", 16 ) == 0 )
+				sgb_hack = 1;
 	}
 
 	gb_timer.divcount = 0xABC8;
@@ -349,9 +349,9 @@ MACHINE_RESET( gbpocket )
 	gb_init_regs(machine);
 
 	/* Initialize the Sound registers */
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x16,0x80);
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x15,0xF3);
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x14,0x77);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x16,0x80);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x15,0xF3);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x14,0x77);
 
 	/* Enable BIOS rom if we have one */
 	memory_set_bankptr(machine, 5, ROMMap[ROMBank00] ? ROMMap[ROMBank00] : gb_dummy_rom_bank );
@@ -371,9 +371,9 @@ MACHINE_RESET( gbc )
 	gb_init_regs(machine);
 
 	/* Initialize the Sound registers */
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x16, 0x80);
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x15, 0xF3);
-	gb_sound_w( cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM ), 0x14, 0x77);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x16, 0x80);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x15, 0xF3);
+	gb_sound_w(devtag_get_device(machine, SOUND, "custom"), 0x14, 0x77);
 
 	memory_set_bankptr(machine, 5, ROMMap[ROMBank00] ? ROMMap[ROMBank00] : gb_dummy_rom_bank );
 	memory_set_bankptr(machine, 10, ROMMap[ROMBank00] ? ROMMap[ROMBank00] + 0x0100 : gb_dummy_rom_bank + 0x0100);
@@ -399,8 +399,8 @@ MACHINE_RESET( gbc )
 
 	if (gb_cart)	// make sure cart is in
 	{
-	if( gb_cart[0x143] == 0x80 || gb_cart[0x143] == 0xC0 )
-		gbc_mode = GBC_MODE_GBC;
+		if( gb_cart[0x143] == 0x80 || gb_cart[0x143] == 0xC0 )
+			gbc_mode = GBC_MODE_GBC;
 	}
 	gb_timer.divcount = 0x1E9C;
 }
@@ -1988,24 +1988,24 @@ static const UINT8 megaduck_sound_offsets[16] = { 0, 2, 1, 3, 4, 6, 5, 7, 8, 9, 
 
 WRITE8_HANDLER( megaduck_sound_w1 )
 {
-	gb_sound_w( space, megaduck_sound_offsets[offset], data );
+	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), megaduck_sound_offsets[offset], data );
 }
 
- READ8_HANDLER( megaduck_sound_r1 )
+READ8_HANDLER( megaduck_sound_r1 )
 {
-	return gb_sound_r( space, megaduck_sound_offsets[offset] );
+	return gb_sound_r( devtag_get_device(space->machine, SOUND, "custom"), megaduck_sound_offsets[offset] );
 }
 
 WRITE8_HANDLER( megaduck_sound_w2 )
 {
 	switch(offset) {
-		case 0x00:	gb_sound_w( space, 0x10, data );	break;
-		case 0x01:	gb_sound_w( space, 0x12, data );	break;
-		case 0x02:	gb_sound_w( space, 0x11, data );	break;
-		case 0x03:	gb_sound_w( space, 0x13, data );	break;
-		case 0x04:	gb_sound_w( space, 0x14, data );	break;
-		case 0x05:	gb_sound_w( space, 0x16, data );	break;
-		case 0x06:	gb_sound_w( space, 0x15, data );	break;
+		case 0x00:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x10, data );	break;
+		case 0x01:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x12, data );	break;
+		case 0x02:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x11, data );	break;
+		case 0x03:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x13, data );	break;
+		case 0x04:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x14, data );	break;
+		case 0x05:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x16, data );	break;
+		case 0x06:	gb_sound_w(devtag_get_device(space->machine, SOUND, "custom"), 0x15, data );	break;
 		case 0x07:
 		case 0x08:
 		case 0x09:
@@ -2021,7 +2021,7 @@ WRITE8_HANDLER( megaduck_sound_w2 )
 
 READ8_HANDLER( megaduck_sound_r2 )
 {
-	return gb_sound_r(space, 0x10 + megaduck_sound_offsets[offset]);
+	return gb_sound_r(devtag_get_device(space->machine, SOUND, "custom"), 0x10 + megaduck_sound_offsets[offset]);
 }
 
 WRITE8_HANDLER( megaduck_rom_bank_select_type1 )

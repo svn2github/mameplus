@@ -151,121 +151,121 @@ static void start_handler(void *data, const char *tagname, const char **attribut
 
 	switch(state->pos++)
 	{
-	case POS_ROOT:
-		if (!strcmp(tagname, "hashfile"))
-		{
-		}
-		else
-		{
-			unknown_tag(state, tagname);
-		}
-		break;
-
-	case POS_MAIN:
-		if (!strcmp(tagname, "hash"))
-		{
-			// we are now examining a hash tag
-			name = NULL;
-			memset(hash_string, 0, sizeof(hash_string));
-			all_functions = 0;
-			device = IO_COUNT;
-
-			while(attributes[0])
+		case POS_ROOT:
+			if (!strcmp(tagname, "hashfile"))
 			{
-				functions = 0;
-				if (!strcmp(attributes[0], "name"))
-				{
-					/* name attribute */
-					name = attributes[1];
-				}
-				else if (!strcmp(attributes[0], "crc32"))
-				{
-					/* crc32 attribute */
-					functions = HASH_CRC;
-				}
-				else if (!strcmp(attributes[0], "md5"))
-				{
-					/* md5 attribute */
-					functions = HASH_MD5;
-				}
-				else if (!strcmp(attributes[0], "sha1"))
-				{
-					/* sha1 attribute */
-					functions = HASH_SHA1;
-				}
-				else if (!strcmp(attributes[0], "type"))
-				{
-					/* type attribute */
-					i = device_typeid(attributes[1]);
-					if (i < 0)
-						unknown_attribute_value(state, attributes[0], attributes[1]);
-					else
-						device = (iodevice_t) i;
-				}
-				else
-				{
-					/* unknown attribute */
-					unknown_attribute(state, attributes[0]);
-				}
-
-				if (functions)
-				{
-					hash_data_insert_printable_checksum(hash_string, functions, attributes[1]);
-					all_functions |= functions;
-				}
-
-				attributes += 2;
-			}
-
-			if (device == IO_COUNT)
-			{
-				for (i = 0; i < IO_COUNT; i++)
-					state->hashfile->functions[i] |= all_functions;
 			}
 			else
-				state->hashfile->functions[device] |= all_functions;
-
-			/* do we use this hash? */
-			if (!state->selector_proc || state->selector_proc(state->hashfile, state->param, name, hash_string))
 			{
-				hi = pool_malloc(state->hashfile->pool, sizeof(hash_info));
-				if (!hi)
-					return;
-				memset(hi, 0, sizeof(*hi));
-
-				hi->longname = pool_strdup(state->hashfile->pool, name);
-				if (!hi->longname)
-					return;
-
-				strcpy(hi->hash, hash_string);
-				state->hi = hi;
+				unknown_tag(state, tagname);
 			}
-		}
-		else
-		{
-			unknown_tag(state, tagname);
-		}
-		break;
+			break;
 
-	case POS_HASH:
-		text_dest = NULL;
+		case POS_MAIN:
+			if (!strcmp(tagname, "hash"))
+			{
+				// we are now examining a hash tag
+				name = NULL;
+				memset(hash_string, 0, sizeof(hash_string));
+				all_functions = 0;
+				device = IO_COUNT;
 
-		if (!strcmp(tagname, "year"))
-			text_dest = (char **) &state->hi->year;
-		else if (!strcmp(tagname, "manufacturer"))
-			text_dest = (char **) &state->hi->manufacturer;
-		else if (!strcmp(tagname, "status"))
-			text_dest = (char **) &state->hi->playable;
+				while(attributes[0])
+				{
+					functions = 0;
+					if (!strcmp(attributes[0], "name"))
+					{
+						/* name attribute */
+						name = attributes[1];
+					}
+					else if (!strcmp(attributes[0], "crc32"))
+					{
+						/* crc32 attribute */
+						functions = HASH_CRC;
+					}
+					else if (!strcmp(attributes[0], "md5"))
+					{
+						/* md5 attribute */
+						functions = HASH_MD5;
+					}
+					else if (!strcmp(attributes[0], "sha1"))
+					{
+						/* sha1 attribute */
+						functions = HASH_SHA1;
+					}
+					else if (!strcmp(attributes[0], "type"))
+					{
+						/* type attribute */
+						i = device_typeid(attributes[1]);
+						if (i < 0)
+							unknown_attribute_value(state, attributes[0], attributes[1]);
+						else
+							device = (iodevice_t) i;
+					}
+					else
+					{
+						/* unknown attribute */
+						unknown_attribute(state, attributes[0]);
+					}
+
+					if (functions)
+					{
+						hash_data_insert_printable_checksum(hash_string, functions, attributes[1]);
+						all_functions |= functions;
+					}
+
+					attributes += 2;
+				}
+
+				if (device == IO_COUNT)
+				{
+					for (i = 0; i < IO_COUNT; i++)
+						state->hashfile->functions[i] |= all_functions;
+				}
+				else
+					state->hashfile->functions[device] |= all_functions;
+
+				/* do we use this hash? */
+				if (!state->selector_proc || state->selector_proc(state->hashfile, state->param, name, hash_string))
+				{
+					hi = pool_malloc(state->hashfile->pool, sizeof(hash_info));
+					if (!hi)
+						return;
+					memset(hi, 0, sizeof(*hi));
+
+					hi->longname = pool_strdup(state->hashfile->pool, name);
+					if (!hi->longname)
+						return;
+
+					strcpy(hi->hash, hash_string);
+					state->hi = hi;
+				}
+			}
+			else
+			{
+				unknown_tag(state, tagname);
+			}
+			break;
+
+		case POS_HASH:
+			text_dest = NULL;
+
+			if (!strcmp(tagname, "year"))
+				text_dest = (char **) &state->hi->year;
+			else if (!strcmp(tagname, "manufacturer"))
+				text_dest = (char **) &state->hi->manufacturer;
+			else if (!strcmp(tagname, "status"))
+				text_dest = (char **) &state->hi->playable;
 			else if (!strcmp(tagname, "pcb"))
 				text_dest = (char **) &state->hi->pcb;
-		else if (!strcmp(tagname, "extrainfo"))
-			text_dest = (char **) &state->hi->extrainfo;
-		else
-			unknown_tag(state, tagname);
+			else if (!strcmp(tagname, "extrainfo"))
+				text_dest = (char **) &state->hi->extrainfo;
+			else
+				unknown_tag(state, tagname);
 
-		if (text_dest && state->hi)
-			state->text_dest = text_dest;
-		break;
+			if (text_dest && state->hi)
+				state->text_dest = text_dest;
+			break;
 	}
 }
 
@@ -282,18 +282,18 @@ static void end_handler(void *data, const char *name)
 
 	switch(--state->pos)
 	{
-	case POS_ROOT:
-	case POS_HASH:
-		break;
+		case POS_ROOT:
+		case POS_HASH:
+			break;
 
-	case POS_MAIN:
-		if (state->hi)
-		{
-			if (state->use_proc)
+		case POS_MAIN:
+			if (state->hi)
+			{
+				if (state->use_proc)
 					(*state->use_proc)(state->hashfile, state->param, state->hi);
-			state->hi = NULL;
-		}
-		break;
+				state->hi = NULL;
+			}
+			break;
 	}
 }
 

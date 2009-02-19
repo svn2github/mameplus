@@ -138,10 +138,6 @@ ROM_START( sfzch )
 	ROM_LOAD( "sfz19",         0x20000, 0x20000, CRC(3b5886d5) SHA1(7e1b7d40ef77b5df628dd663d45a9a13c742cf58))
 ROM_END
 
-//mamep: tag to identify a console system
-SYSTEM_CONFIG_START(cpschngr)
-SYSTEM_CONFIG_END
-
 /***************************************************************************
 
   Game driver(s)
@@ -149,4 +145,4 @@ SYSTEM_CONFIG_END
 ***************************************************************************/
 
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE   INPUT     INIT    CONFIG  COMPANY     FULLNAME */
-CONS( 1995, sfzch,    0,        0,		cps1_10MHz,	  sfzch,    cps1,	cpschngr,	"Capcom", "CPS Changer (Street Fighter Zero)" , 0)
+CONS( 1995, sfzch,    0,        0,		cps1_10MHz,	  sfzch,    cps1,	NULL,	"Capcom", "CPS Changer (Street Fighter ZERO)" , 0)
