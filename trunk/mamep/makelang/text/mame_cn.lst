@@ -494,6 +494,7 @@ phoenix	火凤凰 (Amstar)	火凤凰 (Amstar)	Amstar
 phoenixa	火凤凰 (Centuri, 第1套)	火凤凰 (Centuri, 第1套)	Amstar (Centuri license)
 phoenixb	火凤凰 (Centuri, 第2套)	火凤凰 (Centuri, 第2套)	Amstar (Centuri license)
 phoenixt	火凤凰 (Taito)	火凤凰 (Taito)	Taito
+phoenixj	火凤凰 (Taito 日版 Ver.)	火凤凰 (Taito 日版 Ver.)	Taito
 phoenix3	火凤凰 (T.P.N.)	火凤凰 (T.P.N.)	bootleg
 phoenixc	火凤凰 (IRECSA, G.G.I Corp)	火凤凰 (IRECSA, G.G.I Corp)	bootleg?
 condor	秃鹰 (盗版 火凤凰)	秃鹰 (盗版 火凤凰)	Sidam (bootleg)
@@ -1285,7 +1286,8 @@ bchopper	希利大冒险	希利大冒险	Irem
 mrheli	希利大冒险	希利大冒险	Irem
 nspirit	最后忍道	最后忍道	Irem
 nspiritj	最后忍道 (日版)	最后忍道 (日版)	Irem
-imgfight	梦幻战机 (日版)	梦幻战机 (日版)	Irem
+imgfight	梦幻战机 (校正版 A, 日版)	梦幻战机 (校正版 A, 日版)	Irem
+imgfigho	梦幻战机 (日版)	梦幻战机 (日版)	Irem
 loht	汤玛魔界历险	汤玛魔界历险	Irem
 lohtj	汤玛魔界历险 (日版)	汤玛魔界历险 (日版)	Irem
 lohtb	汤玛魔界历险 (盗版, 第1套)	汤玛魔界历险 (盗版, 第1套)	Irem
@@ -1563,9 +1565,10 @@ pbillian	另类撞球	另类撞球	Taito
 hotsmash	狂热守球员	狂热守球员	Taito
 exzisus	行星任务 (日版)	行星任务 (日版)	Taito Corporation
 minivadr	迷你小蜜蜂	迷你小蜜蜂	Taito Corporation
-volfied	异形天蚕变 (世界版)	异形天蚕变 (世界版)	Taito Corporation Japan
-volfiedu	异形天蚕变 (美版)	异形天蚕变 (美版)	Taito America Corporation
-volfiedj	异形天蚕变 (日版)	异形天蚕变 (日版)	Taito Corporation
+volfied	异形天蚕变 (世界版, 校正版 1)	异形天蚕变 (世界版, 校正版 1)	Taito Corporation Japan
+volfiedu	异形天蚕变 (美版, 校正版 1)	异形天蚕变 (美版, 校正版 1)	Taito America Corporation
+volfiedj	异形天蚕变 (日版, 校正版 1)	异形天蚕变 (日版, 校正版 1)	Taito Corporation
+volfidjo	异形天蚕变 (日版)	异形天蚕变 (日版)	Taito Corporation
 bonzeadv	地狱小和尚 (世界版, 新版)	地狱小和尚 (世界版, 新版)	Taito Corporation Japan
 bonzeado	地狱小和尚 (世界版, 旧版)	地狱小和尚 (世界版, 旧版)	Taito Corporation Japan
 bonzeadu	地狱小和尚 (美版)	地狱小和尚 (美版)	Taito America Corporation
@@ -1610,7 +1613,8 @@ kyustrkr	最后足球	最后足球	East Technology
 ballbros	气球兄弟	气球兄弟	East Technology
 plumppop	狗狗乐园 (日版)	狗狗乐园 (日版)	Taito Corporation
 jpopnics	吸尘器小子 (Nics, 韩国 盗版 狗狗乐园)	吸尘器小子 (Nics, 韩国 盗版 狗狗乐园)	Nics
-extrmatn	异星毁灭者 (美版)	异星毁灭者 (美版)	[Taito] World Games
+extrmatn	异星毁灭者 (世界版)	异星毁灭者 (世界版)	Taito Corporation Japan
+extrmatu	异星毁灭者 (美版)	异星毁灭者 (美版)	[Taito] World Games
 extrmatj	异星毁灭者 (日版)	异星毁灭者 (日版)	Taito Corporation
 arknoid2	打砖块 - DOH 复仇 (世界版)	打砖块 - DOH 复仇 (世界版)	Taito Corporation Japan
 arknid2u	打砖块 - DOH 复仇 (美版)	打砖块 - DOH 复仇 (美版)	Taito America Corporation (Romstar license)
@@ -1666,6 +1670,7 @@ recordbr	世界铁人运动会 (世界版)	世界铁人运动会 (世界版)	Taito Corporation Japan
 dleague	震撼联盟 (日版)	震撼联盟 (日版)	Taito Corporation
 masterw	魔幻兵器 (世界版)	魔幻兵器 (世界版)	Taito Corporation Japan
 masterwu	魔幻兵器 (美版)	魔幻兵器 (美版)	Taito America Corporation
+masterwj	魔幻兵器 (日版)	魔幻兵器 (日版)	Taito Corporation
 nastar	王者之剑 2 (世界版)	王者之剑 2 (世界版)	Taito Corporation Japan
 nastarw	王者之剑 2 (美版)	王者之剑 2 (美版)	Taito America Corporation
 rastsag2	王者之剑 2 (日版)	王者之剑 2 (日版)	Taito Corporation
@@ -2528,6 +2533,9 @@ hsf2d	终极街头霸王 II: 十五周年纪念版 (亚洲版 040202 凤凰版) (盗版)	终极街头霸王
 ssf2tbd	超级街头霸王 II - 战斗联赛 (世界版 931119 凤凰版) (盗版)	超级街头霸王 II - 战斗联赛 (世界版 931119 凤凰版) (盗版)	bootleg
 ssf2xjd	超级街头霸王 II X 向最强挑战 (日版 940223 凤凰版) (盗版)	超级街头霸王 II X 向最强挑战 (日版 940223 凤凰版) (盗版)	bootleg
 sgemfd	超级口袋战士 (美版 970904 凤凰版) (盗版)	超级口袋战士 (美版 970904 凤凰版) (盗版)	bootleg
+armwar1d	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	bootleg
+dimahoud	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	bootleg
+mmatrixd	火星 矩阵: 超固体射击 (日版 000412 凤凰版) (盗版)	火星 矩阵: 超固体射击 (日版 000412 凤凰版) (盗版)	bootleg
 sfiii	街头霸王 III - 新世纪 (美版, 970204)	街头霸王 III - 新世纪 (美版, 970204)	Capcom
 sfiiij	街头霸王 III - 新世纪 (日版, 970204)	街头霸王 III - 新世纪 (日版, 970204)	Capcom
 sfiii2	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	街头霸王 III - 二度冲击 巨型攻击 (美版, 970930)	Capcom
@@ -3682,6 +3690,7 @@ wsbbgd	世界职业棒球 (GDS-0010)	世界职业棒球 (GDS-0010)	Sega
 vathlete	虚拟田径运动会 (GDS-0019)	虚拟田径运动会 (GDS-0019)	Sega
 hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
 naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
+vstrik3c	VR射手 3 (Cart) (USA, EXP, KOR, AUS)	VR射手 3 (Cart) (USA, EXP, KOR, AUS)	Sega
 vstrik3	VR射手 3 (GDS-0006)	VR射手 3 (GDS-0006)	Sega
 vf4	VR战士 4 (GDS-0012)	VR战士 4 (GDS-0012)	Sega
 initd	头文字 D (GDS-0020b)	头文字 D (GDS-0020b)	Sega
@@ -3969,8 +3978,9 @@ fghthist	格斗列传 (世界版 ver 43-07)	格斗列传 (世界版 ver 43-07)	Data East Corpo
 fghthstu	格斗列传 (美版 ver 42-03)	格斗列传 (美版 ver 42-03)	Data East Corporation
 fghthsta	格斗列传 (美版 ver 42-05, 硬件替换版)	格斗列传 (美版 ver 42-05, 硬件替换版)	Data East Corporation
 fghthstj	格斗列传 (日版 ver 42-03)	格斗列传 (日版 ver 42-03)	Data East Corporation
-hvysmsh	重力抽杀 (日版 版本 -2)	重力抽杀 (日版 版本 -2)	Data East Corporation
+hvysmsh	重力抽杀 (欧洲版 版本 -2)	重力抽杀 (欧洲版 版本 -2)	Data East Corporation
 hvysmsha	重力抽杀 (亚洲版 版本 -4)	重力抽杀 (亚洲版 版本 -4)	Data East Corporation
+hvysmshj	重力抽杀 (日版 版本 -2)	重力抽杀 (日版 版本 -2)	Data East Corporation
 nslasher	午夜杀生 (韩国版 Rev 1.3)	午夜杀生 (韩国版 Rev 1.3)	Data East Corporation
 nslashej	午夜杀生 (日版 Rev 1.2)	午夜杀生 (日版 Rev 1.2)	Data East Corporation
 nslashes	午夜杀生 (Over Sea Rev 1.2)	午夜杀生 (Over Sea Rev 1.2)	Data East Corporation
@@ -3999,7 +4009,8 @@ ddream95	梦幻蓝球 95	梦幻蓝球 95	Data East Corporation
 hoops95	梦幻蓝球 95 (欧洲版/亚洲版 1.7)	梦幻蓝球 95 (欧洲版/亚洲版 1.7)	Data East Corporation
 avengrgs	银河复仇者 (世界版)	银河复仇者 (世界版)	Data East Corporation
 avengrgj	银河复仇者 (日版)	银河复仇者 (日版)	Data East Corporation
-skullfng	空牙外传 (日版)	空牙外传 (日版)	Data East Corporation
+skullfng	空牙外传 (世界版)	空牙外传 (世界版)	Data East Corporation
+skullfnj	空牙外传 (日版)	空牙外传 (日版)	Data East Corporation
 stadhr96	棒球英雄’96 (版本 EAD)	棒球英雄’96 (版本 EAD)	Data East Corporation
 stadh96a	棒球英雄’96 (版本 EAJ)	棒球英雄’96 (版本 EAJ)	Data East Corporation
 senjyo	战场高射炮	战场高射炮	Tehkan
@@ -4042,9 +4053,10 @@ tknight	邪城风云	邪城风云	Tecmo
 stratof	雷牙 (美版)	雷牙 (美版)	Tecmo
 raiga	雷牙 (日版)	雷牙 (日版)	Tecmo
 drgnbowl	七龙珠	七龙珠	Nics
-wc90	世界杯足球 ’90 (第1套)	世界杯足球 ’90 (第1套)	Tecmo
-wc90a	世界杯足球 ’90 (第2套)	世界杯足球 ’90 (第2套)	Tecmo
-wc90t	世界杯足球 ’90 (轨迹球)	世界杯足球 ’90 (轨迹球)	Tecmo
+wc90	世界杯足球 ’90 (世界版)	世界杯足球 ’90 (世界版)	Tecmo
+wc90a	世界杯足球 ’90 (欧洲版 第1套)	世界杯足球 ’90 (欧洲版 第1套)	Tecmo
+wc90b	世界杯足球 ’90 (欧洲版 第2套)	世界杯足球 ’90 (欧洲版 第2套)	Tecmo
+wc90t	世界杯足球 ’90 (trackball 第1套)	世界杯足球 ’90 (trackball 第1套)	Tecmo
 wc90b1	世界杯足球 ’90 - 欧洲联盟	世界杯足球 ’90 - 欧洲联盟	bootleg
 wc90b2	世界杯足球 ’90	世界杯足球 ’90	bootleg
 spbactn	弹珠台超级版 (美版)	弹珠台超级版 (美版)	Tecmo
@@ -4141,7 +4153,7 @@ combasct	战斗学校 (轨迹球)	战斗学校 (轨迹球)	Konami
 combascj	战斗学校 (日版 轨迹球)	战斗学校 (日版 轨迹球)	Konami
 bootcamp	战斗学校 Boot Camp	战斗学校 Boot Camp	Konami
 combascb	战斗学校 (盗版)	战斗学校 (盗版)	bootleg
-rockrage	恋爱热摇滚 (世界版?)	恋爱热摇滚 (世界版?)	Konami
+rockrage	恋爱热摇滚 (世界版)	恋爱热摇滚 (世界版)	Konami
 rockraga	恋爱热摇滚 (工程版?)	恋爱热摇滚 (工程版?)	Konami
 rockragj	恋爱热摇滚 (日版)	恋爱热摇滚 (日版)	Konami
 mx5000	冥王战机	冥王战机	Konami
@@ -4424,9 +4436,11 @@ kbm2nd	键盘高手 2度混合	键盘高手 2度混合	Konami
 kbm3rd	键盘高手 3度混合	键盘高手 3度混合	Konami
 popn7	动感音乐 7	动感音乐 7	Konami
 fiveside	英式足球 (ver UAA)	英式足球 (ver UAA)	Konami
-thunderh	雷电风暴 (ver UAA)	雷电风暴 (ver UAA)	Konami
+thunderh	雷电风暴 (ver EAA)	雷电风暴 (ver EAA)	Konami
+thundrhu	雷电风暴 (ver UAA)	雷电风暴 (ver UAA)	Konami
 slrasslt	沙罗曼蛇 3 (ver UAA)	沙罗曼蛇 3 (ver UAA)	Konami
-gticlub	赛车俱乐部 (ver AAA)	赛车俱乐部 (ver AAA)	Konami
+gticlub	赛车俱乐部 (ver EAA)	赛车俱乐部 (ver EAA)	Konami
+gticluba	赛车俱乐部 (ver AAA)	赛车俱乐部 (ver AAA)	Konami
 gticlubj	赛车俱乐部 (ver JAA)	赛车俱乐部 (ver JAA)	Konami
 hangplt	装饰飞行	装饰飞行	Konami
 nbapbp	NBA 玩一玩	NBA 玩一玩	Konami
@@ -4594,6 +4608,7 @@ mhavocrv	太空浩劫 (Return to Vax)	太空浩劫 (Return to Vax)	JMA
 alphaone	太空浩劫 (工程版, 3 lives)	太空浩劫 (工程版, 3 lives)	Atari
 alphaona	太空浩劫 (工程版, 5 lives)	太空浩劫 (工程版, 5 lives)	Atari
 esb	星际大战 - 帝国大反击	星际大战 - 帝国大反击	Atari Games
+tomcat	TomCat (prototype)	TomCat (prototype)	Atari
 warlords	恶枭城堡	恶枭城堡	Atari
 centiped	蜈蚣 (校正版 3)	蜈蚣 (校正版 3)	Atari
 centipd2	蜈蚣 (校正版 2)	蜈蚣 (校正版 2)	Atari
@@ -4999,7 +5014,7 @@ kotmh	魔兽之王 (第2套)	魔兽之王 (第2套)	SNK
 sengoku	战国传承 (第1套)	战国传承 (第1套)	SNK
 sengokh	战国传承 (第2套)	战国传承 (第2套)	SNK
 burningf	热血快打 (第1套)	热血快打 (第1套)	SNK
-burningh	热血快打 (第2套)	热血快打 (第2套)	SNK
+burningfh	热血快打 (第2套)	热血快打 (第2套)	SNK
 lbowling	爆笑保龄球	爆笑保龄球	SNK
 gpilots	魔鬼战将 / 幽灵战区 (第1套)	魔鬼战将 / 幽灵战区 (第1套)	SNK
 gpilotsh	魔鬼战将 / 幽灵战区 (第2套)	魔鬼战将 / 幽灵战区 (第2套)	SNK
@@ -5014,7 +5029,7 @@ legendos	小拳王	小拳王	SNK
 2020bba	2020 年超级棒球 (第2套)	2020 年超级棒球 (第2套)	SNK / Pallas
 2020bbh	2020 年超级棒球 (第3套)	2020 年超级棒球 (第3套)	SNK / Pallas
 socbrawl	喧哗足球 / 机器人足球 (第1套)	喧哗足球 / 机器人足球 (第1套)	SNK
-socbrala	喧哗足球 / 机器人足球 (第2套)	喧哗足球 / 机器人足球 (第2套)	SNK
+socbrawla	喧哗足球 / 机器人足球 (第2套)	喧哗足球 / 机器人足球 (第2套)	SNK
 roboarmy	机甲神兵	机甲神兵	SNK
 fatfury1	饿狼传说 - 宿命之战	饿狼传说 - 宿命之战	SNK
 fbfrenzy	疯狂橄榄球	疯狂橄榄球	SNK
@@ -5030,7 +5045,7 @@ aof	龙虎之拳	龙虎之拳	SNK
 samsho	侍魂 - 十二剑手 (第1套)	侍魂 - 十二剑手 (第1套)	SNK
 samshoh	侍魂 - 十二剑手 (第2套)	侍魂 - 十二剑手 (第2套)	SNK
 tophuntr	顶尖猎人 - 罗迪 & 凯茜 (第1套)	顶尖猎人 - 罗迪 & 凯茜 (第1套)	SNK
-tophunta	顶尖猎人 - 罗迪 & 凯茜 (第2套)	顶尖猎人 - 罗迪 & 凯茜 (第2套)	SNK
+tophuntra	顶尖猎人 - 罗迪 & 凯茜 (第2套)	顶尖猎人 - 罗迪 & 凯茜 (第2套)	SNK
 fatfury2	饿狼传说 2 - 新的战斗	饿狼传说 2 - 新的战斗	SNK
 janshin	雀神传说 - 寻找麻将大师	雀神传说 - 寻找麻将大师	Aicom
 androdun	勇者之击	勇者之击	Visco
@@ -5048,7 +5063,7 @@ fatfursp	饿狼传说 特别版 (第1套)	饿狼传说 特别版 (第1套)	SNK
 fatfursa	饿狼传说 特别版 (第2套)	饿狼传说 特别版 (第2套)	SNK
 savagere	风云默示录 - 格斗创世	风云默示录 - 格斗创世	SNK
 fightfev	狂热格斗 (第1套)	狂热格斗 (第1套)	Viccom
-fightfva	狂热格斗 (第2套)	狂热格斗 (第2套)	Viccom
+fightfeva	狂热格斗 (第2套)	狂热格斗 (第2套)	Viccom
 ssideki2	得点王 2 - 世界锦标赛	得点王 2 - 世界锦标赛	SNK
 spinmast	滑轮大师 / 强尼大冒险	滑轮大师 / 强尼大冒险	Data East Corporation
 samsho2	侍魂 II - 霸王丸地狱变	侍魂 II - 霸王丸地狱变	SNK
@@ -5070,7 +5085,7 @@ quizkof	拳皇问答	拳皇问答	Saurus
 ssideki3	得点王 3 - 光荣的挑战	得点王 3 - 光荣的挑战	SNK
 doubledr	双截龙 (Neo-Geo)	双截龙 (Neo-Geo)	Technos
 pbobblen	泡泡龙 (Neo-Geo) (第1套)	泡泡龙 (Neo-Geo) (第1套)	Taito
-pbobblna	泡泡龙 (Neo-Geo) (第2套)	泡泡龙 (Neo-Geo) (第2套)	Taito
+pbobblena	泡泡龙 (Neo-Geo) (第2套)	泡泡龙 (Neo-Geo) (第2套)	Taito
 kof95	拳皇 '95 (第1套)	拳皇 '95 (第1套)	SNK
 kof95h	拳皇 '95 (第2套)	拳皇 '95 (第2套)	SNK
 tws96	Tecmo 世界杯足球’96	Tecmo 世界杯足球’96	Tecmo
@@ -5121,7 +5136,7 @@ kof97pls	拳皇 '97 风云再起 Plus (盗版)	拳皇 '97 风云再起 Plus (盗版)	bootleg
 kog	格斗之王 (盗版)	格斗之王 (盗版)	bootleg
 magdrop3	魔法气泡 III	魔法气泡 III	Data East Corporation
 lastblad	幕末浪漫 月华剑士 (第1套)	幕末浪漫 月华剑士 (第1套)	SNK
-lastbldh	幕末浪漫 月华剑士 (第2套)	幕末浪漫 月华剑士 (第2套)	SNK
+lastbladh	幕末浪漫 月华剑士 (第2套)	幕末浪漫 月华剑士 (第2套)	SNK
 lastsold	幕末浪漫 月华剑士 (韩国版)	幕末浪漫 月华剑士 (韩国版)	SNK
 puzzldpr	解谜气泡 R	解谜气泡 R	Taito (Visco license)
 irrmaze	终极电流急急棒	终极电流急急棒	SNK / Saurus
@@ -5342,7 +5357,7 @@ moonwarp	月球大战 (工程版)	月球大战 (工程版)	Stern
 mazerbla	玛莎之光 (第1套)	玛莎之光 (第1套)	Stern
 mzrblzra	玛莎之光 (第2套)	玛莎之光 (第2套)	Stern
 greatgun	游乐场枪神	游乐场枪神	Stern
-supdrapo	超级金扑克	超级金扑克	Stern
+supdrapo	超级金扑克	超级金扑克	Valadon Automation (Stern license)
 cliffhgr	巅峰战士	巅峰战士	Stern Electronics
 cliffhga	巅峰战士 (Alt)	巅峰战士 (Alt)	Stern Electronics
 goaltogo	达阵成功	达阵成功	Stern Electronics
@@ -5708,6 +5723,7 @@ rdft2	雷电战机 2	雷电战机 2	Seibu Kaihatsu (Tuning license)
 rdft2a	雷电战机 2 (亚洲版, Metrotainment license, SPI)	雷电战机 2 (亚洲版, Metrotainment license, SPI)	Seibu Kaihatsu (Metrotainment license)
 rdft2a2	雷电战机 2 (亚洲版, Dream Island license, SPI)	雷电战机 2 (亚洲版, Dream Island license, SPI)	Seibu Kaihatsu (Dream Island license)
 rdft2j	雷电战机 2 (日版, SPI)	雷电战机 2 (日版, SPI)	Seibu Kaihatsu
+rdft2j2	雷电战机 2 (日版 第2套, SPI)	雷电战机 2 (日版 第2套, SPI)	Seibu Kaihatsu
 rdft2t	雷电战机 2 (台湾版, SPI)	雷电战机 2 (台湾版, SPI)	Seibu Kaihatsu
 rdft2u	雷电战机 2 (美版, SPI)	雷电战机 2 (美版, SPI)	Seibu Kaihatsu (Fabtek license)
 rdft2us	雷电战机 2 (美版, 单机版)	雷电战机 2 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
@@ -5717,6 +5733,7 @@ rfjetu	雷电喷气战机 (美版)	雷电喷气战机 (美版)	Seibu Kaihatsu (Fabtek license)
 rfjeta	雷电喷气战机 (亚洲版)	雷电喷气战机 (亚洲版)	Seibu Kaihatsu (Dream Island license)
 rfjetj	雷电喷气战机 (日版)	雷电喷气战机 (日版)	Seibu Kaihatsu
 rfjetus	雷电喷气战机 (美版, Single Board)	雷电喷气战机 (美版, Single Board)	Seibu Kaihatsu (Fabtek license)
+feversoc	Fever Soccer	Fever Soccer	Seibu
 cabal	勇士们 (世界版, 操纵杆版本)	勇士们 (世界版, 操纵杆版本)	Tad Corporation
 cabala	勇士们 (阿尔法贸易版)	勇士们 (阿尔法贸易版)	Tad Corporation (Alpha Trading license)
 cabalbl	勇士们 (盗版, 操纵杆版本)	勇士们 (盗版, 操纵杆版本)	[Tad Corporation] (Red Corporation bootleg)
@@ -5764,7 +5781,8 @@ momoko	桃子 120%	桃子 120%	Jaleco
 argus	阿耳弋斯号	阿耳弋斯号	[NMK] (Jaleco license)
 valtric	金刚飞艇	金刚飞艇	[NMK] (Jaleco license)
 butasan	笑傲猪群 (日版)	笑傲猪群 (日版)	[NMK] (Jaleco license)
-psychic5	灵童 5	灵童 5	Jaleco
+psychic5	灵童 5 (第1套)	灵童 5 (第1套)	Jaleco
+psychic5a	灵童 5 (第2套)	灵童 5 (第2套)	Jaleco
 bombsa	轰炸远离	轰炸远离	Jaleco
 ginganin	银河任侠传 (第1套)	银河任侠传 (第1套)	Jaleco
 gingania	银河任侠传 (第2套)	银河任侠传 (第2套)	Jaleco
@@ -6221,7 +6239,7 @@ guiness	锯木王 (日版)	锯木王 (日版)	Sun Electronics
 pettanp	翻地雪人 (日版)	翻地雪人 (日版)	Sun Electronics
 banbam	翻地雪人	翻地雪人	Sun Electronics
 ikki	农夫叛乱物语 (日版)	农夫叛乱物语 (日版)	Sun Electronics
-farmer	农夫叛乱物语 Farmers Rebellion	农夫叛乱物语 Farmers Rebellion	Sun Electronics
+farmer	农夫叛乱物语	农夫叛乱物语	Sun Electronics
 shanghai	上海 (日版)	上海 (日版)	Sunsoft
 shangha2	上海 II (日版)	上海 II (日版)	Sunsoft
 kothello	究极黑白棋	究极黑白棋	Success
@@ -6406,6 +6424,7 @@ zeropnt	零式枪战 (第1套)	零式枪战 (第1套)	Unico
 zeropnta	零式枪战 (第2套)	零式枪战 (第2套)	Unico
 zeropnt2	零式枪战 2	零式枪战 2	Unico
 silkroad	丝绸之路	丝绸之路	Unico
+aoh	丝绸之路 2 (v0.63 - 2001/02/07)	丝绸之路 2 (v0.63 - 2001/02/07)	Unico
 twinactn	孪生劫	孪生劫	Afega
 stagger1	红鹰 (日版)	红鹰 (日版)	Afega
 redhawk	红鹰 (美版)	红鹰 (美版)	Afega
@@ -6425,6 +6444,7 @@ mchampdx	Multi 冠军豪华版 (版本. 0106, 06/01/2000)	Multi 冠军豪华版 (版本. 0106,
 mchampda	Multi 冠军豪华版 (版本. 1126, 26/11/1999)	Multi 冠军豪华版 (版本. 1126, 26/11/1999)	ESD
 hedpanic	头槌小子 (版本. 0117, 17/01/2000)	头槌小子 (版本. 0117, 17/01/2000)	ESD
 hedpanif	头槌小子 (版本. 0315, 15/03/2000)	头槌小子 (版本. 0315, 15/03/2000)	ESD / Fuuki
+hedpanio	头槌小子 (版本. 0615, 15/06/1999)	头槌小子 (版本. 0615, 15/06/1999)	ESD
 tangtang	堂堂 (版本. 0526, 26/05/2000)	堂堂 (版本. 0526, 26/05/2000)	ESD
 swatpolc	SWAT 特警组	SWAT 特警组	ESD
 royalmj	皇家麻雀 (日版, v1.13)	皇家麻雀 (日版, v1.13)	Nichibutsu
@@ -6449,6 +6469,7 @@ hanamai	华之舞 (日版)	华之舞 (日版)	Dynax
 majs101b	麻雀工作室 101 (日版)	麻雀工作室 101 (日版)	Dynax
 mjapinky	麻雀杏红 [BET] (日版)	麻雀杏红 [BET] (日版)	Dynax
 mjdejavu	麻雀辱气楼 (日版)	麻雀辱气楼 (日版)	Dynax
+mjdejav2	麻雀辱气楼 2 (日版)	麻雀辱气楼 2 (日版)	Dynax
 hnkochou	华胡蝶 [BET] (日版)	华胡蝶 [BET] (日版)	Dynax
 mjderngr	麻雀德林杰 (日版)	麻雀德林杰 (日版)	Dynax
 hnoridur	华折鹤 (日版)	华折鹤 (日版)	Dynax
@@ -6456,6 +6477,8 @@ drgpunch	龙牌 (日版)	龙牌 (日版)	Dynax
 mjfriday	麻雀星期五 (日版)	麻雀星期五 (日版)	Dynax
 jantouki	校园狩猎雀斗记 (日版)	校园狩猎雀斗记 (日版)	Dynax
 mjifb	麻雀条件...? [BET]	麻雀条件...? [BET]	Dynax
+mjifb2	麻雀条件...? [BET](2921)	麻雀条件...? [BET](2921)	Dynax
+mjifb3	麻雀条件...? [BET](2931)	麻雀条件...? [BET](2931)	Dynax
 mjvegas	麻雀维加斯 (日版)	麻雀维加斯 (日版)	Dynax
 cafetime	麻雀咖啡时间	麻雀咖啡时间	Dynax
 cafedoll	麻雀咖啡娃娃 (日版)	麻雀咖啡娃娃 (日版)	Dynax
@@ -6546,8 +6569,14 @@ csk227it	扑克牌游戏 - 冠军技能 (with Ability)	扑克牌游戏 - 冠军技能 (with Abilit
 csk234it	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	扑克牌游戏 - 冠军技能 (Ability, Poker & Symbols)	IGS
 igs_ncs	新技能冠军 (v100n)	新技能冠军 (v100n)	IGS
 igs_ncs2	新扑克牌游戏 - 冠军技能 (v100n 2000)	新扑克牌游戏 - 冠军技能 (v100n 2000)	IGS
+spk115it	超级扑克游戏 (v115IT)	超级扑克游戏 (v115IT)	IGS
 spk116it	超级扑克游戏 (v116IT)	超级扑克游戏 (v116IT)	IGS
 jackie	成龙之龙 (v110U)	成龙之龙 (v110U)	IGS
+pktet346	PK Tetris (v346I)	PK Tetris (v346I)	IGS
+chleague	Champion League (Poker)	Champion League (Poker)	IGS
+chleagul	Champion League (Lattine)	Champion League (Lattine)	IGS
+number10	Number Dieci (Poker)	Number Dieci (Poker)	PlayMark Srl
+numbr10l	Number Dieci (Lattine)	Number Dieci (Lattine)	PlayMark Srl
 stellecu	星际方块 (意大利)	星际方块 (意大利)	Sure
 iqblock	数字方块	数字方块	IGS
 grndtour	盛大旅行	盛大旅行	IGS
@@ -6824,6 +6853,9 @@ guab	问答撞球 (6th edition)	问答撞球 (6th edition)	JPM
 guab3	问答撞球 (3rd edition)	问答撞球 (3rd edition)	JPM
 tenup	十上 (特辑 17)	十上 (特辑 17)	JPM
 tenup3	十上 (特辑 3)	十上 (特辑 3)	JPM
+monopoly	Monopoly	Monopoly	JPM
+monoplcl	Monopoly Classic	Monopoly Classic	JPM
+monopldx	Monopoly Deluxe	Monopoly Deluxe	JPM
 cluedo	妙探寻凶 (prod. 2D)	妙探寻凶 (prod. 2D)	JPM
 cluedo2c	妙探寻凶 (prod. 2C)	妙探寻凶 (prod. 2C)	JPM
 cluedo2	妙探寻凶 (prod. 2)	妙探寻凶 (prod. 2)	JPM
@@ -7099,6 +7131,7 @@ koftball	足球王	足球王	BMC
 mpoker	优异纸牌	优异纸牌	Merit
 pitboss	赌场大亨 (第1套)	赌场大亨 (第1套)	Merit
 pitbossa	赌场大亨 (第2套)	赌场大亨 (第2套)	Merit
+pitbossb	赌场大亨 (第3套)	赌场大亨 (第3套)	Merit
 casino5	第五赌场	第五赌场	Merit
 trvwzh	问答 百科高手 (直立型) (问答 第1套)	问答 百科高手 (直立型) (问答 第1套)	Merit
 trvwzha	问答 百科高手 (直立型) (问答 第2套)	问答 百科高手 (直立型) (问答 第2套)	Merit
@@ -7167,6 +7200,7 @@ cubeqst	三次元探索	三次元探索	Simutrek
 pkscram	对战足球	对战足球	Cosmo Electronics Corporation
 magicard	魔法纸牌 (第1套)	魔法纸牌 (第1套)	Impera
 magicrda	魔法纸牌 (第2套)	魔法纸牌 (第2套)	Impera
+magicrdb	魔法纸牌 (第3套)	魔法纸牌 (第3套)	Impera
 jollycrd	快乐纸牌 (奥地利)	快乐纸牌 (奥地利)	TAB-Austria
 jolyc3x3	快乐纸牌 (3x3 deal)	快乐纸牌 (3x3 deal)	TAB-Austria
 jolyc980	快乐纸牌之星 2.0	快乐纸牌之星 2.0	Spale-Soft
@@ -7222,6 +7256,7 @@ ampoker2	美式扑克 II	美式扑克 II	Novomatic
 ampkr2b1	美式扑克 II (盗版，第1套)	美式扑克 II (盗版，第1套)	Bootleg
 ampkr2b2	美式扑克 II (盗版，第2套)	美式扑克 II (盗版，第2套)	Bootleg
 ampkr2b3	美式扑克 II (盗版，第3套)	美式扑克 II (盗版，第3套)	Bootleg
+ampkr228	美式扑克 II (iamp2 v28)	美式扑克 II (iamp2 v28)	Bootleg?
 pkrdewin	扑克大赢家	扑克大赢家	Bootleg
 ampkr95	美式扑克 95	美式扑克 95	Bootleg
 videomat	扑克输赢 (polish 盗版)	扑克输赢 (polish 盗版)	Bootleg
@@ -7241,7 +7276,6 @@ quizmstr	问答测试 (德国版)	问答测试 (德国版)	Loewen Spielautomaten
 trailblz	雪芙兰赛车 - 先驱者	雪芙兰赛车 - 先驱者	Coinmaster
 supnudg2	超级推杆 2 (版本 5.21)	超级推杆 2 (版本 5.21)	Coinmaster
 pokeroul	扑克轮盘 (版本 8.22)	扑克轮盘 (版本 8.22)	Coinmaster
-fruit	未知水果游戏	未知水果游戏	unknown
 egghunt	鸡蛋方块	鸡蛋方块	Invi Image
 magic10	魔法扑克 (ver. 16.55)	魔法扑克 (ver. 16.55)	A.W.P. Games
 magic10a	魔法扑克 (ver. 16.45)	魔法扑克 (ver. 16.45)	A.W.P. Games
@@ -7390,7 +7424,7 @@ leader	首脑	首脑	Bootleg
 livequiz	实况问答秀	实况问答秀	Andamiro
 cowrace	乳牛大赛	乳牛大赛	<unknown>
 discoboy	迪斯可男孩	迪斯可男孩	Soft Art Co.
-steaser	脱衣舞娘 (意大利)	脱衣舞娘 (意大利)	Unknown
+steaser	脱衣舞娘 (意大利, 版本 1.22)	脱衣舞娘 (意大利, 版本 1.22)	Unknown
 pangofun	欢乐小子 (意大利)	欢乐小子 (意大利)	InfoCube
 2mindril	二分钟冲刺	二分钟冲刺	Taito
 koikoi	恋来花札 2	恋来花札 2	Kiwako
@@ -7432,6 +7466,7 @@ pexp0112	游戏者的利刃 Plus (XP000112) White Hot Aces Poker	游戏者的利刃 Plus (XP
 pexs0006	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	游戏者的利刃 Plus (XS000006) Triple Triple Diamond Slots	IGT - International Gaming Technology
 pexmp006	游戏者的利刃 Plus (XMP00006) Multi-Poker	游戏者的利刃 Plus (XMP00006) Multi-Poker	IGT - International Gaming Technology
 pexmp017	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	游戏者的利刃 Plus (XMP00017) 5-in-1 Wingboard	IGT - International Gaming Technology
+pexmp024	游戏者的利刃 Plus (XMP00024) Multi-Poker	游戏者的利刃 Plus (XMP00024) Multi-Poker	IGT - International Gaming Technology
 mirage	妖兽麻雀传 (日版)	妖兽麻雀传 (日版)	Mitchell
 dominob	骨牌块	骨牌块	Wonwoo Systems
 jongkyo	麻雀放课后	麻雀放课后	Kiwako
@@ -7477,9 +7512,10 @@ cmagica	手套魔法 (Ver 1.8)	手套魔法 (Ver 1.8)	Unknown
 millsun	千年太阳	千年太阳	Unknown
 sspac2k1	超级空间 2001	超级空间 2001	Unknown
 elvis	恶魔?	恶魔?	Unknown
-newmcard	新魔法纸牌	新魔法纸牌	New High Video?
-brasil	巴西 (版本 3)	巴西 (版本 3)	New High Video?
-fashion	时尚 (版本 2.14)	时尚 (版本 2.14)	New High Video?
+newmcard	新魔法纸牌	新魔法纸牌	High Video
+brasil	巴西 (版本 3)	巴西 (版本 3)	High Video
+fashion	时尚 (版本 2.14)	时尚 (版本 2.14)	High Video
+ciclone	Ciclone	Ciclone	High Video
 tour4000	漫游 4000	漫游 4000	High Video
 cfever40	英伦赌场热 4.0	英伦赌场热 4.0	High Video
 cfever50	英伦赌场热 5.0	英伦赌场热 5.0	High Video
@@ -7488,7 +7524,7 @@ cfever51	英伦赌场热 5.1	英伦赌场热 5.1	High Video
 cfever61	英伦赌场热 6.1	英伦赌场热 6.1	High Video
 cfever1k	英伦赌场热 1k	英伦赌场热 1k	High Video
 girotutt	赌桌球	赌桌球	High Video
-ilpag	Il 包裹	Il 包裹	unknown
+ilpag	Il 包裹 (意大利, 版本 2.7C)	Il 包裹 (意大利, 版本 2.7C)	unknown
 mil4000	千年诺沃 4000 (版本 2.0)	千年诺沃 4000 (版本 2.0)	Sure Milano
 mil4000a	千年诺沃 4000 (版本 1.8)	千年诺沃 4000 (版本 1.8)	Sure Milano
 ejollyx5	澳洲扑克 X5	澳洲扑克 X5	Solar Games
@@ -7509,8 +7545,10 @@ cmast91	樱桃水果盘 '91 (ver.1.30)	樱桃水果盘 '91 (ver.1.30)	Dyna
 queen	皇后?	皇后?	STG?
 86lions	86 狮子	86 狮子	Aristocrat
 caswin	水果牌	水果牌	Aristocrat
+swthrt2v	Sweet Hearts II (C - 07/09/95, Venezuela version)	Sweet Hearts II (C - 07/09/95, Venezuela version)	Aristocrat
 reelrock	真摇滚 (A - 13/07/98)	真摇滚 (A - 13/07/98)	Aristocrat
 indiandr	印地安之梦 (B - 15/12/98)	印地安之梦 (B - 15/12/98)	Aristocrat
+margmgc	Margarita Magic (A - 07/07/2000)	Margarita Magic (A - 07/07/2000)	Aristocrat
 janshi	雀神	雀神	Eagle
 slotcarn	狂欢节	狂欢节	Wing Co.Ltd
 lucky74	幸运 74 (盗版, 第1套)	幸运 74 (盗版, 第1套)	Wing Co.,Ltd.
@@ -7518,18 +7556,217 @@ lucky74a	幸运 74 (盗版, 第2套)	幸运 74 (盗版, 第2套)	Wing Co.,Ltd.
 lucky8	新幸运 8 线 (第1套)	新幸运 8 线 (第1套)	Wing Co.Ltd / GEI
 lucky8a	新幸运 8 线 (第2套)	新幸运 8 线 (第2套)	Wing Co.Ltd / GEI
 luckgrln	幸运女孩 (基于新 Z180 硬件)	幸运女孩 (基于新 Z180 硬件)	Wing
-schery98	技能樱桃 '98	技能樱桃 '98	Amcoe
-schery97	技能樱桃 '97	技能樱桃 '97	Amcoe
-nfb96	新水果积分 '96	新水果积分 '96	Amcoe
+skill98	Skill '98 (ver. s98-1.33)	Skill '98 (ver. s98-1.33)	Amcoe
+match98	Match '98 (ver. 1.33)	Match '98 (ver. 1.33)	Amcoe
+schery97	Skill Cherry '97 (ver. sc3.52)	Skill Cherry '97 (ver. sc3.52)	Amcoe
+schery97a	Skill Cherry '97 (ver. sc3.52c4)	Skill Cherry '97 (ver. sc3.52c4)	Amcoe
+roypok96	Royal Poker '96 (set 1)	Royal Poker '96 (set 1)	Amcoe
+roypok96a	Royal Poker '96 (set 2)	Royal Poker '96 (set 2)	Amcoe
+roypok96b	Royal Poker '96 (set 3)	Royal Poker '96 (set 3)	Amcoe
+pokonl97	Poker Only '97 (ver. 3.3)	Poker Only '97 (ver. 3.3)	Amcoe
+nc96	新樱桃 '96 特别版 (第1套)	新樱桃 '96 特别版 (第1套)	Amcoe
+nc96a	新樱桃 '96 特别版 (第2套)	新樱桃 '96 特别版 (第2套)	Amcoe
+nc96b	新樱桃 '96 特别版 (第3套)	新樱桃 '96 特别版 (第3套)	Amcoe
+nc96c	新樱桃 '96 特别版 (第4套)	新樱桃 '96 特别版 (第4套)	Amcoe
+nc96txt	新樱桃 '96 特别版 (第5套, Texas XT)	新樱桃 '96 特别版 (第5套, Texas XT)	Amcoe
+nfb96	新水果积分 '96 特别版 (第1套)	新水果积分 '96 特别版 (第1套)	Amcoe
+nfb96a	新水果积分 '96 特别版 (第2套)	新水果积分 '96 特别版 (第2套)	Amcoe
+nfb96b	新水果积分 '96 特别版 (第3套)	新水果积分 '96 特别版 (第3套)	Amcoe
+nfb96c	新水果积分 '96 特别版 (第4套)	新水果积分 '96 特别版 (第4套)	Amcoe
+nfb96txt	新水果积分 '96 特别版 (第5套, Texas XT)	新水果积分 '96 特别版 (第5套, Texas XT)	Amcoe
 nfb96se	新水果积分 '96 特别版 (盗版, 第1套)	新水果积分 '96 特别版 (盗版, 第1套)	bootleg
 nfb96sea	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)	bootleg
 nfb96seb	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)	bootleg
 carb2002	马车积分 2002 (盗版)	马车积分 2002 (盗版)	bootleg
 carb2003	马车积分 2003 (盗版)	马车积分 2003 (盗版)	bootleg
-sfbonus	技能水果	技能水果	Amcoe
 ladylinr	女士线	女士线	TAB Austria
 kkojnoli	韩国水果机 (蜜蜂杀手)	韩国水果机 (蜜蜂杀手)	south korean hack
 mtonic	魔力使者?	魔力使者?	Tonic
+sfbonus	冠军水果积分 (第1套)	冠军水果积分 (第1套)	Amcoe
+sfbonusa	冠军水果积分 (第2套)	冠军水果积分 (第2套)	Amcoe
+sfbonusb	冠军水果积分 (第3套)	冠军水果积分 (第3套)	Amcoe
+sfbonusd	冠军水果积分 (第4套)	冠军水果积分 (第4套)	Amcoe
+sfbonusv	冠军水果积分 (第5套)	冠军水果积分 (第5套)	Amcoe
+parrot3	Parrot Poker III (Version 2.4)	Parrot Poker III (Version 2.4)	Amcoe
+parrot3b	Parrot Poker III (Version 2.6R)	Parrot Poker III (Version 2.6R)	Amcoe
+parrot3d	Parrot Poker III (set 3)	Parrot Poker III (set 3)	Amcoe
+parrot3v	Parrot Poker III (set 4)	Parrot Poker III (set 4)	Amcoe
+parrot3v2	Parrot Poker III (set 5)	Parrot Poker III (set 5)	Amcoe
+hldspin1	把握 & 旋转 I (第1套)	把握 & 旋转 I (第1套)	Amcoe
+hldspin1b	把握 & 旋转 I (第2套)	把握 & 旋转 I (第2套)	Amcoe
+hldspin1d	把握 & 旋转 I (第3套)	把握 & 旋转 I (第3套)	Amcoe
+hldspin1v	把握 & 旋转 I (第4套)	把握 & 旋转 I (第4套)	Amcoe
+hldspin2	把握 & 旋转 II (第1套)	把握 & 旋转 II (第1套)	Amcoe
+hldspin2b	把握 & 旋转 II (第2套)	把握 & 旋转 II (第2套)	Amcoe
+hldspin2d	把握 & 旋转 II (第3套)	把握 & 旋转 II (第3套)	Amcoe
+hldspin2v	把握 & 旋转 II (第4套)	把握 & 旋转 II (第4套)	Amcoe
+fcnudge	水果狂欢 Nudge (第1套)	水果狂欢 Nudge (第1套)	Amcoe
+fruitcar	水果狂欢 Nudge (第2套)	水果狂欢 Nudge (第2套)	Amcoe
+fruitcar2	水果狂欢 Nudge (第3套)	水果狂欢 Nudge (第3套)	Amcoe
+fruitcar3	水果狂欢 Nudge (第4套)	水果狂欢 Nudge (第4套)	Amcoe
+pickwin	Pick & Win (set 1)	Pick & Win (set 1)	Amcoe
+pickwina	Pick & Win (set 2)	Pick & Win (set 2)	Amcoe
+pickwinb	Pick & Win (set 3)	Pick & Win (set 3)	Amcoe
+pickwinb2	Pick & Win (set 4)	Pick & Win (set 4)	Amcoe
+pickwind	Pick & Win (set 5)	Pick & Win (set 5)	Amcoe
+pickwind2	Pick & Win (set 6)	Pick & Win (set 6)	Amcoe
+pickwinv	Pick & Win (set 7)	Pick & Win (set 7)	Amcoe
+pickwinv2	Pick & Win (set 8)	Pick & Win (set 8)	Amcoe
+pickwinv3	Pick & Win (set 9)	Pick & Win (set 9)	Amcoe
+tighook	Tiger Hook (set 1)	Tiger Hook (set 1)	Amcoe
+tighooka	Tiger Hook (set 2)	Tiger Hook (set 2)	Amcoe
+tighookc	Tiger Hook (set 3)	Tiger Hook (set 3)	Amcoe
+tighookc2	Tiger Hook (set 4)	Tiger Hook (set 4)	Amcoe
+tighookv	Tiger Hook (set 5)	Tiger Hook (set 5)	Amcoe
+tighookv2	Tiger Hook (set 6)	Tiger Hook (set 6)	Amcoe
+tighookv3	Tiger Hook (set 7)	Tiger Hook (set 7)	Amcoe
+tighookd	Tiger Hook (set 8)	Tiger Hook (set 8)	Amcoe
+tighookd2	Tiger Hook (set 9)	Tiger Hook (set 9)	Amcoe
+robadv	Robin Adventure (set 1)	Robin Adventure (set 1)	Amcoe
+robadvc	Robin Adventure (set 2)	Robin Adventure (set 2)	Amcoe
+robadvd	Robin Adventure (set 3)	Robin Adventure (set 3)	Amcoe
+robadvv1	Robin Adventure (set 4)	Robin Adventure (set 4)	Amcoe
+robadvv2	Robin Adventure (set 5)	Robin Adventure (set 5)	Amcoe
+robadv2	Robin Adventure 2 (set 1)	Robin Adventure 2 (set 1)	Amcoe
+robadv2a	Robin Adventure 2 (set 2)	Robin Adventure 2 (set 2)	Amcoe
+robadv2c	Robin Adventure 2 (set 3)	Robin Adventure 2 (set 3)	Amcoe
+robadv2v1	Robin Adventure 2 (set 4)	Robin Adventure 2 (set 4)	Amcoe
+robadv2v2	Robin Adventure 2 (set 5)	Robin Adventure 2 (set 5)	Amcoe
+robadv2v3	Robin Adventure 2 (set 6)	Robin Adventure 2 (set 6)	Amcoe
+robadv2v4	Robin Adventure 2 (set 7)	Robin Adventure 2 (set 7)	Amcoe
+robadv2d	Robin Adventure 2 (set 8)	Robin Adventure 2 (set 8)	Amcoe
+pirpok2	海盗扑克 II (版本 2.0)	海盗扑克 II (版本 2.0)	Amcoe
+pirpok2b	海盗扑克 II (版本 2.2R)	海盗扑克 II (版本 2.2R)	Amcoe
+pirpok2d	海盗扑克 II (第3套)	海盗扑克 II (第3套)	Amcoe
+pirpok2v	海盗扑克 II (第4套)	海盗扑克 II (第4套)	Amcoe
+pirpok2v2	海盗扑克 II (第5套)	海盗扑克 II (第5套)	Amcoe
+anibonus	动物积分 (版本 1.50XT)	动物积分 (版本 1.50XT)	Amcoe
+anibonus2	动物积分 (版本 1.5)	动物积分 (版本 1.5)	Amcoe
+anibonus3	动物积分 (第3套)	动物积分 (第3套)	Amcoe
+anibonus4	动物积分 (第4套)	动物积分 (第4套)	Amcoe
+anibonus5	动物积分 (第5套)	动物积分 (第5套)	Amcoe
+anibonus6	动物积分 (第6套)	动物积分 (第6套)	Amcoe
+anibonusb	动物积分 (版本 1.7R)	动物积分 (版本 1.7R)	Amcoe
+anibonusb2	动物积分 (版本 1.7LT)	动物积分 (版本 1.7LT)	Amcoe
+anibonusd	动物积分 (第9套)	动物积分 (第9套)	Amcoe
+anibonusd2	动物积分 (第10套)	动物积分 (第10套)	Amcoe
+anibonusv	动物积分 (第11套)	动物积分 (第11套)	Amcoe
+anibonusv2	动物积分 (第12套)	动物积分 (第12套)	Amcoe
+anibonusv3	动物积分 (第13套)	动物积分 (第13套)	Amcoe
+abnudge	动物积分 Nudge (第1套)	动物积分 Nudge (第1套)	Amcoe
+abnudgeb	动物积分 Nudge (第2套)	动物积分 Nudge (第2套)	Amcoe
+abnudged	动物积分 Nudge (第3套)	动物积分 Nudge (第3套)	Amcoe
+abnudgev	动物积分 Nudge (第4套)	动物积分 Nudge (第4套)	Amcoe
+anithunt	Animal Treasure Hunt (Version 1.7)	Animal Treasure Hunt (Version 1.7)	Amcoe
+anithunt2	Animal Treasure Hunt (Version 1.5)	Animal Treasure Hunt (Version 1.5)	Amcoe
+anithuntb	Animal Treasure Hunt (Version 1.9R)	Animal Treasure Hunt (Version 1.9R)	Amcoe
+anithuntd	Animal Treasure Hunt (set 4)	Animal Treasure Hunt (set 4)	Amcoe
+anithuntv	Animal Treasure Hunt (set 5)	Animal Treasure Hunt (set 5)	Amcoe
+dblchal	Double Challenge (set 1)	Double Challenge (set 1)	Amcoe
+dblchalb	Double Challenge (set 2)	Double Challenge (set 2)	Amcoe
+dblchalc	Double Challenge (set 3)	Double Challenge (set 3)	Amcoe
+dblchald	Double Challenge (set 4)	Double Challenge (set 4)	Amcoe
+dblchalv	Double Challenge (set 5)	Double Challenge (set 5)	Amcoe
+sfruitb	超级水果积分 (版本 2.0B)	超级水果积分 (版本 2.0B)	Amcoe
+sfruitb2	超级水果积分 (版本 2.0)	超级水果积分 (版本 2.0)	Amcoe
+sfruitb3	超级水果积分 (版本 1.80XT)	超级水果积分 (版本 1.80XT)	Amcoe
+sfruitbb	超级水果积分 (第3套)	超级水果积分 (第3套)	Amcoe
+sfruitbb2	超级水果积分 (第4套)	超级水果积分 (第4套)	Amcoe
+sfruitbb3	超级水果积分 (第5套)	超级水果积分 (第5套)	Amcoe
+sfruitbd	超级水果积分 (第6套)	超级水果积分 (第6套)	Amcoe
+sfruitbd2	超级水果积分 (第7套)	超级水果积分 (第7套)	Amcoe
+sfruitbd3	超级水果积分 (第8套)	超级水果积分 (第8套)	Amcoe
+sfruitbv	超级水果积分 (第9套)	超级水果积分 (第9套)	Amcoe
+sfruitbv2	超级水果积分 (第10套)	超级水果积分 (第10套)	Amcoe
+sfruitbv3	超级水果积分 (第11套)	超级水果积分 (第11套)	Amcoe
+sfruitbv4	超级水果积分 (第12套)	超级水果积分 (第12套)	Amcoe
+sfruitbv5	超级水果积分 (第13套)	超级水果积分 (第13套)	Amcoe
+fb2gen	水果积分 2nd 世纪 (第1套)	水果积分 2nd 世纪 (第1套)	Amcoe
+fb2gena	水果积分 2nd 世纪 (第2套)	水果积分 2nd 世纪 (第2套)	Amcoe
+fb2genc	水果积分 2nd 世纪 (第3套)	水果积分 2nd 世纪 (第3套)	Amcoe
+fb2genc2	水果积分 2nd 世纪 (第4套)	水果积分 2nd 世纪 (第4套)	Amcoe
+fb2genv	水果积分 2nd 世纪 (第5套)	水果积分 2nd 世纪 (第5套)	Amcoe
+fb2genv2	水果积分 2nd 世纪 (第6套)	水果积分 2nd 世纪 (第6套)	Amcoe
+fb2genv3	水果积分 2nd 世纪 (第7套)	水果积分 2nd 世纪 (第7套)	Amcoe
+fb2gend	水果积分 2nd 世纪 (第8套)	水果积分 2nd 世纪 (第8套)	Amcoe
+fb2gend2	水果积分 2nd 世纪 (第9套)	水果积分 2nd 世纪 (第9套)	Amcoe
+fb2nd	水果积分 2nd 版 (第1套)	水果积分 2nd 版 (第1套)	Amcoe
+fb2ndc	水果积分 2nd 版 (第2套)	水果积分 2nd 版 (第2套)	Amcoe
+fb2ndc2	水果积分 2nd 版 (第3套)	水果积分 2nd 版 (第3套)	Amcoe
+fb2ndv	水果积分 2nd 版 (第4套)	水果积分 2nd 版 (第4套)	Amcoe
+fb2ndv2	水果积分 2nd 版 (第5套)	水果积分 2nd 版 (第5套)	Amcoe
+fb2ndd	水果积分 2nd 版 (第6套)	水果积分 2nd 版 (第6套)	Amcoe
+fb2ndd2	水果积分 2nd 版 (第7套)	水果积分 2nd 版 (第7套)	Amcoe
+fb4	水果积分 4 (版本 1.3XT)	水果积分 4 (版本 1.3XT)	Amcoe
+fb4a	水果积分 4 (版本 1.2)	水果积分 4 (版本 1.2)	Amcoe
+fb4b	水果积分 4 (第3套)	水果积分 4 (第3套)	Amcoe
+fb4b2	水果积分 4 (第4套)	水果积分 4 (第4套)	Amcoe
+fb4c	水果积分 4 (第5套)	水果积分 4 (第5套)	Amcoe
+fb4c2	水果积分 4 (第6套)	水果积分 4 (第6套)	Amcoe
+fb4d	水果积分 4 (第7套)	水果积分 4 (第7套)	Amcoe
+fb4d2	水果积分 4 (第8套)	水果积分 4 (第8套)	Amcoe
+fb4v	水果积分 4 (第9套)	水果积分 4 (第9套)	Amcoe
+fb4v2	水果积分 4 (第10套)	水果积分 4 (第10套)	Amcoe
+fb4v3	水果积分 4 (第11套)	水果积分 4 (第11套)	Amcoe
+act2000	动作 2000 (版本 1.2)	动作 2000 (版本 1.2)	Amcoe
+act2000a	动作 2000 (版本 3.3)	动作 2000 (版本 3.3)	Amcoe
+act2000a2	动作 2000 (版本 3.10XT)	动作 2000 (版本 3.10XT)	Amcoe
+act2000v	动作 2000 (版本 3.5R Dual)	动作 2000 (版本 3.5R Dual)	Amcoe
+act2000v2	动作 2000 (版本 3.5E Dual)	动作 2000 (版本 3.5E Dual)	Amcoe
+act2000v3	动作 2000 (版本 3.30XT Dual)	动作 2000 (版本 3.30XT Dual)	Amcoe
+act2000d	动作 2000 (版本 3.5R, 第1套)	动作 2000 (版本 3.5R, 第1套)	Amcoe
+act2000d2	动作 2000 (版本 3.30XT, 第1套)	动作 2000 (版本 3.30XT, 第1套)	Amcoe
+act2000b	动作 2000 (版本 3.5R, 第2套)	动作 2000 (版本 3.5R, 第2套)	Amcoe
+act2000b2	动作 2000 (版本 3.30XT, 第2套)	动作 2000 (版本 3.30XT, 第2套)	Amcoe
+ch2000	水果积分 2000 / 新樱桃 2000 (第1套)	水果积分 2000 / 新樱桃 2000 (第1套)	Amcoe
+ch2000x	水果积分 2000 / 新樱桃 2000 (第2套)	水果积分 2000 / 新樱桃 2000 (第2套)	Amcoe
+ch2000y	水果积分 2000 / 新樱桃 2000 (第3套)	水果积分 2000 / 新樱桃 2000 (第3套)	Amcoe
+ch2000b	水果积分 2000 / 新樱桃 2000 (第4套)	水果积分 2000 / 新樱桃 2000 (第4套)	Amcoe
+ch2000b2	水果积分 2000 / 新樱桃 2000 (第5套)	水果积分 2000 / 新樱桃 2000 (第5套)	Amcoe
+ch2000v	水果积分 2000 / 新樱桃 2000 (第6套)	水果积分 2000 / 新樱桃 2000 (第6套)	Amcoe
+ch2000v2	水果积分 2000 / 新樱桃 2000 (第7套)	水果积分 2000 / 新樱桃 2000 (第7套)	Amcoe
+ch2000v3	水果积分 2000 / 新樱桃 2000 (第8套)	水果积分 2000 / 新樱桃 2000 (第8套)	Amcoe
+ch2000c	水果积分 2000 / 新樱桃 2000 (第9套)	水果积分 2000 / 新樱桃 2000 (第9套)	Amcoe
+ch2000c2	水果积分 2000 / 新樱桃 2000 (第10套)	水果积分 2000 / 新樱桃 2000 (第10套)	Amcoe
+ch2000d	水果积分 2000 / 新樱桃 2000 (第11套)	水果积分 2000 / 新樱桃 2000 (第11套)	Amcoe
+ch2000d2	水果积分 2000 / 新樱桃 2000 (第12套)	水果积分 2000 / 新樱桃 2000 (第12套)	Amcoe
+pir2001	海盗 2001 (第1套)	海盗 2001 (第1套)	Amcoe
+pir2001a	海盗 2001 (第2套)	海盗 2001 (第2套)	Amcoe
+pir2001b	海盗 2001 (第3套)	海盗 2001 (第3套)	Amcoe
+pir2001b2	海盗 2001 (第4套)	海盗 2001 (第4套)	Amcoe
+pir2001b3	海盗 2001 (第5套)	海盗 2001 (第5套)	Amcoe
+pir2001v	海盗 2001 (第6套)	海盗 2001 (第6套)	Amcoe
+pir2001v2	海盗 2001 (第7套)	海盗 2001 (第7套)	Amcoe
+pir2001v3	海盗 2001 (第8套)	海盗 2001 (第8套)	Amcoe
+pir2001d	海盗 2001 (第9套)	海盗 2001 (第9套)	Amcoe
+pir2001d2	海盗 2001 (第10套)	海盗 2001 (第10套)	Amcoe
+pir2002	海盗 2002 (第1套)	海盗 2002 (第1套)	Amcoe
+pir2002a	海盗 2002 (第2套)	海盗 2002 (第2套)	Amcoe
+pir2002b	海盗 2002 (第3套)	海盗 2002 (第3套)	Amcoe
+pir2002b2	海盗 2002 (第4套)	海盗 2002 (第4套)	Amcoe
+pir2002b3	海盗 2002 (第5套)	海盗 2002 (第5套)	Amcoe
+pir2002v	海盗 2002 (第6套)	海盗 2002 (第6套)	Amcoe
+pir2002v2	海盗 2002 (第7套)	海盗 2002 (第7套)	Amcoe
+pir2002v3	海盗 2002 (第8套)	海盗 2002 (第8套)	Amcoe
+pir2002d	海盗 2002 (第9套)	海盗 2002 (第9套)	Amcoe
+pir2002d2	海盗 2002 (第10套)	海盗 2002 (第10套)	Amcoe
+classice	Classic Edition (set 1)	Classic Edition (set 1)	Amcoe
+classicea	Classic Edition (set 2)	Classic Edition (set 2)	Amcoe
+classiced	Classic Edition (set 3)	Classic Edition (set 3)	Amcoe
+classiced2	Classic Edition (set 4)	Classic Edition (set 4)	Amcoe
+classiced3	Classic Edition (set 5)	Classic Edition (set 5)	Amcoe
+classicev	Classic Edition (set 6)	Classic Edition (set 6)	Amcoe
+classicev2	Classic Edition (set 7)	Classic Edition (set 7)	Amcoe
+classicev3	Classic Edition (set 8)	Classic Edition (set 8)	Amcoe
+seawld	海洋世界 (第1套)	海洋世界 (第1套)	Amcoe
+seawlda	海洋世界 (第2套)	海洋世界 (第2套)	Amcoe
+moneymac	Money Machine (set 1)	Money Machine (set 1)	Amcoe
+moneymacv	Money Machine (set 2)	Money Machine (set 2)	Amcoe
+moneymacv2	Money Machine (set 3)	Money Machine (set 3)	Amcoe
+moneymacd	Money Machine (set 4)	Money Machine (set 4)	Amcoe
+moneymacd2	Money Machine (set 5)	Money Machine (set 5)	Amcoe
+atworld	Around The World (set 1)	Around The World (set 1)	Amcoe
+atworlda	Around The World (set 2)	Around The World (set 2)	Amcoe
 3super8	3 超级 8 (意大利)	3 超级 8 (意大利)	unknown
 buster	小鬼	小鬼	Marian Electronics Ltd.
 spielbud	巴德演说 (德语版)	巴德演说 (德语版)	ADP
@@ -7537,6 +7774,30 @@ himesiki	姬四季舞 (日版)	姬四季舞 (日版)	Hi-Soft
 gtipoker	GTI 扑克	GTI 扑克	GTI Inc
 norautp	扑克积分	扑克积分	Noraut Ltd.
 norautpn	扑克积分 (盗版)	扑克积分 (盗版)	bootleg?
+pachifev	Pachi Fever	Pachi Fever	Sanki Denshi Kogyo
+m_bdrwho	Dr.Who The Timelord (set 1, UK, Game Card 95-750-288)	Dr.Who The Timelord (set 1, UK, Game Card 95-750-288)	BFM
+m_bdrwh1	Dr.Who The Timelord (set 2, UK, Game Card 95-750-661)	Dr.Who The Timelord (set 2, UK, Game Card 95-750-661)	BFM
+m_bdrwh2	Dr.Who The Timelord (set 3)	Dr.Who The Timelord (set 3)	BFM
+m_bdrwh3	Dr.Who The Timelord (set 4)	Dr.Who The Timelord (set 4)	BFM
+m_bdrwh4	Dr.Who The Timelord (set 5)	Dr.Who The Timelord (set 5)	BFM
+m_bdrwh5	Dr.Who The Timelord (set 6)	Dr.Who The Timelord (set 6)	BFM
+m_bdrwh6	Dr.Who The Timelord (set 7)	Dr.Who The Timelord (set 7)	BFM
+m_bdrwh7	Dr.Who The Timelord (set 8)	Dr.Who The Timelord (set 8)	BFM
+m_bdrwh8	Dr.Who The Timelord (set 9)	Dr.Who The Timelord (set 9)	BFM
+m_bdrwh9	Dr.Who The Timelord (set 10)	Dr.Who The Timelord (set 10)	BFM
+m_bdrw10	Dr.Who The Timelord (set 11)	Dr.Who The Timelord (set 11)	BFM
+m_bdrw11	Dr.Who The Timelord (set 12)	Dr.Who The Timelord (set 12)	BFM
+m_bdrw12	Dr.Who The Timelord (set 13)	Dr.Who The Timelord (set 13)	BFM
+m_bdrw13	Dr.Who The Timelord (set 14)	Dr.Who The Timelord (set 14)	BFM
+m_bdrw14	Dr.Who The Timelord (set 15)	Dr.Who The Timelord (set 15)	BFM
+m_bdrw15	Dr.Who The Timelord (set 16)	Dr.Who The Timelord (set 16)	BFM
+m_bdrw16	Dr.Who The Timelord (set 17)	Dr.Who The Timelord (set 17)	BFM
+m_bdrw17	Dr.Who The Timelord (set 18, not encrypted)	Dr.Who The Timelord (set 18, not encrypted)	BFM
+m_bfocus	Focus (Dutch, Game Card 95-750-347)	Focus (Dutch, Game Card 95-750-347)	BFM/ELAM
+m_bcgslm	Club Grandslam (UK, Game Card 95-750-843)	Club Grandslam (UK, Game Card 95-750-843)	BFM
+m_luvjub	Luvvly Jubbly (UK Multisite 10/25p, Game Card 95-750-808)	Luvvly Jubbly (UK Multisite 10/25p, Game Card 95-750-808)	BFM
+m_cpeno1	Club Public Enemy No.1 (UK, Game Card 95-750-846)	Club Public Enemy No.1 (UK, Game Card 95-750-846)	BFM
+m_honmon	Honey Money	Honey Money	Vivid
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
@@ -7560,9 +7821,6 @@ kodh	龙王战士 (hack)	龙王战士 (hack)	hack
 dinoh	恐龙新世纪 (hack 第1套)	恐龙新世纪 (hack 第1套)	hack
 dinoha	恐龙新世纪 (hack 第2套)	恐龙新世纪 (hack 第2套)	hack
 dinohb	恐龙新世纪 (hack 第3套)	恐龙新世纪 (hack 第3套)	hack
-mmatrixd	火星 矩阵: 超固体射击 (美版 000412 凤凰版) (盗版)	火星 矩阵: 超固体射击 (美版 000412 凤凰版) (盗版)	bootleg
-dimahoud	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	疾风魔法大作战 (美版 000121 凤凰版) (盗版)	bootleg
-armwar1d	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	机甲战士 / 机甲装备: 攻关版 (欧洲版 941011 凤凰版) (盗版)	bootleg
 kof96ep	拳皇 '96 (盗版)	拳皇 '96 (盗版)	bootleg
 kof97pla	拳皇 '97 重出江湖 Plus 2003 (盗版)	拳皇 '97 重出江湖 Plus 2003 (盗版)	bootleg
 kf2k1pls	拳皇 2001 增强型 Plus (盗版 第1套)	拳皇 2001 增强型 Plus (盗版 第1套)	bootleg
