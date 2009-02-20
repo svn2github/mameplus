@@ -382,19 +382,19 @@ DirectInput: Impossibile elencare i mouse (result=%08X)\n
 DirectInput: Using DirectInput %d\n
 DirectInput: Uso delle DirectInput %d\n
 
-# osd/windows/sound.c: 356
+# osd/windows/sound.c: 363
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Buffer primario: %d Hz, %d bits, %d canali\n
 
-# osd/windows/sound.c: 370
+# osd/windows/sound.c: 377
 Error creating DirectSound stream buffer: %08x\n
 Errore nella creazione del buffer del flusso DirectSound: %08x\n
 
-# osd/windows/sound.c: 245
+# osd/windows/sound.c: 252
 Error creating DirectSound: %08x\n
 Errore creazione DirectSound: %08x\n
 
-# osd/windows/sound.c: 337
+# osd/windows/sound.c: 344
 Error creating primary DirectSound buffer: %08x\n
 Errore nella creazione del buffer primario DirectSound: %08x\n
 
@@ -406,7 +406,7 @@ Errore nella creazione del render per finestra %d
 Error creating vertex buffer (%08X)
 Errore nella creazione del buffer vertice (%08X)
 
-# osd/windows/sound.c: 254
+# osd/windows/sound.c: 261
 Error getting DirectSound capabilities: %08x\n
 Errore acquisendo le capacità DirectSound: %08x\n
 
@@ -422,23 +422,23 @@ Errore nella rilevazione dell'identificatore per la periferica\n
 Error getting mode for adapter #%d\n
 Errore nella rilevazione della modalità dell'adattatore #%d\n
 
-# osd/windows/sound.c: 353
+# osd/windows/sound.c: 360
 Error getting primary DirectSound buffer format: %08x\n
 Errore nella rilevazione del formato del buffer primario DirectSound: %08x\n
 
-# osd/windows/sound.c: 378
+# osd/windows/sound.c: 385
 Error locking DirectSound stream buffer: %08x\n
 Errore nel bloccaggio del buffer del flusso DirectSound: %08x\n
 
-# osd/windows/sound.c: 291
+# osd/windows/sound.c: 298
 Error playing: %08x\n
 Errore eseguendo: %08x\n
 
-# osd/windows/sound.c: 262
+# osd/windows/sound.c: 269
 Error setting DirectSound cooperative level: %08x\n
 Errore impostando livello cooperativo DirectSound: %08x\n
 
-# osd/windows/sound.c: 345
+# osd/windows/sound.c: 352
 Error setting primary DirectSound buffer format: %08x\n
 Errore nell'impostare il formato del buffer primario DirectSound: %08x\n
 

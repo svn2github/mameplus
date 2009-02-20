@@ -358,10 +358,6 @@ Logitec
 LucasArts
 루카스아츠
 
-# F-15 Strike Eagle (rev. 2.2 02/25/91)
-Microprose
-마이크로포즈
-
 # Ms. Pac-Man
 Midway
 미드웨이
@@ -1074,6 +1070,10 @@ ADP
 AMT
 
 
+# Cabaret
+AMT Co. Ltd.
+
+
 # Omotesandou (Japan 890215)
 ANIME TEC
 
@@ -1106,7 +1106,7 @@ Allumer
 Alpha
 
 
-# Skill Cherry '98
+# Skill '98 (ver. s98-1.33)
 Amcoe
 
 
@@ -1180,6 +1180,10 @@ Bee-Oh
 
 # Neo 2500 Demo (Homebrew)
 Blastar
+
+
+# American Poker II (iamp2 v28)
+Bootleg?
 
 
 # Sky Lancer (Bordun, ver.U450C)
@@ -1422,7 +1426,7 @@ Ecole
 Ed
 
 
-# Battle Bakraid (Japan) (Wed Apr 7 1999)
+# Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
 Eighting
 
 
@@ -1590,6 +1594,10 @@ Fortrek
 Free Enterprise Games
 
 
+# Super Othello
+Fujiwara
+
+
 # Big Deal (hungarian, set 1)
 Funworld
 
@@ -1714,11 +1722,15 @@ Hanaho Games
 Hara Industries
 
 
+# Himeshikibu (Japan)
+Hi-Soft
+
+
 # Fantasy '95
 Hi-max Technology Inc.
 
 
-# Tour 4000
+# New Magic Card
 High Video
 
 
@@ -2038,6 +2050,10 @@ Microhard
 Micronet
 
 
+# F-15 Strike Eagle (rev. 2.2 02/25/91)
+Microprose Games Inc.
+
+
 # Toffy
 Midas
 
@@ -2122,10 +2138,6 @@ Nazionale Elettronica
 Neodev
 
 
-# New Magic Card
-New High Video?
-
-
 # Super Gran Safari (ver 3.11)
 New Impeuropex Corp.
 
@@ -2164,6 +2176,10 @@ Noise Factory
 
 # Tri-Pool (Casino Tech)
 Noma
+
+
+# Noraut Poker
+Noraut Ltd.
 
 
 # Port Man (bootleg on Moon Cresta hardware)
@@ -2284,6 +2300,10 @@ Philko
 
 # PlayMan Poker (german)
 PlayMan
+
+
+# Number Dieci (Poker)
+PlayMark Srl
 
 
 # Super Slam (set 1)
@@ -2408,6 +2428,10 @@ Samsung
 
 # Snooker 10 (Ver 1.11)
 Sandii'
+
+
+# Pachi Fever
+Sanki Denshi Kogyo
 
 
 # Dream Shopper
@@ -2660,6 +2684,10 @@ Vesely Svet
 
 # Witch Card (Video Klein)
 Video Klein
+
+
+# Honey Money
+Vivid
 
 
 # Jack Potten's Poker (set 2)

@@ -138,7 +138,7 @@ Dynax
 East Technology
 イーストテクノロジー
 
-# Battle Bakraid (Japan) (Wed Apr 7 1999)
+# Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
 Eighting
 エイティング
 
@@ -766,6 +766,10 @@ ADP
 AMT
 
 
+# Cabaret
+AMT Co. Ltd.
+
+
 # Omotesandou (Japan 890215)
 ANIME TEC
 
@@ -810,7 +814,7 @@ Alpha
 Alpha Co
 
 
-# Skill Cherry '98
+# Skill '98 (ver. s98-1.33)
 Amcoe
 
 
@@ -956,6 +960,10 @@ Bonanza Enterprises, Ltd
 
 # Super Glob (Pac-Man hardware) German
 Bootleg
+
+
+# American Poker II (iamp2 v28)
+Bootleg?
 
 
 # Sky Lancer (Bordun, ver.U450C)
@@ -1386,6 +1394,10 @@ Fortrek
 Free Enterprise Games
 
 
+# Super Othello
+Fujiwara
+
+
 # Big Deal (hungarian, set 1)
 Funworld
 
@@ -1490,11 +1502,15 @@ HOEI
 Hanaho Games
 
 
+# Himeshikibu (Japan)
+Hi-Soft
+
+
 # Fantasy '95
 Hi-max Technology Inc.
 
 
-# Tour 4000
+# New Magic Card
 High Video
 
 
@@ -1767,7 +1783,7 @@ Micronet
 
 
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
-Microprose
+Microprose Games Inc.
 
 
 # Toffy
@@ -1850,10 +1866,6 @@ Nazionale Elettronica
 Neodev
 
 
-# New Magic Card
-New High Video?
-
-
 # Super Gran Safari (ver 3.11)
 New Impeuropex Corp.
 
@@ -1884,6 +1896,10 @@ Nippon Electronic Company
 
 # Tri-Pool (Casino Tech)
 Noma
+
+
+# Noraut Poker
+Noraut Ltd.
 
 
 # Port Man (bootleg on Moon Cresta hardware)
@@ -1992,6 +2008,10 @@ Philko
 
 # PlayMan Poker (german)
 PlayMan
+
+
+# Number Dieci (Poker)
+PlayMark Srl
 
 
 # Super Slam (set 1)
@@ -2132,6 +2152,10 @@ Sandii'
 
 # Puzzle Star (Sang Ho Soft)
 Sang Ho Soft
+
+
+# Pachi Fever
+Sanki Denshi Kogyo
 
 
 # Open Mahjong [BET] (Japan)
@@ -2532,6 +2556,10 @@ Vision
 
 # Alpha One (Vision Electronics / Kyle Hodgetts)
 Vision Electronics
+
+
+# Honey Money
+Vivid
 
 
 # Ambush (Volt Elec co-ltd)

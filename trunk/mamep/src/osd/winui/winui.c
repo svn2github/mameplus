@@ -7455,7 +7455,7 @@ static void UpdateMenu(HMENU hMenu)
 
 		SetMenuItemInfo(hMenu, ID_FILE_PLAY, FALSE, &mItem);
 
-		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Propert&ies for %s")), _UIW(TEXT("Driver")));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("Propert&ies for Driver")));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

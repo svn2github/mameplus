@@ -366,19 +366,19 @@ DirectDraw: Aviso - dispositivo não suporta correção gama em tela cheia.\n
 DirectInput: Using DirectInput %d\n
 DirectInput: Usando DirectInput %d\n
 
-# osd/windows/sound.c: 356
+# osd/windows/sound.c: 363
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: Buffer primário: %d Hz, %d bits, %d canais\n
 
-# osd/windows/sound.c: 370
+# osd/windows/sound.c: 377
 Error creating DirectSound stream buffer: %08x\n
 Erro criando buffer de stream DirectSound: %08x\n
 
-# osd/windows/sound.c: 245
+# osd/windows/sound.c: 252
 Error creating DirectSound: %08x\n
 Erro criando DirectSound: %08x\n
 
-# osd/windows/sound.c: 337
+# osd/windows/sound.c: 344
 Error creating primary DirectSound buffer: %08x\n
 Erro criando buffer DirectSound primário: %08x\n
 
@@ -386,7 +386,7 @@ Erro criando buffer DirectSound primário: %08x\n
 Error creating vertex buffer (%08X)
 Erro criando buffer do vertex (%08X)
 
-# osd/windows/sound.c: 254
+# osd/windows/sound.c: 261
 Error getting DirectSound capabilities: %08x\n
 Erro detectando capacidades do DirectSound: %08x\n
 
@@ -402,23 +402,23 @@ Erro detectando identificador para dispositivo\n
 Error getting mode for adapter #%d\n
 Erro detectando modo para adaptador #%d\n
 
-# osd/windows/sound.c: 353
+# osd/windows/sound.c: 360
 Error getting primary DirectSound buffer format: %08x\n
 Erro detectando format de buffer DirectSound primário: %08x\n
 
-# osd/windows/sound.c: 378
+# osd/windows/sound.c: 385
 Error locking DirectSound stream buffer: %08x\n
 Erro travando buffer de stream DirectSound: %08x\n
 
-# osd/windows/sound.c: 291
+# osd/windows/sound.c: 298
 Error playing: %08x\n
 Erro jogando: %08x\n
 
-# osd/windows/sound.c: 262
+# osd/windows/sound.c: 269
 Error setting DirectSound cooperative level: %08x\n
 Erro setando nível cooperativo do DirectSound: %08x\n
 
-# osd/windows/sound.c: 345
+# osd/windows/sound.c: 352
 Error setting primary DirectSound buffer format: %08x\n
 Erro configurando formato de buffer DirectSound primário: %08x\n
 

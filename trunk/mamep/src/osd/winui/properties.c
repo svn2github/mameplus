@@ -1061,6 +1061,12 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 						wcscat(buffer, TEXT("\r\n"));
 					wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
 				}
+				if (drivers[driver_index]->flags & GAME_REQUIRES_ARTWORK)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game requires external artwork files")));
+				}
  			}
 			else
 			{
@@ -1107,6 +1113,12 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 					if (*buffer != '\0')
 						wcscat(buffer, TEXT("\r\n"));
 					wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+				}
+				if (drivers[driver_index]->flags & GAME_REQUIRES_ARTWORK)
+				{
+					if (*buffer != '\0')
+						wcscat(buffer, TEXT("\r\n"));
+					wcscat(buffer, _UIW(TEXT("Game requires external artwork files")));
 				}
 			}
 		}
@@ -1172,6 +1184,12 @@ LPWSTR GameInfoStatus(int driver_index, BOOL bRomStatus)
 			if (*buffer != '\0')
 				wcscat(buffer, TEXT("\r\n"));
 			wcscat(buffer, _UIW(TEXT("Screen flipping is not supported")));
+		}
+		if (drivers[driver_index]->flags & GAME_REQUIRES_ARTWORK)
+		{
+			if (*buffer != '\0')
+				wcscat(buffer, TEXT("\r\n"));
+			wcscat(buffer, _UIW(TEXT("Game requires external artwork files")));
 		}
 	}
 	return buffer;

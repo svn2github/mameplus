@@ -1,4 +1,4 @@
-# osd/winui/properties.c: 1001
+# osd/winui/properties.c: 997
 %d colors 
 %d színek
 
@@ -6,43 +6,43 @@
 %d games
 %d játék
 
-# osd/winui/properties.c: 900
+# osd/winui/properties.c: 896
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d szín
 
-# osd/winui/properties.c: 895
+# osd/winui/properties.c: 891
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d szín)
 
-# osd/winui/treeview.c: 1232
+# osd/winui/treeview.c: 1234
 %dx%d (H)
 %dx%d (H)
 
-# osd/winui/treeview.c: 1226
+# osd/winui/treeview.c: 1228
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 970
+# osd/winui/properties.c: 966
 %s (%d player)
 %s (%d játékos)
 
-# osd/winui/properties.c: 981
+# osd/winui/properties.c: 977
 %s (%d player, %d button)
 %s (%d játékos, %d gomb)
 
-# osd/winui/properties.c: 979
+# osd/winui/properties.c: 975
 %s (%d player, %d buttons)
 %s (%d játékos, %d gomb)
 
-# osd/winui/properties.c: 967
+# osd/winui/properties.c: 963
 %s (%d players)
 %s (%d játékos)
 
-# osd/winui/properties.c: 976
+# osd/winui/properties.c: 972
 %s (%d players, %d button)
 %s (%d játékos, %d gomb)
 
-# osd/winui/properties.c: 973
+# osd/winui/properties.c: 969
 %s (%d players, %d buttons)
 %s (%d játékos, %d gomb)
 
@@ -294,7 +294,7 @@
 <- Remove
 <- Elmozdít
 
-# osd/winui/treeview.c: 530, 550, 1097
+# osd/winui/treeview.c: 530, 550, 1099
 <unknown>
 <Ismeretlen>
 
@@ -306,7 +306,7 @@ Egy megosztás áthágás történt.
 A&udit
 E&llenõrzés
 
-# osd/winui/properties.c: 945 osd/winui/treeview.c: 1364
+# osd/winui/properties.c: 941 osd/winui/treeview.c: 1366
 AD Stick
 AD kar
 
@@ -354,7 +354,7 @@ Eredetileg használt beállítások alkalmazása.
 Allows filtering out games from a folder
 Játékok válogatásának lehetõsége egy mappából
 
-# osd/winui/properties.c: 3586
+# osd/winui/properties.c: 3601
 Anti-clockwise
 Órajárásával ellentétes
 
@@ -394,15 +394,15 @@ ROM és hangminta csoportok ellenõrzése
 Audit complete.\n
 Ellenõrzés kész.\n
 
-# osd/winui/properties.c: 399, 430, 472, 2954, 2960
+# osd/winui/properties.c: 393, 424, 466, 2968, 2974
 Auto
 Automatikus
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3604
 Auto anti-clockwise
 Automatán balra
 
-# osd/winui/properties.c: 3588
+# osd/winui/properties.c: 3603
 Auto clockwise
 Automatán jobbra
 
@@ -426,7 +426,7 @@ Meglévõ terület:
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1121
+# osd/winui/properties.c: 1129
 BIOS missing
 BIOS hiányzik
 
@@ -438,7 +438,7 @@ Hátterek
 Background Images
 Háttér kép
 
-# osd/winui/treeview.c: 1009
+# osd/winui/treeview.c: 1011
 Bad Dump
 Hibás letárolás
 
@@ -514,43 +514,43 @@ Gomb (P vagy 6)
 Button (S or 7)
 Gomb (S vagy 7)
 
-# osd/winui/treeview.c: 1378
+# osd/winui/treeview.c: 1380
 Button 1
 Gomb 1
 
-# osd/winui/treeview.c: 1387
+# osd/winui/treeview.c: 1389
 Buttons 10
 Gombok 10
 
-# osd/winui/treeview.c: 1379
+# osd/winui/treeview.c: 1381
 Buttons 2
 Gombok 2
 
-# osd/winui/treeview.c: 1380
+# osd/winui/treeview.c: 1382
 Buttons 3
 Gombok 3
 
-# osd/winui/treeview.c: 1381
+# osd/winui/treeview.c: 1383
 Buttons 4
 Gombok 4
 
-# osd/winui/treeview.c: 1382
+# osd/winui/treeview.c: 1384
 Buttons 5
 Gombok 5
 
-# osd/winui/treeview.c: 1383
+# osd/winui/treeview.c: 1385
 Buttons 6
 Gombok 6
 
-# osd/winui/treeview.c: 1384
+# osd/winui/treeview.c: 1386
 Buttons 7
 Gombok 7
 
-# osd/winui/treeview.c: 1385
+# osd/winui/treeview.c: 1387
 Buttons 8
 Gombok 8
 
-# osd/winui/treeview.c: 1386
+# osd/winui/treeview.c: 1388
 Buttons 9
 Gombok 9
 
@@ -594,7 +594,7 @@ Játék ellenõrzése %s - %s
 Checking...
 Ellenõrzés...
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3600
 Clockwise
 Órajárásával megegyezõ
 
@@ -610,15 +610,15 @@ Klón:
 Clones
 Klónok
 
-# osd/winui/properties.c: 402, 433
+# osd/winui/properties.c: 396, 427
 Cocktail
 Vegyes
 
-# osd/winui/properties.c: 1036, 1083, 1148
+# osd/winui/properties.c: 1032, 1085, 1156
 Colors are completely wrong
 A színek teljesen rosszak
 
-# osd/winui/properties.c: 1042, 1089, 1154
+# osd/winui/properties.c: 1038, 1091, 1162
 Colors aren't 100% accurate
 A színek nem 100% tökéletesek
 
@@ -734,11 +734,11 @@ Megjelenítés beállításai.
 Customize which columns are used in the game list
 A játéklistában használatos oszlopok bállítása
 
-# osd/winui/properties.c: 3584, 3810, 3839
+# osd/winui/properties.c: 3599, 3825, 3854
 Default
 Alapértelmezett
 
-# osd/winui/properties.c: 611
+# osd/winui/properties.c: 605
 Default Game
 Alapértelmezett játék
 
@@ -762,7 +762,7 @@ Név
 Details
 Részletek
 
-# osd/winui/properties.c: 947 osd/winui/treeview.c: 1366
+# osd/winui/properties.c: 943 osd/winui/treeview.c: 1368
 Dial
 Dial
 
@@ -770,7 +770,7 @@ Dial
 Dial device
 Dial eszköz
 
-# osd/winui/properties.c: 363
+# osd/winui/properties.c: 357
 Direct3D
 Direct3D
 
@@ -826,39 +826,39 @@ Lista megjelenítése.
 Displays program and copyright information
 Program és jogvédelmi információk megjelenítése
 
-# osd/winui/treeview.c: 1362
+# osd/winui/treeview.c: 1364
 Double Joy 16-Way
 Tizenhat irányos iker kar
 
-# osd/winui/treeview.c: 1359
+# osd/winui/treeview.c: 1361
 Double Joy 2-Way
 Két irányos iker joy
 
-# osd/winui/treeview.c: 1360
+# osd/winui/treeview.c: 1362
 Double Joy 4-Way
 Négy irányos iker joy
 
-# osd/winui/treeview.c: 1361
+# osd/winui/treeview.c: 1363
 Double Joy 8-Way
 Nyolc irányos iker joy
 
-# osd/winui/properties.c: 943
+# osd/winui/properties.c: 939
 Double Joystick 16-Way
 Tizenhat irányos iker joy
 
-# osd/winui/properties.c: 940
+# osd/winui/properties.c: 936
 Double Joystick 2-Way
 Kétirányos iker joy
 
-# osd/winui/properties.c: 944
+# osd/winui/properties.c: 940
 Double Joystick 2-Way Vertical
 Két függõleges irányos iker joy
 
-# osd/winui/properties.c: 941
+# osd/winui/properties.c: 937
 Double Joystick 4-Way
 Négy irányos iker joy
 
-# osd/winui/properties.c: 942
+# osd/winui/properties.c: 938
 Double Joystick 8-Way
 Nyolc irányos iker joy
 
@@ -866,11 +866,11 @@ Nyolc irányos iker joy
 Draw antialiased vectors
 Élsimított vektorok megjelenítése
 
-# osd/winui/properties.c: 3552
+# osd/winui/properties.c: 3567
 Draw every frame
 Megjelenik mind
 
-# osd/winui/layout.c: 66 osd/winui/winui.c: 933, 7458
+# osd/winui/layout.c: 66 osd/winui/winui.c: 933
 Driver
 Driver
 
@@ -918,11 +918,11 @@ Enable steadykey support
 Enforce aspect ratio
 Kényszerített képarány
 
-# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 630, 756, 1987
+# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 624, 750, 2001
 Error
 Hiba
 
-# osd/winui/treeview.c: 2638
+# osd/winui/treeview.c: 2640
 Error finding custom file name to save
 Hiba a megfelelõ fájlnév keresésekor mentéshez
 
@@ -930,11 +930,11 @@ Hiba a megfelelõ fájlnév keresésekor mentéshez
 Error searching for custom folder
 Hiba az egyedi mappa keresésekor
 
-# osd/winui/treeview.c: 2566
+# osd/winui/treeview.c: 2568
 Error while renaming custom file %s to %s
 Hiba az egyedi fájl %s átnevezésekor %s
 
-# osd/winui/treeview.c: 2710
+# osd/winui/treeview.c: 2712
 Error while saving custom file %s
 Hiba az egyedi fájl mentésekor %s
 
@@ -1022,11 +1022,11 @@ Játékszûrõk
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 A játékszûrõk lehetõvé teszik a megfelelõ mappában, elõre meghatározott szabályok alapján a játékok listázását.
 
-# osd/winui/properties.c: 1054, 1101, 1166
+# osd/winui/properties.c: 1050, 1103, 1174
 Game lacks sound
 Hiányzik a játék hangja
 
-# osd/winui/properties.c: 1030, 1077, 1142
+# osd/winui/properties.c: 1026, 1079, 1150
 Game protection isn't fully emulated
 A játék védelme nincs teljesen emulálva
 
@@ -1042,15 +1042,15 @@ Gamma állítás
 General
 Általános
 
-# osd/winui/properties.c: 1210
+# osd/winui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
 Átfogó driver beállítások\nEgyedi beállítások használata az összes játékhoz itt: %s
 
-# osd/winui/properties.c: 1201
+# osd/winui/properties.c: 1215
 Global game options\nDefault options used by all games
 Minden játék beállítása\nvalamennyi játék által használt alapbeállítás
 
-# osd/winui/properties.c: 1204
+# osd/winui/properties.c: 1218
 Global vector options\nCustom options used by all games in the Vector
 Átfogó vektor beállítások\nEgyedi beállítások használata az összes vektorjátékhoz
 
@@ -1094,7 +1094,7 @@ Ismertetõ
 Homebrew
 Házi készítésû
 
-# osd/winui/layout.c: 61 osd/winui/treeview.c: 1117 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 61 osd/winui/treeview.c: 1119 osd/winui/winui.c: 5740
 Horizontal
 Vízszintes
 
@@ -1122,15 +1122,15 @@ Kép javítás
 Imperfect
 Hibás
 
-# osd/winui/treeview.c: 960
+# osd/winui/treeview.c: 961
 Imperfect Colors
 Hibás színek
 
-# osd/winui/treeview.c: 961
+# osd/winui/treeview.c: 962
 Imperfect Graphics
 Hibás grafika
 
-# osd/winui/treeview.c: 963
+# osd/winui/treeview.c: 964
 Imperfect Sound
 Hibás hang
 
@@ -1158,43 +1158,43 @@ Beszúrás
 Interface Options
 Megjelenítési beállítások
 
-# osd/winui/treeview.c: 1357
+# osd/winui/treeview.c: 1359
 Joy 16-Way
 Tizenhat irányos kar
 
-# osd/winui/treeview.c: 1354
+# osd/winui/treeview.c: 1356
 Joy 2-Way
 Két irányos joy
 
-# osd/winui/treeview.c: 1355
+# osd/winui/treeview.c: 1357
 Joy 4-Way
 Négy irányos joy
 
-# osd/winui/treeview.c: 1356
+# osd/winui/treeview.c: 1358
 Joy 8-Way
 Nyolc irányos joy
 
-# osd/winui/properties.c: 417
+# osd/winui/properties.c: 411
 Joystick
 Joystick
 
-# osd/winui/properties.c: 938
+# osd/winui/properties.c: 934
 Joystick 16-Way
 Tizenhat irányos joystick
 
-# osd/winui/properties.c: 935
+# osd/winui/properties.c: 931
 Joystick 2-Way
 Két irányos joystick
 
-# osd/winui/properties.c: 939
+# osd/winui/properties.c: 935
 Joystick 2-Way Vertical
 Két függõleges irányos joystick
 
-# osd/winui/properties.c: 936
+# osd/winui/properties.c: 932
 Joystick 4-Way
 Négy irányos joystick
 
-# osd/winui/properties.c: 937
+# osd/winui/properties.c: 933
 Joystick 8-Way
 Nyolc irányos joystick
 
@@ -1206,7 +1206,7 @@ Joystick holtsáv
 Joystick saturation
 Joystick szaturáció
 
-# osd/winui/properties.c: 415
+# osd/winui/properties.c: 409
 Keyboard
 Billentyûzet
 
@@ -1218,7 +1218,7 @@ N&agy ikonok
 Large Icons
 Nagy ikonok
 
-# osd/winui/layout.c: 82 osd/winui/properties.c: 418, 949 osd/winui/treeview.c: 1368
+# osd/winui/layout.c: 82 osd/winui/properties.c: 412, 945 osd/winui/treeview.c: 1370
 Lightgun
 Fénypisztoly
 
@@ -1278,11 +1278,11 @@ Memória kártya
 Miscellaneous
 Egyéb
 
-# osd/winui/treeview.c: 962
+# osd/winui/treeview.c: 963
 Missing Sound
 Hiányzó hang
 
-# osd/winui/properties.c: 416
+# osd/winui/properties.c: 410
 Mouse
 Egér
 
@@ -1314,11 +1314,11 @@ New game changes
 No
 Nem
 
-# osd/winui/treeview.c: 964
+# osd/winui/treeview.c: 965
 No Cocktail
 Nincs vegyes mód
 
-# osd/winui/treeview.c: 1011
+# osd/winui/treeview.c: 1013
 No Dump
 Nincs letárolás
 
@@ -1338,7 +1338,7 @@ A klónok megjelenése azonos az eredetiekével
 Non-Wor&king
 Ne&m mûködõ
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 360, 414, 2824, 3587, 3668, 3797, 3806, 3835
+# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3602, 3683, 3812, 3821, 3850
 None
 Nincs
 
@@ -1354,7 +1354,7 @@ Nem mûködik
 Not found
 Nem található
 
-# osd/winui/properties.c: 1024, 1132
+# osd/winui/properties.c: 1020, 1140
 Not working
 Nem mûködik
 
@@ -1406,7 +1406,7 @@ PCB infó
 PCB Info Files
 PCB infó fájlok
 
-# osd/winui/properties.c: 946 osd/winui/treeview.c: 1365
+# osd/winui/properties.c: 942 osd/winui/treeview.c: 1367
 Paddle
 Paddle
 
@@ -1426,7 +1426,7 @@ Sikeres
 Pause Brightness
 Fényerõ szünetkor
 
-# osd/winui/properties.c: 950 osd/winui/treeview.c: 1369
+# osd/winui/properties.c: 946 osd/winui/treeview.c: 1371
 Pedal
 Gázpedál
 
@@ -1438,7 +1438,7 @@ Gázpedál eszköz
 Physical monitor:
 Fizikai megjelenítõ:
 
-# osd/winui/properties.c: 401, 432
+# osd/winui/properties.c: 395, 426
 Pixel Aspect
 Képkocka hányad
 
@@ -1474,35 +1474,35 @@ Egy rögzített játék visszajátszása
 Played
 Játszva
 
-# osd/winui/treeview.c: 1370
+# osd/winui/treeview.c: 1372
 Player 1
 Játékos 1
 
-# osd/winui/treeview.c: 1371
+# osd/winui/treeview.c: 1373
 Players 2
 Játékos 2
 
-# osd/winui/treeview.c: 1372
+# osd/winui/treeview.c: 1374
 Players 3
 Játékos 3
 
-# osd/winui/treeview.c: 1373
+# osd/winui/treeview.c: 1375
 Players 4
 Játékos 4
 
-# osd/winui/treeview.c: 1374
+# osd/winui/treeview.c: 1376
 Players 5
 Játékos 5
 
-# osd/winui/treeview.c: 1375
+# osd/winui/treeview.c: 1377
 Players 6
 Játékos 6
 
-# osd/winui/treeview.c: 1376
+# osd/winui/treeview.c: 1378
 Players 7
 Játékos 7
 
-# osd/winui/treeview.c: 1377
+# osd/winui/treeview.c: 1379
 Players 8
 Játékos 8
 
@@ -1514,15 +1514,15 @@ Helyzeti eszköz
 Pr&operties
 Tu&lajdonságok
 
-# osd/winui/winui.c: 3928, 7413, 7458
+# osd/winui/winui.c: 3928, 7413
 Propert&ies for %s
 %s : tulajdonságai
 
-# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873
+# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873, 7458
 Propert&ies for Driver
 Driver tulajdonságai
 
-# osd/winui/properties.c: 629, 755
+# osd/winui/properties.c: 623, 749
 Propery Sheet Error %d %X
 Sajátos lemez hiba %d %X
 
@@ -1546,7 +1546,7 @@ ROM ellenõrzés:
 ROMs
 ROM-ok
 
-# osd/winui/properties.c: 1123
+# osd/winui/properties.c: 1131
 ROMs missing
 Hiányzó ROM-ok
 
@@ -1666,7 +1666,7 @@ Képernyõ
 Screen flip support is missing
 A kép oldalak cseréje funkció nem mûködik
 
-# osd/winui/properties.c: 1066, 1113, 1178
+# osd/winui/properties.c: 1062, 1115, 1186
 Screen flipping is not supported
 Képernyõ tükrözés nem támogatott
 
@@ -1770,43 +1770,43 @@ Eszközsor mutatása vagy elrejtése
 Show these fields in this order:
 Mezõk mutatása ilyen sorban:
 
-# osd/winui/properties.c: 3554
+# osd/winui/properties.c: 3569
 Skip 1 of 10 frames
 1 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3572
+# osd/winui/properties.c: 3587
 Skip 10 of 10 frames
 10 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3556
+# osd/winui/properties.c: 3571
 Skip 2 of 10 frames
 2 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3558
+# osd/winui/properties.c: 3573
 Skip 3 of 10 frames
 3 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3560
+# osd/winui/properties.c: 3575
 Skip 4 of 10 frames
 4 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3562
+# osd/winui/properties.c: 3577
 Skip 5 of 10 frames
 5 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3564
+# osd/winui/properties.c: 3579
 Skip 6 of 10 frames
 6 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3566
+# osd/winui/properties.c: 3581
 Skip 7 of 10 frames
 7 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3568
+# osd/winui/properties.c: 3583
 Skip 8 of 10 frames
 8 kihagyása 10-bõl
 
-# osd/winui/properties.c: 3570
+# osd/winui/properties.c: 3585
 Skip 9 of 10 frames
 9 kihagyása 10-bõl
 
@@ -1874,7 +1874,7 @@ Listázás év alapján
 Sound
 Hang
 
-# osd/winui/properties.c: 1060, 1107, 1172
+# osd/winui/properties.c: 1056, 1109, 1180
 Sound emulation isn't 100% accurate
 A hang emuláció nem 100% tökéletes
 
@@ -1886,7 +1886,7 @@ Hang:
 St&ory
 Tö&rténet
 
-# osd/winui/properties.c: 400, 431
+# osd/winui/properties.c: 394, 425
 Standard
 Alap
 
@@ -1910,7 +1910,7 @@ Sztereó
 Story
 Történet
 
-# osd/winui/properties.c: 989 osd/winui/treeview.c: 1317
+# osd/winui/properties.c: 985 osd/winui/treeview.c: 1319
 Supported
 Támogatott
 
@@ -1970,7 +1970,7 @@ Játék képek kapcsolása
 Total:
 Összesen:
 
-# osd/winui/layout.c: 81 osd/winui/properties.c: 948 osd/winui/treeview.c: 1367 osd/winui/winui.c: 928
+# osd/winui/layout.c: 81 osd/winui/properties.c: 944 osd/winui/treeview.c: 1369 osd/winui/winui.c: 928
 Trackball
 Hanyattegér
 
@@ -2054,11 +2054,11 @@ Típus
 Unable to Load Riched32.dll
 Riched32.dll betöltése sikertelen
 
-# osd/winui/treeview.c: 2577
+# osd/winui/treeview.c: 2579
 Unable to add game to non-custom folder
 A játék hozzáadása a nem egyedi mappához sikertelen
 
-# osd/winui/treeview.c: 2594
+# osd/winui/treeview.c: 2596
 Unable to remove game from non-custom folder
 A játék kivétele a nem egyedi mappából sikertelen
 
@@ -2066,11 +2066,11 @@ A játék kivétele a nem egyedi mappából sikertelen
 Unavailable
 Hiányzó
 
-# osd/winui/treeview.c: 958
+# osd/winui/treeview.c: 959
 Unemulated Protection
 Emulálatlan védelem
 
-# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 964, 1018 
+# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 960, 1014 
 Unknown
 Ismeretlen
 
@@ -2078,7 +2078,7 @@ Ismeretlen
 Unknown error.
 Ismeretlen hiba.
 
-# osd/winui/properties.c: 991 osd/winui/treeview.c: 1319
+# osd/winui/properties.c: 987 osd/winui/treeview.c: 1321
 Unsupported
 Nem támogatott
 
@@ -2106,27 +2106,27 @@ Automatikus hangszabályozás használata
 Vector
 Vektor
 
-# osd/winui/treeview.c: 1196
+# osd/winui/treeview.c: 1198
 Vector (H)
 Vector (H)
 
-# osd/winui/properties.c: 887
+# osd/winui/properties.c: 883
 Vector (H) %f Hz (%d colors)
 Vektor (H) %f Hz (%d szín)
 
-# osd/winui/treeview.c: 1194
+# osd/winui/treeview.c: 1196
 Vector (V)
 Vector (V)
 
-# osd/winui/properties.c: 882
+# osd/winui/properties.c: 878
 Vector (V) %f Hz (%d colors)
 Vektor (V) %f Hz (%d szín)
 
-# osd/winui/layout.c: 62 osd/winui/treeview.c: 1114 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 62 osd/winui/treeview.c: 1116 osd/winui/winui.c: 5740
 Vertical
 Függõleges
 
-# osd/winui/properties.c: 1048, 1095, 1160
+# osd/winui/properties.c: 1044, 1097, 1168
 Video emulation isn't 100% accurate
 A videó emuláció nem 100% tökéletes
 
@@ -2158,11 +2158,11 @@ Függõleges szinkron
 What's new in MAME
 MAME újdonságok
 
-# osd/winui/layout.c: 74 osd/winui/properties.c: 1071, 1136
+# osd/winui/layout.c: 74 osd/winui/properties.c: 1073, 1144
 Working
 Mûködik
 
-# osd/winui/treeview.c: 959
+# osd/winui/treeview.c: 960
 Wrong Colors
 Rossz színek
 
@@ -2242,7 +2242,7 @@ Additional MAMEUI code by
 All Games
 
 
-# osd/winui/properties.c: 385
+# osd/winui/properties.c: 379
 All screens
 
 
@@ -2322,7 +2322,7 @@ Debugscript
 Decrypted
 
 
-# osd/winui/properties.c: 721
+# osd/winui/properties.c: 715
 Default Settings
 
 
@@ -2346,7 +2346,7 @@ Display the properties of the selected item
 Displays items grouped by parent game
 
 
-# osd/winui/treeview.c: 1363
+# osd/winui/treeview.c: 1365
 Double Joy 2-Way (V)
 
 
@@ -2398,7 +2398,7 @@ Enable the story tab
 Enable the title tab
 
 
-# osd/winui/properties.c: 386
+# osd/winui/properties.c: 380
 First screen
 
 
@@ -2406,12 +2406,16 @@ First screen
 Font Files
 
 
-# osd/winui/properties.c: 389
+# osd/winui/properties.c: 383
 Fourth screen
 
 
 # osd/winui/winui.c: 7448
 Game
+
+
+# osd/winui/properties.c: 1068, 1121, 1192
+Game requires external artwork files
 
 
 # osd/winui/dialogs.c: 264
@@ -2438,7 +2442,7 @@ Gamename/Increment
 Gameplay speed
 
 
-# osd/winui/properties.c: 1222
+# osd/winui/properties.c: 1236
 Global BIOS options\nCustom options used by all games in the %s
 
 
@@ -2454,7 +2458,7 @@ Image Files (*.png)
 Individual game options\n
 
 
-# osd/winui/properties.c: 429
+# osd/winui/properties.c: 423
 Internal
 
 
@@ -2462,7 +2466,7 @@ Internal
 John Hardy IV and Michael Soderstrom
 
 
-# osd/winui/treeview.c: 1358
+# osd/winui/treeview.c: 1360
 Joy 2-Way (V)
 
 
@@ -2566,6 +2570,10 @@ Remove selected item from this folder
 Rename this folder
 
 
+# osd/winui/treeview.c: 966
+Requires Artwork
+
+
 # osd/winui/mameui.rc: 829
 Reset Debugscript
 
@@ -2590,7 +2598,7 @@ Resetting the User Interface options\n
 Screen flipping in cocktail mode is not supported.\n
 
 
-# osd/winui/properties.c: 387
+# osd/winui/properties.c: 381
 Second screen
 
 
@@ -2750,6 +2758,10 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.\n
 
 
+# osd/winui/datafile.c: 1085
+The game requires external artwork files\n
+
+
 # osd/winui/datafile.c: 1079
 The sound emulation isn't 100% accurate.\n
 
@@ -2758,7 +2770,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.\n
 
 
-# osd/winui/properties.c: 388
+# osd/winui/properties.c: 382
 Third screen
 
 
@@ -2782,15 +2794,15 @@ Update Main window during paused emulation
 User interface settings\n\n
 
 
-# osd/winui/properties.c: 374
+# osd/winui/properties.c: 368
 Version 8
 
 
-# osd/winui/properties.c: 373
+# osd/winui/properties.c: 367
 Version 9
 
 
-# osd/winui/datafile.c: 1137
+# osd/winui/datafile.c: 1140
 \nDRIVER: %s\n
 
 
@@ -2798,7 +2810,7 @@ Version 9
 \nDo you wish to continue?
 
 
-# osd/winui/datafile.c: 1099, 1113
+# osd/winui/datafile.c: 1102, 1116
 \nORIGINAL:\n
 
 
@@ -2806,7 +2818,7 @@ Version 9
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1101, 1115
+# osd/winui/datafile.c: 1104, 1118
 \n\nCLONES:\n
 
 

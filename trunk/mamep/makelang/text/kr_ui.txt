@@ -2,7 +2,7 @@
  will now reset the following\n
 이제 다음으로 재설정됩니다\n
 
-# osd/winui/properties.c: 1001
+# osd/winui/properties.c: 997
 %d colors 
 %d 색상
 
@@ -10,43 +10,43 @@
 %d games
 %d 게임
 
-# osd/winui/properties.c: 900
+# osd/winui/properties.c: 896
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d 색상)
 
-# osd/winui/properties.c: 895
+# osd/winui/properties.c: 891
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d 색상)
 
-# osd/winui/treeview.c: 1232
+# osd/winui/treeview.c: 1234
 %dx%d (H)
 %dx%d (H)
 
-# osd/winui/treeview.c: 1226
+# osd/winui/treeview.c: 1228
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 970
+# osd/winui/properties.c: 966
 %s (%d player)
 %s (%d 사용자)
 
-# osd/winui/properties.c: 981
+# osd/winui/properties.c: 977
 %s (%d player, %d button)
 %s (%d 사용자, %d 버튼)
 
-# osd/winui/properties.c: 979
+# osd/winui/properties.c: 975
 %s (%d player, %d buttons)
 %s (%d 사용자, %d 버튼)
 
-# osd/winui/properties.c: 967
+# osd/winui/properties.c: 963
 %s (%d players)
 %s (%d 사용자)
 
-# osd/winui/properties.c: 976
+# osd/winui/properties.c: 972
 %s (%d players, %d button)
 %s (%d 사용자, %d 버튼)
 
-# osd/winui/properties.c: 973
+# osd/winui/properties.c: 969
 %s (%d players, %d buttons)
 %s (%d 사용자, %d 버튼)
 
@@ -322,7 +322,7 @@ Story 파일 (&S)
 <- Remove
 <- 제거
 
-# osd/winui/treeview.c: 530, 550, 1097
+# osd/winui/treeview.c: 530, 550, 1099
 <unknown>
 <미확인>
 
@@ -334,7 +334,7 @@ A sharing violation occurred.
 A&udit
 검사(&U)
 
-# osd/winui/properties.c: 945 osd/winui/treeview.c: 1364
+# osd/winui/properties.c: 941 osd/winui/treeview.c: 1366
 AD Stick
 AD 스틱
 
@@ -386,7 +386,7 @@ All Games
 All files (*.*)
 모든 파일 (*.*)
 
-# osd/winui/properties.c: 385
+# osd/winui/properties.c: 379
 All screens
 모든 화면
 
@@ -406,7 +406,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 폴더에서 게임을 필터링하여 목록에 표시되지 않게합니다.
 
-# osd/winui/properties.c: 3586
+# osd/winui/properties.c: 3601
 Anti-clockwise
 반시계 방향
 
@@ -454,15 +454,15 @@ Audit items in this folder
 Audit the selected item
 선택 항목 확인
 
-# osd/winui/properties.c: 399, 430, 472, 2954, 2960
+# osd/winui/properties.c: 393, 424, 466, 2968, 2974
 Auto
 자동
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3604
 Auto anti-clockwise
 자동 반시계방향
 
-# osd/winui/properties.c: 3588
+# osd/winui/properties.c: 3603
 Auto clockwise
 자동 시계방향
 
@@ -494,7 +494,7 @@ Available fields:
 BIOS
 바이오스
 
-# osd/winui/properties.c: 1121
+# osd/winui/properties.c: 1129
 BIOS missing
 바이오스 없음
 
@@ -506,7 +506,7 @@ Backdrops
 Background Images
 배경 이미지
 
-# osd/winui/treeview.c: 1009
+# osd/winui/treeview.c: 1011
 Bad Dump
 잘못된 덤프
 
@@ -582,43 +582,43 @@ Button (P or 6)
 Button (S or 7)
 버튼 (S 또는 7)
 
-# osd/winui/treeview.c: 1378
+# osd/winui/treeview.c: 1380
 Button 1
 버튼 1
 
-# osd/winui/treeview.c: 1387
+# osd/winui/treeview.c: 1389
 Buttons 10
 버튼 10
 
-# osd/winui/treeview.c: 1379
+# osd/winui/treeview.c: 1381
 Buttons 2
 버튼 2
 
-# osd/winui/treeview.c: 1380
+# osd/winui/treeview.c: 1382
 Buttons 3
 버튼 3
 
-# osd/winui/treeview.c: 1381
+# osd/winui/treeview.c: 1383
 Buttons 4
 버튼 4
 
-# osd/winui/treeview.c: 1382
+# osd/winui/treeview.c: 1384
 Buttons 5
 버튼 5
 
-# osd/winui/treeview.c: 1383
+# osd/winui/treeview.c: 1385
 Buttons 6
 버튼 6
 
-# osd/winui/treeview.c: 1384
+# osd/winui/treeview.c: 1386
 Buttons 7
 버튼 7
 
-# osd/winui/treeview.c: 1385
+# osd/winui/treeview.c: 1387
 Buttons 8
 버튼 8
 
-# osd/winui/treeview.c: 1386
+# osd/winui/treeview.c: 1388
 Buttons 9
 버튼 9
 
@@ -670,7 +670,7 @@ Checking...
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 및 MAMEUI 팀
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3600
 Clockwise
 시계방향
 
@@ -686,7 +686,7 @@ Clone of:
 Clones
 클론
 
-# osd/winui/properties.c: 402, 433
+# osd/winui/properties.c: 396, 427
 Cocktail
 칵테일
 
@@ -694,11 +694,11 @@ Cocktail
 Coin lockout
 코인 잠금
 
-# osd/winui/properties.c: 1036, 1083, 1148
+# osd/winui/properties.c: 1032, 1085, 1156
 Colors are completely wrong
 색상이 완전히 잘못 출력됩니다
 
-# osd/winui/properties.c: 1042, 1089, 1154
+# osd/winui/properties.c: 1038, 1091, 1162
 Colors aren't 100% accurate
 색상이 100% 정확하지 않습니다
 
@@ -862,11 +862,11 @@ Debugscript
 Decrypted
 암호화
 
-# osd/winui/properties.c: 3584, 3810, 3839
+# osd/winui/properties.c: 3599, 3825, 3854
 Default
 기본값
 
-# osd/winui/properties.c: 611
+# osd/winui/properties.c: 605
 Default Game
 기본 게임
 
@@ -874,7 +874,7 @@ Default Game
 Default Game &Options...
 기본 게임 설정(&O)...
 
-# osd/winui/properties.c: 721
+# osd/winui/properties.c: 715
 Default Settings
 기본 설정
 
@@ -894,7 +894,7 @@ Description
 Details
 자세히
 
-# osd/winui/properties.c: 947 osd/winui/treeview.c: 1366
+# osd/winui/properties.c: 943 osd/winui/treeview.c: 1368
 Dial
 다이얼
 
@@ -902,7 +902,7 @@ Dial
 Dial device
 다이얼 장치
 
-# osd/winui/properties.c: 363
+# osd/winui/properties.c: 357
 Direct3D
 Direct3D
 
@@ -978,43 +978,43 @@ Displays items in a list.
 Displays program and copyright information
 프로그램과 저작권 정보를 보여줍니다.
 
-# osd/winui/treeview.c: 1362
+# osd/winui/treeview.c: 1364
 Double Joy 16-Way
 16방향 2 조이스틱
 
-# osd/winui/treeview.c: 1359
+# osd/winui/treeview.c: 1361
 Double Joy 2-Way
 2방향 2 조이스틱
 
-# osd/winui/treeview.c: 1363
+# osd/winui/treeview.c: 1365
 Double Joy 2-Way (V)
 2방향 2 조이스틱 (V)
 
-# osd/winui/treeview.c: 1360
+# osd/winui/treeview.c: 1362
 Double Joy 4-Way
 4방향 2 조이스틱
 
-# osd/winui/treeview.c: 1361
+# osd/winui/treeview.c: 1363
 Double Joy 8-Way
 8방향 2 조이스틱
 
-# osd/winui/properties.c: 943
+# osd/winui/properties.c: 939
 Double Joystick 16-Way
 16방향 2 조이스틱
 
-# osd/winui/properties.c: 940
+# osd/winui/properties.c: 936
 Double Joystick 2-Way
 2방향 2 조이스틱
 
-# osd/winui/properties.c: 944
+# osd/winui/properties.c: 940
 Double Joystick 2-Way Vertical
 수직 2방향 2 조이스틱
 
-# osd/winui/properties.c: 941
+# osd/winui/properties.c: 937
 Double Joystick 4-Way
 4방향 2 조이스틱
 
-# osd/winui/properties.c: 942
+# osd/winui/properties.c: 938
 Double Joystick 8-Way
 8방향 2 조이스틱
 
@@ -1022,11 +1022,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 안티앨리어싱된 벡터 사용
 
-# osd/winui/properties.c: 3552
+# osd/winui/properties.c: 3567
 Draw every frame
 모든 프레임 표시
 
-# osd/winui/layout.c: 66 osd/winui/winui.c: 933, 7458
+# osd/winui/layout.c: 66 osd/winui/winui.c: 933
 Driver
 드라이버
 
@@ -1122,11 +1122,11 @@ Enable the title tab
 Enforce aspect ratio
 강제 화면비율유지
 
-# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 630, 756, 1987
+# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 624, 750, 2001
 Error
 오류
 
-# osd/winui/treeview.c: 2638
+# osd/winui/treeview.c: 2640
 Error finding custom file name to save
 저장할 파일을 찾지 못함
 
@@ -1134,11 +1134,11 @@ Error finding custom file name to save
 Error searching for custom folder
 사용자 지정 폴더의 검색오류
 
-# osd/winui/treeview.c: 2566
+# osd/winui/treeview.c: 2568
 Error while renaming custom file %s to %s
 사용자 파일 이름을 %s 에서 %s로 변경 실패
 
-# osd/winui/treeview.c: 2710
+# osd/winui/treeview.c: 2712
 Error while saving custom file %s
 사용자 파일 %s 저장 실패
 
@@ -1166,7 +1166,7 @@ File Audit
 Filters for %s Folder
 %s 폴더의 필터
 
-# osd/winui/properties.c: 386
+# osd/winui/properties.c: 380
 First screen
 첫번째 스크린
 
@@ -1198,7 +1198,7 @@ Fold&er List\tAlt+D
 Font Files
 폰트 파일
 
-# osd/winui/properties.c: 389
+# osd/winui/properties.c: 383
 Fourth screen
 네번째 스크린
 
@@ -1242,11 +1242,11 @@ Game filters
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 선택한 항목의 게임을 필터링하여 목록에 표시하지 않습니다.
 
-# osd/winui/properties.c: 1054, 1101, 1166
+# osd/winui/properties.c: 1050, 1103, 1174
 Game lacks sound
 사운드를 지원하지 못함
 
-# osd/winui/properties.c: 1030, 1077, 1142
+# osd/winui/properties.c: 1026, 1079, 1150
 Game protection isn't fully emulated
 게임 암호화되어 완전히 에뮬레이트되지 않음
 
@@ -1286,11 +1286,11 @@ Gamma Correction
 General
 일반
 
-# osd/winui/properties.c: 1222
+# osd/winui/properties.c: 1236
 Global BIOS options\nCustom options used by all games in the %s
 글로벌 바이오스 옵션\n사용자 정의 옵션은 %s 모든 게임에 사용됩니다.
 
-# osd/winui/properties.c: 1210
+# osd/winui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
 전체 드라이버 설정\n%s에 포함된 모든 게임에 사용될 사용자 설정
 
@@ -1298,11 +1298,11 @@ Global driver options\nCustom options used by all games in the %s
 Global game options\n
 전체 게임 옵션\n
 
-# osd/winui/properties.c: 1201
+# osd/winui/properties.c: 1215
 Global game options\nDefault options used by all games
 전체 게임 설정\n모든 게임에 기본으로 사용될 설정
 
-# osd/winui/properties.c: 1204
+# osd/winui/properties.c: 1218
 Global vector options\nCustom options used by all games in the Vector
 전체 벡터 설정\n모든 벡터게임에 사용될 사용자 설정
 
@@ -1346,7 +1346,7 @@ History
 Homebrew
 홈브류
 
-# osd/winui/layout.c: 61 osd/winui/treeview.c: 1117 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 61 osd/winui/treeview.c: 1119 osd/winui/winui.c: 5740
 Horizontal
 가로화면
 
@@ -1378,15 +1378,15 @@ Image Files (*.png)
 Imperfect
 불완전
 
-# osd/winui/treeview.c: 960
+# osd/winui/treeview.c: 961
 Imperfect Colors
 불완전한 색상
 
-# osd/winui/treeview.c: 961
+# osd/winui/treeview.c: 962
 Imperfect Graphics
 불완전한 그래픽
 
-# osd/winui/treeview.c: 963
+# osd/winui/treeview.c: 964
 Imperfect Sound
 불완전한 사운드
 
@@ -1418,7 +1418,7 @@ Insert
 Interface Options
 인터페이스 옵션
 
-# osd/winui/properties.c: 429
+# osd/winui/properties.c: 423
 Internal
 내부
 
@@ -1426,47 +1426,47 @@ Internal
 John Hardy IV and Michael Soderstrom
 John Hardy IV 와 Michael Soderstrom
 
-# osd/winui/treeview.c: 1357
+# osd/winui/treeview.c: 1359
 Joy 16-Way
 16방향 조이스틱
 
-# osd/winui/treeview.c: 1354
+# osd/winui/treeview.c: 1356
 Joy 2-Way
 2방향 조이스틱
 
-# osd/winui/treeview.c: 1358
+# osd/winui/treeview.c: 1360
 Joy 2-Way (V)
 2방향 조이스틱 (V)
 
-# osd/winui/treeview.c: 1355
+# osd/winui/treeview.c: 1357
 Joy 4-Way
 4방향 조이스틱
 
-# osd/winui/treeview.c: 1356
+# osd/winui/treeview.c: 1358
 Joy 8-Way
 8방향 조이스틱
 
-# osd/winui/properties.c: 417
+# osd/winui/properties.c: 411
 Joystick
 조이스틱
 
-# osd/winui/properties.c: 938
+# osd/winui/properties.c: 934
 Joystick 16-Way
 16방향 조이스틱
 
-# osd/winui/properties.c: 935
+# osd/winui/properties.c: 931
 Joystick 2-Way
 2방향 조이스틱
 
-# osd/winui/properties.c: 939
+# osd/winui/properties.c: 935
 Joystick 2-Way Vertical
 수직 2방향 조이스틱
 
-# osd/winui/properties.c: 936
+# osd/winui/properties.c: 932
 Joystick 4-Way
 4방향 조이스틱
 
-# osd/winui/properties.c: 937
+# osd/winui/properties.c: 933
 Joystick 8-Way
 8방향 조이스틱
 
@@ -1482,7 +1482,7 @@ Joystick saturation
 Joystickmap
 조이스틱맵
 
-# osd/winui/properties.c: 415
+# osd/winui/properties.c: 409
 Keyboard
 키보드
 
@@ -1498,7 +1498,7 @@ Language Files
 Large Icons
 큰 아이콘
 
-# osd/winui/layout.c: 82 osd/winui/properties.c: 418, 949 osd/winui/treeview.c: 1368
+# osd/winui/layout.c: 82 osd/winui/properties.c: 412, 945 osd/winui/treeview.c: 1370
 Lightgun
 라이트건
 
@@ -1582,11 +1582,11 @@ Memory Card
 Miscellaneous
 기타
 
-# osd/winui/treeview.c: 962
+# osd/winui/treeview.c: 963
 Missing Sound
 사운드 없음
 
-# osd/winui/properties.c: 416
+# osd/winui/properties.c: 410
 Mouse
 마우스
 
@@ -1622,11 +1622,11 @@ New game changes
 No
 아니오
 
-# osd/winui/treeview.c: 964
+# osd/winui/treeview.c: 965
 No Cocktail
 칵테일 없음
 
-# osd/winui/treeview.c: 1011
+# osd/winui/treeview.c: 1013
 No Dump
 덤프되지 않음
 
@@ -1646,7 +1646,7 @@ No offset for clones missing parent in view
 Non-Wor&king
 실행 불가능(&K)
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 360, 414, 2824, 3587, 3668, 3797, 3806, 3835
+# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3602, 3683, 3812, 3821, 3850
 None
 없음
 
@@ -1662,7 +1662,7 @@ Not Working
 Not found
 파일 없음
 
-# osd/winui/properties.c: 1024, 1132
+# osd/winui/properties.c: 1020, 1140
 Not working
 실행 불가능
 
@@ -1742,7 +1742,7 @@ PCB Info Files
 PCBs
 기판
 
-# osd/winui/properties.c: 946 osd/winui/treeview.c: 1365
+# osd/winui/properties.c: 942 osd/winui/treeview.c: 1367
 Paddle
 패들
 
@@ -1762,7 +1762,7 @@ Passed
 Pause Brightness
 정지화면 밝기조절
 
-# osd/winui/properties.c: 950 osd/winui/treeview.c: 1369
+# osd/winui/properties.c: 946 osd/winui/treeview.c: 1371
 Pedal
 페달
 
@@ -1774,7 +1774,7 @@ Pedal device
 Physical monitor:
 물리적 모니터:
 
-# osd/winui/properties.c: 401, 432
+# osd/winui/properties.c: 395, 426
 Pixel Aspect
 픽셀비율
 
@@ -1814,35 +1814,35 @@ Playback a recorded game
 Played
 실행
 
-# osd/winui/treeview.c: 1370
+# osd/winui/treeview.c: 1372
 Player 1
 사용자 1
 
-# osd/winui/treeview.c: 1371
+# osd/winui/treeview.c: 1373
 Players 2
 사용자 2
 
-# osd/winui/treeview.c: 1372
+# osd/winui/treeview.c: 1374
 Players 3
 사용자 3
 
-# osd/winui/treeview.c: 1373
+# osd/winui/treeview.c: 1375
 Players 4
 사용자 4
 
-# osd/winui/treeview.c: 1374
+# osd/winui/treeview.c: 1376
 Players 5
 사용자 5
 
-# osd/winui/treeview.c: 1375
+# osd/winui/treeview.c: 1377
 Players 6
 사용자 6
 
-# osd/winui/treeview.c: 1376
+# osd/winui/treeview.c: 1378
 Players 7
 사용자 7
 
-# osd/winui/treeview.c: 1377
+# osd/winui/treeview.c: 1379
 Players 8
 사용자 8
 
@@ -1854,11 +1854,11 @@ Positional device
 Pr&operties
 등록정보(&O)
 
-# osd/winui/winui.c: 3928, 7413, 7458
+# osd/winui/winui.c: 3928, 7413
 Propert&ies for %s
 %s 등록정보(&I)
 
-# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873
+# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873, 7458
 Propert&ies for Driver
 드라이버 등록정보
 
@@ -1870,7 +1870,7 @@ Properties &for %s BIOS
 Properties &for BIOS
 바이오스 속성(&F)
 
-# osd/winui/properties.c: 629, 755
+# osd/winui/properties.c: 623, 749
 Propery Sheet Error %d %X
 등록정보 시트 오류 %d %X
 
@@ -1894,7 +1894,7 @@ ROM check:
 ROMs
 롬
 
-# osd/winui/properties.c: 1123
+# osd/winui/properties.c: 1131
 ROMs missing
 롬파일 없음
 
@@ -2054,7 +2054,7 @@ Screen
 Screen flip support is missing
 화면 뒤집기 지원기능이 없음
 
-# osd/winui/properties.c: 1066, 1113, 1178
+# osd/winui/properties.c: 1062, 1115, 1186
 Screen flipping is not supported
 화면 뒤집기가 지원되지 않음
 
@@ -2082,7 +2082,7 @@ Screenshot Cycletime in Seconds
 Screenshot Ta&b\tAlt+B
 스크린샷 탭(&B)\tAlt+B
 
-# osd/winui/properties.c: 387
+# osd/winui/properties.c: 381
 Second screen
 두번째 스크린
 
@@ -2254,43 +2254,43 @@ Show or hide the toolbar
 Show these fields in this order:
 다음 순서로 필드표시:
 
-# osd/winui/properties.c: 3554
+# osd/winui/properties.c: 3569
 Skip 1 of 10 frames
 프레임 스킵 1/10
 
-# osd/winui/properties.c: 3572
+# osd/winui/properties.c: 3587
 Skip 10 of 10 frames
 프레임 스킵 10/10
 
-# osd/winui/properties.c: 3556
+# osd/winui/properties.c: 3571
 Skip 2 of 10 frames
 프레임 스킵 2/10
 
-# osd/winui/properties.c: 3558
+# osd/winui/properties.c: 3573
 Skip 3 of 10 frames
 프레임 스킵 3/10
 
-# osd/winui/properties.c: 3560
+# osd/winui/properties.c: 3575
 Skip 4 of 10 frames
 프레임 스킵 4/10
 
-# osd/winui/properties.c: 3562
+# osd/winui/properties.c: 3577
 Skip 5 of 10 frames
 프레임 스킵 5/10
 
-# osd/winui/properties.c: 3564
+# osd/winui/properties.c: 3579
 Skip 6 of 10 frames
 프레임 스킵 6/10
 
-# osd/winui/properties.c: 3566
+# osd/winui/properties.c: 3581
 Skip 7 of 10 frames
 프레임 스킵 7/10
 
-# osd/winui/properties.c: 3568
+# osd/winui/properties.c: 3583
 Skip 8 of 10 frames
 프레임 스킵 8/10
 
-# osd/winui/properties.c: 3570
+# osd/winui/properties.c: 3585
 Skip 9 of 10 frames
 프레임 스킵 9/10
 
@@ -2398,7 +2398,7 @@ Sort items by year
 Sound
 사운드
 
-# osd/winui/properties.c: 1060, 1107, 1172
+# osd/winui/properties.c: 1056, 1109, 1180
 Sound emulation isn't 100% accurate
 사운드 에뮬레이션이 100% 정확하지 않습니다
 
@@ -2410,7 +2410,7 @@ Sound:
 St&ory
 스토리(&O)
 
-# osd/winui/properties.c: 400, 431
+# osd/winui/properties.c: 394, 425
 Standard
 표준
 
@@ -2434,7 +2434,7 @@ Stereo
 Story
 스토리
 
-# osd/winui/properties.c: 989 osd/winui/treeview.c: 1317
+# osd/winui/properties.c: 985 osd/winui/treeview.c: 1319
 Supported
 지원됨
 
@@ -2470,7 +2470,7 @@ There is no application associated with the given filename extension.
 There was not enough memory to complete the operation.
 명령을 완료하기위한 메모리가 부족합니다.
 
-# osd/winui/properties.c: 388
+# osd/winui/properties.c: 382
 Third screen
 세번째 스크린
 
@@ -2510,7 +2510,7 @@ Toggle full screen mode
 Total:
 전체:
 
-# osd/winui/layout.c: 81 osd/winui/properties.c: 948 osd/winui/treeview.c: 1367 osd/winui/winui.c: 928
+# osd/winui/layout.c: 81 osd/winui/properties.c: 944 osd/winui/treeview.c: 1369 osd/winui/winui.c: 928
 Trackball
 트랙볼
 
@@ -2598,11 +2598,11 @@ Type
 Unable to Load Riched32.dll
 Riched32.dll 을 불러올 수 없습니다
 
-# osd/winui/treeview.c: 2577
+# osd/winui/treeview.c: 2579
 Unable to add game to non-custom folder
 사용자 지정이 아닌 폴더에는 게임을 추가하지 못합니다
 
-# osd/winui/treeview.c: 2594
+# osd/winui/treeview.c: 2596
 Unable to remove game from non-custom folder
 사용자 지정이 아닌 폴더에서는 게임을 제거하지 못합니다
 
@@ -2610,11 +2610,11 @@ Unable to remove game from non-custom folder
 Unavailable
 미보유 게임
 
-# osd/winui/treeview.c: 958
+# osd/winui/treeview.c: 959
 Unemulated Protection
 암호화로 에뮬레이트 못함
 
-# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 964, 1018 
+# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 960, 1014 
 Unknown
 미확인
 
@@ -2622,7 +2622,7 @@ Unknown
 Unknown error.
 알려지지 않은 오류.
 
-# osd/winui/properties.c: 991 osd/winui/treeview.c: 1319
+# osd/winui/properties.c: 987 osd/winui/treeview.c: 1321
 Unsupported
 지원안됨
 
@@ -2658,35 +2658,35 @@ User interface settings\n\n
 Vector
 벡터
 
-# osd/winui/treeview.c: 1196
+# osd/winui/treeview.c: 1198
 Vector (H)
 벡터 (H)
 
-# osd/winui/properties.c: 887
+# osd/winui/properties.c: 883
 Vector (H) %f Hz (%d colors)
 벡터 (H) %f Hz (%d 색상)
 
-# osd/winui/treeview.c: 1194
+# osd/winui/treeview.c: 1196
 Vector (V)
 벡터 (V)
 
-# osd/winui/properties.c: 882
+# osd/winui/properties.c: 878
 Vector (V) %f Hz (%d colors)
 벡터 (V) %f Hz (%d 색상)
 
-# osd/winui/properties.c: 374
+# osd/winui/properties.c: 368
 Version 8
 버전 8
 
-# osd/winui/properties.c: 373
+# osd/winui/properties.c: 367
 Version 9
 버전 9
 
-# osd/winui/layout.c: 62 osd/winui/treeview.c: 1114 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 62 osd/winui/treeview.c: 1116 osd/winui/winui.c: 5740
 Vertical
 세로화면
 
-# osd/winui/properties.c: 1048, 1095, 1160
+# osd/winui/properties.c: 1044, 1097, 1168
 Video emulation isn't 100% accurate
 비디오 에뮬레이션이 100% 정확하지 않습니다
 
@@ -2718,11 +2718,11 @@ Wait for vertical sync
 What's new in MAME
 MAME 새 소식
 
-# osd/winui/layout.c: 74 osd/winui/properties.c: 1071, 1136
+# osd/winui/layout.c: 74 osd/winui/properties.c: 1073, 1144
 Working
 실행가능
 
-# osd/winui/treeview.c: 959
+# osd/winui/treeview.c: 960
 Wrong Colors
 잘못된 색상
 
@@ -2838,8 +2838,16 @@ videos (*.avi)
 videos (*.mng)
 비디오 (*.mng)
 
+# osd/winui/properties.c: 1068, 1121, 1192
+Game requires external artwork files
+
+
 # osd/winui/datafile.c: 1049
 Mameinfo:\n
+
+
+# osd/winui/treeview.c: 966
+Requires Artwork
 
 
 # osd/winui/datafile.c: 1082
@@ -2866,6 +2874,10 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.\n
 
 
+# osd/winui/datafile.c: 1085
+The game requires external artwork files\n
+
+
 # osd/winui/datafile.c: 1079
 The sound emulation isn't 100% accurate.\n
 
@@ -2874,11 +2886,11 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1137
+# osd/winui/datafile.c: 1140
 \nDRIVER: %s\n
 
 
-# osd/winui/datafile.c: 1099, 1113
+# osd/winui/datafile.c: 1102, 1116
 \nORIGINAL:\n
 
 
@@ -2886,7 +2898,7 @@ The video emulation isn't 100% accurate.\n
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1101, 1115
+# osd/winui/datafile.c: 1104, 1118
 \n\nCLONES:\n
 
 

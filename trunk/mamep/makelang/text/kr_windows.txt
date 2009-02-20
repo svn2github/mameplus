@@ -506,7 +506,7 @@ DirectInput: 마우스 확인 불가 (result=%08X)\n
 DirectInput: Using DirectInput %d\n
 DirectInput: %d DirectInput 사용 \n
 
-# osd/windows/sound.c: 356
+# osd/windows/sound.c: 363
 DirectSound: Primary buffer: %d Hz, %d bits, %d channels\n
 DirectSound: 주 버퍼: %d Hz, %d 비트, %d 체널\n
 
@@ -518,15 +518,15 @@ Emulated
 Emulated Keyboard
 키보드 에뮬레이션
 
-# osd/windows/sound.c: 370
+# osd/windows/sound.c: 377
 Error creating DirectSound stream buffer: %08x\n
 DirectSound 스트림 버퍼 생성 오류: %08x\n
 
-# osd/windows/sound.c: 245
+# osd/windows/sound.c: 252
 Error creating DirectSound: %08x\n
 DirectSound 생성 오류: %08x\n
 
-# osd/windows/sound.c: 337
+# osd/windows/sound.c: 344
 Error creating primary DirectSound buffer: %08x\n
 주 DirectSound 버퍼 생성 오류: %08x\n
 
@@ -538,7 +538,7 @@ Error creating render target for window %d
 Error creating vertex buffer (%08X)
 vertex 버퍼 생성 중 오류 (%08X)
 
-# osd/windows/sound.c: 254
+# osd/windows/sound.c: 261
 Error getting DirectSound capabilities: %08x\n
 DirectSound 가능기능 가져오기 실패: %08x\n
 
@@ -554,23 +554,23 @@ Error getting identifier for device\n
 Error getting mode for adapter #%d\n
 아답터 #%d 모드 획득 오류\n
 
-# osd/windows/sound.c: 353
+# osd/windows/sound.c: 360
 Error getting primary DirectSound buffer format: %08x\n
 주 DirectSound 버퍼 포맷 획득 오류: %08x\n
 
-# osd/windows/sound.c: 378
+# osd/windows/sound.c: 385
 Error locking DirectSound stream buffer: %08x\n
 주 DirectSound 스트림 버퍼 잠금 오류: %08x\n
 
-# osd/windows/sound.c: 291
+# osd/windows/sound.c: 298
 Error playing: %08x\n
 실행 오류: %08x\n
 
-# osd/windows/sound.c: 262
+# osd/windows/sound.c: 269
 Error setting DirectSound cooperative level: %08x\n
 DirectSound 보조레벨 설정 실패: %08x\n
 
-# osd/windows/sound.c: 345
+# osd/windows/sound.c: 352
 Error setting primary DirectSound buffer format: %08x\n
 주 DirectSound 버퍼 포맷 설정 오류: %08x\n
 

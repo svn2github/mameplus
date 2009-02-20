@@ -1,4 +1,4 @@
-# osd/winui/properties.c: 1001
+# osd/winui/properties.c: 997
 %d colors 
 %d cores 
 
@@ -6,43 +6,43 @@
 %d games
 %d jogos
 
-# osd/winui/properties.c: 900
+# osd/winui/properties.c: 896
 %d x %d (H) %f Hz (%d colors)
 %d x %d (H) %f Hz (%d cores)
 
-# osd/winui/properties.c: 895
+# osd/winui/properties.c: 891
 %d x %d (V) %f Hz (%d colors)
 %d x %d (V) %f Hz (%d cores)
 
-# osd/winui/treeview.c: 1232
+# osd/winui/treeview.c: 1234
 %dx%d (H)
 %dx%d (H)
 
-# osd/winui/treeview.c: 1226
+# osd/winui/treeview.c: 1228
 %dx%d (V)
 %dx%d (V)
 
-# osd/winui/properties.c: 970
+# osd/winui/properties.c: 966
 %s (%d player)
 %s (%d jogador)
 
-# osd/winui/properties.c: 981
+# osd/winui/properties.c: 977
 %s (%d player, %d button)
 %s (%d jogador, %d botão)
 
-# osd/winui/properties.c: 979
+# osd/winui/properties.c: 975
 %s (%d player, %d buttons)
 %s (%d jogador, %d botões)
 
-# osd/winui/properties.c: 967
+# osd/winui/properties.c: 963
 %s (%d players)
 %s (%d jogadores)
 
-# osd/winui/properties.c: 976
+# osd/winui/properties.c: 972
 %s (%d players, %d button)
 %s (%d jogadores, %d botão)
 
-# osd/winui/properties.c: 973
+# osd/winui/properties.c: 969
 %s (%d players, %d buttons)
 %s (%d jogadores, %d botões)
 
@@ -294,7 +294,7 @@ Gráficos &Vetoriais
 <- Remove
 <- Remover
 
-# osd/winui/treeview.c: 530, 550, 1097
+# osd/winui/treeview.c: 530, 550, 1099
 <unknown>
 <desconhecido>
 
@@ -306,7 +306,7 @@ Violação de compartilhamento.
 A&udit
 A&udit
 
-# osd/winui/properties.c: 945 osd/winui/treeview.c: 1364
+# osd/winui/properties.c: 941 osd/winui/treeview.c: 1366
 AD Stick
 AD Stick
 
@@ -354,7 +354,7 @@ Permitir restaurar opções para valores 'são'.
 Allows filtering out games from a folder
 Permitir filtrar jogos de uma pasta
 
-# osd/winui/properties.c: 3586
+# osd/winui/properties.c: 3601
 Anti-clockwise
 Anti-horário
 
@@ -394,15 +394,15 @@ Verificar sets de ROMs e amostas
 Audit complete.\n
 Verificação completa.\n
 
-# osd/winui/properties.c: 399, 430, 472, 2954, 2960
+# osd/winui/properties.c: 393, 424, 466, 2968, 2974
 Auto
 Auto
 
-# osd/winui/properties.c: 3589
+# osd/winui/properties.c: 3604
 Auto anti-clockwise
 Auto anti-horário
 
-# osd/winui/properties.c: 3588
+# osd/winui/properties.c: 3603
 Auto clockwise
 Auto horário
 
@@ -426,7 +426,7 @@ Campos disponíveis:
 BIOS
 BIOS
 
-# osd/winui/properties.c: 1121
+# osd/winui/properties.c: 1129
 BIOS missing
 BIOS está faltando
 
@@ -438,7 +438,7 @@ Backdrops
 Background Images
 Imagens de Fundo
 
-# osd/winui/treeview.c: 1009
+# osd/winui/treeview.c: 1011
 Bad Dump
 Dump Ruim
 
@@ -510,43 +510,43 @@ Botão (6 ou 6)
 Button (S or 7)
 Botão (S ou 7)
 
-# osd/winui/treeview.c: 1378
+# osd/winui/treeview.c: 1380
 Button 1
 Botão 1
 
-# osd/winui/treeview.c: 1387
+# osd/winui/treeview.c: 1389
 Buttons 10
 Botões 10
 
-# osd/winui/treeview.c: 1379
+# osd/winui/treeview.c: 1381
 Buttons 2
 Botões 2
 
-# osd/winui/treeview.c: 1380
+# osd/winui/treeview.c: 1382
 Buttons 3
 Botões 3
 
-# osd/winui/treeview.c: 1381
+# osd/winui/treeview.c: 1383
 Buttons 4
 Botões 4
 
-# osd/winui/treeview.c: 1382
+# osd/winui/treeview.c: 1384
 Buttons 5
 Botões 5
 
-# osd/winui/treeview.c: 1383
+# osd/winui/treeview.c: 1385
 Buttons 6
 Botões 6
 
-# osd/winui/treeview.c: 1384
+# osd/winui/treeview.c: 1386
 Buttons 7
 Botões 7
 
-# osd/winui/treeview.c: 1385
+# osd/winui/treeview.c: 1387
 Buttons 8
 Botões 8
 
-# osd/winui/treeview.c: 1386
+# osd/winui/treeview.c: 1388
 Buttons 9
 Botões 9
 
@@ -590,7 +590,7 @@ Checando jogo -%s - %s
 Checking...
 Checando...
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3600
 Clockwise
 Horário
 
@@ -606,15 +606,15 @@ Clone de:
 Clones
 Clones
 
-# osd/winui/properties.c: 402, 433
+# osd/winui/properties.c: 396, 427
 Cocktail
 Cocktail
 
-# osd/winui/properties.c: 1036, 1083, 1148
+# osd/winui/properties.c: 1032, 1085, 1156
 Colors are completely wrong
 As cores estão completamente erradas
 
-# osd/winui/properties.c: 1042, 1089, 1154
+# osd/winui/properties.c: 1038, 1091, 1162
 Colors aren't 100% accurate
 As cores não são 100% corretas
 
@@ -730,11 +730,11 @@ Customizar opções de interface.
 Customize which columns are used in the game list
 Customizar quais colinas serão usadas na lista de jogos
 
-# osd/winui/properties.c: 3584, 3810, 3839
+# osd/winui/properties.c: 3599, 3825, 3854
 Default
 Padrão
 
-# osd/winui/properties.c: 611
+# osd/winui/properties.c: 605
 Default Game
 Jogo Padrão
 
@@ -758,7 +758,7 @@ Descrição
 Details
 Detalhes
 
-# osd/winui/properties.c: 947 osd/winui/treeview.c: 1366
+# osd/winui/properties.c: 943 osd/winui/treeview.c: 1368
 Dial
 Dial
 
@@ -766,7 +766,7 @@ Dial
 Dial device
 Dispositivo Dial
 
-# osd/winui/properties.c: 363
+# osd/winui/properties.c: 357
 Direct3D
 Direct3D
 
@@ -822,39 +822,39 @@ Mostra ítens numa lista.
 Displays program and copyright information
 Mostra informação do programa e copyrightr
 
-# osd/winui/treeview.c: 1362
+# osd/winui/treeview.c: 1364
 Double Joy 16-Way
 Double Joy 16-Way
-
-# osd/winui/treeview.c: 1359
-Double Joy 2-Way
-Double Joy 2-Way
-
-# osd/winui/treeview.c: 1360
-Double Joy 4-Way
-Double Joy 4-Way
 
 # osd/winui/treeview.c: 1361
+Double Joy 2-Way
+Double Joy 2-Way
+
+# osd/winui/treeview.c: 1362
+Double Joy 4-Way
+Double Joy 4-Way
+
+# osd/winui/treeview.c: 1363
 Double Joy 8-Way
 Double Joy 8-Way
 
-# osd/winui/properties.c: 943
+# osd/winui/properties.c: 939
 Double Joystick 16-Way
 Double Joystick 16-Way
+
+# osd/winui/properties.c: 936
+Double Joystick 2-Way
+Double Joystick 2-Way
 
 # osd/winui/properties.c: 940
-Double Joystick 2-Way
-Double Joystick 2-Way
-
-# osd/winui/properties.c: 944
 Double Joystick 2-Way Vertical
 Double Joystick 2-Way Vertical
 
-# osd/winui/properties.c: 941
+# osd/winui/properties.c: 937
 Double Joystick 4-Way
 Double Joystick 4-Way
 
-# osd/winui/properties.c: 942
+# osd/winui/properties.c: 938
 Double Joystick 8-Way
 Double Joystick 8-Way
 
@@ -862,11 +862,11 @@ Double Joystick 8-Way
 Draw antialiased vectors
 Mostra Vetores antialiased
 
-# osd/winui/properties.c: 3552
+# osd/winui/properties.c: 3567
 Draw every frame
 Mostra cada quadro
 
-# osd/winui/layout.c: 66 osd/winui/winui.c: 933, 7458
+# osd/winui/layout.c: 66 osd/winui/winui.c: 933
 Driver
 Driver
 
@@ -914,11 +914,11 @@ Habilita steadkey
 Enforce aspect ratio
 Força aspecto de vídeo
 
-# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 630, 756, 1987
+# osd/winui/mui_audit.c: 105 osd/winui/properties.c: 624, 750, 2001
 Error
 Erro
 
-# osd/winui/treeview.c: 2638
+# osd/winui/treeview.c: 2640
 Error finding custom file name to save
 Erro tentando encontrar arquivo para salvar
 
@@ -926,11 +926,11 @@ Erro tentando encontrar arquivo para salvar
 Error searching for custom folder
 Erro tentando encontrar pastas customizadas
 
-# osd/winui/treeview.c: 2566
+# osd/winui/treeview.c: 2568
 Error while renaming custom file %s to %s
 Erro ao tentar renomear arquivo %s para %s
 
-# osd/winui/treeview.c: 2710
+# osd/winui/treeview.c: 2712
 Error while saving custom file %s
 Error tentando salvar arquivo %s
 
@@ -1018,11 +1018,11 @@ Filtros de jogo
 Game filters allow customizing the games that are displayed in each folder by hiding games that match the filters applied.
 Os filtros permitem customizar quais jogos que são mostrados em cada pasta, escondendo jogos que se igualam aos filtros aplicados.
 
-# osd/winui/properties.c: 1054, 1101, 1166
+# osd/winui/properties.c: 1050, 1103, 1174
 Game lacks sound
 O jogo não tem som
 
-# osd/winui/properties.c: 1030, 1077, 1142
+# osd/winui/properties.c: 1026, 1079, 1150
 Game protection isn't fully emulated
 Proteção do jogo não está totalmente emulada
 
@@ -1038,15 +1038,15 @@ Correção Gamma
 General
 Geral
 
-# osd/winui/properties.c: 1210
+# osd/winui/properties.c: 1224
 Global driver options\nCustom options used by all games in the %s
 Opções globais de driver\nOpções customizadas usadas por todos os jogos em %s
 
-# osd/winui/properties.c: 1201
+# osd/winui/properties.c: 1215
 Global game options\nDefault options used by all games
 Opções de jogo globais\nOpções padrão usadas por todos os jogos
 
-# osd/winui/properties.c: 1204
+# osd/winui/properties.c: 1218
 Global vector options\nCustom options used by all games in the Vector
 Opções globais vetoriais\nOpções customizadas usadas por todos os jogos no Vetor
 
@@ -1086,7 +1086,7 @@ Histórico
 Homebrew
 Caseiro
 
-# osd/winui/layout.c: 61 osd/winui/treeview.c: 1117 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 61 osd/winui/treeview.c: 1119 osd/winui/winui.c: 5740
 Horizontal
 Horizontal
 
@@ -1114,15 +1114,15 @@ Realce de Imagem
 Imperfect
 Imperfeito
 
-# osd/winui/treeview.c: 960
+# osd/winui/treeview.c: 961
 Imperfect Colors
 Cores Imperfeitas
 
-# osd/winui/treeview.c: 961
+# osd/winui/treeview.c: 962
 Imperfect Graphics
 Gráficos Imperfeitos
 
-# osd/winui/treeview.c: 963
+# osd/winui/treeview.c: 964
 Imperfect Sound
 Som Imperfeito
 
@@ -1150,43 +1150,43 @@ Inserir
 Interface Options
 Opções de Interface
 
-# osd/winui/treeview.c: 1357
+# osd/winui/treeview.c: 1359
 Joy 16-Way
 Joy 16-Way
-
-# osd/winui/treeview.c: 1354
-Joy 2-Way
-Joy 2-Way
-
-# osd/winui/treeview.c: 1355
-Joy 4-Way
-Joy 4-Way
 
 # osd/winui/treeview.c: 1356
+Joy 2-Way
+Joy 2-Way
+
+# osd/winui/treeview.c: 1357
+Joy 4-Way
+Joy 4-Way
+
+# osd/winui/treeview.c: 1358
 Joy 8-Way
 Joy 8-Way
 
-# osd/winui/properties.c: 417
+# osd/winui/properties.c: 411
 Joystick
 Joystick
 
-# osd/winui/properties.c: 938
+# osd/winui/properties.c: 934
 Joystick 16-Way
 Joystick 16-Way
+
+# osd/winui/properties.c: 931
+Joystick 2-Way
+Joystick 2-Way
 
 # osd/winui/properties.c: 935
-Joystick 2-Way
-Joystick 2-Way
-
-# osd/winui/properties.c: 939
 Joystick 2-Way Vertical
 Joystick 2-Way Vertical
 
-# osd/winui/properties.c: 936
+# osd/winui/properties.c: 932
 Joystick 4-Way
 Joystick 4-Way
 
-# osd/winui/properties.c: 937
+# osd/winui/properties.c: 933
 Joystick 8-Way
 Joystick 8-Way
 
@@ -1198,7 +1198,7 @@ Zona-morta do joystick
 Joystick saturation
 Saturação do joystick
 
-# osd/winui/properties.c: 415
+# osd/winui/properties.c: 409
 Keyboard
 Teclado
 
@@ -1210,7 +1210,7 @@ L&arge Icons
 Large Icons
 Ícones Grandes
 
-# osd/winui/layout.c: 82 osd/winui/properties.c: 418, 949 osd/winui/treeview.c: 1368
+# osd/winui/layout.c: 82 osd/winui/properties.c: 412, 945 osd/winui/treeview.c: 1370
 Lightgun
 Lightgun
 
@@ -1270,11 +1270,11 @@ Memory Card
 Miscellaneous
 Misto
 
-# osd/winui/treeview.c: 962
+# osd/winui/treeview.c: 963
 Missing Sound
 Faltando Som
 
-# osd/winui/properties.c: 416
+# osd/winui/properties.c: 410
 Mouse
 Mouse
 
@@ -1306,11 +1306,11 @@ Novas mudanças do jogo
 No
 Não
 
-# osd/winui/treeview.c: 964
+# osd/winui/treeview.c: 965
 No Cocktail
 Sem Cocktail
 
-# osd/winui/treeview.c: 1011
+# osd/winui/treeview.c: 1013
 No Dump
 Sem Dump
 
@@ -1330,7 +1330,7 @@ Sem offset para clones sem master na visualização
 Non-Wor&king
 Não-Fun&cionando
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 360, 414, 2824, 3587, 3668, 3797, 3806, 3835
+# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3602, 3683, 3812, 3821, 3850
 None
 Nenhum
 
@@ -1346,7 +1346,7 @@ Não funcionando
 Not found
 Não encontrado
 
-# osd/winui/properties.c: 1024, 1132
+# osd/winui/properties.c: 1020, 1140
 Not working
 Não funcionando
 
@@ -1398,7 +1398,7 @@ Informação de PCB
 PCB Info Files
 Arquivos de Informação de PCB
 
-# osd/winui/properties.c: 946 osd/winui/treeview.c: 1365
+# osd/winui/properties.c: 942 osd/winui/treeview.c: 1367
 Paddle
 Paddle
 
@@ -1418,7 +1418,7 @@ Passou
 Pause Brightness
 Brilho em Pausa
 
-# osd/winui/properties.c: 950 osd/winui/treeview.c: 1369
+# osd/winui/properties.c: 946 osd/winui/treeview.c: 1371
 Pedal
 Pedal
 
@@ -1430,7 +1430,7 @@ Dispositivo de Pedal
 Physical monitor:
 Monitor Físico:
 
-# osd/winui/properties.c: 401, 432
+# osd/winui/properties.c: 395, 426
 Pixel Aspect
 Aspecto de Pixel
 
@@ -1466,35 +1466,35 @@ Ver um jogo gravado
 Played
 Jogado
 
-# osd/winui/treeview.c: 1370
+# osd/winui/treeview.c: 1372
 Player 1
 Jogador 1
 
-# osd/winui/treeview.c: 1371
+# osd/winui/treeview.c: 1373
 Players 2
 Jogadores 2
 
-# osd/winui/treeview.c: 1372
+# osd/winui/treeview.c: 1374
 Players 3
 Jogadores 3
 
-# osd/winui/treeview.c: 1373
+# osd/winui/treeview.c: 1375
 Players 4
 Jogadores 4
 
-# osd/winui/treeview.c: 1374
+# osd/winui/treeview.c: 1376
 Players 5
 Jogadores 5
 
-# osd/winui/treeview.c: 1375
+# osd/winui/treeview.c: 1377
 Players 6
 Jogadores 6
 
-# osd/winui/treeview.c: 1376
+# osd/winui/treeview.c: 1378
 Players 7
 Jogadores 7
 
-# osd/winui/treeview.c: 1377
+# osd/winui/treeview.c: 1379
 Players 8
 Jogadores 8
 
@@ -1506,15 +1506,15 @@ Dispositivo posicional
 Pr&operties
 Pr&opriedades
 
-# osd/winui/winui.c: 3928, 7413, 7458
+# osd/winui/winui.c: 3928, 7413
 Propert&ies for %s
 Propridades para %s
 
-# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873
+# osd/winui/mameui.rc: 68, 219 osd/winui/winui.c: 3873, 7458
 Propert&ies for Driver
 Propriedades do Driver
 
-# osd/winui/properties.c: 629, 755
+# osd/winui/properties.c: 623, 749
 Propery Sheet Error %d %X
 Erro no Ítem %d %X
 
@@ -1538,7 +1538,7 @@ Checagem de ROM:
 ROMs
 ROMs
 
-# osd/winui/properties.c: 1123
+# osd/winui/properties.c: 1131
 ROMs missing
 ROMs fantando
 
@@ -1658,7 +1658,7 @@ Tela
 Screen flip support is missing
 Suporte de inversão de tela não disponível
 
-# osd/winui/properties.c: 1066, 1113, 1178
+# osd/winui/properties.c: 1062, 1115, 1186
 Screen flipping is not supported
 Inversão de tela não suportado
 
@@ -1762,43 +1762,43 @@ Mostra ou esconde a toolbar
 Show these fields in this order:
 Mostrar esses campos nesta ordem:
 
-# osd/winui/properties.c: 3554
+# osd/winui/properties.c: 3569
 Skip 1 of 10 frames
 Pular 1 de 10 quadros
 
-# osd/winui/properties.c: 3572
+# osd/winui/properties.c: 3587
 Skip 10 of 10 frames
 Pular 10 de 10 quadros
 
-# osd/winui/properties.c: 3556
+# osd/winui/properties.c: 3571
 Skip 2 of 10 frames
 Pular 2 de 10 quadros
 
-# osd/winui/properties.c: 3558
+# osd/winui/properties.c: 3573
 Skip 3 of 10 frames
 Pular 3 de 10 quadros
 
-# osd/winui/properties.c: 3560
+# osd/winui/properties.c: 3575
 Skip 4 of 10 frames
 Pular 4 de 10 quadros
 
-# osd/winui/properties.c: 3562
+# osd/winui/properties.c: 3577
 Skip 5 of 10 frames
 Pular 5 de 10 quadros
 
-# osd/winui/properties.c: 3564
+# osd/winui/properties.c: 3579
 Skip 6 of 10 frames
 Pular 6 de 10 quadros
 
-# osd/winui/properties.c: 3566
+# osd/winui/properties.c: 3581
 Skip 7 of 10 frames
 Pular 7 de 10 quadros
 
-# osd/winui/properties.c: 3568
+# osd/winui/properties.c: 3583
 Skip 8 of 10 frames
 Pular 8 de 10 quadros
 
-# osd/winui/properties.c: 3570
+# osd/winui/properties.c: 3585
 Skip 9 of 10 frames
 Pular 9 de 10 quadros
 
@@ -1866,7 +1866,7 @@ Ordenar ítens por ano
 Sound
 Som
 
-# osd/winui/properties.c: 1060, 1107, 1172
+# osd/winui/properties.c: 1056, 1109, 1180
 Sound emulation isn't 100% accurate
 A emulação do som não é 100% correta
 
@@ -1878,7 +1878,7 @@ Som:
 St&ory
 St&ory
 
-# osd/winui/properties.c: 400, 431
+# osd/winui/properties.c: 394, 425
 Standard
 Padrão
 
@@ -1902,7 +1902,7 @@ Estéreo
 Story
 Story
 
-# osd/winui/properties.c: 989 osd/winui/treeview.c: 1317
+# osd/winui/properties.c: 985 osd/winui/treeview.c: 1319
 Supported
 Suportado
 
@@ -1962,7 +1962,7 @@ Liga/Desliga Screen Shot
 Total:
 Total:
 
-# osd/winui/layout.c: 81 osd/winui/properties.c: 948 osd/winui/treeview.c: 1367 osd/winui/winui.c: 928
+# osd/winui/layout.c: 81 osd/winui/properties.c: 944 osd/winui/treeview.c: 1369 osd/winui/winui.c: 928
 Trackball
 Trackball
 
@@ -2046,11 +2046,11 @@ Tipo
 Unable to Load Riched32.dll
 Falha ao carregar Riched32.dll
 
-# osd/winui/treeview.c: 2577
+# osd/winui/treeview.c: 2579
 Unable to add game to non-custom folder
 Falha ao adicionar jogo à pasta não-customizada
 
-# osd/winui/treeview.c: 2594
+# osd/winui/treeview.c: 2596
 Unable to remove game from non-custom folder
 Falha ao remover jogo da pasta não-customizada
 
@@ -2058,11 +2058,11 @@ Falha ao remover jogo da pasta não-customizada
 Unavailable
 Não Disponível
 
-# osd/winui/treeview.c: 958
+# osd/winui/treeview.c: 959
 Unemulated Protection
 Proteção Não Emulada
 
-# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 964, 1018 
+# osd/winui/mui_audit.c: 536 osd/winui/properties.c: 960, 1014 
 Unknown
 Desconhecido
 
@@ -2070,7 +2070,7 @@ Desconhecido
 Unknown error.
 Erro desconhecido.
 
-# osd/winui/properties.c: 991 osd/winui/treeview.c: 1319
+# osd/winui/properties.c: 987 osd/winui/treeview.c: 1321
 Unsupported
 Não suportado
 
@@ -2098,27 +2098,27 @@ Usar auto ajuste de volume
 Vector
 Vetorial
 
-# osd/winui/treeview.c: 1196
+# osd/winui/treeview.c: 1198
 Vector (H)
 Vetorial (H)
 
-# osd/winui/properties.c: 887
+# osd/winui/properties.c: 883
 Vector (H) %f Hz (%d colors)
 Vetorial (H) %f Hz (%d cores)
 
-# osd/winui/treeview.c: 1194
+# osd/winui/treeview.c: 1196
 Vector (V)
 Vetorial (V)
 
-# osd/winui/properties.c: 882
+# osd/winui/properties.c: 878
 Vector (V) %f Hz (%d colors)
 Vetorial (V) %f Hz (%d cores)
 
-# osd/winui/layout.c: 62 osd/winui/treeview.c: 1114 osd/winui/winui.c: 5740
+# osd/winui/layout.c: 62 osd/winui/treeview.c: 1116 osd/winui/winui.c: 5740
 Vertical
 Vertical
 
-# osd/winui/properties.c: 1048, 1095, 1160
+# osd/winui/properties.c: 1044, 1097, 1168
 Video emulation isn't 100% accurate
 A emulação do vídeo não é 100% correta
 
@@ -2150,11 +2150,11 @@ Espera pela sincronia vertical
 What's new in MAME
 O que há de novo no MAME
 
-# osd/winui/layout.c: 74 osd/winui/properties.c: 1071, 1136
+# osd/winui/layout.c: 74 osd/winui/properties.c: 1073, 1144
 Working
 Funcionando
 
-# osd/winui/treeview.c: 959
+# osd/winui/treeview.c: 960
 Wrong Colors
 Cores Erradas
 
@@ -2234,7 +2234,7 @@ Additional MAMEUI code by
 All Games
 
 
-# osd/winui/properties.c: 385
+# osd/winui/properties.c: 379
 All screens
 
 
@@ -2318,7 +2318,7 @@ Debugscript
 Decrypted
 
 
-# osd/winui/properties.c: 721
+# osd/winui/properties.c: 715
 Default Settings
 
 
@@ -2342,7 +2342,7 @@ Display the properties of the selected item
 Displays items grouped by parent game
 
 
-# osd/winui/treeview.c: 1363
+# osd/winui/treeview.c: 1365
 Double Joy 2-Way (V)
 
 
@@ -2394,7 +2394,7 @@ Enable the story tab
 Enable the title tab
 
 
-# osd/winui/properties.c: 386
+# osd/winui/properties.c: 380
 First screen
 
 
@@ -2402,12 +2402,16 @@ First screen
 Font Files
 
 
-# osd/winui/properties.c: 389
+# osd/winui/properties.c: 383
 Fourth screen
 
 
 # osd/winui/winui.c: 7448
 Game
+
+
+# osd/winui/properties.c: 1068, 1121, 1192
+Game requires external artwork files
 
 
 # osd/winui/dialogs.c: 264
@@ -2434,7 +2438,7 @@ Gamename/Increment
 Gameplay speed
 
 
-# osd/winui/properties.c: 1222
+# osd/winui/properties.c: 1236
 Global BIOS options\nCustom options used by all games in the %s
 
 
@@ -2454,7 +2458,7 @@ Image Files (*.png)
 Individual game options\n
 
 
-# osd/winui/properties.c: 429
+# osd/winui/properties.c: 423
 Internal
 
 
@@ -2462,7 +2466,7 @@ Internal
 John Hardy IV and Michael Soderstrom
 
 
-# osd/winui/treeview.c: 1358
+# osd/winui/treeview.c: 1360
 Joy 2-Way (V)
 
 
@@ -2566,6 +2570,10 @@ Remove selected item from this folder
 Rename this folder
 
 
+# osd/winui/treeview.c: 966
+Requires Artwork
+
+
 # osd/winui/mameui.rc: 829
 Reset Debugscript
 
@@ -2590,7 +2598,7 @@ Resetting the User Interface options\n
 Screen flipping in cocktail mode is not supported.\n
 
 
-# osd/winui/properties.c: 387
+# osd/winui/properties.c: 381
 Second screen
 
 
@@ -2750,6 +2758,10 @@ The game has protection which isn't fully emulated.\n
 The game lacks sound.\n
 
 
+# osd/winui/datafile.c: 1085
+The game requires external artwork files\n
+
+
 # osd/winui/datafile.c: 1079
 The sound emulation isn't 100% accurate.\n
 
@@ -2758,7 +2770,7 @@ The sound emulation isn't 100% accurate.\n
 The video emulation isn't 100% accurate.\n
 
 
-# osd/winui/properties.c: 388
+# osd/winui/properties.c: 382
 Third screen
 
 
@@ -2782,15 +2794,15 @@ Update Main window during paused emulation
 User interface settings\n\n
 
 
-# osd/winui/properties.c: 374
+# osd/winui/properties.c: 368
 Version 8
 
 
-# osd/winui/properties.c: 373
+# osd/winui/properties.c: 367
 Version 9
 
 
-# osd/winui/datafile.c: 1137
+# osd/winui/datafile.c: 1140
 \nDRIVER: %s\n
 
 
@@ -2798,7 +2810,7 @@ Version 9
 \nDo you wish to continue?
 
 
-# osd/winui/datafile.c: 1099, 1113
+# osd/winui/datafile.c: 1102, 1116
 \nORIGINAL:\n
 
 
@@ -2806,7 +2818,7 @@ Version 9
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1101, 1115
+# osd/winui/datafile.c: 1104, 1118
 \n\nCLONES:\n
 
 

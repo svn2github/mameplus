@@ -1051,7 +1051,7 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 	/* List the game info 'flags' */
 	if (drv->flags &
 	    ( GAME_NOT_WORKING | GAME_UNEMULATED_PROTECTION | GAME_IMPERFECT_GRAPHICS | GAME_WRONG_COLORS |
-	      GAME_IMPERFECT_COLORS | GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL))
+	      GAME_IMPERFECT_COLORS | GAME_NO_SOUND | GAME_IMPERFECT_SOUND | GAME_NO_COCKTAIL | GAME_REQUIRES_ARTWORK))
 	{
 		strcat(buffer, _("GAME: "));
 		strcat(buffer, _LST(drv->description));
@@ -1080,6 +1080,9 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 
 		if (drv->flags & GAME_NO_COCKTAIL)
 			strcat(buffer, _("Screen flipping in cocktail mode is not supported.\n"));
+
+		if (drv->flags & GAME_REQUIRES_ARTWORK)
+			strcat(buffer, _("The game requires external artwork files\n"));
 
 		strcat(buffer, "\n");
 	}	

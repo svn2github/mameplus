@@ -949,6 +949,7 @@ void CreateDeficiencyFolders(int parent_index)
 		GAME_NO_SOUND,
 		GAME_IMPERFECT_SOUND,
 		GAME_NO_COCKTAIL,
+		GAME_REQUIRES_ARTWORK,
 	};
 
 #define NUM_FLAGS	ARRAY_LENGTH(deficiency_flags)
@@ -961,7 +962,8 @@ void CreateDeficiencyFolders(int parent_index)
 		TEXT("Imperfect Graphics"),
 		TEXT("Missing Sound"),
 		TEXT("Imperfect Sound"),
-		TEXT("No Cocktail")
+		TEXT("No Cocktail"),
+		TEXT("Requires Artwork"),
 	};
 
 	int i, j;

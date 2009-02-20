@@ -286,7 +286,7 @@ LPWSTR MyStrStrI(LPCWSTR pFirst, LPCWSTR pSrch)
 
 char * ConvertToWindowsNewlines(const char *source)
 {
-	static char buf[100 * 1024];
+	static char buf[1024 * 1024];
 	char *dest;
 
 	dest = buf;
@@ -508,6 +508,11 @@ static void UpdateController(void)
 int numberOfSpeakers(const machine_config *config)
 {
 	int speakers = speaker_output_count(config);
+
+	/* if we have no sound, zero out the speaker count */
+	if (sound_first(config) == NULL)
+		speakers = 0;
+
 	return speakers;
 }
 
@@ -516,6 +521,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 	if (drivers_info == NULL)
 	{
 		int ndriver;
+		const device_config *device;
 		drivers_info = malloc(sizeof(struct DriversInfo) * GetNumGames());
 		for (ndriver = 0; ndriver < GetNumGames(); ndriver++)
 		{
@@ -576,29 +582,20 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 				}
 			}
 			gameinfo->usesSamples = FALSE;
-			
-			if (HAS_SAMPLES || HAS_VLM5030)
-			{
-				const device_config *sound;
-				const char * const * samplenames = NULL;
-
-				for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
-				{
-
-					{
 #if (HAS_SAMPLES)
-						if( sound_get_type(sound) == SOUND_SAMPLES )
-							samplenames = ((const samples_interface *)sound->static_config)->samplenames;
-#endif
+			for (device = sound_first(config); device != NULL; device = sound_next(device))
+			{
+				if (sound_get_type(device) == SOUND_SAMPLES)
+				{
+					const char *const *samplenames = ((const samples_interface *)device->static_config)->samplenames;
+					if (samplenames != 0 && samplenames[0] != 0)
+					{
+						gameinfo->usesSamples = TRUE;
+						break;
 					}
 				}
-
-				if (samplenames != 0 && samplenames[0] != 0)
-				{
-					gameinfo->usesSamples = TRUE;
-					break;
-				}			
 			}
+#endif
 
 			gameinfo->numPlayers = 0;
 			gameinfo->numButtons = 0;

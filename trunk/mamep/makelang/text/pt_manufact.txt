@@ -602,7 +602,7 @@ Eastern Micro Electronics, Inc.
 Ed
 Ed
 
-# Battle Bakraid (Japan) (Wed Apr 7 1999)
+# Battle Bakraid - Unlimited Version (U.S.A.) (Tue Jun 8 1999)
 Eighting
 Eighting
 
@@ -1229,10 +1229,6 @@ Microhard
 # Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
 Micronet
 Micronet
-
-# F-15 Strike Eagle (rev. 2.2 02/25/91)
-Microprose
-Microprose
 
 # Toffy
 Midas
@@ -2398,11 +2394,15 @@ ABM Electronics
 AMT
 
 
+# Cabaret
+AMT Co. Ltd.
+
+
 # Flower (Sega/Alpha)
 Alpha
 
 
-# Skill Cherry '98
+# Skill '98 (ver. s98-1.33)
 Amcoe
 
 
@@ -2420,6 +2420,10 @@ Astro Corp.
 
 # Galaxi (v2.0)
 B.R.L.
+
+
+# American Poker II (iamp2 v28)
+Bootleg?
 
 
 # Cal Omega - Game 7.6 (Arcade Poker)
@@ -2482,6 +2486,10 @@ Evona
 Fortex LTD
 
 
+# Super Othello
+Fujiwara
+
+
 # Big Deal (hungarian, set 1)
 Funworld
 
@@ -2494,7 +2502,11 @@ G.G.I
 HJ Corp
 
 
-# Tour 4000
+# Himeshikibu (Japan)
+Hi-Soft
+
+
+# New Magic Card
 High Video
 
 
@@ -2522,16 +2534,16 @@ M.P.
 Marian Electronics Ltd.
 
 
+# F-15 Strike Eagle (rev. 2.2 02/25/91)
+Microprose Games Inc.
+
+
 # Paranoia
 Naxat Soft
 
 
 # La Perla Nera (Ver 2.0)
 Nazionale Elettronica
-
-
-# New Magic Card
-New High Video?
 
 
 # Super Gran Safari (ver 3.11)
@@ -2544,6 +2556,14 @@ Nihon Bussan
 
 # PC Engine
 Nippon Electronic Company
+
+
+# Noraut Poker
+Noraut Ltd.
+
+
+# Number Dieci (Poker)
+PlayMark Srl
 
 
 # M-79 Ambush
@@ -2572,6 +2592,10 @@ Samsung
 
 # Snooker 10 (Ver 1.11)
 Sandii'
+
+
+# Pachi Fever
+Sanki Denshi Kogyo
 
 
 # Multi Game III
@@ -2644,6 +2668,10 @@ Video Klein
 
 # MegaDuck/Cougar Boy
 Videojet/Timlex/Cougar
+
+
+# Honey Money
+Vivid
 
 
 # Jack Potten's Poker (set 2)
