@@ -36,8 +36,8 @@ const game_driver *const consoledrivers[] =
 
 /****************CONSOLES****************************************************/
 
-#ifdef MAMEMESS
 
+#ifdef MAMEMESS
 	/* ATARI */
 	DRIVER( a2600 )		/* Atari 2600										*/
 	DRIVER( a2600p )	/* Atari 2600 PAL									*/
@@ -87,12 +87,14 @@ const game_driver *const consoledrivers[] =
 	DRIVER( sgx )		/* SuperGrafX NEC 1989								*/
 
 	/* CAPCOM */
+	DRIVER( sfach )		/* CPS Changer (Street Fighter Alpha)				*/
+	DRIVER( sfzbch )	/* CPS Changer (Street Fighter ZERO Brazil)				*/
 	DRIVER( sfzch )		/* CPS Changer (Street Fighter ZERO)				*/
+	DRIVER( wofch )		/* CPS Changer (Tenchi Wo Kurau II)				*/
 
 	/* BANDAI */
 	DRIVER( wswan )		/* Bandai WonderSwan Handheld						*/
 	DRIVER( wscolor )	/* Bandai WonderSwan Color Handheld					*/
-
 #endif /* MAMEMESS */
 
 
