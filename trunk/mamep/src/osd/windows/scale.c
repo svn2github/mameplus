@@ -4,18 +4,21 @@
 //
 //============================================================
 
-
+#include <windows.h>
 // MAME headers
 #include "driver.h"
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
+#include "scale/snes9x_render.h"
 
 // defines
 enum
 {
 	SCALE_EFFECT_NONE = 0,
 	SCALE_EFFECT_SCANLINESTV,
+	SCALE_EFFECT_EPXB,
+	SCALE_EFFECT_EPXC,
 	SCALE_EFFECT_SCALE2X,
 //	SCALE_EFFECT_SUPERSCALE,
 	SCALE_EFFECT_SUPERSCALE75,
@@ -27,8 +30,10 @@ enum
 	SCALE_EFFECT_2XPM,
 	SCALE_EFFECT_HQ2X,
 	SCALE_EFFECT_HQ2XS,
+	SCALE_EFFECT_HQ2XBOLD,
 	SCALE_EFFECT_HQ3X,
-//	SCALE_EFFECT_HQ3XS,
+	SCALE_EFFECT_HQ3XS,
+	SCALE_EFFECT_HQ3XBOLD,
 	SCALE_EFFECT_LAST
 };
 
@@ -71,6 +76,8 @@ static const char *str_name[] =
 {
 	"none",
 	"scanlinestv",
+	"epxb",
+	"epxc",
 	"scale2x",
 //	"superscale",
 	"superscale75",
@@ -82,8 +89,10 @@ static const char *str_name[] =
 	"2xpm",
 	"hq2x",
 	"hq2xs",
+	"hq2xbold",
 	"hq3x",
-//	"hq3xs",
+	"hq3xs",
+	"hq3xbold",
 	NULL
 };
 
@@ -91,6 +100,8 @@ static const char *str_desc[] =
 {
 	"None",
 	"Scanlines TV",
+	"EPX-B",
+	"EPX-C",
 	"Scale2x",           // by AdvMAME v2.2
 //	"SuperScale",        // by ElSemi, same as Scale2x
 	"SuperScale w/ Scanlines", // by ElSemi
@@ -102,8 +113,10 @@ static const char *str_desc[] =
 	"2xPM",              // by Pablo Medina v0.2
 	"HQ2x",             //
 	"HQ2xS",             //
+	"HQ2xBold",
 	"HQ3x",      // by Maxim Stepin
-//	"HQ3xS",
+	"HQ3xS",
+	"HQ3xBold",
 	NULL
 };
 
@@ -112,8 +125,6 @@ static const char *str_desc[] =
 //============================================================
 //	prototypes
 //============================================================
-
-static void scale_allocate_local_buffer(int width, int height, int bank);
 
 #ifndef PTR64
 // functions from scale2x
@@ -134,15 +145,6 @@ static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int d
 // functions from eagle
 void _eagle_mmx16(unsigned long *lb, unsigned long *lb2, short width,	unsigned long *screen_address1, unsigned long *screen_address2);
 static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-
-// functions from 2xsaimmx.asm
-void  _2xSaISuperEagleLine(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
-void  _2xSaILine(UINT8* srcPtr, UINT8* deltaPtr, UINT32 srcPitch, UINT32 width, UINT8* dstPtr, UINT32 dstPitch, UINT16 dstBlah);
-void  _2xSaISuper2xSaILine(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
-void  Init_2xSaIMMX(UINT32 BitFormat);
-
-static void (*scale_2xsai_line)(UINT8 *srcPtr, UINT8 *deltaPtr, UINT32 srcPitch, UINT32 width, UINT8 *dstPtr, UINT32 dstPitch, UINT16 dstBlah);
-static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 #endif /* PTR64 */
 
 // functions from AdvMAME
@@ -160,16 +162,28 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
 // functions from vba-rerecording
+int Init_2xSaI(UINT32 BitFormat, int);
+void _2xSaI (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+void _2xSaI32 (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+void Super2xSaI (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+void Super2xSaI32 (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+void SuperEagle (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+void SuperEagle32 (UINT8 *srcPtr, UINT32 srcPitch, UINT8 *deltaPtr, UINT8 *dstPtr, UINT32 dstPitch, int width, int height);
+
 void hqxx_init(unsigned bits_per_pixel);
 void hq2xS(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned int, int, int);
 void hq2xS32(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned int, int, int);
 //void hq3xS(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned int, int, int);
 //void hq3xS32(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned int, int, int);
+
 void ScanlinesTV(unsigned char*, unsigned int, unsigned char*, unsigned char*, unsigned int, int, int);
 
 // functions from SNES9x
-//void InitLUTs(void);
-//void RenderHQ2X(unsigned char*, unsigned int, unsigned char*, unsigned int, int, int, int);
+void InitLUTs(void);
+void RenderEPXB(unsigned char *src, unsigned int srcpitch, unsigned char *dst, unsigned int dstpitch, int nWidth, int nHeight);
+void RenderEPXC(unsigned char *src, unsigned int srcpitch, unsigned char *dst, unsigned int dstpitch, int nWidth, int nHeight);
+void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, unsigned int dstpitch, int nWidth, int nHeight, int GuiScale);
+void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, unsigned int dstpitch, int nWidth, int nHeight, int GuiScale);
 
 // functions from Kega Fusion
 void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth);
@@ -358,24 +372,36 @@ int scale_init(void)
 		{
 			break;
 		}
+
 		case SCALE_EFFECT_SCANLINESTV:
 		{
 			sprintf(name, "Scanlines TV");
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
+
+		case SCALE_EFFECT_EPXB:
+		case SCALE_EFFECT_EPXC:
+		{
+			sprintf(name, "EPX");
+			scale_effect.xsize = scale_effect.ysize = 2;
+			break;
+		}
+
 		case SCALE_EFFECT_SCALE2X:
 		{
 			sprintf(name, "Scale2x (%s)", use_mmx ? "mmx optimised" : "non-mmx version");
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
+
 		case SCALE_EFFECT_SCALE3X:
 		{
 			sprintf(name, "Scale3x (non-mmx version)");
 			scale_effect.xsize = scale_effect.ysize = 3;
 			break;
 		}
+
 #ifndef PTR64
 		case SCALE_EFFECT_EAGLE:
 		{
@@ -410,34 +436,23 @@ int scale_init(void)
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
+#endif /* PTR64 */
 
 		case SCALE_EFFECT_2XSAI:
 		case SCALE_EFFECT_SUPER2XSAI:
 		case SCALE_EFFECT_SUPEREAGLE:
 		{
 			if (scale_effect.effect == SCALE_EFFECT_2XSAI)
-			{
-				sprintf(name, "2xSaI (mmx optimised)");
-				scale_2xsai_line = _2xSaILine;
-			}
+				sprintf(name, "2xSaI");
 			else if (scale_effect.effect == SCALE_EFFECT_SUPER2XSAI)
-			{
-				sprintf(name, "Super 2xSaI (mmx optimised)");
-				scale_2xsai_line = _2xSaISuper2xSaILine;
-			}
-			else
-			{
-				sprintf(name, "Super Eagle (mmx optimised)");
-				scale_2xsai_line = _2xSaISuperEagleLine;
-			}
-
-			if (!use_mmx)
-				return 1;
+				sprintf(name, "Super 2xSaI");
+			else if (scale_effect.effect == SCALE_EFFECT_SUPEREAGLE)
+				sprintf(name, "Super Eagle");
 
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
-#endif /* PTR64 */
+
 		case SCALE_EFFECT_2XPM:
 		{
 			sprintf(name, "2xPM");
@@ -447,17 +462,17 @@ int scale_init(void)
 
 		case SCALE_EFFECT_HQ2X:
 		case SCALE_EFFECT_HQ2XS:
+		case SCALE_EFFECT_HQ2XBOLD:
 		{
-//			InitLUTs();
 			sprintf(name, "HQ2x");
 			scale_effect.xsize = scale_effect.ysize = 2;
 			break;
 		}
 
 		case SCALE_EFFECT_HQ3X:
-//		case SCALE_EFFECT_HQ3XS:
+		case SCALE_EFFECT_HQ3XS:
+		case SCALE_EFFECT_HQ3XBOLD:
 		{
-//			hqxx_init(32);
 			sprintf(name, "HQ3x");
 			scale_effect.xsize = scale_effect.ysize = 3;
 			break;
@@ -495,25 +510,55 @@ int scale_check(int depth)
 //		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
 		case SCALE_EFFECT_EAGLE:
-		case SCALE_EFFECT_2XSAI:
-		case SCALE_EFFECT_SUPER2XSAI:
-		case SCALE_EFFECT_SUPEREAGLE:
 			if (use_mmx && (depth == 15 || depth == 16))
 				return 0;
 			else
 				return 1;
 
+		case SCALE_EFFECT_HQ2XBOLD:
+			InitLUTs();
+			if (depth == 15)
+				return 0;
+			else
+				return 1;
+
+		case SCALE_EFFECT_HQ3XS:
+		case SCALE_EFFECT_HQ3XBOLD:
+			hqxx_init(32);
+			if (depth == 15)
+				return 0;
+			else
+				return 1;
+
 		case SCALE_EFFECT_SCANLINESTV://fixme for 32
+		case SCALE_EFFECT_EPXB:
+		case SCALE_EFFECT_EPXC:
 		case SCALE_EFFECT_2XPM:
 			if (depth == 15)
 				return 0;
 			else
 				return 1;
 
+		case SCALE_EFFECT_2XSAI:
+		case SCALE_EFFECT_SUPER2XSAI:
+		case SCALE_EFFECT_SUPEREAGLE:
+			Init_2xSaI(555, (depth == 15) ? 16 : 32);
+			if (depth == 15 || depth == 32)
+				return 0;
+			else
+				return 1;
+
+		case SCALE_EFFECT_HQ2XS://fixme: 15 bit
+			if (depth == 32)
+			{
+				hqxx_init(32);
+				return 0;
+			}
+			else
+				return 1;
+
 		case SCALE_EFFECT_HQ2X:
-		case SCALE_EFFECT_HQ2XS:
 		case SCALE_EFFECT_HQ3X:
-//		case SCALE_EFFECT_HQ3XS:
 			if (depth == 15 || depth == 32)
 				return 0;
 			else
@@ -541,6 +586,14 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			ScanlinesTV((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
 			return 0;
 
+		case SCALE_EFFECT_EPXC:
+			RenderEPXC((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			return 0;		
+
+		case SCALE_EFFECT_EPXB:
+			RenderEPXB((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			return 0;
+
 #ifndef PTR64
 		case SCALE_EFFECT_SCALE2X:
 			return scale_perform_scale2x(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
@@ -556,14 +609,28 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 
 		case SCALE_EFFECT_EAGLE:
 			return scale_perform_eagle(src, dst, src_pitch, dst_pitch, width, height, depth);
+#endif /* PTR64 */
 
 		case SCALE_EFFECT_2XSAI:
+			if (depth == 15)
+				_2xSaI((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			else
+				_2xSaI32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			return 0;
+
 		case SCALE_EFFECT_SUPER2XSAI:
+			if (depth == 15)
+				Super2xSaI((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			else
+				Super2xSaI32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			return 0;
+
 		case SCALE_EFFECT_SUPEREAGLE:
-			if (update)
-				scale_allocate_local_buffer(src_pitch, height, bank);
-			return scale_perform_2xsai(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
-#endif /* PTR64 */
+			if (depth == 15)
+				SuperEagle((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			else
+				SuperEagle32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			return 0;
 
 		case SCALE_EFFECT_2XPM:
 			if (depth != 15)
@@ -579,12 +646,21 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			hq2xS32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
 			return 0;
 
+		case SCALE_EFFECT_HQ2XBOLD:
+			RenderHQ2X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 0);
+			return 0;
+
 		case SCALE_EFFECT_HQ3X:
 			return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
 
-//		case SCALE_EFFECT_HQ3XS:
+		case SCALE_EFFECT_HQ3XS:
 //			hq3xS32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
-//			return 0;
+			RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch,(unsigned char*)dst, (unsigned int)dst_pitch, width, height, 1);
+			return 0;
+
+		case SCALE_EFFECT_HQ3XBOLD:
+			RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 0);
+			return 0;
 
 		default:
 			return 1;
@@ -613,20 +689,6 @@ INLINE void scale_emms(void)
 #endif /* USE_MMX_INTERP_SCALE */
 }
 
-//============================================================
-//	scale_allocate_local_buffer
-//============================================================
-
-static void scale_allocate_local_buffer(int width, int height, int bank)
-{
-	if (scale_buffer[bank])
-		free(scale_buffer[bank]);
-
-	scale_buffer[bank] = malloc(width * height);
-
-	previous_width[bank] = width;
-	previous_height[bank] = height;
-}
 
 //============================================================
 //	scale_perform_scale2x
@@ -813,55 +875,6 @@ static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pi
 		_eagle_mmx16((unsigned long *)src, (unsigned long *)(src + src_pitch), width, (unsigned long *)dst, (unsigned long *)(dst + dst_pitch));
 
 	scale_emms();
-
-	return 0;
-}
-#endif /* PTR64 */
-
-
-#ifndef PTR64
-//============================================================
-//	scale_perform_2xsai
-//============================================================
-
-static int scale_perform_2xsai(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank)
-{
-	int y;
-	UINT8 *buf;
-
-	if ((depth != 15 && depth != 16) || !use_mmx)
-		return 1;
-
-	// see if we need to (re-)initialise
-	if (previous_depth[bank] != depth || previous_width[bank] != src_pitch || previous_height[bank] != height + 3)
-	{
-		Init_2xSaIMMX(depth == 15 ? 555 : 565);
-
-		scale_allocate_local_buffer(src_pitch, height + 3, bank);
-		memset(scale_buffer[bank], 0xAA, src_pitch * (height + 3));
-
-		previous_depth[bank] = depth;
-	}
-
-	if (scale_buffer[bank] == NULL)
-		return 1;
-
-	buf = scale_buffer[bank];
-
-	// treat 2xSaI differently from the others to better align the blitters with scanlines
-	if (scale_effect.effect == SCALE_EFFECT_2XSAI)
-	{
-		for (y = 1; y < height; y++, src += src_pitch, buf += src_pitch, dst += 2 * dst_pitch)
-			scale_2xsai_line(src, buf, src_pitch, width - 1, dst, dst_pitch, 0);
-		scale_2xsai_line(src, buf, 0, width - 1, dst, dst_pitch, 0);
-	}
-	else
-	{
-		scale_2xsai_line(src, buf, src_pitch, width - 1, dst, dst_pitch, 0);
-		dst += dst_pitch;
-		for (y = 0; y < height; y++, src += src_pitch, buf += src_pitch, dst += 2 * dst_pitch)
-			scale_2xsai_line(src, buf, src_pitch, width - 1, dst, dst_pitch, 0);
-	}
 
 	return 0;
 }

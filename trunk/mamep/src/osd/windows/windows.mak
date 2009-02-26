@@ -323,7 +323,7 @@ ifneq ($(USE_SCALE_EFFECTS),)
 
   OBJDIRS += $(WINOBJ)/scale
   ifndef PTR64
-    OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
+    OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj
     OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
   OSDOBJS += $(WINOBJ)/scale/scale2x.o
   endif
@@ -334,8 +334,9 @@ ifneq ($(USE_SCALE_EFFECTS),)
   OSDOBJS += $(WINOBJ)/scale/hq3x.o
 # OSDOBJS += $(WINOBJ)/scale/hq3x32.o
 # OSDOBJS += $(WINOBJ)/scale/hq_shared32.o
+  OSDOBJS += $(WINOBJ)/scale/2xsai.o
   OSDOBJS += $(WINOBJ)/scale/scanline.o
-# OSDOBJS += $(WINOBJ)/scale/snes9x_render.o
+  OSDOBJS += $(WINOBJ)/scale/snes9x_render.o
 
   ifdef PTR64
     USE_MMX_INTERP_SCALE =
