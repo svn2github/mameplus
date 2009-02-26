@@ -3451,15 +3451,18 @@ static void SetSamplesEnabled(HWND hWnd, int nIndex, BOOL bSoundEnabled)
 	if (hCtrl)
 	{
 		const device_config *sound;
-		for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
+		if (config != NULL)
 		{
-			if (sound_get_type(sound) == SOUND_SAMPLES
-#if HAS_VLM5030
-				||  sound_get_type(sound) == SOUND_VLM5030
-#endif
-				)
+			for (sound = sound_first(config); sound != NULL; sound = sound_next(sound))
 			{
-				enabled = TRUE;
+				if (sound_get_type(sound) == SOUND_SAMPLES
+#if HAS_VLM5030
+					||  sound_get_type(sound) == SOUND_VLM5030
+#endif
+					)
+				{
+					enabled = TRUE;
+				}
 			}
 		}
 

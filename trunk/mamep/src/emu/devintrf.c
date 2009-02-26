@@ -62,7 +62,7 @@ static void set_default_string(UINT32 state, char *buffer);
     a temporary string buffer
 -------------------------------------------------*/
 
-char *get_temp_string_buffer(void)
+static char *get_temp_string_buffer(void)
 {
 	char *string = &temp_string_pool[temp_string_pool_index++ % TEMP_STRING_POOL_ENTRIES][0];
 	string[0] = 0;
@@ -104,7 +104,7 @@ device_config *device_list_add(device_config **listheadptr, const device_config 
 
 	/* find the end of the list, and ensure no duplicates along the way */
 	for (devptr = listheadptr; *devptr != NULL; devptr = &(*devptr)->next)
-		if (type == (*devptr)->type && strcmp(tag, (*devptr)->tag) == 0)
+		if (strcmp(tag, (*devptr)->tag) == 0)
 			fatalerror("Attempted to add duplicate device: type=%s tag=%s\n", device_get_name(*devptr), tag);
 
 	/* get the size of the inline config */
