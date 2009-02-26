@@ -12,6 +12,10 @@
 #include "driver.h"
 #include "cpuintrf.h"
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 
 
 /***************************************************************************
@@ -105,7 +109,11 @@ device_config *device_list_add(device_config **listheadptr, const device_config 
 	/* find the end of the list, and ensure no duplicates along the way */
 	for (devptr = listheadptr; *devptr != NULL; devptr = &(*devptr)->next)
 		if (strcmp(tag, (*devptr)->tag) == 0)
+		{
+#ifndef MESS
 			fatalerror("Attempted to add duplicate device: type=%s tag=%s\n", device_get_name(*devptr), tag);
+#endif /* MESS */
+		}
 
 	/* get the size of the inline config */
 	configlen = (UINT32)devtype_get_info_int(type, DEVINFO_INT_INLINE_CONFIG_BYTES);
