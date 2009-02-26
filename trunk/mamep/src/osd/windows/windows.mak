@@ -319,45 +319,36 @@ $(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
 # extra targets and rules for the scale effects
 ifneq ($(USE_SCALE_EFFECTS),)
-OSDOBJS += $(WINOBJ)/scale.o
+  OSDOBJS += $(WINOBJ)/scale.o
 
-OBJDIRS += $(WINOBJ)/scale
-ifndef PTR64
-  OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
-  ifneq ($(ASM_HQ),)
-    DEFS += -DASM_HQ
+  OBJDIRS += $(WINOBJ)/scale
+  ifndef PTR64
+    OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj $(WINOBJ)/scale/2xsaimmx.obj
     OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
+  OSDOBJS += $(WINOBJ)/scale/scale2x.o
   endif
-OSDOBJS += $(WINOBJ)/scale/scale2x.o
-endif
-OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o $(WINOBJ)/scale/2xpmlq.o
+  OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
 
-ifdef PTR64
-USE_MMX_INTERP_SCALE =
-endif
+  OSDOBJS += $(WINOBJ)/scale/hq2x.o
+  OSDOBJS += $(WINOBJ)/scale/vba_hq2x.o
+  OSDOBJS += $(WINOBJ)/scale/hq3x.o
+# OSDOBJS += $(WINOBJ)/scale/hq3x32.o
+# OSDOBJS += $(WINOBJ)/scale/hq_shared32.o
+  OSDOBJS += $(WINOBJ)/scale/scanline.o
+# OSDOBJS += $(WINOBJ)/scale/snes9x_render.o
 
-ifneq ($(USE_MMX_INTERP_SCALE),)
-DEFS += -DUSE_MMX_INTERP_SCALE
-OSDOBJS += $(WINOBJ)/scale/hlq_mmx.o
-else
-OSDOBJS += $(WINOBJ)/scale/hlq.o
-endif
+  ifdef PTR64
+    USE_MMX_INTERP_SCALE =
+  endif
 
-ifneq ($(USE_4X_SCALE),)
-DEFS += -DUSE_4X_SCALE
-endif
+  ifneq ($(USE_MMX_INTERP_SCALE),)
+    DEFS += -DUSE_MMX_INTERP_SCALE
+  endif
 
-$(WINOBJ)/scale/%.obj: $(WINSRC)/scale/%.asm
+  $(WINOBJ)/scale/%.obj: $(WINSRC)/scale/%.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 
-$(WINOBJ)/scale/hlq.o: $(WINSRC)/scale/hlq.c
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -Wno-strict-aliasing -Wno-unused-variable -mno-mmx -UINTERP_MMX -c $< -o $@
-
-$(WINOBJ)/scale/hlq_mmx.o: $(WINSRC)/scale/hlq.c
-	@echo Compiling $<...
-	$(CC) $(CDEFS) $(CFLAGS) -Wno-strict-aliasing -Wno-unused-variable -mmmx -DINTERP_MMX -c $< -o $@
 endif
 
 OSDOBJS += $(VCOBJS)

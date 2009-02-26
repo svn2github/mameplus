@@ -32,8 +32,7 @@
  * - derivative works of the program are allowed.
  */
 
-
-#include "scale2x.h"
+#include "port.h"
 
 #include <assert.h>
 
@@ -49,6 +48,7 @@
  */
 /* #define USE_SCALE_RANDOMWRITE */
 
+#if 0
 INLINE void scale2x_8_def_whole(scale2x_uint8* restrict dst0, scale2x_uint8* restrict dst1, const scale2x_uint8* restrict src0, const scale2x_uint8* restrict src1, const scale2x_uint8* restrict src2, unsigned count)
 {
 	assert(count >= 2);
@@ -197,6 +197,7 @@ INLINE void scale2x_8_def_center(scale2x_uint8* restrict dst, const scale2x_uint
 		dst[1] = src1[0];
 	}
 }
+#endif
 
 INLINE void scale2x_16_def_whole(scale2x_uint16* restrict dst0, scale2x_uint16* restrict dst1, const scale2x_uint16* restrict src0, const scale2x_uint16* restrict src1, const scale2x_uint16* restrict src2, unsigned count)
 {
@@ -496,6 +497,7 @@ INLINE void scale2x_32_def_center(scale2x_uint32* restrict dst, const scale2x_ui
 	}
 }
 
+#if 0
 /**
  * Scale by a factor of 2 a row of pixels of 8 bits.
  * The function is implemented in C.
@@ -520,6 +522,7 @@ void scale2x_8_def(scale2x_uint8* dst0, scale2x_uint8* dst1, const scale2x_uint8
 	scale2x_8_def_border(dst1, src2, src1, src0, count);
 #endif
 }
+#endif
 
 /**
  * Scale by a factor of 2 a row of pixels of 16 bits.
@@ -563,6 +566,7 @@ void scale2x_32_def(scale2x_uint32* dst0, scale2x_uint32* dst1, const scale2x_ui
 #endif
 }
 
+#if 0
 /**
  * Scale by a factor of 2x3 a row of pixels of 8 bits.
  * \note Like scale2x_8_def();
@@ -664,6 +668,7 @@ void scale2x4_32_def(scale2x_uint32* dst0, scale2x_uint32* dst1, scale2x_uint32*
 	scale2x_32_def_border(dst3, src2, src1, src0, count);
 #endif
 }
+#endif
 
 /***************************************************************************/
 /* Scale2x MMX implementation */
@@ -1757,7 +1762,6 @@ void scale2x3_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, scale2x_uint8* dst
 		scale2x_8_mmx_border(dst2, src2, src1, src0, count);
 	}
 }
-#endif
 
 /**
  * Scale by a factor of 2x3 a row of pixels of 16 bits.
@@ -1796,7 +1800,6 @@ void scale2x3_32_mmx(scale2x_uint32* dst0, scale2x_uint32* dst1, scale2x_uint32*
  * This function operates like scale2x_8_mmx() but with an expansion
  * factor of 2x4 instead of 2x2.
  */
-#if 0
 void scale2x4_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, scale2x_uint8* dst2, scale2x_uint8* dst3, const scale2x_uint8* src0, const scale2x_uint8* src1, const scale2x_uint8* src2, unsigned count)
 {
 	if (count % 8 != 0 || count < 16) {
@@ -1808,7 +1811,6 @@ void scale2x4_8_mmx(scale2x_uint8* dst0, scale2x_uint8* dst1, scale2x_uint8* dst
 		scale2x_8_mmx_border(dst3, src2, src1, src0, count);
 	}
 }
-#endif
 
 /**
  * Scale by a factor of 2x4 a row of pixels of 16 bits.
@@ -1843,5 +1845,6 @@ void scale2x4_32_mmx(scale2x_uint32* dst0, scale2x_uint32* dst1, scale2x_uint32*
 		scale2x_32_mmx_border(dst3, src2, src1, src0, count);
 	}
 }
+#endif
 
 #endif /* USE_MMX_INTERP_SCALE */

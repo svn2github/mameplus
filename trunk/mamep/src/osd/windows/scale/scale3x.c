@@ -32,7 +32,7 @@
  * - derivative works of the program are allowed.
  */
 
-#include "scale3x.h"
+#include "port.h"
 
 #include <assert.h>
 
