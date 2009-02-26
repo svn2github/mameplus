@@ -129,11 +129,11 @@ static PALETTE_INIT( wscolor ) {
 
 static MACHINE_DRIVER_START( wswan )
 	/* Basic machine hardware */
-	MDRV_CPU_ADD("main", V30MZ, 3072000)
+	MDRV_CPU_ADD("maincpu", V30MZ, 3072000)
 	MDRV_CPU_PROGRAM_MAP(wswan_mem, 0)
 	MDRV_CPU_IO_MAP(wswan_io, 0)
 
-	MDRV_SCREEN_ADD("main", LCD)
+	MDRV_SCREEN_ADD("screen", LCD)
 	MDRV_SCREEN_REFRESH_RATE(75)
 	MDRV_SCREEN_VBLANK_TIME(0)
 	MDRV_QUANTUM_TIME(HZ(60))
@@ -154,10 +154,10 @@ static MACHINE_DRIVER_START( wswan )
 	MDRV_PALETTE_INIT(wswan)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
+	MDRV_SPEAKER_STANDARD_STEREO("lspeaker", "rspeaker")
 	MDRV_SOUND_ADD("custom", WSWAN, 0)
-	MDRV_SOUND_ROUTE(0, "left", 0.50)
-	MDRV_SOUND_ROUTE(1, "right", 0.50)
+	MDRV_SOUND_ROUTE(0, "lspeaker", 0.50)
+	MDRV_SOUND_ROUTE(1, "rspeaker", 0.50)
 	
 	/* cartridge */
 	MDRV_CARTSLOT_ADD("cart")
@@ -169,7 +169,7 @@ MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( wscolor )
 	MDRV_IMPORT_FROM(wswan)
-	MDRV_CPU_MODIFY("main")
+	MDRV_CPU_MODIFY("maincpu")
 	MDRV_CPU_PROGRAM_MAP(wscolor_mem, 0)
 	MDRV_MACHINE_START( wscolor )
 	MDRV_PALETTE_LENGTH(4096)
@@ -183,12 +183,12 @@ MACHINE_DRIVER_END
 ***************************************************************************/
 
 ROM_START( wswan )
-	ROM_REGION( 0x100000, "main", ROMREGION_ERASEFF )
+	ROM_REGION( 0x100000, "maincpu", ROMREGION_ERASEFF )
 //  ROM_LOAD_OPTIONAL( "ws_bios.bin", 0x0000, 0x0001, NO_DUMP )
 ROM_END
 
 ROM_START( wscolor )
-	ROM_REGION( 0x100000, "main", ROMREGION_ERASEFF )
+	ROM_REGION( 0x100000, "maincpu", ROMREGION_ERASEFF )
 //  ROM_LOAD_OPTIONAL( "wsc_bios.bin", 0x0000, 0x0001, NO_DUMP )
 ROM_END
 

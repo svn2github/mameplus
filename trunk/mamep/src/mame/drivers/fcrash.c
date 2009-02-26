@@ -38,8 +38,6 @@ from 2.bin to 9.bin program eproms
 #include "cps1.h"
 #include "sound/2203intf.h"
 #include "sound/msm5205.h"
-#include "sound/2151intf.h"
-#include "sound/okim6295.h"
 
 
 static int sample_buffer1, sample_buffer2;
@@ -385,22 +383,11 @@ static ADDRESS_MAP_START( kodb_map, ADDRESS_SPACE_PROGRAM, 16 )
 	/* Forgotten Worlds has dial controls on B-board mapped at 800040-80005f. See DRIVER_INIT */
 	AM_RANGE(0x800100, 0x80013f) AM_WRITE(cps1_cps_a_w) AM_BASE(&cps1_cps_a_regs)	/* CPS-A custom */
 	AM_RANGE(0x800140, 0x80017f) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w) AM_BASE(&cps1_cps_b_regs)	/* CPS-B custom */
-	AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)    /* Sound command */
-	AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)   /* Sound timer fade */
+//  AM_RANGE(0x800180, 0x800187) AM_WRITE(cps1_soundlatch_w)    /* Sound command */
+//  AM_RANGE(0x800188, 0x80018f) AM_WRITE(cps1_soundlatch2_w)   /* Sound timer fade */
 	AM_RANGE(0x8001c0, 0x8001ff) AM_READWRITE(cps1_cps_b_r, cps1_cps_b_w)	/* mirror (SF2 revision "E" US 910228) */
 	AM_RANGE(0x900000, 0x92ffff) AM_RAM_WRITE(cps1_gfxram_w) AM_BASE(&cps1_gfxram) AM_SIZE(&cps1_gfxram_size)	/* SF2CE executes code from here */
 	AM_RANGE(0xff0000, 0xffffff) AM_RAM
-ADDRESS_MAP_END
-
-
-static ADDRESS_MAP_START( kodb_sub_map, ADDRESS_SPACE_PROGRAM, 8 )
-	AM_RANGE(0x0000, 0x7fff) AM_ROM
-	AM_RANGE(0x8000, 0xbfff) AM_ROMBANK(1)
-	AM_RANGE(0xd000, 0xd7ff) AM_RAM
-	AM_RANGE(0xe000, 0xe001) AM_DEVREADWRITE(SOUND, "ym", ym2151_r, ym2151_w)
-	AM_RANGE(0xe004, 0xe400) AM_DEVREADWRITE(SOUND, "oki", okim6295_r, okim6295_w)
-	AM_RANGE(0xf004, 0xf004) AM_WRITE(cps1_snd_bankswitch_w)
-	AM_RANGE(0xe800, 0xe800) AM_READ(soundlatch_r)	/* Sound command */
 ADDRESS_MAP_END
 
 
@@ -727,8 +714,8 @@ static MACHINE_DRIVER_START( kodb )
 	MDRV_CPU_PROGRAM_MAP(kodb_map,0)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 
-	MDRV_CPU_ADD("soundcpu", Z80, 3579545)
-	MDRV_CPU_PROGRAM_MAP(kodb_sub_map,0)
+//  MDRV_CPU_ADD("audiocpu", Z80, 3579545)
+//  MDRV_CPU_PROGRAM_MAP(sub_map,0)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -746,16 +733,16 @@ static MACHINE_DRIVER_START( kodb )
 	MDRV_VIDEO_UPDATE(kodb)
 
 	/* sound hardware */
-	MDRV_SPEAKER_STANDARD_MONO("mono")
+//  MDRV_SPEAKER_STANDARD_MONO("mono")
 
-	MDRV_SOUND_ADD("2151", YM2151, 3579545)
-	MDRV_SOUND_CONFIG(ym2151_config)
-	MDRV_SOUND_ROUTE(0, "mono", 0.35)
-	MDRV_SOUND_ROUTE(1, "mono", 0.35)
+//  MDRV_SOUND_ADD("2151", YM2151, 3579545)
+//  MDRV_SOUND_CONFIG(ym2151_config)
+//  MDRV_SOUND_ROUTE(0, "mono", 0.35)
+//  MDRV_SOUND_ROUTE(1, "mono", 0.35)
 
-	MDRV_SOUND_ADD("oki", OKIM6295, 1000000)
-	MDRV_SOUND_CONFIG(okim6295_interface_pin7high) // pin 7 can be changed by the game code, see f006 on z80
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
+//  MDRV_SOUND_ADD("oki", OKIM6295, 1000000)
+//  MDRV_SOUND_CONFIG(okim6295_interface_pin7high) // pin 7 can be changed by the game code, see f006 on z80
+//  MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
 
@@ -858,4 +845,4 @@ ROM_START( kodb )
 ROM_END
 
 GAME( 1990, fcrash,   ffight,  fcrash,     fcrash,   cps1,     ROT0,   "[Capcom] (Playmark bootleg)", "Final Crash (bootleg of Final Fight)", 0 )
-GAME( 1991, kodb,     kod,     kodb,       kodb,     cps1,     ROT0,   "[Capcom] (Playmark bootleg)", "The King of Dragons (bootleg)", 0 )	// 910731  "ETC"
+GAME( 1991, kodb,     kod,     kodb,       kodb,     cps1,     ROT0,   "[Capcom] (Playmark bootleg)", "The King of Dragons (bootleg)", GAME_NOT_WORKING | GAME_NO_SOUND )	// 910731  "ETC"

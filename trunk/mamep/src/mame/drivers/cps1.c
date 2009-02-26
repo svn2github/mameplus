@@ -284,6 +284,7 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 }
 
 
+//mamep: non-static for MAMEMESS
 WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	UINT8 *RAM = memory_region(space->machine, "audiocpu");
@@ -298,12 +299,14 @@ static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 	okim6295_set_pin7(device, (data & 1));
 }
 
+//mamep: non-static for MAMEMESS
 WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch_w(space,0,data & 0xff);
 }
 
+//mamep: non-static for MAMEMESS
 WRITE16_HANDLER( cps1_soundlatch2_w )
 {
 	if (ACCESSING_BITS_0_7)
@@ -429,10 +432,20 @@ static WRITE16_HANDLER( dinoh_sound_command_w )
 *
 ********************************************************************/
 
+#ifndef MESS
 static const eeprom_interface qsound_eeprom_interface =
 {
 	7,		/* address bits */
 	8,		/* data bits */
+	"0110",	/*  read command */
+	"0101",	/* write command */
+	"0111"	/* erase command */
+};
+
+static const eeprom_interface pang3_eeprom_interface =
+{
+	6,		/* address bits */
+	16,		/* data bits */
 	"0110",	/*  read command */
 	"0101",	/* write command */
 	"0111"	/* erase command */
@@ -450,16 +463,6 @@ static NVRAM_HANDLER( qsound )
 			eeprom_load(file);
 	}
 }
-
-#ifndef MESS
-static const eeprom_interface pang3_eeprom_interface =
-{
-	6,		/* address bits */
-	16,		/* data bits */
-	"0110",	/*  read command */
-	"0101",	/* write command */
-	"0111"	/* erase command */
-};
 
 static NVRAM_HANDLER( pang3 )
 {
@@ -2683,7 +2686,7 @@ static INPUT_PORTS_START( wofhfh )
 	PORT_INCLUDE( wof )
 
 	PORT_MODIFY("DSWA")
-	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coinage ) )			PORT_DIPLOCATION("SW(A):1,2")
+	PORT_DIPNAME( 0x03, 0x03, DEF_STR( Coin_A ) )			PORT_DIPLOCATION("SW(A):1,2")
 	PORT_DIPSETTING(    0x03, DEF_STR( 1C_1C ) )
 	PORT_DIPSETTING(    0x02, DEF_STR( 1C_2C ) )
 	PORT_DIPSETTING(    0x01, DEF_STR( 1C_3C ) )
@@ -3144,6 +3147,7 @@ static void cps1_irq_handler_mus(const device_config *device, int irq)
 	cpu_set_input_line(device->machine->cpu[1],0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
+//mamep: non-static for MAMEMESS
 const ym2151_interface ym2151_config =
 {
 	cps1_irq_handler_mus
@@ -3160,7 +3164,7 @@ const ym2151_interface ym2151_config =
 *
 ********************************************************************/
 
-//mamep: non-static for MESS
+//mamep: non-static for MAMEMESS
 MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* basic machine hardware */
@@ -3199,6 +3203,7 @@ MACHINE_DRIVER_START( cps1_10MHz )
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.30)
 MACHINE_DRIVER_END
 
+#ifndef MESS
 static MACHINE_DRIVER_START( cps1_12MHz )
 
 	/* basic machine hardware */
@@ -3207,7 +3212,15 @@ static MACHINE_DRIVER_START( cps1_12MHz )
 	MDRV_CPU_REPLACE("maincpu", M68000, 12000000)
 MACHINE_DRIVER_END
 
-//mamep: non-static for MESS
+static MACHINE_DRIVER_START( pang3 )
+
+	/* basic machine hardware */
+	MDRV_IMPORT_FROM(cps1_12MHz)
+
+	MDRV_NVRAM_HANDLER(pang3)
+MACHINE_DRIVER_END
+
+//mamep: non-static for MAMEMESS
 MACHINE_DRIVER_START( qsound )
 
 	/* basic machine hardware */
@@ -3233,15 +3246,6 @@ MACHINE_DRIVER_START( qsound )
 	MDRV_SOUND_ADD("qsound", QSOUND, QSOUND_CLOCK)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 1.0)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 1.0)
-MACHINE_DRIVER_END
-
-#ifndef MESS
-static MACHINE_DRIVER_START( pang3 )
-
-	/* basic machine hardware */
-	MDRV_IMPORT_FROM(cps1_12MHz)
-
-	MDRV_NVRAM_HANDLER(pang3)
 MACHINE_DRIVER_END
 
 /* bootlegs with PIC */
@@ -9465,12 +9469,6 @@ ROM_START( dinohc )
 	ROM_LOAD( "cd_q4.rom",      0x180000, 0x80000, CRC(2c67821d) SHA1(6e2528d0b22508300a6a142a796dd3bf53a66946) )
 ROM_END
 
-//mamep: non-static for MESS
-DRIVER_INIT( wof )
-{
-	wof_decode(machine);
-	DRIVER_INIT_CALL(cps1);
-}
 
 #ifndef MESS
 
@@ -9523,6 +9521,13 @@ static DRIVER_INIT( sf2hack )
 	/* some SF2 hacks have some inputs wired to the LSB instead of MSB */
 	memory_install_read16_handler (cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x800018, 0x80001f, 0, 0, cps1_hack_dsw_r);
 
+	DRIVER_INIT_CALL(cps1);
+}
+
+//mamep: non-static for MAMEMESS
+DRIVER_INIT( wof )
+{
+	wof_decode(machine);
 	DRIVER_INIT_CALL(cps1);
 }
 
