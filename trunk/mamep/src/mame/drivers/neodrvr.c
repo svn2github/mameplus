@@ -3559,7 +3559,7 @@ ROM_START( kof96h )
 ROM_END
 
 ROM_START( kof96ep )
-	ROM_REGION( 0x400000, "main", 0 )
+	ROM_REGION( 0x400000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "214-p1.bin", 0x000000, 0x100000, CRC(52755d74) SHA1(4232d627f1d2e6ea9fc8cf01571d77d4d5b8a1bb) )
 	ROM_LOAD16_WORD_SWAP( "214-p2.bin", 0x100000, 0x200000, CRC(002ccb73) SHA1(3ae8df682c75027ca82db25491021eeba00a267e) )
 	ROM_LOAD16_WORD_SWAP( "kof96m_ep1.rom", 0x300000, 0x080000, CRC(e5f2fb43) SHA1(5efff9873b30679ea924b7770606c889a1076315) )
@@ -4758,7 +4758,7 @@ ROM_START( kof99p ) /* Prototype Version - Possibly Hacked */
 ROM_END
 
 ROM_START( kof99d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "152-p1.bin", 0x000000, 0x100000, CRC(f2c7ddfa) SHA1(d592eecc53d442c55c2f26a6a721fdf2924d2a5b) )
 	ROM_LOAD16_WORD_SWAP( "152-p2.bin", 0x100000, 0x400000, CRC(274ef47a) SHA1(98654b68cc85c19d4a90b46f3110f551fa2e5357) )
 
@@ -5127,7 +5127,7 @@ ROM_START( kof2000n ) /* Original Version, Encrypted Sound + GFX Roms */
 ROM_END
 
 ROM_START( kof2000d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "257-pg1.bin", 0x000000, 0x100000, CRC(5f809dbe) SHA1(2bc233dcff5622de86d01e3b74b840c7caf12982) )
 	ROM_LOAD16_WORD_SWAP( "257-pg2.bin", 0x100000, 0x400000, CRC(693c2c5e) SHA1(dc9121b7369ef46596343cac055a00aec81704d4) )
 
@@ -5410,7 +5410,7 @@ ROM_START( rotd ) /* Encrypted Set */ /* MVS VERSION */
 ROM_END
 
 ROM_START( rotdd )
-	ROM_REGION( 0x800000, "main", 0 )
+	ROM_REGION( 0x800000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "264-p1.bin", 0x000000, 0x800000, CRC(b8cc969d) SHA1(4f2205b4bdd32dd1522106ef4df10ac0eb1b852d) )
 
 	ROM_Y_ZOOM
@@ -5513,7 +5513,7 @@ ROM_END
 
 
 ROM_START( matrimd )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "266-p1.bin", 0x000000, 0x100000, CRC(5d4c2dc7) SHA1(8d723b0d28ec344eef26009b361a2b97d300dd51) )
 	ROM_LOAD16_WORD_SWAP( "266-p2.bin", 0x100000, 0x400000, CRC(a14b1906) SHA1(1daa14d73512f760ef569b06f9facb279437d1db) )
 
@@ -6180,7 +6180,7 @@ ROM_START( zintrckb )
 ROM_END
 
 ROM_START( zintrkcd )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "211-p1.bin", 0x000000, 0x100000, CRC(9a0bfe0a) SHA1(94299c51572b66fa37e3e496436299573b1faaa8) )
 
 	NEO_SFIX_128K( "211-s1.bin", CRC(56d16afa) SHA1(6e1f960a781f5ef1f858c51507fe573bead8ea66) )
@@ -6333,7 +6333,7 @@ ROM_START( mslug3b6 ) /* This "Metal Slug 6" is a hack/bootleg of Metal Slug 3, 
 ROM_END
 
 ROM_START( mslug3d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "256-ph1.bin", 0x000000, 0x100000, CRC(9c42ca85) SHA1(7a8f77a89867b889295ae9b9dfd4ba28f02d234d) )
 	ROM_LOAD16_WORD_SWAP( "256-ph2.bin", 0x100000, 0x400000, CRC(1f3d8ce8) SHA1(08b05a8abfb86ec09a5e758d6273acf1489961f9) )
 
@@ -6494,7 +6494,7 @@ ROM_START( ct2k3sa ) /* Protected hack/bootleg of kof2001 Phenixsoft, alternate 
 ROM_END
 
 ROM_START( cthd2k3a ) /* Protected hack/bootleg of kof2001 Phenixsoft */
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "5003-p1a.bin", 0x000000, 0x100000, CRC(1185fe39) SHA1(f7ce0878180858c359f125990fd750ec846f42dd) )
 	ROM_LOAD16_WORD_SWAP( "5003-p2a.bin", 0x100000, 0x400000, CRC(ea71faf7) SHA1(5d1bb12d04a5e2db6f48b59cae5f9b02acaeb976) )
 
@@ -6523,7 +6523,7 @@ ROM_START( cthd2k3a ) /* Protected hack/bootleg of kof2001 Phenixsoft */
 ROM_END
 
 ROM_START( kf2k1pls )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2k1-p1p.bin", 0x000000, 0x100000, CRC(758529a7) SHA1(cefdc7049772dcb77d658ac8571a12eedabda3c9) )
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
@@ -6553,7 +6553,7 @@ ROM_START( kf2k1pls )
 ROM_END
 
 ROM_START( kf2k1pa )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2k1-p1a.bin", 0x000000, 0x100000, CRC(f8a71b6f) SHA1(e4cc249b36b8cb72aa162adff4cdb302ce220812) )
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
@@ -6583,7 +6583,7 @@ ROM_START( kf2k1pa )
 ROM_END
 
 ROM_START( kof2001d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "262-pg1.bin", 0x000000, 0x100000, CRC(2af7e741) SHA1(e41282d73ed6d521da056f1a16573bb61bfa3826) )
 	ROM_LOAD16_WORD_SWAP( "262-pg2.bin", 0x100000, 0x400000, CRC(91eea062) SHA1(82bae42bbeedb9f3aa0c7c0b0a7a69be499cf98f) )
 
@@ -6619,7 +6619,7 @@ ROM_END
 
 /* news Decrypted */
 ROM_START( ct2k3ad ) /* this is a hack of kof2001 much like the various korean hacks / bootlegs of games */
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "5k3-p1ad.bin", 0x000000, 0x100000, CRC(83783954) )
 	ROM_LOAD16_WORD_SWAP( "5k3-p2ad.bin", 0x100000, 0x400000, CRC(84b0b164) )
 
@@ -6648,7 +6648,7 @@ ROM_START( ct2k3ad ) /* this is a hack of kof2001 much like the various korean h
 ROM_END
 
 ROM_START( cthd2k3d ) /* this is a hack of kof2001 much like the various korean hacks / bootlegs of games */
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "5003-p1d.bin", 0x000000, 0x100000, CRC(f75508d8) )
 	ROM_LOAD16_WORD_SWAP( "5003-p2d.bin", 0x100000, 0x400000, CRC(eba65bda) )
 
@@ -6706,7 +6706,7 @@ ROM_START( ms4plus )
 ROM_END
 
 ROM_START( mslug4d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "263-pg1.bin",  0x000000, 0x100000, CRC(27e4def3) SHA1(a08785e8145981bb6b5332a3b2df7eb321253cca) )
 	ROM_LOAD16_WORD_SWAP( "263-p2.bin",  0x100000, 0x400000, CRC(fdb7aed8) SHA1(dbeaec38f44e58ffedba99e70fa1439c2bf0dfa3) )
 
@@ -7008,7 +7008,7 @@ ROM_START( kof2k4se )
 ROM_END
 
 ROM_START( kf2k2plb ) /* bootleg */
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2k2-p1p.bin",0x000000, 0x100000, CRC(3ab03781) SHA1(86946c19f1c4d9ab5cde86688d698bf63118a39d) )
 	ROM_LOAD16_WORD_SWAP( "265-p2.bin", 0x100000, 0x400000, CRC(327266b8) SHA1(98f445cc0a94f8744d74bca71cb420277622b034) )
 
@@ -7037,7 +7037,7 @@ ROM_START( kf2k2plb ) /* bootleg */
 ROM_END
 
 ROM_START( kf2k2plc ) /* bootleg */
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2k2-p1pc.bin",0x000000, 0x100000, CRC(ebedae17) SHA1(5f84562f9ef7a6b007290e59b31a62aca208f579) )
 	ROM_LOAD16_WORD_SWAP( "265-p2.bin", 0x100000, 0x400000, CRC(327266b8) SHA1(98f445cc0a94f8744d74bca71cb420277622b034) )
 
@@ -7066,7 +7066,7 @@ ROM_START( kf2k2plc ) /* bootleg */
 ROM_END
 
 ROM_START( kf2k4pls )
-	ROM_REGION( 0x600000, "main", 0 )
+	ROM_REGION( 0x600000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "k2k4s-p1p.bin", 0x000000, 0x100000, CRC(ed97c684) SHA1(0eb8f18f422252c32186b7daa278c9206e189a1a) )
 	ROM_CONTINUE(                       0x500000, 0x100000 )
 	ROM_LOAD16_WORD_SWAP( "k2k4s-p1.bin", 0x400000, 0x100000, CRC(e6c50566) SHA1(cc6a3489a3bfeb4dcc65b6ddae0030f7e66fbabe) )
@@ -7096,7 +7096,7 @@ ROM_START( kf2k4pls )
 ROM_END
 
 ROM_START( kof2002d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "265-p1.bin", 0x000000, 0x100000, CRC(9ede7323) SHA1(ad9d45498777fda9fa58e75781f48e09aee705a6) )
 	ROM_LOAD16_WORD_SWAP( "265-p2.bin", 0x100000, 0x400000, CRC(327266b8) SHA1(98f445cc0a94f8744d74bca71cb420277622b034) )
 
@@ -7130,7 +7130,7 @@ ROM_START( kof2002d )
 ROM_END
 
 ROM_START( kof10thd )
-	ROM_REGION( 0x900000, "main", 0 ) // Modified
+	ROM_REGION( 0x900000, "maincpu", 0 ) // Modified
 	ROM_LOAD16_WORD_SWAP( "kf10-p1d.bin", 0x000000, 0x800000, CRC(30C82F4C) SHA1(d02e6fa14af6fd4aff0349fcb3d275d9226ccbe7) )
 
 	NEO_SFIX_128K( "kf10-s1d.bin", CRC(3C757CB1) SHA1(fea798902c59c125c8d31f42d52aa22caa31fc7b) )
@@ -7560,7 +7560,7 @@ ROM_END
 
 /* news */
 ROM_START( ltorb1 )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ltor1-p1.rom", 0x000000, 0x040000, CRC(353f6b05) SHA1(ae2ebb9a08e936a86cd09aaafda9e90826461bbf) )
 
 	NEO_SFIX_64K( "ltor1-s1.rom", CRC(8224d8b7) SHA1(2e7b176e5dffd8a44fa813b928155801d80b1ee6) )
@@ -7579,7 +7579,7 @@ ROM_START( ltorb1 )
 ROM_END
 
 ROM_START( neodemo )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "demo-p1.bin", 0x000000, 0x080000, CRC(fbfce2a4) SHA1(53472533456e131bee9fa792996b4110999b5c21) )
 
 	NEO_SFIX_128K( "demo-s1.bin", CRC(cd19264f) SHA1(531be2305cd56d332fb7a53ab924214ade34a9e8) )
@@ -7597,7 +7597,7 @@ ROM_START( neodemo )
 ROM_END
 
 ROM_START( fr2ch ) /* CD to MVS Conversion */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "098-p1ch.bin", 0x000000, 0x080000, CRC(9AA8CEE0) SHA1(b2201f16d8fde4eaae9dbc754d019e7b381ecc06) )
 
 	NEO_SFIX_128K( "098-s1ch.bin", CRC(764ac7aa) SHA1(cc40ad276e63084ebf3c3ee224083762a47c3cf8) )
@@ -7620,7 +7620,7 @@ ROM_START( fr2ch ) /* CD to MVS Conversion */
 ROM_END
 
 ROM_START( cnbe ) /* Original Version - Encrypted GFX */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "cnbe-p1.bin",  0x000000, 0x080000, CRC(7ece4186) SHA1(fc4ed3b5ed551744542c2ff1e45a6e97c68eff88) )
 
     NEO_SFIX_64K( "cnbe-s1.bin", CRC(40a4698f) SHA1(be631408b261906f36c41c58c775c1a4c418a256) )
@@ -7638,7 +7638,7 @@ ROM_START( cnbe ) /* Original Version - Encrypted GFX */
 ROM_END
 
 ROM_START( ngem2k ) /* Original Version - Encrypted GFX */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ngem-p1.bin",  0x000000, 0x080000, CRC(f2c42fe3) SHA1(fcd7453019ad21ecf77999a60b6792fc8d72d409) )
 
     NEO_SFIX_64K( "ngem-s1.bin", CRC(fb3c02d2) SHA1(961cf3cfd56e9ace059265f0ff4c283289972938) )
@@ -7656,7 +7656,7 @@ ROM_START( ngem2k ) /* Original Version - Encrypted GFX */
 ROM_END
 
 ROM_START( neo2500 ) /* Original Version - Encrypted GFX */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2500-p1.bin",  0x000000, 0x080000, CRC(2321c0d8) SHA1(e0d535af20f271794dc14c83ff3ffbc1f6bf98d9) )
 
     NEO_SFIX_64K( "2500-s1.bin", CRC(1a37925c) SHA1(2060196c3a4d5dcc75aa62e5f02b0d397ec54b1b) )
@@ -7674,7 +7674,7 @@ ROM_START( neo2500 ) /* Original Version - Encrypted GFX */
 ROM_END
 
 ROM_START( kof2003d )
-	ROM_REGION( 0x700000, "main", 0 )
+	ROM_REGION( 0x700000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "271-p1d.bin", 0x000000, 0x100000, CRC(7c2aee16) )
  	ROM_LOAD16_WORD_SWAP( "271-p1bl.bin" , 0x100000, 0x400000, CRC(92ed6ee3) )
 	ROM_LOAD16_WORD_SWAP( "271-p3d.bin", 0x500000, 0x200000, CRC(0d0a5861) )
@@ -7709,7 +7709,7 @@ ROM_START( kof2003d )
 ROM_END
 
 ROM_START( kf2k3pcd ) /* Decrypted C ROMs Version - Encrypted Code & Sound */
-	ROM_REGION( 0x900000, "main", 0 )
+	ROM_REGION( 0x900000, "maincpu", 0 )
 	ROM_LOAD32_WORD_SWAP( "271-p1.bin", 0x000000, 0x400000, CRC(b9da070c) SHA1(1a26325af142a4dd221c336061761468598c4634) )
 	ROM_LOAD32_WORD_SWAP( "271-p2.bin", 0x000002, 0x400000, CRC(da3118c4) SHA1(582e4f44f03276adecb7b2848d3b96bf6da57f1e) )
 	ROM_LOAD16_WORD_SWAP( "271-p3.bin", 0x800000, 0x100000, CRC(5cefd0d2) SHA1(cddc3164629fed4b6f715e12b109ad35d1009355) )
@@ -7723,7 +7723,7 @@ ROM_START( kf2k3pcd ) /* Decrypted C ROMs Version - Encrypted Code & Sound */
 	/* Decrypted */
 	ROM_LOAD16_WORD_SWAP( "271-bios_decrypted.bin", 0x00000, 0x080000, CRC(e873f1ef) SHA1(e7f7a6084b9d7f4b4f8819ea0fd115b1f2cac2c2) )
 
-	ROM_REGION( 0x90000, "audio", 0 )
+	ROM_REGION( 0x90000, "audiocpu", 0 )
 	ROM_LOAD( "sm1.sm1", 0x00000, 0x20000, CRC(97cf998b) SHA1(977387a7c76ef9b21d0b01fa69830e949a9a9626) )
 	/* Correct to use Decrypted Rom? */
 	ROM_LOAD( "271-m1d.bin", 0x00000, 0x80000, CRC(0e86af8f) SHA1(769102b67bb1a699cfa5674d66cdb46ae633cb65) )
@@ -7748,7 +7748,7 @@ ROM_START( kf2k3pcd ) /* Decrypted C ROMs Version - Encrypted Code & Sound */
 ROM_END
 
 ROM_START( pnyaad ) /* Decrypted C ROMs Version -  Encrypted Sound */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "267-p1.bin", 0x000000, 0x100000, CRC(112fe2c0) SHA1(01420e051f0bdbd4f68ce306a3738161b96f8ba8) )
 
 	ROM_Y_ZOOM
@@ -7775,7 +7775,7 @@ ROM_START( pnyaad ) /* Decrypted C ROMs Version -  Encrypted Sound */
 ROM_END
 
 ROM_START( mslug5d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "268-p1d.bin", 0x000000, 0x100000, CRC(ca50afdf) SHA1(e3780b77f20d139a0dcaa2ded2c6ee323b8b4279) )
 	ROM_LOAD16_WORD_SWAP( "268-p2d.bin", 0x100000, 0x400000, CRC(768ee64a) SHA1(76a65a69aee749758a2101aabdd44f3404838b54) )
 
@@ -7808,7 +7808,7 @@ ROM_START( mslug5d )
 ROM_END
 
 ROM_START( samsho5d ) /* Encrypted Set */
-	ROM_REGION( 0x800000, "main", 0 )
+	ROM_REGION( 0x800000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "270-p1.bin", 0x000000, 0x400000, CRC(4a2a09e6) SHA1(2644de02cdab8ccc605488a7c76b8c9cd1d5bcb9) )
 	ROM_LOAD16_WORD_SWAP( "270-p2.bin", 0x400000, 0x400000, CRC(e0c74c85) SHA1(df24a4ee76438e40c2f04a714175a7f85cacdfe0) )
 
@@ -7844,7 +7844,7 @@ ROM_START( samsho5d ) /* Encrypted Set */
 ROM_END
 
 ROM_START( samsh5sd ) /* Encrypted Set */
-	ROM_REGION( 0x800000, "main", 0 )
+	ROM_REGION( 0x800000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "272-p1.bin", 0x000000, 0x400000, CRC(fb7a6bba) SHA1(f68c527208d8a55ca44b0caaa8ab66b3a0ffdfe5) )
 	ROM_LOAD16_WORD_SWAP( "272-p2.bin", 0x400000, 0x400000, CRC(63492ea6) SHA1(6ba946acb62c63ed61a42fe72b7fff3828883bcc) )
 
@@ -7878,7 +7878,7 @@ ROM_START( samsh5sd ) /* Encrypted Set */
 ROM_END
 
 ROM_START( lans2k4d ) /* Bootleg / Hack of Shock Troopers - 2nd Squad */
-	ROM_REGION( 0x600000, "main", 0 )
+	ROM_REGION( 0x600000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "lnsq-p1d.bin", 0x000000, 0x100000, CRC(724576EA) )
 	ROM_LOAD16_WORD_SWAP( "246-p2.bin", 0x100000, 0x400000, CRC(72ea04c3) SHA1(4fb1d22c30f5f3db4637dd92a4d2705c88de399d) )
 
@@ -7903,7 +7903,7 @@ ROM_START( lans2k4d ) /* Bootleg / Hack of Shock Troopers - 2nd Squad */
 ROM_END
 
 ROM_START( kogd )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "5232-p1d.bin", 0x000000, 0x100000, CRC(58F20940) SHA1(693819ff606b7c7b27400586f34073625445c412) )
 	ROM_LOAD16_WORD_SWAP( "232-p2.bin", 0x100000, 0x400000, CRC(158b23f6) SHA1(9744620a70513490aaf9c5eda33e5ec31222be19) )
 
@@ -7926,7 +7926,7 @@ ROM_START( kogd )
 ROM_END
 
 ROM_START( svcd )
-	ROM_REGION( 0x800000, "main", 0 )
+	ROM_REGION( 0x800000, "maincpu", 0 )
 	ROM_LOAD32_WORD_SWAP( "269-p1.bin", 0x000000, 0x400000, CRC(38e2005e) SHA1(1b902905916a30969282f1399a756e32ff069097) )
 	ROM_LOAD32_WORD_SWAP( "269-p2.bin", 0x000002, 0x400000, CRC(6d13797c) SHA1(3cb71a95cea6b006b44cac0f547df88aec0007b7) )
 
@@ -7959,7 +7959,7 @@ ROM_START( svcd )
 ROM_END
 
 ROM_START( jckeygpd )
-	ROM_REGION( 0x200000, "main", 0 )
+	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "jgp-p1.bin", 0x000000, 0x100000, CRC(2fb7f388) SHA1(e3c9b03944b4c10cf5081caaf9c8be1f08c06493) )
 	ROM_FILL( 0x100000, 0x100000, 0xff )
 
@@ -7987,7 +7987,7 @@ ROM_END
 
 /* news bootleg */
 ROM_START( kof97pla )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "kf97-p1a.bin", 0x000000, 0x100000, CRC(035911c5) SHA1(3321862384ec91174f1822cfdbc2bf1d1407e775) )
 	ROM_LOAD16_WORD_SWAP( "232-p2.bin", 0x100000, 0x400000, CRC(158b23f6) SHA1(9744620a70513490aaf9c5eda33e5ec31222be19) )
 
@@ -8012,7 +8012,7 @@ ROM_START( kof97pla )
 ROM_END
 
 ROM_START( mslug5b )
-	ROM_REGION( 0x600000, "main", 0 )
+	ROM_REGION( 0x600000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "ms5-p1b.bin", 0x000000, 0x100000, CRC(d05853ea) SHA1(8bb284d8f937b1b50d28d207f5fd262e4ed1d96c) )
 	ROM_CONTINUE(                       0x200000, 0x100000 )
 	ROM_CONTINUE(                       0x400000, 0x100000 )
@@ -8049,7 +8049,7 @@ ROM_START( mslug5b )
 ROM_END
 
 ROM_START( neopong )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "pong_p1.rom", 0x000000, 0x020000, CRC(9f35e29d) SHA1(261ce9305950debbc2fe088a45ab0fa83d6cf10d) )
 
 	NEO_SFIX_128K( "pong_s1.rom", CRC(cd19264f) SHA1(531be2305cd56d332fb7a53ab924214ade34a9e8) )
@@ -8067,7 +8067,7 @@ ROM_START( neopong )
 ROM_END
 
 ROM_START( neonopon )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "nnp-p1.rom", 0x000000, 0x080000, CRC(8a792271) SHA1(6f8db18f9ced0706cb2e4b5545da97be871352dd) )
 
 	NEO_SFIX_64K( "nnp-s1.rom", CRC(93e6fe7d) SHA1(791789c33eeeaa23fe6581db2f0ee3c35c73c052) )
@@ -8085,7 +8085,7 @@ ROM_START( neonopon )
 ROM_END
 
 ROM_START( neoponga )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "np10_p1.rom", 0x000000, 0x020000, CRC(31b724d7) SHA1(e374613609aeda64b547d8ce38d2078b6ed55ad5) )
 
 	NEO_SFIX_128K( "pong_s1.rom", CRC(cd19264f) SHA1(531be2305cd56d332fb7a53ab924214ade34a9e8) )
@@ -8103,7 +8103,7 @@ ROM_START( neoponga )
 ROM_END
 
 ROM_START( beast )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2002-p1.bin", 0x000000, 0x080000, CRC(1f9e62a4) SHA1(f245ce9802c5deb257a11fa714b2d1d4d72fc786) )
 
 	NEO_SFIX_128K( "2002-s1.bin", CRC(05a417f5) SHA1(932eeab5ba06f654ed39112c71a4e5a1f78c70bd) )
@@ -8122,7 +8122,7 @@ ROM_START( beast )
 ROM_END
 
 ROM_START( columnsn )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2000-p1.bin", 0x000000, 0x080000, CRC(c6c9888d) SHA1(5a2ec1071872c817bf82053ca7b7d5d63fab6755) )
 
 	NEO_SFIX_128K( "2000-s1.bin", CRC(089a28a8) SHA1(b38b5c42eb909c57c16b016addffcd4e930806ce) )
@@ -8141,7 +8141,7 @@ ROM_START( columnsn )
 ROM_END
 
 ROM_START( poknight )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "2003-p1.bin", 0x000000, 0x080000, CRC(750421ee) SHA1(0a86823456a82506bc96989c361626be4b3ceeaf) )
 
 	NEO_SFIX_128K( "2003-s1.bin", CRC(a26d2f09) SHA1(e7da6005a66e52f5479f9fe9f0cc67527dcb5d04) )
@@ -8160,7 +8160,7 @@ ROM_START( poknight )
 ROM_END
 
 ROM_START( ganryud )
-	ROM_REGION( 0x200000, "main", 0 )
+	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "252-p1.bin", 0x100000, 0x100000, CRC(4b8ac4fb) SHA1(93d90271bff281862b03beba3809cf95a47a1e44) )
 	ROM_CONTINUE(						0x000000, 0x100000 )
 
@@ -8185,7 +8185,7 @@ ROM_START( ganryud )
 ROM_END
 
 ROM_START( garoud )
-	ROM_REGION( 0x900000, "main", 0 )
+	ROM_REGION( 0x900000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "253-sma.kf",  0x0c0000, 0x040000, CRC(98bc93dc) SHA1(01fe3d18b50f770e131e8d8eeff4c630ba8c9551) )	/* stored in the custom chip */
 	ROM_LOAD16_WORD_SWAP( "253-ep1.p1",  0x100000, 0x200000, CRC(ea3171a4) SHA1(bbda40f652baa0dc5fc6a006c001a1bdb0df43f6) )
 	ROM_LOAD16_WORD_SWAP( "253-ep2.p2",  0x300000, 0x200000, CRC(382f704b) SHA1(0ace9c84a8b8a0524fd9a503e7d872de1bf1bd52) )
@@ -8222,7 +8222,7 @@ ROM_START( garoud )
 ROM_END
 
 ROM_START( s1945pd )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "254-p1.bin", 0x000000, 0x100000, CRC(ff8efcff) SHA1(dcaeaca573385c172ecc43ee6bee355359091893) )
 	ROM_LOAD16_WORD_SWAP( "254-p2.bin", 0x100000, 0x400000, CRC(efdfd4dd) SHA1(254f3e1b546eed788f7ae919be9d1bf9702148ce) )
 
@@ -8256,7 +8256,7 @@ ROM_START( s1945pd )
 ROM_END
 
 ROM_START( preisl2d )
-	ROM_REGION( 0x500000, "main", 0 )
+	ROM_REGION( 0x500000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "255-p1.bin", 0x000000, 0x100000, CRC(dfa3c0f3) SHA1(793c6a46f3a794536dc0327a3f3fad20e25ab661) )
 	ROM_LOAD16_WORD_SWAP( "255-p2.bin", 0x100000, 0x400000, CRC(42050b80) SHA1(0981a8295d43b264c2b95e5d7568bdda4e64c976) )
 
@@ -8286,7 +8286,7 @@ ROM_START( preisl2d )
 ROM_END
 
 ROM_START( nitdd )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "260-p1.bin", 0x000000, 0x080000, CRC(61361082) SHA1(441f3f41c1aa752c0e0a9a0b1d92711d9e636b85) )
 
 	ROM_Y_ZOOM
@@ -8310,7 +8310,7 @@ ROM_START( nitdd )
 ROM_END
 
 ROM_START( zupapad ) /* Decrypted GFX */
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "070-p1.bin", 0x000000, 0x100000, CRC(5a96203e) SHA1(49cddec9ca6cc51e5ecf8a34e447a23e1f8a15a1) )
 
 	NEO_SFIX_128K( "070-s1.bin", CRC(307967ba) SHA1(b91430d0fb08ca6e0d63ded42016fd2a5cd9728b) )
@@ -8329,7 +8329,7 @@ ROM_START( zupapad ) /* Decrypted GFX */
 ROM_END
 
 ROM_START( sengok3d )
-	ROM_REGION( 0x200000, "main", 0 )
+	ROM_REGION( 0x200000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "261-p1.bin", 0x100000, 0x100000, CRC(e0d4bc0a) SHA1(8df366097f224771ca6d1aa5c1691cd46776cd12) )
 	ROM_CONTINUE(                       0x000000, 0x100000 )
 
@@ -8359,7 +8359,7 @@ ROM_START( sengok3d )
 ROM_END
 
 ROM_START( syscheck )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "sys-p1.rom", 0x000000, 0x80000, CRC(a4adbe1e) SHA1(eee4a8ebe62a2c97282f0350b3c28c615ea44956) )
 
 	NEO_SFIX_64K( "sys-s1.rom", CRC(4774f28e) SHA1(f381dac250fca3dfe1eb8c8f1b9b3bf0d521000e) )
@@ -8377,7 +8377,7 @@ ROM_START( syscheck )
 ROM_END
 
 ROM_START( frogfest )
-	ROM_REGION( 0x100000, "main", 0 )
+	ROM_REGION( 0x100000, "maincpu", 0 )
 	ROM_LOAD16_WORD_SWAP( "frog_p1.rom", 0x000000, 0x80000, CRC(c26848da) SHA1(33737f8d2366b3a554ceb9ea2fcd85aaed75f344) )
 
 	NEO_SFIX_128K( "frog_s1.rom", CRC(88f4cd13) SHA1(7f3b28c903ecf90478f2dcddf790714d7363aa2b) )
@@ -8843,7 +8843,7 @@ static DRIVER_INIT( kof10thd ) // decrypted P
 
 static DRIVER_INIT( kf2k4pls )
 {
-	unsigned char *src = memory_region(machine, "main");
+	unsigned char *src = memory_region(machine, "maincpu");
 	unsigned char *dst = (unsigned char*)malloc(0x200000);
 
 	if (dst)
@@ -9240,7 +9240,7 @@ static DRIVER_INIT( kog )
 
 static DRIVER_INIT( kof97pla )
 {
-	UINT8 *mem8 = memory_region(machine, "main");
+	UINT8 *mem8 = memory_region(machine, "maincpu");
 	mem8[0x1394A] = 0x6C;
 	mem8[0x1394B] = 0xD1;
 	mem8[0x1394C] = 0x3A;
@@ -9278,8 +9278,8 @@ static WRITE16_HANDLER( fr2ch_cx_hack_w )
 
 static void fr2ch_patches( running_machine *machine )
 {
-	UINT16 *src = (UINT16*)memory_region( machine, "main" );
-	UINT8 *rom = memory_region( machine, "main" );
+	UINT16 *src = (UINT16*)memory_region( machine, "maincpu" );
+	UINT8 *rom = memory_region( machine, "maincpu" );
 	UINT8 *dst = memory_region( machine, "fixed" );
 
 	int i;

@@ -727,7 +727,7 @@ static MACHINE_DRIVER_START( kodb )
 	MDRV_CPU_PROGRAM_MAP(kodb_map,0)
 	MDRV_CPU_VBLANK_INT("screen", cps1_interrupt)
 
-	MDRV_CPU_ADD("sound", Z80, 3579545)
+	MDRV_CPU_ADD("soundcpu", Z80, 3579545)
 	MDRV_CPU_PROGRAM_MAP(kodb_sub_map,0)
 
 	/* video hardware */

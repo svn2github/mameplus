@@ -1549,7 +1549,7 @@ static MACHINE_RESET( cps )
 		(strcmp(gamename, "dinohc" )==0))
 	{
 		/* Patch out Q-Sound test */
-		UINT16 *rom = (UINT16 *)memory_region(machine, "main");
+		UINT16 *rom = (UINT16 *)memory_region(machine, "maincpu");
 		rom[0xaacf4/2] = 0x4e71;
 	}
 

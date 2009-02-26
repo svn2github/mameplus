@@ -206,6 +206,7 @@ static inline u32 interp_32_97(u32 p1, u32 p2)
 /***************************************************************************/
 /* diff */
 
+#if 0
 #define INTERP_Y_LIMIT (0x30*4)
 #define INTERP_U_LIMIT (0x07*4)
 #define INTERP_V_LIMIT (0x06*8)
@@ -328,6 +329,7 @@ static int interp_32_diff2(u32 p1, u32 p2)
 
   return 0;
 }
+#endif
 
 static void interp_set(unsigned bits_per_pixel)
 {
