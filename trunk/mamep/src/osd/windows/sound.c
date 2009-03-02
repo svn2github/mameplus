@@ -171,11 +171,11 @@ void osd_update_audio_stream(running_machine *machine, INT16 *buffer, int sample
 		return;
 
 	/* if we are active, update the sampling frequency */
-	if (video_get_speed_percent(machine) > 0.0f)
+/*	if (video_get_speed_percent(machine) > 0.0f)
 	{
 		IDirectSoundBuffer_SetFrequency(stream_buffer, machine->sample_rate * video_get_speed_percent(machine));
 	}
-
+*/
 
 	// determine the current play position
 	result = IDirectSoundBuffer_GetCurrentPosition(stream_buffer, &play_position, &write_position);
@@ -366,7 +366,7 @@ static HRESULT dsound_create_buffers(void)
 	// create a buffer desc for the stream buffer
 	memset(&stream_desc, 0, sizeof(stream_desc));
 	stream_desc.dwSize = sizeof(stream_desc);
-	stream_desc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2 | DSBCAPS_CTRLFREQUENCY;
+	stream_desc.dwFlags = DSBCAPS_CTRLVOLUME | DSBCAPS_GLOBALFOCUS | DSBCAPS_GETCURRENTPOSITION2/* | DSBCAPS_CTRLFREQUENCY*/;
 	stream_desc.dwBufferBytes = stream_buffer_size;
 	stream_desc.lpwfxFormat	= &stream_format;
 
