@@ -194,7 +194,6 @@ public:
 
 	void loadIcon();
 	void disableCtrls();
-	void initFolders();
 	void restoreFolderSelection(bool = false);
 	bool isAuditFolder(QString);
 	bool isConsoleFolder();
@@ -240,6 +239,7 @@ private:
 	QAbstractItemDelegate *defaultGameListDelegate;
 	QStringList extFolders;
 
+	void initFolders();
 	void initExtFolders(const QString&, const QString&);
 	void initMenus();
 	void updateDynamicMenu(QMenu *);

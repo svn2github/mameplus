@@ -26,7 +26,11 @@ GameListSortFilterProxyModel *gameListPModel;
 GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 static const QString ROOT_FOLDER = "ROOT_FOLDER";
-QByteArray defIconData;
+
+QByteArray defIconDataGreen;
+QByteArray defIconDataYellow;
+QByteArray defIconDataRed;
+
 QByteArray defMameSnapData;
 QByteArray defMessSnapData;
 
@@ -286,9 +290,31 @@ UpdateSelectionThread::UpdateSelectionThread(QObject *parent)
 {
 	abort = false;
 
-	QFile icoFile(":/res/win_roms.ico");
-	icoFile.open(QIODevice::ReadOnly);
-	defIconData = icoFile.readAll();
+	QFile icoFile;
+
+	if (defIconDataGreen.isEmpty())
+	{
+		icoFile.setFileName(":/res/16x16/sqr-g.png");
+		icoFile.open(QIODevice::ReadOnly);
+		defIconDataGreen = icoFile.readAll();
+		icoFile.close();
+	}
+
+	if (defIconDataYellow.isEmpty())
+	{
+		icoFile.setFileName(":/res/16x16/sqr-y.png");
+		icoFile.open(QIODevice::ReadOnly);
+		defIconDataYellow = icoFile.readAll();
+		icoFile.close();
+	}
+
+	if (defIconDataRed.isEmpty())
+	{
+		icoFile.setFileName(":/res/16x16/sqr-r.png");
+		icoFile.open(QIODevice::ReadOnly);
+		defIconDataRed = icoFile.readAll();
+		icoFile.close();
+	}
 
 	QFile mameSnapFile(":/res/mamegui/mame.png");
 	mameSnapFile.open(QIODevice::ReadOnly);
@@ -322,10 +348,10 @@ void UpdateSelectionThread::run()
 		for (int snapType = DOCK_SNAP; snapType <= DOCK_PCB; snapType ++)
 		{
 			if (!abort && win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType]))
-		{
+			{
 				pmSnapData[snapType] = getScreenshot(mameOpts[validGuiSettings[snapType]]->globalvalue, gameName, snapType);
 				emit snapUpdated(snapType);
-		}
+			}
 		}
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
@@ -416,7 +442,7 @@ void UpdateSelectionThread::run()
 	}
 }
 
-QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const QString &gameName, int)
+QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const QString &gameName, int snapType)
 {
 	QStringList dirpaths = dirpath0.split(";");
 	QByteArray snapdata = QByteArray();
@@ -430,6 +456,47 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 		QFile snapFile(dirpath + gameName + PNG_EXT);
 		if (snapFile.open(QIODevice::ReadOnly))
 			snapdata = snapFile.readAll();
+
+		// try to load from built-in names
+		if (snapdata.isNull())
+		{
+			QString zipName;
+			switch (snapType)
+			{
+			case DOCK_SNAP:
+				zipName = "snap";
+				break;
+			case DOCK_FLYER:
+				zipName = "flyers";
+				break;
+			case DOCK_CABINET:
+				zipName = "cabinets";
+				break;
+			case DOCK_MARQUEE:
+				zipName = "marquees";
+				break;
+			case DOCK_TITLE:
+				zipName = "titles";
+				break;
+			case DOCK_CPANEL:
+				zipName = "cpanel";
+				break;
+			case DOCK_PCB:
+				zipName = "pcb";
+				break;
+			}
+
+			QuaZip zip(dirpath + zipName + ZIP_EXT);
+			if (zip.open(QuaZip::mdUnzip))
+			{
+				QuaZipFile zipfile(&zip);
+				if (zip.setCurrentFile(gameName + PNG_EXT))
+				{
+					if (zipfile.open(QIODevice::ReadOnly))
+						snapdata = zipfile.readAll();
+				}
+			}
+		}
 
 		// try to add .zip to nearest folder name
 		if (snapdata.isNull())
@@ -455,7 +522,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 	{
 		GameInfo *gameInfo = mameGame->games[gameName];
  		if (!gameInfo->cloneof.isEmpty())
-			snapdata = getScreenshot(dirpath0, gameInfo->cloneof, 0);
+			snapdata = getScreenshot(dirpath0, gameInfo->cloneof, snapType);
 
 		// fallback to default image, first getScreenshot() can't reach here
 		if (snapdata.isNull())
@@ -635,14 +702,21 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 			QByteArray icondata;
 
 			if (gameInfo->icondata.isNull())
-				icondata = defIconData;
+			{
+				if (gameInfo->status == 0)
+					icondata = defIconDataRed;
+				else if (gameInfo->status == 2)
+					icondata = defIconDataYellow;
+				else
+					icondata = defIconDataGreen;
+			}
 			else
 				icondata = gameInfo->icondata;
 
 			bool isLargeIcon = gameList->listMode == win->actionLargeIcons->objectName().remove("action");
 			
 			QPixmap pm;
-			pm.loadFromData(icondata, "ico");
+			pm.loadFromData(icondata);
 
 			//scale down the icon
 			if (!isLargeIcon)
@@ -1433,11 +1507,19 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 			QByteArray icondata;
 			QPixmap pm;
+
 			if (gameInfo->icondata.isNull())
-				icondata = defIconData;
+			{
+				if (gameInfo->status == 0)
+					icondata = defIconDataRed;
+				else if (gameInfo->status == 2)
+					icondata = defIconDataYellow;
+				else
+					icondata = defIconDataGreen;
+			}
 			else
 				icondata = gameInfo->icondata;
-			pm.loadFromData(icondata, "ico");
+			pm.loadFromData(icondata);
 
 			// paint the unavailable icon on top of original icon
 			if(!gameInfo->available)
@@ -1783,6 +1865,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	if (!toggleState)
 		return;
 
+	folderList.clear();
 	folderList
 		<< tr("All Games")
 		<< (isMESS ? tr("All Systems") : tr("All Arcades"))
@@ -1841,6 +1924,10 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	if (des11n_status == QDataStream::Ok)
 	{
+		//validate currentGame
+		if (!mameGame->games.contains(currentGame))
+			currentGame = mameGame->games.keys().first();
+	
 		disableCtrls();
 
 		//init the model

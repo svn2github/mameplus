@@ -81,6 +81,9 @@
 	<file>res/16x16/cir-r.png</file>
 	<file>res/16x16/cir-y.png</file>
 	<file>res/16x16/arrow-r.png</file>
+	<file>res/16x16/sqr-g.png</file>
+	<file>res/16x16/sqr-r.png</file>
+	<file>res/16x16/sqr-y.png</file>
 
 	<file>res/16x16/media-playback-pause.png</file>
 	<file>res/16x16/media-playback-start.png</file>

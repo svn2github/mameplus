@@ -1,19 +1,19 @@
-INCLUDEPATH += quazip lzma include include/zlib include/SDL-1.3
 win32 {
-INCLUDEPATH += include/SDL-1.3/Win32
+INCLUDEPATH += include/SDL/Win32
 }
 unix {
-INCLUDEPATH += include/SDL-1.3/Linux
+INCLUDEPATH += include/SDL/Linux
 }
+INCLUDEPATH += quazip lzma include include/zlib include/SDL
 
 win32 {
-LIBS += -Llib/Win32 -lSDLmain-1.3 -lSDL-1.3
+LIBS += -Llib/Win32 -lSDLmain
 RC_FILE = mamepgui.rc
 }
 unix {
 LIBS += -Llib/Linux
 }
-LIBS += -lqico -lqjpeg
+LIBS += -lqico -lqjpeg -lSDL
 
 FORMS += mamepguimain.ui playoptions.ui options.ui directories.ui about.ui ips.ui m1.ui
 TRANSLATIONS    = lang/mamepgui_zh_CN.ts lang/mamepgui_zh_TW.ts lang/mamepgui_ja_JP.ts lang/mamepgui_hu_HU.ts lang/mamepgui_pt_BR.ts

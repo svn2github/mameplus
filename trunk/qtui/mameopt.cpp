@@ -3,10 +3,8 @@
 #include "mamepguimain.h"
 #include "dialogs.h"
 
-#ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-#endif /* Q_OS_WIN */
 
 /* global */
 Options *optionsUI = NULL;
@@ -2335,7 +2333,6 @@ void OptionUtils::updateSelectableItems(QString optName)
 		}
 	}
 
-#ifdef Q_OS_WIN
 	else if (optName.startsWith("screen"))
 	{
 		pMameOpt->values.clear();
@@ -2400,7 +2397,6 @@ void OptionUtils::updateSelectableItems(QString optName)
 			}
 		}
 	}
-#endif /* Q_OS_WIN */
 
 	// prepare GUI value desc
 	for (int i = 0; i < pMameOpt->guivalues.size(); i++)

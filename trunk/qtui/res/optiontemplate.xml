@@ -95,27 +95,23 @@
 	<option name="pause_brightness" type="float" min="0.0" max="1.0" />
 	<option name="scale_effect" guiname="image enhancement" type="string" >
 		<value>none</value>
+		<value guivalue="Scanlines TV">scanlinestv</value>
+		<value guivalue="EPX-B">epxb</value>
+		<value guivalue="EPX-C">epxc</value>
 		<value>scale2x</value>
-		<value>scale2x3</value>
-		<value>scale2x4</value>
-		<value>scale3x</value>
-		<value>superscale</value>
 		<value>superscale75</value>
-		<value>2xsai</value>
-		<value>super2xsai</value>
-		<value>supereagle</value>
+		<value>scale3x</value>
+		<value guivalue="2xSaI">2xsai</value>
+		<value guivalue="Super 2xSaI">super2xsai</value>
+		<value guivalue="Super Eagle">supereagle</value>
 		<value>eagle</value>
-		<value>2xpm</value>
-		<value>hq2xasm</value>
-		<value>hq2x</value>
-		<value>hq2x3</value>
-		<value>hq2x4</value>
-		<value>lq2x</value>
-		<value>lq2x3</value>
-		<value>lq2x4</value>
-		<value>hq3xasm</value>
-		<value>hq3x</value>
-		<value>lq3x</value>
+		<value guivalue="2xPM">2xpm</value>
+		<value guivalue="HQ2x">hq2x</value>
+		<value guivalue="HQ2xS">hq2xs</value>
+		<value guivalue="HQ2xBold">hq2xbold</value>
+		<value guivalue="HQ3x">hq3x</value>
+		<value guivalue="HQ3xS">hq3xs</value>
+		<value guivalue="HQ4xBold">hq3xbold</value>
 	</option>
 	
 	<option name="antialias" guiname="draw antialiased vectors" type="bool" />

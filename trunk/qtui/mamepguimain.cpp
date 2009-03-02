@@ -10,10 +10,8 @@
 #include "ips.h"
 #include "m1.h"
 
-#ifdef Q_OS_WIN
 #include "SDL.h"
 #undef main
-#endif /* Q_OS_WIN */
 
 //static qt works with windows version
 Q_IMPORT_PLUGIN(qico)
@@ -171,6 +169,7 @@ QMainWindow(parent)
 	langActions->addAction(actionChinese_PRC);
 	langActions->addAction(actionChinese_Taiwan);
 	langActions->addAction(actionJapanese);
+	langActions->addAction(actionHungarian);
 	langActions->addAction(actionBrazilian);
 
 	QActionGroup *bgStretchActions = new QActionGroup(this);
@@ -348,14 +347,6 @@ void MainWindow::init()
 
 	for (int i = DOCK_HISTORY; i <= DOCK_COMMAND; i ++)
 		initHistory(i);
-
-#ifdef Q_OS_WIN
-	//init SDL
-	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		win->log("SDL_INIT_VIDEO failed.");
-	else
-		sdlInited = true;
-#endif /* Q_OS_WIN */
 
 	ipsUI->init();
 
@@ -571,15 +562,17 @@ void MainWindow::setVersion()
 	if (m1 != NULL && m1->available)
 	{
 		m1Ver = m1->version;
-		m1VerString = QString("<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %1 multi-platform arcade music emulator &copy; R. Belmont")
+		m1VerString = QString("<a href=\"http://rbelmont.mameworld.info/?page_id=223\">M1</a> %1 multi-platform arcade music emulator &copy; R. Belmont<br>")
 						.arg(m1Ver);
 	}
+#endif /* Q_OS_WIN */
 
-	sdlVerString = QString("<a href=\"http://www.libsdl.org\">SDL</a> %1.%2.%3 - Simple DirectMedia Layer<br>")
+	sdlVerString = QString("<a href=\"http://www.libsdl.org\">SDL</a> %1.%2.%3-%4 - Simple DirectMedia Layer<br>")
 					.arg(SDL_MAJOR_VERSION)
 					.arg(SDL_MINOR_VERSION)
-					.arg(SDL_PATCHLEVEL);
-#endif /* Q_OS_WIN */
+					.arg(SDL_PATCHLEVEL)
+					.arg(SDL_REVISION)
+					;
 
 	QString strVersion = QString(
 		"<html>"
@@ -599,7 +592,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 13")
+		.arg("1.3 beta 14")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -1423,6 +1416,9 @@ void Screenshot::updateScreenshotLabel()
 
 int main(int argc, char *argv[])
 {
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) >= 0)
+		sdlInited = true;
+
 	QApplication myApp(argc, argv);
 
 	QTranslator appTranslator;
@@ -1446,5 +1442,10 @@ int main(int argc, char *argv[])
 	win = new MainWindow(0);
 
 	return myApp.exec();
+
+	if(SDL_WasInit(SDL_INIT_VIDEO) != 0)
+	{
+		SDL_QuitSubSystem(SDL_INIT_VIDEO);
+	}
 }
 

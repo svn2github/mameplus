@@ -322,13 +322,17 @@ QString Dirs::getDirs()
 void Dirs::setDirectory(bool isAppend)
 {
 	//take current dir
-	QString initPath = lstwDirs->currentItem()->text();
-	QFileInfo fi(initPath);
-	if (!fi.exists())
+	QString initPath;
+	if (lstwDirs->count() > 0)
 	{
-		//take mame_binary dir
-		fi.setFile(mame_binary);
-		initPath = fi.absolutePath();
+		initPath = lstwDirs->currentItem()->text();
+		QFileInfo fi(initPath);
+		if (!fi.exists())
+		{
+			//take mame_binary dir
+			fi.setFile(mame_binary);
+			initPath = fi.absolutePath();
+		}
 	}
 
 	QFileDialog::Options options = QFileDialog::DontResolveSymlinks | QFileDialog::ShowDirsOnly;
