@@ -2029,9 +2029,9 @@ static TILE_GET_INFO( get_tile0_info )
 	int attr = cps1_scroll1[2*tile_index+1];
 	int gfxset;
 
-	if ((!strcmp(machine->gamedrv->name,"sf2m8")) && code > 0x5000)
+	if (!strcmp(machine->gamedrv->name,"sf2m8"))
 	{
-		code -= 0x5000;
+		code &= 0x4fff;
 	}
 
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL1, code);
@@ -2078,9 +2078,9 @@ static TILE_GET_INFO( get_tile2_info )
 	int code = cps1_scroll3[2*tile_index] & 0x3fff;
 	int attr = cps1_scroll3[2*tile_index+1];
 
-	if ((!strcmp(machine->gamedrv->name,"sf2m8")) && code > 0x2000)
+	if (!strcmp(machine->gamedrv->name,"sf2m8"))
 	{
-		code -= 0x2000;
+		code &= 0x1fff;
 	}
 
 	code = gfxrom_bank_mapper(machine, GFXTYPE_SCROLL3, code);
