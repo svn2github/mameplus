@@ -84,6 +84,7 @@ $(MESSOBJ)/nec.a:	   \
 
 $(MESSOBJ)/cpschngr.a: \
 	$(MESS_DRIVERS)/cpschngr.o \
+	$(MESS_VIDEO)/cpschngr.o \
 
 $(MESSOBJ)/bandai.a:     \
 	$(MESS_DRIVERS)/wswan.o   \

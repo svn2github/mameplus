@@ -320,10 +320,6 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #include "driver.h"
 #include "cps1.h"
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 #define VERBOSE 0
 
 /********************************************************************
@@ -1396,10 +1392,7 @@ static const struct CPS1config cps1_config_table[]=
 	{"wof3sja",  HACK_B_2,     mapper_TK263B, 0, 0, 0, 5 },
 	{"wofb",     CPS_B_21_DEF, mapper_TK263B },
 	#ifdef MESS
-	{"sfach",    CPS_B_21_DEF, mapper_sfzch },
 	{"sfzch",    CPS_B_21_DEF, mapper_sfzch },
-	{"sfzbch",   CPS_B_21_DEF, mapper_sfzch },
-	{"wofch",    CPS_B_21_DEF, mapper_sfzch },
 	#endif
 
     /* CPS2 games */
@@ -1919,13 +1912,11 @@ void cps1_get_video_base(void )
 		enablemask = cps1_game_config->layer_enable_mask[0];
 	if (cps1_game_config->layer_enable_mask[1] == cps1_game_config->layer_enable_mask[2])
 		enablemask = cps1_game_config->layer_enable_mask[1];
-/*
-	if (enablemask)
-	{
-		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
-			popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
-	}
-*/
+//	if (enablemask)
+//	{
+//		if (((layercontrol & enablemask) && (layercontrol & enablemask) != enablemask))
+//			popmessage("layer %02x contact MAMEDEV",layercontrol&0xc03f);
+//	}
 
 	enablemask = cps1_game_config->layer_enable_mask[0] | cps1_game_config->layer_enable_mask[1]
 			| cps1_game_config->layer_enable_mask[2]

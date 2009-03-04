@@ -284,8 +284,7 @@ static WRITE16_HANDLER( forgottn_dial_1_reset_w )
 }
 
 
-//mamep: non-static for MAMEMESS
-WRITE8_HANDLER( cps1_snd_bankswitch_w )
+static WRITE8_HANDLER( cps1_snd_bankswitch_w )
 {
 	UINT8 *RAM = memory_region(space->machine, "audiocpu");
 	int bankaddr;
@@ -299,15 +298,13 @@ static WRITE8_DEVICE_HANDLER( cps1_oki_pin7_w )
 	okim6295_set_pin7(device, (data & 1));
 }
 
-//mamep: non-static for MAMEMESS
-WRITE16_HANDLER( cps1_soundlatch_w )
+static WRITE16_HANDLER( cps1_soundlatch_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch_w(space,0,data & 0xff);
 }
 
-//mamep: non-static for MAMEMESS
-WRITE16_HANDLER( cps1_soundlatch2_w )
+static WRITE16_HANDLER( cps1_soundlatch2_w )
 {
 	if (ACCESSING_BITS_0_7)
 		soundlatch2_w(space,0,data & 0xff);
@@ -3147,8 +3144,7 @@ static void cps1_irq_handler_mus(const device_config *device, int irq)
 	cpu_set_input_line(device->machine->cpu[1],0,irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
-//mamep: non-static for MAMEMESS
-const ym2151_interface ym2151_config =
+static const ym2151_interface ym2151_config =
 {
 	cps1_irq_handler_mus
 };
@@ -3164,8 +3160,7 @@ const ym2151_interface ym2151_config =
 *
 ********************************************************************/
 
-//mamep: non-static for MAMEMESS
-MACHINE_DRIVER_START( cps1_10MHz )
+static MACHINE_DRIVER_START( cps1_10MHz )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, 10000000)
@@ -3220,8 +3215,7 @@ static MACHINE_DRIVER_START( pang3 )
 	MDRV_NVRAM_HANDLER(pang3)
 MACHINE_DRIVER_END
 
-//mamep: non-static for MAMEMESS
-MACHINE_DRIVER_START( qsound )
+static MACHINE_DRIVER_START( qsound )
 
 	/* basic machine hardware */
 	MDRV_IMPORT_FROM(cps1_12MHz)
@@ -9524,8 +9518,7 @@ static DRIVER_INIT( sf2hack )
 	DRIVER_INIT_CALL(cps1);
 }
 
-//mamep: non-static for MAMEMESS
-DRIVER_INIT( wof )
+static DRIVER_INIT( wof )
 {
 	wof_decode(machine);
 	DRIVER_INIT_CALL(cps1);
@@ -10307,7 +10300,7 @@ GAME( 1994, pnickj,   0,        cps1_12MHz, pnickj,   cps1,     ROT0,   "Compile
 GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchell", "Pang! 3 (Euro 950511)", 0 )
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
 
-/* Capcom CPS1 bootleg */
+/* bootleg */
 GAME( 1991, knightsb, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg","Knights of the Round (bootleg)", 0 )
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
 GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
@@ -10319,7 +10312,7 @@ GAME( 1997, wof3sja,  wof,      wofh,       wof3sj,   wof3sj,   ROT0,   "bootleg
 GAME( 1999, wofh,     wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1999, wofha,    wof,      wofh,       wof3sj,   wofh,     ROT0,   "bootleg","Sangokushi II: Sanguo Yingxiong Zhuan (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1990, cawingb,  cawing,   cps1_10MHz, cawing,   cawingb,  ROT0,   "bootleg","Carrier Air Wing (bootleg)", GAME_NOT_WORKING )
-GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg", "Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )					// Wed.26.10.1988 in the ROMS
+GAME( 1988, daimakb,  ghouls,   cps1_10MHz, daimakai, daimakb,  ROT0,   "bootleg","Dai Makai-Mura (Japan, bootleg)" , GAME_NOT_WORKING )		// Wed.26.10.1988 in the ROMS
 GAME( 1992, sf2m8,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (M8, bootleg)", GAME_NOT_WORKING )
 GAME( 1992, sf2m13,   sf2ce,    cps1_12MHz, sf2m4,    sf2m13,   ROT0,   "bootleg","Street Fighter II' Turbo - Hyper Fighting (M13, bootleg)", 0 )
 GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 1)", 0 )
@@ -10329,10 +10322,10 @@ GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg
 GAME( 1993, dinohc,   dino,     qsound,     dinoh,    dinohc,   ROT0,   "bootleg","Cadillacs and Dinosaurs: Dinosaur Hunter (bootleg)", 0 )
 GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg","The Punisher: Biaofeng Zhanjing (Chinese bootleg)", 0 )
 
-/* Capcom CPS1 hack */
-GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "hack","Knights of the Round (hack)" , 0 )
-GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "hack","The King of Dragons (hack)", 0 )
-GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack","Cadillacs and Dinosaurs (hack set 1)", 0)
-GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack","Cadillacs and Dinosaurs (hack set 2)", 0 )
-GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "hack","Cadillacs and Dinosaurs (hack set 3)", 0 )
+/* hack */
+GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "hack",   "Knights of the Round (hack)" , 0 )
+GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "hack",   "The King of Dragons (hack)", 0 )
+GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 1)", 0)
+GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 2)", 0 )
+GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", 0 )
 
