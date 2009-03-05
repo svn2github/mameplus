@@ -119,7 +119,10 @@ static const translation_info gcc_translate[] =
 #else
 	{ 0,		"-std=gnu89",			"" },
 #endif
+	{ 0,		"-std=gnu++98",				"/TP" },
 	{ 0,		"-pipe",				"" },
+	{ 0,		"-x",						"" },
+	{ 0,		"c++",						"" },
 	{ 0 }
 };
 
@@ -151,6 +154,7 @@ static const translation_info ld_translate[] =
 static const translation_info ar_translate[] =
 {
 	{ 0,		"-cr",				"" },
+	{ 0,		"/LTCG",					"/LTCG" },
 	{ 0 }
 };
 
@@ -325,13 +329,13 @@ static void build_command_line(int argc, char *argv[])
 	for (param = 2; param < argc; param++)
 	{
 		const char *src = argv[param];
+		int firstchar = src[0];
 		int srclen = strlen(src);
+		int matched = FALSE;
 		int i;
 
 		// find a match
-		if (src[0] == '-')
-		{
-			for (i = 0; transtable[i].gcc_option; i++)
+		for (i = 0; !matched && transtable[i].gcc_option != NULL; i++)
 			{
 				const char *compare = transtable[i].gcc_option;
 				const char *replace;
@@ -391,7 +395,7 @@ static void build_command_line(int argc, char *argv[])
 
 					// append a final space
 					*dst++ = ' ';
-					break;
+				matched = TRUE;
 				}
 
 				// if we hit the end, we're also ok
@@ -408,85 +412,88 @@ static void build_command_line(int argc, char *argv[])
 
 					// append a final space
 					*dst++ = ' ';
-					break;
+				matched = TRUE;
 				}
 
 				// else keep looking
 			}
 
-			// warn if we didn't get a match
-			if (!transtable[i].gcc_option)
+		// if we didn't match, process
+		if (!matched)
+		{
+			// warn if we missed a parameter
+			if (transtable[i].gcc_option == NULL && firstchar == '-')
 				fprintf(stderr, "Unable to match parameter '%s'\n", src);
-		}
 
 		// otherwise, assume it's a filename and copy translating slashes
 		// it can also be a Windows-specific option which is passed through unscathed
-		else
-		{
-			char *temp = NULL;
-			int dotrans;
-
-			for (i = 0; transtable[i].gcc_option; i++)
+			else if (firstchar != '-')
 			{
-				const char *compare = transtable[i].gcc_option;
-				int clen, slen;
+				char *temp = NULL;
+				int dotrans;
 
-				// check version number
-				if (exe_version < transtable[i].vc_version)
-					continue;
-
-				if (*compare++ != '*')
-					continue;
-
-				clen = strlen(compare);
-				slen = strlen(src);
-
-				if (clen > slen)
-					continue;
-
-				if (strcmp(src + slen - clen, compare) == 0)
+				for (i = 0; transtable[i].gcc_option; i++)
 				{
-					const char *replace = transtable[i].vc_option;
-					int j;
+					const char *compare = transtable[i].gcc_option;
+					int clen, slen;
 
-					temp = malloc(slen + strlen(replace));
+					// check version number
+					if (exe_version < transtable[i].vc_version)
+						continue;
 
-					for (j = 0; replace[j]; j++)
+					if (*compare++ != '*')
+						continue;
+
+					clen = strlen(compare);
+					slen = strlen(src);
+
+					if (clen > slen)
+						continue;
+
+					if (strcmp(src + slen - clen, compare) == 0)
 					{
-						if (replace[j] == '*')
+						const char *replace = transtable[i].vc_option;
+						int j;
+
+						temp = malloc(slen + strlen(replace));
+
+						for (j = 0; replace[j]; j++)
 						{
-							strcpy(temp + j, src);
-							strcpy(temp + j + slen - clen, replace + j + 1);
-							break;
+							if (replace[j] == '*')
+							{
+								strcpy(temp + j, src);
+								strcpy(temp + j + slen - clen, replace + j + 1);
+								break;
+							}
+
+							temp[j] = replace[j];
 						}
 
-						temp[j] = replace[j];
+						src = temp;
+						break;
 					}
-
-					src = temp;
-					break;
 				}
+
+				dotrans = (*src != '/');
+
+				// if the output filename is implicitly first, append the out parameter
+				if (output_is_first)
+				{
+					dst += sprintf(dst, "%s", outstring);
+					output_is_first = 0;
+				}
+
+				// now copy the rest of the string
+				while (*src)
+				{
+					*dst++ = (dotrans && *src == '/') ? '\\' : *src;
+					src++;
+				}
+				*dst++ = ' ';
+
+				if (temp)
+					free(temp);
 			}
-
-			dotrans = (*src != '/');
-
-			// if the output filename is implicitly first, append the out parameter
-			if (output_is_first)
-			{
-				dst += sprintf(dst, "%s", outstring);
-				output_is_first = 0;
-			}
-
-			// now copy the rest of the string
-			while (*src)
-			{
-				*dst++ = (dotrans && *src == '/') ? '\\' : *src;
-				src++;
-			}
-			*dst++ = ' ';
-
-			if (temp)
-				free(temp);
 		}
 	}
 

@@ -158,6 +158,9 @@ BUILD_ZLIB = 1
 # (default is OPTIMIZE = 3 normally, or OPTIMIZE = 0 with symbols)
 # OPTIMIZE = 3
 
+# experimental: uncomment to compile everything as C++ for stricter type checking
+# CPP_COMPILE = 1
+
 
 ###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
@@ -222,16 +225,21 @@ ifdef DEBUG
 DEBUGSUFFIX = d
 endif
 
+# cpp builds get a 'pp' suffix
+ifdef CPP_COMPILE
+CPPSUFFIX = pp
+endif
+
 # the name is just 'target' if no subtarget; otherwise it is
 # the concatenation of the two (e.g., mametiny)
 ifeq ($(TARGET),$(SUBTARGET))
-    NAME = $(TARGET)$(EXTRA_SUFFIX)
+NAME = $(TARGET)$(EXTRA_SUFFIX)
 else
-    NAME = $(TARGET)$(EXTRA_SUFFIX)$(SUBTARGET)
+NAME = $(TARGET)$(EXTRA_SUFFIX)$(SUBTARGET)
 endif
 
 # fullname is prefix+name+suffix+debugsuffix
-FULLNAME = $(PREFIX)$(NAME)$(SUFFIX)$(DEBUGSUFFIX)
+FULLNAME = $(PREFIX)$(NAME)$(CPPSUFFIX)$(SUFFIX)$(DEBUGSUFFIX)
 
 ifeq ($(NO_DLL),)
 DEFS += -DWIN32 -DWINNT
@@ -245,6 +253,7 @@ else
 EMULATOR = $(FULLNAME)$(EXE)
 EMULATORALL = $(EMULATOR)
 endif
+
 
 
 #-------------------------------------------------
@@ -364,60 +373,78 @@ DEFS += -DMAMEMESS
 endif
 
 
+
 #-------------------------------------------------
 # compile flags
+# CCOMFLAGS are common flags
+# CONLYFLAGS are flags only used when compiling for C
+# CPPONLYFLAGS are flags only used when compiling for C++
 #-------------------------------------------------
 
-# we compile to C89 standard with GNU extensions
-CFLAGS = -std=gnu89
+# start with empties for everything
+CCOMFLAGS =
+CONLYFLAGS =
+CPPONLYFLAGS =
+
+# CFLAGS is defined based on C or C++ targets
+# (remember, expansion only happens when used, so doing it here is ok)
+ifdef CPP_COMPILE
+CFLAGS = $(CCOMFLAGS) $(CPPONLYFLAGS)
+else
+CFLAGS = $(CCOMFLAGS) $(CONLYFLAGS)
+endif
+
+# we compile C-only to C89 standard with GNU extensions
+# we compile C++ code to C++98 standard with GNU extensions
+CONLYFLAGS += -std=gnu89
+CPPONLYFLAGS += -x c++ -std=gnu++98
 
 # this speeds it up a bit by piping between the preprocessor/compiler/assembler
-CFLAGS += -pipe
+CCOMFLAGS += -pipe
 
-# add -g if we need symbols
+# add -g if we need symbols, and ensure we have frame pointers
 ifdef SYMBOLS
-CFLAGS += -g
+CCOMFLAGS += -g -fno-omit-frame-pointer
 endif
 
 # add -v if we need verbose build information
 ifdef VERBOSE
-CFLAGS += -v
+CCOMFLAGS += -v
 endif
-
-# add a basic set of warnings
-CFLAGS += \
-	-Wall \
-	-Wpointer-arith \
-	-Wbad-function-cast \
-	-Wcast-align \
-	-Wstrict-prototypes \
-	-Wundef \
-	-Wno-format-security \
-	-Wwrite-strings \
-	-Wno-pointer-sign \
 
 # add profiling information for the compiler
 ifdef PROFILE
-CFLAGS += -pg
-endif
-
-# this warning is not supported on the os2 compilers
-ifneq ($(TARGETOS),os2)
-CFLAGS += -Wdeclaration-after-statement
+CCOMFLAGS += -pg
 endif
 
 # add the optimization flag
-CFLAGS += -O$(OPTIMIZE)
+CCOMFLAGS += -O$(OPTIMIZE)
 
 # if we are optimizing, include optimization options
 # and make all errors into warnings
 ifneq ($(OPTIMIZE),0)
-CFLAGS += -Wno-error $(ARCHOPTS) -fno-strict-aliasing
+CCOMFLAGS += -Wno-error -fno-strict-aliasing $(ARCHOPTS)
 endif
 
-# if symbols are on, make sure we have frame pointers
-ifdef SYMBOLS
-CFLAGS += -fno-omit-frame-pointer
+# add a basic set of warnings
+CCOMFLAGS += \
+	-Wall \
+	-Wcast-align \
+	-Wundef \
+	-Wno-format-security \
+	-Wwrite-strings \
+	-Wno-pointer-sign \
+	-Wno-sign-compare
+
+# warnings only applicable to C compiles
+CONLYFLAGS += \
+	-Wpointer-arith \
+	-Wbad-function-cast \
+	-Wstrict-prototypes
+
+# this warning is not supported on the os2 compilers
+ifneq ($(TARGETOS),os2)
+CONLYFLAGS += -Wdeclaration-after-statement
 endif
 
 
@@ -427,7 +454,7 @@ endif
 #-------------------------------------------------
 
 # add core include paths
-CFLAGS += \
+CCOMFLAGS += \
 	-I$(SRC)/$(TARGET) \
 	-I$(SRC)/$(TARGET)/includes \
 	-I$(OBJ)/$(TARGET)/layout \
@@ -520,7 +547,7 @@ LIBS =
 
 # add expat XML library
 ifdef BUILD_EXPAT
-CFLAGS += -I$(SRC)/lib/expat
+CCOMFLAGS += -I$(SRC)/lib/expat
 EXPAT = $(OBJ)/libexpat.a
 else
 LIBS += -lexpat
@@ -529,7 +556,7 @@ endif
 
 # add ZLIB compression library
 ifdef BUILD_ZLIB
-CFLAGS += -I$(SRC)/lib/zlib
+CCOMFLAGS += -I$(SRC)/lib/zlib
 ZLIB = $(OBJ)/libz.a
 else
 LIBS += -lz
@@ -545,6 +572,8 @@ endif
 
 all: maketree buildtools emulator
 
+
+
 #-------------------------------------------------
 # defines needed by multiple make files 
 #-------------------------------------------------
@@ -552,6 +581,8 @@ all: maketree buildtools emulator
 BUILDSRC = $(SRC)/build
 BUILDOBJ = $(OBJ)/build
 BUILDOUT = $(BUILDOBJ)
+
+
 
 #-------------------------------------------------
 # include the various .mak files
@@ -661,6 +692,8 @@ $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(MESSLIBOSD) $(LI
   endif
   endif
 endif
+
+
 
 #-------------------------------------------------
 # generic rules

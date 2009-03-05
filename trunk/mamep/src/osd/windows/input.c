@@ -445,7 +445,7 @@ INLINE input_item_id keyboard_map_scancode_to_itemid(int scancode)
 	// scan the table for a match
 	for (tablenum = 0; tablenum < ARRAY_LENGTH(win_key_trans_table); tablenum++)
 		if (win_key_trans_table[tablenum][DI_KEY] == scancode)
-			return win_key_trans_table[tablenum][MAME_KEY];
+			return (input_item_id)win_key_trans_table[tablenum][MAME_KEY];
 
 	// default to an "other" switch
 	return ITEM_ID_OTHER_SWITCH;
@@ -714,7 +714,7 @@ BOOL wininput_handle_raw(HANDLE device)
 	// if necessary, allocate a temporary buffer and fetch the data
 	if (size > sizeof(small_buffer))
 	{
-		data = malloc(size);
+		data = (LPBYTE)malloc(size);
 		if (data == NULL)
 			return result;
 	}
@@ -855,7 +855,7 @@ static device_info *generic_device_alloc(running_machine *machine, device_info *
 	device_info *devinfo;
 
 	// allocate memory for the device object
-	devinfo = malloc_or_die(sizeof(*devinfo));
+	devinfo = (device_info *)malloc_or_die(sizeof(*devinfo));
 	memset(devinfo, 0, sizeof(*devinfo));
 	devinfo->head = devlist_head_ptr;
 	devinfo->machine = machine;
@@ -950,8 +950,8 @@ static void generic_device_reset(device_info *devinfo)
 
 static INT32 generic_button_get_state(void *device_internal, void *item_internal)
 {
-	device_info *devinfo = device_internal;
-	BYTE *itemdata = item_internal;
+	device_info *devinfo = (device_info *)device_internal;
+	BYTE *itemdata = (BYTE *)item_internal;
 
 	// return the current state
 	poll_if_necessary(devinfo->machine);
@@ -965,8 +965,8 @@ static INT32 generic_button_get_state(void *device_internal, void *item_internal
 
 static INT32 generic_axis_get_state(void *device_internal, void *item_internal)
 {
-	device_info *devinfo = device_internal;
-	LONG *axisdata = item_internal;
+	device_info *devinfo = (device_info *)device_internal;
+	LONG *axisdata = (LONG *)item_internal;
 
 	// return the current state
 	poll_if_necessary(devinfo->machine);
@@ -1008,7 +1008,7 @@ static void win32_init(running_machine *machine)
 		for (axisnum = 0; axisnum < 2; axisnum++)
 		{
 			const char *name = utf8_from_tstring(default_axis_name[axisnum]);
-			input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+			input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 			free((void *)name);
 		}
 
@@ -1016,7 +1016,7 @@ static void win32_init(running_machine *machine)
 		for (butnum = 0; butnum < 2; butnum++)
 		{
 			const char *name = utf8_from_tstring(default_button_name(butnum));
-			input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], ITEM_ID_BUTTON1 + butnum, generic_button_get_state);
+			input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], (input_item_id)(ITEM_ID_BUTTON1 + butnum), generic_button_get_state);
 			free((void *)name);
 		}
 	}
@@ -1263,12 +1263,12 @@ static device_info *dinput_device_create(running_machine *machine, device_info *
 	devinfo = generic_device_alloc(machine, devlist_head_ptr, instance->tszInstanceName);
 
 	// attempt to create a device
-	result = IDirectInput_CreateDevice(dinput, &instance->guidInstance, &devinfo->dinput.device, NULL);
+	result = IDirectInput_CreateDevice(dinput, WRAP_REFIID(instance->guidInstance), &devinfo->dinput.device, NULL);
 	if (result != DI_OK)
 		goto error;
 
 	// try to get a version 2 device for it
-	result = IDirectInputDevice_QueryInterface(devinfo->dinput.device, &IID_IDirectInputDevice2, (void **)&devinfo->dinput.device2);
+	result = IDirectInputDevice_QueryInterface(devinfo->dinput.device, WRAP_REFIID(IID_IDirectInputDevice2), (void **)&devinfo->dinput.device2);
 	if (result != DI_OK)
 		devinfo->dinput.device2 = NULL;
 
@@ -1355,7 +1355,7 @@ static const char *dinput_device_item_name(device_info *devinfo, int offset, con
 		return utf8_from_tstring(namestring);
 
 	// otherwise, allocate space to add the suffix
-	combined = malloc_or_die(sizeof(TCHAR) * (_tcslen(namestring) + 1 + _tcslen(suffix) + 1));
+	combined = (TCHAR *)malloc_or_die(sizeof(TCHAR) * (_tcslen(namestring) + 1 + _tcslen(suffix) + 1));
 	_tcscpy(combined, namestring);
 	_tcscat(combined, TEXT(" "));
 	_tcscat(combined, suffix);
@@ -1398,7 +1398,7 @@ static HRESULT dinput_device_poll(device_info *devinfo)
 
 static BOOL CALLBACK dinput_keyboard_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
-	running_machine *machine = ref;
+	running_machine *machine = (running_machine *)ref;
 	device_info *devinfo;
 	int keynum;
 
@@ -1454,7 +1454,7 @@ static void dinput_keyboard_poll(device_info *devinfo)
 static BOOL CALLBACK dinput_mouse_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
 	device_info *devinfo, *guninfo = NULL;
-	running_machine *machine = ref;
+	running_machine *machine = (running_machine *)ref;
 	int axisnum, butnum;
 	HRESULT result;
 
@@ -1499,9 +1499,9 @@ static BOOL CALLBACK dinput_mouse_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 		const char *name = dinput_device_item_name(devinfo, offsetof(DIMOUSESTATE, lX) + axisnum * sizeof(LONG), default_axis_name[axisnum], NULL);
 
 		// add to the mouse device and optionally to the gun device as well
-		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 		if (guninfo != NULL && axisnum < 2)
-			input_device_item_add(guninfo->device, name, &guninfo->mouse.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+			input_device_item_add(guninfo->device, name, &guninfo->mouse.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 
 		free((void *)name);
 	}
@@ -1509,13 +1509,14 @@ static BOOL CALLBACK dinput_mouse_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 	// populate the buttons
 	for (butnum = 0; butnum < devinfo->dinput.caps.dwButtons; butnum++)
 	{
-		const char *name = dinput_device_item_name(devinfo, offsetof(DIMOUSESTATE, rgbButtons[butnum]), default_button_name(butnum), NULL);
+		FPTR offset = (FPTR)(&((DIMOUSESTATE *)NULL)->rgbButtons[butnum]);
+		const char *name = dinput_device_item_name(devinfo, offset, default_button_name(butnum), NULL);
 
 		// add to the mouse device and optionally to the gun device as well
 		// note that the gun device points to the mouse buttons rather than its own
-		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], ITEM_ID_BUTTON1 + butnum, generic_button_get_state);
+		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], (input_item_id)(ITEM_ID_BUTTON1 + butnum), generic_button_get_state);
 		if (guninfo != NULL)
-			input_device_item_add(guninfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], ITEM_ID_BUTTON1 + butnum, generic_button_get_state);
+			input_device_item_add(guninfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], (input_item_id)(ITEM_ID_BUTTON1 + butnum), generic_button_get_state);
 
 		free((void *)name);
 	}
@@ -1555,7 +1556,7 @@ static void dinput_mouse_poll(device_info *devinfo)
 static BOOL CALLBACK dinput_joystick_enum(LPCDIDEVICEINSTANCE instance, LPVOID ref)
 {
 	DWORD cooperative_level = (HAS_WINDOW_MENU ? DISCL_BACKGROUND : DISCL_FOREGROUND) | DISCL_EXCLUSIVE;
-	running_machine *machine = ref;
+	running_machine *machine = (running_machine *)ref;
 	device_info *devinfo;
 	HRESULT result;
 
@@ -1620,7 +1621,7 @@ static void assign_joystick_to_player(running_machine *machine, device_info *dev
 
 		// populate the item description as well
 		name = dinput_device_item_name(devinfo, offsetof(DIJOYSTATE2, lX) + axisnum * sizeof(LONG), default_axis_name[axisnum], NULL);
-		input_device_item_add(devinfo->device, name, &devinfo->joystick.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+		input_device_item_add(devinfo->device, name, &devinfo->joystick.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 		free((void *)name);
 
 		axiscount++;
@@ -1655,8 +1656,9 @@ static void assign_joystick_to_player(running_machine *machine, device_info *dev
 	// populate the buttons
 	for (butnum = 0; butnum < devinfo->dinput.caps.dwButtons; butnum++)
 	{
-		const char *name = dinput_device_item_name(devinfo, offsetof(DIJOYSTATE2, rgbButtons[butnum]), default_button_name(butnum), NULL);
-		input_device_item_add(devinfo->device, name, &devinfo->joystick.state.rgbButtons[butnum], (butnum < 16) ? (ITEM_ID_BUTTON1 + butnum) : ITEM_ID_OTHER_SWITCH, generic_button_get_state);
+		FPTR offset = (FPTR)(&((DIJOYSTATE2 *)NULL)->rgbButtons[butnum]);
+		const char *name = dinput_device_item_name(devinfo, offset, default_button_name(butnum), NULL);
+		input_device_item_add(devinfo->device, name, &devinfo->joystick.state.rgbButtons[butnum], (butnum < 16) ? (input_item_id)(ITEM_ID_BUTTON1 + butnum) : ITEM_ID_OTHER_SWITCH, generic_button_get_state);
 		free((void *)name);
 	}
 }
@@ -1688,7 +1690,7 @@ static void dinput_joystick_poll(device_info *devinfo)
 
 static INT32 dinput_joystick_pov_get_state(void *device_internal, void *item_internal)
 {
-	device_info *devinfo = device_internal;
+	device_info *devinfo = (device_info *)device_internal;
 	int povnum = (FPTR)item_internal / 4;
 	int povdir = (FPTR)item_internal % 4;
 	INT32 result = 0;
@@ -1747,7 +1749,7 @@ static void rawinput_init(running_machine *machine)
 		goto error;
 	if (device_count == 0)
 		goto error;
-	devlist = malloc_or_die(device_count * sizeof(*devlist));
+	devlist = (RAWINPUTDEVICELIST *)malloc_or_die(device_count * sizeof(*devlist));
 	if ((*get_rawinput_device_list)(devlist, &device_count, sizeof(*devlist)) == -1)
 		goto error;
 
@@ -1827,7 +1829,7 @@ static device_info *rawinput_device_create(running_machine *machine, device_info
 	// determine the length of the device name, allocate it, and fetch it
 	if ((*get_rawinput_device_info)(device->hDevice, RIDI_DEVICENAME, NULL, &name_length) != 0)
 		goto error;
-	tname = malloc_or_die(name_length * sizeof(*tname));
+	tname = (TCHAR *)malloc_or_die(name_length * sizeof(*tname));
 	if ((*get_rawinput_device_info)(device->hDevice, RIDI_DEVICENAME, tname, &name_length) == -1)
 		goto error;
 
@@ -1886,7 +1888,7 @@ static TCHAR *rawinput_device_improve_name(TCHAR *name)
 		return name;
 
 	// allocate a temporary string and concatenate the base path plus the name
-	regpath = malloc_or_die(sizeof(*regpath) * (_tcslen(basepath) + 1 + _tcslen(name)));
+	regpath = (TCHAR *)malloc_or_die(sizeof(*regpath) * (_tcslen(basepath) + 1 + _tcslen(name)));
 	_tcscpy(regpath, basepath);
 	chdst = regpath + _tcslen(regpath);
 
@@ -1998,7 +2000,7 @@ convert:
 		chsrc++;
 	else
 		chsrc = regstring;
-	name = malloc_or_die(sizeof(*name) * (_tcslen(chsrc) + 1));
+	name = (TCHAR *)malloc_or_die(sizeof(*name) * (_tcslen(chsrc) + 1));
 	_tcscpy(name, chsrc);
 
 exit:
@@ -2115,9 +2117,9 @@ static void rawinput_mouse_enum(running_machine *machine, PRAWINPUTDEVICELIST de
 		const char *name = utf8_from_tstring(default_axis_name[axisnum]);
 
 		// add to the mouse device and optionally to the gun device as well
-		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 		if (guninfo != NULL && axisnum < 2)
-			input_device_item_add(guninfo->device, name, &guninfo->mouse.state.lX + axisnum, ITEM_ID_XAXIS + axisnum, generic_axis_get_state);
+			input_device_item_add(guninfo->device, name, &guninfo->mouse.state.lX + axisnum, (input_item_id)(ITEM_ID_XAXIS + axisnum), generic_axis_get_state);
 
 		free((void *)name);
 	}
@@ -2129,9 +2131,9 @@ static void rawinput_mouse_enum(running_machine *machine, PRAWINPUTDEVICELIST de
 
 		// add to the mouse device and optionally to the gun device as well
 		// note that the gun device points to the mouse buttons rather than its own
-		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], ITEM_ID_BUTTON1 + butnum, generic_button_get_state);
+		input_device_item_add(devinfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], (input_item_id)(ITEM_ID_BUTTON1 + butnum), generic_button_get_state);
 		if (guninfo != NULL)
-			input_device_item_add(guninfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], ITEM_ID_BUTTON1 + butnum, generic_button_get_state);
+			input_device_item_add(guninfo->device, name, &devinfo->mouse.state.rgbButtons[butnum], (input_item_id)(ITEM_ID_BUTTON1 + butnum), generic_button_get_state);
 
 		free((void *)name);
 	}
@@ -2226,7 +2228,7 @@ static TCHAR *reg_query_string(HKEY key, const TCHAR *path)
 		return NULL;
 
 	// allocate a buffer
-	buffer = malloc_or_die(datalen + sizeof(*buffer));
+	buffer = (TCHAR *)malloc_or_die(datalen + sizeof(*buffer));
 	buffer[datalen / sizeof(*buffer)] = 0;
 
 	// now get the actual data

@@ -635,7 +635,7 @@ typedef struct _input_field_user_settings input_field_user_settings;
 struct _input_field_user_settings
 {
 	input_port_value			value;			/* for DIP switches */
-	int							autofire;		/* autofire */
+	int						autofire;	/* autofire */
 	input_seq					seq[SEQ_TYPE_TOTAL];/* sequences of all types */
 	INT32						sensitivity;	/* for analog controls */
 	INT32						delta;			/* for analog controls */
@@ -942,6 +942,7 @@ extern UINT16 custom_button[MAX_PLAYERS][MAX_CUSTOM_BUTTONS];
 extern int custom_buttons;
 #endif /* USE_CUSTOM_BUTTON */
 
+
 #ifdef USE_SHOW_INPUT_LOG
 typedef struct _input_log input_log;
 struct _input_log
@@ -953,6 +954,7 @@ struct _input_log
 extern input_log command_buffer[];
 extern int show_input_log;
 #endif /* USE_SHOW_INPUT_LOG */
+
 
 #ifdef INP_CAPTION
 void draw_caption(running_machine *machine);
@@ -1044,8 +1046,7 @@ int input_field_has_next_setting(const input_field_config *field);
 /* select the next item for a DIP switch or configuration field */
 void input_field_select_next_setting(const input_field_config *field);
 
-
-
+//mamep
 int has_record_file(running_machine *machine);
 int has_playback_file(running_machine *machine);
 
@@ -1077,12 +1078,6 @@ int input_condition_true(running_machine *machine, const input_condition *condit
 
 /* convert an input_port_token to a default string */
 const char *input_port_string_from_token(const input_port_token token);
-
-/* return a memory handler corresponding to a given input port tag */
-read8_space_func input_port_read_handler8(const input_port_config *portlist, const char *tag);
-read16_space_func input_port_read_handler16(const input_port_config *portlist, const char *tag);
-read32_space_func input_port_read_handler32(const input_port_config *portlist, const char *tag);
-read64_space_func input_port_read_handler64(const input_port_config *portlist, const char *tag);
 
 /* autofire functions */
 int get_autofiredelay(int player);

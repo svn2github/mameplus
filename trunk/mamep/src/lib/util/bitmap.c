@@ -49,7 +49,7 @@ bitmap_t *bitmap_alloc_slop(int width, int height, int xslop, int yslop, bitmap_
 		return NULL;
 
 	/* allocate the bitmap itself */
-	bitmap = malloc(sizeof(*bitmap));
+	bitmap = (bitmap_t *)malloc(sizeof(*bitmap));
 	if (bitmap == NULL)
 		return NULL;
 	memset(bitmap, 0, sizeof(*bitmap));
@@ -100,7 +100,7 @@ bitmap_t *bitmap_wrap(void *base, int width, int height, int rowpixels, bitmap_f
 		return NULL;
 
 	/* allocate memory */
-	bitmap = malloc(sizeof(*bitmap));
+	bitmap = (bitmap_t *)malloc(sizeof(*bitmap));
 	if (bitmap == NULL)
 		return NULL;
 	memset(bitmap, 0, sizeof(*bitmap));
