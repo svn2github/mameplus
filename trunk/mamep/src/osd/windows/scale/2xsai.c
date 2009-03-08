@@ -497,6 +497,7 @@ void SuperEagle (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
   u16 *bP;
 //u16 *xP;
   u32 inc_bP;
+  u32 Nextline = srcPitch >> 1;
 
 #ifdef MMX
   if (cpu_mmx) {
@@ -511,8 +512,6 @@ void SuperEagle (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
 #endif  
   {
     inc_bP = 1;
-    
-    u32 Nextline = srcPitch >> 1;
     
     for (; height; height--) {
       u32 finish;
@@ -645,11 +644,10 @@ void SuperEagle32 (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
   u32 *bP;
 //u32 *xP;
   u32 inc_bP;
+  u32 Nextline = srcPitch >> 2;
 
   inc_bP = 1;
   
-  u32 Nextline = srcPitch >> 2;
-    
   for (; height; height--) {
     u32 finish;
     bP = (u32 *) srcPtr;
@@ -773,6 +771,7 @@ void _2xSaI (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
   u8  *dP;
   u16 *bP;
   u32 inc_bP;
+  u32 Nextline = srcPitch >> 1;
   
 #ifdef MMX
   if (cpu_mmx) {
@@ -786,8 +785,6 @@ void _2xSaI (u8 *srcPtr, u32 srcPitch, u8 *deltaPtr,
 #endif
   {
     inc_bP = 1;
-    
-    u32 Nextline = srcPitch >> 1;
     
     for (; height; height--) {
       u32 finish;

@@ -503,10 +503,11 @@ void RenderEPXC(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 INLINE bool Diff(int c1, int c2)
 {
 	int c1y = (c1 & Ymask) - (c2 & Ymask);
-	if (Absolute(c1y) > trY) return true;
 	int c1u = (c1 & Umask) - (c2 & Umask);
-	if (Absolute(c1u) > trU) return true;
 	int c1v = (c1 & Vmask) - (c2 & Vmask);
+
+	if (Absolute(c1y) > trY) return true;
+	if (Absolute(c1u) > trU) return true;
 	if (Absolute(c1v) > trV) return true;
 
 	return false;
@@ -726,7 +727,10 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 	const int* RGBtoYUVtable = RGBtoYUV;
 
 	uint32  pattern;
-	int		l, y;
+	int l;
+#if 0
+	int y;
+#endif
 
 	while (height--)
 	{
