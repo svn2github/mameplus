@@ -7,6 +7,7 @@
 ###########################################################################
 
 
+
 CFLAGS += -DEMULATORDLL=\"$(EMULATORDLL)\"
 RCFLAGS += -DMESS
 
@@ -64,5 +65,4 @@ $(OBJ)/ui/%.res: src/ui/%.rc
 $(MESS_UIOBJ)/%.res: $(MESS_UISRC)/%.rc
 	@echo Compiling mame32 resources $<...
 	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
-
 

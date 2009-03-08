@@ -11,6 +11,11 @@
 
 
 ###########################################################################
+#################   BEGIN USER-CONFIGURABLE OPTIONS   #####################
+###########################################################################
+
+
+###########################################################################
 ##################   END USER-CONFIGURABLE OPTIONS   ######################
 ###########################################################################
 
@@ -26,16 +31,6 @@ UIOBJ = $(OBJ)/osd/winui
 OBJDIRS += $(UIOBJ)
 
 CFLAGS += -I $(UISRC)
-
-ifneq ($(USE_IMAGE_MENU),)
-    $(UIOBJ)/%.o: $(UISRC)/%.cpp
-	    @echo Compiling $<...
-    ifneq ($(MSVC_BUILD),)
-	    $(CC) -mwindows -c $< -o $@
-    else
-	    @g++ -mwindows -c $< -o $@
-    endif
-endif
 
 #-------------------------------------------------
 # configure the resource compiler
@@ -198,6 +193,22 @@ $(UIOBJ)/mamevers.rc: $(VERINFO) $(SRC)/version.c
 
 
 #-------------------------------------------------
+# Specific rele to compile USE_IMAGE_MENU.
+#-------------------------------------------------
+
+ifneq ($(USE_IMAGE_MENU),)
+    $(UIOBJ)/%.o: $(UISRC)/%.cpp
+	    @echo Compiling $<...
+    ifneq ($(MSVC_BUILD),)
+	    $(CC) -mwindows -c $< -o $@
+    else
+	    @g++ -mwindows -c $< -o $@
+    endif
+endif
+
+
+
+#-------------------------------------------------
 # CORE functions
 # only definitions UI_RCDEFS for mameui.rc
 #-------------------------------------------------
@@ -269,6 +280,9 @@ endif
 ifneq ($(SHOW_UNAVAILABLE_FOLDER),)
 DEFS += -DSHOW_UNAVAILABLE_FOLDER
 endif
+
+
+
 
 #####  End windui.mak ##############################################
 
