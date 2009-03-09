@@ -7445,7 +7445,7 @@ static void UpdateMenu(HMENU hMenu)
 	}
 	else
 	{
-		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play %s")), _UIW(TEXT("Game")));
+		snwprintf(buf, ARRAY_LENGTH(buf), _UIW(TEXT("&Play")));
 
 		mItem.cbSize     = sizeof(mItem);
 		mItem.fMask      = MIIM_TYPE;

@@ -10,7 +10,6 @@
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
 #endif /* USE_SCALE_EFFECTS */
-#include "scale/snes9x_render.h"
 
 // defines
 enum

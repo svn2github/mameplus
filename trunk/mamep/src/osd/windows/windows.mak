@@ -22,8 +22,6 @@
 
 # uncomment next line to enable a build using Microsoft tools
 # MSVC_BUILD = 1
-# uncomment next line to enable a build using Intel tools
-# ICC_BUILD = 1
 
 # uncomment next line to use cygwin compiler
 # CYGWIN_BUILD = 1
@@ -100,17 +98,11 @@ endif
 # overrides for the MSVC compiler
 #-------------------------------------------------
 
-ifneq ($(ICC_BUILD),)
-    COMPILER_SUFFIX = -icc
-    VCONVDEFS = -DICC_BUILD
-    MSVC_BUILD = 1
+ifneq ($(MSVC_BUILD),)
+	COMPILER_SUFFIX = -vc
+	VCONVDEFS =
 else
-    ifneq ($(MSVC_BUILD),)
-        COMPILER_SUFFIX = -vc
-        VCONVDEFS =
-    else
-        CFLAGS += -Iextra/include
-    endif
+	CFLAGS += -Iextra/include
 endif
 
 ifdef MSVC_BUILD
@@ -137,13 +129,9 @@ ifdef MSVC_BUILD
     
     # turn on link-time codegen if the MAXOPT flag is also set
     ifdef MAXOPT
-        ifneq ($(ICC_BUILD),)
-            CCOMFLAGS += /Qipo /Qipo_obj
-        else
-            CCOMFLAGS += /GL
-            LDFLAGS += /LTCG
-            AR += /LTCG
-        endif
+    CCOMFLAGS += /GL
+    LDFLAGS += /LTCG
+    AR += /LTCG
     endif
     
     # /O2 (Maximize Speed) equals /Og /Oi /Ot /Oy /Ob2 /Gs /GF /Gy
@@ -181,6 +169,7 @@ DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -D__
     $(WINOBJ)/vconv.o: $(WINSRC)/vconv.c
 	    @echo Compiling $<...
 	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
+
 endif
 
 
@@ -265,9 +254,6 @@ DEFS+= -DDIRECTDRAW_VERSION=0x0300
 DEFS+= -DCLIB_DECL=__cdecl
 DEFS+= -DDECL_SPEC=
 
-ifneq ($(USE_JOYSTICK_ID),)
-DEFS += -DJOYSTICK_ID
-endif
 
 
 #-------------------------------------------------
@@ -321,7 +307,12 @@ endif
 $(WINOBJ)/drawdd.o : 	$(SRC)/emu/rendersw.c
 $(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
+
+
+#-------------------------------------------------
 # extra targets and rules for the scale effects
+#-------------------------------------------------
+
 ifneq ($(USE_SCALE_EFFECTS),)
   OSDOBJS += $(WINOBJ)/scale.o
 
@@ -329,31 +320,23 @@ ifneq ($(USE_SCALE_EFFECTS),)
   ifndef PTR64
     OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj
     OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
-  OSDOBJS += $(WINOBJ)/scale/scale2x.o
+    OSDOBJS += $(WINOBJ)/scale/scale2x.o
   endif
   OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
-
   OSDOBJS += $(WINOBJ)/scale/hq2x.o
   OSDOBJS += $(WINOBJ)/scale/vba_hq2x.o
   OSDOBJS += $(WINOBJ)/scale/hq3x.o
-# OSDOBJS += $(WINOBJ)/scale/hq3x32.o
-# OSDOBJS += $(WINOBJ)/scale/hq_shared32.o
   OSDOBJS += $(WINOBJ)/scale/2xsai.o
   OSDOBJS += $(WINOBJ)/scale/scanline.o
   OSDOBJS += $(WINOBJ)/scale/snes9x_render.o
 
-  ifdef PTR64
-    USE_MMX_INTERP_SCALE =
-  endif
-
-  ifneq ($(USE_MMX_INTERP_SCALE),)
+  ifndef PTR64
     DEFS += -DUSE_MMX_INTERP_SCALE
   endif
 
   $(WINOBJ)/scale/%.obj: $(WINSRC)/scale/%.asm
 	@echo Assembling $<...
 	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
-
 endif
 
 OSDOBJS += $(VCOBJS)
@@ -376,11 +359,11 @@ endif
 
 
 
-ifdef WINUI
 #-------------------------------------------------
 # if building with a UI, include the ui.mak
 #-------------------------------------------------
 
+ifdef WINUI
 include $(SRC)/osd/winui/winui.mak
 endif
 

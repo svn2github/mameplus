@@ -322,6 +322,10 @@ ifneq ($(USE_SCALE_EFFECTS),)
 DEFS += -DUSE_SCALE_EFFECTS
 endif
 
+ifneq ($(USE_JOYSTICK_ID),)
+DEFS += -DJOYSTICK_ID
+endif
+
 ifneq ($(USE_TRANS_UI),)
 DEFS += -DTRANS_UI
 endif
@@ -334,18 +338,17 @@ ifneq ($(USE_AUTO_PAUSE_PLAYBACK),)
 DEFS += -DAUTO_PAUSE_PLAYBACK
 endif
 
-ifneq ($(USE_UI_COLOR_DISPLAY),)
-DEFS += -DUI_COLOR_DISPLAY
-    ifneq ($(USE_CMD_LIST),)
-    DEFS += -DCMD_LIST
-    endif
-    ifneq ($(USE_CUSTOM_BUTTON),)
-    DEFS += -DUSE_CUSTOM_BUTTON
-    endif
+ifneq ($(USE_CMD_LIST),)
+DEFS += -DCMD_LIST
+endif
+
+ifneq ($(USE_CUSTOM_BUTTON),)
+DEFS += -DUSE_CUSTOM_BUTTON
 endif
 
 ifneq ($(USE_UI_COLOR_PALETTE),)
 DEFS += -DUI_COLOR_PALETTE
+DEFS += -DUI_COLOR_DISPLAY
 endif
 
 ifneq ($(USE_HISCORE),)
