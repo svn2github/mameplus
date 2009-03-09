@@ -318,7 +318,7 @@ ifneq ($(USE_SCALE_EFFECTS),)
 
   OBJDIRS += $(WINOBJ)/scale
   ifndef PTR64
-    OSDOBJS += $(WINOBJ)/scale/superscale.obj $(WINOBJ)/scale/eagle.obj
+    OSDOBJS += $(WINOBJ)/scale/superscale.obj
     OSDOBJS += $(WINOBJ)/scale/hq2x16.obj $(WINOBJ)/scale/hq3x16.obj
     OSDOBJS += $(WINOBJ)/scale/scale2x.o
   endif

@@ -25,7 +25,6 @@ enum
 	SCALE_EFFECT_2XSAI,
 	SCALE_EFFECT_SUPER2XSAI,
 	SCALE_EFFECT_SUPEREAGLE,
-	SCALE_EFFECT_EAGLE,
 	SCALE_EFFECT_2XPM,
 	SCALE_EFFECT_HQ2X,
 	SCALE_EFFECT_HQ2XS,
@@ -84,7 +83,6 @@ static const char *str_name[] =
 	"2xsai",
 	"super2xsai",
 	"supereagle",
-	"eagle",
 	"2xpm",
 	"hq2x",
 	"hq2xs",
@@ -108,7 +106,6 @@ static const char *str_desc[] =
 	"2xSaI",             // by Kreed v0.59
 	"Super 2xSaI",       // by Kreed v0.59
 	"Super Eagle",       // by Kreed v0.59
-	"Eagle",             // by Dirk Stevens v0.41a
 	"2xPM",              // by Pablo Medina v0.2
 	"HQ2x",             //
 	"HQ2xS",             //
@@ -140,10 +137,6 @@ void superscale_line(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT
 void superscale_line_75(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
 static void (*superscale_line_func)(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
 static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-
-// functions from eagle
-void _eagle_mmx16(unsigned long *lb, unsigned long *lb2, short width,	unsigned long *screen_address1, unsigned long *screen_address2);
-static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 #endif /* PTR64 */
 
 // functions from AdvMAME
@@ -402,17 +395,6 @@ int scale_init(void)
 		}
 
 #ifndef PTR64
-		case SCALE_EFFECT_EAGLE:
-		{
-			sprintf(name, "Eagle (mmx optimised)");
-
-			if (!use_mmx)
-				return 1;
-
-			scale_effect.xsize = scale_effect.ysize = 2;
-			break;
-		}
-
 //		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
 		{
@@ -508,7 +490,6 @@ int scale_check(int depth)
 
 //		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
-		case SCALE_EFFECT_EAGLE:
 			if (use_mmx && (depth == 15 || depth == 16))
 				return 0;
 			else
@@ -600,14 +581,11 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 
 		case SCALE_EFFECT_SCALE3X:
 			return scale_perform_scale3x(src, dst, src_pitch, dst_pitch, width, height, depth);
-#ifndef PTR64
 
+#ifndef PTR64
 //		case SCALE_EFFECT_SUPERSCALE:
 		case SCALE_EFFECT_SUPERSCALE75:
 			return scale_perform_superscale(src, dst, src_pitch, dst_pitch, width, height, depth);
-
-		case SCALE_EFFECT_EAGLE:
-			return scale_perform_eagle(src, dst, src_pitch, dst_pitch, width, height, depth);
 #endif /* PTR64 */
 
 		case SCALE_EFFECT_2XSAI:
@@ -852,32 +830,8 @@ static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int d
 	
 	return 0;
 }
-
-
-
-//============================================================
-//	scale_perform_eagle
-//============================================================
-
-static int scale_perform_eagle(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
-{
-	int y;
-
-	if ((depth != 15 && depth != 16) || !use_mmx)
-		return 1;
-
-	width *= 2;
-
-	_eagle_mmx16((unsigned long *)src, (unsigned long *)src, width, (unsigned long *)dst, (unsigned long *)dst);
-	dst += dst_pitch - 2;
-	for (y = 0; y < height; y++, src += src_pitch, dst += 2 * dst_pitch)
-		_eagle_mmx16((unsigned long *)src, (unsigned long *)(src + src_pitch), width, (unsigned long *)dst, (unsigned long *)(dst + dst_pitch));
-
-	scale_emms();
-
-	return 0;
-}
 #endif /* PTR64 */
+
 
 
 //============================================================
