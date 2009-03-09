@@ -169,7 +169,6 @@
  */
 
 #include "port.h"
-#include "snes9x_render.h"
 
 //#define R5G6B5 // windows port uses RGB565
 
@@ -223,14 +222,6 @@ static uint16 RGBtoBright[1<<NUMBITS];
 	#define THREE_PIX(left,middle,right) uint48((middle) | ((left) << 16), (right)) // is this right?
 //	#define THREE_PIX(left,middle,right) uint48((right) | ((middle) << 16), (left)) // or this?
 #endif
-
-inline void _SetRect(RECT* rect, int width, int height, int scale)
-{
-	rect->left = 0;
-	rect->right = width * scale;
-	rect->top = 0;
-	rect->bottom = height * scale;
-}
 
 
 // shared EPX-type loop macros
@@ -361,14 +352,14 @@ void RenderEPXC(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 		if ((((on00||on10)?colorA:colorX) != ((on01||on11)?colorC:colorX)) \
 		 && (((on10||on11)?colorB:colorX) != ((on00||on01)?colorD:colorX))) \
 		{ \
-			const bool XnE = colorX != colorE; \
-			const bool XnF = colorX != colorF; \
-			const bool XnG = colorX != colorG; \
-			const bool XnH = colorX != colorH; \
-			const bool DA = on00 && colorD == colorA && (XnE || XnG || colorD != colorH || colorA != colorF); \
-			const bool AB = on10 && colorA == colorB && (XnF || XnH || colorA != colorE || colorB != colorG); \
-			const bool BC = on11 && colorB == colorC && (XnG || XnE || colorB != colorF || colorC != colorH); \
-			const bool CD = on01 && colorC == colorD && (XnH || XnF || colorC != colorG || colorD != colorE); \
+			UINT8 XnE = colorX != colorE; \
+			UINT8 XnF = colorX != colorF; \
+			UINT8 XnG = colorX != colorG; \
+			UINT8 XnH = colorX != colorH; \
+			UINT8 DA = on00 && colorD == colorA && (XnE || XnG || colorD != colorH || colorA != colorF); \
+			UINT8 AB = on10 && colorA == colorB && (XnF || XnH || colorA != colorE || colorB != colorG); \
+			UINT8 BC = on11 && colorB == colorC && (XnG || XnE || colorB != colorF || colorC != colorH); \
+			UINT8 CD = on01 && colorC == colorD && (XnH || XnF || colorC != colorG || colorD != colorE); \
 			if (!on00||!on01||!on10||!on11 || ((colorA != colorC) && (colorB != colorD) && \
 				((colorX == colorA) || (colorX==colorB) || (colorX==colorC) || (colorX==colorD) || (colorX==colorE) || (colorX==colorF) || (colorX==colorG) || (colorX==colorH)))) \
 			{ \
@@ -500,7 +491,7 @@ void RenderEPXC(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 (!((c) & (1 << 31)) ? (c) : (~(c) + 1))
 
 
-INLINE bool Diff(int c1, int c2)
+INLINE UINT8 Diff(int c1, int c2)
 {
 	int c1y = (c1 & Ymask) - (c2 & Ymask);
 	int c1u = (c1 & Umask) - (c2 & Umask);
@@ -760,7 +751,7 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 			{
 			case 0: {
 				const uint16 avg = (RGBtoBright[w1] + RGBtoBright[w2] + RGBtoBright[w3] + RGBtoBright[w4] + RGBtoBright[w5] + RGBtoBright[w6] + RGBtoBright[w7] + RGBtoBright[w8] + RGBtoBright[w9]) / 9;
-				const bool diff5 = RGBtoBright[w5] > avg;
+				UINT8 diff5 = RGBtoBright[w5] > avg;
 				if ((w1 != w5) && ((RGBtoBright[w1] > avg) != diff5)) pattern |= (1 << 0);
 				if ((w2 != w5) && ((RGBtoBright[w2] > avg) != diff5)) pattern |= (1 << 1);
 				if ((w3 != w5) && ((RGBtoBright[w3] > avg) != diff5)) pattern |= (1 << 2);
@@ -773,14 +764,14 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 
 #if 0
 			case 1: {
-				bool nosame = true;
+				UINT8 nosame = true;
 				if(w1 == w5 || w3 == w5 || w7 == w5 || w9 == w5)
 					nosame = false;
 
 				if(nosame)
 				{
 					const uint16 avg = (RGBtoBright[w1] + RGBtoBright[w2] + RGBtoBright[w3] + RGBtoBright[w4] + RGBtoBright[w5] + RGBtoBright[w6] + RGBtoBright[w7] + RGBtoBright[w8] + RGBtoBright[w9]) / 9;
-					const bool diff5 = RGBtoBright[w5] > avg;
+					UINT8 diff5 = RGBtoBright[w5] > avg;
 					if((RGBtoBright[w1] > avg) != diff5) pattern |= (1 << 0);
 					if((RGBtoBright[w2] > avg) != diff5) pattern |= (1 << 1);
 					if((RGBtoBright[w3] > avg) != diff5) pattern |= (1 << 2);
@@ -1121,7 +1112,7 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 			{
 			case 0: {
 				const uint16 avg = (RGBtoBright[w1] + RGBtoBright[w2] + RGBtoBright[w3] + RGBtoBright[w4] + RGBtoBright[w5] + RGBtoBright[w6] + RGBtoBright[w7] + RGBtoBright[w8] + RGBtoBright[w9]) / 9;
-				const bool diff5 = RGBtoBright[w5] > avg;
+				UINT8 diff5 = RGBtoBright[w5] > avg;
 				if ((w1 != w5) && ((RGBtoBright[w1] > avg) != diff5)) pattern |= (1 << 0);
 				if ((w2 != w5) && ((RGBtoBright[w2] > avg) != diff5)) pattern |= (1 << 1);
 				if ((w3 != w5) && ((RGBtoBright[w3] > avg) != diff5)) pattern |= (1 << 2);
@@ -1133,14 +1124,14 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
               }  break;
 
 			case 1: {
-				bool nosame = true;
+				UINT8 nosame = true;
 				if(w1 == w5 || w3 == w5 || w7 == w5 || w9 == w5)
 					nosame = false;
 
 				if(nosame)
 				{
 					const uint16 avg = (RGBtoBright[w1] + RGBtoBright[w2] + RGBtoBright[w3] + RGBtoBright[w4] + RGBtoBright[w5] + RGBtoBright[w6] + RGBtoBright[w7] + RGBtoBright[w8] + RGBtoBright[w9]) / 9;
-					const bool diff5 = RGBtoBright[w5] > avg;
+					UINT8 diff5 = RGBtoBright[w5] > avg;
 					if((RGBtoBright[w1] > avg) != diff5) pattern |= (1 << 0);
 					if((RGBtoBright[w2] > avg) != diff5) pattern |= (1 << 1);
 					if((RGBtoBright[w3] > avg) != diff5) pattern |= (1 << 2);
