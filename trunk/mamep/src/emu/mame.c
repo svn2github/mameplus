@@ -345,6 +345,7 @@ int mame_execute(core_options *options)
 			/* load the configuration settings and NVRAM */
 			settingsloaded = config_load_settings(machine);
 			nvram_load(machine);
+			sound_mute(FALSE);
 
 			/* display the startup screens */
 			ui_display_startup_screens(machine, firstrun, !settingsloaded);
@@ -386,6 +387,7 @@ int mame_execute(core_options *options)
 			end_resource_tracking();
 
 			/* save the NVRAM and configuration */
+			sound_mute(TRUE);
 			nvram_save(machine);
 			// mamep: dont save settings during playback
 			if (!has_playback_file(machine))

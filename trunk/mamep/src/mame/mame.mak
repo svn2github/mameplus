@@ -704,6 +704,7 @@ $(MAMEOBJ)/edevices.a: \
 	$(DRIVERS)/stlforce.o $(VIDEO)/stlforce.o \
 	$(DRIVERS)/ppmast93.o \
 	$(DRIVERS)/twins.o \
+	$(DRIVERS)/pzletime.o \
 
 $(MAMEOBJ)/eolith.a: \
 	$(DRIVERS)/eolith.o $(VIDEO)/eolith.o \
