@@ -376,7 +376,7 @@ static WRITE16_HANDLER( arm7_ram_w )
 {
 	UINT16 *share16 = (UINT16 *)arm7_shareram;
 	if (PGMARM7LOGERROR) logerror("M68K: ARM7 Shared RAM Write: %04x = %04x (%04x) (%06x)\n", BYTE_XOR_LE(offset), data, mem_mask, cpu_get_pc(space->cpu) );
-
+	if (strcmp(space->machine->gamedrv->name, "kovsh")) share16[0x138/2] = input_port_read(space->machine, "Region");
 	COMBINE_DATA(&share16[BYTE_XOR_LE(offset)]);
 }
 
@@ -931,6 +931,48 @@ static INPUT_PORTS_START( sango )
 	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
 INPUT_PORTS_END
 
+//mamep: these dips do not exist on real PCB
+static INPUT_PORTS_START( kov2 )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0004, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( martmast )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0006, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( martmasc )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
+INPUT_PORTS_END
+
 static INPUT_PORTS_START( olds )
 	PORT_INCLUDE ( pgm )
 
@@ -1448,11 +1490,11 @@ static DRIVER_INIT( kovsh )
 {
 	pgm_basic_init(machine);
 
-//  memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, ASIC28_r16, ASIC28_w16);
+	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, ASIC28_r16, ASIC28_w16);
 
 	/* 0x4f0000 - ? is actually ram shared with the protection device,
       the protection device provides the region code */
-//  memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
+	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
 
  	pgm_kovsh_decrypt(machine);
 }
@@ -1865,13 +1907,13 @@ static UINT32 olds_prot_addr( UINT16 addr)
 	return realaddr;
 }
 
-UINT32 olds_read_reg( UINT16 addr)
+static UINT32 olds_read_reg( UINT16 addr)
 {
 	UINT32 protaddr = (olds_prot_addr(addr)-0x400000)/2;
 	return olds_sharedprotram[protaddr]<<16|olds_sharedprotram[protaddr+1];
 }
 
-void olds_write_reg( UINT16 addr, UINT32 val)
+static void olds_write_reg( UINT16 addr, UINT32 val)
 {
 	olds_sharedprotram[(olds_prot_addr(addr)-0x400000)/2]=val>>16;
 	olds_sharedprotram[(olds_prot_addr(addr)-0x400000)/2+1]=val&0xffff;
@@ -1889,6 +1931,13 @@ static MACHINE_RESET( olds )
 	for(i=0;i<0x40000/2;i++)
 	{
 		olds_sharedprotram[i] = mem16[i];
+	}
+
+	//ROM:004008B4                 .word 0xFBA5
+	for(i=0;i<0x20000/2;i++)
+	{
+		if(olds_sharedprotram[i]==(0xffff-i))
+			olds_sharedprotram[i]=0x4e75;
 	}
 }
 
@@ -1974,7 +2023,7 @@ static READ16_HANDLER( olds_prot_swap_r16 )
 
 	if(cpu_get_pc(space->cpu)<0x100000)		//bios
 		return pgm_mainram[0x178F4/2];
-	else					//game
+	else						//game
 		return pgm_mainram[0x178D8/2];
 		
 }
@@ -2713,21 +2762,24 @@ ROM_START( kovsh )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
-	ROM_LOAD( "t0600.320",    0x400000, 0x400000, CRC(164b3c94) SHA1(f00ea66886ca6bff74bbeaa49e7f5c75c275d5d7) ) // bad? its half the size of the kov one
+//	ROM_LOAD( "t0600.320",    0x400000, 0x400000, CRC(164b3c94) SHA1(f00ea66886ca6bff74bbeaa49e7f5c75c275d5d7) ) // bad? its half the size of the kov one
+	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
 	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
 	/* all roms below need checking to see if they're the same on this board */
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0603.rom",    0x1800000, 0x0400000, CRC(ec31abda) SHA1(ee526655369bae63b0ef0730e9768b765c9950fc) )
+	ROM_LOAD( "a0604.rom",    0x1a00000, 0x0400000, CRC(26b59fd3) SHA1(53219376056f4766dc5236735599d982ceb56b84) )
 
 	ROM_REGION( 0x1000000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
 	ROM_LOAD( "b0600.rom",    0x0000000, 0x0800000, CRC(7d3cd059) SHA1(00cf994b63337e0e4ebe96453daf45f24192af1c) )
 	ROM_LOAD( "b0601.rom",    0x0800000, 0x0400000, CRC(a0bb1c2f) SHA1(0542348c6e27779e0a98de16f04f9c18158f2b28) )
+	ROM_LOAD( "b0602.rom",    0x0c00000, 0x0100000, CRC(9df77934) SHA1(99a3fe337c13702c9aa2373bcd1bb1befd0e2a13) )
 
 	ROM_REGION( 0x800000, "ics", 0 ) /* Samples - (8 bit mono 11025Hz) - */
 	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) ) // (BIOS)
@@ -3839,21 +3891,21 @@ GAME( 1997, orlegnde, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Ori
 GAME( 1997, orlegndc, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND  )
 GAME( 1997, orld111c, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND  )
 GAME( 1997, orld105k, orlegend,   pgm, orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi Yo Gi Shi Re Zuang (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, drgw2c,   drgw2,      drgw2, pgm,      drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
+GAME( 1997, drgw2c,   drgw2,    drgw2, pgm,      drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
+GAME( 1999, olds100a, olds,      olds, olds,     olds,       ROT0,   "IGS", "Oriental Legend Super / Special (alt ver. 100)", GAME_IMPERFECT_SOUND )
 GAME( 1999, kov,      pgm,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 117)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
 GAME( 1999, kov115,   kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 115)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
 GAME( 1999, kovj,     kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 100, Japanese Board)", GAME_IMPERFECT_SOUND ) /* ver # provided by protection? */
 GAME( 1999, kovplus,  kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_SOUND )
 GAME( 1999, kovplusa, kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (alt ver. 119)", GAME_IMPERFECT_SOUND )
-GAME( 1999, photoy2k, pgm,        pgm, photoy2k,    djlzz,      ROT0,   "IGS", "Photo Y2K", GAME_IMPERFECT_SOUND ) /* region provided by protection device */
+GAME( 1999, photoy2k, pgm,        pgm, photoy2k, djlzz,      ROT0,   "IGS", "Photo Y2K", GAME_IMPERFECT_SOUND ) /* region provided by protection device */
 GAME( 1999, raf102j,  photoy2k,   pgm, photoy2k, djlzz,      ROT0,   "IGS", "Real and Fake / Photo Y2K (ver. 102, Japanese Board)", GAME_IMPERFECT_SOUND ) /* region provided by protection device */
-GAME( 2000, kov2,     pgm,       kov2, sango,    kov2,       ROT0,   "IGS", "Knights of Valour 2 (ver. 100)", GAME_IMPERFECT_SOUND )
-GAME( 2000, kov2106,  kov2,      kov2, sango,    kov2,       ROT0,   "IGS", "Knights of Valour 2 (ver. 106)", GAME_IMPERFECT_SOUND )
-GAME( 2000, kov2p,    kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons (ver. M204XX)", GAME_IMPERFECT_SOUND )
-GAME( 2000, kov2p205, kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons (ver. M205XX)", GAME_IMPERFECT_SOUND )
-GAME( 2001, martmast, pgm,       kov2, sango,    martmast,   ROT0,   "IGS", "Martial Masters (ver. 102)", GAME_IMPERFECT_SOUND )
-GAME( 2001, martmasc, martmast,  kov2, sango,    martmast,   ROT0,   "IGS", "Martial Masters (ver. 101, Chinese Board)", GAME_IMPERFECT_SOUND )
-GAME( 1999, olds100a, olds,      olds, olds,     olds,       ROT0,   "IGS", "Oriental Legend Super / Special (alt ver. 100)", GAME_IMPERFECT_SOUND )
+GAME( 2000, kov2,     pgm,       kov2, kov2,     kov2,       ROT0,   "IGS", "Knights of Valour 2 (ver. 100)", GAME_IMPERFECT_SOUND )
+GAME( 2000, kov2106,  kov2,      kov2, kov2,     kov2,       ROT0,   "IGS", "Knights of Valour 2 (ver. 106)", GAME_IMPERFECT_SOUND )
+GAME( 2000, kov2p,    kov2,      kov2, kov2,     kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons (ver. M204XX)", GAME_IMPERFECT_SOUND )
+GAME( 2000, kov2p205, kov2,      kov2, kov2,     kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons (ver. M205XX)", GAME_IMPERFECT_SOUND )
+GAME( 2001, martmast, pgm,       kov2, martmast, martmast,   ROT0,   "IGS", "Martial Masters (ver. 102)", GAME_IMPERFECT_SOUND )
+GAME( 2001, martmasc, martmast,  kov2, martmasc, martmast,   ROT0,   "IGS", "Martial Masters (ver. 101, Chinese Board)", GAME_IMPERFECT_SOUND )
 
 /* Playable but maybe imperfect protection emulation */
 GAME( 1997, drgw2,    pgm,        drgw2, pgm,      drgw2,      ROT0,   "IGS", "Dragon World II (ver. 110X, Export)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
