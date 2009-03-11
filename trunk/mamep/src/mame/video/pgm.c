@@ -192,6 +192,24 @@ static void draw_sprites(running_machine *machine, int priority, bitmap_t* bitma
 
 	const UINT16 *finish = pgm_spritebufferram+(0xa00/2);
 
+	if(priority == 1)
+	{
+		UINT16 *bg_spr;
+
+		for(bg_spr = pgm_spritebufferram; bg_spr<pgm_spritebufferram+(0xa00/2); bg_spr += 5)
+		{
+			int high = bg_spr[4] & 0x01ff;
+			if (high == 0) break; /* is this right? */
+		}
+
+		for(; bg_spr>=pgm_spritebufferram; bg_spr -= 5)
+		{
+			int pri = (bg_spr[2] & 0x0080) >>  7;
+			if(pri == 1) break;
+		}
+		finish = bg_spr + 5;
+	}
+
 	while( pgm_sprite_source<finish )
 	{
 		int xpos = pgm_sprite_source[0] & 0x07ff;
@@ -232,7 +250,7 @@ static void draw_sprites(running_machine *machine, int priority, bitmap_t* bitma
 
 		if (high == 0) break; /* is this right? */
 
-		if ((priority == 1) && (pri == 0)) break;
+//		if ((priority == 1) && (pri == 0)) break;
 
 		draw_sprite_new_zoomed(machine, wide, high, xpos, ypos, palt, boff, flip, bitmap, xzoom,xgrow, yzoom,ygrow);
 
