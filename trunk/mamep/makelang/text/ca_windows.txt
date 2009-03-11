@@ -678,7 +678,7 @@ Jugar
 Proposed video mode not supported on device %s\n
 Modo de video propuesto no es soportado por el dispositivo %s\n
 
-# osd/windows/input.c: 1743
+# osd/windows/input.c: 1745
 RawInput: APIs detected\n
 RawInput: APIs detectada\n
 

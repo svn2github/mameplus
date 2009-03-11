@@ -686,7 +686,7 @@ Play
 Proposed video mode not supported on device %s\n
 설정한 비디오 모드는 %s 장치에서 지원되지 않습니다\n
 
-# osd/windows/input.c: 1743
+# osd/windows/input.c: 1745
 RawInput: APIs detected\n
 로우입력:APIs 탐지됨\n
 

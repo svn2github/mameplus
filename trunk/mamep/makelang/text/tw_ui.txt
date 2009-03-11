@@ -218,11 +218,11 @@ MAME 版本資訊(&M)
 &Picture Area\tAlt+P
 預覽圖(&P)\tAlt+P
 
-# osd/winui/mameui.rc: 52, 200 osd/winui/winui.c: 3866
+# osd/winui/mameui.rc: 52, 200 osd/winui/winui.c: 3866, 7448
 &Play
 執行(&P)
 
-# osd/winui/layout.c: 204 osd/winui/winui.c: 3917, 7399, 7448
+# osd/winui/layout.c: 204 osd/winui/winui.c: 3917, 7399
 &Play %s
 執行 %s(&P)
 
@@ -406,7 +406,7 @@ Allow restoring options to 'sane' values.
 Allows filtering out games from a folder
 允許\自資料夾篩選出遊戲
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3604
 Anti-clockwise
 逆時針
 
@@ -458,11 +458,11 @@ Audit the selected item
 Auto
 自動
 
-# osd/winui/properties.c: 3604
+# osd/winui/properties.c: 3607
 Auto anti-clockwise
 自動逆時針
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3606
 Auto clockwise
 自動順時針
 
@@ -670,7 +670,7 @@ Checking...
 Christopher Kirmse and the MAMEUI team
 Christopher Kirmse 與 MAMEUI 開發團隊
 
-# osd/winui/properties.c: 3600
+# osd/winui/properties.c: 3603
 Clockwise
 順時針
 
@@ -862,7 +862,7 @@ Debugscript
 Decrypted
 解密版
 
-# osd/winui/properties.c: 3599, 3825, 3854
+# osd/winui/properties.c: 3602, 3828, 3857
 Default
 預設
 
@@ -1022,7 +1022,7 @@ Double Joystick 8-Way
 Draw antialiased vectors
 描繪反鋸齒向量圖形
 
-# osd/winui/properties.c: 3567
+# osd/winui/properties.c: 3570
 Draw every frame
 描繪出全部畫格
 
@@ -1217,10 +1217,6 @@ Full screen contrast
 # osd/winui/mameui.rc: 764
 Full screen gamma
 全螢幕 Gamma 值
-
-# osd/winui/winui.c: 7448
-Game
-遊戲
 
 # osd/winui/mameui.rc: 1009
 Game Filters
@@ -1654,7 +1650,7 @@ No offset for clones missing parent in view
 Non-Wor&king
 不可執行(&K)
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3602, 3683, 3812, 3821, 3850
+# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3605, 3686, 3815, 3824, 3853
 None
 無
 
@@ -2066,7 +2062,7 @@ Screen
 Screen flip support is missing
 尚未支援畫面翻轉
 
-# osd/winui/datafile.c: 1082
+# osd/winui/datafile.c: 1083
 Screen flipping in cocktail mode is not supported.\n
 尚未支援檯面型筐體模式的畫面翻轉。\n
 
@@ -2270,43 +2266,43 @@ Show or hide the toolbar
 Show these fields in this order:
 按照這個順序顯示欄位:
 
-# osd/winui/properties.c: 3569
+# osd/winui/properties.c: 3572
 Skip 1 of 10 frames
 略過 1/10 畫格
 
-# osd/winui/properties.c: 3587
+# osd/winui/properties.c: 3590
 Skip 10 of 10 frames
 略過 10/10 畫格
 
-# osd/winui/properties.c: 3571
+# osd/winui/properties.c: 3574
 Skip 2 of 10 frames
 略過 2/10 畫格
 
-# osd/winui/properties.c: 3573
+# osd/winui/properties.c: 3576
 Skip 3 of 10 frames
 略過 3/10 畫格
 
-# osd/winui/properties.c: 3575
+# osd/winui/properties.c: 3578
 Skip 4 of 10 frames
 略過 4/10 畫格
 
-# osd/winui/properties.c: 3577
+# osd/winui/properties.c: 3580
 Skip 5 of 10 frames
 略過 5/10 畫格
 
-# osd/winui/properties.c: 3579
+# osd/winui/properties.c: 3582
 Skip 6 of 10 frames
 略過 6/10 畫格
 
-# osd/winui/properties.c: 3581
+# osd/winui/properties.c: 3584
 Skip 7 of 10 frames
 略過 7/10 畫格
 
-# osd/winui/properties.c: 3583
+# osd/winui/properties.c: 3586
 Skip 8 of 10 frames
 略過 8/10 畫格
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3588
 Skip 9 of 10 frames
 略過 9/10 畫格
 
@@ -2467,26 +2463,26 @@ Sync to monitor refresh
 同步於顯示器的更新頻率
 
 # osd/winui/datafile.c: 1061
-THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
-這個遊戲無法執行。您無法正確執行它，不用白忙。\n
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+這個遊戲無法執行。遊戲的模擬還不完全，除了等待開發人員改良模擬之外，沒有方法可以解決這個問題。\n
 
-# osd/winui/datafile.c: 1070
+# osd/winui/datafile.c: 1071
 The colors are completely wrong.\n
 色彩是完全錯誤的。\n
 
-# osd/winui/datafile.c: 1073
+# osd/winui/datafile.c: 1074
 The colors aren't 100% accurate.\n
 色彩尚未達到 100% 精確。\n
 
-# osd/winui/datafile.c: 1064
+# osd/winui/datafile.c: 1065
 The game has protection which isn't fully emulated.\n
 遊戲具有保護尚未完全模擬。\n
 
-# osd/winui/datafile.c: 1076
+# osd/winui/datafile.c: 1077
 The game lacks sound.\n
 遊戲缺少聲音。\n
 
-# osd/winui/datafile.c: 1085
+# osd/winui/datafile.c: 1086
 The game requires external artwork files\n
 遊戲需要外部裝飾圖檔案\n
 
@@ -2494,7 +2490,7 @@ The game requires external artwork files\n
 The operating system is out of memory or resources.
 作業系統的記憶體或資源不足。
 
-# osd/winui/datafile.c: 1079
+# osd/winui/datafile.c: 1080
 The sound emulation isn't 100% accurate.\n
 聲音模擬尚未達到 100% 精確。\n
 
@@ -2506,7 +2502,7 @@ The specified file was not found.
 The specified path was not found.
 找不到指定的路徑。
 
-# osd/winui/datafile.c: 1067
+# osd/winui/datafile.c: 1068
 The video emulation isn't 100% accurate.\n
 視訊模擬尚未達到 100% 精確。\n
 
@@ -2782,7 +2778,7 @@ Year
 Yes
 是
 
-# osd/winui/datafile.c: 1140
+# osd/winui/datafile.c: 1141
 \nDRIVER: %s\n
 \n驅動: %s\n
 
@@ -2790,7 +2786,7 @@ Yes
 \nDo you wish to continue?
 \n您要繼續嗎?
 
-# osd/winui/datafile.c: 1102, 1116
+# osd/winui/datafile.c: 1103, 1117
 \nORIGINAL:\n
 \n原作版:\n
 
@@ -2798,7 +2794,7 @@ Yes
 \nStory:\n
 \n故事:\n
 
-# osd/winui/datafile.c: 1104, 1118
+# osd/winui/datafile.c: 1105, 1119
 \n\nCLONES:\n
 \n\n仿製版:\n
 

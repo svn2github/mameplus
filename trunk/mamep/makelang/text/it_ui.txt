@@ -202,11 +202,11 @@ Impostazioni &Palette...
 &Picture Area\tAlt+P
 &Area Immagine\tAlt+A
 
-# osd/winui/mameui.rc: 52, 200 osd/winui/winui.c: 3866
+# osd/winui/mameui.rc: 52, 200 osd/winui/winui.c: 3866, 7448
 &Play
 &Gioca
 
-# osd/winui/layout.c: 204 osd/winui/winui.c: 3917, 7399, 7448
+# osd/winui/layout.c: 204 osd/winui/winui.c: 3917, 7399
 &Play %s
 &Gioca %s
 
@@ -354,7 +354,7 @@ Permette di ristabilire le opzioni a valori 'certi'.
 Allows filtering out games from a folder
 Permette di escludere i giochi dalla cartella
 
-# osd/winui/properties.c: 3601
+# osd/winui/properties.c: 3604
 Anti-clockwise
 Anti-Oraria
 
@@ -398,11 +398,11 @@ Verifica completata.\n
 Auto
 Automatico
 
-# osd/winui/properties.c: 3604
+# osd/winui/properties.c: 3607
 Auto anti-clockwise
 Auto Antioraria
 
-# osd/winui/properties.c: 3603
+# osd/winui/properties.c: 3606
 Auto clockwise
 Auto Oraria
 
@@ -594,7 +594,7 @@ Controllo Gioco %s - %s
 Checking...
 Controllo...
 
-# osd/winui/properties.c: 3600
+# osd/winui/properties.c: 3603
 Clockwise
 Oraria
 
@@ -734,7 +734,7 @@ Personalizza Opzioni Interfaccia.
 Customize which columns are used in the game list
 Personalizza le colonne da mostrare nella lista giochi
 
-# osd/winui/properties.c: 3599, 3825, 3854
+# osd/winui/properties.c: 3602, 3828, 3857
 Default
 Predefinito
 
@@ -870,7 +870,7 @@ Doppio Joystick 8-Vie
 Draw antialiased vectors
 Disegna vettori con antialias
 
-# osd/winui/properties.c: 3567
+# osd/winui/properties.c: 3570
 Draw every frame
 Disegna ogni quadro
 
@@ -1366,7 +1366,7 @@ Non disallineare i cloni derivati mancanti nella vista
 Non-Wor&king
 N&on-Funzionanti
 
-# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3602, 3683, 3812, 3821, 3850
+# osd/winui/dialogs.c: 256 osd/winui/properties.c: 354, 408, 2838, 3605, 3686, 3815, 3824, 3853
 None
 Nessuno
 
@@ -1810,43 +1810,43 @@ Mostra/Nascondi la barra degli strumenti
 Show these fields in this order:
 Mostra questi campi in quest'ordine:
 
-# osd/winui/properties.c: 3569
+# osd/winui/properties.c: 3572
 Skip 1 of 10 frames
 Salta 1 di 10 quadri
 
-# osd/winui/properties.c: 3587
+# osd/winui/properties.c: 3590
 Skip 10 of 10 frames
 Salta 10 di 10 quadri
 
-# osd/winui/properties.c: 3571
+# osd/winui/properties.c: 3574
 Skip 2 of 10 frames
 Salta 2 di 10 quadri
 
-# osd/winui/properties.c: 3573
+# osd/winui/properties.c: 3576
 Skip 3 of 10 frames
 Salta 3 di 10 quadri
 
-# osd/winui/properties.c: 3575
+# osd/winui/properties.c: 3578
 Skip 4 of 10 frames
 Salta 4 di 10 quadri
 
-# osd/winui/properties.c: 3577
+# osd/winui/properties.c: 3580
 Skip 5 of 10 frames
 Salta 5 di 10 quadri
 
-# osd/winui/properties.c: 3579
+# osd/winui/properties.c: 3582
 Skip 6 of 10 frames
 Salta 6 di 10 quadri
 
-# osd/winui/properties.c: 3581
+# osd/winui/properties.c: 3584
 Skip 7 of 10 frames
 Salta 7 di 10 quadri
 
-# osd/winui/properties.c: 3583
+# osd/winui/properties.c: 3586
 Skip 8 of 10 frames
 Salta 8 di 10 quadri
 
-# osd/winui/properties.c: 3585
+# osd/winui/properties.c: 3588
 Skip 9 of 10 frames
 Salta 9 di 10 quadri
 
@@ -2434,10 +2434,6 @@ Enable the title tab
 Font Files
 
 
-# osd/winui/winui.c: 7448
-Game
-
-
 # osd/winui/properties.c: 1068, 1121, 1192
 Game requires external artwork files
 
@@ -2606,7 +2602,7 @@ Reset time played for selected item
 Resetting the User Interface options\n
 
 
-# osd/winui/datafile.c: 1082
+# osd/winui/datafile.c: 1083
 Screen flipping in cocktail mode is not supported.\n
 
 
@@ -2747,34 +2743,34 @@ Switch drivers
 
 
 # osd/winui/datafile.c: 1061
-THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# osd/winui/datafile.c: 1070
+# osd/winui/datafile.c: 1071
 The colors are completely wrong.\n
 
 
-# osd/winui/datafile.c: 1073
+# osd/winui/datafile.c: 1074
 The colors aren't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1064
+# osd/winui/datafile.c: 1065
 The game has protection which isn't fully emulated.\n
 
 
-# osd/winui/datafile.c: 1076
+# osd/winui/datafile.c: 1077
 The game lacks sound.\n
 
 
-# osd/winui/datafile.c: 1085
+# osd/winui/datafile.c: 1086
 The game requires external artwork files\n
 
 
-# osd/winui/datafile.c: 1079
+# osd/winui/datafile.c: 1080
 The sound emulation isn't 100% accurate.\n
 
 
-# osd/winui/datafile.c: 1067
+# osd/winui/datafile.c: 1068
 The video emulation isn't 100% accurate.\n
 
 
@@ -2802,7 +2798,7 @@ Version 8
 Version 9
 
 
-# osd/winui/datafile.c: 1140
+# osd/winui/datafile.c: 1141
 \nDRIVER: %s\n
 
 
@@ -2810,7 +2806,7 @@ Version 9
 \nDo you wish to continue?
 
 
-# osd/winui/datafile.c: 1102, 1116
+# osd/winui/datafile.c: 1103, 1117
 \nORIGINAL:\n
 
 
@@ -2818,7 +2814,7 @@ Version 9
 \nStory:\n
 
 
-# osd/winui/datafile.c: 1104, 1118
+# osd/winui/datafile.c: 1105, 1119
 \n\nCLONES:\n
 
 

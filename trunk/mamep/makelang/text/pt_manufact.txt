@@ -586,7 +586,7 @@ EVG
 EZ Graphics
 EZ Graphics
 
-# Dangerous Dungeons
+# Dangerous Dungeons (East Coast Coin Company)
 East Coast Coin Company
 East Coast Coin Company
 
@@ -802,7 +802,7 @@ Gakken
 Gamart?
 Gamart?
 
-# Dark Tower
+# Dangerous Dungeons
 Game Room
 Game Room
 
@@ -1150,7 +1150,7 @@ Limenko
 Loewen Spielautomaten
 Loewen Spielautomaten
 
-# Space Invaders (Logitec)
+# Monoshiri Quiz Osyaberi Macha (Japan)
 Logitec
 Logitec
 
@@ -1258,7 +1258,7 @@ Miky SRL
 Min Corp.
 Min Corp.
 
-# Black Jack (Mirco)
+# 21 (Mirco)
 Mirco
 Mirco
 
@@ -2402,8 +2402,20 @@ AMT Co. Ltd.
 Alpha
 
 
+# Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
+Alpha System
+
+
 # Skill '98 (ver. s98-1.33)
 Amcoe
+
+
+# Quiz Keitai Q mode (GDL-0017)
+Amedio
+
+
+# Guilty Gear XX (GDL-0011)
+Arc System Works
 
 
 # 86 Lions
@@ -2420,6 +2432,10 @@ Astro Corp.
 
 # Galaxi (v2.0)
 B.R.L.
+
+
+# Daisyarin [BET] (Japan)
+Best System
 
 
 # American Poker II (iamp2 v28)
@@ -2466,6 +2482,10 @@ Eastern Corp.
 Ecole
 
 
+# Musapey's Choco Marker (GDL-0014A)
+Ecole Software Corporation
+
+
 # Galaxy Gunners
 Electronics Devices Italy
 
@@ -2498,8 +2518,16 @@ Funworld
 G.G.I
 
 
+# Senko No Ronde (GDL-0030A)
+Grev
+
+
 # Super Free Kick
 HJ Corp
+
+
+# CPS Changer - Street Fighter Alpha (Brazil 950727)
+Hack
 
 
 # Himeshikibu (Japan)
@@ -2512,6 +2540,10 @@ High Video
 
 # Blazing Lazers
 Hudson Soft
+
+
+# Multi Fish (040308, set 1)
+Igro
 
 
 # Video Poker
@@ -2532,6 +2564,14 @@ M.P.
 
 # Buster
 Marian Electronics Ltd.
+
+
+# Screen Play (ver. 4.0)
+Maygay
+
+
+# Spotlight
+Maygay Machines Ltd.
 
 
 # F-15 Strike Eagle (rev. 2.2 02/25/91)
@@ -2562,8 +2602,16 @@ Nippon Electronic Company
 Noraut Ltd.
 
 
+# Gran Tesoro? / Play 2000 (v5.01) (Italy)
+Nova Desitec
+
+
 # Number Dieci (Poker)
 PlayMark Srl
+
+
+# Demolish Fist
+Polygon Magic
 
 
 # M-79 Ambush
@@ -2574,8 +2622,16 @@ Ramtek
 Recreativos Franco
 
 
+# Grand Prix '98
+Romtec Co. LTD
+
+
 # Country Girl (Japan)
 Royal Denshi
+
+
+# Champion Italian Cup (bootleg, set 1)
+SGS
 
 
 # SSI Poker (v2.4)
@@ -2638,6 +2694,10 @@ Space Computer
 Spale-Soft
 
 
+# Super Shanghai 2005 (GDL-0031A)
+Starfish
+
+
 # Funny Land de Luxe
 Stella
 
@@ -2648,6 +2708,10 @@ Sure Milano
 
 # Lady Liner
 TAB Austria
+
+
+# King Derby
+Tazmi
 
 
 # Magical Tonic?
@@ -2684,6 +2748,10 @@ Wing Co.,Ltd.
 
 # Slot Carnival
 Wing Co.Ltd
+
+
+# Mahjong Club [BET] (Japan)
+Xex
 
 
 # Black Touch (Korea)

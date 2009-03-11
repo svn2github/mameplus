@@ -190,8 +190,16 @@ Alpha Co
 Alpha Denshi Co.
 
 
+# Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
+Alpha System
+
+
 # Skill '98 (ver. s98-1.33)
 Amcoe
+
+
+# Quiz Keitai Q mode (GDL-0017)
+Amedio
 
 
 # Naughty Mouse (set 1)
@@ -236,6 +244,10 @@ Andamiro
 
 # Otona no Mahjong (Japan 880628)
 Apple
+
+
+# Guilty Gear XX (GDL-0011)
+Arc System Works
 
 
 # Arcadia System BIOS
@@ -348,6 +360,10 @@ Barko Corp.
 
 # Many Block
 Bee-Oh
+
+
+# Daisyarin [BET] (Japan)
+Best System
 
 
 # Neo 2500 Demo (Homebrew)
@@ -714,7 +730,7 @@ EZ Graphics
 Eagle
 
 
-# Dangerous Dungeons
+# Dangerous Dungeons (East Coast Coin Company)
 East Coast Coin Company
 
 
@@ -732,6 +748,10 @@ Eastern Micro Electronics, Inc.
 
 # Melty Blood Act Cadenza (GDL-0028C)
 Ecole
+
+
+# Musapey's Choco Marker (GDL-0014A)
+Ecole Software Corporation
 
 
 # The Alphax Z (Japan)
@@ -970,7 +990,7 @@ Gakken
 Gamart?
 
 
-# Dark Tower
+# Dangerous Dungeons
 Game Room
 
 
@@ -1022,6 +1042,10 @@ Gremlim
 Gremlin
 
 
+# Senko No Ronde (GDL-0030A)
+Grev
+
+
 # Trivia (Version 1.03a)
 Greyhound Electronics
 
@@ -1040,6 +1064,10 @@ HJ Corp
 
 # Laser Base (set 1)
 HOEI
+
+
+# CPS Changer - Street Fighter Alpha (Brazil 950727)
+Hack
 
 
 # Ghost Hunter
@@ -1128,6 +1156,10 @@ IGT - International Gaming Technology
 
 # See See Find Out
 Icarus
+
+
+# Multi Fish (040308, set 1)
+Igro
 
 
 # Magic Card (set 1)
@@ -1338,7 +1370,7 @@ Limenko
 Loewen Spielautomaten
 
 
-# Space Invaders (Logitec)
+# Monoshiri Quiz Osyaberi Macha (Japan)
 Logitec
 
 
@@ -1388,6 +1420,14 @@ Marian Electronics Ltd.
 
 # Desert Tank
 Martin Marietta
+
+
+# Screen Play (ver. 4.0)
+Maygay
+
+
+# Spotlight
+Maygay Machines Ltd.
 
 
 # Dead Eye
@@ -1462,7 +1502,7 @@ Miky SRL
 Min Corp.
 
 
-# Black Jack (Mirco)
+# 21 (Mirco)
 Mirco
 
 
@@ -1592,6 +1632,10 @@ Noma
 
 # Noraut Poker
 Noraut Ltd.
+
+
+# Gran Tesoro? / Play 2000 (v5.01) (Italy)
+Nova Desitec
 
 
 # Port Man (bootleg on Moon Cresta hardware)
@@ -1730,6 +1774,10 @@ Playtronic SRL
 Poby
 
 
+# Demolish Fist
+Polygon Magic
+
+
 # Thunder Heroes
 Primetek Investments
 
@@ -1822,6 +1870,10 @@ Rock-ola
 Romar
 
 
+# Grand Prix '98
+Romtec Co. LTD
+
+
 # Country Girl (Japan)
 Royal Denshi
 
@@ -1836,6 +1888,10 @@ SA
 
 # Astron Belt
 SEGA
+
+
+# Champion Italian Cup (bootleg, set 1)
+SGS
 
 
 # Trivia Hangup (Question Set 1)
@@ -2102,6 +2158,10 @@ Spirit
 Square
 
 
+# Super Shanghai 2005 (GDL-0031A)
+Starfish
+
+
 # Rack + Roll
 Status
 
@@ -2292,6 +2352,10 @@ Tamtex
 
 # TX-1
 Tatsumi
+
+
+# King Derby
+Tazmi
 
 
 # Hole Land
@@ -2596,6 +2660,10 @@ World Game
 
 # Kyros
 World Games Inc
+
+
+# Mahjong Club [BET] (Japan)
+Xex
 
 
 # Space Stranger

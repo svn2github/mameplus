@@ -686,7 +686,7 @@ Play
 Proposed video mode not supported on device %s\n
 建議的視訊模式無法支援裝置 %s\n
 
-# osd/windows/input.c: 1743
+# osd/windows/input.c: 1745
 RawInput: APIs detected\n
 RawInput: 偵測出 API\n
 

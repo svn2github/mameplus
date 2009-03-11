@@ -1058,7 +1058,8 @@ int load_driver_mameinfo (const game_driver *drv, char *buffer, int bufsize)
 		strcat(buffer, "\n");
 
 		if (drv->flags & GAME_NOT_WORKING)
-			strcat(buffer, _("THIS GAME DOESN'T WORK. You won't be able to make it work correctly.  Don't bother.\n"));
+		strcat(buffer, _("THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. "
+						"There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n"));
 
 		if (drv->flags & GAME_UNEMULATED_PROTECTION)
 			strcat(buffer, _("The game has protection which isn't fully emulated.\n"));
