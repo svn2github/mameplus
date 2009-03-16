@@ -1554,6 +1554,10 @@ Main background
 Mame&info File...
 Mameinfo 파일 (&I)
 
+# osd/winui/datafile.c: 1049
+Mameinfo:\n
+Mameinfo 파일:\n
+
 # osd/winui/mameui.rc: 604
 Manufactured:
 제작사:
@@ -2050,6 +2054,10 @@ Screen
 Screen flip support is missing
 화면 뒤집기 지원기능이 없음
 
+# osd/winui/datafile.c: 1083
+Screen flipping in cocktail mode is not supported.\n
+칵테일 모드에서 화면 뒤집기가 지원되지 않음.\n
+
 # osd/winui/properties.c: 1062, 1115, 1186
 Screen flipping is not supported
 화면 뒤집기가 지원되지 않음
@@ -2446,9 +2454,29 @@ Switch resolutions to fit
 Sync to monitor refresh
 모니터 주사율 동기화
 
+# osd/winui/datafile.c: 1071
+The colors are completely wrong.\n
+색상이 완전히 잘못 출력됩니다.\n
+
+# osd/winui/datafile.c: 1074
+The colors aren't 100% accurate.\n
+색상이 100% 정확하지 않습니다.\n
+
+# osd/winui/datafile.c: 1065
+The game has protection which isn't fully emulated.\n
+이 게임은 암호화되어 완전히 에뮬레이트되지 않음.
+
+# osd/winui/datafile.c: 1077
+The game lacks sound.\n
+이 게임은 사운드를 지원하지 못함.\n
+
 # osd/winui/mui_util.c: 241
 The operating system is out of memory or resources.
 운영체제의 메모리나 자원이 부족합니다.
+
+# osd/winui/datafile.c: 1080
+The sound emulation isn't 100% accurate.\n
+사운드 에뮬레이션이 100% 정확하지 않습니다.\n
 
 # osd/winui/mui_util.c: 245
 The specified file was not found.
@@ -2457,6 +2485,10 @@ The specified file was not found.
 # osd/winui/mui_util.c: 257
 The specified path was not found.
 특정 경로를 찾지 못했습니다.
+
+# osd/winui/datafile.c: 1068
+The video emulation isn't 100% accurate.\n
+비디오 에뮬레이션이 100% 정확하지 않습니다.\n
 
 # osd/winui/mui_util.c: 249
 There is no application associated with the given filename extension.
@@ -2730,9 +2762,25 @@ Year
 Yes
 예
 
+# osd/winui/datafile.c: 1141
+\nDRIVER: %s\n
+\n드라이버: %s\n
+
 # osd/winui/dialogs.c: 153
 \nDo you wish to continue?
 \n계속 하시겠습니까?
+
+# osd/winui/datafile.c: 1103, 1117
+\nORIGINAL:\n
+\n원본:\n
+
+# osd/winui/datafile.c: 1023
+\nStory:\n
+\nStory 파일:\n
+
+# osd/winui/datafile.c: 1105, 1119
+\n\nCLONES:\n
+\n\n클론:\n
 
 # osd/winui/mameui.rc: 119
 by &Clone Of
@@ -2838,63 +2886,15 @@ videos (*.mng)
 Game requires external artwork files
 
 
-# osd/winui/datafile.c: 1049
-Mameinfo:\n
-
-
 # osd/winui/treeview.c: 966
 Requires Artwork
-
-
-# osd/winui/datafile.c: 1083
-Screen flipping in cocktail mode is not supported.\n
 
 
 # osd/winui/datafile.c: 1061
 THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
 
 
-# osd/winui/datafile.c: 1071
-The colors are completely wrong.\n
-
-
-# osd/winui/datafile.c: 1074
-The colors aren't 100% accurate.\n
-
-
-# osd/winui/datafile.c: 1065
-The game has protection which isn't fully emulated.\n
-
-
-# osd/winui/datafile.c: 1077
-The game lacks sound.\n
-
-
 # osd/winui/datafile.c: 1086
 The game requires external artwork files\n
-
-
-# osd/winui/datafile.c: 1080
-The sound emulation isn't 100% accurate.\n
-
-
-# osd/winui/datafile.c: 1068
-The video emulation isn't 100% accurate.\n
-
-
-# osd/winui/datafile.c: 1141
-\nDRIVER: %s\n
-
-
-# osd/winui/datafile.c: 1103, 1117
-\nORIGINAL:\n
-
-
-# osd/winui/datafile.c: 1023
-\nStory:\n
-
-
-# osd/winui/datafile.c: 1105, 1119
-\n\nCLONES:\n
 
 

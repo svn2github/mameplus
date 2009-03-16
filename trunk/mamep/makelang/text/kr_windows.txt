@@ -810,6 +810,10 @@ Video: Monitor %p = \"%s\" %s\n
 WINDOWS DEBUGGING OPTIONS
 윈도우즈 디버깅 옵션
 
+# mess/osd/windows/configms.c: 30
+WINDOWS MESS SPECIFIC OPTIONS
+윈도우 MESS 특수 옵션
+
 # osd/windows/winmain.c: 134
 WINDOWS PERFORMANCE OPTIONS
 윈도우 성능 옵션
@@ -1030,6 +1034,14 @@ set joystick ID (Player7)
 set joystick ID (Player8)
 조이스틱 ID 설정 (사용자8)
 
+# osd/windows/winmain.c: 131
+specifies the font size to use for debugging; defaults to 9 pt
+디버깅에 사용할 글꼴 크기를 지정합니다; 기본값 9 포인트
+
+# osd/windows/winmain.c: 130
+specifies the font to use for debugging; defaults to Lucida Console
+디버깅에 사용할 글꼴을 지정합니다; 기본값 Lucida Console
+
 # osd/windows/winmain.c: 156
 specify the preferred Direct3D version (8 or 9)
 사용할 Direct3D 버전 지정 (8 또는 9)
@@ -1038,23 +1050,11 @@ specify the preferred Direct3D version (8 or 9)
 thread priority for the main game thread; range from -15 to 1
 기본 게임 스레드의 우선 순위; -15 에서 1 범위
 
-# osd/windows/winmain.c: 140
-video output method: none, gdi, ddraw, or d3d
-비디오 출력 방법: none, gdi, ddraw, 또는 d3d
-
-# mess/osd/windows/configms.c: 30
-WINDOWS MESS SPECIFIC OPTIONS
-
-
-# osd/windows/winmain.c: 131
-specifies the font size to use for debugging; defaults to 9 pt
-
-
-# osd/windows/winmain.c: 130
-specifies the font to use for debugging; defaults to Lucida Console
-
-
 # mess/osd/windows/configms.c: 31
 use the new MESS UI
+새로운 MESS 인터페이스 사용
 
+# osd/windows/winmain.c: 140
+video output method: none, gdi, ddraw, or d3d
+비디오 출력 방법: 없음, gdi, ddraw 또는 d3d
 
