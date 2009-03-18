@@ -1435,7 +1435,7 @@ static DRIVER_INIT( sngkace )
 {
 	{
 		UINT8 *RAM	=	memory_region(machine, "ym");
-		int len				=	memory_region_length(machine, "ym");
+		int len		=	memory_region_length(machine, "ym");
 		int i;
 
 		/* Bit 6&7 of the samples are swapped. Naughty, naughty... */

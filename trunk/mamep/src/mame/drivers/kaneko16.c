@@ -3630,7 +3630,7 @@ GAME( 1995, gtmr2u,   gtmr2,    gtmr2,    gtmr2,    gtmr2, ROT0,  "Kaneko", "Gre
 /* Non-working games (mainly due to protection) */
 
 GAME( 1992, shogwarr, 0,        shogwarr, shogwarr, shogwarr,   ROT0,  "Kaneko", "Shogun Warriors",         GAME_NOT_WORKING )
-GAME( 1992, shogware, shogwarr, shogwarr, shogwarr, shogwarr,   ROT0,  "Kaneko", "Shogun Warriors (Euro)", 	GAME_NOT_WORKING )
+GAME( 1992, shogware, shogwarr, shogwarr, shogwarr, shogwarr,   ROT0,  "Kaneko", "Shogun Warriors (Euro)",  GAME_NOT_WORKING )
 GAME( 1992, fjbuster, shogwarr, shogwarr, shogwarr, shogwarr,   ROT0,  "Kaneko", "Fujiyama Buster (Japan)", GAME_NOT_WORKING )
 GAME( 1992, brapboys, 0,        shogwarr, shogwarr, 0,          ROT0,  "Kaneko", "B.Rap Boys (World)",      GAME_NOT_WORKING )
 GAME( 1992, brapboyj, brapboys, shogwarr, shogwarr, 0,          ROT0,  "Kaneko", "B.Rap Boys (Japan)",      GAME_NOT_WORKING )

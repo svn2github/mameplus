@@ -320,6 +320,10 @@ The games seem to use them to mark platforms, kill zones and no-go areas.
 #include "driver.h"
 #include "cps1.h"
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 #define VERBOSE 0
 
 /********************************************************************

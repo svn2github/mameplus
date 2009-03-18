@@ -43,7 +43,7 @@ MACHINE_START( a5200 );
 
 WRITE_LINE_DEVICE_HANDLER(atari_pia_cb2_w);
 
-#ifdef MESS
+#if 1//def MESS
 DEVICE_IMAGE_LOAD( a800_floppy );
 
 DEVICE_IMAGE_LOAD( a800_cart );

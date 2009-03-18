@@ -38,7 +38,7 @@
 #define SNES_SCR_HEIGHT_PAL	274		/* ??? */
 #define SNES_VTOTAL_NTSC	262		/* Maximum number of lines for NTSC systems */
 #define SNES_VTOTAL_PAL		312		/* Maximum number of lines for PAL systems */
-#define SNES_HTOTAL		341		/* Maximum number pixels per line (incl. hblank) */
+#define SNES_HTOTAL			341		/* Maximum number pixels per line (incl. hblank) */
 #define SNES_DMA_BASE		0x4300	/* Base DMA register address */
 #define SNES_MODE_20		0x1		/* Lo-ROM cart */
 #define SNES_MODE_21		0x2		/* Hi-ROM cart */
