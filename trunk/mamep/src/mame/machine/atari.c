@@ -94,9 +94,9 @@ static READ8_DEVICE_HANDLER(atari_pia_pb_r)
 static WRITE8_DEVICE_HANDLER(a600xl_pia_pb_w) { a600xl_mmu(device->machine, data); }
 static WRITE8_DEVICE_HANDLER(a800xl_pia_pb_w) { a800xl_mmu(device->machine, data); }
 
-//#ifndef MESS
+#ifndef MESS
 WRITE_LINE_DEVICE_HANDLER(atari_pia_cb2_w) { }
-//#endif
+#endif
 
 const pia6821_interface atari_pia_interface =
 {
