@@ -26,7 +26,7 @@
 /* step 2: define the drivers[] array */
 #undef DRIVER
 #define DRIVER(NAME) &driver_##NAME,
-const game_driver *const consoledrivers[] =
+const game_driver * const consoledrivers[] =
 {
 #include "messdriv.c"
   0             /* end of array */
@@ -35,7 +35,6 @@ const game_driver *const consoledrivers[] =
 #else /* DRIVER_RECURSIVE */
 
 /****************CONSOLES****************************************************/
-
 
 #ifdef MAMEMESS
 	/* ATARI */
