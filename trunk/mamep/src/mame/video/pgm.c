@@ -245,7 +245,7 @@ static void draw_sprites(running_machine *machine, bitmap_t* spritebitmap)
 
 		if (high == 0) break; /* is this right? */
 
-//		if ((priority == 1) && (pri == 0)) break;
+		//if ((priority == 1) && (pri == 0)) break;
 
 		draw_sprite_new_zoomed(machine, wide, high, xpos, ypos, palt, boff, flip, spritebitmap, xzoom,xgrow, yzoom,ygrow, pri);
 
