@@ -408,7 +408,7 @@ void assign_drivers(core_options *options)
 			char *p = strtok(temp, ",");
  			while (p)
 			{
-				char *s = mame_strtrim(p);	//get individual driver name
+				char *s = core_strtrim(p);	//get individual driver name
 				if (s[0])
 				{
 					if (mame_stricmp(s, "all") == 0)
@@ -659,7 +659,7 @@ int cli_info_listclones(core_options *options, const char *gamename)
 
 int cli_info_listbrothers(core_options *options, const char *gamename)
 {
-	UINT8 *didit = malloc_or_die(driver_list_get_count(drivers));
+	UINT8 *didit = (UINT8 *)malloc_or_die(driver_list_get_count(drivers));
 	astring *filename = astring_alloc();
 	int drvindex, count = 0;
 
@@ -1221,7 +1221,7 @@ static void identify_data(const char *name, const UINT8 *data, int length, romid
 	{
 		/* now determine the new data length and allocate temporary memory for it */
 		length = jedbin_output(&jed, NULL, 0);
-		tempjed = malloc(length);
+		tempjed = (UINT8 *)malloc(length);
 		if (tempjed == NULL)
 			return;
 

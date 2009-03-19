@@ -680,7 +680,7 @@ static void input_frame(running_machine *machine)
 			int changed = FALSE;
 
 			/* update the state of all the keys and see if any changed state */
-			for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+			for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 			{
 				input_device_item *item = device->item[itemid];
 				if (item != NULL && item->itemclass == ITEM_CLASS_SWITCH)
@@ -698,7 +698,7 @@ static void input_frame(running_machine *machine)
 			}
 
 			/* if the keyboard state is stable, copy it over */
-			for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+			for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 			{
 				input_device_item *item = device->item[itemid];
 				if (item != NULL && item->itemclass == ITEM_CLASS_SWITCH)
@@ -732,7 +732,7 @@ input_device *input_device_add(running_machine *machine, input_device_class devc
 	assert(devclass != DEVICE_CLASS_INVALID && devclass < DEVICE_CLASS_MAXIMUM);
 
 	/* allocate a new device */
-	devlist->list = auto_realloc(devlist->list, (devlist->count + 1) * sizeof(devlist->list[0]));
+	devlist->list = (input_device *)auto_realloc(devlist->list, (devlist->count + 1) * sizeof(devlist->list[0]));
 	device = &devlist->list[devlist->count++];
 	memset(device, 0, sizeof(*device));
 
@@ -772,7 +772,7 @@ void input_device_item_add(input_device *device, const char *name, void *interna
 
 	/* if we have a generic ID, pick a new internal one */
 	if (itemid >= ITEM_ID_OTHER_SWITCH && itemid <= ITEM_ID_OTHER_AXIS_RELATIVE)
-		for (itemid = ITEM_ID_MAXIMUM + 1; itemid <= ITEM_ID_ABSOLUTE_MAXIMUM; itemid++)
+		for (itemid = (input_item_id)(ITEM_ID_MAXIMUM + 1); itemid <= ITEM_ID_ABSOLUTE_MAXIMUM; itemid++)
 			if (device->item[itemid] == NULL)
 				break;
 	assert(itemid <= ITEM_ID_ABSOLUTE_MAXIMUM);
@@ -781,7 +781,7 @@ void input_device_item_add(input_device *device, const char *name, void *interna
 	assert(device->item[itemid] == NULL);
 
 	/* allocate a new item and copy data into it */
-	item = auto_malloc(sizeof(*item));
+	item = (input_device_item *)auto_malloc(sizeof(*item));
 	memset(item, 0, sizeof(*item));
 	device->item[itemid] = item;
 	device->maxitem = MAX(device->maxitem, itemid);
@@ -950,7 +950,7 @@ input_code input_code_from_input_item_id(input_item_id itemid)
 	input_device_class devclass;
 
 	/* iterate over device classes and devices */
-	for (devclass = DEVICE_CLASS_INVALID + 1; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
+	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
 		int devnum;
@@ -980,7 +980,7 @@ input_code input_code_poll_switches(int reset)
 		code_pressed_memory_reset();
 
 	/* iterate over device classes and devices */
-	for (devclass = DEVICE_CLASS_INVALID + 1; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
+	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
 		int devnum;
@@ -992,7 +992,7 @@ input_code input_code_poll_switches(int reset)
 			input_item_id itemid;
 
 			/* iterate over items within each device */
-			for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+			for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 			{
 				input_device_item *item = device->item[itemid];
 				if (item != NULL)
@@ -1075,7 +1075,7 @@ input_code input_code_poll_keyboard_switches(int reset)
 		input_item_id itemid;
 
 		/* iterate over items within each device */
-		for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+		for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 		{
 			input_device_item *item = device->item[itemid];
 			if (item != NULL && item->itemclass == ITEM_CLASS_SWITCH)
@@ -1101,7 +1101,7 @@ input_code input_code_poll_axes(int reset)
 	input_device_class devclass;
 
 	/* iterate over device classes and devices */
-	for (devclass = DEVICE_CLASS_INVALID + 1; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
+	for (devclass = DEVICE_CLASS_FIRST_VALID; devclass < DEVICE_CLASS_MAXIMUM; devclass++)
 	{
 		input_device_list *devlist = &device_list[devclass];
 		int devnum;
@@ -1113,7 +1113,7 @@ input_code input_code_poll_axes(int reset)
 			input_item_id itemid;
 
 			/* iterate over items within each device */
-			for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+			for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 			{
 				input_device_item *item = device->item[itemid];
 				if (item != NULL)
@@ -1295,7 +1295,7 @@ input_code input_code_from_token(const char *_token)
 	for (numtokens = 0; numtokens < ARRAY_LENGTH(token); )
 	{
 		/* make a token up to the next underscore */
-		char *score = strchr(_token, '_');
+		char *score = (char *)strchr(_token, '_');
 		token[numtokens++] = astring_dupch(_token, (score == NULL) ? strlen(_token) : (score - _token));
 
 		/* if we hit the end, we're done, else advance our pointer */
@@ -1326,7 +1326,7 @@ input_code input_code_from_token(const char *_token)
 
 	/* if we're a standard code, default the itemclass based on it */
 	if (standard)
-		itemclass = input_item_standard_class(devclass, itemid);
+		itemclass = input_item_standard_class((input_device_class)devclass, (input_item_id)itemid);
 
 	/* otherwise, keep parsing */
 	else
@@ -1339,7 +1339,7 @@ input_code input_code_from_token(const char *_token)
 		device = &device_list[devclass].list[devindex];
 
 		/* if not a standard code, look it up in the device specific codes */
-		for (itemid = ITEM_ID_INVALID + 1; itemid <= device->maxitem; itemid++)
+		for (itemid = ITEM_ID_FIRST_VALID; itemid <= device->maxitem; itemid++)
 		{
 			input_device_item *item = device->item[itemid];
 			if (item != NULL && item->token != NULL && astring_cmp(token[curtok], item->token) == 0)

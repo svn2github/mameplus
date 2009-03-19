@@ -49,11 +49,7 @@ struct _translation_info
 
 static const translation_info gcc_translate[] =
 {
-#ifdef ICC_BUILD
-	{ 0,		"-Drestrict=*",		"/Qrestrict" },
-#else
 	{ 0,		"-Drestrict=*",		"/Drestrict=" },
-#endif
 	{ 0,		"-D*",					"/D*" },
 	{ 0,		"-U*",					"/U*" },
 	{ 0,		"-I*",					"/I*" },
@@ -64,13 +60,9 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-S",					"/c~/Fa" },
 	{ VS7,		"-O0",					"/Od /GS /Oi" },
 	{ 0,		"-O0",					"/Od" },
-#ifdef ICC_BUILD
-	{ 0,		"-O3",					"/O3 /Qip /Qvec_report0" },
-#else
 	{ 0,		"-O1",					"/O2 /Qfast_transcendentals" },
 	{ 0,		"-O2",					"/O2 /Qfast_transcendentals" },
 	{ 0,		"-O3",					"/O2 /Qfast_transcendentals" },
-#endif
 	{ 0,		"-Os",					"/O1" },
 //============================================================
 	{ 0,		"-Opgoc",				"/O2 /GL" },
@@ -90,35 +82,23 @@ static const translation_info gcc_translate[] =
 	{ 0,		"-W*",					"" },
 	{ VS2005,	"-march=*",				"" },		// deprecated in VS2005
 	{ 0,		"-march=pentium",		"/G5" },
-	{ 0,		"-march=athlon",		"/G7" },
 	{ 0,		"-march=pentiumpro",	"/G6" },
-#ifdef ICC_BUILD
-	{ 0,		"-march=pentium4",		"/G7 /QxN" },
-#else
-	{ 0,		"-march=pentium4",		"/G7" },
-#endif
-	{ 0,		"-march=athlon64",		"/G7" },
 	{ 0,		"-march=pentium3",		"/G6" },
-#ifdef ICC_BUILD
-	{ 0,		"-march=pentium-m",		"/G6 /QxB" },
-#else
 	{ 0,		"-march=pentium-m",		"/G6" },
-#endif
+	{ 0,		"-march=athlon",		"/G7" },
+	{ 0,		"-march=pentium4",		"/G7" },
+	{ 0,		"-march=athlon64",		"/G7" },
 //============================================================
 	{ 0,		"-mmmx",				"" },
 //============================================================
-	{ 0,		"-msee",				"/arch:SSE" },
+	{ 0,		"-msse",				"/arch:SSE" },
 	{ VS71,		"-msse2",				"/arch:SSE2" },
 	{ 0,		"-msse2",				"" },
 	{ VS71,		"-msse3",				"/arch:SSE2" },
 	{ 0,		"-msse3",				"" },
 	{ 0,		"-mwindows",			"" },
 	{ 0,		"-mno-cygwin",			"" },
-#ifdef ICC_BUILD
 	{ 0,		"-std=gnu89",			"" },
-#else
-	{ 0,		"-std=gnu89",			"" },
-#endif
 	{ 0,		"-std=gnu++98",				"/TP" },
 	{ 0,		"-pipe",				"" },
 	{ 0,		"-x",						"" },
@@ -278,11 +258,7 @@ static void build_command_line(int argc, char *argv[])
 	{
 		transtable = gcc_translate;
 		executable = "cl.exe";
-#ifdef ICC_BUILD
-		dst += sprintf(dst, "icl /nologo ");
-#else
 		dst += sprintf(dst, "cl /nologo ");
-#endif
 	}
 	else if (!strcmp(argv[1], "windres"))
 	{
@@ -294,21 +270,13 @@ static void build_command_line(int argc, char *argv[])
 	{
 		transtable = ld_translate;
 		executable = "link.exe";
-#ifdef ICC_BUILD
-		dst += sprintf(dst, "xilink /nologo ");
-#else
 		dst += sprintf(dst, "link /nologo ");
-#endif
 	}
 	else if (!strcmp(argv[1], "ar"))
 	{
 		transtable = ar_translate;
 		executable = "lib.exe";
-#ifdef ICC_BUILD
-		dst += sprintf(dst, "xilink /lib /nologo ");
-#else
 		dst += sprintf(dst, "link /lib /nologo ");
-#endif
 		outstring = "/out:";
 		output_is_first = 1;
 	}

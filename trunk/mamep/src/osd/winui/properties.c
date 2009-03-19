@@ -2244,7 +2244,7 @@ static void OptionsToProp(HWND hWnd, core_options* o)
 
 			while (p)
 			{
-				char *s = mame_strtrim(p);	//get individual driver name
+				char *s = core_strtrim(p);	//get individual driver name
 				if (s[0])
 				{
 					if (mame_stricmp(s, "all") == 0)

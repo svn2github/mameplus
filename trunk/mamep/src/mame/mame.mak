@@ -132,6 +132,7 @@ CPUS += CUBEQCPU
 CPUS += ESRIP
 CPUS += R3000
 CPUS += R3041
+CPUS += VR4300
 CPUS += R4600
 CPUS += R4650
 CPUS += R4700
@@ -606,6 +607,7 @@ $(MAMEOBJ)/capcom.a: \
 	$(DRIVERS)/vulgus.o $(VIDEO)/vulgus.o \
 	$(DRIVERS)/tigeroad.o $(VIDEO)/tigeroad.o \
 	$(DRIVERS)/zn.o $(MACHINE)/znsec.o \
+	$(DRIVERS)/taitogn.o \
 	$(MACHINE)/cps2crpt.o \
 	$(MACHINE)/kabuki.o \
 
@@ -692,7 +694,6 @@ $(MAMEOBJ)/dynax.a: \
 	$(DRIVERS)/ddenlovr.o \
 	$(DRIVERS)/dynax.o $(VIDEO)/dynax.o \
 	$(DRIVERS)/hnayayoi.o $(VIDEO)/hnayayoi.o \
-	$(DRIVERS)/rcasino.o \
 	$(DRIVERS)/realbrk.o $(VIDEO)/realbrk.o \
 	$(DRIVERS)/royalmah.o \
 
@@ -748,6 +749,7 @@ $(MAMEOBJ)/gaelco.a: \
 	$(DRIVERS)/thoop2.o $(VIDEO)/thoop2.o \
 	$(DRIVERS)/xorworld.o $(VIDEO)/xorworld.o \
 	$(DRIVERS)/wrally.o $(MACHINE)/wrally.o $(VIDEO)/wrally.o \
+	$(DRIVERS)/tokyocop.o \
 
 $(MAMEOBJ)/gameplan.a: \
 	$(DRIVERS)/enigma2.o \
@@ -1564,9 +1566,11 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/big10.o \
 	$(DRIVERS)/blackt96.o \
 	$(DRIVERS)/buster.o \
+	$(DRIVERS)/calchase.o \
 	$(DRIVERS)/calomega.o $(VIDEO)/calomega.o \
 	$(DRIVERS)/carrera.o \
 	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
+	$(DRIVERS)/chsuper.o \
 	$(DRIVERS)/cidelsa.o $(VIDEO)/cidelsa.o \
 	$(DRIVERS)/coinmstr.o \
 	$(DRIVERS)/comebaby.o \
@@ -1654,6 +1658,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/pangofun.o \
 	$(DRIVERS)/pasha2.o \
 	$(DRIVERS)/pass.o $(VIDEO)/pass.o \
+	$(DRIVERS)/pcat_nit.o \
 	$(DRIVERS)/pcxt.o \
 	$(DRIVERS)/peplus.o \
 	$(DRIVERS)/pipeline.o \
@@ -1857,6 +1862,8 @@ $(DRIVERS)/stactics.o:	$(LAYOUT)/stactics.lh
 $(DRIVERS)/stepstag.o:	$(LAYOUT)/stepstag.lh
 
 $(DRIVERS)/superchs.o:	$(LAYOUT)/superchs.lh
+
+$(DRIVERS)/sfbonus.o:	$(LAYOUT)/pirpok2.lh
 
 $(DRIVERS)/taito_z.o:	$(LAYOUT)/contcirc.lh \
 						$(LAYOUT)/dblaxle.lh

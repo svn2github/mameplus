@@ -239,7 +239,7 @@ static quark_table *quark_table_alloc(UINT32 entries, UINT32 hashsize)
 
 	/* determine how many total bytes we need */
 	total_bytes = sizeof(*table) + entries * sizeof(table->entry[0]) + hashsize * sizeof(table->hash[0]);
-	table = auto_malloc(total_bytes);
+	table = (quark_table *)auto_malloc(total_bytes);
 
 	/* fill in the details */
 	table->entries = entries;
@@ -732,7 +732,7 @@ static int validate_cpu(int drivnum, const machine_config *config, const input_p
 	/* loop over all the CPUs */
 	for (device = cpu_first(config); device != NULL; device = cpu_next(device))
 	{
-		const cpu_config *cpuconfig = device->inline_config;
+		const cpu_config *cpuconfig = (const cpu_config *)device->inline_config;
 		int spacenum;
 
 		/* check the CPU for incompleteness */
@@ -931,7 +931,7 @@ static int validate_display(int drivnum, const machine_config *config)
 	/* loop over screens */
 	for (device = video_screen_first(config); device != NULL; device = video_screen_next(device))
 	{
-		const screen_config *scrconfig = device->inline_config;
+		const screen_config *scrconfig = (const screen_config *)device->inline_config;
 
 		/* sanity check dimensions */
 		if ((scrconfig->width <= 0) || (scrconfig->height <= 0))
@@ -1503,7 +1503,7 @@ static int validate_sound(int drivnum, const machine_config *config)
 	/* make sure the sounds are wired to the speakers correctly */
 	for (cursound = sound_first(config); cursound != NULL; cursound = sound_next(cursound))
 	{
-		const sound_config *curconfig = cursound->inline_config;
+		const sound_config *curconfig = (const sound_config *)cursound->inline_config;
 		const sound_route *route;
 
 		/* loop over all the routes */

@@ -143,7 +143,7 @@ ifdef MSVC_BUILD
     endif
 
     # disable function pointer warnings in C++ which are evil to work around
-    CPPONLYFLAGS += /wd4191
+    CPPONLYFLAGS += /wd4191 /wd4060 /wd4065 /wd4640
     
     # filter X86_ASM define
     DEFS := $(filter-out -DX86_ASM,$(DEFS))
