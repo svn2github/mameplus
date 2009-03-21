@@ -1246,6 +1246,10 @@ Game lacks sound
 Game protection isn't fully emulated
 게임 암호화되어 완전히 에뮬레이트되지 않음
 
+# osd/winui/properties.c: 1068, 1121, 1192
+Game requires external artwork files
+게임은 외부 아트웍파일이 필요합니다.
+
 # osd/winui/winui.c: 3499
 Game search %d%% complete
 게임 찾기 %d%% 완료
@@ -1938,6 +1942,10 @@ Remove selected item from this folder
 Rename this folder
 현재 폴더 이름 변경
 
+# osd/winui/treeview.c: 966
+Requires Artwork
+아트웍 필요
+
 # osd/winui/mameui.rc: 210
 Rese&t Playcount
 실행 횟수 초기화(&T)
@@ -2454,6 +2462,10 @@ Switch resolutions to fit
 Sync to monitor refresh
 모니터 주사율 동기화
 
+# osd/winui/datafile.c: 1061
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+이 게임은 작동하지 않습니다. 이 게임에 대한 에뮬레이션이 아직 완료되지 않았습니다. 개발자가 수정하기 전에는 이 문제를 해결 할 수 없습니다.\n
+
 # osd/winui/datafile.c: 1071
 The colors are completely wrong.\n
 색상이 완전히 잘못 출력됩니다.\n
@@ -2469,6 +2481,10 @@ The game has protection which isn't fully emulated.\n
 # osd/winui/datafile.c: 1077
 The game lacks sound.\n
 이 게임은 사운드를 지원하지 못함.\n
+
+# osd/winui/datafile.c: 1086
+The game requires external artwork files\n
+이 게임은 외부 아트웍파일\n 필요합니다.
 
 # osd/winui/mui_util.c: 241
 The operating system is out of memory or resources.
@@ -2881,20 +2897,4 @@ videos (*.avi)
 # osd/winui/winui.c: 6364
 videos (*.mng)
 비디오 (*.mng)
-
-# osd/winui/properties.c: 1068, 1121, 1192
-Game requires external artwork files
-
-
-# osd/winui/treeview.c: 966
-Requires Artwork
-
-
-# osd/winui/datafile.c: 1061
-THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
-
-
-# osd/winui/datafile.c: 1086
-The game requires external artwork files\n
-
 

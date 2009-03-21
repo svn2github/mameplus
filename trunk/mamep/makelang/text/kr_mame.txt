@@ -22,6 +22,10 @@
  BAD
  Àß¸øµÈ ·Ò
 
+# emu/sound.c: 505
+ Ch.%d
+Ch.%d
+
 # emu/clifront.c: 797
  NO GOOD DUMP KNOWN
  Á¤È®ÇÏ°Ô ´ýÇÁµÈ ·Ò ¾øÀ½
@@ -2021,6 +2025,10 @@ MAME ´Â ¿¡¹Ä·¹ÀÌÅÍÀÔ´Ï´Ù: MAME´Â ´Ù¾çÇÑ ¾ÆÄÉÀÌµå ¸Ó½ÅÀÇ Æ¯¼ºÀ» ÀçÇöÇØ ³À´Ï´Ù.\nÇ
 # mess/messopts.c: 36
 MESS SPECIFIC OPTIONS
 MESS Àü¿ë ¿É¼Ç
+
+# mame/drivers/neodrvr.c: 76
+Mahjong Control Panel
+¸¶ÀÛ Á¶Á¾ÆÐ³Î
 
 # mame/layout/nbmj8688.lay: 21
 Main Screen Pixel Aspect (%d:%d)
@@ -4278,6 +4286,22 @@ Set Chip Lamps
 Shifter
 ÀÌµ¿ÀåÄ¡
 
+# mame/layout/buggyboy.lay: 67, 95 mame/layout/tx1.lay: 67, 95
+Shifter-%dL
+ÀÌµ¿ÀåÄ¡-%dL
+
+# mame/layout/buggyboy.lay: 50, 84 mame/layout/tx1.lay: 50, 84
+Shifter-%dR
+ÀÌµ¿ÀåÄ¡-%dR
+
+# mame/layout/280zzzap.lay: 59 mame/layout/buggybjr.lay: 50 mame/layout/buggychl.lay: 59 mame/layout/cbombers.lay: 59 mame/layout/changela.lay: 59 mame/layout/chqflag.lay: 59 mame/layout/contcirc.lay: 59 mame/layout/dblaxle.lay: 59 mame/layout/finallap.lay: 59 mame/layout/grchamp.lay: 59 mame/layout/outrun.lay: 59 mame/layout/overdriv.lay: 59 mame/layout/pdrift.lay: 59 mame/layout/polepos.lay: 59 mame/layout/radr.lay: 59 mame/layout/roundup5.lay: 50 mame/layout/stocker.lay: 59 mame/layout/superchs.lay: 59 mame/layout/topspeed.lay: 59 mame/layout/turbotag.lay: 59 mame/layout/wecleman.lay: 59
+Shifter-L
+ÀÌµ¿ÀåÄ¡-L
+
+# mame/layout/280zzzap.lay: 50 mame/layout/buggybjr.lay: 60 mame/layout/buggychl.lay: 50 mame/layout/cbombers.lay: 50 mame/layout/changela.lay: 50 mame/layout/chqflag.lay: 50 mame/layout/contcirc.lay: 50 mame/layout/dblaxle.lay: 50 mame/layout/finallap.lay: 50 mame/layout/grchamp.lay: 50 mame/layout/outrun.lay: 50 mame/layout/overdriv.lay: 50 mame/layout/pdrift.lay: 50 mame/layout/polepos.lay: 50 mame/layout/radr.lay: 50 mame/layout/roundup5.lay: 61 mame/layout/stocker.lay: 50 mame/layout/superchs.lay: 50 mame/layout/topspeed.lay: 50 mame/layout/turbotag.lay: 50 mame/layout/wecleman.lay: 50
+Shifter-R
+ÀÌµ¿ÀåÄ¡-R
+
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Show Activation Key Message
 È°¼º Å° ¸Þ½ÃÁö º¸ÀÌ±â
@@ -4350,6 +4374,10 @@ Sound
 Spanish
 ½ºÆäÀÎ¾î
 
+# emu/sound.c: 503
+Speaker '%s': %s '%s'
+½ºÇÇÄ¿ '%s': %s '%s'
+
 # emu/inptport.c: 435 
 Standard
 Ç¥ÁØ
@@ -4397,6 +4425,10 @@ Subtract
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Swap
 ±³È¯
+
+# emu/ui.c: 1472 
+THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
+ÀÌ °ÔÀÓÀº ÀÛµ¿ÇÏÁö ¾Ê½À´Ï´Ù. ÀÌ °ÔÀÓ¿¡ ´ëÇÑ ¿¡¹Ä·¹ÀÌ¼ÇÀÌ ¾ÆÁ÷ ¿Ï·áµÇÁö ¾Ê¾Ò½À´Ï´Ù. °³¹ßÀÚ°¡ ¼öÁ¤ÇÏ±â Àü¿¡´Â ÀÌ ¹®Á¦¸¦ ÇØ°á ÇÒ ¼ö ¾ø½À´Ï´Ù.\n
 
 # mame/drivers/aerofgt.c: 579, 971, 1063 mame/drivers/cave.c: 1612 mame/drivers/f1gp.c: 367 mame/drivers/midzeus.c: 874 mame/drivers/pgm.c: 927, 941, 954, 968, 984, 997, 1016, 1131 mame/drivers/psikyo.c: 569, 648, 827, 949, 1080 mame/drivers/toaplan1.c: 983, 1007, 1025, 1102, 1155 mame/drivers/toaplan2.c: 2129, 2176, 2242, 2266, 2332, 2380, 2423, 2533, 2595, 2657, 2726, 2770, 2823
 Taiwan
@@ -4453,6 +4485,10 @@ The game has protection which isn't fully emulated.\n
 # emu/ui.c: 1453 
 The game lacks sound.\n
 »ç¿îµå°¡ ³ªÁö ¾Ê½À´Ï´Ù.\n
+
+# emu/ui.c: 1459 
+The game requires external artwork files\n
+ÀÌ °ÔÀÓÀº ¿ÜºÎ ¾ÆÆ®¿÷ÆÄÀÏ\n ÇÊ¿äÇÕ´Ï´Ù.
 
 # emu/uimenu.c: 3574
 The selected game is missing one or more required ROM or CHD images. Please select a different game.\n\nPress any key to continue.
@@ -4901,6 +4937,10 @@ Watch Skip
 # NOT FOUND IN SRC (tp_mame.txt ) ##
 Watchpoints
 º¸±âÀ§Ä¡
+
+# mame/layout/gridiron.lay: 10
+With LEDs
+LED
 
 # emu/inptport.c: 392 mame/drivers/tetrisp2.c: 659, 662, 665, 666
 World
@@ -5690,10 +5730,6 @@ writes configuration to (driver).ini on exit
 year, manufacturer and full name
 Á¦ÀÛ³âµµ, Á¦ÀÛ»ç¿Í ÀüÃ¼ ÀÌ¸§
 
-# emu/sound.c: 505
- Ch.%d
-
-
 # mame/layout/drwho.lay: 1575
 AWP Simulated Video (Lamp Matrix and Reels)
 
@@ -5730,43 +5766,7 @@ Full Output
 Gamball AWP Simulated Video (No Artwork)
 
 
-# mame/drivers/neodrvr.c: 76
-Mahjong Control Panel
-
-
-# mame/layout/buggyboy.lay: 67, 95 mame/layout/tx1.lay: 67, 95
-Shifter-%dL
-
-
-# mame/layout/buggyboy.lay: 50, 84 mame/layout/tx1.lay: 50, 84
-Shifter-%dR
-
-
-# mame/layout/280zzzap.lay: 59 mame/layout/buggybjr.lay: 50 mame/layout/buggychl.lay: 59 mame/layout/cbombers.lay: 59 mame/layout/changela.lay: 59 mame/layout/chqflag.lay: 59 mame/layout/contcirc.lay: 59 mame/layout/dblaxle.lay: 59 mame/layout/finallap.lay: 59 mame/layout/grchamp.lay: 59 mame/layout/outrun.lay: 59 mame/layout/overdriv.lay: 59 mame/layout/pdrift.lay: 59 mame/layout/polepos.lay: 59 mame/layout/radr.lay: 59 mame/layout/roundup5.lay: 50 mame/layout/stocker.lay: 59 mame/layout/superchs.lay: 59 mame/layout/topspeed.lay: 59 mame/layout/turbotag.lay: 59 mame/layout/wecleman.lay: 59
-Shifter-L
-
-
-# mame/layout/280zzzap.lay: 50 mame/layout/buggybjr.lay: 60 mame/layout/buggychl.lay: 50 mame/layout/cbombers.lay: 50 mame/layout/changela.lay: 50 mame/layout/chqflag.lay: 50 mame/layout/contcirc.lay: 50 mame/layout/dblaxle.lay: 50 mame/layout/finallap.lay: 50 mame/layout/grchamp.lay: 50 mame/layout/outrun.lay: 50 mame/layout/overdriv.lay: 50 mame/layout/pdrift.lay: 50 mame/layout/polepos.lay: 50 mame/layout/radr.lay: 50 mame/layout/roundup5.lay: 61 mame/layout/stocker.lay: 50 mame/layout/superchs.lay: 50 mame/layout/topspeed.lay: 50 mame/layout/turbotag.lay: 50 mame/layout/wecleman.lay: 50
-Shifter-R
-
-
-# emu/sound.c: 503
-Speaker '%s': %s '%s'
-
-
 # mame/layout/stepstag.lay: 43
 Stepping Stage Custom
-
-
-# emu/ui.c: 1472 
-THIS GAME DOESN'T WORK. The emulation for this game is not yet complete. There is nothing you can do to fix this problem except wait for the developers to improve the emulation.\n
-
-
-# emu/ui.c: 1459 
-The game requires external artwork files\n
-
-
-# mame/layout/gridiron.lay: 10
-With LEDs
 
 
