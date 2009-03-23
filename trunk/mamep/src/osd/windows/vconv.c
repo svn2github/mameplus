@@ -303,7 +303,9 @@ static void build_command_line(int argc, char *argv[])
 		int i;
 
 		// find a match
-		for (i = 0; !matched && transtable[i].gcc_option != NULL; i++)
+		if (firstchar == '-')
+		{
+			for (i = 0; !matched && transtable[i].gcc_option != NULL; i++)
 			{
 				const char *compare = transtable[i].gcc_option;
 				const char *replace;
@@ -385,6 +387,7 @@ static void build_command_line(int argc, char *argv[])
 
 				// else keep looking
 			}
+		}
 
 		// if we didn't match, process
 		if (!matched)
