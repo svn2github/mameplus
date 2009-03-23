@@ -7,6 +7,7 @@
   By R. Belmont & Ryan Holtz
 
   TODO:
+  - Raster sync doesn't seem to be right
   - Roz sprites
   - Roz BG support
   - Probably some ARM7 CPU bugs along the way
@@ -23,8 +24,8 @@
 #include "includes/gb.h"
 #include "sound/dac.h"
 
-#define VERBOSE_LEVEL	(2)
-#define DISABLE_ROZ	(0)
+	#define VERBOSE_LEVEL	(0)
+#define DISABLE_ROZ	(1)
 
 static emu_timer *dma_timer[4], *tmr_timer[4], *irq_timer;
 
@@ -988,11 +989,15 @@ static void audio_tick(running_machine *machine, int ref)
 
 			if (gba.SOUNDCNT_H & 0x100)
 			{
-				dac_signed_data_w(0, fifo_a[fifo_a_ptr]^0x80);
+				const device_config *dac_device = devtag_get_device(machine, "direct_a_left");
+
+				dac_signed_data_w(dac_device, fifo_a[fifo_a_ptr]^0x80);
 			}
 			if (gba.SOUNDCNT_H & 0x200)
 			{
-				dac_signed_data_w(1, fifo_a[fifo_a_ptr]^0x80);
+				const device_config *dac_device = devtag_get_device(machine, "direct_a_right");
+
+				dac_signed_data_w(dac_device, fifo_a[fifo_a_ptr]^0x80);
 			}
 			fifo_a_ptr++;
 		}
@@ -1024,11 +1029,15 @@ static void audio_tick(running_machine *machine, int ref)
 
 			if (gba.SOUNDCNT_H & 0x1000)
 			{
-				dac_signed_data_w(2, fifo_b[fifo_b_ptr]^0x80);
+				const device_config *dac_device = devtag_get_device(machine, "direct_b_left");
+
+				dac_signed_data_w(dac_device, fifo_b[fifo_b_ptr]^0x80);
 			}
 			if (gba.SOUNDCNT_H & 0x2000)
 			{
-				dac_signed_data_w(3, fifo_b[fifo_b_ptr]^0x80);
+				const device_config *dac_device = devtag_get_device(machine, "direct_b_right");
+
+				dac_signed_data_w(dac_device, fifo_b[fifo_b_ptr]^0x80);
 			}
 			fifo_b_ptr++;
 		}
@@ -1185,6 +1194,7 @@ static READ32_HANDLER( gba_io_r )
 {
 	UINT32 retval = 0;
 	running_machine *machine = space->machine;
+	const device_config *gb_device = devtag_get_device(space->machine, "custom");
 
 	switch( offset )
 	{
@@ -1431,31 +1441,31 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0060/4:
-			retval = gb_sound_r(space, 0) | gb_sound_r(space, 1)<<16 | gb_sound_r(space, 2)<<24;
+			retval = gb_sound_r(gb_device, 0) | gb_sound_r(gb_device, 1)<<16 | gb_sound_r(gb_device, 2)<<24;
 			break;
 		case 0x0064/4:
-			retval = gb_sound_r(space, 3) | gb_sound_r(space, 4)<<8;
+			retval = gb_sound_r(gb_device, 3) | gb_sound_r(gb_device, 4)<<8;
 			break;
 		case 0x0068/4:
-			retval = gb_sound_r(space, 6) | gb_sound_r(space, 7)<<8;
+			retval = gb_sound_r(gb_device, 6) | gb_sound_r(gb_device, 7)<<8;
 			break;
 		case 0x006c/4:
-			retval = gb_sound_r(space, 8) | gb_sound_r(space, 9)<<8;
+			retval = gb_sound_r(gb_device, 8) | gb_sound_r(gb_device, 9)<<8;
 			break;
 		case 0x0070/4:
-			retval = gb_sound_r(space, 0xa) | gb_sound_r(space, 0xb)<<16 | gb_sound_r(space, 0xc)<<24;
+			retval = gb_sound_r(gb_device, 0xa) | gb_sound_r(gb_device, 0xb)<<16 | gb_sound_r(gb_device, 0xc)<<24;
 			break;
 		case 0x0074/4:
-			retval = gb_sound_r(space, 0xd) | gb_sound_r(space, 0xe)<<8;
+			retval = gb_sound_r(gb_device, 0xd) | gb_sound_r(gb_device, 0xe)<<8;
 			break;
 		case 0x0078/4:
-			retval = gb_sound_r(space, 0x10) | gb_sound_r(space, 0x11)<<8;
+			retval = gb_sound_r(gb_device, 0x10) | gb_sound_r(gb_device, 0x11)<<8;
 			break;
 		case 0x007c/4:
-			retval = gb_sound_r(space, 0x12) | gb_sound_r(space, 0x13)<<8;
+			retval = gb_sound_r(gb_device, 0x12) | gb_sound_r(gb_device, 0x13)<<8;
 			break;
 		case 0x0080/4:
-			retval = gb_sound_r(space, 0x14) | gb_sound_r(space, 0x15)<<8;
+			retval = gb_sound_r(gb_device, 0x14) | gb_sound_r(gb_device, 0x15)<<8;
 			if( (mem_mask) & 0xffff0000 )
 			{
 				verboselog(machine, 2, "GBA IO Register Read: SOUNDCNT_H (%08x) = %04x\n", 0x04000000 + ( offset << 2 ) + 2, gba.SOUNDCNT_H );
@@ -1463,7 +1473,7 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0084/4:
-			retval = gb_sound_r(space, 0x16);
+			retval = gb_sound_r(gb_device, 0x16);
 			break;
 		case 0x0088/4:
 			if( (mem_mask) & 0x0000ffff )
@@ -1477,16 +1487,16 @@ static READ32_HANDLER( gba_io_r )
 			}
 			break;
 		case 0x0090/4:
-			retval = gb_wave_r(space, 0) | gb_wave_r(space, 1)<<8 | gb_wave_r(space, 2)<<16 | gb_wave_r(space, 3)<<24;
+			retval = gb_wave_r(gb_device, 0) | gb_wave_r(gb_device, 1)<<8 | gb_wave_r(gb_device, 2)<<16 | gb_wave_r(gb_device, 3)<<24;
 			break;
 		case 0x0094/4:
-			retval = gb_wave_r(space, 4) | gb_wave_r(space, 5)<<8 | gb_wave_r(space, 6)<<16 | gb_wave_r(space, 7)<<24;
+			retval = gb_wave_r(gb_device, 4) | gb_wave_r(gb_device, 5)<<8 | gb_wave_r(gb_device, 6)<<16 | gb_wave_r(gb_device, 7)<<24;
 			break;
 		case 0x0098/4:
-			retval = gb_wave_r(space, 8) | gb_wave_r(space, 9)<<8 | gb_wave_r(space, 10)<<16 | gb_wave_r(space, 11)<<24;
+			retval = gb_wave_r(gb_device, 8) | gb_wave_r(gb_device, 9)<<8 | gb_wave_r(gb_device, 10)<<16 | gb_wave_r(gb_device, 11)<<24;
 			break;
 		case 0x009c/4:
-			retval = gb_wave_r(space, 12) | gb_wave_r(space, 13)<<8 | gb_wave_r(space, 14)<<16 | gb_wave_r(space, 15)<<24;
+			retval = gb_wave_r(gb_device, 12) | gb_wave_r(gb_device, 13)<<8 | gb_wave_r(gb_device, 14)<<16 | gb_wave_r(gb_device, 15)<<24;
 			break;
 		case 0x00a0/4:
 		case 0x00a4/4:
@@ -1671,6 +1681,7 @@ static READ32_HANDLER( gba_io_r )
 static WRITE32_HANDLER( gba_io_w )
 {
 	running_machine *machine = space->machine;
+	const device_config *gb_device = devtag_get_device(space->machine, "custom");
 
 	switch( offset )
 	{
@@ -1769,48 +1780,48 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0020/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				printf( "GBA IO Register Write: BG2PA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2PA (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2PA = ( gba.BG2PA & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				printf( "GBA IO Register Write: BG2PB (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2PB (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG2PB = ( gba.BG2PB & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0024/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				printf( "GBA IO Register Write: BG2PC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2PC (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2PC = ( gba.BG2PC & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				printf( "GBA IO Register Write: BG2PD (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2PD (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 gba.BG2PD = ( gba.BG2PD & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x0028/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				printf( "GBA IO Register Write: BG2X_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2X_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2X = ( gba.BG2X & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				printf( "GBA IO Register Write: BG2X_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2X_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
 		                gba.BG2X = ( gba.BG2X & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
 		case 0x002c/4:
 			if( (mem_mask) & 0x0000ffff )
 			{
-				printf( "GBA IO Register Write: BG2Y_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2Y_LSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), data & 0x0000ffff, ~mem_mask );
 				gba.BG2Y = ( gba.BG2Y & ~mem_mask ) | ( data & mem_mask );
 			}
 			if( (mem_mask) & 0xffff0000 )
 			{
-				printf( "GBA IO Register Write: BG2Y_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
+				verboselog(machine, 2, "GBA IO Register Write: BG2Y_MSW (%08x) = %04x (%08x)\n", 0x04000000 + ( offset << 2 ), ( data & 0xffff0000 ) >> 16, ~mem_mask );
                 		gba.BG2Y = ( gba.BG2Y & ( ~mem_mask >> 16 ) ) | ( ( data & mem_mask ) >> 16 );
 			}
 			break;
@@ -1955,99 +1966,99 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0060/4:
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(space, 0, data);
+				gb_sound_w(gb_device, 0, data);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(space, 1, data>>16);	// SOUND1CNT_H
+				gb_sound_w(gb_device, 1, data>>16);	// SOUND1CNT_H
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(space, 2, data>>24);
+				gb_sound_w(gb_device, 2, data>>24);
 			}
 			break;
 		case 0x0064/4:
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(space, 3, data);
+				gb_sound_w(gb_device, 3, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 4, data>>8);	// SOUND1CNT_H
+				gb_sound_w(gb_device, 4, data>>8);	// SOUND1CNT_H
 			}
 			break;
 		case 0x0068/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 6, data);
+				gb_sound_w(gb_device, 6, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 7, data>>8);
+				gb_sound_w(gb_device, 7, data>>8);
 			}
 			break;
 		case 0x006c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 8, data);
+				gb_sound_w(gb_device, 8, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 9, data>>8);
+				gb_sound_w(gb_device, 9, data>>8);
 			}
 			break;
 		case 0x0070/4:	//SND3CNTL and H
 			if( (mem_mask) & 0x000000ff )	// SOUNDCNTL
 			{
-				gb_sound_w(space, 0xa, data);
+				gb_sound_w(gb_device, 0xa, data);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_sound_w(space, 0xb, data>>16);	// SOUND1CNT_H
+				gb_sound_w(gb_device, 0xb, data>>16);	// SOUND1CNT_H
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_sound_w(space, 0xc, data>>24);
+				gb_sound_w(gb_device, 0xc, data>>24);
 			}
 			break;
 		case 0x0074/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 0xd, data);
+				gb_sound_w(gb_device, 0xd, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 0xe, data>>8);
+				gb_sound_w(gb_device, 0xe, data>>8);
 			}
 			break;
 		case 0x0078/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 0x10, data);
+				gb_sound_w(gb_device, 0x10, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 0x11, data>>8);
+				gb_sound_w(gb_device, 0x11, data>>8);
 			}
 			break;
 		case 0x007c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 0x12, data);
+				gb_sound_w(gb_device, 0x12, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 0x13, data>>8);
+				gb_sound_w(gb_device, 0x13, data>>8);
 			}
 			break;
 		case 0x0080/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 0x14, data);
+				gb_sound_w(gb_device, 0x14, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_sound_w(space, 0x15, data>>8);
+				gb_sound_w(gb_device, 0x15, data>>8);
 			}
 
 			if ((mem_mask) & 0xffff0000)
@@ -2058,34 +2069,46 @@ static WRITE32_HANDLER( gba_io_w )
 				// DAC A reset?
 				if (data & 0x0800)
 				{
+					const device_config *gb_a_l = devtag_get_device(machine, "direct_a_left");
+					const device_config *gb_a_r = devtag_get_device(machine, "direct_a_right");
+								   
 					fifo_a_ptr = 17;
 					fifo_a_in = 17;
-					dac_signed_data_w(0, 0x80);
-					dac_signed_data_w(1, 0x80);
+					dac_signed_data_w(gb_a_l, 0x80);
+					dac_signed_data_w(gb_a_r, 0x80);
 				}
 
 				// DAC B reset?
 				if (data & 0x8000)
 				{
+					const device_config *gb_b_l = devtag_get_device(machine, "direct_b_left");
+					const device_config *gb_b_r = devtag_get_device(machine, "direct_b_right");
+								   
 					fifo_b_ptr = 17;
 					fifo_b_in = 17;
-					dac_signed_data_w(2, 0x80);
-					dac_signed_data_w(3, 0x80);
+					dac_signed_data_w(gb_b_l, 0x80);
+					dac_signed_data_w(gb_b_r, 0x80);
 				}
 			}
 			break;
 		case 0x0084/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_sound_w(space, 0x16, data);
+				const device_config *gb_a_l = devtag_get_device(machine, "direct_a_left");
+				const device_config *gb_a_r = devtag_get_device(machine, "direct_a_right");
+				const device_config *gb_b_l = devtag_get_device(machine, "direct_b_left");
+				const device_config *gb_b_r = devtag_get_device(machine, "direct_b_right");
+				const device_config *gb_device = devtag_get_device(space->machine, "custom");
+
+				gb_sound_w(gb_device, 0x16, data);
 				if ((data & 0x80) && !(gba.SOUNDCNT_X & 0x80))
 				{
 					fifo_a_ptr = fifo_a_in = 17;
 					fifo_b_ptr = fifo_b_in = 17;
-					dac_signed_data_w(0, 0x80);
-					dac_signed_data_w(1, 0x80);
-					dac_signed_data_w(2, 0x80);
-					dac_signed_data_w(3, 0x80);
+					dac_signed_data_w(gb_a_l, 0x80);
+					dac_signed_data_w(gb_a_r, 0x80);
+					dac_signed_data_w(gb_b_l, 0x80);
+					dac_signed_data_w(gb_b_r, 0x80);
 				}
 				gba.SOUNDCNT_X = data;
 			}
@@ -2104,73 +2127,73 @@ static WRITE32_HANDLER( gba_io_w )
 		case 0x0090/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(space, 0, data);
+				gb_wave_w(gb_device, 0, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(space, 1, data>>8);
+				gb_wave_w(gb_device, 1, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(space, 2, data>>16);
+				gb_wave_w(gb_device, 2, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(space, 3, data>>24);
+				gb_wave_w(gb_device, 3, data>>24);
 			}
 			break;
 		case 0x0094/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(space, 4, data);
+				gb_wave_w(gb_device, 4, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(space, 5, data>>8);
+				gb_wave_w(gb_device, 5, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(space, 6, data>>16);
+				gb_wave_w(gb_device, 6, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(space, 7, data>>24);
+				gb_wave_w(gb_device, 7, data>>24);
 			}
 			break;
 		case 0x0098/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(space, 8, data);
+				gb_wave_w(gb_device, 8, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(space, 9, data>>8);
+				gb_wave_w(gb_device, 9, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(space, 0xa, data>>16);
+				gb_wave_w(gb_device, 0xa, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(space, 0xb, data>>24);
+				gb_wave_w(gb_device, 0xb, data>>24);
 			}
 			break;
 		case 0x009c/4:
 			if( (mem_mask) & 0x000000ff )
 			{
-				gb_wave_w(space, 0xc, data);
+				gb_wave_w(gb_device, 0xc, data);
 			}
 			if( (mem_mask) & 0x0000ff00 )
 			{
-				gb_wave_w(space, 0xd, data>>8);
+				gb_wave_w(gb_device, 0xd, data>>8);
 			}
 			if( (mem_mask) & 0x00ff0000 )
 			{
-				gb_wave_w(space, 0xe, data>>16);
+				gb_wave_w(gb_device, 0xe, data>>16);
 			}
 			if( (mem_mask) & 0xff000000 )
 			{
-				gb_wave_w(space, 0xf, data>>24);
+				gb_wave_w(gb_device, 0xf, data>>24);
 			}
 			break;
 		case 0x00a0/4:
@@ -2597,6 +2620,11 @@ TIMER_CALLBACK( perform_scan )
 
 static MACHINE_RESET( gba )
 {
+	const device_config *gb_a_l = devtag_get_device(machine, "direct_a_left");
+	const device_config *gb_a_r = devtag_get_device(machine, "direct_a_right");
+	const device_config *gb_b_l = devtag_get_device(machine, "direct_b_left");
+	const device_config *gb_b_r = devtag_get_device(machine, "direct_b_right");
+
 	memset(&gba, 0, sizeof(gba));
 	gba.SOUNDBIAS = 0x0200;
 	memset(timer_regs, 0, sizeof(timer_regs));
@@ -2622,10 +2650,10 @@ static MACHINE_RESET( gba )
 	fifo_a_in = fifo_b_in = 17;
 
 	// and clear the DACs
-        dac_signed_data_w(0, 0x80);
-        dac_signed_data_w(1, 0x80);
-        dac_signed_data_w(2, 0x80);
-        dac_signed_data_w(3, 0x80);
+        dac_signed_data_w(gb_a_l, 0x80);
+        dac_signed_data_w(gb_a_r, 0x80);
+        dac_signed_data_w(gb_b_l, 0x80);
+        dac_signed_data_w(gb_b_r, 0x80);
 }
 
 static MACHINE_START( gba )
@@ -2673,10 +2701,6 @@ static MACHINE_START( gba )
 		}
 	}
 }
-
-// 8-bit GB audio
-static custom_sound_interface gameboy_sound_interface =
-{ gameboy_sh_start, 0, 0 };
 
 ROM_START( gba )
 	ROM_REGION( 0x8000, "bios", ROMREGION_ERASE00 )
@@ -3094,13 +3118,13 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 }
 
 static MACHINE_DRIVER_START( gbadv )
-	MDRV_CPU_ADD("main", ARM7, 16777216)
+	MDRV_CPU_ADD("maincpu", ARM7, 16777216)
 	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
 
 	MDRV_MACHINE_START(gba)
 	MDRV_MACHINE_RESET(gba)
 
-	MDRV_SCREEN_ADD("main", RASTER)	// htot hst vwid vtot vst vis
+	MDRV_SCREEN_ADD("gbalcd", RASTER)	// htot hst vwid vtot vst vis
 	MDRV_SCREEN_RAW_PARAMS(16777216/4, 308, 0,  240, 228, 0,  160)
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_PALETTE_LENGTH(32768)
@@ -3109,19 +3133,18 @@ static MACHINE_DRIVER_START( gbadv )
 	MDRV_VIDEO_START(generic_bitmapped)
 	MDRV_VIDEO_UPDATE(generic_bitmapped)
 
-	MDRV_SPEAKER_STANDARD_STEREO("left", "right")
-	MDRV_SOUND_ADD("gblegacy", CUSTOM, 0)		// legacy GB sound
-	MDRV_SOUND_CONFIG(gameboy_sound_interface)
-	MDRV_SOUND_ROUTE(0, "left", 0.50)
-	MDRV_SOUND_ROUTE(1, "right", 0.50)
+	MDRV_SPEAKER_STANDARD_STEREO("spkleft", "spkright")
+	MDRV_SOUND_ADD("custom", GAMEBOY, 0)
+	MDRV_SOUND_ROUTE(0, "spkleft", 0.50)
+	MDRV_SOUND_ROUTE(1, "spkright", 0.50)
 	MDRV_SOUND_ADD("direct_a_left", DAC, 0)			// GBA direct sound A left
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "spkleft", 0.50)
 	MDRV_SOUND_ADD("direct_a_right", DAC, 0)		// GBA direct sound A right
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "spkright", 0.50)
 	MDRV_SOUND_ADD("direct_b_left", DAC, 0)			// GBA direct sound B left
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "left", 0.50)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "spkleft", 0.50)
 	MDRV_SOUND_ADD("direct_b_right", DAC, 0)		// GBA direct sound B right
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "right", 0.50)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "spkright", 0.50)
 
 	MDRV_CARTSLOT_ADD("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("gba,bin")
