@@ -507,6 +507,10 @@ INLINE UINT8 Diff(int c1, int c2)
 void InitLUTs(void)
 {
 	int	c, r, g, b, y, u, v;
+	static int hasInit = 0;
+
+	if (hasInit > 0)
+		return;
 
 	for (c = 0 ; c < (1<<NUMBITS) ; c++)
   	{
@@ -533,6 +537,8 @@ void InitLUTs(void)
 //
 //		RGBtoYUVLQ[c] = (y << 16) + (u << 8) + v;
 	}
+
+	hasInit = 1;
 }
 
 #define HQ2XCASES \
@@ -718,10 +724,7 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 	const int* RGBtoYUVtable = RGBtoYUV;
 
 	uint32  pattern;
-	int l;
-#if 0
-	int y;
-#endif
+	int		l, y;
 
 	while (height--)
 	{
@@ -762,7 +765,6 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 				if ((w9 != w5) && ((RGBtoBright[w9] > avg) != diff5)) pattern |= (1 << 7);
               }  break;
 
-#if 0
 			case 1: {
 				UINT8 nosame = true;
 				if(w1 == w5 || w3 == w5 || w7 == w5 || w9 == w5)
@@ -806,8 +808,8 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 				if ((w8 != w5) && (Diff(y, RGBtoYUVtable[w8]))) pattern |= (1 << 6);
 				if ((w9 != w5) && (Diff(y, RGBtoYUVtable[w9]))) pattern |= (1 << 7);
                 break;
-#endif
 			}
+
 			switch (pattern)
 			{
 				HQ2XCASES
@@ -823,6 +825,7 @@ void RenderHQ2X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 		sp +=  (src1line - width);
 	}
 }
+
 
 
 
@@ -1154,7 +1157,6 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 					if ((w9 != w5) && (Diff(y, RGBtoYUV[w9]))) pattern |= (1 << 7);
 				}
               }  break;
-#if 0
 	        default:
             case 2:
 				y = RGBtoYUVtable[w5];
@@ -1167,7 +1169,6 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 				if ((w8 != w5) && (Diff(y, RGBtoYUVtable[w8]))) pattern |= (1 << 6);
 				if ((w9 != w5) && (Diff(y, RGBtoYUVtable[w9]))) pattern |= (1 << 7);
                 break;
-#endif
 			}
 
 			switch (pattern)

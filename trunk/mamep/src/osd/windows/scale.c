@@ -122,12 +122,10 @@ static const char *str_desc[] =
 //	prototypes
 //============================================================
 
-#ifndef PTR64
 // functions from scale2x
 static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank);
 static void (*scale_scale2x_line_16)(UINT16 *dst0, UINT16 *dst1, const UINT16 *src0, const UINT16 *src1, const UINT16 *src2, unsigned count);
 static void (*scale_scale2x_line_32)(UINT32 *dst0, UINT32 *dst1, const UINT32 *src0, const UINT32 *src1, const UINT32 *src2, unsigned count);
-#endif /* PTR64 */
 
 static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
 
@@ -142,8 +140,10 @@ static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int d
 // functions from AdvMAME
 void scale2x_16_def(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 void scale2x_32_def(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
+#ifdef USE_MMX_INTERP_SCALE
 void scale2x_16_mmx(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 void scale2x_32_mmx(UINT32* dst0, UINT32* dst1, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
+#endif /* USE_MMX_INTERP_SCALE */
 
 void scale3x_16_def(UINT16* dst0, UINT16* dst1, UINT16* dst2, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
 void scale3x_32_def(UINT32* dst0, UINT32* dst1, UINT32* dst2, const UINT32* src0, const UINT32* src1, const UINT32* src2, unsigned count);
@@ -179,9 +179,6 @@ void RenderHQ3X(unsigned char *src, unsigned int srcpitch, unsigned char *dst, u
 
 // functions from Kega Fusion
 void _2xpm_555(void *SrcPtr, void *DstPtr, unsigned long SrcPitch, unsigned long DstPitch, unsigned long SrcW, unsigned long SrcH, int depth);
-
-void hq2x_16_555(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
-void hq3x_16_555(unsigned short *in,unsigned short *out,unsigned int width,unsigned int height,unsigned int pitch,unsigned int xpitch);
 
 #undef INTERP_RGB16_TABLE
 static void interp_init(void)
@@ -495,21 +492,6 @@ int scale_check(int depth)
 			else
 				return 1;
 
-		case SCALE_EFFECT_HQ2XBOLD:
-			InitLUTs();
-			if (depth == 15)
-				return 0;
-			else
-				return 1;
-
-		case SCALE_EFFECT_HQ3XS:
-		case SCALE_EFFECT_HQ3XBOLD:
-			hqxx_init(32);
-			if (depth == 15)
-				return 0;
-			else
-				return 1;
-
 		case SCALE_EFFECT_SCANLINESTV://fixme for 32
 		case SCALE_EFFECT_EPXB:
 		case SCALE_EFFECT_EPXC:
@@ -522,16 +504,9 @@ int scale_check(int depth)
 		case SCALE_EFFECT_2XSAI:
 		case SCALE_EFFECT_SUPER2XSAI:
 		case SCALE_EFFECT_SUPEREAGLE:
-			Init_2xSaI(555, (depth == 15) ? 16 : 32);
 			if (depth == 15 || depth == 32)
-				return 0;
-			else
-				return 1;
-
-		case SCALE_EFFECT_HQ2XS://fixme: 15 bit
-			if (depth == 32)
 			{
-				hqxx_init(32);
+				Init_2xSaI(555, (depth == 15) ? 16 : 32);
 				return 0;
 			}
 			else
@@ -539,8 +514,38 @@ int scale_check(int depth)
 
 		case SCALE_EFFECT_HQ2X:
 		case SCALE_EFFECT_HQ3X:
-			if (depth == 15 || depth == 32)
+			if (depth == 15)
+			{
+				InitLUTs();	//snes9x
 				return 0;
+			}
+			else if (depth == 32)
+				return 0;
+			else
+				return 1;
+
+		case SCALE_EFFECT_HQ2XS:
+			if (depth == 15)
+			{
+				InitLUTs();	//snes9x
+				return 0;
+			}
+			else if (depth == 32)
+			{
+				hqxx_init(32);	//vba
+				return 0;
+			}
+			else
+				return 1;
+
+		case SCALE_EFFECT_HQ2XBOLD:
+		case SCALE_EFFECT_HQ3XS:
+		case SCALE_EFFECT_HQ3XBOLD:
+			if (depth == 15)
+			{
+				InitLUTs();
+				return 0;
+			}
 			else
 				return 1;
 
@@ -574,10 +579,8 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			RenderEPXB((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
 			return 0;
 
-#ifndef PTR64
 		case SCALE_EFFECT_SCALE2X:
 			return scale_perform_scale2x(src, dst, src_pitch, dst_pitch, width, height, depth, bank);
-#endif /* PTR64 */
 
 		case SCALE_EFFECT_SCALE3X:
 			return scale_perform_scale3x(src, dst, src_pitch, dst_pitch, width, height, depth);
@@ -617,10 +620,18 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			return 0;
 
 		case SCALE_EFFECT_HQ2X:
-			return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
+			if (depth == 15)
+				RenderHQ2X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 2);
+			else
+				return scale_perform_hq2x(src, dst, src_pitch, dst_pitch, width, height, depth);
+
+			return 0;
 
 		case SCALE_EFFECT_HQ2XS:
-			hq2xS32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
+			if (depth == 15)
+				RenderHQ2X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 1);
+			else
+				hq2xS32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
 			return 0;
 
 		case SCALE_EFFECT_HQ2XBOLD:
@@ -628,11 +639,16 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 			return 0;
 
 		case SCALE_EFFECT_HQ3X:
-			return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
+			if (depth == 15)
+				RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 2);
+			else
+				return scale_perform_hq3x(src, dst, src_pitch, dst_pitch, width, height, depth);
+
+			return 0;
 
 		case SCALE_EFFECT_HQ3XS:
 //			hq3xS32((unsigned char*)src, (unsigned int)src_pitch, NULL, (unsigned char*)dst, (unsigned int)dst_pitch, width, height);
-			RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch,(unsigned char*)dst, (unsigned int)dst_pitch, width, height, 1);
+			RenderHQ3X((unsigned char*)src, (unsigned int)src_pitch, (unsigned char*)dst, (unsigned int)dst_pitch, width, height, 1);
 			return 0;
 
 		case SCALE_EFFECT_HQ3XBOLD:
@@ -670,7 +686,6 @@ INLINE void scale_emms(void)
 //============================================================
 //	scale_perform_scale2x
 //============================================================
-#ifndef PTR64
 static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth, int bank)
 {
 	int y;
@@ -683,12 +698,14 @@ static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 
 	if (previous_depth[bank] != depth)
 	{
+#ifdef USE_MMX_INTERP_SCALE
 		if (use_mmx)
 		{
 			scale_scale2x_line_16 = scale2x_16_mmx;
 			scale_scale2x_line_32 = scale2x_32_mmx;
 		}
 		else
+#endif /* USE_MMX_INTERP_SCALE */
 		{
 			scale_scale2x_line_16 = scale2x_16_def;
 			scale_scale2x_line_32 = scale2x_32_def;
@@ -739,7 +756,6 @@ static int scale_perform_scale2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 
 	return 0;
 }
-#endif /* PTR64 */
 
 //============================================================
 //	scale_perform_scale3x
@@ -847,32 +863,23 @@ static int scale_perform_hq2x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 
 	interp_init();
 
-	if (depth == 15)
+	hq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
+	for (y = 2; y < height; y++)
 	{
-		hq2x_16_555((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
-	}
-	else
-	{
-		hq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-		for (y = 2; y < height; y++)
-		{
-			dst += 2 * dst_pitch;
-			src_prev = src_curr;
-			src_curr = src_next;
-			src_next += src_pitch;
-
-			hq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-		}
-
 		dst += 2 * dst_pitch;
 		src_prev = src_curr;
 		src_curr = src_next;
+		src_next += src_pitch;
 
 		hq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 	}
 
-	scale_emms();
+	dst += 2 * dst_pitch;
+	src_prev = src_curr;
+	src_curr = src_next;
+
+	hq2x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
 	return 0;
 }
@@ -890,32 +897,23 @@ static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 
 	interp_init();
 	
-	if (depth == 15)
+	hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
+
+	for (y = 3; y < height; y++)
 	{
-		hq3x_16_555((unsigned short *)src, (unsigned short *)dst, width, height, dst_pitch, src_pitch >> 1);
-	}
-	else
-	{
-		hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-
-		for (y = 3; y < height; y++)
-		{
-			dst += 3 * dst_pitch;
-			src_prev = src_curr;
-			src_curr = src_next;
-			src_next += src_pitch;
-
-			hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
-		}
-
 		dst += 3 * dst_pitch;
 		src_prev = src_curr;
 		src_curr = src_next;
+		src_next += src_pitch;
 
 		hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 	}
 
-	scale_emms();
+	dst += 3 * dst_pitch;
+	src_prev = src_curr;
+	src_curr = src_next;
+
+	hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
 	return 0;
 }
