@@ -2260,6 +2260,7 @@ V-V                           TP-027
  2/94 Batsugun                                        Kit 2P 8W+2B     VC            TP-
  4/94 Snow Bros. 2                                    Kit 2P 8W+2B     HC    Action  TP-
 */
+#endif /* !NEOCPSPGM */
 
 	/* Cave games */
 	/* Cave was formed in 1994 from the ruins of Toaplan, like Raizing was. */
@@ -2292,6 +2293,7 @@ V-V                           TP-027
 	DRIVER( theroes )	/* (c) 2001 Primetek Investments */
 	DRIVER( korokoro )	/* (c) 1999 Takumi */
 
+#ifndef NEOCPSPGM
 	/* Kyugo games */
 	/* Kyugo only made four games: Repulse, Flash Gal, SRD Mission and Air Wolf. */
 	/* Gyrodine was made by Crux. Crux was antecedent of Toa Plan, and spin-off from Orca. */
@@ -7033,6 +7035,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( fromancr )	/* (c) 1995 Video System Co. (Japan) */
 	DRIVER( fromanc4 )	/* (c) 1998 Video System Co. (Japan) */
 	DRIVER( inufuku )	/* (c) 1998 Video System Co. (Japan) */
+#endif /* !NEOCPSPGM */
 
 	/* Psikyo games */
 	DRIVER( samuraia )	/* (c) 1993 (World) */
@@ -7059,6 +7062,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( tgm2p )		/* (c) 2000 */
 	DRIVER( gnbarich )	/* (c) 2001 */
 	DRIVER( mjgtaste )	/* (c) 2002 */
+#ifndef NEOCPSPGM
+
 	DRIVER( hotgmck )	/* (c) 1997 */
 	DRIVER( hgkairak )	/* (c) 1998 */
 	DRIVER( hotgmck3 )	/* (c) 1999 */

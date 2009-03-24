@@ -55,6 +55,8 @@ SOUNDS += YM2151
 SOUNDS += YM2203
 SOUNDS += YM2610
 SOUNDS += YM2610B
+SOUNDS += YMF278B
+SOUNDS += YMZ280B
 SOUNDS += MSM5205
 SOUNDS += OKIM6295
 SOUNDS += QSOUND
@@ -81,6 +83,19 @@ DRVLIBS += \
 	$(MAMEOBJ)/capcom.a \
 	$(MAMEOBJ)/igs.a \
 	$(MAMEOBJ)/neogeo.a \
+	$(MAMEOBJ)/psikyo.a \
+	$(MAMEOBJ)/misc.a \
+	$(MAMEOBJ)/shared.a \
+
+
+
+#-------------------------------------------------
+# the following files are general components and
+# shared across a number of drivers
+#-------------------------------------------------
+
+$(MAMEOBJ)/shared.a: \
+	$(MACHINE)/nmk112.o \
 
 
 
@@ -107,6 +122,18 @@ $(MAMEOBJ)/neogeo.a: \
 	$(MACHINE)/neoboot.o \
 	$(MACHINE)/neocrypt.o \
 	$(MACHINE)/neoprot.o \
+
+$(MAMEOBJ)/psikyo.a: \
+	$(DRIVERS)/psikyo.o $(VIDEO)/psikyo.o \
+	$(DRIVERS)/psikyosh.o $(VIDEO)/psikyosh.o \
+
+
+#-------------------------------------------------
+# remaining drivers
+#-------------------------------------------------
+
+$(MAMEOBJ)/misc.a: \
+	$(DRIVERS)/cave.o $(VIDEO)/cave.o \
 
 #-------------------------------------------------
 # layout dependencies
