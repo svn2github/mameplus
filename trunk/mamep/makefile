@@ -612,7 +612,7 @@ include $(SRC)/tools/tools.mak
 include $(SRC)/emu/emu.mak
 
 # combine the various definitions to one
-CDEFS = $(DEFS) $(COREDEFS) $(CPUDEFS) $(SOUNDDEFS) $(ASMDEFS)
+CDEFS = $(DEFS) $(COREDEFS) $(SOUNDDEFS) $(ASMDEFS)
 
 
 

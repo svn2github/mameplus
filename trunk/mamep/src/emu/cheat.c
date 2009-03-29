@@ -500,6 +500,7 @@ void *cheat_get_next_menu_entry(running_machine *machine, void *previous, const 
 	{
 		if (cheat->state == SCRIPT_STATE_OFF)
 		{
+			if (state != NULL)
 			*state = is_oneshot_parameter_cheat(cheat) ? _("Set") : _("Off");
 			if (flags != NULL)
 				*flags = MENU_FLAG_RIGHT_ARROW;
