@@ -1,9 +1,9 @@
 ###########################################################################
 #
-#   neocpspgm.mak
+#   lite.mak
 #
 #   Small driver-specific example makefile
-#	Use make SUBTARGET=neocpspgm to build
+#   Use make SUBTARGET=lite to build
 #
 #   Copyright Nicola Salmoria and the MAME Team.
 #   Visit http://mamedev.org for licensing and usage restrictions.
@@ -41,7 +41,7 @@ CPUS += MCS48
 CPUS += M680X0
 CPUS += ARM7
 CPUS += SH2
-CPUS += PIC16C57
+CPUS += PIC16C5X
 
 
 
@@ -115,7 +115,6 @@ $(MAMEOBJ)/igs.a: \
 	$(DRIVERS)/pgm.o $(VIDEO)/pgm.o \
 	$(MACHINE)/pgmcrypt.o \
 	$(MACHINE)/pgmprot.o \
-	$(MACHINE)/pgmy2ks.o \
 
 $(MAMEOBJ)/neogeo.a: \
 	$(DRIVERS)/neogeo.o $(VIDEO)/neogeo.o \
