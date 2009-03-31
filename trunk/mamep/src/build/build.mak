@@ -37,7 +37,7 @@ BUILD += \
 FILE2STROBJS = \
 	$(BUILDOBJ)/file2str.o \
 
-$(FILE2STR): $(FILE2STROBJS) $(OSDMAIN) $(LIBOCORE)
+$(FILE2STR): $(FILE2STROBJS) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -50,7 +50,7 @@ $(FILE2STR): $(FILE2STROBJS) $(OSDMAIN) $(LIBOCORE)
 PNG2BDCOBJS = \
 	$(BUILDOBJ)/png2bdc.o \
 
-$(PNG2BDC): $(PNG2BDCOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB)
+$(PNG2BDC): $(PNG2BDCOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 

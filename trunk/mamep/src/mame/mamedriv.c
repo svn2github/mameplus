@@ -7927,8 +7927,8 @@ Other Sun games
 	DRIVER( theglad )	/* (c) 2001 */
 	DRIVER( dmnfrnt )	/* (c) 2002 */
 	DRIVER( dmnfrnta )	/* (c) 2002 */
-	DRIVER( kovh )
-	DRIVER( oldss )
+	DRIVER( kovshp )
+	DRIVER( oldsplus )
 	DRIVER( killbldp )
 	DRIVER( svg )
 
@@ -9226,9 +9226,9 @@ Other Sun games
 	DRIVER( himesiki )	/* (c) 1989 Hi-Soft */
 
 	/* Hi-Lo Poker-based */
-	DRIVER( gtipoker )  /* (c) 1983 GTI Inc */
-	DRIVER( norautp )   /* (c) 1988? Noraut */
-	DRIVER( norautpn )  /* (c) 1990? unknown */
+	DRIVER( gtipoker )	/* (c) 1983 GTI Inc */
+	DRIVER( norautp )	/* (c) 1988? Noraut */
+	DRIVER( norautpn )	/* (c) 1990? unknown */
 
 	/* Sanki Denshi Kogyo */
 	DRIVER( pachifev )	/* (c) 1983? */
