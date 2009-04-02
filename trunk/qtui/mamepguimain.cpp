@@ -10,13 +10,17 @@
 #include "ips.h"
 #include "m1.h"
 
+#ifdef USE_SDL
 #include "SDL.h"
 #undef main
+#endif /* USE_SDL */
 
-//static qt works with windows version
+//static Qt plugins
+#ifdef USE_STATIC
 Q_IMPORT_PLUGIN(qico)
 Q_IMPORT_PLUGIN(qjpeg)
 //Q_IMPORT_PLUGIN(qmng)
+#endif /* USE_STATIC */
 
 /* global */
 const QString CFG_PREFIX = 
@@ -158,6 +162,10 @@ QMainWindow(parent)
 
 	setupUi(this);
 
+#ifdef Q_OS_MAC
+	actionDefaultOptions->setText(tr("Preferences..."));
+#endif
+
 	//setExclusive(true) for some actions
     QActionGroup *viewActions = new QActionGroup(this);
     viewActions->addAction(actionDetails);
@@ -170,6 +178,7 @@ QMainWindow(parent)
 	langActions->addAction(actionChinese_Taiwan);
 	langActions->addAction(actionJapanese);
 	langActions->addAction(actionHungarian);
+	langActions->addAction(actionKorean);
 	langActions->addAction(actionBrazilian);
 
 	QActionGroup *bgStretchActions = new QActionGroup(this);
@@ -271,9 +280,11 @@ QMainWindow(parent)
 
 MainWindow::~MainWindow()
 {
+#ifdef USE_SDL
 #ifdef Q_OS_WIN
 	SDL_Quit();
 #endif
+#endif /* USE_SDL */
 }
 
 void MainWindow::initHistory(int snapType)
@@ -398,7 +409,7 @@ void MainWindow::init()
 	loadSettings();
 
 	// validate mame_binary
-	mame_binary = guiSettings.value("mame_binary").toString();
+	mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
 	QFileInfo mamebin(mame_binary);
 
 	// if no valid exec was found, popup a dialog
@@ -412,14 +423,14 @@ void MainWindow::init()
 		filter.append(tr("All Files (*)"));
 	
 		mame_binary = QFileDialog::getOpenFileName(this,
-									tr("MAME executable:"),
+									tr("MAME/MESS executable:"),
 									QCoreApplication::applicationDirPath(),
 									filter);
 
 		mamebin.setFile(mame_binary);
 		if (mame_binary.isEmpty() || mamebin.absoluteFilePath() == QCoreApplication::applicationFilePath())
 		{
-			win->poplog(QString("Could not find MAME."));
+			win->poplog(QString("Could not find MAME/MESS."));
 			mame_binary = "";
 			//quit the program
 			close();
@@ -432,7 +443,7 @@ void MainWindow::init()
 	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
 		isMESS = true;
 
-	QIcon mamepIcon(":/res/16x16/mamep.png");
+	QIcon mamepIcon(":/res/mamep_256.png");
 	qApp->setWindowIcon(mamepIcon);
 	trayIcon = new QSystemTrayIcon(this);
 	trayIcon->setIcon(mamepIcon);
@@ -461,7 +472,7 @@ void MainWindow::init()
 	QDir dir(_dirpath);
 	
 	if (background_file.isEmpty())
-		background_file = guiSettings.value("background_file").toString();
+		background_file = guiSettings.value("background_file", "bkground.png").toString();
 
 	QActionGroup *bgActions = new QActionGroup(this);
 	if (dir.exists())
@@ -501,7 +512,10 @@ void MainWindow::init()
 	// Docked snapshots
 	QList<QTabBar *> tabBars = getSSTabBars();
 	foreach (QTabBar *tabBar, tabBars)
+	{
 		connect(tabBar, SIGNAL(currentChanged(int)), gameList, SLOT(updateSelection()));
+		tabBar->setMovable(true);
+	}
 
 	connect(actionBgStretch, SIGNAL(triggered()), this, SLOT(setBgTile()));
 	connect(actionBgTile, SIGNAL(triggered()), this, SLOT(setBgTile()));
@@ -567,12 +581,14 @@ void MainWindow::setVersion()
 	}
 #endif /* Q_OS_WIN */
 
+#ifdef USE_SDL
 	sdlVerString = QString("<a href=\"http://www.libsdl.org\">SDL</a> %1.%2.%3-%4 - Simple DirectMedia Layer<br>")
 					.arg(SDL_MAJOR_VERSION)
 					.arg(SDL_MINOR_VERSION)
 					.arg(SDL_PATCHLEVEL)
 					.arg(SDL_REVISION)
 					;
+#endif /* USE_SDL */
 
 	QString strVersion = QString(
 		"<html>"
@@ -592,7 +608,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 14")
+		.arg("1.3 beta 16")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -826,6 +842,12 @@ void MainWindow::on_actionHungarian_activated()
 	showRestartDialog();
 }
 
+void MainWindow::on_actionKorean_activated()
+{
+	language = "ko_KR";
+	showRestartDialog();
+}
+
 void MainWindow::on_actionBrazilian_activated()
 {
 	language = "pt_BR";
@@ -931,7 +953,7 @@ void MainWindow::loadLayout()
 	option_geometry = guiSettings.value("option_geometry").toByteArray();
 
 	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs", "1").toInt() == 1);
-	actionRowDelegate->setChecked(guiSettings.value("game_list_delegate", "1").toInt() == 1);
+	actionRowDelegate->setChecked(guiSettings.value("game_list_delegate", "0").toInt() == 1);
 
 	gameList->listMode = guiSettings.value("list_mode").toString();
 	if (gameList->listMode == win->actionDetails->objectName().remove("action"))
@@ -950,6 +972,8 @@ void MainWindow::loadLayout()
 		actionJapanese->setChecked(true);
 	else if (language == "hu_HU")
 		actionHungarian->setChecked(true);
+	else if (language == "ko_KR")
+		actionKorean->setChecked(true);
 	else if (language == "pt_BR")
 		actionBrazilian->setChecked(true);
 	else
@@ -1008,7 +1032,6 @@ void MainWindow::saveSettings()
 		guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
 	else
 		guiSettings.setValue("mame_binary", mame_binary);
-
 
 	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(gameList->folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
 	QTreeWidgetItem *messItem = NULL;
@@ -1113,26 +1136,30 @@ void MainWindow::setDockOptions()
 
 void MainWindow::setTransparentBg(QWidget * w)
 {
-	QColor color, bgColor;
 	QPalette palette;
+	QBrush brush, bgBrush;
+
+	brush.setStyle(Qt::SolidPattern);
+	bgBrush.setStyle(Qt::SolidPattern);
 
 	if (isDarkBg)
 	{
-		bgColor = QColor(0, 0, 0, 128);
-		color = QColor(Qt::white);
+		bgBrush.setColor(QColor(0, 0, 0, 128));
+		brush.setColor(QColor(Qt::white));
 	}
 	else
 	{
-		bgColor = QColor(255, 255, 255, 128);
-		color = QColor(Qt::black);
+		bgBrush.setColor(QColor(255, 255, 255, 128));
+		brush.setColor(QColor(Qt::black));
 	}
 
-	palette.setColor(QPalette::Active, QPalette::Text, color);
-	palette.setColor(QPalette::Inactive, QPalette::Text, color);
-	palette.setColor(QPalette::Disabled, QPalette::Text, color);
-	palette.setColor(QPalette::Active, QPalette::Base, bgColor);
-	palette.setColor(QPalette::Inactive, QPalette::Base, bgColor);
-	palette.setColor(QPalette::Disabled, QPalette::Base, bgColor);
+	palette.setBrush(QPalette::Active, QPalette::Base, bgBrush);
+	palette.setBrush(QPalette::Inactive, QPalette::Base, bgBrush);
+	palette.setBrush(QPalette::Disabled, QPalette::Base, bgBrush);
+
+	palette.setBrush(QPalette::Active, QPalette::Text, brush);
+	palette.setBrush(QPalette::Inactive, QPalette::Text, brush);
+	palette.setBrush(QPalette::Disabled, QPalette::Text, brush);
 
 	w->setPalette(palette);
 }
@@ -1219,13 +1246,6 @@ void MainWindow::setBgPixmap(QString fileName)
 			" QDockWidget::title {padding:1px 2px; margin:2px 0;}"
 			;
 
-		qApp->setStyleSheet( STATIC_STYLE
-			+ " QDockWidget, QStatusBar QLabel {" + TEXT_COLOR + "}"
-			+ " QStatusBar::item, QDockWidget::title {" + TEXT_BGCOLOR + "}"
-			);
-	
-		setPalette(palette);
-
 		// setup background alpha
 		setTransparentBg(treeFolders);
 		setTransparentBg(tvGameList);
@@ -1239,6 +1259,15 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentStyle(m1UI->groupBox);
 		setTransparentStyle(m1UI->lcdNumber);
 #endif /* Q_OS_WIN */
+
+///*
+		qApp->setStyleSheet( STATIC_STYLE
+			+ " QDockWidget, QStatusBar QLabel {" + TEXT_COLOR + "}"
+			+ " QStatusBar::item, QDockWidget::title {" + TEXT_BGCOLOR + "}"
+			);
+//*/
+
+		setPalette(palette);
 	}
 }
 
@@ -1416,8 +1445,10 @@ void Screenshot::updateScreenshotLabel()
 
 int main(int argc, char *argv[])
 {
+#ifdef USE_SDL
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_NOPARACHUTE) >= 0)
 		sdlInited = true;
+#endif /* USE_SDL */
 
 	QApplication myApp(argc, argv);
 
@@ -1443,9 +1474,11 @@ int main(int argc, char *argv[])
 
 	return myApp.exec();
 
+#ifdef USE_SDL
 	if(SDL_WasInit(SDL_INIT_VIDEO) != 0)
 	{
 		SDL_QuitSubSystem(SDL_INIT_VIDEO);
 	}
+#endif /* USE_SDL */
 }
 

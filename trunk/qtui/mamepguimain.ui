@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -126,6 +126,7 @@
      <addaction name="actionChinese_Taiwan"/>
      <addaction name="actionJapanese"/>
      <addaction name="actionHungarian"/>
+     <addaction name="actionKorean"/>
      <addaction name="actionBrazilian"/>
     </widget>
     <widget class="QMenu" name="menuBackground">
@@ -472,7 +473,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>English (United States)</string>
+    <string notr="true">English (United States)</string>
    </property>
   </action>
   <action name="actionChinese_PRC">
@@ -480,7 +481,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Chinese (PRC)</string>
+    <string notr="true">中文 (中国)</string>
    </property>
   </action>
   <action name="actionChinese_Taiwan">
@@ -488,7 +489,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Chinese (Taiwan)</string>
+    <string notr="true">中文 (台灣)</string>
    </property>
   </action>
   <action name="actionJapanese">
@@ -496,7 +497,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Japanese</string>
+    <string notr="true">日本語</string>
    </property>
   </action>
   <action name="actionBrazilian">
@@ -504,7 +505,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Portuguese (Brazil)  </string>
+    <string notr="true">Português (Brasil)</string>
    </property>
   </action>
   <action name="actionEnforceAspect">
@@ -603,7 +604,15 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Hungarian</string>
+    <string notr="true">Magyar</string>
+   </property>
+  </action>
+  <action name="actionKorean">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">한국어</string>
    </property>
   </action>
  </widget>

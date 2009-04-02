@@ -3,8 +3,10 @@
 #include "mamepguimain.h"
 #include "dialogs.h"
 
+#ifdef USE_SDL
 #include "SDL.h"
 #undef main
+#endif /* USE_SDL */
 
 /* global */
 Options *optionsUI = NULL;
@@ -2333,6 +2335,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		}
 	}
 
+#ifdef USE_SDL
 	else if (optName.startsWith("screen"))
 	{
 		pMameOpt->values.clear();
@@ -2397,6 +2400,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 			}
 		}
 	}
+#endif /* USE_SDL */
 
 	// prepare GUI value desc
 	for (int i = 0; i < pMameOpt->guivalues.size(); i++)

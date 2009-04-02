@@ -12,7 +12,7 @@
 <context>
     <name>Dirs</name>
     <message>
-        <location filename="../dialogs.cpp" line="336"/>
+        <location filename="../dialogs.cpp" line="340"/>
         <source>Directory name:</source>
         <translation>Könyvtár név:</translation>
     </message>
@@ -40,112 +40,112 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="2656"/>
+        <location filename="../gamelist.cpp" line="2743"/>
         <source>Loading listxml: %1 games</source>
         <translation>A listxml betöltése: %1 játék</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2833"/>
+        <location filename="../gamelist.cpp" line="2920"/>
         <source>Parsing listxml</source>
         <translation>A listxml elemzése</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2956"/>
+        <location filename="../gamelist.cpp" line="3043"/>
         <source>Refresh</source>
         <translation>Frissítés</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1787"/>
+        <location filename="../gamelist.cpp" line="1870"/>
         <source>All Games</source>
         <translation>Minden játék</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1788"/>
+        <location filename="../gamelist.cpp" line="1871"/>
         <source>All Arcades</source>
         <translation>Minden játéktermi</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1788"/>
+        <location filename="../gamelist.cpp" line="1871"/>
         <source>All Systems</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1789"/>
+        <location filename="../gamelist.cpp" line="1872"/>
         <source>Available Arcades</source>
         <translation>Meglévő játéktermi</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1789"/>
+        <location filename="../gamelist.cpp" line="1872"/>
         <source>Available Systems</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1790"/>
+        <location filename="../gamelist.cpp" line="1873"/>
         <source>Unavailable Arcades</source>
         <translation>Hiányzó játéktermi</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1790"/>
+        <location filename="../gamelist.cpp" line="1873"/>
         <source>Unavailable Systems</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1791"/>
+        <location filename="../gamelist.cpp" line="1874"/>
         <source>Consoles</source>
         <translation>Konzol</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1791"/>
+        <location filename="../gamelist.cpp" line="1874"/>
         <source>Softwares</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1792"/>
+        <location filename="../gamelist.cpp" line="1875"/>
         <source>Manufacturer</source>
         <translation>Gyártó</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1793"/>
+        <location filename="../gamelist.cpp" line="1876"/>
         <source>Year</source>
         <translation>Év</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1794"/>
+        <location filename="../gamelist.cpp" line="1877"/>
         <source>Driver</source>
         <translation>Meghajtó program</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1795"/>
+        <location filename="../gamelist.cpp" line="1878"/>
         <source>BIOS</source>
         <translation>BIOS</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2340"/>
+        <location filename="../gamelist.cpp" line="2427"/>
         <source>Play %1</source>
         <translation>%1 indítása</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2342"/>
+        <location filename="../gamelist.cpp" line="2429"/>
         <source>Properties for %1</source>
         <translation>%1 tulajdonságai</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2567"/>
+        <location filename="../gamelist.cpp" line="2654"/>
         <source>Common image types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2569"/>
+        <location filename="../gamelist.cpp" line="2656"/>
         <source>All Files</source>
         <translation>Minden fájl</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2575"/>
+        <location filename="../gamelist.cpp" line="2662"/>
         <source>File name:</source>
         <translation>Fájl név:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3378"/>
+        <location filename="../gamelist.cpp" line="3465"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -153,7 +153,7 @@ must be mounted:
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1666"/>
+        <location filename="../gamelist.cpp" line="1748"/>
         <source>%1 games</source>
         <translation>%1 játék</translation>
     </message>
@@ -252,52 +252,52 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mamepguimain.cpp" line="148"/>
+        <location filename="../mamepguimain.cpp" line="150"/>
         <source>Snapshot</source>
         <translation>Pillanatkép</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="149"/>
+        <location filename="../mamepguimain.cpp" line="151"/>
         <source>Flyer</source>
         <translation>Plakát</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="150"/>
+        <location filename="../mamepguimain.cpp" line="152"/>
         <source>Cabinet</source>
         <translation>Játékgép</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="151"/>
+        <location filename="../mamepguimain.cpp" line="153"/>
         <source>Marquee</source>
         <translation>Matrica</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="152"/>
+        <location filename="../mamepguimain.cpp" line="154"/>
         <source>Title</source>
         <translation>Kezdőkép</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="153"/>
+        <location filename="../mamepguimain.cpp" line="155"/>
         <source>Control Panel</source>
         <translation>Irányító gombok</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="154"/>
+        <location filename="../mamepguimain.cpp" line="156"/>
         <source>PCB</source>
         <translation>PCB</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="156"/>
+        <location filename="../mamepguimain.cpp" line="158"/>
         <source>History</source>
         <translation>Ismertető</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="157"/>
+        <location filename="../mamepguimain.cpp" line="159"/>
         <source>MAMEInfo</source>
         <translation>MAME infó</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="158"/>
+        <location filename="../mamepguimain.cpp" line="160"/>
         <source>Story</source>
         <translation>Történet</translation>
     </message>
@@ -318,28 +318,28 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Súgó</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="167"/>
+        <location filename="../mamepguimain.ui" line="169"/>
         <source>Toolbar</source>
         <translation>Eszközsor</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="208"/>
-        <location filename="../mamepguimain.ui" line="197"/>
+        <location filename="../mamepguimain.cpp" line="212"/>
+        <location filename="../mamepguimain.ui" line="199"/>
         <source>Search</source>
         <translation>Keresés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="211"/>
+        <location filename="../mamepguimain.ui" line="213"/>
         <source>GUI Log</source>
         <translation>GUI napló</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="238"/>
+        <location filename="../mamepguimain.ui" line="240"/>
         <source>Folder List</source>
         <translation>Mappa lista</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="255"/>
+        <location filename="../mamepguimain.ui" line="257"/>
         <source>1</source>
         <translation></translation>
     </message>
@@ -348,7 +348,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Frissítés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="281"/>
+        <location filename="../mamepguimain.ui" line="283"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
@@ -357,7 +357,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Kilépés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="289"/>
+        <location filename="../mamepguimain.ui" line="291"/>
         <source>Alt+X</source>
         <translation>Alt-X</translation>
     </message>
@@ -390,224 +390,218 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Indítás</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="13"/>
+        <location filename="../mamepguimain.ui" line="14"/>
         <source>M+GUI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="43"/>
+        <location filename="../mamepguimain.ui" line="44"/>
         <source>&amp;File</source>
         <translation>&amp;Fájl</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="66"/>
+        <location filename="../mamepguimain.ui" line="67"/>
         <source>&amp;View</source>
         <translation type="unfinished">Nézet</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="70"/>
+        <location filename="../mamepguimain.ui" line="71"/>
         <source>Customize &amp;Fields</source>
         <translation type="unfinished">Oszlopok rendezése</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="85"/>
+        <location filename="../mamepguimain.ui" line="86"/>
         <source>Game &amp;Pictures</source>
         <translation type="unfinished">Játék képek</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="93"/>
+        <location filename="../mamepguimain.ui" line="94"/>
         <source>Game Do&amp;cuments</source>
         <translation type="unfinished">Játék dokumentumok</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="98"/>
+        <location filename="../mamepguimain.ui" line="99"/>
         <source>Arrange &amp;Icons</source>
         <translation>&amp;Ikonok rendezése</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="117"/>
+        <location filename="../mamepguimain.ui" line="118"/>
         <source>&amp;Options</source>
         <translation type="unfinished">Beállítások</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="121"/>
+        <location filename="../mamepguimain.ui" line="122"/>
         <source>&amp;Language</source>
         <translation type="unfinished">Nyelv</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="132"/>
+        <location filename="../mamepguimain.ui" line="134"/>
         <source>&amp;Background Images</source>
         <translation type="unfinished">Háttér kép</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="140"/>
+        <location filename="../mamepguimain.ui" line="142"/>
         <source>GUI &amp;Style</source>
         <translation>Kinézet &amp;Stílusa</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="152"/>
+        <location filename="../mamepguimain.ui" line="154"/>
         <source>&amp;Help</source>
         <translation type="unfinished">Súgó</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="269"/>
+        <location filename="../mamepguimain.ui" line="271"/>
         <source>Default Game &amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="278"/>
+        <location filename="../mamepguimain.ui" line="280"/>
         <source>&amp;Refresh</source>
         <translation type="unfinished">Frissítés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="286"/>
+        <location filename="../mamepguimain.ui" line="288"/>
         <source>E&amp;xit</source>
         <translation type="unfinished">Kilépés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="298"/>
+        <location filename="../mamepguimain.ui" line="300"/>
         <source>&amp;About</source>
         <translation type="unfinished">Névjegy</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="310"/>
+        <location filename="../mamepguimain.ui" line="312"/>
         <source>&amp;Details</source>
         <translation type="unfinished">Részletek</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="325"/>
+        <location filename="../mamepguimain.ui" line="327"/>
         <source>&amp;Grouped</source>
         <translation type="unfinished">Csoportosítva</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="337"/>
+        <location filename="../mamepguimain.ui" line="339"/>
         <source>L&amp;arge Icons</source>
         <translation type="unfinished">Nagy ikonok</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="345"/>
+        <location filename="../mamepguimain.ui" line="347"/>
         <source>&amp;Vertical Tabs</source>
         <translation type="unfinished">Függőleges fülek</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="350"/>
+        <location filename="../mamepguimain.ui" line="352"/>
         <source>&amp;Play</source>
         <translation type="unfinished">Lejátszás</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="355"/>
+        <location filename="../mamepguimain.ui" line="357"/>
         <source>&amp;Record Input...</source>
         <translation type="unfinished">Bemenet rögzítése...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="360"/>
+        <location filename="../mamepguimain.ui" line="362"/>
         <source>Configure &amp;IPS...</source>
         <translation>&amp;IPS beállítása...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="365"/>
+        <location filename="../mamepguimain.ui" line="367"/>
         <source>Audit</source>
         <translation>Ellenőrzés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="373"/>
+        <location filename="../mamepguimain.ui" line="375"/>
         <source>Description</source>
         <translation>Név</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="381"/>
+        <location filename="../mamepguimain.ui" line="383"/>
         <source>Name</source>
         <translation>ROM név</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="389"/>
+        <location filename="../mamepguimain.ui" line="391"/>
         <source>ROMs</source>
         <translation>ROM-ok</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="397"/>
+        <location filename="../mamepguimain.ui" line="399"/>
         <source>Manufacturer</source>
         <translation>Gyártó</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="405"/>
+        <location filename="../mamepguimain.ui" line="407"/>
         <source>Driver</source>
         <translation>Meghajtó program</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="413"/>
+        <location filename="../mamepguimain.ui" line="415"/>
         <source>Year</source>
         <translation>Év</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="421"/>
+        <location filename="../mamepguimain.ui" line="423"/>
         <source>Clone of</source>
         <translation>Klón</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="432"/>
+        <location filename="../mamepguimain.ui" line="434"/>
         <source>Sort Ascending</source>
         <translation>Listázás növekvő sorba</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="443"/>
+        <location filename="../mamepguimain.ui" line="445"/>
         <source>Sort Descending</source>
         <translation>Listázás csökkenő sorba</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="452"/>
+        <location filename="../mamepguimain.ui" line="454"/>
         <source>&amp;Directories...</source>
         <translation type="unfinished">Könyvtárak...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="461"/>
+        <location filename="../mamepguimain.ui" line="463"/>
         <source>Pr&amp;operties</source>
         <translation type="unfinished">Tulajdonságok</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="506"/>
-        <source>Portuguese (Brazil)  </source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../mamepguimain.ui" line="522"/>
+        <location filename="../mamepguimain.ui" line="524"/>
         <source>Local &amp;Language Game List</source>
         <translation type="unfinished">Lefordított játéklista használata</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="564"/>
+        <location filename="../mamepguimain.ui" line="566"/>
         <source>Highlight Selected Row</source>
         <translation>A kiválasztott sor kiemelése</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="577"/>
+        <location filename="../mamepguimain.ui" line="579"/>
         <source>&amp;Playback Input...</source>
         <translation type="unfinished">A bemenet visszajátszása...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="582"/>
+        <location filename="../mamepguimain.ui" line="584"/>
         <source>Record &amp;Wave Output...</source>
         <translation>&amp;WAV hang rögzítése...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="587"/>
+        <location filename="../mamepguimain.ui" line="589"/>
         <source>Record &amp;MNG Output...</source>
         <translation>&amp;MNG videó rögzítése...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="592"/>
+        <location filename="../mamepguimain.ui" line="594"/>
         <source>Record &amp;AVI Output...</source>
         <translation>&amp;AVI videó rögzítése...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="597"/>
+        <location filename="../mamepguimain.ui" line="599"/>
         <source>Load &amp;Savestate</source>
         <translation type="unfinished">Mentett állás betöltése</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="602"/>
         <source>Hungarian</source>
-        <translation>Magyar</translation>
+        <translation type="obsolete">Magyar</translation>
     </message>
     <message>
         <source>Playback Input...</source>
@@ -642,7 +636,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Könyvtárak...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="466"/>
+        <location filename="../mamepguimain.ui" line="468"/>
         <source>Properties for </source>
         <translation>Tulajdonságok a következőhöz </translation>
     </message>
@@ -651,39 +645,31 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Nyelv</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="474"/>
-        <source>English (United States)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../mamepguimain.ui" line="482"/>
         <source>Chinese (PRC)</source>
-        <translation>中文 (中国)</translation>
+        <translation type="obsolete">中文 (中国)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="490"/>
         <source>Chinese (Taiwan)</source>
-        <translation>中文 (台灣)</translation>
+        <translation type="obsolete">中文 (台灣)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="498"/>
         <source>Japanese</source>
-        <translation>日本語</translation>
+        <translation type="obsolete">日本語</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="860"/>
+        <location filename="../mamepguimain.cpp" line="874"/>
         <source>Restart</source>
         <translation>Újraindítás</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="861"/>
+        <location filename="../mamepguimain.cpp" line="875"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>A változtatások érvényesítéséhez újraindítás szükséges.
 Folytatod?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="514"/>
+        <location filename="../mamepguimain.ui" line="516"/>
         <source>Enforce Aspect Ratio</source>
         <translation>Kényszerített képarány</translation>
     </message>
@@ -696,57 +682,57 @@ Folytatod?</translation>
         <translation type="obsolete">Lefordított játéklista használata</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="83"/>
+        <location filename="../mamepguimain.cpp" line="85"/>
         <source>status</source>
         <translation>állapot</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="88"/>
+        <location filename="../mamepguimain.cpp" line="90"/>
         <source>emulation</source>
         <translation>emuláció</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="93"/>
+        <location filename="../mamepguimain.cpp" line="95"/>
         <source>color</source>
         <translation>szín</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="98"/>
+        <location filename="../mamepguimain.cpp" line="100"/>
         <source>sound</source>
         <translation>hang</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="103"/>
+        <location filename="../mamepguimain.cpp" line="105"/>
         <source>graphic</source>
         <translation>grafika</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="108"/>
+        <location filename="../mamepguimain.cpp" line="110"/>
         <source>savestate</source>
         <translation>játékmentés</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="120"/>
+        <location filename="../mamepguimain.cpp" line="122"/>
         <source>cocktail</source>
         <translation>vegyes</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="132"/>
+        <location filename="../mamepguimain.cpp" line="134"/>
         <source>protection</source>
         <translation>védelem</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="418"/>
+        <location filename="../mamepguimain.cpp" line="416"/>
         <source>Executable files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="421"/>
+        <location filename="../mamepguimain.cpp" line="419"/>
         <source>All Files (*)</source>
         <translation>Minden fájl (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="424"/>
+        <location filename="../mamepguimain.cpp" line="422"/>
         <source>MAME executable:</source>
         <translation>MAME exe:</translation>
     </message>
@@ -755,7 +741,7 @@ Folytatod?</translation>
         <translation type="obsolete">MAMEPGUI</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="47"/>
+        <location filename="../mamepguimain.ui" line="48"/>
         <source>Play with Options</source>
         <translation>Játék a beállítások használatával</translation>
     </message>
@@ -776,37 +762,37 @@ Folytatod?</translation>
         <translation type="obsolete">Brazil</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="527"/>
+        <location filename="../mamepguimain.ui" line="529"/>
         <source>FAQ</source>
         <translation>GYIK</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="532"/>
+        <location filename="../mamepguimain.ui" line="534"/>
         <source>Discussion Board</source>
         <translation>Felhasználói fórum</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="537"/>
+        <location filename="../mamepguimain.ui" line="539"/>
         <source>Readme</source>
         <translation>Olvass el</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="545"/>
+        <location filename="../mamepguimain.ui" line="547"/>
         <source>Stretch</source>
         <translation>Nyújtás</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="553"/>
+        <location filename="../mamepguimain.ui" line="555"/>
         <source>Tile</source>
         <translation>Mozaik</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="159"/>
+        <location filename="../mamepguimain.cpp" line="161"/>
         <source>Command</source>
         <translation>Parancs</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="214"/>
+        <location filename="../mamepguimain.cpp" line="218"/>
         <source>Clear</source>
         <translation>Törlés</translation>
     </message>
@@ -823,7 +809,7 @@ Folytatod?</translation>
         <translation type="obsolete">Ikonok rendezése</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="572"/>
+        <location filename="../mamepguimain.ui" line="574"/>
         <source>Strech Screenshot Larger</source>
         <translation>Pillanatkép nagyítása</translation>
     </message>
@@ -831,17 +817,17 @@ Folytatod?</translation>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="914"/>
+        <location filename="../gamelist.cpp" line="988"/>
         <source>Saving listxml</source>
         <translation>A listxml mentése</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1116"/>
+        <location filename="../gamelist.cpp" line="1190"/>
         <source>Cache signature error.</source>
         <translation>Aláírás hibák mentése.</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1125"/>
+        <location filename="../gamelist.cpp" line="1199"/>
         <source>Cache version has been updated. A full refresh is required.</source>
         <translation>Cache verzió frissítve. Szükség van teljes frissítésre.</translation>
     </message>
@@ -2320,37 +2306,37 @@ Folytatod?</translation>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="525"/>
+        <location filename="../gamelist.cpp" line="592"/>
         <source>Description</source>
         <translation>Név</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="526"/>
+        <location filename="../gamelist.cpp" line="593"/>
         <source>Name</source>
         <translation>ROM név</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="527"/>
+        <location filename="../gamelist.cpp" line="594"/>
         <source>ROMs</source>
         <translation>ROM-ok</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="528"/>
+        <location filename="../gamelist.cpp" line="595"/>
         <source>Manufacturer</source>
         <translation>Gyártó</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="529"/>
+        <location filename="../gamelist.cpp" line="596"/>
         <source>Driver</source>
         <translation>Meghajtó program</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="530"/>
+        <location filename="../gamelist.cpp" line="597"/>
         <source>Year</source>
         <translation>Év</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="531"/>
+        <location filename="../gamelist.cpp" line="598"/>
         <source>Clone of</source>
         <translation>Klón</translation>
     </message>

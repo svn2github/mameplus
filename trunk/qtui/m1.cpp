@@ -47,6 +47,7 @@ void M1UI::init()
 	connect(btnStop, SIGNAL(pressed()), &m1->m1Thread, SLOT(stop()));
 	connect(cmbLang, SIGNAL(currentIndexChanged(const QString &)), m1, SLOT(updateList(const QString &)));
 
+	setSizePolicy(QSizePolicy(QSizePolicy::Ignored, QSizePolicy::Expanding));
 //	win->addDockWidget(static_cast<Qt::DockWidgetArea>(Qt::RightDockWidgetArea), this);
 }
 

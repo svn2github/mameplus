@@ -1,8 +1,8 @@
 ﻿CSI, 豪斯医生, 盾牌，律师风云，都很不错
 
-
 引用(wxcalin(323楼) @ 2009/02/05 18:48:21)
 Criminal Minds，CSI.LV，The Closer，Bones......
+
 //Web
 render xml feed
 multi lang basic UI
@@ -13,43 +13,55 @@ theme
 
 
 //Linux/Mac
-D column sorting
-2 On OSX, would it be possible to make the front end start the selected game when you press return?
+1 On OSX, would it be possible to make the front end start the selected game when you press return?
 check font size
-icon最大可以大到512x512 Apple也强烈建议开发者要准备这么大的尺寸（除了原有的16x16、32x32、128x128之外 
-Windows在XP以前仅支持16x16、32x32、48x48，直到Vista才开始加大到64x64和256x256。
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
 能不能价格功能，让写入配置文件的时候输入root密码拥有写入权限 
 * LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang
+mac should load settings same as win
 
 //Priority tasks
-播放器我没有　他也要让我看下
-SDL lib: configure with directx header?
+3 custom ini write
+3 ips lang may cause crash
+3 new version detection
+3 visual effect override for vector games
+
+2 auto refresh
+2 搜索的时候，只会对当前的列表搜索，而老版的貌似是对各语言版本的列表都搜索了
+2 better console refresh
+2 比如设定完“核心视频”后，如果直接却设定“系统视频”，则刚刚做的“核心视频”所有设定丢失。
+2 column sorting
+
+1 ips GUI seq
+1 added API to know which dock widgets are tabified together with a dock widget
+1 bios可改成完整名稱(像mame plus)
+1 按照版本順序排列(像mame plus)
+
+1 播放器我没有　他也要让我看下
 2 m1能用，但是有m1在bin目录首次启动新龟启动不了
+2 load m1 on the fly
 2 MAME uses the M1 directory as currentdirectory, mame option available after m1 init
 
 2 global softwarepath
 2 translator credit
+2 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
 
 1 pop warning if console rom not exists
 2 multi sw paths
 1 MESS sw ext rom cfg saving
 
-2 chd clones
+1 CJK sorting
+
 2 disable play with
+2 mamep core lang, for non cjk languages
+2 gamename0000 snap
+2 SDL joystick GUI
 
 1 playwith state name prompt, empty file name handling
 1 filter also display parent (cross line?), unavail folder, parent avail, clone unavail
-2 mamep core lang, for non cjk languages
-2 gamename0000 snap
-2 custom ini write
-1 SDL joystick GUI
-1 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
-1 enable filter when scanline active
 
 * reconsider command.dat it's slow and buggy
 * icon for local switching
-* new version detection
 
 //Coding
 * separate screenshot.cpp
@@ -62,9 +74,9 @@ SDL lib: configure with directx header?
 //General
 * test oldest mame version support, warning
 * move datafile.c statistics to GUI
-1 try to load a default bkgr
 1 Add an option to revert the geometry to default, I lost a couple of my snap/info
 1 F11 fullscreen mode, vista style
+1 support relative path
 
 //Options
 1 check default bios since .129
@@ -166,7 +178,7 @@ configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -
 cd /mnt/hgfs/qtui
 
 linux/mac:
-export PATH=/usr/local/Trolltech/Qt-4.5.0-beta1/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
@@ -193,6 +205,7 @@ neogeo playback rtc
 1 submit joyid
 4 verify rev 3991
 3x filter height
+verify MESS defs
 remove nvram hack
 mamep snaps
 hazemd icons

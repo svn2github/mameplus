@@ -12,7 +12,7 @@
 <context>
     <name>Dirs</name>
     <message>
-        <location filename="../dialogs.cpp" line="336"/>
+        <location filename="../dialogs.cpp" line="340"/>
         <source>Directory name:</source>
         <translation>目錄名稱:</translation>
     </message>
@@ -40,112 +40,112 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="2833"/>
+        <location filename="../gamelist.cpp" line="2920"/>
         <source>Parsing listxml</source>
         <translation>正在解析 listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2656"/>
+        <location filename="../gamelist.cpp" line="2743"/>
         <source>Loading listxml: %1 games</source>
         <translation>正在載入 listxml: %1 個遊戲</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2567"/>
+        <location filename="../gamelist.cpp" line="2654"/>
         <source>Common image types</source>
         <translation>通用影像類型</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2569"/>
+        <location filename="../gamelist.cpp" line="2656"/>
         <source>All Files</source>
         <translation>所有檔案</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2575"/>
+        <location filename="../gamelist.cpp" line="2662"/>
         <source>File name:</source>
         <translation>檔案名稱:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2956"/>
+        <location filename="../gamelist.cpp" line="3043"/>
         <source>Refresh</source>
         <translation>重新整理</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1787"/>
+        <location filename="../gamelist.cpp" line="1870"/>
         <source>All Games</source>
         <translation>全部遊戲</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1788"/>
+        <location filename="../gamelist.cpp" line="1871"/>
         <source>All Arcades</source>
         <translation>全部業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1788"/>
+        <location filename="../gamelist.cpp" line="1871"/>
         <source>All Systems</source>
         <translation>全部系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1789"/>
+        <location filename="../gamelist.cpp" line="1872"/>
         <source>Available Arcades</source>
         <translation>擁有業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1789"/>
+        <location filename="../gamelist.cpp" line="1872"/>
         <source>Available Systems</source>
         <translation>擁有系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1790"/>
+        <location filename="../gamelist.cpp" line="1873"/>
         <source>Unavailable Arcades</source>
         <translation>未擁有業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1790"/>
+        <location filename="../gamelist.cpp" line="1873"/>
         <source>Unavailable Systems</source>
         <translation>未擁有系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1791"/>
+        <location filename="../gamelist.cpp" line="1874"/>
         <source>Consoles</source>
         <translation>家用機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1791"/>
+        <location filename="../gamelist.cpp" line="1874"/>
         <source>Softwares</source>
         <translation>軟體</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1792"/>
+        <location filename="../gamelist.cpp" line="1875"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1793"/>
+        <location filename="../gamelist.cpp" line="1876"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1794"/>
+        <location filename="../gamelist.cpp" line="1877"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1795"/>
+        <location filename="../gamelist.cpp" line="1878"/>
         <source>BIOS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2340"/>
+        <location filename="../gamelist.cpp" line="2427"/>
         <source>Play %1</source>
         <translation>執行 %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2342"/>
+        <location filename="../gamelist.cpp" line="2429"/>
         <source>Properties for %1</source>
         <translation>%1 內容</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3378"/>
+        <location filename="../gamelist.cpp" line="3465"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -155,7 +155,7 @@ must be mounted:
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1666"/>
+        <location filename="../gamelist.cpp" line="1748"/>
         <source>%1 games</source>
         <translation>%1 個遊戲</translation>
     </message>
@@ -270,18 +270,18 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">說明</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="167"/>
+        <location filename="../mamepguimain.ui" line="169"/>
         <source>Toolbar</source>
         <translation>工具列</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="208"/>
-        <location filename="../mamepguimain.ui" line="197"/>
+        <location filename="../mamepguimain.cpp" line="212"/>
+        <location filename="../mamepguimain.ui" line="199"/>
         <source>Search</source>
         <translation>搜尋</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="211"/>
+        <location filename="../mamepguimain.ui" line="213"/>
         <source>GUI Log</source>
         <translation>圖形介面記錄</translation>
     </message>
@@ -290,7 +290,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">重新整理</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="281"/>
+        <location filename="../mamepguimain.ui" line="283"/>
         <source>F5</source>
         <translation></translation>
     </message>
@@ -299,7 +299,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">結束</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="289"/>
+        <location filename="../mamepguimain.ui" line="291"/>
         <source>Alt+X</source>
         <translation></translation>
     </message>
@@ -320,62 +320,62 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">大圖示</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="238"/>
+        <location filename="../mamepguimain.ui" line="240"/>
         <source>Folder List</source>
         <translation>資料夾清單</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="148"/>
+        <location filename="../mamepguimain.cpp" line="150"/>
         <source>Snapshot</source>
         <translation>遊戲圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="149"/>
+        <location filename="../mamepguimain.cpp" line="151"/>
         <source>Flyer</source>
         <translation>廣告圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="150"/>
+        <location filename="../mamepguimain.cpp" line="152"/>
         <source>Cabinet</source>
         <translation>筐體圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="151"/>
+        <location filename="../mamepguimain.cpp" line="153"/>
         <source>Marquee</source>
         <translation>標籤圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="152"/>
+        <location filename="../mamepguimain.cpp" line="154"/>
         <source>Title</source>
         <translation>標題圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="153"/>
+        <location filename="../mamepguimain.cpp" line="155"/>
         <source>Control Panel</source>
         <translation>控制器</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="154"/>
+        <location filename="../mamepguimain.cpp" line="156"/>
         <source>PCB</source>
         <translation>電路板</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="156"/>
+        <location filename="../mamepguimain.cpp" line="158"/>
         <source>History</source>
         <translation>歷史</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="157"/>
+        <location filename="../mamepguimain.cpp" line="159"/>
         <source>MAMEInfo</source>
         <translation>資訊</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="158"/>
+        <location filename="../mamepguimain.cpp" line="160"/>
         <source>Story</source>
         <translation>故事</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="255"/>
+        <location filename="../mamepguimain.ui" line="257"/>
         <source>1</source>
         <translation></translation>
     </message>
@@ -396,57 +396,57 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">設定 IPS...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="365"/>
+        <location filename="../mamepguimain.ui" line="367"/>
         <source>Audit</source>
         <translation>驗證</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="373"/>
+        <location filename="../mamepguimain.ui" line="375"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="381"/>
+        <location filename="../mamepguimain.ui" line="383"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="389"/>
+        <location filename="../mamepguimain.ui" line="391"/>
         <source>ROMs</source>
         <translation>ROM</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="397"/>
+        <location filename="../mamepguimain.ui" line="399"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="405"/>
+        <location filename="../mamepguimain.ui" line="407"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="413"/>
+        <location filename="../mamepguimain.ui" line="415"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="421"/>
+        <location filename="../mamepguimain.ui" line="423"/>
         <source>Clone of</source>
         <translation>原作</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="432"/>
+        <location filename="../mamepguimain.ui" line="434"/>
         <source>Sort Ascending</source>
         <translation>遞增排序</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="443"/>
+        <location filename="../mamepguimain.ui" line="445"/>
         <source>Sort Descending</source>
         <translation>遞減排序</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="564"/>
+        <location filename="../mamepguimain.ui" line="566"/>
         <source>Highlight Selected Row</source>
         <translation>高亮度顯示所選資料列</translation>
     </message>
@@ -479,7 +479,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">目錄...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="466"/>
+        <location filename="../mamepguimain.ui" line="468"/>
         <source>Properties for </source>
         <translation>內容</translation>
     </message>
@@ -488,204 +488,194 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">語言</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="13"/>
+        <location filename="../mamepguimain.ui" line="14"/>
         <source>M+GUI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="43"/>
+        <location filename="../mamepguimain.ui" line="44"/>
         <source>&amp;File</source>
         <translation>檔案(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="66"/>
+        <location filename="../mamepguimain.ui" line="67"/>
         <source>&amp;View</source>
         <translation>檢視(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="70"/>
+        <location filename="../mamepguimain.ui" line="71"/>
         <source>Customize &amp;Fields</source>
         <translation>自訂欄位(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="85"/>
+        <location filename="../mamepguimain.ui" line="86"/>
         <source>Game &amp;Pictures</source>
         <translation>遊戲圖片(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="93"/>
+        <location filename="../mamepguimain.ui" line="94"/>
         <source>Game Do&amp;cuments</source>
         <translation>遊戲文件(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="98"/>
+        <location filename="../mamepguimain.ui" line="99"/>
         <source>Arrange &amp;Icons</source>
         <translation>排列圖示(&amp;I)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="117"/>
+        <location filename="../mamepguimain.ui" line="118"/>
         <source>&amp;Options</source>
         <translation>選項(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="121"/>
+        <location filename="../mamepguimain.ui" line="122"/>
         <source>&amp;Language</source>
         <translation>語言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="132"/>
+        <location filename="../mamepguimain.ui" line="134"/>
         <source>&amp;Background Images</source>
         <translation>背景圖像(&amp;B)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="140"/>
+        <location filename="../mamepguimain.ui" line="142"/>
         <source>GUI &amp;Style</source>
         <translation>圖形介面樣式(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="152"/>
+        <location filename="../mamepguimain.ui" line="154"/>
         <source>&amp;Help</source>
         <translation>說明(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="269"/>
+        <location filename="../mamepguimain.ui" line="271"/>
         <source>Default Game &amp;Options</source>
         <translation>預設遊戲選項(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="278"/>
+        <location filename="../mamepguimain.ui" line="280"/>
         <source>&amp;Refresh</source>
         <translation>重新整理(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="286"/>
+        <location filename="../mamepguimain.ui" line="288"/>
         <source>E&amp;xit</source>
         <translation>結束(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="298"/>
+        <location filename="../mamepguimain.ui" line="300"/>
         <source>&amp;About</source>
         <translation>關於(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="310"/>
+        <location filename="../mamepguimain.ui" line="312"/>
         <source>&amp;Details</source>
         <translation>詳細資料(&amp;D)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="325"/>
+        <location filename="../mamepguimain.ui" line="327"/>
         <source>&amp;Grouped</source>
         <translation>群組(&amp;G)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="337"/>
+        <location filename="../mamepguimain.ui" line="339"/>
         <source>L&amp;arge Icons</source>
         <translation>大圖示(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="345"/>
+        <location filename="../mamepguimain.ui" line="347"/>
         <source>&amp;Vertical Tabs</source>
         <translation>垂直索引標籤(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="350"/>
+        <location filename="../mamepguimain.ui" line="352"/>
         <source>&amp;Play</source>
         <translation>執行(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="355"/>
+        <location filename="../mamepguimain.ui" line="357"/>
         <source>&amp;Record Input...</source>
         <translation>記錄輸入檔(&amp;R)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="360"/>
+        <location filename="../mamepguimain.ui" line="362"/>
         <source>Configure &amp;IPS...</source>
         <translation>設定 &amp;IPS...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="452"/>
+        <location filename="../mamepguimain.ui" line="454"/>
         <source>&amp;Directories...</source>
         <translation>目錄(&amp;D)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="461"/>
+        <location filename="../mamepguimain.ui" line="463"/>
         <source>Pr&amp;operties</source>
         <translation>內容(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="474"/>
-        <source>English (United States)</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="../mamepguimain.ui" line="482"/>
         <source>Chinese (PRC)</source>
-        <translation>中文 (中国)</translation>
+        <translation type="obsolete">中文 (中国)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="490"/>
         <source>Chinese (Taiwan)</source>
-        <translation>中文 (台灣)</translation>
+        <translation type="obsolete">中文 (台灣)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="498"/>
         <source>Japanese</source>
-        <translation>日本語</translation>
+        <translation type="obsolete">日本語</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="506"/>
         <source>Portuguese (Brazil)  </source>
-        <translation>Português (Brasil)</translation>
+        <translation type="obsolete">Português (Brasil)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="522"/>
+        <location filename="../mamepguimain.ui" line="524"/>
         <source>Local &amp;Language Game List</source>
         <translation>中文遊戲清單(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="577"/>
+        <location filename="../mamepguimain.ui" line="579"/>
         <source>&amp;Playback Input...</source>
         <translation>播放輸入檔(&amp;P)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="582"/>
+        <location filename="../mamepguimain.ui" line="584"/>
         <source>Record &amp;Wave Output...</source>
         <translation>錄製聲波音訊輸出(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="587"/>
+        <location filename="../mamepguimain.ui" line="589"/>
         <source>Record &amp;MNG Output...</source>
         <translation>錄製&amp;MNG視訊輸出...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="592"/>
+        <location filename="../mamepguimain.ui" line="594"/>
         <source>Record &amp;AVI Output...</source>
         <translation>錄製&amp;AVI視訊輸出...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="597"/>
+        <location filename="../mamepguimain.ui" line="599"/>
         <source>Load &amp;Savestate</source>
         <translation>載入儲存狀態(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="602"/>
         <source>Hungarian</source>
-        <translation>Magyar</translation>
+        <translation type="obsolete">Magyar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="860"/>
+        <location filename="../mamepguimain.cpp" line="874"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="861"/>
+        <location filename="../mamepguimain.cpp" line="875"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>變更這個選項需要重新啟動才能生效。
 您要繼續嗎?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="514"/>
+        <location filename="../mamepguimain.ui" line="516"/>
         <source>Enforce Aspect Ratio</source>
         <translation>強制圖片長寬比例</translation>
     </message>
@@ -698,62 +688,62 @@ Do you wish to continue?</source>
         <translation type="obsolete">中文遊戲清單</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="83"/>
+        <location filename="../mamepguimain.cpp" line="85"/>
         <source>status</source>
         <translation>狀況</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="88"/>
+        <location filename="../mamepguimain.cpp" line="90"/>
         <source>emulation</source>
         <translation>模擬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="93"/>
+        <location filename="../mamepguimain.cpp" line="95"/>
         <source>color</source>
         <translation>色彩</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="98"/>
+        <location filename="../mamepguimain.cpp" line="100"/>
         <source>sound</source>
         <translation>聲音</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="103"/>
+        <location filename="../mamepguimain.cpp" line="105"/>
         <source>graphic</source>
         <translation>圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="108"/>
+        <location filename="../mamepguimain.cpp" line="110"/>
         <source>savestate</source>
         <translation>儲存狀態</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="120"/>
+        <location filename="../mamepguimain.cpp" line="122"/>
         <source>cocktail</source>
         <translation>檯面型</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="132"/>
+        <location filename="../mamepguimain.cpp" line="134"/>
         <source>protection</source>
         <translation>保護</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="418"/>
+        <location filename="../mamepguimain.cpp" line="416"/>
         <source>Executable files</source>
         <translation>執行檔</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="421"/>
+        <location filename="../mamepguimain.cpp" line="419"/>
         <source>All Files (*)</source>
         <translation>所有檔案 (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="424"/>
+        <location filename="../mamepguimain.cpp" line="422"/>
         <source>MAME executable:</source>
         <translation>MAME 執行檔:</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="47"/>
+        <location filename="../mamepguimain.ui" line="48"/>
         <source>Play with Options</source>
         <translation>錄製或播放</translation>
     </message>
@@ -766,27 +756,27 @@ Do you wish to continue?</source>
         <translation type="obsolete">記錄輸入檔...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="527"/>
+        <location filename="../mamepguimain.ui" line="529"/>
         <source>FAQ</source>
         <translation>常見問題集</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="532"/>
+        <location filename="../mamepguimain.ui" line="534"/>
         <source>Discussion Board</source>
         <translation>討論板</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="537"/>
+        <location filename="../mamepguimain.ui" line="539"/>
         <source>Readme</source>
         <translation>讀我檔案</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="545"/>
+        <location filename="../mamepguimain.ui" line="547"/>
         <source>Stretch</source>
         <translation>拉伸</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="553"/>
+        <location filename="../mamepguimain.ui" line="555"/>
         <source>Tile</source>
         <translation>並排</translation>
     </message>
@@ -795,12 +785,12 @@ Do you wish to continue?</source>
         <translation type="obsolete">圖形介面樣式</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="159"/>
+        <location filename="../mamepguimain.cpp" line="161"/>
         <source>Command</source>
         <translation>招式表</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="214"/>
+        <location filename="../mamepguimain.cpp" line="218"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -817,7 +807,7 @@ Do you wish to continue?</source>
         <translation type="obsolete">排列圖示</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="572"/>
+        <location filename="../mamepguimain.ui" line="574"/>
         <source>Strech Screenshot Larger</source>
         <translation>允許延展預覽圖</translation>
     </message>
@@ -825,17 +815,17 @@ Do you wish to continue?</source>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="914"/>
+        <location filename="../gamelist.cpp" line="988"/>
         <source>Saving listxml</source>
         <translation>正在儲存 listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1116"/>
+        <location filename="../gamelist.cpp" line="1190"/>
         <source>Cache signature error.</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1125"/>
+        <location filename="../gamelist.cpp" line="1199"/>
         <source>Cache version has been updated. A full refresh is required.</source>
         <translation></translation>
     </message>
@@ -2294,37 +2284,37 @@ Do you wish to continue?</source>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="525"/>
+        <location filename="../gamelist.cpp" line="592"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="526"/>
+        <location filename="../gamelist.cpp" line="593"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="527"/>
+        <location filename="../gamelist.cpp" line="594"/>
         <source>ROMs</source>
         <translation>ROM</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="528"/>
+        <location filename="../gamelist.cpp" line="595"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="529"/>
+        <location filename="../gamelist.cpp" line="596"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="530"/>
+        <location filename="../gamelist.cpp" line="597"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="531"/>
+        <location filename="../gamelist.cpp" line="598"/>
         <source>Clone of</source>
         <translation>原作</translation>
     </message>
