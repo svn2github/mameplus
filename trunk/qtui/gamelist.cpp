@@ -2053,6 +2053,9 @@ void Gamelist::init(bool toggleState, int initMethod)
 		//for re-init list from folders
 		restoreGameSelection();
 
+		//save fixdat
+		win->romAuditor.exportDat();
+
 		win->log(QString("init'd game count %1").arg(mameGame->games.count()));
 	}
 	else

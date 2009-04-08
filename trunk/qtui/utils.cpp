@@ -130,7 +130,7 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 	QFile datFile(fileName);
 	QString buf = "";
 	if (linkType > 0)
-		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://www.mameworld.net/maws/romset/" + systemName + "\">View information at MAWS</a><br>";
+		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://maws.mameworld.info/maws/romset/" + systemName + "\">View information at MAWS</a><br>";
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{

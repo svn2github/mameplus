@@ -10,7 +10,7 @@ read/write cookie
 theme
 
 //Done
-
+fixed maws link
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -25,6 +25,7 @@ mac should load settings same as win
 3 ips lang may cause crash
 3 new version detection
 3 visual effect override for vector games
+3 background trans color on switching
 
 2 auto refresh
 2 搜索的时候，只会对当前的列表搜索，而老版的貌似是对各语言版本的列表都搜索了

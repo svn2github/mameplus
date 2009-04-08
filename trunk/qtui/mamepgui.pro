@@ -19,13 +19,16 @@ build_static {
 build_sdl {
   win32 {
   LIBS += -Llib/Win32 -lSDLmain
-  RC_FILE = mamepgui.rc
   }
   unix {
   LIBS += -Llib/Linux
   }
   LIBS += -lSDL
   DEFINES += USE_SDL
+}
+
+win32 {
+RC_FILE = mamepgui.rc
 }
 
 macx {

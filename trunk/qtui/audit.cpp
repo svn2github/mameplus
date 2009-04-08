@@ -11,10 +11,184 @@
 #include "mamepguimain.h"
 #include "mameopt.h"
 
-void RomAuditor::audit(bool autoAudit)
+RomAuditor::RomAuditor(QObject *parent) : 
+QThread(parent),
+hasAudited(false),
+method(AUDIT_ONLY)
+{
+}
+
+RomAuditor::~RomAuditor()
+{
+	wait();
+}
+
+void RomAuditor::exportDat()
+{
+	if (method == AUDIT_ONLY || fixDatFileName.isEmpty())
+		return;
+
+	QFile outFile(fixDatFileName);
+
+	if (outFile.open(QFile::WriteOnly | QFile::Text))
+	{
+		QXmlStreamWriter out(&outFile);
+		out.setAutoFormatting(true);
+		out.setAutoFormattingIndent(-1);
+
+		GameInfo *gameInfo;
+
+		QStringList gameNames;
+		//append all parent names to the list and sort it
+		foreach (QString gameName, mameGame->games.keys())
+		{
+			gameInfo = mameGame->games[gameName];
+			if (gameInfo->cloneof.isEmpty())
+				gameNames.append(gameName);
+		}
+		gameNames.sort();
+
+		QStringList gameNames_copy(gameNames);
+
+		//insert all sorted clone names to the list
+		int i = 0;
+		foreach (QString gameName, gameNames_copy)
+		{
+			gameInfo = mameGame->games[gameName];
+
+			QList<QString> cloneList = gameInfo->clones.toList();
+			qSort(cloneList);
+
+			foreach (QString cloneName, cloneList)
+				gameNames.insert(++i, cloneName);
+
+			i ++;
+		}
+
+		//start writing xml
+		out.writeStartDocument();
+		out.writeDTD("<!DOCTYPE datafile PUBLIC \"-//Logiqx//DTD ROM Management Datafile//EN\" \"http://www.logiqx.com/Dats/datafile.dtd\">");
+		out.writeStartElement("datafile");
+
+		foreach (QString gameName, gameNames)
+		{
+			gameInfo = mameGame->games[gameName];
+
+			if (gameInfo->available == 0)
+			{
+				GameInfo *gameInfo2 = NULL, *gameBiosInfo = NULL;
+				RomInfo *romInfo, *romInfo2;
+
+				//we'd like to sort the roms, QMap is used
+				QMap<QString, quint32> missingRoms;
+
+				//if all roms of a game are missing, excluding missing bios and parent roms
+				bool completelyMissing = false;
+
+				//number of missing roms and nodumps
+				int missingCount = 0,
+					nodumpCount = 0;
+
+				//find parent and bios of the game
+				if (!gameInfo->romof.isEmpty())
+				{
+					gameInfo2 = mameGame->games[gameInfo->romof];
+
+					if (!gameInfo2->romof.isEmpty())
+						gameBiosInfo = mameGame->games[gameInfo2->romof];
+					else if (gameInfo2->isBios)
+						gameBiosInfo = gameInfo2;
+				}
+
+				foreach (quint32 crc, gameInfo->roms.keys())
+				{
+					romInfo = gameInfo->roms[crc];
+
+					if (romInfo->status == "nodump")
+						nodumpCount++;
+
+					if (!romInfo->available)
+					{
+						if (gameInfo2 != NULL)
+						{
+							//continue loop if parent is also missing this rom
+							if (gameInfo2->roms.contains(crc) && !gameInfo2->roms[crc]->available)
+							{
+								//dont count bioses #1
+								if (!gameInfo2->isBios && (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
+									missingCount++;
+								continue;
+							}
+						}
+
+						missingRoms.insert(romInfo->name, crc);
+						//dont count bioses #2
+						if (!gameInfo->isBios && (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
+							missingCount++;
+					}
+				}
+
+				if (missingRoms.size() == 0)
+					continue;
+
+				//dont count bioses #3
+				int biosRomsCount = 0;
+				if (gameBiosInfo != NULL)
+					biosRomsCount = gameBiosInfo->roms.size();
+
+				if (missingCount == gameInfo->roms.size() - biosRomsCount - nodumpCount)
+					completelyMissing = true;
+
+				//toggle export methods
+				if (method == AUDIT_EXPORT_INCOMPLETE && completelyMissing || 
+					method == AUDIT_EXPORT_MISSING && !completelyMissing)
+					continue;
+
+				out.writeStartElement("game");
+				out.writeAttribute("name", gameName);
+				out.writeAttribute("sourcefile", gameInfo->sourcefile);
+				if (!gameInfo->romof.isEmpty())
+					out.writeAttribute("romof", gameInfo->romof);
+
+				out.writeTextElement("description", gameInfo->description);
+				if (!gameInfo->year.isEmpty())
+					out.writeTextElement("year", gameInfo->year);
+				out.writeTextElement("manufacturer", gameInfo->manufacturer);
+
+				foreach (quint32 crc, missingRoms)
+				{
+					romInfo = gameInfo->roms[crc];
+
+					out.writeStartElement("rom");
+					out.writeAttribute("name", romInfo->name);
+					out.writeAttribute("size", QString("%1").arg(romInfo->size));
+					out.writeAttribute("crc", QString("%1").arg(crc, 8, 16, QLatin1Char('0')));
+					out.writeEndElement();
+				}
+
+				out.writeEndElement();
+			}
+		}
+		out.writeEndDocument();
+	}
+	
+	outFile.close();
+}
+
+void RomAuditor::audit(bool autoAudit, int _method, QString fileName)
 {
 	if (!isRunning())
 	{
+		method = _method;
+		fixDatFileName = fileName;
+
+		//skip auditing and go export directly
+		if (method != AUDIT_ONLY && hasAudited)
+		{
+			exportDat();
+			return;
+		}
+	
 		gameList->disableCtrls();
 
 		//must clear mameGame in the main thread
@@ -36,6 +210,7 @@ void RomAuditor::audit(bool autoAudit)
 			isConsoleFolder = false;
 		}
 
+		hasAudited = true;
 		start(LowPriority);
 	}
 }
@@ -190,6 +365,7 @@ void RomAuditor::run()
 
 				foreach (RomInfo *romInfo, gameInfo->roms)
 				{
+					//clone romInfo->available is already partially supplied by parent
 					if (!romInfo->available)
 					{
 						allinParent = false;
@@ -206,25 +382,15 @@ void RomAuditor::run()
 					}
 				}
 
-				gameInfo->available = (allNoDump || allinParent) ? 1 : 0;
+				gameInfo->available = (!allNoDump && !allinParent && gameInfo->disks.isEmpty()) ? 0 : 1;
 			}
-			//shortcircuit
-			if (gameInfo->available == 0)
-				continue;
 
 			//iterate disks
 			foreach (DiskInfo *diskInfo, gameInfo->disks)
 			{
 				if (!diskInfo->available)
-				{
-					//win->log("NA :" + gameName + "/" + diskInfo->name);
 					gameInfo->available = 0;
-					break;
-				}
 			}
-			//shortcircuit
-			if (gameInfo->available == 0)
-				continue;
 
 			//iterate roms
 			foreach (quint32 crc, gameInfo->roms.keys())
@@ -242,7 +408,10 @@ void RomAuditor::run()
 
 					//parent rom passed
 					if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
+					{
+						romInfo->available = true;
 						continue;
+					}
 
 					//check bios
 					if (!gameInfo2->romof.isEmpty())
@@ -251,13 +420,15 @@ void RomAuditor::run()
 
 						//bios rom passed
 						if (gameInfo2->roms.contains(crc) && gameInfo2->roms[crc]->available)
+						{
+							romInfo->available = true;
 							continue;
+						}
 					}
 				}
 
 				//failed audit
 				gameInfo->available = 0;
-				break;
 			}
 		}
 	}
@@ -361,11 +532,6 @@ void RomAuditor::auditConsole(QString consoleName)
 	}
 
 //	win->poplog(QString("%1, %2").arg(consoleName).arg(_dirpath));
-}
-
-RomAuditor::~RomAuditor()
-{
-	wait();
 }
 
 

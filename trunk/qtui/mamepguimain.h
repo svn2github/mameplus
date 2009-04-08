@@ -74,6 +74,9 @@ public:
 public slots:
 	void on_actionExitStop_activated();
 	void on_actionRefresh_activated();
+	void on_actionFixDatAll_activated();
+	void on_actionFixDatIncomplete_activated();
+	void on_actionFixDatMissing_activated();
 	void on_actionEnglish_activated();
 	void on_actionChinese_PRC_activated();
 	void on_actionChinese_Taiwan_activated();
@@ -140,6 +143,7 @@ private:
 	void setTransparentBg(QWidget *);
 	void setTransparentStyle(QWidget * w);
 	QList<QTabBar *> getSSTabBars();
+	void exportFixDat(int);
 };
 
 #define MAMEPLUS_SIG 0x704c7553

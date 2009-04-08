@@ -599,7 +599,7 @@ void MainWindow::setVersion()
 		"</head>"
 		"<body>"
 		"<strong>M+GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
-		"A Qt implementation of the famous <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
+		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
 		"%2"
 		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
@@ -608,7 +608,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.3 beta 16")
+		.arg("1.4.0 rc 1")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -695,6 +695,37 @@ void MainWindow::on_actionConfigIPS_activated()
 void MainWindow::on_actionRefresh_activated()
 {
 	romAuditor.audit();
+}
+
+void MainWindow::on_actionFixDatAll_activated()
+{
+	exportFixDat(AUDIT_EXPORT_ALL);
+}
+
+void MainWindow::on_actionFixDatIncomplete_activated()
+{
+	exportFixDat(AUDIT_EXPORT_INCOMPLETE);
+}
+
+void MainWindow::on_actionFixDatMissing_activated()
+{
+	exportFixDat(AUDIT_EXPORT_MISSING);
+}
+
+void MainWindow::exportFixDat(int method)
+{
+	QString filter = "";
+	filter.append(tr("Dat files") + " (*.dat)");
+	filter.append(";;");
+	filter.append(tr("All Files (*)"));
+
+	QFileInfo mamebin(mame_binary);
+	
+	QString fileName = QFileDialog::getSaveFileName
+		(0, tr("File name:"), mamebin.absolutePath(), filter);	
+
+	if (!fileName.isEmpty())
+		romAuditor.audit(false, method, fileName);
 }
 
 void MainWindow::on_actionAudit_activated()

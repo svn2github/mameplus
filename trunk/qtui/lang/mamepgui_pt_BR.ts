@@ -40,17 +40,17 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <location filename="../gamelist.cpp" line="2743"/>
+        <location filename="../gamelist.cpp" line="2746"/>
         <source>Loading listxml: %1 games</source>
         <translation>Carregando listxml: %1 jogos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2920"/>
+        <location filename="../gamelist.cpp" line="2923"/>
         <source>Parsing listxml</source>
         <translation>Lendo listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3043"/>
+        <location filename="../gamelist.cpp" line="3046"/>
         <source>Refresh</source>
         <translation>Atualizar</translation>
     </message>
@@ -120,32 +120,32 @@
         <translation>BIOS</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2427"/>
+        <location filename="../gamelist.cpp" line="2430"/>
         <source>Play %1</source>
         <translation>Jogar %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2429"/>
+        <location filename="../gamelist.cpp" line="2432"/>
         <source>Properties for %1</source>
         <translation>Propriedades de %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2654"/>
+        <location filename="../gamelist.cpp" line="2657"/>
         <source>Common image types</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2656"/>
+        <location filename="../gamelist.cpp" line="2659"/>
         <source>All Files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2662"/>
+        <location filename="../gamelist.cpp" line="2665"/>
         <source>File name:</source>
         <translation type="unfinished">Nome do arquivo:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3465"/>
+        <location filename="../gamelist.cpp" line="3468"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -194,17 +194,12 @@ must be mounted:
 <context>
     <name>M1UI</name>
     <message>
-        <location filename="../m1.ui" line="13"/>
+        <location filename="../m1.ui" line="14"/>
         <source>M1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="65"/>
-        <source>Record</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../m1.ui" line="79"/>
+        <location filename="../m1.ui" line="44"/>
         <source>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
 &lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
 p, li { white-space: pre-wrap; }
@@ -214,27 +209,27 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="122"/>
+        <location filename="../m1.ui" line="130"/>
         <source>Play</source>
         <translation type="unfinished">Jogar</translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="142"/>
+        <location filename="../m1.ui" line="110"/>
         <source>Stop</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="176"/>
+        <location filename="../m1.ui" line="154"/>
         <source>1</source>
         <translation type="unfinished">1</translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="181"/>
+        <location filename="../m1.ui" line="159"/>
         <source>2</source>
         <translation type="unfinished">2</translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="186"/>
+        <location filename="../m1.ui" line="164"/>
         <source>3</source>
         <translation type="unfinished">3</translation>
     </message>
@@ -318,28 +313,28 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Ajuda</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="169"/>
+        <location filename="../mamepguimain.ui" line="179"/>
         <source>Toolbar</source>
         <translation>Barra de Ferramentas</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="212"/>
-        <location filename="../mamepguimain.ui" line="199"/>
+        <location filename="../mamepguimain.cpp" line="216"/>
+        <location filename="../mamepguimain.ui" line="209"/>
         <source>Search</source>
         <translation>Busca</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="213"/>
+        <location filename="../mamepguimain.ui" line="223"/>
         <source>GUI Log</source>
         <translation>Log do GUI</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="240"/>
+        <location filename="../mamepguimain.ui" line="250"/>
         <source>Folder List</source>
         <translation>Lista de Pastas</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="257"/>
+        <location filename="../mamepguimain.ui" line="267"/>
         <source>1</source>
         <translation>1</translation>
     </message>
@@ -348,7 +343,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Atualizar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="283"/>
+        <location filename="../mamepguimain.ui" line="293"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
@@ -357,7 +352,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Sair</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="291"/>
+        <location filename="../mamepguimain.ui" line="301"/>
         <source>Alt+X</source>
         <translation>Alt-X</translation>
     </message>
@@ -390,57 +385,57 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Jogar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="367"/>
+        <location filename="../mamepguimain.ui" line="377"/>
         <source>Audit</source>
         <translation>Auditar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="375"/>
+        <location filename="../mamepguimain.ui" line="385"/>
         <source>Description</source>
         <translation>Descrição</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="383"/>
+        <location filename="../mamepguimain.ui" line="393"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="391"/>
+        <location filename="../mamepguimain.ui" line="401"/>
         <source>ROMs</source>
         <translation>ROMs</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="399"/>
+        <location filename="../mamepguimain.ui" line="409"/>
         <source>Manufacturer</source>
         <translation>Fabricante</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="407"/>
+        <location filename="../mamepguimain.ui" line="417"/>
         <source>Driver</source>
         <translation>Driver</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="415"/>
+        <location filename="../mamepguimain.ui" line="425"/>
         <source>Year</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="423"/>
+        <location filename="../mamepguimain.ui" line="433"/>
         <source>Clone of</source>
         <translation>Clone de</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="434"/>
+        <location filename="../mamepguimain.ui" line="444"/>
         <source>Sort Ascending</source>
         <translation>Ordenar em Ordem Crescente</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="445"/>
+        <location filename="../mamepguimain.ui" line="455"/>
         <source>Sort Descending</source>
         <translation>Ordenar em Ordem Decrescente</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="566"/>
+        <location filename="../mamepguimain.ui" line="576"/>
         <source>Highlight Selected Row</source>
         <translation type="unfinished"></translation>
     </message>
@@ -457,7 +452,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Diretórios...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="468"/>
+        <location filename="../mamepguimain.ui" line="478"/>
         <source>Properties for </source>
         <translation>Propriedades de</translation>
     </message>
@@ -476,118 +471,138 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="67"/>
+        <location filename="../mamepguimain.ui" line="59"/>
+        <source>Save Fix-dat File</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.ui" line="77"/>
         <source>&amp;View</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="71"/>
+        <location filename="../mamepguimain.ui" line="81"/>
         <source>Customize &amp;Fields</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="86"/>
+        <location filename="../mamepguimain.ui" line="96"/>
         <source>Game &amp;Pictures</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="94"/>
+        <location filename="../mamepguimain.ui" line="104"/>
         <source>Game Do&amp;cuments</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="99"/>
+        <location filename="../mamepguimain.ui" line="109"/>
         <source>Arrange &amp;Icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="118"/>
+        <location filename="../mamepguimain.ui" line="128"/>
         <source>&amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="122"/>
+        <location filename="../mamepguimain.ui" line="132"/>
         <source>&amp;Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="134"/>
+        <location filename="../mamepguimain.ui" line="144"/>
         <source>&amp;Background Images</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="142"/>
+        <location filename="../mamepguimain.ui" line="152"/>
         <source>GUI &amp;Style</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="154"/>
+        <location filename="../mamepguimain.ui" line="164"/>
         <source>&amp;Help</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="271"/>
+        <location filename="../mamepguimain.ui" line="281"/>
         <source>Default Game &amp;Options</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="280"/>
+        <location filename="../mamepguimain.ui" line="290"/>
         <source>&amp;Refresh</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="288"/>
+        <location filename="../mamepguimain.ui" line="298"/>
         <source>E&amp;xit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="300"/>
+        <location filename="../mamepguimain.ui" line="310"/>
         <source>&amp;About</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="312"/>
+        <location filename="../mamepguimain.ui" line="322"/>
         <source>&amp;Details</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="327"/>
+        <location filename="../mamepguimain.ui" line="337"/>
         <source>&amp;Grouped</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="339"/>
+        <location filename="../mamepguimain.ui" line="349"/>
         <source>L&amp;arge Icons</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="347"/>
+        <location filename="../mamepguimain.ui" line="357"/>
         <source>&amp;Vertical Tabs</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="352"/>
+        <location filename="../mamepguimain.ui" line="362"/>
         <source>&amp;Play</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="357"/>
+        <location filename="../mamepguimain.ui" line="367"/>
         <source>&amp;Record Input...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="362"/>
+        <location filename="../mamepguimain.ui" line="372"/>
         <source>Configure &amp;IPS...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="454"/>
+        <location filename="../mamepguimain.ui" line="464"/>
         <source>&amp;Directories...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="463"/>
+        <location filename="../mamepguimain.ui" line="473"/>
         <source>Pr&amp;operties</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.ui" line="630"/>
+        <source>Completely Missing Sets Only...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.ui" line="635"/>
+        <source>Incomplete Sets Only...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.ui" line="640"/>
+        <source>All Set Issues...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -607,49 +622,49 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Japonês</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="524"/>
+        <location filename="../mamepguimain.ui" line="534"/>
         <source>Local &amp;Language Game List</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="579"/>
+        <location filename="../mamepguimain.ui" line="589"/>
         <source>&amp;Playback Input...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="584"/>
+        <location filename="../mamepguimain.ui" line="594"/>
         <source>Record &amp;Wave Output...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="589"/>
+        <location filename="../mamepguimain.ui" line="599"/>
         <source>Record &amp;MNG Output...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="594"/>
+        <location filename="../mamepguimain.ui" line="604"/>
         <source>Record &amp;AVI Output...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="599"/>
+        <location filename="../mamepguimain.ui" line="609"/>
         <source>Load &amp;Savestate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="874"/>
+        <location filename="../mamepguimain.cpp" line="901"/>
         <source>Restart</source>
         <translation>Reiniciar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="875"/>
+        <location filename="../mamepguimain.cpp" line="902"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>Para efetuar as alterações será necessário reiniciar.
 Tem certeza disso?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="516"/>
+        <location filename="../mamepguimain.ui" line="526"/>
         <source>Enforce Aspect Ratio</source>
         <translation>Reforçar relação de aspecto</translation>
     </message>
@@ -702,18 +717,23 @@ Tem certeza disso?</translation>
         <translation>proteção</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="416"/>
+        <location filename="../mamepguimain.cpp" line="166"/>
+        <source>Preferences...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.cpp" line="420"/>
         <source>Executable files</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="419"/>
+        <location filename="../mamepguimain.cpp" line="423"/>
         <source>All Files (*)</source>
         <translation type="unfinished">Todos arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="422"/>
-        <source>MAME executable:</source>
+        <location filename="../mamepguimain.cpp" line="426"/>
+        <source>MAME/MESS executable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -722,27 +742,27 @@ Tem certeza disso?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="529"/>
+        <location filename="../mamepguimain.ui" line="539"/>
         <source>FAQ</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="534"/>
+        <location filename="../mamepguimain.ui" line="544"/>
         <source>Discussion Board</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="539"/>
+        <location filename="../mamepguimain.ui" line="549"/>
         <source>Readme</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="547"/>
+        <location filename="../mamepguimain.ui" line="557"/>
         <source>Stretch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="555"/>
+        <location filename="../mamepguimain.ui" line="565"/>
         <source>Tile</source>
         <translation type="unfinished"></translation>
     </message>
@@ -752,12 +772,12 @@ Tem certeza disso?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="218"/>
+        <location filename="../mamepguimain.cpp" line="222"/>
         <source>Clear</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="574"/>
+        <location filename="../mamepguimain.ui" line="584"/>
         <source>Strech Screenshot Larger</source>
         <translation type="unfinished"></translation>
     </message>
@@ -783,7 +803,7 @@ Tem certeza disso?</translation>
 <context>
     <name>MergedRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="412"/>
+        <location filename="../audit.cpp" line="530"/>
         <source>Auditing</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2237,7 +2257,7 @@ Tem certeza disso?</translation>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="83"/>
+        <location filename="../audit.cpp" line="210"/>
         <source>Auditing</source>
         <translation type="unfinished"></translation>
     </message>

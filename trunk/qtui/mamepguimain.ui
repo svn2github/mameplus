@@ -54,11 +54,21 @@
      <addaction name="actionAVI"/>
      <addaction name="actionWave"/>
     </widget>
+    <widget class="QMenu" name="menuSave_Fix_dat_File_2">
+     <property name="title">
+      <string>Save Fix-dat File</string>
+     </property>
+     <addaction name="actionFixDatAll"/>
+     <addaction name="actionFixDatIncomplete"/>
+     <addaction name="actionFixDatMissing"/>
+    </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
     <addaction name="separator"/>
     <addaction name="actionSrcProperties"/>
     <addaction name="actionProperties"/>
+    <addaction name="separator"/>
+    <addaction name="menuSave_Fix_dat_File_2"/>
     <addaction name="separator"/>
     <addaction name="actionExitStop"/>
    </widget>
@@ -613,6 +623,21 @@
    </property>
    <property name="text">
     <string notr="true">한국어</string>
+   </property>
+  </action>
+  <action name="actionFixDatMissing">
+   <property name="text">
+    <string>Completely Missing Sets Only...</string>
+   </property>
+  </action>
+  <action name="actionFixDatIncomplete">
+   <property name="text">
+    <string>Incomplete Sets Only...</string>
+   </property>
+  </action>
+  <action name="actionFixDatAll">
+   <property name="text">
+    <string>All Set Issues...</string>
    </property>
   </action>
  </widget>
