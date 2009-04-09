@@ -5806,8 +5806,8 @@ rdft2j	雷电战机 2 (日版, SPI)	雷电战机 2 (日版, SPI)	Seibu Kaihatsu
 rdft2j2	雷电战机 2 (日版 第2套, SPI)	雷电战机 2 (日版 第2套, SPI)	Seibu Kaihatsu
 rdft2t	雷电战机 2 (台湾版, SPI)	雷电战机 2 (台湾版, SPI)	Seibu Kaihatsu
 rdft2u	雷电战机 2 (美版, SPI)	雷电战机 2 (美版, SPI)	Seibu Kaihatsu (Fabtek license)
-rdft2us	雷电战机 2 (美版, 单机版)	雷电战机 2 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
-rdft22kc	雷电战机 2 (中国版)	雷电战机 2 (中国版)	Seibu Kaihatsu
+rdft2us	雷电战机 2.1 (美版, 单机版)	雷电战机 2.1 (美版, 单机版)	Seibu Kaihatsu (Fabtek license)
+rdft22kc	雷电战机 2 - 2000 (中国版)	雷电战机 2 - 2000 (中国版)	Seibu Kaihatsu
 rfjet	雷电喷气战机	雷电喷气战机	Seibu Kaihatsu (Tuning license)
 rfjetu	雷电喷气战机 (美版)	雷电喷气战机 (美版)	Seibu Kaihatsu (Fabtek license)
 rfjeta	雷电喷气战机 (亚洲版)	雷电喷气战机 (亚洲版)	Seibu Kaihatsu (Dream Island license)
@@ -6738,7 +6738,7 @@ killbldt	傲剑狂刀 (中文基板)	傲剑狂刀 (中文基板)	IGS
 puzlstar	魔幻星座	魔幻星座	IGS
 olds	西游释厄传 Super (ver. 101, 韩文基板)	西游释厄传 Super (ver. 101, 韩文基板)	IGS
 olds100	西游释厄传 Super (ver. 100)	西游释厄传 Super (ver. 100)	IGS
-olds100a	西游释厄传 Super (alt ver. 100)	西游释厄传 Super (alt ver. 100)	IGS
+olds100a	西游释厄传 Super (ver. 100 替换版)	西游释厄传 Super (ver. 100 替换版)	IGS
 kov2	三国战纪 2 (ver. 100)	三国战纪 2 (ver. 100)	IGS
 kov2106	三国战纪 2 (ver. 106)	三国战纪 2 (ver. 106)	IGS
 kov2p	三国战纪 2 - 群雄争霸 (ver. M204XX)	三国战纪 2 - 群雄争霸 (ver. M204XX)	IGS
