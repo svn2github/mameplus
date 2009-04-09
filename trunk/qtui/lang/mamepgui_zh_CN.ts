@@ -629,7 +629,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="640"/>
         <source>All Set Issues...</source>
-        <translation>所有ROM档...</translation>
+        <translation type="unfinished">所有问题...</translation>
     </message>
     <message>
         <source>Chinese (PRC)</source>

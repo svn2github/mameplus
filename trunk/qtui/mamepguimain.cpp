@@ -269,6 +269,7 @@ QMainWindow(parent)
 	dirsUI = new Dirs(this);
 	playOptionsUI = new PlayOptions(this);
 	optionsUI = new Options(this);
+	csvCfgUI = new CsvCfg(this);
 	aboutUI = new About(this);
 	ipsUI = new IPS(this);
 #ifdef Q_OS_WIN

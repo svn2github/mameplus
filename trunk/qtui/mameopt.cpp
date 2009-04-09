@@ -10,6 +10,8 @@
 
 /* global */
 Options *optionsUI = NULL;
+CsvCfg *csvCfgUI = NULL;
+
 OptionUtils *optUtils;
 QList<QListWidget *> optCtrls;
 
@@ -35,9 +37,9 @@ enum
 	MAMEOPT_TYPE_EXEFILE,
 	MAMEOPT_TYPE_DIR,
 	MAMEOPT_TYPE_DIRS,
+	MAMEOPT_TYPE_CSV,
 	MAMEOPT_TYPE_UNKNOWN
 	//MAMEOPT_TYPE_COLOR,
-	//MAMEOPT_TYPE_CSV,
 };
 
 enum
@@ -94,6 +96,68 @@ void Options::closeEvent(QCloseEvent *event)
 	option_geometry = saveGeometry();
 	event->accept();
 }
+
+
+CsvCfg::CsvCfg(QWidget *parent)
+:QDialog(parent)
+{
+	setupUi(this);
+}
+
+void CsvCfg::init(QString title, QMap<QString, bool> items)
+{
+	groupBoxTitle->setTitle(title);
+
+	QStringList keys = items.keys();
+	QStringList names;
+	foreach (QString key, keys)
+	{
+		names.append(QString(key).left(2));
+	}
+
+	//fixme: remove widgets
+	
+	for (int i = 0; i < keys.size(); i++)
+	{
+		const QString key = keys[i];
+//		const QString name = names[i];
+		const QString desc = QString(key).remove(0, 3);
+		QCheckBox *checkBox;
+
+		checkBox = groupBoxTitle->findChild<QCheckBox *>(desc);
+		if (checkBox == NULL)
+		{
+			checkBox = new QCheckBox(groupBoxTitle);
+			checkBox->setObjectName(desc);
+		}
+
+		checkBox->setText(desc);
+		checkBox->setChecked(items[key]);
+		layContainer->addWidget(checkBox);
+	}
+}
+
+QString CsvCfg::getCSV()
+{
+	QString csv = "";
+
+	for (int i = 0; i < layContainer->count(); i++)
+	{
+		QCheckBox *checkBox = (QCheckBox *)layContainer->itemAt(i)->widget();
+
+		if (checkBox->checkState() == Qt::Checked)
+		{
+			csv.append(checkBox->objectName());
+			csv.append(",");
+		}
+	}
+
+	if (csv.endsWith(','))
+		csv.chop(1);
+
+	return csv;
+}
+
 
 OptInfo::OptInfo(QListWidget *catv, QTreeView *optv, QObject *parent)
 : QObject(parent)
@@ -185,20 +249,27 @@ void ResetWidget::setWidget(QWidget *widget, QWidget *widget2, int optType, int 
 		case MAMEOPT_TYPE_EXEFILE:
 		case MAMEOPT_TYPE_DIR:
 		case MAMEOPT_TYPE_DIRS:
-			_btnFileDlg = static_cast<QToolButton*>(subWidget2);
-			_btnFileDlg->disconnect(SIGNAL(clicked()));
+			_btnSetDlg = static_cast<QToolButton*>(subWidget2);
+			_btnSetDlg->disconnect(SIGNAL(clicked()));
 			if (optType == MAMEOPT_TYPE_DIRS)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectories()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectories()));
 			else if (optType == MAMEOPT_TYPE_DIR)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectory()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDirectory()));
 			else if (optType == MAMEOPT_TYPE_FILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setFile()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setFile()));
 			else if (optType == MAMEOPT_TYPE_DATFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDatFile()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setDatFile()));
 			else if (optType == MAMEOPT_TYPE_CFGFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setCfgFile()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setCfgFile()));
 			else if (optType == MAMEOPT_TYPE_EXEFILE)
-				connect(_btnFileDlg, SIGNAL(clicked()), &optDelegate, SLOT(setExeFile()));
+				connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setExeFile()));
+			break;
+
+		case MAMEOPT_TYPE_CSV:
+			_btnSetDlg = static_cast<QToolButton*>(subWidget2);
+			_btnSetDlg->disconnect(SIGNAL(clicked()));
+			connect(_btnSetDlg, SIGNAL(clicked()), &optDelegate, SLOT(setCSV()));
+		
 			break;
 		}
 	}
@@ -259,7 +330,7 @@ OptionDelegate::OptionDelegate(QObject *parent)
 : QItemDelegate(parent)
 {
 	isReset = false;
-	pathBuf = "";
+	csvBuf = "";
 }
 
 QSize OptionDelegate::sizeHint ( const QStyleOptionViewItem & option, 
@@ -459,6 +530,18 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 		return resetWidget;
 	}
 
+	case MAMEOPT_TYPE_CSV:
+	{
+		QLineEdit *ctrl = new QLineEdit(resetWidget);
+		ctrl->setReadOnly(true);
+
+		QToolButton *ctrl2 = new QToolButton(resetWidget);
+		ctrl2->setText("...");
+
+		resetWidget->setWidget(ctrl, ctrl2, optType);
+		return resetWidget;
+	}
+
 	case MAMEOPT_TYPE_STRING:
 	case MAMEOPT_TYPE_STRING_EDITABLE:
 	{
@@ -535,7 +618,16 @@ void OptionDelegate::setEditorData(QWidget *editor,
 		resetWidget->updateSliderLabel(intVal);
 		break;
 	}
-	
+
+	case MAMEOPT_TYPE_CSV:
+	{
+		QString guivalue = index.model()->data(index, Qt::DisplayRole).toString();
+		
+		QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
+		ctrl->setText(guivalue);
+		break;
+	}
+
 	case MAMEOPT_TYPE_STRING:
 	case MAMEOPT_TYPE_STRING_EDITABLE:
 	{
@@ -558,6 +650,7 @@ void OptionDelegate::setEditorData(QWidget *editor,
 		QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
 		ctrl->setText(guivalue);
 //			QItemDelegate::setEditorData(editor, index);
+		break;
 	}
 	}
 //*/
@@ -658,8 +751,8 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 			QLineEdit *ctrl = static_cast<QLineEdit*>(resetWidget->subWidget);
 
 			// set file dialog result
-			if (!pathBuf.isEmpty())
-				dispValue = pathBuf;
+			if (!csvBuf.isEmpty())
+				dispValue = csvBuf;
 			else
 				dispValue = ctrl->text();
 //			QItemDelegate::setModelData(editor, model, index);
@@ -793,6 +886,13 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 
 	if (optLevel == OPTLEVEL_GUI)
 		win->saveSettings();
+
+	//special case for driver_config
+	if (optName == "driver_config" && pMameOpt->globalvalue != prevVal)
+	{
+		gameList->disableCtrls();
+		gameList->init(true, GAMELIST_INIT_DRIVER);
+	}
 }
 
 void OptionDelegate::updateEditorGeometry(QWidget *editor,
@@ -817,6 +917,42 @@ void OptionDelegate::setChangesAccepted()
 	emit commitData(rWidget);
 }
 
+void OptionDelegate::setCSV()
+{
+	rWidget = qobject_cast<ResetWidget*>(sender()->parent());
+	if (rWidget == NULL)
+		return;
+
+	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
+
+	disconnect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
+	connect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
+
+	QMap<QString, bool> items;
+
+	//fixme: the following is not generic
+	if (!mameOpts.contains("driver_config"))
+		return;
+
+	QStringList driverStrings = mameOpts["driver_config"]->globalvalue.split(',');
+
+	items.insert("c0_mame", driverStrings.contains("mame"));
+	items.insert("c1_plus", driverStrings.contains("plus"));
+	items.insert("c2_homebrew", driverStrings.contains("homebrew"));
+	items.insert("c3_decrypted", driverStrings.contains("decrypted"));
+	items.insert("c4_console", driverStrings.contains("console"));
+
+	csvCfgUI->init("Driver Config", items);
+	csvCfgUI->exec();
+}
+
+void OptionDelegate::setCSVAccepted()
+{
+	csvBuf = csvCfgUI->getCSV();
+	emit commitData(rWidget);
+	csvBuf.clear();
+}
+
 void OptionDelegate::setDirectories()
 {
 	rWidget = qobject_cast<ResetWidget*>(sender()->parent());
@@ -835,9 +971,9 @@ void OptionDelegate::setDirectories()
 
 void OptionDelegate::setDirectoriesAccepted()
 {
-	pathBuf = dirsUI->getDirs();
+	csvBuf = dirsUI->getDirs();
 	emit commitData(rWidget);
-	pathBuf.clear();
+	csvBuf.clear();
 }
 
 //todo: merge with setFile
@@ -866,9 +1002,9 @@ void OptionDelegate::setDirectory()
 								options);
 	if (!directory.isEmpty())
 	{
-		pathBuf = directory;
+		csvBuf = directory;
 		emit commitData(resetWidget);
-		pathBuf.clear();
+		csvBuf.clear();
 	}
 }
 
@@ -904,9 +1040,9 @@ void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 
 	if (!fileName.isEmpty())
 	{
-		pathBuf = fileName;
+		csvBuf = fileName;
 		emit commitData(resetWidget);
-		pathBuf.clear();
+		csvBuf.clear();
 	}
 }
 
@@ -999,6 +1135,8 @@ public:
 					pMameOpt->type = MAMEOPT_TYPE_FLOAT;
 				else if (type == "bool")
 					pMameOpt->type = MAMEOPT_TYPE_BOOL;
+				else if (type == "csv")
+					pMameOpt->type = MAMEOPT_TYPE_CSV;
 				else
 					pMameOpt->type = MAMEOPT_TYPE_UNKNOWN;
 
@@ -1109,6 +1247,7 @@ void OptionUtils::init()
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
 		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
 
+	//fixme: csv?
 	connect(optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
 	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
 }
@@ -2167,7 +2306,6 @@ void OptionUtils::updateModel(QString optCat, int optLevel)
 {
 	QStandardItemModel *optModel0, *optModel;
 	QTreeView *optView = optInfos[optLevel]->optView;
-	bool guiHasAdded = false;
 
 	//init option listview
 	//hack: preserve model and delete it later, so that scroll pos is kept

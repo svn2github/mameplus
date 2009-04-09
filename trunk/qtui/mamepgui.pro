@@ -35,7 +35,7 @@ macx {
 DEFINES += _LZMA_UINT32_IS_ULONG
 }
 
-FORMS += mamepguimain.ui playoptions.ui options.ui directories.ui about.ui ips.ui m1.ui
+FORMS += mamepguimain.ui playoptions.ui options.ui csvcfg.ui directories.ui about.ui ips.ui m1.ui
 TRANSLATIONS = lang/mamepgui_zh_CN.ts lang/mamepgui_zh_TW.ts lang/mamepgui_ja_JP.ts lang/mamepgui_hu_HU.ts lang/mamepgui_ko_KR.ts lang/mamepgui_pt_BR.ts
 
 HEADERS += mamepguimain.h dialogs.h audit.h gamelist.h mameopt.h utils.h ips.h m1.h quazip/ioapi.h quazip/zip.h quazip/unzip.h quazip/quazip.h quazip/quazipfile.h quazip/quazipfileinfo.h

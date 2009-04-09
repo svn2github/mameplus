@@ -18,13 +18,7 @@
 	<option name="mameinfo_file" default="mameinfo.dat" type="datfile" guivisible="1" />
 	<option name="mame_binary" guiname="MAME binary" type="exefile" guivisible="1" />
 
-	<option name="driver_config" type="string" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0">
-		<!--value guivalue="MAME">mame</value>
-		<value guivalue="MAME Plus!">plus</value>
-		<value>homebrew</value>
-		<value>decrypted</value>
-		<value>console</value-->
-	</option>
+	<option name="driver_config" type="csv" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="readconfig" type="bool" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	
 	<option name="rompath" guiname="ROMsets directory" type="dirs" />

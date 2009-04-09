@@ -4,6 +4,7 @@
 #include <QtGui>
 
 #include "ui_options.h"
+#include "ui_csvcfg.h"
 
 enum
 {
@@ -28,6 +29,7 @@ protected:
 	void showEvent(QShowEvent *);
 	void closeEvent(QCloseEvent *);
 };
+
 
 class ResetWidget : public QWidget
 {
@@ -60,11 +62,22 @@ private:
 	QLabel *_iconLabel;
 	QSlider *_slider;
 	QLabel *_sliderLabel;
-	QToolButton *_btnFileDlg;
+	QToolButton *_btnSetDlg;
 	QToolButton *_btnReset;
 	int ctrlSpacing;
 	int optType;
 	int sliderOffset;
+};
+
+
+class CsvCfg : public QDialog, public Ui::CsvCfg
+{
+Q_OBJECT
+
+public:
+	CsvCfg(QWidget *parent = 0);
+	void init(QString, QMap<QString, bool>);
+	QString getCSV();
 };
 
 
@@ -89,6 +102,8 @@ public:
 public slots:
 	void sync();
 	void setChangesAccepted();
+	void setCSV();
+	void setCSVAccepted();
 	void setDirectories();
 	void setDirectoriesAccepted();
 	void setDirectory();
@@ -100,7 +115,7 @@ public slots:
 private:
 	ResetWidget *rWidget;
 	bool isReset;
-	QString pathBuf;
+	QString csvBuf;
 };
 
 class MameOption : public QObject
@@ -163,6 +178,8 @@ private:
 };
 
 extern Options *optionsUI;
+extern CsvCfg *csvCfgUI;
+
 extern OptionUtils *optUtils;
 extern QList<QListWidget *> optCtrls;
 
