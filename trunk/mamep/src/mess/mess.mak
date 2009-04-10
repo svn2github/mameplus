@@ -57,6 +57,7 @@ $(MESSOBJ)/sega.a:			\
 	$(MESS_DRIVERS)/sms.o		\
 
 $(MESSOBJ)/atari.a:			\
+	$(MESS_MACHINE)/ataricrt.o	\
 	$(MESS_MACHINE)/atarifdc.o	\
 	$(MESS_DRIVERS)/atari.o		\
 	$(MESS_MACHINE)/a7800.o		\
