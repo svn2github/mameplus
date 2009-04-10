@@ -36,12 +36,12 @@ const game_driver * const consoledrivers[] =
 
 /****************CONSOLES****************************************************/
 
+
 #ifdef MAMEMESS
 	/* ATARI */
 	DRIVER( a2600 )		/* Atari 2600										*/
 	DRIVER( a2600p )	/* Atari 2600 PAL									*/
 	DRIVER( a5200 )		/* Atari 5200										*/
-	DRIVER( a5200a )	/* Atari 5200 alt									*/
 	DRIVER( a7800 )		/* Atari 7800 NTSC									*/
 	DRIVER( a7800p )	/* Atari 7800 PAL									*/
 
