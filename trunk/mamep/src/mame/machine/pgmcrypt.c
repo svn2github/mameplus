@@ -405,7 +405,7 @@ void pgm_ddp2_decrypt(running_machine *machine)
 	int i;
 	UINT16 *src = (UINT16 *)(memory_region(machine, "user1"));
 
-	int rom_size = 0x200000;
+	int rom_size = 0x400000;
 
 	for(i=0; i<rom_size/2; i++) {
     	UINT16 x = src[i];

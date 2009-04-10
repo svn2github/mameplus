@@ -802,14 +802,14 @@ static UINT16 kovsh_highlatch_68k_w, kovsh_lowlatch_68k_w;
 
 static READ32_HANDLER( kovsh_arm7_protlatch_r )
 {
-//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	return (kovsh_highlatch_68k_w << 16) | (kovsh_lowlatch_68k_w);
 }
 
 static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 {
-//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	if (ACCESSING_BITS_16_31)
 	{
@@ -821,16 +821,11 @@ static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 		kovsh_lowlatch_arm_w = data;
 		kovsh_lowlatch_68k_w = 0;
 	}
-
-	if((kovsh_highlatch_arm_w&0xFF00)!=0)
-	{
-		KOVSH_ARM_2_68K;
-	}
 }
 
 static READ16_HANDLER( kovsh_68k_protlatch_r )
 {
-//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	switch (offset)
 	{
@@ -842,7 +837,7 @@ static READ16_HANDLER( kovsh_68k_protlatch_r )
 
 static WRITE16_HANDLER( kovsh_68k_protlatch_w )
 {
-//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	switch (offset)
 	{
@@ -927,7 +922,7 @@ static ADDRESS_MAP_START( kovsh_arm7_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x08100000, 0x083fffff) AM_READ(kovsh_exrom_r) // unpopulated, returns 0 to keep checksum happy
 	AM_RANGE(0x10000000, 0x100003ff) AM_RAM // internal ram for asic
 	AM_RANGE(0x40000000, 0x40000003) AM_READ(kovsh_arm7_protlatch_r) AM_WRITE(kovsh_arm7_protlatch_w)
-	AM_RANGE(0x40000008, 0x4000000b) AM_WRITE(SMH_NOP) // ?
+	AM_RANGE(0x40000008, 0x4000000b) AM_WRITENOP // ?
 	AM_RANGE(0x4000000c, 0x4000000f) AM_READ(kovsh_arm7_unk_r)
 	AM_RANGE(0x50800000, 0x5080003f) AM_READWRITE(arm7_shareram_r, arm7_shareram_w) AM_BASE(&arm7_shareram)
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM // uploads xor table to decrypt 68k rom here
@@ -2264,13 +2259,13 @@ ROM_START( pgm )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x200000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Layer Tiles */
+	ROM_REGION( 0x200000, "gfx1", 0 ) /* 8x8 Text Layer Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) )
 
 	ROM_REGION( 0x200000, "ics", 0 ) /* Samples - (8 bit mono 11025Hz) - */
 	ROM_LOAD( "pgm_m01s.rom", 0x000000, 0x200000, CRC(45ae7159) SHA1(d3ed3ff3464557fd0df6b069b2e431528b0ebfa8) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 
 	ROM_REGION( 0x1000000, "gfx4", ROMREGION_ERASEFF ) /* Sprite Masks + Colour Indexes */
 ROM_END
@@ -2282,14 +2277,14 @@ ROM_START( orlegend )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0100.rom",    0x400000, 0x400000, CRC(61425e1e) SHA1(20753b86fc12003cfd763d903f034dbba8010b32) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0100.rom",    0x0000000, 0x400000, CRC(8b3bd88a) SHA1(42db3a60c6ba9d83ebe2008c8047d094027f65a7) )
 	ROM_LOAD( "a0101.rom",    0x0400000, 0x400000, CRC(3b9e9644) SHA1(5b95ec1d25c3bc3504c93547f5adb5ce24376405) )
 	ROM_LOAD( "a0102.rom",    0x0800000, 0x400000, CRC(069e2c38) SHA1(9bddca8c2f5bd80f4abe4e1f062751736dc151dd) )
@@ -2314,14 +2309,14 @@ ROM_START( orlegnde )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0100.rom",    0x400000, 0x400000, CRC(61425e1e) SHA1(20753b86fc12003cfd763d903f034dbba8010b32) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0100.rom",    0x0000000, 0x400000, CRC(8b3bd88a) SHA1(42db3a60c6ba9d83ebe2008c8047d094027f65a7) )
 	ROM_LOAD( "a0101.rom",    0x0400000, 0x400000, CRC(3b9e9644) SHA1(5b95ec1d25c3bc3504c93547f5adb5ce24376405) )
 	ROM_LOAD( "a0102.rom",    0x0800000, 0x400000, CRC(069e2c38) SHA1(9bddca8c2f5bd80f4abe4e1f062751736dc151dd) )
@@ -2346,14 +2341,14 @@ ROM_START( orlegndc )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0100.rom",    0x400000, 0x400000, CRC(61425e1e) SHA1(20753b86fc12003cfd763d903f034dbba8010b32) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0100.rom",    0x0000000, 0x400000, CRC(8b3bd88a) SHA1(42db3a60c6ba9d83ebe2008c8047d094027f65a7) )
 	ROM_LOAD( "a0101.rom",    0x0400000, 0x400000, CRC(3b9e9644) SHA1(5b95ec1d25c3bc3504c93547f5adb5ce24376405) )
 	ROM_LOAD( "a0102.rom",    0x0800000, 0x400000, CRC(069e2c38) SHA1(9bddca8c2f5bd80f4abe4e1f062751736dc151dd) )
@@ -2414,14 +2409,14 @@ ROM_START( orld111c )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0100.rom",    0x400000, 0x400000, CRC(61425e1e) SHA1(20753b86fc12003cfd763d903f034dbba8010b32) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0100.rom",    0x0000000, 0x400000, CRC(8b3bd88a) SHA1(42db3a60c6ba9d83ebe2008c8047d094027f65a7) )
 	ROM_LOAD( "a0101.rom",    0x0400000, 0x400000, CRC(3b9e9644) SHA1(5b95ec1d25c3bc3504c93547f5adb5ce24376405) )
 	ROM_LOAD( "a0102.rom",    0x0800000, 0x400000, CRC(069e2c38) SHA1(9bddca8c2f5bd80f4abe4e1f062751736dc151dd) )
@@ -2482,14 +2477,14 @@ ROM_START( orld105k )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0100.rom",    0x400000, 0x400000, CRC(61425e1e) SHA1(20753b86fc12003cfd763d903f034dbba8010b32) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0100.rom",    0x0000000, 0x400000, CRC(8b3bd88a) SHA1(42db3a60c6ba9d83ebe2008c8047d094027f65a7) )
 	ROM_LOAD( "a0101.rom",    0x0400000, 0x400000, CRC(3b9e9644) SHA1(5b95ec1d25c3bc3504c93547f5adb5ce24376405) )
 	ROM_LOAD( "a0102.rom",    0x0800000, 0x400000, CRC(069e2c38) SHA1(9bddca8c2f5bd80f4abe4e1f062751736dc151dd) )
@@ -2581,14 +2576,14 @@ ROM_START( drgw2 )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "pgmt0200.u7",    0x400000, 0x400000, CRC(b0f6534d) SHA1(174cacd81169a0e0d14790ac06d03caed737e05d) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x400000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x400000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "pgma0200.u5",    0x0000000, 0x400000, CRC(13b95069) SHA1(4888b06002afb18eab81c010e9362629045767af) )
 
 	ROM_REGION( 0x400000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
@@ -2606,14 +2601,14 @@ ROM_START( drgw2c )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "pgmt0200.u7",    0x400000, 0x400000, CRC(b0f6534d) SHA1(174cacd81169a0e0d14790ac06d03caed737e05d) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x400000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x400000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "pgma0200.u5",    0x0000000, 0x400000, CRC(13b95069) SHA1(4888b06002afb18eab81c010e9362629045767af) )
 
 	ROM_REGION( 0x400000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
@@ -2630,14 +2625,14 @@ ROM_START( drgw2j )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x800000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "pgmt0200.u7",    0x400000, 0x400000, CRC(b0f6534d) SHA1(174cacd81169a0e0d14790ac06d03caed737e05d) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x400000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x400000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "pgma0200.u5",    0x0000000, 0x400000, CRC(13b95069) SHA1(4888b06002afb18eab81c010e9362629045767af) )
 
 	ROM_REGION( 0x400000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
@@ -2682,14 +2677,14 @@ ROM_START( drgw3 )
 	ROM_REGION( 0x010000, "user1", 0 ) /* Protection Data */
 	ROM_LOAD( "dw3_v100.u15", 0x000000, 0x010000, CRC(03dc4fdf) SHA1(b329b04325d4f725231b1bb7862eedef2319b652) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "dw3t0400.u18",   0x400000, 0x400000, CRC(b70f3357) SHA1(8733969d7d21f540f295a9f747a4bb8f0d325cf0) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "dw3a0400.u9",     0x0000000, 0x400000, CRC(dd7bfd40) SHA1(fb7ec5bf89a413c5208716083762a725ff63f5db) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "dw3a0401.u10",    0x0400000, 0x400000, CRC(cab6557f) SHA1(1904dd86645eea27ac1ab8a2462b20f6531356f8) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 
@@ -2728,14 +2723,14 @@ ROM_START( drgw3k )
 	ROM_REGION( 0x010000, "user1", 0 ) /* Protection Data - is it correct for this set? */
 	ROM_LOAD( "dw3_v100.u15", 0x000000, 0x010000, CRC(03dc4fdf) SHA1(b329b04325d4f725231b1bb7862eedef2319b652) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "dw3t0400.u18",   0x400000, 0x400000, CRC(b70f3357) SHA1(8733969d7d21f540f295a9f747a4bb8f0d325cf0) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "dw3a0400.u9",     0x0000000, 0x400000, CRC(dd7bfd40) SHA1(fb7ec5bf89a413c5208716083762a725ff63f5db) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "dw3a0401.u10",    0x0400000, 0x400000, CRC(cab6557f) SHA1(1904dd86645eea27ac1ab8a2462b20f6531356f8) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 
@@ -2754,17 +2749,17 @@ ROM_START( kov )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -2786,17 +2781,17 @@ ROM_START( kov115 )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -2853,17 +2848,17 @@ ROM_START( kovj )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -2885,17 +2880,17 @@ ROM_START( kovplus )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -2952,17 +2947,17 @@ ROM_START( kovplusa )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -2987,15 +2982,15 @@ ROM_START( kovsh )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "kovsh_v100_china.asic", 0x000000, 0x04000,  CRC(0f09a5c1) SHA1(621b38c05f33277608d58b49822aebc930ae4870) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
 	/* all roms below need checking to see if they're the same on this board */
-	ROM_REGION( 0x1e00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1e00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -3022,15 +3017,15 @@ ROM_START( photoy2k )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "photoy2k_v100_china.asic", 0x000000, 0x04000,  CRC(6dd7f257) SHA1(1984f98a282d8b3264674f231c3b7def1757cf72) )
 
-	ROM_REGION( 0x480000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x480000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0700.rom",    0x400000, 0x080000, CRC(93943b4d) SHA1(3b439903853727d45d62c781af6073024eb3c5a3) )
 
-	ROM_REGION( 0x480000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x480000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
 	/* all roms below need checking to see if they're the same on this board */
-	ROM_REGION( 0x1080000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1080000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0700.l",    0x0000000, 0x0400000, CRC(26a9ae9c) SHA1(c977c89db6fdf47ee260ff687b80375caeab975c) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0700.h",    0x0400000, 0x0400000, CRC(79bc1fc1) SHA1(a09472a9b75704c1d31ab828f92c2a5007b2b4ed) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0701.l",    0x0800000, 0x0400000, CRC(23607f81) SHA1(8b6dbcdce9b131370693847ed9771aa04b62711c) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -3090,15 +3085,15 @@ ROM_START( raf102j )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "photoy2k_v100_china.asic", 0x000000, 0x04000,  CRC(6dd7f257) SHA1(1984f98a282d8b3264674f231c3b7def1757cf72) )
 
-	ROM_REGION( 0x480000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x480000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0700.rom",    0x400000, 0x080000, CRC(93943b4d) SHA1(3b439903853727d45d62c781af6073024eb3c5a3) )
 
-	ROM_REGION( 0x480000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x480000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
 	/* all roms below need checking to see if they're the same on this board */
-	ROM_REGION( 0x1080000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1080000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0700.l",    0x0000000, 0x0400000, CRC(26a9ae9c) SHA1(c977c89db6fdf47ee260ff687b80375caeab975c) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0700.h",    0x0400000, 0x0400000, CRC(79bc1fc1) SHA1(a09472a9b75704c1d31ab828f92c2a5007b2b4ed) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0701.l",    0x0800000, 0x0400000, CRC(23607f81) SHA1(8b6dbcdce9b131370693847ed9771aa04b62711c) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -3199,14 +3194,14 @@ ROM_START( killbld )
 	ROM_REGION( 0x010000, "user1", 0 ) /* Protection Data */
 	ROM_LOAD16_WORD_SWAP( "kb_u2_v104.u2", 0x000000, 0x010000,  CRC(c970f6d5) SHA1(399fc6f80262784c566363c847dc3fdc4fb37494) )
 
-	ROM_REGION( 0x800000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0300.u14",    0x400000, 0x400000, CRC(0922f7d9) SHA1(4302b4b7369e13f315fad14f7d6cad1321101d24) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0300.u9",   0x0000000, 0x0400000,  CRC(3f9455d3) SHA1(3718ce00ad93975383aafc14e5a74dc297b011a1) )
 	ROM_LOAD( "a0301.u10",  0x0400000, 0x0400000,  CRC(92776889) SHA1(6d677837fefff47bfd1c6166322f69f89989a5e2) )
 	ROM_LOAD( "a0303.u11",  0x0800000, 0x0400000,  CRC(33f5cc69) SHA1(9cacd5058d4bb25b77f71658bbbbd4b38d0a6b6a) )
@@ -3240,14 +3235,14 @@ ROM_START( killbldt )
 	ROM_REGION( 0x010000, "user1", 0 ) /* Protection Data */
 	ROM_LOAD16_WORD_SWAP( "kb_u2.rom", 0x000000, 0x010000,  CRC(de3eae63) SHA1(03af767ef764055bda528b5cc6a24b9e1218cca8) )
 
-	ROM_REGION( 0x800000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0300.u14",    0x400000, 0x400000, CRC(0922f7d9) SHA1(4302b4b7369e13f315fad14f7d6cad1321101d24) )
 
-	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x800000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0300.u9",   0x0000000, 0x0400000,  CRC(3f9455d3) SHA1(3718ce00ad93975383aafc14e5a74dc297b011a1) )
 	ROM_LOAD( "a0301.u10",  0x0400000, 0x0400000,  CRC(92776889) SHA1(6d677837fefff47bfd1c6166322f69f89989a5e2) )
 	ROM_LOAD( "a0303.u11",  0x0800000, 0x0400000,  CRC(33f5cc69) SHA1(9cacd5058d4bb25b77f71658bbbbd4b38d0a6b6a) )
@@ -3331,14 +3326,14 @@ ROM_START( puzlstar )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "puzlstar_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0800.u5",    0x400000, 0x200000, CRC(f9d84e59) SHA1(80ec77025ac5bf355b1a60f2a678dd4c56071f6b) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0800.u1",    0x0000000, 0x0400000, CRC(e1e6ec40) SHA1(390432431f144ef63424a426582b311765a61771) )
 
 	ROM_REGION( 0x1000000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
@@ -3423,15 +3418,15 @@ ROM_START( olds )
 	// clearly not for this revision
 	ROM_LOAD( "ram_dump", 0x000000, 0x04000, CRC(280cfb4e) SHA1(cd2bdcaa21347952c2bf38b105a204d327fde39e) )
 
-	ROM_REGION( 0xc00000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0500.rom",    0x400000, 0x400000, CRC(d881726c) SHA1(a82517e665996f7b7017c940f1fcf016fccb65c2) )
 	ROM_LOAD( "t0501.rom",    0x800000, 0x200000, CRC(d2106864) SHA1(65d827135b87d82196433aea3279608ee263feca) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0500.rom",    0x0000000, 0x400000, CRC(80a59197) SHA1(7d0108e2f0d0347d43ace2d96c0388202c05fdfb) )
 	ROM_LOAD( "a0501.rom",    0x0400000, 0x400000, CRC(98c931b1) SHA1(9b70d1a7beb4c3a0c1436c25fd1fb76e47539538) )
 	ROM_LOAD( "a0502.rom",    0x0800000, 0x400000, CRC(c3fcdf1d) SHA1(107585fd103fcd0af0fb7db283be4f7c7058aef7) )
@@ -3470,15 +3465,15 @@ ROM_START( olds100 )
 	ROM_REGION( 0x010000, "user1", 0 ) /* ASIC25? Protection Data */
 	ROM_LOAD( "kd-u6.512", 0x000000, 0x010000,  CRC(e7613dda) SHA1(0d7c043b90e2f9a36a45066f22e3e305dc716676) )
 
-	ROM_REGION( 0xc00000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0500.rom",    0x400000, 0x400000, CRC(d881726c) SHA1(a82517e665996f7b7017c940f1fcf016fccb65c2) )
 	ROM_LOAD( "t0501.rom",    0x800000, 0x200000, CRC(d2106864) SHA1(65d827135b87d82196433aea3279608ee263feca) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0500.rom",    0x0000000, 0x400000, CRC(80a59197) SHA1(7d0108e2f0d0347d43ace2d96c0388202c05fdfb) )
 	ROM_LOAD( "a0501.rom",    0x0400000, 0x400000, CRC(98c931b1) SHA1(9b70d1a7beb4c3a0c1436c25fd1fb76e47539538) )
 	ROM_LOAD( "a0502.rom",    0x0800000, 0x400000, CRC(c3fcdf1d) SHA1(107585fd103fcd0af0fb7db283be4f7c7058aef7) )
@@ -3514,15 +3509,15 @@ ROM_START( olds100a )
 	// used to simulate encrypted DMA protection device for now ..
 	ROM_LOAD( "ram_dump", 0x000000, 0x04000, CRC(280cfb4e) SHA1(cd2bdcaa21347952c2bf38b105a204d327fde39e) )
 
-	ROM_REGION( 0xc00000, "gfx1",  ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1",  0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0500.rom",    0x400000, 0x400000, CRC(d881726c) SHA1(a82517e665996f7b7017c940f1fcf016fccb65c2) )
 	ROM_LOAD( "t0501.rom",    0x800000, 0x200000, CRC(d2106864) SHA1(65d827135b87d82196433aea3279608ee263feca) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0500.rom",    0x0000000, 0x400000, CRC(80a59197) SHA1(7d0108e2f0d0347d43ace2d96c0388202c05fdfb) )
 	ROM_LOAD( "a0501.rom",    0x0400000, 0x400000, CRC(98c931b1) SHA1(9b70d1a7beb4c3a0c1436c25fd1fb76e47539538) )
 	ROM_LOAD( "a0502.rom",    0x0800000, 0x400000, CRC(c3fcdf1d) SHA1(107585fd103fcd0af0fb7db283be4f7c7058aef7) )
@@ -3555,14 +3550,14 @@ ROM_START( kov2 )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "igs_u19.rom", 0x000000, 0x200000,   CRC(edd59922) SHA1(09b14f20f685944a93292c83e5830849aade42c9) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1200.rom",    0x400000, 0x800000, CRC(d7e26609) SHA1(bdad810f82fcf1d50a8791bdc495374ec5a309c6) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1200.rom",    0x0000000, 0x0800000, CRC(ceeb81d8) SHA1(5476729443fc1bc9593ae10fbf7cbc5d7290b017) )
 	ROM_LOAD( "a1201.rom",    0x0800000, 0x0800000, CRC(82f0a878) SHA1(ddd13e404252a71de1b2b3b974b910f899f51c38) )
 	ROM_LOAD( "a1202.rom",    0x1000000, 0x0800000, CRC(4bb92fae) SHA1(f0b6d72ed425de1c69dc8f8d5795ea760a4a59b0) )
@@ -3591,14 +3586,14 @@ ROM_START( kov2106 )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "u19.102", 0x000000, 0x200000,   CRC(462e2980) SHA1(3da7c3d2c65b59f50c78be1c25922b71d40f6080) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1200.rom",    0x400000, 0x800000, CRC(d7e26609) SHA1(bdad810f82fcf1d50a8791bdc495374ec5a309c6) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1200.rom",    0x0000000, 0x0800000, CRC(ceeb81d8) SHA1(5476729443fc1bc9593ae10fbf7cbc5d7290b017) )
 	ROM_LOAD( "a1201.rom",    0x0800000, 0x0800000, CRC(82f0a878) SHA1(ddd13e404252a71de1b2b3b974b910f899f51c38) )
 	ROM_LOAD( "a1202.rom",    0x1000000, 0x0800000, CRC(4bb92fae) SHA1(f0b6d72ed425de1c69dc8f8d5795ea760a4a59b0) )
@@ -3622,19 +3617,19 @@ ROM_START( kov2p )
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(e0d7679f) SHA1(e1c2d127eba4ddbeb8ad173c55b90ac1467e1ca8) )
+	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v200-16.rom", 0x000000, 0x200000,  CRC(16a0c11f) SHA1(ce449cef76ebd5657d49b57951e2eb0f132e203e) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1200.rom",    0x400000, 0x800000, CRC(d7e26609) SHA1(bdad810f82fcf1d50a8791bdc495374ec5a309c6) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1200.rom",    0x0000000, 0x0800000, CRC(ceeb81d8) SHA1(5476729443fc1bc9593ae10fbf7cbc5d7290b017) )
 	ROM_LOAD( "a1201.rom_p",  0x0800000, 0x0800000, CRC(21063ca7) SHA1(cf561b44902425a920d5cbea5bf65dd9530b2289) ) // either this or a1201.rom in kov2 is probably bad
 	ROM_LOAD( "a1202.rom",    0x1000000, 0x0800000, CRC(4bb92fae) SHA1(f0b6d72ed425de1c69dc8f8d5795ea760a4a59b0) )
@@ -3658,19 +3653,19 @@ ROM_START( kov2p205 )
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(e0d7679f) SHA1(e1c2d127eba4ddbeb8ad173c55b90ac1467e1ca8) )
+	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v200-16.rom", 0x000000, 0x200000,  CRC(16a0c11f) SHA1(ce449cef76ebd5657d49b57951e2eb0f132e203e) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1200.rom",    0x400000, 0x800000, CRC(d7e26609) SHA1(bdad810f82fcf1d50a8791bdc495374ec5a309c6) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1200.rom",    0x0000000, 0x0800000, CRC(ceeb81d8) SHA1(5476729443fc1bc9593ae10fbf7cbc5d7290b017) )
 	ROM_LOAD( "a1201.rom_p",  0x0800000, 0x0800000, CRC(21063ca7) SHA1(cf561b44902425a920d5cbea5bf65dd9530b2289) ) // either this or a1201.rom in kov2 is probably bad
 	ROM_LOAD( "a1202.rom",    0x1000000, 0x0800000, CRC(4bb92fae) SHA1(f0b6d72ed425de1c69dc8f8d5795ea760a4a59b0) )
@@ -3714,14 +3709,14 @@ ROM_START( ddp2 )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "v100.u23", 0x000000, 0x20000, CRC(06c3dd29) SHA1(20c9479f158467fc2037dcf162b6c6be18c91d46) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1300.u21",    0x400000, 0x800000, CRC(e748f0cb) SHA1(5843bee3a17c33648ce904af2b98c6a90aff7393) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1300.u1",    0x0000000, 0x0800000, CRC(fc87a405) SHA1(115c21ecc56997652e527c92654076870bc9fa51) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a1301.u2",    0x0800000, 0x0800000, CRC(0c8520da) SHA1(390317857ae5baa94a4cc042874b00a811f06a63) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 
@@ -3746,14 +3741,14 @@ ROM_START( ddp2a )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "v100.u23", 0x000000, 0x20000, CRC(06c3dd29) SHA1(20c9479f158467fc2037dcf162b6c6be18c91d46) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1300.u21",    0x400000, 0x800000, CRC(e748f0cb) SHA1(5843bee3a17c33648ce904af2b98c6a90aff7393) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1300.u1",    0x0000000, 0x0800000, CRC(fc87a405) SHA1(115c21ecc56997652e527c92654076870bc9fa51) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a1301.u2",    0x0800000, 0x0800000, CRC(0c8520da) SHA1(390317857ae5baa94a4cc042874b00a811f06a63) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 
@@ -3833,14 +3828,14 @@ ROM_START( puzzli2 )
 	ROM_REGION32_LE( 0x4000000, "user1", ROMREGION_ERASEFF )
 	/* not on this PCB */
 
-	ROM_REGION( 0x600000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x600000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0900.u9",    0x400000, 0x200000, CRC(70615611) SHA1(a46d4aa71396947b427f9ba4ba0e636876c09d6b) )
 
-	ROM_REGION( 0x600000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0x600000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x400000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x400000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0900.u3",    0x0000000, 0x0400000, CRC(14911251) SHA1(e0d10ef50c408dbcf0907f81d4f0e49aeb651a6c) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 
 	ROM_REGION( 0x0200000, "gfx4", 0 ) /* Sprite Masks + Colour Indexes */
@@ -3924,14 +3919,14 @@ ROM_START( martmast )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v102_16m.u10", 0x000000, 0x200000,  CRC(18b745e6) SHA1(7bcb58dd3a2d6072f492cf0dd7181cb061c1f49d) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1000.u3",    0x400000, 0x800000, CRC(bbf879b5) SHA1(bd9a6aea34ad4001e89e62ff4b7a2292eb833c00) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1000.u3",    0x0000000, 0x0800000, CRC(43577ac8) SHA1(6eea8b455985d5bac74dcc9943cdc3c0902de6cc) )
 	ROM_LOAD( "a1001.u4",    0x0800000, 0x0800000, CRC(fe7a476f) SHA1(a8c7f1f0dd3e53141aed6d927eb88a3ceebb81e4) )
 	ROM_LOAD( "a1002.u6",    0x1000000, 0x0800000, CRC(62e33d38) SHA1(96163d583e25073594f8413ce263e56b66bd69a1) )
@@ -3961,14 +3956,14 @@ ROM_START( martmasc )
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v102_16m.u10", 0x000000, 0x200000,  CRC(18b745e6) SHA1(7bcb58dd3a2d6072f492cf0dd7181cb061c1f49d) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t1000.u3",    0x400000, 0x800000, CRC(bbf879b5) SHA1(bd9a6aea34ad4001e89e62ff4b7a2292eb833c00) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a1000.u3",    0x0000000, 0x0800000, CRC(43577ac8) SHA1(6eea8b455985d5bac74dcc9943cdc3c0902de6cc) )
 	ROM_LOAD( "a1001.u4",    0x0800000, 0x0800000, CRC(fe7a476f) SHA1(a8c7f1f0dd3e53141aed6d927eb88a3ceebb81e4) )
 	ROM_LOAD( "a1002.u6",    0x1000000, 0x0800000, CRC(62e33d38) SHA1(96163d583e25073594f8413ce263e56b66bd69a1) )
@@ -4048,14 +4043,14 @@ ROM_START( dmnfrnt )
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "v101_32m.u26", 0x000000, 0x400000,  CRC(93965281) SHA1(89da198aaa7ca759cb96b5f18859a477e55fd590) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t04501.u29",    0x400000, 0x800000, CRC(900eaaac) SHA1(4033cb7b28fcadb92d5af3ea7fdd1c22747618fd) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a04501.u3",    0x0000000, 0x0800000, CRC(9741bea6) SHA1(e3e904249be228628c8c2bd3495cda23586dc048) )
 	ROM_LOAD( "a04502.u4",    0x0800000, 0x0800000, CRC(e104f405) SHA1(124b3deed3e838f8bae6c7d78bdd788859597585) )
 	ROM_LOAD( "a04503.u6",    0x1000000, 0x0800000, CRC(bfd5cfe3) SHA1(fbe4c0a2987c2036df707b86597d78124ee2e665) )
@@ -4082,14 +4077,14 @@ ROM_START( dmnfrnta )
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "v105_32m.u26", 0x000000, 0x400000,  CRC(d200ee63) SHA1(3128c27c5f5a4361d31e7b4bb006de631b3a228c) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t04501.u29",    0x400000, 0x800000, CRC(900eaaac) SHA1(4033cb7b28fcadb92d5af3ea7fdd1c22747618fd) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a04501.u3",    0x0000000, 0x0800000, CRC(9741bea6) SHA1(e3e904249be228628c8c2bd3495cda23586dc048) )
 	ROM_LOAD( "a04502.u4",    0x0800000, 0x0800000, CRC(e104f405) SHA1(124b3deed3e838f8bae6c7d78bdd788859597585) )
 	ROM_LOAD( "a04503.u6",    0x1000000, 0x0800000, CRC(bfd5cfe3) SHA1(fbe4c0a2987c2036df707b86597d78124ee2e665) )
@@ -4116,14 +4111,14 @@ ROM_START( theglad )
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "u2.rom", 0x000000, 0x200000,  CRC(c7bcf2ae) SHA1(10bc012c83987f594d5375a51bc4be2e17568a81) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t04601.u33",   0x400000, 0x800000, CRC(e5dab371) SHA1(2e3c93958eb0326b6b84b95c2168626f26bbac76) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a04601.u2",    0x0000000, 0x0800000,  CRC(d9b2e004) SHA1(8e1882b800fe9f12d7d49303e7417ba5b6f8ef85) )
 	ROM_LOAD( "a04602.u4",    0x0800000, 0x0800000,  CRC(14f22308) SHA1(7fad54704e8c97eab723f53dfb50fb3e7bb606d2) )
 	ROM_LOAD( "a04603.u6",    0x1000000, 0x0800000,  CRC(8f621e17) SHA1(b0f87f378e0115d0c95017ca0f1b0d508827a7c6) )
@@ -4150,14 +4145,14 @@ ROM_START( theglada )
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data, internal missing) */
 	ROM_LOAD( "v107.u26", 0x000000, 0x200000,  CRC(f7c61357) SHA1(52d31c464dfc83c5371b078cb6b73c0d0e0d57e3) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t04601.u33",   0x400000, 0x800000, CRC(e5dab371) SHA1(2e3c93958eb0326b6b84b95c2168626f26bbac76) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a04601.u2",    0x0000000, 0x0800000,  CRC(d9b2e004) SHA1(8e1882b800fe9f12d7d49303e7417ba5b6f8ef85) )
 	ROM_LOAD( "a04602.u4",    0x0800000, 0x0800000,  CRC(14f22308) SHA1(7fad54704e8c97eab723f53dfb50fb3e7bb606d2) )
 	ROM_LOAD( "a04603.u6",    0x1000000, 0x0800000,  CRC(8f621e17) SHA1(b0f87f378e0115d0c95017ca0f1b0d508827a7c6) )
@@ -4181,14 +4176,14 @@ ROM_START( oldsplus )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "oldsplus_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t05301.rom",   0x400000, 0x800000, CRC(8257bbb0) SHA1(b48067b7e7081a15fddf21739b641d677c2df3d9) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a05301.rom",   0x0000000, 0x0800000, CRC(57946fd2) SHA1(5d79bc71a1881f3099821a9b255a5f271e0eeff6) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a05302.rom",   0x0800000, 0x0800000, CRC(3459a0b8) SHA1(94ab6f980b5582f1db9bb12019d03f0b6e0a06df) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a05303.rom",   0x1000000, 0x0800000, CRC(13475d85) SHA1(4683a3bf304fdc15ffb1c61b7957ad68b023fa33) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -4213,14 +4208,14 @@ ROM_START( kovshp )
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	ROM_LOAD( "kovshp_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t0600.rom",    0x400000, 0x800000, CRC(4acc1ad6) SHA1(0668dbd5e856c2406910c6b7382548b37c631780) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x2000000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x2000000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a0600.rom",    0x0000000, 0x0800000, CRC(d8167834) SHA1(fa55a99629d03b2ea253392352f70d2c8639a991) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0601.rom",    0x0800000, 0x0800000, CRC(ff7a4373) SHA1(7def9fca7513ad5a117da230bebd2e3c78679041) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
 	ROM_LOAD( "a0602.rom",    0x1000000, 0x0800000, CRC(e7a32959) SHA1(3d0ed684dc5b269238890836b2ce7ef46aa5265b) ) // FIXED BITS (xxxxxxxx1xxxxxxx)
@@ -4243,19 +4238,20 @@ ROM_START( killbldp )
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+	/* the first ~0x200 bytes of this are 'execute only' and can't be read directly, even when running code from internal/external ARM romspace */
 	ROM_LOAD( "killbldp_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(9a73bf7d) SHA1(2ce1311b01e1124ad00af172f0670141bcb7a030) ) 
 
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v300x.u26", 0x000000, 0x200000,  CRC(144388c8) SHA1(d7469df077c1a674129f18210584ba4d05a61888) )
 
-	ROM_REGION( 0x800000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0x800000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t05701w032.bin",0x400000, 0x400000, CRC(567c714f) SHA1(b25b20e1ec9f077d6f7b9d41723a68d0d461bef2) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1800000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1800000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a05701w064.bin",   0x0000000, 0x0800000, CRC(8c0c992c) SHA1(28391e50ca4400060676f1524bd49ede373292da) )
 	ROM_LOAD( "a05702w064.bin",   0x0800000, 0x0800000, CRC(7e5b0f27) SHA1(9e8d69f34c30216925fcb7af87f8b37f703317e7) )
 	ROM_LOAD( "a05703w064.bin",   0x1000000, 0x0800000, CRC(accbdb44) SHA1(d59b2452c7a5b4e666473dc973b73a0f2b4edc13) )
@@ -4283,14 +4279,14 @@ ROM_START( svg )
 	ROM_LOAD( "u26.bin", 0x000000, 0x400000, CRC(46826ec8) SHA1(ad1daf6f615fb8d748ce7f98f19dd3bf22f79fba) )
 	ROM_LOAD( "u29.bin", 0x400000, 0x400000, CRC(fa5f3901) SHA1(8ab7c6763df4f752b50ed2197063f58046b32ddb) )
 
-	ROM_REGION( 0xc00000, "gfx1", ROMREGION_DISPOSE ) /* 8x8 Text Tiles + 32x32 BG Tiles */
+	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom",  0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
 	ROM_LOAD( "t05601w016.bin",0x400000, 0x200000, CRC(03e110dc) SHA1(41c8f286e9303b24ba6235b341371c298226fb6a) )
 
-	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_DISPOSE | ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
+	ROM_REGION( 0xc00000/5*8, "gfx2", ROMREGION_ERASEFF ) /* Region for 32x32 BG Tiles */
 	/* 32x32 Tile Data is put here for easier Decoding */
 
-	ROM_REGION( 0x1c00000, "gfx3", ROMREGION_DISPOSE ) /* Sprite Colour Data */
+	ROM_REGION( 0x1c00000, "gfx3", 0 ) /* Sprite Colour Data */
 	ROM_LOAD( "a05601w064.bin",  0x0000000, 0x0800000, CRC(ea6453e4) SHA1(b5c82edafa8008ad59b5f2219511947d078d446e) )
 	ROM_LOAD( "a05602w064.bin",  0x0800000, 0x0800000, CRC(6d00621b) SHA1(55a4bc357e14b975b0234a9cd49e2224f509dad9) )
 	ROM_LOAD( "a05603w064.bin",  0x1000000, 0x0800000, CRC(7b71c64f) SHA1(bec7c7edf0634cf8351a54abb867c56af08ad2c3) )

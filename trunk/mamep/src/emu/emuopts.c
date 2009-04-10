@@ -49,6 +49,7 @@ const options_entry mame_core_options[] =
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
+	{ "crsshairpath",                "crsshair",  0,                 "path to crosshair files" },
 	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datafiles" },
 #ifdef USE_IPS
 	{ "ipspath;ips_directory",       "ips",       0,                 "path to ips files" },

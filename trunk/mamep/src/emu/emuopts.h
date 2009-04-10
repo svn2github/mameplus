@@ -48,6 +48,7 @@
 #define OPTION_INIPATH				"inipath"
 #define OPTION_FONTPATH				"fontpath"
 #define OPTION_CHEATPATH			"cheatpath"
+#define OPTION_CRSSHAIRPATH			"crsshairpath"
 #define OPTION_LANGPATH				"langpath"
 #ifdef USE_IPS
 #define OPTION_IPSPATH  			"ips_directory"
