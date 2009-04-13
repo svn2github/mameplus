@@ -3628,8 +3628,8 @@ static void menu_crosshair_populate(running_machine *machine, ui_menu *menu)
 				flags |= MENU_FLAG_RIGHT_ARROW;
 
 			/* add CROSSHAIR_ITEM_VIS menu */
-			sprintf(temp_text, "P%d Visibility", player + 1);
-			ui_menu_item_append(menu, temp_text, vis_text[settings.mode], flags, data);
+			sprintf(temp_text, _("P%d Visibility"), player + 1);
+			ui_menu_item_append(menu, temp_text, _(vis_text[settings.mode]), flags, data);
 
 			/* CROSSHAIR_ITEM_PIC - allocate a data item and fill it */
 			data = ui_menu_pool_alloc(menu, sizeof(*data));
@@ -3708,8 +3708,8 @@ static void menu_crosshair_populate(running_machine *machine, ui_menu *menu)
 					flags |= MENU_FLAG_LEFT_ARROW;
 
 				/* add CROSSHAIR_ITEM_PIC menu */
-				sprintf(temp_text, "P%d Crosshair", player + 1);
-				ui_menu_item_append(menu, temp_text, using_default ? "DEFAULT" : settings.name, flags, data);
+				sprintf(temp_text, _("P%d Crosshair"), player + 1);
+				ui_menu_item_append(menu, temp_text, using_default ? _("DEFAULT") : settings.name, flags, data);
 			}
 		}
 	}
@@ -3734,7 +3734,7 @@ static void menu_crosshair_populate(running_machine *machine, ui_menu *menu)
 
 		/* add CROSSHAIR_ITEM_AUTO_TIME menu */
 		sprintf(temp_text, "%d", settings.auto_time);
-		ui_menu_item_append(menu, "Visible Delay", temp_text, flags, data);
+		ui_menu_item_append(menu, _("Visible Delay"), temp_text, flags, data);
 	}
 //  else
 //      /* leave a blank filler line when not in auto time so size does not rescale */
