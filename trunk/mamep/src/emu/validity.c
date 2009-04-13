@@ -18,10 +18,6 @@
 #include "unicode.h"
 #include <zlib.h>
 
-#ifdef MAMEMESS
-#define MESS
-#endif /* MAMEMESS */
-
 
 /***************************************************************************
     DEBUGGING
@@ -174,10 +170,8 @@ INLINE int validate_tag(const game_driver *driver, const char *object, const cha
 		strcmp(tag, "left") == 0 ||
 		strcmp(tag, "right") == 0)
 	{
-#ifndef MESS
 		mame_printf_error("%s: %s has invalid generic tag '%s'\n", driver->source_file, driver->name, tag);
 		error = TRUE;
-#endif /* MESS */
 	}
 
 	for (p = tag; *p != 0; p++)
@@ -1558,10 +1552,8 @@ static int validate_devices(int drivnum, const machine_config *config)
 		for (scandevice = device_list_first(config->devicelist, DEVICE_TYPE_WILDCARD); scandevice != device; scandevice = device_list_next(scandevice, DEVICE_TYPE_WILDCARD))
 			if (strcmp(scandevice->tag, device->tag) == 0)
 			{
-#ifndef MESS
 				mame_printf_warning("%s: %s has multiple devices with the tag '%s'\n", driver->source_file, driver->name, device->tag);
 				break;
-#endif /* MESS */
 			}
 
 		/* call the device-specific validity check */

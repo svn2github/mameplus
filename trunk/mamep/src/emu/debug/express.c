@@ -9,7 +9,6 @@
 
 #include "express.h"
 #include <ctype.h>
-#include "uilang.h"
 
 
 

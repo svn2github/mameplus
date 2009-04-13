@@ -36,15 +36,15 @@
 #define UI_BOX_TB_BORDER		(UI_TARGET_FONT_HEIGHT * 0.25f)
 
 /* handy colors */
-#define ARGB_WHITE			MAKE_ARGB(0xff,0xff,0xff,0xff)
-#define ARGB_BLACK			MAKE_ARGB(0xff,0x00,0x00,0x00)
+#define ARGB_WHITE				MAKE_ARGB(0xff,0xff,0xff,0xff)
+#define ARGB_BLACK				MAKE_ARGB(0xff,0x00,0x00,0x00)
 #ifdef UI_COLOR_DISPLAY
 #define UI_FILLCOLOR			SYSTEM_COLOR_BACKGROUND
 #else /* UI_COLOR_DISPLAY */
 #define UI_FILLCOLOR			MAKE_ARGB(0xe0,0x10,0x10,0x30)
 #endif /* UI_COLOR_DISPLAY */
 #define UI_YELLOWCOLOR			MAKE_ARGB(0xe0,0x60,0x60,0x10)
-#define UI_REDCOLOR			MAKE_ARGB(0xf0,0x60,0x10,0x10)
+#define UI_REDCOLOR				MAKE_ARGB(0xf0,0x60,0x10,0x10)
 
 /* cancel return value for a UI handler */
 #define UI_HANDLER_CANCEL		((UINT32)~0)

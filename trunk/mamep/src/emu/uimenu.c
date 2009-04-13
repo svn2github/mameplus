@@ -22,7 +22,6 @@
 #endif /* CMD_LIST */
 #ifdef USE_SCALE_EFFECTS
 #include "osdscale.h"
-#include "video.h"
 #endif /* USE_SCALE_EFFECTS */
 
 #ifdef MAMEMESS

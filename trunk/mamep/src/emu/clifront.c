@@ -19,7 +19,6 @@
 #include "unzip.h"
 #include "romload.h"
 #include "sound/samples.h"
-#include "osdcore.h"
 
 #include <ctype.h>
 

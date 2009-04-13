@@ -93,7 +93,6 @@
 #include "streams.h"
 #include "deprecat.h"
 #include "debug/debugcon.h"
-#include "clifront.h"
 
 #include <stdarg.h>
 #include <setjmp.h>
