@@ -334,6 +334,10 @@ About
 About MAMEUI
 MAMEUIについて
 
+# osd/winui/mameui.rc: 817
+Activate Integrated Debugger
+デバッガの有効・無効
+
 # osd/winui/mameui.rc: 472
 Add ->
 追加 ->
@@ -1578,6 +1582,18 @@ Orientation
 Originals
 原作
 
+# osd/winui/mameui.rc: 815
+Output diagnostic information
+起動時に診断用の情報を表\示
+
+# osd/winui/mameui.rc: 813
+Output log to Logfile
+error.logファイルを生成
+
+# osd/winui/mameui.rc: 819
+Output log to Windows Debugger
+error.logデータをシステムデバッガに出力
+
 # osd/winui/mameui.rc: 927
 Overlays
 オーバーレイ
@@ -1801,6 +1817,10 @@ Remove selected item from this folder
 # osd/winui/mameui.rc: 1594
 Rename this folder
 このフォルダの名前変更します
+
+# osd/winui/treeview.c: 966
+Requires Artwork
+要アートワーク
 
 # osd/winui/mameui.rc: 210
 Rese&t Playcount
@@ -2614,10 +2634,6 @@ by T&rackball
 .\n
 
 
-# osd/winui/mameui.rc: 817
-Activate Integrated Debugger
-
-
 # osd/winui/mameui.rc: 391
 Additional MAMEUI code by
 
@@ -2724,22 +2740,6 @@ Mame&info File...
 
 # osd/winui/datafile.c: 1049
 Mameinfo:\n
-
-
-# osd/winui/mameui.rc: 815
-Output diagnostic information
-
-
-# osd/winui/mameui.rc: 813
-Output log to Logfile
-
-
-# osd/winui/mameui.rc: 819
-Output log to Windows Debugger
-
-
-# osd/winui/treeview.c: 966
-Requires Artwork
 
 
 # osd/winui/mameui.rc: 829

@@ -290,7 +290,7 @@ Dynamic Pl. Toei Animation
 Electronic Arts
 일렉트로닉 아츠
 
-# Cross Pang
+# Jumping Break
 F2 System
 F2 시스템
 
@@ -554,7 +554,7 @@ Stern
 Stern Electronics
 스턴 일렉트로닉스
 
-# RyuKyu (Japan, FD1094 317-5023)
+# Psyvariar -Medium Unit- (V2.04J)
 Success
 석세스
 
@@ -675,10 +675,6 @@ Tatsumi
 타츠미
 
 # Double Dragon (PlayChoice-10)
-Technos
-테크노스
-
-# Bogey Manor
 Technos Japan
 테크노스 저팬
 
@@ -850,7 +846,7 @@ WAVE
 WSAC Systems?
 WSAC 시스템
 
-# Shienryu (JUET 961226 V1.000)
+# Shanghai Shoryu Sairin (V2.03J)
 Warashi
 와라시
 
@@ -1086,6 +1082,10 @@ ATW
 ATW USA, Inc.
 
 
+# Chaos Field (GDL-0025)
+Able
+
+
 # Baluba-louk no Densetsu
 Able Corp, Ltd.
 
@@ -1098,6 +1098,10 @@ Afega
 Aiky
 
 
+# Shikigami no Shiro (V2.03J)
+Alfa System
+
+
 # Rezon
 Allumer
 
@@ -1108,6 +1112,10 @@ Alpha
 
 # Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
 Alpha System
+
+
+# Moeru Casinyo (GDL-0013)
+Altron
 
 
 # Skill '98 (ver. s98-1.33)
@@ -1144,6 +1152,10 @@ Astro Corp.
 
 # Pro Mahjong Kiwame S (J 951020 V1.208)
 Athena
+
+
+# Jingi Storm - The Arcade (GDL-0037)
+Atrativa Japan
 
 
 # Galaxi (v2.0)
@@ -1434,12 +1446,8 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
-# Melty Blood Act Cadenza (GDL-0028C)
-Ecole
-
-
-# Musapey's Choco Marker (GDL-0014A)
-Ecole Software Corporation
+# Musapey's Choco Marker (Rev A) (GDL-0014A)
+Ecole Software
 
 
 # The Alphax Z (Japan)
@@ -1590,10 +1598,6 @@ FUJIC
 Face
 
 
-# Super Crown Golf
-Face?
-
-
 # Frog (Falcon bootleg)
 Falcon
 
@@ -1624,6 +1628,10 @@ Funworld
 
 # Go Go! Mile Smile
 Fuuki
+
+
+# Border Down (Rev A) (GDL-0023A)
+G-Rev
 
 
 # Galaxian Part 4 (hack)
@@ -1712,10 +1720,6 @@ Gremlim
 
 # Moon Cresta (Gremlin)
 Gremlin
-
-
-# Senko No Ronde (GDL-0030A)
-Grev
 
 
 # Trivia (Version 1.03a)
@@ -1832,6 +1836,10 @@ Icarus
 
 # Multi Fish (040308, set 1)
 Igro
+
+
+# Crazy Monkey (031110)
+Igrosoft
 
 
 # Magic Card (set 1)
@@ -2022,6 +2030,10 @@ MTM Games
 Maboroshi Ware
 
 
+# Mahjong Oh (V2.06J)
+Mahjong Kobo/Taito
+
+
 # Mahjong Doukyuusei
 Make Software
 
@@ -2086,7 +2098,7 @@ Meyco Games
 Microhard
 
 
-# Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
+# Virtual Mahjong (J 961214 V1.000)
 Micronet
 
 
@@ -2108,6 +2120,10 @@ Mijin
 
 # Truco Clemente
 Miky SRL
+
+
+# Radirgy (GDL-0032)
+Milestone
 
 
 # Gumbo
@@ -2134,6 +2150,10 @@ Model Racing
 Mondial Games
 
 
+# Flip Maze (V2.04J)
+Moss
+
+
 # Tylz (prototype)
 Mylstar
 
@@ -2158,6 +2178,10 @@ Nakanihon
 Nakasawa
 
 
+# Super Crowns Golf (Japan)
+Nasco
+
+
 # Crowns Golf (834-5419-04)
 Nasco Japan
 
@@ -2176,6 +2200,10 @@ Nazionale Elettronica
 
 # Neo Pong (Ver 1.1, Homebrew)
 Neodev
+
+
+# Bonanza (Revision 3)
+New Image Technologies
 
 
 # Super Gran Safari (ver 3.11)
@@ -2200,10 +2228,6 @@ Nics
 
 # Hot Blocks - Tetrix II
 Nics?
-
-
-# Three Ds - Three Dealers Casino House
-Nihon Bussan
 
 
 # PC Engine
@@ -2450,7 +2474,7 @@ Royal Denshi
 SA
 
 
-# Champion Italian Cup (bootleg, set 1)
+# Champion Italian PK (bootleg, blue board)
 SGS
 
 
@@ -2467,7 +2491,7 @@ SSI
 
 
 # Queen?
-STG?
+STG
 
 
 # Fishing Maniac 3
@@ -2614,7 +2638,7 @@ Spacy Industrial, Ltd.
 Spale-Soft
 
 
-# Super Shanghai 2005 (GDL-0031A)
+# Super Shanghai 2005 (Rev A) (GDL-0031A)
 Starfish
 
 
@@ -2708,6 +2732,10 @@ Tong Electronic
 
 # Magical Tonic?
 Tonic
+
+
+# XII Stag (V2.01J)
+Triangle Service
 
 
 # Ultraman Club - Tatakae! Ultraman Kyoudai!!

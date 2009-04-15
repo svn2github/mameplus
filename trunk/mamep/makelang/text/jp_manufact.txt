@@ -506,7 +506,7 @@ Square
 Stern
 スターン
 
-# RyuKyu (Japan, FD1094 317-5023)
+# Psyvariar -Medium Unit- (V2.04J)
 Success
 サクセス
 
@@ -587,10 +587,6 @@ Tamtex
 タムテックス
 
 # Double Dragon (PlayChoice-10)
-Technos
-テクノス
-
-# Bogey Manor
 Technos Japan
 テクノスジャパン
 
@@ -782,6 +778,10 @@ ATW
 ATW USA, Inc.
 
 
+# Chaos Field (GDL-0025)
+Able
+
+
 # David Crane's Amazing Tennis (Nintendo Super System)
 Absolute Entertainment Inc.
 
@@ -802,6 +802,10 @@ Aiky
 Alberici
 
 
+# Shikigami no Shiro (V2.03J)
+Alfa System
+
+
 # Delta Race
 Allied Leisure
 
@@ -816,6 +820,10 @@ Alpha Co
 
 # Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
 Alpha System
+
+
+# Moeru Casinyo (GDL-0013)
+Altron
 
 
 # Skill '98 (ver. s98-1.33)
@@ -916,6 +924,10 @@ Associated Overseas MFR, Inc
 
 # Show Hand (Italy)
 Astro Corp.
+
+
+# Jingi Storm - The Arcade (GDL-0037)
+Atrativa Japan
 
 
 # Galaxi (v2.0)
@@ -1274,12 +1286,8 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
-# Melty Blood Act Cadenza (GDL-0028C)
-Ecole
-
-
-# Musapey's Choco Marker (GDL-0014A)
-Ecole Software Corporation
+# Musapey's Choco Marker (Rev A) (GDL-0014A)
+Ecole Software
 
 
 # The Alphax Z (Japan)
@@ -1386,12 +1394,8 @@ Evona Electronic
 ExPotato
 
 
-# Cross Pang
+# Jumping Break
 F2 System
-
-
-# Super Crown Golf
-Face?
 
 
 # Frog (Falcon bootleg)
@@ -1420,6 +1424,10 @@ Fujiwara
 
 # Big Deal (hungarian, set 1)
 Funworld
+
+
+# Border Down (Rev A) (GDL-0023A)
+G-Rev
 
 
 # Galaxian Part 4 (hack)
@@ -1496,10 +1504,6 @@ Grayhound Electronics
 
 # Super Crash (bootleg of Head On)
 Gremlim
-
-
-# Senko No Ronde (GDL-0030A)
-Grev
 
 
 # Trivia (Version 1.03a)
@@ -1592,6 +1596,10 @@ Icarus
 
 # Multi Fish (040308, set 1)
 Igro
+
+
+# Crazy Monkey (031110)
+Igrosoft
 
 
 # Magic Card (set 1)
@@ -1766,6 +1774,10 @@ M.P.
 MTM Games
 
 
+# Mahjong Oh (V2.06J)
+Mahjong Kobo/Taito
+
+
 # Mahjong Gakuensai (Japan)
 MakeSoft
 
@@ -1818,7 +1830,7 @@ Meyco Games
 Microhard
 
 
-# Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
+# Virtual Mahjong (J 961214 V1.000)
 Micronet
 
 
@@ -1850,6 +1862,10 @@ Mijin
 Miky SRL
 
 
+# Radirgy (GDL-0032)
+Milestone
+
+
 # Gumbo
 Min Corp.
 
@@ -1868,6 +1884,10 @@ Model Racing
 
 # Lady Frog
 Mondial Games
+
+
+# Flip Maze (V2.04J)
+Moss
 
 
 # Tylz (prototype)
@@ -1894,6 +1914,10 @@ Nakanihon
 Nakasawa
 
 
+# Super Crowns Golf (Japan)
+Nasco
+
+
 # Paranoia
 Naxat Soft
 
@@ -1904,6 +1928,10 @@ Nazionale Elettronica
 
 # Neo Pong (Ver 1.1, Homebrew)
 Neodev
+
+
+# Bonanza (Revision 3)
+New Image Technologies
 
 
 # Super Gran Safari (ver 3.11)
@@ -1924,10 +1952,6 @@ Nics?
 
 # Monster Zero
 Nihon
-
-
-# Three Ds - Three Dealers Casino House
-Nihon Bussan
 
 
 # PC Engine
@@ -2166,7 +2190,7 @@ Ryoto Electric Co.
 SA
 
 
-# Champion Italian Cup (bootleg, set 1)
+# Champion Italian PK (bootleg, blue board)
 SGS
 
 
@@ -2183,7 +2207,7 @@ SSI
 
 
 # Queen?
-STG?
+STG
 
 
 # Fishing Maniac 3
@@ -2346,7 +2370,7 @@ Spale-Soft
 Spirit
 
 
-# Super Shanghai 2005 (GDL-0031A)
+# Super Shanghai 2005 (Rev A) (GDL-0031A)
 Starfish
 
 
@@ -2518,6 +2542,10 @@ Topis Corp
 Treasure
 
 
+# XII Stag (V2.01J)
+Triangle Service
+
+
 # MTV Rock-N-Roll Trivia (Part 2)
 Triumph Software Inc.
 
@@ -2642,7 +2670,7 @@ WAVE
 WSAC Systems?
 
 
-# Shienryu (JUET 961226 V1.000)
+# Shanghai Shoryu Sairin (V2.03J)
 Warashi
 
 

@@ -726,7 +726,7 @@ Excellent Systems
 Exidy
 Exidy
 
-# Cross Pang
+# Jumping Break
 F2 System
 F2 System
 
@@ -737,10 +737,6 @@ FUJIC
 # Mahjong Gakuen 2 Gakuen-chou no Fukushuu
 Face
 Face
-
-# Super Crown Golf
-Face?
-Face?
 
 # Frog (Falcon bootleg)
 Falcon
@@ -1226,7 +1222,7 @@ Meyco Games
 Microhard
 Microhard
 
-# Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
+# Virtual Mahjong (J 961214 V1.000)
 Micronet
 Micronet
 
@@ -1842,7 +1838,7 @@ Subelectro
 Subsino
 Subsino
 
-# RyuKyu (Japan, FD1094 317-5023)
+# Psyvariar -Medium Unit- (V2.04J)
 Success
 Success
 
@@ -2007,10 +2003,6 @@ Tecfri
 Tecfri
 
 # Double Dragon (PlayChoice-10)
-Technos
-Technos
-
-# Bogey Manor
 Technos Japan
 Technos Japan
 
@@ -2222,7 +2214,7 @@ WAVE
 WSAC Systems?
 WSAC Systems?
 
-# Shienryu (JUET 961226 V1.000)
+# Shanghai Shoryu Sairin (V2.03J)
 Warashi
 Warashi
 
@@ -2398,12 +2390,24 @@ AMT
 AMT Co. Ltd.
 
 
+# Chaos Field (GDL-0025)
+Able
+
+
+# Shikigami no Shiro (V2.03J)
+Alfa System
+
+
 # Flower (Sega/Alpha)
 Alpha
 
 
 # Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
 Alpha System
+
+
+# Moeru Casinyo (GDL-0013)
+Altron
 
 
 # Skill '98 (ver. s98-1.33)
@@ -2428,6 +2432,10 @@ Aruze?
 
 # Show Hand (Italy)
 Astro Corp.
+
+
+# Jingi Storm - The Arcade (GDL-0037)
+Atrativa Japan
 
 
 # Galaxi (v2.0)
@@ -2478,12 +2486,8 @@ Eagle
 Eastern Corp.
 
 
-# Melty Blood Act Cadenza (GDL-0028C)
-Ecole
-
-
-# Musapey's Choco Marker (GDL-0014A)
-Ecole Software Corporation
+# Musapey's Choco Marker (Rev A) (GDL-0014A)
+Ecole Software
 
 
 # Galaxy Gunners
@@ -2514,12 +2518,12 @@ Fujiwara
 Funworld
 
 
+# Border Down (Rev A) (GDL-0023A)
+G-Rev
+
+
 # Galaxian Part 4 (hack)
 G.G.I
-
-
-# Senko No Ronde (GDL-0030A)
-Grev
 
 
 # Super Free Kick
@@ -2546,6 +2550,10 @@ Hudson Soft
 Igro
 
 
+# Crazy Monkey (031110)
+Igrosoft
+
+
 # Video Poker
 InterFlip
 
@@ -2560,6 +2568,10 @@ M.M. - B.R.L.
 
 # Super Joly 2000 - 3x
 M.P.
+
+
+# Mahjong Oh (V2.06J)
+Mahjong Kobo/Taito
 
 
 # Buster
@@ -2578,6 +2590,18 @@ Maygay Machines Ltd.
 Microprose Games Inc.
 
 
+# Radirgy (GDL-0032)
+Milestone
+
+
+# Flip Maze (V2.04J)
+Moss
+
+
+# Super Crowns Golf (Japan)
+Nasco
+
+
 # Paranoia
 Naxat Soft
 
@@ -2586,12 +2610,12 @@ Naxat Soft
 Nazionale Elettronica
 
 
+# Bonanza (Revision 3)
+New Image Technologies
+
+
 # Super Gran Safari (ver 3.11)
 New Impeuropex Corp.
-
-
-# Three Ds - Three Dealers Casino House
-Nihon Bussan
 
 
 # PC Engine
@@ -2630,7 +2654,7 @@ Romtec Co. LTD
 Royal Denshi
 
 
-# Champion Italian Cup (bootleg, set 1)
+# Champion Italian PK (bootleg, blue board)
 SGS
 
 
@@ -2639,7 +2663,7 @@ SSI
 
 
 # Queen?
-STG?
+STG
 
 
 # Gam*Boy II (Korea)
@@ -2694,7 +2718,7 @@ Space Computer
 Spale-Soft
 
 
-# Super Shanghai 2005 (GDL-0031A)
+# Super Shanghai 2005 (Rev A) (GDL-0031A)
 Starfish
 
 
@@ -2716,6 +2740,10 @@ Tazmi
 
 # Magical Tonic?
 Tonic
+
+
+# XII Stag (V2.01J)
+Triangle Service
 
 
 # P's Attack
