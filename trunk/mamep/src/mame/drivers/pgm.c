@@ -163,13 +163,13 @@ ASIC 22 + ASIC 25
 ASIC 25 + ASIC 28
     Oriental Legend Super
 
-ASIC 27 (5585E):
+ASIC 27 (55857E):
     performs a variety of calculations, quite complex, different per region, supplies region code
     used by:
     Knights of Valour 1 / Plus
     Photo Y2k / Real and Fake
 
-ASIC 27A(5585F/5585G):
+ASIC 27A(55857F/55857G):
     arm7 cpu with 16kb internal rom (different per game / region) + optional external data rom
     probably used to give extra power to the system, lots of calculations are offloaded to it
     used by:
@@ -295,7 +295,7 @@ Notes:
 UINT16 *pgm_mainram, *pgm_bg_videoram, *pgm_tx_videoram, *pgm_videoregs, *pgm_rowscrollram, *pgm_videoram;
 static UINT8 *z80_mainram;
 static UINT32 *arm7_shareram;
-static UINT32 *svg_shareram[2];	//for 5585G MACHINE
+static UINT32 *svg_shareram[2];	//for 55857G MACHINE
 static UINT32 kov2_latchdata_68k_w;
 static UINT32 kov2_latchdata_arm_w;
 
@@ -304,9 +304,8 @@ static WRITE16_HANDLER( pgm_videoram_w )
 {
 	if (offset<0x4000/2)
 		pgm_bg_videoram_w(space, offset, data, mem_mask);
-	else if (offset<0x7000/2)
+	else if (offset<0x6000/2)
 		pgm_tx_videoram_w(space, offset-0x4000/2, data, mem_mask);
-	else COMBINE_DATA(&pgm_videoram[offset/2]);
 }
 
 static READ16_HANDLER ( z80_ram_r )
@@ -571,8 +570,8 @@ static ADDRESS_MAP_START( pgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -604,8 +603,8 @@ static ADDRESS_MAP_START( killbld_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -637,8 +636,8 @@ static ADDRESS_MAP_START( olds_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -667,8 +666,8 @@ static ADDRESS_MAP_START( kov2_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -699,8 +698,8 @@ static ADDRESS_MAP_START( kov2p_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -733,8 +732,8 @@ static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -785,6 +784,7 @@ static ADDRESS_MAP_START( kov2_arm7_map, ADDRESS_SPACE_PROGRAM, 32 )
 	AM_RANGE(0x50000000, 0x500003ff) AM_RAM
 ADDRESS_MAP_END
 
+/* Kov Superheroes */
 
 #define KOVSH_68K_SUSPEND           if(cpu_is_executing(space->machine->cpu[0])==TRUE) cpu_suspend(space->machine->cpu[0],SUSPEND_REASON_SPIN,1)
 #define KOVSH_ARM_SUSPEND           if(cpu_is_executing(space->machine->cpu[2])==TRUE) cpu_suspend(space->machine->cpu[2],SUSPEND_REASON_SPIN,1)
@@ -795,21 +795,19 @@ ADDRESS_MAP_END
 #define KOVSH_68K_2_ARM				do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME;  } while (0)
 #define KOVSH_ARM_2_68K				do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME;  } while (0)
 
-/* Kov Superheroes */
-
 static UINT16 kovsh_highlatch_arm_w, kovsh_lowlatch_arm_w;
 static UINT16 kovsh_highlatch_68k_w, kovsh_lowlatch_68k_w;
 
 static READ32_HANDLER( kovsh_arm7_protlatch_r )
 {
-	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	return (kovsh_highlatch_68k_w << 16) | (kovsh_lowlatch_68k_w);
 }
 
 static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 {
-	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	if (ACCESSING_BITS_16_31)
 	{
@@ -821,11 +819,15 @@ static WRITE32_HANDLER( kovsh_arm7_protlatch_w )
 		kovsh_lowlatch_arm_w = data;
 		kovsh_lowlatch_68k_w = 0;
 	}
+	if((kovsh_highlatch_arm_w&0xFF00)!=0)
+	{
+		KOVSH_ARM_2_68K;
+	}
 }
 
 static READ16_HANDLER( kovsh_68k_protlatch_r )
 {
-	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	switch (offset)
 	{
@@ -837,7 +839,7 @@ static READ16_HANDLER( kovsh_68k_protlatch_r )
 
 static WRITE16_HANDLER( kovsh_68k_protlatch_w )
 {
-	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
+//	timer_call_after_resynch(space->machine, NULL, 0, 0); // force resync
 
 	switch (offset)
 	{
@@ -883,8 +885,8 @@ static ADDRESS_MAP_START( kovsh_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -929,7 +931,7 @@ static ADDRESS_MAP_START( kovsh_arm7_map, ADDRESS_SPACE_PROGRAM, 32 )
 ADDRESS_MAP_END
 
 
-//5585G
+//55857G
 unsigned char svg_ram_sel;
 
 static WRITE32_HANDLER( svg_arm7_ram_sel_w )
@@ -992,8 +994,8 @@ static ADDRESS_MAP_START( svg_68k_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 //	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
 //	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-//	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -1471,7 +1473,7 @@ static MACHINE_DRIVER_START( kov )
 	MDRV_CPU_PROGRAM_MAP(kovsh_mem,0)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585E/F/G
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857E/F/G
 	MDRV_CPU_PROGRAM_MAP(kovsh_arm7_map, 0)
 MACHINE_DRIVER_END
 
@@ -1482,7 +1484,7 @@ static MACHINE_DRIVER_START( kov2 )
 	MDRV_CPU_PROGRAM_MAP(kov2_mem,0)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585F
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857F
 	MDRV_CPU_PROGRAM_MAP(kov2_arm7_map, 0)
 MACHINE_DRIVER_END
 
@@ -1493,7 +1495,7 @@ static MACHINE_DRIVER_START( kov2p )
 	MDRV_CPU_PROGRAM_MAP(kov2p_mem,0)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585F
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857F
 	MDRV_CPU_PROGRAM_MAP(arm7_map, 0)
 MACHINE_DRIVER_END
 
@@ -1504,7 +1506,7 @@ static MACHINE_DRIVER_START( svg )
 	MDRV_CPU_PROGRAM_MAP(svg_68k_mem,0)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585G
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857G
 	MDRV_CPU_PROGRAM_MAP(svg_arm7_map, 0)
 MACHINE_DRIVER_END
 
@@ -1590,7 +1592,6 @@ static void pgm_basic_init(running_machine *machine)
 
 	pgm_bg_videoram = &pgm_videoram[0];
 	pgm_tx_videoram = &pgm_videoram[0x4000/2];
-	pgm_rowscrollram = &pgm_videoram[0x7000/2];
 }
 
 static DRIVER_INIT( pgm )
@@ -1660,14 +1661,13 @@ static DRIVER_INIT( drgw2j )
 static DRIVER_INIT( kov )
 {
 	pgm_basic_init(machine);
+ 	pgm_kov_decrypt(machine);
 
 	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, ASIC28_r16, ASIC28_w16);
 
 	/* 0x4f0000 - ? is actually ram shared with the protection device,
       the protection device provides the region code */
 	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
-
- 	pgm_kov_decrypt(machine);
 }
 
 static DRIVER_INIT( pstar )
@@ -1708,14 +1708,13 @@ static DRIVER_INIT( kov2 )
 
 static DRIVER_INIT( kov2p )
 {
-	UINT8 *mem8;
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "user1");
 
 	pgm_basic_init(machine);
 	pgm_kov2p_decrypt(machine);
 
 // this hacks the identification of the kov2 rom to return the string required for kov2p
 // this is _NOT_ appropriate for use in MAME, the internal rom should be dumped.
-	mem8 = (UINT8 *)memory_region(machine, "user1");
 
 	mem8[0xDE] = 0xC0;
 	mem8[0xDF] = 0x46;
@@ -2368,7 +2367,7 @@ ROM_END
 
 /*
 
-Oriental Legend / Xi Yo Gi Shi Re Zuang (CHINA 111 Ver.)
+Oriental Legend / Xi You Shi E Zhuan (CHINA 111 Ver.)
 (c)1997 IGS
 
 PGM system
@@ -2436,7 +2435,7 @@ ROM_END
 
 /*
 
-Oriental Legend / Xi Yo Gi Shi Re Zuang (KOREA 105 Ver.)
+Oriental Legend / Xi You Shi E Zhuan (KOREA 105 Ver.)
 (c)1997 IGS
 
 PGM system
@@ -2749,8 +2748,8 @@ ROM_START( kov )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
@@ -2781,8 +2780,8 @@ ROM_START( kov115 )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
@@ -2848,8 +2847,8 @@ ROM_START( kovj )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
@@ -2880,8 +2879,8 @@ ROM_START( kovplus )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
@@ -2947,8 +2946,8 @@ ROM_START( kovplusa )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
-	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+//	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
+//	ROM_LOAD( "kov_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
 
 	ROM_REGION( 0xc00000, "gfx1", 0 ) /* 8x8 Text Tiles + 32x32 BG Tiles */
 	ROM_LOAD( "pgm_t01s.rom", 0x000000, 0x200000, CRC(1a7123a0) SHA1(cc567f577bfbf45427b54d6695b11b74f2578af3) ) // (BIOS)
@@ -3617,7 +3616,7 @@ ROM_START( kov2p )
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(e0d7679f) SHA1(e1c2d127eba4ddbeb8ad173c55b90ac1467e1ca8) )
 
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v200-16.rom", 0x000000, 0x200000,  CRC(16a0c11f) SHA1(ce449cef76ebd5657d49b57951e2eb0f132e203e) )
@@ -3653,7 +3652,7 @@ ROM_START( kov2p205 )
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
-	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, NO_DUMP )
+	ROM_LOAD( "kov2p_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(e0d7679f) SHA1(e1c2d127eba4ddbeb8ad173c55b90ac1467e1ca8) )
 
 	ROM_REGION32_LE( 0x400000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v200-16.rom", 0x000000, 0x200000,  CRC(16a0c11f) SHA1(ce449cef76ebd5657d49b57951e2eb0f132e203e) )
@@ -3699,7 +3698,7 @@ Some logic IC's, resistors, caps etc.
 ROM_START( ddp2 )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
-	ROM_LOAD16_WORD_SWAP( "ddp2_v102.u8", 0x100000, 0x200000, CRC(5a9ea040) SHA1(51eaec46c368f7cfc5245e64896092f52b1193e0) )
+	ROM_LOAD16_WORD_SWAP( "v100.u8", 0x100000, 0x200000, CRC(0c8aa8ea) SHA1(57e33224622607a1df8daabf26ba063cf8a6d3fc) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
@@ -3731,7 +3730,7 @@ ROM_END
 ROM_START( ddp2a )
 	ROM_REGION( 0x600000, "maincpu", 0 ) /* 68000 Code */
 	ROM_LOAD16_WORD_SWAP( "pgm_p01s.rom", 0x000000, 0x020000, CRC(e42b166e) SHA1(2a9df9ec746b14b74fae48b1a438da14973702ea) )  // (BIOS)
-	ROM_LOAD16_WORD_SWAP( "v100.u8",    0x100000, 0x200000, CRC(0c8aa8ea) SHA1(57e33224622607a1df8daabf26ba063cf8a6d3fc) )
+	ROM_LOAD16_WORD_SWAP( "v102.u8", 0x100000, 0x200000, CRC(5a9ea040) SHA1(51eaec46c368f7cfc5245e64896092f52b1193e0) )
 
 	/* CPU2 = Z80, romless, code uploaded by 68k */
 
