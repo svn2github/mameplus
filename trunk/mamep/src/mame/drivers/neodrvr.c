@@ -8569,6 +8569,22 @@ static DRIVER_INIT( kof2000n )
 	DRIVER_INIT_CALL(neogeo);
 }
 
+static DRIVER_INIT( kof2000d )
+{
+	int i;
+	extern int neogeo_fixed_layer_bank_type;
+	int tx_size = memory_region_length(machine, "fixed");
+	int rom_size = memory_region_length(machine, "sprites");
+	UINT8 *src = memory_region(machine, "sprites")+rom_size-tx_size;
+	UINT8 *dst = memory_region(machine, "fixed");
+	neogeo_fixed_layer_bank_type = 2;
+
+	for (i = 0;i < tx_size;i++)
+		dst[i] = src[(i & ~0x1f) + ((i & 7) << 2) + ((~i & 8) >> 2) + ((i & 0x10) >> 4)];
+
+	DRIVER_INIT_CALL(neogeo);
+}
+
 static DRIVER_INIT( kof2001 )
 {
 	neogeo_fixed_layer_bank_type = 1;
@@ -9682,7 +9698,7 @@ GAME( 1995, fr2ch,    neogeo,   neogeo,   neogeo,   fr2ch,    ROT0, "hack", "Ido
 GAME( 1999, kof99d,   kof99,    neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters '99 - Millennium Battle (not encrypted P, decrypted C)", 0 )
 GAME( 1999, garoud,   garou,    neogeo,   neogeo,   garoud,   ROT0, "SNK", "Garou - Mark of the Wolves (decrypted C)", 0 )
 GAME( 2000, mslug3d,  mslug3,   neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "Metal Slug 3 (not encrypted P, decrypted C)", 0 )
-GAME( 2000, kof2000d, kof2000,  neogeo,   neogeo,   gfxdec42, ROT0, "SNK", "The King of Fighters 2000 (not encrypted P, decrypted C)", 0 )
+GAME( 2000, kof2000d, kof2000,  neogeo,   neogeo,   kof2000d, ROT0, "SNK", "The King of Fighters 2000 (not encrypted P, decrypted C)", 0 )
 GAME( 2001, zupapad,  zupapa,   neogeo,   neogeo,   neogeo,   ROT0, "SNK", "Zupapa! (custom decrypted C)", 0 )
 GAME( 2001, sengok3d, sengoku3, neogeo,   neogeo,   sengo3d,  ROT0, "SNK", "Sengoku 3 (decrypted C)", 0 )
 GAME( 2001, kof2001d, kof2001,  neogeo,   neogeo,   gfxdec52, ROT0, "Eolith / SNK", "The King of Fighters 2001 (set 2, decrypted C)", 0 )
