@@ -10,8 +10,25 @@
 #define NES_H_
 
 
+/***************************************************************************
+    CONSTANTS
+***************************************************************************/
+
 #define NTSC_CLOCK		N2A03_DEFAULTCLOCK	/* 1.789772 MHz */
 #define PAL_CLOCK		(26601712.0/16)		/* 1.662607 MHz */
+
+
+/***************************************************************************
+    TYPE DEFINITIONS
+***************************************************************************/
+
+typedef struct _nes_state nes_state;
+struct _nes_state
+{
+	const device_config *ppu;
+	const device_config *sound;
+	const device_config *cart;
+};
 
 
 /*----------- defined in machine/nes.c -----------*/
@@ -80,7 +97,7 @@ MACHINE_RESET( nes );
 READ8_HANDLER( nes_IN0_r );
 READ8_HANDLER( nes_IN1_r );
 
-int nes_ppu_vidaccess( running_machine *machine, int num, int address, int data );
+int nes_ppu_vidaccess( const device_config *device, int address, int data );
 
 void nes_partialhash(char *dest, const unsigned char *data,
 	unsigned long length, unsigned int functions);
