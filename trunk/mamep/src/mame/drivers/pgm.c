@@ -304,8 +304,9 @@ static WRITE16_HANDLER( pgm_videoram_w )
 {
 	if (offset<0x4000/2)
 		pgm_bg_videoram_w(space, offset, data, mem_mask);
-	else if (offset<0x6000/2)
+	else if (offset<0x7000/2)
 		pgm_tx_videoram_w(space, offset-0x4000/2, data, mem_mask);
+	else COMBINE_DATA(&pgm_videoram[offset]);
 }
 
 static READ16_HANDLER ( z80_ram_r )
@@ -332,7 +333,7 @@ static TIMER_CALLBACK( arm_irq )
 
 static WRITE32_HANDLER( kov2_arm7_latch_arm_w )
 {
-//	if (PGMARM7LOGERROR) logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, cpu_get_pc(space->cpu) );
+	if (PGMARM7LOGERROR) logerror("ARM7: Latch write: %08x (%08x) (%06x)\n", data, mem_mask, cpu_get_pc(space->cpu) );
 	COMBINE_DATA(&kov2_latchdata_arm_w);
 
 	if (data!=0xaa) cpu_spinuntil_trigger(space->cpu, 1000);
@@ -353,7 +354,8 @@ static WRITE32_HANDLER( arm7_shareram_w )
 
 static WRITE32_HANDLER( kov2_arm7_shareram_w )
 {
-//	if (PGMARM7LOGERROR) logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, cpu_get_pc(space->cpu) );
+	if (PGMARM7LOGERROR) logerror("ARM7: ARM7 Shared RAM Write: %04x = %08x (%08x) (%06x)\n", offset << 2, data, mem_mask, cpu_get_pc(space->cpu) );
+	// region hack
 	arm7_shareram[0x138/4] = input_port_read(space->machine, "Region");
 	COMBINE_DATA(&arm7_shareram[offset]);
 }
@@ -376,7 +378,7 @@ static WRITE16_HANDLER( arm7_latch_68k_w )
 
 static WRITE16_HANDLER( kov2_arm7_latch_68k_w )
 {
-//	if (PGMARM7LOGERROR) logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, cpu_get_pc(space->cpu) );
+	if (PGMARM7LOGERROR) logerror("M68K: Latch write: %04x (%04x) (%06x)\n", data & 0x0000ffff, mem_mask, cpu_get_pc(space->cpu) );
 	COMBINE_DATA(&kov2_latchdata_68k_w);
 
 	cpuexec_trigger(space->machine, 1000);
@@ -568,10 +570,10 @@ static ADDRESS_MAP_START( pgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -601,10 +603,10 @@ static ADDRESS_MAP_START( killbld_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -634,10 +636,10 @@ static ADDRESS_MAP_START( olds_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -664,10 +666,10 @@ static ADDRESS_MAP_START( kov2_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -696,10 +698,10 @@ static ADDRESS_MAP_START( kov2p_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -730,10 +732,10 @@ static ADDRESS_MAP_START( cavepgm_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -786,14 +788,14 @@ ADDRESS_MAP_END
 
 /* Kov Superheroes */
 
-#define KOVSH_68K_SUSPEND           if(cpu_is_executing(space->machine->cpu[0])==TRUE) cpu_suspend(space->machine->cpu[0],SUSPEND_REASON_SPIN,1)
-#define KOVSH_ARM_SUSPEND           if(cpu_is_executing(space->machine->cpu[2])==TRUE) cpu_suspend(space->machine->cpu[2],SUSPEND_REASON_SPIN,1)
+#define KOVSH_68K_SUSPEND	if(cpu_is_executing(space->machine->cpu[0])==TRUE) cpu_suspend(space->machine->cpu[0],SUSPEND_REASON_SPIN,1)
+#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(space->machine->cpu[2])==TRUE) cpu_suspend(space->machine->cpu[2],SUSPEND_REASON_SPIN,1)
 
-#define KOVSH_68K_RESUME            if(cpu_is_executing(space->machine->cpu[0])==FALSE) cpu_resume(space->machine->cpu[0],SUSPEND_REASON_SPIN)
-#define KOVSH_ARM_RESUME            if(cpu_is_executing(space->machine->cpu[2])==FALSE) cpu_resume(space->machine->cpu[2],SUSPEND_REASON_SPIN)
+#define KOVSH_68K_RESUME	if(cpu_is_executing(space->machine->cpu[0])==FALSE) cpu_resume(space->machine->cpu[0],SUSPEND_REASON_SPIN)
+#define KOVSH_ARM_RESUME	if(cpu_is_executing(space->machine->cpu[2])==FALSE) cpu_resume(space->machine->cpu[2],SUSPEND_REASON_SPIN)
 
-#define KOVSH_68K_2_ARM				do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME;  } while (0)
-#define KOVSH_ARM_2_68K				do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME;  } while (0)
+#define KOVSH_68K_2_ARM		do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME; } while (0)
+#define KOVSH_ARM_2_68K		do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME; } while (0)
 
 static UINT16 kovsh_highlatch_arm_w, kovsh_lowlatch_arm_w;
 static UINT16 kovsh_highlatch_68k_w, kovsh_lowlatch_68k_w;
@@ -843,14 +845,14 @@ static WRITE16_HANDLER( kovsh_68k_protlatch_w )
 
 	switch (offset)
 	{
-		case 1: 
+		case 1:
 			{
-				kovsh_highlatch_68k_w = data; 
+				kovsh_highlatch_68k_w = data;
 				KOVSH_68K_2_ARM;
 			}
 			break;
 
-		case 0: 
+		case 0:
 			{
 				kovsh_lowlatch_68k_w = data;
 			}
@@ -883,10 +885,10 @@ static ADDRESS_MAP_START( kovsh_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -992,10 +994,10 @@ static ADDRESS_MAP_START( svg_68k_mem, ADDRESS_SPACE_PROGRAM, 16)
 
 	AM_RANGE(0x800000, 0x81ffff) AM_RAM AM_MIRROR(0x0e0000) AM_BASE(&pgm_mainram) /* Main Ram */
 
-//	AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
-//	AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
-	AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_MIRROR(0x0f8000) AM_BASE(&pgm_rowscrollram)
-	AM_RANGE(0x900000, 0x905fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
+//  AM_RANGE(0x900000, 0x903fff) AM_RAM_WRITE(pgm_bg_videoram_w) AM_BASE(&pgm_bg_videoram) /* Backgrounds */
+//  AM_RANGE(0x904000, 0x905fff) AM_RAM_WRITE(pgm_tx_videoram_w) AM_BASE(&pgm_tx_videoram) /* Text Layer */
+//  AM_RANGE(0x907000, 0x9077ff) AM_RAM AM_BASE(&pgm_rowscrollram)
+	AM_RANGE(0x900000, 0x907fff) AM_MIRROR(0x0f8000) AM_RAM_WRITE(pgm_videoram_w) AM_BASE(&pgm_videoram) /* IGS023 VIDEO CHIP */
 	AM_RANGE(0xa00000, 0xa011ff) AM_RAM_WRITE(paletteram16_xRRRRRGGGGGBBBBB_word_w) AM_BASE(&paletteram16)
 	AM_RANGE(0xb00000, 0xb0ffff) AM_RAM AM_BASE(&pgm_videoregs) /* Video Regs inc. Zoom Table */
 
@@ -1114,20 +1116,50 @@ static INPUT_PORTS_START( pgm )
 	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )
 
 	PORT_START("Region")
-	PORT_DIPNAME( 0x0003, 0x0000, DEF_STR( Region ) )
-	PORT_DIPSETTING(      0x0000, DEF_STR( World ) )
-//  PORT_DIPSETTING(      0x0001, DEF_STR( World ) ) // again?
-	PORT_DIPSETTING(      0x0002, "Korea" )
-	PORT_DIPSETTING(      0x0003, "China" )
+	PORT_DIPNAME( 0x000f, 0x0005, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "Taiwan" )
+	PORT_DIPSETTING(      0x0001, "China" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( orlegndc )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")
+	PORT_DIPNAME( 0x000f, 0x0001, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "Taiwan" )
+	PORT_DIPSETTING(      0x0001, "China" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( orld111c )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")
+	PORT_DIPNAME( 0x0003, 0x0002, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "Hong Kong" )
+//  PORT_DIPSETTING(      0x0001, "Hong Kong" ) // again?
+	PORT_DIPSETTING(      0x0002, "China" )
+//  PORT_DIPSETTING(      0x0003, "China" ) // again?
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( orld105k )
 	PORT_INCLUDE ( pgm )
 
 	PORT_MODIFY("Region")
-	PORT_DIPNAME( 0x0003, 0x0002, DEF_STR( Unused ) )	// region switch
-	PORT_DIPSETTING(      0x0002, DEF_STR( Off ) )		// if enabled, game gives
-	PORT_DIPSETTING(      0x0000, DEF_STR( On ) )		// "incorrect version" error
+	PORT_DIPNAME( 0x000f, 0x0003, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "Taiwan" )
+	PORT_DIPSETTING(      0x0001, "China" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( sango )
@@ -1141,48 +1173,6 @@ static INPUT_PORTS_START( sango )
 	PORT_DIPSETTING(      0x0003, "Korea" )
 	PORT_DIPSETTING(      0x0004, "Hong Kong" )
 	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
-INPUT_PORTS_END
-
-//mamep: these dips do not exist on real PCB
-static INPUT_PORTS_START( kov2 )
-	PORT_INCLUDE ( pgm )
-
-	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0004, DEF_STR( Region ) )
-	PORT_DIPSETTING(      0x0000, "China" )
-	PORT_DIPSETTING(      0x0001, "Taiwan" )
-	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
-	PORT_DIPSETTING(      0x0003, "Korea" )
-	PORT_DIPSETTING(      0x0004, "Hong Kong" )
-	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
-INPUT_PORTS_END
-
-static INPUT_PORTS_START( martmast )
-	PORT_INCLUDE ( pgm )
-
-	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0006, DEF_STR( Region ) )
-	PORT_DIPSETTING(      0x0000, "China" )
-	PORT_DIPSETTING(      0x0001, "Taiwan" )
-	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
-	PORT_DIPSETTING(      0x0003, "Korea" )
-	PORT_DIPSETTING(      0x0004, "Hong Kong" )
-	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
-	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
-INPUT_PORTS_END
-
-static INPUT_PORTS_START( martmasc )
-	PORT_INCLUDE ( pgm )
-
-	PORT_MODIFY("Region")	/* Region - supplied by protection device */
-	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
-	PORT_DIPSETTING(      0x0000, "China" )
-	PORT_DIPSETTING(      0x0001, "Taiwan" )
-	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
-	PORT_DIPSETTING(      0x0003, "Korea" )
-	PORT_DIPSETTING(      0x0004, "Hong Kong" )
-	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
-	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( olds )
@@ -1231,6 +1221,47 @@ static INPUT_PORTS_START( photoy2k )
 	PORT_DIPSETTING(      0x0003, DEF_STR( World ))
 	PORT_DIPSETTING(      0x0004, "Korea" )
 	PORT_DIPSETTING(      0x0005, "Hong Kong" )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( kov2 )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0004, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( martmast )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0006, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
+INPUT_PORTS_END
+
+static INPUT_PORTS_START( martmasc )
+	PORT_INCLUDE ( pgm )
+
+	PORT_MODIFY("Region")	/* Region - supplied by protection device */
+	PORT_DIPNAME( 0x000f, 0x0000, DEF_STR( Region ) )
+	PORT_DIPSETTING(      0x0000, "China" )
+	PORT_DIPSETTING(      0x0001, "Taiwan" )
+	PORT_DIPSETTING(      0x0002, "Japan (Alta License)" )
+	PORT_DIPSETTING(      0x0003, "Korea" )
+	PORT_DIPSETTING(      0x0004, "Hong Kong" )
+	PORT_DIPSETTING(      0x0005, DEF_STR( World ) )
+	PORT_DIPSETTING(      0x0006, DEF_STR( USA ) )
 INPUT_PORTS_END
 
 static INPUT_PORTS_START( ddp2 )
@@ -1435,6 +1466,42 @@ static MACHINE_DRIVER_START( pgm )
 	MDRV_VIDEO_UPDATE(pgm)
 MACHINE_DRIVER_END
 
+static MACHINE_RESET( orlegend );
+
+static MACHINE_DRIVER_START( orlegend )
+	MDRV_IMPORT_FROM(pgm)
+
+	MDRV_MACHINE_RESET( orlegend )
+
+MACHINE_DRIVER_END
+
+static MACHINE_RESET( orlegnde );
+
+static MACHINE_DRIVER_START( orlegnde )
+	MDRV_IMPORT_FROM(pgm)
+
+	MDRV_MACHINE_RESET( orlegnde )
+
+MACHINE_DRIVER_END
+
+static MACHINE_RESET( orlegndc );
+
+static MACHINE_DRIVER_START( orlegndc )
+	MDRV_IMPORT_FROM(pgm)
+
+	MDRV_MACHINE_RESET( orlegndc )
+
+MACHINE_DRIVER_END
+
+static MACHINE_RESET( orld105k );
+
+static MACHINE_DRIVER_START( orld105k )
+	MDRV_IMPORT_FROM(pgm)
+
+	MDRV_MACHINE_RESET( orld105k )
+
+MACHINE_DRIVER_END
+
 static MACHINE_DRIVER_START( drgw2 )
 	MDRV_IMPORT_FROM(pgm)
 
@@ -1592,6 +1659,7 @@ static void pgm_basic_init(running_machine *machine)
 
 	pgm_bg_videoram = &pgm_videoram[0];
 	pgm_tx_videoram = &pgm_videoram[0x4000/2];
+	pgm_rowscrollram = &pgm_videoram[0x7000/2];
 }
 
 static DRIVER_INIT( pgm )
@@ -1601,9 +1669,84 @@ static DRIVER_INIT( pgm )
 
 /* Oriental Legend INIT */
 
+static MACHINE_RESET( orlegend )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
+
+	MACHINE_RESET_CALL(pgm);
+
+	mem8[0x1d1749]=input_port_read(machine, "Region");
+}
+
+static MACHINE_RESET( orlegnde )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
+
+	MACHINE_RESET_CALL(pgm);
+
+	mem8[0x1d1759]=input_port_read(machine, "Region");
+}
+
+static MACHINE_RESET( orlegndc )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
+
+	MACHINE_RESET_CALL(pgm);
+
+	mem8[0x1d15cf]=input_port_read(machine, "Region");
+}
+
+static MACHINE_RESET( orld105k )
+{
+	UINT8 *mem8 = (UINT8 *)memory_region(machine, "maincpu");
+
+	MACHINE_RESET_CALL(pgm);
+
+	mem8[0x1d0e47]=input_port_read(machine, "Region");
+}
+
 static DRIVER_INIT( orlegend )
 {
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, "maincpu");
+
 	pgm_basic_init(machine);
+
+	mem16[0x146ae4/2]=0x4e71;
+	mem16[0x146ae6/2]=0x4e71;
+
+	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+}
+
+static DRIVER_INIT( orlegnde )
+{
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, "maincpu");
+
+	pgm_basic_init(machine);
+
+	mem16[0x146af4/2]=0x4e71;
+	mem16[0x146af6/2]=0x4e71;
+
+	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+}
+
+static DRIVER_INIT( orld111c )
+{
+	pgm_basic_init(machine);
+
+	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+}
+
+static DRIVER_INIT( orld105k )
+{
+	UINT16 *mem16 = (UINT16 *)memory_region(machine, "maincpu");
+
+	pgm_basic_init(machine);
+
+	mem16[0x146450/2]=0x4e71;
+	mem16[0x146452/2]=0x4e71;
 
 	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
 	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
@@ -4238,7 +4381,7 @@ ROM_START( killbldp )
 
 	ROM_REGION( 0x4000, "prot", 0 ) /* ARM protection ASIC - internal rom */
 	/* the first ~0x200 bytes of this are 'execute only' and can't be read directly, even when running code from internal/external ARM romspace */
-	ROM_LOAD( "killbldp_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(9a73bf7d) SHA1(2ce1311b01e1124ad00af172f0670141bcb7a030) ) 
+	ROM_LOAD( "killbldp_igs027a.bin", 0x000000, 0x04000, BAD_DUMP CRC(9a73bf7d) SHA1(2ce1311b01e1124ad00af172f0670141bcb7a030) )
 
 	ROM_REGION( 0x800000, "user1", 0 ) /* Protection Data (encrypted external ARM data) */
 	ROM_LOAD( "v300x.u26", 0x000000, 0x200000,  CRC(144388c8) SHA1(d7469df077c1a674129f18210584ba4d05a61888) )
@@ -4306,11 +4449,11 @@ ROM_END
 
 GAME( 1997, pgm,      0,          pgm, pgm,      pgm,        ROT0,   "IGS", "PGM (Polygame Master) System BIOS", GAME_IS_BIOS_ROOT )
 
-GAME( 1997, orlegend, pgm,        pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orlegnde, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orlegndc, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orld111c, orlegend,   pgm, pgm,      orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND  )
-GAME( 1997, orld105k, orlegend,   pgm, orld105k, orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegend, pgm,     orlegend,pgm,     orlegend,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 126)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegnde, orlegend,orlegnde,pgm,     orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orlegndc, orlegend,orlegndc,orlegndc,orlegnde,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 112, Chinese Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orld111c, orlegend,   pgm, orld111c, orld111c,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 111, Chinese Board)", GAME_IMPERFECT_SOUND  )
+GAME( 1997, orld105k, orlegend,orld105k,orld105k,orld105k,   ROT0,   "IGS", "Oriental Legend / Xi You Shi E Zhuan (ver. 105, Korean Board)", GAME_IMPERFECT_SOUND  )
 GAME( 1997, drgw2c,   drgw2,    drgw2, pgm,      drgw2c,     ROT0,   "IGS", "Zhong Guo Long II (ver. 100C, China)", GAME_IMPERFECT_SOUND )
 GAME( 1999, photoy2k, pgm,        kov, photoy2k, djlzz,      ROT0,   "IGS", "Photo Y2K (ver. 104)", GAME_IMPERFECT_SOUND ) /* region provided by protection device */
 GAME( 1999, raf102j,  photoy2k,   kov, photoy2k, djlzz,      ROT0,   "IGS", "Real and Fake / Photo Y2K (ver. 102, Japanese Board)", GAME_IMPERFECT_SOUND ) /* region provided by protection device */
@@ -4332,16 +4475,16 @@ GAME( 1998, olds100a, olds,      olds, olds,     olds,       ROT0,   "IGS", "Ori
 GAME( 1998, drgw3,    pgm,        pgm, sango,    dw3,        ROT0,   "IGS", "Dragon World 3 (ver. 100)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1998, drgw3k,   drgw3,      pgm, sango,    dw3,        ROT0,   "IGS", "Dragon World 3 (ver. 106, Korean Board)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 1998, killbld,  pgm,    killbld, killbld,  killbld,    ROT0,   "IGS", "The Killing Blade (ver. 104)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
-GAME( 1999, kov,      pgm,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 117)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 1999, kov115,   kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 115)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 1999, kovj,     kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 100, Japanese Board)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 1999, kovplus,  kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 1999, kovplusa, kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (alt ver. 119)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
+GAME( 1999, kov,      pgm,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 117)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 1999, kov115,   kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 115)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 1999, kovj,     kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour / Sangoku Senki (ver. 100, Japanese Board)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 1999, kovplus,  kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (ver. 119)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 1999, kovplusa, kov,        pgm, sango,    kov,        ROT0,   "IGS", "Knights of Valour Plus / Sangoku Senki Plus (alt ver. 119)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
 GAME( 1999, puzlstar, pgm,        kov, sango,    pstar,      ROT0,   "IGS", "Puzzle Star (ver. 100MG)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
-GAME( 2001, kov2p,    kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M204XX)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 2001, kov2p205, kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M205XX)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION ) /* need internal rom of IGS027A */
-GAME( 2001, ddp2,     pgm,       kov2p,ddp2,     ddp2,       ROT270, "IGS", "Bee Storm - DoDonPachi II (ver. 100)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
-GAME( 2001, ddp2a,    ddp2,      kov2p,ddp2,     ddp2,       ROT270, "IGS", "Bee Storm - DoDonPachi II (ver. 102)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
+GAME( 2001, kov2p,    kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M204XX)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 2001, kov2p205, kov2,      kov2, sango,    kov2p,      ROT0,   "IGS", "Knights of Valour 2 Plus - Nine Dragons / Sangoku Senki 2 Plus - Nine Dragons (ver. M205XX)", GAME_IMPERFECT_SOUND ) /* need internal rom of IGS027A */
+GAME( 2001, ddp2,     pgm,      kov2p, ddp2,     ddp2,       ROT270, "IGS", "Bee Storm - DoDonPachi II (ver. 100)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
+GAME( 2001, ddp2a,    ddp2,     kov2p, ddp2,     ddp2,       ROT270, "IGS", "Bee Storm - DoDonPachi II (ver. 102)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
 GAME( 2001, puzzli2,  pgm,        kov, sango,    puzzli2,    ROT0,   "IGS", "Puzzli 2 Super (ver. 200)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING )
 GAME( 2002, dmnfrnt,  pgm,        svg, sango,    dmnfrnt,    ROT0,   "IGS", "Demon Front (ver. 102)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
 GAME( 2002, dmnfrnta, dmnfrnt,    svg, sango,    dmnfrnt,    ROT0,   "IGS", "Demon Front (ver. 105)", GAME_IMPERFECT_SOUND | GAME_UNEMULATED_PROTECTION | GAME_NOT_WORKING ) /* need internal rom of IGS027A */
