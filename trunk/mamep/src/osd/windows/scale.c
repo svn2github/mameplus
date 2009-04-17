@@ -95,18 +95,16 @@ static const char *str_desc[] =
 	"Scanlines TV",
 	"EPX-B",
 	"EPX-C",
-	"Scale2x",           // by AdvMAME v2.2
-//	"SuperScale",        // by ElSemi, same as Scale2x
-	"SuperScale w/ Scanlines", // by ElSemi
-	"Scale3x",           // by AdvMAME v2.2
-	"2xSaI",             // by Kreed v0.59
-	"Super 2xSaI",       // by Kreed v0.59
-	"Super Eagle",       // by Kreed v0.59
-	"2xPM",              // by Pablo Medina v0.2
-	"HQ2x",             //
-	"HQ2xS",             //
+	"Scale2x",      // by AdvMAME v2.2
+	"Scale3x",      // by AdvMAME v2.2
+	"2xSaI",        // by Kreed v0.59
+	"Super 2xSaI",  // by Kreed v0.59
+	"Super Eagle",  // by Kreed v0.59
+	"2xPM",         // by Pablo Medina v0.2
+	"HQ2x",
+	"HQ2xS",
 	"HQ2xBold",
-	"HQ3x",      // by Maxim Stepin
+	"HQ3x",         // by Maxim Stepin
 	"HQ3xS",
 	"HQ3xBold",
 	NULL
