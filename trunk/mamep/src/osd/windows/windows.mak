@@ -145,9 +145,6 @@ ifdef MSVC_BUILD
     # disable function pointer warnings in C++ which are evil to work around
     CPPONLYFLAGS += /wd4191 /wd4060 /wd4065 /wd4640
     
-    # filter X86_ASM define
-    DEFS := $(filter-out -DX86_ASM,$(DEFS))
-    
     # explicitly set the entry point for UNICODE builds
     ifdef UNICODE
     LDFLAGS += /ENTRY:wmainCRTStartup
@@ -171,15 +168,6 @@ DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -D__
 	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
 
 endif
-
-
-#-------------------------------------------------
-# nasm for Windows (but not cygwin) has a "w"
-# at the end
-#-------------------------------------------------
-
-ASM = @nasmw
-ASMFLAGS = -f coff -Wno-orphan-labels
 
 
 #-------------------------------------------------
@@ -317,9 +305,7 @@ ifneq ($(USE_SCALE_EFFECTS),)
   OSDOBJS += $(WINOBJ)/scale.o
 
   OBJDIRS += $(WINOBJ)/scale
-  ifndef PTR64
-    OSDOBJS += $(WINOBJ)/scale/superscale.obj
-  endif
+
   OSDOBJS += $(WINOBJ)/scale/scale2x.o
   OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
   OSDOBJS += $(WINOBJ)/scale/hq2x.o
@@ -332,10 +318,6 @@ ifneq ($(USE_SCALE_EFFECTS),)
   ifndef PTR64
     DEFS += -DUSE_MMX_INTERP_SCALE
   endif
-
-  $(WINOBJ)/scale/%.obj: $(WINSRC)/scale/%.asm
-	@echo Assembling $<...
-	$(ASM) -o $@ $(ASMFLAGS) $(subst -D,-d,$(ASMDEFS)) $<
 endif
 
 OSDOBJS += $(VCOBJS)

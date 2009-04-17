@@ -19,8 +19,6 @@ enum
 	SCALE_EFFECT_EPXB,
 	SCALE_EFFECT_EPXC,
 	SCALE_EFFECT_SCALE2X,
-//	SCALE_EFFECT_SUPERSCALE,
-	SCALE_EFFECT_SUPERSCALE75,
 	SCALE_EFFECT_SCALE3X,
 	SCALE_EFFECT_2XSAI,
 	SCALE_EFFECT_SUPER2XSAI,
@@ -77,8 +75,6 @@ static const char *str_name[] =
 	"epxb",
 	"epxc",
 	"scale2x",
-//	"superscale",
-	"superscale75",
 	"scale3x",
 	"2xsai",
 	"super2xsai",
@@ -128,14 +124,6 @@ static void (*scale_scale2x_line_16)(UINT16 *dst0, UINT16 *dst1, const UINT16 *s
 static void (*scale_scale2x_line_32)(UINT32 *dst0, UINT32 *dst1, const UINT32 *src0, const UINT32 *src1, const UINT32 *src2, unsigned count);
 
 static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-
-#ifndef PTR64
-// functions from superscale.asm
-void superscale_line(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
-void superscale_line_75(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
-static void (*superscale_line_func)(UINT16 *src0, UINT16 *src1, UINT16 *src2, UINT16 *dst, UINT32 width, UINT64 *mask);
-static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth);
-#endif /* PTR64 */
 
 // functions from AdvMAME
 void scale2x_16_def(UINT16* dst0, UINT16* dst1, const UINT16* src0, const UINT16* src1, const UINT16* src2, unsigned count);
@@ -391,31 +379,6 @@ int scale_init(void)
 			break;
 		}
 
-#ifndef PTR64
-//		case SCALE_EFFECT_SUPERSCALE:
-		case SCALE_EFFECT_SUPERSCALE75:
-		{
-			/*
-			if (scale_effect.effect == SCALE_EFFECT_SUPERSCALE)
-			{
-				sprintf(name, "SuperScale (mmx optimised)");
-				superscale_line_func = superscale_line;
-			}
-			else
-			*/
-			{
-				sprintf(name, "SuperScale75%% (mmx optimised)");
-				superscale_line_func = superscale_line_75;
-			}
-
-			if (!use_mmx)
-				return 1;
-
-			scale_effect.xsize = scale_effect.ysize = 2;
-			break;
-		}
-#endif /* PTR64 */
-
 		case SCALE_EFFECT_2XSAI:
 		case SCALE_EFFECT_SUPER2XSAI:
 		case SCALE_EFFECT_SUPEREAGLE:
@@ -481,13 +444,6 @@ int scale_check(int depth)
 		case SCALE_EFFECT_SCALE2X:
 		case SCALE_EFFECT_SCALE3X:
 			if (depth == 15 || depth == 16 || depth == 32)
-				return 0;
-			else
-				return 1;
-
-//		case SCALE_EFFECT_SUPERSCALE:
-		case SCALE_EFFECT_SUPERSCALE75:
-			if (use_mmx && (depth == 15 || depth == 16))
 				return 0;
 			else
 				return 1;
@@ -584,12 +540,6 @@ int scale_perform_scale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, in
 
 		case SCALE_EFFECT_SCALE3X:
 			return scale_perform_scale3x(src, dst, src_pitch, dst_pitch, width, height, depth);
-
-#ifndef PTR64
-//		case SCALE_EFFECT_SUPERSCALE:
-		case SCALE_EFFECT_SUPERSCALE75:
-			return scale_perform_superscale(src, dst, src_pitch, dst_pitch, width, height, depth);
-#endif /* PTR64 */
 
 		case SCALE_EFFECT_2XSAI:
 			if (depth == 15)
@@ -809,46 +759,6 @@ static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 
 	return 0;
 }
-
-
-#ifndef PTR64
-//============================================================
-//	scale_perform_superscale
-//============================================================
-
-static int scale_perform_superscale(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pitch, int width, int height, int depth)
-{
-	UINT32 srcNextline = src_pitch >> 1;
-	UINT16 *dst0=(UINT16 *)dst;
-	UINT16 *dst1=(UINT16 *)(dst+dst_pitch);
-	UINT16 *src0=(UINT16 *)(src-src_pitch);  //don't worry, there is extra space :)
-	UINT16 *src1=(UINT16 *)src;
-	UINT16 *src2=(UINT16 *)(src+src_pitch);
-	UINT64 mask = 0x7BEF7BEF7BEF7BEFLL;
-	int i;
-
-	if (depth == 15)
-		mask = 0x3DEF3DEF3DEF3DEFLL;
-
-	for (i = 0; i < height; i++)
-	{
-		superscale_line(src0, src1, src2, dst0, width, &mask);
-		superscale_line_func(src2, src1, src0, dst1, width, &mask);
-
-		src0 = src1;
-		src1 = src2;
-		src2 += srcNextline;
-
-		dst0 += dst_pitch;
-		dst1 += dst_pitch;
-	}
-	scale_emms();
-	
-	return 0;
-}
-#endif /* PTR64 */
-
-
 
 //============================================================
 //	scale_perform_hq2x
