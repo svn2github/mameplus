@@ -543,7 +543,7 @@ INLINE const char *code_to_string(const code_string_table *table, UINT32 code)
 	/* find a matching code, or  */
 	for ( ; table->code != ~0; table++)
 		if (table->code == code)
-			return table->string;
+			return _(table->string);
 
 	/* return the default string */
 	return table->string;

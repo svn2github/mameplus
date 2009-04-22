@@ -1929,7 +1929,7 @@ static void menu_input_populate_and_sort(ui_menu *menu, input_item_data *itemlis
 		/* generate the name of the item itself, based off the base name and the type */
 		item = itemarray[curitem];
 		assert(nameformat[item->type] != NULL);
-		astring_printf(text, nameformat[item->type], item->name);
+		astring_printf(text, nameformat[item->type], _(item->name));
 
 		/* if we're polling this item, use some spaces with left/right arrows */
 		if (menustate->pollingref == item->ref)
