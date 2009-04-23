@@ -94,6 +94,13 @@ const game_driver * const consoledrivers[] =
 	/* BANDAI */
 	DRIVER( wswan )		/* Bandai WonderSwan Handheld						*/
 	DRIVER( wscolor )	/* Bandai WonderSwan Color Handheld					*/
+
+/****************COMPUTERS***************************************************/
+	/* ASCII & MICROSOFT */
+	DRIVER( msx )		/* 1983 MSX 										*/
+	DRIVER( msx2 )		/* 1985 MSX2										*/
+	DRIVER( msx2p )		/* 1988 MSX2+ Japan									*/
+
 #endif /* MAMEMESS */
 
 

@@ -16,6 +16,7 @@
 
 DRVLIBS += \
 	$(MESSOBJ)/messdriv.o \
+	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
 	$(MESSOBJ)/cpschngr.a \
@@ -39,9 +40,15 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_FORMATS)/ioprocs.o	\
 	$(MESS_FORMATS)/flopimg.o	\
 	$(MESS_FORMATS)/cassimg.o	\
+	$(MESS_FORMATS)/basicdsk.o	\
 	$(MESS_DEVICES)/mflopimg.o	\
 	$(MESS_DEVICES)/cassette.o	\
+	$(MESS_DEVICES)/printer.o	\
+	$(MESS_DEVICES)/basicdsk.o	\
+	$(MESS_MACHINE)/tc8521.o   \
+	$(MESS_MACHINE)/ctronics.o \
 	$(MESS_FORMATS)/wavfile.o	\
+	$(MESS_MACHINE)/wd17xx.o   \
 
 
 
@@ -82,6 +89,12 @@ $(MESSOBJ)/nintendo.a:			\
 $(MESSOBJ)/nec.a:	   \
 	$(MESS_MACHINE)/pce.o	 \
 	$(MESS_DRIVERS)/pce.o	\
+
+$(MESSOBJ)/ascii.a :   \
+	$(MESS_FORMATS)/fmsx_cas.o \
+	$(MESS_DRIVERS)/msx.o	\
+	$(MESS_MACHINE)/msx_slot.o	 \
+	$(MESS_MACHINE)/msx.o	 \
 
 $(MESSOBJ)/cpschngr.a: \
 	$(MESS_DRIVERS)/cpschngr.o \
