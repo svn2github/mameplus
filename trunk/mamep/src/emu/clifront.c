@@ -197,7 +197,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 				"supported " GAMESNOUN " (best match first):\n\n"), gamename_option);
 		for (drvnum = 0; drvnum < ARRAY_LENGTH(matches); drvnum++)
 			if (matches[drvnum] != NULL)
-				mame_printf_warning("%-10s%s\n", matches[drvnum]->name, _LST(matches[drvnum]->description));
+				mame_printf_warning("%-18s%s\n", matches[drvnum]->name, _LST(matches[drvnum]->description));
 
 		/* exit with an error */
 		result = MAMERR_NO_SUCH_GAME;
@@ -562,7 +562,7 @@ int cli_info_listfull(core_options *options, const char *gamename)
 			count++;
 
 			/* output the remaining information */
-			mame_printf_info("%-10s", drivers[drvindex]->name);
+			mame_printf_info("%-18s", drivers[drvindex]->name);
 
 			if (lang_message_is_enabled(UI_MSG_LIST))
 			{
@@ -608,7 +608,7 @@ int cli_info_listsource(core_options *options, const char *gamename)
 		if (mame_strwildcmp(gamename, drivers[drvindex]->name) == 0)
 		{
 			/* output the remaining information */
-			mame_printf_info("%-8s %s\n", drivers[drvindex]->name, astring_c(core_filename_extract_base(filename, drivers[drvindex]->source_file, FALSE)));
+			mame_printf_info("%-16s %s\n", drivers[drvindex]->name, astring_c(core_filename_extract_base(filename, drivers[drvindex]->source_file, FALSE)));
 			count++;
 		}
 
@@ -641,7 +641,7 @@ int cli_info_listclones(core_options *options, const char *gamename)
 					mame_printf_info(_("Name:    Clone of:\n"));
 
 				/* output the remaining information */
-				mame_printf_info("%-8s %-8s\n", drivers[drvindex]->name, clone_of->name);
+				mame_printf_info("%-16s %-8s\n", drivers[drvindex]->name, clone_of->name);
 				count++;
 			}
 	}
@@ -683,7 +683,7 @@ int cli_info_listbrothers(core_options *options, const char *gamename)
 					const game_driver *clone_of = driver_get_clone(drivers[matchindex]);
 
 					if (clone_of != NULL && (clone_of->flags & GAME_IS_BIOS_ROOT) == 0)
-						mame_printf_info("%s%-8s [%s]\n", matchstring, drivers[matchindex]->name, clone_of->name);
+						mame_printf_info("%s%-16s [%s]\n", matchstring, drivers[matchindex]->name, clone_of->name);
 					else
 						mame_printf_info("%s%s\n", matchstring, drivers[matchindex]->name);
 					didit[matchindex] = TRUE;
