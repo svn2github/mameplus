@@ -27,6 +27,8 @@ build_sdl {
   DEFINES += USE_SDL
 }
 
+LIBS += -dead_strip
+
 win32 {
 RC_FILE = mamepgui.rc
 }

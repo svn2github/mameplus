@@ -29,6 +29,7 @@
 	<option name="inipath" guiname="ini files directory" type="dirs" />
 	<option name="fontpath" guiname="font files directory" type="dirs" />
 	<option name="cheatpath" guiname="cheat files directory" type="dir" />
+	<option name="crsshairpath" guiname="crosshair files directory" type="dir" />
 	<option name="langpath" guiname="language files directory" type="dir" />
 	<option name="ipspath" guiname="IPS files directory" type="dir" />
 	
@@ -93,7 +94,6 @@
 		<value guivalue="EPX-B">epxb</value>
 		<value guivalue="EPX-C">epxc</value>
 		<value>scale2x</value>
-		<value>superscale75</value>
 		<value>scale3x</value>
 		<value guivalue="2xSaI">2xsai</value>
 		<value guivalue="Super 2xSaI">super2xsai</value>

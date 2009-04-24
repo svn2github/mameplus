@@ -111,10 +111,10 @@ QString Utils::getSinglePath(QString dirPaths0, QString fileName)
 	return QString();
 }
 
-QString Utils::getDesc(const QString &gameName)
+QString Utils::getDesc(const QString &gameName, bool useLocal)
 {
 	GameInfo *gameInfo = mameGame->games[gameName];
-	if (local_game_list && !gameInfo->lcDesc.isEmpty())
+	if (local_game_list && !gameInfo->lcDesc.isEmpty() && useLocal)
 		return gameInfo->lcDesc;
 	else
 		return gameInfo->description;

@@ -54,7 +54,7 @@
      <addaction name="actionAVI"/>
      <addaction name="actionWave"/>
     </widget>
-    <widget class="QMenu" name="menuSave_Fix_dat_File_2">
+    <widget class="QMenu" name="menuSaveFixdat">
      <property name="title">
       <string>Save Fix-dat File</string>
      </property>
@@ -68,7 +68,7 @@
     <addaction name="actionSrcProperties"/>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
-    <addaction name="menuSave_Fix_dat_File_2"/>
+    <addaction name="menuSaveFixdat"/>
     <addaction name="separator"/>
     <addaction name="actionExitStop"/>
    </widget>

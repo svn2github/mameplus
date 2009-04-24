@@ -188,4 +188,10 @@ extern QByteArray option_column_state;
 extern QByteArray option_geometry;
 extern QString mameIniPath;
 
+extern bool isSDLPort;
+extern bool hasLanguage;
+extern bool hasDriverCfg;
+extern bool hasIPS;
+extern bool hasDevices;
+
 #endif

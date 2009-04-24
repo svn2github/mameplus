@@ -175,13 +175,7 @@ extern QString language;
 extern bool local_game_list;
 extern bool isDarkBg;
 extern bool sdlInited;
-
-extern bool isSDLPort;
 extern bool isMESS;
-extern bool hasIPS;
-extern bool hasDevices;
-extern bool hasLanguage;
-extern bool hasDriverCfg;
 
 extern QStringList validGuiSettings;
 

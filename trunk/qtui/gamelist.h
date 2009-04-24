@@ -128,18 +128,17 @@ public:
 	QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	QModelIndex index(int column, TreeItem *childItem) const;
 	QModelIndex parent(const QModelIndex &index) const;
+	QVariant data(const QModelIndex &index, int role) const;
+	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
 	int columnCount(const QModelIndex &parent = QModelIndex()) const;
-	QVariant data(const QModelIndex &index, int role) const;
-
-	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	void updateRow(const QModelIndex &index);
 
 private:
 	TreeItem *rootItem;
 
 	TreeItem *getItem(const QModelIndex &index) const;
-	TreeItem * buildItem(TreeItem *, QString, bool);
+	TreeItem *setupModelData(TreeItem *, QString, bool);
 };
 
 class GamelistDelegate : public QItemDelegate
@@ -174,17 +173,11 @@ class Gamelist : public QObject
 	Q_OBJECT
 
 public:
-	bool hasInitd;
 	QProcess *loadProc;
-	QString mameOutputBuf;
 	QStringList xmlLines;
-	QTime loadTimer;
-	int numTotalGames;
-	QString mameVersion;
 	QMenu *menuContext;
 	QMenu *headerMenu;
 	QString listMode;
-	QStringList folderList;
 
 	// interactive threads used by the game list
 	UpdateSelectionThread selectionThread;
@@ -201,6 +194,7 @@ public:
 
 public slots:
 	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
+	void update(int = GAMELIST_INIT_FULL);
 
 	void showContextMenu(const QPoint &);
 	void updateContextMenu();
@@ -210,7 +204,6 @@ public slots:
 	void updateHeaderContextMenu();
 	void restoreGameSelection();
 
-	void loadDefaultIni();
 	void runMame(bool = false, QStringList = QStringList());
 	QString getViewString(const QModelIndex &index, int column) const;
 	void updateProgress(int progress);
@@ -221,10 +214,6 @@ public slots:
 	void toggleDelegate(bool);
 
 	// external process management
-	void loadListXmlReadyReadStandardOutput();
-	void loadListXmlFinished(int, QProcess::ExitStatus);
-	void loadDefaultIniReadyReadStandardOutput();
-	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 	void extractMerged(QString, QString);
 	void runMameFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
@@ -234,6 +223,7 @@ public slots:
 	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);
 
 private:
+	bool hasInitd;
 	QString currentTempROM;
 	QFutureWatcher<void> loadIconWatcher;
 	int loadIconStatus;
@@ -246,7 +236,6 @@ private:
 	void updateDynamicMenu(QMenu *);
 	void loadMMO(int);
 	void loadIconWorkder();
-	void parse();
 
 private slots:
 	void postLoadIcon();
@@ -456,11 +445,25 @@ public:
 	QHash<QString, GameInfo *> games;
 
 	MameGame(QObject *parent = 0);
-	~MameGame();
 
+	void init(int = 0);
 	void s11n();
-	int des11n();
 	void completeData();
+
+private:
+	QProcess *loadProc;
+	int numTotalGames;
+	QString mameOutputBuf;
+
+	int des11n();
+	void parseListXml();
+
+private slots:
+	// external process management
+	void loadListXmlReadyReadStandardOutput();
+	void loadListXmlFinished(int, QProcess::ExitStatus);
+	void loadDefaultIniReadyReadStandardOutput();
+	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 };
 
 class GameListSortFilterProxyModel : public QSortFilterProxyModel
@@ -480,6 +483,7 @@ protected:
 
 extern MameGame *mameGame;
 extern Gamelist *gameList;
+extern QStringList folderList;
 extern QString currentGame, currentFolder;
 
 #endif

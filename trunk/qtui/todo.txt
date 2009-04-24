@@ -10,7 +10,6 @@ read/write cookie
 theme
 
 //Done
-fixed maws link
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -23,12 +22,10 @@ mac should load settings same as win
 //Priority tasks
 3 custom ini write
 3 ips lang may cause crash
-3 new version detection
-3 visual effect override for vector games
+3 command.dat may cause crash
+2 new version detection
 3 background trans color on switching
 
-2 auto refresh
-2 搜索的时候，只会对当前的列表搜索，而老版的貌似是对各语言版本的列表都搜索了
 2 better console refresh
 2 比如设定完“核心视频”后，如果直接却设定“系统视频”，则刚刚做的“核心视频”所有设定丢失。
 2 column sorting
@@ -45,7 +42,6 @@ mac should load settings same as win
 
 2 global softwarepath
 2 translator credit
-2 driver config editor, -driver_config, mamebin changes should cause gamelist->init()
 
 1 pop warning if console rom not exists
 2 multi sw paths
@@ -90,6 +86,7 @@ mac should load settings same as win
 * vector.ini, debug.ini
 * unify method to get inherited default value
 * general info page
+* mamebin changes should cause gamelist->init()
 
 //GameList
 * separate game list language
@@ -142,7 +139,6 @@ mac should load settings same as win
 1 ramoptions
 * MESS skip warning
 chinese zip console name error
-1 buggy sorting console list
 * if we are in an empty MESS system folder, assign currentGame to the system
 * console folder icon
 * multi software dirs
@@ -157,7 +153,7 @@ chinese zip console name error
 
 //Extra
 * controller setting interface
-* export complete fixdat, current availabe only fixdat, selected, mame, mamep, mamep extra dat, snapshot dat
+* export selected, mame, mamep, mamep extra dat, snapshot dat
 * export roms to folders
 * delete roms,cfg,nvram...
 * delete snapshot
@@ -188,12 +184,15 @@ sudo chmod +x /usr/games/mamepgui
 in an empty folder
 1 dock snap
 w/ or w/o m1
-upgrading xml
 check sorting
-mame, mamep in same folder
+mame, mamep, mess in same folder
 gui/core options saving
 bios, ctrlr, effect, screen
 path w/ space and Unicode
+gamelist init #1: upgrading xml (sig err) G
+gamelist init #2: restore a console folder and/or game that is removed G
+gamelist init #3: keep audit result (newer ver) G
+gamelist init #4: driver config switch (newer ver) G
 
 [mamep core test]
 ips should not inherit
@@ -212,3 +211,53 @@ mamep snaps
 hazemd icons
 verify spclone dips
 add makelang text, src repo link on main page
+
+
+[gamelist init rewrite]
+todo: 
+-check mameGame_copy
+
+0: only called once
+3: multiple times
+
+/* init mameGame */
+[0]des11n()
+or
+[3]-listxml proc
+    >parseListXml()
+    >loadDefaultIni() proc
+      >gameList->init()
+
+disableCtrls()
+*disconn all
+
+init gameListModel, gameListPModel
+
+[0]initFolders (*need separate method to update visibility)
+
+1: init options from default mame.ini
+optUtils->loadDefault(mameGame->mameDefaultIni);
+2: load mame.ini overrides
+optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
+3: load GUI path overrides
+
+[0]setVersion()
+
+[3]loadMMO()
+
+filterFolderChanged()
+
+restore column state
+
+[0]initMenus()
+
+*connect all, updateSelection()
+enableCtrls()
+
+[0]loadIcon() in thread
+
+restoreGameSelection()
+
+
+*** switch to manu/bios folder slow
+*** restoreGameSelection() is slow

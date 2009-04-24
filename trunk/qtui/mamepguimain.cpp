@@ -37,13 +37,7 @@ QString language;
 bool local_game_list;
 bool isDarkBg = false;
 bool sdlInited = false;
-
-bool isSDLPort = false;
 bool isMESS = false;
-bool hasIPS = false;
-bool hasDevices = false;
-bool hasLanguage = false;
-bool hasDriverCfg = false;
 
 QStringList validGuiSettings;
 
@@ -264,8 +258,9 @@ QMainWindow(parent)
 
 	mameAuditor = new MameExeRomAuditor(this);
 
-	gameList = new Gamelist(this);
-	optUtils = new OptionUtils(this);
+	mameGame = new MameGame(0);
+	gameList = new Gamelist(0);
+	optUtils = new OptionUtils(0);
 	dirsUI = new Dirs(this);
 	playOptionsUI = new PlayOptions(this);
 	optionsUI = new Options(this);
@@ -505,7 +500,7 @@ void MainWindow::init()
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
 
-	gameList->init(true, GAMELIST_INIT_FULL);
+	mameGame->init();
 	show();
 
 	// connect misc signal and slots
@@ -555,8 +550,8 @@ void MainWindow::init()
 	m1->init();
 #endif /* Q_OS_WIN */
 
-	gameList->restoreGameSelection();
-	gameList->updateSelection();
+//	gameList->restoreGameSelection();
+//	gameList->updateSelection();
 }
 
 void MainWindow::setVersion()
@@ -609,7 +604,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.0 rc 1")
+		.arg("1.4.0 rc 2")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -642,6 +637,8 @@ void MainWindow::enableCtrls(bool isEnabled)
 	win->actionSrcProperties->setEnabled(isEnabled);
 	win->actionDefaultOptions->setEnabled(isEnabled);
 	win->actionPlay->setEnabled(isEnabled);
+	win->menuPlayWith->setEnabled(isEnabled);
+	win->menuSaveFixdat->setEnabled(isEnabled);
 	win->lineEditSearch->setEnabled(isEnabled);
 	win->btnSearch->setEnabled(isEnabled);
 	win->btnClearSearch->setEnabled(isEnabled);
@@ -1065,7 +1062,7 @@ void MainWindow::saveSettings()
 	else
 		guiSettings.setValue("mame_binary", mame_binary);
 
-	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(gameList->folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
+	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
 	QTreeWidgetItem *messItem = NULL;
 	if (!messItems.isEmpty())
 		messItem = messItems.first();

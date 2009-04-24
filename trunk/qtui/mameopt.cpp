@@ -21,6 +21,12 @@ QByteArray option_column_state;
 QByteArray option_geometry;
 QString mameIniPath = "";
 
+bool isSDLPort = false;
+bool hasLanguage = false;
+bool hasDriverCfg = false;
+bool hasIPS = false;
+bool hasDevices = false;
+
 /* internal */
 OptionDelegate optDelegate(win);
 
@@ -888,10 +894,14 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		win->saveSettings();
 
 	//special case for driver_config
-	if (optName == "driver_config" && pMameOpt->globalvalue != prevVal)
+	if (pMameOpt->globalvalue != prevVal &&
+		(optName == "driver_config"/* || optName == "mame_binary"*/))
 	{
+		//avoid accepted() SIGNAL
+		optionsUI->hide();
 		gameList->disableCtrls();
-		gameList->init(true, GAMELIST_INIT_DRIVER);
+
+		mameGame->init(1);
 	}
 }
 
@@ -912,6 +922,7 @@ void OptionDelegate::sync()
 	isReset = false;
 }
 
+//save options when dialog is closed
 void OptionDelegate::setChangesAccepted()
 {
 	emit commitData(rWidget);
@@ -1247,7 +1258,6 @@ void OptionUtils::init()
 	for (int i = OPTLEVEL_GUI; i < OPTLEVEL_LAST; i++)
 		connect(optCtrls[i], SIGNAL(currentItemChanged(QListWidgetItem *, QListWidgetItem *)), this, SLOT(preUpdateModel(QListWidgetItem *)));
 
-	//fixme: csv?
 	connect(optionsUI, SIGNAL(accepted()), &optDelegate, SLOT(setChangesAccepted()));
 	connect(optionsUI->tabOptions, SIGNAL(currentChanged(int)), this, SLOT(preUpdateModel()));
 }
@@ -1805,15 +1815,18 @@ void OptionUtils::loadDefault(QString text)
 	}
 
 	//mameOpts constructed, test MAME derivative now
+	if (mameOpts.contains("sdlvideofps") || mameOpts.contains("videodriver"))
+		isSDLPort = true;
+
+	if (mameOpts.contains("langpath"))
+		hasLanguage = true;
+
 	if (mameOpts.contains("driver_config"))
 		hasDriverCfg = true;
 	
 	if (mameOpts.contains("ips"))
 		hasIPS = true;
 	
-	if (mameOpts.contains("sdlvideofps") || mameOpts.contains("videodriver"))
-		isSDLPort = true;
-
 	loadTemplate();
 
 	QStringList consoleGamesL;
