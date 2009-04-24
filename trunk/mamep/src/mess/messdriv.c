@@ -95,6 +95,10 @@ const game_driver * const consoledrivers[] =
 	DRIVER( wswan )		/* Bandai WonderSwan Handheld						*/
 	DRIVER( wscolor )	/* Bandai WonderSwan Color Handheld					*/
 
+	/* SNK */
+	DRIVER( ngp )		/* NeoGeo Pocket									*/
+	DRIVER( ngpc )		/* NeoGeo Pocket Color								*/
+
 /****************COMPUTERS***************************************************/
 	/* ASCII & MICROSOFT */
 	DRIVER( msx )		/* 1983 MSX 										*/

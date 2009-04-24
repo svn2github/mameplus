@@ -23,6 +23,7 @@ DRVLIBS += \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
+	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/shared.a \
 
 
@@ -106,8 +107,15 @@ $(MESSOBJ)/bandai.a:     \
 	$(MESS_VIDEO)/wswan.o   \
 	$(MESS_AUDIO)/wswan.o
 
+$(MESSOBJ)/snk.a: \
+	$(MESS_DRIVERS)/ngp.o \
+	$(MESS_VIDEO)/k1ge.o
+
 #-------------------------------------------------
 # layout dependencies
 #-------------------------------------------------
 
 $(MESS_DRIVERS)/gb.o:		$(MESS_LAYOUT)/gb.lh
+$(MESS_DRIVERS)/ngp.o:		$(MESS_LAYOUT)/ngp.lh
+
+
