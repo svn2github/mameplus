@@ -1005,6 +1005,7 @@ smgolfb	VS.ƒSƒ‹ƒt / Stroke & Match Golf (men ver set 2)	‚Î[‚³‚·‚²‚é‚Ó	Nintendo
 vsbbaljb	VS.ƒx[ƒXƒ{[ƒ‹ (“ú–{”Å set 3)	‚Î[‚³‚·‚×[‚·‚Ú[‚é	Nintendo of America
 multigam	ƒ}ƒ‹ƒ`ƒQ[ƒ€ (set 1)	‚Ü‚é‚¿‚°[‚Ş	unknown
 multigmb	ƒ}ƒ‹ƒ`ƒQ[ƒ€ (set 2)	‚Ü‚é‚¿‚°[‚Ş	unknown
+multigm2	ƒ}ƒ‹ƒ`ƒQ[ƒ€2	‚Ü‚é‚¿‚°[‚Ş_2	Seo Jin
 multigm3	ƒ}ƒ‹ƒ`ƒQ[ƒ€III	‚Ü‚é‚¿‚°[‚Ş‚·‚è[	Seo Jin
 cham24	ƒJƒƒŒƒIƒ“24	‚©‚ß‚ê‚¨‚ñ24	bootleg
 nss_ssoc	ƒX[ƒp[ƒtƒH[ƒ[ƒVƒ‡ƒ“ƒTƒbƒJ[ / Super Soccer (Nintendo Super System)	‚·[‚Ï[‚Ó‚§[‚ß[‚µ‚å‚ñ‚³‚Á‚©[	Human Inc.
@@ -1692,7 +1693,8 @@ tetrista	ƒeƒgƒŠƒX (“ú–{”Å B-System YM2203)	‚Ä‚Æ‚è‚·_1_2_sega	Sega
 viofight	ƒoƒCƒIƒŒƒ“ƒXƒtƒ@ƒCƒg (ŠCŠO”Å)	‚Î‚¢‚¨‚ê‚ñ‚·‚Ó‚Ÿ‚¢‚Æ	Taito Corporation Japan
 viofightu	ƒoƒCƒIƒŒƒ“ƒXƒtƒ@ƒCƒg (USA”Å)	‚Î‚¢‚¨‚ê‚ñ‚·‚Ó‚Ÿ‚¢‚Æ	Taito America Corporation
 viofightj	ƒoƒCƒIƒŒƒ“ƒXƒtƒ@ƒCƒg (“ú–{”Å)	‚Î‚¢‚¨‚ê‚ñ‚·‚Ó‚Ÿ‚¢‚Æ	Taito Corporation
-ashura	ˆ¢C—…ƒuƒ‰ƒXƒ^[ (“ú–{”Å)	‚ ‚µ‚ã‚ç‚Ô‚ç‚·‚½[	Taito Corporation
+ashura	ˆ¢C—…ƒuƒ‰ƒXƒ^[ (ŠCŠO”Å)	‚ ‚µ‚ã‚ç‚Ô‚ç‚·‚½[	Taito Corporation Japan
+ashuraj	ˆ¢C—…ƒuƒ‰ƒXƒ^[ (“ú–{”Å)	‚ ‚µ‚ã‚ç‚Ô‚ç‚·‚½[	Taito Corporation
 ashurau	ˆ¢C—…ƒuƒ‰ƒXƒ^[ (USA”Å)	‚ ‚µ‚ã‚ç‚Ô‚ç‚·‚½[	Taito America Corporation
 hitice	ƒqƒbƒgEƒWEƒAƒCƒX -The Video Hockey League (USA”Å)	‚Ğ‚Á‚Æ‚¶‚ ‚¢‚·	Williams
 hiticej	ƒqƒbƒgEƒWEƒAƒCƒX -The Video Hockey League (“ú–{”Å)	‚Ğ‚Á‚Æ‚¶‚ ‚¢‚·	Midway/Taito Corporation
@@ -1792,8 +1794,8 @@ dinorexu	ƒ_ƒCƒmƒŒƒbƒNƒX (USA”Å)	‚¾‚¢‚Ì‚ê‚Á‚­‚·	Taito America Corporation
 qjinsei	ƒNƒCƒYl¶Œ€ê (“ú–{”Å)	‚­‚¢‚¸‚¶‚ñ‚¹‚¢‚°‚«‚¶‚å‚¤	Taito Corporation
 qcrayon	ƒNƒCƒYƒNƒŒƒˆƒ“‚µ‚ñ‚¿‚á‚ñ (“ú–{”Å)	‚­‚¢‚¸‚­‚ê‚æ‚ñ‚µ‚ñ‚¿‚á‚ñ	Taito Corporation
 qcrayon2	ƒNƒŒƒˆƒ“‚µ‚ñ‚¿‚á‚ñ -ƒIƒ‰‚Æ—V‚Ú (“ú–{”Å)	‚­‚ê‚æ‚ñ‚µ‚ñ‚¿‚á‚ñ	Taito Corporation
-driftout	ƒhƒŠƒtƒgƒAƒEƒg (“ú–{”Å)	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ	Visco
-driveout	ƒhƒŠƒtƒgƒAƒEƒg / Drive Out	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ	bootleg
+driftout	ƒhƒŠƒtƒgƒAƒEƒg (“ú–{”Å)	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ_1	Visco
+driveout	ƒhƒŠƒtƒgƒAƒEƒg / Drive Out	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ_1	bootleg
 ringrage	ƒŠƒ“ƒOƒŒƒCƒW (ver 2.3O 1992/08/09)	‚è‚ñ‚®‚ê‚¢‚¶	Taito Corporation Japan
 ringragj	ƒŠƒ“ƒOƒŒƒCƒW (ver 2.3J 1992/08/09)	‚è‚ñ‚®‚ê‚¢‚¶	Taito Corporation
 ringragu	ƒŠƒ“ƒOƒŒƒCƒW (ver 2.3A 1992/08/09)	‚è‚ñ‚®‚ê‚¢‚¶	Taito America Corporation
@@ -2365,14 +2367,14 @@ xmcotaj1	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941219)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotaj2	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941217)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotaa	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (ƒAƒWƒA”Å 941217)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
 xmcotajr	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (“ú–{”Å 941208 rent ver)	‚¦‚Á‚­‚·‚ß‚ñ_2	Capcom
-nwarr	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (‰¢B”Å 950316)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-nwarru	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-nwarrh	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (ƒ‰ƒeƒ“”Å 950403)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-nwarrb	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (ƒuƒ‰ƒWƒ‹”Å 950403)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-nwarra	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (ƒAƒWƒA”Å 950302)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-vhuntj	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950316)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-vhuntjr1	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950307)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
-vhuntjr2	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950302)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	Capcom
+nwarr	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (‰¢B”Å 950316)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+nwarru	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+nwarrh	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (ƒ‰ƒeƒ“”Å 950403)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+nwarrb	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (ƒuƒ‰ƒWƒ‹”Å 950403)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+nwarra	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (ƒAƒWƒA”Å 950302)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+vhuntj	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950316)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+vhuntjr1	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950307)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
+vhuntjr2	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW (“ú–{”Å 950302)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	Capcom
 cybots	ƒTƒCƒo[ƒ{ƒbƒc -ƒtƒ‹ƒƒ^ƒ‹ƒ}ƒbƒhƒlƒX (‰¢B”Å 950424)	‚³‚¢‚Î[‚Ú‚Á‚Â	Capcom
 cybotsu	ƒTƒCƒo[ƒ{ƒbƒc -ƒtƒ‹ƒƒ^ƒ‹ƒ}ƒbƒhƒlƒX (USA”Å 950424)	‚³‚¢‚Î[‚Ú‚Á‚Â	Capcom
 cybotsj	ƒTƒCƒo[ƒ{ƒbƒc -ƒtƒ‹ƒƒ^ƒ‹ƒ}ƒbƒhƒlƒX (“ú–{”Å 950420)	‚³‚¢‚Î[‚Ú‚Á‚Â	Capcom
@@ -2523,7 +2525,7 @@ avspd	ƒGƒCƒŠƒAƒ“ VS. ƒvƒŒƒfƒ^[ (‰¢B”Å 940520 Phoenix Edition) (ŠC‘¯”Å)	‚¦‚¢‚è‚
 dstlku1d	ƒ”ƒ@ƒ“ƒpƒCƒA -ƒUEƒiƒCƒgƒEƒHƒŠƒA[ƒY / Dark Stalkers -The Night Warriors (USA”Å 940705 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _1	bootleg
 ringdstd	ƒX[ƒp[ƒ}ƒbƒXƒ‹ƒ{ƒ}[ -ƒCƒ“ƒ^[ƒiƒVƒ‡ƒiƒ‹EƒuƒƒEƒAƒEƒg / Ring of Destruction -Slam Masters II (‰¢B”Å 940902 Phoenix Edition) (ŠC‘¯”Å)	‚·[‚Ï[‚Ü‚Á‚·‚é‚Ú‚Ü[	bootleg
 xmcotad	X-MEN -ƒ`ƒ‹ƒhƒŒƒ“ƒIƒuƒWƒAƒgƒ€ (‰¢B”Å 950105 Phoenix Edition) (ŠC‘¯”Å)	‚¦‚Á‚­‚·‚ß‚ñ_2	bootleg
-nwarrud	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[	bootleg
+nwarrud	ƒ”ƒ@ƒ“ƒpƒCƒAƒnƒ“ƒ^[ -ƒ_[ƒNƒXƒg[ƒJ[ƒYƒŠƒxƒ“ƒW / Night Warriors -Darkstalkers' Revenge (USA”Å 950406 Phoenix Edition) (ŠC‘¯”Å)	‚Î‚ñ‚Ï‚¢‚ _2_‚Í‚ñ‚½[_1	bootleg
 sfad	ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[ZERO / Street Fighter Alpha -Warriors' Dreams (‰¢B”Å 950727 Phoenix Edition) (ŠC‘¯”Å)	‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[_6_‚º‚ë_1	bootleg
 mshud	ƒ}[ƒ”ƒ‹EƒX[ƒp[ƒq[ƒ[ƒY (USA”Å 951024 Phoenix Edition) (ŠC‘¯”Å)	‚Ü[‚Ô‚é‚·[‚Ï[‚Ğ[‚ë[‚¸_1	bootleg
 19xxd	19XX -The War Against Destiny (USA”Å 951207 Phoenix Edition) (ŠC‘¯”Å)	‚È‚¢‚ñ‚Ä‚¡[‚ñ‚¾‚Ô‚é‚¦‚Á‚­‚·	bootleg
@@ -2838,7 +2840,7 @@ mgakuen2	–ƒŠw‰€2 -Šw‰€’·‚Ì•œQ	‚Ü[‚¶‚á‚ñ‚ª‚­‚¦‚ñ_2	Face
 pkladies	ƒ|[ƒJ[ƒŒƒfƒB[ƒX	‚Û[‚©[‚ê‚Å‚¡[‚·	Mitchell
 pkladiel	ƒ|[ƒJ[ƒŒƒfƒB[ƒX (Leprechaun ver 510)	‚Û[‚©[‚ê‚Å‚¡[‚·	Leprechaun
 pkladila	ƒ|[ƒJ[ƒŒƒfƒB[ƒX (Leprechaun ver 401)	‚Û[‚©[‚ê‚Å‚¡[‚·	Leprechaun
-dokaben	ƒhƒJƒxƒ“ (“ú–{”Å)	‚Ç‚©‚×‚ñ	Capcom
+dokaben	ƒhƒJƒxƒ“ (“ú–{”Å)	‚Ç‚©‚×‚ñ_1	Capcom
 pang	ƒ|ƒ“ƒsƒ“ƒOƒ[ƒ‹ƒh / Pang (ŠCŠO”Å)	‚Û‚ñ‚Ò‚ñ‚®‚í[‚é‚Ç	Mitchell
 pangb	ƒ|ƒ“ƒsƒ“ƒOƒ[ƒ‹ƒh / Pang (ŠC‘¯”Å set 1)	‚Û‚ñ‚Ò‚ñ‚®‚í[‚é‚Ç	[Mitchell] (bootleg)
 pangbold	ƒ|ƒ“ƒsƒ“ƒOƒ[ƒ‹ƒh / Pang (ŠC‘¯”Å set 2)	‚Û‚ñ‚Ò‚ñ‚®‚í[‚é‚Ç	[Mitchell] (bootleg)
@@ -3522,7 +3524,7 @@ pltkids	ƒpƒCƒƒbƒgƒLƒbƒY (Model 2B rev A)	‚Ï‚¢‚ë‚Á‚Æ‚«‚Á‚¸	Psikyo
 skisuprg	ƒZƒKƒXƒL[ ƒX[ƒp[G	‚¹‚ª‚·‚«[‚·[‚Ï[‚¶[	Sega
 stcc	ƒZƒK ƒc[ƒŠƒ“ƒOƒJ[ƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv (rev A)	‚¹‚ª‚Â[‚è‚ñ‚®‚©[‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	Sega
 waverunr	ƒEƒF[ƒuƒ‰ƒ“ƒi[ (“ú–{”Å rev A)	‚¤‚¥[‚Ô‚ç‚ñ‚È[	Sega
-hotd	ƒUEƒnƒEƒXEƒIƒuEƒUEƒfƒbƒh	‚´‚Í‚¤‚·‚¨‚Ô‚´‚Å‚Á‚Ç	Sega
+hotd	ƒUEƒnƒEƒXEƒIƒuEƒUEƒfƒbƒh	‚´‚Í‚¤‚·‚¨‚Ô‚´‚Å‚Á‚Ç_1	Sega
 topskatr	ƒgƒbƒvƒXƒP[ƒ^[ -Sega Skateboarding (ŠCŠO”Å rev A)	‚Æ‚Á‚Õ‚·‚¯[‚½[	Sega
 topskatu	ƒgƒbƒvƒXƒP[ƒ^[ -Sega Skateboarding (USA”Å)	‚Æ‚Á‚Õ‚·‚¯[‚½[	Sega
 overrev	ƒI[ƒo[ƒŒƒu (rev A)	‚¨[‚Î[‚ê‚Ô	Jaleco
@@ -3658,16 +3660,17 @@ mp_col3	ƒRƒ‰ƒ€ƒXIII -‘ÎŒˆIƒRƒ‰ƒ€ƒXƒ[ƒ‹ƒh / Columns III -Revenge of Columns (M
 ssf2ghw	ƒX[ƒp[ƒXƒgƒŠ[ƒgƒtƒ@ƒCƒ^[II -ƒUEƒjƒ…[ƒ`ƒƒƒŒƒ“ƒWƒƒ[ƒY (“ú–{”Å MegaDrive ver) (ŠC‘¯”Å)	‚·[‚Ï[‚·‚Æ‚è[‚Æ‚Ó‚Ÿ‚¢‚½[2_1_‚´‚É‚ã[‚¿‚á‚ê‚ñ‚¶‚á[‚¸	bootleg / Capcom
 aladbl	ƒAƒ‰ƒWƒ“ (“ú–{”Å Megadrive ver) (ŠC‘¯”Å)	‚ ‚ç‚¶‚ñ	bootleg / Sega
 dybbnao	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹ ƒiƒIƒ~ -SEGA Professional Baseball (“ú–{”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é_2_‚È‚¨‚İ	Sega
-zombrvn	ƒ]ƒ“ƒrƒŠƒxƒ“ƒW (“ú–{ / USA / ‰¢B / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¼‚ñ‚Ñ‚è‚×‚ñ‚¶	Sega
 pstone	ƒpƒ[ƒXƒg[ƒ“ (“ú–{ / USA / ‰¢B / ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ï‚í[‚·‚Æ[‚ñ_1	Capcom
+zombrvn	ƒ]ƒ“ƒrƒŠƒxƒ“ƒW (“ú–{ / USA / ‰¢B / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¼‚ñ‚Ñ‚è‚×‚ñ‚¶	Sega
 ggram2	ƒWƒƒƒCƒAƒ“ƒgƒOƒ‰ƒ€ ‘S“ú–{ƒvƒƒŒƒX2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¶‚á‚¢‚ ‚ñ‚Æ‚®‚ç‚Ş_2_‚º‚ñ‚É‚Ù‚ñ‚Õ‚ë‚ê‚·2	Sega
+shangril	“dŒ¶“Vg‘ÎímƒVƒƒƒ“ƒOƒŠƒ‰ (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚ñ‚°‚ñ‚Ä‚ñ‚µ‚½‚¢‚¹‚ñ‚¶‚á‚ñ‚µ‚µ‚á‚ñ‚®‚è‚ç	Marvelous Ent.
 vs2_2k	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[2 ƒo[ƒWƒ‡ƒ“2000 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_2_4‚Î[‚¶‚å‚ñ2000	Sega
 suchie3	ƒAƒCƒhƒ‹mƒX[ƒ`[ƒpƒCIII (“ú–{”Å)	‚ ‚¢‚Ç‚é‚¶‚á‚ñ‚µ‚·[‚¿[‚Ï‚¢_3	Jaleco
 toyfight	ƒgƒCƒtƒ@ƒCƒ^[	‚Æ‚¢‚Ó‚Ÿ‚¢‚½[	Sega
 derbyoc	ƒ_[ƒr[ƒI[ƒi[ƒYƒNƒ‰ƒu (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¾[‚Ñ[‚¨[‚È[‚¸‚­‚ç‚Ô_1	Sega
+doa2	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_2_1	Tecmo
 otrigger	ƒAƒEƒgƒgƒŠƒK[ (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚ ‚¤‚Æ‚Æ‚è‚ª[	Sega
 dybb99	ƒ_ƒCƒiƒ}ƒCƒgƒx[ƒXƒ{[ƒ‹99 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¾‚¢‚È‚Ü‚¢‚Æ‚×[‚·‚Ú[‚é_3_99	Sega
-doa2	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_2_1	Tecmo
 samba	ƒTƒ“ƒoDEƒAƒ~[ƒS (“ú–{”Å)	‚³‚ñ‚Î‚Å‚ ‚İ[‚²	Sega
 vtennis	ƒpƒ[ƒXƒ}ƒbƒVƒ… (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ï‚í[‚·‚Ü‚Á‚µ‚ã	Sega
 vtennisg	ƒo[ƒ`ƒƒƒeƒjƒX (GDS-0011)	‚Î[‚¿‚á‚Ä‚É‚·_1	Sega
@@ -3675,14 +3678,20 @@ totd	ƒUEƒ^ƒCƒsƒ“ƒOEƒIƒuEƒUEƒfƒbƒh (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA
 spawn	ƒXƒ|[ƒ“ -In The Demon's Hand (“ú–{ / USA / ‰¢B / ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚·‚Û[‚ñ	Capcom
 doa2m	ƒfƒbƒhƒIƒAƒAƒ‰ƒCƒu2 ƒ~ƒŒƒjƒAƒ€ (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚Á‚Ç‚¨‚ ‚ ‚ç‚¢‚Ô_2_2‚İ‚ê‚É‚ ‚Ş	Tecmo
 virnba	ƒo[ƒ`ƒƒNBA (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Î[‚¿‚á‚¦‚Ê‚Ñ[‚¦[	Sega
+virnbao	ƒo[ƒ`ƒƒNBA (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å) (original)	‚Î[‚¿‚á‚¦‚Ê‚Ñ[‚¦[	Sega
+mvsc2	ƒ}[ƒ”ƒ‹VSƒJƒvƒRƒ“2 -ƒjƒ…[ƒGƒCƒWƒIƒuƒq[ƒ[ƒY (“ú–{ / USA / ‰¢B / ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ü[‚Ô‚é‚Î[‚³‚·‚©‚Õ‚±‚ñ_2	Capcom
 smarinef	ƒ}ƒŠƒ“ƒtƒBƒbƒVƒ“ƒO	‚Ü‚è‚ñ‚Ó‚¡‚Á‚µ‚ñ‚®	Sega
 pstone2	ƒpƒ[ƒXƒg[ƒ“2 (“ú–{ / USA / ‰¢B / ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ï‚í[‚·‚Æ[‚ñ_2	Capcom
+qmegamis	ƒNƒCƒY ‚ ‚ —_‚³‚Ü‚Á -“¬‚¤—ƒ‚Æ‚Æ‚à‚É (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚­‚¢‚¸‚ ‚ ‚ß‚ª‚İ‚³‚Ü‚Á	Sega
+ggx	ƒMƒ‹ƒeƒBƒMƒAX (“ú–{”Å)	‚¬‚é‚Ä‚¡‚¬‚ _2_‚º‚­‚·	Arc System Works
 slasho	ƒXƒ‰ƒbƒVƒ…ƒAƒEƒg (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚·‚ç‚Á‚µ‚ã‚ ‚¤‚Æ	Sega
 slashout	ƒXƒ‰ƒbƒVƒ…ƒAƒEƒg (GDS-0004)	‚·‚ç‚Á‚µ‚ã‚ ‚¤‚Æ	Sega
 capsnk	ƒJƒvƒRƒ“ VS. SNK ƒ~ƒŒƒjƒAƒ€ƒtƒ@ƒCƒg2000 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚©‚Õ‚±‚ñ‚Î[‚³‚·‚¦‚·‚¦‚Ê‚¯‚¢_1‚İ‚ê‚É‚ ‚Ş‚Ó‚Ÿ‚¢‚Æ2000	Capcom / SNK
 gram2000	ƒWƒƒƒCƒAƒ“ƒgƒOƒ‰ƒ€2000 ‘S“ú–{ƒvƒƒŒƒX3 -‰hŒõ‚Ì—EÒ’B (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¶‚á‚¢‚ ‚ñ‚Æ‚®‚ç‚Ş_3_2000_‚º‚ñ‚É‚Ù‚ñ‚Õ‚ë‚ê‚·3	Sega
 cspike	ƒKƒ“ƒXƒpƒCƒN (“ú–{ / USA / ŠCŠO/ ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚ª‚ñ‚·‚Ï‚¢‚­	Psikyo / Capcom
+deathcox	ƒfƒXƒNƒŠƒ€ƒ]ƒ“OX (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Å‚·‚­‚è‚Ş‚¼‚ñ‚¨‚Á‚­‚·	Ecole
 confmiss	ƒRƒ“ƒtƒBƒfƒ“ƒVƒƒƒ‹ƒ~ƒbƒVƒ‡ƒ“ (GDS-0001)	‚±‚ñ‚Ó‚¡‚Å‚ñ‚µ‚á‚é‚İ‚Á‚µ‚å‚ñ	Sega
+wwfroyal	WWFƒƒCƒ„ƒ‹ƒ‰ƒ“ƒuƒ‹ (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¾‚Ô‚é‚¾‚Ô‚é‚¦‚Ó‚ë‚¢‚â‚é‚ç‚ñ‚Ô‚é	Sega
 pjustic	”R‚¦‚ëIƒWƒƒƒXƒeƒBƒXŠw‰€ (“ú–{ / USA / ŠCŠO/ ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚à‚¦‚ë‚¶‚á‚·‚Ä‚¡‚·‚ª‚­‚¦‚ñ	Capcom
 sprtjam	ƒXƒ|[ƒcƒWƒƒƒ€ (GDS-0003)	‚·‚Û[‚Â‚¶‚á‚Ş	Sega
 gwing2	ƒMƒKƒEƒBƒ“ƒO2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¬‚ª‚¤‚¡‚ñ‚®_2	Takumi / Capcom
@@ -3696,33 +3705,34 @@ cvsgd	ƒJƒvƒRƒ“ VS. SNK ƒ~ƒŒƒjƒAƒ€ƒtƒ@ƒCƒg2000 ƒvƒ (GDL-0004)	‚©‚Õ‚±‚ñ‚Î[‚³‚·‚¦
 wsbbgd	ƒX[ƒp[ƒƒWƒƒ[ƒŠ[ƒO (GDS-0010)	‚·[‚Ï[‚ß‚¶‚á[‚è[‚®	Sega
 spkrbtl	ƒXƒpƒCƒJ[ƒYƒoƒgƒ‹ (GDS-0005)	‚·‚Ï‚¢‚©[‚¸‚Î‚Æ‚é	Sega
 cvs2gd	ƒJƒvƒRƒ“ VS. SNK 2 ƒ~ƒŠƒIƒlƒA ƒtƒ@ƒCƒeƒBƒ“ƒO 2001 (rev A) (GDL-0007A)	‚©‚Õ‚±‚ñ‚Î[‚³‚·‚¦‚·‚¦‚Ê‚¯‚¢_2‚İ‚è‚¨‚Ë‚ ‚Ó‚Ÿ‚¢‚Ä‚¡‚ñ‚®2001	Capcom / SNK
-hmgeo	ƒwƒr[ƒƒ^ƒ‹ƒWƒIƒ}ƒgƒŠƒbƒNƒX (“ú–{ / USA / ‰¢B/ ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ö‚Ñ[‚ß‚½‚é‚¶‚¨‚Ü‚Æ‚è‚Á‚­‚·	Capcom
 gundmxgd	‹@“®ímƒKƒ“ƒ_ƒ€ ˜A–MVS.ƒWƒIƒ“ DX (GDL-0006)	‚«‚Ç‚¤‚¹‚ñ‚µ‚ª‚ñ‚¾‚Ş_5_‚ê‚ñ‚Û‚¤‚Î[‚³‚·‚¶‚¨‚ñ_2_‚Å‚ç‚Á‚­‚·	Capcom
+hmgeo	ƒwƒr[ƒƒ^ƒ‹ƒWƒIƒ}ƒgƒŠƒbƒNƒX (“ú–{ / USA / ‰¢B/ ƒAƒWƒA / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Ö‚Ñ[‚ß‚½‚é‚¶‚¨‚Ü‚Æ‚è‚Á‚­‚·	Capcom
+derbyoc2	ƒ_[ƒr[ƒI[ƒi[ƒYƒNƒ‰ƒu2 (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚¾[‚Ñ[‚¨[‚È[‚¸‚­‚ç‚Ô_2	Sega
 vtennis2	ƒo[ƒ`ƒƒƒeƒjƒX2 (rev A) (GDS-0015A)	‚Î[‚¿‚á‚Ä‚É‚·_2	Sega
 keyboard	La ƒL[ƒ{[ƒhƒ… (GDS-0017)	‚ç‚«[‚Ú[‚Ç‚ã	Sega
 ikaruga	”Á”µ (GDL-0010)	‚¢‚©‚é‚ª	Treasure
 lupinsho	ƒ‹ƒpƒ“O¢ THE SHOOTING (GDS-0018)	‚é‚Ï‚ñ‚³‚ñ‚¹‚¢‚´‚µ‚ã[‚Ä‚¡‚ñ‚®	Sega
 vathlete	ƒo[ƒ`ƒƒƒAƒXƒŠ[ƒg (GDS-0019)	‚Î[‚¿‚á‚ ‚·‚è[‚Æ	Sega
 luptype	ƒ‹ƒpƒ“O¢ THE TYPING (rev A) (GDS-0021A)	‚é‚Ï‚ñ‚³‚ñ‚¹‚¢‚´‚½‚¢‚Ò‚ñ‚®	Sega
-ggxx	ƒMƒ‹ƒeƒBƒMƒAXX (GDL-0011)	‚¬‚é‚Ä‚¡‚¬‚ ‚¢‚®‚º‚­‚·_1	Arc System Works
+ggxx	ƒMƒ‹ƒeƒBƒMƒAXX (GDL-0011)	‚¬‚é‚Ä‚¡‚¬‚ _3_‚¢‚®‚º‚­‚·_1	Arc System Works
 mok	ƒUEƒƒCƒYEƒIƒuEƒUEƒLƒ“ƒOƒX (GDS-0022)	‚´‚ß‚¢‚¸‚¨‚Ô‚´‚«‚ñ‚®‚·	Sega
 chocomk	ƒ€ƒTƒsƒB‚Ìƒ`ƒ‡ƒRƒ}[ƒJ[ (rev A) (GDL-0014A)	‚Ş‚³‚Ò‚¡‚Ì‚¿‚å‚±‚Ü[‚©[	Ecole Software
 moeru	–G‚¦‚éƒJƒW‚É‚å (GDL-0013)	‚à‚¦‚é‚©‚¶‚É‚å	Altron
 quizqgd	ƒNƒCƒYƒP[ƒ^ƒCQƒ‚[ƒh -Mail‚àChat‚à—ö‚µTel (GDL-0017)	‚­‚¢‚¸‚¯[‚½‚¢‚«‚ã[‚à[‚Ç	Amedio (Taito license)
-usagui	“e -–ì¶‚Ì“¬”v Ré–ƒ•Ò (GDL-0022)	‚¤‚³‚¬_2	Warashi
-ggxxrl	ƒMƒ‹ƒeƒBƒMƒAXX #ƒŠƒ[ƒh (rev A) (GDL-0019A)	‚¬‚é‚Ä‚¡‚¬‚ ‚¢‚®‚º‚­‚·_2_‚µ‚á[‚Õ‚è‚ë[‚Ç	Arc System Works
+ggxxrl	ƒMƒ‹ƒeƒBƒMƒAXX #ƒŠƒ[ƒh (rev A) (GDL-0019A)	‚¬‚é‚Ä‚¡‚¬‚ _3_‚¢‚®‚º‚­‚·_2_‚µ‚á[‚Õ‚è‚ë[‚Ç	Arc System Works
 shikgam2	®_‚ÌéII (GDL-0021)	‚µ‚«‚ª‚İ‚Ì‚µ‚ë_2	Alpha System
 bdrdown	ƒ{[ƒ_[ƒ_ƒEƒ“ (rev A) (GDL-0023A)	‚Ú[‚¾[‚¾‚¤‚ñ	G-Rev
+usagui	“e -–ì¶‚Ì“¬”v Ré–ƒ•Ò (GDL-0022)	‚¤‚³‚¬_2	Warashi
 psyvar2	ƒTƒCƒ”ƒ@ƒŠƒA2 -The Will To Fabricate (GDL-0024)	‚³‚¢‚Î‚è‚ _2	G-Rev
 puyofev	‚Õ‚æ‚Õ‚æƒtƒB[ƒo[ (GDS-0031)	‚Õ‚æ‚Õ‚æ‚Ó‚¡[‚Î[	Sega
-cfield	ƒJƒIƒXƒtƒB[ƒ‹ƒh (GDL-0025)	‚©‚¨‚·‚Ó‚¡[‚é‚Ç	Able
 tetkiwam	ƒeƒgƒŠƒX‹É“¹ (GDL-0020)	‚Ä‚Æ‚è‚·_5_‚«‚í‚ß‚İ‚¿	Success
+cfield	ƒJƒIƒXƒtƒB[ƒ‹ƒh (GDL-0025)	‚©‚¨‚·‚Ó‚¡[‚é‚Ç	Able
 trizeal	ƒgƒ‰ƒCƒW[ƒ‹ (GDL-0026)	‚Æ‚ç‚¢‚¶[‚é	Taito
 ss2005	ƒX[ƒp[ãŠC2005 (rev A) (GDL-0031A)	‚·[‚Ï[‚µ‚á‚ñ‚Í‚¢_2_2005	Starfish
 senkoo	ùŒõ‚Ì—Ö•‘ (GDL-0030)	‚¹‚ñ‚±‚¤‚Ì‚ë‚ñ‚Ç_1	G-Rev
 senko	ùŒõ‚Ì—Ö•‘ NEW ver (rev A) (GDL-0030A)	‚¹‚ñ‚±‚¤‚Ì‚ë‚ñ‚Ç_2_‚É‚ã[‚Î[‚¶‚å‚ñ	G-Rev
 meltybld	ƒƒ‹ƒeƒBƒuƒ‰ƒbƒh ƒAƒNƒgƒJƒfƒ“ƒcƒ@ Ver A (rev C) (GDL-0028C)	‚ß‚é‚Ä‚¡‚Ô‚ç‚Á‚Ç‚ ‚­‚Æ‚©‚Å‚ñ‚Â‚Ÿ_1_‚Î[‚¶‚å‚ñA	Ecole Software
-ggxxsla	ƒMƒ‹ƒeƒBƒMƒA ƒCƒOƒ[ƒNƒX ƒXƒ‰ƒbƒVƒ… (rev A) (GDL-0033A)	‚¬‚é‚Ä‚¡‚¬‚ ‚¢‚®‚º‚­‚·‚·‚ç‚Á‚µ‚ã	Arc System Works
+ggxxsla	ƒMƒ‹ƒeƒBƒMƒA ƒCƒOƒ[ƒNƒX ƒXƒ‰ƒbƒVƒ… (rev A) (GDL-0033A)	‚¬‚é‚Ä‚¡‚¬‚ _3_‚¢‚®‚º‚­‚·_3_‚·‚ç‚Á‚µ‚ã	Arc System Works
 radirgy	ƒ‰ƒWƒ‹ƒM (GDL-0032)	‚ç‚¶‚é‚¬	Milestone
 undefeat	ƒAƒ“ƒ_[ƒfƒBƒtƒB[ƒg (GDL-0035)	‚ ‚ñ‚¾[‚Å‚¡‚Ó‚¡[‚Æ	G-Rev
 kurucham	‚­‚é‚­‚éƒJƒƒŒƒIƒ“ (GDL-0034)	‚­‚é‚­‚é‚©‚ß‚ê‚¨‚ñ	Able
@@ -3736,15 +3746,16 @@ ngdup23a	ƒiƒIƒ~DIMMƒtƒ@[ƒ€ƒEƒFƒAƒAƒbƒvƒf[ƒ^ (GDS-0023A)	‚È‚¨‚İ‚Å‚¡‚Ş‚Ó‚Ÿ[‚Ş‚¤
 ngdup23c	ƒiƒIƒ~DIMMƒtƒ@[ƒ€ƒEƒFƒAƒAƒbƒvƒf[ƒ^ (GDS-0023C)	‚È‚¨‚İ‚Å‚¡‚Ş‚Ó‚Ÿ[‚Ş‚¤‚¥‚ ‚ ‚Á‚Õ‚Å[‚½	Sega
 vstrik3c	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[3 (cart) (USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_3	Sega
 vstrik3	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[3 (GDS-0006)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_3	Sega
+wldrider	ƒƒCƒ‹ƒhƒ‰ƒCƒ_[ƒY (“ú–{ / USA / ŠCŠO / ŠØ‘ / ƒI[ƒXƒgƒ‰ƒŠƒA”Å)	‚í‚¢‚é‚Ç‚ç‚¢‚¾[‚¸	Sega
 beachspi	ƒr[ƒ`ƒXƒpƒCƒJ[ƒY (GDS-0014)	‚Ñ[‚¿‚·‚Ï‚¢‚©[‚¸	Sega
 vf4	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 (GDS-0012)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_1	Sega
 vf4b	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 (rev B) (GDS-0012B)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_1	Sega
 vf4c	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 (rev C) (GDS-0012C)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_1	Sega
 initd	“ª•¶šD Arcade Stage (“ú–{”Å rev B) (GDS-0020B)	‚¢‚É‚µ‚á‚é‚Å‚¡[‚ [‚¯[‚Ç‚·‚Ä[‚¶_1	Sega
 initdexp	“ª•¶šD Arcade Stage (ŠCŠO”Å) (GDS-0025)	‚¢‚É‚µ‚á‚é‚Å‚¡[‚ [‚¯[‚Ç‚·‚Ä[‚¶_1	Sega
-vf4evo	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 ƒGƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (rev B) (GDS-0024B)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_2_‚¦‚Ú‚è‚ã[‚µ‚å‚ñ	Sega
 vf4evoa	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 ƒGƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (rev A) (GDS-0024A)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_2_‚¦‚Ú‚è‚ã[‚µ‚å‚ñ	Sega
 initdv2j	“ª•¶šD Arcade Stage Ver.2 (“ú–{”Å) (GDS-0026)	‚¢‚É‚µ‚á‚é‚Å‚¡[‚ [‚¯[‚Ç‚·‚Ä[‚¶_2_‚Î[‚¶‚å‚ñ_2	Sega
+vf4evo	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 ƒGƒ{ƒŠƒ…[ƒVƒ‡ƒ“ (rev B) (GDS-0024B)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_2_‚¦‚Ú‚è‚ã[‚µ‚å‚ñ	Sega
 initdv3j	“ª•¶šD Arcade Stage Ver.3 (“ú–{”Å) (rev B) (GDS-0032B)	‚¢‚É‚µ‚á‚é‚Å‚¡[‚ [‚¯[‚Ç‚·‚Ä[‚¶_3_‚Î[‚¶‚å‚ñ_3	Sega
 vf4tuneda	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 ƒtƒ@ƒCƒiƒ‹ƒ`ƒ…[ƒ“ƒh (rev A) (GDS-0036A)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_3_‚Ó‚Ÿ‚¢‚È‚é‚¿‚ã[‚ñ‚Ç	Sega
 vf4tunedd	ƒo[ƒ`ƒƒƒtƒ@ƒCƒ^[4 ƒtƒ@ƒCƒiƒ‹ƒ`ƒ…[ƒ“ƒh (rev D) (GDS-0036D)	‚Î[‚¿‚á‚Ó‚Ÿ‚¢‚½[_4_3_‚Ó‚Ÿ‚¢‚È‚é‚¿‚ã[‚ñ‚Ç	Sega
@@ -3754,11 +3765,15 @@ fotns	–k“l‚ÌŒ	‚Ù‚­‚Æ‚Ì‚¯‚ñ	Arc System Works
 podrace	ƒXƒ^[ƒEƒH[ƒYƒŒ[ƒT[ ƒA[ƒP[ƒh / Star Wars Pod Racer	‚·‚½[‚¤‚§[‚¸‚ê[‚³[‚ [‚¯[‚Ç	Sega
 pharrier	ƒvƒ‰ƒlƒbƒgƒnƒŠƒA[ƒY	‚Õ‚ç‚Ë‚Á‚Æ‚Í‚è‚ [‚¸	Sega
 airtrix	ƒGƒAƒgƒŠƒbƒNƒX	‚¦‚ ‚Æ‚è‚Á‚­‚·	Sega
+vs2002j	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[2002 (GDT-0001)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_5_2002	Sega
 vs2002ex	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[2002 (GDT-0002)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_5_2002	Sega
+avalons	ƒAƒ”ƒ@ƒƒ“‚ÌŒ® ƒT[ƒo (GDT-0005C) (ver 4.001)	‚ ‚Î‚ë‚ñ‚Ì‚©‚¬_1	Sega
 gekpurya	Œƒ“¬ƒvƒ–ì‹…E…“‡ViƒI[ƒ‹ƒXƒ^[ƒYvsƒvƒ–ì‹… (rev C) (GDT-0008C)	‚°‚«‚Æ‚¤‚Õ‚ë‚â‚«‚ã‚¤‚İ‚¸‚µ‚Ü‚µ‚ñ‚¶‚¨[‚é‚·‚½[‚¸‚Î[‚³‚·‚Õ‚ë‚â‚«‚ã‚¤	Sega
-avalon13	ƒAƒ”ƒ@ƒƒ“‚ÌŒ® ver1.30 -¬“×‚Ì‰ƒ (GDT-0010C) (ver 4.000)	‚ ‚Î‚ë‚ñ‚Ì‚©‚¬_1_‚Î[‚¶‚å‚ñ_1.30	Sega
-vs4	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[4 (GDT-0015)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_4	Sega
-avalon20	ƒAƒ”ƒ@ƒƒ“‚ÌŒ® “ó -’˜‚Æ‰ú—¥ (GDT-0017B) (ver 3.001)	‚ ‚Î‚ë‚ñ‚Ì‚©‚¬_2	Sega
+avalon13	ƒAƒ”ƒ@ƒƒ“‚ÌŒ® ver1.30 -¬“×‚Ì‰ƒ ƒNƒ‰ƒCƒAƒ“ƒg(GDT-0010C) (ver 4.000)	‚ ‚Î‚ë‚ñ‚Ì‚©‚¬_1_‚Î[‚¶‚å‚ñ_1.30	Sega
+vs4	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[4 (GDT-0015)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_4_1	Sega
+vs4j	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[4 (“ú–{”Å) (GDT-0013E)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_4_1	Sega
+avalon20	ƒAƒ”ƒ@ƒƒ“‚ÌŒ® “ó -’˜‚Æ‰ú—¥ ƒNƒ‰ƒCƒAƒ“ƒg (GDT-0017B) (ver 3.001)	‚ ‚Î‚ë‚ñ‚Ì‚©‚¬_2	Sega
+vs42006	ƒo[ƒ`ƒƒƒXƒgƒ‰ƒCƒJ[4 Ver.2006 (“ú–{”Å rev D) (GDT-0020D)	‚Î[‚¿‚á‚·‚Æ‚ç‚¢‚©[_4_2	Sega
 tfupdate	ƒgƒ‰ƒCƒtƒH[ƒXDIMMƒAƒbƒvƒf[ƒ^ (GDT-0011)	‚Æ‚ç‚¢‚Ó‚§[‚·‚Å‚¡‚Ş‚ ‚Á‚Õ‚Å[‚½	Sega
 vcop3	ƒo[ƒ`ƒƒƒRƒbƒv3 (GDX-0003A)	‚Î[‚¿‚á‚±‚Á‚Õ_3	Sega
 wangmid	˜pŠİƒ~ƒbƒhƒiƒCƒg Maximum Tune (ŠCŠO”Å rev B) (GDX-0009B)	‚í‚ñ‚ª‚ñ‚İ‚Á‚Ç‚È‚¢‚Æ‚Ü‚«‚µ‚Ü‚Ş‚¿‚ã[‚ñ_1	Sega
@@ -4392,6 +4407,7 @@ xexexj	ƒ[ƒNƒZƒNƒX (ver JAA)	‚º‚­‚¹‚­‚·	Konami
 asterix	ƒAƒXƒeƒŠƒNƒX (ver EAD)	‚ ‚·‚Ä‚è‚­‚·	Konami
 astrxeac	ƒAƒXƒeƒŠƒNƒX (ver EAC)	‚ ‚·‚Ä‚è‚­‚·	Konami
 astrxeaa	ƒAƒXƒeƒŠƒNƒX (ver EAA)	‚ ‚·‚Ä‚è‚­‚·	Konami
+asterixj	ƒAƒXƒeƒŠƒNƒX (ver JAD)	‚ ‚·‚Ä‚è‚­‚·	Konami
 gijoe	G.I.ƒWƒ‡[ -A Real American Hero (ŠCŠO”Å)	‚¶[‚ ‚¢‚¶‚å[	Konami
 gijoeu	G.I.ƒWƒ‡[ -A Real American Hero (USA”Å)	‚¶[‚ ‚¢‚¶‚å[	Konami
 gijoej	G.I.ƒWƒ‡[ -A Real American Hero (“ú–{”Å)	‚¶[‚ ‚¢‚¶‚å[	Konami
@@ -6253,7 +6269,7 @@ sxyreact	ƒpƒ`ƒ“ƒRƒZƒNƒV[ƒŠƒAƒNƒVƒ‡ƒ“ (“ú–{”Å)	‚Ï‚¿‚ñ‚±‚¹‚­‚µ[‚è‚ ‚­‚µ‚å‚ñ_1	Sa
 sxyreac2	ƒpƒ`ƒ“ƒRƒZƒNƒV[ƒŠƒAƒNƒVƒ‡ƒ“2 (“ú–{”Å)	‚Ï‚¿‚ñ‚±‚¹‚­‚µ[‚è‚ ‚­‚µ‚å‚ñ_2	Sammy
 cairblad	ƒ`ƒFƒ“ƒWƒGƒAƒuƒŒ[ƒh (“ú–{”Å)	‚¿‚¥‚ñ‚¶‚¦‚ ‚Ô‚ê[‚Ç	Sammy
 keithlcy	ƒhƒ‰ƒ}ƒeƒBƒbƒNƒAƒhƒxƒ“ƒ`ƒƒ[ƒNƒCƒY ƒL[ƒX&ƒ‹[ƒVƒB (“ú–{”Å)	‚Ç‚ç‚Ü‚Ä‚¡‚Á‚­‚ ‚Ç‚×‚ñ‚¿‚á[‚­‚¢‚¸‚«[‚·‚ ‚ñ‚Ç‚é[‚µ‚¡	Visco
-drifto94	ƒhƒŠƒtƒgƒAƒEƒg'94 -ƒUEƒn[ƒhƒI[ƒ_[ (“ú–{”Å)	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ94	Visco
+drifto94	ƒhƒŠƒtƒgƒAƒEƒg'94 -ƒUEƒn[ƒhƒI[ƒ_[ (“ú–{”Å)	‚Ç‚è‚Ó‚Æ‚ ‚¤‚Æ_2_94	Visco
 janjans1	ƒ‰ƒuƒŠ[ƒ|ƒbƒv–ƒ X‚µ‚Ü‚µ‚å (“ú–{”Å)	‚ç‚Ô‚è[‚Û‚Á‚Õ‚Ü[‚¶‚á‚ñ‚¶‚á‚ñ‚¶‚á‚ñ‚µ‚Ü‚µ‚å_1	Visco
 stmblade	ƒXƒg[ƒ€EƒuƒŒ[ƒh (USA”Å)	‚·‚Æ[‚Ş‚Ô‚ê[‚Ç	Visco
 jsk	´…s‘ã——¬lŠ¥‰¤ŠÄC ——¬«Šû‹³º (“ú–{”Å)	‚µ‚İ‚¸‚¢‚¿‚æ‚¶‚å‚è‚ã‚¤‚æ‚ñ‚©‚ñ‚¨‚¤‚©‚ñ‚µ‚ã‚¤‚¶‚å‚è‚ã‚¤‚µ‚å‚¤‚¬‚«‚å‚¤‚µ‚Â	Visco
@@ -7094,7 +7110,7 @@ coolpool	ƒN[ƒ‹ƒv[ƒ‹	‚­[‚é‚Õ[‚é	Catalina
 9ballsht	9ƒ{[ƒ‹ƒVƒ…[ƒgƒAƒEƒg (set 1)	‚È‚¢‚ñ‚Ú[‚é‚µ‚ã[‚Æ‚ ‚¤‚Æ_1	E-Scape EnterMedia (Bundra license)
 9ballsh2	9ƒ{[ƒ‹ƒVƒ…[ƒgƒAƒEƒg (set 2)	‚È‚¢‚ñ‚Ú[‚é‚µ‚ã[‚Æ‚ ‚¤‚Æ_1	E-Scape EnterMedia (Bundra license)
 9ballsh3	9ƒ{[ƒ‹ƒVƒ…[ƒgƒAƒEƒg (set 3)	‚È‚¢‚ñ‚Ú[‚é‚µ‚ã[‚Æ‚ ‚¤‚Æ_1	E-Scape EnterMedia (Bundra license)
-9ballshc	9ƒ{[ƒ‹ƒVƒ…[ƒgƒAƒEƒgƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv	‚È‚¢‚ñ‚Ú[‚é‚µ‚ã[‚Æ‚ ‚¤‚Æ_2	E-Scape EnterMedia (Bundra license)
+9ballshc	9ƒ{[ƒ‹ƒVƒ…[ƒgƒAƒEƒgƒ`ƒƒƒ“ƒsƒIƒ“ƒVƒbƒv	‚È‚¢‚ñ‚Ú[‚é‚µ‚ã[‚Æ‚ ‚¤‚Æ_2_‚¿‚á‚ñ‚Ò‚¨‚ñ‚µ‚Á‚Õ	E-Scape EnterMedia (Bundra license)
 gumbo	ƒKƒ“ƒ{[	‚ª‚ñ‚Ú[	Min Corp.
 mspuzzlg	ƒKƒ“ƒ{[ / Miss Puzzle	‚ª‚ñ‚Ú[	Min Corp.
 mspuzzle	ƒ~ƒXƒpƒYƒ‹	‚İ‚·‚Ï‚¸‚é	Min Corp.
@@ -7103,6 +7119,8 @@ msbingo	ƒ~ƒXƒrƒ“ƒS	‚İ‚·‚Ñ‚ñ‚²	Min Corp.
 dblpoint	ƒ_ƒuƒ‹ƒ|ƒCƒ“ƒg -–éãŠC	‚¾‚Ô‚é‚Û‚¢‚ñ‚Æ	Min Corp.
 dblpoind	ƒ_ƒuƒ‹ƒ|ƒCƒ“ƒg -–éãŠC (Dong Bang Electron) (ŠC‘¯”Å?)	‚¾‚Ô‚é‚Û‚¢‚ñ‚Æ	Dong Bang Electron
 statusbj	ƒXƒe[ƒ^ƒXƒuƒ‰ƒbƒNƒWƒƒƒbƒN (ver 1.0c)	‚·‚Ä[‚½‚·‚Ô‚ç‚Á‚­‚¶‚á‚Á‚­	Status Games
+tripdraw	ƒgƒŠƒvƒ‹ƒhƒ[ (ver 3.1 s)	‚Æ‚è‚Õ‚é‚Ç‚ë[	Status Games
+funcsino	ƒXƒe[ƒ^ƒXƒtƒ@ƒ“ƒJƒWƒm (ver 1.3s)	‚·‚Ä[‚½‚·‚Ó‚Ÿ‚ñ‚©‚¶‚Ì	Status Games
 hangman	ƒnƒ“ƒOƒ}ƒ“ -The Video Game	‚Í‚ñ‚®‚Ü‚ñ	Status Games
 trivquiz	ƒgƒŠƒu ƒNƒCƒY	‚Æ‚è‚Ô_1‚­‚¢‚¸	Status Games
 statriv2	ƒgƒŠƒu ƒc[	‚Æ‚è‚Ô_2	Status Games
@@ -7112,6 +7130,7 @@ sextriv	ƒZƒbƒNƒXƒgƒŠƒu	‚¹‚Á‚­‚·‚Æ‚è‚Ô	Status Games
 quaquiz2	ƒNƒAƒhƒƒNƒCƒYII	‚­‚ ‚Ç‚ë‚­‚¢‚¸2	Status Games
 supertr2	ƒX[ƒp[ƒgƒŠƒuII	‚·[‚Ï[‚Æ‚è‚Ô_2	Status Games
 supertr3	ƒX[ƒp[ƒgƒŠƒuIII	‚·[‚Ï[‚Æ‚è‚Ô_3	Status Games
+cstripxi	ƒJƒWƒmƒXƒgƒŠƒbƒvXI	‚©‚¶‚Ì‚·‚Æ‚è‚Á‚Õ_11	Status Games
 tickee	ƒeƒBƒbƒL[ƒeƒBƒJƒbƒc	‚Ä‚¡‚Á‚«[‚Ä‚¡‚©‚Á‚Â	Raster Elite
 ghoshunt	ƒS[ƒXƒgƒnƒ“ƒ^[	‚²[‚·‚Æ‚Í‚ñ‚½[	Hanaho Games
 tutstomb	ƒ^ƒbƒcƒgƒD[ƒ€	‚½‚Á‚Â‚Æ‚£[‚Ş	Island Design
