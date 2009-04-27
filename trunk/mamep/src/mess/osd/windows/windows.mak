@@ -20,22 +20,11 @@ OBJDIRS += \
 MESS_WINSRC = $(SRC)/mess/osd/windows
 MESS_WINOBJ = $(OBJ)/mess/osd/windows
 
-#fixme: should use LIBOSD +=
-MESSLIBOSD += \
+LIBOSD += \
 	$(MESS_WINOBJ)/configms.o	\
 	$(MESS_WINOBJ)/dialog.o	\
 	$(MESS_WINOBJ)/menu.o		\
 	$(MESS_WINOBJ)/opcntrl.o
-
-ifeq ($(NO_DLL),)
-    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
-    MESSLIBOSD += $(MESS_WINOBJ)/messlib.res
-else
-    ifeq ($(WINUI),)
-        $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
-        CLIRESFILE = $(MESS_WINOBJ)/messcli.res
-    endif
-endif
 
 $(LIBOSD): $(OSDOBJS)
 
@@ -51,6 +40,22 @@ $(LIBOCORE_NOMAIN): $(OSDCOREOBJS:$(WINOBJ)/main.o=)
 
 
 #-------------------------------------------------
+# rules for resource file
+#-------------------------------------------------
+
+ifeq ($(NO_DLL),)
+    $(MESS_WINOBJ)/messlib.res: $(MESS_WINSRC)/mess.rc $(WINOBJ)/mamevers.rc
+    LIBOSD += $(MESS_WINOBJ)/messlib.res
+else
+    ifeq ($(WINUI),)
+        $(MESS_WINOBJ)/messcli.res: $(MESS_WINSRC)/mess.rc $(WINSRC)/mame.rc $(WINOBJ)/mamevers.rc
+        CLIRESFILE = $(MESS_WINOBJ)/messcli.res
+    endif
+endif
+
+
+
+#-------------------------------------------------
 # generic rules for the resource compiler
 #-------------------------------------------------
 
@@ -58,11 +63,4 @@ $(MESS_WINOBJ)/%.res: $(MESS_WINSRC)/%.rc
 	@echo Compiling resources $<...
 	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir mess/$(OSD) -o $@ -i $<
 
-$(OBJ)/ui/%.res: src/ui/%.rc
-	@echo Compiling resources $<...
-	$(RC) $(RCDEFS) $(RCFLAGS) --include-dir src/ui -o $@ -i $<
-
-$(MESS_UIOBJ)/%.res: $(MESS_UISRC)/%.rc
-	@echo Compiling mame32 resources $<...
-	$(UI_RC) $(UI_RCDEFS) $(UI_RCFLAGS) -o $@ -i $<
 

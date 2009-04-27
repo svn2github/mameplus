@@ -295,34 +295,6 @@ endif
 $(WINOBJ)/drawdd.o : 	$(SRC)/emu/rendersw.c
 $(WINOBJ)/drawgdi.o :	$(SRC)/emu/rendersw.c
 
-
-
-#-------------------------------------------------
-# extra targets and rules for the scale effects
-#-------------------------------------------------
-
-ifneq ($(USE_SCALE_EFFECTS),)
-  OSDOBJS += $(WINOBJ)/scale.o
-
-  OBJDIRS += $(WINOBJ)/scale
-
-  OSDOBJS += $(WINOBJ)/scale/scale2x.o
-  OSDOBJS += $(WINOBJ)/scale/scale3x.o $(WINOBJ)/scale/2xpm.o
-  OSDOBJS += $(WINOBJ)/scale/hq2x.o
-  OSDOBJS += $(WINOBJ)/scale/vba_hq2x.o
-  OSDOBJS += $(WINOBJ)/scale/hq3x.o
-  OSDOBJS += $(WINOBJ)/scale/2xsai.o
-  OSDOBJS += $(WINOBJ)/scale/scanline.o
-  OSDOBJS += $(WINOBJ)/scale/snes9x_render.o
-
-  ifndef PTR64
-    DEFS += -DUSE_MMX_INTERP_SCALE
-  endif
-endif
-
-OSDOBJS += $(VCOBJS)
-CLIOBJS = $(WINOBJ)/climain.o
-
 # add debug-specific files
 OSDOBJS += \
 	$(WINOBJ)/debugwin.o
@@ -332,10 +304,22 @@ CLIRESFILE = $(WINOBJ)/mame.res
 VERSIONRES = $(WINOBJ)/version.res
 
 
+
 ifdef MSVC_BUILD
 DLLLINK = lib
 else
 DLLLINK = dll
+endif
+
+
+
+#-------------------------------------------------
+# extra scale effects, include the scale.mak
+#-------------------------------------------------
+
+ifneq ($(USE_SCALE_EFFECTS),)
+OSDOBJS += $(WINOBJ)/scale.o
+include $(SRC)/osd/windows/scale/scale.mak
 endif
 
 

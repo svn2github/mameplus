@@ -115,7 +115,7 @@ UIOBJS += \
 	$(UIOBJ)/translate.o \
 
 
-ifneq ($(USE_UI_COLOR_PALETTE),)
+ifneq ($(USE_CUSTOM_UI_COLOR),)
 UIOBJS += $(UIOBJ)/paletteedit.o
 endif
 
@@ -124,13 +124,10 @@ UIOBJS += $(UIOBJ)/imagemenu.o
 endif
 
 # add our UI resources
-ifneq ($(NO_DLL),)
-UI_RCFLAGS +=
-$(UIOBJ)/mameui.res: $(UISRC)/mameui.rc $(UIOBJ)/mamevers.rc
-endif
 GUIRESFILE = $(UIOBJ)/mameui.res
 
 $(LIBOSD): $(UIOBJS)
+
 
 
 
@@ -213,7 +210,7 @@ endif
 # only definitions UI_RCDEFS for mameui.rc
 #-------------------------------------------------
 
-ifneq ($(USE_UI_COLOR_PALETTE),)
+ifneq ($(USE_CUSTOM_UI_COLOR),)
 UI_RCDEFS += -DUI_COLOR_PALETTE
 endif
 

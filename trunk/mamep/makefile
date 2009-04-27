@@ -346,7 +346,7 @@ ifneq ($(USE_CUSTOM_BUTTON),)
 DEFS += -DUSE_CUSTOM_BUTTON
 endif
 
-ifneq ($(USE_UI_COLOR_PALETTE),)
+ifneq ($(USE_CUSTOM_UI_COLOR),)
 DEFS += -DUI_COLOR_PALETTE
 DEFS += -DUI_COLOR_DISPLAY
 endif
@@ -658,8 +658,7 @@ $(sort $(OBJDIRS)):
 ifndef EXECUTABLE_DEFINED
 
 ifeq ($(NO_DLL),)
-
-$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+$(EMULATORDLL): $(VERSIONOBJ) $(OBJ)/osd/windows/mamelib.o $(DRVLIBS) $(LIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 # always recompile the version string
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
@@ -677,18 +676,19 @@ $(EMULATORCLI):	$(EMULATORDLL) $(OBJ)/osd/windows/climain.o $(CLIRESFILE)
 else
   ifdef WINUI
   # gui target
-$(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
+  $(EMULATOR):	$(OBJ)/osd/winui/mui_main.o $(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(GUIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE_NOMAIN)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mwindows $^ $(LIBS) -o $@ $(MAPFLAGS)
   else
-# cli target
-$(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(MESSLIBOSD) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
+  # cli target
+  $(EMULATOR):	$(VERSIONOBJ) $(DRVLIBS) $(LIBOSD) $(CLIRESFILE) $(LIBEMU) $(LIBCPU) $(LIBSOUND) $(LIBUTIL) $(EXPAT) $(ZLIB) $(LIBOCORE)
 	$(CC) $(CDEFS) $(CFLAGS) -c $(SRC)/version.c -o $(VERSIONOBJ)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $(LDFLAGSEMULATOR) -mconsole $^ $(LIBS) -o $@ $(MAPFLAGS)
   endif
-  endif
+endif
+
 endif
 
 
