@@ -52,7 +52,7 @@
     <message>
         <location filename="../gamelist.cpp" line="2657"/>
         <source>Common image types</source>
-        <translation>通用影像類型</translation>
+        <translation>通用映像檔類型</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2659"/>
@@ -455,15 +455,15 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <source>Record Wave Output...</source>
-        <translation type="obsolete">錄製聲波音訊輸出...</translation>
+        <translation type="obsolete">錄製 WAV 音訊輸出...</translation>
     </message>
     <message>
         <source>Record MNG Output...</source>
-        <translation type="obsolete">錄製MNG視訊輸出...</translation>
+        <translation type="obsolete">錄製 MNG 視訊輸出...</translation>
     </message>
     <message>
         <source>Record AVI Output...</source>
-        <translation type="obsolete">錄製AVI視訊輸出...</translation>
+        <translation type="obsolete">錄製 AVI 影片輸出...</translation>
     </message>
     <message>
         <source>Load Savestate</source>
@@ -499,7 +499,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="59"/>
         <source>Save Fix-dat File</source>
-        <translation type="unfinished"></translation>
+        <translation>儲存補檔文件</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="77"/>
@@ -604,7 +604,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="372"/>
         <source>Configure &amp;IPS...</source>
-        <translation>設定 &amp;IPS...</translation>
+        <translation>設定 IPS(&amp;I)...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="464"/>
@@ -619,17 +619,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="630"/>
         <source>Completely Missing Sets Only...</source>
-        <translation type="unfinished"></translation>
+        <translation>完全遺失的集合...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="635"/>
         <source>Incomplete Sets Only...</source>
-        <translation type="unfinished"></translation>
+        <translation>不完整的集合...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="640"/>
         <source>All Set Issues...</source>
-        <translation type="unfinished"></translation>
+        <translation>所有問題...</translation>
     </message>
     <message>
         <source>Chinese (PRC)</source>
@@ -660,17 +660,17 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="594"/>
         <source>Record &amp;Wave Output...</source>
-        <translation>錄製聲波音訊輸出(&amp;W)...</translation>
+        <translation>錄製 WAV 音訊輸出(&amp;W)...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="599"/>
         <source>Record &amp;MNG Output...</source>
-        <translation>錄製&amp;MNG視訊輸出...</translation>
+        <translation>錄製 MNG 視訊輸出(&amp;M)...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="604"/>
         <source>Record &amp;AVI Output...</source>
-        <translation>錄製&amp;AVI視訊輸出...</translation>
+        <translation>錄製 AVI 影片輸出(&amp;A)...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="609"/>
@@ -749,7 +749,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mamepguimain.cpp" line="166"/>
         <source>Preferences...</source>
-        <translation type="unfinished"></translation>
+        <translation>喜好設定...</translation>
     </message>
     <message>
         <location filename="../mamepguimain.cpp" line="420"/>
@@ -764,7 +764,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mamepguimain.cpp" line="426"/>
         <source>MAME/MESS executable:</source>
-        <translation type="unfinished"></translation>
+        <translation>MAME/MESS 執行檔:</translation>
     </message>
     <message>
         <source>MAME executable:</source>
@@ -850,12 +850,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../gamelist.cpp" line="1190"/>
         <source>Cache signature error.</source>
-        <translation></translation>
+        <translation>快取簽暑錯誤。</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="1199"/>
         <source>Cache version has been updated. A full refresh is required.</source>
-        <translation></translation>
+        <translation>快取版本已經更新，需要重新整理。</translation>
     </message>
 </context>
 <context>
@@ -863,7 +863,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../audit.cpp" line="530"/>
         <source>Auditing</source>
-        <translation>驗證中</translation>
+        <translation>正在驗證</translation>
     </message>
 </context>
 <context>
@@ -1000,12 +1000,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1304"/>
         <source>localized directory</source>
-        <translation>當地化 DAT 檔目錄</translation>
+        <translation>當地化資料檔目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1307"/>
         <source>cfg directory</source>
-        <translation>cfg 目錄</translation>
+        <translation>組態檔目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1308"/>
@@ -1045,7 +1045,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1315"/>
         <source>hiscore directory</source>
-        <translation>高分記錄目錄</translation>
+        <translation>高分檔目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1286"/>
@@ -1176,7 +1176,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1341"/>
         <source>crop artwork</source>
-        <translation>裁切 Artwork 圖片</translation>
+        <translation>裁切裝飾圖</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1342"/>
@@ -1389,11 +1389,6 @@ Do you wish to continue?</source>
         <translation>輸入檔播放結束時自動暫停</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1395"/>
-        <source>m68k core</source>
-        <translation>M68000 CPU 核心</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="1397"/>
         <source>transparent in-game ui</source>
         <translation>半透明的遊戲中設定選單</translation>
@@ -1586,7 +1581,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1447"/>
         <source>force power of 2 textures</source>
-        <translation>強制2次方大小的紋理</translation>
+        <translation>強制 2 次方大小的材質</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1480"/>
@@ -1826,7 +1821,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1553"/>
         <source>core artwork</source>
-        <translation>核心 Artwork 選項</translation>
+        <translation>核心裝飾圖選項</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1554"/>
@@ -1915,12 +1910,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1385"/>
         <source>log</source>
-        <translation></translation>
+        <translation>建立 error.log 檔案</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1417"/>
         <source>use lang list</source>
-        <translation></translation>
+        <translation>使用中文遊戲清單</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1537"/>
@@ -1930,12 +1925,12 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1547"/>
         <source>SDL keyboard mapping</source>
-        <translation>SDL 鍵盤對映</translation>
+        <translation>SDL 鍵盤對應</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1548"/>
         <source>SDL joystick mapping</source>
-        <translation>SDL 搖桿對映</translation>
+        <translation>SDL 搖桿對應</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1555"/>
@@ -1945,22 +1940,22 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1295"/>
         <source>romsets directory</source>
-        <translation>Rom 目錄</translation>
+        <translation>ROM 集合的目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1296"/>
         <source>hash files directory</source>
-        <translation>Hash 檔目錄</translation>
+        <translation>HASH 檔目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1297"/>
         <source>samplesets directory</source>
-        <translation>樣本檔目錄</translation>
+        <translation>樣本檔集合的目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1298"/>
         <source>artwork files directory</source>
-        <translation>Artwork 檔目錄</translation>
+        <translation>裝飾圖檔案目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1299"/>
@@ -1970,7 +1965,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1300"/>
         <source>ini files directory</source>
-        <translation>Ini 檔目錄</translation>
+        <translation>INI 檔案目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1301"/>
@@ -1980,7 +1975,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1302"/>
         <source>cheat files directory</source>
-        <translation>作弊檔目錄</translation>
+        <translation>作弊碼檔案目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1303"/>
@@ -1990,7 +1985,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1305"/>
         <source>ips files directory</source>
-        <translation>IPS 檔目錄</translation>
+        <translation>IPS 檔案目錄</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1323"/>
@@ -2020,7 +2015,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1513"/>
         <source>sdl render driver</source>
-        <translation>SDL 渲染驅動</translation>
+        <translation>SDL 描繪驅動</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="2345"/>
@@ -2036,7 +2031,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../mameopt.cpp" line="1283"/>
         <source>external folder list</source>
-        <translation></translation>
+        <translation>外部資料夾清單</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1425"/>
@@ -2280,17 +2275,17 @@ Do you wish to continue?</source>
     <message>
         <location filename="../playoptions.ui" line="111"/>
         <source>Record MNG Output</source>
-        <translation>錄製MNG視訊輸出</translation>
+        <translation>錄製 MNG 視訊輸出</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="118"/>
         <source>Record AVI Output</source>
-        <translation>錄製AVI視訊輸出</translation>
+        <translation>錄製 AVI 影片輸出</translation>
     </message>
     <message>
         <location filename="../playoptions.ui" line="125"/>
         <source>Record Wave Output</source>
-        <translation>錄製聲波音訊輸出</translation>
+        <translation>錄製 WAV 音訊輸出</translation>
     </message>
 </context>
 <context>
@@ -2298,7 +2293,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../quazip/quazipfile.cpp" line="128"/>
         <source>ZIP/UNZIP API error %1</source>
-        <translation></translation>
+        <translation>ZIP/UNZIP API 錯誤 %1</translation>
     </message>
 </context>
 <context>
@@ -2306,7 +2301,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../audit.cpp" line="210"/>
         <source>Auditing</source>
-        <translation>驗證中</translation>
+        <translation>正在驗證</translation>
     </message>
 </context>
 <context>
