@@ -6,7 +6,7 @@
 	This in turn includes cps1.h.
 	Therefore we must call our include by the same name, in order to
 	override the mame include, and thereby remove any compilation errors.
-	It also means we can get rid of the varios bodges of the past, and
+	It also means we can get rid of the various bodges of the past, and
 	no more ifdefs are needed in the mame code.
 
 ***************************************************************************/
@@ -78,8 +78,6 @@ static WRITE16_HANDLER( cpsq_coinctrl2_w )
 
 static INTERRUPT_GEN( cps1_interrupt )
 {
-	/* Strider also has a IRQ4 handler. It is input port related, but the game */
-	/* works without it. It is the *only* CPS1 game to have that. */
 	cpu_set_input_line(device, 2, HOLD_LINE);
 }
 
@@ -102,13 +100,11 @@ static READ16_HANDLER( qsound_rom_r )
 {
 	UINT8 *rom = memory_region(space->machine, "user1");
 
-	if (rom) return rom[offset] | 0xff00;
+	if (rom)
+		return rom[offset] | 0xff00;
 	else
-	{
-		popmessage("%06x: read sound ROM byte %04x",cpu_get_pc(space->cpu),offset);
 		return 0;
 	}
-}
 
 static READ16_HANDLER( qsound_sharedram1_r )
 {
@@ -136,11 +132,10 @@ static WRITE8_HANDLER( qsound_banksw_w )
 {
 	UINT8 *RAM = memory_region(space->machine, "audiocpu");
 	int bankaddress=0x10000+((data&0x0f)*0x4000);
+
 	if (bankaddress >= memory_region_length(space->machine, "audiocpu"))
-	{
-		logerror("WARNING: Q sound bank overflow (%02x)\n", data);
 		bankaddress=0x10000;
-	}
+
 	memory_set_bankptr(space->machine, 1, &RAM[bankaddress]);
 }
 
@@ -356,7 +351,7 @@ GFXDECODE_END
 
 static void cps1_irq_handler_mus(const device_config *device, int irq)
 {
-	cpu_set_input_line(device->machine->cpu[1],0,irq ? ASSERT_LINE : CLEAR_LINE);
+	cputag_set_input_line(device->machine, "audiocpu", 0, irq ? ASSERT_LINE : CLEAR_LINE);
 }
 
 static const ym2151_interface ym2151_config =
@@ -612,5 +607,5 @@ ROM_END
 /*    YEAR  NAME      PARENT    COMPAT  MACHINE     INPUT     INIT      CONFIG  COMPANY     FULLNAME */
 CONS( 1995, sfach,    sfzch,    0,	cps1_10MHz, sfzch,    cps1,     NULL,   "Capcom", "CPS Changer - Street Fighter Alpha - Warriors' Dreams (Publicity US 950727)", 0 )
 CONS( 1995, sfzch,    0,        0,	cps1_10MHz, sfzch,    cps1,     NULL,   "Capcom", "CPS Changer - Street Fighter Zero (Japan 951020)", 0 )
-CONS( 1995, sfzbch,   sfzch,    0,	cps1_10MHz, sfzch,    cps1,     NULL,   "Hack",   "CPS Changer - Street Fighter Alpha (Brazil 950727)", 0 )
+CONS( 1995, sfzbch,   sfzch,    0,	cps1_10MHz, sfzch,    cps1,     NULL,   "Capcom", "CPS Changer - Street Fighter Zero (Brazil 950727)", 0 )
 CONS( 1995, wofch,    0,        0,	qsound,     sfzch,    wof,      NULL,   "Capcom", "CPS Changer - Tenchi Wo Kurau II (Japan 921031)", 0 )

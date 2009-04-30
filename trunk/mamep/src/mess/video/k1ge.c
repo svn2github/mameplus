@@ -113,6 +113,13 @@ WRITE8_DEVICE_HANDLER( k1ge_w )
 		data &= 0x80;
 		break;
 	}
+
+	/* Only the lower 4 bits of the palette entry high bytes can be written */
+	if ( offset >= 0x0200 && offset < 0x0400 && ( offset & 1 ) )
+	{
+		data &= 0x0f;
+	}
+
 	k1ge->vram[offset & 0x7ff] = data;
 }
 
@@ -266,19 +273,22 @@ static void k1ge_draw( const device_config *device, int line )
 {
 	k1ge_t *k1ge = get_safe_token( device );
 	UINT16 *p = BITMAP_ADDR16( k1ge->bitmap, line, 0 );
+	UINT16 oowcol = k1ge->vram[0x012] & 0x07;
 	int i;
 
 	if ( line < k1ge->wba_v || line >= k1ge->wba_v + k1ge->wsi_v )
 	{
 		for( i = 0; i < 160; i++ )
 		{
-			p[i] = k1ge->vram[0x012] & 0x07;
+			p[i] = oowcol;
 		}
 	}
 	else
 	{
+		UINT16 col = ( ( k1ge->vram[0x118] & 0xc0 ) == 0x80 ) ? k1ge->vram[0x118] & 0x07 : 0;
+
 		for ( i = 0; i < 160; i++ )
-			p[i] = 0;
+			p[i] = col;
 
 		if ( k1ge->vram[0x030] & 0x80 )
 		{
@@ -317,12 +327,12 @@ static void k1ge_draw( const device_config *device, int line )
 
 		for( i = 0; i < k1ge->wba_h; i++ )
 		{       
-			p[i] = k1ge->vram[0x012] & 0x07;
+			p[i] = oowcol;
 		}
 
 		for( i = k1ge->wba_h + k1ge->wsi_h; i < 160; i++ )
 		{       
-			p[i] = k1ge->vram[0x012] & 0x07;
+			p[i] = oowcol;
 		}
 	}
 }
@@ -631,7 +641,7 @@ static void k2ge_draw( const device_config *device, int line )
 	int i;
 
 	oowcol = ( k1ge->vram[0x012] & 0x07 ) * 2;
-	oowcol = k1ge->vram[0x3f0 + col ] | ( k1ge->vram[0x3f1 + col ] << 8 );
+	oowcol = k1ge->vram[0x3f0 + oowcol ] | ( k1ge->vram[0x3f1 + oowcol ] << 8 );
 
 	if ( line < k1ge->wba_v || line >= k1ge->wba_v + k1ge->wsi_v )
 	{

@@ -9463,8 +9463,8 @@ Other Sun games
 
 	/* MPU5 */
 	DRIVER( m_honmon )
-#endif /* !NEOCPSPGM */
 
 	DRIVER( roul )
+#endif /* !NEOCPSPGM */
 
 #endif	/* DRIVER_RECURSIVE */
