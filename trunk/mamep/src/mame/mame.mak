@@ -700,6 +700,7 @@ $(MAMEOBJ)/igs.a: \
 
 $(MAMEOBJ)/irem.a: \
 	$(DRIVERS)/m10.o $(VIDEO)/m10.o \
+	$(DRIVERS)/m14.o \
 	$(DRIVERS)/m52.o $(VIDEO)/m52.o \
 	$(DRIVERS)/m57.o $(VIDEO)/m57.o \
 	$(DRIVERS)/m58.o $(VIDEO)/m58.o \
@@ -1282,7 +1283,6 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/nycaptor.o $(MACHINE)/nycaptor.o $(VIDEO)/nycaptor.o \
 	$(DRIVERS)/opwolf.o $(MACHINE)/opwolf.o \
 	$(DRIVERS)/othunder.o $(VIDEO)/othunder.o \
-	$(DRIVERS)/parentj.o \
 	$(DRIVERS)/pitnrun.o $(MACHINE)/pitnrun.o $(VIDEO)/pitnrun.o \
 	$(DRIVERS)/qix.o $(MACHINE)/qix.o $(AUDIO)/qix.o $(VIDEO)/qix.o \
 	$(DRIVERS)/rainbow.o $(MACHINE)/rainbow.o \
@@ -1301,6 +1301,7 @@ $(MAMEOBJ)/taito.a: \
 	$(DRIVERS)/taito_l.o $(VIDEO)/taito_l.o \
 	$(DRIVERS)/taito_x.o $(MACHINE)/cchip.o \
 	$(DRIVERS)/taito_z.o $(VIDEO)/taito_z.o \
+	$(DRIVERS)/taito_o.o $(VIDEO)/taito_o.o \
 	$(DRIVERS)/taitoair.o $(VIDEO)/taitoair.o \
 	$(DRIVERS)/taitojc.o $(VIDEO)/taitojc.o \
 	$(DRIVERS)/taitopjc.o $\
@@ -1583,6 +1584,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/rcorsair.o \
 	$(DRIVERS)/re900.o \
 	$(DRIVERS)/shangkid.o $(VIDEO)/shangkid.o \
+	$(DRIVERS)/skimaxx.o \
 	$(DRIVERS)/skyarmy.o \
 	$(DRIVERS)/skylncr.o \
 	$(DRIVERS)/sliver.o \

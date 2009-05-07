@@ -854,8 +854,7 @@ static device_info *generic_device_alloc(running_machine *machine, device_info *
 	device_info *devinfo;
 
 	// allocate memory for the device object
-	devinfo = (device_info *)malloc_or_die(sizeof(*devinfo));
-	memset(devinfo, 0, sizeof(*devinfo));
+	devinfo = alloc_clear_or_die(device_info);
 	devinfo->head = devlist_head_ptr;
 	devinfo->machine = machine;
 
@@ -1354,7 +1353,7 @@ static const char *dinput_device_item_name(device_info *devinfo, int offset, con
 		return utf8_from_tstring(namestring);
 
 	// otherwise, allocate space to add the suffix
-	combined = (TCHAR *)malloc_or_die(sizeof(TCHAR) * (_tcslen(namestring) + 1 + _tcslen(suffix) + 1));
+	combined = alloc_array_or_die(TCHAR, _tcslen(namestring) + 1 + _tcslen(suffix) + 1);
 	_tcscpy(combined, namestring);
 	_tcscat(combined, TEXT(" "));
 	_tcscat(combined, suffix);
@@ -1748,7 +1747,7 @@ static void rawinput_init(running_machine *machine)
 		goto error;
 	if (device_count == 0)
 		goto error;
-	devlist = (RAWINPUTDEVICELIST *)malloc_or_die(device_count * sizeof(*devlist));
+	devlist = alloc_array_or_die(RAWINPUTDEVICELIST, device_count);
 	if ((*get_rawinput_device_list)(devlist, &device_count, sizeof(*devlist)) == -1)
 		goto error;
 
@@ -1828,7 +1827,7 @@ static device_info *rawinput_device_create(running_machine *machine, device_info
 	// determine the length of the device name, allocate it, and fetch it
 	if ((*get_rawinput_device_info)(device->hDevice, RIDI_DEVICENAME, NULL, &name_length) != 0)
 		goto error;
-	tname = (TCHAR *)malloc_or_die(name_length * sizeof(*tname));
+	tname = alloc_array_or_die(TCHAR, name_length);
 	if ((*get_rawinput_device_info)(device->hDevice, RIDI_DEVICENAME, tname, &name_length) == -1)
 		goto error;
 
@@ -1892,7 +1891,7 @@ static TCHAR *rawinput_device_improve_name(TCHAR *name)
 		return name;
 
 	// allocate a temporary string and concatenate the base path plus the name
-	regpath = (TCHAR *)malloc_or_die(sizeof(*regpath) * (_tcslen(basepath) + 1 + _tcslen(name)));
+	regpath = alloc_array_or_die(TCHAR, _tcslen(basepath) + 1 + _tcslen(name));
 	_tcscpy(regpath, basepath);
 	chdst = regpath + _tcslen(regpath);
 
@@ -2004,7 +2003,7 @@ convert:
 		chsrc++;
 	else
 		chsrc = regstring;
-	name = (TCHAR *)malloc_or_die(sizeof(*name) * (_tcslen(chsrc) + 1));
+	name = alloc_array_or_die(TCHAR, _tcslen(chsrc) + 1);
 	_tcscpy(name, chsrc);
 
 exit:
@@ -2225,7 +2224,7 @@ static TCHAR *reg_query_string(HKEY key, const TCHAR *path)
 		return NULL;
 
 	// allocate a buffer
-	buffer = (TCHAR *)malloc_or_die(datalen + sizeof(*buffer));
+	buffer = alloc_array_or_die(TCHAR, datalen + sizeof(*buffer));
 	buffer[datalen / sizeof(*buffer)] = 0;
 
 	// now get the actual data

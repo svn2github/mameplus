@@ -4508,11 +4508,11 @@ Type
 
 # emu/uimenu.c: 4025
 Type name or select: %s_
-輸入名稱或選擇: %s_
+鍵入名稱或選擇: %s_
 
 # emu/uimenu.c: 4027
 Type name or select: (random)
-輸入名稱或選擇: (任意)
+鍵入名稱或選擇: (任意)
 
 # emu/inpttype.h: 610
 UI Cancel
