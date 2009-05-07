@@ -141,7 +141,7 @@ static UINT32 handler_load_save(running_machine *machine, UINT32 state);
 static UINT32 handler_confirm_quit(running_machine *machine, UINT32 state);
 
 /* slider controls */
-static slider_state *slider_alloc(const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg);
+static slider_state *slider_alloc(running_machine *machine, const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg);
 static slider_state *slider_init(running_machine *machine);
 static INT32 slider_volume(running_machine *machine, void *arg, astring *string, INT32 newval);
 static INT32 slider_mixervol(running_machine *machine, void *arg, astring *string, INT32 newval);
@@ -2041,11 +2041,10 @@ const slider_state *ui_get_slider_list(void)
     slider_alloc - allocate a new slider entry
 -------------------------------------------------*/
 
-static slider_state *slider_alloc(const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg)
+static slider_state *slider_alloc(running_machine *machine, const char *title, INT32 minval, INT32 defval, INT32 maxval, INT32 incval, slider_update update, void *arg)
 {
 	int size = sizeof(slider_state) + strlen(title);
-	slider_state *state = (slider_state *)auto_malloc(size);
-	memset(state, 0, size);
+	slider_state *state = (slider_state *)auto_alloc_array_clear(machine, UINT8, size);
 
 	state->minval = minval;
 	state->defval = defval;
@@ -2075,7 +2074,7 @@ static slider_state *slider_init(running_machine *machine)
 	int numitems, item;
 
 	/* add overall volume */
-	*tailptr = slider_alloc(_("Master Volume"), -32, 0, 0, 1, slider_volume, NULL);
+	*tailptr = slider_alloc(machine, _("Master Volume"), -32, 0, 0, 1, slider_volume, NULL);
 	tailptr = &(*tailptr)->next;
 
 	/* add per-channel volume */
@@ -2089,7 +2088,7 @@ static slider_state *slider_init(running_machine *machine)
 			maxval = 2 * defval;
 
 		astring_printf(string, _("%s Volume"), sound_get_user_gain_name(machine, item));
-		*tailptr = slider_alloc(astring_c(string), 0, defval, maxval, 20, slider_mixervol, (void *)(FPTR)item);
+		*tailptr = slider_alloc(machine, astring_c(string), 0, defval, maxval, 20, slider_mixervol, (void *)(FPTR)item);
 		tailptr = &(*tailptr)->next;
 	}
 
@@ -2099,7 +2098,7 @@ static slider_state *slider_init(running_machine *machine)
 			if (field->type == IPT_ADJUSTER)
 			{
 				void *param = (void *)field;
-				*tailptr = slider_alloc(field->name, 0, field->defvalue, 100, 1, slider_adjuster, param);
+				*tailptr = slider_alloc(machine, field->name, 0, field->defvalue, 100, 1, slider_adjuster, param);
 				tailptr = &(*tailptr)->next;
 			}
 
@@ -2109,9 +2108,9 @@ static slider_state *slider_init(running_machine *machine)
 		for (item = 0; item < ARRAY_LENGTH(machine->cpu); item++)
 			if (machine->cpu[item] != NULL)
 		{
-			astring_printf(string,  _("Overclock CPU %s"), machine->cpu[item]->tag);
+			astring_printf(string, _("Overclock CPU %s"), machine->cpu[item]->tag);
 			//mamep: 4x overclock
-			*tailptr = slider_alloc(astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
+			*tailptr = slider_alloc(machine, astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
 			tailptr = &(*tailptr)->next;
 		}
 	}
@@ -2130,33 +2129,33 @@ static slider_state *slider_init(running_machine *machine)
 		if (options_get_bool(mame_options(), OPTION_CHEAT))
 		{
 			astring_printf(string, _("%s Refresh Rate"), slider_get_screen_desc(device));
-			*tailptr = slider_alloc(astring_c(string), -10000, 0, 10000, 1000, slider_refresh, param);
+			*tailptr = slider_alloc(machine, astring_c(string), -10000, 0, 10000, 1000, slider_refresh, param);
 			tailptr = &(*tailptr)->next;
 		}
 
 		/* add standard brightness/contrast/gamma controls per-screen */
 		astring_printf(string, _("%s Brightness"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), 100, 1000, 2000, 10, slider_brightness, param);
+		*tailptr = slider_alloc(machine, astring_c(string), 100, 1000, 2000, 10, slider_brightness, param);
 		tailptr = &(*tailptr)->next;
 		astring_printf(string, _("%s Contrast"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), 100, 1000, 2000, 50, slider_contrast, param);
+		*tailptr = slider_alloc(machine, astring_c(string), 100, 1000, 2000, 50, slider_contrast, param);
 		tailptr = &(*tailptr)->next;
 		astring_printf(string, _("%s Gamma"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), 100, 1000, 3000, 50, slider_gamma, param);
+		*tailptr = slider_alloc(machine, astring_c(string), 100, 1000, 3000, 50, slider_gamma, param);
 		tailptr = &(*tailptr)->next;
 
 		/* add scale and offset controls per-screen */
 		astring_printf(string, _("%s Horiz Stretch"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_xscale, param);
+		*tailptr = slider_alloc(machine, astring_c(string), 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_xscale, param);
 		tailptr = &(*tailptr)->next;
 		astring_printf(string, _("%s Horiz Position"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), -500, defxoffset, 500, 2, slider_xoffset, param);
+		*tailptr = slider_alloc(machine, astring_c(string), -500, defxoffset, 500, 2, slider_xoffset, param);
 		tailptr = &(*tailptr)->next;
 		astring_printf(string, _("%s Vert Stretch"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_yscale, param);
+		*tailptr = slider_alloc(machine, astring_c(string), 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_yscale, param);
 		tailptr = &(*tailptr)->next;
 		astring_printf(string, _("%s Vert Position"), slider_get_screen_desc(device));
-		*tailptr = slider_alloc(astring_c(string), -500, defyoffset, 500, 2, slider_yoffset, param);
+		*tailptr = slider_alloc(machine, astring_c(string), -500, defyoffset, 500, 2, slider_yoffset, param);
 		tailptr = &(*tailptr)->next;
 	}
 
@@ -2173,16 +2172,16 @@ static slider_state *slider_init(running_machine *machine)
 
 			/* add scale and offset controls per-overlay */
 			astring_printf(string, _("%s Horiz Stretch"), slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(astring_c(string), 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_overxscale, param);
+			*tailptr = slider_alloc(machine, astring_c(string), 500, (defxscale == 0) ? 1000 : defxscale, 1500, 2, slider_overxscale, param);
 			tailptr = &(*tailptr)->next;
 			astring_printf(string, _("%s Horiz Position"), slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(astring_c(string), -500, defxoffset, 500, 2, slider_overxoffset, param);
+			*tailptr = slider_alloc(machine, astring_c(string), -500, defxoffset, 500, 2, slider_overxoffset, param);
 			tailptr = &(*tailptr)->next;
 			astring_printf(string, _("%s Vert Stretch"), slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(astring_c(string), 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_overyscale, param);
+			*tailptr = slider_alloc(machine, astring_c(string), 500, (defyscale == 0) ? 1000 : defyscale, 1500, 2, slider_overyscale, param);
 			tailptr = &(*tailptr)->next;
 			astring_printf(string, _("%s Vert Position"), slider_get_laserdisc_desc(device));
-			*tailptr = slider_alloc(astring_c(string), -500, defyoffset, 500, 2, slider_overyoffset, param);
+			*tailptr = slider_alloc(machine, astring_c(string), -500, defyoffset, 500, 2, slider_overyoffset, param);
 			tailptr = &(*tailptr)->next;
 		}
 	}
@@ -2193,9 +2192,9 @@ static slider_state *slider_init(running_machine *machine)
 		if (scrconfig->type == SCREEN_TYPE_VECTOR)
 		{
 			/* add flicker control */
-			*tailptr = slider_alloc(_("Vector Flicker"), 0, 0, 1000, 10, slider_flicker, NULL);
+			*tailptr = slider_alloc(machine, _("Vector Flicker"), 0, 0, 1000, 10, slider_flicker, NULL);
 			tailptr = &(*tailptr)->next;
-			*tailptr = slider_alloc(_("Beam Width"), 10, 100, 1000, 10, slider_beam, NULL);
+			*tailptr = slider_alloc(machine, _("Beam Width"), 10, 100, 1000, 10, slider_beam, NULL);
 			tailptr = &(*tailptr)->next;
 			break;
 		}
@@ -2209,10 +2208,10 @@ static slider_state *slider_init(running_machine *machine)
 			{
 				void *param = (void *)field;
 				astring_printf(string, _("Crosshair Scale %s"), (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y");
-				*tailptr = slider_alloc(astring_c(string), -3000, 1000, 3000, 100, slider_crossscale, param);
+				*tailptr = slider_alloc(machine, astring_c(string), -3000, 1000, 3000, 100, slider_crossscale, param);
 				tailptr = &(*tailptr)->next;
 				astring_printf(string, _("Crosshair Offset %s"), (field->crossaxis == CROSSHAIR_AXIS_X) ? "X" : "Y");
-				*tailptr = slider_alloc(astring_c(string), -3000, 0, 3000, 100, slider_crossoffset, param);
+				*tailptr = slider_alloc(machine, astring_c(string), -3000, 0, 3000, 100, slider_crossoffset, param);
 				tailptr = &(*tailptr)->next;
 			}
 #endif
@@ -2640,7 +2639,7 @@ static char *slider_get_laserdisc_desc(const device_config *laserdisc)
 #ifdef MAME_DEBUG
 static INT32 slider_crossscale(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	input_field_config *field = arg;
+	input_field_config *field = (input_field_config *)arg;
 
 	if (newval != SLIDER_NOCHANGE)
 		field->crossscale = (float)newval * 0.001f;
@@ -2659,7 +2658,7 @@ static INT32 slider_crossscale(running_machine *machine, void *arg, astring *str
 #ifdef MAME_DEBUG
 static INT32 slider_crossoffset(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	input_field_config *field = arg;
+	input_field_config *field = (input_field_config *)arg;
 
 	if (newval != SLIDER_NOCHANGE)
 		field->crossoffset = (float)newval * 0.001f;
