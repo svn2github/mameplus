@@ -24,24 +24,21 @@ DRIVER_INIT( atari )
 	offs_t ram_top;
 	offs_t ram_size;
 
-	if (!strcmp(machine->gamedrv->name, "a400")
-		|| !strcmp(machine->gamedrv->name, "a400pal")
-		|| !strcmp(machine->gamedrv->name, "a800")
-		|| !strcmp(machine->gamedrv->name, "a800pal")
-		|| !strcmp(machine->gamedrv->name, "a800xl"))
+	if (!strcmp(machine->gamedrv->name, "a5200")
+		|| !strcmp(machine->gamedrv->name, "a600xl"))
 	{
-		ram_size = 0xA000;
+		ram_size = 0x8000;
 	}
 	else
 	{
-		ram_size = 0x8000;
+		ram_size = 0xa000;
 	}
 
 	/* install RAM */
 	ram_top = MIN(mess_ram_size, ram_size) - 1;
-	memory_install_read8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM),
+	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM),
 		0x0000, ram_top, 0, 0, SMH_BANK2);
-	memory_install_write8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM),
+	memory_install_write8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM),
 		0x0000, ram_top, 0, 0, SMH_BANK2);
 	memory_set_bankptr(machine, 2, mess_ram);
 }
@@ -74,9 +71,9 @@ static void a800_setbank(running_machine *machine, int n)
 			break;
 	}
 
-	memory_install_read8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x8000, 0xbfff, 0, 0,
+	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8000, 0xbfff, 0, 0,
 		read_addr ? SMH_BANK1 : SMH_NOP);
-	memory_install_write8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x8000, 0xbfff, 0, 0,
+	memory_install_write8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x8000, 0xbfff, 0, 0,
 		write_addr ? SMH_BANK1 : SMH_NOP);
 	if (read_addr)
 		memory_set_bankptr(machine, 1, read_addr);
@@ -116,9 +113,9 @@ static void ms_atari_machine_start(running_machine *machine, int type, int has_c
 
 	/* install RAM */
 	ram_top = MIN(mess_ram_size, ram_size) - 1;
-	memory_install_read8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM),
+	memory_install_read8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM),
 		0x0000, ram_top, 0, 0, SMH_BANK2);
-	memory_install_write8_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM),
+	memory_install_write8_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM),
 		0x0000, ram_top, 0, 0, SMH_BANK2);
 	memory_set_bankptr(machine, 2, mess_ram);
 
