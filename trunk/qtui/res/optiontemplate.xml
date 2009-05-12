@@ -53,7 +53,13 @@
 	<option name="mngwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="aviwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
 	<option name="wavwrite" type="file" globalvisible="0" srcvisible="0" biosvisible="0" cloneofvisible="0" gamevisible="0" />
-	<option name="snapname" guiname="snapshot/movie pattern" type="string" />
+	<option name="snapname" guiname="snapshot/movie pattern" type="string">
+		<value guivalue="game name">%g</value>
+		<value guivalue="game name + increment">%g%i</value>
+		<value guivalue="game name/game name">%g/%g</value>
+		<value guivalue="game name/game name + increment">%g/%g%i</value>
+		<value guivalue="game name/increment">%g/%i</value>
+	</option>
 	<option name="snapsize" guiname="snapshot/movie resolution" type="string" />
 	<option name="snapview" guiname="snapshot/movie view" type="string" >
 		<value>internal</value>
@@ -389,8 +395,8 @@
 	<option name="ramsize" type="bool" />
 	<option name="writeconfig" type="bool" />
 	<option name="skip_warnings" type="bool" />
-	<option name="newui" type="bool" />
-	<option name="natural" type="bool" />
+	<option name="newui" guiname="use new MESS UI" type="bool" />
+	<option name="natural" guiname="use natural keyboard" type="bool" />
 
 <!-- sdlmame ver -->
 	<!--SDL KEYBOARD MAPPING-->

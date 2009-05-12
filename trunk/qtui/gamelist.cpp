@@ -27,7 +27,7 @@ GameListSortFilterProxyModel *gameListPModel;
 MameGame *mameGame0 = NULL;
 GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
-static const QString ROOT_FOLDER = "ROOT_FOLDER";
+QMultiMap<QString, QString> extFolderMap;
 
 QByteArray defIconDataGreen;
 QByteArray defIconDataYellow;
@@ -35,6 +35,11 @@ QByteArray defIconDataRed;
 
 QByteArray defMameSnapData;
 QByteArray defMessSnapData;
+
+#define ROOT_FOLDER "ROOT_FOLDER"
+#define EXTFOLDER_MAGIC "**00_"
+#define STR_EXTSFOLDER "actionExtSubFolder_"
+#define STR_EXTFOLDER "actionExtSubFolder_"
 
 enum
 {
@@ -449,64 +454,87 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 		QDir dir(_dirpath);
 		QString dirpath = utils->getPath(_dirpath);
 
-		// try to load directly	
-		QFile snapFile(dirpath + gameName + PNG_EXT);
+		QFile snapFile;
+		// try to load directly #1
+		snapFile.setFileName(dirpath + gameName + PNG_EXT);
 		if (snapFile.open(QIODevice::ReadOnly))
+		{
 			snapdata = snapFile.readAll();
+			snapFile.close();
+		}
+
+		if (!snapdata.isNull())
+			return snapdata;
+
+		// try to load directly #2
+		if (mameOpts.contains("snapname"))
+		{
+			QString pattern = mameOpts["snapname"]->currvalue;
+
+			pattern.replace("%g", gameName);
+			pattern.replace("%i", "0000");
+
+			snapFile.setFileName(dirpath + pattern + PNG_EXT);
+			if (snapFile.open(QIODevice::ReadOnly))
+			{
+				snapdata = snapFile.readAll();
+				snapFile.close();
+			}
+			
+			if (!snapdata.isNull())
+				return snapdata;
+		}
 
 		// try to load from built-in names
-		if (snapdata.isNull())
+		QString zipName;
+		switch (snapType)
 		{
-			QString zipName;
-			switch (snapType)
-			{
-			case DOCK_SNAP:
-				zipName = "snap";
-				break;
-			case DOCK_FLYER:
-				zipName = "flyers";
-				break;
-			case DOCK_CABINET:
-				zipName = "cabinets";
-				break;
-			case DOCK_MARQUEE:
-				zipName = "marquees";
-				break;
-			case DOCK_TITLE:
-				zipName = "titles";
-				break;
-			case DOCK_CPANEL:
-				zipName = "cpanel";
-				break;
-			case DOCK_PCB:
-				zipName = "pcb";
-				break;
-			}
+		case DOCK_SNAP:
+			zipName = "snap";
+			break;
+		case DOCK_FLYER:
+			zipName = "flyers";
+			break;
+		case DOCK_CABINET:
+			zipName = "cabinets";
+			break;
+		case DOCK_MARQUEE:
+			zipName = "marquees";
+			break;
+		case DOCK_TITLE:
+			zipName = "titles";
+			break;
+		case DOCK_CPANEL:
+			zipName = "cpanel";
+			break;
+		case DOCK_PCB:
+			zipName = "pcb";
+			break;
+		}
 
-			QuaZip zip(dirpath + zipName + ZIP_EXT);
-			if (zip.open(QuaZip::mdUnzip))
+		QuaZip zip(dirpath + zipName + ZIP_EXT);
+		if (zip.open(QuaZip::mdUnzip))
+		{
+			QuaZipFile zipfile(&zip);
+			if (zip.setCurrentFile(gameName + PNG_EXT))
 			{
-				QuaZipFile zipfile(&zip);
-				if (zip.setCurrentFile(gameName + PNG_EXT))
-				{
-					if (zipfile.open(QIODevice::ReadOnly))
-						snapdata = zipfile.readAll();
-				}
+				if (zipfile.open(QIODevice::ReadOnly))
+					snapdata = zipfile.readAll();
 			}
 		}
 
+		if (!snapdata.isNull())
+			return snapdata;
+
 		// try to add .zip to nearest folder name
-		if (snapdata.isNull())
+		QuaZip zip2(dirpath + dir.dirName() + ZIP_EXT);
+		if (zip2.open(QuaZip::mdUnzip))
 		{
-			QuaZip zip(dirpath + dir.dirName() + ZIP_EXT);
-			if (zip.open(QuaZip::mdUnzip))
+			QuaZipFile zipfile(&zip2);
+			if (zip2.setCurrentFile(gameName + PNG_EXT))
 			{
-				QuaZipFile zipfile(&zip);
-				if (zip.setCurrentFile(gameName + PNG_EXT))
-				{
-					if (zipfile.open(QIODevice::ReadOnly))
-						snapdata = zipfile.readAll();
-				}
+				if (zipfile.open(QIODevice::ReadOnly))
+					snapdata = zipfile.readAll();
 			}
 		}
 
@@ -514,18 +542,18 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 			break;
 	}
 
-	// recursively load parent image
-	if (snapdata.isNull())
-	{
-		GameInfo *gameInfo = mameGame->games[gameName];
- 		if (!gameInfo->cloneof.isEmpty())
-			snapdata = getScreenshot(dirpath0, gameInfo->cloneof, snapType);
+	if (!snapdata.isNull())
+		return snapdata;
 
-		// fallback to default image, first getScreenshot() can't reach here
-		if (snapdata.isNull())
-			snapdata = (isMESS || gameInfo->isExtRom || !gameInfo->devices.isEmpty()) ? 
-				defMessSnapData : defMameSnapData;
-	}
+	// recursively load parent image
+	GameInfo *gameInfo = mameGame->games[gameName];
+		if (!gameInfo->cloneof.isEmpty())
+		snapdata = getScreenshot(dirpath0, gameInfo->cloneof, snapType);
+
+	// fallback to default image, first getScreenshot() can't reach here
+	if (snapdata.isNull())
+		snapdata = (isMESS || gameInfo->isExtRom || !gameInfo->devices.isEmpty()) ? 
+			defMessSnapData : defMameSnapData;
 
 	return snapdata;
 }
@@ -691,7 +719,7 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 
 			if (gameInfo->icondata.isNull())
 			{
-				if (gameInfo->status == 1 || gameInfo->isExtRom)
+				if (gameInfo->isExtRom || gameInfo->status == 1)
 					icondata = defIconDataGreen;
 				else if (gameInfo->status == 2)
 					icondata = defIconDataYellow;
@@ -1434,7 +1462,7 @@ int MameGame::des11n()
 			in >> gameInfo->defaultRamOption;
 		}
 
-		games[gameName] = gameInfo;
+		games.insert(gameName, gameInfo);
 	}
 
 	win->log(QString("des11n %1 games from cache.").arg(gamecount));
@@ -1446,8 +1474,7 @@ int MameGame::des11n()
 		return QDataStream::ReadCorruptData;
 	}
 
-	completeData();
-	return in.status();
+	return completeData() | in.status();
 }
 
 void MameGame::parseListXml()
@@ -1523,7 +1550,7 @@ void MameGame::parseListXml()
 	mameOutputBuf.clear();
 }
 
-void MameGame::completeData()
+int MameGame::completeData()
 {
 	GameInfo *_gameInfo, *gameInfo2;
 
@@ -1541,6 +1568,9 @@ void MameGame::completeData()
 		// update clone list
 		if (!_gameInfo->cloneof.isEmpty())
 		{
+			if (!games.contains(_gameInfo->cloneof))
+				return QDataStream::ReadCorruptData;
+		
 			gameInfo2 = games[_gameInfo->cloneof];
 			gameInfo2->clones.insert(gameName);
 			
@@ -1549,6 +1579,7 @@ void MameGame::completeData()
 		}
 	}
 
+	return QDataStream::Ok;
 }
 
 void MameGame::loadListXmlReadyReadStandardOutput()
@@ -1666,7 +1697,7 @@ void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
 
 			if (gameInfo->icondata.isNull())
 			{
-				if (gameInfo->status == 1 || gameInfo->isExtRom)
+				if (gameInfo->isExtRom || gameInfo->status == 1)
 					icondata = defIconDataGreen;
 				else if (gameInfo->status == 2)
 					icondata = defIconDataYellow;
@@ -2064,7 +2095,9 @@ void Gamelist::init(bool toggleState, int initMethod)
 			<< QT_TR_NOOP("Save State")
 			<< QT_TR_NOOP("Control Type")
 			<< QT_TR_NOOP("Stereo")
-			<< QT_TR_NOOP("CHD")
+			*/
+			<< tr("CHD")
+			/*
 			<< QT_TR_NOOP("Samples")
 			<< QT_TR_NOOP("Artwork")*/
 			;
@@ -2497,6 +2530,9 @@ void Gamelist::initMenus()
 		menuContext->addAction(win->actionPlay);
 		menuContext->addAction(win->actionRecord);
 		menuContext->addSeparator();
+		menuContext->addMenu(win->menuAddtoFolder);
+		menuContext->addAction(win->actionRemoveFromFolder);
+		menuContext->addSeparator();
 		menuContext->addAction(win->actionAudit);
 		menuContext->addSeparator();
 		menuContext->addAction(win->actionSrcProperties);
@@ -2569,6 +2605,7 @@ void Gamelist::updateContextMenu()
 	if (!mameGame->games.contains(currentGame))
 		return;
 
+	//play menu
 	QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
 
@@ -2580,6 +2617,32 @@ void Gamelist::updateContextMenu()
 	win->actionPlay->setIcon(icon);
     win->actionPlay->setText(tr("Play %1").arg(gameInfo->description));
 
+	//ext folder menu
+	QString extFolderName, extSubFolderName;
+	QStringList strlist = utils->split2Str(currentFolder, "/");
+	
+	if (strlist.first().isEmpty())
+	{
+		extFolderName = strlist.last();
+		extSubFolderName = ROOT_FOLDER;
+	}
+	else
+	{
+		extFolderName = strlist.first();
+		extSubFolderName = strlist.last();
+	}
+
+	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), extFolderName + INI_EXT);
+	QFile inFile(folderPath);
+	win->log(folderPath);
+	const bool isAccessable = inFile.exists() && inFile.permissions() & QFile::WriteUser;
+
+	win->actionRemoveFromFolder->setText(tr("Remove From \"%1%2\"")
+		.arg(extFolderName)
+		.arg((extSubFolderName != ROOT_FOLDER) ? "/" + extSubFolderName : ""));
+	win->actionRemoveFromFolder->setEnabled(isAccessable);
+
+	//prop menu
 	win->actionSrcProperties->setText(tr("Properties for %1").arg(gameInfo->sourcefile));
 
 	updateDynamicMenu(win->menuFile);
@@ -2591,11 +2654,6 @@ void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 	const QString gameName = currentGame;
 	GameInfo *gameInfo = mameGame->games[gameName];
 
-	//update IPS menu
-	rootMenu->removeAction(win->actionConfigIPS);
-	if (hasIPS && ipsUI->checkAvailable(gameName))
-		rootMenu->insertAction(win->actionSrcProperties, win->actionConfigIPS);
-
 	//remove existing device menus
 	QList<QAction *>rootMenuActions = rootMenu->actions();
 	foreach (QAction *action, rootMenuActions)
@@ -2606,6 +2664,13 @@ void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 			delete action;
 		}
 	}
+
+	//update custom folder menu
+
+	//update IPS menu
+	rootMenu->removeAction(win->actionConfigIPS);
+	if (hasIPS && ipsUI->checkAvailable(gameName))
+		rootMenu->insertAction(win->actionSrcProperties, win->actionConfigIPS);
 
 	//construct devices for ext roms
 	if (gameInfo->isExtRom)
@@ -2756,7 +2821,6 @@ void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 			connect(actionUnmount, SIGNAL(triggered()), this, SLOT(unmountDevice()));
 		}
 
-#if 1
 		//see MESS device.c for all device types
 		QAction *actionDeviceIcon;
 		if (deviceTypesSubmenu.contains(deviceInfo->type))
@@ -2772,7 +2836,6 @@ void Gamelist::updateDynamicMenu(QMenu *rootMenu)
 			actionDeviceIcon->setIcon(QIcon(":/res/16x16/printer.png"));
 		else if (deviceInfo->type ==  "cdrom")
 			actionDeviceIcon->setIcon(QIcon(":/res/16x16/media-optical.png"));
-#endif
 	}
 
 	//fixme: parent
@@ -3102,9 +3165,11 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_CONSOLE);
 		else if (folderName == folderList[FOLDER_BIOS])
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_BIOS);
+		else if (folderName == folderList[FOLDER_HARDDISK])
+			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_HARDDISK);
 		else if (extFolders.contains(folderName))
 		{
-			initExtFolders(folderName, ROOT_FOLDER);
+			initExtFolders(folderName, EXTFOLDER_MAGIC ROOT_FOLDER);
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_EXT);
 		}
 		else
@@ -3242,7 +3307,6 @@ void Gamelist::initFolders()
 	}
 
 	//init ext folders
-
 	QString folderPath = utils->getPath(guiSettings.value("folder_directory", "folders").toString());
 	QStringList dirPaths = folderPath.split(";");
 
@@ -3266,85 +3330,194 @@ void Gamelist::initFolders()
 
 	disconnect(win->treeFolders, SIGNAL(itemSelectionChanged()), this, SLOT(filterFolderChanged()));
 	connect(win->treeFolders, SIGNAL(itemSelectionChanged()), this, SLOT(filterFolderChanged()));
+
+	disconnect(win->actionRemoveFromFolder, SIGNAL(triggered()), this, SLOT(removeFromExtFolder()));
+	connect(win->actionRemoveFromFolder, SIGNAL(triggered()), this, SLOT(removeFromExtFolder()));
 }
 
-void Gamelist::initExtFolders(const QString &folderName, const QString &subFolderName)
+int Gamelist::parseExtFolders(const QString &folderName)
 {
 	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), folderName + INI_EXT);
 	QFile inFile(folderPath);
 
+	if (!inFile.open(QFile::ReadOnly | QFile::Text))
+		return -1;
+
+	const bool isWritable = inFile.permissions() & QFile::WriteUser;
+
 	//start parsing folder .ini
-	if (inFile.open(QFile::ReadOnly | QFile::Text))
+	QString line, key;
+	QTextStream in(&inFile);
+	in.setCodec("UTF-8");
+
+	extFolderMap.clear();
+	//fill in extFolderMap
+	do
 	{
-		QString line;
-		QString key;
-		QMultiMap<QString, QString> extFolderMap;
-
-		QTextStream in(&inFile);
-		in.setCodec("UTF-8");
-
-		//fill in extFolderMap
-		do
+		line = in.readLine().trimmed();
+		if (!line.isEmpty())
 		{
-			line = in.readLine().trimmed();
-			if (!line.isEmpty())
+			if (line.startsWith("[") && line.endsWith("]"))
 			{
-				if (line.startsWith("[") && line.endsWith("]") && 
-					line != "[FOLDER_SETTINGS]")
-				{
-				 
-					if (line == "[" + ROOT_FOLDER + "]")
-						key = ROOT_FOLDER;
-					else
-						key = line.mid(1, line.size() - 2);
-				}
-				else if (!key.isEmpty())
-					extFolderMap.insert(key, line);
+				key = line.mid(1, line.size() - 2);
+				//prepend a magic string for special tags
+				if (key == ROOT_FOLDER || key == "FOLDER_SETTINGS")
+					key = EXTFOLDER_MAGIC + key;
 			}
+			else if (!key.isEmpty())
+				extFolderMap.insert(key, line);
 		}
-		while (!line.isNull());
+	}
+	while (!line.isNull());
 
-		//build GUI tree
-		if (subFolderName.isEmpty())
+	return isWritable ? 1 : 0;
+}
+
+void Gamelist::initExtFolders(const QString &folderName, const QString &subFolderName)
+{
+	const bool parseResult = parseExtFolders(folderName);
+
+	if ( parseResult < 0)
+		return;
+
+	//build GUI tree
+	if (subFolderName.isEmpty())
+	{
+		static QIcon icoFolder(":/res/32x32/folder.png");
+		QTreeWidgetItem *treeitemExtFolder;
+		QMenu *menuExtFolder;
+		QAction *actionExtSubFolder;
+
+		QList<QString> keys = extFolderMap.uniqueKeys();
+		if (!keys.isEmpty())
 		{
-			static QIcon icoFolder(":/res/32x32/folder.png");
-			QTreeWidgetItem *rootFolderItem;
+			treeitemExtFolder = new QTreeWidgetItem(win->treeFolders, QStringList(folderName));
+			treeitemExtFolder->setIcon(0, icoFolder);
 
-			QList<QString> keys = extFolderMap.uniqueKeys();
-			if (!keys.isEmpty())
+			if (parseResult > 0)
 			{
-				rootFolderItem = new QTreeWidgetItem(win->treeFolders, QStringList(folderName));
-				rootFolderItem->setIcon(0, icoFolder);
+				menuExtFolder = new QMenu(folderName, win->menuAddtoFolder);
+				menuExtFolder->menuAction()->setObjectName(QString(STR_EXTFOLDER "%1").arg(folderName));
+				win->menuAddtoFolder->addMenu(menuExtFolder);
+
+				actionExtSubFolder = new QAction(tr("Root Folder [.]"), menuExtFolder->menuAction());
+				actionExtSubFolder->setObjectName(QString(STR_EXTSFOLDER "%1").arg(EXTFOLDER_MAGIC ROOT_FOLDER));
+				menuExtFolder->addAction(actionExtSubFolder);
+				connect(actionExtSubFolder, SIGNAL(triggered()), this, SLOT(addToExtFolder()));
+
+//				menuExtFolder->addAction(tr("New Folder..."));
+				menuExtFolder->addSeparator();
+			}
 			
-				foreach (QString key, keys)
-				{
-					if (key == ROOT_FOLDER)
-						continue;
-
-					new QTreeWidgetItem(rootFolderItem, QStringList(key));
-				}
-			}
-		}
-		//apply the filter
-		else
-		{
-			gameListPModel->filterList.clear();
-
-			//also add parent
-			foreach (QString gameName, extFolderMap.values(subFolderName))
+			foreach (QString key, keys)
 			{
-				gameListPModel->filterList.append(gameName);
-
-				if (!mameGame->games.contains(gameName))
+				if (key.startsWith(EXTFOLDER_MAGIC))
 					continue;
 
-				//append parent for standalone clones
-				GameInfo *gameInfo = mameGame->games[gameName];
-				if (!gameInfo->cloneof.isEmpty() && !gameListPModel->filterList.contains(gameInfo->cloneof))
-					gameListPModel->filterList.append(gameInfo->cloneof);
+				new QTreeWidgetItem(treeitemExtFolder, QStringList(key));
+
+				if (parseResult > 0)
+				{
+					actionExtSubFolder = new QAction(key, menuExtFolder->menuAction());
+					actionExtSubFolder->setObjectName(QString(STR_EXTSFOLDER "%1").arg(key));
+					menuExtFolder->addAction(actionExtSubFolder);
+					connect(actionExtSubFolder, SIGNAL(triggered()), this, SLOT(addToExtFolder()));
+				}
 			}
 		}
 	}
+	//apply the filter
+	//fixme: move to a stand alone method
+	else
+	{
+		gameListPModel->filterList.clear();
+
+		//also add parent
+		foreach (QString gameName, extFolderMap.values(subFolderName))
+		{
+			gameListPModel->filterList.append(gameName);
+
+			if (!mameGame->games.contains(gameName))
+				continue;
+
+			//append parent for standalone clones
+			GameInfo *gameInfo = mameGame->games[gameName];
+			if (!gameInfo->cloneof.isEmpty() && !gameListPModel->filterList.contains(gameInfo->cloneof))
+				gameListPModel->filterList.append(gameInfo->cloneof);
+		}
+	}
+}
+
+void Gamelist::saveExtFolders(const QString &folderName)
+{
+	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), folderName + INI_EXT);
+	QFile outFile(folderPath);
+
+	if (!outFile.open(QFile::WriteOnly | QFile::Text))
+		return;
+
+	QTextStream out(&outFile);
+	out.setCodec("UTF-8");
+//	out.setGenerateByteOrderMark(true);
+
+	QStringList subFolderNames = extFolderMap.uniqueKeys();
+	subFolderNames.sort();
+	foreach (QString subFolderName, subFolderNames)
+	{
+		QString _subFolderName = subFolderName;
+		if (_subFolderName.startsWith(EXTFOLDER_MAGIC))
+			_subFolderName = _subFolderName.right(_subFolderName.size() - QString(EXTFOLDER_MAGIC).size());
+			
+		out << "[" << _subFolderName << "]" << endl;
+		
+		QStringList gameNames = extFolderMap.values(subFolderName);
+		gameNames.sort();
+		foreach (QString gameName, gameNames)
+		{
+			out << gameName << endl;
+		}
+		out << endl;
+	}
+}
+
+void Gamelist::addToExtFolder()
+{
+	QString extFolderName = ((QAction*)sender()->parent())->objectName();
+	extFolderName = extFolderName.right(extFolderName.size() - QString(STR_EXTFOLDER).size());
+
+	QString extSubFolderName = ((QAction*)sender())->objectName();
+	extSubFolderName = extSubFolderName.right(extSubFolderName.size() - QString(STR_EXTSFOLDER).size());
+
+	if (parseExtFolders(extFolderName) < 0)
+		return;
+
+	extFolderMap.insert(extSubFolderName, currentGame);
+	saveExtFolders(extFolderName);
+}
+
+void Gamelist::removeFromExtFolder()
+{
+	QString extFolderName, extSubFolderName;
+	QStringList strlist = utils->split2Str(currentFolder, "/");
+	
+	if (strlist.first().isEmpty())
+	{
+		extFolderName = strlist.last();
+		extSubFolderName = EXTFOLDER_MAGIC ROOT_FOLDER;
+	}
+	else
+	{
+		extFolderName = strlist.first();
+		extSubFolderName = strlist.last();
+	}
+	
+	if (parseExtFolders(extFolderName) < 0)
+		return;
+
+	extFolderMap.remove(extSubFolderName, currentGame);
+	saveExtFolders(extFolderName);
+
+	filterFolderChanged(win->treeFolders->currentItem());
 }
 
 void Gamelist::restoreFolderSelection(bool isForce)
@@ -3402,10 +3575,10 @@ bool Gamelist::isAuditFolder(QString consoleName)
 	QStringList paths = currentFolder.split("/");
 	if (paths.size() == 2)
 	{
-		if (paths[1] == folderList[FOLDER_CONSOLE])
-			return true;
+//		if (paths[1] == folderList[FOLDER_CONSOLE])
+//			return true;
 
-		else if(paths[1] == consoleName)
+		/*else*/ if(paths[1] == consoleName)
 			return true;
 	}
 
@@ -3550,8 +3723,8 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	if (!gameInfo->devices.isEmpty() && !gameNameExtRom.isEmpty())
 		gameInfo = mameGame->games[gameNameExtRom];
 
-	bool isSFZCH = gameName == "sfzch";
-	bool isConsole = isSFZCH || !gameInfo->devices.isEmpty();
+	//fixme: how to filter MESS games
+	bool isConsole = gameInfo->sourcefile == "cpschngr.c" || !gameInfo->devices.isEmpty();
 	bool isBIOS = gameInfo->isBios;
 	bool isExtRom = gameInfo->isExtRom;
 
@@ -3562,7 +3735,8 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 		QRegExp regExpSearch(searchText, Qt::CaseInsensitive, syntax);
 
 		result = gameName.contains(regExpSearch)|| 
-				 gameDesc.contains(regExpSearch);
+				 gameDesc.contains(regExpSearch) || 
+				 utils->getDesc(gameName, false).contains(regExpSearch);
 
 		// also true if any of a parent's clone matches
 		if (!isExtRom && !gameInfo->clones.isEmpty())
@@ -3632,13 +3806,17 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 		result = result && isBIOS;
 		break;
 
+	case Qt::UserRole + FOLDER_HARDDISK:
+		result = result && !gameInfo->disks.isEmpty();
+		break;
+
 	case Qt::UserRole + FOLDER_BIOS + MAX_FOLDERS:	//hack for bios subfolders
 		result = result && !isBIOS && 
 			gameInfo->biosof() == filterText;
 		break;
 
 	case Qt::UserRole + FOLDER_EXT:
-		result = result && !isBIOS && filterList.contains(gameName);
+		result = result && !isBIOS && filterList.contains((isExtRom) ? gameNameExtRom : gameName);
 		break;
 
 	case Qt::UserRole + FOLDER_ALLGAME:
@@ -3652,12 +3830,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	//add the games to counter
 	if (result)
-	{
-		if (isExtRom)
-			visibleGames.insert(gameNameExtRom);
-		else
-			visibleGames.insert(gameName);
-	}
+		visibleGames.insert((isExtRom) ? gameNameExtRom : gameName);
 
 	return result;
 }

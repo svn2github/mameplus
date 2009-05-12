@@ -41,7 +41,6 @@ enum
 	FOLDER_YEAR,
 	FOLDER_SOURCE,
 	FOLDER_BIOS,
-	FOLDER_EXT,
 	/*
 	FOLDER_CPU,
 	FOLDER_SND,
@@ -59,9 +58,13 @@ enum
 	FOLDER_SAVESTATE,
 	FOLDER_CONTROL,
 	FOLDER_STEREO,
+	*/
 	FOLDER_HARDDISK,
+	/*
 	FOLDER_SAMPLES,
-	FOLDER_ARTWORK,*/
+	FOLDER_ARTWORK,
+	*/
+	FOLDER_EXT,
 	MAX_FOLDERS
 };
 
@@ -231,13 +234,18 @@ private:
 	QStringList extFolders;
 
 	void initFolders();
-	void initExtFolders(const QString&, const QString&);
+	int parseExtFolders(const QString &);
+	void initExtFolders(const QString &, const QString &);
+	void saveExtFolders(const QString &);
+
 	void initMenus();
 	void updateDynamicMenu(QMenu *);
 	void loadMMO(int);
 	void loadIconWorkder();
 
 private slots:
+	void addToExtFolder();
+	void removeFromExtFolder();
 	void postLoadIcon();
 };
 
@@ -448,7 +456,7 @@ public:
 
 	void init(int = 0);
 	void s11n();
-	void completeData();
+	int completeData();
 
 private:
 	QProcess *loadProc;

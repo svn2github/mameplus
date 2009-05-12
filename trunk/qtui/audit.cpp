@@ -82,15 +82,22 @@ void RomAuditor::exportDat()
 				//we'd like to sort the roms, QMap is used
 				QMap<QString, quint32> missingRoms;
 
-				//if all roms of a game are missing, excluding missing bios and parent roms
-				bool completelyMissing = false;
+				//if all roms of a game are missing, excluding missing bios
+				bool completelyMissing = false,
+				//if all roms of a clone are missing
+					 completelyMissingClone = true;
 
 				//number of missing roms and nodumps
 				int missingCount = 0,
-					nodumpCount = 0;
+					nodumpCount = 0,
+					//dont count bioses #3
+					biosRomsCount = 0;
 
-				//find parent and bios of the game
-				if (!gameInfo->romof.isEmpty())
+				//the game doesnt have a parent, default completelyMissingClone to false
+				if (gameInfo->romof.isEmpty())
+					completelyMissingClone = false;
+				else
+				//find parent (gameInfo2) and bios (gameBiosInfo) of the game
 				{
 					gameInfo2 = mameGame->games[gameInfo->romof];
 
@@ -100,6 +107,10 @@ void RomAuditor::exportDat()
 						gameBiosInfo = gameInfo2;
 				}
 
+				if (gameBiosInfo != NULL)
+					biosRomsCount = gameBiosInfo->roms.size();
+
+				//start iterating all roms
 				foreach (quint32 crc, gameInfo->roms.keys())
 				{
 					romInfo = gameInfo->roms[crc];
@@ -109,35 +120,37 @@ void RomAuditor::exportDat()
 
 					if (!romInfo->available)
 					{
-						if (gameInfo2 != NULL)
+						//to reduce redundant data, continue loop if parent is also missing this rom
+						if (gameInfo2 != NULL && 
+							gameInfo2->roms.contains(crc) && !gameInfo2->roms[crc]->available)
 						{
-							//continue loop if parent is also missing this rom
-							if (gameInfo2->roms.contains(crc) && !gameInfo2->roms[crc]->available)
-							{
-								//dont count bioses #1
-								if (!gameInfo2->isBios && (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
-									missingCount++;
-								continue;
-							}
+							//dont count bioses #1
+							if (/*!gameInfo2->isBios && */ (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
+								missingCount++;
+							continue;
 						}
 
 						missingRoms.insert(romInfo->name, crc);
 						//dont count bioses #2
-						if (!gameInfo->isBios && (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc)))
+						if (gameBiosInfo == NULL || !gameBiosInfo->roms.contains(crc))
 							missingCount++;
+					}
+					else if (completelyMissingClone && gameInfo2 != NULL && !gameInfo2->roms.contains(crc))
+					{
+						//clone-specific rom is available
+						completelyMissingClone = false;
 					}
 				}
 
 				if (missingRoms.size() == 0)
 					continue;
 
-				//dont count bioses #3
-				int biosRomsCount = 0;
-				if (gameBiosInfo != NULL)
-					biosRomsCount = gameBiosInfo->roms.size();
-
-				if (missingCount == gameInfo->roms.size() - biosRomsCount - nodumpCount)
+				//it is possible that bios roms are nodump
+				if (missingCount >= gameInfo->roms.size() - biosRomsCount - nodumpCount)
 					completelyMissing = true;
+
+				if (gameInfo2 != NULL)
+					completelyMissing = completelyMissing || completelyMissingClone;
 
 				//toggle export methods
 				if (method == AUDIT_EXPORT_INCOMPLETE && completelyMissing || 

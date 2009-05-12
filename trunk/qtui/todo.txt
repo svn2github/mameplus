@@ -1,7 +1,11 @@
 ﻿CSI, 豪斯医生, 盾牌，律师风云，都很不错
-
 引用(wxcalin(323楼) @ 2009/02/05 18:48:21)
 Criminal Minds，CSI.LV，The Closer，Bones......
+
+
+after a year and 3 months of development, I consider this program is compatible with most of the features of MAMEUI, so that a final version is released. and as promised, it's now open-source. no license or whatever, it's free for any purpose. the building process is the same as any Qt program.
+
+经过1年3个月的开发，新GUI已经可以兼容MAMEUI的大部分功能，因此决定发布正式版。同时依照之前承诺的，这个项目现在开源。源代码无任何授权，想怎么用都可以。编译方法同Qt其他标准程序。
 
 //Web
 render xml feed
@@ -20,12 +24,15 @@ check font size
 mac should load settings same as win
 
 //Priority tasks
-3 custom ini write
+3 macosx指定了sdlmame之后就挂了
+3 crash when exit and auditing
+
 3 ips lang may cause crash
 3 command.dat may cause crash
 2 new version detection
 3 background trans color on switching
 
+2 find a way to pick MESS systems
 2 better console refresh
 2 比如设定完“核心视频”后，如果直接却设定“系统视频”，则刚刚做的“核心视频”所有设定丢失。
 2 column sorting
@@ -51,7 +58,6 @@ mac should load settings same as win
 
 2 disable play with
 2 mamep core lang, for non cjk languages
-2 gamename0000 snap
 2 SDL joystick GUI
 
 1 playwith state name prompt, empty file name handling
@@ -107,7 +113,6 @@ mac should load settings same as win
 * clrmame style dialog
 1 gba F5 crash
 1 audit all
-* crash when exit and auditing
 * non compressed roms
 
 //Folder
@@ -180,6 +185,8 @@ export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui
 
+/Developer/Tools/Qt/macdeployqt mamepgui.app
+
 [mamepgui test]
 in an empty folder
 1 dock snap
@@ -212,6 +219,11 @@ hazemd icons
 verify spclone dips
 add makelang text, src repo link on main page
 
+[mamep tools]
+toggle pw mask
+progress 总大小　已完成大小　　再搞个%进度
+purge cache if error on extracting
+purge cache if cache larger than rom
 
 [gamelist init rewrite]
 todo: 

@@ -48,6 +48,9 @@ typedef unsigned char Byte;
 typedef short Int16;
 typedef unsigned short UInt16;
 
+#ifdef Q_WS_MAC
+#define _LZMA_UINT32_IS_ULONG
+#endif
 #ifdef _LZMA_UINT32_IS_ULONG
 typedef long Int32;
 typedef unsigned long UInt32;

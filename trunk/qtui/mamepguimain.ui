@@ -62,8 +62,16 @@
      <addaction name="actionFixDatIncomplete"/>
      <addaction name="actionFixDatMissing"/>
     </widget>
+    <widget class="QMenu" name="menuAddtoFolder">
+     <property name="title">
+      <string>Add to Custom Folder</string>
+     </property>
+    </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
+    <addaction name="separator"/>
+    <addaction name="menuAddtoFolder"/>
+    <addaction name="actionRemoveFromFolder"/>
     <addaction name="separator"/>
     <addaction name="actionSrcProperties"/>
     <addaction name="actionProperties"/>
@@ -359,7 +367,7 @@
   </action>
   <action name="actionPlay">
    <property name="text">
-    <string>&amp;Play</string>
+    <string notr="true">&amp;Play</string>
    </property>
   </action>
   <action name="actionRecord">
@@ -475,7 +483,7 @@
   </action>
   <action name="actionSrcProperties">
    <property name="text">
-    <string>Properties for </string>
+    <string notr="true">Properties for </string>
    </property>
   </action>
   <action name="actionEnglish">
@@ -638,6 +646,11 @@
   <action name="actionFixDatAll">
    <property name="text">
     <string>All Set Issues...</string>
+   </property>
+  </action>
+  <action name="actionRemoveFromFolder">
+   <property name="text">
+    <string notr="true">Remove From This Folder</string>
    </property>
   </action>
  </widget>

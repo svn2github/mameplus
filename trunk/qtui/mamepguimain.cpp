@@ -448,6 +448,12 @@ void MainWindow::init()
 	if (gui_style.isEmpty())
 		gui_style = guiSettings.value("gui_style").toString();
 
+#ifdef Q_WS_MAC
+	//fixme: temp hack, aqua theme is buggy
+	if (gui_style.isEmpty() || gui_style.startsWith("macintosh", Qt::CaseInsensitive))
+		gui_style = "Plastique";
+#endif
+
 	QStringList styles = QStyleFactory::keys();
 	QActionGroup *styleActions = new QActionGroup(this);
 	foreach (QString style, styles)
@@ -458,6 +464,12 @@ void MainWindow::init()
 			act->setChecked(true);
 		styleActions->addAction(act);
 		connect(act, SIGNAL(triggered()), this, SLOT(setGuiStyle()));
+
+#ifdef Q_WS_MAC
+		//fixme: temp hack, aqua theme is buggy
+		if (style.startsWith("macintosh", Qt::CaseInsensitive))
+			act->setEnabled(false);
+#endif
 	}
 
 	if (!gui_style.isEmpty())
@@ -604,7 +616,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.0 rc 2")
+		.arg("1.4.0")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
