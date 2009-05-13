@@ -207,8 +207,8 @@ DEVICE_START( a7800_cart )
 	a7800_cart_bkup = NULL;
 
 	/* Allocate memory for BIOS bank switching */
-	a7800_bios_bkup = (UINT8*) auto_malloc(0x4000);
-	a7800_cart_bkup = (UINT8*) auto_malloc(0x4000);
+	a7800_bios_bkup = auto_alloc_array(device->machine, UINT8, 0x4000);
+	a7800_cart_bkup = auto_alloc_array(device->machine, UINT8, 0x4000);
 
 	/* save the BIOS so we can switch it in and out */
 	memcpy( a7800_bios_bkup, memory + 0xC000, 0x4000 );
