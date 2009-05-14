@@ -3119,7 +3119,7 @@ static DEVICE_IMAGE_LOAD( gba_cart )
 
 static MACHINE_DRIVER_START( gbadv )
 	MDRV_CPU_ADD("maincpu", ARM7, 16777216)
-	MDRV_CPU_PROGRAM_MAP(gbadvance_map,0)
+	MDRV_CPU_PROGRAM_MAP(gbadvance_map)
 
 	MDRV_MACHINE_START(gba)
 	MDRV_MACHINE_RESET(gba)

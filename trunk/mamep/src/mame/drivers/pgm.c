@@ -1440,12 +1440,12 @@ static MACHINE_DRIVER_START( pgm )
 
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", M68000, 20000000) /* 20 mhz! verified on real board */
-	MDRV_CPU_PROGRAM_MAP(pgm_mem,0)
+	MDRV_CPU_PROGRAM_MAP(pgm_mem)
 	MDRV_CPU_VBLANK_INT("screen", irq6_line_hold)
 
 	MDRV_CPU_ADD("soundcpu", Z80, 8468000)
-	MDRV_CPU_PROGRAM_MAP(z80_mem, 0)
-	MDRV_CPU_IO_MAP(z80_io, 0)
+	MDRV_CPU_PROGRAM_MAP(z80_mem)
+	MDRV_CPU_IO_MAP(z80_io)
 
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 	MDRV_SOUND_ADD("ics", ICS2115, 0)
@@ -1519,7 +1519,7 @@ static MACHINE_DRIVER_START( killbld )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(killbld_mem,0)
+	MDRV_CPU_PROGRAM_MAP(killbld_mem)
 
 	MDRV_MACHINE_RESET(killbld)
 
@@ -1531,7 +1531,7 @@ static MACHINE_DRIVER_START( olds )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(olds_mem,0)
+	MDRV_CPU_PROGRAM_MAP(olds_mem)
 
 	MDRV_MACHINE_RESET(olds)
 
@@ -1541,44 +1541,44 @@ static MACHINE_DRIVER_START( kov )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(kovsh_mem,0)
+	MDRV_CPU_PROGRAM_MAP(kovsh_mem)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857E/F/G
-	MDRV_CPU_PROGRAM_MAP(kovsh_arm7_map, 0)
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585E/F/G
+	MDRV_CPU_PROGRAM_MAP(kovsh_arm7_map)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( kov2 )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(kov2_mem,0)
+	MDRV_CPU_PROGRAM_MAP(kov2_mem)
 
 	/* protection CPU */
 	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857F
-	MDRV_CPU_PROGRAM_MAP(kov2_arm7_map, 0)
+	MDRV_CPU_PROGRAM_MAP(arm7_map)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( kov2p )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(kov2p_mem,0)
+	MDRV_CPU_PROGRAM_MAP(kov2p_mem)
 
 	/* protection CPU */
 	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857F
-	MDRV_CPU_PROGRAM_MAP(arm7_map, 0)
+	MDRV_CPU_PROGRAM_MAP(arm7_map)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( svg )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(svg_68k_mem,0)
+	MDRV_CPU_PROGRAM_MAP(svg_68k_mem)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857G
-	MDRV_CPU_PROGRAM_MAP(svg_arm7_map, 0)
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585G
+	MDRV_CPU_PROGRAM_MAP(svg_arm7_map)
 MACHINE_DRIVER_END
 
 #if 0
@@ -1586,11 +1586,11 @@ static MACHINE_DRIVER_START( cavepgm )
 	MDRV_IMPORT_FROM(pgm)
 
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP(cavepgm_mem,0)
+	MDRV_CPU_PROGRAM_MAP(cavepgm_mem)
 
 	/* protection CPU */
 //  MDRV_CPU_ADD("prot", ARM7, 20000000)    // ???
-//  MDRV_CPU_PROGRAM_MAP(arm7_map, 0)
+//  MDRV_CPU_PROGRAM_MAP(arm7_map)
 MACHINE_DRIVER_END
 #endif
 
