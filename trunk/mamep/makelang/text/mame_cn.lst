@@ -1477,6 +1477,7 @@ undoukai	运动会 84 (日版)	运动会 84 (日版)	Taito Corporation
 40love	网球 40-0	网球 40-0	Taito Corporation
 tsamurai	侍日本一 (第1套)	侍日本一 (第1套)	Taito
 tsamurai2	侍日本一 (第2套)	侍日本一 (第2套)	Taito
+tsamuraih	侍日本一 (第3套, 硬件)	侍日本一 (第3套, 硬件)	Taito
 ladymstr	新功夫少女	新功夫少女	Taito
 nunchaku	功夫少女	功夫少女	Taito
 yamagchi	山口君大冒险	山口君大冒险	Taito
@@ -2659,6 +2660,7 @@ gdarius2	决战时空要塞 G - 海洋生物巨大战舰复活 (Ver 2.03J)	决战时空要塞 G - 海洋
 taitogn	Taito G 网络	Taito G 网络	Sony/Taito
 chaoshea	激烈大混乱 (V2.08J)	激烈大混乱 (V2.08J)	Taito
 raycris	闪电战机 (V2.03J)	闪电战机 (V2.03J)	Taito
+otenamih	Otenami Haiken (V2.04J)	Otenami Haiken (V2.04J)	Success
 spuzbobj	超级泡泡龙 (V2.04J)	超级泡泡龙 (V2.04J)	Taito
 spuzbobl	超级泡泡龙 (V2.05O)	超级泡泡龙 (V2.05O)	Taito
 gobyrc	RC 世界杯 (V2.03O)	RC 世界杯 (V2.03O)	Taito
@@ -2674,6 +2676,7 @@ nightrai	夜袭战机 (V2.03J)	夜袭战机 (V2.03J)	Takumi
 shikigam	式神之城 (V2.03J)	式神之城 (V2.03J)	Taito/Alfa System
 otenki	怪物方块 (V2.01J)	怪物方块 (V2.01J)	Takumi
 usagi	兔 - 野性的斗牌 (V2.02J)	兔 - 野性的斗牌 (V2.02J)	Warashi/Mahjong Kobo/Taito
+shangtou	上海 - 三国牌斗义 (Ver 2.01J)	上海 - 三国牌斗义 (Ver 2.01J)	Warashi/Sunsoft/Taito
 xiistag	赤红十三 (V2.01J)	赤红十三 (V2.01J)	Triangle Service
 sianniv	太空侵略者周年纪念 (V2.02J)	太空侵略者周年纪念 (V2.02J)	Taito
 kollon	柯隆方块 (V2.04J)	柯隆方块 (V2.04J)	Taito
@@ -3126,9 +3129,9 @@ hvymetal	重装任务 (315-5135)	重装任务 (315-5135)	Sega
 myhero	我的英雄 (美版, 未加密)	我的英雄 (美版, 未加密)	Sega
 sscandal	青春物语 (315-5132, 日版)	青春物语 (315-5132, 日版)	Coreland / Sega
 myherok	我的英雄 (韩国版)	我的英雄 (韩国版)	Coreland / Sega
-shtngmst	射击大师 (Rev A, 8751 315-5159a)	射击大师 (Rev A, 8751 315-5159a)	Sega
-shtngmst1	射击大师 (8751 315-5159)	射击大师 (8751 315-5159)	Sega
-shtngmsta	射击大师 (EVG, 8751 315-5159)	射击大师 (EVG, 8751 315-5159)	Sega [EVG]
+shtngmst	射击大师 (8751 315-5159)	射击大师 (8751 315-5159)	Sega
+shtngmste	射击大师 (EVG, 8751 315-5159a)	射击大师 (EVG, 8751 315-5159a)	Sega [EVG]
+shtngmstu	射击大师 (未保护)	射击大师 (未保护)	Sega
 choplift	直升机救难 (8751 315-5151)	直升机救难 (8751 315-5151)	Sega
 chopliftu	直升机救难 (替换版)	直升机救难 (替换版)	Sega
 chopliftbl	直升机救难 (盗版)	直升机救难 (盗版)	bootleg
@@ -3141,7 +3144,7 @@ wboy2	神奇男孩 (第2套, 315-5178)	神奇男孩 (第2套, 315-5178)	Sega (Escape license
 wboy2u	神奇男孩 (第2套, 未加密)	神奇男孩 (第2套, 未加密)	Sega (Escape license)
 wboy3	神奇男孩 (第3套, 315-5135)	神奇男孩 (第3套, 315-5135)	Sega (Escape license)
 wboy4	神奇男孩 (315-5162, 四次元战士 转换)	神奇男孩 (315-5162, 四次元战士 转换)	Sega (Escape license)
-wboyu	神奇男孩 (未加密)	神奇男孩 (未加密)	Sega (Escape license)
+wboyu	神奇男孩 (工程版?)	神奇男孩 (工程版?)	Sega (Escape license)
 wbdeluxe	神奇男孩豪华版	神奇男孩豪华版	Sega (Escape license)
 wboysys2	神奇男孩 (系统 2)	神奇男孩 (系统 2)	Sega (Escape license)
 gardia	巡弋飞艇 (317-0006)	巡弋飞艇 (317-0006)	Sega / Coreland
@@ -3300,6 +3303,7 @@ shinoblb	超级忍 (测试版 盗版)	超级忍 (测试版 盗版)	[Sega] (Beta bootleg)
 shinobld	超级忍 (数据版 盗版)	超级忍 (数据版 盗版)	[Sega] (Datsu bootleg)
 tetrisbl	俄罗斯方块 (盗版)	俄罗斯方块 (盗版)	bootleg
 beautyb	美丽方块	美丽方块	AMT
+iqpipe	IQ Pipe	IQ Pipe	AMT
 tturfbl	硬汉 (盗版)	硬汉 (盗版)	bootleg
 wb3bbl	神奇男孩 Ⅲ (盗版)	神奇男孩 Ⅲ (盗版)	bootleg
 shdancer	影舞者 (第3套, 美版)	影舞者 (第3套, 美版)	Sega
@@ -5301,7 +5305,7 @@ kof2000n	拳皇 2000 (程序未加密)	拳皇 2000 (程序未加密)	SNK
 bangbead	碰碰球	碰碰球	Visco
 nitd	黑暗守墓者 / 暗黑恶梦	黑暗守墓者 / 暗黑恶梦	Eleven / Gavaking
 nitdbl	黑暗守墓者 / 暗黑恶梦 (盗版)	黑暗守墓者 / 暗黑恶梦 (盗版)	bootleg
-sengoku3	战国传承 3 / 战国传承 2001	战国传承 3 / 战国传承 20011	Noise Factory / SNK
+sengoku3	战国传承 3 / 战国传承 2001	战国传承 3 / 战国传承 2001	Noise Factory / SNK
 kof2001	拳皇 2001 (第1套)	拳皇 2001 (第1套)	Eolith / SNK
 kof2001h	拳皇 2001 (第2套)	拳皇 2001 (第2套)	Eolith / SNK
 cthd2003	卧虎藏龙 2003 (盗版)	卧虎藏龙 2003 (盗版)	bootleg
@@ -5567,7 +5571,7 @@ airattck	空袭 (第1套)	空袭 (第1套)	Comad
 airattca	空袭 (第2套)	空袭 (第2套)	Comad
 manybloc	拉霸拼图	拉霸拼图	Bee-Oh
 daireika	麻雀大灵界 (日版)	麻雀大灵界 (日版)	Jaleco / NMK
-mjzoomin	麻雀牌移瞬间 (日版)	麻雀牌移瞬间 In (日版)	Jaleco
+mjzoomin	麻雀牌移瞬间 (日版)	麻雀牌移瞬间 (日版)	Jaleco
 kakumei	麻雀革命 (日版)	麻雀革命 (日版)	Jaleco
 kakumei2	麻雀革命 II - 公主联盟 (日版)	麻雀革命 II - 公主联盟 (日版)	Jaleco
 suchipi	漫画美少女雀士 (日版)	漫画美少女雀士 (日版)	Jaleco
@@ -6016,7 +6020,8 @@ fromance	最终罗曼史 (日版)	最终罗曼史 (日版)	Video System Co.
 pipedrm	梦幻之笛 (世界版)	梦幻之笛 (世界版)	Video System Co.
 pipedrmu	梦幻之笛 (美版)	梦幻之笛 (美版)	Video System Co.
 pipedrmj	水管狂想曲 (日版)	水管狂想曲 (日版)	Video System Co.
-hatris	帽子方块 (日版)	帽子方块 (日版)	Video System Co.
+hatris	帽子方块 (美版)	帽子方块 (美版)	Video System Co.
+hatrisj	帽子方块 (日版)	帽子方块 (日版)	Video System Co.
 spinlbrk	时空英雄 (世界版)	时空英雄 (世界版)	V-System Co.
 spinlbru	时空英雄 (美版)	时空英雄 (美版)	V-System Co.
 spinlbrj	时空英雄 (日版)	时空英雄 (日版)	V-System Co.
@@ -6517,7 +6522,7 @@ gstrik2	足球盛况 2 (日版)	足球盛况 2 (日版)	Human Amusement
 hyprduel	神枪战机 (日版 第1套)	神枪战机 (日版 第1套)	Technosoft
 hyprdelj	神枪战机 (日版 第2套)	神枪战机 (日版 第2套)	Technosoft
 magerror	探求不可思议的误差	探求不可思议的误差	Technosoft / Jaleco
-puzzlet	难题 (日版)	难题 (日版)	Yunizu Corporation
+puzzlet	难题 (日版)	难题 (日版)	Unies Corporation
 spcforce	太空武力 (第1套)	太空武力 (第1套)	Venture Line
 spcforc2	太空武力 (第2套)	太空武力 (第2套)	Elcon (bootleg?)
 meteor	太空武力 Meteoroids	太空武力 Meteoroids	Venture Line
@@ -6852,7 +6857,7 @@ kinst213	杀手学堂 2 (v1.3)	杀手学堂 2 (v1.3)	Rare
 kinst2k3	杀手学堂 2 (v1.3k, 装备升级版)	杀手学堂 2 (v1.3k, 装备升级版)	Rare
 kinst211	杀手学堂 2 (v1.1)	杀手学堂 2 (v1.1)	Rare
 kinst210	杀手学堂 2 (v1.0)	杀手学堂 2 (v1.0)	Rare
-gigas	十亿	十亿	Sega
+gigas	十亿 (MC-8123, 317-5002)	十亿 (MC-8123, 317-5002)	Sega
 gigasb	打砖块战斗台 (盗版)	打砖块战斗台 (盗版)	bootleg
 gigasm2b	打砖块战斗台 2 (盗版)	打砖块战斗台 2 (盗版)	bootleg
 oigas	打砖块战斗台 Oigas (盗版)	打砖块战斗台 Oigas (盗版)	bootleg
@@ -8166,7 +8171,7 @@ pce	PC Engine	PC Engine	Nippon Electronic Company
 tg16	TurboGrafx 16	TurboGrafx 16	Nippon Electronic Company
 sgx	SuperGrafx	SuperGrafx	Nippon Electronic Company
 sfach	CPS 家用版 - 少年街霸: 斗士之梦 (Publicity 美版 950727)	CPS 家用版 - 少年街霸: 斗士之梦 (Publicity 美版 950727)	Capcom
-sfzbch	CPS 家用版 - 少年街霸 (巴西版 950727)	CPS 家用版 - 少年街霸 (巴西版 950727)	Hack
+sfzbch	CPS 家用版 - 少年街霸 (巴西版 950727)	CPS 家用版 - 少年街霸 (巴西版 950727)	Capcom
 sfzch	CPS 家用版 - 少年街霸 (日版 951020)	CPS 家用版 - 少年街霸 (日版 951020)	Capcom
 wofch	CPS 家用版 - 三国志 II - 赤壁之战 (日版 921031)	CPS 家用版 - 三国志 II - 赤壁之战 (日版 921031)	Capcom
 wswan	万岱掌机	万岱掌机	Bandai
