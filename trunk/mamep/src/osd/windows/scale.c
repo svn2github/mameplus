@@ -729,7 +729,7 @@ static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 
 	if (depth == 15 || depth == 16)
 	{
-		for (y = 3; y < height; y++)
+		for (y = 2; y < height; y++)
 		{
 			dst	+= 3 * dst_pitch;
 			src_prev = src_curr;
@@ -740,7 +740,7 @@ static int scale_perform_scale3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_
 	}
 	else
 	{
-		for (y = 3; y < height; y++)
+		for (y = 2; y < height; y++)
 		{
 			dst += 3 * dst_pitch;
 			src_prev = src_curr;
