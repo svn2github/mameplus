@@ -1074,7 +1074,7 @@ static MACHINE_DRIVER_START( a600xl )
 	MDRV_IMPORT_FROM( atari_common )
 
 	MDRV_CPU_MODIFY( "maincpu" )
-	MDRV_CPU_PROGRAM_MAP(a600xl_mem)	// FIXME
+	MDRV_CPU_PROGRAM_MAP(a600xl_mem)
 	MDRV_CPU_VBLANK_INT_HACK(a800xl_interrupt, TOTAL_LINES_60HZ)
 
 	MDRV_PIA6821_MODIFY( "pia", a600xl_pia_interface )
