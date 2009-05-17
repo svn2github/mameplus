@@ -18,6 +18,10 @@
 #include "unicode.h"
 #include <zlib.h>
 
+#ifdef MAMEMESS
+#define MESS
+#endif /* MAMEMESS */
+
 
 /***************************************************************************
     DEBUGGING
