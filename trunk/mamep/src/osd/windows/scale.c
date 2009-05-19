@@ -810,7 +810,7 @@ static int scale_perform_hq3x(UINT8 *src, UINT8 *dst, int src_pitch, int dst_pit
 	
 	hq3x_32_def((UINT32 *)dst, (UINT32 *)(dst + dst_pitch), (UINT32 *)(dst + 2 * dst_pitch), (UINT32 *)src_prev, (UINT32 *)src_curr, (UINT32 *)src_next, width);
 
-	for (y = 3; y < height; y++)
+	for (y = 2; y < height; y++)
 	{
 		dst += 3 * dst_pitch;
 		src_prev = src_curr;
