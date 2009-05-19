@@ -55,5 +55,9 @@ const game_driver * const homebrewdrivers[] =
 	DRIVER( cnbe )
 	DRIVER( ltorb1 )
 	DRIVER( beast )
-
+		
+	DRIVER( kof96ae )
+	DRIVER( kof96c )
+	DRIVER( kof97cn )
+	DRIVER( kof97xt )
 #endif	/* DRIVER_RECURSIVE */

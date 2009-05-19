@@ -9870,6 +9870,7 @@ GAME( 2002, neodemo,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Chaos", "Ne
 GAME( 2006, cnbe,     neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "Codename - Blut Engel (Homebrew 060119)", 0 )
 GAME( 2006, ngem2k,   neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Homebrew", "NGEM2K (Homebrew 060118, Beta)", 0 )
 GAME( 2004, neo2500,  neogeo,   neogeo,   neogeo,   neogeo,   ROT0, "Blastar", "Neo 2500 Demo (Homebrew)", 0 )
+
 GAME( 2007, kof96ae,  kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 10th Anniversary Edition (hack)", 0 )
 GAME( 200?, kof96c,   kof96,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '96 Chinese 1.00 (hack)", 0 )
 GAME( 2007, kof97cn,  kof97,    neogeo,   neogeo,   neogeo,   ROT0, "hack", "The King of Fighters '97 10th Chinese Edition (hack)", 0 )
