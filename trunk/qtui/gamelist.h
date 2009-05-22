@@ -25,6 +25,7 @@ enum
 	
 	DOCK_HISTORY,
 	DOCK_MAMEINFO,
+	DOCK_DRIVERINFO,
 	DOCK_STORY,
 	DOCK_COMMAND,
 	DOCK_LAST
@@ -76,6 +77,7 @@ public:
 	MyQueue myqueue;
 	QString historyText;
 	QString mameinfoText;
+	QString driverinfoText;
 	QString storyText;
 	QString commandText;
 

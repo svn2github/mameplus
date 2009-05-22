@@ -14,6 +14,9 @@ read/write cookie
 theme
 
 //Done
+improved CHD verification
+added Driver Info widget [Xander Xander]
+added menu: "File - Audit All Games"
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -24,8 +27,10 @@ check font size
 mac should load settings same as win
 
 //Priority tasks
+3 clone history
 3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing
+3 create new folder
 
 3 ips lang may cause crash
 3 command.dat may cause crash
@@ -68,7 +73,6 @@ mac should load settings same as win
 
 //Coding
 * separate screenshot.cpp
-1 reduce auto audit calls
 * check new/delete operator
 * remove TreeItem
 * use size()
@@ -112,14 +116,12 @@ mac should load settings same as win
 * audit samples
 * clrmame style dialog
 1 gba F5 crash
-1 audit all
 * non compressed roms
 
 //Folder
-1 treeview bug,能调到比默认宽,不能调窄
-1 rewrite filter by thread
 * other filters
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
+translation
 * bios icons
 * dnd support
 
@@ -213,6 +215,7 @@ neogeo playback rtc
 4 verify rev 3991
 3x filter height
 verify MESS defs
+wofch
 remove nvram hack
 mamep snaps
 hazemd icons
@@ -220,8 +223,10 @@ verify spclone dips
 add makelang text, src repo link on main page
 
 [mamep tools]
+translation
+multi fixdat
+multi paths for a ftp
 toggle pw mask
-progress 总大小　已完成大小　　再搞个%进度
 purge cache if error on extracting
 purge cache if cache larger than rom
 

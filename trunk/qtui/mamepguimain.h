@@ -69,7 +69,7 @@ public:
 	
 	QStringList dockCtrlNames;
 	QDockWidget* dockCtrls[DOCK_LAST];
-	QTextBrowser *tbHistory, *tbMameinfo, *tbStory, *tbCommand;
+	QTextBrowser *tbHistory, *tbMameinfo, *tbDriverinfo, *tbStory, *tbCommand;
 
 public slots:
 	void on_actionExitStop_activated();
@@ -99,6 +99,7 @@ public slots:
 	void on_actionWave_activated();
 	void on_actionConfigIPS_activated();
 	void on_actionAudit_activated();
+	void on_actionAuditAll_activated();
 	void on_actionProperties_activated();
 	void on_actionSrcProperties_activated();
 	void on_actionDefaultOptions_activated();

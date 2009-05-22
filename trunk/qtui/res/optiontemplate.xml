@@ -379,6 +379,7 @@
 
 	<!--SOUND OPTIONS-->
 	<option name="audio_latency" type="int" min="1" max="5" />
+	<option name="audio_sync" type="bool" />
 	
 	<!--INPUT DEVICE OPTIONS-->
 	<option name="dual_lightgun" type="bool" />

@@ -12,7 +12,7 @@ public:
 	Utils(QObject *parent = 0);
 
 	QString getDesc(const QString &, bool = true);
-	QString getHistory(const QString &, const QString &, int = 0);
+	QString getHistory(const QString &, const QString &, int);
 
 	QSize getScaledSize(QSize, QSize, bool);
 	QString capitalizeStr(const QString &);

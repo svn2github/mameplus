@@ -76,6 +76,7 @@
     <addaction name="actionSrcProperties"/>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
+    <addaction name="actionAuditAll"/>
     <addaction name="menuSaveFixdat"/>
     <addaction name="separator"/>
     <addaction name="actionExitStop"/>
@@ -651,6 +652,11 @@
   <action name="actionRemoveFromFolder">
    <property name="text">
     <string notr="true">Remove From This Folder</string>
+   </property>
+  </action>
+  <action name="actionAuditAll">
+   <property name="text">
+    <string>&amp;Audit All Games</string>
    </property>
   </action>
  </widget>

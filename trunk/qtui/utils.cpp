@@ -1,6 +1,7 @@
 #include "utils.h"
 
 #include "mamepguimain.h"
+#include "gamelist.h"
 
 #undef _DEBUG_
 #define LOG_MAME	2
@@ -120,17 +121,22 @@ QString Utils::getDesc(const QString &gameName, bool useLocal)
 		return gameInfo->description;
 }
 
-QString Utils::getHistory(const QString &fileName, const QString &gameName, int linkType)
+QString Utils::getHistory(const QString &fileName, const QString &gameName, int method)
 {
-	QString systemName = gameName;
-	GameInfo *gameInfo = mameGame->games[systemName];
+	QString searchTag = gameName;
+
+	GameInfo *gameInfo = mameGame->games[searchTag];
 	if (gameInfo->isExtRom)
-		systemName = gameInfo->romof;
+	{
+		searchTag = gameInfo->romof;
+//		gameInfo = mameGame->games[searchTag];
+	}
+
+	if (method == DOCK_DRIVERINFO)
+		searchTag = gameInfo->sourcefile;
 
 	QFile datFile(fileName);
 	QString buf = "";
-	if (linkType > 0)
-		buf = QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=\"http://maws.mameworld.info/maws/romset/" + systemName + "\">View information at MAWS</a><br>";
 
 	if (datFile.open(QFile::ReadOnly | QFile::Text))
 	{
@@ -151,12 +157,12 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 					{
 						isFound = false;
 						line.remove(0, 6);	//remove $info=
-						QStringList games = line.split(',');
+						QStringList tags = line.split(',');
 
-						foreach (QString game, games)
+						foreach (QString tag, tags)
 						{
 							//found the entry, start recording
-							if (game == systemName)
+							if (tag == searchTag)
 							{
 								recData = true;
 								isFound = true;
@@ -193,14 +199,19 @@ QString Utils::getHistory(const QString &fileName, const QString &gameName, int 
 		while (!line.isNull());
 	}
 
-	if (buf.trimmed().isEmpty())
+	buf = buf.trimmed();
+
+	if (buf.isEmpty() && mameGame->games.contains(searchTag))
 	{
-		gameInfo = mameGame->games[systemName];
+		gameInfo = mameGame->games[searchTag];
 		if (!gameInfo->cloneof.isEmpty())
-			buf = getHistory(fileName, gameInfo->cloneof);
+			buf = getHistory(fileName, gameInfo->cloneof, method);
 	}
+	else if (method == DOCK_HISTORY)
+		buf.prepend(QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + 
+			"\" href=\"http://maws.mameworld.info/maws/romset/" + searchTag + "\">View information at MAWS</a><br>");
 	
-	return buf.trimmed();
+	return buf;
 }
 
 QString Utils::getMameVersion()

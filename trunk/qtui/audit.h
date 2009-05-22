@@ -71,14 +71,15 @@ public:
 	QProcess *loadProc;
 
 	MameExeRomAuditor(QObject *parent = 0);
-	void audit();
+	void audit(bool = false);
 
 public slots:
 	void auditorReadyReadStandardOutput();
-	void auditorFinished(int, QProcess::ExitStatus);
+	void auditorClosed();
 
 private:
-	QString outBuf;
+	QDialog dlgAudit;
+	QTextBrowser *tbAudit;
 };
 
 

@@ -1541,7 +1541,6 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("ips")
 		<< QT_TR_NOOP("quit game with confirmation")
 		<< QT_TR_NOOP("auto pause when playback is finished")
-		<< QT_TR_NOOP("m68k core")
 		
 		<< QT_TR_NOOP("transparent in-game ui")
 		<< QT_TR_NOOP("in-game ui transparency")
@@ -1633,6 +1632,7 @@ void OptionUtils::loadDefault(QString text)
 		<< QT_TR_NOOP("full screen gamma")
 			
 		<< QT_TR_NOOP("audio latency")
+		<< QT_TR_NOOP("audio sync")
 			
 		<< QT_TR_NOOP("dual lightgun")
 		<< QT_TR_NOOP("joyid1")

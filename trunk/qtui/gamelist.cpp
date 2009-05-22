@@ -365,7 +365,7 @@ void UpdateSelectionThread::run()
 			if (mameOpts.contains("history_file"))
 				path = mameOpts["history_file"]->globalvalue;
 
-			historyText = utils->getHistory(path, gameName, 1);
+			historyText = utils->getHistory(path, gameName, DOCK_HISTORY);
 
 			emit snapUpdated(DOCK_HISTORY);
 		}
@@ -375,16 +375,27 @@ void UpdateSelectionThread::run()
 			if (mameOpts.contains("mameinfo_file"))
 				path = mameOpts["mameinfo_file"]->globalvalue;
 		
-			mameinfoText = utils->getHistory(path, gameName);
+			mameinfoText = utils->getHistory(path, gameName, DOCK_MAMEINFO);
 			emit snapUpdated(DOCK_MAMEINFO);
 		}
+
+		if (!abort && win->tbMameinfo->isVisible() && win->isDockTabVisible("DriverInfo"))
+		{
+			path = "mameinfo.dat";
+			if (mameOpts.contains("mameinfo_file"))
+				path = mameOpts["mameinfo_file"]->globalvalue;
+		
+			driverinfoText = utils->getHistory(path, gameName, DOCK_DRIVERINFO);
+			emit snapUpdated(DOCK_DRIVERINFO);
+		}
+
 		if (!abort && win->tbStory->isVisible() && win->isDockTabVisible("Story"))
 		{
 			path = "story.dat";
 			if (mameOpts.contains("story_file"))
 				path = mameOpts["story_file"]->globalvalue;
 		
-			storyText = utils->getHistory(path, gameName);
+			storyText = utils->getHistory(path, gameName, DOCK_STORY);
 			emit snapUpdated(DOCK_STORY);
 		}
 		if (!abort && win->tbCommand->isVisible() && win->isDockTabVisible("Command"))
@@ -393,7 +404,7 @@ void UpdateSelectionThread::run()
 			if (mameOpts.contains("command_file"))
 				path = mameOpts["command_file"]->globalvalue;
 
-			commandText = utils->getHistory(path, gameName);
+			commandText = utils->getHistory(path, gameName, DOCK_COMMAND);
 
 			// command.dat parsing
 			commandText.replace(QRegExp("<br>\\s+"), "<br>");
@@ -1985,6 +1996,11 @@ void Gamelist::setupSnap(int snapType)
 	case DOCK_MAMEINFO:
 		win->tbMameinfo->setHtml(selectionThread.mameinfoText);
 		break;
+
+	case DOCK_DRIVERINFO:
+		win->tbDriverinfo->setHtml(selectionThread.driverinfoText);
+		break;
+
 	case DOCK_STORY:
 		win->tbStory->setHtml(selectionThread.storyText);
 		break;

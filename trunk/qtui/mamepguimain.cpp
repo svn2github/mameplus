@@ -151,6 +151,7 @@ QMainWindow(parent)
 	
 	   << QT_TR_NOOP("History")
 	   << QT_TR_NOOP("MAMEInfo")
+	   << QT_TR_NOOP("DriverInfo")
 	   << QT_TR_NOOP("Story")
 	   << QT_TR_NOOP("Command"));
 
@@ -304,6 +305,8 @@ void MainWindow::initHistory(int snapType)
 	}
 	else if (snapType == DOCK_MAMEINFO)
 		tb = tbMameinfo = new QTextBrowser(dockWidgetContents);
+	else if (snapType == DOCK_DRIVERINFO)
+		tb = tbDriverinfo = new QTextBrowser(dockWidgetContents);
 	else if (snapType == DOCK_STORY)
 		tb = tbStory = new QTextBrowser(dockWidgetContents);
 	else
@@ -616,7 +619,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.0")
+		.arg("1.4.2")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -741,6 +744,11 @@ void MainWindow::exportFixDat(int method)
 void MainWindow::on_actionAudit_activated()
 {
 	mameAuditor->audit();
+}
+
+void MainWindow::on_actionAuditAll_activated()
+{
+	mameAuditor->audit(true);
 }
 
 void MainWindow::on_actionSrcProperties_activated()
@@ -1293,6 +1301,7 @@ void MainWindow::setBgPixmap(QString fileName)
 		setTransparentBg(lvGameList);
 		setTransparentBg(tbHistory);
 		setTransparentBg(tbMameinfo);
+		setTransparentBg(tbDriverinfo);
 		setTransparentBg(tbStory);
 		setTransparentBg(tbCommand);
 #ifdef Q_OS_WIN

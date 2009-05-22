@@ -265,8 +265,8 @@ void RomAuditor::run()
 		{
 			QDir dir(dirpath);
 			QStringList nameFilter = QStringList() << "*" ZIP_EXT;
-			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable);
+			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable | QDir::Hidden);
+			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable | QDir::Hidden);
 
 			emit progressSwitched(romFiles.count(), tr("Auditing") + " " + dirpath + " ...");
 
@@ -274,7 +274,7 @@ void RomAuditor::run()
 			foreach (QString romDir, romDirs)
 			{
 				QDir dir2(utils->getPath(dirpath) + romDir);
-				QString gameName = dir2.dirName();
+				QString gameName = dir2.dirName().toLower();
 
 				if (!mameGame->games.contains(gameName))
 					continue;
@@ -282,7 +282,7 @@ void RomAuditor::run()
 				gameInfo = mameGame->games[gameName];
 
 				QStringList nameFilter2 = QStringList() << "*.chd";
-				QStringList chdFiles = dir2.entryList(nameFilter2, QDir::Files | QDir::Readable);
+				QStringList chdFiles = dir2.entryList(nameFilter2, QDir::Files | QDir::Readable | QDir::Hidden);
 
 				foreach (QString chdFile, chdFiles)
 				{
@@ -292,7 +292,7 @@ void RomAuditor::run()
 					{
 						DiskInfo *diskInfo = gameInfo->disks[sha1];
 
-						if (diskInfo->name == fileInfo.baseName())
+						if (diskInfo->name == fileInfo.baseName().toLower())
 						{
 							diskInfo->available = true;
 
@@ -679,25 +679,44 @@ MergedRomAuditor::~MergedRomAuditor()
 MameExeRomAuditor::MameExeRomAuditor(QObject *parent) : 
 QObject(parent)
 {
+	dlgAudit.setModal(true);
+	dlgAudit.setWindowTitle(tr("Checking..."));
+	dlgAudit.resize(400, 300);
+
+	QGridLayout *lay = new QGridLayout(&dlgAudit);
+	tbAudit = new QTextBrowser(&dlgAudit);
+	lay->addWidget(tbAudit, 0, 0, 1, 1);
+
+	QDialogButtonBox *buttonBox = new QDialogButtonBox(&dlgAudit);
+	buttonBox->setOrientation(Qt::Horizontal);
+	buttonBox->setStandardButtons(QDialogButtonBox::Ok);
+
+	lay->addWidget(buttonBox, 1, 0, 1, 1);
+
+	connect(buttonBox, SIGNAL(accepted()), this, SLOT(auditorClosed()));
 }
 
 void MameExeRomAuditor::auditorReadyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-	outBuf.append(QString::fromLocal8Bit(proc->readAllStandardOutput().data()));
+	tbAudit->append(QString::fromLocal8Bit(proc->readAllStandardOutput().data()));
 }
 
-void MameExeRomAuditor::auditorFinished(int, QProcess::ExitStatus)
+void MameExeRomAuditor::auditorClosed()
 {
-	QMessageBox msgBox;
-	msgBox.setText(outBuf);
-	msgBox.exec();
+	win->log("try to terminate");
+	loadProc->kill();
+	dlgAudit.accept();
 }
 
-void MameExeRomAuditor::audit()
+void MameExeRomAuditor::audit(bool verifyAll)
 {
 	QStringList args;
-	args << "-verifyroms" << currentGame;
+
+	args << "-verifyroms";
+	if (!verifyAll)
+		args << currentGame;
+
 	if (hasLanguage)
 	{
 		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
@@ -705,11 +724,12 @@ void MameExeRomAuditor::audit()
 		args << "-language" << language;
 	}
 
-	outBuf.clear();
+	tbAudit->clear();
 
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(auditorReadyReadStandardOutput()));
-	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(auditorFinished(int, QProcess::ExitStatus)));
+
+	dlgAudit.show();
 }
 
