@@ -292,7 +292,8 @@ Notes:
 #include "includes/pgm.h"
 
 
-UINT16 *pgm_mainram, *pgm_bg_videoram, *pgm_tx_videoram, *pgm_videoregs, *pgm_rowscrollram, *pgm_videoram;
+UINT16 *pgm_mainram, *pgm_bg_videoram, *pgm_tx_videoram, *pgm_videoregs, *pgm_rowscrollram;
+static UINT16 *pgm_videoram;
 static UINT8 *z80_mainram;
 static UINT32 *arm7_shareram;
 static UINT32 *svg_shareram[2];	//for 55857G MACHINE
@@ -937,7 +938,7 @@ ADDRESS_MAP_END
 
 
 //55857G
-unsigned char svg_ram_sel;
+static unsigned char svg_ram_sel;
 
 static WRITE32_HANDLER( svg_arm7_ram_sel_w )
 {

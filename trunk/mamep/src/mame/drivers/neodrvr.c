@@ -8543,14 +8543,6 @@ ROM_START( neogeo )
 ROM_END
 
 
-
-static DRIVER_INIT( gfxdec52 )
-{
-	neogeo_fixed_layer_bank_type = 0;
-	neogeo_sfix_decrypt(machine);
-	DRIVER_INIT_CALL(neogeo);
-}
-
 static DRIVER_INIT( gfxdec42 )
 {
 	neogeo_fixed_layer_bank_type = 1;
