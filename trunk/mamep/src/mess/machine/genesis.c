@@ -1204,6 +1204,8 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 		if (!(genesis_sram_end & 1))
 			genesis_sram_end += 1;
 		
+		if ( has_sram )
+		{
 		genesis_sram = alloc_array_or_die(UINT16, (genesis_sram_end - genesis_sram_start) / sizeof(UINT16));
 		image_battery_load(devtag_get_device(image->machine, "cart"), genesis_sram, genesis_sram_end - genesis_sram_start);
 
@@ -1212,6 +1214,7 @@ static DEVICE_IMAGE_LOAD( genesis_cart )
 
 		if (genesis_last_loaded_image_length < genesis_sram_start)
 			genesis_sram_active = 1;
+	}
 	}
 
 	logerror("SRAM detected? %s\n", has_sram ? "Yes" : "No");
