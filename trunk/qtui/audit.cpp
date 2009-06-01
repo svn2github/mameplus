@@ -704,7 +704,6 @@ void MameExeRomAuditor::auditorReadyReadStandardOutput()
 
 void MameExeRomAuditor::auditorClosed()
 {
-	win->log("try to terminate");
 	loadProc->kill();
 	dlgAudit.accept();
 }

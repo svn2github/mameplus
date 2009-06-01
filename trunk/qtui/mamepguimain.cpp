@@ -32,6 +32,7 @@ const QString CFG_PREFIX =
 MainWindow *win;
 QSettings guiSettings(CFG_PREFIX + "mamepgui" INI_EXT, QSettings::IniFormat);
 QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
+const QString currentDir = QDir::currentPath();
 QString mame_binary;
 QString language;
 bool local_game_list;
@@ -56,11 +57,14 @@ void MainWindow::log(QString message, char logOrigin)
 
 void MainWindow::poplog(QString message)
 {
-	QMessageBox::critical(this, "Debug", message); 
+	QMessageBox::critical(this, "Warning", message); 
 }
 
 void MainWindow::logStatus(QString message)
 {
+	if (currentDir != QDir::currentPath())
+		return;
+
 	labelProgress->setText(message);
 }
 
@@ -619,7 +623,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.2")
+		.arg("1.4.3")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)

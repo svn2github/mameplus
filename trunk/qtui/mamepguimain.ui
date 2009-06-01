@@ -67,8 +67,14 @@
       <string>Add to Custom Folder</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuDeleteCfg">
+     <property name="title">
+      <string>Remove</string>
+     </property>
+    </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
+    <addaction name="menuDeleteCfg"/>
     <addaction name="separator"/>
     <addaction name="menuAddtoFolder"/>
     <addaction name="actionRemoveFromFolder"/>

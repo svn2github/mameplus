@@ -1,9 +1,4 @@
-﻿CSI, 豪斯医生, 盾牌，律师风云，都很不错
-引用(wxcalin(323楼) @ 2009/02/05 18:48:21)
-Criminal Minds，CSI.LV，The Closer，Bones......
-
-
-after a year and 3 months of development, I consider this program is compatible with most of the features of MAMEUI, so that a final version is released. and as promised, it's now open-source. no license or whatever, it's free for any purpose. the building process is the same as any Qt program.
+﻿after a year and 3 months of development, I consider this program is compatible with most of the features of MAMEUI, so that a final version is released. and as promised, it's now open-source. no license or whatever, it's free for any purpose. the building process is the same as any Qt program.
 
 经过1年3个月的开发，新GUI已经可以兼容MAMEUI的大部分功能，因此决定发布正式版。同时依照之前承诺的，这个项目现在开源。源代码无任何授权，想怎么用都可以。编译方法同Qt其他标准程序。
 
@@ -14,19 +9,26 @@ read/write cookie
 theme
 
 //Done
-improved CHD verification
-added Driver Info widget [Xander Xander]
-added menu: "File - Audit All Games"
+added menu to remove cfg, ini, diff, nv files of a game
+disabled ctrls when M1 is loading
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
 check font size
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
-能不能价格功能，让写入配置文件的时候输入root密码拥有写入权限 
 * LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang
-mac should load settings same as win
+
+//auto update
+note that all paths are determinable
+
+exes: mamep, mamepgui, mame, mess, mameui, (m1, m1.dll, lst)
+exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi mo), snap(multi png)
+
+single package crc format: clrmamep
 
 //Priority tasks
+3 startup args to assign cache,ini dir
+3 dat location for official mame
 3 clone history
 3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing

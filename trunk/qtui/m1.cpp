@@ -73,11 +73,14 @@ void M1::init()
 
 void M1::loadLib()
 {
+	win->enableCtrls(false);
+
 	//set current dir to m1, so that m1.xml and list could be loaded
 	m1_dir = utils->getPath(guiSettings.value("m1_directory", "bin/m1").toString());
 
-	QString currentDir = QDir::currentPath();
+	win->logStatus(tr("Loading M1, please wait..."));
 	QDir::setCurrent(m1_dir);
+	
 	QLibrary m1Lib(0);
 	m1Lib.setFileName(m1_dir + "m1");
 
@@ -119,6 +122,9 @@ void M1::loadLib()
 
 	//restore current dir
 	QDir::setCurrent(currentDir);
+
+	win->enableCtrls(true);
+	win->logStatus("");
 }
 
 void M1::postInit()

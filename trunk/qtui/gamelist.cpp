@@ -28,6 +28,7 @@ MameGame *mameGame0 = NULL;
 GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 QMultiMap<QString, QString> extFolderMap;
+QStringList deleteCfgFiles;
 
 QByteArray defIconDataGreen;
 QByteArray defIconDataYellow;
@@ -38,6 +39,7 @@ QByteArray defMessSnapData;
 
 #define ROOT_FOLDER "ROOT_FOLDER"
 #define EXTFOLDER_MAGIC "**00_"
+#define STR_DELCFG "actionDelCfg_"
 #define STR_EXTSFOLDER "actionExtSubFolder_"
 #define STR_EXTFOLDER "actionExtSubFolder_"
 
@@ -2545,6 +2547,7 @@ void Gamelist::initMenus()
 	
 		menuContext->addAction(win->actionPlay);
 		menuContext->addAction(win->actionRecord);
+		menuContext->addMenu(win->menuDeleteCfg);
 		menuContext->addSeparator();
 		menuContext->addMenu(win->menuAddtoFolder);
 		menuContext->addAction(win->actionRemoveFromFolder);
@@ -2629,9 +2632,11 @@ void Gamelist::updateContextMenu()
 	pm.loadFromData(gameInfo->icondata, "ico");
 	QIcon icon(pm);
 
-	win->actionPlay->setEnabled(true);
 	win->actionPlay->setIcon(icon);
-    win->actionPlay->setText(tr("Play %1").arg(gameInfo->description));
+    win->actionPlay->setText(tr("Play %1").arg(gameName));
+    
+	//remove cfg menu
+	updateDeleteCfgMenu (gameName);
 
 	//ext folder menu
 	QString extFolderName, extSubFolderName;
@@ -2952,6 +2957,107 @@ void Gamelist::updateHeaderContextMenu()
 	win->actionColDriver->setChecked(header->isSectionHidden(4) ? false : true);
 	win->actionColYear->setChecked(header->isSectionHidden(5) ? false : true);
 	win->actionColCloneOf->setChecked(header->isSectionHidden(6) ? false : true);
+}
+
+void Gamelist::updateDeleteCfgMenu(const QString &gameName)
+{
+	QAction *actionMenuItem;
+	DiskInfo *diskInfo;
+	GameInfo *gameInfo = mameGame->games[currentGame];
+	QString path;
+	
+	win->menuDeleteCfg->clear();
+	win->menuDeleteCfg->setEnabled(false);
+	deleteCfgFiles.clear();
+
+	//ini file
+	if (mameOpts.contains("inipath"))
+	{
+		QStringList dirPaths = mameOpts["inipath"]->currvalue.split(";");
+
+		foreach (path, dirPaths)
+		{
+			addDeleteCfgMenu(utils->getPath(path), currentGame + ".ini");
+
+			if (!gameInfo->cloneof.isEmpty())
+				addDeleteCfgMenu(utils->getPath(path), gameInfo->cloneof + ".ini");
+
+			QString biosof = gameInfo->biosof();
+			if (!biosof.isEmpty())
+				addDeleteCfgMenu(utils->getPath(path), biosof + ".ini");
+		}
+	}
+
+	//cfg file
+	if (mameOpts.contains("cfg_directory"))
+	{
+		path = mameOpts["cfg_directory"]->currvalue;
+		addDeleteCfgMenu(utils->getPath(path), currentGame + ".cfg");
+	}
+ 
+ 	//nvram file
+	if (mameOpts.contains("nvram_directory"))
+	{
+		path = mameOpts["nvram_directory"]->currvalue;
+		addDeleteCfgMenu(utils->getPath(path), currentGame + ".nv");
+	}
+   
+	//Diff file
+	if (mameOpts.contains("diff_directory"))
+	{
+		path  = mameOpts["diff_directory"]->currvalue;
+
+		foreach (QString sha1, mameGame->games[currentGame]->disks.keys())
+		{
+			diskInfo = mameGame->games[currentGame]->disks[sha1];
+			addDeleteCfgMenu(utils->getPath(path), diskInfo->name + ".dif");
+		}
+	}
+
+	//All folder
+	win->menuDeleteCfg->addSeparator();
+
+	actionMenuItem = new QAction(tr("Remove All"), win->menuDeleteCfg->menuAction());
+	actionMenuItem->setObjectName(QString(STR_DELCFG "all"));
+
+	win->menuDeleteCfg->addAction(actionMenuItem);
+	connect(actionMenuItem, SIGNAL(triggered()), this, SLOT(deleteCfg()));
+}
+
+void Gamelist::addDeleteCfgMenu(const QString &path, const QString &fileName)
+{
+	QAction *actionMenuItem;
+	GameInfo *gameInfo = mameGame->games[currentGame];
+	const QString fullPath = path + fileName;
+	QFile file(fullPath);
+ 
+	if (file.exists())
+	{
+		actionMenuItem = new QAction(fullPath, win->menuDeleteCfg->menuAction());
+		deleteCfgFiles << fullPath;
+		actionMenuItem->setObjectName(QString(STR_DELCFG "%1").arg(fullPath));
+		actionMenuItem->setEnabled(file.permissions() & QFile::WriteUser);
+		win->menuDeleteCfg->addAction(actionMenuItem);
+		connect(actionMenuItem, SIGNAL(triggered()), this, SLOT(deleteCfg()));
+
+		win->menuDeleteCfg->setEnabled(true);
+	}
+}
+
+void Gamelist::deleteCfg()
+{
+	GameInfo *gameInfo = mameGame->games[currentGame];
+	const QString itemName = ((QAction*)sender())->objectName();
+
+	for (int i = 0 ; i < deleteCfgFiles.size() ; i++)
+	{
+		const QString fileName = deleteCfgFiles.at(i);
+		if (itemName == QString(STR_DELCFG "%1").arg(fileName) ||  itemName == STR_DELCFG "all")
+		{
+			QFile delFile(fileName);
+			delFile.remove();
+		}
+	}
 }
 
 void Gamelist::toggleDelegate(bool isHilite)
@@ -3625,6 +3731,13 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 	//block multi mame session for now
 	//if (procMan->procCount > 0)
 	//	return;
+
+	//block process during M1 loading
+	if (currentDir != QDir::currentPath())
+	{
+		win->poplog(tr("Loading M1, please wait..."));
+		return;
+	}
 
 	QStringList args;
 	args << playArgs;

@@ -200,15 +200,7 @@ public:
 public slots:
 	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
 	void update(int = GAMELIST_INIT_FULL);
-
-	void showContextMenu(const QPoint &);
-	void updateContextMenu();
-	void mountDevice();
-	void unmountDevice();
-	void showHeaderContextMenu(const QPoint &);
-	void updateHeaderContextMenu();
 	void restoreGameSelection();
-
 	void runMame(bool = false, QStringList = QStringList());
 	QString getViewString(const QModelIndex &index, int column) const;
 	void updateProgress(int progress);
@@ -242,10 +234,19 @@ private:
 
 	void initMenus();
 	void updateDynamicMenu(QMenu *);
+	void updateDeleteCfgMenu(const QString &);
+	void addDeleteCfgMenu(const QString &, const QString &);
 	void loadMMO(int);
 	void loadIconWorkder();
 
 private slots:
+	void showContextMenu(const QPoint &);
+	void updateContextMenu();
+	void mountDevice();
+	void unmountDevice();
+	void showHeaderContextMenu(const QPoint &);
+	void updateHeaderContextMenu();
+	void deleteCfg();
 	void addToExtFolder();
 	void removeFromExtFolder();
 	void postLoadIcon();
@@ -383,7 +384,7 @@ public:
 
 	/* sample */
 	QStringList samples;
-
+	
 	/* chip */
 	QList<ChipInfo *> chips;
 

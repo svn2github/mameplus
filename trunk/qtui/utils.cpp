@@ -370,6 +370,10 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 		connect(proc, SIGNAL(started()), this, SLOT(started()));
 	}
 	
+#ifdef Q_WS_WIN
+	//explicitly assign WorkingDirectory during M1 loading
+	proc->setWorkingDirectory(currentDir);
+#endif
 	procMap[proc] = procCount++;
 	proc->start(command, arguments);
 	return procCount - 1;
