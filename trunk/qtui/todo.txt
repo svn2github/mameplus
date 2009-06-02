@@ -9,8 +9,7 @@ read/write cookie
 theme
 
 //Done
-added menu to remove cfg, ini, diff, nv files of a game
-disabled ctrls when M1 is loading
+localized .dat support
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -29,7 +28,6 @@ single package crc format: clrmamep
 //Priority tasks
 3 startup args to assign cache,ini dir
 3 dat location for official mame
-3 clone history
 3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing
 3 create new folder
@@ -104,7 +102,6 @@ single package crc format: clrmamep
 * separate game list language
 * manuals support planned? (http://www.mamext.net/)
 * Ctrl-F w/ functionality to filter like MameUI including its text filter.
-* inherit parent history.dat
 * export lst gamelist
 * coin/time counter column
 * sort by reading

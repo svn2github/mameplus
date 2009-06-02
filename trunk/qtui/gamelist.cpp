@@ -345,6 +345,26 @@ void UpdateSelectionThread::update()
 
 void UpdateSelectionThread::run()
 {
+	// construct dockInfo	
+	struct DockInfo
+	{
+		QString optName;
+		QString fileName;
+		int type;
+		QString title;
+		QString *buffer;
+	};
+	
+	static const DockInfo _dockInfoList[] =
+	{
+		{ "history_file",	"history.dat",	DOCK_HISTORY,	"History",		&historyText },
+		{ "mameinfo_file",	"mameinfo.dat", DOCK_MAMEINFO,	"MAMEInfo",		&mameinfoText },
+		{ "mameinfo_file",	"mameinfo.dat", DOCK_DRIVERINFO,"DriverInfo",	&driverinfoText },
+		{ "story_file", 	"story.dat",	DOCK_STORY, 	"Story",		&storyText },
+		{ "command_file",	"command.dat",	DOCK_COMMAND,	"Command",		&commandText },
+		{ NULL }
+	};
+
 	while (!myqueue.isEmpty() && !abort)
 	{
 		QString gameName = myqueue.dequeue();
@@ -360,101 +380,196 @@ void UpdateSelectionThread::run()
 //		static QMovie movie( "xxx.mng" );
 //		win->lblPCB->setMovie( &movie );
 
-		QString path;
-		if (!abort && win->tbHistory->isVisible() && win->isDockTabVisible("History"))
+		QString path, localPath;
+
+		const DockInfo *dockInfoList = _dockInfoList;
+
+		/* loop over entries until we hit a NULL name */
+		for ( ; dockInfoList->optName != NULL; dockInfoList++)
 		{
-			path = "history.dat";
-			if (mameOpts.contains("history_file"))
-				path = mameOpts["history_file"]->globalvalue;
+			if (hasLanguage)
+				localPath = utils->getPath(mameOpts["langpath"]->globalvalue);
 
-			historyText = utils->getHistory(path, gameName, DOCK_HISTORY);
-
-			emit snapUpdated(DOCK_HISTORY);
-		}
-		if (!abort && win->tbMameinfo->isVisible() && win->isDockTabVisible("MAMEInfo"))
-		{
-			path = "mameinfo.dat";
-			if (mameOpts.contains("mameinfo_file"))
-				path = mameOpts["mameinfo_file"]->globalvalue;
-		
-			mameinfoText = utils->getHistory(path, gameName, DOCK_MAMEINFO);
-			emit snapUpdated(DOCK_MAMEINFO);
-		}
-
-		if (!abort && win->tbMameinfo->isVisible() && win->isDockTabVisible("DriverInfo"))
-		{
-			path = "mameinfo.dat";
-			if (mameOpts.contains("mameinfo_file"))
-				path = mameOpts["mameinfo_file"]->globalvalue;
-		
-			driverinfoText = utils->getHistory(path, gameName, DOCK_DRIVERINFO);
-			emit snapUpdated(DOCK_DRIVERINFO);
-		}
-
-		if (!abort && win->tbStory->isVisible() && win->isDockTabVisible("Story"))
-		{
-			path = "story.dat";
-			if (mameOpts.contains("story_file"))
-				path = mameOpts["story_file"]->globalvalue;
-		
-			storyText = utils->getHistory(path, gameName, DOCK_STORY);
-			emit snapUpdated(DOCK_STORY);
-		}
-		if (!abort && win->tbCommand->isVisible() && win->isDockTabVisible("Command"))
-		{
-			path = "command.dat";
-			if (mameOpts.contains("command_file"))
-				path = mameOpts["command_file"]->globalvalue;
-
-			commandText = utils->getHistory(path, gameName, DOCK_COMMAND);
-
-			// command.dat parsing
-			commandText.replace(QRegExp("<br>\\s+"), "<br>");
-			/* directions */
-			//generate dup dirs
-			commandText.replace("_2_1_4_1_2_3_6", "_2_1_4_4_1_2_3_6");
-			commandText.replace("_2_3_6_3_2_1_4", "_2_3_6_6_3_2_1_4");
-			commandText.replace("_4_1_2_3_6", "<img src=\":/res/16x16/dir-hcf.png\" />");
-			commandText.replace("_6_3_2_1_4", "<img src=\":/res/16x16/dir-hcb.png\" />");
-			commandText.replace("_2_3_6", "<img src=\":/res/16x16/dir-qdf.png\" />");
-			commandText.replace("_2_1_4", "<img src=\":/res/16x16/dir-qdb.png\" />");
-			commandText.replace(QRegExp("_(\\d)"), "<img src=\":/res/16x16/dir-\\1.png\" />");
-			// buttons
-			commandText.replace(QRegExp("_([A-DGKNPS\\+])"), "<img src=\":/res/16x16/btn-\\1.png\" />");
-			commandText.replace(QRegExp("_([a-f])"), "<img src=\":/res/16x16/btn-n\\1.png\" />");
-			//------
-			commandText.replace(QRegExp("<br>[\\x2500-]{8,}<br>"), "<hr>");
-			//special moves, starts with <br> || <hr>
-			commandText.replace(QRegExp(">\\x2605"), "><img src=\":/res/16x16/star_gold.png\" />");
-			commandText.replace(QRegExp(">\\x2606"), "><img src=\":/res/16x16/star_silver.png\" />");
-			commandText.replace(QRegExp(">\\x25B2"), "><img src=\":/res/16x16/tri-r.png\" />");
-			commandText.replace(QRegExp(">\\x25CB"), "><img src=\":/res/16x16/cir-y.png\" />");
-			commandText.replace(QRegExp(">\\x25CE"), "><img src=\":/res/16x16/cir-r.png\" />");			
-			commandText.replace(QRegExp(">\\x25CF"), "><img src=\":/res/16x16/cir-g.png\" />");
-			commandText.replace(QChar(0x2192), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />");
-//			commandText.replace(QChar(0x3000), "<img src=\":/res/16x16/blank.png\" />");
-
-			/* colors
-			Y: +45
-			G: +120 0 -28
-			B: -150 0 -20
-			C: -32
-			P: -90
-			*/
-
-			///*
-			if (language.startsWith("zh_") || language.startsWith("ja_"))
+			if (!abort && win->tbHistory->isVisible() && win->isDockTabVisible(dockInfoList->title))
 			{
-				QFont font;
-				font.setFamily("MS Gothic");
-				font.setFixedPitch(true);
-				win->tbCommand->setFont(font);
-//				win->tbCommand->setLineWrapMode(QTextEdit::NoWrap);
+				dockInfoList->buffer->clear();
+			
+				path = dockInfoList->fileName;
+
+				if (!localPath.isEmpty())
+				{
+					localPath = localPath + language + "/" + path;
+
+					*dockInfoList->buffer = getHistory(localPath, gameName, dockInfoList->type + DOCK_LAST /*hack for local*/);
+					if (!dockInfoList->buffer->isEmpty())
+						dockInfoList->buffer->append("<hr>");
+				}
+				
+				if (mameOpts.contains(dockInfoList->optName))
+					path = mameOpts[dockInfoList->optName]->globalvalue;
+
+				//we don't want display the same dat twice
+				if (localPath != path)
+					dockInfoList->buffer->append(getHistory(path, gameName, dockInfoList->type));
+
+				//special handling for command
+				if (dockInfoList->type == DOCK_COMMAND)
+				{
+					convertCommand(commandText);
+/*
+					//fixme: font hack, should be removed
+					if (language.startsWith("zh_") || language.startsWith("ja_"))
+					{
+						QFont font;
+						font.setFamily("MS Gothic");
+						font.setFixedPitch(true);
+						win->tbCommand->setFont(font);
+		//				win->tbCommand->setLineWrapMode(QTextEdit::NoWrap);
+					}
+*/
+				}
+			
+				emit snapUpdated(dockInfoList->type);
 			}
-//*/
-			emit snapUpdated(DOCK_COMMAND);
 		}
 	}
+}
+
+QString UpdateSelectionThread::getHistory(const QString &fileName, const QString &gameName, int method)
+{
+	QString searchTag = gameName;
+
+	GameInfo *gameInfo = mameGame->games[searchTag];
+	if (gameInfo->isExtRom)
+	{
+		searchTag = gameInfo->romof;
+//		gameInfo = mameGame->games[searchTag];
+	}
+
+	if (method == DOCK_DRIVERINFO)
+		searchTag = gameInfo->sourcefile;
+
+	QFile datFile(fileName);
+	QString buf = "";
+
+	if (datFile.open(QFile::ReadOnly | QFile::Text))
+	{
+		QTextStream in(&datFile);
+		in.setCodec("UTF-8");
+
+		bool isFound, recData = false;
+		QString line;
+
+		do
+		{
+			line = in.readLine();
+			if (!line.startsWith("#"))
+			{
+				if (line.startsWith("$"))
+				{
+					if (line.startsWith("$info="))
+					{
+						isFound = false;
+						line.remove(0, 6);	//remove $info=
+						QStringList tags = line.split(',');
+
+						foreach (QString tag, tags)
+						{
+							//found the entry, start recording
+							if (tag == searchTag)
+							{
+								recData = true;
+								isFound = true;
+								break;
+							}
+						}
+
+						// reach another entry, stop recording
+						if (!isFound && recData)
+						{
+							recData = false;
+							//finished
+							break;
+						}
+					}
+					else if (recData && line.startsWith("$<a href="))
+					{
+						line.remove(0, 1);	//remove $
+						line.replace("<a href=", QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + "\" href=");
+						buf += line;
+						buf += "<br>";
+					}
+//					else if (recData)
+//						buf += "<br>";
+
+				}
+				else if (recData)
+				{
+					buf += line;
+					buf += "<br>";
+				}
+			}
+		}
+		while (!line.isNull());
+	}
+
+	buf = buf.trimmed();
+
+	if (buf.isEmpty() && mameGame->games.contains(searchTag))
+	{
+		gameInfo = mameGame->games[searchTag];
+		if (!gameInfo->cloneof.isEmpty())
+			buf = getHistory(fileName, gameInfo->cloneof, method);
+	}
+	else if (method == DOCK_HISTORY)
+		buf.prepend(QString("<a style=\"color:") + (isDarkBg ? "#00a0e9" : "#006d9f") + 
+			"\" href=\"http://maws.mameworld.info/maws/romset/" + searchTag + "\">View information at MAWS</a><br>");
+
+	//post process redundant break lines
+	while (buf.startsWith("<br>"))
+		buf.remove(0, 4);
+
+	while (buf.endsWith("<br>"))
+		buf.remove(buf.size() - 4, 4);
+
+	return buf;
+}
+
+void UpdateSelectionThread::convertCommand(QString &commandText)
+{
+	// command.dat parsing
+	commandText.replace(QRegExp("<br>\\s+"), "<br>");
+	/* directions */
+	//generate dup dirs
+	commandText.replace("_2_1_4_1_2_3_6", "_2_1_4_4_1_2_3_6");
+	commandText.replace("_2_3_6_3_2_1_4", "_2_3_6_6_3_2_1_4");
+	commandText.replace("_4_1_2_3_6", "<img src=\":/res/16x16/dir-hcf.png\" />");
+	commandText.replace("_6_3_2_1_4", "<img src=\":/res/16x16/dir-hcb.png\" />");
+	commandText.replace("_2_3_6", "<img src=\":/res/16x16/dir-qdf.png\" />");
+	commandText.replace("_2_1_4", "<img src=\":/res/16x16/dir-qdb.png\" />");
+	commandText.replace(QRegExp("_(\\d)"), "<img src=\":/res/16x16/dir-\\1.png\" />");
+	// buttons
+	commandText.replace(QRegExp("_([A-DGKNPS\\+])"), "<img src=\":/res/16x16/btn-\\1.png\" />");
+	commandText.replace(QRegExp("_([a-f])"), "<img src=\":/res/16x16/btn-n\\1.png\" />");
+	//------
+	commandText.replace(QRegExp("<br>[\\x2500-]{8,}<br>"), "<hr>");
+	//special moves, starts with <br> || <hr>
+	commandText.replace(QRegExp(">\\x2605"), "><img src=\":/res/16x16/star_gold.png\" />");
+	commandText.replace(QRegExp(">\\x2606"), "><img src=\":/res/16x16/star_silver.png\" />");
+	commandText.replace(QRegExp(">\\x25B2"), "><img src=\":/res/16x16/tri-r.png\" />");
+	commandText.replace(QRegExp(">\\x25CB"), "><img src=\":/res/16x16/cir-y.png\" />");
+	commandText.replace(QRegExp(">\\x25CE"), "><img src=\":/res/16x16/cir-r.png\" />"); 		
+	commandText.replace(QRegExp(">\\x25CF"), "><img src=\":/res/16x16/cir-g.png\" />");
+	commandText.replace(QChar(0x2192), "<img src=\":/res/16x16/blank.png\" /><img src=\":/res/16x16/arrow-r.png\" />");
+//			commandText.replace(QChar(0x3000), "<img src=\":/res/16x16/blank.png\" />");
+
+	/* colors
+	Y: +45
+	G: +120 0 -28
+	B: -150 0 -20
+	C: -32
+	P: -90
+	*/
 }
 
 QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const QString &gameName, int snapType)

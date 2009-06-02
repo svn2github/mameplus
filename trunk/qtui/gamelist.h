@@ -98,6 +98,8 @@ private:
 	QMutex mutex;
 	bool abort;
 
+	QString getHistory(const QString &, const QString &, int);
+	void convertCommand(QString &);
 	QByteArray getScreenshot(const QString &, const QString &, int);
 };
 
