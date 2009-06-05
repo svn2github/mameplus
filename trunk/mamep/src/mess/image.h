@@ -258,6 +258,7 @@ UINT32 image_fwrite(const device_config *image, const void *buffer, UINT32 lengt
 int image_fseek(const device_config *image, INT64 offset, int whence);
 UINT64 image_ftell(const device_config *image);
 int image_fgetc(const device_config *image);
+char *image_fgets(const device_config *image, char *s, UINT32 length);
 int image_feof(const device_config *image);
 
 void *image_ptr(const device_config *image);

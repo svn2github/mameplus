@@ -23,9 +23,8 @@ DRVLIBS += \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
-	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/shared.a \
-
+	$(MESSOBJ)/snk.a \
 
 
 
@@ -81,13 +80,13 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_VIDEO)/gb.o		\
 	$(MESS_MACHINE)/gb.o		\
 	$(MESS_DRIVERS)/gb.o		\
+	$(MESS_DRIVERS)/gba.o	 	\
 	$(MESS_MACHINE)/nes_mmc.o	\
 	$(MESS_VIDEO)/nes.o		\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
-	$(MESS_DRIVERS)/gba.o	 	\
 
 $(MESSOBJ)/nec.a:	   \
 	$(MESS_MACHINE)/pce.o	 \
@@ -111,7 +110,7 @@ $(MESSOBJ)/bandai.a:     \
 
 $(MESSOBJ)/snk.a: \
 	$(MESS_DRIVERS)/ngp.o \
-	$(MESS_VIDEO)/k1ge.o
+	$(MESS_VIDEO)/k1ge.o \
 
 #-------------------------------------------------
 # layout dependencies

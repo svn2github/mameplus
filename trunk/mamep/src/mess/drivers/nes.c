@@ -8,9 +8,6 @@
   Based in part on the old xNes code, by Nicolas Hamel, Chuck Mason, Brad Oliver,
   Richard Bannister and Jeff Mitchell.
 
-  Todo: Famicom driver has hardcoded famicom disk-system, needs removing and 
-        adding as it's own driver.
-
 ***************************************************************************/
 
 #include "driver.h"
@@ -171,64 +168,6 @@ static const nes_interface nes_apu_interface =
 };
 
 
-ROM_START( nes )
-    ROM_REGION( 0x10000, "maincpu",0 )  /* Main RAM + program banks */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx1",0 )  /* VROM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx2",0 )  /* VRAM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x10000, "user1",0 ) /* WRAM */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-ROM_END
-
-ROM_START( nespal )
-    ROM_REGION( 0x10000, "maincpu",0 )  /* Main RAM + program banks */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx1",0 )  /* VROM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx2",0 )  /* VRAM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x10000, "user1",0 ) /* WRAM */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-ROM_END
-
-ROM_START( famicom )
-    ROM_REGION( 0x10000, "maincpu",0 )  /* Main RAM + program banks */
-    ROM_LOAD_OPTIONAL ("disksys.rom", 0xe000, 0x2000, CRC(5e607dcf) SHA1(57fe1bdee955bb48d357e463ccbf129496930b62))
-
-    ROM_REGION( 0x2000,  "gfx1",0 )  /* VROM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx2",0 )  /* VRAM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x10000, "user1",0 ) /* WRAM */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-ROM_END
-
-ROM_START( famitwin )
-    ROM_REGION( 0x10000, "maincpu",0 )  /* Main RAM + program banks */
-    ROM_LOAD_OPTIONAL ("disksyst.rom", 0xe000, 0x2000, CRC(4df24a6c) SHA1(e4e41472c454f928e53eb10e0509bf7d1146ecc1))
-
-    ROM_REGION( 0x2000,  "gfx1",0 )  /* VROM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx2",0 )  /* VRAM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x10000, "user1",0 ) /* WRAM */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-ROM_END
-
-ROM_START( dendy )
-    ROM_REGION( 0x10000, "maincpu",0 )  /* Main RAM + program banks */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx1",0 )  /* VROM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x2000,  "gfx2",0 )  /* VRAM */
-	ROM_FILL( 0x0000, 0x2000, 0x00 )
-    ROM_REGION( 0x10000, "user1",0 ) /* WRAM */
-	ROM_FILL( 0x0000, 0x10000, 0x00 )
-ROM_END
-
-
 static void ppu_nmi(const device_config *device, int *ppu_regs)
 {
 	cputag_set_input_line(device->machine, "maincpu", INPUT_LINE_NMI, PULSE_LINE);
@@ -237,7 +176,7 @@ static void ppu_nmi(const device_config *device, int *ppu_regs)
 
 static ppu2c0x_interface nes_ppu_interface =
 {
-	NULL/*"gfx1"*/,
+	NULL,//"gfx1",
 	0,
 	0,
 	PPU_MIRROR_NONE,
@@ -250,6 +189,12 @@ static MACHINE_DRIVER_START( nes )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", N2A03, NTSC_CLOCK)
 	MDRV_CPU_PROGRAM_MAP(nes_map)
+
+	MDRV_DRIVER_DATA( nes_state )
+
+	MDRV_MACHINE_START( nes )
+	MDRV_MACHINE_RESET( nes )
+
 	MDRV_SCREEN_ADD("screen", RASTER)
 	MDRV_SCREEN_REFRESH_RATE(60.098)
 	// This isn't used so much to calulate the vblank duration (the PPU code tracks that manually) but to determine
@@ -257,12 +202,6 @@ static MACHINE_DRIVER_START( nes )
 	// non-rendering scanlines, we compensate. This ends up being 2500 cycles for the non-rendering portion, 2273
 	// cycles for the actual vblank period.
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((113.66/(NTSC_CLOCK/1000000)) * (PPU_VBLANK_LAST_SCANLINE_NTSC-PPU_VBLANK_FIRST_SCANLINE+1+2)))
-
-	MDRV_DRIVER_DATA( nes_state )
-
-	MDRV_MACHINE_START( nes )
-	MDRV_MACHINE_RESET( nes )
-
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(32*8, 262)
 	MDRV_SCREEN_VISIBLE_AREA(0*8, 32*8-1, 0*8, 30*8-1)
@@ -278,7 +217,7 @@ static MACHINE_DRIVER_START( nes )
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 	MDRV_SOUND_ADD("nessound", NES, NTSC_CLOCK)
 	MDRV_SOUND_CONFIG(nes_apu_interface)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 	
 	MDRV_CARTSLOT_ADD("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("nes")
@@ -305,7 +244,7 @@ static MACHINE_DRIVER_START( nespal )
     /* sound hardware */
 	MDRV_SOUND_REPLACE("nessound", NES, PAL_CLOCK)
 	MDRV_SOUND_CONFIG(nes_apu_interface)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( dendy )
@@ -326,7 +265,7 @@ static MACHINE_DRIVER_START( dendy )
     /* sound hardware */
 	MDRV_SOUND_REPLACE("nessound", NES, 26601712/15) /* 26.601712MHz / 15 == 1.77344746666... MHz */
 	MDRV_SOUND_CONFIG(nes_apu_interface)
-	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 1.00)
+	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( famicom )
@@ -338,6 +277,96 @@ static MACHINE_DRIVER_START( famicom )
 	MDRV_CARTSLOT_LOAD(nes_cart)
 	MDRV_CARTSLOT_PARTIALHASH(nes_partialhash)
 MACHINE_DRIVER_END
+
+
+ROM_START( nes )
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+ROM_START( nespal )
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+ROM_START( famicom )
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_LOAD_OPTIONAL( "disksys.rom", 0xe000, 0x2000, CRC(5e607dcf) SHA1(57fe1bdee955bb48d357e463ccbf129496930b62) )
+
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+ROM_START( famitwin )
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_LOAD_OPTIONAL( "disksyst.rom", 0xe000, 0x2000, CRC(4df24a6c) SHA1(e4e41472c454f928e53eb10e0509bf7d1146ecc1) )
+
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+ROM_START( m82 )
+	ROM_REGION( 0x14000, "maincpu", 0 )  /* Main RAM + program banks */
+	/* Banks to be mapped at 0xe000? More investigations needed... */
+	ROM_LOAD( "m82_v1_0.bin", 0x10000, 0x4000, CRC(7d56840a) SHA1(cbd2d14fa073273ba58367758f40d67fd8a9106d) )
+
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+// see http://www.disgruntleddesigner.com/chrisc/drpcjr/index.html
+// and http://www.disgruntleddesigner.com/chrisc/drpcjr/DrPCJrMemMap.txt
+ROM_START( drpcjr )
+	ROM_REGION( 0x18000, "maincpu", 0 )  /* Main RAM + program banks */
+	/* 4 banks to be mapped in 0xe000-0xffff (or 8 banks to be mapped in 0xe000-0xefff & 0xf000-0xffff). 
+	Banks selected by writing at 0x4180 */
+	ROM_LOAD("drpcjr_bios.bin", 0x10000, 0x8000, CRC(c8fbef89) SHA1(2cb0a817b31400cdf27817d09bae7e69f41b062b) )	// bios vers. 1.0a
+	// Not sure if we should support this: hacked version 1.5a by Chris Covell with bugfixes and GameGenie support
+//	ROM_LOAD("drpcjr_v1_5_gg.bin", 0x10000, 0x8000, CRC(98f2033b) SHA1(93c114da787a19279d1a46667c2f69b49e25d4f1) )
+
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
+ROM_START( dendy )
+	ROM_REGION( 0x10000, "maincpu", 0 )  /* Main RAM + program banks */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx1", 0 )  /* VROM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x2000,  "gfx2", 0 )  /* VRAM */
+	ROM_FILL( 0x0000, 0x2000, 0x00 )
+	ROM_REGION( 0x10000, "user1", 0 ) /* WRAM */
+	ROM_FILL( 0x0000, 0x10000, 0x00 )
+ROM_END
+
 
 static void famicom_floppy_getinfo(const mess_device_class *devclass, UINT32 state, union devinfo *info)
 {
@@ -371,10 +400,14 @@ SYSTEM_CONFIG_END
 
 ***************************************************************************/
 
-/*     YEAR  NAME      PARENT    COMPAT MACHINE   INPUT     INIT      CONFIG    COMPANY   FULLNAME */
-CONS( 1983, famicom,   0,        0,		famicom,  famicom,  0,	      famicom,	"Nintendo",	"Famicom" , GAME_NOT_WORKING)
-CONS( 1986, famitwin,  famicom,  0,		famicom,  famicom,  0,	      famicom,	"Sharp",	"Famicom Twin" , GAME_NOT_WORKING)
-CONS( 1985, nes,       famicom,  0,	nes,      nes,      0,        0,	"Nintendo",	"Nintendo Entertainment System (NTSC)" , GAME_NOT_WORKING)
-CONS( 1987, nespal,    famicom,  0,	nespal,   nes,      0,	      0,	"Nintendo",	"Nintendo Entertainment System (PAL)" , GAME_NOT_WORKING)
-CONS( 199?, dendy,     famicom,  0,	dendy,    nes,      0,        0,	"Steepler",	"Dendy Classic" , GAME_NOT_WORKING)
+/* Since 0.130u4, most of the games do not show graphics correctly. Conversion of PPU to a device showed some of the 
+limitations of the previous implementation. Systems regressed to GAME_NOT_WORKING status until a proper fix is found */
 
+/*     YEAR  NAME      PARENT    COMPAT MACHINE   INPUT     INIT      CONFIG    COMPANY   FULLNAME */
+CONS( 1985, nes,       0,      0,     nes,      nes,     0,     0,       "Nintendo",  "Nintendo Entertainment System / Famicom (NTSC)", GAME_NOT_WORKING )
+CONS( 1987, nespal,    nes,    0,     nespal,   nes,     0,     0,       "Nintendo",  "Nintendo Entertainment System (PAL)", GAME_NOT_WORKING )
+CONS( 1983, famicom,   nes,    0,     famicom,  famicom, 0,     famicom, "Nintendo",  "Famicom Disk System", GAME_NOT_WORKING )
+CONS( 1986, famitwin,  nes,    0,     famicom,  famicom, 0,     famicom, "Sharp",     "Famicom Twin", GAME_NOT_WORKING )
+CONS( 198?, m82,       nes,    0,     nes,      nes,     0,     0,       "Nintendo",  "M82 Display Unit", GAME_NOT_WORKING )
+CONS( 1996, drpcjr,    nes,    0,     famicom,  nes,     0,     0,       "Bung",      "Doctor PC Jr", GAME_NOT_WORKING )
+CONS( 199?, dendy,     nes,    0,     dendy,    nes,     0,     0,       "Steepler",  "Dendy Classic", GAME_NOT_WORKING )

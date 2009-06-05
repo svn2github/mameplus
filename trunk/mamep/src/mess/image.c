@@ -1486,6 +1486,19 @@ int image_fgetc(const device_config *image)
 
 
 /*-------------------------------------------------
+    image_fgets
+-------------------------------------------------*/
+
+char *image_fgets(const device_config *image, char *buffer, UINT32 length)
+{
+    image_slot_data *slot = find_image_slot(image);
+    check_for_file(slot);
+    return core_fgets(buffer, length, slot->file);
+}
+
+
+
+/*-------------------------------------------------
     image_feof
 -------------------------------------------------*/
 
