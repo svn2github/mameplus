@@ -41,7 +41,7 @@ TOOLS += \
 ROMCMPOBJS = \
 	$(TOOLSOBJ)/romcmp.o \
 
-romcmp$(EXE): $(ROMCMPOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN) $(LIBOCORE)
+romcmp$(EXE): $(ROMCMPOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -55,7 +55,7 @@ CHDMANOBJS = \
 	$(TOOLSOBJ)/chdman.o \
 	$(TOOLSOBJ)/chdcd.o \
 
-chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN) $(LIBOCORE)
+chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(LIBOCORE)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -68,7 +68,7 @@ chdman$(EXE): $(VERSIONOBJ) $(CHDMANOBJS) $(LIBUTIL) $(ZLIB) $(EXPAT) $(OSDMAIN)
 JEDUTILOBJS = \
 	$(TOOLSOBJ)/jedutil.o \
 
-jedutil$(EXE): $(JEDUTILOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
+jedutil$(EXE): $(JEDUTILOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -94,7 +94,7 @@ ldresample$(EXE): $(LDRESAMPLEOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 LDVERIFYOBJS = \
 	$(TOOLSOBJ)/ldverify.o \
 
-ldverify$(EXE): $(LDVERIFYOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
+ldverify$(EXE): $(LDVERIFYOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -107,7 +107,7 @@ ldverify$(EXE): $(LDVERIFYOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPA
 REGREPOBJS = \
 	$(TOOLSOBJ)/regrep.o \
 
-regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
+regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -120,7 +120,7 @@ regrep$(EXE): $(REGREPOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
 SRCCLEANOBJS = \
 	$(TOOLSOBJ)/srcclean.o \
 
-srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
+srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
 
@@ -133,6 +133,6 @@ srcclean$(EXE): $(SRCCLEANOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPA
 SRC2HTMLOBJS = \
 	$(TOOLSOBJ)/src2html.o \
 
-src2html$(EXE): $(SRC2HTMLOBJS) $(LIBUTIL) $(OSDMAIN) $(LIBOCORE) $(ZLIB) $(EXPAT)
+src2html$(EXE): $(SRC2HTMLOBJS) $(LIBUTIL) $(LIBOCORE) $(ZLIB) $(EXPAT)
 	@echo Linking $@...
 	$(LD) $(LDFLAGS) $^ $(LIBS) -o $@
