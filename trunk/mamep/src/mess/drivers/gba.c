@@ -24,7 +24,7 @@
 #include "includes/gb.h"
 #include "sound/dac.h"
 
-	#define VERBOSE_LEVEL	(0)
+#define VERBOSE_LEVEL	(0)
 #define DISABLE_ROZ	(1)
 
 static emu_timer *dma_timer[4], *tmr_timer[4], *irq_timer;
@@ -383,7 +383,7 @@ void draw_bg_scanline(UINT16 *scanline, int ypos, UINT32 enablemask, UINT32 ctrl
 						mapyofs += 64;
 					}
 
-					printf("%d yofs %d (ypos %d vofs %d my %d) tileofs %x\n", video_screen_get_vpos(machine->primary_screen), mapyofs, ypos, vofs, my, (mapbase>>1) + (mapyofs * 32));
+//					printf("%d yofs %d (ypos %d vofs %d my %d) tileofs %x\n", video_screen_get_vpos(machine->primary_screen), mapyofs, ypos, vofs, my, (mapbase>>1) + (mapyofs * 32));
 				}
 			#endif
 
@@ -2280,7 +2280,7 @@ static WRITE32_HANDLER( gba_io_w )
 
 				COMBINE_DATA(&timer_regs[offset]);
 
-				printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, cpu_get_pc(space->cpu));
+//				printf("%x to timer %d (mask %x PC %x)\n", data, offset, ~mem_mask, cpu_get_pc(space->cpu));
 
 				if (ACCESSING_BITS_0_15)
 				{
@@ -2298,7 +2298,7 @@ static WRITE32_HANDLER( gba_io_w )
 
 					final = clocksel / rate;
 
-					printf("Enabling timer %d @ %f Hz\n", offset, final);
+//					printf("Enabling timer %d @ %f Hz\n", offset, final);
 
 					// enable the timer
 					if( !(data & 0x40000) ) // if we're not in Count-Up mode
