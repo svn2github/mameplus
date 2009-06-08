@@ -23,8 +23,8 @@ DRVLIBS += \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
-	$(MESSOBJ)/shared.a \
 	$(MESSOBJ)/snk.a \
+	$(MESSOBJ)/shared.a \
 
 
 
