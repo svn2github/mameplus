@@ -38,6 +38,8 @@
 // Various levels of ini's we can edit.
 typedef enum {
 	OPTIONS_GLOBAL = 0,
+	OPTIONS_HORIZONTAL,
+	OPTIONS_VERTICAL,
 	OPTIONS_VECTOR,
 	OPTIONS_SOURCE,
 	OPTIONS_PARENT,
@@ -371,6 +373,9 @@ void SetFolderDir(const WCHAR *path);
 
 const WCHAR* GetFontDir(void);
 void  SetFontDir(const WCHAR* paths);
+
+const WCHAR* GetCrosshairDir(void);
+void  SetCrosshairDir(const WCHAR* paths);
 
 const WCHAR *GetCheatDir(void);
 void SetCheatDir(const WCHAR *path);

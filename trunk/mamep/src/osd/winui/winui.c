@@ -2724,7 +2724,7 @@ static LRESULT CALLBACK MameWindowProc(HWND hWnd, UINT message, WPARAM wParam, L
 			return 0;
 		}
 
-		i = (int)(LOWORD(wParam)) - ID_PLAY_PATCH;
+		i = (int)(LOWORD(wParam)) - ID_PLAY_IPS;
 		if (i >= 0 && i < MAX_PATCHES && GetPatchFilename(patch_name, driversw[Picker_GetSelectedItem(hwndList)]->name, i))
 		{
 			FreeIfAllocatedW(&g_IPSMenuSelectName);
@@ -4895,12 +4895,12 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	}
 
 #ifdef USE_IPS
-	if ((id >= ID_PLAY_PATCH) && (id < ID_PLAY_PATCH + MAX_PATCHES))
+	if ((id >= ID_PLAY_IPS) && (id < ID_PLAY_IPS + MAX_PATCHES))
 	{
 		int  nGame = Picker_GetSelectedItem(hwndList);
 		WCHAR patch_filename[MAX_PATCHNAME];
 
-		if (GetPatchFilename(patch_filename, driversw[nGame]->name, id-ID_PLAY_PATCH))
+		if (GetPatchFilename(patch_filename, driversw[nGame]->name, id-ID_PLAY_IPS))
 		{
 			static WCHAR new_opt[MAX_PATCHNAME * MAX_PATCHES];
 			core_options *o = load_options(OPTIONS_GAME, nGame);
@@ -5276,8 +5276,18 @@ static BOOL MameCommand(HWND hwnd,int id, HWND hwndCtl, UINT codeNotify)
 	case ID_FOLDER_PROPERTIES:
 		if (!oldControl)
 		{
+			OPTIONS_TYPE curOptType = OPTIONS_SOURCE;
 			folder = GetSelectedFolder();
-			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), (folder->m_nFolderId == FOLDER_VECTOR) ? OPTIONS_VECTOR : OPTIONS_SOURCE , folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
+			if(folder->m_nFolderId == FOLDER_VECTOR) {
+				curOptType = OPTIONS_VECTOR;
+			}
+			else if(folder->m_nFolderId == FOLDER_HORIZONTAL) {
+				curOptType = OPTIONS_HORIZONTAL;
+			}
+			else if(folder->m_nFolderId == FOLDER_VERTICAL) {
+				curOptType = OPTIONS_VERTICAL;
+			}
+			InitPropertyPage(hInst, hwnd, GetSelectedFolderIcon(), curOptType, folder->m_nFolderId, Picker_GetSelectedItem(hwndList));
 			//SaveFolderOptions(folder->m_nFolderId, Picker_GetSelectedItem(hwndList) );
 		}
 		/* Just in case the toggle MMX on/off */
@@ -7254,7 +7264,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 
 				// patch_count--, add menu items in reversed order
 				if(!(wp = wcschr(wbuf,'/')))	// no category
-					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wbuf));
+					InsertMenu(hMenu, 1, MF_BYPOSITION, ID_PLAY_IPS + patch_count, ConvertAmpersandString(wbuf));
 				else	// has category
 				{
 					int  i;
@@ -7278,11 +7288,11 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 					if(!hSubMenu)
 					{
 						hSubMenu = CreateMenu();
-						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wp + 1));
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_IPS + patch_count, ConvertAmpersandString(wp + 1));
 						InsertMenu(hMenu, 1, MF_BYPOSITION | MF_POPUP, (UINT)hSubMenu, ConvertAmpersandString(wbuf));
 					}
 					else
-						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_PATCH + patch_count, ConvertAmpersandString(wp + 1));
+						InsertMenu(hSubMenu, 0, MF_BYPOSITION, ID_PLAY_IPS + patch_count, ConvertAmpersandString(wp + 1));
 				}
 
 				if (ips != NULL)
@@ -7296,7 +7306,7 @@ static void GamePicker_OnBodyContextMenu(POINT pt)
 					{
 						if (!wcscmp(patch_filename, wp))
 						{
-							CheckMenuItem(hMenu,ID_PLAY_PATCH + patch_count, MF_BYCOMMAND | MF_CHECKED);
+							CheckMenuItem(hMenu,ID_PLAY_IPS + patch_count, MF_BYCOMMAND | MF_CHECKED);
 							break;
 						}
 						wp = wcstok(NULL, TEXT(","));

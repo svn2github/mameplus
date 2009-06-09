@@ -536,8 +536,9 @@
 #define ID_FOLDER_VECTORPROPERTIES      0     // N/A
 #define ID_ARRANGE_ICONS                0     // N/A
 #define ID_OPTIONS_CHEAT                0     // N/A
-#define ID_OPTIONS_MAMEINFO             40101
-#define ID_OPTIONS_HISTORY              40102
+#define ID_OPTIONS_MAMEINFO             40100
+#define ID_OPTIONS_HISTORY              40101
+
 #define ID_OPTIONS_STORY                40111 // STORY_DATAFILE
 #define ID_BIOS_PROPERTIES		40112 // BIOSSet properties
 
@@ -579,7 +580,7 @@
 #define ID_LANGUAGE_PORTUGUESE_BRA      40214
 #define ID_LANGUAGE_HUNGARIAN           40215
 
-#define ID_PLAY_PATCH                   40300 // USE_IPS
+#define ID_PLAY_IPS                     40300 // USE_IPS
 
 #define IDC_STATIC                      -1
 
@@ -590,7 +591,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_3D_CONTROLS                1
 #define _APS_NEXT_RESOURCE_VALUE        189
-#define _APS_NEXT_COMMAND_VALUE         40103
+#define _APS_NEXT_COMMAND_VALUE         40102
 #define _APS_NEXT_CONTROL_VALUE         1254
 #define _APS_NEXT_SYMED_VALUE           93
 #endif

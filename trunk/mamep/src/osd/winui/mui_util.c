@@ -65,7 +65,7 @@ static struct DriversInfo
 	BOOL isHarddisk;
 	BOOL hasOptionalBIOS;
 	BOOL isStereo;
-	BOOL isMultiMon;
+	int screenCount;
 	BOOL isVector;
 	BOOL usesRoms;
 	BOOL usesSamples;
@@ -342,6 +342,18 @@ BOOL isDriverVector(const machine_config *config)
 	return FALSE;
 }
 
+int numberOfScreens(const machine_config *config)
+{
+	const device_config *screen = video_screen_first(config);
+	int i=0;
+	for (; screen != NULL; screen = video_screen_next(screen)) {
+		i++;
+	}
+	return i;
+}
+
+
+
 struct control_cache_t
 {
 	const input_port_token *ipt;
@@ -559,9 +571,7 @@ static struct DriversInfo* GetDriversInfo(int driver_index)
 			num_speakers = numberOfSpeakers(config);
 
 			gameinfo->isStereo = (num_speakers > 1);
-			//gameinfo->isMultiMon = ((drv.video_attributes & VIDEO_DUAL_MONITOR) != 0);
-			// Was removed from Core
-			gameinfo->isMultiMon = 0;
+			gameinfo->screenCount = numberOfScreens(config);
 			gameinfo->isVector = isDriverVector(config); // ((drv.video_attributes & VIDEO_TYPE_VECTOR) != 0);
 			gameinfo->usesRoms = FALSE;
 			for (source = rom_first_source(gamedrv, config); source != NULL; source = rom_next_source(gamedrv, config, source))
@@ -718,9 +728,10 @@ BOOL DriverIsStereo(int driver_index)
 {
 	return GetDriversInfo(driver_index)->isStereo;
 }
-BOOL DriverIsMultiMon(int driver_index)
+
+int DriverNumScreens(int driver_index)
 {
-	return GetDriversInfo(driver_index)->isMultiMon;
+	return GetDriversInfo(driver_index)->screenCount;
 }
 
 BOOL DriverIsVector(int driver_index)

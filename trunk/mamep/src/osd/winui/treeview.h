@@ -86,16 +86,17 @@ extern EXTFOLDER_TEMPLATE extFavorite;
 void CreateManufacturerFolders(int parent_index);
 void CreateYearFolders(int parent_index);
 void CreateSourceFolders(int parent_index);
+void CreateScreenFolders(int parent_index);
 void CreateCPUFolders(int parent_index);
 void CreateSoundFolders(int parent_index);
 #ifdef MISC_FOLDER
-void CreateOrientationFolders(int parent_index);
 void CreateBIOSFolders(int parent_index);
 void CreateFPSFolders(int parent_index);
 void CreateResolutionFolders(int parent_index);
 void CreateControlFolders(int parent_index);
 void CreateSaveStateFolders(int parent_index);
 #endif /* MISC_FOLDER */
+//void CreateOrientationFolders(int parent_index);
 void CreateDeficiencyFolders(int parent_index);
 void CreateDumpingFolders(int parent_index);
 
@@ -123,7 +124,6 @@ enum
 	FOLDER_RASTER,
 	FOLDER_VECTOR,
 #ifdef MISC_FOLDER
-	FOLDER_ORIENTATION,
 	FOLDER_RESOLUTION,
 	FOLDER_FPS,
 	FOLDER_CONTROL,
@@ -140,6 +140,7 @@ enum
 	FOLDER_BIOS,
 	FOLDER_HORIZONTAL,
 	FOLDER_VERTICAL,
+	FOLDER_SCREENS,
 #ifdef MESS
 	FOLDER_CONSOLE,
 	FOLDER_COMPUTER,

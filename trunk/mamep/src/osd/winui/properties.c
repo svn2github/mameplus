@@ -35,8 +35,10 @@ built-in defaults
 program    ini (executable root filename ini)
 debug      ini (if running a debug build)
 vector     ini (really is vector.ini!)
+vertical     ini (really is vertical.ini!)
+horizont     ini (really is horizont.ini!)
 driver     ini (source code root filename in which this driver is found)
-granparent ini (grandparent, not sure these exist, but it is possible)
+grandparent ini (grandparent, not sure these exist, but it is possible)
 parent     ini (where parent is the name of the parent driver)
 game       ini (where game is the driver name for this game)
 
@@ -331,6 +333,8 @@ static  BOOL bPageTreeSelChangedActive = FALSE;
 #define HIGHLIGHT_COLOR RGB(0,196,0)
 static HBRUSH highlight_brush = NULL;
 static HBRUSH background_brush = NULL;
+
+#define ORIENTATION_COLOR RGB( 190, 128, 0) //LIGHT BROWN
 #define VECTOR_COLOR RGB( 190, 0, 0) //DARK RED
 #define FOLDER_COLOR RGB( 0, 128, 0 ) // DARK GREEN
 #define PARENT_COLOR RGB( 190, 128, 192 ) // PURPLE
@@ -655,6 +659,12 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 	if (opt_type > OPTIONS_GLOBAL)
 	{
 		default_type -= 1;
+		if (OPTIONS_VERTICAL == opt_type) {
+			//since VERTICAL and HORIZONTAL are equally ranked
+			//we need to subtract 2 from vertical to also get to correct default
+			default_type -= 1;
+		}
+
 	}
 	pDefaultOpts = load_options(default_type, game_num);
 
@@ -708,6 +718,8 @@ void InitPropertyPageToPage(HINSTANCE hInst, HWND hWnd, HICON hIcon, OPTIONS_TYP
 		w_description = UseLangList() ? _LSTW(driversw[g_nGame]->description) : driversw[g_nGame]->modify_the;
 		break;
 	case OPTIONS_VECTOR:
+	case OPTIONS_VERTICAL:
+	case OPTIONS_HORIZONTAL:
 	case OPTIONS_SOURCE:
 		w_description = GetFolderByID(g_nFolder)->m_lpTitle;
 		break;
@@ -866,37 +878,47 @@ static LPCWSTR GameInfoScreen(UINT nIndex)
 {
 	static WCHAR buf[1024];
 	machine_config *config = machine_config_alloc(drivers[nIndex]->machine_config);
-	const device_config *screen = video_screen_first(config);
-	const screen_config *scrconfig = screen->inline_config;
+	memset(buf, '\0', 1024);
 
-	if (screen != NULL)
+	if (isDriverVector(config))
 	{
-		if (isDriverVector(config))
+		const device_config *screen = video_screen_first(config);
+		const screen_config *scrconfig = screen->inline_config;
+		if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
 		{
-			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
-			{
-				swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
-						scrconfig->refresh, config->total_colors);
-			}
-			else
-			{
-				swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
-						scrconfig->refresh, config->total_colors);
-			}
+			swprintf(buf, _UIW(TEXT("Vector (V) %f Hz (%d colors)")),
+					scrconfig->refresh, config->total_colors);
 		}
 		else
 		{
-			if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
-			{
-				swprintf(buf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)")),
-						scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
-						scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
-						ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
-			} else {
-				swprintf(buf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)")),
-						scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
-						scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
-						ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
+			swprintf(buf, _UIW(TEXT("Vector (H) %f Hz (%d colors)")),
+					scrconfig->refresh, config->total_colors);
+		}
+	}
+	else
+	{
+		const device_config *screen = video_screen_first(config);
+		if (screen == NULL) {
+			wcscpy(buf, _UIW(TEXT("Screenless Game"))); 
+		}
+		else {
+			for (; screen != NULL; screen = video_screen_next(screen)) {
+				const screen_config *scrconfig = screen->inline_config;
+				WCHAR tmpbuf[256];
+
+				if (drivers[nIndex]->flags & ORIENTATION_SWAP_XY)
+				{
+					swprintf(tmpbuf, _UIW(TEXT("%d x %d (V) %f Hz (%d colors)\n")),
+							scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
+							scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
+							ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
+				} else {
+					swprintf(tmpbuf, _UIW(TEXT("%d x %d (H) %f Hz (%d colors)\n")),
+							scrconfig->visarea.max_x - scrconfig->visarea.min_x + 1,
+							scrconfig->visarea.max_y - scrconfig->visarea.min_y + 1,
+							ATTOSECONDS_TO_HZ(scrconfig->refresh), config->total_colors);
+				}
+					wcscat(buf, tmpbuf);
 			}
 		}
 	}
@@ -1217,6 +1239,12 @@ LPWSTR GameInfoTitle(OPTIONS_TYPE opt_type, UINT nIndex)
 	if (OPTIONS_VECTOR == opt_type)
 		return _UIW(TEXT("Global vector options\nCustom options used by all games in the Vector"));
 
+	if (OPTIONS_VERTICAL == opt_type)
+		return _UIW(TEXT("Global vertical options\nCustom options used by all games in the Vertical"));
+
+	if (OPTIONS_HORIZONTAL == opt_type)
+		return _UIW(TEXT("Global horizontal options\nCustom options used by all games in the Horizontal"));
+
 	if (OPTIONS_SOURCE == opt_type)
 	{
 		LPTREEFOLDER folder = GetFolderByID(g_nFolder);
@@ -1248,10 +1276,7 @@ static LPCWSTR GameInfoCloneOf(UINT nIndex)
 	if (DriverIsClone(nIndex))
 	{
 		nParentIndex = GetParentIndex(drivers[nIndex]);
-		swprintf(buf, TEXT("%s [%s]"),
-			ConvertAmpersandString(UseLangList()?
-				_LSTW(driversw[nParentIndex]->description):
-				driversw[nParentIndex]->modify_the),
+		swprintf(buf, TEXT("%s"),
 			driversw[nParentIndex]->name);
 	}
 
@@ -1751,9 +1776,9 @@ INT_PTR CALLBACK GameOptionsProc(HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lPar
 			}
 		}
 		else
-			SetBkColor((HDC)wParam, RGB(255,255,255));
-		UnrealizeObject(background_brush);
-		return (DWORD)background_brush;
+				SetBkColor((HDC)wParam,RGB(255,255,255) );
+			UnrealizeObject(background_brush);
+			return (DWORD)background_brush;
 			break;
 	}
 #endif // 0 Not sure what to do here

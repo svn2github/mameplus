@@ -36,6 +36,7 @@
 /****************************************************************************
  *      token parsing constants
  ****************************************************************************/
+
 #ifndef TRUE
 #define TRUE 1
 #endif
@@ -92,6 +93,7 @@ static struct tDatafileIndex *story_idx[FILE_TYPEMAX];
 static struct tDatafileIndex *mame_idx[FILE_TYPEMAX];
 static struct tDatafileIndex *driv_idx;
 
+
 /****************************************************************************
  *      private data for parsing functions
  ****************************************************************************/
@@ -115,9 +117,7 @@ typedef struct
 
 static driver_data_type *sorted_drivers = NULL;
 static srcdriver_data_type *sorted_srcdrivers = NULL;
-
 static int num_games;
-
 static void flush_index(void);
 
 
@@ -361,14 +361,14 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 					dwFilePos = dwPos;
 					*pbTokenPtr++ = bData;	/* A real linefeed */
 					*pbTokenPtr = '\0';
-
 					return(TOKEN_LINEBREAK);
 				}
 
 				/* Otherwise, fall through and keep parsing. */
 
 			}
-			else if (CR == bData)			/* Carriage return? */
+			else
+			if (CR == bData)			/* Carriage return? */
 			{
 				/* Figure out if it's Mac or MSDOS format */
 
@@ -389,10 +389,10 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 
 					*pbTokenPtr++ = bData;	/* A real carriage return (hard) */
 					*pbTokenPtr = '\0';
-
 					return(TOKEN_LINEBREAK);
 				}
-				else if (LF == bData)		/* MSDOS format! */
+				else
+				if (LF == bData)		/* MSDOS format! */
 				{
 						UINT64 dwPos;
 
@@ -440,8 +440,6 @@ static UINT32 GetNextToken(UINT8 **ppszTokenText, UINT64 *pdwPosition)
 }
 
 
-
-
 /****************************************************************************
  *      ParseClose - Closes the existing opened file (if any)
  ****************************************************************************/
@@ -450,7 +448,9 @@ static void ParseClose(void)
 	/* If the file is open, time for fclose. */
 
 	if (fp)
+        {
 		mame_fclose(fp);
+        }
 
 	fp = NULL;
 }
@@ -547,9 +547,8 @@ static int index_datafile (struct tDatafileIndex **_index)
 						idx++;
 						count++;
 						/* done = 1;  Not done, as we must process other clones in list */
-						//break;
-					}
 
+					}
 					if (!done)
 					{
 						token = GetNextToken (&s, &tell);
@@ -967,6 +966,7 @@ static int load_datafile (const game_driver *drv, char *buffer, int bufsize,
 	return 1;
 }
 
+
 /**************************************************************************
  *	flush_index_if_needed
  **************************************************************************/
@@ -981,6 +981,7 @@ static void flush_index_if_needed(void)
 		oldLangCode = lang_get_langcode();
 	}
 }
+
 
 /**************************************************************************
  *	load_driver_history

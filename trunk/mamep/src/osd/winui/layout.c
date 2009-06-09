@@ -55,12 +55,8 @@ FOLDERDATA g_folderData[] =
 #ifdef SHOW_UNAVAILABLE_FOLDER
 	{TEXT("Unavailable"),     "unavailable",       FOLDER_UNAVAILABLE,  IDI_FOLDER_UNAVAILABLE,   F_UNAVAILABLE, F_AVAILABLE,  NULL,                       FilterAvailable,              FALSE },
 #endif
-#ifdef MISC_FOLDER
-	{TEXT("Orientation"),     "orientation",       FOLDER_ORIENTATION,  IDI_FOLDER,               0,             0,            CreateOrientationFolders },
-#else /* MISC_FOLDER */
 	{TEXT("Horizontal"),      "horizontal",        FOLDER_HORIZONTAL,   IDI_FOLDER_HORIZONTAL,    F_HORIZONTAL,  F_VERTICAL,   NULL,                       DriverIsVertical,        FALSE },
 	{TEXT("Vertical"),        "vertical",          FOLDER_VERTICAL,     IDI_FOLDER_VERTICAL,      F_VERTICAL,    F_HORIZONTAL, NULL,                       DriverIsVertical,        TRUE },
-#endif /* !MISC_FOLDER */
 	{TEXT("Manufacturer"),    "manufacturer",      FOLDER_MANUFACTURER, IDI_FOLDER_MANUFACTURER,  0,             0,            CreateManufacturerFolders },
 	{TEXT("Year"),            "year",              FOLDER_YEAR,         IDI_FOLDER_YEAR,          0,             0,            CreateYearFolders },
 	{TEXT("Driver"),          "driver",            FOLDER_SOURCE,       IDI_FOLDER_SOURCE,        0,             0,            CreateSourceFolders },
@@ -71,9 +67,10 @@ FOLDERDATA g_folderData[] =
 	{TEXT("Sound"),           "sound",             FOLDER_SND,          IDI_SND,                  0,             0,            CreateSoundFolders },
 	{TEXT("Imperfect"),       "imperfect",         FOLDER_DEFICIENCY,   IDI_FOLDER,               0,             0,            CreateDeficiencyFolders },
 	{TEXT("Dumping Status"),  "dumping",           FOLDER_DUMPING,      IDI_FOLDER,               0,             0,            CreateDumpingFolders },
+  	{TEXT("Screens"),         "screens",           FOLDER_SCREENS,      IDI_FOLDER,               0,             0,            CreateScreenFolders },
 	{TEXT("Working"),         "working",           FOLDER_WORKING,      IDI_WORKING,              F_WORKING,     F_NONWORKING, NULL,                       DriverIsBroken,    FALSE },
 	{TEXT("Not Working"),     "nonworking",        FOLDER_NONWORKING,   IDI_NONWORKING,           F_NONWORKING,  F_WORKING,    NULL,                       DriverIsBroken,    TRUE },
-	{TEXT("Originals"),       "originals",        FOLDER_ORIGINAL,    IDI_FOLDER,              F_ORIGINALS,   F_CLONES,     NULL,                       DriverIsClone,     FALSE },
+	{TEXT("Originals"),       "originals",         FOLDER_ORIGINAL,     IDI_FOLDER,               F_ORIGINALS,   F_CLONES,     NULL,                       DriverIsClone,     FALSE },
 	{TEXT("Clones"),          "clones",            FOLDER_CLONES,       IDI_FOLDER,               F_CLONES,      F_ORIGINALS,  NULL,                       DriverIsClone,     TRUE },
 	{TEXT("Raster"),          "raster",            FOLDER_RASTER,       IDI_FOLDER,               F_RASTER,      F_VECTOR,     NULL,                       DriverIsVector,    FALSE },
 	{TEXT("Vector"),          "vector",            FOLDER_VECTOR,       IDI_FOLDER,               F_VECTOR,      F_RASTER,     NULL,                       DriverIsVector,    TRUE },
@@ -137,6 +134,7 @@ DIRECTORYINFO g_directoryInfo[] =
 	{ TEXT("Background Images"),     GetBgDir,            SetBgDir,            FALSE, 0 },
 	{ TEXT("Comment Files"),         GetCommentDir,       SetCommentDir,       FALSE, DIRDLG_COMMENT },
 	{ TEXT("Font Files"),            GetFontDir,          SetFontDir,          TRUE,  0 },
+	{ TEXT("Crosshair Files"),       GetCrosshairDir,     SetCrosshairDir,     TRUE,  0 },
 	{ TEXT("External Folder List"),  GetFolderDir,        SetFolderDir,        FALSE, 0 },
 #ifdef USE_IPS
 	{ TEXT("IPS Files"),             GetIPSDir,           SetIPSDir,           FALSE, 0 },

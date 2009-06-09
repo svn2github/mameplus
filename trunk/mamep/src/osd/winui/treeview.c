@@ -126,9 +126,6 @@ static char         *ExtraFolderIcons[MAX_EXTRA_FOLDERS];
 static LPFOLDERDATA  g_lpFolderData;
 static LPFILTER_ITEM g_lpFilterList;	
 
-static UINT          g_source_folder = 0;
-static UINT          g_bios_folder = 0;
-
 /***************************************************************************
     private function prototypes
  ***************************************************************************/
@@ -460,8 +457,6 @@ void CreateSourceFolders(int parent_index)
 	int start_folder = numFolders;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
 
-	g_source_folder = parent_index;
-
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
 	for (jj = 0; jj < nGames; jj++)
@@ -491,6 +486,44 @@ void CreateSourceFolders(int parent_index)
 		}
 	}
 }
+
+void CreateScreenFolders(int parent_index)
+{
+	int i,jj;
+	int nGames =  GetNumGames();
+	int start_folder = numFolders;
+	LPTREEFOLDER lpFolder = treeFolders[parent_index];
+
+	// no games in top level folder
+	SetAllBits(lpFolder->m_lpGameBits,FALSE);
+	for (jj = 0; jj < nGames; jj++)
+	{
+		int screens = DriverNumScreens(jj);
+		TCHAR s[2];
+		itoa(screens, s, 10);
+                			
+		// look for an existant screens treefolder for this game
+		// (likely to be the previous one, so start at the end)
+		for (i=numFolders-1;i>=start_folder;i--)
+		{
+			if (wcscmp(treeFolders[i]->m_lpTitle,s) == 0)
+			{
+				AddGame(treeFolders[i],jj);
+				break;
+			}
+		}
+		if (i == start_folder-1)
+		{
+			// nope, it's a screen file we haven't seen before, make it.
+			LPTREEFOLDER lpTemp;
+			lpTemp = NewFolder(s, 0, FALSE, next_folder_id++, parent_index, IDI_FOLDER);
+
+			AddFolder(lpTemp);
+			AddGame(lpTemp,jj);
+		}
+	}
+}
+
 
 void CreateManufacturerFolders(int parent_index)
 {
@@ -1104,37 +1137,6 @@ void CreateYearFolders(int parent_index)
 }
 
 #ifdef MISC_FOLDER
-void CreateOrientationFolders(int parent_index)
-{
-	int jj;
-	int nGames = GetNumGames();
-	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-
-	// create our two subfolders
-	LPTREEFOLDER lpVert, lpHorz;
-
-	lpVert = NewFolder(TEXT("Vertical"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER_VERTICAL);
-	AddFolder(lpVert);
-
-	lpHorz = NewFolder(TEXT("Horizontal"), 0, TRUE, next_folder_id++, parent_index, IDI_FOLDER_HORIZONTAL);
-	AddFolder(lpHorz);
-
-	// no games in top level folder
-	SetAllBits(lpFolder->m_lpGameBits,FALSE);
-
-	for (jj = 0; jj < nGames; jj++)
-	{
-		if (drivers[jj]->flags & ORIENTATION_SWAP_XY)
-		{
-			AddGame(lpVert,jj);
-		}
-		else
-		{
-			AddGame(lpHorz,jj);
-		}
-	}
-}
-
 void CreateBIOSFolders(int parent_index)
 {
 	int i,jj;
@@ -1143,8 +1145,6 @@ void CreateBIOSFolders(int parent_index)
 	const game_driver *drv;
 	int nParentIndex = -1;
 	LPTREEFOLDER lpFolder = treeFolders[parent_index];
-
-	g_bios_folder = parent_index;
 
 	// no games in top level folder
 	SetAllBits(lpFolder->m_lpGameBits,FALSE);
@@ -1672,7 +1672,9 @@ void SelectTreeViewFolder(int folder_id)
  * of FOLDER_SOURCE.
  */
 static BOOL FolderHasIni(LPTREEFOLDER lpFolder) {
-	if (FOLDER_VECTOR == lpFolder->m_nFolderId) {
+	if (FOLDER_VECTOR == lpFolder->m_nFolderId ||
+		FOLDER_VERTICAL == lpFolder->m_nFolderId ||
+		FOLDER_HORIZONTAL == lpFolder->m_nFolderId) {
 		return TRUE;
 	}
 	if (lpFolder->m_nParent != -1
