@@ -500,7 +500,7 @@ void CreateScreenFolders(int parent_index)
 	{
 		int screens = DriverNumScreens(jj);
 		TCHAR s[2];
-		itoa(screens, s, 10);
+		swprintf(s, TEXT("%d"), screens);
                 			
 		// look for an existant screens treefolder for this game
 		// (likely to be the previous one, so start at the end)
