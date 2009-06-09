@@ -354,7 +354,7 @@ void UpdateSelectionThread::run()
 		QString title;
 		QString *buffer;
 	};
-	
+
 	static const DockInfo _dockInfoList[] =
 	{
 		{ "history_file",	"history.dat",	DOCK_HISTORY,	"History",		&historyText },
@@ -2306,8 +2306,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 			if (!pMameOpt->guivisible)
 				continue;
 
-			if (guiSettings.contains(optName))
-				pMameOpt->globalvalue = guiSettings.value(optName).toString();
+			if (pGuiSettings->contains(optName))
+				pMameOpt->globalvalue = pGuiSettings->value(optName).toString();
 		}
 
 		// we're ready to set version info
@@ -2353,8 +2353,8 @@ void Gamelist::init(bool toggleState, int initMethod)
 		QByteArray column_state;
 
 		// restore view column state, needed on first init and after auditing, but not for folder switching
-		if (guiSettings.value("column_state").isValid())
-			column_state = guiSettings.value("column_state").toByteArray();
+		if (pGuiSettings->value("column_state").isValid())
+			column_state = pGuiSettings->value("column_state").toByteArray();
 		else
 			column_state = defSettings.value("column_state").toByteArray();
 		
@@ -2768,7 +2768,7 @@ void Gamelist::updateContextMenu()
 		extSubFolderName = strlist.last();
 	}
 
-	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), extFolderName + INI_EXT);
+	QString folderPath = utils->getSinglePath(pGuiSettings->value("folder_directory", "folders").toString(), extFolderName + INI_EXT);
 	QFile inFile(folderPath);
 	win->log(folderPath);
 	const bool isAccessable = inFile.exists() && inFile.permissions() & QFile::WriteUser;
@@ -3510,7 +3510,7 @@ void Gamelist::initFolders()
 				items[i]->addChild(subItem);
 
 				QString path = consoleName + "_extra_software";
-				if (!guiSettings.contains(path) || guiSettings.value(path).toString().isEmpty())
+				if (!pGuiSettings->contains(path) || pGuiSettings->value(path).toString().isEmpty())
 					subItem->setHidden(true);
 			}
 		}
@@ -3544,7 +3544,7 @@ void Gamelist::initFolders()
 	}
 
 	//init ext folders
-	QString folderPath = utils->getPath(guiSettings.value("folder_directory", "folders").toString());
+	QString folderPath = utils->getPath(pGuiSettings->value("folder_directory", "folders").toString());
 	QStringList dirPaths = folderPath.split(";");
 
 	extFolders.clear();
@@ -3574,7 +3574,7 @@ void Gamelist::initFolders()
 
 int Gamelist::parseExtFolders(const QString &folderName)
 {
-	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), folderName + INI_EXT);
+	QString folderPath = utils->getSinglePath(pGuiSettings->value("folder_directory", "folders").toString(), folderName + INI_EXT);
 	QFile inFile(folderPath);
 
 	if (!inFile.open(QFile::ReadOnly | QFile::Text))
@@ -3687,7 +3687,7 @@ void Gamelist::initExtFolders(const QString &folderName, const QString &subFolde
 
 void Gamelist::saveExtFolders(const QString &folderName)
 {
-	QString folderPath = utils->getSinglePath(guiSettings.value("folder_directory", "folders").toString(), folderName + INI_EXT);
+	QString folderPath = utils->getSinglePath(pGuiSettings->value("folder_directory", "folders").toString(), folderName + INI_EXT);
 	QFile outFile(folderPath);
 
 	if (!outFile.open(QFile::WriteOnly | QFile::Text))
@@ -3763,7 +3763,7 @@ void Gamelist::restoreFolderSelection(bool isForce)
 	if(!currentFolder.isEmpty() && !isForce)
 		return;
 	
-	currentFolder = guiSettings.value("folder_current", "/" + folderList[0]).toString();
+	currentFolder = pGuiSettings->value("folder_current", "/" + folderList[0]).toString();
 	int sep = currentFolder.indexOf("/");
 	QString parentFolder = currentFolder.left(sep);
 	QString subFolder = currentFolder.right(currentFolder.size() - sep - 1);

@@ -22,7 +22,7 @@ M1UI::M1UI(QWidget *parent)
 		<< "en" << "jp");
 	cmbLang->addItems(langs);
 
-	QString m1Language = guiSettings.value("m1_language").toString();
+	QString m1Language = pGuiSettings->value("m1_language").toString();
 	int sel = langs.indexOf(m1Language);
 	if (sel < 0)
 		sel = 0;
@@ -76,7 +76,7 @@ void M1::loadLib()
 	win->enableCtrls(false);
 
 	//set current dir to m1, so that m1.xml and list could be loaded
-	m1_dir = utils->getPath(guiSettings.value("m1_directory", "bin/m1").toString());
+	m1_dir = utils->getPath(pGuiSettings->value("m1_directory", "bin/m1").toString());
 
 	win->logStatus(tr("Loading M1, please wait..."));
 	QDir::setCurrent(m1_dir);

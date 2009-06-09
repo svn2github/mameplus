@@ -35,6 +35,7 @@ RC_FILE = mamepgui.rc
 
 macx {
 DEFINES += _LZMA_UINT32_IS_ULONG
+ICON = mamepgui.icns
 }
 
 FORMS += mamepguimain.ui playoptions.ui options.ui csvcfg.ui directories.ui about.ui ips.ui m1.ui

@@ -1894,9 +1894,9 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 		MameOption *pMameOpt = mameOpts[optName];
 
 		//ignore all guiSettings, they are not handled by mame's .ini
-		if (guiSettings.contains(optName))
+		if (pGuiSettings->contains(optName))
 		{
-			pMameOpt->globalvalue = pMameOpt->currvalue = guiSettings.value(optName).toString();
+			pMameOpt->globalvalue = pMameOpt->currvalue = pGuiSettings->value(optName).toString();
 			continue;
 		}
 

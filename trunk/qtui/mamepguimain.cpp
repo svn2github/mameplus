@@ -23,14 +23,14 @@ Q_IMPORT_PLUGIN(qjpeg)
 #endif /* USE_STATIC */
 
 /* global */
-const QString CFG_PREFIX = 
+QString CFG_PREFIX = 
 #ifndef Q_WS_WIN
 	QDir::homePath() + "/" + 
 #endif
 	".mamepgui/";
 
 MainWindow *win;
-QSettings guiSettings(CFG_PREFIX + "mamepgui" INI_EXT, QSettings::IniFormat);
+QSettings *pGuiSettings;
 QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
 const QString currentDir = QDir::currentPath();
 QString mame_binary;
@@ -412,7 +412,7 @@ void MainWindow::init()
 	loadSettings();
 
 	// validate mame_binary
-	mame_binary = guiSettings.value("mame_binary", "mamep.exe").toString();
+	mame_binary = pGuiSettings->value("mame_binary", "mamep.exe").toString();
 	QFileInfo mamebin(mame_binary);
 
 	// if no valid exec was found, popup a dialog
@@ -442,7 +442,7 @@ void MainWindow::init()
 	}
 
 	//save the new mame_binary value now, it will be accessed later in option module
-	guiSettings.setValue("mame_binary", mame_binary);
+	pGuiSettings->setValue("mame_binary", mame_binary);
 	if (QFileInfo(mame_binary).baseName().contains("mess", Qt::CaseInsensitive))
 		isMESS = true;
 
@@ -453,7 +453,7 @@ void MainWindow::init()
 
 	// must init app style before background
 	if (gui_style.isEmpty())
-		gui_style = guiSettings.value("gui_style").toString();
+		gui_style = pGuiSettings->value("gui_style").toString();
 
 #ifdef Q_WS_MAC
 	//fixme: temp hack, aqua theme is buggy
@@ -483,11 +483,11 @@ void MainWindow::init()
 		setGuiStyle(gui_style);
 
 	// init background menu
-	QString _dirpath = utils->getPath(guiSettings.value("background_directory", "bkground").toString());
+	QString _dirpath = utils->getPath(pGuiSettings->value("background_directory", "bkground").toString());
 	QDir dir(_dirpath);
 	
 	if (background_file.isEmpty())
-		background_file = guiSettings.value("background_file", "bkground.png").toString();
+		background_file = pGuiSettings->value("background_file", "bkground.png").toString();
 
 	QActionGroup *bgActions = new QActionGroup(this);
 	if (dir.exists())
@@ -522,6 +522,7 @@ void MainWindow::init()
 	mameGame->init();
 	show();
 
+win->log(CFG_PREFIX);
 	// connect misc signal and slots
 
 	// Docked snapshots
@@ -623,7 +624,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.3")
+		.arg("1.4.4")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -939,7 +940,7 @@ void MainWindow::showRestartDialog()
 
 void MainWindow::initSettings()
 {
-    guiSettings.setFallbacksEnabled(false);
+    pGuiSettings->setFallbacksEnabled(false);
 
 	//remove invalid settings
 	validGuiSettings = (QStringList() 
@@ -984,31 +985,31 @@ void MainWindow::initSettings()
 		<< "column_state"
 		<< "language");
 
-	QStringList keys = guiSettings.allKeys();
+	QStringList keys = pGuiSettings->allKeys();
 	foreach(QString key, keys)
 	{
 		if (key.endsWith("_extra_software") || validGuiSettings.contains(key))
 			continue;
 
-		guiSettings.remove(key);
+		pGuiSettings->remove(key);
 	}
 
 }
 
 void MainWindow::loadLayout()
 {
-	if (guiSettings.value("window_geometry").isValid())
-		restoreGeometry(guiSettings.value("window_geometry").toByteArray());
+	if (pGuiSettings->value("window_geometry").isValid())
+		restoreGeometry(pGuiSettings->value("window_geometry").toByteArray());
 
-	if (guiSettings.value("window_state").isValid())
-		restoreState(guiSettings.value("window_state").toByteArray());
+	if (pGuiSettings->value("window_state").isValid())
+		restoreState(pGuiSettings->value("window_state").toByteArray());
 	
-	option_geometry = guiSettings.value("option_geometry").toByteArray();
+	option_geometry = pGuiSettings->value("option_geometry").toByteArray();
 
-	actionVerticalTabs->setChecked(guiSettings.value("vertical_tabs", "1").toInt() == 1);
-	actionRowDelegate->setChecked(guiSettings.value("game_list_delegate", "0").toInt() == 1);
+	actionVerticalTabs->setChecked(pGuiSettings->value("vertical_tabs", "1").toInt() == 1);
+	actionRowDelegate->setChecked(pGuiSettings->value("game_list_delegate", "0").toInt() == 1);
 
-	gameList->listMode = guiSettings.value("list_mode").toString();
+	gameList->listMode = pGuiSettings->value("list_mode").toString();
 	if (gameList->listMode == win->actionDetails->objectName().remove("action"))
 		actionDetails->setChecked(true);
 	else if (gameList->listMode == win->actionLargeIcons->objectName().remove("action"))
@@ -1032,13 +1033,13 @@ void MainWindow::loadLayout()
 	else
 		actionEnglish->setChecked(true);
 
-	actionStretchSshot->setChecked(guiSettings.value("stretch_screenshot_larger", "0").toInt() == 1);
-	actionEnforceAspect->setChecked(guiSettings.value("enforce_aspect", "1").toInt() == 1);
+	actionStretchSshot->setChecked(pGuiSettings->value("stretch_screenshot_larger", "0").toInt() == 1);
+	actionEnforceAspect->setChecked(pGuiSettings->value("enforce_aspect", "1").toInt() == 1);
 
-	local_game_list = guiSettings.value("local_game_list", "1").toInt() == 1;
+	local_game_list = pGuiSettings->value("local_game_list", "1").toInt() == 1;
 	actionLocalGameList->setChecked(local_game_list);
 
-	if (guiSettings.value("background_stretch", "1").toInt() == 0)
+	if (pGuiSettings->value("background_stretch", "1").toInt() == 0)
 		actionBgTile->setChecked(true);
 	else
 		actionBgStretch->setChecked(true);
@@ -1047,44 +1048,44 @@ void MainWindow::loadLayout()
 
 void MainWindow::loadSettings()
 {
-	currentGame = guiSettings.value("default_game").toString();
+	currentGame = pGuiSettings->value("default_game").toString();
 
 	if (defSettings.value("option_column_state").isValid())
 		option_column_state = defSettings.value("option_column_state").toByteArray();
 	else
-		option_column_state = guiSettings.value("option_column_state").toByteArray();
+		option_column_state = pGuiSettings->value("option_column_state").toByteArray();
 }
 
 void MainWindow::saveSettings()
 {
 	//some guiSettings uses mameOpts mapping for dialog view
-	guiSettings.setValue("cabinet_directory", mameOpts["cabinet_directory"]->globalvalue);
-	guiSettings.setValue("cpanel_directory", mameOpts["cpanel_directory"]->globalvalue);
-	guiSettings.setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
-	guiSettings.setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
-	guiSettings.setValue("pcb_directory", mameOpts["pcb_directory"]->globalvalue);
-	guiSettings.setValue("title_directory", mameOpts["title_directory"]->globalvalue);
-	guiSettings.setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
-	guiSettings.setValue("background_directory", mameOpts["background_directory"]->globalvalue);
-	guiSettings.setValue("folder_directory", mameOpts["folder_directory"]->globalvalue);
+	pGuiSettings->setValue("cabinet_directory", mameOpts["cabinet_directory"]->globalvalue);
+	pGuiSettings->setValue("cpanel_directory", mameOpts["cpanel_directory"]->globalvalue);
+	pGuiSettings->setValue("flyer_directory", mameOpts["flyer_directory"]->globalvalue);
+	pGuiSettings->setValue("marquee_directory", mameOpts["marquee_directory"]->globalvalue);
+	pGuiSettings->setValue("pcb_directory", mameOpts["pcb_directory"]->globalvalue);
+	pGuiSettings->setValue("title_directory", mameOpts["title_directory"]->globalvalue);
+	pGuiSettings->setValue("icons_directory", mameOpts["icons_directory"]->globalvalue);
+	pGuiSettings->setValue("background_directory", mameOpts["background_directory"]->globalvalue);
+	pGuiSettings->setValue("folder_directory", mameOpts["folder_directory"]->globalvalue);
 
-	guiSettings.setValue("background_file", background_file);
-	guiSettings.setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
+	pGuiSettings->setValue("background_file", background_file);
+	pGuiSettings->setValue("m1_directory", mameOpts["m1_directory"]->globalvalue);
 #ifdef Q_OS_WIN
-	guiSettings.setValue("m1_language", m1UI->cmbLang->currentText());
+	pGuiSettings->setValue("m1_language", m1UI->cmbLang->currentText());
 #endif /* Q_OS_WIN */
-	guiSettings.setValue("ips_language", ipsUI->cmbLang->currentText());
-	guiSettings.setValue("ips_relationship", ipsUI->chkRelation->isChecked() ? 1 : 0);
-	guiSettings.setValue("gui_style", gui_style);
-	guiSettings.setValue("language", language);
+	pGuiSettings->setValue("ips_language", ipsUI->cmbLang->currentText());
+	pGuiSettings->setValue("ips_relationship", ipsUI->chkRelation->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("gui_style", gui_style);
+	pGuiSettings->setValue("language", language);
 
-	guiSettings.setValue("history_file", mameOpts["history_file"]->globalvalue);
-	guiSettings.setValue("story_file", mameOpts["story_file"]->globalvalue);
-	guiSettings.setValue("mameinfo_file", mameOpts["mameinfo_file"]->globalvalue);
+	pGuiSettings->setValue("history_file", mameOpts["history_file"]->globalvalue);
+	pGuiSettings->setValue("story_file", mameOpts["story_file"]->globalvalue);
+	pGuiSettings->setValue("mameinfo_file", mameOpts["mameinfo_file"]->globalvalue);
 	if (mameOpts["mame_binary"]->globalvalue != mameOpts["mame_binary"]->defvalue)
-		guiSettings.setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
+		pGuiSettings->setValue("mame_binary", mameOpts["mame_binary"]->globalvalue);
 	else
-		guiSettings.setValue("mame_binary", mame_binary);
+		pGuiSettings->setValue("mame_binary", mame_binary);
 
 	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
 	QTreeWidgetItem *messItem = NULL;
@@ -1106,7 +1107,7 @@ void MainWindow::saveSettings()
 			QString v = mameOpts[optName]->globalvalue;
 			if (!v.trimmed().isEmpty())
 			{
-				guiSettings.setValue(optName, mameOpts[optName]->globalvalue);
+				pGuiSettings->setValue(optName, mameOpts[optName]->globalvalue);
 
 				if (messItem != NULL)
 					for (int i = 0; i < messItem->childCount(); i++)
@@ -1120,7 +1121,7 @@ void MainWindow::saveSettings()
 			}
 			else
 			{
-				guiSettings.remove(optName);
+				pGuiSettings->remove(optName);
 
 				if (messItem != NULL)
 				{
@@ -1148,22 +1149,22 @@ void MainWindow::saveSettings()
 //	win->treeFolders->setCurrentItem(messItem->child(iNext));
 
 	//save layout
-	guiSettings.setValue("window_geometry", saveGeometry());
-	guiSettings.setValue("window_state", saveState());
-	guiSettings.setValue("option_geometry", option_geometry);
-	guiSettings.setValue("option_column_state", option_column_state);
-	guiSettings.setValue("column_state", tvGameList->header()->saveState());
-	guiSettings.setValue("sort_column", tvGameList->header()->sortIndicatorSection());
-	guiSettings.setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
-	guiSettings.setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
-	guiSettings.setValue("stretch_screenshot_larger", actionStretchSshot->isChecked() ? 1 : 0);
-	guiSettings.setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
-	guiSettings.setValue("game_list_delegate", actionRowDelegate->isChecked() ? 1 : 0);
-	guiSettings.setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
-	guiSettings.setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
-	guiSettings.setValue("default_game", currentGame);
-	guiSettings.setValue("folder_current", currentFolder);//fixme: rename
-	guiSettings.setValue("list_mode", gameList->listMode);
+	pGuiSettings->setValue("window_geometry", saveGeometry());
+	pGuiSettings->setValue("window_state", saveState());
+	pGuiSettings->setValue("option_geometry", option_geometry);
+	pGuiSettings->setValue("option_column_state", option_column_state);
+	pGuiSettings->setValue("column_state", tvGameList->header()->saveState());
+	pGuiSettings->setValue("sort_column", tvGameList->header()->sortIndicatorSection());
+	pGuiSettings->setValue("sort_reverse", (tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder) ? 0 : 1);
+	pGuiSettings->setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("stretch_screenshot_larger", actionStretchSshot->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("game_list_delegate", actionRowDelegate->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
+	pGuiSettings->setValue("default_game", currentGame);
+	pGuiSettings->setValue("folder_current", currentFolder);//fixme: rename
+	pGuiSettings->setValue("list_mode", gameList->listMode);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
@@ -1265,7 +1266,7 @@ void MainWindow::setBgPixmap(QString fileName)
 
 	background_file = fileName;
 
-	QString _dirpath = utils->getPath(guiSettings.value("background_directory", "bkground").toString());
+	QString _dirpath = utils->getPath(pGuiSettings->value("background_directory", "bkground").toString());
 	QDir dir(_dirpath);
 	QString dirpath = utils->getPath(_dirpath);
 
@@ -1504,11 +1505,22 @@ int main(int argc, char *argv[])
 		sdlInited = true;
 #endif /* USE_SDL */
 
+	for (int i = 1; i < argc; i++)
+	{
+		if (QString(argv[i]) == "-configpath" && i + 1 < argc)
+		{
+			CFG_PREFIX = utils->getPath(argv[i + 1]);
+			break;
+		}
+	}
+
+	pGuiSettings = new QSettings(CFG_PREFIX + "mamepgui" INI_EXT, QSettings::IniFormat);
+
 	QApplication myApp(argc, argv);
 
 	QTranslator appTranslator;
 
-	language = guiSettings.value("language").toString();
+	language = pGuiSettings->value("language").toString();
 	if (language.isEmpty())
 		language = QLocale::system().name();
 	appTranslator.load(":/lang/mamepgui_" + language);

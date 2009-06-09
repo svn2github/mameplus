@@ -25,7 +25,7 @@ void IPS::init()
 
 	cmbLang->addItems(ipsLangs);
 
-	QString ipsLanguage = guiSettings.value("ips_language").toString();
+	QString ipsLanguage = pGuiSettings->value("ips_language").toString();
 	int sel = ipsLangs.indexOf(ipsLanguage);
 	if (sel < 0)
 	{
@@ -35,7 +35,7 @@ void IPS::init()
 	}
 	cmbLang->setCurrentIndex(sel);
 
-	chkRelation->setChecked(guiSettings.value("ips_relationship", "1").toInt() == 1);
+	chkRelation->setChecked(pGuiSettings->value("ips_relationship", "1").toInt() == 1);
 
 	connect(twList, SIGNAL(currentItemChanged(QTreeWidgetItem *, QTreeWidgetItem *)), 
 			this, SLOT(parse(QTreeWidgetItem *, QTreeWidgetItem *)));

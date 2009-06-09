@@ -9,7 +9,7 @@ read/write cookie
 theme
 
 //Done
-localized .dat support
+added a startup parameter -configpath to assign temporary directory for cache and ini. e.g. mamepgui -configpath ~/mamepgui
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -26,14 +26,17 @@ exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi
 single package crc format: clrmamep
 
 //Priority tasks
-3 startup args to assign cache,ini dir
+3 audit output only incorrect, sample
 3 dat location for official mame
 3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing
-3 create new folder
-
 3 ips lang may cause crash
 3 command.dat may cause crash
+
+2 single game audit
+2 create new folder
+2 arrange icons
+2 sysinfo_file, messinfo_file
 2 new version detection
 3 background trans color on switching
 
