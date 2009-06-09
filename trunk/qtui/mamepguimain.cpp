@@ -32,7 +32,7 @@ QString CFG_PREFIX =
 MainWindow *win;
 QSettings *pGuiSettings;
 QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
-const QString currentDir = QDir::currentPath();
+QString currentDir;
 QString mame_binary;
 QString language;
 bool local_game_list;
@@ -144,6 +144,8 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 MainWindow::MainWindow(QWidget *parent) : 
 QMainWindow(parent)
 {
+	currentDir = QDir::currentPath();
+
 	dockCtrlNames = (QStringList() 
 	   << QT_TR_NOOP("Snapshot")
 	   << QT_TR_NOOP("Flyer")

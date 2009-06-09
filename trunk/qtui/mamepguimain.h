@@ -171,7 +171,7 @@ extern QString CFG_PREFIX;
 
 extern MainWindow *win;
 extern QSettings *pGuiSettings, defSettings;
-extern const QString currentDir;
+extern QString currentDir;
 extern QString mame_binary;
 extern QString language;
 extern bool local_game_list;
