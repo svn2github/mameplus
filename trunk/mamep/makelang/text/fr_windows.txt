@@ -76,7 +76,7 @@ Contrôles &Analog...
 
 # mess/osd/windows/mess.rc: 33
 &Save State
-&Sauvegarde d'Etats
+&Sauvegarde d'Etat
 
 # mess/osd/windows/menu.c: 1520, 1520, 2152 mess/osd/windows/mess.rc: 59, 61
 &Video
@@ -420,23 +420,23 @@ méthode de sortie vidéo : aucune, gdi, ddraw, ou d3d
 
 # mess/osd/windows/mess.rc: 85
 &Hide Menubar\tScrLk
-
+Cac&her la Barre de Menu\tScrLk
 
 # osd/windows/drawd3d.c: 770
 Direct3D: Max texture size = %dx%d\n
-
+Direct3D: Taille de Texture Max = %dx%d\n
 
 # osd/windows/drawdd.c: 1056, 1065, 1074, 1083
 DirectDraw: Error %08X clearing the screen\n
-
+DirectDraw: Erreur %08X vidage de l'écran\n
 
 # osd/windows/drawdd.c: 777
 DirectDraw: Error %08X creating %s surface\n
-
+DirectDraw: Erreur %08X création %s surface\n
 
 # osd/windows/drawdd.c: 818
 DirectDraw: Error %08X creating clipper\n
-
+DirectDraw: Erreur %08X création clipper\n
 
 # osd/windows/drawdd.c: 463, 1118
 DirectDraw: Error %08X during DirectDrawCreateEx call\n
@@ -700,23 +700,23 @@ Joystick %i
 
 # mess/osd/windows/menu.c: 311
 Joysticks/Controllers
-
+Joysticks/Contrôleurs
 
 # osd/windows/window.c: 641
 MAME: %s [%s] - Screen %d
-
+MAME: %s [%s] - Ecran %d
 
 # mess/osd/windows/mess.rc: 74
 Maximum &Speed
-
+&Vitesse Maximum
 
 # mess/osd/windows/menu.c: 333
 Miscellaneous Input
-
+Entrée Diverse
 
 # mess/osd/windows/mess.rc: 51 
 Natural
-
+Naturel
 
 # mess/osd/windows/dialog.c: 135 
 OK
@@ -724,7 +724,7 @@ OK
 
 # osd/windows/winmain.c: 754
 Out of memory
-
+Plus de Mémoire
 
 # osd/windows/winmain.c: 160
 PER-WINDOW VIDEO OPTIONS
@@ -736,67 +736,67 @@ Pause
 
 # mess/osd/windows/mess.rc: 148
 Play
-
+Lancer
 
 # osd/windows/drawd3d.c: 1200
 Proposed video mode not supported on device %s\n
-
+Le mode vidéo n'est pas supporté sur le périphérique %s\n
 
 # osd/windows/input.c: 1745
 RawInput: APIs detected\n
-
+RawInput: APIs détecté\n
 
 # mess/osd/windows/mess.rc: 64
 Rotate 0 degrees
-
+Rotation de 0 degrés
 
 # mess/osd/windows/mess.rc: 66
 Rotate 180 degrees
-
+Rotation de 180 degrés
 
 # mess/osd/windows/mess.rc: 67
 Rotate 270 degrees
-
+Rotation de 270 degrés
 
 # mess/osd/windows/mess.rc: 65
 Rotate 90 degrees
-
+Rotation de 90 degrés
 
 # mess/osd/windows/mess.rc: 34
 S&ave State As...
-
+S&auvegarder l'Etat Sous...
 
 # mess/osd/windows/mess.rc: 36
 Save Sc&reenshot
-
+Sauvegarder les Captu&res d'Ecrans
 
 # mess/osd/windows/mess.rc: 83
 Show &FPS
-
+Afficher les &FPS
 
 # mess/osd/windows/mess.rc: 96
 Show P&rofiler
-
+Afficher le P&rofileur
 
 # mess/osd/windows/mess.rc: 91
 Soft &Reset
-
+&Redémarrage Logiciel
 
 # osd/windows/sound.c: 111
 Sound buffer: overflows=%d underflows=%d\n
-
+Tampon Son : overflows=%d underflows=%d\n
 
 # osd/windows/sound.c: 109
 Sound: buffer overflows=%d underflows=%d\n
-
+Son : tampon overflows=%d underflows=%d\n
 
 # mess/osd/windows/menu.c: 611
 State Files (*.sta)|*.sta|All Files (*.*)|*.*
-
+Fichiers d'Etats (*.sta)|*.sta|Tous les Fichiers (*.*)|*.*
 
 # mess/osd/windows/mess.rc: 149
 Stop
-
+Arrêter
 
 # osd/windows/winmain.c: 750
 Symbol table full
@@ -808,51 +808,51 @@ Tape Control
 
 # osd/windows/drawd3d.c: 1868
 Texture too big! (wanted: %dx%d, max is %dx%d)\n
-
+Texture trop grande! (souhaité: %dx%d, max is %dx%d)\n 
 
 # osd/windows/input.c: 796
 Toggle Fullscreen
-
+Passer en Plein Ecran
 
 # osd/windows/input.c: 805
 Toggle Menubar
-
+Changer la Barre de Menu
 
 # osd/windows/ledutil.c: 571, 577
 Unable to close the keyboard device. (error %d)\n
-
+Ne peut pas fermer le clavier. (erreur %d)\n
 
 # osd/windows/window.c: 661
 Unable to complete window creation
-
+Ne peut terminer la création de la fenêtre
 
 # osd/windows/drawd3d.c: 762
 Unable to create the Direct3D device (%08X)\n
-
+Ne peut pas créer le périphérique Direct3D (%08X)\n
 
 # osd/windows/drawd3d.c: 467, 528
 Unable to initialize Direct3D.\n
-
+Ne peut pas initialiser Direct3D.\n
 
 # osd/windows/drawdd.c: 270
 Unable to initialize DirectDraw.\n
-
+Ne peut pas initialiser DirectDraw.\n
 
 # osd/windows/video.c: 492
 Unable to load PNG file '%s'\n
-
+Ne peut pas charger le fichier PNG '%s'\n
 
 # osd/windows/ledutil.c: 535, 543
 Unable to open the keyboard device. (error %d)\n
-
+Ne peut pas ouvrir le périphérique clavier (erreur %d)\n
 
 # osd/windows/drawd3d.c: 2338
 Unknown texture blendmode=%d format=%d\n
-
+Texture inconnu blendmode=%d format=%d\n
 
 # mess/osd/windows/mess.rc: 81
 Unlimited
-
+Illimité
 
 # osd/windows/video.c: 402
 Using %s scale effect\n

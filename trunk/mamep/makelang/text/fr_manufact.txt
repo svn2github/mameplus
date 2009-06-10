@@ -4,7 +4,7 @@
 
 # NGEM2K (Homebrew 060118, Beta)
 Homebrew
-fait maison
+Fait Maison
 
 # Chewing Gum
 unknown
@@ -86,10 +86,6 @@ ATW USA, Inc.
 AV JAPAN
 
 
-# Chaos Field (GDL-0025)
-Able
-
-
 # Baluba-louk no Densetsu
 Able Corp, Ltd.
 
@@ -130,10 +126,6 @@ Alba
 Alberici
 
 
-# Shikigami no Shiro (V2.03J)
-Alfa System
-
-
 # Delta Race
 Allied Leisure
 
@@ -156,10 +148,6 @@ Alpha Denshi Co.
 
 # Shikigami No Shiro II / The Castle of Shikigami II (GDL-0021)
 Alpha System
-
-
-# Moeru Casinyo (GDL-0013)
-Altron
 
 
 # Skill '98 (ver. s98-1.33)
@@ -276,10 +264,6 @@ Athena
 
 # Atlus PSX
 Atlus
-
-
-# Jingi Storm - The Arcade (GDL-0037)
-Atrativa Japan
 
 
 # Galaxi (v2.0)
@@ -722,8 +706,12 @@ Eastern Corp.
 Eastern Micro Electronics, Inc.
 
 
-# Musapey's Choco Marker (Rev A) (GDL-0014A)
-Ecole Software
+# Melty Blood Act Cadenza (GDL-0028C)
+Ecole
+
+
+# Musapey's Choco Marker (GDL-0014A)
+Ecole Software Corporation
 
 
 # The Alphax Z (Japan)
@@ -870,7 +858,7 @@ Excellent Systems
 Exidy
 
 
-# Jumping Break
+# Cross Pang
 F2 System
 
 
@@ -880,6 +868,10 @@ FUJIC
 
 # Mahjong Gakuen 2 Gakuen-chou no Fukushuu
 Face
+
+
+# Super Crown Golf
+Face?
 
 
 # Frog (Falcon bootleg)
@@ -912,10 +904,6 @@ Funworld
 
 # Go Go! Mile Smile
 Fuuki
-
-
-# Border Down (Rev A) (GDL-0023A)
-G-Rev
 
 
 # Galaxian Part 4 (hack)
@@ -1012,6 +1000,10 @@ Gremlim
 
 # Moon Cresta (Gremlin)
 Gremlin
+
+
+# Senko No Ronde (GDL-0030A)
+Grev
 
 
 # Trivia (Version 1.03a)
@@ -1128,10 +1120,6 @@ Icarus
 
 # Multi Fish (040308, set 1)
 Igro
-
-
-# Crazy Monkey (031110)
-Igrosoft
 
 
 # Magic Card (set 1)
@@ -1374,10 +1362,6 @@ MTM Games
 Maboroshi Ware
 
 
-# Mahjong Oh (V2.06J)
-Mahjong Kobo/Taito
-
-
 # Mahjong Doukyuusei
 Make Software
 
@@ -1442,7 +1426,7 @@ Meyco Games
 Microhard
 
 
-# Virtual Mahjong (J 961214 V1.000)
+# Virtual Mahjong 2 - My Fair Lady (J 980608 V1.000)
 Micronet
 
 
@@ -1474,10 +1458,6 @@ Mijin
 Miky SRL
 
 
-# Radirgy (GDL-0032)
-Milestone
-
-
 # Gumbo
 Min Corp.
 
@@ -1504,10 +1484,6 @@ Mondial Games
 
 # Minnasanno Okagesamadesu
 Monolith Corp.
-
-
-# Flip Maze (V2.04J)
-Moss
 
 
 # Tylz (prototype)
@@ -1542,10 +1518,6 @@ Namco
 Namco LTD.
 
 
-# Super Crowns Golf (Japan)
-Nasco
-
-
 # Crowns Golf (834-5419-04)
 Nasco Japan
 
@@ -1564,10 +1536,6 @@ Nazionale Elettronica
 
 # Neo Pong (Ver 1.1, Homebrew)
 Neodev
-
-
-# Bonanza (Revision 3)
-New Image Technologies
 
 
 # Super Gran Safari (ver 3.11)
@@ -1596,6 +1564,10 @@ Nics?
 
 # Monster Zero
 Nihon
+
+
+# Three Ds - Three Dealers Casino House
+Nihon Bussan
 
 
 # Pocket Gal Deluxe (Japan v3.00)
@@ -1894,7 +1866,7 @@ SA
 SEGA
 
 
-# Champion Italian PK (bootleg, blue board)
+# Champion Italian Cup (bootleg, set 1)
 SGS
 
 
@@ -1927,7 +1899,7 @@ SSI
 
 
 # Queen?
-STG
+STG?
 
 
 # Fishing Maniac 3
@@ -2166,7 +2138,7 @@ Spirit
 Square
 
 
-# Super Shanghai 2005 (Rev A) (GDL-0031A)
+# Super Shanghai 2005 (GDL-0031A)
 Starfish
 
 
@@ -2198,7 +2170,7 @@ Subelectro
 Subsino
 
 
-# Psyvariar -Medium Unit- (V2.04J)
+# RyuKyu (Japan, FD1094 317-5023)
 Success
 
 
@@ -2375,6 +2347,10 @@ Tecfri
 
 
 # Double Dragon (PlayChoice-10)
+Technos
+
+
+# Bogey Manor
 Technos Japan
 
 
@@ -2452,10 +2428,6 @@ Topis Corp
 
 # Radiant Silvergun (JUET 980523 V1.000)
 Treasure
-
-
-# XII Stag (V2.01J)
-Triangle Service
 
 
 # MTV Rock-N-Roll Trivia (Part 2)
@@ -2618,7 +2590,7 @@ WAVE
 WSAC Systems?
 
 
-# Shanghai Shoryu Sairin (V2.03J)
+# Shienryu (JUET 961226 V1.000)
 Warashi
 
 
@@ -2796,5 +2768,5 @@ hack
 
 # Kkoj Noli (Kill the Bees)
 south korean hack
-
+Hack Sud Coréen
 

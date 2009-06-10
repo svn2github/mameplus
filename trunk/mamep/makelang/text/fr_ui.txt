@@ -180,7 +180,7 @@ Style du &Menu
 
 # osd/winui/mameui.rc: 183
 &New Game Changes
-&Nouveau jeu : changement
+&Nouveau Jeu : Changement
 
 # osd/winui/mameui.rc: 380, 1044, 1070, 1136, 1199
 &OK
@@ -324,7 +324,7 @@ Ajouter ->
 
 # osd/winui/mameui.rc: 1162
 Add Game To Custom Folder
-Ajouter le jeu dans le dossier personnalisé
+Ajouter le jeu au dossier personnalisé
 
 # osd/winui/mameui.rc: 748
 Advanced
@@ -448,7 +448,7 @@ Backdrops
 
 # osd/winui/layout.c: 137
 Background Images
-Images de fond
+Images de Fond
 
 # osd/winui/treeview.c: 1011
 Bad Dump
@@ -600,7 +600,7 @@ Changement de l'objet non autorisé
 
 # osd/winui/mui_audit.c: 279, 288
 Checking Game %s - %s
-Vérification du jeu %s - %s
+Vérification du Jeu %s - %s
 
 # osd/winui/mameui.rc: 644, 646
 Checking...
@@ -2872,7 +2872,7 @@ maps (*.map,*.txt)
 
 # osd/winui/dialogs.c: 149
 requires exiting 
-
+Nécessite un Redémarrage
 
 # osd/winui/winui.c: 6382
 scripts (*.txt,*.dat)
@@ -2880,21 +2880,21 @@ scripts (*.txt,*.dat)
 
 # osd/winui/winui.c: 6361
 sounds (*.wav)
-
+sons (*.wav)
 
 # osd/winui/winui.c: 6395
 stoty (*.dat)
-
+historique (*.dat)
 
 # osd/winui/dialogs.c: 137
 to the default settings:\n\n
-
+vers les paramètres par dédaut :\n\n
 
 # osd/winui/winui.c: 6367
 videos (*.avi)
-
+vidéos (*.avi)
 
 # osd/winui/winui.c: 6364
 videos (*.mng)
-
+vidéos (*.mng)
 

@@ -12,15 +12,15 @@ Bezel
 
 # 2762
 CP Graphics
-
+Graphismes CP
 
 # 2776
 Inst. Card
-
+Carte Inst.
 
 # 3511
 Lamps or LEDs
-
+Lampes ou LEDs
 
 # 3570
 Marquee
@@ -28,5 +28,5 @@ Marquee
 
 # 3786
 Overlay
-
+Transparence
 

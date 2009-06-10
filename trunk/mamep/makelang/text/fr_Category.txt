@@ -28,7 +28,7 @@ Conduite
 
 # 314
 Driving / 1st Person
-Conduite / En Vue subjective 
+Conduite / En Vue Subjective 
 
 # 374
 Driving / Boat
@@ -48,23 +48,23 @@ Conduite / Course (Poursuite)
 
 # 590
 Driving / Race (chase view) Bike
-Conduite / Course de moto (Poursuite)
+Conduite / Course de Moto (Poursuite)
 
 # 624
 Driving / Race 1st P Bike
-Conduite / Course de moto en vue subjective
+Conduite / Course de Moto en vue Subjective
 
 # 631
 Driving / Race 1st Person
-Conduite / Course en vue subjective
+Conduite / Course en vue Subjective
 
 # 654
 Driving / Race Bike
-Conduite / Course de moto
+Conduite / Course de Moto
 
 # 671
 Driving / Race Track
-Conduite / Course sur piste
+Conduite / Course sur Piste
 
 # 710
 Fighter / 2.5D
@@ -176,7 +176,7 @@ Multi-jeu *Adulte*
 
 # 2414
 Not Classified
-Aucun genre
+Aucun Genre
 
 # 2493
 Pinball
@@ -344,7 +344,7 @@ Tir / En vue Subjective
 
 # 4050
 Shooter / 3rd Person
-Tir / A la 3ème personne
+Tir / A la 3ème Personne
 
 # 4096
 Shooter / Command
@@ -620,5 +620,5 @@ Jeu de plateau / Shougi
 
 # 269
 Climbing
-
+Escalade
 

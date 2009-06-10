@@ -4,11 +4,11 @@ Console
 
 # 8011
 Decrypted
-
+Décrypté
 
 # 8069
 Homebrew
-
+Fait Maison
 
 # 7970
 Plus!
