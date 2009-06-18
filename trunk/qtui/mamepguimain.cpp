@@ -412,7 +412,7 @@ void MainWindow::init()
 
 	initSettings();
 	loadSettings();
-
+	
 	// validate mame_binary
 	mame_binary = pGuiSettings->value("mame_binary", "mamep.exe").toString();
 	QFileInfo mamebin(mame_binary);
@@ -524,7 +524,6 @@ void MainWindow::init()
 	mameGame->init();
 	show();
 
-win->log(CFG_PREFIX);
 	// connect misc signal and slots
 
 	// Docked snapshots
@@ -626,7 +625,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.4")
+		.arg("1.4.5")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -974,7 +973,8 @@ void MainWindow::initSettings()
 		<< "sort_column"
 		<< "sort_reverse"
 		<< "default_game"
-		<< "folder_current"
+		<< "default_folder"
+		<< "hide_folders"
 		<< "vertical_tabs"
 		<< "stretch_screenshot_larger"
 		<< "enforce_aspect"
@@ -1089,34 +1089,33 @@ void MainWindow::saveSettings()
 	else
 		pGuiSettings->setValue("mame_binary", mame_binary);
 
-	QList<QTreeWidgetItem *> messItems = win->treeFolders->findItems(folderList[FOLDER_CONSOLE], Qt::MatchFixedString);
-	QTreeWidgetItem *messItem = NULL;
-	if (!messItems.isEmpty())
-		messItem = messItems.first();
+	QList<QTreeWidgetItem *> softwaresItems = win->treeFolders->findItems(gameList->intFolderNames[FOLDER_CONSOLE], Qt::MatchFixedString);
+	QTreeWidgetItem *softwaresItem = NULL;
+	if (!softwaresItems.isEmpty())
+		softwaresItem = softwaresItems.first();
 
 	//save console dirs
-	int iNext = 0;	
+//	int iNext = 0;
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
 
 		if (pMameOpt->guivisible && optName.endsWith("_extra_software"))
 		{
-		win->log(optName);
 			QString sysName = optName;
 			sysName.remove("_extra_software");
-				
+
 			QString v = mameOpts[optName]->globalvalue;
 			if (!v.trimmed().isEmpty())
 			{
 				pGuiSettings->setValue(optName, mameOpts[optName]->globalvalue);
 
-				if (messItem != NULL)
-					for (int i = 0; i < messItem->childCount(); i++)
+				if (softwaresItem != NULL)
+					for (int i = 0; i < softwaresItem->childCount(); i++)
 					{
-						if (sysName == messItem->child(i)->text(0))
+						if (sysName == softwaresItem->child(i)->text(0))
 						{
-							messItem->child(i)->setHidden(false);
+							softwaresItem->child(i)->setHidden(false);
 							break;
 						}
 					}
@@ -1125,16 +1124,16 @@ void MainWindow::saveSettings()
 			{
 				pGuiSettings->remove(optName);
 
-				if (messItem != NULL)
+				if (softwaresItem != NULL)
 				{
-					for (int i = 0; i < messItem->childCount(); i++)
+					for (int i = 0; i < softwaresItem->childCount(); i++)
 					{
-						if (sysName == messItem->child(i)->text(0))
+						if (sysName == softwaresItem->child(i)->text(0))
 						{
-							messItem->child(i)->setHidden(true);
+							softwaresItem->child(i)->setHidden(true);
 /*							iNext = i + 1;
 
-							if (iNext >= messItem->childCount())
+							if (iNext >= softwaresItem->childCount())
 								iNext = i - 1;
 
 							if (iNext < 0)
@@ -1148,7 +1147,29 @@ void MainWindow::saveSettings()
 			}
 		}
 	}
-//	win->treeFolders->setCurrentItem(messItem->child(iNext));
+//	win->treeFolders->setCurrentItem(softwaresItem->child(iNext));
+
+	//prepare default_folder
+	QString folderName, subFolderName, defalutFolder;
+	QStringList strlist = utils->split2Str(currentFolder, "/");
+
+	folderName = strlist.first();
+	subFolderName = strlist.last();
+
+	if (folderName.isEmpty())
+	{
+		folderName = strlist.last();
+		subFolderName.clear();
+	}
+
+	int p = gameList->intFolderNames.indexOf(folderName);
+	if (p >= 0)
+		folderName = gameList->intFolderNames0[p];
+
+	if (subFolderName.isEmpty())
+		defalutFolder = "/" + folderName;
+	else
+		defalutFolder = folderName + "/" + subFolderName;
 
 	//save layout
 	pGuiSettings->setValue("window_geometry", saveGeometry());
@@ -1165,8 +1186,9 @@ void MainWindow::saveSettings()
 	pGuiSettings->setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
 	pGuiSettings->setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
 	pGuiSettings->setValue("default_game", currentGame);
-	pGuiSettings->setValue("folder_current", currentFolder);//fixme: rename
+	pGuiSettings->setValue("default_folder", defalutFolder);
 	pGuiSettings->setValue("list_mode", gameList->listMode);
+	pGuiSettings->setValue("hide_folders", hiddenFolders);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

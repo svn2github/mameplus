@@ -42,29 +42,27 @@ enum
 	FOLDER_YEAR,
 	FOLDER_SOURCE,
 	FOLDER_BIOS,
-	/*
 	FOLDER_CPU,
 	FOLDER_SND,
-	FOLDER_ORIENTATION,
-	FOLDER_DEFICIENCY,
+	FOLDER_HARDDISK,
+	FOLDER_SAMPLES,
 	FOLDER_DUMPING,
 	FOLDER_WORKING,
 	FOLDER_NONWORKING,
-	FOLDER_ORIGINAL,
+	FOLDER_ORIGINALS,
 	FOLDER_CLONES,
-	FOLDER_RASTER,
-	FOLDER_VECTOR,
 	FOLDER_RESOLUTION,
-	FOLDER_FPS,
+	FOLDER_PALETTESIZE,
+	FOLDER_REFRESH,
+	FOLDER_DISPLAY,
+	FOLDER_CONTROLS,
+	FOLDER_CHANNELS,
 	FOLDER_SAVESTATE,
-	FOLDER_CONTROL,
-	FOLDER_STEREO,
-	*/
-	FOLDER_HARDDISK,
 	/*
-	FOLDER_SAMPLES,
+	FOLDER_DEFICIENCY,
 	FOLDER_ARTWORK,
 	*/
+
 	FOLDER_EXT,
 	MAX_FOLDERS
 };
@@ -174,85 +172,6 @@ protected:
 	void paintEvent(QPaintEvent *);
 };
 //*/
-
-class Gamelist : public QObject
-{
-	Q_OBJECT
-
-public:
-	QProcess *loadProc;
-	QStringList xmlLines;
-	QMenu *menuContext;
-	QMenu *headerMenu;
-	QString listMode;
-
-	// interactive threads used by the game list
-	UpdateSelectionThread selectionThread;
-	bool autoAudit;
-
-	Gamelist(QObject *parent = 0);
-	~Gamelist();
-
-	void loadIcon();
-	void disableCtrls();
-	void restoreFolderSelection(bool = false);
-	bool isAuditFolder(QString);
-	bool isConsoleFolder();
-
-public slots:
-	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
-	void update(int = GAMELIST_INIT_FULL);
-	void restoreGameSelection();
-	void runMame(bool = false, QStringList = QStringList());
-	QString getViewString(const QModelIndex &index, int column) const;
-	void updateProgress(int progress);
-	void switchProgress(int max, QString title);
-	void updateSelection();
-	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
-	void setupSnap(int);
-	void toggleDelegate(bool);
-
-	// external process management
-	void extractMerged(QString, QString);
-	void runMameFinished(int, QProcess::ExitStatus);
-	void runMergedFinished(int, QProcess::ExitStatus);
-
-	void filterSearchCleared();
-	void filterSearchChanged();
-	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);
-
-private:
-	bool hasInitd;
-	QString currentTempROM;
-	QFutureWatcher<void> loadIconWatcher;
-	int loadIconStatus;
-	QAbstractItemDelegate *defaultGameListDelegate;
-	QStringList extFolders;
-
-	void initFolders();
-	int parseExtFolders(const QString &);
-	void initExtFolders(const QString &, const QString &);
-	void saveExtFolders(const QString &);
-
-	void initMenus();
-	void updateDynamicMenu(QMenu *);
-	void updateDeleteCfgMenu(const QString &);
-	void addDeleteCfgMenu(const QString &, const QString &);
-	void loadMMO(int);
-	void loadIconWorkder();
-
-private slots:
-	void showContextMenu(const QPoint &);
-	void updateContextMenu();
-	void mountDevice();
-	void unmountDevice();
-	void showHeaderContextMenu(const QPoint &);
-	void updateHeaderContextMenu();
-	void deleteCfg();
-	void addToExtFolder();
-	void removeFromExtFolder();
-	void postLoadIcon();
-};
 
 class BiosSet : public QObject
 {
@@ -434,6 +353,7 @@ public:
 
 	bool isExtRom;
 	bool isCloneAvailable;
+	bool isHorz;
 
 	qint8 available;
 	QByteArray icondata;
@@ -479,6 +399,89 @@ private slots:
 	void loadDefaultIniFinished(int, QProcess::ExitStatus);
 };
 
+class Gamelist : public QObject
+{
+	Q_OBJECT
+
+public:
+	QProcess *loadProc;
+	QStringList xmlLines;
+	QMenu *menuContext;
+	QMenu *headerMenu;
+	QString listMode;
+	QStringList intFolderNames0, intFolderNames;
+
+	// interactive threads used by the game list
+	UpdateSelectionThread selectionThread;
+	bool autoAudit;
+
+	Gamelist(QObject *parent = 0);
+	~Gamelist();
+
+	void loadIcon();
+	void disableCtrls();
+	void restoreFolderSelection(bool = false);
+	bool isAuditConsoleFolder(const QString&);
+	bool isConsoleFolder();
+	QString getResolution(GameInfo *, int);
+
+public slots:
+	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
+	void update(int = GAMELIST_INIT_FULL);
+	void restoreGameSelection();
+	void runMame(bool = false, QStringList = QStringList());
+	QString getViewString(const QModelIndex &index, int column) const;
+	void updateProgress(int progress);
+	void switchProgress(int max, QString title);
+	void updateSelection();
+	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
+	void setupSnap(int);
+	void toggleDelegate(bool);
+
+	// external process management
+	void extractMerged(QString, QString);
+	void runMameFinished(int, QProcess::ExitStatus);
+	void runMergedFinished(int, QProcess::ExitStatus);
+
+	void filterSearchCleared();
+	void filterSearchChanged();
+	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);
+
+private:
+	bool hasInitd;
+	QString currentTempROM;
+	QFutureWatcher<void> loadIconWatcher;
+	int loadIconStatus;
+	QAbstractItemDelegate *defaultGameListDelegate;
+	QList<QTreeWidgetItem *> intFolderItems;
+	QStringList extFolderNames;
+
+	void initFolders();
+	int parseExtFolders(const QString &);
+	void initExtFolders(const QString &, const QString &);
+	void saveExtFolders(const QString &);
+
+	void initMenus();
+	void updateDynamicMenu(QMenu *);
+	void updateDeleteCfgMenu(const QString &);
+	void addDeleteCfgMenu(const QString &, const QString &);
+	void loadMMO(int);
+	void loadIconWorkder();
+
+private slots:
+	void showContextMenu(const QPoint &);
+	void updateContextMenu();
+	void mountDevice();
+	void unmountDevice();
+	void toggleFolder();
+	void showHeaderContextMenu(const QPoint &);
+	void updateHeaderContextMenu();
+	void deleteCfg();
+	void addToExtFolder();
+	void removeFromExtFolder();
+	void postLoadIcon();
+};
+
 class GameListSortFilterProxyModel : public QSortFilterProxyModel
 {
 Q_OBJECT
@@ -496,7 +499,7 @@ protected:
 
 extern MameGame *mameGame;
 extern Gamelist *gameList;
-extern QStringList folderList;
 extern QString currentGame, currentFolder;
+extern QStringList hiddenFolders;
 
 #endif

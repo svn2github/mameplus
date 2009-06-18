@@ -209,7 +209,7 @@ void RomAuditor::audit(bool autoAudit, int _method, QString fileName)
 		foreach (QString gameName, mameGame->games.keys())
 		{
 			GameInfo *gameInfo = mameGame->games[gameName];
-			if (gameInfo->isExtRom && gameList->isAuditFolder(gameInfo->romof))
+			if (gameInfo->isExtRom && gameList->isAuditConsoleFolder(gameInfo->romof))
 			{
 				mameGame->games.remove(gameName);
 				delete gameInfo;
@@ -455,9 +455,9 @@ void RomAuditor::run()
 		GameInfo *gameInfo = mameGame->games[gameName];
 		if (!gameInfo->devices.isEmpty())
 		{
-			if (!gameList->isAuditFolder(gameName))
+			if (!gameList->isAuditConsoleFolder(gameName))
 				continue;
-		
+
 			auditConsole(gameName);
 		}
 	}
@@ -560,7 +560,7 @@ void MergedRomAuditor::audit()
 			gameInfo = mameGame->games[gameName];
 			if (!gameInfo->devices.isEmpty())
 			{
-				if (!gameList->isAuditFolder(gameName))
+				if (!gameList->isAuditConsoleFolder(gameName))
 					continue;
 			
 				QString _dirpath = mameOpts[gameName + "_extra_software"]->globalvalue;

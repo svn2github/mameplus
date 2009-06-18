@@ -9,7 +9,10 @@ read/write cookie
 theme
 
 //Done
-added a startup parameter -configpath to assign temporary directory for cache and ini. e.g. mamepgui -configpath ~/mamepgui
+added all MAMEUI built-in folders
+added menu: "View - Show Folders" to toggle built-in folders
+fixed calculation of horizontal/vertical games
+save folders in untraslated strings
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -26,13 +29,18 @@ exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi
 single package crc format: clrmamep
 
 //Priority tasks
-3 audit output only incorrect, sample
-3 dat location for official mame
+3 other language mamep core
+3 console refresh is broken?
+3 hide all, console folder for non mameplus
+3 Is there a way to hide the clones and make the font bigger with the new ui? 
+2 audit output only incorrect, sample
+3 customizable *.dat location for official mame
 3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing
 3 ips lang may cause crash
 3 command.dat may cause crash
 
+2 split gamelist.cpp to treeview.cpp datatype.cpp
 2 single game audit
 2 create new folder
 2 arrange icons
@@ -121,7 +129,6 @@ single package crc format: clrmamep
 * non compressed roms
 
 //Folder
-* other filters
 * 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
 translation
 * bios icons

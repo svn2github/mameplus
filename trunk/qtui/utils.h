@@ -23,6 +23,9 @@ public:
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
 
+	QString getLongName(const QString &);
+	QString getShortName(const QString &);
+
 signals:
 	void icoUpdated(QString);
 
@@ -32,6 +35,8 @@ public slots:
 
 private:
 	QString mameVersion;
+	QMap<QString, QString> descMap;
+	void initDescMap();
 };
 
 class MyQueue : public QObject

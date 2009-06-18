@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -119,11 +119,12 @@
       <string>Game Do&amp;cuments</string>
      </property>
     </widget>
-    <widget class="QMenu" name="menuArrangeIcons">
+    <widget class="QMenu" name="menuShowFolders">
      <property name="title">
-      <string>Arrange &amp;Icons</string>
+      <string>&amp;Show Folders</string>
      </property>
     </widget>
+    <addaction name="menuShowFolders"/>
     <addaction name="menuPictures"/>
     <addaction name="menuDocuments"/>
     <addaction name="actionVerticalTabs"/>
@@ -134,7 +135,6 @@
     <addaction name="actionRowDelegate"/>
     <addaction name="actionLocalGameList"/>
     <addaction name="menuCustomizeFields"/>
-    <addaction name="menuArrangeIcons"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
    </widget>
