@@ -792,7 +792,7 @@ victlapw	A 级方程式赛车 - 胜利金足 (Rev. ADV2, 世界版)	A 级方程式赛车 - 胜利金足
 alpinesa	高山冲浪 (Rev. AF2 Ver.A)	高山冲浪 (Rev. AF2 Ver.A)	Namco
 propcycl	空中自行车 (Rev. PR2 Ver.A)	空中自行车 (Rev. PR2 Ver.A)	Namco
 tokyowar	东京战争 (Rev. TW2 Ver.A)	东京战争 (Rev. TW2 Ver.A)	Namco
-aquajet	 水上摩托赛 (Rev. AJ2 Ver.B)	 水上摩托赛 (Rev. AJ2 Ver.B)	Namco
+aquajet	水上摩托赛 (Rev. AJ2 Ver.B)	水上摩托赛 (Rev. AJ2 Ver.B)	Namco
 rapidrvr	激流划艇 (RD3 Ver. C)	激流划艇 (RD3 Ver. C)	Namco
 motoxgo	疯狂越野摩托车 (MG3 Ver. A)	疯狂越野摩托车 (MG3 Ver. A)	Namco
 timecrs2	化解危机 2 (TSS3 Ver. B)	化解危机 2 (TSS3 Ver. B)	Namco
@@ -1100,6 +1100,7 @@ polaris	海战 (第1套)	海战 (第1套)	Taito
 polarisa	海战 (第2套)	海战 (第2套)	Taito
 ballbomb	气球炸弹	气球炸弹	Taito
 indianbt	印地安战争	印地安战争	Taito
+steelwkr	钢铁工人	钢铁工人	Taito
 m79amb	战车 M-79	战车 M-79	Ramtek
 alieninv	宇宙侵略者 - 异形入侵者 P2	宇宙侵略者 - 异形入侵者 P2	bootleg
 tst_invd	宇宙侵略者 - 测试版	宇宙侵略者 - 测试版	Test ROM
@@ -2841,13 +2842,15 @@ dsem2	劲舞革命 2度混合 欧版 (G*C23 VER. EAA)	劲舞革命 2度混合 欧版 (G*C23 VER. E
 ddrextrm	劲舞革命 - 极限版 (G*C36 VER. JAA)	劲舞革命 - 极限版 (G*C36 VER. JAA)	Konami
 gtfrk11m	疯狂吉他手 11度混合 (G*D39 VER. JAA)	疯狂吉他手 11度混合 (G*D39 VER. JAA)	Konami
 gq863	Twinkle System	Twinkle System	Konami
+bmiidx	狂热节拍 IIDX (863 JAA)	狂热节拍 IIDX (863 JAA)	Konami
 bmiidxc	狂热节拍 含 DDR 2nd Club 版本 (896 JAB)	狂热节拍 含 DDR 2nd Club 版本 (896 JAB)	Konami
 bmiidxca	狂热节拍 含 DDR 2nd Club 版本 (896 JAA)	狂热节拍 含 DDR 2nd Club 版本 (896 JAA)	Konami
-bmiidxc2	狂热节拍 Substream 2 含 DDR 2nd Club 版本 (984 A01 BM)	beatmania IIDX Substream 2 含 DDR 2nd Club 版本 (984 A01 BM)	Konami
+bmiidxc2	狂热节拍 Substream 2 含 DDR 2nd Club 版本 (984 A01 BM)	狂热节拍 Substream 2 含 DDR 2nd Club 版本 (984 A01 BM)	Konami
+bmiidx3	狂热节拍 IIDX 3th style (GC992 JA)	狂热节拍 IIDX 3th style (GC992 JA)	Konami
 bmiidx4	狂热节拍 4th style (GCA03 JA)	狂热节拍 4th style (GCA03 JA)	Konami
 bmiidx6	狂热节拍 6th style (GCB4U JA)	狂热节拍 6th style (GCB4U JA)	Konami
 bmiidx7	狂热节拍 7th style (GCB44 JA)	狂热节拍 7th style (GCB44 JA)	Konami
-bmiidx8	狂热节拍 IIDX 8th style (GCC44 JA)	beatmania IIDX 8th style (GCC44 JA)	Konami
+bmiidx8	狂热节拍 IIDX 8th style (GCC44 JA)	狂热节拍 IIDX 8th style (GCC44 JA)	Konami
 kviper	Konami Viper BIOS	Konami Viper BIOS	Konami
 ppp2nd	劲舞天堂 2度混合	劲舞天堂 2度混合	Konami
 boxingm	拳击王	拳击王	Konami
@@ -3219,9 +3222,9 @@ bodyslam	女子摔角 (8751 317-0015)	女子摔角 (8751 317-0015)	Sega
 dumpmtmt	女子摔角 (日版, 8751 317-unknown)	女子摔角 (日版, 8751 317-unknown)	Sega
 mjleague	棒球联盟	棒球联盟	Sega
 quartet	星战四人组 (Rev A, 8751 315-5194)	星战四人组 (Rev A, 8751 315-5194)	Sega
-quartet1	星战四人组 (8751 315-5194)	星战四人组 (8751 315-5194)	Sega
-quart21	星战四人组 2 (8751 317-0010)	星战四人组 2 (8751 317-0010)	Sega
-quart2	星战四人组 2 (未保护版)	星战四人组 2 (未保护版)	Sega
+quarteta	星战四人组 (8751 315-5194)	星战四人组 (8751 315-5194)	Sega
+quartet2	星战四人组 2 (8751 317-0010)	星战四人组 2 (8751 317-0010)	Sega
+quartet2a	星战四人组 2 (未保护版)	星战四人组 2 (未保护版)	Sega
 aceattaa	王牌攻击者 (日版, 系统 16A, FD1094 317-0060)	王牌攻击者 (日版, 系统 16A, FD1094 317-0060)	Sega
 afighter	战斗任务 (FD1089A 317-0018)	战斗任务 (FD1089A 317-0018)	Sega
 alexkidd	天空魔城 (第2套, 未保护版)	天空魔城 (第2套, 未保护版)	Sega
@@ -3811,7 +3814,9 @@ vf4tuneda	VR 战士 4 复刻强化版 (Rev A) (GDS-0036A)	VR 战士 4 复刻强化版 (Rev A) 
 vf4tunedd	VR 战士 4 复刻强化版 (Rev D) (GDS-0036D)	VR 战士 4 复刻强化版 (Rev D) (GDS-0036D)	Sega
 vf4tuned	VR 战士 4 复刻强化版 (Rev F) (GDS-0036F)	VR 战士 4 复刻强化版 (Rev F) (GDS-0036F)	Sega
 awbios	Atomiswave Bios	Atomiswave Bios	Sammy
+sprtshot	美国射击运动	美国射击运动	Sammy
 demofist	破坏拳	破坏拳	Polygon Magic / Dimps
+rangrmsn	巡逻任务	巡逻任务	Sammy
 fotns	新北斗神拳	新北斗神拳	Arc System Works
 hikaru	Hikaru Bios	Hikaru Bios	Sega
 podrace	星际大战	星际大战	Sega
@@ -5027,7 +5032,7 @@ spclordg	太空君主 (rev A, 德国版)	太空君主 (rev A, 德国版)	Atari Games
 rrreveng	道路风暴复仇版 (工程版)	道路风暴复仇版 (工程版)	Atari Games
 rrrevenp	道路风暴复仇版 (工程版 替换版)	道路风暴复仇版 (工程版 替换版)	Atari Games
 beathead	摇滚跳方块 (工程版)	摇滚跳方块 (工程版)	Atari Games
-tmek	沙漠鹫狮 (v5.1, The Warlords)	沙漠鹫狮 (v5.1, The Warlords)	Atari Games
+tmek	T-MEK (v5.1, The Warlords)	T-MEK (v5.1, The Warlords)	Atari Games
 tmek51p	沙漠鹫狮 (v5.1, 工程版)	沙漠鹫狮 (v5.1, 工程版)	Atari Games
 tmek45	沙漠鹫狮 (v4.5)	沙漠鹫狮 (v4.5)	Atari Games
 tmek44	沙漠鹫狮 (v4.4)	沙漠鹫狮 (v4.4)	Atari Games
@@ -5690,7 +5695,8 @@ mk4	真人快打 4 (版本 3.0)	真人快打 4 (版本 3.0)	Midway
 mk4a	真人快打 4 (版本 2.1)	真人快打 4 (版本 2.1)	Midway
 invasnab	入侵 - 绑架者 (版本 5.0)	入侵 - 绑架者 (版本 5.0)	Midway
 invasnv4	入侵 - 绑架者 (版本 4.0)	入侵 - 绑架者 (版本 4.0)	Midway
-crusnexo	异族事务 (版本 1.6)	异族事务 (版本 1.6)	Midway
+crusnexo	异族事务 (版本 2.4)	异族事务 (版本 2.4)	Midway
+crusnexa	异族事务 (版本 1.6)	异族事务 (版本 1.6)	Midway
 thegrid	超人竞技场 (版本 1.2)	超人竞技场 (版本 1.2)	Midway
 thegrida	超人竞技场 (版本 1.1)	超人竞技场 (版本 1.1)	Midway
 wg3dh	韦恩格雷兹基 3D立体曲棍球	韦恩格雷兹基 3D立体曲棍球	Atari Games
@@ -6004,6 +6010,7 @@ soldamj	苏登益智方块 (日版)	苏登益智方块 (日版)	Jaleco
 bigstrik	大联盟足球	大联盟足球	Jaleco
 bigstrkb	大联盟足球 (盗版)	大联盟足球 (盗版)	bootleg
 bestleag	大联盟足球 Best League	大联盟足球 Best League	bootleg
+bestleaw	大联盟足球 (世界版)	大联盟足球 (世界版)	bootleg
 chimerab	原生兽 (工程版)	原生兽 (工程版)	Jaleco
 cybattlr	战斗机械	战斗机械	Jaleco
 hayaosi1	问答 - 王座决定战	问答 - 王座决定战	Jaleco
@@ -6082,6 +6089,7 @@ crshrac2	冲撞赛车 - 离合器 (第2套)	冲撞赛车 - 离合器 (第2套)	Video System Co.
 taotaido	苏婆诃格斗 - 太鸥体道 (第1套)	苏婆诃格斗 - 太鸥体道 (第1套)	Video System Co.
 taotaida	苏婆诃格斗 - 太鸥体道 (第2套)	苏婆诃格斗 - 太鸥体道 (第2套)	Video System Co.
 gstriker	足球盛况	足球盛况	Human
+gstrikea	足球盛况 (美版)	足球盛况 (美版)	Human
 vgoalsoc	胜利射门 (第1套)	胜利射门 (第1套)	Tecmo
 vgoalsca	胜利射门 (第2套)	胜利射门 (第2套)	Tecmo
 twrldc94	Tecmo 世界杯足球’94 (第1套)	Tecmo 世界杯足球’94 (第1套)	Tecmo
@@ -6549,6 +6557,7 @@ gakusai	麻雀学园祭 (日版)	麻雀学园祭 (日版)	MakeSoft
 gakusai2	麻雀学园祭 2 (日版)	麻雀学园祭 2 (日版)	MakeSoft
 blzntrnd	摔跤旋风	摔跤旋风	Human Amusement
 gstrik2	足球盛况 2 (日版)	足球盛况 2 (日版)	Human Amusement
+gstrik2e	足球盛况 2 (欧版和大洋洲版)	足球盛况 2 (欧版和大洋洲版)	Human Amusement
 hyprduel	神枪战机 (日版 第1套)	神枪战机 (日版 第1套)	Technosoft
 hyprdelj	神枪战机 (日版 第2套)	神枪战机 (日版 第2套)	Technosoft
 magerror	探求不可思议的误差	探求不可思议的误差	Technosoft / Jaleco
@@ -6592,7 +6601,7 @@ saturn	土星	土星	[Zilec Electronics] Jaleco
 gogomile	鸡蛋小子大接龙	鸡蛋小子大接龙	Fuuki
 gogomilj	鸡蛋小子大接龙 (日版)	鸡蛋小子大接龙 (日版)	Fuuki
 pbancho	番长大逆转方块 (日版)	番长大逆转方块 (日版)	Fuuki
-asurabld	血剑王朝 (日版)	血剑王朝 (日版)	Fuuki
+asurabld	血剑王朝 - 魔刃降临 (日版)	血剑王朝 - 魔刃降临 (日版)	Fuuki
 asurabus	血剑王朝 II (日版)	血剑王朝 II (日版)	Fuuki
 drgnmst	龙圣	龙圣	Unico
 burglarx	夜盗 X	夜盗 X	Unico
@@ -6627,7 +6636,7 @@ royalmj	皇家麻雀 (日版, v1.13)	皇家麻雀 (日版, v1.13)	Nichibutsu
 openmj	皇家麻雀 [BET] (日版)	皇家麻雀 [BET] (日版)	Sapporo Mechanic
 royalmah	皇家麻雀 (Falcon 盗版, v1.01)	皇家麻雀 (Falcon 盗版, v1.01)	bootleg
 janyoup2	皇家麻雀 Part II (ver 7.03, July 1 1983)	皇家麻雀 Part II (ver 7.03, July 1 1983)	Cosmo Denshi
-janputer	纯真日语 (日版)	纯真日语 (日版)	Taito Corporation
+janputer	新双倍赌注麻雀 (日版)	新双倍赌注麻雀 (日版)	Ps Ltd. / Mes
 janoh	喔 - 一月 (第1套)	喔 - 一月 (第1套)	Toaplan
 janoha	喔 - 一月 (第2套)	喔 - 一月 (第2套)	Toaplan
 jansou	雀庄 (第1套)	雀庄 (第1套)	Dyna
@@ -7047,8 +7056,14 @@ skattv	史卡特电视台	史卡特电视台	ADP
 skattva	史卡特电视台 (版本 TS3)	史卡特电视台 (版本 TS3)	ADP
 fashiong	时尚赌徒	时尚赌徒	ADP
 funlddlx	趣味岛的路克斯	趣味岛的路克斯	Stella
-guab	问答撞球 (6th edition)	问答撞球 (6th edition)	JPM
-guab3	问答撞球 (3rd edition)	问答撞球 (3rd edition)	JPM
+guab	问答撞球 (3rd edition)	问答撞球 (3rd edition)	JPM
+guab3a	问答撞球 (3rd edition alt?)	问答撞球 (3rd edition alt?)	JPM
+guab4	问答撞球 (4th edition)	问答撞球 (4th edition)	JPM
+guab6	问答撞球 (6th edition)	问答撞球 (6th edition)	JPM
+guab6a	问答撞球 (6th edition alt?)	问答撞球 (6th edition alt?)	JPM
+guab7	问答撞球 (7th edition)	问答撞球 (7th edition)	JPM
+guab21	问答撞球 (21st edition)	问答撞球 (21st edition)	JPM
+guab43	问答撞球 (43rd edition)	问答撞球 (43rd edition)	JPM
 tenup	十上 (特辑 17)	十上 (特辑 17)	JPM
 tenup3	十上 (特辑 3)	十上 (特辑 3)	JPM
 monopoly	地产大亨	地产大亨	JPM
@@ -7389,8 +7404,9 @@ poizone	炸弹企鹅	炸弹企鹅	Eterna
 ssfindo	超级比一比 99	超级比一比 99	Icarus
 ppcar	呯嘭客车	呯嘭客车	Icarus
 imolagp	伊莫拉大赛车	伊莫拉大赛车	Alberici
+dambustr	皇家空军中队 - 丹巴斯特 (美版, 第1套)	皇家空军中队 - 丹巴斯特 (美版, 第1套)	South West Research
+dambusta	皇家空军中队 - 丹巴斯特 (美版, 第2套)	皇家空军中队 - 丹巴斯特 (美版, 第2套)	South West Research
 dambust	皇家空军中队 - 丹巴斯特 (英国版)	皇家空军中队 - 丹巴斯特 (英国版)	South West Research
-dambustr	皇家空军中队 - 丹巴斯特 (美国版)	皇家空军中队 - 丹巴斯特 (美国版)	South West Research
 gunpey	线条游戏	线条游戏	Banpresto
 spaceg	太空神枪	太空神枪	Omori
 wldarrow	狂野之箭 (Standard V4.8)	狂野之箭 (Standard V4.8)	Meyco Games
@@ -7767,8 +7783,8 @@ caswin	水果牌	水果牌	Aristocrat
 eforest	魔法森林 - 12XF528902	魔法森林 - 12XF528902	Aristocrat
 swthrt2v	情人 II (C - 07/09/95, 委内瑞拉版本)	情人 II (C - 07/09/95, 委内瑞拉版本)	Aristocrat
 enchfrst	魔法森林 (E - 23/06/95, Local)	魔法森林 (E - 23/06/95, Local)	Aristocrat
-dolphntr	海豚财宝 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	海豚财宝 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	Aristocrat
-dolphtra	海豚财宝 (B - 06/12/96, NSW/ACT, Rev 3)	海豚财宝 (B - 06/12/96, NSW/ACT, Rev 3)	Aristocrat
+dolphntr	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	Aristocrat
+dolphtra	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 3)	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 3)	Aristocrat
 dmdtouch	钻石触碰 (E - 30-06-97, Local)	钻石触碰 (E - 30-06-97, Local)	Aristocrat
 goldprmd	黄金金字塔 (B - 13-05-97, 美版)	黄金金字塔 (B - 13-05-97, 美版)	Aristocrat
 qotn	尼罗河皇后 (B - 13-05-97, NSW/ACT)	尼罗河皇后 (B - 13-05-97, NSW/ACT)	Aristocrat
