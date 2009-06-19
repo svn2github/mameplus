@@ -329,7 +329,7 @@ static WRITE32_HANDLER( arm7_latch_arm_w )
 
 static TIMER_CALLBACK( arm_irq )
 {
-	generic_pulse_irq_line(machine->cpu[2], ARM7_FIRQ_LINE);
+	generic_pulse_irq_line(cputag_get_cpu(machine, "prot"), ARM7_FIRQ_LINE);
 }
 
 static WRITE32_HANDLER( kov2_arm7_latch_arm_w )
@@ -792,11 +792,11 @@ ADDRESS_MAP_END
 
 /* Kov Superheroes */
 
-#define KOVSH_68K_SUSPEND	if(cpu_is_executing(space->machine->cpu[0])==TRUE) cpu_suspend(space->machine->cpu[0],SUSPEND_REASON_SPIN,1)
-#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(space->machine->cpu[2])==TRUE) cpu_suspend(space->machine->cpu[2],SUSPEND_REASON_SPIN,1)
+#define KOVSH_68K_SUSPEND	if(cpu_is_executing(cputag_get_cpu(space->machine, "maincpu"))==TRUE) cpu_suspend(cputag_get_cpu(space->machine, "maincpu"),SUSPEND_REASON_SPIN,1)
+#define KOVSH_ARM_SUSPEND	if(cpu_is_executing(cputag_get_cpu(space->machine, "prot"))==TRUE) cpu_suspend(cputag_get_cpu(space->machine, "prot"),SUSPEND_REASON_SPIN,1)
 
-#define KOVSH_68K_RESUME	if(cpu_is_executing(space->machine->cpu[0])==FALSE) cpu_resume(space->machine->cpu[0],SUSPEND_REASON_SPIN)
-#define KOVSH_ARM_RESUME	if(cpu_is_executing(space->machine->cpu[2])==FALSE) cpu_resume(space->machine->cpu[2],SUSPEND_REASON_SPIN)
+#define KOVSH_68K_RESUME	if(cpu_is_executing(cputag_get_cpu(space->machine, "maincpu"))==FALSE) cpu_resume(cputag_get_cpu(space->machine, "maincpu"),SUSPEND_REASON_SPIN)
+#define KOVSH_ARM_RESUME	if(cpu_is_executing(cputag_get_cpu(space->machine, "prot"))==FALSE) cpu_resume(cputag_get_cpu(space->machine, "prot"),SUSPEND_REASON_SPIN)
 
 #define KOVSH_68K_2_ARM		do { KOVSH_68K_SUSPEND; KOVSH_ARM_RESUME; } while (0)
 #define KOVSH_ARM_2_68K		do { KOVSH_ARM_SUSPEND; KOVSH_68K_RESUME; } while (0)
@@ -1545,7 +1545,7 @@ static MACHINE_DRIVER_START( kov )
 	MDRV_CPU_PROGRAM_MAP(kovsh_mem)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585E/F/G
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857E/F/G
 	MDRV_CPU_PROGRAM_MAP(kovsh_arm7_map)
 MACHINE_DRIVER_END
 
@@ -1557,7 +1557,7 @@ static MACHINE_DRIVER_START( kov2 )
 
 	/* protection CPU */
 	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857F
-	MDRV_CPU_PROGRAM_MAP(arm7_map)
+	MDRV_CPU_PROGRAM_MAP(kov2_arm7_map)
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( kov2p )
@@ -1578,7 +1578,7 @@ static MACHINE_DRIVER_START( svg )
 	MDRV_CPU_PROGRAM_MAP(svg_68k_mem)
 
 	/* protection CPU */
-	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 5585G
+	MDRV_CPU_ADD("prot", ARM7, 20000000)	// 55857G
 	MDRV_CPU_PROGRAM_MAP(svg_arm7_map)
 MACHINE_DRIVER_END
 
@@ -1719,8 +1719,8 @@ static DRIVER_INIT( orlegend )
 	mem16[0x146ae4/2]=0x4e71;
 	mem16[0x146ae6/2]=0x4e71;
 
-	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
-	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
 }
 
 static DRIVER_INIT( orlegnde )
@@ -1732,8 +1732,8 @@ static DRIVER_INIT( orlegnde )
 	mem16[0x146af4/2]=0x4e71;
 	mem16[0x146af6/2]=0x4e71;
 
-	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
-	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
 }
 
 static DRIVER_INIT( orld111c )
@@ -1753,8 +1753,8 @@ static DRIVER_INIT( orld105k )
 	mem16[0x146450/2]=0x4e71;
 	mem16[0x146452/2]=0x4e71;
 
-	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
-	memory_install_write16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC0400e, 0xC0400f, 0, 0, pgm_asic3_r, pgm_asic3_w);
+	memory_install_write16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0xC04000, 0xC04001, 0, 0, pgm_asic3_reg_w);
 }
 
 static void drgwld2_common_init(running_machine *machine)
@@ -1811,11 +1811,11 @@ static DRIVER_INIT( kov )
 	pgm_basic_init(machine);
  	pgm_kov_decrypt(machine);
 
-	memory_install_readwrite16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, ASIC28_r16, ASIC28_w16);
+	memory_install_readwrite16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x500000, 0x500003, 0, 0, ASIC28_r16, ASIC28_w16);
 
 	/* 0x4f0000 - ? is actually ram shared with the protection device,
       the protection device provides the region code */
-	memory_install_read16_handler(cpu_get_address_space(machine->cpu[0], ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
+	memory_install_read16_handler(cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM), 0x4f0000, 0x4fffff, 0, 0, sango_protram_r);
 }
 
 static DRIVER_INIT( pstar )
