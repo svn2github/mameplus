@@ -143,6 +143,9 @@ p, li { white-space: pre-wrap; }
     </item>
     <item row="5" column="0" colspan="10">
      <widget class="QTreeWidget" name="twSongList">
+      <property name="frameShape">
+       <enum>QFrame::NoFrame</enum>
+      </property>
       <property name="rootIsDecorated">
        <bool>false</bool>
       </property>

@@ -274,6 +274,9 @@
      </property>
      <item row="0" column="0">
       <widget class="QTreeWidget" name="treeFolders">
+       <property name="frameShape">
+        <enum>QFrame::NoFrame</enum>
+       </property>
        <property name="headerHidden">
         <bool>true</bool>
        </property>

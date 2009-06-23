@@ -29,6 +29,8 @@ exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi
 single package crc format: clrmamep
 
 //Priority tasks
+2 unify zip/7z, *.dat reading
+2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
 3 other language mamep core
 3 console refresh is broken?
 3 hide all, console folder for non mameplus

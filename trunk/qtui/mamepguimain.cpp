@@ -190,6 +190,7 @@ QMainWindow(parent)
     tvGameList = new QTreeView(centralwidget);
     tvGameList->setRootIsDecorated(false);
     tvGameList->setItemsExpandable(false);
+	tvGameList->setFrameShape(QFrame::NoFrame);
 	tvGameList->hide();
 
 	lvGameList = new QListView(centralwidget);
@@ -200,6 +201,7 @@ QMainWindow(parent)
 	lvGameList->setUniformItemSizes(true);
 	lvGameList->setWordWrap(true);
 //	lvGameList->setTextElideMode(Qt::TextDontClip | Qt::TextWordWrap);
+	lvGameList->setFrameShape(QFrame::NoFrame);
 	lvGameList->hide();
 
 	lineEditSearch = new QLineEdit(centralwidget);
@@ -319,6 +321,7 @@ void MainWindow::initHistory(int snapType)
 		tb = tbCommand = new QTextBrowser(dockWidgetContents);
 	
 	tb->setObjectName("textBrowser_" + title);
+	tb->setFrameShape(QFrame::NoFrame);
 
 	gridLayout->addWidget(tb);
 
