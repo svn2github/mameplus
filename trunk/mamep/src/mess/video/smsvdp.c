@@ -596,7 +596,7 @@ static void sms_refresh_line_mode4(int *lineBuffer, int line)
 
 	/* if top 2 rows of screen not affected by horizontal scrolling, then xScroll = 0 */
 	/* else xScroll = reg[0x08]                                                       */
-		xScroll = (((smsvdp.reg[0x00] & 0x40) && (line < 16)) ? 0 : 0x0100 - smsvdp.reg[0x08]);
+	xScroll = (((smsvdp.reg[0x00] & 0x40) && (line < 16)) ? 0 : 0x0100 - smsvdp.reg[0x08]);
 
 	xScrollStartColumn = (xScroll >> 3);			 /* x starting column tile */
 

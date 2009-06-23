@@ -623,7 +623,7 @@ MACHINE_DRIVER_END
 static MACHINE_DRIVER_START( gbcolor )
 	MDRV_IMPORT_FROM(gameboy)
 	MDRV_CPU_MODIFY("maincpu")
-	MDRV_CPU_PROGRAM_MAP( gbc_map )
+	MDRV_CPU_PROGRAM_MAP( gbc_map)
 	MDRV_CPU_CONFIG(cgb_cpu_reset)
 
 	MDRV_MACHINE_RESET(gbc)
@@ -642,7 +642,7 @@ SYSTEM_CONFIG_END
 static MACHINE_DRIVER_START( megaduck )
 	/* basic machine hardware */
 	MDRV_CPU_ADD("maincpu", LR35902, 4194304)			/* 4.194304 MHz */
-	MDRV_CPU_PROGRAM_MAP( megaduck_map )
+	MDRV_CPU_PROGRAM_MAP( megaduck_map)
 	MDRV_CPU_VBLANK_INT("screen", gb_scanline_interrupt)	/* 1 int each scanline ! */
 	MDRV_CPU_CONFIG(megaduck_cpu_reset)
 

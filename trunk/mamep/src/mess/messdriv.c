@@ -39,11 +39,11 @@ const game_driver * const consoledrivers[] =
 
 #ifdef MAMEMESS
     /* ATARI */
-    DRIVER( a2600 )		/* Atari 2600										*/
-    DRIVER( a2600p )	/* Atari 2600 PAL									*/
-    DRIVER( a5200 )		/* Atari 5200										*/
-    DRIVER( a7800 )		/* Atari 7800 NTSC									*/
-    DRIVER( a7800p )	/* Atari 7800 PAL									*/
+    DRIVER( a2600 )     /* Atari 2600                                       */
+    DRIVER( a2600p )    /* Atari 2600 PAL                                   */
+    DRIVER( a5200 )     /* Atari 5200                                       */
+    DRIVER( a7800 )     /* Atari 7800 NTSC                                  */
+    DRIVER( a7800p )    /* Atari 7800 PAL                                   */
 
     /* NINTENDO */
     DRIVER( nes )       /* Nintendo Entertainment System                    */
@@ -60,7 +60,7 @@ const game_driver * const consoledrivers[] =
     DRIVER( gbcolor )   /* Nintendo Game Boy Color Handheld                 */
     DRIVER( gba )
     DRIVER( snes )      /* Nintendo Super Nintendo NTSC                     */
-    DRIVER( snespal )   /* Nintendo Super Nintendo PAL   						*/
+    DRIVER( snespal )   /* Nintendo Super Nintendo PAL                      */
     DRIVER( sfcbox )    /* Nintendo Super Famicom Box                       */
 
     DRIVER( megaduck )  /* Megaduck                                         */
@@ -83,32 +83,32 @@ const game_driver * const consoledrivers[] =
     DRIVER( megadriv )  /* 1990 Sega Mega Drive (Europe)                    */
     DRIVER( pico )      /* 1994 Sega Pico (Europe)                          */
     DRIVER( picou )     /* 1994 Sega Pico (USA)                             */
-    DRIVER( picoj )     /* 1993 Sega Pico (Japan)  							*/
+    DRIVER( picoj )     /* 1993 Sega Pico (Japan)                           */
 
     /* NEC */
     DRIVER( pce )       /* PC/Engine NEC 1987-1993                          */
     DRIVER( tg16 )      /* Turbo Grafix-16  NEC 1989-1993                   */
-    DRIVER( sgx )       /* SuperGrafX NEC 1989       							*/
+    DRIVER( sgx )       /* SuperGrafX NEC 1989                              */
 
     /* CAPCOM */
     DRIVER( sfach )     /* CPS Changer (Street Fighter Alpha)               */
     DRIVER( sfzbch )    /* CPS Changer (Street Fighter ZERO Brazil)         */
     DRIVER( sfzch )     /* CPS Changer (Street Fighter ZERO)                */
-    DRIVER( wofch )     /* CPS Changer (Tenchi Wo Kurau II)  				*/
+    DRIVER( wofch )     /* CPS Changer (Tenchi Wo Kurau II)                 */
 
     /* BANDAI */
     DRIVER( wswan )     /* Bandai WonderSwan Handheld                       */
-    DRIVER( wscolor )   /* Bandai WonderSwan Color Handheld  					*/
+    DRIVER( wscolor )   /* Bandai WonderSwan Color Handheld                 */
 
     /* SNK */
     DRIVER( ngp )       /* NeoGeo Pocket                                    */
-    DRIVER( ngpc )      /* NeoGeo Pocket Color  								*/
+    DRIVER( ngpc )      /* NeoGeo Pocket Color                              */
 
 /****************COMPUTERS***************************************************/
     /* ASCII & MICROSOFT */
-    DRIVER( msx )       /* 1983 MSX   										*/
-    DRIVER( msx2 )      /* 1985 MSX2   										*/
-    DRIVER( msx2p )     /* 1988 MSX2+ Japan    								*/
+    DRIVER( msx )       /* 1983 MSX                                         */
+    DRIVER( msx2 )      /* 1985 MSX2                                        */
+    DRIVER( msx2p )     /* 1988 MSX2+ Japan                                 */
 
 #endif /* MAMEMESS */
 

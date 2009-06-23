@@ -546,7 +546,7 @@ static mess_input_code *build_codes(running_machine *machine, const input_port_c
 	{
 		/* allocate the codes */
 		codes = auto_alloc_array_clear(machine, mess_input_code, code_count + 1);
-
+	
 		/* and populate them */
 		scan_keys(portconfig, codes, ports, fields, 0, 0);
 	}

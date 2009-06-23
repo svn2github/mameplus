@@ -657,7 +657,7 @@ static void k2ge_draw( const device_config *device, int line )
 		{
 			col = ( k1ge->vram[0x118] & 0x07 ) * 2;
 		}
-			col = k1ge->vram[0x3e0 + col ] | ( k1ge->vram[0x3e1 + col ] << 8 );
+		col = k1ge->vram[0x3e0 + col ] | ( k1ge->vram[0x3e1 + col ] << 8 );
 
 		/* Set the bacground color */
 		for ( i = 0; i < 160; i++ )

@@ -29,12 +29,12 @@ struct _multicart_private
 typedef struct _multicart_load_state multicart_load_state;
 struct _multicart_load_state
 {
-	multicart *				multicart;
-	zip_file *				zip;
+	multicart *			multicart;
+	zip_file *			zip;
 	xml_data_node *			layout_xml;
 	xml_data_node *			resources_node;
 	xml_data_node *			pcb_node;
-	multicart_resource *	resources;
+	multicart_resource *		resources;
 	multicart_socket *		sockets;
 };
 
@@ -168,8 +168,8 @@ static multicart_open_error load_rom_resource(multicart_load_state *state, xml_d
 
 	if (!(crcstr = xml_get_attribute_string(resource_node, "crc", NULL)))
 	{
-	/* locate the file in the ZIP file */
-	header = find_file(state->zip, file);
+		/* locate the file in the ZIP file */
+		header = find_file(state->zip, file);
 	}
 	else	/* CRC tag is present, use it */
 	{
@@ -220,12 +220,12 @@ static multicart_open_error load_ram_resource(multicart_load_state *state, xml_d
 	const char *ram_filename;
 
 	astring *ram_pathname;
-
+	
 	/* locate the 'length' attribute */
 	length_string = xml_get_attribute_string(resource_node, "length", NULL);
 	if (length_string == NULL)
 		return MCERR_MISSING_RAM_LENGTH;
-
+	
 	/* ...and parse it */
 	resource->length = ram_parse_string(length_string);
 	if (resource->length <= 0)
@@ -246,7 +246,7 @@ static multicart_open_error load_ram_resource(multicart_load_state *state, xml_d
 			ram_filename = xml_get_attribute_string(resource_node, "file", NULL);
 			if (ram_filename==NULL)
 				return MCERR_XML_ERROR;
-
+			
 			ram_pathname = astring_assemble_3(astring_alloc(), state->multicart->gamedrv_name, PATH_SEPARATOR, ram_filename);
 			
 			/* Save the file name so that we can write the contents on unloading. 

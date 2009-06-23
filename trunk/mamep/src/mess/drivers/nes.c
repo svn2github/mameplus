@@ -213,7 +213,7 @@ static MACHINE_DRIVER_START( nes )
 
 	MDRV_PPU2C02_ADD( "ppu", nes_ppu_interface )
 
-    /* sound hardware */
+	/* sound hardware */
 	MDRV_SPEAKER_STANDARD_MONO("mono")
 	MDRV_SOUND_ADD("nessound", NES, NTSC_CLOCK)
 	MDRV_SOUND_CONFIG(nes_apu_interface)
@@ -241,7 +241,7 @@ static MACHINE_DRIVER_START( nespal )
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((106.53/(PAL_CLOCK/1000000)) * (PPU_VBLANK_LAST_SCANLINE_PAL-PPU_VBLANK_FIRST_SCANLINE+1+2)))
 	MDRV_VIDEO_START(nes_pal)
 
-    /* sound hardware */
+	/* sound hardware */
 	MDRV_SOUND_REPLACE("nessound", NES, PAL_CLOCK)
 	MDRV_SOUND_CONFIG(nes_apu_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
@@ -262,7 +262,7 @@ static MACHINE_DRIVER_START( dendy )
 	MDRV_SCREEN_VBLANK_TIME(ATTOSECONDS_IN_USEC((106.53/(PAL_CLOCK/1000000)) * (PPU_VBLANK_LAST_SCANLINE_PAL-PPU_VBLANK_FIRST_SCANLINE+1+2)))
 	MDRV_VIDEO_START(nes_pal)
 
-    /* sound hardware */
+	/* sound hardware */
 	MDRV_SOUND_REPLACE("nessound", NES, 26601712/15) /* 26.601712MHz / 15 == 1.77344746666... MHz */
 	MDRV_SOUND_CONFIG(nes_apu_interface)
 	MDRV_SOUND_ROUTE(ALL_OUTPUTS, "mono", 0.90)
@@ -376,12 +376,12 @@ static void famicom_floppy_getinfo(const mess_device_class *devclass, UINT32 sta
 		/* --- the following bits of info are returned as 64-bit signed integers --- */
 		case MESS_DEVINFO_INT_TYPE:							info->i = IO_FLOPPY; break;
 		case MESS_DEVINFO_INT_READABLE:						info->i = 1; break;
-		case MESS_DEVINFO_INT_WRITEABLE:						info->i = 0; break;
-		case MESS_DEVINFO_INT_CREATABLE:						info->i = 0; break;
-		case MESS_DEVINFO_INT_COUNT:							info->i = 1; break;
+		case MESS_DEVINFO_INT_WRITEABLE:					info->i = 0; break;
+		case MESS_DEVINFO_INT_CREATABLE:					info->i = 0; break;
+		case MESS_DEVINFO_INT_COUNT:						info->i = 1; break;
 
 		/* --- the following bits of info are returned as pointers to data or functions --- */
-		case MESS_DEVINFO_PTR_START:							info->start = DEVICE_START_NAME(nes_disk); break;
+		case MESS_DEVINFO_PTR_START:						info->start = DEVICE_START_NAME(nes_disk); break;
 		case MESS_DEVINFO_PTR_LOAD:							info->load = DEVICE_IMAGE_LOAD_NAME(nes_disk); break;
 		case MESS_DEVINFO_PTR_UNLOAD:						info->unload = DEVICE_IMAGE_UNLOAD_NAME(nes_disk); break;
 
@@ -403,7 +403,7 @@ SYSTEM_CONFIG_END
 /* Since 0.130u4, most of the games do not show graphics correctly. Conversion of PPU to a device showed some of the 
 limitations of the previous implementation. Systems regressed to GAME_NOT_WORKING status until a proper fix is found */
 
-/*     YEAR  NAME      PARENT    COMPAT MACHINE   INPUT     INIT      CONFIG    COMPANY   FULLNAME */
+/*     YEAR  NAME      PARENT  COMPAT MACHINE   INPUT    INIT   CONFIG   COMPANY       FULLNAME */
 CONS( 1985, nes,       0,      0,     nes,      nes,     0,     0,       "Nintendo",  "Nintendo Entertainment System / Famicom (NTSC)", GAME_NOT_WORKING )
 CONS( 1987, nespal,    nes,    0,     nespal,   nes,     0,     0,       "Nintendo",  "Nintendo Entertainment System (PAL)", GAME_NOT_WORKING )
 CONS( 1983, famicom,   nes,    0,     famicom,  famicom, 0,     famicom, "Nintendo",  "Famicom Disk System", GAME_NOT_WORKING )

@@ -772,14 +772,14 @@ ROM_END
 
 ***************************************************************************/
 
-/*    YEAR  NAME		PARENT		COMPAT  MACHINE    	  INPUT     INIT  		CONFIG		COMPANY   FULLNAME */
-CONS( 1989, genesis,	0,			0,      ms_megadriv,  md,		genesis,	0,		"Sega",   "Genesis (USA, NTSC)", 0)
+/*    YEAR  NAME        PARENT     COMPAT  MACHINE          INPUT   INIT     CONFIG COMPANY   FULLNAME */
+CONS( 1989, genesis,    0,         0,      ms_megadriv,     md,     genesis,   0,   "Sega",   "Genesis (USA, NTSC)", 0)
 CONS( 1993, gensvp,     genesis,   0,      ms_megdsvp,      md_sel, gensvp,    0,   "Sega",   "Genesis (USA, NTSC, w/SVP)", 0)
 CONS( 1990, megadriv,   genesis,   0,      ms_megadpal,     md,     md_eur,    0,   "Sega",   "Mega Drive (Europe, PAL)", 0)
-CONS( 1988, megadrij,	genesis,	0,      ms_megadriv,  md,		md_jpn,		0,		"Sega",   "Mega Drive (Japan, NTSC)", 0)
+CONS( 1988, megadrij,   genesis,   0,      ms_megadriv,     md,     md_jpn,    0,   "Sega",   "Mega Drive (Japan, NTSC)", 0)
 CONS( 1994, pico,       0,         0,      picopal,         pico,   md_eur,    0,   "Sega",   "Pico (Europe, PAL)", 0)
-CONS( 1994, picou,		pico,		0,      pico,	      pico,		genesis,	0,		"Sega",   "Pico (USA, NTSC)", 0)
-CONS( 1993, picoj,		pico,		0,      pico,	      pico,		md_jpn,		0,		"Sega",   "Pico (Japan, NTSC)", 0)
+CONS( 1994, picou,      pico,      0,      pico,            pico,   genesis,   0,   "Sega",   "Pico (USA, NTSC)", 0)
+CONS( 1993, picoj,      pico,      0,      pico,            pico,   md_jpn,    0,   "Sega",   "Pico (Japan, NTSC)", 0)
 
 /* Not Working */
 CONS( 1994, 32x,        0,         0,      genesis_32x,     md_sel, mess_32x,  0,   "Sega",   "32X", GAME_NOT_WORKING )

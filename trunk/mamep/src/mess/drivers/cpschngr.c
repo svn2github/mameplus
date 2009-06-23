@@ -104,7 +104,7 @@ static READ16_HANDLER( qsound_rom_r )
 		return rom[offset] | 0xff00;
 	else
 		return 0;
-	}
+}
 
 static READ16_HANDLER( qsound_sharedram1_r )
 {

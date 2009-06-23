@@ -1030,12 +1030,12 @@ void msx_memory_map_all (running_machine *machine)
 WRITE8_HANDLER (msx_page0_w)
 {
 	if ( offset == 0 )
-{
-	msx1.superloadrunner_bank = data;
-	if (msx1.slot[2]->slot_type == SLOT_SUPERLOADRUNNER) {
-		msx1.slot[2]->map (space->machine, msx1.state[2], 2);
+	{
+		msx1.superloadrunner_bank = data;
+		if (msx1.slot[2]->slot_type == SLOT_SUPERLOADRUNNER) {
+			msx1.slot[2]->map (space->machine, msx1.state[2], 2);
+		}
 	}
-}
 
 	switch (msx1.slot[0]->mem_type) {
 	case MSX_MEM_RAM:

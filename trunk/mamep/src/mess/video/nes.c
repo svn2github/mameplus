@@ -38,8 +38,8 @@ static void nes_vh_reset(running_machine *machine)
 				ppu2c0x_set_mirroring(devtag_get_device(machine,"ppu"), PPU_MIRROR_NONE );
 				break;
 		}
-		}
 	}
+}
 
 static void nes_vh_start(running_machine *machine, double scanlines_per_frame)
 {
