@@ -628,7 +628,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.5")
+		.arg("1.4.5a")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)

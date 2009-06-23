@@ -19,6 +19,9 @@ Utils::Utils(QObject *parent)
 
 QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 {
+	if (!mameGame->games.contains(currentGame))
+		return orig;
+
 	GameInfo *gameInfo = mameGame->games[currentGame];
 
 	const float FORCE_ASPECT = 0.75f;

@@ -2325,21 +2325,23 @@ void Gamelist::init(bool toggleState, int initMethod)
 			win->setVersion();
 	}
 
-	if (autoAudit)
-	{
-		win->romAuditor.audit(true);
-		return;
-	}
-
+	//localization must be loaded after init of options so that proper lang directory can be located
 	if (!hasInitd || initMethod == GAMELIST_INIT_DRIVER)
 	{
 		loadMMO(UI_MSG_LIST);
 		loadMMO(UI_MSG_MANUFACTURE);
 	}
 
-	// init folders
+	// init folders must be called after init of localization so that folder names are translated
 	if (initMethod == GAMELIST_INIT_FULL && !hasInitd)
 		initFolders();
+
+	// auto audit will shortcircuit gameList->init() and must be the last thing in gameList->init()
+	if (autoAudit)
+	{
+		win->romAuditor.audit(true);
+		return;
+	}
 
 	// connect gameListModel/gameListPModel signals after the view init completed
 	// connect gameListModel/gameListPModel signals after mameOpts init
