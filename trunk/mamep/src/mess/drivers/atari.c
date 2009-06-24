@@ -727,7 +727,7 @@ static PALETTE_INIT( atari )
  *
  **************************************************************/
 
-void a800xl_mmu(running_machine *machine, UINT8 new_mmu)
+static void a800xl_mmu(running_machine *machine, UINT8 new_mmu)
 {
 	read8_space_func rbank1, rbank2, rbank3, rbank4;
 	write8_space_func wbank1, wbank2, wbank3, wbank4;
@@ -797,7 +797,7 @@ void a800xl_mmu(running_machine *machine, UINT8 new_mmu)
 }
 
 /* BASIC was available in a separate cart, so we don't test it */
-void a1200xl_mmu(running_machine *machine, UINT8 new_mmu)
+static void a1200xl_mmu(running_machine *machine, UINT8 new_mmu)
 {
 	read8_space_func rbank2, rbank3, rbank4;
 	write8_space_func wbank2, wbank3, wbank4;
@@ -876,7 +876,7 @@ static const pokey_interface atari_pokey_interface =
 };
 
 
-const pia6821_interface atari_pia_interface =
+static const pia6821_interface atari_pia_interface =
 {
 	DEVCB_HANDLER(atari_pia_pa_r),		/* port A in */
 	DEVCB_HANDLER(atari_pia_pb_r),	/* port B in */
@@ -892,7 +892,7 @@ const pia6821_interface atari_pia_interface =
 	DEVCB_NULL		/* IRQB */
 };
 
-const pia6821_interface a600xl_pia_interface =
+static const pia6821_interface a600xl_pia_interface =
 {
 	DEVCB_HANDLER(atari_pia_pa_r),		/* port A in */
 	DEVCB_HANDLER(atari_pia_pb_r),	/* port B in */
@@ -908,7 +908,7 @@ const pia6821_interface a600xl_pia_interface =
 	DEVCB_NULL		/* IRQB */
 };
 
-const pia6821_interface a1200xl_pia_interface =
+static const pia6821_interface a1200xl_pia_interface =
 {
 	DEVCB_HANDLER(atari_pia_pa_r),		/* port A in */
 	DEVCB_HANDLER(atari_pia_pb_r),	/* port B in */
@@ -924,7 +924,7 @@ const pia6821_interface a1200xl_pia_interface =
 	DEVCB_NULL		/* IRQB */
 };
 
-const pia6821_interface a800xl_pia_interface =
+static const pia6821_interface a800xl_pia_interface =
 {
 	DEVCB_HANDLER(atari_pia_pa_r),		/* port A in */
 	DEVCB_HANDLER(atari_pia_pb_r),	/* port B in */
