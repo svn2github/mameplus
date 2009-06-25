@@ -180,7 +180,7 @@ INLINE int validate_tag(const game_driver *driver, const char *object, const cha
 
 	for (p = tag; *p != 0; p++)
 	{
-		if (*p != tolower(*p))
+		if (*p != tolower((UINT8)*p))
 		{
 			mame_printf_error("%s: %s has %s with tag '%s' containing upper-case characters\n", driver->source_file, driver->name, object, tag);
 			error = TRUE;
@@ -536,7 +536,7 @@ static int validate_driver(int drivnum, const machine_config *config)
 
 	/* make sure the year is only digits, '?' or '+' */
 	for (s = driver->year; *s; s++)
-		if (!isdigit(*s) && *s != '?' && *s != '+')
+		if (!isdigit((UINT8)*s) && *s != '?' && *s != '+')
 		{
 			mame_printf_error("%s: %s has an invalid year '%s'\n", driver->source_file, driver->name, driver->year);
 			error = TRUE;
@@ -706,7 +706,7 @@ static int validate_roms(int drivnum, const machine_config *config, region_info 
 
 				/* make sure it's all lowercase */
 				for (s = last_name; *s; s++)
-					if (tolower(*s) != *s)
+					if (tolower((UINT8)*s) != *s)
 					{
 						mame_printf_error("%s: %s has upper case ROM name %s\n", driver->source_file, driver->name, last_name);
 						error = TRUE;
