@@ -1091,7 +1091,8 @@ solfight	奥兹玛战争 - 太阳格斗	奥兹玛战争 - 太阳格斗	bootleg
 spaceph	奥兹玛战争 - 宇宙幻影	奥兹玛战争 - 宇宙幻影	Zilec Games
 schaser	空间追逐者	空间追逐者	Taito
 schasrcv	空间追逐者 (CV 版本)	空间追逐者 (CV 版本)	Taito
-lupin3	鲁邦三世	鲁邦三世	Taito
+lupin3	鲁邦三世 (第1套)	鲁邦三世 (第1套)	Taito
+lupin3a	鲁邦三世 (第2套)	鲁邦三世 (第2套)	Taito
 intruder	太空镭射 Intruder	太空镭射 Intruder	GamePlan (Taito)
 spclaser	太空镭射 Space Laser	太空镭射 Space Laser	Taito
 laser	太空镭射	太空镭射	Leisure Time Electronics Inc.
@@ -3152,7 +3153,6 @@ sscandal	青春物语 (315-5132, 日版)	青春物语 (315-5132, 日版)	Coreland / Sega
 myherok	我的英雄 (韩国版)	我的英雄 (韩国版)	Coreland / Sega
 shtngmst	射击大师 (8751 315-5159)	射击大师 (8751 315-5159)	Sega
 shtngmste	射击大师 (EVG, 8751 315-5159a)	射击大师 (EVG, 8751 315-5159a)	Sega [EVG]
-shtngmstu	射击大师 (未保护)	射击大师 (未保护)	Sega
 choplift	直升机救难 (8751 315-5151)	直升机救难 (8751 315-5151)	Sega
 chopliftu	直升机救难 (替换版)	直升机救难 (替换版)	Sega
 chopliftbl	直升机救难 (盗版)	直升机救难 (盗版)	bootleg
@@ -4717,7 +4717,8 @@ mcombat	导弹指令 (Videotron 盗版, 第1套)	导弹指令 (Videotron 盗版, 第1套)	[Atari
 mcombata	导弹指令 (Videotron 盗版, 第2套)	导弹指令 (Videotron 盗版, 第2套)	[Atari] (Videotron bootleg)
 llander	登月 (rev 2)	登月 (rev 2)	Atari
 llander1	登月 (rev 1)	登月 (rev 1)	Atari
-asteroid	爆破彗星 (rev 2)	爆破彗星 (rev 2)	Atari
+asteroid	爆破彗星 (rev 4)	爆破彗星 (rev 4)	Atari
+asteroi2	爆破彗星 (rev 2)	爆破彗星 (rev 2)	Atari
 asteroi1	爆破彗星 (rev 1)	爆破彗星 (rev 1)	Atari
 asteroib	爆破彗星 (盗版 on Lunar Lander 硬件)	爆破彗星 (盗版 on Lunar Lander 硬件)	bootleg
 asterock	爆破彗星 Asterock	爆破彗星 Asterock	Sidam
@@ -5032,7 +5033,7 @@ spclordg	太空君主 (rev A, 德国版)	太空君主 (rev A, 德国版)	Atari Games
 rrreveng	道路风暴复仇版 (工程版)	道路风暴复仇版 (工程版)	Atari Games
 rrrevenp	道路风暴复仇版 (工程版 替换版)	道路风暴复仇版 (工程版 替换版)	Atari Games
 beathead	摇滚跳方块 (工程版)	摇滚跳方块 (工程版)	Atari Games
-tmek	T-MEK (v5.1, The Warlords)	T-MEK (v5.1, The Warlords)	Atari Games
+tmek	沙漠鹫狮 (v5.1, The Warlords)	沙漠鹫狮 (v5.1, The Warlords)	Atari Games
 tmek51p	沙漠鹫狮 (v5.1, 工程版)	沙漠鹫狮 (v5.1, 工程版)	Atari Games
 tmek45	沙漠鹫狮 (v4.5)	沙漠鹫狮 (v4.5)	Atari Games
 tmek44	沙漠鹫狮 (v4.4)	沙漠鹫狮 (v4.4)	Atari Games
@@ -5628,6 +5629,7 @@ smashtv4	霹雳趣味大竞赛 (rev 4.00)	霹雳趣味大竞赛 (rev 4.00)	Williams
 hiimpact	狂野橄榄球 (rev LA5 02/15/91)	狂野橄榄球 (rev LA5 02/15/91)	Williams
 hiimpac4	狂野橄榄球 (rev LA4 02/04/91)	狂野橄榄球 (rev LA4 02/04/91)	Williams
 hiimpac3	狂野橄榄球 (rev LA3 12/27/90)	狂野橄榄球 (rev LA3 12/27/90)	Williams
+hiimpac1	狂野橄榄球 (rev LA1 12/16/90)	狂野橄榄球 (rev LA1 12/16/90)	Williams
 hiimpacp	狂野橄榄球 (工程版, rev 8.6 12/09/90)	狂野橄榄球 (工程版, rev 8.6 12/09/90)	Williams
 shimpact	超级狂野橄榄球 (rev LA1 09/30/91)	超级狂野橄榄球 (rev LA1 09/30/91)	Midway
 shimpap6	超级狂野橄榄球 (工程版, rev 6.0 09/23/91)	超级狂野橄榄球 (工程版, rev 6.0 09/23/91)	Midway
@@ -6986,10 +6988,10 @@ upscope	潜舰大作战	潜舰大作战	Grand Products
 cd32	Amiga CD32 Bios	Amiga CD32 Bios	Commodore
 cndypuzl	糖果泡泡	糖果泡泡	CD Express
 haremchl	闺房挑战	闺房挑战	CD Express
-lsrquiz	激速问答	激速问答	CD Express
-lsrquiz2	激速问答 '2' 意大利 (v1.0)	激速问答 '2' 意大利 (v1.0)	CD Express
+lsrquiz	激速问答 意大利	激速问答 意大利	CD Express
+lsrquiz2	激速问答 2 意大利 (v1.0)	激速问答 2 意大利 (v1.0)	CD Express
 mgprem11	魔法保险 (v1.1)	魔法保险 (v1.1)	CD Express
-lasstixx	激速 Stixx	激速 Stixx	CD Express
+lasstixx	激速 Strixx 2	激速 Strixx 2	CD Express
 mgnumber	数字魔法	数字魔法	CD Express
 alg_bios	American Laser Games BIOS	American Laser Games BIOS	American Laser Games
 maddoga	疯狗 v1C board rev.A	疯狗 v1C board rev.A	American Laser Games
@@ -8113,6 +8115,7 @@ m_ccelbr	夜总会庆典	夜总会庆典	Barcrest
 m_gmball	坚宝	坚宝	Barcrest
 m_honmon	爱钱	爱钱	Vivid
 roul	超级幸运轮盘	超级幸运轮盘	bootleg
+hitpoker	冲击扑克 (保加利亚)	冲击扑克 (保加利亚)	Accept Ltd.
 knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
