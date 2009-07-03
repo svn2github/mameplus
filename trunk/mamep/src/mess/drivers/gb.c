@@ -440,7 +440,6 @@ space. This mapper uses 32KB sized banks.
 #include "cpu/lr35902/lr35902.h"
 #include "devices/cartslot.h"
 #include "rendlay.h"
-#include "gb.lh"
 
 
 /* Initial value of the cpu registers (hacks until we get bios dumps) */
@@ -566,7 +565,7 @@ static MACHINE_DRIVER_START( gameboy )
 	MDRV_VIDEO_UPDATE( generic_bitmapped )
 
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
-	MDRV_DEFAULT_LAYOUT(layout_gb)
+	MDRV_DEFAULT_LAYOUT(layout_lcd)
 //  MDRV_SCREEN_SIZE(20*8, 18*8)
 	MDRV_SCREEN_SIZE( 458, 154 )
 	MDRV_SCREEN_VISIBLE_AREA(0*8, 20*8-1, 0*8, 18*8-1)
@@ -659,7 +658,7 @@ static MACHINE_DRIVER_START( megaduck )
 	MDRV_SCREEN_FORMAT(BITMAP_FORMAT_INDEXED16)
 	MDRV_SCREEN_SIZE(20*8, 18*8)
 	MDRV_SCREEN_VISIBLE_AREA(0*8, 20*8-1, 0*8, 18*8-1)
-	MDRV_DEFAULT_LAYOUT(layout_gb)
+	MDRV_DEFAULT_LAYOUT(layout_lcd)
 	MDRV_GFXDECODE(gb)
 	MDRV_PALETTE_LENGTH(4)
 	MDRV_PALETTE_INIT(megaduck)

@@ -116,7 +116,4 @@ $(MESSOBJ)/snk.a: \
 # layout dependencies
 #-------------------------------------------------
 
-$(MESS_DRIVERS)/gb.o:		$(MESS_LAYOUT)/gb.lh
-$(MESS_DRIVERS)/ngp.o:		$(MESS_LAYOUT)/ngp.lh
-
-
+$(MESSOBJ)/mess.o:	$(MESS_LAYOUT)/lcd.lh

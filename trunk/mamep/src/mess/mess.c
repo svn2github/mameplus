@@ -17,6 +17,8 @@
 #include "hash.h"
 #include "messopts.h"
 
+#include "lcd.lh"
+
 /* Globals */
 UINT32 mess_ram_size;
 UINT8 *mess_ram;

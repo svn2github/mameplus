@@ -12,7 +12,6 @@
 #-------------------------------------------------
 
 
-# add some additional include libraries for the mess files
 CFLAGS += \
 	-I$(SRC)/mess \
 	-I$(SRC)/mess/includes \
