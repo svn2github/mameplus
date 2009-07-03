@@ -2334,6 +2334,20 @@ static void generate_compute_flags(powerpc_state *ppc, drcuml_block *block, cons
 		UML_OR(block, CR32(0), IREG(1), XERSO32);											// or      [cr0],i1,[xerso]
 }
 
+/*-------------------------------------------------
+    generate_fp_flags - compute FPSCR floating
+    point status flags
+-------------------------------------------------*/
+
+static void generate_fp_flags(powerpc_state *ppc, drcuml_block *block, const opcode_desc *desc, int updatefprf)
+{
+	/* for now, only handle the FPRF field */
+	if (updatefprf)
+	{
+		UML_MOV(block, MEM(&ppc->param0), IMM(G_RD(desc->opptr.l[0])));
+		UML_CALLC(block, ppccom_update_fprf, ppc);
+	}
+}
 
 /*-------------------------------------------------
     generate_branch - generate an unconditional
@@ -3505,7 +3519,12 @@ static int generate_instruction_1f(powerpc_state *ppc, drcuml_block *block, comp
 			UML_MAPVAR(block, MAPVAR_DSISR, DSISR_IDX(op));									// mapvar  dsisr,DSISR_IDX(op)
 			UML_CALLH(block, ppc->impstate->write32align[ppc->impstate->mode]);				// callh   write32align
 			generate_update_cycles(ppc, block, compiler, IMM(desc->pc + 4), TRUE);			// <update cycles>
+
 			UML_CMP(block, IREG(0), IREG(0));												// cmp     i0,i0
+			UML_GETFLGS(block, IREG(0), DRCUML_FLAG_Z | DRCUML_FLAG_C | DRCUML_FLAG_S);		// getflgs i0,zcs
+			UML_LOAD(block, IREG(0), ppc->impstate->cmp_cr_table, IREG(0), BYTE);			// load    i0,cmp_cr_table,i0,byte
+			UML_OR(block, CR32(G_CRFD(op)), IREG(0), XERSO32);								// or      [crn],i0,[xerso]
+
 			generate_compute_flags(ppc, block, desc, TRUE, 0, FALSE);						// <update flags>
 			return TRUE;
 
@@ -3790,6 +3809,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 				return generate_instruction_3f(ppc, block, compiler, desc);
 			UML_FDADD(block, FREG(0), F64(G_RA(op)), F64(G_RB(op)));						// fdadd   f0,ra,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x14:	/* FSUBSx */
@@ -3797,13 +3817,15 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 				return generate_instruction_3f(ppc, block, compiler, desc);
 			UML_FDSUB(block, FREG(0), F64(G_RA(op)), F64(G_RB(op)));						// fdsub   f0,ra,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x19:	/* FMULSx */
 			if (!(ppc->impstate->drcoptions & PPCDRC_ACCURATE_SINGLES))
 				return generate_instruction_3f(ppc, block, compiler, desc);
-			UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_RB(op)));						// fdmul   f0,ra,rb
+			UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));						// fdmul   f0,ra,rc
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x12:	/* FDIVSx */
@@ -3811,6 +3833,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 				return generate_instruction_3f(ppc, block, compiler, desc);
 			UML_FDDIV(block, FREG(0), F64(G_RA(op)), F64(G_RB(op)));						// fddiv   f0,ra,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x16:	/* FSQRTSx */
@@ -3818,12 +3841,14 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 				return generate_instruction_3f(ppc, block, compiler, desc);
 			UML_FDSQRT(block, FREG(0), F64(G_RB(op)));										// fdsqrt  f0,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x18:	/* FRESx */
 			UML_FSFRFLT(block, FREG(0), F64(G_RB(op)), QWORD);								// fsfrlt  f0,rb,qword
 			UML_FSRECIP(block, FREG(0), FREG(0));											// fsrecip f0,f0
 			UML_FDFRFLT(block, F64(G_RD(op)), FREG(0), DWORD);								// fdfrflt rd,f0,dword
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x1d:	/* FMADDSx */
@@ -3832,6 +3857,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 			UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));						// fdmul   f0,ra,rc
 			UML_FDADD(block, FREG(0), FREG(0), F64(G_RB(op)));								// fdadd   f0,f0,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x1c:	/* FMSUBSx */
@@ -3840,6 +3866,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 			UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));						// fdmul   f0,ra,rc
 			UML_FDSUB(block, FREG(0), FREG(0), F64(G_RB(op)));								// fdsub   f0,f0,rb
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x1f:	/* FNMADDSx */
@@ -3849,6 +3876,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 			UML_FDADD(block, FREG(0), FREG(0), F64(G_RB(op)));								// fdadd   f0,f0,rb
 			UML_FDNEG(block, FREG(0), FREG(0));												// fdneg   f0,f0
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 
 		case 0x1e:	/* FNMSUBSx */
@@ -3857,6 +3885,7 @@ static int generate_instruction_3b(powerpc_state *ppc, drcuml_block *block, comp
 			UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));						// fdmul   f0,ra,rc
 			UML_FDSUB(block, FREG(0), F64(G_RB(op)), FREG(0));								// fdsub   f0,rb,f0
 			UML_FDRNDS(block, F64(G_RD(op)), FREG(0));										// fdrnds  rd,f0
+			generate_fp_flags(ppc, block, desc, TRUE);
 			return TRUE;
 	}
 
@@ -3882,26 +3911,32 @@ static int generate_instruction_3f(powerpc_state *ppc, drcuml_block *block, comp
 		{
 			case 0x15:	/* FADDx */
 				UML_FDADD(block, F64(G_RD(op)), F64(G_RA(op)), F64(G_RB(op)));				// fdadd   rd,ra,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x14:	/* FSUBx */
 				UML_FDSUB(block, F64(G_RD(op)), F64(G_RA(op)), F64(G_RB(op)));				// fdsub   rd,ra,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x19:	/* FMULx */
-				UML_FDMUL(block, F64(G_RD(op)), F64(G_RA(op)), F64(G_RB(op)));				// fdmul   rd,ra,rb
+				UML_FDMUL(block, F64(G_RD(op)), F64(G_RA(op)), F64(G_REGC(op)));			// fdmul   rd,ra,rc
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x12:	/* FDIVx */
 				UML_FDDIV(block, F64(G_RD(op)), F64(G_RA(op)), F64(G_RB(op)));				// fddiv   rd,ra,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x16:	/* FSQRTx */
 				UML_FDSQRT(block, F64(G_RD(op)), F64(G_RB(op)));							// fdsqrt  rd,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x1a:	/* FRSQRTEx */
 				UML_FDRSQRT(block, F64(G_RD(op)), F64(G_RB(op)));							// fdrsqrt rd,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x17:	/* FSELx */
@@ -3913,22 +3948,26 @@ static int generate_instruction_3f(powerpc_state *ppc, drcuml_block *block, comp
 			case 0x1d:	/* FMADDx */
 				UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));					// fdmul   f0,ra,rc
 				UML_FDADD(block, F64(G_RD(op)), FREG(0), F64(G_RB(op)));					// fdadd   rd,f0,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x1f:	/* FNMADDx */
 				UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));					// fdmul   f0,ra,rc
 				UML_FDADD(block, FREG(0), FREG(0), F64(G_RB(op)));							// fdadd   f0,f0,rb
 				UML_FDNEG(block, F64(G_RD(op)), FREG(0));									// fdneg   rd,f0
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x1c:	/* FMSUBx */
 				UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));					// fdmul   f0,ra,rc
 				UML_FDSUB(block, F64(G_RD(op)), FREG(0), F64(G_RB(op)));					// fdsub   rd,f0,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x1e:	/* FNMSUBx */
 				UML_FDMUL(block, FREG(0), F64(G_RA(op)), F64(G_REGC(op)));					// fdmul   f0,ra,rc
 				UML_FDSUB(block, F64(G_RD(op)), F64(G_RB(op)), FREG(0));					// fdsub   rd,rb,f0
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 		}
 	}
@@ -3951,6 +3990,7 @@ static int generate_instruction_3f(powerpc_state *ppc, drcuml_block *block, comp
 
 			case 0x00c:	/* FRSPx */
 				UML_FDRNDS(block, F64(G_RD(op)), F64(G_RB(op)));							// fdrnds  rd,rb
+				generate_fp_flags(ppc, block, desc, TRUE);
 				return TRUE;
 
 			case 0x00e:	/* FCTIWx */

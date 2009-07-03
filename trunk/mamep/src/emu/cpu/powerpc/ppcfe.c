@@ -1243,16 +1243,26 @@ static int describe_instruction_3b(powerpc_state *ppc, UINT32 op, opcode_desc *d
 				desc->cycles = 18;	/* 603 */
 			else
 				desc->cycles = 17;	/* ??? */
+			FPSCR_MODIFIED(desc, 4);
 			return TRUE;
 
 		case 0x14:	/* FSUBSx */
 		case 0x15:	/* FADDSx */
-		case 0x19:	/* FMULSx */
 			FPR_USED(desc, G_RA(op));
 			FPR_USED(desc, G_RB(op));
 			FPR_MODIFIED(desc, G_RD(op));
 			if (op & M_RC)
 				CR_MODIFIED(desc, 1);
+			FPSCR_MODIFIED(desc, 4);
+			return TRUE;
+
+		case 0x19:	/* FMULSx - not the same form as FSUB/FADD! */
+			FPR_USED(desc, G_RA(op));
+			FPR_USED(desc, G_REGC(op));
+			FPR_MODIFIED(desc, G_RD(op));
+			if (op & M_RC)
+				CR_MODIFIED(desc, 1);
+			FPSCR_MODIFIED(desc, 4);
 			return TRUE;
 
 		case 0x16:	/* FSQRTSx */
@@ -1261,6 +1271,7 @@ static int describe_instruction_3b(powerpc_state *ppc, UINT32 op, opcode_desc *d
 			FPR_MODIFIED(desc, G_RD(op));
 			if (op & M_RC)
 				CR_MODIFIED(desc, 1);
+			FPSCR_MODIFIED(desc, 4);
 			return TRUE;
 
 		case 0x1c:	/* FMSUBSx */
@@ -1273,6 +1284,7 @@ static int describe_instruction_3b(powerpc_state *ppc, UINT32 op, opcode_desc *d
 			FPR_MODIFIED(desc, G_RD(op));
 			if (op & M_RC)
 				CR_MODIFIED(desc, 1);
+			FPSCR_MODIFIED(desc, 4);
 			return TRUE;
 	}
 
@@ -1310,15 +1322,17 @@ static int describe_instruction_3f(powerpc_state *ppc, UINT32 op, opcode_desc *d
 					desc->cycles = 33;	/* 603 */
 				else
 					desc->cycles = 31;	/* ??? */
+				FPSCR_MODIFIED(desc, 4);
 				return TRUE;
 
 			case 0x19:	/* FMULx */
 				FPR_USED(desc, G_RA(op));
-				FPR_USED(desc, G_RB(op));
+				FPR_USED(desc, G_REGC(op));
 				FPR_MODIFIED(desc, G_RD(op));
 				if (op & M_RC)
 					CR_MODIFIED(desc, 1);
 				desc->cycles = 2;	/* 601/603 */
+				FPSCR_MODIFIED(desc, 4);
 				return TRUE;
 
 			case 0x14:	/* FSUBx */
@@ -1328,6 +1342,7 @@ static int describe_instruction_3f(powerpc_state *ppc, UINT32 op, opcode_desc *d
 				FPR_MODIFIED(desc, G_RD(op));
 				if (op & M_RC)
 					CR_MODIFIED(desc, 1);
+				FPSCR_MODIFIED(desc, 4);
 				return TRUE;
 
 			case 0x16:	/* FSQRTx */
@@ -1336,9 +1351,19 @@ static int describe_instruction_3f(powerpc_state *ppc, UINT32 op, opcode_desc *d
 				FPR_MODIFIED(desc, G_RD(op));
 				if (op & M_RC)
 					CR_MODIFIED(desc, 1);
+				FPSCR_MODIFIED(desc, 4);
 				return TRUE;
 
 			case 0x17:	/* FSELx */
+				FPR_USED(desc, G_RA(op));
+				FPR_USED(desc, G_RB(op));
+				FPR_USED(desc, G_REGC(op));
+				FPR_MODIFIED(desc, G_RD(op));
+				if (op & M_RC)
+					CR_MODIFIED(desc, 1);
+				desc->cycles = 2;	/* 601/603 */
+				return TRUE;
+
 			case 0x1c:	/* FMSUBx */
 			case 0x1d:	/* FMADDx */
 			case 0x1e:	/* FNMSUBx */
@@ -1350,6 +1375,7 @@ static int describe_instruction_3f(powerpc_state *ppc, UINT32 op, opcode_desc *d
 				if (op & M_RC)
 					CR_MODIFIED(desc, 1);
 				desc->cycles = 2;	/* 601/603 */
+				FPSCR_MODIFIED(desc, 4);
 				return TRUE;
 		}
 	}
@@ -1372,6 +1398,7 @@ static int describe_instruction_3f(powerpc_state *ppc, UINT32 op, opcode_desc *d
 			case 0x00c:	/* FRSPx */
 			case 0x00e:	/* FCTIWx */
 			case 0x00f:	/* FCTIWZx */
+				FPSCR_MODIFIED(desc, 4);
 			case 0x028:	/* FNEGx */
 			case 0x048:	/* FMRx */
 			case 0x088:	/* FNABSx */
