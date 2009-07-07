@@ -360,6 +360,7 @@ jangou	雀豪 [BET] (日版)	雀豪 [BET] (日版)	Nichibutsu
 macha	小魔女知识问答 (日版)	小魔女知识问答 (日版)	Logitec
 jngolady	雀豪 女士版 (日版)	雀豪 女士版 (日版)	Nichibutsu
 cntrygrl	乡村女孩 (日版)	乡村女孩 (日版)	Royal Denshi
+fruitbun	水果 & 兔女郎 (世界版?)	水果 & 兔女郎 (世界版?)	Nichibutsu
 luckygrl	幸运女孩? (Wing)	幸运女孩? (Wing)	Wing
 nightgal	晚间少女 (日版 840920 AG 1-00)	晚间少女 (日版 840920 AG 1-00)	Nichibutsu
 ngtbunny	晚间儿童(日版 840601 MRN 2-10)	晚间儿童(日版 840601 MRN 2-10)	Nichibutsu
@@ -879,8 +880,9 @@ dkongjre	大金刚 Jr. (容易版)	大金刚 Jr. (容易版)	Nintendo of America
 dkong3	大金刚 3 (美版)	大金刚 3 (美版)	Nintendo of America
 dkong3j	大金刚 3 (日版)	大金刚 3 (日版)	Nintendo
 dkong3b	大金刚 3 (盗版 大金刚 Jr. 硬件)	大金刚 3 (盗版 大金刚 Jr. 硬件)	bootleg
-mario	马里奥兄弟 (美版 第1套)	马里奥兄弟 (美版 第1套)	Nintendo of America
-marioo	马里奥兄弟 (美版 第2套)	马里奥兄弟 (美版 第2套)	Nintendo of America
+mario	马里奥兄弟 (美版, 校正版 F)	马里奥兄弟 (美版, 校正版 F)	Nintendo of America
+marioe	马里奥兄弟 (美版, 校正版 E)	马里奥兄弟 (美版, 校正版 E)	Nintendo of America
+marioo	马里奥兄弟 (美版, 未知版本)	Mario Bros. (美版, 未知版本)	Nintendo of America
 marioj	马里奥兄弟 (日版)	马里奥兄弟 (日版)	Nintendo
 masao	马里奥兄弟 Masao	马里奥兄弟 Masao	bootleg
 pestplce	马里奥兄弟 Pest Place	马里奥兄弟 Pest Place	bootleg
@@ -1749,7 +1751,7 @@ pwheelsj	四驱赛车 (日版)	四驱赛车 (日版)	Taito Corporation
 racingb	超强方程式赛车 (世界版)	超强方程式赛车 (世界版)	Taito Corporation Japan
 topland	顶尖飞行模拟 (世界版)	顶尖飞行模拟 (世界版)	Taito Corporation Japan
 ainferno	空中射程 (美版)	空中射程 (美版)	Taito America Corporation
-mlanding	午夜登陆	午夜登陆	Taito Corporation
+mlanding	月球登陆 (德国版)	月球登陆 (德国版)	Taito America Corporation
 gunbustr	飞跃颠峰 (日版)	飞跃颠峰 (日版)	Taito Corporation
 superchs	大追捕 罪恶终结者 (美版)	大追捕 罪恶终结者 (美版)	Taito America Corporation
 groundfx	地面效应 (日版)	地面效应 (日版)	Taito Corporation
@@ -2197,14 +2199,15 @@ ledstrm2	道路风暴 2011 (美版)	道路风暴 2011 (美版)	Capcom
 forgottn	失落的世界 (世界版)	失落的世界 (世界版)	Capcom
 forgottu	失落的世界 (美版)	失落的世界 (美版)	Capcom
 lostwrld	失落的世界 (日版)	失落的世界 (日版)	Capcom
+lostwrldo	失落的世界 (日版 旧版本)	失落的世界 (日版 旧版本)	Capcom
 ghouls	大魔界村 (世界版)	大魔界村 (世界版)	Capcom
 ghoulsu	大魔界村 (美版)	大魔界村 (美版)	Capcom
 daimakai	大魔界村 (日版)	大魔界村 (日版)	Capcom
-daimakr2	大魔界村 (日版 hack?)	大魔界村 (日版 hack?)	Capcom
+daimakair	大魔界村 (日版 Resale Ver.)	大魔界村 (日版 Resale Ver.)	Capcom
 strider	出击飞龙 (美版 第1套)	出击飞龙 (美版 第1套)	Capcom
 stridrua	出击飞龙 (美版 第2套)	出击飞龙 (美版 第2套)	Capcom
-striderj	出击飞龙 (日版 第1套)	出击飞龙 (日版 第1套)	Capcom
-stridrja	出击飞龙 (日版 第2套)	出击飞龙 (日版 第2套)	Capcom
+striderj	出击飞龙 (日版)	出击飞龙 (日版)	Capcom
+striderjr	出击飞龙 (日版 Resale Ver.)	出击飞龙 (日版 Resale Ver.)	Capcom
 dynwar	吞食天地 (美版 第1套)	吞食天地 (美版 第1套)	Capcom
 dynwaru	吞食天地 (美版 第2套)	吞食天地 (美版 第2套)	Capcom
 dynwarj	吞食天地 (日版)	吞食天地 (日版)	Capcom
@@ -2639,7 +2642,10 @@ psarc95	PS Arcade 95	PS Arcade 95	Sony/Eighting/Raizing
 beastrzr	兽化格斗 (美版)	兽化格斗 (美版)	Eighting/Raizing
 bldyroar	兽化格斗 (日版)	兽化格斗 (日版)	Eighting/Raizing
 beastrzb	兽化格斗 (美版 盗版)	兽化格斗 (美版 盗版)	Eighting/Raizing
-bldyror2	兽化格斗 2 (日版)	兽化格斗 2 (日版)	Eighting/Raizing
+bldyror2	兽化格斗 2 (世界版)	兽化格斗 2 (世界版)	Eighting/Raizing
+bldyror2u	兽化格斗 2 (美版)	兽化格斗 2 (美版)	Eighting/Raizing
+bldyror2a	兽化格斗 2 (亚洲版)	兽化格斗 2 (亚洲版)	Eighting/Raizing
+bldyror2j	兽化格斗 2 (日版)	兽化格斗 2 (日版)	Eighting/Raizing
 brvblade	勇气之刃 (日版)	勇气之刃 (日版)	Eighting/Raizing
 bam2	纵情跳跃 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)	纵情跳跃 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)	Metro/Enix/Namco
 atpsx	Atari PSX	Atari PSX	Atari
@@ -2783,6 +2789,7 @@ ddrja	劲舞革命 (GC845 VER. JAA)	劲舞革命 (GC845 VER. JAA)	Konami
 ddrjb	劲舞革命 (GC845 VER. JAB)	劲舞革命 (GC845 VER. JAB)	Konami
 ddra	劲舞革命 (GN845 VER. AAA)	劲舞革命 (GN845 VER. AAA)	Konami
 fbait2bc	渔夫的诱饵 2 - 一个巴斯的挑战 (GE865 VER. UAB)	渔夫的诱饵 2 - 一个巴斯的挑战 (GE865 VER. UAB)	Konami
+bassang2	巴斯钓鱼 2 (GE865 VER. JAA)	巴斯钓鱼 2 (GE865 VER. JAA)	Konami
 drmn	青春鼓王 (GQ881 VER. JAD)	青春鼓王 (GQ881 VER. JAD)	Konami
 gtrfrks	疯狂吉他手 (GQ886 VER. EAC)	疯狂吉他手 (GQ886 VER. EAC)	Konami
 gtrfrksu	疯狂吉他手 (GQ886 VER. UAC)	疯狂吉他手 (GQ886 VER. UAC)	Konami
@@ -2808,6 +2815,8 @@ ddr3mj	劲舞革命 3度混合 (GN887 VER. JAA)	劲舞革命 3度混合 (GN887 VER. JAA)	Konam
 ddrsbm	劲舞革命 重低音版 (GQ894 VER. JAA)	劲舞革命 重低音版 (GQ894 VER. JAA)	Konami
 ddrs2k	劲舞革命 2000 (GC905 VER. AAA)	劲舞革命 2000 (GC905 VER. AAA)	Konami
 ddrs2kj	劲舞革命 2000 (GC905 VER. JAA)	劲舞革命 2000 (GC905 VER. JAA)	Konami
+hyperbbc	超级巴斯冠军 (GX908 1999/08/24 VER. JAA)	超级巴斯冠军 (GX908 1999/08/24 VER. JAA)	Konami
+hyperbbck	超级巴斯冠军 (GX908 1999/08/24 VER. KAA)	超级巴斯冠军 (GX908 1999/08/24 VER. KAA)	Konami
 dsfdct	劲舞革命 - 美梦成真 (GC910 VER. JCA)	劲舞革命 - 美梦成真 (GC910 VER. JCA)	Konami
 dsfdcta	劲舞革命 - 美梦成真 (GC910 VER. JAA)	劲舞革命 - 美梦成真 (GC910 VER. JAA)	Konami
 drmn2m	青春鼓王 2度混合 (GE912 VER. JAB)	青春鼓王 2度混合 (GE912 VER. JAB)	Konami
@@ -3199,6 +3208,7 @@ buckrogn	行星飞行 (未加密)	行星飞行 (未加密)	Sega
 zoom909	飞行 909	飞行 909	Sega
 kopunch	胜利拳击	胜利拳击	Sega
 suprloco	超级蒸气火车	超级蒸气火车	Sega
+suprlocoa	超级蒸气火车 (Rev.A)	超级蒸气火车 (Rev.A)	Sega
 dotrikun	多托君 (新版)	多托君 (新版)	Sega
 dotriku2	多托君 (旧版)	多托君 (旧版)	Sega
 spcpostn	太空赛车 (日版)	太空赛车 (日版)	Sega / Nasco
@@ -3612,6 +3622,7 @@ swtrilgy	星球大战 (校正版 A)	星球大战 (校正版 A)	Sega/LucasArts
 swtrilga	星球大战 2	星球大战 2	Sega/LucasArts
 dayto2pe	梦游美国 2 动力版	梦游美国 2 动力版	Sega
 spikeofe	锐击 - 战斗街头 最终版本	锐击 - 战斗街头 最终版本	Sega
+magtruck	魔法汽车冒险	魔法汽车冒险	Sega
 eca	非常救护车	非常救护车	Sega
 ecax	非常救护车 (出口版)	非常救护车 (出口版)	Sega
 logicpro	逻辑 PRO (日版)	逻辑 PRO (日版)	Deniam
@@ -4252,7 +4263,8 @@ tp84a	时空大战’84 (第2套)	时空大战’84 (第2套)	Konami
 tp84b	时空大战 '84 (第3套)	时空大战 '84 (第3套)	Konami
 hyperspt	84 柯拿米运动会	84 柯拿米运动会	Konami (Centuri license)
 hpolym84	84 柯拿米运动会 - 疯狂奥运 84	84 柯拿米运动会 - 疯狂奥运 84	Konami
-sbasketb	超级篮球 (版本 H, 未保护)	超级篮球 (版本 H, 未保护)	Konami
+sbasketb	超级篮球 (版本 I, 加密)	超级篮球 (版本 I, 加密)	Konami
+sbasketh	超级篮球 (版本 H, 未保护)	超级篮球 (版本 H, 未保护)	Konami
 sbasketg	超级篮球 (版本 G, 加密)	超级篮球 (版本 G, 加密)	Konami
 sbaskete	超级篮球 (版本 E, 加密)	超级篮球 (版本 E, 加密)	Konami
 mikie	捣蛋学员麦克	捣蛋学员麦克	Konami
@@ -5277,6 +5289,7 @@ ragnagrd	神凰拳	神凰拳	Saurus
 pgoal	开心射门 / Futsal - 5 对 5 迷你足球	开心射门 / Futsal - 5 对 5 迷你足球	Saurus
 magdrop2	魔法气泡 II	魔法气泡 II	Data East Corporation
 samsho4	侍魂 IV - 天草降临	侍魂 IV - 天草降临	SNK
+samsho4k	霸王传说 (韩国审查版 侍魂 IV)	霸王传说 (韩国审查版 侍魂 IV)	SNK
 rbffspec	RB 饿狼传说 特别版	RB 饿狼传说 特别版	SNK
 twinspri	梦幻小妖精	梦幻小妖精	ADK
 wakuwak7	七战士 / 火热火热 7	七战士 / 火热火热 7	Sunsoft
@@ -5592,6 +5605,7 @@ gunnail	炮钉 (28th May. 1992)	炮钉 (28th May. 1992)	NMK / Tecmo
 macross2	超时空要塞 II	超时空要塞 II	Banpresto
 sabotenb	仙人掌兄弟 (第1套)	仙人掌兄弟 (第1套)	NMK / Tecmo
 sabotnba	仙人掌兄弟 (第2套)	仙人掌兄弟 (第2套)	NMK / Tecmo
+cactus	仙人掌 (盗版 仙人掌兄弟)	仙人掌 (盗版 仙人掌兄弟)	bootleg
 nouryoku	脑力向上委员会	脑力向上委员会	Tecmo
 raphero	雷豹英雄 (日版?)	雷豹英雄 (日版?)	Media Trading Corp
 mustangb	野马战机 (盗版)	野马战机 (盗版)	bootleg
@@ -5904,7 +5918,8 @@ rfjetu	雷电喷气战机 (美版)	雷电喷气战机 (美版)	Seibu Kaihatsu (Fabtek license)
 rfjeta	雷电喷气战机 (亚洲版)	雷电喷气战机 (亚洲版)	Seibu Kaihatsu (Dream Island license)
 rfjetj	雷电喷气战机 (日版)	雷电喷气战机 (日版)	Seibu Kaihatsu
 rfjetus	雷电喷气战机 (美版, Single Board)	雷电喷气战机 (美版, Single Board)	Seibu Kaihatsu (Fabtek license)
-ejsakura	E-雀 樱花草	E-雀 樱花草	Seibu Kaihatsu
+ejsakura	E-雀 樱花草 (v2.0)	E-雀 樱花草 (v2.0)	Seibu Kaihatsu
+ejsakura12	E-雀 樱花草 (v1.2)	E-雀 樱花草 (v1.2)	Seibu Kaihatsu
 feversoc	狂热足球	狂热足球	Seibu
 cabal	勇士们 (世界版, 操纵杆版本)	勇士们 (世界版, 操纵杆版本)	Tad Corporation
 cabala	勇士们 (阿尔法贸易版)	勇士们 (阿尔法贸易版)	Tad Corporation (Alpha Trading license)
@@ -6932,10 +6947,12 @@ mjkinjas	麻雀教师的欲望 (日版)	麻雀教师的欲望 (日版)	Home Data
 battlcry	南拳北腿	南拳北腿	Home Data
 jogakuen	麻雀女学园 - 身体检查编 (日版)	麻雀女学园 - 身体检查编 (日版)	Windom
 mjikaga	麻雀2 泊 3 日慰安旅行 (日版)	麻雀2 泊 3 日慰安旅行 (日版)	Mitchell
+siseikat	麻雀牌 - 制胜 (日版)	麻雀牌 - 制胜 (日版)	Matoba
 ultennis	终极网球	终极网球	Art & Magic
 cheesech	干酪追逐	干酪追逐	Art & Magic
 stonebal	石头球 (4 Players)	石头球 (4 Players)	Art & Magic
 stoneba2	石头球 (2 Players)	石头球 (2 Players)	Art & Magic
+skeetsht	街头射击	街头射击	Dynamo
 dynamski	动态滑雪	动态滑雪	Taiyo
 chinhero	中华英雄	中华英雄	Taiyo
 chinher2	中华英雄 (旧版)	中华英雄 (旧版)	Taiyo
@@ -7825,10 +7842,10 @@ nfb96seb	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)
 carb2002	马车积分 2002 (盗版)	马车积分 2002 (盗版)	bootleg
 carb2003	马车积分 2003 (盗版)	马车积分 2003 (盗版)	bootleg
 nfm	新水果积分 (明-扬 电子)	新水果积分 (明-扬 电子)	Ming-Yang Electronic
-unkch1	超级樱桃水果盘 / 新樱桃和黄金 '99 (第1套)	超级樱桃水果盘 / 新樱桃和黄金 '99 (第1套)	bootleg
-unkch2	超级樱桃水果盘 / 超级桃和黄金	超级樱桃水果盘 / 超级桃和黄金	bootleg
-unkch3	超级樱桃水果盘 / 新樱桃和黄金 '99 (第2套)	超级樱桃水果盘 / 新樱桃和黄金 '99 (第2套)	bootleg
-unkch4	超级樱桃水果盘 / 樱桃水果盘	超级樱桃水果盘 / 樱桃水果盘	bootleg
+unkch1	新樱桃积分 '99 (盗版 超级樱桃水果盘) (第1套)	新樱桃积分 '99 (盗版 超级樱桃) (第1套)	bootleg
+unkch2	超级樱桃积分 (盗版 超级樱桃水果盘)	超级樱桃积分 (盗版 超级樱桃水果盘)	bootleg
+unkch3	新樱桃积分 '99 (盗版 超级樱桃) (第2套)	新樱桃积分 '99 (盗版 超级樱桃) (第2套)	bootleg
+unkch4	盛大樱桃水果盘 (盗版 超级樱桃水果盘)	盛大樱桃水果盘 (盗版 超级樱桃水果盘)	bootleg
 ladylinr	女士线	女士线	TAB Austria
 kkojnoli	韩国水果机 (蜜蜂杀手)	韩国水果机 (蜜蜂杀手)	south korean hack
 wcat3	疯狂猫 3	疯狂猫 3	bootleg?
