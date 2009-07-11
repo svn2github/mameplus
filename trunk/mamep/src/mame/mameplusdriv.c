@@ -37,7 +37,7 @@ const game_driver * const plusdrivers[] =
 #else	/* DRIVER_RECURSIVE */
 
 	/* Capcom CPS1 bootleg */
-	DRIVER( knightsb )	/* bootleg */
+	DRIVER( knightsb2 )	/* bootleg */
 	DRIVER( wofb )		/* bootleg */
 	DRIVER( wofsj )		/* bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */
 	DRIVER( wofsja )	/* bootleg, 1995  Holy Sword Three Kingdoms / Sheng Jian San Guo */

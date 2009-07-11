@@ -877,6 +877,7 @@ $(MAMEOBJ)/metro.a: \
 	$(DRIVERS)/hyprduel.o $(VIDEO)/hyprduel.o \
 	$(DRIVERS)/metro.o $(VIDEO)/metro.o \
 	$(DRIVERS)/rabbit.o \
+	$(DRIVERS)/tmmjprd.o \
 
 $(MAMEOBJ)/midcoin.a: \
 	$(DRIVERS)/wallc.o \
@@ -921,6 +922,7 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/20pacgal.o $(VIDEO)/20pacgal.o \
 	$(DRIVERS)/baraduke.o $(VIDEO)/baraduke.o \
 	$(DRIVERS)/dambustr.o \
+	$(DRIVERS)/gal3.o \
 	$(DRIVERS)/galaga.o $(AUDIO)/galaga.o $(VIDEO)/galaga.o \
 	$(DRIVERS)/galaxian.o $(AUDIO)/galaxian.o $(VIDEO)/galaxian.o \
 	$(DRIVERS)/galaxold.o $(MACHINE)/galaxold.o $(VIDEO)/galaxold.o \
@@ -938,7 +940,6 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/namcos12.o \
 	$(DRIVERS)/namcos2.o $(MACHINE)/namcos2.o $(VIDEO)/namcos2.o \
 	$(DRIVERS)/namcos21.o $(VIDEO)/namcos21.o \
-	$(DRIVERS)/gal3.o \
 	$(DRIVERS)/namcos22.o $(VIDEO)/namcos22.o \
 	$(DRIVERS)/namcos23.o \
 	$(DRIVERS)/namcos86.o $(VIDEO)/namcos86.o \
@@ -949,6 +950,7 @@ $(MAMEOBJ)/namco.a: \
 	$(DRIVERS)/tankbatt.o $(VIDEO)/tankbatt.o \
 	$(DRIVERS)/tceptor.o $(VIDEO)/tceptor.o \
 	$(DRIVERS)/toypop.o $(VIDEO)/toypop.o \
+	$(DRIVERS)/turrett.o \
 	$(DRIVERS)/warpwarp.o $(AUDIO)/warpwarp.o $(VIDEO)/warpwarp.o \
 	$(MACHINE)/namcoio.o \
 	$(AUDIO)/geebee.o \
@@ -1137,6 +1139,7 @@ $(MAMEOBJ)/sega.a: \
 	$(DRIVERS)/segaxbd.o $(VIDEO)/segaxbd.o \
 	$(DRIVERS)/segaybd.o $(VIDEO)/segaybd.o \
 	$(DRIVERS)/ssf2md.o \
+	$(DRIVERS)/ssgbl.o \
 	$(DRIVERS)/sg1000a.o \
 	$(DRIVERS)/stactics.o $(VIDEO)/stactics.o \
 	$(DRIVERS)/stv.o $(DRIVERS)/stvinit.o $(MACHINE)/stvprot.o $(MACHINE)/stvcd.o \
@@ -1586,6 +1589,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/pntnpuzl.o \
 	$(DRIVERS)/policetr.o $(VIDEO)/policetr.o \
 	$(DRIVERS)/polyplay.o $(AUDIO)/polyplay.o $(VIDEO)/polyplay.o \
+	$(DRIVERS)/quakeat.o \
 	$(DRIVERS)/queen.o \
 	$(DRIVERS)/quizo.o \
 	$(DRIVERS)/quizpun2.o \
@@ -1626,6 +1630,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/vamphalf.o \
 	$(DRIVERS)/vcombat.o \
 	$(DRIVERS)/videopkr.o \
+	$(DRIVERS)/vp101.o \
 	$(DRIVERS)/vroulet.o \
 	$(DRIVERS)/wldarrow.o \
 	$(DRIVERS)/xyonix.o $(VIDEO)/xyonix.o \
@@ -1732,7 +1737,8 @@ $(DRIVERS)/mpu4.o:		$(LAYOUT)/mpu4.lh \
 $(DRIVERS)/mw8080bw.o:	$(LAYOUT)/280zzzap.lh \
 						$(LAYOUT)/clowns.lh \
 						$(LAYOUT)/invaders.lh \
-						$(LAYOUT)/invad2ct.lh
+						$(LAYOUT)/invad2ct.lh \
+						$(LAYOUT)/lagunar.lh
 
 $(DRIVERS)/meadows.o:	$(LAYOUT)/deadeye.lh \
 						$(LAYOUT)/gypsyjug.lh
