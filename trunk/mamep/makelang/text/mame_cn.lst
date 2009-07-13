@@ -46,8 +46,8 @@ nmouseb	顽皮鼠 (第2套)	顽皮鼠 (第2套)	Amenip Nova Games Ltd.
 mspacman	吃豆人	吃豆人	Midway
 mspacmnf	吃豆人 (加速修改版)	吃豆人 (加速修改版)	Midway
 mspacmat	吃豆人 Attack	吃豆人 Attack	hack
-woodpek	顽皮鼠 (第1套)	顽皮鼠 (第1套)	Amenip (Palcom Queen River)
-woodpeka	顽皮鼠 (第2套)	顽皮鼠 (第2套)	Amenip
+woodpeck	顽皮鼠 (第1套)	顽皮鼠 (第1套)	Amenip (Palcom Queen River)
+woodpeca	顽皮鼠 (第2套)	顽皮鼠 (第2套)	Amenip
 mspacmab	吃豆人 (盗版)	吃豆人 (盗版)	bootleg
 mspacmbe	吃豆人 (盗版, 加密)	吃豆人 (盗版, 加密)	bootleg
 pacgal	吃豆人 Pac-Gal	吃豆人 Pac-Gal	hack
@@ -804,6 +804,7 @@ finfurl2	英国快打 2 (世界版)	英国快打 2 (世界版)	Namco
 finfrl2j	英国快打 2 (日版)	英国快打 2 (日版)	Namco
 20pacgal	怀旧 2 合 1 (V1.04)	怀旧 2 合 1 (V1.04)	Namco
 20pacgaa	怀旧 2 合 1 (V1.01)	怀旧 2 合 1 (V1.01)	Namco
+turrett	炮塔城堡	炮塔城堡	Dell Electronics (Namco license)
 cosmicg	宇宙游击队	宇宙游击队	Universal
 cosmica	宇宙异形	宇宙异形	Universal
 cosmica2	宇宙异形 (旧版)	宇宙异形 (旧版)	Universal
@@ -882,7 +883,7 @@ dkong3j	大金刚 3 (日版)	大金刚 3 (日版)	Nintendo
 dkong3b	大金刚 3 (盗版 大金刚 Jr. 硬件)	大金刚 3 (盗版 大金刚 Jr. 硬件)	bootleg
 mario	马里奥兄弟 (美版, 校正版 F)	马里奥兄弟 (美版, 校正版 F)	Nintendo of America
 marioe	马里奥兄弟 (美版, 校正版 E)	马里奥兄弟 (美版, 校正版 E)	Nintendo of America
-marioo	马里奥兄弟 (美版, 未知版本)	Mario Bros. (美版, 未知版本)	Nintendo of America
+marioo	马里奥兄弟 (美版, 未知版本)	马里奥兄弟 (美版, 未知版本)	Nintendo of America
 marioj	马里奥兄弟 (日版)	马里奥兄弟 (日版)	Nintendo
 masao	马里奥兄弟 Masao	马里奥兄弟 Masao	bootleg
 pestplce	马里奥兄弟 Pest Place	马里奥兄弟 Pest Place	bootleg
@@ -1367,6 +1368,7 @@ skingam2	主题高尔夫 2 (美版 第2套)	主题高尔夫 2 (美版 第2套)	Irem America
 hook	铁钩船长 (世界版)	铁钩船长 (世界版)	Irem
 hooku	铁钩船长 (美版)	铁钩船长 (美版)	Irem America
 hookj	铁钩船长 (日版)	铁钩船长 (日版)	Irem
+ppan	铁钩船长 (盗版)	铁钩船长 (盗版)	Irem
 rtypeleo	异形战机 Leo (世界版 rev. C)	异形战机 Leo (世界版 rev. C)	Irem
 rtypelej	异形战机 Leo (日版 rev. D)	异形战机 Leo (日版 rev. D)	Irem
 inthunt	海底大作战 (世界版)	海底大作战 (世界版)	Irem
@@ -2189,9 +2191,9 @@ tigerodb	虎之道 (美版 盗版)	虎之道 (美版 盗版)	bootleg
 f1dream	一级方程式梦语	一级方程式梦语	Capcom (Romstar license)
 f1dreamb	一级方程式梦语 (盗版)	一级方程式梦语 (盗版)	bootleg
 1943kai	1943 改 - 中途岛海战 (日版)	1943 改 - 中途岛海战 (日版)	Capcom
-lastduel	行星战争 2012 (美版 第1套)	行星战争 2012 (美版 第1套)	Capcom
-lstduela	行星战争 2012 (美版 第2套)	行星战争 2012 (美版 第2套)	Capcom
-lstduelb	行星战争 2012 (盗版)	行星战争 2012 (盗版)	bootleg
+lastduel	行星战争 2012 (美版 新版)	行星战争 2012 (美版 新版)	Capcom
+lastduelo	行星战争 2012 (美版 旧版)	行星战争 2012 (美版 旧版)	Capcom
+lastduelb	行星战争 2012 (盗版)	行星战争 2012 (盗版)	bootleg
 madgear	疯狂机车 (美版)	疯狂机车 (美版)	Capcom
 madgearj	疯狂机车 (日版)	疯狂机车 (日版)	Capcom
 ledstorm	道路风暴 (美版)	道路风暴 (美版)	Capcom
@@ -2269,6 +2271,7 @@ captcomb	名将 (盗版)	名将 (盗版)	bootleg
 knights	圆桌骑士 (世界版 911127)	圆桌骑士 (世界版 911127)	Capcom
 knightsu	圆桌骑士 (美版 911127)	圆桌骑士 (美版 911127)	Capcom
 knightsj	圆桌骑士 (日版 911127)	圆桌骑士 (日版 911127)	Capcom
+knightsb	圆桌骑士 (世界版 911127, 盗版)	圆桌骑士 (世界版 911127, 盗版)	Capcom
 sf2ce	街头霸王 II' - 四大天王 (世界版 920313)	街头霸王 II' - 四大天王 (世界版 920313)	Capcom
 sf2ceua	街头霸王 II' - 四大天王 (美版 920313)	街头霸王 II' - 四大天王 (美版 920313)	Capcom
 sf2ceub	街头霸王 II' - 四大天王 (美版 920513)	街头霸王 II' - 四大天王 (美版 920513)	Capcom
@@ -3107,8 +3110,8 @@ sindbadm	天方夜谭	天方夜谭	Sega
 zaxxon	立体空战 (第1套)	立体空战 (第1套)	Sega
 zaxxon2	立体空战 (第2套)	立体空战 (第2套)	Sega
 zaxxonb	立体空战 Jackson	立体空战 Jackson	bootleg
-szaxxon	立体空战超级版	立体空战超级版	Sega
-futspy	未来间谍机	未来间谍机	Sega
+szaxxon	超级立体空战 (315-5013)	超级立体空战 (315-5013)	Sega
+futspy	未来间谍机 (315-5061)	未来间谍机 (315-5061)	Sega
 razmataz	趣味猎枪	趣味猎枪	Sega
 ixion	回旋炮台 (工程版)	回旋炮台 (工程版)	Sega
 congo	刚果阿古	刚果阿古	Sega
@@ -3723,6 +3726,7 @@ mp_mazin	合金战役 / Mazin Saga (Mega Play)	合金战役 / Mazin Saga (Mega Play)	Seg
 mp_col3	魔法方块 3 (Mega Play)	魔法方块 3 (Mega Play)	Sega
 ssf2ghw	超级街头霸王 II - 新的来者 (MegaDrive 日版, 街机盗版)	超级街头霸王 II - 新的来者 (MegaDrive 日版, 街机盗版)	bootleg / Capcom
 aladbl	阿拉丁 (盗版 日版 Mega 驱动版本)	阿拉丁 (盗版 日版 Mega 驱动版本)	bootleg / Sega
+ssgbl	落日骑士 (盗版 Megadrive 驱动)	落日骑士 (盗版 Megadrive 驱动)	bootleg
 naomi	Naomi Bios	Naomi Bios	Sega
 naomigd	Naomi GD-ROM Bios	Naomi GD-ROM Bios	Sega
 naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
@@ -3844,6 +3848,7 @@ vs4j	VR 射手 4 (日版) (GDT-0013E)	VR 射手 4 (日版) (GDT-0013E)	Sega
 avalon20	阿瓦隆之匙 2.0 - Eutaxy and Commandment - Client (GDT-0017B) (V3.001)	阿瓦隆之匙 2.0 - Eutaxy and Commandment - Client (GDT-0017B) (V3.001)	Sega
 tfupdate	Triforce DIMM 系统升级 (GDT-0011)	Triforce DIMM 系统升级 (GDT-0011)	Sega
 chihiro	Chihiro Bios	Chihiro Bios	Sega
+hotd3	死亡之屋 III [GDX-0001]	死亡之屋 III [GDX-0001]	Sega
 vcop3	VR 战警 3 (GDX-0003A)	VR 战警 3 (GDX-0003A)	Sega
 wangmid	湾岸午夜赛车 (Rev. B) (Export) (GDX-0009B)	湾岸午夜赛车 (Rev. B) (Export) (GDX-0009B)	Sega
 mj2	世嘉网络麻雀 MJ 2 (Rev C) [GDX-0006C]	世嘉网络麻雀 MJ 2 (Rev C) [GDX-0006C]	Sega
@@ -4183,7 +4188,8 @@ ponttehk	益智扑克 (Tehkan)	益智扑克 (Tehkan)	Tehkan
 lvpoker	可爱扑克 [BET]	可爱扑克 [BET]	Tehkan
 lvcards	美女 5PK	美女 5PK	Tehkan
 tehkanwc	世界杯足球赛 (第1套)	世界杯足球赛 (第1套)	Tehkan
-tehkanwb	世界杯足球赛 (第2套, 盗版?)	世界杯足球赛 (第2套, 盗版?)	Tehkan
+tehkanwcb	世界杯足球赛 (第2套, 盗版?)	世界杯足球赛 (第2套, 盗版?)	Tehkan
+tehkanwcc	世界杯足球赛 (第3套, 盗版)	世界杯足球赛 (第3套, 盗版)	Tehkan
 gridiron	橄榄球争霸	橄榄球争霸	Tehkan
 teedoff	Tecmo 高尔夫 86 (日版)	Tecmo 高尔夫 86 (日版)	Tecmo
 solomon	所罗门之钥 (美版)	所罗门之钥 (美版)	Tecmo
@@ -4536,6 +4542,7 @@ gradius3	宇宙巡航舰 Ⅲ (日版)	宇宙巡航舰 Ⅲ (日版)	Konami
 grdius3a	宇宙巡航舰 Ⅲ (亚洲版)	宇宙巡航舰 Ⅲ (亚洲版)	Konami
 grdius3e	宇宙巡航舰 Ⅲ (世界版 ?)	宇宙巡航舰 Ⅲ (世界版 ?)	Konami
 plygonet	超级指挥官 (ver UAA)	超级指挥官 (ver UAA)	Konami
+polynetw	石版对战 (ver JAA)	石版对战 (ver JAA)	Konami
 konamigx	System GX	System GX	Konami
 racinfrc	瑞金赛车 (ver EAC)	瑞金赛车 (ver EAC)	Konami
 racinfru	瑞金赛车 (ver UAB)	瑞金赛车 (ver UAB)	Konami
@@ -4604,7 +4611,8 @@ gticluba	赛车俱乐部 (ver EAA)	赛车俱乐部 (ver EAA)	Konami
 gticlubj	赛车俱乐部 (ver JAA)	赛车俱乐部 (ver JAA)	Konami
 hangplt	装饰飞行	装饰飞行	Konami
 nbapbp	NBA 玩一玩	NBA 玩一玩	Konami
-terabrst	新时代爆破	新时代爆破	Konami
+terabrst	新时代爆破 (1998/07/17 ver UEL)	新时代爆破 (1998/07/17 ver UEL)	Konami
+terabrsta	新时代爆破 (1998/02/25 ver AAA)	新时代爆破 (1998/02/25 ver AAA)	Konami
 gradius4	宇宙巡航舰 Ⅳ	宇宙巡航舰 Ⅳ	Konami
 sscope	狙击手 (ver UAB)	狙击手 (ver UAB)	Konami
 sscopea	狙击手 (ver UAA)	狙击手 (ver UAA)	Konami
@@ -5445,7 +5453,8 @@ skyadvnj	天空大冒险 (日版)	天空大冒险 (日版)	Alpha Denshi Co.
 gangwars	暴徒之战 (美版)	暴徒之战 (美版)	Alpha Denshi Co.
 gangwarb	暴徒之战 (盗版)	暴徒之战 (盗版)	bootleg
 sbasebal	超级冠军棒球 (美版)	超级冠军棒球 (美版)	Alpha Denshi Co. (SNK of America license)
-tnexspce	异次元战机	异次元战机	SNK
+tnextspc	异次元战机	异次元战机	SNK
+tnextspcj	异次元战机 (日版)	异次元战机 (日版)	SNK (Pasadena International Corp. license)
 meijinsn	名人战	名人战	SNK Electronics corp.
 scregg	孵蛋大战	孵蛋大战	Technos Japan
 eggs	孵蛋大战 Eggs	孵蛋大战 Eggs	[Technos Japan] Universal USA
@@ -6343,7 +6352,8 @@ gundhara	铳弹岚	铳弹岚	Banpresto
 sokonuke	心愿猫咪对战游戏 (日版)	心愿猫咪对战游戏 (日版)	Sammy Industries
 zombraid	蛇神出击 (美版)	蛇神出击 (美版)	American Sammy
 crazyfgt	狂热快打	狂热快打	Subsino
-inttoote	吹喇叭国际比赛 (Germany)	吹喇叭国际比赛 (Germany)	Coinmaster
+inttoote	吹喇叭国际比赛 (德国版)	吹喇叭国际比赛 (德国版)	Coinmaster
+inttootea	吹喇叭国际比赛 II (世界版?)	吹喇叭国际比赛 II (世界版?)	Coinmaster
 gundamex	机动战士 94 系列 钢弹 EX	机动战士 94 系列 钢弹 EX	Banpresto
 grdians	电神魔傀 II	电神魔傀 II	Banpresto
 mj4simai	若草物语 - 麻雀四姊妹 (日版)	若草物语 - 麻雀四姊妹 (日版)	Maboroshi Ware
@@ -6389,7 +6399,9 @@ vasara2	婆裟罗 2 (第1套)	婆裟罗 2 (第1套)	Visco
 vasara2a	婆裟罗 2 (第2套)	婆裟罗 2 (第2套)	Visco
 ultrax	咸蛋超人警备队 - 科幻特效游戏	咸蛋超人警备队 - 科幻特效游戏	Banpresto + Tsuburaya Prod.
 gdfs	机动战士 95 系列 - 钢弹 最后射击 (日版)	机动战士 95 系列 - 钢弹 最后射击 (日版)	Banpresto
-darkhors	暗黑之马	暗黑之马	bootleg
+jclub2	赛马俱乐部 II (新硬件)	赛马俱乐部 II (新硬件)	Seta
+jclub2o	赛马俱乐部 II (老硬件)	赛马俱乐部 II (老硬件)	Seta
+darkhors	暗黑之马 (盗版 赛马俱乐部 II)	暗黑之马 (盗版 赛马俱乐部 II)	bootleg
 renju	五子棋 - 连珠贵族	五子棋 - 连珠贵族	Visco
 nratechu	龙鼠之钥	龙鼠之钥	Seta
 srmp5	超真实麻雀 P5	超真实麻雀 P5	Seta
@@ -6947,7 +6959,7 @@ mjkinjas	麻雀教师的欲望 (日版)	麻雀教师的欲望 (日版)	Home Data
 battlcry	南拳北腿	南拳北腿	Home Data
 jogakuen	麻雀女学园 - 身体检查编 (日版)	麻雀女学园 - 身体检查编 (日版)	Windom
 mjikaga	麻雀2 泊 3 日慰安旅行 (日版)	麻雀2 泊 3 日慰安旅行 (日版)	Mitchell
-siseikat	麻雀牌 - 制胜 (日版)	麻雀牌 - 制胜 (日版)	Matoba
+mjprivat	麻雀 - 私生活 (日版)	麻雀 - 私生活 (日版)	Matoba
 ultennis	终极网球	终极网球	Art & Magic
 cheesech	干酪追逐	干酪追逐	Art & Magic
 stonebal	石头球 (4 Players)	石头球 (4 Players)	Art & Magic
@@ -6987,15 +6999,19 @@ twinsa	孪牌 (第2套)	孪牌 (第2套)	Electronic Devices
 mwarr	世纪战士	世纪战士	Elettronica Video-Games S.R.L.
 pzletime	问答时间 (工程版)	问答时间 (工程版)	Elettronica Video-Games S.R.L.
 ar_bios	Arcadia System BIOS	Arcadia System BIOS	Arcadia Systems
-ar_airh	体育时间 - 桌上曲棍球 (Arcadia, V 2.1)	体育时间 - 桌上曲棍球 (Arcadia, V 2.1)	Arcadia Systems
+ar_airh	体育时间 - 桌上曲棍球 (Arcadia, 第1套, V 2.1)	体育时间 - 桌上曲棍球 (Arcadia, 第1套, V 2.1)	Arcadia Systems
+ar_airh2	体育时间 - 桌上曲棍球 (Arcadia, 第2套)	体育时间 - 桌上曲棍球 (Arcadia, 第2套)	Arcadia Systems
 ar_bowl	体育时间 - 保龄球 (Arcadia, V 2.1)	体育时间 - 保龄球 (Arcadia, V 2.1)	Arcadia Systems
-ar_dart	世界飞镖赛 (Arcadia, V 2.1)	世界飞镖赛 (Arcadia, V 2.1)	Arcadia Systems
+ar_dart	世界飞镖赛 (Arcadia, 第1套, V 2.1)	世界飞镖赛 (Arcadia, 第1套, V 2.1)	Arcadia Systems
+ar_dart2	世界飞镖赛 (Arcadia, 第2套)	世界飞镖赛s (Arcadia, 第2套)	Arcadia Systems
 ar_fast	魔术詹森快攻篮球 (Arcadia, V 2.8)	魔术詹森快攻篮球 (Arcadia, V 2.8)	Arcadia Systems
 ar_ldrb	实况高尔夫 (Arcadia, V 2.4?)	实况高尔夫 (Arcadia, V 2.4?)	Arcadia Systems
 ar_ldrba	实况高尔夫 (Arcadia, V 2.5)	实况高尔夫 (Arcadia, V 2.5)	Arcadia Systems
-ar_ninj	忍者任务 (Arcadia, V 2.5)	忍者任务 (Arcadia, V 2.5)	Arcadia Systems
+ar_ninj	忍者任务 (Arcadia, 第1套, V 2.5)	忍者任务 (Arcadia, 第1套, V 2.5)	Arcadia Systems
+ar_ninj2	忍者任务 (Arcadia, 第2套)	忍者任务 (Arcadia, 第2套)	Arcadia Systems
 ar_rdwr	跑道战争 (Arcadia, V 2.3)	跑道战争 (Arcadia, V 2.3)	Arcadia Systems
-ar_sdwr	双响尾蛇 (Arcadia, V 2.1)	双响尾蛇 (Arcadia, V 2.1)	Arcadia Systems
+ar_sdwr	双响尾蛇 (Arcadia, 第1套, V 2.1)	双响尾蛇 (Arcadia, 第1套, V 2.1)	Arcadia Systems
+ar_sdwr2	双响尾蛇 (Arcadia, 第2套)	双响尾蛇 (Arcadia, 第2套)	Arcadia Systems
 ar_socc	胜利杯世界足球 (Arcadia, V 3.0)	胜利杯世界足球 (Arcadia, V 3.0)	Arcadia Systems
 ar_spot	酷王棋 (Arcadia)	酷王棋 (Arcadia)	Arcadia Systems
 ar_sprg	太空巡逻队 (Arcadia, V 2.0)	太空巡逻队 (Arcadia, V 2.0)	Arcadia Systems
@@ -7169,16 +7185,16 @@ newsa	魔法美女气泡 (第2套)	魔法美女气泡 (第2套)	Poby
 taxidrvr	计程车司机	计程车司机	Graphic Techno
 xyonix	天下大将军	天下大将军	Philko
 gt507uk	问答 百科 (英国版本 5.07)	问答 百科 (英国版本 5.07)	Grayhound Electronics
-gt103	问答 百科 (版本 1.03)	问答 百科 (版本 1.03)	Grayhound Electronics
 gt5	问答 百科 (版本 5.06)	问答 百科 (版本 5.06)	Grayhound Electronics
-gt103a	问答 百科 (版本 1.03a)	问答 百科 (版本 1.03a)	Greyhound Electronics
+gtsers8	问答 百科 (问答 系列 8)	问答 百科 (问答 系列 8)	Greyhound Electronics
+gtsers9	问答 百科 (问答 系列 9)	问答 百科 (问答 系列 9)	Greyhound Electronics
+gtsers10	问答 百科 (问答 系列 10)	问答 百科 (问答 系列 10)	Greyhound Electronics
+gtsers11	问答 百科 (问答 系列 11)	问答 百科 (问答 系列 11)	Greyhound Electronics
 gt103a1	问答 百科 (版本 1.03a) (替换 1)	问答 百科 (版本 1.03a) (替换 1)	Greyhound Electronics
 gt103a2	问答 百科 (版本 1.03a) (替换 2)	问答 百科 (版本 1.03a) (替换 2)	Greyhound Electronics
 gt103a3	问答 百科 (版本 1.03a) (替换 3)	问答 百科 (版本 1.03a) (替换 3)	Greyhound Electronics
-gt103a4	问答 百科 (版本 1.03a) (替换 4)	问答 百科 (版本 1.03a) (替换 4)	Greyhound Electronics
+gt103aa	问答 百科 (版本 1.03a 问答)	问答 百科 (版本 1.03a 问答)	Greyhound Electronics
 gt103asx	问答 百科 (版本 1.03a 性别问题)	问答 百科 (版本 1.03a 性别问题)	Greyhound Electronics
-gt103aa	问答 百科 (版本 1.03a 替换问题 1)	问答 百科 (版本 1.03a 替换问题 1)	Greyhound Electronics
-gt103ab	问答 百科 (版本 1.03a 替换问题 2)	问答 百科 (版本 1.03a 替换问题 2)	Greyhound Electronics
 reelfun	卷轴趣味 (版本 7.01)	卷轴趣味 (版本 7.01)	Grayhound Electronics
 findout	大发现 (版本 4.04)	大发现 (版本 4.04)	Elettronolo
 quiz	问答 (校正版 2)	问答 (校正版 2)	Italian bootleg
@@ -7353,6 +7369,7 @@ dynadice	动态扑克	动态扑克	<unknown>
 ssingles	震撼安打	震撼安打	Ent. Ent. Ltd
 tcl	棋王争霸	棋王争霸	Uniwang
 sothello	超级五子棋	超级五子棋	Success/Fujiwara
+quake	月震 (Release Beta 2)	月震 (Release Beta 2)	Lazer-Tron / iD Software
 macsbios	Multi Amenity Cassette System BIOS	Multi Amenity Cassette System BIOS	I'Max
 mac2bios	Multi Amenity Cassette System 2 BIOS	Multi Amenity Cassette System 2 BIOS	I'Max
 kisekaem	换妆麻雀	换妆麻雀	I'Max
@@ -7762,6 +7779,7 @@ millsun	千年太阳	千年太阳	Unknown
 sspac2k1	超级空间 2001	超级空间 2001	Unknown
 elvis	恶魔?	恶魔?	Unknown
 sstar	超级明星	超级明星	Unknown
+pirati	海盗	海盗	Cin
 newmcard	新魔法纸牌	新魔法纸牌	High Video
 brasil	巴西 (版本 3)	巴西 (版本 3)	High Video
 fashion	时尚 (版本 2.14)	时尚 (版本 2.14)	High Video
@@ -7779,6 +7797,7 @@ ilpag	Il 包裹 (意大利, 版本 2.7C)	Il 包裹 (意大利, 版本 2.7C)	unknown
 mil4000	千年诺沃 4000 (版本 2.0)	千年诺沃 4000 (版本 2.0)	Sure Milano
 mil4000a	千年诺沃 4000 (版本 1.8)	千年诺沃 4000 (版本 1.8)	Sure Milano
 mil4000b	千年诺沃 4000 (版本 1.5)	千年诺沃 4000 (版本 1.5)	Sure Milano
+mil4000c	千年诺沃 4000 (版本 1.6)	千年诺沃 4000 (版本 1.6)	Sure Milano
 ejollyx5	澳洲扑克 X5	澳洲扑克 X5	Solar Games
 grandprx	国际长途大赛车	国际长途大赛车	4fun
 supjolly	超级纸牌	超级纸牌	<unknown>
@@ -7842,7 +7861,7 @@ nfb96seb	新水果积分 '96 特别版 (盗版, 第2套)	新水果积分 '96 特别版 (盗版, 第2套)
 carb2002	马车积分 2002 (盗版)	马车积分 2002 (盗版)	bootleg
 carb2003	马车积分 2003 (盗版)	马车积分 2003 (盗版)	bootleg
 nfm	新水果积分 (明-扬 电子)	新水果积分 (明-扬 电子)	Ming-Yang Electronic
-unkch1	新樱桃积分 '99 (盗版 超级樱桃水果盘) (第1套)	新樱桃积分 '99 (盗版 超级樱桃) (第1套)	bootleg
+unkch1	新樱桃积分 '99 (盗版 超级樱桃水果盘) (第1套)	新樱桃积分 '99 (盗版 超级樱桃水果盘) (第1套)	bootleg
 unkch2	超级樱桃积分 (盗版 超级樱桃水果盘)	超级樱桃积分 (盗版 超级樱桃水果盘)	bootleg
 unkch3	新樱桃积分 '99 (盗版 超级樱桃) (第2套)	新樱桃积分 '99 (盗版 超级樱桃) (第2套)	bootleg
 unkch4	盛大樱桃水果盘 (盗版 超级樱桃水果盘)	盛大樱桃水果盘 (盗版 超级樱桃水果盘)	bootleg
@@ -8133,7 +8152,8 @@ m_gmball	坚宝	坚宝	Barcrest
 m_honmon	爱钱	爱钱	Vivid
 roul	超级幸运轮盘	超级幸运轮盘	bootleg
 hitpoker	冲击扑克 (保加利亚)	冲击扑克 (保加利亚)	Accept Ltd.
-knightsb	圆桌骑士 (盗版)	圆桌骑士 (盗版)	bootleg
+jnero	动作英雄	动作英雄	ICE/Play Mechanix
+knightsb2	圆桌骑士 (盗版 第2套)	圆桌骑士 (盗版 第2套)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
 wofsja	三国志 II: 圣剑 (中国 盗版 第2套)	三国志 II: 圣剑 (中国 盗版 第2套)	bootleg
