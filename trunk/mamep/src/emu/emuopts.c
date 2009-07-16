@@ -49,7 +49,7 @@ const options_entry mame_core_options[] =
 	{ "inipath",                     "ini",       0,                 "path to ini files" },
 	{ "fontpath",                    ".;lang",    0,                 "path to font files" },
 	{ "cheatpath",                   "cheat",     0,                 "path to cheat files" },
-	{ "crsshairpath",                "crsshair",  0,                 "path to crosshair files" },
+	{ "crosshairpath",               "crosshair", 0,                 "path to crosshair files" },
 	{ "langpath;language_directory", "lang",      0,                 "path to localized languages and datafiles" },
 #ifdef USE_IPS
 	{ "ipspath;ips_directory",       "ips",       0,                 "path to ips files" },
@@ -90,6 +90,7 @@ const options_entry mame_core_options[] =
 	{ "snapname",                    "%g/%i",     0,                 "override of the default snapshot/movie naming; %g == gamename, %i == index" },
 	{ "snapsize",                    "auto",      0,                 "specify snapshot/movie resolution (<width>x<height>) or 'auto' to use minimal size " },
 	{ "snapview",                    "internal",  0,                 "specify snapshot/movie view or 'internal' to use internal pixel-aspect views" },
+	{ "burnin",                      "0",         OPTION_BOOLEAN,    "create burn-in snapshots for each screen" },
 
 	/* performance options */
 	{ NULL,                          NULL,        OPTION_HEADER,     "CORE PERFORMANCE OPTIONS" },

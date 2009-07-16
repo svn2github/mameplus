@@ -48,7 +48,7 @@
 #define OPTION_INIPATH				"inipath"
 #define OPTION_FONTPATH				"fontpath"
 #define OPTION_CHEATPATH			"cheatpath"
-#define OPTION_CRSSHAIRPATH			"crsshairpath"
+#define OPTION_CROSSHAIRPATH		"crosshairpath"
 #define OPTION_LANGPATH				"langpath"
 #ifdef USE_IPS
 #define OPTION_IPSPATH  			"ips_directory"
@@ -86,6 +86,7 @@
 #define OPTION_SNAPNAME				"snapname"
 #define OPTION_SNAPSIZE				"snapsize"
 #define OPTION_SNAPVIEW				"snapview"
+#define OPTION_BURNIN				"burnin"
 
 /* core performance options */
 #define OPTION_AUTOFRAMESKIP		"autoframeskip"
