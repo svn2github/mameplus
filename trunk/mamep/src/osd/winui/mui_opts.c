@@ -1511,12 +1511,12 @@ void SetFontDir(const WCHAR* paths)
 
 const WCHAR* GetCrosshairDir(void)
 {
-	return options_get_wstring(global, OPTION_CRSSHAIRPATH);
+	return options_get_wstring(global, OPTION_CROSSHAIRPATH);
 }
 
 void SetCrosshairDir(const WCHAR* paths)
 {
-	options_set_wstring(global, OPTION_CRSSHAIRPATH, paths, OPTION_PRIORITY_CMDLINE);
+	options_set_wstring(global, OPTION_CROSSHAIRPATH, paths, OPTION_PRIORITY_CMDLINE);
 }
 
 const WCHAR* GetFlyerDir(void)
