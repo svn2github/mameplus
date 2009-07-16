@@ -462,8 +462,8 @@ void MainWindow::init()
 
 #ifdef Q_WS_MAC
 	//fixme: temp hack, aqua theme is buggy
-	if (gui_style.isEmpty() || gui_style.startsWith("macintosh", Qt::CaseInsensitive))
-		gui_style = "Plastique";
+//	if (gui_style.isEmpty() || gui_style.startsWith("macintosh", Qt::CaseInsensitive))
+//		gui_style = "Plastique";
 #endif
 
 	QStringList styles = QStyleFactory::keys();
@@ -479,8 +479,8 @@ void MainWindow::init()
 
 #ifdef Q_WS_MAC
 		//fixme: temp hack, aqua theme is buggy
-		if (style.startsWith("macintosh", Qt::CaseInsensitive))
-			act->setEnabled(false);
+//		if (style.startsWith("macintosh", Qt::CaseInsensitive))
+//			act->setEnabled(false);
 #endif
 	}
 
@@ -588,9 +588,9 @@ void MainWindow::setVersion()
 	QString sdlVerString = "";
 
 	if (!isMESS)
-		mameString = QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(mameGame->mameVersion);
-	else
-		mameString = QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; The MESS Team<br>").arg(mameGame->mameVersion);
+		mameString.append(QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(mameGame->mameVersion));
+	if (hasDevices)
+		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(mameGame->mameVersion));
 
 #ifdef Q_OS_WIN
 	if (m1 != NULL && m1->available)
@@ -622,13 +622,13 @@ void MainWindow::setVersion()
 		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
 		"%2"
-		"<a href=\"http://trolltech.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
+		"<a href=\"http://www.qtsoftware.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
 		"%4"
 		"%5"
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.5a")
+		.arg("1.4.5b")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -1098,7 +1098,6 @@ void MainWindow::saveSettings()
 		softwaresItem = softwaresItems.first();
 
 	//save console dirs
-//	int iNext = 0;
 	foreach (QString optName, mameOpts.keys())
 	{
 		MameOption *pMameOpt = mameOpts[optName];
@@ -1116,7 +1115,10 @@ void MainWindow::saveSettings()
 				if (softwaresItem != NULL)
 					for (int i = 0; i < softwaresItem->childCount(); i++)
 					{
-						if (sysName == softwaresItem->child(i)->text(0))
+						const QString sysDesc = softwaresItem->child(i)->text(0);
+
+						if (consoleMap.contains(sysDesc) && 
+							consoleMap[sysDesc] == sysName)
 						{
 							softwaresItem->child(i)->setHidden(false);
 							break;
@@ -1131,17 +1133,12 @@ void MainWindow::saveSettings()
 				{
 					for (int i = 0; i < softwaresItem->childCount(); i++)
 					{
-						if (sysName == softwaresItem->child(i)->text(0))
+						const QString sysDesc = softwaresItem->child(i)->text(0);
+
+						if (consoleMap.contains(sysDesc) && 
+							consoleMap[sysDesc] == sysName)
 						{
 							softwaresItem->child(i)->setHidden(true);
-/*							iNext = i + 1;
-
-							if (iNext >= softwaresItem->childCount())
-								iNext = i - 1;
-
-							if (iNext < 0)
-								iNext = 0;
-*/
 							break;
 						}
 					}
@@ -1150,7 +1147,6 @@ void MainWindow::saveSettings()
 			}
 		}
 	}
-//	win->treeFolders->setCurrentItem(softwaresItem->child(iNext));
 
 	//prepare default_folder
 	QString folderName, subFolderName, defalutFolder;

@@ -23,7 +23,6 @@ QString mameIniPath = "";
 
 bool isSDLPort = false;
 bool hasLanguage = false;
-bool hasDriverCfg = false;
 bool hasIPS = false;
 bool hasDevices = false;
 
@@ -386,6 +385,8 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 				return;
 			}
 
+//fixme: mac doesn't draw the bar very well
+#ifndef Q_OS_MAC
 			case MAMEOPT_TYPE_INT:
 			case MAMEOPT_TYPE_FLOAT:
 			{
@@ -445,6 +446,7 @@ void OptionDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opt,
 
 				return;
 			}
+#endif /* Q_OS_MAC */
 			}
 		}
 	}
@@ -578,7 +580,6 @@ QWidget *OptionDelegate::createEditor(QWidget *parent,
 void OptionDelegate::setEditorData(QWidget *editor,
 								   const QModelIndex &index) const
 {
-///*
 	if (index.column() == 0)
 		return;
 
@@ -659,7 +660,6 @@ void OptionDelegate::setEditorData(QWidget *editor,
 		break;
 	}
 	}
-//*/
 }
 
 // override setModelData()
@@ -1779,7 +1779,7 @@ void OptionUtils::loadDefault(QString text)
 
 	/* take the first value of mame's default inipath csv as our inipath */
 	QStringList inipaths = mameOpts["inipath"]->defvalue.split(";");
-	mameIniPath = utils->getPath(inipaths[0]);
+	mameIniPath = utils->getPath(inipaths.first());
 
 	/* test ini readable/writable */
 	QString warnings = "";
@@ -1821,9 +1821,6 @@ void OptionUtils::loadDefault(QString text)
 	if (mameOpts.contains("langpath"))
 		hasLanguage = true;
 
-	if (mameOpts.contains("driver_config"))
-		hasDriverCfg = true;
-	
 	if (mameOpts.contains("ips"))
 		hasIPS = true;
 	

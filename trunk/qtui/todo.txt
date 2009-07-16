@@ -9,10 +9,7 @@ read/write cookie
 theme
 
 //Done
-added all MAMEUI built-in folders
-added menu: "View - Show Folders" to toggle built-in folders
-fixed calculation of horizontal/vertical games
-save folders in untraslated strings
+
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
@@ -28,6 +25,35 @@ exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi
 
 single package crc format: clrmamep
 
+//zip
+in: dirpath, filename, zipname, ext
+out: QHash<quint32 /*crc*/, RomInfo *> roms;, QByteArray, extract_path
+
+[multi-file] read, getinfo, extract
+read per zip, for exec, auditing
+
+gamename.zip\x.rom
+             y.rom
+
+gamename.7z\x.rom
+            y.rom
+
+ips
+cheat
+lang
+
+[single-file] read, getinfo
+snaps:
+load gamename.png
+load builtin.zip\gamename.png
+load builtin-fallback.zip\gamename.png
+*load parent
+
+history:
+load datname.dat
+load builtin.zip\datname.dat
+*load parent
+
 //Priority tasks
 2 unify zip/7z, *.dat reading
 2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
@@ -37,7 +63,6 @@ single package crc format: clrmamep
 3 Is there a way to hide the clones and make the font bigger with the new ui? 
 2 audit output only incorrect, sample
 3 customizable *.dat location for official mame
-3 macosx指定了sdlmame之后就挂了
 3 crash when exit and auditing
 3 ips lang may cause crash
 3 command.dat may cause crash
@@ -109,7 +134,6 @@ single package crc format: clrmamep
 * vector.ini, debug.ini
 * unify method to get inherited default value
 * general info page
-* mamebin changes should cause gamelist->init()
 
 //GameList
 * separate game list language
@@ -193,7 +217,7 @@ configure -release -static -no-exceptions -no-accessibility -no-stl -no-phonon -
 cd /mnt/hgfs/qtui
 
 linux/mac:
-export PATH=/usr/local/Trolltech/Qt-4.5.0/bin:$PATH
+export PATH=/usr/local/Trolltech/Qt-4.5.2/bin:$PATH
 
 sudo cp -f mamepgui /usr/games
 sudo chmod +x /usr/games/mamepgui

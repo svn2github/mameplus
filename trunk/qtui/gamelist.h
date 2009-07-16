@@ -501,5 +501,6 @@ extern MameGame *mameGame;
 extern Gamelist *gameList;
 extern QString currentGame, currentFolder;
 extern QStringList hiddenFolders;
+extern QMap<QString, QString> consoleMap;
 
 #endif

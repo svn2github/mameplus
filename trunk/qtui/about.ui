@@ -1,48 +1,49 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>About</class>
- <widget class="QDialog" name="About" >
-  <property name="geometry" >
+ <widget class="QDialog" name="About">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>320</height>
+    <width>480</width>
+    <height>360</height>
    </rect>
   </property>
-  <property name="windowTitle" >
+  <property name="windowTitle">
    <string>About MAME Plus! GUI</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
-   <property name="leftMargin" >
+  <layout class="QVBoxLayout" name="_2">
+   <property name="leftMargin">
     <number>0</number>
    </property>
-   <property name="topMargin" >
+   <property name="topMargin">
     <number>0</number>
    </property>
-   <property name="rightMargin" >
+   <property name="rightMargin">
     <number>0</number>
    </property>
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout" >
+    <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QLabel" name="lblLogo" >
-       <property name="styleSheet" >
-        <string notr="true" >background-color:white;
+      <widget class="QLabel" name="lblLogo">
+       <property name="styleSheet">
+        <string notr="true">background-color:white;
 border-bottom-width:2px;
 border-bottom-style: solid;
 border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 rgba(0, 0, 0, 255), stop:1 rgba(255, 255, 255, 255));</string>
        </property>
-       <property name="text" >
+       <property name="text">
         <string/>
        </property>
-       <property name="pixmap" >
-        <pixmap resource="mamepguimain.qrc" >:/res/mamegui/mamep_brush.png</pixmap>
+       <property name="pixmap">
+        <pixmap resource="mamepguimain.qrc">:/res/mamegui/mamep_brush.png</pixmap>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QTextBrowser" name="tbVersion" >
-       <property name="openExternalLinks" >
+      <widget class="QTextBrowser" name="tbVersion">
+       <property name="openExternalLinks">
         <bool>true</bool>
        </property>
       </widget>
@@ -50,11 +51,11 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
     </layout>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="orientation">
       <enum>Qt::Horizontal</enum>
      </property>
-     <property name="standardButtons" >
+     <property name="standardButtons">
       <set>QDialogButtonBox::Ok</set>
      </property>
     </widget>
@@ -64,7 +65,7 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
   <zorder></zorder>
  </widget>
  <resources>
-  <include location="mamepguimain.qrc" />
+  <include location="mamepguimain.qrc"/>
  </resources>
  <connections>
   <connection>
@@ -73,11 +74,11 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
    <receiver>About</receiver>
    <slot>accept()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>248</x>
      <y>254</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>157</x>
      <y>274</y>
     </hint>
@@ -89,11 +90,11 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
    <receiver>About</receiver>
    <slot>reject()</slot>
    <hints>
-    <hint type="sourcelabel" >
+    <hint type="sourcelabel">
      <x>316</x>
      <y>260</y>
     </hint>
-    <hint type="destinationlabel" >
+    <hint type="destinationlabel">
      <x>286</x>
      <y>274</y>
     </hint>

@@ -1,5 +1,8 @@
 CONFIG += build_static
 CONFIG += build_sdl
+macx {
+CONFIG += x86 ppc
+}
 
 #INCLUDE
 INCLUDEPATH += quazip lzma include include/zlib include/SDL

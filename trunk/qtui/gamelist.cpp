@@ -18,6 +18,8 @@ MameGame *mameGame = NULL;
 Gamelist *gameList = NULL;
 QString currentGame, currentFolder;
 QStringList hiddenFolders;
+QMap<QString, QString> consoleMap;
+
 
 //fixme: used in audit
 TreeModel *gameListModel;
@@ -29,7 +31,7 @@ GamelistDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 QMultiMap<QString, QString> extFolderMap;
 QStringList deleteCfgFiles;
-QMap<QString, QString> consoleMap, biosMap;
+QMap<QString, QString> biosMap;
 
 QByteArray defIconDataGreen;
 QByteArray defIconDataYellow;
@@ -1747,6 +1749,7 @@ void MameGame::loadListXmlFinished(int, QProcess::ExitStatus)
 	QStringList args;
 	args << "-showconfig" << "-noreadconfig";
 
+	mameDefaultIni.clear();
 	loadProc = procMan->process(procMan->start(mame_binary, args, FALSE));
 	connect(loadProc, SIGNAL(readyReadStandardOutput()), this, SLOT(loadDefaultIniReadyReadStandardOutput()));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(loadDefaultIniFinished(int, QProcess::ExitStatus)));
@@ -1757,7 +1760,8 @@ void MameGame::loadListXmlFinished(int, QProcess::ExitStatus)
 void MameGame::loadDefaultIniReadyReadStandardOutput()
 {
 	QProcess *proc = (QProcess *)sender();
-	mameDefaultIni = proc->readAllStandardOutput();
+	//hack for Mac OS X, readAllStandardOutput() may not readAll
+	mameDefaultIni.append(proc->readAllStandardOutput());
 }
 
 void MameGame::loadDefaultIniFinished(int, QProcess::ExitStatus)
@@ -4075,10 +4079,10 @@ void Gamelist::restoreFolderSelection(bool isForce)
 
 bool Gamelist::isAuditConsoleFolder(const QString &consoleName)
 {
-	QStringList paths = currentFolder.split("/");
-	if (paths.size() == 2)
+	QStringList paths = utils->split2Str(currentFolder, "/");
+	if (!paths.isEmpty())
 	{
-		const QString rightFolder = paths[1];
+		const QString rightFolder = paths.last();
 
 		if (consoleMap.contains(rightFolder) && 
 			consoleMap[rightFolder] == consoleName)
@@ -4090,10 +4094,10 @@ bool Gamelist::isAuditConsoleFolder(const QString &consoleName)
 
 bool Gamelist::isConsoleFolder()
 {
-	QStringList paths = currentFolder.split("/");
-	if (paths.size() == 2)
+	QStringList paths = utils->split2Str(currentFolder, "/");
+	if (!paths.isEmpty())
 	{
-		const QString rightFolder = paths[1];
+		const QString rightFolder = paths.last();
 
 		if (rightFolder == intFolderNames[FOLDER_CONSOLE])
 			return true;

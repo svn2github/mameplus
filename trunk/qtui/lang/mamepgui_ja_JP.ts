@@ -2642,7 +2642,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../utils.cpp" line="149"/>
         <source>LCD</source>
-        <translation>液晶ディスプレイ</translation>
+        <translation>液晶</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="151"/>
