@@ -2681,6 +2681,7 @@ chaoshea	激烈大混乱 (V2.09O)	激烈大混乱 (V2.09O)	Taito
 chaoshej	激烈大混乱 (V2.08J)	激烈大混乱 (V2.08J)	Taito
 raycris	闪电危机 (V2.03J)	闪电危机 (V2.03J)	Taito
 otenamih	Otenami 拜见 (V2.04J)	Otenami 拜见 (V2.04J)	Success
+otenamhf	Otenami 拜见 完全版 (V2.07JC)	Otenami 拜见 完全版 (V2.07JC)	Success/Warashi
 spuzbobj	超级泡泡龙 (V2.04J)	超级泡泡龙 (V2.04J)	Taito
 spuzbobl	超级泡泡龙 (V2.05O)	超级泡泡龙 (V2.05O)	Taito
 gobyrc	RC 世界杯 (V2.03O)	RC 世界杯 (V2.03O)	Taito
@@ -2866,32 +2867,35 @@ bmiidx7	狂热节拍 7th style (GCB44 JA)	狂热节拍 7th style (GCB44 JA)	Konami
 bmiidx8	狂热节拍 IIDX 8th style (GCC44 JA)	狂热节拍 IIDX 8th style (GCC44 JA)	Konami
 kviper	Konami Viper BIOS	Konami Viper BIOS	Konami
 ppp2nd	劲舞天堂 2度混合	劲舞天堂 2度混合	Konami
-boxingm	拳击王	拳击王	Konami
-code1d	限时快递	限时快递	Konami
+boxingm	狂热拳击 (ver JAA)	狂热拳击 (ver JAA)	Konami
+code1d	限时快递 (ver D)	限时快递 (ver D)	Konami
 code1db	限时快递 (ver B)	限时快递 (ver B)	Konami
-gticlub2	赛车俱乐部 2	赛车俱乐部 2	Konami
-jpark3	侏罗纪公园 3	侏罗纪公园 3	Konami
-mocapglf	挑战高尔夫	挑战高尔夫	Konami
+gticlub2	赛车俱乐部 2 (ver JAB)	赛车俱乐部 2 (ver JAB)	Konami
+gticlub2ea	赛车俱乐部 2 (ver EAA)	赛车俱乐部 2 (ver EAA)	Konami
+jpark3	侏罗纪公园 3 (ver EBC)	侏罗纪公园 3 (ver EBC)	Konami
+mocapglf	挑战高尔夫 (ver UAA)	挑战高尔夫 (ver UAA)	Konami
 mocapb	挑战拳击 (ver AAA)	挑战拳击 (ver AAA)	Konami
 mocapbj	挑战拳击 (ver JAA)	挑战拳击 (ver JAA)	Konami
-p911	警察 911	警察 911	Konami
+p911	警察 911 (ver UAD)	警察 911 (ver UAD)	Konami
 p911uc	警察 911 (ver UAC)	警察 911 (ver UAC)	Konami
+p911kc	警察 911 (ver KAC)	警察 911 (ver KAC)	Konami
 p911e	警察 24/7 (ver EAA)	警察 24/7 (ver EAA)	Konami
 p911j	新宿警察 24 小时 (ver JAC)	新宿警察 24 小时 (ver JAC)	Konami
-p9112	警察 911 2	警察 911 2	Konami
-popn9	动感音乐 9	动感音乐 9	Konami
+p9112	警察 911 2 (ver A)	警察 911 2 (ver A)	Konami
+popn9	流行音乐 9 (ver JAB)	流行音乐 9 (ver JAB)	Konami
 sscopex	沉默狙击手 EX (ver UAA)	沉默狙击手 EX (ver UAA)	Konami
 sogeki	沉默狙击手 (ver JAA)	沉默狙击手 (ver JAA)	Konami
-thrild2	惊悚赛车 2	惊悚赛车 2	Konami
-thrild2a	惊悚赛车 2 (ver A)	惊悚赛车 2 (ver A)	Konami
+thrild2	惊悚赛车 2 (ver EBB)	惊悚赛车 2 (ver EBB)	Konami
+thrild2a	惊悚赛车 2 (ver AAA)	惊悚赛车 2 (ver AAA)	Konami
+thrild2c	惊悚赛车 2 (ver EAA)	惊悚赛车 2 (ver EAA)	Konami
 tsurugi	剑道 (ver EAB)	剑道 (ver EAB)	Konami
 tsurugij	剑道 (ver JAC)	剑道 (ver JAC)	Konami
-wcombat	世界大战	世界大战	Konami
-wcombak	世界大战 (ver KBC)	世界大战 (ver KBC)	Konami
-wcombaj	世界大战 (ver JAA)	世界大战 (ver JAA)	Konami
-xtrial	极限赛车	极限赛车	Konami
-mfightc	麻雀格斗俱乐部 (ver D)	麻雀格斗俱乐部 (ver D)	Konami
-mfightcc	麻雀格斗俱乐部 (ver C)	麻雀格斗俱乐部 (ver C)	Konami
+wcombat	世界大战 (ver UAA?)	世界大战 (ver UAA?)	Konami
+wcombatk	世界大战 (ver KBC)	世界大战 (ver KBC)	Konami
+wcombatj	世界大战 (ver JAA)	世界大战 (ver JAA)	Konami
+xtrial	极限赛车 (ver JAB)	极限赛车 (ver JAB)	Konami
+mfightc	麻雀格斗俱乐部 (ver JAD)	麻雀格斗俱乐部 (ver JAD)	Konami
+mfightcc	麻雀格斗俱乐部 (ver JAC)	麻雀格斗俱乐部 (ver JAC)	Konami
 mgakuen	麻雀学园 - 卒业编	麻雀学园 - 卒业编	Yuga
 7toitsu	七对子 - 一万去还有一万	七对子 - 一万去还有一万	Yuga
 mgakuen2	麻雀学园 2 - 学园长的复仇	麻雀学园 2 - 学园长的复仇	Face
@@ -3123,6 +3127,7 @@ galaxyrp	银河突击队 (先锋 LDV1000)	银河突击队 (先锋 LDV1000)	SEGA
 sblazerp	星际战舰 (先锋 LDV1000)	星际战舰 (先锋 LDV1000)	SEGA
 cobraseg	眼镜蛇指令 (世嘉雷射光碟机)	眼镜蛇指令 (世嘉雷射光碟机)	SEGA
 gpworld	赛车世界	赛车世界	SEGA
+timetrv	时空旅者	时空旅者	Virtual Image Productions (Sega license)
 chboxing	冠军杯拳击	冠军杯拳击	Sega
 chwrestl	冠军职业摔跤	冠军职业摔跤	Sega
 dokidoki	企鹅大陆	企鹅大陆	Sega
@@ -3799,6 +3804,7 @@ bdrdown	破镜怒潮 (Rev A) (GDL-0023A)	破镜怒潮 (Rev A) (GDL-0023A)	G-Rev
 usagui	兔 - 野性的斗牌 - 山城麻雀编 (GDL-0022)	兔 - 野性的斗牌 - 山城麻雀编 (GDL-0022)	Warashi / Taito / Mahjong Kobo
 psyvar2	雷霆战机 2 (GDL-0024)	雷霆战机 2 (GDL-0024)	G-Rev
 puyofev	噗呦噗呦 (GDS-0031)	噗呦噗呦 (GDS-0031)	Sega
+shootpl	火力撞球 (JPN, USA, KOR, AUS) / Shootout Pool Prize (EXP)	火力撞球 (JPN, USA, KOR, AUS) / Shootout Pool Prize (EXP)	Sega
 tetkiwam	俄罗斯方块 (GDL-0020)	俄罗斯方块 (GDL-0020)	Success
 cfield	混沌时空 (GDL-0025)	混沌时空 (GDL-0025)	Able
 trizeal	热爱射击 (GDL-0026)	热爱射击 (GDL-0026)	Taito
@@ -3910,6 +3916,8 @@ cppicf	西点小厨师 (卡带版, 第1套)	西点小厨师 (卡带版, 第1套)	Data East Corporati
 cppicf2	西点小厨师 (卡带版, 第2套)	西点小厨师 (卡带版, 第2套)	Data East Corporation
 cfghtice	战斗曲棍球 (卡带版)	战斗曲棍球 (卡带版)	Data East Corporation
 cbdash	夺宝小子 (卡带版)	夺宝小子 (卡带版)	Data East Corporation
+cobra	眼镜蛇指挥官 (Data East LD)	眼镜蛇指挥官 (Data East LD)	Data East
+rblaster	道路爆破 (Data East LD)	道路爆破 (Data East LD)	Data East
 madalien	赛车小蜜蜂	赛车小蜜蜂	Data East Corporation
 madalina	赛车小蜜蜂 (Highway Chase)	赛车小蜜蜂 (Highway Chase)	Data East Corporation
 astrof	宇宙战机 (第1套)	宇宙战机 (第1套)	Data East
@@ -4793,6 +4801,7 @@ millipdd	蜈蚣千足 (hack)	蜈蚣千足 (hack)	hack
 qwak	天鹅幻想曲 (工程版)	天鹅幻想曲 (工程版)	Atari
 runaway	蒸气火车 (工程版)	蒸气火车 (工程版)	Atari
 bullsdrt	飞镖准心	飞镖准心	Shinkai Inc. (Magic Eletronics Inc. licence)
+cmmb162	多重游戏合集 (V1.00)	多重游戏合集 (V1.00)	Infogrames / Cosmodog
 tunhunt	地道猎手	地道猎手	Atari
 tunhuntc	地道猎手 (Centuri)	地道猎手 (Centuri)	Atari (Centuri license)
 liberatr	捍卫地球 (第1套)	捍卫地球 (第1套)	Atari
@@ -7003,7 +7012,7 @@ ar_airh	体育时间 - 桌上曲棍球 (Arcadia, 第1套, V 2.1)	体育时间 - 桌上曲棍球 (Arc
 ar_airh2	体育时间 - 桌上曲棍球 (Arcadia, 第2套)	体育时间 - 桌上曲棍球 (Arcadia, 第2套)	Arcadia Systems
 ar_bowl	体育时间 - 保龄球 (Arcadia, V 2.1)	体育时间 - 保龄球 (Arcadia, V 2.1)	Arcadia Systems
 ar_dart	世界飞镖赛 (Arcadia, 第1套, V 2.1)	世界飞镖赛 (Arcadia, 第1套, V 2.1)	Arcadia Systems
-ar_dart2	世界飞镖赛 (Arcadia, 第2套)	世界飞镖赛s (Arcadia, 第2套)	Arcadia Systems
+ar_dart2	世界飞镖赛 (Arcadia, 第2套)	世界飞镖赛 (Arcadia, 第2套)	Arcadia Systems
 ar_fast	魔术詹森快攻篮球 (Arcadia, V 2.8)	魔术詹森快攻篮球 (Arcadia, V 2.8)	Arcadia Systems
 ar_ldrb	实况高尔夫 (Arcadia, V 2.4?)	实况高尔夫 (Arcadia, V 2.4?)	Arcadia Systems
 ar_ldrba	实况高尔夫 (Arcadia, V 2.5)	实况高尔夫 (Arcadia, V 2.5)	Arcadia Systems
@@ -7605,6 +7614,7 @@ witchcrd	魔法纸牌 (Video Klein)	魔法纸牌 (Video Klein)	Video Klein
 witchcda	魔法纸牌 (西班牙, 魔法游戏, 第1套)	魔法纸牌 (西班牙, 魔法游戏, 第1套)	Unknown
 witchcdb	魔法纸牌 (西班牙, 魔法游戏, 第2套)	魔法纸牌 (西班牙, 魔法游戏, 第2套)	Unknown
 witchcdc	魔法纸牌 (英文版, 非魔法游戏)	魔法纸牌 (英文版, 非魔法游戏)	Unknown
+witchcdd	魔法纸牌 (德国版?)	魔法纸牌 (德国版?)	Unknown
 sloco93	超级拼图 93 (西班牙, 第1套)	超级拼图 93 (西班牙, 第1套)	Unknown
 sloco93a	超级拼图 93 (西班牙, 第2套)	超级拼图 93 (西班牙, 第2套)	Unknown
 maverik	独行侠	独行侠	Unknown
@@ -7804,6 +7814,7 @@ supjolly	超级纸牌	超级纸牌	<unknown>
 showhand	手秀扑克 (意大利)	手秀扑克 (意大利)	Astro Corp.
 showhanc	王牌对决	王牌对决	Astro Corp.
 cb2001	樱桃和黄金 2001	樱桃和黄金 2001	Dyna
+scherrym	超级樱桃积分	超级樱桃积分	Dyna
 ncb3	樱桃和黄金 Ⅲ (ver.1.40, 第1套)	樱桃和黄金 Ⅲ (ver.1.40, 第1套)	Dyna
 cb3a	樱桃和黄金 Ⅲ (ver.1.40, 第2套)	樱桃和黄金 Ⅲ (ver.1.40, 第2套)	Dyna
 cb3	樱桃和黄金 Ⅲ (ver.1.40, 加密版)	樱桃和黄金 Ⅲ (ver.1.40, 加密版)	Dyna
