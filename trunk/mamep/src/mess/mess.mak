@@ -58,13 +58,13 @@ $(MESSOBJ)/shared.a: \
 # manufacturer-specific groupings for drivers
 #-------------------------------------------------
 
-$(MESSOBJ)/ascii.a :			\
+$(MESSOBJ)/ascii.a:				\
 	$(MESS_FORMATS)/fmsx_cas.o	\
 	$(MESS_DRIVERS)/msx.o		\
 	$(MESS_MACHINE)/msx_slot.o	\
 	$(MESS_MACHINE)/msx.o		\
 
-$(MESSOBJ)/atari.a:			\
+$(MESSOBJ)/atari.a:				\
 	$(MESS_MACHINE)/ataricrt.o	\
 	$(MESS_MACHINE)/atarifdc.o	\
 	$(MESS_DRIVERS)/atari.o		\
@@ -84,31 +84,32 @@ $(MESSOBJ)/capcom.a:			\
 	$(MESS_DRIVERS)/cpschngr.o	\
 	$(MESS_VIDEO)/cpschngr.o	\
 
-$(MESSOBJ)/nec.a:			\
+$(MESSOBJ)/nec.a:				\
 	$(MESS_MACHINE)/pce.o		\
 	$(MESS_DRIVERS)/pce.o		\
 
 $(MESSOBJ)/nintendo.a:			\
-	$(MESS_AUDIO)/gb.o		\
-	$(MESS_VIDEO)/gb.o		\
+	$(MESS_AUDIO)/gb.o			\
+	$(MESS_VIDEO)/gb.o			\
 	$(MESS_MACHINE)/gb.o		\
 	$(MESS_DRIVERS)/gb.o		\
 	$(MESS_DRIVERS)/gba.o	 	\
 	$(MESS_MACHINE)/nes_mmc.o	\
-	$(MESS_VIDEO)/nes.o		\
+	$(MAME_VIDEO)/ppu2c0x.o		\
+	$(MESS_VIDEO)/nes.o			\
 	$(MESS_MACHINE)/nes.o		\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
 
-$(MESSOBJ)/sega.a:			\
+$(MESSOBJ)/sega.a:				\
 	$(MESS_DRIVERS)/genesis.o	\
 	$(MESS_MACHINE)/genesis.o	\
 	$(MESS_VIDEO)/smsvdp.o		\
 	$(MESS_MACHINE)/sms.o		\
 	$(MESS_DRIVERS)/sms.o		\
 
-$(MESSOBJ)/snk.a:			\
+$(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
 	$(MESS_VIDEO)/k1ge.o		\
 
