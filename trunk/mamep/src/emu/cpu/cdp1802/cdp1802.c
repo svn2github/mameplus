@@ -29,6 +29,10 @@ struct _cdp1802_state
     const address_space *program;
     const address_space *io;
 
+	devcb_resolved_write_line	out_q_func;
+	devcb_resolved_read8		in_dma_func;
+	devcb_resolved_write8		out_dma_func;
+
 	/* registers */
 	UINT8 d;				/* data register (accumulator) */
 	int df;					/* data flag (ALU carry) */
@@ -44,6 +48,7 @@ struct _cdp1802_state
 
 	/* cpu state */
 	cdp1802_cpu_state state;		/* processor state */
+	cdp1802_state_code state_code;	/* state code */
 	cdp1802_control_mode mode;		/* control mode */
 	cdp1802_control_mode prevmode;	/* previous control mode */
 
@@ -97,6 +102,7 @@ static const cpu_state_entry state_array[] =
 	CDP1802_STATE_ENTRY(Re, "%04X", r[14], 0xffff, 0)
 	CDP1802_STATE_ENTRY(Rf, "%04X", r[15], 0xffff, 0)
 
+	CDP1802_STATE_ENTRY(SC, "%1u", state_code, 0x3, CPUSTATE_NOSHOW)
 	CDP1802_STATE_ENTRY(DF, "%1u", df, 0x1, CPUSTATE_NOSHOW)
 	CDP1802_STATE_ENTRY(IE, "%1u", ie, 0x1, CPUSTATE_NOSHOW)
 	CDP1802_STATE_ENTRY(Q, "%1u", q, 0x1, CPUSTATE_NOSHOW)
@@ -239,6 +245,7 @@ static void cdp1802_output_state_code(const device_config *device)
 	if (cpustate->intf->sc_w)
 	{
 		cdp1802_state_code state_code = CDP1802_STATE_CODE_S0_FETCH;
+		int sc0, sc1;
 
 		switch (cpustate->state)
 		{
@@ -262,15 +269,16 @@ static void cdp1802_output_state_code(const device_config *device)
 			break;
 		}
 
-		cpustate->intf->sc_w(device, state_code);
+		sc0 = BIT(state_code, 0);
+		sc1 = BIT(state_code, 1);
+
+		cpustate->intf->sc_w(device, state_code, sc0, sc1);
 	}
 }
 
 static void cdp1802_run(const device_config *device)
 {
 	cdp1802_state *cpustate = get_safe_token(device);
-
-	cdp1802_output_state_code(device);
 
 	switch (cpustate->state)
 	{
@@ -549,19 +557,13 @@ static void cdp1802_run(const device_config *device)
 			case 0xa:
 				Q = 0;
 
-				if (cpustate->intf->q_w)
-				{
-					cpustate->intf->q_w(device, Q);
-				}
+				devcb_call_write_line(&cpustate->out_q_func, Q);
 				break;
 
 			case 0xb:
 				Q = 1;
 
-				if (cpustate->intf->q_w)
-				{
-					cpustate->intf->q_w(device, Q);
-				}
+				devcb_call_write_line(&cpustate->out_q_func, Q);
 				break;
 
 			case 0xc:
@@ -791,10 +793,7 @@ static void cdp1802_run(const device_config *device)
 
     case CDP1802_STATE_2_DMA_IN:
 
-		if (cpustate->intf->dma_r)
-		{
-			RAM_W(R[0], cpustate->intf->dma_r(device, R[0]));
-		}
+		RAM_W(R[0], devcb_call_read8(&cpustate->in_dma_func, R[0]));
 
 		R[0] = R[0] + 1;
 
@@ -824,10 +823,7 @@ static void cdp1802_run(const device_config *device)
 
     case CDP1802_STATE_2_DMA_OUT:
 
-		if (cpustate->intf->dma_w)
-		{
-	        cpustate->intf->dma_w(device, R[0], RAM_R(R[0]));
-		}
+		devcb_call_write8(&cpustate->out_dma_func, R[0], RAM_R(R[0]));
 
 		R[0] = R[0] + 1;
 
@@ -893,10 +889,24 @@ static CPU_EXECUTE( cdp1802 )
 		switch (cpustate->mode)
 		{
 		case CDP1802_MODE_LOAD:
-			I = 0;
-			N = 0;
-			cpustate->state = CDP1802_STATE_1_EXECUTE;
-			cdp1802_run(device);
+			if (cpustate->prevmode == CDP1802_MODE_RESET)
+			{
+				cpustate->prevmode = CDP1802_MODE_LOAD;
+
+				/* execute initialization cycle */
+				cpustate->state = CDP1802_STATE_1_INIT;
+				cdp1802_run(device);
+
+				/* next state is IDLE */
+				cpustate->state = CDP1802_STATE_1_EXECUTE;
+			}
+			else
+			{
+				/* idle */
+				I = 0;
+				N = 0;
+				cdp1802_run(device);
+			}
 			break;
 
 		case CDP1802_MODE_RESET:
@@ -913,6 +923,7 @@ static CPU_EXECUTE( cdp1802 )
 			{
 			case CDP1802_MODE_LOAD:
 				// RUN mode cannot be initiated from LOAD mode
+				logerror("CDP1802 '%s' Tried to initiate RUN mode from LOAD mode\n", device->tag);
 				cpustate->mode = CDP1802_MODE_LOAD;
 				break;
 
@@ -934,6 +945,8 @@ static CPU_EXECUTE( cdp1802 )
 			}
 			break;
 		}
+
+		cdp1802_output_state_code(device);
 	}
 	while (cpustate->icount > 0);
 
@@ -954,19 +967,21 @@ static CPU_INIT( cdp1802 )
 
 	cpustate->intf = (cdp1802_interface *) device->static_config;
 
-	/* set up the state table */
+	/* resolve callbacks */
+	devcb_resolve_write_line(&cpustate->out_q_func, &cpustate->intf->out_q_func, device);
+	devcb_resolve_read8(&cpustate->in_dma_func, &cpustate->intf->in_dma_func, device);
+	devcb_resolve_write8(&cpustate->out_dma_func, &cpustate->intf->out_dma_func, device);
 
+	/* set up the state table */
 	cpustate->state_table = state_table_template;
 	cpustate->state_table.baseptr = cpustate;
 	cpustate->state_table.subtypemask = 1;
 
 	/* find address spaces */
-
 	cpustate->program = memory_find_address_space(device, ADDRESS_SPACE_PROGRAM);
 	cpustate->io = memory_find_address_space(device, ADDRESS_SPACE_IO);
 
 	/* set initial values */
-
 	cpustate->p = mame_rand(device->machine) & 0x0f;
 	cpustate->x = mame_rand(device->machine) & 0x0f;
 	cpustate->d = mame_rand(device->machine);
@@ -987,7 +1002,6 @@ static CPU_INIT( cdp1802 )
 	cpustate->dmaout = CLEAR_LINE;
 
 	/* register for state saving */
-
 	state_save_register_device_item(device, 0, cpustate->p);
 	state_save_register_device_item(device, 0, cpustate->x);
 	state_save_register_device_item(device, 0, cpustate->d);

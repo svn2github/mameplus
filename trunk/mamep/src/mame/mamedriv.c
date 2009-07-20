@@ -5065,6 +5065,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gemini )	/* (c) 1987 Tecmo */
 	DRIVER( silkworm )	/* 6217 - (c) 1988 Tecmo */
 	DRIVER( silkwrm2 )	/* 6217 - (c) 1988 Tecmo */
+	DRIVER( backfirt )	/* bootleg [(c) 1988 Tecmo] */
 	DRIVER( tbowl )		/* 6206 - (c) 1987 Tecmo */
 	DRIVER( tbowlj )	/* 6206 - (c) 1987 Tecmo */
 	DRIVER( shadoww )	/* 6215 - (c) 1988 Tecmo (World) */
@@ -8896,8 +8897,9 @@ Other Sun games
 	DRIVER( rcorsair )	/* (c) 1984 Nakasawa */
 	DRIVER( pzlestar )	/* (c) 199? Sang Ho Soft */
 	DRIVER( sexyboom )	/* (c) 1992 Sang Ho Soft */
-	DRIVER( sfkick )	/* (c) 199? HEC */
-	DRIVER( spinkick )	/* (c) 199? HEC */
+	DRIVER( sfkick )	/* (c) 1988 Haesung/HJ Corp */
+	DRIVER( sfkicka )	/* (c) 198? Haesung */
+	DRIVER( spinkick )	/* (c) 1988 Haesung/Seojin */
 	DRIVER( 7mezzo )	/* (c) 198? Unknown */
 	DRIVER( magicfly )	/* (c) 198? P&A GAMES */
 	DRIVER( dynabomb )	/* (c) 2000 Limenko */
@@ -9605,12 +9607,12 @@ Other Sun games
 	DRIVER( m_honmon )
 
 	DRIVER( roul )
-#endif /* !NEOCPSPGM */
 
 	/* Accept LTD. */
 	DRIVER( hitpoker ) /* (c) 1997 */
 
 	/* Play Mechanix */
 	DRIVER( jnero )		/* (c) 2004 */
+#endif /* !NEOCPSPGM */
 
 #endif	/* DRIVER_RECURSIVE */
