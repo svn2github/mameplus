@@ -50,6 +50,10 @@ const game_driver * const plusdrivers[] =
 	DRIVER( cawingb )	/* bootleg */
 	DRIVER( daimakb )	/* bootleg */
 	DRIVER( sf2m8 )		/* bootleg */
+	DRIVER( sf2m9 )		/* bootleg */
+	DRIVER( sf2m10 )	/* bootleg */
+	DRIVER( sf2m11 )	/* bootleg */
+	DRIVER( sf2m12 )	/* bootleg */
 	DRIVER( sf2m13 )	/* bootleg */
 	DRIVER( sf2tlona )	/* bootleg, Tu Long set 1 */
 	DRIVER( sf2tlonb )	/* bootleg, Tu Long set 2 */

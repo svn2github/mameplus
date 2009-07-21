@@ -10589,7 +10589,7 @@ GAME( 1991, captcomb, captcomm, cps1_10MHz, captcomm, captcomb, ROT0,   "bootleg
 GAME( 1991, knights,  0,        cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127)" , 0)			// "ETC"
 GAME( 1991, knightsu, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (US 911127)", 0 )
 GAME( 1991, knightsj, knights,  cps1_10MHz, knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (Japan 911127)", 0 )
-GAME( 1991, knightsb, knights,  knightsb,   knights,  cps1,     ROT0,   "Capcom", "Knights of the Round (World 911127, bootleg)" , GAME_NOT_WORKING)
+GAME( 1991, knightsb, knights,  knightsb,   knights,  cps1,     ROT0,   "bootleg","Knights of the Round (World 911127, bootleg)" , GAME_NOT_WORKING)
 GAME( 1992, sf2ce,    0,        cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (World 920313)" , 0)	// "ETC"
 GAME( 1992, sf2ceua,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920313)", 0 )
 GAME( 1992, sf2ceub,  sf2ce,    cps1_12MHz, sf2,      cps1,     ROT0,   "Capcom", "Street Fighter II' - Champion Edition (US 920513)", 0 )
@@ -10653,7 +10653,9 @@ GAME( 1995, pang3,    0,        pang3,      pang3,    pang3,    ROT0,   "Mitchel
 GAME( 1995, pang3j,   pang3,    pang3,      pang3,    pang3j,   ROT0,   "Mitchell", "Pang! 3 (Japan 950511)", 0 )
 
 /* bootleg */
+GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "bootleg","The King of Dragons (hack)", 0 )
 GAME( 1991, knightsb2,knights,  cps1_10MHz, knights,  cps1,     ROT0,   "bootleg","Knights of the Round (bootleg set 2)", 0 )
+GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "bootleg","Knights of the Round (hack)" , 0 )
 GAME( 1992, wofb,     wof,      qsound,     wof,      wofb,     ROT0,   "bootleg","Warriors of Fate (bootleg)", 0 )
 GAME( 1995, wofsj,    wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 1)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
 GAME( 1995, wofsja,   wof,      wofh,       wofsj,    wof3sj,   ROT0,   "bootleg","Sangokushi II: Sheng Jian Sanguo (Chinese bootleg set 2)", GAME_NOT_WORKING | GAME_IMPERFECT_SOUND )
@@ -10675,13 +10677,8 @@ GAME( 1992, sf2tlona, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg
 GAME( 1992, sf2tlonb, sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition: Tu Long (Chinese bootleg set 2)", 0 )
 GAME( 1992, sf2th,    sf2ce,    cps1_12MHz, sf2hack,  sf2hack,  ROT0,   "bootleg","Street Fighter II' - Champion Edition (Turbo hack, bootleg)", GAME_NOT_WORKING )
 GAME( 1991, sf2b,     sf2,      cps1_10MHz, sf2,      cps1,     ROT0,   "bootleg","Street Fighter II - The World Warrior (bootleg)" , GAME_NOT_WORKING )
-GAME( 1993, dinohc,   dino,     qsound,     dinoh,    dinohc,   ROT0,   "bootleg","Cadillacs and Dinosaurs: Dinosaur Hunter (bootleg)", 0 )
+GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 1)", 0)
+GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 2)", 0 )
+GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "bootleg","Cadillacs and Dinosaurs (hack set 3)", 0 )
+GAME( 1993, dinohc,   dino,     qsound,     dinoh,    dinohc,   ROT0,   "bootleg","Cadillacs and Dinosaurs: Dinosaur Hunter (hack set 4)", 0 )
 GAME( 2002, punishrh, punisher, wofhfh,     punishrh, cps1,     ROT0,   "bootleg","The Punisher: Biaofeng Zhanjing (Chinese bootleg)", 0 )
-
-/* hack */
-GAME( 1991, knightsh, knights,  cps1_10MHz, knightsh, cps1,     ROT0,   "hack",   "Knights of the Round (hack)" , 0 )
-GAME( 1991, kodh,     kod,      cps1_10MHz, kodh,     cps1,     ROT0,   "hack",   "The King of Dragons (hack)", 0 )
-GAME( 1993, dinoh,    dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 1)", 0)
-GAME( 1997, dinoha,   dino,     qsound,     dinoh,    dinoh,    ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 2)", 0 )
-GAME( 1997, dinohb,   dino,     qsound,     dinohb,   dinohb,   ROT0,   "hack",   "Cadillacs and Dinosaurs (hack set 3)", 0 )
-
