@@ -36,9 +36,9 @@ static WRITE_LINE_DEVICE_HANDLER( cidelsa_q_w )
 
 static CDP1802_INTERFACE( cidelsa_cdp1802_config )
 {
-	cidelsa_mode_r,		// MODE
-	cidelsa_ef_r,		// EF
-	NULL,				// SC
+	cidelsa_mode_r,				// MODE
+	cidelsa_ef_r,				// EF
+	NULL,						// SC
 	DEVCB_LINE(cidelsa_q_w),	// Q
 	DEVCB_NULL,					// DMA read
 	DEVCB_NULL					// DMA write

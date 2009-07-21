@@ -1715,7 +1715,7 @@ static INTERRUPT_GEN( interrupt_scudhamm )
 	{
 		case 0:		cpu_set_input_line(device, 3, HOLD_LINE); break;	// update palette, layers etc. Not the sprites.
 		case 14:	cpu_set_input_line(device, 2, HOLD_LINE); break;	// "real" vblank. It just sets a flag that
-														// the main loop polls before updating the sprites.
+											// the main loop polls before updating the sprites.
 		default: break;
 	}
 }

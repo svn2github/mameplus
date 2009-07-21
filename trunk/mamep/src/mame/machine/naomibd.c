@@ -765,8 +765,8 @@ static DEVICE_NVRAM( naomibd )
 		}
 		else
 		{
-		x76f100_init( device->machine, 0, eeprom_romboard );
-		memcpy(eeprom_romboard+20,"\241\011                              0000000000000000",48);
+			x76f100_init( device->machine, 0, eeprom_romboard );
+			memcpy(eeprom_romboard+20,"\241\011                              0000000000000000",48);
 		}
 
 	}
@@ -813,3 +813,4 @@ DEVICE_GET_INFO( naomibd )
 		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 	}
 }
+

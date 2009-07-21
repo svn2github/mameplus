@@ -185,7 +185,7 @@
     DEBUGGING
 ***************************************************************************/
 
-#define LOG_HASHJMPS		(0)
+#define LOG_HASHJMPS			(0)
 
 #define USE_RCPSS_FOR_SINGLES	(0)
 #define USE_RSQRTSS_FOR_SINGLES	(0)
