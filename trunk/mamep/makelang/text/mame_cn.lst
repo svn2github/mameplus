@@ -2271,7 +2271,7 @@ captcomb	名将 (盗版)	名将 (盗版)	bootleg
 knights	圆桌骑士 (世界版 911127)	圆桌骑士 (世界版 911127)	Capcom
 knightsu	圆桌骑士 (美版 911127)	圆桌骑士 (美版 911127)	Capcom
 knightsj	圆桌骑士 (日版 911127)	圆桌骑士 (日版 911127)	Capcom
-knightsb	圆桌骑士 (世界版 911127, 盗版)	圆桌骑士 (世界版 911127, 盗版)	Capcom
+knightsb	圆桌骑士 (世界版 911127, 盗版)	圆桌骑士 (世界版 911127, 盗版)	bootleg
 sf2ce	街头霸王 II' - 四大天王 (世界版 920313)	街头霸王 II' - 四大天王 (世界版 920313)	Capcom
 sf2ceua	街头霸王 II' - 四大天王 (美版 920313)	街头霸王 II' - 四大天王 (美版 920313)	Capcom
 sf2ceub	街头霸王 II' - 四大天王 (美版 920513)	街头霸王 II' - 四大天王 (美版 920513)	Capcom
@@ -2650,7 +2650,7 @@ bldyror2u	兽化格斗 2 (美版)	兽化格斗 2 (美版)	Eighting/Raizing
 bldyror2a	兽化格斗 2 (亚洲版)	兽化格斗 2 (亚洲版)	Eighting/Raizing
 bldyror2j	兽化格斗 2 (日版)	兽化格斗 2 (日版)	Eighting/Raizing
 brvblade	勇气之刃 (日版)	勇气之刃 (日版)	Eighting/Raizing
-bam2	纵情跳跃 2 (Japanese ROM ver. 1999/07/17 10:00:00)	纵情跳跃 2 (Japanese ROM ver. 1999/07/17 10:00:00)	Metro/Enix/Namco
+bam2	纵情跳跃 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)	纵情跳跃 2 (JAPANESE ROM ver. 1999/07/17 10:00:00)	Metro/Enix/Namco
 atpsx	Atari PSX	Atari PSX	Atari
 primrag2	恐龙格斗 2 (Ver 0.36a)	恐龙格斗 2 (Ver 0.36a)	Atari
 acpsx	Acclaim PSX	Acclaim PSX	Acclaim
@@ -4209,6 +4209,7 @@ rygarj	阿尔卑斯古战士 (日版)	阿尔卑斯古战士 (日版)	Tecmo
 gemini	昆虫世界	昆虫世界	Tecmo
 silkworm	中东战争 (第1套)	中东战争 (第1套)	Tecmo
 silkwrm2	中东战争 (第2套)	中东战争 (第2套)	Tecmo
+backfirt	烽火佳人 (Tecmo, 盗版)	烽火佳人 (Tecmo, 盗版)	Tecmo
 tbowl	Tecmo 橄榄球 (世界版?)	Tecmo 橄榄球 (世界版?)	Tecmo
 tbowlj	Tecmo 橄榄球 (日版)	Tecmo 橄榄球 (日版)	Tecmo
 shadoww	忍者龙剑传 (世界版, 第1套)	忍者龙剑传 (世界版, 第1套)	Tecmo
@@ -7588,7 +7589,8 @@ trvmadns	疯狂事务	疯狂事务	Thunderhead Inc.
 rcorsair	红色海盗	红色海盗	Nakasawa
 pzlestar	魔幻星座? (Sang Ho 软件)	魔幻星座? (Sang Ho 软件)	Sang Ho Soft
 sexyboom	性感宣传	性感宣传	Sang Ho Soft
-sfkick	超级自由踢	超级自由踢	Haesung/HJ Corp
+sfkick	超级自由踢 (第1套)	超级自由踢 (第1套)	Haesung/HJ Corp
+sfkicka	超级自由踢 (第2套)	超级自由踢 (第2套)	Haesung
 spinkick	旋转踢	旋转踢	Haesung/Seojin
 7mezzo	七依之间	七依之间	Unknown
 magicfly	魔法飞行	魔法飞行	P&A Games
