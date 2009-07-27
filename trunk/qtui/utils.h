@@ -3,19 +3,34 @@
 
 #include <QtGui>
 
+enum
+{
+	MAMEFILE_GETINFO = 0,
+	MAMEFILE_READ,
+	MAMEFILE_EXTRACT
+};
+
+class MameFileInfo : public QObject
+{
+public:
+	quint32 crc;
+	quint64 size;
+	QByteArray data;
+};
+
 class Utils : public QObject
 {
 Q_OBJECT
 public:
 	QProcess *loadProc;
-	
+
 	Utils(QObject *parent = 0);
 
 	QString getDesc(const QString &, bool = true);
 	QSize getScaledSize(QSize, QSize, bool);
 	QString capitalizeStr(const QString &);
 	void lowerTrimmed(QStringList &);
-	QStringList split2Str(const QString &, const QString &);
+	QStringList split2Str(const QString &, const QString &, bool = false);
 	QString getPath(QString);
 	QString getSinglePath(QString, QString);
 	QString getMameVersion();
@@ -25,6 +40,9 @@ public:
 
 	QString getLongName(const QString &);
 	QString getShortName(const QString &);
+
+	QHash<QString, MameFileInfo *> iterateMameFile(const QString &, const QString &, const QString &, int);
+	void clearMameFileInfoList(QHash<QString, MameFileInfo *>);
 
 signals:
 	void icoUpdated(QString);
@@ -37,6 +55,8 @@ private:
 	QString mameVersion;
 	QMap<QString, QString> descMap;
 	void initDescMap();
+	bool matchMameFile(const QString &, const QStringList &);
+	bool extractMameFile(const QString &, MameFileInfo *);
 };
 
 class MyQueue : public QObject

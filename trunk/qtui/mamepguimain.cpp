@@ -525,7 +525,6 @@ void MainWindow::init()
 		setBgPixmap(background_file);
 
 	mameGame->init();
-	show();
 
 	// connect misc signal and slots
 
@@ -553,11 +552,7 @@ void MainWindow::init()
 	// Auditor
 	connect(&romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
 	connect(&romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
-	connect(&romAuditor, SIGNAL(finished()), &mergedAuditor, SLOT(audit()));
-
-	connect(&mergedAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
-	connect(&mergedAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
-	connect(&mergedAuditor, SIGNAL(finished()), gameList, SLOT(init()));
+	connect(&romAuditor, SIGNAL(finished()), gameList, SLOT(init()));
 
 	// Game List
 	connect(lineEditSearch, SIGNAL(returnPressed()), gameList, SLOT(filterSearchChanged()));
@@ -628,7 +623,7 @@ void MainWindow::setVersion()
 		"%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.5b")
+		.arg("1.4.6")
 		.arg(mameString)
 		.arg(QT_VERSION_STR)
 		.arg(sdlVerString)
@@ -824,7 +819,31 @@ void MainWindow::on_actionBoard_activated()
 
 void MainWindow::on_actionAbout_activated()
 {
+#if 1
 	aboutUI->exec();
+#else
+
+	QHash<QString, MameFileInfo *> mameFileInfoList = 
+//		utils->iterateMameFile("d:/mame/icons2/;d:/mame/icons3", "icons", "*" ICO_EXT, MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame", "", "history.dat", MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame/roms", "grdians", "*", MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame/snap/", "snap;.;denjinmk", "denjinmk.png;0000.png", MAMEFILE_READ);
+		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.nes", MAMEFILE_GETINFO);
+
+	QString buf;
+	foreach (QString key, mameFileInfoList.keys())
+	{
+		buf.append(QString("%1,%2,%3,%4\n")
+			.arg(key)
+			.arg(mameFileInfoList[key]->crc, 8, 16, QLatin1Char('0'))
+			.arg(mameFileInfoList[key]->size)
+			.arg(mameFileInfoList[key]->data.size())
+			);
+	}
+	win->poplog(buf);
+	
+	utils->clearMameFileInfoList(mameFileInfoList);
+#endif
 }
 
 void MainWindow::toggleGameListColumn(int logicalIndex)

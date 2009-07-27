@@ -26,39 +26,35 @@ exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi
 single package crc format: clrmamep
 
 //zip
-in: dirpath, filename, zipname, ext
-out: QHash<quint32 /*crc*/, RomInfo *> roms;, QByteArray, extract_path
+gui只能导出fix-dat，不能导出完整的？
+3 test with some illegal paths: /history.dat, ///
 
-[multi-file] read, getinfo, extract
-read per zip, for exec, auditing
-
-gamename.zip\x.rom
-             y.rom
-
-gamename.7z\x.rom
-            y.rom
-
+params
+in: dirpath, zipname, filename, ext, extract_path
+out: QHash<quint32 /*crc*/, RomInfo *> roms
+[multi-file] {readbytes of all files}, getinfo of all files, extract merged
 ips
 cheat
 lang
 
-[single-file] read, getinfo
-snaps:
-load gamename.png
-load builtin.zip\gamename.png
-load builtin-fallback.zip\gamename.png
-*load parent
+in: dirpath, zipname, filename, ext
+out: QByteArray
+[single-file] mamefread
+snaps, history: snaps fname is gamename
+fname.ext
+builtin.zip\fname.ext
+builtin-fallback.zip\fname.ext
+*parent
 
-history:
-load datname.dat
-load builtin.zip\datname.dat
-*load parent
+roms, roms/ips builtin is gamename
+builtin\fname.ext
+builtin.zip\fname.ext
 
 //Priority tasks
+2 mamebin changes should cause gamelist->init()
 2 unify zip/7z, *.dat reading
 2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
 3 other language mamep core
-3 console refresh is broken?
 3 hide all, console folder for non mameplus
 3 Is there a way to hide the clones and make the font bigger with the new ui? 
 2 audit output only incorrect, sample

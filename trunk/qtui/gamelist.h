@@ -439,7 +439,6 @@ public slots:
 	void toggleDelegate(bool);
 
 	// external process management
-	void extractMerged(QString, QString);
 	void runMameFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
@@ -451,7 +450,6 @@ private:
 	bool hasInitd;
 	QString currentTempROM;
 	QFutureWatcher<void> loadIconWatcher;
-	int loadIconStatus;
 	QAbstractItemDelegate *defaultGameListDelegate;
 	QList<QTreeWidgetItem *> intFolderItems;
 	QStringList extFolderNames;

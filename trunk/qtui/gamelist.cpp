@@ -1,11 +1,3 @@
-#include "7zCrc.h"
-#include "7zFile.h"
-#include "7zVersion.h"
-
-#include "7zAlloc.h"
-#include "7zExtract.h"
-#include "7zIn.h"
-
 #include "gamelist.h"
 
 #include "mamepguimain.h"
@@ -391,11 +383,11 @@ void UpdateSelectionThread::run()
 		/* loop over entries until we hit a NULL name */
 		for ( ; dockInfoList->optName != NULL; dockInfoList++)
 		{
-			if (hasLanguage)
-				localPath = utils->getPath(mameOpts["langpath"]->globalvalue);
-
 			if (!abort && win->tbHistory->isVisible() && win->isDockTabVisible(dockInfoList->title))
 			{
+				if (hasLanguage)
+					localPath = utils->getPath(mameOpts["langpath"]->globalvalue);
+
 				dockInfoList->buffer->clear();
 			
 				path = dockInfoList->fileName;
@@ -408,11 +400,11 @@ void UpdateSelectionThread::run()
 					if (!dockInfoList->buffer->isEmpty())
 						dockInfoList->buffer->append("<hr>");
 				}
-				
+
 				if (mameOpts.contains(dockInfoList->optName))
 					path = mameOpts[dockInfoList->optName]->globalvalue;
 
-				//we don't want display the same dat twice
+				//we don't want to display the same dat twice
 				if (localPath != path)
 					dockInfoList->buffer->append(getHistory(path, gameName, dockInfoList->type));
 
@@ -432,7 +424,7 @@ void UpdateSelectionThread::run()
 					}
 */
 				}
-			
+
 				emit snapUpdated(dockInfoList->type);
 			}
 		}
@@ -441,24 +433,27 @@ void UpdateSelectionThread::run()
 
 QString UpdateSelectionThread::getHistory(const QString &fileName, const QString &gameName, int method)
 {
-	QString searchTag = gameName;
+	QString buf = "";
 
+	QString searchTag = gameName;
 	GameInfo *gameInfo = mameGame->games[searchTag];
 	if (gameInfo->isExtRom)
 	{
 		searchTag = gameInfo->romof;
 //		gameInfo = mameGame->games[searchTag];
 	}
-
 	if (method == DOCK_DRIVERINFO)
 		searchTag = gameInfo->sourcefile;
 
-	QFile datFile(fileName);
-	QString buf = "";
+	QFileInfo fileInfo(fileName);
+	QStringList paths = utils->split2Str(fileInfo.absoluteFilePath(), "/", true);
 
-	if (datFile.open(QFile::ReadOnly | QFile::Text))
+	QHash<QString, MameFileInfo *> mameFileInfoList = 
+		utils->iterateMameFile(paths.first(), "", paths.last(), MAMEFILE_READ);
+
+	if (mameFileInfoList.size() > 0)
 	{
-		QTextStream in(&datFile);
+		QTextStream in(mameFileInfoList[mameFileInfoList.keys().first()]->data);
 		in.setCodec("UTF-8");
 
 		bool isFound, recData = false;
@@ -516,6 +511,8 @@ QString UpdateSelectionThread::getHistory(const QString &fileName, const QString
 		}
 		while (!line.isNull());
 	}
+
+	utils->clearMameFileInfoList(mameFileInfoList);
 
 	buf = buf.trimmed();
 
@@ -576,103 +573,69 @@ void UpdateSelectionThread::convertCommand(QString &commandText)
 	*/
 }
 
-QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const QString &gameName, int snapType)
+QByteArray UpdateSelectionThread::getScreenshot(const QString &_dirPaths, const QString &gameName, int snapType)
 {
-	QStringList dirpaths = dirpath0.split(";");
 	QByteArray snapdata = QByteArray();
 
-	foreach (QString _dirpath, dirpaths)
+	// prepare built-in names
+	QString zipName;
+	switch (snapType)
 	{
-		QDir dir(_dirpath);
-		QString dirpath = utils->getPath(_dirpath);
-
-		QFile snapFile;
-		// try to load directly #1
-		snapFile.setFileName(dirpath + gameName + PNG_EXT);
-		if (snapFile.open(QIODevice::ReadOnly))
-		{
-			snapdata = snapFile.readAll();
-			snapFile.close();
-		}
-
-		if (!snapdata.isNull())
-			return snapdata;
-
-		// try to load directly #2
-		if (mameOpts.contains("snapname"))
-		{
-			QString pattern = mameOpts["snapname"]->currvalue;
-
-			pattern.replace("%g", gameName);
-			pattern.replace("%i", "0000");
-
-			snapFile.setFileName(dirpath + pattern + PNG_EXT);
-			if (snapFile.open(QIODevice::ReadOnly))
-			{
-				snapdata = snapFile.readAll();
-				snapFile.close();
-			}
-			
-			if (!snapdata.isNull())
-				return snapdata;
-		}
-
-		// try to load from built-in names
-		QString zipName;
-		switch (snapType)
-		{
-		case DOCK_SNAP:
-			zipName = "snap";
-			break;
-		case DOCK_FLYER:
-			zipName = "flyers";
-			break;
-		case DOCK_CABINET:
-			zipName = "cabinets";
-			break;
-		case DOCK_MARQUEE:
-			zipName = "marquees";
-			break;
-		case DOCK_TITLE:
-			zipName = "titles";
-			break;
-		case DOCK_CPANEL:
-			zipName = "cpanel";
-			break;
-		case DOCK_PCB:
-			zipName = "pcb";
-			break;
-		}
-
-		QuaZip zip(dirpath + zipName + ZIP_EXT);
-		if (zip.open(QuaZip::mdUnzip))
-		{
-			QuaZipFile zipfile(&zip);
-			if (zip.setCurrentFile(gameName + PNG_EXT))
-			{
-				if (zipfile.open(QIODevice::ReadOnly))
-					snapdata = zipfile.readAll();
-			}
-		}
-
-		if (!snapdata.isNull())
-			return snapdata;
-
-		// try to add .zip to nearest folder name
-		QuaZip zip2(dirpath + dir.dirName() + ZIP_EXT);
-		if (zip2.open(QuaZip::mdUnzip))
-		{
-			QuaZipFile zipfile(&zip2);
-			if (zip2.setCurrentFile(gameName + PNG_EXT))
-			{
-				if (zipfile.open(QIODevice::ReadOnly))
-					snapdata = zipfile.readAll();
-			}
-		}
-
-		if (!snapdata.isNull())
-			break;
+	case DOCK_SNAP:
+		zipName = "snap";
+		break;
+	case DOCK_FLYER:
+		zipName = "flyers";
+		break;
+	case DOCK_CABINET:
+		zipName = "cabinets";
+		break;
+	case DOCK_MARQUEE:
+		zipName = "marquees";
+		break;
+	case DOCK_TITLE:
+		zipName = "titles";
+		break;
+	case DOCK_CPANEL:
+		zipName = "cpanel";
+		break;
+	case DOCK_PCB:
+		zipName = "pcb";
+		break;
 	}
+
+	zipName = zipName.append(";.");
+	QString dirPaths = _dirPaths;
+	QString fileNameFilters = gameName + PNG_EXT;
+	// try to load from patterns
+	if (snapType == DOCK_SNAP && mameOpts.contains("snapname"))
+	{
+		QString pattern = mameOpts["snapname"]->currvalue;
+
+		pattern.replace("%g", gameName);
+		pattern.replace("%i", "0000");
+
+		QStringList dirPathList = _dirPaths.split(";");
+		foreach (QString _dirPath, dirPathList)
+		{
+			QDir dir(_dirPath);
+			QString dirPath = utils->getPath(_dirPath);
+			QFileInfo fileInfo(dirPath + pattern + PNG_EXT);
+			dirPaths.append(";" + fileInfo.absolutePath());
+			fileNameFilters.append(";" + fileInfo.fileName());
+		}
+	}
+
+	QHash<QString, MameFileInfo *> mameFileInfoList = 
+		utils->iterateMameFile(dirPaths, 
+		zipName, 
+		fileNameFilters,
+		MAMEFILE_READ);
+
+	if (mameFileInfoList.size() > 0)
+		snapdata = mameFileInfoList[mameFileInfoList.keys().first()]->data;
+
+	utils->clearMameFileInfoList(mameFileInfoList);
 
 	if (!snapdata.isNull())
 		return snapdata;
@@ -680,7 +643,7 @@ QByteArray UpdateSelectionThread::getScreenshot(const QString &dirpath0, const Q
 	// recursively load parent image
 	GameInfo *gameInfo = mameGame->games[gameName];
 		if (!gameInfo->cloneof.isEmpty())
-		snapdata = getScreenshot(dirpath0, gameInfo->cloneof, snapType);
+		snapdata = getScreenshot(_dirPaths, gameInfo->cloneof, snapType);
 
 	// fallback to default image, first getScreenshot() can't reach here
 	if (snapdata.isNull())
@@ -1929,7 +1892,6 @@ menuContext(NULL),
 headerMenu(NULL),
 autoAudit(false),
 hasInitd(false),
-loadIconStatus(0),
 defaultGameListDelegate(NULL)
 {
 	connect(&selectionThread, SIGNAL(snapUpdated(int)), this, SLOT(setupSnap(int)));
@@ -2043,7 +2005,7 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 
 void Gamelist::restoreGameSelection()
 {
-	if (gameListModel == NULL || gameListPModel == NULL)
+	if (gameListModel == NULL || gameListPModel == NULL || !hasInitd)
 		return;
 
 	if (!mameGame->games.contains(currentGame))
@@ -2066,7 +2028,7 @@ void Gamelist::restoreGameSelection()
 	if (!pi.isValid())
 		return;
 
-	win->log("restore callback: " + currentGame);
+//	win->log("restore callback: " + currentGame);
 
 	bool isLView = false;
 	if (win->actionLargeIcons->isChecked())
@@ -2103,7 +2065,7 @@ void Gamelist::restoreGameSelection()
 		if ((*it)->parent() == NULL && (*it)->isExpanded() && 
 			(*it)->text(0) != folderName)
 		{
-			win->log("co: " + (*it)->text(0) + ", " + folderName);
+//			win->log("co: " + (*it)->text(0) + ", " + folderName);
 			win->treeFolders->collapseItem(*it);
 		}
 		++it;
@@ -2300,6 +2262,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		if (win->actionRowDelegate->isChecked())
 			win->tvGameList->setItemDelegate(&gamelistDelegate);
 	}
+	win->show();
 
 	if (initMethod == GAMELIST_INIT_FULL)
 	{
@@ -2397,9 +2360,6 @@ void Gamelist::init(bool toggleState, int initMethod)
 		loadIcon();
 	}
 
-	//for re-init list from folders
-	restoreGameSelection();
-
 	// everything is done, enable ctrls now
 	win->enableCtrls(true);
 
@@ -2408,6 +2368,9 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	hasInitd = true;
 	win->log(QString("init'd %1 games").arg(mameGame->games.count()));
+
+	//for re-init list from folders
+	restoreGameSelection();
 }
 
 void Gamelist::loadIcon()
@@ -2421,121 +2384,50 @@ void Gamelist::loadIcon()
 	
 void Gamelist::loadIconWorkder()
 {
-	bool done = false;
-	bool cancel = false;
-
 	GameInfo *gameInfo, *gameInfo2;
 
-//	win->log(QString("ico count: %1").arg(mameGame->gamenameGameInfoMap.count()));
+	QHash<QString, MameFileInfo *> mameFileInfoList = 
+		utils->iterateMameFile(mameOpts["icons_directory"]->globalvalue, "icons", "*" ICO_EXT, MAMEFILE_READ);
 
-	while(!done)
+	foreach (QString key, mameFileInfoList.keys())
 	{
-		// iterate split dirpath
-		QStringList dirpaths = mameOpts["icons_directory"]->globalvalue.split(";");
-		foreach (QString _dirpath, dirpaths)
+		QString gameName = key;
+		gameName.chop(4 /* sizeof ICO_EXT */);
+		if (mameGame->games.contains(gameName))
 		{
-			QDir dir(_dirpath);
-			QString dirpath = utils->getPath(_dirpath);
-		
-			QStringList nameFilter;
-			nameFilter << "*" ICO_EXT;
-			
-			// iterate all files in the path
-			QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-			for (int i = 0; i < files.count(); i++)
+			gameInfo = mameGame->games[gameName];
+			gameInfo->icondata = mameFileInfoList[key]->data;
+		}
+	}
+
+	utils->clearMameFileInfoList(mameFileInfoList);
+
+	//complete data
+	foreach (QString gameName, mameGame->games.keys())
+	{
+		gameInfo = mameGame->games[gameName];
+
+		// get clone icons from parent
+		if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
+		{
+			gameInfo2 = mameGame->games[gameInfo->cloneof];
+			if (!gameInfo2->icondata.isNull())
 			{
-				QString gameName = files[i].toLower().remove(ICO_EXT);
-				if (mameGame->games.contains(gameName))
-				{
-					gameInfo = mameGame->games[gameName];
-					if (gameInfo->icondata.isNull())
-					{
-						QFile icoFile(dirpath + gameName + ICO_EXT);
-						if (icoFile.open(QIODevice::ReadOnly))
-						{
-							gameInfo->icondata = icoFile.readAll();
-							loadIconStatus++;
-						}
-					}
-				}
-
-				if (cancel)
-					break;
+				gameInfo->icondata = gameInfo2->icondata;
+//				emit icoUpdated(gameName);
 			}
-
-			if (cancel)
-				break;
-
-			// iterate all files in the zip
-			QuaZip zip(dirpath + "icons" ZIP_EXT);
-
-			if(!zip.open(QuaZip::mdUnzip))
-				continue;
-
-			QuaZipFileInfo info;
-			QuaZipFile zipFile(&zip);
-			for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile())
-			{
-				if(!zip.getCurrentFileInfo(&info))
-					continue;
-
-				QString gameName = info.name.toLower().remove(ICO_EXT);
-				if (mameGame->games.contains(gameName))
-				{
-					gameInfo = mameGame->games[gameName];
-					if (gameInfo->icondata.isNull())
-					{
-						QuaZipFile icoFile(&zip);
-						if (icoFile.open(QIODevice::ReadOnly))
-						{
-							gameInfo->icondata = icoFile.readAll();
-							loadIconStatus++;
-						}
-					}
-				}
-				/*
-				else if (gameName == "warning")
-				{
-				}
-				//*/
-				if (cancel)
-					break;
-			}
-			if (cancel)
-				break;
 		}
 
-		if (!cancel)
+		// get ext rom icons from system
+		if (gameInfo->isExtRom && gameInfo->icondata.isNull())
 		{
-			foreach (QString gameName, mameGame->games.keys())
+			gameInfo2 = mameGame->games[gameInfo->romof];
+			if (!gameInfo2->icondata.isNull())
 			{
-				gameInfo = mameGame->games[gameName];
-
-				// get clone icons from parent
-				if (!gameInfo->isExtRom && gameInfo->icondata.isNull() && !gameInfo->cloneof.isEmpty())
-				{
-					gameInfo2 = mameGame->games[gameInfo->cloneof];
-					if (!gameInfo2->icondata.isNull())
-					{
-						gameInfo->icondata = gameInfo2->icondata;
-//						emit icoUpdated(gameName);
-					}
-				}
-
-				// get ext rom icons from system
-				if (gameInfo->isExtRom && gameInfo->icondata.isNull())
-				{
-					gameInfo2 = mameGame->games[gameInfo->romof];
-					if (!gameInfo2->icondata.isNull())
-					{
-						gameInfo->icondata = gameInfo2->icondata;
-//						emit icoUpdated(gameName);
-					}
-				}					
+				gameInfo->icondata = gameInfo2->icondata;
+//				emit icoUpdated(gameName);
 			}
-			done = true;
-		}
-		cancel = false;
+		}					
 	}
 }
 
@@ -2562,7 +2454,7 @@ void Gamelist::loadMMO(int msgCat)
 	QFile file( dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
 	if (!file.exists())
 	{
-		win->log("not exist: " + dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
+//		win->log("not exist: " + dirpath + language + "/" + msgFileName[msgCat] + ".mmo");
 		return;
 	}
 
@@ -2776,22 +2668,22 @@ void Gamelist::updateContextMenu()
 
 	//ext folder menu
 	QString extFolderName, extSubFolderName;
-	QStringList strlist = utils->split2Str(currentFolder, "/");
+	QStringList paths = utils->split2Str(currentFolder, "/");
 	
-	if (strlist.first().isEmpty())
+	if (paths.first().isEmpty())
 	{
-		extFolderName = strlist.last();
+		extFolderName = paths.last();
 		extSubFolderName = ROOT_FOLDER;
 	}
 	else
 	{
-		extFolderName = strlist.first();
-		extSubFolderName = strlist.last();
+		extFolderName = paths.first();
+		extSubFolderName = paths.last();
 	}
 
 	QString folderPath = utils->getSinglePath(pGuiSettings->value("folder_directory", "folders").toString(), extFolderName + INI_EXT);
 	QFile inFile(folderPath);
-	win->log(folderPath);
+//	win->log(folderPath);
 	const bool isAccessable = inFile.exists() && inFile.permissions() & QFile::WriteUser;
 
 	win->actionRemoveFromFolder->setText(tr("Remove From \"%1%2\"")
@@ -3199,112 +3091,6 @@ void Gamelist::toggleDelegate(bool isHilite)
 		win->tvGameList->setItemDelegate(&gamelistDelegate);
 	else if (defaultGameListDelegate != NULL)
 		win->tvGameList->setItemDelegate(defaultGameListDelegate);
-}
-
-// extract a rom from the merged file
-void Gamelist::extractMerged(QString mergedFileName, QString fileName)
-{
-	currentTempROM = QDir::tempPath() + "/" + fileName;
-
-//fixme: wrap to a class
-//fixme: break the loop when file extracted
-
-	CFileInStream archiveStream;
-	CLookToRead lookStream;
-	CSzArEx db;
-	SRes res;
-	ISzAlloc allocImp;
-	ISzAlloc allocTempImp;
-
-	if (InFile_Open(&archiveStream.file,  qPrintable(mergedFileName)))
-	{
-		win->log("can not open: " + mergedFileName);
-		return;
-	}
-
-	FileInStream_CreateVTable(&archiveStream);
-	LookToRead_CreateVTable(&lookStream, False);
-
-	lookStream.realStream = &archiveStream.s;
-	LookToRead_Init(&lookStream);
-
-	allocImp.Alloc = SzAlloc;
-	allocImp.Free = SzFree;
-
-	allocTempImp.Alloc = SzAllocTemp;
-	allocTempImp.Free = SzFreeTemp;
-
-	CrcGenerateTable();
-
-	SzArEx_Init(&db);
-	res = SzArEx_Open(&db, &lookStream.s, &allocImp, &allocTempImp);
-	if (res == SZ_OK)
-	{
-		UInt32 i;
-		
-		/*
-		if you need cache, use these 3 variables.
-		if you use external function, you can make these variable as static.
-		*/
-		UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
-		Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
-		size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
-		
-		for (i = 0; i < db.db.NumFiles; i++)
-		{
-			size_t offset;
-			size_t outSizeProcessed;
-			CSzFileItem *f = db.db.Files + i;
-
-			if (f->IsDir)
-				continue;
-
-			if (f->Name != fileName)
-				continue;
-
-			res = SzAr_Extract(&db, &lookStream.s, i,
-				&blockIndex, &outBuffer, &outBufferSize,
-				&offset, &outSizeProcessed,
-				&allocImp, &allocTempImp);
-		  
-			if (res != SZ_OK)
-				break;
-
-			CSzFile outFile;
-			size_t processedSize;
-			  
-			if (OutFile_Open(&outFile, qPrintable(QDir::tempPath() + "/" + fileName)))
-			{
-				//PrintError("can not open output file");
-				res = SZ_ERROR_FAIL;
-				break;
-			}
-
-			processedSize = outSizeProcessed;
-			if (File_Write(&outFile, outBuffer + offset, &processedSize) != 0 ||
-				processedSize != outSizeProcessed)
-			{
-				// PrintError("can not write output file");
-				res = SZ_ERROR_FAIL;
-				break;
-			}
-			
-			if (File_Close(&outFile))
-			{
-				//PrintError("can not close output file");
-				res = SZ_ERROR_FAIL;
-				break;
-			}
-
-			//success
-			break;
-		}
-		IAlloc_Free(&allocImp, outBuffer);
-	}
-	SzArEx_Free(&db, &allocImp);
-	File_Close(&archiveStream.file);
-
-	runMame(true);
 }
 
 // delete the extracted rom
@@ -4003,17 +3789,17 @@ void Gamelist::addToExtFolder()
 void Gamelist::removeFromExtFolder()
 {
 	QString extFolderName, extSubFolderName;
-	QStringList strlist = utils->split2Str(currentFolder, "/");
+	QStringList paths = utils->split2Str(currentFolder, "/");
 	
-	if (strlist.first().isEmpty())
+	if (paths.first().isEmpty())
 	{
-		extFolderName = strlist.last();
+		extFolderName = paths.last();
 		extSubFolderName = EXTFOLDER_MAGIC ROOT_FOLDER;
 	}
 	else
 	{
-		extFolderName = strlist.first();
-		extSubFolderName = strlist.last();
+		extFolderName = paths.first();
+		extSubFolderName = paths.last();
 	}
 	
 	if (parseExtFolders(extFolderName) < 0)
@@ -4066,7 +3852,7 @@ void Gamelist::restoreFolderSelection(bool isForce)
 					if (subsubItem->text(0) == subFolder)
 					{
 						win->treeFolders->setCurrentItem(subsubItem);
-						win->log(QString("treeb.gamecount %1").arg(mameGame->games.count()));
+//						win->log(QString("treeb.gamecount %1").arg(mameGame->games.count()));
 						return;
 					}
 				}
@@ -4080,7 +3866,7 @@ void Gamelist::restoreFolderSelection(bool isForce)
 bool Gamelist::isAuditConsoleFolder(const QString &consoleName)
 {
 	QStringList paths = utils->split2Str(currentFolder, "/");
-	if (!paths.isEmpty())
+	if (!paths.last().isEmpty())
 	{
 		const QString rightFolder = paths.last();
 
@@ -4095,7 +3881,7 @@ bool Gamelist::isAuditConsoleFolder(const QString &consoleName)
 bool Gamelist::isConsoleFolder()
 {
 	QStringList paths = utils->split2Str(currentFolder, "/");
-	if (!paths.isEmpty())
+	if (!paths.last().isEmpty())
 	{
 		const QString rightFolder = paths.last();
 
@@ -4151,11 +3937,19 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 	else
 	// run MESS roms, add necessary params
 	{
-		// extract merged rom
+		// extract rom from the merged file
 		if (!hasTempRom && gameName.contains(SZIP_EXT "/"))
 		{
 			QStringList paths = gameName.split(SZIP_EXT "/");
-			extractMerged(paths[0] + SZIP_EXT, paths[1]);
+			QString archName = paths.first() + SZIP_EXT;
+			QString romFileName = paths.last();
+			QFileInfo fileInfo(archName);
+			
+			currentTempROM = QDir::tempPath() + "/" + romFileName;
+			QHash<QString, MameFileInfo *> mameFileInfoList = 
+				utils->iterateMameFile(fileInfo.path(), fileInfo.completeBaseName(), romFileName, MAMEFILE_EXTRACT);
+			utils->clearMameFileInfoList(mameFileInfoList);
+			runMame(true);
 			return;
 		}
 

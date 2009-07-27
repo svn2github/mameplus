@@ -1,11 +1,3 @@
-#include "7zCrc.h"
-#include "7zFile.h"
-#include "7zVersion.h"
-
-#include "7zAlloc.h"
-#include "7zExtract.h"
-#include "7zIn.h"
-
 #include "audit.h"
 
 #include "mamepguimain.h"
@@ -77,7 +69,7 @@ void RomAuditor::exportDat()
 			if (gameInfo->available == 0)
 			{
 				GameInfo *gameInfo2 = NULL, *gameBiosInfo = NULL;
-				RomInfo *romInfo, *romInfo2;
+				RomInfo *romInfo;
 
 				//we'd like to sort the roms, QMap is used
 				QMap<QString, quint32> missingRoms;
@@ -230,8 +222,6 @@ void RomAuditor::audit(bool autoAudit, int _method, QString fileName)
 
 void RomAuditor::run()
 {
-	QStringList dirpaths = mameOpts["rompath"]->currvalue.split(";");
-
 	GameInfo *gameInfo, *gameInfo2;
 	RomInfo *romInfo;
 
@@ -260,20 +250,21 @@ void RomAuditor::run()
 			}
 		}
 
+		QStringList dirPaths = mameOpts["rompath"]->currvalue.split(";");
 		//iterate rompaths
-		foreach (QString dirpath, dirpaths)
+		foreach (QString dirPath, dirPaths)
 		{
-			QDir dir(dirpath);
+			QDir dir(dirPath);
 			QStringList nameFilter = QStringList() << "*" ZIP_EXT;
 			QStringList romFiles = dir.entryList(nameFilter, QDir::Files | QDir::Readable | QDir::Hidden);
 			QStringList romDirs = dir.entryList(QStringList(), QDir::AllDirs | QDir::NoDotAndDotDot | QDir::Readable | QDir::Hidden);
 
-			emit progressSwitched(romFiles.count(), tr("Auditing") + " " + dirpath + " ...");
+			emit progressSwitched(romFiles.count(), QString(tr("Auditing %1 ...")).arg(dir.dirName() + "/"));
 
 			//iterate gameName/*.chd files
 			foreach (QString romDir, romDirs)
 			{
-				QDir dir2(utils->getPath(dirpath) + romDir);
+				QDir dir2(utils->getPath(dirPath) + romDir);
 				QString gameName = dir2.dirName().toLower();
 
 				if (!mameGame->games.contains(gameName))
@@ -307,14 +298,12 @@ void RomAuditor::run()
 					}
 				}
 			}
-				
+
 			//iterate rom files
+			//also audit non compressed roms
+			romFiles = romFiles + romDirs;
 			for (int i = 0; i < romFiles.count(); i++)
 			{
-				//update progressbar per 100 files
-				if (i % 100 == 0)
-					emit progressUpdated(i);
-
 				QString gameName = romFiles[i].toLower().remove(ZIP_EXT);
 
 				if (!mameGame->games.contains(gameName))
@@ -323,33 +312,30 @@ void RomAuditor::run()
 				gameInfo = mameGame->games[gameName];
 				auditedGames.insert(gameName);
 
-				//open zip file
-				QuaZip zip(utils->getPath(dirpath) + romFiles[i]);
-				if(!zip.open(QuaZip::mdUnzip))
-					continue;
+				QHash<QString, MameFileInfo *> mameFileInfoList = 
+					utils->iterateMameFile(dirPath, gameName, "*", MAMEFILE_GETINFO);
 
-				QuaZipFileInfo zipFileInfo;
-				QuaZipFile zipFile(&zip);
-
-				//iterate all files in the zip
-				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+				foreach (QString key, mameFileInfoList.keys())
 				{
-					if(!zip.getCurrentFileInfo(&zipFileInfo))
-						continue;
-
+					quint32 crc = mameFileInfoList[key]->crc;
 					//fill rom available status if crc recognized
-					if (gameInfo->roms.contains(zipFileInfo.crc))
-						gameInfo->roms[zipFileInfo.crc]->available = true;
+					if (gameInfo->roms.contains(crc))
+						gameInfo->roms[crc]->available = true;
 
 					//check if rom belongs to a clone
 					foreach (QString cloneName, gameInfo->clones)
 					{
 						auditedGames.insert(cloneName);
 						gameInfo2 = mameGame->games[cloneName];
-						if (gameInfo2->roms.contains(zipFileInfo.crc))
-							gameInfo2->roms[zipFileInfo.crc]->available = true;
+						if (gameInfo2->roms.contains(crc))
+							gameInfo2->roms[crc]->available = true;
 					}
 				}
+
+				utils->clearMameFileInfoList(mameFileInfoList);
+
+				if (i % 100 == 0)
+					emit progressUpdated(i);
 			}
 		}
 
@@ -469,67 +455,57 @@ void RomAuditor::run()
 // must be static func in a thread
 void RomAuditor::auditConsole(QString consoleName)
 {
-	GameInfo *gameInfo;
-
 	QString _dirpath = mameOpts[consoleName + "_extra_software"]->globalvalue;
 	QDir dir(_dirpath);
 	if (_dirpath.isEmpty() || !dir.exists())
 		return;
-	QString dirpath = utils->getPath(_dirpath);
+	QString dirPath = utils->getPath(_dirpath);
 
-	gameInfo = mameGame->games[consoleName];
-
+	GameInfo *gameInfo = mameGame->games[consoleName];
 	QString sourcefile = gameInfo->sourcefile;
 
-	QStringList nameFilter;
-	QStringList allExtensionNames;
+	QStringList nameFilters;
 	foreach (DeviceInfo *deviceInfo, gameInfo->devices)
 		foreach (QString ext, deviceInfo->extensionNames)
-		{
-			nameFilter << "*." + ext;
-			allExtensionNames << ext;
-		}
-	nameFilter << "*" ZIP_EXT;
+			nameFilters << "*." + ext;
+
+	const QString allExtensionNames = nameFilters.join(";");
+		
+	nameFilters << "*" ZIP_EXT;
+	nameFilters << "*" SZIP_EXT;
 
 	// iterate all files in the path
-	QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+	QStringList files = dir.entryList(nameFilters, QDir::Files | QDir::Readable);
+	emit progressSwitched(files.count(), QString(tr("Auditing %1 ...")).arg(consoleName));
 	for (int i = 0; i < files.count(); i++)
 	{
-		QString gameName = files[i];
+		QString fileName = files[i];
 		QFileInfo fi(files[i]);
+		const QString suffixName = "." + fi.suffix();
 
-		if ("." + fi.suffix() == ZIP_EXT)	
+		if (suffixName == ZIP_EXT || suffixName == SZIP_EXT)	
 		{
-			//open zip file
-			QuaZip zip(dirpath + files[i]);
-			if(!zip.open(QuaZip::mdUnzip))
-				continue;
-			
-			QuaZipFileInfo zipFileInfo;
-			QuaZipFile zipFile(&zip);
-			
-			//iterate all files in the zip
-			for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
+			QHash<QString, MameFileInfo *> mameFileInfoList = 
+				utils->iterateMameFile(dirPath, fi.completeBaseName(), allExtensionNames, MAMEFILE_GETINFO);
+
+			foreach (QString zipFileName, mameFileInfoList.keys())
 			{
-				if(!zip.getCurrentFileInfo(&zipFileInfo))
-					continue;
+				mameFileInfoList[zipFileName]->size;
 
-				QFileInfo zipfi(zipFileInfo.name);
-
-				//filter out non valid extensions
-				if (!allExtensionNames.contains(zipfi.suffix(), Qt::CaseInsensitive))
-					continue;
+				QFileInfo zipFileInfo(zipFileName);
 
 				gameInfo = new GameInfo(mameGame);
-				gameInfo->description = zipfi.completeBaseName();
+				gameInfo->description = zipFileInfo.completeBaseName();
 				gameInfo->isExtRom = true;
 				gameInfo->romof = consoleName;
 				gameInfo->sourcefile = sourcefile;
 				gameInfo->available = 1;
 				
-				QString key = dirpath + gameName + "/" + zipFileInfo.name;
+				QString key = dirPath + fileName + "/" + zipFileName;
 				mameGame->games[key] = gameInfo;
 			}
+			
+			utils->clearMameFileInfoList(mameFileInfoList);
 		}
 		else
 		{
@@ -540,139 +516,13 @@ void RomAuditor::auditConsole(QString consoleName)
 			gameInfo->sourcefile = sourcefile;
 			gameInfo->available = 1;
 
-			mameGame->games[dirpath + gameName] = gameInfo;
-		}
-	}
-
-//	win->poplog(QString("%1, %2").arg(consoleName).arg(_dirpath));
-}
-
-
-void MergedRomAuditor::audit()
-{
-	if (!isRunning())
-	{
-		//init loader, put sw path of all console systems to a list, for non-param pop operation needed by process mgt
-		consoleInfoList.clear();
-		GameInfo *gameInfo;
-		foreach (QString gameName, mameGame->games.keys())
-		{
-			gameInfo = mameGame->games[gameName];
-			if (!gameInfo->devices.isEmpty())
-			{
-				if (!gameList->isAuditConsoleFolder(gameName))
-					continue;
-			
-				QString _dirpath = mameOpts[gameName + "_extra_software"]->globalvalue;
-				QDir dir(_dirpath);
-				if (_dirpath.isEmpty() || !dir.exists())
-					continue;
-				QString dirpath = utils->getPath(_dirpath);
-
-				QStringList nameFilter;
-				nameFilter << "*" SZIP_EXT;
-				QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
-
-				foreach (QString fileName, files)
-				{
-					QStringList consoleInfo;
-				    consoleInfo << gameName << dirpath << fileName;
-					consoleInfoList.append(consoleInfo);
-				}
-			}
+			mameGame->games[dirPath + fileName] = gameInfo;
 		}
 
-		start(LowPriority);
+		if (i % 10 == 0)
+			emit progressUpdated(i);
 	}
-}
-
-void MergedRomAuditor::run()
-{
-	emit progressSwitched(consoleInfoList.size(), tr("Auditing") + " " + " ...");
-
-	for (int c = 0; c < consoleInfoList.size(); c ++)
-	{
-		QStringList consoleInfo = consoleInfoList[c];
-
-		consoleName = consoleInfo[0];
-		consolePath = consoleInfo[1];
-		mergedName = consoleInfo[2];
-
-		emit progressUpdated(c);
-
-//		win->logStatus(consolePath + mergedName);
-
-		GameInfo *gameInfo = mameGame->games[consoleName];
-
-		QStringList allExtensionNames;
-		foreach (DeviceInfo *deviceInfo, gameInfo->devices)
-			foreach (QString ext, deviceInfo->extensionNames)
-				allExtensionNames << ext;
-
-		CFileInStream archiveStream;
-		CLookToRead lookStream;
-		CSzArEx db;
-		SRes res;
-		ISzAlloc allocImp;
-		ISzAlloc allocTempImp;
-
-		if (InFile_Open(&archiveStream.file,  qPrintable(consolePath + mergedName)))
-			continue;
-
-		FileInStream_CreateVTable(&archiveStream);
-		LookToRead_CreateVTable(&lookStream, False);
-
-		lookStream.realStream = &archiveStream.s;
-		LookToRead_Init(&lookStream);
-
-		allocImp.Alloc = SzAlloc;
-		allocImp.Free = SzFree;
-
-		allocTempImp.Alloc = SzAllocTemp;
-		allocTempImp.Free = SzFreeTemp;
-
-		CrcGenerateTable();
-
-		SzArEx_Init(&db);
-		res = SzArEx_Open(&db, &lookStream.s, &allocImp, &allocTempImp);
-
-		if (res == SZ_OK)
-		{
-			UInt32 i;
-			 for (i = 0; i < db.db.NumFiles; i++)
-			 {
-				CSzFileItem *f = db.db.Files + i;
-
-				if (f->IsDir)
-				 continue;
-
-				QFileInfo fi(f->Name);
-
-				//filter out non valid extensions
-				if (!allExtensionNames.contains(fi.suffix(), Qt::CaseInsensitive))
-					continue;
-
-				GameInfo *gameInfo2;
-				gameInfo2 = new GameInfo(mameGame);
-				gameInfo2->description = fi.completeBaseName();
-				gameInfo2->isExtRom = true;
-				gameInfo2->romof = consoleName;
-				gameInfo2->sourcefile = gameInfo->sourcefile;
-				gameInfo2->available = 1;
-				mameGame->games[consolePath + mergedName + "/" + f->Name] = gameInfo2;
-			 }
-		}
-
-		SzArEx_Free(&db, &allocImp);
-		File_Close(&archiveStream.file);
-	}
-
 	emit progressSwitched(-1);
-}
-
-MergedRomAuditor::~MergedRomAuditor()
-{
-	wait();
 }
 
 

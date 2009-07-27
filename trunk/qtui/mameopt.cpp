@@ -1021,7 +1021,7 @@ void OptionDelegate::setDirectory()
 
 void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 {
-	win->log(filter);
+//	win->log(filter);
 
 	if (resetWidget == NULL)
 		resetWidget = qobject_cast<ResetWidget*>(sender()->parent());
@@ -1044,7 +1044,7 @@ void OptionDelegate::setFile(QString filter, ResetWidget *resetWidget)
 	if (!filter.isEmpty())
 		filter.append(";;");
 	filter.append(tr("All Files") + " (*)");
-	win->log(filter);
+//	win->log(filter);
 
 	QString fileName = QFileDialog::getOpenFileName
 		(resetWidget, tr("File name:"), initPath, filter);
@@ -1752,7 +1752,7 @@ void OptionUtils::loadDefault(QString text)
 				QStringList list = utils->split2Str(line0, " ");
 				MameOption *pMameOpt = new MameOption(0);	//fixme parent
 				//option has a value from ini
-				if (!list.isEmpty())
+				if (list.size() > 1)
 				{
 					QString value = list.last();
 					//remove quoted value if needed	

@@ -52,7 +52,6 @@ public:
 	void enableCtrls(bool);
 
 	RomAuditor romAuditor;
-	MergedRomAuditor mergedAuditor;
 	MameExeRomAuditor *mameAuditor;
 
 	QTreeView *tvGameList;

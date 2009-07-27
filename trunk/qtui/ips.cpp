@@ -381,7 +381,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 		QString fallbackTag = "[" + ipsLangs[0] + "]";
 		if (current == NULL && lang != fallbackTag && !success)
 		{
-			win->log(QString("lang fallback: %1").arg(_datName));
+//			win->log(QString("lang fallback: %1").arg(_datName));
 			parse(current, previous, _datName, fallbackTag);
 		}
 
@@ -494,7 +494,7 @@ void IPS::save()
 
 void IPS::clear()
 {
-	win->log("clear");
+//	win->log("clear");
 	iterateItems(twList->invisibleRootItem(), ITR_CLEAR);
 }
 

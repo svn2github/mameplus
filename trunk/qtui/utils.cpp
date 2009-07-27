@@ -1,3 +1,11 @@
+#include "7zCrc.h"
+#include "7zFile.h"
+#include "7zVersion.h"
+
+#include "7zAlloc.h"
+#include "7zExtract.h"
+#include "7zIn.h"
+
 #include "utils.h"
 
 #include "mamepguimain.h"
@@ -79,20 +87,19 @@ void Utils::lowerTrimmed(QStringList &list)
 		list[i] = list[i].toLower().trimmed();
 }
 
-QStringList Utils::split2Str(const QString &str, const QString &separator)
+QStringList Utils::split2Str(const QString &str, const QString &separator, bool reverse)
 {
 	int pos;
-	pos = str.indexOf(separator);
+	if (reverse)
+		pos = str.lastIndexOf(separator);
+	else
+		pos = str.indexOf(separator);
 
 	if (pos > -1)
-	{
-		return (QStringList()
-			<< str.left(pos).trimmed()
-			<< str.right(str.size() - pos - 1).trimmed()
-			);
-	}
+		return (QStringList() << str.left(pos).trimmed()
+							  << str.right(str.size() - pos - 1).trimmed());
 
-	return QStringList();
+	return QStringList() << str;
 }
 
 QString Utils::getPath(QString dirpath)
@@ -251,6 +258,283 @@ QString Utils::getStatusString(quint8 status, bool isSaveState)
 	return "unknown";	//error
 }
 
+void Utils::clearMameFileInfoList(QHash<QString, MameFileInfo *> mameFileInfoList)
+{
+	foreach (QString key, mameFileInfoList.keys())
+		delete mameFileInfoList[key];
+}
+
+bool Utils::matchMameFile(const QString &fileName, const QStringList &fileNameFilters)
+{
+	foreach (QString fileNameFilter, fileNameFilters)
+	{
+		//no filter
+		if (fileNameFilter == "*")
+			return true;
+
+		//wildcard filter
+		if (fileNameFilter.startsWith("*."))
+		{
+			//remove *
+			fileNameFilter.remove(0, 1);
+			if (fileName.endsWith(fileNameFilter, Qt::CaseInsensitive))
+				return true;
+		}
+		//filename filter
+		else
+		{
+			if (QString::compare(fileName, fileNameFilter, Qt::CaseInsensitive) == 0)
+				return true;
+		}
+	}
+
+	return false;
+}
+
+bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
+{
+	bool result = false;
+	
+	QFileInfo fileInfo(fileName);
+	QFile outFile(utils->getPath(QDir::tempPath()) + fileInfo.fileName());
+
+	if (outFile.open(QIODevice::WriteOnly))
+	{
+		qint64 bytes = outFile.write(mameFileInfo->data);
+		if (bytes == mameFileInfo->size)
+			result = true;
+	}
+
+	outFile.close();
+	
+	return result;
+}
+
+//fixme: filter dir from zip and path, handle paths in the zip/7z, cases
+QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, const QString &_archNames, const QString &_fileNameFilters, int method)
+{
+//fixme: clear mameFileInfoList
+	QHash<QString, MameFileInfo *> mameFileInfoList;
+
+	bool isSingleFile = true;
+	QStringList dirPaths = _dirPaths.split(";");
+
+	QStringList archNames = _archNames.split(";");
+	QStringList fileNameFilters = _fileNameFilters.split(";");
+	if (fileNameFilters.first().startsWith("*"))
+		isSingleFile = false;
+
+	MameFileInfo *mameFileInfo;
+
+	// iterate split dirpath
+	foreach (QString _dirPath, dirPaths)
+	{
+		_dirPath = utils->getPath(_dirPath);
+
+		foreach (QString archName, archNames)
+		{
+			if (isSingleFile && mameFileInfoList.size() > 0)
+				break;
+		
+			// iterate all files in the path
+			QString dirPath = utils->getPath(_dirPath + archName);
+			QDir dir(dirPath);
+			QStringList fileNames = dir.entryList(fileNameFilters, QDir::Files | QDir::Readable);
+//			win->log(QString("testing: %1, %2").arg(dirPath).arg(fileNames.count()));
+
+			for (int i = 0; i < fileNames.count(); i++)
+			{
+//				win->log("testing: " + dirPath + fileNames[i]);
+				QFile file(dirPath + fileNames[i]);
+				if (!file.open(QIODevice::ReadOnly))
+					continue;
+
+				QFileInfo fileInfo(file);
+
+				//already loaded
+				QString fileName = fileInfo.fileName();
+				if (mameFileInfoList.contains(fileName))
+					continue;
+
+				bool isCHD = fileName.endsWith(".chd");
+
+				mameFileInfo = new MameFileInfo();
+				mameFileInfo->size = file.size();
+				if (method != MAMEFILE_EXTRACT && !isCHD)
+					mameFileInfo->data = file.readAll();
+				if (method == MAMEFILE_GETINFO && !isCHD)
+				{
+					mameFileInfo->crc = crc32(0L, Z_NULL, 0);
+					mameFileInfo->crc = crc32(mameFileInfo->crc, (const Bytef*)mameFileInfo->data.data(), mameFileInfo->size);
+				}
+				else
+					mameFileInfo->crc = 0L;
+				mameFileInfoList.insert(fileName, mameFileInfo);
+
+				if (isSingleFile)
+					break;
+			}
+		}
+
+		// generate a default archName
+		QString archName = archNames.first();
+		if (archName.isEmpty())
+		{
+			QString fileNameFilter = fileNameFilters.first();
+			if (fileNameFilter.startsWith("*."))
+			{
+				// use nearest folder name
+				QDir dir(_dirPath);
+				archName = dir.dirName();
+			}
+			else
+			{
+				// use file base name
+				QFileInfo fileInfo(_dirPath + fileNameFilter);
+				archName = fileInfo.baseName();
+			}
+		}
+
+		// iterate all fileNames in the .zip
+		QuaZip zip(_dirPath + archName + ZIP_EXT);
+//		win->log("testing: " + _dirPath + archName + ZIP_EXT);
+		if(zip.open(QuaZip::mdUnzip))
+		{
+			for (bool more = zip.goToFirstFile(); more; more = zip.goToNextFile())
+			{
+				if (isSingleFile && mameFileInfoList.size() > 0)
+					break;
+			
+				QuaZipFile inFile(&zip);
+				if (!inFile.open(QIODevice::ReadOnly))
+					continue;
+
+				QuaZipFileInfo zipFileInfo;
+				if(!zip.getCurrentFileInfo(&zipFileInfo))
+					continue;
+
+				//no directories
+				if (zipFileInfo.name.endsWith("/"))
+					continue;
+
+				//already loaded
+				if (mameFileInfoList.contains(zipFileInfo.name))
+					continue;
+
+				if (!matchMameFile(zipFileInfo.name, fileNameFilters))
+					continue;
+
+				mameFileInfo = new MameFileInfo();
+				mameFileInfo->size = zipFileInfo.uncompressedSize;
+				if (method != MAMEFILE_GETINFO)
+					mameFileInfo->data = inFile.readAll();
+				mameFileInfo->crc = zipFileInfo.crc;
+				mameFileInfoList.insert(zipFileInfo.name, mameFileInfo);
+
+				if (method == MAMEFILE_EXTRACT)
+				{
+					bool re = extractMameFile(zipFileInfo.name, mameFileInfo);
+//					win->log(QString("ext re: %1").arg(re));
+				}
+
+				inFile.close();
+			}
+		}
+		zip.close();
+
+		// iterate all fileNames in the .7z
+		// implementation from LZMA SDK's 7zMain.c
+		CFileInStream archiveStream;
+		CLookToRead lookStream;
+		CSzArEx db;
+		SRes res;
+		ISzAlloc allocImp;
+		ISzAlloc allocTempImp;
+
+		if (InFile_Open(&archiveStream.file,  qPrintable(_dirPath + archName + SZIP_EXT)))
+			continue;
+
+		FileInStream_CreateVTable(&archiveStream);
+		LookToRead_CreateVTable(&lookStream, False);
+
+		lookStream.realStream = &archiveStream.s;
+		LookToRead_Init(&lookStream);
+
+		allocImp.Alloc = SzAlloc;
+		allocImp.Free = SzFree;
+
+		allocTempImp.Alloc = SzAllocTemp;
+		allocTempImp.Free = SzFreeTemp;
+
+		CrcGenerateTable();
+
+		SzArEx_Init(&db);
+		res = SzArEx_Open(&db, &lookStream.s, &allocImp, &allocTempImp);
+
+		if (res == SZ_OK)
+		{
+			UInt32 i;
+
+			/*
+			if you need cache, use these 3 variables.
+			if you use external function, you can make these variable as static.
+			*/
+			UInt32 blockIndex = 0xFFFFFFFF; /* it can have any value before first call (if outBuffer = 0) */
+			Byte *outBuffer = 0; /* it must be 0 before first call for each new archive. */
+			size_t outBufferSize = 0;  /* it can have any value before first call (if outBuffer = 0) */
+
+			for (i = 0; i < db.db.NumFiles; i++)
+			{
+				if (isSingleFile && mameFileInfoList.size() > 0)
+					break;
+
+				size_t offset;
+				size_t outSizeProcessed;
+				CSzFileItem *f = db.db.Files + i;
+
+				//no directories
+				if (f->IsDir)
+				{
+					continue;
+				}
+
+				//already loaded
+				if (mameFileInfoList.contains(f->Name))
+					continue;
+
+				if (!matchMameFile(f->Name, fileNameFilters))
+					continue;
+
+				res = SzAr_Extract(&db, &lookStream.s, i,
+					&blockIndex, &outBuffer, &outBufferSize,
+					&offset, &outSizeProcessed,
+					&allocImp, &allocTempImp);
+
+				if (res != SZ_OK)
+					break;
+
+				mameFileInfo = new MameFileInfo();
+				mameFileInfo->size = outSizeProcessed;
+				if (method != MAMEFILE_GETINFO)
+					mameFileInfo->data = QByteArray((const char *)outBuffer + offset, outSizeProcessed);
+				mameFileInfo->crc = f->FileCRC;
+				mameFileInfoList.insert(f->Name, mameFileInfo);
+
+				if (method == MAMEFILE_EXTRACT)
+				{
+					bool re = extractMameFile(f->Name, mameFileInfo);
+					win->log(QString("ext re: %1").arg(re));
+				}
+			}
+			IAlloc_Free(&allocImp, outBuffer);
+		}
+
+		SzArEx_Free(&db, &allocImp);
+		File_Close(&archiveStream.file);
+	}
+	return mameFileInfoList;
+}
+
 MyQueue::MyQueue(QObject *parent)
 : QObject(parent)
 {
@@ -320,7 +604,6 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 	for (argCount = 0; argCount < arguments.count(); argCount++)
 		logMsg += QString(argCount > 0 ? " " + arguments[argCount] : arguments[argCount]);
 	logMsg += "\", bool autoConnect = " + QString(autoConnect ? "TRUE" : "FALSE") + ")";
-//	win->log(logMsg);
 #endif
 
 	QProcess *proc = new QProcess(this);
