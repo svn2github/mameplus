@@ -151,7 +151,7 @@ static void load_mmo(int msgcat)
 	if (!mmo_config[msgcat].filename)
 		return;
 
-	fname = astring_assemble_4(astring_alloc(), ui_lang_info[current_lang].name, "/", mmo_config[msgcat].filename, ".mmo");
+	fname = astring_assemble_4(astring_alloc(), ui_lang_info[current_lang].name, PATH_SEPARATOR, mmo_config[msgcat].filename, ".mmo");
 	filerr = mame_fopen_options(lang_options, SEARCHPATH_LANGDATA, astring_c(fname), OPEN_FLAG_READ, &file);
 	astring_free(fname);
 

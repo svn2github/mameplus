@@ -236,7 +236,7 @@ render_font *render_font_alloc(const char *filename)
 	if (filename != NULL)
 	{
 		int loaded = 0;
-		astring *filename_local = astring_assemble_3(astring_alloc(), ui_lang_info[lang_get_langcode()].name, "/", filename);
+		astring *filename_local = astring_assemble_3(astring_alloc(), ui_lang_info[lang_get_langcode()].name, PATH_SEPARATOR, filename);
 //		mame_printf_warning("%s\n", filename_local);
 
 	 	if (astring_len(filename_local) > 0 && render_font_load_cached_bdf(font, astring_c(filename_local)) == 0)

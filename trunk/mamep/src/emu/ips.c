@@ -83,9 +83,9 @@ static int load_ips_file(ips_chunk **p, const char *ips_dir, const char *ips_nam
 	UINT8 buffer[8];
 	int len;
 
-	logerror("IPS: load ips flie \"%s/%s\"\n", ips_dir, ips_name);
+	mame_printf_verbose("IPS: loading ips \"%s/%s%s\"\n", ips_dir, ips_name, IPS_EXT);
 
-	fname = astring_assemble_4(astring_alloc(), ips_dir, "/", ips_name, IPS_EXT);
+	fname = astring_assemble_4(astring_alloc(), ips_dir, PATH_SEPARATOR, ips_name, IPS_EXT);
 	filerr = mame_fopen(SEARCHPATH_IPS, astring_c(fname), OPEN_FLAG_READ, &file);
 	astring_free(fname);
 
@@ -217,9 +217,9 @@ static int parse_ips_patch(running_machine *machine, ips_entry **ips_p, const ch
 	astring *fname;
 	int result = 0;
 
-	logerror("IPS: load ips \"%s\"\n", patch_name);
+	mame_printf_verbose("IPS: parsing ips \"%s/%s%s\"\n", machine->gamedrv->name, patch_name, INDEX_EXT);
 
-	fname = astring_assemble_4(astring_alloc(), machine->gamedrv->name, "/", patch_name, INDEX_EXT);
+	fname = astring_assemble_4(astring_alloc(), machine->gamedrv->name, PATH_SEPARATOR, patch_name, INDEX_EXT);
 	filerr = mame_fopen(SEARCHPATH_IPS, astring_c(fname), OPEN_FLAG_READ, &fpDat);
 	astring_free(fname);
 
