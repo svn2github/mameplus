@@ -19,13 +19,13 @@ DRVLIBS += \
 	$(MESSOBJ)/ascii.a \
 	$(MESSOBJ)/atari.a \
 	$(MESSOBJ)/bandai.a \
-	$(MESSOBJ)/capcom.a \
 	$(MESSOBJ)/nec.a \
 	$(MESSOBJ)/nintendo.a \
 	$(MESSOBJ)/sega.a \
 	$(MESSOBJ)/snk.a \
 	$(MESSOBJ)/shared.a \
 
+#	$(MESSOBJ)/capcom.a \
 
 
 

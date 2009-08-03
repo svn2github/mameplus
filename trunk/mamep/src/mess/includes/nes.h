@@ -33,9 +33,6 @@ struct _nes_state
 
 /*----------- defined in machine/nes.c -----------*/
 
-void ppu_mirror_custom (int page, int address);
-void ppu_mirror_custom_vrom (int page, int address);
-
 WRITE8_HANDLER ( nes_IN0_w );
 WRITE8_HANDLER ( nes_IN1_w );
 
@@ -59,6 +56,8 @@ struct nes_struct
 	UINT8 *vrom;
 	UINT8 *vram;
 	UINT8 *wram;
+	UINT8 *ciram; //PPU nametable RAM - external to PPU!
+	UINT8 *exram; //MMC5 exram. We should move this one day
 
 	/* Variables which can change */
 	UINT8 mid_ram_enable;
@@ -101,6 +100,18 @@ int nes_ppu_vidaccess( const device_config *device, int address, int data );
 
 void nes_partialhash(char *dest, const unsigned char *data,
 	unsigned long length, unsigned int functions);
+
+//TEMPORARY PPU STUFF
+
+/* mirroring types */
+#define PPU_MIRROR_NONE		0
+#define PPU_MIRROR_VERT		1
+#define PPU_MIRROR_HORZ		2
+#define PPU_MIRROR_HIGH		3
+#define PPU_MIRROR_LOW		4
+#define PPU_MIRROR_4SCREEN	5	// Same effect as NONE, but signals that we should never mirror
+
+void set_nt_mirroring(int mirroring );
 
 
 /*----------- defined in video/nes.c -----------*/

@@ -91,10 +91,10 @@ const game_driver * const consoledrivers[] =
     DRIVER( sgx )       /* SuperGrafX NEC 1989                              */
 
     /* CAPCOM */
-    DRIVER( sfach )     /* CPS Changer (Street Fighter Alpha)               */
-    DRIVER( sfzbch )    /* CPS Changer (Street Fighter ZERO Brazil)         */
-    DRIVER( sfzch )     /* CPS Changer (Street Fighter ZERO)                */
-    DRIVER( wofch )     /* CPS Changer (Tenchi Wo Kurau II)                 */
+//0133u1    DRIVER( sfach )     /* CPS Changer (Street Fighter Alpha)               */
+//0133u1    DRIVER( sfzbch )    /* CPS Changer (Street Fighter ZERO Brazil)         */
+//0133u1    DRIVER( sfzch )     /* CPS Changer (Street Fighter ZERO)                */
+//0133u1    DRIVER( wofch )     /* CPS Changer (Tenchi Wo Kurau II)                 */
 
     /* BANDAI */
     DRIVER( wswan )     /* Bandai WonderSwan Handheld                       */
