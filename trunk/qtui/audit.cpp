@@ -300,10 +300,12 @@ void RomAuditor::run()
 			}
 
 			//iterate rom files
-			//also audit non compressed roms
-			romFiles = romFiles + romDirs;
 			for (int i = 0; i < romFiles.count(); i++)
 			{
+				//update progressbar every 10 files
+				if (i % 10 == 0)
+					emit progressUpdated(i);
+
 				QString gameName = romFiles[i].toLower().remove(ZIP_EXT);
 
 				if (!mameGame->games.contains(gameName))
@@ -312,30 +314,33 @@ void RomAuditor::run()
 				gameInfo = mameGame->games[gameName];
 				auditedGames.insert(gameName);
 
-				QHash<QString, MameFileInfo *> mameFileInfoList = 
-					utils->iterateMameFile(dirPath, gameName, "*", MAMEFILE_GETINFO);
+				//open zip file
+				QuaZip zip(utils->getPath(dirPath) + romFiles[i]);
+				if(!zip.open(QuaZip::mdUnzip))
+					continue;
 
-				foreach (QString key, mameFileInfoList.keys())
+				QuaZipFileInfo zipFileInfo;
+				QuaZipFile zipFile(&zip);
+
+				//iterate all files in the zip
+				for(bool more=zip.goToFirstFile(); more; more=zip.goToNextFile())
 				{
-					quint32 crc = mameFileInfoList[key]->crc;
+					if(!zip.getCurrentFileInfo(&zipFileInfo))
+						continue;
+
 					//fill rom available status if crc recognized
-					if (gameInfo->roms.contains(crc))
-						gameInfo->roms[crc]->available = true;
+					if (gameInfo->roms.contains(zipFileInfo.crc))
+						gameInfo->roms[zipFileInfo.crc]->available = true;
 
 					//check if rom belongs to a clone
 					foreach (QString cloneName, gameInfo->clones)
 					{
 						auditedGames.insert(cloneName);
 						gameInfo2 = mameGame->games[cloneName];
-						if (gameInfo2->roms.contains(crc))
-							gameInfo2->roms[crc]->available = true;
+						if (gameInfo2->roms.contains(zipFileInfo.crc))
+							gameInfo2->roms[zipFileInfo.crc]->available = true;
 					}
 				}
-
-				utils->clearMameFileInfoList(mameFileInfoList);
-
-				if (i % 100 == 0)
-					emit progressUpdated(i);
 			}
 		}
 
