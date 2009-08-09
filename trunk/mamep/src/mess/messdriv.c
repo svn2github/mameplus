@@ -58,10 +58,10 @@ const game_driver * const consoledrivers[] =
     DRIVER( gbpocket )  /* Nintendo Game Boy Pocket Handheld                */
     DRIVER( gblight )   /* Nintendo Game Boy Light Handheld             */
     DRIVER( gbcolor )   /* Nintendo Game Boy Color Handheld                 */
-    DRIVER( gba )
     DRIVER( snes )      /* Nintendo Super Nintendo NTSC                     */
     DRIVER( snespal )   /* Nintendo Super Nintendo PAL                      */
     DRIVER( sfcbox )    /* Nintendo Super Famicom Box                       */
+    DRIVER( gba )	/* Nintendo Game Boy Advance Handheld               */
 
     DRIVER( megaduck )  /* Megaduck                                         */
 

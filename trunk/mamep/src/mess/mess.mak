@@ -93,7 +93,6 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_VIDEO)/gb.o			\
 	$(MESS_MACHINE)/gb.o		\
 	$(MESS_DRIVERS)/gb.o		\
-	$(MESS_DRIVERS)/gba.o	 	\
 	$(MESS_MACHINE)/nes_mmc.o	\
 	$(MAME_VIDEO)/ppu2c0x.o		\
 	$(MESS_VIDEO)/nes.o			\
@@ -101,6 +100,8 @@ $(MESSOBJ)/nintendo.a:			\
 	$(MESS_DRIVERS)/nes.o		\
 	$(MESS_MACHINE)/snescart.o	\
 	$(MESS_DRIVERS)/snes.o	 	\
+	$(MESS_DRIVERS)/gba.o		\
+	$(MESS_VIDEO)/gba.o		\
 
 $(MESSOBJ)/sega.a:				\
 	$(MESS_DRIVERS)/genesis.o	\
