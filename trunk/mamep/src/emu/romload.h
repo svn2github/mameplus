@@ -137,8 +137,20 @@ struct _rom_entry
 };
 
 //mamep: moved from romload.c
-typedef struct _rom_load_data rom_load_data;
-struct _rom_load_data
+typedef struct _open_chd open_chd;
+struct _open_chd
+{
+	open_chd *			next;					/* pointer to next in the list */
+	const char *		region;					/* disk region we came from */
+	chd_file *			origchd;				/* handle to the original CHD */
+	mame_file *			origfile;				/* file handle to the original CHD file */
+	chd_file *			diffchd;				/* handle to the diff CHD */
+	mame_file *			difffile;				/* file handle to the diff CHD file */
+};
+
+
+typedef struct _romload_private rom_load_data;
+struct _romload_private
 {
 	running_machine *machine;			/* machine object where needed */
 	int				system_bios;		/* the system BIOS we wish to load */
@@ -155,6 +167,8 @@ struct _rom_load_data
 #ifdef USE_IPS
 	void *			patch;				/* current ips */
 #endif /* USE_IPS */
+	open_chd *		chd_list;			/* disks */
+	open_chd **		chd_list_tailptr;
 
 	UINT8 *			regionbase;			/* base of current region */
 	UINT32			regionlength;		/* length of current region */
@@ -302,7 +316,7 @@ struct _rom_load_data
 void rom_init(running_machine *machine);
 
 /* return the number of warnings we generated */
-int rom_load_warnings(void);
+int rom_load_warnings(running_machine *machine);
 
 
 
@@ -346,7 +360,7 @@ chd_error open_disk_image(const game_driver *gamedrv, const rom_entry *romp, mam
 chd_error open_disk_image_options(core_options *options, const game_driver *gamedrv, const rom_entry *romp, mame_file **image_file, chd_file **image_chd);
 
 /* return a pointer to the CHD file associated with the given region */
-chd_file *get_disk_handle(const char *region);
+chd_file *get_disk_handle(running_machine *machine, const char *region);
 
 /* set a pointer to the CHD file associated with the given region */
 void set_disk_handle(running_machine *machine, const char *region, mame_file *file, chd_file *chd);

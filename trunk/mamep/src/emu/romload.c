@@ -38,8 +38,20 @@
 ***************************************************************************/
 
 #if 0 //mamep: moved to romload.h
-typedef struct _rom_load_data rom_load_data;
-struct _rom_load_data
+typedef struct _open_chd open_chd;
+struct _open_chd
+{
+	open_chd *			next;					/* pointer to next in the list */
+	const char *		region;					/* disk region we came from */
+	chd_file *			origchd;				/* handle to the original CHD */
+	mame_file *			origfile;				/* file handle to the original CHD file */
+	chd_file *			diffchd;				/* handle to the diff CHD */
+	mame_file *			difffile;				/* file handle to the diff CHD file */
+};
+
+
+typedef struct _romload_private rom_load_data;
+struct _romload_private
 {
 	running_machine *machine;			/* machine object where needed */
 	int				system_bios;		/* the system BIOS we wish to load */
@@ -56,6 +68,8 @@ struct _rom_load_data
 #ifdef USE_IPS
 	void *			patch;				/* current ips */
 #endif /* USE_IPS */
+	open_chd *		chd_list;			/* disks */
+	open_chd **		chd_list_tailptr;
 
 	UINT8 *			regionbase;			/* base of current region */
 	UINT32			regionlength;		/* length of current region */
@@ -63,31 +77,6 @@ struct _rom_load_data
 	astring *		errorstring;		/* error string */
 };
 #endif
-
-
-typedef struct _open_chd open_chd;
-struct _open_chd
-{
-	open_chd *			next;					/* pointer to next in the list */
-	const char *		region;					/* disk region we came from */
-	chd_file *			origchd;				/* handle to the original CHD */
-	mame_file *			origfile;				/* file handle to the original CHD file */
-	chd_file *			diffchd;				/* handle to the diff CHD */
-	mame_file *			difffile;				/* file handle to the diff CHD file */
-};
-
-
-
-/***************************************************************************
-    GLOBAL VARIABLES
-***************************************************************************/
-
-/* disks */
-static open_chd *chd_list;
-static open_chd **chd_list_tailptr;
-
-static int total_rom_load_warnings;
-
 
 
 /***************************************************************************
@@ -107,14 +96,29 @@ static void rom_exit(running_machine *machine);
     CHD file associated with the given region
 -------------------------------------------------*/
 
-chd_file *get_disk_handle(const char *region)
+chd_file *get_disk_handle(running_machine *machine, const char *region)
 {
 	open_chd *curdisk;
 
-	for (curdisk = chd_list; curdisk != NULL; curdisk = curdisk->next)
+	for (curdisk = machine->romload_data->chd_list; curdisk != NULL; curdisk = curdisk->next)
 		if (strcmp(curdisk->region, region) == 0)
 			return (curdisk->diffchd != NULL) ? curdisk->diffchd : curdisk->origchd;
 	return NULL;
+}
+
+
+/*-------------------------------------------------
+    add_disk_handle - add a disk to the to the
+    list of CHD files
+-------------------------------------------------*/
+
+static void add_disk_handle(running_machine *machine, open_chd *chd)
+{
+	romload_private *romload_data = machine->romload_data;
+
+	*romload_data->chd_list_tailptr = auto_alloc(machine, open_chd);
+	**romload_data->chd_list_tailptr = *chd;
+	romload_data->chd_list_tailptr = &(*romload_data->chd_list_tailptr)->next;
 }
 
 
@@ -133,9 +137,7 @@ void set_disk_handle(running_machine *machine, const char *region, mame_file *fi
 	chd.origfile = file;
 
 	/* we're okay, add to the list of disks */
-	*chd_list_tailptr = auto_alloc(machine, open_chd);
-	**chd_list_tailptr = chd;
-	chd_list_tailptr = &(*chd_list_tailptr)->next;
+	add_disk_handle(machine, &chd);
 }
 
 
@@ -1249,9 +1251,7 @@ static void process_disk_entries(rom_load_data *romdata, const char *regiontag, 
 
 			/* we're okay, add to the list of disks */
 			LOG(("Assigning to handle %d\n", DISK_GETINDEX(romp)));
-			*chd_list_tailptr = auto_alloc(romdata->machine, open_chd);
-			**chd_list_tailptr = chd;
-			chd_list_tailptr = &(*chd_list_tailptr)->next;
+			add_disk_handle(romdata->machine, &chd);
 		}
 	}
 	astring_free(filename);
@@ -1362,57 +1362,58 @@ static void process_region_list(rom_load_data *romdata)
 
 void rom_init(running_machine *machine)
 {
-	rom_load_data romdata;
+	rom_load_data *romdata;
 #ifdef USE_IPS
 	const char *patchname = options_get_string(mame_options(), OPTION_IPS);
 #endif /* USE_IPS */
+
+	/* allocate private data */
+	machine->romload_data = romdata = auto_alloc_clear(machine, romload_private);
 
 	/* make sure we get called back on the way out */
 	add_exit_callback(machine, rom_exit);
 
 	/* reset the romdata struct */
-	memset(&romdata, 0, sizeof(romdata));
-	romdata.machine = machine;
-	romdata.errorstring = astring_alloc();
+	romdata->machine = machine;
+	romdata->errorstring = astring_alloc();
 
 	/* figure out which BIOS we are using */
-	determine_bios_rom(&romdata);
+	determine_bios_rom(romdata);
 
 	/* count the total number of ROMs */
-	count_roms(&romdata);
+	count_roms(romdata);
 
 	/* reset the disk list */
-	chd_list = NULL;
-	chd_list_tailptr = &chd_list;
+	romdata->chd_list = NULL;
+	romdata->chd_list_tailptr = &machine->romload_data->chd_list;
 
 #ifdef USE_IPS
 	if (patchname && *patchname)
 	{
-		if (!open_ips_entry(machine, patchname, &romdata, machine->gamedrv->rom))
+		if (!open_ips_entry(machine, patchname, romdata, machine->gamedrv->rom))
 		{
-			display_rom_load_results(&romdata);
+			display_rom_load_results(romdata);
 //			return;
 		}
 	}
 #endif /* USE_IPS */
 
 	/* process the ROM entries we were passed */
-	process_region_list(&romdata);
+	process_region_list(romdata);
 
 #ifdef USE_IPS
 	if (patchname && *patchname)
 	{
-		if (!close_ips_entry(&romdata))
+		if (!close_ips_entry(romdata))
 		{
-			display_rom_load_results(&romdata);
+			display_rom_load_results(romdata);
 			return;
 		}
 	}
 #endif /* USE_IPS */
 	/* display the results and exit */
-	total_rom_load_warnings = romdata.warnings;
-	display_rom_load_results(&romdata);
-	astring_free(romdata.errorstring);
+	display_rom_load_results(romdata);
+	astring_free(romdata->errorstring);
 }
 
 
@@ -1433,7 +1434,7 @@ static void rom_exit(running_machine *machine)
 	}
 
 	/* close all hard drives */
-	for (curchd = chd_list; curchd != NULL; curchd = curchd->next)
+	for (curchd = machine->romload_data->chd_list; curchd != NULL; curchd = curchd->next)
 	{
 		if (curchd->diffchd != NULL)
 			chd_close(curchd->diffchd);
@@ -1452,7 +1453,7 @@ static void rom_exit(running_machine *machine)
     warnings we generated
 -------------------------------------------------*/
 
-int rom_load_warnings(void)
+int rom_load_warnings(running_machine *machine)
 {
-	return total_rom_load_warnings;
+	return machine->romload_data->warnings;
 }
