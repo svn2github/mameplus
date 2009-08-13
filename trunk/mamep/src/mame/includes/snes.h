@@ -413,7 +413,7 @@ extern UINT8  *snes_ram;			/* Main memory */
 extern UINT8  *spc_ram;				/* SPC main memory */
 extern UINT8  spc_port_in[4];		/* SPC input ports */
 extern UINT8  spc_port_out[4];		/* SPC output ports */
-struct SNES_PPU_STRUCT
+struct SNES_PPU_STRUCT	/* once all the regs are saved in this structure, it would be better to reorganize it a bit... */
 {
 	struct
 	{
@@ -422,6 +422,12 @@ struct SNES_PPU_STRUCT
 		UINT32 map;
 		UINT8 map_size;
 		UINT8 tile_size;
+		UINT8 mosaic_enabled;	// actually used only for layers 0->3!
+		UINT8 main_window_enabled;
+		UINT8 sub_window_enabled;
+		UINT8 window1_enabled, window1_invert;
+		UINT8 window2_enabled, window2_invert;
+		UINT8 wlog_mask;
 		struct
 		{
 			UINT16 horizontal;
@@ -431,7 +437,13 @@ struct SNES_PPU_STRUCT
 			UINT16 tile_vert;
 			UINT16 shift_vert;
 		} offset;
-	} layer[5];
+	} layer[5];	// this is for the BG1 - BG2 - BG3 - BG4 - OBJ layers
+	struct
+	{
+		UINT8 window1_enabled, window1_invert;
+		UINT8 window2_enabled, window2_invert;
+		UINT8 wlog_mask;
+	} colour;	// this is for the color (which is 'seen' as a layer by the window masking code)
 	struct
 	{
 		UINT8 address_low;
@@ -462,17 +474,40 @@ struct SNES_PPU_STRUCT
 	} beam;
 	struct
 	{
+		UINT8 repeat;
+		UINT8 hflip;
+		UINT8 vflip;
 		INT16 matrix_a;
 		INT16 matrix_b;
 		INT16 matrix_c;
 		INT16 matrix_d;
 		INT16 origin_x;
 		INT16 origin_y;
+		UINT16 hor_offset;
+		UINT16 ver_offset;
 	} mode7;
+	UINT8 mosaic_size;
+	UINT8 main_color_mask;
+	UINT8 sub_color_mask;
+	UINT8 sub_add_mode;
+	UINT8 bg3_priority_bit;
+	UINT8 direct_color;
+	UINT8 ppu_last_scroll;		/* as per Anomie's doc and Theme Park, all scroll regs shares (but mode 7 ones) the same
+                                    'previous' scroll value */
+	UINT8 mode7_last_scroll;	/* as per Anomie's doc mode 7 scroll regs use a different value, shared with mode 7 matrix! */
+
+	UINT8 main_bg_enabled[5];	// these would probably better fit the layer struct, but it would make worse the code in snes_update_mode_X()
+	UINT8 sub_bg_enabled[5];
+	UINT8 ppu1_open_bus, ppu2_open_bus;
+	UINT8 ppu1_version, ppu2_version;
+	UINT8 window1_left, window1_right, window2_left, window2_right;
+
+	UINT16 mosaic_table[16][4096];
 	UINT8 clipmasks[6][SNES_SCR_WIDTH + 8];
 	UINT8 update_windows;
 	UINT8 update_offsets;
 	UINT8 mode;
+	UINT8 interlace; //doubles the visible resolution
 };
 
 struct snes_cart_info

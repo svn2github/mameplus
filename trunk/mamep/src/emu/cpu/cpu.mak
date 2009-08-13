@@ -546,6 +546,21 @@ $(CPUOBJ)/e132xs/e132xs.o:	$(CPUSRC)/e132xs/e132xs.c \
 
 
 #-------------------------------------------------
+# Intel 4004
+#-------------------------------------------------
+
+ifneq ($(filter I4004,$(CPUS)),)
+OBJDIRS += $(CPUOBJ)/i4004
+CPUOBJS += $(CPUOBJ)/i4004/i4004.o
+DBGOBJS += $(CPUOBJ)/i4004/4004dasm.o
+endif
+
+$(CPUOBJ)/i4004/i4004.o:	$(CPUSRC)/i4004/i4004.c \
+							$(CPUSRC)/i4004/i4004.h
+
+
+
+#-------------------------------------------------
 # Intel 8080/8085A
 #-------------------------------------------------
 
@@ -557,8 +572,7 @@ endif
 
 $(CPUOBJ)/i8085/i8085.o:	$(CPUSRC)/i8085/i8085.c \
 							$(CPUSRC)/i8085/i8085.h \
-							$(CPUSRC)/i8085/i8085cpu.h \
-							$(CPUSRC)/i8085/i8085daa.h
+							$(CPUSRC)/i8085/i8085cpu.h
 
 
 
@@ -1530,7 +1544,6 @@ endif
 
 $(CPUOBJ)/z180/z180.o:	$(CPUSRC)/z180/z180.c \
 						$(CPUSRC)/z180/z180.h \
-						$(CPUSRC)/z180/z180daa.h \
 						$(CPUSRC)/z180/z180op.c \
 						$(CPUSRC)/z180/z180ops.h \
 						$(CPUSRC)/z180/z180tbl.h \

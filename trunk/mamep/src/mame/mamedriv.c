@@ -242,6 +242,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( ckongg )	/* 1981 bootleg */
 	DRIVER( kkgalax )	/* 1981 bootleg */
 	DRIVER( porter )	/* 1982 bootleg (Arcade TV Game List - P.98, Left, 15 from bottom) */
+	DRIVER( tdpgal )	/* 1983 Design Labs / Thomas Automatics */
 
 	/* Has some similarities with Moon Cresta but Board is very different */
 	DRIVER( rockclim )	/* (c)1981 Taito */
@@ -831,7 +832,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( swcourtj )	/* (c) 1992 (Japan) */
 	DRIVER( emeralda )	/* (c) 1993 (Japan) */
 	DRIVER( emeraldaj )	/* (c) 1993 (Japan) */
-	DRIVER( emeraldaja )/* (c) 1993 (Japan) */
+	DRIVER( emeraldaja )	/* (c) 1993 (Japan) */
 	DRIVER( numanath )	/* (c) 1993 (World) */
 	DRIVER( numanathj )	/* (c) 1993 (Japan) */
 	DRIVER( quiztou )	/* (c) 1993 (Japan) */
@@ -841,8 +842,9 @@ const game_driver * const mamedrivers[] =
 	/* Namco NB-1 / NB-2 System games */
 	DRIVER( nebulray )	/* (c) 1994 (World) */
 	DRIVER( nebulrayj )	/* (c) 1994 (Japan) */
-	DRIVER( ptblank )	/* (c) 1994 */
-	DRIVER( gunbulet )	/* (c) 1994 (Japan) */
+	DRIVER( ptblank )	/* (c) 1994 (GN2 World) */
+	DRIVER( gunbuletj )	/* (c) 1994 (GN1 Japan) */
+	DRIVER( gunbuletw )	/* (c) 1994 (GN3 World) */
 	DRIVER( gslugrsj )	/* (c) 1993 (Japan) */
 	DRIVER( gslgr94u )	/* (c) 1994 */
 	DRIVER( gslgr94j )	/* (c) 1994 (Japan) */
@@ -850,7 +852,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( sws96 )		/* (c) 1996 (Japan) */
 	DRIVER( sws97 )		/* (c) 1997 (Japan) */
 	DRIVER( vshoot )	/* (c) 1994 */
-	DRIVER( outfxies )	/* (c) 1994 */
+	DRIVER( outfxies )	/* (c) 1994 (World) */
 	DRIVER( outfxiesj )	/* (c) 1994 (Japan) */
 	DRIVER( machbrkr )	/* (c) 1995 (Japan) */
 
@@ -881,6 +883,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( ridgerac )	/* (c) 1993 */
 	DRIVER( ridgeracb )	/* (c) 1993 */
 	DRIVER( ridgeracj )	/* (c) 1993 */
+	DRIVER( ridgerac3 )	/* (c) 1993 */
 	DRIVER( acedrvrw )	/* (c) 1994 */
 	DRIVER( alpinerd )	/* (c) 1994 */
 	DRIVER( alpinerc )	/* (c) 1994 */
@@ -972,9 +975,11 @@ const game_driver * const mamedrivers[] =
 
 	/* Nintendo games */
 	DRIVER( spacefev )	/* (c) 1979 Nintendo */
-	DRIVER( spacefeva )	/* (c) 1979 Nintendo */
+	DRIVER( spacefevo )	/* (c) 1979 Nintendo */
+	DRIVER( spacefevo2 )/* (c) 1979 Nintendo */
 	DRIVER( highsplt )	/* (c) 1979 Nintendo */
 	DRIVER( highsplta )	/* (c) 1979 Nintendo */
+	DRIVER( highspltb )	/* (c) 1979 Nintendo */
 	DRIVER( spacelnc )	/* (c) 1979 Nintendo */
 	DRIVER( sheriff )	/* (c) 1979 Nintendo */
 	DRIVER( bandido )	/* (c) 1980 Exidy */
@@ -1112,6 +1117,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( vspinbalj )	/* (c) 1984 Nintendo */
 	DRIVER( vsslalom )	/* (c) 1986 Nintendo */
 	DRIVER( vssoccer )	/* (c) 1985 Nintendo */
+	DRIVER( vssoccerj )	/* (c) 1985 Nintendo */
 	DRIVER( vsgradus )	/* (c) 1986 Konami */
 	DRIVER( platoon )	/* (c) 1987 Ocean */
 	DRIVER( vstetris )	/* (c) 1988 Atari */
@@ -1127,12 +1133,12 @@ const game_driver * const mamedrivers[] =
 	DRIVER( vsbball )	/* (c) 1984 Nintendo */
 	DRIVER( vsbballj )	/* (c) 1984 Nintendo */
 	DRIVER( vsbballja )	/* (c) 1984 Nintendo */
+	DRIVER( vsbballjb )	/* (c) 1984 Nintendo */
 	DRIVER( iceclmrj )	/* (c) 1984 Nintendo */
 	DRIVER( vsgshoe )	/* (c) 1986 Nintendo */
 	DRIVER( supxevs )	/* (c) 1986 Nintendo */
 	DRIVER( vsfdf )		/* (c) 1986 Sunsoft */
 	DRIVER( smgolfb )	/* (c) 1985 Nintendo */
-	DRIVER( vsbballjb )	/* (c) 1984 Nintendo */
 
 	/* NES-based hacks */
 	DRIVER( multigam )	/* 1992 */
@@ -1581,6 +1587,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( qix )		/* LK  (c) 1981 Taito America Corporation */
 	DRIVER( qixa )		/* LK  (c) 1981 Taito America Corporation */
 	DRIVER( qixb )		/* LK  (c) 1981 Taito America Corporation */
+	DRIVER( qixo )		/* LK  (c) 1981 Taito America Corporation */
 	DRIVER( qix2 )		/* ??  (c) 1981 Taito America Corporation */
 	DRIVER( sdungeon )	/* SD  (c) 1981 Taito America Corporation */
 	DRIVER( elecyoyo )	/* YY  (c) 1982 Taito America Corporation */
@@ -5315,7 +5322,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gradius2 )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( gradius2a )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( gradius2b )	/* GX785 (c) 1988 (Japan) */
-	DRIVER( cuebrckj )	/* GX903 (c) 1989 */
+	DRIVER( cuebrickj )	/* GX903 (c) 1989 (Japan) */
 	DRIVER( fround )	/* GX870 (c) 1988 */
 	DRIVER( froundl )	/* GX870 (c) 1988 */
 	DRIVER( hpuncher )	/* GX870 (c) 1988 (Japan) */
@@ -5503,7 +5510,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( bmfinal )	/* GXC01 (c) 2002 (Japan) */
 
 	//DRIVER( popn1 )       /* GX803 (c) 1998 (Japan) */
-	//DRIVER( popn2 )       /* GX831 (c) 1998 (Japan) */
+	DRIVER( popn2 )       /* GX831 (c) 1998 (Japan) */
 	//DRIVER( popn3 )       /* GX980 (c) 1999 (Japan) */
 	//DRIVER( popnstex )    /* GX970 (c) 1999 (Japan) */
 
@@ -5517,7 +5524,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( popn7 )		/* not sure, doesn't boot yet (c) 2001 */
 
 	/* PowerPC based Konami games */
-	DRIVER( fiveside )	/*   479 (c)1995 */
+	DRIVER( fiveside )	/* GX479 (c)1995 */
 	DRIVER( thunderh )	/* GX680 (c)1996 Euro EAA */
 	DRIVER( thunderhu )	/* GX680 (c)1996 USA UAA */
 	DRIVER( slrasslt )	/* GX792 (c)1996 */
@@ -5526,8 +5533,8 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( gticlubj )	/* GX688 (c)1996 Japan JAA */
 	DRIVER( hangplt )	/* GX685 (c)1997 */
 	DRIVER( nbapbp )	/* GX778 (c)1998 */
-	DRIVER( terabrst )	/* GX??? (c)1998 USA UEL 1998/07/17*/
-	DRIVER( terabrsta )	/* GX??? (c)1998 Asia AAA 1998/02/25 */
+	DRIVER( terabrst )	/* GX715 (c)1998 USA UEL 1998/07/17*/
+	DRIVER( terabrsta )	/* GX715 (c)1998 Asia AAA 1998/02/25 */
 	DRIVER( gradius4 )	/* GX837 (c)1999 */
 	DRIVER( sscope )	/* GX830 (c)1999 */
 	DRIVER( sscopea )	/* GX830 (c)1999 */
@@ -5535,10 +5542,11 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( racingj )	/* GX676 (c)1998 */
 	DRIVER( racingj2 )	/* GX888 (c)1999 */
 	DRIVER( thrilld )	/* GX713 (c)1998 */
-	DRIVER( midnrun )	/* GX??? (c)1995 */
+	DRIVER( midnrun )	/* GX476 (c)1995 */
 	DRIVER( windheat )	/* GX677 (c)1996 */
 	DRIVER( windheatu )	/* GX677 (c)1996 */
-	DRIVER( jetwave )	/* GX??? (c)1996 */
+	DRIVER( windheatj )	/* GX677 (c)1996 */
+	DRIVER( jetwave )	/* GX678 (c)1996 */
 
 	/* Konami M2 games */
 	DRIVER( polystar )	/* GX623 (c)1997 */
@@ -6923,6 +6931,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 
 	/* Photon hardware games */
 	DRIVER( phtetris )
+	DRIVER( phpython )
 
 	/* Valadon Automation games */
 	DRIVER( bagman )	/* (c) 1982 */
@@ -8053,17 +8062,18 @@ Other Sun games
 	DRIVER( lhb )		/* (c) 1995 */
 	DRIVER( lhba )		/* (c) 1995 */
 	DRIVER( dbc )		/* (c) 199? */
-	DRIVER( chindrag )	/* (c) 1995 */
-	DRIVER( chugokur )	/* (c) 1995 */
 	DRIVER( chmplst2 )	/* (c) 1996 */
 	DRIVER( xymg )		/* (c) 1996 */
 	DRIVER( grtwall )	/* (c) 1996 */
 	DRIVER( vbowl )		/* (c) 1996 */
 	DRIVER( vbowlj )	/* (c) 1996 */
 	DRIVER( drgnwrld )	/* (c) 1997 */
-	DRIVER( drgwrld3 )	/* (c) 1995 */
-	DRIVER( chindrac )	/* (c) 1995 */
-	DRIVER( chindrah )	/* (c) 1995 */
+	DRIVER( drgnwrldv30 )	/* (c) 1995 */
+	DRIVER( drgnwrldv21 )	/* (c) 1995 */
+	DRIVER( drgnwrldv21j )	/* (c) 1995 */
+	DRIVER( drgnwrldv20j )	/* (c) 1995 */
+	DRIVER( drgnwrldv10c )	/* (c) 1995 */
+	DRIVER( drgnwrldv11h )	/* (c) 1995 */
 
 	DRIVER( lordgun )	/* (c) 1994 */
 	DRIVER( hfh )		/* (c) 199? */
@@ -8145,6 +8155,7 @@ Other Sun games
 
 	/* Omori games */
 	DRIVER( shuttlei )	/* (c) 1979 Omori (Arcade Tv Game List - P.79, Left, 6 from bottom) */
+	DRIVER( skylove )	/* (c) 1979 Omori */
 	DRIVER( battlex )	/* (c) 1982 Omori E. Co., Ltd. */
 	DRIVER( carjmbre )	/* (c) 1983 Omori Electric Co., Ltd. */
 	DRIVER( popper )	/* (c) 1983 Omori Electric Co., Ltd. */
@@ -8753,6 +8764,7 @@ Other Sun games
 	DRIVER( megat4te )	/* (c) 1996 Merit */
 	DRIVER( megat4st )	/* (c) 1996 Merit */
 	DRIVER( megat5 )	/* (c) 1997 Merit */
+	DRIVER( megat5a )	/* (c) 1997 Merit */
 	DRIVER( megat5nj )	/* (c) 1997 Merit */
 	DRIVER( megat6 )	/* (c) 1998 Merit */
 	DRIVER( suprgolf )	/* (c) 1989 Nasco */
@@ -9205,7 +9217,7 @@ Other Sun games
 	DRIVER( kgbirda )	/* (c) 1996 */
 	DRIVER( phantomp )	/* (c) 1998 */
 	DRIVER( swtht2nz )	/* (c) 1998 */
-	DRIVER( topgear )	/* (c) 1996 */	
+	DRIVER( topgear )	/* (c) 1996 */
 
 	/* Aristocrat Mk5 hardware */
 	DRIVER( swthrt2v )	/* (c) 1995 */
@@ -9265,224 +9277,223 @@ Other Sun games
 	DRIVER( wcat3 )
 	DRIVER( mtonic )	/* 198? (c) Tonic */
 
-	DRIVER( sfbonus )	/* (c) 199? Amcoe */
-	DRIVER( sfbonusa )	/* (c) 199? Amcoe */
-	DRIVER( sfbonusb )
-	DRIVER( sfbonusd )
-	DRIVER( sfbonusv )
-	DRIVER( parrot3 )
-	DRIVER( parrot3b )
-	DRIVER( parrot3d )
-	DRIVER( parrot3v )
-	DRIVER( parrot3v2 )
-	DRIVER( hldspin1 )
-	DRIVER( hldspin1b )
-	DRIVER( hldspin1d )
-	DRIVER( hldspin1v )
-	DRIVER( hldspin2 )
-	DRIVER( hldspin2b )
-	DRIVER( hldspin2d )
-	DRIVER( hldspin2v )
-	DRIVER( fcnudge )
-	DRIVER( fcnudge2 )
-	DRIVER( fcnudge3 )
-	DRIVER( fcnudge4 )
-	DRIVER( pickwin )
-	DRIVER( pickwina )
-	DRIVER( pickwinb )
-	DRIVER( pickwinb2 )
-	DRIVER( pickwind )
-	DRIVER( pickwind2 )
-	DRIVER( pickwinv )
-	DRIVER( pickwinv2 )
-	DRIVER( pickwinv3 )
-	DRIVER( tighook )
-	DRIVER( tighooka )
-	DRIVER( tighookc )
-	DRIVER( tighookc2 )
-	DRIVER( tighookv )
-	DRIVER( tighookv2 )
-	DRIVER( tighookv3 )
-	DRIVER( tighookd )
-	DRIVER( tighookd2 )
-	DRIVER( robadv )
-	DRIVER( robadvc )
-	DRIVER( robadvd )
-	DRIVER( robadvv1 )
-	DRIVER( robadvv2 )
-	DRIVER( robadv2 )
-	DRIVER( robadv2a )
-	DRIVER( robadv2c )
-	DRIVER( robadv2v1 )
-	DRIVER( robadv2v2 )
-	DRIVER( robadv2v3 )
-	DRIVER( robadv2v4 )
-	DRIVER( robadv2d )
-	DRIVER( robadv2d2 )
-	DRIVER( robadv2d3 )
-	DRIVER( robadv2c2 )
-	DRIVER( robadv2c3 )
-	DRIVER( pirpok2 )
-	DRIVER( pirpok2b )
-	DRIVER( pirpok2d )
-	DRIVER( pirpok2v )
-	DRIVER( pirpok2v2 )
-	DRIVER( anibonus )
-	DRIVER( anibonus2 )
-	DRIVER( anibonus3 )
-	DRIVER( anibonus4 )
-	DRIVER( anibonus5 )
-	DRIVER( anibonus6 )
-	DRIVER( anibonusb )
-	DRIVER( anibonusb2 )
-	DRIVER( anibonusd )
-	DRIVER( anibonusd2 )
-	DRIVER( anibonusv )
-	DRIVER( anibonusv2 )
-	DRIVER( anibonusv3 )
-	DRIVER( abnudge )
-	DRIVER( abnudgeb )
-	DRIVER( abnudged )
-	DRIVER( abnudgev )
-	DRIVER( anithunt )
-	DRIVER( anithunt2 )
-	DRIVER( anithuntb )
-	DRIVER( anithuntd )
-	DRIVER( anithuntv )
-	DRIVER( dblchal )
-	DRIVER( dblchalb )
-	DRIVER( dblchalc )
-	DRIVER( dblchald )
-	DRIVER( dblchalv )
-	DRIVER( sfruitb )
-	DRIVER( sfruitb2 )
-	DRIVER( sfruitb3 )
-	DRIVER( sfruitbb )
-	DRIVER( sfruitbb2 )
-	DRIVER( sfruitbb3 )
-	DRIVER( sfruitbd )
-	DRIVER( sfruitbd2 )
-	DRIVER( sfruitbd3 )
-	DRIVER( sfruitbv )
-	DRIVER( sfruitbv2 )
-	DRIVER( sfruitbv3 )
-	DRIVER( sfruitbv4 )
-	DRIVER( sfruitbv5 )
-	DRIVER( fb2gen )
-	DRIVER( fb2gena )
-	DRIVER( fb2genc )
-	DRIVER( fb2genc2 )
-	DRIVER( fb2genv )
-	DRIVER( fb2genv2 )
-	DRIVER( fb2genv3 )
-	DRIVER( fb2gend )
-	DRIVER( fb2gend2 )
-	DRIVER( fb2nd )
-	DRIVER( fb2ndc )
-	DRIVER( fb2ndc2 )
-	DRIVER( fb2ndv )
-	DRIVER( fb2ndv2 )
-	DRIVER( fb2ndd )
-	DRIVER( fb2ndd2 )
-	DRIVER( fb4 )
-	DRIVER( fb4a )
-	DRIVER( fb4b )
-	DRIVER( fb4b2 )
-	DRIVER( fb4c )
-	DRIVER( fb4c2 )
-	DRIVER( fb4d )
-	DRIVER( fb4d2 )
-	DRIVER( fb4v )
-	DRIVER( fb4v2 )
-	DRIVER( fb4v3 )
-	DRIVER( fb5 )
-	DRIVER( fb5c )
-	DRIVER( fb5d )
-	DRIVER( fb5v )
-	DRIVER( fb6 )
-	DRIVER( fb6v3 )
-	DRIVER( fb6d2 )
-	DRIVER( fb6s )
-	DRIVER( fb6v )
-	DRIVER( fb6d )
-	DRIVER( fb6s2 )
-	DRIVER( fb6v2 )
-	DRIVER( fb6se )
-	DRIVER( fb6sev )
-	DRIVER( fb6sed )
-	DRIVER( fb6sev2 )
-	DRIVER( fb6sed2 )
-	DRIVER( fb6sev3 )
-	DRIVER( version4 )
-	DRIVER( bugfever )
-	DRIVER( bugfeverd )
-	DRIVER( bugfeverv )
-	DRIVER( bugfeverv2 )
-	DRIVER( dvisland )
-	DRIVER( funriver )
-	DRIVER( funriverv )
-	DRIVER( amclink )
+	DRIVER( sfbonus )	/* (c) 2003 Amcoe - Skill Fruit Bonus */
+	DRIVER( sfbonusd1 )	/* (c) 2003 Amcoe */
+	DRIVER( sfbonusv1 )	/* (c) 2003 Amcoe */
+	DRIVER( sfbonuso )	/* (c) 2003 Amcoe */
+	DRIVER( sfbonuso2 )	/* (c) 2003 Amcoe */
+	DRIVER( parrot3 )	/* (c) 2003 Amcoe - Parrot Poker III */
+	DRIVER( parrot3b1 )	/* (c) 2004 Amcoe */
+	DRIVER( parrot3d1 )	/* (c) 2004 Amcoe */
+	DRIVER( parrot3v1 )	/* (c) 2004 Amcoe */
+	DRIVER( parrot3o )	/* (c) 2004 Amcoe */
+	DRIVER( hldspin1 )	/* (c) 2000 Amcoe - Hold & Spin I */
+	DRIVER( hldspin1dt )/* (c) 2000 Amcoe */
+	DRIVER( hldspin1vt )/* (c) 2000 Amcoe */
+	DRIVER( hldspin1o )	/* (c) 2000 Amcoe */
+	DRIVER( hldspin2 )	/* (c) 2000 Amcoe - Hold & Spin II */
+	DRIVER( hldspin2d1 )/* (c) 2000 Amcoe */
+	DRIVER( hldspin2v1 )/* (c) 2000 Amcoe */
+	DRIVER( hldspin2o )	/* (c) 2000 Amcoe */
+	DRIVER( fcnudge )	/* (c) 2003 Amcoe - Fruit Carnival Nudge */
+	DRIVER( fcnudgeo )	/* (c) 2003 Amcoe */
+	DRIVER( fcnudgeo2 )	/* (c) 2003 Amcoe */
+	DRIVER( fcnudgeo3 )	/* (c) 2003 Amcoe */
+	DRIVER( pickwin )	/* (c) 2001 Amcoe - Pick 'n Win */
+	DRIVER( pickwinb1 )	/* (c) 2001 Amcoe */
+	DRIVER( pickwind1 )	/* (c) 2001 Amcoe */
+	DRIVER( pickwinv1 )	/* (c) 2001 Amcoe */
+	DRIVER( pickwinbt )	/* (c) 2001 Amcoe */
+	DRIVER( pickwindt )	/* (c) 2001 Amcoe */
+	DRIVER( pickwinvt )	/* (c) 2001 Amcoe */
+	DRIVER( pickwino )	/* (c) 2001 Amcoe */
+	DRIVER( pickwino2 )	/* (c) 2001 Amcoe */
+	DRIVER( tighook )	/* (c) 2004 Amcoe - Tiger Hook */
+	DRIVER( tighookc1 )	/* (c) 2004 Amcoe */
+	DRIVER( tighookd1 )	/* (c) 2004 Amcoe */
+	DRIVER( tighookv1 )	/* (c) 2004 Amcoe */
+	DRIVER( tighookc2 )	/* (c) 2004 Amcoe */
+	DRIVER( tighookd2 )	/* (c) 2004 Amcoe */
+	DRIVER( tighookv2 )	/* (c) 2004 Amcoe */
+	DRIVER( tighooko )	/* (c) 2004 Amcoe */
+	DRIVER( tighooko2 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv )	/* (c) 2004 Amcoe - Robin's Adventure */
+	DRIVER( robadvc1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadvd1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadvv1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadvo )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2 )	/* (c) 2004 Amcoe - Robin's Adventure 2 */
+	DRIVER( robadv2c1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2d1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2v1 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2c2 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2d2 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2v2 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2c3 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2d3 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2v3 )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2o )	/* (c) 2004 Amcoe */
+	DRIVER( robadv2o2 )	/* (c) 2004 Amcoe */
+	DRIVER( pirpok2 )	/* (c) 2003 Amcoe - Pirate Poker II */
+	DRIVER( pirpok2b1 )	/* (c) 2003 Amcoe */
+	DRIVER( pirpok2d1 )	/* (c) 2003 Amcoe */
+	DRIVER( pirpok2v1 )	/* (c) 2003 Amcoe */
+	DRIVER( pirpok2o )	/* (c) 2003 Amcoe */
+	DRIVER( anibonus )	/* (c) 2003 Amcoe - Animal Bonus */
+	DRIVER( anibonusv1 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusv2 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusb1 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusd1 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusb2 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusd2 )/* (c) 2003 Amcoe */
+	DRIVER( anibonuso )	/* (c) 2003 Amcoe */
+	DRIVER( anibonuso2 )/* (c) 2003 Amcoe */
+	DRIVER( anibonuso3 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusxo )/* (c) 2003 Amcoe */
+	DRIVER( anibonusxo2 )/* (c) 2003 Amcoe */
+	DRIVER( anibonusxo3 )/* (c) 2003 Amcoe */
+	DRIVER( abnudge )	/* (c) 2003 Amcoe - Animal Bonus Nudge */
+	DRIVER( abnudgeb )	/* (c) 2003 Amcoe */
+	DRIVER( abnudged )	/* (c) 2003 Amcoe */
+	DRIVER( abnudgeo )	/* (c) 2003 Amcoe */
+	DRIVER( dblchal )	/* (c) 2003 Amcoe - Double Challenge */
+	DRIVER( dblchalc1 )	/* (c) 2003 Amcoe */
+	DRIVER( dblchald1 )	/* (c) 2003 Amcoe */
+	DRIVER( dblchalv1 )	/* (c) 2003 Amcoe */
+	DRIVER( dblchalo )	/* (c) 2003 Amcoe */
+	DRIVER( anithunt )	/* (c) 2003 Amcoe - Animal Treasure Hunt */
+	DRIVER( anithuntd1 )/* (c) 2003 Amcoe */
+	DRIVER( anithuntv1 )/* (c) 2003 Amcoe */
+	DRIVER( anithunto )	/* (c) 2003 Amcoe */
+	DRIVER( anithunto2 )/* (c) 2003 Amcoe */
+	DRIVER( sfruitb )	/* (c) 2002 Amcoe - Super Fruit Bonus */
+	DRIVER( sfruitbb1 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbd1 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbv1 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbb2 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbd2 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbv2 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbo )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbo2 )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbh )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbbh )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbdh )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitbvh )	/* (c) 2002 Amcoe */
+	DRIVER( sfruitboh )	/* (c) 2002 Amcoe */
+	DRIVER( fb2gen )	/* (c) 2004 Amcoe - Fruit Bonus 2nd Generation */
+	DRIVER( fb2genc1 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2gend1 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2genv1 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2genc2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2gend2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2genv2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2geno )	/* (c) 2004 Amcoe */
+	DRIVER( fb2geno2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2nd )		/* (c) 2004 Amcoe - Fruit Bonus 2nd Edition */
+	DRIVER( fb2ndd1 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2ndv1 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2ndc2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2ndd2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2ndv2 )	/* (c) 2004 Amcoe */
+	DRIVER( fb2ndo )	/* (c) 2004 Amcoe */
+	DRIVER( fb4 )		/* (c) 2004 Amcoe - Fruit Bonus 2004 */
+	DRIVER( fb4c1 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4d1 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4v1 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4exp )	/* (c) 2004 Amcoe */
+	DRIVER( fb4b2 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4c2 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4d2 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4v2 )		/* (c) 2004 Amcoe */
+	DRIVER( fb4o )		/* (c) 2004 Amcoe */
+	DRIVER( fb4o2 )		/* (c) 2004 Amcoe */
+	DRIVER( fb5 )		/* (c) 2005 Amcoe - Fruit Bonus 2005 */
+	DRIVER( fb5c )		/* (c) 2005 Amcoe */
+	DRIVER( fb5d )		/* (c) 2005 Amcoe */
+	DRIVER( fb5v )		/* (c) 2005 Amcoe */
+	DRIVER( fb6 )		/* (c) 200? Amcoe - Fruit Bonus '06 - 10th anniversary */
+	DRIVER( fb6v )		/* (c) 200? Amcoe */
+	DRIVER( fb6d1 )		/* (c) 200? Amcoe */
+	DRIVER( fb6s1 )		/* (c) 200? Amcoe */
+	DRIVER( fb6v1 )		/* (c) 200? Amcoe */
+	DRIVER( fb6d2 )		/* (c) 200? Amcoe */
+	DRIVER( fb6s2 )		/* (c) 200? Amcoe */
+	DRIVER( fb6v2 )		/* (c) 200? Amcoe */
+	DRIVER( fb6se )		/* (c) 200? Amcoe - Fruit Bonus 2006 Special Edition */
+	DRIVER( fb6sev )	/* (c) 200? Amcoe */
+	DRIVER( fb6sed1 )	/* (c) 200? Amcoe */
+	DRIVER( fb6sev1 )	/* (c) 200? Amcoe */
+	DRIVER( fb6sed2 )	/* (c) 200? Amcoe */
+	DRIVER( fb6sev2 )	/* (c) 200? Amcoe */
+	DRIVER( version4 )	/* (c) 200? Amcoe - Version 4 ? */
+	DRIVER( bugfever )	/* (c) 200? Amcoe - Bug Fever */
+	DRIVER( bugfeverd )	/* (c) 200? Amcoe */
+	DRIVER( bugfeverv )	/* (c) 200? Amcoe */
+	DRIVER( bugfeverv2 )/* (c) 200? Amcoe */
+	DRIVER( dvisland )	/* (c) 200? Amcoe - Devil's Island */
+	DRIVER( funriver )	/* (c) 200? Amcoe - Fun River */
+	DRIVER( funriverv )	/* (c) 200? Amcoe */
+	DRIVER( amclink )	/* (c) 200? Amcoe - Amcoe Link Control Box? */
 
-
-	DRIVER( act2000 )
-	DRIVER( act2000a )
-	DRIVER( act2000a2 )
-	DRIVER( act2000v )
-	DRIVER( act2000v2 )
-	DRIVER( act2000v3 )
-	DRIVER( act2000d )
-	DRIVER( act2000d2 )
-	DRIVER( act2000b )
-	DRIVER( act2000b2 )
-	DRIVER( ch2000 )
-	DRIVER( ch2000x )
-	DRIVER( ch2000y )
-	DRIVER( ch2000b )
-	DRIVER( ch2000b2 )
-	DRIVER( ch2000v )
-	DRIVER( ch2000v2 )
-	DRIVER( ch2000v3 )
-	DRIVER( ch2000c )
-	DRIVER( ch2000c2 )
-	DRIVER( ch2000d )
-	DRIVER( ch2000d2 )
-	DRIVER( pir2001 )
-	DRIVER( pir2001a )
-	DRIVER( pir2001b )
-	DRIVER( pir2001b2 )
-	DRIVER( pir2001b3 )
-	DRIVER( pir2001v )
-	DRIVER( pir2001v2 )
-	DRIVER( pir2001v3 )
-	DRIVER( pir2001d )
-	DRIVER( pir2001d2 )
-	DRIVER( pir2002 )
-	DRIVER( pir2002a )
-	DRIVER( pir2002b )
-	DRIVER( pir2002b2 )
-	DRIVER( pir2002b3 )
-	DRIVER( pir2002v )
-	DRIVER( pir2002v2 )
-	DRIVER( pir2002v3 )
-	DRIVER( pir2002d )
-	DRIVER( pir2002d2 )
-	DRIVER( classice )
-	DRIVER( classicea )
-	DRIVER( classiced )
-	DRIVER( classiced2 )
-	DRIVER( classiced3 )
-	DRIVER( classicev )
-	DRIVER( classicev2 )
-	DRIVER( classicev3 )
-	DRIVER( seawld )
-	DRIVER( seawlda )
-	DRIVER( moneymac )
-	DRIVER( moneymacv )
-	DRIVER( moneymacv2 )
-	DRIVER( moneymacd )
-	DRIVER( moneymacd2 )
-	DRIVER( atworld )
-	DRIVER( atworlda )
+	DRIVER( act2000 )	/* (c) 1999 Amcoe - Action 2000 */
+	DRIVER( act2000v1 )	/* (c) 1999 Amcoe */
+	DRIVER( act2000d1 )	/* (c) 1999 Amcoe */
+	DRIVER( act2000b1 )	/* (c) 1999 Amcoe */
+	DRIVER( act2000vx )	/* (c) 1999 Amcoe */
+	DRIVER( act2000dx )	/* (c) 1999 Amcoe */
+	DRIVER( act2000bx )	/* (c) 1999 Amcoe */
+	DRIVER( act2000o )	/* (c) 1999 Amcoe */
+	DRIVER( act2000o2 )	/* (c) 1999 Amcoe */
+	DRIVER( act2000o3 )	/* (c) 1999 Amcoe */
+	DRIVER( ch2000 )	/* (c) 2000 Amcoe - Fruit Bonus 2000 / New Cherry 2000 */
+	DRIVER( ch2000b1 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000c1 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000d1 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000v1 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000b2 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000c2 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000d2 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000v2 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000o )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000o2 )	/* (c) 2000 Amcoe */
+	DRIVER( ch2000o3 )	/* (c) 2000 Amcoe */
+	DRIVER( pir2001 )	/* (c) 2001 Amcoe - Pirate 2001 */
+	DRIVER( pir2001b1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001d1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001v1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001bx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001dx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001vx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001o )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001o2 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2001o3 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002 )	/* (c) 2001 Amcoe - Pirate 2002 */
+	DRIVER( pir2002b1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002d1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002v1 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002bx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002dx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002vx )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002o )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002o2 )	/* (c) 2001 Amcoe */
+	DRIVER( pir2002o3 )	/* (c) 2001 Amcoe */
+	DRIVER( classice )	/* (c) 2004 Amcoe - Classic Edition */
+	DRIVER( classicev )	/* (c) 2004 Amcoe */
+	DRIVER( classice1 )	/* (c) 2004 Amcoe */
+	DRIVER( classiced1 )/* (c) 2004 Amcoe */
+	DRIVER( classicev1 )/* (c) 2004 Amcoe */
+	DRIVER( classice2 )	/* (c) 2004 Amcoe */
+	DRIVER( classiced2 )/* (c) 2004 Amcoe */
+	DRIVER( classicev2 )/* (c) 2004 Amcoe */
+	DRIVER( seawld )	/* (c) 200? Amcoe - Sea World */
+	DRIVER( seawldd1 )	/* (c) 200? Amcoe */
+	DRIVER( moneymac )	/* (c) 200? Amcoe - Money Machine */
+	DRIVER( moneymacd1 )/* (c) 200? Amcoe */
+	DRIVER( moneymacv1 )/* (c) 200? Amcoe */
+	DRIVER( moneymacd2 )/* (c) 200? Amcoe */
+	DRIVER( moneymacv2 )/* (c) 200? Amcoe */
+	//DRIVER( atworld ) /* (c) 2007 Amcoe - Around The World (year listed on Amcoe web site) */
+	//DRIVER( atworldd1 )   /* (c) 2007 Amcoe (year listed on Amcoe web site) */
 
 
 	DRIVER( chsuper3 )	/* unknown */
