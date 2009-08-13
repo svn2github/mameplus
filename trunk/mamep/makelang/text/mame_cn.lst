@@ -46,8 +46,8 @@ nmouseb	顽皮鼠 (第2套)	顽皮鼠 (第2套)	Amenip Nova Games Ltd.
 mspacman	吃豆人	吃豆人	Midway
 mspacmnf	吃豆人 (加速修改版)	吃豆人 (加速修改版)	Midway
 mspacmat	吃豆人 Attack	吃豆人 Attack	hack
-woodpeck	顽皮鼠 (第1套)	顽皮鼠 (第1套)	Amenip (Palcom Queen River)
-woodpeca	顽皮鼠 (第2套)	顽皮鼠 (第2套)	Amenip
+woodpeck	啄木鸟 (第1套)	啄木鸟 (第1套)	Amenip (Palcom Queen River)
+woodpeca	啄木鸟 (第2套)	啄木鸟 (第2套)	Amenip
 mspacmab	吃豆人 (盗版)	吃豆人 (盗版)	bootleg
 mspacmbe	吃豆人 (盗版, 加密)	吃豆人 (盗版, 加密)	bootleg
 pacgal	吃豆人 Pac-Gal	吃豆人 Pac-Gal	hack
@@ -106,7 +106,7 @@ swarm	小蜜蜂 (盗版?)	小蜜蜂 (盗版?)	Subelectro
 zerotime	小蜜蜂 - 难度加强版	小蜜蜂 - 难度加强版	Petaco S.A.
 starfght	小蜜蜂	小蜜蜂	Jeutel
 galaxbsf	小蜜蜂 (盗版)	小蜜蜂 (盗版)	bootleg
-kamakazi3	小蜜蜂 III	小蜜蜂 III	Video Games (UK) Ltd.
+kamakazi3	小蜜蜂 III (superg hack)	小蜜蜂 III (superg hack)	hack
 tst_galx	小蜜蜂 - 测试版	小蜜蜂 - 测试版	Test ROM
 gmgalax	小精灵 Galaxian (盗版)	小精灵 Galaxian (盗版)	bootleg
 pisces	双鱼座	双鱼座	Subelectro
@@ -189,6 +189,7 @@ catacomb	地下墓穴	地下墓穴	MTM Games
 ckongg	大金刚 (盗版 on Galaxian 硬件, 第1套)	大金刚 (盗版 on Galaxian 硬件, 第1套)	bootleg
 kkgalax	大金刚 (盗版 on Galaxian 硬件, 第2套)	大金刚 (盗版 on Galaxian 硬件, 第2套)	bootleg
 porter	海男 (盗版 on Moon Cresta 硬件)	海男 (盗版 on Moon Cresta 硬件)	[Nova Games Ltd.] (bootleg)
+tdpgal	Triple Draw Poker	Triple Draw Poker	Design Labs / Thomas Automatics
 rockclim	攀岩者	攀岩者	Taito
 scramble	紧急起飞 混乱	紧急起飞 混乱	Konami
 scrambles	紧急起飞 混乱 (Stern)	紧急起飞 混乱 (Stern)	[Konami] (Stern license)
@@ -742,10 +743,11 @@ numanathj	超能运动会 (日版)	超能运动会 (日版)	Namco
 quiztou	热斗! 激斗! 问题岛!! (日版)	热斗! 激斗! 问题岛!! (日版)	Namco
 tinklpit	铃当王子 (日版)	铃当王子 (日版)	Namco
 xday2	X - DAY 2 (日版)	X - DAY 2 (日版)	Namco
-nebulray	星云战机 (世界版)	星云战机 (世界版)	Namco
-nebulrayj	星云战机 (日版)	星云战机 (日版)	Namco
-ptblank	枪林弹雨	枪林弹雨	Namco
-gunbulet	枪林弹雨 (日版)	枪林弹雨 (日版)	Namco
+nebulray	星云战机 (世界版, NR2)	星云战机 (世界版, NR2)	Namco
+nebulrayj	星云战机 (日版, NR1)	星云战机 (日版, NR1)	Namco
+ptblank	枪林弹雨 (世界版, GN2 Rev B)	枪林弹雨 (世界版, GN2 Rev B)	Namco
+gunbuletj	枪林弹雨 (日版, GN1)	枪林弹雨 (日版, GN1)	Namco
+gunbuletw	枪林弹雨 (世界版, GN3 Rev B)	枪林弹雨 (世界版, GN3 Rev B)	Namco
 gslugrsj	超级强打 93 - 新世界棒球 (日版)	超级强打 93 - 新世界棒球 (日版)	Namco
 gslgr94u	超级强打 '94	超级强打 '94	Namco
 gslgr94j	超级强打 '94 (日版)	超级强打 '94 (日版)	Namco
@@ -753,8 +755,8 @@ sws95	超级世界棒球 '95 (日版)	超级世界棒球 '95 (日版)	Namco
 sws96	超级世界棒球 '96 (日版)	超级世界棒球 '96 (日版)	Namco
 sws97	超级世界棒球 '97 (日版)	超级世界棒球 '97 (日版)	Namco
 vshoot	J-联盟足球 - 胜利射门 (日版)	J-联盟足球 - 胜利射门 (日版)	Namco
-outfxies	异域战狐	异域战狐	Namco
-outfxiesj	异域战狐 (日版)	异域战狐 (日版)	Namco
+outfxies	异域战狐 (世界版, OU2)	异域战狐 (世界版, OU2)	Namco
+outfxiesj	异域战狐 (日版, OU1)	异域战狐 (日版, OU1)	Namco
 machbrkr	超能运动会 2 (日版)	超能运动会 2 (日版)	Namco
 ncv1	南梦宫名作剧场 Vol.1	南梦宫名作剧场 Vol.1	Namco
 ncv1j	南梦宫名作剧场 Vol.1 (日版, v1.00)	南梦宫名作剧场 Vol.1 (日版, v1.00)	Namco
@@ -774,6 +776,7 @@ gal3	小蜜蜂 3	小蜜蜂 3	Namco
 ridgerac	山脊赛车 (Rev. RR3, 世界版)	山脊赛车 (Rev. RR3, 世界版)	Namco
 ridgeracb	山脊赛车 (Rev. RR2, 世界版)	山脊赛车 (Rev. RR2, 世界版)	Namco
 ridgeracj	山脊赛车 (Rev. RR1, 日版)	山脊赛车 (Rev. RR1, 日版)	Namco
+ridgerac3	山脊赛车 (3 Screen? Rev. RR2, 世界版)	山脊赛车 (3 Screen? Rev. RR2, 世界版)	Namco
 acedrvrw	A 级方程式赛车 (Rev. AD2, 世界版)	A 级方程式赛车 (Rev. AD2, 世界版)	Namco
 alpinerd	高山滑雪比赛 (Rev. AR2 Ver.D)	高山滑雪比赛 (Rev. AR2 Ver.D)	Namco
 alpinerc	高山滑雪比赛 (Rev. AR2 Ver.C)	高山滑雪比赛 (Rev. AR2 Ver.C)	Namco
@@ -856,10 +859,12 @@ idsoccer	室内足球	室内足球	Universal
 superdq	超级唐吉珂德 (Long Scenes)	超级唐吉珂德 (Long Scenes)	Universal
 superdqs	超级唐吉珂德 (Short Scenes)	超级唐吉珂德 (Short Scenes)	Universal
 superdqa	超级唐吉珂德 (Short Scenes, Alt)	超级唐吉珂德 (Short Scenes, Alt)	Universal
-spacefev	太空热击 (第1套)	太空热击 (第1套)	Nintendo
-spacefeva	太空热击 (第2套)	太空热击 (第2套)	Nintendo
+spacefev	太空热击 (新版)	太空热击 (新版)	Nintendo
+spacefevo	太空热击 (旧版)	太空热击 (旧版)	Nintendo
+spacefevo2	太空热击 (旧版本)	太空热击 (旧版本)	Nintendo
 highsplt	太空热击 HS (第1套)	太空热击 HS (第1套)	Nintendo
 highsplta	太空热击 HS (第2套)	太空热击 HS (第2套)	Nintendo
+highspltb	太空热击 HS (高音版)	太空热击 HS (高音版)	Nintendo
 spacelnc	太空火箭	太空火箭	Nintendo
 sheriff	警骑	警骑	Nintendo
 bandido	警骑与抢匪	警骑与抢匪	Exidy
@@ -993,6 +998,7 @@ vspinbal	VS.弹珠台	VS.弹珠台	Nintendo
 vspinbalj	VS.弹珠台 (日版)	VS.弹珠台 (日版)	Nintendo
 vsslalom	VS.障碍滑雪赛	VS.障碍滑雪赛	Rare LTD.
 vssoccer	VS.足球	VS.足球	Nintendo
+vssoccerj	VS.足球 (日版)	VS.足球 (日版)	Nintendo
 vsgradus	VS.宇宙巡航舰	VS.宇宙巡航舰	Konami
 platoon	VS.前进高棉	VS.前进高棉	Ocean Software Limited
 vstetris	VS.俄罗斯方块	VS.俄罗斯方块	Academysoft-Elory
@@ -1006,14 +1012,14 @@ wrecking	VS.玛莉拆屋	VS.玛莉拆屋	Nintendo
 balonfgt	VS.气球大战	VS.气球大战	Nintendo
 vsmahjng	VS.麻雀(日版)	VS.麻雀(日版)	Nintendo
 vsbball	VS.棒球	VS.棒球	Nintendo of America
-vsbballj	VS.棒球 (日版 第1套)	VS.棒球 (日版 第1套)	Nintendo of America
-vsbballja	VS.棒球 (日版 第2套)	VS.棒球 (日版 第2套)	Nintendo of America
+vsbballj	VS.棒球 (日版 第1套)	VS.棒球 (日版 第1套)	Nintendo
+vsbballja	VS.棒球 (日版 第2套)	VS.棒球 (日版 第2套)	Nintendo
+vsbballjb	VS.棒球 (日版 第3套)	VS.棒球 (日版 第3套)	Nintendo
 iceclmrj	VS.敲冰块 Dual (日版)	VS.敲冰块 Dual (日版)	Nintendo
 vsgshoe	VS.大侦探	VS.大侦探	Nintendo
 supxevs	VS.星际战争	VS.星际战争	Namco
 vsfdf	VS.自由武装	VS.自由武装	Sunsoft
 smgolfb	VS.男子高尔夫 (男士版, 第2套)	VS.男子高尔夫 (男士版, 第2套)	Nintendo
-vsbballjb	VS.棒球 (日版 第3套)	VS.棒球 (日版 第3套)	Nintendo of America
 multigam	Multi 游戏 (第1套)	Multi 游戏 (第1套)	<unknown>
 multigmb	Multi 游戏 (第2套)	Multi 游戏 (第2套)	<unknown>
 multigm2	Multi 游戏 2	Multi 游戏 2	Seo Jin
@@ -1413,8 +1419,9 @@ curvebal	变化球	变化球	Mylstar
 vidvince	工厂 (工程版)	工厂 (工程版)	Mylstar
 wizwarz	巫师射击 (工程版)	巫师射击 (工程版)	Mylstar
 qix	赶尽杀绝 (第1套)	赶尽杀绝 (第1套)	Taito America Corporation
-qixa	赶尽杀绝 (第2套)	赶尽杀绝 (第2套)	Taito America Corporation
-qixb	赶尽杀绝 (第3套)	赶尽杀绝 (第3套)	Taito America Corporation
+qixa	赶尽杀绝 (第2套, smaller roms)	赶尽杀绝 (第2套, smaller roms)	Taito America Corporation
+qixb	赶尽杀绝 (第2套, larger roms)	赶尽杀绝 (第2套, larger roms)	Taito America Corporation
+qixo	赶尽杀绝 (第3套, earlier)	赶尽杀绝 (第3套, earlier)	Taito America Corporation
 qix2	赶尽杀绝 II (比赛版)	赶尽杀绝 II (比赛版)	Taito America Corporation
 sdungeon	太空危城	太空危城	Taito America Corporation
 elecyoyo	电子回力球 (第1套)	电子回力球 (第1套)	Taito America Corporation
@@ -3131,7 +3138,7 @@ galaxyrp	银河突击队 (先锋 LDV1000)	银河突击队 (先锋 LDV1000)	SEGA
 sblazerp	星际战舰 (先锋 LDV1000)	星际战舰 (先锋 LDV1000)	SEGA
 cobraseg	眼镜蛇指令 (世嘉雷射光碟机)	眼镜蛇指令 (世嘉雷射光碟机)	SEGA
 gpworld	赛车世界	赛车世界	SEGA
-timetrv	Time Traveler	Time Traveler	Virtual Image Productions (Sega license)
+timetrv	时空旅者	时空旅者	Virtual Image Productions (Sega license)
 chboxing	冠军杯拳击	冠军杯拳击	Sega
 chwrestl	冠军职业摔跤	冠军职业摔跤	Sega
 dokidoki	企鹅大陆	企鹅大陆	Sega
@@ -4451,7 +4458,7 @@ vulcan	宇宙巡航舰 II	宇宙巡航舰 II	Konami
 gradius2	宇宙巡航舰 II (日版 新版)	宇宙巡航舰 II (日版 新版)	Konami
 gradius2a	宇宙巡航舰 II (日版 旧版)	宇宙巡航舰 II (日版 旧版)	Konami
 gradius2b	宇宙巡航舰 II (日版 老版)	宇宙巡航舰 II (日版 老版)	Konami
-cuebrckj	砖块拼图大考验 (日版)	砖块拼图大考验 (日版)	Konami
+cuebrickj	砖块拼图大考验 (日版)	砖块拼图大考验 (日版)	Konami
 fround	拳击决赛 (版本 M)	拳击决赛 (版本 M)	Konami
 froundl	拳击决赛 (版本 L)	拳击决赛 (版本 L)	Konami
 hpuncher	拳击决赛 (日版)	拳击决赛 (日版)	Konami
@@ -4613,6 +4620,7 @@ hmcompm2	狂热节拍 全部混合版 2 (ver UA-A)	狂热节拍 全部混合版 2 (ver UA-A)	Konam
 bm6thmix	狂热节拍 六次混合版 (ver JA-A)	狂热节拍 六次混合版 (ver JA-A)	Konami
 bm7thmix	狂热节拍 七次混合版 (ver JA-B)	狂热节拍 七次混合版 (ver JA-B)	Konami
 bmfinal	狂热节拍 The Final (ver JA-A)	狂热节拍 The Final (ver JA-A)	Konami
+popn2	流行音乐 2 (ver JA-A)	流行音乐 2 (ver JA-A)	Konami
 ppp	劲舞天堂	劲舞天堂	Konami
 ppd	动感热舞	动感热舞	Konami
 ppp11	劲舞天堂 v1.1	劲舞天堂 v1.1	Konami
@@ -4641,6 +4649,7 @@ thrilld	惊悚驾驶	惊悚驾驶	Konami
 midnrun	午夜狂飙 (欧洲版 v1.11)	午夜狂飙 (欧洲版 v1.11)	Konami
 windheat	劲风赛车 (EAA, 欧洲版 v2.11)	劲风赛车 (EAA, 欧洲版 v2.11)	Konami
 windheatu	劲风赛车 (UBC, 美版 v2.22)	劲风赛车 (UBC, 美版 v2.22)	Konami
+windheatj	劲风赛车 (JAA, 日版 v2.11)	劲风赛车 (JAA, 日版 v2.11)	Konami
 jetwave	喷射波动 (UAB, 美版 v1.04)	喷射波动 (UAB, 美版 v1.04)	Konami
 polystar	到此! 保罗之星 (ver JAA)	到此! 保罗之星 (ver JAA)	Konami
 totlvice	恶贯满盈 (ver JAA)	恶贯满盈 (ver JAA)	Konami
@@ -5072,7 +5081,7 @@ spclordsg	太空君主 (rev A, 德国版)	太空君主 (rev A, 德国版)	Atari Games
 rrreveng	道路风暴复仇版 (工程版)	道路风暴复仇版 (工程版)	Atari Games
 rrrevengp	道路风暴复仇版 (工程版 替换版)	道路风暴复仇版 (工程版 替换版)	Atari Games
 beathead	摇滚跳方块 (工程版)	摇滚跳方块 (工程版)	Atari Games
-tmek	T-MEK (v5.1, The Warlords)	T-MEK (v5.1, The Warlords)	Atari Games
+tmek	沙漠鹫狮 (v5.1, The Warlords)	沙漠鹫狮 (v5.1, The Warlords)	Atari Games
 tmek51p	沙漠鹫狮 (v5.1, 工程版)	沙漠鹫狮 (v5.1, 工程版)	Atari Games
 tmek45	沙漠鹫狮 (v4.5)	沙漠鹫狮 (v4.5)	Atari Games
 tmek44	沙漠鹫狮 (v4.4)	沙漠鹫狮 (v4.4)	Atari Games
@@ -5848,6 +5857,7 @@ rtriv	问答 罗马百科	问答 罗马百科	Romar
 konek	双面扬声	双面扬声	Terminal
 sosterm	国际援助	国际援助	Terminal
 phtetris	俄罗斯方块 (Photon 系统)	俄罗斯方块 (Photon 系统)	<unknown>
+phpython	大蟒蛇 (Photon System)	大蟒蛇 (Photon System)	<unknown>
 bagman	推销员	推销员	Valadon Automation
 bagnard	推销员 (第1套)	推销员 (第1套)	Valadon Automation
 bagnarda	推销员 (第2套)	推销员 (第2套)	Valadon Automation
@@ -6676,7 +6686,7 @@ hotbubl	泡泡野人版 Hot	泡泡野人版 Hot	Pandora
 popspops	流行艺术	流行艺术	Afega
 firehawk	火鹰	火鹰	ESD
 mangchi	曼翅	曼翅	Afega
-spec2k	光普 2000	光普 2000	Yonatech
+spec2k	光普 2000	光普 2000	YONA Tech
 multchmp	Multi 冠军 (世界版)	Multi 冠军 (世界版)	ESD
 multchmpk	Multi 冠军 (韩国版)	Multi 冠军 (韩国版)	ESD
 mchampdx	Multi 冠军豪华版 (版本. 0106, 06/01/2000)	Multi 冠军豪华版 (版本. 0106, 06/01/2000)	ESD
@@ -6833,17 +6843,18 @@ gp98	国际长途大赛车 '98	国际长途大赛车 '98	Romtec Co. LTD
 lhb	龙虎榜 (V035C)	龙虎榜 (V035C)	IGS
 lhba	龙虎榜 (V033C)	龙虎榜 (V033C)	IGS
 dbc	大阪城 (V027H)	大阪城 (V027H)	IGS
-chindrag	中国龙 (日版, V021J)	中国龙 (日版, V021J)	IGS / Alta
-chugokur	中国龙 (日版, V020J)	中国龙 (日版, V020J)	IGS / Alta
 chmplst2	龙虎榜 II (V185H)	龙虎榜 II (V185H)	IGS
 xymg	幸运满贯 (V651C)	幸运满贯 (V651C)	IGS
 grtwall	万里长城 (V638C)	万里长城 (V638C)	IGS
 vbowl	虚拟保龄球 (世界版, V101XCM)	虚拟保龄球 (世界版, V101XCM)	IGS
 vbowlj	虚拟保龄球 (日版, V100JCM)	虚拟保龄球 (日版, V100JCM)	IGS / Alta
-drgnwrld	中国龙 (世界版, V0400)	中国龙 (世界版, V0400)	IGS
-drgwrld3	世界龙 (世界版, V0300)	世界龙 (世界版, V0300)	IGS
-chindrac	中国龙 (中国版, V010C)	中国龙 (中国版, V010C)	IGS
-chindrah	东方之珠 (香港版, V011H)	东方之珠 (香港版, V011H)	IGS
+drgnwrld	中国龙 (世界版, V040O)	中国龙 (世界版, V040O)	IGS
+drgnwrldv30	中国龙 (世界版, V030O)	中国龙 (世界版, V030O)	IGS
+drgnwrldv21	中国龙 (世界版, V021O)	中国龙 (世界版, V021O)	IGS
+drgnwrldv21j	中国龙 (日版, V021J)	中国龙 (日版, V021J)	IGS / Alta
+drgnwrldv20j	中国龙 (日版, V020J)	中国龙 (日版, V020J)	IGS / Alta
+drgnwrldv10c	中国龙 (中国版, V010C)	中国龙 (中国版, V010C)	IGS
+drgnwrldv11h	东方之珠 (香港版, V011H)	东方之珠 (香港版, V011H)	IGS
 lordgun	枪火贵族	枪火贵族	IGS
 hfh	形意拳 - 黄飞鸿	形意拳 - 黄飞鸿	IGS
 tarzan	泰山	泰山	IGS
@@ -6912,6 +6923,7 @@ barricad	贪食蛇 Barricade	贪食蛇 Barricade	RamTek
 brickyrd	贪食蛇 Brickyard	贪食蛇 Brickyard	RamTek
 starcrus	星际巡航	星际巡航	RamTek
 shuttlei	太空侵略者	太空侵略者	Omori
+skylove	天爱	天爱	Omori
 battlex	战斗飞梭	战斗飞梭	Omori Electric
 carjmbre	越野小汽车	越野小汽车	Omori Electric Co., Ltd.
 popper	兔子立体跳方块	兔子立体跳方块	Omori Electric Co., Ltd.
@@ -7453,7 +7465,8 @@ megat4a	非常接触 IV (9255-40-01 ROD, 标准版)	非常接触 IV (9255-40-01 ROD, 标准版
 megat4sn	超级非常接触 IV (9255-41-07 ROG, 新泽西州版)	超级非常接触 IV (9255-41-07 ROG, 新泽西州版)	Merit
 megat4te	非常接触 IV 联赛版 (9255-50-01 ROD, 标准版)	非常接触 IV 联赛版 (9255-50-01 ROD, 标准版)	Merit
 megat4st	超级非常接触 IV 联赛版 (9255-51-01 ROB, 标准版)	超级非常接触 IV 联赛版 (9255-51-01 ROB, 标准版)	Merit
-megat5	非常接触 5 (9255-60-01 ROC, 标准版)	非常接触 5 (9255-60-01 ROC, 标准版)	Merit
+megat5	非常接触 5 (9255-60-01 ROI, 标准版)	非常接触 5 (9255-60-01 ROI, 标准版)	Merit
+megat5a	非常接触 5 (9255-60-01 ROC, 标准版)	非常接触 5 (9255-60-01 ROC, 标准版)	Merit
 megat5nj	非常接触 5 (9255-60-07 RON, 新泽西州版)	非常接触 5 (9255-60-07 RON, 新泽西州版)	Merit
 megat6	非常接触 6 (9255-80-01 ROA, 标准版)	非常接触 6 (9255-80-01 ROA, 标准版)	Merit
 suprgolf	超级皇冠高尔夫 (日版)	超级皇冠高尔夫 (日版)	Nasco
@@ -7530,7 +7543,7 @@ jokercrd	鬼牌 (Ver.A267BC, 加密)	鬼牌 (Ver.A267BC, 加密)	Vesely Svet
 mongolnw	新热气球 (意大利)	新热气球 (意大利)	bootleg
 soccernw	新足球 (意大利)	新足球 (意大利)	bootleg
 saloon	酒吧 (法语版, 加密版)	酒吧 (法语版, 加密版)	<unknown>
-photoply	PhotoPlay	PhotoPlay	Funworld
+photoply	相片播放	相片播放	Funworld
 snookr10	司诺克 10 (Ver 1.11)	司诺克 10 (Ver 1.11)	Sandii'
 apple10	苹果 10 (Ver 1.21)	苹果 10 (Ver 1.21)	Sandii'
 tenballs	十球 (Ver 1.05)	十球 (Ver 1.05)	<unknown>
@@ -7620,12 +7633,12 @@ carrera	爆破 (版本 6.7)	爆破 (版本 6.7)	BS Electronics
 pmpoker	花花公子纸牌 (德国版)	花花公子纸牌 (德国版)	PlayMan
 goldnpkr	黄金扑克 (大男孩)	黄金扑克 (大男孩)	Bonanza Enterprises, Ltd
 goldnpkb	黄金扑克 (小男孩)	黄金扑克 (小男孩)	Bonanza Enterprises, Ltd
-pottnpkr	杰克的纸牌 (第1套)	杰克的纸牌 (第1套)	Bootleg
-potnpkra	杰克的纸牌 (第2套)	杰克的纸牌 (第2套)	Bootleg on Coinmaster H/W
-potnpkrb	杰克的纸牌 (第3套)	杰克的纸牌 (第3套)	Bootleg
-potnpkrc	杰克的纸牌 (第4套)	杰克的纸牌 (第4套)	Bootleg
-potnpkrd	杰克的纸牌 (第5套)	杰克的纸牌 (第5套)	Bootleg
-potnpkre	杰克的纸牌 (第6套)	杰克的纸牌 (第6套)	Bootleg
+pottnpkr	杰克的纸牌 (第1套)	杰克的纸牌 (第1套)	bootleg
+potnpkra	杰克的纸牌 (第2套) (Coinmaster 硬件)	杰克的纸牌 (第2套) (Coinmaster 硬件)	bootleg
+potnpkrb	杰克的纸牌 (第3套)	杰克的纸牌 (第3套)	bootleg
+potnpkrc	杰克的纸牌 (第4套)	杰克的纸牌 (第4套)	bootleg
+potnpkrd	杰克的纸牌 (第5套)	杰克的纸牌 (第5套)	bootleg
+potnpkre	杰克的纸牌 (第6套)	杰克的纸牌 (第6套)	bootleg
 goodluck	好运	好运	<unknown>
 royale	皇家扑克 (第1套)	皇家扑克 (第1套)	<unknown>
 royalea	皇家扑克 (第2套)	皇家扑克 (第2套)	<unknown>
@@ -7783,10 +7796,10 @@ spool99a	超真实弹珠台 99 (版本 0.31)	超真实弹珠台 99 (版本 0.31)	Electronic Proj
 4roses	四玫瑰 (加密版, 第1套)	四玫瑰 (加密版, 第1套)	<unknown>
 4rosesa	四玫瑰 (加密版, 第2套)	四玫瑰 (加密版, 第2套)	<unknown>
 big10	大拾	大拾	<unknown>
-bingor1	Bingo Roll / Bellstar? (set 1)	Bingo Roll / Bellstar? (set 1)	<unknown>
-bingor2	Bingo Roll / Bellstar? (set 2)	Bingo Roll / Bellstar? (set 2)	<unknown>
-bingor3	Bingo Roll / Bellstar? (set 3)	Bingo Roll / Bellstar? (set 3)	<unknown>
-bingor4	Bingo Roll / Bellstar? (set 4)	Bingo Roll / Bellstar? (set 4)	<unknown>
+bingor1	宾果辊 / 贝尔星? (第1套)	宾果辊 / 贝尔星? (第1套)	<unknown>
+bingor2	宾果辊 / 贝尔星? (第2套)	宾果辊 / 贝尔星? (第2套)	<unknown>
+bingor3	宾果辊 / 贝尔星? (第3套)	宾果辊 / 贝尔星? (第3套)	<unknown>
+bingor4	宾果辊 / 贝尔星? (第4套)	宾果辊 / 贝尔星? (第4套)	<unknown>
 videopkr	视频扑克	视频扑克	InterFlip
 blckjack	二十一点	二十一点	InterFlip
 videodad	视频骰子	视频骰子	InterFlip
@@ -7854,21 +7867,21 @@ queen	皇后?	皇后?	STG
 caswin	水果牌	水果牌	Aristocrat
 3bagflnz	全满3个口袋 - 3VXFC5345 (新西兰)	全满3个口袋 - 3VXFC5345 (新西兰)	Aristocrat
 blkrhino	黑犀牛 - 3VXFC5344 (新西兰)	黑犀牛 - 3VXFC5344 (新西兰)	Aristocrat
-coralr2	Coral Riches II - 1VXFC5472 (New Zealand)	Coral Riches II - 1VXFC5472 (New Zealand)	Aristocrat
+coralr2	珊瑚财产 II - 1VXFC5472 (新西兰)	珊瑚财产 II - 1VXFC5472 (新西兰)	Aristocrat
 eforest	魔法森林 - 12XF528902	魔法森林 - 12XF528902	Aristocrat
 eforesta	魔法森林 - 4VXFC818	魔法森林 - 4VXFC818	Aristocrat
 eforestb	魔法森林 - 3VXFC5343 (新西兰)	魔法森林 - 3VXFC5343 (新西兰)	Aristocrat
 goldenc	金丝雀 - 1VXFC5462	金丝雀 - 1VXFC5462	Aristocrat
 kgbird	K.G 鸟 - 4VXFC5341 (新西兰, 87.98%)	K.G 鸟 - 4VXFC5341 (新西兰, 87.98%)	Aristocrat
 kgbirda	K.G 鸟 - 4VXFC5341 (新西兰, 91.97%)	K.G 鸟 - 4VXFC5341 (新西兰, 91.97%)	Aristocrat
-phantomp	Phantom Pays - 4VXFC5431 (New Zealand)	Phantom Pays - 4VXFC5431 (New Zealand)	Aristocrat
-swtht2nz	情人 II - 1VXFC5461 (New Zealand)	情人 II - 1VXFC5461 (New Zealand)	Aristocrat
+phantomp	幻影自付 - 4VXFC5431 (新西兰)	幻影自付 - 4VXFC5431 (新西兰)	Aristocrat
+swtht2nz	芳香街道 II - 1VXFC5461 (新西兰)	芳香街道 II - 1VXFC5461 (新西兰)	Aristocrat
 topgear	顶级装备 - 4VXFC969	顶级装备 - 4VXFC969	Aristocrat
-swthrt2v	情人 II (C - 07/09/95, 委内瑞拉版本)	情人 II (C - 07/09/95, 委内瑞拉版本)	Aristocrat
+swthrt2v	芳香街道 II (C - 07/09/95, 委内瑞拉版本)	芳香街道 II (C - 07/09/95, 委内瑞拉版本)	Aristocrat
 enchfrst	魔法森林 (E - 23/06/95, Local)	魔法森林 (E - 23/06/95, Local)	Aristocrat
 dolphntr	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 1.24.4.0)	Aristocrat
 dolphtra	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 3)	海豚宝藏 (B - 06/12/96, NSW/ACT, Rev 3)	Aristocrat
-dmdtouch	钻石触碰 (E - 30-06-97, Local)	钻石触碰 (E - 30-06-97, Local)	Aristocrat
+dmdtouch	菱形触觉 (E - 30-06-97, Local)	菱形触觉 (E - 30-06-97, Local)	Aristocrat
 goldprmd	黄金金字塔 (B - 13-05-97, 美版)	黄金金字塔 (B - 13-05-97, 美版)	Aristocrat
 qotn	尼罗河皇后 (B - 13-05-97, NSW/ACT)	尼罗河皇后 (B - 13-05-97, NSW/ACT)	Aristocrat
 adonis	花花公子 (A - 25-05-98, NSW/ACT)	花花公子 (A - 25-05-98, NSW/ACT)	Aristocrat
@@ -7914,154 +7927,154 @@ ladylinr	女士线	女士线	TAB Austria
 kkojnoli	韩国水果机 (蜜蜂杀手)	韩国水果机 (蜜蜂杀手)	south korean hack
 wcat3	疯狂猫 3	疯狂猫 3	bootleg?
 mtonic	魔力使者?	魔力使者?	Tonic
-sfbonus	冠军水果积分 (版本 1.6)	冠军水果积分 (版本 1.6)	Amcoe
-sfbonusa	冠军水果积分 (版本 1.7)	冠军水果积分 (版本 1.7)	Amcoe
-sfbonusb	冠军水果积分 (版本 1.9R, 第1套)	冠军水果积分 (版本 1.9R, 第1套)	Amcoe
-sfbonusd	冠军水果积分 (版本 1.9R, 第2套)	冠军水果积分 (版本 1.9R, 第2套)	Amcoe
-sfbonusv	冠军水果积分 (版本 1.9R 双倍)	冠军水果积分 (版本 1.9R 双倍)	Amcoe
-parrot3	鹦鹉扑克 Ⅲ (版本 2.4)	鹦鹉扑克 Ⅲ (版本 2.4)	Amcoe
-parrot3b	鹦鹉扑克 Ⅲ (版本 2.6R, 第1套)	鹦鹉扑克 Ⅲ (版本 2.6R, 第1套)	Amcoe
-parrot3d	鹦鹉扑克 Ⅲ (版本 2.6R, 第2套)	鹦鹉扑克 Ⅲ (版本 2.6R, 第2套)	Amcoe
-parrot3v	鹦鹉扑克 Ⅲ (版本 2.6E 双倍)	鹦鹉扑克 Ⅲ (版本 2.6E 双倍)	Amcoe
-parrot3v2	鹦鹉扑克 Ⅲ (版本 2.6R 双倍)	鹦鹉扑克 Ⅲ (版本 2.6R 双倍)	Amcoe
-hldspin1	水果盘拉霸 I (版本 2.5T)	水果盘拉霸 I (版本 2.5T)	Amcoe
-hldspin1b	水果盘拉霸 I (版本 2.7T, 第1套)	水果盘拉霸 I (版本 2.7T, 第1套)	Amcoe
-hldspin1d	水果盘拉霸 I (版本 2.7T, 第2套)	水果盘拉霸 I (版本 2.7T, 第2套)	Amcoe
-hldspin1v	水果盘拉霸 I (版本 2.7T 双倍)	水果盘拉霸 I (版本 2.7T 双倍)	Amcoe
-hldspin2	水果盘拉霸 II (版本 2.6)	水果盘拉霸 II (版本 2.6)	Amcoe
-hldspin2b	水果盘拉霸 II (版本 2.8R, 第1套)	水果盘拉霸 II (版本 2.8R, 第1套)	Amcoe
-hldspin2d	水果盘拉霸 II (版本 2.8R, 第2套)	水果盘拉霸 II (版本 2.8R, 第2套)	Amcoe
-hldspin2v	水果盘拉霸 II (版本 2.8R 双倍)	水果盘拉霸 II (版本 2.8R 双倍)	Amcoe
-fcnudge	水果狂欢 Nudge (版本 1.7)	水果狂欢 Nudge (版本 1.7)	Amcoe
-fcnudge2	水果狂欢 Nudge (版本 2.1 双倍)	水果狂欢 Nudge (版本 2.1 双倍)	Amcoe
-fcnudge3	水果狂欢 Nudge (版本 2.0, 第1套)	水果狂欢 Nudge (版本 2.0, 第1套)	Amcoe
-fcnudge4	水果狂欢 Nudge (版本 2.0, 第2套)	水果狂欢 Nudge (版本 2.0, 第2套)	Amcoe
-pickwin	拉霸赢家 (版本 2.5T)	拉霸赢家 (版本 2.5T)	Amcoe
-pickwina	拉霸赢家 (版本 2.6)	拉霸赢家 (版本 2.6)	Amcoe
-pickwinb	拉霸赢家 (版本 2.8T, 第1套)	拉霸赢家 (版本 2.8T, 第1套)	Amcoe
-pickwinb2	拉霸赢家 (版本 2.9R, 第1套)	拉霸赢家 (版本 2.9R, 第1套)	Amcoe
-pickwind	拉霸赢家 (版本 2.8T, 第2套)	拉霸赢家 (版本 2.8T, 第2套)	Amcoe
-pickwind2	拉霸赢家 (版本 2.9R, 第2套)	拉霸赢家 (版本 2.9R, 第2套)	Amcoe
-pickwinv	拉霸赢家 (版本 2.8T, 双倍)	拉霸赢家 (版本 2.8T, 双倍)	Amcoe
-pickwinv2	拉霸赢家 (版本 2.9E 双倍)	拉霸赢家 (版本 2.9E 双倍)	Amcoe
-pickwinv3	拉霸赢家 (版本 2.9R 双倍)	拉霸赢家 (版本 2.9R 双倍)	Amcoe
-tighook	老虎机 (版本 1.7XT)	老虎机 (版本 1.7XT)	Amcoe
-tighooka	老虎机 (版本 1.7)	老虎机 (版本 1.7)	Amcoe
-tighookc	老虎机 (版本 2.1R, 第1套)	老虎机 (版本 2.1R, 第1套)	Amcoe
+sfbonus	冠军水果积分 (版本 1.9R, 第1套)	冠军水果积分 (版本 1.9R, 第1套)	Amcoe
+sfbonusd1	冠军水果积分 (版本 1.9R, 第2套)	冠军水果积分 (版本 1.9R, 第2套)	Amcoe
+sfbonusv1	冠军水果积分 (版本 1.9R 双倍)	冠军水果积分 (版本 1.9R 双倍)	Amcoe
+sfbonuso	冠军水果积分 (版本 1.7)	冠军水果积分 (版本 1.7)	Amcoe
+sfbonuso2	冠军水果积分 (版本 1.6)	冠军水果积分 (版本 1.6)	Amcoe
+parrot3	鹦鹉扑克 Ⅲ (版本 2.6E 双倍)	鹦鹉扑克 Ⅲ (版本 2.6E 双倍)	Amcoe
+parrot3b1	鹦鹉扑克 Ⅲ (版本 2.6R, 第1套)	鹦鹉扑克 Ⅲ (版本 2.6R, 第1套)	Amcoe
+parrot3d1	鹦鹉扑克 Ⅲ (版本 2.6R, 第2套)	鹦鹉扑克 Ⅲ (版本 2.6R, 第2套)	Amcoe
+parrot3v1	鹦鹉扑克 Ⅲ (版本 2.6R 双倍)	鹦鹉扑克 Ⅲ (版本 2.6R 双倍)	Amcoe
+parrot3o	鹦鹉扑克 Ⅲ (版本 2.4)	鹦鹉扑克 Ⅲ (版本 2.4)	Amcoe
+hldspin1	水果盘拉霸 I (版本 2.7T, 第1套)	水果盘拉霸 I (版本 2.7T, 第1套)	Amcoe
+hldspin1dt	水果盘拉霸 I (版本 2.7T, 第2套)	水果盘拉霸 I (版本 2.7T, 第2套)	Amcoe
+hldspin1vt	水果盘拉霸 I (版本 2.7T 双倍)	水果盘拉霸 I (版本 2.7T 双倍)	Amcoe
+hldspin1o	水果盘拉霸 I (版本 2.5T)	水果盘拉霸 I (版本 2.5T)	Amcoe
+hldspin2	水果盘拉霸 II (版本 2.8R, 第1套)	水果盘拉霸 II (版本 2.8R, 第1套)	Amcoe
+hldspin2d1	水果盘拉霸 II (版本 2.8R, 第2套)	水果盘拉霸 II (版本 2.8R, 第2套)	Amcoe
+hldspin2v1	水果盘拉霸 II (版本 2.8R 双倍)	水果盘拉霸 II (版本 2.8R 双倍)	Amcoe
+hldspin2o	水果盘拉霸 II (版本 2.6)	水果盘拉霸 II (版本 2.6)	Amcoe
+fcnudge	水果狂欢 Nudge (版本 2.1 双倍)	水果狂欢 Nudge (版本 2.1 双倍)	Amcoe
+fcnudgeo	水果狂欢 Nudge (版本 2.0, 第1套)	水果狂欢 Nudge (版本 2.0, 第1套)	Amcoe
+fcnudgeo2	水果狂欢 Nudge (版本 2.0, 第2套)	水果狂欢 Nudge (版本 2.0, 第2套)	Amcoe
+fcnudgeo3	水果狂欢 Nudge (版本 1.7)	水果狂欢 Nudge (版本 1.7)	Amcoe
+pickwin	拉霸赢家 (版本 2.9E 双倍)	拉霸赢家 (版本 2.9E 双倍)	Amcoe
+pickwinb1	拉霸赢家 (版本 2.9R, 第1套)	拉霸赢家 (版本 2.9R, 第1套)	Amcoe
+pickwind1	拉霸赢家 (版本 2.9R, 第2套)	拉霸赢家 (版本 2.9R, 第2套)	Amcoe
+pickwinv1	拉霸赢家 (版本 2.9R 双倍)	拉霸赢家 (版本 2.9R 双倍)	Amcoe
+pickwinbt	拉霸赢家 (版本 2.8T, 第1套)	拉霸赢家 (版本 2.8T, 第1套)	Amcoe
+pickwindt	拉霸赢家 (版本 2.8T, 第2套)	拉霸赢家 (版本 2.8T, 第2套)	Amcoe
+pickwinvt	拉霸赢家 (版本 2.8T, 双倍)	拉霸赢家 (版本 2.8T, 双倍)	Amcoe
+pickwino	拉霸赢家 (版本 2.6)	拉霸赢家 (版本 2.6)	Amcoe
+pickwino2	拉霸赢家 (版本 2.5T)	拉霸赢家 (版本 2.5T)	Amcoe
+tighook	老虎机 (版本 2.1E 双倍)	老虎机 (版本 2.1E 双倍)	Amcoe
+tighookc1	老虎机 (版本 2.1R, 第1套)	老虎机 (版本 2.1R, 第1套)	Amcoe
+tighookd1	老虎机 (版本 2.1R, 第2套)	老虎机 (版本 2.1R, 第2套)	Amcoe
+tighookv1	老虎机 (版本 2.1R 双倍)	老虎机 (版本 2.1R 双倍)	Amcoe
 tighookc2	老虎机 (版本 2.0LT, 第1套)	老虎机 (版本 2.0LT, 第1套)	Amcoe
-tighookv	老虎机 (版本 2.1R 双倍)	老虎机 (版本 2.1R 双倍)	Amcoe
-tighookv2	老虎机 (版本 2.1E 双倍)	老虎机 (版本 2.1E 双倍)	Amcoe
-tighookv3	老虎机 (版本 2.0LT 双倍)	老虎机 (版本 2.0LT 双倍)	Amcoe
-tighookd	老虎机 (版本 2.1R, 第2套)	老虎机 (版本 2.1R, 第2套)	Amcoe
 tighookd2	老虎机 (版本 2.0LT, 第2套)	老虎机 (版本 2.0LT, 第2套)	Amcoe
-robadv	罗宾汉历险记 (版本 1.5)	罗宾汉历险记 (版本 1.5)	Amcoe
-robadvc	罗宾汉历险记 (版本 1.7R, 第1套)	罗宾汉历险记 (版本 1.7R, 第1套)	Amcoe
-robadvd	罗宾汉历险记 (版本 1.7R, 第2套)	罗宾汉历险记 (版本 1.7R, 第2套)	Amcoe
-robadvv1	罗宾汉历险记 (版本 1.7E 双倍)	罗宾汉历险记 (版本 1.7E 双倍)	Amcoe
-robadvv2	罗宾汉历险记 (版本 1.7R 双倍)	罗宾汉历险记 (版本 1.7R 双倍)	Amcoe
-robadv2	罗宾汉历险记 2 (版本 1.5SH)	罗宾汉历险记 2 (版本 1.5SH)	Amcoe
-robadv2a	罗宾汉历险记 2 (版本 1.5)	罗宾汉历险记 2 (版本 1.5)	Amcoe
-robadv2c	罗宾汉历险记 2 (版本 1.7LT, 第1套)	罗宾汉历险记 2 (版本 1.7LT, 第1套)	Amcoe
-robadv2v1	罗宾汉历险记 2 (版本 1.7SH 双倍)	罗宾汉历险记 2 (版本 1.7SH 双倍)	Amcoe
-robadv2v2	罗宾汉历险记 2 (版本 1.7R 双倍)	罗宾汉历险记 2 (版本 1.7R 双倍)	Amcoe
-robadv2v3	罗宾汉历险记 2 (版本 1.7LT 双倍)	罗宾汉历险记 2 (版本 1.7LT 双倍)	Amcoe
-robadv2v4	罗宾汉历险记 2 (版本 1.7E 双倍)	罗宾汉历险记 2 (版本 1.7E 双倍)	Amcoe
-robadv2d	罗宾汉历险记 2 (版本 1.7LT, 第2套)	罗宾汉历险记 2 (版本 1.7LT, 第2套)	Amcoe
-robadv2d2	罗宾汉历险记 2 (版本 1.7R, 第1套)	罗宾汉历险记 2 (版本 1.7R, 第1套)	Amcoe
-robadv2d3	罗宾汉历险记 2 (版本 1.7SH, 第1套)	罗宾汉历险记 2 (版本 1.7SH, 第1套)	Amcoe
-robadv2c2	罗宾汉历险记 2 (版本 1.7R, 第2套)	罗宾汉历险记 2 (版本 1.7R, 第2套)	Amcoe
-robadv2c3	罗宾汉历险记 2 (版本 1.7SH, 第2套)	罗宾汉历险记 2 (版本 1.7SH, 第2套)	Amcoe
-pirpok2	海盗扑克 II (版本 2.0)	海盗扑克 II (版本 2.0)	Amcoe
-pirpok2b	海盗扑克 II (版本 2.2R, 第1套)	海盗扑克 II (版本 2.2R, 第1套)	Amcoe
-pirpok2d	海盗扑克 II (版本 2.2R, 第1套)	海盗扑克 II (版本 2.2R, 第1套)	Amcoe
-pirpok2v	海盗扑克 II (版本 2.2R 双倍)	海盗扑克 II (版本 2.2R 双倍)	Amcoe
-pirpok2v2	海盗扑克 II (版本 2.4E 双倍)	海盗扑克 II (版本 2.4E 双倍)	Amcoe
-anibonus	动物积分 (版本 1.50XT)	动物积分 (版本 1.50XT)	Amcoe
-anibonus2	动物积分 (版本 1.5)	动物积分 (版本 1.5)	Amcoe
-anibonus3	动物积分 (版本 1.40XT, 第1套)	动物积分 (版本 1.40XT, 第1套)	Amcoe
-anibonus4	动物积分 (版本 1.40XT, 第2套)	动物积分 (版本 1.40XT, 第2套)	Amcoe
-anibonus5	动物积分 (版本 1.4, 第1套)	动物积分 (版本 1.4, 第1套)	Amcoe
-anibonus6	动物积分 (版本 1.4, 第2套)	动物积分 (版本 1.4, 第2套)	Amcoe
-anibonusb	动物积分 (版本 1.7R, 第1套)	动物积分 (版本 1.7R, 第1套)	Amcoe
-anibonusb2	动物积分 (版本 1.7LT, 第1套)	动物积分 (版本 1.7LT, 第1套)	Amcoe
-anibonusd	动物积分 (版本 1.7R, 第2套)	动物积分 (版本 1.7R, 第2套)	Amcoe
-anibonusd2	动物积分 (版本 1.7LT, 第2套)	动物积分 (版本 1.7LT, 第2套)	Amcoe
-anibonusv	动物积分 (版本 1.8R 双倍)	动物积分 (版本 1.8R 双倍)	Amcoe
+tighookv2	老虎机 (版本 2.0LT 双倍)	老虎机 (版本 2.0LT 双倍)	Amcoe
+tighooko	老虎机 (版本 1.7XT)	老虎机 (版本 1.7XT)	Amcoe
+tighooko2	老虎机 (版本 1.7)	老虎机 (版本 1.7)	Amcoe
+robadv	罗宾汉历险记 (版本 1.7E 双倍)	罗宾汉历险记 (版本 1.7E 双倍)	Amcoe
+robadvc1	罗宾汉历险记 (版本 1.7R, 第1套)	罗宾汉历险记 (版本 1.7R, 第1套)	Amcoe
+robadvd1	罗宾汉历险记 (版本 1.7R, 第2套)	罗宾汉历险记 (版本 1.7R, 第2套)	Amcoe
+robadvv1	罗宾汉历险记 (版本 1.7R 双倍)	罗宾汉历险记 (版本 1.7R 双倍)	Amcoe
+robadvo	罗宾汉历险记 (版本 1.5)	罗宾汉历险记 (版本 1.5)	Amcoe
+robadv2	罗宾汉历险记 2 (版本 1.7E 双倍)	罗宾汉历险记 2 (版本 1.7E 双倍)	Amcoe
+robadv2c1	罗宾汉历险记 2 (版本 1.7R, 第1套)	罗宾汉历险记 2 (版本 1.7R, 第1套)	Amcoe
+robadv2d1	罗宾汉历险记 2 (版本 1.7R, 第2套)	罗宾汉历险记 2 (版本 1.7R, 第2套)	Amcoe
+robadv2v1	罗宾汉历险记 2 (版本 1.7R 双倍)	罗宾汉历险记 2 (版本 1.7R 双倍)	Amcoe
+robadv2c2	罗宾汉历险记 2 (版本 1.7LT, 第1套)	罗宾汉历险记 2 (版本 1.7LT, 第1套)	Amcoe
+robadv2d2	罗宾汉历险记 2 (版本 1.7LT, 第2套)	罗宾汉历险记 2 (版本 1.7LT, 第2套)	Amcoe
+robadv2v2	罗宾汉历险记 2 (版本 1.7LT 双倍)	罗宾汉历险记 2 (版本 1.7LT 双倍)	Amcoe
+robadv2c3	罗宾汉历险记 2 (版本 1.7SH, 第1套)	罗宾汉历险记 2 (版本 1.7SH, 第1套)	Amcoe
+robadv2d3	罗宾汉历险记 2 (版本 1.7SH, 第2套)	罗宾汉历险记 2 (版本 1.7SH, 第2套)	Amcoe
+robadv2v3	罗宾汉历险记 2 (版本 1.7SH 双倍)	罗宾汉历险记 2 (版本 1.7SH 双倍)	Amcoe
+robadv2o	罗宾汉历险记 2 (版本 1.5SH)	罗宾汉历险记 2 (版本 1.5SH)	Amcoe
+robadv2o2	罗宾汉历险记 2 (版本 1.5)	罗宾汉历险记 2 (版本 1.5)	Amcoe
+pirpok2	海盗扑克 II (版本 2.4E 双倍)	海盗扑克 II (版本 2.4E 双倍)	Amcoe
+pirpok2b1	海盗扑克 II (版本 2.2R, 第1套)	海盗扑克 II (版本 2.2R, 第1套)	Amcoe
+pirpok2d1	海盗扑克 II (版本 2.2R, 第1套)	海盗扑克 II (版本 2.2R, 第1套)	Amcoe
+pirpok2v1	海盗扑克 II (版本 2.2R 双倍)	海盗扑克 II (版本 2.2R 双倍)	Amcoe
+pirpok2o	海盗扑克 II (版本 2.0)	海盗扑克 II (版本 2.0)	Amcoe
+anibonus	动物积分 (版本 1.8E 双倍)	动物积分 (版本 1.8E 双倍)	Amcoe
+anibonusv1	动物积分 (版本 1.8R 双倍)	动物积分 (版本 1.8R 双倍)	Amcoe
 anibonusv2	动物积分 (版本 1.8LT 双倍)	动物积分 (版本 1.8LT 双倍)	Amcoe
-anibonusv3	动物积分 (版本 1.8E 双倍)	动物积分 (版本 1.8E 双倍)	Amcoe
-abnudge	动物积分 Nudge (版本 1.7)	动物积分 Nudge (版本 1.7)	Amcoe
+anibonusb1	动物积分 (版本 1.7R, 第1套)	动物积分 (版本 1.7R, 第1套)	Amcoe
+anibonusd1	动物积分 (版本 1.7R, 第2套)	动物积分 (版本 1.7R, 第2套)	Amcoe
+anibonusb2	动物积分 (版本 1.7LT, 第1套)	动物积分 (版本 1.7LT, 第1套)	Amcoe
+anibonusd2	动物积分 (版本 1.7LT, 第2套)	动物积分 (版本 1.7LT, 第2套)	Amcoe
+anibonuso	动物积分 (版本 1.5)	动物积分 (版本 1.5)	Amcoe
+anibonuso2	动物积分 (版本 1.4, 第1套)	动物积分 (版本 1.4, 第1套)	Amcoe
+anibonuso3	动物积分 (版本 1.4, 第2套)	动物积分 (版本 1.4, 第2套)	Amcoe
+anibonusxo	动物积分 (版本 1.50XT)	动物积分 (版本 1.50XT)	Amcoe
+anibonusxo2	动物积分 (版本 1.40XT, 第1套)	动物积分 (版本 1.40XT, 第1套)	Amcoe
+anibonusxo3	动物积分 (版本 1.40XT, 第2套)	动物积分 (版本 1.40XT, 第2套)	Amcoe
+abnudge	动物积分 Nudge (版本 2.1 双倍)	动物积分 Nudge (版本 2.1 双倍)	Amcoe
 abnudgeb	动物积分 Nudge (版本 2.0, 第1套)	动物积分 Nudge (版本 2.0, 第1套)	Amcoe
 abnudged	动物积分 Nudge (版本 2.0, 第2套)	动物积分 Nudge (版本 2.0, 第2套)	Amcoe
-abnudgev	动物积分 Nudge (版本 2.1 双倍)	动物积分 Nudge (版本 2.1 双倍)	Amcoe
-anithunt	动物积分 - 守猎 (版本 1.7)	动物积分 - 守猎 (版本 1.7)	Amcoe
-anithunt2	动物积分 - 守猎 (版本 1.5)	动物积分 - 守猎 (版本 1.5)	Amcoe
-anithuntb	动物积分 - 守猎 (版本 1.9R, 第1套)	动物积分 - 守猎 (版本 1.9R, 第1套)	Amcoe
-anithuntd	动物积分 - 守猎 (版本 1.9R, 第2套)	动物积分 - 守猎 (版本 1.9R, 第2套)	Amcoe
-anithuntv	动物积分 - 守猎 (版本 1.9R 双倍)	动物积分 - 守猎 (版本 1.9R 双倍)	Amcoe
-dblchal	双拼水果盘 (版本 1.1)	双拼水果盘 (版本 1.1)	Amcoe
-dblchalb	双拼水果盘 (版本 1.5R, 第1套)	双拼水果盘 (版本 1.5R, 第1套)	Amcoe
-dblchalc	双拼水果盘 (版本 1.5R, 第2套)	双拼水果盘 (版本 1.5R, 第2套)	Amcoe
-dblchald	双拼水果盘 (版本 1.5R, 第3套)	双拼水果盘 (版本 1.5R, 第3套)	Amcoe
-dblchalv	双拼水果盘 (版本 1.5R 双倍)	双拼水果盘 (版本 1.5R 双倍)	Amcoe
-sfruitb	超级水果积分 (版本 2.0B)	超级水果积分 (版本 2.0B)	Amcoe
-sfruitb2	超级水果积分 (版本 2.0)	超级水果积分 (版本 2.0)	Amcoe
-sfruitb3	超级水果积分 (版本 1.80XT)	超级水果积分 (版本 1.80XT)	Amcoe
-sfruitbb	超级水果积分 (版本 2.0LT, 第1套)	超级水果积分 (版本 2.0LT, 第1套)	Amcoe
-sfruitbb2	超级水果积分 (版本 2.2B, 第1套)	超级水果积分 (版本 2.2B, 第1套)	Amcoe
-sfruitbb3	超级水果积分 (版本 2.5R, 第1套)	超级水果积分 (版本 2.5R, 第1套)	Amcoe
-sfruitbd	超级水果积分 (版本 2.0LT, 第2套)	超级水果积分 (版本 2.0LT, 第2套)	Amcoe
-sfruitbd2	超级水果积分 (版本 2.2B, 第2套)	超级水果积分 (版本 2.2B, 第2套)	Amcoe
-sfruitbd3	超级水果积分 (版本 2.5R, 第2套)	超级水果积分 (版本 2.5R, 第2套)	Amcoe
-sfruitbv	超级水果积分 (版本 2.5R 双倍)	超级水果积分 (版本 2.5R 双倍)	Amcoe
-sfruitbv2	超级水果积分 (版本 2.5E 双倍)	超级水果积分 (版本 2.5E 双倍)	Amcoe
-sfruitbv3	超级水果积分 (版本 2.2EB 双倍)	超级水果积分 (版本 2.2EB 双倍)	Amcoe
-sfruitbv4	超级水果积分 (版本 2.2B 双倍)	超级水果积分 (版本 2.2B 双倍)	Amcoe
-sfruitbv5	超级水果积分 (版本 2.0LT 双倍)	超级水果积分 (版本 2.0LT 双倍)	Amcoe
-fb2gen	水果积分 2nd 世纪 (版本 1.6XT)	水果积分 2nd 世纪 (版本 1.6XT)	Amcoe
-fb2gena	水果积分 2nd 世纪 (版本 1.5)	水果积分 2nd 世纪 (版本 1.5)	Amcoe
-fb2genc	水果积分 2nd 世纪 (版本 1.8R, 第1套)	水果积分 2nd 世纪 (版本 1.8R, 第1套)	Amcoe
+abnudgeo	动物积分 Nudge (版本 1.7)	动物积分 Nudge (版本 1.7)	Amcoe
+dblchal	双拼水果盘 (版本 1.5R, 第1套)	双拼水果盘 (版本 1.5R, 第1套)	Amcoe
+dblchalc1	双拼水果盘 (版本 1.5R, 第2套)	双拼水果盘 (版本 1.5R, 第2套)	Amcoe
+dblchald1	双拼水果盘 (版本 1.5R, 第3套)	双拼水果盘 (版本 1.5R, 第3套)	Amcoe
+dblchalv1	双拼水果盘 (版本 1.5R 双倍)	双拼水果盘 (版本 1.5R 双倍)	Amcoe
+dblchalo	双拼水果盘 (版本 1.1)	双拼水果盘 (版本 1.1)	Amcoe
+anithunt	动物积分 - 守猎 (版本 1.9R, 第1套)	动物积分 - 守猎 (版本 1.9R, 第1套)	Amcoe
+anithuntd1	动物积分 - 守猎 (版本 1.9R, 第2套)	动物积分 - 守猎 (版本 1.9R, 第2套)	Amcoe
+anithuntv1	动物积分 - 守猎 (版本 1.9R 双倍)	动物积分 - 守猎 (版本 1.9R 双倍)	Amcoe
+anithunto	动物积分 - 守猎 (版本 1.7)	动物积分 - 守猎 (版本 1.7)	Amcoe
+anithunto2	动物积分 - 守猎 (版本 1.5)	动物积分 - 守猎 (版本 1.5)	Amcoe
+sfruitb	超级水果积分 (版本 2.5E 双倍)	超级水果积分 (版本 2.5E 双倍)	Amcoe
+sfruitbb1	超级水果积分 (版本 2.5R, 第1套)	超级水果积分 (版本 2.5R, 第1套)	Amcoe
+sfruitbd1	超级水果积分 (版本 2.5R, 第2套)	超级水果积分 (版本 2.5R, 第2套)	Amcoe
+sfruitbv1	超级水果积分 (版本 2.5R 双倍)	超级水果积分 (版本 2.5R 双倍)	Amcoe
+sfruitbb2	超级水果积分 (版本 2.0LT, 第1套)	超级水果积分 (版本 2.0LT, 第1套)	Amcoe
+sfruitbd2	超级水果积分 (版本 2.0LT, 第2套)	超级水果积分 (版本 2.0LT, 第2套)	Amcoe
+sfruitbv2	超级水果积分 (版本 2.0LT 双倍)	超级水果积分 (版本 2.0LT 双倍)	Amcoe
+sfruitbo	超级水果积分 (版本 2.0)	超级水果积分 (版本 2.0)	Amcoe
+sfruitbo2	超级水果积分 (版本 1.80XT)	超级水果积分 (版本 1.80XT)	Amcoe
+sfruitbh	超级水果积分 (版本 2.2EB 双倍)	超级水果积分 (版本 2.2EB 双倍)	Amcoe
+sfruitbbh	超级水果积分 (版本 2.2B, 第1套)	超级水果积分 (版本 2.2B, 第1套)	Amcoe
+sfruitbdh	超级水果积分 (版本 2.2B, 第2套)	超级水果积分 (版本 2.2B, 第2套)	Amcoe
+sfruitbvh	超级水果积分 (版本 2.2B 双倍)	超级水果积分 (版本 2.2B 双倍)	Amcoe
+sfruitboh	超级水果积分 (版本 2.0B)	超级水果积分 (版本 2.0B)	Amcoe
+fb2gen	水果积分 2nd 世纪 (版本 1.8E 双倍)	水果积分 2nd 世纪 (版本 1.8E 双倍)	Amcoe
+fb2genc1	水果积分 2nd 世纪 (版本 1.8R, 第1套)	水果积分 2nd 世纪 (版本 1.8R, 第1套)	Amcoe
+fb2gend1	水果积分 2nd 世纪 (版本 1.8R, 第2套)	水果积分 2nd 世纪 (版本 1.8R, 第2套)	Amcoe
+fb2genv1	水果积分 2nd 世纪 (版本 1.8R 双倍)	水果积分 2nd 世纪 (版本 1.8R 双倍)	Amcoe
 fb2genc2	水果积分 2nd 世纪 (版本 1.8LT, 第1套)	水果积分 2nd 世纪 (版本 1.8LT, 第1套)	Amcoe
-fb2genv	水果积分 2nd 世纪 (版本 1.8R 双倍)	水果积分 2nd 世纪 (版本 1.8R 双倍)	Amcoe
-fb2genv2	水果积分 2nd 世纪 (版本 1.8LT 双倍)	水果积分 2nd 世纪 (版本 1.8LT 双倍)	Amcoe
-fb2genv3	水果积分 2nd 世纪 (版本 1.8E 双倍)	水果积分 2nd 世纪 (版本 1.8E 双倍)	Amcoe
-fb2gend	水果积分 2nd 世纪 (版本 1.8R, 第2套)	水果积分 2nd 世纪 (版本 1.8R, 第2套)	Amcoe
 fb2gend2	水果积分 2nd 世纪 (版本 1.8LT, 第2套)	水果积分 2nd 世纪 (版本 1.8LT, 第2套)	Amcoe
-fb2nd	水果积分 2nd Edition (版本 1.5)	水果积分 2nd Edition (版本 1.5)	Amcoe
-fb2ndc	水果积分 2nd Edition (版本 1.8R, 第1套)	水果积分 2nd Edition (版本 1.8R, 第1套)	Amcoe
+fb2genv2	水果积分 2nd 世纪 (版本 1.8LT 双倍)	水果积分 2nd 世纪 (版本 1.8LT 双倍)	Amcoe
+fb2geno	水果积分 2nd 世纪 (版本 1.6XT)	水果积分 2nd 世纪 (版本 1.6XT)	Amcoe
+fb2geno2	水果积分 2nd 世纪 (版本 1.5)	水果积分 2nd 世纪 (版本 1.5)	Amcoe
+fb2nd	水果积分 2nd Edition (版本 1.8R, 第1套)	水果积分 2nd Edition (版本 1.8R, 第1套)	Amcoe
+fb2ndd1	水果积分 2nd Edition (版本 1.8R, 第2套)	水果积分 2nd Edition (版本 1.8R, 第2套)	Amcoe
+fb2ndv1	水果积分 2nd Edition (版本 1.8R 双倍)	水果积分 2nd Edition (版本 1.8R 双倍)	Amcoe
 fb2ndc2	水果积分 2nd Edition (版本 1.8LT, 第1套)	水果积分 2nd Edition (版本 1.8LT, 第1套)	Amcoe
-fb2ndv	水果积分 2nd Edition (版本 1.8R 双倍)	水果积分 2nd Edition (版本 1.8R 双倍)	Amcoe
-fb2ndv2	水果积分 2nd Edition (版本 1.8LT 双倍)	水果积分 2nd Edition (版本 1.8LT 双倍)	Amcoe
-fb2ndd	水果积分 2nd Edition (版本 1.8R, 第2套)	水果积分 2nd Edition (版本 1.8R, 第2套)	Amcoe
 fb2ndd2	水果积分 2nd Edition (版本 1.8LT, 第2套)	水果积分 2nd Edition (版本 1.8LT, 第2套)	Amcoe
-fb4	水果积分 4 (版本 1.3XT)	水果积分 4 (版本 1.3XT)	Amcoe
-fb4a	水果积分 4 (版本 1.2)	水果积分 4 (版本 1.2)	Amcoe
-fb4b	水果积分 4 (版本 1.5LT, 第1套	水果积分 4 (版本 1.5LT, 第1套	Amcoe
-fb4b2	水果积分 4 (版本 1.5R, 第1套)	水果积分 4 (版本 1.5R, 第1套)	Amcoe
-fb4c	水果积分 4 (版本 1.5R, 第2套)	水果积分 4 (版本 1.5R, 第2套)	Amcoe
-fb4c2	水果积分 4 (版本 1.5LT, 第2套)	水果积分 4 (版本 1.5LT, 第2套)	Amcoe
-fb4d	水果积分 4 (版本 1.5R, 第3套)	水果积分 4 (版本 1.5R, 第3套)	Amcoe
-fb4d2	水果积分 4 (版本 1.5LT, 第3套)	水果积分 4 (版本 1.5LT, 第3套)	Amcoe
-fb4v	水果积分 4 (版本 1.5R 双倍)	水果积分 4 (版本 1.5R 双倍)	Amcoe
-fb4v2	水果积分 4 (版本 1.5LT 双倍)	水果积分 4 (版本 1.5LT 双倍)	Amcoe
-fb4v3	水果积分 4 (版本 1.5E 双倍) (with 2005 title)	水果积分 4 (版本 1.5E 双倍) (with 2005 title)	Amcoe
-fb5	水果积分 5 (版本 1.5SH, 第1套)	水果积分 5 (版本 1.5SH, 第1套)	Amcoe
-fb5c	水果积分 5 (版本 1.5SH, 第2套)	水果积分 5 (版本 1.5SH, 第2套)	Amcoe
-fb5d	水果积分 5 (版本 1.5SH, 第3套)	水果积分 5 (版本 1.5SH, 第3套)	Amcoe
-fb5v	水果积分 5 (版本 1.5SH 双倍)	水果积分 5 (版本 1.5SH 双倍)	Amcoe
-fb6	水果积分 6 (版本 1.7E CGA)	水果积分 6 (版本 1.7E CGA)	Amcoe
-fb6v3	水果积分 6 (版本 1.7E 双倍)	水果积分 6 (版本 1.7E 双倍)	Amcoe
-fb6d2	水果积分 6 (版本 1.7R CGA, 第1套)	水果积分 6 (版本 1.7R CGA, 第1套)	Amcoe
-fb6s	水果积分 6 (版本 1.7R CGA, 第2套)	水果积分 6 (版本 1.7R CGA, 第2套)	Amcoe
-fb6v	水果积分 6 (版本 1.7R 双倍)	水果积分 6 (版本 1.7R 双倍)	Amcoe
-fb6d	水果积分 6 (版本 1.7LT CGA, 第1套)	水果积分 6 (版本 1.7LT CGA, 第1套)	Amcoe
-fb6s2	水果积分 6 (版本 1.7LT CGA, 第2套)	水果积分 6 (版本 1.7LT CGA, 第2套)	Amcoe
-fb6v2	水果积分 6 (版本 1.7LT 双倍)	水果积分 6 (版本 1.7LT 双倍)	Amcoe
-fb6se	水果积分 6 特别版 (版本 1.4R CGA)	水果积分 6 特别版 (版本 1.4R CGA)	Amcoe
-fb6sev	水果积分 6 特别版 (版本 1.4R 双倍)	水果积分 6 特别版 (版本 1.4R 双倍)	Amcoe
-fb6sed	水果积分 6 特别版 (版本 1.4LT CGA)	水果积分 6 特别版 (版本 1.4LT CGA)	Amcoe
-fb6sev2	水果积分 6 特别版 (版本 1.4LT 双倍)	水果积分 6 特别版 (版本 1.4LT 双倍)	Amcoe
-fb6sed2	水果积分 6 特别版 (版本 1.4E CGA)	水果积分 6 特别版 (版本 1.4E CGA)	Amcoe
-fb6sev3	水果积分 6 特别版 (版本 1.4E 双倍)	水果积分 6 特别版 (版本 1.4E 双倍)	Amcoe
+fb2ndv2	水果积分 2nd Edition (版本 1.8LT 双倍)	水果积分 2nd Edition (版本 1.8LT 双倍)	Amcoe
+fb2ndo	水果积分 2nd Edition (版本 1.5)	水果积分 2nd Edition (版本 1.5)	Amcoe
+fb4	水果积分 2004 (版本 1.5R, 第1套)	水果积分 2004 (版本 1.5R, 第1套)	Amcoe
+fb4c1	水果积分 2004 (版本 1.5R, 第2套)	水果积分 2004 (版本 1.5R, 第2套)	Amcoe
+fb4d1	水果积分 2004 (版本 1.5R, 第3套)	水果积分 2004 (版本 1.5R, 第3套)	Amcoe
+fb4v1	水果积分 2004 (版本 1.5R 双倍)	水果积分 2004 (版本 1.5R 双倍)	Amcoe
+fb4exp	水果积分 2005 (2004 额外 - 版本 1.5E 双倍)	水果积分 2005 (2004 额外 - 版本 1.5E 双倍)	Amcoe
+fb4b2	水果积分 2004 (版本 1.5LT, 第1套)	水果积分 2004 (版本 1.5LT, 第1套)	Amcoe
+fb4c2	水果积分 2004 (版本 1.5LT, 第2套)	水果积分 2004 (版本 1.5LT, 第2套)	Amcoe
+fb4d2	水果积分 2004 (版本 1.5LT, 第3套)	水果积分 2004 (版本 1.5LT, 第3套)	Amcoe
+fb4v2	水果积分 2004 (版本 1.5LT 双倍)	水果积分 2004 (版本 1.5LT 双倍)	Amcoe
+fb4o	水果积分 2004 (版本 1.3XT)	水果积分 2004 (版本 1.3XT)	Amcoe
+fb4o2	水果积分 2004 (版本 1.2)	水果积分 2004 (版本 1.2)	Amcoe
+fb5	水果积分 2005 (版本 1.5SH, 第1套)	水果积分 2005 (版本 1.5SH, 第1套)	Amcoe
+fb5c	水果积分 2005 (版本 1.5SH, 第2套)	水果积分 2005 (版本 1.5SH, 第2套)	Amcoe
+fb5d	水果积分 2005 (版本 1.5SH, 第3套)	水果积分 2005 (版本 1.5SH, 第3套)	Amcoe
+fb5v	水果积分 2005 (版本 1.5SH 双倍)	水果积分 2005 (版本 1.5SH 双倍)	Amcoe
+fb6	水果积分 '06 - 十周年纪念 (版本 1.7E CGA)	水果积分 '06 - 十周年纪念 (版本 (Version 1.7E CGA)	Amcoe
+fb6v	水果积分 '06 - 十周年纪念 (版本 1.7E 双倍)	水果积分 '06 - 十周年纪念 (版本 1.7E Dual)	Amcoe
+fb6d1	水果积分 '06 - 十周年纪念 (版本 1.7R CGA, 第1套)	水果积分 '06 - 十周年纪念 (版本 1.7R CGA, 第1套)	Amcoe
+fb6s1	水果积分 '06 - 十周年纪念 (版本 1.7R CGA, 第2套)	水果积分 '06 - 十周年纪念 (版本 1.7R CGA, 第2套)	Amcoe
+fb6v1	水果积分 '06 - 十周年纪念 (版本 1.7R 双倍)	水果积分 '06 - 十周年纪念 (版本 1.7R 双倍)	Amcoe
+fb6d2	水果积分 '06 - 十周年纪念 (版本 1.7LT CGA, 第1套)	水果积分 '06 - 十周年纪念 (版本 1.7LT CGA, 第1套)	Amcoe
+fb6s2	水果积分 '06 - 十周年纪念 (版本 1.7LT CGA, 第2套)	水果积分 '06 - 十周年纪念 (版本 1.7LT CGA, 第2套)	Amcoe
+fb6v2	水果积分 '06 - 十周年纪念 (版本 1.7LT 双倍)	水果积分 '06 - 十周年纪念 (版本 1.7LT 双倍)	Amcoe
+fb6se	水果积分 2006 特别版 (版本 1.4E CGA)	水果积分 2006 特别版 (版本 1.4E CGA)	Amcoe
+fb6sev	水果积分 2006 特别版 (版本 1.4E 双倍)	水果积分 2006 特别版 (版本 1.4E 双倍)	Amcoe
+fb6sed1	水果积分 2006 特别版 (版本 1.4R CGA)	水果积分 2006 特别版 (版本 1.4R CGA)	Amcoe
+fb6sev1	水果积分 2006 特别版 (版本 1.4R 双倍)	水果积分 2006 特别版 (版本 1.4R 双倍)	Amcoe
+fb6sed2	水果积分 2006 特别版 (版本 1.4LT CGA)	水果积分 2006 特别版 (版本 1.4LT CGA)	Amcoe
+fb6sev2	水果积分 2006 特别版 (版本 1.4LT 双倍)	水果积分 2006 特别版 (版本 1.4LT 双倍)	Amcoe
 version4	水果积分 2000 (版本 4.2R)	水果积分 2000 (版本 4.2R)	Amcoe
 bugfever	虫虫也疯狂 (第1套)	虫虫也疯狂 (第1套)	Amcoe
 bugfeverd	虫虫也疯狂 (第2套)	虫虫也疯狂 (第2套)	Amcoe
@@ -8071,65 +8084,63 @@ dvisland	恶魔岛水果积分	恶魔岛水果积分	Amcoe
 funriver	快乐小溪 (第1套)	快乐小溪 (第1套)	Amcoe
 funriverv	快乐小溪 (第2套)	快乐小溪 (第2套)	Amcoe
 amclink	水果积分连线控制箱 (版本 2.2)	水果积分连线控制箱 (版本 2.2)	Amcoe
-act2000	行动 2000 (版本 1.2)	行动 2000 (版本 1.2)	Amcoe
-act2000a	行动 2000 (版本 3.3)	行动 2000 (版本 3.3)	Amcoe
-act2000a2	行动 2000 (版本 3.10XT)	行动 2000 (版本 3.10XT)	Amcoe
-act2000v	行动 2000 (版本 3.5R 双倍)	行动 2000 (版本 3.5R 双倍)	Amcoe
-act2000v2	行动 2000 (版本 3.5E 双倍)	行动 2000 (版本 3.5E 双倍)	Amcoe
-act2000v3	行动 2000 (版本 3.30XT 双倍)	行动 2000 (版本 3.30XT 双倍)	Amcoe
-act2000d	行动 2000 (版本 3.5R, 第1套)	行动 2000 (版本 3.5R, 第1套)	Amcoe
-act2000d2	行动 2000 (版本 3.30XT, 第1套)	行动 2000 (版本 3.30XT, 第1套)	Amcoe
-act2000b	行动 2000 (版本 3.5R, 第2套)	行动 2000 (版本 3.5R, 第2套)	Amcoe
-act2000b2	行动 2000 (版本 3.30XT, 第2套)	行动 2000 (版本 3.30XT, 第2套)	Amcoe
-ch2000	水果积分 2000 / 新樱桃 2000 (版本 3.9XT)	水果积分 2000 / 新樱桃 2000 (版本 3.9XT)	Amcoe
-ch2000x	水果积分 2000 / 新樱桃 2000 (版本 3.9D)	水果积分 2000 / 新樱桃 2000 (版本 3.9D)	Amcoe
-ch2000y	水果积分 2000 / 新樱桃 2000 (版本 3.9)	水果积分 2000 / 新樱桃 2000 (版本 3.9)	Amcoe
-ch2000b	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第1套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第1套)	Amcoe
+act2000	行动 2000 (版本 3.5E 双倍)	行动 2000 (版本 3.5E 双倍)	Amcoe
+act2000v1	行动 2000 (版本 3.5R 双倍)	行动 2000 (版本 3.5R 双倍)	Amcoe
+act2000d1	行动 2000 (版本 3.5R, 第1套)	行动 2000 (版本 3.5R, 第1套)	Amcoe
+act2000b1	行动 2000 (版本 3.5R, 第2套)	行动 2000 (版本 3.5R, 第2套)	Amcoe
+act2000vx	行动 2000 (版本 3.30XT 双倍)	行动 2000 (版本 3.30XT 双倍)	Amcoe
+act2000dx	行动 2000 (版本 3.30XT, 第1套)	行动 2000 (版本 3.30XT, 第1套)	Amcoe
+act2000bx	行动 2000 (版本 3.30XT, 第2套)	行动 2000 (版本 3.30XT, 第2套)	Amcoe
+act2000o	行动 2000 (版本 3.3)	行动 2000 (版本 3.3)	Amcoe
+act2000o2	行动 2000 (版本 3.10XT)	行动 2000 (版本 3.10XT)	Amcoe
+act2000o3	行动 2000 (版本 1.2)	行动 2000 (版本 1.2)	Amcoe
+ch2000	水果积分 2000 / 新樱桃 2000 (版本 4.4E 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.4E 双倍)	Amcoe
+ch2000b1	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第1套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第1套)	Amcoe
+ch2000c1	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第2套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第2套)	Amcoe
+ch2000d1	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第3套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第3套)	Amcoe
+ch2000v1	水果积分 2000 / 新樱桃 2000 (版本 4.4R 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.4R 双倍)	Amcoe
 ch2000b2	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第1套)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第1套)	Amcoe
-ch2000v	水果积分 2000 / 新樱桃 2000 (版本 4.4R 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.4R 双倍)	Amcoe
-ch2000v2	水果积分 2000 / 新樱桃 2000 (版本 4.4E 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.4E 双倍)	Amcoe
-ch2000v3	水果积分 2000 / 新樱桃 2000 (版本 4.1LT 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT 双倍)	Amcoe
-ch2000c	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第2套)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第2套)	Amcoe
-ch2000c2	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第2套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第2套)	Amcoe
-ch2000d	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第3套)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第3套)	Amcoe
-ch2000d2	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第3套)	水果积分 2000 / 新樱桃 2000 (版本 4.4R, 第3套)	Amcoe
-pir2001	海盗 2001 (版本 2.3N)	海盗 2001 (版本 2.3N)	Amcoe
-pir2001a	海盗 2001 (版本 2.3)	海盗 2001 (版本 2.3)	Amcoe
-pir2001b	海盗 2001 (版本 2.20XT)	海盗 2001 (版本 2.20XT)	Amcoe
-pir2001b2	海盗 2001 (版本 2.40XT, 第1套)	海盗 2001 (版本 2.40XT, 第1套)	Amcoe
-pir2001b3	海盗 2001 (版本 2.5R, 第1套)	海盗 2001 (版本 2.5R, 第1套)	Amcoe
-pir2001v	海盗 2001 (版本 2.5R 双倍)	海盗 2001 (版本 2.5R 双倍)	Amcoe
-pir2001v2	海盗 2001 (版本 2.5E 双倍)	海盗 2001 (版本 2.5E 双倍)	Amcoe
-pir2001v3	海盗 2001 (版本 2.40XT 双倍)	海盗 2001 (版本 2.40XT 双倍)	Amcoe
-pir2001d	海盗 2001 (版本 2.5R, 第2套)	海盗 2001 (版本 2.5R, 第2套)	Amcoe
-pir2001d2	海盗 2001 (版本 2.40XT, 第2套)	海盗 2001 (版本 2.40XT, 第2套)	Amcoe
-pir2002	海盗 2002 (版本 1.8N)	海盗 2002 (版本 1.8N)	Amcoe
-pir2002a	海盗 2002 (版本 1.8)	海盗 2002 (版本 1.8)	Amcoe
-pir2002b	海盗 2002 (版本 1.70XT)	海盗 2002 (版本 1.70XT)	Amcoe
-pir2002b2	海盗 2002 (版本 1.90XT, 第1套)	海盗 2002 (版本 1.90XT, 第1套)	Amcoe
-pir2002b3	海盗 2002 (版本 2.0R, 第1套)	海盗 2002 (版本 2.0R, 第1套)	Amcoe
-pir2002v	海盗 2002 (版本 2.0R 双倍)	海盗 2002 (版本 2.0R 双倍)	Amcoe
-pir2002v2	海盗 2002 (版本 2.0E 双倍)	海盗 2002 (版本 2.0E 双倍)	Amcoe
-pir2002v3	海盗 2002 (版本 1.90XT 双倍)	海盗 2002 (版本 1.90XT 双倍)	Amcoe
-pir2002d	海盗 2002 (版本 2.0R, 第2套)	海盗 2002 (版本 2.0R, 第2套)	Amcoe
-pir2002d2	海盗 2002 (版本 1.90XT, 第2套)	海盗 2002 (版本 1.90XT, 第2套)	Amcoe
-classice	水果积分经典版 (版本 1.6LT, 第1套)	水果积分经典版 (版本 1.6LT, 第1套)	Amcoe
-classicea	水果积分经典版 (版本 1.6R, 第1套)	水果积分经典版 (版本 1.6R, 第1套)	Amcoe
-classiced	水果积分经典版 (版本 1.6R, 第2套)	水果积分经典版 (版本 1.6R, 第2套)	Amcoe
+ch2000c2	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第2套)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第2套)	Amcoe
+ch2000d2	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第3套)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT, 第3套)	Amcoe
+ch2000v2	水果积分 2000 / 新樱桃 2000 (版本 4.1LT 双倍)	水果积分 2000 / 新樱桃 2000 (版本 4.1LT 双倍)	Amcoe
+ch2000o	水果积分 2000 / 新樱桃 2000 (版本 3.9XT)	水果积分 2000 / 新樱桃 2000 (版本 3.9XT)	Amcoe
+ch2000o2	水果积分 2000 / 新樱桃 2000 (版本 3.9D)	水果积分 2000 / 新樱桃 2000 (版本 3.9D)	Amcoe
+ch2000o3	水果积分 2000 / 新樱桃 2000 (版本 3.9)	水果积分 2000 / 新樱桃 2000 (版本 3.9)	Amcoe
+pir2001	海盗 2001 (版本 2.5E 双倍)	海盗 2001 (版本 2.5E 双倍)	Amcoe
+pir2001b1	海盗 2001 (版本 2.5R, 第1套)	海盗 2001 (版本 2.5R, 第1套)	Amcoe
+pir2001d1	海盗 2001 (版本 2.5R, 第2套)	海盗 2001 (版本 2.5R, 第2套)	Amcoe
+pir2001v1	海盗 2001 (版本 2.5R 双倍)	海盗 2001 (版本 2.5R 双倍)	Amcoe
+pir2001bx	海盗 2001 (版本 2.40XT, 第1套)	海盗 2001 (版本 2.40XT, 第1套)	Amcoe
+pir2001dx	海盗 2001 (版本 2.40XT, 第2套)	海盗 2001 (版本 2.40XT, 第2套)	Amcoe
+pir2001vx	海盗 2001 (版本 2.40XT 双倍)	海盗 2001 (版本 2.40XT 双倍)	Amcoe
+pir2001o	海盗 2001 (版本 2.3N)	海盗 2001 (版本 2.3N)	Amcoe
+pir2001o2	海盗 2001 (版本 2.3)	海盗 2001 (版本 2.3)	Amcoe
+pir2001o3	海盗 2001 (版本 2.20XT)	海盗 2001 (版本 2.20XT)	Amcoe
+pir2002	海盗 2002 (版本 2.0E 双倍)	海盗 2002 (版本 2.0E 双倍)	Amcoe
+pir2002b1	海盗 2002 (版本 2.0R, 第1套)	海盗 2002 (版本 2.0R, 第1套)	Amcoe
+pir2002d1	海盗 2002 (版本 2.0R, 第2套)	海盗 2002 (版本 2.0R, 第2套)	Amcoe
+pir2002v1	海盗 2002 (版本 2.0R 双倍)	海盗 2002 (版本 2.0R 双倍)	Amcoe
+pir2002bx	海盗 2002 (版本 1.90XT, 第1套)	海盗 2002 (版本 1.90XT, 第1套)	Amcoe
+pir2002dx	海盗 2002 (版本 1.90XT, 第2套)	海盗 2002 (版本 1.90XT, 第2套)	Amcoe
+pir2002vx	海盗 2002 (版本 1.90XT 双倍)	海盗 2002 (版本 1.90XT 双倍)	Amcoe
+pir2002o	海盗 2002 (版本 1.8N)	海盗 2002 (版本 1.8N)	Amcoe
+pir2002o2	海盗 2002 (版本 1.8)	海盗 2002 (版本 1.8)	Amcoe
+pir2002o3	海盗 2002 (版本 1.70XT)	海盗 2002 (版本 1.70XT)	Amcoe
+classice	水果积分经典版 (版本 1.6E)	水果积分经典版 (版本 1.6E)	Amcoe
+classicev	水果积分经典版 (版本 1.6E 双倍)	水果积分经典版 (版本 1.6E 双倍)	Amcoe
+classice1	水果积分经典版 (版本 1.6R, 第1套)	水果积分经典版 (版本 1.6R, 第1套)	Amcoe
+classiced1	水果积分经典版 (版本 1.6R, 第2套)	水果积分经典版 (版本 1.6R, 第2套)	Amcoe
+classicev1	水果积分经典版 (版本 1.6R 双倍)	水果积分经典版 (版本 1.6R 双倍)	Amcoe
+classice2	水果积分经典版 (版本 1.6LT, 第1套)	水果积分经典版 (版本 1.6LT, 第1套)	Amcoe
 classiced2	水果积分经典版 (版本 1.6LT, 第2套)	水果积分经典版 (版本 1.6LT, 第2套)	Amcoe
-classiced3	水果积分经典版 (版本 1.6E)	水果积分经典版 (版本 1.6E)	Amcoe
-classicev	水果积分经典版 (版本 1.6R 双倍)	水果积分经典版 (版本 1.6R 双倍)	Amcoe
 classicev2	水果积分经典版 (版本 1.6LT 双倍)	水果积分经典版 (版本 1.6LT 双倍)	Amcoe
-classicev3	水果积分经典版 (版本 1.6E 双倍)	水果积分经典版 (版本 1.6E 双倍)	Amcoe
-seawld	海洋世界 (版本 1.6R CGA)	海洋世界 (版本 1.6R CGA)	Amcoe
-seawlda	海洋世界 (版本 1.6E 双倍)	海洋世界 (版本 1.6E 双倍)	Amcoe
-moneymac	赚钱机器 (版本 1.7R 双倍)	赚钱机器 (版本 1.7R 双倍)	Amcoe
-moneymacv	赚钱机器 (版本 1.7E 双倍)	赚钱机器 (版本 1.7E 双倍)	Amcoe
-moneymacv2	赚钱机器 (版本 1.7LT 双倍	赚钱机器 (版本 1.7LT 双倍	Amcoe
-moneymacd	赚钱机器 (版本 1.7R)	赚钱机器 (版本 1.7R)	Amcoe
+seawld	海洋世界 (版本 1.6E 双倍)	海洋世界 (版本 1.6E 双倍)	Amcoe
+seawldd1	海洋世界 (版本 1.6R CGA)	海洋世界 (版本 1.6R CGA)	Amcoe
+moneymac	赚钱机器 (版本 1.7E 双倍)	赚钱机器 (版本 1.7E 双倍)	Amcoe
+moneymacd1	赚钱机器 (版本 1.7R)	赚钱机器 (版本 1.7R)	Amcoe
+moneymacv1	赚钱机器 (版本 1.7R 双倍)	赚钱机器 (版本 1.7R 双倍)	Amcoe
 moneymacd2	赚钱机器 (版本 1.7LT)	赚钱机器 (版本 1.7LT)	Amcoe
-atworld	环游世界 (版本 1.3R CGA)	环游世界 (版本 1.3R CGA)	Amcoe
-atworlda	环游世界 (版本 1.3E CGA)	环游世界 (版本 1.3E CGA)	Amcoe
+moneymacv2	赚钱机器 (版本 1.7LT 双倍)	赚钱机器 (版本 1.7LT 双倍)	Amcoe
 chsuper3	超级扑克冠军 3 (V0.35)	超级扑克冠军 3 (V0.35)	<unknown>
 chsuper2	超级扑克冠军 2 (V0.13)	超级扑克冠军 2 (V0.13)	<unknown>
 3super8	3 超级 8 (意大利)	3 超级 8 (意大利)	<unknown>
@@ -8159,7 +8170,7 @@ rclimb_3	攀岩特工队 (040827)	攀岩特工队 (040827)	Igrosoft
 sweetl	甜蜜生活 (041220)	甜蜜生活 (041220)	Igrosoft
 resdnt_2	居民 (040513)	居民 (040513)	Igrosoft
 island	岛屿 (050713)	岛屿 (050713)	Igrosoft
-m_brkfst	The Big Breakfast (UK, Game Card 95-750-524 )	The Big Breakfast (UK, Game Card 95-750-524 )	BFM
+m_brkfst	老大哥 (UK, Game Card 95-750-524 )	老大哥 (UK, Game Card 95-750-524 )	BFM
 m_bdrwho	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	BFM
 m_bdrwh1	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	BFM
 m_bdrwh2	超时空博士 (第3套)	超时空博士 (第3套)	BFM
@@ -8198,7 +8209,7 @@ m_gmball	坚宝	坚宝	Barcrest
 m_honmon	爱钱	爱钱	Vivid
 roul	超级幸运轮盘	超级幸运轮盘	bootleg
 hitpoker	冲击扑克 (保加利亚)	冲击扑克 (保加利亚)	Accept Ltd.
-vpoker	Videotronics Poker	Videotronics Poker	Videotronics
+vpoker	扑克游戏	扑克游戏	Videotronics
 jnero	动作英雄	动作英雄	ICE/Play Mechanix
 knightsb2	圆桌骑士 (盗版 第2套)	圆桌骑士 (盗版 第2套)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
@@ -8303,10 +8314,10 @@ supergb	Super Game Boy	Super Game Boy	Nintendo
 gbpocket	Game Boy Pocket	Game Boy Pocket	Nintendo
 gblight	Game Boy Light	Game Boy Light	Nintendo
 gbcolor	Game Boy Color	Game Boy Color	Nintendo
-gba	Game Boy Advance	Game Boy Advance	Nintendo
 snes	超级任天堂 (NTSC)	超级任天堂 (NTSC)	Nintendo
 snespal	超级任天堂 (PAL)	超级任天堂 (PAL)	Nintendo
 sfcbox	Super Famicom Box (NTSC)	Super Famicom Box (NTSC)	Nintendo
+gba	Game Boy Advance	Game Boy Advance	Nintendo
 megaduck	MegaDuck/Cougar Boy	MegaDuck/Cougar Boy	Creatronic/Videojet/Timlex/Cougar
 gamegear	世嘉掌机 (欧版/America)	世嘉掌机 (欧版/America)	Sega
 gamegeaj	世嘉掌机 (日版)	世嘉掌机 (日版)	Sega
