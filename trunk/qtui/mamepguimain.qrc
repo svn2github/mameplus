@@ -106,11 +106,13 @@
 	<file>res/mame32-view-list.png</file>
 	<file>res/mame32-view-sicon.png</file>
 	<file>res/mame32-view-the.png</file>
+
 	<file>res/mamegui/mame.png</file>
 	<file>res/mamegui/mess.png</file>
 	<file>res/mamegui/mamep_brush.png</file>
-	<file>res/mamegui/selected_bar_light.png</file>
-	<file>res/mamegui/selected_bar_dark.png</file>
+	<file>res/mamegui/deco-brightbg.png</file>
+	<file>res/mamegui/deco-darkbg.png</file>
+
 	<file>res/optiontemplate.xml</file>
 	<file>res/reset_property.png</file>
 	<file>res/status-na.png</file>

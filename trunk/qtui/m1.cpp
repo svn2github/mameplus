@@ -12,6 +12,8 @@ M1UI::M1UI(QWidget *parent)
 :QDockWidget(parent)
 {
 	setupUi(this);
+	setObjectName("M1");
+	setWindowTitle("M1");
 
 	const QStringList m1Headers = (QStringList()
 		<< "#" << tr("Name") << tr("Len"));
@@ -73,20 +75,21 @@ void M1::init()
 
 void M1::loadLib()
 {
-	win->enableCtrls(false);
-
 	//set current dir to m1, so that m1.xml and list could be loaded
 	m1_dir = utils->getPath(pGuiSettings->value("m1_directory", "bin/m1").toString());
+//	win->log(m1_dir);
 
 	win->logStatus(tr("Loading M1, please wait..."));
 	QDir::setCurrent(m1_dir);
 	
 	QLibrary m1Lib(0);
-	m1Lib.setFileName(m1_dir + "m1");
+	m1Lib.setFileName("m1");
 
 	//resolve symbols from m1 lib
 	if (m1Lib.load())
 	{
+		win->enableCtrls(false);
+
 		m1snd_init = (fp_m1snd_init)m1Lib.resolve("m1snd_init");
 		m1snd_run = (fp_m1snd_run)m1Lib.resolve("m1snd_run");
 		m1snd_shutdown = (fp_m1snd_shutdown)m1Lib.resolve("m1snd_shutdown");
@@ -118,12 +121,13 @@ void M1::loadLib()
 			max_games = m1snd_get_info_int(M1_IINF_TOTALGAMES, 0);
 			version = QString(m1snd_get_info_str(M1_SINF_COREVERSION, 0));
 		}
+		
+		win->enableCtrls(true);
 	}
 
 	//restore current dir
 	QDir::setCurrent(currentDir);
 
-	win->enableCtrls(true);
 	win->logStatus("");
 }
 
@@ -143,8 +147,6 @@ void M1::postInit()
 		
 		win->log("m1 loaded");
 	}
-	else
-		win->removeDockWidget(m1UI);
 }
 
 void M1::updateList(const QString &)
@@ -207,6 +209,7 @@ void M1::updateList(const QString &)
 
 				QTreeWidgetItem *item = new QTreeWidgetItem(m1UI->twSongList, list);
 				item->setDisabled(true);
+
 				items.append(item);
 			}
 		}

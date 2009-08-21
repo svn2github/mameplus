@@ -12,14 +12,13 @@ QString currentGame, currentFolder;
 QStringList hiddenFolders;
 QMap<QString, QString> consoleMap;
 
-
 //fixme: used in audit
 TreeModel *gameListModel;
 GameListSortFilterProxyModel *gameListPModel;
 
 /* internal */
 MameGame *mameGame0 = NULL;
-GamelistDelegate gamelistDelegate(0);
+GameListDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 QMultiMap<QString, QString> extFolderMap;
 QStringList deleteCfgFiles;
@@ -336,7 +335,7 @@ void UpdateSelectionThread::update()
 	QMutexLocker locker(&mutex);
 
 	if (!isRunning())
-		start(IdlePriority);
+		start(LowPriority);
 }
 
 void UpdateSelectionThread::run()
@@ -704,7 +703,7 @@ TreeItem *TreeItem::parent()
 	return parentItem;
 }
 
-TreeModel::TreeModel(QObject *parent, bool isGroup)
+TreeModel::TreeModel(QObject *parent)
 : QAbstractItemModel(parent)
 {
 	QList<QVariant> rootData;
@@ -725,18 +724,7 @@ TreeModel::TreeModel(QObject *parent, bool isGroup)
 
 	foreach (QString gameName, mameGame->games.keys())
 	{
-		GameInfo *gameInfo = mameGame->games[gameName];
-
-		// build parent
-		if (!isGroup || gameInfo->cloneof.isEmpty())
-		{
-			TreeItem *parent = setupModelData(rootItem, gameName, isGroup);
-
-			// build clones
-			if (isGroup)
-				foreach (QString cloneName, gameInfo->clones)
-					setupModelData(parent, cloneName, isGroup);
-		}
+		setupModelData(rootItem, gameName);
 	}
 }
 
@@ -788,6 +776,50 @@ QModelIndex TreeModel::parent(const QModelIndex &index) const
 	return createIndex(parentItem->row(), 0, parentItem);
 }
 
+QVariant TreeModel::displayData(GameInfo *gameInfo, int col) const
+{
+	TreeItem *item = gameInfo->pModItem;
+
+	switch (col)
+	{
+	case COL_DESC:
+		if (local_game_list && !gameInfo->lcDesc.isEmpty())
+			return gameInfo->lcDesc;
+		break;
+	
+	case COL_MFTR:
+		if (local_game_list && !gameInfo->lcMftr.isEmpty())
+			return gameInfo->lcMftr;
+		break;
+	
+	case COL_YEAR:
+		if (gameInfo->year.isEmpty())
+			return "?";
+		break;
+	
+	case COL_NAME:
+		if (gameInfo->isExtRom)
+			return gameInfo->romof;
+		break;
+	
+	//convert 'ROMs' column
+	case COL_ROM:
+		switch (item->data(COL_ROM).toInt())
+		{
+		case -1:
+			return "";
+			
+		case 0:
+			return tr("No");
+	
+		case 1:
+			return tr("Yes");
+		}
+	}
+	
+	return item->data(col);
+}
+
 //mandatory
 QVariant TreeModel::data(const QModelIndex &index, int role) const
 {
@@ -807,52 +839,37 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		else
 			return qVariantFromValue(QColor((isDarkBg) ? Qt::white : Qt::black));
 
-	case Qt::DecorationRole:
-		if (col == COL_DESC)
-		{
-			QByteArray icondata;
-
-			if (gameInfo->icondata.isNull())
-			{
-				if (gameInfo->isExtRom || gameInfo->status == 1)
-					icondata = defIconDataGreen;
-				else if (gameInfo->status == 2)
-					icondata = defIconDataYellow;
-				else
-					icondata = defIconDataRed;
-			}
-			else
-				icondata = gameInfo->icondata;
-
-			bool isLargeIcon = gameList->listMode == win->actionLargeIcons->objectName().remove("action");
-			
-			QPixmap pm;
-			pm.loadFromData(icondata);
-
-			//scale down the icon
-			if (!isLargeIcon)
-				pm = pm.scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation);
-
-			if(!gameInfo->available)
-			{
-				QPainter p;
-				p.begin(&pm);
-				if(isLargeIcon)
-					p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
-				else
-					p.drawPixmap(8, 8, QPixmap(":/res/status-na.png"));
-				p.end();
-			}
-			
-			return QIcon(pm);
-		}
-		break;
-
  	case Qt::UserRole + FOLDER_BIOS:
 		return gameInfo->biosof();
 		
 	case Qt::UserRole + FOLDER_CONSOLE:
 		return gameInfo->isExtRom ? true : false;
+
+	case Qt::UserRole + SORT_STR:
+	{
+//		[parentsortkey]_[parentname]_[0/9][sortkey]
+
+		//fixme: move to static
+		const bool sortOrder = win->tvGameList->header()->sortIndicatorOrder() == Qt::AscendingOrder;
+		
+		QString sortKey = displayData(gameInfo, col).toString();
+		QString parentSortKey = sortKey;
+		QString sortMagic;
+		QString parent = gameName;
+
+		if (!gameInfo->cloneof.isEmpty())
+		{
+			parent = gameInfo->cloneof;
+			GameInfo *gameInfo2 = mameGame->games[parent];
+			parentSortKey = displayData(gameInfo2, col).toString();
+			//always keep parent on top
+			sortMagic = sortOrder ? "_9" : "_0";
+		}
+		else
+			sortMagic = sortOrder ? "_0" : "_9";
+
+		return parentSortKey + "_" + parent + sortMagic + sortKey;
+	}
 
 	//convert 'Name' column for ext roms
 	case Qt::UserRole:
@@ -861,44 +878,8 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		break;
 
 	case Qt::DisplayRole:
-		switch (col)
-		{
-		case COL_DESC:
-			if (local_game_list && !gameInfo->lcDesc.isEmpty())
-				return gameInfo->lcDesc;
-			break;
+		return displayData(gameInfo, col);
 
-		case COL_MFTR:
-			if (local_game_list && !gameInfo->lcMftr.isEmpty())
-				return gameInfo->lcMftr;
-			break;
-
-		case COL_YEAR:
-			if (gameInfo->year.isEmpty())
-				return "?";
-			break;
-
-		case COL_NAME:
-			if (gameInfo->isExtRom)
-				return gameInfo->romof;
-			break;
-
-		//convert 'ROMs' column
-		case COL_ROM:
-			switch (item->data(COL_ROM).toInt())
-			{
-			case -1:
-				return "";
-				
-			case 0:
-				return "No";
-
-			case 1:
-				return "Yes";
-			}
-		}
-
-		return item->data(col);
 	}
 
 	return QVariant();
@@ -955,7 +936,7 @@ TreeItem * TreeModel::getItem(const QModelIndex &index) const
 	return rootItem;
 }
 
-TreeItem * TreeModel::setupModelData(TreeItem *parent, QString gameName, bool isGroup)
+TreeItem * TreeModel::setupModelData(TreeItem *parent, QString gameName)
 {
 	GameInfo *gameInfo = mameGame->games[gameName];
 
@@ -1026,7 +1007,6 @@ isBios(false),
 cocktail(64),
 protection(64),
 isExtRom(false),
-isCloneAvailable(false),
 isHorz(true),
 available(0)
 {
@@ -1121,6 +1101,8 @@ void MameGame::init(int method)
 	//fixme: not good to use global mameGame ptr here
 	if (des11n_status != QDataStream::Ok || method != 0)
 	{
+		win->show();
+
 		//save a copy of des11n mameGame
 		mameGame0 = mameGame;
 		mameGame = new MameGame(0);
@@ -1669,9 +1651,6 @@ int MameGame::completeData()
 		
 			gameInfo2 = games[_gameInfo->cloneof];
 			gameInfo2->clones.insert(gameName);
-			
-			if (!gameInfo2->isCloneAvailable && _gameInfo->available == 1)
-				gameInfo2->isCloneAvailable = true;
 		}
 		
 		// update horz/vert
@@ -1733,157 +1712,181 @@ void MameGame::loadDefaultIniFinished(int, QProcess::ExitStatus)
 	procMan->procMap.remove(proc);
 }
 
-
-GamelistDelegate::GamelistDelegate(QObject *parent)
-: QItemDelegate(parent)
+GameListTreeView::GameListTreeView(QWidget *parent) : 
+QTreeView(parent)
 {
 }
 
-QSize GamelistDelegate::sizeHint (const QStyleOptionViewItem & option, 
-								  const QModelIndex & index) const
+void GameListTreeView::paintEvent(QPaintEvent *e)
 {
-	QString gameName = gameList->getViewString(index, COL_NAME);
-	GameInfo *gameInfo = mameGame->games[gameName];
-	//fixme: combine @ console gamename
-	if (!gameInfo->devices.isEmpty())
-	{
-		QString gameName2 = gameList->getViewString(index, COL_NAME + COL_LAST);
+	QTreeView::paintEvent(e);
 
-		if (!gameName2.isEmpty())
-		{
-			gameInfo = mameGame->games[gameName2];
-			if (gameInfo && gameInfo->isExtRom)
-				gameName = gameName2;
-		}
-	}
+	if (visibleGames.size() < 1 || 
+		!win->actionRowDelegate->isChecked() || 
+		gameList->listMode == "LargeIcons")
+		return;
 
-	//fixme: should not use hardcoded values?
-	if (currentGame == gameName)
-		return QSize(1,33);
-	else
-		return QSize(1,17);
+	QPainter painter(viewport());
+
+	QRect _decoRect = gameList->rectDeco;
+	if (gameList->rectDeco.top() >= 8)
+		_decoRect.setTop(gameList->rectDeco.top() - 8);
+//			if (_decoRect.top() < 0)
+//				_decoRect.setTop(0);
+	_decoRect.setWidth(38);
+	_decoRect.setHeight(38);
+
+	/*
+	win->log(QString("p: %1 %2 %3 %4")
+		.arg(gameList->rectDeco.top())
+		.arg(gameList->rectDeco.left())
+		.arg(gameList->rectDeco.width())
+		.arg(gameList->rectDeco.height())
+		);
+	//*/
+
+	if (gameList->rectDeco.top() + 8 >= 0)
+		painter.drawPixmap(_decoRect, gameList->pmDeco);
 }
 
-void GamelistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
+
+GameListDelegate::GameListDelegate(QObject *parent) : 
+QItemDelegate(parent)
+{
+}
+
+QSize GameListDelegate::sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const
+{
+	return QSize(1,18);
+}
+
+void GameListDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option,
 							 const QModelIndex &index ) const
 {
+	if (index.column() != COL_DESC)
+	{
+		QItemDelegate::paint(painter, option, index);
+		return;
+	}
+
 	QString gameName = gameList->getViewString(index, COL_NAME);
-	GameInfo *gameInfo = mameGame->games[gameName];
+	GameInfo *gameInfo = gameList->getGameInfo(index, gameName);
 
-	//fixme: combine @ console gamename
-	// override gameName and gameInfo for console roms
-	if (!gameInfo->devices.isEmpty())
+	int cloneOffset = 0;
+	//clone
+	if (gameList->listMode == "Grouped" && !gameInfo->cloneof.isEmpty())
 	{
-		QString gameName2 = gameList->getViewString(index, COL_NAME + COL_LAST);
-		if (!gameName2.isEmpty())
-		{
-			gameInfo = mameGame->games[gameName2];
-			if (gameInfo && gameInfo->isExtRom)
-				gameName = gameName2;
-		}
+		if (visibleGames.contains(gameInfo->cloneof))
+			cloneOffset = 16;
 	}
 
-	if (currentGame == gameName)
+	QModelIndex i, pi;
+	i = gameListModel->index(COL_DESC, mameGame->games[currentGame]->pModItem);
+
+	if (i.isValid())
+		pi = gameListPModel->mapFromSource(i);
+	
+	if (pi.isValid())
+		gameList->rectDeco = win->tvGameList->visualRect(pi);
+	else
+		gameList->rectDeco = QRect();
+
+	QRect rectDeco, rectText;
+	rectDeco = rectText = option.rect;
+	
+	//load original icon
+	QByteArray icondata;
+
+	if (gameInfo->icondata.isNull())
 	{
-		static QPixmap pmSelBarLite(":/res/mamegui/selected_bar_light.png");
-		static QPixmap pmSelBarDark(":/res/mamegui/selected_bar_dark.png");
-		QRect rc = option.rect;
-		QPoint pt;
-		QString text;
-
-		if (index.column() == COL_DESC)
-		{
-			QString gameDesc = gameList->getViewString(index, COL_DESC);
-
-			//draw big icon
-			pt = rc.topLeft();
-			pt.setX(pt.x() + 2);
-			rc = QRect(pt, rc.bottomRight());
-
-			QByteArray icondata;
-			QPixmap pm;
-
-			if (gameInfo->icondata.isNull())
-			{
-				if (gameInfo->isExtRom || gameInfo->status == 1)
-					icondata = defIconDataGreen;
-				else if (gameInfo->status == 2)
-					icondata = defIconDataYellow;
-				else
-					icondata = defIconDataRed;
-			}
-			else
-				icondata = gameInfo->icondata;
-			pm.loadFromData(icondata);
-
-			// paint the unavailable icon on top of original icon
-			if(!gameInfo->available)
-			{
-				QPainter p;
-				p.begin(&pm);
-				p.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
-				p.end();
-			}
-			QApplication::style()->drawItemPixmap (painter, rc, Qt::AlignLeft | Qt::AlignVCenter, pm);
-
-			// calc text rect
-			pt = rc.topLeft();
-			pt.setX(pt.x() + 34);	//32px + 2px left padding
-			rc = QRect(pt, rc.bottomRight());
-
-			text = gameDesc;
-		}
+		if (gameInfo->isExtRom || gameInfo->status == 1)
+			icondata = defIconDataGreen;
+		else if (gameInfo->status == 2)
+			icondata = defIconDataYellow;
 		else
-			text = gameList->getViewString(index, index.column());
+			icondata = defIconDataRed;
+	}
+	else
+		icondata = gameInfo->icondata;
 
-		// set bold font for selected items
-		QFont boldFont(option.font);
-		boldFont.setBold(true);
-		painter->setFont(boldFont);
+	QPixmap pmFinal, pmIcon;
 
-		//elide the text within bounding rect
-		QFontMetrics fm(boldFont);
-		text = fm.elidedText(text, option.textElideMode, rc.width() - 5);	//3px + 2px right padding
+	pmIcon.loadFromData(icondata);
+	const bool isLargeIcon = pmIcon.width() > 16;
+	const bool isZooming = win->actionRowDelegate->isChecked();
 
-		if (option.state & QStyle::State_Selected)
-		{
-			//draw text bg
-			painter->drawPixmap(rc, isDarkBg ? pmSelBarDark : pmSelBarLite);
-//			painter->fillRect(rc, option.palette.highlight());
+	if (isLargeIcon)
+	{
+		if (currentGame == gameName && isZooming)
+			pmFinal.load(isDarkBg ? ":/res/mamegui/deco-darkbg.png" : ":/res/mamegui/deco-brightbg.png");
+		else
+			pmFinal = pmIcon = pmIcon.scaled(QSize(16, 16), Qt::KeepAspectRatio, Qt::SmoothTransformation);
+	}
+	else
+		pmFinal = pmIcon;
 
-			//draw text
-			pt = rc.topLeft();
-			pt.setX(pt.x() + 3);
-			rc = QRect(pt, rc.bottomRight());
-			QStyleOptionViewItem myoption = option;
-			//override foreground, black doesnt look nice
-			painter->setPen(Qt::white);
-//			painter->drawText(rc, text, QTextOption(Qt::AlignLeft | Qt::AlignVCenter));
-			QApplication::style()->drawItemText(painter, rc, Qt::AlignLeft | Qt::AlignVCenter, myoption.palette, true, text);
-			return;
-		}
+	//paint unavailable icon
+	QPainter p;
+	p.begin(&pmFinal);
+
+	if (currentGame == gameName && isLargeIcon && isZooming)
+		p.drawPixmap(3, 3, 32, 32, pmIcon);
+
+	// paint the unavailable icon on top of original icon
+	if(!gameInfo->available)
+	{
+		int offset = 8;
+		if (currentGame == gameName && isLargeIcon && isZooming)
+			offset = 27;
+		
+		p.drawPixmap(offset, offset, 8, 8, QPixmap(":/res/status-na.png"));
 	}
 
-	QItemDelegate::paint(painter, option, index);
+	p.end();
+
+	//save it for zooming
+	int icoSize, decoSize;
+
+	if (pmFinal.width() > 16)
+	{
+		icoSize = 32;
+		decoSize = 38;
+
+		gameList->pmDeco = pmFinal;
+	}
+	else
+	{
+		icoSize = decoSize = 16;
+
+		if (currentGame == gameName)
+			gameList->pmDeco = QPixmap();
+	}
+
+	rectDeco.setLeft(rectDeco.left() + cloneOffset);
+	rectDeco.setWidth(icoSize + 6);
+
+	if (currentGame == gameName && isLargeIcon && isZooming)
+		rectText.setLeft(rectText.left() + decoSize);
+	else
+		rectText.setLeft(rectText.left() + decoSize + cloneOffset + 6);
+
+	//paint item text
+/*	QColor foreColor;
+	if (gameInfo->emulation == 0 && !gameInfo->isExtRom)
+		foreColor = QColor(isDarkBg ? QColor(255, 96, 96) : Qt::darkRed);
+	else
+		foreColor = QColor((isDarkBg) ? Qt::white : Qt::black);
+	painter->setPen(foreColor);
+//*/
+	drawDisplay(painter, option, rectText, gameList->getViewString(index, COL_DESC));
+
+	//paint item icon
+	if (currentGame != gameName || !isZooming || 
+		(currentGame == gameName && !isLargeIcon))
+		drawDecoration(painter, option, rectDeco, pmFinal);	
+
 	return;
 }
-
-/*
-XTreeView::XTreeView(QWidget *parent)
-: QTreeView(parent)
-{
-}
-
-void XTreeView::paintEvent(QPaintEvent *event)
-{
-//	QTreeView::paintEvent(event);
-	QPainter p(this);
-
-	p.begin(this);
-	p.drawPixmap(0, 32, QPixmap(":/res/32x32/input-gaming.png"));
-	p.end();
-}
-//*/
 
 Gamelist::Gamelist(QObject *parent) : 
 QObject(parent),
@@ -1946,8 +1949,36 @@ QString Gamelist::getViewString(const QModelIndex &index, int column) const
 		return index.model()->data(j, Qt::DisplayRole).toString();
 }
 
+// override gameName and gameInfo for console roms
+GameInfo* Gamelist::getGameInfo (const QModelIndex &index, QString& gameName)
+{
+	GameInfo *gameInfo = mameGame->games[gameName];
+	
+	if (!gameInfo->devices.isEmpty())
+	{
+		QString gameName2 = getViewString(index, COL_NAME + COL_LAST);
+		if (!gameName2.isEmpty())
+		{
+			gameInfo = mameGame->games[gameName2];
+			if (gameInfo && gameInfo->isExtRom)
+				gameName = gameName2;
+		}
+	}
+
+	return gameInfo;
+}
+
 void Gamelist::updateSelection()
 {
+#ifdef Q_OS_WIN
+	static bool m1Loaded = false;
+	if (!m1Loaded && m1UI->isVisible() && win->isDockTabVisible("M1"))
+	{
+		m1Loaded = true;
+		m1->init();
+	}
+#endif /* Q_OS_WIN */
+
 	if (hasInitd && mameGame->games.contains(currentGame))
 	{
 		selectionThread.myqueue.enqueue(currentGame);
@@ -1964,19 +1995,16 @@ void Gamelist::updateSelection(const QModelIndex & current, const QModelIndex & 
 		if (gameName.isEmpty())
 			return;
 
-		QString gameDesc = getViewString(current, COL_DESC);
-		GameInfo *gameInfo = mameGame->games[gameName];
-
-		if (!gameInfo->devices.isEmpty())
+		for (int snapType = DOCK_SNAP; snapType <= DOCK_PCB; snapType ++)
 		{
-			QString gameName2 = getViewString(current, COL_NAME + COL_LAST);
-			if (!gameName2.isEmpty())
+			if (win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType]))
 			{
-				gameInfo = mameGame->games[gameName2];
-				if (gameInfo && gameInfo->isExtRom)
-					gameName = gameName2;
+				((Screenshot*)win->dockCtrls[snapType])->updateScreenshotLabel(true);
 			}
 		}
+	
+		QString gameDesc = getViewString(current, COL_DESC);
+		GameInfo *gameInfo = getGameInfo(current, gameName);
 
 		currentGame = gameName;
 		
@@ -2031,8 +2059,8 @@ void Gamelist::restoreGameSelection()
 //	win->log("restore callback: " + currentGame);
 
 	bool isLView = false;
-	if (win->actionLargeIcons->isChecked())
-		isLView = true;
+//	if (win->actionLargeIcons->isChecked())
+//		isLView = true;
 
 	//fixme: time consuming
 	if (isLView)
@@ -2048,7 +2076,7 @@ void Gamelist::restoreGameSelection()
 		win->tvGameList->setFocus();
 	}
 
-	win->labelGameCount->setText(tr("%1 games").arg(visibleGames.count()));
+	win->labelGameCount->setText(tr("%1 games").arg(visibleGames.size()));
 
 	//auto collapse other folders
 	QString folderName;
@@ -2075,16 +2103,21 @@ void Gamelist::restoreGameSelection()
 // must update GUI in main thread
 void Gamelist::setupSnap(int snapType)
 {
+	if (!selectionThread.myqueue.isEmpty())
+		return;
+
 	switch (snapType)
 	{
 	case DOCK_SNAP:
 	case DOCK_TITLE:
+		((Screenshot*)win->dockCtrls[snapType])->setPixmap(selectionThread.pmSnapData[snapType], win->actionEnforceAspect->isChecked());
+		break;
 	case DOCK_FLYER:
 	case DOCK_CABINET:
 	case DOCK_MARQUEE:
 	case DOCK_CPANEL:
 	case DOCK_PCB:
-		((Screenshot*)win->dockCtrls[snapType])->setPixmap(selectionThread.pmSnapData[snapType], win->actionEnforceAspect->isChecked());
+		((Screenshot*)win->dockCtrls[snapType])->setPixmap(selectionThread.pmSnapData[snapType], false);
 		break;
 	case DOCK_HISTORY:
 		win->tbHistory->setHtml(selectionThread.historyText);
@@ -2103,33 +2136,6 @@ void Gamelist::setupSnap(int snapType)
 	case DOCK_COMMAND:
 		win->tbCommand->setHtml(selectionThread.commandText);
 		break;
-#if 0
-//draw in memory
-		QPixmap pm(100, 100);
-		QPainter p(&pm);
-
-		QRect rc(0, 0, 100, 100);
-		QString text = selectionThread.storyText;
-		text.replace("<br>", "\n");
-		rc = p.boundingRect(rc, Qt::AlignLeft, text);
-//		win->log(QString("rc: %1, %2, %3").arg(rc.width()).arg(rc.height()).arg(selectionThread.storyText.count()));
-
-		QPixmap pm2(rc.width(), 300);
-		QPainter p2;
-		QFont font;
-		win->log(p2.font().family());
-		pm2.fill();
-
-		p2.begin(&pm2);
-		font.setFamily("MS Gothic");
-//		font.setPointSize(8);
-		p2.setFont(font);
-		p2.drawPixmap(24, 24, QPixmap(":/res/status-na.png"));
-		p2.drawText(rc, Qt::AlignLeft | Qt::TextWordWrap, text);
-		p2.end();
-		
-		win->ssPCB->setPixmap(pm2);
-#endif
 	default:
 		break;
 	}
@@ -2215,22 +2221,20 @@ void Gamelist::init(bool toggleState, int initMethod)
 	foreach (QString folderName, intFolderNames0)
 		intFolderNames << tr(qPrintable(folderName));
 
-	bool isGroup = true, isLView = false;
+	bool isLView = false;
 
 	// get current game list mode
 	if (win->actionDetails->isChecked())
 	{
-		listMode = win->actionDetails->objectName().remove("action");
-		isGroup = false;
+		listMode = "Details";
 	}
-	else if (win->actionLargeIcons->isChecked())
-	{
-		listMode = win->actionLargeIcons->objectName().remove("action");
-		isLView = true;
-		isGroup = false;
-	}
+//	else if (win->actionLargeIcons->isChecked())
+//	{
+//		listMode = "LargeIcons";
+//		isLView = true;
+//	}
 	else
-		listMode = win->actionGrouped->objectName().remove("action");
+		listMode = "Grouped";
 
 	//validate currentGame
 	if (!mameGame->games.contains(currentGame))
@@ -2239,7 +2243,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	disableCtrls();
 
 	//init the model
-	gameListModel = new TreeModel(win, isGroup);
+	gameListModel = new TreeModel(win);
 	gameListPModel = new GameListSortFilterProxyModel(win);
 
 	gameListPModel->setSourceModel(gameListModel);
@@ -2259,8 +2263,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		if (defaultGameListDelegate == NULL)
 			defaultGameListDelegate = win->tvGameList->itemDelegate();
 
-		if (win->actionRowDelegate->isChecked())
-			win->tvGameList->setItemDelegate(&gamelistDelegate);
+		win->tvGameList->setItemDelegate(&gamelistDelegate);
 	}
 	win->show();
 
@@ -2371,6 +2374,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	//for re-init list from folders
 	restoreGameSelection();
+	updateSelection();
 }
 
 void Gamelist::loadIcon()
@@ -2387,7 +2391,7 @@ void Gamelist::loadIconWorkder()
 	GameInfo *gameInfo, *gameInfo2;
 
 	QHash<QString, MameFileInfo *> mameFileInfoList = 
-		utils->iterateMameFile(mameOpts["icons_directory"]->globalvalue, "icons", "*" ICO_EXT, MAMEFILE_READ);
+		utils->iterateMameFile(mameOpts["icons_directory"]->globalvalue, "icons;.", "*" ICO_EXT, MAMEFILE_READ);
 
 	foreach (QString key, mameFileInfoList.keys())
 	{
@@ -2564,8 +2568,8 @@ mmo_readerr:
 void Gamelist::initMenus()
 {
 	bool isLView = false;
-	if (win->actionLargeIcons->isChecked())
-		isLView = true;
+//	if (win->actionLargeIcons->isChecked())
+//		isLView = true;
 
 	// init context menuContext, we don't need to init it twice
 	if (menuContext == NULL)
@@ -3087,10 +3091,12 @@ void Gamelist::deleteCfg()
 
 void Gamelist::toggleDelegate(bool isHilite)
 {
+/*
 	if (isHilite)
 		win->tvGameList->setItemDelegate(&gamelistDelegate);
 	else if (defaultGameListDelegate != NULL)
 		win->tvGameList->setItemDelegate(defaultGameListDelegate);
+*/
 }
 
 // delete the extracted rom
@@ -3154,26 +3160,6 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 	if (win->treeFolders->currentItem()->parent() != NULL)
 		currentFolder.append(win->treeFolders->currentItem()->parent()->text(0));
 	currentFolder.append("/" + win->treeFolders->currentItem()->text(0));
-
-	/* hack to speed up sorting and filtering, don't know why. need more investigation
-	  * filtering game desc fleld is extremely lengthy
-	  * _current == NULL means this call is from a signal, only process this case
-	  */
-
-	/*
-	if (_current == NULL &&
-		(currentFolder == "/" + intFolderNames[FOLDER_ALLGAME] || 
-		currentFolder == "/" + intFolderNames[FOLDER_ALLARC] || 
-		currentFolder == "/" + intFolderNames[FOLDER_AVAILABLE] || 
-		currentFolder == "/" + intFolderNames[FOLDER_UNAVAILABLE] || 
-		currentFolder == "/" + intFolderNames[FOLDER_CONSOLE] ||
-		visibleGames.count() > 10000))
-	{
-		win->log("hack to reinit list");
-		init(true, GAMELIST_INIT_DIR);
-		return;
-	}
-	//*/
 
 	visibleGames.clear();
 
@@ -3317,7 +3303,7 @@ void Gamelist::initFolders()
 	foreach (QString gameName, mameGame->games.keys())
 	{
 		gameInfo = mameGame->games[gameName];
-		QString item;
+		QString itemStr;
 		const QString gameDesc = utils->getDesc(gameName);
 
 		//console
@@ -3333,11 +3319,11 @@ void Gamelist::initFolders()
 			mftrList << gameInfo->manufacturer;
 
 		//year
-		item = gameInfo->year;
-		if (item.isEmpty())
-			item = "?";
-		if (!yearList.contains(item))
-			yearList << item;
+		itemStr = gameInfo->year;
+		if (itemStr.isEmpty())
+			itemStr = "?";
+		if (!yearList.contains(itemStr))
+			yearList << itemStr;
 
 		//the following does not apply to ExtRoms
 		if (gameInfo->isExtRom)
@@ -3372,18 +3358,23 @@ void Gamelist::initFolders()
 
 		//rom status
 		foreach (RomInfo* romsInfo, gameInfo->roms)
-			if (!statusList.contains(romsInfo->status) && !romsInfo->status.isEmpty())
-				statusList << romsInfo->status;
+		{
+			itemStr = utils->getLongName(romsInfo->status);
+			if (!statusList.contains(itemStr) && !itemStr.isEmpty())
+				statusList << itemStr;
+		}
 
 		//disk status
 		foreach (DiskInfo* disksInfo, gameInfo->disks)
 		{	
-			if (!statusList.contains(disksInfo->status) && !disksInfo->status.isEmpty())
-				statusList << disksInfo->status;
+			itemStr = utils->getLongName(disksInfo->status);
+			if (!statusList.contains(itemStr) && !itemStr.isEmpty())
+				statusList << itemStr;
 
 			//disk region
-			if (!regionList.contains(disksInfo->region) && !disksInfo->region.isEmpty())
-				regionList << disksInfo->region;
+			itemStr = utils->getLongName(disksInfo->region);
+			if (!regionList.contains(itemStr) && !itemStr.isEmpty())
+				regionList << itemStr;
 		}
 
 		for (int i = 0; i < gameInfo->displays.size(); i++)
@@ -3396,8 +3387,9 @@ void Gamelist::initFolders()
 				pixelSize++;
 
 			//display type
-			if (!displayList.contains(displaysInfo->type))
-				displayList << displaysInfo->type;
+			itemStr = utils->getLongName(displaysInfo->type);
+			if (!displayList.contains(itemStr))
+				displayList << itemStr;
 
 			//refresh
 			if (!refreshList.contains(displaysInfo->refresh))
@@ -3410,8 +3402,11 @@ void Gamelist::initFolders()
 
 		//control type
 		foreach (ControlInfo *controlsInfo, gameInfo->controls)
-			if (!controlList.contains(controlsInfo->type))
-				controlList << controlsInfo->type;
+		{
+			itemStr = utils->getLongName(controlsInfo->type);
+			if (!controlList.contains(itemStr))
+				controlList << itemStr;
+		}
 	}
 
 	//sort subfolder items
@@ -3490,7 +3485,7 @@ void Gamelist::initFolders()
 			}
 		else if (i == FOLDER_HARDDISK)
 			foreach (QString name, regionList)
-				intFolderItems[i]->addChild(new QTreeWidgetItem(intFolderItems[i], QStringList(utils->getLongName(name))));
+				intFolderItems[i]->addChild(new QTreeWidgetItem(intFolderItems[i], QStringList(name)));
  
 		else if (i == FOLDER_CPU)
 			foreach (QString name, cpuList)
@@ -3502,7 +3497,7 @@ void Gamelist::initFolders()
  
 		else if (i == FOLDER_DUMPING)
 			foreach (QString name, statusList)
-				intFolderItems[i]->addChild(new QTreeWidgetItem(intFolderItems[i], QStringList(utils->getLongName(name))));
+				intFolderItems[i]->addChild(new QTreeWidgetItem(intFolderItems[i], QStringList(name)));
  
 		else if (i == FOLDER_DISPLAY)
 		{
@@ -3730,11 +3725,6 @@ void Gamelist::initExtFolders(const QString &folderName, const QString &subFolde
 
 			if (!mameGame->games.contains(gameName))
 				continue;
-
-			//append parent for standalone clones
-			GameInfo *gameInfo = mameGame->games[gameName];
-			if (!gameInfo->cloneof.isEmpty() && !gameListPModel->filterList.contains(gameInfo->cloneof))
-				gameListPModel->filterList.append(gameInfo->cloneof);
 		}
 	}
 }
@@ -4029,7 +4019,6 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	QString gameNameExtRom = srcModel->data(indexGameName, Qt::UserRole).toString();
 	//must use desc from view value for ext roms
 	QString gameDesc = srcModel->data(indexGameDesc).toString();
-	QString encfilterText = utils->getShortName(filterText);
 	bool tmpresult = false;
 
 	GameInfo *gameInfo = mameGame->games[gameName];
@@ -4044,27 +4033,12 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	// apply search filter
 	if (!searchText.isEmpty())
 	{
-		QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);	
+		QRegExp::PatternSyntax syntax = QRegExp::PatternSyntax(QRegExp::Wildcard);
 		QRegExp regExpSearch(searchText, Qt::CaseInsensitive, syntax);
 
 		result = gameName.contains(regExpSearch)|| 
 				 gameDesc.contains(regExpSearch) || 
 				 utils->getDesc(gameName, false).contains(regExpSearch);
-
-		// also true if any of a parent's clone matches
-		if (!isExtRom && !gameInfo->clones.isEmpty())
-		{
-			foreach (QString gameName2, gameInfo->clones)
-			{
-				if (gameName2.contains(regExpSearch) ||
-					utils->getDesc(gameName2).contains(regExpSearch) ||
-					utils->getDesc(gameName2, false).contains(regExpSearch))
-				{
-					result = true;
-					break;
-				}
-			}
-		}
 	}
 
 	const int role = filterRole();
@@ -4079,7 +4053,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	case Qt::UserRole + FOLDER_AVAILABLE:
 		result = result && !isBIOS && !isExtRom
-			&& (gameInfo->available == 1 || gameInfo->isCloneAvailable);
+			&& (gameInfo->available == 1);
 		if (!isMESS)
 			result = result && !isConsole;		
 		break;
@@ -4180,7 +4154,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	case Qt::UserRole + FOLDER_HARDDISK + MAX_FOLDERS:
 		foreach (DiskInfo* disksInfo, gameInfo->disks)
 		{
-			if (disksInfo->region == encfilterText)
+			if (utils->getLongName(disksInfo->region) == filterText)
 			{
 				tmpresult = true;
 				break;
@@ -4193,7 +4167,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	case Qt::UserRole + FOLDER_DUMPING:
 		foreach (RomInfo* romsInfo, gameInfo->roms)
 		{
-			if (romsInfo->status == encfilterText)
+			if (utils->getLongName(romsInfo->status) == filterText)
 			{
 				tmpresult = true;
 				break;
@@ -4202,7 +4176,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 		foreach (DiskInfo* disksInfo, gameInfo->disks)
 		{
-			if (disksInfo->status == encfilterText)
+			if (utils->getLongName(disksInfo->status) == filterText)
 			{
 				tmpresult = true;
 				break;
@@ -4227,7 +4201,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 	
 		foreach (DisplayInfo* displaysInfo, gameInfo->displays)
 		{	
-			if (displaysInfo->type == encfilterText)
+			if (utils->getLongName(displaysInfo->type) == filterText)
 			{
 				tmpresult = true;
 				break;
@@ -4278,7 +4252,7 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 		foreach (ControlInfo* controlsInfo, gameInfo->controls)
 		{		
-			if (controlsInfo->type == encfilterText)
+			if (utils->getLongName(controlsInfo->type) == filterText)
 			{
 				tmpresult = true;
 				break;
@@ -4311,3 +4285,13 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 
 	return result;
 }
+
+bool GameListSortFilterProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
+{
+	const QAbstractItemModel *srcModel = sourceModel();
+
+	return QString::localeAwareCompare(
+		srcModel->data(left, Qt::UserRole + SORT_STR).toString(), 
+		srcModel->data(right, Qt::UserRole + SORT_STR).toString()) < 0;
+}
+

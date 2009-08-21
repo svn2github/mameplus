@@ -9,108 +9,98 @@ read/write cookie
 theme
 
 //Done
+Command-Line Access Mode
 
+命令行模式
+支持完整dat导出
+
+mame能否加上 显示游戏当前运算的分辨率？
+
+//////////////////////////
+//auto update
+http://downloads.sourceforge.net/sourceforge/mingw/mingw32-make-3.81-20080326-3.tar.gz
+http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+http://www.p4c.philips.com/files/1/170s8fb_93/170s8fb_93_pss_zhs.pdf
+http://bbs.pdafans.com/attachment.php
+
+game name (Package name)
+game category
+game description
+game manufacturer (Maintainer)
+game architecture* (Platform)
+game year (Version)
+game homepage*
+game url* (could pt to a dat file)
+game depends*
+game conflicts*
+  rom name
+  rom size
+  rom crc
+
+note that all paths are determinable
+
+exes: mamep, mamepgui, mame, mess, mameui, m1_xml, m1_bin, m1_lst(multi), exttools(multi)
+exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi), lang(multi), snap(multi)
+
+.script to detect latest version, provide url, version > filename.info
+wget to local > filename
+7z to list files name, crc, size > filename.txt
+make dat file
+curl upload to remote server
+
+///////////////////
+//Priority tasks
+2 constrain the game selection to the visible area of the selection window?
+3 残档目录
+3 column sorting
+1 multi profile
+* not working的红色不显示在游戏全名了，只显示在romset名了
+* 点击没有缩略图的纵版游戏，缩略图mame那几个字就变成拉伸变长的了
+3 LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang, customizable *.dat location for official mame
+3 color chooser
+3 font chooser
+2 generic clrmamep dat parser
+2 generic downloader, get file size, part download
+2 test with some illegal paths: /history.dat, ///
+2 mamebin changes should cause gamelist->init()
+2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
+2 other language mamep core
+3 hide all, console folder for non mameplus
+2 audit output only incorrect, sample
+1 crash when exit and auditing
+2 ips lang may cause crash
+2 command.dat may cause crash
+2 split gamelist.cpp to treeview.cpp datatype.cpp
+2 new large icon effect
+2 sysinfo_file, messinfo_file
+2 new version detection
+2 background trans color on switching
+1 find a way to pick MESS systems from drivers
+2 better console refresh
+2 coin/time counter column
+1 ips GUI seq
+1 added API to know which dock widgets are tabified together with a dock widget
+1 bios可改成完整名稱(像mame plus)
+1 ver 按照版本順序排列(像mame plus)
+1 global softwarepath, multi software dirs
+2 translator credit
+1 pop warning if console rom not exists
+2 multi sw paths
+1 MESS sw ext rom cfg saving
+2 disable play with
+2 mamep core lang, for non cjk languages
+2 SDL joystick GUI
+1 playwith state name prompt, empty file name handling
+* reconsider command.dat it's slow and buggy
+* icon for local switching
 
 //Linux/Mac
 1 On OSX, would it be possible to make the front end start the selected game when you press return?
 check font size
 当使用linux版本的时候，rom和artworks等文件夹放在ntfs分区时，会在其目录下建立.mamepgui文件夹
-* LIN下的GUI能不能想办法支持汉化列表, command.dat... default command.dat path in lang
-
-//auto update
-note that all paths are determinable
-
-exes: mamep, mamepgui, mame, mess, mameui, (m1, m1.dll, lst)
-exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi xml), lang(multi mo), snap(multi png)
-
-single package crc format: clrmamep
-
-//zip
-gui只能导出fix-dat，不能导出完整的？
-3 test with some illegal paths: /history.dat, ///
-
-params
-in: dirpath, zipname, filename, ext, extract_path
-out: QHash<quint32 /*crc*/, RomInfo *> roms
-[multi-file] {readbytes of all files}, getinfo of all files, extract merged
-ips
-cheat
-lang
-
-in: dirpath, zipname, filename, ext
-out: QByteArray
-[single-file] mamefread
-snaps, history: snaps fname is gamename
-fname.ext
-builtin.zip\fname.ext
-builtin-fallback.zip\fname.ext
-*parent
-
-roms, roms/ips builtin is gamename
-builtin\fname.ext
-builtin.zip\fname.ext
-
-//Priority tasks
-2 mamebin changes should cause gamelist->init()
-2 unify zip/7z, *.dat reading
-2 不過執行缺少不分 ROM 檔案的遊戲，不會跟舊GUI 一樣提示缺少了哪些檔案，就關閉這點比較可惜希望可以加上。
-3 other language mamep core
-3 hide all, console folder for non mameplus
-3 Is there a way to hide the clones and make the font bigger with the new ui? 
-2 audit output only incorrect, sample
-3 customizable *.dat location for official mame
-3 crash when exit and auditing
-3 ips lang may cause crash
-3 command.dat may cause crash
-
-2 split gamelist.cpp to treeview.cpp datatype.cpp
-2 single game audit
-2 create new folder
-2 arrange icons
-2 sysinfo_file, messinfo_file
-2 new version detection
-3 background trans color on switching
-
-2 find a way to pick MESS systems
-2 better console refresh
-2 比如设定完“核心视频”后，如果直接却设定“系统视频”，则刚刚做的“核心视频”所有设定丢失。
-2 column sorting
-
-1 ips GUI seq
-1 added API to know which dock widgets are tabified together with a dock widget
-1 bios可改成完整名稱(像mame plus)
-1 按照版本順序排列(像mame plus)
-
-1 播放器我没有　他也要让我看下
-2 m1能用，但是有m1在bin目录首次启动新龟启动不了
-2 load m1 on the fly
-2 MAME uses the M1 directory as currentdirectory, mame option available after m1 init
-
-2 global softwarepath
-2 translator credit
-
-1 pop warning if console rom not exists
-2 multi sw paths
-1 MESS sw ext rom cfg saving
-
-1 CJK sorting
-
-2 disable play with
-2 mamep core lang, for non cjk languages
-2 SDL joystick GUI
-
-1 playwith state name prompt, empty file name handling
-1 filter also display parent (cross line?), unavail folder, parent avail, clone unavail
-
-* reconsider command.dat it's slow and buggy
-* icon for local switching
 
 //Coding
 * separate screenshot.cpp
-* check new/delete operator
-* remove TreeItem
-* use size()
-* bios filter really slow
 
 //General
 * test oldest mame version support, warning
@@ -134,25 +124,17 @@ builtin.zip\fname.ext
 //GameList
 * separate game list language
 * manuals support planned? (http://www.mamext.net/)
-* Ctrl-F w/ functionality to filter like MameUI including its text filter.
 * export lst gamelist
-* coin/time counter column
 * sort by reading
-* display 2 lines of game desc local/english
-* in-place zooming for icons
 * add/remove items from game list model
 * ROM capa column
 
 //Audit
-* 残档目录
 * audit samples
 * clrmame style dialog
-1 gba F5 crash
-* non compressed roms
 
 //Folder
-* 读取分类列表，说明属于“格斗、赛车、解谜”之类的 +0.01
-translation
+* ext folder translation
 * bios icons
 * dnd support
 
@@ -170,33 +152,29 @@ translation
 * check m1 hardware capa
 * ips dir must restart
 * ips v1 dat fallback with datfile name
-* 官方mame支持ips +0.1
 * multi directory
 
 //MESS
 1 ramoptions
-* MESS skip warning
 chinese zip console name error
 * if we are in an empty MESS system folder, assign currentGame to the system
 * console folder icon
-* multi software dirs
 * console game info from GameFAQs?
-* wildcard console gamename
-  snapshot
+* search wildcard console gamename
   use mess hsi(goodxxx)
   use xmdb directly? (name based)
   add manufacturer from offline dat (name based, one time, submit to MESS)
-  snap/snes/parent game name (without tags)
+  snapshot snap/snes/parent game name (without tags)
   display region/hack info of console rom
 
 //Extra
+GUI Support for chdman (and possibly the LD Player)
 * controller setting interface
-* export selected, mame, mamep, mamep extra dat, snapshot dat
+* export snapshot dat
 * export roms to folders
 * delete roms,cfg,nvram...
 * delete snapshot
 * gamelist editor
-* autoupdater
 
 ----------------------------------------
 
@@ -224,7 +202,7 @@ sudo chmod +x /usr/games/mamepgui
 in an empty folder
 1 dock snap
 w/ or w/o m1
-check sorting
+check sorting, with local
 mame, mamep, mess in same folder
 gui/core options saving
 bios, ctrlr, effect, screen
@@ -309,3 +287,25 @@ restoreGameSelection()
 
 *** switch to manu/bios folder slow
 *** restoreGameSelection() is slow
+
+
+	QHash<QString, MameFileInfo *> mameFileInfoList = 
+//		utils->iterateMameFile("d:/mame/icons2/;d:/mame/icons3", "icons", "*" ICO_EXT, MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame", "", "history.dat", MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame/roms", "grdians", "*", MAMEFILE_READ);
+//		utils->iterateMameFile("d:/mame/snap/", "snap;.;denjinmk", "denjinmk.png;0000.png", MAMEFILE_READ);
+		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.nes", MAMEFILE_GETINFO);
+
+	QString buf;
+	foreach (QString key, mameFileInfoList.keys())
+	{
+		buf.append(QString("%1,%2,%3,%4\n")
+			.arg(key)
+			.arg(mameFileInfoList[key]->crc, 8, 16, QLatin1Char('0'))
+			.arg(mameFileInfoList[key]->size)
+			.arg(mameFileInfoList[key]->data.size())
+			);
+	}
+	win->poplog(buf);
+	
+	utils->clearMameFileInfoList(mameFileInfoList);

@@ -64,7 +64,9 @@ enum
 	*/
 
 	FOLDER_EXT,
-	MAX_FOLDERS
+	MAX_FOLDERS,
+
+	SORT_STR
 };
 
 class UpdateSelectionThread : public QThread
@@ -122,17 +124,19 @@ private:
 	TreeItem *parentItem;
 };
 
+class GameInfo;
 class TreeModel : public QAbstractItemModel
 {
 	Q_OBJECT
 
 public:
-	TreeModel(QObject *parent = 0, bool isGroup = true);
+	TreeModel(QObject *parent = 0);
 	~TreeModel();
 
 	QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
 	QModelIndex index(int column, TreeItem *childItem) const;
 	QModelIndex parent(const QModelIndex &index) const;
+	QVariant displayData(GameInfo *gameInfo, int col) const;
 	QVariant data(const QModelIndex &index, int role) const;
 	QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 	int rowCount(const QModelIndex &parent = QModelIndex()) const;
@@ -143,35 +147,26 @@ private:
 	TreeItem *rootItem;
 
 	TreeItem *getItem(const QModelIndex &index) const;
-	TreeItem *setupModelData(TreeItem *, QString, bool);
+	TreeItem *setupModelData(TreeItem *, QString);
 };
 
-class GamelistDelegate : public QItemDelegate
-{
-	Q_OBJECT
-
-public:
-	GamelistDelegate(QObject *parent = 0);
-
-	QSize sizeHint ( const QStyleOptionViewItem & option, 
-		const QModelIndex & index ) const;
-
-	void paint(QPainter *painter, const QStyleOptionViewItem &option,
-		const QModelIndex &index ) const;
-};
-
-/*
-class XTreeView : public QTreeView
+class GameListTreeView : public QTreeView
 {
 Q_OBJECT
-
 public:
-    XTreeView(QWidget *parent = 0);
- 
-protected:
-	void paintEvent(QPaintEvent *);
+		GameListTreeView(QWidget * = 0);
+		void paintEvent(QPaintEvent *);
 };
-//*/
+
+class GameListDelegate : public QItemDelegate
+{
+Q_OBJECT
+public:
+	GameListDelegate(QObject * = 0);
+
+	QSize sizeHint(const QStyleOptionViewItem &, const QModelIndex &) const;
+	void paint(QPainter *, const QStyleOptionViewItem &, const QModelIndex &) const;
+};
 
 class BiosSet : public QObject
 {
@@ -352,7 +347,6 @@ public:
 	QString reading;
 
 	bool isExtRom;
-	bool isCloneAvailable;
 	bool isHorz;
 
 	qint8 available;
@@ -410,6 +404,8 @@ public:
 	QMenu *headerMenu;
 	QString listMode;
 	QStringList intFolderNames0, intFolderNames;
+	QPixmap pmDeco;
+	QRect rectDeco;
 
 	// interactive threads used by the game list
 	UpdateSelectionThread selectionThread;
@@ -431,6 +427,7 @@ public slots:
 	void restoreGameSelection();
 	void runMame(bool = false, QStringList = QStringList());
 	QString getViewString(const QModelIndex &index, int column) const;
+	GameInfo* getGameInfo (const QModelIndex &, QString&);
 	void updateProgress(int progress);
 	void switchProgress(int max, QString title);
 	void updateSelection();
@@ -491,8 +488,8 @@ public:
 	GameListSortFilterProxyModel(QObject *parent = 0);
 
 protected:
-	bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const;
-//	bool lessThan(const QModelIndex &left, const QModelIndex &right) const;
+	bool filterAcceptsRow(int, const QModelIndex &) const;
+	bool lessThan(const QModelIndex &, const QModelIndex &) const;
 };
 
 extern MameGame *mameGame;

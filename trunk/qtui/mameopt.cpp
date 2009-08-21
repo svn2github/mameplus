@@ -2424,7 +2424,9 @@ void OptionUtils::updateSelectableItems(QString optName)
 			if (!gameInfo->isBios)
 				gameInfo = mameGame->games[biosof];
 
-			foreach (QString name, gameInfo->biosSets.keys())
+			QStringList biosSets = gameInfo->biosSets.keys();
+			biosSets.sort();
+			foreach (QString name, biosSets)
 			{
 				BiosSet *biosSet = gameInfo->biosSets[name];
 
@@ -2447,6 +2449,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		nameFilter << "*.cfg";
 		
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+		files.sort();
 		for (int i = 0; i < files.count(); i++)
 		{
 			QFileInfo fi(files[i]);
@@ -2473,6 +2476,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		nameFilter << "*" PNG_EXT;
 		
 		QStringList files = dir.entryList(nameFilter, QDir::Files | QDir::Readable);
+		files.sort();
 		for (int i = 0; i < files.count(); i++)
 		{
 			QFileInfo fi(files[i]);

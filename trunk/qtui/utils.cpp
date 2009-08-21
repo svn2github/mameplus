@@ -160,26 +160,18 @@ void Utils::initDescMap()
 
 	descMap.insert("card", tr("PC Card"));
 	descMap.insert("cdrom", tr("CD-ROM"));
-	descMap.insert("cdrom0", tr("CD-ROM") + " 0");
-	descMap.insert("cdrom1", tr("CD-ROM") + " 1");
+	descMap.insert("cdrom0", tr("CD-ROM"));
+	descMap.insert("cdrom1", tr("CD-ROM"));
 	descMap.insert("cfcard", tr("CompactFlash Card"));
 	descMap.insert("disk", tr("Disk"));
-	descMap.insert("disks", tr("Disks"));
+	descMap.insert("disks", tr("Disk"));
 	descMap.insert("gdrom", tr("GD-ROM"));
 	descMap.insert("ide", tr("IDE"));
 	descMap.insert("laserdisc", tr("Laserdisc"));
-	descMap.insert("laserdisc2", tr("Laserdisc") + " 2");
-	descMap.insert("scsi0", tr("SCSI") + " 0");
-	descMap.insert("scsi1", tr("SCSI") + " 1");
+	descMap.insert("laserdisc2", tr("Laserdisc"));
+	descMap.insert("scsi0", tr("SCSI"));
+	descMap.insert("scsi1", tr("SCSI"));
 	descMap.insert("vhs", tr("VHS"));
-}
-
-QString Utils::getShortName(const QString &str)
-{	
-	if (!descMap.key(str).isEmpty())
-		return descMap.key(str);
-	
-	return str;
 }
 
 QString Utils::getLongName(const QString &str)
@@ -329,6 +321,9 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 	// iterate split dirpath
 	foreach (QString _dirPath, dirPaths)
 	{
+		if (isSingleFile && mameFileInfoList.size() > 0)
+			break;
+	
 		_dirPath = utils->getPath(_dirPath);
 
 		foreach (QString archName, archNames)
@@ -344,16 +339,19 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 			for (int i = 0; i < fileNames.count(); i++)
 			{
+				if (isSingleFile && mameFileInfoList.size() > 0)
+					break;
+
 //				win->log("testing: " + dirPath + fileNames[i]);
 				QFile file(dirPath + fileNames[i]);
-				if (!file.open(QIODevice::ReadOnly))
-					continue;
-
 				QFileInfo fileInfo(file);
 
 				//already loaded
 				QString fileName = fileInfo.fileName();
 				if (mameFileInfoList.contains(fileName))
+					continue;
+
+				if (!file.open(QIODevice::ReadOnly))
 					continue;
 
 				bool isCHD = fileName.endsWith(".chd");
@@ -370,9 +368,6 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				else
 					mameFileInfo->crc = 0L;
 				mameFileInfoList.insert(fileName, mameFileInfo);
-
-				if (isSingleFile)
-					break;
 			}
 		}
 
@@ -395,6 +390,9 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 			}
 		}
 
+		if (isSingleFile && mameFileInfoList.size() > 0)
+			break;
+
 		// iterate all fileNames in the .zip
 		QuaZip zip(_dirPath + archName + ZIP_EXT);
 //		win->log("testing: " + _dirPath + archName + ZIP_EXT);
@@ -405,10 +403,6 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				if (isSingleFile && mameFileInfoList.size() > 0)
 					break;
 			
-				QuaZipFile inFile(&zip);
-				if (!inFile.open(QIODevice::ReadOnly))
-					continue;
-
 				QuaZipFileInfo zipFileInfo;
 				if(!zip.getCurrentFileInfo(&zipFileInfo))
 					continue;
@@ -422,6 +416,10 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 					continue;
 
 				if (!matchMameFile(zipFileInfo.name, fileNameFilters))
+					continue;
+
+				QuaZipFile inFile(&zip);
+				if (!inFile.open(QIODevice::ReadOnly))
 					continue;
 
 				mameFileInfo = new MameFileInfo();
@@ -441,6 +439,9 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 			}
 		}
 		zip.close();
+
+		if (isSingleFile && mameFileInfoList.size() > 0)
+			break;
 
 		// iterate all fileNames in the .7z
 		// implementation from LZMA SDK's 7zMain.c
@@ -494,9 +495,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				//no directories
 				if (f->IsDir)
-				{
 					continue;
-				}
 
 				//already loaded
 				if (mameFileInfoList.contains(f->Name))
@@ -532,6 +531,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 		SzArEx_Free(&db, &allocImp);
 		File_Close(&archiveStream.file);
 	}
+	
 	return mameFileInfoList;
 }
 

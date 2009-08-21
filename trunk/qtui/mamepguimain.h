@@ -20,6 +20,7 @@ public:
     Screenshot(QString, QWidget *parent = 0);
 	void setPixmap(QPixmap pm);
 	void setPixmap(const QByteArray &, bool);
+    void updateScreenshotLabel(bool = false);
 
 protected:
     void resizeEvent(QResizeEvent *);
@@ -29,10 +30,8 @@ private slots:
 	void rotateImage();
 
 private:
-    void updateScreenshotLabel();
-
 	QPushButton *screenshotLabel;
-    QPixmap originalPixmap;
+	QPixmap originalPixmap;
 	QGridLayout *mainLayout;
 	QWidget *dockWidgetContents;
 	bool forceAspect;

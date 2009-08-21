@@ -187,7 +187,7 @@ QMainWindow(parent)
 	bgStretchActions->addAction(actionBgTile);
 
 	// init controls
-    tvGameList = new QTreeView(centralwidget);
+    tvGameList = new GameListTreeView(centralwidget);
     tvGameList->setRootIsDecorated(false);
     tvGameList->setItemsExpandable(false);
 	tvGameList->setFrameShape(QFrame::NoFrame);
@@ -277,6 +277,7 @@ QMainWindow(parent)
 	aboutUI = new About(this);
 	ipsUI = new IPS(this);
 #ifdef Q_OS_WIN
+	m1 = new M1(0);
 	m1UI = new M1UI(this);
 #endif /* Q_OS_WIN */
 
@@ -525,6 +526,7 @@ void MainWindow::init()
 		setBgPixmap(background_file);
 
 	mameGame->init();
+//	show();
 
 	// connect misc signal and slots
 
@@ -541,7 +543,7 @@ void MainWindow::init()
 
 	// Actions
 	connect(actionVerticalTabs, SIGNAL(toggled(bool)), this, SLOT(setDockOptions()));
-	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
+//	connect(actionLargeIcons, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionDetails, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
@@ -562,12 +564,6 @@ void MainWindow::init()
 	// Tray Icon
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)),
 			this, SLOT(on_trayIconActivated(QSystemTrayIcon::ActivationReason)));
-
-#ifdef Q_OS_WIN
-	//init M1 in a background thread
-	m1 = new M1(this);
-	m1->init();
-#endif /* Q_OS_WIN */
 
 //	gameList->restoreGameSelection();
 //	gameList->updateSelection();
@@ -616,24 +612,21 @@ void MainWindow::setVersion()
 		"<strong>M+GUI</strong> %1 &copy; 2008-2009 <a href=\"http://mameicons.free.fr/mame32p/\">MAME Plus!</a> Team<br>"
 		"A Qt implementation of <a href=\"http://mameui.classicgaming.gamespy.com\">MameUI</a>"
 		"<hr>"
-		"%2"
-		"<a href=\"http://www.qtsoftware.com\">Qt</a> %3 &copy; Nokia Corporation<br>"
-		"%4"
-		"%5"
-		"%6"
+		"%2%3%4%5%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.6")
+		.arg("1.4.7b")
 		.arg(mameString)
-		.arg(QT_VERSION_STR)
-		.arg(sdlVerString)
 		.arg(m1VerString)
+		.arg("<a href=\"http://www.qtsoftware.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
+		.arg(sdlVerString)
 		.arg("<a href=\"http://www.7-zip.org\">LZMA SDK</a> " MY_VERSION_COPYRIGHT_DATE)
 		;
 
 	aboutUI->tbVersion->setHtml(strVersion);
 #ifdef Q_OS_WIN
-	m1UI->setWindowTitle("M1 - " + m1Ver);
+	if (!m1Ver.isEmpty())
+		m1UI->setWindowTitle("M1 - " + m1Ver);
 #endif /* Q_OS_WIN */
 
 	QFileInfo fi(mame_binary);
@@ -647,7 +640,7 @@ void MainWindow::setVersion()
 void MainWindow::enableCtrls(bool isEnabled)
 {
 	win->treeFolders->setEnabled(isEnabled);
-	win->actionLargeIcons->setEnabled(isEnabled);
+	win->actionLargeIcons->setEnabled(false);
 	win->actionDetails->setEnabled(isEnabled);
 	win->actionGrouped->setEnabled(isEnabled);
 	win->actionRefresh->setEnabled(isEnabled);
@@ -822,13 +815,8 @@ void MainWindow::on_actionAbout_activated()
 #if 1
 	aboutUI->exec();
 #else
-
 	QHash<QString, MameFileInfo *> mameFileInfoList = 
-//		utils->iterateMameFile("d:/mame/icons2/;d:/mame/icons3", "icons", "*" ICO_EXT, MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame", "", "history.dat", MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame/roms", "grdians", "*", MAMEFILE_READ);
-//		utils->iterateMameFile("d:/mame/snap/", "snap;.;denjinmk", "denjinmk.png;0000.png", MAMEFILE_READ);
-		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.nes", MAMEFILE_GETINFO);
+		utils->iterateMameFile("d:/svn_proj/mamepgui/release", "", "mamepgui.exe", MAMEFILE_GETINFO);
 
 	QString buf;
 	foreach (QString key, mameFileInfoList.keys())
@@ -841,8 +829,13 @@ void MainWindow::on_actionAbout_activated()
 			);
 	}
 	win->poplog(buf);
-	
+
 	utils->clearMameFileInfoList(mameFileInfoList);
+
+	const QString appPath = QCoreApplication::applicationFilePath();
+
+	QFile::rename("mamepgui.exe", "mamepgui.exe.bak");
+
 #endif
 }
 
@@ -1000,7 +993,7 @@ void MainWindow::initSettings()
 		<< "vertical_tabs"
 		<< "stretch_screenshot_larger"
 		<< "enforce_aspect"
-		<< "game_list_delegate"
+		<< "zoom_icon"
 		<< "local_game_list"
 		<< "list_mode"
 		<< "option_column_state"
@@ -1031,7 +1024,7 @@ void MainWindow::loadLayout()
 	option_geometry = pGuiSettings->value("option_geometry").toByteArray();
 
 	actionVerticalTabs->setChecked(pGuiSettings->value("vertical_tabs", "1").toInt() == 1);
-	actionRowDelegate->setChecked(pGuiSettings->value("game_list_delegate", "0").toInt() == 1);
+	actionRowDelegate->setChecked(pGuiSettings->value("zoom_icon", "1").toInt() == 1);
 
 	gameList->listMode = pGuiSettings->value("list_mode").toString();
 	if (gameList->listMode == win->actionDetails->objectName().remove("action"))
@@ -1200,7 +1193,7 @@ void MainWindow::saveSettings()
 	pGuiSettings->setValue("vertical_tabs", actionVerticalTabs->isChecked() ? 1 : 0);
 	pGuiSettings->setValue("stretch_screenshot_larger", actionStretchSshot->isChecked() ? 1 : 0);
 	pGuiSettings->setValue("enforce_aspect", actionEnforceAspect->isChecked() ? 1 : 0);
-	pGuiSettings->setValue("game_list_delegate", actionRowDelegate->isChecked() ? 1 : 0);
+	pGuiSettings->setValue("zoom_icon", actionRowDelegate->isChecked() ? 1 : 0);
 	pGuiSettings->setValue("local_game_list", actionLocalGameList->isChecked() ? 1 : 0);
 	pGuiSettings->setValue("background_stretch", actionBgTile->isChecked() ? 0 : 1);
 	pGuiSettings->setValue("default_game", currentGame);
@@ -1395,7 +1388,12 @@ QList<QTabBar *> MainWindow::getSSTabBars()
 			for (int t = 0; t < tabBar->count(); t ++)
 			{
 				//if the tab contains any known screenshot/history dock names
-				if (tr(qPrintable(dockCtrlNames[i])) == tabBar->tabText(t))
+				QString tabName = tabBar->tabText(t);
+				if (tr(qPrintable(dockCtrlNames[i])) == tabName 
+#ifdef Q_OS_WIN
+					|| tabName == "M1"
+#endif /* Q_OS_WIN */
+					)
 				{
 					isSSDocked = true;
 					break;
@@ -1412,6 +1410,7 @@ QList<QTabBar *> MainWindow::getSSTabBars()
 	return tabBars2;
 }
 
+//fixme: win->dockCtrls[snapType]->isVisible() && win->isDockTabVisible(win->dockCtrlNames[snapType])
 bool MainWindow::isDockTabVisible(QString objName)
 {
 	bool isSSTabbed = false;
@@ -1531,13 +1530,25 @@ void Screenshot::rotateImage()
 	}
 }
 
-void Screenshot::updateScreenshotLabel()
+void Screenshot::updateScreenshotLabel(bool isLoading)
 {
     QSize scaledSize = utils->getScaledSize(originalPixmap.size(), screenshotLabel->size(), forceAspect);
 
 	screenshotLabel->setIconSize(scaledSize);
-	screenshotLabel->setIcon(originalPixmap.scaled(scaledSize,
-			Qt::IgnoreAspectRatio, Qt::SmoothTransformation));
+	QPixmap pm = originalPixmap.scaled(scaledSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+
+	if (isLoading)
+	{
+		QPainter p;
+		p.begin(&pm);
+		p.setPen(Qt::black);
+		p.drawText(5, -3, pm.width(), pm.height(), Qt::AlignBottom, tr("Loading..."));
+		p.setPen(Qt::white);
+		p.drawText(4, -4, pm.width(), pm.height(), Qt::AlignBottom, tr("Loading..."));
+		p.end();
+	}
+	
+	screenshotLabel->setIcon(pm);
 }
 
 int main(int argc, char *argv[])

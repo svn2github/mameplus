@@ -37,9 +37,7 @@ public:
 
 	quint8 getStatus(QString);
 	QString getStatusString(quint8, bool = false);
-
 	QString getLongName(const QString &);
-	QString getShortName(const QString &);
 
 	QHash<QString, MameFileInfo *> iterateMameFile(const QString &, const QString &, const QString &, int);
 	void clearMameFileInfoList(QHash<QString, MameFileInfo *>);

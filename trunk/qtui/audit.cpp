@@ -355,9 +355,6 @@ void RomAuditor::run()
 			if (gameInfo->isExtRom)
 				continue;
 
-			//reset isCloneAvailable, will call completeData() later
-			gameInfo->isCloneAvailable = false;
-
 			//if game rom file exists, default to passed, if not, skip and fail it
 			if (auditedGames.contains(gameName))
 				gameInfo->available = 1;

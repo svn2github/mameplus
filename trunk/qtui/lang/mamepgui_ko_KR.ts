@@ -4,7 +4,7 @@
 <context>
     <name>About</name>
     <message>
-        <location filename="../about.ui" line="13"/>
+        <location filename="../about.ui" line="14"/>
         <source>About MAME Plus! GUI</source>
         <translatorcomment>MAME Plus! GUI</translatorcomment>
         <translation>MAME Plus! GUI 정보</translation>
@@ -43,12 +43,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="4417"/>
+        <location filename="../gamelist.cpp" line="4189"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="4422"/>
+        <location filename="../gamelist.cpp" line="4194"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -64,182 +64,182 @@
         <translation type="obsolete">읽기 listxml: %1 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2224"/>
+        <location filename="../gamelist.cpp" line="2183"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2220"/>
+        <location filename="../gamelist.cpp" line="2179"/>
         <source>Available Arcades</source>
         <translation type="unfinished">보유 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2219"/>
+        <location filename="../gamelist.cpp" line="2178"/>
         <source>All Systems</source>
         <translation type="unfinished">전체 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2220"/>
+        <location filename="../gamelist.cpp" line="2179"/>
         <source>Available Systems</source>
         <translation type="unfinished">보유 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2221"/>
+        <location filename="../gamelist.cpp" line="2180"/>
         <source>Unavailable Arcades</source>
         <translation type="unfinished">미보유 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2221"/>
+        <location filename="../gamelist.cpp" line="2180"/>
         <source>Unavailable Systems</source>
         <translation type="unfinished">미보유 시스템</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2222"/>
+        <location filename="../gamelist.cpp" line="2181"/>
         <source>Consoles</source>
         <translation type="unfinished">콘솔 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2222"/>
+        <location filename="../gamelist.cpp" line="2181"/>
         <source>Softwares</source>
         <translation type="unfinished">소프트웨어</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2223"/>
+        <location filename="../gamelist.cpp" line="2182"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2225"/>
+        <location filename="../gamelist.cpp" line="2184"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2226"/>
+        <location filename="../gamelist.cpp" line="2185"/>
         <source>BIOS</source>
         <translation type="unfinished">바이오스</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2227"/>
+        <location filename="../gamelist.cpp" line="2186"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2228"/>
+        <location filename="../gamelist.cpp" line="2187"/>
         <source>Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2229"/>
+        <location filename="../gamelist.cpp" line="2188"/>
         <source>CHD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2230"/>
+        <location filename="../gamelist.cpp" line="2189"/>
         <source>Samples</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2231"/>
+        <location filename="../gamelist.cpp" line="2190"/>
         <source>Dumping Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2232"/>
+        <location filename="../gamelist.cpp" line="2191"/>
         <source>Working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2233"/>
+        <location filename="../gamelist.cpp" line="2192"/>
         <source>Not working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2235"/>
+        <location filename="../gamelist.cpp" line="2194"/>
         <source>Clones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2238"/>
+        <location filename="../gamelist.cpp" line="2197"/>
         <source>Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3720"/>
+        <location filename="../gamelist.cpp" line="3504"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3721"/>
+        <location filename="../gamelist.cpp" line="3505"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2236"/>
+        <location filename="../gamelist.cpp" line="2195"/>
         <source>Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2234"/>
+        <location filename="../gamelist.cpp" line="2193"/>
         <source>Originals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2237"/>
+        <location filename="../gamelist.cpp" line="2196"/>
         <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2239"/>
+        <location filename="../gamelist.cpp" line="2198"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2240"/>
+        <location filename="../gamelist.cpp" line="2199"/>
         <source>Control Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2241"/>
+        <location filename="../gamelist.cpp" line="2200"/>
         <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2242"/>
+        <location filename="../gamelist.cpp" line="2201"/>
         <source>Save State</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2791"/>
+        <location filename="../gamelist.cpp" line="2679"/>
         <source>Remove From &quot;%1%2&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3149"/>
+        <location filename="../gamelist.cpp" line="3037"/>
         <source>Remove All</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3814"/>
+        <location filename="../gamelist.cpp" line="3598"/>
         <source>(H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3814"/>
+        <location filename="../gamelist.cpp" line="3598"/>
         <source>(V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3902"/>
+        <location filename="../gamelist.cpp" line="3686"/>
         <source>Root Folder [.]</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="4120"/>
+        <location filename="../gamelist.cpp" line="3899"/>
         <source>Loading M1, please wait...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="4189"/>
+        <location filename="../gamelist.cpp" line="3976"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -249,47 +249,47 @@ must be mounted:
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2219"/>
+        <location filename="../gamelist.cpp" line="2178"/>
         <source>All Arcades</source>
         <translation type="unfinished">전체 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2218"/>
+        <location filename="../gamelist.cpp" line="2177"/>
         <source>All Games</source>
         <translation>전체 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3022"/>
+        <location filename="../gamelist.cpp" line="2910"/>
         <source>Common image types</source>
         <translation type="unfinished">일반 이미지 종류</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3024"/>
+        <location filename="../gamelist.cpp" line="2912"/>
         <source>All Files</source>
         <translation type="unfinished">모든 파일</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3030"/>
+        <location filename="../gamelist.cpp" line="2918"/>
         <source>File name:</source>
         <translation type="unfinished">파일명:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3394"/>
+        <location filename="../gamelist.cpp" line="3178"/>
         <source>Refresh</source>
         <translation>새로고침</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2765"/>
+        <location filename="../gamelist.cpp" line="2653"/>
         <source>Play %1</source>
         <translation type="unfinished">실행 %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2797"/>
+        <location filename="../gamelist.cpp" line="2685"/>
         <source>Properties for %1</source>
         <translation type="unfinished">%1 속성</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2085"/>
+        <location filename="../gamelist.cpp" line="2066"/>
         <source>%1 games</source>
         <translation>%1 게임</translation>
     </message>
@@ -367,17 +367,17 @@ p, li { white-space: pre-wrap; }
         <translation>정지</translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="154"/>
+        <location filename="../m1.ui" line="157"/>
         <source>1</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="159"/>
+        <location filename="../m1.ui" line="162"/>
         <source>2</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../m1.ui" line="164"/>
+        <location filename="../m1.ui" line="167"/>
         <source>3</source>
         <translation></translation>
     </message>
@@ -416,7 +416,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">툴바</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="217"/>
+        <location filename="../mamepguimain.cpp" line="219"/>
         <location filename="../mamepguimain.ui" line="224"/>
         <source>Search</source>
         <translation type="unfinished">검색</translation>
@@ -431,7 +431,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">새로고침</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="308"/>
+        <location filename="../mamepguimain.ui" line="311"/>
         <source>F5</source>
         <translation type="unfinished">F5</translation>
     </message>
@@ -440,7 +440,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">종료</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="316"/>
+        <location filename="../mamepguimain.ui" line="319"/>
         <source>Alt+X</source>
         <translation type="unfinished">Alt+X</translation>
     </message>
@@ -516,7 +516,7 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">스토리</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="282"/>
+        <location filename="../mamepguimain.ui" line="285"/>
         <source>1</source>
         <translation type="unfinished">1</translation>
     </message>
@@ -533,59 +533,58 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">실행</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="392"/>
+        <location filename="../mamepguimain.ui" line="395"/>
         <source>Audit</source>
         <translation type="unfinished">검사</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="400"/>
+        <location filename="../mamepguimain.ui" line="403"/>
         <source>Description</source>
         <translation type="unfinished">설명</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="408"/>
+        <location filename="../mamepguimain.ui" line="411"/>
         <source>Name</source>
         <translation type="unfinished">이름</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="416"/>
+        <location filename="../mamepguimain.ui" line="419"/>
         <source>ROMs</source>
         <translation type="unfinished">롬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="424"/>
+        <location filename="../mamepguimain.ui" line="427"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="432"/>
+        <location filename="../mamepguimain.ui" line="435"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="440"/>
+        <location filename="../mamepguimain.ui" line="443"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="448"/>
+        <location filename="../mamepguimain.ui" line="451"/>
         <source>Clone of</source>
         <translation type="unfinished">부모롬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="459"/>
+        <location filename="../mamepguimain.ui" line="462"/>
         <source>Sort Ascending</source>
         <translation type="unfinished">오름차순 정렬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="470"/>
+        <location filename="../mamepguimain.ui" line="473"/>
         <source>Sort Descending</source>
         <translation type="unfinished">내림차순 정렬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="591"/>
         <source>Highlight Selected Row</source>
-        <translation type="unfinished">선택 게임 목록 효과주기</translation>
+        <translation type="obsolete">선택 게임 목록 효과주기</translation>
     </message>
     <message>
         <source>Playback Input...</source>
@@ -707,47 +706,52 @@ p, li { white-space: pre-wrap; }
         <translation type="unfinished">도움말(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="296"/>
+        <location filename="../mamepguimain.ui" line="299"/>
         <source>Default Game &amp;Options</source>
         <translation type="unfinished">기본 게임 설정(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="305"/>
+        <location filename="../mamepguimain.ui" line="308"/>
         <source>&amp;Refresh</source>
         <translation type="unfinished">새로고침(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="313"/>
+        <location filename="../mamepguimain.ui" line="316"/>
         <source>E&amp;xit</source>
         <translation type="unfinished">종료(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="325"/>
+        <location filename="../mamepguimain.ui" line="328"/>
         <source>&amp;About</source>
         <translation type="unfinished">MAME 정보(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="337"/>
+        <location filename="../mamepguimain.ui" line="340"/>
         <source>&amp;Details</source>
         <translation type="unfinished">자세히(&amp;D)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="352"/>
+        <location filename="../mamepguimain.ui" line="355"/>
         <source>&amp;Grouped</source>
         <translation type="unfinished">그룹화(&amp;G)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="364"/>
+        <location filename="../mamepguimain.ui" line="367"/>
         <source>L&amp;arge Icons</source>
         <translation type="unfinished">큰 아이콘(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="372"/>
+        <location filename="../mamepguimain.ui" line="375"/>
         <source>&amp;Vertical Tabs</source>
         <translation type="unfinished">가로 탭 보기(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="665"/>
+        <location filename="../mamepguimain.ui" line="594"/>
+        <source>Highlight Selected Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepguimain.ui" line="668"/>
         <source>&amp;Audit All Games</source>
         <translation type="unfinished"></translation>
     </message>
@@ -756,37 +760,37 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">실행(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="382"/>
+        <location filename="../mamepguimain.ui" line="385"/>
         <source>&amp;Record Input...</source>
         <translation type="unfinished">INP 리플레이 기록(&amp;R)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="387"/>
+        <location filename="../mamepguimain.ui" line="390"/>
         <source>Configure &amp;IPS...</source>
         <translation type="unfinished">IPS 설정...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="479"/>
+        <location filename="../mamepguimain.ui" line="482"/>
         <source>&amp;Directories...</source>
         <translation type="unfinished">디렉토리 설정(&amp;D)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="488"/>
+        <location filename="../mamepguimain.ui" line="491"/>
         <source>Pr&amp;operties</source>
         <translation type="unfinished">등록정보(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="645"/>
+        <location filename="../mamepguimain.ui" line="648"/>
         <source>Completely Missing Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="650"/>
+        <location filename="../mamepguimain.ui" line="653"/>
         <source>Incomplete Sets Only...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="655"/>
+        <location filename="../mamepguimain.ui" line="658"/>
         <source>All Set Issues...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -807,32 +811,32 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Português (Brasil)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="549"/>
+        <location filename="../mamepguimain.ui" line="552"/>
         <source>Local &amp;Language Game List</source>
         <translation type="unfinished">현지 게임목록(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="604"/>
+        <location filename="../mamepguimain.ui" line="607"/>
         <source>&amp;Playback Input...</source>
         <translation type="unfinished">INP 리플레이 재생(&amp;P)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="609"/>
+        <location filename="../mamepguimain.ui" line="612"/>
         <source>Record &amp;Wave Output...</source>
         <translation type="unfinished">WAV 사운드 기록(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="614"/>
+        <location filename="../mamepguimain.ui" line="617"/>
         <source>Record &amp;MNG Output...</source>
         <translation type="unfinished">MNG 비디오 기록(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="619"/>
+        <location filename="../mamepguimain.ui" line="622"/>
         <source>Record &amp;AVI Output...</source>
         <translation type="unfinished">MNG AVI 무압축 비디오 기록(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="624"/>
+        <location filename="../mamepguimain.ui" line="627"/>
         <source>Load &amp;Savestate</source>
         <translation type="unfinished">상태저장(세이브) 파일 불러오기(&amp;S)</translation>
     </message>
@@ -841,18 +845,18 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Magyar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="936"/>
+        <location filename="../mamepguimain.cpp" line="958"/>
         <source>Restart</source>
         <translation>재시작</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="937"/>
+        <location filename="../mamepguimain.cpp" line="959"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation type="unfinished">이 설정을 변경하려면 다시 시작해야합니다. 계속하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="541"/>
+        <location filename="../mamepguimain.ui" line="544"/>
         <source>Enforce Aspect Ratio</source>
         <translation type="unfinished">강제 화면비율유지</translation>
     </message>
@@ -915,28 +919,28 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="425"/>
+        <location filename="../mamepguimain.cpp" line="428"/>
         <source>Executable files</source>
         <translation type="unfinished">실행파일</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="428"/>
-        <location filename="../mamepguimain.cpp" line="739"/>
+        <location filename="../mamepguimain.cpp" line="431"/>
+        <location filename="../mamepguimain.cpp" line="737"/>
         <source>All Files (*)</source>
         <translation type="unfinished">모든 파일 (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="431"/>
+        <location filename="../mamepguimain.cpp" line="434"/>
         <source>MAME/MESS executable:</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="737"/>
+        <location filename="../mamepguimain.cpp" line="735"/>
         <source>Dat files</source>
         <translation type="unfinished">데이터 파일</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="744"/>
+        <location filename="../mamepguimain.cpp" line="742"/>
         <source>File name:</source>
         <translation type="unfinished">파일명:</translation>
     </message>
@@ -958,27 +962,27 @@ Do you wish to continue?</source>
         <translation type="obsolete">INP 리플레이 기록...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="554"/>
+        <location filename="../mamepguimain.ui" line="557"/>
         <source>FAQ</source>
         <translation type="unfinished">묻고 답하기</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="559"/>
+        <location filename="../mamepguimain.ui" line="562"/>
         <source>Discussion Board</source>
         <translation type="unfinished">포럼 게시판</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="564"/>
+        <location filename="../mamepguimain.ui" line="567"/>
         <source>Readme</source>
         <translation type="unfinished">읽어보기</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="572"/>
+        <location filename="../mamepguimain.ui" line="575"/>
         <source>Stretch</source>
         <translation type="unfinished">늘리기</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="580"/>
+        <location filename="../mamepguimain.ui" line="583"/>
         <source>Tile</source>
         <translation type="unfinished">타일</translation>
     </message>
@@ -992,7 +996,7 @@ Do you wish to continue?</source>
         <translation type="unfinished">공략파일</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="223"/>
+        <location filename="../mamepguimain.cpp" line="225"/>
         <source>Clear</source>
         <translation type="unfinished">지우기</translation>
     </message>
@@ -1009,7 +1013,7 @@ Do you wish to continue?</source>
         <translation type="obsolete">아이콘 정렬하기</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="599"/>
+        <location filename="../mamepguimain.ui" line="602"/>
         <source>Strech Screenshot Larger</source>
         <translation type="unfinished">스크린샷 이미지 크게 보기</translation>
     </message>
@@ -1017,7 +1021,7 @@ Do you wish to continue?</source>
 <context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="683"/>
+        <location filename="../audit.cpp" line="530"/>
         <source>Checking...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1025,27 +1029,27 @@ Do you wish to continue?</source>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="1623"/>
+        <location filename="../gamelist.cpp" line="1575"/>
         <source>Parsing listxml</source>
         <translation type="unfinished">listxml 분석</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1737"/>
+        <location filename="../gamelist.cpp" line="1686"/>
         <source>Loading listxml: %1 games</source>
         <translation type="unfinished">읽기 listxml: %1 게임</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1193"/>
+        <location filename="../gamelist.cpp" line="1145"/>
         <source>Saving listxml</source>
         <translation type="unfinished">listxml 저장하기</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1395"/>
+        <location filename="../gamelist.cpp" line="1347"/>
         <source>Cache signature error.</source>
         <translation type="unfinished">캐쉬 표시 에러</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1404"/>
+        <location filename="../gamelist.cpp" line="1356"/>
         <source>Cache version has been updated. A full refresh is required.</source>
         <translation type="unfinished">캐쉬 버전이 업데이트 되었습니다. 전체 새로 고침이 필요합니다.</translation>
     </message>
@@ -1053,9 +1057,8 @@ Do you wish to continue?</source>
 <context>
     <name>MergedRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="591"/>
         <source>Auditing</source>
-        <translation type="unfinished">검사중</translation>
+        <translation type="obsolete">검사중</translation>
     </message>
 </context>
 <context>
@@ -1297,7 +1300,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1234"/>
-        <location filename="../mameopt.cpp" line="2233"/>
+        <location filename="../mameopt.cpp" line="2230"/>
         <source>GUI Paths</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
@@ -2146,32 +2149,32 @@ Do you wish to continue?</source>
         <translation type="unfinished">SDL 렌더 드라이버</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1861"/>
+        <location filename="../mameopt.cpp" line="1858"/>
         <source>MESS software directory</source>
         <translation type="unfinished">MESS 소프트웨어 폴더</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1864"/>
+        <location filename="../mameopt.cpp" line="1861"/>
         <source>GUI paths</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2249"/>
+        <location filename="../mameopt.cpp" line="2246"/>
         <source>GUI</source>
         <translation type="unfinished">GUI 경로</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2332"/>
+        <location filename="../mameopt.cpp" line="2329"/>
         <source>Option</source>
         <translation type="unfinished">설정</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2333"/>
+        <location filename="../mameopt.cpp" line="2330"/>
         <source>Value</source>
         <translation type="unfinished">값</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2242"/>
+        <location filename="../mameopt.cpp" line="2239"/>
         <source>Options</source>
         <translation type="unfinished">설정</translation>
     </message>
@@ -2190,7 +2193,7 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1240"/>
-        <location filename="../mameopt.cpp" line="2235"/>
+        <location filename="../mameopt.cpp" line="2232"/>
         <source>Core Video</source>
         <translation type="unfinished">코어 화면</translation>
     </message>
@@ -2200,7 +2203,7 @@ Do you wish to continue?</source>
         <translation type="unfinished">OSD 비디오</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2257"/>
+        <location filename="../mameopt.cpp" line="2254"/>
         <source>Global</source>
         <translation type="unfinished">일반</translation>
     </message>
@@ -2300,13 +2303,13 @@ Do you wish to continue?</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2496"/>
-        <location filename="../mameopt.cpp" line="2515"/>
+        <location filename="../mameopt.cpp" line="2493"/>
+        <location filename="../mameopt.cpp" line="2512"/>
         <source>Auto</source>
         <translation type="unfinished">자동</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2470"/>
+        <location filename="../mameopt.cpp" line="2467"/>
         <source>None</source>
         <translation type="unfinished">없음</translation>
     </message>
@@ -2546,45 +2549,59 @@ Do you wish to continue?</source>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="271"/>
+        <location filename="../audit.cpp" line="262"/>
+        <location filename="../audit.cpp" line="476"/>
+        <source>Auditing %1 ...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
         <source>Auditing</source>
-        <translation type="unfinished">검사</translation>
+        <translation type="obsolete">검사</translation>
+    </message>
+</context>
+<context>
+    <name>Screenshot</name>
+    <message>
+        <location filename="../mamepguimain.cpp" line="1547"/>
+        <location filename="../mamepguimain.cpp" line="1549"/>
+        <source>Loading...</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="748"/>
+        <location filename="../gamelist.cpp" line="712"/>
         <source>Description</source>
         <translation type="unfinished">설명</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="749"/>
+        <location filename="../gamelist.cpp" line="713"/>
         <source>Name</source>
         <translation type="unfinished">이름</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="750"/>
+        <location filename="../gamelist.cpp" line="714"/>
         <source>ROMs</source>
         <translation type="unfinished">롬</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="751"/>
+        <location filename="../gamelist.cpp" line="715"/>
         <source>Manufacturer</source>
         <translation type="unfinished">제작사</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="752"/>
+        <location filename="../gamelist.cpp" line="716"/>
         <source>Driver</source>
         <translation type="unfinished">드라이버</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="753"/>
+        <location filename="../gamelist.cpp" line="717"/>
         <source>Year</source>
         <translation type="unfinished">제작년도</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="754"/>
+        <location filename="../gamelist.cpp" line="718"/>
         <source>Clone of</source>
         <translation type="unfinished">부모롬 이름</translation>
     </message>
@@ -2596,176 +2613,176 @@ Do you wish to continue?</source>
         <translation type="obsolete">콘솔 게임</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="129"/>
+        <location filename="../utils.cpp" line="139"/>
         <source>Joy 2-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="130"/>
+        <location filename="../utils.cpp" line="140"/>
         <source>Joy 4-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="131"/>
+        <location filename="../utils.cpp" line="141"/>
         <source>Joy 8-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="132"/>
+        <location filename="../utils.cpp" line="142"/>
         <source>Paddle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="133"/>
+        <location filename="../utils.cpp" line="143"/>
         <source>Double Joy 2-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="134"/>
+        <location filename="../utils.cpp" line="144"/>
         <source>Double Joy 4-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="135"/>
+        <location filename="../utils.cpp" line="145"/>
         <source>Double Joy 8-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="136"/>
+        <location filename="../utils.cpp" line="146"/>
         <source>Dial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="137"/>
+        <location filename="../utils.cpp" line="147"/>
         <source>Lightgun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="138"/>
+        <location filename="../utils.cpp" line="148"/>
         <source>Pedal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="139"/>
+        <location filename="../utils.cpp" line="149"/>
         <source>Stick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="140"/>
+        <location filename="../utils.cpp" line="150"/>
         <source>Trackball</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="141"/>
+        <location filename="../utils.cpp" line="151"/>
         <source>Joy 2-Way (V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="142"/>
+        <location filename="../utils.cpp" line="152"/>
         <source>Double Joy 2-Way (V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="144"/>
+        <location filename="../utils.cpp" line="154"/>
         <source>Bad Dump</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="145"/>
+        <location filename="../utils.cpp" line="155"/>
         <source>No Dump</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="147"/>
+        <location filename="../utils.cpp" line="157"/>
         <source>Raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="148"/>
+        <location filename="../utils.cpp" line="158"/>
         <source>Vector</source>
         <translation type="unfinished">벡터</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="149"/>
+        <location filename="../utils.cpp" line="159"/>
         <source>LCD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="151"/>
-        <source>PC Card</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="152"/>
-        <location filename="../utils.cpp" line="153"/>
-        <location filename="../utils.cpp" line="154"/>
-        <source>CD-ROM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="155"/>
-        <source>CompactFlash Card</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="156"/>
-        <source>Disk</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="157"/>
-        <source>Disks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="158"/>
-        <source>GD-ROM</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="159"/>
-        <source>IDE</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="160"/>
         <location filename="../utils.cpp" line="161"/>
-        <source>Laserdisc</source>
+        <source>PC Card</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="162"/>
         <location filename="../utils.cpp" line="163"/>
+        <location filename="../utils.cpp" line="164"/>
+        <source>CD-ROM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="165"/>
+        <source>CompactFlash Card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="166"/>
+        <source>Disk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="167"/>
+        <source>Disks</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="168"/>
+        <source>GD-ROM</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="169"/>
+        <source>IDE</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="170"/>
+        <location filename="../utils.cpp" line="171"/>
+        <source>Laserdisc</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../utils.cpp" line="172"/>
+        <location filename="../utils.cpp" line="173"/>
         <source>SCSI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="164"/>
+        <location filename="../utils.cpp" line="174"/>
         <source>VHS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="234"/>
+        <location filename="../utils.cpp" line="244"/>
         <source>good</source>
         <translation type="unfinished">완전</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="236"/>
+        <location filename="../utils.cpp" line="246"/>
         <source>imperfect</source>
         <translation type="unfinished">불완전</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="238"/>
+        <location filename="../utils.cpp" line="248"/>
         <source>preliminary</source>
         <translation type="unfinished">예비지원</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="243"/>
+        <location filename="../utils.cpp" line="253"/>
         <source>supported</source>
         <translation type="unfinished">지원됨</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="245"/>
+        <location filename="../utils.cpp" line="255"/>
         <source>unsupported</source>
         <translation type="unfinished">지원안됨</translation>
     </message>
