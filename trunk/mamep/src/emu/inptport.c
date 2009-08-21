@@ -2010,7 +2010,7 @@ static void frame_update(running_machine *machine)
 	INT32 mouse_target_y;
 	int mouse_button;
 
-profiler_mark(PROFILER_INPUT);
+profiler_mark_start(PROFILER_INPUT);
 
 	/* record/playback information about the current frame */
 	playback_frame(machine, curtime);
@@ -2117,7 +2117,7 @@ profiler_mark(PROFILER_INPUT);
 		make_input_log(machine);
 #endif /* USE_SHOW_INPUT_LOG */
 
-profiler_mark(PROFILER_END);
+profiler_mark_end();
 }
 
 

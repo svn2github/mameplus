@@ -156,14 +156,13 @@
  * Aqua Jet         (C) Namco, 1996
  * *Armidillo Racing(C) Namco, 1997
  * Cyber Cycles     (C) Namco, 1995
- * !Dirt Dash       (C) Namco, 1995
+ * Dirt Dash        (C) Namco, 1995
  * Prop Cycle       (C) Namco, 1996
  * Time Crisis      (C) Namco, 1995
  * Tokyo Wars       (C) Namco, 1996
  *
- * ! - denotes secured but not dumped yet.
- * * - denotes not available. If you can help with the remaining undumped SS22 games,
- *     please contact http://guru.mameworld.info/
+ * * - denotes not available. If you can help with the remaining undumped SS22 game other other revisions of the
+ *     dumped games, please contact http://guru.mameworld.info/
  *
  * The Namco Super System 22 System comprises 4 PCB's plugged into a motherboard. The motherboard contains only
  * some slots and connectors. The 4 PCB's are housed in a metal box with a large fan on the side. The fan mostly cools
@@ -289,7 +288,7 @@
  *                                          Aqua Jet         = C429
  *                                          Armidillo Racing = C433
  *                                          Cyber Cycles     = C389
- *                                          Dirt Dash        =
+ *                                          Dirt Dash        = C418
  *                                          Prop Cycle       = C428
  *                                          Time Crisis      = C419
  *                                          Tokyo Wars       = C424
@@ -307,7 +306,7 @@
  *                      Aqua Jet           'AJ1 DATA'
  *                      Armidillo Racing   'AR DATA'
  *                      Cyber Cycles       'CB1 DATA B'
- *                      Dirt Dash
+ *                      Dirt Dash          'DT1 DATA A'
  *                      Prop Cycle         'PR1 DATA'
  *                      Time Crisis        'TS1 DATA'
  *                      Tokyo Wars         'TW1 DATA'
@@ -323,7 +322,7 @@
  *                      Aqua Jet           'AJ1 WAVEA' , 'AJ1 WAVEB'  , both DIP42 32M MASKROMs
  *                      Armidillo Racing   'AR WAVEA'  , 'AR WAVEB'   , both TSOP56, mounted on a DIP48 adapter board
  *                      Cyber Cycles       'CB1 WAVEA' , 'CB1 WAVEB'  , WAVE A DIP42 32M MASKROM, WAVE B DIP42 16M MASKROM
- *                      Dirt Dash
+ *                      Dirt Dash          'DT1 WAVEA' , 'DT1 WAVEB'  , both DIP42 32M MASKROMs
  *                      Prop Cycle         'PR1 WAVE A', 'PR1 WAVE B' , both DIP42 32M MASKROM
  *                      Time Crisis        'TS1 WAVE A', 'TS1 WAVE B' , WAVE A DIP42 32M MASKROM, WAVE B DIP42 16M MASKROM
  *                      Tokyo Wars         'TW1 WAVE A',              , DIP42 32M MASKROM
@@ -357,6 +356,7 @@
  *                           Air Combat 22    'ACS1 Ver.B'
  *                           Alpine Racer     'AR2 Ver.C'
  *                           Alpine Racer     'AR2 Ver.D'
+ *                           Aqua Jet         'AJ2 Ver.B'
  *                           Armidillo Racing 'AR' Ver.?
  *                           Cyber Cycles     'CB2 Ver.C'
  *                           Prop Cycle       'PR2 Ver.A'
@@ -382,6 +382,7 @@
  *                           Game          Software revision
  *                           -------------------------------
  *                           Time Crisis   'TS2 Ver.A'
+ *                           Dirt Dash     'DT2 Ver.A'
  *
  * Type 3
  * SYSTEM SUPER22 MPM(F16X4) PCB 8646962901 (8646972901)
@@ -408,6 +409,7 @@
  *
  * Type 4
  * SYSTEM SUPER22 MPM(F16X4F) PCB 8646963500 (8646973500)
+ * SYSTEM SUPER22 MPM(F16X4F) PCB 8646963501 (8646973501) <-- very minor?
  * |-------------------------|
  * |SS22P1B                  |
  * |                         |
@@ -432,9 +434,10 @@
  *                  IC C383 pins 53 (A INPUT) & 52 (B INPUT)
  *
  *       This PCB is used on:
- *                           Game          Software revision
- *                           -------------------------------
- *                           Alpine Surfer 'AF2 Ver.A'
+ *                           Game           Software revision
+ *                           --------------------------------
+ *                           Alpine Surfer  'AF2 Ver.A'   note: with PAL modification and using 8646963500 PCB
+ *                           Alpine Racer 2 'ARS2 Ver.A'  note: without PAL modification and using 8646963501 PCB
  *
  *
  * Auxillary PCB (connector JC410 on the CPU PCB is used only for Time Crisis)
@@ -713,7 +716,30 @@
  *                    CB1PTRL2.15K                   "
  *                    CB1PTRL3.14K                   "
  *
- * Dirt Dash          N/A
+ * Dirt Dash          DT1CCRH.5B, DT1CCRH.1D      4M SOP32
+ *                    DT1CCRL.7B, DT1CCRL.3D     16M SOP44
+ *                    DT1CG0.12B, DT1CG0.8D          "
+ *                    DT1CG1.13B, DT1CG1.10D         "
+ *                    DT1CG2.14B, DT1CG2.12D         "
+ *                    DT1CG3.16B, DT1CG3.13D         "
+ *                    DT1CG4.18B, DT1CG4.14D         "
+ *                    DT1CG5.19B, DT1CG5.16D         "
+ *                    DT1CG6.18A, DT1CG6.18D         "
+ *                    DT1CG7.15A, DT1CG7.19D         "
+ *                    DT1SCG0.12F,DT1SCG0.12L        "
+ *                    DT1SCG1.10F,DT1SCG1.10L        "
+ *                    DT1PTRU0.18F                4M SOP32
+ *                    DT1PTRU1.16F                   "
+ *                    DT1PTRU2.15F                   "
+ *                    DT1PTRU3.14F                   "
+ *                    DT1PTRM0.18J                   "
+ *                    DT1PTRM1.16J                   "
+ *                    DT1PTRM2.15J                   "
+ *                    DT1PTRM3.14J                   "
+ *                    DT1PTRL0.18K                   "
+ *                    DT1PTRL1.16K                   "
+ *                    DT1PTRL2.15K                   "
+ *                    DT1PTRL3.14K                   "
  *
  * Prop Cycle         PR1CCRH.5B, PR1CCRH.1D      4M SOP32
  *                    PR1CCRL.7B, PR1CCRL.3D     16M SOP44
@@ -2237,6 +2263,9 @@ static READ32_HANDLER( namcos22_keycus_r )
 
 	case NAMCOS22_CYBER_CYCLES:
 		return 0x0387;
+
+	case NAMCOS22_DIRT_DASH:
+		return 0x1a2<<16;
 
 	case NAMCOS22_TOKYO_WARS:
 		return 0x01a8<<16;
@@ -4609,12 +4638,62 @@ ROM_START( tokyowar )
         ROM_LOAD( "tw1wavea.2l",  0x000000, 0x400000, CRC(ebce6366) SHA1(44ebe90ff3c7af5bebbf1baba3b7a2b1863daebb) )
 ROM_END
 
+ROM_START( dirtdash )
+	ROM_REGION( 0x400000, "maincpu", 0 ) /* main program */
+        ROM_LOAD32_WORD_SWAP( "dt2vera.1",    0x000002, 0x200000, CRC(402a3d73) SHA1(009b57ed0ea228ccedb139d945b9eaf2a36e2502) )
+        ROM_LOAD32_WORD_SWAP( "dt2vera.2",    0x000000, 0x200000, CRC(66ed140d) SHA1(a472fdc7b6aaeb4b3643ecdafd32fa665e7c7aa2) )
+
+	ROM_REGION( 0x10000*2, "master", 0 ) /* Master DSP */
+	ROM_LOAD16_WORD( "c71.bin", 0,0x1000*2, CRC(47c623ab) SHA1(e363ac50f5556f83308d4cc191b455e9b62bcfc8) )
+
+	ROM_REGION( 0x10000*2, "slave", 0 ) /* Slave DSP */
+	ROM_LOAD16_WORD( "c71.bin", 0,0x1000*2, CRC(47c623ab) SHA1(e363ac50f5556f83308d4cc191b455e9b62bcfc8) )
+
+	ROM_REGION( 0x80000, "mcu", ROMREGION_ERASE00 ) /* BIOS */
+
+	ROM_REGION16_LE( 0x080000, "user4", 0 ) /* MCU BIOS */
+        ROM_LOAD( "dt1dataa.8k",  0x000000, 0x080000, CRC(9bcdea21) SHA1(26ae025cf746d3a703a82495eb2bb515b828a650) )
+
+	ROM_REGION( 0x800000, "sprite", 0 ) /* 32x32x8bpp sprite tiles */
+        ROM_LOAD( "dt1scg0.12f",  0x000000, 0x200000, CRC(a09b5760) SHA1(3dd54ebebf9da1de76874a1adf491ed15849e1b1) )
+        ROM_LOAD( "dt1scg1.10f",  0x200000, 0x200000, CRC(f9ac8111) SHA1(814074ae8cc81c6c1201d764a84dd95fe914f19c) )
+
+	ROM_REGION( 0x200000*8, "textile", 0) /* 16x16x8bpp texture tiles */
+        ROM_LOAD( "dt1cg0.8d",    0x000000, 0x200000, CRC(10ab95e0) SHA1(ffde1f00ac3e82a36fbcfa060c6b97c92dfcfc8b) )
+        ROM_LOAD( "dt1cg1.10d",   0x200000, 0x200000, CRC(d9f1ba53) SHA1(5a1095b726c55001cc1d4c695adc38097e6a0201) )
+        ROM_LOAD( "dt1cg2.12d",   0x400000, 0x200000, CRC(bd8b1e0b) SHA1(fcd94e33a0cbd17c9308cb8952e3c618ab56f9fc) )
+        ROM_LOAD( "dt1cg3.13d",   0x600000, 0x200000, CRC(ba960663) SHA1(e98149bc4652ea7933ac47d760a6f7e6489f15e2) )
+        ROM_LOAD( "dt1cg4.14d",   0x800000, 0x200000, CRC(424b9652) SHA1(fa8865110db03559740c4e633e123d1a009782c4) )
+        ROM_LOAD( "dt1cg5.16d",   0xa00000, 0x200000, CRC(29516626) SHA1(1f12c5dc3975b88dc60d87d0409bf311837e9fa4) )
+        ROM_LOAD( "dt1cg6.18d",   0xc00000, 0x200000, CRC(e6fa7180) SHA1(85316cde282cff1f913cf9f155cfa36adcc1108e) )
+        ROM_LOAD( "dt1cg7.19d",   0xe00000, 0x200000, CRC(2ca19153) SHA1(c82403c8b40bf85daedf610b1bc7bfea9dfc6206) )
+
+	ROM_REGION16_LE( 0x280000, "textilemap", 0 ) /* texture tilemap */
+        ROM_LOAD( "dt1ccrl.3d",   0x000000, 0x200000, CRC(e536b313) SHA1(7357da993d2bb3fcc8c1c2feb53689ad368cd80a) )
+        ROM_LOAD( "dt1ccrh.1d",   0x200000, 0x080000, CRC(af257064) SHA1(0da561d9f8824618c00209ccef6146e9f3ad72bb) )
+
+	ROM_REGION( 0x600000, "pointrom", 0 ) /* 3d model data */
+        ROM_LOAD( "dt1ptrl0.18k", 0x000000, 0x080000, CRC(4e0cac3a) SHA1(c2778e9e93be2de729c6f118caf62ac9f48efbb0) )
+        ROM_LOAD( "dt1ptrl1.16k", 0x080000, 0x080000, CRC(59ba9dba) SHA1(a2e9488cf0ff255284c06a1ef653ae86c0d98adc) )
+        ROM_LOAD( "dt1ptrl2.15k", 0x100000, 0x080000, CRC(cfe80c67) SHA1(ba3bc48aa39712e63c915070a76974fbd560dee6) )
+        ROM_LOAD( "dt1ptrm0.18j", 0x180000, 0x080000, CRC(41f34337) SHA1(7e624e7b6fdefe156168b1c9cc5e919db3b2fbaa) )
+        ROM_LOAD( "dt1ptrm1.16j", 0x200000, 0x080000, CRC(d68541fc) SHA1(6b00079bd8f2db26e71968de289cea93458aebe9) )
+        ROM_LOAD( "dt1ptrm2.15j", 0x280000, 0x080000, CRC(71e6714d) SHA1(6aad6db3be5020213d7add61c7d927ae9c4fea4e) )
+        ROM_LOAD( "dt1ptru0.18f", 0x300000, 0x080000, CRC(4909bd7d) SHA1(0e4ef3987c43ef0438331b82b50dcc97363a45d0) )
+        ROM_LOAD( "dt1ptru1.16f", 0x380000, 0x080000, CRC(4a5097df) SHA1(a9c814b0ed4bd92accd0e57be8e3d887114b06a5) )
+        ROM_LOAD( "dt1ptru2.15f", 0x400000, 0x080000, CRC(1171eaf5) SHA1(168365ea619386f218585c49025cdd7fd1224082) )
+
+	ROM_REGION( 0x1000000, "c352", 0 ) /* sound samples */
+        ROM_LOAD( "dt1wavea.2l",  0x000000, 0x400000, CRC(14352455) SHA1(1965ea6e5ce1b2187ecb64bd40ff044f4b2ba5f6) )
+        ROM_LOAD( "dt1waveb.1l",  0x400000, 0x400000, CRC(16a4dd8a) SHA1(4883b7ba3ee08a2893d4b2918640ba44e7147164) )
+ROM_END
+
 ROM_START( aquajet )
 	ROM_REGION( 0x400000, "maincpu", 0 ) /* main program */
-        ROM_LOAD32_BYTE( "aj2ver-b.1",   0x000003, 0x100000, CRC(3a67b9f4) SHA1(8cd51f319e082297fdb99634486fe297a0ace654) )
-        ROM_LOAD32_BYTE( "aj2ver-b.2",   0x000002, 0x100000, CRC(f5e8fc96) SHA1(e23fcf6f84724d1de15870ff578ff8a6b26e8f31) )
-        ROM_LOAD32_BYTE( "aj2ver-b.3",   0x000001, 0x100000, CRC(ef6ebcf7) SHA1(358973b678b9a3065e945fb589af16e8102d437b) )
-        ROM_LOAD32_BYTE( "aj2ver-b.4",   0x000000, 0x100000, CRC(7799b909) SHA1(e40005f96f51742b2778605926b8184c9b2c1ad2) )
+	ROM_LOAD32_BYTE( "aj2ver-b.1",   0x000003, 0x100000, CRC(3a67b9f4) SHA1(8cd51f319e082297fdb99634486fe297a0ace654) )
+	ROM_LOAD32_BYTE( "aj2ver-b.2",   0x000002, 0x100000, CRC(f5e8fc96) SHA1(e23fcf6f84724d1de15870ff578ff8a6b26e8f31) )
+	ROM_LOAD32_BYTE( "aj2ver-b.3",   0x000001, 0x100000, CRC(ef6ebcf7) SHA1(358973b678b9a3065e945fb589af16e8102d437b) )
+	ROM_LOAD32_BYTE( "aj2ver-b.4",   0x000000, 0x100000, CRC(7799b909) SHA1(e40005f96f51742b2778605926b8184c9b2c1ad2) )
 
 	ROM_REGION( 0x10000*2, "master", 0 ) /* Master DSP */
 	ROM_LOAD16_WORD( "c71.bin", 0,0x1000*2, CRC(47c623ab) SHA1(e363ac50f5556f83308d4cc191b455e9b62bcfc8) )
@@ -5668,6 +5747,13 @@ static DRIVER_INIT( aquajet )
 	memory_install_read8_handler(cputag_get_address_space(machine, "mcu", ADDRESS_SPACE_IO), M37710_ADC0_L, M37710_ADC7_H, 0, 0, aquajet_mcu_adc_r);
 }
 
+static DRIVER_INIT( dirtdash )
+{
+	namcos22s_init(machine, NAMCOS22_DIRT_DASH);
+
+	memory_install_read8_handler(cputag_get_address_space(machine, "mcu", ADDRESS_SPACE_IO), M37710_ADC0_L, M37710_ADC7_H, 0, 0, aquajet_mcu_adc_r);
+}
+
 /************************************************************************************/
 
 /*     YEAR, NAME,    PARENT,    MACHINE,   INPUT,    INIT,     MNTR,  COMPANY, FULLNAME,                                    FLAGS */
@@ -5691,7 +5777,7 @@ GAME( 1995, airco22b, 0,        namcos22s, airco22,  airco22,  ROT0, "Namco", "A
 GAME( 1995, alpinerd, 0,        namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.D)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, alpinerc, alpinerd, namcos22s, alpiner,  alpiner,  ROT0, "Namco", "Alpine Racer (Rev. AR2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, cybrcycc, 0,        namcos22s, cybrcycc, cybrcyc,  ROT0, "Namco", "Cyber Cycles (Rev. CB2 Ver.C)"             , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
-//GAME( 1995, dirtdshx, "Dirt Dash")
+GAME( 1995, dirtdash, 0,        namcos22s, aquajet,  dirtdash, ROT0, "Namco", "Dirt Dash (Rev. DT2)"                      , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING )
 GAME( 1995, timecris, 0,        namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.B)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
 GAME( 1995, timecrisa,timecris, namcos22s, timecris, timecris, ROT0, "Namco", "Time Crisis (Rev. TS2 Ver.A)"              , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, alpinr2b, 0,        namcos22s, alpiner,  alpiner2, ROT0, "Namco", "Alpine Racer 2 (Rev. ARS2 Ver.B)"          , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
@@ -5700,4 +5786,4 @@ GAME( 1996, alpinesa, 0,        namcos22s, alpiner,  alpinesa, ROT0, "Namco", "A
 GAME( 1996, propcycl, 0,        namcos22s, propcycl, propcycl, ROT0, "Namco", "Prop Cycle (Rev. PR2 Ver.A)"                , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
 GAME( 1996, tokyowar, 0,        namcos22s, tokyowar, tokyowar, ROT0, "Namco", "Tokyo Wars (Rev. TW2 Ver.A)"                , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS|GAME_NOT_WORKING )	/* missing sprite clear DMA?  or protection? */
 GAME( 1996, aquajet,  0,        namcos22s, aquajet,  aquajet,  ROT0, "Namco", "Aqua Jet (Rev. AJ2 Ver.B)"                , GAME_IMPERFECT_SOUND|GAME_IMPERFECT_GRAPHICS )
-//GAME( 1997, armdilox, "Armidillo Racing")
+//GAME( 1997, armdilox, "Armadillo Racing")

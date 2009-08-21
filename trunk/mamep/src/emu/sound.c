@@ -728,7 +728,7 @@ static TIMER_CALLBACK( sound_update )
 
 	VPRINTF(("sound_update\n"));
 
-	profiler_mark(PROFILER_SOUND);
+	profiler_mark_start(PROFILER_SOUND);
 
 	/* force all the speaker streams to generate the proper number of samples */
 	for (curspeak = speaker_output_first(machine->config); curspeak != NULL; curspeak = speaker_output_next(curspeak))
@@ -856,7 +856,7 @@ static TIMER_CALLBACK( sound_update )
 	/* update the streamer */
 	streams_update(machine);
 
-	profiler_mark(PROFILER_END);
+	profiler_mark_end();
 }
 
 #ifdef USE_VOLUME_AUTO_ADJUST

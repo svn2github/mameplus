@@ -360,7 +360,7 @@ READ64_DEVICE_HANDLER( naomibd_r )
 	// AW board is different, shouldn't ever be read
 	if (v->type == AW_ROM_BOARD)
 	{
-		mame_printf_debug("AW_ROM_BOARD read @ %x mask %llx\n", offset, mem_mask);
+		mame_printf_debug("AW_ROM_BOARD read @ %x mask %" I64FMT "x\n", offset, mem_mask);
 		return U64(0xffffffffffffffff);
 	}
 
@@ -395,7 +395,7 @@ READ64_DEVICE_HANDLER( naomibd_r )
 			}
 			else
 			{
-				mame_printf_verbose("Bad protection offset read %x\n", v->rom_offset);
+				logerror("Bad protection offset read %x\n", v->rom_offset);
 			}
 		}
 		else
@@ -450,7 +450,7 @@ READ64_DEVICE_HANDLER( naomibd_r )
 	}
 	else
 	{
-		//mame_printf_verbose("%s:ROM: read mask %llx @ %x\n", cpuexec_describe_context(machine), mem_mask, offset);
+		//mame_printf_verbose("%s:ROM: read mask %" I64FMT "x @ %x\n", cpuexec_describe_context(machine), mem_mask, offset);
 	}
 
 	return U64(0xffffffffffffffff);
@@ -464,7 +464,7 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 	// AW board
 	if (v->type == AW_ROM_BOARD)
 	{
-		//printf("AW: %llx to ROM board @ %x (mask %llx)\n", data, offset, mem_mask);
+		//printf("AW: %" I64FMT "x to ROM board @ %x (mask %" I64FMT "x)\n", data, offset, mem_mask);
 
 		switch (offset)
 		{
@@ -540,7 +540,7 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 			break;
 
 			default:
-				logerror("AW: unhandled %llx to ROM board @ %x (mask %llx)\n", data, offset, mem_mask);
+				logerror("AW: unhandled %" I64FMT "x to ROM board @ %x (mask %" I64FMT "x)\n", data, offset, mem_mask);
 			break;
 		}
 
@@ -574,20 +574,6 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 				v->dma_offset &= 0xffff;
 				v->dma_offset |= (data >> 16) & 0x1fff0000;
 				v->dma_offset_flags = (data>>28);
-
-				// if the flag is cleared that lets the protection chip go,
-				// we need to handle this specially.
-				if (!(v->dma_offset_flags & NAOMIBD_FLAG_ADDRESS_SHUFFLE))
-				{
-					if (!strcmp(device->machine->gamedrv->name, "qmegamis"))
-					{
-						v->dma_offset = 0x9000000;
-					}
-					else
-					{
-						logerror("Protected DMA not handled for this game\n");
-					}
-				}
 			}
 			if(ACCESSING_BITS_0_15)
 			{
@@ -607,7 +593,7 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 					case 0x1fffc:	// decryption key
 						v->prot_key = data;
 
-						mame_printf_verbose("Protection: set up read @ %x, key %x (PIO %x DMA %x) [%s]\n", v->prot_offset, v->prot_key, v->rom_offset, v->dma_offset, cpuexec_describe_context(device->machine));
+//                      printf("Protection: set up read @ %x, key %x (PIO %x DMA %x) [%s]\n", v->prot_offset, v->prot_key, v->rom_offset, v->dma_offset, cpuexec_describe_context(device->machine));
 
 						// translate address if necessary
 						if (v->prot_translate != NULL)
@@ -646,7 +632,7 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 						}
 						else
 						{
-							mame_printf_verbose("naomibd: protection not handled for this game\n");
+							logerror("naomibd: protection not handled for this game\n");
 						}
 						break;
 
@@ -709,7 +695,7 @@ WRITE64_DEVICE_HANDLER( naomibd_w )
 		}
 		break;
 		default:
-			mame_printf_verbose("%s: ROM: write %llx to %x, mask %llx\n", cpuexec_describe_context(device->machine), data, offset, mem_mask);
+			mame_printf_verbose("%s: ROM: write %" I64FMT "x to %x, mask %" I64FMT "x\n", cpuexec_describe_context(device->machine), data, offset, mem_mask);
 			break;
 	}
 }
@@ -1043,7 +1029,43 @@ DEVICE_GET_INFO( naomibd )
 		case DEVINFO_INT_TOKEN_BYTES:			info->i = sizeof(naomibd_state);				break;
 		case DEVINFO_INT_INLINE_CONFIG_BYTES:	info->i = sizeof(naomibd_config);				break;
 		case DEVINFO_INT_CLASS:					info->i = DEVICE_CLASS_PERIPHERAL;				break;
-		case DEVINFO_INT_DMAOFFSET:				info->i = get_safe_token(device)->dma_offset;	break;
+		case DEVINFO_INT_DMAOFFSET:
+//          printf("DMA source %x, flags %x\n", get_safe_token(device)->dma_offset, get_safe_token(device)->dma_offset_flags);
+
+			// if the flag is cleared that lets the protection chip go,
+			// we need to handle this specially.
+			if (!(get_safe_token(device)->dma_offset_flags & NAOMIBD_FLAG_ADDRESS_SHUFFLE))
+			{
+				if (!strcmp(device->machine->gamedrv->name, "qmegamis"))
+				{
+					info->i = 0x9000000;
+					break;
+				}
+				else if (!strcmp(device->machine->gamedrv->name, "mvsc2"))
+				{
+					switch (get_safe_token(device)->dma_offset)
+					{
+						case 0x08000000: info->i = 0x8800000;	break;
+						case 0x08026440: info->i = 0x8830000;	break;
+						case 0x0803bda0: info->i = 0x8850000;	break;
+						case 0x0805a560: info->i = 0x8870000;	break;
+						case 0x0805b720: info->i = 0x8880000;	break;
+						case 0x0808b7e0: info->i = 0x88a0000;	break;
+						default:
+							info->i = get_safe_token(device)->dma_offset;
+							break;
+					}
+
+					return;
+				}
+				else
+				{
+					logerror("Protected DMA not handled for this game (dma_offset %x)\n", get_safe_token(device)->dma_offset);
+				}
+			}
+
+			info->i = get_safe_token(device)->dma_offset;
+			break;
 
 		/* --- the following bits of info are returned as pointers --- */
 		case DEVINFO_PTR_ROM_REGION:			info->romregion = NULL;							break;
@@ -1072,4 +1094,3 @@ DEVICE_GET_INFO( naomibd )
 		case DEVINFO_STR_CREDITS:				strcpy(info->s, "Copyright Nicola Salmoria and the MAME Team"); break;
 	}
 }
-

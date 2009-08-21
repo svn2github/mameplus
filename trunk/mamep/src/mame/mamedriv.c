@@ -645,9 +645,9 @@ const game_driver * const mamedrivers[] =
 	DRIVER( gallag )	/* bootleg */
 	DRIVER( gatsbee )	/* (c) 1984 Uchida / hack */
 	DRIVER( digdug )	/* (c) 1982 */
-	DRIVER( digdugb )	/* (c) 1982 */
+	DRIVER( digdug1 )	/* (c) 1982 */
 	DRIVER( digdugat )	/* 136007   (c) 1982 Atari */
-	DRIVER( digduga1 )	/* 136007   (c) 1982 Atari */
+	DRIVER( digdugat1 )	/* 136007   (c) 1982 Atari */
 	DRIVER( dzigzag )	/* bootleg */
 	DRIVER( digsid )	/* bootleg */
 	DRIVER( xevious )	/* (c) 1982 */
@@ -900,6 +900,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( cybrcycc )	/* (c) 1995 */
 	DRIVER( timecris )	/* (c) 1995 */
 	DRIVER( timecrisa )	/* (c) 1995 */
+	DRIVER( dirtdash )	/* (c) 1995 */
 	DRIVER( victlapw )	/* (c) 1996 */
 	DRIVER( alpinesa )	/* (c) 1996 */
 	DRIVER( propcycl )	/* (c) 1996 */
@@ -4571,7 +4572,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 						/* 2005.10 The King of Fighters XI */
 	DRIVER( fotns )		/* 2005.12 Hokuto no Ken */
 						/* 2006.02 Metal Slug 6 */
-						/* 2006.09 Extreme Hunting 2 Tournament Edition */
+	DRIVER( xtrmhnt2 )	 		/* 2006.09 Extreme Hunting 2 Tournament Edition */
 						/* 2008.?? Sega Clay Challenge */
 
 	/* Hikaru */
@@ -6255,6 +6256,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( ssideki2 )	/* 0061 (c) 1994 SNK */
 	DRIVER( spinmast )	/* 0062 (c) 1993 Data East Corporation */
 	DRIVER( samsho2 )	/* 0063 (c) 1994 SNK */
+	DRIVER( samsho2k )	/* 0063 (c) 1994 SNK (Korean hack) */
 	DRIVER( wh2j )		/* 0064 (c) 1994 ADK / SNK */
 	DRIVER( wh2jh )		/* 0064 (c) 1994 ADK / SNK */
 	DRIVER( wjammers )	/* 0065 (c) 1994 Data East Corporation */
@@ -7743,6 +7745,7 @@ Other Sun games
 	DRIVER( missmw96 )	/* (c) 1996 Comad */
 	DRIVER( fantsia2 )	/* (c) 1997 Comad */
 	DRIVER( fantsia2a )	/* (c) 1997 Comad */
+	DRIVER( wownfant )	/* (c) 2002 Comad */
 	DRIVER( galhustl )	/* (c) 1997 ACE International */
 
 	/* Playmark games */
@@ -8870,6 +8873,7 @@ Other Sun games
 	DRIVER( pkrdewin )	/* 1990 bootleg */
 	DRIVER( ampkr95 )	/* 1995 bootleg */
 	DRIVER( videomat )	/* 1990 bootleg */
+	DRIVER( rabbitpk )	/* 1990 bootleg */
 	DRIVER( sigmapkr )	/* (c) 1995 Sigma */
 	DRIVER( sigma2k )	/* (c) 2000 Sigma */
 	DRIVER( sidewndr )	/* (c) 1981? ACE */
@@ -9515,83 +9519,124 @@ Other Sun games
 	DRIVER( pachifev )	/* (c) 1983? */
 
 	/* New Image Technologies */
-	DRIVER( bonanza )     /* (c) 1993 */
-	DRIVER( bonanzar2 )   /* (c) 1993 */
-	DRIVER( streetg )     /* (c) 1993 */
-	DRIVER( streetgr3 )   /* (c) 1993 */
-	DRIVER( streetg2 )    /* (c) 1993 */
-	DRIVER( streetg2r5 )  /* (c) 1993 */
+	DRIVER( bonanza )	/* (c) 1993 */
+	DRIVER( bonanzar2 )	/* (c) 1993 */
+	DRIVER( streetg )	/* (c) 1993 */
+	DRIVER( streetgr3 )	/* (c) 1993 */
+	DRIVER( streetg2 )	/* (c) 1993 */
+	DRIVER( streetg2r5 )	/* (c) 1993 */
 
-	/* Igrosoft - SHA1 information is not available for commented out sets, only MD5/CRC32 */
+	/* Coinmaster-Gaming VGA based */
+	DRIVER( colorama )	/* (c) 2001 Coinmaster-Gaming, Ltd. */
+	DRIVER( cmrltv75 )	/* (c) 2001 Coinmaster-Gaming, Ltd. */
+	DRIVER( cmkenosp )	/* (c) 2000 Coinmaster-Gaming, Ltd. */
+	DRIVER( cmkenospa )	/* (c) 2000 Coinmaster-Gaming, Ltd. */
 
+	/* Igrosoft */
 	/* Multifish */
-	//DRIVER( mfish )
-	//DRIVER( mfish_2 )
-	//DRIVER( mfish_3 )
-	//DRIVER( mfish_4 )
-	//DRIVER( mfish_5 )
-	//DRIVER( mfish_6 )
-	//DRIVER( mfish_7 )
-	//DRIVER( mfish_8 )
-	//DRIVER( mfish_9 )
-	//DRIVER( mfish_10 )
-	//DRIVER( mfish_11 )
-	DRIVER( mfish_12 )
-	DRIVER( mfish_12a )
-	//DRIVER( mfish_13 )
+	//DRIVER( mfish )   /* (c) 2002 */
+	//DRIVER( mfish_2 ) /* (c) 2002 */
+	DRIVER( mfish_3 )	/* (c) 2002 */
+	DRIVER( mfish_3a )	/* (c) 2002 */
+	//DRIVER( mfish_4 ) /* (c) 2002 */
+	//DRIVER( mfish_5 ) /* (c) 2002 */
+	//DRIVER( mfish_6 ) /* (c) 2002 */
+	//DRIVER( mfish_7 ) /* (c) 2002 */
+	//DRIVER( mfish_8 ) /* (c) 2002 */
+	//DRIVER( mfish_9 ) /* (c) 2002 */
+	//DRIVER( mfish_10 )    /* (c) 2002 */
+	//DRIVER( mfish_11 )    /* (c) 2002 */
+	DRIVER( mfish_12 )	/* (c) 2002 */
+	DRIVER( mfish_12a )	/* (c) 2002 */
+	//DRIVER( mfish_13 )    /* (c) 2002 */
 
 	/* Crazy Monkey */
-	//DRIVER( crzmon )
-	//DRIVER( crzmon_2 )
-	//DRIVER( crzmon_3 )
-	//DRIVER( crzmon_4 )
-	//DRIVER( crzmon_5 )
+	//DRIVER( crzmon )  /* (c) 2003 */
+	//DRIVER( crzmon_2 )    /* (c) 2003 */
+	//DRIVER( crzmon_3 )    /* (c) 2003 */
+	//DRIVER( crzmon_4 )    /* (c) 2003 */
+	//DRIVER( crzmon_5 )    /* (c) 2003 */
 	//DRIVER( crzmon_6 )
-	DRIVER( crzmon_7 )
+	DRIVER( crzmon_7 )	/* (c) 2003 */
+	DRIVER( crzmon_7a )	/* (c) 2003 */
+	DRIVER( crzmon_7b )	/* (c) 2003 */
+	DRIVER( crzmon_8 )	/* (c) 2003 */
+	DRIVER( crzmon_8a )	/* (c) 2003 */
 
 	/* Fruit Cocktail */
-	//DRIVER( fcock )
-	//DRIVER( fcock_2 )
-	//DRIVER( fcock_3 )
-	//DRIVER( fcock_4 )
-	//DRIVER( fcock_5 )
-	DRIVER( fcock_6 )
+	//DRIVER( fcockt )  /* (c) 2003 */
+	//DRIVER( fcockt_2 )    /* (c) 2003 */
+	//DRIVER( fcockt_3 )    /* (c) 2003 */
+	//DRIVER( fcockt_4 )    /* (c) 2003 */
+	//DRIVER( fcockt_5 )    /* (c) 2003 */
+	DRIVER( fcockt_6 )	/* (c) 2003 */
+	DRIVER( fcockt_6a )	/* (c) 2003 */
+	DRIVER( fcockt_6b )	/* (c) 2003 */
+	DRIVER( fcockt_7 )	/* (c) 2003 */
+	DRIVER( fcockt_7a )	/* (c) 2003 */
+	DRIVER( fcockt_8 )	/* (c) 2003 */
 
 	/* Lucky Haunter */
-	//DRIVER( lhaunt )
-	//DRIVER( lhaunt_2 )
-	//DRIVER( lhaunt_3 )
-	DRIVER( lhaunt_4 )
-	DRIVER( lhaunt_5 )
-	DRIVER( lhaunt_6 )
-
-	/* Garage */
-	//DRIVER( garage )
-	//DRIVER( garage_2 )
-	//DRIVER( garage_3 )
-	DRIVER( garage_4 )
-
-	/* Rock Climber */
-	//DRIVER( rclimb )
-	//DRIVER( rclimb_2 )
-	DRIVER( rclimb_3 )
-
-	/* Sweet Life */
-	DRIVER( sweetl )
-
-	/* Resident */
-	//DRIVER( resdnt )
-	DRIVER( resdnt_2 )
+	//DRIVER( lhaunt )  /* (c) 2003 */
+	//DRIVER( lhaunt_2 )    /* (c) 2003 */
+	//DRIVER( lhaunt_3 )    /* (c) 2003 */
+	DRIVER( lhaunt_4 )	/* (c) 2003 */
+	DRIVER( lhaunt_4a )	/* (c) 2003 */
+	DRIVER( lhaunt_5 )	/* (c) 2003 */
+	DRIVER( lhaunt_5a )	/* (c) 2003 */
+	DRIVER( lhaunt_6 )	/* (c) 2003 */
+	DRIVER( lhaunt_6a )	/* (c) 2003 */
 
 	/* Rollfruit */
-	//DRIVER( rollfr )
-	//DRIVER( rollfr_2 )
+	//DRIVER( rollfr )  /* (c) 2003 */
+	DRIVER( rollfr_2 )	/* (c) 2003 */
+
+	/* Garage */
+	//DRIVER( garage )  /* (c) 2004 */
+	//DRIVER( garage_2 )    /* (c) 2004 */
+	//DRIVER( garage_3 )    /* (c) 2004 */
+	DRIVER( garage_4 )	/* (c) 2004 */
+	DRIVER( garage_4a )	/* (c) 2004 */
+	DRIVER( garage_5 )	/* (c) 2004 */
+	DRIVER( garage_5a )	/* (c) 2004 */
+
+	/* Rock Climber */
+	//DRIVER( rclimb )  /* (c) 2004 */
+	//DRIVER( rclimb_2 )    /* (c) 2004 */
+	DRIVER( rclimb_3 )	/* (c) 2004 */
+	DRIVER( rclimb_3a )	/* (c) 2004 */
+	DRIVER( rclimb_3b )	/* (c) 2004 */
+
+	/* Sweet Life */
+	DRIVER( sweetl )	/* (c) 2004 */
+	DRIVER( sweetla )	/* (c) 2004 */
+
+	/* Resident */
+	//DRIVER( resdnt )  /* (c) 2004 */
+	DRIVER( resdnt_2 )	/* (c) 2004 */
+	DRIVER( resdnt_2a )	/* (c) 2004 */
 
 	/* Island */
-	DRIVER( island )
+	DRIVER( island )	/* (c) 2005 */
+	DRIVER( islanda )	/* (c) 2005 */
 
+	/* Pirate */
+	//DRIVER( pirate )  /* (c) 2005 */
+	DRIVER( pirate_1 )	/* (c) 2005 */
+	//DRIVER( pirate_2 )/* (c) 2005 */
 
-	/* Drivers below are mechanical games, usually with no video display, requiring external artwork to function.
+	/* Island 2 */
+	DRIVER( island2 )	/* (c) 2006 */
+	DRIVER( island2a )	/* (c) 2006 */
+
+	/* Keks */
+	DRIVER( keks )		/* (c) 2006 */
+	DRIVER( keksa )		/* (c) 2006 */
+	DRIVER( keksb )		/* (c) 2006 */
+	DRIVER( keks_2 )	/* (c) 2006 */
+	DRIVER( keks_2a )	/* (c) 2006 */
+
+/* Drivers below are mechanical games, usually with no video display, requiring external artwork to function.
        These are currently mostly 'fruit machine' style games, although this may later be extended to system logic
        emulation for pinball machiens.
 
