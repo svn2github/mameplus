@@ -189,7 +189,7 @@ catacomb	µØÏÂÄ¹Ñ¨	µØÏÂÄ¹Ñ¨	MTM Games
 ckongg	´ó½ğ¸Õ (µÁ°æ on Galaxian Ó²¼ş, µÚ1Ì×)	´ó½ğ¸Õ (µÁ°æ on Galaxian Ó²¼ş, µÚ1Ì×)	bootleg
 kkgalax	´ó½ğ¸Õ (µÁ°æ on Galaxian Ó²¼ş, µÚ2Ì×)	´ó½ğ¸Õ (µÁ°æ on Galaxian Ó²¼ş, µÚ2Ì×)	bootleg
 porter	º£ÄĞ (µÁ°æ on Moon Cresta Ó²¼ş)	º£ÄĞ (µÁ°æ on Moon Cresta Ó²¼ş)	[Nova Games Ltd.] (bootleg)
-tdpgal	Triple Draw Poker	Triple Draw Poker	Design Labs / Thomas Automatics
+tdpgal	ÈıºÏÆË¿Ë	ÈıºÏÆË¿Ë	Design Labs / Thomas Automatics
 rockclim	ÅÊÑÒÕß	ÅÊÑÒÕß	Taito
 scramble	½ô¼±Æğ·É »ìÂÒ	½ô¼±Æğ·É »ìÂÒ	Konami
 scrambles	½ô¼±Æğ·É »ìÂÒ (Stern)	½ô¼±Æğ·É »ìÂÒ (Stern)	[Konami] (Stern license)
@@ -567,9 +567,9 @@ galagamf	´óÃÛ·ä (Midway µÚ1Ì× ¿ìËÙÉä»÷ĞŞ¸Ä°æ)	´óÃÛ·ä (Midway µÚ1Ì× ¿ìËÙÉä»÷ĞŞ¸Ä°
 gallag	´óÃÛ·ä	´óÃÛ·ä	bootleg
 gatsbee	´óÃÛ·ä Gatsbee	´óÃÛ·ä Gatsbee	hack
 digdug	ÍÚ½ğ×Ó (rev 2)	ÍÚ½ğ×Ó (rev 2)	Namco
-digdugb	ÍÚ½ğ×Ó (rev 1)	ÍÚ½ğ×Ó (rev 1)	Namco
+digdug1	ÍÚ½ğ×Ó (rev 1)	ÍÚ½ğ×Ó (rev 1)	Namco
 digdugat	ÍÚ½ğ×Ó (Atari, rev 2)	ÍÚ½ğ×Ó (Atari, rev 2)	[Namco] (Atari license)
-digduga1	ÍÚ½ğ×Ó (Atari, rev 1)	ÍÚ½ğ×Ó (Atari, rev 1)	[Namco] (Atari license)
+digdugat1	ÍÚ½ğ×Ó (Atari, rev 1)	ÍÚ½ğ×Ó (Atari, rev 1)	[Namco] (Atari license)
 dzigzag	ÍÚ½ğ×Ó (Dig Dug Ó²¼ş)	ÍÚ½ğ×Ó (Dig Dug Ó²¼ş)	bootleg
 digsid	ÍÚ½ğ×Ó (manufactured by Sidam)	ÍÚ½ğ×Ó (manufactured by Sidam)	Namco [Sidam license]
 xevious	Ìú°åÕó (Namco)	Ìú°åÕó (Namco)	Namco
@@ -793,6 +793,7 @@ cybrcomm	Î´À´Ì¹¿Ë (Rev. CY1, ÈÕ°æ)	Î´À´Ì¹¿Ë (Rev. CY1, ÈÕ°æ)	Namco
 cybrcycc	Î´À´ÆïÊ¿ (Rev. CB2 Ver.C)	Î´À´ÆïÊ¿ (Rev. CB2 Ver.C)	Namco
 timecris	»¯½âÎ£»ú (Rev. TS2 Ver.B)	»¯½âÎ£»ú (Rev. TS2 Ver.B)	Namco
 timecrisa	»¯½âÎ£»ú (Rev. TS2 Ver.A)	»¯½âÎ£»ú (Rev. TS2 Ver.A)	Namco
+dirtdash	ÖÕ¼«Èü³µ (Rev. DT2)	ÖÕ¼«Èü³µ (Rev. DT2)	Namco
 victlapw	A ¼¶·½³ÌÊ½Èü³µ - Ê¤Àû½ğ×ã (Rev. ADV2, ÊÀ½ç°æ)	A ¼¶·½³ÌÊ½Èü³µ - Ê¤Àû½ğ×ã (Rev. ADV2, ÊÀ½ç°æ)	Namco
 alpinesa	¸ßÉ½³åÀË (Rev. AF2 Ver.A)	¸ßÉ½³åÀË (Rev. AF2 Ver.A)	Namco
 propcycl	¿ÕÖĞ×ÔĞĞ³µ (Rev. PR2 Ver.A)	¿ÕÖĞ×ÔĞĞ³µ (Rev. PR2 Ver.A)	Namco
@@ -3577,7 +3578,7 @@ doaa	ËÀ»òÉú (Model 2A, Ğ£Õı°æ A)	ËÀ»òÉú (Model 2A, Ğ£Õı°æ A)	Sega
 motoraid	Ä¦ÍĞ¾ºÈü	Ä¦ÍĞ¾ºÈü	Sega
 zeroguna	ÁãÊ½Ç¹ÊÖ (Model 2A)	ÁãÊ½Ç¹ÊÖ (Model 2A)	Psikyo
 dyndeka2	ÖÕ¼«¾¯Ì½ 2 (ÈÕ°æ, Model 2A)	ÖÕ¼«¾¯Ì½ 2 (ÈÕ°æ, Model 2A)	Sega
-dynamcop	ÖÕ¼«¾¯Ì½ (³ö¿Ú°æ, Model 2A)	ÖÕ¼«¾¯Ì½ (³ö¿Ú°æ, Model 2A)	Sega
+dynamcop	ÖÕ¼«¾¯Ì½ (º£Íâ°æ, Model 2A)	ÖÕ¼«¾¯Ì½ (º£Íâ°æ, Model 2A)	Sega
 pltkidsa	·ÉĞĞĞ¡×Ó (Model 2A)	·ÉĞĞĞ¡×Ó (Model 2A)	Psikyo
 vstriker	VR ÉäÊÖ (Ğ£Õı°æ A)	VR ÉäÊÖ (Ğ£Õı°æ A)	Sega
 vstrikero	VR ÉäÊÖ	VR ÉäÊÖ	Sega
@@ -3590,7 +3591,7 @@ von	µçÄÔÕ½»ú (ÃÀ°æ, Ğ£Õı°æ B)	µçÄÔÕ½»ú (ÃÀ°æ, Ğ£Õı°æ B)	Sega
 vonj	µçÄÔÕ½»ú (ÈÕ°æ, Ğ£Õı°æ B)	µçÄÔÕ½»ú (ÈÕ°æ, Ğ£Õı°æ B)	Sega
 gunblade	Å¦Ô¼·ç±© (Ğ£Õı°æ A)	Å¦Ô¼·ç±© (Ğ£Õı°æ A)	Sega
 schamp	Ë÷Äá¿Ë¸ñ¶·	Ë÷Äá¿Ë¸ñ¶·	Sega
-lastbrnx	¶«¾©·¬ÍâµØ (³ö¿Ú°æ, Ğ£Õı°æ A)	¶«¾©·¬ÍâµØ (³ö¿Ú°æ, Ğ£Õı°æ A)	Sega
+lastbrnx	¶«¾©·¬ÍâµØ (º£Íâ°æ, Ğ£Õı°æ A)	¶«¾©·¬ÍâµØ (º£Íâ°æ, Ğ£Õı°æ A)	Sega
 lastbrnxj	¶«¾©·¬ÍâµØ (ÈÕ°æ, Ğ£Õı°æ A)	¶«¾©·¬ÍâµØ (ÈÕ°æ, Ğ£Õı°æ A)	Sega
 sgt24h	³¬¼¶ GT Èü³µ 24 Ğ¡Ê±	³¬¼¶ GT Èü³µ 24 Ğ¡Ê±	Jaleco
 dynabb	±¬ÁÑ°ôÇò '97 (Ğ£Õı°æ A)	±¬ÁÑ°ôÇò '97 (Ğ£Õı°æ A)	Sega
@@ -3598,13 +3599,13 @@ doa	ËÀ»òÉú (Model 2B, Ğ£Õı°æ B)	ËÀ»òÉú (Model 2B, Ğ£Õı°æ B)	Sega
 zerogun	ÁãÊ½Ç¹ÊÖ (Model 2B)	ÁãÊ½Ç¹ÊÖ (Model 2B)	Psikyo
 zerogunj	ÁãÊ½Ç¹ÊÖ (ÈÕ°æ Model 2B)	ÁãÊ½Ç¹ÊÖ (ÈÕ°æ Model 2B)	Psikyo
 dyndeka2b	ÖÕ¼«¾¯Ì½ 2 (ÈÕ°æ, Model 2B)	ÖÕ¼«¾¯Ì½ 2 (ÈÕ°æ, Model 2B)	Sega
-dynamcopb	ÖÕ¼«¾¯Ì½ (³ö¿Ú°æ, Model 2B)	ÖÕ¼«¾¯Ì½ (³ö¿Ú°æ, Model 2B)	Sega
+dynamcopb	ÖÕ¼«¾¯Ì½ (º£Íâ°æ, Model 2B)	ÖÕ¼«¾¯Ì½ (º£Íâ°æ, Model 2B)	Sega
 pltkids	·ÉĞĞĞ¡×Ó (Model 2B, Ğ£Õı°æ A)	·ÉĞĞĞ¡×Ó (Model 2B, Ğ£Õı°æ A)	Psikyo
 skisuprg	ÊÀ¼Î³¬¼¶»¬Ñ© G	ÊÀ¼Î³¬¼¶»¬Ñ© G	Sega
 stcc	ÊÀ¼Î¹Ú¾ü·¿³µÈü (Ğ£Õı°æ A)	ÊÀ¼Î¹Ú¾ü·¿³µÈü (Ğ£Õı°æ A)	Sega
 waverunr	Óù·çÕß (ÈÕ°æ, Ğ£Õı°æ A)	Óù·çÕß (ÈÕ°æ, Ğ£Õı°æ A)	Sega
 hotd	ËÀÍöÖ®Îİ	ËÀÍöÖ®Îİ	Sega
-topskatr	¶¥¼â»¬°å (³ö¿Ú°æ, Ğ£Õı°æ A)	¶¥¼â»¬°å (³ö¿Ú°æ, Ğ£Õı°æ A)	Sega
+topskatr	¶¥¼â»¬°å (º£Íâ°æ, Ğ£Õı°æ A)	¶¥¼â»¬°å (º£Íâ°æ, Ğ£Õı°æ A)	Sega
 topskatru	¶¥¼â»¬°å (ÃÀ°æ)	¶¥¼â»¬°å (ÃÀ°æ)	Sega
 overrev	ÖÕ¼«»Ø×ª (Ğ£Õı°æ A)	ÖÕ¼«»Ø×ª (Ğ£Õı°æ A)	Jaleco
 segawski	ÊÀ¼Î»¬°å (ÈÕ°æ, Ğ£Õı°æ A)	ÊÀ¼Î»¬°å (ÈÕ°æ, Ğ£Õı°æ A)	Sega
@@ -3617,7 +3618,7 @@ bass	ÊÀ¼ÎºÚ°ÍË¹µöÓã	ÊÀ¼ÎºÚ°ÍË¹µöÓã	Sega
 getbass	ÊÀ¼ÎºÚ°ÍË¹µöÓã	ÊÀ¼ÎºÚ°ÍË¹µöÓã	Sega
 scud	¼²ĞĞ¿ñì­ (°ÄÖŞ°æ)	¼²ĞĞ¿ñì­ (°ÄÖŞ°æ)	Sega
 scudj	¼²ĞĞ¿ñì­ (ÈÕ°æ)	¼²ĞĞ¿ñì­ (ÈÕ°æ)	Sega
-scuda	¼²ĞĞ¿ñì­ (³ö¿Ú°æ)	¼²ĞĞ¿ñì­ (³ö¿Ú°æ)	Sega
+scuda	¼²ĞĞ¿ñì­ (º£Íâ°æ)	¼²ĞĞ¿ñì­ (º£Íâ°æ)	Sega
 vs215	VR ÉäÊÖ 2 (Step 1.5)	VR ÉäÊÖ 2 (Step 1.5)	Sega
 lostwsga	ÙªÂŞ¼Í¹«Ô° - Ê§ÂäµÄÊÀ½ç	ÙªÂŞ¼Í¹«Ô° - Ê§ÂäµÄÊÀ½ç	Sega
 scudp	¼²ĞĞ¿ñì­ ¼ÓÇ¿°æ (Ğ£Õı°æ A)	¼²ĞĞ¿ñì­ ¼ÓÇ¿°æ (Ğ£Õı°æ A)	Sega
@@ -3644,7 +3645,7 @@ dayto2pe	ÃÎÓÎÃÀ¹ú 2 ¶¯Á¦°æ	ÃÎÓÎÃÀ¹ú 2 ¶¯Á¦°æ	Sega
 spikeofe	Èñ»÷ - Õ½¶·½ÖÍ· ×îÖÕ°æ±¾	Èñ»÷ - Õ½¶·½ÖÍ· ×îÖÕ°æ±¾	Sega
 magtruck	Ä§·¨Æû³µÃ°ÏÕ	Ä§·¨Æû³µÃ°ÏÕ	Sega
 eca	·Ç³£¾È»¤³µ	·Ç³£¾È»¤³µ	Sega
-ecax	·Ç³£¾È»¤³µ (³ö¿Ú°æ)	·Ç³£¾È»¤³µ (³ö¿Ú°æ)	Sega
+ecax	·Ç³£¾È»¤³µ (º£Íâ°æ)	·Ç³£¾È»¤³µ (º£Íâ°æ)	Sega
 logicpro	Âß¼­ PRO (ÈÕ°æ)	Âß¼­ PRO (ÈÕ°æ)	Deniam
 croquis	Âß¼­ PRO (µÂ¹ú°æ)	Âß¼­ PRO (µÂ¹ú°æ)	Deniam
 karianx	¿¨ÁÕÄ§±¦ (Rev. 1.0)	¿¨ÁÕÄ§±¦ (Rev. 1.0)	Deniam
@@ -3749,7 +3750,7 @@ naomigd	Naomi GD-ROM Bios	Naomi GD-ROM Bios	Sega
 naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
 hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
 dybbnao	»ğ±¬°ôÇò NAOMI (JPN)	»ğ±¬°ôÇò NAOMI (JPN)	Sega
-pstone	Á¦Ê¯Õ½Ê¿ (JPN, USA, EUR, ASI, AUS)	Á¦Ê¯Õ½Ê¿ (JPN, USA, EUR, ASI, AUS)	Capcom
+pstone	ÄÜÁ¿±¦Ê¯ (JPN, USA, EUR, ASI, AUS)	ÄÜÁ¿±¦Ê¯ (JPN, USA, EUR, ASI, AUS)	Capcom
 zombrvn	ËÀÁé¸´³ğ (JPN, USA, EXP, KOR, AUS)	ËÀÁé¸´³ğ (JPN, USA, EXP, KOR, AUS)	Sega
 ggram2	È«ÈÕ±¾Ö°ÒµË¤½Ç (JPN, USA, EXP, KOR, AUS)	È«ÈÕ±¾Ö°ÒµË¤½Ç (JPN, USA, EXP, KOR, AUS)	Sega
 f355bios	Naomi Ferrari F355 Challenge Bios	Naomi Ferrari F355 Challenge Bios	Sega
@@ -3762,7 +3763,7 @@ derbyoc	ÑøÂí¾ãÀÖ²¿ (JPN, USA, EXP, KOR, AUS)	ÑøÂí¾ãÀÖ²¿ (JPN, USA, EXP, KOR, AUS
 doa2	ËÀ»òÉú 2 (JPN, USA, EXP, KOR, AUS)	ËÀ»òÉú 2 (JPN, USA, EXP, KOR, AUS)	Tecmo
 otrigger	ÉñÇ¹¾Ñ»÷ÊÖ (JPN, USA, EXP, KOR, AUS)	ÉñÇ¹¾Ñ»÷ÊÖ (JPN, USA, EXP, KOR, AUS)	Sega
 dybb99	»ğ±¬°ôÇò '99 (JPN) / Ö°Òµ°ôÇòÈü '99 (USA, EXP, KOR, AUS)	»ğ±¬°ôÇò '99 (JPN) / Ö°Òµ°ôÇòÈü '99 (USA, EXP, KOR, AUS)	Sega
-samba	É­°ÍÁå¹Ä (JPN)	É­°ÍÁå¹Ä (JPN)	Sega
+samba	¿ìÀÖÉ£°Í (JPN)	¿ìÀÖÉ£°Í (JPN)	Sega
 vtennis	VR ÍøÇò (JPN) / ÍøÇòÔË¶¯ (USA, EXP, KOR, AUS)	VR ÍøÇò (JPN) / ÍøÇòÔË¶¯ (USA, EXP, KOR, AUS)	Sega
 vtennisg	VR ÍøÇò (GDS-0011)	VR ÍøÇò (GDS-0011)	Sega
 totd	ËÀÍö´ò×Ö»ú (JPN, USA, EXP, KOR, AUS)	ËÀÍö´ò×Ö»ú (JPN, USA, EXP, KOR, AUS)	Sega
@@ -3772,7 +3773,7 @@ virnba	VR ÀºÇò NBA (JPN, USA, EXP, KOR, AUS)	VR ÀºÇò NBA (JPN, USA, EXP, KOR, AU
 virnbao	VR ÀºÇò NBA (JPN, USA, EXP, KOR, AUS) (³õ°æ)	VR ÀºÇò NBA (JPN, USA, EXP, KOR, AUS) (³õ°æ)	Sega
 mvsc2	Âş»­Ó¢ĞÛ ¶Ô Capcom 2 (JPN, USA, EUR, ASI, AUS)	Âş»­Ó¢ĞÛ ¶Ô Capcom 2 (JPN, USA, EUR, ASI, AUS)	Capcom
 smarinef	ÊÀ¼Îº£ÉÏµöÓã	ÊÀ¼Îº£ÉÏµöÓã	Sega
-pstone2	Á¦Ê¯Õ½Ê¿ 2 (JPN, USA, EUR, ASI, AUS)	Á¦Ê¯Õ½Ê¿ 2 (JPN, USA, EUR, ASI, AUS)	Capcom
+pstone2	ÄÜÁ¿±¦Ê¯ 2 (JPN, USA, EUR, ASI, AUS)	ÄÜÁ¿±¦Ê¯ 2 (JPN, USA, EUR, ASI, AUS)	Capcom
 qmegamis	ÎÊ´ğÄ§·¨Ñ§Ô° (JPN, USA, EXP, KOR, AUS)	ÎÊ´ğÄ§·¨Ñ§Ô° (JPN, USA, EXP, KOR, AUS)	Sega
 ggx	×ï¶ñ¹¤¾ß X (JPN)	×ï¶ñ¹¤¾ß X (JPN)	Arc System Works
 slasho	ºÀÕ¶ (JPN, USA, EXP, KOR, AUS)	ºÀÕ¶ (JPN, USA, EXP, KOR, AUS)	Sega
@@ -3780,7 +3781,7 @@ slashout	ºÀÕ¶ (GDS-0004)	ºÀÕ¶ (GDS-0004)	Sega
 capsnka	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2000 (000804 JPN, USA, EXP, KOR, AUS)	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2000 (000804 JPN, USA, EXP, KOR, AUS)	Capcom / SNK
 capsnk	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2000 (000904 JPN, USA, EXP, KOR, AUS)	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2000 (000904 JPN, USA, EXP, KOR, AUS)	Capcom / SNK
 gram2000	È«ÈÕ±¾Ö°ÒµË¤½Ç 2000 (JPN, USA, EXP, KOR, AUS)	È«ÈÕ±¾Ö°ÒµË¤½Ç 2000 (JPN, USA, EXP, KOR, AUS)	Sega
-cspike	ÉñÇ¹»ú±ø (JPN) / (USA, EXP, KOR, AUS)	ÉñÇ¹»ú±ø (JPN) / (USA, EXP, KOR, AUS)	Psikyo / Capcom
+cspike	ÉñÇ¹»ú±ø (JPN) (USA, EXP, KOR, AUS)	ÉñÇ¹»ú±ø (JPN) (USA, EXP, KOR, AUS)	Psikyo / Capcom
 deathcox	ËÀÍö»ğÇ¹ OX (JPN, USA, EXP, KOR, AUS)	ËÀÍö»ğÇ¹ OX (JPN, USA, EXP, KOR, AUS)	Ecole
 confmiss	»úÃÜÈÎÎñ (GDS-0001)	»úÃÜÈÎÎñ (GDS-0001)	Sega
 wwfroyal	WWF »Ê¼ÒË¤½Ç (JPN, USA, EXP, KOR, AUS)	WWF »Ê¼ÒË¤½Ç (JPN, USA, EXP, KOR, AUS)	Sega
@@ -3798,7 +3799,7 @@ wsbbgd	³¬¼¶Ö°°ô´óÁªÃË (GDS-0010)	³¬¼¶Ö°°ô´óÁªÃË (GDS-0010)	Sega
 spkrbtl	ÖÂÃüÒ»»÷ (GDS-0005)	ÖÂÃüÒ»»÷ (GDS-0005)	Sega
 cvs2gd	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2001 (Rev A) (GDL-0007A)	Capcom ¶Ô SNK Ç§ìû¸ñ¶· 2001 (Rev A) (GDL-0007A)	Capcom / SNK
 gundmxgd	»ú¶¯Õ½Ê¿¸ß´ï - Áª°î VS ¼ªÎÌ DX  (GDL-0006)	»ú¶¯Õ½Ê¿¸ß´ï - Áª°î VS ¼ªÎÌ DX  (GDL-0006)	Capcom
-hmgeo	ÖØ×°¸ñ¶· (JPN, USA, EUR, ASI, AUS)	ÖØ×°¸ñ¶· (JPN, USA, EUR, ASI, AUS)	Capcom
+hmgeo	ÖØ½ğÊô¸ñ¶·ÓÎ¼¼ (JPN, USA, EUR, ASI, AUS)	ÖØ½ğÊô¸ñ¶·ÓÎ¼¼ (JPN, USA, EUR, ASI, AUS)	Capcom
 derbyoc2	ÈüÂíÕß¾ãÀÖ²¿ II (JPN, USA, EXP, KOR, AUS)	ÈüÂíÕß¾ãÀÖ²¿ II (JPN, USA, EXP, KOR, AUS)	Sega
 vtennis2	VR ÍøÇò 2 (Rev A) (GDS-0015A)	VR ÍøÇò 2 (Rev A) (GDS-0015A)	Sega
 keyboard	Îä×°¼üÅÌ (GDS-0017)	Îä×°¼üÅÌ (GDS-0017)	Sega
@@ -3839,7 +3840,7 @@ vf4	VR Õ½Ê¿ 4 (GDS-0012)	VR Õ½Ê¿ 4 (GDS-0012)	Sega
 vf4b	VR Õ½Ê¿ 4 (Rev B) (GDS-0012B)	VR Õ½Ê¿ 4 (Rev B) (GDS-0012B)	Sega
 vf4c	VR Õ½Ê¿ 4 (Rev C) (GDS-0012C)	VR Õ½Ê¿ 4 (Rev C) (GDS-0012C)	Sega
 initd	Í·ÎÄ×Ö D - ½Ö»ú°æ (Rev B) (ÈÕ°æ) (GDS-0020B)	Í·ÎÄ×Ö D - ½Ö»ú°æ (Rev B) (ÈÕ°æ) (GDS-0020B)	Sega
-initdexp	Í·ÎÄ×Ö D - ½Ö»ú°æ (Export) (GDS-0025)	Í·ÎÄ×Ö D - ½Ö»ú°æ (Export) (GDS-0025)	Sega
+initdexp	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Sega
 vf4evoa	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev A) (GDS-0024A)	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev A) (GDS-0024A)	Sega
 initdv2j	Í·ÎÄ×Ö D - ½Ö»ú°æ Ver. 2 (ÈÕ°æ) (GDS-0026)	Í·ÎÄ×Ö D - ½Ö»ú°æ Ver. 2 (ÈÕ°æ) (GDS-0026)	Sega
 vf4evo	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev B) (GDS-0024B)	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev B) (GDS-0024B)	Sega
@@ -3853,6 +3854,7 @@ demofist	ÆÆ»µÈ­	ÆÆ»µÈ­	Polygon Magic / Dimps
 rangrmsn	Ñ²ÂßÈÎÎñ	Ñ²ÂßÈÎÎñ	Sammy
 xtrmhunt	¿ñÈÈ´òÁÔ	¿ñÈÈ´òÁÔ	Sammy
 fotns	ĞÂ±±¶·ÉñÈ­	ĞÂ±±¶·ÉñÈ­	Arc System Works
+xtrmhnt2	¿ñÈÈ´òÁÔ 2	¿ñÈÈ´òÁÔ 2	Sammy
 hikaru	Hikaru Bios	Hikaru Bios	Sega
 podrace	ĞÇ¼Ê´óÕ½	ĞÇ¼Ê´óÕ½	Sega
 pharrier	ĞÇÇò·ç±©	ĞÇÇò·ç±©	Sega
@@ -3863,17 +3865,17 @@ vs2002ex	VR ÉäÊÖ 3 Ver.2002 (GDT-0002)	VR ÉäÊÖ 3 Ver.2002 (GDT-0002)	Sega
 avalons	°¢ÍßÂ¡Ö®³× - The Wizard Master - Server (GDT-0005C) (V4.001)	°¢ÍßÂ¡Ö®³× - The Wizard Master - Server (GDT-0005C) (V4.001)	Sega
 gekpurya	ĞÂÈ¼ÉÕÖ°Òµ°ôÇòÈ«Ã÷ĞÇ (Rev C) (GDT-0008C)	ĞÂÈ¼ÉÕÖ°Òµ°ôÇòÈ«Ã÷ĞÇ (Rev C) (GDT-0008C)	Sega
 avalon13	°¢ÍßÂ¡Ö®³× 1.3 - Chaotic Sabbat - Client (GDT-0010C) (V4.000)	°¢ÍßÂ¡Ö®³× 1.3 - Chaotic Sabbat - Client (GDT-0010C) (V4.000)	Sega
-vs4	VR ÉäÊÖ 4 (³ö¿Ú°æ) (GDT-0015)	VR ÉäÊÖ 4 (³ö¿Ú°æ) (GDT-0015)	Sega
+vs4	VR ÉäÊÖ 4 (º£Íâ°æ) (GDT-0015)	VR ÉäÊÖ 4 (º£Íâ°æ) (GDT-0015)	Sega
 vs4j	VR ÉäÊÖ 4 (ÈÕ°æ) (GDT-0013E)	VR ÉäÊÖ 4 (ÈÕ°æ) (GDT-0013E)	Sega
 avalon20	°¢ÍßÂ¡Ö®³× 2.0 - Eutaxy and Commandment - Client (GDT-0017B) (V3.001)	°¢ÍßÂ¡Ö®³× 2.0 - Eutaxy and Commandment - Client (GDT-0017B) (V3.001)	Sega
 tfupdate	Triforce DIMM ÏµÍ³Éı¼¶ (GDT-0011)	Triforce DIMM ÏµÍ³Éı¼¶ (GDT-0011)	Sega
 chihiro	Chihiro Bios	Chihiro Bios	Sega
 hotd3	ËÀÍöÖ®Îİ III [GDX-0001]	ËÀÍöÖ®Îİ III [GDX-0001]	Sega
 vcop3	VR Õ½¾¯ 3 (GDX-0003A)	VR Õ½¾¯ 3 (GDX-0003A)	Sega
-wangmid	Íå°¶ÎçÒ¹Èü³µ (Rev. B) (Export) (GDX-0009B)	Íå°¶ÎçÒ¹Èü³µ (Rev. B) (Export) (GDX-0009B)	Sega
+wangmid	Íå°¶ÎçÒ¹Èü³µ (Rev. B) (º£Íâ°æ) (GDX-0009B)	Íå°¶ÎçÒ¹Èü³µ (Rev. B) (º£Íâ°æ) (GDX-0009B)	Sega
 mj2	ÊÀ¼ÎÍøÂçÂéÈ¸ MJ 2 (Rev C) [GDX-0006C]	ÊÀ¼ÎÍøÂçÂéÈ¸ MJ 2 (Rev C) [GDX-0006C]	Sega
 ghostsqu	ÓÄÁéÕ½¶Ó (Ver. A?) (GDX-0012A)	ÓÄÁéÕ½¶Ó (Ver. A?) (GDX-0012A)	Sega
-wangmid2	Íå°¶Èü³µ 2 (Export) (GDX-0015)	Íå°¶Èü³µ 2 (Export) (GDX-0015)	Sega
+wangmid2	Íå°¶Èü³µ 2 (º£Íâ°æ) (GDX-0015)	Íå°¶Èü³µ 2 (º£Íâ°æ) (GDX-0015)	Sega
 mj3	ÊÀ¼ÎÍøÂçÂéÈ¸ MJ 3 (Rev D) [GDX-0017D]	ÊÀ¼ÎÍøÂçÂéÈ¸ MJ 3 (Rev D) [GDX-0017D]	Sega
 hshavoc	¸ßº£ºÆ½Ù	¸ßº£ºÆ½Ù	Data East
 lnc	Ğ¡¾«ÁéÉğÊ¿	Ğ¡¾«ÁéÉğÊ¿	Data East Corporation
@@ -4627,7 +4629,7 @@ ppp11	¾¢ÎèÌìÌÃ v1.1	¾¢ÎèÌìÌÃ v1.1	Konami
 kbm	¼üÅÌ¸ßÊÖ	¼üÅÌ¸ßÊÖ	Konami
 kbm2nd	¼üÅÌ¸ßÊÖ 2¶È»ìºÏ	¼üÅÌ¸ßÊÖ 2¶È»ìºÏ	Konami
 kbm3rd	¼üÅÌ¸ßÊÖ 3¶È»ìºÏ	¼üÅÌ¸ßÊÖ 3¶È»ìºÏ	Konami
-popn7	¶¯¸ĞÒôÀÖ 7	¶¯¸ĞÒôÀÖ 7	Konami
+popn7	Á÷ĞĞÒôÀÖ 7	Á÷ĞĞÒôÀÖ 7	Konami
 fiveside	Ó¢Ê½×ãÇò (ver UAA)	Ó¢Ê½×ãÇò (ver UAA)	Konami
 thunderh	À×µç·ç±© (ver EAA)	À×µç·ç±© (ver EAA)	Konami
 thunderhu	À×µç·ç±© (ver UAA)	À×µç·ç±© (ver UAA)	Konami
@@ -5081,7 +5083,7 @@ spclordsg	Ì«¿Õ¾ıÖ÷ (rev A, µÂ¹ú°æ)	Ì«¿Õ¾ıÖ÷ (rev A, µÂ¹ú°æ)	Atari Games
 rrreveng	µÀÂ··ç±©¸´³ğ°æ (¹¤³Ì°æ)	µÀÂ··ç±©¸´³ğ°æ (¹¤³Ì°æ)	Atari Games
 rrrevengp	µÀÂ··ç±©¸´³ğ°æ (¹¤³Ì°æ Ìæ»»°æ)	µÀÂ··ç±©¸´³ğ°æ (¹¤³Ì°æ Ìæ»»°æ)	Atari Games
 beathead	Ò¡¹öÌø·½¿é (¹¤³Ì°æ)	Ò¡¹öÌø·½¿é (¹¤³Ì°æ)	Atari Games
-tmek	É³Ä®ğÕÊ¨ (v5.1, The Warlords)	É³Ä®ğÕÊ¨ (v5.1, The Warlords)	Atari Games
+tmek	T-MEK (v5.1, The Warlords)	T-MEK (v5.1, The Warlords)	Atari Games
 tmek51p	É³Ä®ğÕÊ¨ (v5.1, ¹¤³Ì°æ)	É³Ä®ğÕÊ¨ (v5.1, ¹¤³Ì°æ)	Atari Games
 tmek45	É³Ä®ğÕÊ¨ (v4.5)	É³Ä®ğÕÊ¨ (v4.5)	Atari Games
 tmek44	É³Ä®ğÕÊ¨ (v4.4)	É³Ä®ğÕÊ¨ (v4.4)	Atari Games
@@ -5269,6 +5271,7 @@ fightfeva	¿ñÈÈ¸ñ¶· (µÚ2Ì×)	¿ñÈÈ¸ñ¶· (µÚ2Ì×)	Viccom
 ssideki2	µÃµãÍõ 2 - ÊÀ½ç½õ±êÈü	µÃµãÍõ 2 - ÊÀ½ç½õ±êÈü	SNK
 spinmast	»¬ÂÖ´óÊ¦ / Ç¿Äá´óÃ°ÏÕ	»¬ÂÖ´óÊ¦ / Ç¿Äá´óÃ°ÏÕ	Data East Corporation
 samsho2	ÊÌ»ê II - °ÔÍõÍèµØÓü±ä	ÊÌ»ê II - °ÔÍõÍèµØÓü±ä	SNK
+samsho2k	ÕæÊÌ»ê (º«¹ú°æ ÊÌ»ê II)	ÕæÊÌ»ê (º«¹ú°æ ÊÌ»ê II)	SNK
 wh2j	ÊÀ½çÓ¢ĞÛ 2 ÅçÉä°æ (µÚ1Ì×)	ÊÀ½çÓ¢ĞÛ 2 ÅçÉä°æ (µÚ1Ì×)	ADK / SNK
 wh2jh	ÊÀ½çÓ¢ĞÛ 2 ÅçÉä°æ (µÚ2Ì×)	ÊÀ½çÓ¢ĞÛ 2 ÅçÉä°æ (µÚ2Ì×)	ADK / SNK
 wjammers	Ò°ÍâÅÅÇò / ³¬¼¶·ÉµúÇò	Ò°ÍâÅÅÇò / ³¬¼¶·ÉµúÇò	Data East Corporation
@@ -5304,7 +5307,7 @@ rbff1	RB ¶öÀÇ´«Ëµ	RB ¶öÀÇ´«Ëµ	SNK
 rbff1a	RB ¶öÀÇ´«Ëµ (ÎÊÌâĞŞ¸´°æ)	RB ¶öÀÇ´«Ëµ (ÎÊÌâĞŞ¸´°æ)	SNK
 aof3	Áú»¢Ö®È­ 3 - ¶·Ê¿Ö®Â· / Áú»¢Ö®È­ Íâ´«	Áú»¢Ö®È­ 3 - ¶·Ê¿Ö®Â· / Áú»¢Ö®È­ Íâ´«	SNK
 aof3k	Áú»¢Ö®È­ 3 - ¶·Ê¿Ö®Â· / Áú»¢Ö®È­ Íâ´« (º«¹ú°æ)	Áú»¢Ö®È­ 3 - ¶·Ê¿Ö®Â· / Áú»¢Ö®È­ Íâ´« (º«¹ú°æ)	SNK
-sonicwi3	ËÄ¹úÕ½»ú 2 / ÒôËÙÖ®Òí 3	ËÄ¹úÕ½»ú 2 / ÒôËÙÖ®Òí 3	Video System Co.
+sonicwi3	ËÄ¹úÕ½»ú 3 / ÒôËÙÖ®Òí 3	ËÄ¹úÕ½»ú 3 / ÒôËÙÖ®Òí 3	Video System Co.
 turfmast	´óÁªÃË¸ß¶û·ò	´óÁªÃË¸ß¶û·ò	Nazca
 mslug	ºÏ½ğµ¯Í· - ³¬¼¶Õ½³µ-001	ºÏ½ğµ¯Í· - ³¬¼¶Õ½³µ-001	Nazca
 puzzledp	½âÃÕÆøÅİ	½âÃÕÆøÅİ	Taito (Visco license)
@@ -6268,7 +6271,7 @@ airbustrb	¿ÕÖĞ±¤Àİ (µÁ°æ)	¿ÕÖĞ±¤Àİ (µÁ°æ)	bootleg
 galpanic	Ìì²Ï±ä (Î´±£»¤)	Ìì²Ï±ä (Î´±£»¤)	Kaneko
 galpanica	Ìì²Ï±ä (MCU ±£»¤)	Ìì²Ï±ä (MCU ±£»¤)	Kaneko
 galsnew	Ìì²Ï±ä (ÃÀ°æ, EXPRO-02 PCB)	Ìì²Ï±ä (ÃÀ°æ, EXPRO-02 PCB)	Kaneko
-galsnewa	Ìì²Ï±ä (³ö¿Ú°æ, EXPRO-02 PCB)	Ìì²Ï±ä (³ö¿Ú°æ, EXPRO-02 PCB)	Kaneko
+galsnewa	Ìì²Ï±ä (º£Íâ°æ, EXPRO-02 PCB)	Ìì²Ï±ä (º£Íâ°æ, EXPRO-02 PCB)	Kaneko
 galsnewj	Ìì²Ï±ä (ÈÕ°æ, EXPRO-02 PCB)	Ìì²Ï±ä (ÈÕ°æ, EXPRO-02 PCB)	Kaneko (Taito license)
 galpani2	Ìì²Ï±ä II (ÑÇÖŞ°æ)	Ìì²Ï±ä II (ÑÇÖŞ°æ)	Kaneko
 galpani2g	Ìì²Ï±ä II (µÂ¹ú°æ)	Ìì²Ï±ä II (µÂ¹ú°æ)	Kaneko
@@ -6557,6 +6560,7 @@ missw96	Ìì²Ï±ä '96 (ÂãÌå)	Ìì²Ï±ä '96 (ÂãÌå)	Comad
 missmw96	Ìì²Ï±ä '96 - ÊÀ½çÏÈÉú + ÊÀ½çĞ¡½ãÆª (ÂãÌå)	Ìì²Ï±ä '96 - ÊÀ½çÏÈÉú + ÊÀ½çĞ¡½ãÆª (ÂãÌå)	Comad
 fantsia2	Ìì²Ï±ä»ÃÏëÇú II (Ã÷È·)	Ìì²Ï±ä»ÃÏëÇú II (Ã÷È·)	Comad
 fantsia2a	Ìì²Ï±ä»ÃÏëÇú II (½ÏÃ÷È·)	Ìì²Ï±ä»ÃÏëÇú II (½ÏÃ÷È·)	Comad
+wownfant	WOW ĞÂ»ÃÏëÇú	WOW ĞÂ»ÃÏëÇú	Comad
 galhustl	¿ªÂØÆ­×Ó	¿ªÂØÆ­×Ó	ACE International
 sslam	³¬¼¶ÍøÇò (µÚ1Ì×)	³¬¼¶ÍøÇò (µÚ1Ì×)	Playmark
 sslama	³¬¼¶ÍøÇò (µÚ2Ì×)	³¬¼¶ÍøÇò (µÚ2Ì×)	Playmark
@@ -6881,7 +6885,7 @@ orlegende	Î÷ÓÎÊÍ¶ò´« (ver. 112)	Î÷ÓÎÊÍ¶ò´« (ver. 112)	IGS
 orlegendc	Î÷ÓÎÊÍ¶ò´« (ver. 112, ÖĞÎÄ»ù°å)	Î÷ÓÎÊÍ¶ò´« (ver. 112, ÖĞÎÄ»ù°å)	IGS
 orlegend111c	Î÷ÓÎÊÍ¶ò´« (ver. 111, ÖĞÎÄ»ù°å)	Î÷ÓÎÊÍ¶ò´« (ver. 111, ÖĞÎÄ»ù°å)	IGS
 orlegend105k	Î÷ÓÎÊÍ¶ò´« (ver. 105, º«ÎÄ»ù°å)	Î÷ÓÎÊÍ¶ò´« (ver. 105, º«ÎÄ»ù°å)	IGS
-drgw2	ÖĞ¹úÁú II (ver. 110X, ³ö¿Ú°æ)	ÖĞ¹úÁú II (ver. 110X, ³ö¿Ú°æ)	IGS
+drgw2	ÖĞ¹úÁú II (ver. 110X, º£Íâ°æ)	ÖĞ¹úÁú II (ver. 110X, º£Íâ°æ)	IGS
 drgw2c	ÖĞ¹úÁú II (ver. 100C, ÖĞ¹ú°æ)	ÖĞ¹úÁú II (ver. 100C, ÖĞ¹ú°æ)	IGS
 drgw2j	ÖĞ¹úÁú II (ver. 100J, ÈÕ°æ)	ÖĞ¹úÁú II (ver. 100J, ÈÕ°æ)	IGS
 drgw3	ÖĞ¹úÁú ¢ó (ver. 100)	ÖĞ¹úÁú ¢ó (ver. 100)	IGS
@@ -7563,6 +7567,7 @@ ampkr228	ÃÀÊ½ÆË¿Ë II (iamp2 v28)	ÃÀÊ½ÆË¿Ë II (iamp2 v28)	bootleg?
 pkrdewin	ÆË¿Ë´óÓ®¼Ò	ÆË¿Ë´óÓ®¼Ò	bootleg
 ampkr95	ÃÀÊ½ÆË¿Ë 95	ÃÀÊ½ÆË¿Ë 95	bootleg
 videomat	ÆË¿ËÊäÓ® (polish µÁ°æ)	ÆË¿ËÊäÓ® (polish µÁ°æ)	bootleg
+rabbitpk	ÍÃÅ®ÀÉÆË¿Ë (ÑÇÀûÉ£ÄÇÆË¿Ë v1.1?)	ÍÃÅ®ÀÉÆË¿Ë (ÑÇÀûÉ£ÄÇÆË¿Ë v1.1?)	bootleg
 sigmapkr	Ë¼¸ñÂêÆË¿Ë	Ë¼¸ñÂêÆË¿Ë	Sigma Inc.
 sigma2k	Ë¼¸ñÂêÆË¿Ë 2000	Ë¼¸ñÂêÆË¿Ë 2000	Sigma Inc.
 sidewndr	ÅÔÇÃ²à»÷	ÅÔÇÃ²à»÷	ACE
@@ -8061,8 +8066,8 @@ fb5	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ1Ì×)	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ1Ì×)	Amcoe
 fb5c	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ2Ì×)	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ2Ì×)	Amcoe
 fb5d	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ3Ì×)	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH, µÚ3Ì×)	Amcoe
 fb5v	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH Ë«±¶)	Ë®¹û»ı·Ö 2005 (°æ±¾ 1.5SH Ë«±¶)	Amcoe
-fb6	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E CGA)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ (Version 1.7E CGA)	Amcoe
-fb6v	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E Ë«±¶)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E Dual)	Amcoe
+fb6	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E CGA)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E CGA)	Amcoe
+fb6v	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E Ë«±¶)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7E Ë«±¶)	Amcoe
 fb6d1	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R CGA, µÚ1Ì×)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R CGA, µÚ1Ì×)	Amcoe
 fb6s1	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R CGA, µÚ2Ì×)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R CGA, µÚ2Ì×)	Amcoe
 fb6v1	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R Ë«±¶)	Ë®¹û»ı·Ö '06 - Ê®ÖÜÄê¼ÍÄî (°æ±¾ 1.7R Ë«±¶)	Amcoe
@@ -8080,7 +8085,7 @@ bugfever	³æ³æÒ²·è¿ñ (µÚ1Ì×)	³æ³æÒ²·è¿ñ (µÚ1Ì×)	Amcoe
 bugfeverd	³æ³æÒ²·è¿ñ (µÚ2Ì×)	³æ³æÒ²·è¿ñ (µÚ2Ì×)	Amcoe
 bugfeverv	³æ³æÒ²·è¿ñ (µÚ3Ì×)	³æ³æÒ²·è¿ñ (µÚ3Ì×)	Amcoe
 bugfeverv2	³æ³æÒ²·è¿ñ (µÚ4Ì×)	³æ³æÒ²·è¿ñ (µÚ4Ì×)	Amcoe
-dvisland	¶ñÄ§µºË®¹û»ı·Ö	¶ñÄ§µºË®¹û»ı·Ö	Amcoe
+dvisland	Ä§¹íµº	Ä§¹íµº	Amcoe
 funriver	¿ìÀÖĞ¡Ïª (µÚ1Ì×)	¿ìÀÖĞ¡Ïª (µÚ1Ì×)	Amcoe
 funriverv	¿ìÀÖĞ¡Ïª (µÚ2Ì×)	¿ìÀÖĞ¡Ïª (µÚ2Ì×)	Amcoe
 amclink	Ë®¹û»ı·ÖÁ¬Ïß¿ØÖÆÏä (°æ±¾ 2.2)	Ë®¹û»ı·ÖÁ¬Ïß¿ØÖÆÏä (°æ±¾ 2.2)	Amcoe
@@ -8158,18 +8163,53 @@ streetg	½ÖÍ·¿ñÏë (Ğ£Õı°æ 4)	½ÖÍ·¿ñÏë (Ğ£Õı°æ 4)	New Image Technologies
 streetgr3	½ÖÍ·¿ñÏë (Ğ£Õı°æ 3)	½ÖÍ·¿ñÏë (Ğ£Õı°æ 3)	New Image Technologies
 streetg2	½ÖÍ·¿ñÏë II (Ğ£Õı°æ 7C)	½ÖÍ·¿ñÏë II (Ğ£Õı°æ 7C)	New Image Technologies
 streetg2r5	½ÖÍ·¿ñÏë II (Ğ£Õı°æ 5)	½ÖÍ·¿ñÏë II (Ğ£Õı°æ 5)	New Image Technologies
+colorama	Colorama (english)	Colorama (english)	Coinmaster-Gaming, Ltd.
+cmrltv75	¶ÄÂÖÅÌ V75 (Y2K, Î÷°àÑÀ)	¶ÄÂÖÅÌ V75 (Y2K, Î÷°àÑÀ)	Coinmaster-Gaming, Ltd.
+cmkenosp	Ó²±Ò´óÊ¦ Keno (Y2K, Î÷°àÑÀ, 2000-12-14)	Ó²±Ò´óÊ¦ Keno (Y2K, Î÷°àÑÀ, 2000-12-14)	Coinmaster-Gaming, Ltd.
+cmkenospa	Ó²±Ò´óÊ¦ Keno (Y2K, Î÷°àÑÀ, 2000-12-02)	Ó²±Ò´óÊ¦ Keno (Y2K, Î÷°àÑÀ, 2000-12-02)	Coinmaster-Gaming, Ltd.
+mfish_3	ÃÔÄãµöÓã (021124, µÚ1Ì×)	ÃÔÄãµöÓã (021124, µÚ1Ì×)	Igro
+mfish_3a	ÃÔÄãµöÓã (021124, µÚ2Ì×)	ÃÔÄãµöÓã (021124, µÚ2Ì×)	Igro
 mfish_12	ÃÔÄãµöÓã (040308, µÚ1Ì×)	ÃÔÄãµöÓã (040308, µÚ1Ì×)	Igro
-mfish_12a	ÃÔÄãµöÓã (040308, µÚ2Ì×, hack?)	ÃÔÄãµöÓã (040308, µÚ2Ì×, hack?)	Igro
-crzmon_7	·è¿ñºï×Ó (031110)	·è¿ñºï×Ó (031110)	Igrosoft
-fcock_6	¼¦Î²¾Æ (040216)	¼¦Î²¾Æ (040216)	Igrosoft
-lhaunt_4	ĞÒÔËË®¹û»ú (031111)	ĞÒÔËË®¹û»ú (031111)	Igrosoft
-lhaunt_5	ĞÒÔËË®¹û»ú (040216)	ĞÒÔËË®¹û»ú (040216)	Igrosoft
-lhaunt_6	ĞÒÔËË®¹û»ú (040825)	ĞÒÔËË®¹û»ú (040825)	Igrosoft
-garage_4	³µ¿â (040219)	³µ¿â (040219)	Igrosoft
-rclimb_3	ÅÊÑÒÌØ¹¤¶Ó (040827)	ÅÊÑÒÌØ¹¤¶Ó (040827)	Igrosoft
-sweetl	ÌğÃÛÉú»î (041220)	ÌğÃÛÉú»î (041220)	Igrosoft
-resdnt_2	¾ÓÃñ (040513)	¾ÓÃñ (040513)	Igrosoft
-island	µºÓì (050713)	µºÓì (050713)	Igrosoft
+mfish_12a	ÃÔÄãµöÓã (040308, µÚ2Ì×)	ÃÔÄãµöÓã (040308, µÚ2Ì×)	Igro
+crzmon_7	·è¿ñºï×Ó (031110, µÚ1Ì×)	·è¿ñºï×Ó (031110, µÚ1Ì×)	Igrosoft
+crzmon_7a	·è¿ñºï×Ó (031110, µÚ2Ì×)	·è¿ñºï×Ó (031110, µÚ2Ì×)	Igrosoft
+crzmon_7b	·è¿ñºï×Ó (031110, µÚ3Ì×)	·è¿ñºï×Ó (031110, µÚ3Ì×)	Igrosoft
+crzmon_8	·è¿ñºï×Ó (050120, µÚ1Ì×)	·è¿ñºï×Ó (050120, µÚ1Ì×)	Igrosoft
+crzmon_8a	·è¿ñºï×Ó (050120, µÚ2Ì×)	·è¿ñºï×Ó (050120, µÚ2Ì×)	Igrosoft
+fcockt_6	¼¦Î²¾Æ (040216, µÚ1Ì×)	¼¦Î²¾Æ (040216, µÚ1Ì×)	Igrosoft
+fcockt_6a	¼¦Î²¾Æ (040216, µÚ2Ì×)	¼¦Î²¾Æ (040216, µÚ2Ì×)	Igrosoft
+fcockt_6b	¼¦Î²¾Æ (040216, µÚ3Ì×)	¼¦Î²¾Æ (040216, µÚ3Ì×)	Igrosoft
+fcockt_7	¼¦Î²¾Æ (050118, µÚ1Ì×)	¼¦Î²¾Æ (050118, µÚ1Ì×)	Igrosoft
+fcockt_7a	¼¦Î²¾Æ (050118, µÚ2Ì×)	¼¦Î²¾Æ (050118, µÚ2Ì×)	Igrosoft
+fcockt_8	¼¦Î²¾Æ (060111)	¼¦Î²¾Æ (060111)	Igrosoft
+lhaunt_4	ĞÒÔËË®¹û»ú (031111, µÚ1Ì×)	ĞÒÔËË®¹û»ú (031111, µÚ1Ì×)	Igrosoft
+lhaunt_4a	ĞÒÔËË®¹û»ú (031111, µÚ2Ì×)	ĞÒÔËË®¹û»ú (031111, µÚ2Ì×)	Igrosoft
+lhaunt_5	ĞÒÔËË®¹û»ú (040216. µÚ1Ì×)	ĞÒÔËË®¹û»ú (040216. µÚ1Ì×)	Igrosoft
+lhaunt_5a	ĞÒÔËË®¹û»ú (040216, µÚ2Ì×)	ĞÒÔËË®¹û»ú (040216, µÚ2Ì×)	Igrosoft
+lhaunt_6	ĞÒÔËË®¹û»ú (040825, µÚ1Ì×)	ĞÒÔËË®¹û»ú (040825, µÚ1Ì×)	Igrosoft
+lhaunt_6a	ĞÒÔËË®¹û»ú (040825, µÚ2Ì×)	ĞÒÔËË®¹û»ú (040825, µÚ2Ì×)	Igrosoft
+rollfr_2	Roll Fruit (040318)	Roll Fruit (040318)	Igrosoft
+garage_4	³µ¿â (040219, µÚ1Ì×)	³µ¿â (040219, µÚ1Ì×)	Igrosoft
+garage_4a	³µ¿â (040219, µÚ2Ì×)	³µ¿â (040219, µÚ2Ì×)	Igrosoft
+garage_5	³µ¿â (050311, µÚ1Ì×)	³µ¿â (050311, µÚ1Ì×)	Igrosoft
+garage_5a	³µ¿â (050311, µÚ2Ì×)	³µ¿â (050311, µÚ2Ì×)	Igrosoft
+rclimb_3	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ1Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ1Ì×)	Igrosoft
+rclimb_3a	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ2Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ2Ì×)	Igrosoft
+rclimb_3b	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ3Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ3Ì×)	Igrosoft
+sweetl	ÌğÃÛÉú»î (041220, µÚ1Ì×)	ÌğÃÛÉú»î (041220, µÚ1Ì×)	Igrosoft
+sweetla	ÌğÃÛÉú»î (041220, µÚ2Ì×)	ÌğÃÛÉú»î (041220, µÚ2Ì×)	Igrosoft
+resdnt_2	¾ÓÃñ (040513, µÚ1Ì×)	¾ÓÃñ (040513, µÚ1Ì×)	Igrosoft
+resdnt_2a	¾ÓÃñ (040513, µÚ2Ì×)	¾ÓÃñ (040513, µÚ2Ì×)	Igrosoft
+island	µºÓì (050713, µÚ1Ì×)	µºÓì (050713, µÚ1Ì×)	Igrosoft
+islanda	µºÓì (050713, µÚ2Ì×)	µºÓì (050713, µÚ2Ì×)	Igrosoft
+pirate_1	º£µÁ (060210)	º£µÁ (060210)	Igrosoft
+island2	µºÓì 2 (060529, µÚ1Ì×)	µºÓì 2 (060529, µÚ1Ì×)	Igrosoft
+island2a	µºÓì 2 (060529, µÚ2Ì×)	µºÓì 2 (060529, µÚ2Ì×)	Igrosoft
+keks	Keks (060328, set 1)	Keks (060328, set 1)	Igrosoft
+keksa	Keks (060328, set 2)	Keks (060328, set 2)	Igrosoft
+keksb	Keks (060328, set 3)	Keks (060328, set 3)	Igrosoft
+keks_2	Keks (060403. set 1)	Keks (060403. set 1)	Igrosoft
+keks_2a	Keks (060403, set 3)	Keks (060403, set 3)	Igrosoft
 m_brkfst	ÀÏ´ó¸ç (UK, Game Card 95-750-524 )	ÀÏ´ó¸ç (UK, Game Card 95-750-524 )	BFM
 m_bdrwho	³¬Ê±¿Õ²©Ê¿ (µÚ1Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-288)	³¬Ê±¿Õ²©Ê¿ (µÚ1Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-288)	BFM
 m_bdrwh1	³¬Ê±¿Õ²©Ê¿ (µÚ2Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-661)	³¬Ê±¿Õ²©Ê¿ (µÚ2Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-661)	BFM
@@ -8280,7 +8320,7 @@ kof2000d	È­»Ê 2000 (P Î´¼ÓÃÜ, C ½âÃÜ)	È­»Ê 2000 (P Î´¼ÓÃÜ, C ½âÃÜ)	SNK
 nitdd	ºÚ°µÊØÄ¹Õß / °µºÚ¶ñÃÎ (C ½âÃÜ)	ºÚ°µÊØÄ¹Õß / °µºÚ¶ñÃÎ (C ½âÃÜ)	Eleven / Gavaking
 sengok3d	Õ½¹ú´«³Ğ 3 / Õ½¹ú´«³Ğ 2001 (C ½âÃÜ)	Õ½¹ú´«³Ğ 3 / Õ½¹ú´«³Ğ 2001 (C ½âÃÜ)	SNK
 kof2001d	È­»Ê 2001 (µÚ2Ì×, C ½âÃÜ)	È­»Ê 2001 (µÚ2Ì×, C ½âÃÜ)	Eolith / SNK
-mslug4d	ºÏ½ğµ¯Í· 4 (C ½âÃÜ)	ºÏ½ğµ¯Í· 4 (C ½âÃÜ)	Mega
+mslug4d	ºÏ½ğµ¯Í· 4 (Custom C ½âÃÜ)	ºÏ½ğµ¯Í· 4 (Custom C ½âÃÜ)	Mega
 rotdd	Áúºğ - Ë«½ØÁú (C ½âÃÜ)	Áúºğ - Ë«½ØÁú (C ½âÃÜ)	Evoga / Playmore
 kof2002d	È­»Ê 2002 - ÖÕ¼«ÌôÕ½ (C ½âÃÜ)	È­»Ê 2002 - ÖÕ¼«ÌôÕ½ (C ½âÃÜ)	Eolith / Playmore
 matrimd	ĞÂºÀÑªËÂÒ»×å - ¶·»é (C ½âÃÜ)	ĞÂºÀÑªËÂÒ»×å - ¶·»é (C ½âÃÜ)	Noise Factory / Atlus
