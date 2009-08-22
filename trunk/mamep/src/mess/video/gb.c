@@ -2450,3 +2450,4 @@ WRITE8_HANDLER ( gbc_video_w )
 
 	gb_vid_regs[offset] = data;
 }
+
