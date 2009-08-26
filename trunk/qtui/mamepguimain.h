@@ -89,6 +89,7 @@ public slots:
 	void on_actionAbout_activated();
 
 	void on_actionPlay_activated();
+	void on_actionCommandLine_activated();
 	void on_actionSavestate_activated();
 	void on_actionPlayback_activated();
 	void on_actionRecord_activated();

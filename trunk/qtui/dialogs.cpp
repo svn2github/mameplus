@@ -7,6 +7,7 @@
 PlayOptions *playOptionsUI = NULL;
 Dirs *dirsUI = NULL;
 About *aboutUI = NULL;
+Cmd *cmdUI = NULL;
 
 PlayOptions::PlayOptions(QWidget *parent) : 
 QDialog(parent)
@@ -187,7 +188,7 @@ void PlayOptions::runMame()
 		args << arg1 << arg2;
 	}
 
-	gameList->runMame(false, args);
+	gameList->runMame(RUNMAME_NORMAL, args);
 }
 
 void PlayOptions::clear()
@@ -361,6 +362,12 @@ void Dirs::removeDirectory()
 }
 
 About::About(QWidget *parent)
+:QDialog(parent)
+{
+	setupUi(this);
+}
+
+Cmd::Cmd(QWidget *parent)
 :QDialog(parent)
 {
 	setupUi(this);

@@ -4,6 +4,7 @@
 #include "mameopt.h"
 #include "ips.h"
 #include "m1.h"
+#include "dialogs.h"
 
 /* global */
 MameGame *mameGame = NULL;
@@ -31,6 +32,8 @@ QByteArray defIconDataRed;
 QByteArray defMameSnapData;
 QByteArray defMessSnapData;
 
+static QRegExp emptyRegex("");
+
 #define ROOT_FOLDER "ROOT_FOLDER"
 #define EXTFOLDER_MAGIC "**00_"
 #define STR_DELCFG "actionDelCfg_"
@@ -48,6 +51,25 @@ enum
 	COL_YEAR,
 	COL_CLONEOF,
 	COL_LAST
+};
+
+//from treeview.h
+enum
+{
+	F_CLONES		= 0x0001,
+	F_NONWORKING	= 0x0002,
+	F_UNAVAILABLE	= 0x0004,
+	F_VECTOR		= 0x0008,
+	F_RASTER		= 0x0010,
+	F_ORIGINALS 	= 0x0020,
+	F_WORKING		= 0x0040,
+	F_AVAILABLE 	= 0x0080,
+	F_HORIZONTAL	= 0x1000,
+	F_VERTICAL		= 0x2000,
+	F_COMPUTER		= 0x0200,
+	F_CONSOLE		= 0x0400,
+	F_MODIFIED		= 0x0800,
+	F_MASK			= 0xFFFF
 };
 
 /* to support mameplus .mmo translation */
@@ -2186,6 +2208,13 @@ void Gamelist::init(bool toggleState, int initMethod)
 
 	//have to init here instead of in the constructor, after isMESS has been assigned
 	if (!hasInitd)
+	{
+		//filters
+		filterFlags = pGuiSettings->value("folder_flag").toInt();
+		win->actionFilterClones->setChecked(F_CLONES & filterFlags);
+		win->actionFilterNonWorking->setChecked(F_NONWORKING & filterFlags);
+		win->actionFilterUnavailable->setChecked(F_UNAVAILABLE & filterFlags);
+
 		intFolderNames0
 			<< QT_TR_NOOP("All Games")
 			<< (isMESS ? QT_TR_NOOP("All Systems") : QT_TR_NOOP("All Arcades"))
@@ -2217,6 +2246,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 			<< QT_TR_NOOP("Artwork")
 			*/
 			;
+	}
 
 	foreach (QString folderName, intFolderNames0)
 		intFolderNames << tr(qPrintable(folderName));
@@ -2351,7 +2381,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	//sorting
 	win->tvGameList->setSortingEnabled(true);
 
-	//fixme: hack to update snapshot_directory for non-Windows
+	//fixme: hack to update snapshot_directory for non-Windows build
 	optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL);
 
 	if (!hasInitd)
@@ -3110,6 +3140,33 @@ void Gamelist::runMergedFinished(int, QProcess::ExitStatus)
 	currentTempROM.clear();
 }
 
+void Gamelist::filterFlagsChanged(bool isChecked)
+{
+	QAction* actionFilter = (QAction*)sender();
+	quint16 currentFlag = 0x0;
+	if (actionFilter->objectName() == "actionFilterClones")
+		currentFlag = F_CLONES;
+	else if (actionFilter->objectName() == "actionFilterNonWorking")
+		currentFlag = F_NONWORKING;
+	else if (actionFilter->objectName() == "actionFilterUnavailable")
+		currentFlag = F_UNAVAILABLE;
+
+	if (isChecked)
+		filterFlags |= currentFlag;
+	else
+		filterFlags ^= currentFlag;
+
+	// set it for a callback to refresh the list
+	gameListPModel->setFilterRegExp(emptyRegex);
+
+	//fixme: must have this, otherwise the list cannot be expanded properly
+	qApp->processEvents();
+	win->tvGameList->expandAll();
+
+	restoreGameSelection();
+//	win->log(QString("filterFlags: %1").arg(filterFlags));
+}
+
 void Gamelist::filterSearchCleared()
 {
 	if (win->lineEditSearch->text().count() < 1)
@@ -3133,7 +3190,6 @@ void Gamelist::filterSearchChanged()
 	text.replace(spaceRegex, "*");
 
 	//fixme: doesnt use filterregexp
-	static QRegExp emptyRegex("");
 	gameListPModel->searchText = text;
 	// set it for a callback to refresh the list
 	gameListPModel->setFilterRegExp(emptyRegex);
@@ -3268,10 +3324,9 @@ void Gamelist::filterFolderChanged(QTreeWidgetItem *_current, QTreeWidgetItem *p
 			gameListPModel->setFilterRole(Qt::UserRole + FOLDER_ALLARC);
 	}
 
-	static QRegExp regExp("");
 	// set it for a callback to refresh the list
 	gameListPModel->filterText = filterText;	// must set before regExp
-	gameListPModel->setFilterRegExp(regExp);
+	gameListPModel->setFilterRegExp(emptyRegex);
 
 	//fixme: must have this, otherwise the list cannot be expanded properly
 	qApp->processEvents();
@@ -3890,7 +3945,7 @@ bool Gamelist::isConsoleFolder()
 	return false;
 }
 
-void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
+void Gamelist::runMame(int method, QStringList playArgs)
 {
 	//block multi mame session for now
 	//if (procMan->procCount > 0)
@@ -3905,13 +3960,6 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 
 	QStringList args;
 	args << playArgs;
-
-	if (hasLanguage)
-	{
-		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
-		args << "-langpath" << langpath;
-		args << "-language" << language;
-	}
 
 	//force update ext rom fields
 	updateDynamicMenu(win->menuFile);
@@ -3928,7 +3976,7 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 	// run MESS roms, add necessary params
 	{
 		// extract rom from the merged file
-		if (!hasTempRom && gameName.contains(SZIP_EXT "/"))
+		if (method != RUNMAME_EXTROM && gameName.contains(SZIP_EXT "/"))
 		{
 			QStringList paths = gameName.split(SZIP_EXT "/");
 			QString archName = paths.first() + SZIP_EXT;
@@ -3939,7 +3987,7 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 			QHash<QString, MameFileInfo *> mameFileInfoList = 
 				utils->iterateMameFile(fileInfo.path(), fileInfo.completeBaseName(), romFileName, MAMEFILE_EXTRACT);
 			utils->clearMameFileInfoList(mameFileInfoList);
-			runMame(true);
+			runMame(RUNMAME_EXTROM);
 			return;
 		}
 
@@ -3959,7 +4007,7 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 			if (!deviceInfo->mountedPath.isEmpty())
 			{
 				args << "-" + instanceName;
-				if (hasTempRom && !tempRomLoaded)
+				if (method == RUNMAME_EXTROM && !tempRomLoaded)
 				{
 					args << currentTempROM;
 					tempRomLoaded = true;
@@ -3982,12 +4030,63 @@ void Gamelist::runMame(bool hasTempRom, QStringList playArgs)
 		}
 	}
 
-//	win->poplog(args.join(" "));
+	if (hasLanguage)
+	{
+		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
+		args << "-langpath" << langpath;
+		args << "-language" << language;
+	}
 
-	loadProc = procMan->process(procMan->start(mame_binary, args, !hasTempRom));
+	if (method == RUNMAME_CMD)
+	{
+		QStringList strOptions;
+
+		//update mameOpts
+		optUtils->preUpdateModel(NULL, OPTLEVEL_CURR);
+
+		QStringList optNames = mameOpts.keys();
+		optNames.sort();
+
+		foreach (QString optName, optNames)
+		{
+			MameOption *pMameOpt = mameOpts[optName];
+			QString currVal = pMameOpt->currvalue;
+			if (pMameOpt->defvalue != currVal && 
+				!optName.endsWith("_extra_software") && 
+				!pGuiSettings->contains(optName) &&
+				optName != "langpath" &&
+				optName != "language"
+				)
+			{
+				if (pMameOpt->type == MAMEOPT_TYPE_BOOL)
+				{
+					QString opt = optName;
+					if (currVal == "0")
+						opt.prepend("no");
+					
+					strOptions << "-" + opt;
+				}
+				else
+					strOptions << "-" + optName + " " + currVal;
+			}
+		}
+		
+		cmdUI->textCommand->setText((args + strOptions).join(" "));
+		if (cmdUI->exec() == QDialog::Accepted)
+		{
+			QString cmdArgs = cmdUI->textCommand->toPlainText();
+			args.clear();
+			args << "-noreadconfig";
+			args << cmdArgs.split(" ", QString::SkipEmptyParts);
+		}
+		else
+			return;
+	}
+
+	loadProc = procMan->process(procMan->start(mame_binary, args, method != RUNMAME_EXTROM));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMameFinished(int, QProcess::ExitStatus)));
 	// delete the extracted rom
-	if (hasTempRom)
+	if (method == RUNMAME_EXTROM)
 		connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(runMergedFinished(int, QProcess::ExitStatus)));
 	connect(loadProc, SIGNAL(finished(int, QProcess::ExitStatus)), win, SLOT(toggleTrayIcon(int, QProcess::ExitStatus)));
 	win->toggleTrayIcon(0, QProcess::NormalExit, true);
@@ -4026,9 +4125,18 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 		gameInfo = mameGame->games[gameNameExtRom];
 
 	//fixme: how to filter MESS games
-	bool isConsole = gameInfo->sourcefile == "cpschngr.c" || !gameInfo->devices.isEmpty();
-	bool isBIOS = gameInfo->isBios;
-	bool isExtRom = gameInfo->isExtRom;
+	const bool isConsole = gameInfo->sourcefile == "cpschngr.c" || !gameInfo->devices.isEmpty();
+	const bool isBIOS = gameInfo->isBios;
+	const bool isExtRom = gameInfo->isExtRom;
+	const bool isClone = !gameInfo->cloneof.isEmpty();
+
+	// apply filter flags
+	if (F_CLONES & gameList->filterFlags && !isExtRom)
+		result = result && !isClone;
+	if (F_NONWORKING & gameList->filterFlags&& !isExtRom)
+		result = result && gameInfo->status;
+	if (F_UNAVAILABLE & gameList->filterFlags&& !isExtRom)
+		result = result && gameInfo->available == 1;
 
 	// apply search filter
 	if (!searchText.isEmpty())
@@ -4110,11 +4218,11 @@ bool GameListSortFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelI
 		break;
 		
 	case Qt::UserRole + FOLDER_ORIGINALS:
-		result = result && !isBIOS && !isExtRom && gameInfo->cloneof.isEmpty();
+		result = result && !isBIOS && !isExtRom && !isClone;
 		break;
 
 	case Qt::UserRole + FOLDER_CLONES:
-		result = result && !isBIOS && !isExtRom && !gameInfo->cloneof.isEmpty();
+		result = result && !isBIOS && !isExtRom && isClone;
 		break;
 
 	case Qt::UserRole + FOLDER_CHANNELS:

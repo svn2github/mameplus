@@ -47,6 +47,8 @@
      <property name="title">
       <string>Play with Options</string>
      </property>
+     <addaction name="actionCommandLine"/>
+     <addaction name="separator"/>
      <addaction name="actionSavestate"/>
      <addaction name="actionPlayback"/>
      <addaction name="actionRecord"/>
@@ -124,6 +126,14 @@
       <string>&amp;Show Folders</string>
      </property>
     </widget>
+    <widget class="QMenu" name="menuCustomFilters">
+     <property name="title">
+      <string>&amp;Custom Filters</string>
+     </property>
+     <addaction name="actionFilterClones"/>
+     <addaction name="actionFilterNonWorking"/>
+     <addaction name="actionFilterUnavailable"/>
+    </widget>
     <addaction name="menuShowFolders"/>
     <addaction name="menuPictures"/>
     <addaction name="menuDocuments"/>
@@ -134,9 +144,10 @@
     <addaction name="actionGrouped"/>
     <addaction name="actionRowDelegate"/>
     <addaction name="actionLocalGameList"/>
-    <addaction name="menuCustomizeFields"/>
     <addaction name="separator"/>
     <addaction name="actionRefresh"/>
+    <addaction name="menuCustomizeFields"/>
+    <addaction name="menuCustomFilters"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -624,7 +635,7 @@
   </action>
   <action name="actionSavestate">
    <property name="text">
-    <string>Load &amp;Savestate</string>
+    <string>Load &amp;Savestate...</string>
    </property>
   </action>
   <action name="actionHungarian">
@@ -666,6 +677,40 @@
   <action name="actionAuditAll">
    <property name="text">
     <string>&amp;Audit All Games</string>
+   </property>
+  </action>
+  <action name="actionFilterClones">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide C&amp;lones</string>
+   </property>
+  </action>
+  <action name="actionFilterNonWorking">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide Non-Wor&amp;king</string>
+   </property>
+  </action>
+  <action name="actionFilterUnavailable">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Hide &amp;Unavailable</string>
+   </property>
+  </action>
+  <action name="actionCommandLine">
+   <property name="text">
+    <string>Command Line...</string>
+   </property>
+  </action>
+  <action name="actionFixDatComplete">
+   <property name="text">
+    <string>All Sets...</string>
    </property>
   </action>
  </widget>

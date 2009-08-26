@@ -276,6 +276,7 @@ QMainWindow(parent)
 	csvCfgUI = new CsvCfg(this);
 	aboutUI = new About(this);
 	ipsUI = new IPS(this);
+	cmdUI = new Cmd(this);
 #ifdef Q_OS_WIN
 	m1 = new M1(0);
 	m1UI = new M1UI(this);
@@ -551,6 +552,10 @@ void MainWindow::init()
 	connect(actionStretchSshot, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 	connect(actionEnforceAspect, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 
+	connect(actionFilterClones, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
+	connect(actionFilterNonWorking, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
+	connect(actionFilterUnavailable, SIGNAL(toggled(bool)), gameList, SLOT(filterFlagsChanged(bool)));
+
 	// Auditor
 	connect(&romAuditor, SIGNAL(progressSwitched(int, QString)), gameList, SLOT(switchProgress(int, QString)));
 	connect(&romAuditor, SIGNAL(progressUpdated(int)), gameList, SLOT(updateProgress(int)));
@@ -615,7 +620,7 @@ void MainWindow::setVersion()
 		"%2%3%4%5%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.7b")
+		.arg("1.4.7c")
 		.arg(mameString)
 		.arg(m1VerString)
 		.arg("<a href=\"http://www.qtsoftware.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
@@ -659,6 +664,11 @@ void MainWindow::enableCtrls(bool isEnabled)
 void MainWindow::on_actionPlay_activated()
 {
 	gameList->runMame();
+}
+
+void MainWindow::on_actionCommandLine_activated()
+{
+	gameList->runMame(RUNMAME_CMD);
 }
 
 void MainWindow::on_actionSavestate_activated()
@@ -816,7 +826,7 @@ void MainWindow::on_actionAbout_activated()
 	aboutUI->exec();
 #else
 	QHash<QString, MameFileInfo *> mameFileInfoList = 
-		utils->iterateMameFile("d:/svn_proj/mamepgui/release", "", "mamepgui.exe", MAMEFILE_GETINFO);
+		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.exe", MAMEFILE_GETINFO);
 
 	QString buf;
 	foreach (QString key, mameFileInfoList.keys())
@@ -832,9 +842,8 @@ void MainWindow::on_actionAbout_activated()
 
 	utils->clearMameFileInfoList(mameFileInfoList);
 
-	const QString appPath = QCoreApplication::applicationFilePath();
-
-	QFile::rename("mamepgui.exe", "mamepgui.exe.bak");
+//	const QString appPath = QCoreApplication::applicationFilePath();
+//	QFile::rename("mamepgui.exe", "mamepgui.exe.bak");
 
 #endif
 }
@@ -990,6 +999,7 @@ void MainWindow::initSettings()
 		<< "default_game"
 		<< "default_folder"
 		<< "hide_folders"
+		<< "folder_flag"
 		<< "vertical_tabs"
 		<< "stretch_screenshot_larger"
 		<< "enforce_aspect"
@@ -1200,6 +1210,7 @@ void MainWindow::saveSettings()
 	pGuiSettings->setValue("default_folder", defalutFolder);
 	pGuiSettings->setValue("list_mode", gameList->listMode);
 	pGuiSettings->setValue("hide_folders", hiddenFolders);
+	pGuiSettings->setValue("folder_flag", gameList->filterFlags);
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

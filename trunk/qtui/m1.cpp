@@ -20,6 +20,7 @@ M1UI::M1UI(QWidget *parent)
 	twSongList->setHeaderLabels(m1Headers);
 	twSongList->header()->moveSection(2, 1);
 
+	//fixme: should be dynamic
 	const QStringList langs = (QStringList()
 		<< "en" << "jp");
 	cmbLang->addItems(langs);
@@ -30,6 +31,7 @@ M1UI::M1UI(QWidget *parent)
 		sel = 0;
 	cmbLang->setCurrentIndex(sel);
 
+/*
 	if (m1Language == "jp")
 	{
 		QFont font;
@@ -38,8 +40,7 @@ M1UI::M1UI(QWidget *parent)
 		twSongList->setFont(font);
 		lblTrackName->setFont(font);
 	}
-
-	setEnabled(false);
+*/
 }
 
 void M1UI::init()
@@ -137,7 +138,6 @@ void M1::postInit()
 	{
 		available = true;
 
-		m1UI->setEnabled(true);
 		m1UI->init();
 		updateList();
 		win->setVersion();

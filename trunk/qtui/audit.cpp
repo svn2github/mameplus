@@ -149,6 +149,7 @@ void RomAuditor::exportDat()
 					method == AUDIT_EXPORT_MISSING && !completelyMissing)
 					continue;
 
+				//write xml
 				out.writeStartElement("game");
 				out.writeAttribute("name", gameName);
 				out.writeAttribute("sourcefile", gameInfo->sourcefile);
@@ -178,6 +179,8 @@ void RomAuditor::exportDat()
 	}
 	
 	outFile.close();
+
+	win->poplog("Finished.");
 }
 
 void RomAuditor::audit(bool autoAudit, int _method, QString fileName)

@@ -15,6 +15,13 @@ enum
 
 enum
 {
+	RUNMAME_NORMAL = 0,
+	RUNMAME_EXTROM,
+	RUNMAME_CMD
+};
+
+enum
+{
 	DOCK_SNAP,
 	DOCK_FLYER,
 	DOCK_CABINET,
@@ -406,6 +413,7 @@ public:
 	QStringList intFolderNames0, intFolderNames;
 	QPixmap pmDeco;
 	QRect rectDeco;
+	quint16 filterFlags;
 
 	// interactive threads used by the game list
 	UpdateSelectionThread selectionThread;
@@ -425,7 +433,7 @@ public slots:
 	void init(bool = true, int = GAMELIST_INIT_AUDIT);	//the default init value is a hack, for connect slots
 	void update(int = GAMELIST_INIT_FULL);
 	void restoreGameSelection();
-	void runMame(bool = false, QStringList = QStringList());
+	void runMame(int = RUNMAME_NORMAL, QStringList = QStringList());
 	QString getViewString(const QModelIndex &index, int column) const;
 	GameInfo* getGameInfo (const QModelIndex &, QString&);
 	void updateProgress(int progress);
@@ -439,6 +447,7 @@ public slots:
 	void runMameFinished(int, QProcess::ExitStatus);
 	void runMergedFinished(int, QProcess::ExitStatus);
 
+	void filterFlagsChanged(bool);
 	void filterSearchCleared();
 	void filterSearchChanged();
 	void filterFolderChanged(QTreeWidgetItem * = NULL, QTreeWidgetItem * = NULL);

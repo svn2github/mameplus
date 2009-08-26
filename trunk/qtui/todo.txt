@@ -39,8 +39,8 @@ game conflicts*
 
 note that all paths are determinable
 
-exes: mamep, mamepgui, mame, mess, mameui, m1_xml, m1_bin, m1_lst(multi), exttools(multi)
-exts: history, hiscore, mameinfo, sysinfo, command, cheat(multi), lang(multi), snap(multi)
+exes: mamep, mamepgui, mess, mameui, exttools(multi)
+exts: jp,ita history, jp mameinfo, sysinfo, jp/en command, lang(multi), snap(multi)
 
 .script to detect latest version, provide url, version > filename.info
 wget to local > filename

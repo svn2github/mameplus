@@ -6,6 +6,7 @@
 #include "ui_playoptions.h"
 #include "ui_directories.h"
 #include "ui_about.h"
+#include "ui_cmd.h"
 
 class PlayOptions: public QDialog, public Ui::PlayOptions
 {
@@ -65,7 +66,17 @@ public:
 	About(QWidget *parent = 0);
 };
 
+class Cmd: public QDialog, public Ui::Cmd
+{
+Q_OBJECT
+
+public:
+	Cmd(QWidget *parent = 0);
+};
+
+
 extern PlayOptions *playOptionsUI;
 extern Dirs *dirsUI;
 extern About *aboutUI;
+extern Cmd *cmdUI;
 #endif
