@@ -2713,6 +2713,7 @@ shangtou	上海 - 三国牌斗义 (Ver 2.01J)	上海 - 三国牌斗义 (Ver 2.01J)	Warashi/Sun
 xiistag	赤红十三 (V2.01J)	赤红十三 (V2.01J)	Triangle Service
 sianniv	太空侵略者周年纪念 (V2.02J)	太空侵略者周年纪念 (V2.02J)	Taito
 kollon	柯隆方块 (V2.04J)	柯隆方块 (V2.04J)	Taito
+kollonc	柯隆方块 (V2.04JC)	柯隆方块 (V2.04JC)	Taito
 zooo	动物管理员 (V2.01J)	动物管理员 (V2.01J)	Success
 tekken	铁拳 (TE4/VER.C)	铁拳 (TE4/VER.C)	Namco
 tekkena	铁拳 (TE2/VER.C)	铁拳 (TE2/VER.C)	Namco
@@ -3699,6 +3700,7 @@ mt_shnbi	超级忍 (Mega-Tech, SMS based)	超级忍 (Mega-Tech, SMS based)	Sega
 mt_aftrb	冲破火网 (Mega-Tech, SMS based)	冲破火网 (Mega-Tech, SMS based)	Sega
 mt_tfor2	闪电火力 2 (Mega-Tech)	闪电火力 2 (Mega-Tech)	Tecno Soft / Sega
 mt_astro	高级勇士 (Mega-Tech, SMS based)	高级勇士 (Mega-Tech, SMS based)	Sega
+mt_gfoot	伟大足球 (Mega-Tech, SMS based)	伟大足球 (Mega-Tech, SMS based)	Sega
 mt_lastb	北斗神拳 - 新世纪末救世主传说 (Mega-Tech)	北斗神拳 - 新世纪末救世主传说 (Mega-Tech)	Sega
 mt_wcsoc	世界足球 (Mega-Tech)	世界足球 (Mega-Tech)	Sega
 mt_tetri	俄罗斯方块 (Mega-Tech)	俄罗斯方块 (Mega-Tech)	Sega
@@ -3751,7 +3753,7 @@ naomi2	Naomi 2 Bios	Naomi 2 Bios	Sega
 hod2bios	Naomi House of the Dead 2 Bios	Naomi House of the Dead 2 Bios	Sega
 dybbnao	火爆棒球 NAOMI (JPN)	火爆棒球 NAOMI (JPN)	Sega
 pstone	能量宝石 (JPN, USA, EUR, ASI, AUS)	能量宝石 (JPN, USA, EUR, ASI, AUS)	Capcom
-zombrvn	死灵复仇 (JPN, USA, EXP, KOR, AUS)	死灵复仇 (JPN, USA, EXP, KOR, AUS)	Sega
+zombrvn	僵尸复仇 (JPN, USA, EXP, KOR, AUS)	僵尸复仇 (JPN, USA, EXP, KOR, AUS)	Sega
 ggram2	全日本职业摔角 (JPN, USA, EXP, KOR, AUS)	全日本职业摔角 (JPN, USA, EXP, KOR, AUS)	Sega
 f355bios	Naomi Ferrari F355 Challenge Bios	Naomi Ferrari F355 Challenge Bios	Sega
 f355	法拉利 F355 挑战赛	法拉利 F355 挑战赛	Sega
@@ -5693,6 +5695,7 @@ shimpactp4	超级狂野橄榄球 (工程版, rev 4.0 09/10/91)	超级狂野橄榄球 (工程版, rev
 strkforc	射击部队 (rev 1 02/25/91)	射击部队 (rev 1 02/25/91)	Midway
 mk	真人快打 (rev 5.0 T-Unit 03/19/93)	真人快打 (rev 5.0 T-Unit 03/19/93)	Midway
 mkr4	真人快打 (rev 4.0 T-Unit 02/11/93)	真人快打 (rev 4.0 T-Unit 02/11/93)	Midway
+mkturbo	真人快打 (rev 3.1 T-Unit 03/19/93, hack)	真人快打 (rev 3.1 T-Unit 03/19/93, hack)	Midway
 mkprot8	真人快打 (工程版, rev 8.0 07/21/92)	真人快打 (工程版, rev 8.0 07/21/92)	Midway
 mkprot9	真人快打 (工程版, rev 9.0 07/28/92)	真人快打 (工程版, rev 9.0 07/28/92)	Midway
 mkla1	真人快打 (rev 1.0 08/09/92)	真人快打 (rev 1.0 08/09/92)	Midway
@@ -5859,6 +5862,7 @@ koroleva	玫瑰花园	玫瑰花园	Terminal
 rtriv	问答 罗马百科	问答 罗马百科	Romar
 konek	双面扬声	双面扬声	Terminal
 sosterm	国际援助	国际援助	Terminal
+bilyard	台球	台球	Terminal
 phtetris	俄罗斯方块 (Photon 系统)	俄罗斯方块 (Photon 系统)	<unknown>
 phpython	大蟒蛇 (Photon System)	大蟒蛇 (Photon System)	<unknown>
 bagman	推销员	推销员	Valadon Automation
@@ -6297,7 +6301,7 @@ shogwarr	幕府快打	幕府快打	Kaneko
 shogwarre	幕府快打 (欧洲版)	幕府快打 (欧洲版)	Kaneko
 fjbuster	幕府快打 - 富士山 BUSTER (日版)	幕府快打 - 富士山 BUSTER (日版)	Kaneko
 brapboys	嘻哈男孩 (世界版)	嘻哈男孩 (世界版)	Kaneko
-brapboysj	嘻哈男孩 (日版)	嘻哈男孩 (日版)	Kaneko
+brapboysj	嘻哈男孩 特别版 (日版)	嘻哈男孩 特别版 (日版)	Kaneko
 bloodwar	大江户格斗 - 血忍	大江户格斗 - 血忍	Kaneko
 bonkadv	究极 PC 原人	究极 PC 原人	Kaneko
 gtmr	1000 英里大师赛车 (94/07/18)	1000 英里大师赛车 (94/07/18)	Kaneko
@@ -6560,7 +6564,7 @@ missw96	天蚕变 '96 (裸体)	天蚕变 '96 (裸体)	Comad
 missmw96	天蚕变 '96 - 世界先生 + 世界小姐篇 (裸体)	天蚕变 '96 - 世界先生 + 世界小姐篇 (裸体)	Comad
 fantsia2	天蚕变幻想曲 II (明确)	天蚕变幻想曲 II (明确)	Comad
 fantsia2a	天蚕变幻想曲 II (较明确)	天蚕变幻想曲 II (较明确)	Comad
-wownfant	WOW 新幻想曲	WOW 新幻想曲	Comad
+wownfant	天蚕变 新幻想曲	天蚕变 新幻想曲	Comad
 galhustl	开仑骗子	开仑骗子	ACE International
 sslam	超级网球 (第1套)	超级网球 (第1套)	Playmark
 sslama	超级网球 (第2套)	超级网球 (第2套)	Playmark
@@ -7456,9 +7460,10 @@ couplei	出双入对 (第3套)	出双入对 (第3套)	Merit
 pitboss2	赌场大亨 II	赌场大亨 II	Merit
 spitboss	超级赌场大亨	超级赌场大亨	Merit
 pitbosss	赌场大亨 - 超级巨星	赌场大亨 - 超级巨星	Merit
-pitbossm	赌场大亨 Megastar	赌场大亨 Megastar	Merit
-pbst30	赌场大亨 - 超级接触 30	赌场大亨 - 超级接触 30	Merit
-pbst30b	赌场大亨 - 超级接触 30 (第2套)	赌场大亨 - 超级接触 30 (第2套)	Merit
+pitbossm	赌场大亨 Megastar (9244-00-01)	赌场大亨 Megastar (9244-00-01)	Merit
+pitbossma	赌场大亨 Megastar (9243-00-01)	赌场大亨 Megastar (9243-00-01)	Merit
+pbst30	赌场大亨 - 超级接触 30 (9234-10-01)	赌场大亨 - 超级接触 30 (9234-10-01)	Merit
+pbst30b	赌场大亨 - 超级接触 30 (9234-00-01)	赌场大亨 - 超级接触 30 (9234-00-01)	Merit
 megat3	非常接触 III (9255-20-01 RON, 标准版)	非常接触 III (9255-20-01 RON, 标准版)	Merit
 megat3a	非常接触 III (9255-20-01 ROF, 标准版)	非常接触 III (9255-20-01 ROF, 标准版)	Merit
 megat3ca	非常接触 III (9255-20-06 RON, 加利福尼亚版)	非常接触 III (9255-20-06 RON, 加利福尼亚版)	Merit
@@ -8155,6 +8160,9 @@ himesiki	姬四季舞 (日版)	姬四季舞 (日版)	Hi-Soft
 gtipoker	GTI 扑克	GTI 扑克	GTI Inc
 norautp	扑克积分 (第1套)	扑克积分 (第1套)	Noraut Ltd.
 norautjp	扑克积分 (第2套)	扑克积分 (第2套)	Noraut Ltd.
+norautrh	Noraut Red Hot Joker Poker	Noraut Red Hot Joker Poker	Noraut Ltd.
+norautu	Noraut Poker (NTX10A)	Noraut Poker (NTX10A)	Noraut Ltd.
+norautv3	Noraut Joker Poker (V3.010a)	Noraut Joker Poker (V3.010a)	Noraut Ltd.
 norautpn	扑克积分 (盗版)	扑克积分 (盗版)	bootleg?
 pachifev	狂热柏青哥	狂热柏青哥	Sanki Denshi Kogyo
 bonanza	幸运兄弟 (校正版 3)	幸运兄弟 (校正版 3)	New Image Technologies
@@ -8163,10 +8171,10 @@ streetg	街头狂想 (校正版 4)	街头狂想 (校正版 4)	New Image Technologies
 streetgr3	街头狂想 (校正版 3)	街头狂想 (校正版 3)	New Image Technologies
 streetg2	街头狂想 II (校正版 7C)	街头狂想 II (校正版 7C)	New Image Technologies
 streetg2r5	街头狂想 II (校正版 5)	街头狂想 II (校正版 5)	New Image Technologies
-colorama	Colorama (english)	Colorama (english)	Coinmaster-Gaming, Ltd.
+colorama	彩色光 (英语)	彩色光 (英语)	Coinmaster-Gaming, Ltd.
 cmrltv75	赌轮盘 V75 (Y2K, 西班牙)	赌轮盘 V75 (Y2K, 西班牙)	Coinmaster-Gaming, Ltd.
-cmkenosp	硬币大师 Keno (Y2K, 西班牙, 2000-12-14)	硬币大师 Keno (Y2K, 西班牙, 2000-12-14)	Coinmaster-Gaming, Ltd.
-cmkenospa	硬币大师 Keno (Y2K, 西班牙, 2000-12-02)	硬币大师 Keno (Y2K, 西班牙, 2000-12-02)	Coinmaster-Gaming, Ltd.
+cmkenosp	赌轮盘 (Y2K, 西班牙, 2000-12-14)	赌轮盘 (Y2K, 西班牙, 2000-12-14)	Coinmaster-Gaming, Ltd.
+cmkenospa	赌轮盘 (Y2K, 西班牙, 2000-12-02)	赌轮盘 (Y2K, 西班牙, 2000-12-02)	Coinmaster-Gaming, Ltd.
 mfish_3	迷你钓鱼 (021124, 第1套)	迷你钓鱼 (021124, 第1套)	Igro
 mfish_3a	迷你钓鱼 (021124, 第2套)	迷你钓鱼 (021124, 第2套)	Igro
 mfish_12	迷你钓鱼 (040308, 第1套)	迷你钓鱼 (040308, 第1套)	Igro
@@ -8188,7 +8196,7 @@ lhaunt_5	幸运水果机 (040216. 第1套)	幸运水果机 (040216. 第1套)	Igrosoft
 lhaunt_5a	幸运水果机 (040216, 第2套)	幸运水果机 (040216, 第2套)	Igrosoft
 lhaunt_6	幸运水果机 (040825, 第1套)	幸运水果机 (040825, 第1套)	Igrosoft
 lhaunt_6a	幸运水果机 (040825, 第2套)	幸运水果机 (040825, 第2套)	Igrosoft
-rollfr_2	Roll Fruit (040318)	Roll Fruit (040318)	Igrosoft
+rollfr_2	滚动水果机 (040318)	滚动水果机 (040318)	Igrosoft
 garage_4	车库 (040219, 第1套)	车库 (040219, 第1套)	Igrosoft
 garage_4a	车库 (040219, 第2套)	车库 (040219, 第2套)	Igrosoft
 garage_5	车库 (050311, 第1套)	车库 (050311, 第1套)	Igrosoft
@@ -8205,11 +8213,11 @@ islanda	岛屿 (050713, 第2套)	岛屿 (050713, 第2套)	Igrosoft
 pirate_1	海盗 (060210)	海盗 (060210)	Igrosoft
 island2	岛屿 2 (060529, 第1套)	岛屿 2 (060529, 第1套)	Igrosoft
 island2a	岛屿 2 (060529, 第2套)	岛屿 2 (060529, 第2套)	Igrosoft
-keks	Keks (060328, set 1)	Keks (060328, set 1)	Igrosoft
-keksa	Keks (060328, set 2)	Keks (060328, set 2)	Igrosoft
-keksb	Keks (060328, set 3)	Keks (060328, set 3)	Igrosoft
-keks_2	Keks (060403. set 1)	Keks (060403. set 1)	Igrosoft
-keks_2a	Keks (060403, set 3)	Keks (060403, set 3)	Igrosoft
+keks	快克水果机 (060328, 第1套)	快克水果机 (060328, 第1套)	Igrosoft
+keksa	快克水果机 (060328, 第2套)	快克水果机 (060328, 第2套)	Igrosoft
+keksb	快克水果机 (060328, 第3套)	快克水果机 (060328, 第3套)	Igrosoft
+keks_2	快克水果机 (060403. 第1套)	快克水果机 (060403. 第1套)	Igrosoft
+keks_2a	快克水果机 (060403, 第3套)	快克水果机 (060403, 第3套)	Igrosoft
 m_brkfst	老大哥 (UK, Game Card 95-750-524 )	老大哥 (UK, Game Card 95-750-524 )	BFM
 m_bdrwho	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	BFM
 m_bdrwh1	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	BFM
