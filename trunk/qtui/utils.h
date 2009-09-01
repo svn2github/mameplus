@@ -6,6 +6,7 @@
 enum
 {
 	MAMEFILE_GETINFO = 0,
+	MAMEFILE_GETDATINFO,
 	MAMEFILE_READ,
 	MAMEFILE_EXTRACT
 };
@@ -112,6 +113,6 @@ public slots:
 
 extern Utils *utils;
 extern ProcessManager *procMan;
-extern QRegExp spaceRegex;
+extern QRegExp rxSpace;
 
 #endif

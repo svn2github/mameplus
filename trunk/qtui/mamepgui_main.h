@@ -9,8 +9,10 @@
 #include <QApplication>
 #include <QtXml>
 
-#include "ui_mamepguimain.h"
+#include "ui_mamepgui_main.h"
+#include "mamepgui_types.h"
 #include "gamelist.h"
+#include "audit.h"
 
 class Screenshot : public QDockWidget
 {
@@ -72,6 +74,7 @@ public:
 public slots:
 	void on_actionExitStop_activated();
 	void on_actionRefresh_activated();
+	void on_actionFixDatComplete_activated();
 	void on_actionFixDatAll_activated();
 	void on_actionFixDatIncomplete_activated();
 	void on_actionFixDatMissing_activated();
@@ -113,7 +116,7 @@ public slots:
 	void on_actionColCloneOf_activated();
 	void on_trayIconActivated(QSystemTrayIcon::ActivationReason);
 
-    void log(QString, char logOrigin = 1);
+    void log(QString);
 	void poplog(QString);
 	void logStatus(QString);
 	void logStatus(GameInfo *);
@@ -170,7 +173,7 @@ extern QString CFG_PREFIX;
 
 extern MainWindow *win;
 extern QSettings *pGuiSettings, defSettings;
-extern QString currentDir;
+extern QString currentAppDir;
 extern QString mame_binary;
 extern QString language;
 extern bool local_game_list;

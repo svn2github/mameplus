@@ -42,12 +42,12 @@
     <message>
         <location filename="../gamelist.cpp" line="4189"/>
         <source>Horizontal</source>
-        <translation type="unfinished"></translation>
+        <translation>Vízszintes</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="4194"/>
         <source>Vertical</source>
-        <translation type="unfinished"></translation>
+        <translation>Függőleges</translation>
     </message>
 </context>
 <context>
@@ -88,7 +88,7 @@
     <message>
         <location filename="../gamelist.cpp" line="2179"/>
         <source>Available Systems</source>
-        <translation>Meglévő rendszerek</translation>
+        <translation>Meglévő rendszer</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2180"/>
@@ -133,12 +133,12 @@
     <message>
         <location filename="../gamelist.cpp" line="2186"/>
         <source>CPU</source>
-        <translation type="unfinished"></translation>
+        <translation>Processzor</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2187"/>
         <source>Sound</source>
-        <translation type="unfinished"></translation>
+        <translation>Hang</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2188"/>
@@ -148,77 +148,77 @@
     <message>
         <location filename="../gamelist.cpp" line="2189"/>
         <source>Samples</source>
-        <translation type="unfinished"></translation>
+        <translation>Hangminta</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2190"/>
         <source>Dumping Status</source>
-        <translation type="unfinished"></translation>
+        <translation>Letárolási állapot</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2191"/>
         <source>Working</source>
-        <translation type="unfinished"></translation>
+        <translation>Működő</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2192"/>
         <source>Not working</source>
-        <translation type="unfinished"></translation>
+        <translation>Nem működő</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2194"/>
         <source>Clones</source>
-        <translation type="unfinished"></translation>
+        <translation>Klón</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2197"/>
         <source>Refresh Rate</source>
-        <translation type="unfinished"></translation>
+        <translation>Képfrissítés</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3504"/>
         <source>Horizontal</source>
-        <translation type="unfinished"></translation>
+        <translation>Vízszintes</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3505"/>
         <source>Vertical</source>
-        <translation type="unfinished"></translation>
+        <translation>Függőleges</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2195"/>
         <source>Resolution</source>
-        <translation type="unfinished"></translation>
+        <translation>Felbontás</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2193"/>
         <source>Originals</source>
-        <translation type="unfinished"></translation>
+        <translation>Eredeti</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2196"/>
         <source>Colors</source>
-        <translation type="unfinished"></translation>
+        <translation>Szín</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2198"/>
         <source>Display</source>
-        <translation type="unfinished"></translation>
+        <translation>Kijelző</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2199"/>
         <source>Control Type</source>
-        <translation type="unfinished"></translation>
+        <translation>Irányítás típus</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2200"/>
         <source>Channels</source>
-        <translation type="unfinished"></translation>
+        <translation>Csatorna</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2201"/>
         <source>Save State</source>
-        <translation type="unfinished"></translation>
+        <translation>Állás mentés</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="2653"/>
@@ -253,17 +253,17 @@
     <message>
         <location filename="../gamelist.cpp" line="3037"/>
         <source>Remove All</source>
-        <translation type="unfinished"></translation>
+        <translation>Mind törlése</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3598"/>
         <source>(H)</source>
-        <translation type="unfinished"></translation>
+        <translation>(V)</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3598"/>
         <source>(V)</source>
-        <translation type="unfinished"></translation>
+        <translation>(F)</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3686"/>
@@ -273,7 +273,7 @@
     <message>
         <location filename="../gamelist.cpp" line="3899"/>
         <source>Loading M1, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>M1 betöltése, egy kis türelem...</translation>
     </message>
     <message>
         <location filename="../gamelist.cpp" line="3976"/>
@@ -330,7 +330,7 @@ csatlakoztatva legyenek:
     <message>
         <location filename="../m1.cpp" line="81"/>
         <source>Loading M1, please wait...</source>
-        <translation type="unfinished"></translation>
+        <translation>M1 betöltése, egy kis türelmet...</translation>
     </message>
 </context>
 <context>
@@ -553,7 +553,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="72"/>
         <source>Remove</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltávolítás</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="92"/>
@@ -582,7 +582,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="124"/>
         <source>&amp;Show Folders</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Mappák megjelenítése</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="143"/>
@@ -652,7 +652,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="594"/>
         <source>Highlight Selected Icon</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiválasztott ikon kiemelése</translation>
     </message>
     <message>
         <location filename="../mamepguimain.ui" line="648"/>
@@ -672,7 +672,7 @@ p, li { white-space: pre-wrap; }
     <message>
         <location filename="../mamepguimain.ui" line="668"/>
         <source>&amp;Audit All Games</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Összes játék ellenőrzése</translation>
     </message>
     <message>
         <source>&amp;Play</source>
@@ -910,7 +910,7 @@ Folytatja?</translation>
     <message>
         <location filename="../mamepguimain.cpp" line="160"/>
         <source>DriverInfo</source>
-        <translation type="unfinished"></translation>
+        <translation>Driver infó</translation>
     </message>
     <message>
         <location filename="../mamepguimain.cpp" line="167"/>
@@ -1030,7 +1030,7 @@ Folytatja?</translation>
     <message>
         <location filename="../audit.cpp" line="530"/>
         <source>Checking...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenőrzés...</translation>
     </message>
 </context>
 <context>
@@ -1862,7 +1862,7 @@ Folytatja?</translation>
     <message>
         <location filename="../mameopt.cpp" line="1635"/>
         <source>audio sync</source>
-        <translation type="unfinished"></translation>
+        <translation>hang szinkron</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1637"/>
@@ -2541,7 +2541,7 @@ Folytatja?</translation>
         <location filename="../audit.cpp" line="262"/>
         <location filename="../audit.cpp" line="476"/>
         <source>Auditing %1 ...</source>
-        <translation type="unfinished"></translation>
+        <translation>Ellenőrzés %1 ...</translation>
     </message>
     <message>
         <source>Auditing</source>
@@ -2554,7 +2554,7 @@ Folytatja?</translation>
         <location filename="../mamepguimain.cpp" line="1547"/>
         <location filename="../mamepguimain.cpp" line="1549"/>
         <source>Loading...</source>
-        <translation type="unfinished"></translation>
+        <translation>Betöltés...</translation>
     </message>
 </context>
 <context>
@@ -2592,7 +2592,7 @@ Folytatja?</translation>
     <message>
         <location filename="../gamelist.cpp" line="718"/>
         <source>Clone of</source>
-        <translation>Klón</translation>
+        <translation>Klónja ennek:</translation>
     </message>
 </context>
 <context>
@@ -2604,151 +2604,151 @@ Folytatja?</translation>
     <message>
         <location filename="../utils.cpp" line="139"/>
         <source>Joy 2-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Két irányos joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="140"/>
         <source>Joy 4-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Négy irányos joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="141"/>
         <source>Joy 8-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyolc irányos joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="142"/>
         <source>Paddle</source>
-        <translation type="unfinished"></translation>
+        <translation>Paddle</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="143"/>
         <source>Double Joy 2-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Két irányos iker joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="144"/>
         <source>Double Joy 4-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Négy irányos iker joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="145"/>
         <source>Double Joy 8-Way</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyolc irányos iker joy</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="146"/>
         <source>Dial</source>
-        <translation type="unfinished"></translation>
+        <translation>Tárcsázás</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="147"/>
         <source>Lightgun</source>
-        <translation type="unfinished"></translation>
+        <translation>Fénypisztoly</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="148"/>
         <source>Pedal</source>
-        <translation type="unfinished"></translation>
+        <translation>Gázpedál</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="149"/>
         <source>Stick</source>
-        <translation type="unfinished"></translation>
+        <translation>Kar</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="150"/>
         <source>Trackball</source>
-        <translation type="unfinished"></translation>
+        <translation>Hanyattegér</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="151"/>
         <source>Joy 2-Way (V)</source>
-        <translation type="unfinished"></translation>
+        <translation>Két irányos joy (F)</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="152"/>
         <source>Double Joy 2-Way (V)</source>
-        <translation type="unfinished"></translation>
+        <translation>Két irányos iker joy (F)</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="154"/>
         <source>Bad Dump</source>
-        <translation type="unfinished"></translation>
+        <translation>Rossz letárolás</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="155"/>
         <source>No Dump</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs letárolás</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="157"/>
         <source>Raster</source>
-        <translation type="unfinished"></translation>
+        <translation>Raszter</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="158"/>
         <source>Vector</source>
-        <translation type="unfinished">Vektor</translation>
+        <translation>Vektor</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="159"/>
         <source>LCD</source>
-        <translation type="unfinished"></translation>
+        <translation>LCD</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="161"/>
         <source>PC Card</source>
-        <translation type="unfinished"></translation>
+        <translation>PC kártya</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="162"/>
         <location filename="../utils.cpp" line="163"/>
         <location filename="../utils.cpp" line="164"/>
         <source>CD-ROM</source>
-        <translation type="unfinished"></translation>
+        <translation>CD-ROM</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="165"/>
         <source>CompactFlash Card</source>
-        <translation type="unfinished"></translation>
+        <translation>Kompakt Flash kártya</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="166"/>
         <source>Disk</source>
-        <translation type="unfinished"></translation>
+        <translation>Lemez</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="167"/>
         <source>Disks</source>
-        <translation type="unfinished"></translation>
+        <translation>Lemezek</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="168"/>
         <source>GD-ROM</source>
-        <translation type="unfinished"></translation>
+        <translation>GD-ROM</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="169"/>
         <source>IDE</source>
-        <translation type="unfinished"></translation>
+        <translation>IDE</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="170"/>
         <location filename="../utils.cpp" line="171"/>
         <source>Laserdisc</source>
-        <translation type="unfinished"></translation>
+        <translation>Lézerlemez</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="172"/>
         <location filename="../utils.cpp" line="173"/>
         <source>SCSI</source>
-        <translation type="unfinished"></translation>
+        <translation>SCSI</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="174"/>
         <source>VHS</source>
-        <translation type="unfinished"></translation>
+        <translation>VHS</translation>
     </message>
     <message>
         <location filename="../utils.cpp" line="244"/>

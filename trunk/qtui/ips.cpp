@@ -1,6 +1,7 @@
 #include "ips.h"
 
-#include "mamepguimain.h"
+#include "mamepgui_types.h"
+#include "mamepgui_main.h"
 #include "mameopt.h"
 
 /* global */
@@ -398,7 +399,7 @@ void IPS::parse(QTreeWidgetItem *current, QTreeWidgetItem *previous, const QStri
 			QPixmap pm = QPixmap(ipspath + currentGame + "/" + datName + ".png");
 			if (pm.isNull())
 			{
-				GameInfo *gameinfo = mameGame->games[currentGame];
+				GameInfo *gameinfo = pMameDat->games[currentGame];
 				if (!gameinfo->cloneof.isEmpty())
 					pm = QPixmap(ipspath + gameinfo->cloneof + "/" + datName + ".png");
 			}

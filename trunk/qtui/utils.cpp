@@ -8,16 +8,13 @@
 
 #include "utils.h"
 
-#include "mamepguimain.h"
-#include "gamelist.h"
-
-#undef _DEBUG_
-#define LOG_MAME	2
+#include "mamepgui_types.h"
+#include "mamepgui_main.h"
 
 /* global */
 Utils *utils;
 ProcessManager *procMan = NULL;
-QRegExp spaceRegex = QRegExp("\\s+");
+QRegExp rxSpace = QRegExp("\\s+");
 
 Utils::Utils(QObject *parent)
 : QObject(parent)
@@ -27,10 +24,10 @@ Utils::Utils(QObject *parent)
 
 QSize Utils::getScaledSize(QSize orig, QSize bounding, bool forceAspect)
 {
-	if (!mameGame->games.contains(currentGame))
+	if (!pMameDat->games.contains(currentGame))
 		return orig;
 
-	GameInfo *gameInfo = mameGame->games[currentGame];
+	GameInfo *gameInfo = pMameDat->games[currentGame];
 
 	const float FORCE_ASPECT = 0.75f;
 	QSize scaledSize = orig;
@@ -127,7 +124,7 @@ QString Utils::getSinglePath(QString dirPaths0, QString fileName)
 
 QString Utils::getDesc(const QString &gameName, bool useLocal)
 {
-	GameInfo *gameInfo = mameGame->games[gameName];
+	GameInfo *gameInfo = pMameDat->games[gameName];
 	if (local_game_list && !gameInfo->lcDesc.isEmpty() && useLocal)
 		return gameInfo->lcDesc;
 	else
@@ -292,7 +289,7 @@ bool Utils::extractMameFile(const QString &fileName, MameFileInfo *mameFileInfo)
 
 	if (outFile.open(QIODevice::WriteOnly))
 	{
-		qint64 bytes = outFile.write(mameFileInfo->data);
+		quint64 bytes = outFile.write(mameFileInfo->data);
 		if (bytes == mameFileInfo->size)
 			result = true;
 	}
@@ -360,14 +357,19 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 				mameFileInfo->size = file.size();
 				if (method != MAMEFILE_EXTRACT && !isCHD)
 					mameFileInfo->data = file.readAll();
-				if (method == MAMEFILE_GETINFO && !isCHD)
+				if (method <= MAMEFILE_GETDATINFO && !isCHD)
 				{
 					mameFileInfo->crc = crc32(0L, Z_NULL, 0);
 					mameFileInfo->crc = crc32(mameFileInfo->crc, (const Bytef*)mameFileInfo->data.data(), mameFileInfo->size);
 				}
 				else
 					mameFileInfo->crc = 0L;
-				mameFileInfoList.insert(fileName, mameFileInfo);
+
+				QString _fileName = fileName;
+				if (!archName.isEmpty() && method == MAMEFILE_GETDATINFO)
+					_fileName.prepend(archName + "/");
+				
+				mameFileInfoList.insert(_fileName, mameFileInfo);
 			}
 		}
 
@@ -424,14 +426,14 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				mameFileInfo = new MameFileInfo();
 				mameFileInfo->size = zipFileInfo.uncompressedSize;
-				if (method != MAMEFILE_GETINFO)
+				if (method > MAMEFILE_GETDATINFO)
 					mameFileInfo->data = inFile.readAll();
 				mameFileInfo->crc = zipFileInfo.crc;
 				mameFileInfoList.insert(zipFileInfo.name, mameFileInfo);
 
 				if (method == MAMEFILE_EXTRACT)
 				{
-					bool re = extractMameFile(zipFileInfo.name, mameFileInfo);
+					extractMameFile(zipFileInfo.name, mameFileInfo);
 //					win->log(QString("ext re: %1").arg(re));
 				}
 
@@ -514,7 +516,7 @@ QHash<QString, MameFileInfo *> Utils::iterateMameFile(const QString &_dirPaths, 
 
 				mameFileInfo = new MameFileInfo();
 				mameFileInfo->size = outSizeProcessed;
-				if (method != MAMEFILE_GETINFO)
+				if (method > MAMEFILE_GETDATINFO)
 					mameFileInfo->data = QByteArray((const char *)outBuffer + offset, outSizeProcessed);
 				mameFileInfo->crc = f->FileCRC;
 				mameFileInfoList.insert(f->Name, mameFileInfo);
@@ -598,14 +600,6 @@ procCount(0)
 
 int ProcessManager::start(QString &command, QStringList &arguments, bool autoConnect)
 {
-#ifdef _DEBUG_
-	QString logMsg = "DEBUG: ProcessManager::start(QString &command = \"" + command + "\", QStringList &arguments = \"";
-	int argCount;
-	for (argCount = 0; argCount < arguments.count(); argCount++)
-		logMsg += QString(argCount > 0 ? " " + arguments[argCount] : arguments[argCount]);
-	logMsg += "\", bool autoConnect = " + QString(autoConnect ? "TRUE" : "FALSE") + ")";
-#endif
-
 	QProcess *proc = new QProcess(this);
 	if (autoConnect)
 	{
@@ -623,7 +617,7 @@ int ProcessManager::start(QString &command, QStringList &arguments, bool autoCon
 	
 #ifdef Q_WS_WIN
 	//explicitly assign WorkingDirectory during M1 loading
-	proc->setWorkingDirectory(currentDir);
+	proc->setWorkingDirectory(currentAppDir);
 #endif
 	procMap[proc] = procCount++;
 	proc->start(command, arguments);
@@ -670,7 +664,7 @@ void ProcessManager::readyReadStandardOutput()
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
-			win->log(QString("stdout[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
+			win->log(QString("stdout[#%1]: ").arg(procMap[proc]) + s);
 	}
 }
 
@@ -685,7 +679,7 @@ void ProcessManager::readyReadStandardError()
 	{
 		s = sl[i].simplified();
 		if ( !s.isEmpty() )
-			win->log(QString("stderr[#%1]: ").arg(procMap[proc]) + s, LOG_MAME);
+			win->log(QString("stderr[#%1]: ").arg(procMap[proc]) + s);
 	}
 }
 

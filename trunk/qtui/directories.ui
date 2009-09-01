@@ -50,7 +50,7 @@
   </layout>
  </widget>
  <resources>
-  <include location="mamepguimain.qrc" />
+  <include location="mamepgui_main.qrc" />
  </resources>
  <connections>
   <connection>

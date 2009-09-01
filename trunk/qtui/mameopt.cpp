@@ -1,6 +1,7 @@
 #include "mameopt.h"
 
-#include "mamepguimain.h"
+#include "mamepgui_types.h"
+#include "mamepgui_main.h"
 #include "dialogs.h"
 
 #ifdef USE_SDL
@@ -754,7 +755,7 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 	QString prevVal;
 	QAbstractItemModel *itemModel;
 	QString iniFileName;
-	GameInfo *gameInfo = mameGame->games[currentGame];
+	GameInfo *gameInfo = pMameDat->games[currentGame];
 	
 	switch (optLevel)
 	{
@@ -876,14 +877,32 @@ void OptionDelegate::setModelData(QWidget *editor, QAbstractItemModel *model,
 		win->saveSettings();
 
 	//special case for driver_config
-	if (pMameOpt->globalvalue != prevVal &&
-		(optName == "driver_config"/* || optName == "mame_binary"*/))
+	if (pMameOpt->globalvalue != prevVal)
 	{
-		//avoid accepted() SIGNAL
-		optionsUI->hide();
-		gameList->disableCtrls();
+		bool needReload = false;
 
-		mameGame->init(1);
+		if (optName == "driver_config")
+			needReload = true;
+		else if (optName == "mame_binary")
+		{
+			QString _mame_binary = mameOpts["mame_binary"]->globalvalue;
+
+			if (mame_binary != _mame_binary)
+			{
+				mame_binary = _mame_binary;
+				needReload = true;
+			}
+		}
+
+		if (needReload)
+		{
+			//avoid accepted() SIGNAL
+			optionsUI->hide();
+			gameList->disableCtrls();
+
+			pTempDat = pMameDat;
+			pMameDat = new MameDat(0, 1);
+		}
 	}
 }
 
@@ -915,8 +934,6 @@ void OptionDelegate::setCSV()
 	rWidget = qobject_cast<ResetWidget*>(sender()->parent());
 	if (rWidget == NULL)
 		return;
-
-	QLineEdit *ctrl = static_cast<QLineEdit*>(rWidget->subWidget);
 
 	disconnect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
 	connect(csvCfgUI, SIGNAL(accepted()), this, SLOT(setCSVAccepted()));
@@ -1400,6 +1417,8 @@ bool OptionUtils::isTitle(const QModelIndex &index)
 
 void OptionUtils::loadDefault(QString text)
 {
+//	win->log(loadDefault);
+
 //the following is for Qt translation
 #if 0
 	QStringList optList = (QStringList()
@@ -1810,9 +1829,9 @@ void OptionUtils::loadDefault(QString text)
 
 	QStringList consoleGamesL;
 	// append GUI MESS extra software paths to mameOpts
-	foreach (QString gameName, mameGame->games.keys())
+	foreach (QString gameName, pMameDat->games.keys())
 	{
-		GameInfo *gameInfo = mameGame->games[gameName];
+		GameInfo *gameInfo = pMameDat->games[gameName];
 		
 		if (!gameInfo->devices.isEmpty() && !gameInfo->isExtRom)
 		{
@@ -1960,7 +1979,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 
 	if (outFile.open(QFile::WriteOnly | QFile::Text))
 	{
-		QTextStream in(&mameGame->mameDefaultIni);
+		QTextStream in(&pMameDat->defaultIni);
 		QTextStream outBuf(&mameIni);
 		QTextStream out(&outFile);
 		in.setCodec("UTF-8");
@@ -1993,7 +2012,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 			// process option entry
 			else
 			{
-				int sep = line.indexOf(spaceRegex);
+				int sep = line.indexOf(rxSpace);
 				optName = line.left(sep);
 
 				MameOption *pMameOpt = mameOpts[optName];
@@ -2064,7 +2083,7 @@ void OptionUtils::saveIniFile(int optLevel, const QString &iniFileName)
 					outBuf << optName;
 					outBuf.setFieldWidth(0);
 					//quote value if needed
-					if (currVal.indexOf(spaceRegex) > 0 && !(currVal.startsWith('"') && currVal.endsWith('"')))
+					if (currVal.indexOf(rxSpace) > 0 && !(currVal.startsWith('"') && currVal.endsWith('"')))
 						outBuf << "\"" << currVal << "\"" << endl;
 					else
 						outBuf << currVal << endl;
@@ -2154,7 +2173,7 @@ QHash<QString, QString> OptionUtils::parseIniFile(const QString &iniFileName)
 			if (!line.startsWith("#") && line.size() > 0)
 			{
 				//locate the first space
-				int sep = line.indexOf(spaceRegex);
+				int sep = line.indexOf(rxSpace);
 
 				//valid entry
 				if (sep != -1)
@@ -2216,7 +2235,7 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 	}
 
 	/* update mameopts */
-	GameInfo *gameInfo = mameGame->games[currentGame];
+	GameInfo *gameInfo = pMameDat->games[currentGame];
 	QString iniFileName;
 	QString STR_OPTS_ = tr("Options") + " - ";
 
@@ -2396,7 +2415,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 	// init BIOS values
 	if (optName == "bios")
 	{
-		GameInfo *gameInfo = mameGame->games[currentGame];
+		GameInfo *gameInfo = pMameDat->games[currentGame];
 		QString biosof = gameInfo->biosof();
 		pMameOpt->values.clear();
 		pMameOpt->guivalues.clear();
@@ -2404,7 +2423,7 @@ void OptionUtils::updateSelectableItems(QString optName)
 		if ((gameInfo->isBios || !biosof.isEmpty()))
 		{
 			if (!gameInfo->isBios)
-				gameInfo = mameGame->games[biosof];
+				gameInfo = pMameDat->games[biosof];
 
 			QStringList biosSets = gameInfo->biosSets.keys();
 			biosSets.sort();

@@ -1,7 +1,8 @@
 #include "m1ui.h"
 #include "m1.h"
 
-#include "mamepguimain.h"
+#include "mamepgui_types.h"
+#include "mamepgui_main.h"
 #include "mameopt.h"
 
 /* global */
@@ -127,7 +128,7 @@ void M1::loadLib()
 	}
 
 	//restore current dir
-	QDir::setCurrent(currentDir);
+	QDir::setCurrent(currentAppDir);
 
 	win->logStatus("");
 }
@@ -228,7 +229,7 @@ int M1::m1ui_message(void *pthis, int message, char *txt, int iparm)
 	{
 		case M1_MSG_HARDWAREDESC:
 		{
-			GameInfo *gameInfo = mameGame->games[currentGame];
+			GameInfo *gameInfo = pMameDat->games[currentGame];
 			
 			m1UI->lblTrackInfo->setText(
 				QString(

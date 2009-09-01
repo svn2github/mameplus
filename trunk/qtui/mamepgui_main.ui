@@ -63,6 +63,8 @@
      <addaction name="actionFixDatAll"/>
      <addaction name="actionFixDatIncomplete"/>
      <addaction name="actionFixDatMissing"/>
+     <addaction name="separator"/>
+     <addaction name="actionFixDatComplete"/>
     </widget>
     <widget class="QMenu" name="menuAddtoFolder">
      <property name="title">
@@ -303,7 +305,7 @@
   </widget>
   <action name="actionDefaultOptions">
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/16x16/system-settings.png</normaloff>:/res/16x16/system-settings.png</iconset>
    </property>
    <property name="text">
@@ -312,7 +314,7 @@
   </action>
   <action name="actionRefresh">
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/16x16/view-refresh.png</normaloff>:/res/16x16/view-refresh.png</iconset>
    </property>
    <property name="text">
@@ -332,7 +334,7 @@
   </action>
   <action name="actionAbout">
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/16x16/help-browser.png</normaloff>:/res/16x16/help-browser.png</iconset>
    </property>
    <property name="text">
@@ -344,7 +346,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/mame32-view-detail.png</normaloff>:/res/mame32-view-detail.png</iconset>
    </property>
    <property name="text">
@@ -359,7 +361,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/mame32-view-group.png</normaloff>:/res/mame32-view-group.png</iconset>
    </property>
    <property name="text">
@@ -371,7 +373,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/mame32-view-licon.png</normaloff>:/res/mame32-view-licon.png</iconset>
    </property>
    <property name="text">
@@ -486,7 +488,7 @@
   </action>
   <action name="actionDirectories">
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/32x32/folder.png</normaloff>:/res/32x32/folder.png</iconset>
    </property>
    <property name="text">
@@ -495,7 +497,7 @@
   </action>
   <action name="actionProperties">
    <property name="icon">
-    <iconset resource="mamepguimain.qrc">
+    <iconset resource="mamepgui_main.qrc">
      <normaloff>:/res/16x16/system-settings.png</normaloff>:/res/16x16/system-settings.png</iconset>
    </property>
    <property name="text">
@@ -715,7 +717,7 @@
   </action>
  </widget>
  <resources>
-  <include location="mamepguimain.qrc"/>
+  <include location="mamepgui_main.qrc"/>
  </resources>
  <connections/>
 </ui>

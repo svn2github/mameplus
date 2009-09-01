@@ -110,7 +110,7 @@ p, li { white-space: pre-wrap; }
           <string>Stop</string>
          </property>
          <property name="icon">
-          <iconset resource="mamepguimain.qrc">
+          <iconset resource="mamepgui_main.qrc">
            <normaloff>:/res/16x16/media-playback-stop.png</normaloff>:/res/16x16/media-playback-stop.png</iconset>
          </property>
          <property name="flat">
@@ -130,7 +130,7 @@ p, li { white-space: pre-wrap; }
           <string>Play</string>
          </property>
          <property name="icon">
-          <iconset resource="mamepguimain.qrc">
+          <iconset resource="mamepgui_main.qrc">
            <normaloff>:/res/16x16/media-playback-start.png</normaloff>:/res/16x16/media-playback-start.png</iconset>
          </property>
          <property name="flat">
@@ -173,7 +173,7 @@ p, li { white-space: pre-wrap; }
   </widget>
  </widget>
  <resources>
-  <include location="mamepguimain.qrc"/>
+  <include location="mamepgui_main.qrc"/>
  </resources>
  <connections/>
 </ui>

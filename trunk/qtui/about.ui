@@ -37,7 +37,7 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
         <string/>
        </property>
        <property name="pixmap">
-        <pixmap resource="mamepguimain.qrc">:/res/mamegui/mamep_brush.png</pixmap>
+        <pixmap resource="mamepgui_main.qrc">:/res/mamegui/mamep_brush.png</pixmap>
        </property>
       </widget>
      </item>
@@ -65,7 +65,7 @@ border-bottom-color: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, stop:0 
   <zorder></zorder>
  </widget>
  <resources>
-  <include location="mamepguimain.qrc"/>
+  <include location="mamepgui_main.qrc"/>
  </resources>
  <connections>
   <connection>

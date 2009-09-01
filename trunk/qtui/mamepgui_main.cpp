@@ -2,10 +2,11 @@
 
 #include "7zVersion.h"
 
-#include "mamepguimain.h"
+#include "mamepgui_main.h"
 
+#include "mamepgui_types.h"
+#include "gamelist.h"
 #include "mameopt.h"
-#include "utils.h"
 #include "dialogs.h"
 #include "ips.h"
 #include "m1.h"
@@ -32,7 +33,7 @@ QString CFG_PREFIX =
 MainWindow *win;
 QSettings *pGuiSettings;
 QSettings defSettings(":/res/mamepgui" INI_EXT, QSettings::IniFormat);
-QString currentDir;
+QString currentAppDir;
 QString mame_binary;
 QString language;
 bool local_game_list;
@@ -45,7 +46,7 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-void MainWindow::log(QString message, char logOrigin)
+void MainWindow::log(QString message)
 {
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
 
@@ -62,7 +63,7 @@ void MainWindow::poplog(QString message)
 
 void MainWindow::logStatus(QString message)
 {
-	if (currentDir != QDir::currentPath())
+	if (currentAppDir != QDir::currentPath())
 		return;
 
 	labelProgress->setText(message);
@@ -77,7 +78,7 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 	QString statusBuffer = "";
 
 	if (gameInfo->isExtRom)
-		gameInfo = mameGame->games[gameInfo->romof];
+		gameInfo = pMameDat->games[gameInfo->romof];
 
 	QString statusText = utils->getStatusString (gameInfo->status);
 	QString statusName = QT_TR_NOOP("status");
@@ -144,7 +145,7 @@ void MainWindow::logStatus(GameInfo *gameInfo)
 MainWindow::MainWindow(QWidget *parent) : 
 QMainWindow(parent)
 {
-	currentDir = QDir::currentPath();
+	currentAppDir = QDir::currentPath();
 
 	dockCtrlNames = (QStringList() 
 	   << QT_TR_NOOP("Snapshot")
@@ -267,7 +268,7 @@ QMainWindow(parent)
 
 	mameAuditor = new MameExeRomAuditor(this);
 
-	mameGame = new MameGame(0);
+	pMameDat = new MameDat(0, 0);
 	gameList = new Gamelist(0);
 	optUtils = new OptionUtils(0);
 	dirsUI = new Dirs(this);
@@ -526,8 +527,19 @@ void MainWindow::init()
 	if (!background_file.isEmpty())
 		setBgPixmap(background_file);
 
-	mameGame->init();
-//	show();
+	int des11n_status = pMameDat->load();
+	if (des11n_status == QDataStream::Ok)
+	{
+		gameList->init(true, GAMELIST_INIT_FULL);
+		win->setVersion();
+	}
+	else
+	//des11n() failed, construct a new pMameDat
+	{
+		show();
+		pTempDat = pMameDat;
+		pMameDat = new MameDat(0, 1);
+	}
 
 	// connect misc signal and slots
 
@@ -584,9 +596,9 @@ void MainWindow::setVersion()
 	QString sdlVerString = "";
 
 	if (!isMESS)
-		mameString.append(QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(mameGame->mameVersion));
+		mameString.append(QString("<a href=\"http://mamedev.org\">M.A.M.E.</a> %1 - Multiple Arcade Machine Emulator &copy; Nicola Salmoria and the MAME Team<br>").arg(pMameDat->version));
 	if (hasDevices)
-		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(mameGame->mameVersion));
+		mameString.append(QString("<a href=\"http://www.mess.org\">M.E.S.S.</a> %1 - Multi Emulator Super System &copy; the MESS Team<br>").arg(pMameDat->version));
 
 #ifdef Q_OS_WIN
 	if (m1 != NULL && m1->available)
@@ -620,7 +632,7 @@ void MainWindow::setVersion()
 		"%2%3%4%5%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.7c")
+		.arg("1.4.8")
 		.arg(mameString)
 		.arg(m1VerString)
 		.arg("<a href=\"http://www.qtsoftware.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
@@ -636,10 +648,10 @@ void MainWindow::setVersion()
 
 	QFileInfo fi(mame_binary);
 
-	win->setWindowTitle(QString("%1 - %2 %3")
-		.arg(win->windowTitle())
+	setWindowTitle(QString("%1 - %2 %3")
+		.arg("M+GUI")
 		.arg(fi.baseName().toUpper())
-		.arg(mameGame->mameVersion));
+		.arg(pMameDat->version));
 }
 
 void MainWindow::enableCtrls(bool isEnabled)
@@ -717,6 +729,11 @@ void MainWindow::on_actionRefresh_activated()
 	romAuditor.audit();
 }
 
+void MainWindow::on_actionFixDatComplete_activated()
+{
+	exportFixDat(AUDIT_EXPORT_COMPLETE);
+}
+
 void MainWindow::on_actionFixDatAll_activated()
 {
 	exportFixDat(AUDIT_EXPORT_ALL);
@@ -760,7 +777,7 @@ void MainWindow::on_actionAuditAll_activated()
 
 void MainWindow::on_actionSrcProperties_activated()
 {
-	if (!mameGame->games.contains(currentGame))
+	if (!pMameDat->games.contains(currentGame))
 		return;
 
 	optionsUI->init(OPTLEVEL_SRC, 0);
@@ -769,7 +786,7 @@ void MainWindow::on_actionSrcProperties_activated()
 
 void MainWindow::on_actionProperties_activated()
 {
-	if (!mameGame->games.contains(currentGame))
+	if (!pMameDat->games.contains(currentGame))
 		return;
 
 	optionsUI->init(OPTLEVEL_CURR, 0);
@@ -778,7 +795,7 @@ void MainWindow::on_actionProperties_activated()
 
 void MainWindow::on_actionDefaultOptions_activated()
 {
-	if (!mameGame->games.contains(currentGame))
+	if (!pMameDat->games.contains(currentGame))
 		return;
 
 	optionsUI->init(OPTLEVEL_GLOBAL, 0);
@@ -787,7 +804,7 @@ void MainWindow::on_actionDefaultOptions_activated()
 
 void MainWindow::on_actionDirectories_activated()
 {
-	if (!mameGame->games.contains(currentGame))
+	if (!pMameDat->games.contains(currentGame))
 		return;
 
 	optionsUI->init(OPTLEVEL_GUI, 0);
@@ -822,30 +839,7 @@ void MainWindow::on_actionBoard_activated()
 
 void MainWindow::on_actionAbout_activated()
 {
-#if 1
 	aboutUI->exec();
-#else
-	QHash<QString, MameFileInfo *> mameFileInfoList = 
-		utils->iterateMameFile("d:/mame/software/NES/", "Super C", "*.exe", MAMEFILE_GETINFO);
-
-	QString buf;
-	foreach (QString key, mameFileInfoList.keys())
-	{
-		buf.append(QString("%1,%2,%3,%4\n")
-			.arg(key)
-			.arg(mameFileInfoList[key]->crc, 8, 16, QLatin1Char('0'))
-			.arg(mameFileInfoList[key]->size)
-			.arg(mameFileInfoList[key]->data.size())
-			);
-	}
-	win->poplog(buf);
-
-	utils->clearMameFileInfoList(mameFileInfoList);
-
-//	const QString appPath = QCoreApplication::applicationFilePath();
-//	QFile::rename("mamepgui.exe", "mamepgui.exe.bak");
-
-#endif
 }
 
 void MainWindow::toggleGameListColumn(int logicalIndex)
@@ -1219,7 +1213,7 @@ void MainWindow::closeEvent(QCloseEvent *event)
 	if (!mame_binary.isEmpty())
 	{
 		saveSettings();
-		mameGame->s11n();
+		pMameDat->save();
 	}
 	event->accept();
 }

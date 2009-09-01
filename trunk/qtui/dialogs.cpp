@@ -1,6 +1,6 @@
 #include "dialogs.h"
 
-#include "mamepguimain.h"
+#include "mamepgui_main.h"
 #include "mameopt.h"
 
 /* global */
