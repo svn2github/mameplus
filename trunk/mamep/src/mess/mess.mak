@@ -28,7 +28,6 @@ DRVLIBS += \
 
 
 
-
 #-------------------------------------------------
 # the following files are general components and
 # shared across a number of drivers
