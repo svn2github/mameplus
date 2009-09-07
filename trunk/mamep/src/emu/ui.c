@@ -498,8 +498,8 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 		}
 
 		/* clear the input memory */
-		input_code_poll_switches(TRUE);
-		while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID) ;
+		input_code_poll_switches(machine, TRUE);
+		while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID) ;
 
 		/* loop while we have a handler */
 		while (ui_handler_callback != handler_ingame && !mame_is_scheduled_event_pending(machine) && !ui_menu_is_force_game_select())
@@ -517,7 +517,7 @@ int ui_display_startup_screens(running_machine *machine, int first_time, int sho
 		ui_set_handler(ui_menu_ui_handler, 0);
 
 	/* clear the input memory */
-	while (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
+	while (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID)
 		;
 
 	return 0;
@@ -1695,11 +1695,11 @@ static UINT32 handler_messagebox_ok(running_machine *machine, UINT32 state)
 	if (res == 0)
 	{
 		/* an 'O' or left joystick kicks us to the next state */
-		if (state == 0 && (input_code_pressed_once(KEYCODE_O) || ui_input_pressed(machine, IPT_UI_LEFT)))
+		if (state == 0 && (input_code_pressed_once(machine, KEYCODE_O) || ui_input_pressed(machine, IPT_UI_LEFT)))
 			state++;
 
 		/* a 'K' or right joystick exits the state */
-		else if (state == 1 && (input_code_pressed_once(KEYCODE_K) || ui_input_pressed(machine, IPT_UI_RIGHT)))
+		else if (state == 1 && (input_code_pressed_once(machine, KEYCODE_K) || ui_input_pressed(machine, IPT_UI_RIGHT)))
 			state = UI_HANDLER_CANCEL;
 	}
 
@@ -1737,7 +1737,7 @@ static UINT32 handler_messagebox_anykey(running_machine *machine, UINT32 state)
 	/* if select key is pressed, just exit */
 	if (res == 1)
 	{
-		if (input_code_poll_switches(FALSE) != INPUT_CODE_INVALID)
+		if (input_code_poll_switches(machine, FALSE) != INPUT_CODE_INVALID)
 			state = UI_HANDLER_CANCEL;
 	}
 
@@ -1836,7 +1836,7 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 	if (ui_input_pressed(machine, IPT_UI_PAUSE))
 	{
 		/* with a shift key, it is single step */
-		if (is_paused && (input_code_pressed(KEYCODE_LSHIFT) || input_code_pressed(KEYCODE_RSHIFT)))
+		if (is_paused && (input_code_pressed(machine, KEYCODE_LSHIFT) || input_code_pressed(machine, KEYCODE_RSHIFT)))
 		{
 			single_step = TRUE;
 			mame_pause(machine, FALSE);
@@ -1960,15 +1960,15 @@ static UINT32 handler_load_save(running_machine *machine, UINT32 state)
 
 	/* check for A-Z or 0-9 */
 	for (code = KEYCODE_A; code <= (input_code)KEYCODE_Z; code++)
-		if (input_code_pressed_once(code))
+		if (input_code_pressed_once(machine, code))
 			file = code - KEYCODE_A + 'a';
 	if (file == 0)
 		for (code = KEYCODE_0; code <= (input_code)KEYCODE_9; code++)
-			if (input_code_pressed_once(code))
+			if (input_code_pressed_once(machine, code))
 				file = code - KEYCODE_0 + '0';
 	if (file == 0)
 		for (code = KEYCODE_0_PAD; code <= (input_code)KEYCODE_9_PAD; code++)
-			if (input_code_pressed_once(code))
+			if (input_code_pressed_once(machine, code))
 				file = code - KEYCODE_0_PAD + '0';
 	if (file == 0)
 		return state;
@@ -2228,10 +2228,10 @@ static slider_state *slider_init(running_machine *machine)
 static INT32 slider_volume(running_machine *machine, void *arg, astring *string, INT32 newval)
 	{
 	if (newval != SLIDER_NOCHANGE)
-		sound_set_attenuation(newval);
+		sound_set_attenuation(machine, newval);
 	if (string != NULL)
-		astring_printf(string, "%3ddB", sound_get_attenuation());
-	return sound_get_attenuation();
+		astring_printf(string, "%3ddB", sound_get_attenuation(machine));
+	return sound_get_attenuation(machine);
 }
 
 
