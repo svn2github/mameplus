@@ -14,6 +14,7 @@
 #ifndef __CORESTR_H__
 #define __CORESTR_H__
 
+#include "osdcore.h"
 #include <string.h>
 
 
@@ -57,6 +58,10 @@ char *core_strdup(const char *str);
 int core_strwildcmp(const char *sp1, const char *sp2);
 
 char *core_strtrim(const char *str);
+
+
+/* I64 printf helper */
+char *core_i64_hex_format(UINT64 value, UINT8 mindigits);
 
 
 #endif /* __CORESTR_H__ */

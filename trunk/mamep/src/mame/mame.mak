@@ -1576,7 +1576,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/murogem.o \
 	$(DRIVERS)/murogmbl.o \
 	$(DRIVERS)/news.o $(VIDEO)/news.o \
-	$(DRIVERS)/norautp.o \
+	$(DRIVERS)/norautp.o  $(AUDIO)/norautp.o \
 	$(DRIVERS)/oneshot.o $(VIDEO)/oneshot.o \
 	$(DRIVERS)/onetwo.o \
 	$(DRIVERS)/othldrby.o $(VIDEO)/othldrby.o \
@@ -1588,6 +1588,7 @@ $(MAMEOBJ)/misc.a: \
 	$(DRIVERS)/pcxt.o \
 	$(DRIVERS)/peplus.o \
 	$(DRIVERS)/photon.o $(VIDEO)/pk8000.o \
+	$(DRIVERS)/photon2.o \
 	$(DRIVERS)/pipeline.o \
 	$(DRIVERS)/photoply.o \
 	$(DRIVERS)/pkscram.o \
@@ -1858,6 +1859,8 @@ $(DRIVERS)/mpu4.o:		$(MAMESRC)/drivers/mpu4drvr.c
 $(DRIVERS)/neogeo.o:	$(MAMESRC)/drivers/neodrvr.c
 $(MACHINE)/snes.o: 		$(MAMESRC)/machine/snesdsp1.c \
 				$(MAMESRC)/machine/snesdsp2.c \
+				$(MAMESRC)/machine/snesdsp3.c \
+				$(MAMESRC)/machine/snesdsp4.c \
 				$(MAMESRC)/machine/snesobc1.c \
 				$(MAMESRC)/machine/snesrtc.c \
 				$(MAMESRC)/machine/snessdd1.c

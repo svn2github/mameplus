@@ -1571,7 +1571,7 @@ astring *game_info_astring(running_machine *machine, astring *string)
 	astring_printf(string, "%s\n%s %s\n\nCPU:\n", _LST(machine->gamedrv->description), machine->gamedrv->year, _MANUFACT(machine->gamedrv->manufacturer));
 
 	/* loop over all CPUs */
-	for (device = machine->cpu[0]; device != NULL; device = scandevice)
+	for (device = machine->firstcpu; device != NULL; device = scandevice)
 	{
 		/* count how many identical CPUs we have */
 		count = 1;
@@ -1857,6 +1857,10 @@ static UINT32 handler_ingame(running_machine *machine, UINT32 state)
 		display_input_log(machine);
 #endif /* USE_SHOW_INPUT_LOG */
 
+	/* handle a toggle cheats request */
+	if (ui_input_pressed(machine, IPT_UI_TOGGLE_CHEAT))
+		cheat_set_global_enable(machine, !cheat_get_global_enable(machine));
+
 	/* toggle movie recording */
 	if (ui_input_pressed(machine, IPT_UI_RECORD_MOVIE))
 	{
@@ -2105,12 +2109,12 @@ static slider_state *slider_init(running_machine *machine)
 	/* add CPU overclocking (cheat only) */
 	if (options_get_bool(mame_options(), OPTION_CHEAT))
 	{
-		for (item = 0; item < ARRAY_LENGTH(machine->cpu); item++)
-			if (machine->cpu[item] != NULL)
+		for (device = machine->firstcpu; device != NULL; device = cpu_next(device))
 		{
-			astring_printf(string, _("Overclock CPU %s"), machine->cpu[item]->tag);
+			void *param = (void *)device;
+			astring_printf(string, _("Overclock CPU %s"), device->tag);
 			//mamep: 4x overclock
-			*tailptr = slider_alloc(machine, astring_c(string), 10, 1000, 4000, 50, slider_overclock, (void *)(FPTR)item);
+			*tailptr = slider_alloc(machine, astring_c(string), 10, 1000, 4000, 50, slider_overclock, param);
 			tailptr = &(*tailptr)->next;
 		}
 	}
@@ -2280,12 +2284,12 @@ static INT32 slider_adjuster(running_machine *machine, void *arg, astring *strin
 
 static INT32 slider_overclock(running_machine *machine, void *arg, astring *string, INT32 newval)
 {
-	int which = (FPTR)arg;
+	const device_config *cpu = (const device_config *)arg;
 	if (newval != SLIDER_NOCHANGE)
-		cpu_set_clockscale(machine->cpu[which], (float)newval * 0.001f);
+		cpu_set_clockscale(cpu, (float)newval * 0.001f);
 	if (string != NULL)
-		astring_printf(string, "%3.0f%%", floor(cpu_get_clockscale(machine->cpu[which]) * 100.0f + 0.5f));
-	return floor(cpu_get_clockscale(machine->cpu[which]) * 1000.0f + 0.5f);
+		astring_printf(string, "%3.0f%%", floor(cpu_get_clockscale(cpu) * 100.0f + 0.5f));
+	return floor(cpu_get_clockscale(cpu) * 1000.0f + 0.5f);
 }
 
 

@@ -361,6 +361,25 @@ static void cia_timer_update(cia_timer *timer, INT32 new_count)
 	}
 }
 
+/*-------------------------------------------------
+    cia_get_timer - get the count
+    for a given CIA timer
+-------------------------------------------------*/
+
+static UINT16 cia_get_timer(cia_timer *timer)
+{
+	UINT16 count;
+
+	if (is_timer_active(timer->timer))
+	{
+		UINT16 current_count = attotime_to_double(attotime_mul(timer_timeelapsed(timer->timer), timer->cia->device->clock));
+		count = timer->count - MIN(timer->count, current_count);
+	}
+	else
+		count = timer->count;
+
+	return count;
+}
 
 /*-------------------------------------------------
     cia_timer_bump
@@ -644,6 +663,7 @@ READ8_DEVICE_HANDLER( cia_r )
 			port = &cia->port[offset & 1];
 			data = devcb_call_read8(&port->read, 0);
 			data = ((data & ~port->ddr) | (port->latch & port->ddr)) & port->mask_value;
+
 			port->in = data;
 
 			if (offset == CIA_PRB)
@@ -684,16 +704,14 @@ READ8_DEVICE_HANDLER( cia_r )
 		case CIA_TALO:
 		case CIA_TBLO:
 			timer = &cia->timer[(offset >> 1) & 1];
-			cia_timer_update(timer, -1);
-			data = timer->count >> 0;
+			data = cia_get_timer(timer) >> 0;
 			break;
 
 		/* timer A/B high byte */
 		case CIA_TAHI:
 		case CIA_TBHI:
 			timer = &cia->timer[(offset >> 1) & 1];
-			cia_timer_update(timer, -1);
-			data = timer->count >> 8;
+			data = cia_get_timer(timer) >> 8;
 			break;
 
 		/* TOD counter */
@@ -745,6 +763,7 @@ READ8_DEVICE_HANDLER( cia_r )
 			data = timer->mode;
 			break;
 	}
+
 	return data;
 }
 
@@ -874,8 +893,8 @@ WRITE8_DEVICE_HANDLER( cia_w )
 
 
 
-UINT8 cia_get_output_a(const device_config *device)	{ return get_token(device)->port[0].out; }
-UINT8 cia_get_output_b(const device_config *device)	{ return get_token(device)->port[1].out; }
+UINT8 cia_get_output_a(const device_config *device)	{ return (get_token(device)->port[0].latch | ~get_token(device)->port[0].ddr); }
+UINT8 cia_get_output_b(const device_config *device)	{ return (get_token(device)->port[1].latch | ~get_token(device)->port[1].ddr); }
 int cia_get_irq(const device_config *device)		{ return get_token(device)->irq; }
 
 
@@ -936,4 +955,5 @@ DEVICE_GET_INFO(cia8520)
 		default:	DEVICE_GET_INFO_CALL(cia6526r1);	break;
 	}
 }
+
 

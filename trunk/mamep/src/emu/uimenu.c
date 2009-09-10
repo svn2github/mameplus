@@ -1253,6 +1253,10 @@ static void ui_menu_handle_keys(ui_menu *menu, UINT32 flags)
 	if (!ignorepause && exclusive_input_pressed(menu, IPT_UI_PAUSE, 0))
 		mame_pause(menu->machine, !mame_is_paused(menu->machine));
 
+	/* handle a toggle cheats request */
+	if (exclusive_input_pressed(menu, IPT_UI_TOGGLE_CHEAT, 0))
+		cheat_set_global_enable(menu->machine, !cheat_get_global_enable(menu->machine));
+
 	/* see if any other UI keys are pressed */
 	if (menu->event.iptkey == IPT_INVALID)
 		for (code = __ipt_ui_start; code <= __ipt_ui_end; code++)
@@ -2642,7 +2646,7 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 				case IPT_UI_UP:
 				case IPT_UI_DOWN:
 					if (cheat_get_comment(event->itemref) != NULL)
-						popmessage("Cheat Comment:\n%s", astring_c(cheat_get_comment(event->itemref)));
+						popmessage(_("Cheat Comment:\n%s"), astring_c(cheat_get_comment(event->itemref)));
 					break;
 			}
 		}
@@ -2655,7 +2659,7 @@ static void menu_cheat(running_machine *machine, ui_menu *menu, void *parameter,
 
 			/* display the reloaded cheats */
 			ui_menu_reset(menu, UI_MENU_RESET_REMEMBER_REF);
-			popmessage("All cheats reloaded");
+			popmessage(_("All cheats reloaded"));
 		}
 
 		/* if things changed, update */
