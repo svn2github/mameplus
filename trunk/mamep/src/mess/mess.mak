@@ -34,7 +34,6 @@ DRVLIBS += \
 #-------------------------------------------------
 
 $(MESSOBJ)/shared.a: \
-	$(MESS_DEVICES)/basicdsk.o	\
 	$(MESS_DEVICES)/cartslot.o	\
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_DEVICES)/chd_cd.o	\

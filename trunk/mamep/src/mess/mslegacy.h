@@ -73,7 +73,7 @@ enum
 /* uitext */
 const char * ui_getstring (int string_num);
 
-/* drawgfx */
-#define fillbitmap(dest, pen, clip) bitmap_fill(dest, clip, pen)
+/* retrieves a CPU by index */
+const device_config *cpu_get_by_index(running_machine *machine, int index);
 
 #endif /* MSLEGACY_H */
