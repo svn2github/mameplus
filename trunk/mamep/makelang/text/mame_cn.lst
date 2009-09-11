@@ -3806,7 +3806,7 @@ spkrbtl	致命一击 (GDS-0005)	致命一击 (GDS-0005)	Sega
 gunsur2	枪下游魂 2: 生化危机 代号 - 维罗尼卡	枪下游魂 2: 生化危机 代号 - 维罗尼卡	Capcom / Namco
 cvs2gd	Capcom 对 SNK 千禧格斗 2001 (Rev A) (GDL-0007A)	Capcom 对 SNK 千禧格斗 2001 (Rev A) (GDL-0007A)	Capcom / SNK
 gundmxgd	机动战士高达 - 联邦 VS 吉翁 DX (GDL-0006)	机动战士高达 - 联邦 VS 吉翁 DX (GDL-0006)	Capcom
-hmgeo	重金属格斗游技 (JPN, USA, EUR, ASI, AUS)	重金属格斗游技 (JPN, USA, EUR, ASI, AUS)	Capcom
+hmgeo	重金属格 - 斗游技 (JPN, USA, EUR, ASI, AUS)	重金属格 - 斗游技 (JPN, USA, EUR, ASI, AUS)	Capcom
 derbyoc2	赛马者俱乐部 II (JPN, USA, EXP, KOR, AUS)	赛马者俱乐部 II (JPN, USA, EXP, KOR, AUS)	Sega
 vtennis2	VR 网球 2 (Rev A) (GDS-0015A)	VR 网球 2 (Rev A) (GDS-0015A)	Sega
 keyboard	武装键盘 (GDS-0017)	武装键盘 (GDS-0017)	Sega
@@ -3860,7 +3860,7 @@ vf4tuned	VR 战士 4 最终调整版 (Rev F) (GDS-0036F)	VR 战士 4 最终调整版 (Rev F) (
 awbios	Atomiswave Bios	Atomiswave Bios	Sammy
 sprtshot	美国射击运动	美国射击运动	Sammy USA
 demofist	破坏拳	破坏拳	Polygon Magic / Dimps
-dolphin	蓝海豚富士	蓝海豚富士	Sammy
+dolphin	蓝海豚	蓝海豚	Sammy
 ggisuka	罪恶工具 Isuka	罪恶工具 Isuka	Sammy / Arc System Works
 rumblef	斗鱼	斗鱼	Sammy / Dimps
 rangrmsn	巡逻任务	巡逻任务	Sammy
@@ -5883,6 +5883,9 @@ sosterm	国际援助	国际援助	Terminal
 bilyard	小丑台球	小丑台球	Terminal
 phtetris	俄罗斯方块 (Photon 系统)	俄罗斯方块 (Photon 系统)	<unknown>
 phpython	大蟒蛇 (Photon System)	大蟒蛇 (Photon System)	<unknown>
+kok	Povar / Sobrat' Buran / Agroprom	Povar / Sobrat' Buran / Agroprom	<unknown>
+black	Czernyj Korabl	Czernyj Korabl	<unknown>
+brod	Brodjaga	Brodjaga	<unknown>
 bagman	推销员	推销员	Valadon Automation
 bagnard	推销员 (第1套)	推销员 (第1套)	Valadon Automation
 bagnarda	推销员 (第2套)	推销员 (第2套)	Valadon Automation
