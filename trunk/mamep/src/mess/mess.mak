@@ -38,7 +38,6 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_DEVICES)/chd_cd.o	\
 	$(MESS_DEVICES)/flopdrv.o	\
-	$(MESS_DEVICES)/mflopimg.o	\
 	$(MESS_DEVICES)/multcart.o	\
 	$(MESS_DEVICES)/printer.o	\
 	$(MESS_FORMATS)/basicdsk.o	\

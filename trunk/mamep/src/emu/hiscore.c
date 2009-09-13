@@ -55,7 +55,7 @@ static int is_highscore_enabled(running_machine *machine)
 static void copy_to_memory (running_machine *machine, int cpunum, int addr, const UINT8 *source, int num_bytes)
 {
 //	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(machine->firstcpu, ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
@@ -66,7 +66,7 @@ static void copy_to_memory (running_machine *machine, int cpunum, int addr, cons
 static void copy_from_memory (running_machine *machine, int cpunum, int addr, UINT8 *dest, int num_bytes)
 {
 //	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(machine->firstcpu, ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	int i;
 	for (i=0; i<num_bytes; i++)
 	{
@@ -160,7 +160,7 @@ static int safe_to_load (running_machine *machine)
 	memory_range *mem_range = state.mem_range;
 //	int cpunum = mem_range->cpunum;
 //	const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
-	const address_space *space = cpu_get_address_space(machine->firstcpu, ADDRESS_SPACE_PROGRAM);
+	const address_space *space = cpu_get_address_space(cputag_get_cpu(machine, "maincpu"), ADDRESS_SPACE_PROGRAM);
 	while (mem_range)
 	{
 		if (memory_read_byte (space, mem_range->addr) != mem_range->start_value)
