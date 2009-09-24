@@ -373,8 +373,9 @@ void add_logerror_callback(running_machine *machine, void (*callback)(running_ma
 /* parse the configured INI files */
 void mame_parse_ini_files(core_options *options, const game_driver *driver);
 
-//mamep: required for using -listxml with -driver_config
-int parse_ini_file(core_options *options, const char *name);
+//mamep: moved from mame.c
+/* required for using -listxml with -driver_config */
+int parse_ini_file(core_options *options, const char *name, int priority);
 
 /* standardized random number generator */
 UINT32 mame_rand(running_machine *machine);

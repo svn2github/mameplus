@@ -152,7 +152,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 
 	//mamep: required for using -listxml with -driver_config
 	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
-	parse_ini_file(options, CONFIGNAME);
+	parse_ini_file(options, CONFIGNAME, OPTION_PRIORITY_MAME_INI);
 
 #ifdef DRIVER_SWITCH
 	assign_drivers(options);
@@ -171,7 +171,7 @@ int cli_execute(int argc, char **argv, const options_entry *osd_options)
 
 	//mamep: required for using -listxml with -driver_config
 	options_set_string(options, OPTION_INIPATH, ".", OPTION_PRIORITY_INI);
-	parse_ini_file(options, CONFIGNAME);
+	parse_ini_file(options, CONFIGNAME, OPTION_PRIORITY_MAME_INI);
 
 	/* find out what game we might be referring to */
 	gamename_option = options_get_string(options, OPTION_GAMENAME);
