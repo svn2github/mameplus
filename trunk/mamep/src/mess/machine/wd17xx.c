@@ -322,7 +322,11 @@ static void wd17xx_set_irq(const device_config *device);
 static const device_config *wd17xx_current_image(const device_config *device)
 {
 	wd17xx_t *w = get_safe_token(device);
-	return image_from_devtype_and_index(device->machine, IO_FLOPPY, w->current_drive);
+	if (w->intf->floppy_drive_tags[w->current_drive]!=NULL) {
+		return devtag_get_device(device->machine,w->intf->floppy_drive_tags[w->current_drive]);
+	} else {
+		return NULL;
+	}
 }
 
 
@@ -393,7 +397,7 @@ static void wd17xx_restore(const device_config *device)
 	UINT8 step_counter;
 	wd17xx_t *w = get_safe_token(device);
 
-	if (w->current_drive >= device_count(device->machine, IO_FLOPPY))
+	if (w->current_drive >= floppy_get_count(device->machine))
 		return;
 
 	step_counter = 255;
@@ -862,7 +866,40 @@ static TIMER_CALLBACK(wd17xx_misc_timer_callback)
 	timer_reset(w->timer, attotime_never);
 }
 
+int wd17xx_get_datarate_in_us(DENSITY density)
+{
+	int usecs;
+	/* 64 for single density */
+	switch (density)
+	{
+		case DEN_FM_LO:
+		{
+			usecs = 128;
+		}
+		break;
 
+		case DEN_FM_HI:
+		{
+			usecs = 64;
+		}
+		break;
+
+		default:
+		case DEN_MFM_LO:
+		{
+			usecs = 32;
+		}
+		break;
+
+		case DEN_MFM_HI:
+		{
+			usecs = 16;
+		}
+		break;
+	}
+
+	return usecs;
+}
 
 /* called on error, or when command is actually completed */
 /* KT - I have used a timer for systems that use interrupt driven transfers.
@@ -886,13 +923,13 @@ static void wd17xx_complete_command(const device_config *device, int delay)
 	/* Robbbert - adjusted delay value (see notes above) to fix the osborne1 */
 	w->status &= ~STA_2_BUSY;
 
-	usecs = floppy_drive_get_datarate_in_us(w->density);
+	usecs = wd17xx_get_datarate_in_us(w->density);
 	usecs *= delay;
 #endif
 
 	usecs = 12;
 
-	/* set new timer */
+	/* set new timer */	
 	timer_adjust_oneshot(w->timer, ATTOTIME_IN_USEC(usecs), MISCCALLBACK_COMMAND);
 }
 
@@ -1079,7 +1116,7 @@ static void wd17xx_timed_data_request(const device_config *device)
 	int usecs;
 	wd17xx_t *w = get_safe_token(device);
 
-	usecs = floppy_drive_get_datarate_in_us(w->density);
+	usecs = wd17xx_get_datarate_in_us(w->density);
 
 	/* set new timer */
 	timer_adjust_oneshot(w->timer, ATTOTIME_IN_USEC(usecs), MISCCALLBACK_DATA);
@@ -1700,7 +1737,8 @@ WRITE8_DEVICE_HANDLER( wd17xx_w )
 	}
 }
 
-const wd17xx_interface default_wd17xx_interface = { NULL, NULL };
+const wd17xx_interface default_wd17xx_interface = { NULL, NULL, { FLOPPY_0, FLOPPY_1, FLOPPY_2, FLOPPY_3} };
+const wd17xx_interface default_wd17xx_interface_2_drives = { NULL, NULL, { FLOPPY_0, FLOPPY_1, NULL, NULL} };
 
 /* device interface */
 static void common_start(const device_config *device, wd17xx_type_t device_type)
@@ -1728,12 +1766,16 @@ static DEVICE_RESET( wd17xx )
 	wd17xx_t *w = get_safe_token(device);
 	int i;
 
-	for (i = 0; i < device_count(device->machine, IO_FLOPPY); i++)
+	for (i = 0; i < 4; i++)
 	{
-		const device_config *img = image_from_devtype_and_index(device->machine, IO_FLOPPY, i);
-		floppy_drive_set_controller(img,device);
-		floppy_drive_set_index_pulse_callback(img, wd17xx_index_pulse_callback);
-		floppy_drive_set_rpm( img, 300.);
+		if(w->intf->floppy_drive_tags[i]!=NULL) {
+			const device_config *img = devtag_get_device(device->machine,w->intf->floppy_drive_tags[i]);
+			if (img!=NULL) {
+				floppy_drive_set_controller(img,device);
+				floppy_drive_set_index_pulse_callback(img, wd17xx_index_pulse_callback);
+				floppy_drive_set_rpm( img, 300.);
+			}
+		}
 	}
 
 	w->current_drive = 0;

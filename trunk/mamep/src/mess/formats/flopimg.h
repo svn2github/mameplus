@@ -78,15 +78,30 @@ struct FloppyFormat
 	const char *param_guidelines;
 };
 
+#define FLOPPY_IDENTIFY(name)	floperr_t name(floppy_image *floppy, const struct FloppyFormat *format, int *vote)
+#define FLOPPY_CONSTRUCT(name)	floperr_t name(floppy_image *floppy, const struct FloppyFormat *format, option_resolution *params)
 
+FLOPPY_IDENTIFY(td0_dsk_identify);
+FLOPPY_CONSTRUCT(td0_dsk_construct);
+
+FLOPPY_IDENTIFY(imd_dsk_identify);
+FLOPPY_CONSTRUCT(imd_dsk_construct);
+
+FLOPPY_IDENTIFY(cqm_dsk_identify);
+FLOPPY_CONSTRUCT(cqm_dsk_construct);
+
+FLOPPY_IDENTIFY(dsk_dsk_identify);
+FLOPPY_CONSTRUCT(dsk_dsk_construct);
+
+FLOPPY_IDENTIFY(d88_dsk_identify);
+FLOPPY_CONSTRUCT(d88_dsk_construct);
+
+#define FLOPPY_OPTIONS_NAME(name)	floppyoptions_##name
 
 #define FLOPPY_OPTIONS_START(name)												\
 	const struct FloppyFormat floppyoptions_##name[] =								\
 	{																			\
 
-#define FLOPPY_OPTIONS_END														\
-		{ NULL }																\
-	};
 
 #define FLOPPY_OPTIONS_EXTERN(name)												\
 	extern const struct FloppyFormat floppyoptions_##name[]							\
@@ -94,6 +109,16 @@ struct FloppyFormat
 #define FLOPPY_OPTION(name, extensions_, description_, identify_, construct_, ranges_)\
 	{ #name, extensions_, description_, identify_, construct_, ranges_ },				\
 
+#define FLOPPY_OPTIONS_END														\
+		FLOPPY_OPTION( td0, "td0", "Teledisk floppy disk image",	td0_dsk_identify, td0_dsk_construct, NULL) \
+		FLOPPY_OPTION( imd, "imd", "IMD floppy disk image",	imd_dsk_identify, imd_dsk_construct, NULL) \
+		FLOPPY_OPTION( cqm, "cqm,dsk", "CopyQM floppy disk image",	cqm_dsk_identify, cqm_dsk_construct, NULL) \
+		FLOPPY_OPTION( dsk, "dsk", "DSK floppy disk image",	dsk_dsk_identify, dsk_dsk_construct, NULL) \
+		FLOPPY_OPTION( d88, "d77,d88",	"D88 Floppy Disk image", d88_dsk_identify, d88_dsk_construct, NULL)\
+		{ NULL }							\
+	};
+
+FLOPPY_OPTIONS_EXTERN(default);
 
 #define PARAM_END				'\0'
 #define PARAM_HEADS				'H'
@@ -110,8 +135,6 @@ struct FloppyFormat
 #define INTERLEAVE(range)		"I" #range
 #define FIRST_SECTOR_ID(range)	"F" #range
 
-#define FLOPPY_IDENTIFY(name)	floperr_t name(floppy_image *floppy, const struct FloppyFormat *format, int *vote)
-#define FLOPPY_CONSTRUCT(name)	floperr_t name(floppy_image *floppy, const struct FloppyFormat *format, option_resolution *params)
 
 /***************************************************************************
 
@@ -143,7 +166,6 @@ floperr_t floppy_read_sector(floppy_image *floppy, int head, int track, int sect
 floperr_t floppy_write_sector(floppy_image *floppy, int head, int track, int sector, int offset, const void *buffer, size_t buffer_len, int ddam);
 floperr_t floppy_read_indexed_sector(floppy_image *floppy, int head, int track, int sector_index, int offset, void *buffer, size_t buffer_len);
 floperr_t floppy_write_indexed_sector(floppy_image *floppy, int head, int track, int sector_index, int offset, const void *buffer, size_t buffer_len, int ddam);
-floperr_t floppy_clear_sector(floppy_image *floppy, int head, int track, int sector, UINT8 data);
 floperr_t floppy_read_track(floppy_image *floppy, int head, int track, void *buffer, size_t buffer_len);
 floperr_t floppy_write_track(floppy_image *floppy, int head, int track, const void *buffer, size_t buffer_len);
 floperr_t floppy_read_track_data(floppy_image *floppy, int head, int track, void *buffer, size_t buffer_len);

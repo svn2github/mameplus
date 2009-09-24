@@ -37,6 +37,11 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_DEVICES)/cartslot.o	\
 	$(MESS_DEVICES)/cassette.o	\
 	$(MESS_DEVICES)/chd_cd.o	\
+	$(MESS_FORMATS)/imd_dsk.o	\
+	$(MESS_FORMATS)/td0_dsk.o	\
+	$(MESS_FORMATS)/cqm_dsk.o	\
+	$(MESS_FORMATS)/dsk_dsk.o	\
+	$(MESS_FORMATS)/d88_dsk.o	\
 	$(MESS_DEVICES)/flopdrv.o	\
 	$(MESS_DEVICES)/multcart.o	\
 	$(MESS_DEVICES)/printer.o	\
@@ -110,6 +115,17 @@ $(MESSOBJ)/sega.a:				\
 $(MESSOBJ)/snk.a:				\
 	$(MESS_DRIVERS)/ngp.o		\
 	$(MESS_VIDEO)/k1ge.o		\
+
+
+
+#-------------------------------------------------
+# miscellaneous dependencies
+#-------------------------------------------------
+
+$(MESS_VIDEO)/gba.o: 		$(MESSSRC)/video/gbamode0.c \
+				$(MESSSRC)/video/gbamode1.c \
+				$(MESSSRC)/video/gbamode2.c \
+				$(MESSSRC)/video/gbam345.c
 
 #-------------------------------------------------
 # layout dependencies

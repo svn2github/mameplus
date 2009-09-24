@@ -164,7 +164,8 @@ static void init_nes_core (running_machine *machine)
 
 	/* Load a battery file, but only if there's no trainer since they share */
 	/* overlapping memory. */
-	if (nes.trainer) return;
+	if (nes.trainer)
+		return;
 
 	/* We need this because battery ram is loaded before the */
 	/* memory subsystem is set up. When this routine is called */
@@ -398,7 +399,8 @@ WRITE8_HANDLER ( nes_IN0_w )
 	nes_input in_2;
 	nes_input in_3;
 
-	if (data & 0x01) return;
+	if (data & 0x01)
+		return;
 
 	if (LOG_JOY)
 		logerror ("joy 0 bits read: %d\n", in_0.shift);

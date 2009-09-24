@@ -443,13 +443,11 @@ space. This mapper uses 32KB sized banks.
 
 
 /* Initial value of the cpu registers (hacks until we get bios dumps) */
-static const UINT16 sgb_cpu_regs[6] = { 0x01B0, 0x0013, 0x00D8, 0x014D, 0xFFFE, 0x0100 };    /* Super Game Boy                    */
 static const UINT16 mgb_cpu_regs[6] = { 0xFFB0, 0x0013, 0x00D8, 0x014D, 0xFFFE, 0x0100 };	/* Game Boy Pocket / Super Game Boy 2 */
-//static const UINT16 cgb_cpu_regs[6] = { 0x11B0, 0x0013, 0x00D8, 0x014D, 0xFFFE, 0x0100 };	/* Game Boy Color  / Game Boy Advance */
 static const UINT16 megaduck_cpu_regs[6] = { 0x0000, 0x0000, 0x0000, 0x0000, 0xFFFE, 0x0000 };	/* Megaduck */
 
 static const lr35902_cpu_core dmg_cpu_reset = { NULL, LR35902_FEATURE_HALT_BUG, gb_timer_callback };
-static const lr35902_cpu_core sgb_cpu_reset = { sgb_cpu_regs, LR35902_FEATURE_HALT_BUG, gb_timer_callback };
+static const lr35902_cpu_core sgb_cpu_reset = { NULL, LR35902_FEATURE_HALT_BUG, gb_timer_callback };
 static const lr35902_cpu_core mgb_cpu_reset = { mgb_cpu_regs, LR35902_FEATURE_HALT_BUG, gb_timer_callback };
 static const lr35902_cpu_core cgb_cpu_reset = { NULL, 0, gb_timer_callback };
 static const lr35902_cpu_core megaduck_cpu_reset = { megaduck_cpu_regs, LR35902_FEATURE_HALT_BUG, gb_timer_callback };
@@ -457,9 +455,9 @@ static const lr35902_cpu_core megaduck_cpu_reset = { megaduck_cpu_regs, LR35902_
 static ADDRESS_MAP_START(gb_map, ADDRESS_SPACE_PROGRAM, 8)
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x00ff) AM_ROMBANK(5)					/* BIOS or ROM */
-	AM_RANGE(0x0100, 0x014f) AM_ROMBANK(10)					/* ROM bank */
-	AM_RANGE(0x0150, 0x03ff) AM_ROMBANK(6)
-	AM_RANGE(0x0400, 0x3fff) AM_ROMBANK(11)
+	AM_RANGE(0x0100, 0x01ff) AM_ROMBANK(10)					/* ROM bank */
+	AM_RANGE(0x0200, 0x08ff) AM_ROMBANK(6)
+	AM_RANGE(0x0900, 0x3fff) AM_ROMBANK(11)
 	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK(1)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK(4)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x8000, 0x9fff) AM_READWRITE( gb_vram_r, gb_vram_w ) /* 8k VRAM */
@@ -477,10 +475,10 @@ ADDRESS_MAP_END
 
 static ADDRESS_MAP_START(sgb_map, ADDRESS_SPACE_PROGRAM, 8)
 	ADDRESS_MAP_UNMAP_HIGH
-	AM_RANGE(0x0000, 0x00ff) AM_ROMBANK(5)					/* 16k fixed ROM bank */
-	AM_RANGE(0x0100, 0x014f) AM_ROMBANK(10)					/* ROM bank */
-	AM_RANGE(0x0150, 0x03ff) AM_ROMBANK(6)
-	AM_RANGE(0x0400, 0x3fff) AM_ROMBANK(11)
+	AM_RANGE(0x0000, 0x00ff) AM_ROMBANK(5)					/* BIOS or ROM */
+	AM_RANGE(0x0100, 0x01ff) AM_ROMBANK(10)					/* ROM bank */
+	AM_RANGE(0x0200, 0x08ff) AM_ROMBANK(6)
+	AM_RANGE(0x0900, 0x3fff) AM_ROMBANK(11)
 	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK(1)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK(4)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x8000, 0x9fff) AM_READWRITE( gb_vram_r, gb_vram_w ) /* 8k VRAM */
@@ -499,9 +497,9 @@ ADDRESS_MAP_END
 static ADDRESS_MAP_START(gbc_map, ADDRESS_SPACE_PROGRAM, 8)
 	ADDRESS_MAP_UNMAP_HIGH
 	AM_RANGE(0x0000, 0x00ff) AM_ROMBANK(5)					/* 16k fixed ROM bank */
-	AM_RANGE(0x0100, 0x014f) AM_ROMBANK(10)					/* ROM bank */
-	AM_RANGE(0x0150, 0x03ff) AM_ROMBANK(6)
-	AM_RANGE(0x0400, 0x3fff) AM_ROMBANK(11)
+	AM_RANGE(0x0100, 0x01ff) AM_ROMBANK(10)					/* ROM bank */
+	AM_RANGE(0x0200, 0x08ff) AM_ROMBANK(6)
+	AM_RANGE(0x0900, 0x3fff) AM_ROMBANK(11)
 	AM_RANGE(0x4000, 0x5fff) AM_ROMBANK(1)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x6000, 0x7fff) AM_ROMBANK(4)					/* 8KB/16KB switched ROM bank */
 	AM_RANGE(0x8000, 0x9fff) AM_READWRITE( gb_vram_r, gb_vram_w )		/* 8k switched VRAM bank */
@@ -584,7 +582,7 @@ static MACHINE_DRIVER_START( gameboy )
 	MDRV_SOUND_ADD("custom", GAMEBOY, 0)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 0.50)
-	
+
 	MDRV_CARTSLOT_ADD("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("gb,gmb,cgb,gbc,sgb,bin")
 	MDRV_CARTSLOT_NOT_MANDATORY
@@ -611,7 +609,6 @@ static MACHINE_DRIVER_START( supergb )
 	MDRV_PALETTE_INIT(sgb)
 
 	MDRV_CARTSLOT_MODIFY("cart")
-	MDRV_CARTSLOT_MANDATORY
 MACHINE_DRIVER_END
 
 static MACHINE_DRIVER_START( gbpocket )
@@ -670,7 +667,7 @@ static MACHINE_DRIVER_START( megaduck )
 	MDRV_SOUND_ADD("custom", GAMEBOY, 0)
 	MDRV_SOUND_ROUTE(0, "lspeaker", 0.50)
 	MDRV_SOUND_ROUTE(1, "rspeaker", 0.50)
-	
+
 	MDRV_CARTSLOT_ADD("cart")
 	MDRV_CARTSLOT_EXTENSION_LIST("bin")
 	MDRV_CARTSLOT_MANDATORY
@@ -689,8 +686,8 @@ ROM_START( gameboy )
 ROM_END
 
 ROM_START( supergb )
-	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASEFF )
-/*  ROM_LOAD( "sgb_boot.bin", 0x0000, 0x0100, NO_DUMP ) */
+	ROM_REGION( 0x0100, "maincpu", 0 )
+	ROM_LOAD( "sgb_boot.bin", 0x0000, 0x0100, CRC(ec8a83b9) SHA1(aa2f50a77dfb4823da96ba99309085a3c6278515) )
 ROM_END
 
 ROM_START( gbpocket )
@@ -705,9 +702,8 @@ ROM_END
 
 ROM_START( gbcolor )
 	ROM_REGION( 0x03B0 + 1792, "maincpu", 0 )
-	ROM_LOAD( "gbc_boot.1", 0x0000, 0x0100, BAD_DUMP CRC(607a2f81) SHA1(6b232a802ca1f4c3c7c29ad10de10737bbc064bc) )	/* Bootstrap code part 1 */
-	ROM_LOAD( "gbc_boot.2", 0x0100, 0x02B0, BAD_DUMP CRC(2a8e6294) SHA1(0b9a3836b524ffbff74729e0a01f33fef45b457b) ) /* Bootstrap code part 2 */
-	ROM_LOAD( "gbc_boot.3", 0x03B0, 1792, NO_DUMP )	/* DMG game - palette lookup table(?) */
+	ROM_LOAD( "gbc_boot.1", 0x0000, 0x0100, CRC(779ea374) SHA1(e4b40c9fd593a97a1618cfb2696f290cf9596a62) )	/* Bootstrap code part 1 */
+	ROM_LOAD( "gbc_boot.2", 0x0100, 0x0700, CRC(f741807d) SHA1(f943b1e0b640cf1d371e1d8f0ada69af03ebb396) ) /* Bootstrap code part 2 */
 ROM_END
 
 
@@ -715,15 +711,14 @@ ROM_START( megaduck )
 	ROM_REGION( 0x10000, "maincpu", ROMREGION_ERASEFF )
 ROM_END
 
-/*    YEAR  NAME      PARENT   COMPAT   MACHINE   INPUT    INIT  CONFIG   COMPANY     FULLNAME */
-CONS( 1990, gameboy,  0,       0,	gameboy,  gameboy, 0,    0,	 "Nintendo", "Game Boy"  , 0)
-CONS( 1994, supergb,  0,       gameboy,	supergb,  gameboy, 0,    0,	 "Nintendo", "Super Game Boy" , 0)
-CONS( 1996, gbpocket, gameboy, 0,	gbpocket, gameboy, 0,    0,	 "Nintendo", "Game Boy Pocket" , 0)
-CONS( 1997, gblight,  gameboy, 0,	gbpocket, gameboy, 0,    0,	 "Nintendo", "Game Boy Light" , 0)
-CONS( 1998, gbcolor,  gameboy, 0,	gbcolor,  gameboy, 0,    gb_cgb, "Nintendo", "Game Boy Color" , GAME_NOT_WORKING)
+/*    YEAR  NAME      PARENT   COMPAT   MACHINE   INPUT    INIT  CONFIG		COMPANY     FULLNAME */
+CONS( 1990, gameboy,  0,       0,		gameboy,  gameboy, 0,    0,			"Nintendo", "Game Boy", 0)
+CONS( 1994, supergb,  gameboy, 0,		supergb,  gameboy, 0,    0,			"Nintendo", "Super Game Boy", 0)
+CONS( 1996, gbpocket, gameboy, 0,		gbpocket, gameboy, 0,    0,			"Nintendo", "Game Boy Pocket", 0)
+CONS( 1997, gblight,  gameboy, 0,		gbpocket, gameboy, 0,    0,			"Nintendo", "Game Boy Light", 0)
+CONS( 1998, gbcolor,  gameboy, 0,		gbcolor,  gameboy, 0,    gb_cgb,	"Nintendo", "Game Boy Color", GAME_NOT_WORKING)
 
 /* Sound is not 100% yet, it generates some sounds which could be ok. Since we're lacking a real
    system there's no way to verify. Same goes for the colors of the LCD. We are no using the default
    Game Boy green colors */
 CONS( 1993, megaduck, 0,       0,       megaduck, gameboy, 0,    0,	 "Creatronic/Videojet/Timlex/Cougar",  "MegaDuck/Cougar Boy" , 0)
-

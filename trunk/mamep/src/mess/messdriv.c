@@ -61,6 +61,7 @@ const game_driver * const consoledrivers[] =
     DRIVER( snes )      /* Nintendo Super Nintendo NTSC                     */
     DRIVER( snessfx )	/* Nintendo Super Nintendo NTSC, SuperFX			*/
     DRIVER( snespal )   /* Nintendo Super Nintendo PAL                      */
+    DRIVER( snespsfx )	/* Nintendo Super Nintendo PAL, SuperFX			*/
     DRIVER( sfcbox )    /* Nintendo Super Famicom Box                       */
     DRIVER( gba )	/* Nintendo Game Boy Advance Handheld               */
 

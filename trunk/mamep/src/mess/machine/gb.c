@@ -175,8 +175,8 @@ static void gb_rom16_0000( running_machine *machine, UINT8 *addr )
 {
 	memory_set_bankptr( machine, 5, addr );
 	memory_set_bankptr( machine, 10, addr + 0x0100 );
-	memory_set_bankptr( machine, 6, addr + 0x0150 );
-	memory_set_bankptr( machine, 11, addr + 0x0400 );
+	memory_set_bankptr( machine, 6, addr + 0x0200 );
+	memory_set_bankptr( machine, 11, addr + 0x0900 );
 }
 
 static void gb_rom16_4000( running_machine *machine, UINT8 *addr ) 
@@ -320,14 +320,18 @@ MACHINE_RESET( sgb )
 	gb_init_regs(machine);
 
 	gb_rom16_0000( machine, ROMMap[ROMBank00] ? ROMMap[ROMBank00] : gb_dummy_rom_bank );
+	//gb_rom16_0000( machine, ROMMap[ROMBank00] ); // which of these is correct?
+
+	/* Enable BIOS rom */
+	memory_set_bankptr(machine, 5, memory_region(machine, "maincpu") );
 
 	sgb_tile_data = auto_alloc_array_clear(machine, UINT8, 0x2000 );
 	memset( sgb_tile_data, 0, 0x2000 );
 
-	/* Initialize the Sound Registers */
-	gb_sound_w(devtag_get_device(machine, "custom"), 0x16,0xF0);	/* F0 for SGB */
-	gb_sound_w(devtag_get_device(machine, "custom"), 0x15,0xF3);
-	gb_sound_w(devtag_get_device(machine, "custom"), 0x14,0x77);
+	/* Initialize the Sound Registers */ // should be unnecessary with the bootrom
+	//gb_sound_w(devtag_get_device(machine, "custom"), 0x16,0xF0);	/* F0 for SGB */
+	//gb_sound_w(devtag_get_device(machine, "custom"), 0x15,0xF3);
+	//gb_sound_w(devtag_get_device(machine, "custom"), 0x14,0x77);
 
 	sgb_window_mask = 0;
 	memset( sgb_pal_map, 0, sizeof(sgb_pal_map) );
@@ -345,7 +349,7 @@ MACHINE_RESET( sgb )
 				sgb_hack = 1;
 	}
 
-	gb_timer.divcount = 0xABC8;
+	gb_timer.divcount = 0x0004; //0xABC8; // needs to be fixed for bootrom, probably should be 0x0004 like dmg
 }
 
 MACHINE_RESET( gbpocket )
@@ -949,7 +953,7 @@ WRITE8_HANDLER ( sgb_io_w )
 			{
 			case 0x00:				   /* start condition */
 				if (sgb_start)
-					logerror("SGB: Start condition before end of transfer ??");
+					logerror("SGB: Start condition before end of transfer ??\n");
 				sgb_bitcount = 0;
 				sgb_start = 1;
 				sgb_rest = 0;
@@ -1376,8 +1380,12 @@ WRITE8_HANDLER ( sgb_io_w )
 								   But I don't know what it is for. */
 								/* Not Implemented */
 								break;
+							case 0x1E:	/* Used by bootrom to transfer the gb cart header */
+								break;
+							case 0x1F:	/* Used by bootrom to transfer the gb cart header */
+								break;
 							default:
-								logerror( "\tSGB: Unknown Command!\n" );
+								logerror( "SGB: Unknown Command 0x%02x!\n", sgb_data[0] >> 3 );
 						}
 
 						sgb_start = 0;
@@ -1410,6 +1418,10 @@ WRITE8_HANDLER ( sgb_io_w )
 				}
 				else
 					JOYPAD = 0x3F;
+
+				/* Hack to let cartridge know it's running on an SGB */
+				if ( (sgb_data[0] >> 3) == 0x1F )
+					JOYPAD = 0x3E;
 				break;
 			}
 			return;
@@ -1465,7 +1477,7 @@ DEVICE_START(gb_cart)
 	memset( gb_dummy_rom_bank, 0xFF, 0x4000 );
 
 	gb_dummy_ram_bank = auto_alloc_array( device->machine, UINT8, 0x2000 );
-	memset( gb_dummy_ram_bank, 0x00, 0x2000 );
+	memset( gb_dummy_ram_bank, 0xFF, 0x2000 );
 
 	for(I = 0; I < MAX_ROMBANK; I++) 
 	{
@@ -1872,6 +1884,7 @@ DEVICE_IMAGE_LOAD(gb_cart)
 	{
 		/* Claim memory */
 		gb_cart_ram = auto_alloc_array( image->machine, UINT8, RAMBanks * 0x2000 );
+		memset( gb_cart_ram, 0xFF, RAMBank * 0x2000 );
 
 		for (I = 0; I < RAMBanks; I++)
 		{
