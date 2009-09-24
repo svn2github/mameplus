@@ -167,6 +167,14 @@ DEFS += -D_CRT_SECURE_NO_DEPRECATE -D_CRT_NONSTDC_NO_DEPRECATE -DXML_STATIC -D__
 	    @echo Compiling $<...
 	    @cl.exe /nologo /O1 -D_CRT_SECURE_NO_DEPRECATE $(VCONVDEFS) -c $< /Fo$@
 
+OSDCLEAN = msvcclean
+
+msvcclean:
+	@echo Deleting Visual Studio specific files...
+	$(RM) *.pdb
+	$(RM) *.lib
+	$(RM) *.exp
+
 endif
 
 

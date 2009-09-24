@@ -69,6 +69,8 @@
 
 #define PORTA_STEP(_c)		(((WR1(_c) >> 4) & 0x03)*2-1)
 #define PORTB_STEP(_c)		(((WR2(_c) >> 4) & 0x03)*2-1)
+#define PORTA_INC(_c)		(WR1(_c) & 0x10)
+#define PORTB_INC(_c)		(WR2(_c) & 0x10)
 #define PORTA_FIXED(_c)		(((WR1(_c) >> 4) & 0x02) == 0x02)
 #define PORTB_FIXED(_c)		(((WR2(_c) >> 4) & 0x02) == 0x02)
 #define PORTA_MEMORY(_c)	(((WR1(_c) >> 3) & 0x01) == 0x00)
@@ -80,6 +82,11 @@
 #define PORTA_IS_SOURCE(_c)	((WR0(_c) >> 2) & 0x01)
 #define PORTB_IS_SOURCE(_c)	(!PORTA_IS_SOURCE(_c))
 #define TRANSFER_MODE(_c)	(WR0(_c) & 0x03)
+
+#define MATCH_F_SET(_c)		(_c->status &= ~0x10)
+#define MATCH_F_CLEAR(_c)	(_c->status |= 0x10)
+#define EOB_F_SET(_c)		(_c->status &= ~0x20)
+#define EOB_F_CLEAR(_c)		(_c->status |= 0x20)
 
 #define TM_TRANSFER		(0x01)
 #define TM_SEARCH		(0x02)
@@ -97,6 +104,9 @@ struct _z80dma_t
 	UINT8 	num_follow;
 	UINT8	cur_follow;
 	UINT8 	regs_follow[4];
+	UINT8	read_num_follow;
+	UINT8	read_cur_follow;
+	UINT8 	read_regs_follow[7];
 	UINT8	status;
 	UINT8	dma_enabled;
 
@@ -105,6 +115,8 @@ struct _z80dma_t
 	UINT16 count;
 
 	UINT8 rdy;
+	UINT8 irq_en;
+	UINT8 reset_pointer;
 
 	UINT8 is_read;
 	UINT8 cur_cycle;
@@ -131,13 +143,16 @@ static void z80dma_do_read(const device_config *device)
 	mode = TRANSFER_MODE(cntx);
 	switch(mode) {
 		case TM_TRANSFER:
+		case TM_SEARCH:
 			if (PORTA_IS_SOURCE(cntx))
 			{
 				if (PORTA_MEMORY(cntx))
 					cntx->latch = cntx->intf->memory_read(device, cntx->addressA);
 				else
 					cntx->latch = cntx->intf->portA_read(device, cntx->addressA);
-				cntx->addressA += PORTA_STEP(cntx);
+
+				LOG(("A src: %04x \n",cntx->addressA));
+				cntx->addressA += PORTA_FIXED(cntx) ? 0 : PORTA_INC(cntx) ? PORTA_STEP(cntx) : -PORTA_STEP(cntx);
 			}
 			else
 			{
@@ -145,10 +160,14 @@ static void z80dma_do_read(const device_config *device)
 					cntx->latch = cntx->intf->memory_read(device, cntx->addressB);
 				else
 					cntx->latch = cntx->intf->portB_read(device, cntx->addressB);
-				cntx->addressB += PORTB_STEP(cntx);
+
+				LOG(("B src: %04x \n",cntx->addressB));
+				cntx->addressB += PORTB_FIXED(cntx) ? 0 : PORTB_INC(cntx) ? PORTB_STEP(cntx) : -PORTB_STEP(cntx);
 			}
 			break;
-
+		case TM_SEARCH_TRANSFER:
+			fatalerror("z80dma_do_operation: unhandled search & transfer mode !\n");
+			break;
 		default:
 			fatalerror("z80dma_do_operation: invalid mode %d!\n", mode);
 			break;
@@ -174,18 +193,40 @@ static int z80dma_do_write(const device_config *device)
 					cntx->intf->memory_write(device, cntx->addressB, cntx->latch);
 				else
 					cntx->intf->portB_write(device, cntx->addressB, cntx->latch);
-				cntx->addressB += PORTB_STEP(cntx);
+
+				LOG(("B dst: %04x \n",cntx->addressB));
+				cntx->addressB += PORTB_FIXED(cntx) ? 0 : PORTB_INC(cntx) ? PORTB_STEP(cntx) : -PORTB_STEP(cntx);
 			}
 			else
 			{
 				if (PORTA_MEMORY(cntx))
 					cntx->intf->memory_write(device, cntx->addressA, cntx->latch);
 				else
-					cntx->intf->portB_write(device, cntx->addressA, cntx->latch);
-				cntx->addressA += PORTA_STEP(cntx);
+					cntx->intf->portA_write(device, cntx->addressA, cntx->latch);
+
+				LOG(("A dst: %04x \n",cntx->addressA));
+				cntx->addressA += PORTA_FIXED(cntx) ? 0 : PORTA_INC(cntx) ? PORTA_STEP(cntx) : -PORTA_STEP(cntx);
 			}
 			cntx->count--;
 			done = (cntx->count == 0xFFFF);
+			break;
+
+		case TM_SEARCH:
+			{
+				UINT8 load_byte,match_byte;
+				load_byte = cntx->latch | MASK_BYTE(cntx);
+				match_byte = MATCH_BYTE(cntx) | MASK_BYTE(cntx);
+				//LOG(("%02x %02x\n",load_byte,match_byte));
+				if(load_byte == match_byte)
+					MATCH_F_SET(cntx);
+
+				cntx->count--;
+				done = (cntx->count == 0xFFFF); //correct?
+			}
+			break;
+
+		case TM_SEARCH_TRANSFER:
+			fatalerror("z80dma_do_operation: unhandled search & transfer mode !\n");
 			break;
 
 		default:
@@ -268,8 +309,16 @@ static void z80dma_update_status(const device_config *device)
 
 READ8_DEVICE_HANDLER( z80dma_r )
 {
-	fatalerror("z80dma_read: not implemented");
-	return 0;
+	z80dma_t *cntx = get_safe_token(device);
+	UINT8 res;
+
+	res = cntx->read_regs_follow[cntx->read_cur_follow];
+	cntx->read_cur_follow++;
+
+	if(cntx->read_cur_follow >= cntx->read_num_follow)
+		cntx->read_cur_follow = 0;
+
+	return res;
 }
 
 
@@ -306,6 +355,7 @@ WRITE8_DEVICE_HANDLER( z80dma_w )
 		else if ((data & 0x83) == 0x80) // WR3
 		{
 			WR3(cntx) = data;
+			if (data & 0x08)
 				cntx->regs_follow[cntx->num_follow++] = GET_REGNUM(cntx, MASK_BYTE(cntx));
 			if (data & 0x10)
 				cntx->regs_follow[cntx->num_follow++] = GET_REGNUM(cntx, MATCH_BYTE(cntx));
@@ -329,36 +379,96 @@ WRITE8_DEVICE_HANDLER( z80dma_w )
 			WR6(cntx) = data;
 			switch (data)
 			{
-				case 0x88:	/* Reinitialize status byte */
 				case 0xA3:	/* Reset and disable interrupts */
-				case 0xA7:	/* Initiate read sequence */
-				case 0xAB:	/* Enable interrupts */
-				case 0xAF:	/* Disable interrupts */
-				case 0xB3:	/* Force ready */
 				case 0xB7:	/* Enable after rti */
 				case 0xBF:	/* Read status byte */
-				case 0xD3:	/* Continue */
 					fatalerror("Unimplemented WR6 command %02x", data);
+					break;
+				case 0xA7:	/* Initiate read sequence */
+					LOG(("Initiate Read Sequence\n"));
+					cntx->read_cur_follow = cntx->read_num_follow = 0;
+					if(READ_MASK(cntx) & 0x01) { cntx->read_regs_follow[cntx->read_num_follow++] = cntx->status; }
+					if(READ_MASK(cntx) & 0x02) { cntx->read_regs_follow[cntx->read_num_follow++] = BLOCKLEN_L(cntx); } //byte counter (low)
+					if(READ_MASK(cntx) & 0x04) { cntx->read_regs_follow[cntx->read_num_follow++] = BLOCKLEN_H(cntx); } //byte counter (high)
+					if(READ_MASK(cntx) & 0x08) { cntx->read_regs_follow[cntx->read_num_follow++] = PORTA_ADDRESS_L(cntx); } //port A address (low)
+					if(READ_MASK(cntx) & 0x10) { cntx->read_regs_follow[cntx->read_num_follow++] = PORTA_ADDRESS_H(cntx); } //port A address (high)
+					if(READ_MASK(cntx) & 0x20) { cntx->read_regs_follow[cntx->read_num_follow++] = PORTB_ADDRESS_L(cntx); } //port B address (low)
+					if(READ_MASK(cntx) & 0x40) { cntx->read_regs_follow[cntx->read_num_follow++] = PORTA_ADDRESS_H(cntx); } //port B address (high)
 					break;
 				case 0xC3:	/* Reset */
 					LOG(("Reset\n"));
+					cntx->dma_enabled = 0;
+					cntx->rdy = 1;
+					cntx->irq_en = 0;
+					/* Needs six reset commands to reset the DMA */
+					{
+						UINT8 WRi;
+
+						for(WRi=0;WRi<7;WRi++)
+							REG(cntx,WRi,cntx->reset_pointer) = 0;
+
+						cntx->reset_pointer++;
+						if(cntx->reset_pointer >= 6) { cntx->reset_pointer = 0; }
+					}
+					cntx->status = 0x38;
 					break;
 				case 0xCF:	/* Load */
 					cntx->addressA = PORTA_ADDRESS(cntx);
 					cntx->addressB = PORTB_ADDRESS(cntx);
 					cntx->count = BLOCKLEN(cntx);
+					cntx->status |= 0x30;
 					LOG(("Load A: %x B: %x N: %x\n", cntx->addressA, cntx->addressB, cntx->count));
 					break;
 				case 0x83:	/* Disable dma */
+					LOG(("Disable DMA\n"));
 					cntx->dma_enabled = 0;
+					cntx->rdy = 1 ^ ((WR5(cntx) & 0x8)>>3);
 					z80dma_rdy_w(device, 0, cntx->rdy);
 					break;
 				case 0x87:	/* Enable dma */
+					LOG(("Enable DMA\n"));
 					cntx->dma_enabled = 1;
+					cntx->rdy = (WR5(cntx) & 0x8)>>3;
 					z80dma_rdy_w(device, 0, cntx->rdy);
 					break;
 				case 0xBB:
+					LOG(("Set Read Mask\n"));
 					cntx->regs_follow[cntx->num_follow++] = GET_REGNUM(cntx, READ_MASK(cntx));
+					break;
+				case 0xD3:	/* Continue */
+					LOG(("Continue\n"));
+					cntx->count = 0;
+					cntx->dma_enabled = 1;
+					//"match not found" & "end of block" status flags zeroed here
+					cntx->status |= 0x30;
+					break;
+				case 0xc7:	/* Reset Port A Timing */
+					LOG(("Reset Port A Timing\n"));
+					PORTA_TIMING(cntx) = 0;
+					break;
+				case 0xcb:	/* Reset Port B Timing */
+					LOG(("Reset Port B Timing\n"));
+					PORTB_TIMING(cntx) = 0;
+					break;
+				case 0xB3:	/* Force ready */
+					LOG(("Force ready\n"));
+					cntx->rdy = (WR5(cntx) & 0x8)>>3;
+					z80dma_rdy_w(device, 0, cntx->rdy);
+					break;
+				case 0xAB:	/* Enable interrupts */
+					LOG(("Enable IRQ\n"));
+					cntx->irq_en = 1;
+					break;
+				case 0xAF:	/* Disable interrupts */
+					LOG(("Disable IRQ\n"));
+					cntx->irq_en = 0;
+					break;
+				case 0x8B:	/* Reinitialize status byte */
+					LOG(("Reinitialize status byte\n"));
+					cntx->status |= 0x30;
+					break;
+				case 0xFB:
+					LOG(("Z80DMA undocumented command triggered 0x%02X!\n",data));
 					break;
 				default:
 					fatalerror("Unknown WR6 command %02x", data);
@@ -402,7 +512,7 @@ static TIMER_CALLBACK( z80dma_rdy_write_callback )
 }
 
 
-WRITE8_DEVICE_HANDLER( z80dma_rdy_w)
+WRITE8_DEVICE_HANDLER( z80dma_rdy_w )
 {
 	z80dma_t *z80dma = get_safe_token(device);
 	int param;
@@ -477,6 +587,9 @@ static DEVICE_RESET( z80dma )
 	z80dma->rdy = 0;
 	z80dma->num_follow = 0;
 	z80dma->dma_enabled = 0;
+	z80dma->read_num_follow = z80dma->read_cur_follow = 0;
+	z80dma->irq_en = 0;
+	z80dma->reset_pointer = 0;
 	z80dma_update_status(device);
 }
 

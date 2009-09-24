@@ -629,7 +629,7 @@ tools: maketree $(TOOLS)
 
 maketree: $(sort $(OBJDIRS))
 
-clean:
+clean: $(OSDCLEAN)
 	@echo Deleting object tree $(OBJ)...
 	$(RM) -r $(OBJ)
 	@echo Deleting $(EMULATORALL)...
