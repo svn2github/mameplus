@@ -362,7 +362,8 @@ hyhoo2	早押对战问答 2 (日版)	早押对战问答 2 (日版)	Nichibutsu
 jangou	雀豪 [BET] (日版)	雀豪 [BET] (日版)	Nichibutsu
 macha	小魔女知识问答 (日版)	小魔女知识问答 (日版)	Logitec
 jngolady	雀豪 女士版 (日版)	雀豪 女士版 (日版)	Nichibutsu
-cntrygrl	乡村女孩 (日版)	乡村女孩 (日版)	Royal Denshi
+cntrygrl	乡村女孩 (日版 第1套)	乡村女孩 (日版 第1套)	Royal Denshi
+cntrygrla	乡村女孩 (日版 第2套)	乡村女孩 (日版 第2套)	Nichibutsu
 fruitbun	水果 & 兔女郎 (世界版?)	水果 & 兔女郎 (世界版?)	Nichibutsu
 luckygrl	幸运女孩? (Wing)	幸运女孩? (Wing)	Wing
 nightgal	晚间少女 (日版 840920 AG 1-00)	晚间少女 (日版 840920 AG 1-00)	Nichibutsu
@@ -1368,6 +1369,7 @@ crossbld	刀锋领主 (日版)	刀锋领主 (日版)	Irem
 lethalth	致命因子 (世界版)	致命因子 (世界版)	Irem
 thndblst	致命因子 (日版)	致命因子 (日版)	Irem
 uccops	暴力刑警 (世界版)	暴力刑警 (世界版)	Irem
+uccopsu	暴力刑警 (美版)	暴力刑警 (美版)	Irem
 uccopsar	暴力刑警 (阿尔法更新版)	暴力刑警 (阿尔法更新版)	Irem
 uccopsj	暴力刑警 (日版)	暴力刑警 (日版)	Irem
 mysticri	魔法警备队 (世界版)	魔法警备队 (世界版)	Irem
@@ -1602,7 +1604,8 @@ perestro	天蚕变 93 - 新思维美女	天蚕变 93 - 新思维美女	Promat
 perestrof	天蚕变 93 - 新思维美女 (富贵商会 license)	天蚕变 93 - 新思维美女 (富贵商会 license)	Promat (Fuuki license)
 pbillian	另类撞球	另类撞球	Taito
 hotsmash	狂热守球员	狂热守球员	Taito
-exzisus	行星任务 (日版)	行星任务 (日版)	Taito Corporation
+exzisus	行星任务 (日版, dedicated)	行星任务 (日版, dedicated)	Taito Corporation
+exzisusa	行星任务 (日版, 转换版)	行星任务 (日版, 转换版)	Taito Corporation
 minivadr	迷你小蜜蜂	迷你小蜜蜂	Taito Corporation
 volfied	异形天蚕变 (世界版, 校正版 1)	异形天蚕变 (世界版, 校正版 1)	Taito Corporation Japan
 volfiedu	异形天蚕变 (美版, 校正版 1)	异形天蚕变 (美版, 校正版 1)	Taito America Corporation
@@ -1959,6 +1962,7 @@ truxton	达人	达人	[Toaplan] Taito Corporation
 hellfire	地狱火 (2P Ver.)	地狱火 (2P Ver.)	Toaplan (Taito license)
 hellfire1	地狱火 (1P Ver.)	地狱火 (1P Ver.)	Toaplan (Taito license)
 hellfire2	地狱火 (2P Ver., first edition)	地狱火 (2P Ver., first edition)	Toaplan (Taito license)
+hellfire3	地狱火 (1P Ver., alt)	地狱火 (1P Ver., alt)	Toaplan (Taito license)
 zerowing	零式战机	零式战机	Toaplan
 zerowing2	零式战机 (2 player simultaneous ver.)	零式战机 (2 player simultaneous ver.)	[Toaplan] Williams Electronics Games, Inc
 demonwld	步步惊魂 (第1套)	步步惊魂 (第1套)	Toaplan
@@ -2027,6 +2031,7 @@ shippumd	疾风魔法大作战 (日版)	疾风魔法大作战 (日版)	Raizing / Eighting
 kingdmgp	疾风魔法大作战 (世界版)	疾风魔法大作战 (世界版)	Raizing / Eighting
 bgaregga	空战之路 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Feb 3 1996)	空战之路 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Feb 3 1996)	Raizing / Eighting
 bgareggahk	空战之路 (奥地利版 / 香港版) (Sat Feb 3 1996)	空战之路 (奥地利版 / 香港版) (Sat Feb 3 1996)	Raizing / Eighting
+bgareggatw	空战之路 (台湾版 / 德国版) (Thu Feb 1 1996)	空战之路 (台湾版 / 德国版) (Thu Feb 1 1996)	Raizing / Eighting
 bgaregganv	空战之路 - 新版本 (奥地利版 / 香港版) (Sat Mar 2 1996)	空战之路 - 新版本 (奥地利版 / 香港版) (Sat Mar 2 1996)	Raizing / Eighting
 bgareggat2	空战之路 - Type 2 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Mar 2 1996)	空战之路 - Type 2 (欧洲版 / 美版 / 日版 / 亚洲版) (Sat Mar 2 1996)	Raizing / Eighting
 bgareggacn	空战之路 - Type 2 (丹麦版 / 中国版) (Tue Apr 2 1996)	空战之路 - Type 2 (丹麦版 / 中国版) (Tue Apr 2 1996)	Raizing / Eighting
@@ -3864,9 +3869,11 @@ dolphin	蓝海豚	蓝海豚	Sammy
 ggisuka	罪恶工具 Isuka	罪恶工具 Isuka	Sammy / Arc System Works
 rumblef	斗鱼	斗鱼	Sammy / Dimps
 rangrmsn	巡逻任务	巡逻任务	Sammy
+salmankt	上班族金太郎	上班族金太郎	Sammy
 kofnw	拳皇 - 新浪	拳皇 - 新浪	Sammy / SNK Playmore
 xtrmhunt	狂热打猎	狂热打猎	Sammy
 kov7sprt	新·三国战纪 - 七星转生	新·三国战纪 - 七星转生	Sammy / IGS
+vfurlong	赛马之胜利距离	赛马之胜利距离	Sammy
 ngbc	Neo-Geo 格斗竞技场	Neo-Geo 格斗竞技场	Sammy / SNK Playmore
 fotns	新北斗神拳	新北斗神拳	Sega / Arc System Works
 xtrmhnt2	狂热打猎 2	狂热打猎 2	Sega
@@ -4452,6 +4459,7 @@ lethalenux	双枪 (ver unknown, US, 08/06/92 15:11, hacked/proto?)	双枪 (ver unkno
 lethaleneab	双枪 (ver EAB, 10/14/92 19:53)	双枪 (ver EAB, 10/14/92 19:53)	Konami
 lethaleneae	双枪 (ver EAE, 11/19/92 16:24)	双枪 (ver EAE, 11/19/92 16:24)	Konami
 lethalenj	双枪 (ver JAD, 12/04/92 17:16)	双枪 (ver JAD, 12/04/92 17:16)	Konami
+tgtpanic	Target Panic	Target Panic	Konami
 nemesis	宇宙巡航舰	宇宙巡航舰	Konami
 nemesisuk	宇宙巡航舰 (世界版?)	宇宙巡航舰 (世界版?)	Konami
 konamigt	柯纳米GT 赛车	柯纳米GT 赛车	Konami
@@ -4473,7 +4481,8 @@ gwarrior	银河战士	银河战士	Konami
 devilw	魔兽王国 Devil 世界版	魔兽王国 Devil 世界版	Konami
 darkadv	魔兽王国 Dark Adventure	魔兽王国 Dark Adventure	Konami
 majuu	魔兽王国	魔兽王国	Konami
-vulcan	宇宙巡航舰 II	宇宙巡航舰 II	Konami
+vulcan	宇宙巡航舰	宇宙巡航舰	Konami
+vulcana	宇宙巡航舰 (旧版)	宇宙巡航舰 (旧版)	Konami
 gradius2	宇宙巡航舰 II (日版 新版)	宇宙巡航舰 II (日版 新版)	Konami
 gradius2a	宇宙巡航舰 II (日版 旧版)	宇宙巡航舰 II (日版 旧版)	Konami
 gradius2b	宇宙巡航舰 II (日版 老版)	宇宙巡航舰 II (日版 老版)	Konami
@@ -4522,7 +4531,8 @@ ssridersjbd	落日骑士 (2 Players ver JBD)	落日骑士 (2 Players ver JBD)	Konami
 ssridersb	落日骑士 (盗版 4 Players ver ADD)	落日骑士 (盗版 4 Players ver ADD)	Konami
 xmen	X - 战警 (4 Players ver UBB)	X - 战警 (4 Players ver UBB)	Konami
 xmenj	X - 战警 (4 Players ver JBA)	X - 战警 (4 Players ver JBA)	Konami
-xmen2p	X - 战警 (2 Players ver AAA)	X - 战警 (2 Players ver AAA)	Konami
+xmen2pe	X - 战警 (2 Players ver EAA)	X - 战警 (2 Players ver EAA)	Konami
+xmen2pa	X - 战警 (2 Players ver AAA)	X - 战警 (2 Players ver AAA)	Konami
 xmen2pj	X - 战警 (2 Players ver JAA)	X - 战警 (2 Players ver JAA)	Konami
 xmen6p	X - 战警 (6 Players ver ECB)	X - 战警 (6 Players ver ECB)	Konami
 xmen6pu	X - 战警 (6 Players ver UCB)	X - 战警 (6 Players ver UCB)	Konami
@@ -5217,7 +5227,8 @@ dmndrby	钻石德贝 (新版)	钻石德贝 (新版)	Electrocoin
 dmndrbya	钻石德贝 (旧版)	钻石德贝 (旧版)	Electrocoin
 neogeo	Neo-Geo	Neo-Geo	SNK
 nam1975	越战 - 1975	越战 - 1975	SNK
-bstars	棒球之星	棒球之星	SNK
+bstars	棒球之星 (第1套)	棒球之星 (第1套)	SNK
+bstarsh	棒球之星 (第2套)	棒球之星 (第2套)	SNK
 tpgolf	顶尖高尔夫	顶尖高尔夫	SNK
 mahretsu	麻雀狂列传 - 西日本编	麻雀狂列传 - 西日本编	SNK
 maglord	幻魔大战 (第1套)	幻魔大战 (第1套)	Alpha Denshi Co.
@@ -5266,7 +5277,7 @@ aof	龙虎之拳	龙虎之拳	SNK
 samsho	侍魂 - 十二剑手 (第1套)	侍魂 - 十二剑手 (第1套)	SNK
 samshoh	侍魂 - 十二剑手 (第2套)	侍魂 - 十二剑手 (第2套)	SNK
 tophuntr	顶尖猎人 - 罗迪 & 凯茜 (第1套)	顶尖猎人 - 罗迪 & 凯茜 (第1套)	SNK
-tophuntra	顶尖猎人 - 罗迪 & 凯茜 (第2套)	顶尖猎人 - 罗迪 & 凯茜 (第2套)	SNK
+tophuntrh	顶尖猎人 - 罗迪 & 凯茜 (第2套)	顶尖猎人 - 罗迪 & 凯茜 (第2套)	SNK
 fatfury2	饿狼传说 2 - 新的战斗	饿狼传说 2 - 新的战斗	SNK
 janshin	雀神传说 - 寻找麻将大师	雀神传说 - 寻找麻将大师	Aicom
 androdun	勇者之击	勇者之击	Visco
@@ -5307,7 +5318,7 @@ quizkof	拳皇问答	拳皇问答	Saurus
 ssideki3	得点王 3 - 光荣的挑战	得点王 3 - 光荣的挑战	SNK
 doubledr	双截龙 (Neo-Geo)	双截龙 (Neo-Geo)	Technos Japan
 pbobblen	泡泡龙 (Neo-Geo) (第1套)	泡泡龙 (Neo-Geo) (第1套)	Taito
-pbobblena	泡泡龙 (Neo-Geo) (第2套)	泡泡龙 (Neo-Geo) (第2套)	Taito
+pbobblenb	泡泡龙 (Neo-Geo) (盗版)	泡泡龙 (Neo-Geo) (盗版)	Taito
 kof95	拳皇 '95 (第1套)	拳皇 '95 (第1套)	SNK
 kof95h	拳皇 '95 (第2套)	拳皇 '95 (第2套)	SNK
 tws96	Tecmo 世界杯足球 '96	Tecmo 世界杯足球 '96	Tecmo
@@ -5354,7 +5365,7 @@ ghostlop	鬼精灵投球手 (工程版)	鬼精灵投球手 (工程版)	Data East Corporation
 breakers	爆裂人	爆裂人	Visco
 miexchng	金钱游戏	金钱游戏	Face
 kof97	拳皇 '97 (第1套)	拳皇 '97 (第1套)	SNK
-kof97a	拳皇 '97 (第2套)	拳皇 '97 (第2套)	SNK
+kof97h	拳皇 '97 (第2套)	拳皇 '97 (第2套)	SNK
 kof97pls	拳皇 '97 风云再起 Plus (盗版)	拳皇 '97 风云再起 Plus (盗版)	bootleg
 kog	格斗之王 (盗版)	格斗之王 (盗版)	bootleg
 magdrop3	魔法气泡 Ⅲ	魔法气泡 Ⅲ	Data East Corporation
@@ -5409,7 +5420,8 @@ kof2001h	拳皇 2001 (第2套)	拳皇 2001 (第2套)	Eolith / SNK
 cthd2003	卧虎藏龙 2003 (盗版)	卧虎藏龙 2003 (盗版)	bootleg
 ct2k3sp	卧虎藏龙 2003 风云 Super Plus (盗版)	卧虎藏龙 2003 风云 Super Plus (盗版)	bootleg
 ct2k3sa	卧虎藏龙 2003 Super Plus 替换版 (盗版)	卧虎藏龙 2003 Super Plus 替换版 (盗版)	bootleg
-mslug4	合金弹头 4	合金弹头 4	Mega / Playmore
+mslug4	合金弹头 4 (第1套)	合金弹头 4 (第1套)	Mega / Playmore
+mslug4h	合金弹头 4 (第2套)	合金弹头 4 (第2套)	Mega / Playmore
 ms4plus	合金弹头 4 增强型 Plus (盗版)	合金弹头 4 增强型 Plus (盗版)	bootleg
 rotd	龙吼 - 双截龙	龙吼 - 双截龙	Evoga / Playmore
 kof2002	拳皇 2002 - 终极挑战	拳皇 2002 - 终极挑战	Eolith / Playmore
@@ -5727,6 +5739,7 @@ totcarn	黑珍珠部队 (rev LA1 03/10/92)	黑珍珠部队 (rev LA1 03/10/92)	Midway
 totcarnp	黑珍珠部队 (工程版, rev 1.0 01/25/92)	黑珍珠部队 (工程版, rev 1.0 01/25/92)	Midway
 mk2	真人快打 II (rev L3.1)	真人快打 II (rev L3.1)	Midway
 mk2r32	真人快打 II (rev L3.2 (欧洲版)	真人快打 II (rev L3.2 (欧洲版)	Midway
+mk2r30	真人快打 II (rev L3.0)	真人快打 II (rev L3.0)	Midway
 mk2r21	真人快打 II (rev L2.1)	真人快打 II (rev L2.1)	Midway
 mk2r14	真人快打 II (rev L1.4)	真人快打 II (rev L1.4)	Midway
 mk2r42	真人快打 II (rev L4.2, 修改版)	真人快打 II (rev L4.2, 修改版)	hack
@@ -5883,9 +5896,9 @@ sosterm	国际援助	国际援助	Terminal
 bilyard	小丑台球	小丑台球	Terminal
 phtetris	俄罗斯方块 (Photon 系统)	俄罗斯方块 (Photon 系统)	<unknown>
 phpython	大蟒蛇 (Photon System)	大蟒蛇 (Photon System)	<unknown>
-kok	天才厨师	天才厨师	<unknown>
-black	黑海盗	黑海盗	<unknown>
-brod	弹簧密探	弹簧密探	<unknown>
+kok	天才厨师 (街机 multi-game 盗版)	天才厨师 (街机 multi-game 盗版)	<unknown>
+black	黑海盗 (街机 盗版)	黑海盗 (街机 盗版)	<unknown>
+brod	弹簧密探 (街机 盗版)	弹簧密探 (街机 盗版)	<unknown>
 bagman	推销员	推销员	Valadon Automation
 bagnard	推销员 (第1套)	推销员 (第1套)	Valadon Automation
 bagnarda	推销员 (第2套)	推销员 (第2套)	Valadon Automation
@@ -6739,7 +6752,7 @@ mjsiyoub	麻雀校园 (日版)	麻雀校园 (日版)	Visco
 mjsenka	麻雀 樱花(日版)	麻雀 樱花(日版)	Visco
 mjyarou	麻雀野郎 [BET] (日版)	麻雀野郎 [BET] (日版)	Visco / Video System
 mjclub	麻雀俱乐部 [BET] (日版)	麻雀俱乐部 [BET] (日版)	Xex
-daisyari	雏女麻雀 [BET] (日版)	雏女麻雀 [BET] (日版)	Best System
+daisyari	麻雀 - 大车轮 [BET] (日版)	麻雀 - 大车轮 [BET] (日版)	Best System
 suzume	麻雀与我 (日版)	麻雀与我 (日版)	Dyna Electronics
 hnayayoi	华弥生 (日版)	华弥生 (日版)	Dyna Electronics
 dondenmj	唐屋麻雀 [BET] (日版)	唐屋麻雀 [BET] (日版)	Dyna Electronics
@@ -7634,6 +7647,7 @@ wyvernwg	铁翼飞龙	铁翼飞龙	SemiCom (Game Vision License)
 rbmk	实战 - 麻将王 加强版	实战 - 麻将王 加强版	GMS
 go2000	射门 2000	射门 2000	SA
 mirax	鲸鱼星座	鲸鱼星座	Current Technologies
+miraxa	鲸鱼星座 (第2套)	鲸鱼星座 (第2套)	Current Technologies
 victor5	征服者 5	征服者 5	Subsino
 victor21	征服者 21	征服者 21	Subsino
 crsbingo	十字牌	十字牌	Subsino
@@ -8242,7 +8256,7 @@ keks	快克水果机 (060328, 第1套)	快克水果机 (060328, 第1套)	Igrosoft
 keksa	快克水果机 (060328, 第2套)	快克水果机 (060328, 第2套)	Igrosoft
 keksb	快克水果机 (060328, 第3套)	快克水果机 (060328, 第3套)	Igrosoft
 keks_2	快克水果机 (060403. 第1套)	快克水果机 (060403. 第1套)	Igrosoft
-keks_2a	快克水果机 (060403, 第3套)	快克水果机 (060403, 第3套)	Igrosoft
+keks_2a	快克水果机 (060403, 第2套)	快克水果机 (060403, 第2套)	Igrosoft
 m_brkfst	老大哥 (UK, Game Card 95-750-524 )	老大哥 (UK, Game Card 95-750-524 )	BFM
 m_bdrwho	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	超时空博士 (第1套, UK, 纸牌游戏 95-750-288)	BFM
 m_bdrwh1	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	超时空博士 (第2套, UK, 纸牌游戏 95-750-661)	BFM
@@ -8284,6 +8298,9 @@ roul	超级幸运轮盘	超级幸运轮盘	bootleg
 hitpoker	冲击扑克 (保加利亚)	冲击扑克 (保加利亚)	Accept Ltd.
 vpoker	扑克游戏	扑克游戏	Videotronics
 jnero	动作英雄	动作英雄	ICE/Play Mechanix
+am_uslot	Amatic 未知游戏	Amatic 未知游戏	Amatic Trading GMBH
+am_mg24	Multi 游戏 I (V.Ger 2.4)	Multi 游戏 I (V.Ger 2.4)	Amatic Trading GMBH
+am_mg3	Multi 游戏 III (V.Ger 3.5)	Multi 游戏 III (V.Ger 3.5)	Amatic Trading GMBH
 knightsb2	圆桌骑士 (盗版 第2套)	圆桌骑士 (盗版 第2套)	bootleg
 wofb	三国志 II (盗版)	三国志 II (盗版)	bootleg
 wofsj	三国志 II: 圣剑 (中国 盗版 第1套)	三国志 II: 圣剑 (中国 盗版 第1套)	bootleg
@@ -8390,6 +8407,7 @@ gbcolor	Game Boy Color	Game Boy Color	Nintendo
 snes	超级任天堂 (NTSC)	超级任天堂 (NTSC)	Nintendo
 snessfx	Super Nintendo Entertainment System / Super Famicom (NTSC), SuperFX	Super Nintendo Entertainment System / Super Famicom (NTSC), SuperFX	Nintendo
 snespal	超级任天堂 (PAL)	超级任天堂 (PAL)	Nintendo
+snespsfx	Super Nintendo Entertainment System (PAL), SuperFX	Super Nintendo Entertainment System (PAL), SuperFX	Nintendo
 sfcbox	Super Famicom Box (NTSC)	Super Famicom Box (NTSC)	Nintendo
 gba	Game Boy Advance	Game Boy Advance	Nintendo
 megaduck	MegaDuck/Cougar Boy	MegaDuck/Cougar Boy	Creatronic/Videojet/Timlex/Cougar
