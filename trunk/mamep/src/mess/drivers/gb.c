@@ -701,7 +701,7 @@ ROM_START( gblight )
 ROM_END
 
 ROM_START( gbcolor )
-	ROM_REGION( 0x03B0 + 1792, "maincpu", 0 )
+	ROM_REGION( 0x800, "maincpu", 0 )
 	ROM_LOAD( "gbc_boot.1", 0x0000, 0x0100, CRC(779ea374) SHA1(e4b40c9fd593a97a1618cfb2696f290cf9596a62) )	/* Bootstrap code part 1 */
 	ROM_LOAD( "gbc_boot.2", 0x0100, 0x0700, CRC(f741807d) SHA1(f943b1e0b640cf1d371e1d8f0ada69af03ebb396) ) /* Bootstrap code part 2 */
 ROM_END
@@ -716,7 +716,7 @@ CONS( 1990, gameboy,  0,       0,		gameboy,  gameboy, 0,    0,			"Nintendo", "Ga
 CONS( 1994, supergb,  gameboy, 0,		supergb,  gameboy, 0,    0,			"Nintendo", "Super Game Boy", 0)
 CONS( 1996, gbpocket, gameboy, 0,		gbpocket, gameboy, 0,    0,			"Nintendo", "Game Boy Pocket", 0)
 CONS( 1997, gblight,  gameboy, 0,		gbpocket, gameboy, 0,    0,			"Nintendo", "Game Boy Light", 0)
-CONS( 1998, gbcolor,  gameboy, 0,		gbcolor,  gameboy, 0,    gb_cgb,	"Nintendo", "Game Boy Color", GAME_NOT_WORKING)
+CONS( 1998, gbcolor,  gameboy, 0,		gbcolor,  gameboy, 0,    gb_cgb,	"Nintendo", "Game Boy Color", GAME_IMPERFECT_GRAPHICS)
 
 /* Sound is not 100% yet, it generates some sounds which could be ok. Since we're lacking a real
    system there's no way to verify. Same goes for the colors of the LCD. We are no using the default

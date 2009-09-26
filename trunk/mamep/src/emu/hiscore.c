@@ -295,8 +295,8 @@ void hiscore_init (running_machine *machine)
 	//int cpunum = mem_range->cpunum;
 	//const address_space *space = cpu_get_address_space(machine->cpu[cpunum], ADDRESS_SPACE_PROGRAM);
 	file_error filerr;
-	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE);
 	mame_file *f;
+	const char *db_filename = options_get_string(mame_options(), OPTION_HISCORE_FILE); /* high score definition file */
 	const char *name = machine->basename;
 	state.hiscores_have_been_loaded = 0;
 
