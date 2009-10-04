@@ -118,13 +118,15 @@ gteikokb	ÒøºÓµÛ¹úµÄ·´»÷ (µÁ°æ µÚ1Ì×)	ÒøºÓµÛ¹úµÄ·´»÷ (µÁ°æ µÚ1Ì×)	bootleg
 gteikob2	ÒøºÓµÛ¹úµÄ·´»÷ (µÁ°æ µÚ2Ì×)	ÒøºÓµÛ¹úµÄ·´»÷ (µÁ°æ µÚ2Ì×)	bootleg
 spacbatt	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÕ½¶· (µÁ°æ µÚ1Ì×)	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÕ½¶· (µÁ°æ µÚ1Ì×)	bootleg
 spacbat2	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÕ½¶· (µÁ°æ µÚ2Ì×)	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÕ½¶· (µÁ°æ µÚ2Ì×)	bootleg
+spacempr	ÒøºÓµÛ¹ú (µÁ°æ)	ÒøºÓµÛ¹ú (µÁ°æ)	bootleg
 skyraidr	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÈëÇÖ	ÒøºÓµÛ¹úµÄ·´»÷ - Ì«¿ÕÈëÇÖ	bootleg
 batman2	»ğ·ï»Ë òùòğ Part 2	»ğ·ï»Ë òùòğ Part 2	bootleg
 warofbug	·É³æ´ó×÷Õ½	·É³æ´ó×÷Õ½	Armenia
 redufo	ºì·Éµú	ºì·Éµú	bootleg
 exodus	ºì·Éµú (µÁ°æ?)	ºì·Éµú (µÁ°æ?)	Subelectro
 streakng	Âã±¼	Âã±¼	Shoei
-pacmanbl	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş)	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş)	bootleg
+pacmanbl	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ1Ì×)	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ1Ì×)	bootleg
+pacmanbla	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ2Ì×)	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ2Ì×)	bootleg
 devilfsg	Ä§ÉñÓãÀà (Galaxian Ó²¼ş, µÁ°æ?)	Ä§ÉñÓãÀà (Galaxian Ó²¼ş, µÁ°æ?)	Vision / Artic
 zigzag	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ1Ì×)	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ1Ì×)	LAX
 zigzag2	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ2Ì×)	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ2Ì×)	LAX
@@ -544,9 +546,11 @@ tankbatt	Ì¹¿Ë´óÕ½	Ì¹¿Ë´óÕ½	Namco
 warpwarp	ÍŞÍŞ±ø	ÍŞÍŞ±ø	Namco
 warpwarpr	ÍŞÍŞ±ø (Rock-ola µÚ1Ì×)	ÍŞÍŞ±ø (Rock-ola µÚ1Ì×)	[Namco] (Rock-ola license)
 warpwarpr2	ÍŞÍŞ±ø (Rock-ola µÚ2Ì×)	ÍŞÍŞ±ø (Rock-ola µÚ2Ì×)	[Namco] (Rock-ola license)
-rallyx	ÃÔ»ê³µ	ÃÔ»ê³µ	Namco
-rallyxm	ÃÔ»ê³µ (Midway)	ÃÔ»ê³µ (Midway)	[Namco] (Midway license)
-nrallyx	ÃÔ»ê³µ [¾­µä°æ]	ÃÔ»ê³µ [¾­µä°æ]	Namco
+rallyx	ÃÔ»ê³µ X (32k Ver.?)	ÃÔ»ê³µ X (32k Ver.?)	Namco
+rallyxa	ÃÔ»ê³µ X	ÃÔ»ê³µ X	Namco
+rallyxm	ÃÔ»ê³µ X (Midway)	ÃÔ»ê³µ X (Midway)	[Namco] (Midway license)
+nrallyx	ĞÂÃÔ»ê³µ X	ĞÂÃÔ»ê³µ X	Namco
+nrallyxb	ĞÂÃÔ»ê³µ X (µÁ°æ?) 	ĞÂÃÔ»ê³µ X (µÁ°æ?) 	Namco
 jungler	òÚò¼ÃÕ³Ç	òÚò¼ÃÕ³Ç	Konami
 junglers	òÚò¼ÃÕ³Ç (Stern)	òÚò¼ÃÕ³Ç (Stern)	[Konami] (Stern license)
 tactcian	Ì«¿ÕÕ½Êõ¼Ò (µÚ1Ì×)	Ì«¿ÕÕ½Êõ¼Ò (µÚ1Ì×)	[Konami] (Sega license)
@@ -1623,6 +1627,7 @@ cadashj	¿¨´ïĞğ´«Ëµ (ÈÕ°æ)	¿¨´ïĞğ´«Ëµ (ÈÕ°æ)	Taito Corporation
 cadashu	¿¨´ïĞğ´«Ëµ (ÃÀ°æ)	¿¨´ïĞğ´«Ëµ (ÃÀ°æ)	Taito America Corporation
 cadashi	¿¨´ïĞğ´«Ëµ (Òâ´óÀû)	¿¨´ïĞğ´«Ëµ (Òâ´óÀû)	Taito Corporation Japan
 cadashf	¿¨´ïĞğ´«Ëµ (·¨¹ú)	¿¨´ïĞğ´«Ëµ (·¨¹ú)	Taito Corporation Japan
+cadashg	¿¨´ïĞğ´«Ëµ (µÂ¹ú)	¿¨´ïĞğ´«Ëµ (µÂ¹ú)	Taito Corporation Japan
 parentj	½Ü¿ËÆğÔ´	½Ü¿ËÆğÔ´	Taito
 galmedes	¸ßÃ×´ïË¹ĞÇÕ½ (ÈÕ°æ)	¸ßÃ×´ïË¹ĞÇÕ½ (ÈÕ°æ)	Visco
 earthjkr	U.N. ¹ú·ÀÕ½»ú: µØÇòÕ½ÒÛ	U.N. ¹ú·ÀÕ½»ú: µØÇòÕ½ÒÛ	Visco
@@ -2274,6 +2279,7 @@ sf2uk	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÃÀ°æ 911101)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÃÀ°æ 911101)	
 sf2j	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 911210)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 911210)	Capcom
 sf2ja	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910214)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910214)	Capcom
 sf2jc	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910306)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910306)	Capcom
+sf2qp1	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (Quicken Pt-I, µÁ°æ)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (Quicken Pt-I, µÁ°æ)	bootleg
 3wonders	Ææ¼£ÈıºÏÒ» (ÊÀ½ç°æ 910520)	Ææ¼£ÈıºÏÒ» (ÊÀ½ç°æ 910520)	Capcom
 3wondersu	Ææ¼£ÈıºÏÒ» (ÃÀ°æ 910520)	Ææ¼£ÈıºÏÒ» (ÃÀ°æ 910520)	Capcom
 wonder3	Ææ¼£ÈıºÏÒ» (ÈÕ°æ 910520)	Ææ¼£ÈıºÏÒ» (ÈÕ°æ 910520)	Capcom
@@ -2300,6 +2306,7 @@ sf2rb2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ2Ì×, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êº
 sf2rb3	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ3Ì×, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ3Ì×, µÁ°æ)	bootleg
 sf2red	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (³àÉ«²¨¶¯, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (³àÉ«²¨¶¯, µÁ°æ)	bootleg
 sf2v004	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (V004, µÁ°æ)	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (V004, µÁ°æ)	bootleg
+sf2acc	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	bootleg
 sf2accp2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷ Pt.II, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷ Pt.II, µÁ°æ)	bootleg
 sf2m1	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M1, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M1, µÁ°æ)	bootleg
 sf2m2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M2, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M2, µÁ°æ)	bootleg
@@ -3060,6 +3067,7 @@ aafbc	È«ÃÀÖ°ÒµéÏé­Çò (rev C)	È«ÃÀÖ°ÒµéÏé­Çò (rev C)	Leland Corp.
 aafbb	È«ÃÀÖ°ÒµéÏé­Çò (rev B)	È«ÃÀÖ°ÒµéÏé­Çò (rev B)	Leland Corp.
 offroad	»·ÈÆÔ½Ò°Èü³µ	»·ÈÆÔ½Ò°Èü³µ	Leland Corp.
 offroadt	»·ÈÆÔ½Ò°Èü³µ Track-Pak	»·ÈÆÔ½Ò°Èü³µ Track-Pak	Leland Corp.
+offrdtp2	»·ÈÆÔ½Ò°Èü³µ Track-Pak (2 Players)	»·ÈÆÔ½Ò°Èü³µ Track-Pak (2 Players)	Leland Corp.
 pigout	Ç¿µÁÖí! (µÚ1Ì×)	Ç¿µÁÖí! (µÚ1Ì×)	Leland Corp.
 pigouta	Ç¿µÁÖí! (µÚ2Ì×)	Ç¿µÁÖí! (µÚ2Ì×)	Leland Corp.
 ataxx	ÒìĞÎÕ½Æå (µÚ1Ì×)	ÒìĞÎÕ½Æå (µÚ1Ì×)	Leland Corp.
@@ -3132,6 +3140,7 @@ pignewt	Å£¶ÙÖí (°æ±¾ C)	Å£¶ÙÖí (°æ±¾ C)	Sega
 pignewta	Å£¶ÙÖí (°æ±¾ A)	Å£¶ÙÖí (°æ±¾ A)	Sega
 sindbadm	Ìì·½Ò¹Ì·	Ìì·½Ò¹Ì·	Sega
 zaxxon	Á¢Ìå¿ÕÕ½ (µÚ1Ì×)	Á¢Ìå¿ÕÕ½ (µÚ1Ì×)	Sega
+zaxxonj	Á¢Ìå¿ÕÕ½ (ÈÕ°æ)	Á¢Ìå¿ÕÕ½ (ÈÕ°æ)	Sega
 zaxxon2	Á¢Ìå¿ÕÕ½ (µÚ2Ì×)	Á¢Ìå¿ÕÕ½ (µÚ2Ì×)	Sega
 zaxxonb	Á¢Ìå¿ÕÕ½ Jackson	Á¢Ìå¿ÕÕ½ Jackson	bootleg
 szaxxon	³¬¼¶Á¢Ìå¿ÕÕ½ (315-5013)	³¬¼¶Á¢Ìå¿ÕÕ½ (315-5013)	Sega
@@ -3848,13 +3857,14 @@ vstrik3c	VR ÉäÊÖ 3 (Cart) (USA, EXP, KOR, AUS)	VR ÉäÊÖ 3 (Cart) (USA, EXP, KOR, 
 vstrik3	VR ÉäÊÖ 3 (GDS-0006)	VR ÉäÊÖ 3 (GDS-0006)	Sega
 wldrider	º£Ë«ÀÇ (JPN, USA, EXP, KOR, AUS)	º£Ë«ÀÇ (JPN, USA, EXP, KOR, AUS)	Sega
 beachspi	É³Ì²ÅÅÇò (GDS-0014)	É³Ì²ÅÅÇò (GDS-0014)	Sega
-vf4cart	VR Õ½Ê¿ 4 (Cart)	VR Õ½Ê¿ 4 (Cart)	Sega
+vf4cart	VR Õ½Ê¿ 4 (Cartridge)	VR Õ½Ê¿ 4 (Cartridge)	Sega
 vf4	VR Õ½Ê¿ 4 (GDS-0012)	VR Õ½Ê¿ 4 (GDS-0012)	Sega
 vf4b	VR Õ½Ê¿ 4 (Rev B) (GDS-0012B)	VR Õ½Ê¿ 4 (Rev B) (GDS-0012B)	Sega
 vf4c	VR Õ½Ê¿ 4 (Rev C) (GDS-0012C)	VR Õ½Ê¿ 4 (Rev C) (GDS-0012C)	Sega
 initd	Í·ÎÄ×Ö D - ½Ö»ú°æ (Rev B) (ÈÕ°æ) (GDS-0020B)	Í·ÎÄ×Ö D - ½Ö»ú°æ (Rev B) (ÈÕ°æ) (GDS-0020B)	Sega
 initdexp	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Í·ÎÄ×Ö D - ½Ö»ú°æ (º£Íâ°æ) (GDS-0025)	Sega
 clubkrte	Èü³µ¾ãÀÖ²¿ - Å·ÖŞÕ¾	Èü³µ¾ãÀÖ²¿ - Å·ÖŞÕ¾	Sega
+vf4evoct	VR Õ½Ê¿ 4 ½ø»¯°æ (Cartridge)	VR Õ½Ê¿ 4 ½ø»¯°æ (Cartridge)	Sega
 vf4evoa	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev A) (GDS-0024A)	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev A) (GDS-0024A)	Sega
 initdv2j	Í·ÎÄ×Ö D - ½Ö»ú°æ Ver. 2 (ÈÕ°æ) (GDS-0026)	Í·ÎÄ×Ö D - ½Ö»ú°æ Ver. 2 (ÈÕ°æ) (GDS-0026)	Sega
 vf4evo	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev B) (GDS-0024B)	VR Õ½Ê¿ 4 ½ø»¯°æ (Rev B) (GDS-0024B)	Sega
@@ -4459,7 +4469,7 @@ lethalenux	Ë«Ç¹ (ver unknown, US, 08/06/92 15:11, hacked/proto?)	Ë«Ç¹ (ver unkno
 lethaleneab	Ë«Ç¹ (ver EAB, 10/14/92 19:53)	Ë«Ç¹ (ver EAB, 10/14/92 19:53)	Konami
 lethaleneae	Ë«Ç¹ (ver EAE, 11/19/92 16:24)	Ë«Ç¹ (ver EAE, 11/19/92 16:24)	Konami
 lethalenj	Ë«Ç¹ (ver JAD, 12/04/92 17:16)	Ë«Ç¹ (ver JAD, 12/04/92 17:16)	Konami
-tgtpanic	Target Panic	Target Panic	Konami
+tgtpanic	ÄÁÈËÖ®°Ğ	ÄÁÈËÖ®°Ğ	Konami
 nemesis	ÓîÖæÑ²º½½¢	ÓîÖæÑ²º½½¢	Konami
 nemesisuk	ÓîÖæÑ²º½½¢ (ÊÀ½ç°æ?)	ÓîÖæÑ²º½½¢ (ÊÀ½ç°æ?)	Konami
 konamigt	¿ÂÄÉÃ×GT Èü³µ	¿ÂÄÉÃ×GT Èü³µ	Konami
@@ -4481,8 +4491,9 @@ gwarrior	ÒøºÓÕ½Ê¿	ÒøºÓÕ½Ê¿	Konami
 devilw	Ä§ÊŞÍõ¹ú Devil ÊÀ½ç°æ	Ä§ÊŞÍõ¹ú Devil ÊÀ½ç°æ	Konami
 darkadv	Ä§ÊŞÍõ¹ú Dark Adventure	Ä§ÊŞÍõ¹ú Dark Adventure	Konami
 majuu	Ä§ÊŞÍõ¹ú	Ä§ÊŞÍõ¹ú	Konami
-vulcan	ÓîÖæÑ²º½½¢	ÓîÖæÑ²º½½¢	Konami
+vulcan	ÓîÖæÑ²º½½¢ (ĞÂ°æ)	ÓîÖæÑ²º½½¢ (ĞÂ°æ)	Konami
 vulcana	ÓîÖæÑ²º½½¢ (¾É°æ)	ÓîÖæÑ²º½½¢ (¾É°æ)	Konami
+vulcanb	ÓîÖæÑ²º½½¢ (ÀÏ°æ)	ÓîÖæÑ²º½½¢ (ÀÏ°æ)	Konami
 gradius2	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ĞÂ°æ)	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ĞÂ°æ)	Konami
 gradius2a	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ¾É°æ)	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ¾É°æ)	Konami
 gradius2b	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ÀÏ°æ)	ÓîÖæÑ²º½½¢ II (ÈÕ°æ ÀÏ°æ)	Konami
@@ -4681,7 +4692,8 @@ windheatu	¾¢·çÈü³µ (UBC, ÃÀ°æ v2.22)	¾¢·çÈü³µ (UBC, ÃÀ°æ v2.22)	Konami
 windheatj	¾¢·çÈü³µ (JAA, ÈÕ°æ v2.11)	¾¢·çÈü³µ (JAA, ÈÕ°æ v2.11)	Konami
 jetwave	ÅçÉä²¨¶¯ (UAB, ÃÀ°æ v1.04)	ÅçÉä²¨¶¯ (UAB, ÃÀ°æ v1.04)	Konami
 polystar	µ½´Ë! ±£ÂŞÖ®ĞÇ (ver JAA)	µ½´Ë! ±£ÂŞÖ®ĞÇ (ver JAA)	Konami
-totlvice	¶ñ¹áÂúÓ¯ (ver JAA)	¶ñ¹áÂúÓ¯ (ver JAA)	Konami
+totlvice	¶ñ¹áÂúÓ¯ (ver UAC)	¶ñ¹áÂúÓ¯ (ver UAC)	Konami
+totlvicj	¶ñ¹áÂúÓ¯ (ver JAA)	¶ñ¹áÂúÓ¯ (ver JAA)	Konami
 btltryst	Ô¼»áÕ½ÒÛ (ver JAC)	Ô¼»áÕ½ÒÛ (ver JAC)	Konami
 heatof11	Ê¤ÀûÊ®Ò»ÈË '98 (ver EAA)	Ê¤ÀûÊ®Ò»ÈË '98 (ver EAA)	Konami
 evilngt	×ï¶ñÖ®Ò¹ (ver EAA)	×ï¶ñÖ®Ò¹ (ver EAA)	Konami
@@ -5738,6 +5750,7 @@ term2la1	Ä§¹íÖÕ½áÕß 2 - ÉóÅĞÖ®ÈÕ (rev LA1 11/01/91)	Ä§¹íÖÕ½áÕß 2 - ÉóÅĞÖ®ÈÕ (rev
 totcarn	ºÚÕäÖé²¿¶Ó (rev LA1 03/10/92)	ºÚÕäÖé²¿¶Ó (rev LA1 03/10/92)	Midway
 totcarnp	ºÚÕäÖé²¿¶Ó (¹¤³Ì°æ, rev 1.0 01/25/92)	ºÚÕäÖé²¿¶Ó (¹¤³Ì°æ, rev 1.0 01/25/92)	Midway
 mk2	ÕæÈË¿ì´ò II (rev L3.1)	ÕæÈË¿ì´ò II (rev L3.1)	Midway
+mk2r31e	ÕæÈË¿ì´ò II (rev L3.1 (Å·ÖŞ°æ)	ÕæÈË¿ì´ò II (rev L3.1 (Å·ÖŞ°æ)	Midway
 mk2r32	ÕæÈË¿ì´ò II (rev L3.2 (Å·ÖŞ°æ)	ÕæÈË¿ì´ò II (rev L3.2 (Å·ÖŞ°æ)	Midway
 mk2r30	ÕæÈË¿ì´ò II (rev L3.0)	ÕæÈË¿ì´ò II (rev L3.0)	Midway
 mk2r21	ÕæÈË¿ì´ò II (rev L2.1)	ÕæÈË¿ì´ò II (rev L2.1)	Midway
@@ -6276,7 +6289,8 @@ wrallyb	ÊÀ½çÀ­Á¦Èü³µ (ÃÀ°æ, 930217)	ÊÀ½çÀ­Á¦Èü³µ (ÃÀ°æ, 930217)	Gaelco (Atari li
 glass	²£Á§ (Ver 1.1)	²£Á§ (Ver 1.1)	Gaelco
 glass10	²£Á§ (Ver 1.0)	²£Á§ (Ver 1.0)	Gaelco
 glassbrk	²£Á§ (Ver 1.0, ĞİÏĞ°æ)	²£Á§ (Ver 1.0, ĞİÏĞ°æ)	Gaelco
-targeth	ÃüÖĞÄ¿±ê	ÃüÖĞÄ¿±ê	Gaelco
+targeth	ÃüÖĞÄ¿±ê (ver 1.1)	ÃüÖĞÄ¿±ê (ver 1.1)	Gaelco
+targetha	ÃüÖĞÄ¿±ê (ver 1.0)	ÃüÖĞÄ¿±ê (ver 1.0)	Gaelco
 thoop2	îÊĞĞÕß	îÊĞĞÕß	Gaelco
 aligator	öùÓãÁÔÈË	öùÓãÁÔÈË	Gaelco
 aligatorun	öùÓãÁÔÈË (Î´±£»¤°æ)	öùÓãÁÔÈË (Î´±£»¤°æ)	Gaelco
@@ -6347,6 +6361,7 @@ gtmr2a	1000 Ó¢Àï´óÊ¦Èü³µ 2 (95/04/04)	1000 Ó¢Àï´óÊ¦Èü³µ 2 (95/04/04)	Kaneko
 gtmr2u	1000 Ó¢Àï´óÊ¦Èü³µ 2 (95/05/18)	1000 Ó¢Àï´óÊ¦Èü³µ 2 (95/05/18)	Kaneko
 skns	Super Kaneko Nova System BIOS	Super Kaneko Nova System BIOS	Kaneko
 galpani4	Ìì²Ï±ä 4 (ÈÕ°æ)	Ìì²Ï±ä 4 (ÈÕ°æ)	Kaneko
+galpani4k	Ìì²Ï±ä 4 (º«¹ú°æ)	Ìì²Ï±ä 4 (º«¹ú°æ)	Kaneko
 jjparads	È¸È¸ÌìÌÃ	È¸È¸ÌìÌÃ	Electro Design
 sarukani	VS.Õ½¶·´ò×©Íõ (ÈÕ°æ)	VS.Õ½¶·´ò×©Íõ (ÈÕ°æ)	Kaneko / Mediaworks
 vblokbrk	VS.Õ½¶·´ò×©Íõ (ÑÇÖŞ°æ)	VS.Õ½¶·´ò×©Íõ (ÑÇÖŞ°æ)	Kaneko / Mediaworks
@@ -6389,6 +6404,7 @@ usclssic	ÃÀ¹ú¾­µä¸ß¶û·ò	ÃÀ¹ú¾­µä¸ß¶û·ò	Seta
 calibr50	µãÎåÁã	µãÎåÁã	Athena / Seta
 arbalest	¾¢åóÕ½»ú	¾¢åóÕ½»ú	Seta
 metafox	É³Ä®Ö®ºü	É³Ä®Ö®ºü	Seta
+setaroul	¶ÄÂÖÅÌ?	¶ÄÂÖÅÌ?	Seta / Visco
 drgnunit	Ä§³ÇÁú»ê	Ä§³ÇÁú»ê	Seta
 wits	Î¬×È³¬ÈË (ÈÕ°æ)	Î¬×È³¬ÈË (ÈÕ°æ)	Athena (Visco license)
 thunderl	À×Óëµç×©¿éÎïÓï	À×Óëµç×©¿éÎïÓï	Seta
@@ -7448,6 +7464,7 @@ stankatk	³¬¼¶Ì¹¿Ë´óÕ½ (¹¤³Ì°æ rev. 4/21/92 )	³¬¼¶Ì¹¿Ë´óÕ½ (¹¤³Ì°æ rev. 4/21/92 )
 dynadice	¶¯Ì¬ÆË¿Ë	¶¯Ì¬ÆË¿Ë	<unknown>
 ssingles	Õğº³°²´ò	Õğº³°²´ò	Ent. Ent. Ltd
 tcl	ÆåÍõÕù°Ô	ÆåÍõÕù°Ô	Uniwang
+othello	°ÂÈüÂŞ (°æ±¾ 3.0)	°ÂÈüÂŞ (°æ±¾ 3.0)	Success
 sothello	³¬¼¶Îå×ÓÆå	³¬¼¶Îå×ÓÆå	Success/Fujiwara
 quake	ÔÂÕğ (Release Beta 2)	ÔÂÕğ (Release Beta 2)	Lazer-Tron / iD Software
 macsbios	Multi Amenity Cassette System BIOS	Multi Amenity Cassette System BIOS	I'Max
@@ -7789,6 +7806,8 @@ quizoa	ÎÊ´ğ°ÂÁÖÆ¥¿Ë (µÚ2Ì×)	ÎÊ´ğ°ÂÁÖÆ¥¿Ë (µÚ2Ì×)	Seoul Coin Corp.
 gstream	À×öªÖ®Òí G2020	À×öªÖ®Òí G2020	Oriental Soft Japan
 miniboy7	ÃÔÄãÄĞº¢ 7	ÃÔÄãÄĞº¢ 7	Bonanza Enterprises, Ltd
 39in1	39 ºÏ 1 MAME µÁ°æ	39 ºÏ 1 MAME µÁ°æ	<unknown>
+48in1	48 ºÏ 1 MAME µÁ°æ (ver 3.09)	48 ºÏ 1 MAME µÁ°æ (ver 3.09)	<unknown>
+48in1a	48 ºÏ 1 MAME µÁ°æ (ver 3.02)	48 ºÏ 1 MAME µÁ°æ (ver 3.02)	<unknown>
 kingpin	µ¯ÖéÍõ	µ¯ÖéÍõ	American Communication Laboratories Inc.
 kingpinm	µ¯ÖéÍõºÏ¼¯	µ¯ÖéÍõºÏ¼¯	American Communication Laboratories Inc.
 thayers	Ñ°Çóº£µÄÏÈÉú	Ñ°Çóº£µÄÏÈÉú	RDI Video Systems
