@@ -68,7 +68,6 @@ const game_driver * const consoledrivers[] =
     DRIVER( megaduck )  /* Megaduck                                         */
 
     /* SEGA */
-#if 0
     DRIVER( gamegear )  /* Sega GameGear                                    */
     DRIVER( gamegeaj )  /* Sega GameGear (Japan)                            */
     DRIVER( sms )       /* Sega Master System II (NTSC)                     */
@@ -79,7 +78,6 @@ const game_driver * const consoledrivers[] =
     DRIVER( sg1000m3 )  /* Sega SG-1000 Mark III (Japan)                    */
     DRIVER( sms2kr )    /* Samsung Gam*Boy II (Korea)                       */
     DRIVER( smssdisp )  /* Sega Master System Store Display Unit            */
-#endif
 
     DRIVER( megadrij )  /* 1988 Sega Mega Drive (Japan)                     */
     DRIVER( genesis )   /* 1989 Sega Genesis (USA)                          */

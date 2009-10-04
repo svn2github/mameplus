@@ -1167,7 +1167,7 @@ MACHINE_START(sms)
 }
 
 
-MACHINE_RESET(sms)
+MACHINE_RESET(sms_mess)
 {
 	const address_space *space = cputag_get_address_space(machine, "maincpu", ADDRESS_SPACE_PROGRAM);
 

@@ -329,7 +329,7 @@ static MACHINE_DRIVER_START(sms1ntsc)
 	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
-	MDRV_MACHINE_RESET(sms)
+	MDRV_MACHINE_RESET(sms_mess)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -396,7 +396,7 @@ static MACHINE_DRIVER_START(sms1pal)
 	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
-	MDRV_MACHINE_RESET(sms)
+	MDRV_MACHINE_RESET(sms_mess)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", RASTER)
@@ -455,7 +455,7 @@ static MACHINE_DRIVER_START(gamegear)
 	MDRV_QUANTUM_TIME(HZ(60))
 
 	MDRV_MACHINE_START(sms)
-	MDRV_MACHINE_RESET(sms)
+	MDRV_MACHINE_RESET(sms_mess)
 
 	/* video hardware */
 	MDRV_SCREEN_ADD("screen", LCD)
