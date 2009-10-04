@@ -22,12 +22,12 @@
 #define DRIVER_RECURSIVE
 
 /* step 1: declare all external references */
-#define DRIVER(NAME) extern game_driver driver_##NAME;
+#define DRIVER(NAME) GAME_EXTERN(NAME);
 #include "mamedriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
-#define DRIVER(NAME) &driver_##NAME,
+#define DRIVER(NAME) &GAME_NAME(NAME),
 #ifndef DRIVER_SWITCH
 const game_driver * const drivers[] =
 #else /* DRIVER_SWITCH */
@@ -171,6 +171,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( gteikob2 )	/* bootleg */
 	DRIVER( spacbatt )	/* bootleg */
 	DRIVER( spacbat2 )	/* bootleg */
+	DRIVER( spacempr )	/* bootleg */
 	DRIVER( skyraidr )	/* bootleg */
 	DRIVER( batman2 )	/* bootleg */
 	DRIVER( warofbug )	/* (c) 1981 Armenia */
@@ -178,6 +179,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( exodus )	/* Subelectro - bootleg? */
 	DRIVER( streakng )	/* [1980] Shoei */
 	DRIVER( pacmanbl )	/* bootleg */
+	DRIVER( pacmanbla )	/* bootleg */
 	DRIVER( devilfsg )	/* (c) 1984 Vision / Artic (bootleg?) */
 	DRIVER( zigzag )	/* (c) 1982 LAX */
 	DRIVER( zigzag2 )	/* (c) 1982 LAX */
@@ -622,8 +624,10 @@ const game_driver * const mamedrivers[] =
 	DRIVER( warpwarpr )	/* (c) 1981 [Namco] (Rock-ola license) */
 	DRIVER( warpwarpr2 )/* (c) 1981 [Namco] (Rock-ola license) */
 	DRIVER( rallyx )	/* (c) 1980 Namco */
+	DRIVER( rallyxa )	/* (c) 1980 Namco */
 	DRIVER( rallyxm )	/* (c) 1980 Midway */
 	DRIVER( nrallyx )	/* (c) 1981 Namco */
+	DRIVER( nrallyxb )	/* (c) 1981 Namco */
 	DRIVER( jungler )	/* GX327 (c) 1981 Konami */
 	DRIVER( junglers )	/* GX327 (c) 1981 Stern */
 	DRIVER( tactcian )	/* GX335 (c) 1982 Sega */
@@ -1793,6 +1797,7 @@ const game_driver * const mamedrivers[] =
 	DRIVER( cadashu )	/* C21 (c) 1989 Taito America Corporation */
 	DRIVER( cadashi )	/* C21 (c) 1989 Taito Corporation Japan */
 	DRIVER( cadashf )	/* C21 (c) 1989 Taito Corporation Japan */
+	DRIVER( cadashg )	/* C21 (c) 1989 Taito Corporation Japan */
 	DRIVER( parentj )	/* C42 (c) 199? Taito */
 	DRIVER( galmedes )	/* (c) 1992 Visco (Japan) */
 	DRIVER( earthjkr )	/* (c) 1993 Visco (Japan) */
@@ -2563,6 +2568,7 @@ V-V                           TP-027
 	DRIVER( sf2j )		/* 10/12/1991 (c) 1991 (Japan) */
 	DRIVER( sf2ja )		/* 14/02/1991 (c) 1991 (Japan) */
 	DRIVER( sf2jc )		/* 06/03/1991 (c) 1991 (Japan) */
+	DRIVER( sf2qp1 )	/* hack */
 	DRIVER( 3wonders )	/* 20/05/1991 (c) 1991 (World) */
 	DRIVER( 3wondersu )	/* 20/05/1991 (c) 1991 (US)    */
 	DRIVER( wonder3 )	/* 20/05/1991 (c) 1991 (Japan) */
@@ -2589,6 +2595,7 @@ V-V                           TP-027
 	DRIVER( sf2rb3 )	/* hack */
 	DRIVER( sf2red )	/* hack */
 	DRIVER( sf2v004 )	/* hack */
+	DRIVER( sf2acc )	/* hack */
 	DRIVER( sf2accp2 )	/* hack */
 	DRIVER( sf2m1 )		/* hack */
 	DRIVER( sf2m2 )		/* hack */
@@ -3441,6 +3448,7 @@ V-V                           TP-027
 	DRIVER( aafbb )		/* (c) 1989 Leland */
 	DRIVER( offroad )	/* (c) 1989 Leland */
 	DRIVER( offroadt )	/* (c) 1989 Leland */
+	DRIVER( offrdtp2 )	/* (c) 1989 Leland */
 	DRIVER( pigout )	/* (c) 1990 Leland */
 	DRIVER( pigouta )	/* (c) 1990 Leland */
 	DRIVER( ataxx )		/* (c) 1990 Leland */
@@ -3530,6 +3538,7 @@ V-V                           TP-027
 
 	/* Sega "Zaxxon hardware" games */
 	DRIVER( zaxxon )	/* (c) 1982 */
+	DRIVER( zaxxonj )	/* (c) 1982 */
 	DRIVER( zaxxon2 )	/* (c) 1982 */
 	DRIVER( zaxxonb )	/* bootleg */
 	DRIVER( szaxxon )	/* (c) 1982 */
@@ -4537,6 +4546,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( clubkrte )	/* 2002.?? Club Kart: European Session */
 						/* 2002.06 WCCF SERIE A 2001-2002 */
 						/* 2002.07 Soul Surfer */
+	DRIVER( vf4evoct )	/* 2002.08 Virtua Fighter 4 Evolution (cartridge) */
 	DRIVER( vf4evoa )	/* 2002.08 Virtua Fighter 4 Evolution */
 						/* 2002.11 WCCF SERIE A 2001-2002 ver.1.2 */
 	DRIVER( initdv2j )	/* 2002.12 Initial D Arcade Stage ver.2 */
@@ -5337,6 +5347,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( majuu )		/* GX687 (c) 1987 (Japan) */
 	DRIVER( vulcan )	/* GX785 (c) 1988 */
 	DRIVER( vulcana )	/* GX785 (c) 1988 */
+	DRIVER( vulcanb )	/* GX785 (c) 1988 */
 	DRIVER( gradius2 )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( gradius2a )	/* GX785 (c) 1988 (Japan) */
 	DRIVER( gradius2b )	/* GX785 (c) 1988 (Japan) */
@@ -5570,6 +5581,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Konami M2 games */
 	DRIVER( polystar )	/* GX623 (c)1997 */
 	DRIVER( totlvice )	/* GX639 (c)1997 */
+	DRIVER( totlvicj )	/* GX639 (c)1997 */
 	DRIVER( btltryst )	/* GX636 (c)1998 */
 	DRIVER( heatof11 )	/* GX703 (c)1998 */
 	DRIVER( evilngt )	/* GX810 (c)1998 */
@@ -6780,6 +6792,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( totcarn )	/* (c) 1992 Midway */
 	DRIVER( totcarnp )	/* (c) 1992 Midway */
 	DRIVER( mk2 )		/* (c) 1993 Midway */
+	DRIVER( mk2r31e )	/* (c) 1993 Midway */
 	DRIVER( mk2r32 )	/* (c) 1993 Midway */
 	DRIVER( mk2r30 )	/* (c) 1993 Midway */
 	DRIVER( mk2r21 )	/* (c) 1993 Midway */
@@ -7394,6 +7407,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( glass10 )	/* (c) 1993 - Ref 931021 */
 	DRIVER( glassbrk )	/* (c) 1993 - Ref 931021 shows "Break Edition" on a real PCB */
 	DRIVER( targeth )	/* (c) 1994 - Ref 940531 */
+	DRIVER( targetha )	/* (c) 1994 - Ref 940531 */
 	DRIVER( thoop2 )	/* (c) 1994 - Ref ??? */
 	DRIVER( aligator )	/* (c) 1994 - Ref 940411 */
 	DRIVER( aligatorun )	/* (c) 1994 - Ref 940411 (unprotected) */
@@ -7483,6 +7497,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	/* Kaneko "Super Nova System" games */
 	DRIVER( skns )
 	DRIVER( galpani4 )	/* 1996.09 (c) 1996 Kaneko (Japan) */
+	DRIVER( galpani4k )	/* 1996.09 (c) 1996 Kaneko (Korea) */
 	DRIVER( jjparads )	/* 1996.12 (c) 1996 Electro Design Co. (Japan) */
 	DRIVER( sarukani )	/* 1997.01 (c) 1997 Kaneko / Mediaworks (Japan) */
 	DRIVER( vblokbrk )	/* 1997.?? (c) 1997 Kaneko / Mediaworks (Asia) */
@@ -7527,6 +7542,7 @@ BOMULEUL CHAJARA SEGA ST-V  1997/04/11
 	DRIVER( calibr50 )	/* UH   (c) 1989 + Romstar or Taito license (DSW) */
 	DRIVER( arbalest )	/* UK   (c) 1989 + Jordan, Romstar or Taito license (DSW) */
 	DRIVER( metafox )	/* UP   (c) 1989 + Jordan, Romstar or Taito license (DSW) */
+	DRIVER( setaroul )	/* UF   (c) 19?? Seta / Visco */
 	DRIVER( drgnunit )	/* (c) 1989 Athena / Seta + Romstar or Taito license (DSW) */
 	DRIVER( wits )		/* (c) 1989 Athena (Visco license) */
 	DRIVER( thunderl )	/* (c) 1990 Seta + Romstar or Visco license (DSW) */
@@ -8734,6 +8750,7 @@ Other Sun games
 	DRIVER( dynadice )	/* ? */
 	DRIVER( ssingles )	/* Yachiyo? */
 	DRIVER( tcl )		/* (c) 1995 Uniwang */
+	DRIVER( othello )	/* (c) 1984 Success */
 	DRIVER( sothello )	/* (c) 1986 Success / Fujiwara */
 	DRIVER( quake )		/* (c) 19?? Lazer-Tron / iD Software  */
 
@@ -9094,6 +9111,8 @@ Other Sun games
 	DRIVER( gstream )	/* (c) 2002, Oriental Soft Japan */
 	DRIVER( miniboy7 )	/* (c) 1983, Bonanza Enterprises */
 	DRIVER( 39in1 )		/* MAME based bootleg */
+	DRIVER( 48in1 )		/* MAME based bootleg */
+	DRIVER( 48in1a )    	/* MAME based bootleg */
 	DRIVER( kingpin )	/* (c) 1983 American Communications Laboratories Inc. */
 	DRIVER( kingpinm )	/* (c) 1983 American Communications Laboratories Inc. */
 	DRIVER( thayers )	/* (c) 1983 RDI Video Systems */
