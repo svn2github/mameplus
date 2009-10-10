@@ -274,6 +274,7 @@ MACHINE_DRIVER_END
 ***************************************************************************/
 
 ROM_START(snes)
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 	ROM_REGION( 0x1000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -283,6 +284,7 @@ ROM_START(snes)
 ROM_END
 
 ROM_START(snessfx)
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 	ROM_REGION( 0x1000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -291,6 +293,7 @@ ROM_START(snessfx)
 ROM_END
 
 ROM_START(snespal)
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 	ROM_REGION( 0x1000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -300,6 +303,7 @@ ROM_START(snespal)
 ROM_END
 
 ROM_START(snespsfx)
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 	ROM_REGION( 0x100, "user5", 0 )		/* IPL ROM */
 	ROM_LOAD( "spc700.rom", 0, 0x40, CRC(44bb3a40) SHA1(97e352553e94242ae823547cd853eecda55c20f0) )	/* boot rom */
 	ROM_REGION( 0x1000, "addons", 0 )		/* add-on chip ROMs (DSP, SFX, etc) */
@@ -308,6 +312,7 @@ ROM_START(snespsfx)
 ROM_END
 
 ROM_START(sfcbox)
+	ROM_REGION( 0x1000000, "maincpu", ROMREGION_ERASE00 )
 	/* atm, we only load these here, but we don't really emulate anything */
 	ROM_REGION( 0x10000, "grom", 0 )
 	ROM_LOAD( "grom1-1.bin", 0x0000, 0x8000, CRC(333bf9a7) SHA1(5d0cd9ca29e5580c3eebe9f136839987c879f979) )

@@ -32,6 +32,19 @@
 typedef struct _floppy_drive floppy_drive;
 struct _floppy_drive
 {
+	/* callbacks */
+	devcb_resolved_write_line out_idx_func;
+	devcb_resolved_read_line in_mon_func;
+	devcb_resolved_write_line out_tk00_func;
+	devcb_resolved_write_line out_wpt_func;
+	devcb_resolved_write_line out_rdy_func;
+
+	/* state of output lines */
+	int idx;  /* index pulse */
+	int tk00; /* track 00 */
+	int wpt;  /* write protect */
+	int rdy;  /* ready */
+
 	const floppy_config	*config;
 	
 	/* flags */
@@ -50,8 +63,6 @@ struct _floppy_drive
 	void	(*index_pulse_callback)(const device_config *controller,const device_config *image, int state);
 	/* rotation per minute => gives index pulse frequency */
 	float rpm;
-	/* current index pulse value */
-	int index;
 
 	void	(*ready_state_change_callback)(const device_config *controller,const device_config *img, int state);
 
@@ -255,7 +266,7 @@ void floppy_drive_init(const device_config *img)
 	pDrive->index_pulse_callback = NULL;
 	pDrive->ready_state_change_callback = NULL;
 	pDrive->index_timer = timer_alloc(img->machine, floppy_drive_index_callback, (void *) img);
-	pDrive->index = 0;
+	pDrive->idx = 0;
 
 	floppy_drive_set_geometry(img, ((floppy_config*)img->static_config)->floppy_type);
 
@@ -277,23 +288,25 @@ void floppy_drive_init(const device_config *img)
 /* index pulses at rpm/60 Hz, and stays high 1/20th of time */
 static void floppy_drive_index_func(const device_config *img)
 {
-	floppy_drive *pDrive = get_safe_token( img );
+	floppy_drive *drive = get_safe_token( img );
 
-	double ms = 1000. / (pDrive->rpm / 60.);
+	double ms = 1000.0 / (drive->rpm / 60.0);
 
-	if (pDrive->index)
+	if (drive->idx)
 	{
-		pDrive->index = 0;
-		timer_adjust_oneshot(pDrive->index_timer, double_to_attotime(ms*19/20/1000.0), 0);
+		drive->idx = 0;
+		timer_adjust_oneshot(drive->index_timer, double_to_attotime(ms*19/20/1000.0), 0);
 	}
 	else
 	{
-		pDrive->index = 1;
-		timer_adjust_oneshot(pDrive->index_timer, double_to_attotime(ms/20/1000.0), 0);
+		drive->idx = 1;
+		timer_adjust_oneshot(drive->index_timer, double_to_attotime(ms/20/1000.0), 0);
 	}
 
-	if (pDrive->index_pulse_callback)
-		pDrive->index_pulse_callback(pDrive->controller, img, pDrive->index);
+	devcb_call_write_line(&drive->out_idx_func, drive->idx);
+
+	if (drive->index_pulse_callback)
+		drive->index_pulse_callback(drive->controller, img, drive->idx);
 }
 
 static TIMER_CALLBACK(floppy_drive_index_callback)
@@ -352,6 +365,8 @@ void floppy_drive_set_flag_state(const device_config *img, int flag, int state)
 		if (flag & FLOPPY_DRIVE_READY)
 		{
 			/* trigger state change callback */
+			devcb_call_write_line(&drv->out_rdy_func, new_state ? ASSERT_LINE : CLEAR_LINE);
+
 			if (drv->ready_state_change_callback)
 				drv->ready_state_change_callback(drv->controller, img, new_state);
 		}
@@ -392,7 +407,7 @@ void floppy_drive_set_motor_state(const device_config *img, int state)
 		{
 			floppy_drive *pDrive = get_safe_token( img );
 
-			pDrive->index = 0;
+			pDrive->idx = 0;
 			if (new_motor_state)
 			{
 				/* off->on */
@@ -509,12 +524,16 @@ void floppy_drive_seek(const device_config *img, signed int signed_tracks)
 	}
 
 	/* set track 0 flag */
+	pDrive->tk00 = ASSERT_LINE;
 	pDrive->flags &= ~FLOPPY_DRIVE_HEAD_AT_TRACK_0;
 
 	if (pDrive->current_track==0)
 	{
+		pDrive->tk00 = CLEAR_LINE;
 		pDrive->flags |= FLOPPY_DRIVE_HEAD_AT_TRACK_0;
 	}
+
+	devcb_call_write_line(&pDrive->out_tk00_func, pDrive->tk00);
 
 	/* inform disk image of step operation so it can cache information */
 	if (image_exists(img))
@@ -684,6 +703,13 @@ DEVICE_START( floppy )
 	floppy_drive	*floppy = get_safe_token( device );
 	floppy->config = device->static_config;
 	floppy_drive_init(device);
+
+	/* resolve callbacks */
+	devcb_resolve_write_line(&floppy->out_idx_func, &floppy->config->out_idx_func, device);
+	devcb_resolve_read_line(&floppy->in_mon_func, &floppy->config->in_mon_func, device);
+	devcb_resolve_write_line(&floppy->out_tk00_func, &floppy->config->out_tk00_func, device);
+	devcb_resolve_write_line(&floppy->out_wpt_func, &floppy->config->out_wpt_func, device);
+	devcb_resolve_write_line(&floppy->out_rdy_func, &floppy->config->out_rdy_func, device);
 }
 
 static int internal_floppy_device_load(const device_config *image, int create_format, option_resolution *create_args)
@@ -836,6 +862,15 @@ int floppy_get_count(running_machine *machine)
     if (devtag_get_device(machine,FLOPPY_2)) cnt++;
     if (devtag_get_device(machine,FLOPPY_3)) cnt++;	
 	return cnt;
+}
+
+/* write protect signal, active low */
+READ_LINE_DEVICE_HANDLER( floppy_wpt_r )
+{
+	if (floppy_drive_get_flag_state(device, FLOPPY_DRIVE_DISK_WRITE_PROTECTED))
+		return CLEAR_LINE;
+	else
+		return ASSERT_LINE;
 }
 
 /*************************************
