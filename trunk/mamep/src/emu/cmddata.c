@@ -15,7 +15,6 @@
 #include <assert.h>
 #include <ctype.h>
 #include "driver.h"
-#include "osd_cpu.h"
 #include "cmddata.h"
 
 
