@@ -25,11 +25,15 @@
     * 000 F1 Race requires more precise PPU timing. It currently has plenty of 1-line glitches.
     * 001 AD&D Hillsfar and Bill & Ted are broken. We need to ignore the case of writes happening on 2
           consecutive CPU cycles because these games use dirty tricks to reset counters (see note in mapper1_w)
+    * 001 Yoshi flashes in-game. Zombie Hunter regressed. Rocket Ranger and Back to the Future have heavily corrupted graphics
     * 001, 155 We don't handle (yet) WRAM enable/disable bit
     * 002, 003, 094, 097, 152 Bus conflict?
+    * 004 Mendel Palace has never worked properly
     * 005 has issues (see e.g. Just Breed or Metal Slader Glory), RAM banking needs hardware flags to determine size
+    * 007 Marble Madness has small graphics corruptions
     * 014 in-game graphics is glitched
     * 015 Shanghai Tycoon has corrupted graphics
+    * 025 TMNT & TMNT2 Jpn do not work
     * 033 has still some graphics problem (e.g. missing text in Akira)
     * 034 Impossible Mission II does not show graphics
     * 038 seems to miss inputs. separate reads?
@@ -39,11 +43,12 @@
     * 064 has many IRQ problems (due to the way we implement CPU based IRQ) - see Skull & Crossbones.
           Klax has problems as well (even if it uses scanline based IRQ, according to Disch's docs).
     * 067 some 1-line glitches that cannot be solved without a better implementation for cycle-based IRQs
-    * 071 Fire Hawk is not properly working (it requires one hack to support both boards using this mapper)
+    * 071 Micro Machines has various small graphics problems. Fire Hawk is flashing all the times.
     * 072, 086, 092 lack samples support (maybe others as well)
     * 073 16 bit IRQ mode is not implemented
     * 077 Requires 4-screen mirroring. Currently, it is very glitchy
     * 083 has serious glitches
+    * 088 Quinty has never worked properly
     * 096 is preliminary (no correct chr switch in connection to PPU)
     * 104 Not all the games work
     * 107 Are the scrolling glitches (check status bar) correct? NEStopia behaves similarly
@@ -81,6 +86,7 @@
     * 032 - Major League needs hardwired mirroring (missing windows and glitched field in top view, otherwise)
     * 034 - Impossible Mission II is not like BxROM games (it writes to 0x7ffd-0x7fff, instead of 0x8000). It is still
           unplayable though (see above)
+    * 071 - Fire Hawk is different from other Camerica games (no hardwired mirroring). Without crc_hack no helicopter graphics
     * 078 - Cosmo Carrier needs a different mirroring than Holy Diver
     * 113 - HES 6-in-1 requires mirroring (check Bookyman playfield), while other games break with this (check AV Soccer)
     * 153 - Famicom Jump II uses a different board (or the same in a very different way)
@@ -4750,19 +4756,24 @@ static WRITE8_HANDLER( mapper70_w )
 
 *************************************************************/
 
-static WRITE8_HANDLER( mapper71_m_w )
-{
-	LOG_MMC(("mapper71_m_w offset: %04x, data: %02x\n", offset, data));
-
-	prg16_89ab(space->machine, data);
-}
-
 static WRITE8_HANDLER( mapper71_w )
 {
 	LOG_MMC(("mapper71_w offset: %04x, data: %02x\n", offset, data));
 
-	if (offset >= 0x4000)
+	switch (offset & 0x7000)
+	{
+	case 0x0000:
+	case 0x1000:
+		if (nes.crc_hack)
+			set_nt_mirroring((data & 0x10) ? PPU_MIRROR_HIGH : PPU_MIRROR_LOW);
+		break;
+	case 0x4000:
+	case 0x5000:
+	case 0x6000:
+	case 0x7000:
 		prg16_89ab(space->machine, data);
+		break;
+	}
 }
 
 /*************************************************************
@@ -11116,7 +11127,7 @@ static const mmc mmc_list[] =
 	{ 68, "SunSoft 4",                 NULL, NULL, NULL, mapper68_w, NULL, NULL, NULL },
 	{ 69, "SunSoft FME",               NULL, NULL, NULL, mapper69_w, NULL, NULL, mapper69_irq },
 	{ 70, "74161/32 Bandai",           NULL, NULL, NULL, mapper70_w, NULL, NULL, NULL },
-	{ 71, "Camerica",                  NULL, NULL, mapper71_m_w, mapper71_w, NULL, NULL, NULL },
+	{ 71, "Camerica",                  NULL, NULL, NULL, mapper71_w, NULL, NULL, NULL },
 	{ 72, "74161/32 Jaleco",           NULL, NULL, NULL, mapper72_w, NULL, NULL, NULL },
 	{ 73, "Konami VRC 3",              NULL, NULL, NULL, mapper73_w, NULL, NULL, konami_irq },
 	{ 74, "Waixing Type A",            NULL, NULL, NULL, mapper74_w, NULL, NULL, mapper4_irq },
@@ -11674,7 +11685,6 @@ int mapper_reset( running_machine *machine, int mmc_num )
 		case 65:
 		case 67:
 		case 69:
-		case 71:
 		case 72:
 		case 78:
 		case 92:
@@ -11688,6 +11698,11 @@ int mapper_reset( running_machine *machine, int mmc_num )
 			break;
 		case 70:
 			prg16_89ab(space->machine, nes.prg_chunks - 2);
+			prg16_cdef(space->machine, nes.prg_chunks - 1);
+			break;
+		case 71:
+			set_nt_mirroring(PPU_MIRROR_HORZ);
+			prg16_89ab(space->machine, 0);
 			prg16_cdef(space->machine, nes.prg_chunks - 1);
 			break;
 		case 76:
@@ -12180,7 +12195,7 @@ SACHEN_8259A
 static const unif unif_list[] =
 {
 /*       UNIF                       LOW_W, LOW_R, MED_W, HIGH_W, PPU_latch, scanline CB, hblank CB     PRG  CHR  NVW  WRAM  CRAM       NMT    IDX*/
-	{ "UNL-SACHEN-8259A",         mapper141_l_w, NULL, mapper141_m_w, NULL, NULL, NULL, NULL,        256, 256,   0,    0, CHRRAM_0,  0,     SACHEN_8259A},
+	{ "UNL-SACHEN-8259A",         mapper141_l_w, NULL, mapper141_m_w, NULL, NULL, NULL, NULL,         16,  32,   0,    0, CHRRAM_0,  0,     SACHEN_8259A},
 };
 
 const unif *nes_unif_lookup( const char *board )

@@ -20,12 +20,12 @@
 #define DRIVER_RECURSIVE
 
 /* step 1: declare all external references */
-#define DRIVER(NAME) GAME_EXTERN(NAME);
+#define DRIVER(NAME) extern const game_driver driver_##NAME;
 #include "messdriv.c"
 
 /* step 2: define the drivers[] array */
 #undef DRIVER
-#define DRIVER(NAME) &GAME_NAME(NAME),
+#define DRIVER(NAME) &driver_##NAME,
 const game_driver * const consoledrivers[] =
 {
 #include "messdriv.c"

@@ -88,7 +88,7 @@ ADDRESS_MAP_END
 
 ***************************************************************************/
 
-static INPUT_PORTS_START( snes_ms )
+static INPUT_PORTS_START( snes )
 	PORT_START("PAD1L")		/* Joypad 1 - L */
 	PORT_BIT( 0x80, IP_ACTIVE_HIGH, IPT_BUTTON3 ) PORT_NAME("P1 Button A")  PORT_PLAYER(1)
 	PORT_BIT( 0x40, IP_ACTIVE_HIGH, IPT_BUTTON4 ) PORT_NAME("P1 Button X")  PORT_PLAYER(1)
@@ -335,8 +335,8 @@ ROM_END
 ***************************************************************************/
 
 /*     YEAR  NAME     PARENT  COMPAT  MACHINE  INPUT  INIT  CONFIG  COMPANY     FULLNAME                                      FLAGS */
-CONS( 1989, snes,    0,      0,      snes,    snes_ms,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 1989, snessfx, snes,   0,      snessfx, snes_ms,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC), SuperFX", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 1991, snespal, snes,   0,      snespal, snes_ms,  0,    0,   "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 1991, snespsfx,snes,   0,      snespsfx,snes_ms,  0,    0,   "Nintendo", "Super Nintendo Entertainment System (PAL), SuperFX",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
-CONS( 199?, sfcbox,  snes,   0,      snes,    snes_ms,  0,    0,   "Nintendo", "Super Famicom Box (NTSC)", GAME_NOT_WORKING )
+CONS( 1989, snes,    0,      0,      snes,    snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC)", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1989, snessfx, snes,   0,      snessfx, snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System / Super Famicom (NTSC), SuperFX", GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1991, snespal, snes,   0,      snespal, snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System (PAL)",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 1991, snespsfx,snes,   0,      snespsfx,snes,  0,    0,   "Nintendo", "Super Nintendo Entertainment System (PAL), SuperFX",  GAME_IMPERFECT_GRAPHICS | GAME_IMPERFECT_SOUND )
+CONS( 199?, sfcbox,  snes,   0,      snes,    snes,  0,    0,   "Nintendo", "Super Famicom Box (NTSC)", GAME_NOT_WORKING )
