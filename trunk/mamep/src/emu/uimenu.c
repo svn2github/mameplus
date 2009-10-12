@@ -872,10 +872,15 @@ static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly
 			/* if we're selected, draw with a different background */
 			if (itemnum == menu->selected)
 			{
+#ifdef UI_COLOR_DISPLAY
 				rgb_t fgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_TEXT);
 				rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_SELECTED_BG);
 				fgcolor = MAKE_ARGB(0xe0, RGB_RED(fgcolor0), RGB_GREEN(fgcolor0), RGB_BLUE(fgcolor0));
 				bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
+#else /* UI_COLOR_DISPLAY */
+				fgcolor = UI_SELECTED_COLOR;
+				bgcolor = UI_SELECTED_BG_COLOR;
+#endif /* UI_COLOR_DISPLAY */
 				fgcolor2 = UI_SELECTED_COLOR;
 				fgcolor3 = UI_SELECTED_COLOR;
 			}
@@ -883,10 +888,15 @@ static void ui_menu_draw(running_machine *machine, ui_menu *menu, int customonly
 			/* else if the mouse is over this item, draw with a different background */
 			else if (itemnum == menu->hover)
 			{
+#ifdef UI_COLOR_DISPLAY
 				rgb_t fgcolor0 = ui_get_rgb_color(CURSOR_HOVER_TEXT);
 				rgb_t bgcolor0 = ui_get_rgb_color(CURSOR_HOVER_BG);
 				fgcolor = MAKE_ARGB(0xe0, RGB_RED(fgcolor0), RGB_GREEN(fgcolor0), RGB_BLUE(fgcolor0));
 				bgcolor = MAKE_ARGB(0xe0, RGB_RED(bgcolor0), RGB_GREEN(bgcolor0), RGB_BLUE(bgcolor0));
+#else /* UI_COLOR_DISPLAY */
+				fgcolor = UI_MOUSEOVER_COLOR;
+				bgcolor = UI_MOUSEOVER_BG_COLOR;
+#endif /* UI_COLOR_DISPLAY */
 				fgcolor2 = UI_MOUSEOVER_COLOR;
 				fgcolor3 = UI_MOUSEOVER_COLOR;
 			}
