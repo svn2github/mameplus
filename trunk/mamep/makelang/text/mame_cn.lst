@@ -127,6 +127,8 @@ exodus	ºì·Éµú (µÁ°æ?)	ºì·Éµú (µÁ°æ?)	Subelectro
 streakng	Âã±¼	Âã±¼	Shoei
 pacmanbl	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ1Ì×)	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ1Ì×)	bootleg
 pacmanbla	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ2Ì×)	Ğ¡¾«Áé Pac-Man (Galaxian Ó²¼ş, µÚ2Ì×)	bootleg
+phoenxp2	·ï»Ë½ÇÉ« 2	·ï»Ë½ÇÉ« 2	bootleg
+atlantisb	ÑÇÌØÀ¼µÙË¹´ó×÷Õ½ (µÁ°æ)	ÑÇÌØÀ¼µÙË¹´ó×÷Õ½ (µÁ°æ)	bootleg
 devilfsg	Ä§ÉñÓãÀà (Galaxian Ó²¼ş, µÁ°æ?)	Ä§ÉñÓãÀà (Galaxian Ó²¼ş, µÁ°æ?)	Vision / Artic
 zigzag	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ1Ì×)	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ1Ì×)	LAX
 zigzag2	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ2Ì×)	ÍÚ½ğ×Ó (Galaxian Ó²¼ş, µÚ2Ì×)	LAX
@@ -1595,6 +1597,7 @@ arkblock	´ò×©¿é (Game Corporation µÁ°æ, µÚ1Ì×)	´ò×©¿é (Game Corporation µÁ°æ, µÚ
 arkbloc2	´ò×©¿é (Game Corporation µÁ°æ, µÚ2Ì×)	´ò×©¿é (Game Corporation µÁ°æ, µÚ2Ì×)	bootleg
 arkgcbl	´ò×©¿é (µÁ°æ on Block hardware)	´ò×©¿é (µÁ°æ on Block hardware)	bootleg
 paddle2	´ò×©¿é 2 (µÁ°æ on Block hardware)	´ò×©¿é 2 (µÁ°æ on Block hardware)	bootleg
+block2	´ò×©¿é 2 (S.P.A. CO. µÁ°æ)	´ò×©¿é 2 (S.P.A. CO. µÁ°æ)	bootleg
 arkatayt	´ò×©¿é (Tayto µÁ°æ)	´ò×©¿é (Tayto µÁ°æ)	bootleg
 arktayt2	´ò×©¿é (Tayto µÁ°æ, harder)	´ò×©¿é (Tayto µÁ°æ, harder)	bootleg
 arkatour	´ò×©¿é (ÃÀ°æ)	´ò×©¿é (ÃÀ°æ)	Taito America Corporation (Romstar license)
@@ -1715,6 +1718,7 @@ plgirls	ÃÀÅ®×©Íõ	ÃÀÅ®×©Íõ	Hot-B.
 plgirls2	ÃÀÅ®×©Íõ 2	ÃÀÅ®×©Íõ 2	Hot-B.
 syvalion	»Æ½ğÁúÕ½¼Ç (ÈÕ°æ)	»Æ½ğÁúÕ½¼Ç (ÈÕ°æ)	Taito Corporation
 recordbr	ÊÀ½çÌúÈËÔË¶¯»á (ÊÀ½ç°æ)	ÊÀ½çÌúÈËÔË¶¯»á (ÊÀ½ç°æ)	Taito Corporation Japan
+gogold	ÊÀ½çÌúÈËÔË¶¯»á (ÈÕ°æ)	ÊÀ½çÌúÈËÔË¶¯»á (ÈÕ°æ)	Taito Corporation
 dleague	Õğº³ÁªÃË (ÈÕ°æ)	Õğº³ÁªÃË (ÈÕ°æ)	Taito Corporation
 masterw	Ä§»Ã±øÆ÷ (ÊÀ½ç°æ)	Ä§»Ã±øÆ÷ (ÊÀ½ç°æ)	Taito Corporation Japan
 masterwu	Ä§»Ã±øÆ÷ (ÃÀ°æ)	Ä§»Ã±øÆ÷ (ÃÀ°æ)	Taito America Corporation
@@ -2279,7 +2283,7 @@ sf2uk	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÃÀ°æ 911101)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÃÀ°æ 911101)	
 sf2j	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 911210)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 911210)	Capcom
 sf2ja	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910214)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910214)	Capcom
 sf2jc	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910306)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (ÈÕ°æ 910306)	Capcom
-sf2qp1	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (Quicken Pt-I, µÁ°æ)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (Quicken Pt-I, µÁ°æ)	bootleg
+sf2qp1	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (¼ÓËÙÆ÷ Pt-I, µÁ°æ)	½ÖÍ·°ÔÍõ II - ÌìÏÂ¶·Ê¿ (¼ÓËÙÆ÷ Pt-I, µÁ°æ)	bootleg
 3wonders	Ææ¼£ÈıºÏÒ» (ÊÀ½ç°æ 910520)	Ææ¼£ÈıºÏÒ» (ÊÀ½ç°æ 910520)	Capcom
 3wondersu	Ææ¼£ÈıºÏÒ» (ÃÀ°æ 910520)	Ææ¼£ÈıºÏÒ» (ÃÀ°æ 910520)	Capcom
 wonder3	Ææ¼£ÈıºÏÒ» (ÈÕ°æ 910520)	Ææ¼£ÈıºÏÒ» (ÈÕ°æ 910520)	Capcom
@@ -2306,7 +2310,7 @@ sf2rb2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ2Ì×, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êº
 sf2rb3	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ3Ì×, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (²Êºç°æ µÚ3Ì×, µÁ°æ)	bootleg
 sf2red	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (³àÉ«²¨¶¯, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (³àÉ«²¨¶¯, µÁ°æ)	bootleg
 sf2v004	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (V004, µÁ°æ)	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (V004, µÁ°æ)	bootleg
-sf2acc	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	½ÖÍ·°ÔÍõ II! - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	bootleg
+sf2acc	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷!, µÁ°æ)	bootleg
 sf2accp2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷ Pt.II, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (¼ÓËÙÆ÷ Pt.II, µÁ°æ)	bootleg
 sf2m1	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M1, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M1, µÁ°æ)	bootleg
 sf2m2	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M2, µÁ°æ)	½ÖÍ·°ÔÍõ II' - ËÄ´óÌìÍõ (M2, µÁ°æ)	bootleg
@@ -3131,6 +3135,7 @@ astrob	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 3)	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 3)	Sega
 astrob2	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 2)	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 2)	Sega
 astrob2a	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 2a)	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 2a)	Sega
 astrob1	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 1)	ÒøºÓºÅÌ«¿Õ´¬ (°æ±¾ 1)	Sega
+astrode	ÒøºÓºÅÌ«¿Õ´¬ (µÂ¹ú°æ)	ÒøºÓºÅÌ«¿Õ´¬ (µÂ¹ú°æ)	Sega
 005	005 Çé±¨Ô±	005 Çé±¨Ô±	Sega
 monsterb	ÍòÊ¥½Ú¾ª»ê	ÍòÊ¥½Ú¾ª»ê	Sega
 monsterb2	ÍòÊ¥½Ú¾ª»ê (Ë«»ù°å)	ÍòÊ¥½Ú¾ª»ê (Ë«»ù°å)	Sega
@@ -3523,7 +3528,7 @@ stvbios	ST-V Bios	ST-V Bios	Sega
 gaxeduel	Õ½¸«¸ñ¶·Æª (JUETL 950117 V1.000)	Õ½¸«¸ñ¶·Æª (JUETL 950117 V1.000)	Sega
 suikoenb	Ë®ä°ÑİÎä (JUETL 950314 V2.001)	Ë®ä°ÑİÎä (JUETL 950314 V2.001)	Data East
 bakubaku	ÊÀ½çËÇÓıÏµÑ¡ÊÖÈ¨ (J 950407 V1.000)	ÊÀ½çËÇÓıÏµÑ¡ÊÖÈ¨ (J 950407 V1.000)	Sega
-vfremix	VR Õ½Ê¿ Remix (JUETBKAL 950428 V1.000)	VR Õ½Ê¿ Remix  (JUETBKAL 950428 V1.000)	Sega
+vfremix	VR Õ½Ê¿ Remix (JUETBKAL 950428 V1.000)	VR Õ½Ê¿ Remix (JUETBKAL 950428 V1.000)	Sega
 ejihon	ÕìÌ½ÊÂÎñËù (J 950613 V1.000)	ÕìÌ½ÊÂÎñËù (J 950613 V1.000)	Sega
 finlarch	³¬¼¶Ö°ÒµÁªÃË (J 950714 V1.001)	³¬¼¶Ö°ÒµÁªÃË (J 950714 V1.001)	Sega
 sfish2j	ÒµÓàµöÓã 2 (J 951201 V1.100)	ÒµÓàµöÓã 2 (J 951201 V1.100)	Sega
@@ -3577,6 +3582,7 @@ micrombc	Ğ¡ÈËÕ½¶·³å·æ (J 990326 V1.000)	Ğ¡ÈËÕ½¶·³å·æ (J 990326 V1.000)	Sega
 sanjeon	¶ÔÕ½ÌìÌÃ (AJTUE 990412 V1.000)	¶ÔÕ½ÌìÌÃ (AJTUE 990412 V1.000)	Sega / Deniam
 danchih	ÍÅµØÖ®»¨Ôı (J 990607 V1.400)	ÍÅµØÖ®»¨Ôı (J 990607 V1.400)	Altron (Tecmo license)
 ffreveng	¿ì´òĞı·çµÄ¸´³ğ (JUET 990714 V1.000)	¿ì´òĞı·çµÄ¸´³ğ (JUET 990714 V1.000)	Capcom
+danchiq	ÍÅµØÖ®»¨ÔıÖ®ÎÊÌâÆª! (J 001128 V1.200)	ÍÅµØÖ®»¨ÔıÖ®ÎÊÌâÆª! (J 001128 V1.200)	Altron
 daytona	ÃÎÓÎÃÀ¹ú (ÈÕ°æ, Ğ£Õı°æ A)	ÃÎÓÎÃÀ¹ú (ÈÕ°æ, Ğ£Õı°æ A)	Sega
 daytona93	ÃÎÓÎÃÀ¹ú ºÀ»ª°æ '93	ÃÎÓÎÃÀ¹ú ºÀ»ª°æ '93	Sega
 daytonas	ÃÎÓÎÃÀ¹ú (With Saturn Adverts)	ÃÎÓÎÃÀ¹ú (With Saturn Adverts)	Sega
@@ -7864,10 +7870,11 @@ spool99a	³¬ÕæÊµµ¯ÖéÌ¨ 99 (°æ±¾ 0.31)	³¬ÕæÊµµ¯ÖéÌ¨ 99 (°æ±¾ 0.31)	Electronic Proj
 4roses	ËÄÃµ¹å (¼ÓÃÜ°æ, µÚ1Ì×)	ËÄÃµ¹å (¼ÓÃÜ°æ, µÚ1Ì×)	<unknown>
 4rosesa	ËÄÃµ¹å (¼ÓÃÜ°æ, µÚ2Ì×)	ËÄÃµ¹å (¼ÓÃÜ°æ, µÚ2Ì×)	<unknown>
 big10	´óÊ°	´óÊ°	<unknown>
-bingor1	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ1Ì×)	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ1Ì×)	<unknown>
-bingor2	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ2Ì×)	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ2Ì×)	<unknown>
-bingor3	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ3Ì×)	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ3Ì×)	<unknown>
-bingor4	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ4Ì×)	±ö¹û¹õ / ±´¶ûĞÇ? (µÚ4Ì×)	<unknown>
+bingor1	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ1Ì×)	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ1Ì×)	<unknown>
+bingor2	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ2Ì×)	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ2Ì×)	<unknown>
+bingor3	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ3Ì×)	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ3Ì×)	<unknown>
+bingor4	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ4Ì×)	±ö¹û¹÷ / ±´¶ûĞÇ? (µÚ4Ì×)	<unknown>
+bingor5	±ö¹û¹÷ / ±´¶ûĞÇ V3? (µÚ5Ì×)	±ö¹û¹÷ / ±´¶ûĞÇ V3? (µÚ5Ì×)	<unknown>
 videopkr	ÊÓÆµÆË¿Ë	ÊÓÆµÆË¿Ë	InterFlip
 blckjack	¶şÊ®Ò»µã	¶şÊ®Ò»µã	InterFlip
 videodad	ÊÓÆµ÷»×Ó	ÊÓÆµ÷»×Ó	InterFlip
@@ -8215,13 +8222,17 @@ chsuper2	³¬¼¶ÆË¿Ë¹Ú¾ü 2 (V0.13)	³¬¼¶ÆË¿Ë¹Ú¾ü 2 (V0.13)	<unknown>
 buster	Ğ¡¹í	Ğ¡¹í	Marian Electronics Ltd.
 spielbud	°ÍµÂÑİËµ (µÂÓï°æ)	°ÍµÂÑİËµ (µÂÓï°æ)	ADP
 himesiki	¼§ËÄ¼¾Îè (ÈÕ°æ)	¼§ËÄ¼¾Îè (ÈÕ°æ)	Hi-Soft
-gtipoker	GTI ÆË¿Ë	GTI ÆË¿Ë	GTI Inc
 norautp	ÆË¿Ë»ı·Ö (µÚ1Ì×)	ÆË¿Ë»ı·Ö (µÚ1Ì×)	Noraut Ltd.
 norautjp	ÆË¿Ë»ı·Ö (µÚ2Ì×)	ÆË¿Ë»ı·Ö (µÚ2Ì×)	Noraut Ltd.
 norautrh	ºìÉ«ÆË¿Ë»ı·Ö	ºìÉ«ÆË¿Ë»ı·Ö	Noraut Ltd.
 norautu	ÆË¿Ë»ı·Ö (NTX10A)	ÆË¿Ë»ı·Ö (NTX10A)	Noraut Ltd.
 norautv3	ÆË¿Ë»ı·Ö (V3.010a)	ÆË¿Ë»ı·Ö (V3.010a)	Noraut Ltd.
 norautpn	ÆË¿Ë»ı·Ö (µÁ°æ)	ÆË¿Ë»ı·Ö (µÁ°æ)	bootleg?
+pma	PMA ÆË¿Ë	PMA ÆË¿Ë	PMA
+dphl	ºÍ¾ÖÆË¿ËHi-Lo (M.Kramer)	ºÍ¾ÖÆË¿ËHi-Lo (M.Kramer)	M. Kramer Manufacturing.
+dphla	ºÍ¾ÖÆË¿ËHi-Lo (alt)	ºÍ¾ÖÆË¿ËHi-Lo (alt)	Unknown
+gtipoker	GTI ÆË¿Ë	GTI ÆË¿Ë	GTI Inc
+tpoker2	ĞıÎĞÆË¿Ë 2	ĞıÎĞÆË¿Ë 2	Micro Manufacturing, Inc.
 pachifev	¿ñÈÈ°ØÇà¸ç	¿ñÈÈ°ØÇà¸ç	Sanki Denshi Kogyo
 bonanza	ĞÒÔËĞÖµÜ (Ğ£Õı°æ 3)	ĞÒÔËĞÖµÜ (Ğ£Õı°æ 3)	New Image Technologies
 bonanzar2	ĞÒÔËĞÖµÜ (Ğ£Õı°æ 2)	ĞÒÔËĞÖµÜ (Ğ£Õı°æ 2)	New Image Technologies
@@ -8235,47 +8246,59 @@ cmkenosp	¶ÄÂÖÅÌ (Y2K, Î÷°àÑÀ, 2000-12-14)	¶ÄÂÖÅÌ (Y2K, Î÷°àÑÀ, 2000-12-14)	Coinm
 cmkenospa	¶ÄÂÖÅÌ (Y2K, Î÷°àÑÀ, 2000-12-02)	¶ÄÂÖÅÌ (Y2K, Î÷°àÑÀ, 2000-12-02)	Coinmaster-Gaming, Ltd.
 mfish_3	ÃÔÄãµöÓã (021124, µÚ1Ì×)	ÃÔÄãµöÓã (021124, µÚ1Ì×)	Igro
 mfish_3a	ÃÔÄãµöÓã (021124, µÚ2Ì×)	ÃÔÄãµöÓã (021124, µÚ2Ì×)	Igro
-mfish_12	ÃÔÄãµöÓã (040308, µÚ1Ì×)	ÃÔÄãµöÓã (040308, µÚ1Ì×)	Igro
-mfish_12a	ÃÔÄãµöÓã (040308, µÚ2Ì×)	ÃÔÄãµöÓã (040308, µÚ2Ì×)	Igro
-crzmon_7	·è¿ñºï×Ó (031110, µÚ1Ì×)	·è¿ñºï×Ó (031110, µÚ1Ì×)	Igrosoft
-crzmon_7a	·è¿ñºï×Ó (031110, µÚ2Ì×)	·è¿ñºï×Ó (031110, µÚ2Ì×)	Igrosoft
-crzmon_7b	·è¿ñºï×Ó (031110, µÚ3Ì×)	·è¿ñºï×Ó (031110, µÚ3Ì×)	Igrosoft
-crzmon_8	·è¿ñºï×Ó (050120, µÚ1Ì×)	·è¿ñºï×Ó (050120, µÚ1Ì×)	Igrosoft
-crzmon_8a	·è¿ñºï×Ó (050120, µÚ2Ì×)	·è¿ñºï×Ó (050120, µÚ2Ì×)	Igrosoft
-fcockt_6	¼¦Î²¾Æ (040216, µÚ1Ì×)	¼¦Î²¾Æ (040216, µÚ1Ì×)	Igrosoft
-fcockt_6a	¼¦Î²¾Æ (040216, µÚ2Ì×)	¼¦Î²¾Æ (040216, µÚ2Ì×)	Igrosoft
-fcockt_6b	¼¦Î²¾Æ (040216, µÚ3Ì×)	¼¦Î²¾Æ (040216, µÚ3Ì×)	Igrosoft
-fcockt_7	¼¦Î²¾Æ (050118, µÚ1Ì×)	¼¦Î²¾Æ (050118, µÚ1Ì×)	Igrosoft
-fcockt_7a	¼¦Î²¾Æ (050118, µÚ2Ì×)	¼¦Î²¾Æ (050118, µÚ2Ì×)	Igrosoft
+mfish_11	ÃÔÄãµöÓã (031124)	ÃÔÄãµöÓã (031124)	Igro
+mfish_12	ÃÔÄãµöÓã (040308)	ÃÔÄãµöÓã (040308)	Igro
+mfish_12a	ÃÔÄãµöÓã (040308, banking address hack)	ÃÔÄãµöÓã (040308, banking address hack)	Igro
+crzmon_7	·è¿ñºï×Ó (031110)	·è¿ñºï×Ó (031110)	Igrosoft
+crzmon_7a	·è¿ñºï×Ó (031110, backdoor µÚ1Ì×)	·è¿ñºï×Ó (031110, backdoor µÚ1Ì×)	Igrosoft
+crzmon_7b	·è¿ñºï×Ó (031110, backdoor µÚ2Ì×)	·è¿ñºï×Ó (031110, backdoor µÚ2Ì×)	Igrosoft
+crzmon_8	·è¿ñºï×Ó (050120)	·è¿ñºï×Ó (050120)	Igrosoft
+crzmon_8a	·è¿ñºï×Ó (050120, backdoor)	·è¿ñºï×Ó (050120, backdoor)	Igrosoft
+fcockt_6	¼¦Î²¾Æ (040216)	¼¦Î²¾Æ (040216)	Igrosoft
+fcockt_6a	¼¦Î²¾Æ (040216, banking address hack)	¼¦Î²¾Æ (040216, banking address hack)	Igrosoft
+fcockt_6b	¼¦Î²¾Æ (040216, backdoor)	¼¦Î²¾Æ (040216, backdoor)	Igrosoft
+fcockt_7	¼¦Î²¾Æ (050118)	¼¦Î²¾Æ (050118)	Igrosoft
+fcockt_7a	¼¦Î²¾Æ (050118, backdoor)	¼¦Î²¾Æ (050118, backdoor)	Igrosoft
 fcockt_8	¼¦Î²¾Æ (060111)	¼¦Î²¾Æ (060111)	Igrosoft
-lhaunt_4	ĞÒÔËË®¹û»ú (031111, µÚ1Ì×)	ĞÒÔËË®¹û»ú (031111, µÚ1Ì×)	Igrosoft
-lhaunt_4a	ĞÒÔËË®¹û»ú (031111, µÚ2Ì×)	ĞÒÔËË®¹û»ú (031111, µÚ2Ì×)	Igrosoft
-lhaunt_5	ĞÒÔËË®¹û»ú (040216. µÚ1Ì×)	ĞÒÔËË®¹û»ú (040216. µÚ1Ì×)	Igrosoft
-lhaunt_5a	ĞÒÔËË®¹û»ú (040216, µÚ2Ì×)	ĞÒÔËË®¹û»ú (040216, µÚ2Ì×)	Igrosoft
-lhaunt_6	ĞÒÔËË®¹û»ú (040825, µÚ1Ì×)	ĞÒÔËË®¹û»ú (040825, µÚ1Ì×)	Igrosoft
-lhaunt_6a	ĞÒÔËË®¹û»ú (040825, µÚ2Ì×)	ĞÒÔËË®¹û»ú (040825, µÚ2Ì×)	Igrosoft
+lhaunt_4	ĞÒÔËË®¹û»ú (031111)	ĞÒÔËË®¹û»ú (031111)	Igrosoft
+lhaunt_4a	ĞÒÔËË®¹û»ú (031111, backdoor)	ĞÒÔËË®¹û»ú (031111, backdoor)	Igrosoft
+lhaunt_5	ĞÒÔËË®¹û»ú (040216)	ĞÒÔËË®¹û»ú (040216)	Igrosoft
+lhaunt_5a	ĞÒÔËË®¹û»ú (040216, backdoor)	ĞÒÔËË®¹û»ú (040216, backdoor)	Igrosoft
+lhaunt_6	ĞÒÔËË®¹û»ú (040825)	ĞÒÔËË®¹û»ú (040825)	Igrosoft
+lhaunt_6a	ĞÒÔËË®¹û»ú (040825, backdoor)	ĞÒÔËË®¹û»ú (040825, backdoor)	Igrosoft
 rollfr_2	¹ö¶¯Ë®¹û»ú (040318)	¹ö¶¯Ë®¹û»ú (040318)	Igrosoft
-garage_4	³µ¿â (040219, µÚ1Ì×)	³µ¿â (040219, µÚ1Ì×)	Igrosoft
-garage_4a	³µ¿â (040219, µÚ2Ì×)	³µ¿â (040219, µÚ2Ì×)	Igrosoft
-garage_5	³µ¿â (050311, µÚ1Ì×)	³µ¿â (050311, µÚ1Ì×)	Igrosoft
-garage_5a	³µ¿â (050311, µÚ2Ì×)	³µ¿â (050311, µÚ2Ì×)	Igrosoft
-rclimb_3	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ1Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ1Ì×)	Igrosoft
-rclimb_3a	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ2Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ2Ì×)	Igrosoft
-rclimb_3b	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ3Ì×)	ÅÊÑÒÌØ¹¤¶Ó (040827, µÚ3Ì×)	Igrosoft
-sweetl	ÌğÃÛÉú»î (041220, µÚ1Ì×)	ÌğÃÛÉú»î (041220, µÚ1Ì×)	Igrosoft
-sweetla	ÌğÃÛÉú»î (041220, µÚ2Ì×)	ÌğÃÛÉú»î (041220, µÚ2Ì×)	Igrosoft
-resdnt_2	¾ÓÃñ (040513, µÚ1Ì×)	¾ÓÃñ (040513, µÚ1Ì×)	Igrosoft
-resdnt_2a	¾ÓÃñ (040513, µÚ2Ì×)	¾ÓÃñ (040513, µÚ2Ì×)	Igrosoft
-island	µºÓì (050713, µÚ1Ì×)	µºÓì (050713, µÚ1Ì×)	Igrosoft
-islanda	µºÓì (050713, µÚ2Ì×)	µºÓì (050713, µÚ2Ì×)	Igrosoft
-pirate_1	º£µÁ (060210)	º£µÁ (060210)	Igrosoft
-island2	µºÓì 2 (060529, µÚ1Ì×)	µºÓì 2 (060529, µÚ1Ì×)	Igrosoft
-island2a	µºÓì 2 (060529, µÚ2Ì×)	µºÓì 2 (060529, µÚ2Ì×)	Igrosoft
-keks	¿ì¿ËË®¹û»ú (060328, µÚ1Ì×)	¿ì¿ËË®¹û»ú (060328, µÚ1Ì×)	Igrosoft
-keksa	¿ì¿ËË®¹û»ú (060328, µÚ2Ì×)	¿ì¿ËË®¹û»ú (060328, µÚ2Ì×)	Igrosoft
-keksb	¿ì¿ËË®¹û»ú (060328, µÚ3Ì×)	¿ì¿ËË®¹û»ú (060328, µÚ3Ì×)	Igrosoft
-keks_2	¿ì¿ËË®¹û»ú (060403. µÚ1Ì×)	¿ì¿ËË®¹û»ú (060403. µÚ1Ì×)	Igrosoft
-keks_2a	¿ì¿ËË®¹û»ú (060403, µÚ2Ì×)	¿ì¿ËË®¹û»ú (060403, µÚ2Ì×)	Igrosoft
+garage_4	³µ¿â (040219)	³µ¿â (040219)	Igrosoft
+garage_4a	³µ¿â (040219, backdoor)	³µ¿â (040219, backdoor)	Igrosoft
+garage_4b	³µ¿â (040219, changed version text)	³µ¿â (040219, changed version text)	Igrosoft
+garage_5	³µ¿â (050311)	³µ¿â (050311)	Igrosoft
+garage_5a	³µ¿â (050311, backdoor)	³µ¿â (050311, backdoor)	Igrosoft
+rclimb_3	ÅÊÑÒÌØ¹¤¶Ó (040827)	ÅÊÑÒÌØ¹¤¶Ó (040827)	Igrosoft
+rclimb_3a	ÅÊÑÒÌØ¹¤¶Ó (040827, backdoor)	ÅÊÑÒÌØ¹¤¶Ó (040827, backdoor)	Igrosoft
+rclimb_3b	ÅÊÑÒÌØ¹¤¶Ó (040827, new service menu)	ÅÊÑÒÌØ¹¤¶Ó (040827, new service menu)	Igrosoft
+sweetl	ÌğÃÛÉú»î (041220)	ÌğÃÛÉú»î (041220)	Igrosoft
+sweetla	ÌğÃÛÉú»î (041220, backdoor)	ÌğÃÛÉú»î (041220, backdoor)	Igrosoft
+sweetlb	ÌğÃÛÉú»î (041220, banking address hack, changed version text)	ÌğÃÛÉú»î (041220, banking address hack, changed version text)	Igrosoft
+resdnt_2	¾ÓÃñ (040513)	¾ÓÃñ (040513)	Igrosoft
+resdnt_2a	¾ÓÃñ (040513, backdoor)	¾ÓÃñ (040513, backdoor)	Igrosoft
+island	µºÓì (050713)	µºÓì (050713)	Igrosoft
+islanda	µºÓì (050713, backdoor)	µºÓì (050713, backdoor)	Igrosoft
+pirate_2	º£µÁ (060210)	º£µÁ (060210)	Igrosoft
+pirate_3	º£µÁ (060803)	º£µÁ (060803)	Igrosoft
+pirate2	º£µÁ 2 (061005)	º£µÁ 2 (061005)	Igrosoft
+pirate2a	º£µÁ 2 (061005, banking address hack µÚ1Ì×)	º£µÁ 2 (061005, banking address hack µÚ1Ì×)	Igrosoft
+pirate2b	º£µÁ 2 (061005, banking address hack µÚ2Ì×)	º£µÁ 2 (061005, banking address hack µÚ2Ì×)	Igrosoft
+pirate2c	º£µÁ 2 (061005, banking address hack, changed version text µÚ1Ì×)	º£µÁ 2 (061005, banking address hack, changed version text µÚ1Ì×)	Igrosoft
+pirate2d	º£µÁ 2 (061005, banking address hack, changed version text µÚ2Ì×)	º£µÁ 2 (061005, banking address hack, changed version text µÚ2Ì×)	Igrosoft
+pirate2e	º£µÁ 2 (061005, banking address hack, changed version text µÚ3Ì×)	º£µÁ 2 (061005, banking address hack, changed version text µÚ3Ì×)	Igrosoft
+island2	µºÓì 2 (060529)	µºÓì 2 (060529)	Igrosoft
+island2a	µºÓì 2 (060529, banking address hack)	µºÓì 2 (060529, banking address hack)	Igrosoft
+keks	¿ì¿ËË®¹û»ú (060328)	¿ì¿ËË®¹û»ú (060328)	Igrosoft
+keksa	¿ì¿ËË®¹û»ú (060328, banking address hack)	¿ì¿ËË®¹û»ú (060328, banking address hack)	Igrosoft
+keksb	¿ì¿ËË®¹û»ú (060328, backdoor)	¿ì¿ËË®¹û»ú (060328, backdoor)	Igrosoft
+keksc	¿ì¿ËË®¹û»ú (060328, banking address hack, changed version text)	¿ì¿ËË®¹û»ú (060328, banking address hack, changed version text)	Igrosoft
+keks_2	¿ì¿ËË®¹û»ú (060403)	¿ì¿ËË®¹û»ú (060403)	Igrosoft
+keks_2a	¿ì¿ËË®¹û»ú (060403, banking address hack)	¿ì¿ËË®¹û»ú (060403, banking address hack)	Igrosoft
+keks_2b	¿ì¿ËË®¹û»ú (060403, banking address hack, changed version text)	¿ì¿ËË®¹û»ú (060403, banking address hack, changed version text)	Igrosoft
 m_brkfst	ÀÏ´ó¸ç (UK, Game Card 95-750-524 )	ÀÏ´ó¸ç (UK, Game Card 95-750-524 )	BFM
 m_bdrwho	³¬Ê±¿Õ²©Ê¿ (µÚ1Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-288)	³¬Ê±¿Õ²©Ê¿ (µÚ1Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-288)	BFM
 m_bdrwh1	³¬Ê±¿Õ²©Ê¿ (µÚ2Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-661)	³¬Ê±¿Õ²©Ê¿ (µÚ2Ì×, UK, Ö½ÅÆÓÎÏ· 95-750-661)	BFM
