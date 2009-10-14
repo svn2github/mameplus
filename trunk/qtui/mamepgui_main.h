@@ -85,6 +85,7 @@ public slots:
 	void on_actionHungarian_activated();
 	void on_actionKorean_activated();
 	void on_actionBrazilian_activated();
+	void on_actionRussian_activated();
 	void on_actionLocalGameList_activated();
 	void on_actionReadme_activated();
 	void on_actionFAQ_activated();
@@ -107,13 +108,9 @@ public slots:
 	void on_actionDefaultOptions_activated();
 	void on_actionDirectories_activated();
 
-	void on_actionColDescription_activated();
-	void on_actionColName_activated();
-	void on_actionColROMs_activated();
-	void on_actionColManufacturer_activated();
-	void on_actionColDriver_activated();
-	void on_actionColYear_activated();
-	void on_actionColCloneOf_activated();
+	void on_actionColSortAscending_activated();
+	void on_actionColSortDescending_activated();
+	void toggleGameListColumn();
 	void on_trayIconActivated(QSystemTrayIcon::ActivationReason);
 
     void log(QString);
@@ -139,7 +136,6 @@ private:
 	QString background_file;
 	QString gui_style;
 	
-	void toggleGameListColumn(int);
 	void initHistory(int);
 	void initSnap(int);
 	void showRestartDialog();

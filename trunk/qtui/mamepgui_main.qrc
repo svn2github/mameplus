@@ -6,6 +6,8 @@
 	<file>lang/mamepgui_hu_HU.qm</file>
 	<file>lang/mamepgui_ko_KR.qm</file>
 	<file>lang/mamepgui_pt_BR.qm</file>
+	<file>lang/mamepgui_ru_RU.qm</file>
+
 	<file>res/32x32/applications-system.png</file>
 	<file>res/32x32/audio-x-generic.png</file>
 	<file>res/32x32/folder.png</file>

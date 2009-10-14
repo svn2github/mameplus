@@ -36,7 +36,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>23</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -99,16 +99,6 @@
      <property name="title">
       <string>Customize &amp;Fields</string>
      </property>
-     <addaction name="actionColDescription"/>
-     <addaction name="actionColName"/>
-     <addaction name="actionColROMs"/>
-     <addaction name="actionColManufacturer"/>
-     <addaction name="actionColDriver"/>
-     <addaction name="actionColYear"/>
-     <addaction name="actionColCloneOf"/>
-     <addaction name="separator"/>
-     <addaction name="actionColSortAscending"/>
-     <addaction name="actionColSortDescending"/>
     </widget>
     <widget class="QMenu" name="menuPictures">
      <property name="title">
@@ -136,6 +126,13 @@
      <addaction name="actionFilterNonWorking"/>
      <addaction name="actionFilterUnavailable"/>
     </widget>
+    <widget class="QMenu" name="menuArrangeIcons">
+     <property name="title">
+      <string>Arrange &amp;Icons</string>
+     </property>
+     <addaction name="actionColSortAscending"/>
+     <addaction name="actionColSortDescending"/>
+    </widget>
     <addaction name="menuShowFolders"/>
     <addaction name="menuPictures"/>
     <addaction name="menuDocuments"/>
@@ -147,9 +144,10 @@
     <addaction name="actionRowDelegate"/>
     <addaction name="actionLocalGameList"/>
     <addaction name="separator"/>
-    <addaction name="actionRefresh"/>
+    <addaction name="menuArrangeIcons"/>
     <addaction name="menuCustomizeFields"/>
     <addaction name="menuCustomFilters"/>
+    <addaction name="actionRefresh"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
@@ -166,6 +164,7 @@
      <addaction name="actionHungarian"/>
      <addaction name="actionKorean"/>
      <addaction name="actionBrazilian"/>
+     <addaction name="actionRussian"/>
     </widget>
     <widget class="QMenu" name="menuBackground">
      <property name="title">
@@ -468,9 +467,6 @@
    <property name="checkable">
     <bool>true</bool>
    </property>
-   <property name="enabled">
-    <bool>false</bool>
-   </property>
    <property name="text">
     <string>Sort Ascending</string>
    </property>
@@ -478,9 +474,6 @@
   <action name="actionColSortDescending">
    <property name="checkable">
     <bool>true</bool>
-   </property>
-   <property name="enabled">
-    <bool>false</bool>
    </property>
    <property name="text">
     <string>Sort Descending</string>
@@ -711,8 +704,19 @@
    </property>
   </action>
   <action name="actionFixDatComplete">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>All Sets...</string>
+   </property>
+  </action>
+  <action name="actionRussian">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string notr="true">Русский</string>
    </property>
   </action>
  </widget>

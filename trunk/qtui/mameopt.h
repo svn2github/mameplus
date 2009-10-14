@@ -179,8 +179,7 @@ public:
 	void saveIniFile(int , const QString &);
 
 public slots:
-	void loadIni(int, const QString &);
-	void preUpdateModel(QListWidgetItem *currItem = 0, int optType = -1);
+	void preUpdateModel(QListWidgetItem *currItem = 0, int optType = -1, const QString &gameName = "", int method = 0);
 	void updateHeaderSize(int, int, int);
 
 private:
@@ -188,6 +187,7 @@ private:
 	QMap<QString, QStringList> optCatMap;
 	QList<OptInfo *> optInfos;
 
+	void loadIni(int, const QString &);
 	void loadTemplate();
 	QHash<QString, QString> parseIniFile(const QString &);
 	void addModelItemTitle(QStandardItemModel*, QString);

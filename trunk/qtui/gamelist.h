@@ -216,7 +216,6 @@ public slots:
 	void updateSelection();
 	void updateSelection(const QModelIndex & current, const QModelIndex & previous);
 	void setupSnap(int);
-	void toggleDelegate(bool);
 
 	// external process management
 	void runMameFinished(int, QProcess::ExitStatus);
@@ -280,5 +279,7 @@ extern Gamelist *gameList;
 extern QString currentGame, currentFolder;
 extern QStringList hiddenFolders;
 extern QMap<QString, QString> consoleMap;
+extern QActionGroup *colSortActionGroup;
+extern QList<QAction *> colToggleActions;
 
 #endif

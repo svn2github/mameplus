@@ -10,9 +10,17 @@
     </message>
 </context>
 <context>
+    <name>Cmd</name>
+    <message>
+        <location filename="../cmd.ui" line="14"/>
+        <source>Command Line Options</source>
+        <translation>命令行選項</translation>
+    </message>
+</context>
+<context>
     <name>Dirs</name>
     <message>
-        <location filename="../dialogs.cpp" line="340"/>
+        <location filename="../dialogs.cpp" line="341"/>
         <source>Directory name:</source>
         <translation>目錄名稱:</translation>
     </message>
@@ -40,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="4189"/>
+        <location filename="../gamelist.cpp" line="3379"/>
         <source>Horizontal</source>
         <translation>水平</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="4194"/>
+        <location filename="../gamelist.cpp" line="3384"/>
         <source>Vertical</source>
         <translation>垂直</translation>
     </message>
@@ -61,177 +69,182 @@
         <translation type="obsolete">正在載入 listxml: %1 個遊戲</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2183"/>
+        <location filename="../gamelist.cpp" line="1279"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2179"/>
+        <location filename="../gamelist.cpp" line="1275"/>
         <source>Available Arcades</source>
         <translation>擁有業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2178"/>
+        <location filename="../gamelist.cpp" line="1274"/>
         <source>All Systems</source>
         <translation>全部系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2179"/>
+        <location filename="../gamelist.cpp" line="1275"/>
         <source>Available Systems</source>
         <translation>擁有系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2180"/>
+        <location filename="../gamelist.cpp" line="1276"/>
         <source>Unavailable Arcades</source>
         <translation>未擁有業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2180"/>
+        <location filename="../gamelist.cpp" line="1276"/>
         <source>Unavailable Systems</source>
         <translation>未擁有系統</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2181"/>
+        <location filename="../gamelist.cpp" line="1277"/>
         <source>Consoles</source>
         <translation>家用機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2181"/>
+        <location filename="../gamelist.cpp" line="1277"/>
         <source>Softwares</source>
         <translation>軟體</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2182"/>
+        <location filename="../gamelist.cpp" line="1278"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2184"/>
+        <location filename="../gamelist.cpp" line="1280"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2185"/>
+        <location filename="../gamelist.cpp" line="1281"/>
         <source>BIOS</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2186"/>
+        <location filename="../gamelist.cpp" line="1282"/>
         <source>CPU</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2187"/>
+        <location filename="../gamelist.cpp" line="1283"/>
         <source>Sound</source>
         <translation>聲音</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2188"/>
+        <location filename="../gamelist.cpp" line="1284"/>
         <source>CHD</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2189"/>
+        <location filename="../gamelist.cpp" line="1285"/>
         <source>Samples</source>
         <translation>樣本檔</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2190"/>
+        <location filename="../gamelist.cpp" line="1286"/>
         <source>Dumping Status</source>
         <translation>Dump 狀況</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2191"/>
+        <location filename="../gamelist.cpp" line="1287"/>
         <source>Working</source>
         <translation>可以執行</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2192"/>
+        <location filename="../gamelist.cpp" line="1288"/>
         <source>Not working</source>
         <translation>不可執行</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2194"/>
+        <location filename="../gamelist.cpp" line="1290"/>
         <source>Clones</source>
         <translation>仿製版</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2197"/>
+        <location filename="../gamelist.cpp" line="1293"/>
         <source>Refresh Rate</source>
         <translation>更新頻率</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3504"/>
+        <location filename="../gamelist.cpp" line="1667"/>
+        <source>by %1</source>
+        <translation>依%1</translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="2642"/>
         <source>Horizontal</source>
         <translation>水平</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3505"/>
+        <location filename="../gamelist.cpp" line="2643"/>
         <source>Vertical</source>
         <translation>垂直</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2195"/>
+        <location filename="../gamelist.cpp" line="1291"/>
         <source>Resolution</source>
         <translation>解析度</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2193"/>
+        <location filename="../gamelist.cpp" line="1289"/>
         <source>Originals</source>
         <translation>原作版</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2196"/>
+        <location filename="../gamelist.cpp" line="1292"/>
         <source>Colors</source>
         <translation>色彩</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2198"/>
+        <location filename="../gamelist.cpp" line="1294"/>
         <source>Display</source>
         <translation>顯示</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2199"/>
+        <location filename="../gamelist.cpp" line="1295"/>
         <source>Control Type</source>
         <translation>控制器類型</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2200"/>
+        <location filename="../gamelist.cpp" line="1296"/>
         <source>Channels</source>
         <translation>聲道</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2201"/>
+        <location filename="../gamelist.cpp" line="1297"/>
         <source>Save State</source>
         <translation>儲存狀態</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2679"/>
+        <location filename="../gamelist.cpp" line="1805"/>
         <source>Remove From &quot;%1%2&quot;</source>
         <translation>從 &quot;%1%2&quot; 中移除</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3037"/>
+        <location filename="../gamelist.cpp" line="2157"/>
         <source>Remove All</source>
         <translation>全部移除</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3598"/>
+        <location filename="../gamelist.cpp" line="2736"/>
         <source>(H)</source>
         <translation>(橫)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3598"/>
+        <location filename="../gamelist.cpp" line="2736"/>
         <source>(V)</source>
         <translation>(縱)</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3686"/>
+        <location filename="../gamelist.cpp" line="2824"/>
         <source>Root Folder [.]</source>
         <translation>根資料夾 [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3899"/>
+        <location filename="../gamelist.cpp" line="3037"/>
         <source>Loading M1, please wait...</source>
         <translation>正在載入 M1，請稍侯...</translation>
     </message>
@@ -240,7 +253,7 @@
         <translation type="obsolete">新增資料夾...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3976"/>
+        <location filename="../gamelist.cpp" line="3107"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -250,47 +263,47 @@ must be mounted:
 </translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2178"/>
+        <location filename="../gamelist.cpp" line="1274"/>
         <source>All Arcades</source>
         <translation>全部業務機</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2177"/>
+        <location filename="../gamelist.cpp" line="1273"/>
         <source>All Games</source>
         <translation>全部遊戲</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2910"/>
+        <location filename="../gamelist.cpp" line="2036"/>
         <source>Common image types</source>
         <translation>通用映像檔類型</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2912"/>
+        <location filename="../gamelist.cpp" line="2038"/>
         <source>All Files</source>
         <translation>所有檔案</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2918"/>
+        <location filename="../gamelist.cpp" line="2044"/>
         <source>File name:</source>
         <translation>檔案名稱:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3178"/>
+        <location filename="../gamelist.cpp" line="2304"/>
         <source>Refresh</source>
         <translation>重新整理</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2653"/>
+        <location filename="../gamelist.cpp" line="1779"/>
         <source>Play %1</source>
         <translation>執行 %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2685"/>
+        <location filename="../gamelist.cpp" line="1811"/>
         <source>Properties for %1</source>
         <translation>%1 內容</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2066"/>
+        <location filename="../gamelist.cpp" line="1155"/>
         <source>%1 games</source>
         <translation>%1 個遊戲</translation>
     </message>
@@ -298,12 +311,12 @@ must be mounted:
 <context>
     <name>IPS</name>
     <message>
-        <location filename="../ips.cpp" line="23"/>
+        <location filename="../ips.cpp" line="24"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../ips.cpp" line="23"/>
+        <location filename="../ips.cpp" line="24"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
@@ -331,7 +344,7 @@ must be mounted:
 <context>
     <name>M1</name>
     <message>
-        <location filename="../m1.cpp" line="81"/>
+        <location filename="../m1.cpp" line="84"/>
         <source>Loading M1, please wait...</source>
         <translation>正在載入 M1，請稍侯...</translation>
     </message>
@@ -383,12 +396,12 @@ p, li { white-space: pre-wrap; }
         <translation></translation>
     </message>
     <message>
-        <location filename="../m1.cpp" line="17"/>
+        <location filename="../m1.cpp" line="20"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
     <message>
-        <location filename="../m1.cpp" line="17"/>
+        <location filename="../m1.cpp" line="20"/>
         <source>Len</source>
         <translation>長度</translation>
     </message>
@@ -412,18 +425,18 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">說明</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="194"/>
+        <location filename="../mamepgui_main.ui" line="205"/>
         <source>Toolbar</source>
         <translation>工具列</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="219"/>
-        <location filename="../mamepguimain.ui" line="224"/>
+        <location filename="../mamepgui_main.cpp" line="221"/>
+        <location filename="../mamepgui_main.ui" line="235"/>
         <source>Search</source>
         <translation>搜尋</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="238"/>
+        <location filename="../mamepgui_main.ui" line="249"/>
         <source>GUI Log</source>
         <translation>圖形介面記錄</translation>
     </message>
@@ -432,7 +445,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">重新整理</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="311"/>
+        <location filename="../mamepgui_main.ui" line="322"/>
         <source>F5</source>
         <translation></translation>
     </message>
@@ -441,7 +454,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">結束</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="319"/>
+        <location filename="../mamepgui_main.ui" line="330"/>
         <source>Alt+X</source>
         <translation></translation>
     </message>
@@ -462,62 +475,62 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">大圖示</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="265"/>
+        <location filename="../mamepgui_main.ui" line="276"/>
         <source>Folder List</source>
         <translation>資料夾清單</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="150"/>
+        <location filename="../mamepgui_main.cpp" line="152"/>
         <source>Snapshot</source>
         <translation>遊戲圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="151"/>
+        <location filename="../mamepgui_main.cpp" line="153"/>
         <source>Flyer</source>
         <translation>廣告圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="152"/>
+        <location filename="../mamepgui_main.cpp" line="154"/>
         <source>Cabinet</source>
         <translation>筐體圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="153"/>
+        <location filename="../mamepgui_main.cpp" line="155"/>
         <source>Marquee</source>
         <translation>標籤圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="154"/>
+        <location filename="../mamepgui_main.cpp" line="156"/>
         <source>Title</source>
         <translation>標題圖</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="155"/>
+        <location filename="../mamepgui_main.cpp" line="157"/>
         <source>Control Panel</source>
         <translation>控制器</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="156"/>
+        <location filename="../mamepgui_main.cpp" line="158"/>
         <source>PCB</source>
         <translation>電路板</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="158"/>
+        <location filename="../mamepgui_main.cpp" line="160"/>
         <source>History</source>
         <translation>歷史</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="159"/>
+        <location filename="../mamepgui_main.cpp" line="161"/>
         <source>MAMEInfo</source>
         <translation>MAME 資訊</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="161"/>
+        <location filename="../mamepgui_main.cpp" line="163"/>
         <source>Story</source>
         <translation>故事</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="285"/>
+        <location filename="../mamepgui_main.ui" line="296"/>
         <source>1</source>
         <translation></translation>
     </message>
@@ -534,52 +547,52 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">執行</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="395"/>
+        <location filename="../mamepgui_main.ui" line="406"/>
         <source>Audit</source>
         <translation>驗證</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="403"/>
+        <location filename="../mamepgui_main.ui" line="414"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="411"/>
+        <location filename="../mamepgui_main.ui" line="422"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="419"/>
+        <location filename="../mamepgui_main.ui" line="430"/>
         <source>ROMs</source>
         <translation>ROM</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="427"/>
+        <location filename="../mamepgui_main.ui" line="438"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="435"/>
+        <location filename="../mamepgui_main.ui" line="446"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="443"/>
+        <location filename="../mamepgui_main.ui" line="454"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="451"/>
+        <location filename="../mamepgui_main.ui" line="462"/>
         <source>Clone of</source>
         <translation>原作</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="462"/>
+        <location filename="../mamepgui_main.ui" line="470"/>
         <source>Sort Ascending</source>
         <translation>遞增排序</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="473"/>
+        <location filename="../mamepgui_main.ui" line="478"/>
         <source>Sort Descending</source>
         <translation>遞減排序</translation>
     </message>
@@ -628,170 +641,206 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">語言</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="14"/>
+        <location filename="../mamepgui_main.ui" line="14"/>
         <source>M+GUI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="44"/>
+        <location filename="../mamepgui_main.ui" line="44"/>
         <source>&amp;File</source>
         <translation>檔案(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="59"/>
+        <location filename="../mamepgui_main.ui" line="61"/>
         <source>Save Fix-dat File</source>
         <translation>儲存補檔文件</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="67"/>
+        <location filename="../mamepgui_main.ui" line="71"/>
         <source>Add to Custom Folder</source>
         <translation>加入到自訂資料夾</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="72"/>
+        <location filename="../mamepgui_main.ui" line="76"/>
         <source>Remove</source>
         <translation>移除</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="92"/>
+        <location filename="../mamepgui_main.ui" line="96"/>
         <source>&amp;View</source>
         <translation>檢視(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="96"/>
+        <location filename="../mamepgui_main.ui" line="100"/>
         <source>Customize &amp;Fields</source>
         <translation>自訂欄位(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="111"/>
+        <location filename="../mamepgui_main.ui" line="105"/>
         <source>Game &amp;Pictures</source>
         <translation>遊戲圖片(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="119"/>
+        <location filename="../mamepgui_main.ui" line="113"/>
         <source>Game Do&amp;cuments</source>
         <translation>遊戲文件(&amp;C)</translation>
     </message>
     <message>
+        <location filename="../mamepgui_main.ui" line="131"/>
         <source>Arrange &amp;Icons</source>
-        <translation type="obsolete">排列圖示(&amp;I)</translation>
+        <translation>排列圖示(&amp;I)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="124"/>
+        <location filename="../mamepgui_main.ui" line="118"/>
         <source>&amp;Show Folders</source>
         <translation>顯示資料夾(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="143"/>
+        <location filename="../mamepgui_main.ui" line="123"/>
+        <source>&amp;Custom Filters</source>
+        <translation>自訂篩選程式(&amp;C)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="154"/>
         <source>&amp;Options</source>
         <translation>選項(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="147"/>
+        <location filename="../mamepgui_main.ui" line="158"/>
         <source>&amp;Language</source>
         <translation>語言(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="159"/>
+        <location filename="../mamepgui_main.ui" line="170"/>
         <source>&amp;Background Images</source>
         <translation>背景圖像(&amp;B)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="167"/>
+        <location filename="../mamepgui_main.ui" line="178"/>
         <source>GUI &amp;Style</source>
         <translation>圖形介面樣式(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="179"/>
+        <location filename="../mamepgui_main.ui" line="190"/>
         <source>&amp;Help</source>
         <translation>說明(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="299"/>
+        <location filename="../mamepgui_main.ui" line="310"/>
         <source>Default Game &amp;Options</source>
         <translation>預設遊戲選項(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="308"/>
+        <location filename="../mamepgui_main.ui" line="319"/>
         <source>&amp;Refresh</source>
         <translation>重新整理(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="316"/>
+        <location filename="../mamepgui_main.ui" line="327"/>
         <source>E&amp;xit</source>
         <translation>結束(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="328"/>
+        <location filename="../mamepgui_main.ui" line="339"/>
         <source>&amp;About</source>
         <translation>關於(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="340"/>
+        <location filename="../mamepgui_main.ui" line="351"/>
         <source>&amp;Details</source>
         <translation>詳細資料(&amp;D)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="355"/>
+        <location filename="../mamepgui_main.ui" line="366"/>
         <source>&amp;Grouped</source>
         <translation>群組(&amp;G)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="367"/>
+        <location filename="../mamepgui_main.ui" line="378"/>
         <source>L&amp;arge Icons</source>
         <translation>大圖示(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="375"/>
+        <location filename="../mamepgui_main.ui" line="386"/>
         <source>&amp;Vertical Tabs</source>
         <translation>垂直索引標籤(&amp;V)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="594"/>
+        <location filename="../mamepgui_main.ui" line="599"/>
         <source>Highlight Selected Icon</source>
         <translation>高亮度顯示所選圖示</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="668"/>
+        <location filename="../mamepgui_main.ui" line="632"/>
+        <source>Load &amp;Savestate...</source>
+        <translation>載入儲存狀態(&amp;S)...</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="673"/>
         <source>&amp;Audit All Games</source>
         <translation>驗證全部遊戲(&amp;A)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="681"/>
+        <source>Hide C&amp;lones</source>
+        <translation>隱藏仿製版(&amp;L)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="689"/>
+        <source>Hide Non-Wor&amp;king</source>
+        <translation>隱藏不可執行的(&amp;K)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="697"/>
+        <source>Hide &amp;Unavailable</source>
+        <translation>隱藏未擁有的(&amp;U)</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="702"/>
+        <source>Command Line...</source>
+        <translation>命令行...</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="710"/>
+        <source>All Sets...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>&amp;Play</source>
         <translation type="obsolete">執行(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="385"/>
+        <location filename="../mamepgui_main.ui" line="396"/>
         <source>&amp;Record Input...</source>
         <translation>記錄輸入檔(&amp;R)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="390"/>
+        <location filename="../mamepgui_main.ui" line="401"/>
         <source>Configure &amp;IPS...</source>
         <translation>設定 IPS(&amp;I)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="482"/>
+        <location filename="../mamepgui_main.ui" line="487"/>
         <source>&amp;Directories...</source>
         <translation>目錄(&amp;D)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="491"/>
+        <location filename="../mamepgui_main.ui" line="496"/>
         <source>Pr&amp;operties</source>
         <translation>內容(&amp;O)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="648"/>
+        <location filename="../mamepgui_main.ui" line="653"/>
         <source>Completely Missing Sets Only...</source>
         <translation>完全遺失的集合...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="653"/>
+        <location filename="../mamepgui_main.ui" line="658"/>
         <source>Incomplete Sets Only...</source>
         <translation>不完整的集合...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="658"/>
+        <location filename="../mamepgui_main.ui" line="663"/>
         <source>All Set Issues...</source>
         <translation>全部有問題的集合...</translation>
     </message>
@@ -816,53 +865,52 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Português (Brasil)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="552"/>
+        <location filename="../mamepgui_main.ui" line="557"/>
         <source>Local &amp;Language Game List</source>
         <translation>中文遊戲清單(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="607"/>
+        <location filename="../mamepgui_main.ui" line="612"/>
         <source>&amp;Playback Input...</source>
         <translation>播放輸入檔(&amp;P)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="612"/>
+        <location filename="../mamepgui_main.ui" line="617"/>
         <source>Record &amp;Wave Output...</source>
         <translation>錄製 WAV 音訊輸出(&amp;W)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="617"/>
+        <location filename="../mamepgui_main.ui" line="622"/>
         <source>Record &amp;MNG Output...</source>
         <translation>錄製 MNG 視訊輸出(&amp;M)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="622"/>
+        <location filename="../mamepgui_main.ui" line="627"/>
         <source>Record &amp;AVI Output...</source>
         <translation>錄製 AVI 影片輸出(&amp;A)...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="627"/>
         <source>Load &amp;Savestate</source>
-        <translation>載入儲存狀態(&amp;S)</translation>
+        <translation type="obsolete">載入儲存狀態(&amp;S)</translation>
     </message>
     <message>
         <source>Hungarian</source>
         <translation type="obsolete">Magyar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="958"/>
+        <location filename="../mamepgui_main.cpp" line="946"/>
         <source>Restart</source>
         <translation>重新啟動</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="959"/>
+        <location filename="../mamepgui_main.cpp" line="947"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>變更這個選項需要重新啟動才能生效。
 您要繼續嗎?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="544"/>
+        <location filename="../mamepgui_main.ui" line="549"/>
         <source>Enforce Aspect Ratio</source>
         <translation>強制圖片長寬比例</translation>
     </message>
@@ -875,78 +923,78 @@ Do you wish to continue?</source>
         <translation type="obsolete">中文遊戲清單</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="83"/>
+        <location filename="../mamepgui_main.cpp" line="85"/>
         <source>status</source>
         <translation>狀況</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="88"/>
+        <location filename="../mamepgui_main.cpp" line="90"/>
         <source>emulation</source>
         <translation>模擬</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="93"/>
+        <location filename="../mamepgui_main.cpp" line="95"/>
         <source>color</source>
         <translation>色彩</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="98"/>
+        <location filename="../mamepgui_main.cpp" line="100"/>
         <source>sound</source>
         <translation>聲音</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="103"/>
+        <location filename="../mamepgui_main.cpp" line="105"/>
         <source>graphic</source>
         <translation>圖形</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="108"/>
+        <location filename="../mamepgui_main.cpp" line="110"/>
         <source>savestate</source>
         <translation>儲存狀態</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="120"/>
+        <location filename="../mamepgui_main.cpp" line="122"/>
         <source>cocktail</source>
         <translation>檯面型</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="132"/>
+        <location filename="../mamepgui_main.cpp" line="134"/>
         <source>protection</source>
         <translation>保護</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="160"/>
+        <location filename="../mamepgui_main.cpp" line="162"/>
         <source>DriverInfo</source>
         <translation>驅動資訊</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="167"/>
+        <location filename="../mamepgui_main.cpp" line="169"/>
         <source>Preferences...</source>
         <translation>喜好設定...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="428"/>
+        <location filename="../mamepgui_main.cpp" line="434"/>
         <source>Executable files</source>
         <translation>執行檔</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="431"/>
-        <location filename="../mamepguimain.cpp" line="737"/>
+        <location filename="../mamepgui_main.cpp" line="437"/>
+        <location filename="../mamepgui_main.cpp" line="760"/>
         <source>All Files (*)</source>
         <translation>所有檔案 (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="434"/>
+        <location filename="../mamepgui_main.cpp" line="440"/>
         <source>MAME/MESS executable:</source>
         <translation>MAME/MESS 執行檔:</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="735"/>
+        <location filename="../mamepgui_main.cpp" line="758"/>
         <source>Dat files</source>
         <translation>DAT 檔案</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="742"/>
+        <location filename="../mamepgui_main.cpp" line="765"/>
         <source>File name:</source>
         <translation>檔案名稱:</translation>
     </message>
@@ -955,7 +1003,7 @@ Do you wish to continue?</source>
         <translation type="obsolete">MAME 執行檔:</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="48"/>
+        <location filename="../mamepgui_main.ui" line="48"/>
         <source>Play with Options</source>
         <translation>錄製或播放</translation>
     </message>
@@ -968,27 +1016,27 @@ Do you wish to continue?</source>
         <translation type="obsolete">記錄輸入檔...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="557"/>
+        <location filename="../mamepgui_main.ui" line="562"/>
         <source>FAQ</source>
         <translation>常見問題集</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="562"/>
+        <location filename="../mamepgui_main.ui" line="567"/>
         <source>Discussion Board</source>
         <translation>討論板</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="567"/>
+        <location filename="../mamepgui_main.ui" line="572"/>
         <source>Readme</source>
         <translation>讀我檔案</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="575"/>
+        <location filename="../mamepgui_main.ui" line="580"/>
         <source>Stretch</source>
         <translation>延展</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="583"/>
+        <location filename="../mamepgui_main.ui" line="588"/>
         <source>Tile</source>
         <translation>並排</translation>
     </message>
@@ -997,12 +1045,12 @@ Do you wish to continue?</source>
         <translation type="obsolete">圖形介面樣式</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="162"/>
+        <location filename="../mamepgui_main.cpp" line="164"/>
         <source>Command</source>
         <translation>招式表</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="225"/>
+        <location filename="../mamepgui_main.cpp" line="227"/>
         <source>Clear</source>
         <translation>清除</translation>
     </message>
@@ -1019,15 +1067,43 @@ Do you wish to continue?</source>
         <translation type="obsolete">排列圖示</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="602"/>
+        <location filename="../mamepgui_main.ui" line="607"/>
         <source>Strech Screenshot Larger</source>
         <translation>允許延展預覽圖</translation>
     </message>
 </context>
 <context>
+    <name>MameDat</name>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="404"/>
+        <source>Saving listxml</source>
+        <translation>正在儲存 listxml</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="606"/>
+        <source>Cache signature error.</source>
+        <translation type="unfinished">快取簽暑錯誤。</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="615"/>
+        <source>Cache streamVersion has been updated. A full refresh is required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="835"/>
+        <source>Parsing listxml</source>
+        <translation>正在解析 listxml</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="953"/>
+        <source>Loading listxml: %1 games</source>
+        <translation>正在載入 listxml: %1 個遊戲</translation>
+    </message>
+</context>
+<context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="530"/>
+        <location filename="../audit.cpp" line="539"/>
         <source>Checking...</source>
         <translation>正在檢查...</translation>
     </message>
@@ -1035,29 +1111,24 @@ Do you wish to continue?</source>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="1575"/>
         <source>Parsing listxml</source>
-        <translation>正在解析 listxml</translation>
+        <translation type="obsolete">正在解析 listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1686"/>
         <source>Loading listxml: %1 games</source>
-        <translation>正在載入 listxml: %1 個遊戲</translation>
+        <translation type="obsolete">正在載入 listxml: %1 個遊戲</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1145"/>
         <source>Saving listxml</source>
-        <translation>正在儲存 listxml</translation>
+        <translation type="obsolete">正在儲存 listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1347"/>
         <source>Cache signature error.</source>
-        <translation>快取簽暑錯誤。</translation>
+        <translation type="obsolete">快取簽暑錯誤。</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1356"/>
         <source>Cache version has been updated. A full refresh is required.</source>
-        <translation>快取版本已經更新，需要重新整理。</translation>
+        <translation type="obsolete">快取版本已經更新，需要重新整理。</translation>
     </message>
 </context>
 <context>
@@ -1070,12 +1141,12 @@ Do you wish to continue?</source>
 <context>
     <name>OptionDelegate</name>
     <message>
-        <location filename="../mameopt.cpp" line="1011"/>
+        <location filename="../mameopt.cpp" line="1010"/>
         <source>Directory name:</source>
         <translation>目錄名稱:</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1050"/>
+        <location filename="../mameopt.cpp" line="1049"/>
         <source>File name:</source>
         <translation>檔案名稱:</translation>
     </message>
@@ -1092,22 +1163,22 @@ Do you wish to continue?</source>
         <translation type="obsolete">組態檔 (*.cfg)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1046"/>
+        <location filename="../mameopt.cpp" line="1045"/>
         <source>All Files</source>
         <translation>所有檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1063"/>
+        <location filename="../mameopt.cpp" line="1062"/>
         <source>Dat files</source>
         <translation>DAT 檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1069"/>
+        <location filename="../mameopt.cpp" line="1068"/>
         <source>Executable files</source>
         <translation>執行檔</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1075"/>
+        <location filename="../mameopt.cpp" line="1074"/>
         <source>Config files</source>
         <translation>組態檔</translation>
     </message>
@@ -1115,558 +1186,558 @@ Do you wish to continue?</source>
 <context>
     <name>OptionUtils</name>
     <message>
-        <location filename="../mameopt.cpp" line="1482"/>
+        <location filename="../mameopt.cpp" line="1483"/>
         <source>rotate</source>
         <translation>旋轉</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1483"/>
+        <location filename="../mameopt.cpp" line="1484"/>
         <source>rotate clockwise</source>
         <translation>順時針旋轉</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1484"/>
+        <location filename="../mameopt.cpp" line="1485"/>
         <source>rotate anti-clockwise</source>
         <translation>逆時針旋轉</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1485"/>
+        <location filename="../mameopt.cpp" line="1486"/>
         <source>auto rotate clockwise</source>
         <translation>自動順時針旋轉</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1486"/>
+        <location filename="../mameopt.cpp" line="1487"/>
         <source>auto rotate anti-clockwise</source>
         <translation>自動逆時針旋轉</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1487"/>
+        <location filename="../mameopt.cpp" line="1488"/>
         <source>flip screen left-right</source>
         <translation>左右翻轉畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1488"/>
+        <location filename="../mameopt.cpp" line="1489"/>
         <source>flip screen upside-down</source>
         <translation>上下翻轉畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1495"/>
+        <location filename="../mameopt.cpp" line="1496"/>
         <source>brightness correction</source>
         <translation>亮度值修正</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1496"/>
+        <location filename="../mameopt.cpp" line="1497"/>
         <source>contrast correction</source>
         <translation>對比值修正</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1497"/>
+        <location filename="../mameopt.cpp" line="1498"/>
         <source>gamma correction</source>
         <translation>Gamma 值修正</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1498"/>
+        <location filename="../mameopt.cpp" line="1499"/>
         <source>pause brightness</source>
         <translation>暫停時亮度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1499"/>
+        <location filename="../mameopt.cpp" line="1500"/>
         <source>image enhancement</source>
         <translation>影像增強</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1628"/>
+        <location filename="../mameopt.cpp" line="1629"/>
         <source>triple buffering</source>
         <translation>三重緩衝</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1629"/>
+        <location filename="../mameopt.cpp" line="1630"/>
         <source>switch resolutions to fit</source>
         <translation>切換至最符合的解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1630"/>
+        <location filename="../mameopt.cpp" line="1631"/>
         <source>full screen brightness</source>
         <translation>全螢幕亮度值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1631"/>
+        <location filename="../mameopt.cpp" line="1632"/>
         <source>full screen contrast</source>
         <translation>全螢幕對比值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1632"/>
+        <location filename="../mameopt.cpp" line="1633"/>
         <source>full screen gamma</source>
         <translation>全螢幕 Gamma 值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1431"/>
+        <location filename="../mameopt.cpp" line="1432"/>
         <source>background directory</source>
         <translation>背景圖像目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1424"/>
+        <location filename="../mameopt.cpp" line="1425"/>
         <source>cabinet directory</source>
         <translation>筐體圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1425"/>
+        <location filename="../mameopt.cpp" line="1426"/>
         <source>control panel directory</source>
         <translation>控制器圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1426"/>
+        <location filename="../mameopt.cpp" line="1427"/>
         <source>flyer directory</source>
         <translation>廣告圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1430"/>
+        <location filename="../mameopt.cpp" line="1431"/>
         <source>icons directory</source>
         <translation>圖示目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1427"/>
+        <location filename="../mameopt.cpp" line="1428"/>
         <source>marquee directory</source>
         <translation>標籤圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1428"/>
+        <location filename="../mameopt.cpp" line="1429"/>
         <source>pcb directory</source>
         <translation>電路板圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1429"/>
+        <location filename="../mameopt.cpp" line="1430"/>
         <source>title directory</source>
         <translation>標題圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1438"/>
+        <location filename="../mameopt.cpp" line="1439"/>
         <source>mame binary</source>
         <translation>MAME 執行檔</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1440"/>
+        <location filename="../mameopt.cpp" line="1441"/>
         <source>driver config</source>
         <translation>驅動開關</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1453"/>
+        <location filename="../mameopt.cpp" line="1454"/>
         <source>localized directory</source>
         <translation>當地化資料檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1456"/>
+        <location filename="../mameopt.cpp" line="1457"/>
         <source>cfg directory</source>
         <translation>組態檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1457"/>
+        <location filename="../mameopt.cpp" line="1458"/>
         <source>nvram directory</source>
         <translation>NVRAM 目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1458"/>
+        <location filename="../mameopt.cpp" line="1459"/>
         <source>memcard directory</source>
         <translation>記憶卡目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1459"/>
+        <location filename="../mameopt.cpp" line="1460"/>
         <source>input directory</source>
         <translation>輸入檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1460"/>
+        <location filename="../mameopt.cpp" line="1461"/>
         <source>state directory</source>
         <translation>狀態檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1461"/>
+        <location filename="../mameopt.cpp" line="1462"/>
         <source>snapshot directory</source>
         <translation>遊戲圖目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1462"/>
+        <location filename="../mameopt.cpp" line="1463"/>
         <source>diff directory</source>
         <translation>硬碟差異檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1463"/>
+        <location filename="../mameopt.cpp" line="1464"/>
         <source>comment directory</source>
         <translation>註解檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1464"/>
+        <location filename="../mameopt.cpp" line="1465"/>
         <source>hiscore directory</source>
         <translation>高分檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1435"/>
+        <location filename="../mameopt.cpp" line="1436"/>
         <source>history file</source>
         <translation>歷史檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1234"/>
-        <location filename="../mameopt.cpp" line="2230"/>
+        <location filename="../mameopt.cpp" line="1233"/>
+        <location filename="../mameopt.cpp" line="2236"/>
         <source>GUI Paths</source>
         <translation>圖形介面路徑</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1235"/>
+        <location filename="../mameopt.cpp" line="1234"/>
         <source>MAME Paths</source>
         <translation>MAME 路徑</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1236"/>
+        <location filename="../mameopt.cpp" line="1235"/>
         <source>MESS Paths</source>
         <translation>MESS 路徑</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1436"/>
+        <location filename="../mameopt.cpp" line="1437"/>
         <source>story file</source>
         <translation>故事檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1437"/>
+        <location filename="../mameopt.cpp" line="1438"/>
         <source>mameinfo file</source>
         <translation>MAME 資訊檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1466"/>
+        <location filename="../mameopt.cpp" line="1467"/>
         <source>command file</source>
         <translation>招式表檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1467"/>
+        <location filename="../mameopt.cpp" line="1468"/>
         <source>hiscore file</source>
         <translation>高分記錄檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1469"/>
+        <location filename="../mameopt.cpp" line="1470"/>
         <source>auto restore and save</source>
         <translation>自動載入與儲存狀態</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1470"/>
+        <location filename="../mameopt.cpp" line="1471"/>
         <source>snapshot/movie pattern</source>
         <translation>擷圖/錄影檢視樣式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1471"/>
+        <location filename="../mameopt.cpp" line="1472"/>
         <source>snapshot/movie resolution</source>
         <translation>擷圖/錄影解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1474"/>
+        <location filename="../mameopt.cpp" line="1475"/>
         <source>auto frame skipping</source>
         <translation>自動略過畫格</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1475"/>
+        <location filename="../mameopt.cpp" line="1476"/>
         <source>frame skipping</source>
         <translation>略過畫格</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1477"/>
+        <location filename="../mameopt.cpp" line="1478"/>
         <source>throttle</source>
         <translation>限制速度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1478"/>
+        <location filename="../mameopt.cpp" line="1479"/>
         <source>sleep when possible</source>
         <translation>適時釋放佔用中的系統資源</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1479"/>
+        <location filename="../mameopt.cpp" line="1480"/>
         <source>gameplay speed</source>
         <translation>遊戲執行速度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1480"/>
+        <location filename="../mameopt.cpp" line="1481"/>
         <source>auto refresh speed</source>
         <translation>自動更新頻率速度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1490"/>
+        <location filename="../mameopt.cpp" line="1491"/>
         <source>crop artwork</source>
         <translation>裁切裝飾圖</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1491"/>
+        <location filename="../mameopt.cpp" line="1492"/>
         <source>use backdrops</source>
         <translation>使用背景圖</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1492"/>
+        <location filename="../mameopt.cpp" line="1493"/>
         <source>use overlays</source>
         <translation>使用覆疊圖</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1493"/>
+        <location filename="../mameopt.cpp" line="1494"/>
         <source>use bezels</source>
         <translation>使用外框圖</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1501"/>
+        <location filename="../mameopt.cpp" line="1502"/>
         <source>draw antialiased vectors</source>
         <translation>描繪反鋸齒向量圖形</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1502"/>
+        <location filename="../mameopt.cpp" line="1503"/>
         <source>beam width</source>
         <translation>光束寬度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1503"/>
+        <location filename="../mameopt.cpp" line="1504"/>
         <source>flicker</source>
         <translation>閃爍度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1506"/>
+        <location filename="../mameopt.cpp" line="1507"/>
         <source>sample rate</source>
         <translation>取樣頻率</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1508"/>
+        <location filename="../mameopt.cpp" line="1509"/>
         <source>use samples</source>
         <translation>使用樣本檔</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1509"/>
+        <location filename="../mameopt.cpp" line="1510"/>
         <source>volume attenuation</source>
         <translation>音量衰減</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1510"/>
+        <location filename="../mameopt.cpp" line="1511"/>
         <source>use volume auto adjust</source>
         <translation>使用音量自動調整</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1513"/>
+        <location filename="../mameopt.cpp" line="1514"/>
         <source>default input layout</source>
         <translation>預設輸入配置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1514"/>
+        <location filename="../mameopt.cpp" line="1515"/>
         <source>enable mouse input</source>
         <translation>啟用滑鼠輸入</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1515"/>
+        <location filename="../mameopt.cpp" line="1516"/>
         <source>enable joystick input</source>
         <translation>啟用搖桿輸入</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1516"/>
+        <location filename="../mameopt.cpp" line="1517"/>
         <source>enable lightgun input</source>
         <translation>啟用光線槍輸入</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1517"/>
+        <location filename="../mameopt.cpp" line="1518"/>
         <source>enable multiple keyboards</source>
         <translation>啟用多鍵盤</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1518"/>
+        <location filename="../mameopt.cpp" line="1519"/>
         <source>enable multiple mice</source>
         <translation>啟用多滑鼠</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1519"/>
+        <location filename="../mameopt.cpp" line="1520"/>
         <source>enable steadykey support</source>
         <translation>啟用多個按鍵同時輸入支援</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1520"/>
+        <location filename="../mameopt.cpp" line="1521"/>
         <source>offscreen shots reload</source>
         <translation>射擊畫面外區域即重新填補</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1521"/>
+        <location filename="../mameopt.cpp" line="1522"/>
         <source>joystick map</source>
         <translation>搖桿對應檔</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1522"/>
+        <location filename="../mameopt.cpp" line="1523"/>
         <source>joystick deadzone</source>
         <translation>搖桿的無反應區</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1523"/>
+        <location filename="../mameopt.cpp" line="1524"/>
         <source>joystick saturation</source>
         <translation>搖桿的飽和值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1525"/>
+        <location filename="../mameopt.cpp" line="1526"/>
         <source>paddle device</source>
         <translation>操縱桿裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1526"/>
+        <location filename="../mameopt.cpp" line="1527"/>
         <source>adstick device</source>
         <translation>AD 搖桿裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1527"/>
+        <location filename="../mameopt.cpp" line="1528"/>
         <source>pedal device</source>
         <translation>踏板裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1528"/>
+        <location filename="../mameopt.cpp" line="1529"/>
         <source>dial device</source>
         <translation>轉盤裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1529"/>
+        <location filename="../mameopt.cpp" line="1530"/>
         <source>trackball device</source>
         <translation>軌跡球裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1530"/>
+        <location filename="../mameopt.cpp" line="1531"/>
         <source>lightgun device</source>
         <translation>光線槍裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1531"/>
+        <location filename="../mameopt.cpp" line="1532"/>
         <source>positional device</source>
         <translation>定位器裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1532"/>
+        <location filename="../mameopt.cpp" line="1533"/>
         <source>mouse device</source>
         <translation>滑鼠裝置</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1539"/>
+        <location filename="../mameopt.cpp" line="1540"/>
         <source>enable game cheats</source>
         <translation>啟用遊戲作弊引擎</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1540"/>
+        <location filename="../mameopt.cpp" line="1541"/>
         <source>skip game info</source>
         <translation>略過顯示遊戲資訊畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1542"/>
+        <location filename="../mameopt.cpp" line="1543"/>
         <source>quit game with confirmation</source>
         <translation>離開遊戲時先確認</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1543"/>
+        <location filename="../mameopt.cpp" line="1544"/>
         <source>auto pause when playback is finished</source>
         <translation>輸入檔播放結束時自動暫停</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1564"/>
+        <location filename="../mameopt.cpp" line="1565"/>
         <source>language</source>
         <translation>語言</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1568"/>
+        <location filename="../mameopt.cpp" line="1569"/>
         <source>watchdog</source>
         <translation>監視器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1570"/>
+        <location filename="../mameopt.cpp" line="1571"/>
         <source>thread priority</source>
         <translation>執行緒優先權</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1571"/>
+        <location filename="../mameopt.cpp" line="1572"/>
         <source>enable multi-threading</source>
         <translation>啟用多執行緒</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1575"/>
+        <location filename="../mameopt.cpp" line="1576"/>
         <source>video output method</source>
         <translation>視訊輸出方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1577"/>
+        <location filename="../mameopt.cpp" line="1578"/>
         <source>number of screens to create</source>
         <translation>建立的畫面總數</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1578"/>
+        <location filename="../mameopt.cpp" line="1579"/>
         <source>run in a window</source>
         <translation>以視窗模式執行</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1579"/>
+        <location filename="../mameopt.cpp" line="1580"/>
         <source>start out maximized</source>
         <translation>啟動時最大化</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1580"/>
+        <location filename="../mameopt.cpp" line="1581"/>
         <source>enforce aspect ratio</source>
         <translation>強制長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1581"/>
+        <location filename="../mameopt.cpp" line="1582"/>
         <source>scale screen</source>
         <translation>縮放畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1582"/>
+        <location filename="../mameopt.cpp" line="1583"/>
         <source>non-integer stretching</source>
         <translation>非整數倍延展</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1583"/>
+        <location filename="../mameopt.cpp" line="1584"/>
         <source>visual effects</source>
         <translation>視覺效果</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1584"/>
+        <location filename="../mameopt.cpp" line="1585"/>
         <source>center horizontally</source>
         <translation>水平置中</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1585"/>
+        <location filename="../mameopt.cpp" line="1586"/>
         <source>center vertically</source>
         <translation>垂直置中</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1586"/>
+        <location filename="../mameopt.cpp" line="1587"/>
         <source>wait for vertical sync</source>
         <translation>等待垂直同步</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1587"/>
+        <location filename="../mameopt.cpp" line="1588"/>
         <source>sync to monitor refresh</source>
         <translation>同步於顯示器的更新頻率</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1588"/>
+        <location filename="../mameopt.cpp" line="1589"/>
         <source>scale mode</source>
         <translation>縮放模式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1590"/>
+        <location filename="../mameopt.cpp" line="1591"/>
         <source>hardware stretching</source>
         <translation>硬體延展</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1592"/>
+        <location filename="../mameopt.cpp" line="1593"/>
         <source>d3d version</source>
         <translation>D3D 版本</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1593"/>
+        <location filename="../mameopt.cpp" line="1594"/>
         <source>bilinear filtering</source>
         <translation>雙線過濾</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1595"/>
+        <location filename="../mameopt.cpp" line="1596"/>
         <source>force power of 2 textures</source>
         <translation>強制 2 次方大小的材質</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1634"/>
+        <location filename="../mameopt.cpp" line="1635"/>
         <source>audio latency</source>
         <translation>音訊等待時間</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1637"/>
+        <location filename="../mameopt.cpp" line="1638"/>
         <source>dual lightgun</source>
         <translation>雙光線槍</translation>
     </message>
@@ -1679,177 +1750,177 @@ Do you wish to continue?</source>
         <translation type="obsolete">自然鍵盤</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1653"/>
+        <location filename="../mameopt.cpp" line="1654"/>
         <source>enable keymap</source>
         <translation>啟用按鍵對應</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1654"/>
+        <location filename="../mameopt.cpp" line="1655"/>
         <source>keymap filename</source>
         <translation>按鍵對應檔案名</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1656"/>
+        <location filename="../mameopt.cpp" line="1657"/>
         <source>enable joystick mapping</source>
         <translation>啟用搖桿對應</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1657"/>
+        <location filename="../mameopt.cpp" line="1658"/>
         <source>joymap filename</source>
         <translation>搖桿對應檔案名</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1664"/>
+        <location filename="../mameopt.cpp" line="1665"/>
         <source>alternative libGL.so</source>
         <translation>替代 libGL.so</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1669"/>
+        <location filename="../mameopt.cpp" line="1670"/>
         <source>core configuration</source>
         <translation>核心組態選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1670"/>
+        <location filename="../mameopt.cpp" line="1671"/>
         <source>core palette</source>
         <translation>核心色盤選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1671"/>
+        <location filename="../mameopt.cpp" line="1672"/>
         <source>core language</source>
         <translation>核心語言選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1673"/>
+        <location filename="../mameopt.cpp" line="1674"/>
         <source>core search path</source>
         <translation>核心搜尋路徑選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1674"/>
+        <location filename="../mameopt.cpp" line="1675"/>
         <source>core output directory</source>
         <translation>核心輸出目錄選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1675"/>
+        <location filename="../mameopt.cpp" line="1676"/>
         <source>core filename</source>
         <translation>核心檔名選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1677"/>
+        <location filename="../mameopt.cpp" line="1678"/>
         <source>core rotation</source>
         <translation>核心旋轉選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1678"/>
+        <location filename="../mameopt.cpp" line="1679"/>
         <source>core screen</source>
         <translation>核心畫面選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1679"/>
+        <location filename="../mameopt.cpp" line="1680"/>
         <source>full screen</source>
         <translation>全螢幕選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1682"/>
+        <location filename="../mameopt.cpp" line="1683"/>
         <source>Windows video</source>
         <translation>Windows 視訊選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1683"/>
+        <location filename="../mameopt.cpp" line="1684"/>
         <source>DirectDraw-specific</source>
         <translation>DirectDraw 特定選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1684"/>
+        <location filename="../mameopt.cpp" line="1685"/>
         <source>Direct3D-specific</source>
         <translation>Direct3D 特定選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1680"/>
+        <location filename="../mameopt.cpp" line="1681"/>
         <source>core performance</source>
         <translation>核心效能選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1685"/>
+        <location filename="../mameopt.cpp" line="1686"/>
         <source>Windows performance</source>
         <translation>Windows 效能選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1688"/>
+        <location filename="../mameopt.cpp" line="1689"/>
         <source>per-window video</source>
         <translation>各個畫面的視訊選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1690"/>
+        <location filename="../mameopt.cpp" line="1691"/>
         <source>core sound</source>
         <translation>核心聲音選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1691"/>
+        <location filename="../mameopt.cpp" line="1692"/>
         <source>Windows sound</source>
         <translation>Windows 聲音選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1693"/>
+        <location filename="../mameopt.cpp" line="1694"/>
         <source>core input</source>
         <translation>核心輸入選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1694"/>
+        <location filename="../mameopt.cpp" line="1695"/>
         <source>core input automatic enable</source>
         <translation>核心輸入自動啟用選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1695"/>
+        <location filename="../mameopt.cpp" line="1696"/>
         <source>input device</source>
         <translation>輸入裝置選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1699"/>
+        <location filename="../mameopt.cpp" line="1700"/>
         <source>core vector</source>
         <translation>核心向量選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1701"/>
+        <location filename="../mameopt.cpp" line="1702"/>
         <source>core misc</source>
         <translation>核心雜項選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1702"/>
+        <location filename="../mameopt.cpp" line="1703"/>
         <source>core artwork</source>
         <translation>核心裝飾圖選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1703"/>
+        <location filename="../mameopt.cpp" line="1704"/>
         <source>core state/playback</source>
         <translation>核心狀態/播放選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1705"/>
+        <location filename="../mameopt.cpp" line="1706"/>
         <source>MESS specific</source>
         <translation>MESS 特定選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1706"/>
+        <location filename="../mameopt.cpp" line="1707"/>
         <source>Windows MESS specific</source>
         <translation>Windows MESS 特定選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1707"/>
+        <location filename="../mameopt.cpp" line="1708"/>
         <source>core debugging</source>
         <translation>核心除錯程式選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1708"/>
+        <location filename="../mameopt.cpp" line="1709"/>
         <source>Windows debugging</source>
         <translation>Windows 除錯選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1545"/>
+        <location filename="../mameopt.cpp" line="1546"/>
         <source>transparent in-game ui</source>
         <translation>半透明的遊戲中設定選單</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1546"/>
+        <location filename="../mameopt.cpp" line="1547"/>
         <source>in-game ui transparency</source>
         <translation>設定選單的半透明值</translation>
     </message>
@@ -1858,287 +1929,287 @@ Do you wish to continue?</source>
         <translation type="obsolete">目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1243"/>
+        <location filename="../mameopt.cpp" line="1242"/>
         <source>Audio</source>
         <translation>音訊</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1244"/>
+        <location filename="../mameopt.cpp" line="1243"/>
         <source>Control</source>
         <translation>控制</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1245"/>
+        <location filename="../mameopt.cpp" line="1244"/>
         <source>Vector</source>
         <translation>向量</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1246"/>
+        <location filename="../mameopt.cpp" line="1245"/>
         <source>Misc</source>
         <translation>雜項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1442"/>
+        <location filename="../mameopt.cpp" line="1443"/>
         <source>readconfig</source>
         <translation>啟用載入設定檔</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1476"/>
+        <location filename="../mameopt.cpp" line="1477"/>
         <source>seconds to run</source>
         <translation>執行的秒數</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1534"/>
+        <location filename="../mameopt.cpp" line="1535"/>
         <source>log</source>
         <translation>建立 error.log 檔案</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1535"/>
+        <location filename="../mameopt.cpp" line="1536"/>
         <source>verbose</source>
         <translation>診斷資訊</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1536"/>
+        <location filename="../mameopt.cpp" line="1537"/>
         <source>update in pause</source>
         <translation>暫停期間持續更新主畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1538"/>
+        <location filename="../mameopt.cpp" line="1539"/>
         <source>bios</source>
         <translation>BIOS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1541"/>
+        <location filename="../mameopt.cpp" line="1542"/>
         <source>ips</source>
         <translation>IPS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1548"/>
+        <location filename="../mameopt.cpp" line="1549"/>
         <source>font blank</source>
         <translation>字型 (空白) 色彩</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1549"/>
+        <location filename="../mameopt.cpp" line="1550"/>
         <source>font normal</source>
         <translation>字型 (標準) 色彩</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1550"/>
+        <location filename="../mameopt.cpp" line="1551"/>
         <source>font special</source>
         <translation>字型 (特殊) 色彩</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1551"/>
+        <location filename="../mameopt.cpp" line="1552"/>
         <source>system background</source>
         <translation>視窗的背景色彩</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1552"/>
+        <location filename="../mameopt.cpp" line="1553"/>
         <source>button red</source>
         <translation>按鈕色彩 (A 或 1)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1553"/>
+        <location filename="../mameopt.cpp" line="1554"/>
         <source>button yellow</source>
         <translation>按鈕色彩 (B 或 2)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1554"/>
+        <location filename="../mameopt.cpp" line="1555"/>
         <source>button green</source>
         <translation>按鈕色彩 (C 或 3)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1555"/>
+        <location filename="../mameopt.cpp" line="1556"/>
         <source>button blue</source>
         <translation>按鈕色彩 (D 或 4)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1556"/>
+        <location filename="../mameopt.cpp" line="1557"/>
         <source>button purple</source>
         <translation>按鈕色彩 (K 或 5)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1557"/>
+        <location filename="../mameopt.cpp" line="1558"/>
         <source>button pink</source>
         <translation>按鈕色彩 (P 或 6)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1558"/>
+        <location filename="../mameopt.cpp" line="1559"/>
         <source>button aqua</source>
         <translation>按鈕色彩 (S 或 7)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1559"/>
+        <location filename="../mameopt.cpp" line="1560"/>
         <source>button silver</source>
         <translation>按鈕色彩 (8)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1560"/>
+        <location filename="../mameopt.cpp" line="1561"/>
         <source>button navy</source>
         <translation>按鈕色彩 (9)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1561"/>
+        <location filename="../mameopt.cpp" line="1562"/>
         <source>button lime</source>
         <translation>按鈕色彩 (10)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1562"/>
+        <location filename="../mameopt.cpp" line="1563"/>
         <source>cursor</source>
         <translation>游標色彩</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1565"/>
+        <location filename="../mameopt.cpp" line="1566"/>
         <source>use lang list</source>
         <translation>使用中文遊戲清單</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1567"/>
+        <location filename="../mameopt.cpp" line="1568"/>
         <source>oslog</source>
         <translation>輸出記錄到除錯程式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1573"/>
+        <location filename="../mameopt.cpp" line="1574"/>
         <source>show sdl video performance</source>
         <translation>顯示 SDL 視訊效能</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1596"/>
+        <location filename="../mameopt.cpp" line="1597"/>
         <source>no gl arb texture rectangle</source>
         <translation>不使用 GL ARB 矩形紋理</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1597"/>
+        <location filename="../mameopt.cpp" line="1598"/>
         <source>enable opengl vbo</source>
         <translation>啟用 OpenGL VBO</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1598"/>
+        <location filename="../mameopt.cpp" line="1599"/>
         <source>enable opengl pbo</source>
         <translation>啟用 OpenGL PBO</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1599"/>
+        <location filename="../mameopt.cpp" line="1600"/>
         <source>enable opengl glsl</source>
         <translation>啟用 OpenGL GLSL</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1600"/>
+        <location filename="../mameopt.cpp" line="1601"/>
         <source>opengl glsl filtering</source>
         <translation>OpenGL GLSL 過濾</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1601"/>
+        <location filename="../mameopt.cpp" line="1602"/>
         <source>opengl glsl video attributes</source>
         <translation>OpenGL GLSL 視訊屬性</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1635"/>
+        <location filename="../mameopt.cpp" line="1636"/>
         <source>audio sync</source>
         <translation>音訊同步</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1638"/>
+        <location filename="../mameopt.cpp" line="1639"/>
         <source>joyid1</source>
         <translation>P1 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1639"/>
+        <location filename="../mameopt.cpp" line="1640"/>
         <source>joyid2</source>
         <translation>P2 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1640"/>
+        <location filename="../mameopt.cpp" line="1641"/>
         <source>joyid3</source>
         <translation>P3 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1641"/>
+        <location filename="../mameopt.cpp" line="1642"/>
         <source>joyid4</source>
         <translation>P4 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1642"/>
+        <location filename="../mameopt.cpp" line="1643"/>
         <source>joyid5</source>
         <translation>P5 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1643"/>
+        <location filename="../mameopt.cpp" line="1644"/>
         <source>joyid6</source>
         <translation>P6 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1644"/>
+        <location filename="../mameopt.cpp" line="1645"/>
         <source>joyid7</source>
         <translation>P7 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1645"/>
+        <location filename="../mameopt.cpp" line="1646"/>
         <source>joyid8</source>
         <translation>P8 搖桿 ID</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1647"/>
+        <location filename="../mameopt.cpp" line="1648"/>
         <source>ramsize</source>
         <translation>RAM 大小</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1648"/>
+        <location filename="../mameopt.cpp" line="1649"/>
         <source>writeconfig</source>
         <translation>寫入設定資料至 (驅動).ini</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1649"/>
+        <location filename="../mameopt.cpp" line="1650"/>
         <source>skip warnings</source>
         <translation>略過顯示警告畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1658"/>
+        <location filename="../mameopt.cpp" line="1659"/>
         <source>ps3 sixaxis controllers</source>
         <translation>PS3 Sixaxis 控制器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1660"/>
+        <location filename="../mameopt.cpp" line="1661"/>
         <source>sdl audio driver</source>
         <translation>SDL 音訊驅動</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1661"/>
+        <location filename="../mameopt.cpp" line="1662"/>
         <source>sdl video driver</source>
         <translation>SDL 視訊驅動</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1662"/>
+        <location filename="../mameopt.cpp" line="1663"/>
         <source>sdl render driver</source>
         <translation>SDL 描繪驅動</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1858"/>
+        <location filename="../mameopt.cpp" line="1859"/>
         <source>MESS software directory</source>
         <translation>MESS 軟體目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1861"/>
+        <location filename="../mameopt.cpp" line="1862"/>
         <source>GUI paths</source>
         <translation>圖形介面路徑</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2246"/>
+        <location filename="../mameopt.cpp" line="2254"/>
         <source>GUI</source>
         <translation>圖形介面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2329"/>
+        <location filename="../mameopt.cpp" line="2353"/>
         <source>Option</source>
         <translation>選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2330"/>
+        <location filename="../mameopt.cpp" line="2354"/>
         <source>Value</source>
         <translation>值</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2239"/>
+        <location filename="../mameopt.cpp" line="2245"/>
         <source>Options</source>
         <translation>選項</translation>
     </message>
@@ -2151,239 +2222,239 @@ Do you wish to continue?</source>
         <translation type="obsolete">MESS 軟體目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1242"/>
+        <location filename="../mameopt.cpp" line="1241"/>
         <source>Screen</source>
         <translation>畫面</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1240"/>
-        <location filename="../mameopt.cpp" line="2232"/>
+        <location filename="../mameopt.cpp" line="1239"/>
+        <location filename="../mameopt.cpp" line="2238"/>
         <source>Core Video</source>
         <translation>核心視訊</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1241"/>
+        <location filename="../mameopt.cpp" line="1240"/>
         <source>OSD Video</source>
         <translation>系統視訊</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2254"/>
+        <location filename="../mameopt.cpp" line="2265"/>
         <source>Global</source>
         <translation>通用</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1512"/>
+        <location filename="../mameopt.cpp" line="1513"/>
         <source>coin lockout</source>
         <translation>投幣停工</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1686"/>
+        <location filename="../mameopt.cpp" line="1687"/>
         <source>OpenGL-specific</source>
         <translation>OpenGL 特定選項</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1696"/>
+        <location filename="../mameopt.cpp" line="1697"/>
         <source>SDL keyboard mapping</source>
         <translation>SDL 鍵盤對應</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1697"/>
+        <location filename="../mameopt.cpp" line="1698"/>
         <source>SDL joystick mapping</source>
         <translation>SDL 搖桿對應</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1704"/>
+        <location filename="../mameopt.cpp" line="1705"/>
         <source>SDL lowlevel driver</source>
         <translation>SDL 低階驅動</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1444"/>
+        <location filename="../mameopt.cpp" line="1445"/>
         <source>romsets directory</source>
         <translation>ROM 集合的目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1445"/>
+        <location filename="../mameopt.cpp" line="1446"/>
         <source>hash files directory</source>
         <translation>HASH 檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1446"/>
+        <location filename="../mameopt.cpp" line="1447"/>
         <source>samplesets directory</source>
         <translation>樣本檔集合的目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1447"/>
+        <location filename="../mameopt.cpp" line="1448"/>
         <source>artwork files directory</source>
         <translation>裝飾圖檔案目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1448"/>
+        <location filename="../mameopt.cpp" line="1449"/>
         <source>controller definitions directory</source>
         <translation>控制器定義檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1449"/>
+        <location filename="../mameopt.cpp" line="1450"/>
         <source>ini files directory</source>
         <translation>INI 檔案目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1450"/>
+        <location filename="../mameopt.cpp" line="1451"/>
         <source>font files directory</source>
         <translation>字型檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1451"/>
+        <location filename="../mameopt.cpp" line="1452"/>
         <source>cheat files directory</source>
         <translation>作弊碼檔案目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1452"/>
+        <location filename="../mameopt.cpp" line="1453"/>
         <source>language files directory</source>
         <translation>語言檔目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1454"/>
+        <location filename="../mameopt.cpp" line="1455"/>
         <source>ips files directory</source>
         <translation>IPS 檔案目錄</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1472"/>
+        <location filename="../mameopt.cpp" line="1473"/>
         <source>snapshot/movie view</source>
         <translation>擷圖/錄影檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1505"/>
+        <location filename="../mameopt.cpp" line="1506"/>
         <source>enable sound output</source>
         <translation>啟用聲音輸出</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1650"/>
+        <location filename="../mameopt.cpp" line="1651"/>
         <source>use new mess ui</source>
         <translation>使用新的遊戲中設定選單</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1651"/>
+        <location filename="../mameopt.cpp" line="1652"/>
         <source>use natural keyboard</source>
         <translation>使用自然鍵盤</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2493"/>
-        <location filename="../mameopt.cpp" line="2512"/>
+        <location filename="../mameopt.cpp" line="2521"/>
+        <location filename="../mameopt.cpp" line="2540"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2467"/>
+        <location filename="../mameopt.cpp" line="2494"/>
         <source>None</source>
         <translation>無</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1603"/>
+        <location filename="../mameopt.cpp" line="1604"/>
         <source>all screens: physical monitor</source>
         <translation>所有畫面: 實體顯示器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1432"/>
+        <location filename="../mameopt.cpp" line="1433"/>
         <source>external folder list</source>
         <translation>外部資料夾清單</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1604"/>
+        <location filename="../mameopt.cpp" line="1605"/>
         <source>all screens: aspect ratio</source>
         <translation>所有畫面: 長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1605"/>
+        <location filename="../mameopt.cpp" line="1606"/>
         <source>all screens: resolution</source>
         <translation>所有畫面: 解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1606"/>
+        <location filename="../mameopt.cpp" line="1607"/>
         <source>all screens: view</source>
         <translation>所有畫面: 檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1608"/>
+        <location filename="../mameopt.cpp" line="1609"/>
         <source>screen 1: physical monitor</source>
         <translation>畫面 1: 實體顯示器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1609"/>
+        <location filename="../mameopt.cpp" line="1610"/>
         <source>screen 1: aspect ratio</source>
         <translation>畫面 1: 長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1610"/>
+        <location filename="../mameopt.cpp" line="1611"/>
         <source>screen 1: resolution</source>
         <translation>畫面 1: 解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1611"/>
+        <location filename="../mameopt.cpp" line="1612"/>
         <source>screen 1: view</source>
         <translation>畫面 1: 檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1613"/>
+        <location filename="../mameopt.cpp" line="1614"/>
         <source>screen 2: physical monitor</source>
         <translation>畫面 2: 實體顯示器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1614"/>
+        <location filename="../mameopt.cpp" line="1615"/>
         <source>screen 2: aspect ratio</source>
         <translation>畫面 2: 長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1615"/>
+        <location filename="../mameopt.cpp" line="1616"/>
         <source>screen 2: resolution</source>
         <translation>畫面 2: 解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1616"/>
+        <location filename="../mameopt.cpp" line="1617"/>
         <source>screen 2: view</source>
         <translation>畫面 2: 檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1618"/>
+        <location filename="../mameopt.cpp" line="1619"/>
         <source>screen 3: physical monitor</source>
         <translation>畫面 3: 實體顯示器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1619"/>
+        <location filename="../mameopt.cpp" line="1620"/>
         <source>screen 3: aspect ratio</source>
         <translation>畫面 3: 長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1620"/>
+        <location filename="../mameopt.cpp" line="1621"/>
         <source>screen 3: resolution</source>
         <translation>畫面 3: 解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1621"/>
+        <location filename="../mameopt.cpp" line="1622"/>
         <source>screen 3: view</source>
         <translation>畫面 3: 檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1623"/>
+        <location filename="../mameopt.cpp" line="1624"/>
         <source>screen 4: physical monitor</source>
         <translation>畫面 4: 實體顯示器</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1624"/>
+        <location filename="../mameopt.cpp" line="1625"/>
         <source>screen 4: aspect ratio</source>
         <translation>畫面 4: 長寬比例</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1625"/>
+        <location filename="../mameopt.cpp" line="1626"/>
         <source>screen 4: resolution</source>
         <translation>畫面 4: 解析度</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1626"/>
+        <location filename="../mameopt.cpp" line="1627"/>
         <source>screen 4: view</source>
         <translation>畫面 4: 檢視方式</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1434"/>
+        <location filename="../mameopt.cpp" line="1435"/>
         <source>m1 directory</source>
         <translation>M1 目錄</translation>
     </message>
@@ -2429,30 +2500,30 @@ Do you wish to continue?</source>
 <context>
     <name>PlayOptions</name>
     <message>
-        <location filename="../dialogs.cpp" line="222"/>
-        <location filename="../dialogs.cpp" line="224"/>
+        <location filename="../dialogs.cpp" line="223"/>
+        <location filename="../dialogs.cpp" line="225"/>
         <source>File name:</source>
         <translation>檔案名稱:</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="233"/>
+        <location filename="../dialogs.cpp" line="234"/>
         <source>Savestate files</source>
         <translation>狀態檔</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="239"/>
-        <location filename="../dialogs.cpp" line="258"/>
+        <location filename="../dialogs.cpp" line="240"/>
+        <location filename="../dialogs.cpp" line="259"/>
         <source>Input files</source>
         <translation>輸入檔</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="266"/>
-        <location filename="../dialogs.cpp" line="274"/>
+        <location filename="../dialogs.cpp" line="267"/>
+        <location filename="../dialogs.cpp" line="275"/>
         <source>Videos</source>
         <translation>視訊檔</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="282"/>
+        <location filename="../dialogs.cpp" line="283"/>
         <source>Sounds</source>
         <translation>聲音檔</translation>
     </message>
@@ -2513,8 +2584,8 @@ Do you wish to continue?</source>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="262"/>
-        <location filename="../audit.cpp" line="476"/>
+        <location filename="../audit.cpp" line="266"/>
+        <location filename="../audit.cpp" line="485"/>
         <source>Auditing %1 ...</source>
         <translation>正在驗證 %1 ...</translation>
     </message>
@@ -2526,8 +2597,8 @@ Do you wish to continue?</source>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../mamepguimain.cpp" line="1547"/>
-        <location filename="../mamepguimain.cpp" line="1549"/>
+        <location filename="../mamepgui_main.cpp" line="1542"/>
+        <location filename="../mamepgui_main.cpp" line="1544"/>
         <source>Loading...</source>
         <translation>正在載入...</translation>
     </message>
@@ -2535,39 +2606,62 @@ Do you wish to continue?</source>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="712"/>
+        <location filename="../gamelist.cpp" line="637"/>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="640"/>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="536"/>
         <source>Description</source>
         <translation>描述</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="713"/>
+        <location filename="../gamelist.cpp" line="537"/>
         <source>Name</source>
         <translation>名稱</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="714"/>
+        <location filename="../gamelist.cpp" line="538"/>
         <source>ROMs</source>
         <translation>ROM</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="715"/>
+        <location filename="../gamelist.cpp" line="539"/>
         <source>Manufacturer</source>
         <translation>製造廠商</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="716"/>
+        <location filename="../gamelist.cpp" line="540"/>
         <source>Driver</source>
         <translation>驅動</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="717"/>
+        <location filename="../gamelist.cpp" line="541"/>
         <source>Year</source>
         <translation>年代</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="718"/>
+        <location filename="../gamelist.cpp" line="542"/>
         <source>Clone of</source>
         <translation>原作</translation>
+    </message>
+</context>
+<context>
+    <name>UpdaterUI</name>
+    <message>
+        <location filename="../updater.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../updater.ui" line="29"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2577,176 +2671,176 @@ Do you wish to continue?</source>
         <translation type="obsolete">家用機</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="139"/>
+        <location filename="../utils.cpp" line="136"/>
         <source>Joy 2-Way</source>
         <translation>2 方向搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="140"/>
+        <location filename="../utils.cpp" line="137"/>
         <source>Joy 4-Way</source>
         <translation>4 方向搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="141"/>
+        <location filename="../utils.cpp" line="138"/>
         <source>Joy 8-Way</source>
         <translation>8 方向搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="142"/>
+        <location filename="../utils.cpp" line="139"/>
         <source>Paddle</source>
         <translation>操縱桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="143"/>
+        <location filename="../utils.cpp" line="140"/>
         <source>Double Joy 2-Way</source>
         <translation>2 方向雙搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="144"/>
+        <location filename="../utils.cpp" line="141"/>
         <source>Double Joy 4-Way</source>
         <translation>4 方向雙搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="145"/>
+        <location filename="../utils.cpp" line="142"/>
         <source>Double Joy 8-Way</source>
         <translation>8 方向雙搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="146"/>
+        <location filename="../utils.cpp" line="143"/>
         <source>Dial</source>
         <translation>轉盤</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="147"/>
+        <location filename="../utils.cpp" line="144"/>
         <source>Lightgun</source>
         <translation>光線槍</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="148"/>
+        <location filename="../utils.cpp" line="145"/>
         <source>Pedal</source>
         <translation>踏板</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="149"/>
+        <location filename="../utils.cpp" line="146"/>
         <source>Stick</source>
         <translation>搖桿</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="150"/>
+        <location filename="../utils.cpp" line="147"/>
         <source>Trackball</source>
         <translation>軌跡球</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="151"/>
+        <location filename="../utils.cpp" line="148"/>
         <source>Joy 2-Way (V)</source>
         <translation>2 方向搖桿 (縱)</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="152"/>
+        <location filename="../utils.cpp" line="149"/>
         <source>Double Joy 2-Way (V)</source>
         <translation>2 方向雙搖桿 (縱)</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="154"/>
+        <location filename="../utils.cpp" line="151"/>
         <source>Bad Dump</source>
         <translation>錯誤 dump</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="155"/>
+        <location filename="../utils.cpp" line="152"/>
         <source>No Dump</source>
         <translation>尚未 dump</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="157"/>
+        <location filename="../utils.cpp" line="154"/>
         <source>Raster</source>
         <translation>點陣</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="158"/>
+        <location filename="../utils.cpp" line="155"/>
         <source>Vector</source>
         <translation>向量</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="159"/>
+        <location filename="../utils.cpp" line="156"/>
         <source>LCD</source>
         <translation>液晶</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="161"/>
+        <location filename="../utils.cpp" line="158"/>
         <source>PC Card</source>
         <translation>PC 卡</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="162"/>
-        <location filename="../utils.cpp" line="163"/>
-        <location filename="../utils.cpp" line="164"/>
+        <location filename="../utils.cpp" line="159"/>
+        <location filename="../utils.cpp" line="160"/>
+        <location filename="../utils.cpp" line="161"/>
         <source>CD-ROM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="165"/>
+        <location filename="../utils.cpp" line="162"/>
         <source>CompactFlash Card</source>
         <translation>CF 卡</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="166"/>
+        <location filename="../utils.cpp" line="163"/>
+        <location filename="../utils.cpp" line="164"/>
         <source>Disk</source>
         <translation>磁碟</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="167"/>
         <source>Disks</source>
-        <translation>磁碟</translation>
+        <translation type="obsolete">磁碟</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="168"/>
+        <location filename="../utils.cpp" line="165"/>
         <source>GD-ROM</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="169"/>
+        <location filename="../utils.cpp" line="166"/>
         <source>IDE</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="170"/>
-        <location filename="../utils.cpp" line="171"/>
+        <location filename="../utils.cpp" line="167"/>
+        <location filename="../utils.cpp" line="168"/>
         <source>Laserdisc</source>
         <translation>鐳射光碟</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="172"/>
-        <location filename="../utils.cpp" line="173"/>
+        <location filename="../utils.cpp" line="169"/>
+        <location filename="../utils.cpp" line="170"/>
         <source>SCSI</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="174"/>
+        <location filename="../utils.cpp" line="171"/>
         <source>VHS</source>
         <translation>錄影帶</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="244"/>
+        <location filename="../utils.cpp" line="249"/>
         <source>good</source>
         <translation>正確</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="246"/>
+        <location filename="../utils.cpp" line="251"/>
         <source>imperfect</source>
         <translation>不完美</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="248"/>
+        <location filename="../utils.cpp" line="253"/>
         <source>preliminary</source>
         <translation>初步</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="253"/>
+        <location filename="../utils.cpp" line="258"/>
         <source>supported</source>
         <translation>支援</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="255"/>
+        <location filename="../utils.cpp" line="260"/>
         <source>unsupported</source>
         <translation>未支援</translation>
     </message>

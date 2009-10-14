@@ -10,9 +10,17 @@
     </message>
 </context>
 <context>
+    <name>Cmd</name>
+    <message>
+        <location filename="../cmd.ui" line="14"/>
+        <source>Command Line Options</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
     <name>Dirs</name>
     <message>
-        <location filename="../dialogs.cpp" line="340"/>
+        <location filename="../dialogs.cpp" line="341"/>
         <source>Directory name:</source>
         <translation>Nome do diretório:</translation>
     </message>
@@ -40,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="4189"/>
+        <location filename="../gamelist.cpp" line="3379"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="4194"/>
+        <location filename="../gamelist.cpp" line="3384"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61,222 +69,227 @@
         <translation type="obsolete">Lendo listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3178"/>
+        <location filename="../gamelist.cpp" line="2304"/>
         <source>Refresh</source>
         <translation>Atualizar</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2177"/>
+        <location filename="../gamelist.cpp" line="1273"/>
         <source>All Games</source>
         <translation>Todos jogos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2178"/>
+        <location filename="../gamelist.cpp" line="1274"/>
         <source>All Arcades</source>
         <translation>Todas máquinas</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2178"/>
+        <location filename="../gamelist.cpp" line="1274"/>
         <source>All Systems</source>
         <translation>Todos os sistemas</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2179"/>
+        <location filename="../gamelist.cpp" line="1275"/>
         <source>Available Arcades</source>
         <translation>Máquinas disponíveis</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2179"/>
+        <location filename="../gamelist.cpp" line="1275"/>
         <source>Available Systems</source>
         <translation>Sistemas disponíveis</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2180"/>
+        <location filename="../gamelist.cpp" line="1276"/>
         <source>Unavailable Arcades</source>
         <translation>Máquinas indisponíveis</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2180"/>
+        <location filename="../gamelist.cpp" line="1276"/>
         <source>Unavailable Systems</source>
         <translation>Sistemas indisponíveis</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2181"/>
+        <location filename="../gamelist.cpp" line="1277"/>
         <source>Consoles</source>
         <translation>Consoles</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2181"/>
+        <location filename="../gamelist.cpp" line="1277"/>
         <source>Softwares</source>
         <translation>Programas</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2182"/>
+        <location filename="../gamelist.cpp" line="1278"/>
         <source>Manufacturer</source>
         <translation>Fabricante</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2183"/>
+        <location filename="../gamelist.cpp" line="1279"/>
         <source>Year</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2184"/>
+        <location filename="../gamelist.cpp" line="1280"/>
         <source>Driver</source>
         <translation>Driver</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2185"/>
+        <location filename="../gamelist.cpp" line="1281"/>
         <source>BIOS</source>
         <translation>BIOS</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2186"/>
+        <location filename="../gamelist.cpp" line="1282"/>
         <source>CPU</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2187"/>
+        <location filename="../gamelist.cpp" line="1283"/>
         <source>Sound</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2188"/>
+        <location filename="../gamelist.cpp" line="1284"/>
         <source>CHD</source>
         <translation>CHD</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2189"/>
+        <location filename="../gamelist.cpp" line="1285"/>
         <source>Samples</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2190"/>
+        <location filename="../gamelist.cpp" line="1286"/>
         <source>Dumping Status</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2191"/>
+        <location filename="../gamelist.cpp" line="1287"/>
         <source>Working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2192"/>
+        <location filename="../gamelist.cpp" line="1288"/>
         <source>Not working</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2194"/>
+        <location filename="../gamelist.cpp" line="1290"/>
         <source>Clones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2197"/>
+        <location filename="../gamelist.cpp" line="1293"/>
         <source>Refresh Rate</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3504"/>
+        <location filename="../gamelist.cpp" line="1667"/>
+        <source>by %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="2642"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3505"/>
+        <location filename="../gamelist.cpp" line="2643"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2195"/>
+        <location filename="../gamelist.cpp" line="1291"/>
         <source>Resolution</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2193"/>
+        <location filename="../gamelist.cpp" line="1289"/>
         <source>Originals</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2196"/>
+        <location filename="../gamelist.cpp" line="1292"/>
         <source>Colors</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2198"/>
+        <location filename="../gamelist.cpp" line="1294"/>
         <source>Display</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2199"/>
+        <location filename="../gamelist.cpp" line="1295"/>
         <source>Control Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2200"/>
+        <location filename="../gamelist.cpp" line="1296"/>
         <source>Channels</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2201"/>
+        <location filename="../gamelist.cpp" line="1297"/>
         <source>Save State</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2653"/>
+        <location filename="../gamelist.cpp" line="1779"/>
         <source>Play %1</source>
         <translation>Jogar %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2679"/>
+        <location filename="../gamelist.cpp" line="1805"/>
         <source>Remove From &quot;%1%2&quot;</source>
         <translation>Remover de &quot;%1%2&quot;</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2685"/>
+        <location filename="../gamelist.cpp" line="1811"/>
         <source>Properties for %1</source>
         <translation>Propriedades de %1</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2910"/>
+        <location filename="../gamelist.cpp" line="2036"/>
         <source>Common image types</source>
         <translation>Tipos de imagens comuns</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2912"/>
+        <location filename="../gamelist.cpp" line="2038"/>
         <source>All Files</source>
         <translation>Todos os arquivos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2918"/>
+        <location filename="../gamelist.cpp" line="2044"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3037"/>
+        <location filename="../gamelist.cpp" line="2157"/>
         <source>Remove All</source>
         <translation>Remover todos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3598"/>
+        <location filename="../gamelist.cpp" line="2736"/>
         <source>(H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3598"/>
+        <location filename="../gamelist.cpp" line="2736"/>
         <source>(V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3686"/>
+        <location filename="../gamelist.cpp" line="2824"/>
         <source>Root Folder [.]</source>
         <translation>Diretório raiz [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3899"/>
+        <location filename="../gamelist.cpp" line="3037"/>
         <source>Loading M1, please wait...</source>
         <translation>Carregando M1, por favor aguarde ...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3976"/>
+        <location filename="../gamelist.cpp" line="3107"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -284,7 +297,7 @@ must be mounted:
         <translation>%1 necessita dos dispositivos montados:</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2066"/>
+        <location filename="../gamelist.cpp" line="1155"/>
         <source>%1 games</source>
         <translation>Jogos %1</translation>
     </message>
@@ -292,12 +305,12 @@ must be mounted:
 <context>
     <name>IPS</name>
     <message>
-        <location filename="../ips.cpp" line="23"/>
+        <location filename="../ips.cpp" line="24"/>
         <source>Description</source>
         <translation>Descrição</translation>
     </message>
     <message>
-        <location filename="../ips.cpp" line="23"/>
+        <location filename="../ips.cpp" line="24"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
@@ -325,7 +338,7 @@ must be mounted:
 <context>
     <name>M1</name>
     <message>
-        <location filename="../m1.cpp" line="81"/>
+        <location filename="../m1.cpp" line="84"/>
         <source>Loading M1, please wait...</source>
         <translation>Carregando M1, aguarde por favor...</translation>
     </message>
@@ -373,12 +386,12 @@ p, li { white-space: pre-wrap; }
         <translation>3</translation>
     </message>
     <message>
-        <location filename="../m1.cpp" line="17"/>
+        <location filename="../m1.cpp" line="20"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../m1.cpp" line="17"/>
+        <location filename="../m1.cpp" line="20"/>
         <source>Len</source>
         <translation>Len</translation>
     </message>
@@ -386,52 +399,52 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mamepguimain.cpp" line="150"/>
+        <location filename="../mamepgui_main.cpp" line="152"/>
         <source>Snapshot</source>
         <translation>Captura de Tela</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="151"/>
+        <location filename="../mamepgui_main.cpp" line="153"/>
         <source>Flyer</source>
         <translation>Poster</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="152"/>
+        <location filename="../mamepgui_main.cpp" line="154"/>
         <source>Cabinet</source>
         <translation>Gabinete</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="153"/>
+        <location filename="../mamepgui_main.cpp" line="155"/>
         <source>Marquee</source>
         <translation>Marquise</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="154"/>
+        <location filename="../mamepgui_main.cpp" line="156"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="155"/>
+        <location filename="../mamepgui_main.cpp" line="157"/>
         <source>Control Panel</source>
         <translation>Painel de Controle</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="156"/>
+        <location filename="../mamepgui_main.cpp" line="158"/>
         <source>PCB</source>
         <translation>PCB</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="158"/>
+        <location filename="../mamepgui_main.cpp" line="160"/>
         <source>History</source>
         <translation>Histórico</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="159"/>
+        <location filename="../mamepgui_main.cpp" line="161"/>
         <source>MAMEInfo</source>
         <translation>MAMEinfo</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="161"/>
+        <location filename="../mamepgui_main.cpp" line="163"/>
         <source>Story</source>
         <translation>Estória</translation>
     </message>
@@ -452,28 +465,28 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Ajuda</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="194"/>
+        <location filename="../mamepgui_main.ui" line="205"/>
         <source>Toolbar</source>
         <translation>Barra de Ferramentas</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="219"/>
-        <location filename="../mamepguimain.ui" line="224"/>
+        <location filename="../mamepgui_main.cpp" line="221"/>
+        <location filename="../mamepgui_main.ui" line="235"/>
         <source>Search</source>
         <translation>Busca</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="238"/>
+        <location filename="../mamepgui_main.ui" line="249"/>
         <source>GUI Log</source>
         <translation>Log do GUI</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="265"/>
+        <location filename="../mamepgui_main.ui" line="276"/>
         <source>Folder List</source>
         <translation>Lista de Pastas</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="285"/>
+        <location filename="../mamepgui_main.ui" line="296"/>
         <source>1</source>
         <translation>1</translation>
     </message>
@@ -482,7 +495,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Atualizar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="311"/>
+        <location filename="../mamepgui_main.ui" line="322"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
@@ -491,7 +504,7 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Sair</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="319"/>
+        <location filename="../mamepgui_main.ui" line="330"/>
         <source>Alt+X</source>
         <translation>Alt-X</translation>
     </message>
@@ -524,52 +537,52 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Jogar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="395"/>
+        <location filename="../mamepgui_main.ui" line="406"/>
         <source>Audit</source>
         <translation>Auditar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="403"/>
+        <location filename="../mamepgui_main.ui" line="414"/>
         <source>Description</source>
         <translation>Descrição</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="411"/>
+        <location filename="../mamepgui_main.ui" line="422"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="419"/>
+        <location filename="../mamepgui_main.ui" line="430"/>
         <source>ROMs</source>
         <translation>ROMs</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="427"/>
+        <location filename="../mamepgui_main.ui" line="438"/>
         <source>Manufacturer</source>
         <translation>Fabricante</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="435"/>
+        <location filename="../mamepgui_main.ui" line="446"/>
         <source>Driver</source>
         <translation>Driver</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="443"/>
+        <location filename="../mamepgui_main.ui" line="454"/>
         <source>Year</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="451"/>
+        <location filename="../mamepgui_main.ui" line="462"/>
         <source>Clone of</source>
         <translation>Clone de</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="462"/>
+        <location filename="../mamepgui_main.ui" line="470"/>
         <source>Sort Ascending</source>
         <translation>Listar em ordem crescente</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="473"/>
+        <location filename="../mamepgui_main.ui" line="478"/>
         <source>Sort Descending</source>
         <translation>Listar em ordem decrescente</translation>
     </message>
@@ -598,163 +611,199 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Idioma</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="14"/>
+        <location filename="../mamepgui_main.ui" line="14"/>
         <source>M+GUI</source>
         <translation>M+GUI</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="44"/>
+        <location filename="../mamepgui_main.ui" line="44"/>
         <source>&amp;File</source>
         <translation>&amp;Arquivo</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="59"/>
+        <location filename="../mamepgui_main.ui" line="61"/>
         <source>Save Fix-dat File</source>
         <translation>Salvar arquivo Fix-dat</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="67"/>
+        <location filename="../mamepgui_main.ui" line="71"/>
         <source>Add to Custom Folder</source>
         <translation>Adicionar em pasta personalizada</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="72"/>
+        <location filename="../mamepgui_main.ui" line="76"/>
         <source>Remove</source>
         <translation>Remover</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="92"/>
+        <location filename="../mamepgui_main.ui" line="96"/>
         <source>&amp;View</source>
         <translation>&amp;Visualizar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="96"/>
+        <location filename="../mamepgui_main.ui" line="100"/>
         <source>Customize &amp;Fields</source>
         <translation>&amp;Campos personalizados</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="111"/>
+        <location filename="../mamepgui_main.ui" line="105"/>
         <source>Game &amp;Pictures</source>
         <translation>&amp;Imagens de jogos</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="119"/>
+        <location filename="../mamepgui_main.ui" line="113"/>
         <source>Game Do&amp;cuments</source>
         <translation>Do&amp;cumentação de jogos</translation>
     </message>
     <message>
-        <source>Arrange &amp;Icons</source>
-        <translation type="obsolete">Arranjar ícones</translation>
+        <location filename="../mamepgui_main.ui" line="123"/>
+        <source>&amp;Custom Filters</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="143"/>
+        <location filename="../mamepgui_main.ui" line="131"/>
+        <source>Arrange &amp;Icons</source>
+        <translation type="unfinished">Arranjar ícones</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="154"/>
         <source>&amp;Options</source>
         <translation>&amp;Opções</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="147"/>
+        <location filename="../mamepgui_main.ui" line="158"/>
         <source>&amp;Language</source>
         <translation>&amp;Linguagem</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="159"/>
+        <location filename="../mamepgui_main.ui" line="170"/>
         <source>&amp;Background Images</source>
         <translation>&amp;Imagens de fundo</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="167"/>
+        <location filename="../mamepgui_main.ui" line="178"/>
         <source>GUI &amp;Style</source>
         <translation>Estilo &amp;da interface</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="179"/>
+        <location filename="../mamepgui_main.ui" line="190"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="299"/>
+        <location filename="../mamepgui_main.ui" line="310"/>
         <source>Default Game &amp;Options</source>
         <translation>Opções padrão de jogos</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="308"/>
+        <location filename="../mamepgui_main.ui" line="319"/>
         <source>&amp;Refresh</source>
         <translation>&amp;Atualizar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="316"/>
+        <location filename="../mamepgui_main.ui" line="327"/>
         <source>E&amp;xit</source>
         <translation>&amp;Sair</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="328"/>
+        <location filename="../mamepgui_main.ui" line="339"/>
         <source>&amp;About</source>
         <translation>&amp;Sobre</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="340"/>
+        <location filename="../mamepgui_main.ui" line="351"/>
         <source>&amp;Details</source>
         <translation>&amp;Detalhes</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="355"/>
+        <location filename="../mamepgui_main.ui" line="366"/>
         <source>&amp;Grouped</source>
         <translation>&amp;Agrupado</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="367"/>
+        <location filename="../mamepgui_main.ui" line="378"/>
         <source>L&amp;arge Icons</source>
         <translation>Ícones g&amp;randes</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="375"/>
+        <location filename="../mamepgui_main.ui" line="386"/>
         <source>&amp;Vertical Tabs</source>
         <translation>A&amp;bas verticais</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="385"/>
+        <location filename="../mamepgui_main.ui" line="396"/>
         <source>&amp;Record Input...</source>
         <translation>&amp;Gravar comandos...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="390"/>
+        <location filename="../mamepgui_main.ui" line="401"/>
         <source>Configure &amp;IPS...</source>
         <translation>Configurar &amp;IPS...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="482"/>
+        <location filename="../mamepgui_main.ui" line="487"/>
         <source>&amp;Directories...</source>
         <translation>&amp;Diretórios...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="491"/>
+        <location filename="../mamepgui_main.ui" line="496"/>
         <source>Pr&amp;operties</source>
         <translation>&amp;Propriedades</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="594"/>
+        <location filename="../mamepgui_main.ui" line="599"/>
         <source>Highlight Selected Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="648"/>
+        <location filename="../mamepgui_main.ui" line="632"/>
+        <source>Load &amp;Savestate...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="653"/>
         <source>Completely Missing Sets Only...</source>
         <translation>Apenas lista de sets incompletos...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="653"/>
+        <location filename="../mamepgui_main.ui" line="658"/>
         <source>Incomplete Sets Only...</source>
         <translation>Somente sets incompletos...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="658"/>
+        <location filename="../mamepgui_main.ui" line="663"/>
         <source>All Set Issues...</source>
         <translation>Todos sets problemáticos...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="668"/>
+        <location filename="../mamepgui_main.ui" line="673"/>
         <source>&amp;Audit All Games</source>
         <translation>&amp;Auditar todos os jogos</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="681"/>
+        <source>Hide C&amp;lones</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="689"/>
+        <source>Hide Non-Wor&amp;king</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="697"/>
+        <source>Hide &amp;Unavailable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="702"/>
+        <source>Command Line...</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="710"/>
+        <source>All Sets...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <source>English (United States)</source>
@@ -773,49 +822,48 @@ p, li { white-space: pre-wrap; }
         <translation type="obsolete">Japonês</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="552"/>
+        <location filename="../mamepgui_main.ui" line="557"/>
         <source>Local &amp;Language Game List</source>
         <translation>&amp;Lista de jogos da lingua atual</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="607"/>
+        <location filename="../mamepgui_main.ui" line="612"/>
         <source>&amp;Playback Input...</source>
         <translation>&amp;Ver jogo gravado...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="612"/>
+        <location filename="../mamepgui_main.ui" line="617"/>
         <source>Record &amp;Wave Output...</source>
         <translation>Gra&amp;var jogo...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="617"/>
+        <location filename="../mamepgui_main.ui" line="622"/>
         <source>Record &amp;MNG Output...</source>
         <translation>Gravar vídeo em &amp;MNG...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="622"/>
+        <location filename="../mamepgui_main.ui" line="627"/>
         <source>Record &amp;AVI Output...</source>
         <translation>Gravar vídeo em &amp;AVI...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="627"/>
         <source>Load &amp;Savestate</source>
-        <translation>Carregar &amp;statesave</translation>
+        <translation type="obsolete">Carregar &amp;statesave</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="958"/>
+        <location filename="../mamepgui_main.cpp" line="946"/>
         <source>Restart</source>
         <translation>Reiniciar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="959"/>
+        <location filename="../mamepgui_main.cpp" line="947"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>Para efetuar as alterações será necessário reiniciar.
 Tem certeza disso?</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="544"/>
+        <location filename="../mamepgui_main.ui" line="549"/>
         <source>Enforce Aspect Ratio</source>
         <translation>Reforçar relação de aspecto</translation>
     </message>
@@ -828,136 +876,164 @@ Tem certeza disso?</translation>
         <translation type="obsolete">Usar Idioma Local da Lista de Jogos</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="83"/>
+        <location filename="../mamepgui_main.cpp" line="85"/>
         <source>status</source>
         <translation>status</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="88"/>
+        <location filename="../mamepgui_main.cpp" line="90"/>
         <source>emulation</source>
         <translation>emulação</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="93"/>
+        <location filename="../mamepgui_main.cpp" line="95"/>
         <source>color</source>
         <translation>cor</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="98"/>
+        <location filename="../mamepgui_main.cpp" line="100"/>
         <source>sound</source>
         <translation>som</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="103"/>
+        <location filename="../mamepgui_main.cpp" line="105"/>
         <source>graphic</source>
         <translation>gráfico</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="108"/>
+        <location filename="../mamepgui_main.cpp" line="110"/>
         <source>savestate</source>
         <translation>salvar status</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="120"/>
+        <location filename="../mamepgui_main.cpp" line="122"/>
         <source>cocktail</source>
         <translation>cocktail</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="132"/>
+        <location filename="../mamepgui_main.cpp" line="134"/>
         <source>protection</source>
         <translation>proteção</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="160"/>
+        <location filename="../mamepgui_main.cpp" line="162"/>
         <source>DriverInfo</source>
         <translation>Informações do driver</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="167"/>
+        <location filename="../mamepgui_main.cpp" line="169"/>
         <source>Preferences...</source>
         <translation>Preferências...</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="428"/>
+        <location filename="../mamepgui_main.cpp" line="434"/>
         <source>Executable files</source>
         <translation>Arquivos executáveis</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="431"/>
-        <location filename="../mamepguimain.cpp" line="737"/>
+        <location filename="../mamepgui_main.cpp" line="437"/>
+        <location filename="../mamepgui_main.cpp" line="760"/>
         <source>All Files (*)</source>
         <translation>Todos arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="434"/>
+        <location filename="../mamepgui_main.cpp" line="440"/>
         <source>MAME/MESS executable:</source>
         <translation>Executável do MAME/MESS:</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="735"/>
+        <location filename="../mamepgui_main.cpp" line="758"/>
         <source>Dat files</source>
         <translation>Arquivos DAT</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="742"/>
+        <location filename="../mamepgui_main.cpp" line="765"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="48"/>
+        <location filename="../mamepgui_main.ui" line="48"/>
         <source>Play with Options</source>
         <translation>Jogar com as opções</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="124"/>
+        <location filename="../mamepgui_main.ui" line="118"/>
         <source>&amp;Show Folders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="557"/>
+        <location filename="../mamepgui_main.ui" line="562"/>
         <source>FAQ</source>
         <translation>FAQ</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="562"/>
+        <location filename="../mamepgui_main.ui" line="567"/>
         <source>Discussion Board</source>
         <translation>Lista de discussões</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="567"/>
+        <location filename="../mamepgui_main.ui" line="572"/>
         <source>Readme</source>
         <translation>Leia-me</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="575"/>
+        <location filename="../mamepgui_main.ui" line="580"/>
         <source>Stretch</source>
         <translation>Escalonar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="583"/>
+        <location filename="../mamepgui_main.ui" line="588"/>
         <source>Tile</source>
         <translation>Ladrilho</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="162"/>
+        <location filename="../mamepgui_main.cpp" line="164"/>
         <source>Command</source>
         <translation>Commando</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.cpp" line="225"/>
+        <location filename="../mamepgui_main.cpp" line="227"/>
         <source>Clear</source>
         <translation>Limpar</translation>
     </message>
     <message>
-        <location filename="../mamepguimain.ui" line="602"/>
+        <location filename="../mamepgui_main.ui" line="607"/>
         <source>Strech Screenshot Larger</source>
         <translation>Escalonar papel de parede grande</translation>
     </message>
 </context>
 <context>
+    <name>MameDat</name>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="404"/>
+        <source>Saving listxml</source>
+        <translation type="unfinished">Salvando listxml</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="606"/>
+        <source>Cache signature error.</source>
+        <translation type="unfinished">Erro na assinatura cache</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="615"/>
+        <source>Cache streamVersion has been updated. A full refresh is required.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="835"/>
+        <source>Parsing listxml</source>
+        <translation type="unfinished">Lendo listxml</translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_types.cpp" line="953"/>
+        <source>Loading listxml: %1 games</source>
+        <translation type="unfinished">Carregando listxml: %1 jogos</translation>
+    </message>
+</context>
+<context>
     <name>MameExeRomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="530"/>
+        <location filename="../audit.cpp" line="539"/>
         <source>Checking...</source>
         <translation>Verificando...</translation>
     </message>
@@ -965,29 +1041,24 @@ Tem certeza disso?</translation>
 <context>
     <name>MameGame</name>
     <message>
-        <location filename="../gamelist.cpp" line="1575"/>
         <source>Parsing listxml</source>
-        <translation>Lendo listxml</translation>
+        <translation type="obsolete">Lendo listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1686"/>
         <source>Loading listxml: %1 games</source>
-        <translation>Carregando listxml: %1 jogos</translation>
+        <translation type="obsolete">Carregando listxml: %1 jogos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1145"/>
         <source>Saving listxml</source>
-        <translation>Salvando listxml</translation>
+        <translation type="obsolete">Salvando listxml</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1347"/>
         <source>Cache signature error.</source>
-        <translation>Erro na assinatura cache</translation>
+        <translation type="obsolete">Erro na assinatura cache</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="1356"/>
         <source>Cache version has been updated. A full refresh is required.</source>
-        <translation>Versão cache foi atualizada. Será necessário uma atualização completa.</translation>
+        <translation type="obsolete">Versão cache foi atualizada. Será necessário uma atualização completa.</translation>
     </message>
 </context>
 <context>
@@ -1000,12 +1071,12 @@ Tem certeza disso?</translation>
 <context>
     <name>OptionDelegate</name>
     <message>
-        <location filename="../mameopt.cpp" line="1011"/>
+        <location filename="../mameopt.cpp" line="1010"/>
         <source>Directory name:</source>
         <translation>Nome do diretório:</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1050"/>
+        <location filename="../mameopt.cpp" line="1049"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
     </message>
@@ -1022,22 +1093,22 @@ Tem certeza disso?</translation>
         <translation type="obsolete">Arquivos de Config (*.cfg)</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1046"/>
+        <location filename="../mameopt.cpp" line="1045"/>
         <source>All Files</source>
         <translation>Todos arquivos</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1063"/>
+        <location filename="../mameopt.cpp" line="1062"/>
         <source>Dat files</source>
         <translation>Arquivos DAT</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1069"/>
+        <location filename="../mameopt.cpp" line="1068"/>
         <source>Executable files</source>
         <translation>Arquivos executáveis</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1075"/>
+        <location filename="../mameopt.cpp" line="1074"/>
         <source>Config files</source>
         <translation>Arquivos de configuração</translation>
     </message>
@@ -1049,473 +1120,473 @@ Tem certeza disso?</translation>
         <translation type="obsolete">Diretório</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1243"/>
+        <location filename="../mameopt.cpp" line="1242"/>
         <source>Audio</source>
         <translation>Áudio</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1244"/>
+        <location filename="../mameopt.cpp" line="1243"/>
         <source>Control</source>
         <translation>Controle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1245"/>
+        <location filename="../mameopt.cpp" line="1244"/>
         <source>Vector</source>
         <translation>Vetor</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1246"/>
+        <location filename="../mameopt.cpp" line="1245"/>
         <source>Misc</source>
         <translation>Misc</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1431"/>
+        <location filename="../mameopt.cpp" line="1432"/>
         <source>background directory</source>
         <translation>diretório de fundo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1424"/>
+        <location filename="../mameopt.cpp" line="1425"/>
         <source>cabinet directory</source>
         <translation>diretório de gabinete</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1425"/>
+        <location filename="../mameopt.cpp" line="1426"/>
         <source>control panel directory</source>
         <translation>diretório de painel de controle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1426"/>
+        <location filename="../mameopt.cpp" line="1427"/>
         <source>flyer directory</source>
         <translation>diretório de poster</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1430"/>
+        <location filename="../mameopt.cpp" line="1431"/>
         <source>icons directory</source>
         <translation>diretório de ícones</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1427"/>
+        <location filename="../mameopt.cpp" line="1428"/>
         <source>marquee directory</source>
         <translation>diretório de marquise</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1428"/>
+        <location filename="../mameopt.cpp" line="1429"/>
         <source>pcb directory</source>
         <translation>diretório pcb</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1429"/>
+        <location filename="../mameopt.cpp" line="1430"/>
         <source>title directory</source>
         <translation>diretório de títulos</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1438"/>
+        <location filename="../mameopt.cpp" line="1439"/>
         <source>mame binary</source>
         <translation>binário mame</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1440"/>
+        <location filename="../mameopt.cpp" line="1441"/>
         <source>driver config</source>
         <translation>config driver</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1442"/>
+        <location filename="../mameopt.cpp" line="1443"/>
         <source>readconfig</source>
         <translation>ler config</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1453"/>
+        <location filename="../mameopt.cpp" line="1454"/>
         <source>localized directory</source>
         <translation>diretório localizado</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1456"/>
+        <location filename="../mameopt.cpp" line="1457"/>
         <source>cfg directory</source>
         <translation>diretório de cfg</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1457"/>
+        <location filename="../mameopt.cpp" line="1458"/>
         <source>nvram directory</source>
         <translation>diretório de nvram</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1458"/>
+        <location filename="../mameopt.cpp" line="1459"/>
         <source>memcard directory</source>
         <translation>diretório de memcard</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1459"/>
+        <location filename="../mameopt.cpp" line="1460"/>
         <source>input directory</source>
         <translation>diretório de input</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1460"/>
+        <location filename="../mameopt.cpp" line="1461"/>
         <source>state directory</source>
         <translation>diretório de state</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1461"/>
+        <location filename="../mameopt.cpp" line="1462"/>
         <source>snapshot directory</source>
         <translation>diretório de snapshot</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1462"/>
+        <location filename="../mameopt.cpp" line="1463"/>
         <source>diff directory</source>
         <translation>diretório de diff</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1463"/>
+        <location filename="../mameopt.cpp" line="1464"/>
         <source>comment directory</source>
         <translation>diretório de diff</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1464"/>
+        <location filename="../mameopt.cpp" line="1465"/>
         <source>hiscore directory</source>
         <translation>diretório de hiscore</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1435"/>
+        <location filename="../mameopt.cpp" line="1436"/>
         <source>history file</source>
         <translation>arquivo history</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1234"/>
-        <location filename="../mameopt.cpp" line="2230"/>
+        <location filename="../mameopt.cpp" line="1233"/>
+        <location filename="../mameopt.cpp" line="2236"/>
         <source>GUI Paths</source>
         <translation>GUI Paths</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1235"/>
+        <location filename="../mameopt.cpp" line="1234"/>
         <source>MAME Paths</source>
         <translation>MAME Paths</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1236"/>
+        <location filename="../mameopt.cpp" line="1235"/>
         <source>MESS Paths</source>
         <translation>MESS Paths</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1436"/>
+        <location filename="../mameopt.cpp" line="1437"/>
         <source>story file</source>
         <translation>arquivo story</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1437"/>
+        <location filename="../mameopt.cpp" line="1438"/>
         <source>mameinfo file</source>
         <translation>arquivo mameinfo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1466"/>
+        <location filename="../mameopt.cpp" line="1467"/>
         <source>command file</source>
         <translation>arquivo command</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1467"/>
+        <location filename="../mameopt.cpp" line="1468"/>
         <source>hiscore file</source>
         <translation>arquivo hiscore</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1469"/>
+        <location filename="../mameopt.cpp" line="1470"/>
         <source>auto restore and save</source>
         <translation>auto restaurar e salvar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1470"/>
+        <location filename="../mameopt.cpp" line="1471"/>
         <source>snapshot/movie pattern</source>
         <translation>padrões de vídeo/captura</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1471"/>
+        <location filename="../mameopt.cpp" line="1472"/>
         <source>snapshot/movie resolution</source>
         <translation>resolução de vídeo/captura</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1474"/>
+        <location filename="../mameopt.cpp" line="1475"/>
         <source>auto frame skipping</source>
         <translation>auto pulo de quadro</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1475"/>
+        <location filename="../mameopt.cpp" line="1476"/>
         <source>frame skipping</source>
         <translation>pulo de quadro</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1476"/>
+        <location filename="../mameopt.cpp" line="1477"/>
         <source>seconds to run</source>
         <translation>segundos de execução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1477"/>
+        <location filename="../mameopt.cpp" line="1478"/>
         <source>throttle</source>
         <translation>desacelerador</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1478"/>
+        <location filename="../mameopt.cpp" line="1479"/>
         <source>sleep when possible</source>
         <translation>dormir quando possível</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1479"/>
+        <location filename="../mameopt.cpp" line="1480"/>
         <source>gameplay speed</source>
         <translation>velocidade de jogabilidade</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1480"/>
+        <location filename="../mameopt.cpp" line="1481"/>
         <source>auto refresh speed</source>
         <translation>Velocidade de atualização automática</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1482"/>
+        <location filename="../mameopt.cpp" line="1483"/>
         <source>rotate</source>
         <translation>girar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1483"/>
+        <location filename="../mameopt.cpp" line="1484"/>
         <source>rotate clockwise</source>
         <translation>girar no sentido hoário</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1484"/>
+        <location filename="../mameopt.cpp" line="1485"/>
         <source>rotate anti-clockwise</source>
         <translation>girar no sentido anti-horário</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1485"/>
+        <location filename="../mameopt.cpp" line="1486"/>
         <source>auto rotate clockwise</source>
         <translation>auto girar no sentido horário</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1486"/>
+        <location filename="../mameopt.cpp" line="1487"/>
         <source>auto rotate anti-clockwise</source>
         <translation>auto girar no sentido anti-horário</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1487"/>
+        <location filename="../mameopt.cpp" line="1488"/>
         <source>flip screen left-right</source>
         <translation>Girar tela esquerda-direita</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1488"/>
+        <location filename="../mameopt.cpp" line="1489"/>
         <source>flip screen upside-down</source>
         <translation>Girar tela de ponta-cabeça</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1490"/>
+        <location filename="../mameopt.cpp" line="1491"/>
         <source>crop artwork</source>
         <translation>cortar artwork</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1491"/>
+        <location filename="../mameopt.cpp" line="1492"/>
         <source>use backdrops</source>
         <translation>usar backdrops</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1492"/>
+        <location filename="../mameopt.cpp" line="1493"/>
         <source>use overlays</source>
         <translation>usar overlays</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1493"/>
+        <location filename="../mameopt.cpp" line="1494"/>
         <source>use bezels</source>
         <translation>usar bezels</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1495"/>
+        <location filename="../mameopt.cpp" line="1496"/>
         <source>brightness correction</source>
         <translation>correção de brilho</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1496"/>
+        <location filename="../mameopt.cpp" line="1497"/>
         <source>contrast correction</source>
         <translation>correção de contraste</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1497"/>
+        <location filename="../mameopt.cpp" line="1498"/>
         <source>gamma correction</source>
         <translation>correção de gama</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1498"/>
+        <location filename="../mameopt.cpp" line="1499"/>
         <source>pause brightness</source>
         <translation>brilho em pausa</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1499"/>
+        <location filename="../mameopt.cpp" line="1500"/>
         <source>image enhancement</source>
         <translation>realce de imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1501"/>
+        <location filename="../mameopt.cpp" line="1502"/>
         <source>draw antialiased vectors</source>
         <translation>desenha vetores com antialias</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1502"/>
+        <location filename="../mameopt.cpp" line="1503"/>
         <source>beam width</source>
         <translation>largura do feixe de luz</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1503"/>
+        <location filename="../mameopt.cpp" line="1504"/>
         <source>flicker</source>
         <translation>cintilação</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1506"/>
+        <location filename="../mameopt.cpp" line="1507"/>
         <source>sample rate</source>
         <translation>taxa de amostra de som</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1508"/>
+        <location filename="../mameopt.cpp" line="1509"/>
         <source>use samples</source>
         <translation>usar amostras de som</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1509"/>
+        <location filename="../mameopt.cpp" line="1510"/>
         <source>volume attenuation</source>
         <translation>atenuação de volume</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1510"/>
+        <location filename="../mameopt.cpp" line="1511"/>
         <source>use volume auto adjust</source>
         <translation>usar auto-ajuste de volume</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1513"/>
+        <location filename="../mameopt.cpp" line="1514"/>
         <source>default input layout</source>
         <translation>configuração padrão de entrada</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1514"/>
+        <location filename="../mameopt.cpp" line="1515"/>
         <source>enable mouse input</source>
         <translation>habilitar entrada de mouse</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1515"/>
+        <location filename="../mameopt.cpp" line="1516"/>
         <source>enable joystick input</source>
         <translation>habilitar entrada de controle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1516"/>
+        <location filename="../mameopt.cpp" line="1517"/>
         <source>enable lightgun input</source>
         <translation>habilitar entrada de pistola laser</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1517"/>
+        <location filename="../mameopt.cpp" line="1518"/>
         <source>enable multiple keyboards</source>
         <translation>habilitar múltiplos teclados</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1518"/>
+        <location filename="../mameopt.cpp" line="1519"/>
         <source>enable multiple mice</source>
         <translation>habilitar multiplos mouses</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1519"/>
+        <location filename="../mameopt.cpp" line="1520"/>
         <source>enable steadykey support</source>
         <translation>habilitar suporte a teclas de aderência</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1520"/>
+        <location filename="../mameopt.cpp" line="1521"/>
         <source>offscreen shots reload</source>
         <translation>recarregar atirando fora da tela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1521"/>
+        <location filename="../mameopt.cpp" line="1522"/>
         <source>joystick map</source>
         <translation>mapa de joystic</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1522"/>
+        <location filename="../mameopt.cpp" line="1523"/>
         <source>joystick deadzone</source>
         <translation>zona morta do joystic</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1523"/>
+        <location filename="../mameopt.cpp" line="1524"/>
         <source>joystick saturation</source>
         <translation>saturação do joystic</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1525"/>
+        <location filename="../mameopt.cpp" line="1526"/>
         <source>paddle device</source>
         <translation>dispositivo paddle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1526"/>
+        <location filename="../mameopt.cpp" line="1527"/>
         <source>adstick device</source>
         <translation>dispositivo controle ad</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1527"/>
+        <location filename="../mameopt.cpp" line="1528"/>
         <source>pedal device</source>
         <translation>dispositivo pedal</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1528"/>
+        <location filename="../mameopt.cpp" line="1529"/>
         <source>dial device</source>
         <translation>dispositivo dial</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1529"/>
+        <location filename="../mameopt.cpp" line="1530"/>
         <source>trackball device</source>
         <translation>dispositivo trackball</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1530"/>
+        <location filename="../mameopt.cpp" line="1531"/>
         <source>lightgun device</source>
         <translation>dispositivo pistola laser</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1531"/>
+        <location filename="../mameopt.cpp" line="1532"/>
         <source>positional device</source>
         <translation>dispositivo posicional</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1532"/>
+        <location filename="../mameopt.cpp" line="1533"/>
         <source>mouse device</source>
         <translation>dispositivo mouse</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1534"/>
+        <location filename="../mameopt.cpp" line="1535"/>
         <source>log</source>
         <translation>log</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1535"/>
+        <location filename="../mameopt.cpp" line="1536"/>
         <source>verbose</source>
         <translation>verbose</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1536"/>
+        <location filename="../mameopt.cpp" line="1537"/>
         <source>update in pause</source>
         <translation>atualiza em pause</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1538"/>
+        <location filename="../mameopt.cpp" line="1539"/>
         <source>bios</source>
         <translation>bios</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1539"/>
+        <location filename="../mameopt.cpp" line="1540"/>
         <source>enable game cheats</source>
         <translation>habilitar cheats de games</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1540"/>
+        <location filename="../mameopt.cpp" line="1541"/>
         <source>skip game info</source>
         <translation>pular info de jogos</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1541"/>
+        <location filename="../mameopt.cpp" line="1542"/>
         <source>ips</source>
         <translation>ips</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1542"/>
+        <location filename="../mameopt.cpp" line="1543"/>
         <source>quit game with confirmation</source>
         <translation>confirmar ao sair do jogo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1543"/>
+        <location filename="../mameopt.cpp" line="1544"/>
         <source>auto pause when playback is finished</source>
         <translation>auto pausar quando reprodução terminar</translation>
     </message>
@@ -1524,297 +1595,297 @@ Tem certeza disso?</translation>
         <translation type="obsolete">m68k core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1545"/>
+        <location filename="../mameopt.cpp" line="1546"/>
         <source>transparent in-game ui</source>
         <translation>interface do usuário transparente no jogo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1546"/>
+        <location filename="../mameopt.cpp" line="1547"/>
         <source>in-game ui transparency</source>
         <translation>no jogo interface do usuário transparente</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1548"/>
+        <location filename="../mameopt.cpp" line="1549"/>
         <source>font blank</source>
         <translation>fonte lacuna</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1549"/>
+        <location filename="../mameopt.cpp" line="1550"/>
         <source>font normal</source>
         <translation>fonte normal</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1550"/>
+        <location filename="../mameopt.cpp" line="1551"/>
         <source>font special</source>
         <translation>fonte especial</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1551"/>
+        <location filename="../mameopt.cpp" line="1552"/>
         <source>system background</source>
         <translation>tela de fundo do sistema</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1552"/>
+        <location filename="../mameopt.cpp" line="1553"/>
         <source>button red</source>
         <translation>botão vermelho</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1553"/>
+        <location filename="../mameopt.cpp" line="1554"/>
         <source>button yellow</source>
         <translation>botão amarelo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1554"/>
+        <location filename="../mameopt.cpp" line="1555"/>
         <source>button green</source>
         <translation>botão verde</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1555"/>
+        <location filename="../mameopt.cpp" line="1556"/>
         <source>button blue</source>
         <translation>botão azul</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1556"/>
+        <location filename="../mameopt.cpp" line="1557"/>
         <source>button purple</source>
         <translation>botão roxo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1557"/>
+        <location filename="../mameopt.cpp" line="1558"/>
         <source>button pink</source>
         <translation>botão rosa</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1558"/>
+        <location filename="../mameopt.cpp" line="1559"/>
         <source>button aqua</source>
         <translation>botão aqua</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1559"/>
+        <location filename="../mameopt.cpp" line="1560"/>
         <source>button silver</source>
         <translation>botão prata</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1560"/>
+        <location filename="../mameopt.cpp" line="1561"/>
         <source>button navy</source>
         <translation>botão marinho</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1561"/>
+        <location filename="../mameopt.cpp" line="1562"/>
         <source>button lime</source>
         <translation>botão cal</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1562"/>
+        <location filename="../mameopt.cpp" line="1563"/>
         <source>cursor</source>
         <translation>cursor</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1564"/>
+        <location filename="../mameopt.cpp" line="1565"/>
         <source>language</source>
         <translation>linguagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1565"/>
+        <location filename="../mameopt.cpp" line="1566"/>
         <source>use lang list</source>
         <translation>usar lista de tradução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1567"/>
+        <location filename="../mameopt.cpp" line="1568"/>
         <source>oslog</source>
         <translation>log do os</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1568"/>
+        <location filename="../mameopt.cpp" line="1569"/>
         <source>watchdog</source>
         <translation>observatorio</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1570"/>
+        <location filename="../mameopt.cpp" line="1571"/>
         <source>thread priority</source>
         <translation>linha de prioridade </translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1571"/>
+        <location filename="../mameopt.cpp" line="1572"/>
         <source>enable multi-threading</source>
         <translation>habilitar multi-threading</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1575"/>
+        <location filename="../mameopt.cpp" line="1576"/>
         <source>video output method</source>
         <translation>método de saida de vídeo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1577"/>
+        <location filename="../mameopt.cpp" line="1578"/>
         <source>number of screens to create</source>
         <translation>número de telas a criar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1578"/>
+        <location filename="../mameopt.cpp" line="1579"/>
         <source>run in a window</source>
         <translation>executar em modo janela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1579"/>
+        <location filename="../mameopt.cpp" line="1580"/>
         <source>start out maximized</source>
         <translation>iniciar em janela maximizada</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1580"/>
+        <location filename="../mameopt.cpp" line="1581"/>
         <source>enforce aspect ratio</source>
         <translation>reforçar relação de aspecto</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1581"/>
+        <location filename="../mameopt.cpp" line="1582"/>
         <source>scale screen</source>
         <translation>tela de escala</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1582"/>
+        <location filename="../mameopt.cpp" line="1583"/>
         <source>non-integer stretching</source>
         <translation>escalonamento não-inteiro</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1583"/>
+        <location filename="../mameopt.cpp" line="1584"/>
         <source>visual effects</source>
         <translation>efeitos visuais</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1584"/>
+        <location filename="../mameopt.cpp" line="1585"/>
         <source>center horizontally</source>
         <translation>centro horizontalmente</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1585"/>
+        <location filename="../mameopt.cpp" line="1586"/>
         <source>center vertically</source>
         <translation>centro verticalmente</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1586"/>
+        <location filename="../mameopt.cpp" line="1587"/>
         <source>wait for vertical sync</source>
         <translation>espera pela sinconia vertial</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1587"/>
+        <location filename="../mameopt.cpp" line="1588"/>
         <source>sync to monitor refresh</source>
         <translation>sincronizar à atualização do monitor</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1588"/>
+        <location filename="../mameopt.cpp" line="1589"/>
         <source>scale mode</source>
         <translation>modo de escala</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1590"/>
+        <location filename="../mameopt.cpp" line="1591"/>
         <source>hardware stretching</source>
         <translation>extensão por hardware</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1592"/>
+        <location filename="../mameopt.cpp" line="1593"/>
         <source>d3d version</source>
         <translation>versão d3d</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1593"/>
+        <location filename="../mameopt.cpp" line="1594"/>
         <source>bilinear filtering</source>
         <translation>filtragem bilinear</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1595"/>
+        <location filename="../mameopt.cpp" line="1596"/>
         <source>force power of 2 textures</source>
         <translation>vigor potencia de 2 texturas</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1628"/>
+        <location filename="../mameopt.cpp" line="1629"/>
         <source>triple buffering</source>
         <translation>buffer triplo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1629"/>
+        <location filename="../mameopt.cpp" line="1630"/>
         <source>switch resolutions to fit</source>
         <translation>trocar resoluções para corresponder</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1630"/>
+        <location filename="../mameopt.cpp" line="1631"/>
         <source>full screen brightness</source>
         <translation>brilho em tela cheia</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1631"/>
+        <location filename="../mameopt.cpp" line="1632"/>
         <source>full screen contrast</source>
         <translation>contraste em tela cheia</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1632"/>
+        <location filename="../mameopt.cpp" line="1633"/>
         <source>full screen gamma</source>
         <translation>gama em tela cheia</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1634"/>
+        <location filename="../mameopt.cpp" line="1635"/>
         <source>audio latency</source>
         <translation>latência do áudio</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1635"/>
+        <location filename="../mameopt.cpp" line="1636"/>
         <source>audio sync</source>
         <translation>audio sinc</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1637"/>
+        <location filename="../mameopt.cpp" line="1638"/>
         <source>dual lightgun</source>
         <translation>duas pistolas lasers</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1638"/>
+        <location filename="../mameopt.cpp" line="1639"/>
         <source>joyid1</source>
         <translation>joy-id1</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1639"/>
+        <location filename="../mameopt.cpp" line="1640"/>
         <source>joyid2</source>
         <translation>joy-id2</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1640"/>
+        <location filename="../mameopt.cpp" line="1641"/>
         <source>joyid3</source>
         <translation>joy-id3</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1641"/>
+        <location filename="../mameopt.cpp" line="1642"/>
         <source>joyid4</source>
         <translation>joy-id4</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1642"/>
+        <location filename="../mameopt.cpp" line="1643"/>
         <source>joyid5</source>
         <translation>joy-id5</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1643"/>
+        <location filename="../mameopt.cpp" line="1644"/>
         <source>joyid6</source>
         <translation>joy-id6</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1644"/>
+        <location filename="../mameopt.cpp" line="1645"/>
         <source>joyid7</source>
         <translation>joy-id7</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1645"/>
+        <location filename="../mameopt.cpp" line="1646"/>
         <source>joyid8</source>
         <translation>joy-id8</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1647"/>
+        <location filename="../mameopt.cpp" line="1648"/>
         <source>ramsize</source>
         <translation>tamanho da ram</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1648"/>
+        <location filename="../mameopt.cpp" line="1649"/>
         <source>writeconfig</source>
         <translation>escrever configuração</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1649"/>
+        <location filename="../mameopt.cpp" line="1650"/>
         <source>skip warnings</source>
         <translation>ignorar alertas</translation>
     </message>
@@ -1827,257 +1898,257 @@ Tem certeza disso?</translation>
         <translation type="obsolete">natural</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1653"/>
+        <location filename="../mameopt.cpp" line="1654"/>
         <source>enable keymap</source>
         <translation>habilitar joymap</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1654"/>
+        <location filename="../mameopt.cpp" line="1655"/>
         <source>keymap filename</source>
         <translation>nome do arquivo de joymap</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1656"/>
+        <location filename="../mameopt.cpp" line="1657"/>
         <source>enable joystick mapping</source>
         <translation>habilitar mapeamento de controle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1657"/>
+        <location filename="../mameopt.cpp" line="1658"/>
         <source>joymap filename</source>
         <translation>nome do arquivo do joymap</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1664"/>
+        <location filename="../mameopt.cpp" line="1665"/>
         <source>alternative libGL.so</source>
         <translation>libGL.so alternativo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1669"/>
+        <location filename="../mameopt.cpp" line="1670"/>
         <source>core configuration</source>
         <translation>configuração do core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1670"/>
+        <location filename="../mameopt.cpp" line="1671"/>
         <source>core palette</source>
         <translation>paleta core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1671"/>
+        <location filename="../mameopt.cpp" line="1672"/>
         <source>core language</source>
         <translation>idioma core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1673"/>
+        <location filename="../mameopt.cpp" line="1674"/>
         <source>core search path</source>
         <translation>path de busca core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1674"/>
+        <location filename="../mameopt.cpp" line="1675"/>
         <source>core output directory</source>
         <translation>diretório de saída core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1675"/>
+        <location filename="../mameopt.cpp" line="1676"/>
         <source>core filename</source>
         <translation>nome do arquivo core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1677"/>
+        <location filename="../mameopt.cpp" line="1678"/>
         <source>core rotation</source>
         <translation>rotação core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1678"/>
+        <location filename="../mameopt.cpp" line="1679"/>
         <source>core screen</source>
         <translation>tela core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1679"/>
+        <location filename="../mameopt.cpp" line="1680"/>
         <source>full screen</source>
         <translation>tela cheia</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1682"/>
+        <location filename="../mameopt.cpp" line="1683"/>
         <source>Windows video</source>
         <translation>video do Windows</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1683"/>
+        <location filename="../mameopt.cpp" line="1684"/>
         <source>DirectDraw-specific</source>
         <translation>especificação DirectDraw</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1684"/>
+        <location filename="../mameopt.cpp" line="1685"/>
         <source>Direct3D-specific</source>
         <translation>especificação Direct3D</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1680"/>
+        <location filename="../mameopt.cpp" line="1681"/>
         <source>core performance</source>
         <translation>performance core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1432"/>
+        <location filename="../mameopt.cpp" line="1433"/>
         <source>external folder list</source>
         <translation>lista de pasta externa</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1573"/>
+        <location filename="../mameopt.cpp" line="1574"/>
         <source>show sdl video performance</source>
         <translation>exibir performance sdl-video</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1596"/>
+        <location filename="../mameopt.cpp" line="1597"/>
         <source>no gl arb texture rectangle</source>
         <translation>sem gl arb texture rectangle</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1597"/>
+        <location filename="../mameopt.cpp" line="1598"/>
         <source>enable opengl vbo</source>
         <translation>habilitar opengl-vbo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1598"/>
+        <location filename="../mameopt.cpp" line="1599"/>
         <source>enable opengl pbo</source>
         <translation>habilitar opengl-pbo</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1599"/>
+        <location filename="../mameopt.cpp" line="1600"/>
         <source>enable opengl glsl</source>
         <translation>habilitar opengl-glsl</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1600"/>
+        <location filename="../mameopt.cpp" line="1601"/>
         <source>opengl glsl filtering</source>
         <translation>filtragem opengl glsl</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1601"/>
+        <location filename="../mameopt.cpp" line="1602"/>
         <source>opengl glsl video attributes</source>
         <translation>atributos de opengl glsl video</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1658"/>
+        <location filename="../mameopt.cpp" line="1659"/>
         <source>ps3 sixaxis controllers</source>
         <translation>controles de ps3 sisaxis</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1660"/>
+        <location filename="../mameopt.cpp" line="1661"/>
         <source>sdl audio driver</source>
         <translation>driver sdl audio</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1661"/>
+        <location filename="../mameopt.cpp" line="1662"/>
         <source>sdl video driver</source>
         <translation>driver sdl video</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1662"/>
+        <location filename="../mameopt.cpp" line="1663"/>
         <source>sdl render driver</source>
         <translation>driver sdl render</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1685"/>
+        <location filename="../mameopt.cpp" line="1686"/>
         <source>Windows performance</source>
         <translation>performance da janela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1688"/>
+        <location filename="../mameopt.cpp" line="1689"/>
         <source>per-window video</source>
         <translation>video por janela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1690"/>
+        <location filename="../mameopt.cpp" line="1691"/>
         <source>core sound</source>
         <translation>som core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1691"/>
+        <location filename="../mameopt.cpp" line="1692"/>
         <source>Windows sound</source>
         <translation>som da janela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1693"/>
+        <location filename="../mameopt.cpp" line="1694"/>
         <source>core input</source>
         <translation>input core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1694"/>
+        <location filename="../mameopt.cpp" line="1695"/>
         <source>core input automatic enable</source>
         <translation>habilitar automaticamente o input core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1695"/>
+        <location filename="../mameopt.cpp" line="1696"/>
         <source>input device</source>
         <translation>dispositivo core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1699"/>
+        <location filename="../mameopt.cpp" line="1700"/>
         <source>core vector</source>
         <translation>vetor core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1701"/>
+        <location filename="../mameopt.cpp" line="1702"/>
         <source>core misc</source>
         <translation>misc core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1702"/>
+        <location filename="../mameopt.cpp" line="1703"/>
         <source>core artwork</source>
         <translation>artwork core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1703"/>
+        <location filename="../mameopt.cpp" line="1704"/>
         <source>core state/playback</source>
         <translation>state/playback core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1705"/>
+        <location filename="../mameopt.cpp" line="1706"/>
         <source>MESS specific</source>
         <translation>especificação MESS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1706"/>
+        <location filename="../mameopt.cpp" line="1707"/>
         <source>Windows MESS specific</source>
         <translation>especificação da janela MESS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1707"/>
+        <location filename="../mameopt.cpp" line="1708"/>
         <source>core debugging</source>
         <translation>depuração core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1708"/>
+        <location filename="../mameopt.cpp" line="1709"/>
         <source>Windows debugging</source>
         <translation>depuração da janela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1858"/>
+        <location filename="../mameopt.cpp" line="1859"/>
         <source>MESS software directory</source>
         <translation>diretório do programa MESS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1861"/>
+        <location filename="../mameopt.cpp" line="1862"/>
         <source>GUI paths</source>
         <translation>caminhos da interface</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2239"/>
+        <location filename="../mameopt.cpp" line="2245"/>
         <source>Options</source>
         <translation>Opções</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2246"/>
+        <location filename="../mameopt.cpp" line="2254"/>
         <source>GUI</source>
         <translation>GUI</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2329"/>
+        <location filename="../mameopt.cpp" line="2353"/>
         <source>Option</source>
         <translation>Opção</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2330"/>
+        <location filename="../mameopt.cpp" line="2354"/>
         <source>Value</source>
         <translation>Valor</translation>
     </message>
@@ -2090,234 +2161,234 @@ Tem certeza disso?</translation>
         <translation type="obsolete">DIRETÓRIO DO SOFTWARE MESS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1242"/>
+        <location filename="../mameopt.cpp" line="1241"/>
         <source>Screen</source>
         <translation>Tela</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1240"/>
-        <location filename="../mameopt.cpp" line="2232"/>
+        <location filename="../mameopt.cpp" line="1239"/>
+        <location filename="../mameopt.cpp" line="2238"/>
         <source>Core Video</source>
         <translation>Vídeo Core</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1241"/>
+        <location filename="../mameopt.cpp" line="1240"/>
         <source>OSD Video</source>
         <translation>Vídeo OSD</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2254"/>
+        <location filename="../mameopt.cpp" line="2265"/>
         <source>Global</source>
         <translation>Global</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1512"/>
+        <location filename="../mameopt.cpp" line="1513"/>
         <source>coin lockout</source>
         <translation>bloqueio de moeda</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1686"/>
+        <location filename="../mameopt.cpp" line="1687"/>
         <source>OpenGL-specific</source>
         <translation>Especificações OpenGL</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1696"/>
+        <location filename="../mameopt.cpp" line="1697"/>
         <source>SDL keyboard mapping</source>
         <translation>mapeamento SDL keyboard</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1697"/>
+        <location filename="../mameopt.cpp" line="1698"/>
         <source>SDL joystick mapping</source>
         <translation>mapeamento SDL Joystic</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1704"/>
+        <location filename="../mameopt.cpp" line="1705"/>
         <source>SDL lowlevel driver</source>
         <translation>driver SDL lowlevel</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1444"/>
+        <location filename="../mameopt.cpp" line="1445"/>
         <source>romsets directory</source>
         <translation>diretório dos sets de roms</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1445"/>
+        <location filename="../mameopt.cpp" line="1446"/>
         <source>hash files directory</source>
         <translation>diretório dos arquivos hash</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1446"/>
+        <location filename="../mameopt.cpp" line="1447"/>
         <source>samplesets directory</source>
         <translation>diretório samples</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1447"/>
+        <location filename="../mameopt.cpp" line="1448"/>
         <source>artwork files directory</source>
         <translation>diretório de arquivos artwork</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1448"/>
+        <location filename="../mameopt.cpp" line="1449"/>
         <source>controller definitions directory</source>
         <translation>diretório de configurações de controles</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1449"/>
+        <location filename="../mameopt.cpp" line="1450"/>
         <source>ini files directory</source>
         <translation>diretório de arquivos ini</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1450"/>
+        <location filename="../mameopt.cpp" line="1451"/>
         <source>font files directory</source>
         <translation>diretório de arquivos de fontes</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1451"/>
+        <location filename="../mameopt.cpp" line="1452"/>
         <source>cheat files directory</source>
         <translation>diretório de cheats</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1452"/>
+        <location filename="../mameopt.cpp" line="1453"/>
         <source>language files directory</source>
         <translation>diretório de arquivos de linguagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1454"/>
+        <location filename="../mameopt.cpp" line="1455"/>
         <source>ips files directory</source>
         <translation>diretórios de arquivos IPS</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1472"/>
+        <location filename="../mameopt.cpp" line="1473"/>
         <source>snapshot/movie view</source>
         <translation>ver video/captura </translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1505"/>
+        <location filename="../mameopt.cpp" line="1506"/>
         <source>enable sound output</source>
         <translation>habilitar saída de som</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1650"/>
+        <location filename="../mameopt.cpp" line="1651"/>
         <source>use new mess ui</source>
         <translation>usar nova interface do mess</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1651"/>
+        <location filename="../mameopt.cpp" line="1652"/>
         <source>use natural keyboard</source>
         <translation>usar teclado natural</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2493"/>
-        <location filename="../mameopt.cpp" line="2512"/>
+        <location filename="../mameopt.cpp" line="2521"/>
+        <location filename="../mameopt.cpp" line="2540"/>
         <source>Auto</source>
         <translation>Automático</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2467"/>
+        <location filename="../mameopt.cpp" line="2494"/>
         <source>None</source>
         <translation>Nenhum</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1603"/>
+        <location filename="../mameopt.cpp" line="1604"/>
         <source>all screens: physical monitor</source>
         <translation>todas telas: monitor físico</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1604"/>
+        <location filename="../mameopt.cpp" line="1605"/>
         <source>all screens: aspect ratio</source>
         <translation>todas telas: relação de aspecto da imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1605"/>
+        <location filename="../mameopt.cpp" line="1606"/>
         <source>all screens: resolution</source>
         <translation>todas telas: resolução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1606"/>
+        <location filename="../mameopt.cpp" line="1607"/>
         <source>all screens: view</source>
         <translation>todas telas: visualizar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1608"/>
+        <location filename="../mameopt.cpp" line="1609"/>
         <source>screen 1: physical monitor</source>
         <translation>tela1: monitor físico</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1609"/>
+        <location filename="../mameopt.cpp" line="1610"/>
         <source>screen 1: aspect ratio</source>
         <translation>tela1: relação de aspecto da imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1610"/>
+        <location filename="../mameopt.cpp" line="1611"/>
         <source>screen 1: resolution</source>
         <translation>tela1: resolução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1611"/>
+        <location filename="../mameopt.cpp" line="1612"/>
         <source>screen 1: view</source>
         <translation>tela1: visualizar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1613"/>
+        <location filename="../mameopt.cpp" line="1614"/>
         <source>screen 2: physical monitor</source>
         <translation>tela2: monitor físico</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1614"/>
+        <location filename="../mameopt.cpp" line="1615"/>
         <source>screen 2: aspect ratio</source>
         <translation>tela2: relação de aspecto da imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1615"/>
+        <location filename="../mameopt.cpp" line="1616"/>
         <source>screen 2: resolution</source>
         <translation>tela2: resolução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1616"/>
+        <location filename="../mameopt.cpp" line="1617"/>
         <source>screen 2: view</source>
         <translation>tela2: visualizar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1618"/>
+        <location filename="../mameopt.cpp" line="1619"/>
         <source>screen 3: physical monitor</source>
         <translation>tela3: monitor físico</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1619"/>
+        <location filename="../mameopt.cpp" line="1620"/>
         <source>screen 3: aspect ratio</source>
         <translation>tela3: relação de aspecto da imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1620"/>
+        <location filename="../mameopt.cpp" line="1621"/>
         <source>screen 3: resolution</source>
         <translation>tela3: resolução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1621"/>
+        <location filename="../mameopt.cpp" line="1622"/>
         <source>screen 3: view</source>
         <translation>tela3: visualizar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1623"/>
+        <location filename="../mameopt.cpp" line="1624"/>
         <source>screen 4: physical monitor</source>
         <translation>tela4: monitor físico</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1624"/>
+        <location filename="../mameopt.cpp" line="1625"/>
         <source>screen 4: aspect ratio</source>
         <translation>tela4: relação de aspecto da imagem</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1625"/>
+        <location filename="../mameopt.cpp" line="1626"/>
         <source>screen 4: resolution</source>
         <translation>tela4: resolução</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1626"/>
+        <location filename="../mameopt.cpp" line="1627"/>
         <source>screen 4: view</source>
         <translation>tela4: visualizar</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="1434"/>
+        <location filename="../mameopt.cpp" line="1435"/>
         <source>m1 directory</source>
         <translation>diretório m1</translation>
     </message>
@@ -2363,30 +2434,30 @@ Tem certeza disso?</translation>
 <context>
     <name>PlayOptions</name>
     <message>
-        <location filename="../dialogs.cpp" line="222"/>
-        <location filename="../dialogs.cpp" line="224"/>
+        <location filename="../dialogs.cpp" line="223"/>
+        <location filename="../dialogs.cpp" line="225"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="233"/>
+        <location filename="../dialogs.cpp" line="234"/>
         <source>Savestate files</source>
         <translation>arquivos savestate</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="239"/>
-        <location filename="../dialogs.cpp" line="258"/>
+        <location filename="../dialogs.cpp" line="240"/>
+        <location filename="../dialogs.cpp" line="259"/>
         <source>Input files</source>
         <translation>arquivos de entrada</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="266"/>
-        <location filename="../dialogs.cpp" line="274"/>
+        <location filename="../dialogs.cpp" line="267"/>
+        <location filename="../dialogs.cpp" line="275"/>
         <source>Videos</source>
         <translation>Vídeos</translation>
     </message>
     <message>
-        <location filename="../dialogs.cpp" line="282"/>
+        <location filename="../dialogs.cpp" line="283"/>
         <source>Sounds</source>
         <translation>Sons</translation>
     </message>
@@ -2458,8 +2529,8 @@ Tem certeza disso?</translation>
 <context>
     <name>RomAuditor</name>
     <message>
-        <location filename="../audit.cpp" line="262"/>
-        <location filename="../audit.cpp" line="476"/>
+        <location filename="../audit.cpp" line="266"/>
+        <location filename="../audit.cpp" line="485"/>
         <source>Auditing %1 ...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2471,8 +2542,8 @@ Tem certeza disso?</translation>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../mamepguimain.cpp" line="1547"/>
-        <location filename="../mamepguimain.cpp" line="1549"/>
+        <location filename="../mamepgui_main.cpp" line="1542"/>
+        <location filename="../mamepgui_main.cpp" line="1544"/>
         <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2480,39 +2551,62 @@ Tem certeza disso?</translation>
 <context>
     <name>TreeModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="712"/>
+        <location filename="../gamelist.cpp" line="637"/>
+        <source>No</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="640"/>
+        <source>Yes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../gamelist.cpp" line="536"/>
         <source>Description</source>
         <translation>Descrição</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="713"/>
+        <location filename="../gamelist.cpp" line="537"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="714"/>
+        <location filename="../gamelist.cpp" line="538"/>
         <source>ROMs</source>
         <translation>ROMs</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="715"/>
+        <location filename="../gamelist.cpp" line="539"/>
         <source>Manufacturer</source>
         <translation>Fabricante</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="716"/>
+        <location filename="../gamelist.cpp" line="540"/>
         <source>Driver</source>
         <translation>Driver</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="717"/>
+        <location filename="../gamelist.cpp" line="541"/>
         <source>Year</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="718"/>
+        <location filename="../gamelist.cpp" line="542"/>
         <source>Clone of</source>
         <translation>Clone de</translation>
+    </message>
+</context>
+<context>
+    <name>UpdaterUI</name>
+    <message>
+        <location filename="../updater.ui" line="14"/>
+        <source>Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../updater.ui" line="29"/>
+        <source>Update</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -2522,176 +2616,172 @@ Tem certeza disso?</translation>
         <translation type="obsolete">Consoles</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="139"/>
+        <location filename="../utils.cpp" line="136"/>
         <source>Joy 2-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="140"/>
+        <location filename="../utils.cpp" line="137"/>
         <source>Joy 4-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="141"/>
+        <location filename="../utils.cpp" line="138"/>
         <source>Joy 8-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="142"/>
+        <location filename="../utils.cpp" line="139"/>
         <source>Paddle</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="143"/>
+        <location filename="../utils.cpp" line="140"/>
         <source>Double Joy 2-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="144"/>
+        <location filename="../utils.cpp" line="141"/>
         <source>Double Joy 4-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="145"/>
+        <location filename="../utils.cpp" line="142"/>
         <source>Double Joy 8-Way</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="146"/>
+        <location filename="../utils.cpp" line="143"/>
         <source>Dial</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="147"/>
+        <location filename="../utils.cpp" line="144"/>
         <source>Lightgun</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="148"/>
+        <location filename="../utils.cpp" line="145"/>
         <source>Pedal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="149"/>
+        <location filename="../utils.cpp" line="146"/>
         <source>Stick</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="150"/>
+        <location filename="../utils.cpp" line="147"/>
         <source>Trackball</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="151"/>
+        <location filename="../utils.cpp" line="148"/>
         <source>Joy 2-Way (V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="152"/>
+        <location filename="../utils.cpp" line="149"/>
         <source>Double Joy 2-Way (V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="154"/>
+        <location filename="../utils.cpp" line="151"/>
         <source>Bad Dump</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="155"/>
+        <location filename="../utils.cpp" line="152"/>
         <source>No Dump</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="157"/>
+        <location filename="../utils.cpp" line="154"/>
         <source>Raster</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="158"/>
+        <location filename="../utils.cpp" line="155"/>
         <source>Vector</source>
         <translation type="unfinished">Vetor</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="159"/>
+        <location filename="../utils.cpp" line="156"/>
         <source>LCD</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="161"/>
+        <location filename="../utils.cpp" line="158"/>
         <source>PC Card</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="162"/>
-        <location filename="../utils.cpp" line="163"/>
-        <location filename="../utils.cpp" line="164"/>
+        <location filename="../utils.cpp" line="159"/>
+        <location filename="../utils.cpp" line="160"/>
+        <location filename="../utils.cpp" line="161"/>
         <source>CD-ROM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="165"/>
+        <location filename="../utils.cpp" line="162"/>
         <source>CompactFlash Card</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="166"/>
+        <location filename="../utils.cpp" line="163"/>
+        <location filename="../utils.cpp" line="164"/>
         <source>Disk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="167"/>
-        <source>Disks</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../utils.cpp" line="168"/>
+        <location filename="../utils.cpp" line="165"/>
         <source>GD-ROM</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="169"/>
+        <location filename="../utils.cpp" line="166"/>
         <source>IDE</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="170"/>
-        <location filename="../utils.cpp" line="171"/>
+        <location filename="../utils.cpp" line="167"/>
+        <location filename="../utils.cpp" line="168"/>
         <source>Laserdisc</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="172"/>
-        <location filename="../utils.cpp" line="173"/>
+        <location filename="../utils.cpp" line="169"/>
+        <location filename="../utils.cpp" line="170"/>
         <source>SCSI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="174"/>
+        <location filename="../utils.cpp" line="171"/>
         <source>VHS</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="244"/>
+        <location filename="../utils.cpp" line="249"/>
         <source>good</source>
         <translation>bom</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="246"/>
+        <location filename="../utils.cpp" line="251"/>
         <source>imperfect</source>
         <translation>imperfeito</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="248"/>
+        <location filename="../utils.cpp" line="253"/>
         <source>preliminary</source>
         <translation>preliminar</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="253"/>
+        <location filename="../utils.cpp" line="258"/>
         <source>supported</source>
         <translation>suportado</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="255"/>
+        <location filename="../utils.cpp" line="260"/>
         <source>unsupported</source>
         <translation>não-suportado</translation>
     </message>

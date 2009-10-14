@@ -1883,7 +1883,7 @@ void OptionUtils::loadIni(int optLevel, const QString &iniFileName)
 	if (optLevel == OPTLEVEL_GUI)
 		return;
 
-	//get opti values from ini
+	//get opt values from ini
 	QHash<QString, QString> iniSettings = parseIniFile(iniFileName);
 
 	//iterate every option
@@ -2204,18 +2204,24 @@ QHash<QString, QString> OptionUtils::parseIniFile(const QString &iniFileName)
 }
 
 // determine what to update in the option dialog
-void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
+// method 0 updates model, method 1 loads ini only
+void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel, const QString &gameName0, int method)
 {
 	//fixme: test how many times it's called. 
 	//win->log(QString("preUpdateModel: %1 %2").arg(currItem == 0).arg(optLevel));
 
-	/* figure out which option category are we in list ctlr */
+	QString gameName = gameName0;
+
+	if (gameName.isEmpty())
+		gameName = currentGame;
+
 	//get optLevel by selected tab
 	if (optLevel == -1)
 		optLevel = optionsUI->tabOptions->currentIndex();
 
+	// figure out which option category are we in list ctlr
 	QString optCat;
-	if (optLevel > -1)
+	if (optLevel > -1 && method == 0)
 	{
 		//assign current option category if not assigned
 		if (!currItem)
@@ -2235,24 +2241,30 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 	}
 
 	/* update mameopts */
-	GameInfo *gameInfo = pMameDat->games[currentGame];
+	GameInfo *gameInfo = pMameDat->games[gameName];
 	QString iniFileName;
-	QString STR_OPTS_ = tr("Options") + " - ";
+	static const QString STR_OPTS_ = tr("Options") + " - ";
 
 	loadIni(OPTLEVEL_GLOBAL, mameIniPath + (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
 	//GUI
 	if (optLevel == OPTLEVEL_GUI)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + tr("GUI"));
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + tr("GUI"));
+		}
 		return;
 	}
 
 	//global
 	if (optLevel == OPTLEVEL_GLOBAL)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + tr("Global"));
+		}
 		return;
 	}
 
@@ -2263,8 +2275,11 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 
 	if (optLevel == OPTLEVEL_SRC)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + gameInfo->sourcefile);
+		}
 		return;
 	}
 
@@ -2277,8 +2292,11 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 
 	if (optLevel == OPTLEVEL_BIOS)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		}
 		return;
 	}
 
@@ -2291,8 +2309,11 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 	
 	if (optLevel == OPTLEVEL_CLONEOF)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		}
 		return;
 	}
 
@@ -2301,13 +2322,16 @@ void OptionUtils::preUpdateModel(QListWidgetItem *currItem, int optLevel)
 	if (gameInfo->isExtRom)
 		iniFileName = gameInfo->romof;
 	else
-		iniFileName = currentGame;
+		iniFileName = gameName;
 	loadIni(OPTLEVEL_CURR, mameIniPath + "ini/" + iniFileName + INI_EXT);
 
 	if (optLevel == OPTLEVEL_CURR)
 	{
-		updateModel(optCat, optLevel);
-		optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		if (method == 0)
+		{
+			updateModel(optCat, optLevel);
+			optionsUI->setWindowTitle(STR_OPTS_ + iniFileName);
+		}
 		return;
 	}
 }

@@ -12,6 +12,8 @@ Gamelist *gameList = NULL;
 QString currentGame, currentFolder;
 QStringList hiddenFolders;
 QMap<QString, QString> consoleMap;
+QActionGroup *colSortActionGroup;
+QList<QAction *> colToggleActions;
 
 //fixme: used in audit
 TreeModel *gameListModel;
@@ -22,6 +24,7 @@ GameListDelegate gamelistDelegate(0);
 QSet<QString> visibleGames;
 QMultiMap<QString, QString> extFolderMap;
 QStringList deleteCfgFiles;
+QStringList columnList;
 QMap<QString, QString> biosMap;
 
 QByteArray defIconDataGreen;
@@ -529,7 +532,7 @@ TreeModel::TreeModel(QObject *parent)
 {
 	QList<QVariant> rootData;
 
-	static const QStringList columnList = (QStringList() 
+	columnList = (QStringList() 
 		<< QT_TR_NOOP("Description") 
 		<< QT_TR_NOOP("Name") 
 		<< QT_TR_NOOP("ROMs") 
@@ -677,6 +680,9 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
 		QString parentSortKey = sortKey;
 		QString sortMagic;
 		QString parent = gameName;
+
+		if (gameList->listMode != "Grouped")
+			return sortKey;
 
 		if (!gameInfo->cloneof.isEmpty())
 		{
@@ -1354,7 +1360,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 		optUtils->loadDefault(pMameDat->defaultIni);
 
 		// load mame.ini overrides
-		optUtils->loadIni(OPTLEVEL_GLOBAL, (isMESS ? "mess" INI_EXT : "mame" INI_EXT));
+		optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
 
 		// load GUI path overrides
 		foreach (QString optName, mameOpts.keys())
@@ -1430,7 +1436,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->tvGameList->setSortingEnabled(true);
 
 	//fixme: hack to update snapshot_directory for non-Windows build
-	optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL);
+	optUtils->preUpdateModel(NULL, OPTLEVEL_GLOBAL, currentGame, 1);
 
 	if (!hasInitd)
 	{
@@ -1448,7 +1454,7 @@ void Gamelist::init(bool toggleState, int initMethod)
 	win->romAuditor.exportDat();
 
 	hasInitd = true;
-	win->log(QString("init'd %1 games").arg(pMameDat->games.count()));
+//	win->log(QString("init'd %1 games").arg(pMameDat->games.count()));
 
 	//for re-init list from folders
 	restoreGameSelection();
@@ -1649,6 +1655,34 @@ void Gamelist::initMenus()
 //	if (win->actionLargeIcons->isChecked())
 //		isLView = true;
 
+	colSortActionGroup = new QActionGroup(win->menuArrangeIcons);
+
+	win->menuArrangeIcons->addSeparator();
+
+	for (int c = COL_DESC; c < COL_LAST; c++)
+	{
+		QAction *actionMenuItem, *actionMenuItem2;
+		QString columnName = TreeModel::tr(qPrintable(columnList[c]));
+
+		actionMenuItem = new QAction(QString(tr("by %1")).arg(columnName), win->menuArrangeIcons->menuAction());
+		actionMenuItem2 = new QAction(columnName, win->menuCustomizeFields->menuAction());
+
+		actionMenuItem->setCheckable(true);
+		actionMenuItem2->setCheckable(true);
+
+		if (c == COL_DESC)
+			actionMenuItem2->setEnabled(false);
+
+		colSortActionGroup->addAction(actionMenuItem);
+		win->menuArrangeIcons->addAction(actionMenuItem);
+		
+		colToggleActions.append(actionMenuItem2);
+		win->menuCustomizeFields->addAction(actionMenuItem2);
+
+		connect(actionMenuItem, SIGNAL(triggered()), win, SLOT(on_actionColSortAscending_activated()));
+		connect(actionMenuItem2, SIGNAL(triggered()), win, SLOT(toggleGameListColumn()));
+	}
+
 	// init context menuContext, we don't need to init it twice
 	if (menuContext == NULL)
 	{
@@ -1692,18 +1726,15 @@ void Gamelist::initMenus()
 		headerMenu->addAction(win->actionColSortAscending);
 		headerMenu->addAction(win->actionColSortDescending);
 		headerMenu->addSeparator();
-		headerMenu->addAction(win->actionColDescription);
-		headerMenu->addAction(win->actionColName);
-		headerMenu->addAction(win->actionColROMs);
-		headerMenu->addAction(win->actionColManufacturer);
-		headerMenu->addAction(win->actionColDriver);
-		headerMenu->addAction(win->actionColYear);
-		headerMenu->addAction(win->actionColCloneOf);
-	
+		foreach (QAction *action, colToggleActions)
+		{
+			headerMenu->addAction(action);
+		}
+
 		// add sorting action to an exclusive group
-		QActionGroup *sortingActions = new QActionGroup(headerMenu);
-		sortingActions->addAction(win->actionColSortAscending);
-		sortingActions->addAction(win->actionColSortDescending);
+		QActionGroup *sortingOrderActions = new QActionGroup(headerMenu);
+		sortingOrderActions->addAction(win->actionColSortAscending);
+		sortingOrderActions->addAction(win->actionColSortDescending);
 	}
 
 	QHeaderView *header = win->tvGameList->header();
@@ -1721,6 +1752,9 @@ void Gamelist::initMenus()
 
 	disconnect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 	connect(win->menuCustomizeFields, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
+
+	disconnect(win->menuArrangeIcons, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
+	connect(win->menuArrangeIcons, SIGNAL(aboutToShow()), this, SLOT(updateHeaderContextMenu()));
 }
 
 void Gamelist::showContextMenu(const QPoint &p)
@@ -2034,38 +2068,32 @@ void Gamelist::unmountDevice()
 
 void Gamelist::showHeaderContextMenu(const QPoint &p)
 {
-	QHeaderView *header = win->tvGameList->header();
-
-	int currCol = header->logicalIndexAt(p);
-	int sortCol = header->sortIndicatorSection();
-
-	if (currCol != sortCol)
-	{
-		win->actionColSortAscending->setChecked(false);
-		win->actionColSortDescending->setChecked(false);
-	}
-	else
-	{
-		if (header->sortIndicatorOrder() == Qt::AscendingOrder)
-			win->actionColSortAscending->setChecked(true);
-		else
-			win->actionColSortDescending->setChecked(true);
-	}
-	
-    headerMenu->popup(win->tvGameList->mapToGlobal(p));
+	headerMenu->popup(win->tvGameList->mapToGlobal(p));
 }
 
 void Gamelist::updateHeaderContextMenu()
 {
 	QHeaderView *header = win->tvGameList->header();
 
-	win->actionColDescription->setChecked(header->isSectionHidden(0) ? false : true);
-	win->actionColName->setChecked(header->isSectionHidden(1) ? false : true);
-	win->actionColROMs->setChecked(header->isSectionHidden(2) ? false : true);
-	win->actionColManufacturer->setChecked(header->isSectionHidden(3) ? false : true);
-	win->actionColDriver->setChecked(header->isSectionHidden(4) ? false : true);
-	win->actionColYear->setChecked(header->isSectionHidden(5) ? false : true);
-	win->actionColCloneOf->setChecked(header->isSectionHidden(6) ? false : true);
+	QList<QAction *>actions;
+
+	actions = colToggleActions;
+	for (int i = 0; i < actions.size(); i++)
+	{
+		actions[i]->setChecked(!header->isSectionHidden(i));
+	}
+	
+	actions = colSortActionGroup->actions();
+	for (int i = 0; i < actions.size(); i++)
+	{
+		if (win->tvGameList->header()->sortIndicatorSection() == i)
+			actions[i]->setChecked(true);
+	}
+
+	if (header->sortIndicatorOrder() == Qt::AscendingOrder)
+		win->actionColSortAscending->setChecked(true);
+	else
+		win->actionColSortDescending->setChecked(true);
 }
 
 void Gamelist::updateDeleteCfgMenu(const QString &gameName)
@@ -2165,16 +2193,6 @@ void Gamelist::deleteCfg()
 			delFile.remove();
 		}
 	}
-}
-
-void Gamelist::toggleDelegate(bool isHilite)
-{
-/*
-	if (isHilite)
-		win->tvGameList->setItemDelegate(&gamelistDelegate);
-	else if (defaultGameListDelegate != NULL)
-		win->tvGameList->setItemDelegate(defaultGameListDelegate);
-*/
 }
 
 // delete the extracted rom
@@ -2529,11 +2547,13 @@ void Gamelist::initFolders()
 
 	static QIcon icoFolder(":/res/32x32/folder.png");
 
+	//prepare hidden folders
 	hiddenFolders = pGuiSettings->value("hide_folders").toStringList();
 	if (hiddenFolders.isEmpty())
 		hiddenFolders << intFolderNames0[FOLDER_ALLGAME];
 	hiddenFolders.removeDuplicates();
-	//remove not recognized values
+	
+	//remove unrecognized values
 	foreach (QString folderName, hiddenFolders)
 		if (!intFolderNames0.contains(folderName))
 			hiddenFolders.removeOne(folderName);
@@ -2546,7 +2566,9 @@ void Gamelist::initFolders()
 		win->treeFolders->addTopLevelItems(intFolderItems);
 		intFolderItems[i]->setIcon(0, icoFolder);
 
-		if (hiddenFolders.contains(intFolderNames0[i]))
+		//hide folders
+		if (hiddenFolders.contains(intFolderNames0[i]) || 
+			(!hasDevices && (i == FOLDER_ALLGAME || i == FOLDER_CONSOLE)))
 			intFolderItems[i]->setHidden(true);
 
 		if (i == FOLDER_CONSOLE)
@@ -3078,7 +3100,7 @@ void Gamelist::runMame(int method, QStringList playArgs)
 		}
 	}
 
-	if (hasLanguage)
+	if (hasLanguage && language != "ru_RU" /* no core support yet */)
 	{
 		QString langpath = utils->getPath(mameOpts["langpath"]->globalvalue);
 		args << "-langpath" << langpath;
@@ -3090,7 +3112,7 @@ void Gamelist::runMame(int method, QStringList playArgs)
 		QStringList strOptions;
 
 		//update mameOpts
-		optUtils->preUpdateModel(NULL, OPTLEVEL_CURR);
+		optUtils->preUpdateModel(NULL, OPTLEVEL_CURR, currentGame, 1);
 
 		QStringList optNames = mameOpts.keys();
 		optNames.sort();

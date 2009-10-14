@@ -46,6 +46,8 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
+#define MPGUI_VER "1.4.9"
+
 void MainWindow::log(QString message)
 {
 	QString timeString = QTime::currentTime().toString("hh:mm:ss.zzz");
@@ -166,6 +168,11 @@ QMainWindow(parent)
 
 #ifdef Q_OS_MAC
 	actionDefaultOptions->setText(tr("Preferences..."));
+
+	//macx font hack
+	QFont font = QApplication::font();
+	font.setPixelSize(13);
+	qApp->setFont(font);
 #endif
 
 	//setExclusive(true) for some actions
@@ -182,6 +189,7 @@ QMainWindow(parent)
 	langActions->addAction(actionHungarian);
 	langActions->addAction(actionKorean);
 	langActions->addAction(actionBrazilian);
+	langActions->addAction(actionRussian);
 
 	QActionGroup *bgStretchActions = new QActionGroup(this);
 	bgStretchActions->addAction(actionBgStretch);
@@ -263,7 +271,8 @@ QMainWindow(parent)
 
 	QAction *actionFolderList = dwFolderList->toggleViewAction();
 	actionFolderList->setIcon(QIcon(":/res/mame32-show-tree.png"));
-	menuView->insertAction(actionVerticalTabs, actionFolderList);
+	menuShowFolders->addAction(actionFolderList);
+	menuShowFolders->addSeparator();
 	toolBar->insertAction(actionLargeIcons, actionFolderList);
 
 	mameAuditor = new MameExeRomAuditor(this);
@@ -560,7 +569,6 @@ void MainWindow::init()
 	connect(actionDetails, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 	connect(actionGrouped, SIGNAL(toggled(bool)), gameList, SLOT(init(bool)));
 
-	connect(actionRowDelegate, SIGNAL(toggled(bool)), gameList, SLOT(toggleDelegate(bool)));
 	connect(actionStretchSshot, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 	connect(actionEnforceAspect, SIGNAL(toggled(bool)), gameList, SLOT(updateSelection()));
 
@@ -632,7 +640,7 @@ void MainWindow::setVersion()
 		"%2%3%4%5%6"
 		"</body>"
 		"</html>")
-		.arg("1.4.8")
+		.arg(MPGUI_VER)
 		.arg(mameString)
 		.arg(m1VerString)
 		.arg("<a href=\"http://www.qtsoftware.com\">Qt</a> " QT_VERSION_STR " &copy; Nokia Corporation<br>")
@@ -649,7 +657,7 @@ void MainWindow::setVersion()
 	QFileInfo fi(mame_binary);
 
 	setWindowTitle(QString("%1 - %2 %3")
-		.arg("M+GUI")
+		.arg("M+GUI " MPGUI_VER)
 		.arg(fi.baseName().toUpper())
 		.arg(pMameDat->version));
 }
@@ -668,6 +676,9 @@ void MainWindow::enableCtrls(bool isEnabled)
 	win->actionPlay->setEnabled(isEnabled);
 	win->menuPlayWith->setEnabled(isEnabled);
 	win->menuSaveFixdat->setEnabled(isEnabled);
+	win->menuArrangeIcons->setEnabled(isEnabled);
+	win->menuCustomizeFields->setEnabled(isEnabled);
+	win->menuCustomFilters->setEnabled(isEnabled);
 	win->lineEditSearch->setEnabled(isEnabled);
 	win->btnSearch->setEnabled(isEnabled);
 	win->btnClearSearch->setEnabled(isEnabled);
@@ -842,47 +853,32 @@ void MainWindow::on_actionAbout_activated()
 	aboutUI->exec();
 }
 
-void MainWindow::toggleGameListColumn(int logicalIndex)
+void MainWindow::toggleGameListColumn()
 {
-	if (win->tvGameList->header()->isSectionHidden(logicalIndex))
-		win->tvGameList->header()->setSectionHidden (logicalIndex, false);
+	int col = colToggleActions.indexOf((QAction *)sender());
+
+	if (col == -1)
+		return;
+
+	if (win->tvGameList->header()->isSectionHidden(col))
+		win->tvGameList->header()->setSectionHidden (col, false);
 	else
-		win->tvGameList->header()->setSectionHidden (logicalIndex, true);
+		win->tvGameList->header()->setSectionHidden (col, true);
 }
 
-void MainWindow::on_actionColDescription_activated()
+void MainWindow::on_actionColSortAscending_activated()
 {
-	toggleGameListColumn(0);
+	int col = colSortActionGroup->actions().indexOf((QAction *)sender());
+
+	if (col == -1)
+		col = win->tvGameList->header()->sortIndicatorSection();
+
+	win->tvGameList->sortByColumn(col, Qt::AscendingOrder);
 }
 
-void MainWindow::on_actionColName_activated()
+void MainWindow::on_actionColSortDescending_activated()
 {
-	toggleGameListColumn(1);
-}
-
-void MainWindow::on_actionColROMs_activated()
-{
-	toggleGameListColumn(2);
-}
-
-void MainWindow::on_actionColManufacturer_activated()
-{
-	toggleGameListColumn(3);
-}
-
-void MainWindow::on_actionColDriver_activated()
-{
-	toggleGameListColumn(4);
-}
-
-void MainWindow::on_actionColYear_activated()
-{
-	toggleGameListColumn(5);
-}
-
-void MainWindow::on_actionColCloneOf_activated()
-{
-	toggleGameListColumn(6);
+	win->tvGameList->sortByColumn(win->tvGameList->header()->sortIndicatorSection(), Qt::DescendingOrder);
 }
 
 void MainWindow::on_actionEnglish_activated()
@@ -924,6 +920,12 @@ void MainWindow::on_actionKorean_activated()
 void MainWindow::on_actionBrazilian_activated()
 {
 	language = "pt_BR";
+	showRestartDialog();
+}
+
+void MainWindow::on_actionRussian_activated()
+{
+	language = "ru_RU";
 	showRestartDialog();
 }
 
@@ -1051,6 +1053,8 @@ void MainWindow::loadLayout()
 		actionKorean->setChecked(true);
 	else if (language == "pt_BR")
 		actionBrazilian->setChecked(true);
+	else if (language == "ru_RU")
+		actionRussian->setChecked(true);
 	else
 		actionEnglish->setChecked(true);
 
