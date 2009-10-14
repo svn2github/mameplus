@@ -11,11 +11,11 @@
 # MESS core defines
 #-------------------------------------------------
 
-
 CFLAGS += \
 	-I$(SRC)/mess \
 	-I$(SRC)/mess/includes \
 	-I$(OBJ)/mess/layout \
+	-I$(SRC)/mess/osd \
 	-I$(SRC)/mess/osd/$(OSD)
 
 
@@ -85,7 +85,6 @@ EMUOBJS += \
 	$(MESSOBJ)/compcfg.o	\
 	$(MESSOBJ)/utils.o		\
 	$(MESSOBJ)/eventlst.o	\
-	$(MESSOBJ)/mscommon.o	\
 	$(MESSOBJ)/mslegacy.o	\
 	$(MESSOBJ)/tagpool.o	\
 	$(MESSOBJ)/cheatms.o	\
