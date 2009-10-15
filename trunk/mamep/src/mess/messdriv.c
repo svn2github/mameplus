@@ -43,7 +43,7 @@ const game_driver * const consoledrivers[] =
     DRIVER( a2600p )    /* Atari 2600 PAL                                   */
     DRIVER( a5200 )     /* Atari 5200                                       */
     DRIVER( a7800 )     /* Atari 7800 NTSC                                  */
-    DRIVER( a7800p )    /* Atari 7800 PAL                                   */
+    DRIVER( a7800p )    /* Atari 7800 PAL                                    */
 
     /* Nintendo */
     DRIVER( nes )       /* Nintendo Entertainment System                    */
