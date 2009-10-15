@@ -49,7 +49,8 @@ struct _ram_config
 	MDRV_DEVICE_REMOVE(_tag)
 
 #define MDRV_RAM_MODIFY(_tag) \
-	MDRV_DEVICE_MODIFY(_tag)
+	MDRV_DEVICE_MODIFY(_tag)	\
+	MDRV_DEVICE_CONFIG_DATAPTR(ram_config, extra_options, NULL)
 
 #define MDRV_RAM_DEFAULT_SIZE(_default_size) \
 	MDRV_DEVICE_CONFIG_DATAPTR(ram_config, default_size, _default_size)
@@ -69,6 +70,7 @@ DEVICE_GET_INFO( messram );
 UINT32 messram_get_size(const device_config *device);
 UINT8 *messram_get_ptr(const device_config *device);
 void messram_dump(const device_config *device, const char *filename);
-
+UINT32 ram_parse_string(const char *s);
+const char *ram_string(char *buffer, UINT32 ram);
 
 #endif /* __MESSRAM_H__ */
