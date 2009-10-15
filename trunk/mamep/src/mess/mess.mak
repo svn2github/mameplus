@@ -43,6 +43,7 @@ $(MESSOBJ)/shared.a: \
 	$(MESS_FORMATS)/dsk_dsk.o	\
 	$(MESS_FORMATS)/d88_dsk.o	\
 	$(MESS_DEVICES)/flopdrv.o	\
+	$(MESS_DEVICES)/messram.o	\
 	$(MESS_DEVICES)/multcart.o	\
 	$(MESS_DEVICES)/printer.o	\
 	$(MESS_FORMATS)/basicdsk.o	\
