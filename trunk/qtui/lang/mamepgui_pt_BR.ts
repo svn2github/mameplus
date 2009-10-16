@@ -48,12 +48,12 @@
 <context>
     <name>GameListSortFilterProxyModel</name>
     <message>
-        <location filename="../gamelist.cpp" line="3379"/>
+        <location filename="../gamelist.cpp" line="3369"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3384"/>
+        <location filename="../gamelist.cpp" line="3374"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -61,15 +61,7 @@
 <context>
     <name>Gamelist</name>
     <message>
-        <source>Loading listxml: %1 games</source>
-        <translation type="obsolete">Carregando listxml: %1 jogos</translation>
-    </message>
-    <message>
-        <source>Parsing listxml</source>
-        <translation type="obsolete">Lendo listxml</translation>
-    </message>
-    <message>
-        <location filename="../gamelist.cpp" line="2304"/>
+        <location filename="../gamelist.cpp" line="2294"/>
         <source>Refresh</source>
         <translation>Atualizar</translation>
     </message>
@@ -189,12 +181,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2642"/>
+        <location filename="../gamelist.cpp" line="2632"/>
         <source>Horizontal</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2643"/>
+        <location filename="../gamelist.cpp" line="2633"/>
         <source>Vertical</source>
         <translation type="unfinished"></translation>
     </message>
@@ -269,27 +261,27 @@
         <translation>Remover todos</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2736"/>
+        <location filename="../gamelist.cpp" line="2726"/>
         <source>(H)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2736"/>
+        <location filename="../gamelist.cpp" line="2726"/>
         <source>(V)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="2824"/>
+        <location filename="../gamelist.cpp" line="2814"/>
         <source>Root Folder [.]</source>
         <translation>Diretório raiz [.]</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3037"/>
+        <location filename="../gamelist.cpp" line="3027"/>
         <source>Loading M1, please wait...</source>
         <translation>Carregando M1, por favor aguarde ...</translation>
     </message>
     <message>
-        <location filename="../gamelist.cpp" line="3107"/>
+        <location filename="../gamelist.cpp" line="3097"/>
         <source>%1 requires that these device(s)
 must be mounted:
 
@@ -399,216 +391,141 @@ p, li { white-space: pre-wrap; }
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../mamepgui_main.cpp" line="152"/>
+        <location filename="../mamepgui_main.cpp" line="153"/>
         <source>Snapshot</source>
         <translation>Captura de Tela</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="153"/>
+        <location filename="../mamepgui_main.cpp" line="154"/>
         <source>Flyer</source>
         <translation>Poster</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="154"/>
+        <location filename="../mamepgui_main.cpp" line="155"/>
         <source>Cabinet</source>
         <translation>Gabinete</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="155"/>
+        <location filename="../mamepgui_main.cpp" line="156"/>
         <source>Marquee</source>
         <translation>Marquise</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="156"/>
+        <location filename="../mamepgui_main.cpp" line="157"/>
         <source>Title</source>
         <translation>Título</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="157"/>
+        <location filename="../mamepgui_main.cpp" line="158"/>
         <source>Control Panel</source>
         <translation>Painel de Controle</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="158"/>
+        <location filename="../mamepgui_main.cpp" line="159"/>
         <source>PCB</source>
         <translation>PCB</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="160"/>
+        <location filename="../mamepgui_main.cpp" line="161"/>
         <source>History</source>
         <translation>Histórico</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="161"/>
+        <location filename="../mamepgui_main.cpp" line="162"/>
         <source>MAMEInfo</source>
         <translation>MAMEinfo</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="163"/>
+        <location filename="../mamepgui_main.cpp" line="164"/>
         <source>Story</source>
         <translation>Estória</translation>
     </message>
     <message>
-        <source>File</source>
-        <translation type="obsolete">Arquivo</translation>
-    </message>
-    <message>
-        <source>View</source>
-        <translation type="obsolete">Visualizar</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="obsolete">Opções</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="obsolete">Ajuda</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="205"/>
+        <location filename="../mamepgui_main.ui" line="208"/>
         <source>Toolbar</source>
         <translation>Barra de Ferramentas</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="221"/>
-        <location filename="../mamepgui_main.ui" line="235"/>
+        <location filename="../mamepgui_main.cpp" line="228"/>
+        <location filename="../mamepgui_main.ui" line="238"/>
         <source>Search</source>
         <translation>Busca</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="249"/>
+        <location filename="../mamepgui_main.ui" line="252"/>
         <source>GUI Log</source>
         <translation>Log do GUI</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="276"/>
+        <location filename="../mamepgui_main.ui" line="279"/>
         <source>Folder List</source>
         <translation>Lista de Pastas</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="296"/>
+        <location filename="../mamepgui_main.ui" line="299"/>
         <source>1</source>
         <translation>1</translation>
     </message>
     <message>
-        <source>Refresh</source>
-        <translation type="obsolete">Atualizar</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="322"/>
+        <location filename="../mamepgui_main.ui" line="325"/>
         <source>F5</source>
         <translation>F5</translation>
     </message>
     <message>
-        <source>Exit</source>
-        <translation type="obsolete">Sair</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="330"/>
+        <location filename="../mamepgui_main.ui" line="333"/>
         <source>Alt+X</source>
         <translation>Alt-X</translation>
     </message>
     <message>
-        <source>About</source>
-        <translation type="obsolete">Sobre</translation>
-    </message>
-    <message>
-        <source>Details</source>
-        <translation type="obsolete">Detalhes</translation>
-    </message>
-    <message>
-        <source>Grouped</source>
-        <translation type="obsolete">Agrupado</translation>
-    </message>
-    <message>
-        <source>Large Icons</source>
-        <translation type="obsolete">Ícones Grandes</translation>
-    </message>
-    <message>
-        <source>Vertical Tabs</source>
-        <translation type="obsolete">Abas Verticais</translation>
-    </message>
-    <message>
-        <source>Properties</source>
-        <translation type="obsolete">Propriedades</translation>
-    </message>
-    <message>
-        <source>Play</source>
-        <translation type="obsolete">Jogar</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="406"/>
+        <location filename="../mamepgui_main.ui" line="71"/>
+        <location filename="../mamepgui_main.ui" line="409"/>
         <source>Audit</source>
         <translation>Auditar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="414"/>
+        <location filename="../mamepgui_main.ui" line="417"/>
         <source>Description</source>
         <translation>Descrição</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="422"/>
+        <location filename="../mamepgui_main.ui" line="425"/>
         <source>Name</source>
         <translation>Nome</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="430"/>
+        <location filename="../mamepgui_main.ui" line="433"/>
         <source>ROMs</source>
         <translation>ROMs</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="438"/>
+        <location filename="../mamepgui_main.ui" line="441"/>
         <source>Manufacturer</source>
         <translation>Fabricante</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="446"/>
+        <location filename="../mamepgui_main.ui" line="449"/>
         <source>Driver</source>
         <translation>Driver</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="454"/>
+        <location filename="../mamepgui_main.ui" line="457"/>
         <source>Year</source>
         <translation>Ano</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="462"/>
+        <location filename="../mamepgui_main.ui" line="465"/>
         <source>Clone of</source>
         <translation>Clone de</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="470"/>
+        <location filename="../mamepgui_main.ui" line="473"/>
         <source>Sort Ascending</source>
         <translation>Listar em ordem crescente</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="478"/>
+        <location filename="../mamepgui_main.ui" line="481"/>
         <source>Sort Descending</source>
         <translation>Listar em ordem decrescente</translation>
-    </message>
-    <message>
-        <source>Highlight Selected Row</source>
-        <translation type="obsolete">Destacar coluna selecionada</translation>
-    </message>
-    <message>
-        <source>Configure IPS...</source>
-        <translation type="obsolete">Configurar IPS...</translation>
-    </message>
-    <message>
-        <source>Default Game Options</source>
-        <translation type="obsolete">Opções Padrão de Jogo</translation>
-    </message>
-    <message>
-        <source>Directories...</source>
-        <translation type="obsolete">Diretórios...</translation>
-    </message>
-    <message>
-        <source>Properties for </source>
-        <translation type="obsolete">Propriedades de</translation>
-    </message>
-    <message>
-        <source>Language</source>
-        <translation type="obsolete">Idioma</translation>
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="14"/>
@@ -622,332 +539,299 @@ p, li { white-space: pre-wrap; }
     </message>
     <message>
         <location filename="../mamepgui_main.ui" line="61"/>
-        <source>Save Fix-dat File</source>
-        <translation>Salvar arquivo Fix-dat</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="71"/>
         <source>Add to Custom Folder</source>
         <translation>Adicionar em pasta personalizada</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="76"/>
-        <source>Remove</source>
-        <translation>Remover</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="96"/>
+        <location filename="../mamepgui_main.ui" line="97"/>
         <source>&amp;View</source>
         <translation>&amp;Visualizar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="100"/>
+        <location filename="../mamepgui_main.ui" line="101"/>
         <source>Customize &amp;Fields</source>
         <translation>&amp;Campos personalizados</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="105"/>
+        <location filename="../mamepgui_main.ui" line="106"/>
         <source>Game &amp;Pictures</source>
         <translation>&amp;Imagens de jogos</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="113"/>
+        <location filename="../mamepgui_main.ui" line="114"/>
         <source>Game Do&amp;cuments</source>
         <translation>Do&amp;cumentação de jogos</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="123"/>
+        <location filename="../mamepgui_main.ui" line="124"/>
         <source>&amp;Custom Filters</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="131"/>
+        <location filename="../mamepgui_main.ui" line="132"/>
         <source>Arrange &amp;Icons</source>
         <translation type="unfinished">Arranjar ícones</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="154"/>
+        <location filename="../mamepgui_main.ui" line="156"/>
         <source>&amp;Options</source>
         <translation>&amp;Opções</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="158"/>
+        <location filename="../mamepgui_main.ui" line="160"/>
         <source>&amp;Language</source>
         <translation>&amp;Linguagem</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="170"/>
+        <location filename="../mamepgui_main.ui" line="173"/>
         <source>&amp;Background Images</source>
         <translation>&amp;Imagens de fundo</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="178"/>
+        <location filename="../mamepgui_main.ui" line="181"/>
         <source>GUI &amp;Style</source>
         <translation>Estilo &amp;da interface</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="190"/>
+        <location filename="../mamepgui_main.ui" line="193"/>
         <source>&amp;Help</source>
         <translation>&amp;Ajuda</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="310"/>
+        <location filename="../mamepgui_main.ui" line="313"/>
         <source>Default Game &amp;Options</source>
         <translation>Opções padrão de jogos</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="319"/>
+        <location filename="../mamepgui_main.ui" line="322"/>
         <source>&amp;Refresh</source>
         <translation>&amp;Atualizar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="327"/>
+        <location filename="../mamepgui_main.ui" line="330"/>
         <source>E&amp;xit</source>
         <translation>&amp;Sair</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="339"/>
+        <location filename="../mamepgui_main.ui" line="342"/>
         <source>&amp;About</source>
         <translation>&amp;Sobre</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="351"/>
+        <location filename="../mamepgui_main.ui" line="354"/>
         <source>&amp;Details</source>
         <translation>&amp;Detalhes</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="366"/>
+        <location filename="../mamepgui_main.ui" line="369"/>
         <source>&amp;Grouped</source>
         <translation>&amp;Agrupado</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="378"/>
+        <location filename="../mamepgui_main.ui" line="381"/>
         <source>L&amp;arge Icons</source>
         <translation>Ícones g&amp;randes</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="386"/>
+        <location filename="../mamepgui_main.ui" line="389"/>
         <source>&amp;Vertical Tabs</source>
         <translation>A&amp;bas verticais</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="396"/>
+        <location filename="../mamepgui_main.ui" line="399"/>
         <source>&amp;Record Input...</source>
         <translation>&amp;Gravar comandos...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="401"/>
+        <location filename="../mamepgui_main.ui" line="404"/>
         <source>Configure &amp;IPS...</source>
         <translation>Configurar &amp;IPS...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="487"/>
+        <location filename="../mamepgui_main.ui" line="490"/>
         <source>&amp;Directories...</source>
         <translation>&amp;Diretórios...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="496"/>
+        <location filename="../mamepgui_main.ui" line="499"/>
         <source>Pr&amp;operties</source>
         <translation>&amp;Propriedades</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="599"/>
+        <location filename="../mamepgui_main.ui" line="602"/>
         <source>Highlight Selected Icon</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="632"/>
+        <location filename="../mamepgui_main.ui" line="635"/>
         <source>Load &amp;Savestate...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="653"/>
-        <source>Completely Missing Sets Only...</source>
-        <translation>Apenas lista de sets incompletos...</translation>
+        <location filename="../mamepgui_main.ui" line="656"/>
+        <source>Export Completely Missing Sets Only...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="658"/>
-        <source>Incomplete Sets Only...</source>
-        <translation>Somente sets incompletos...</translation>
+        <location filename="../mamepgui_main.ui" line="661"/>
+        <source>Export Incomplete Sets Only...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="663"/>
-        <source>All Set Issues...</source>
-        <translation>Todos sets problemáticos...</translation>
+        <location filename="../mamepgui_main.ui" line="666"/>
+        <source>Export All Set Issues...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="673"/>
-        <source>&amp;Audit All Games</source>
-        <translation>&amp;Auditar todos os jogos</translation>
+        <location filename="../mamepgui_main.ui" line="713"/>
+        <source>Export All Sets...</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="681"/>
+        <location filename="../mamepgui_main.ui" line="676"/>
+        <source>&amp;Audit All Roms</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="726"/>
+        <source>Audit All Samples</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="684"/>
         <source>Hide C&amp;lones</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="689"/>
+        <location filename="../mamepgui_main.ui" line="692"/>
         <source>Hide Non-Wor&amp;king</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="697"/>
+        <location filename="../mamepgui_main.ui" line="700"/>
         <source>Hide &amp;Unavailable</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="702"/>
+        <location filename="../mamepgui_main.ui" line="705"/>
         <source>Command Line...</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="710"/>
-        <source>All Sets...</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <source>English (United States)</source>
-        <translation type="obsolete">Inglês (Estados Unidos)</translation>
-    </message>
-    <message>
-        <source>Chinese (PRC)</source>
-        <translation type="obsolete">Chinês (República Popular da China)</translation>
-    </message>
-    <message>
-        <source>Chinese (Taiwan)</source>
-        <translation type="obsolete">Chinês (Taiwan)</translation>
-    </message>
-    <message>
-        <source>Japanese</source>
-        <translation type="obsolete">Japonês</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.ui" line="557"/>
+        <location filename="../mamepgui_main.ui" line="560"/>
         <source>Local &amp;Language Game List</source>
         <translation>&amp;Lista de jogos da lingua atual</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="612"/>
+        <location filename="../mamepgui_main.ui" line="615"/>
         <source>&amp;Playback Input...</source>
         <translation>&amp;Ver jogo gravado...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="617"/>
+        <location filename="../mamepgui_main.ui" line="620"/>
         <source>Record &amp;Wave Output...</source>
         <translation>Gra&amp;var jogo...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="622"/>
+        <location filename="../mamepgui_main.ui" line="625"/>
         <source>Record &amp;MNG Output...</source>
         <translation>Gravar vídeo em &amp;MNG...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="627"/>
+        <location filename="../mamepgui_main.ui" line="630"/>
         <source>Record &amp;AVI Output...</source>
         <translation>Gravar vídeo em &amp;AVI...</translation>
     </message>
     <message>
-        <source>Load &amp;Savestate</source>
-        <translation type="obsolete">Carregar &amp;statesave</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.cpp" line="946"/>
+        <location filename="../mamepgui_main.cpp" line="961"/>
         <source>Restart</source>
         <translation>Reiniciar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="947"/>
+        <location filename="../mamepgui_main.cpp" line="962"/>
         <source>Changing this option requires a restart to take effect.
 Do you wish to continue?</source>
         <translation>Para efetuar as alterações será necessário reiniciar.
 Tem certeza disso?</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="549"/>
+        <location filename="../mamepgui_main.ui" line="552"/>
         <source>Enforce Aspect Ratio</source>
         <translation>Reforçar relação de aspecto</translation>
     </message>
     <message>
-        <source>Customize Fields</source>
-        <translation type="obsolete">Personalizar Campos</translation>
-    </message>
-    <message>
-        <source>Local Language Game List</source>
-        <translation type="obsolete">Usar Idioma Local da Lista de Jogos</translation>
-    </message>
-    <message>
-        <location filename="../mamepgui_main.cpp" line="85"/>
+        <location filename="../mamepgui_main.cpp" line="86"/>
         <source>status</source>
         <translation>status</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="90"/>
+        <location filename="../mamepgui_main.cpp" line="91"/>
         <source>emulation</source>
         <translation>emulação</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="95"/>
+        <location filename="../mamepgui_main.cpp" line="96"/>
         <source>color</source>
         <translation>cor</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="100"/>
+        <location filename="../mamepgui_main.cpp" line="101"/>
         <source>sound</source>
         <translation>som</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="105"/>
+        <location filename="../mamepgui_main.cpp" line="106"/>
         <source>graphic</source>
         <translation>gráfico</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="110"/>
+        <location filename="../mamepgui_main.cpp" line="111"/>
         <source>savestate</source>
         <translation>salvar status</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="122"/>
+        <location filename="../mamepgui_main.cpp" line="123"/>
         <source>cocktail</source>
         <translation>cocktail</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="134"/>
+        <location filename="../mamepgui_main.cpp" line="135"/>
         <source>protection</source>
         <translation>proteção</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="162"/>
+        <location filename="../mamepgui_main.cpp" line="163"/>
         <source>DriverInfo</source>
         <translation>Informações do driver</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="169"/>
+        <location filename="../mamepgui_main.cpp" line="170"/>
         <source>Preferences...</source>
         <translation>Preferências...</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="434"/>
+        <location filename="../mamepgui_main.cpp" line="440"/>
         <source>Executable files</source>
         <translation>Arquivos executáveis</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="437"/>
-        <location filename="../mamepgui_main.cpp" line="760"/>
+        <location filename="../mamepgui_main.cpp" line="443"/>
+        <location filename="../mamepgui_main.cpp" line="768"/>
         <source>All Files (*)</source>
         <translation>Todos arquivos (*)</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="440"/>
+        <location filename="../mamepgui_main.cpp" line="446"/>
         <source>MAME/MESS executable:</source>
         <translation>Executável do MAME/MESS:</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="758"/>
+        <location filename="../mamepgui_main.cpp" line="766"/>
         <source>Dat files</source>
         <translation>Arquivos DAT</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="765"/>
+        <location filename="../mamepgui_main.cpp" line="773"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
     </message>
@@ -957,47 +841,52 @@ Tem certeza disso?</translation>
         <translation>Jogar com as opções</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="118"/>
+        <location filename="../mamepgui_main.ui" line="66"/>
+        <source>Clean Up</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../mamepgui_main.ui" line="119"/>
         <source>&amp;Show Folders</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="562"/>
+        <location filename="../mamepgui_main.ui" line="565"/>
         <source>FAQ</source>
         <translation>FAQ</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="567"/>
+        <location filename="../mamepgui_main.ui" line="570"/>
         <source>Discussion Board</source>
         <translation>Lista de discussões</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="572"/>
+        <location filename="../mamepgui_main.ui" line="575"/>
         <source>Readme</source>
         <translation>Leia-me</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="580"/>
+        <location filename="../mamepgui_main.ui" line="583"/>
         <source>Stretch</source>
         <translation>Escalonar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="588"/>
+        <location filename="../mamepgui_main.ui" line="591"/>
         <source>Tile</source>
         <translation>Ladrilho</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="164"/>
+        <location filename="../mamepgui_main.cpp" line="165"/>
         <source>Command</source>
         <translation>Commando</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.cpp" line="227"/>
+        <location filename="../mamepgui_main.cpp" line="234"/>
         <source>Clear</source>
         <translation>Limpar</translation>
     </message>
     <message>
-        <location filename="../mamepgui_main.ui" line="607"/>
+        <location filename="../mamepgui_main.ui" line="610"/>
         <source>Strech Screenshot Larger</source>
         <translation>Escalonar papel de parede grande</translation>
     </message>
@@ -1005,27 +894,27 @@ Tem certeza disso?</translation>
 <context>
     <name>MameDat</name>
     <message>
-        <location filename="../mamepgui_types.cpp" line="404"/>
+        <location filename="../mamepgui_types.cpp" line="394"/>
         <source>Saving listxml</source>
         <translation type="unfinished">Salvando listxml</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="606"/>
+        <location filename="../mamepgui_types.cpp" line="596"/>
         <source>Cache signature error.</source>
         <translation type="unfinished">Erro na assinatura cache</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="615"/>
+        <location filename="../mamepgui_types.cpp" line="605"/>
         <source>Cache streamVersion has been updated. A full refresh is required.</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="835"/>
+        <location filename="../mamepgui_types.cpp" line="824"/>
         <source>Parsing listxml</source>
         <translation type="unfinished">Lendo listxml</translation>
     </message>
     <message>
-        <location filename="../mamepgui_types.cpp" line="953"/>
+        <location filename="../mamepgui_types.cpp" line="939"/>
         <source>Loading listxml: %1 games</source>
         <translation type="unfinished">Carregando listxml: %1 jogos</translation>
     </message>
@@ -1039,36 +928,6 @@ Tem certeza disso?</translation>
     </message>
 </context>
 <context>
-    <name>MameGame</name>
-    <message>
-        <source>Parsing listxml</source>
-        <translation type="obsolete">Lendo listxml</translation>
-    </message>
-    <message>
-        <source>Loading listxml: %1 games</source>
-        <translation type="obsolete">Carregando listxml: %1 jogos</translation>
-    </message>
-    <message>
-        <source>Saving listxml</source>
-        <translation type="obsolete">Salvando listxml</translation>
-    </message>
-    <message>
-        <source>Cache signature error.</source>
-        <translation type="obsolete">Erro na assinatura cache</translation>
-    </message>
-    <message>
-        <source>Cache version has been updated. A full refresh is required.</source>
-        <translation type="obsolete">Versão cache foi atualizada. Será necessário uma atualização completa.</translation>
-    </message>
-</context>
-<context>
-    <name>MergedRomAuditor</name>
-    <message>
-        <source>Auditing</source>
-        <translation type="obsolete">Auditando</translation>
-    </message>
-</context>
-<context>
     <name>OptionDelegate</name>
     <message>
         <location filename="../mameopt.cpp" line="1010"/>
@@ -1079,18 +938,6 @@ Tem certeza disso?</translation>
         <location filename="../mameopt.cpp" line="1049"/>
         <source>File name:</source>
         <translation>Nome do arquivo:</translation>
-    </message>
-    <message>
-        <source>All Files (*)</source>
-        <translation type="obsolete">Todos arquivos (*)</translation>
-    </message>
-    <message>
-        <source>Dat files (*.dat)</source>
-        <translation type="obsolete">Arquivos Dat (*.dat)</translation>
-    </message>
-    <message>
-        <source>Config files (*.cfg)</source>
-        <translation type="obsolete">Arquivos de Config (*.cfg)</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1045"/>
@@ -1115,10 +962,6 @@ Tem certeza disso?</translation>
 </context>
 <context>
     <name>OptionUtils</name>
-    <message>
-        <source>Directory</source>
-        <translation type="obsolete">Diretório</translation>
-    </message>
     <message>
         <location filename="../mameopt.cpp" line="1242"/>
         <source>Audio</source>
@@ -1251,7 +1094,7 @@ Tem certeza disso?</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1233"/>
-        <location filename="../mameopt.cpp" line="2236"/>
+        <location filename="../mameopt.cpp" line="2237"/>
         <source>GUI Paths</source>
         <translation>GUI Paths</translation>
     </message>
@@ -1591,10 +1434,6 @@ Tem certeza disso?</translation>
         <translation>auto pausar quando reprodução terminar</translation>
     </message>
     <message>
-        <source>m68k core</source>
-        <translation type="obsolete">m68k core</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="1546"/>
         <source>transparent in-game ui</source>
         <translation>interface do usuário transparente no jogo</translation>
@@ -1890,14 +1729,6 @@ Tem certeza disso?</translation>
         <translation>ignorar alertas</translation>
     </message>
     <message>
-        <source>newui</source>
-        <translation type="obsolete">interface nova</translation>
-    </message>
-    <message>
-        <source>natural</source>
-        <translation type="obsolete">natural</translation>
-    </message>
-    <message>
         <location filename="../mameopt.cpp" line="1654"/>
         <source>enable keymap</source>
         <translation>habilitar joymap</translation>
@@ -2133,32 +1964,24 @@ Tem certeza disso?</translation>
         <translation>caminhos da interface</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2245"/>
+        <location filename="../mameopt.cpp" line="2246"/>
         <source>Options</source>
         <translation>Opções</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2254"/>
+        <location filename="../mameopt.cpp" line="2255"/>
         <source>GUI</source>
         <translation>GUI</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2353"/>
+        <location filename="../mameopt.cpp" line="2354"/>
         <source>Option</source>
         <translation>Opção</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2354"/>
+        <location filename="../mameopt.cpp" line="2355"/>
         <source>Value</source>
         <translation>Valor</translation>
-    </message>
-    <message>
-        <source>GUI DIRECTORY</source>
-        <translation type="obsolete">DIRETÓRIO GUI</translation>
-    </message>
-    <message>
-        <source>MESS SOFTWARE DIRECTORY</source>
-        <translation type="obsolete">DIRETÓRIO DO SOFTWARE MESS</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1241"/>
@@ -2167,7 +1990,7 @@ Tem certeza disso?</translation>
     </message>
     <message>
         <location filename="../mameopt.cpp" line="1239"/>
-        <location filename="../mameopt.cpp" line="2238"/>
+        <location filename="../mameopt.cpp" line="2239"/>
         <source>Core Video</source>
         <translation>Vídeo Core</translation>
     </message>
@@ -2177,7 +2000,7 @@ Tem certeza disso?</translation>
         <translation>Vídeo OSD</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2265"/>
+        <location filename="../mameopt.cpp" line="2266"/>
         <source>Global</source>
         <translation>Global</translation>
     </message>
@@ -2277,13 +2100,13 @@ Tem certeza disso?</translation>
         <translation>usar teclado natural</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2521"/>
-        <location filename="../mameopt.cpp" line="2540"/>
+        <location filename="../mameopt.cpp" line="2522"/>
+        <location filename="../mameopt.cpp" line="2541"/>
         <source>Auto</source>
         <translation>Automático</translation>
     </message>
     <message>
-        <location filename="../mameopt.cpp" line="2494"/>
+        <location filename="../mameopt.cpp" line="2495"/>
         <source>None</source>
         <translation>Nenhum</translation>
     </message>
@@ -2508,17 +2331,6 @@ Tem certeza disso?</translation>
     </message>
 </context>
 <context>
-    <name>ProcessManager</name>
-    <message>
-        <source>stdout[#%1]: </source>
-        <translation type="obsolete">saída padrão[#%1]:</translation>
-    </message>
-    <message>
-        <source>stderr[#%1]: </source>
-        <translation type="obsolete">erro padrão[#%1]:</translation>
-    </message>
-</context>
-<context>
     <name>QuaZipFile</name>
     <message>
         <location filename="../quazip/quazipfile.cpp" line="128"/>
@@ -2534,16 +2346,12 @@ Tem certeza disso?</translation>
         <source>Auditing %1 ...</source>
         <translation type="unfinished"></translation>
     </message>
-    <message>
-        <source>Auditing</source>
-        <translation type="obsolete">Auditando</translation>
-    </message>
 </context>
 <context>
     <name>Screenshot</name>
     <message>
-        <location filename="../mamepgui_main.cpp" line="1542"/>
-        <location filename="../mamepgui_main.cpp" line="1544"/>
+        <location filename="../mamepgui_main.cpp" line="1559"/>
+        <location filename="../mamepgui_main.cpp" line="1561"/>
         <source>Loading...</source>
         <translation type="unfinished"></translation>
     </message>
@@ -2597,24 +2405,7 @@ Tem certeza disso?</translation>
     </message>
 </context>
 <context>
-    <name>UpdaterUI</name>
-    <message>
-        <location filename="../updater.ui" line="14"/>
-        <source>Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="../updater.ui" line="29"/>
-        <source>Update</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>Utils</name>
-    <message>
-        <source>Consoles</source>
-        <translation type="obsolete">Consoles</translation>
-    </message>
     <message>
         <location filename="../utils.cpp" line="136"/>
         <source>Joy 2-Way</source>
@@ -2761,27 +2552,27 @@ Tem certeza disso?</translation>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="249"/>
+        <location filename="../utils.cpp" line="233"/>
         <source>good</source>
         <translation>bom</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="251"/>
+        <location filename="../utils.cpp" line="235"/>
         <source>imperfect</source>
         <translation>imperfeito</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="253"/>
+        <location filename="../utils.cpp" line="237"/>
         <source>preliminary</source>
         <translation>preliminar</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="258"/>
+        <location filename="../utils.cpp" line="242"/>
         <source>supported</source>
         <translation>suportado</translation>
     </message>
     <message>
-        <location filename="../utils.cpp" line="260"/>
+        <location filename="../utils.cpp" line="244"/>
         <source>unsupported</source>
         <translation>não-suportado</translation>
     </message>

@@ -564,12 +564,16 @@ void MameExeRomAuditor::auditorClosed()
 	dlgAudit.accept();
 }
 
-void MameExeRomAuditor::audit(bool verifyAll)
+void MameExeRomAuditor::audit(int method)
 {
 	QStringList args;
 
-	args << "-verifyroms";
-	if (!verifyAll)
+	if (method == VERIFY_CURRENT_ROMS || method == VERIFY_ALL_ROMS)
+		args << "-verifyroms";
+	else
+		args << "-verifysamples";
+
+	if (method == VERIFY_CURRENT_ROMS || method == VERIFY_CURRENT_SAMPLES)
 		args << currentGame;
 
 	if (hasLanguage)

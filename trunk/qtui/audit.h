@@ -12,6 +12,15 @@ enum
 	AUDIT_EXPORT_MISSING
 };
 
+enum
+{
+	VERIFY_CURRENT_ROMS = 0,
+	VERIFY_ALL_ROMS,
+	VERIFY_CURRENT_SAMPLES,
+	VERIFY_ALL_SAMPLES
+};
+
+
 class RomAuditor : public QThread
 {
 	Q_OBJECT
@@ -49,7 +58,7 @@ public:
 	QProcess *loadProc;
 
 	MameExeRomAuditor(QObject *parent = 0);
-	void audit(bool = false);
+	void audit(int = VERIFY_CURRENT_ROMS);
 
 public slots:
 	void auditorReadyReadStandardOutput();

@@ -9,6 +9,7 @@ read/write cookie
 theme
 
 //Done
+1 ips GUI seq
 Command-Line Access Mode
 
 命令行模式
@@ -52,6 +53,7 @@ curl upload to remote server
 //Priority tasks
 2 constrain the game selection to the visible area of the selection window?
 3 残档目录
+3 audit all samples
 3 column sorting
 1 multi profile
 * not working的红色不显示在游戏全名了，只显示在romset名了
@@ -78,7 +80,6 @@ curl upload to remote server
 1 find a way to pick MESS systems from drivers
 2 better console refresh
 2 coin/time counter column
-1 ips GUI seq
 1 added API to know which dock widgets are tabified together with a dock widget
 1 bios可改成完整名稱(像mame plus)
 1 ver 按照版本順序排列(像mame plus)

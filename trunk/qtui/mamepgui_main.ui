@@ -56,16 +56,6 @@
      <addaction name="actionAVI"/>
      <addaction name="actionWave"/>
     </widget>
-    <widget class="QMenu" name="menuSaveFixdat">
-     <property name="title">
-      <string>Save Fix-dat File</string>
-     </property>
-     <addaction name="actionFixDatAll"/>
-     <addaction name="actionFixDatIncomplete"/>
-     <addaction name="actionFixDatMissing"/>
-     <addaction name="separator"/>
-     <addaction name="actionFixDatComplete"/>
-    </widget>
     <widget class="QMenu" name="menuAddtoFolder">
      <property name="title">
       <string>Add to Custom Folder</string>
@@ -73,8 +63,20 @@
     </widget>
     <widget class="QMenu" name="menuDeleteCfg">
      <property name="title">
-      <string>Remove</string>
+      <string>Clean Up</string>
      </property>
+    </widget>
+    <widget class="QMenu" name="menuAudit">
+     <property name="title">
+      <string>Audit</string>
+     </property>
+     <addaction name="actionAuditAll"/>
+     <addaction name="actionAuditAllSamples"/>
+     <addaction name="separator"/>
+     <addaction name="actionFixDatAll"/>
+     <addaction name="actionFixDatIncomplete"/>
+     <addaction name="actionFixDatMissing"/>
+     <addaction name="actionFixDatComplete"/>
     </widget>
     <addaction name="actionPlay"/>
     <addaction name="menuPlayWith"/>
@@ -86,8 +88,7 @@
     <addaction name="actionSrcProperties"/>
     <addaction name="actionProperties"/>
     <addaction name="separator"/>
-    <addaction name="actionAuditAll"/>
-    <addaction name="menuSaveFixdat"/>
+    <addaction name="menuAudit"/>
     <addaction name="separator"/>
     <addaction name="actionExitStop"/>
    </widget>
@@ -147,6 +148,7 @@
     <addaction name="menuArrangeIcons"/>
     <addaction name="menuCustomizeFields"/>
     <addaction name="menuCustomFilters"/>
+    <addaction name="separator"/>
     <addaction name="actionRefresh"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
@@ -651,17 +653,17 @@
   </action>
   <action name="actionFixDatMissing">
    <property name="text">
-    <string>Completely Missing Sets Only...</string>
+    <string>Export Completely Missing Sets Only...</string>
    </property>
   </action>
   <action name="actionFixDatIncomplete">
    <property name="text">
-    <string>Incomplete Sets Only...</string>
+    <string>Export Incomplete Sets Only...</string>
    </property>
   </action>
   <action name="actionFixDatAll">
    <property name="text">
-    <string>All Set Issues...</string>
+    <string>Export All Set Issues...</string>
    </property>
   </action>
   <action name="actionRemoveFromFolder">
@@ -671,7 +673,7 @@
   </action>
   <action name="actionAuditAll">
    <property name="text">
-    <string>&amp;Audit All Games</string>
+    <string>&amp;Audit All Roms</string>
    </property>
   </action>
   <action name="actionFilterClones">
@@ -708,7 +710,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>All Sets...</string>
+    <string>Export All Sets...</string>
    </property>
   </action>
   <action name="actionRussian">
@@ -717,6 +719,11 @@
    </property>
    <property name="text">
     <string notr="true">Русский</string>
+   </property>
+  </action>
+  <action name="actionAuditAllSamples">
+   <property name="text">
+    <string>Audit All Samples</string>
    </property>
   </action>
  </widget>

@@ -103,6 +103,7 @@ public slots:
 	void on_actionConfigIPS_activated();
 	void on_actionAudit_activated();
 	void on_actionAuditAll_activated();
+	void on_actionAuditAllSamples_activated();
 	void on_actionProperties_activated();
 	void on_actionSrcProperties_activated();
 	void on_actionDefaultOptions_activated();

@@ -46,7 +46,7 @@ QStringList validGuiSettings;
 /* internal */
 QDockWidget *dwHistory = NULL;
 
-#define MPGUI_VER "1.4.9"
+#define MPGUI_VER "1.4.9a"
 
 void MainWindow::log(QString message)
 {
@@ -675,7 +675,7 @@ void MainWindow::enableCtrls(bool isEnabled)
 	win->actionDefaultOptions->setEnabled(isEnabled);
 	win->actionPlay->setEnabled(isEnabled);
 	win->menuPlayWith->setEnabled(isEnabled);
-	win->menuSaveFixdat->setEnabled(isEnabled);
+	win->menuAudit->setEnabled(isEnabled);
 	win->menuArrangeIcons->setEnabled(isEnabled);
 	win->menuCustomizeFields->setEnabled(isEnabled);
 	win->menuCustomFilters->setEnabled(isEnabled);
@@ -778,12 +778,17 @@ void MainWindow::exportFixDat(int method)
 
 void MainWindow::on_actionAudit_activated()
 {
-	mameAuditor->audit();
+	mameAuditor->audit(VERIFY_CURRENT_ROMS);
 }
 
 void MainWindow::on_actionAuditAll_activated()
 {
-	mameAuditor->audit(true);
+	mameAuditor->audit(VERIFY_ALL_ROMS);
+}
+
+void MainWindow::on_actionAuditAllSamples_activated()
+{
+	mameAuditor->audit(VERIFY_ALL_SAMPLES);
 }
 
 void MainWindow::on_actionSrcProperties_activated()

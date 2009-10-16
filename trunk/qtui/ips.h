@@ -24,7 +24,6 @@ public slots:
 
 private:
 	QString ipspath;
-	QString ipsValues;
 	QStringList datFiles;
 	bool stopListenRelations;
 

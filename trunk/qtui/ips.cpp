@@ -474,22 +474,22 @@ void IPS::updateList()
 	parseRelations();
 }
 
+//save tree ctrl values to ips options
 void IPS::save()
 {
-	ipsValues.clear();
+	QStringList ipsValues;
 
 	QHashIterator<QString, int> i(itemStateTable);
 	while (i.hasNext())
 	{
 		i.next();
 		if (i.value() == 1)
-			ipsValues.append(i.key() + ",");
+			ipsValues.append(i.key());
 	}
 
-	if (ipsValues.endsWith(","))
-		ipsValues.remove(ipsValues.length() - 1, 1);
+	ipsValues.sort();
 
-	mameOpts["ips"]->currvalue = ipsValues;
+	mameOpts["ips"]->currvalue = ipsValues.join(",");
 	optUtils->saveIniFile(OPTLEVEL_CURR, mameIniPath + "ini/" + currentGame + INI_EXT);
 }
 
@@ -499,7 +499,6 @@ void IPS::clear()
 	iterateItems(twList->invisibleRootItem(), ITR_CLEAR);
 }
 
-//save tree ctrl values to private data: ipsValues
 void IPS::iterateItems(QTreeWidgetItem *item, int method)
 {
 	int count = item->childCount();
@@ -520,15 +519,11 @@ void IPS::iterateItems(QTreeWidgetItem *item, int method)
 
 		//process signals sent from a checked item
 		if (item->checkState(0) == Qt::Checked)
-		{
 			if (method == ITR_CLEAR)
 				item->setCheckState(0, Qt::Unchecked);
-		}
 
 		if (method == ITR_RELATIONS)
-		{
 			item->setCheckState(0, (itemStateTable[datName] == 1) ? Qt::Checked : Qt::Unchecked);
-		}
 	}
 }
 
